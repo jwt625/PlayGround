@@ -103,10 +103,11 @@ with open("shape.geojson", "w") as text_file:
 
 # %% testing ipyleaflet
 from ipyleaflet import *
-m = Map(center=(50, 0))
 
-with open('shape.geojson', 'r') as json_file:
-    data = json.load(json_file)
+lat = 38.9451408
+lng = -120.7226249
+m = Map(center=(lat,lng), zoom=10)
+
 
 # %%
 
@@ -117,6 +118,8 @@ def random_color(feature):
         'fillColor': random.choice(['red', 'yellow', 'green', 'orange']),
     }
 
+with open('shape.geojson', 'r') as json_file:
+    data = json.load(json_file)
 geo_json = GeoJSON(
     data=data,
     style={
@@ -128,3 +131,7 @@ geo_json = GeoJSON(
     style_callback=random_color
 )
 m.add_layer(geo_json)
+# %%
+marker = Marker(location=(lat, lng))
+m.add_layer(marker)
+# %%
