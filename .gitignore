@@ -1,3 +1,5 @@
 20230903_travelTime/node_modules/
 *.json
 *.geojson
+*.csv
+*.pyc
