@@ -105,4 +105,26 @@ with open("shape.geojson", "w") as text_file:
 from ipyleaflet import *
 m = Map(center=(50, 0))
 
+with open('shape.geojson', 'r') as json_file:
+    data = json.load(json_file)
+
 # %%
+
+import random
+def random_color(feature):
+    return {
+        'color': 'black',
+        'fillColor': random.choice(['red', 'yellow', 'green', 'orange']),
+    }
+
+geo_json = GeoJSON(
+    data=data,
+    style={
+        'opacity': 1, 'dashArray': '9', 'fillOpacity': 0.1, 'weight': 1
+    },
+    hover_style={
+        'color': 'white', 'dashArray': '0', 'fillOpacity': 0.5
+    },
+    style_callback=random_color
+)
+m.add_layer(geo_json)
