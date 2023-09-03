@@ -40,7 +40,6 @@ from traveltimepy import Driving, Coordinates, TravelTimeSdk
 
 async def main():
     sdk = TravelTimeSdk(data['APP_ID'], data['APP_KEY'])
-    
     results = await sdk.time_map_async(
         coordinates=[Coordinates(lat=lat, lng=lng)],
         arrival_time=datetime.now(),
@@ -53,7 +52,54 @@ async def main():
 res = asyncio.run(main())
 
 #%%
-res[0].shapes
+shape = res[0].shapes[0]
+
+
+
+
+#%% using POST instead of the python SDK
+from datetime import datetime
+
+import requests
+import json
+
+lat = 38.9451408
+lng = -120.7226249
+sdk = TravelTimeSdk(data['APP_ID'], data['APP_KEY'])
+path = "time-map"
+url = f"https://{sdk._sdk_params.host}/v4/{path}"
+transp_type = "driving"
+travel_time = 3600
+
+# url = "https://api.traveltimeapp.com/v4/time-map"
+
+payload = json.dumps({
+    "departure_searches": [
+        {
+            "id": "public transport from Trafalgar Square",
+            "coords": {"lat": lat, "lng": lng},
+            "transportation": {"type": transp_type},
+            "departure_time": datetime.utcnow().isoformat(),
+            "travel_time": travel_time
+        }
+    ]
+})
+
+headers = {
+    'Host': 'api.traveltimeapp.com',
+    'Content-Type': 'application/json',
+    'Accept': 'application/geo+json',
+    'X-Application-Id': sdk._app_id,
+    'X-Api-Key': sdk._api_key
+}
+
+response = requests.request("POST", url, headers=headers, data=payload)
+
+with open("shape.geojson", "w") as text_file:
+    text_file.write(response.text)
+
+
+
 
 # %% testing ipyleaflet
 from ipyleaflet import *
