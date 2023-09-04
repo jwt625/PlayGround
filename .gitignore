@@ -3,3 +3,4 @@
 *.geojson
 *.csv
 *.pyc
+*.ipynb

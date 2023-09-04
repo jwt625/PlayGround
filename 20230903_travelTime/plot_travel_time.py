@@ -11,8 +11,8 @@ df = pd.read_csv(file_path, header=None, names=['lat', 'lng'])
 from ipyleaflet import *
 import random
 
-m = Map(center=(df.lat[0],df.lng[0]), zoom=10)
-
+m = Map(center=(df.lat[0],df.lng[0]), zoom=10, scroll_wheel_zoom=True)
+m.add_control(FullScreenControl())
 
 # %%
 def random_color(feature):
@@ -21,7 +21,9 @@ def random_color(feature):
         'fillColor': random.choice(['red', 'yellow', 'green', 'orange']),
     }
 
-for ii in range(7):
+icon_house = AwesomeIcon(name='home', marker_color='green')
+
+for ii in range(len(df.lat)):
     with open(f'{ii}.geojson', 'r') as json_file:
         data = json.load(json_file)
     geo_json = GeoJSON(
@@ -35,10 +37,22 @@ for ii in range(7):
         style_callback=random_color
     )
     m.add_layer(geo_json)
-    marker = Marker(location=(df.lat[ii], df.lng[ii]))
+    marker = Marker(location=(df.lat[ii], df.lng[ii]), draggable=False, icon=icon_house)
     m.add_layer(marker)
 
-# %%
-# %%
+# add lakes
+icon_lake = AwesomeIcon(name='fa-tint')
+file_path = 'lakes.csv'
+df_lakes = pd.read_csv(file_path, header=None, names=['lat', 'lng', 'name'])
+for ii in range(len(df_lakes.lat)):
+    marker = Marker(location=(df_lakes.lat[ii], df_lakes.lng[ii]), 
+        draggable=False, icon=icon_lake, name=df_lakes.name[ii])
+    m.add_layer(marker)
 
 
+
+# %%
+m
+
+# %%
+# %%
