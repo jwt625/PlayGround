@@ -2020,6 +2020,7 @@
                             key: "getStreams",
                             value: function () {
                                 var e = this;
+                                console.log(this.hit.url);
                                 this.hit.url ? this.streams.full = {
                                     url: this.hit.url
                                 } : this.hit.urls ? this.hit.urls.forEach((function (t, n) {
@@ -3263,6 +3264,10 @@
                     if (!(e instanceof t)) throw new TypeError("Cannot call a class as a function")
                 }
                 t.networkHook = function (e, t) {
+                    const first_27_char = e.url.substring(0, 27); // Extract the first n characters from string1
+                    if (first_27_char === "https://YOUR.TARGET.URL/") {
+                        console.log(e.url);
+                    }
                     if (!u.prefs.chunksEnabled) return null;
                     var n = null;
                     u.prefs.dashEnabled && (v.test(e.url) ? n = new x(e.url, "json", t) : t.contentType && y.test(t.contentType.toLowerCase()) && (n = new x(e.url, "xml", t)));
@@ -4721,6 +4726,7 @@
                             this.action = e, this.downloadTarget = t[0].fileName;
                             var a = e.hit._mpd || e.hit.audioMpd,
                                 s = new URL(e.hit._mpdCommonBaseUrl, e.hit.url || e.hit.audioUrl).href;
+                            console.log(e.hit.url);
                             s = new URL(a.base_url, s).href, o.downloadFile(this.downloadTarget, a, s, n, r, i), e.abortChunked = function () {
                                 o.actionAbortFn()
                             }
