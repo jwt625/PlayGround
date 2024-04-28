@@ -4,3 +4,4 @@
 *.csv
 *.pyc
 *.ipynb
+.DS_Store
