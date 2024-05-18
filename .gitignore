@@ -3,5 +3,5 @@
 *.geojson
 *.csv
 *.pyc
-*.ipynb
 .DS_Store
+20240517_SAM/sam_vit_h_4b8939.pth
