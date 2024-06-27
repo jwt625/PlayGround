@@ -8,7 +8,10 @@ import cv2
 import supervision as sv
 from ultralytics import YOLO
 
-image = cv2.imread('GPlQ1Tca8AAW_U1.jfif')
+#%%
+# image = cv2.imread('GPlQ1Tca8AAW_U1.jfif')
+image = cv2.imread('IMG_6881.JPG')
+
 model = YOLO('yolov8s.pt')
 result = model(image)[0]
 detections = sv.Detections.from_ultralytics(result)
@@ -44,6 +47,8 @@ len(detections)
 
 #%% box annotation
 box_annotator = sv.BoxAnnotator()
+box_annotator.text_scale = 3
+box_annotator.text_thickness = 6
 
 labels = [
     f"{model.model.names[class_id]} {confidence:.2f}"
