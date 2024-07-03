@@ -50,8 +50,10 @@ model_type = "vit_h"
 sam = sam_model_registry[model_type](checkpoint=checkpoint)
 mask_generator = SamAutomaticMaskGenerator(sam)
 
+#%%
 # Load image using OpenCV
-image_path = "signal-2024-07-02-214900_002.jpeg"
+# image_path = "signal-2024-07-02-214900_002.jpeg"
+image_path = "signal-2024-06-30-172053_002.jpeg"
 image = cv2.imread(image_path)
 image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)  # Convert BGR to RGB
 
@@ -75,6 +77,7 @@ fig, ax = plt.subplots(1, 1, figsize=(10, 10))
 ax.imshow(image)
 
 # Iterate through the masks and plot each one
+# for mask_dict in masks[0:100]:
 for mask_dict in masks[0:20]:
     mask_array = mask_dict['segmentation']  # Access the mask array using the 'segmentation' key
     show_mask(mask_array, ax)
