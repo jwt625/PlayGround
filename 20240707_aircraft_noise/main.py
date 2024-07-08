@@ -25,8 +25,8 @@ def calculate_distance_and_azimuth(xx, yy, x0, y0, z0):
 
 def create_frame(xx, yy, distances, point, frame_number):
     plt.figure(figsize=(8, 6))
-    plt.contourf(xx, yy, distances, cmap='viridis')
-    plt.colorbar(label='noise (dB)')
+    contour = plt.contourf(xx, yy, distances, cmap='viridis', vmin = 30, vmax = 110)
+    plt.colorbar(contour, label='noise (dB)')
     plt.scatter(point[0], point[1], color='red', label=f'Point {point}')
     # plt.title(f'2D Color Plot of noise (Frame {frame_number})')
     plt.xlabel('X')
@@ -39,7 +39,7 @@ def create_frame(xx, yy, distances, point, frame_number):
     return filename
 
 
-#%%
+#%% test 2D color plot
 
 # Parameters for the 2D mesh
 x_min, x_max, y_min, y_max = -10, 10, -10, 10
@@ -64,13 +64,14 @@ N_atten = rhos*N0*np.exp(-alpha*distances)
 
 N_atten_dB = 10*np.log10(N_atten) + 100
 
-#%%
+#%% generate gif
 r_bend = 20
 x_bend = -10
 y_bend = r_bend
+N = 50
 moving_points = [(x_bend + r_bend* np.cos(t),
                   y_bend + r_bend* np.sin(t),
-                  1 + (t + np.pi/2)/np.pi * 20, t+np.pi/2) for t in np.linspace(-np.pi/2, -np.pi/6, 30)]
+                  1 + (t + np.pi/2)/np.pi * 20, t+np.pi/2) for t in np.linspace(-np.pi/2, -np.pi/6, N)]
 
 # Generate frames
 filenames = []
