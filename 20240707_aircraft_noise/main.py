@@ -2,6 +2,8 @@
 #%%
 import numpy as np
 import matplotlib.pyplot as plt
+import imageio
+import os
 
 
 def generate_2d_mesh(x_min, x_max, y_min, y_max, x_points, y_points):
@@ -26,10 +28,10 @@ def create_frame(xx, yy, distances, point, frame_number):
     plt.contourf(xx, yy, distances, cmap='viridis')
     plt.colorbar(label='noise (dB)')
     plt.scatter(point[0], point[1], color='red', label=f'Point {point}')
-    plt.title(f'2D Color Plot of noise (Frame {frame_number})')
+    # plt.title(f'2D Color Plot of noise (Frame {frame_number})')
     plt.xlabel('X')
     plt.ylabel('Y')
-    plt.legend()
+    # plt.legend()
     plt.tight_layout()
     filename = f'frame_{frame_number:03d}.png'
     plt.savefig(filename)
@@ -62,7 +64,39 @@ N_atten = rhos*N0*np.exp(-alpha*distances)
 
 N_atten_dB = 10*np.log10(N_atten) + 100
 
+#%%
+r_bend = 20
+x_bend = -10
+y_bend = r_bend
+moving_points = [(x_bend + r_bend* np.cos(t),
+                  y_bend + r_bend* np.sin(t),
+                  1 + (t + np.pi/2)/np.pi * 20, t+np.pi/2) for t in np.linspace(-np.pi/2, -np.pi/6, 30)]
 
+# Generate frames
+filenames = []
+for i, (x0, y0, z0, t) in enumerate(moving_points):    
+    # Calculate distances
+    distances, thetas = calculate_distance_and_azimuth(xx, yy, x0, y0, z0)
+    thetas = thetas - t
+    rhos = 1.5 + 0.5*np.cos(thetas) + 0.1*np.cos(2*thetas + np.pi) + 0.2*np.cos(3*thetas)
+    # print(distances)
+    N0 = 1
+    alpha = 1   # Neper per km
+    N_atten = rhos*N0*np.exp(-alpha*distances)
+    N_atten_dB = 10*np.log10(N_atten) + 100
+
+    filename = create_frame(xx, yy, N_atten_dB, (x0, y0), i)
+    filenames.append(filename)
+
+# Create a GIF
+with imageio.get_writer('tmp.gif', mode='I', duration=0.1) as writer:
+    for filename in filenames:
+        image = imageio.imread(filename)
+        writer.append_data(image)
+
+# Remove the temporary files
+for filename in filenames:
+    os.remove(filename)
 
 
 # %%
