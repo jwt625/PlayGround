@@ -4,6 +4,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import imageio
 import os
+from PIL import Image
 
 
 def generate_2d_mesh(x_min, x_max, y_min, y_max, x_points, y_points):
@@ -22,10 +23,15 @@ def calculate_distance_and_azimuth(xx, yy, x0, y0, z0):
     return distances, azimuth
 
 
+background_image = Image.open('map.PNG')
 
 def create_frame(xx, yy, distances, point, frame_number):
-    plt.figure(figsize=(8, 6))
-    contour = plt.contourf(xx, yy, distances, cmap='viridis', vmin = 30, vmax = 110)
+    fig, ax = plt.subplots(figsize=(8, 6))
+    # Display the background image
+    ax.imshow(background_image, extent=[xx.min(), xx.max(), yy.min(), yy.max()], aspect='auto')
+
+    contour = plt.contourf(xx, yy, distances, cmap='viridis',
+                           alpha=0.6, vmin = 30, vmax = 110, levels=30)
     plt.colorbar(contour, label='noise (dB)')
     plt.scatter(point[0], point[1], color='red', label=f'Point {point}')
     # plt.title(f'2D Color Plot of noise (Frame {frame_number})')
@@ -68,10 +74,20 @@ N_atten_dB = 10*np.log10(N_atten) + 100
 r_bend = 20
 x_bend = -10
 y_bend = r_bend
-N = 50
-moving_points = [(x_bend + r_bend* np.cos(t),
-                  y_bend + r_bend* np.sin(t),
-                  1 + (t + np.pi/2)/np.pi * 20, t+np.pi/2) for t in np.linspace(-np.pi/2, -np.pi/6, N)]
+N = 30
+# moving_points = [(x_bend + r_bend* np.cos(t),
+#                   y_bend + r_bend* np.sin(t),
+#                   1 + (t + np.pi/2)/np.pi * 20, t+np.pi/2) for t in np.linspace(-np.pi/2, -np.pi/6, N)]
+x_start = 6
+y_start = -2
+line_length = 17
+num_points = N
+theta0 = np.pi - np.pi/6
+moving_points = [(x_start + t * np.cos(theta0),
+                  y_start + t * np.sin(theta0),
+                  0.1 + t/3*2, theta0) for t in np.linspace(0, line_length, num_points)]
+
+
 
 # Generate frames
 filenames = []
