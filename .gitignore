@@ -8,3 +8,5 @@
 *.onnx
 *.JPG
 *.jpeg
+*.gif
+*.mp4
