@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generative Art with p5.js</title>
+</head>
+<body>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script>
+    <script>
+        // from https://x.com/yuruyurau/status/1759576934101717450
+        $=[],t=0,draw=_=>{
+            t++||createCanvas(720,720);
+            background(0,9);
+            ($=[...$.slice(-5e3),...[...'#つぶやきProcessing'].map(_=>p5.Vector.random3D().add(3.6,2).mult(99))]).map(v=>
+                stroke(49*(k=sqrt(5+(cos(v.y/33+t/240)*19^19*sin(v.x/33)))))
+                .point(v.add(sin((r=(k&4)/25)*v.y),cos(v.x*r)))
+            )
+        }
+    </script>
+</body>
+</html>

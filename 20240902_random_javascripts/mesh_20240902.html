@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generative Art with p5.js</title>
+</head>
+<body>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script>
+    <script>
+        // from https://x.com/yuruyurau/status/1830677030259839352
+        a=(x,y,d=-exp(-mag(k=w*noise(t)-x,e=w*noise(t,9)-y)/(40+145*noise(x/50,y/50))))=>[x+k*d,y+e*d]
+        s=4,t=0,draw=$=>{
+            t||createCanvas(w=400,w);
+            noFill(t+=.02);
+            background(248);
+            for(y=0;y<w;y+=s)
+                for(x=0;x<w;x+=s)
+                    triangle(...[a(x,y),a(x,y+s),a(x+s,y)].flat())
+        }
+    </script>
+</body>
+</html>
