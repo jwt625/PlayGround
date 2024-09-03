@@ -12,7 +12,7 @@
         $=[],t=0,draw=_=>{
             t++||createCanvas(720,720);
             background(0,9);
-            ($=[...$.slice(-5e3),...[...'#つぶやきProcessing'].map(_=>p5.Vector.random3D().add(3.6,2).mult(99))]).map(v=>
+            ($=[...$.slice(-5e3),...[...'OutsideFiveSigma'].map(_=>p5.Vector.random3D().add(3.6,2).mult(99))]).map(v=>
                 stroke(49*(k=sqrt(5+(cos(v.y/33+t/240)*19^19*sin(v.x/33)))))
                 .point(v.add(sin((r=(k&4)/25)*v.y),cos(v.x*r)))
             )
