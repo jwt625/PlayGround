@@ -72,3 +72,67 @@ final_video = video.set_audio(audio)
 final_video.write_videofile('output_video.mp4', fps=24, codec='libx264', audio_codec="aac")
 
 print("Video created: output_video.mp4")
+
+
+
+
+
+
+#%%
+
+
+# Input and output file paths
+input_file = 'EC_no_tether_20200121_addedMonitor_Si_200nm_monitor_4.mpg'
+output_file = 'EC_no_tether_20200121_addedMonitor_Si_200nm_monitor_4.mp4'
+
+
+
+
+import cv2
+
+# Input and output file paths
+# input_file = 'input_video.mpg'
+# output_file = 'output_video.mp4'
+
+# Open the mpg video file
+cap = cv2.VideoCapture(input_file)
+
+# Get the frames per second (fps) and the resolution of the input video
+fps = cap.get(cv2.CAP_PROP_FPS)
+width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+
+# Define the codec for the output video (using MP4V codec)
+fourcc = cv2.VideoWriter_fourcc(*'mp4v')
+
+# Create a VideoWriter object to write the video to mp4
+out = cv2.VideoWriter(output_file, fourcc, fps, (width, height))
+
+# Read and write frames
+while True:
+    ret, frame = cap.read()
+    if not ret:
+        break
+    out.write(frame)
+
+# Release everything once done
+cap.release()
+out.release()
+cv2.destroyAllWindows()
+
+
+
+
+#%% further cleanup the format
+from moviepy.editor import VideoFileClip
+
+# Input and output file paths
+input_file = 'EC_no_tether_20200121_addedMonitor_Si_200nm_monitor_4.mp4'
+output_file = 'EC_no_tether_20200121_addedMonitor_Si_200nm_monitor_4_clean.mp4'
+
+# Load the mpg video
+video_clip = VideoFileClip(input_file)
+
+# Write the video to mp4 format with libx264 and aac for audio
+video_clip.write_videofile(output_file, codec="libx264", audio_codec="aac")
+
