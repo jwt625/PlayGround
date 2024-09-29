@@ -13,3 +13,5 @@
 *.ttf
 *.zip
 *.PNG
+*.env
+/20240928_Twitter_API/node_modules
