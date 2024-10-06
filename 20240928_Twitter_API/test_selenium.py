@@ -50,9 +50,9 @@ def scrape_bookmarks(driver, media_folder, N = 1):
 
         # Calculate new scroll height and compare with last scroll height
         new_height = driver.execute_script("return document.body.scrollHeight")
-        if new_height == last_height:
-            break
-        last_height = new_height
+        # if new_height == last_height:
+        #     break
+        # last_height = new_height
 
         tweet_elements = driver.find_elements(By.CSS_SELECTOR, 'article[data-testid="tweet"]')
 
@@ -95,7 +95,7 @@ def scrape_bookmarks(driver, media_folder, N = 1):
 
             if tweet_data not in bookmarks:
                 bookmarks.append(tweet_data)
-        print(f"Scrolled {ii}/{N}...")
+        print(f"Scrolled {ii+1}/{N}...")
 
     return bookmarks
 
@@ -105,7 +105,7 @@ media_folder = 'media'
 os.makedirs(media_folder, exist_ok=True)
 
 # Scrape bookmarks
-bookmarked_tweets = scrape_bookmarks(driver, media_folder)
+bookmarked_tweets = scrape_bookmarks(driver, media_folder, N = 2)
 
 # Save to JSON file
 with open('bookmarked_tweets.json', 'w', encoding='utf-8') as f:
