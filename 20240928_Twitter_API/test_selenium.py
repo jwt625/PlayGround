@@ -115,4 +115,125 @@ print(f"Scraped {len(bookmarked_tweets)} bookmarked tweets.")
 
 
 
+
+
+
+
+
+#%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+#%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+# %% 20241006, load urls and scrape those tweets
+
+import os
+import requests
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.common.exceptions import TimeoutException
+import time
+import json
+import re
+from datetime import datetime
+
+
+
+#%%
+driver = webdriver.Chrome()  # Or whichever browser you're using
+
+
+#%%
+def get_original_media_url(url):
+    return re.sub(r'&name=\w+', '', url)
+
+def download_media(url, folder, filename):
+    response = requests.get(url, stream=True)
+    if response.status_code == 200:
+        filepath = os.path.join(folder, filename)
+        with open(filepath, 'wb') as f:
+            for chunk in response.iter_content(1024):
+                f.write(chunk)
+        return filepath
+    return None
+
+def scrape_tweet(driver, url, media_folder):
+    driver.get(url)
+    
+    try:
+        WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.CSS_SELECTOR, 'article[data-testid="tweet"]'))
+        )
+    except TimeoutException:
+        print(f"Timeout waiting for tweet to load: {url}")
+        return None
+
+    tweet_data = {'url': url}
+
+    # Extract tweet text
+    try:
+        tweet_text = driver.find_element(By.CSS_SELECTOR, 'div[data-testid="tweetText"]').text
+        tweet_data['text'] = tweet_text
+    except:
+        tweet_data['text'] = ''
+
+    # Extract tweet timestamp
+    try:
+        time_element = driver.find_element(By.CSS_SELECTOR, 'time')
+        timestamp = time_element.get_attribute('datetime')
+        tweet_date = datetime.fromisoformat(timestamp.replace('Z', '+00:00'))
+        tweet_data['timestamp'] = tweet_date.isoformat()
+    except:
+        tweet_data['timestamp'] = ''
+
+    # Extract and process media
+    try:
+        media_elements = driver.find_elements(By.CSS_SELECTOR, 'div[data-testid="tweetPhoto"] img')
+        tweet_data['media'] = []
+        for index, elem in enumerate(media_elements):
+            media_url = elem.get_attribute('src')
+            original_url = get_original_media_url(media_url)
+            
+            # Create filename based on tweet timestamp
+            file_timestamp = tweet_date.strftime("%Y%m%d_%H%M%S")
+            filename = f"{file_timestamp}_{index}.jpg"
+            
+            # Download and save the media
+            local_path = download_media(original_url, media_folder, filename)
+            
+            if local_path:
+                tweet_data['media'].append({
+                    'url': original_url,
+                    'local_path': os.path.relpath(local_path, start=os.getcwd())
+                })
+    except Exception as e:
+        print(f"Error processing media: {str(e)}")
+
+    return tweet_data
+
+#%% Setup
+# driver = webdriver.Chrome()  # or whichever driver you're using
+media_folder = 'media'
+os.makedirs(media_folder, exist_ok=True)
+
+#%% Read URLs from file
+with open('urls_tweet_to_scrape.txt', 'r') as f:
+    urls = [line.strip() for line in f if line.strip()]
+
+#%% Scrape tweets
+tweets_data = []
+for url in urls:
+    tweet_data = scrape_tweet(driver, url, media_folder)
+    if tweet_data:
+        tweets_data.append(tweet_data)
+    time.sleep(2)  # Add a small delay between requests
+
+# Save to JSON file
+with open('scraped_tweets.json', 'w', encoding='utf-8') as f:
+    json.dump(tweets_data, f, ensure_ascii=False, indent=4)
+
+print(f"Scraped {len(tweets_data)} tweets.")
+
+# driver.quit()
+
 # %%
