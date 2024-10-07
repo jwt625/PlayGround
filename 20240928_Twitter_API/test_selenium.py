@@ -138,6 +138,7 @@ import re
 from datetime import datetime
 
 #%%
+
 def get_original_media_url(url):
     return re.sub(r'&name=\w+', '', url)
 
@@ -198,27 +199,47 @@ def scrape_thread(driver, url, media_folder, str_user_handle):
         return None
 
     thread_data = {'url': url, 'tweets': []}
+    last_height = driver.execute_script("return document.body.scrollHeight")
 
-    # Find all tweets from the specified user
-    tweets = driver.find_elements(By.CSS_SELECTOR, 'article[data-testid="tweet"]')
-    user_tweets = [tweet for tweet in tweets if str_user_handle.lower() in tweet.text.lower()]
+    while True:
+        # Find all tweets from the specified user
+        tweets = driver.find_elements(By.CSS_SELECTOR, 'article[data-testid="tweet"]')
+        user_tweets = [tweet for tweet in tweets if str_user_handle.lower() in tweet.find_element(By.CSS_SELECTOR, 'div[data-testid="User-Name"]').text.lower()]
 
-    for tweet in user_tweets:
-        # Extract tweet timestamp
-        try:
-            time_element = tweet.find_element(By.CSS_SELECTOR, 'time')
-            timestamp = time_element.get_attribute('datetime')
-            tweet_date = datetime.fromisoformat(timestamp.replace('Z', '+00:00'))
-            tweet_timestamp = tweet_date.isoformat()
-        except NoSuchElementException:
-            tweet_timestamp = ''
+        for tweet in user_tweets:
+            # Check if we've already processed this tweet
+            if tweet in [t['element'] for t in thread_data['tweets']]:
+                continue
 
-        tweet_data = scrape_tweet(driver, tweet, media_folder, tweet_date)
-        tweet_data['timestamp'] = tweet_timestamp
-        thread_data['tweets'].append(tweet_data)
+            # Extract tweet timestamp
+            try:
+                time_element = tweet.find_element(By.CSS_SELECTOR, 'time')
+                timestamp = time_element.get_attribute('datetime')
+                tweet_date = datetime.fromisoformat(timestamp.replace('Z', '+00:00'))
+                tweet_timestamp = tweet_date.isoformat()
+            except NoSuchElementException:
+                tweet_timestamp = ''
+
+            tweet_data = scrape_tweet(driver, tweet, media_folder, tweet_date)
+            tweet_data['timestamp'] = tweet_timestamp
+            tweet_data['element'] = tweet  # Store the element for later comparison
+            thread_data['tweets'].append(tweet_data)
+
+        # Scroll down to bottom
+        driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+        time.sleep(2)
+
+        # Calculate new scroll height and compare with last scroll height
+        new_height = driver.execute_script("return document.body.scrollHeight")
+        if new_height == last_height:
+            break
+        last_height = new_height
+
+    # Remove the 'element' key from tweet data before returning
+    for tweet in thread_data['tweets']:
+        del tweet['element']
 
     return thread_data
-
 
 
 #%% login manually and keep using the same tag
@@ -231,7 +252,9 @@ os.makedirs(media_folder, exist_ok=True)
 str_user_handle = "@jwt0625"  # Replace with the actual user handle
 
 # Read URLs from file
-with open('urls_tweet_to_scrape.txt', 'r') as f:
+# str_fn = 'urls_tweet_to_scrape.txt'
+str_fn = 'urls_test.txt'
+with open(str_fn, 'r') as f:
     urls = [line.strip() for line in f if line.strip()]
 
 # Scrape tweets
