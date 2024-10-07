@@ -4,6 +4,9 @@
 
 from moviepy.editor import *
 
+
+#%%
+
 # Load the image and audio
 image = ImageClip("image128.png")
 # image = ImageClip("image306.png")
@@ -136,3 +139,22 @@ video_clip = VideoFileClip(input_file)
 # Write the video to mp4 format with libx264 and aac for audio
 video_clip.write_videofile(output_file, codec="libx264", audio_codec="aac")
 
+
+
+#%% converting wmv to mp4, did not work
+
+from moviepy.editor import VideoFileClip
+
+# Load the .wmv video file
+input_file = "41378_2021_240_MOESM8_ESM.wmv"
+output_file = "output_SM8.mp4"
+# Convert the video
+clip = VideoFileClip(input_file)
+
+# If fps is None, manually set a frame rate, e.g., 24 fps
+clip.write_videofile(output_file, codec="libx264", audio_codec="aac", fps=24)
+
+print(f"Conversion completed: {output_file}")
+
+
+# %%
