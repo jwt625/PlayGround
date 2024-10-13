@@ -79,4 +79,5 @@ print("All images processed. Results saved in the 'results' folder.")
 import matplotlib.pyplot  as plt
 
 plt.plot(all_avg_temp)
+plt.ylabel('Temperature (C)')
 # %%
