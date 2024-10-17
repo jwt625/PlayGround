@@ -68,6 +68,7 @@ def scrape_tweet(driver, tweet_element, media_folder, tweet_timestamp):
 
 def scrape_thread(driver, url, media_folder, str_user_handle):
     driver.get(url)
+    time.sleep(2)
     
     try:
         WebDriverWait(driver, 10).until(
