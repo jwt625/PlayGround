@@ -110,8 +110,15 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
   if (currentTabHistory && currentTabHistory.length > 0) {
     const lastNode = currentTabHistory[currentTabHistory.length - 1];
     if (lastNode.url !== tab.url) {
-      // This is navigation within the same tab
-      addTabToTree(tab, lastNode.id);
+      // Check if we're navigating back to a previous page
+      const existingIndex = currentTabHistory.findIndex(node => node.url === tab.url);
+      if (existingIndex !== -1) {
+        // We're navigating back, truncate the history
+        tabHistory[tabId] = currentTabHistory.slice(0, existingIndex + 1);
+      } else {
+        // This is navigation to a new page
+        addTabToTree(tab, lastNode.id);
+      }
     }
   } else {
     // This is a new tab that we haven't seen before
@@ -122,7 +129,8 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
 chrome.webNavigation.onCommitted.addListener((details) => {
   if (!extensionInitialized || details.frameId !== 0 || isExcluded(details.url)) return;
 
-  if (details.transitionType === 'reload' || details.transitionQualifiers.includes('forward_back')) {
+  if (details.transitionType === 'link' && details.transitionQualifiers.includes('from_address_bar')) {
+    // This is likely a "Go back" action
     const history = tabHistory[details.tabId];
     if (history) {
       const index = history.findIndex(node => node.url === details.url);
