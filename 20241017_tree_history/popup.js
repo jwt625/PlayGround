@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', function() {
   chrome.storage.local.get(['tabTree'], function(result) {
-    const tabTree = result.tabTree;
+    const tabTree = result.tabTree || {};
     const tabTreeElement = document.getElementById('tabTree');
     
     function createTreeView(tree, element) {
@@ -13,6 +13,9 @@ document.addEventListener('DOMContentLoaded', function() {
           tree[parentId].forEach(child => {
             const childLi = document.createElement('li');
             childLi.textContent = `${child.title} (${child.url})`;
+            if (child.closedAt) {
+              childLi.textContent += ` [Closed]`;
+            }
             childUl.appendChild(childLi);
           });
           li.appendChild(childUl);
@@ -23,5 +26,60 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     createTreeView(tabTree, tabTreeElement);
+
+    // Save button functionality
+    document.getElementById('saveButton').addEventListener('click', function() {
+      const jsonString = JSON.stringify(tabTree, null, 2);
+      const blob = new Blob([jsonString], {type: "application/json"});
+      const url = URL.createObjectURL(blob);
+      
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'tabTree.json';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    });
+
+    // Clear button functionality
+    document.getElementById('clearButton').addEventListener('click', function() {
+      if (confirm('Are you sure you want to clear the tab tree?')) {
+        sendMessageWithRetry({action: "clearTabTree"}, 3)
+          .then(response => {
+            if (response && response.success) {
+              tabTreeElement.innerHTML = '';
+              alert('Tab tree cleared successfully!');
+            } else {
+              alert('Failed to clear the tab tree. Please try again.');
+            }
+          })
+          .catch(error => {
+            console.error(error);
+            alert('An error occurred while clearing the tab tree. Please try again.');
+          });
+      }
+    });
   });
 });
+
+function sendMessageWithRetry(message, maxRetries) {
+  return new Promise((resolve, reject) => {
+    function attemptSend(retriesLeft) {
+      chrome.runtime.sendMessage(message, response => {
+        if (chrome.runtime.lastError) {
+          console.log(chrome.runtime.lastError);
+          if (retriesLeft > 0) {
+            console.log(`Retrying... ${retriesLeft} attempts left.`);
+            setTimeout(() => attemptSend(retriesLeft - 1), 1000);
+          } else {
+            reject(new Error('Max retries reached'));
+          }
+        } else {
+          resolve(response);
+        }
+      });
+    }
+    attemptSend(maxRetries);
+  });
+}
