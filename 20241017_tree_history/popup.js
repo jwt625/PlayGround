@@ -1,27 +1,37 @@
 document.addEventListener('DOMContentLoaded', function() {
-  chrome.storage.local.get(['tabTree'], function(result) {
-    const tabTree = result.tabTree || {};
+  chrome.runtime.sendMessage({action: "getTabTree"}, function(response) {
+    if (chrome.runtime.lastError) {
+      console.error(chrome.runtime.lastError);
+      alert('An error occurred while fetching the tab tree. Please try again.');
+      return;
+    }
+
+    const tabTree = response.tabTree || {};
     const tabTreeElement = document.getElementById('tabTree');
     
     function createTreeView(tree, element) {
       const ul = document.createElement('ul');
-      for (let parentId in tree) {
-        const li = document.createElement('li');
-        li.textContent = `Tab ${parentId}`;
-        if (tree[parentId].length > 0) {
-          const childUl = document.createElement('ul');
-          tree[parentId].forEach(child => {
-            const childLi = document.createElement('li');
-            childLi.textContent = `${child.title} (${child.url})`;
-            if (child.closedAt) {
-              childLi.textContent += ` [Closed]`;
-            }
-            childUl.appendChild(childLi);
-          });
-          li.appendChild(childUl);
+      Object.values(tree).forEach(node => {
+        if (!node.closedAt) {  // Only show open tabs in the main view
+          const li = document.createElement('li');
+          li.textContent = `${node.title} (${node.url})`;
+          if (node.children && node.children.length > 0) {
+            const childUl = document.createElement('ul');
+            node.children.forEach(childId => {
+              if (tree[childId]) {
+                const childLi = document.createElement('li');
+                childLi.textContent = `${tree[childId].title} (${tree[childId].url})`;
+                if (tree[childId].closedAt) {
+                  childLi.textContent += ` [Closed]`;
+                }
+                childUl.appendChild(childLi);
+              }
+            });
+            li.appendChild(childUl);
+          }
+          ul.appendChild(li);
         }
-        ul.appendChild(li);
-      }
+      });
       element.appendChild(ul);
     }
 
