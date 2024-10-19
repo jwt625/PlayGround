@@ -1,24 +1,21 @@
 let tabTree = {};
 let excludedDomains = [];
 let extensionInitialized = false;
+let tabHistory = {};
+let userTimeZone = 'UTC'; // Default to UTC
 
-// Load configuration
-chrome.storage.local.get(['config'], (result) => {
+// Load configuration and existing tabTree
+chrome.storage.local.get(['config', 'tabTree', 'userTimeZone'], (result) => {
   if (result.config) {
     excludedDomains = result.config.excludedDomains || [];
   }
-});
-
-chrome.runtime.onInstalled.addListener(() => {
-  chrome.storage.local.get(['tabTree', 'config'], (result) => {
-    if (result.config) {
-      excludedDomains = result.config.excludedDomains || [];
-    }
-    // Initialize with an empty tabTree
-    tabTree = {};
-    saveTabTree();
-    extensionInitialized = true;
-  });
+  if (result.tabTree) {
+    tabTree = result.tabTree;
+  }
+  if (result.userTimeZone) {
+    userTimeZone = result.userTimeZone;
+  }
+  extensionInitialized = true;
 });
 
 function isExcluded(url) {
@@ -26,63 +23,115 @@ function isExcluded(url) {
   return excludedDomains.some(domain => url.includes(domain));
 }
 
-function addTabToTree(tab) {
-  if (isExcluded(tab.url)) return;
+function getHumanReadableTime(timestamp) {
+  const date = new Date(timestamp);
+  return date.toLocaleString('en-US', { timeZone: userTimeZone, 
+    year: 'numeric', month: '2-digit', day: '2-digit', 
+    hour: '2-digit', minute: '2-digit', second: '2-digit', 
+    hour12: false 
+  }).replace(/[/,:]/g, '-');
+}
 
-  const newNode = {
-    id: tab.id,
+function findNodeById(tree, id) {
+  if (tree.id === id) return tree;
+  if (tree.children) {
+    for (let child of tree.children) {
+      const found = findNodeById(child, id);
+      if (found) return found;
+    }
+  }
+  return null;
+}
+
+function addNodeToTree(node, parentId = null) {
+  if (parentId) {
+    for (let rootId in tabTree) {
+      const parentNode = findNodeById(tabTree[rootId], parentId);
+      if (parentNode) {
+        if (!parentNode.children) parentNode.children = [];
+        parentNode.children.push(node);
+        return;
+      }
+    }
+  }
+  // If no parent found or parentId is null, add as root node
+  tabTree[node.id] = node;
+}
+
+function createNode(tab) {
+  const timestamp = Date.now();
+  return {
+    id: `${tab.id}-${timestamp}`, // Unique ID for each node
+    tabId: tab.id,
     url: tab.url,
     title: tab.title,
-    createdAt: Date.now(),
+    createdAt: timestamp,
+    createdAtHuman: getHumanReadableTime(timestamp),
     closedAt: null,
+    closedAtHuman: null,
     children: []
   };
+}
 
-  if (tab.openerTabId && tabTree[tab.openerTabId]) {
-    // This is a child tab
-    tabTree[tab.openerTabId].children.push(newNode);
-  } else {
-    // This is a root tab
-    tabTree[tab.id] = newNode;
+function addTabToTree(tab, parentId = null) {
+  if (isExcluded(tab.url)) return;
+
+  const newNode = createNode(tab);
+  addNodeToTree(newNode, parentId);
+
+  if (!tabHistory[tab.id]) {
+    tabHistory[tab.id] = [];
   }
+  tabHistory[tab.id].push(newNode);
+
+  saveTabTree();
 }
 
 chrome.tabs.onCreated.addListener((tab) => {
   if (!extensionInitialized) return;
 
-  // Don't add the tab immediately, wait for it to load
-  chrome.tabs.onUpdated.addListener(function listener(tabId, info) {
-    if (tabId === tab.id && info.status === 'complete') {
-      chrome.tabs.get(tabId, (updatedTab) => {
-        if (!isExcluded(updatedTab.url)) {
-          addTabToTree(updatedTab);
-          saveTabTree();
-        }
-      });
-      chrome.tabs.onUpdated.removeListener(listener);
+  // If openerTabId is set, use it as the parent
+  if (tab.openerTabId) {
+    const parentHistory = tabHistory[tab.openerTabId];
+    if (parentHistory && parentHistory.length > 0) {
+      addTabToTree(tab, parentHistory[parentHistory.length - 1].id);
+    } else {
+      addTabToTree(tab);
     }
-  });
-});
-
-chrome.tabs.onActivated.addListener((activeInfo) => {
-  if (!extensionInitialized) return;
-
-  if (!tabTree[activeInfo.tabId]) {
-    // If the activated tab is not in our tree, add it
-    chrome.tabs.get(activeInfo.tabId, (tab) => {
-      if (!isExcluded(tab.url)) {
-        addTabToTree(tab);
-        saveTabTree();
-      }
-    });
+  } else {
+    addTabToTree(tab);
   }
 });
 
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
-  if (!extensionInitialized) return;
+  if (!extensionInitialized || changeInfo.status !== 'complete' || isExcluded(tab.url)) return;
 
-  if (changeInfo.status === 'complete' && !isExcluded(tab.url)) {
-    updateTabInfo(tabId, tab.url, tab.title);
+  const currentTabHistory = tabHistory[tabId];
+  if (currentTabHistory && currentTabHistory.length > 0) {
+    const lastNode = currentTabHistory[currentTabHistory.length - 1];
+    if (lastNode.url !== tab.url) {
+      // This is navigation within the same tab
+      addTabToTree(tab, lastNode.id);
+    }
+  } else {
+    // This is a new tab that we haven't seen before
+    addTabToTree(tab);
+  }
+});
+
+chrome.webNavigation.onCommitted.addListener((details) => {
+  if (!extensionInitialized || details.frameId !== 0 || isExcluded(details.url)) return;
+
+  if (details.transitionType === 'reload' || details.transitionQualifiers.includes('forward_back')) {
+    const history = tabHistory[details.tabId];
+    if (history) {
+      const index = history.findIndex(node => node.url === details.url);
+      if (index !== -1) {
+        // We've navigated back to a previous page
+        tabHistory[details.tabId] = history.slice(0, index + 1);
+        saveTabTree();
+      }
+    }
   }
 });
 
@@ -90,40 +139,22 @@ chrome.tabs.onRemoved.addListener((tabId) => {
   if (!extensionInitialized) return;
 
   updateTabClosedTime(tabId);
+  delete tabHistory[tabId];
 });
-
-function updateTabInfo(tabId, url, title) {
-  function updateNode(node) {
-    if (node.id === tabId) {
-      node.url = url;
-      node.title = title;
-      return true;
-    }
-    for (let child of node.children) {
-      if (updateNode(child)) {
-        return true;
-      }
-    }
-    return false;
-  }
-
-  for (let rootId in tabTree) {
-    if (updateNode(tabTree[rootId])) {
-      saveTabTree();
-      return;
-    }
-  }
-}
 
 function updateTabClosedTime(tabId) {
   function closeNode(node) {
-    if (node.id === tabId) {
-      node.closedAt = Date.now();
+    if (node.tabId === tabId) {
+      const timestamp = Date.now();
+      node.closedAt = timestamp;
+      node.closedAtHuman = getHumanReadableTime(timestamp);
       return true;
     }
-    for (let child of node.children) {
-      if (closeNode(child)) {
-        return true;
+    if (node.children) {
+      for (let child of node.children) {
+        if (closeNode(child)) {
+          return true;
+        }
       }
     }
     return false;
@@ -144,6 +175,7 @@ function saveTabTree() {
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (request.action === "clearTabTree") {
     tabTree = {};
+    tabHistory = {};
     saveTabTree();
     sendResponse({success: true});
   } else if (request.action === "getTabTree") {
@@ -151,6 +183,11 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   } else if (request.action === "updateConfig") {
     chrome.storage.local.set({ config: request.config }, () => {
       excludedDomains = request.config.excludedDomains || [];
+      sendResponse({success: true});
+    });
+  } else if (request.action === "updateTimeZone") {
+    userTimeZone = request.timeZone;
+    chrome.storage.local.set({ userTimeZone: userTimeZone }, () => {
       sendResponse({success: true});
     });
   }
