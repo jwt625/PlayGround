@@ -12,25 +12,15 @@ document.addEventListener('DOMContentLoaded', function() {
     function createTreeView(tree, element) {
       const ul = document.createElement('ul');
       Object.values(tree).forEach(node => {
-        if (!node.closedAt) {  // Only show open tabs in the main view
-          const li = document.createElement('li');
-          li.textContent = `${node.title} (${node.url})`;
-          if (node.children && node.children.length > 0) {
-            const childUl = document.createElement('ul');
-            node.children.forEach(childId => {
-              if (tree[childId]) {
-                const childLi = document.createElement('li');
-                childLi.textContent = `${tree[childId].title} (${tree[childId].url})`;
-                if (tree[childId].closedAt) {
-                  childLi.textContent += ` [Closed]`;
-                }
-                childUl.appendChild(childLi);
-              }
-            });
-            li.appendChild(childUl);
-          }
-          ul.appendChild(li);
+        const li = document.createElement('li');
+        li.textContent = `${node.title} (${node.url})`;
+        if (node.closedAt) {
+          li.textContent += ` [Closed]`;
         }
+        if (node.children && node.children.length > 0) {
+          createTreeView(node.children, li);
+        }
+        ul.appendChild(li);
       });
       element.appendChild(ul);
     }
@@ -58,8 +48,7 @@ document.addEventListener('DOMContentLoaded', function() {
         sendMessageWithRetry({action: "clearTabTree"}, 3)
           .then(response => {
             if (response && response.success) {
-              tabTreeElement.innerHTML = '';
-              alert('Tab tree cleared successfully!');
+              location.reload();  // Reload the popup to show the updated tree
             } else {
               alert('Failed to clear the tab tree. Please try again.');
             }
