@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Browser History Tree Visualization</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+        body { margin: 0; font-family: Arial, sans-serif; }
+        #tree-container { width: 100vw; height: 100vh; }
+        .node circle { fill: #fff; stroke: steelblue; stroke-width: 3px; }
+        .node text { font: 12px sans-serif; }
+        .link { fill: none; stroke: #ccc; stroke-width: 2px; }
+        .tooltip { position: absolute; background-color: white; padding: 10px; border: 1px solid #ddd; border-radius: 5px; pointer-events: none; }
+    </style>
+</head>
+<body>
+    <div id="tree-container"></div>
+    <script>
+        // Function to transform the data into a hierarchical structure
+        function transformData(data) {
+            const root = { id: "root", children: [] };
+            Object.values(data).forEach(item => {
+                const node = { ...item, name: item.title };
+                if (item.children) {
+                    node.children = item.children.map(child => ({
+                        ...child,
+                        name: child.title,
+                        children: child.children || []
+                    }));
+                }
+                root.children.push(node);
+            });
+            return root;
+        }
+
+        // Load the JSON file and create the visualization
+        d3.json("tabTree.json").then(data => {
+            const root = d3.hierarchy(transformData(data));
+
+            const width = window.innerWidth;
+            const height = window.innerHeight;
+
+            const svg = d3.select("#tree-container")
+                .append("svg")
+                .attr("width", width)
+                .attr("height", height)
+                .append("g")
+                .attr("transform", "translate(50,50)");
+
+            const tree = d3.tree().size([height - 100, width - 200]);
+            tree(root);
+
+            const link = svg.selectAll(".link")
+                .data(root.links())
+                .enter().append("path")
+                .attr("class", "link")
+                .attr("d", d3.linkHorizontal()
+                    .x(d => d.y)
+                    .y(d => d.x));
+
+            const node = svg.selectAll(".node")
+                .data(root.descendants())
+                .enter().append("g")
+                .attr("class", "node")
+                .attr("transform", d => `translate(${d.y},${d.x})`);
+
+            node.append("circle")
+                .attr("r", 10);
+
+            node.append("text")
+                .attr("dy", ".35em")
+                .attr("x", d => d.children ? -13 : 13)
+                .style("text-anchor", d => d.children ? "end" : "start")
+                .text(d => d.data.name.substring(0, 30));
+
+            // Add zoom behavior
+            const zoom = d3.zoom()
+                .scaleExtent([0.1, 3])
+                .on("zoom", (event) => {
+                    svg.attr("transform", event.transform);
+                });
+
+            d3.select("svg").call(zoom);
+
+            // Add tooltip
+            const tooltip = d3.select("body").append("div")
+                .attr("class", "tooltip")
+                .style("opacity", 0);
+
+            node.on("mouseover", (event, d) => {
+                tooltip.transition()
+                    .duration(200)
+                    .style("opacity", .9);
+                tooltip.html(`Title: ${d.data.title}<br/>URL: ${d.data.url}<br/>Created: ${d.data.createdAtHuman}`)
+                    .style("left", (event.pageX + 10) + "px")
+                    .style("top", (event.pageY - 28) + "px");
+            })
+            .on("mouseout", () => {
+                tooltip.transition()
+                    .duration(500)
+                    .style("opacity", 0);
+            });
+        }).catch(error => console.error('Error loading the JSON file:', error));
+    </script>
+</body>
+</html>
