@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Browser History Tree Visualization</title>
+    <title>Browser History Tree Visualization - Debug Version</title>
     <script src="https://d3js.org/d3.v7.min.js"></script>
     <style>
         body { margin: 0; font-family: Arial, sans-serif; }
@@ -19,18 +19,25 @@
     <script>
         // Function to transform the data into a hierarchical structure
         function transformData(data) {
+            console.log("Raw data:", data);
             const root = { id: "root", children: [] };
             Object.values(data).forEach(item => {
-                const node = { ...item, name: item.title };
-                if (item.children) {
+                console.log("Processing item:", item);
+                const node = { 
+                    ...item, 
+                    name: item.title || "Untitled",
+                    children: []
+                };
+                if (item.children && Array.isArray(item.children) && item.children.length > 0) {
                     node.children = item.children.map(child => ({
                         ...child,
-                        name: child.title,
+                        name: child.title || "Untitled",
                         children: child.children || []
                     }));
                 }
                 root.children.push(node);
             });
+            console.log("Transformed data:", root);
             return root;
         }
 
@@ -72,7 +79,30 @@
                 .attr("dy", ".35em")
                 .attr("x", d => d.children ? -13 : 13)
                 .style("text-anchor", d => d.children ? "end" : "start")
-                .text(d => d.data.name.substring(0, 30));
+                .text(d => {
+                    console.log("Node data:", d.data);
+                    return (d.data.name || "").substring(0, 10) + ((d.data.name || "").length > 10 ? "..." : "");
+                });
+
+            // Add tooltip
+            const tooltip = d3.select("body").append("div")
+                .attr("class", "tooltip")
+                .style("opacity", 0);
+
+            node.on("mouseover", function(event, d) {
+                console.log("Mouseover event:", d.data);
+                tooltip.transition()
+                    .duration(200)
+                    .style("opacity", .9);
+                tooltip.html(`Title: ${d.data.title || "N/A"}<br/>URL: ${d.data.url || "N/A"}<br/>Created: ${d.data.createdAtHuman || "N/A"}`)
+                    .style("left", (event.pageX + 10) + "px")
+                    .style("top", (event.pageY - 28) + "px");
+            })
+            .on("mouseout", function() {
+                tooltip.transition()
+                    .duration(500)
+                    .style("opacity", 0);
+            });
 
             // Add zoom behavior
             const zoom = d3.zoom()
@@ -83,24 +113,6 @@
 
             d3.select("svg").call(zoom);
 
-            // Add tooltip
-            const tooltip = d3.select("body").append("div")
-                .attr("class", "tooltip")
-                .style("opacity", 0);
-
-            node.on("mouseover", (event, d) => {
-                tooltip.transition()
-                    .duration(200)
-                    .style("opacity", .9);
-                tooltip.html(`Title: ${d.data.title}<br/>URL: ${d.data.url}<br/>Created: ${d.data.createdAtHuman}`)
-                    .style("left", (event.pageX + 10) + "px")
-                    .style("top", (event.pageY - 28) + "px");
-            })
-            .on("mouseout", () => {
-                tooltip.transition()
-                    .duration(500)
-                    .style("opacity", 0);
-            });
         }).catch(error => console.error('Error loading the JSON file:', error));
     </script>
 </body>
