@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Browser History Tree Visualization - Debug Version</title>
+    <title>Browser History Tree Visualization - All Nodes Labeled</title>
     <script src="https://d3js.org/d3.v7.min.js"></script>
     <style>
         body { margin: 0; font-family: Arial, sans-serif; }
@@ -19,10 +19,8 @@
     <script>
         // Function to transform the data into a hierarchical structure
         function transformData(data) {
-            console.log("Raw data:", data);
             const root = { id: "root", children: [] };
             Object.values(data).forEach(item => {
-                console.log("Processing item:", item);
                 const node = { 
                     ...item, 
                     name: item.title || "Untitled",
@@ -37,7 +35,7 @@
                 }
                 root.children.push(node);
             });
-            console.log("Transformed data:", root);
+            // console.log(root)
             return root;
         }
 
@@ -55,7 +53,10 @@
                 .append("g")
                 .attr("transform", "translate(50,50)");
 
-            const tree = d3.tree().size([height - 100, width - 200]);
+            const tree = d3.tree()
+                .size([height + 2000, width - 400])
+                .separation((a, b) => (a.parent == b.parent ? 1 : 2) / a.depth);
+
             tree(root);
 
             const link = svg.selectAll(".link")
@@ -64,13 +65,13 @@
                 .attr("class", "link")
                 .attr("d", d3.linkHorizontal()
                     .x(d => d.y)
-                    .y(d => d.x));
+                    .y(d => 2*d.x));
 
             const node = svg.selectAll(".node")
                 .data(root.descendants())
                 .enter().append("g")
                 .attr("class", "node")
-                .attr("transform", d => `translate(${d.y},${d.x})`);
+                .attr("transform", d => `translate(${d.y},${2*d.x})`);
 
             node.append("circle")
                 .attr("r", 10);
@@ -80,9 +81,12 @@
                 .attr("x", d => d.children ? -13 : 13)
                 .style("text-anchor", d => d.children ? "end" : "start")
                 .text(d => {
-                    console.log("Node data:", d.data);
-                    return (d.data.name || "").substring(0, 10) + ((d.data.name || "").length > 10 ? "..." : "");
-                });
+                    const name = d.data.name || "NULL";
+                    console.log(name)
+                    return name.substring(0, 10) + (name.length > 10 ? "..." : "");
+                })
+                .clone(true).lower()
+                .attr("stroke", "white");
 
             // Add tooltip
             const tooltip = d3.select("body").append("div")
@@ -90,7 +94,6 @@
                 .style("opacity", 0);
 
             node.on("mouseover", function(event, d) {
-                console.log("Mouseover event:", d.data);
                 tooltip.transition()
                     .duration(200)
                     .style("opacity", .9);
