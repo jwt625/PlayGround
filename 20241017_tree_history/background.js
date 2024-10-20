@@ -87,20 +87,37 @@ function addTabToTree(tab, parentId = null) {
   saveTabTree();
 }
 
+function updateNodeTitle(node, newTitle) {
+  node.title = newTitle;
+  saveTabTree();
+}
+
 chrome.tabs.onCreated.addListener((tab) => {
   if (!extensionInitialized) return;
 
-  // If openerTabId is set, use it as the parent
-  if (tab.openerTabId) {
-    const parentHistory = tabHistory[tab.openerTabId];
-    if (parentHistory && parentHistory.length > 0) {
-      addTabToTree(tab, parentHistory[parentHistory.length - 1].id);
-    } else {
-      addTabToTree(tab);
+  // Store the opener tab ID for later use
+  chrome.storage.local.set({ [`opener_${tab.id}`]: tab.openerTabId });
+
+  // Don't add the tab immediately, wait for it to load
+  chrome.tabs.onUpdated.addListener(function listener(tabId, info, updatedTab) {
+    if (tabId === tab.id && info.status === 'complete') {
+      chrome.storage.local.get(`opener_${tab.id}`, (result) => {
+        const openerTabId = result[`opener_${tab.id}`];
+        if (openerTabId) {
+          const parentHistory = tabHistory[openerTabId];
+          if (parentHistory && parentHistory.length > 0) {
+            addTabToTree(updatedTab, parentHistory[parentHistory.length - 1].id);
+          } else {
+            addTabToTree(updatedTab);
+          }
+          chrome.storage.local.remove(`opener_${tab.id}`);
+        } else {
+          addTabToTree(updatedTab);
+        }
+      });
+      chrome.tabs.onUpdated.removeListener(listener);
     }
-  } else {
-    addTabToTree(tab);
-  }
+  });
 });
 
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
@@ -113,12 +130,21 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
       // Check if we're navigating back to a previous page
       const existingIndex = currentTabHistory.findIndex(node => node.url === tab.url);
       if (existingIndex !== -1) {
-        // We're navigating back, truncate the history
+        // We're navigating back, truncate the history and update close times
+        const timestamp = Date.now();
+        for (let i = existingIndex + 1; i < currentTabHistory.length; i++) {
+          currentTabHistory[i].closedAt = timestamp;
+          currentTabHistory[i].closedAtHuman = getHumanReadableTime(timestamp);
+        }
         tabHistory[tabId] = currentTabHistory.slice(0, existingIndex + 1);
+        updateNodeTitle(tabHistory[tabId][existingIndex], tab.title);
       } else {
         // This is navigation to a new page
         addTabToTree(tab, lastNode.id);
       }
+    } else if (lastNode.title !== tab.title) {
+      // Update the title if it has changed
+      updateNodeTitle(lastNode, tab.title);
     }
   } else {
     // This is a new tab that we haven't seen before
@@ -129,13 +155,20 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
 chrome.webNavigation.onCommitted.addListener((details) => {
   if (!extensionInitialized || details.frameId !== 0 || isExcluded(details.url)) return;
 
-  if (details.transitionType === 'link' && details.transitionQualifiers.includes('from_address_bar')) {
-    // This is likely a "Go back" action
+  if (details.transitionType === 'link' && details.transitionQualifiers.includes('forward_back')) {
+    // This is likely a "Go back" or "Go forward" action
     const history = tabHistory[details.tabId];
     if (history) {
       const index = history.findIndex(node => node.url === details.url);
       if (index !== -1) {
-        // We've navigated back to a previous page
+        const timestamp = Date.now();
+        // Update close times for nodes we're moving past
+        if (index < history.length - 1) {
+          for (let i = index + 1; i < history.length; i++) {
+            history[i].closedAt = timestamp;
+            history[i].closedAtHuman = getHumanReadableTime(timestamp);
+          }
+        }
         tabHistory[details.tabId] = history.slice(0, index + 1);
         saveTabTree();
       }
