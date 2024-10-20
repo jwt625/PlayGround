@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Browser History Tree Visualization - All Nodes Labeled</title>
+    <title>Browser History Tree Visualization - With Layout Toggle</title>
     <script src="https://d3js.org/d3.v7.min.js"></script>
     <style>
         body { margin: 0; font-family: Arial, sans-serif; }
@@ -12,12 +12,15 @@
         .node text { font: 12px sans-serif; }
         .link { fill: none; stroke: #ccc; stroke-width: 2px; }
         .tooltip { position: absolute; background-color: white; padding: 10px; border: 1px solid #ddd; border-radius: 5px; pointer-events: none; }
+        #layout-toggle { position: absolute; top: 10px; left: 10px; }
     </style>
 </head>
 <body>
+    <button id="layout-toggle">Toggle Layout</button>
     <div id="tree-container"></div>
     <script>
-        // Function to transform the data into a hierarchical structure
+        let isHorizontal = true;
+
         function transformData(data) {
             const root = { id: "root", children: [] };
             Object.values(data).forEach(item => {
@@ -35,16 +38,14 @@
                 }
                 root.children.push(node);
             });
-            // console.log(root)
             return root;
         }
 
-        // Load the JSON file and create the visualization
-        d3.json("tabTree.json").then(data => {
-            const root = d3.hierarchy(transformData(data));
-
+        function updateLayout(root) {
             const width = window.innerWidth;
             const height = window.innerHeight;
+
+            d3.select("svg").remove();
 
             const svg = d3.select("#tree-container")
                 .append("svg")
@@ -54,8 +55,7 @@
                 .attr("transform", "translate(50,50)");
 
             const tree = d3.tree()
-                .size([height + 2000, width - 400])
-                .separation((a, b) => (a.parent == b.parent ? 1 : 2) / a.depth);
+                .size(isHorizontal ? [height - 100, width - 200] : [width - 200, height - 100]);
 
             tree(root);
 
@@ -63,32 +63,34 @@
                 .data(root.links())
                 .enter().append("path")
                 .attr("class", "link")
-                .attr("d", d3.linkHorizontal()
+                .attr("d", isHorizontal ? d3.linkHorizontal()
                     .x(d => d.y)
-                    .y(d => 2*d.x));
+                    .y(d => 2*d.x)
+                    : d3.linkVertical()
+                    .x(d => 2*d.x)
+                    .y(d => d.y));
 
             const node = svg.selectAll(".node")
                 .data(root.descendants())
                 .enter().append("g")
                 .attr("class", "node")
-                .attr("transform", d => `translate(${d.y},${2*d.x})`);
+                .attr("transform", d => isHorizontal ? `translate(${d.y},${2*d.x})` : `translate(${2*d.x},${d.y})`);
 
             node.append("circle")
                 .attr("r", 10);
 
             node.append("text")
                 .attr("dy", ".35em")
-                .attr("x", d => d.children ? -13 : 13)
-                .style("text-anchor", d => d.children ? "end" : "start")
+                .attr("x", d => isHorizontal ? (d.children ? -13 : 13) : 0)
+                .attr("y", d => isHorizontal ? 0 : (d.children ? -13 : 13))
+                .style("text-anchor", d => isHorizontal ? (d.children ? "end" : "start") : "middle")
                 .text(d => {
-                    const name = d.data.name || "NULL";
-                    console.log(name)
+                    const name = d.data.name || d.data.title || "Untitled";
                     return name.substring(0, 10) + (name.length > 10 ? "..." : "");
                 })
                 .clone(true).lower()
                 .attr("stroke", "white");
 
-            // Add tooltip
             const tooltip = d3.select("body").append("div")
                 .attr("class", "tooltip")
                 .style("opacity", 0);
@@ -107,7 +109,6 @@
                     .style("opacity", 0);
             });
 
-            // Add zoom behavior
             const zoom = d3.zoom()
                 .scaleExtent([0.1, 3])
                 .on("zoom", (event) => {
@@ -115,7 +116,17 @@
                 });
 
             d3.select("svg").call(zoom);
+        }
 
+        d3.json("tabTree.json").then(data => {
+            const root = d3.hierarchy(transformData(data));
+            
+            updateLayout(root);
+
+            d3.select("#layout-toggle").on("click", () => {
+                isHorizontal = !isHorizontal;
+                updateLayout(root);
+            });
         }).catch(error => console.error('Error loading the JSON file:', error));
     </script>
 </body>
