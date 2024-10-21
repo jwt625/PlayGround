@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Browser History Tree Visualization - With Layout Toggle</title>
+    <title>Browser History Tree Visualization - Enhanced</title>
     <script src="https://d3js.org/d3.v7.min.js"></script>
     <style>
         body { margin: 0; font-family: Arial, sans-serif; }
@@ -12,14 +12,19 @@
         .node text { font: 12px sans-serif; }
         .link { fill: none; stroke: #ccc; stroke-width: 2px; }
         .tooltip { position: absolute; background-color: white; padding: 10px; border: 1px solid #ddd; border-radius: 5px; pointer-events: none; }
-        #layout-toggle { position: absolute; top: 10px; left: 10px; }
+        #layout-toggle, #file-input { position: absolute; top: 10px; }
+        #layout-toggle { left: 10px; }
+        #file-input { left: 120px; }
+        .tooltip a { color: blue; }
     </style>
 </head>
 <body>
     <button id="layout-toggle">Toggle Layout</button>
+    <input type="file" id="file-input" accept=".json">
     <div id="tree-container"></div>
     <script>
         let isHorizontal = true;
+        let root;
 
         function transformData(data) {
             const root = { id: "root", children: [] };
@@ -41,7 +46,7 @@
             return root;
         }
 
-        function updateLayout(root) {
+        function updateLayout() {
             const width = window.innerWidth;
             const height = window.innerHeight;
 
@@ -76,6 +81,13 @@
                 .attr("class", "node")
                 .attr("transform", d => isHorizontal ? `translate(${d.y},${2*d.x})` : `translate(${2*d.x},${d.y})`);
 
+            node.style("cursor", "pointer")
+                .on("click", function(event, d) {
+                    if (d.data.url) {
+                        window.open(d.data.url, '_blank');
+                    }
+                });
+
             node.append("circle")
                 .attr("r", 10);
 
@@ -99,14 +111,20 @@
                 tooltip.transition()
                     .duration(200)
                     .style("opacity", .9);
-                tooltip.html(`Title: ${d.data.title || "N/A"}<br/>URL: ${d.data.url || "N/A"}<br/>Created: ${d.data.createdAtHuman || "N/A"}`)
+                tooltip.html(`
+                    Title: ${d.data.title || "N/A"}<br/>
+                    URL: <a href="${d.data.url || "#"}" target="_blank">${d.data.url || "N/A"}</a><br/>
+                    Created: ${d.data.createdAtHuman || "N/A"}
+                `)
                     .style("left", (event.pageX + 10) + "px")
                     .style("top", (event.pageY - 28) + "px");
             })
             .on("mouseout", function() {
-                tooltip.transition()
-                    .duration(500)
-                    .style("opacity", 0);
+                setTimeout(() => {
+                    tooltip.transition()
+                        .duration(500)
+                        .style("opacity", 0);
+                }, 1000);
             });
 
             const zoom = d3.zoom()
@@ -118,16 +136,39 @@
             d3.select("svg").call(zoom);
         }
 
-        d3.json("tabTree.json").then(data => {
-            const root = d3.hierarchy(transformData(data));
-            
-            updateLayout(root);
+        function loadTreeFromFile(file) {
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                try {
+                    const data = JSON.parse(event.target.result);
+                    root = d3.hierarchy(transformData(data));
+                    updateLayout();
+                } catch (error) {
+                    console.error("Error parsing JSON file:", error);
+                    alert("Error loading file. Please make sure it's a valid JSON file.");
+                }
+            };
+            reader.readAsText(file);
+        }
 
-            d3.select("#layout-toggle").on("click", () => {
-                isHorizontal = !isHorizontal;
-                updateLayout(root);
-            });
+        // Initial load with default file
+        d3.json("tabTree.json").then(data => {
+            root = d3.hierarchy(transformData(data));
+            updateLayout();
         }).catch(error => console.error('Error loading the JSON file:', error));
+
+        // Event listeners
+        d3.select("#layout-toggle").on("click", () => {
+            isHorizontal = !isHorizontal;
+            updateLayout();
+        });
+
+        d3.select("#file-input").on("change", function() {
+            const file = this.files[0];
+            if (file) {
+                loadTreeFromFile(file);
+            }
+        });
     </script>
 </body>
 </html>
