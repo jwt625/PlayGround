@@ -1,24 +1,198 @@
+
+// State variables
 let tabTree = {};
 let excludedDomains = [];
 let extensionInitialized = false;
 let tabHistory = {};
 let userTimeZone = 'UTC'; // Default to UTC
 let isTracking = false; // New tracking state
+let trackingCheckInterval = null;
 
-// Load configuration and existing tabTree
-chrome.storage.local.get(['config', 'tabTree', 'userTimeZone'], (result) => {
-  if (result.config) {
-    excludedDomains = result.config.excludedDomains || [];
+// Initialize tracking check interval
+function initTrackingCheck() {
+  if (trackingCheckInterval) {
+    clearInterval(trackingCheckInterval);
   }
-  if (result.tabTree) {
-    tabTree = result.tabTree;
+  
+  trackingCheckInterval = setInterval(() => {
+    if (isTracking) {
+      // Verify tracking state and reinitialize if needed
+      chrome.storage.local.get(['isTracking'], (result) => {
+        if (result.isTracking !== isTracking) {
+          console.log('Tracking state mismatch detected, reinitializing...');
+          initializeExtension();
+        }
+      });
+    }
+  }, 60000); // Check every minute
+}
+
+// Function to update extension icon
+function updateIcon(tracking) {
+  const iconPath = tracking ? {
+    16: 'icons/active_16.png',
+    32: 'icons/active_32.png',
+    48: 'icons/active_48.png',
+    128: 'icons/active_128.png'
+  } : {
+    16: 'icons/inactive_16.png',
+    32: 'icons/inactive_32.png',
+    48: 'icons/inactive_48.png',
+    128: 'icons/inactive_128.png'
+  };
+  
+  chrome.action.setIcon({ path: iconPath });
+}
+
+// Single initialization function
+async function initializeExtension() {
+  try {
+    const result = await chrome.storage.local.get(['config', 'tabTree', 'userTimeZone', 'isTracking']);
+    
+    if (result.config) {
+      excludedDomains = result.config.excludedDomains || [];
+    }
+    if (result.tabTree) {
+      tabTree = result.tabTree;
+    }
+    if (result.userTimeZone) {
+      userTimeZone = result.userTimeZone;
+    }
+    isTracking = result.isTracking || false;
+    
+    updateIcon(isTracking);
+    initTrackingCheck();
+    extensionInitialized = true;
+    
+    // Log initialization status
+    console.log('Extension initialized:', {
+      isTracking,
+      domainsCount: excludedDomains.length,
+      treeSize: Object.keys(tabTree).length
+    });
+  } catch (error) {
+    console.error('Initialization error:', error);
   }
-  if (result.userTimeZone) {
-    userTimeZone = result.userTimeZone;
-  }
-  isTracking = result.isTracking || false; // Load tracking state
-  extensionInitialized = true;
+}
+
+// Initialize event listeners
+function initializeEventListeners() {
+  // Tab creation listener
+  chrome.tabs.onCreated.addListener((tab) => {
+    if (!extensionInitialized || !isTracking) return;
+    
+    try {
+      chrome.storage.local.set({ [`opener_${tab.id}`]: tab.openerTabId });
+      
+      function updateListener(tabId, info, updatedTab) {
+        if (tabId === tab.id && info.status === 'complete') {
+          chrome.storage.local.get(`opener_${tab.id}`, async (result) => {
+            const openerTabId = result[`opener_${tab.id}`];
+            if (openerTabId) {
+              const parentHistory = tabHistory[openerTabId];
+              if (parentHistory && parentHistory.length > 0) {
+                await addTabToTree(updatedTab, parentHistory[parentHistory.length - 1].id);
+              } else {
+                await addTabToTree(updatedTab);
+              }
+              chrome.storage.local.remove(`opener_${tab.id}`);
+            } else {
+              await addTabToTree(updatedTab);
+            }
+          });
+          chrome.tabs.onUpdated.removeListener(updateListener);
+        }
+      }
+      
+      chrome.tabs.onUpdated.addListener(updateListener);
+    } catch (error) {
+      console.error('Error in onCreated listener:', error);
+    }
+  });
+
+  // Tab update listener
+  chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
+    if (!extensionInitialized || !isTracking || changeInfo.status !== 'complete' || isExcluded(tab.url)) return;
+    
+    const currentTabHistory = tabHistory[tabId];
+    if (currentTabHistory?.length > 0) {
+      const lastNode = currentTabHistory[currentTabHistory.length - 1];
+      if (lastNode.url !== tab.url) {
+        const existingIndex = currentTabHistory.findIndex(node => node.url === tab.url);
+        if (existingIndex !== -1) {
+          handleExistingTab(currentTabHistory, existingIndex, tab, tabId);
+        } else {
+          addTabToTree(tab, lastNode.id);
+        }
+      } else if (lastNode.title !== tab.title) {
+        updateNodeTitle(lastNode, tab.title);
+      }
+    } else {
+      addTabToTree(tab);
+    }
+  });
+
+  // Navigation listener
+  chrome.webNavigation.onCommitted.addListener((details) => {
+    if (!extensionInitialized || !isTracking || details.frameId !== 0 || isExcluded(details.url)) return;
+    
+    if (details.transitionType === 'link' && details.transitionQualifiers.includes('forward_back')) {
+      handleNavigationChange(details);
+    }
+  });
+
+  // Tab removal listener
+  chrome.tabs.onRemoved.addListener((tabId) => {
+    if (!extensionInitialized || !isTracking) return;
+    updateTabClosedTime(tabId);
+    delete tabHistory[tabId];
+  });
+
+  // Message listener
+  chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+    if (request.action === "toggleTracking") {
+      toggleTracking()
+        .then(response => sendResponse(response))
+        .catch(error => sendResponse({ error: error.message }));
+      return true;
+    }
+    
+    // Handle other messages
+    handleOtherMessages(request, sendResponse);
+    return true;
+  });
+
+  // Alarm for state verification
+  chrome.alarms.create('verifyTrackingState', { periodInMinutes: 1 });
+  chrome.alarms.onAlarm.addListener((alarm) => {
+    if (alarm.name === 'verifyTrackingState') {
+      chrome.storage.local.get(['isTracking'], (result) => {
+        if (result.isTracking !== isTracking) {
+          console.log('Tracking state mismatch detected, reinitializing...');
+          initializeExtension();
+        }
+      });
+    }
+  });
+}
+
+// Start initialization
+initializeExtension().then(() => {
+  initializeEventListeners();
 });
+
+// Initialize on install or update
+chrome.runtime.onInstalled.addListener(() => {
+  initializeExtension().then(() => {
+    initializeEventListeners();
+  });
+});
+
+// [Rest of your existing helper functions remain the same]
+// (isExcluded, getHumanReadableTime, findNodeById, addNodeToTree, createNode,
+// addTabToTree, analyzePageContent, getWordFrequency, updateTabClosedTime,
+// saveTabTree, etc.)
+
 
 function isExcluded(url) {
   if (!url) return true; // Exclude empty tabs
@@ -45,19 +219,40 @@ function findNodeById(tree, id) {
   return null;
 }
 
+// Add this function to check for duplicate nodes
+function isDuplicateNode(newNode, existingNode) {
+  return newNode.url === existingNode.url && 
+         Math.abs(newNode.createdAt - existingNode.createdAt) < 1000; // Within 1 second
+}
+
+
 function addNodeToTree(node, parentId = null) {
   if (parentId) {
     for (let rootId in tabTree) {
       const parentNode = findNodeById(tabTree[rootId], parentId);
       if (parentNode) {
         if (!parentNode.children) parentNode.children = [];
-        parentNode.children.push(node);
+          // Check for duplicates in children
+          const isDuplicate = parentNode.children.some(child => 
+            isDuplicateNode(node, child)
+          );
+          
+          if (!isDuplicate) {
+            parentNode.children.push(node);
+        }
         return;
       }
     }
   }
   // If no parent found or parentId is null, add as root node
-  tabTree[node.id] = node;
+  // Check for duplicates in root nodes
+  const isDuplicate = Object.values(tabTree).some(existingNode => 
+    isDuplicateNode(node, existingNode)
+  );
+  
+  if (!isDuplicate) {
+    tabTree[node.id] = node;
+  }
 }
 
 // Update createNode function to include word frequency
@@ -77,26 +272,45 @@ function createNode(tab) {
   };
 }
 
+// Modified addTabToTree function with debouncing
+let addTabDebounceTimers = {};
 // Update addTabToTree to include word frequency analysis
 async function addTabToTree(tab, parentId = null) {
   if (isExcluded(tab.url)) return;
 
-  const newNode = createNode(tab);
-  
-  // Analyze page content
-  const wordFrequency = await analyzePageContent(tab.id);
-  if (wordFrequency) {
-    newNode.topWords = wordFrequency;
+  // Clear any existing timer for this tab
+  if (addTabDebounceTimers[tab.id]) {
+    clearTimeout(addTabDebounceTimers[tab.id]);
   }
 
-  addNodeToTree(newNode, parentId);
+  // Set a new timer
+  addTabDebounceTimers[tab.id] = setTimeout(async () => {
+    const newNode = createNode(tab);
+    
+    // Analyze page content
+    const wordFrequency = await analyzePageContent(tab.id);
+    if (wordFrequency) {
+      newNode.topWords = wordFrequency;
+    }
 
-  if (!tabHistory[tab.id]) {
-    tabHistory[tab.id] = [];
-  }
-  tabHistory[tab.id].push(newNode);
+    addNodeToTree(newNode, parentId);
 
-  saveTabTree();
+    if (!tabHistory[tab.id]) {
+      tabHistory[tab.id] = [];
+    }
+    
+    // Check for duplicates in tab history
+    const isDuplicate = tabHistory[tab.id].some(historyNode => 
+      isDuplicateNode(newNode, historyNode)
+    );
+    
+    if (!isDuplicate) {
+      tabHistory[tab.id].push(newNode);
+      saveTabTree();
+    }
+    
+    delete addTabDebounceTimers[tab.id];
+  }, 100); // 100ms debounce time
 }
 
 chrome.tabs.onCreated.addListener((tab) => {
@@ -185,6 +399,11 @@ chrome.webNavigation.onCommitted.addListener((details) => {
 
 chrome.tabs.onRemoved.addListener((tabId) => {
   if (!extensionInitialized || !isTracking) return;
+  
+  if (addTabDebounceTimers[tabId]) {
+    clearTimeout(addTabDebounceTimers[tabId]);
+    delete addTabDebounceTimers[tabId];
+  }
 
   updateTabClosedTime(tabId);
   delete tabHistory[tabId];
@@ -339,6 +558,7 @@ function saveTabTree() {
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (request.action === "toggleTracking") {
     isTracking = !isTracking;
+    updateIcon(isTracking); // update icon
     chrome.storage.local.set({ isTracking: isTracking });
     sendResponse({ isTracking: isTracking });
   } else if (request.action === "getTrackingStatus") {
