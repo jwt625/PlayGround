@@ -212,14 +212,70 @@ async function analyzePageContent(tabId) {
 
 // Function to be injected into the page
 function getWordFrequency() {
-  // Common English stop words to exclude
+  // Comprehensive list of English stop words
   const stopWords = new Set([
-    'a', 'an', 'and', 'are', 'as', 'at', 'be', 'by', 'for', 'from', 'has', 'he',
-    'in', 'is', 'it', 'its', 'of', 'on', 'that', 'the', 'to', 'was', 'were',
-    'will', 'with', 'the', 'this', 'but', 'they', 'have', 'had', 'what', 'when',
-    'where', 'who', 'which', 'why', 'how', 'all', 'any', 'both', 'each', 'few',
-    'more', 'most', 'other', 'some', 'such', 'no', 'nor', 'not', 'only', 'own',
-    'same', 'so', 'than', 'too', 'very'
+    // Articles and basic prepositions
+    'a', 'an', 'the', 'and', 'or', 'but', 'in', 'on', 'at', 'by', 'for', 'with', 'about',
+    'against', 'between', 'into', 'through', 'during', 'before', 'after', 'above', 'below',
+    'to', 'from', 'up', 'down', 'of', 'off',
+    
+    // Pronouns and their variants
+    'i', 'me', 'my', 'mine', 'myself',
+    'you', 'your', 'yours', 'yourself', 'yourselves',
+    'he', 'him', 'his', 'himself',
+    'she', 'her', 'hers', 'herself',
+    'it', 'its', 'itself',
+    'we', 'us', 'our', 'ours', 'ourselves',
+    'they', 'them', 'their', 'theirs', 'themselves',
+    'this', 'that', 'these', 'those',
+    'who', 'whom', 'whose', 'which', 'what',
+    
+    // Verbs and verb forms
+    'am', 'is', 'are', 'was', 'were', 'be', 'been', 'being',
+    'have', 'has', 'had', 'having', 'do', 'does', 'did', 'doing',
+    'would', 'should', 'could', 'might', 'must', 'can', 'will',
+    'shall', 'may', 'ought',
+    
+    // Common contractions
+    "i'm", "i've", "i'll", "i'd",
+    "you're", "you've", "you'll", "you'd",
+    "he's", "he'll", "he'd",
+    "she's", "she'll", "she'd",
+    "it's", "it'll", "it'd",
+    "we're", "we've", "we'll", "we'd",
+    "they're", "they've", "they'll", "they'd",
+    "that's", "that'll", "that'd",
+    "who's", "who'll", "who'd",
+    "what's", "what're", "what'll", "what'd",
+    "where's", "where'll", "where'd",
+    "when's", "when'll", "when'd",
+    "why's", "why'll", "why'd",
+    "how's", "how'll", "how'd",
+    "ain't", "isn't", "aren't", "wasn't", "weren't",
+    "hasn't", "haven't", "hadn't",
+    "doesn't", "don't", "didn't",
+    "won't", "wouldn't", "shan't", "shouldn't",
+    "can't", "cannot", "couldn't",
+    "mustn't", "mightn't",
+    
+    // Common adverbs and adjectives
+    'just', 'very', 'quite', 'rather', 'somewhat',
+    'more', 'most', 'much', 'many', 'some', 'few', 'all', 'any', 'enough',
+    'such', 'same', 'different', 'other', 'another', 'each', 'every', 'either',
+    'neither', 'several', 'both', 'else',
+    'here', 'there', 'where', 'when', 'why', 'how',
+    'again', 'ever', 'never', 'always', 'sometimes', 'often', 'usually',
+    'already', 'still', 'now', 'then', 'once', 'twice',
+    'only', 'even', 'also', 'too', 'instead', 'rather',
+    
+    // Miscellaneous common words
+    'like', 'well', 'back', 'there', 'still', 'yet', 'else', 'further',
+    'since', 'while', 'whether', 'though', 'although', 'unless',
+    'however', 'moreover', 'therefore', 'hence', 'furthermore',
+    'otherwise', 'nevertheless', 'meanwhile', 'afterward', 'afterwards',
+    'yes', 'no', 'not', 'nor', 'none', 'nothing', 'nobody',
+    'anywhere', 'everywhere', 'somewhere', 'nowhere',
+    'among', 'beside', 'besides', 'beyond', 'within', 'without'
   ]);
 
   // Get all text content from the page
