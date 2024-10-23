@@ -18,3 +18,7 @@
 *.txt
 *.wmv
 *.mp3
+
+# track extension icons
+!20241017_tree_history/icons/active_*.png
+!20241017_tree_history/icons/inactive_*.png
