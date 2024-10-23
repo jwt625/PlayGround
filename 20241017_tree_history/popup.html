@@ -1,18 +1,50 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Tab Tree Tracker</title>
   <style>
-    body { width: 300px; font-family: Arial, sans-serif; }
-    ul { list-style-type: none; padding-left: 20px; }
-    button { margin: 10px 5px; }
+    body {
+      width: 400px;
+      padding: 10px;
+    }
+    .control-panel {
+      margin-bottom: 15px;
+      padding: 10px;
+      background-color: #f5f5f5;
+      border-radius: 4px;
+    }
+    .status {
+      display: inline-block;
+      margin-left: 10px;
+      font-weight: bold;
+    }
+    .status.active {
+      color: green;
+    }
+    .status.inactive {
+      color: red;
+    }
+    button {
+      margin: 5px;
+      padding: 5px 10px;
+    }
+    #tabTree {
+      margin-top: 15px;
+      max-height: 400px;
+      overflow-y: auto;
+    }
   </style>
 </head>
 <body>
-  <h1>Tab Tree</h1>
-  <div id="tabTree"></div>
+  <div class="control-panel">
+    <button id="toggleTracking">Start Tracking</button>
+    <span id="trackingStatus" class="status inactive">Not Tracking</span>
+  </div>
+  
   <button id="saveButton">Save Tree</button>
   <button id="clearButton">Clear Tree</button>
+  
+  <div id="tabTree"></div>
+  
   <script src="popup.js"></script>
 </body>
 </html>

@@ -3,6 +3,7 @@ let excludedDomains = [];
 let extensionInitialized = false;
 let tabHistory = {};
 let userTimeZone = 'UTC'; // Default to UTC
+let isTracking = false; // New tracking state
 
 // Load configuration and existing tabTree
 chrome.storage.local.get(['config', 'tabTree', 'userTimeZone'], (result) => {
@@ -15,6 +16,7 @@ chrome.storage.local.get(['config', 'tabTree', 'userTimeZone'], (result) => {
   if (result.userTimeZone) {
     userTimeZone = result.userTimeZone;
   }
+  isTracking = result.isTracking || false; // Load tracking state
   extensionInitialized = true;
 });
 
@@ -58,10 +60,11 @@ function addNodeToTree(node, parentId = null) {
   tabTree[node.id] = node;
 }
 
+// Update createNode function to include word frequency
 function createNode(tab) {
   const timestamp = Date.now();
   return {
-    id: `${tab.id}-${timestamp}`, // Unique ID for each node
+    id: `${tab.id}-${timestamp}`,
     tabId: tab.id,
     url: tab.url,
     title: tab.title,
@@ -69,14 +72,23 @@ function createNode(tab) {
     createdAtHuman: getHumanReadableTime(timestamp),
     closedAt: null,
     closedAtHuman: null,
-    children: []
+    children: [],
+    topWords: null // Will be populated after analysis
   };
 }
 
-function addTabToTree(tab, parentId = null) {
+// Update addTabToTree to include word frequency analysis
+async function addTabToTree(tab, parentId = null) {
   if (isExcluded(tab.url)) return;
 
   const newNode = createNode(tab);
+  
+  // Analyze page content
+  const wordFrequency = await analyzePageContent(tab.id);
+  if (wordFrequency) {
+    newNode.topWords = wordFrequency;
+  }
+
   addNodeToTree(newNode, parentId);
 
   if (!tabHistory[tab.id]) {
@@ -87,13 +99,8 @@ function addTabToTree(tab, parentId = null) {
   saveTabTree();
 }
 
-function updateNodeTitle(node, newTitle) {
-  node.title = newTitle;
-  saveTabTree();
-}
-
 chrome.tabs.onCreated.addListener((tab) => {
-  if (!extensionInitialized) return;
+  if (!extensionInitialized || !isTracking) return; // Add tracking check
 
   // Store the opener tab ID for later use
   chrome.storage.local.set({ [`opener_${tab.id}`]: tab.openerTabId });
@@ -121,7 +128,7 @@ chrome.tabs.onCreated.addListener((tab) => {
 });
 
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
-  if (!extensionInitialized || changeInfo.status !== 'complete' || isExcluded(tab.url)) return;
+  if (!extensionInitialized || !isTracking || changeInfo.status !== 'complete' || isExcluded(tab.url)) return;
 
   const currentTabHistory = tabHistory[tabId];
   if (currentTabHistory && currentTabHistory.length > 0) {
@@ -153,7 +160,7 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
 });
 
 chrome.webNavigation.onCommitted.addListener((details) => {
-  if (!extensionInitialized || details.frameId !== 0 || isExcluded(details.url)) return;
+  if (!extensionInitialized || !isTracking || details.frameId !== 0 || isExcluded(details.url)) return;
 
   if (details.transitionType === 'link' && details.transitionQualifiers.includes('forward_back')) {
     // This is likely a "Go back" or "Go forward" action
@@ -177,11 +184,71 @@ chrome.webNavigation.onCommitted.addListener((details) => {
 });
 
 chrome.tabs.onRemoved.addListener((tabId) => {
-  if (!extensionInitialized) return;
+  if (!extensionInitialized || !isTracking) return;
 
   updateTabClosedTime(tabId);
   delete tabHistory[tabId];
 });
+
+
+// Add functions for word frequency analysis
+async function analyzePageContent(tabId) {
+  if (!isTracking) return null;
+  
+  // Inject content script to analyze the page
+  try {
+    const [{ result }] = await chrome.scripting.executeScript({
+      target: { tabId: tabId },
+      func: getWordFrequency,
+    });
+    return result;
+  } catch (error) {
+    console.error('Error analyzing page content:', error);
+    return null;
+  }
+}
+
+
+
+// Function to be injected into the page
+function getWordFrequency() {
+  // Common English stop words to exclude
+  const stopWords = new Set([
+    'a', 'an', 'and', 'are', 'as', 'at', 'be', 'by', 'for', 'from', 'has', 'he',
+    'in', 'is', 'it', 'its', 'of', 'on', 'that', 'the', 'to', 'was', 'were',
+    'will', 'with', 'the', 'this', 'but', 'they', 'have', 'had', 'what', 'when',
+    'where', 'who', 'which', 'why', 'how', 'all', 'any', 'both', 'each', 'few',
+    'more', 'most', 'other', 'some', 'such', 'no', 'nor', 'not', 'only', 'own',
+    'same', 'so', 'than', 'too', 'very'
+  ]);
+
+  // Get all text content from the page
+  const text = document.body.innerText;
+  
+  // Split into words, convert to lowercase, and filter
+  const words = text.toLowerCase()
+    .replace(/[^a-z0-9\s]/g, '') // Remove punctuation and special characters
+    .split(/\s+/) // Split on whitespace
+    .filter(word => 
+      word.length > 2 && // Skip very short words
+      !stopWords.has(word) && // Skip stop words
+      !/^\d+$/.test(word) // Skip pure numbers
+    );
+
+  // Count word frequencies
+  const frequencyMap = {};
+  words.forEach(word => {
+    frequencyMap[word] = (frequencyMap[word] || 0) + 1;
+  });
+
+  // Get top 5 words by frequency
+  return Object.entries(frequencyMap)
+    .sort(([,a], [,b]) => b - a)
+    .slice(0, 5)
+    .map(([word, count]) => ({ word, count }));
+}
+
+
 
 function updateTabClosedTime(tabId) {
   function closeNode(node) {
@@ -214,6 +281,14 @@ function saveTabTree() {
 }
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+  if (request.action === "toggleTracking") {
+    isTracking = !isTracking;
+    chrome.storage.local.set({ isTracking: isTracking });
+    sendResponse({ isTracking: isTracking });
+  } else if (request.action === "getTrackingStatus") {
+    sendResponse({ isTracking: isTracking });
+  } 
+
   if (request.action === "clearTabTree") {
     tabTree = {};
     tabHistory = {};

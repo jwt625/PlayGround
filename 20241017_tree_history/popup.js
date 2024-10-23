@@ -1,4 +1,27 @@
 document.addEventListener('DOMContentLoaded', function() {
+  // Get initial tracking status
+  chrome.runtime.sendMessage({action: "getTrackingStatus"}, function(response) {
+    updateTrackingUI(response.isTracking);
+  });
+
+  // Set up tracking toggle
+  const toggleButton = document.getElementById('toggleTracking');
+  toggleButton.addEventListener('click', function() {
+    chrome.runtime.sendMessage({action: "toggleTracking"}, function(response) {
+      updateTrackingUI(response.isTracking);
+    });
+  });
+
+  function updateTrackingUI(isTracking) {
+    const toggleButton = document.getElementById('toggleTracking');
+    const statusElement = document.getElementById('trackingStatus');
+    
+    toggleButton.textContent = isTracking ? 'Stop Tracking' : 'Start Tracking';
+    statusElement.textContent = isTracking ? 'Tracking Active' : 'Not Tracking';
+    statusElement.className = `status ${isTracking ? 'active' : 'inactive'}`;
+  }
+
+  // Get and display tab tree
   chrome.runtime.sendMessage({action: "getTabTree"}, function(response) {
     if (chrome.runtime.lastError) {
       console.error(chrome.runtime.lastError);
@@ -13,10 +36,26 @@ document.addEventListener('DOMContentLoaded', function() {
       const ul = document.createElement('ul');
       Object.values(tree).forEach(node => {
         const li = document.createElement('li');
-        li.textContent = `${node.title} (${node.url})`;
+        
+        // Create main node text
+        const nodeText = document.createElement('div');
+        nodeText.textContent = `${node.title} (${node.url})`;
         if (node.closedAt) {
-          li.textContent += ` [Closed]`;
+          nodeText.textContent += ` [Closed]`;
         }
+        
+        // Add word frequency if available
+        if (node.topWords && node.topWords.length > 0) {
+          const wordFreq = document.createElement('div');
+          wordFreq.style.fontSize = '0.8em';
+          wordFreq.style.color = '#666';
+          wordFreq.textContent = 'Top words: ' + 
+            node.topWords.map(w => `${w.word}(${w.count})`).join(', ');
+          nodeText.appendChild(wordFreq);
+        }
+        
+        li.appendChild(nodeText);
+        
         if (node.children && node.children.length > 0) {
           createTreeView(node.children, li);
         }
