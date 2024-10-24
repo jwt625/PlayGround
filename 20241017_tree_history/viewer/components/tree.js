@@ -22,6 +22,7 @@ export class TreeVisualizer {
       this.render();
     });
   }
+
   init() {
     // Clear any existing content
     this.container.innerHTML = '';
@@ -45,8 +46,6 @@ export class TreeVisualizer {
     this.render();
   }
 
-  
-  // Add text wrapping helper function
   wrapText(text) {
     if (!text) return [''];
     
@@ -61,9 +60,7 @@ export class TreeVisualizer {
         lines.push(currentLine);
         currentLine = words[i];
         
-        // Check if we've reached max lines
         if (lines.length >= this.options.maxLines - 1) {
-          // Add last line with ellipsis if there are more words
           if (i < words.length - 1) {
             currentLine = currentLine + '...';
           }
@@ -90,11 +87,16 @@ export class TreeVisualizer {
     this.treeLayout = d3.tree()
       .size(isVertical ? [width, height] : [height, width])
       .separation((a, b) => {
-        return (a.parent === b.parent ? 1.5 : 2); // Increased separation for wrapped text
+        return (a.parent === b.parent ? 1.5 : 2);
       });
 
     const root = d3.hierarchy(this.data);
     const treeData = this.treeLayout(root);
+
+    // Define transition
+    const transition = d3.transition()
+      .duration(750)
+      .ease(d3.easeQuadInOut);
 
     // Links
     const linkGenerator = isVertical ? 
@@ -107,99 +109,126 @@ export class TreeVisualizer {
 
     const links = this.linksGroup
       .selectAll('.link')
-      .data(treeData.links(), d => d.target.data.name + d.source.data.name);
+      .data(treeData.links(), d => {
+        return `${d.source.data.name}-${d.source.depth}-${d.target.data.name}-${d.target.depth}`;
+      });
 
-    links.exit().remove();
+    // Remove old links with transition
+    links.exit()
+      .transition(transition)
+      .style('opacity', 0)
+      .remove();
 
+    // Add new links with starting position
     const linksEnter = links
       .enter()
       .append('path')
       .attr('class', 'link')
       .attr('stroke', '#ccc')
       .attr('stroke-width', 2)
-      .attr('fill', 'none');
+      .attr('fill', 'none')
+      .style('opacity', 0)
+      .attr('d', d => {
+        const o = {
+          x: d.source.x0 || d.source.x || 0,
+          y: d.source.y0 || d.source.y || 0
+        };
+        return linkGenerator({source: o, target: o});
+      });
 
+    // Update all links with transition
     links.merge(linksEnter)
-      .transition()
-      .duration(750)
+      .transition(transition)
+      .style('opacity', 1)
       .attr('d', linkGenerator);
 
     // Nodes
     const nodes = this.nodesGroup
       .selectAll('.node')
-      .data(treeData.descendants(), d => d.data.name);
+      .data(treeData.descendants(), d => {
+        return `${d.data.name}-${d.depth}-${d.parent?.data.name || 'root'}`;
+      });
 
-    nodes.exit().remove();
+    // Remove old nodes with transition
+    nodes.exit()
+      .transition(transition)
+      .style('opacity', 0)
+      .remove();
 
-    // Create new nodes
+    // Create new nodes with starting position
     const nodesEnter = nodes
       .enter()
       .append('g')
       .attr('class', 'node')
-      .attr('cursor', 'pointer');
+      .style('opacity', 0)
+      .attr('transform', d => {
+        const x = d.parent?.x0 || d.parent?.x || d.x || 0;
+        const y = d.parent?.y0 || d.parent?.y || d.y || 0;
+        return isVertical ? 
+          `translate(${x},${y})` : 
+          `translate(${y},${x})`;
+      });
 
     // Add circles to new nodes
     nodesEnter
       .append('circle')
       .attr('r', this.options.nodeSize / 2)
       .attr('fill', '#fff')
-      .attr('stroke', '#1a73e8')
+      .attr('stroke', d => d.data.url ? '#1a73e8' : '#666')
       .attr('stroke-width', 2)
+      .style('cursor', d => d.data.url ? 'pointer' : 'default')
       .on('click', (event, d) => {
-        if (this.options.onNodeClick) {
-          this.options.onNodeClick(d.data);
-        }
-      });
-
-    // Create clickable link group
-    const linkGroup = nodesEnter
-      .append('g')
-      .attr('class', 'link-group')
-      .on('click', (event, d) => {
-        event.stopPropagation(); // Prevent node click handler
+        event.stopPropagation();
         if (d.data.url) {
           window.open(d.data.url, '_blank');
         }
+      })
+      .on('mouseover', function() {
+        d3.select(this)
+          .transition()
+          .duration(200)
+          .attr('fill', '#f0f7ff');
+      })
+      .on('mouseout', function() {
+        d3.select(this)
+          .transition()
+          .duration(200)
+          .attr('fill', '#fff');
       });
 
-    // Add text background and foreground to link group
-    linkGroup
+    // Add text group
+    const textGroup = nodesEnter
       .append('g')
-      .attr('class', 'text-background');
+      .attr('class', 'text-group');
 
-    linkGroup
-      .append('g')
-      .attr('class', 'text-foreground');
+    // Add text background and foreground groups
+    textGroup.append('g').attr('class', 'text-background');
+    textGroup.append('g').attr('class', 'text-foreground');
 
-    // Update all nodes
-    const allNodes = nodes.merge(nodesEnter);
-
-    // Transition nodes to their new position
-    allNodes.transition()
-      .duration(750)
+    // Update all nodes with transition
+    const allNodes = nodes.merge(nodesEnter)
+      .transition(transition)
+      .style('opacity', 1)
       .attr('transform', d => isVertical ?
         `translate(${d.x},${d.y})` :
         `translate(${d.y},${d.x})`
       );
 
     // Update text for all nodes
-    allNodes.each((d, i, nodes) => {
+    this.nodesGroup.selectAll('.node').each((d, i, nodes) => {
       const node = d3.select(nodes[i]);
-      const linkGroup = node.select('.link-group');
-      const background = linkGroup.select('.text-background');
-      const foreground = linkGroup.select('.text-foreground');
+      const textGroup = node.select('.text-group');
+      const background = textGroup.select('.text-background');
+      const foreground = textGroup.select('.text-foreground');
       
-      // Clear existing text
       background.selectAll('*').remove();
       foreground.selectAll('*').remove();
 
-      // Get wrapped text
       const lines = this.wrapText(d.data.name);
-      const lineHeight = 1.2; // em units
+      const lineHeight = 1.2;
       
-      // Add background and foreground text
       lines.forEach((line, i) => {
-        // Background (white outline)
+        // Background
         background
           .append('text')
           .attr('dy', `${i * lineHeight}em`)
@@ -209,41 +238,27 @@ export class TreeVisualizer {
           .attr('stroke-width', 3)
           .text(line);
 
-        // Foreground (actual text)
+        // Foreground
         foreground
           .append('text')
           .attr('dy', `${i * lineHeight}em`)
           .attr('x', d.children ? -8 : 8)
           .attr('text-anchor', d.children ? 'end' : 'start')
-          .attr('fill', d.data.url ? '#1a73e8' : '#000')  // Blue for clickable links
-          .attr('text-decoration', d.data.url ? 'underline' : 'none')
+          .attr('fill', '#000')
           .text(line);
       });
 
-      // Add title attribute for hover tooltip showing full text
-      linkGroup.select('title').remove();
-      linkGroup.append('title')
-        .text(d.data.name + (d.data.url ? '\nClick to open URL' : ''));
+      // Add tooltip
+      node.select('title').remove();
+      node.append('title')
+        .text(d.data.name + (d.data.url ? '\nClick node to open URL' : ''));
     });
 
-    // Add hover effect for clickable nodes
-    allNodes
-      .select('.link-group')
-      .style('cursor', d => d.data.url ? 'pointer' : 'default')
-      .on('mouseover', function(event, d) {
-        if (d.data.url) {
-          d3.select(this).select('.text-foreground')
-            .selectAll('text')
-            .attr('fill', '#1557b0');
-        }
-      })
-      .on('mouseout', function(event, d) {
-        if (d.data.url) {
-          d3.select(this).select('.text-foreground')
-            .selectAll('text')
-            .attr('fill', '#1a73e8');
-        }
-      });
+    // Store positions for next transition
+    nodes.each(d => {
+      d.x0 = d.x;
+      d.y0 = d.y;
+    });
   }
 
   updateData(newData) {
