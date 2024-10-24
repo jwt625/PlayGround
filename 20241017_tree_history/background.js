@@ -67,11 +67,10 @@ const State = {
   },
 
   
-  viewerTabs: new Set(),  // Keep track of viewer tabs
-
-
-  registerViewerTab(tabId) {
-    this.viewerTabs.add(tabId);
+  viewerTabs: new Map(), // Change to Map to store more info
+  
+  registerViewerTab(tabId, layout = 'vertical') {
+    this.viewerTabs.set(tabId, { layout });
   },
 
   unregisterViewerTab(tabId) {
@@ -80,9 +79,35 @@ const State = {
 
   isViewerTab(tabId) {
     return this.viewerTabs.has(tabId);
+  },
+
+  getViewerLayout(tabId) {
+    return this.viewerTabs.get(tabId)?.layout || 'vertical';
+  },
+
+  updateViewerLayout(tabId, layout) {
+    if (this.viewerTabs.has(tabId)) {
+      this.viewerTabs.set(tabId, { layout });
+    }
   }
 
 };
+
+
+// Update message handling in background.js
+chrome.runtime.onConnect.addListener(port => {
+  if (port.name === 'viewer') {
+    port.onMessage.addListener((msg) => {
+      if (msg.action === 'layoutChanged') {
+        State.updateViewerLayout(port.sender.tab.id, msg.layout);
+      }
+    });
+
+    port.onDisconnect.addListener(() => {
+      State.unregisterViewerTab(port.sender.tab.id);
+    });
+  }
+});
 
 // =============================================================================
 // Tab Management

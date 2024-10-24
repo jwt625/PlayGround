@@ -6,30 +6,70 @@ class TabTreeViewer {
     this.treeVisualizer = null;
     this.controls = null;
     this.currentLayout = 'vertical';
-    this.isViewerTab = true;  // Flag to indicate this is a viewer tab
+    this.isViewerTab = true;
+    this.port = null;
+    this.tabId = null;  // Add tabId as class property
     this.init();
+  }
+
+  // Get tab ID - keep as separate async method
+  async getTabId() {
+    return new Promise((resolve) => {
+      if (window.chrome && chrome.tabs) {
+        chrome.tabs.getCurrent(tab => resolve(tab?.id));
+      } else {
+        resolve(null);
+      }
+    });
+  }
+
+  // Cleanup without async
+  cleanup() {
+    try {
+      if (this.port) {
+        this.port.disconnect();
+        this.port = null;
+      }
+
+      if (this.tabId && window.chrome && chrome.runtime) {
+        chrome.runtime.sendMessage({ 
+          action: "unregisterViewer",
+          tabId: this.tabId
+        });
+      }
+    } catch (error) {
+      console.error('Cleanup error:', error);
+    }
   }
 
   async init() {
     try {
-      // Show loading state
       this.showLoading(true);
 
-      // Mark this tab as a viewer tab
+      // Get tab ID first
+      this.tabId = await this.getTabId();
+      if (!this.tabId) {
+        throw new Error('Failed to get tab ID');
+      }
+
+      // Establish persistent connection
       if (window.chrome && chrome.runtime) {
+        this.port = chrome.runtime.connect({ name: 'viewer' });
+        this.port.onDisconnect.addListener(() => {
+          console.log('Viewer disconnected');
+          this.cleanup();
+        });
+
+        // Register viewer tab
         await chrome.runtime.sendMessage({ 
           action: "registerViewer",
-          tabId: await this.getTabId()
+          tabId: this.tabId
         });
       }
 
-      // Initialize controls
       this.controls = new ViewerControls(this);
-      
-      // Get initial tree data
       const { tabTree } = await this.requestData();
       
-      // Initialize tree visualization
       this.treeVisualizer = new TreeVisualizer(
         document.getElementById('tree-container'),
         this.processTreeData(tabTree),
@@ -39,27 +79,20 @@ class TabTreeViewer {
         }
       );
 
-      // Set up message listener for updates
       this.setupMessageListener();
-      
-      // Hide loading state
       this.showLoading(false);
 
-      // Clean up when viewer is closed
-      window.addEventListener('unload', () => {
-        if (window.chrome && chrome.runtime) {
-          chrome.runtime.sendMessage({ 
-            action: "unregisterViewer",
-            tabId: this.getTabId()
-          });
-        }
-      });
+      // Add cleanup event listeners
+      const cleanupHandler = () => this.cleanup();
+      window.addEventListener('unload', cleanupHandler);
+      window.addEventListener('beforeunload', cleanupHandler);
 
     } catch (error) {
       console.error('Initialization error:', error);
       this.showError('Failed to initialize viewer');
     }
   }
+
 
   async getTabId() {
     return new Promise((resolve) => {
