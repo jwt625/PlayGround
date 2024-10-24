@@ -555,33 +555,77 @@ function saveTabTree() {
   chrome.storage.local.set({ tabTree: tabTree });
 }
 
-chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-  if (request.action === "toggleTracking") {
-    isTracking = !isTracking;
-    updateIcon(isTracking); // update icon
-    chrome.storage.local.set({ isTracking: isTracking });
-    sendResponse({ isTracking: isTracking });
-  } else if (request.action === "getTrackingStatus") {
-    sendResponse({ isTracking: isTracking });
-  } 
+// Add this function for updating node titles
+function updateNodeTitle(node, newTitle) {
+  node.title = newTitle;
+  saveTabTree();
+}
 
-  if (request.action === "clearTabTree") {
-    tabTree = {};
-    tabHistory = {};
-    saveTabTree();
-    sendResponse({success: true});
-  } else if (request.action === "getTabTree") {
-    sendResponse({tabTree: tabTree});
-  } else if (request.action === "updateConfig") {
-    chrome.storage.local.set({ config: request.config }, () => {
-      excludedDomains = request.config.excludedDomains || [];
+// Replace the handleOtherMessages function (previously embedded in the message listener)
+function handleOtherMessages(request, sendResponse) {
+  switch (request.action) {
+    case "clearTabTree":
+      tabTree = {};
+      tabHistory = {};
+      saveTabTree();
       sendResponse({success: true});
-    });
-  } else if (request.action === "updateTimeZone") {
-    userTimeZone = request.timeZone;
-    chrome.storage.local.set({ userTimeZone: userTimeZone }, () => {
-      sendResponse({success: true});
-    });
+      break;
+    
+    case "getTabTree":
+      sendResponse({tabTree: tabTree});
+      break;
+    
+    case "updateConfig":
+      chrome.storage.local.set({ config: request.config }, () => {
+        excludedDomains = request.config.excludedDomains || [];
+        sendResponse({success: true});
+      });
+      break;
+    
+    case "updateTimeZone":
+      userTimeZone = request.timeZone;
+      chrome.storage.local.set({ userTimeZone: userTimeZone }, () => {
+        sendResponse({success: true});
+      });
+      break;
+    
+    case "getTrackingStatus":
+      sendResponse({ isTracking: isTracking });
+      break;
+      
+    default:
+      sendResponse({ error: "Unknown action" });
   }
-  return true;  // Indicates that the response is sent asynchronously
-});
+}
+
+// Add this function that was referenced but not defined
+function handleExistingTab(currentTabHistory, existingIndex, tab, tabId) {
+  const timestamp = Date.now();
+  // Update close times for nodes after the existing one
+  for (let i = existingIndex + 1; i < currentTabHistory.length; i++) {
+    currentTabHistory[i].closedAt = timestamp;
+    currentTabHistory[i].closedAtHuman = getHumanReadableTime(timestamp);
+  }
+  tabHistory[tabId] = currentTabHistory.slice(0, existingIndex + 1);
+  updateNodeTitle(tabHistory[tabId][existingIndex], tab.title);
+  saveTabTree();
+}
+
+// Add this function that was referenced but not defined
+function handleNavigationChange(details) {
+  const history = tabHistory[details.tabId];
+  if (history) {
+    const index = history.findIndex(node => node.url === details.url);
+    if (index !== -1) {
+      const timestamp = Date.now();
+      if (index < history.length - 1) {
+        for (let i = index + 1; i < history.length; i++) {
+          history[i].closedAt = timestamp;
+          history[i].closedAtHuman = getHumanReadableTime(timestamp);
+        }
+      }
+      tabHistory[details.tabId] = history.slice(0, index + 1);
+      saveTabTree();
+    }
+  }
+}

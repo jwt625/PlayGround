@@ -121,3 +121,10 @@ function sendMessageWithRetry(message, maxRetries) {
     attemptSend(maxRetries);
   });
 }
+
+// Add this to your existing popup.js event listeners
+document.getElementById('openViewer')?.addEventListener('click', () => {
+  chrome.tabs.create({
+    url: chrome.runtime.getURL('viewer/viewer.html')
+  });
+});
