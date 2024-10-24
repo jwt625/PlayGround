@@ -64,7 +64,24 @@ const State = {
     this.tabTree = {};
     this.tabHistory = {};
     this.saveState();
+  },
+
+  
+  viewerTabs: new Set(),  // Keep track of viewer tabs
+
+
+  registerViewerTab(tabId) {
+    this.viewerTabs.add(tabId);
+  },
+
+  unregisterViewerTab(tabId) {
+    this.viewerTabs.delete(tabId);
+  },
+
+  isViewerTab(tabId) {
+    return this.viewerTabs.has(tabId);
   }
+
 };
 
 // =============================================================================
@@ -174,7 +191,7 @@ const TabManager = {
 // =============================================================================
 const EventHandlers = {
   async onTabCreated(tab) {
-    if (!State.isTracking) return;
+    if (!State.isTracking || State.isViewerTab(tab.id)) return;
 
     const openerKey = `opener_${tab.id}`;
     await chrome.storage.local.set({ [openerKey]: tab.openerTabId });
@@ -205,8 +222,8 @@ const EventHandlers = {
   },
 
   async onTabUpdated(tabId, changeInfo, tab) {
-    if (!State.isTracking || !changeInfo.status === 'complete' || isExcluded(tab.url)) return;
-
+    if (!State.isTracking || State.isViewerTab(tabId) || 
+        !changeInfo.status === 'complete' || isExcluded(tab.url)) return;
     // Always update title if it has changed
     if (changeInfo.title) {
       TabManager.updateTabTitle(tab);
@@ -242,6 +259,10 @@ const EventHandlers = {
 
   onTabRemoved(tabId) {
     if (!State.isTracking) return;
+    if (State.isViewerTab(tabId)) {
+      State.unregisterViewerTab(tabId);
+      return;
+    }
     TabManager.handleTabClose(tabId);
   }
 };
@@ -296,10 +317,10 @@ initializeExtension().then(() => {
 // Utility Functions
 // =============================================================================
 function isExcluded(url) {
-  if (!url) return true;
-  if (url.startsWith(chrome.runtime.getURL('viewer/'))) return true;
-  return State.excludedDomains.some(domain => url.includes(domain));
-}
+    if (!url) return true;
+    if (url.startsWith(chrome.runtime.getURL('viewer/'))) return true;
+    return State.excludedDomains.some(domain => url.includes(domain));
+  }
 
 function getHumanReadableTime(timestamp) {
   return new Date(timestamp).toLocaleString('en-US', {
@@ -357,6 +378,16 @@ function updateIcon(tracking) {
 // =============================================================================
 function handleMessages(request, sender, sendResponse) {
     switch (request.action) {
+        case 'registerViewer':
+        State.registerViewerTab(request.tabId);
+        sendResponse({ success: true });
+        break;
+
+        case 'unregisterViewer':
+        State.unregisterViewerTab(request.tabId);
+        sendResponse({ success: true });
+        break;
+
       case 'toggleTracking':
         State.isTracking = !State.isTracking;
         updateIcon(State.isTracking);
@@ -406,24 +437,24 @@ function handleMessages(request, sender, sendResponse) {
     }
     return true; // Will respond asynchronously
   }
-  
+
 // 
 // Add functions for word frequency analysis
 async function analyzePageContent(tabId) {
-    if (!isTracking) return null;
+    if (!State.isTracking) return null;  // Change from isTracking to State.isTracking
     
     // Inject content script to analyze the page
     try {
-      const [{ result }] = await chrome.scripting.executeScript({
+        const [{ result }] = await chrome.scripting.executeScript({
         target: { tabId: tabId },
         func: getWordFrequency,
-      });
-      return result;
+        });
+        return result;
     } catch (error) {
-      console.error('Error analyzing page content:', error);
-      return null;
+        console.error('Error analyzing page content:', error);
+        return null;
     }
-  }
+    }
   
   
   

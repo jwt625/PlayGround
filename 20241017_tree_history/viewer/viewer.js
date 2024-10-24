@@ -6,6 +6,7 @@ class TabTreeViewer {
     this.treeVisualizer = null;
     this.controls = null;
     this.currentLayout = 'vertical';
+    this.isViewerTab = true;  // Flag to indicate this is a viewer tab
     this.init();
   }
 
@@ -13,6 +14,14 @@ class TabTreeViewer {
     try {
       // Show loading state
       this.showLoading(true);
+
+      // Mark this tab as a viewer tab
+      if (window.chrome && chrome.runtime) {
+        await chrome.runtime.sendMessage({ 
+          action: "registerViewer",
+          tabId: await this.getTabId()
+        });
+      }
 
       // Initialize controls
       this.controls = new ViewerControls(this);
@@ -35,12 +44,33 @@ class TabTreeViewer {
       
       // Hide loading state
       this.showLoading(false);
+
+      // Clean up when viewer is closed
+      window.addEventListener('unload', () => {
+        if (window.chrome && chrome.runtime) {
+          chrome.runtime.sendMessage({ 
+            action: "unregisterViewer",
+            tabId: this.getTabId()
+          });
+        }
+      });
+
     } catch (error) {
       console.error('Initialization error:', error);
       this.showError('Failed to initialize viewer');
     }
   }
 
+  async getTabId() {
+    return new Promise((resolve) => {
+      if (window.chrome && chrome.tabs) {
+        chrome.tabs.getCurrent(tab => resolve(tab.id));
+      } else {
+        resolve(null);
+      }
+    });
+  }
+  
   async requestData() {
     return new Promise((resolve) => {
       chrome.runtime.sendMessage({ action: "getTabTree" }, response => {
