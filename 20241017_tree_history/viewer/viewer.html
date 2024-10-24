@@ -2,7 +2,6 @@
 <html>
 <head>
   <title>Tab Tree Viewer</title>
-  <!-- <script src="https://d3js.org/d3.v7.min.js"></script> -->
   <script src="/libs/d3.v7.min.js"></script>
   <style>
     body {
@@ -30,7 +29,7 @@
       background-color: white;
       border-radius: 4px;
       box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-      overflow: auto;
+      overflow: hidden;
     }
 
     .node circle {
@@ -61,7 +60,7 @@
       display: none;
     }
 
-    .button {
+    button {
       padding: 8px 16px;
       margin: 0 4px;
       border: none;
@@ -72,17 +71,17 @@
       font-size: 14px;
     }
 
-    .button:hover {
+    button:hover {
       background-color: #1557b0;
     }
   </style>
 </head>
 <body>
   <div id="controls">
-    <button id="toggleLayout" class="button">Toggle Layout</button>
-    <button id="zoomIn" class="button">+</button>
-    <button id="zoomOut" class="button">-</button>
-    <button id="resetZoom" class="button">Reset</button>
+    <button id="toggleLayout">Toggle Layout</button>
+    <button id="zoomIn">+</button>
+    <button id="zoomOut">-</button>
+    <button id="resetZoom">Reset</button>
   </div>
   
   <div id="tree-container"></div>
