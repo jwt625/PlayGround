@@ -101,30 +101,39 @@ async function initializeState() {
 
   while (retryCount < maxRetries) {
     try {
-      // Try to connect to ensure background is ready
-      const port = chrome.runtime.connect();
-      port.disconnect();
-
-      // Get tracking status
-      const trackingResponse = await sendMessage('getTrackingStatus');
-      if (trackingResponse.error) throw new Error(trackingResponse.error);
-      updateTrackingUI(trackingResponse.isTracking);
-
-      // Get tree data
+      // Get tree data with validation
+      console.log('Requesting tab tree...'); // For debugging
       const treeResponse = await sendMessage('getTabTree');
-      if (treeResponse.error) throw new Error(treeResponse.error);
+      
+      console.log('Received tree response:', treeResponse); // For debugging
+      
+      if (!treeResponse || !treeResponse.tabTree) {
+        throw new Error('Invalid or missing tree data');
+      }
+
       updateTreeDisplay(treeResponse.tabTree);
       
-      break; // Success, exit loop
+      // Get tracking status
+      const trackingResponse = await sendMessage('getTrackingStatus');
+      if (!trackingResponse) {
+        throw new Error('Invalid tracking status response');
+      }
+      
+      updateTrackingUI(trackingResponse.isTracking);
+      break;
+
     } catch (error) {
+      console.error('Attempt', retryCount + 1, 'failed:', error);
       retryCount++;
+      
       if (retryCount === maxRetries) {
-        console.error('Failed to initialize popup:', error);
-        showError('Failed to initialize popup');
+        console.error('Failed to initialize popup after', maxRetries, 'attempts');
+        showError(`Failed to initialize popup: ${error.message}`);
         return;
       }
-      // Wait before retry
-      await new Promise(resolve => setTimeout(resolve, 100));
+      
+      // Wait before retry with exponential backoff
+      await new Promise(resolve => setTimeout(resolve, Math.pow(2, retryCount) * 100));
     }
   }
 }
@@ -140,6 +149,14 @@ function updateTrackingUI(isTracking) {
 // Update tree display
 function updateTreeDisplay(tree) {
   elements.treeContainer.innerHTML = '';
+
+  if (!tree || Object.keys(tree).length === 0) {
+    const message = document.createElement('div');
+    message.textContent = 'No tab data available';
+    message.className = 'empty-state';
+    elements.treeContainer.appendChild(message);
+    return;
+  }
   
   function createNodeElement(node) {
     const div = document.createElement('div');
@@ -167,6 +184,11 @@ function updateTreeDisplay(tree) {
   }
 
   function buildTree(nodes, container) {
+    if (!nodes) {
+      console.warn('No tree data available');
+      return;
+    }
+
     Object.values(nodes).forEach(node => {
       const nodeElement = createNodeElement(node);
       container.appendChild(nodeElement);
@@ -186,13 +208,27 @@ function updateTreeDisplay(tree) {
 // Helper function to send messages to background script
 function sendMessage(action, data = {}) {
   return new Promise((resolve, reject) => {
-    chrome.runtime.sendMessage({ action, ...data }, response => {
-      if (chrome.runtime.lastError) {
-        reject(chrome.runtime.lastError);
-        return;
-      }
-      resolve(response);
-    });
+    try {
+      chrome.runtime.sendMessage({ action, ...data }, response => {
+        if (chrome.runtime.lastError) {
+          console.error('Runtime error:', chrome.runtime.lastError);
+          reject(chrome.runtime.lastError);
+          return;
+        }
+        
+        if (response === undefined) {
+          console.error('No response received for action:', action);
+          reject(new Error('No response received'));
+          return;
+        }
+
+        console.log('Received response for', action, ':', response); // For debugging
+        resolve(response);
+      });
+    } catch (error) {
+      console.error('Error sending message:', error);
+      reject(error);
+    }
   });
 }
 

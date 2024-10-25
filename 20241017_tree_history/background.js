@@ -9,6 +9,7 @@ const State = {
   isTracking: false,
   extensionInitialized: false,
   trackingCheckInterval: null,
+  viewerPort: null,
 
   // Update node in both tree and history
   updateNode: function(node, updates) {
@@ -89,14 +90,30 @@ const State = {
     if (this.viewerTabs.has(tabId)) {
       this.viewerTabs.set(tabId, { layout });
     }
-  }
+  },
 
+
+  // Modify getTabTree to handle viewer connection
+  getTabTree() {
+    return this.tabTree || {};
+  },
+
+  // Modify getTabTree response handler
+  handleGetTabTree() {
+    // Ensure we always return a valid object even if empty
+    return {
+      tabTree: this.tabTree || {}
+    };
+  }
 };
 
 
 // Update message handling in background.js
 chrome.runtime.onConnect.addListener(port => {
   if (port.name === 'viewer') {
+    console.log('Viewer connected'); // For debugging
+    // Store the viewer port in State
+    State.viewerPort = port;
     port.onMessage.addListener((msg) => {
       if (msg.action === 'layoutChanged') {
         State.updateViewerLayout(port.sender.tab.id, msg.layout);
@@ -104,6 +121,7 @@ chrome.runtime.onConnect.addListener(port => {
     });
 
     port.onDisconnect.addListener(() => {
+      console.log('Viewer disconnected'); // For debugging
       State.unregisterViewerTab(port.sender.tab.id);
     });
   }
@@ -402,27 +420,37 @@ function updateIcon(tracking) {
 // Message Handling
 // =============================================================================
 function handleMessages(request, sender, sendResponse) {
+    console.log('Message received:', request); // For debugging
+
     switch (request.action) {
+        case 'getTabTree':
+          const response = {
+            tabTree: State.tabTree || {}
+          };
+          console.log('Sending tabTree response:', response); // For debugging
+          sendResponse(response);
+          return false; // Changed to false since we're sending synchronously
+        
         case 'registerViewer':
         State.registerViewerTab(request.tabId);
         sendResponse({ success: true });
-        break;
+        return false; // Changed to false since we're sending synchronously
 
         case 'unregisterViewer':
         State.unregisterViewerTab(request.tabId);
         sendResponse({ success: true });
-        break;
+        return false; // Changed to false since we're sending synchronously
 
       case 'toggleTracking':
         State.isTracking = !State.isTracking;
         updateIcon(State.isTracking);
         chrome.storage.local.set({ isTracking: State.isTracking });
         sendResponse({ isTracking: State.isTracking });
-        break;
+        return false; // Changed to false since we're sending synchronously
   
       case 'getTrackingStatus':
         sendResponse({ isTracking: State.isTracking });
-        break;
+        return false; // Changed to false since we're sending synchronously
   
       case 'getTabTree':
         sendResponse({ tabTree: State.tabTree });
@@ -431,7 +459,7 @@ function handleMessages(request, sender, sendResponse) {
       case 'clearTabTree':
         State.clearState();
         sendResponse({ success: true });
-        break;
+        return false; // Changed to false since we're sending synchronously
   
       case 'updateConfig':
         chrome.storage.local.set({ config: request.config })
