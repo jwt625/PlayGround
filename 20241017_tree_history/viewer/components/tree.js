@@ -43,7 +43,7 @@ export class TreeVisualizer {
 
     // Set up zoom behavior
     const zoom = d3.zoom()
-      .scaleExtent([0.1, 3])
+      .scaleExtent([0.01, 30])
       .on('zoom', (event) => {
         this.handleZoom(event);
       });
@@ -278,29 +278,35 @@ export class TreeVisualizer {
     
     const words = text.split(/\s+/);
     const lines = [];
-    let currentLine = words[0];
-
-    for (let i = 1; i < words.length; i++) {
-      if (currentLine.length + words[i].length + 1 <= this.options.maxLineLength) {
-        currentLine += ' ' + words[i];
+    let currentLine = '';
+  
+    // First, truncate any long words
+    const truncatedWords = words.map(word => 
+      word.length > this.options.maxLineLength ? 
+        word.slice(0, 15) + '...' : 
+        word
+    );
+    
+    for (const word of truncatedWords) {
+      if (currentLine.length + word.length + 1 <= this.options.maxLineLength) {
+        currentLine += (currentLine.length === 0 ? '' : ' ') + word;
       } else {
-        lines.push(currentLine);
-        currentLine = words[i];
+        if (currentLine.length > 0) {
+          lines.push(currentLine);
+        }
+        currentLine = word;
         
         if (lines.length >= this.options.maxLines - 1) {
-          if (i < words.length - 1) {
-            currentLine = currentLine + '...';
-          }
-          lines.push(currentLine);
-          break;
+          lines.push(currentLine + '...');
+          return lines;
         }
       }
     }
     
-    if (lines.length < this.options.maxLines && currentLine.length > 0) {
+    if (currentLine.length > 0 && lines.length < this.options.maxLines) {
       lines.push(currentLine);
     }
-
+  
     return lines;
   }
 }
