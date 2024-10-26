@@ -3,6 +3,11 @@ export class ZoomControls {
     this.viewer = viewer;
     this.zoomSpeed = 0.02;
     this.zoomIntervals = new Map();
+    // Track separate scales for x and y
+    this.scales = {
+      x: 1,
+      y: 1
+    };
     this.setupZoomControls();
   }
 
@@ -13,11 +18,11 @@ export class ZoomControls {
 
     // Create axis-specific zoom controls
     const axes = [
-      { label: 'X', scale: (k) => ({ kx: k, ky: 1 }) },
-      { label: 'Y', scale: (k) => ({ kx: 1, ky: k }) }
+      { label: 'X', axis: 'x' },
+      { label: 'Y', axis: 'y' }
     ];
 
-    axes.forEach(({ label, scale }) => {
+    axes.forEach(({ label, axis }) => {
       const axisContainer = document.createElement('div');
       axisContainer.className = 'axis-zoom-controls';
       axisContainer.style.cssText = 'display: flex; align-items: center; gap: 4px;';
@@ -26,8 +31,8 @@ export class ZoomControls {
       axisLabel.textContent = label;
       axisLabel.style.cssText = 'margin: 0 4px; font-weight: bold;';
 
-      const zoomInBtn = this.createZoomButton(`${label}+`, () => this.startZoom(scale, 1.0));
-      const zoomOutBtn = this.createZoomButton(`${label}-`, () => this.startZoom(scale, -1.0));
+      const zoomInBtn = this.createZoomButton(`${label}+`, () => this.startAxisZoom(axis, 1));
+      const zoomOutBtn = this.createZoomButton(`${label}-`, () => this.startAxisZoom(axis, -1));
 
       axisContainer.appendChild(zoomOutBtn);
       axisContainer.appendChild(axisLabel);
@@ -52,7 +57,6 @@ export class ZoomControls {
       }
     }
 
-    // Global event listeners
     document.addEventListener('mouseup', () => this.stopAllZoom());
     document.addEventListener('mouseleave', () => this.stopAllZoom());
   }
@@ -81,30 +85,41 @@ export class ZoomControls {
     return button;
   }
 
-  startZoom(scaleFn, direction) {
+  startAxisZoom(axis, direction) {
     this.stopAllZoom();
     
-    const svg = d3.select('#tree-container svg');
-    const g = svg.select('g.main-group');
-    let currentTransform = d3.zoomTransform(g.node());
-
     const intervalId = setInterval(() => {
       const scale = Math.exp(this.zoomSpeed * direction);
-      const { kx, ky } = scaleFn(scale);
+      this.scales[axis] *= scale;
       
-      // Calculate new transform
-      currentTransform = currentTransform.scale(kx, ky);
+      // Constrain scales to reasonable limits
+      this.scales[axis] = Math.max(0.1, Math.min(10, this.scales[axis]));
       
-      // Apply the new transform
-      g.attr('transform', currentTransform);
-      
-      // Update the viewer's zoom level if needed
-      if (this.viewer.treeVisualizer) {
-        this.viewer.treeVisualizer.zoomLevel = currentTransform.k;
-      }
+      this.applyAxisZoom();
     }, 16);
 
-    this.zoomIntervals.set(scaleFn.toString(), intervalId);
+    this.zoomIntervals.set(axis, intervalId);
+  }
+
+  applyAxisZoom() {
+    if (!this.viewer.treeVisualizer) return;
+
+    const treeVis = this.viewer.treeVisualizer;
+    const container = document.getElementById('tree-container');
+    const baseWidth = container.clientWidth;
+    const baseHeight = container.clientHeight;
+
+    // Update tree layout size based on current scales
+    const isVertical = treeVis.options.layout === 'vertical';
+    const newSize = isVertical ? 
+      [baseWidth * this.scales.x, baseHeight * this.scales.y] : 
+      [baseHeight * this.scales.y, baseWidth * this.scales.x];
+
+    // Update the layout with new dimensions
+    treeVis.treeLayout.size(newSize);
+
+    // Re-render the tree with scaled dimensions but maintain node sizes
+    treeVis.render(true);
   }
 
   stopAllZoom() {
@@ -113,17 +128,8 @@ export class ZoomControls {
   }
 
   resetZoom() {
-    const svg = d3.select('#tree-container svg');
-    const g = svg.select('g.main-group');
-    
-    // Create a smooth transition to identity transform
-    g.transition()
-      .duration(750)
-      .attr('transform', d3.zoomIdentity);
-      
-    // Reset the viewer's zoom level
-    if (this.viewer.treeVisualizer) {
-      this.viewer.treeVisualizer.zoomLevel = 1;
-    }
+    this.scales.x = 1;
+    this.scales.y = 1;
+    this.applyAxisZoom();
   }
 }

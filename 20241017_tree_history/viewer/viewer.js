@@ -90,21 +90,6 @@ class TabTreeViewer {
       // Initialize zoom controls after tree visualizer
       this.zoomControls = new ZoomControls(this);
 
-      // Create SVG container
-      this.svg = d3.select(this.container)
-      .append('svg')
-      .attr('width', '100%')
-      .attr('height', '100%');
-
-      // Create main group with class name
-      this.mainGroup = this.svg
-        .append('g')
-        .attr('class', 'main-group');
-
-      // Create groups for links and nodes within main group
-      this.linksGroup = this.mainGroup.append('g').attr('class', 'links');
-      this.nodesGroup = this.mainGroup.append('g').attr('class', 'nodes');
-
       // Add cleanup event listeners
       const cleanupHandler = () => this.cleanup();
       window.addEventListener('unload', cleanupHandler);
