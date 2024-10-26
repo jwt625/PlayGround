@@ -136,6 +136,47 @@
       background: #f5f5f5;
     } */
 
+    
+    .node-details {
+      position: absolute;
+      display: none;
+      background: white;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      padding: 12px;
+      pointer-events: none;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      font-size: 12px;
+      max-width: 300px;
+      z-index: 1000;
+    }
+
+    .node-details h4 {
+      margin: 0 0 8px 0;
+      font-size: 14px;
+      color: #333;
+    }
+
+    .node-details-section {
+      margin-bottom: 8px;
+    }
+
+    .node-details-section:last-child {
+      margin-bottom: 0;
+    }
+
+    .word-stats {
+      display: grid;
+      grid-template-columns: auto auto;
+      gap: 4px 8px;
+      margin-top: 4px;
+    }
+
+    .word-count {
+      color: #666;
+      text-align: right;
+    }
+
   </style>
 </head>
 <body>

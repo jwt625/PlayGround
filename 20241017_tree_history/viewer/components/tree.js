@@ -15,6 +15,9 @@ export class TreeVisualizer {
     this.zoomLevel = 1;
     this.axisScales = { x: 1, y: 1 };
     
+    // Add property for details panel
+    this.detailsPanel = null;
+
     this.init();
 
     window.addEventListener('resize', () => {
@@ -26,6 +29,12 @@ export class TreeVisualizer {
 
   init() {
     this.container.innerHTML = '';
+    
+    // Create details panel
+    this.detailsPanel = d3.select(this.container)
+      .append('div')
+      .attr('class', 'node-details')
+      .style('display', 'none');
 
     // Create SVG container
     this.svg = d3.select(this.container)
@@ -54,6 +63,69 @@ export class TreeVisualizer {
   }
 
   
+  // Add method to update details panel content
+  updateDetailsPanel(d, event) {
+    if (!d) {
+      this.detailsPanel.style('display', 'none');
+      return;
+    }
+
+    const data = d.data;
+    const nodeData = data.data; // Original node data with all properties
+    
+    // Format timestamp to local date-time
+    const createdAt = new Date(nodeData.createdAt).toLocaleString();
+    const closedAt = nodeData.closedAt ? new Date(nodeData.closedAt).toLocaleString() : 'Still open';
+
+    // Update content
+    this.detailsPanel.html(`
+      <h4>${data.name}</h4>
+      
+      <div class="node-details-section">
+        <strong>URL:</strong> ${nodeData.url || 'N/A'}
+      </div>
+      
+      <div class="node-details-section">
+        <strong>Created:</strong> ${createdAt}<br>
+        <strong>Closed:</strong> ${closedAt}
+      </div>
+      
+      ${nodeData.topWords ? `
+        <div class="node-details-section">
+          <strong>Top Words:</strong>
+          <div class="word-stats">
+            ${nodeData.topWords.map(w => `
+              <div>${w.word}</div>
+              <div class="word-count">${w.count}</div>
+            `).join('')}
+          </div>
+        </div>
+      ` : ''}
+    `);
+
+    // Position the panel near the cursor but not overlapping
+    const [x, y] = d3.pointer(event, this.container);
+    const panelBox = this.detailsPanel.node().getBoundingClientRect();
+    const containerBox = this.container.getBoundingClientRect();
+    
+    let left = x + 10; // 10px offset from cursor
+    let top = y + 10;
+
+    // Adjust if panel would overflow container
+    if (left + panelBox.width > containerBox.width) {
+      left = x - panelBox.width - 10;
+    }
+    if (top + panelBox.height > containerBox.height) {
+      top = y - panelBox.height - 10;
+    }
+
+    this.detailsPanel
+      .style('left', `${left}px`)
+      .style('top', `${top}px`)
+      .style('display', 'block');
+  }
+
+
   // Add these interface methods to match what other components expect
   setLayout(layout) {
     this.options.layout = layout;
@@ -172,17 +244,22 @@ export class TreeVisualizer {
           window.open(d.data.url, '_blank');
         }
       })
-      .on('mouseover', function() {
-        d3.select(this)
+      .on('mouseover', (event, d) => {
+        d3.select(event.currentTarget)
           .transition()
           .duration(200)
           .attr('fill', '#f0f7ff');
+        this.updateDetailsPanel(d, event);
       })
-      .on('mouseout', function() {
-        d3.select(this)
+      .on('mousemove', (event, d) => {
+        this.updateDetailsPanel(d, event);
+      })
+      .on('mouseout', (event) => {
+        d3.select(event.currentTarget)
           .transition()
           .duration(200)
           .attr('fill', '#fff');
+        this.updateDetailsPanel(null);
       });
 
     // Text groups
