@@ -1,5 +1,6 @@
 import { TreeVisualizer } from './components/tree.js';
 import { ViewerControls } from './components/controls.js';
+import { FileLoader } from './components/file-loader.js';
 
 class TabTreeViewer {
   constructor() {
@@ -81,6 +82,9 @@ class TabTreeViewer {
 
       this.setupMessageListener();
       this.showLoading(false);
+
+      // Initialize file loader
+      this.fileLoader = new FileLoader(this);
 
       // Add cleanup event listeners
       const cleanupHandler = () => this.cleanup();
