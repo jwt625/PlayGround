@@ -63,6 +63,61 @@ export class TreeVisualizer {
   }
 
   
+  // Add text wrapping utility method to TreeVisualizer class
+  wrapLongText(text, maxLength = 40, maxLines = 3) {
+    if (!text) return '';
+    
+    // Split into words, keeping URL structure intact
+    const words = text.split(/(?<=\/)/); // Split after '/' for URLs
+    const lines = [];
+    let currentLine = '';
+
+    for (const word of words) {
+      // If single word is longer than maxLength, split it
+      if (word.length > maxLength) {
+        if (currentLine) {
+          lines.push(currentLine);
+          currentLine = '';
+        }
+        
+        // Add chunks of the long word
+        let remaining = word;
+        while (remaining.length > 0 && lines.length < maxLines) {
+          lines.push(remaining.slice(0, maxLength));
+          remaining = remaining.slice(maxLength);
+        }
+        
+        if (remaining.length > 0) {
+          // If we hit maxLines, modify last line to show truncation
+          if (lines.length === maxLines) {
+            lines[maxLines - 1] = lines[maxLines - 1].slice(0, -3) + '...';
+          }
+          break;
+        }
+        continue;
+      }
+
+      // Normal word processing
+      if (currentLine.length + word.length + 1 <= maxLength) {
+        currentLine += (currentLine.length === 0 ? '' : '') + word;
+      } else {
+        if (lines.length < maxLines) {
+          lines.push(currentLine);
+          currentLine = word;
+        } else {
+          lines[maxLines - 1] = lines[maxLines - 1].slice(0, -3) + '...';
+          break;
+        }
+      }
+    }
+
+    if (currentLine && lines.length < maxLines) {
+      lines.push(currentLine);
+    }
+
+    return lines.join('\n');
+  }
+
   // Add method to update details panel content
   updateDetailsPanel(d, event) {
     if (!d) {
@@ -77,12 +132,18 @@ export class TreeVisualizer {
     const createdAt = new Date(nodeData.createdAt).toLocaleString();
     const closedAt = nodeData.closedAt ? new Date(nodeData.closedAt).toLocaleString() : 'Still open';
 
+    
+    // Wrap title and URL
+    const wrappedTitle = this.wrapLongText(data.name, 40, 3);
+    const wrappedUrl = nodeData.url ? this.wrapLongText(nodeData.url, 40, 3) : 'N/A';
+
     // Update content
     this.detailsPanel.html(`
-      <h4>${data.name}</h4>
+      <h4 class="wrapped-text">${wrappedTitle}</h4>
       
       <div class="node-details-section">
-        <strong>URL:</strong> ${nodeData.url || 'N/A'}
+        <strong>URL:</strong><br>
+        <span class="wrapped-text url-text">${wrappedUrl}</span>
       </div>
       
       <div class="node-details-section">
