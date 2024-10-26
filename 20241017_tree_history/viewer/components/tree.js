@@ -214,8 +214,12 @@ export class TreeVisualizer {
     });
   }
 
-  // Update the updateNodeText method to handle stroke scaling
-  updateNodeText(node, d, scale = 1) {
+  // Updated updateNodeText method with constant text size
+  updateNodeText(node, d) {
+    const scale = this.zoomLevel || 1;
+    const baseOffset = 8; // Base offset distance from node
+    const scaledOffset = baseOffset / scale; // Scale offset with zoom level
+    
     const textGroup = node.select('.text-group');
     const background = textGroup.select('.text-background');
     const foreground = textGroup.select('.text-foreground');
@@ -230,18 +234,20 @@ export class TreeVisualizer {
       background
         .append('text')
         .attr('dy', `${i * lineHeight}em`)
-        .attr('x', d.children ? -8 : 8)
+        .attr('x', d.children ? -scaledOffset : scaledOffset) // Use scaled offset
         .attr('text-anchor', d.children ? 'end' : 'start')
         .attr('stroke', 'white')
         .attr('stroke-width', 3 / scale)
+        .style('font-size', `${12 / scale}px`)  // Constant font size
         .text(line);
 
       foreground
         .append('text')
         .attr('dy', `${i * lineHeight}em`)
-        .attr('x', d.children ? -8 : 8)
+        .attr('x', d.children ? -scaledOffset : scaledOffset) // Use scaled offset
         .attr('text-anchor', d.children ? 'end' : 'start')
         .attr('fill', '#000')
+        .style('font-size', `${12 / scale}px`)  // Constant font size
         .text(line);
     });
 
@@ -250,7 +256,7 @@ export class TreeVisualizer {
       .text(d.data.name + (d.data.url ? '\nClick node to open URL' : ''));
   }
 
-  // Rest of the methods remain the same as before, but update handleZoom to fix stroke width
+
   handleZoom(event) {
     const transform = event.transform;
     this.mainGroup.attr('transform', transform);
@@ -261,17 +267,19 @@ export class TreeVisualizer {
       .attr('r', this.options.nodeSize / 2 / scale)
       .attr('stroke-width', 2 / scale);  // Scale stroke width inversely
     
-    // Scale text and its stroke
-    this.nodesGroup.selectAll('.text-group text')
-      .style('font-size', `${12 / scale}px`)
-      .attr('stroke-width', 3 / scale);  // Scale text stroke width inversely
+    // Update text positions and scaling
+    this.nodesGroup.selectAll('.node').each((d, i, nodes) => {
+      const node = d3.select(nodes[i]);
+      this.updateNodeText(node, d);
+    });
     
     // Scale link stroke width
     this.linksGroup.selectAll('.link')
       .attr('stroke-width', 2 / scale);
 
     this.zoomLevel = scale;
-  }
+}
+
   // Your existing helper methods remain the same
   wrapText(text) {
     if (!text) return [''];
