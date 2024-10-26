@@ -445,8 +445,9 @@ function handleMessages(request, sender, sendResponse) {
         State.isTracking = !State.isTracking;
         updateIcon(State.isTracking);
         chrome.storage.local.set({ isTracking: State.isTracking });
+        console.log('Tracking toggled:', State.isTracking); // Add logging
         sendResponse({ isTracking: State.isTracking });
-        return false; // Changed to false since we're sending synchronously
+        return false;
   
       case 'getTrackingStatus':
         sendResponse({ isTracking: State.isTracking });

@@ -15,8 +15,12 @@ const elements = {
 };
 
 // Initialize popup
+// Modify the DOMContentLoaded event listener
 document.addEventListener('DOMContentLoaded', async function() {
-  // Cache UI elements
+  // First close any open viewer tabs
+  await closeViewerTab();
+
+  // Then continue with original initialization
   elements.toggleButton = document.getElementById('toggleTracking');
   elements.statusIndicator = document.getElementById('trackingStatus');
   elements.treeContainer = document.getElementById('tabTree');
@@ -24,10 +28,7 @@ document.addEventListener('DOMContentLoaded', async function() {
   elements.clearButton = document.getElementById('clearButton');
   elements.viewerButton = document.getElementById('openViewer');
 
-  // Set up event listeners
   setupEventListeners();
-
-  // Initialize state
   await initializeState();
 });
 
@@ -241,4 +242,22 @@ function getTimestamp() {
 function showError(message) {
   // You can implement a more sophisticated error display
   alert(message);
+}
+
+// In popup.js, add this function after the other functions
+async function closeViewerTab() {
+  try {
+    const tabs = await chrome.tabs.query({
+      url: chrome.runtime.getURL('viewer/viewer.html')
+    });
+    
+    if (tabs.length > 0) {
+      // Close all viewer tabs
+      for (const tab of tabs) {
+        await chrome.tabs.remove(tab.id);
+      }
+    }
+  } catch (error) {
+    console.error('Error closing viewer tab:', error);
+  }
 }
