@@ -123,7 +123,7 @@ def scrape_thread(driver, url, media_folder, str_user_handle):
 
 
 #%% login manually and keep using the same tag
-# driver = webdriver.Chrome()  # Or whichever browser you're using
+driver = webdriver.Chrome()  # Or whichever browser you're using
 
 
 #%% Setup
