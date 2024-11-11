@@ -53,6 +53,7 @@ print(f"Video cropped and exported successfully: {output_file}")
 
 
 # %%
+import argparse
 from moviepy.editor import VideoFileClip
 
 def crop_video_duration(input_file, output_file, start_time=0, end_time=None):
@@ -77,7 +78,7 @@ def crop_video_duration(input_file, output_file, start_time=0, end_time=None):
         audio_codec='aac',
         temp_audiofile='temp-audio.m4a',
         remove_temp=True,
-        fps=clip.fps
+        fps=30
     )
     
     # Close the clips
@@ -85,8 +86,8 @@ def crop_video_duration(input_file, output_file, start_time=0, end_time=None):
     cropped_clip.close()
 
     
-input_file="input2.mp4"
-output_file="output3.mp4"
-crop_video_duration(input_file, output_file, end_time = 139)
+input_file="3.mov"
+output_file="3out.mp4"
+crop_video_duration(input_file, output_file, end_time = None)
 print(f"Video duration cropped successfully: {output_file}")
 # %%
