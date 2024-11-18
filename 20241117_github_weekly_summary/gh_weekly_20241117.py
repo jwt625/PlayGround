@@ -79,11 +79,18 @@ class GitHubCommitSummary:
             
         return commits
 
-# %% Visualization Methods
-def analyze_commit_patterns(commits: List[Dict]) -> Tuple[plt.Figure, plt.Figure]:
+# %% Visualization Methods# %% Updated Visualization Methods
+def analyze_commit_patterns(commits: List[Dict], weeks_history: int = 1) -> Tuple[plt.Figure, plt.Figure]:
     """
     Analyze temporal patterns in commits and generate visualizations
+    
+    Args:
+        commits: List of commit data
+        weeks_history: Number of weeks being analyzed (for better visualization scaling)
     """
+    if not commits:
+        return None, None
+        
     # Extract timestamp data
     timestamps = []
     for commit in commits:
@@ -96,6 +103,7 @@ def analyze_commit_patterns(commits: List[Dict]) -> Tuple[plt.Figure, plt.Figure
     df = pd.DataFrame({'timestamp': timestamps})
     df['hour'] = df['timestamp'].dt.hour
     df['day'] = df['timestamp'].dt.day_name()
+    df['week'] = df['timestamp'].dt.isocalendar().week
     
     # Create heatmap of commit times
     plt.figure(figsize=(12, 6))
@@ -104,18 +112,29 @@ def analyze_commit_patterns(commits: List[Dict]) -> Tuple[plt.Figure, plt.Figure
     hour_counts = hour_counts.reindex(day_order)
     
     sns.heatmap(hour_counts, cmap='YlOrRd', cbar_kws={'label': 'Number of Commits'})
-    plt.title('Commit Activity Heatmap by Day and Hour')
+    plt.title(f'Commit Activity Heatmap (Past {weeks_history} weeks)')
     plt.xlabel('Hour of Day')
     plt.ylabel('Day of Week')
     heatmap_fig = plt.gcf()
     
-    # Create daily distribution plot
-    plt.figure(figsize=(10, 6))
-    daily_commits = df['day'].value_counts().reindex(day_order)
-    daily_commits.plot(kind='bar')
-    plt.title('Commits Distribution by Day')
-    plt.xlabel('Day of Week')
-    plt.ylabel('Number of Commits')
+    # Create weekly distribution plot
+    plt.figure(figsize=(max(10, weeks_history * 2), 6))  # Adjust figure size based on weeks
+    if weeks_history > 1:
+        # Group by week and day for longer periods
+        weekly_commits = df.groupby(['week', 'day']).size().unstack()
+        weekly_commits = weekly_commits.reindex(columns=day_order)
+        weekly_commits.plot(kind='bar', stacked=True)
+        plt.title('Commits Distribution by Week')
+        plt.xlabel('Week Number')
+        plt.ylabel('Number of Commits')
+    else:
+        # Show daily distribution for single week
+        daily_commits = df['day'].value_counts().reindex(day_order)
+        daily_commits.plot(kind='bar')
+        plt.title('Commits Distribution by Day')
+        plt.xlabel('Day of Week')
+        plt.ylabel('Number of Commits')
+    
     plt.xticks(rotation=45)
     plt.tight_layout()
     dist_fig = plt.gcf()
@@ -209,7 +228,9 @@ print(summary)
 # Generate and display visualizations
 heatmap_fig, dist_fig = analyze_commit_patterns(commits)
 plt.show()
-# %%
+
+
+
 # %% Example Usage with Flexible Time Window
 def analyze_repositories(repositories: List[Dict], weeks_history: int = 1, token: str = None):
     """
@@ -259,28 +280,26 @@ def analyze_repositories(repositories: List[Dict], weeks_history: int = 1, token
 
 # Example usage:
 repositories = [
-    {"owner": "octocat", "repo": "Hello-World"},
-    {"owner": "octocat", "repo": "Spoon-Knife"},
+    {"owner": "jwt625", "repo": "jwt625.github.io"},
+    {"owner": "jwt625", "repo": "PlayGround"},
 ]
 
 # Analyze last 4 weeks
-summary, commits = analyze_repositories(repositories, weeks_history=4)
+summary, commits = analyze_repositories(repositories, weeks_history=4, token=TOKEN)
 print(summary)
 
 # Analyze just last week
-summary, commits = analyze_repositories(repositories, weeks_history=1)
+summary, commits = analyze_repositories(repositories, weeks_history=1, token=TOKEN)
 print(summary)
 
 # Analyze last 12 weeks
-summary, commits = analyze_repositories(repositories, weeks_history=12)
+summary, commits = analyze_repositories(repositories, weeks_history=12, token=TOKEN)
 print(summary)
 
 #%%
-# Analyze quarterly data
-summary, commits = analyze_repositories(repositories, weeks_history=13)
-
-# Analyze monthly data
-summary, commits = analyze_repositories(repositories, weeks_history=4)
-
 # Analyze yearly data
-summary, commits = analyze_repositories(repositories, weeks_history=52)
+summary, commits = analyze_repositories(repositories, weeks_history=52, token=TOKEN)
+
+
+
+# %%
