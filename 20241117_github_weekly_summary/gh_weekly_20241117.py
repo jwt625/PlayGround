@@ -15,6 +15,7 @@ from typing import List, Dict, Tuple
 import matplotlib.pyplot as plt
 import seaborn as sns
 import pandas as pd
+import numpy as np
 
 # %% GitHub API Setup
 def setup_github_client(token: str = None):
@@ -79,10 +80,11 @@ class GitHubCommitSummary:
             
         return commits
 
-# %% Visualization Methods# %% Updated Visualization Methods
+# %% Visualization Methods# %% Updated Visualization Methods 
 def analyze_commit_patterns(commits: List[Dict], weeks_history: int = 1) -> Tuple[plt.Figure, plt.Figure]:
     """
     Analyze temporal patterns in commits and generate visualizations
+    Times are converted to Pacific Time (PST/PDT)
     
     Args:
         commits: List of commit data
@@ -91,14 +93,18 @@ def analyze_commit_patterns(commits: List[Dict], weeks_history: int = 1) -> Tupl
     if not commits:
         return None, None
         
-    # Extract timestamp data
+    # Extract timestamp data and convert to Pacific Time
+    pacific_tz = pytz.timezone('America/Los_Angeles')
     timestamps = []
     for commit in commits:
+        # Parse UTC timestamp
         commit_date = datetime.strptime(
             commit['commit']['author']['date'],
             '%Y-%m-%dT%H:%M:%SZ'
         ).replace(tzinfo=pytz.UTC)
-        timestamps.append(commit_date)
+        # Convert to Pacific Time
+        pacific_time = commit_date.astimezone(pacific_tz)
+        timestamps.append(pacific_time)
 
     df = pd.DataFrame({'timestamp': timestamps})
     df['hour'] = df['timestamp'].dt.hour
@@ -111,9 +117,15 @@ def analyze_commit_patterns(commits: List[Dict], weeks_history: int = 1) -> Tupl
     hour_counts = pd.crosstab(df['day'], df['hour'])
     hour_counts = hour_counts.reindex(day_order)
     
+    # Create heatmap with hour labels in 12-hour format
     sns.heatmap(hour_counts, cmap='YlOrRd', cbar_kws={'label': 'Number of Commits'})
-    plt.title(f'Commit Activity Heatmap (Past {weeks_history} weeks)')
-    plt.xlabel('Hour of Day')
+    plt.title(f'Commit Activity Heatmap (Past {weeks_history} weeks) - Pacific Time')
+    
+    # Format x-axis labels to show AM/PM
+    hour_labels = [f'{h%12 or 12}{["AM","PM"][h//12]}' for h in range(24)]
+    plt.xticks(np.arange(24) + 0.5, hour_labels, rotation=45)
+    
+    plt.xlabel('Hour of Day (Pacific Time)')
     plt.ylabel('Day of Week')
     heatmap_fig = plt.gcf()
     
@@ -124,14 +136,14 @@ def analyze_commit_patterns(commits: List[Dict], weeks_history: int = 1) -> Tupl
         weekly_commits = df.groupby(['week', 'day']).size().unstack()
         weekly_commits = weekly_commits.reindex(columns=day_order)
         weekly_commits.plot(kind='bar', stacked=True)
-        plt.title('Commits Distribution by Week')
+        plt.title('Commits Distribution by Week (Pacific Time)')
         plt.xlabel('Week Number')
         plt.ylabel('Number of Commits')
     else:
         # Show daily distribution for single week
         daily_commits = df['day'].value_counts().reindex(day_order)
         daily_commits.plot(kind='bar')
-        plt.title('Commits Distribution by Day')
+        plt.title('Commits Distribution by Day (Pacific Time)')
         plt.xlabel('Day of Week')
         plt.ylabel('Number of Commits')
     
@@ -140,6 +152,7 @@ def analyze_commit_patterns(commits: List[Dict], weeks_history: int = 1) -> Tupl
     dist_fig = plt.gcf()
     
     return heatmap_fig, dist_fig
+
 
 # %% Summary Generation
 def generate_summary(commits: List[Dict], owner: str, repo: str, 
@@ -282,6 +295,7 @@ def analyze_repositories(repositories: List[Dict], weeks_history: int = 1, token
 repositories = [
     {"owner": "jwt625", "repo": "jwt625.github.io"},
     {"owner": "jwt625", "repo": "PlayGround"},
+    {"owner": "jwt625", "repo": "Obsidian-Journals"},
 ]
 
 # Analyze last 4 weeks
@@ -297,8 +311,13 @@ summary, commits = analyze_repositories(repositories, weeks_history=12, token=TO
 print(summary)
 
 #%%
+repositories = [
+    {"owner": "jwt625", "repo": "jwt625.github.io"},
+    {"owner": "jwt625", "repo": "PlayGround"},
+    {"owner": "jwt625", "repo": "Obsidian-Journals"},
+]
 # Analyze yearly data
-summary, commits = analyze_repositories(repositories, weeks_history=52, token=TOKEN)
+summary, commits = analyze_repositories(repositories, weeks_history=26, token=TOKEN)
 
 
 
