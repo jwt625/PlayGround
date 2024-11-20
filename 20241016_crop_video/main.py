@@ -86,8 +86,8 @@ def crop_video_duration(input_file, output_file, start_time=0, end_time=None):
     cropped_clip.close()
 
     
-input_file="3.mov"
-output_file="3out.mp4"
-crop_video_duration(input_file, output_file, end_time = None)
+input_file="mmc5.mp4"
+output_file="out.mp4"
+crop_video_duration(input_file, output_file, start_time = 149.5, end_time = None)
 print(f"Video duration cropped successfully: {output_file}")
 # %%
