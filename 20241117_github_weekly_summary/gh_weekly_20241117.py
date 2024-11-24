@@ -319,6 +319,6 @@ repositories = [
 # Analyze yearly data
 summary, commits = analyze_repositories(repositories, weeks_history=26, token=TOKEN)
 
-
+# test
 
 # %%
