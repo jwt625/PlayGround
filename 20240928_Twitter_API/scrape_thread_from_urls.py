@@ -132,7 +132,9 @@ os.makedirs(media_folder, exist_ok=True)
 str_user_handle = "@jwt0625"  # Replace with the actual user handle
 
 # Read URLs from file
-str_fn = 'urls_tweet_to_scrape_20241215.txt'
+# str_fn = 'urls_tweet_to_scrape_20241215.txt'
+str_fn = 'urls_tweet_to_scrape_20241222.txt'
+
 # str_fn = 'urls_test.txt'
 with open(str_fn, 'r') as f:
     urls = [line.strip() for line in f if line.strip()]
