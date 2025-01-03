@@ -1,50 +1,90 @@
-// Function to fetch the pinned tweet from a profile URL
-async function fetchPinnedTweet(profileUrl) {
-  try {
-    const response = await fetch(profileUrl);
-    const text = await response.text();
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(text, "text/html");
 
-    // Find the pinned tweet (this selector may need to be updated if Twitter/X changes their HTML structure)
-    const pinnedTweet = doc.querySelector('[data-testid="tweet"]:first-child');
-    if (pinnedTweet) {
-      return pinnedTweet.outerHTML;
-    } else {
-      console.log("No pinned tweet found.");
-      return null;
-    }
+// content.js
+let pinnedTweet = null;
+let isInjected = false;
+
+// Function to extract pinned tweet
+async function getPinnedTweet(profileUrl) {
+  try {
+    // Wait for the profile page to load
+    await waitForElement('[data-testid="pinned-tweet-text"]');
+    
+    // Find the pinned tweet container
+    const pinnedTweetElement = document.querySelector('[data-testid="pinned-tweet"]');
+    if (!pinnedTweetElement) return null;
+    
+    // Clone the pinned tweet
+    return pinnedTweetElement.cloneNode(true);
   } catch (error) {
-    console.error("Error fetching pinned tweet:", error);
+    console.error('Error getting pinned tweet:', error);
     return null;
   }
 }
 
-// Function to inject the pinned tweet into the feed
-function injectPinnedTweet(pinnedTweetHtml) {
-  if (!pinnedTweetHtml) return;
+// Function to inject pinned tweet at the top of the feed
+async function injectPinnedTweet() {
+  if (isInjected || !pinnedTweet) return;
+  
+  const timeline = await waitForElement('[data-testid="primaryColumn"]');
+  if (!timeline) return;
+  
+  // Create container for pinned tweet
+  const container = document.createElement('div');
+  container.classList.add('pinned-tweet-container');
+  container.style.marginBottom = '20px';
+  container.style.border = '1px solid rgb(239, 243, 244)';
+  container.style.borderRadius = '16px';
+  container.appendChild(pinnedTweet);
+  
+  // Insert at the top of the timeline
+  const firstChild = timeline.firstChild;
+  timeline.insertBefore(container, firstChild);
+  isInjected = true;
+}
 
-  // Create a container for the pinned tweet
-  const pinnedTweetContainer = document.createElement("div");
-  pinnedTweetContainer.className = "pinned-tweet-container";
-  pinnedTweetContainer.innerHTML = pinnedTweetHtml;
+// Utility function to wait for element
+function waitForElement(selector) {
+  return new Promise(resolve => {
+    if (document.querySelector(selector)) {
+      return resolve(document.querySelector(selector));
+    }
 
-  // Find the Twitter/X feed container
-  const feedContainer = document.querySelector('[aria-label="Timeline: Your Home Timeline"]') || document.querySelector("main");
-  if (feedContainer) {
-    // Insert the pinned tweet at the top of the feed
-    feedContainer.insertBefore(pinnedTweetContainer, feedContainer.firstChild);
-  } else {
-    console.error("Could not find the feed container.");
+    const observer = new MutationObserver(mutations => {
+      if (document.querySelector(selector)) {
+        observer.disconnect();
+        resolve(document.querySelector(selector));
+      }
+    });
+
+    observer.observe(document.body, {
+      childList: true,
+      subtree: true
+    });
+  });
+}
+
+// Initialize
+async function init() {
+  // Get saved profile URL
+  const { profileUrl } = await chrome.storage.sync.get(['profileUrl']);
+  if (!profileUrl) return;
+  
+  // Get pinned tweet first
+  const pinned = await getPinnedTweet(profileUrl);
+  if (pinned) {
+    pinnedTweet = pinned;
+    // Watch for feed changes and inject when possible
+    const observer = new MutationObserver(() => {
+      if (window.location.pathname === '/home' || window.location.pathname === '/') {
+        injectPinnedTweet();
+      }
+    });
+    
+    observer.observe(document.body, {
+      childList: true,
+      subtree: true
+    });
   }
 }
 
-// Main function to run the script
-async function main() {
-  const profileUrl = "https://x.com/jwt0625"; // Replace with your profile URL
-  const pinnedTweetHtml = await fetchPinnedTweet(profileUrl);
-  injectPinnedTweet(pinnedTweetHtml);
-}
-
-// Run the script when the page loads
-main();
+init();

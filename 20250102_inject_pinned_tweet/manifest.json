@@ -1,15 +1,24 @@
+
 {
     "manifest_version": 3,
-    "name": "Pinned Post for Twitter/X",
+    "name": "Twitter Pinned Post Viewer",
     "version": "1.0",
-    "description": "Displays your pinned post at the top of Twitter/X.",
-    "permissions": ["activeTab", "scripting"],
-    "host_permissions": ["https://twitter.com/*", "https://x.com/*"],
+    "description": "Shows your pinned tweet at the top of Twitter feed",
+    "permissions": [
+      "storage",
+      "scripting"
+    ],
+    "host_permissions": [
+      "https://*.twitter.com/*",
+      "https://*.x.com/*"
+    ],
+    "action": {
+      "default_popup": "popup.html"
+    },
     "content_scripts": [
       {
-        "matches": ["https://twitter.com/*", "https://x.com/*"],
-        "js": ["content.js"],
-        "css": ["styles.css"]
+        "matches": ["https://*.twitter.com/*", "https://*.x.com/*"],
+        "js": ["content.js"]
       }
     ]
   }

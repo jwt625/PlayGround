@@ -1,0 +1,63 @@
+
+// popup.html
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Twitter Pinned Post Settings</title>
+  <style>
+    body {
+      width: 300px;
+      padding: 10px;
+      font-family: Arial, sans-serif;
+    }
+    .input-group {
+      margin-bottom: 15px;
+    }
+    input[type="text"] {
+      width: 100%;
+      padding: 5px;
+      margin-top: 5px;
+    }
+    button {
+      width: 100%;
+      padding: 8px;
+      background-color: #1DA1F2;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #1991db;
+    }
+  </style>
+</head>
+<body>
+  <div class="input-group">
+    <label for="profileUrl">Twitter Profile URL:</label>
+    <input type="text" id="profileUrl" placeholder="https://twitter.com/username">
+  </div>
+  <button id="saveButton">Save Settings</button>
+  <script src="popup.js"></script>
+</body>
+</html>
+
+// popup.js
+document.getElementById('saveButton').addEventListener('click', async () => {
+  const profileUrl = document.getElementById('profileUrl').value;
+  
+  // Save to Chrome storage
+  await chrome.storage.sync.set({
+    profileUrl: profileUrl
+  });
+  
+  // Show success message
+  alert('Settings saved!');
+});
+
+// Load saved settings
+chrome.storage.sync.get(['profileUrl'], (result) => {
+  if (result.profileUrl) {
+    document.getElementById('profileUrl').value = result.profileUrl;
+  }
+});
