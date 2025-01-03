@@ -1,0 +1,16 @@
+.pinned-tweet-container {
+  border: 2px solid #1da1f2; /* Twitter/X blue */
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 16px;
+  background-color: #f5f8fa; /* Light background */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.pinned-tweet-container::before {
+  content: "📌 Pinned Tweet";
+  display: block;
+  font-weight: bold;
+  color: #1da1f2;
+  margin-bottom: 8px;
+}
