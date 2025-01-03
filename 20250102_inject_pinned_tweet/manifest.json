@@ -1,0 +1,15 @@
+{
+    "manifest_version": 3,
+    "name": "Pinned Post for Twitter/X",
+    "version": "1.0",
+    "description": "Displays your pinned post at the top of Twitter/X.",
+    "permissions": ["activeTab", "scripting"],
+    "host_permissions": ["https://twitter.com/*", "https://x.com/*"],
+    "content_scripts": [
+      {
+        "matches": ["https://twitter.com/*", "https://x.com/*"],
+        "js": ["content.js"],
+        "css": ["styles.css"]
+      }
+    ]
+  }
