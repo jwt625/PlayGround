@@ -11,69 +11,70 @@ function debugLog(step, message, data = null) {
     }
 }
 
-// Function to fetch profile page and extract pinned tweet
-async function getPinnedTweet(profileUrl) {
+// Function to fetch and extract tweet
+async function getTweet(tweetUrl) {
     try {
-        debugLog('Fetch', `Starting to fetch profile page: ${profileUrl}`);
+        debugLog('Fetch', `Starting to fetch tweet: ${tweetUrl}`);
         
-        // Fetch the profile page content
-        const response = await fetch(profileUrl);
+        const response = await fetch(tweetUrl, {
+            headers: {
+                'Accept': 'text/html',
+                'Cache-Control': 'no-cache'
+            },
+            credentials: 'include'
+        });
+
         if (!response.ok) {
-            debugLog('Fetch Error', `Failed to fetch profile page. Status: ${response.status}`);
+            debugLog('Fetch Error', `Failed to fetch tweet. Status: ${response.status}`);
             return null;
         }
-        debugLog('Fetch', 'Successfully fetched profile page');
         
         const text = await response.text();
-        debugLog('Parse', 'Got page content, length:', text.length);
+        debugLog('Parse', 'Got tweet content, length:', text.length);
         
-        // Create a temporary DOM parser
         const parser = new DOMParser();
         const doc = parser.parseFromString(text, 'text/html');
-        debugLog('Parse', 'Parsed HTML document');
         
-        // Find the pinned tweet in the parsed document
-        const pinnedTweetElement = doc.querySelector('[data-testid="pinned-tweet"]');
-        if (!pinnedTweetElement) {
-            debugLog('Extract', 'No pinned tweet found on profile');
-            return null;
+        // Log the HTML structure for debugging
+        debugLog('Parse', 'Document HTML preview:', doc.body?.innerHTML?.substring(0, 1000) || 'No body content');
+
+        // Try different selectors
+        const selectors = [
+            '[data-testid="tweet"]',
+            '[role="article"]',
+            '[data-testid="tweetText"]',
+            '.css-175oi2r.r-18u37iz',
+            'article',
+            '[data-testid="cellInnerDiv"]'
+        ];
+
+        let tweetElement = null;
+        for (const selector of selectors) {
+            const element = doc.querySelector(selector);
+            debugLog('Selector', `Trying selector "${selector}": ${element ? 'Found' : 'Not found'}`);
+            if (element) {
+                tweetElement = element;
+                break;
+            }
         }
-        debugLog('Extract', 'Found pinned tweet element', pinnedTweetElement);
-        
-        // Clone the pinned tweet
-        const clonedTweet = pinnedTweetElement.cloneNode(true);
-        debugLog('Clone', 'Cloned pinned tweet element');
-        
-        // Fix any relative URLs in the tweet content
-        const links = clonedTweet.querySelectorAll('a');
-        debugLog('URLs', `Fixing ${links.length} links in tweet`);
-        links.forEach(link => {
-            if (link.href && link.href.startsWith('/')) {
-                const oldHref = link.href;
-                link.href = `https://twitter.com${link.href}`;
-                debugLog('URLs', `Updated link from ${oldHref} to ${link.href}`);
-            }
+
+        // Send both raw and parsed content to popup
+        chrome.runtime.sendMessage({
+            type: 'SCRAPED_CONTENT',
+            rawHtml: text,
+            parsedContent: tweetElement ? tweetElement.outerHTML : 'No tweet element found',
+            timestamp: new Date().toISOString()
         });
-        
-        const images = clonedTweet.querySelectorAll('img');
-        debugLog('URLs', `Fixing ${images.length} images in tweet`);
-        images.forEach(img => {
-            if (img.src && img.src.startsWith('/')) {
-                const oldSrc = img.src;
-                img.src = `https://twitter.com${img.src}`;
-                debugLog('URLs', `Updated image from ${oldSrc} to ${img.src}`);
-            }
-        });
-        
-        debugLog('Success', 'Successfully processed pinned tweet');
-        return clonedTweet;
+
+        return tweetElement;
+
     } catch (error) {
-        debugLog('Error', 'Error getting pinned tweet:', error);
+        debugLog('Error', 'Error getting tweet:', error);
         return null;
     }
 }
 
-// Function to inject pinned tweet at the top of the feed
+// Function to inject tweet at the top of the feed
 async function injectPinnedTweet() {
     if (isInjected || !pinnedTweet) {
         debugLog('Inject', 'Skipping injection - already injected or no tweet available');
@@ -99,13 +100,13 @@ async function injectPinnedTweet() {
     
     // Add a "Pinned Tweet" label
     const label = document.createElement('div');
-    label.textContent = '📌 Your Pinned Tweet';
+    label.textContent = '📌 Pinned Tweet';
     label.style.marginBottom = '8px';
     label.style.fontWeight = 'bold';
     label.style.color = 'rgb(83, 100, 113)';
     container.appendChild(label);
     
-    // Add the tweet
+    // Add tweet
     container.appendChild(pinnedTweet);
     debugLog('Inject', 'Created container with tweet');
     
@@ -117,7 +118,7 @@ async function injectPinnedTweet() {
     
     timeline.insertBefore(container, insertAfter.nextSibling);
     isInjected = true;
-    debugLog('Inject', 'Successfully injected pinned tweet into timeline');
+    debugLog('Inject', 'Successfully injected tweet into timeline');
 }
 
 // Utility function to wait for element
@@ -142,7 +143,6 @@ function waitForElement(selector, timeout = 5000) {
             subtree: true
         });
 
-        // Add timeout to avoid infinite waiting
         setTimeout(() => {
             observer.disconnect();
             debugLog('Wait', `Timeout waiting for element: ${selector}`);
@@ -165,20 +165,19 @@ async function init() {
     try {
         debugLog('Init', 'Starting extension initialization');
         
-        // Get saved profile URL
-        const { profileUrl } = await chrome.storage.sync.get(['profileUrl']);
-        if (!profileUrl) {
-            debugLog('Init', 'No profile URL found in storage');
+        // Get saved tweet URL
+        const { tweetUrl } = await chrome.storage.sync.get(['tweetUrl']);
+        if (!tweetUrl) {
+            debugLog('Init', 'No tweet URL found in storage');
             return;
         }
-        debugLog('Init', `Found profile URL: ${profileUrl}`);
+        debugLog('Init', `Found tweet URL: ${tweetUrl}`);
         
-        // Get pinned tweet first
-        debugLog('Init', 'Attempting to get pinned tweet');
-        const pinned = await getPinnedTweet(profileUrl);
-        if (pinned) {
-            debugLog('Init', 'Successfully got pinned tweet');
-            pinnedTweet = pinned;
+        // Get tweet content
+        const tweet = await getTweet(tweetUrl);
+        if (tweet) {
+            debugLog('Init', 'Successfully got tweet');
+            pinnedTweet = tweet;
             
             // Initial check for home page
             if (isHomePage()) {
@@ -188,7 +187,7 @@ async function init() {
             
             // Watch for navigation changes
             debugLog('Init', 'Setting up navigation observer');
-            const observer = new MutationObserver(async (mutations) => {
+            const observer = new MutationObserver(async () => {
                 if (isHomePage() && !isInjected) {
                     debugLog('Navigation', 'Detected navigation to home page, attempting injection');
                     await injectPinnedTweet();
@@ -201,12 +200,21 @@ async function init() {
             });
             debugLog('Init', 'Navigation observer setup complete');
         } else {
-            debugLog('Init', 'Failed to get pinned tweet');
+            debugLog('Init', 'Failed to get tweet');
         }
     } catch (error) {
         debugLog('Error', 'Error in initialization:', error);
     }
 }
+
+// Listen for manual scrape triggers
+window.addEventListener('SCRAPE_TWEET', async () => {
+    debugLog('Manual', 'Received manual scrape trigger');
+    const { tweetUrl } = await chrome.storage.sync.get(['tweetUrl']);
+    if (tweetUrl) {
+        await getTweet(tweetUrl);
+    }
+});
 
 // Reset injection state on navigation
 let lastPath = window.location.pathname;

@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Twitter Pinned Post Settings</title>
+  <title>Pin Tweet Settings</title>
   <style>
     body {
-      width: 300px;
+      width: 400px;
       padding: 10px;
       font-family: Arial, sans-serif;
     }
@@ -15,6 +15,7 @@
       width: 100%;
       padding: 5px;
       margin-top: 5px;
+      box-sizing: border-box;
     }
     button {
       width: 100%;
@@ -24,18 +25,64 @@
       border: none;
       border-radius: 4px;
       cursor: pointer;
+      margin-bottom: 10px;
     }
     button:hover {
       background-color: #1991db;
+    }
+    .note {
+      font-size: 12px;
+      color: #666;
+      margin-top: 5px;
+    }
+    #debugInfo {
+      margin-top: 15px;
+      border-top: 1px solid #eee;
+      padding-top: 10px;
+    }
+    #scrapedContent {
+      margin-top: 10px;
+      max-height: 200px;
+      overflow: auto;
+      font-family: monospace;
+      font-size: 11px;
+      background: #f5f5f5;
+      padding: 8px;
+      border-radius: 4px;
+      white-space: pre-wrap;
+      word-break: break-all;
+    }
+    .timestamp {
+      font-size: 11px;
+      color: #666;
+      margin-top: 5px;
+    }
+    #refreshButton {
+      background-color: #2EA043;
     }
   </style>
 </head>
 <body>
   <div class="input-group">
-    <label for="profileUrl">Twitter Profile URL:</label>
-    <input type="text" id="profileUrl" placeholder="https://twitter.com/username">
+    <label for="tweetUrl">Tweet URL to Pin:</label>
+    <input type="text" id="tweetUrl" placeholder="https://twitter.com/username/status/123456789">
+    <div class="note">Enter the full URL of the tweet you want to pin</div>
   </div>
   <button id="saveButton">Save Settings</button>
+  <button id="refreshButton">Refresh Preview</button>
+  <button id="saveHtmlButton" style="background-color: #6e40c9;">Save Parsed HTML</button>
+  <button id="saveRawHtmlButton" style="background-color: #2ea043;">Save Raw HTML</button>
+  
+  <div id="debugInfo">
+    <h3>Debug Information</h3>
+    <div id="timestamp" class="timestamp"></div>
+    <h4>Parsed Content:</h4>
+    <div id="scrapedContent">No content scraped yet...</div>
+    <h4>Raw HTML:</h4>
+    <div id="rawHtml" style="margin-top: 10px; max-height: 200px; overflow: auto; font-family: monospace; font-size: 11px; background: #f5f5f5; padding: 8px; border-radius: 4px; white-space: pre-wrap; word-break: break-all;">
+      No raw HTML yet...
+    </div>
+  </div>
   <script src="popup.js"></script>
 </body>
 </html>
