@@ -1,5 +1,3 @@
-
-// popup.js
 document.getElementById('saveButton').addEventListener('click', async () => {
   const profileUrl = document.getElementById('profileUrl').value;
   
