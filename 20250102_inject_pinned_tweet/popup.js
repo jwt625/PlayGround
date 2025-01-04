@@ -1,35 +1,37 @@
-// Function to trigger content scraping
+// Function to scrape tweet
 async function scrapeTweet(tweetUrl) {
-  // Get all tabs that match the tweet URL
+  debugLog('Scrape', `Starting scrape of tweet: ${tweetUrl}`);
+  
+  // Find or create a tab for the tweet
   const tabs = await chrome.tabs.query({
-    url: [
-      "https://twitter.com/*",
-      "https://x.com/*"
-    ]
+      url: [
+          "https://twitter.com/*",
+          "https://x.com/*"
+      ]
   });
-
-  // Find the tab with our tweet or create a new one
+  
   let tweetTab;
   if (tabs.length > 0) {
-    tweetTab = tabs[0];
-    await chrome.tabs.update(tweetTab.id, { url: tweetUrl });
+      tweetTab = tabs[0];
+      await chrome.tabs.update(tweetTab.id, { url: tweetUrl });
   } else {
-    tweetTab = await chrome.tabs.create({ url: tweetUrl, active: false });
+      tweetTab = await chrome.tabs.create({ url: tweetUrl, active: false });
   }
-
-  // Wait for the page to load and inject our content script
-  await new Promise(resolve => setTimeout(resolve, 2000));
+  
+  // Wait for page load and execute content script
+  await new Promise(resolve => setTimeout(resolve, 5000)); // Wait 5 seconds for load
   
   try {
-    await chrome.scripting.executeScript({
-      target: { tabId: tweetTab.id },
-      function: () => {
-        // This will trigger our content.js to scrape the tweet
-        window.dispatchEvent(new CustomEvent('SCRAPE_TWEET'));
-      }
-    });
+      // Execute script in the context of the tweet page
+      await chrome.scripting.executeScript({
+          target: { tabId: tweetTab.id },
+          function: () => {
+              // This will trigger our content script to scrape the tweet
+              window.dispatchEvent(new CustomEvent('SCRAPE_TWEET'));
+          }
+      });
   } catch (error) {
-    console.error('Error executing script:', error);
+      console.error('Error executing script:', error);
   }
 }
 
@@ -39,8 +41,8 @@ async function saveSettings() {
   
   // Basic URL validation
   if (!tweetUrl.match(/^https?:\/\/(twitter\.com|x\.com)\/\w+\/status\/\d+/)) {
-    alert('Please enter a valid tweet URL\nExample: https://twitter.com/username/status/123456789');
-    return;
+      alert('Please enter a valid tweet URL\nExample: https://twitter.com/username/status/123456789');
+      return;
   }
   
   // Save to Chrome storage
@@ -48,20 +50,17 @@ async function saveSettings() {
   
   // Try to scrape the tweet immediately
   await scrapeTweet(tweetUrl);
-  
-  // Show success message
-  alert('Settings saved! The tweet will appear at the top of your home feed.');
 }
 
 // Function to save HTML to file
 function saveHtmlToFile(type) {
   const content = type === 'raw' ? 
-    document.getElementById('rawHtml').textContent :
-    document.getElementById('scrapedContent').textContent;
-    
+      document.getElementById('rawHtml').textContent :
+      document.getElementById('scrapedContent').textContent;
+      
   if (!content || content === 'No content scraped yet...' || content === 'No raw HTML yet...') {
-    alert('No content to save yet. Please fetch the tweet first.');
-    return;
+      alert('No content to save yet. Please fetch the tweet first.');
+      return;
   }
 
   // Create blob and download link
@@ -79,14 +78,24 @@ function saveHtmlToFile(type) {
   URL.revokeObjectURL(url);
 }
 
+// Debug logging function
+function debugLog(step, message, data = null) {
+  const logMessage = `[Twitter Pin Extension Popup] ${step}: ${message}`;
+  if (data) {
+      console.log(logMessage, data);
+  } else {
+      console.log(logMessage);
+  }
+}
+
 // Event Listeners
 document.getElementById('saveButton').addEventListener('click', saveSettings);
 document.getElementById('refreshButton').addEventListener('click', async () => {
   const { tweetUrl } = await chrome.storage.sync.get(['tweetUrl']);
   if (tweetUrl) {
-    await scrapeTweet(tweetUrl);
+      await scrapeTweet(tweetUrl);
   } else {
-    alert('Please save a tweet URL first');
+      alert('Please save a tweet URL first');
   }
 });
 document.getElementById('saveHtmlButton').addEventListener('click', () => saveHtmlToFile('parsed'));
@@ -95,34 +104,17 @@ document.getElementById('saveRawHtmlButton').addEventListener('click', () => sav
 // Listen for scraped content from content script
 chrome.runtime.onMessage.addListener((message) => {
   if (message.type === 'SCRAPED_CONTENT') {
-    document.getElementById('scrapedContent').textContent = message.parsedContent || 'No tweet element found';
-    document.getElementById('rawHtml').textContent = message.rawHtml || 'No raw HTML available';
-    document.getElementById('timestamp').textContent = 
-      `Last updated: ${new Date(message.timestamp).toLocaleString()}`;
-  }
-});
-document.getElementById('refreshButton').addEventListener('click', async () => {
-  const { tweetUrl } = await chrome.storage.sync.get(['tweetUrl']);
-  if (tweetUrl) {
-    await scrapeTweet(tweetUrl);
-  } else {
-    alert('Please save a tweet URL first');
-  }
-});
-
-// Listen for scraped content from content script
-chrome.runtime.onMessage.addListener((message) => {
-  if (message.type === 'SCRAPED_CONTENT') {
-    document.getElementById('scrapedContent').textContent = message.content;
-    document.getElementById('timestamp').textContent = 
-      `Last updated: ${new Date(message.timestamp).toLocaleString()}`;
+      document.getElementById('scrapedContent').textContent = message.parsedContent || 'No tweet element found';
+      document.getElementById('rawHtml').textContent = message.rawHtml || 'No raw HTML available';
+      document.getElementById('timestamp').textContent = 
+          `Last updated: ${new Date(message.timestamp).toLocaleString()}`;
+      debugLog('Update', 'Updated display with new content');
   }
 });
 
 // Load saved settings
 chrome.storage.sync.get(['tweetUrl'], (result) => {
   if (result.tweetUrl) {
-    document.getElementById('tweetUrl').value = result.tweetUrl;
-    scrapeTweet(result.tweetUrl);  // Try to get initial preview
+      document.getElementById('tweetUrl').value = result.tweetUrl;
   }
 });

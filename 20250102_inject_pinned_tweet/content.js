@@ -11,67 +11,52 @@ function debugLog(step, message, data = null) {
     }
 }
 
-// Function to fetch and extract tweet
-async function getTweet(tweetUrl) {
-    try {
-        debugLog('Fetch', `Starting to fetch tweet: ${tweetUrl}`);
+// Function to get tweet from the actual rendered page
+async function getTweetFromDOM() {
+    debugLog('Scrape', 'Starting DOM scraping');
+    
+    // Wait for the tweet to be rendered
+    const selectors = [
+        '[data-testid="tweet"]',
+        '[role="article"]',
+        '[data-testid="tweetText"]',
+        '.css-175oi2r.r-18u37iz',
+        'article'
+    ];
+    
+    let tweetElement = null;
+    
+    // Try multiple times with a delay
+    for (let attempt = 0; attempt < 10; attempt++) {
+        debugLog('Scrape', `Attempt ${attempt + 1} to find tweet`);
         
-        const response = await fetch(tweetUrl, {
-            headers: {
-                'Accept': 'text/html',
-                'Cache-Control': 'no-cache'
-            },
-            credentials: 'include'
-        });
-
-        if (!response.ok) {
-            debugLog('Fetch Error', `Failed to fetch tweet. Status: ${response.status}`);
-            return null;
-        }
-        
-        const text = await response.text();
-        debugLog('Parse', 'Got tweet content, length:', text.length);
-        
-        const parser = new DOMParser();
-        const doc = parser.parseFromString(text, 'text/html');
-        
-        // Log the HTML structure for debugging
-        debugLog('Parse', 'Document HTML preview:', doc.body?.innerHTML?.substring(0, 1000) || 'No body content');
-
-        // Try different selectors
-        const selectors = [
-            '[data-testid="tweet"]',
-            '[role="article"]',
-            '[data-testid="tweetText"]',
-            '.css-175oi2r.r-18u37iz',
-            'article',
-            '[data-testid="cellInnerDiv"]'
-        ];
-
-        let tweetElement = null;
         for (const selector of selectors) {
-            const element = doc.querySelector(selector);
-            debugLog('Selector', `Trying selector "${selector}": ${element ? 'Found' : 'Not found'}`);
+            const element = document.querySelector(selector);
             if (element) {
+                debugLog('Scrape', `Found element with selector: ${selector}`);
                 tweetElement = element;
                 break;
             }
         }
-
-        // Send both raw and parsed content to popup
-        chrome.runtime.sendMessage({
-            type: 'SCRAPED_CONTENT',
-            rawHtml: text,
-            parsedContent: tweetElement ? tweetElement.outerHTML : 'No tweet element found',
-            timestamp: new Date().toISOString()
-        });
-
-        return tweetElement;
-
-    } catch (error) {
-        debugLog('Error', 'Error getting tweet:', error);
+        
+        if (tweetElement) break;
+        await new Promise(r => setTimeout(r, 1000)); // Wait 1 second between attempts
+    }
+    
+    if (!tweetElement) {
+        debugLog('Scrape', 'Failed to find tweet after all attempts');
         return null;
     }
+    
+    // Send both raw and rendered content to popup
+    chrome.runtime.sendMessage({
+        type: 'SCRAPED_CONTENT',
+        rawHtml: document.documentElement.outerHTML,
+        parsedContent: tweetElement.outerHTML,
+        timestamp: new Date().toISOString()
+    });
+    
+    return tweetElement.cloneNode(true);
 }
 
 // Function to inject tweet at the top of the feed
@@ -163,6 +148,17 @@ function isHomePage() {
 // Initialize
 async function init() {
     try {
+        // If we're on a tweet page, try to scrape it
+        if (window.location.pathname.includes('/status/')) {
+            debugLog('Init', 'On tweet page, attempting to scrape');
+            const tweet = await getTweetFromDOM();
+            if (tweet) {
+                debugLog('Init', 'Successfully scraped tweet from page');
+            }
+            return;
+        }
+        
+        // Otherwise check if we need to inject the pinned tweet
         debugLog('Init', 'Starting extension initialization');
         
         // Get saved tweet URL
@@ -173,17 +169,9 @@ async function init() {
         }
         debugLog('Init', `Found tweet URL: ${tweetUrl}`);
         
-        // Get tweet content
-        const tweet = await getTweet(tweetUrl);
-        if (tweet) {
-            debugLog('Init', 'Successfully got tweet');
-            pinnedTweet = tweet;
-            
-            // Initial check for home page
-            if (isHomePage()) {
-                debugLog('Init', 'On home page, attempting initial injection');
-                await injectPinnedTweet();
-            }
+        if (isHomePage() && pinnedTweet) {
+            debugLog('Init', 'On home page with pinned tweet, attempting injection');
+            await injectPinnedTweet();
             
             // Watch for navigation changes
             debugLog('Init', 'Setting up navigation observer');
@@ -199,22 +187,11 @@ async function init() {
                 subtree: true
             });
             debugLog('Init', 'Navigation observer setup complete');
-        } else {
-            debugLog('Init', 'Failed to get tweet');
         }
     } catch (error) {
         debugLog('Error', 'Error in initialization:', error);
     }
 }
-
-// Listen for manual scrape triggers
-window.addEventListener('SCRAPE_TWEET', async () => {
-    debugLog('Manual', 'Received manual scrape trigger');
-    const { tweetUrl } = await chrome.storage.sync.get(['tweetUrl']);
-    if (tweetUrl) {
-        await getTweet(tweetUrl);
-    }
-});
 
 // Reset injection state on navigation
 let lastPath = window.location.pathname;
