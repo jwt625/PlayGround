@@ -131,22 +131,31 @@ driver = webdriver.Chrome()  # Or whichever browser you're using
 # Get the list of all window handles (tabs)
 window_handles = driver.window_handles
 
-# List to store URLs
+# List to store valid URLs
 urls = []
 
 # Iterate through each tab and get the URL
 for handle in window_handles:
     driver.switch_to.window(handle)
     url = driver.current_url
-    urls.append(url)
+    
+    # Check if the URL matches the expected format
+    if url.startswith("https://x.com/jwt0625/status/"):
+        # Extract the numeric part at the end
+        try:
+            tweet_id = int(url.split("/")[-1])
+            urls.append((tweet_id, url))  # Store as a tuple (tweet_id, url)
+        except ValueError:
+            # Ignore URLs that don't end with a valid number
+            continue
 
-# Export URLs to a text file
-with open("open_tabs_urls.txt", "w") as file:
-    for url in urls:
+# Sort the URLs based on the tweet ID (ascending order)
+sorted_urls = sorted(urls, key=lambda x: x[0])
+
+# Export sorted URLs to a text file
+with open("sorted_tweet_urls.txt", "w") as file:
+    for tweet_id, url in sorted_urls:
         file.write(url + "\n")
-
-# Close the browser (optional)
-# driver.quit()
 
 
 #%% Setup
@@ -156,7 +165,7 @@ str_user_handle = "@jwt0625"  # Replace with the actual user handle
 
 # Read URLs from file
 # str_fn = 'urls_tweet_to_scrape_20241215.txt'
-str_fn = 'urls_tweet_to_scrape_20241229.txt'
+str_fn = 'sorted_tweet_urls_20250105.txt'
 
 # str_fn = 'urls_test.txt'
 with open(str_fn, 'r') as f:
