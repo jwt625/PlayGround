@@ -126,6 +126,29 @@ def scrape_thread(driver, url, media_folder, str_user_handle):
 driver = webdriver.Chrome()  # Or whichever browser you're using
 
 
+#%% get all urls
+
+# Get the list of all window handles (tabs)
+window_handles = driver.window_handles
+
+# List to store URLs
+urls = []
+
+# Iterate through each tab and get the URL
+for handle in window_handles:
+    driver.switch_to.window(handle)
+    url = driver.current_url
+    urls.append(url)
+
+# Export URLs to a text file
+with open("open_tabs_urls.txt", "w") as file:
+    for url in urls:
+        file.write(url + "\n")
+
+# Close the browser (optional)
+# driver.quit()
+
+
 #%% Setup
 media_folder = 'media'
 os.makedirs(media_folder, exist_ok=True)
