@@ -11,7 +11,7 @@ dx = 3e-3;          % Spatial step in x (meters)
 dy = 3e-3;          % Spatial step in y (meters)
 % dt = dx/(3e8*sqrt(2)); % Time step (Courant condition)
 
-Nt = 10;           % Number of time steps
+Nt = 1000;           % Number of time steps
 c0 = 3e8;           % Speed of light in vacuum
 mu0 = pi*4e-7;      % Permeability of free space
 eps0 = 8.85e-12;    % Permittivity of free space
@@ -96,28 +96,23 @@ disp('Calculating field maxima and final states...');
 tic;
 for n = 1:Nt
     % Field updates
-    % Update Ex field
-    for i = 1:Nx
-        for j = 2:Ny
-            Ex(i,j) = Ex(i,j) + CEx(i,j) * (Hz(i,j) - Hz(i,j-1));
-        end
-    end
+
+    % Vectorized Field Updates
+
+    % Update Hz field (all rows/columns)
+    % Calculate spatial derivatives using matrix operations
+    dEy_dx = Ey(2:Nx+1, :) - Ey(1:Nx, :);    % Forward difference in x
+    dEx_dy = Ex(:, 2:Ny+1) - Ex(:, 1:Ny);    % Forward difference in y
+    Hz = Hz + CHz_x * dEy_dx + CHz_y * dEx_dy;
     
-    % Update Ey field
-    for i = 2:Nx
-        for j = 1:Ny
-            Ey(i,j) = Ey(i,j) + CEy(i,j) * (Hz(i,j) - Hz(i-1,j));
-        end
-    end
+    % Update Ex field (all rows, columns 2:end)
+    Hz_diff_x = Hz(:, 2:Ny) - Hz(:, 1:Ny-1);
+    Ex(:, 2:Ny) = Ex(:, 2:Ny) + CEx(:, 2:Ny) .* Hz_diff_x;
     
-    % Update Hz field
-    for i = 1:Nx
-        for j = 1:Ny
-            dEy_dx = Ey(i+1,j) - Ey(i,j);
-            dEx_dy = Ex(i,j+1) - Ex(i,j);
-            Hz(i,j) = Hz(i,j) + CHz_x * dEy_dx + CHz_y * dEx_dy;
-        end
-    end
+    % Update Ey field (rows 2:end, all columns)
+    Hz_diff_y = Hz(2:Nx, :) - Hz(1:Nx-1, :);
+    Ey(2:Nx, :) = Ey(2:Nx, :) + CEy(2:Nx, :) .* Hz_diff_y;
+    
     
     % Apply sources
     for s = 1:length(sources)
@@ -187,28 +182,23 @@ disp('Generating animation...');
 tic;
 for n = 1:Nt
     % Field updates
-    % Update Ex field
-    for i = 1:Nx
-        for j = 2:Ny
-            Ex(i,j) = Ex(i,j) + CEx(i,j) * (Hz(i,j) - Hz(i,j-1));
-        end
-    end
+
+    % Vectorized Field Updates
+
+    % Update Hz field (all rows/columns)
+    % Calculate spatial derivatives using matrix operations
+    dEy_dx = Ey(2:Nx+1, :) - Ey(1:Nx, :);    % Forward difference in x
+    dEx_dy = Ex(:, 2:Ny+1) - Ex(:, 1:Ny);    % Forward difference in y
+    Hz = Hz + CHz_x * dEy_dx + CHz_y * dEx_dy;
+
+    % Update Ex field (all rows, columns 2:end)
+    Hz_diff_x = Hz(:, 2:Ny) - Hz(:, 1:Ny-1);
+    Ex(:, 2:Ny) = Ex(:, 2:Ny) + CEx(:, 2:Ny) .* Hz_diff_x;
     
-    % Update Ey field
-    for i = 2:Nx
-        for j = 1:Ny
-            Ey(i,j) = Ey(i,j) + CEy(i,j) * (Hz(i,j) - Hz(i-1,j));
-        end
-    end
+    % Update Ey field (rows 2:end, all columns)
+    Hz_diff_y = Hz(2:Nx, :) - Hz(1:Nx-1, :);
+    Ey(2:Nx, :) = Ey(2:Nx, :) + CEy(2:Nx, :) .* Hz_diff_y;
     
-    % Update Hz field
-    for i = 1:Nx
-        for j = 1:Ny
-            dEy_dx = Ey(i+1,j) - Ey(i,j);
-            dEx_dy = Ex(i,j+1) - Ex(i,j);
-            Hz(i,j) = Hz(i,j) + CHz_x * dEy_dx + CHz_y * dEx_dy;
-        end
-    end
     
     % Apply sources
     for s = 1:length(sources)
