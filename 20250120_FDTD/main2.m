@@ -7,8 +7,8 @@ clear; close all;
 % Simulation parameters
 Nx = 300;           % Number of cells in x-direction
 Ny = 300;           % Number of cells in y-direction
-dx = 3e-3;          % Spatial step in x (meters)
-dy = 3e-3;          % Spatial step in y (meters)
+dx = 1e-3;          % Spatial step in x (meters)
+dy = 1e-3;          % Spatial step in y (meters)
 % dt = dx/(3e8*sqrt(2)); % Time step (Courant condition)
 
 Nt = 1000;           % Number of time steps
@@ -16,7 +16,7 @@ c0 = 3e8;           % Speed of light in vacuum
 mu0 = pi*4e-7;      % Permeability of free space
 eps0 = 8.85e-12;    % Permittivity of free space
 
-dt = 1/(c0*sqrt(1/dx^2 + 1/dy^2)) * 0.99; % 99% of stability limit
+dt = 1/(c0*sqrt(1/dx^2 + 1/dy^2)) * 0.5; % 99% of stability limit
 
 % User-defined parameters
 % 1. Refractive index distribution (Nx x Ny matrix)
@@ -31,7 +31,7 @@ lambda = c0/f;      % Wavelength
 omega = 2*pi*f;     % Angular frequency
 
 % Create vertical line source (~3 wavelengths long)
-source_length = round(10*lambda/dx); % Number of cells for 3 wavelengths
+source_length = round(0.3*lambda/dx); % Number of cells for 3 wavelengths
 sources = struct('i', {}, 'j', {}, 'A', {}, 'phi', {});
 center_x = round(Nx/2);
 start_y = round(Ny/2 - source_length/2);
@@ -107,11 +107,11 @@ for n = 1:Nt
     
     % Update Ex field (all rows, columns 2:end)
     Hz_diff_x = Hz(:, 2:Ny) - Hz(:, 1:Ny-1);
-    Ex(:, 2:Ny) = Ex(:, 2:Ny) + CEx(:, 2:Ny) .* Hz_diff_x;
+    Ex(:, 1:Ny-1) = Ex(:, 1:Ny-1) + CEx(:, 2:Ny) .* Hz_diff_x;
     
     % Update Ey field (rows 2:end, all columns)
     Hz_diff_y = Hz(2:Nx, :) - Hz(1:Nx-1, :);
-    Ey(2:Nx, :) = Ey(2:Nx, :) + CEy(2:Nx, :) .* Hz_diff_y;
+    Ey(1:Nx-1, :) = Ey(1:Nx-1, :) + CEy(2:Nx, :) .* Hz_diff_y;
     
     
     % Apply sources
