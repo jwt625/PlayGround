@@ -53,4 +53,55 @@ plt.imshow(Ez, cmap='RdBu')
 plt.show()
 
 
+# %% 20250212, naive calculation, written by mistral
+# % did not work. Switched to chatGPT pro I got free from the training project
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Define parameters
+wavelength = 1.0  # Wavelength of the emitted waves
+c = 1.0  # Speed of light in medium (normalized to 1)
+v_particle = 1.2 * c  # Particle speed (greater than c to induce Cherenkov radiation)
+k = 2 * np.pi / wavelength  # Wavenumber
+omega = k * c  # Angular frequency
+period = 2 * np.pi / omega  # Wave period
+dt = period / 10  # Time step
+
+domain_x = 100 * wavelength
+
+# Set domain and grid
+nx, ny = 500, 100  # Resolution
+x = np.linspace(0, domain_x, nx)
+y = np.linspace(-10 * wavelength, 10 * wavelength, ny)
+X, Y = np.meshgrid(x, y)
+
+# Time evolution
+final_time = domain_x / v_particle * 0.8  # Final time when particle is at 80% of domain_x
+n_steps = int(final_time / dt)
+
+# Initialize wave field
+wave_field = np.zeros((ny, nx))
+
+# Compute the superposition of waves
+for step in range(n_steps):
+    t = step * dt
+    x_source = v_particle * t  # Particle position at time t
+    r = np.sqrt((X - x_source)**2 + Y**2)  # Distance to current wavefront
+    valid_mask = r > 0  # Avoid singularity at r=0
+    wave_field[valid_mask] += (1 / r[valid_mask]**2) * np.cos(k * r[valid_mask] - omega * t)
+
+# Normalize for visualization
+wave_field /= np.max(np.abs(wave_field))
+
+# Plot the result
+plt.figure(figsize=(10, 5))
+plt.imshow(wave_field, extent=[0, domain_x, -10 * wavelength, 10 * wavelength], cmap='bwr', origin='lower')
+plt.colorbar(label='Wave Amplitude')
+plt.xlabel('x (Wavelengths)')
+plt.ylabel('y (Wavelengths)')
+plt.title('Cherenkov Radiation Pattern')
+plt.show()
+
+
+
 # %%
