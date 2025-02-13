@@ -62,22 +62,22 @@ import plotly.graph_objects as go
 # Define parameters
 wavelength = 1.0  # Wavelength of the emitted waves
 c = 1.0  # Speed of light in medium (normalized to 1)
-v_particle = 2.5 * c  # Particle speed (greater than c to induce Cherenkov radiation)
+v_particle = 5 * c  # Particle speed (greater than c to induce Cherenkov radiation)
 k = 2 * np.pi / wavelength  # Wavenumber
 omega = k * c  # Angular frequency
 period = 2 * np.pi / omega  # Wave period
 dt = period / 50  # Time step
 
-domain_x = 20 * wavelength
+domain_x = 10 * wavelength
 
 # Set domain and grid
-nx, ny = 1000, 200  # Resolution
+nx, ny = 1000, 400  # Resolution
 x = np.linspace(0, domain_x, nx)
-y = np.linspace(-5 * wavelength, 5 * wavelength, ny)
+y = np.linspace(-2 * wavelength, 2 * wavelength, ny)
 X, Y = np.meshgrid(x, y)
 
 # Time evolution
-final_time = domain_x / v_particle * 0.6  # Final time when particle is at 80% of domain_x
+final_time = domain_x / v_particle * 0.7  # Final time when particle is at 80% of domain_x
 n_steps = int(final_time / dt)
 
 # Initialize wave field
