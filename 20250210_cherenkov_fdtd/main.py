@@ -62,11 +62,11 @@ import plotly.graph_objects as go
 # Define parameters
 wavelength = 1.0  # Wavelength of the emitted waves
 c = 1.0  # Speed of light in medium (normalized to 1)
-v_particle = 0.7 * c  # Particle speed (greater than c to induce Cherenkov radiation)
+v_particle = 2.5 * c  # Particle speed (greater than c to induce Cherenkov radiation)
 k = 2 * np.pi / wavelength  # Wavenumber
 omega = k * c  # Angular frequency
 period = 2 * np.pi / omega  # Wave period
-dt = period / 10  # Time step
+dt = period / 50  # Time step
 
 domain_x = 20 * wavelength
 
@@ -95,10 +95,16 @@ for step in range(n_steps):
 # Normalize for visualization
 wave_field /= np.max(np.abs(wave_field))
 
+
 # Create interactive plot using Plotly
-fig = go.Figure(data=go.Heatmap(z=wave_field, x=x, y=y, colorscale='RdBu', 
-                                zmin=-0.3, zmax=0.3))
-fig.update_layout(title='Cherenkov Radiation Pattern', xaxis_title='x (Wavelengths)', yaxis_title='y (Wavelengths)')
+fig = go.Figure(data=go.Heatmap(z=wave_field, x=x, y=y,
+    colorscale='RdBu', zmin=-0.3, zmax=0.3))
+fig.update_layout(
+    title='Cherenkov Radiation Pattern',
+    xaxis_title='x (Wavelengths)',
+    yaxis_title='y (Wavelengths)',
+    yaxis=dict(scaleanchor="x", scaleratio=1)  # Enforce aspect ratio of 1
+)
 fig.show()
 
 
