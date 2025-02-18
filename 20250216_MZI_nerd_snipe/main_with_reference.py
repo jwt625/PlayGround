@@ -62,3 +62,5 @@ draw_interference(ax[1])
 
 plt.tight_layout()
 plt.show()
+
+# %%
