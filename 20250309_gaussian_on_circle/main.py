@@ -187,12 +187,14 @@ fig_3d.show()
 # %% shaded 3d
 import numpy as np
 import matplotlib.pyplot as plt
-from mpl_toolkits.mplot3d.art3d import Poly3DCollection
+from mpl_toolkits.mplot3d.art3d import Poly3DCollection, Line3DCollection
 import plotly.graph_objs as go
 
 # --- Parameters ---
-sigma = 1.0/3  # sigma equals the circle radius
-x = np.linspace(-20*sigma, 20*sigma, 5000)
+sigma = 0.2  # sigma equals the circle radius
+x = np.linspace(-10*sigma, 10*sigma, 1000)
+x_extend = np.logspace(np.log10(10*sigma), np.log10(1000*sigma), 100)
+x = np.concatenate((-np.flip(x_extend), x, x_extend))
 pdf = 1/(sigma * np.sqrt(2*np.pi)) * np.exp(-0.5*(x/sigma)**2)
 
 # --- Stereographic Projection ---
@@ -201,14 +203,24 @@ pdf = 1/(sigma * np.sqrt(2*np.pi)) * np.exp(-0.5*(x/sigma)**2)
 u = 2*x/(1+x**2)
 v = (x**2 - 1)/(1+x**2)
 
-# --- Matplotlib 3D Plot with Shaded Surface ---
+# ------------------------------
+# Matplotlib 3D Plot with Colored & Transparent Surface
+# ------------------------------
 fig = plt.figure(figsize=(10, 7))
 ax = fig.add_subplot(111, projection='3d')
 
-# Plot the 3D Gaussian curve (wrapped on the circle)
-ax.plot(u, v, pdf, lw=2, label='Gaussian Curve')
+# Create colored segments for the 3D curve
+segments = [((u[i], v[i], pdf[i]), (u[i+1], v[i+1], pdf[i+1])) for i in range(len(u)-1)]
+norm = plt.Normalize(pdf.min(), pdf.max())
+# Compute the average PDF for each segment to color it
+segment_colors = [plt.cm.viridis(norm((pdf[i] + pdf[i+1]) / 2)) for i in range(len(u)-1)]
+line_collection = Line3DCollection(segments, colors=segment_colors, linewidths=2)
+ax.add_collection3d(line_collection)
 
-# Create polygons (quadrilaterals) for the surface between the curve and z=0
+# Optionally, add markers for clarity (colored by the PDF)
+ax.scatter(u, v, pdf, c=pdf, cmap='viridis', s=20)
+
+# Create polygons for the surface between the curve and its projection (z=0)
 polys = []
 for i in range(len(u) - 1):
     poly = [
@@ -218,37 +230,44 @@ for i in range(len(u) - 1):
         (u[i],   v[i],   pdf[i])     # top current point
     ]
     polys.append(poly)
+# Compute face colors based on the average PDF on the top edge of each quadrilateral
+facecolors = [plt.cm.viridis(norm((pdf[i] + pdf[i+1]) / 2)) for i in range(len(u)-1)]
+surface = Poly3DCollection(polys, facecolors=facecolors, edgecolors='none', alpha=0.5)
+ax.add_collection3d(surface)
 
-# Create a Poly3DCollection with transparency (alpha)
-collection = Poly3DCollection(polys, facecolors='cyan', edgecolors='none', alpha=0.5)
-ax.add_collection3d(collection)
+# Add a reference unit circle in the uv plane at z=0 (dashed)
+theta = np.linspace(0, 2*np.pi, 200)
+circle_u = np.cos(theta)
+circle_v = np.sin(theta)
+circle_z = np.zeros_like(theta)
+ax.plot(circle_u, circle_v, circle_z, 'k--', lw=1, label='Unit Circle (z=0)')
 
-# Optionally, add the projection curve on the uv plane (z=0)
-ax.plot(u, v, np.zeros_like(pdf), 'k--', lw=1, label='Projection (z=0)')
-
-# Set labels and title
 ax.set_xlabel('u')
 ax.set_ylabel('v')
 ax.set_zlabel('PDF')
-ax.set_title('3D Gaussian on a Ring with Shaded Surface (Matplotlib)')
+ax.set_title('3D Gaussian on a Ring with Colored, Transparent Surface (Matplotlib)')
 ax.legend()
 plt.show()
 
-# --- Plotly 3D Plot with Shaded Surface ---
-# For Plotly, we'll build a mesh that fills between the Gaussian curve and its projection.
-
+# ------------------------------
+# Plotly 3D Plot with Colored & Transparent Surface
+# ------------------------------
+# For Plotly, we build a mesh that fills between the top (curve) and its projection (z=0)
 n = len(u)
-# Create vertices: first half are the top (curve) and second half are the bottom (projection)
+# Create vertices: top vertices (the curve) and bottom vertices (projection onto uv-plane)
 x_vertices = np.concatenate([u, u])
 y_vertices = np.concatenate([v, v])
+# Top vertices get their PDF value; bottom vertices remain at z=0
 z_vertices = np.concatenate([pdf, np.zeros_like(pdf)])
+# To color the mesh according to PDF along the top edge, assign intensity values from the PDF for both top and bottom vertices.
+intensity = np.concatenate([pdf, pdf])
 
 # Build faces (two triangles per segment)
 faces_i = []
 faces_j = []
 faces_k = []
 for i_pt in range(n - 1):
-    # Indices: top: i_pt and i_pt+1, bottom: i_pt+n and i_pt+1+n
+    # For each segment, the indices for the top vertices are i_pt and i_pt+1, and for the bottom vertices are i_pt+n and i_pt+1+n.
     # Triangle 1: (top[i], top[i+1], bottom[i])
     faces_i.append(i_pt)
     faces_j.append(i_pt + 1)
@@ -266,19 +285,35 @@ mesh_trace = go.Mesh3d(
     i=faces_i,
     j=faces_j,
     k=faces_k,
+    intensity=intensity,
+    colorscale='Viridis',
     opacity=0.5,
-    color='cyan',
+    showscale=True,
     name='Shaded Surface'
 )
 
-# Add the top Gaussian curve as a line for clarity
-curve_trace = go.Scatter3d(
+# For the curve, add a marker trace so that each point is colored by its PDF
+curve_trace_markers = go.Scatter3d(
+    x=u,
+    y=v,
+    z=pdf,
+    mode='markers',
+    marker=dict(
+        size=4,
+        color=pdf,
+        colorscale='Viridis',
+        # colorbar=dict(title='PDF')
+    ),
+    name='Gaussian Curve Markers'
+)
+# Optionally, add a line trace for continuity (note: the line will be one uniform color)
+curve_trace_line = go.Scatter3d(
     x=u,
     y=v,
     z=pdf,
     mode='lines',
-    line=dict(width=4),
-    name='Gaussian Curve'
+    line=dict(width=2, color='darkblue'),
+    name='Gaussian Curve Line'
 )
 
 # Also add the projection (curve on the uv plane)
@@ -287,19 +322,129 @@ proj_trace = go.Scatter3d(
     y=v,
     z=np.zeros_like(pdf),
     mode='lines',
-    line=dict(dash='dash', width=2),
+    line=dict(dash='dash', width=2, color='black'),
     name='Projection (z=0)'
 )
 
-fig_plotly = go.Figure(data=[mesh_trace, curve_trace, proj_trace])
-fig_plotly.update_layout(
-    title='3D Gaussian on a Ring with Shaded Surface (Plotly)',
-    scene=dict(
-        xaxis_title='u',
-        yaxis_title='v',
-        zaxis_title='PDF'
-    )
-)
+fig_plotly = go.Figure(data=[mesh_trace, 
+                             curve_trace_line, curve_trace_markers, proj_trace])
+# fig_plotly.update_layout(
+#     title='3D Gaussian on a Ring with Colored, Transparent Surface (Plotly)',
+#     scene=dict(
+#         xaxis_title='u',
+#         yaxis_title='v',
+#         zaxis_title='PDF'
+#     )
+# )
 fig_plotly.show()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# %% generate gif
+
+import numpy as np
+import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d.art3d import Poly3DCollection, Line3DCollection
+import imageio
+
+# --- Parameters ---
+sigma = 0.2  # sigma equals the circle radius
+x = np.linspace(-10*sigma, 10*sigma, 1000)
+x_extend = np.logspace(np.log10(10*sigma), np.log10(1000*sigma), 100)
+x = np.concatenate((-np.flip(x_extend), x, x_extend))
+pdf = 1/(sigma * np.sqrt(2*np.pi)) * np.exp(-0.5*(x/sigma)**2)
+
+# --- Stereographic Projection ---
+# u(x) = 2x/(1+x^2) and v(x) = (x^2 - 1)/(1+x^2)
+u = 2*x/(1+x**2)
+v = (x**2 - 1)/(1+x**2)
+
+# ------------------------------
+# Matplotlib 3D Plot with Colored & Transparent Surface
+# ------------------------------
+fig = plt.figure(figsize=(10, 7))
+ax = fig.add_subplot(111, projection='3d')
+
+# Create colored segments for the 3D curve
+segments = [((u[i], v[i], pdf[i]), (u[i+1], v[i+1], pdf[i+1])) for i in range(len(u)-1)]
+norm = plt.Normalize(pdf.min(), pdf.max())
+segment_colors = [plt.cm.viridis(norm((pdf[i] + pdf[i+1]) / 2)) for i in range(len(u)-1)]
+line_collection = Line3DCollection(segments, colors=segment_colors, linewidths=2)
+ax.add_collection3d(line_collection)
+
+# Optionally, add markers for clarity (colored by the PDF)
+ax.scatter(u, v, pdf, c=pdf, cmap='viridis', s=20)
+
+# Create polygons for the surface between the curve and its projection (z=0)
+polys = []
+for i in range(len(u) - 1):
+    poly = [
+        (u[i],   v[i],   0),       # bottom current point
+        (u[i+1], v[i+1], 0),        # bottom next point
+        (u[i+1], v[i+1], pdf[i+1]),  # top next point
+        (u[i],   v[i],   pdf[i])     # top current point
+    ]
+    polys.append(poly)
+# Compute face colors based on the average PDF on the top edge of each quadrilateral
+facecolors = [plt.cm.viridis(norm((pdf[i] + pdf[i+1]) / 2)) for i in range(len(u)-1)]
+surface = Poly3DCollection(polys, facecolors=facecolors, edgecolors='none', alpha=0.5)
+ax.add_collection3d(surface)
+
+# Add a reference unit circle in the uv plane at z=0 (dashed)
+theta = np.linspace(0, 2*np.pi, 200)
+circle_u = np.cos(theta)
+circle_v = np.sin(theta)
+circle_z = np.zeros_like(theta)
+ax.plot(circle_u, circle_v, circle_z, 'k--', lw=1, label='Unit Circle (z=0)')
+
+ax.set_xlabel('u')
+ax.set_ylabel('v')
+ax.set_zlabel('PDF')
+# ax.set_title('3D Gaussian on a Ring with Colored, Transparent Surface (Matplotlib)')
+# ax.legend()
+
+# ------------------------------
+# Generate GIF by Rotating the View
+# ------------------------------
+frames = []
+num_frames = 72  # e.g., 72 frames for a full 360° rotation (~5° per frame)
+for angle in np.linspace(0, 360, num_frames):
+    ax.view_init(elev=30, azim=angle)
+    fig.canvas.draw()  # update the figure
+    # Extract the image from the figure canvas as a numpy array
+    image = np.frombuffer(fig.canvas.tostring_rgb(), dtype='uint8')
+    image = image.reshape(fig.canvas.get_width_height()[::-1] + (3,))
+    frames.append(image)
+
+gif_filename = 'orbit.gif'
+imageio.mimsave(gif_filename, frames, fps=20)
+print(f"GIF saved as {gif_filename}")
+
+plt.show()
+
 
 # %%
