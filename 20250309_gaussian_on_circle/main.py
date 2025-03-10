@@ -204,7 +204,7 @@ u = 2*x/(1+x**2)
 v = (x**2 - 1)/(1+x**2)
 
 # ------------------------------
-# Matplotlib 3D Plot with Colored & Transparent Surface
+# Matplotlib 3D Plot with Colored & Transparent Surface (for reference)
 # ------------------------------
 fig = plt.figure(figsize=(10, 7))
 ax = fig.add_subplot(111, projection='3d')
@@ -212,12 +212,11 @@ ax = fig.add_subplot(111, projection='3d')
 # Create colored segments for the 3D curve
 segments = [((u[i], v[i], pdf[i]), (u[i+1], v[i+1], pdf[i+1])) for i in range(len(u)-1)]
 norm = plt.Normalize(pdf.min(), pdf.max())
-# Compute the average PDF for each segment to color it
 segment_colors = [plt.cm.viridis(norm((pdf[i] + pdf[i+1]) / 2)) for i in range(len(u)-1)]
 line_collection = Line3DCollection(segments, colors=segment_colors, linewidths=2)
 ax.add_collection3d(line_collection)
 
-# Optionally, add markers for clarity (colored by the PDF)
+# Markers colored by PDF
 ax.scatter(u, v, pdf, c=pdf, cmap='viridis', s=20)
 
 # Create polygons for the surface between the curve and its projection (z=0)
@@ -230,12 +229,11 @@ for i in range(len(u) - 1):
         (u[i],   v[i],   pdf[i])     # top current point
     ]
     polys.append(poly)
-# Compute face colors based on the average PDF on the top edge of each quadrilateral
 facecolors = [plt.cm.viridis(norm((pdf[i] + pdf[i+1]) / 2)) for i in range(len(u)-1)]
 surface = Poly3DCollection(polys, facecolors=facecolors, edgecolors='none', alpha=0.5)
 ax.add_collection3d(surface)
 
-# Add a reference unit circle in the uv plane at z=0 (dashed)
+# Add reference unit circle in the uv plane at z=0 (dashed)
 theta = np.linspace(0, 2*np.pi, 200)
 circle_u = np.cos(theta)
 circle_v = np.sin(theta)
@@ -246,20 +244,17 @@ ax.set_xlabel('u')
 ax.set_ylabel('v')
 ax.set_zlabel('PDF')
 ax.set_title('3D Gaussian on a Ring with Colored, Transparent Surface (Matplotlib)')
-ax.legend()
+# ax.legend()
 plt.show()
 
 # ------------------------------
-# Plotly 3D Plot with Colored & Transparent Surface
+# Plotly 3D Plot with Colored & Transparent Surface and Arrow Annotation
 # ------------------------------
-# For Plotly, we build a mesh that fills between the top (curve) and its projection (z=0)
+# Build a mesh that fills between the top (curve) and its projection (z=0)
 n = len(u)
-# Create vertices: top vertices (the curve) and bottom vertices (projection onto uv-plane)
 x_vertices = np.concatenate([u, u])
 y_vertices = np.concatenate([v, v])
-# Top vertices get their PDF value; bottom vertices remain at z=0
 z_vertices = np.concatenate([pdf, np.zeros_like(pdf)])
-# To color the mesh according to PDF along the top edge, assign intensity values from the PDF for both top and bottom vertices.
 intensity = np.concatenate([pdf, pdf])
 
 # Build faces (two triangles per segment)
@@ -267,13 +262,10 @@ faces_i = []
 faces_j = []
 faces_k = []
 for i_pt in range(n - 1):
-    # For each segment, the indices for the top vertices are i_pt and i_pt+1, and for the bottom vertices are i_pt+n and i_pt+1+n.
-    # Triangle 1: (top[i], top[i+1], bottom[i])
     faces_i.append(i_pt)
     faces_j.append(i_pt + 1)
     faces_k.append(i_pt + n)
     
-    # Triangle 2: (top[i+1], bottom[i+1], bottom[i])
     faces_i.append(i_pt + 1)
     faces_j.append(i_pt + 1 + n)
     faces_k.append(i_pt + n)
@@ -288,25 +280,10 @@ mesh_trace = go.Mesh3d(
     intensity=intensity,
     colorscale='Viridis',
     opacity=0.5,
-    showscale=True,
+    showscale=False,
     name='Shaded Surface'
 )
 
-# For the curve, add a marker trace so that each point is colored by its PDF
-curve_trace_markers = go.Scatter3d(
-    x=u,
-    y=v,
-    z=pdf,
-    mode='markers',
-    marker=dict(
-        size=4,
-        color=pdf,
-        colorscale='Viridis',
-        # colorbar=dict(title='PDF')
-    ),
-    name='Gaussian Curve Markers'
-)
-# Optionally, add a line trace for continuity (note: the line will be one uniform color)
 curve_trace_line = go.Scatter3d(
     x=u,
     y=v,
@@ -316,7 +293,19 @@ curve_trace_line = go.Scatter3d(
     name='Gaussian Curve Line'
 )
 
-# Also add the projection (curve on the uv plane)
+curve_trace_markers = go.Scatter3d(
+    x=u,
+    y=v,
+    z=pdf,
+    mode='markers',
+    marker=dict(
+        size=4,
+        color=pdf,
+        colorscale='Viridis'
+    ),
+    name='Gaussian Curve Markers'
+)
+
 proj_trace = go.Scatter3d(
     x=u,
     y=v,
@@ -326,18 +315,66 @@ proj_trace = go.Scatter3d(
     name='Projection (z=0)'
 )
 
-fig_plotly = go.Figure(data=[mesh_trace, 
-                             curve_trace_line, curve_trace_markers, proj_trace])
-# fig_plotly.update_layout(
-#     title='3D Gaussian on a Ring with Colored, Transparent Surface (Plotly)',
-#     scene=dict(
-#         xaxis_title='u',
-#         yaxis_title='v',
-#         zaxis_title='PDF'
-#     )
-# )
+fig_plotly = go.Figure(data=[mesh_trace, curve_trace_line, curve_trace_markers, proj_trace])
+
+# Add annotation with arrow at the top of the circle (point (0,1,0))
+fig_plotly.update_layout(
+    width=600, height=600, margin=dict(l=0, r=0, b=0, t=0),
+    showlegend=False,
+    scene=dict(
+        xaxis=dict(title='', showticklabels=False, ticks='', showgrid=True),
+        yaxis=dict(title='', showticklabels=False, ticks='', showgrid=True),
+        zaxis=dict(title='', showticklabels=False, ticks='', showgrid=True),
+        annotations=[
+            dict(
+                x=0,
+                y=1,
+                z=0,
+                text="you are here",
+                showarrow=True,
+                arrowhead=2,
+                arrowcolor="red",
+                ax=0,   # horizontal offset (in pixels)
+                ay=-80, # vertical offset (in pixels)
+                font=dict(color="black", size=20)
+            )
+        ]
+    )
+)
+
 fig_plotly.show()
 
+#%% additional code for gif
+import plotly.io as pio
+import imageio
+import io
+
+frames = []
+num_frames = 72  # number of frames in the orbit shot
+d = 2.5        # distance of the camera from the center
+cam_z = 0.5    # fixed z coordinate for the camera
+
+for angle in np.linspace(0, 360, num_frames, endpoint=False):
+    print(angle)
+    angle_rad = np.deg2rad(angle)
+    cam_x = d * np.cos(angle_rad)
+    cam_y = d * np.sin(angle_rad)
+    
+    # Update the camera view for the 3D scene.
+    fig_plotly.update_layout(
+        scene_camera=dict(
+            eye=dict(x=cam_x, y=cam_y, z=cam_z)
+        )
+    )
+    
+    # Export the current view as a PNG image (requires kaleido).
+    img_bytes = pio.to_image(fig_plotly, format='png')
+    image = imageio.imread(io.BytesIO(img_bytes))
+    frames.append(image)
+
+gif_filename = 'orbit_plotly.gif'
+imageio.mimsave(gif_filename, frames, fps=20)
+print(f"GIF saved as {gif_filename}")
 
 
 
@@ -364,7 +401,7 @@ fig_plotly.show()
 
 
 
-# %% generate gif
+# %% generate gif (no labeling. Run the one above)
 
 import numpy as np
 import matplotlib.pyplot as plt
