@@ -109,3 +109,79 @@ for row in rows:
             properties.append((row[0].strip(), non_empty_count))
 
 properties[:50]  # print first 50 for inspection if many exist
+
+# %%
+import csv
+import json
+import re
+
+# Regular expression to check if a string is a valid number (integer or float in scientific notation)
+number_re = re.compile(r'^[+-]?(\d+(\.\d*)?|\.\d+)([eE][+-]?\d+)?$')
+
+def convert_cell(cell):
+    """
+    Process a cell: return None if empty; if the cell is numeric (and does not include a '%'),
+    convert it to float; otherwise, return the stripped string.
+    """
+    cell = cell.strip()
+    if cell == "":
+        return None
+    # If the cell looks like a number (and doesn't include a percentage sign), convert it.
+    if "%" not in cell and number_re.match(cell):
+        try:
+            return float(cell)
+        except ValueError:
+            return cell
+    return cell
+
+def process_csv_to_json(csv_filename, json_filename):
+    # Read the CSV file.
+    with open(csv_filename, newline="", encoding="utf-8") as csvfile:
+        reader = csv.reader(csvfile)
+        rows = list(reader)
+    
+    # Check that we have at least three columns:
+    if not rows or len(rows[0]) < 3:
+        print("CSV does not have enough columns to process.")
+        return
+    
+    # The first two columns (index 0 and 1) contain the property name and (sometimes) units.
+    # Columns starting at index 2 correspond to individual papers.
+    num_papers = len(rows[0]) - 2
+
+    papers = []
+    # Process each paper (each column from index 2 onward).
+    for col in range(2, 2 + num_papers):
+        paper_data = {}
+        # Loop over each row to extract properties.
+        for row in rows:
+            if row and len(row) > 0 and row[0].strip():
+                original_key = row[0].strip()
+                # Disambiguate duplicate keys by appending a suffix if needed.
+                key = original_key
+                if key in paper_data:
+                    count = 2
+                    new_key = f"{original_key} ({count})"
+                    while new_key in paper_data:
+                        count += 1
+                        new_key = f"{original_key} ({count})"
+                    key = new_key
+                # Get the cell value from the current paper's column.
+                value = row[col] if col < len(row) else ""
+                paper_data[key] = convert_cell(value)
+        papers.append(paper_data)
+    
+    # Write the JSON output.
+    with open(json_filename, "w", encoding="utf-8") as f_out:
+        json.dump(papers, f_out, indent=2, ensure_ascii=False)
+    print(f"Processed {num_papers} papers and saved to {json_filename}")
+
+
+#%%
+# if __name__ == "__main__":
+# Define input and output file names.
+csv_filename = "QFC_cleanup.csv"       # Change this to your CSV file path.
+json_filename = "output.json"    # Output JSON file.
+process_csv_to_json(csv_filename, json_filename)
+
+# %%
