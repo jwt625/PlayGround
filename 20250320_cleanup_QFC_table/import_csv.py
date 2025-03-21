@@ -169,6 +169,9 @@ def process_csv_to_json(csv_filename, json_filename):
                 # Get the cell value from the current paper's column.
                 value = row[col] if col < len(row) else ""
                 paper_data[key] = convert_cell(value)
+        # Skip entry if both "Name" and "Latex Key" are missing or empty.
+        if not (paper_data.get("Name") or paper_data.get("Latex Key")):
+            continue
         papers.append(paper_data)
     
     # Write the JSON output.
