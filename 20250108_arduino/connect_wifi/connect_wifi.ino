@@ -19,22 +19,32 @@ WebServer server(80);
 
 // HTTP handler to capture and send the JPEG image
 void handleCapture() {
-  camera_fb_t * fb = esp_camera_fb_get();
+  camera_fb_t *fb = esp_camera_fb_get();
   if (!fb) {
     Serial.println("Camera capture failed");
     server.send(500, "text/plain", "Camera capture failed");
     return;
   }
   
-  // Set the content type header
-  server.sendHeader("Content-Type", "image/jpeg");
-  // Send the image without manually setting Content-Length
-  server.send(200, "image/jpeg", (const char*)fb->buf);
-
-
-  // Return the frame buffer to the driver
+  // Get the client connected to the server
+  WiFiClient client = server.client();
+  
+  // Manually send the HTTP response headers
+  client.print("HTTP/1.1 200 OK\r\n");
+  client.print("Content-Type: image/jpeg\r\n");
+  client.print("Content-Length: ");
+  client.print(fb->len);
+  client.print("\r\n");
+  client.print("Access-Control-Allow-Origin: *\r\n");
+  client.print("\r\n");
+  
+  // Send the JPEG image data directly to the client
+  client.write(fb->buf, fb->len);
+  
+  // Return the frame buffer back to the driver
   esp_camera_fb_return(fb);
 }
+
 
 
 void setup() {
