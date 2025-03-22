@@ -26,14 +26,16 @@ void handleCapture() {
     return;
   }
   
-  // Set the response headers and send the JPEG image
+  // Set the content type header
   server.sendHeader("Content-Type", "image/jpeg");
-  server.sendHeader("Content-Length", String(fb->len));
+  // Send the image without manually setting Content-Length
   server.send(200, "image/jpeg", (const char*)fb->buf);
 
-  // Return the frame buffer back to the driver
+
+  // Return the frame buffer to the driver
   esp_camera_fb_return(fb);
 }
+
 
 void setup() {
   Serial.begin(115200);
