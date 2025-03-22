@@ -2,7 +2,7 @@
 // Replace with your network credentials
 
 #include "config.h"
-
+#define CAMERA_MODEL_XIAO_ESP32S3
 #include "esp_camera.h"
 #include <WiFi.h>
 #include <WebServer.h>
