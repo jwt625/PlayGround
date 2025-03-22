@@ -1,58 +1,104 @@
-#include "WiFi.h"
 
 // Replace with your network credentials
-const char* ssid = "FBI Command center";
-const char* password = "pineapplepizza102";
 
-void initWiFi() {
+#include "config.h"
+
+#include "esp_camera.h"
+#include <WiFi.h>
+#include <WebServer.h>
+
+// Replace these with your network credentials
+// const char* ssid     = "YOUR_SSID";
+// const char* password = "YOUR_PASSWORD";
+
+// Create a web server on port 80
+WebServer server(80);
+
+// Include your camera pins definition (usually provided in camera_pins.h)
+#include "camera_pins.h"
+
+// HTTP handler to capture and send the JPEG image
+void handleCapture() {
+  camera_fb_t * fb = esp_camera_fb_get();
+  if (!fb) {
+    Serial.println("Camera capture failed");
+    server.send(500, "text/plain", "Camera capture failed");
+    return;
+  }
+  
+  // Set the response headers and send the JPEG image
+  server.sendHeader("Content-Type", "image/jpeg");
+  server.sendHeader("Content-Length", String(fb->len));
+  server.send(200, "image/jpeg", (const char*)fb->buf);
+
+  // Return the frame buffer back to the driver
+  esp_camera_fb_return(fb);
+}
+
+void setup() {
+  Serial.begin(115200);
+  delay(1000);
+
+  // --- Camera configuration ---
+  camera_config_t config;
+  config.ledc_channel = LEDC_CHANNEL_0;
+  config.ledc_timer   = LEDC_TIMER_0;
+  
+  // These pin assignments come from the camera_pins.h for XIAO ESP32S3 Sense
+  config.pin_d0     = Y2_GPIO_NUM;
+  config.pin_d1     = Y3_GPIO_NUM;
+  config.pin_d2     = Y4_GPIO_NUM;
+  config.pin_d3     = Y5_GPIO_NUM;
+  config.pin_d4     = Y6_GPIO_NUM;
+  config.pin_d5     = Y7_GPIO_NUM;
+  config.pin_d6     = Y8_GPIO_NUM;
+  config.pin_d7     = Y9_GPIO_NUM;
+  config.pin_xclk   = XCLK_GPIO_NUM;
+  config.pin_pclk   = PCLK_GPIO_NUM;
+  config.pin_vsync  = VSYNC_GPIO_NUM;
+  config.pin_href   = HREF_GPIO_NUM;
+  config.pin_sscb_sda = SIOD_GPIO_NUM;
+  config.pin_sscb_scl = SIOC_GPIO_NUM;
+  config.pin_pwdn   = PWDN_GPIO_NUM;
+  config.pin_reset  = RESET_GPIO_NUM;
+
+  config.xclk_freq_hz = 20000000;
+  config.pixel_format = PIXFORMAT_JPEG;
+  
+  // Choose an appropriate frame size based on your module’s PSRAM availability.
+  // For modules with PSRAM (like the XIAO ESP32S3 Sense), you can use higher resolutions.
+  config.frame_size = FRAMESIZE_SVGA;
+  config.jpeg_quality = 12; // 0-63, lower means better quality
+  config.fb_count = 1;      // Use one frame buffer
+
+  // Initialize the camera
+  esp_err_t err = esp_camera_init(&config);
+  if(err != ESP_OK) {
+    Serial.printf("Camera init failed with error 0x%x", err);
+    return;
+  }
+  Serial.println("Camera initialized");
+
+  // --- Connect to WiFi ---
   WiFi.mode(WIFI_STA);
   WiFi.begin(ssid, password);
-  Serial.print("Connecting to WiFi ..");
-  while (WiFi.status() != WL_CONNECTED) {
-    Serial.print('.');
-    delay(1000);
+  Serial.print("Connecting to WiFi");
+  while(WiFi.status() != WL_CONNECTED) {
+    Serial.print(".");
+    delay(500);
   }
   Serial.println();
+  Serial.print("Connected! IP Address: ");
   Serial.println(WiFi.localIP());
-}
 
-void setup() {
-  Serial.begin(115200);
-
-  // Set WiFi to station mode and disconnect from an AP if it was previously connected
-  WiFi.mode(WIFI_STA);
-  WiFi.disconnect();
-  delay(100);
-
-  initWiFi();#include <I2S.h>
-
-void setup() {
-  // Open serial communications and wait for port to open:
-  // A baud rate of 115200 is used instead of 9600 for a faster data rate
-  // on non-native USB ports
-  Serial.begin(115200);
-  while (!Serial) {
-    ; // wait for serial port to connect. Needed for native USB port only
-  }
-
-  // start I2S at 16 kHz with 16-bits per sample
-  I2S.setAllPins(-1, 42, 41, -1, -1);
-  if (!I2S.begin(PDM_MONO_MODE, 16000, 16)) {
-    Serial.println("Failed to initialize I2S!");
-    while (1); // do nothing
-  }
+  // --- Set up the web server ---
+  server.on("/capture", HTTP_GET, handleCapture);
+  server.begin();
+  Serial.println("HTTP server started");
 }
 
 void loop() {
-  // read a sample
-  int sample = I2S.read();
-
-  if (sample && sample != -1 && sample != 1) {
-    Serial.println(sample);
-  }
-}
+  server.handleClient();
+  delay(1);
 }
 
-void loop() {
-  
-}
