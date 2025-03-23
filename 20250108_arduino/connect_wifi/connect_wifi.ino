@@ -91,6 +91,36 @@ void setup() {
   }
   Serial.println("Camera initialized");
 
+  // sensor settings
+  // Retrieve the sensor object
+  sensor_t * s = esp_camera_sensor_get();
+  if(s == NULL) {
+    Serial.println("Failed to get sensor pointer");
+  } else {
+    // Increase brightness (range is typically -2 to 2)
+    s->set_brightness(s, 1);
+    
+    // Enable auto exposure control (if supported)
+    s->set_exposure_ctrl(s, 1);
+
+    // Optionally, you can try setting a manual exposure value
+    // s->set_aec_value(s, 300);  // Try different values for exposure
+    
+    // Enable auto gain control (AGC)
+    s->set_gain_ctrl(s, 1);
+
+    // You may also want to adjust white balance
+    s->set_whitebal(s, 1);
+    
+    // Optionally adjust contrast and saturation
+    s->set_contrast(s, 0);
+    s->set_saturation(s, 0);
+    
+    Serial.println("Sensor settings tuned for low light");
+  }
+
+
+
   // --- Connect to WiFi ---
   WiFi.mode(WIFI_STA);
   WiFi.begin(ssid, password);
