@@ -22,6 +22,12 @@ void goToSleep();
 void setup() {
   Serial.begin(115200);
   delay(100); // Brief delay for serial stability
+  // Wait for 5 seconds at startup to allow time for potential uploads
+  for(int i = 5; i > 0; i--) {
+    Serial.printf("Upload window: %d seconds remaining...\n", i);
+    delay(1000);
+  }
+  
   
   // Initialize camera with the same config as before
   if (!initCamera()) {
@@ -128,9 +134,8 @@ bool captureAndSendImage() {
 
   // Create a WiFiClient object
   WiFiClient client;
-  
   // Connect to your Python server
-  if (!client.connect("192.168.12.43", 8080)) { // Replace with your server's IP and port
+  if (!client.connect(SERVER_IP, SERVER_PORT)) {
     Serial.println("Connection to server failed");
     esp_camera_fb_return(fb);
     return false;
