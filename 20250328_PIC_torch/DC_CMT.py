@@ -129,7 +129,35 @@ print("Learnable parameters:")
 for name, param in dc.named_parameters():
     print(f"  {name}: {param.shape}")
 
-# %%
+
+
+#%% loss and gradient calculation
+# Forward pass through the directional coupler
+output_field = dc(input_field)
+
+# Compose complex fields from the output (channels: 0/1 for WG1, 2/3 for WG2)
+output_complex_wg1 = torch.complex(output_field[0, 0, :], output_field[0, 1, :])
+output_complex_wg2 = torch.complex(output_field[0, 2, :], output_field[0, 3, :])
+
+# Compute power (magnitude squared) for each waveguide at each wavelength point
+power_wg1 = torch.abs(output_complex_wg1)**2
+power_wg2 = torch.abs(output_complex_wg2)**2
+
+# Define loss as the mean squared deviation from a 50:50 split.
+# For a perfect 50:50 split, power_wg1 should equal power_wg2.
+loss = torch.mean((power_wg1 - power_wg2)**2)
+
+# Backward pass to compute gradients
+loss.backward()
+
+# Print the loss and check gradients for the learnable parameters.
+print("Loss (deviation from 50:50):", loss.item())
+print("Gradient for kappa:", dc.kappa.grad)
+print("Gradient for delta_beta:", dc.delta_beta.grad)
+
+
+
+# %% plot
 import matplotlib.pyplot as plt
 
 # Create figure with subplots
