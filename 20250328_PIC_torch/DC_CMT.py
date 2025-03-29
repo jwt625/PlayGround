@@ -19,7 +19,7 @@ class DirectionalCouplerCoupledMode(nn.Module):
         
         # Learnable parameters: coupling coefficient and detuning for each wavelength
         # Units should be consistent (e.g., 1/m)
-        self.kappa = nn.Parameter(1e-3 * 2 * torch.pi / self.wavelength_points)      # coupling rate
+        self.kappa = nn.Parameter(100e-3 * 2 * torch.pi / self.wavelength_points)      # coupling rate
         # Calculate quadratic detuning using Lagrange interpolation
         # Define points for quadratic interpolation
         x = np.array([0, 0.5, 1.0])  # normalized positions
@@ -105,13 +105,13 @@ class DirectionalCouplerCoupledMode(nn.Module):
         print("Final output shape:", out.shape)
         return out
 
-# Example usage:
+#%% Example usage:
 
 # Define wavelength points (e.g., from 1.5 μm to 1.6 μm)
 wavelength_points = np.linspace(1.5e-6, 1.6e-6, 1000)
 
 # Create an instance of the updated directional coupler
-dc = DirectionalCouplerCoupledMode(wavelength_points, L=0.01)
+dc = DirectionalCouplerCoupledMode(wavelength_points, L=0.00000195)
 
 # Create an example input:
 # Assume batch_size=1, 4 channels (real/imag for both waveguides), N wavelength points.
@@ -156,12 +156,12 @@ plt.grid(True)
 
 # Plot 2: Coupling parameters
 plt.subplot(2, 2, 2)
-plt.plot(wavelength_points * 1e9, dc.kappa.detach().numpy(), 
+plt.plot(wavelength_points * 1e9, dc.kappa.detach().numpy() / 1e6, 
          label='κ', linestyle='--')
-plt.plot(wavelength_points * 1e9, dc.delta_beta.detach().numpy(), 
+plt.plot(wavelength_points * 1e9, dc.delta_beta.detach().numpy() / 1e6, 
          label='Δβ')
 plt.xlabel('Wavelength (nm)')
-plt.ylabel('Value (1/m)')
+plt.ylabel('Value (rad/um)')
 plt.title('Coupling Parameters')
 plt.legend()
 plt.grid(True)

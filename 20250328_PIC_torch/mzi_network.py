@@ -3,6 +3,7 @@ import torch
 import torch.nn as nn
 import numpy as np
 from torch.utils.tensorboard import SummaryWriter
+from DC_CMT import DirectionalCouplerCoupledMode
 
 class DirectionalCoupler(nn.Module):
     def __init__(self, coupling_ratio=0.5):
@@ -110,9 +111,11 @@ class MZINetwork(nn.Module):
         Complete MZI network with learnable parameters
         """
         super(MZINetwork, self).__init__()
-        self.dc1 = DirectionalCoupler(coupling_ratio)
+        # self.dc1 = DirectionalCoupler(coupling_ratio)
+        self.dc1 = DirectionalCouplerCoupledMode(wavelength_points, L=0.00000195)
         self.delay = DelayLine(wavelength_points, delta_L, n_eff)
-        self.dc2 = DirectionalCoupler(coupling_ratio)
+        # self.dc2 = DirectionalCoupler(coupling_ratio)
+        self.dc2 = DirectionalCouplerCoupledMode(wavelength_points, L=0.00000195)
         
     def forward(self, x):
         """
@@ -126,10 +129,10 @@ class MZINetwork(nn.Module):
 # Example usage
 #%%
 # Define wavelength points
-wavelength_points = np.linspace(1.5e-6, 1.6e-6, 1000)  # 1000 points from 1.5 to 1.6 μm
+wavelength_points = np.linspace(1.5e-6, 1.6e-6, 5000)  # 1000 points from 1.5 to 1.6 μm
 
 # Create network
-mzi = MZINetwork(wavelength_points, delta_L=100e-6)
+mzi = MZINetwork(wavelength_points, delta_L=300e-6)
 
 # Create example input (batch_size=1, 4 channels, N wavelength points)
 batch_size = 1
@@ -157,10 +160,10 @@ output_complex_2 = torch.complex(output_field[0, 2], output_field[0, 3])
 import matplotlib.pyplot as plt
 
 plt.figure(figsize=(10, 6))
-plt.plot(wavelength_points * 1e9, (torch.abs(input_complex_1).detach().numpy())**2, label='Input WG1')
-plt.plot(wavelength_points * 1e9, (torch.abs(input_complex_2).detach().numpy())**2, label='Input WG2')
-plt.plot(wavelength_points * 1e9, (torch.abs(output_complex_1).detach().numpy())**2, label='Output WG1')
-plt.plot(wavelength_points * 1e9, (torch.abs(output_complex_2).detach().numpy())**2, label='Output WG2')
+plt.semilogy(wavelength_points * 1e9, (torch.abs(input_complex_1).detach().numpy())**2, label='Input WG1')
+# plt.semilogy(wavelength_points * 1e9, (torch.abs(input_complex_2).detach().numpy())**2, label='Input WG2')
+plt.semilogy(wavelength_points * 1e9, (torch.abs(output_complex_1).detach().numpy())**2, label='Output WG1')
+plt.semilogy(wavelength_points * 1e9, (torch.abs(output_complex_2).detach().numpy())**2, label='Output WG2')
 plt.xlabel('Wavelength (nm)')
 plt.ylabel('Power')
 plt.title('MZI Response')
