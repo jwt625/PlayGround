@@ -17,30 +17,43 @@ class DirectionalCouplerCoupledMode(nn.Module):
         self.register_buffer('wavelength_points', torch.tensor(wavelength_points, dtype=torch.float32))
         self.L = L  # coupler length
         
+        # Normalize wavelength points to [0,1] for interpolation
+        wl_norm = (wavelength_points - wavelength_points[0]) / (wavelength_points[-1] - wavelength_points[0])
+        
         # Learnable parameters: coupling coefficient and detuning for each wavelength
         # Units should be consistent (e.g., 1/m)
-        self.kappa = nn.Parameter(100e-3 * 2 * torch.pi / self.wavelength_points)      # coupling rate
+        # Define points for quadratic interpolation
+        x = np.array([0, 0.5, 1.0])  # normalized positions
+        y = np.array([100e-3, 100e-3, 100e-3])  # coefficients at min, center, max
+        
+        kappa_normalized = self.langrange_polynomial(x, y, wl_norm)
+        kappa_normalized = torch.tensor(kappa_normalized, dtype=torch.float32)
+        self.kappa_normalized = nn.Parameter(kappa_normalized)      # coupling rate
         # Calculate quadratic detuning using Lagrange interpolation
         # Define points for quadratic interpolation
         x = np.array([0, 0.5, 1.0])  # normalized positions
         y = np.array([2e-3, 4e-3, 8e-3])  # coefficients at min, center, max
         
-        # Normalize wavelength points to [0,1] for interpolation
-        wl_norm = (wavelength_points - wavelength_points[0]) / (wavelength_points[-1] - wavelength_points[0])
+        # Combine to get detuning coefficients
+        detuning_coeff = self.langrange_polynomial(x, y, wl_norm)
         
-        # Lagrange polynomial coefficients
+        delta_normalized = torch.tensor(detuning_coeff, dtype=torch.float32)         # convert to torch tensor
+        self.delta_beta_normalized = nn.Parameter(delta_normalized)
+
+    def langrange_polynomial(self, x, y, wl_norm):
+        """
+        x: input tensor of shape (batch_size, 4, N)
+        y: input tensor of shape (batch_size, 4, N)
+        wl_norm: input tensor of shape (batch_size, N)
+        """
         l0 = (wl_norm - x[1]) * (wl_norm - x[2]) / ((x[0] - x[1]) * (x[0] - x[2]))
         l1 = (wl_norm - x[0]) * (wl_norm - x[2]) / ((x[1] - x[0]) * (x[1] - x[2]))
         l2 = (wl_norm - x[0]) * (wl_norm - x[1]) / ((x[2] - x[0]) * (x[2] - x[1]))
         
-        # Combine to get detuning coefficients
-        detuning_coeff = y[0]*l0 + y[1]*l1 + y[2]*l2
+        y_interp = y[0]*l0 + y[1]*l1 + y[2]*l2
         
-        # Calculate final detuning values
-        delta = detuning_coeff * 2 * np.pi / wavelength_points  # using np.pi since detuning_coeff is a numpy array
-        delta = torch.tensor(delta, dtype=torch.float32)         # convert to torch tensor
-        self.delta_beta = nn.Parameter(delta)
-
+        return y_interp
+        
         
     def forward(self, x):
         """
@@ -48,51 +61,49 @@ class DirectionalCouplerCoupledMode(nn.Module):
            where 4 channels represent [real1, imag1, real2, imag2]
            and N is the number of wavelength points.
         """
-        print("Input shape:", x.shape)
+        # print("Input shape:", x.shape)
         
         # Convert to complex representation
         x_complex = torch.complex(x[:, 0], x[:, 1])  # waveguide 1
         y_complex = torch.complex(x[:, 2], x[:, 3])  # waveguide 2
         z = torch.stack([x_complex, y_complex], dim=1)  # shape: (batch_size, 2, N)
-        print("Stacked complex shape:", z.shape)
+        # print("Stacked complex shape:", z.shape)
         
         # Compute gamma from coupling coefficient and detuning for each wavelength:
-        gamma = torch.sqrt(self.kappa**2 + (self.delta_beta / 2)**2)
-        print("Gamma shape:", gamma.shape)
+        kappa = self.kappa_normalized * 2 * torch.pi / self.wavelength_points
+        delta_beta = self.delta_beta_normalized * 2 * torch.pi / self.wavelength_points
+        gamma = torch.sqrt(kappa**2 + (delta_beta / 2)**2)
+        # print("Gamma shape:", gamma.shape)
         
         # Calculate matrix elements based on coupled mode theory for each wavelength
         L = self.L
-        T11 = torch.cos(gamma * L) + 1j * (self.delta_beta / (2 * gamma)) * torch.sin(gamma * L)
-        T12 = -1j * (self.kappa / gamma) * torch.sin(gamma * L)
+        T11 = torch.cos(gamma * L) + 1j * (delta_beta / (2 * gamma)) * torch.sin(gamma * L)
+        T12 = -1j * (kappa / gamma) * torch.sin(gamma * L)
         T21 = T12
-        T22 = torch.cos(gamma * L) - 1j * (self.delta_beta / (2 * gamma)) * torch.sin(gamma * L)
-        print("T11 shape:", T11.shape)
+        T22 = torch.cos(gamma * L) - 1j * (delta_beta / (2 * gamma)) * torch.sin(gamma * L)
+        # print("T11 shape:", T11.shape)
         
         # Form the 2x2 coupling matrix for each wavelength
         coupling_matrix = torch.stack([
             torch.stack([T11, T12]),
             torch.stack([T21, T22])
         ])  # shape: (2, 2, N)
-        print("Coupling matrix shape:", coupling_matrix.shape)
+        # print("Coupling matrix shape:", coupling_matrix.shape)
         
         # Expand coupling matrix to operate on each batch:
         # Reshape to (1, 2, 2, N) and then expand to (batch_size, 2, 2, N)
         coupling_matrix = coupling_matrix.unsqueeze(0)
         coupling_matrix = coupling_matrix.expand(x.shape[0], -1, -1, -1)
-        print("Expanded coupling matrix shape:", coupling_matrix.shape)
+        # print("Expanded coupling matrix shape:", coupling_matrix.shape)
         
         # Rearrange input for multiplication: (batch_size, N, 2)
         z_reshaped = z.permute(0, 2, 1)
-        print("Reshaped input shape:", z_reshaped.shape)
+        # print("Reshaped input shape:", z_reshaped.shape)
         
         # Apply the coupling matrix for each wavelength:
         # The einsum performs: out[b, n, i] = sum_j coupling_matrix[b, i, j, n] * z_reshaped[b, n, j]
         z_out = torch.einsum('bijn,bnj->bin', coupling_matrix, z_reshaped)
-        print("Output after einsum shape:", z_out.shape)
-        
-        # # Permute back to shape (batch_size, 2, N)
-        # z_out = z_out.permute(0, 2, 1)
-        # print("Output after permute shape:", z_out.shape)
+        # print("Output after einsum shape:", z_out.shape)
         
         # Convert back to real/imaginary representation
         # z_out shape is (batch_size, 2, N)
@@ -102,13 +113,13 @@ class DirectionalCouplerCoupledMode(nn.Module):
             z_out[:, 1].real,  # shape: (batch_size, N)
             z_out[:, 1].imag   # shape: (batch_size, N)
         ], dim=1)  # shape: (batch_size, 4, N)
-        print("Final output shape:", out.shape)
+        # print("Final output shape:", out.shape)
         return out
 
 #%% Example usage:
 
 # Define wavelength points (e.g., from 1.5 μm to 1.6 μm)
-wavelength_points = np.linspace(1.5e-6, 1.6e-6, 1000)
+wavelength_points = np.linspace(1.3e-6, 1.7e-6, 2000)
 
 # Create an instance of the updated directional coupler
 dc = DirectionalCouplerCoupledMode(wavelength_points, L=0.00000195)
@@ -152,12 +163,47 @@ loss.backward()
 
 # Print the loss and check gradients for the learnable parameters.
 print("Loss (deviation from 50:50):", loss.item())
-print("Gradient for kappa:", dc.kappa.grad)
-print("Gradient for delta_beta:", dc.delta_beta.grad)
+print("Gradient for kappa:", dc.kappa_normalized.grad)
+print("Gradient for delta_beta:", dc.delta_beta_normalized.grad)
+
+
+#%%
+# Set up an optimizer for the kappa and delta_beta parameters
+optimizer = torch.optim.Adam([dc.kappa_normalized, dc.delta_beta_normalized], lr=1e-3)
+num_epochs = 1000
+
+for epoch in range(num_epochs):
+    optimizer.zero_grad()
+    
+    # Forward pass through the directional coupler
+    output_field = dc(input_field)
+    
+    # Compose complex fields for each waveguide
+    output_complex_wg1 = torch.complex(output_field[0, 0, :], output_field[0, 1, :])
+    output_complex_wg2 = torch.complex(output_field[0, 2, :], output_field[0, 3, :])
+    
+    # Compute power (magnitude squared)
+    power_wg1 = torch.abs(output_complex_wg1)**2
+    power_wg2 = torch.abs(output_complex_wg2)**2
+    
+    # Define loss as the mean squared deviation from a 50:50 split
+    loss = torch.mean((power_wg1 - power_wg2)**2)
+    
+    # Backpropagate to compute gradients
+    loss.backward()
+    optimizer.step()
+    
+    # Optionally print progress every 100 epochs
+    if (epoch + 1) % 100 == 0:
+        print(f"Epoch {epoch+1}/{num_epochs}, Loss: {loss.item():.6f}")
+        print(f"  kappa mean: {dc.kappa_normalized.mean().item():.6f}")
+        print(f"  delta_beta mean: {dc.delta_beta_normalized.mean().item():.6f}")
 
 
 
 # %% plot
+
+output_field = dc(input_field)
 import matplotlib.pyplot as plt
 
 # Create figure with subplots
@@ -184,22 +230,22 @@ plt.grid(True)
 
 # Plot 2: Coupling parameters
 plt.subplot(2, 2, 2)
-plt.plot(wavelength_points * 1e9, dc.kappa.detach().numpy() / 1e6, 
+plt.plot(wavelength_points * 1e9, dc.kappa_normalized.detach().numpy(), 
          label='κ', linestyle='--')
-plt.plot(wavelength_points * 1e9, dc.delta_beta.detach().numpy() / 1e6, 
+plt.plot(wavelength_points * 1e9, dc.delta_beta_normalized.detach().numpy(), 
          label='Δβ')
 plt.xlabel('Wavelength (nm)')
-plt.ylabel('Value (rad/um)')
+plt.ylabel('Value (normalized to k0)')
 plt.title('Coupling Parameters')
 plt.legend()
 plt.grid(True)
 
 # Plot 3: Phase of coupling matrix elements
 plt.subplot(2, 2, 3)
-gamma = torch.sqrt(dc.kappa**2 + (dc.delta_beta / 2)**2)
+gamma = torch.sqrt(dc.kappa_normalized**2 + (dc.delta_beta_normalized / 2)**2)
 L = dc.L
-T11 = torch.cos(gamma * L) + 1j * (dc.delta_beta / (2 * gamma)) * torch.sin(gamma * L)
-T12 = -1j * (dc.kappa / gamma) * torch.sin(gamma * L)
+T11 = torch.cos(gamma * L) + 1j * (dc.delta_beta_normalized / (2 * gamma)) * torch.sin(gamma * L)
+T12 = -1j * (dc.kappa_normalized / gamma) * torch.sin(gamma * L)
 
 plt.plot(wavelength_points * 1e9, torch.angle(T11).detach().numpy(), 
          label='Phase(T11)', linestyle='--')
@@ -229,7 +275,7 @@ plt.show()
 # Print coupling parameters
 print("\nCoupling Parameters:")
 print(f"Coupler length (L): {dc.L:.4f} m")
-print(f"κ range: [{dc.kappa.min().item():.4f}, {dc.kappa.max().item():.4f}] 1/m")
-print(f"Δβ range: [{dc.delta_beta.min().item():.4f}, {dc.delta_beta.max().item():.4f}] 1/m")
+print(f"κ range: [{dc.kappa_normalized.min().item():.4f}, {dc.kappa_normalized.max().item():.4f}] 1/m")
+print(f"Δβ range: [{dc.delta_beta_normalized.min().item():.4f}, {dc.delta_beta_normalized.max().item():.4f}] 1/m")
 
 # %%
