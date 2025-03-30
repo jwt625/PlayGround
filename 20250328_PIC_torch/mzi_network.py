@@ -156,9 +156,10 @@ wavelength_points = np.linspace(1.5e-6, 1.6e-6, 5000)  # 1000 points from 1.5 to
 
 # Create network
 mzi = MZINetwork(wavelength_points, delta_L=100e-6,
-                 ring_FSR=0.0105, ring_Q_total=6e2,
-                 ring_Q_ext=8e3, phase_shift=np.pi/2)
-
+                 ring_FSR=0.0105, ring_Q_total=2e2,
+                 ring_Q_ext=1e3, phase_shift=np.pi/2)
+# mzi.ring.r = torch.nn.Parameter(torch.tensor(4.0))
+mzi.ring.a = torch.nn.Parameter(torch.tensor(-3.0))
 # Create example input (batch_size=1, 4 channels, N wavelength points)
 batch_size = 1
 N = len(wavelength_points)
@@ -185,7 +186,8 @@ output_complex_2 = torch.complex(output_field[0, 2], output_field[0, 3])
 # Plot results
 import matplotlib.pyplot as plt
 
-plt.figure(figsize=(10, 6))
+plt.figure(figsize=(10, 12))
+plt.subplot(3, 1, 1)
 # plt.semilogy(wavelength_points * 1e9, (torch.abs(input_complex_1).detach().numpy())**2, label='Input WG1')
 # # plt.semilogy(wavelength_points * 1e9, (torch.abs(input_complex_2).detach().numpy())**2, label='Input WG2')
 # plt.semilogy(wavelength_points * 1e9, (torch.abs(output_complex_1).detach().numpy())**2, label='Output WG1')
@@ -200,11 +202,20 @@ plt.ylabel('Power')
 plt.title('MZI Response')
 plt.legend()
 plt.grid(True)
-plt.show()
+# Compute the derivative of the power in output waveguide 1
+d_power_output_1 = torch.diff(torch.abs(output_complex_1)**2)
+
+# Create a new subplot for the derivative
+plt.subplot(3, 1, 2)  # 2 rows, 1 column, 2nd subplot
+plt.plot(wavelength_points[1:] * 1e9, d_power_output_1.detach().numpy(), label='Derivative of Output WG1', color='orange')
+plt.xlabel('Wavelength (nm)')
+plt.ylabel('Derivative of Power')
+plt.title('Derivative of Power in Output Waveguide 1')
+plt.grid(True)
+plt.legend()
 
 
-
-#%% check ring resonator response
+# check ring resonator response
 
 output_ring = mzi.ring(input_field[:, :2, :])
 # plot the output of the ring resonator
@@ -212,8 +223,7 @@ output_ring = mzi.ring(input_field[:, :2, :])
 output_complex = torch.complex(output_ring[0, 0], output_ring[0, 1])
 # Compute power (magnitude squared) for each wavelength point
 power = torch.abs(output_complex)**2
-
-plt.figure(figsize=(10, 6))
+plt.subplot(3, 1, 3)
 plt.plot(wavelength_points * 1e9, power.detach().numpy(), label='Ring Resonator Response')
 plt.xlabel('Wavelength (nm)')
 plt.ylabel('Power')
@@ -221,6 +231,7 @@ plt.title('Ring Resonator Response')
 plt.legend()
 plt.grid(True)
 
+plt.show()
 # Assuming 'ring' is your instance of RingResonator
 for name, param in mzi.ring.named_parameters():
     print(f"{name}: {param.data.numpy()}")
@@ -244,8 +255,8 @@ def linearity_loss(transmission):
     dx = 1.0 / transmission.shape[0]  # Assuming x range is from 0 to 1
     dT = dT / dx  # approximate derivative
     
-    # Create a mask for points with positive slope
-    pos_mask = (dT > 0).float()  # shape: (N-1,)
+    # Create a mask for points where the slope is greater than 2/3 of the maximum slope
+    pos_mask = (dT > (2/3) * dT.max()).float()  # shape: (N-1,)
     
     count = pos_mask.sum()
     # To avoid division by zero if no positive slopes:
@@ -263,7 +274,7 @@ def linearity_loss(transmission):
 import torch.optim as optim
 
 # Set up optimizer to train the parameters of the ring resonator (or entire MZI)
-optimizer = optim.Adam(mzi.ring.parameters(), lr=1e-2)
+optimizer = optim.Adam(mzi.ring.parameters(), lr=1e-1)
 num_epochs = 1000
 
 # Training loop to minimize the linearity loss (improving linearity of positive slope regions)
@@ -285,34 +296,6 @@ for epoch in range(num_epochs):
     optimizer.step()
     
     if (epoch + 1) % 100 == 0:
-        print(f"Epoch {epoch+1}/{num_epochs}, Loss: {loss.item():.6e}")
-        # Assuming 'ring' is your instance of RingResonator
-        for name, param in mzi.ring.named_parameters():
-            print(f"{name}: {param.data.numpy()}")
-
-#%% trying LBFGS
-# Assuming your model is called "mzi" and your loss function is "linearity_loss"
-
-# Use LBFGS optimizer
-optimizer = torch.optim.LBFGS(mzi.ring.parameters(), lr=1e-2, max_iter=20, history_size=10)
-
-num_epochs = 200
-
-def closure():
-    optimizer.zero_grad()
-    # Get the transmission spectrum (power vs. wavelength) for the first batch sample
-    output_field = mzi(input_field)  # shape: (batch_size, N)
-    # Compose the output complex field from the two channels:
-    output_complex = torch.complex(output_field[0, 0], output_field[0, 1])
-    # Compute power (magnitude squared) for each wavelength point
-    power = torch.abs(output_complex)**2
-    loss = linearity_loss(power)
-    loss.backward()
-    return loss
-
-for epoch in range(num_epochs):
-    loss = optimizer.step(closure)
-    if (epoch + 1) % 10 == 0:
         print(f"Epoch {epoch+1}/{num_epochs}, Loss: {loss.item():.6e}")
         # Assuming 'ring' is your instance of RingResonator
         for name, param in mzi.ring.named_parameters():
@@ -368,6 +351,42 @@ plt.grid(True)
 
 plt.tight_layout()
 plt.show()
+
+
+# Assuming 'ring' is your instance of RingResonator
+for name, param in mzi.ring.named_parameters():
+    print(f"{name}: {param.data.numpy()}")
+
+#%% trying LBFGS
+# Assuming your model is called "mzi" and your loss function is "linearity_loss"
+
+# Use LBFGS optimizer
+optimizer = torch.optim.LBFGS(mzi.ring.parameters(), lr=1e-2, max_iter=20, history_size=10)
+
+num_epochs = 200
+
+def closure():
+    optimizer.zero_grad()
+    # Get the transmission spectrum (power vs. wavelength) for the first batch sample
+    output_field = mzi(input_field)  # shape: (batch_size, N)
+    # Compose the output complex field from the two channels:
+    output_complex = torch.complex(output_field[0, 0], output_field[0, 1])
+    # Compute power (magnitude squared) for each wavelength point
+    power = torch.abs(output_complex)**2
+    loss = linearity_loss(power)
+    loss.backward()
+    return loss
+
+for epoch in range(num_epochs):
+    loss = optimizer.step(closure)
+    if (epoch + 1) % 10 == 0:
+        print(f"Epoch {epoch+1}/{num_epochs}, Loss: {loss.item():.6e}")
+        # Assuming 'ring' is your instance of RingResonator
+        for name, param in mzi.ring.named_parameters():
+            print(f"{name}: {param.data.numpy()}")
+
+
+
 # %% test loss function
 
 import torch

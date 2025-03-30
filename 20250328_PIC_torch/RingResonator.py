@@ -43,7 +43,9 @@ class RingResonatorFP(nn.Module):
         
         # Compute the transfer function H(λ) using the FP cavity reflection formula:
         # Incorporate the additional phase shift
-        H = (self.r - self.a * torch.exp(-1j * (theta + self.phase_shift))) / (1 - self.r * self.a * torch.exp(-1j * (theta + self.phase_shift)))
+        r = torch.sigmoid(self.r)
+        a = torch.sigmoid(self.a)
+        H = (r - a * torch.exp(-1j * (theta + self.phase_shift))) / (1 - r * a * torch.exp(-1j * (theta + self.phase_shift)))
         # H has shape: (N,)
         
         # Convert input field into a complex tensor.
