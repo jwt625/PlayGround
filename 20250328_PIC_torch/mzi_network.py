@@ -4,6 +4,8 @@ import torch.nn as nn
 import numpy as np
 from torch.utils.tensorboard import SummaryWriter
 from DC_CMT import DirectionalCouplerCoupledMode
+from RingResonator import RingResonatorFP
+
 
 class DirectionalCoupler(nn.Module):
     def __init__(self, coupling_ratio=0.5):
@@ -95,54 +97,31 @@ class DelayLine(nn.Module):
         
         return out
 
-class RingResonator(nn.Module):
-    def __init__(self, wavelength_points, FSR, Q_total=1e6, Q_ext=1e6):
-        super(RingResonator, self).__init__()
-        self.FSR = FSR  # Normalized Free Spectral Range
-        self.Q_total = Q_total  # Total quality factor
-        self.Q_ext = Q_ext  # Extrinsic coupling quality factor
-        self.register_buffer('wavelength_points', torch.tensor(wavelength_points, dtype=torch.float32))
 
-    def forward(self, x):
-        """
-        x: input tensor of shape (batch_size, 2, N)
-        wavelengths: tensor of shape (N,) representing the wavelengths
-        """
-        # Extract real and imaginary parts
-        real_part = x[:, 0, :]
-        imag_part = x[:, 1, :]
-        
-        # Calculate the complex field
-        complex_field = torch.complex(real_part, imag_part)
-
-        # Calculate the resonant frequencies based on the wavelengths
-        f_0 = 1 / self.wavelength_points  # Convert wavelengths to frequencies (normalized)
-        
-        # Calculate the Lorentzian transfer function
-        gamma = f_0 * (self.FSR / (2 * np.pi))  # Convert FSR to frequency domain
-        delta_beta = (2 * np.pi * f_0) / self.Q_total  # Calculate detuning
-        
-        # Calculate the transfer function H(f)
-        H = 1 / (1 + 1j * (2 * self.Q_ext / self.Q_total) * (f_0 - gamma))
-        
-        # Apply the transfer function to the complex field
-        coupled_field = complex_field * H
-        
-        # Return the output as real and imaginary parts
-        output_real = coupled_field.real
-        output_imag = coupled_field.imag
-        
-        return torch.stack([output_real, output_imag], dim=1)  # shape: (batch_size, 2, N)
 
 class MZINetwork(nn.Module):
-    def __init__(self, wavelength_points, coupling_ratio=0.5,
-                 delta_L=1e-6, n_eff=1.5, ring_FSR=1.0, ring_Q_total=1e5, ring_Q_ext=1e5):
+    def __init__(self, wavelength_points, 
+                 delta_L=1e-6, n_eff=1.5, ring_FSR=0.01, ring_Q_total=1e3, ring_Q_ext=2e3):
         """
         Complete MZI network with learnable parameters
         """
         super(MZINetwork, self).__init__()
+        # Compute the round-trip length L. (With neff lumped in, we take L = 1/FSR)
+        lambda0 = (wavelength_points[0] + wavelength_points[-1]) / 2
+        L = lambda0 / ring_FSR
+        kappa = np.sqrt(ring_FSR / ring_Q_ext)
+        r = np.sqrt(1 - kappa**2)
+        if ring_Q_total >= ring_Q_ext:
+            a = 1.0
+        else:
+            Q_int = (ring_Q_total * ring_Q_ext) / (ring_Q_ext - ring_Q_total)
+            # Calculate round-trip amplitude transmission a from the intrinsic loss.
+            a = np.exp(-ring_FSR / (2 * Q_int))
+
         self.dc1 = DirectionalCouplerCoupledMode(wavelength_points, L=0.00000195)
-        self.ring = RingResonator(wavelength_points, FSR=ring_FSR, Q_total=ring_Q_total, Q_ext=ring_Q_ext)
+        # print ring parameters
+        print(f"Ring parameters: L={L}, kappa={kappa}, r={r}, a={a}")
+        self.ring = RingResonatorFP(wavelength_points, L=L, r=r, a=a)
         self.delay = DelayLine(wavelength_points, delta_L, n_eff)
         self.dc2 = DirectionalCouplerCoupledMode(wavelength_points, L=0.00000195)
         self.register_buffer('wavelength_points', torch.tensor(wavelength_points, dtype=torch.float32))
@@ -179,8 +158,10 @@ wavelength_points = np.linspace(1.5e-6, 1.6e-6, 5000)  # 1000 points from 1.5 to
 
 # Create network
 mzi = MZINetwork(wavelength_points, delta_L=100e-6,
-                 ring_FSR=1.0, ring_Q_total=1e6, ring_Q_ext=1e6)
+                 ring_FSR=0.01, ring_Q_total=1e2, ring_Q_ext=2e2)
 
+
+#%%
 # Create example input (batch_size=1, 4 channels, N wavelength points)
 batch_size = 1
 N = len(wavelength_points)
@@ -189,6 +170,7 @@ input_field[:, 0, :] = 1.0  # Set real part of waveguide 1 to 1
 
 # Forward pass
 output_field = mzi(input_field)
+
 
 # Print shapes and parameters
 print(f"Input shape: {input_field.shape}")
@@ -222,6 +204,27 @@ plt.title('MZI Response')
 plt.legend()
 plt.grid(True)
 plt.show()
+
+
+
+#%% check ring resonator response
+
+output_ring = mzi.ring(input_field[:, :2, :])
+# plot the output of the ring resonator
+# Compose the output complex field from the two channels:
+output_complex = torch.complex(output_ring[0, 0], output_ring[0, 1])
+# Compute power (magnitude squared) for each wavelength point
+power = torch.abs(output_complex)**2
+
+plt.figure(figsize=(10, 6))
+plt.plot(wavelength_points * 1e9, power.detach().numpy(), label='Ring Resonator Response')
+plt.xlabel('Wavelength (nm)')
+plt.ylabel('Power')
+plt.title('Ring Resonator Response')
+plt.legend()
+plt.grid(True)
+
+
 
 #%%
 # Visualize network structure using TensorBoard
