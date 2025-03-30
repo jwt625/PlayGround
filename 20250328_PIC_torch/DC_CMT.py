@@ -43,6 +43,8 @@ class DirectionalCouplerCoupledMode(nn.Module):
         # Learnable parameters: scaling for kappa and delta
         self.kappa_scale = nn.Parameter(torch.tensor(1.0, dtype=torch.float32))
         self.delta_scale = nn.Parameter(torch.tensor(1.0, dtype=torch.float32))
+        self.kappa_shift = nn.Parameter(torch.tensor(0.0, dtype=torch.float32))
+        self.delta_shift = nn.Parameter(torch.tensor(0.0, dtype=torch.float32))
 
     def langrange_polynomial(self, x, y, wl_norm):
         """
@@ -74,8 +76,8 @@ class DirectionalCouplerCoupledMode(nn.Module):
         # print("Stacked complex shape:", z.shape)
         
         # Compute gamma from coupling coefficient and detuning for each wavelength:
-        kappa = self.kappa_scale * self.kappa_normalized * 2 * torch.pi / self.wavelength_points
-        delta_beta = self.delta_scale * self.delta_beta_normalized * 2 * torch.pi / self.wavelength_points
+        kappa = (self.kappa_scale * self.kappa_normalized + self.kappa_shift) * 2 * torch.pi / self.wavelength_points
+        delta_beta = (self.delta_scale * self.delta_beta_normalized + self.delta_shift) * 2 * torch.pi / self.wavelength_points
         gamma = torch.sqrt(kappa**2 + (delta_beta / 2)**2)
         # print("Gamma shape:", gamma.shape)
         

@@ -137,8 +137,8 @@ plt.grid(True)
 
 # Plot 3: Phase of coupling matrix elements
 plt.subplot(2, 2, 3)
-kappa = dc.kappa_normalized * 2 * torch.pi / dc.wavelength_points
-delta_beta = dc.delta_beta_normalized * 2 * torch.pi / dc.wavelength_points
+kappa = (dc.kappa_normalized * dc.kappa_scale + dc.kappa_shift) * 2 * torch.pi / dc.wavelength_points
+delta_beta = (dc.delta_beta_normalized * dc.delta_scale + dc.delta_shift) * 2 * torch.pi / dc.wavelength_points
 gamma = torch.sqrt(kappa**2 + (delta_beta / 2)**2)
 
 L = dc.L
