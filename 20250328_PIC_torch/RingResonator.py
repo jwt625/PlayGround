@@ -4,7 +4,7 @@ import numpy as np
 
 
 class RingResonatorFP(nn.Module):
-    def __init__(self, wavelength_points, L=10e-6, r=0.9, a=0.99, phase_shift=0.0):
+    def __init__(self, wavelength_points, L=10, r=0.9, a=0.99, phase_shift=0.0):
         """
         A ring resonator modeled using the FP cavity analytical solution.
         
@@ -20,7 +20,7 @@ class RingResonatorFP(nn.Module):
           phase_shift       : additional phase shift to apply to the resonances.
         """
         super(RingResonatorFP, self).__init__()
-        self.L = L
+        self.L = nn.Parameter(torch.tensor(L, dtype=torch.float32))  # in um
         # Optionally make r and a learnable:
         self.r = nn.Parameter(torch.tensor(r, dtype=torch.float32))
         self.a = nn.Parameter(torch.tensor(a, dtype=torch.float32))
@@ -38,7 +38,8 @@ class RingResonatorFP(nn.Module):
         """
         # Compute the phase shift for each wavelength:
         # θ(λ) = 2π n_eff L / λ
-        theta = 2 * torch.pi * self.L / self.wavelength_points  # shape: (N,)
+        L_meter = self.L * 1e-6  # convert to meters
+        theta = 2 * torch.pi * L_meter / self.wavelength_points  # shape: (N,)
         
         # Compute the transfer function H(λ) using the FP cavity reflection formula:
         # Incorporate the additional phase shift
