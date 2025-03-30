@@ -109,14 +109,13 @@ class MZINetwork(nn.Module):
         # Compute the round-trip length L. (With neff lumped in, we take L = 1/FSR)
         lambda0 = (wavelength_points[0] + wavelength_points[-1]) / 2
         L = lambda0 / ring_FSR
-        kappa = np.sqrt(ring_FSR / ring_Q_ext)
-        r = np.sqrt(1 - kappa**2)
-        if ring_Q_total >= ring_Q_ext:
-            a = 1.0
+        r = 1 - (torch.pi * L) / (lambda0 * ring_Q_ext)
+        a = np.exp(-ring_FSR / (2 * ring_Q_total))
+        if ring_Q_ext > ring_Q_total:
+            ring_Q_int = (ring_Q_total * ring_Q_ext) / (ring_Q_ext - ring_Q_total)
+            a = 1 - (torch.pi * L) / (lambda0 * ring_Q_int)
         else:
-            Q_int = (ring_Q_total * ring_Q_ext) / (ring_Q_ext - ring_Q_total)
-            # Calculate round-trip amplitude transmission a from the intrinsic loss.
-            a = np.exp(-ring_FSR / (2 * Q_int))
+            a = 1.0
 
         self.dc1 = DirectionalCouplerCoupledMode(wavelength_points, L=0.00000195)
         # print ring parameters
@@ -158,10 +157,8 @@ wavelength_points = np.linspace(1.5e-6, 1.6e-6, 5000)  # 1000 points from 1.5 to
 
 # Create network
 mzi = MZINetwork(wavelength_points, delta_L=100e-6,
-                 ring_FSR=0.01, ring_Q_total=1e2, ring_Q_ext=2e2)
+                 ring_FSR=0.01, ring_Q_total=1e3, ring_Q_ext=2e3)
 
-
-#%%
 # Create example input (batch_size=1, 4 channels, N wavelength points)
 batch_size = 1
 N = len(wavelength_points)
