@@ -59,7 +59,7 @@ class DirectionalCoupler(nn.Module):
 class DelayLine(nn.Module):
     def __init__(self, wavelength_points, delta_L=1e-6, n_eff=1.5):
         """
-        Delay line layer using nn.Linear
+        Delay line layer that applies a phase delay to a single waveguide.
         wavelength_points: array of wavelength points
         delta_L: initial length difference between arms (m)
         n_eff: initial effective refractive index
@@ -72,38 +72,56 @@ class DelayLine(nn.Module):
         self.delta_L = nn.Parameter(torch.tensor(delta_L, dtype=torch.float32))
         self.n_eff = nn.Parameter(torch.tensor(n_eff, dtype=torch.float32))
         
-        # Add learnable phase parameters
-        self.phase = nn.Parameter(torch.zeros(2, dtype=torch.float32))
-        
     def forward(self, x):
         """
-        x: input tensor of shape (batch_size, 4, N)
+        x: input tensor of shape (batch_size, 2, N)
+           where 2 channels represent [real, imag] of the waveguide.
         """
         # Convert to complex representation
-        x_complex = torch.complex(x[:, 0], x[:, 1])  # waveguide 1
-        y_complex = torch.complex(x[:, 2], x[:, 3])  # waveguide 2
+        x_complex = torch.complex(x[:, 0], x[:, 1])  # single waveguide
         
         # Calculate phase difference using learnable parameters
         k = 2 * torch.pi * self.n_eff / self.wavelength_points
         phase_diff = k * self.delta_L
         
-        # Apply phase difference to waveguide 2
-        y_complex = y_complex * torch.exp(1j * phase_diff)
-        
-        # Apply learnable phase shifts
-        phase_matrix = torch.exp(1j * self.phase)
-        x_complex = x_complex * phase_matrix[0]
-        y_complex = y_complex * phase_matrix[1]
+        # Apply phase difference to the waveguide
+        x_complex = x_complex * torch.exp(1j * phase_diff)
         
         # Convert back to real/imag representation
         out = torch.stack([
-            x_complex.real,    # real part of waveguide 1
-            x_complex.imag,    # imag part of waveguide 1
-            y_complex.real,    # real part of waveguide 2
-            y_complex.imag     # imag part of waveguide 2
-        ], dim=1)
+            x_complex.real,    # real part
+            x_complex.imag     # imag part
+        ], dim=1)  # shape: (batch_size, 2, N)
         
         return out
+
+class RingResonator(nn.Module):
+    def __init__(self, radius, coupling_coefficient):
+        super(RingResonator, self).__init__()
+        self.radius = radius
+        self.coupling_coefficient = coupling_coefficient
+
+    def forward(self, x):
+        """
+        x: input tensor of shape (batch_size, 2, N)
+        """
+        # Extract real and imaginary parts
+        real_part = x[:, 0, :]
+        imag_part = x[:, 1, :]
+        
+        # Calculate the complex field
+        complex_field = torch.complex(real_part, imag_part)
+        
+        # Apply the ring resonator transformation
+        # For example, apply a phase shift based on the radius and coupling coefficient
+        phase_shift = torch.exp(1j * (2 * np.pi / self.radius))  # Example phase shift
+        coupled_field = complex_field * phase_shift * self.coupling_coefficient
+        
+        # Return the output as real and imaginary parts
+        output_real = coupled_field.real
+        output_imag = coupled_field.imag
+        
+        return torch.stack([output_real, output_imag], dim=1)  # shape: (batch_size, 2, N)
 
 class MZINetwork(nn.Module):
     def __init__(self, wavelength_points, coupling_ratio=0.5, delta_L=1e-6, n_eff=1.5):
@@ -113,6 +131,7 @@ class MZINetwork(nn.Module):
         super(MZINetwork, self).__init__()
         # self.dc1 = DirectionalCoupler(coupling_ratio)
         self.dc1 = DirectionalCouplerCoupledMode(wavelength_points, L=0.00000195)
+        self.ring = RingResonator(radius=1e-6, coupling_coefficient=0.5)
         self.delay = DelayLine(wavelength_points, delta_L, n_eff)
         # self.dc2 = DirectionalCoupler(coupling_ratio)
         self.dc2 = DirectionalCouplerCoupledMode(wavelength_points, L=0.00000195)
@@ -121,10 +140,27 @@ class MZINetwork(nn.Module):
         """
         x: input tensor of shape (batch_size, 4, N)
         """
-        x = self.dc1(x)      # First directional coupler
-        x = self.delay(x)    # Delay line
-        x = self.dc2(x)      # Second directional coupler
-        return x
+        # Split the input tensor
+        x = self.dc1(x)
+        print(x.shape)
+        x1 = x[:, :2, :]  # First two channels for the ring resonator
+        x2 = x[:, 2:, :]  # Last two channels to skip the ring
+
+        # Pass the first part through the ring resonator, and second part through the delay line
+        # x1 = self.ring(x1)  # Pass through the ring resonator
+        x2 = self.delay(x2)
+
+        # Combine the outputs
+        # Here, you may need to concatenate or stack the outputs appropriately
+        # For example, if the ring output is also of shape (batch_size, 2, N):
+        x_combined = torch.cat((x1, x2), dim=1)  # Combine along the channel dimension
+        print(x_combined.shape)
+
+        x_combined = self.dc2(x_combined)    # Second directional coupler
+
+        return x_combined
+
+
 
 # Example usage
 #%%
