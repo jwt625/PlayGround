@@ -26,13 +26,41 @@ class MZITestNetwork(nn.Module):
 
         return output
 
+
+class NestedMZINetwork(nn.Module):
+    def __init__(self, wavelength_points, dL1=100e-6, dL2=100e-6, dL3=100e-6, n_eff=1.5):
+        super(NestedMZINetwork, self).__init__()
+        self.splitter = YSplitter()
+        self.mzi1 = MZITestNetwork(wavelength_points, dL1, n_eff)
+        self.mzi2 = MZITestNetwork(wavelength_points, dL2, n_eff)
+        self.delay_line = DelayLine(wavelength_points, dL3, n_eff)
+        self.combiner = YCombiner()  # Combiner for the final output
+        self.register_buffer('wavelength_points', torch.tensor(wavelength_points, dtype=torch.float32))
+        
+    def forward(self, x):
+        # Split the input tensor
+        x_split = self.splitter(x)
+        # Pass through the first MZI
+        output1 = self.mzi1(x_split[:, :2, :])  # Apply mzi1 to the first path
+        # Pass through the second MZI
+        output2 = self.mzi2(x_split[:, 2:, :])  # Apply mzi2 to the second path
+        # apply extra delay to the second path
+        output2 = self.delay_line(output2)
+        # Combine the outputs from both MZIs
+        combined_output = torch.cat((output1, output2), dim=1)  # Combine outputs from both MZIs
+        final_output = self.combiner(combined_output)  # Final combiner
+        
+        return final_output
+
+
 # Example usage
 #%%
 # Define wavelength points
 wavelength_points = np.linspace(1.5e-6, 1.6e-6, 5000)  # 5000 points from 1.5 to 1.6 μm
 
 # Create MZI test network
-mzi_test = MZITestNetwork(wavelength_points, delta_L=100e-6)
+# mzi_test = MZITestNetwork(wavelength_points, delta_L=100e-6)
+mzi_test = NestedMZINetwork(wavelength_points, dL1=100e-6, dL2=50e-6, dL3=100e-6)
 
 # Create example input (batch_size=1, 4 channels, N wavelength points)
 batch_size = 1
@@ -58,4 +86,7 @@ plt.title('MZI Output Power')
 plt.legend()
 plt.grid(True)
 plt.show()
-# %%
+
+# %% test MZI in MZI
+
+
