@@ -39,6 +39,10 @@ class DirectionalCouplerCoupledMode(nn.Module):
         
         delta_normalized = torch.tensor(detuning_coeff, dtype=torch.float32)         # convert to torch tensor
         self.delta_beta_normalized = nn.Parameter(delta_normalized)
+        
+        # Learnable parameters: scaling for kappa and delta
+        self.kappa_scale = nn.Parameter(torch.tensor(1.0, dtype=torch.float32))
+        self.delta_scale = nn.Parameter(torch.tensor(1.0, dtype=torch.float32))
 
     def langrange_polynomial(self, x, y, wl_norm):
         """
@@ -70,8 +74,8 @@ class DirectionalCouplerCoupledMode(nn.Module):
         # print("Stacked complex shape:", z.shape)
         
         # Compute gamma from coupling coefficient and detuning for each wavelength:
-        kappa = self.kappa_normalized * 2 * torch.pi / self.wavelength_points
-        delta_beta = self.delta_beta_normalized * 2 * torch.pi / self.wavelength_points
+        kappa = self.kappa_scale * self.kappa_normalized * 2 * torch.pi / self.wavelength_points
+        delta_beta = self.delta_scale * self.delta_beta_normalized * 2 * torch.pi / self.wavelength_points
         gamma = torch.sqrt(kappa**2 + (delta_beta / 2)**2)
         # print("Gamma shape:", gamma.shape)
         
@@ -115,6 +119,8 @@ class DirectionalCouplerCoupledMode(nn.Module):
         ], dim=1)  # shape: (batch_size, 4, N)
         # print("Final output shape:", out.shape)
         return out
+
+
 
 #%% Example usage:
 
@@ -169,7 +175,7 @@ print("Gradient for delta_beta:", dc.delta_beta_normalized.grad)
 
 #%%
 # Set up an optimizer for the kappa and delta_beta parameters
-optimizer = torch.optim.Adam([dc.kappa_normalized, dc.delta_beta_normalized], lr=1e-3)
+optimizer = torch.optim.Adam([dc.kappa_scale, dc.delta_scale], lr=1e-3)
 num_epochs = 1000
 
 for epoch in range(num_epochs):
@@ -183,12 +189,16 @@ for epoch in range(num_epochs):
     output_complex_wg2 = torch.complex(output_field[0, 2, :], output_field[0, 3, :])
     
     # Compute power (magnitude squared)
+    # Compute power (magnitude squared)
     power_wg1 = torch.abs(output_complex_wg1)**2
     power_wg2 = torch.abs(output_complex_wg2)**2
-    
-    # Define loss as the mean squared deviation from a 50:50 split
-    loss = torch.mean((power_wg1 - power_wg2)**2)
-    
+
+    # Compute total power and avoid division by zero
+    total_power = power_wg1 + power_wg2 + 1e-8
+
+    # Define loss as the mean squared deviation of the power ratio in WG1 from 45%
+    loss = torch.mean((power_wg1 / total_power - 0.45)**2)
+
     # Backpropagate to compute gradients
     loss.backward()
     optimizer.step()
@@ -242,10 +252,13 @@ plt.grid(True)
 
 # Plot 3: Phase of coupling matrix elements
 plt.subplot(2, 2, 3)
-gamma = torch.sqrt(dc.kappa_normalized**2 + (dc.delta_beta_normalized / 2)**2)
+kappa = dc.kappa_normalized * 2 * torch.pi / dc.wavelength_points
+delta_beta = dc.delta_beta_normalized * 2 * torch.pi / dc.wavelength_points
+gamma = torch.sqrt(kappa**2 + (delta_beta / 2)**2)
+
 L = dc.L
-T11 = torch.cos(gamma * L) + 1j * (dc.delta_beta_normalized / (2 * gamma)) * torch.sin(gamma * L)
-T12 = -1j * (dc.kappa_normalized / gamma) * torch.sin(gamma * L)
+T11 = torch.cos(gamma * L) + 1j * (delta_beta / (2 * gamma)) * torch.sin(gamma * L)
+T12 = -1j * (kappa / gamma) * torch.sin(gamma * L)
 
 plt.plot(wavelength_points * 1e9, torch.angle(T11).detach().numpy(), 
          label='Phase(T11)', linestyle='--')
