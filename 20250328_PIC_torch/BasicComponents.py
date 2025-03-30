@@ -5,6 +5,56 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
+class YSplitter(nn.Module):
+    def __init__(self):
+        super(YSplitter, self).__init__()
+        self.factor = 1 / np.sqrt(2)  # Factor for power conservation
+
+    def forward(self, x):
+        """
+        x: input tensor of shape (batch_size, 2, N)
+           where 2 channels represent [real, imag] of the input waveguide.
+        Returns:
+           output tensor of shape (batch_size, 4, N)
+        """
+        # Split the input into two waveguides and apply the factor
+        real_part = x[:, 0, :] * self.factor  # Real part
+        imag_part = x[:, 1, :] * self.factor  # Imaginary part
+        
+        # Create the output tensor
+        output = torch.stack([
+            real_part,  # Waveguide 1 real part
+            imag_part,  # Waveguide 1 imag part
+            real_part,  # Waveguide 2 real part (same as waveguide 1)
+            imag_part   # Waveguide 2 imag part (same as waveguide 1)
+        ], dim=1)  # shape: (batch_size, 4, N)
+
+        return output
+
+
+class YCombiner(nn.Module):
+    def __init__(self):
+        super(YCombiner, self).__init__()
+        self.factor = 1 / np.sqrt(2)  # Factor for power conservation
+
+    def forward(self, x):
+        """
+        x: input tensor of shape (batch_size, 4, N)
+           where 4 channels represent [real1, imag1, real2, imag2].
+        Returns:
+           output tensor of shape (batch_size, 2, N)
+        """
+        # Average the two waveguides and apply the factor
+        real_part = (x[:, 0, :] + x[:, 2, :]) * self.factor  # Average real parts
+        imag_part = (x[:, 1, :] + x[:, 3, :]) * self.factor  # Average imag parts
+        
+        # Create the output tensor
+        output = torch.stack([
+            real_part,  # Combined real part
+            imag_part   # Combined imag part
+        ], dim=1)  # shape: (batch_size, 2, N)
+
+        return output
 
 class DirectionalCoupler(nn.Module):
     def __init__(self, coupling_ratio=0.5):
