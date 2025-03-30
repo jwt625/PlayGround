@@ -101,7 +101,8 @@ class DelayLine(nn.Module):
 
 class MZINetwork(nn.Module):
     def __init__(self, wavelength_points, 
-                 delta_L=1e-6, n_eff=1.5, ring_FSR=0.01, ring_Q_total=1e3, ring_Q_ext=2e3):
+                 delta_L=1e-6, n_eff=1.5,
+                 ring_FSR=0.01, ring_Q_total=1e3, ring_Q_ext=2e3, phase_shift=0.0):
         """
         Complete MZI network with learnable parameters
         """
@@ -118,9 +119,7 @@ class MZINetwork(nn.Module):
             a = 1.0
 
         self.dc1 = DirectionalCouplerCoupledMode(wavelength_points, L=0.00000195)
-        # print ring parameters
-        print(f"Ring parameters: L={L}, kappa={kappa}, r={r}, a={a}")
-        self.ring = RingResonatorFP(wavelength_points, L=L, r=r, a=a)
+        self.ring = RingResonatorFP(wavelength_points, L=L, r=r, a=a, phase_shift=phase_shift)
         self.delay = DelayLine(wavelength_points, delta_L, n_eff)
         self.dc2 = DirectionalCouplerCoupledMode(wavelength_points, L=0.00000195)
         self.register_buffer('wavelength_points', torch.tensor(wavelength_points, dtype=torch.float32))
@@ -157,7 +156,7 @@ wavelength_points = np.linspace(1.5e-6, 1.6e-6, 5000)  # 1000 points from 1.5 to
 
 # Create network
 mzi = MZINetwork(wavelength_points, delta_L=100e-6,
-                 ring_FSR=0.01, ring_Q_total=1e3, ring_Q_ext=2e3)
+                 ring_FSR=0.0105, ring_Q_total=1e3, ring_Q_ext=5e3, phase_shift=np.pi/2)
 
 # Create example input (batch_size=1, 4 channels, N wavelength points)
 batch_size = 1

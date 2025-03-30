@@ -1,11 +1,10 @@
-
 import torch
 import torch.nn as nn
 import numpy as np
 
 
 class RingResonatorFP(nn.Module):
-    def __init__(self, wavelength_points, L=10e-6, r=0.9, a=0.99):
+    def __init__(self, wavelength_points, L=10e-6, r=0.9, a=0.99, phase_shift=0.0):
         """
         A ring resonator modeled using the FP cavity analytical solution.
         
@@ -18,12 +17,14 @@ class RingResonatorFP(nn.Module):
           L                 : round-trip length of the ring (meters).
           r                 : self-coupling coefficient (amplitude reflection at the coupler).
           a                 : round-trip amplitude transmission (internal loss factor).
+          phase_shift       : additional phase shift to apply to the resonances.
         """
         super(RingResonatorFP, self).__init__()
         self.L = L
         # Optionally make r and a learnable:
         self.r = nn.Parameter(torch.tensor(r, dtype=torch.float32))
         self.a = nn.Parameter(torch.tensor(a, dtype=torch.float32))
+        self.phase_shift = nn.Parameter(torch.tensor(phase_shift, dtype=torch.float32))  # New phase parameter
         
         # Register wavelength points as a buffer (non-trainable)
         self.register_buffer('wavelength_points', 
@@ -40,8 +41,8 @@ class RingResonatorFP(nn.Module):
         theta = 2 * torch.pi * self.L / self.wavelength_points  # shape: (N,)
         
         # Compute the transfer function H(λ) using the FP cavity reflection formula:
-        # In our mapping, this H(λ) is the effective ring transfer function.
-        H = (self.r - self.a * torch.exp(-1j * theta)) / (1 - self.r * self.a * torch.exp(-1j * theta))
+        # Incorporate the additional phase shift
+        H = (self.r - self.a * torch.exp(-1j * (theta + self.phase_shift))) / (1 - self.r * self.a * torch.exp(-1j * (theta + self.phase_shift)))
         # H has shape: (N,)
         
         # Convert input field into a complex tensor.
