@@ -4,6 +4,100 @@ import torch.nn as nn
 import numpy as np
 import matplotlib.pyplot as plt
 
+
+
+class DirectionalCoupler(nn.Module):
+    def __init__(self, coupling_ratio=0.5):
+        """
+        Directional coupler layer using nn.Linear
+        coupling_ratio: initial power coupling ratio (0 to 1)
+        """
+        super(DirectionalCoupler, self).__init__()
+        # Initialize coupling matrix as learnable parameters
+        k = np.sqrt(coupling_ratio)
+        t = np.sqrt(1 - coupling_ratio)
+        self.coupling_matrix = nn.Parameter(torch.tensor([
+            [t, -1j*k],
+            [-1j*k, t]
+        ], dtype=torch.complex64))
+        
+        # Add learnable phase parameters
+        self.phase = nn.Parameter(torch.zeros(2, dtype=torch.float32))
+        
+    def forward(self, x):
+        """
+        x: input tensor of shape (batch_size, 4, N)
+           where 4 represents [real1, imag1, real2, imag2]
+           and N is the number of wavelength points
+        """
+        # Convert to complex representation
+        x_complex = torch.complex(x[:, 0], x[:, 1])  # waveguide 1
+        y_complex = torch.complex(x[:, 2], x[:, 3])  # waveguide 2
+        
+        # Stack complex numbers
+        z = torch.stack([x_complex, y_complex], dim=1)  # shape: (batch_size, 2, N)
+        
+        # Apply coupling matrix to each wavelength point
+        z_reshaped = z.permute(0, 2, 1)  # shape: (batch_size, N, 2)
+        z_out = torch.matmul(z_reshaped, self.coupling_matrix)  # shape: (batch_size, N, 2)
+        
+        # Apply learnable phase shifts
+        phase_matrix = torch.exp(1j * self.phase)
+        z_out = z_out * phase_matrix
+        
+        z_out = z_out.permute(0, 2, 1)  # shape: (batch_size, 2, N)
+        
+        # Convert back to real/imag representation
+        out = torch.stack([
+            z_out[:, 0].real,  # real part of waveguide 1
+            z_out[:, 0].imag,  # imag part of waveguide 1
+            z_out[:, 1].real,  # real part of waveguide 2
+            z_out[:, 1].imag   # imag part of waveguide 2
+        ], dim=1)
+        
+        return out
+
+class DelayLine(nn.Module):
+    def __init__(self, wavelength_points, delta_L=1e-6, n_eff=1.5):
+        """
+        Delay line layer that applies a phase delay to a single waveguide.
+        wavelength_points: array of wavelength points
+        delta_L: initial length difference between arms (m)
+        n_eff: initial effective refractive index
+        """
+        super(DelayLine, self).__init__()
+        # Convert wavelength points to tensor and make it a buffer (not learnable)
+        self.register_buffer('wavelength_points', torch.tensor(wavelength_points, dtype=torch.float32))
+        
+        # Make parameters learnable
+        self.delta_L = nn.Parameter(torch.tensor(delta_L, dtype=torch.float32))
+        self.n_eff = nn.Parameter(torch.tensor(n_eff, dtype=torch.float32))
+        
+    def forward(self, x):
+        """
+        x: input tensor of shape (batch_size, 2, N)
+           where 2 channels represent [real, imag] of the waveguide.
+        """
+        # Convert to complex representation
+        x_complex = torch.complex(x[:, 0], x[:, 1])  # single waveguide
+        
+        # Calculate phase difference using learnable parameters
+        k = 2 * torch.pi * self.n_eff / self.wavelength_points
+        phase_diff = k * self.delta_L
+        
+        # Apply phase difference to the waveguide
+        x_complex = x_complex * torch.exp(1j * phase_diff)
+        
+        # Convert back to real/imag representation
+        out = torch.stack([
+            x_complex.real,    # real part
+            x_complex.imag     # imag part
+        ], dim=1)  # shape: (batch_size, 2, N)
+        
+        return out
+
+
+
 class DirectionalCouplerCoupledMode(nn.Module):
     def __init__(self, wavelength_points, L=0.001):
         """
