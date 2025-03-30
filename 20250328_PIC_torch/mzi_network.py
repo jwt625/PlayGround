@@ -96,14 +96,17 @@ class DelayLine(nn.Module):
         return out
 
 class RingResonator(nn.Module):
-    def __init__(self, radius, coupling_coefficient):
+    def __init__(self, wavelength_points, FSR, Q_total=1e6, Q_ext=1e6):
         super(RingResonator, self).__init__()
-        self.radius = radius
-        self.coupling_coefficient = coupling_coefficient
+        self.FSR = FSR  # Normalized Free Spectral Range
+        self.Q_total = Q_total  # Total quality factor
+        self.Q_ext = Q_ext  # Extrinsic coupling quality factor
+        self.register_buffer('wavelength_points', torch.tensor(wavelength_points, dtype=torch.float32))
 
     def forward(self, x):
         """
         x: input tensor of shape (batch_size, 2, N)
+        wavelengths: tensor of shape (N,) representing the wavelengths
         """
         # Extract real and imaginary parts
         real_part = x[:, 0, :]
@@ -111,11 +114,19 @@ class RingResonator(nn.Module):
         
         # Calculate the complex field
         complex_field = torch.complex(real_part, imag_part)
+
+        # Calculate the resonant frequencies based on the wavelengths
+        f_0 = 1 / self.wavelength_points  # Convert wavelengths to frequencies (normalized)
         
-        # Apply the ring resonator transformation
-        # For example, apply a phase shift based on the radius and coupling coefficient
-        phase_shift = torch.exp(1j * (2 * np.pi / self.radius))  # Example phase shift
-        coupled_field = complex_field * phase_shift * self.coupling_coefficient
+        # Calculate the Lorentzian transfer function
+        gamma = f_0 * (self.FSR / (2 * np.pi))  # Convert FSR to frequency domain
+        delta_beta = (2 * np.pi * f_0) / self.Q_total  # Calculate detuning
+        
+        # Calculate the transfer function H(f)
+        H = 1 / (1 + 1j * (2 * self.Q_ext / self.Q_total) * (f_0 - gamma))
+        
+        # Apply the transfer function to the complex field
+        coupled_field = complex_field * H
         
         # Return the output as real and imaginary parts
         output_real = coupled_field.real
@@ -124,17 +135,17 @@ class RingResonator(nn.Module):
         return torch.stack([output_real, output_imag], dim=1)  # shape: (batch_size, 2, N)
 
 class MZINetwork(nn.Module):
-    def __init__(self, wavelength_points, coupling_ratio=0.5, delta_L=1e-6, n_eff=1.5):
+    def __init__(self, wavelength_points, coupling_ratio=0.5,
+                 delta_L=1e-6, n_eff=1.5, ring_FSR=1.0, ring_Q_total=1e5, ring_Q_ext=1e5):
         """
         Complete MZI network with learnable parameters
         """
         super(MZINetwork, self).__init__()
-        # self.dc1 = DirectionalCoupler(coupling_ratio)
         self.dc1 = DirectionalCouplerCoupledMode(wavelength_points, L=0.00000195)
-        self.ring = RingResonator(radius=1e-6, coupling_coefficient=0.5)
+        self.ring = RingResonator(wavelength_points, FSR=ring_FSR, Q_total=ring_Q_total, Q_ext=ring_Q_ext)
         self.delay = DelayLine(wavelength_points, delta_L, n_eff)
-        # self.dc2 = DirectionalCoupler(coupling_ratio)
         self.dc2 = DirectionalCouplerCoupledMode(wavelength_points, L=0.00000195)
+        self.register_buffer('wavelength_points', torch.tensor(wavelength_points, dtype=torch.float32))
         
     def forward(self, x):
         """
@@ -142,19 +153,18 @@ class MZINetwork(nn.Module):
         """
         # Split the input tensor
         x = self.dc1(x)
-        print(x.shape)
-        x1 = x[:, :2, :]  # First two channels for the ring resonator
-        x2 = x[:, 2:, :]  # Last two channels to skip the ring
+
+        x1 = x[:, :2, :]  # First two channels for the first path (ring)
+        x2 = x[:, 2:, :]  # Last two channels for the second path (delay line)
 
         # Pass the first part through the ring resonator, and second part through the delay line
-        # x1 = self.ring(x1)  # Pass through the ring resonator
+        x1 = self.ring(x1)  # Pass through the ring resonator
         x2 = self.delay(x2)
 
         # Combine the outputs
         # Here, you may need to concatenate or stack the outputs appropriately
         # For example, if the ring output is also of shape (batch_size, 2, N):
         x_combined = torch.cat((x1, x2), dim=1)  # Combine along the channel dimension
-        print(x_combined.shape)
 
         x_combined = self.dc2(x_combined)    # Second directional coupler
 
@@ -168,7 +178,8 @@ class MZINetwork(nn.Module):
 wavelength_points = np.linspace(1.5e-6, 1.6e-6, 5000)  # 1000 points from 1.5 to 1.6 μm
 
 # Create network
-mzi = MZINetwork(wavelength_points, delta_L=300e-6)
+mzi = MZINetwork(wavelength_points, delta_L=100e-6,
+                 ring_FSR=1.0, ring_Q_total=1e6, ring_Q_ext=1e6)
 
 # Create example input (batch_size=1, 4 channels, N wavelength points)
 batch_size = 1
@@ -196,10 +207,15 @@ output_complex_2 = torch.complex(output_field[0, 2], output_field[0, 3])
 import matplotlib.pyplot as plt
 
 plt.figure(figsize=(10, 6))
-plt.semilogy(wavelength_points * 1e9, (torch.abs(input_complex_1).detach().numpy())**2, label='Input WG1')
-# plt.semilogy(wavelength_points * 1e9, (torch.abs(input_complex_2).detach().numpy())**2, label='Input WG2')
-plt.semilogy(wavelength_points * 1e9, (torch.abs(output_complex_1).detach().numpy())**2, label='Output WG1')
-plt.semilogy(wavelength_points * 1e9, (torch.abs(output_complex_2).detach().numpy())**2, label='Output WG2')
+# plt.semilogy(wavelength_points * 1e9, (torch.abs(input_complex_1).detach().numpy())**2, label='Input WG1')
+# # plt.semilogy(wavelength_points * 1e9, (torch.abs(input_complex_2).detach().numpy())**2, label='Input WG2')
+# plt.semilogy(wavelength_points * 1e9, (torch.abs(output_complex_1).detach().numpy())**2, label='Output WG1')
+# plt.semilogy(wavelength_points * 1e9, (torch.abs(output_complex_2).detach().numpy())**2, label='Output WG2')
+plt.plot(wavelength_points * 1e9, (torch.abs(input_complex_1).detach().numpy())**2, label='Input WG1')
+# plt.plot(wavelength_points * 1e9, (torch.abs(input_complex_2).detach().numpy())**2, label='Input WG2')
+plt.plot(wavelength_points * 1e9, (torch.abs(output_complex_1).detach().numpy())**2, label='Output WG1')
+plt.plot(wavelength_points * 1e9, (torch.abs(output_complex_2).detach().numpy())**2, label='Output WG2')
+
 plt.xlabel('Wavelength (nm)')
 plt.ylabel('Power')
 plt.title('MZI Response')
