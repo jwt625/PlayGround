@@ -165,7 +165,7 @@ str_user_handle = "@jwt0625"  # Replace with the actual user handle
 
 # Read URLs from file
 # str_fn = 'urls_tweet_to_scrape_20241215.txt'
-str_fn = 'sorted_tweet_urls_20250323.txt'
+str_fn = 'sorted_tweet_urls_20250330.txt'
 
 # str_fn = 'urls_test.txt'
 with open(str_fn, 'r') as f:
@@ -187,5 +187,39 @@ with open('scraped_tweets.json', 'w', encoding='utf-8') as f:
     json.dump(threads_data, f, ensure_ascii=False, indent=4)
 
 print(f"Scraped {len(threads_data)} threads.")
+
+# %%
+
+import shutil
+from datetime import datetime
+
+#% Move JPG files to a new folder based on date range
+
+# Get all JPG files in the media folder
+media_folder = 'media'
+jpg_files = [f for f in os.listdir(media_folder) if f.endswith('.jpg')]
+
+if jpg_files:
+    # Extract creation dates
+    dates = []
+    for jpg in jpg_files:
+        creation_time = os.path.getctime(os.path.join(media_folder, jpg))
+        dates.append(datetime.fromtimestamp(creation_time))
+
+    # Determine the date range
+    min_date = min(dates).strftime("%Y%m%d")
+    max_date = max(dates).strftime("%Y%m%d")
+
+    # Create a new folder name based on the date range inside the media folder
+    new_folder_name = os.path.join(media_folder, f"{min_date}_{max_date}")
+    os.makedirs(new_folder_name, exist_ok=True)
+
+    # Move JPG files to the new folder
+    for jpg in jpg_files:
+        shutil.move(os.path.join(media_folder, jpg), os.path.join(new_folder_name, jpg))
+
+    print(f"Moved {len(jpg_files)} JPG files to folder: {new_folder_name}")
+else:
+    print("No JPG files found in the media folder.")
 
 # %%
