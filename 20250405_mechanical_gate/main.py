@@ -84,7 +84,7 @@ def extract_polygon_and_write_gds(
         plt.show()
 
     # 5. Optionally approximate the contour to reduce number of points
-    epsilon = 1.0  # Adjust epsilon as needed
+    epsilon = 1  # Adjust epsilon as needed
     approx_contour = cv2.approxPolyDP(main_contour, epsilon, True)
     if debug:
         print(f"[DEBUG] Approximated polygon vertices count: {len(approx_contour)}")
@@ -126,14 +126,14 @@ def extract_polygon_and_write_gds(
 
 # if __name__ == "__main__":
 # Example usage
-image_file = "test2.png"
+image_file = "BW-v2.png"
 gds_output_file = "output.gds"
 
 extract_polygon_and_write_gds(
     image_path=image_file,
     output_gds_path=gds_output_file,
     threshold_value=120,
-    min_contour_area=500,  # Adjust based on your image scale
+    min_contour_area=2000,  # Adjust based on your image scale
     debug=True
 )
 
