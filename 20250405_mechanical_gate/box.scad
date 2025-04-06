@@ -1,3 +1,5 @@
+for (i = [0:5]) {
+    translate([i * 335, 0, 0]) {
 difference() {
     // Positive shape: extruded by 120 units
     linear_extrude(height = 130)
@@ -7,4 +9,6 @@ difference() {
     translate([0, 0, 31])
     linear_extrude(height = 100)
         import("box_neg.dxf", convexity=10);
+}
+}
 }
