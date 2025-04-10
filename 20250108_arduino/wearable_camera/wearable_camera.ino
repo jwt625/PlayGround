@@ -195,6 +195,13 @@ void goToSleep() {
   
   Serial.println("Going to sleep...");
   Serial.flush();
+  Serial.end();
+
+  const int pulldown_gpio[] = {4, 16, 17, 18, 21, 33, 34, 35, 36, 37, 38, 39};
+  for (int i = 0; i < sizeof(pulldown_gpio)/sizeof(int); ++i) {
+    pinMode(pulldown_gpio[i], INPUT_PULLDOWN);
+  }
+
   
   // Enter deep sleep
   esp_deep_sleep_start();
