@@ -84,6 +84,10 @@ bool initCamera() {
   config.frame_size = FRAMESIZE_SVGA;
   config.jpeg_quality = 12;
   config.fb_count = 1;
+  
+  pinMode(PWDN_GPIO_NUM, OUTPUT);
+  digitalWrite(PWDN_GPIO_NUM, 0); // Ensure sensor is active
+  delay(10); // Allow power-up time
 
   esp_err_t err = esp_camera_init(&config);
   if (err != ESP_OK) {
@@ -182,6 +186,9 @@ void goToSleep() {
   
   // Power down the camera
   esp_camera_deinit();
+  pinMode(PWDN_GPIO_NUM, OUTPUT);
+  digitalWrite(PWDN_GPIO_NUM, 1); // Drive high to power down sensor
+
   
   // Configure wake-up timer
   esp_sleep_enable_timer_wakeup(SLEEP_DURATION);
