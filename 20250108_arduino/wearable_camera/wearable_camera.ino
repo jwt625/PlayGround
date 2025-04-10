@@ -22,6 +22,12 @@ void goToSleep();
 void setup() {
   Serial.begin(115200);
   delay(100); // Brief delay for serial stability
+  // Wait for 5 seconds at startup to allow time for potential uploads
+  for(int i = 5; i > 0; i--) {
+    Serial.printf("Upload window: %d seconds remaining...\n", i);
+    delay(1000);
+  }
+  
   
   // Initialize camera with the same config as before
   if (!initCamera()) {
@@ -40,12 +46,6 @@ void setup() {
   // Capture and send image
   if (!captureAndSendImage()) {
     Serial.println("Image capture/send failed - going to sleep");
-  }
-
-  // Wait for 5 seconds after capture to allow time for potential uploads
-  for(int i = 5; i > 0; i--) {
-    Serial.printf("Upload window: %d seconds remaining...\n", i);
-    delay(1000);
   }
 
   // Go to sleep after everything (success or failure)
@@ -183,10 +183,10 @@ void goToSleep() {
   // Power down the camera
   esp_camera_deinit();
   
-  // Configure wake-up source: Timer wake-up every 60 seconds
+  // Configure wake-up timer
   esp_sleep_enable_timer_wakeup(SLEEP_DURATION);
   
-  Serial.println("Going to sleep... Will wake up in 60 seconds");
+  Serial.println("Going to sleep...");
   Serial.flush();
   
   // Enter deep sleep
