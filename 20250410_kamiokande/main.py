@@ -28,7 +28,8 @@ from PIL import Image
 from sklearn.cluster import DBSCAN
 
 # Load and prepare the image
-image_path = 'image_converted.png' 
+# image_path = 'image_converted.png' 
+image_path = '20250410T1152.gif' 
 image = Image.open(image_path).convert('RGB')
 image_np = np.array(image)
 
@@ -64,6 +65,42 @@ for label in unique_labels:
         'color': tuple(avg_color)
     })
 
+
+# Define bounding boxes to exclude: list of ((xmin, ymin), (xmax, ymax))
+exclude_boxes = [((0, 0), (420, 240)), ((1300, 0), (1680, 280)),
+                 ((0, 700), (550, 1010)), ((0, 1032), (1680, 1050))]  # example
+
+# Filter detectors outside all exclusion boxes
+def is_outside_boxes(x, y, boxes):
+    for (xmin, ymin), (xmax, ymax) in boxes:
+        if xmin <= x <= xmax and ymin <= y <= ymax:
+            return False
+    return True
+
+# Apply filtering
+detectors = [d for d in detectors if is_outside_boxes(d['x'], d['y'], exclude_boxes)]
+
+
+# New bounding boxes for partitioning: list of ((xmin, ymin), (xmax, ymax))
+partition_boxes = [((600, 0), (1130, 350)), ((590, 699), (1150, 1030)),
+                   ((40, 350), (1680, 695))]  # example
+
+# Initialize partitions: one list per box, and one for everything else
+partitioned_sets = {i: [] for i in range(len(partition_boxes))}
+unassigned = []
+
+# Assign each detector to a box if it falls within one
+for d in detectors:
+    assigned = False
+    for i, ((xmin, ymin), (xmax, ymax)) in enumerate(partition_boxes):
+        if xmin <= d['x'] <= xmax and ymin <= d['y'] <= ymax:
+            partitioned_sets[i].append(d)
+            assigned = True
+            break
+    if not assigned:
+        unassigned.append(d)
+
+
 # Preview results
 for d in detectors[:10]:
     print(d)
@@ -87,33 +124,35 @@ import plotly.express as px
 import pandas as pd
 
 # Convert to DataFrame for Plotly
-df = pd.DataFrame(detectors)
+for ind, dd in partitioned_sets.items():
+    # df = pd.DataFrame(detectors)
+    df = pd.DataFrame(dd)
 
-# Normalize color values to 0–1 range for Plotly
-df['r'] = df['color'].apply(lambda c: c[0] / 255.0)
-df['g'] = df['color'].apply(lambda c: c[1] / 255.0)
-df['b'] = df['color'].apply(lambda c: c[2] / 255.0)
+    # Normalize color values to 0–1 range for Plotly
+    df['r'] = df['color'].apply(lambda c: c[0] / 255.0)
+    df['g'] = df['color'].apply(lambda c: c[1] / 255.0)
+    df['b'] = df['color'].apply(lambda c: c[2] / 255.0)
 
-# Build color strings in rgba format
-df['rgba'] = df.apply(lambda row: f'rgba({row["color"][0]},{row["color"][1]},{row["color"][2]},1.0)', axis=1)
+    # Build color strings in rgba format
+    df['rgba'] = df.apply(lambda row: f'rgba({row["color"][0]},{row["color"][1]},{row["color"][2]},1.0)', axis=1)
 
-# Create interactive scatter plot
-fig = px.scatter(
-    df, x='x', y='y',
-    color='rgba',
-    color_discrete_map='identity',
-    hover_data=['x', 'y', 'color'],
-    title='Clustered Detector Pixels'
-)
+    # Create interactive scatter plot
+    fig = px.scatter(
+        df, x='x', y='y',
+        color='rgba',
+        color_discrete_map='identity',
+        hover_data=['x', 'y', 'color'],
+        title='Clustered Detector Pixels'
+    )
 
-fig.update_traces(marker=dict(size=6))
-fig.update_layout(
-    yaxis=dict(autorange='reversed'),
-    xaxis=dict(scaleanchor='y'),
-    width=700,
-    height=700
-)
+    fig.update_traces(marker=dict(size=6))
+    fig.update_layout(
+        yaxis=dict(autorange='reversed'),
+        xaxis=dict(scaleanchor='y'),
+        width=700,
+        height=700
+    )
 
-fig.show()
+    fig.show()
 
 # %%
