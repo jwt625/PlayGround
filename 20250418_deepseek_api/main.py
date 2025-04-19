@@ -49,10 +49,20 @@ if __name__ == "__main__":
     with open('config.json', 'r') as f:
         config = json.load(f)
     
+    # Set up command-line arguments
+    parser = argparse.ArgumentParser(description='Process text with LLM using markdown files')
+    parser.add_argument('--prompt_file', default='prompt.md', 
+                      help='Path to prompt instructions file (default: prompt.md)')
+    parser.add_argument('--content_file', default='content.md',
+                      help='Path to content input file (default: content.md)')
+    parser.add_argument('--output_file', default='output.md',
+                      help='Path to output results file (default: output.md)')
+    args = parser.parse_args()
+
     try:
         # Read input files
-        prompt = read_file('prompt.md')  # Note: Fixed typo from 'prompt.md' to 'prompt.md'
-        content = read_file('content.md')
+        prompt = read_file(args.prompt_file)
+        content = read_file(args.content_file)
         
         # Process with LLM
         result = process_with_llm(
@@ -63,9 +73,10 @@ if __name__ == "__main__":
         )
         
         # Save and display results
-        save_output(result, 'output.md')
-        print("AI Response:\n", result)
-        print("\nOutput successfully saved to output.md")
+        save_output(result, args.output_file)
+        print(f"AI Response (saved to {args.output_file}):\n{'-'*40}")
+        print(result)
+        print('-'*40)
         
     except Exception as e:
         print(str(e))
