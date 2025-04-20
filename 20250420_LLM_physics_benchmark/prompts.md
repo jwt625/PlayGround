@@ -40,78 +40,109 @@ This task probes classical‑mechanics reasoning (constant‑acceleration kinema
 # Maxwell’s Displacement Current in a Charging Capacitor
 
 #### Task  
-Derive analytic field expressions and create `output.gif`, a two‑panel animation over one period \(T=2\pi/\omega\):  
-1. Electric‑field magnitude \(E(r,t)=\dfrac{I_0}{\pi R^{2}\varepsilon_0\omega}\sin(\omega t)\).  
-2. Magnetic field inside the plates  
+Derive the analytic fields and generate `output.gif`, a two‑panel animation over one period \(T=2\pi/\omega\):
+
+1. **Electric field (uniform)**  
+   \[
+     E(r,t)=\frac{I_{0}}{\pi R^{2}\varepsilon_{0}\,\omega}\,\sin(\omega t).
+   \]
+
+2. **Azimuthal magnetic field**  
    \[
      B(r,t)=
      \begin{cases}
-       \dfrac{\mu_0 I_0 r}{2\pi R^{2}}\cos(\omega t), & 0\le r\le R,\\[6pt]
-       0, & r>R,
+       \dfrac{\mu_{0} I_{0} r}{2\pi R^{2}}\cos(\omega t), & 0\le r\le R,\\[6pt]
+       0, & r>R.
      \end{cases}
-   \]  
-   for a parallel‑plate capacitor (\(R=5\;\text{cm}\), \(d=2\;\text{mm}\)).  
-Use \(I_0=1\;\text{A}\), \(\omega=2\pi\times10^{5}\;\text{rad s}^{-1}\). Plot radial profile at mid‑plane, 200 frames, SI units, no edge fringing.
+   \]
+
+* **Parameters** \(R=5\;\text{cm},\;d=2\;\text{mm},\;I_{0}=1\;\text{A},\;\omega=2\pi\times10^{5}\;\text{rad s}^{-1}\).  
+* Plot \(E(r,t)\) and \(B(r,t)\) versus \(r\) (mid‑plane, 0–5 cm) for 200 equally spaced time‑steps; identical time axis in both sub‑plots; SI labels; ignore edge fringing.  
 
 #### Description  
-Assesses understanding of Maxwell‑Ampère law with displacement current, uniform‑field approximation, and ability to visualise time‑varying fields quantitatively.
+Assesses understanding of the displacement‑current term in Maxwell–Ampère’s law, uniform‑field approximation, and quantitative field visualisation.
 
 #### Evaluation Points  
-- **Correct derivation** including the displacement‑current term; shows where \( \partial E/\partial t \) enters.  
-- **Numeric consistency**: uses given constants, correct radial dependence.  
-- **Animation quality**: synchronised subplots, readable axes, units.  
-- **Physical commentary**: brief note explaining why \(B\propto r\) inside the plate region.
+- **Complete derivation** showing where \(\partial E/\partial t\) enters.  
+- **Numeric accuracy** using the supplied constants.  
+- **Synchronous animation** – two panels advance together, axes and units clear.  
+- **Brief physical note** in titles/captions explaining \(B\propto r\) behaviour.
+
+
+
+
 
 
 
 
 # Quantum Double‑Slit Wave‑Packet
 
+
 #### Task  
-Solve the time‑dependent Schrödinger equation for an electron wave‑packet encountering a double‑slit barrier and generate:  
-* `double_slit.gif`: animation of the probability density \(|\psi(x,t)|^{2}\) until the packet reaches \(x=+10\,\mu\text{m}\).  
-* A static plot comparing the time‑averaged intensity at the detection plane with the analytic Fraunhofer pattern  
+Simulate an electron Gaussian wave‑packet incident on a double‑slit barrier with the time‑dependent Schrödinger equation and deliver:
+
+* `double_slit.gif` – colour‑map animation of \(|\psi(x,t)|^{2}\) from launch (\(x=-6\,\mu\text{m}\)) to arrival at the detection plane (\(x=+10\,\mu\text{m}\)).  
+* A static plot overlaying the **time‑averaged** intensity at the detection plane with the Fraunhofer prediction  
   \[
-    I_{\text{theory}}(y)\propto
-    \cos^{2}\!\!\left(\frac{\pi d y}{\lambda L}\right)
-    \operatorname{sinc}^{2}\!\!\left(\frac{\pi a y}{\lambda L}\right).
-  \]  
-Parameters: electron mass \(m_e\); initial Gaussian \(\sigma=0.5\,\mu\text{m}\), \(k_0=5\times10^{6}\,\text{m}^{-1}\); slit width \(a=0.3\,\mu\text{m}\), centre separation \(d=2.0\,\mu\text{m}\); barrier height \(10\,\text{eV}\). Use Crank–Nicolson or split‑operator FFT with absorbing boundaries.
+    I_{\text{theory}}(y)
+      \propto
+      \cos^{2}\!\Bigl(\tfrac{\pi d y}{\lambda L}\Bigr)\;
+      \operatorname{sinc}^{2}\!\Bigl(\tfrac{\pi a y}{\lambda L}\Bigr).
+  \]
+
+* **Physical parameters**  
+  * Electron mass \(m_{e}\).  
+  * Initial packet: width \(\sigma=0.5\,\mu\text{m}\), centre momentum \( \hbar k_{0}, \;k_{0}=5\times10^{6}\,\text{m}^{-1}\).  
+  * Barrier at \(x=0\): height \(10\,\text{eV}\); two rectangular slits width \(a=0.3\,\mu\text{m}\) centred at \(y=\pm1.0\,\mu\text{m}\) (centre‑to‑centre \(d=2.0\,\mu\text{m}\)).  
+  * Large transverse extent so reflections are negligible; absorbing layers at grid edges.  
+
+* **Numerics** – split‑operator FFT or Crank–Nicolson in 2‑D (preferred) or reduced 1‑D Fresnel approximation; choose grid so \(\Delta x,\Delta t\) satisfy the stability criteria.  
 
 #### Description  
-Tests quantum‑mechanical modelling, numerical PDE skills, boundary‑condition handling, and ability to connect simulation to analytic interference theory.
+Exercises quantum dynamics, numerical PDEs, absorbing boundaries, and comparison between simulation and analytic interference.
 
 #### Evaluation Points  
-- **Solver stability**: norm conservation \(<1\%\) loss.  
-- **Physical accuracy**: interference fringe spacing matches analytic prediction within 5 %.  
-- **Plot quality**: clear colour map, time stamps, annotated detection plane.  
-- **Code structure**: modular solver, parameterised grid, documented units.
+- **Probability conservation** loss < 1 %.  
+- **Fringe spacing agreement** with analytic curve within 5 %.  
+- **Clear figures** – colour bar, time stamps, slit/barrier overlay.  
+- **Modular, documented Python code** with adjustable grid and physical parameters.
+
+
+
 
 
 
 # Gravitational Redshift from the Sun
 
-
 #### Task  
-Starting from the Schwarzschild metric  
-\[
-  \mathrm{d}\tau^{2}=\left(1-\frac{2GM}{rc^{2}}\right)c^{2}\mathrm{d}t^{2}-\left(1-\frac{2GM}{rc^{2}}\right)^{-1}\mathrm{d}r^{2}-r^{2}\mathrm{d}\Omega^{2},
-\]  
-derive the first‑order gravitational redshift  
-\[
-  \frac{\Delta\lambda}{\lambda}\;\approx\;\frac{GM}{rc^{2}},
-\]  
-then compute the shift of the H‑α line (\(\lambda_0=656.281\,\text{nm}\)) emitted at the solar photosphere (\(r=R_\odot\)). Use \(M_\odot\) and \(R_\odot\) from CODATA‑2022; output the shifted wavelength and parts‑per‑million (ppm) shift.
+1. **Derivation**  
+   From the Schwarzschild line element  
+   \[
+     \mathrm{d}\tau^{2}= 
+       \Bigl(1-\frac{2GM}{rc^{2}}\Bigr)c^{2}\mathrm{d}t^{2}
+       -\Bigl(1-\frac{2GM}{rc^{2}}\Bigr)^{-1}\mathrm{d}r^{2}-r^{2}\mathrm{d}\Omega^{2},
+   \]  
+   show that for a photon emitted at radius \(r\) and detected at infinity  
+   \[
+     \frac{\Delta\lambda}{\lambda}\;\approx\;\frac{GM}{rc^{2}}
+     \quad (\text{first order in }GM/rc^{2}).
+   \]
+
+2. **Numerical evaluation**  
+   * Use \(M_\odot = 1.9885\times10^{30}\,\text{kg}\), \(R_\odot = 6.9634\times10^{8}\,\text{m}\).  
+   * Reference line: H‑α, \(\lambda_{0}=656.281\,\text{nm}\).  
+   * Output shifted wavelength and parts‑per‑million (ppm) shift.  
+
+3. **Comment** – one or two sentences on additional perturbations (solar rotation, pressure shifts).
 
 #### Description  
-Evaluates grasp of general‑relativistic time dilation, approximation techniques, and numerical precision in astrophysical contexts.
+Tests competence with GR weak‑field approximation, algebraic manipulation of metrics, and accurate astrophysical calculation.
 
 #### Evaluation Points  
-- **Derivation clarity**: proper use of proper vs. coordinate time, correct series expansion.  
-- **Numerical result**: wavelength shift ≈ 0.064 nm (0.636 Å) or 96 ppm, within 2 %.  
-- **Discussion**: concise mention of solar rotation/pressure broadening (≤ 2 sentences).  
-- **Presentation**: clean algebra, explicit constants, final answer in nm & ppm.
-
+- **Correct algebra** distinguishing proper and coordinate time.  
+- **Numeric shift** ≈ 0.636 Å (0.064 nm) ≈ 96 ppm, within 2 %.  
+- **Concise discussion** of non‑GR contributions (< 40 words).  
+- **Well‑presented constants and units**; clear final boxed answer.
 
 
 
