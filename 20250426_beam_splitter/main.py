@@ -12,6 +12,7 @@ pip install qutip matplotlib numpy
 import numpy as np
 import matplotlib.pyplot as plt
 from qutip import basis, ket2dm, destroy, qeye, tensor, wigner
+import matplotlib.colors as mcolors      
 
 # ---------- helpers --------------------------------------------------------- #
 
@@ -33,7 +34,11 @@ def apply_bs_once(rho_single, U, ket0):
 
 def wigner_panel(rho, xvec, ax, title):
     W = wigner(rho, xvec, xvec, g=2)      # g=2 → rotate axes into x-p
-    ax.contourf(xvec, xvec, W, 120)
+    # ax.contourf(xvec, xvec, W, 120)
+    norm = mcolors.TwoSlopeNorm(vcenter=0)          # symmetric about 0
+    ax.contourf(xvec, xvec, W, 120, cmap='RdBu_r',  # diverging colormap
+                norm=norm)
+
     ax.set_title(title)
     ax.set_xlabel(r'$x$')
     ax.set_ylabel(r'$p$')
@@ -83,6 +88,9 @@ def main(n=3, n_bs=2, cutoff=None):
     fig.suptitle(
         fr"Wigner evolution of $|{n}\rangle$ through {n_bs} beam-splitter pass(es)",
         y=0.95, fontsize=14)
+    # fig.colorbar(axes[0][0].collections[0], ax=axes.ravel().tolist(),
+    #           location='right')
+
     fig.tight_layout()
     plt.show()
 
