@@ -13,10 +13,11 @@ import numpy as np
 import matplotlib.pyplot as plt
 from qutip import basis, ket2dm, destroy, qeye, tensor, wigner, displace, squeeze, coherent
 import matplotlib.colors as mcolors      
+import imageio.v2 as imageio  
 
 # ---------- helpers --------------------------------------------------------- #
 
-def beam_splitter(cutoff, theta=np.pi / 10):
+def beam_splitter(cutoff, theta=np.pi / 15):
     """
     Return the 2-mode unitary for a loss-less beam splitter with mixing
     angle θ (θ = π/4 → 50:50).
@@ -44,6 +45,35 @@ def wigner_panel(rho, xvec, ax, title):
     ax.set_ylabel(r'$p$')
     ax.set_aspect('equal', adjustable='box')
 
+
+# ---------- animation ------------------------------------------------------ #
+
+def save_wigner_gif(states, xvec, filename="wigner.gif", title_prefix="k="):
+    """Save an animated GIF of the Wigner function for every state in *states*."""
+    W_all   = [wigner(r, xvec, xvec, g=2) for r in states]
+    Wmax    = max(np.max(np.abs(W)) for W in W_all)
+    norm    = mcolors.TwoSlopeNorm(vcenter=0, vmin=-Wmax, vmax=+Wmax)
+    W_all   = [wigner(r, xvec, xvec, g=2) for r in states]   # pre-compute
+    frames  = []
+    for k, W in enumerate(W_all):
+        Wmax = np.max(np.abs(W))                              # per-frame scale
+        norm = mcolors.TwoSlopeNorm(vcenter=0, vmin=-Wmax, vmax=+Wmax)
+        fig, ax = plt.subplots(figsize=(4, 4))
+        ax.contourf(xvec, xvec, W, 120, cmap='RdBu_r', norm=norm)
+        ax.set_axis_off()
+        ax.set_title(f"{title_prefix}{k}")
+        # fig.canvas.draw()                                        # grab RGBA buffer
+        # w, h   = fig.canvas.get_width_height()
+        # frame  = np.frombuffer(fig.canvas.tostring_rgb(), dtype=np.uint8)
+        # frames.append(frame.reshape((h, w, 3)))
+        fig.canvas.draw()                                        # render the figure
+        frame = np.asarray(fig.canvas.buffer_rgba())            # RGBA array
+        frames.append(frame[:, :, :3])                           # use RGB, drop α
+
+        plt.close(fig)
+    imageio.mimsave(filename, frames, duration=0.6)
+
+
 # ===== Gaussian / non‑Gaussian initial states ============================
 
 def squeezed_coherent_state(cutoff, *, n, alpha, r, phi=0):
@@ -56,7 +86,8 @@ def squeezed_coherent_state(cutoff, *, n, alpha, r, phi=0):
 def cat_state(cutoff, *, n, alpha, theta=0):
     """Even/odd cat ∝ |α⟩ + e^{iθ}|−α⟩ (normalised)."""
     ket = coherent(cutoff, alpha) + np.exp(1j * theta) * coherent(cutoff, -alpha)
-    ket = ket / np.sqrt((ket.dag() * ket).full()[0, 0])
+    # ket = ket / np.sqrt((ket.dag() * ket).full()[0, 0])
+    ket = ket.unit()
     return ket2dm(ket)
 
 
@@ -85,7 +116,7 @@ def initial_state(state_type, cutoff, **kw):
 
 # ---------- main ------------------------------------------------------------ #
 
-def main(state_type="fock", n=5, n_bs=2, cutoff=None, **state_kw):
+def main(state_type="fock", n=5, n_bs=2, cutoff=None, *, gif_file=None, **state_kw):
 
     """
     Parameters
@@ -133,14 +164,17 @@ def main(state_type="fock", n=5, n_bs=2, cutoff=None, **state_kw):
 
     fig.tight_layout()
     plt.show()
+    # optional GIF ----------------------------------------------------------
+    if gif_file:
+        save_wigner_gif(states, xvec, filename=gif_file)
 
 # --------------------------------------------------------------------------- #
 
 if __name__ == "__main__":
     # examples: choose one
-    # main(state_type="fock", n=6, n_bs=5)
-    # main(state_type="squeezed_coh", n_bs=5, alpha=1+0j, r=0.7, phi=0)
-    main(state_type="cat", n_bs=5, alpha=2, theta=np.pi)
-    # main(state_type="displaced_fock", n=3, n_bs=5, alpha=1.5)
+    main(state_type="fock", n=5, n_bs=25, gif_file="fock_evolution.gif")
+    # main(state_type="squeezed_coh", n_bs=99, alpha=2+0j, r=0.8, phi=0, gif_file="squeezed_coh_evolution.gif")
+    # main(state_type="cat", n_bs=99, alpha=2, theta=np.pi, gif_file="cat_evolution.gif")
+    # main(state_type="displaced_fock", n=4, n_bs=99, alpha=1.5, gif_file="displaced_fock_evolution.gif")
 
 # %%
