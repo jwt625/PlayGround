@@ -11,15 +11,31 @@ pip install qutip matplotlib numpy
 #%%
 import numpy as np
 import matplotlib.pyplot as plt
+
+
 from qutip import (basis, ket2dm, destroy, qeye, tensor,
-                   wigner, displace, squeeze, coherent, expect)
+                   displace, squeeze, coherent, expect)
+# QuTiP ≥ 5 stores the plotting helpers in the visualisation sub-package
+from qutip.visualization import wigner as _wigner_std
+try:
+    from qutip.visualization import wigner_fft as _wigner_fft
+except ImportError:          # for QuTiP 4.x
+    _wigner_fft = None
+
+# convenience wrapper: use FFT if available, else fall back
+def w_fast(rho, xv):
+    if _wigner_fft is not None:
+        return _wigner_fft(rho, xv, xv)
+    return _wigner_std(rho, xv, xv, g=2)
+
 import matplotlib.colors as mcolors      
 import imageio.v2 as imageio  
 import mplcursors                             # NEW
+from matplotlib.colors import LogNorm                   # NEW
 
 # ---------- helpers --------------------------------------------------------- #
 
-def beam_splitter(cutoff, theta=np.pi / 4):
+def beam_splitter(cutoff, theta=np.pi / 15):
     """
     Return the 2-mode unitary for a loss-less beam splitter with mixing
     angle θ (θ = π/4 → 50:50).
@@ -27,7 +43,7 @@ def beam_splitter(cutoff, theta=np.pi / 4):
     a  = destroy(cutoff)
     a1 = tensor(a, qeye(cutoff))
     a2 = tensor(qeye(cutoff), a)
-    return (-1j * theta * (a1.dag() * a2 - a1 * a2.dag())).expm()
+    return (theta * (a1.dag() * a2 - a1 * a2.dag())).expm()
 
 def apply_bs_once(rho_single, U, ket0):
     """Embed ρ (mode-1) ⊗ |0⟩⟨0| (mode-2), apply U, trace out mode-2."""
@@ -36,7 +52,10 @@ def apply_bs_once(rho_single, U, ket0):
     return rho_two.ptrace(0)              # reduced state of port-1
 
 def wigner_panel(rho, xvec, ax, title):
-    W = wigner(rho, xvec, xvec, g=2)      # g=2 → rotate axes into x-p
+    W = w_fast(rho, xvec)      
+    # renormalise (grid integral → 1) ----------------------------------
+    dx = xvec[1] - xvec[0]
+    W /= integrate_wigner(W, dx, dx)
     Wmax = np.max(np.abs(W))              # Get maximum absolute value
     norm = mcolors.TwoSlopeNorm(vcenter=0, vmin=-Wmax, vmax=Wmax)  # Symmetric norm
     cs = ax.contourf(xvec, xvec, W, 120, cmap='RdBu_r',  # diverging colormap
@@ -44,7 +63,7 @@ def wigner_panel(rho, xvec, ax, title):
     ax.set_title(title)
     ax.set_xlabel(r'$x$')
     ax.set_ylabel(r'$p$')
-    x_range = 10
+    x_range = 5
     ax.set_xlim(-x_range, x_range)  # Set fixed x range
     ax.set_ylim(-x_range, x_range)  # Set fixed y range
     ax.set_aspect('equal', adjustable='box')
@@ -55,15 +74,32 @@ def wigner_panel(rho, xvec, ax, title):
     
     return cs                                    # NEW
 
+# ---------- density-matrix visualiser ----------------------------------- #
+
+def density_panel(rho, ax, title):
+    """Plot |ρ_{mn}|² as an image."""
+    M = np.abs(rho.full())
+    im = ax.imshow(M,
+                   norm=LogNorm(vmin=M[M>0].min(), vmax=M.max()),
+                   origin="lower",
+                   cmap="viridis")
+    ax.set_title(title)
+    ax.set_xlabel("n")
+    ax.set_ylabel("m")
+    plt.colorbar(im, ax=ax, label=r"$|\rho_{mn}|^2$")
+    print(f"Trace of {title}: {rho.tr():.6f}")
+    return im
+
 
 # ---------- animation ------------------------------------------------------ #
 
 def save_wigner_gif(states, xvec, filename="wigner.gif", title_prefix="k="):
     """Save an animated GIF of the Wigner function for every state in *states*."""
-    W_all   = [wigner(r, xvec, xvec, g=2) for r in states]
+    W_all   = [w_fast(r, xvec) for r in states]
+    dx      = xvec[1]-xvec[0]
+    W_all   = [W / integrate_wigner(W, dx, dx) for W in W_all]   # renorm
     Wmax    = max(np.max(np.abs(W)) for W in W_all)
     norm    = mcolors.TwoSlopeNorm(vcenter=0, vmin=-Wmax, vmax=+Wmax)
-    W_all   = [wigner(r, xvec, xvec, g=2) for r in states]   # pre-compute
     frames  = []
     for k, W in enumerate(W_all):
         Wmax = np.max(np.abs(W))                              # per-frame scale
@@ -186,10 +222,17 @@ def main(state_type="fock", n=5, n_bs=2, cutoff=None, *, gif_file=None, **state_
     states = [rho0]
     for k in range(n_bs):
         rho_next = apply_bs_once(states[-1], U_bs, ket0)
+        # rho_next = rho_next / rho_next.tr()        # force normalization
+        # ---- cut-off safety check ------------------------------------
+        tail_pop = rho_next.diag()[-1].real
+        if tail_pop > 1e-8:
+            print(f"[warn] {tail_pop:.2e} of population at n = {cutoff-1}; "
+                  f"results may blow up – increase cutoff.")
+
         states.append(rho_next)
 
     # plotting ----------------------------------------------------------------
-    xvec = np.linspace(-10, 10, 1001)
+    xvec = np.linspace(-5, 5, 251)
     # choose phase-space window adaptively -------------------------------
     # xvec = adaptive_grid(rho0)
     n_plots = n_bs + 1
@@ -210,7 +253,7 @@ def main(state_type="fock", n=5, n_bs=2, cutoff=None, *, gif_file=None, **state_
 
         # --- Wigner integral check -------------------------------------
         if idx == 0:        # only need once – same grid for all
-            W0  = wigner(rho, xvec, xvec, g=2)
+            W0  = w_fast(rho, xvec)
             dx  = xvec[1]-xvec[0]
             integ = integrate_wigner(W0, dx, dx)
             if abs(integ-1) > TOL_INTEG:
@@ -230,6 +273,21 @@ def main(state_type="fock", n=5, n_bs=2, cutoff=None, *, gif_file=None, **state_
     #           location='right')
 
     fig.tight_layout()
+
+
+    # --------------- density-matrix plots ------------------------------
+    fig_dm, ax_dm = plt.subplots(n_rows, n_cols,
+                                 figsize=(3*n_cols, 3*n_rows),
+                                 squeeze=False)
+    for idx, rho in enumerate(states):
+        r, c = divmod(idx, n_cols)
+        title = "ρ₀" if idx == 0 else fr"ρ$_{{k={idx}}}$"
+        density_panel(rho, ax_dm[r][c], title)
+    for ax in ax_dm.ravel()[n_plots:]:
+        ax.axis("off")
+    fig_dm.suptitle("Density-matrix magnitude squared", y=0.94, fontsize=14)
+    fig_dm.tight_layout()
+
     # enable hover tooltips showing (x, p, W) ------------------------------
     # robustly collect artists from any Matplotlib version
     artists = []
@@ -251,19 +309,34 @@ def main(state_type="fock", n=5, n_bs=2, cutoff=None, *, gif_file=None, **state_
 
 if __name__ == "__main__":
     # examples: choose one
-    # main(state_type="fock", n=5, n_bs=25, gif_file="fock_evolution.gif")
-    # main(state_type="squeezed_coh", n_bs=99, alpha=2+0j, r=0.8, phi=0, gif_file="squeezed_coh_evolution.gif")
-    # main(state_type="cat", n_bs=99, alpha=2, theta=np.pi, gif_file="cat_evolution.gif")
-    # main(state_type="displaced_fock", n=4, n_bs=99, alpha=1.5, gif_file="displaced_fock_evolution.gif")
+    # main(state_type="fock", n=5, n_bs=50, gif_file="fock_evolution.gif")
+    # main(state_type="squeezed_coh", n_bs=50, alpha=2+0j, r=0.8, phi=0, gif_file="squeezed_coh_evolution.gif")
+    # main(state_type="cat", n_bs=50, alpha=2, cutoff=20, theta=np.pi, gif_file="cat_evolution.gif")
+    # main(state_type="displaced_fock", n=4, n_bs=50, alpha=1.5, gif_file="displaced_fock_evolution.gif")
     # one-liner example
     main(state_type="random_ripple",
         n=0,                    # ignored for this state type
-        n_bs=2,                # number of beam-splitter passes
-        cutoff=40,              # Fock-space truncation
+        n_bs=50,                # number of beam-splitter passes
+        cutoff=10,              # Fock-space truncation
         n_modes=10,             # how many random coherent components
         sigma=1.5,              # envelope width in phase space
         seed=323,               # RNG seed for reproducibility (optional)
         gif_file="ripple_evolution_fast.gif")
 
+
+# %%
+cutoff = 10
+from qutip import qeye
+ket0   = ket2dm(basis(cutoff, 0))
+U_bs   = beam_splitter(cutoff, theta = np.pi/4)        # fixed 50:50 BS
+U_bs.dag() * U_bs
+# I2 = qeye(cutoff**2)
+# Δ = (U_bs.dag() * U_bs - I2).norm()
+# print(f"‖U†U − I‖ = {Δ:.3g}")     # should be ~0
+
+# %%
+a  = destroy(cutoff)
+a1 = tensor(a, qeye(cutoff))
+a2 = tensor(qeye(cutoff), a)
 
 # %%
