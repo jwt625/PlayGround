@@ -51,6 +51,25 @@ def apply_bs_once(rho_single, U, ket0):
     rho_two = U * rho_two * U.dag()
     return rho_two.ptrace(0)              # reduced state of port-1
 
+def amplifier(cutoff, r = np.pi/10):
+    """
+    Two-mode squeezing operator U = exp[r (a^† b^† - a b)]
+    which implements a phase-insensitive amplifier of gain cosh(r).
+    """
+    a = destroy(cutoff)
+    a1 = tensor(a, qeye(cutoff))   # signal
+    a2 = tensor(qeye(cutoff), a)   # idler
+    return (r * (a1.dag()*a2.dag() - a1*a2)).expm()
+
+def apply_gain_once(rho_signal, U_amp, vac_dm):
+    """
+    Embed signal ⊗ |0⟩⟨0|, apply U_amp, trace out idler.
+    Returns the amplified signal mode.
+    """
+    joint = tensor(rho_signal, vac_dm)
+    joint = U_amp * joint * U_amp.dag()
+    return joint.ptrace(0)
+
 def wigner_panel(rho, xvec, ax, title):
     W = w_fast(rho, xvec)      
     # renormalise (grid integral → 1) ----------------------------------
@@ -215,6 +234,7 @@ def main(state_type="fock", n=5, n_bs=2, cutoff=None, *, gif_file=None, **state_
     cutoff = cutoff or 5 * n + 1
     ket0   = ket2dm(basis(cutoff, 0))
     U_bs   = beam_splitter(cutoff)        # fixed 50:50 BS
+    U_amp  = amplifier(cutoff)
 
     rho0, label0 = initial_state(state_type, cutoff, n=n, **state_kw)
     check_trace(rho0)
@@ -222,7 +242,7 @@ def main(state_type="fock", n=5, n_bs=2, cutoff=None, *, gif_file=None, **state_
     states = [rho0]
     for k in range(n_bs):
         rho_next = apply_bs_once(states[-1], U_bs, ket0)
-        # rho_next = rho_next / rho_next.tr()        # force normalization
+        rho_next = apply_gain_once(rho_next, U_amp, ket0)
         # ---- cut-off safety check ------------------------------------
         tail_pop = rho_next.diag()[-1].real
         if tail_pop > 1e-8:
@@ -311,17 +331,17 @@ if __name__ == "__main__":
     # examples: choose one
     # main(state_type="fock", n=5, n_bs=50, gif_file="fock_evolution.gif")
     # main(state_type="squeezed_coh", n_bs=50, alpha=2+0j, r=0.8, phi=0, gif_file="squeezed_coh_evolution.gif")
-    # main(state_type="cat", n_bs=50, alpha=2, cutoff=20, theta=np.pi, gif_file="cat_evolution.gif")
+    # main(state_type="cat", n_bs=20, alpha=2, cutoff=40, theta=np.pi, gif_file="cat_evolution_gain.gif")
     # main(state_type="displaced_fock", n=4, n_bs=50, alpha=1.5, gif_file="displaced_fock_evolution.gif")
     # one-liner example
     main(state_type="random_ripple",
         n=0,                    # ignored for this state type
-        n_bs=50,                # number of beam-splitter passes
-        cutoff=10,              # Fock-space truncation
+        n_bs=20,                # number of beam-splitter passes
+        cutoff=50,              # Fock-space truncation
         n_modes=10,             # how many random coherent components
         sigma=1.5,              # envelope width in phase space
         seed=323,               # RNG seed for reproducibility (optional)
-        gif_file="ripple_evolution_fast.gif")
+        gif_file="ripple_evolution_gain.gif")
 
 
 # %%
