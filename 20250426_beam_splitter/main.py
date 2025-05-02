@@ -14,10 +14,11 @@ import matplotlib.pyplot as plt
 from qutip import basis, ket2dm, destroy, qeye, tensor, wigner, displace, squeeze, coherent
 import matplotlib.colors as mcolors      
 import imageio.v2 as imageio  
+import mplcursors                             # NEW
 
 # ---------- helpers --------------------------------------------------------- #
 
-def beam_splitter(cutoff, theta=np.pi / 15):
+def beam_splitter(cutoff, theta=np.pi / 4):
     """
     Return the 2-mode unitary for a loss-less beam splitter with mixing
     angle θ (θ = π/4 → 50:50).
@@ -37,13 +38,13 @@ def wigner_panel(rho, xvec, ax, title):
     W = wigner(rho, xvec, xvec, g=2)      # g=2 → rotate axes into x-p
     # ax.contourf(xvec, xvec, W, 120)
     norm = mcolors.TwoSlopeNorm(vcenter=0)          # symmetric about 0
-    ax.contourf(xvec, xvec, W, 120, cmap='RdBu_r',  # diverging colormap
-                norm=norm)
-
+    cs = ax.contourf(xvec, xvec, W, 120, cmap='RdBu_r',  # diverging colormap
+                     norm=norm)
     ax.set_title(title)
     ax.set_xlabel(r'$x$')
     ax.set_ylabel(r'$p$')
     ax.set_aspect('equal', adjustable='box')
+    return cs                                    # NEW
 
 
 # ---------- animation ------------------------------------------------------ #
@@ -110,8 +111,23 @@ def initial_state(state_type, cutoff, **kw):
     if state_type == "displaced_fock":
         rho = displaced_fock_state(cutoff, **kw)
         return rho, fr"D(α)|{kw['n']}⟩"
+    if state_type == "random_ripple":
+        rho = random_ripple_state(cutoff, **kw)
+        return rho, "rand"
     raise ValueError("unknown state_type")
 
+
+
+def random_ripple_state(cutoff, *, n_modes=30, sigma=1.5, seed=None, **_):
+    """Random super-position of coherent states → Gaussian envelope + ripples."""
+    rng = np.random.default_rng(seed)
+    ket = 0
+    for _ in range(n_modes):
+        alpha  = rng.normal(scale=sigma) + 1j * rng.normal(scale=sigma)
+        phase  = rng.random() * 2 * np.pi
+        ket   += np.exp(1j * phase) * coherent(cutoff, alpha)
+    ket = ket.unit()
+    return ket2dm(ket)
 # -------------------------------------------------------------------------
 
 # ---------- main ------------------------------------------------------------ #
@@ -143,6 +159,7 @@ def main(state_type="fock", n=5, n_bs=2, cutoff=None, *, gif_file=None, **state_
     n_rows  = int(np.ceil(n_plots / n_cols))
     fig, axes = plt.subplots(n_rows, n_cols, figsize=(4*n_cols, 4*n_rows),
                              squeeze=False)
+    cs_all = []                       
     for idx, rho in enumerate(states):
         r, c = divmod(idx, n_cols)
         if idx == 0:
@@ -150,7 +167,8 @@ def main(state_type="fock", n=5, n_bs=2, cutoff=None, *, gif_file=None, **state_
         else:
             # W_{k=1}, W_{k=2}, …
             title = fr'$W_{{k={idx}}}(x,p)$'
-        wigner_panel(rho, xvec, axes[r][c], title)
+        cs = wigner_panel(rho, xvec, axes[r][c], title)   # MOD
+        cs_all.append(cs)                                 # NEW
 
     # hide unused axes
     for ax in axes.ravel()[n_plots:]:
@@ -163,6 +181,18 @@ def main(state_type="fock", n=5, n_bs=2, cutoff=None, *, gif_file=None, **state_
     #           location='right')
 
     fig.tight_layout()
+    # enable hover tooltips showing (x, p, W) ------------------------------
+    # robustly collect artists from any Matplotlib version
+    artists = []
+    for cs in cs_all:
+        artists.extend(getattr(cs, "collections", [cs]))
+
+    mplcursors.cursor(
+        artists,
+        hover=True).connect(
+        "add", lambda sel: sel.annotation.set_text(
+            f"x={sel.target[0]:.2f}\np={sel.target[1]:.2f}\nW={sel.target[2]:.3g}"))
+
     plt.show()
     # optional GIF ----------------------------------------------------------
     if gif_file:
@@ -172,9 +202,19 @@ def main(state_type="fock", n=5, n_bs=2, cutoff=None, *, gif_file=None, **state_
 
 if __name__ == "__main__":
     # examples: choose one
-    main(state_type="fock", n=5, n_bs=25, gif_file="fock_evolution.gif")
+    # main(state_type="fock", n=5, n_bs=25, gif_file="fock_evolution.gif")
     # main(state_type="squeezed_coh", n_bs=99, alpha=2+0j, r=0.8, phi=0, gif_file="squeezed_coh_evolution.gif")
     # main(state_type="cat", n_bs=99, alpha=2, theta=np.pi, gif_file="cat_evolution.gif")
     # main(state_type="displaced_fock", n=4, n_bs=99, alpha=1.5, gif_file="displaced_fock_evolution.gif")
+    # one-liner example
+    main(state_type="random_ripple",
+        n=0,                    # ignored for this state type
+        n_bs=20,                # number of beam-splitter passes
+        cutoff=40,              # Fock-space truncation
+        n_modes=10,             # how many random coherent components
+        sigma=1.5,              # envelope width in phase space
+        seed=323,               # RNG seed for reproducibility (optional)
+        gif_file="ripple_evolution_fast.gif")
+
 
 # %%
