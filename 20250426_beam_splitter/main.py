@@ -11,7 +11,8 @@ pip install qutip matplotlib numpy
 #%%
 import numpy as np
 import matplotlib.pyplot as plt
-from qutip import basis, ket2dm, destroy, qeye, tensor, wigner, displace, squeeze, coherent
+from qutip import (basis, ket2dm, destroy, qeye, tensor,
+                   wigner, displace, squeeze, coherent, expect)
 import matplotlib.colors as mcolors      
 import imageio.v2 as imageio  
 import mplcursors                             # NEW
@@ -130,6 +131,32 @@ def random_ripple_state(cutoff, *, n_modes=30, sigma=1.5, seed=None, **_):
     return ket2dm(ket)
 # -------------------------------------------------------------------------
 
+# ---------- diagnostics ---------------------------------------------------- #
+
+TOL_TRACE  = 1e-8        # allowed loss of trace in Fock truncation
+TOL_INTEG  = 1e-3        # allowed error on ∫W dx dp / (2π)
+
+def check_trace(rho):
+    tr = rho.tr()
+    if abs(tr - 1) > TOL_TRACE:
+        print(f"[warn] truncated Trρ = {tr:.6g} (loss {(1-tr):.3g})")
+    return tr
+
+def integrate_wigner(W, dx, dp):
+    return (dx*dp)/(2*np.pi) * W.sum()
+
+def adaptive_grid(rho, base_range=5.0, points=201):
+    """Enlarge phase-space window until Husimi Q captures ≥0.9999 mass."""
+    R = base_range
+    while True:
+        xvec = np.linspace(-R, R, points)
+        Q0   = wigner(rho, xvec, xvec, g=1)          # Husimi-like positive
+        dx   = xvec[1]-xvec[0]
+        mass = (dx*dx)/(2*np.pi) * Q0.sum()
+        if mass > 0.9999:
+            return xvec
+        R *= 1.5
+
 # ---------- main ------------------------------------------------------------ #
 
 def main(state_type="fock", n=5, n_bs=2, cutoff=None, *, gif_file=None, **state_kw):
@@ -146,6 +173,7 @@ def main(state_type="fock", n=5, n_bs=2, cutoff=None, *, gif_file=None, **state_
     U_bs   = beam_splitter(cutoff)        # fixed 50:50 BS
 
     rho0, label0 = initial_state(state_type, cutoff, n=n, **state_kw)
+    check_trace(rho0)
     # evolution list: ρ₀, ρ₁, …, ρ_{n_bs}
     states = [rho0]
     for k in range(n_bs):
@@ -153,7 +181,9 @@ def main(state_type="fock", n=5, n_bs=2, cutoff=None, *, gif_file=None, **state_
         states.append(rho_next)
 
     # plotting ----------------------------------------------------------------
-    xvec = np.linspace(-5, 5, 201)
+    # xvec = np.linspace(-5, 5, 201)
+    # choose phase-space window adaptively -------------------------------
+    xvec = adaptive_grid(rho0)
     n_plots = n_bs + 1
     n_cols  = min(2, n_plots)             # up to three per row
     n_rows  = int(np.ceil(n_plots / n_cols))
@@ -169,6 +199,17 @@ def main(state_type="fock", n=5, n_bs=2, cutoff=None, *, gif_file=None, **state_
             title = fr'$W_{{k={idx}}}(x,p)$'
         cs = wigner_panel(rho, xvec, axes[r][c], title)   # MOD
         cs_all.append(cs)                                 # NEW
+
+        # --- Wigner integral check -------------------------------------
+        if idx == 0:        # only need once – same grid for all
+            W0  = wigner(rho, xvec, xvec, g=2)
+            dx  = xvec[1]-xvec[0]
+            integ = integrate_wigner(W0, dx, dx)
+            if abs(integ-1) > TOL_INTEG:
+                print(f"[warn] ∫W dx dp /(2π) = {integ:.5f}")
+                if state_kw.get("renorm", False):
+                    print("        renormalising Wigner arrays")
+                    rho0  /= rho0.tr()
 
     # hide unused axes
     for ax in axes.ravel()[n_plots:]:
@@ -209,7 +250,7 @@ if __name__ == "__main__":
     # one-liner example
     main(state_type="random_ripple",
         n=0,                    # ignored for this state type
-        n_bs=20,                # number of beam-splitter passes
+        n_bs=2,                # number of beam-splitter passes
         cutoff=40,              # Fock-space truncation
         n_modes=10,             # how many random coherent components
         sigma=1.5,              # envelope width in phase space
