@@ -37,14 +37,22 @@ def apply_bs_once(rho_single, U, ket0):
 
 def wigner_panel(rho, xvec, ax, title):
     W = wigner(rho, xvec, xvec, g=2)      # g=2 → rotate axes into x-p
-    # ax.contourf(xvec, xvec, W, 120)
-    norm = mcolors.TwoSlopeNorm(vcenter=0)          # symmetric about 0
+    Wmax = np.max(np.abs(W))              # Get maximum absolute value
+    norm = mcolors.TwoSlopeNorm(vcenter=0, vmin=-Wmax, vmax=Wmax)  # Symmetric norm
     cs = ax.contourf(xvec, xvec, W, 120, cmap='RdBu_r',  # diverging colormap
                      norm=norm)
     ax.set_title(title)
     ax.set_xlabel(r'$x$')
     ax.set_ylabel(r'$p$')
+    x_range = 10
+    ax.set_xlim(-x_range, x_range)  # Set fixed x range
+    ax.set_ylim(-x_range, x_range)  # Set fixed y range
     ax.set_aspect('equal', adjustable='box')
+    
+    # Add colorbar
+    cbar = plt.colorbar(cs, ax=ax)
+    cbar.set_label('W(x,p)')
+    
     return cs                                    # NEW
 
 
@@ -181,9 +189,9 @@ def main(state_type="fock", n=5, n_bs=2, cutoff=None, *, gif_file=None, **state_
         states.append(rho_next)
 
     # plotting ----------------------------------------------------------------
-    # xvec = np.linspace(-5, 5, 201)
+    xvec = np.linspace(-10, 10, 1001)
     # choose phase-space window adaptively -------------------------------
-    xvec = adaptive_grid(rho0)
+    # xvec = adaptive_grid(rho0)
     n_plots = n_bs + 1
     n_cols  = min(2, n_plots)             # up to three per row
     n_rows  = int(np.ceil(n_plots / n_cols))
