@@ -5,13 +5,16 @@ import { writeFile } from 'fs/promises';
 import path from 'path';
 import { spawn } from 'child_process';
 
+// Create a yt-dlp instance
+const ytdlp = youtubeDl.create('yt-dlp');
+
 async function getVideoDuration(videoUrl: string): Promise<number> {
-  const info = await youtubeDl(videoUrl, {
+  const info = await ytdlp(videoUrl, {
     dumpJson: true,
     noWarnings: true,
     noCheckCertificates: true,
     preferFreeFormats: true
-  }) as any;  // Using any temporarily to handle the dynamic response
+  }) as any;
 
   return info.duration;
 }
@@ -20,13 +23,12 @@ async function extractFrame(
   videoUrl: string,
   timestampSec: number
 ): Promise<Buffer> {
-  // Use youtube-dl to get the video stream
-  const ytProcess = spawn('youtube-dl', [
+  // Use yt-dlp to get the video stream
+  const ytProcess = spawn('yt-dlp', [
     videoUrl,
     '-f', 'best[ext=mp4]',
     '-o', '-',  // Output to stdout
-    '--no-warnings',
-    '--no-check-certificate'
+    '--no-warnings'
   ]);
 
   return new Promise<Buffer>((resolve, reject) => {
@@ -34,8 +36,12 @@ async function extractFrame(
     const chunks: Buffer[] = [];
 
     ytProcess.on('error', (err) => {
-      console.error('YouTube-DL process error:', err);
+      console.error('yt-dlp process error:', err);
       reject(err);
+    });
+
+    ytProcess.stderr.on('data', (data) => {
+      console.error('yt-dlp stderr:', data.toString());
     });
 
     // collect all data from FFmpeg
@@ -58,7 +64,7 @@ async function extractFrame(
 }
 
 async function main() {
-  const videoId = 'dQw4w9WgXcQ';
+  const videoId = 'vspD719IM0E';
   const videoUrl = `https://www.youtube.com/watch?v=${videoId}`;
 
   try {
