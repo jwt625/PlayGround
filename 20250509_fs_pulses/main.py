@@ -100,3 +100,54 @@ fig.show()
 
 
 # %%
+#%%
+import numpy as np
+import plotly.graph_objects as go
+
+# Parameters
+c = 3e8
+lambda0 = 1e-6
+omega0 = 2 * np.pi * c / lambda0
+tau_fwhm = 5e-15
+sigma_t = tau_fwhm / (2 * np.sqrt(2 * np.log(2)))
+
+# Time vector
+t = np.linspace(-25e-15, 25e-15, 1000)
+time_fs = t * 1e15
+
+# Gaussian pulse envelope
+envelope = np.exp(-t**2 / (2 * sigma_t**2))
+
+# Time-varying phase shift for polarization gating
+# Goes from ~π/2 in wings to 0 at center
+delta_phi = (np.pi / 2) * np.tanh(t / (5e-15))
+
+# Two orthogonal components with varying phase shift
+Ex = envelope * np.cos(omega0 * t)
+Ey = envelope * np.cos(omega0 * t + delta_phi)
+
+# Plot with Plotly
+fig = go.Figure()
+
+fig.add_trace(go.Scatter3d(
+    x=Ex, y=Ey, z=time_fs,
+    mode='lines',
+    line=dict(width=3, color=time_fs, colorscale='Plasma'),
+    name='PG-modulated E-field'
+))
+
+fig.update_layout(
+    scene=dict(
+        xaxis_title='Ex (arb. units)',
+        yaxis_title='Ey (arb. units)',
+        zaxis_title='Time (fs)',
+        xaxis=dict(range=[-1.1, 1.1]),
+        yaxis=dict(range=[-1.1, 1.1]),
+        zaxis=dict(range=[time_fs[0], time_fs[-1]])
+    ),
+    title="Polarization Gating: Linear Center, Circular Wings",
+    margin=dict(l=0, r=0, b=0, t=40)
+)
+
+fig.show()
+# %%
