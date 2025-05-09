@@ -51,8 +51,10 @@ ani.save("circular_pulse.gif", writer='pillow', fps=60)
 
 
 #%%
+#%%
+#%%
 import numpy as np
-import matplotlib.pyplot as plt
+import plotly.graph_objects as go
 
 # Parameters
 c = 3e8
@@ -60,23 +62,41 @@ lambda0 = 1e-6
 omega0 = 2 * np.pi * c / lambda0
 tau_fwhm = 5e-15
 sigma_t = tau_fwhm / (2 * np.sqrt(2 * np.log(2)))
-phi = np.pi / 3  # adjustable phase shift in radians
+phi = np.pi / 3  # adjustable phase shift
 
 # Time vector
 t = np.linspace(-20e-15, 20e-15, 1000)
 envelope = np.exp(-t**2 / (2 * sigma_t**2))
 
-# Ex: x-polarized pulse
+# Electric fields
 Ex = envelope * np.cos(omega0 * t)
-# Ey: y-polarized pulse with phase shift
 Ey = envelope * np.cos(omega0 * t + phi)
+time_fs = t * 1e15  # convert to fs
 
-# Plot vector trajectory in Ex-Ey space
-plt.figure(figsize=(6, 6))
-plt.plot(Ex, Ey, linewidth=1)
-plt.xlabel('Ex (arb. units)')
-plt.ylabel('Ey (arb. units)')
-plt.title(f'Polarization Ellipse (φ = {phi:.2f} rad)')
-plt.axis('equal')
-plt.grid(True)
-plt
+# Create 3D plot
+fig = go.Figure()
+
+fig.add_trace(go.Scatter3d(
+    x=Ex, y=Ey, z=time_fs,
+    mode='lines',
+    line=dict(width=3, color=time_fs, colorscale='Viridis'),
+    name='E-field Trajectory'
+))
+
+fig.update_layout(
+    scene=dict(
+        xaxis_title='Ex (arb. units)',
+        yaxis_title='Ey (arb. units)',
+        zaxis_title='Time (fs)',
+        xaxis=dict(range=[-1.1, 1.1]),
+        yaxis=dict(range=[-1.1, 1.1]),
+        zaxis=dict(range=[time_fs[0], time_fs[-1]])
+    ),
+    title=f"Circular/Elliptical Polarization (φ = {phi:.2f} rad)",
+    margin=dict(l=0, r=0, b=0, t=40)
+)
+
+fig.show()
+
+
+# %%
