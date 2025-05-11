@@ -66,3 +66,9 @@ print("Saved to li_nb_eo_sankey_final.html")
 # %%
 fig
 # %%
+from matplotlib.sankey import Sankey
+Sankey(flows=[1.0, -0.5, -0.5], labels=['input', 'output1', 'output2']).finish()
+
+
+
+# %%
