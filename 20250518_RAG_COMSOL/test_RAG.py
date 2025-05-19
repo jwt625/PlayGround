@@ -1,6 +1,5 @@
 # rag_from_pdfs.py
 
-
 #%%
 import os
 import fitz  # PyMuPDF
@@ -44,23 +43,53 @@ def setup_rag(vectorstore):
     qa_chain = RetrievalQA(llm=llm, retriever=retriever)
     return qa_chain
 
-# === 5. Main Pipeline ===
-def main(pdf_directory):
-    texts = load_all_pdfs_from_directory(pdf_directory)
-    documents = chunk_texts(texts)
-    vectorstore = embed_documents(documents)
-    rag_chain = setup_rag(vectorstore)
+#%%
+# Section 1: Extract and process PDFs
+pdf_directory = "pdf"  # Change this to your PDF directory path
+texts = load_all_pdfs_from_directory(pdf_directory)
 
-    while True:
-        query = input("\nAsk a question (or type 'exit'): ")
-        if query.lower() in ("exit", "quit"):
-            break
-        answer = rag_chain.run(query)
-        print(f"\nAnswer:\n{answer}")
+#%%
+# Save texts to a file
+output_file = "extracted_texts.txt"
+with open(output_file, "w", encoding="utf-8") as f:
+    for i, text in enumerate(texts):
+        f.write(f"=== Document {i+1} ===\n")
+        f.write(text)
+        f.write("\n\n")
+print(f"Texts saved to {output_file}")
 
-if __name__ == "__main__":
-    import sys
-    if len(sys.argv) != 2:
-        print("Usage: python rag_from_pdfs.py /path/to/pdf_directory")
-        exit(1)
-    main(sys.argv[1])
+#%% need openAI API key for this
+# Section 2: Create chunks and embeddings
+documents = chunk_texts(texts)
+vectorstore = embed_documents(documents)
+
+
+
+#%%
+# Load texts from the extracted_texts.txt file
+with open("extracted_texts.txt", "r", encoding="utf-8") as f:
+    texts = f.read().split("=== Document ")[1:]  # Split on document markers and remove empty first element
+    texts = [doc.split("\n", 1)[1] for doc in texts]  # Remove document number and keep content
+
+from langchain.embeddings import HuggingFaceEmbeddings
+
+embeddings = HuggingFaceEmbeddings(
+    model_name="sentence-transformers/all-MiniLM-L6-v2",  # Open source model with good performance
+    model_kwargs={"device": "mps"}  # use "cpu" if no GPU
+)
+
+# Then plug into your vector store
+documents = chunk_texts(texts)
+vectorstore = FAISS.from_documents(documents, embeddings)
+
+
+#%%
+# Section 3: Setup RAG and start QA
+rag_chain = setup_rag(vectorstore)
+
+while True:
+    query = input("\nAsk a question (or type 'exit'): ")
+    if query.lower() in ("exit", "quit"):
+        break
+    answer = rag_chain.run(query)
+    print(f"\nAnswer:\n{answer}")
