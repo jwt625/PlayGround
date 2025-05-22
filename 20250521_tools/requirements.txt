@@ -1,0 +1,9 @@
+torch==2.7.0
+torchvision==0.22.0
+torchaudio==2.7.0
+transformers==4.52.2
+diffusers==0.33.1
+accelerate==1.7.0
+sentencepiece==0.2.0
+protobuf
+huggingface-hub==0.31.4 
