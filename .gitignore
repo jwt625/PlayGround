@@ -37,4 +37,10 @@
 *.3mf
 /20250506_youtube2slides/node_modules
 /20250518_RAG_COMSOL/rag-env
+/20250518_RAG_COMSOL/chroma_db
+/20250518_RAG_COMSOL/rag-env2
+/20250518_RAG_COMSOL/skypilot
+/20250518_RAG_COMSOL/faiss
 *.pdf
+*.npy
+*.index
