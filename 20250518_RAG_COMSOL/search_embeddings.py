@@ -22,7 +22,7 @@ def load_models() -> Tuple[AutoTokenizer, AutoModel, pipeline]:
     summarizer = pipeline(
         "summarization",
         model="facebook/bart-large-cnn",  # Good for extractive summarization
-        device=0,  # Use GPU 0
+        device=4,  # Use GPU 0
         torch_dtype=torch.float16
     )
     
