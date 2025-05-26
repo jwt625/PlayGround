@@ -91,6 +91,7 @@ def main():
     parser = argparse.ArgumentParser(description="Stream mic to Whisper with auto stop on pause")
     parser.add_argument('--model', default='base', help='Whisper model to use')
     parser.add_argument('--quiet', '-q', action='store_true', help='Output only transcribed text (good for piping)')
+    parser.add_argument('--confirm', '-c', action='store_true', help='Show transcript and ask for confirmation before output')
     args = parser.parse_args()
 
     audio_path = record_until_silence(quiet=args.quiet)
@@ -104,7 +105,54 @@ def main():
     
     text = transcribe_with_whisper(audio_path, model_name=args.model, quiet=args.quiet)
     
-    if args.quiet:
+    # Handle confirmation mode
+    if args.confirm:
+        print(f"\nTranscript: {text.strip()}")
+        print("\nOptions:")
+        print("  [Enter] - Send as-is")
+        print("  [e] - Edit transcript")
+        print("  [r] - Record again")
+        print("  [q] - Quit")
+        
+        while True:
+            choice = input("\nChoice: ").strip().lower()
+            
+            if choice == "" or choice == "y":
+                # Send as-is
+                print(text.strip())
+                break
+            elif choice == "e":
+                # Edit transcript
+                print("Enter your edited version:")
+                edited_text = input("> ")
+                if edited_text.strip():
+                    print(edited_text.strip())
+                    break
+                else:
+                    print("Empty input, using original transcript.")
+                    print(text.strip())
+                    break
+            elif choice == "r":
+                # Record again
+                os.remove(audio_path)
+                print("\nRecording again...")
+                audio_path = record_until_silence(quiet=args.quiet)
+                if not args.quiet:
+                    print("Transcribing...")
+                text = transcribe_with_whisper(audio_path, model_name=args.model, quiet=args.quiet)
+                print(f"\nNew transcript: {text.strip()}")
+                print("\nOptions:")
+                print("  [Enter] - Send as-is")
+                print("  [e] - Edit transcript")
+                print("  [r] - Record again")
+                print("  [q] - Quit")
+            elif choice == "q":
+                # Quit without output
+                os.remove(audio_path)
+                sys.exit(0)
+            else:
+                print("Invalid choice. Please try again.")
+    elif args.quiet:
         print(text.strip())
     else:
         print("Transcription:")
