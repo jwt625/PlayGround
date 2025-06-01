@@ -113,8 +113,8 @@ async function processTweet(tweet, enabled = true) {
         return;
     }
 
-    // Get the text content and clean it
-    const originalContent = textElement.textContent;
+    // Get the content and clean it
+    const originalContent = textElement.innerHTML;
     console.log('Original content:', originalContent);
     
     // Clean URLs before markdown processing
