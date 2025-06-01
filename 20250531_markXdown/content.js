@@ -1,6 +1,6 @@
 // Configuration for marked.js
 marked.setOptions({
-    breaks: true,
+    breaks: false,
     gfm: true,
     headerIds: false,
     mangle: false,
@@ -121,8 +121,18 @@ async function processTweet(tweet, enabled = true) {
     const cleanedText = cleanUrls(originalContent);
     console.log('Cleaned text content:', cleanedText);
     
-    // Process markdown
-    const processedContent = marked.parse(cleanedText);
+    // Split text into markdown and display math parts
+    const parts = cleanedText.split(/(\$\$[\s\S]*?\$\$)/);
+    const processedParts = parts.map(part => {
+        if (part.startsWith('$$')) {
+            // Preserve display math blocks exactly as is, replacing newlines with spaces
+            return part.replace(/\n/g, ' ');
+        } else {
+            // Process markdown for non-math parts
+            return marked.parse(part);
+        }
+    });
+    const processedContent = processedParts.join('');
     console.log('Processed markdown:', processedContent);
     
     // Sanitize the HTML
