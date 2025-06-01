@@ -1,0 +1,76 @@
+/* Markdown styles */
+[data-testid="tweetText"] {
+    line-height: 1.5;
+}
+
+[data-testid="tweetText"] h1,
+[data-testid="tweetText"] h2,
+[data-testid="tweetText"] h3,
+[data-testid="tweetText"] h4,
+[data-testid="tweetText"] h5,
+[data-testid="tweetText"] h6 {
+    margin-top: 1em;
+    margin-bottom: 0.5em;
+    font-weight: bold;
+}
+
+[data-testid="tweetText"] h1 { font-size: 1.5em; }
+[data-testid="tweetText"] h2 { font-size: 1.3em; }
+[data-testid="tweetText"] h3 { font-size: 1.1em; }
+
+[data-testid="tweetText"] p {
+    margin: 0.5em 0;
+}
+
+[data-testid="tweetText"] code {
+    background-color: rgba(0, 0, 0, 0.1);
+    padding: 0.2em 0.4em;
+    border-radius: 3px;
+    font-family: monospace;
+}
+
+[data-testid="tweetText"] pre {
+    background-color: rgba(0, 0, 0, 0.1);
+    padding: 1em;
+    border-radius: 5px;
+    overflow-x: auto;
+}
+
+[data-testid="tweetText"] pre code {
+    background-color: transparent;
+    padding: 0;
+}
+
+[data-testid="tweetText"] blockquote {
+    border-left: 4px solid rgba(0, 0, 0, 0.2);
+    margin: 0.5em 0;
+    padding-left: 1em;
+    color: rgba(0, 0, 0, 0.7);
+}
+
+[data-testid="tweetText"] ul,
+[data-testid="tweetText"] ol {
+    margin: 0.5em 0;
+    padding-left: 2em;
+}
+
+[data-testid="tweetText"] table {
+    border-collapse: collapse;
+    margin: 0.5em 0;
+    width: 100%;
+}
+
+[data-testid="tweetText"] th,
+[data-testid="tweetText"] td {
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    padding: 0.5em;
+}
+
+[data-testid="tweetText"] th {
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+/* MathJax styles */
+.MathJax {
+    font-size: 1.1em !important;
+} 
