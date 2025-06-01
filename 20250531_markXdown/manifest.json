@@ -2,10 +2,8 @@
   "manifest_version": 3,
   "name": "MarkXdown",
   "version": "1.0",
-  "description": "Render markdown and LaTeX equations in Twitter/X posts",
+  "description": "Render markdown and LaTeX in tweets",
   "permissions": [
-    "activeTab",
-    "scripting",
     "storage"
   ],
   "host_permissions": [
@@ -21,6 +19,7 @@
       "js": [
         "lib/marked.min.js",
         "lib/mathjax-config.js",
+        "lib/mathjax.min.js",
         "content.js"
       ],
       "css": ["styles.css"],
