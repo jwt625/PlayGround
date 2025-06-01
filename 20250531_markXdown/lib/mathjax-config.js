@@ -1,7 +1,4 @@
 window.MathJax = {
-    loader: {
-        load: ['input/tex', 'output/chtml', 'ui/menu']
-    },
     tex: {
         inlineMath: [['$', '$'], ['\\(', '\\)']],
         displayMath: [['$$', '$$'], ['\\[', '\\]']],
@@ -17,10 +14,15 @@ window.MathJax = {
     startup: {
         ready: () => {
             console.log('MathJax is loaded and ready');
-            // Process any queued elements
-            if (window.processMathJaxQueue) {
-                window.processMathJaxQueue();
-            }
+            // Process any existing tweets
+            document.querySelectorAll('[data-testid="tweet"]').forEach(tweet => {
+                const tweetText = tweet.querySelector('[data-testid="tweetText"]');
+                if (tweetText && tweetText.dataset.markdownProcessed) {
+                    MathJax.typesetPromise([tweetText]).catch(function (err) {
+                        console.error('MathJax error:', err);
+                    });
+                }
+            });
         }
     }
 }; 

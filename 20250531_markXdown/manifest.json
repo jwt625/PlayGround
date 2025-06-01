@@ -20,7 +20,6 @@
       "matches": ["https://twitter.com/*", "https://x.com/*"],
       "js": [
         "lib/marked.min.js",
-        "lib/mathjax.min.js",
         "lib/mathjax-config.js",
         "content.js"
       ],
