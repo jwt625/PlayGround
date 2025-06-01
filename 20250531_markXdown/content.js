@@ -113,8 +113,16 @@ async function processTweet(tweet, enabled = true) {
         return;
     }
 
-    // Get the content and clean it
-    const originalContent = textElement.innerHTML;
+    // Get the content, preserving emojis but getting raw text for markdown
+    const tempDiv = document.createElement('div');
+    tempDiv.innerHTML = textElement.innerHTML;
+    // Convert <img> emoji to their alt text
+    tempDiv.querySelectorAll('img').forEach(img => {
+        if (img.alt) {
+            img.replaceWith(img.alt);
+        }
+    });
+    const originalContent = tempDiv.textContent;
     console.log('Original content:', originalContent);
     
     // Clean URLs before markdown processing
