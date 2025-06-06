@@ -96,9 +96,25 @@ go get github.com/prometheus/client_golang/prometheus/promhttp
 docker-compose up -d
 ```
 
-**Terminal 2 - Start the Go keystroke tracker:**
+**Terminal 2 - Start the keystroke tracker (Choose one option):**
+
+**Option A: Automatic startup (Recommended):**
 ```bash
-go run main-categorized-fixed.go
+./start.sh
+```
+
+**Option B: With detailed logs:**
+```bash
+./start-with-logs.sh
+```
+
+**Option C: Manual startup (old way):**
+```bash
+# Terminal 2a: Start Swift helper
+swift app-detector-helper.swift
+
+# Terminal 2b: Start Go tracker  
+go run main.go
 ```
 
 You should see:
