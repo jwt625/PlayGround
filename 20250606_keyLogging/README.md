@@ -1,8 +1,11 @@
 # Keystroke Tracker with Prometheus & Grafana
 
+*Last Updated: June 6, 2025*
+
 A real-time keystroke monitoring system built with Go, Prometheus, and Grafana to learn backend observability and data visualization.
 
 ## 🎯 What This Project Does
+*Features as of: June 6, 2025*
 
 - **Captures keystrokes** passively (read-only, no interference)
 - **Categorizes keys** by type (letters, numbers, special keys)
@@ -11,6 +14,7 @@ A real-time keystroke monitoring system built with Go, Prometheus, and Grafana t
 - **Tracks typing patterns** and productivity insights
 
 ## 📋 Prerequisites
+*Updated: June 6, 2025*
 
 You'll need to install several tools. Don't worry - we'll walk through each one!
 
@@ -58,6 +62,7 @@ brew install git
 ```
 
 ## 🚀 Quick Start Guide
+*Updated: June 6, 2025*
 
 ### Step 1: Clone & Setup
 
@@ -124,6 +129,7 @@ Metrics server starting on :8080/metrics
 - Try query: `keystrokes_total`
 
 ## 🧪 Testing the System
+*Updated: June 6, 2025*
 
 1. **Type anywhere** on your computer
 2. **Watch the terminal** - you should see logs like:
@@ -134,6 +140,7 @@ Metrics server starting on :8080/metrics
 4. **Try different typing** - code vs text vs numbers
 
 ## 📁 Project Structure
+*Updated: June 6, 2025*
 
 ```
 keystroke-tracker/
@@ -147,6 +154,7 @@ keystroke-tracker/
 ```
 
 ## 🔧 Troubleshooting
+*Updated: June 6, 2025*
 
 ### "Failed to create keyboard event tap"
 - **Solution**: Grant Accessibility permissions (Step 2 above)
@@ -175,6 +183,7 @@ keystroke-tracker/
 - **Check**: Run `go version`
 
 ## 🎛️ Configuration
+*Updated: June 6, 2025*
 
 ### Change Update Frequency
 
@@ -192,6 +201,7 @@ docker-compose restart prometheus
 ```
 
 ## 📊 Understanding the Data
+*Updated: June 6, 2025*
 
 ### Metrics Available
 - `keystrokes_total{key_type="letter"}` - A-Z keys
@@ -211,6 +221,7 @@ increase(keystrokes_total[1h])
 ```
 
 ## 🛑 Privacy & Security
+*Updated: June 6, 2025*
 
 - **Local only**: All data stays on your machine
 - **Read-only**: No keystroke content is logged (only counts)
@@ -218,6 +229,7 @@ increase(keystrokes_total[1h])
 - **Passive**: Doesn't interfere with normal typing
 
 ## 🔄 Stopping the System
+*Updated: June 6, 2025*
 
 ```bash
 # Stop the Go application
@@ -228,6 +240,7 @@ docker-compose down
 ```
 
 ## 📚 Learning Resources
+*Updated: June 6, 2025*
 
 - **Go Language**: https://tour.golang.org/
 - **Prometheus**: https://prometheus.io/docs/
@@ -235,6 +248,7 @@ docker-compose down
 - **Docker**: https://docs.docker.com/get-started/
 
 ## 🎓 Next Steps
+*Updated: June 6, 2025*
 
 Once you have the basic system running, explore:
 - **Phase 3**: Time-based insights and typing speed calculation
@@ -243,6 +257,7 @@ Once you have the basic system running, explore:
 - **Advanced queries**: Complex Prometheus analytics
 
 ## 🆘 Need Help?
+*Updated: June 6, 2025*
 
 If you get stuck:
 1. **Check the logs** - both Go terminal and Docker logs

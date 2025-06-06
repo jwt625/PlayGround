@@ -1,11 +1,14 @@
 # Keystroke Tracking with Prometheus & Grafana
 
+*Last Updated: June 6, 2025*
+
 ## Project Overview
 Building a passive keystroke tracker in Go to learn backend observability with Prometheus and Grafana visualization.
 
 ## Implementation Plan
 
 ### Phase 1: Basic Keystroke Counter ✅ COMPLETED
+*Completed: June 6, 2025*
 **Goal**: Get end-to-end pipeline working with immediate visual feedback
 
 **Tasks**:
@@ -29,6 +32,7 @@ Building a passive keystroke tracker in Go to learn backend observability with P
 - Full pipeline working: Keystrokes → Go → Prometheus → Grafana
 
 ### Phase 2: Basic Categorization ✅ COMPLETED
+*Completed: June 6, 2025*
 **Goal**: Add more meaningful metrics with labels
 
 **Tasks**:
@@ -43,6 +47,7 @@ Building a passive keystroke tracker in Go to learn backend observability with P
 - No Prometheus config changes needed - labels auto-discovered
 
 ### Phase 3: Time-based Insights
+*Status: Planned*
 **Goal**: Calculate derived metrics for better analysis
 
 **Tasks**:
@@ -50,7 +55,8 @@ Building a passive keystroke tracker in Go to learn backend observability with P
 - [ ] Create hourly/daily pattern visualizations
 - [ ] Add typing speed trends over time
 
-### Phase 4: Application Awareness
+### Phase 4: Application Awareness ✅ COMPLETED
+*Completed: June 6, 2025*
 **Goal**: Track typing activity per application
 
 **Tasks**:
@@ -59,6 +65,7 @@ Building a passive keystroke tracker in Go to learn backend observability with P
 - [ ] Create application-specific dashboards
 
 ## Technical Approach
+*Documented: June 6, 2025*
 
 ### Security & Privacy
 - **Passive monitoring**: Read-only event listening, no keystroke interception
@@ -85,6 +92,7 @@ Building a passive keystroke tracker in Go to learn backend observability with P
 - [x] Can see immediate feedback when typing
 
 ## Current Status
+*As of June 6, 2025*
 - **Phase 1**: ✅ Complete - End-to-end pipeline working
 - **Phase 2**: ✅ Complete - Key categorization with labels
 - **Phase 3**: 🚧 In Progress - Time-based insights
@@ -94,6 +102,7 @@ Building a passive keystroke tracker in Go to learn backend observability with P
   - Metrics: http://localhost:8080/metrics
 
 ## Key Go Programming Concepts Worth Learning
+*Documented: June 6, 2025*
 
 ### 1. CGO Integration (`main-categorized.go`)
 ```go
@@ -165,8 +174,10 @@ appData, _ := os.ReadFile("/tmp/current_app.json")
 - **Reliability patterns**: Combining multiple technologies for robust solutions
 
 ## Implementation Challenges & Solutions
+*Documented: June 6, 2025*
 
 ### Challenge 1: CGO NSWorkspace Reliability
+*Resolved: June 6, 2025*
 **Problem**: NSWorkspace app detection worked in pure Swift but failed in CGO context
 **Root Cause**: Threading, memory management, or framework linking issues in CGO
 **Solution**: Hybrid architecture with Swift helper process + file-based IPC
@@ -174,11 +185,13 @@ appData, _ := os.ReadFile("/tmp/current_app.json")
 **Key Learning**: Sometimes the "simple" approach (separate processes) is more reliable than complex integration
 
 ### Challenge 2: macOS Security & Permissions
+*Resolved: June 6, 2025*
 **Problem**: Accessibility permissions and app detection behavior varies by context
 **Solution**: Test with minimal reproducible examples to isolate issues
 **Tools**: Pure Swift tests, isolated CGO tests, permission verification
 
 ### Challenge 3: Real-time Multi-Language Integration
+*Resolved: June 6, 2025*
 **Problem**: Combining Go (metrics), C (keyboard events), and Swift (app detection)
 **Solution**: 
 - **C for low-level**: Keyboard event capture (CGEventTap)
@@ -187,4 +200,5 @@ appData, _ := os.ReadFile("/tmp/current_app.json")
 - **Files for communication**: Simple, debuggable IPC
 
 ## Next Steps
+*Updated: June 6, 2025*
 Start with Phase 1 implementation, validate the complete pipeline works, then iterate through phases 2-4 based on learning and interest.
