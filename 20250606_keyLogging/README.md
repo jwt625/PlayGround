@@ -111,6 +111,7 @@ Metrics server starting on :8080/metrics
 3. Go to **Configuration** → **Data Sources** → **Add data source**
 4. Select **Prometheus**
 5. Set URL: `http://host.docker.internal:9090`
+  - this is because Grafana is running inside the docker container
 6. Click **Save & Test**
 
 **Import Dashboard:**
