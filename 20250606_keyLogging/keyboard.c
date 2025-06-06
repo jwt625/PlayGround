@@ -1,60 +1,18 @@
 #include "keyboard.h"
 #include <CoreGraphics/CoreGraphics.h>
 #include <CoreFoundation/CoreFoundation.h>
-#include <ApplicationServices/ApplicationServices.h>
-#include <AppKit/AppKit.h>
 #include <string.h>
 #include <time.h>
 
-// Global variables for keystroke tracking
+// Global variables for keystroke tracking only
 static KeystrokeStats keystroke_stats = {0, 0, 0};
-static char current_app_name[256] = "";
-static AppInfo app_switch_events[100];
-static int app_switch_count = 0;
-static double last_app_switch_time = 0;
 
-// Get current timestamp
-double getCurrentTimestamp() {
-    struct timespec ts;
-    clock_gettime(CLOCK_REALTIME, &ts);
-    return ts.tv_sec + ts.tv_nsec / 1000000000.0;
-}
-
-// Get the name of the currently active application
-void updateCurrentApp() {
-    NSWorkspace *workspace = [NSWorkspace sharedWorkspace];
-    NSRunningApplication *app = [workspace frontmostApplication];
-    
-    if (app && app.localizedName) {
-        const char* appName = [app.localizedName UTF8String];
-        
-        // Check if app changed
-        if (strcmp(current_app_name, appName) != 0) {
-            // Record app switch event
-            if (app_switch_count < 100) {
-                strncpy(app_switch_events[app_switch_count].app_name, current_app_name, 255);
-                app_switch_events[app_switch_count].app_name[255] = '\0';
-                app_switch_events[app_switch_count].timestamp = getCurrentTimestamp();
-                app_switch_count++;
-            }
-            
-            // Update current app
-            strncpy(current_app_name, appName, 255);
-            current_app_name[255] = '\0';
-            last_app_switch_time = getCurrentTimestamp();
-        }
-    }
-}
-
-// Keyboard event callback
+// Keyboard event callback - only tracks keystrokes
 CGEventRef keyboardCallback(CGEventTapProxy proxy, CGEventType type, CGEventRef event, void *refcon) {
     (void)proxy;
     (void)refcon;
     
     if (type == kCGEventKeyDown) {
-        // Update current app on each keystroke (efficient way to track app switches)
-        updateCurrentApp();
-        
         CGKeyCode keycode = (CGKeyCode)CGEventGetIntegerValueField(event, kCGKeyboardEventKeycode);
         
         // Categorize keys based on macOS virtual key codes
@@ -151,34 +109,4 @@ int getAndResetSpecial() {
     int count = keystroke_stats.special;
     keystroke_stats.special = 0;
     return count;
-}
-
-// Get current application info
-AppInfo getCurrentApp() {
-    AppInfo info;
-    strncpy(info.app_name, current_app_name, 255);
-    info.app_name[255] = '\0';
-    info.timestamp = last_app_switch_time;
-    return info;
-}
-
-// Get app switch events
-void getAppSwitchEvents(AppInfo* events, int* count, int max_events) {
-    int copy_count = app_switch_count < max_events ? app_switch_count : max_events;
-    
-    for (int i = 0; i < copy_count; i++) {
-        events[i] = app_switch_events[i];
-    }
-    
-    *count = copy_count;
-    
-    // Reset the events array
-    app_switch_count = 0;
-}
-
-// Initialize app monitoring
-int startAppMonitoring() {
-    // Initialize current app
-    updateCurrentApp();
-    return 1;
 }

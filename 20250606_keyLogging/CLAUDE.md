@@ -155,5 +155,36 @@ if result == 0 {
 - **Graceful degradation**: Clear error messages for user action
 - **System dependency handling**: Permission and configuration requirements
 
+### 6. Multi-Process Architecture & IPC
+```go
+// File-based communication between processes
+appData, _ := os.ReadFile("/tmp/current_app.json")
+```
+- **Process separation**: When to split functionality across processes
+- **Inter-process communication**: Files, pipes, and message passing
+- **Reliability patterns**: Combining multiple technologies for robust solutions
+
+## Implementation Challenges & Solutions
+
+### Challenge 1: CGO NSWorkspace Reliability
+**Problem**: NSWorkspace app detection worked in pure Swift but failed in CGO context
+**Root Cause**: Threading, memory management, or framework linking issues in CGO
+**Solution**: Hybrid architecture with Swift helper process + file-based IPC
+
+**Key Learning**: Sometimes the "simple" approach (separate processes) is more reliable than complex integration
+
+### Challenge 2: macOS Security & Permissions
+**Problem**: Accessibility permissions and app detection behavior varies by context
+**Solution**: Test with minimal reproducible examples to isolate issues
+**Tools**: Pure Swift tests, isolated CGO tests, permission verification
+
+### Challenge 3: Real-time Multi-Language Integration
+**Problem**: Combining Go (metrics), C (keyboard events), and Swift (app detection)
+**Solution**: 
+- **C for low-level**: Keyboard event capture (CGEventTap)
+- **Swift for high-level**: App detection (NSWorkspace)  
+- **Go for business logic**: Metrics aggregation and HTTP serving
+- **Files for communication**: Simple, debuggable IPC
+
 ## Next Steps
 Start with Phase 1 implementation, validate the complete pipeline works, then iterate through phases 2-4 based on learning and interest.
