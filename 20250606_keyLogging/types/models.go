@@ -22,3 +22,13 @@ type CounterState struct {
 	AppSwitches   map[string]map[string]float64 `json:"app_switches"`  // [from_app][to_app]
 	TotalSwitches float64                       `json:"total_switches"`
 }
+
+// KeystrokeInterval represents keystroke activity in a 1-second window
+type KeystrokeInterval struct {
+	App       string  `json:"app"`
+	Letters   int     `json:"letters"`
+	Numbers   int     `json:"numbers"`
+	Special   int     `json:"special"`
+	Total     int     `json:"total"`
+	Timestamp float64 `json:"timestamp"`
+}

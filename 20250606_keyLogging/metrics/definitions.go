@@ -61,6 +61,15 @@ var (
 		},
 		[]string{"from_app", "to_app"},
 	)
+
+	// Keystroke interval activity - actual counts per 1s window
+	KeystrokeIntervalActivity = prometheus.NewGaugeVec(
+		prometheus.GaugeOpts{
+			Name: "keystroke_interval_activity",
+			Help: "Number of keystrokes in the current 1-second interval by app and type",
+		},
+		[]string{"app", "key_type"},
+	)
 )
 
 // RegisterMetrics registers all metrics with Prometheus
@@ -71,4 +80,5 @@ func RegisterMetrics() {
 	prometheus.MustRegister(CurrentAppGauge)
 	prometheus.MustRegister(AppSwitchTotal)
 	prometheus.MustRegister(AppSwitchEvents)
+	prometheus.MustRegister(KeystrokeIntervalActivity)
 }
