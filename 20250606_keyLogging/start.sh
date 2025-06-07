@@ -83,11 +83,11 @@ cleanup() {
 # Set trap to cleanup on exit
 trap cleanup SIGINT SIGTERM
 
-# Start Swift helper in background
-echo "📱 Starting Swift app detector helper..."
-swift app-detector-helper.swift &
+# Start Swift unified tracker in background
+echo "📱 Starting Swift unified tracker (app + trackpad)..."
+swift swift/tracker.swift &
 SWIFT_PID=$!
-echo "   Swift helper started (PID: $SWIFT_PID)"
+echo "   Swift tracker started (PID: $SWIFT_PID)"
 
 # Wait a moment for Swift to initialize
 sleep 1

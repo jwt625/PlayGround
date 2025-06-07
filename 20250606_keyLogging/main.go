@@ -9,6 +9,7 @@ import (
 	"keystroke-tracker/app"
 	"keystroke-tracker/keyboard"
 	"keystroke-tracker/metrics"
+	"keystroke-tracker/trackpad"
 )
 
 func main() {
@@ -17,7 +18,7 @@ func main() {
 	log.Println("📱 App Detection: Swift Helper")
 	log.Println("")
 	log.Println("🚀 Start the Swift helper in another terminal:")
-	log.Println("   swift app-detector-helper.swift")
+	log.Println("   swift swift/tracker.swift")
 
 	// Register all Prometheus metrics
 	metrics.RegisterMetrics()
@@ -33,6 +34,9 @@ func main() {
 
 	// Start app switch monitor
 	go app.MonitorAppSwitches()
+
+	// Start trackpad click monitor
+	go trackpad.MonitorClickEvents()
 
 	// Start metrics collection
 	go keyboard.CollectMetrics()

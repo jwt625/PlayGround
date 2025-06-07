@@ -88,9 +88,9 @@ cleanup() {
 # Set trap to cleanup on exit
 trap cleanup SIGINT SIGTERM
 
-# Start Swift helper with log prefix
-echo "📱 Starting Swift app detector helper..."
-(swift app-detector-helper.swift 2>&1 | while IFS= read -r line; do
+# Start Swift unified tracker with log prefix
+echo "📱 Starting Swift unified tracker (app + trackpad)..."
+(swift swift/tracker.swift 2>&1 | while IFS= read -r line; do
     echo -e "${SWIFT_COLOR}[swift]${RESET_COLOR} $line"
 done) &
 

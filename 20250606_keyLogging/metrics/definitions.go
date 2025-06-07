@@ -70,6 +70,15 @@ var (
 		},
 		[]string{"app", "key_type"},
 	)
+
+	// Mouse click metrics
+	MouseClicksTotal = prometheus.NewCounterVec(
+		prometheus.CounterOpts{
+			Name: "mouse_clicks_total",
+			Help: "Total number of mouse clicks recorded by button type and application",
+		},
+		[]string{"button_type", "app"},
+	)
 )
 
 // RegisterMetrics registers all metrics with Prometheus
@@ -81,4 +90,5 @@ func RegisterMetrics() {
 	prometheus.MustRegister(AppSwitchTotal)
 	prometheus.MustRegister(AppSwitchEvents)
 	prometheus.MustRegister(KeystrokeIntervalActivity)
+	prometheus.MustRegister(MouseClicksTotal)
 }
