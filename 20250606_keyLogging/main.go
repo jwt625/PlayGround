@@ -42,7 +42,16 @@ var (
 		prometheus.HistogramOpts{
 			Name:    "app_session_duration_seconds",
 			Help:    "Duration of app focus sessions",
-			Buckets: []float64{1, 5, 10, 30, 60, 300, 600, 1800, 3600}, // 1s to 1h
+			Buckets: []float64{
+				// Quick switches (< 1 min)
+				0.5, 1, 2, 5, 10, 15, 30,
+				// Work sessions (1-60 min, 5-min intervals)
+				60, 300, 600, 900, 1200, 1500, 1800, 2100, 2400, 2700, 3000, 3300, 3600,
+				// Extended sessions (1-2h, 10-min intervals)
+				4200, 4800, 5400, 6000, 6600, 7200,
+				// Long sessions (2-4h, 20-min intervals)
+				8400, 9600, 10800, 12000, 13200, 14400,
+			},
 		},
 		[]string{"app"},
 	)
@@ -69,6 +78,14 @@ var (
 			Help: "Total number of application switches",
 		},
 	)
+
+	appSwitchEvents = prometheus.NewCounterVec(
+		prometheus.CounterOpts{
+			Name: "app_switch_events_total",
+			Help: "App switch events with from/to app labels",
+		},
+		[]string{"from_app", "to_app"},
+	)
 )
 
 // App session tracking
@@ -80,6 +97,7 @@ type AppSession struct {
 var (
 	currentSession *AppSession
 	currentApp     string = "unknown"
+	previousApp    string = "unknown"
 )
 
 func init() {
@@ -88,6 +106,7 @@ func init() {
 	prometheus.MustRegister(appTotalTime)
 	prometheus.MustRegister(currentAppGauge)
 	prometheus.MustRegister(appSwitchTotal)
+	prometheus.MustRegister(appSwitchEvents)
 }
 
 func main() {
@@ -97,6 +116,9 @@ func main() {
 	log.Println("")
 	log.Println("🚀 Start the Swift helper in another terminal:")
 	log.Println("   swift app-detector-helper.swift")
+	
+	// Load previous state
+	loadPersistedCounters()
 
 	// Start keystroke monitoring in a goroutine
 	go startKeystrokeMonitoring()
@@ -129,8 +151,7 @@ func readAppInfo() {
 				if err := json.Unmarshal(data, &appInfo); err == nil {
 					newApp := sanitizeAppName(appInfo.Name)
 					if newApp != currentApp {
-						log.Printf("📱 App detected by Swift: %s", appInfo.Name)
-						currentApp = newApp
+						updateCurrentApp(newApp, appInfo.Name)
 					}
 				}
 			}
@@ -146,6 +167,19 @@ func startKeystrokeMonitoring() {
 	if result == 0 {
 		log.Fatal("Failed to create keyboard event tap. Check Accessibility permissions!")
 	}
+}
+
+func updateCurrentApp(newApp, originalName string) {
+	if newApp != currentApp && currentApp != "unknown" {
+		// Record the switch event
+		appSwitchEvents.WithLabelValues(currentApp, newApp).Inc()
+		log.Printf("🔄 App switch: %s → %s", currentApp, newApp)
+	} else {
+		log.Printf("📱 App detected by Swift: %s", originalName)
+	}
+	
+	previousApp = currentApp
+	currentApp = newApp
 }
 
 func sanitizeAppName(appName string) string {
@@ -226,6 +260,7 @@ func handleAppSwitch(fromApp, toApp string, switchTime time.Time) {
 		// Only increment switch counter for actual switches between different apps
 		if isActualSwitch {
 			appSwitchTotal.Inc()
+			appSwitchEvents.WithLabelValues(fromApp, toApp).Inc()
 			log.Printf("🔄 App switch: %s → %s", fromApp, toApp)
 		} else {
 			log.Printf("📱 App detected: %s", toApp)
@@ -268,5 +303,42 @@ func collectMetrics() {
 			}
 		}
 	}
+}
+
+// Counter persistence for app restart recovery
+type CounterState struct {
+	Keystrokes    map[string]map[string]float64 `json:"keystrokes"`    // [app][key_type]
+	AppSwitches   map[string]map[string]float64 `json:"app_switches"`  // [from_app][to_app]
+	TotalSwitches float64                       `json:"total_switches"`
+}
+
+func loadPersistedCounters() {
+	data, err := os.ReadFile("/tmp/keystroke_tracker_state.json")
+	if err != nil {
+		log.Println("📂 No previous state found, starting fresh")
+		return
+	}
+	
+	var state CounterState
+	if err := json.Unmarshal(data, &state); err != nil {
+		log.Printf("⚠️  Failed to load previous state: %v", err)
+		return
+	}
+	
+	// Restore keystroke counters
+	for app, keyTypes := range state.Keystrokes {
+		for keyType, value := range keyTypes {
+			keystrokesTotal.WithLabelValues(keyType, app).Add(value)
+		}
+	}
+	
+	// Restore app switch counters
+	for fromApp, toApps := range state.AppSwitches {
+		for toApp, value := range toApps {
+			appSwitchEvents.WithLabelValues(fromApp, toApp).Add(value)
+		}
+	}
+	
+	log.Printf("📂 Restored previous state: %.0f total switches", state.TotalSwitches)
 }
 

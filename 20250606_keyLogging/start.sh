@@ -7,6 +7,36 @@ echo "🚀 Starting Keystroke Tracker..."
 echo "Press Ctrl+C to stop both processes"
 echo ""
 
+# Check if Go is installed
+echo "🔧 Checking Go installation..."
+if command -v go >/dev/null 2>&1; then
+    GO_VERSION=$(go version | awk '{print $3}')
+    echo "   ✅ Go is installed: $GO_VERSION"
+else
+    echo "   ❌ Go is not installed. Installing via Homebrew..."
+    
+    # Check if Homebrew is installed
+    if command -v brew >/dev/null 2>&1; then
+        echo "   🍺 Installing Go with Homebrew..."
+        brew install go
+        if [ $? -eq 0 ]; then
+            echo "   ✅ Go installed successfully"
+            GO_VERSION=$(go version | awk '{print $3}')
+            echo "   ℹ️  Installed: $GO_VERSION"
+        else
+            echo "   ❌ Failed to install Go via Homebrew"
+            echo "   💡 Please install Go manually from: https://golang.org/dl/"
+            exit 1
+        fi
+    else
+        echo "   ❌ Homebrew not found. Please install Go manually:"
+        echo "   💡 Visit: https://golang.org/dl/"
+        echo "   💡 Or install Homebrew first: https://brew.sh/"
+        exit 1
+    fi
+fi
+echo ""
+
 # Check if Docker containers are running
 echo "🐳 Checking Docker containers..."
 if docker-compose ps | grep -q "Up"; then
