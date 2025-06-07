@@ -173,8 +173,12 @@ func monitorAppSwitches() {
 			if stat, err := os.Stat("/tmp/keystroke_tracker_app_switches.jsonl"); err == nil {
 				if stat.Size() > lastFileSize {
 					// File has grown, read new content
-					if data, err := os.ReadFile("/tmp/keystroke_tracker_app_switches.jsonl"); err == nil {
-						lines := strings.Split(string(data), "\n")
+					if file, err := os.Open("/tmp/keystroke_tracker_app_switches.jsonl"); err == nil {
+						file.Seek(lastFileSize, 0) // Start reading from where we left off
+						newData := make([]byte, stat.Size()-lastFileSize)
+						file.Read(newData)
+						file.Close()
+						lines := strings.Split(string(newData), "\n")
 						for _, line := range lines {
 							if strings.TrimSpace(line) == "" {
 								continue
@@ -199,6 +203,9 @@ func monitorAppSwitches() {
 }
 
 func handleAppSwitch(fromApp, toApp string, switchTime time.Time) {
+	// Only count as a switch if we're actually switching between different apps
+	isActualSwitch := fromApp != "" && toApp != "" && fromApp != "unknown" && toApp != "unknown" && fromApp != toApp
+
 	// End current session if there was one
 	if currentSession != nil && fromApp == currentSession.AppName {
 		duration := switchTime.Sub(currentSession.StartTime).Seconds()
@@ -215,8 +222,14 @@ func handleAppSwitch(fromApp, toApp string, switchTime time.Time) {
 			AppName:   toApp,
 			StartTime: switchTime,
 		}
-		appSwitchTotal.Inc()
-		log.Printf("🔄 App switch: %s → %s", fromApp, toApp)
+		
+		// Only increment switch counter for actual switches between different apps
+		if isActualSwitch {
+			appSwitchTotal.Inc()
+			log.Printf("🔄 App switch: %s → %s", fromApp, toApp)
+		} else {
+			log.Printf("📱 App detected: %s", toApp)
+		}
 	}
 }
 
