@@ -55,6 +55,22 @@ else
 fi
 echo ""
 
+# Check if binary exists or is outdated, build if needed
+echo "🔨 Checking Go binary..."
+if [ ! -f "./keystroke-tracker" ] || [ "main.go" -nt "./keystroke-tracker" ]; then
+    echo "   🔄 Building keystroke tracker binary..."
+    go build
+    if [ $? -eq 0 ]; then
+        echo "   ✅ Binary built successfully"
+    else
+        echo "   ❌ Failed to build binary. Please check Go installation and code."
+        exit 1
+    fi
+else
+    echo "   ✅ Binary is up to date"
+fi
+echo ""
+
 # Colors for log prefixes
 SWIFT_COLOR='\033[34m'  # Blue
 GO_COLOR='\033[32m'     # Green
@@ -83,7 +99,7 @@ sleep 1
 
 # Start Go tracker with log prefix
 echo "⌨️  Starting Go keystroke tracker..."
-(go run main.go 2>&1 | while IFS= read -r line; do
+(./keystroke-tracker 2>&1 | while IFS= read -r line; do
     echo -e "${GO_COLOR}[go]${RESET_COLOR} $line"
 done) &
 

@@ -37,6 +37,22 @@ else
 fi
 echo ""
 
+# Check if binary exists or is outdated, build if needed
+echo "🔨 Checking Go binary..."
+if [ ! -f "./keystroke-tracker" ] || [ "main.go" -nt "./keystroke-tracker" ]; then
+    echo "   🔄 Building keystroke tracker binary..."
+    go build
+    if [ $? -eq 0 ]; then
+        echo "   ✅ Binary built successfully"
+    else
+        echo "   ❌ Failed to build binary. Please check Go installation and code."
+        exit 1
+    fi
+else
+    echo "   ✅ Binary is up to date"
+fi
+echo ""
+
 # Check if Docker containers are running
 echo "🐳 Checking Docker containers..."
 if docker-compose ps | grep -q "Up"; then
@@ -78,7 +94,7 @@ sleep 1
 
 # Start Go tracker in background
 echo "⌨️  Starting Go keystroke tracker..."
-go run main.go &
+./keystroke-tracker &
 GO_PID=$!
 echo "   Go tracker started (PID: $GO_PID)"
 

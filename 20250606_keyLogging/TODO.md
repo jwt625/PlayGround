@@ -136,5 +136,119 @@
 
 ---
 
+## ✅ Phase 7: Code Refactoring & Architecture Improvements
+*Completed: June 6, 2025*
+
+### Core Requirements
+*Status: Complete*
+- [x] Split monolithic main.go (345 lines) into logical packages
+- [x] Create clean package structure with proper separation of concerns
+- [x] Maintain all existing functionality while improving maintainability
+- [x] Fix CGO compilation issues and import path problems
+
+### Package Structure Created
+*Status: Complete*
+- [x] **types/** - Shared data structures (AppInfo, AppSession, CounterState)
+- [x] **metrics/** - Prometheus metric definitions and persistence logic
+- [x] **app/** - Application detection, session tracking, and file monitoring
+- [x] **keyboard/** - CGO-based keyboard capture and C implementation
+- [x] **main.go** - Reduced to 35 lines, entry point only
+
+### Technical Challenges & Solutions
+*Status: Complete*
+
+#### Challenge 1: Go Module Import Paths
+*Resolved: June 6, 2025*
+**Problem**: Relative imports like `"./app"` and `"../types"` fail in Go modules
+**Error**: `"./app" is relative, but relative import paths are not supported in module mode`
+**Solution**: Use module-based imports like `"keystroke-tracker/app"`
+**Learning**: Always use full module paths in Go packages, never relative paths
+
+#### Challenge 2: CGO Duplicate Symbol Errors
+*Resolved: June 6, 2025*
+**Problem**: Duplicate symbol errors when linking C code
+**Error**: `duplicate symbol '_getAndResetLetters'` and 4 other C functions
+**Root Cause**: Including both `keyboard.h` and `keyboard.c` in CGO comment block
+**Solution**: Only include header file (`keyboard.h`), let linker handle implementation
+**Learning**: In CGO, include headers only - don't include .c files directly
+
+#### Challenge 3: C File Organization
+*Resolved: June 6, 2025*
+**Problem**: `C source files not allowed when not using cgo` when C files in root
+**Solution**: Move `keyboard.c` and `keyboard.h` into `keyboard/` package directory
+**Learning**: C files must be co-located with the Go package that uses CGO
+
+### Enhanced Metrics Implementation
+*Status: Complete*
+- [x] Fine-grained histogram buckets (32 buckets from 0.5s to 4h)
+  - Quick switches: 0.5s - 30s (7 buckets)
+  - Work sessions: 1-60min in 5-min intervals (13 buckets)
+  - Extended sessions: 1-2h in 10-min intervals (6 buckets)
+  - Long sessions: 2-4h in 20-min intervals (6 buckets)
+- [x] App switch events tracking: `app_switch_events_total{from_app="X", to_app="Y"}`
+- [x] Data persistence through Docker named volumes
+
+### Key Go Programming Lessons Learned
+*Documented: June 6, 2025*
+
+#### 1. Package Organization Best Practices
+```go
+// Good: Module-based imports
+import "keystroke-tracker/metrics"
+
+// Bad: Relative imports (fails)
+import "../metrics"
+```
+
+#### 2. CGO Integration Patterns
+```go
+/*
+#cgo CFLAGS: -x objective-c
+#cgo LDFLAGS: -framework CoreGraphics -framework CoreFoundation
+#include "keyboard.h"  // ✅ Header only
+// #include "keyboard.c"  // ❌ Causes duplicate symbols
+*/
+import "C"
+```
+
+#### 3. Prometheus Metrics Separation
+- **Centralized definitions**: All metrics in `metrics/definitions.go`
+- **Registration function**: `metrics.RegisterMetrics()` for clean initialization
+- **Package-level access**: Exported variables for cross-package use
+
+### Persistence Architecture Improvements
+*Status: Complete*
+- [x] Docker named volumes for Prometheus data persistence
+- [x] Survives container restarts and system reboots
+- [x] 200-hour (8+ days) data retention configured
+- [x] Go app state persistence framework (partial implementation)
+
+### Results & Benefits
+*Achieved: June 6, 2025*
+- **Maintainability**: main.go reduced from 345 to 35 lines
+- **Modularity**: Clean separation by functional area
+- **Testability**: Each package can be tested independently
+- **Extensibility**: Easy to add new features (trackpad tracking planned)
+- **Build Success**: All compilation issues resolved
+
+## 🚀 Phase 8: Trackpad Click Tracking
+*Planned: June 6, 2025*
+
+### Core Requirements
+*Status: Planned*
+- [ ] Add trackpad/mouse click event capture using Swift
+- [ ] Create new metrics: `trackpad_clicks_total{button_type="left|right|middle", app="X"}`
+- [ ] Integrate with existing file-based IPC architecture
+- [ ] Add monitoring goroutine in Go server
+
+### Implementation Strategy
+*Status: Planned*
+- [ ] Extend `app-detector-helper.swift` with NSEvent mouse monitoring
+- [ ] Create `/tmp/keystroke_tracker_trackpad_events.jsonl` for click events
+- [ ] Add `trackpad/` package to clean architecture
+- [ ] Follow same pattern as keyboard capture but for mouse events
+
+---
+
 **Next Session Priority:**
-Start with either Multi-Machine setup or Chrome extension development based on immediate needs.
+Complete trackpad click tracking implementation using the newly refactored architecture, then test full system integration.
