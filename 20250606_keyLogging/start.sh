@@ -54,10 +54,25 @@ fi
 
 echo ""
 
+# Generate Prometheus config from template and .env
+echo "⚙️  Generating Prometheus configuration..."
+if [ -f "./generate-prometheus-config.sh" ]; then
+    ./generate-prometheus-config.sh
+    if [ $? -ne 0 ]; then
+        echo "   ❌ Failed to generate Prometheus config. Please check .env file."
+        exit 1
+    fi
+else
+    echo "   ⚠️  generate-prometheus-config.sh not found, using existing prometheus.yml"
+fi
+echo ""
+
 # Check if Docker containers are running
 echo "🐳 Checking Docker containers..."
 if docker-compose ps | grep -q "Up"; then
     echo "   ✅ Prometheus & Grafana containers already running"
+    echo "   🔄 Restarting Prometheus to pick up config changes..."
+    docker-compose restart prometheus
 else
     echo "   🔄 Starting Prometheus & Grafana containers..."
     docker-compose up -d

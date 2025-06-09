@@ -31,6 +31,11 @@ vendor/
 
 # macOS
 .DS_Store
-*.
+
+# Environment and generated files
+.env
+prometheus.yml
+
+# Chrome native host
 /cmd/chrome-native-host
 chrome-native-host

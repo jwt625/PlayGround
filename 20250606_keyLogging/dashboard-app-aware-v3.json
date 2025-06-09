@@ -18,157 +18,9 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "id": 4,
+  "id": 3,
   "links": [],
   "panels": [
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "prometheus"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "blue"
-              },
-              {
-                "color": "green",
-                "value": 1000
-              },
-              {
-                "color": "yellow",
-                "value": 5000
-              },
-              {
-                "color": "red",
-                "value": 10000
-              }
-            ]
-          },
-          "unit": "short"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 6,
-        "w": 6,
-        "x": 0,
-        "y": 0
-      },
-      "id": 9,
-      "options": {
-        "colorMode": "background",
-        "graphMode": "area",
-        "justifyMode": "auto",
-        "orientation": "auto",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "showPercentChange": false,
-        "textMode": "auto",
-        "wideLayout": true
-      },
-      "pluginVersion": "12.0.1",
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "prometheus"
-          },
-          "expr": "sum(keystrokes_total)",
-          "interval": "",
-          "legendFormat": "Total Keystrokes",
-          "refId": "A"
-        }
-      ],
-      "title": "Total Keystrokes",
-      "type": "stat"
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "prometheus"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "purple"
-              },
-              {
-                "color": "blue",
-                "value": 50
-              },
-              {
-                "color": "green",
-                "value": 100
-              },
-              {
-                "color": "yellow",
-                "value": 200
-              }
-            ]
-          },
-          "unit": "short"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 6,
-        "w": 6,
-        "x": 6,
-        "y": 0
-      },
-      "id": 10,
-      "options": {
-        "colorMode": "background",
-        "graphMode": "area",
-        "justifyMode": "auto",
-        "orientation": "auto",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "showPercentChange": false,
-        "textMode": "auto",
-        "wideLayout": true
-      },
-      "pluginVersion": "12.0.1",
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "prometheus"
-          },
-          "expr": "app_switch_total",
-          "interval": "",
-          "legendFormat": "Total App Switches",
-          "refId": "A"
-        }
-      ],
-      "title": "Total App Switches",
-      "type": "stat"
-    },
     {
       "datasource": {
         "type": "prometheus",
@@ -228,8 +80,8 @@
       },
       "gridPos": {
         "h": 8,
-        "w": 12,
-        "x": 12,
+        "w": 10,
+        "x": 0,
         "y": 0
       },
       "id": 1,
@@ -290,10 +142,10 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 6,
+        "h": 8,
         "w": 6,
-        "x": 0,
-        "y": 6
+        "x": 10,
+        "y": 0
       },
       "id": 2,
       "options": {
@@ -319,7 +171,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "rate(keystrokes_total{key_type=\"letter\"}[$__rate_interval]) * 60 / 5",
+          "expr": "typing_speed_wpm",
           "interval": "",
           "legendFormat": "{{app}} WPM",
           "refId": "A"
@@ -343,20 +195,11 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "blue",
-                "value": 0
-              },
-              {
-                "color": "green", 
-                "value": 60
-              },
-              {
-                "color": "yellow",
-                "value": 300
+                "color": "green"
               },
               {
                 "color": "red",
-                "value": 600
+                "value": 80
               }
             ]
           },
@@ -365,16 +208,15 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 6,
-        "w": 6,
-        "x": 6,
-        "y": 6
+        "h": 8,
+        "w": 8,
+        "x": 16,
+        "y": 0
       },
       "id": 5,
       "options": {
-        "colorMode": "background",
-        "graphMode": "none",
-        "justifyMode": "center",
+        "minVizHeight": 75,
+        "minVizWidth": 75,
         "orientation": "auto",
         "reduceOptions": {
           "calcs": [
@@ -383,13 +225,10 @@
           "fields": "",
           "values": false
         },
-        "showPercentChange": false,
-        "text": {
-          "titleSize": 12,
-          "valueSize": 16
-        },
-        "textMode": "value_and_name",
-        "wideLayout": true
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true,
+        "sizing": "auto",
+        "text": {}
       },
       "pluginVersion": "12.0.1",
       "targets": [
@@ -405,7 +244,7 @@
         }
       ],
       "title": "Current Session Duration",
-      "type": "stat"
+      "type": "gauge"
     },
     {
       "datasource": {
@@ -433,7 +272,7 @@
         "h": 8,
         "w": 7,
         "x": 0,
-        "y": 12
+        "y": 8
       },
       "id": 3,
       "options": {
@@ -499,7 +338,7 @@
         "h": 8,
         "w": 5,
         "x": 7,
-        "y": 12
+        "y": 8
       },
       "id": 4,
       "options": {
@@ -549,15 +388,7 @@
             "mode": "palette-classic"
           },
           "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "Session Duration (minutes)",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "barWidthFactor": 0.6,
-            "drawStyle": "bars",
-            "fillOpacity": 70,
+            "fillOpacity": 80,
             "gradientMode": "none",
             "hideFrom": {
               "legend": false,
@@ -565,21 +396,10 @@
               "vis": false,
               "viz": false
             },
-            "insertNulls": false,
-            "lineInterpolation": "linear",
             "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "never",
-            "spanNulls": false,
             "stacking": {
               "group": "A",
               "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
             }
           },
           "mappings": [],
@@ -588,10 +408,14 @@
             "steps": [
               {
                 "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
               }
             ]
           },
-          "unit": "short"
+          "unit": "s"
         },
         "overrides": []
       },
@@ -599,10 +423,12 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 12
+        "y": 8
       },
-      "id": 11,
+      "id": 7,
       "options": {
+        "bucketOffset": 0,
+        "bucketSize": 60,
         "legend": {
           "calcs": [],
           "displayMode": "list",
@@ -616,28 +442,15 @@
         }
       },
       "pluginVersion": "12.0.1",
-      "options": {
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": true
-        },
-        "tooltip": {
-          "hideZeros": false,
-          "mode": "single",
-          "sort": "none"
-        }
-      },
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "histogram_quantile(0.1, sum(app_session_duration_seconds_bucket) by (le, app)) / 60",
+          "expr": "histogram_quantile(0.95, app_session_duration_seconds_bucket)",
           "interval": "",
-          "legendFormat": "{{app}} - 10th percentile",
+          "legendFormat": "95th percentile",
           "refId": "A"
         },
         {
@@ -645,44 +458,14 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "histogram_quantile(0.25, sum(app_session_duration_seconds_bucket) by (le, app)) / 60",
+          "expr": "histogram_quantile(0.50, app_session_duration_seconds_bucket)",
           "interval": "",
-          "legendFormat": "{{app}} - 25th percentile",
+          "legendFormat": "50th percentile (median)",
           "refId": "B"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "prometheus"
-          },
-          "expr": "histogram_quantile(0.5, sum(app_session_duration_seconds_bucket) by (le, app)) / 60",
-          "interval": "",
-          "legendFormat": "{{app}} - Median",
-          "refId": "C"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "prometheus"
-          },
-          "expr": "histogram_quantile(0.75, sum(app_session_duration_seconds_bucket) by (le, app)) / 60",
-          "interval": "",
-          "legendFormat": "{{app}} - 75th percentile",
-          "refId": "D"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "prometheus"
-          },
-          "expr": "histogram_quantile(0.9, sum(app_session_duration_seconds_bucket) by (le, app)) / 60",
-          "interval": "",
-          "legendFormat": "{{app}} - 90th percentile",
-          "refId": "E"
         }
       ],
-      "title": "App Session Duration Percentiles (Minutes)",
-      "type": "timeseries"
+      "title": "App Session Duration Distribution",
+      "type": "histogram"
     },
     {
       "datasource": {
@@ -703,7 +486,7 @@
             "barAlignment": 0,
             "barWidthFactor": 0.6,
             "drawStyle": "line",
-            "fillOpacity": 10,
+            "fillOpacity": 20,
             "gradientMode": "none",
             "hideFrom": {
               "legend": false,
@@ -718,7 +501,7 @@
             "scaleDistribution": {
               "type": "linear"
             },
-            "showPoints": "never",
+            "showPoints": "auto",
             "spanNulls": false,
             "stacking": {
               "group": "A",
@@ -745,7 +528,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 20
+        "y": 16
       },
       "id": 6,
       "options": {
@@ -838,7 +621,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 20
+        "y": 16
       },
       "id": 8,
       "options": {
@@ -883,12 +666,12 @@
     "list": []
   },
   "time": {
-    "from": "now-15m",
+    "from": "now-1h",
     "to": "now"
   },
   "timepicker": {},
   "timezone": "",
-  "title": "Keystroke Tracker - Enhanced with Totals & Probability Curves",
-  "uid": "keystroke-tracker-enhanced",
-  "version": 3
+  "title": "Keystroke Tracker - App Aware with Time Tracking",
+  "uid": "keystroke-tracker-app-aware",
+  "version": 2
 }

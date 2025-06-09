@@ -1,0 +1,20 @@
+global:
+  scrape_interval: 15s
+
+scrape_configs:
+  - job_name: 'keystroke-tracker'
+    static_configs:
+      - targets: ['host.docker.internal:8080']
+    scrape_interval: 5s
+    metrics_path: /metrics
+
+remote_write:
+  - url: __PROMETHEUS_REMOTE_WRITE_ENDPOINT__
+    basic_auth:
+      username: __USERNAME__
+      password: __GRAFANA_API_TOKEN__
+    # Optional: reduce load by sampling or filtering
+    write_relabel_configs:
+      - source_labels: [__name__]
+        regex: 'keystroke.*|app_.*|chrome_.*|mouse_.*'
+        action: keep
