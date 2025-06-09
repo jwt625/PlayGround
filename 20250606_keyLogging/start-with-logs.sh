@@ -56,24 +56,26 @@ fi
 echo ""
 
 # Check if binary exists or is outdated, build if needed
-echo "🔨 Checking Go binary..."
+echo "🔨 Checking Go binaries..."
 if [ ! -f "./keystroke-tracker" ] || [ "main.go" -nt "./keystroke-tracker" ]; then
     echo "   🔄 Building keystroke tracker binary..."
     go build
     if [ $? -eq 0 ]; then
-        echo "   ✅ Binary built successfully"
+        echo "   ✅ Main binary built successfully"
     else
-        echo "   ❌ Failed to build binary. Please check Go installation and code."
+        echo "   ❌ Failed to build main binary. Please check Go installation and code."
         exit 1
     fi
 else
-    echo "   ✅ Binary is up to date"
+    echo "   ✅ Main binary is up to date"
 fi
+
 echo ""
 
 # Colors for log prefixes
 SWIFT_COLOR='\033[34m'  # Blue
 GO_COLOR='\033[32m'     # Green
+CHROME_COLOR='\033[35m' # Magenta
 RESET_COLOR='\033[0m'   # Reset
 
 # Function to cleanup processes on exit
@@ -97,6 +99,7 @@ done) &
 # Wait a moment for Swift to initialize
 sleep 1
 
+
 # Start Go tracker with log prefix
 echo "⌨️  Starting Go keystroke tracker..."
 (./keystroke-tracker 2>&1 | while IFS= read -r line; do
@@ -104,7 +107,7 @@ echo "⌨️  Starting Go keystroke tracker..."
 done) &
 
 echo ""
-echo "🎯 Both processes running with logs below:"
+echo "🎯 All processes running with logs below:"
 echo "   • Metrics: http://localhost:8080/metrics"
 echo "   • Grafana: http://localhost:3001"
 echo ""

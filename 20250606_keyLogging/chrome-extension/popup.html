@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <style>
+    body {
+      width: 400px;
+      padding: 20px;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      font-size: 14px;
+    }
+    
+    .header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 20px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #e0e0e0;
+    }
+    
+    .header h1 {
+      margin: 0;
+      font-size: 18px;
+      color: #333;
+    }
+    
+    .status {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      margin-right: 8px;
+    }
+    
+    .status.active { background-color: #4CAF50; }
+    .status.error { background-color: #f44336; }
+    .status.unknown { background-color: #ff9800; }
+    
+    .section {
+      margin-bottom: 20px;
+    }
+    
+    .section h3 {
+      margin: 0 0 10px 0;
+      font-size: 14px;
+      font-weight: 600;
+      color: #555;
+    }
+    
+    .info-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 0;
+      border-bottom: 1px solid #f0f0f0;
+    }
+    
+    .info-item:last-child {
+      border-bottom: none;
+    }
+    
+    .label {
+      color: #666;
+      font-weight: 500;
+    }
+    
+    .value {
+      color: #333;
+      font-family: 'Monaco', 'Menlo', monospace;
+      font-size: 12px;
+      max-width: 200px;
+      text-align: right;
+      word-break: break-all;
+    }
+    
+    .events {
+      max-height: 200px;
+      overflow-y: auto;
+      border: 1px solid #e0e0e0;
+      border-radius: 4px;
+      padding: 10px;
+      background-color: #f9f9f9;
+    }
+    
+    .event {
+      font-family: 'Monaco', 'Menlo', monospace;
+      font-size: 11px;
+      padding: 4px 0;
+      border-bottom: 1px solid #e0e0e0;
+      color: #444;
+    }
+    
+    .event:last-child {
+      border-bottom: none;
+    }
+    
+    .event-time {
+      color: #888;
+      margin-right: 8px;
+    }
+    
+    .event-type {
+      font-weight: 600;
+      margin-right: 8px;
+    }
+    
+    .refresh-btn {
+      background-color: #007bff;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 12px;
+      margin-top: 10px;
+    }
+    
+    .refresh-btn:hover {
+      background-color: #0056b3;
+    }
+    
+    .error-msg {
+      color: #f44336;
+      font-size: 12px;
+      font-style: italic;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div class="status" id="status"></div>
+    <h1>Keystroke Tracker Debug</h1>
+  </div>
+  
+  <div class="section">
+    <h3>Current State</h3>
+    <div class="info-item">
+      <span class="label">Current Domain:</span>
+      <span class="value" id="currentDomain">Loading...</span>
+    </div>
+    <div class="info-item">
+      <span class="label">Current URL:</span>
+      <span class="value" id="currentUrl">Loading...</span>
+    </div>
+    <div class="info-item">
+      <span class="label">Tab Title:</span>
+      <span class="value" id="currentTitle">Loading...</span>
+    </div>
+    <div class="info-item">
+      <span class="label">Last Update:</span>
+      <span class="value" id="lastUpdate">Loading...</span>
+    </div>
+  </div>
+  
+  <div class="section">
+    <h3>Communication Status</h3>
+    <div class="info-item">
+      <span class="label">HTTP Endpoint:</span>
+      <span class="value" id="nativeStatus">Testing...</span>
+    </div>
+    <div class="info-item">
+      <span class="label">Storage Debug:</span>
+      <span class="value" id="storageStatus">Testing...</span>
+    </div>
+    <div class="info-item">
+      <span class="label">Events Sent:</span>
+      <span class="value" id="eventsSent">0</span>
+    </div>
+  </div>
+  
+  <div class="section">
+    <h3>Recent Events</h3>
+    <div class="events" id="recentEvents">
+      Loading events...
+    </div>
+    <button class="refresh-btn" id="refreshBtn">Refresh Debug Info</button>
+  </div>
+  
+  <script src="popup.js"></script>
+</body>
+</html>

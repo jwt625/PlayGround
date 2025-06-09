@@ -7,6 +7,7 @@ import (
 	"strings"
 	"time"
 
+	"keystroke-tracker/chrome"
 	"keystroke-tracker/metrics"
 )
 
@@ -16,6 +17,19 @@ type ClickEvent struct {
 	App        string  `json:"app"`
 	Timestamp  float64 `json:"timestamp"`
 	ClickCount int     `json:"clickCount"`
+}
+
+// getDomainForApp returns the domain label for metrics based on the current app
+func getDomainForApp(appName string) string {
+	if appName == "google_chrome" {
+		domain := chrome.GetCurrentDomain()
+		if domain == "" {
+			return "unknown"
+		}
+		return domain
+	}
+	// For non-Chrome apps, use empty domain
+	return ""
 }
 
 // MonitorClickEvents watches the trackpad events file for new clicks
@@ -49,11 +63,18 @@ func MonitorClickEvents() {
 								// Convert app name to clean format (same as keystrokes)
 								appName := sanitizeAppName(clickEvent.App)
 								
-								// Increment Prometheus counter
-								metrics.MouseClicksTotal.WithLabelValues(clickEvent.ButtonType, appName).Inc()
+								// Get domain for current app (Chrome-aware)
+								domain := getDomainForApp(appName)
 								
-								log.Printf("🖱️ %s click in %s (Prometheus updated)", 
-									strings.Title(clickEvent.ButtonType), appName)
+								// Increment Prometheus counter with domain
+								metrics.MouseClicksTotal.WithLabelValues(clickEvent.ButtonType, appName, domain).Inc()
+								
+								domainInfo := ""
+								if domain != "" {
+									domainInfo = " (" + domain + ")"
+								}
+								log.Printf("🖱️ %s click in %s%s (Prometheus updated)", 
+									strings.Title(clickEvent.ButtonType), appName, domainInfo)
 							}
 						}
 					}

@@ -31,3 +31,6 @@ vendor/
 
 # macOS
 .DS_Store
+*.
+/cmd/chrome-native-host
+chrome-native-host

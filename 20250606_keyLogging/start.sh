@@ -38,19 +38,20 @@ fi
 echo ""
 
 # Check if binary exists or is outdated, build if needed
-echo "🔨 Checking Go binary..."
+echo "🔨 Checking Go binaries..."
 if [ ! -f "./keystroke-tracker" ] || [ "main.go" -nt "./keystroke-tracker" ]; then
     echo "   🔄 Building keystroke tracker binary..."
     go build
     if [ $? -eq 0 ]; then
-        echo "   ✅ Binary built successfully"
+        echo "   ✅ Main binary built successfully"
     else
-        echo "   ❌ Failed to build binary. Please check Go installation and code."
+        echo "   ❌ Failed to build main binary. Please check Go installation and code."
         exit 1
     fi
 else
-    echo "   ✅ Binary is up to date"
+    echo "   ✅ Main binary is up to date"
 fi
+
 echo ""
 
 # Check if Docker containers are running
@@ -92,6 +93,9 @@ echo "   Swift tracker started (PID: $SWIFT_PID)"
 # Wait a moment for Swift to initialize
 sleep 1
 
+# Note: Chrome extension will write to Downloads folder - no native host needed
+echo "🌐 Chrome extension will use Downloads folder fallback"
+
 # Start Go tracker in background
 echo "⌨️  Starting Go keystroke tracker..."
 ./keystroke-tracker &
@@ -99,12 +103,13 @@ GO_PID=$!
 echo "   Go tracker started (PID: $GO_PID)"
 
 echo ""
-echo "🎯 Both processes running!"
+echo "🎯 All processes running!"
 echo "   • Swift helper: PID $SWIFT_PID"
 echo "   • Go tracker: PID $GO_PID"
+echo "   • Chrome extension: file-based fallback"
 echo "   • Metrics: http://localhost:8080/metrics"
 echo "   • Grafana: http://localhost:3001"
 echo ""
 
-# Wait for both processes
+# Wait for all processes
 wait $SWIFT_PID $GO_PID

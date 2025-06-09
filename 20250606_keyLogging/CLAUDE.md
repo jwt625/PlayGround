@@ -1,6 +1,6 @@
 # Keystroke Tracking with Prometheus & Grafana
 
-*Last Updated: June 6, 2025*
+*Last Updated: June 8, 2025*
 
 ## Project Overview
 Building a passive keystroke tracker in Go to learn backend observability with Prometheus and Grafana visualization.
@@ -60,9 +60,26 @@ Building a passive keystroke tracker in Go to learn backend observability with P
 **Goal**: Track typing activity per application
 
 **Tasks**:
-- [ ] Detect active application during keystroke events
-- [ ] Add app label: `keystrokes_total{key_type="letter", app="vscode"}`
-- [ ] Create application-specific dashboards
+- [x] Detect active application during keystroke events
+- [x] Add app label: `keystrokes_total{key_type="letter", app="vscode"}`
+- [x] Create application-specific dashboards
+
+### Phase 5: Chrome Domain Tracking ✅ COMPLETED
+*Completed: June 8, 2025*
+**Goal**: Fine-grained tracking of Chrome tab activity by domain
+
+**Tasks**:
+- [x] Chrome extension for domain detection
+- [x] HTTP endpoint for real-time communication
+- [x] Domain-aware metrics with labels
+- [x] Chrome tab session duration tracking
+- [x] Grafana panels for domain analytics
+
+**Implementation**:
+- Chrome extension detects domain changes in real-time
+- HTTP POST to `localhost:8080/chrome-update` for immediate updates
+- Metrics include: `keystrokes_total{domain="youtube_com"}`, `chrome_tab_total_time_seconds`, `chrome_tab_session_duration_seconds`
+- No native messaging or file I/O - pure HTTP communication
 
 ## Technical Approach
 *Documented: June 6, 2025*
@@ -76,9 +93,16 @@ Building a passive keystroke tracker in Go to learn backend observability with P
 ### Architecture
 ```
 [Keyboard Events] → [Go Service] → [Prometheus Metrics] → [Grafana Dashboard]
-                         ↓
-                  [HTTP /metrics endpoint]
+[Mouse Events]   → [Swift Helper] ↗
+[App Detection]  ↗               ↓
+[Chrome Domains] → [HTTP Endpoint] → [HTTP /metrics endpoint]
 ```
+
+### Chrome Extension Integration
+- **Real-time communication**: HTTP POST to `localhost:8080/chrome-update`
+- **Domain detection**: Automatic extraction and sanitization of domains
+- **Session tracking**: Duration metrics for each domain
+- **Debug interface**: Built-in popup for troubleshooting
 
 ### Platform Implementation
 - **macOS**: `CGEventTap` with `kCGEventTapOptionListenOnly`
@@ -92,14 +116,17 @@ Building a passive keystroke tracker in Go to learn backend observability with P
 - [x] Can see immediate feedback when typing
 
 ## Current Status
-*As of June 6, 2025*
+*As of June 8, 2025*
 - **Phase 1**: ✅ Complete - End-to-end pipeline working
 - **Phase 2**: ✅ Complete - Key categorization with labels
 - **Phase 3**: 🚧 In Progress - Time-based insights
+- **Phase 4**: ✅ Complete - Application awareness
+- **Phase 5**: ✅ Complete - Chrome domain tracking
 - **Access URLs**:
   - Grafana: http://localhost:3001 (admin/admin)
   - Prometheus: http://localhost:9090
   - Metrics: http://localhost:8080/metrics
+  - Chrome Extension Debug: Click extension icon in Chrome toolbar
 
 ## Key Go Programming Concepts Worth Learning
 *Documented: June 6, 2025*
@@ -173,6 +200,26 @@ appData, _ := os.ReadFile("/tmp/current_app.json")
 - **Inter-process communication**: Files, pipes, and message passing
 - **Reliability patterns**: Combining multiple technologies for robust solutions
 
+### 7. HTTP API Design & Chrome Extension Integration
+```go
+// HTTP endpoint for Chrome extension communication
+func handleChromeUpdate(w http.ResponseWriter, r *http.Request) {
+    // CORS headers for Chrome extension
+    w.Header().Set("Access-Control-Allow-Origin", "*")
+    chrome.UpdateCurrentDomain(update.Domain)
+}
+```
+```javascript
+// Chrome extension real-time domain updates
+fetch('http://localhost:8080/chrome-update', {
+    method: 'POST',
+    body: JSON.stringify({domain: 'youtube_com'})
+})
+```
+- **CORS handling**: Cross-origin requests from Chrome extension
+- **Real-time communication**: Immediate domain updates via HTTP
+- **Error handling**: Graceful fallbacks and debug interfaces
+
 ## Implementation Challenges & Solutions
 *Documented: June 6, 2025*
 
@@ -198,6 +245,28 @@ appData, _ := os.ReadFile("/tmp/current_app.json")
 - **Swift for high-level**: App detection (NSWorkspace)  
 - **Go for business logic**: Metrics aggregation and HTTP serving
 - **Files for communication**: Simple, debuggable IPC
+
+### Challenge 4: Chrome Extension Communication
+*Resolved: June 8, 2025*
+**Problem**: Complex native messaging setup with multiple failure points
+**Root Cause**: Chrome security restrictions, file system limitations, manifest complexity
+**Solution**: Direct HTTP communication to Go application
+
+**Key Learning**: Simple HTTP endpoints are often more reliable than complex platform-specific APIs
+
+## Installation & Setup
+
+### Chrome Extension Setup
+1. **Load extension**: Chrome → Extensions → Developer mode → "Load unpacked" → Select `chrome-extension/` folder
+2. **Reload tracker**: Run `./start.sh` to ensure HTTP endpoint is available
+3. **Test communication**: Click extension icon → Should show "✅ HTTP Working"
+4. **Grant permissions**: Extension will request tabs and storage permissions
+
+### Grafana Chrome Domain Panel
+Add this query to track time spent by domain:
+```
+increase(chrome_tab_total_time_seconds[$__range])
+```
 
 ## Next Steps
 *Updated: June 6, 2025*

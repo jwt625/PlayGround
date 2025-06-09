@@ -232,23 +232,63 @@ import "C"
 - **Build Success**: All compilation issues resolved
 
 ## 🚀 Phase 8: Trackpad Click Tracking
-*Planned: June 6, 2025*
+*Completed: June 6, 2025*
 
 ### Core Requirements
-*Status: Planned*
-- [ ] Add trackpad/mouse click event capture using Swift
-- [ ] Create new metrics: `trackpad_clicks_total{button_type="left|right|middle", app="X"}`
-- [ ] Integrate with existing file-based IPC architecture
-- [ ] Add monitoring goroutine in Go server
+*Status: Complete*
+- [x] Add trackpad/mouse click event capture using Swift
+- [x] Create new metrics: `mouse_clicks_total{button_type="left|right|middle", app="X"}`
+- [x] Integrate with existing file-based IPC architecture
+- [x] Add monitoring goroutine in Go server
 
 ### Implementation Strategy
+*Status: Complete*
+- [x] Extend Swift unified tracker with CGEventTap mouse monitoring
+- [x] Create `/tmp/keystroke_tracker_trackpad_events.jsonl` for click events
+- [x] Add `trackpad/` package to clean architecture
+- [x] Follow same pattern as keyboard capture but for mouse events
+
+## 🌐 Phase 9: Chrome Extension Fine-Grained Tracking
+*Started: June 6, 2025*
+
+### Core Requirements
+*Status: In Progress*
+- [ ] **Chrome Extension Development**
+  - [ ] Create manifest.json with tabs and activeTab permissions
+  - [ ] Background script for tab switch detection
+  - [ ] Content script for URL change monitoring within tabs
+  - [ ] Domain extraction and sanitization logic
+  
+- [ ] **File-based IPC Integration** 
+  - [ ] Write to `/tmp/keystroke_tracker_chrome_events.jsonl` for tab switches
+  - [ ] Write to `/tmp/keystroke_tracker_current_domain.json` for current domain
+  - [ ] Follow same JSONL pattern as Swift tracker
+
+- [ ] **Go Server Integration**
+  - [ ] Create `chrome/` package to monitor Chrome JSONL files
+  - [ ] Enhance existing metrics with domain labels when app="google_chrome"
+  - [ ] Add Chrome-specific metrics: `chrome_tab_switches_total{from_domain, to_domain}`
+
+### Enhanced Metrics Structure
 *Status: Planned*
-- [ ] Extend `app-detector-helper.swift` with NSEvent mouse monitoring
-- [ ] Create `/tmp/keystroke_tracker_trackpad_events.jsonl` for click events
-- [ ] Add `trackpad/` package to clean architecture
-- [ ] Follow same pattern as keyboard capture but for mouse events
+```promql
+# Existing metrics enhanced with domain context
+keystrokes_total{app="google_chrome", domain="github.com", key_type="letter"}
+mouse_clicks_total{app="google_chrome", domain="stackoverflow.com", button_type="left"}
+
+# New Chrome-specific metrics
+chrome_tab_switches_total{from_domain="github.com", to_domain="stackoverflow.com"}
+chrome_time_spent_seconds{domain="github.com"}
+```
+
+### Technical Considerations
+*Status: Planned*
+- [ ] Chrome extension cannot directly write to `/tmp/` - needs Native Messaging Host
+- [ ] Alternative: Use Chrome storage API + periodic sync to Go server
+- [ ] Domain privacy filtering and sanitization
+- [ ] Performance optimization for high-frequency tab switching
 
 ---
 
 **Next Session Priority:**
-Complete trackpad click tracking implementation using the newly refactored architecture, then test full system integration.
+Complete Chrome extension development with proper file system access, then integrate with existing Go observability architecture.

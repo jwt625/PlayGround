@@ -1,17 +1,20 @@
 # Keystroke Tracker with Prometheus & Grafana
 
-*Last Updated: June 6, 2025*
+*Last Updated: June 8, 2025*
 
-A real-time keystroke monitoring system built with Go, Prometheus, and Grafana to learn backend observability and data visualization.
+A comprehensive productivity tracking system built with Go, Prometheus, and Grafana featuring keystroke monitoring, app detection, mouse tracking, and Chrome domain analytics.
 
 ## 🎯 What This Project Does
-*Features as of: June 6, 2025*
+*Features as of: June 8, 2025*
 
 - **Captures keystrokes** passively (read-only, no interference)
 - **Categorizes keys** by type (letters, numbers, special keys)
-- **Exposes metrics** via Prometheus
+- **Tracks applications** and session durations
+- **Monitors mouse clicks** and trackpad events
+- **Chrome domain tracking** with real-time tab switching detection
+- **Exposes metrics** via Prometheus with domain-aware labels
 - **Visualizes data** in real-time Grafana dashboards
-- **Tracks typing patterns** and productivity insights
+- **Tracks productivity patterns** across apps and websites
 
 ## 📋 Prerequisites
 *Updated: June 6, 2025*
@@ -91,69 +94,60 @@ go get github.com/prometheus/client_golang/prometheus/promhttp
 
 ### Step 3: Start the Services
 
-**Terminal 1 - Start Prometheus & Grafana:**
-```bash
-docker-compose up -d
-```
-
-**Terminal 2 - Start the keystroke tracker (Choose one option):**
-
-**Option A: Automatic startup (Recommended):**
+**Start everything with one command (Recommended):**
 ```bash
 ./start.sh
 ```
 
-**Option B: With detailed logs:**
+**Or with detailed logs:**
 ```bash
 ./start-with-logs.sh
 ```
 
-**Option C: Manual startup (old way):**
-```bash
-# Terminal 2a: Start Swift helper
-swift app-detector-helper.swift
-
-# Terminal 2b: Start Go tracker  
-go run main.go
-```
-
 You should see:
 ```
-Starting keystroke tracker with categorization...
-Starting native macOS keyboard event monitoring with categorization...
-Metrics server starting on :8080/metrics
+🚀 Starting Keystroke Tracker...
+🔧 Checking Go installation...
+🔨 Checking Go binaries...
+🐳 Checking Docker containers...
+📱 Starting Swift unified tracker (app + trackpad)...
+🌐 Chrome extension will use HTTP endpoint
+⌨️  Starting Go keystroke tracker...
+🎯 All processes running!
 ```
 
-### Step 4: Access the Dashboards
+### Step 4: Setup Chrome Extension (Optional)
+
+**For Chrome domain tracking:**
+1. Open Chrome → Extensions → **Developer mode** (toggle on)
+2. Click **"Load unpacked"** → Select the `chrome-extension/` folder
+3. **Click the extension icon** → Should show "✅ HTTP Working"
+4. **Grant permissions** when prompted (tabs, storage)
+
+### Step 5: Access the Dashboards
 
 **Grafana Dashboard:**
 1. Open: http://localhost:3001
 2. Login: `admin` / `admin`
-3. Go to **Configuration** → **Data Sources** → **Add data source**
-4. Select **Prometheus**
-5. Set URL: `http://host.docker.internal:9090`
-  - this is because Grafana is running inside the docker container
-6. Click **Save & Test**
-
-**Import Dashboard:**
-1. Click **"+" → Import**
-2. Copy content from `dashboard-categorized.json`
-3. Paste and click **Load** → **Import**
+3. Import dashboard from `dashboard-app-aware-v3.json`
 
 **Prometheus (Optional):**
 - Open: http://localhost:9090
-- Try query: `keystrokes_total`
+- Try queries: `keystrokes_total`, `chrome_tab_total_time_seconds`
 
 ## 🧪 Testing the System
-*Updated: June 6, 2025*
+*Updated: June 8, 2025*
 
 1. **Type anywhere** on your computer
 2. **Watch the terminal** - you should see logs like:
    ```
-   Total: 15 (Letters:12 Numbers:2 Special:1)
+   ⌨️  App: code | Total: 15 (L:12 N:2 S:1)
+   🖱️  Mouse: left click in code
+   🌐 Chrome domain via HTTP: youtube_com
    ```
-3. **Check Grafana** - graphs should update in real-time
-4. **Try different typing** - code vs text vs numbers
+3. **Switch between apps** - should see app detection
+4. **Use Chrome with extension** - should see domain tracking
+5. **Check Grafana** - all metrics update in real-time
 
 ## 📁 Project Structure
 *Updated: June 6, 2025*
@@ -220,20 +214,25 @@ docker-compose restart prometheus
 *Updated: June 6, 2025*
 
 ### Metrics Available
-- `keystrokes_total{key_type="letter"}` - A-Z keys
-- `keystrokes_total{key_type="number"}` - 0-9 keys  
-- `keystrokes_total{key_type="special"}` - Space, Enter, punctuation, etc.
+- `keystrokes_total{key_type="letter", app="code", domain=""}` - A-Z keys by app
+- `mouse_clicks_total{button_type="left", app="chrome", domain="youtube_com"}` - Mouse clicks  
+- `app_total_time_seconds{app="code"}` - Time spent per application
+- `chrome_tab_total_time_seconds{domain="github_com"}` - Time spent per domain
+- `chrome_tab_session_duration_seconds` - Individual Chrome session durations
 
 ### Useful Prometheus Queries
 ```bash
 # Typing speed (keystrokes per minute)
 rate(keystrokes_total[1m]) * 60
 
-# Letters vs numbers ratio
-rate(keystrokes_total{key_type="letter"}[1m]) / rate(keystrokes_total{key_type="number"}[1m])
+# Time spent by application (exclude system apps)
+increase(app_total_time_seconds{app!~"loginwindow|finder|dock|.*window.*"}[$__range])
 
-# Total keystrokes in last hour
-increase(keystrokes_total[1h])
+# Time spent by Chrome domain
+increase(chrome_tab_total_time_seconds[$__range])
+
+# Chrome session duration percentiles
+histogram_quantile(0.95, chrome_tab_session_duration_seconds)
 ```
 
 ## 🛑 Privacy & Security
