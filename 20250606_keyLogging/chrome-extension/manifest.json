@@ -1,0 +1,34 @@
+{
+  "manifest_version": 3,
+  "name": "Keystroke Tracker Chrome Extension",
+  "version": "1.0",
+  "description": "Tracks Chrome tab activity for productivity analytics",
+  
+  "permissions": [
+    "tabs",
+    "activeTab",
+    "storage"
+  ],
+  
+  "background": {
+    "service_worker": "background.js"
+  },
+  
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Keystroke Tracker Debug"
+  },
+  
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"],
+      "run_at": "document_start"
+    }
+  ],
+  
+  "host_permissions": [
+    "<all_urls>",
+    "http://localhost:8080/*"
+  ]
+}
