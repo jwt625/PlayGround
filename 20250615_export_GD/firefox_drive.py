@@ -21,6 +21,7 @@ class GoogleDriveFirefox:
         self.rate_limit_delay = 2  # Base delay between downloads
         self.folder_structure = {}  # Track folder hierarchy
         self.current_local_path = ""  # Track current local download path
+        self.url_stack = []  # Track folder URLs for navigation
     
     def get_firefox_profile_path(self):
         """Find Firefox profile path"""
@@ -417,50 +418,84 @@ class GoogleDriveFirefox:
             # Small delay between files
             await self.wait_random(0.5, 1)
         
-        # Remember current folder structure before entering subfolders
+        # Remember current folder structure and URL before entering subfolders
         current_folder_items = [item['name'] for item in items]
+        current_folder_url = self.page.url
+        print(f"🔄 Current folder URL: {current_folder_url}")
         
         # Process subfolders recursively
-        for folder_item in folders:
+        for i, folder_item in enumerate(folders):
             folder_name = folder_item['name']
-            print(f"\n🔄 Entering folder: {folder_name}")
+            print(f"\n🔄 Entering folder {i+1}/{len(folders)}: {folder_name}")
             
             navigation_successful = False
             
             try:
+                # Save current URL before navigation
+                current_url = self.page.url
+                print(f"🔄 Current URL before navigation: {current_url}")
+                
+                # Check if element is still attached
+                try:
+                    element_text = await folder_item['element'].inner_text()
+                    print(f"🔄 Element text: {element_text[:50]}...")
+                    print(f"🔄 Element attached: ✅")
+                except Exception as e:
+                    print(f"❌ Element detached: {e}")
+                    print("🔄 Need to refresh folder items...")
+                    fresh_items = await self.get_current_folder_items()
+                    fresh_folders = [item for item in fresh_items if item['is_folder']]
+                    # Find the current folder in fresh items
+                    folder_item = None
+                    for fresh_folder in fresh_folders:
+                        if fresh_folder['name'] == folder_name:
+                            folder_item = fresh_folder
+                            print(f"✅ Found fresh element for: {folder_name}")
+                            break
+                    
+                    if not folder_item:
+                        print(f"❌ Could not find fresh element for: {folder_name}")
+                        continue
+                
                 # Navigate to folder by clicking on the name/element
+                print(f"🔄 Double-clicking on folder element...")
                 await folder_item['element'].dblclick()
+                print(f"🔄 Double-click completed, waiting...")
                 await self.wait_random(3, 4)  # Give more time for navigation
                 
                 # Simple cleanup of any stuck context menus after folder navigation
                 await self.close_any_open_menus()
                 
-                # Try to verify navigation by waiting for network idle, but don't rely on it
-                try:
-                    await self.page.wait_for_load_state('networkidle', timeout=5000)  # Reduced timeout
-                    print(f"✅ Network idle reached")
-                except:
-                    print(f"⚠️  Network idle timeout, checking navigation by folder contents...")
+                # Check if URL changed (most reliable way to detect navigation)
+                new_url = self.page.url
+                print(f"🔄 URL after navigation: {new_url}")
+                print(f"🔄 URL comparison: {current_url} -> {new_url}")
+                print(f"🔄 URLs are {'different' if new_url != current_url else 'SAME'}")
                 
-                # Verify navigation by comparing folder structure
-                await self.wait_random(2, 3)
-                new_items = await self.get_current_folder_items()
-                new_folder_items = [item['name'] for item in new_items]
-                
-                # Check if folder structure changed (indicating successful navigation)
-                if set(new_folder_items) != set(current_folder_items):
-                    print(f"✅ Navigation successful - folder contents changed")
-                    print(f"   Before: {len(current_folder_items)} items")
-                    print(f"   After: {len(new_folder_items)} items")
-                    navigation_successful = True
-                elif len(new_folder_items) == 0 and len(current_folder_items) > 0:
-                    # Special case: entered an empty folder
-                    print(f"✅ Navigation successful - entered empty folder")
+                if new_url != current_url:
+                    print(f"✅ Navigation successful - URL changed")
+                    print(f"   From: {current_url}")
+                    print(f"   To:   {new_url}")
+                    # Push current URL to stack for going back
+                    self.url_stack.append(current_url)
+                    print(f"🔄 URL stack now has {len(self.url_stack)} items")
                     navigation_successful = True
                 else:
-                    print(f"❌ Navigation failed - folder contents unchanged")
-                    print(f"   Items found: {new_folder_items}")
-                    navigation_successful = False
+                    print(f"❌ Navigation failed - URL unchanged")
+                    print(f"🔄 Waiting additional time and checking again...")
+                    await self.wait_random(2, 3)
+                    new_url = self.page.url
+                    print(f"🔄 URL after additional wait: {new_url}")
+                    if new_url != current_url:
+                        print(f"✅ Navigation successful after delay - URL changed")
+                        self.url_stack.append(current_url)
+                        print(f"🔄 URL stack now has {len(self.url_stack)} items")
+                        navigation_successful = True
+                    else:
+                        print(f"❌ Navigation definitely failed - URL still unchanged")
+                        print(f"   Expected change from: {current_url}")
+                        print(f"   But still at:        {new_url}")
+                        navigation_successful = False
                 
                 if navigation_successful:
                     # Recursively process subfolder with updated path
@@ -494,12 +529,16 @@ class GoogleDriveFirefox:
                         await fresh_folder['element'].click()  # Double-click manually
                         await self.wait_random(3, 4)
                         
-                        # Verify alternative method worked by checking folder structure again
-                        alt_items = await self.get_current_folder_items()
-                        alt_folder_items = [item['name'] for item in alt_items]
+                        # Verify alternative method worked by checking URL
+                        await self.wait_random(2, 3)
+                        alt_url = self.page.url
+                        print(f"🔄 Alternative method URL: {alt_url}")
                         
-                        if set(alt_folder_items) != set(current_folder_items):
-                            print(f"✅ Alternative navigation successful")
+                        if alt_url != current_url:
+                            print(f"✅ Alternative navigation successful - URL changed")
+                            # Don't forget to save the URL for going back
+                            if len(self.url_stack) == 0 or self.url_stack[-1] != alt_url:
+                                self.url_stack.append(current_url)
                             navigation_successful = True
                             new_path = os.path.join(base_path, folder_name) if base_path else folder_name
                             
@@ -510,7 +549,7 @@ class GoogleDriveFirefox:
                             
                             await self.download_folder_recursively(new_path)
                         else:
-                            print(f"❌ Alternative method also failed to change folder contents")
+                            print(f"❌ Alternative method also failed - URL unchanged")
                     else:
                         print(f"❌ Could not find folder {folder_name} after refresh")
                         continue
@@ -529,57 +568,95 @@ class GoogleDriveFirefox:
                 # Wait for page to load after going back
                 await self.wait_random(2, 3)
                 
-                # Verify we're back in the original folder by checking structure
-                back_items = await self.get_current_folder_items()
-                back_folder_items = [item['name'] for item in back_items]
+                # Verify we're back by checking URL
+                back_url = self.page.url
+                print(f"🔄 Back navigation URL: {back_url}")
                 
-                if set(back_folder_items) == set(current_folder_items):
+                if back_url == current_folder_url:
                     print(f"✅ Successfully returned to parent folder")
                 else:
-                    print(f"⚠️  Back navigation may have issues - folder contents different")
-                    print(f"   Expected: {len(current_folder_items)} items")
-                    print(f"   Found: {len(back_folder_items)} items")
+                    print(f"⚠️  Back navigation URL different from expected")
+                    print(f"   Expected: {current_folder_url}")
+                    print(f"   Got: {back_url}")
                 
                 # Reset local path back to current level
                 self.current_local_path = base_path
+                
+                # IMPORTANT: Refresh folder items after going back to fix element detachment
+                print("🔄 Refreshing folder items after going back...")
+                items = await self.get_current_folder_items()
+                folders = [item for item in items if item['is_folder']]
     
     async def go_back(self):
-        """Go back to parent folder"""
+        """Go back to parent folder using URL stack"""
+        print("🔄 Attempting to go back...")
+        
+        current_url = self.page.url
+        print(f"🔄 Current URL: {current_url}")
+        
+        # Check if we have a URL to go back to
+        if not self.url_stack:
+            print("❌ No parent URL in stack - cannot go back")
+            return False
+        
+        target_url = self.url_stack[-1]  # Get the last URL (parent folder)
+        print(f"🎯 Target URL: {target_url}")
+        
+        # Method 1: Direct navigation to parent URL
         try:
-            # Try back button first
-            back_selectors = [
-                '[data-tooltip="Back"]',
-                '[aria-label="Back"]',
-                'button[aria-label*="Back"]',
-                '[title="Back"]'
-            ]
+            print("🔄 Trying direct navigation to parent URL...")
+            await self.page.goto(target_url, wait_until='networkidle', timeout=10000)
+            await self.wait_random(2, 3)
             
-            for selector in back_selectors:
-                back_button = await self.page.query_selector(selector)
-                if back_button:
-                    await back_button.click()
-                    await self.wait_random(2, 3)
-                    print("⬅️  Went back using back button")
-                    return True
+            final_url = self.page.url
+            if final_url == target_url or target_url in final_url:
+                print("⬅️  Went back using direct navigation")
+                self.url_stack.pop()  # Remove the URL we just went back to
+                return True
+            else:
+                print(f"⚠️  Direct navigation didn't reach target URL: {final_url}")
+        except Exception as e:
+            print(f"⚠️  Direct navigation failed: {e}")
+        
+        # Method 2: Try browser back
+        try:
+            print("🔄 Trying browser back...")
+            await self.page.go_back(wait_until='domcontentloaded', timeout=5000)
+            await self.wait_random(2, 3)
             
-            # Alternative: use correct Firefox keyboard shortcut
+            final_url = self.page.url
+            if final_url != current_url:
+                print("⬅️  Went back using browser history")
+                # Check if we reached the expected URL
+                if final_url == target_url or target_url in final_url:
+                    self.url_stack.pop()
+                return True
+            else:
+                print("⚠️  Browser back didn't change URL")
+        except Exception as e:
+            print(f"⚠️  Browser back failed: {e}")
+        
+        # Method 3: Try keyboard shortcuts
+        try:
+            print("🔄 Trying keyboard shortcuts...")
             await self.page.keyboard.press('Alt+ArrowLeft')
             await self.wait_random(2, 3)
-            print("⬅️  Went back using keyboard shortcut")
-            return True
             
-        except Exception as e:
-            print(f"❌ Could not go back: {e}")
-            
-            # Last resort: try browser back
-            try:
-                await self.page.go_back()
-                await self.wait_random(2, 3)
-                print("⬅️  Went back using browser history")
+            final_url = self.page.url
+            if final_url != current_url:
+                print("⬅️  Went back using keyboard shortcut")
+                if final_url == target_url or target_url in final_url:
+                    self.url_stack.pop()
                 return True
-            except Exception as e2:
-                print(f"❌ Browser back also failed: {e2}")
-                return False
+            else:
+                print("⚠️  Keyboard shortcut didn't change URL")
+        except Exception as e:
+            print(f"⚠️  Keyboard shortcut failed: {e}")
+        
+        print("❌ All back navigation methods failed")
+        print(f"   Current URL: {self.page.url}")
+        print(f"   Target URL: {target_url}")
+        return False
     
     def get_unique_filename(self, folder_path, filename):
         """Generate a unique filename by adding (2), (3), etc. if file exists"""
