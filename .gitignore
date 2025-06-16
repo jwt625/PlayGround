@@ -44,3 +44,9 @@
 *.pdf
 *.npy
 *.index
+*.docx
+*.pptx
+*.xlsx
+*.doc
+*.ppt
+*.xls

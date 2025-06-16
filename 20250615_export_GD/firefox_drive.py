@@ -11,14 +11,16 @@ load_dotenv()
 
 class GoogleDriveFirefox:
     def __init__(self, download_dir=None):
-        self.download_dir = download_dir or os.path.join(os.getcwd(), 'firefox_downloads')
-        Path(self.download_dir).mkdir(exist_ok=True)
+        self.base_download_dir = download_dir or os.path.join(os.getcwd(), 'firefox_downloads')
+        Path(self.base_download_dir).mkdir(exist_ok=True)
         self.page = None
         self.context = None
         self.browser = None
         self.current_folder_path = ""
         self.download_count = 0
         self.rate_limit_delay = 2  # Base delay between downloads
+        self.folder_structure = {}  # Track folder hierarchy
+        self.current_local_path = ""  # Track current local download path
     
     def get_firefox_profile_path(self):
         """Find Firefox profile path"""
@@ -329,6 +331,15 @@ class GoogleDriveFirefox:
         print(f"📊 Total valid items found: {len(items)}")
         return items
     
+    async def close_any_open_menus(self):
+        """Close any open context menus or popups by pressing Escape key"""
+        try:
+            # Simple and reliable: just press Escape key to close any open menus
+            await self.page.keyboard.press('Escape')
+            await self.wait_random(0.3, 0.5)  # Short wait
+        except Exception as e:
+            print(f"⚠️  Error closing menus: {e}")
+
     async def download_individual_file(self, file_element, file_name):
         """Download a single file"""
         try:
@@ -381,7 +392,10 @@ class GoogleDriveFirefox:
         """Recursively download all files in current folder and subfolders"""
         print(f"🗂️  Processing folder: {base_path or 'Root'}")
         
-        # Get all items in current folder
+        # Update current local path for downloads
+        self.current_local_path = base_path
+        
+        # Get all items in current folder (this will be our baseline)
         items = await self.get_current_folder_items()
         
         if not items:
@@ -397,32 +411,74 @@ class GoogleDriveFirefox:
         print(f"📄 Files to download: {len(files)}")
         print(f"📁 Folders to process: {len(folders)}")
         
-        # Download files
+        # Download files to current local path
         for file_item in files:
             await self.download_individual_file(file_item['element'], file_item['name'])
+            # Small delay between files
+            await self.wait_random(0.5, 1)
+        
+        # Remember current folder structure before entering subfolders
+        current_folder_items = [item['name'] for item in items]
         
         # Process subfolders recursively
         for folder_item in folders:
             folder_name = folder_item['name']
             print(f"\n🔄 Entering folder: {folder_name}")
             
+            navigation_successful = False
+            
             try:
                 # Navigate to folder by clicking on the name/element
                 await folder_item['element'].dblclick()
                 await self.wait_random(3, 4)  # Give more time for navigation
                 
-                # Verify we've actually navigated (wait for page to change)
-                await self.page.wait_for_load_state('networkidle', timeout=10000)
+                # Simple cleanup of any stuck context menus after folder navigation
+                await self.close_any_open_menus()
                 
-                # Recursively process subfolder
-                new_path = f"{base_path}/{folder_name}" if base_path else folder_name
-                await self.download_folder_recursively(new_path)
+                # Try to verify navigation by waiting for network idle, but don't rely on it
+                try:
+                    await self.page.wait_for_load_state('networkidle', timeout=5000)  # Reduced timeout
+                    print(f"✅ Network idle reached")
+                except:
+                    print(f"⚠️  Network idle timeout, checking navigation by folder contents...")
+                
+                # Verify navigation by comparing folder structure
+                await self.wait_random(2, 3)
+                new_items = await self.get_current_folder_items()
+                new_folder_items = [item['name'] for item in new_items]
+                
+                # Check if folder structure changed (indicating successful navigation)
+                if set(new_folder_items) != set(current_folder_items):
+                    print(f"✅ Navigation successful - folder contents changed")
+                    print(f"   Before: {len(current_folder_items)} items")
+                    print(f"   After: {len(new_folder_items)} items")
+                    navigation_successful = True
+                elif len(new_folder_items) == 0 and len(current_folder_items) > 0:
+                    # Special case: entered an empty folder
+                    print(f"✅ Navigation successful - entered empty folder")
+                    navigation_successful = True
+                else:
+                    print(f"❌ Navigation failed - folder contents unchanged")
+                    print(f"   Items found: {new_folder_items}")
+                    navigation_successful = False
+                
+                if navigation_successful:
+                    # Recursively process subfolder with updated path
+                    new_path = os.path.join(base_path, folder_name) if base_path else folder_name
+                    
+                    # Create local folder structure to mirror Google Drive
+                    local_folder_path = os.path.join(self.base_download_dir, new_path)
+                    os.makedirs(local_folder_path, exist_ok=True)
+                    print(f"📁 Created local folder: {local_folder_path}")
+                    
+                    await self.download_folder_recursively(new_path)
                 
             except Exception as e:
                 print(f"❌ Failed to enter folder {folder_name}: {e}")
-                print("🔄 Trying alternative navigation method...")
                 
-                # Alternative: try clicking on folder name text
+            # If navigation failed, try alternative method
+            if not navigation_successful:
+                print("🔄 Trying alternative navigation method...")
                 try:
                     # Refresh the page elements since they might be stale
                     fresh_items = await self.get_current_folder_items()
@@ -438,8 +494,23 @@ class GoogleDriveFirefox:
                         await fresh_folder['element'].click()  # Double-click manually
                         await self.wait_random(3, 4)
                         
-                        new_path = f"{base_path}/{folder_name}" if base_path else folder_name
-                        await self.download_folder_recursively(new_path)
+                        # Verify alternative method worked by checking folder structure again
+                        alt_items = await self.get_current_folder_items()
+                        alt_folder_items = [item['name'] for item in alt_items]
+                        
+                        if set(alt_folder_items) != set(current_folder_items):
+                            print(f"✅ Alternative navigation successful")
+                            navigation_successful = True
+                            new_path = os.path.join(base_path, folder_name) if base_path else folder_name
+                            
+                            # Create local folder structure
+                            local_folder_path = os.path.join(self.base_download_dir, new_path)
+                            os.makedirs(local_folder_path, exist_ok=True)
+                            print(f"📁 Created local folder: {local_folder_path}")
+                            
+                            await self.download_folder_recursively(new_path)
+                        else:
+                            print(f"❌ Alternative method also failed to change folder contents")
                     else:
                         print(f"❌ Could not find folder {folder_name} after refresh")
                         continue
@@ -448,14 +519,29 @@ class GoogleDriveFirefox:
                     print(f"❌ Alternative navigation also failed: {e2}")
                     continue
             
-            # Go back to parent folder
-            print(f"⬅️  Returning from: {folder_name}")
-            if not await self.go_back():
-                print("❌ Could not go back, stopping recursion")
-                break
-            
-            # Wait for page to load after going back
-            await self.wait_random(2, 3)
+            # Go back to parent folder only if we successfully navigated
+            if navigation_successful:
+                print(f"⬅️  Returning from: {folder_name}")
+                if not await self.go_back():
+                    print("❌ Could not go back, stopping recursion")
+                    break
+                
+                # Wait for page to load after going back
+                await self.wait_random(2, 3)
+                
+                # Verify we're back in the original folder by checking structure
+                back_items = await self.get_current_folder_items()
+                back_folder_items = [item['name'] for item in back_items]
+                
+                if set(back_folder_items) == set(current_folder_items):
+                    print(f"✅ Successfully returned to parent folder")
+                else:
+                    print(f"⚠️  Back navigation may have issues - folder contents different")
+                    print(f"   Expected: {len(current_folder_items)} items")
+                    print(f"   Found: {len(back_folder_items)} items")
+                
+                # Reset local path back to current level
+                self.current_local_path = base_path
     
     async def go_back(self):
         """Go back to parent folder"""
@@ -495,16 +581,58 @@ class GoogleDriveFirefox:
                 print(f"❌ Browser back also failed: {e2}")
                 return False
     
+    def get_unique_filename(self, folder_path, filename):
+        """Generate a unique filename by adding (2), (3), etc. if file exists"""
+        original_path = os.path.join(folder_path, filename)
+        
+        # If file doesn't exist, use original name
+        if not os.path.exists(original_path):
+            return filename
+        
+        # Split filename into name and extension
+        name, ext = os.path.splitext(filename)
+        counter = 2
+        
+        # Keep trying until we find a unique name
+        while True:
+            new_filename = f"{name} ({counter}){ext}"
+            new_path = os.path.join(folder_path, new_filename)
+            
+            if not os.path.exists(new_path):
+                print(f"🔄 File exists, renamed to: {new_filename}")
+                return new_filename
+            
+            counter += 1
+            
+            # Safety check to prevent infinite loop
+            if counter > 1000:
+                import time
+                timestamp = int(time.time())
+                new_filename = f"{name}_{timestamp}{ext}"
+                print(f"🔄 Too many duplicates, using timestamp: {new_filename}")
+                return new_filename
+
     async def handle_downloads(self):
-        """Monitor and handle downloads"""
+        """Monitor and handle downloads with folder structure preservation"""
         print("📋 Monitoring downloads...")
         
         # Set up download handler
         async def handle_download(download):
             filename = download.suggested_filename
-            download_path = os.path.join(self.download_dir, filename)
+            
+            # Create the full local path preserving folder structure
+            local_folder_path = os.path.join(self.base_download_dir, self.current_local_path)
+            os.makedirs(local_folder_path, exist_ok=True)
+            
+            # Handle duplicate files by generating unique filename
+            unique_filename = self.get_unique_filename(local_folder_path, filename)
+            download_path = os.path.join(local_folder_path, unique_filename)
+            
             await download.save_as(download_path)
-            print(f"💾 Downloaded: {filename}")
+            if unique_filename != filename:
+                print(f"💾 Downloaded: {filename} → {self.current_local_path}/{unique_filename} (renamed)")
+            else:
+                print(f"💾 Downloaded: {filename} → {self.current_local_path}/{filename}")
         
         self.page.on("download", handle_download)
     
@@ -525,24 +653,61 @@ async def main():
         # Setup download monitoring
         await downloader.handle_downloads()
         
-        # Login to Google Drive and let user navigate to desired folder
-        await downloader.login_to_drive()
+        # Continuous operation mode
+        while True:
+            try:
+                # Login to Google Drive and let user navigate to desired folder
+                await downloader.login_to_drive()
+                
+                # Start recursive download from current folder
+                print("\n🚀 Starting recursive download...")
+                await downloader.download_folder_recursively()
+                
+                print(f"\n🎉 Current folder download completed!")
+                print(f"📊 Total files downloaded this session: {downloader.download_count}")
+                print(f"📁 Downloads saved to: {downloader.base_download_dir}")
+                
+                # Ask user if they want to continue with another folder
+                print("\n" + "="*60)
+                print("📋 DOWNLOAD COMPLETE - Ready for next folder")
+                print("="*60)
+                print("🗂️  Navigate to the next folder you want to download")
+                print("✅ Press Enter when ready to download the next folder")
+                print("❌ Type 'quit' or 'exit' to stop the script")
+                
+                user_choice = input("Continue? (Enter to continue, 'quit' to exit): ").strip().lower()
+                
+                if user_choice in ['quit', 'exit', 'q', 'stop']:
+                    print("👋 Stopping download script...")
+                    break
+                
+                print(f"\n🔄 Ready for next download session...")
+                
+            except KeyboardInterrupt:
+                print("\n\n⚠️  Script interrupted by user (Ctrl+C)")
+                break
+            except Exception as e:
+                print(f"❌ An error occurred in this session: {e}")
+                import traceback
+                traceback.print_exc()
+                
+                # Ask if user wants to continue despite the error
+                continue_choice = input("\n❓ Error occurred. Continue with next folder? (y/N): ").strip().lower()
+                if continue_choice not in ['y', 'yes']:
+                    break
         
-        # Start recursive download from current folder
-        print("\n🚀 Starting recursive download...")
-        await downloader.download_folder_recursively()
-        
-        print(f"\n🎉 Download process completed!")
-        print(f"📊 Total files downloaded: {downloader.download_count}")
-        print("⏳ Waiting 30 seconds for downloads to finish...")
-        await asyncio.sleep(30)
+        print(f"\n📊 Final Statistics:")
+        print(f"   Total files downloaded: {downloader.download_count}")
+        print(f"   Downloads location: {downloader.base_download_dir}")
+        print("🎉 Thank you for using the Google Drive downloader!")
         
     except Exception as e:
-        print(f"❌ An error occurred: {e}")
+        print(f"❌ Fatal error occurred: {e}")
         import traceback
         traceback.print_exc()
     finally:
-        input("Press Enter to close browser...")
+        # Don't automatically close the browser
+        input("\nPress Enter to close browser and exit...")
         await downloader.close()
 
 if __name__ == "__main__":

@@ -89,21 +89,69 @@
 - **Clear navigation**: Logs folder entry/exit for visibility
 - **Error handling**: Graceful fallbacks for UI element detection
 
+### Update 2: Firefox Implementation with Complete Working Solution
+**Date**: June 15, 2025 (continued)
+**Changes**: Switched from Chrome to Firefox and completed full implementation
+
+#### Major Changes:
+1. **Browser Switch**: Moved from Chrome to Firefox due to persistent context issues
+2. **Working Login Flow**: Successfully implemented manual login workflow
+3. **File Detection Fixed**: Resolved issues with detecting actual files vs UI elements
+4. **Download Implementation**: Complete working download functionality
+5. **Folder Structure Preservation**: Downloads maintain exact folder hierarchy
+6. **Continuous Operation Mode**: Script continues running for multiple folder downloads
+
+#### Firefox-Specific Implementation:
+- `firefox_drive.py`: Complete working Firefox-based solution
+- Profile detection and selection for existing Firefox profiles
+- Proper stealth injection with Firefox-specific user agents
+- Fixed navigation issues (Alt+ArrowLeft for Firefox back button)
+- Element refresh mechanism to handle DOM detachment
+
+#### Download Features Completed:
+- **Folder Structure Preservation**: 
+  - `current_local_path` tracks hierarchy
+  - Creates subdirectories automatically
+  - Preserves exact folder structure from Drive
+- **Continuous Operation**: 
+  - Script runs in loop allowing multiple folder downloads
+  - User navigates to new folders between sessions
+  - Only exits when explicitly requested
+- **Robust File Detection**:
+  - Filters out UI elements (Settings, Support, etc.)
+  - Uses data-id and aria-label for accurate identification
+  - Comprehensive debug output for troubleshooting
+
+#### User Workflow:
+1. Script opens Firefox with existing profile
+2. User logs in to Google Drive manually  
+3. User navigates to desired folder
+4. Press Enter to start download
+5. Script recursively downloads preserving structure
+6. User can navigate to next folder and repeat
+7. Type 'quit' to exit
+
 ## Current Status
 - ✅ Playwright script created with stealth features
 - ✅ Download monitoring implemented
-- ✅ **NEW**: Recursive folder traversal implemented
-- ✅ **NEW**: Individual file download with rate limiting
-- ✅ **NEW**: Manual folder navigation workflow
-- 🔄 Ready for testing and refinement
+- ✅ Recursive folder traversal implemented
+- ✅ Individual file download with rate limiting
+- ✅ Manual folder navigation workflow
+- ✅ **Firefox-based solution working completely**
+- ✅ **Folder structure preservation implemented**
+- ✅ **Continuous operation mode implemented**
+- ✅ **Chrome profile selection for Chrome version**
+- ✅ **Complete working solution ready for production use**
 
 ## Next Steps
-1. Install Playwright: `pip install playwright`
-2. Install browser: `playwright install chromium`
-3. Test script with Google Drive folder
-4. Refine UI selectors based on actual Drive interface
-5. Add file type filtering and exclusion options
-6. Implement resume capability for interrupted downloads
+1. ✅ Install Playwright: `pip install playwright`
+2. ✅ Install browser: `playwright install firefox`
+3. ✅ Test script with Google Drive folder
+4. ✅ Refine UI selectors based on actual Drive interface
+5. 🔄 Add file type filtering and exclusion options (future enhancement)
+6. 🔄 Implement resume capability for interrupted downloads (future enhancement)
+7. 🔄 Optimize download speed (user noted it's slow)
+8. 🔄 Add Google Docs HTML export preference (currently downloads as DOCX)
 
 ## Technical Notes
 - **User Agent**: Using realistic Chrome user agent
@@ -119,6 +167,11 @@
 - Browser automation is viable alternative when API access is blocked
 - Playwright offers better stealth capabilities than Selenium
 - Manual authentication step reduces bot detection risk
-- **NEW**: Individual file downloads are less suspicious than bulk operations
-- **NEW**: Progressive rate limiting helps avoid Google's bot detection
-- **NEW**: UI selectors may need adjustment based on Drive interface variations
+- Individual file downloads are less suspicious than bulk operations
+- Progressive rate limiting helps avoid Google's bot detection
+- UI selectors may need adjustment based on Drive interface variations
+- **Firefox more reliable than Chrome for persistent contexts**
+- **Element detachment common in SPA - need refresh mechanisms**
+- **Folder structure preservation requires careful path tracking**
+- **Right-click context menus more reliable than keyboard shortcuts for downloads**
+- **Continuous operation mode greatly improves user experience**
