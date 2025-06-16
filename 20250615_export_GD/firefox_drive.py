@@ -205,101 +205,128 @@ class GoogleDriveFirefox:
         """Get list of files and folders in current directory"""
         await self.wait_random(1, 2)
         
-        # Get all file/folder items
         items = []
         try:
-            # Wait for Drive interface to load - multiple fallback selectors
-            selectors_to_try = [
-                'div[role="main"]',
-                '[data-target="drive"]', 
-                'div[aria-label*="Files"]',
-                'div[aria-label*="Grid"]',
-                'div[role="grid"]'
+            # Wait for the main content area to load
+            await self.page.wait_for_selector('div[role="main"]', timeout=10000)
+            print("✅ Found main Drive interface")
+            
+            # Target the specific file grid area, not the entire page
+            content_selectors = [
+                # The main file grid container
+                'div[role="grid"] div[role="gridcell"]',
+                # Files area with specific data attributes 
+                'div[data-id][role="gridcell"]',
+                # Alternative grid cells in main content
+                'div[role="main"] div[role="gridcell"]'
             ]
             
-            loaded = False
-            for selector in selectors_to_try:
-                try:
-                    await self.page.wait_for_selector(selector, timeout=3000)
-                    print(f"✅ Found Drive interface with selector: {selector}")
-                    loaded = True
-                    break
-                except:
-                    continue
-            
-            if not loaded:
-                print("⚠️  Could not find Drive interface, trying anyway...")
-            
-            # Try multiple approaches to find files and folders
-            approaches = [
-                # Approach 1: data-tooltip attributes
-                '[data-tooltip]:not([data-tooltip=""])',
-                # Approach 2: file/folder items in grid
-                'div[role="gridcell"]',
-                # Approach 3: clickable items with aria-labels
-                '[aria-label][role="gridcell"]',
-                # Approach 4: Drive items with specific classes
-                'div[data-id]'
-            ]
-            
-            for approach in approaches:
-                file_elements = await self.page.query_selector_all(approach)
+            file_elements = []
+            for selector in content_selectors:
+                file_elements = await self.page.query_selector_all(selector)
                 if file_elements:
-                    print(f"✅ Found {len(file_elements)} elements with approach: {approach}")
+                    print(f"✅ Found {len(file_elements)} grid items with: {selector}")
                     break
             
-            for element in file_elements:
+            if not file_elements:
+                print("⚠️  No grid items found, trying fallback...")
+                return items
+            
+            for i, element in enumerate(file_elements):
                 try:
-                    # Try multiple ways to get the name
+                    # Debug info for each element
+                    data_id = await element.get_attribute('data-id')
+                    aria_label = await element.get_attribute('aria-label')
+                    data_tooltip = await element.get_attribute('data-tooltip')
+                    text_content = await element.inner_text()
+                    
+                    print(f"\n🔍 DEBUG Element {i+1}:")
+                    print(f"   data-id: {data_id}")
+                    print(f"   aria-label: {aria_label}")
+                    print(f"   data-tooltip: {data_tooltip}")
+                    print(f"   text_content: {repr(text_content[:100])}")
+                    
+                    # Try multiple ways to get the file/folder name
                     name = None
                     is_folder = False
                     
-                    # Method 1: data-tooltip
-                    name = await element.get_attribute('data-tooltip')
+                    # Method 1: Look for the filename in aria-label
+                    if aria_label:
+                        # Parse aria-label format: "filename, Type, Owner, Date"
+                        parts = aria_label.split(',')
+                        if len(parts) > 0:
+                            name = parts[0].strip()
+                            # Check if it's a folder from the aria-label
+                            if 'folder' in aria_label.lower() or 'google drive folder' in aria_label.lower():
+                                is_folder = True
                     
-                    # Method 2: aria-label
-                    if not name:
-                        aria_label = await element.get_attribute('aria-label')
-                        if aria_label:
-                            name = aria_label.split(',')[0]  # Take first part of aria-label
+                    # Method 2: Look for data-tooltip as backup
+                    if not name and data_tooltip:
+                        name = data_tooltip.strip()
                     
-                    # Method 3: inner text
-                    if not name:
-                        name = await element.inner_text()
-                        name = name.split('\n')[0] if name else None  # Take first line
+                    # Method 3: Look for text content as last resort
+                    if not name and text_content:
+                        lines = text_content.strip().split('\n')
+                        name = lines[0] if lines else None
+                        if name:
+                            name = name.strip()
                     
-                    if not name:
+                    print(f"   extracted_name: {repr(name)}")
+                    print(f"   is_folder: {is_folder}")
+                    
+                    if not name or len(name.strip()) == 0:
+                        print("   ❌ SKIPPED: No name found")
                         continue
                     
-                    # Check if it's a folder
-                    element_html = await element.inner_html()
-                    folder_indicators = [
-                        'folder',
-                        'directory', 
-                        'data-target="folder"',
-                        'aria-label*="Folder"',
-                        'folder-icon'
+                    name = name.strip()
+                    
+                    # Additional folder detection from element content
+                    if not is_folder:
+                        element_html = await element.inner_html()
+                        folder_indicators = ['folder-icon', 'folder', 'directory']
+                        for indicator in folder_indicators:
+                            if indicator in element_html.lower():
+                                is_folder = True
+                                print(f"   🗂️  Found folder indicator: {indicator}")
+                                break
+                    
+                    # Filter out obvious UI elements (less aggressive)
+                    ui_keywords = [
+                        'advanced search', 'settings', 'support', 'activity',
+                        'list layout', 'grid layout', 'hide details',
+                        'clear selection', 'more actions', 'reverse sort',
+                        'zoom out', 'zoom in', 'edit description'
                     ]
                     
-                    for indicator in folder_indicators:
-                        if indicator.lower() in element_html.lower():
-                            is_folder = True
-                            break
+                    # Check if it's a UI element
+                    is_ui_element = any(keyword in name.lower() for keyword in ui_keywords)
+                    print(f"   is_ui_element: {is_ui_element}")
                     
-                    # Filter out UI elements
-                    ui_elements = ['Back', 'Search', 'New', 'Details', 'Sort', 'View', 'Upload', 'Create']
-                    if name and not any(ui_elem in name for ui_elem in ui_elements):
-                        items.append({'name': name, 'is_folder': is_folder, 'element': element})
-                        print(f"📄 Found: {name} {'(folder)' if is_folder else '(file)'}")
+                    if is_ui_element:
+                        print("   ❌ SKIPPED: UI element")
+                        continue
+                    
+                    # Skip if name is too long (likely metadata) but be less restrictive
+                    if len(name) > 200:
+                        print("   ❌ SKIPPED: Name too long")
+                        continue
+                    
+                    items.append({
+                        'name': name, 
+                        'is_folder': is_folder, 
+                        'element': element,
+                        'data_id': data_id
+                    })
+                    print(f"   ✅ ADDED: {name} {'(folder)' if is_folder else '(file)'}")
                         
                 except Exception as e:
-                    print(f"⚠️  Error processing element: {e}")
+                    print(f"   ⚠️  Error processing element {i+1}: {e}")
                     continue
                     
         except Exception as e:
             print(f"⚠️  Error getting folder items: {e}")
         
-        print(f"📊 Total items found: {len(items)}")
+        print(f"📊 Total valid items found: {len(items)}")
         return items
     
     async def download_individual_file(self, file_element, file_name):
