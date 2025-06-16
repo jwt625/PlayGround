@@ -334,14 +334,38 @@ class GoogleDriveFirefox:
         try:
             print(f"📄 Downloading file: {file_name}")
             
-            # Click on the file to select it
-            await file_element.click()
-            await self.wait_random(0.5, 1)
-            
-            # Try Firefox keyboard shortcut for download
-            await self.page.keyboard.press('Control+Shift+s')
+            # Right-click on the file to open context menu
+            await file_element.click(button='right')
             await self.wait_random(1, 2)
             
+            # Look for download option in context menu
+            download_selectors = [
+                'text="Download"',
+                '[aria-label*="Download"]',
+                '[data-tooltip*="Download"]',
+                'text="下载"',  # Chinese
+                'text="Télécharger"'  # French
+            ]
+            
+            download_clicked = False
+            for selector in download_selectors:
+                try:
+                    download_option = await self.page.query_selector(selector)
+                    if download_option:
+                        await download_option.click()
+                        download_clicked = True
+                        print(f"✅ Clicked download from context menu")
+                        break
+                except:
+                    continue
+            
+            if not download_clicked:
+                # Fallback: try keyboard shortcut
+                print("🔄 Trying keyboard shortcut fallback...")
+                await file_element.click()  # Select the file first
+                await self.wait_random(0.5, 1)
+                await self.page.keyboard.press('Control+Shift+s')
+                
             # Apply rate limiting
             await self.apply_rate_limit()
             self.download_count += 1
@@ -382,38 +406,94 @@ class GoogleDriveFirefox:
             folder_name = folder_item['name']
             print(f"\n🔄 Entering folder: {folder_name}")
             
-            # Double-click to enter folder
-            await folder_item['element'].dblclick()
-            await self.wait_random(2, 3)
-            
-            # Recursively process subfolder
-            new_path = f"{base_path}/{folder_name}" if base_path else folder_name
-            await self.download_folder_recursively(new_path)
+            try:
+                # Navigate to folder by clicking on the name/element
+                await folder_item['element'].dblclick()
+                await self.wait_random(3, 4)  # Give more time for navigation
+                
+                # Verify we've actually navigated (wait for page to change)
+                await self.page.wait_for_load_state('networkidle', timeout=10000)
+                
+                # Recursively process subfolder
+                new_path = f"{base_path}/{folder_name}" if base_path else folder_name
+                await self.download_folder_recursively(new_path)
+                
+            except Exception as e:
+                print(f"❌ Failed to enter folder {folder_name}: {e}")
+                print("🔄 Trying alternative navigation method...")
+                
+                # Alternative: try clicking on folder name text
+                try:
+                    # Refresh the page elements since they might be stale
+                    fresh_items = await self.get_current_folder_items()
+                    fresh_folder = None
+                    for item in fresh_items:
+                        if item['name'] == folder_name and item['is_folder']:
+                            fresh_folder = item
+                            break
+                    
+                    if fresh_folder:
+                        await fresh_folder['element'].click()
+                        await self.wait_random(1, 2)
+                        await fresh_folder['element'].click()  # Double-click manually
+                        await self.wait_random(3, 4)
+                        
+                        new_path = f"{base_path}/{folder_name}" if base_path else folder_name
+                        await self.download_folder_recursively(new_path)
+                    else:
+                        print(f"❌ Could not find folder {folder_name} after refresh")
+                        continue
+                        
+                except Exception as e2:
+                    print(f"❌ Alternative navigation also failed: {e2}")
+                    continue
             
             # Go back to parent folder
             print(f"⬅️  Returning from: {folder_name}")
-            await self.go_back()
-            await self.wait_random(1, 2)
+            if not await self.go_back():
+                print("❌ Could not go back, stopping recursion")
+                break
+            
+            # Wait for page to load after going back
+            await self.wait_random(2, 3)
     
     async def go_back(self):
         """Go back to parent folder"""
         try:
-            # Try back button
-            back_button = await self.page.query_selector('[data-tooltip="Back"]')
-            if back_button:
-                await back_button.click()
-                await self.wait_random(1, 2)
-                print("⬅️  Went back to parent folder")
-                return True
+            # Try back button first
+            back_selectors = [
+                '[data-tooltip="Back"]',
+                '[aria-label="Back"]',
+                'button[aria-label*="Back"]',
+                '[title="Back"]'
+            ]
             
-            # Alternative: use keyboard
-            await self.page.keyboard.press('Alt+Left')
-            await self.wait_random(1, 2)
-            print("⬅️  Went back using keyboard")
+            for selector in back_selectors:
+                back_button = await self.page.query_selector(selector)
+                if back_button:
+                    await back_button.click()
+                    await self.wait_random(2, 3)
+                    print("⬅️  Went back using back button")
+                    return True
+            
+            # Alternative: use correct Firefox keyboard shortcut
+            await self.page.keyboard.press('Alt+ArrowLeft')
+            await self.wait_random(2, 3)
+            print("⬅️  Went back using keyboard shortcut")
             return True
+            
         except Exception as e:
             print(f"❌ Could not go back: {e}")
-            return False
+            
+            # Last resort: try browser back
+            try:
+                await self.page.go_back()
+                await self.wait_random(2, 3)
+                print("⬅️  Went back using browser history")
+                return True
+            except Exception as e2:
+                print(f"❌ Browser back also failed: {e2}")
+                return False
     
     async def handle_downloads(self):
         """Monitor and handle downloads"""
