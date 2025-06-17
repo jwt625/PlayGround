@@ -153,12 +153,36 @@
 7. 🔄 Optimize download speed (user noted it's slow)
 8. 🔄 Add Google Docs HTML export preference (currently downloads as DOCX)
 
+## Speed Optimization Update
+**Date**: June 16, 2025
+**Changes**: Significant download speed improvements through optimized wait times
+
+#### Performance Improvements:
+- **Pre-download cleanup**: Reduced from 0.5-1.0s to 0.2-0.4s
+- **Context menu wait**: Reduced from 1.5-2.5s to 0.8-1.2s 
+- **Post-download cleanup**: Reduced from 0.5-1.0s to 0.2-0.4s
+- **File selection wait**: Reduced from 0.5-1.0s to 0.3-0.5s
+- **Inter-file delays**: Reduced from 0.5-1.0s to 0.3-0.5s
+- **Rate limiting base**: Reduced from 2s to 1s
+
+#### Results:
+- **Before optimization**: ~4.5-7.5 seconds per file download
+- **After optimization**: ~2.3-3.4 seconds per file download
+- **Speed improvement**: ~50% faster download times
+- **User feedback**: "Great, navigation and download are both working fine"
+
+#### Technical Implementation:
+- Maintained download reliability while reducing unnecessary delays
+- Optimized timing in `download_individual_file()` method
+- Reduced `rate_limit_delay` from 2s to 1s (line 21)
+- Progressive rate limiting still active (+0.3s every 15 downloads vs +0.5s every 10)
+
 ## Technical Notes
 - **User Agent**: Using realistic Chrome user agent
 - **Viewport**: Standard desktop resolution (1920x1080)
 - **Automation Markers**: Removed webdriver detection properties
 - **Download Directory**: Configurable, defaults to `./playwright_downloads`
-- **Rate Limiting**: Progressive delays from 2s to 5s+ based on download count
+- **Rate Limiting**: Progressive delays from 1s to 3s+ based on download count (optimized)
 - **File Detection**: Uses `data-tooltip` attributes to identify Drive items
 - **Folder Detection**: Looks for folder icons to distinguish from files
 

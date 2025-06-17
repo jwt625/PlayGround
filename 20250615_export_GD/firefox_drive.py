@@ -18,7 +18,7 @@ class GoogleDriveFirefox:
         self.browser = None
         self.current_folder_path = ""
         self.download_count = 0
-        self.rate_limit_delay = 2  # Base delay between downloads
+        self.rate_limit_delay = 1  # Base delay between downloads (reduced from 2s)
         self.folder_structure = {}  # Track folder hierarchy
         self.current_local_path = ""  # Track current local download path
         self.url_stack = []  # Track folder URLs for navigation
@@ -198,9 +198,9 @@ class GoogleDriveFirefox:
     
     async def apply_rate_limit(self):
         """Apply progressive rate limiting to avoid detection"""
-        # Increase delay after every 10 downloads
-        progressive_delay = self.rate_limit_delay + (self.download_count // 10) * 0.5
-        delay = random.uniform(progressive_delay, progressive_delay + 1)
+        # Increase delay after every 15 downloads (less frequent increases)
+        progressive_delay = self.rate_limit_delay + (self.download_count // 15) * 0.3
+        delay = random.uniform(progressive_delay, progressive_delay + 0.5)  # Smaller random range
         print(f"⏱️  Rate limit delay: {delay:.1f}s (downloaded: {self.download_count})")
         await asyncio.sleep(delay)
     
@@ -348,7 +348,7 @@ class GoogleDriveFirefox:
             
             # First, clear any existing context menus
             await self.close_any_open_menus()
-            await self.wait_random(0.5, 1)
+            await self.wait_random(0.2, 0.4)  # Reduced wait time
             
             # Check current download count to verify later
             expected_download_path = os.path.join(self.base_download_dir, self.current_local_path, file_name)
@@ -357,13 +357,13 @@ class GoogleDriveFirefox:
             # Right-click on the file to open context menu
             print(f"🔄 Right-clicking on file element...")
             await file_element.click(button='right')
-            await self.wait_random(1.5, 2.5)  # Give more time for menu to appear
+            await self.wait_random(0.8, 1.2)  # Reduced wait time for menu to appear
             
-            # Look for download option in context menu
+            # Look for download option in context menu (prioritize working selector)
             download_selectors = [
-                'text="Download"',
-                '[aria-label*="Download"]',
+                '[aria-label*="Download"]',  # This one works reliably
                 '[data-tooltip*="Download"]',
+                'text="Download"',  # Keep as fallback but lower priority
                 'text="下载"',  # Chinese
                 'text="Télécharger"'  # French
             ]
@@ -374,25 +374,36 @@ class GoogleDriveFirefox:
                     download_option = await self.page.query_selector(selector)
                     if download_option:
                         print(f"🔄 Found download option with: {selector}")
-                        await download_option.click()
+                        # Try clicking with 5 second timeout
+                        await download_option.click(timeout=5000)
                         download_clicked = True
                         print(f"✅ Clicked download from context menu")
                         break
                 except Exception as e:
                     print(f"⚠️  Download selector {selector} failed: {e}")
-                    continue
+                    # Try alternative clicking method if regular click fails
+                    try:
+                        if download_option:
+                            print(f"🔄 Trying force click for: {selector}")
+                            await download_option.click(force=True, timeout=5000)
+                            download_clicked = True
+                            print(f"✅ Force clicked download from context menu")
+                            break
+                    except Exception as e2:
+                        print(f"⚠️  Force click also failed: {e2}")
+                        continue
             
             # Always close context menu after attempting download
             await self.close_any_open_menus()
-            await self.wait_random(0.5, 1)
+            await self.wait_random(0.2, 0.4)  # Reduced wait time
             
             if not download_clicked:
                 # Fallback: try keyboard shortcut
                 print("🔄 Trying keyboard shortcut fallback...")
                 await file_element.click()  # Select the file first
-                await self.wait_random(0.5, 1)
+                await self.wait_random(0.3, 0.5)  # Reduced wait time
                 await self.page.keyboard.press('Control+Shift+s')
-                await self.wait_random(1, 2)
+                await self.wait_random(0.5, 0.8)  # Reduced wait time
                 
             # Apply rate limiting
             await self.apply_rate_limit()
@@ -465,7 +476,7 @@ class GoogleDriveFirefox:
                     print(f"⚠️  Download verification: File count unchanged")
             
             # Small delay and thorough cleanup between files
-            await self.wait_random(0.5, 1)
+            await self.wait_random(0.3, 0.5)  # Reduced wait time between files
             await self.close_any_open_menus()
         
         # Remember current folder structure and URL before entering subfolders
@@ -652,39 +663,69 @@ class GoogleDriveFirefox:
         target_url = self.url_stack[-1]  # Get the last URL (parent folder)
         print(f"🎯 Target URL: {target_url}")
         
-        # Method 1: Direct navigation to parent URL
+        # Method 1: Direct navigation to parent URL with multiple wait strategies
         try:
             print("🔄 Trying direct navigation to parent URL...")
-            await self.page.goto(target_url, wait_until='networkidle', timeout=10000)
+            # Try with domcontentloaded first (faster)
+            await self.page.goto(target_url, wait_until='domcontentloaded', timeout=8000)
             await self.wait_random(2, 3)
             
             final_url = self.page.url
             if final_url == target_url or target_url in final_url:
-                print("⬅️  Went back using direct navigation")
+                print("⬅️  Went back using direct navigation (domcontentloaded)")
                 self.url_stack.pop()  # Remove the URL we just went back to
                 return True
             else:
-                print(f"⚠️  Direct navigation didn't reach target URL: {final_url}")
+                print(f"🔄 URL reached but different: {final_url}, trying networkidle...")
+                # Try waiting for networkidle if we're close
+                try:
+                    await self.page.wait_for_load_state('networkidle', timeout=5000)
+                    final_url = self.page.url
+                    if final_url == target_url or target_url in final_url:
+                        print("⬅️  Went back using direct navigation (networkidle)")
+                        self.url_stack.pop()
+                        return True
+                except:
+                    print(f"⚠️  NetworkIdle timeout but got URL: {final_url}")
+                    # Check if we're close enough to the target
+                    if target_url in final_url or final_url in target_url:
+                        print("⬅️  Went back using direct navigation (close enough)")
+                        self.url_stack.pop()
+                        return True
         except Exception as e:
             print(f"⚠️  Direct navigation failed: {e}")
         
         # Method 2: Try browser back
         try:
             print("🔄 Trying browser back...")
-            await self.page.go_back(wait_until='domcontentloaded', timeout=5000)
+            await self.page.go_back(wait_until='domcontentloaded', timeout=8000)
             await self.wait_random(2, 3)
             
             final_url = self.page.url
             if final_url != current_url:
                 print("⬅️  Went back using browser history")
-                # Check if we reached the expected URL
-                if final_url == target_url or target_url in final_url:
+                # Check if we reached the expected URL (be more flexible)
+                if final_url == target_url or target_url in final_url or final_url in target_url:
                     self.url_stack.pop()
                 return True
             else:
                 print("⚠️  Browser back didn't change URL")
         except Exception as e:
             print(f"⚠️  Browser back failed: {e}")
+            # Try browser back without waiting for domcontentloaded
+            try:
+                print("🔄 Trying browser back without wait condition...")
+                await self.page.go_back(timeout=5000)
+                await self.wait_random(3, 4)  # Give more time
+                
+                final_url = self.page.url
+                if final_url != current_url:
+                    print("⬅️  Went back using browser history (no wait)")
+                    if final_url == target_url or target_url in final_url or final_url in target_url:
+                        self.url_stack.pop()
+                    return True
+            except Exception as e2:
+                print(f"⚠️  Browser back (no wait) also failed: {e2}")
         
         # Method 3: Try keyboard shortcuts
         try:
