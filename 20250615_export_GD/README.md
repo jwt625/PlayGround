@@ -72,17 +72,73 @@ Downloaded files will be saved to `./playwright_downloads/`
 ## How It Works
 
 ### Authentication
-- Opens real Chrome browser
-- You manually log in (no credentials stored)
-- Works with organization-managed accounts
-- Bypasses API restrictions
+- Opens Firefox browser with existing user profile
+- You manually log in to Google Drive (no credentials stored)
+- Works with organization-managed accounts that block API access
+- Bypasses Google Cloud project requirements
 
-### Download Process
-1. **Scan** - Identifies files and folders in current directory
-2. **Download Files** - Downloads all files in current folder
-3. **Enter Subfolders** - Recursively processes each subfolder
-4. **Navigate Back** - Returns to parent folder when done
-5. **Rate Limit** - Applies progressive delays between downloads
+### Navigation & Folder Detection
+The script intelligently navigates the Google Drive web interface:
+
+1. **DOM Element Analysis** - Scans `div[role="gridcell"]` elements in the main Drive area
+2. **Content Filtering** - Uses `aria-label`, `data-tooltip`, and text content to identify actual files vs UI elements
+3. **Folder Detection** - Identifies folders by looking for folder icons and "folder" keywords in element HTML
+4. **URL-Based Navigation** - Tracks folder URLs in a stack for reliable back navigation
+5. **Element Refresh** - Re-queries DOM elements after navigation to prevent "element detached" errors
+
+### Download Workflow
+Each file download follows a careful multi-step process:
+
+#### Step 1: Pre-Download Cleanup
+- Clears any stuck context menus using `Escape` key
+- Verifies download folder exists and counts existing files
+- Ensures clean DOM state for reliable interaction
+
+#### Step 2: File Selection & Context Menu
+- Right-clicks on file element to open context menu
+- Waits 1.5-2.5 seconds for menu to fully render
+- Searches for download option using multiple selectors:
+  - `text="Download"` - Direct text match
+  - `[aria-label*="Download"]` - Accessibility label
+  - `[data-tooltip*="Download"]` - Tooltip attribute
+  - Multi-language support (Chinese, French)
+
+#### Step 3: Download Initiation
+- **Primary Method**: Clicks download option from context menu
+- **Fallback Method**: If context menu fails, uses keyboard shortcut `Control+Shift+s`
+- Always closes context menu after attempt to prevent UI blocking
+
+#### Step 4: Verification & Rate Limiting
+- Counts files in download folder after attempt
+- Verifies file count increased (actual download verification)
+- Applies progressive rate limiting (2s base + 0.5s per 10 downloads)
+- Handles duplicate files automatically with `(2)`, `(3)` numbering
+
+#### Step 5: Folder Structure Preservation
+- Creates local directories matching Google Drive hierarchy
+- Downloads handler saves files to correct subdirectories
+- Maintains exact folder structure without ZIP compression
+
+### Recursive Folder Processing
+The script processes folders depth-first:
+
+1. **Current Folder**: Downloads all files in current location
+2. **Subfolder Entry**: Double-clicks folder elements to navigate
+3. **URL Verification**: Confirms navigation success by checking URL changes
+4. **Recursive Processing**: Processes each subfolder completely
+5. **Smart Back Navigation**: 
+   - **Method 1**: Direct navigation to parent URL (most reliable)
+   - **Method 2**: Browser back button with URL verification  
+   - **Method 3**: Keyboard shortcuts as fallback
+6. **Element Refresh**: Re-queries folder elements after returning to prevent DOM issues
+
+### Error Handling & Resilience
+- **Element Detachment**: Automatically refreshes elements when DOM changes
+- **Menu Interference**: Comprehensive context menu cleanup between operations
+- **Navigation Failures**: Multiple fallback methods with clear success/failure detection
+- **Download Verification**: Real file system checks, not just UI feedback
+- **Duplicate Handling**: Automatic file renaming to prevent overwrites
+- **Rate Limiting**: Progressive delays to avoid detection and throttling
 
 ### File Formats
 - **Google Docs** → HTML format

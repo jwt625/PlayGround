@@ -342,13 +342,22 @@ class GoogleDriveFirefox:
             print(f"⚠️  Error closing menus: {e}")
 
     async def download_individual_file(self, file_element, file_name):
-        """Download a single file"""
+        """Download a single file with verification"""
         try:
             print(f"📄 Downloading file: {file_name}")
             
+            # First, clear any existing context menus
+            await self.close_any_open_menus()
+            await self.wait_random(0.5, 1)
+            
+            # Check current download count to verify later
+            expected_download_path = os.path.join(self.base_download_dir, self.current_local_path, file_name)
+            print(f"🔄 Expected download location: {expected_download_path}")
+            
             # Right-click on the file to open context menu
+            print(f"🔄 Right-clicking on file element...")
             await file_element.click(button='right')
-            await self.wait_random(1, 2)
+            await self.wait_random(1.5, 2.5)  # Give more time for menu to appear
             
             # Look for download option in context menu
             download_selectors = [
@@ -364,12 +373,18 @@ class GoogleDriveFirefox:
                 try:
                     download_option = await self.page.query_selector(selector)
                     if download_option:
+                        print(f"🔄 Found download option with: {selector}")
                         await download_option.click()
                         download_clicked = True
                         print(f"✅ Clicked download from context menu")
                         break
-                except:
+                except Exception as e:
+                    print(f"⚠️  Download selector {selector} failed: {e}")
                     continue
+            
+            # Always close context menu after attempting download
+            await self.close_any_open_menus()
+            await self.wait_random(0.5, 1)
             
             if not download_clicked:
                 # Fallback: try keyboard shortcut
@@ -377,16 +392,25 @@ class GoogleDriveFirefox:
                 await file_element.click()  # Select the file first
                 await self.wait_random(0.5, 1)
                 await self.page.keyboard.press('Control+Shift+s')
+                await self.wait_random(1, 2)
                 
             # Apply rate limiting
             await self.apply_rate_limit()
             self.download_count += 1
             
             print(f"✅ Initiated download: {file_name}")
+            
+            # Brief verification that download folder exists and is being monitored
+            if os.path.exists(self.base_download_dir):
+                folder_files = os.listdir(os.path.join(self.base_download_dir, self.current_local_path) if self.current_local_path else self.base_download_dir)
+                print(f"🔄 Files in download folder: {len(folder_files)}")
+            
             return True
             
         except Exception as e:
             print(f"❌ Failed to download {file_name}: {e}")
+            # Always ensure menus are closed even on error
+            await self.close_any_open_menus()
             return False
     
     async def download_folder_recursively(self, base_path=""):
@@ -413,10 +437,36 @@ class GoogleDriveFirefox:
         print(f"📁 Folders to process: {len(folders)}")
         
         # Download files to current local path
-        for file_item in files:
+        for i, file_item in enumerate(files):
+            print(f"\n📥 Downloading file {i+1}/{len(files)}: {file_item['name']}")
+            
+            # Check download folder before download
+            download_folder = os.path.join(self.base_download_dir, self.current_local_path) if self.current_local_path else self.base_download_dir
+            if os.path.exists(download_folder):
+                files_before = len(os.listdir(download_folder))
+                print(f"🔄 Files in download folder before: {files_before}")
+            else:
+                files_before = 0
+                print(f"🔄 Download folder doesn't exist yet: {download_folder}")
+            
+            # Ensure clean state before each download
+            await self.close_any_open_menus()
+            
+            # Download the file
             await self.download_individual_file(file_item['element'], file_item['name'])
-            # Small delay between files
+            
+            # Verify download folder after download
+            if os.path.exists(download_folder):
+                files_after = len(os.listdir(download_folder))
+                print(f"🔄 Files in download folder after: {files_after}")
+                if files_after > files_before:
+                    print(f"✅ Download verification: File count increased!")
+                else:
+                    print(f"⚠️  Download verification: File count unchanged")
+            
+            # Small delay and thorough cleanup between files
             await self.wait_random(0.5, 1)
+            await self.close_any_open_menus()
         
         # Remember current folder structure and URL before entering subfolders
         current_folder_items = [item['name'] for item in items]
