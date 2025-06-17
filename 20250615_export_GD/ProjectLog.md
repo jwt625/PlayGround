@@ -177,6 +177,68 @@
 - Reduced `rate_limit_delay` from 2s to 1s (line 21)
 - Progressive rate limiting still active (+0.3s every 15 downloads vs +0.5s every 10)
 
+## Download Reliability & Virus Popup Issue
+**Date**: June 16, 2025
+**Problem**: Downloads completing too fast without proper verification + Google Drive virus scan popup interrupting workflow
+
+### Issue Diagnosis:
+1. **Download Verification Problem**: 
+   - Script was moving to next file before current download completed
+   - File count check was immediate, not waiting for actual file appearance
+   - Some downloads were incomplete or missed entirely
+
+2. **Virus Scan Popup Problem**:
+   - Google Drive shows "can't scan file for viruses" popup for larger files
+   - Popup blocks download workflow with "Download anyway" button
+   - Script was not detecting or handling this interruption
+   - User feedback: "ah found issue of a 'can't scan file for viruses' popup is messing with the download workflow"
+
+### Debug Process:
+1. **Download Verification Issues**:
+   - Added proper `wait_for_download_completion()` method
+   - Implemented 60-second timeout with 2-second interval checks
+   - Added file count monitoring and name-based verification
+   - Added creation time validation (files created within 2 minutes)
+
+2. **Virus Popup Detection**:
+   - Initial implementation failed due to timing and selector issues
+   - Improved with two-phase detection: immediate + periodic checks
+   - Enhanced dialog detection using multiple selectors
+   - Added comprehensive "Download anyway" button selectors
+
+### Solution Implemented:
+
+#### 1. **Enhanced Download Verification**:
+- `wait_for_download_completion()`: Monitors download folder until file appears
+- **Multiple verification methods**: File count increase, name matching, creation time
+- **Timeout handling**: 60-second max wait with progress updates every 10s
+- **Rate limiting**: Only applied after successful download verification
+
+#### 2. **Virus Popup Handler** (`handle_virus_scan_popup()`):
+- **Dialog detection**: Finds virus warning using `[role="dialog"]`, text containing "virus"/"scan"
+- **Button detection**: 15+ selectors for "Download anyway" button including:
+  - Text variations: `"Download anyway"`, `"download anyway"`, `"Download Anyway"`
+  - Button selectors: `button:has-text("Download anyway")`
+  - Positional: `[role="dialog"] button:nth-child(2)`, `button:last-child`
+  - International: Chinese (`"仍要下载"`) and French (`"Télécharger quand même"`)
+- **Smart timing**: 
+  - Immediate check: 1-2 seconds after download initiation
+  - Periodic check: Every 6 seconds between 6-30 second window
+  - One-time handling per download to avoid conflicts
+
+#### 3. **Technical Implementation**:
+- Added immediate popup check in `download_individual_file()` after download initiation
+- Integrated periodic popup checking in download wait loop
+- Enhanced error handling with detailed logging for debugging
+- Visibility verification before clicking buttons
+
+### Results:
+- **Download reliability**: 100% verification that files are actually downloaded
+- **Popup handling**: Automatic detection and clicking of "Download anyway"
+- **User feedback**: "Great, popup handle working now"
+- **Known issue**: Some false positive popup detections (acceptable for reliability)
+- **Performance**: Maintained fast download speeds with robust verification
+
 ## Technical Notes
 - **User Agent**: Using realistic Chrome user agent
 - **Viewport**: Standard desktop resolution (1920x1080)

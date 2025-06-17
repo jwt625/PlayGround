@@ -341,6 +341,156 @@ class GoogleDriveFirefox:
         except Exception as e:
             print(f"⚠️  Error closing menus: {e}")
 
+    async def handle_virus_scan_popup(self):
+        """Handle the 'can't scan file for viruses' popup by clicking 'Download anyway'"""
+        try:
+            print(f"🔄 Checking for virus scan popup...")
+            
+            # First check if virus warning dialog exists
+            virus_dialog_selectors = [
+                '[role="dialog"]',
+                '.virus-warning',
+                '[data-testid*="virus"]',
+                'div:has-text("virus")',
+                'div:has-text("can\'t scan")',
+                'div:has-text("Google couldn\'t scan")',
+            ]
+            
+            popup_found = False
+            for dialog_selector in virus_dialog_selectors:
+                try:
+                    dialog = await self.page.query_selector(dialog_selector)
+                    if dialog:
+                        dialog_text = await dialog.inner_text()
+                        if 'virus' in dialog_text.lower() or 'scan' in dialog_text.lower():
+                            print(f"🦠 Found virus warning dialog: {dialog_text[:100]}...")
+                            popup_found = True
+                            break
+                except:
+                    continue
+            
+            if not popup_found:
+                return False
+            
+            # Look for download anyway button with more comprehensive selectors
+            download_anyway_selectors = [
+                # Text-based selectors
+                'text="Download anyway"',
+                'text="download anyway"',
+                'text="Download Anyway"',
+                # Button selectors
+                'button:has-text("Download anyway")',
+                'button:has-text("download anyway")',
+                'button:has-text("Download Anyway")',
+                # Aria label selectors
+                '[aria-label*="Download anyway"]',
+                '[aria-label*="download anyway"]',
+                # Generic button in dialog
+                '[role="dialog"] button:nth-child(2)',  # Often the second button
+                '[role="dialog"] button:last-child',    # Or the last button
+                # Data attributes
+                '[data-testid*="download"]',
+                '[data-action*="download"]',
+                # Chinese/International
+                'text="下载"',
+                'text="仍要下载"',
+                'text="Télécharger quand même"',
+            ]
+            
+            for selector in download_anyway_selectors:
+                try:
+                    popup_button = await self.page.query_selector(selector)
+                    if popup_button:
+                        # Check if button is visible and enabled
+                        is_visible = await popup_button.is_visible()
+                        if is_visible:
+                            print(f"🦠 Found 'Download anyway' button with: {selector}")
+                            await popup_button.click(timeout=5000)
+                            await self.wait_random(2, 3)
+                            print(f"✅ Successfully clicked 'Download anyway' button")
+                            return True
+                except Exception as e:
+                    print(f"⚠️  Failed to click with {selector}: {e}")
+                    continue
+            
+            print(f"❌ Virus popup detected but couldn't find 'Download anyway' button")
+            return False
+            
+        except Exception as e:
+            print(f"⚠️  Error handling virus scan popup: {e}")
+            return False
+
+    async def wait_for_download_completion(self, expected_file_name, files_before):
+        """Wait for download to complete by monitoring the download folder"""
+        download_folder = os.path.join(self.base_download_dir, self.current_local_path) if self.current_local_path else self.base_download_dir
+        
+        print(f"🔄 Waiting for download completion of: {expected_file_name}")
+        print(f"🔄 Monitoring folder: {download_folder}")
+        
+        # Create download folder if it doesn't exist
+        os.makedirs(download_folder, exist_ok=True)
+        
+        max_wait_time = 60  # Maximum wait time in seconds
+        check_interval = 2  # Check every 2 seconds
+        elapsed_time = 0
+        popup_handled = False
+        
+        while elapsed_time < max_wait_time:
+            try:
+                # Check for virus scan popup periodically (but not too often)
+                if elapsed_time >= 6 and elapsed_time <= 30 and not popup_handled:  # Check between 6-30 seconds
+                    if elapsed_time % 6 == 0:  # Every 6 seconds within this window
+                        if await self.handle_virus_scan_popup():
+                            popup_handled = True
+                            print(f"🦠 Virus scan popup handled, continuing download wait...")
+                
+                if os.path.exists(download_folder):
+                    current_files = os.listdir(download_folder)
+                    files_after = len(current_files)
+                    
+                    # Check if file count increased
+                    if files_after > files_before:
+                        print(f"✅ Download completed: File count increased from {files_before} to {files_after}")
+                        
+                        # Try to identify which file was downloaded
+                        if files_after == files_before + 1:
+                            # Find the new file
+                            for file in current_files:
+                                file_path = os.path.join(download_folder, file)
+                                # Check if file was created recently (within last 2 minutes)
+                                if os.path.getctime(file_path) > (time.time() - 120):
+                                    print(f"✅ New file detected: {file}")
+                                    break
+                        
+                        return True
+                    
+                    # Alternative check: look for file with similar name
+                    expected_base = os.path.splitext(expected_file_name)[0].lower()
+                    for file in current_files:
+                        file_base = os.path.splitext(file)[0].lower()
+                        # Check if file name is similar (handles Google Drive renaming)
+                        if expected_base in file_base or file_base in expected_base:
+                            file_path = os.path.join(download_folder, file)
+                            # Check if file was created recently
+                            if os.path.getctime(file_path) > (time.time() - 120):
+                                print(f"✅ Download completed: Found matching file: {file}")
+                                return True
+                
+                # Wait before next check
+                await asyncio.sleep(check_interval)
+                elapsed_time += check_interval
+                
+                if elapsed_time % 10 == 0:  # Progress update every 10 seconds
+                    print(f"🔄 Still waiting for download... ({elapsed_time}/{max_wait_time}s)")
+                
+            except Exception as e:
+                print(f"⚠️  Error checking download folder: {e}")
+                await asyncio.sleep(check_interval)
+                elapsed_time += check_interval
+        
+        print(f"❌ Download timeout after {max_wait_time}s for: {expected_file_name}")
+        return False
+
     async def download_individual_file(self, file_element, file_name):
         """Download a single file with verification"""
         try:
@@ -350,8 +500,16 @@ class GoogleDriveFirefox:
             await self.close_any_open_menus()
             await self.wait_random(0.2, 0.4)  # Reduced wait time
             
-            # Check current download count to verify later
-            expected_download_path = os.path.join(self.base_download_dir, self.current_local_path, file_name)
+            # Check file count before download for verification
+            download_folder = os.path.join(self.base_download_dir, self.current_local_path) if self.current_local_path else self.base_download_dir
+            if os.path.exists(download_folder):
+                files_before = len(os.listdir(download_folder))
+                print(f"🔄 Files in download folder before: {files_before}")
+            else:
+                files_before = 0
+                print(f"🔄 Download folder doesn't exist yet: {download_folder}")
+            
+            expected_download_path = os.path.join(download_folder, file_name)
             print(f"🔄 Expected download location: {expected_download_path}")
             
             # Right-click on the file to open context menu
@@ -405,18 +563,23 @@ class GoogleDriveFirefox:
                 await self.page.keyboard.press('Control+Shift+s')
                 await self.wait_random(0.5, 0.8)  # Reduced wait time
                 
-            # Apply rate limiting
-            await self.apply_rate_limit()
-            self.download_count += 1
-            
             print(f"✅ Initiated download: {file_name}")
             
-            # Brief verification that download folder exists and is being monitored
-            if os.path.exists(self.base_download_dir):
-                folder_files = os.listdir(os.path.join(self.base_download_dir, self.current_local_path) if self.current_local_path else self.base_download_dir)
-                print(f"🔄 Files in download folder: {len(folder_files)}")
+            # Immediately check for virus scan popup
+            await self.wait_random(1, 2)  # Give popup time to appear
+            await self.handle_virus_scan_popup()
             
-            return True
+            # Wait for download to complete with proper verification
+            download_success = await self.wait_for_download_completion(file_name, files_before)
+            
+            if download_success:
+                # Apply rate limiting only after successful download
+                await self.apply_rate_limit()
+                self.download_count += 1
+                return True
+            else:
+                print(f"⚠️  Download verification failed for: {file_name}")
+                return False
             
         except Exception as e:
             print(f"❌ Failed to download {file_name}: {e}")
@@ -451,29 +614,16 @@ class GoogleDriveFirefox:
         for i, file_item in enumerate(files):
             print(f"\n📥 Downloading file {i+1}/{len(files)}: {file_item['name']}")
             
-            # Check download folder before download
-            download_folder = os.path.join(self.base_download_dir, self.current_local_path) if self.current_local_path else self.base_download_dir
-            if os.path.exists(download_folder):
-                files_before = len(os.listdir(download_folder))
-                print(f"🔄 Files in download folder before: {files_before}")
-            else:
-                files_before = 0
-                print(f"🔄 Download folder doesn't exist yet: {download_folder}")
-            
             # Ensure clean state before each download
             await self.close_any_open_menus()
             
-            # Download the file
-            await self.download_individual_file(file_item['element'], file_item['name'])
+            # Download the file with built-in verification
+            download_success = await self.download_individual_file(file_item['element'], file_item['name'])
             
-            # Verify download folder after download
-            if os.path.exists(download_folder):
-                files_after = len(os.listdir(download_folder))
-                print(f"🔄 Files in download folder after: {files_after}")
-                if files_after > files_before:
-                    print(f"✅ Download verification: File count increased!")
-                else:
-                    print(f"⚠️  Download verification: File count unchanged")
+            if download_success:
+                print(f"✅ Successfully downloaded: {file_item['name']}")
+            else:
+                print(f"❌ Failed to download: {file_item['name']}")
             
             # Small delay and thorough cleanup between files
             await self.wait_random(0.3, 0.5)  # Reduced wait time between files
