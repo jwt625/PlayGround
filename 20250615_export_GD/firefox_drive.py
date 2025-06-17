@@ -341,83 +341,37 @@ class GoogleDriveFirefox:
         except Exception as e:
             print(f"⚠️  Error closing menus: {e}")
 
-    async def handle_virus_scan_popup(self):
-        """Handle the 'can't scan file for viruses' popup by clicking 'Download anyway'"""
+    async def handle_download_popup(self):
+        """Handle download popups by clicking 'Download anyway' - only popup confirmations"""
         try:
-            print(f"🔄 Checking for virus scan popup...")
-            
-            # First check if virus warning dialog exists
-            virus_dialog_selectors = [
-                '[role="dialog"]',
-                '.virus-warning',
-                '[data-testid*="virus"]',
-                'div:has-text("virus")',
-                'div:has-text("can\'t scan")',
-                'div:has-text("Google couldn\'t scan")',
-            ]
-            
-            popup_found = False
-            for dialog_selector in virus_dialog_selectors:
-                try:
-                    dialog = await self.page.query_selector(dialog_selector)
-                    if dialog:
-                        dialog_text = await dialog.inner_text()
-                        if 'virus' in dialog_text.lower() or 'scan' in dialog_text.lower():
-                            print(f"🦠 Found virus warning dialog: {dialog_text[:100]}...")
-                            popup_found = True
-                            break
-                except:
-                    continue
-            
-            if not popup_found:
-                return False
-            
-            # Look for download anyway button with more comprehensive selectors
-            download_anyway_selectors = [
-                # Text-based selectors
+            # Only look for popup-specific buttons, not general download buttons
+            popup_selectors = [
                 'text="Download anyway"',
                 'text="download anyway"',
                 'text="Download Anyway"',
-                # Button selectors
                 'button:has-text("Download anyway")',
                 'button:has-text("download anyway")',
-                'button:has-text("Download Anyway")',
-                # Aria label selectors
-                '[aria-label*="Download anyway"]',
-                '[aria-label*="download anyway"]',
-                # Generic button in dialog
-                '[role="dialog"] button:nth-child(2)',  # Often the second button
-                '[role="dialog"] button:last-child',    # Or the last button
-                # Data attributes
-                '[data-testid*="download"]',
-                '[data-action*="download"]',
-                # Chinese/International
-                'text="下载"',
-                'text="仍要下载"',
-                'text="Télécharger quand même"',
+                'text="仍要下载"',  # Chinese "download anyway"
+                'text="继续下载"',  # Chinese "continue download"
+                'text="Télécharger quand même"'  # French "download anyway"
             ]
             
-            for selector in download_anyway_selectors:
+            for selector in popup_selectors:
                 try:
                     popup_button = await self.page.query_selector(selector)
                     if popup_button:
-                        # Check if button is visible and enabled
-                        is_visible = await popup_button.is_visible()
-                        if is_visible:
-                            print(f"🦠 Found 'Download anyway' button with: {selector}")
-                            await popup_button.click(timeout=5000)
-                            await self.wait_random(2, 3)
-                            print(f"✅ Successfully clicked 'Download anyway' button")
-                            return True
+                        print(f"🔄 Found popup confirmation with: {selector}")
+                        await popup_button.click(timeout=5000)
+                        await self.wait_random(1, 2)
+                        print(f"✅ Clicked popup confirmation")
+                        return True
                 except Exception as e:
-                    print(f"⚠️  Failed to click with {selector}: {e}")
                     continue
             
-            print(f"❌ Virus popup detected but couldn't find 'Download anyway' button")
             return False
             
         except Exception as e:
-            print(f"⚠️  Error handling virus scan popup: {e}")
+            print(f"⚠️  Error handling download popup: {e}")
             return False
 
     async def wait_for_download_completion(self, expected_file_name, files_before):
@@ -437,12 +391,12 @@ class GoogleDriveFirefox:
         
         while elapsed_time < max_wait_time:
             try:
-                # Check for virus scan popup periodically (but not too often)
+                # Check for download popups periodically (but not too often)
                 if elapsed_time >= 6 and elapsed_time <= 30 and not popup_handled:  # Check between 6-30 seconds
                     if elapsed_time % 6 == 0:  # Every 6 seconds within this window
-                        if await self.handle_virus_scan_popup():
+                        if await self.handle_download_popup():
                             popup_handled = True
-                            print(f"🦠 Virus scan popup handled, continuing download wait...")
+                            print(f"💾 Download popup handled, continuing download wait...")
                 
                 if os.path.exists(download_folder):
                     current_files = os.listdir(download_folder)
@@ -565,9 +519,9 @@ class GoogleDriveFirefox:
                 
             print(f"✅ Initiated download: {file_name}")
             
-            # Immediately check for virus scan popup
+            # Immediately check for any download popup
             await self.wait_random(1, 2)  # Give popup time to appear
-            await self.handle_virus_scan_popup()
+            await self.handle_download_popup()
             
             # Wait for download to complete with proper verification
             download_success = await self.wait_for_download_completion(file_name, files_before)

@@ -239,6 +239,32 @@
 - **Known issue**: Some false positive popup detections (acceptable for reliability)
 - **Performance**: Maintained fast download speeds with robust verification
 
+### Follow-up Issues & Fixes:
+
+#### **Issue 1: Popup Detection Stopped Working**
+- **Problem**: Made popup detection too complex, no longer finding popups
+- **User feedback**: "how are you detecting the popup?? it is no longer being detected anymore"
+- **Root cause**: Added complex dialog detection logic that was failing
+- **Solution**: Simplified back to direct button search without popup detection first
+- **Approach**: Always assume popup might exist, just look for "Download anyway" buttons
+
+#### **Issue 2: Duplicate Downloads** 
+- **Problem**: Every file getting downloaded twice
+- **User feedback**: "why is every single file getting downloaded twice now??"
+- **Root cause**: Popup handler was clicking broad selectors like `[aria-label*="Download"]` that matched original download buttons
+- **Solution**: Made popup handler specific to only popup confirmation buttons
+- **Fixed selectors**: 
+  - **Removed**: `[aria-label*="Download"]`, `[data-tooltip*="Download"]` (too broad)
+  - **Kept only**: `text="Download anyway"`, `button:has-text("Download anyway")` (popup-specific)
+
+#### **Final Working Solution**:
+- **Function**: `handle_download_popup()` - simple, focused approach
+- **Logic**: Always search for popup confirmation buttons, no popup detection
+- **Selectors**: Only popup-specific like "Download anyway", "继续下载", "Télécharger quand même"
+- **Timing**: Immediate check (1-2s) + periodic check (6-30s window)
+- **Result**: No duplicate downloads, reliable popup handling
+- **User feedback**: "Great, working properly now"
+
 ## Technical Notes
 - **User Agent**: Using realistic Chrome user agent
 - **Viewport**: Standard desktop resolution (1920x1080)
