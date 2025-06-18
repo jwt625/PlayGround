@@ -274,6 +274,39 @@
 - **File Detection**: Uses `data-tooltip` attributes to identify Drive items
 - **Folder Detection**: Looks for folder icons to distinguish from files
 
+## Selective Download Feature Implementation
+**Date**: June 17, 2025
+**Changes**: Added selective download capability for resuming failed downloads
+
+#### New Feature Added:
+- **Interactive Selection Interface**: Shows numbered list of files and folders in root directory
+- **Range Selection Support**: Accepts input like "4, 5, 7~14, 20" for flexible item selection
+- **Resume Failed Downloads**: Perfect for continuing from interrupted downloads
+- **Root-Only Selection**: Selection interface only appears for initial folder; subfolders download everything automatically
+
+#### Technical Implementation:
+- **`parse_selection()` method**: Parses user input with support for:
+  - Individual numbers: "4, 5, 20"
+  - Inclusive ranges: "7~14" (downloads items 7, 8, 9, 10, 11, 12, 13, 14)
+  - Mixed format: "4, 5, 7~14, 20"
+  - Special commands: "all" or "skip"
+- **Modified `download_folder_recursively()`**: Added `is_root=True` parameter
+- **Smart Recursion**: Child folders automatically download all contents without prompting
+
+#### User Experience:
+- **Root folder**: Interactive numbered list with selection prompt
+- **Child folders**: Automatic recursive download of all contents
+- **Range format**: Uses `~` for ranges (e.g., "3~6" includes 3, 4, 5, and 6)
+- **Flexible selection**: Mix individual items and ranges in one command
+- **Clear feedback**: Shows selected items before starting download
+
+#### Use Case - Resume Failed Downloads:
+1. Navigate to folder where download previously failed
+2. See numbered list of all items (both downloaded and not downloaded)
+3. Select only the items that weren't downloaded yet
+4. Script recursively downloads selected items and their contents
+5. Perfect for large folder downloads that were interrupted
+
 ## Lessons Learned
 - Organization-managed Google accounts have API restrictions
 - Browser automation is viable alternative when API access is blocked
@@ -287,3 +320,5 @@
 - **Folder structure preservation requires careful path tracking**
 - **Right-click context menus more reliable than keyboard shortcuts for downloads**
 - **Continuous operation mode greatly improves user experience**
+- **Selective downloading essential for resuming large interrupted downloads**
+- **Range syntax with `~` provides intuitive bulk selection interface**

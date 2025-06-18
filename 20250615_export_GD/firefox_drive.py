@@ -541,8 +541,28 @@ class GoogleDriveFirefox:
             await self.close_any_open_menus()
             return False
     
-    async def download_folder_recursively(self, base_path=""):
-        """Recursively download all files in current folder and subfolders"""
+    def parse_selection(self, selection_input):
+        """Parse user selection input like '4, 5, 7~14, 20' into a list of indices"""
+        indices = []
+        parts = selection_input.split(',')
+        
+        for part in parts:
+            part = part.strip()
+            if '~' in part:
+                # Handle range like "7~14"
+                start, end = part.split('~')
+                start_idx = int(start.strip()) - 1  # Convert to 0-based
+                end_idx = int(end.strip()) - 1      # Convert to 0-based
+                indices.extend(range(start_idx, end_idx + 1))
+            else:
+                # Handle single number like "4"
+                idx = int(part.strip()) - 1  # Convert to 0-based
+                indices.append(idx)
+        
+        return sorted(list(set(indices)))  # Remove duplicates and sort
+
+    async def download_folder_recursively(self, base_path="", is_root=True):
+        """Recursively download selected files in current folder and subfolders"""
         print(f"🗂️  Processing folder: {base_path or 'Root'}")
         
         # Update current local path for downloads
@@ -557,14 +577,66 @@ class GoogleDriveFirefox:
         
         print(f"📊 Found {len(items)} items")
         
-        # First, download all files (non-folders)
-        files = [item for item in items if not item['is_folder']]
-        folders = [item for item in items if item['is_folder']]
+        # Only show selection interface for root folder
+        if is_root:
+            # Display numbered list of all items
+            print("\n" + "="*60)
+            print("📋 ITEMS IN CURRENT FOLDER:")
+            print("="*60)
+            for i, item in enumerate(items, 1):
+                item_type = "📁" if item['is_folder'] else "📄"
+                print(f"{i:3d}. {item_type} {item['name']}")
+            
+            print("\n" + "="*60)
+            print("📝 SELECT ITEMS TO DOWNLOAD:")
+            print("Format: 4, 5, 7~14, 20 (individual numbers, ranges with ~)")
+            print("Enter 'all' to download everything, or 'skip' to skip this folder")
+            selection = input("Your selection: ").strip()
+            
+            if selection.lower() == 'skip':
+                print("⏭️  Skipping this folder")
+                return
+            
+            selected_indices = []
+            if selection.lower() == 'all':
+                selected_indices = list(range(len(items)))
+            else:
+                try:
+                    selected_indices = self.parse_selection(selection)
+                except (ValueError, IndexError) as e:
+                    print(f"❌ Invalid selection format: {e}")
+                    print("📝 Please use format like: 4, 5, 7~14, 20")
+                    return
+            
+            # Filter selected items
+            selected_items = []
+            for idx in selected_indices:
+                if 0 <= idx < len(items):
+                    selected_items.append(items[idx])
+                else:
+                    print(f"⚠️  Index {idx+1} is out of range (max: {len(items)})")
+            
+            if not selected_items:
+                print("❌ No valid items selected")
+                return
+            
+            print(f"\n📦 Selected {len(selected_items)} items for download:")
+            for item in selected_items:
+                item_type = "📁" if item['is_folder'] else "📄"
+                print(f"   {item_type} {item['name']}")
+        else:
+            # For non-root folders, download everything
+            selected_items = items
+            print(f"📦 Downloading all {len(selected_items)} items in subfolder")
         
-        print(f"📄 Files to download: {len(files)}")
+        # Separate selected files and folders
+        files = [item for item in selected_items if not item['is_folder']]
+        folders = [item for item in selected_items if item['is_folder']]
+        
+        print(f"\n📄 Files to download: {len(files)}")
         print(f"📁 Folders to process: {len(folders)}")
         
-        # Download files to current local path
+        # Download selected files
         for i, file_item in enumerate(files):
             print(f"\n📥 Downloading file {i+1}/{len(files)}: {file_item['name']}")
             
@@ -671,7 +743,7 @@ class GoogleDriveFirefox:
                     os.makedirs(local_folder_path, exist_ok=True)
                     print(f"📁 Created local folder: {local_folder_path}")
                     
-                    await self.download_folder_recursively(new_path)
+                    await self.download_folder_recursively(new_path, is_root=False)
                 
             except Exception as e:
                 print(f"❌ Failed to enter folder {folder_name}: {e}")
@@ -712,7 +784,7 @@ class GoogleDriveFirefox:
                             os.makedirs(local_folder_path, exist_ok=True)
                             print(f"📁 Created local folder: {local_folder_path}")
                             
-                            await self.download_folder_recursively(new_path)
+                            await self.download_folder_recursively(new_path, is_root=False)
                         else:
                             print(f"❌ Alternative method also failed - URL unchanged")
                     else:
