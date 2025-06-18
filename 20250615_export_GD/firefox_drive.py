@@ -196,6 +196,12 @@ class GoogleDriveFirefox:
         delay = random.uniform(min_sec, max_sec)
         await asyncio.sleep(delay)
     
+    async def folder_navigation_pause(self):
+        """Add random pause between 10s to 5min for folder navigation rate limiting"""
+        pause_duration = random.uniform(10, 300)  # 10 seconds to 5 minutes
+        print(f"🔄 Folder navigation rate limit: pausing for {pause_duration:.1f} seconds ({pause_duration/60:.1f} minutes)")
+        await asyncio.sleep(pause_duration)
+    
     async def apply_rate_limit(self):
         """Apply progressive rate limiting to avoid detection"""
         # Increase delay after every 15 downloads (less frequent increases)
@@ -735,6 +741,9 @@ class GoogleDriveFirefox:
                         navigation_successful = False
                 
                 if navigation_successful:
+                    # Add rate limiting pause after successful folder navigation
+                    await self.folder_navigation_pause()
+                    
                     # Recursively process subfolder with updated path
                     new_path = os.path.join(base_path, folder_name) if base_path else folder_name
                     
@@ -801,6 +810,9 @@ class GoogleDriveFirefox:
                 if not await self.go_back():
                     print("❌ Could not go back, stopping recursion")
                     break
+                
+                # Add rate limiting pause after returning from subfolder
+                await self.folder_navigation_pause()
                 
                 # Wait for page to load after going back
                 await self.wait_random(2, 3)
