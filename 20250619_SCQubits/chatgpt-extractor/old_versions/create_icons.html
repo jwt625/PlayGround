@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Generate Extension Icons</title>
+</head>
+<body>
+    <h2>Extension Icons</h2>
+    <p>Save each canvas as PNG with the corresponding filename</p>
+    
+    <div>
+        <h3>icon16.png</h3>
+        <canvas id="icon16" width="16" height="16"></canvas>
+    </div>
+    
+    <div>
+        <h3>icon48.png</h3>
+        <canvas id="icon48" width="48" height="48"></canvas>
+    </div>
+    
+    <div>
+        <h3>icon128.png</h3>
+        <canvas id="icon128" width="128" height="128"></canvas>
+    </div>
+    
+    <script>
+        function drawIcon(canvasId, size) {
+            const canvas = document.getElementById(canvasId);
+            const ctx = canvas.getContext('2d');
+            
+            // Background
+            ctx.fillStyle = '#10a37f';
+            ctx.fillRect(0, 0, size, size);
+            
+            // Text style
+            ctx.fillStyle = 'white';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            
+            // Adjust font size based on icon size
+            let fontSize = size * 0.3;
+            ctx.font = `bold ${fontSize}px Arial`;
+            
+            // Draw "GPT"
+            ctx.fillText('GPT', size/2, size/2 - size*0.15);
+            
+            // Draw download arrow
+            ctx.beginPath();
+            ctx.moveTo(size * 0.3, size * 0.65);
+            ctx.lineTo(size * 0.5, size * 0.85);
+            ctx.lineTo(size * 0.7, size * 0.65);
+            ctx.lineWidth = size * 0.08;
+            ctx.strokeStyle = 'white';
+            ctx.stroke();
+            
+            // Draw download line
+            ctx.beginPath();
+            ctx.moveTo(size * 0.5, size * 0.5);
+            ctx.lineTo(size * 0.5, size * 0.8);
+            ctx.lineWidth = size * 0.08;
+            ctx.stroke();
+        }
+        
+        // Draw icons
+        drawIcon('icon16', 16);
+        drawIcon('icon48', 48);
+        drawIcon('icon128', 128);
+        
+        // Instructions
+        document.body.innerHTML += '<p>Right-click each canvas and save as PNG file with the corresponding name.</p>';
+    </script>
+</body>
+</html>

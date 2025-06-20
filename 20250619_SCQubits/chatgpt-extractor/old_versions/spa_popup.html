@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <style>
+    body {
+      width: 350px;
+      padding: 20px;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+    h3 { margin-top: 0; color: #111827; }
+    .info {
+      background: #eff6ff;
+      padding: 12px;
+      border-radius: 6px;
+      margin-bottom: 15px;
+      font-size: 14px;
+      color: #1e40af;
+    }
+    button {
+      width: 100%;
+      padding: 12px;
+      font-size: 16px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .primary {
+      background: #2563eb;
+      color: white;
+    }
+    .primary:hover:not(:disabled) {
+      background: #1d4ed8;
+    }
+    .secondary {
+      background: #10a37f;
+      color: white;
+      margin-top: 10px;
+    }
+    .secondary:hover:not(:disabled) {
+      background: #0d8e6f;
+    }
+    button:disabled {
+      background: #e5e7eb;
+      color: #9ca3af;
+      cursor: not-allowed;
+    }
+    #status {
+      margin-top: 15px;
+      padding: 12px;
+      background: #f3f4f6;
+      border-radius: 6px;
+      font-size: 14px;
+      min-height: 20px;
+    }
+    .error { color: #dc2626; }
+    .success { color: #059669; }
+  </style>
+</head>
+<body>
+  <h3>ChatGPT Smart Downloader</h3>
+  
+  <div class="info">
+    <strong>SPA Mode:</strong> Downloads all chats without page reloads.
+    Make sure the sidebar is open before starting.
+  </div>
+  
+  <button id="spaBtn" class="primary">Download All (SPA Mode)</button>
+  <button id="oldBtn" class="secondary">Download All (Navigation Mode)</button>
+  
+  <div id="status"></div>
+  
+  <script>
+    console.log('Popup loaded');
+    
+    const spaBtn = document.getElementById('spaBtn');
+    const oldBtn = document.getElementById('oldBtn');
+    const status = document.getElementById('status');
+    
+    // Check we're on ChatGPT
+    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+      const tab = tabs[0];
+      if (!tab.url || (!tab.url.includes('chatgpt.com') && !tab.url.includes('chat.openai.com'))) {
+        status.innerHTML = '<span class="error">Please navigate to ChatGPT first!</span>';
+        spaBtn.disabled = true;
+        oldBtn.disabled = true;
+      }
+    });
+    
+    spaBtn.addEventListener('click', () => {
+      console.log('SPA button clicked');
+      spaBtn.disabled = true;
+      oldBtn.disabled = true;
+      status.textContent = 'Starting SPA download...';
+      
+      chrome.runtime.sendMessage({ action: 'startSPADownload' }, (response) => {
+        console.log('Response:', response);
+        if (response && response.error) {
+          status.innerHTML = `<span class="error">Error: ${response.error}</span>`;
+          spaBtn.disabled = false;
+          oldBtn.disabled = false;
+        } else {
+          status.innerHTML = '<span class="success">Download started! The page will click through each chat automatically.</span>';
+        }
+      });
+    });
+    
+    oldBtn.addEventListener('click', () => {
+      console.log('Old mode button clicked');
+      spaBtn.disabled = true;
+      oldBtn.disabled = true;
+      status.textContent = 'Starting navigation download...';
+      
+      chrome.runtime.sendMessage({ action: 'startDownload' }, (response) => {
+        console.log('Response:', response);
+        if (response && response.error) {
+          status.innerHTML = `<span class="error">Error: ${response.error}</span>`;
+          spaBtn.disabled = false;
+          oldBtn.disabled = false;
+        } else {
+          status.innerHTML = '<span class="success">Download started! Check console for progress.</span>';
+        }
+      });
+    });
+  </script>
+</body>
+</html>

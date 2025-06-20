@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <style>
+    body {
+      width: 350px;
+      padding: 20px;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Ubuntu', sans-serif;
+    }
+    h1 {
+      font-size: 18px;
+      margin-bottom: 15px;
+      color: #202123;
+    }
+    button {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 10px;
+      border: none;
+      border-radius: 6px;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    #extractBtn {
+      background-color: #10a37f;
+      color: white;
+    }
+    #extractBtn:hover {
+      background-color: #0d8e6f;
+    }
+    #extractBtn:disabled {
+      background-color: #ccc;
+      cursor: not-allowed;
+    }
+    #extractAllBtn {
+      background-color: #5436da;
+      color: white;
+    }
+    #extractAllBtn:hover {
+      background-color: #4526ca;
+    }
+    #extractAllBtn:disabled {
+      background-color: #ccc;
+      cursor: not-allowed;
+    }
+    #status {
+      margin-top: 15px;
+      padding: 10px;
+      border-radius: 6px;
+      font-size: 13px;
+      text-align: center;
+    }
+    .success {
+      background-color: #d4edda;
+      color: #155724;
+    }
+    .error {
+      background-color: #f8d7da;
+      color: #721c24;
+    }
+    .info {
+      background-color: #d1ecf1;
+      color: #0c5460;
+    }
+    .options {
+      margin: 15px 0;
+    }
+    .option {
+      display: flex;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    .option input[type="checkbox"] {
+      margin-right: 8px;
+    }
+    .option label {
+      font-size: 14px;
+      color: #202123;
+    }
+  </style>
+</head>
+<body>
+  <h1>ChatGPT Conversation Extractor</h1>
+  
+  <div class="options">
+    <div class="option">
+      <input type="checkbox" id="includeCode" checked>
+      <label for="includeCode">Include code blocks</label>
+    </div>
+    <div class="option">
+      <input type="checkbox" id="includeTimestamps" checked>
+      <label for="includeTimestamps">Include timestamps</label>
+    </div>
+    <div class="option">
+      <input type="checkbox" id="darkMode">
+      <label for="darkMode">Dark mode theme</label>
+    </div>
+  </div>
+  
+  <button id="extractBtn">Extract Current Conversation</button>
+  <button id="extractAllBtn">Export All Conversations</button>
+  
+  <div id="status"></div>
+  <div id="progress" style="display: none;">
+    <div style="margin-top: 10px; font-size: 13px;">
+      <div id="progressText">Preparing...</div>
+      <div style="background-color: #e5e5e5; height: 4px; border-radius: 2px; margin-top: 5px;">
+        <div id="progressBar" style="background-color: #10a37f; height: 100%; width: 0%; border-radius: 2px; transition: width 0.3s;"></div>
+      </div>
+    </div>
+  </div>
+  
+  <script src="popup.js"></script>
+</body>
+</html>

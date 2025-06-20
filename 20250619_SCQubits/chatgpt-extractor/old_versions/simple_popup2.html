@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <style>
+    body {
+      width: 300px;
+      padding: 20px;
+      font-family: Arial, sans-serif;
+    }
+    button {
+      width: 100%;
+      padding: 10px;
+      background: #10a37f;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    button:hover {
+      background: #0d8e6f;
+    }
+    button:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+    }
+    #status {
+      margin-top: 15px;
+      padding: 10px;
+      background: #f5f5f5;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body>
+  <h3>ChatGPT Downloader</h3>
+  <p>Make sure the sidebar is open before starting.</p>
+  <button id="downloadBtn">Download All Chats</button>
+  <div id="status"></div>
+  
+  <script>
+    console.log('Popup script loading...');
+    
+    const btn = document.getElementById('downloadBtn');
+    const status = document.getElementById('status');
+    
+    console.log('Button found:', !!btn);
+    
+    btn.addEventListener('click', () => {
+      console.log('Download button clicked');
+      btn.disabled = true;
+      status.textContent = 'Starting download...';
+      
+      chrome.runtime.sendMessage({ action: 'startDownload' }, (response) => {
+        if (response.error) {
+          status.textContent = 'Error: ' + response.error;
+          btn.disabled = false;
+        } else {
+          status.textContent = 'Download started! Check progress in console.';
+          checkStatus();
+        }
+      });
+    });
+    
+    function checkStatus() {
+      chrome.runtime.sendMessage({ action: 'getStatus' }, (response) => {
+        if (response.isDownloading) {
+          status.textContent = `Downloading: ${response.current + 1}/${response.total}`;
+          setTimeout(checkStatus, 2000);
+        } else if (response.total > 0) {
+          status.textContent = `Complete! Downloaded ${response.total} chats.`;
+          btn.disabled = false;
+        }
+      });
+    }
+    
+    // Check status on load
+    checkStatus();
+  </script>
+</body>
+</html>

@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <style>
+    body {
+      width: 300px;
+      padding: 20px;
+      font-family: Arial, sans-serif;
+    }
+    button {
+      width: 100%;
+      padding: 10px;
+      margin: 5px 0;
+      cursor: pointer;
+    }
+    #log {
+      margin-top: 10px;
+      padding: 10px;
+      background: #f0f0f0;
+      border-radius: 4px;
+      font-size: 12px;
+      max-height: 200px;
+      overflow-y: auto;
+    }
+    .success { color: green; }
+    .error { color: red; }
+  </style>
+</head>
+<body>
+  <h3>ChatGPT Downloader</h3>
+  
+  <button id="testBtn">Test Connection</button>
+  <button id="downloadBtn">Download All Chats</button>
+  
+  <div id="log"></div>
+  
+  <script>
+    const log = document.getElementById('log');
+    
+    function addLog(message, type = '') {
+      const entry = document.createElement('div');
+      entry.className = type;
+      entry.textContent = new Date().toLocaleTimeString() + ' - ' + message;
+      log.appendChild(entry);
+      log.scrollTop = log.scrollHeight;
+    }
+    
+    // Test button
+    document.getElementById('testBtn').addEventListener('click', () => {
+      addLog('Testing connection...');
+      
+      chrome.runtime.sendMessage({ action: 'testConnection' }, (response) => {
+        if (chrome.runtime.lastError) {
+          addLog('Error: ' + chrome.runtime.lastError.message, 'error');
+        } else if (response) {
+          addLog('Response: ' + JSON.stringify(response), 'success');
+        } else {
+          addLog('No response received', 'error');
+        }
+      });
+    });
+    
+    // Download button
+    document.getElementById('downloadBtn').addEventListener('click', () => {
+      addLog('Starting download...');
+      
+      // Check if we're on ChatGPT
+      chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+        const tab = tabs[0];
+        
+        if (!tab.url.includes('chatgpt.com') && !tab.url.includes('chat.openai.com')) {
+          addLog('Error: Not on ChatGPT!', 'error');
+          return;
+        }
+        
+        addLog('Sending download request...');
+        
+        chrome.runtime.sendMessage({ action: 'startSPADownload' }, (response) => {
+          if (chrome.runtime.lastError) {
+            addLog('Error: ' + chrome.runtime.lastError.message, 'error');
+          } else if (response) {
+            if (response.success) {
+              addLog('Download started successfully!', 'success');
+              addLog('Check the page - it will click through chats automatically');
+            } else {
+              addLog('Error: ' + (response.error || 'Unknown error'), 'error');
+            }
+          }
+        });
+      });
+    });
+    
+    // Show initial status
+    addLog('Popup loaded');
+  </script>
+</body>
+</html>
