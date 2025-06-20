@@ -198,7 +198,7 @@ class GoogleDriveFirefox:
     
     async def folder_navigation_pause(self):
         """Add random pause between 10s to 5min for folder navigation rate limiting"""
-        pause_duration = random.uniform(10, 300)  # 10 seconds to 5 minutes
+        pause_duration = random.uniform(10, 120)  # 10 seconds to 2 minutes
         print(f"🔄 Folder navigation rate limit: pausing for {pause_duration:.1f} seconds ({pause_duration/60:.1f} minutes)")
         await asyncio.sleep(pause_duration)
     
@@ -390,8 +390,8 @@ class GoogleDriveFirefox:
         # Create download folder if it doesn't exist
         os.makedirs(download_folder, exist_ok=True)
         
-        max_wait_time = 60  # Maximum wait time in seconds
-        check_interval = 2  # Check every 2 seconds
+        max_wait_time = 300  # Maximum wait time in seconds
+        check_interval = 10  # Check every 10 seconds
         elapsed_time = 0
         popup_handled = False
         
