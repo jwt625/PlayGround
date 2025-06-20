@@ -33,7 +33,28 @@
   <h3>Simple HTML Grabber</h3>
   
   <button id="grabBtn">Grab Current Page HTML</button>
-  <button id="grabAllBtn">Grab All Chats</button>
+  <button id="grabAllBtn">Grab All Chats (Auto)</button>
+  
+  <hr style="margin: 15px 0">
+  
+  <h4>Manual Navigation</h4>
+  <button id="loadChatsBtn">Load Chat List</button>
+  
+  <div id="navigation" style="display: none; margin-top: 10px;">
+    <div style="display: flex; align-items: center; gap: 10px;">
+      <button id="prevBtn">← Prev</button>
+      <span id="chatInfo" style="flex: 1; text-align: center; font-size: 12px;"></span>
+      <button id="nextBtn">Next →</button>
+    </div>
+    <div style="margin-top: 10px; padding: 10px; background: #f0f8ff; border-radius: 4px; font-size: 11px;">
+      <strong>Instructions:</strong><br>
+      1. Click Next/Prev to see which chat to navigate to<br>
+      2. Manually click on that chat in the sidebar<br>
+      3. Wait for page to fully render<br>
+      4. Click Download when ready
+    </div>
+    <button id="downloadCurrentBtn" style="width: 100%; margin-top: 10px;">Download Current</button>
+  </div>
   
   <div id="status"></div>
   
