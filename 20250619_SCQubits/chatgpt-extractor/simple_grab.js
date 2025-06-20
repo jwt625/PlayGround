@@ -87,11 +87,26 @@ document.getElementById('grabAllBtn').addEventListener('click', async () => {
         // Wait extra for content
         await new Promise(resolve => setTimeout(resolve, 5000));
         
-        // Grab and download
+        // Grab and download with updated links
         await new Promise(resolve => {
           chrome.scripting.executeScript({
             target: { tabId: tab.id },
-            func: () => document.documentElement.outerHTML
+            func: (allChats) => {
+              // Get the HTML
+              let html = document.documentElement.outerHTML;
+              
+              // Update all chat links in the sidebar to point to local files
+              allChats.forEach((chat, idx) => {
+                const safeTitle = chat.title.replace(/[^a-z0-9]/gi, '_').substring(0, 40);
+                const localFile = `${(idx + 1).toString().padStart(3, '0')}_${safeTitle}.html`;
+                // Replace the href in the sidebar
+                const pattern = new RegExp(`href="${chat.url.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}"`, 'g');
+                html = html.replace(pattern, `href="${localFile}"`);
+              });
+              
+              return html;
+            },
+            args: [chats]
           }, (results) => {
             if (results && results[0]) {
               const html = results[0].result;
