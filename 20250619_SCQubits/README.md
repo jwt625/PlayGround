@@ -16,47 +16,40 @@ A complete Docker-based solution for running qiskit-metal and scqubits with full
 - Docker Desktop for Mac
 - XQuartz (for GUI support)
 
-### 1. Setup X11 Forwarding
+### 1. One-Time Setup: Build Optimized Container
 ```bash
+# Build container with all packages pre-installed (takes 5-10 minutes)
+./build-container.sh
+```
+
+### 2. Daily Usage: Run Container
+```bash
+# Fast startup with everything ready (takes ~5 seconds)
+./run-qiskit-metal.sh
+```
+
+That's it! The script will:
+- ✅ Configure XQuartz automatically
+- ✅ Start the optimized container
+- ✅ Test GUI functionality
+- ✅ Drop you into a working environment
+
+### 3. Alternative Manual Setup
+If you prefer manual control:
+
+```bash
+# Setup X11 forwarding
 ./setup-x11-forwarding.sh
-```
 
-### 2. Build the Container
-```bash
+# Build container manually
 docker build --platform linux/x86_64 -t qiskit-metal-container .
-```
 
-### 3. Run the Container
-```bash
+# Run container manually
 docker run --platform linux/x86_64 -it --rm \
   -e DISPLAY=host.docker.internal:0 \
   -v /tmp/.X11-unix:/tmp/.X11-unix \
   -v $(pwd):/workspace/host \
   qiskit-metal-container bash
-```
-
-### 4. Install Packages (Inside Container)
-```bash
-# Activate virtual environment
-source venv/bin/activate
-
-# Install PySide2 from wheel
-pip install https://files.pythonhosted.org/packages/c2/9a/78ca8bada6cf4d2798e0c823c025c590517d74445837f4eb50bfddce8737/PySide2-5.15.2.1-5.15.2-cp35.cp36.cp37.cp38.cp39.cp310-abi3-manylinux1_x86_64.whl
-
-# Install remaining packages
-pip install -r /workspace/requirements-docker.txt
-pip install qiskit-metal
-
-# Test installation
-python -c "
-import qiskit_metal
-import scqubits
-import PySide2
-print('✅ All packages imported successfully!')
-print(f'qiskit-metal version: {qiskit_metal.__version__}')
-print(f'scqubits version: {scqubits.__version__}')
-print(f'PySide2 version: {PySide2.__version__}')
-"
 ```
 
 ## 🖥️ GUI Testing
@@ -80,11 +73,16 @@ app.exec_()
 
 ```
 20250619_SCQubits/
-├── Dockerfile                    # Ubuntu 20.04 container definition
+├── Dockerfile                    # Ubuntu 20.04 container with pre-installed packages
 ├── requirements-docker.txt       # Python package requirements
+├── build-container.sh           # Build optimized container (one-time setup)
+├── run-qiskit-metal.sh          # Run container with GUI support (daily use)
 ├── setup-x11-forwarding.sh      # macOS X11 configuration script
-├── install-qiskit-metal.sh      # Automated installation (alternative)
+├── install-qiskit-metal.sh      # Alternative installation script
 ├── test_installation.py         # Installation verification script
+├── examples/
+│   ├── Example full chip design.ipynb  # Original Jupyter notebook
+│   └── full_chip_design.py            # Converted Python script
 ├── DevLog.md                    # Complete development journey
 └── README.md                    # This file
 ```
@@ -96,12 +94,22 @@ app.exec_()
 - **Consistent Environment**: Ubuntu 20.04 with compatible Qt5/LLVM versions
 - **GUI Support**: X11 forwarding enables native Qt applications on macOS
 - **Reproducible**: Same environment every time, no host system conflicts
+- **Pre-installed Packages**: All dependencies built into container for instant startup
 
-### Package Versions
+### Package Versions (Pre-installed)
 - **Python**: 3.9
+- **PySide2**: 5.15.2.1 (from official wheel)
+- **qiskit-metal**: 0.1.5
+- **scqubits**: 3.1.0
 - **NumPy**: 1.20.3 (compatible with all packages)
 - **Qt**: 5.12.8 (Ubuntu 20.04 default)
 - **LLVM**: 10 (compatible with PySide2)
+
+### Performance Optimizations
+- **Fast Startup**: ~5 seconds (vs ~10 minutes with package installation)
+- **Layer Caching**: Docker efficiently caches build layers
+- **Pre-compiled**: All packages compiled during build time
+- **Offline Capable**: Works without internet after initial build
 
 ## 🐛 Troubleshooting
 
@@ -109,18 +117,44 @@ app.exec_()
 1. Ensure XQuartz is running: `open -a XQuartz`
 2. Allow localhost connections: `xhost +localhost`
 3. Check DISPLAY variable: `echo $DISPLAY`
+4. Try restarting: `./run-qiskit-metal.sh` (script handles most issues automatically)
 
 ### Container Build Issues?
-1. Ensure Docker has sufficient resources (4GB+ RAM)
+1. Ensure Docker has sufficient resources (4GB+ RAM, 10GB+ disk space)
 2. Check internet connection for package downloads
-3. Try building without cache: `docker build --no-cache ...`
+3. Try rebuilding: `./build-container.sh` (removes old container first)
+4. For manual rebuild: `docker build --no-cache --platform linux/x86_64 -t qiskit-metal-container .`
 
-### Import Errors?
-1. Verify virtual environment is activated: `source venv/bin/activate`
-2. Check package installation: `pip list | grep -E "(qiskit|scqubits|PySide2)"`
-3. Test individual imports to isolate issues
+### Slow Startup?
+1. Use optimized workflow: `./build-container.sh` once, then `./run-qiskit-metal.sh` daily
+2. Avoid manual package installation - everything is pre-installed
+3. Check if you're using the right container: `docker images | grep qiskit-metal`
+
+### Package Issues?
+1. All packages are pre-installed - no need to install manually
+2. If issues persist, rebuild container: `./build-container.sh`
+3. Check versions: `python -c "import qiskit_metal, scqubits, PySide2; print('All OK')"`
 
 ## 📚 Usage Examples
+
+### Running the Full Chip Design Example
+```bash
+# Inside the container
+source venv/bin/activate
+cd /workspace/host/examples
+
+# Option 1: Run the converted Python script
+python full_chip_design.py
+
+# Option 2: Use Jupyter notebook
+pip install jupyter nbconvert
+jupyter nbconvert --to script "Example full chip design.ipynb"
+python "Example full chip design.py"
+
+# Option 3: Run Jupyter server for interactive use
+jupyter notebook --ip=0.0.0.0 --port=8888 --no-browser --allow-root --NotebookApp.token=''
+# Then open http://localhost:8888 in your browser
+```
 
 ### Basic qiskit-metal Usage
 ```python
@@ -160,13 +194,33 @@ print(f"First excited state: {eigenvals[1]:.3f} GHz")
 ## 🎉 Success!
 
 You now have a complete quantum device design environment with:
-- Full qiskit-metal functionality for device design
-- Complete scqubits library for qubit analysis  
-- GUI support for interactive design
-- Reproducible Docker environment
-- Native macOS integration
+- ⚡ **Instant startup** - Optimized container with pre-installed packages
+- 🔬 **Full qiskit-metal functionality** - Complete device design suite
+- 📊 **Complete scqubits library** - Advanced qubit analysis tools
+- 🖥️ **GUI support** - Interactive design with native macOS integration
+- 🐳 **Reproducible environment** - Consistent Docker-based setup
+- 📓 **Example notebooks** - Ready-to-run quantum chip designs
+- 🚀 **One-command workflow** - `./run-qiskit-metal.sh` and you're ready!
 
-Happy quantum computing! 🚀
+## 🔄 Workflow Summary
+
+### One-Time Setup:
+```bash
+./build-container.sh  # Build optimized container (5-10 minutes)
+```
+
+### Daily Usage:
+```bash
+./run-qiskit-metal.sh  # Start environment (5 seconds)
+```
+
+### Inside Container:
+```bash
+cd /workspace/host/examples
+python full_chip_design.py  # Run quantum chip design
+```
+
+Happy quantum computing! 🚀⚛️
 
 ---
 
