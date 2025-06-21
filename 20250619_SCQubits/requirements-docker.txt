@@ -1,0 +1,41 @@
+# requirements-docker.txt
+# Compatible package versions for qiskit-metal 0.1.5 in Docker x86_64 environment
+# Based on qiskit-metal 0.1.5 exact requirements with Docker-compatible versions
+
+# Core scientific computing stack - compatible with PySide2
+numpy==1.20.3
+scipy==1.10.0
+matplotlib==3.7.0
+pandas==1.5.3
+
+# Quantum computing libraries
+scqubits==3.1.0
+qutip==4.7.1
+
+# Geometry and design libraries
+shapely==2.0.1
+gdspy==1.6.12
+descartes==1.1.0
+
+# Optional geometry library (may fail on some systems, but not critical)
+# geopandas==0.12.2
+
+# Utility libraries
+addict==2.4.0
+pint==0.20.1
+pyyaml==6.0
+
+# Development and interactive tools
+ipython==8.10.0
+pygments==2.14.0
+
+# Optional GUI styling (not critical for core functionality)
+# qdarkstyle==3.1
+
+# Optional advanced simulation tools (may have complex dependencies)
+# pyEPR-quantum==0.8.5.7
+# gmsh==4.11.1
+# pyaedt==0.6.46
+
+# Note: PySide2==5.15.2.1 is installed separately via wheel in Dockerfile
+# Note: qiskit-metal==0.1.5 is installed separately in Dockerfile after requirements

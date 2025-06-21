@@ -62,6 +62,9 @@ RUN apt-get update && apt-get install -y \
     gfortran \
     libopenblas-dev \
     liblapack-dev \
+    # Text editors for development
+    nano \
+    vim \
     # Cleanup
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
@@ -101,6 +104,9 @@ COPY install-qiskit-metal.sh /workspace/
 COPY run-qiskit-metal.sh /workspace/
 COPY build-container.sh /workspace/
 COPY setup-x11-forwarding.sh /workspace/
+
+# Copy examples folder with quantum chip designs
+COPY examples/ /workspace/examples/
 
 # Make all shell scripts executable
 RUN chmod +x /workspace/*.sh

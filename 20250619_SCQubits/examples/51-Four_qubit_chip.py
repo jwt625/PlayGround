@@ -325,8 +325,30 @@ display(Image('shot.png', **_disp_ops))
 # In[20]:
 
 
-# Closing the Qiskit Metal GUI
-# gui.main_window.close()
+# Keep GUI running with proper Qt event loop for responsiveness
+import sys
+from PySide2.QtWidgets import QApplication
+
+print("🎉 Four-qubit chip design completed!")
+print("GUI is now running and fully responsive.")
+print("You can interact with the design - zoom, pan, edit components.")
+print("Close the GUI window to exit the program.")
+
+# Get or create QApplication instance
+app = QApplication.instance()
+if app is None:
+    app = QApplication(sys.argv)
+
+# Run the Qt event loop - this keeps GUI responsive and prevents exit
+try:
+    app.exec_()
+except KeyboardInterrupt:
+    print("Exiting...")
+finally:
+    # Clean shutdown
+    if hasattr(gui, 'main_window'):
+        gui.main_window.close()
+    print("GUI closed successfully.")
 
 
 # In[ ]:
