@@ -98,9 +98,31 @@ RUN /workspace/venv/bin/pip install \
 # Copy requirements and install script
 COPY requirements-docker.txt /workspace/
 COPY install-qiskit-metal.sh /workspace/
+COPY run-qiskit-metal.sh /workspace/
+COPY build-container.sh /workspace/
+COPY setup-x11-forwarding.sh /workspace/
 
-# Make install script executable
-RUN chmod +x /workspace/install-qiskit-metal.sh
+# Make all shell scripts executable
+RUN chmod +x /workspace/*.sh
+
+# Set proper permissions for the workspace
+RUN chmod -R 755 /workspace
+
+# Install PySide2 from wheel during build
+RUN /workspace/venv/bin/pip install \
+    https://files.pythonhosted.org/packages/c2/9a/78ca8bada6cf4d2798e0c823c025c590517d74445837f4eb50bfddce8737/PySide2-5.15.2.1-5.15.2-cp35.cp36.cp37.cp38.cp39.cp310-abi3-manylinux1_x86_64.whl
+
+# Install all requirements during build
+RUN /workspace/venv/bin/pip install -r /workspace/requirements-docker.txt
+
+# Install qiskit-metal during build
+RUN /workspace/venv/bin/pip install qiskit-metal
+
+# Install X11 apps for testing (do this during build to save time)
+RUN apt-get update && apt-get install -y x11-apps && apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# Verify installation during build
+RUN /workspace/venv/bin/python -c "import qiskit_metal, scqubits, PySide2; print('✅ All packages installed successfully in Docker image')"
 
 # Set the entrypoint to bash so we can run commands interactively
 CMD ["/bin/bash"]

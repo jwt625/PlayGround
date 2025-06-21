@@ -107,21 +107,7 @@ echo '📦 Setting up Python environment...'
 # Activate virtual environment
 source venv/bin/activate
 
-# Check if packages are already installed
-if python -c 'import PySide2' 2>/dev/null; then
-    echo '✅ PySide2 already installed'
-else
-    echo '📦 Installing PySide2 from wheel...'
-    pip install https://files.pythonhosted.org/packages/c2/9a/78ca8bada6cf4d2798e0c823c025c590517d74445837f4eb50bfddce8737/PySide2-5.15.2.1-5.15.2-cp35.cp36.cp37.cp38.cp39.cp310-abi3-manylinux1_x86_64.whl
-fi
-
-if python -c 'import qiskit_metal' 2>/dev/null; then
-    echo '✅ qiskit-metal already installed'
-else
-    echo '📦 Installing remaining packages...'
-    pip install -r /workspace/requirements-docker.txt
-    pip install qiskit-metal
-fi
+echo '✅ All packages pre-installed in Docker image'
 
 echo '🧪 Testing installation...'
 python -c \"
@@ -139,9 +125,6 @@ except ImportError as e:
 \"
 
 echo '🖥️  Testing X11 connection...'
-apt-get update >/dev/null 2>&1
-apt-get install -y x11-apps >/dev/null 2>&1
-
 echo '👀 Testing with xeyes (close the window to continue)...'
 timeout 10s xeyes || echo '⚠️  xeyes test timed out or failed'
 
