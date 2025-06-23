@@ -700,45 +700,42 @@ class GoogleDriveFirefox:
                         print(f"❌ Could not find fresh element for: {folder_name}")
                         continue
                 
-                # Navigate to folder by clicking on the name/element
-                print(f"🔄 Double-clicking on folder element...")
-                await folder_item['element'].dblclick()
-                print(f"🔄 Double-click completed, waiting...")
-                await self.wait_random(3, 4)  # Give more time for navigation
-                
-                # Simple cleanup of any stuck context menus after folder navigation
-                await self.close_any_open_menus()
-                
-                # Check if URL changed (most reliable way to detect navigation)
-                new_url = self.page.url
-                print(f"🔄 URL after navigation: {new_url}")
-                print(f"🔄 URL comparison: {current_url} -> {new_url}")
-                print(f"🔄 URLs are {'different' if new_url != current_url else 'SAME'}")
-                
-                if new_url != current_url:
-                    print(f"✅ Navigation successful - URL changed")
-                    print(f"   From: {current_url}")
-                    print(f"   To:   {new_url}")
-                    # Push current URL to stack for going back
-                    self.url_stack.append(current_url)
-                    print(f"🔄 URL stack now has {len(self.url_stack)} items")
-                    navigation_successful = True
-                else:
-                    print(f"❌ Navigation failed - URL unchanged")
-                    print(f"🔄 Waiting additional time and checking again...")
-                    await self.wait_random(2, 3)
+                # Try double-clicking at least three times before giving up
+                navigation_successful = False
+                for attempt in range(3):
+                    print(f"🔄 Double-click attempt {attempt + 1}/3 on folder element...")
+                    await folder_item['element'].dblclick()
+                    print(f"🔄 Double-click completed, waiting...")
+                    await self.wait_random(3, 4)  # Give more time for navigation
+                    
+                    # Simple cleanup of any stuck context menus after folder navigation
+                    await self.close_any_open_menus()
+                    
+                    # Check if URL changed (most reliable way to detect navigation)
                     new_url = self.page.url
-                    print(f"🔄 URL after additional wait: {new_url}")
+                    print(f"🔄 URL after attempt {attempt + 1}: {new_url}")
+                    print(f"🔄 URL comparison: {current_url} -> {new_url}")
+                    print(f"🔄 URLs are {'different' if new_url != current_url else 'SAME'}")
+                    
                     if new_url != current_url:
-                        print(f"✅ Navigation successful after delay - URL changed")
+                        print(f"✅ Navigation successful on attempt {attempt + 1} - URL changed")
+                        print(f"   From: {current_url}")
+                        print(f"   To:   {new_url}")
+                        # Push current URL to stack for going back
                         self.url_stack.append(current_url)
                         print(f"🔄 URL stack now has {len(self.url_stack)} items")
                         navigation_successful = True
+                        break
                     else:
-                        print(f"❌ Navigation definitely failed - URL still unchanged")
-                        print(f"   Expected change from: {current_url}")
-                        print(f"   But still at:        {new_url}")
-                        navigation_successful = False
+                        print(f"❌ Attempt {attempt + 1} failed - URL unchanged")
+                        if attempt < 2:  # Don't wait after the last attempt
+                            print(f"🔄 Waiting before next attempt...")
+                            await self.wait_random(2, 3)
+                
+                if not navigation_successful:
+                    print(f"❌ All double-click attempts failed - URL still unchanged")
+                    print(f"   Expected change from: {current_url}")
+                    print(f"   But still at:        {new_url}")
                 
                 if navigation_successful:
                     # Add rate limiting pause after successful folder navigation
