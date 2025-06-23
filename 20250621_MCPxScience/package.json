@@ -1,0 +1,27 @@
+{
+  "name": "text-inversion-mcp",
+  "version": "1.0.0",
+  "description": "A Model Context Protocol (MCP) server that provides text inversion/reversal functionality. This server exposes a single tool that can reverse the character order of any input string.",
+  "main": "build/index.js",
+  "bin": {
+    "text-inversion-mcp": "build/index.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsx index.ts",
+    "start": "node build/index.js",
+    "clean": "rm -rf build",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": ["mcp", "text-inversion", "model-context-protocol"],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.13.0"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.3",
+    "tsx": "^4.20.3",
+    "typescript": "^5.8.3"
+  }
+}
