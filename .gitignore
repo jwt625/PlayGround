@@ -50,3 +50,4 @@
 *.doc
 *.ppt
 *.xls
+.ipynb_checkpoints
