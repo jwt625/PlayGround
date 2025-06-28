@@ -15,7 +15,7 @@ import time
 from collections import deque
 
 class TranscriptProcessor:
-    def __init__(self, model_name="base", language=None):
+    def __init__(self, model_name="small", language=None):
         self.model_name = model_name
         self.language = language
         self.model = None
@@ -230,7 +230,7 @@ def test_transcript_processor():
     print("Testing TranscriptProcessor...")
     
     try:
-        processor = TranscriptProcessor(model_name="base")
+        processor = TranscriptProcessor(model_name="small")
         
         # Test with a dummy audio file (if available)
         audio_samples_dir = "../audio_samples"

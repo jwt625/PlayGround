@@ -11,6 +11,8 @@ import time
 import numpy as np
 from collections import deque
 import os
+# Smart chunking temporarily disabled - will implement later
+# from smart_chunking import SmartAudioChunker
 
 class AudioCapture:
     def __init__(self, sample_rate=16000, channels=1, chunk_size=1024):
@@ -35,6 +37,14 @@ class AudioCapture:
         # Streams
         self.mic_stream = None
         self.system_stream = None
+
+        # Smart chunking (temporarily disabled)
+        # self.smart_chunker = SmartAudioChunker(
+        #     silence_threshold=0.015,      # Adjust based on your environment
+        #     min_silence_duration=0.8,     # 800ms pause triggers processing
+        #     min_speech_duration=1.5,      # Need 1.5s of speech minimum
+        #     max_chunk_duration=12.0       # Max 12s chunks
+        # )
     
     def list_devices(self):
         """List available audio input and output devices"""
@@ -88,6 +98,13 @@ class AudioCapture:
         if self.recording_thread:
             self.recording_thread.join(timeout=5.0)
 
+        # Process any remaining audio (smart chunker disabled for now)
+        # if hasattr(self, 'smart_chunker') and self.callback:
+        #     final_chunk = self.smart_chunker.force_process()
+        #     if final_chunk:
+        #         print("🎯 Processing final audio chunk...")
+        #         self.callback(final_chunk, source='microphone', is_transcription=True)
+
         # Save final audio buffers
         if hasattr(self, '_current_session_dir') and self._current_session_dir:
             print("💾 Saving final audio buffers...")
@@ -116,15 +133,19 @@ class AudioCapture:
                             )
                             self.mic_buffer.append(mic_data)
                             
-                            # Calculate and emit audio level (every 10th chunk for performance)
+                            # Calculate audio level
+                            mic_level = self.get_audio_level(mic_data)
+
+                            # Emit audio level (every 10th chunk for performance)
                             if self.callback and chunk_count % 10 == 0:
-                                mic_level = self.get_audio_level(mic_data)
                                 self.callback(mic_data, source='microphone', audio_level=mic_level)
 
-                            # Process microphone audio for transcription
-                            if self.callback and chunk_count % 50 == 0:  # Process every 50th chunk (~3 seconds)
-                                audio_chunk = b''.join(list(self.mic_buffer)[-50:])
+                            # Process microphone audio for transcription with overlap (every 25th chunk ~1.5 seconds)
+                            if self.callback and chunk_count % 25 == 0:
+                                # Use 75 chunks (4.5 seconds) for better context and overlap
+                                audio_chunk = b''.join(list(self.mic_buffer)[-75:])
                                 self.callback(audio_chunk, source='microphone', is_transcription=True)
+                                print(f"🎤 Processing overlapping chunk: {len(list(self.mic_buffer)[-75:])} chunks (~4.5s)")
                         
                         except Exception as e:
                             print(f"Microphone read error: {e}")
@@ -144,10 +165,12 @@ class AudioCapture:
                                 system_level = self.get_audio_level(system_data)
                                 self.callback(system_data, source='system', audio_level=system_level)
 
-                            # Process system audio for transcription
-                            if self.callback and chunk_count % 50 == 0:  # Process every 50th chunk (~3 seconds)
-                                audio_chunk = b''.join(list(self.system_buffer)[-50:])
+                            # Process system audio for transcription with overlap (every 25th chunk ~1.5 seconds)
+                            if self.callback and chunk_count % 25 == 0:
+                                # Use 75 chunks (4.5 seconds) for better context and overlap
+                                audio_chunk = b''.join(list(self.system_buffer)[-75:])
                                 self.callback(audio_chunk, source='system', is_transcription=True)
+                                print(f"🔊 Processing overlapping chunk: {len(list(self.system_buffer)[-75:])} chunks (~4.5s)")
                         
                         except Exception as e:
                             print(f"System audio read error: {e}")
