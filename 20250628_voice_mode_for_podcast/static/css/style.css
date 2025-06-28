@@ -245,7 +245,25 @@ header h1 {
 .transcript-entry.processing {
     background-color: #2e2a1a;
     border-left-color: #ffcc02;
-    opacity: 0.7;
+    opacity: 0.8;
+    position: relative;
+    animation: pulse 2s infinite;
+}
+
+.transcript-entry.processing::after {
+    content: "⏳ Combining...";
+    position: absolute;
+    top: 5px;
+    right: 10px;
+    font-size: 0.8em;
+    color: #ffcc02;
+    font-weight: 500;
+}
+
+@keyframes pulse {
+    0% { opacity: 0.8; }
+    50% { opacity: 0.6; }
+    100% { opacity: 0.8; }
 }
 
 .transcript-meta {

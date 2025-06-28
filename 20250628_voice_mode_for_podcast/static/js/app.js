@@ -12,6 +12,13 @@ class TranscriptRecorder {
         this.confidenceSum = 0;
         this.confidenceCount = 0;
 
+        // Transcript combining state
+        this.currentMessage = null;  // Current message being built
+        this.lastSpeaker = null;     // Last speaker (microphone/system)
+        this.lastUpdateTime = null;  // Time of last transcript update
+        this.combineTimeoutMs = 5000; // Combine chunks within 5 seconds
+        this.combineTimer = null;    // Timer for finalizing messages
+
         this.initializeElements();
         this.setupEventListeners();
         this.setupSSEConnection();
@@ -140,33 +147,38 @@ class TranscriptRecorder {
         try {
             this.updateStatus('ready', 'Stopping...');
             this.stopBtn.disabled = true;
-            
+
+            // Finalize any current message before stopping
+            if (this.currentMessage) {
+                this.finalizeCurrentMessage();
+            }
+
             const response = await fetch('/api/stop', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 }
             });
-            
+
             const result = await response.json();
-            
+
             if (response.ok) {
                 this.isRecording = false;
                 this.sessionId = null;
                 this.startTime = null;
-                
+
                 this.updateStatus('ready', 'Ready');
                 this.startBtn.disabled = false;
                 this.stopBtn.disabled = true;
-                
+
                 this.hideSessionInfo();
                 this.stopDurationTimer();
-                
+
                 console.log('Recording stopped:', result);
             } else {
                 throw new Error(result.error || 'Failed to stop recording');
             }
-            
+
         } catch (error) {
             console.error('Error stopping recording:', error);
             this.updateStatus('error', 'Error: ' + error.message);
@@ -175,18 +187,33 @@ class TranscriptRecorder {
     }
     
     clearTranscript() {
+        // Finalize any current message
+        if (this.currentMessage) {
+            this.finalizeCurrentMessage();
+        }
+
+        // Clear combine timer
+        if (this.combineTimer) {
+            clearTimeout(this.combineTimer);
+            this.combineTimer = null;
+        }
+
+        // Reset all state
         this.transcriptEntries = [];
         this.segmentCount = 0;
         this.wordCount = 0;
         this.confidenceSum = 0;
         this.confidenceCount = 0;
-        
+        this.currentMessage = null;
+        this.lastSpeaker = null;
+        this.lastUpdateTime = null;
+
         this.transcriptContent.innerHTML = `
             <div class="transcript-placeholder">
                 <p>🎙️ Transcript cleared. Click "Start Recording" to begin again.</p>
             </div>
         `;
-        
+
         this.updateStats();
         this.updateQualityMetrics();
     }
@@ -194,49 +221,174 @@ class TranscriptRecorder {
     addTranscriptEntry(data) {
         // Remove placeholder if it exists
         this.clearTranscriptPlaceholder();
-        
-        // Create transcript entry
+
+        const currentTime = new Date(data.timestamp);
+        const speaker = data.source;
+
+        // Check if we should combine with existing message
+        const shouldCombine = this.shouldCombineWithCurrent(speaker, currentTime);
+
+        if (shouldCombine && this.currentMessage) {
+            // Update existing message
+            this.updateCurrentMessage(data, currentTime);
+        } else {
+            // Finalize previous message if exists
+            if (this.currentMessage) {
+                this.finalizeCurrentMessage();
+            }
+
+            // Start new message
+            this.startNewMessage(data, currentTime);
+        }
+
+        // Set timer to finalize message after timeout
+        this.resetCombineTimer();
+
+        // Update last save time
+        this.lastSaveSpan.textContent = new Date().toLocaleTimeString();
+    }
+
+    shouldCombineWithCurrent(speaker, currentTime) {
+        if (!this.currentMessage || !this.lastUpdateTime) {
+            return false;
+        }
+
+        // Same speaker?
+        if (this.lastSpeaker !== speaker) {
+            return false;
+        }
+
+        // Within time window?
+        const timeDiff = currentTime - this.lastUpdateTime;
+        if (timeDiff > this.combineTimeoutMs) {
+            return false;
+        }
+
+        return true;
+    }
+
+    startNewMessage(data, timestamp) {
+        const confidence = data.confidence || 0;
+        const confidenceClass = this.getConfidenceClass(confidence);
+
+        // Create new transcript entry
         const entry = document.createElement('div');
         entry.className = `transcript-entry ${data.source === 'microphone' ? 'user' : 'chatgpt'}`;
         if (!data.is_final) {
             entry.classList.add('processing');
         }
-        
-        const timestamp = new Date(data.timestamp).toLocaleTimeString();
-        const confidence = data.confidence || 0;
-        const confidenceClass = this.getConfidenceClass(confidence);
-        
+
+        const timeString = timestamp.toLocaleTimeString();
+
         entry.innerHTML = `
             <div class="transcript-meta">
                 <span>${data.source === 'microphone' ? '🎤 You' : '🤖 ChatGPT'}</span>
-                <span>${timestamp}</span>
+                <span class="timestamp">${timeString}</span>
                 <span class="confidence-indicator ${confidenceClass}">
                     ${Math.round(confidence * 100)}%
                 </span>
             </div>
             <div class="transcript-text">${data.text}</div>
         `;
-        
+
+        // Mark as processing initially (will be removed when finalized)
+        entry.classList.add('processing');
+
         // Add to transcript
         this.transcriptContent.appendChild(entry);
-        
+        this.transcriptContent.scrollTop = this.transcriptContent.scrollHeight;
+
+        // Store current message state
+        this.currentMessage = {
+            element: entry,
+            data: data,
+            text: data.text,
+            confidenceSum: confidence,
+            confidenceCount: 1,
+            wordCount: data.text.split(' ').length,
+            startTime: timestamp
+        };
+
+        this.lastSpeaker = data.source;
+        this.lastUpdateTime = timestamp;
+    }
+
+    updateCurrentMessage(data, timestamp) {
+        if (!this.currentMessage) return;
+
+        const confidence = data.confidence || 0;
+
+        // Combine text (add space if needed)
+        const newText = data.text.trim();
+        if (newText) {
+            // Check if we need a space between chunks
+            const currentText = this.currentMessage.text.trim();
+            const needsSpace = currentText.length > 0 &&
+                              !currentText.endsWith(' ') &&
+                              !currentText.endsWith('.') &&
+                              !currentText.endsWith(',') &&
+                              !currentText.endsWith('!') &&
+                              !currentText.endsWith('?') &&
+                              !newText.startsWith(' ');
+
+            this.currentMessage.text = currentText + (needsSpace ? ' ' : '') + newText;
+        }
+
+        // Update confidence and word count
+        this.currentMessage.confidenceSum += confidence;
+        this.currentMessage.confidenceCount++;
+        this.currentMessage.wordCount = this.currentMessage.text.split(' ').length;
+
+        // Update the DOM element
+        const avgConfidence = this.currentMessage.confidenceSum / this.currentMessage.confidenceCount;
+        const confidenceClass = this.getConfidenceClass(avgConfidence);
+
+        // Update confidence indicator
+        const confidenceIndicator = this.currentMessage.element.querySelector('.confidence-indicator');
+        confidenceIndicator.className = `confidence-indicator ${confidenceClass}`;
+        confidenceIndicator.textContent = `${Math.round(avgConfidence * 100)}%`;
+
+        // Update text content
+        const textElement = this.currentMessage.element.querySelector('.transcript-text');
+        textElement.textContent = this.currentMessage.text;
+
         // Scroll to bottom
         this.transcriptContent.scrollTop = this.transcriptContent.scrollHeight;
-        
+
+        this.lastUpdateTime = timestamp;
+    }
+
+    finalizeCurrentMessage() {
+        if (!this.currentMessage) return;
+
+        // Remove processing class
+        this.currentMessage.element.classList.remove('processing');
+
         // Update statistics
-        this.transcriptEntries.push(data);
-        if (data.is_final) {
-            this.segmentCount++;
-            this.wordCount += data.text.split(' ').length;
-            this.confidenceSum += confidence;
-            this.confidenceCount++;
-        }
-        
+        this.transcriptEntries.push(this.currentMessage.data);
+        this.segmentCount++;
+        this.wordCount += this.currentMessage.wordCount;
+        this.confidenceSum += this.currentMessage.confidenceSum / this.currentMessage.confidenceCount;
+        this.confidenceCount++;
+
         this.updateStats();
         this.updateQualityMetrics();
-        
-        // Update last save time
-        this.lastSaveSpan.textContent = new Date().toLocaleTimeString();
+
+        // Clear current message
+        this.currentMessage = null;
+    }
+
+    resetCombineTimer() {
+        if (this.combineTimer) {
+            clearTimeout(this.combineTimer);
+        }
+
+        this.combineTimer = setTimeout(() => {
+            if (this.currentMessage) {
+                console.log('🕐 Finalizing message due to timeout');
+                this.finalizeCurrentMessage();
+            }
+        }, this.combineTimeoutMs);
     }
     
     updateStatus(type, text) {
