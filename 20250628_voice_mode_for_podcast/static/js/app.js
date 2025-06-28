@@ -70,11 +70,12 @@ class TranscriptRecorder {
         });
         
         this.socket.on('transcript_update', (data) => {
-            console.log('Transcript update:', data);
+            console.log('📝 Transcript update received:', data);
             this.addTranscriptEntry(data);
         });
         
         this.socket.on('audio_level', (data) => {
+            console.log('🔊 Audio level received:', data);
             this.updateAudioLevels(data);
         });
     }

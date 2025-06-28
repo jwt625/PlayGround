@@ -74,13 +74,23 @@ def start_recording():
             'start_time': datetime.now().isoformat()
         })
         
+        # Test WebSocket connection
+        socketio.emit('transcript_update', {
+            'session_id': session_id,
+            'timestamp': datetime.now().isoformat(),
+            'source': 'system',
+            'text': '🎯 Recording started! WebSocket connection test.',
+            'confidence': 1.0,
+            'is_final': True
+        })
+
         # Start audio capture in background thread
         def audio_thread():
             audio_capture.start_recording(
                 session_id=session_id,
                 callback=on_audio_chunk
             )
-        
+
         threading.Thread(target=audio_thread, daemon=True).start()
         
         return jsonify({
@@ -152,8 +162,10 @@ def on_audio_chunk(audio_data, source='microphone', audio_level=None, is_transcr
         elif source == 'system':
             level_data['system_level'] = audio_level
 
-        # Emit audio level update to frontend
-        socketio.emit('audio_level', level_data)
+        # Emit audio level update to frontend with proper context
+        with app.app_context():
+            socketio.emit('audio_level', level_data)
+            print(f"🔊 Audio level emitted: {level_data}")
 
     # Handle transcription processing
     if is_transcription and transcript_processor:
@@ -167,15 +179,18 @@ def on_audio_chunk(audio_data, source='microphone', audio_level=None, is_transcr
             if transcript_result and transcript_result.get('text', '').strip():
                 print(f"📝 Transcript ({source}): {transcript_result['text']}")
 
-                # Emit transcript update to frontend
-                socketio.emit('transcript_update', {
+                # Emit transcript update to frontend with proper context
+                transcript_data = {
                     'session_id': recording_state['session_id'],
                     'timestamp': datetime.now().isoformat(),
                     'source': source,
                     'text': transcript_result['text'],
                     'confidence': transcript_result.get('confidence', 0),
                     'is_final': transcript_result.get('is_final', False)
-                })
+                }
+                with app.app_context():
+                    socketio.emit('transcript_update', transcript_data)
+                    print(f"📤 Transcript emitted: {transcript_data}")
         except Exception as e:
             print(f"Error processing transcript: {e}")
 

@@ -25,8 +25,8 @@ class AudioCapture:
         self.callback = None
         
         # Audio buffers
-        self.mic_buffer = deque(maxlen=100)  # Keep last 100 chunks
-        self.system_buffer = deque(maxlen=100)
+        self.mic_buffer = deque(maxlen=200)  # Keep last 200 chunks (~12 seconds)
+        self.system_buffer = deque(maxlen=200)
         
         # Device IDs
         self.mic_device_id = None
@@ -109,10 +109,15 @@ class AudioCapture:
                             )
                             self.mic_buffer.append(mic_data)
                             
-                            # Process microphone audio
-                            if self.callback and chunk_count % 10 == 0:  # Process every 10th chunk
-                                audio_chunk = b''.join(list(self.mic_buffer)[-10:])
-                                self.callback(audio_chunk, source='microphone')
+                            # Calculate and emit audio level
+                            if self.callback:
+                                mic_level = self.get_audio_level(mic_data)
+                                self.callback(mic_data, source='microphone', audio_level=mic_level)
+
+                            # Process microphone audio for transcription
+                            if self.callback and chunk_count % 50 == 0:  # Process every 50th chunk (~3 seconds)
+                                audio_chunk = b''.join(list(self.mic_buffer)[-50:])
+                                self.callback(audio_chunk, source='microphone', is_transcription=True)
                         
                         except Exception as e:
                             print(f"Microphone read error: {e}")
@@ -127,10 +132,15 @@ class AudioCapture:
                             )
                             self.system_buffer.append(system_data)
                             
-                            # Process system audio
-                            if self.callback and chunk_count % 10 == 0:  # Process every 10th chunk
-                                audio_chunk = b''.join(list(self.system_buffer)[-10:])
-                                self.callback(audio_chunk, source='system')
+                            # Calculate and emit audio level
+                            if self.callback:
+                                system_level = self.get_audio_level(system_data)
+                                self.callback(system_data, source='system', audio_level=system_level)
+
+                            # Process system audio for transcription
+                            if self.callback and chunk_count % 50 == 0:  # Process every 50th chunk (~3 seconds)
+                                audio_chunk = b''.join(list(self.system_buffer)[-50:])
+                                self.callback(audio_chunk, source='system', is_transcription=True)
                         
                         except Exception as e:
                             print(f"System audio read error: {e}")

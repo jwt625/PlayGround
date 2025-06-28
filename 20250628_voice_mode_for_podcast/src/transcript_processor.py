@@ -15,7 +15,7 @@ import time
 from collections import deque
 
 class TranscriptProcessor:
-    def __init__(self, model_name="tiny", language=None):
+    def __init__(self, model_name="base", language=None):
         self.model_name = model_name
         self.language = language
         self.model = None
@@ -75,8 +75,11 @@ class TranscriptProcessor:
             
             # Extract transcript text
             text = result.get('text', '').strip()
-            
+
+            print(f"🎤 Whisper result: '{text}' (confidence: {self._estimate_confidence(result):.2f})")
+
             if not text:
+                print("⚠️  Empty transcript result")
                 return None
             
             # Update statistics
@@ -227,7 +230,7 @@ def test_transcript_processor():
     print("Testing TranscriptProcessor...")
     
     try:
-        processor = TranscriptProcessor(model_name="tiny")
+        processor = TranscriptProcessor(model_name="base")
         
         # Test with a dummy audio file (if available)
         audio_samples_dir = "../audio_samples"
