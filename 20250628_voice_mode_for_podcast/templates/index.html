@@ -28,6 +28,23 @@
             <button id="clear-btn" class="btn btn-clear">🗑️ Clear Transcript</button>
         </div>
 
+        <div class="provider-selection">
+            <h3>🔧 Transcription Provider</h3>
+            <div class="provider-controls">
+                <label for="provider-select">Provider:</label>
+                <select id="provider-select">
+                    <option value="whisper">Whisper (Local)</option>
+                    <option value="assemblyai">AssemblyAI (Cloud)</option>
+                </select>
+                <button id="set-provider-btn" class="btn btn-secondary">Set Provider</button>
+                <span id="provider-status" class="provider-status">Current: whisper</span>
+            </div>
+            <div class="provider-info">
+                <p><strong>Whisper:</strong> Local processing, slower but private</p>
+                <p><strong>AssemblyAI:</strong> Cloud processing, faster with better accuracy</p>
+            </div>
+        </div>
+
         <div class="audio-levels">
             <div class="level-meter">
                 <label>Microphone Level:</label>

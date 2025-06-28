@@ -27,13 +27,19 @@ class SmartAudioChunker:
         self.chunk_size = chunk_size
         self.chunk_duration = chunk_size / sample_rate  # ~0.064 seconds per chunk
         
-        # State tracking
-        self.speech_buffer = deque()
+        # Continuous audio buffer (never cleared)
+        self.continuous_buffer = deque()
+        self.last_processed_chunk_index = 0  # Track what we've already sent to Whisper
+
+        # VAD state tracking
         self.current_silence_duration = 0.0
         self.current_speech_duration = 0.0
         self.is_in_speech = False
         self.last_process_time = time.time()
-        
+
+        # Chunk tracking
+        self.total_chunks_received = 0
+
         print(f"🎤 Smart chunker initialized:")
         print(f"   Silence threshold: {silence_threshold}")
         print(f"   Min silence duration: {min_silence_duration}s")
@@ -45,8 +51,9 @@ class SmartAudioChunker:
         Add audio chunk and return transcript data if ready to process
         Returns: (should_process, audio_chunk_for_transcription)
         """
-        # Add to buffer
-        self.speech_buffer.append(audio_data)
+        # Always add to continuous buffer (NEVER cleared)
+        self.continuous_buffer.append(audio_data)
+        self.total_chunks_received += 1
         
         # Determine if this chunk contains speech
         is_speech = audio_level > self.silence_threshold
@@ -67,27 +74,33 @@ class SmartAudioChunker:
         should_process = self._should_process_now()
         
         if should_process:
-            # Get audio data for transcription
-            audio_chunk = b''.join(self.speech_buffer)
-            
-            # Log processing decision
-            buffer_duration = len(self.speech_buffer) * self.chunk_duration
-            print(f"🎯 Processing chunk: {buffer_duration:.1f}s audio, "
-                  f"speech: {self.current_speech_duration:.1f}s, "
-                  f"silence: {self.current_silence_duration:.1f}s")
-            
-            # Reset for next chunk
-            self._reset_state()
-            
-            return True, audio_chunk
+            # Extract NEW audio chunks that haven't been sent to Whisper yet
+            new_audio_chunk = self._extract_new_audio_for_processing()
+
+            if new_audio_chunk:
+                # Log processing decision
+                new_chunks_count = self.total_chunks_received - self.last_processed_chunk_index
+                duration = new_chunks_count * self.chunk_duration
+                print(f"🎯 Processing NEW audio: {duration:.1f}s ({new_chunks_count} chunks), "
+                      f"speech: {self.current_speech_duration:.1f}s, "
+                      f"silence: {self.current_silence_duration:.1f}s")
+
+                # Update tracking - mark these chunks as processed
+                self.last_processed_chunk_index = self.total_chunks_received
+
+                # Reset VAD counters for next detection cycle
+                self._reset_vad_counters()
+
+                return True, new_audio_chunk
         
         return False, None
     
     def _should_process_now(self):
         """Determine if we should process the current buffer"""
-        
-        # Get current buffer duration
-        buffer_duration = len(self.speech_buffer) * self.chunk_duration
+
+        # Get current unprocessed buffer duration
+        unprocessed_chunks = self.total_chunks_received - self.last_processed_chunk_index
+        buffer_duration = unprocessed_chunks * self.chunk_duration
         
         # Condition 1: Natural pause detected
         if (self.is_in_speech and 
@@ -109,33 +122,63 @@ class SmartAudioChunker:
         
         return False
     
-    def _reset_state(self):
-        """Reset state after processing"""
-        self.speech_buffer.clear()
+    def _extract_new_audio_for_processing(self):
+        """Extract only NEW audio chunks that haven't been sent to Whisper"""
+        if self.last_processed_chunk_index >= self.total_chunks_received:
+            return None  # No new audio
+
+        # Get only the NEW chunks since last processing
+        new_chunks = list(self.continuous_buffer)[self.last_processed_chunk_index:]
+
+        if not new_chunks:
+            return None
+
+        # Combine new chunks into audio data
+        new_audio_chunk = b''.join(new_chunks)
+        return new_audio_chunk
+
+    def _reset_vad_counters(self):
+        """Reset only VAD counters, keep continuous buffer intact"""
         self.current_silence_duration = 0.0
         self.current_speech_duration = 0.0
         self.is_in_speech = False
         self.last_process_time = time.time()
+
+    def _reset_state(self):
+        """Legacy method - now just calls _reset_vad_counters"""
+        self._reset_vad_counters()
     
     def force_process(self):
-        """Force process current buffer (for end of recording)"""
-        if len(self.speech_buffer) > 0:
-            audio_chunk = b''.join(self.speech_buffer)
-            buffer_duration = len(self.speech_buffer) * self.chunk_duration
-            print(f"🔚 Force processing final chunk: {buffer_duration:.1f}s")
-            self._reset_state()
-            return audio_chunk
+        """Force process any remaining NEW audio (for end of recording)"""
+        # Get any unprocessed audio chunks
+        final_chunk = self._extract_new_audio_for_processing()
+
+        if final_chunk:
+            new_chunks_count = self.total_chunks_received - self.last_processed_chunk_index
+            duration = new_chunks_count * self.chunk_duration
+            print(f"🔚 Force processing final chunk: {duration:.1f}s ({new_chunks_count} chunks)")
+
+            # Mark all chunks as processed
+            self.last_processed_chunk_index = self.total_chunks_received
+            return final_chunk
+
         return None
     
     def get_stats(self):
         """Get current chunker statistics"""
-        buffer_duration = len(self.speech_buffer) * self.chunk_duration
+        total_duration = self.total_chunks_received * self.chunk_duration
+        unprocessed_chunks = self.total_chunks_received - self.last_processed_chunk_index
+        unprocessed_duration = unprocessed_chunks * self.chunk_duration
+
         return {
-            'buffer_duration': buffer_duration,
+            'total_duration': total_duration,
+            'total_chunks': self.total_chunks_received,
+            'processed_chunks': self.last_processed_chunk_index,
+            'unprocessed_chunks': unprocessed_chunks,
+            'unprocessed_duration': unprocessed_duration,
             'speech_duration': self.current_speech_duration,
             'silence_duration': self.current_silence_duration,
-            'is_in_speech': self.is_in_speech,
-            'buffer_chunks': len(self.speech_buffer)
+            'is_in_speech': self.is_in_speech
         }
 
 # Test function

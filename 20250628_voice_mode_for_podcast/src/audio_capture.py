@@ -11,8 +11,11 @@ import time
 import numpy as np
 from collections import deque
 import os
-# Smart chunking temporarily disabled - will implement later
-# from smart_chunking import SmartAudioChunker
+# Import smart chunking
+import sys
+import os
+sys.path.append(os.path.dirname(__file__))
+from smart_chunking import SmartAudioChunker
 
 class AudioCapture:
     def __init__(self, sample_rate=16000, channels=1, chunk_size=1024):
@@ -38,13 +41,13 @@ class AudioCapture:
         self.mic_stream = None
         self.system_stream = None
 
-        # Smart chunking (temporarily disabled)
-        # self.smart_chunker = SmartAudioChunker(
-        #     silence_threshold=0.015,      # Adjust based on your environment
-        #     min_silence_duration=0.8,     # 800ms pause triggers processing
-        #     min_speech_duration=1.5,      # Need 1.5s of speech minimum
-        #     max_chunk_duration=12.0       # Max 12s chunks
-        # )
+        # Smart chunking with VAD
+        self.smart_chunker = SmartAudioChunker(
+            silence_threshold=0.02,       # Adjust based on your environment
+            min_silence_duration=0.6,     # 600ms pause triggers processing
+            min_speech_duration=2.0,      # Need 2s of speech minimum
+            max_chunk_duration=15.0       # Max 15s chunks
+        )
     
     def list_devices(self):
         """List available audio input and output devices"""
@@ -98,12 +101,12 @@ class AudioCapture:
         if self.recording_thread:
             self.recording_thread.join(timeout=5.0)
 
-        # Process any remaining audio (smart chunker disabled for now)
-        # if hasattr(self, 'smart_chunker') and self.callback:
-        #     final_chunk = self.smart_chunker.force_process()
-        #     if final_chunk:
-        #         print("🎯 Processing final audio chunk...")
-        #         self.callback(final_chunk, source='microphone', is_transcription=True)
+        # Process any remaining audio in smart chunker
+        if hasattr(self, 'smart_chunker') and self.callback:
+            final_chunk = self.smart_chunker.force_process()
+            if final_chunk:
+                print("🎯 Processing final audio chunk...")
+                self.callback(final_chunk, source='microphone', is_transcription=True)
 
         # Save final audio buffers
         if hasattr(self, '_current_session_dir') and self._current_session_dir:
@@ -140,12 +143,11 @@ class AudioCapture:
                             if self.callback and chunk_count % 10 == 0:
                                 self.callback(mic_data, source='microphone', audio_level=mic_level)
 
-                            # Process microphone audio for transcription with overlap (every 25th chunk ~1.5 seconds)
-                            if self.callback and chunk_count % 25 == 0:
-                                # Use 75 chunks (4.5 seconds) for better context and overlap
-                                audio_chunk = b''.join(list(self.mic_buffer)[-75:])
-                                self.callback(audio_chunk, source='microphone', is_transcription=True)
-                                print(f"🎤 Processing overlapping chunk: {len(list(self.mic_buffer)[-75:])} chunks (~4.5s)")
+                            # Smart chunking for transcription (VAD-based)
+                            if self.callback:
+                                should_process, audio_chunk = self.smart_chunker.add_audio_chunk(mic_data, mic_level)
+                                if should_process:
+                                    self.callback(audio_chunk, source='microphone', is_transcription=True)
                         
                         except Exception as e:
                             print(f"Microphone read error: {e}")

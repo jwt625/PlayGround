@@ -128,6 +128,88 @@ header h1 {
     transform: translateY(-1px);
 }
 
+.btn-secondary {
+    background-color: #007aff;
+    color: white;
+}
+
+.btn-secondary:hover:not(:disabled) {
+    background-color: #0056b3;
+    transform: translateY(-1px);
+}
+
+/* Provider Selection */
+.provider-selection {
+    background: #2a2a2a;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
+    border: 1px solid #3a3a3a;
+}
+
+.provider-selection h3 {
+    margin-bottom: 15px;
+    color: #f5f5f7;
+    font-size: 18px;
+}
+
+.provider-controls {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 15px;
+    flex-wrap: wrap;
+}
+
+.provider-controls label {
+    color: #a1a1a6;
+    font-weight: 500;
+}
+
+.provider-controls select {
+    background: #3a3a3a;
+    color: #f5f5f7;
+    border: 1px solid #4a4a4a;
+    border-radius: 6px;
+    padding: 8px 12px;
+    font-size: 14px;
+    min-width: 150px;
+}
+
+.provider-controls select:focus {
+    outline: none;
+    border-color: #007aff;
+    box-shadow: 0 0 0 2px rgba(0, 122, 255, 0.2);
+}
+
+.provider-status {
+    color: #34c759;
+    font-weight: 500;
+    font-size: 14px;
+}
+
+.provider-info {
+    background: #1a1a1a;
+    border-radius: 8px;
+    padding: 15px;
+    border: 1px solid #3a3a3a;
+}
+
+.provider-info p {
+    margin-bottom: 8px;
+    font-size: 14px;
+    color: #a1a1a6;
+}
+
+.provider-info p:last-child {
+    margin-bottom: 0;
+}
+
+.provider-info strong {
+    color: #f5f5f7;
+}
+
 /* Audio Levels */
 .audio-levels {
     background: #2a2a2a;

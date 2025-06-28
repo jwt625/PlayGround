@@ -15,6 +15,7 @@ class TranscriptRecorder {
         this.initializeElements();
         this.setupEventListeners();
         this.setupSSEConnection();
+        this.loadCurrentStatus();
     }
     
     initializeElements() {
@@ -22,6 +23,11 @@ class TranscriptRecorder {
         this.startBtn = document.getElementById('start-btn');
         this.stopBtn = document.getElementById('stop-btn');
         this.clearBtn = document.getElementById('clear-btn');
+
+        // Provider selection elements
+        this.providerSelect = document.getElementById('provider-select');
+        this.setProviderBtn = document.getElementById('set-provider-btn');
+        this.providerStatus = document.getElementById('provider-status');
         
         // Status elements
         this.statusDot = document.getElementById('status-dot');
@@ -48,6 +54,7 @@ class TranscriptRecorder {
     setupEventListeners() {
         this.startBtn.addEventListener('click', () => this.startRecording());
         this.stopBtn.addEventListener('click', () => this.stopRecording());
+        this.setProviderBtn.addEventListener('click', () => this.setTranscriptionProvider());
         this.clearBtn.addEventListener('click', () => this.clearTranscript());
     }
     
@@ -173,7 +180,70 @@ class TranscriptRecorder {
             this.stopBtn.disabled = false;
         }
     }
-    
+
+    async setTranscriptionProvider() {
+        try {
+            if (this.isRecording) {
+                this.showErrorMessage('Cannot change provider while recording');
+                return;
+            }
+
+            const provider = this.providerSelect.value;
+            this.setProviderBtn.disabled = true;
+            this.setProviderBtn.textContent = 'Setting...';
+
+            const response = await fetch('/api/set-provider', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ provider: provider })
+            });
+
+            const result = await response.json();
+
+            if (response.ok) {
+                this.providerStatus.textContent = `Current: ${provider}`;
+                this.showSuccessMessage(`Transcription provider set to ${provider}`);
+                console.log('Provider changed:', result);
+            } else {
+                throw new Error(result.error || 'Failed to set provider');
+            }
+
+        } catch (error) {
+            console.error('Error setting provider:', error);
+            this.showErrorMessage(error.message);
+        } finally {
+            this.setProviderBtn.disabled = false;
+            this.setProviderBtn.textContent = 'Set Provider';
+        }
+    }
+
+    async loadCurrentStatus() {
+        try {
+            const response = await fetch('/api/status');
+            const status = await response.json();
+
+            if (response.ok) {
+                // Update provider selection
+                this.providerSelect.value = status.transcription_provider || 'whisper';
+                this.providerStatus.textContent = `Current: ${status.transcription_provider || 'whisper'}`;
+
+                // Update recording state
+                if (status.is_recording) {
+                    this.isRecording = true;
+                    this.sessionId = status.session_id;
+                    this.updateStatus('recording', 'Recording');
+                    this.startBtn.disabled = true;
+                    this.stopBtn.disabled = false;
+                    this.showSessionInfo();
+                }
+            }
+        } catch (error) {
+            console.error('Error loading status:', error);
+        }
+    }
+
     clearTranscript() {
         this.transcriptEntries = [];
         this.segmentCount = 0;
@@ -362,6 +432,26 @@ class TranscriptRecorder {
         setTimeout(() => {
             errorDiv.remove();
         }, 10000);
+    }
+
+    showSuccessMessage(message) {
+        // Create success notification
+        const successDiv = document.createElement('div');
+        successDiv.className = 'success-notification';
+        successDiv.innerHTML = `
+            <div style="background: #34c759; color: white; padding: 15px; border-radius: 8px; margin: 10px 0;">
+                <strong>Success:</strong> ${message}
+            </div>
+        `;
+
+        // Insert at top of container
+        const container = document.querySelector('.container');
+        container.insertBefore(successDiv, container.firstChild);
+
+        // Remove after 5 seconds
+        setTimeout(() => {
+            successDiv.remove();
+        }, 5000);
     }
 }
 

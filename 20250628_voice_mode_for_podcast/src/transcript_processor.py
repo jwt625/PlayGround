@@ -28,6 +28,10 @@ class TranscriptProcessor:
         # Statistics
         self.total_processed = 0
         self.total_processing_time = 0
+
+        # Deduplication for smart chunking
+        self.recent_transcripts = []  # Keep last few transcripts for deduplication
+        self.max_recent_transcripts = 5
         
         # Load model
         self._load_model()
@@ -81,6 +85,14 @@ class TranscriptProcessor:
             if not text:
                 print("⚠️  Empty transcript result")
                 return None
+
+            # Smart deduplication
+            cleaned_text = self._deduplicate_text(text)
+            if not cleaned_text:
+                print("🔄 Duplicate content filtered out")
+                return None
+
+            text = cleaned_text
             
             # Update statistics
             self.total_processed += 1
@@ -223,6 +235,65 @@ class TranscriptProcessor:
         """Set the target language for transcription"""
         self.language = language
         print(f"Language set to: {language or 'auto-detect'}")
+
+    def _deduplicate_text(self, text):
+        """Remove duplicate content from overlapping chunks"""
+        import difflib
+
+        # Clean and normalize text
+        text = text.strip()
+        if not text:
+            return None
+
+        # Check against recent transcripts
+        for recent_text in self.recent_transcripts:
+            # Calculate similarity
+            similarity = difflib.SequenceMatcher(None, text.lower(), recent_text.lower()).ratio()
+
+            # If very similar (>80%), extract only new content
+            if similarity > 0.8:
+                print(f"🔍 High similarity ({similarity:.2f}) detected, extracting new content")
+                new_content = self._extract_new_content(text, recent_text)
+                if new_content:
+                    text = new_content
+                    break
+                else:
+                    return None  # No new content
+
+        # Add to recent transcripts (keep only last few)
+        self.recent_transcripts.append(text)
+        if len(self.recent_transcripts) > self.max_recent_transcripts:
+            self.recent_transcripts.pop(0)
+
+        return text
+
+    def _extract_new_content(self, current_text, previous_text):
+        """Extract new content from current text that wasn't in previous"""
+        import difflib
+
+        # Split into words for better comparison
+        current_words = current_text.split()
+        previous_words = previous_text.split()
+
+        # Find the longest common subsequence
+        matcher = difflib.SequenceMatcher(None, previous_words, current_words)
+
+        # Get new words that weren't in previous text
+        new_words = []
+        for tag, i1, i2, j1, j2 in matcher.get_opcodes():
+            if tag == 'insert':
+                new_words.extend(current_words[j1:j2])
+            elif tag == 'replace':
+                # Take the new version in case of replacements
+                new_words.extend(current_words[j1:j2])
+
+        # Only return if we have substantial new content (>3 words)
+        if len(new_words) > 3:
+            new_content = ' '.join(new_words).strip()
+            print(f"✨ Extracted new content: '{new_content}'")
+            return new_content
+
+        return None
 
 # Test function
 def test_transcript_processor():
