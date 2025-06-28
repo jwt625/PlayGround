@@ -4,14 +4,14 @@ ChatGPT Voice Mode Transcript Recorder
 Main Flask Application
 """
 
-from flask import Flask, render_template, request, jsonify
-from flask_socketio import SocketIO, emit
+from flask import Flask, render_template, request, jsonify, Response
 import os
 import json
 import sqlite3
 from datetime import datetime
 import threading
 import time
+import queue
 
 # Import our custom modules
 from src.audio_capture import AudioCapture
@@ -19,7 +19,9 @@ from src.transcript_processor import TranscriptProcessor
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'your-secret-key-here'
-socketio = SocketIO(app, cors_allowed_origins="*")
+
+# SSE streaming queue
+stream_queue = queue.Queue(maxsize=1000)  # Prevent memory issues
 
 # Global state
 recording_state = {
@@ -35,6 +37,30 @@ transcript_processor = None
 def index():
     """Main transcript display page"""
     return render_template('index.html')
+
+@app.route('/stream')
+def stream():
+    """Server-Sent Events endpoint for real-time updates"""
+    def event_stream():
+        while True:
+            try:
+                # Get data from queue (blocks until available)
+                data = stream_queue.get(timeout=1)
+                yield f"data: {json.dumps(data)}\n\n"
+            except queue.Empty:
+                # Send heartbeat to keep connection alive
+                yield "data: {\"type\": \"heartbeat\"}\n\n"
+            except Exception as e:
+                print(f"SSE stream error: {e}")
+                break
+
+    return Response(event_stream(),
+                   mimetype='text/event-stream',
+                   headers={
+                       'Cache-Control': 'no-cache',
+                       'Connection': 'keep-alive',
+                       'Access-Control-Allow-Origin': '*'
+                   })
 
 @app.route('/api/status')
 def get_status():
@@ -74,15 +100,19 @@ def start_recording():
             'start_time': datetime.now().isoformat()
         })
         
-        # Test WebSocket connection
-        socketio.emit('transcript_update', {
-            'session_id': session_id,
-            'timestamp': datetime.now().isoformat(),
-            'source': 'system',
-            'text': '🎯 Recording started! WebSocket connection test.',
-            'confidence': 1.0,
-            'is_final': True
-        })
+        # Send recording started message via SSE
+        try:
+            stream_queue.put({
+                'type': 'transcript_update',
+                'session_id': session_id,
+                'timestamp': datetime.now().isoformat(),
+                'source': 'system',
+                'text': '🎯 Recording started! SSE connection working.',
+                'confidence': 1.0,
+                'is_final': True
+            }, block=False)
+        except queue.Full:
+            print("⚠️ Stream queue full, dropping message")
 
         # Start audio capture in background thread
         def audio_thread():
@@ -156,16 +186,22 @@ def on_audio_chunk(audio_data, source='microphone', audio_level=None, is_transcr
 
     # Handle audio level updates
     if audio_level is not None:
-        level_data = {}
+        level_data = {
+            'type': 'audio_level',
+            'timestamp': datetime.now().isoformat()
+        }
         if source == 'microphone':
             level_data['microphone_level'] = audio_level
         elif source == 'system':
             level_data['system_level'] = audio_level
 
-        # Emit audio level update to frontend with proper context
-        with app.app_context():
-            socketio.emit('audio_level', level_data)
-            print(f"🔊 Audio level emitted: {level_data}")
+        # Send audio level via SSE queue
+        try:
+            stream_queue.put(level_data, block=False)
+            print(f"🔊 Audio level queued: {level_data}")
+        except queue.Full:
+            # Skip if queue is full (audio levels are frequent)
+            pass
 
     # Handle transcription processing
     if is_transcription and transcript_processor:
@@ -179,8 +215,9 @@ def on_audio_chunk(audio_data, source='microphone', audio_level=None, is_transcr
             if transcript_result and transcript_result.get('text', '').strip():
                 print(f"📝 Transcript ({source}): {transcript_result['text']}")
 
-                # Emit transcript update to frontend with proper context
+                # Send transcript update via SSE queue
                 transcript_data = {
+                    'type': 'transcript_update',
                     'session_id': recording_state['session_id'],
                     'timestamp': datetime.now().isoformat(),
                     'source': source,
@@ -188,32 +225,15 @@ def on_audio_chunk(audio_data, source='microphone', audio_level=None, is_transcr
                     'confidence': transcript_result.get('confidence', 0),
                     'is_final': transcript_result.get('is_final', False)
                 }
-                with app.app_context():
-                    socketio.emit('transcript_update', transcript_data)
-                    print(f"📤 Transcript emitted: {transcript_data}")
+                try:
+                    stream_queue.put(transcript_data, block=False)
+                    print(f"📤 Transcript queued: {transcript_data}")
+                except queue.Full:
+                    print("⚠️ Stream queue full, dropping transcript")
         except Exception as e:
             print(f"Error processing transcript: {e}")
 
-@socketio.on('connect')
-def handle_connect():
-    """Handle client connection"""
-    print('Client connected')
-    emit('status', {
-        'connected': True,
-        'recording_state': recording_state
-    })
-
-@socketio.on('disconnect')
-def handle_disconnect():
-    """Handle client disconnection"""
-    print('Client disconnected')
-
-@socketio.on('request_status')
-def handle_status_request():
-    """Handle status request from client"""
-    emit('status', {
-        'recording_state': recording_state
-    })
+# SSE doesn't need connection handlers - connections are automatic
 
 def init_database():
     """Initialize SQLite database"""
@@ -254,9 +274,10 @@ if __name__ == '__main__':
     
     print("🎯 ChatGPT Voice Mode Transcript Recorder")
     print("=" * 50)
-    print("Starting Flask server...")
+    print("Starting Flask server with SSE...")
     print("Open http://localhost:5001 in your browser")
+    print("SSE stream available at http://localhost:5001/stream")
     print("=" * 50)
 
-    # Run the app
-    socketio.run(app, debug=True, host='0.0.0.0', port=5001)
+    # Run the app (regular Flask, no SocketIO)
+    app.run(debug=True, host='0.0.0.0', port=5001, threaded=True)

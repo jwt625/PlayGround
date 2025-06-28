@@ -2,7 +2,7 @@
 
 class TranscriptRecorder {
     constructor() {
-        this.socket = io();
+        this.eventSource = null;
         this.isRecording = false;
         this.sessionId = null;
         this.startTime = null;
@@ -11,10 +11,10 @@ class TranscriptRecorder {
         this.wordCount = 0;
         this.confidenceSum = 0;
         this.confidenceCount = 0;
-        
+
         this.initializeElements();
         this.setupEventListeners();
-        this.setupSocketListeners();
+        this.setupSSEConnection();
     }
     
     initializeElements() {
@@ -51,33 +51,47 @@ class TranscriptRecorder {
         this.clearBtn.addEventListener('click', () => this.clearTranscript());
     }
     
-    setupSocketListeners() {
-        this.socket.on('connect', () => {
-            console.log('Connected to server');
+    setupSSEConnection() {
+        console.log('Setting up SSE connection...');
+        this.eventSource = new EventSource('/stream');
+
+        this.eventSource.onopen = () => {
+            console.log('📡 SSE connection opened');
             this.updateStatus('ready', 'Connected');
-        });
-        
-        this.socket.on('disconnect', () => {
-            console.log('Disconnected from server');
-            this.updateStatus('error', 'Disconnected');
-        });
-        
-        this.socket.on('status', (data) => {
-            console.log('Status update:', data);
-            if (data.recording_state) {
-                this.updateRecordingState(data.recording_state);
+        };
+
+        this.eventSource.onerror = (error) => {
+            console.error('❌ SSE connection error:', error);
+            this.updateStatus('error', 'Connection Error');
+        };
+
+        this.eventSource.onmessage = (event) => {
+            try {
+                console.log('🔍 Raw SSE event data:', event.data);
+                const data = JSON.parse(event.data);
+                console.log('📨 SSE message parsed:', data);
+
+                switch (data.type) {
+                    case 'transcript_update':
+                        console.log('📝 Processing transcript update:', data);
+                        this.addTranscriptEntry(data);
+                        break;
+                    case 'audio_level':
+                        console.log('🔊 Processing audio level:', data);
+                        console.log('🔊 Microphone level:', data.microphone_level);
+                        console.log('🔊 System level:', data.system_level);
+                        this.updateAudioLevels(data);
+                        break;
+                    case 'heartbeat':
+                        console.log('💓 Heartbeat received');
+                        break;
+                    default:
+                        console.log('❓ Unknown SSE message type:', data.type, data);
+                }
+            } catch (error) {
+                console.error('❌ Error parsing SSE message:', error, 'Raw data:', event.data);
             }
-        });
-        
-        this.socket.on('transcript_update', (data) => {
-            console.log('📝 Transcript update received:', data);
-            this.addTranscriptEntry(data);
-        });
-        
-        this.socket.on('audio_level', (data) => {
-            console.log('🔊 Audio level received:', data);
-            this.updateAudioLevels(data);
-        });
+        };
     }
     
     async startRecording() {
@@ -255,11 +269,17 @@ class TranscriptRecorder {
     }
     
     updateAudioLevels(data) {
+        console.log('🎚️ updateAudioLevels called with:', data);
+
         if (data.microphone_level !== undefined) {
-            this.micLevel.style.width = `${data.microphone_level * 100}%`;
+            const percentage = data.microphone_level * 100;
+            console.log(`🎤 Setting mic level to ${percentage}%`);
+            this.micLevel.style.width = `${percentage}%`;
         }
         if (data.system_level !== undefined) {
-            this.systemLevel.style.width = `${data.system_level * 100}%`;
+            const percentage = data.system_level * 100;
+            console.log(`🔊 Setting system level to ${percentage}%`);
+            this.systemLevel.style.width = `${percentage}%`;
         }
     }
     

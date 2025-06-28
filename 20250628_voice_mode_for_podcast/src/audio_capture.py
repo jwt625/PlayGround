@@ -70,6 +70,8 @@ class AudioCapture:
         # Create session directory
         session_dir = f"audio_samples/{session_id}"
         os.makedirs(session_dir, exist_ok=True)
+        self._current_session_dir = session_dir
+        print(f"📁 Created session directory: {session_dir}")
         
         # Start recording thread
         self.recording_thread = threading.Thread(
@@ -82,10 +84,15 @@ class AudioCapture:
     def stop_recording(self):
         """Stop recording"""
         self.is_recording = False
-        
+
         if self.recording_thread:
             self.recording_thread.join(timeout=5.0)
-        
+
+        # Save final audio buffers
+        if hasattr(self, '_current_session_dir') and self._current_session_dir:
+            print("💾 Saving final audio buffers...")
+            self._save_audio_buffers(self._current_session_dir, 9999)
+
         self._close_streams()
     
     def _recording_loop(self, session_dir):
@@ -109,8 +116,8 @@ class AudioCapture:
                             )
                             self.mic_buffer.append(mic_data)
                             
-                            # Calculate and emit audio level
-                            if self.callback:
+                            # Calculate and emit audio level (every 10th chunk for performance)
+                            if self.callback and chunk_count % 10 == 0:
                                 mic_level = self.get_audio_level(mic_data)
                                 self.callback(mic_data, source='microphone', audio_level=mic_level)
 
@@ -132,8 +139,8 @@ class AudioCapture:
                             )
                             self.system_buffer.append(system_data)
                             
-                            # Calculate and emit audio level
-                            if self.callback:
+                            # Calculate and emit audio level (every 10th chunk for performance)
+                            if self.callback and chunk_count % 10 == 0:
                                 system_level = self.get_audio_level(system_data)
                                 self.callback(system_data, source='system', audio_level=system_level)
 
@@ -147,8 +154,10 @@ class AudioCapture:
                     
                     chunk_count += 1
                     
-                    # Save audio periodically (every 30 seconds)
-                    if chunk_count % (self.sample_rate // self.chunk_size * 30) == 0:
+                    # Save audio periodically (every 10 seconds for testing)
+                    save_interval = self.sample_rate // self.chunk_size * 10  # 10 seconds
+                    if chunk_count % save_interval == 0:
+                        print(f"💾 Saving audio buffers at chunk {chunk_count}")
                         self._save_audio_buffers(session_dir, chunk_count)
                     
                     # Small delay to prevent excessive CPU usage
