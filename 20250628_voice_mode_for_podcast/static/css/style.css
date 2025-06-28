@@ -1,0 +1,361 @@
+/* ChatGPT Voice Mode Transcript Recorder Styles */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background-color: #f5f5f7;
+    color: #1d1d1f;
+    line-height: 1.6;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* Header */
+header {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+header h1 {
+    font-size: 24px;
+    margin-bottom: 15px;
+    color: #1d1d1f;
+}
+
+.status-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.status-indicator {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.status-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background-color: #8e8e93;
+    transition: background-color 0.3s ease;
+}
+
+.status-dot.ready { background-color: #34c759; }
+.status-dot.recording { background-color: #ff3b30; animation: pulse 1.5s infinite; }
+.status-dot.error { background-color: #ff9500; }
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+.session-info {
+    font-size: 14px;
+    color: #8e8e93;
+}
+
+/* Controls */
+.controls {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.btn {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.btn-start {
+    background-color: #34c759;
+    color: white;
+}
+
+.btn-start:hover:not(:disabled) {
+    background-color: #30d158;
+    transform: translateY(-1px);
+}
+
+.btn-stop {
+    background-color: #ff3b30;
+    color: white;
+}
+
+.btn-stop:hover:not(:disabled) {
+    background-color: #ff453a;
+    transform: translateY(-1px);
+}
+
+.btn-clear {
+    background-color: #8e8e93;
+    color: white;
+}
+
+.btn-clear:hover {
+    background-color: #636366;
+    transform: translateY(-1px);
+}
+
+/* Audio Levels */
+.audio-levels {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.level-meter {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.level-meter:last-child {
+    margin-bottom: 0;
+}
+
+.level-meter label {
+    min-width: 150px;
+    font-weight: 600;
+    color: #1d1d1f;
+}
+
+.meter {
+    flex: 1;
+    height: 8px;
+    background-color: #f2f2f7;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.meter-bar {
+    height: 100%;
+    background: linear-gradient(90deg, #34c759 0%, #ffcc02 70%, #ff3b30 100%);
+    width: 0%;
+    transition: width 0.1s ease;
+}
+
+/* Transcript Container */
+.transcript-container {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    min-height: 400px;
+}
+
+.transcript-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #f2f2f7;
+}
+
+.transcript-header h2 {
+    font-size: 20px;
+    color: #1d1d1f;
+}
+
+.transcript-stats {
+    display: flex;
+    gap: 20px;
+    font-size: 14px;
+    color: #8e8e93;
+}
+
+.transcript-content {
+    max-height: 500px;
+    overflow-y: auto;
+    padding-right: 10px;
+}
+
+.transcript-placeholder {
+    text-align: center;
+    color: #8e8e93;
+    padding: 40px 20px;
+}
+
+.transcript-placeholder ul {
+    text-align: left;
+    display: inline-block;
+    margin-top: 15px;
+}
+
+.transcript-placeholder li {
+    margin-bottom: 5px;
+}
+
+/* Transcript Entries */
+.transcript-entry {
+    margin-bottom: 15px;
+    padding: 15px;
+    border-radius: 8px;
+    border-left: 4px solid #007aff;
+}
+
+.transcript-entry.user {
+    background-color: #f0f9ff;
+    border-left-color: #007aff;
+}
+
+.transcript-entry.chatgpt {
+    background-color: #f0fdf4;
+    border-left-color: #34c759;
+}
+
+.transcript-entry.processing {
+    background-color: #fefce8;
+    border-left-color: #ffcc02;
+    opacity: 0.7;
+}
+
+.transcript-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+    font-size: 12px;
+    color: #8e8e93;
+}
+
+.transcript-text {
+    font-size: 16px;
+    line-height: 1.5;
+    color: #1d1d1f;
+}
+
+.confidence-indicator {
+    display: inline-block;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.confidence-high { background-color: #d1fae5; color: #065f46; }
+.confidence-medium { background-color: #fef3c7; color: #92400e; }
+.confidence-low { background-color: #fee2e2; color: #991b1b; }
+
+/* Quality Monitor */
+.quality-monitor {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.quality-monitor h3 {
+    font-size: 18px;
+    margin-bottom: 15px;
+    color: #1d1d1f;
+}
+
+.quality-metrics {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+}
+
+.metric {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    background-color: #f2f2f7;
+    border-radius: 6px;
+}
+
+.metric label {
+    font-weight: 600;
+    color: #1d1d1f;
+}
+
+.metric span {
+    color: #8e8e93;
+    font-family: 'SF Mono', Monaco, monospace;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .container {
+        padding: 15px;
+    }
+    
+    .controls {
+        flex-direction: column;
+    }
+    
+    .btn {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .status-bar {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .transcript-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+    
+    .quality-metrics {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Scrollbar Styling */
+.transcript-content::-webkit-scrollbar {
+    width: 6px;
+}
+
+.transcript-content::-webkit-scrollbar-track {
+    background: #f2f2f7;
+    border-radius: 3px;
+}
+
+.transcript-content::-webkit-scrollbar-thumb {
+    background: #c7c7cc;
+    border-radius: 3px;
+}
+
+.transcript-content::-webkit-scrollbar-thumb:hover {
+    background: #a8a8af;
+}

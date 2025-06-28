@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ChatGPT Voice Mode Transcript Recorder</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎯 ChatGPT Voice Mode Transcript Recorder</h1>
+            <div class="status-bar">
+                <div class="status-indicator" id="status-indicator">
+                    <span class="status-dot" id="status-dot"></span>
+                    <span id="status-text">Ready</span>
+                </div>
+                <div class="session-info" id="session-info" style="display: none;">
+                    <span>Session: <span id="session-id"></span></span>
+                    <span>Duration: <span id="duration">00:00</span></span>
+                </div>
+            </div>
+        </header>
+
+        <div class="controls">
+            <button id="start-btn" class="btn btn-start">🎤 Start Recording</button>
+            <button id="stop-btn" class="btn btn-stop" disabled>⏹️ Stop Recording</button>
+            <button id="clear-btn" class="btn btn-clear">🗑️ Clear Transcript</button>
+        </div>
+
+        <div class="audio-levels">
+            <div class="level-meter">
+                <label>Microphone Level:</label>
+                <div class="meter">
+                    <div class="meter-bar" id="mic-level"></div>
+                </div>
+            </div>
+            <div class="level-meter">
+                <label>System Audio Level:</label>
+                <div class="meter">
+                    <div class="meter-bar" id="system-level"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="transcript-container">
+            <div class="transcript-header">
+                <h2>Live Transcript</h2>
+                <div class="transcript-stats">
+                    <span>Segments: <span id="segment-count">0</span></span>
+                    <span>Words: <span id="word-count">0</span></span>
+                </div>
+            </div>
+            
+            <div class="transcript-content" id="transcript-content">
+                <div class="transcript-placeholder">
+                    <p>🎙️ Click "Start Recording" to begin transcribing your ChatGPT conversation</p>
+                    <p>Make sure you have:</p>
+                    <ul>
+                        <li>✅ Microphone connected and permissions granted</li>
+                        <li>✅ System audio routing configured (see AUDIO_SETUP.md)</li>
+                        <li>✅ ChatGPT voice mode ready</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="quality-monitor">
+            <h3>Quality Monitor</h3>
+            <div class="quality-metrics">
+                <div class="metric">
+                    <label>Avg Confidence:</label>
+                    <span id="avg-confidence">--</span>
+                </div>
+                <div class="metric">
+                    <label>Processing Delay:</label>
+                    <span id="processing-delay">--</span>
+                </div>
+                <div class="metric">
+                    <label>Last Save:</label>
+                    <span id="last-save">--</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>
