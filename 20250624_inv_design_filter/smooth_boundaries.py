@@ -88,6 +88,7 @@ def find_area_preserving_threshold(smoothed_grid, target_area, tolerance=1, debu
         print(f"Binary search range: [{low:.6f}, {high:.6f}]")
         print(f"Target area: {target_area}")
 
+    target_area = target_area * 1.1
     # Binary search with precision
     for iteration in range(50):  # 50 iterations gives very high precision
         mid = (low + high) / 2.0
@@ -95,7 +96,7 @@ def find_area_preserving_threshold(smoothed_grid, target_area, tolerance=1, debu
         # Calculate area with current threshold
         binary_result = (smoothed_grid > mid).astype(int)
         current_area = np.sum(binary_result)
-        diff = current_area - target_area * 1.5
+        diff = current_area - target_area
 
         # Track best result
         if abs(diff) < abs(best_diff):
@@ -454,7 +455,7 @@ if __name__ == "__main__":
 
     # Parameters
     image_path = "in.png"
-    gaussian_sigma = 4.0  # Adjustable smoothing parameter
+    gaussian_sigma = 6.0  # Adjustable smoothing parameter
 
     # Run the pipeline
     results = smooth_boundaries_pipeline(
