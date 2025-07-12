@@ -1,0 +1,11 @@
+[project]
+name = "hunyuan-api-test"
+version = "0.1.0"
+description = "Test suite for Hunyuan3D API server with comprehensive endpoint testing"
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = [
+    "requests>=2.31.0",
+    "python-dotenv>=1.0.0",
+    "pillow>=10.0.0",
+]
