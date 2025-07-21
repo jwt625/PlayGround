@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<VTKFile type="PUnstructuredGrid" version ="0.1" byte_order="LittleEndian">
+<PUnstructuredGrid GhostLevel="0">
+<PPoints>
+	<PDataArray type="Float32"  Name="Points" NumberOfComponents="3" format="binary"/>
+</PPoints>
+<PCells>
+	<PDataArray type="Int32"  Name="connectivity" NumberOfComponents="1" format="binary"/>
+	<PDataArray type="Int32"  Name="offsets"      NumberOfComponents="1" format="binary"/>
+	<PDataArray type="UInt8"  Name="types"        NumberOfComponents="1" format="binary"/>
+</PCells>
+<PPointData>
+<PDataArray type="Float32" Name="Qs_imag" NumberOfComponents="1" format="binary" />
+<PDataArray type="Float32" Name="Qs_real" NumberOfComponents="1" format="binary" />
+<PDataArray type="Float32" Name="Ue" NumberOfComponents="1" format="binary" />
+<PDataArray type="Float32" Name="Um" NumberOfComponents="1" format="binary" />
+<PDataArray type="Float32" Name="B_imag" NumberOfComponents="3" format="binary" />
+<PDataArray type="Float32" Name="B_real" NumberOfComponents="3" format="binary" />
+<PDataArray type="Float32" Name="E_imag" NumberOfComponents="3" format="binary" />
+<PDataArray type="Float32" Name="E_real" NumberOfComponents="3" format="binary" />
+<PDataArray type="Float32" Name="Js_imag" NumberOfComponents="3" format="binary" />
+<PDataArray type="Float32" Name="Js_real" NumberOfComponents="3" format="binary" />
+</PPointData>
+<PCellData>
+	<PDataArray type="Int32" Name="attribute" NumberOfComponents="1" format="binary"/>
+</PCellData>
+<Piece Source="proc000000.vtu"/>
+</PUnstructuredGrid>
+</VTKFile>
