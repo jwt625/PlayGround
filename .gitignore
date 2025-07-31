@@ -67,3 +67,6 @@ venv.bak/
 *.wav
 *.mp3
 *.mph
+
+*/node_modules/*
+20250621_MCPxScience/build/*
