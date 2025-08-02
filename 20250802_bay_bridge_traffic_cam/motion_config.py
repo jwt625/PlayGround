@@ -20,7 +20,7 @@ BACKGROUND_SUBTRACTOR_CONFIG = {
 # Motion Detection Thresholds
 MOTION_DETECTION = {
     # Object size filters (in pixels)
-    "min_contour_area": 20,     # LOWERED from 100 - detects smaller cars
+    "min_contour_area": 3,     # LOWERED from 100 - detects smaller cars
     "max_contour_area": 8000,   # INCREASED from 5000 - allows larger vehicles
     
     # Morphological operations (noise reduction)
@@ -29,7 +29,7 @@ MOTION_DETECTION = {
     
     # Contour filtering
     "min_aspect_ratio": 0.1,     # Minimum width/height ratio (filters thin lines)
-    "max_aspect_ratio": 5.0,     # Maximum width/height ratio
+    "max_aspect_ratio": 100.0,     # Maximum width/height ratio
     "min_extent": 0.2,           # Minimum contour area / bounding box area
 }
 
@@ -128,7 +128,7 @@ DEMO_CONFIG = {
 # Presets for different scenarios
 DETECTION_PRESETS = {
     "high_sensitivity": {
-        "min_contour_area": 25,         # Very small objects
+        "min_contour_area": 3,         # Very small objects
         "varThreshold": 30,             # More sensitive background subtraction
         "enable_multiscale": True,
     },

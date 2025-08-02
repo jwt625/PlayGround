@@ -53,6 +53,7 @@ class MotionTrafficDetector:
         self.paused_frame = None
         self.paused_fg_mask = None
         self.paused_contours = []
+        self.pause_analysis_printed = False  # Track if we've printed analysis for current pause
 
         # Print configuration on startup
         config.print_config_summary()
@@ -269,6 +270,110 @@ class MotionTrafficDetector:
 
         return display_frame
 
+    def analyze_detections(self, fg_mask):
+        """Analyze all detections and return detailed information."""
+        if fg_mask is None:
+            return []
+
+        # Find ALL contours for analysis
+        all_contours, _ = cv2.findContours(fg_mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+
+        detection_analysis = []
+
+        for i, contour in enumerate(all_contours):
+            area = cv2.contourArea(contour)
+            x, y, w, h = cv2.boundingRect(contour)
+
+            # Calculate shape metrics
+            aspect_ratio = w / h if h > 0 else 0
+            extent = area / (w * h) if w > 0 and h > 0 else 0
+
+            # Determine status and reason
+            if area < self.min_contour_area:
+                status = "REJECTED"
+                reason = "TOO_SMALL"
+                color_name = "RED"
+            elif area > self.max_contour_area:
+                status = "REJECTED"
+                reason = "TOO_LARGE"
+                color_name = "BLUE"
+            elif aspect_ratio < self.min_aspect_ratio:
+                status = "REJECTED"
+                reason = "ASPECT_RATIO_TOO_LOW"
+                color_name = "ORANGE"
+            elif aspect_ratio > self.max_aspect_ratio:
+                status = "REJECTED"
+                reason = "ASPECT_RATIO_TOO_HIGH"
+                color_name = "ORANGE"
+            elif extent < self.min_extent:
+                status = "REJECTED"
+                reason = "EXTENT_TOO_LOW"
+                color_name = "ORANGE"
+            else:
+                status = "VALID"
+                reason = "PASSED_ALL_FILTERS"
+                color_name = "GREEN"
+
+            # Adjust coordinates if ROI is set
+            display_x, display_y = x, y
+            if self.roi_set and self.roi is not None:
+                roi_x, roi_y, _, _ = self.roi
+                display_x += roi_x
+                display_y += roi_y
+
+            detection_info = {
+                'id': i + 1,
+                'status': status,
+                'reason': reason,
+                'color_name': color_name,
+                'area': int(area),
+                'bbox': (display_x, display_y, w, h),
+                'aspect_ratio': round(aspect_ratio, 3),
+                'extent': round(extent, 3),
+                'contour': contour
+            }
+
+            detection_analysis.append(detection_info)
+
+        return detection_analysis
+
+    def print_detection_analysis(self, detection_analysis):
+        """Print detailed detection analysis to terminal."""
+        print("\n" + "="*80)
+        print("PAUSED FRAME DETECTION ANALYSIS")
+        print("="*80)
+
+        if not detection_analysis:
+            print("No motion detected in this frame.")
+            return
+
+        # Count by status
+        valid_count = sum(1 for d in detection_analysis if d['status'] == 'VALID')
+        rejected_count = len(detection_analysis) - valid_count
+
+        print(f"Total Objects Detected: {len(detection_analysis)}")
+        print(f"Valid Detections: {valid_count}")
+        print(f"Rejected Detections: {rejected_count}")
+        print()
+
+        # Print each detection
+        for detection in detection_analysis:
+            status_symbol = "✅" if detection['status'] == 'VALID' else "❌"
+            print(f"{status_symbol} Object #{detection['id']:2d} | {detection['color_name']:6s} | {detection['status']:8s}")
+            print(f"   Reason: {detection['reason']}")
+            print(f"   Area: {detection['area']:4d} pixels")
+            print(f"   BBox: ({detection['bbox'][0]:3d},{detection['bbox'][1]:3d}) {detection['bbox'][2]:3d}x{detection['bbox'][3]:3d}")
+            print(f"   Aspect Ratio: {detection['aspect_ratio']:5.3f} (range: {self.min_aspect_ratio}-{self.max_aspect_ratio})")
+            print(f"   Extent: {detection['extent']:5.3f} (min: {self.min_extent})")
+            print()
+
+        # Print filter thresholds
+        print("CURRENT FILTER SETTINGS:")
+        print(f"  Size Range: {self.min_contour_area} - {self.max_contour_area} pixels")
+        print(f"  Aspect Ratio: {self.min_aspect_ratio} - {self.max_aspect_ratio}")
+        print(f"  Min Extent: {self.min_extent}")
+        print("="*80)
+
     def create_debug_motion_mask(self, frame, fg_mask, _contours):
         """Create enhanced motion mask with bounding boxes for debugging."""
         # Create 3-channel mask for colored overlays
@@ -289,60 +394,44 @@ class MotionTrafficDetector:
             # Full frame mask
             mask_display = cv2.cvtColor(fg_mask, cv2.COLOR_GRAY2BGR)
 
-        # Find ALL contours (not just filtered ones) for debugging
-        all_contours, _ = cv2.findContours(fg_mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+        # Get detailed analysis
+        detection_analysis = self.analyze_detections(fg_mask)
 
-        # Draw all contours with different colors based on size
-        for contour in all_contours:
-            area = cv2.contourArea(contour)
-            x, y, w, h = cv2.boundingRect(contour)
+        # Draw all detections with analysis
+        for detection in detection_analysis:
+            x, y, w, h = detection['bbox']
 
-            # Adjust coordinates if ROI is set
-            if self.roi_set and self.roi is not None:
-                roi_x, roi_y, _, _ = self.roi
-                x += roi_x
-                y += roi_y
-
-            # Color code by size and validity
-            if area < self.min_contour_area:
-                # Too small - RED
-                color = (0, 0, 255)
-                label = f"TOO SMALL: {int(area)}"
-            elif area > self.max_contour_area:
-                # Too large - BLUE
-                color = (255, 0, 0)
-                label = f"TOO LARGE: {int(area)}"
-            else:
-                # Valid size - check shape filters
-                aspect_ratio = w / h if h > 0 else 0
-                extent = area / (w * h) if w > 0 and h > 0 else 0
-
-                if (self.min_aspect_ratio <= aspect_ratio <= self.max_aspect_ratio and
-                    extent >= self.min_extent):
-                    # VALID detection - GREEN
-                    color = (0, 255, 0)
-                    label = f"VALID: {int(area)}"
-                else:
-                    # Failed shape filter - ORANGE
-                    color = (0, 165, 255)
-                    label = f"SHAPE: {int(area)} AR:{aspect_ratio:.2f} EX:{extent:.2f}"
+            # Color mapping
+            color_map = {
+                'GREEN': (0, 255, 0),
+                'RED': (0, 0, 255),
+                'BLUE': (255, 0, 0),
+                'ORANGE': (0, 165, 255)
+            }
+            color = color_map[detection['color_name']]
 
             # Draw bounding box
             cv2.rectangle(mask_display, (x, y), (x+w, y+h), color, 2)
 
-            # Draw area label
+            # Create detailed label
+            if detection['status'] == 'VALID':
+                label = f"#{detection['id']} VALID: {detection['area']}"
+            else:
+                label = f"#{detection['id']} {detection['reason']}: {detection['area']}"
+
+            # Draw label
             cv2.putText(mask_display, label, (x, y-5),
                        cv2.FONT_HERSHEY_SIMPLEX, 0.4, color, 1)
 
             # Draw contour outline
             if self.roi_set and self.roi is not None:
                 # Adjust contour coordinates for display
-                adjusted_contour = contour + [self.roi[0], self.roi[1]]
+                adjusted_contour = detection['contour'] + [self.roi[0], self.roi[1]]
                 cv2.drawContours(mask_display, [adjusted_contour], -1, color, 1)
             else:
-                cv2.drawContours(mask_display, [contour], -1, color, 1)
+                cv2.drawContours(mask_display, [detection['contour']], -1, color, 1)
 
-        # Add legend
+        # Add legend and analysis summary
         legend_y = 30
         cv2.putText(mask_display, "LEGEND:", (10, legend_y),
                    cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 2)
@@ -355,11 +444,23 @@ class MotionTrafficDetector:
         cv2.putText(mask_display, "ORANGE = Failed shape filter", (10, legend_y + 85),
                    cv2.FONT_HERSHEY_SIMPLEX, 0.4, (0, 165, 255), 1)
 
+        # Add pause-specific information
+        if self.is_paused:
+            valid_count = sum(1 for d in detection_analysis if d['status'] == 'VALID')
+            total_count = len(detection_analysis)
+            cv2.putText(mask_display, f"PAUSED - Analysis: {valid_count}/{total_count} valid",
+                       (10, legend_y + 110), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 0), 2)
+
+            # Print analysis to terminal (only once per pause)
+            if not self.pause_analysis_printed:
+                self.print_detection_analysis(detection_analysis)
+                self.pause_analysis_printed = True
+
         # Add current filter settings
         cv2.putText(mask_display, f"Min Size: {self.min_contour_area} | Max Size: {self.max_contour_area}",
-                   (10, legend_y + 110), cv2.FONT_HERSHEY_SIMPLEX, 0.4, (255, 255, 255), 1)
+                   (10, legend_y + 135), cv2.FONT_HERSHEY_SIMPLEX, 0.4, (255, 255, 255), 1)
         cv2.putText(mask_display, f"Aspect Ratio: {self.min_aspect_ratio}-{self.max_aspect_ratio} | Min Extent: {self.min_extent}",
-                   (10, legend_y + 130), cv2.FONT_HERSHEY_SIMPLEX, 0.4, (255, 255, 255), 1)
+                   (10, legend_y + 155), cv2.FONT_HERSHEY_SIMPLEX, 0.4, (255, 255, 255), 1)
 
         return mask_display
 
@@ -450,6 +551,7 @@ class MotionTrafficDetector:
                 self.is_paused = not self.is_paused
                 if self.is_paused:
                     print("PAUSED - Press SPACE to resume")
+                    self.pause_analysis_printed = False  # Reset analysis flag for new pause
                 else:
                     print("RESUMED")
             elif key == ord('r'):
