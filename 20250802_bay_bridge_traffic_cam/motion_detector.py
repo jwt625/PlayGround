@@ -25,6 +25,11 @@ class MotionTrafficDetector:
             history=bg_config["history"]
         )
 
+        # Set shadow parameters if shadow detection is enabled
+        if bg_config["detectShadows"]:
+            self.background_subtractor.setShadowValue(bg_config["shadowValue"])
+            self.background_subtractor.setShadowThreshold(bg_config["shadowThreshold"])
+
         # ROI for bridge deck (will be set interactively)
         self.roi = None
         self.roi_set = False
@@ -155,12 +160,13 @@ class MotionTrafficDetector:
     def set_roi_interactive(self, frame):
         """Let user select Region of Interest (bridge deck area)."""
         print("Select the bridge deck area by dragging a rectangle, then press ENTER")
+        print("Or press ENTER without selecting to use the full frame")
         print("Press 'r' to reset selection, 'q' to quit")
-        
+
         roi = cv2.selectROI("Select Bridge Deck ROI", frame, False, False)
         cv2.destroyWindow("Select Bridge Deck ROI")
-        
-        if roi[2] > 0 and roi[3] > 0:  # Valid selection
+
+        if roi[2] > 0 and roi[3] > 0:  # Valid ROI selection
             self.roi = roi
             self.roi_set = True
             print(f"ROI set: x={roi[0]}, y={roi[1]}, w={roi[2]}, h={roi[3]}")
@@ -170,10 +176,13 @@ class MotionTrafficDetector:
                 self.roi_tracker.set_roi(roi)
                 print("ROI tracker updated with new ROI")
         else:
-            print("No ROI selected, using full frame")
+            # No ROI selected - use full frame
+            print("No ROI selected, using full frame for motion detection")
             self.roi = None
+            self.roi_set = True  # Mark as set so we don't ask again
             if self.roi_tracker is not None:
                 self.roi_tracker.set_roi(None)
+                print("ROI tracker set to use full frame")
 
     def set_counting_line_interactive(self, frame):
         """Let user set a counting line for traffic counting."""
@@ -244,6 +253,12 @@ class MotionTrafficDetector:
 
         # Apply background subtraction
         fg_mask = self.background_subtractor.apply(roi_frame)
+
+        # Remove shadows if configured (convert grey shadow pixels to black)
+        bg_config = config.BACKGROUND_SUBTRACTOR_CONFIG
+        if bg_config["detectShadows"] and bg_config["removeShadows"]:
+            # Remove shadow pixels (convert 127 to 0, keep 255 as 255)
+            fg_mask[fg_mask == bg_config["shadowValue"]] = 0
 
         # Clean up the mask using config parameters
         motion_config = config.MOTION_DETECTION
@@ -672,6 +687,58 @@ class MotionTrafficDetector:
 
         return mask_display
 
+    def create_combined_display(self, display_frame, fg_mask, contours, original_frame):
+        """Create a combined display with main view and smaller subplots for mask and background."""
+        # Get original frame dimensions
+        main_height, main_width = display_frame.shape[:2]
+
+        # Calculate subplot dimensions (half size)
+        sub_height = main_height // 2
+        sub_width = main_width // 2
+
+        # Create combined canvas
+        # Layout: [Main Detection View    ]
+        #         [Motion Mask | Background]
+        combined_height = main_height + sub_height
+        combined_width = main_width
+        combined_display = np.zeros((combined_height, combined_width, 3), dtype=np.uint8)
+
+        # Place main detection view at top
+        combined_display[0:main_height, 0:main_width] = display_frame
+
+        # Create and place motion mask subplot (bottom left)
+        if fg_mask is not None and config.DISPLAY_CONFIG["show_motion_mask"]:
+            mask_display = self.create_debug_motion_mask(original_frame, fg_mask, contours)
+            mask_resized = cv2.resize(mask_display, (sub_width, sub_height))
+            combined_display[main_height:combined_height, 0:sub_width] = mask_resized
+
+            # Add label
+            cv2.putText(combined_display, "Motion Mask", (5, main_height + 20),
+                       cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 2)
+
+        # Create and place background model subplot (bottom right)
+        if config.DISPLAY_CONFIG["show_background_model"]:
+            background_image = self.background_subtractor.getBackgroundImage()
+            if background_image is not None:
+                # Apply ROI to background if set
+                if self.roi_set and self.roi is not None:
+                    x, y, w, h = self.roi
+                    bg_display = background_image.copy()
+                    cv2.rectangle(bg_display, (x, y), (x+w, y+h), (0, 255, 0), 2)
+                    cv2.putText(bg_display, "ROI", (x, y-10),
+                               cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 255, 0), 2)
+                else:
+                    bg_display = background_image
+
+                bg_resized = cv2.resize(bg_display, (sub_width, sub_height))
+                combined_display[main_height:combined_height, sub_width:main_width] = bg_resized
+
+                # Add label
+                cv2.putText(combined_display, "Background Model", (sub_width + 5, main_height + 20),
+                           cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 2)
+
+        return combined_display
+
     def update_fps(self):
         """Update FPS calculation."""
         current_time = time.time()
@@ -748,13 +815,9 @@ class MotionTrafficDetector:
             # Draw results (always update display even when paused)
             display_frame = self.draw_detections(frame, fg_mask, contours, tracked_objects)
 
-            # Show frames
-            cv2.imshow("Motion Traffic Detection", display_frame)
-
-            if fg_mask is not None and config.DISPLAY_CONFIG["show_motion_mask"]:
-                # Create enhanced motion mask with bounding boxes for debugging
-                mask_display = self.create_debug_motion_mask(frame, fg_mask, contours)
-                cv2.imshow("Motion Mask (Debug)", mask_display)
+            # Create combined display with subplots
+            combined_display = self.create_combined_display(display_frame, fg_mask, contours, frame)
+            cv2.imshow("Motion Traffic Detection - Combined View", combined_display)
 
             # Handle keyboard input
             key = cv2.waitKey(1) & 0xFF

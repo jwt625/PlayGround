@@ -9,12 +9,13 @@ WEBCAM_TIMEOUT = 5  # seconds
 
 # Background Subtraction Parameters
 BACKGROUND_SUBTRACTOR_CONFIG = {
-    "detectShadows": True,      # Helps reduce shadow false positives
-    "varThreshold": 30,         # Lower = more sensitive to motion (16-50 good range)
-    "history": 500,             # Frames to build background model (300-1000)
+    "detectShadows": True,      # Detect shadows to exclude them from motion
+    "varThreshold": 15,         # Lower = more sensitive to motion (16-50 good range)
+    "history": 1500,            # Frames to build background model (300-1000)
     "learningRate": -1,         # Auto learning rate (-1 = automatic)
-    "shadowValue": 0,           # Shadow pixel value
-    "shadowThreshold": 0.5      # Shadow detection threshold
+    "shadowValue": 127,         # Shadow pixel value (grey)
+    "shadowThreshold": 0.5,     # Shadow detection threshold (0.0-1.0)
+    "removeShadows": True       # Remove shadow pixels from final mask (convert grey to black)
 }
 
 # Motion Detection Thresholds
@@ -101,6 +102,7 @@ DISPLAY_CONFIG = {
     
     # Display windows
     "show_motion_mask": True,           # Show background subtraction mask
+    "show_background_model": True,      # Show current background model
     "show_debug_info": True,            # Show detection statistics
     "window_resize": True,              # Allow window resizing
 }
@@ -160,7 +162,7 @@ DEMO_CONFIG = {
 DETECTION_PRESETS = {
     "high_sensitivity": {
         "min_contour_area": 100,         # Very small objects
-        "varThreshold": 20,             # More sensitive background subtraction
+        "varThreshold": 15,             # More sensitive background subtraction
         "enable_multiscale": True,
         "max_distance": 40,             # Tighter tracking for small objects
         "min_detection_frames": 2,      # Faster confirmation for small objects
