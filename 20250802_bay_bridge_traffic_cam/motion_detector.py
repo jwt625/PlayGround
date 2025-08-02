@@ -151,9 +151,10 @@ class MotionTrafficDetector:
 
             cv2.rectangle(frame, (x, y), (x+40, y+40), color, -1)
 
+        font_scale, thickness = self.get_scaled_font_params()
         cv2.putText(frame, "DEMO MODE - Moving objects", (10, 30),
-                   config.DISPLAY_CONFIG["font"], config.DISPLAY_CONFIG["font_scale"],
-                   config.DISPLAY_CONFIG["text_color"], config.DISPLAY_CONFIG["font_thickness"])
+                   config.DISPLAY_CONFIG["font"], font_scale,
+                   config.DISPLAY_CONFIG["text_color"], thickness)
 
         return frame
     
@@ -312,9 +313,10 @@ class MotionTrafficDetector:
             x, y, w, h = self.roi
             cv2.rectangle(display_frame, (x, y), (x+w, y+h),
                          display_config["roi_color"], display_config["roi_thickness"])
+            small_font_scale, small_thickness = self.get_scaled_font_params("small_font_scale", "small_font_thickness")
             cv2.putText(display_frame, "Bridge Deck ROI", (x, y-10),
-                       display_config["font"], display_config["small_font_scale"],
-                       display_config["roi_color"], display_config["small_font_thickness"])
+                       display_config["font"], small_font_scale,
+                       display_config["roi_color"], small_thickness)
 
         # Draw tracked objects if available, otherwise draw regular contours
         motion_count = 0
@@ -430,26 +432,30 @@ class MotionTrafficDetector:
         if self.is_paused:
             status_text += " | PAUSED"
 
+        # Get scaled font parameters
+        font_scale, thickness = self.get_scaled_font_params()
+        small_font_scale, small_thickness = self.get_scaled_font_params("small_font_scale", "small_font_thickness")
+
         # Main detection count
         cv2.putText(display_frame, f"Motion Objects: {motion_count}", (10, 30),
-                   display_config["font"], display_config["font_scale"],
-                   display_config["text_color"], display_config["font_thickness"])
+                   display_config["font"], font_scale,
+                   display_config["text_color"], thickness)
 
         # Tracking statistics
         if self.tracker is not None:
             stats = self.tracker.get_statistics()
             tracking_text = f"Tracked: {stats['active_objects']} | Confirmed: {stats['confirmed_objects']}"
             cv2.putText(display_frame, tracking_text, (10, 60),
-                       display_config["font"], display_config["small_font_scale"],
-                       display_config["text_color"], display_config["small_font_thickness"])
+                       display_config["font"], small_font_scale,
+                       display_config["text_color"], small_thickness)
 
             # Traffic counts
             if self.traffic_counter is not None:
                 counts = self.traffic_counter.get_counts()
                 count_text = f"Traffic Count: {counts['total']} (L:{counts['left']} R:{counts['right']})"
                 cv2.putText(display_frame, count_text, (10, 80),
-                           display_config["font"], display_config["small_font_scale"],
-                           display_config["text_color"], display_config["small_font_thickness"])
+                           display_config["font"], small_font_scale,
+                           display_config["text_color"], small_thickness)
                 y_offset = 100
             else:
                 y_offset = 80
@@ -476,20 +482,20 @@ class MotionTrafficDetector:
             y_offset = 60
 
         cv2.putText(display_frame, status_text, (10, y_offset),
-                   display_config["font"], display_config["font_scale"],
-                   display_config["text_color"], display_config["font_thickness"])
+                   display_config["font"], font_scale,
+                   display_config["text_color"], thickness)
         cv2.putText(display_frame, f"Min Size: {current_config['min_object_size']} px", (10, y_offset + 30),
-                   display_config["font"], display_config["small_font_scale"],
-                   display_config["text_color"], display_config["small_font_thickness"])
+                   display_config["font"], small_font_scale,
+                   display_config["text_color"], small_thickness)
         cv2.putText(display_frame, "Press 'q' to quit, 'r' to reset ROI, 'c' to change preset", (10, y_offset + 50),
-                   display_config["font"], display_config["small_font_scale"],
-                   display_config["text_color"], display_config["small_font_thickness"])
+                   display_config["font"], small_font_scale,
+                   display_config["text_color"], small_thickness)
         cv2.putText(display_frame, "Press SPACE to pause/resume, 't' to toggle tracking", (10, y_offset + 70),
-                   display_config["font"], display_config["small_font_scale"],
-                   display_config["text_color"], display_config["small_font_thickness"])
+                   display_config["font"], small_font_scale,
+                   display_config["text_color"], small_thickness)
         cv2.putText(display_frame, "Press 'l' to set counting line, 'x' to reset ROI counters", (10, y_offset + 90),
-                   display_config["font"], display_config["small_font_scale"],
-                   display_config["text_color"], display_config["small_font_thickness"])
+                   display_config["font"], small_font_scale,
+                   display_config["text_color"], small_thickness)
 
         return display_frame
 
@@ -654,25 +660,33 @@ class MotionTrafficDetector:
             else:
                 cv2.drawContours(mask_display, [detection['contour']], -1, color, 1)
 
-        # Add legend and analysis summary
+        # Add legend and analysis summary with scaled fonts
         legend_y = 30
+        multiplier = config.DISPLAY_CONFIG["text_scale_multiplier"]
+        legend_scale = 0.6 * multiplier
+        legend_thickness = max(1, int(2 * multiplier))
+        small_scale = 0.4 * multiplier
+        small_thick = max(1, int(1 * multiplier))
+
         cv2.putText(mask_display, "LEGEND:", (10, legend_y),
-                   cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 2)
+                   cv2.FONT_HERSHEY_SIMPLEX, legend_scale, (255, 255, 255), legend_thickness)
         cv2.putText(mask_display, "GREEN = Valid detection", (10, legend_y + 25),
-                   cv2.FONT_HERSHEY_SIMPLEX, 0.4, (0, 255, 0), 1)
+                   cv2.FONT_HERSHEY_SIMPLEX, small_scale, (0, 255, 0), small_thick)
         cv2.putText(mask_display, "RED = Too small", (10, legend_y + 45),
-                   cv2.FONT_HERSHEY_SIMPLEX, 0.4, (0, 0, 255), 1)
+                   cv2.FONT_HERSHEY_SIMPLEX, small_scale, (0, 0, 255), small_thick)
         cv2.putText(mask_display, "BLUE = Too large", (10, legend_y + 65),
-                   cv2.FONT_HERSHEY_SIMPLEX, 0.4, (255, 0, 0), 1)
+                   cv2.FONT_HERSHEY_SIMPLEX, small_scale, (255, 0, 0), small_thick)
         cv2.putText(mask_display, "ORANGE = Failed shape filter", (10, legend_y + 85),
-                   cv2.FONT_HERSHEY_SIMPLEX, 0.4, (0, 165, 255), 1)
+                   cv2.FONT_HERSHEY_SIMPLEX, small_scale, (0, 165, 255), small_thick)
 
         # Add pause-specific information
         if self.is_paused:
             valid_count = sum(1 for d in detection_analysis if d['status'] == 'VALID')
             total_count = len(detection_analysis)
+            pause_scale = 0.5 * multiplier
+            pause_thick = max(1, int(2 * multiplier))
             cv2.putText(mask_display, f"PAUSED - Analysis: {valid_count}/{total_count} valid",
-                       (10, legend_y + 110), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 0), 2)
+                       (10, legend_y + 110), cv2.FONT_HERSHEY_SIMPLEX, pause_scale, (255, 255, 0), pause_thick)
 
             # Print analysis to terminal (only once per pause)
             if not self.pause_analysis_printed:
@@ -681,9 +695,9 @@ class MotionTrafficDetector:
 
         # Add current filter settings
         cv2.putText(mask_display, f"Min Size: {self.min_contour_area} | Max Size: {self.max_contour_area}",
-                   (10, legend_y + 135), cv2.FONT_HERSHEY_SIMPLEX, 0.4, (255, 255, 255), 1)
+                   (10, legend_y + 135), cv2.FONT_HERSHEY_SIMPLEX, small_scale, (255, 255, 255), small_thick)
         cv2.putText(mask_display, f"Aspect Ratio: {self.min_aspect_ratio}-{self.max_aspect_ratio} | Min Extent: {self.min_extent}",
-                   (10, legend_y + 155), cv2.FONT_HERSHEY_SIMPLEX, 0.4, (255, 255, 255), 1)
+                   (10, legend_y + 155), cv2.FONT_HERSHEY_SIMPLEX, small_scale, (255, 255, 255), small_thick)
 
         return mask_display
 
@@ -712,9 +726,11 @@ class MotionTrafficDetector:
             mask_resized = cv2.resize(mask_display, (sub_width, sub_height))
             combined_display[main_height:combined_height, 0:sub_width] = mask_resized
 
-            # Add label
+            # Add label with scaled font
+            label_scale = 0.6 * config.DISPLAY_CONFIG["text_scale_multiplier"]
+            label_thickness = max(1, int(2 * config.DISPLAY_CONFIG["text_scale_multiplier"]))
             cv2.putText(combined_display, "Motion Mask", (5, main_height + 20),
-                       cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 2)
+                       cv2.FONT_HERSHEY_SIMPLEX, label_scale, (255, 255, 255), label_thickness)
 
         # Create and place background model subplot (bottom right)
         if config.DISPLAY_CONFIG["show_background_model"]:
@@ -733,11 +749,21 @@ class MotionTrafficDetector:
                 bg_resized = cv2.resize(bg_display, (sub_width, sub_height))
                 combined_display[main_height:combined_height, sub_width:main_width] = bg_resized
 
-                # Add label
+                # Add label with scaled font
                 cv2.putText(combined_display, "Background Model", (sub_width + 5, main_height + 20),
-                           cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 2)
+                           cv2.FONT_HERSHEY_SIMPLEX, label_scale, (255, 255, 255), label_thickness)
 
         return combined_display
+
+    def get_scaled_font_params(self, font_scale_key="font_scale", thickness_key="font_thickness"):
+        """Get font parameters scaled by the text_scale_multiplier."""
+        display_config = config.DISPLAY_CONFIG
+        multiplier = display_config["text_scale_multiplier"]
+
+        scaled_font_scale = display_config[font_scale_key] * multiplier
+        scaled_thickness = max(1, int(display_config[thickness_key] * multiplier))
+
+        return scaled_font_scale, scaled_thickness
 
     def update_fps(self):
         """Update FPS calculation."""

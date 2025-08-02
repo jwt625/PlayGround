@@ -21,7 +21,7 @@ BACKGROUND_SUBTRACTOR_CONFIG = {
 # Motion Detection Thresholds
 MOTION_DETECTION = {
     # Object size filters (in pixels)
-    "min_contour_area": 100,     # LOWERED from 100 - detects smaller cars
+    "min_contour_area": 30,     # LOWERED from 100 - detects smaller cars
     "max_contour_area": 80000,   # INCREASED from 5000 - allows larger vehicles
     
     # Morphological operations (noise reduction)
@@ -99,6 +99,9 @@ DISPLAY_CONFIG = {
     "font_thickness": 2,
     "small_font_scale": 0.5,
     "small_font_thickness": 1,
+
+    # Text scaling multiplier (2.0 = double size, 1.0 = normal size)
+    "text_scale_multiplier": 2.0,
     
     # Display windows
     "show_motion_mask": True,           # Show background subtraction mask
@@ -161,7 +164,7 @@ DEMO_CONFIG = {
 # Presets for different scenarios
 DETECTION_PRESETS = {
     "high_sensitivity": {
-        "min_contour_area": 100,         # Very small objects
+        "min_contour_area": 30,         # Very small objects
         "varThreshold": 15,             # More sensitive background subtraction
         "enable_multiscale": True,
         "max_distance": 40,             # Tighter tracking for small objects
