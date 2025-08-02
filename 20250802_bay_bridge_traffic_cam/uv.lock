@@ -16,6 +16,7 @@ dependencies = [
     { name = "opencv-python" },
     { name = "pillow" },
     { name = "requests" },
+    { name = "scipy" },
     { name = "ultralytics" },
 ]
 
@@ -24,6 +25,7 @@ requires-dist = [
     { name = "opencv-python", specifier = ">=4.12.0.88" },
     { name = "pillow", specifier = ">=11.3.0" },
     { name = "requests", specifier = ">=2.32.4" },
+    { name = "scipy", specifier = ">=1.11.0" },
     { name = "ultralytics", specifier = ">=8.3.173" },
 ]
 

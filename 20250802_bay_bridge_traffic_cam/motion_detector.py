@@ -11,6 +11,7 @@ import time
 from datetime import datetime
 import os
 import motion_config as config
+from object_tracker import ObjectTracker, TrafficCounter
 
 class MotionTrafficDetector:
     def __init__(self, webcam_url=None):
@@ -40,6 +41,18 @@ class MotionTrafficDetector:
         self.motion_objects = []
         self.frame_count = 0
 
+        # Object tracking
+        tracking_config = config.TRACKING_CONFIG
+        self.tracker = ObjectTracker(
+            max_distance=tracking_config["max_distance"],
+            max_disappeared=tracking_config["max_disappeared"],
+            min_detection_frames=tracking_config["min_detection_frames"]
+        ) if tracking_config["enable_tracking"] else None
+
+        self.traffic_counter = TrafficCounter(
+            counting_lines=tracking_config["counting_lines"]
+        ) if tracking_config["enable_counting"] else None
+
         # PERFORMANCE OPTIMIZATION: Persistent video capture
         self.cap = None
         self.cap_initialized = False
@@ -53,6 +66,7 @@ class MotionTrafficDetector:
         self.paused_frame = None
         self.paused_fg_mask = None
         self.paused_contours = []
+        self.paused_tracked_objects = []
         self.pause_analysis_printed = False  # Track if we've printed analysis for current pause
 
         # Print configuration on startup
@@ -151,6 +165,61 @@ class MotionTrafficDetector:
         else:
             print("No ROI selected, using full frame")
             self.roi = None
+
+    def set_counting_line_interactive(self, frame):
+        """Let user set a counting line for traffic counting."""
+        if self.traffic_counter is None:
+            print("Traffic counting is disabled")
+            return
+
+        print("Click two points to set a counting line, then press ENTER")
+        print("Press 'q' to cancel")
+
+        points = []
+
+        def mouse_callback(event, x, y, flags, param):
+            if event == cv2.EVENT_LBUTTONDOWN:
+                points.append((x, y))
+                if len(points) == 2:
+                    cv2.destroyWindow("Set Counting Line")
+
+        cv2.namedWindow("Set Counting Line")
+        cv2.setMouseCallback("Set Counting Line", mouse_callback)
+
+        while len(points) < 2:
+            display_frame = frame.copy()
+
+            # Draw existing points
+            for i, point in enumerate(points):
+                cv2.circle(display_frame, point, 5, (0, 255, 0), -1)
+                cv2.putText(display_frame, f"P{i+1}", (point[0]+10, point[1]),
+                           cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 1)
+
+            # Draw instruction
+            cv2.putText(display_frame, f"Click point {len(points)+1} of 2", (10, 30),
+                       cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 255, 255), 2)
+
+            cv2.imshow("Set Counting Line", display_frame)
+
+            key = cv2.waitKey(1) & 0xFF
+            if key == ord('q'):
+                cv2.destroyWindow("Set Counting Line")
+                return
+
+        if len(points) == 2:
+            # Adjust for ROI if set
+            if self.roi_set and self.roi is not None:
+                roi_x, roi_y, _, _ = self.roi
+                adjusted_points = [(p[0] - roi_x, p[1] - roi_y) for p in points]
+                line = (adjusted_points[0][0], adjusted_points[0][1],
+                       adjusted_points[1][0], adjusted_points[1][1])
+            else:
+                line = (points[0][0], points[0][1], points[1][0], points[1][1])
+
+            self.traffic_counter.add_counting_line(*line)
+            print(f"Counting line added: {line}")
+
+        cv2.destroyWindow("Set Counting Line")
     
     def detect_motion(self, frame):
         """Detect motion in the frame and return motion mask and contours."""
@@ -193,12 +262,22 @@ class MotionTrafficDetector:
                     extent >= self.min_extent):
                     valid_contours.append(contour)
 
-        return fg_mask, valid_contours
+        # Apply object tracking if enabled
+        tracked_objects = []
+        if self.tracker is not None:
+            tracked_objects = self.tracker.update(valid_contours)
+
+            # Update traffic counter if enabled
+            if self.traffic_counter is not None:
+                self.traffic_counter.update(tracked_objects)
+
+        return fg_mask, valid_contours, tracked_objects
     
-    def draw_detections(self, frame, fg_mask, contours):
-        """Draw motion detections on the frame."""
+    def draw_detections(self, frame, fg_mask, contours, tracked_objects=None):
+        """Draw motion detections and tracked objects on the frame."""
         display_frame = frame.copy()
         display_config = config.DISPLAY_CONFIG
+        tracking_config = config.TRACKING_CONFIG
 
         # Draw ROI if set
         if self.roi_set and self.roi is not None:
@@ -209,42 +288,113 @@ class MotionTrafficDetector:
                        display_config["font"], display_config["small_font_scale"],
                        display_config["roi_color"], display_config["small_font_thickness"])
 
-        # Draw motion contours
+        # Draw tracked objects if available, otherwise draw regular contours
         motion_count = 0
-        for contour in contours:
-            # Get bounding box
-            x, y, w, h = cv2.boundingRect(contour)
-            area = cv2.contourArea(contour)
 
-            # Adjust coordinates if ROI is set
-            if self.roi_set and self.roi is not None:
-                roi_x, roi_y, _, _ = self.roi
-                x += roi_x
-                y += roi_y
+        if tracked_objects is not None and tracking_config["enable_tracking"]:
+            # Draw tracked objects with IDs and trajectories
+            for obj in tracked_objects:
+                x, y, w, h = obj.bbox
 
-            # Draw bounding box
-            cv2.rectangle(display_frame, (x, y), (x+w, y+h),
-                         display_config["detection_color"], display_config["detection_thickness"])
+                # Adjust coordinates if ROI is set
+                if self.roi_set and self.roi is not None:
+                    roi_x, roi_y, _, _ = self.roi
+                    x += roi_x
+                    y += roi_y
 
-            # Draw contour
-            if self.roi_set and self.roi is not None:
-                # Adjust contour coordinates
-                adjusted_contour = contour + [self.roi[0], self.roi[1]]
-                cv2.drawContours(display_frame, [adjusted_contour], -1,
-                               display_config["contour_color"], display_config["contour_thickness"])
-            else:
-                cv2.drawContours(display_frame, [contour], -1,
-                               display_config["contour_color"], display_config["contour_thickness"])
+                # Draw bounding box with different color for tracked objects
+                color = (0, 255, 255)  # Yellow for tracked objects
+                cv2.rectangle(display_frame, (x, y), (x+w, y+h), color, 2)
 
-            # Add size info for small objects
-            if area < 200:  # Show area for small detections
-                cv2.putText(display_frame, f"{int(area)}", (x, y-5),
+                # Draw object ID if enabled
+                if tracking_config["show_object_ids"]:
+                    cv2.putText(display_frame, f"ID:{obj.id}", (x, y-25),
+                               display_config["font"], display_config["small_font_scale"],
+                               color, display_config["small_font_thickness"])
+
+                # Draw trajectory if enabled
+                if tracking_config["show_trajectories"] and len(obj.positions) > 1:
+                    trajectory_points = obj.positions[-tracking_config["trajectory_length"]:]
+
+                    # Adjust trajectory points for ROI
+                    if self.roi_set and self.roi is not None:
+                        roi_x, roi_y, _, _ = self.roi
+                        trajectory_points = [(px + roi_x, py + roi_y) for px, py in trajectory_points]
+
+                    # Draw trajectory line
+                    for i in range(1, len(trajectory_points)):
+                        cv2.line(display_frame, trajectory_points[i-1], trajectory_points[i],
+                                color, 1)
+
+                # Show speed and direction info
+                speed = obj.get_speed_pixels_per_second()
+                if speed > 0:
+                    cv2.putText(display_frame, f"{speed:.1f}px/s", (x, y-5),
+                               display_config["font"], display_config["small_font_scale"],
+                               color, display_config["small_font_thickness"])
+
+                if obj.direction:
+                    cv2.putText(display_frame, obj.direction, (x+w-30, y-5),
+                               display_config["font"], display_config["small_font_scale"],
+                               color, display_config["small_font_thickness"])
+
+                motion_count += 1
+        else:
+            # Draw regular contours (fallback when tracking is disabled)
+            for contour in contours:
+                # Get bounding box
+                x, y, w, h = cv2.boundingRect(contour)
+                area = cv2.contourArea(contour)
+
+                # Adjust coordinates if ROI is set
+                if self.roi_set and self.roi is not None:
+                    roi_x, roi_y, _, _ = self.roi
+                    x += roi_x
+                    y += roi_y
+
+                # Draw bounding box
+                cv2.rectangle(display_frame, (x, y), (x+w, y+h),
+                             display_config["detection_color"], display_config["detection_thickness"])
+
+                # Draw contour
+                if self.roi_set and self.roi is not None:
+                    # Adjust contour coordinates
+                    adjusted_contour = contour + [self.roi[0], self.roi[1]]
+                    cv2.drawContours(display_frame, [adjusted_contour], -1,
+                                   display_config["contour_color"], display_config["contour_thickness"])
+                else:
+                    cv2.drawContours(display_frame, [contour], -1,
+                                   display_config["contour_color"], display_config["contour_thickness"])
+
+                # Add size info for small objects
+                if area < 200:  # Show area for small detections
+                    cv2.putText(display_frame, f"{int(area)}", (x, y-5),
+                               display_config["font"], display_config["small_font_scale"],
+                               display_config["text_color"], display_config["small_font_thickness"])
+
+                motion_count += 1
+
+        # Draw counting lines if enabled
+        if (self.traffic_counter is not None and
+            tracking_config["show_counting_lines"] and
+            len(self.traffic_counter.counting_lines) > 0):
+
+            for line in self.traffic_counter.counting_lines:
+                x1, y1, x2, y2 = line
+                # Adjust for ROI if set
+                if self.roi_set and self.roi is not None:
+                    roi_x, roi_y, _, _ = self.roi
+                    x1 += roi_x
+                    y1 += roi_y
+                    x2 += roi_x
+                    y2 += roi_y
+
+                cv2.line(display_frame, (x1, y1), (x2, y2), (255, 0, 255), 2)  # Magenta line
+                cv2.putText(display_frame, "COUNT LINE", (x1, y1-10),
                            display_config["font"], display_config["small_font_scale"],
-                           display_config["text_color"], display_config["small_font_thickness"])
+                           (255, 0, 255), display_config["small_font_thickness"])
 
-            motion_count += 1
-
-        # Add info text with FPS and pause status
+        # Add info text with FPS, tracking stats, and pause status
         current_config = config.get_current_config()
 
         # Status line with pause indicator
@@ -252,19 +402,45 @@ class MotionTrafficDetector:
         if self.is_paused:
             status_text += " | PAUSED"
 
+        # Main detection count
         cv2.putText(display_frame, f"Motion Objects: {motion_count}", (10, 30),
                    display_config["font"], display_config["font_scale"],
                    display_config["text_color"], display_config["font_thickness"])
-        cv2.putText(display_frame, status_text, (10, 60),
+
+        # Tracking statistics
+        if self.tracker is not None:
+            stats = self.tracker.get_statistics()
+            tracking_text = f"Tracked: {stats['active_objects']} | Confirmed: {stats['confirmed_objects']}"
+            cv2.putText(display_frame, tracking_text, (10, 60),
+                       display_config["font"], display_config["small_font_scale"],
+                       display_config["text_color"], display_config["small_font_thickness"])
+
+            # Traffic counts
+            if self.traffic_counter is not None:
+                counts = self.traffic_counter.get_counts()
+                count_text = f"Traffic Count: {counts['total']} (L:{counts['left']} R:{counts['right']})"
+                cv2.putText(display_frame, count_text, (10, 80),
+                           display_config["font"], display_config["small_font_scale"],
+                           display_config["text_color"], display_config["small_font_thickness"])
+                y_offset = 100
+            else:
+                y_offset = 80
+        else:
+            y_offset = 60
+
+        cv2.putText(display_frame, status_text, (10, y_offset),
                    display_config["font"], display_config["font_scale"],
                    display_config["text_color"], display_config["font_thickness"])
-        cv2.putText(display_frame, f"Min Size: {current_config['min_object_size']} px", (10, 90),
+        cv2.putText(display_frame, f"Min Size: {current_config['min_object_size']} px", (10, y_offset + 30),
                    display_config["font"], display_config["small_font_scale"],
                    display_config["text_color"], display_config["small_font_thickness"])
-        cv2.putText(display_frame, "Press 'q' to quit, 'r' to reset ROI, 'c' to change preset", (10, 120),
+        cv2.putText(display_frame, "Press 'q' to quit, 'r' to reset ROI, 'c' to change preset", (10, y_offset + 50),
                    display_config["font"], display_config["small_font_scale"],
                    display_config["text_color"], display_config["small_font_thickness"])
-        cv2.putText(display_frame, "Press SPACE to pause/resume", (10, 140),
+        cv2.putText(display_frame, "Press SPACE to pause/resume, 't' to toggle tracking", (10, y_offset + 70),
+                   display_config["font"], display_config["small_font_scale"],
+                   display_config["text_color"], display_config["small_font_thickness"])
+        cv2.putText(display_frame, "Press 'l' to set counting line", (10, y_offset + 90),
                    display_config["font"], display_config["small_font_scale"],
                    display_config["text_color"], display_config["small_font_thickness"])
 
@@ -477,13 +653,15 @@ class MotionTrafficDetector:
     
     def run(self):
         """Main detection loop."""
-        print("Starting Motion-Based Traffic Detection")
+        print("Starting Motion-Based Traffic Detection with Object Tracking")
         print("Controls:")
         print("  'q' - Quit")
         print("  'r' - Reset/Set ROI")
         print("  's' - Save current frame")
         print("  'c' - Cycle through detection presets")
         print("  '1-4' - Switch to specific preset")
+        print("  't' - Toggle object tracking")
+        print("  'l' - Set counting line")
         print("  SPACE - Pause/Resume")
         print()
 
@@ -520,20 +698,22 @@ class MotionTrafficDetector:
                     continue
 
                 # Detect motion
-                fg_mask, contours = self.detect_motion(frame)
+                fg_mask, contours, tracked_objects = self.detect_motion(frame)
 
                 # Store current frame data for pause functionality
                 self.paused_frame = frame.copy()
                 self.paused_fg_mask = fg_mask.copy() if fg_mask is not None else None
                 self.paused_contours = contours.copy()
+                self.paused_tracked_objects = tracked_objects.copy() if tracked_objects else []
             else:
                 # Use paused frame data
                 frame = self.paused_frame
                 fg_mask = self.paused_fg_mask
                 contours = self.paused_contours
+                tracked_objects = self.paused_tracked_objects
 
             # Draw results (always update display even when paused)
-            display_frame = self.draw_detections(frame, fg_mask, contours)
+            display_frame = self.draw_detections(frame, fg_mask, contours, tracked_objects)
 
             # Show frames
             cv2.imshow("Motion Traffic Detection", display_frame)
@@ -578,6 +758,17 @@ class MotionTrafficDetector:
                     config.apply_preset(new_preset)
                     self._update_detection_params()
                     print(f"Switched to preset: {new_preset}")
+            elif key == ord('t'):
+                # Toggle tracking
+                if self.tracker is not None:
+                    config.TRACKING_CONFIG["enable_tracking"] = not config.TRACKING_CONFIG["enable_tracking"]
+                    if not config.TRACKING_CONFIG["enable_tracking"]:
+                        self.tracker.reset()
+                    print(f"Tracking {'enabled' if config.TRACKING_CONFIG['enable_tracking'] else 'disabled'}")
+            elif key == ord('l'):
+                # Set counting line
+                if frame is not None:
+                    self.set_counting_line_interactive(frame)
 
             # Adaptive frame rate control (only when not paused)
             if not self.is_paused:
@@ -606,6 +797,13 @@ class MotionTrafficDetector:
         # Update background subtractor parameters
         bg_config = config.BACKGROUND_SUBTRACTOR_CONFIG
         self.background_subtractor.setVarThreshold(bg_config["varThreshold"])
+
+        # Update tracking parameters
+        if self.tracker is not None:
+            tracking_config = config.TRACKING_CONFIG
+            self.tracker.max_distance = tracking_config["max_distance"]
+            self.tracker.max_disappeared = tracking_config["max_disappeared"]
+            self.tracker.min_detection_frames = tracking_config["min_detection_frames"]
 
 def main():
     detector = MotionTrafficDetector()

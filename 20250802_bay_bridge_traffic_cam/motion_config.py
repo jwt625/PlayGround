@@ -38,14 +38,39 @@ ADVANCED_DETECTION = {
     # Multi-scale detection for very small objects
     "enable_multiscale": True,          # Process at multiple scales
     "scale_factors": [1.0, 1.5, 2.0],  # Image scaling for small object detection
-    
+
     # Temporal filtering (reduce noise across frames)
     "enable_temporal_filter": True,     # Track objects across frames
     "min_detection_frames": 2,          # Object must appear in N consecutive frames
-    
+
     # Motion direction filtering
     "enable_direction_filter": False,   # Filter by movement direction
     "valid_directions": ["left", "right", "both"],  # Expected traffic directions
+}
+
+# Object Tracking Configuration
+TRACKING_CONFIG = {
+    # Core tracking parameters
+    "enable_tracking": True,            # Enable object tracking across frames
+    "max_distance": 50,                 # Maximum pixels for object association
+    "max_disappeared": 10,              # Max frames object can be missing
+    "min_detection_frames": 3,          # Frames required to confirm object
+
+    # Tracking visualization
+    "show_object_ids": True,            # Display object IDs on detections
+    "show_trajectories": True,          # Show object movement trails
+    "trajectory_length": 10,            # Number of points in trajectory trail
+    "show_velocity_vectors": False,     # Show velocity arrows
+
+    # Traffic counting
+    "enable_counting": True,            # Enable traffic counting
+    "counting_lines": [],               # List of counting lines [(x1,y1,x2,y2)]
+    "show_counting_lines": True,        # Display counting lines
+    "count_confirmed_only": True,       # Only count confirmed objects
+
+    # Performance optimization
+    "tracking_roi_only": True,          # Only track within ROI
+    "max_tracked_objects": 50,          # Maximum simultaneous tracked objects
 }
 
 # Visual Display Settings
@@ -131,22 +156,30 @@ DETECTION_PRESETS = {
         "min_contour_area": 3,         # Very small objects
         "varThreshold": 30,             # More sensitive background subtraction
         "enable_multiscale": True,
+        "max_distance": 40,             # Tighter tracking for small objects
+        "min_detection_frames": 2,      # Faster confirmation for small objects
     },
     "balanced": {
         "min_contour_area": 50,         # Current default
         "varThreshold": 50,
         "enable_multiscale": True,
+        "max_distance": 50,             # Standard tracking distance
+        "min_detection_frames": 3,      # Standard confirmation
     },
     "low_noise": {
         "min_contour_area": 100,        # Larger objects only
         "varThreshold": 70,             # Less sensitive (reduces noise)
         "enable_multiscale": False,
+        "max_distance": 60,             # Larger objects can move more
+        "min_detection_frames": 4,      # More confirmation for stability
     },
     "distant_traffic": {
         "min_contour_area": 20,         # Very small for distant cars
         "varThreshold": 25,             # Very sensitive
         "enable_multiscale": True,
         "scale_factors": [1.0, 1.5, 2.0, 2.5],  # More scales
+        "max_distance": 35,             # Small distance for distant objects
+        "min_detection_frames": 2,      # Quick confirmation for distant traffic
     }
 }
 
@@ -155,14 +188,14 @@ ACTIVE_PRESET = "high_sensitivity"  # Options: "high_sensitivity", "balanced", "
 
 def apply_preset(preset_name):
     """Apply a detection preset to the current configuration."""
-    global MOTION_DETECTION, BACKGROUND_SUBTRACTOR_CONFIG, ADVANCED_DETECTION
-    
+    global MOTION_DETECTION, BACKGROUND_SUBTRACTOR_CONFIG, ADVANCED_DETECTION, TRACKING_CONFIG
+
     if preset_name not in DETECTION_PRESETS:
         print(f"Warning: Preset '{preset_name}' not found. Using 'balanced'.")
         preset_name = "balanced"
-    
+
     preset = DETECTION_PRESETS[preset_name]
-    
+
     # Apply preset values
     if "min_contour_area" in preset:
         MOTION_DETECTION["min_contour_area"] = preset["min_contour_area"]
@@ -172,11 +205,17 @@ def apply_preset(preset_name):
         ADVANCED_DETECTION["enable_multiscale"] = preset["enable_multiscale"]
     if "scale_factors" in preset:
         ADVANCED_DETECTION["scale_factors"] = preset["scale_factors"]
-    
+    if "max_distance" in preset:
+        TRACKING_CONFIG["max_distance"] = preset["max_distance"]
+    if "min_detection_frames" in preset:
+        TRACKING_CONFIG["min_detection_frames"] = preset["min_detection_frames"]
+
     print(f"Applied preset: {preset_name}")
     print(f"  Min contour area: {MOTION_DETECTION['min_contour_area']}")
     print(f"  Variance threshold: {BACKGROUND_SUBTRACTOR_CONFIG['varThreshold']}")
     print(f"  Multiscale enabled: {ADVANCED_DETECTION['enable_multiscale']}")
+    print(f"  Tracking max distance: {TRACKING_CONFIG['max_distance']}")
+    print(f"  Min detection frames: {TRACKING_CONFIG['min_detection_frames']}")
 
 def get_current_config():
     """Get current configuration summary."""

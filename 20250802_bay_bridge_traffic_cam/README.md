@@ -1,8 +1,8 @@
-# Bay Bridge Traffic Cam - Traffic Detection
+# Bay Bridge Traffic Cam - Traffic Detection with Object Tracking
 
-A real-time traffic detection system for Bay Bridge monitoring with two detection approaches:
+A real-time traffic detection and tracking system for Bay Bridge monitoring with advanced object tracking capabilities:
 
-1. **Motion-Based Detection** (Recommended) - Real-time motion tracking optimized for bridge side views
+1. **Motion-Based Detection with Object Tracking** (Recommended) - Real-time motion tracking with persistent object IDs
 2. **YOLO-Based Detection** (Legacy) - Object detection using YOLOv8 models
 
 ## Setup
@@ -16,13 +16,36 @@ uv run python car_detector.py --help
 
 ## Usage
 
-### Motion-Based Detection (Recommended)
+### Motion-Based Detection with Object Tracking (Recommended)
 
-**Best for**: Bay Bridge side views, real-time monitoring, small/distant vehicles
+**Best for**: Bay Bridge side views, real-time monitoring, small/distant vehicles, traffic counting
+
+**Features:**
+- Real-time object tracking with persistent IDs
+- Traffic counting with directional analysis
+- Speed estimation in pixels per second
+- Trajectory visualization
+- Interactive counting line setup
 
 ```bash
-# Run motion-based traffic detection
+# Run motion-based traffic detection with tracking
 python motion_detector.py
+```
+
+**Controls:**
+- `q` - Quit
+- `r` - Reset/Set ROI (Region of Interest)
+- `s` - Save current frame
+- `c` - Cycle through detection presets
+- `1-4` - Switch to specific preset
+- `t` - Toggle object tracking on/off
+- `l` - Set counting line for traffic counting
+- `SPACE` - Pause/Resume
+
+**Test the tracking system:**
+```bash
+# Run tracking tests
+python test_tracking.py
 ```
 
 **Features:**

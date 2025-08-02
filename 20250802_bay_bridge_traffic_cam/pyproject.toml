@@ -9,4 +9,5 @@ dependencies = [
     "pillow>=11.3.0",
     "requests>=2.32.4",
     "ultralytics>=8.3.173",
+    "scipy>=1.11.0",
 ]
