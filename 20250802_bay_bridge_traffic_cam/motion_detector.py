@@ -40,21 +40,45 @@ class MotionTrafficDetector:
         self.motion_objects = []
         self.frame_count = 0
 
+        # PERFORMANCE OPTIMIZATION: Persistent video capture
+        self.cap = None
+        self.cap_initialized = False
+        self.last_frame_time = time.time()
+        self.fps_counter = 0
+        self.fps_start_time = time.time()
+        self.current_fps = 0
+
         # Print configuration on startup
         config.print_config_summary()
         
     def get_frame_from_webcam(self):
-        """Capture frame from iPhone webcam with fallback methods."""
+        """Optimized frame capture with persistent connection."""
         try:
-            # Try OpenCV first
-            cap = cv2.VideoCapture(self.webcam_url)
-            if cap.isOpened():
-                ret, frame = cap.read()
-                cap.release()
+            # Initialize persistent video capture if needed
+            if not self.cap_initialized:
+                self.cap = cv2.VideoCapture(self.webcam_url)
+                if self.cap.isOpened():
+                    # Optimize capture settings for speed
+                    self.cap.set(cv2.CAP_PROP_BUFFERSIZE, 1)  # Reduce buffer to get latest frame
+                    self.cap.set(cv2.CAP_PROP_FPS, 60)        # Request higher FPS if available
+                    self.cap_initialized = True
+                    print("Persistent video capture initialized")
+                else:
+                    self.cap = None
+
+            # Try to read from persistent connection
+            if self.cap and self.cap.isOpened():
+                ret, frame = self.cap.read()
                 if ret:
                     return frame
+                else:
+                    # Connection lost, reinitialize
+                    print("Video capture connection lost, reinitializing...")
+                    self.cap.release()
+                    self.cap_initialized = False
+                    return self.get_frame_from_webcam()  # Retry once
 
-            # Fallback to HTTP request method
+            # Fallback to HTTP request method (only if OpenCV fails)
             response = requests.get(self.webcam_url, stream=True, timeout=config.WEBCAM_TIMEOUT)
             if response.status_code == 200:
                 bytes_data = b''
@@ -72,6 +96,13 @@ class MotionTrafficDetector:
             print(f"Error capturing frame: {e}")
 
         return None
+
+    def cleanup(self):
+        """Clean up resources."""
+        if self.cap:
+            self.cap.release()
+            self.cap = None
+            self.cap_initialized = False
     
     def create_demo_frame(self):
         """Create a demo frame for testing when webcam is unavailable."""
@@ -206,12 +237,12 @@ class MotionTrafficDetector:
 
             motion_count += 1
 
-        # Add info text
+        # Add info text with FPS
         current_config = config.get_current_config()
         cv2.putText(display_frame, f"Motion Objects: {motion_count}", (10, 30),
                    display_config["font"], display_config["font_scale"],
                    display_config["text_color"], display_config["font_thickness"])
-        cv2.putText(display_frame, f"Frame: {self.frame_count}", (10, 60),
+        cv2.putText(display_frame, f"Frame: {self.frame_count} | FPS: {self.current_fps:.1f}", (10, 60),
                    display_config["font"], display_config["font_scale"],
                    display_config["text_color"], display_config["font_thickness"])
         cv2.putText(display_frame, f"Min Size: {current_config['min_object_size']} px", (10, 90),
@@ -222,6 +253,111 @@ class MotionTrafficDetector:
                    display_config["text_color"], display_config["small_font_thickness"])
 
         return display_frame
+
+    def create_debug_motion_mask(self, frame, fg_mask, _contours):
+        """Create enhanced motion mask with bounding boxes for debugging."""
+        # Create 3-channel mask for colored overlays
+        if self.roi_set and self.roi is not None:
+            # Full frame mask with ROI area filled
+            mask_display = np.zeros_like(frame)
+            x, y, w, h = self.roi
+
+            # Convert single-channel mask to 3-channel
+            fg_mask_3ch = cv2.cvtColor(fg_mask, cv2.COLOR_GRAY2BGR)
+            mask_display[y:y+h, x:x+w] = fg_mask_3ch
+
+            # Draw ROI boundary
+            cv2.rectangle(mask_display, (x, y), (x+w, y+h), (255, 255, 0), 2)
+            cv2.putText(mask_display, "ROI", (x, y-10),
+                       cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 0), 2)
+        else:
+            # Full frame mask
+            mask_display = cv2.cvtColor(fg_mask, cv2.COLOR_GRAY2BGR)
+
+        # Find ALL contours (not just filtered ones) for debugging
+        all_contours, _ = cv2.findContours(fg_mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+
+        # Draw all contours with different colors based on size
+        for contour in all_contours:
+            area = cv2.contourArea(contour)
+            x, y, w, h = cv2.boundingRect(contour)
+
+            # Adjust coordinates if ROI is set
+            if self.roi_set and self.roi is not None:
+                roi_x, roi_y, _, _ = self.roi
+                x += roi_x
+                y += roi_y
+
+            # Color code by size and validity
+            if area < self.min_contour_area:
+                # Too small - RED
+                color = (0, 0, 255)
+                label = f"TOO SMALL: {int(area)}"
+            elif area > self.max_contour_area:
+                # Too large - BLUE
+                color = (255, 0, 0)
+                label = f"TOO LARGE: {int(area)}"
+            else:
+                # Valid size - check shape filters
+                aspect_ratio = w / h if h > 0 else 0
+                extent = area / (w * h) if w > 0 and h > 0 else 0
+
+                if (self.min_aspect_ratio <= aspect_ratio <= self.max_aspect_ratio and
+                    extent >= self.min_extent):
+                    # VALID detection - GREEN
+                    color = (0, 255, 0)
+                    label = f"VALID: {int(area)}"
+                else:
+                    # Failed shape filter - ORANGE
+                    color = (0, 165, 255)
+                    label = f"SHAPE: {int(area)} AR:{aspect_ratio:.2f} EX:{extent:.2f}"
+
+            # Draw bounding box
+            cv2.rectangle(mask_display, (x, y), (x+w, y+h), color, 2)
+
+            # Draw area label
+            cv2.putText(mask_display, label, (x, y-5),
+                       cv2.FONT_HERSHEY_SIMPLEX, 0.4, color, 1)
+
+            # Draw contour outline
+            if self.roi_set and self.roi is not None:
+                # Adjust contour coordinates for display
+                adjusted_contour = contour + [self.roi[0], self.roi[1]]
+                cv2.drawContours(mask_display, [adjusted_contour], -1, color, 1)
+            else:
+                cv2.drawContours(mask_display, [contour], -1, color, 1)
+
+        # Add legend
+        legend_y = 30
+        cv2.putText(mask_display, "LEGEND:", (10, legend_y),
+                   cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 2)
+        cv2.putText(mask_display, "GREEN = Valid detection", (10, legend_y + 25),
+                   cv2.FONT_HERSHEY_SIMPLEX, 0.4, (0, 255, 0), 1)
+        cv2.putText(mask_display, "RED = Too small", (10, legend_y + 45),
+                   cv2.FONT_HERSHEY_SIMPLEX, 0.4, (0, 0, 255), 1)
+        cv2.putText(mask_display, "BLUE = Too large", (10, legend_y + 65),
+                   cv2.FONT_HERSHEY_SIMPLEX, 0.4, (255, 0, 0), 1)
+        cv2.putText(mask_display, "ORANGE = Failed shape filter", (10, legend_y + 85),
+                   cv2.FONT_HERSHEY_SIMPLEX, 0.4, (0, 165, 255), 1)
+
+        # Add current filter settings
+        cv2.putText(mask_display, f"Min Size: {self.min_contour_area} | Max Size: {self.max_contour_area}",
+                   (10, legend_y + 110), cv2.FONT_HERSHEY_SIMPLEX, 0.4, (255, 255, 255), 1)
+        cv2.putText(mask_display, f"Aspect Ratio: {self.min_aspect_ratio}-{self.max_aspect_ratio} | Min Extent: {self.min_extent}",
+                   (10, legend_y + 130), cv2.FONT_HERSHEY_SIMPLEX, 0.4, (255, 255, 255), 1)
+
+        return mask_display
+
+    def update_fps(self):
+        """Update FPS calculation."""
+        current_time = time.time()
+        self.fps_counter += 1
+
+        # Calculate FPS every second
+        if current_time - self.fps_start_time >= 1.0:
+            self.current_fps = self.fps_counter / (current_time - self.fps_start_time)
+            self.fps_counter = 0
+            self.fps_start_time = current_time
     
     def run(self):
         """Main detection loop."""
@@ -253,9 +389,16 @@ class MotionTrafficDetector:
 
             self.frame_count += 1
 
+            # Update FPS calculation
+            self.update_fps()
+
             # Set ROI on first frame or when requested
             if not self.roi_set and webcam_available:
                 self.set_roi_interactive(frame)
+
+            # Skip processing if frame skipping is enabled
+            if config.PERFORMANCE["frame_skip"] > 1 and self.frame_count % config.PERFORMANCE["frame_skip"] != 0:
+                continue
 
             # Detect motion
             fg_mask, contours = self.detect_motion(frame)
@@ -267,14 +410,9 @@ class MotionTrafficDetector:
             cv2.imshow("Motion Traffic Detection", display_frame)
 
             if fg_mask is not None and config.DISPLAY_CONFIG["show_motion_mask"]:
-                # Resize mask for display
-                if self.roi_set and self.roi is not None:
-                    mask_display = np.zeros_like(frame[:,:,0])
-                    x, y, w, h = self.roi
-                    mask_display[y:y+h, x:x+w] = fg_mask
-                else:
-                    mask_display = fg_mask
-                cv2.imshow("Motion Mask", mask_display)
+                # Create enhanced motion mask with bounding boxes for debugging
+                mask_display = self.create_debug_motion_mask(frame, fg_mask, contours)
+                cv2.imshow("Motion Mask (Debug)", mask_display)
 
             # Handle keyboard input
             key = cv2.waitKey(1) & 0xFF
@@ -305,12 +443,19 @@ class MotionTrafficDetector:
                     self._update_detection_params()
                     print(f"Switched to preset: {new_preset}")
 
-            # Small delay to prevent excessive CPU usage
+            # Adaptive frame rate control
             target_fps = config.PERFORMANCE["target_fps"]
-            time.sleep(1.0 / target_fps if target_fps > 0 else 0.03)
+            if target_fps > 0:
+                frame_time = time.time() - self.last_frame_time
+                target_frame_time = 1.0 / target_fps
+                if frame_time < target_frame_time:
+                    time.sleep(target_frame_time - frame_time)
+            self.last_frame_time = time.time()
 
+        # Cleanup
+        self.cleanup()
         cv2.destroyAllWindows()
-        print("Motion detection stopped")
+        print(f"Motion detection stopped. Final FPS: {self.current_fps:.1f}")
 
     def _update_detection_params(self):
         """Update detection parameters from config after preset change."""

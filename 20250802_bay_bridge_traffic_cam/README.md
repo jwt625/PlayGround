@@ -1,6 +1,9 @@
-# Bay Bridge Traffic Cam - Car Detection
+# Bay Bridge Traffic Cam - Traffic Detection
 
-A minimal Python script that grabs frames from an iPhone webcam and uses YOLO to detect cars.
+A real-time traffic detection system for Bay Bridge monitoring with two detection approaches:
+
+1. **Motion-Based Detection** (Recommended) - Real-time motion tracking optimized for bridge side views
+2. **YOLO-Based Detection** (Legacy) - Object detection using YOLOv8 models
 
 ## Setup
 
@@ -13,18 +16,42 @@ uv run python car_detector.py --help
 
 ## Usage
 
-### Test YOLO Detection
-First, test that YOLO is working with a real traffic image:
+### Motion-Based Detection (Recommended)
+
+**Best for**: Bay Bridge side views, real-time monitoring, small/distant vehicles
+
 ```bash
-uv run python test_yolo.py
+# Run motion-based traffic detection
+python motion_detector.py
 ```
 
-### iPhone Webcam Detection
+**Features:**
+- **30+ FPS** real-time processing
+- **Detects vehicles as small as 20 pixels**
+- **Handles occlusion** from bridge infrastructure
+- **Interactive ROI selection** for bridge deck area
+- **Debug visualization** with color-coded detection analysis
+- **Multiple detection presets** for different scenarios
+
+**Controls:**
+- `q` - Quit
+- `r` - Reset/Set ROI (Region of Interest)
+- `s` - Save current frame
+- `c` - Cycle through detection presets
+- `1-4` - Switch to specific preset
+
+### YOLO-Based Detection (Legacy)
+
+**Best for**: Clear, unobstructed vehicle views
+
 ```bash
-# Try to connect to iPhone webcam (auto-detects endpoints)
+# Test YOLO detection with sample image
+uv run python test_yolo.py
+
+# Run YOLO-based detection
 uv run python car_detector.py
 
-# Use demo mode with synthetic image
+# Use demo mode
 uv run python car_detector.py --demo
 
 # Specify custom webcam URL
@@ -50,44 +77,107 @@ Popular iPhone webcam apps and their typical endpoints:
 
 The script automatically tries common endpoints when you provide the base URL.
 
+## Configuration
+
+### Motion Detection Settings
+
+Edit `motion_config.py` to adjust detection parameters:
+
+```python
+# Object size filters (in pixels)
+"min_contour_area": 20,     # Minimum car size (lower = detect smaller cars)
+"max_contour_area": 8000,   # Maximum car size
+
+# Shape filters
+"min_aspect_ratio": 0.1,    # Allow thin distant vehicles
+"min_extent": 0.2,          # Allow partially occluded vehicles
+
+# Performance settings
+"target_fps": 0,            # 0 = unlimited, 30 = cap at 30fps
+```
+
+### Detection Presets
+
+Four built-in presets optimized for different scenarios:
+
+1. **`high_sensitivity`** (Default) - Best for distant traffic
+2. **`distant_traffic`** - Maximum sensitivity for very small cars
+3. **`balanced`** - Good noise/detection balance
+4. **`low_noise`** - Minimal false positives
+
 ## Files Generated
 
+### Motion Detection
+- `motion_detection_TIMESTAMP.jpg` - Annotated frames with detections
+- `motion_outputs/` - Directory for saved detection results
+
+### YOLO Detection
 - `test_input.jpg` - Original test image (from test_yolo.py)
 - `test_detected.jpg` - Test image with car detection boxes
 - `original_frame.jpg` - Original frame from webcam
 - `detected_cars.jpg` - Frame with detected cars highlighted
-- `demo_input.jpg` - Synthetic demo image (in demo mode)
+- `outputs/TIMESTAMP/` - Timestamped detection results
 
 ## Dependencies
 
-- `opencv-python` - Image processing
-- `ultralytics` - YOLO model
-- `requests` - HTTP requests for webcam
+- `opencv-python` - Image processing and motion detection
+- `ultralytics` - YOLO model (for legacy detection)
+- `requests` - HTTP requests for webcam streaming
 - `pillow` - Image handling
 - `numpy` - Array operations
 
-## Model
+## Detection Methods
 
-Uses YOLOv8 nano model (`yolov8n.pt`) for fast inference. The model automatically downloads on first run.
+### Motion-Based Detection
+- **Algorithm**: MOG2 Background Subtraction
+- **Performance**: 30+ FPS real-time processing
+- **Strengths**: Handles occlusion, small objects, no training required
+- **Best for**: Fixed-camera traffic monitoring, bridge side views
 
-Detects these vehicle types:
-- Cars (class 2)
-- Motorcycles (class 3)
-- Buses (class 5)
-- Trucks (class 7)
+### YOLO-Based Detection
+- **Model**: YOLOv8 nano (`yolov8n.pt`) - downloads automatically
+- **Performance**: 2-3 FPS processing
+- **Detects**: Cars, motorcycles, buses, trucks, pedestrians
+- **Best for**: Clear, unobstructed vehicle identification
 
 ## Troubleshooting
+
+### Motion Detection Issues
+
+1. **Cars not detected (showing as RED boxes in debug window)**
+   - Lower `min_contour_area` in `motion_config.py` (try 15 or 10)
+   - Switch to `distant_traffic` preset (press '4' key)
+   - Ensure ROI covers the traffic area properly
+
+2. **Too many false positives**
+   - Switch to `low_noise` preset (press '3' key)
+   - Increase `min_contour_area` and `min_extent` values
+   - Adjust ROI to exclude non-traffic areas
+
+3. **Cars detected but filtered out (ORANGE boxes)**
+   - Lower `min_aspect_ratio` for thin distant cars
+   - Lower `min_extent` for partially occluded cars
+   - Check debug window for specific AR/EX values
+
+### General Issues
 
 1. **Can't connect to iPhone webcam**
    - Make sure iPhone and computer are on same WiFi network
    - Check the webcam app is running and showing the IP address
-   - Try the demo mode first: `--demo`
+   - Try demo mode first to test the system
 
-2. **No cars detected**
+2. **Low frame rate**
+   - Motion detector should run at 30+ FPS
+   - YOLO detector runs at 2-3 FPS (expected)
+   - Check `target_fps` setting in `motion_config.py`
+
+3. **YOLO detection issues**
    - Try the test script first: `python test_yolo.py`
-   - Check if the image actually contains cars
-   - Lower confidence threshold in the code if needed
+   - YOLO struggles with bridge side views (use motion detection instead)
 
-3. **Slow detection**
-   - YOLOv8n is already the fastest model
-   - Consider reducing image resolution in the webcam app
+## Documentation
+
+- **RFD-000**: YOLO-based detection system (legacy)
+- **RFD-001**: Motion-based detection system (current)
+
+See `docs/` folder for detailed technical documentation.

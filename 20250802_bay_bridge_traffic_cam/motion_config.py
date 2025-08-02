@@ -20,7 +20,7 @@ BACKGROUND_SUBTRACTOR_CONFIG = {
 # Motion Detection Thresholds
 MOTION_DETECTION = {
     # Object size filters (in pixels)
-    "min_contour_area": 50,     # LOWERED from 100 - detects smaller cars
+    "min_contour_area": 20,     # LOWERED from 100 - detects smaller cars
     "max_contour_area": 8000,   # INCREASED from 5000 - allows larger vehicles
     
     # Morphological operations (noise reduction)
@@ -28,9 +28,9 @@ MOTION_DETECTION = {
     "morph_iterations": 1,        # Number of morphological iterations
     
     # Contour filtering
-    "min_aspect_ratio": 0.2,     # Minimum width/height ratio (filters thin lines)
+    "min_aspect_ratio": 0.1,     # Minimum width/height ratio (filters thin lines)
     "max_aspect_ratio": 5.0,     # Maximum width/height ratio
-    "min_extent": 0.3,           # Minimum contour area / bounding box area
+    "min_extent": 0.2,           # Minimum contour area / bounding box area
 }
 
 # Advanced Detection Settings
@@ -76,10 +76,11 @@ DISPLAY_CONFIG = {
 
 # Performance Settings
 PERFORMANCE = {
-    "target_fps": 30,                   # Target frame rate
+    "target_fps": 0,                    # Target frame rate (0 = unlimited, 30 = 30fps cap)
     "frame_skip": 1,                    # Process every Nth frame (1 = all frames)
     "max_processing_time": 0.1,         # Max time per frame (seconds)
     "enable_gpu_acceleration": False,   # Use GPU if available (experimental)
+    "show_fps": True,                   # Display FPS counter
 }
 
 # ROI (Region of Interest) Settings
