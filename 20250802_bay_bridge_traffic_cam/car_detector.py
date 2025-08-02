@@ -14,54 +14,77 @@ import time
 import argparse
 import os
 from datetime import datetime
+import config
 
-# Configuration
-WEBCAM_BASE_URL = "http://192.168.12.6:4747"
-MODEL_NAME = "yolov8n.pt"  # Nano model for speed
 
-# Common iPhone webcam app endpoints to try
-COMMON_ENDPOINTS = [
-    "/video",
-    "/video.mjpg",
-    "/mjpeg",
-    "/stream",
-    "/cam.mjpg",
-    "/video.cgi",
-    "/videostream.cgi",
-    "/axis-cgi/mjpg/video.cgi"
-]
 
-def try_webcam_endpoints(base_url):
-    """Try different common endpoints to find the video stream."""
-    print(f"Trying to find video stream at {base_url}...")
+def optimize_resolution(cap):
+    """Set the highest resolution available for the video capture."""
+    if not config.USE_HIGHEST_RESOLUTION:
+        return
 
-    for endpoint in COMMON_ENDPOINTS:
-        url = base_url + endpoint
-        print(f"Trying: {url}")
+    # Common high resolutions to try (width, height)
+    high_resolutions = [
+        (3840, 2160),  # 4K
+        (2560, 1440),  # 1440p
+        (1920, 1080),  # 1080p
+        (1280, 720),   # 720p
+        (960, 540),    # 540p
+        (640, 480),    # 480p
+    ]
 
-        try:
-            response = requests.head(url, timeout=3)
-            print(f"  Status: {response.status_code}")
+    print("Attempting to set highest resolution...")
 
-            if response.status_code == 200:
-                content_type = response.headers.get('content-type', '')
-                print(f"  Content-Type: {content_type}")
+    for width, height in high_resolutions:
+        cap.set(cv2.CAP_PROP_FRAME_WIDTH, width)
+        cap.set(cv2.CAP_PROP_FRAME_HEIGHT, height)
 
-                if 'mjpeg' in content_type.lower() or 'multipart' in content_type.lower():
-                    print(f"  ✓ Found MJPEG stream at: {url}")
-                    return url
-                elif 'jpeg' in content_type.lower() or 'image' in content_type.lower():
-                    print(f"  ✓ Found image endpoint at: {url}")
-                    return url
+        # Check what resolution was actually set
+        actual_width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+        actual_height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
 
-        except Exception as e:
-            print(f"  Error: {e}")
+        if actual_width >= config.MIN_RESOLUTION[0] and actual_height >= config.MIN_RESOLUTION[1]:
+            print(f"Set resolution to: {actual_width}x{actual_height}")
+            return
 
-    print("No working video endpoints found!")
-    return None
+    print("Using default resolution")
+
+def process_frame_resolution(frame):
+    """Process frame resolution according to config settings."""
+    if frame is None:
+        return None
+
+    original_shape = frame.shape
+    height, width = original_shape[:2]
+
+    # Force specific resolution if configured
+    if config.FORCE_RESOLUTION:
+        target_width, target_height = config.FORCE_RESOLUTION
+        frame = cv2.resize(frame, (target_width, target_height), interpolation=cv2.INTER_CUBIC)
+        print(f"Forced resolution: {original_shape[:2]} -> {frame.shape[:2]}")
+
+    # Handle aspect ratio preference
+    elif config.PREFERRED_ASPECT_RATIO == "landscape" and height > width:
+        # Rotate portrait to landscape
+        frame = cv2.rotate(frame, cv2.ROTATE_90_CLOCKWISE)
+        print(f"Rotated to landscape: {original_shape[:2]} -> {frame.shape[:2]}")
+    elif config.PREFERRED_ASPECT_RATIO == "portrait" and width > height:
+        # Rotate landscape to portrait
+        frame = cv2.rotate(frame, cv2.ROTATE_90_COUNTERCLOCKWISE)
+        print(f"Rotated to portrait: {original_shape[:2]} -> {frame.shape[:2]}")
+
+    # Apply small object enhancement if enabled
+    if config.ENHANCE_SMALL_OBJECTS:
+        height, width = frame.shape[:2]
+        new_width = int(width * config.SMALL_OBJECT_ENHANCEMENT_FACTOR)
+        new_height = int(height * config.SMALL_OBJECT_ENHANCEMENT_FACTOR)
+        frame = cv2.resize(frame, (new_width, new_height), interpolation=cv2.INTER_CUBIC)
+        print(f"Enhanced for small objects: {width}x{height} -> {new_width}x{new_height}")
+
+    return frame
 
 def grab_frame_from_webcam(url):
-    """Grab a single frame from the iPhone webcam stream."""
+    """Grab a single frame from the iPhone webcam stream with highest resolution."""
     try:
         print(f"Grabbing frame from: {url}")
 
@@ -71,7 +94,7 @@ def grab_frame_from_webcam(url):
         if not cap.isOpened():
             print("Failed to open video stream with OpenCV, trying requests...")
             # Fallback to requests method
-            response = requests.get(url, stream=True, timeout=10)
+            response = requests.get(url, stream=True, timeout=config.WEBCAM_TIMEOUT)
             if response.status_code == 200:
                 bytes_data = b''
                 for chunk in response.iter_content(chunk_size=1024):
@@ -92,6 +115,8 @@ def grab_frame_from_webcam(url):
                         if len(frame.shape) == 3:
                             frame = cv2.cvtColor(frame, cv2.COLOR_RGB2BGR)
 
+                        # Process resolution
+                        frame = process_frame_resolution(frame)
                         return frame
 
                     # Keep only recent data to avoid memory issues
@@ -99,12 +124,18 @@ def grab_frame_from_webcam(url):
                         bytes_data = bytes_data[-50000:]
             return None
 
+        # Optimize resolution for OpenCV capture
+        optimize_resolution(cap)
+
         # Read a frame using OpenCV
         ret, frame = cap.read()
         cap.release()
 
         if ret:
             print(f"Successfully captured frame: {frame.shape}")
+
+            # Process resolution
+            frame = process_frame_resolution(frame)
             return frame
         else:
             print("Failed to read frame from video stream")
@@ -118,8 +149,9 @@ def create_demo_image():
     """Create a demo image with cars for testing when webcam is not available."""
     print("Creating demo image with cars...")
 
-    # Create a simple demo image (640x480, blue background)
-    demo_frame = np.full((480, 640, 3), (100, 50, 0), dtype=np.uint8)
+    # Create a simple demo image using config settings
+    width, height = config.DEMO_IMAGE_SIZE
+    demo_frame = np.full((height, width, 3), config.DEMO_BACKGROUND_COLOR, dtype=np.uint8)
 
     # Draw some rectangles to simulate cars
     cars = [
@@ -149,28 +181,26 @@ def create_demo_image():
     return demo_frame
 
 def detect_objects(frame, model):
-    """Run YOLO detection on the frame and filter for cars and pedestrians."""
+    """Run YOLO detection on the frame and filter for configured object classes."""
     if frame is None:
         return None, []
 
-    # Run YOLO inference
-    results = model(frame, verbose=False)
+    # Get active detection classes from config
+    target_classes = config.get_active_confidence_thresholds()
 
-    # Define object classes we're interested in
-    target_classes = {
-        0: {'name': 'person', 'color': (255, 0, 0), 'min_conf': 0.4},      # Blue for persons
-        2: {'name': 'car', 'color': (0, 255, 0), 'min_conf': 0.5},         # Green for cars
-        3: {'name': 'motorcycle', 'color': (0, 255, 255), 'min_conf': 0.5}, # Yellow for motorcycles
-        5: {'name': 'bus', 'color': (255, 0, 255), 'min_conf': 0.5},       # Magenta for buses
-        7: {'name': 'truck', 'color': (0, 128, 255), 'min_conf': 0.5}      # Orange for trucks
-    }
+    # Run YOLO inference
+    results = model(frame, verbose=config.VERBOSE_YOLO)
 
     detections = []
+    detection_count = 0
 
     for result in results:
         boxes = result.boxes
         if boxes is not None:
             for box in boxes:
+                if detection_count >= config.MAX_DETECTIONS_PER_FRAME:
+                    break
+
                 # Get class ID and confidence
                 class_id = int(box.cls[0])
                 confidence = float(box.conf[0])
@@ -178,7 +208,7 @@ def detect_objects(frame, model):
                 # Check if it's a target class with sufficient confidence
                 if class_id in target_classes:
                     class_info = target_classes[class_id]
-                    if confidence > class_info['min_conf']:
+                    if class_info['enabled'] and confidence > class_info['min_confidence']:
                         # Get bounding box coordinates
                         x1, y1, x2, y2 = box.xyxy[0].cpu().numpy()
                         detections.append({
@@ -188,6 +218,7 @@ def detect_objects(frame, model):
                             'class_name': class_info['name'],
                             'color': class_info['color']
                         })
+                        detection_count += 1
 
     # Draw bounding boxes on the frame
     annotated_frame = frame.copy()
@@ -198,45 +229,67 @@ def detect_objects(frame, model):
         color = detection['color']
 
         # Draw rectangle
-        cv2.rectangle(annotated_frame, (x1, y1), (x2, y2), color, 2)
+        cv2.rectangle(annotated_frame, (x1, y1), (x2, y2), color, config.BOUNDING_BOX_THICKNESS)
 
         # Add label with background for better visibility
         label = f"{class_name}: {confidence:.2f}"
-        label_size = cv2.getTextSize(label, cv2.FONT_HERSHEY_SIMPLEX, 0.5, 2)[0]
+        label_size = cv2.getTextSize(label, config.LABEL_FONT, config.LABEL_FONT_SCALE, config.LABEL_FONT_THICKNESS)[0]
         cv2.rectangle(annotated_frame, (x1, y1-label_size[1]-10),
                      (x1+label_size[0], y1), color, -1)
         cv2.putText(annotated_frame, label, (x1, y1-5),
-                   cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2)
+                   config.LABEL_FONT, config.LABEL_FONT_SCALE, config.LABEL_TEXT_COLOR, config.LABEL_FONT_THICKNESS)
 
     return annotated_frame, detections
 
+def organize_outputs():
+    """Create output directory structure."""
+    timestamp = datetime.now().strftime(config.TIMESTAMP_FORMAT)
+    output_dir = f"{config.OUTPUT_BASE_DIR}/{timestamp}"
+    os.makedirs(output_dir, exist_ok=True)
+    return output_dir
+
 def main():
-    """Main function to run car detection."""
-    parser = argparse.ArgumentParser(description='Car detection using iPhone webcam and YOLO')
+    """Main function to run object detection."""
+    parser = argparse.ArgumentParser(description='Car and pedestrian detection using iPhone webcam and YOLO')
     parser.add_argument('--demo', action='store_true', help='Use demo mode with synthetic image')
-    parser.add_argument('--url', default="http://192.168.12.6:4747/video", help='Webcam URL')
+    parser.add_argument('--url', default=f"{config.WEBCAM_BASE_URL}{config.WEBCAM_DEFAULT_ENDPOINT}", help='Webcam URL')
+    parser.add_argument('--config-summary', action='store_true', help='Print configuration summary and exit')
     args = parser.parse_args()
 
+    if args.config_summary:
+        config.print_config_summary()
+        return
+
+    print("=== Bay Bridge Traffic Monitor ===")
+    config.print_config_summary()
+
     print("Loading YOLO model...")
-    model = YOLO(MODEL_NAME)
-    print(f"Model loaded: {MODEL_NAME}")
+    model = YOLO(config.MODEL_NAME)
+    print(f"Model loaded: {config.MODEL_NAME}")
+
+    # Create output directory
+    output_dir = organize_outputs()
+    print(f"Output directory: {output_dir}")
 
     frame = None
 
     if args.demo:
         print("Running in demo mode...")
         frame = create_demo_image()
-        cv2.imwrite("demo_input.jpg", frame)
-        print("Demo frame created and saved as demo_input.jpg")
+        demo_path = os.path.join(output_dir, "demo_input.jpg")
+        cv2.imwrite(demo_path, frame)
+        print(f"Demo frame created and saved as {demo_path}")
     else:
         # Grab a frame from the webcam
+        print("Capturing frame from iPhone webcam...")
         frame = grab_frame_from_webcam(args.url)
 
         if frame is None:
             print("Failed to grab frame from webcam! Falling back to demo mode...")
             frame = create_demo_image()
-            cv2.imwrite("demo_input.jpg", frame)
-            print("Demo frame created and saved as demo_input.jpg")
+            demo_path = os.path.join(output_dir, "demo_input.jpg")
+            cv2.imwrite(demo_path, frame)
+            print(f"Demo frame created and saved as {demo_path}")
 
     if frame is None:
         print("No frame available for processing!")
@@ -244,31 +297,51 @@ def main():
 
     print(f"Frame shape: {frame.shape}")
 
-    # Detect cars
-    print("Running car detection...")
-    annotated_frame, detections = detect_cars(frame, model)
+    # Detect objects
+    print("Running object detection (cars, pedestrians, vehicles)...")
+    annotated_frame, detections = detect_objects(frame, model)
 
     if annotated_frame is not None:
-        print(f"Found {len(detections)} cars!")
+        # Count detections by type
+        detection_counts = {}
+        for detection in detections:
+            class_name = detection['class_name']
+            detection_counts[class_name] = detection_counts.get(class_name, 0) + 1
 
-        # Print detection details
+        total_objects = len(detections)
+        print(f"\n=== DETECTION RESULTS ===")
+        print(f"Total objects detected: {total_objects}")
+        for obj_type, count in detection_counts.items():
+            print(f"  {obj_type}: {count}")
+
+        # Print detailed detection info
+        print(f"\nDetailed results:")
         for i, detection in enumerate(detections):
             bbox = detection['bbox']
             conf = detection['confidence']
-            print(f"Car {i+1}: bbox={bbox}, confidence={conf:.3f}")
+            class_name = detection['class_name']
+            print(f"  {i+1}. {class_name}: bbox={bbox}, confidence={conf:.3f}")
 
-        # Save the annotated frame
-        output_path = "detected_cars.jpg"
-        cv2.imwrite(output_path, annotated_frame)
-        print(f"Annotated frame saved to: {output_path}")
+        # Save files with organized naming
+        files_saved = []
 
-        # Also save the original frame for comparison
-        cv2.imwrite("original_frame.jpg", frame)
-        print("Original frame saved to: original_frame.jpg")
+        if config.SAVE_ORIGINAL_FRAME:
+            original_path = os.path.join(output_dir, "original_frame.jpg")
+            cv2.imwrite(original_path, frame)
+            files_saved.append(f"Original frame: {original_path}")
 
-        print("\n=== SUMMARY ===")
-        print(f"Cars detected: {len(detections)}")
-        print(f"Output files: {output_path}, original_frame.jpg")
+        if config.SAVE_ANNOTATED_FRAME:
+            annotated_path = os.path.join(output_dir, "detected_objects.jpg")
+            cv2.imwrite(annotated_path, annotated_frame)
+            files_saved.append(f"Annotated frame: {annotated_path}")
+
+        print(f"\n=== FILES SAVED ===")
+        for file_info in files_saved:
+            print(file_info)
+
+        print(f"\n=== SUMMARY ===")
+        for obj_type, count in detection_counts.items():
+            print(f"{obj_type}: {count}")
         if args.demo:
             print("Note: This was a demo run with synthetic data")
 
