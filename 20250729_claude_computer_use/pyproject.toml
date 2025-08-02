@@ -1,0 +1,8 @@
+[project]
+name = "20250729-claude-computer-use"
+version = "0.1.0"
+description = "Add your description here"
+requires-python = ">=3.12"
+dependencies = [
+    "anthropic>=0.60.0",
+]
