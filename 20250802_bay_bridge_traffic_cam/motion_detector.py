@@ -11,7 +11,7 @@ import time
 from datetime import datetime
 import os
 import motion_config as config
-from object_tracker import ObjectTracker, TrafficCounter
+from object_tracker import ObjectTracker, TrafficCounter, ROITracker
 
 class MotionTrafficDetector:
     def __init__(self, webcam_url=None):
@@ -52,6 +52,8 @@ class MotionTrafficDetector:
         self.traffic_counter = TrafficCounter(
             counting_lines=tracking_config["counting_lines"]
         ) if tracking_config["enable_counting"] else None
+
+        self.roi_tracker = ROITracker() if tracking_config["enable_roi_tracking"] else None
 
         # PERFORMANCE OPTIMIZATION: Persistent video capture
         self.cap = None
@@ -162,9 +164,16 @@ class MotionTrafficDetector:
             self.roi = roi
             self.roi_set = True
             print(f"ROI set: x={roi[0]}, y={roi[1]}, w={roi[2]}, h={roi[3]}")
+
+            # Update ROI tracker
+            if self.roi_tracker is not None:
+                self.roi_tracker.set_roi(roi)
+                print("ROI tracker updated with new ROI")
         else:
             print("No ROI selected, using full frame")
             self.roi = None
+            if self.roi_tracker is not None:
+                self.roi_tracker.set_roi(None)
 
     def set_counting_line_interactive(self, frame):
         """Let user set a counting line for traffic counting."""
@@ -270,6 +279,10 @@ class MotionTrafficDetector:
             # Update traffic counter if enabled
             if self.traffic_counter is not None:
                 self.traffic_counter.update(tracked_objects)
+
+            # Update ROI tracker if enabled
+            if self.roi_tracker is not None:
+                self.roi_tracker.update(tracked_objects, self.frame_count)
 
         return fg_mask, valid_contours, tracked_objects
     
@@ -425,6 +438,25 @@ class MotionTrafficDetector:
                 y_offset = 100
             else:
                 y_offset = 80
+
+            # ROI entry/exit counts
+            if self.roi_tracker is not None and tracking_config["show_roi_counts"]:
+                roi_counts = self.roi_tracker.get_counts()
+                roi_text = f"ROI: In:{roi_counts['entries']} Out:{roi_counts['exits']} Current:{roi_counts['current_in_roi']}"
+                cv2.putText(display_frame, roi_text, (10, y_offset),
+                           display_config["font"], display_config["small_font_scale"],
+                           display_config["text_color"], display_config["small_font_thickness"])
+
+                # Show recent activity if enabled
+                if tracking_config["show_recent_events"]:
+                    recent = self.roi_tracker.get_recent_events(60)  # Last 60 seconds
+                    recent_text = f"Recent: {recent['recent_entries']}/min in, {recent['recent_exits']}/min out"
+                    cv2.putText(display_frame, recent_text, (10, y_offset + 20),
+                               display_config["font"], display_config["small_font_scale"],
+                               display_config["text_color"], display_config["small_font_thickness"])
+                    y_offset += 40
+                else:
+                    y_offset += 20
         else:
             y_offset = 60
 
@@ -440,7 +472,7 @@ class MotionTrafficDetector:
         cv2.putText(display_frame, "Press SPACE to pause/resume, 't' to toggle tracking", (10, y_offset + 70),
                    display_config["font"], display_config["small_font_scale"],
                    display_config["text_color"], display_config["small_font_thickness"])
-        cv2.putText(display_frame, "Press 'l' to set counting line", (10, y_offset + 90),
+        cv2.putText(display_frame, "Press 'l' to set counting line, 'x' to reset ROI counters", (10, y_offset + 90),
                    display_config["font"], display_config["small_font_scale"],
                    display_config["text_color"], display_config["small_font_thickness"])
 
@@ -662,6 +694,7 @@ class MotionTrafficDetector:
         print("  '1-4' - Switch to specific preset")
         print("  't' - Toggle object tracking")
         print("  'l' - Set counting line")
+        print("  'x' - Reset ROI and traffic counters")
         print("  SPACE - Pause/Resume")
         print()
 
@@ -769,6 +802,14 @@ class MotionTrafficDetector:
                 # Set counting line
                 if frame is not None:
                     self.set_counting_line_interactive(frame)
+            elif key == ord('x'):
+                # Reset ROI counters
+                if self.roi_tracker is not None:
+                    self.roi_tracker.reset()
+                    print("ROI entry/exit counters reset")
+                if self.traffic_counter is not None:
+                    self.traffic_counter.reset_counts()
+                    print("Traffic counters reset")
 
             # Adaptive frame rate control (only when not paused)
             if not self.is_paused:

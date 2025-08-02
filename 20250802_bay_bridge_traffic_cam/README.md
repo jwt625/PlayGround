@@ -23,6 +23,7 @@ uv run python car_detector.py --help
 **Features:**
 - Real-time object tracking with persistent IDs
 - Traffic counting with directional analysis
+- ROI entry/exit counting for traffic flow analysis
 - Speed estimation in pixels per second
 - Trajectory visualization
 - Interactive counting line setup
@@ -40,6 +41,7 @@ python motion_detector.py
 - `1-4` - Switch to specific preset
 - `t` - Toggle object tracking on/off
 - `l` - Set counting line for traffic counting
+- `x` - Reset ROI and traffic counters
 - `SPACE` - Pause/Resume
 
 **Test the tracking system:**

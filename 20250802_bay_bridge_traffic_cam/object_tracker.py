@@ -36,6 +36,11 @@ class TrackedObject:
         # Motion properties
         self.velocity = (0, 0)
         self.direction = None  # 'left', 'right', 'up', 'down', or None
+
+        # ROI tracking
+        self.roi_status = None  # 'inside', 'outside', or None (unknown)
+        self.roi_entry_frame = None  # Frame number when entered ROI
+        self.roi_exit_frame = None   # Frame number when exited ROI
         
     def update_position(self, centroid, bbox, area):
         """Update object position and calculate motion properties."""
@@ -102,16 +107,45 @@ class TrackedObject:
         """Get total distance traveled."""
         if len(self.positions) < 2:
             return 0.0
-        
+
         total_distance = 0.0
         for i in range(1, len(self.positions)):
             prev_pos = self.positions[i-1]
             curr_pos = self.positions[i]
-            distance = np.sqrt((curr_pos[0] - prev_pos[0])**2 + 
+            distance = np.sqrt((curr_pos[0] - prev_pos[0])**2 +
                              (curr_pos[1] - prev_pos[1])**2)
             total_distance += distance
-        
+
         return total_distance
+
+    def update_roi_status(self, roi_rect, frame_number):
+        """Update ROI status and track entry/exit events."""
+        if roi_rect is None:
+            return None
+
+        x, y, w, h = roi_rect
+        cx, cy = self.centroid
+
+        # Check if centroid is inside ROI
+        is_inside = (x <= cx <= x + w) and (y <= cy <= y + h)
+        new_status = 'inside' if is_inside else 'outside'
+
+        # Detect status changes (only for confirmed objects)
+        if self.confirmed and self.roi_status is not None and self.roi_status != new_status:
+            if self.roi_status == 'outside' and new_status == 'inside':
+                # Object entered ROI
+                self.roi_entry_frame = frame_number
+                self.roi_status = new_status
+                return 'entered'
+            elif self.roi_status == 'inside' and new_status == 'outside':
+                # Object exited ROI
+                self.roi_exit_frame = frame_number
+                self.roi_status = new_status
+                return 'exited'
+
+        # Update status (initialize for new objects)
+        self.roi_status = new_status
+        return None
 
 
 class ObjectTracker:
@@ -401,3 +435,108 @@ class TrafficCounter:
         """Reset all counts."""
         self.counts = {'left': 0, 'right': 0, 'up': 0, 'down': 0, 'total': 0}
         self.counted_objects.clear()
+
+
+class ROITracker:
+    """
+    ROI (Region of Interest) entry/exit tracker.
+
+    Tracks objects entering and leaving the ROI area for traffic flow analysis.
+    """
+
+    def __init__(self):
+        """Initialize ROI tracker."""
+        self.entry_count = 0
+        self.exit_count = 0
+        self.objects_in_roi = set()  # Track which objects are currently in ROI
+        self.entry_events = []  # List of (object_id, frame_number, timestamp)
+        self.exit_events = []   # List of (object_id, frame_number, timestamp)
+        self.roi_rect = None    # Current ROI rectangle (x, y, w, h)
+
+    def set_roi(self, roi_rect):
+        """Set the ROI rectangle."""
+        self.roi_rect = roi_rect
+
+    def update(self, tracked_objects, frame_number):
+        """Update ROI tracking with current objects."""
+        if self.roi_rect is None:
+            return
+
+        import time
+        current_time = time.time()
+
+        # Only process confirmed objects to avoid duplicate counting
+        confirmed_objects = [obj for obj in tracked_objects if obj.confirmed]
+
+        for obj in confirmed_objects:
+            # Update object's ROI status and check for events
+            event = obj.update_roi_status(self.roi_rect, frame_number)
+
+            if event == 'entered':
+                self.entry_count += 1
+                self.objects_in_roi.add(obj.id)
+                self.entry_events.append((obj.id, frame_number, current_time))
+
+                # Limit event history to prevent memory growth
+                if len(self.entry_events) > 1000:
+                    self.entry_events = self.entry_events[-500:]
+
+            elif event == 'exited':
+                self.exit_count += 1
+                self.objects_in_roi.discard(obj.id)
+                self.exit_events.append((obj.id, frame_number, current_time))
+
+                # Limit event history to prevent memory growth
+                if len(self.exit_events) > 1000:
+                    self.exit_events = self.exit_events[-500:]
+
+        # Update current objects in ROI count based on actual positions
+        current_in_roi = set()
+        for obj in confirmed_objects:
+            if obj.roi_status == 'inside':
+                current_in_roi.add(obj.id)
+        self.objects_in_roi = current_in_roi
+
+    def get_counts(self):
+        """Get current entry/exit counts."""
+        return {
+            'entries': self.entry_count,
+            'exits': self.exit_count,
+            'current_in_roi': len(self.objects_in_roi),
+            'net_flow': self.entry_count - self.exit_count
+        }
+
+    def get_recent_events(self, seconds=60):
+        """Get recent entry/exit events within the specified time window."""
+        import time
+        current_time = time.time()
+        cutoff_time = current_time - seconds
+
+        recent_entries = [e for e in self.entry_events if e[2] >= cutoff_time]
+        recent_exits = [e for e in self.exit_events if e[2] >= cutoff_time]
+
+        return {
+            'recent_entries': len(recent_entries),
+            'recent_exits': len(recent_exits),
+            'entries_per_minute': len(recent_entries) * (60.0 / seconds),
+            'exits_per_minute': len(recent_exits) * (60.0 / seconds)
+        }
+
+    def reset(self):
+        """Reset all ROI tracking data."""
+        self.entry_count = 0
+        self.exit_count = 0
+        self.objects_in_roi.clear()
+        self.entry_events.clear()
+        self.exit_events.clear()
+
+    def get_statistics(self):
+        """Get comprehensive ROI statistics."""
+        counts = self.get_counts()
+        recent = self.get_recent_events()
+
+        return {
+            **counts,
+            **recent,
+            'total_events': len(self.entry_events) + len(self.exit_events)
+        }

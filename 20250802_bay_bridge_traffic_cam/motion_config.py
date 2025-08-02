@@ -10,7 +10,7 @@ WEBCAM_TIMEOUT = 5  # seconds
 # Background Subtraction Parameters
 BACKGROUND_SUBTRACTOR_CONFIG = {
     "detectShadows": True,      # Helps reduce shadow false positives
-    "varThreshold": 50,         # Lower = more sensitive to motion (16-50 good range)
+    "varThreshold": 30,         # Lower = more sensitive to motion (16-50 good range)
     "history": 500,             # Frames to build background model (300-1000)
     "learningRate": -1,         # Auto learning rate (-1 = automatic)
     "shadowValue": 0,           # Shadow pixel value
@@ -20,8 +20,8 @@ BACKGROUND_SUBTRACTOR_CONFIG = {
 # Motion Detection Thresholds
 MOTION_DETECTION = {
     # Object size filters (in pixels)
-    "min_contour_area": 3,     # LOWERED from 100 - detects smaller cars
-    "max_contour_area": 8000,   # INCREASED from 5000 - allows larger vehicles
+    "min_contour_area": 100,     # LOWERED from 100 - detects smaller cars
+    "max_contour_area": 80000,   # INCREASED from 5000 - allows larger vehicles
     
     # Morphological operations (noise reduction)
     "morph_kernel_size": (3, 3),  # Kernel for opening/closing operations
@@ -71,6 +71,12 @@ TRACKING_CONFIG = {
     # Performance optimization
     "tracking_roi_only": True,          # Only track within ROI
     "max_tracked_objects": 50,          # Maximum simultaneous tracked objects
+
+    # ROI entry/exit tracking
+    "enable_roi_tracking": True,        # Enable ROI entry/exit counting
+    "show_roi_counts": True,            # Display ROI entry/exit counts
+    "roi_event_history": 1000,          # Maximum number of events to store
+    "show_recent_events": True,         # Show recent entry/exit rates
 }
 
 # Visual Display Settings
@@ -153,8 +159,8 @@ DEMO_CONFIG = {
 # Presets for different scenarios
 DETECTION_PRESETS = {
     "high_sensitivity": {
-        "min_contour_area": 3,         # Very small objects
-        "varThreshold": 30,             # More sensitive background subtraction
+        "min_contour_area": 100,         # Very small objects
+        "varThreshold": 20,             # More sensitive background subtraction
         "enable_multiscale": True,
         "max_distance": 40,             # Tighter tracking for small objects
         "min_detection_frames": 2,      # Faster confirmation for small objects
