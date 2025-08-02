@@ -48,6 +48,12 @@ class MotionTrafficDetector:
         self.fps_start_time = time.time()
         self.current_fps = 0
 
+        # Pause/Resume functionality
+        self.is_paused = False
+        self.paused_frame = None
+        self.paused_fg_mask = None
+        self.paused_contours = []
+
         # Print configuration on startup
         config.print_config_summary()
         
@@ -237,18 +243,27 @@ class MotionTrafficDetector:
 
             motion_count += 1
 
-        # Add info text with FPS
+        # Add info text with FPS and pause status
         current_config = config.get_current_config()
+
+        # Status line with pause indicator
+        status_text = f"Frame: {self.frame_count} | FPS: {self.current_fps:.1f}"
+        if self.is_paused:
+            status_text += " | PAUSED"
+
         cv2.putText(display_frame, f"Motion Objects: {motion_count}", (10, 30),
                    display_config["font"], display_config["font_scale"],
                    display_config["text_color"], display_config["font_thickness"])
-        cv2.putText(display_frame, f"Frame: {self.frame_count} | FPS: {self.current_fps:.1f}", (10, 60),
+        cv2.putText(display_frame, status_text, (10, 60),
                    display_config["font"], display_config["font_scale"],
                    display_config["text_color"], display_config["font_thickness"])
         cv2.putText(display_frame, f"Min Size: {current_config['min_object_size']} px", (10, 90),
                    display_config["font"], display_config["small_font_scale"],
                    display_config["text_color"], display_config["small_font_thickness"])
         cv2.putText(display_frame, "Press 'q' to quit, 'r' to reset ROI, 'c' to change preset", (10, 120),
+                   display_config["font"], display_config["small_font_scale"],
+                   display_config["text_color"], display_config["small_font_thickness"])
+        cv2.putText(display_frame, "Press SPACE to pause/resume", (10, 140),
                    display_config["font"], display_config["small_font_scale"],
                    display_config["text_color"], display_config["small_font_thickness"])
 
@@ -368,6 +383,7 @@ class MotionTrafficDetector:
         print("  's' - Save current frame")
         print("  'c' - Cycle through detection presets")
         print("  '1-4' - Switch to specific preset")
+        print("  SPACE - Pause/Resume")
         print()
 
         webcam_available = False
@@ -375,35 +391,47 @@ class MotionTrafficDetector:
         current_preset_index = preset_names.index(config.ACTIVE_PRESET)
 
         while True:
-            # Get frame
-            frame = self.get_frame_from_webcam()
-            if frame is None:
-                if not webcam_available:
-                    print("Webcam not available, using demo mode")
-                    webcam_available = False
-                frame = self.create_demo_frame()
+            # Handle pause/resume logic
+            if not self.is_paused:
+                # Get new frame only when not paused
+                frame = self.get_frame_from_webcam()
+                if frame is None:
+                    if not webcam_available:
+                        print("Webcam not available, using demo mode")
+                        webcam_available = False
+                    frame = self.create_demo_frame()
+                else:
+                    if not webcam_available:
+                        print("Webcam connected successfully!")
+                        webcam_available = True
+
+                self.frame_count += 1
+
+                # Update FPS calculation
+                self.update_fps()
+
+                # Set ROI on first frame or when requested
+                if not self.roi_set and webcam_available:
+                    self.set_roi_interactive(frame)
+
+                # Skip processing if frame skipping is enabled
+                if config.PERFORMANCE["frame_skip"] > 1 and self.frame_count % config.PERFORMANCE["frame_skip"] != 0:
+                    continue
+
+                # Detect motion
+                fg_mask, contours = self.detect_motion(frame)
+
+                # Store current frame data for pause functionality
+                self.paused_frame = frame.copy()
+                self.paused_fg_mask = fg_mask.copy() if fg_mask is not None else None
+                self.paused_contours = contours.copy()
             else:
-                if not webcam_available:
-                    print("Webcam connected successfully!")
-                    webcam_available = True
+                # Use paused frame data
+                frame = self.paused_frame
+                fg_mask = self.paused_fg_mask
+                contours = self.paused_contours
 
-            self.frame_count += 1
-
-            # Update FPS calculation
-            self.update_fps()
-
-            # Set ROI on first frame or when requested
-            if not self.roi_set and webcam_available:
-                self.set_roi_interactive(frame)
-
-            # Skip processing if frame skipping is enabled
-            if config.PERFORMANCE["frame_skip"] > 1 and self.frame_count % config.PERFORMANCE["frame_skip"] != 0:
-                continue
-
-            # Detect motion
-            fg_mask, contours = self.detect_motion(frame)
-
-            # Draw results
+            # Draw results (always update display even when paused)
             display_frame = self.draw_detections(frame, fg_mask, contours)
 
             # Show frames
@@ -418,6 +446,12 @@ class MotionTrafficDetector:
             key = cv2.waitKey(1) & 0xFF
             if key == ord('q'):
                 break
+            elif key == ord(' '):  # Spacebar for pause/resume
+                self.is_paused = not self.is_paused
+                if self.is_paused:
+                    print("PAUSED - Press SPACE to resume")
+                else:
+                    print("RESUMED")
             elif key == ord('r'):
                 self.roi_set = False
                 print("ROI reset - will be set on next frame")
@@ -443,14 +477,18 @@ class MotionTrafficDetector:
                     self._update_detection_params()
                     print(f"Switched to preset: {new_preset}")
 
-            # Adaptive frame rate control
-            target_fps = config.PERFORMANCE["target_fps"]
-            if target_fps > 0:
-                frame_time = time.time() - self.last_frame_time
-                target_frame_time = 1.0 / target_fps
-                if frame_time < target_frame_time:
-                    time.sleep(target_frame_time - frame_time)
-            self.last_frame_time = time.time()
+            # Adaptive frame rate control (only when not paused)
+            if not self.is_paused:
+                target_fps = config.PERFORMANCE["target_fps"]
+                if target_fps > 0:
+                    frame_time = time.time() - self.last_frame_time
+                    target_frame_time = 1.0 / target_fps
+                    if frame_time < target_frame_time:
+                        time.sleep(target_frame_time - frame_time)
+                self.last_frame_time = time.time()
+            else:
+                # When paused, just a small delay to prevent excessive CPU usage
+                time.sleep(0.05)
 
         # Cleanup
         self.cleanup()
