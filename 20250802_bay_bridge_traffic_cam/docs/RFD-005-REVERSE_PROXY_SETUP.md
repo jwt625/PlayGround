@@ -88,7 +88,10 @@ Internet → Cloudflare Tunnel → Nginx (port 8080) → Local Grafana (port 300
 ✅ **Cloudflared**: Installed and tunnel created successfully
 ✅ **Automation Scripts**: Created for easy setup and management
 ✅ **DNS Routing**: Configured in Cloudflare (manual setup required)
-⚠️ **Static Asset Loading**: Grafana UI fails to load through reverse proxy
+✅ **Static Asset Loading**: CSS and JS files now loading correctly
+✅ **Tunnel Connectivity**: Cloudflare tunnel running with 4 active connections
+⚠️ **WebSocket Connections**: Grafana Live WebSocket connections failing through reverse proxy
+⚠️ **API Endpoints**: Some API endpoints (e.g., `/api/frontend-metrics`) returning 404 through proxy
 
 ## Quick Start
 
@@ -188,6 +191,9 @@ grafana:
     - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
     - GF_AUTH_DISABLE_LOGIN_FORM=true
     - GF_AUTH_DISABLE_SIGNOUT_MENU=true
+    # Additional reverse proxy settings
+    - GF_SERVER_ENABLE_GZIP=true
+    - GF_LOG_LEVEL=debug
   volumes:
     - grafana-storage:/var/lib/grafana
     - ./grafana/provisioning:/etc/grafana/provisioning
@@ -198,25 +204,36 @@ grafana:
 ```nginx
 server {
     listen 8080;
-    server_name bay-bridge-traffic.com;
+    server_name _;
 
+    # Redirect root to dashboard
+    location = / {
+        return 302 /d/bay-bridge-traffic/bay-bridge-traffic-detection-system;
+    }
+
+    # Proxy all requests to Grafana
     location / {
         proxy_pass http://localhost:3000;
-        proxy_set_header Host $host;
+        proxy_set_header Host $http_host;
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header X-Forwarded-Proto https;
+        proxy_set_header X-Forwarded-Host bay-bridge-traffic.com;
+        proxy_set_header X-Forwarded-Port 443;
 
         # WebSocket support for Grafana live features
         proxy_http_version 1.1;
         proxy_set_header Upgrade $http_upgrade;
         proxy_set_header Connection "upgrade";
 
-        # Timeouts and buffering
+        # Increase timeouts for long-running queries
         proxy_connect_timeout 60s;
         proxy_send_timeout 60s;
         proxy_read_timeout 60s;
+
+        # Buffer settings
         proxy_buffering off;
+        proxy_request_buffering off;
     }
 }
 ```
@@ -330,36 +347,54 @@ datasources:
 
 **Cause**: Reverse proxy configuration interfering with static asset loading
 
-**Current Status**: ⚠️ **UNRESOLVED**
+**Current Status**: ✅ **RESOLVED**
+
+**Resolution**:
+1. **Fixed Grafana Environment Variables**: Ensured `GF_SERVER_ROOT_URL` includes trailing slash
+2. **Updated Nginx Configuration**:
+   - Changed `server_name` to `_` (accept any hostname)
+   - Set `proxy_set_header Host $http_host` to preserve original host
+   - Added proper HTTPS headers for Cloudflare tunnel
+3. **Container Recreation**: Full container recreation to apply environment variables
+
+**Verified Working**:
+- ✅ Static assets (CSS/JS) loading correctly
+- ✅ Grafana logo and UI elements appear
+- ✅ Cloudflare tunnel connectivity established
+
+#### Issue 5: WebSocket and API Endpoint Failures
+**Error**: WebSocket connections and some API endpoints failing through reverse proxy
+
+**Current Status**: ⚠️ **ACTIVE ISSUE**
 
 **Symptoms**:
-- Tunnel receives requests successfully (visible in debug logs)
-- Local Grafana works fine (http://localhost:3000)
-- Reverse proxy returns 404 for some requests
-- Grafana UI shows "failed to load application files" error
+- WebSocket connection to `ws://localhost:8080/api/live/ws` fails repeatedly
+- API endpoint `/api/frontend-metrics` returns 404
+- Grafana UI loads but shows continuous loading/connection issues
+- Browser console shows repeated WebSocket connection failures
 
-**Debug Process**:
-1. **Tunnel Debug Logs**: Use `cloudflared tunnel --loglevel debug run grafana-local` to see request flow
-2. **Environment Variables**: Ensure Grafana container has correct auth settings:
-   ```bash
-   docker exec grafana env | grep GF_AUTH
-   ```
-3. **Container Recreation**: Sometimes requires full container recreation:
-   ```bash
-   docker-compose down grafana
-   docker-compose up -d grafana
-   ```
+**Root Cause**:
+- WebSocket upgrade headers may not be properly handled through Cloudflare tunnel
+- Some API endpoints inconsistently accessible through reverse proxy
+- Grafana Live features require persistent WebSocket connections
+
+**Debug Information**:
+```javascript
+// Browser console errors:
+WebSocket connection to 'ws://localhost:8080/api/live/ws' failed
+POST http://localhost:8080/api/frontend-metrics 404 (Not Found)
+```
 
 **Attempted Solutions**:
-- ✅ Disabled Grafana authentication completely
-- ✅ Updated Nginx to proxy all requests to Grafana
-- ✅ Set proper Grafana reverse proxy environment variables
-- ❌ Static asset loading still fails through tunnel
+- ✅ Added WebSocket upgrade headers to Nginx configuration
+- ✅ Verified API endpoints work directly on Grafana (localhost:3000)
+- ❌ WebSocket connections still fail through tunnel
 
 **Next Steps**:
-- Investigate Grafana subpath configuration
-- Consider alternative reverse proxy approaches
-- Test with different Grafana versions
+- Investigate Cloudflare tunnel WebSocket support limitations
+- Consider disabling Grafana Live features for public access
+- Test alternative WebSocket proxy configurations
+- Evaluate if WebSocket failures affect core dashboard functionality
 
 ## Security Considerations
 

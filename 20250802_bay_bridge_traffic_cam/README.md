@@ -1,6 +1,6 @@
 # Bay Bridge Traffic Detection System
 
-A comprehensive real-time traffic detection and monitoring system for Bay Bridge with **Prometheus + Grafana Cloud integration**:
+A comprehensive real-time traffic detection and monitoring system for Bay Bridge with **Prometheus + Grafana integration** and **public dashboard access**:
 
 ## 🚀 Features
 
@@ -10,29 +10,38 @@ A comprehensive real-time traffic detection and monitoring system for Bay Bridge
 
 ### 📊 Monitoring & Analytics (NEW)
 - **Prometheus Metrics Collection** - Real-time traffic counting and system health
-- **Grafana Cloud Integration** - Cloud-based dashboards and alerting
+- **Local Grafana Dashboard** - Self-hosted dashboard with full functionality
+- **Public Dashboard Access** - https://bay-bridge-traffic.com (via Cloudflare Tunnel)
 - **Traffic Flow Analytics** - Vehicles per minute by direction
 - **System Health Monitoring** - Component status tracking
 - **Performance Metrics** - FPS and processing time monitoring
 
 ## 🚀 Quick Start
 
-### 1. Start Monitoring Infrastructure
+### 1. Start Complete Monitoring Infrastructure
 ```bash
-# Start Prometheus and monitoring stack
-./start.sh
+# Start all monitoring services (Prometheus + Grafana + Nginx)
+./start-bay-bridge-services.sh
 ```
 
-### 2. Run Traffic Detection with Metrics
+### 2. Start Cloudflare Tunnel (for public access)
+```bash
+# Start the tunnel to expose dashboard publicly
+cloudflared tunnel run grafana-local
+```
+
+### 3. Run Traffic Detection with Metrics
 ```bash
 # Start the complete system with monitoring (main entry point)
 python motion_detector.py
 ```
 
-### 3. Access Monitoring
+### 4. Access Monitoring
+- **Public Dashboard**: https://bay-bridge-traffic.com (requires tunnel)
+- **Local Grafana**: http://localhost:3000 (admin/admin)
+- **Local Prometheus**: http://localhost:9090
+- **Nginx Proxy**: http://localhost:8080
 - **Metrics Endpoint**: http://localhost:9091/metrics
-- **Prometheus UI**: http://localhost:9090
-- **Grafana Cloud**: https://jwt625.grafana.net
 
 ## Setup
 
@@ -218,44 +227,96 @@ Four built-in presets optimized for different scenarios:
 - `detected_cars.jpg` - Frame with detected cars highlighted
 - `outputs/TIMESTAMP/` - Timestamped detection results
 
-## 🐳 Docker Infrastructure
+## 🐳 Infrastructure Services
 
-The monitoring system uses Docker for Prometheus:
+The complete monitoring system requires multiple services to run:
 
+### Required Services
+
+#### 1. Docker Services
 ```bash
-# Start monitoring stack
-./start.sh
-
-# Stop monitoring stack
-docker-compose down
+# Start Prometheus + Grafana containers
+docker-compose up -d
 
 # View logs
 docker logs prometheus
+docker logs grafana
 ```
 
-**Services:**
-- **Prometheus** (port 9090) - Metrics collection and remote write to Grafana Cloud
+#### 2. Nginx Reverse Proxy
+```bash
+# Start Nginx (if not running)
+nginx
+
+# Reload configuration
+nginx -s reload
+
+# Stop Nginx
+nginx -s stop
+```
+
+#### 3. Cloudflare Tunnel (for public access)
+```bash
+# Start tunnel for public dashboard access
+cloudflared tunnel run grafana-local
+
+# Check tunnel status
+cloudflared tunnel list
+```
+
+#### 4. Traffic Detection Application
+```bash
+# Start the main application
+python motion_detector.py
+```
+
+### All-in-One Startup
+```bash
+# Start all services except tunnel and application
+./start-bay-bridge-services.sh
+
+# Then start tunnel in separate terminal
+cloudflared tunnel run grafana-local
+
+# Then start application in another terminal
+python motion_detector.py
+```
+
+**Services Overview:**
+- **Prometheus** (port 9090) - Metrics collection and storage
+- **Grafana** (port 3000) - Dashboard and visualization
+- **Nginx** (port 8080) - Reverse proxy for public access
 - **Application** (port 9091) - Metrics HTTP server
+- **Cloudflare Tunnel** - Secure public access to dashboard
 
 ## 📁 Project Structure
 
 ```
 ├── motion_detector.py          # Main entry point with integrated monitoring
 ├── prometheus_metrics.py       # Metrics collection engine
-├── motion_detector.py          # Motion detection system
 ├── object_tracker.py          # Object tracking with metrics integration
 ├── start_metrics_server.py    # Standalone metrics server
 ├── test_metrics.py            # Testing and validation suite
-├── docker-compose.yml         # Prometheus container
+├── docker-compose.yml         # Prometheus + Grafana containers
 ├── prometheus.yml.template    # Prometheus configuration template
 ├── generate-prometheus-config.sh # Auto-configuration script
-├── start.sh                   # One-command startup
+├── start.sh                   # Legacy startup script
+├── start-bay-bridge-services.sh # Complete infrastructure startup
+├── setup-cloudflare-tunnel.sh # Tunnel setup automation
 ├── grafana-dashboard.json     # Ready-to-import dashboard
-├── .env                       # Configuration (Grafana Cloud credentials)
+├── nginx/                     # Reverse proxy configuration
+│   └── bay-bridge-traffic.conf
+├── grafana/                   # Grafana provisioning
+│   ├── provisioning/
+│   │   ├── datasources/
+│   │   └── dashboards/
+│   └── dashboards/
+├── .env                       # Configuration (credentials)
 └── docs/                      # Technical documentation
     ├── RFD-001-motion-detection.md
     ├── RFD-002-traffic-counting.md
-    └── RFD-004-prometheus-grafana-monitoring.md
+    ├── RFD-004-prometheus-grafana-monitoring.md
+    └── RFD-005-REVERSE_PROXY_SETUP.md
 ```
 
 ## Dependencies
@@ -294,7 +355,7 @@ docker logs prometheus
 METRICS_ENABLED=true
 PROMETHEUS_HTTP_SERVER_PORT=9091
 
-# Grafana Cloud Integration
+# Optional: Grafana Cloud Integration (for remote backup)
 PROMETHEUS_PUSH_GATEWAY_URL=https://prometheus-prod-XX-XXX.grafana.net/api/prom/push
 PROMETHEUS_USERNAME=your_grafana_user_id
 PROMETHEUS_API_KEY=your_grafana_api_token
@@ -304,7 +365,24 @@ APP_NAME=bay-bridge-traffic-detector
 GRAFANA_INSTANCE_URL=https://jwt625.grafana.net
 ```
 
-### Grafana Cloud Setup
+### Public Dashboard Setup
+
+The system uses a self-hosted Grafana instance with public access via Cloudflare Tunnel:
+
+1. **Local Grafana** - Runs in Docker with anonymous access enabled
+2. **Nginx Reverse Proxy** - Provides clean URL mapping
+3. **Cloudflare Tunnel** - Secures public access without port forwarding
+4. **Custom Domain** - https://bay-bridge-traffic.com
+
+**Setup Steps:**
+1. **Start Services**: `./start-bay-bridge-services.sh`
+2. **Setup Tunnel**: `./setup-cloudflare-tunnel.sh` (one-time)
+3. **Start Tunnel**: `cloudflared tunnel run grafana-local`
+4. **Access Dashboard**: https://bay-bridge-traffic.com
+
+### Optional: Grafana Cloud Integration
+
+For additional cloud backup and alerting:
 
 1. **Create Grafana Cloud Account** at https://grafana.com/
 2. **Get Credentials** from your Grafana Cloud instance
@@ -312,6 +390,44 @@ GRAFANA_INSTANCE_URL=https://jwt625.grafana.net
 4. **Import Dashboard** from `grafana-dashboard.json`
 
 ## Troubleshooting
+
+### Infrastructure Issues
+
+1. **Public dashboard not accessible (https://bay-bridge-traffic.com)**
+   ```bash
+   # Check if tunnel is running
+   ps aux | grep cloudflared
+
+   # Start tunnel if not running
+   cloudflared tunnel run grafana-local
+
+   # Check tunnel status
+   cloudflared tunnel list
+   ```
+
+2. **Local services not starting**
+   ```bash
+   # Check Docker services
+   docker ps
+
+   # Check Nginx
+   ps aux | grep nginx
+
+   # Restart all services
+   ./start-bay-bridge-services.sh
+   ```
+
+3. **Grafana shows "failed to load application files"**
+   ```bash
+   # Restart Grafana container
+   docker-compose restart grafana
+
+   # Check Nginx configuration
+   nginx -t
+
+   # Reload Nginx
+   nginx -s reload
+   ```
 
 ### Monitoring System Issues
 
@@ -333,12 +449,14 @@ GRAFANA_INSTANCE_URL=https://jwt625.grafana.net
    ./generate-prometheus-config.sh
    ```
 
-3. **Grafana Cloud not receiving data**
+3. **Dashboard shows no data**
    ```bash
    # Check Docker logs
    docker logs prometheus
+   docker logs grafana
 
-   # Verify credentials in .env file
+   # Verify application is running
+   curl http://localhost:9091/metrics
    ```
 
 ### Motion Detection Issues
@@ -380,7 +498,8 @@ GRAFANA_INSTANCE_URL=https://jwt625.grafana.net
 - **RFD-000**: YOLO-based detection system (legacy)
 - **RFD-001**: Motion-based detection system (current)
 - **RFD-002**: Traffic counting and direction detection
-- **RFD-004**: Prometheus + Grafana Cloud monitoring system ⭐
+- **RFD-004**: Prometheus + Grafana monitoring system ⭐
+- **RFD-005**: Reverse proxy setup for public dashboard access ⭐
 
 ### Key Metrics
 
@@ -399,18 +518,39 @@ GRAFANA_INSTANCE_URL=https://jwt625.grafana.net
 
 ## 🎯 Production Deployment
 
-### Quick Deployment Checklist
+### Complete Deployment Checklist
 
-1. **Configure Grafana Cloud credentials** in `.env`
-2. **Start monitoring infrastructure**: `./start.sh`
-3. **Run traffic detection**: `python motion_detector.py`
-4. **Validate metrics**: `python test_metrics.py --validate`
-5. **Import dashboard** to Grafana Cloud from `grafana-dashboard.json`
+1. **Start all infrastructure services**: `./start-bay-bridge-services.sh`
+2. **Setup Cloudflare tunnel** (one-time): `./setup-cloudflare-tunnel.sh`
+3. **Start tunnel for public access**: `cloudflared tunnel run grafana-local`
+4. **Run traffic detection**: `python motion_detector.py`
+5. **Validate system**: `python test_metrics.py --validate`
+6. **Access public dashboard**: https://bay-bridge-traffic.com
+
+### Service Dependencies
+
+**Required for basic monitoring:**
+- Docker (Prometheus + Grafana)
+- Traffic detection application
+
+**Required for public access:**
+- Nginx reverse proxy
+- Cloudflare tunnel
+- Domain configuration
 
 ### Monitoring Endpoints
 
+- **Public Dashboard**: https://bay-bridge-traffic.com
+- **Local Grafana**: http://localhost:3000 (admin/admin)
+- **Local Prometheus**: http://localhost:9090
 - **Application Metrics**: http://localhost:9091/metrics
-- **Prometheus UI**: http://localhost:9090
-- **Grafana Cloud**: https://jwt625.grafana.net
+- **Nginx Proxy**: http://localhost:8080
+
+### Known Issues
+
+⚠️ **WebSocket Connections**: Grafana Live features may not work through the reverse proxy
+⚠️ **API Endpoints**: Some API calls may fail intermittently through the tunnel
+
+These issues don't affect core dashboard functionality but may impact real-time features.
 
 See `docs/` folder for detailed technical documentation and implementation guides.
