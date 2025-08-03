@@ -166,13 +166,42 @@ volumes:
 - **Document data storage** requirements for all services
 - **Implement backup strategies** for critical data
 
+#### Dashboard Metrics Analysis
+
+**Grafana Dashboard Metrics Identified:**
+From `grafana/dashboards/grafana-dashboard.json`, the following metrics are actively used:
+
+**Core Traffic Metrics:**
+- `traffic_vehicles_total` - Main vehicle counter by direction
+- `traffic_flow_rate_per_minute` - Real-time flow rate calculations
+- `rate(traffic_vehicles_total[5m]) * 60` - Current traffic rate
+- `increase(traffic_vehicles_total[1h])` - Hourly traffic increases
+
+**System Health Metrics:**
+- `system_status` - Component health monitoring
+- `avg(system_status) * 100` - System availability percentage
+
+**Performance Metrics (when available):**
+- `tracked_objects_active` - Active object tracking
+- `motion_detector_fps` - Processing frame rate
+- `frame_processing_time_seconds_bucket` - Processing time histograms
+- `histogram_quantile(0.95, rate(frame_processing_time_seconds_bucket[5m]))` - 95th percentile processing time
+
+**Export Coverage:**
+- ✅ **4/9 metrics** successfully exported with data
+- ⚠️ **5/9 metrics** no data available (performance metrics not pushed to cloud)
+
 ## Current Status
 
-✅ **Persistent volumes configured** for both Prometheus and Grafana  
-✅ **Grafana datasource issues resolved**  
-✅ **Dashboard connectivity restored**  
-❌ **Historical data lost** (6+ hours of traffic metrics)  
-✅ **Future data will persist** across container restarts  
+✅ **Persistent volumes configured** for both Prometheus and Grafana
+✅ **Grafana datasource issues resolved**
+✅ **Dashboard connectivity restored**
+✅ **Direct Prometheus API access established**
+✅ **Automated export tools developed**
+✅ **24-hour data export completed** (10,876 data points)
+❌ **Historical data lost** (6+ hours of traffic metrics from incident)
+✅ **Future data will persist** across container restarts
+✅ **Data backup capability** now available
 
 ## Recommendations
 
@@ -251,6 +280,55 @@ docker-compose down  # DANGEROUS without persistent volumes
 docker-compose up -d
 ```
 
+### Data Export Tools
+
+#### Environment Setup
+```bash
+# Configure .env file with Prometheus credentials
+PROMETHEUS_QUERY_URL=https://prometheus-prod-{region}.grafana.net/api/prom
+PROMETHEUS_USERNAME={your_grafana_user_id}
+GRAFANA_READ_TOKEN={your_grafana_read_token}
+```
+
+#### Individual Metric Export
+```bash
+# Export specific metric with custom parameters
+python scripts/export_prometheus_data.py \
+  --metric "traffic_vehicles_total" \
+  --start "2025-08-03T10:00:00Z" \
+  --end "2025-08-03T16:00:00Z" \
+  --step 30 \
+  --output "traffic_data.txt"
+
+# List available metrics
+python scripts/export_prometheus_data.py --list-metrics
+
+# Export with different resolutions
+python scripts/export_prometheus_data.py --step 15  # 15-second intervals
+python scripts/export_prometheus_data.py --step 60  # 1-minute intervals
+```
+
+#### Dashboard Metrics Bulk Export
+```bash
+# Export all dashboard metrics for last 24 hours
+python scripts/export_dashboard_metrics.py
+
+# Output includes:
+# - Individual JSON files per metric
+# - Prometheus format files (.txt)
+# - Export summary with statistics
+```
+
+#### Export Output Analysis
+```bash
+# Check export results
+ls -la dashboard_export_*/
+wc -l dashboard_export_*/traffic_vehicles_total.txt
+
+# Verify data intervals
+head -5 dashboard_export_*/traffic_vehicles_total.txt
+```
+
 ## Data Recovery Investigation
 
 ### Attempted Recovery Methods
@@ -294,8 +372,110 @@ Following the data loss incident, several methods were investigated to recover t
 3. **Data Format Conversion**: Convert extracted JSON to Prometheus TSDB format
 4. **Local Import**: Import recovered data into local Prometheus instance
 
+## Data Export Solution - Final Implementation
+
+### Successful Prometheus API Integration
+
+Following the initial investigation, a complete solution was developed for exporting data directly from Grafana Cloud Prometheus using the correct API endpoints and authentication.
+
+#### Final Working Configuration
+
+**Prometheus Data Source Settings:**
+- **Name**: `grafanacloud-{instance}-prom`
+- **Type**: Prometheus
+- **URL**: `https://prometheus-prod-{region}.grafana.net/api/prom`
+- **Access**: Server (default)
+- **BasicAuth**: ✅ Enabled
+- **Username**: `{grafana_user_id}`
+- **Password**: `{grafana_read_token}`
+
+#### Environment Configuration
+
+Updated `.env` file with Prometheus query endpoint:
+```bash
+# Prometheus query URL for reading data
+PROMETHEUS_QUERY_URL=https://prometheus-prod-{region}.grafana.net/api/prom
+
+# Authentication credentials
+PROMETHEUS_USERNAME={your_grafana_user_id}
+GRAFANA_READ_TOKEN={your_grafana_read_token}
+```
+
+**Note**: Actual values are stored in the project's `.env` file and should not be committed to version control. Replace placeholders with your specific Grafana Cloud instance details.
+
+#### Export Tools Developed
+
+**1. Individual Metric Export (`export_prometheus_data.py`)**
+```bash
+# Export specific metric with custom time range
+python export_prometheus_data.py \
+  --metric "traffic_vehicles_total" \
+  --start "2025-08-03T10:00:00Z" \
+  --end "2025-08-03T16:00:00Z" \
+  --step 30
+```
+
+**2. Dashboard Metrics Export (`export_dashboard_metrics.py`)**
+```bash
+# Export all dashboard metrics for last 24 hours
+python export_dashboard_metrics.py
+```
+
+#### Export Results Summary
+
+**Successful Data Export (24-hour period):**
+- **Time Range**: 2025-08-02 18:56 UTC to 2025-08-03 18:56 UTC
+- **Resolution**: 30-second intervals (2x higher than initial 60s)
+- **Total Data Points**: 10,876 across all metrics
+
+**Metrics Successfully Exported:**
+1. **traffic_vehicles_total**: 2,419 data points (left + right directions)
+2. **traffic_flow_rate_per_minute**: 2,408 data points (flow rates by direction)
+3. **system_status**: 3,630 data points (system health components)
+4. **traffic_vehicles_created**: 2,419 data points (vehicle creation events)
+
+**Data Coverage**: ~84% (indicating some expected downtime periods)
+
+#### Technical Implementation Details
+
+**API Endpoint Structure:**
+- **Base URL**: `https://prometheus-prod-{region}.grafana.net/api/prom`
+- **Query Range**: `/api/v1/query_range`
+- **Metrics List**: `/api/v1/label/__name__/values`
+- **Authentication**: HTTP Basic Auth with username + API token
+
+**Query Parameters:**
+```bash
+# Example query structure
+GET /api/v1/query_range?query={metric_name}&start={start_timestamp}&end={end_timestamp}&step={interval}s
+Authorization: Basic <base64(username:token)>
+```
+
+**Output Formats:**
+- **JSON**: Raw Prometheus API response with metadata
+- **Prometheus Format**: Standard exposition format for import/analysis
+
+#### Data Quality Verification
+
+**Timestamp Verification:**
+- 30-second intervals confirmed: `1754207395000` → `1754207425000` = 30,000ms
+- Consistent data spacing across all metrics
+- No significant gaps in core traffic metrics
+
+**File Size Analysis:**
+- 30s intervals: ~460KB per metric (2,419 data points)
+- 60s intervals: ~228KB per metric (1,202 data points)
+- Perfect 2:1 ratio confirming interval accuracy
+
 ## Conclusion
 
-This incident highlights the critical importance of proper data persistence configuration in containerized environments. While the immediate issue has been resolved, the investigation revealed that data recovery from cloud sources is technically feasible but requires session-based authentication rather than API tokens.
+This incident highlights the critical importance of proper data persistence configuration in containerized environments. The investigation successfully developed a complete data export solution using direct Prometheus API access with proper authentication.
 
-The implemented fixes ensure that future container restarts will preserve data, and the recovery investigation provides a pathway for retrieving lost historical data when needed.
+**Key Achievements:**
+✅ **Persistent volumes configured** - Future data loss prevented
+✅ **Direct Prometheus API access** - Reliable data export capability
+✅ **Automated export tools** - Reusable scripts for ongoing data backup
+✅ **High-resolution data recovery** - 30-second interval exports available
+✅ **Environment-based configuration** - Secure credential management
+
+The implemented fixes ensure that future container restarts will preserve data, and the export tools provide ongoing capability for data backup, analysis, and migration from cloud Prometheus storage.
