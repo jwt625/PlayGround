@@ -6,3 +6,5 @@ prometheus.yml
 
 # Generated files
 outputs/
+prometheus_data/
+grafana_data/

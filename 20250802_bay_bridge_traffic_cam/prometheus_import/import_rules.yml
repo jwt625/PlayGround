@@ -1,0 +1,29 @@
+groups:
+- interval: 30s
+  name: historical_import
+  rules:
+  - expr: '# Import from metrics_20250803_114855.txt'
+    labels:
+      file: metrics_20250803_114855.txt
+      source: historical_import
+    record: historical_data_rule_1
+  - expr: '# Import from metrics_20250803_035125.txt'
+    labels:
+      file: metrics_20250803_035125.txt
+      source: historical_import
+    record: historical_data_rule_2
+  - expr: '# Import from metrics_20250803_031425.txt'
+    labels:
+      file: metrics_20250803_031425.txt
+      source: historical_import
+    record: historical_data_rule_3
+  - expr: '# Import from metrics_20250803_043925.txt'
+    labels:
+      file: metrics_20250803_043925.txt
+      source: historical_import
+    record: historical_data_rule_4
+  - expr: '# Import from metrics_20250803_062055.txt'
+    labels:
+      file: metrics_20250803_062055.txt
+      source: historical_import
+    record: historical_data_rule_5
