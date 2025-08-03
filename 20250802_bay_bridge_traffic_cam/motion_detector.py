@@ -951,7 +951,14 @@ class MotionTrafficDetector:
                 self.metrics.update_system_status('tracker', True)  # If we're here, tracker is working
 
                 # Update performance metrics
-                active_objects = len(self.tracker.tracked_objects) if hasattr(self.tracker, 'tracked_objects') else 0
+                # Use the tracker's statistics method to get accurate active objects count
+                if hasattr(self.tracker, 'get_statistics'):
+                    stats = self.tracker.get_statistics()
+                    active_objects = stats.get('active_objects', 0)
+                else:
+                    # Fallback: use objects attribute directly
+                    active_objects = len(self.tracker.objects) if hasattr(self.tracker, 'objects') else 0
+
                 # Estimate processing time (rough approximation)
                 processing_time = 1.0 / max(self.current_fps, 1.0) if self.current_fps > 0 else 0.1
                 self.metrics.update_performance_metrics(

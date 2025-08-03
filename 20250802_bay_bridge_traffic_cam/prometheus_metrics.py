@@ -22,6 +22,8 @@ import os
 import time
 import threading
 import logging
+import json
+import atexit
 from typing import Dict, Optional, Any
 from dataclasses import dataclass
 from datetime import datetime, timedelta
@@ -52,6 +54,9 @@ class MetricsConfig:
     push_interval: int = 30
     flow_calculation_interval: int = 60
     debug: bool = False
+    # State persistence settings
+    persist_state: bool = True
+    state_file: str = "traffic_metrics_state.json"
 
     @classmethod
     def from_env(cls) -> 'MetricsConfig':
@@ -69,7 +74,9 @@ class MetricsConfig:
             app_instance=os.getenv('APP_INSTANCE', 'main'),
             push_interval=int(os.getenv('PROMETHEUS_PUSH_INTERVAL', '30')),
             flow_calculation_interval=int(os.getenv('TRAFFIC_FLOW_CALCULATION_INTERVAL', '60')),
-            debug=os.getenv('METRICS_DEBUG', 'false').lower() == 'true'
+            debug=os.getenv('METRICS_DEBUG', 'false').lower() == 'true',
+            persist_state=os.getenv('METRICS_PERSIST_STATE', 'true').lower() == 'true',
+            state_file=os.getenv('METRICS_STATE_FILE', 'traffic_metrics_state.json')
         )
 
 
@@ -141,13 +148,22 @@ class TrafficMetrics:
         self._flow_calculation_thread = None
         self._stop_flow_calculation = threading.Event()
         self._last_flow_calculation = time.time()
-        
+
         # HTTP server state
         self._http_server_started = False
-        
+
+        # State persistence
+        self._state_lock = threading.Lock()
+
         # Initialize system status
         self._initialize_system_status()
-        
+
+        # Restore counter state if enabled
+        if self.config.persist_state:
+            self._restore_counter_state()
+            # Register cleanup handler
+            atexit.register(self._save_counter_state)
+
         logger.info(f"TrafficMetrics initialized with config: {config}")
     
     def _initialize_system_status(self):
@@ -159,26 +175,109 @@ class TrafficMetrics:
                 app=self.config.app_name,
                 instance=self.config.app_instance
             ).set(1)  # 1 = healthy
+
+    def _save_counter_state(self):
+        """Save current counter values to file for persistence across restarts."""
+        if not self.config.persist_state:
+            return
+
+        try:
+            with self._state_lock:
+                # Get current counter values
+                state = {
+                    'timestamp': time.time(),
+                    'app_name': self.config.app_name,
+                    'app_instance': self.config.app_instance,
+                    'counters': {}
+                }
+
+                # Extract counter values from metrics text
+                metrics_text = self.get_metrics_text()
+                for line in metrics_text.split('\n'):
+                    if line.startswith('traffic_vehicles_total{') and not line.startswith('#'):
+                        # Parse line like: traffic_vehicles_total{app="...",direction="left",instance="..."} 5.0
+                        if 'direction="left"' in line:
+                            value = float(line.split()[-1])
+                            state['counters']['left'] = value
+                        elif 'direction="right"' in line:
+                            value = float(line.split()[-1])
+                            state['counters']['right'] = value
+
+                # Write to file
+                with open(self.config.state_file, 'w') as f:
+                    json.dump(state, f, indent=2)
+
+                if self.config.debug:
+                    logger.debug(f"Counter state saved: {state['counters']}")
+
+        except Exception as e:
+            logger.error(f"Failed to save counter state: {e}")
+
+    def _restore_counter_state(self):
+        """Restore counter values from file on startup."""
+        if not self.config.persist_state or not os.path.exists(self.config.state_file):
+            logger.info("No previous counter state found, starting with fresh counters")
+            return
+
+        try:
+            with open(self.config.state_file, 'r') as f:
+                state = json.load(f)
+
+            # Validate state file
+            if (state.get('app_name') != self.config.app_name or
+                state.get('app_instance') != self.config.app_instance):
+                logger.warning("State file is for different app/instance, ignoring")
+                return
+
+            # Check if state is recent (within last 24 hours)
+            state_age = time.time() - state.get('timestamp', 0)
+            if state_age > 24 * 3600:  # 24 hours
+                logger.warning(f"State file is {state_age/3600:.1f} hours old, ignoring")
+                return
+
+            # Restore counter values
+            counters = state.get('counters', {})
+            for direction in ['left', 'right']:
+                if direction in counters:
+                    value = int(counters[direction])
+                    if value > 0:
+                        # Increment counter to restore previous value
+                        counter = self.traffic_vehicles_total.labels(
+                            direction=direction,
+                            app=self.config.app_name,
+                            instance=self.config.app_instance
+                        )
+                        counter._value._value = value  # Direct assignment to restore state
+
+            logger.info(f"Counter state restored: {counters}")
+
+        except Exception as e:
+            logger.error(f"Failed to restore counter state: {e}")
+            logger.info("Starting with fresh counters")
     
     def record_vehicle_count(self, direction: str):
         """
         Record a vehicle detection event.
-        
+
         Args:
             direction: 'left' or 'right'
         """
         if not self.config.enabled:
             return
-            
+
         self.traffic_vehicles_total.labels(
             direction=direction,
             app=self.config.app_name,
             instance=self.config.app_instance
         ).inc()
-        
+
         # Update internal counter for flow rate calculation
         self._traffic_counts[direction] += 1
-        
+
+        # Save state after each vehicle count (for persistence)
+        if self.config.persist_state:
+            self._save_counter_state()
+
         if self.config.debug:
             logger.debug(f"Vehicle count recorded: {direction}")
     
@@ -300,6 +399,11 @@ class TrafficMetrics:
     
     def shutdown(self):
         """Shutdown metrics collection system."""
+        # Save final state before shutdown
+        if self.config.persist_state:
+            self._save_counter_state()
+            logger.info("Final counter state saved")
+
         self.stop_flow_calculation()
         logger.info("TrafficMetrics shutdown complete")
 
