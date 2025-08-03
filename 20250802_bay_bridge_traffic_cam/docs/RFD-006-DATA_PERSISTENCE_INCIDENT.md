@@ -204,6 +204,43 @@ docker run --rm -v prometheus-storage:/data -v $(pwd):/backup alpine tar czf /ba
 docker run --rm -v prometheus-storage:/data -v $(pwd):/backup alpine tar xzf /backup/prometheus-backup.tar.gz -C /data
 ```
 
+### Data Recovery Commands
+
+#### Failed API Token Approaches
+```bash
+# Direct Prometheus API (failed - scope issues)
+curl -u "USER_ID:$GRAFANA_READ_TOKEN" \
+  "https://prometheus-prod-XX-prod-us-west-0.grafana.net/api/prom/api/v1/label/__name__/values"
+
+# Grafana API with Bearer token (failed - invalid key)
+curl -H "Authorization: Bearer $GRAFANA_READ_TOKEN" \
+  "https://USERNAME.grafana.net/api/datasources"
+```
+
+#### Working Session-based Approach
+```bash
+# Extract session cookie from browser Developer Tools
+# Use captured grafana_session cookie for authenticated requests
+curl -X POST "https://USERNAME.grafana.net/api/ds/query?ds_type=prometheus" \
+  -H "content-type: application/json" \
+  -H "cookie: grafana_session=<session_id>; grafana_session_expiry=<expiry>" \
+  -H "x-grafana-org-id: 1" \
+  -H "x-datasource-uid: grafanacloud-prom" \
+  -d '{
+    "queries": [
+      {
+        "refId": "A",
+        "expr": "traffic_vehicles_total",
+        "range": true,
+        "format": "time_series",
+        "start": <start_timestamp>,
+        "end": <end_timestamp>,
+        "step": 60
+      }
+    ]
+  }'
+```
+
 ### Safe Restart Procedure
 ```bash
 # Safe restart with persistent volumes
@@ -214,8 +251,51 @@ docker-compose down  # DANGEROUS without persistent volumes
 docker-compose up -d
 ```
 
+## Data Recovery Investigation
+
+### Attempted Recovery Methods
+
+Following the data loss incident, several methods were investigated to recover the lost historical data from Grafana Cloud:
+
+#### 1. Direct Prometheus API Access
+**Attempted**: Direct queries to Grafana Cloud Prometheus endpoint
+- **Endpoint**: `https://prometheus-prod-XX-prod-us-west-0.grafana.net/api/prom/api/v1/label/__name__/values`
+- **Authentication**: Basic auth with username `USER_ID` and various API tokens
+- **Result**: Failed with "authentication error: invalid scope requested"
+- **Tokens Tested**:
+  - Write-only token: `glc_eyJ...` (expected to fail)
+  - Read token: `glc_eyJ...` (created with read permissions)
+
+#### 2. Grafana HTTP API Access
+**Attempted**: Access via Grafana Cloud API endpoints
+- **Endpoint**: `https://USERNAME.grafana.net/api/datasources`
+- **Authentication**: Bearer token with read permissions
+- **Result**: Failed with "Invalid API key" despite valid access policy
+- **Access Policy**: Confirmed active with scopes: `metrics:read`, `datasources:read`, `alerts:read`, etc.
+
+#### 3. Browser Session Authentication Discovery
+**Breakthrough**: Captured working authentication from browser Developer Tools
+- **Method**: Intercepted successful API calls from Grafana dashboard
+- **Authentication**: Session-based using `grafana_session` cookie
+- **Endpoint**: `POST /api/ds/query?ds_type=prometheus`
+- **Status**: Promising approach for data extraction
+
+### Key Findings
+
+1. **API Token Limitations**: Standard API tokens appear insufficient for Prometheus data access
+2. **Session Authentication**: Browser sessions use different auth mechanism than API tokens
+3. **Data Accessibility**: Historical data exists and is queryable through Grafana interface
+4. **Recovery Feasibility**: Data recovery is technically possible using session-based authentication
+
+### Next Steps for Data Recovery
+
+1. **Session-based Extraction**: Use captured session cookies to query historical data
+2. **Time Range Targeting**: Focus on lost data period (6+ hours from incident)
+3. **Data Format Conversion**: Convert extracted JSON to Prometheus TSDB format
+4. **Local Import**: Import recovered data into local Prometheus instance
+
 ## Conclusion
 
-This incident highlights the critical importance of proper data persistence configuration in containerized environments. While the immediate issue has been resolved, the loss of historical data serves as a reminder that infrastructure changes must be approached with extreme caution, especially in production environments.
+This incident highlights the critical importance of proper data persistence configuration in containerized environments. While the immediate issue has been resolved, the investigation revealed that data recovery from cloud sources is technically feasible but requires session-based authentication rather than API tokens.
 
-The implemented fixes ensure that future container restarts will preserve data, but operational procedures must be updated to prevent similar incidents from occurring.
+The implemented fixes ensure that future container restarts will preserve data, and the recovery investigation provides a pathway for retrieving lost historical data when needed.
