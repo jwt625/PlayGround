@@ -1,1 +1,8 @@
 yolov8n.pt
+
+# Environment and configuration files with secrets
+.env
+prometheus.yml
+
+# Generated files
+outputs/

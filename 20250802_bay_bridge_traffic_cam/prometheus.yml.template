@@ -1,0 +1,19 @@
+global:
+  scrape_interval: 15s
+
+scrape_configs:
+  - job_name: 'bay-bridge-traffic-detector'
+    static_configs:
+      - targets: ['host.docker.internal:9091']
+    scrape_interval: 5s
+    metrics_path: /metrics
+
+remote_write:
+  - url: __PROMETHEUS_PUSH_GATEWAY_URL__
+    basic_auth:
+      username: __PROMETHEUS_USERNAME__
+      password: __PROMETHEUS_API_KEY__
+    write_relabel_configs:
+      - source_labels: [__name__]
+        regex: 'traffic_.*|system_.*'
+        action: keep

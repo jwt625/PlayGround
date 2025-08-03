@@ -12,6 +12,14 @@ from scipy.optimize import linear_sum_assignment
 from collections import OrderedDict
 import time
 
+# Import metrics system for traffic counting integration
+try:
+    from prometheus_metrics import get_metrics
+except ImportError:
+    # Graceful fallback if metrics not available
+    def get_metrics():
+        return None
+
 
 class TrackedObject:
     """Represents a single tracked object with its history and properties."""
@@ -486,6 +494,11 @@ class TrafficCounter:
                     if obj.direction in ['left', 'right']:
                         self.counts[obj.direction] += 1
                         print(f"  ✅ Added to {obj.direction} count. New counts: L:{self.counts['left']} R:{self.counts['right']} Total:{self.counts['total']}")
+
+                        # Record in metrics system if available
+                        metrics = get_metrics()
+                        if metrics:
+                            metrics.record_vehicle_count(obj.direction)
                     else:
                         print(f"  ⚠️ WARNING: Object direction '{obj.direction}' not valid for bridge side view! Not counted.")
 
