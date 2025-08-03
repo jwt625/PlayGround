@@ -103,27 +103,41 @@ func CollectMetrics() {
 			numbers := int(C.getAndResetNumbers())
 			special := int(C.getAndResetSpecial())
 
-			// Get domain for current app (Chrome-aware)
-			domain := getDomainForApp(app.CurrentApp)
-
-			// Update Prometheus counters with current app and domain labels
+			// Update Prometheus counters with app labels only (domain removed for low cardinality)
 			if letters > 0 {
-				metrics.KeystrokesTotal.WithLabelValues("letter", app.CurrentApp, domain).Add(float64(letters))
+				metrics.KeystrokesTotal.WithLabelValues("letter", app.CurrentApp).Add(float64(letters))
 			}
 			if numbers > 0 {
-				metrics.KeystrokesTotal.WithLabelValues("number", app.CurrentApp, domain).Add(float64(numbers))
+				metrics.KeystrokesTotal.WithLabelValues("number", app.CurrentApp).Add(float64(numbers))
 			}
 			if special > 0 {
-				metrics.KeystrokesTotal.WithLabelValues("special", app.CurrentApp, domain).Add(float64(special))
+				metrics.KeystrokesTotal.WithLabelValues("special", app.CurrentApp).Add(float64(special))
+			}
+
+			// For Chrome, also track domain-category-specific keystrokes
+			if app.CurrentApp == "google_chrome" {
+				domain := chrome.GetCurrentDomain()
+				if domain != "" {
+					domainCategory := chrome.GetDomainCategory(domain)
+					if letters > 0 {
+						metrics.ChromeKeystrokesTotal.WithLabelValues("letter", domainCategory).Add(float64(letters))
+					}
+					if numbers > 0 {
+						metrics.ChromeKeystrokesTotal.WithLabelValues("number", domainCategory).Add(float64(numbers))
+					}
+					if special > 0 {
+						metrics.ChromeKeystrokesTotal.WithLabelValues("special", domainCategory).Add(float64(special))
+					}
+				}
 			}
 
 			// ALSO log interval events for persistence & detailed analysis
 			logKeystrokeInterval(letters, numbers, special, app.CurrentApp)
 
 			// AND expose as Prometheus metrics for observability - SET the interval activity
-			metrics.KeystrokeIntervalActivity.WithLabelValues(app.CurrentApp, "letter", domain).Set(float64(letters))
-			metrics.KeystrokeIntervalActivity.WithLabelValues(app.CurrentApp, "number", domain).Set(float64(numbers))
-			metrics.KeystrokeIntervalActivity.WithLabelValues(app.CurrentApp, "special", domain).Set(float64(special))
+			metrics.KeystrokeIntervalActivity.WithLabelValues(app.CurrentApp, "letter").Set(float64(letters))
+			metrics.KeystrokeIntervalActivity.WithLabelValues(app.CurrentApp, "number").Set(float64(numbers))
+			metrics.KeystrokeIntervalActivity.WithLabelValues(app.CurrentApp, "special").Set(float64(special))
 
 			total := letters + numbers + special
 			if total > 0 {
