@@ -51,14 +51,18 @@ class TrackedObject:
                 centroid[0] - prev_centroid[0],
                 centroid[1] - prev_centroid[1]
             )
-            
-            # Determine primary direction
-            if abs(self.velocity[0]) > abs(self.velocity[1]):
-                self.direction = 'right' if self.velocity[0] > 0 else 'left'
-            elif abs(self.velocity[1]) > 2:  # Threshold for vertical movement
-                self.direction = 'down' if self.velocity[1] > 0 else 'up'
-            else:
-                self.direction = None
+
+            # Determine primary direction using smoothed movement over multiple frames
+            old_direction = self.direction
+            self._update_direction_stable()
+
+            # Debug: Print direction changes for tracking (only significant changes)
+            # Uncomment the lines below for debugging direction changes
+            # if old_direction != self.direction and len(self.positions) > 5:
+            #     print(f"DEBUG: Object {self.id} direction STABILIZED from {old_direction} to {self.direction}")
+            #     print(f"  Current velocity: {self.velocity}")
+            #     print(f"  Overall movement: {self._get_overall_movement()}")
+            #     print(f"  Position history: {self.positions[-3:]}")
         
         # Update history
         self.centroid = centroid
@@ -68,7 +72,7 @@ class TrackedObject:
         self.bboxes.append(bbox)
         self.areas.append(area)
         self.timestamps.append(time.time())
-        
+
         # Limit history size for memory efficiency
         max_history = 30
         if len(self.positions) > max_history:
@@ -76,10 +80,82 @@ class TrackedObject:
             self.bboxes = self.bboxes[-max_history:]
             self.areas = self.areas[-max_history:]
             self.timestamps = self.timestamps[-max_history:]
-        
+
         # Reset disappeared count and increment detection count
         self.disappeared_count = 0
         self.detection_count += 1
+
+    def _update_direction_stable(self):
+        """Update direction using stable calculation over multiple frames.
+        For bridge side view: only horizontal movement (left/right) is valid."""
+        # Need at least 5 positions for direction calculation (reduced for faster response)
+        if len(self.positions) < 5:
+            return
+
+        # Calculate overall movement over last 5 frames for stability
+        overall_movement = self._get_overall_movement()
+
+        # For bridge side view, only consider horizontal movement
+        horizontal_movement = overall_movement[0]
+
+        # Lower movement threshold for faster direction detection
+        min_movement_threshold = 15  # pixels - reduced for faster response
+        if abs(horizontal_movement) < min_movement_threshold:
+            return
+
+        # Once a direction is established, make it hard to change (highway traffic is consistent)
+        if self.direction is not None:
+            # Require stronger evidence to change direction on a highway
+            direction_change_threshold = 30  # pixels - reduced for better responsiveness
+            if abs(horizontal_movement) < direction_change_threshold:
+                return
+
+        # Determine direction based ONLY on horizontal movement (bridge side view)
+        new_direction = None
+        if abs(horizontal_movement) > min_movement_threshold:
+            new_direction = 'right' if horizontal_movement > 0 else 'left'
+
+        # Only change direction if we have a strong signal and it's different
+        if new_direction and new_direction != self.direction:
+            # Additional stability check: confirm direction over multiple frames
+            if self._confirm_direction_change(new_direction):
+                self.direction = new_direction
+
+    def _get_overall_movement(self):
+        """Get overall movement vector over the last several frames."""
+        if len(self.positions) < 2:
+            return (0, 0)
+
+        # Use last 5 positions or all available positions
+        num_frames = min(5, len(self.positions))
+        start_pos = self.positions[-num_frames]
+        end_pos = self.positions[-1]
+
+        return (end_pos[0] - start_pos[0], end_pos[1] - start_pos[1])
+
+    def _confirm_direction_change(self, new_direction):
+        """Confirm direction change by checking consistency over recent frames.
+        For bridge side view: only check horizontal movement."""
+        if len(self.positions) < 3:
+            return True  # Not enough data, allow change
+
+        # Check if the new direction is consistent with recent horizontal movement
+        recent_movements = []
+        for i in range(max(1, len(self.positions) - 3), len(self.positions)):
+            if i > 0:
+                horizontal_movement = self.positions[i][0] - self.positions[i-1][0]
+                recent_movements.append(horizontal_movement)
+
+        # Count how many recent movements support the new direction (only horizontal)
+        supporting_count = 0
+        for movement in recent_movements:
+            if new_direction == 'right' and movement > 1:  # Small threshold to ignore noise
+                supporting_count += 1
+            elif new_direction == 'left' and movement < -1:  # Small threshold to ignore noise
+                supporting_count += 1
+
+        # Require majority support for direction change (60% for faster response)
+        return supporting_count >= len(recent_movements) * 0.6
     
     def mark_disappeared(self):
         """Mark object as disappeared for this frame."""
@@ -381,7 +457,7 @@ class TrafficCounter:
             counting_lines: List of counting lines [(x1, y1, x2, y2), ...]
         """
         self.counting_lines = counting_lines or []
-        self.counts = {'left': 0, 'right': 0, 'up': 0, 'down': 0, 'total': 0}
+        self.counts = {'left': 0, 'right': 0, 'total': 0}  # Only left/right for bridge side view
         self.counted_objects = set()  # Track which objects have been counted
 
     def add_counting_line(self, x1, y1, x2, y2):
@@ -400,9 +476,18 @@ class TrafficCounter:
                     self.counted_objects.add(obj.id)
                     self.counts['total'] += 1
 
-                    # Count by direction
-                    if obj.direction:
+                    # Debug: Print crossing information
+                    print(f"🚗 TRAFFIC COUNT: Object {obj.id} crossed counting line!")
+                    print(f"  Direction: {obj.direction}")
+                    print(f"  Overall movement: {obj._get_overall_movement() if hasattr(obj, '_get_overall_movement') else 'N/A'}")
+                    print(f"  Position history: {obj.positions[-3:] if len(obj.positions) >= 3 else obj.positions}")
+
+                    # Count by direction (only left/right for bridge side view)
+                    if obj.direction in ['left', 'right']:
                         self.counts[obj.direction] += 1
+                        print(f"  ✅ Added to {obj.direction} count. New counts: L:{self.counts['left']} R:{self.counts['right']} Total:{self.counts['total']}")
+                    else:
+                        print(f"  ⚠️ WARNING: Object direction '{obj.direction}' not valid for bridge side view! Not counted.")
 
                     break  # Only count once per object
 
@@ -433,7 +518,7 @@ class TrafficCounter:
 
     def reset_counts(self):
         """Reset all counts."""
-        self.counts = {'left': 0, 'right': 0, 'up': 0, 'down': 0, 'total': 0}
+        self.counts = {'left': 0, 'right': 0, 'total': 0}  # Only left/right for bridge side view
         self.counted_objects.clear()
 
 

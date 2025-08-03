@@ -65,7 +65,7 @@ TRACKING_CONFIG = {
 
     # Traffic counting
     "enable_counting": True,            # Enable traffic counting
-    "counting_lines": [],               # List of counting lines [(x1,y1,x2,y2)]
+    "counting_lines": [(640, 0, 640, 720)],    # Default vertical counting line spanning full frame height
     "show_counting_lines": True,        # Display counting lines
     "count_confirmed_only": True,       # Only count confirmed objects
 
