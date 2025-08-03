@@ -13,6 +13,22 @@ import os
 import motion_config as config
 from object_tracker import ObjectTracker, TrafficCounter, ROITracker
 
+# Import metrics system for monitoring integration
+try:
+    from prometheus_metrics import initialize_metrics, get_metrics, shutdown_metrics, MetricsConfig
+    from dotenv import load_dotenv
+    load_dotenv()  # Load environment variables
+    METRICS_AVAILABLE = True
+except ImportError:
+    # Graceful fallback if metrics not available
+    METRICS_AVAILABLE = False
+    def initialize_metrics(*args, **kwargs):
+        return None
+    def get_metrics():
+        return None
+    def shutdown_metrics():
+        pass
+
 class MotionTrafficDetector:
     def __init__(self, webcam_url=None):
         self.webcam_url = webcam_url or config.WEBCAM_URL
@@ -82,6 +98,18 @@ class MotionTrafficDetector:
 
         # Print configuration on startup
         config.print_config_summary()
+
+        # Initialize metrics system if available
+        self.metrics = None
+        if METRICS_AVAILABLE:
+            try:
+                metrics_config = MetricsConfig.from_env()
+                self.metrics = initialize_metrics(metrics_config)
+                print("✅ Metrics system initialized")
+                print(f"📊 Metrics endpoint: http://localhost:{metrics_config.http_server_port}/metrics")
+            except Exception as e:
+                print(f"⚠️ Failed to initialize metrics: {e}")
+                self.metrics = None
         
     def get_frame_from_webcam(self):
         """Optimized frame capture with persistent connection."""
@@ -135,6 +163,14 @@ class MotionTrafficDetector:
             self.cap.release()
             self.cap = None
             self.cap_initialized = False
+
+        # Shutdown metrics system
+        if self.metrics and METRICS_AVAILABLE:
+            try:
+                shutdown_metrics()
+                print("✅ Metrics system shutdown")
+            except Exception as e:
+                print(f"⚠️ Error shutting down metrics: {e}")
     
     def create_demo_frame(self):
         """Create a demo frame for testing when webcam is unavailable."""
@@ -896,7 +932,7 @@ class MotionTrafficDetector:
         return scaled_font_scale, scaled_thickness
 
     def update_fps(self):
-        """Update FPS calculation."""
+        """Update FPS calculation and metrics."""
         current_time = time.time()
         self.fps_counter += 1
 
@@ -905,6 +941,24 @@ class MotionTrafficDetector:
             self.current_fps = self.fps_counter / (current_time - self.fps_start_time)
             self.fps_counter = 0
             self.fps_start_time = current_time
+
+            # Update metrics if available
+            if self.metrics:
+                # Update system health status
+                webcam_healthy = self.cap_initialized and self.cap is not None and self.cap.isOpened()
+                self.metrics.update_system_status('webcam', webcam_healthy)
+                self.metrics.update_system_status('detector', True)  # If we're here, detector is working
+                self.metrics.update_system_status('tracker', True)  # If we're here, tracker is working
+
+                # Update performance metrics
+                active_objects = len(self.tracker.tracked_objects) if hasattr(self.tracker, 'tracked_objects') else 0
+                # Estimate processing time (rough approximation)
+                processing_time = 1.0 / max(self.current_fps, 1.0) if self.current_fps > 0 else 0.1
+                self.metrics.update_performance_metrics(
+                    fps=self.current_fps,
+                    active_objects=active_objects,
+                    processing_time=processing_time
+                )
     
     def run(self):
         """Main detection loop."""

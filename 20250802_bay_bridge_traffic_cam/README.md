@@ -25,11 +25,8 @@ A comprehensive real-time traffic detection and monitoring system for Bay Bridge
 
 ### 2. Run Traffic Detection with Metrics
 ```bash
-# Start the complete system with monitoring
-python main.py
-
-# Or run without metrics
-python main.py --no-metrics
+# Start the complete system with monitoring (main entry point)
+python motion_detector.py
 ```
 
 ### 3. Access Monitoring
@@ -84,13 +81,15 @@ python start_metrics_server.py --simulate
 **Complete traffic detection with monitoring:**
 
 ```bash
-python main.py [OPTIONS]
-
-Options:
-  --debug          Enable debug output and visualization
-  --no-metrics     Disable metrics collection
-  --config FILE    Use custom configuration file
+# Run the main traffic detection system with integrated metrics
+python motion_detector.py
 ```
+
+The system automatically:
+- ✅ Initializes Prometheus metrics collection
+- ✅ Starts HTTP server on port 9091
+- ✅ Records traffic counts and system health
+- ✅ Monitors performance (FPS, active objects)
 
 ### Motion-Based Detection with Object Tracking
 
@@ -241,7 +240,7 @@ docker logs prometheus
 ## 📁 Project Structure
 
 ```
-├── main.py                     # Main entry point with monitoring
+├── motion_detector.py          # Main entry point with integrated monitoring
 ├── prometheus_metrics.py       # Metrics collection engine
 ├── motion_detector.py          # Motion detection system
 ├── object_tracker.py          # Object tracking with metrics integration
@@ -404,7 +403,7 @@ GRAFANA_INSTANCE_URL=https://jwt625.grafana.net
 
 1. **Configure Grafana Cloud credentials** in `.env`
 2. **Start monitoring infrastructure**: `./start.sh`
-3. **Run traffic detection**: `python main.py`
+3. **Run traffic detection**: `python motion_detector.py`
 4. **Validate metrics**: `python test_metrics.py --validate`
 5. **Import dashboard** to Grafana Cloud from `grafana-dashboard.json`
 
