@@ -8,6 +8,7 @@ services:
       - "9090:9090"
     volumes:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus-storage:/prometheus
     command:
       - '--config.file=/etc/prometheus/prometheus.yml'
       - '--storage.tsdb.path=/prometheus'
@@ -37,6 +38,15 @@ services:
       # Additional reverse proxy settings
       - GF_SERVER_ENABLE_GZIP=true
       - GF_LOG_LEVEL=debug
+      # Disable WebSocket features that may cause issues through reverse proxy
+      - GF_LIVE_ALLOWED_ORIGINS=*
+      - GF_LIVE_MAX_CONNECTIONS=0
+      # Force static asset serving
+      - GF_PATHS_STATIC_ROOT_PATH=/usr/share/grafana
+      # Additional headers for reverse proxy compatibility
+      - GF_SERVER_PROTOCOL=http
+      - GF_SERVER_HTTP_ADDR=0.0.0.0
+      - GF_SERVER_HTTP_PORT=3000
     volumes:
       - grafana-storage:/var/lib/grafana
       - ./grafana/provisioning:/etc/grafana/provisioning
@@ -47,6 +57,7 @@ services:
 
 volumes:
   grafana-storage:
+  prometheus-storage:
 
 networks:
   monitoring:
