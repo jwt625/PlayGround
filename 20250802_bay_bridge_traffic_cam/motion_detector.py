@@ -76,6 +76,10 @@ class MotionTrafficDetector:
         self.paused_tracked_objects = []
         self.pause_analysis_printed = False  # Track if we've printed analysis for current pause
 
+        # Debug visualization
+        self.show_debug_steps = False
+        self.debug_steps = {}  # Store intermediate processing steps
+
         # Print configuration on startup
         config.print_config_summary()
         
@@ -245,35 +249,59 @@ class MotionTrafficDetector:
         if frame is None:
             return None, []
 
-        # Apply ROI if set
+        # Clear debug steps
+        if self.show_debug_steps:
+            self.debug_steps = {}
+
+        # Step 1: Apply ROI if set
         if self.roi_set and self.roi is not None:
             x, y, w, h = self.roi
             roi_frame = frame[y:y+h, x:x+w]
         else:
             roi_frame = frame
 
-        # Apply background subtraction
-        fg_mask = self.background_subtractor.apply(roi_frame)
+        if self.show_debug_steps:
+            self.debug_steps['1_roi_frame'] = roi_frame.copy()
 
-        # Remove shadows if configured (convert grey shadow pixels to black)
+        # Step 2: Apply background subtraction
+        fg_mask_raw = self.background_subtractor.apply(roi_frame)
+
+        if self.show_debug_steps:
+            self.debug_steps['2_raw_bg_subtraction'] = fg_mask_raw.copy()
+
+        # Step 3: Remove shadows if configured (convert grey shadow pixels to black)
         bg_config = config.BACKGROUND_SUBTRACTOR_CONFIG
+        fg_mask_no_shadows = fg_mask_raw.copy()
         if bg_config["detectShadows"] and bg_config["removeShadows"]:
             # Remove shadow pixels (convert 127 to 0, keep 255 as 255)
-            fg_mask[fg_mask == bg_config["shadowValue"]] = 0
+            fg_mask_no_shadows[fg_mask_no_shadows == bg_config["shadowValue"]] = 0
 
-        # Clean up the mask using config parameters
+        if self.show_debug_steps:
+            self.debug_steps['3_shadow_removed'] = fg_mask_no_shadows.copy()
+
+        # Step 4: Clean up the mask using morphological operations
         motion_config = config.MOTION_DETECTION
         kernel_size = motion_config["morph_kernel_size"]
         iterations = motion_config["morph_iterations"]
 
         kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, kernel_size)
-        fg_mask = cv2.morphologyEx(fg_mask, cv2.MORPH_OPEN, kernel, iterations=iterations)
-        fg_mask = cv2.morphologyEx(fg_mask, cv2.MORPH_CLOSE, kernel, iterations=iterations)
 
-        # Find contours
+        # Step 4a: Morphological Opening (erosion then dilation)
+        fg_mask_opened = cv2.morphologyEx(fg_mask_no_shadows, cv2.MORPH_OPEN, kernel, iterations=iterations)
+
+        if self.show_debug_steps:
+            self.debug_steps['4_morphological_opening'] = fg_mask_opened.copy()
+
+        # Step 4b: Morphological Closing (dilation then erosion)
+        fg_mask = cv2.morphologyEx(fg_mask_opened, cv2.MORPH_CLOSE, kernel, iterations=iterations)
+
+        if self.show_debug_steps:
+            self.debug_steps['5_morphological_closing'] = fg_mask.copy()
+
+        # Step 5: Find contours
         contours, _ = cv2.findContours(fg_mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
-        # Filter contours by size and shape
+        # Step 6: Filter contours by size and shape
         valid_contours = []
         for contour in contours:
             area = cv2.contourArea(contour)
@@ -286,6 +314,13 @@ class MotionTrafficDetector:
                 if (self.min_aspect_ratio <= aspect_ratio <= self.max_aspect_ratio and
                     extent >= self.min_extent):
                     valid_contours.append(contour)
+
+        # Store final contours for debug visualization
+        if self.show_debug_steps:
+            # Create a mask showing final valid contours
+            final_contour_mask = np.zeros_like(fg_mask)
+            cv2.drawContours(final_contour_mask, valid_contours, -1, 255, -1)
+            self.debug_steps['6_final_contours'] = final_contour_mask
 
         # Apply object tracking if enabled
         tracked_objects = []
@@ -494,6 +529,9 @@ class MotionTrafficDetector:
                    display_config["font"], small_font_scale,
                    display_config["text_color"], small_thickness)
         cv2.putText(display_frame, "Press 'l' to set counting line, 'x' to reset ROI counters", (10, y_offset + 90),
+                   display_config["font"], small_font_scale,
+                   display_config["text_color"], small_thickness)
+        cv2.putText(display_frame, "Press 'd' to toggle debug steps visualization", (10, y_offset + 110),
                    display_config["font"], small_font_scale,
                    display_config["text_color"], small_thickness)
 
@@ -755,6 +793,98 @@ class MotionTrafficDetector:
 
         return combined_display
 
+    def create_debug_steps_display(self):
+        """Create a 2x3 grid showing all processing steps for debugging."""
+        if not self.show_debug_steps or not self.debug_steps:
+            return None
+
+        # Define the steps in order
+        step_order = [
+            '1_roi_frame',
+            '2_raw_bg_subtraction',
+            '3_shadow_removed',
+            '4_morphological_opening',
+            '5_morphological_closing',
+            '6_final_contours'
+        ]
+
+        step_titles = [
+            "1. ROI Frame",
+            "2. Raw Background Subtraction",
+            "3. Shadow Removal",
+            "4. Morphological Opening",
+            "5. Morphological Closing",
+            "6. Final Valid Contours"
+        ]
+
+        # Get dimensions from the first available step
+        first_step = None
+        for step in step_order:
+            if step in self.debug_steps:
+                first_step = self.debug_steps[step]
+                break
+
+        if first_step is None:
+            return None
+
+        # Calculate subplot dimensions
+        if len(first_step.shape) == 3:  # Color image
+            step_height, step_width = first_step.shape[:2]
+        else:  # Grayscale
+            step_height, step_width = first_step.shape
+
+        # Scale down for display (each subplot will be 1/3 original size)
+        display_scale = 0.4
+        subplot_height = int(step_height * display_scale)
+        subplot_width = int(step_width * display_scale)
+
+        # Create 2x3 grid
+        grid_height = subplot_height * 3
+        grid_width = subplot_width * 2
+        debug_display = np.zeros((grid_height, grid_width, 3), dtype=np.uint8)
+
+        # Font parameters for labels using config settings
+        display_config = config.DISPLAY_CONFIG
+        font_scale = 2*display_config["font_scale"] * display_config["text_scale_multiplier"] * display_scale
+        font_thickness = max(1, int(display_config["font_thickness"] * display_config["text_scale_multiplier"] * display_scale))
+        font = display_config["font"]
+
+        # Place each step in the grid
+        for i, (step_key, title) in enumerate(zip(step_order, step_titles)):
+            if step_key not in self.debug_steps:
+                continue
+
+            # Calculate grid position (2 columns, 3 rows)
+            row = i // 2
+            col = i % 2
+
+            y_start = row * subplot_height
+            y_end = y_start + subplot_height
+            x_start = col * subplot_width
+            x_end = x_start + subplot_width
+
+            # Get the step image
+            step_img = self.debug_steps[step_key]
+
+            # Convert grayscale to color if needed
+            if len(step_img.shape) == 2:
+                step_img = cv2.cvtColor(step_img, cv2.COLOR_GRAY2BGR)
+
+            # Resize to subplot size
+            step_resized = cv2.resize(step_img, (subplot_width, subplot_height))
+
+            # Place in grid
+            debug_display[y_start:y_end, x_start:x_end] = step_resized
+
+            # Add title
+            cv2.putText(debug_display, title, (x_start + 5, y_start + 20),
+                       font, font_scale, (255, 255, 255), font_thickness)
+
+            # Add border around subplot
+            cv2.rectangle(debug_display, (x_start, y_start), (x_end-1, y_end-1), (100, 100, 100), 1)
+
+        return debug_display
+
     def get_scaled_font_params(self, font_scale_key="font_scale", thickness_key="font_thickness"):
         """Get font parameters scaled by the text_scale_multiplier."""
         display_config = config.DISPLAY_CONFIG
@@ -788,6 +918,7 @@ class MotionTrafficDetector:
         print("  't' - Toggle object tracking")
         print("  'l' - Set counting line")
         print("  'x' - Reset ROI and traffic counters")
+        print("  'd' - Toggle debug steps visualization")
         print("  SPACE - Pause/Resume")
         print()
 
@@ -845,6 +976,12 @@ class MotionTrafficDetector:
             combined_display = self.create_combined_display(display_frame, fg_mask, contours, frame)
             cv2.imshow("Motion Traffic Detection - Combined View", combined_display)
 
+            # Show debug steps window if enabled
+            if self.show_debug_steps:
+                debug_display = self.create_debug_steps_display()
+                if debug_display is not None:
+                    cv2.imshow("Debug Steps - Processing Pipeline", debug_display)
+
             # Handle keyboard input
             key = cv2.waitKey(1) & 0xFF
             if key == ord('q'):
@@ -899,6 +1036,15 @@ class MotionTrafficDetector:
                 if self.traffic_counter is not None:
                     self.traffic_counter.reset_counts()
                     print("Traffic counters reset")
+            elif key == ord('d'):
+                # Toggle debug steps visualization
+                self.show_debug_steps = not self.show_debug_steps
+                if self.show_debug_steps:
+                    print("Debug steps visualization ENABLED")
+                else:
+                    print("Debug steps visualization DISABLED")
+                    # Close debug window if it exists
+                    cv2.destroyWindow("Debug Steps - Processing Pipeline")
 
             # Adaptive frame rate control (only when not paused)
             if not self.is_paused:
