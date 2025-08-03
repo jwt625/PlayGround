@@ -81,12 +81,14 @@ Internet → Cloudflare Tunnel → Nginx (port 8080) → Local Grafana (port 300
 
 ## Implementation Status
 
-✅ **Local Grafana**: Running on port 3000 with dashboard auto-imported
+✅ **Local Grafana**: Running on port 3000 with dashboard auto-imported and authentication disabled
 ✅ **Nginx Reverse Proxy**: Configured and running on port 8080
-✅ **Prometheus**: Running on port 9090 (existing, unchanged)
+✅ **Prometheus**: Running on port 9090 with local data source configured
 ✅ **Metrics Server**: Running on port 9091 (existing, unchanged)
-✅ **Cloudflared**: Installed and ready for tunnel setup
+✅ **Cloudflared**: Installed and tunnel created successfully
 ✅ **Automation Scripts**: Created for easy setup and management
+✅ **DNS Routing**: Configured in Cloudflare (manual setup required)
+⚠️ **Static Asset Loading**: Grafana UI fails to load through reverse proxy
 
 ## Quick Start
 
@@ -170,7 +172,7 @@ Visit: https://bay-bridge-traffic.com
 
 ### Docker Compose Updates (`docker-compose.yml`)
 ```yaml
-# Added Grafana service
+# Added Grafana service with authentication disabled
 grafana:
   image: grafana/grafana:latest
   container_name: grafana
@@ -180,7 +182,12 @@ grafana:
     - GF_SECURITY_ADMIN_PASSWORD=admin
     - GF_USERS_ALLOW_SIGN_UP=false
     - GF_SERVER_DOMAIN=bay-bridge-traffic.com
-    - GF_SERVER_ROOT_URL=https://bay-bridge-traffic.com
+    - GF_SERVER_ROOT_URL=https://bay-bridge-traffic.com/
+    - GF_SERVER_SERVE_FROM_SUB_PATH=false
+    - GF_AUTH_ANONYMOUS_ENABLED=true
+    - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
+    - GF_AUTH_DISABLE_LOGIN_FORM=true
+    - GF_AUTH_DISABLE_SIGNOUT_MENU=true
   volumes:
     - grafana-storage:/var/lib/grafana
     - ./grafana/provisioning:/etc/grafana/provisioning
@@ -221,17 +228,13 @@ datasources:
   - name: Prometheus
     type: prometheus
     access: proxy
-    url: https://prometheus-prod-36-prod-us-west-0.grafana.net/api/prom
-    basicAuth: true
-    basicAuthUser: [YOUR_GRAFANA_CLOUD_USER_ID]
-    secureJsonData:
-      basicAuthPassword: [YOUR_GRAFANA_CLOUD_API_KEY]
+    url: http://host.docker.internal:9090
     uid: prometheus
     isDefault: true
     editable: false
 ```
 
-**Note**: Replace `[YOUR_GRAFANA_CLOUD_USER_ID]` and `[YOUR_GRAFANA_CLOUD_API_KEY]` with your actual Grafana Cloud credentials. These values are copied from your existing `prometheus.yml` configuration.
+**Note**: Updated to use local Prometheus instance instead of Grafana Cloud to avoid authentication issues. The `host.docker.internal:9090` allows the Grafana container to access the local Prometheus service.
 
 ### Cloudflare Tunnel Config (`~/.cloudflared/config.yml`)
 ```yaml
@@ -266,14 +269,97 @@ cloudflared tunnel list
 # Check tunnel status
 cloudflared tunnel info grafana-local
 
-# View tunnel logs
-cloudflared tunnel run grafana-local --loglevel debug
+# View tunnel logs with debug output
+cloudflared tunnel --loglevel debug run grafana-local
 ```
 
 ### Dashboard Not Loading
 1. Check if Grafana is accessible: http://localhost:3000
 2. Check if reverse proxy works: http://localhost:8080
 3. Verify tunnel is running and DNS is configured
+
+### Common Issues and Solutions
+
+#### Issue 1: Tunnel Credentials File Not Found
+**Error**: `Tunnel credentials file '/Users/username/.cloudflared/grafana-local.json' doesn't exist`
+
+**Cause**: The setup script creates credentials with tunnel ID as filename, but config expects `grafana-local.json`
+
+**Solution**: Update config file to use correct credentials path:
+```bash
+# Find the actual credentials file
+ls ~/.cloudflared/*.json
+
+# Update config.yml to use the correct file
+sed -i '' 's|credentials-file: ~/.cloudflared/grafana-local.json|credentials-file: ~/.cloudflared/[TUNNEL_ID].json|' ~/.cloudflared/config.yml
+```
+
+#### Issue 2: DNS Routing Fails During Setup
+**Error**: `Failed to add route: code: 1003, reason: Failed to create record... An A, AAAA, or CNAME record with that host already exists`
+
+**Cause**: Existing DNS record conflicts with CNAME creation
+
+**Solution**: Manually configure DNS in Cloudflare Dashboard:
+1. Go to Cloudflare Dashboard → DNS → Records
+2. Delete existing A/AAAA record for domain
+3. Create new CNAME record:
+   - **Name**: `bay-bridge-traffic.com` (or `@` for root)
+   - **Target**: `[TUNNEL_ID].cfargotunnel.com`
+   - **Proxy**: Enabled (orange cloud)
+
+#### Issue 3: Grafana Authentication Issues
+**Error**: `unexpected response with status code 401: authentication error`
+
+**Cause**: Using Grafana Cloud write-only API key for read operations
+
+**Solution**: Switch to local Prometheus data source:
+```yaml
+# Update grafana/provisioning/datasources/prometheus.yml
+datasources:
+  - name: Prometheus
+    type: prometheus
+    access: proxy
+    url: http://host.docker.internal:9090  # Local Prometheus
+    uid: prometheus
+    isDefault: true
+    editable: false
+```
+
+#### Issue 4: Grafana Static Assets Not Loading
+**Error**: "Grafana has failed to load its application files... caused by reverse proxy settings"
+
+**Cause**: Reverse proxy configuration interfering with static asset loading
+
+**Current Status**: ⚠️ **UNRESOLVED**
+
+**Symptoms**:
+- Tunnel receives requests successfully (visible in debug logs)
+- Local Grafana works fine (http://localhost:3000)
+- Reverse proxy returns 404 for some requests
+- Grafana UI shows "failed to load application files" error
+
+**Debug Process**:
+1. **Tunnel Debug Logs**: Use `cloudflared tunnel --loglevel debug run grafana-local` to see request flow
+2. **Environment Variables**: Ensure Grafana container has correct auth settings:
+   ```bash
+   docker exec grafana env | grep GF_AUTH
+   ```
+3. **Container Recreation**: Sometimes requires full container recreation:
+   ```bash
+   docker-compose down grafana
+   docker-compose up -d grafana
+   ```
+
+**Attempted Solutions**:
+- ✅ Disabled Grafana authentication completely
+- ✅ Updated Nginx to proxy all requests to Grafana
+- ✅ Set proper Grafana reverse proxy environment variables
+- ❌ Static asset loading still fails through tunnel
+
+**Next Steps**:
+- Investigate Grafana subpath configuration
+- Consider alternative reverse proxy approaches
+- Test with different Grafana versions
 
 ## Security Considerations
 

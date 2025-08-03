@@ -44,9 +44,16 @@ echo "Step 3: Setting up tunnel configuration"
 mkdir -p ~/.cloudflared
 
 # Step 4: Create tunnel config
+# Get the tunnel ID to construct the correct credentials file path
+TUNNEL_ID=$(cloudflared tunnel list | grep grafana-local | awk '{print $1}')
+if [ -z "$TUNNEL_ID" ]; then
+    echo "❌ Could not find tunnel ID for grafana-local"
+    exit 1
+fi
+
 cat > ~/.cloudflared/config.yml << EOF
 tunnel: grafana-local
-credentials-file: ~/.cloudflared/grafana-local.json
+credentials-file: ~/.cloudflared/${TUNNEL_ID}.json
 
 ingress:
   - hostname: bay-bridge-traffic.com

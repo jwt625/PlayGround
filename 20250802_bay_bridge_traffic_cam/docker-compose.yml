@@ -28,7 +28,15 @@ services:
       - GF_SECURITY_ADMIN_PASSWORD=admin
       - GF_USERS_ALLOW_SIGN_UP=false
       - GF_SERVER_DOMAIN=bay-bridge-traffic.com
-      - GF_SERVER_ROOT_URL=https://bay-bridge-traffic.com
+      - GF_SERVER_ROOT_URL=https://bay-bridge-traffic.com/
+      - GF_SERVER_SERVE_FROM_SUB_PATH=false
+      - GF_AUTH_ANONYMOUS_ENABLED=true
+      - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
+      - GF_AUTH_DISABLE_LOGIN_FORM=true
+      - GF_AUTH_DISABLE_SIGNOUT_MENU=true
+      # Additional reverse proxy settings
+      - GF_SERVER_ENABLE_GZIP=true
+      - GF_LOG_LEVEL=debug
     volumes:
       - grafana-storage:/var/lib/grafana
       - ./grafana/provisioning:/etc/grafana/provisioning
