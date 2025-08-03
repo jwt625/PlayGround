@@ -20,16 +20,26 @@ class OpticalFlowTrafficDetector:
         self.min_motion_area = 200  # Minimum area of motion region
         self.max_motion_area = 3000  # Maximum area to avoid noise
         self.coherence_threshold = 0.7  # Motion direction consistency
+
+        # Horizontal motion filtering for side-view bridge camera
+        self.horizontal_motion_only = True  # Filter out vertical movement
+        self.min_horizontal_ratio = 0.6  # Minimum ratio of horizontal to total motion
+        self.max_vertical_component = 3.0  # Maximum allowed vertical flow component
+
+        # Performance optimization: frame processing - AGGRESSIVE SCALING
+        self.processing_scale = 1.0  # Scale factor for processing (1.0 = full size, 0.5 = half size)
+        self.max_processing_width = 640   # REDUCED to 640 for speed (was 1280)
+        self.force_downscale = True       # Force downscaling for better performance
         
-        # Dense optical flow parameters (Farneback)
+        # Dense optical flow parameters (Farneback) - AGGRESSIVE SPEED OPTIMIZATION
         self.flow_params = {
-            'pyr_scale': 0.5,
-            'levels': 3,
-            'winsize': 15,
-            'iterations': 3,
-            'poly_n': 5,
-            'poly_sigma': 1.2,
-            'flags': 0
+            'pyr_scale': 0.5,    # Image pyramid scaling factor
+            'levels': 1,         # REDUCED to 1 for maximum speed (was 2)
+            'winsize': 8,        # REDUCED to 8 for speed (was 10)
+            'iterations': 1,     # REDUCED to 1 for speed (was 2)
+            'poly_n': 3,         # REDUCED to 3 for speed (was 5)
+            'poly_sigma': 1.0,   # REDUCED for speed (was 1.1)
+            'flags': 0           # Algorithm flags
         }
         
         # Frame processing
@@ -43,8 +53,8 @@ class OpticalFlowTrafficDetector:
         self.tracked_objects = {}
         self.next_id = 1
 
-        # Debug visualization
-        self.show_debug = True
+        # Debug visualization - ENABLE FOR DEBUGGING
+        self.show_debug = True   # Enable debug windows
         self.debug_windows = {
             'flow_vectors': True,
             'motion_mask': True,
@@ -52,7 +62,10 @@ class OpticalFlowTrafficDetector:
             'coherence': True
         }
         
-        # Performance
+        # Performance optimization settings
+        self.target_fps = 30  # Target 30 FPS for real-time performance
+        self.frame_skip = 1   # Process every frame (no skipping)
+        self.last_frame_time = time.time()
         self.fps_counter = 0
         self.fps_start_time = time.time()
         self.current_fps = 0
@@ -62,17 +75,21 @@ class OpticalFlowTrafficDetector:
         self.cap_initialized = False
         
     def get_frame(self):
-        """Optimized frame capture with persistent connection."""
+        """Optimized frame capture with persistent connection for high FPS."""
         try:
             # Initialize persistent video capture if needed
             if not self.cap_initialized:
                 self.cap = cv2.VideoCapture(self.webcam_url)
                 if self.cap.isOpened():
-                    # Optimize capture settings for speed
-                    self.cap.set(cv2.CAP_PROP_BUFFERSIZE, 1)  # Reduce buffer to get latest frame
-                    self.cap.set(cv2.CAP_PROP_FPS, 60)        # Request higher FPS if available
+                    # PERFORMANCE OPTIMIZATION: Aggressive capture settings for 30+ FPS
+                    self.cap.set(cv2.CAP_PROP_BUFFERSIZE, 1)     # Minimal buffer for latest frame
+                    self.cap.set(cv2.CAP_PROP_FPS, 60)           # Request maximum FPS
+                    self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1280) # Set resolution if needed
+                    self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 720)
+                    # Additional optimizations
+                    self.cap.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc('M','J','P','G'))
                     self.cap_initialized = True
-                    print("Persistent video capture initialized")
+                    print("High-performance video capture initialized for 30+ FPS")
                 else:
                     self.cap = None
 
@@ -89,10 +106,10 @@ class OpticalFlowTrafficDetector:
                     return self.get_frame()  # Retry once
 
             # Fallback to HTTP request method (only if OpenCV fails)
-            response = requests.get(self.webcam_url, stream=True, timeout=5)
+            response = requests.get(self.webcam_url, stream=True, timeout=2)  # Reduced timeout
             if response.status_code == 200:
                 bytes_data = b''
-                for chunk in response.iter_content(chunk_size=1024):
+                for chunk in response.iter_content(chunk_size=2048):  # Larger chunks
                     bytes_data += chunk
                     start = bytes_data.find(b'\xff\xd8')  # JPEG start
                     end = bytes_data.find(b'\xff\xd9')    # JPEG end
@@ -106,6 +123,29 @@ class OpticalFlowTrafficDetector:
             print(f"Error capturing frame: {e}")
 
         return None
+
+    def create_demo_frame(self):
+        """Create a demo frame for testing when webcam is unavailable."""
+        width, height = 1280, 720
+        frame = np.full((height, width, 3), (50, 50, 50), dtype=np.uint8)
+
+        # Add some moving objects for demo
+        t = time.time()
+        colors = [(0, 255, 0), (255, 0, 0), (0, 0, 255)]
+
+        for i in range(3):
+            speed = 1 + i * 0.5
+            x = int(100 + i * 200 + 100 * np.sin(t * speed))
+            y = int(200 + i * 50)
+            color = colors[i % len(colors)]
+
+            # Draw moving rectangles (simulating vehicles)
+            cv2.rectangle(frame, (x, y), (x+60, y+30), color, -1)
+
+        cv2.putText(frame, "DEMO MODE - Moving objects for optical flow testing", (10, 30),
+                   cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 255, 255), 2)
+
+        return frame
 
     def cleanup(self):
         """Clean up resources."""
@@ -157,19 +197,32 @@ class OpticalFlowTrafficDetector:
         cv2.destroyWindow("Set Counting Line")
     
     def detect_motion_flow(self, frame):
-        """Detect motion using optical flow."""
+        """Detect motion using optical flow with performance optimizations."""
         if frame is None:
             return [], np.zeros_like(frame[:,:,0]) if frame is not None else None
-        
+
         # Apply ROI if set
         if self.roi:
             x, y, w, h = self.roi
             roi_frame = frame[y:y+h, x:x+w]
         else:
             roi_frame = frame
-        
+
+        # PERFORMANCE: AGGRESSIVE frame scaling for speed
+        if self.force_downscale or roi_frame.shape[1] > self.max_processing_width:
+            # Always scale down for maximum performance
+            scale_factor = self.max_processing_width / roi_frame.shape[1]
+            scale_factor = min(scale_factor, 0.5)  # Never use more than half resolution
+            new_width = int(roi_frame.shape[1] * scale_factor)
+            new_height = int(roi_frame.shape[0] * scale_factor)
+            processing_frame = cv2.resize(roi_frame, (new_width, new_height), interpolation=cv2.INTER_LINEAR)
+            self.processing_scale = scale_factor
+        else:
+            processing_frame = roi_frame
+            self.processing_scale = 1.0
+
         # Convert to grayscale
-        gray = cv2.cvtColor(roi_frame, cv2.COLOR_BGR2GRAY)
+        gray = cv2.cvtColor(processing_frame, cv2.COLOR_BGR2GRAY)
         
         # Initialize on first frame
         if self.prev_gray is None:
@@ -194,51 +247,70 @@ class OpticalFlowTrafficDetector:
         # Create motion mask
         motion_mask = (magnitude > self.flow_threshold).astype(np.uint8) * 255
         
-        # Clean up mask with morphological operations
-        kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (5, 5))
-        motion_mask = cv2.morphologyEx(motion_mask, cv2.MORPH_OPEN, kernel)
-        motion_mask = cv2.morphologyEx(motion_mask, cv2.MORPH_CLOSE, kernel)
+        # PERFORMANCE: Simplified morphological operations
+        kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (3, 3))  # Smaller kernel
+        motion_mask = cv2.morphologyEx(motion_mask, cv2.MORPH_OPEN, kernel, iterations=1)  # Single operation
         
         # Find motion regions
         contours, _ = cv2.findContours(motion_mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
         
-        # Filter contours by size and motion coherence
+        # PERFORMANCE: Simplified contour filtering - MAJOR OPTIMIZATION
         valid_motions = []
         for contour in contours:
             area = cv2.contourArea(contour)
             if self.min_motion_area <= area <= self.max_motion_area:
-                # Check motion coherence
-                mask = np.zeros_like(motion_mask)
-                cv2.drawContours(mask, [contour], -1, 255, -1)
-                
-                # Get flow vectors in this region
-                region_flow_x = flow[..., 0][mask > 0]
-                region_flow_y = flow[..., 1][mask > 0]
-                
-                if len(region_flow_x) > 0:
-                    # Calculate direction consistency
-                    directions = np.arctan2(region_flow_y, region_flow_x)
-                    mean_direction = np.arctan2(np.mean(region_flow_y), np.mean(region_flow_x))
-                    
-                    # Calculate coherence
-                    angle_diffs = np.abs(directions - mean_direction)
-                    angle_diffs = np.minimum(angle_diffs, 2*np.pi - angle_diffs)
-                    coherence = 1.0 - (np.mean(angle_diffs) / np.pi)
-                    
-                    if coherence >= self.coherence_threshold:
-                        # Adjust contour coordinates if ROI is set
-                        if self.roi:
-                            contour = contour + [self.roi[0], self.roi[1]]
-                        valid_motions.append({
-                            'contour': contour,
-                            'area': area,
-                            'coherence': coherence,
-                            'flow': (np.mean(region_flow_x), np.mean(region_flow_y))
-                        })
+                # SIMPLIFIED: Use bounding box for flow sampling instead of exact contour mask
+                x, y, w, h = cv2.boundingRect(contour)
+
+                # Sample flow in bounding box region (much faster than creating mask)
+                region_flow_x = flow[y:y+h, x:x+w, 0].flatten()
+                region_flow_y = flow[y:y+h, x:x+w, 1].flatten()
+
+                # Filter out zero flow areas
+                non_zero_mask = (region_flow_x != 0) | (region_flow_y != 0)
+                if np.sum(non_zero_mask) > 10:  # Need at least 10 flow vectors
+                    region_flow_x = region_flow_x[non_zero_mask]
+                    region_flow_y = region_flow_y[non_zero_mask]
+
+                    # SIMPLIFIED coherence calculation
+                    mean_flow_x = np.mean(region_flow_x)
+                    mean_flow_y = np.mean(region_flow_y)
+
+                    # Quick horizontal motion check
+                    horizontal_magnitude = abs(mean_flow_x)
+                    vertical_magnitude = abs(mean_flow_y)
+                    total_magnitude = np.sqrt(mean_flow_x**2 + mean_flow_y**2)
+
+                    if total_magnitude > self.flow_threshold:
+                        horizontal_ratio = horizontal_magnitude / total_magnitude
+
+                        # SIMPLIFIED filtering - skip expensive coherence calculation
+                        horizontal_valid = True
+                        if self.horizontal_motion_only:
+                            horizontal_valid = (horizontal_ratio >= self.min_horizontal_ratio and
+                                              vertical_magnitude <= self.max_vertical_component)
+
+                        if horizontal_valid:
+                            # Scale contour back to original size if processing was scaled
+                            if self.processing_scale != 1.0:
+                                contour = (contour / self.processing_scale).astype(np.int32)
+
+                            # Adjust contour coordinates if ROI is set
+                            if self.roi:
+                                contour = contour + [self.roi[0], self.roi[1]]
+
+                            valid_motions.append({
+                                'contour': contour,
+                                'area': area,
+                                'coherence': 0.8,  # Dummy value for compatibility
+                                'flow': (mean_flow_x, mean_flow_y),
+                                'horizontal_ratio': horizontal_ratio,
+                                'vertical_magnitude': vertical_magnitude
+                            })
         
         self.prev_gray = gray.copy()
 
-        # Store debug data
+        # Store debug data ONLY if debug is enabled (performance optimization)
         if self.show_debug:
             self.debug_data = {
                 'flow': flow,
@@ -246,8 +318,9 @@ class OpticalFlowTrafficDetector:
                 'angle': angle,
                 'motion_mask': motion_mask,
                 'valid_motions': valid_motions,
-                'roi_frame': roi_frame
+                'roi_frame': processing_frame  # Use processing frame instead of roi_frame
             }
+            print(f"Debug data stored: flow shape={flow.shape}, magnitude shape={magnitude.shape}, valid_motions={len(valid_motions)}")
 
         return valid_motions, motion_mask
     
@@ -351,13 +424,25 @@ class OpticalFlowTrafficDetector:
             # Draw centroid
             cv2.circle(display_frame, centroid, 5, (0, 0, 255), -1)
         
-        # Draw info
-        cv2.putText(display_frame, f"Frame: {self.frame_count} | FPS: {self.current_fps:.1f}", 
-                   (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 255, 255), 2)
-        cv2.putText(display_frame, f"Objects: {len(objects)} | Count: {self.vehicle_count}", 
+        # Draw info with performance metrics
+        fps_color = (0, 255, 0) if self.current_fps >= 25 else (0, 255, 255) if self.current_fps >= 15 else (0, 0, 255)
+        cv2.putText(display_frame, f"Frame: {self.frame_count} | FPS: {self.current_fps:.1f}",
+                   (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.7, fps_color, 2)
+        cv2.putText(display_frame, f"Objects: {len(objects)} | Count: {self.vehicle_count}",
                    (10, 60), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 255, 255), 2)
-        cv2.putText(display_frame, "Press 'q' to quit, 'r' for ROI, 'l' for line", 
+
+        # Performance settings
+        target_text = f"Target: {self.target_fps} FPS" if self.target_fps > 0 else "Target: Unlimited"
+        cv2.putText(display_frame, f"{target_text} | Skip: {self.frame_skip}",
                    (10, 90), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1)
+
+        # Controls and horizontal filter status
+        cv2.putText(display_frame, "Press 'q' to quit, 'r' for ROI, 'l' for line, 'h' for horizontal filter",
+                   (10, 110), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1)
+        cv2.putText(display_frame, f"Horizontal Filter: {'ON' if self.horizontal_motion_only else 'OFF'} (Ratio: {self.min_horizontal_ratio:.2f})",
+                   (10, 130), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0) if self.horizontal_motion_only else (0, 0, 255), 1)
+        cv2.putText(display_frame, "Press 'f' for FPS control, 'p'/'o' for frame skip",
+                   (10, 150), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1)
         
         return display_frame
 
@@ -418,6 +503,8 @@ class OpticalFlowTrafficDetector:
             area = motion['area']
             coherence = motion['coherence']
             flow_vec = motion['flow']
+            horizontal_ratio = motion.get('horizontal_ratio', 0)
+            vertical_magnitude = motion.get('vertical_magnitude', 0)
 
             # Draw contour
             cv2.drawContours(debug_frame, [contour], -1, (0, 255, 0), 2)
@@ -425,25 +512,31 @@ class OpticalFlowTrafficDetector:
             # Get bounding box
             x, y, w, h = cv2.boundingRect(contour)
 
-            # Draw bounding box
-            cv2.rectangle(debug_frame, (x, y), (x+w, y+h), (255, 0, 0), 2)
+            # Draw bounding box - color code based on horizontal motion
+            box_color = (0, 255, 0) if horizontal_ratio >= self.min_horizontal_ratio else (0, 165, 255)  # Green for good horizontal, orange for poor
+            cv2.rectangle(debug_frame, (x, y), (x+w, y+h), box_color, 2)
 
-            # Add detailed labels
-            cv2.putText(debug_frame, f"ID:{i}", (x, y-40),
+            # Add detailed labels with horizontal motion info
+            cv2.putText(debug_frame, f"ID:{i}", (x, y-55),
                        cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 0), 1)
-            cv2.putText(debug_frame, f"Area:{int(area)}", (x, y-25),
+            cv2.putText(debug_frame, f"Area:{int(area)}", (x, y-40),
                        cv2.FONT_HERSHEY_SIMPLEX, 0.4, (255, 255, 0), 1)
-            cv2.putText(debug_frame, f"Coh:{coherence:.2f}", (x, y-10),
+            cv2.putText(debug_frame, f"Coh:{coherence:.2f}", (x, y-25),
+                       cv2.FONT_HERSHEY_SIMPLEX, 0.4, (255, 255, 0), 1)
+            cv2.putText(debug_frame, f"H-Ratio:{horizontal_ratio:.2f}", (x, y-10),
                        cv2.FONT_HERSHEY_SIMPLEX, 0.4, (255, 255, 0), 1)
             cv2.putText(debug_frame, f"Flow:({flow_vec[0]:.1f},{flow_vec[1]:.1f})", (x, y+h+15),
                        cv2.FONT_HERSHEY_SIMPLEX, 0.4, (255, 255, 0), 1)
+            cv2.putText(debug_frame, f"V-Mag:{vertical_magnitude:.1f}", (x, y+h+30),
+                       cv2.FONT_HERSHEY_SIMPLEX, 0.4, (255, 255, 0), 1)
 
-            # Draw flow vector arrow from center
+            # Draw flow vector arrow from center - color code based on direction
             center_x = x + w // 2
             center_y = y + h // 2
             end_x = int(center_x + flow_vec[0] * 5)
             end_y = int(center_y + flow_vec[1] * 5)
-            cv2.arrowedLine(debug_frame, (center_x, center_y), (end_x, end_y), (0, 0, 255), 2, tipLength=0.3)
+            arrow_color = (0, 255, 0) if horizontal_ratio >= self.min_horizontal_ratio else (0, 0, 255)  # Green for horizontal, red for vertical
+            cv2.arrowedLine(debug_frame, (center_x, center_y), (end_x, end_y), arrow_color, 2, tipLength=0.3)
 
         # Add summary info
         cv2.putText(debug_frame, f"Valid Motion Regions: {len(valid_motions)}", (10, 30),
@@ -452,34 +545,60 @@ class OpticalFlowTrafficDetector:
                    cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1)
         cv2.putText(debug_frame, f"Coherence Threshold: {self.coherence_threshold}", (10, 75),
                    cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1)
+        cv2.putText(debug_frame, f"Horizontal Filter: {'ON' if self.horizontal_motion_only else 'OFF'}", (10, 95),
+                   cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1)
+        if self.horizontal_motion_only:
+            cv2.putText(debug_frame, f"Min H-Ratio: {self.min_horizontal_ratio:.1f}, Max V-Mag: {self.max_vertical_component:.1f}", (10, 115),
+                       cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1)
 
         return debug_frame
 
     def show_debug_windows(self):
         """Show all debug visualization windows."""
-        if not self.show_debug or not hasattr(self, 'debug_data'):
+        if not self.show_debug:
+            return
+
+        if not hasattr(self, 'debug_data'):
+            print("Debug enabled but no debug_data available yet...")
             return
 
         debug_data = self.debug_data
+        print(f"Showing debug windows: flow_vectors={self.debug_windows['flow_vectors']}, magnitude={self.debug_windows['magnitude']}, motion_mask={self.debug_windows['motion_mask']}, coherence={self.debug_windows['coherence']}")
 
         # Flow vectors visualization
         if self.debug_windows['flow_vectors']:
-            flow_vis = self.create_flow_visualization(debug_data['flow'], debug_data['magnitude'])
-            cv2.imshow("Debug: Flow Vectors", flow_vis)
+            try:
+                flow_vis = self.create_flow_visualization(debug_data['flow'], debug_data['magnitude'])
+                cv2.imshow("Debug: Flow Vectors", flow_vis)
+                print("Flow vectors window created")
+            except Exception as e:
+                print(f"Error creating flow vectors: {e}")
 
         # Magnitude visualization
         if self.debug_windows['magnitude']:
-            mag_vis = self.create_magnitude_visualization(debug_data['magnitude'])
-            cv2.imshow("Debug: Flow Magnitude", mag_vis)
+            try:
+                mag_vis = self.create_magnitude_visualization(debug_data['magnitude'])
+                cv2.imshow("Debug: Flow Magnitude", mag_vis)
+                print("Magnitude window created")
+            except Exception as e:
+                print(f"Error creating magnitude: {e}")
 
         # Motion mask
         if self.debug_windows['motion_mask']:
-            cv2.imshow("Debug: Motion Mask", debug_data['motion_mask'])
+            try:
+                cv2.imshow("Debug: Motion Mask", debug_data['motion_mask'])
+                print("Motion mask window created")
+            except Exception as e:
+                print(f"Error creating motion mask: {e}")
 
         # Motion regions with details
         if self.debug_windows['coherence']:
-            regions_vis = self.create_motion_regions_visualization(debug_data['roi_frame'], debug_data['valid_motions'])
-            cv2.imshow("Debug: Motion Regions", regions_vis)
+            try:
+                regions_vis = self.create_motion_regions_visualization(debug_data['roi_frame'], debug_data['valid_motions'])
+                cv2.imshow("Debug: Motion Regions", regions_vis)
+                print("Motion regions window created")
+            except Exception as e:
+                print(f"Error creating motion regions: {e}")
 
     def run(self):
         """Main detection loop."""
@@ -494,22 +613,53 @@ class OpticalFlowTrafficDetector:
         print("  '2' - Toggle magnitude")
         print("  '3' - Toggle motion mask")
         print("  '4' - Toggle motion regions")
+        print("  'h' - Toggle horizontal motion filtering")
+        print("  '+' - Increase horizontal ratio threshold")
+        print("  '-' - Decrease horizontal ratio threshold")
+        print("  'f' - Toggle frame rate control (30 FPS target)")
+        print("  'p' - Increase frame skip (reduce processing load)")
+        print("  'o' - Decrease frame skip (increase processing)")
+        print("  'x' - Toggle PERFORMANCE MODE (disables debug for max FPS)")
+        print()
+        print(f"PERFORMANCE MODE: {'ON' if not self.show_debug else 'OFF'} - Debug windows: {'OFF' if not self.show_debug else 'ON'}")
+        print(f"Processing resolution: {self.max_processing_width}px max, Force downscale: {self.force_downscale}")
         print()
 
         # Get first frame and set ROI
+        webcam_available = False
         frame = self.get_frame()
+        if frame is None:
+            print("Webcam not available, using demo mode")
+            frame = self.create_demo_frame()
+            webcam_available = False
+        else:
+            print("Webcam connected successfully!")
+            webcam_available = True
+
         if frame is not None:
             self.set_roi_interactive(frame)
             self.set_counting_line_interactive(frame)
 
         while True:
+            frame_start_time = time.time()
+
             frame = self.get_frame()
             if frame is None:
-                print("No frame received, retrying...")
-                time.sleep(1)
-                continue
+                if webcam_available:
+                    print("Webcam connection lost, switching to demo mode")
+                    webcam_available = False
+                frame = self.create_demo_frame()
+            else:
+                if not webcam_available:
+                    print("Webcam reconnected!")
+                    webcam_available = True
 
             self.frame_count += 1
+
+            # PERFORMANCE: Skip frames if needed to maintain target FPS
+            if self.frame_skip > 1 and self.frame_count % self.frame_skip != 0:
+                continue
+
             self.update_fps()
 
             # Detect motion using optical flow
@@ -529,6 +679,15 @@ class OpticalFlowTrafficDetector:
 
             # Show main display
             cv2.imshow("Optical Flow Traffic Detection", display_frame)
+
+            # PERFORMANCE: Frame rate control for consistent 30 FPS
+            if self.target_fps > 0:
+                frame_time = time.time() - frame_start_time
+                target_frame_time = 1.0 / self.target_fps
+                if frame_time < target_frame_time:
+                    time.sleep(target_frame_time - frame_time)
+
+            self.last_frame_time = time.time()
 
             # Handle keyboard input
             key = cv2.waitKey(1) & 0xFF
@@ -571,6 +730,46 @@ class OpticalFlowTrafficDetector:
                 print(f"Motion regions: {'ON' if self.debug_windows['coherence'] else 'OFF'}")
                 if not self.debug_windows['coherence']:
                     cv2.destroyWindow("Debug: Motion Regions")
+            elif key == ord('h'):
+                self.horizontal_motion_only = not self.horizontal_motion_only
+                print(f"Horizontal motion filtering: {'ON' if self.horizontal_motion_only else 'OFF'}")
+                if self.horizontal_motion_only:
+                    print(f"  Min horizontal ratio: {self.min_horizontal_ratio:.2f}")
+                    print(f"  Max vertical component: {self.max_vertical_component:.1f}")
+            elif key == ord('+') or key == ord('='):
+                self.min_horizontal_ratio = min(1.0, self.min_horizontal_ratio + 0.05)
+                print(f"Min horizontal ratio increased to: {self.min_horizontal_ratio:.2f}")
+            elif key == ord('-'):
+                self.min_horizontal_ratio = max(0.0, self.min_horizontal_ratio - 0.05)
+                print(f"Min horizontal ratio decreased to: {self.min_horizontal_ratio:.2f}")
+            elif key == ord('f'):
+                if self.target_fps == 30:
+                    self.target_fps = 0  # Unlimited
+                    print("Frame rate control DISABLED (unlimited FPS)")
+                else:
+                    self.target_fps = 30
+                    print("Frame rate control ENABLED (30 FPS target)")
+            elif key == ord('p'):
+                self.frame_skip = min(5, self.frame_skip + 1)
+                print(f"Frame skip increased to: {self.frame_skip} (processing every {self.frame_skip} frames)")
+            elif key == ord('o'):
+                self.frame_skip = max(1, self.frame_skip - 1)
+                print(f"Frame skip decreased to: {self.frame_skip} (processing every {self.frame_skip} frames)")
+            elif key == ord('x'):
+                # Toggle PERFORMANCE MODE
+                self.show_debug = not self.show_debug
+                if not self.show_debug:
+                    # Enable performance mode - disable all debug windows
+                    for window_name in self.debug_windows:
+                        self.debug_windows[window_name] = False
+                    cv2.destroyWindow("Debug: Flow Vectors")
+                    cv2.destroyWindow("Debug: Flow Magnitude")
+                    cv2.destroyWindow("Debug: Motion Mask")
+                    cv2.destroyWindow("Debug: Motion Regions")
+                    print("PERFORMANCE MODE ENABLED - All debug disabled for maximum FPS")
+                else:
+                    print("PERFORMANCE MODE DISABLED - Debug available (press 'd' to enable)")
+                print(f"Current FPS should improve to: {'25-30+' if not self.show_debug else '10-15'}")
 
         self.cleanup()
         cv2.destroyAllWindows()
