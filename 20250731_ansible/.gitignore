@@ -1,0 +1,16 @@
+# Ansible inventory files with real IPs/hostnames
+inventory.ini
+hosts.ini
+production.ini
+staging.ini
+
+# Ansible vault files
+*.vault
+
+# SSH keys
+*.pem
+*.key
+
+# Environment-specific configs
+.env
+.env.local
