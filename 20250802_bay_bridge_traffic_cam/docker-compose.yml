@@ -32,9 +32,18 @@ services:
       - GF_SERVER_ROOT_URL=https://bay-bridge-traffic.com/
       - GF_SERVER_SERVE_FROM_SUB_PATH=false
       - GF_AUTH_ANONYMOUS_ENABLED=true
-      - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
-      - GF_AUTH_DISABLE_LOGIN_FORM=true
-      - GF_AUTH_DISABLE_SIGNOUT_MENU=true
+      - GF_AUTH_ANONYMOUS_ORG_ROLE=Viewer
+      - GF_AUTH_DISABLE_LOGIN_FORM=false
+      - GF_AUTH_DISABLE_SIGNOUT_MENU=false
+      # Disable sharing and export features for anonymous users
+      - GF_SNAPSHOTS_EXTERNAL_ENABLED=false
+      - GF_SNAPSHOTS_ENABLED=false
+      - GF_EXTERNAL_IMAGE_STORAGE_PROVIDER=""
+      # Additional security settings
+      - GF_PANELS_DISABLE_SANITIZE_HTML=false
+      # Time picker restrictions
+      - GF_DASHBOARDS_MIN_REFRESH_INTERVAL=30s
+      - GF_TIME_PICKER_QUICK_RANGES=[{"from":"now-5m","to":"now","display":"Last 5 minutes"},{"from":"now-15m","to":"now","display":"Last 15 minutes"},{"from":"now-1h","to":"now","display":"Last 1 hour"},{"from":"now-6h","to":"now","display":"Last 6 hours"},{"from":"now-12h","to":"now","display":"Last 12 hours"},{"from":"now-24h","to":"now","display":"Last 24 hours"},{"from":"now-2d","to":"now","display":"Last 2 days"},{"from":"now-7d","to":"now","display":"Last 7 days"}]
       # Additional reverse proxy settings
       - GF_SERVER_ENABLE_GZIP=true
       - GF_LOG_LEVEL=debug
