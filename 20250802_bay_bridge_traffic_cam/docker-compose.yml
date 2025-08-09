@@ -28,9 +28,9 @@ services:
     environment:
       - GF_SECURITY_ADMIN_PASSWORD=admin
       - GF_USERS_ALLOW_SIGN_UP=false
-      - GF_SERVER_DOMAIN=localhost
-      - GF_SERVER_ROOT_URL=http://localhost:8080/grafana/
-      - GF_SERVER_SERVE_FROM_SUB_PATH=true
+      - GF_SERVER_DOMAIN=bay-bridge-traffic.com
+      - GF_SERVER_ROOT_URL=https://bay-bridge-traffic.com/
+      - GF_SERVER_SERVE_FROM_SUB_PATH=false
       - GF_AUTH_ANONYMOUS_ENABLED=true
       - GF_AUTH_ANONYMOUS_ORG_ROLE=Viewer
       - GF_AUTH_DISABLE_LOGIN_FORM=false
@@ -58,14 +58,17 @@ services:
       - GF_SERVER_HTTP_PORT=3000
       # IFRAME EMBEDDING SETTINGS
       - GF_SECURITY_ALLOW_EMBEDDING=true
-      - GF_SECURITY_X_FRAME_OPTIONS=ALLOWALL
+      - GF_SECURITY_X_FRAME_OPTIONS=
       - GF_SECURITY_X_CONTENT_TYPE_OPTIONS=false
       - GF_SECURITY_X_XSS_PROTECTION=false
       - GF_SECURITY_CONTENT_SECURITY_POLICY=false
       - GF_SECURITY_STRICT_TRANSPORT_SECURITY=false
+      - GF_SECURITY_COOKIE_SAMESITE=none
+      - GF_SECURITY_COOKIE_SECURE=false
       # Additional CORS settings for iframe
       - GF_SERVER_ENABLE_CORS=true
       - GF_SERVER_CORS_ALLOW_ORIGIN=*
+      - GF_SERVER_CORS_ALLOW_CREDENTIALS=true
       # Disable security features that might block requests
       - GF_SECURITY_DISABLE_INITIAL_ADMIN_CREATION=true
       - GF_SECURITY_DISABLE_GRAVATAR=true
