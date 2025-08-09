@@ -60,7 +60,9 @@ Create `import_prometheus_data.py` with multiple import strategies:
 # Usage examples
 python import_prometheus_data.py --input traffic_data.txt --method simulation
 python import_prometheus_data.py --input-dir backup_20250803/ --method pushgateway
-python import_prometheus_data.py --input traffic_data.txt --method remote-write
+python import_prometheus_data.py --input traffic_data.txt --method http-server
+python import_prometheus_data.py --input traffic_data.txt --method direct-write
+python import_prometheus_data.py --input traffic_data.txt --method remote-write  # Future
 ```
 
 ### Import Methods
@@ -75,7 +77,18 @@ python import_prometheus_data.py --input traffic_data.txt --method remote-write
 - **Requirements**: Pushgateway service running
 - **Limitations**: Only latest values, no historical timestamps
 
-#### 3. Remote Write Mode (Future)
+#### 3. HTTP Server Mode
+- **Purpose**: Create static files for historical data import
+- **Requirements**: HTTP server to serve metric files
+- **Benefits**: Preserves original timestamps, can be scraped by Prometheus
+
+#### 4. Direct Write Mode
+- **Purpose**: Create TSDB blocks with original timestamps
+- **Requirements**: promtool and Prometheus downtime
+- **Benefits**: Direct TSDB manipulation with timestamp preservation
+- **Status**: ❌ **FAILED** - Blocks created but not loaded by Prometheus
+
+#### 5. Remote Write Mode (Future)
 - **Purpose**: Direct remote write to Prometheus
 - **Requirements**: Prometheus remote write endpoint enabled
 - **Benefits**: Preserves timestamps and full metadata
@@ -88,14 +101,14 @@ Backed Up Data (.txt files)
    Import Tool Parser
          ↓
     Method Selection
-    ↓         ↓         ↓
-Simulation  Pushgateway  Remote Write
-    ↓         ↓         ↓
- Validation  HTTP POST   Protobuf/Snappy
-    ↓         ↓         ↓
-  Report    Pushgateway  Prometheus
-              ↓         ↓
-           Prometheus   TSDB
+    ↓         ↓         ↓         ↓         ↓
+Simulation  Pushgateway  HTTP-Server  Direct-Write  Remote Write
+    ↓         ↓         ↓         ↓         ↓
+ Validation  HTTP POST   Static Files  TSDB Blocks  Protobuf/Snappy
+    ↓         ↓         ↓         ↓         ↓
+  Report    Pushgateway  HTTP Server   promtool    Prometheus
+              ↓         ↓         ↓         ↓
+           Prometheus   Prometheus   ❌ FAILED    TSDB
 ```
 
 ## Implementation Plan
@@ -107,7 +120,11 @@ Simulation  Pushgateway  Remote Write
 - [x] Add pushgateway mode for basic import
 - [x] Command-line interface with multiple options
 
-### Phase 2: Enhanced Import Capabilities
+### Phase 2: Enhanced Import Capabilities ⚠️ **IN PROGRESS**
+- [x] Implement HTTP server method for historical data files
+- [x] Create TSDB blocks using promtool
+- [x] Add direct-write method for timestamp preservation
+- [ ] ❌ **FAILED**: TSDB block import method (blocks not loaded by Prometheus)
 - [ ] Implement proper remote write protocol support
 - [ ] Add protobuf and snappy compression
 - [ ] Batch processing optimization
@@ -192,6 +209,71 @@ traffic_vehicles_total{direction="right"} 5678 1754207395000
 - Gauge metrics (e.g., `system_status`)
 - Histogram metrics (e.g., `frame_processing_time_seconds`)
 
+## Recent Progress and Findings
+
+### August 3, 2025 - Historical Data Restoration Attempt
+
+#### **Attempted Methods**
+
+1. **✅ HTTP Server Method** - Successfully implemented
+   - Created 1,210 individual metric files with original timestamps
+   - Generated HTTP server to serve historical data
+   - Files properly formatted in Prometheus exposition format
+   - **Status**: Working but requires manual Prometheus configuration
+
+2. **❌ Direct TSDB Block Import** - Failed
+   - Used `promtool tsdb create-blocks-from openmetrics` to create 1,210 TSDB blocks
+   - Successfully copied blocks to Prometheus data directory (Docker volume)
+   - Fixed ownership and permissions (UID 65534)
+   - **Issue**: Prometheus does not load/recognize the imported blocks
+   - **Result**: No historical data queryable despite blocks being present
+
+#### **Technical Details of TSDB Block Failure**
+
+**What Worked:**
+- ✅ `promtool` successfully created TSDB blocks from OpenMetrics data
+- ✅ Blocks copied to correct Prometheus data directory (`prometheus-storage` volume)
+- ✅ Proper file ownership and permissions set
+- ✅ Block metadata shows correct timestamps and metrics
+
+**What Failed:**
+- ❌ Prometheus does not discover or load the imported blocks
+- ❌ Historical data not queryable via Prometheus API
+- ❌ No errors in Prometheus logs about block loading
+- ❌ Grafana dashboard shows no historical data
+
+**Root Cause Analysis:**
+- TSDB block import requires Prometheus to be stopped during import
+- Prometheus may have strict requirements for block consistency and ordering
+- Imported blocks may conflict with existing TSDB structure
+- Time range of imported data (August 2025) may be outside expected ranges
+
+#### **Current Status**
+
+**Data Available:**
+- ✅ Current live traffic data (post-data-loss)
+- ✅ Exported historical data in multiple formats
+- ✅ HTTP server with historical data files ready for import
+
+**Data Missing:**
+- ❌ Historical data in Prometheus TSDB (pre-data-loss)
+- ❌ Historical data visible in Grafana dashboards
+- ❌ Time series continuity across the data loss incident
+
+#### **Lessons Learned**
+
+1. **TSDB Block Import is Unreliable**: Direct manipulation of Prometheus TSDB blocks is complex and error-prone
+2. **Pushgateway Limitations**: Only stores current values, not historical time series
+3. **Timestamp Preservation**: Most import methods lose original timestamps
+4. **Docker Volume Complexity**: Data persistence in containerized environments requires careful volume management
+
+#### **Recommended Next Steps**
+
+1. **Accept Data Loss**: Acknowledge that historical data restoration is not feasible with current tools
+2. **Improve Backup Strategy**: Implement more robust backup mechanisms (remote write, federation)
+3. **Focus on Prevention**: Ensure data persistence is properly configured going forward
+4. **Alternative Approaches**: Consider external time series databases for long-term storage
+
 ## Limitations and Considerations
 
 ## Data Overlap Handling
@@ -249,10 +331,12 @@ python scripts/import_prometheus_data.py --input data.txt --overlap-strategy fai
 
 ### Current Limitations
 1. **Pushgateway Method**: Only preserves latest values, not full time series
-2. **Timestamp Handling**: Historical timestamps may not be preserved in all methods
-3. **Rate Limiting**: Large imports may need throttling
-4. **Memory Usage**: Large files require careful batch processing
-5. **Overlap Detection**: Limited to first 3 metrics to avoid overwhelming Prometheus
+2. **TSDB Block Import**: Blocks created but not loaded by Prometheus (method unreliable)
+3. **Timestamp Handling**: Historical timestamps may not be preserved in all methods
+4. **Rate Limiting**: Large imports may need throttling
+5. **Memory Usage**: Large files require careful batch processing
+6. **Overlap Detection**: Limited to first 3 metrics to avoid overwhelming Prometheus
+7. **Docker Volume Complexity**: TSDB blocks must be in correct Docker volume with proper ownership
 
 ### Best Practices
 1. **Start with Simulation**: Always validate data before importing
@@ -332,9 +416,12 @@ The data import solution provides a comprehensive approach to restoring backed u
 - ✅ Extensible architecture for future enhancements
 
 **Next Steps:**
-1. Test the basic import tool with existing backup data
-2. Set up Pushgateway for production imports
-3. Develop remote write protocol support
-4. Create automated backup/restore workflows
+1. ✅ ~~Test the basic import tool with existing backup data~~ **COMPLETED**
+2. ✅ ~~Set up Pushgateway for production imports~~ **COMPLETED**
+3. ❌ ~~Develop TSDB block import~~ **FAILED - Method unreliable**
+4. [ ] Develop remote write protocol support
+5. [ ] Create automated backup/restore workflows
+6. [ ] Implement alternative backup strategies (federation, remote write)
+7. [ ] Accept current data loss and focus on prevention
 
 This solution addresses the critical gap identified in RFD-006 and provides a foundation for robust data management in the Bay Bridge Traffic monitoring system.
