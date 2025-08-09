@@ -1,0 +1,10 @@
+[myhosts]
+# Replace with your actual server IPs
+192.0.2.1 ansible_python_interpreter=/usr/bin/python3.10
+192.0.2.2 ansible_python_interpreter=/usr/bin/python3.10
+
+# Example with variables
+# server1.example.com ansible_python_interpreter=/usr/bin/python3.10
+# server2.example.com ansible_python_interpreter=/usr/bin/python3.10
+
+# For YAML version, see inventory.yml
