@@ -885,7 +885,7 @@
     }
   ],
   "preload": false,
-  "refresh": "30s",
+  "refresh": "5m",
   "schemaVersion": 41,
   "tags": [
     "traffic",
@@ -897,13 +897,11 @@
     "list": []
   },
   "time": {
-    "from": "now-7d",
+    "from": "now-30m",
     "to": "now"
   },
   "timepicker": {
     "refresh_intervals": [
-      "30s",
-      "1m",
       "5m",
       "15m",
       "30m",
