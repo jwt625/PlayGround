@@ -43,6 +43,35 @@ python motion_detector.py
 - **Nginx Proxy**: http://localhost:8080
 - **Metrics Endpoint**: http://localhost:9091/metrics
 
+### 5. Custom Landing Page
+
+The system includes a custom landing page that embeds the Grafana dashboard with branding and contact information.
+
+#### Current Setup (Development)
+```bash
+# Serve the custom landing page locally for testing
+python test-minimal.py
+```
+- **Landing Page**: http://localhost:8083
+- **Features**: Custom header, embedded Grafana dashboard in kiosk mode, footer with contact info
+- **Dashboard**: Embedded from http://localhost:3000 via iframe
+
+#### Production Setup (via Nginx + Tunnel)
+The landing page will be served through nginx and the Cloudflare tunnel:
+```bash
+# Deploy nginx configuration (when ready)
+sudo cp /tmp/bay-bridge-traffic-clean.conf /opt/homebrew/etc/nginx/servers/bay-bridge-traffic.conf
+sudo nginx -s reload
+```
+- **Public Access**: https://bay-bridge-traffic.com (custom landing page)
+- **Dashboard Path**: https://bay-bridge-traffic.com/grafana/ (proxied to local Grafana)
+
+#### Landing Page Components
+- **Header**: Project title and description
+- **Dashboard**: Grafana dashboard embedded in kiosk mode (no UI chrome)
+- **Footer**: Technology stack, disclaimer, and contact information
+- **Responsive**: Works on desktop and mobile devices
+
 ## Setup
 
 This project uses `uv` for dependency management:
@@ -367,18 +396,27 @@ GRAFANA_INSTANCE_URL=https://jwt625.grafana.net
 
 ### Public Dashboard Setup
 
-The system uses a self-hosted Grafana instance with public access via Cloudflare Tunnel:
+The system uses a custom landing page with embedded Grafana dashboard, served via Cloudflare Tunnel:
 
-1. **Local Grafana** - Runs in Docker with anonymous access enabled
-2. **Nginx Reverse Proxy** - Provides clean URL mapping
-3. **Cloudflare Tunnel** - Secures public access without port forwarding
-4. **Custom Domain** - https://bay-bridge-traffic.com
+1. **Custom Landing Page** - HTML page with branding and embedded dashboard
+2. **Local Grafana** - Runs in Docker with anonymous access and iframe embedding enabled
+3. **Nginx Reverse Proxy** - Serves landing page at root, proxies Grafana under `/grafana/`
+4. **Cloudflare Tunnel** - Secures public access without port forwarding
+5. **Custom Domain** - https://bay-bridge-traffic.com
+
+**Architecture:**
+```
+Internet → Cloudflare Tunnel → Nginx → Custom Landing Page
+                                    ↓
+                               iframe → Local Grafana (localhost:3000)
+```
 
 **Setup Steps:**
 1. **Start Services**: `./start-bay-bridge-services.sh`
 2. **Setup Tunnel**: `./setup-cloudflare-tunnel.sh` (one-time)
-3. **Start Tunnel**: `cloudflared tunnel run grafana-local`
-4. **Access Dashboard**: https://bay-bridge-traffic.com
+3. **Deploy Landing Page**: Deploy nginx config (see section 5 above)
+4. **Start Tunnel**: `cloudflared tunnel run grafana-local`
+5. **Access Dashboard**: https://bay-bridge-traffic.com
 
 ### Optional: Grafana Cloud Integration
 
