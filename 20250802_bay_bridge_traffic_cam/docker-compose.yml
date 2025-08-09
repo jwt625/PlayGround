@@ -47,10 +47,21 @@ services:
       - GF_SERVER_PROTOCOL=http
       - GF_SERVER_HTTP_ADDR=0.0.0.0
       - GF_SERVER_HTTP_PORT=3000
+      # IFRAME EMBEDDING SETTINGS
+      - GF_SECURITY_ALLOW_EMBEDDING=true
+      - GF_SECURITY_X_FRAME_OPTIONS=ALLOWALL
+      - GF_SECURITY_X_CONTENT_TYPE_OPTIONS=false
+      - GF_SECURITY_X_XSS_PROTECTION=false
+      - GF_SECURITY_CONTENT_SECURITY_POLICY=false
+      - GF_SECURITY_STRICT_TRANSPORT_SECURITY=false
+      # Additional CORS settings for iframe
+      - GF_SERVER_ENABLE_CORS=true
+      - GF_SERVER_CORS_ALLOW_ORIGIN=*
     volumes:
       - grafana-storage:/var/lib/grafana
       - ./grafana/provisioning:/etc/grafana/provisioning
       - ./grafana/dashboards:/var/lib/grafana/dashboards
+      - ./grafana/grafana.ini:/etc/grafana/grafana.ini
     restart: unless-stopped
     networks:
       - monitoring
