@@ -66,6 +66,10 @@ services:
       # Additional CORS settings for iframe
       - GF_SERVER_ENABLE_CORS=true
       - GF_SERVER_CORS_ALLOW_ORIGIN=*
+      # Disable security features that might block requests
+      - GF_SECURITY_DISABLE_INITIAL_ADMIN_CREATION=true
+      - GF_SECURITY_DISABLE_GRAVATAR=true
+      - GF_FEATURE_TOGGLES_ENABLE=publicDashboards
     volumes:
       - grafana-storage:/var/lib/grafana
       - ./grafana/provisioning:/etc/grafana/provisioning
