@@ -9,15 +9,17 @@
         .header { background: #1f1f1f; color: white; padding: 20px; }
         .dashboard-container { height: calc(100vh - 200px); }
         .footer { background: #1f1f1f; color: white; padding: 20px; }
-        .footer a { color: #4da6ff; text-decoration: none; }
-        .footer a:hover { color: #66b3ff; text-decoration: underline; }
+        /* Better link colors for dark backgrounds */
+        .header a, .footer a { color: #66b3ff; text-decoration: none; }
+        .header a:hover, .footer a:hover { color: #80c7ff; text-decoration: underline; }
+        .header a:visited, .footer a:visited { color: #99d6ff; }
         iframe { width: 100%; height: 100%; border: none; }
     </style>
 </head>
 <body>
     <div class="header">
         <h1>Bay Bridge Traffic</h1>
-        <p>Real-time bay bridge traffic monitoring with a crap old iphone. Created by <a href="https://outside5sigma.com/" target="_blank">Wentao</a>.</p>
+        <p>Real-time bay bridge traffic monitoring with a crap old iphone.</p>
     </div>
     
     <div class="dashboard-container">
@@ -27,6 +29,7 @@
     <div class="footer">
         <p><strong>Disclaimer:</strong> This is a personal project for educational purposes.</p>
         <p><strong>Technology:</strong> OpenCV, Python, Prometheus, Grafana, Cloudflare Tunnel</p>
+        <p>Created by <a href="https://outside5sigma.com/" target="_blank">Wentao</a></p>
     </div>
 </body>
 </html>
