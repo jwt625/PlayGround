@@ -85,7 +85,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "sum(rate(traffic_vehicles_total[5m])) * 60",
+          "expr": "sum(rate(traffic_vehicles_total{app=\"bay-bridge-traffic-detector\"}[5m])) * 60",
           "legendFormat": "Total Vehicles/min",
           "range": true,
           "refId": "A"
@@ -167,7 +167,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "system_status",
+          "expr": "system_status{app=\"bay-bridge-traffic-detector\"}",
           "legendFormat": "{{component}}",
           "range": true,
           "refId": "A"
