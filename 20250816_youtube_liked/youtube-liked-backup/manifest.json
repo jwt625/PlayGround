@@ -1,0 +1,59 @@
+{
+  "manifest_version": 3,
+  "name": "YouTube Liked Videos Backup",
+  "version": "1.0.0",
+  "description": "Backup metadata from YouTube liked videos with automatic removal capability to circumvent the 5000 video limit",
+  "author": "Wentao Jiang",
+  
+  "permissions": [
+    "storage",
+    "downloads", 
+    "tabs",
+    "activeTab",
+    "scripting"
+  ],
+  
+  "host_permissions": [
+    "https://www.youtube.com/*",
+    "https://i.ytimg.com/*"
+  ],
+  
+  "optional_permissions": [
+    "unlimitedStorage"
+  ],
+  
+  "background": {
+    "service_worker": "background/background.js"
+  },
+  
+  "content_scripts": [
+    {
+      "matches": ["https://www.youtube.com/*"],
+      "js": [
+        "utils/constants.js",
+        "utils/data-schemas.js",
+        "utils/youtube-api.js",
+        "utils/data-validator.js",
+        "content/video-scraper.js",
+        "content/pagination-handler.js",
+        "content/removal-handler.js",
+        "content/content.js"
+      ],
+      "run_at": "document_idle"
+    }
+  ],
+  
+  "action": {
+    "default_popup": "popup/popup.html",
+    "default_title": "YouTube Liked Videos Backup"
+  },
+
+  "options_page": "options/options.html",
+  
+  "web_accessible_resources": [
+    {
+      "resources": ["content/*", "utils/*"],
+      "matches": ["https://www.youtube.com/*"]
+    }
+  ]
+}

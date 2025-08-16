@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YouTube Liked Videos Backup</title>
+    <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <h1 class="title">YouTube Backup</h1>
+            <div class="status-indicator" id="statusIndicator">
+                <span class="status-dot" id="statusDot"></span>
+                <span class="status-text" id="statusText">Ready</span>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Page Detection -->
+            <div class="page-info" id="pageInfo">
+                <div class="page-status" id="pageStatus">
+                    <span class="icon" id="pageIcon">📍</span>
+                    <span class="text" id="pageText">Navigate to YouTube Liked Videos</span>
+                </div>
+                <div class="video-count" id="videoCount" style="display: none;">
+                    <span class="count" id="totalVideos">0</span>
+                    <span class="label">videos found</span>
+                </div>
+            </div>
+
+            <!-- Backup Controls -->
+            <div class="backup-controls" id="backupControls">
+                <button class="btn btn-primary" id="startBackupBtn" disabled>
+                    <span class="btn-icon">▶️</span>
+                    <span class="btn-text">Start Backup</span>
+                </button>
+                
+                <button class="btn btn-secondary" id="pauseBackupBtn" style="display: none;">
+                    <span class="btn-icon">⏸️</span>
+                    <span class="btn-text">Pause</span>
+                </button>
+                
+                <button class="btn btn-danger" id="stopBackupBtn" style="display: none;">
+                    <span class="btn-icon">⏹️</span>
+                    <span class="btn-text">Stop</span>
+                </button>
+            </div>
+
+            <!-- Progress Section -->
+            <div class="progress-section" id="progressSection" style="display: none;">
+                <div class="progress-header">
+                    <span class="progress-title">Backup Progress</span>
+                    <span class="progress-percentage" id="progressPercentage">0%</span>
+                </div>
+                
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+                
+                <div class="progress-details">
+                    <div class="progress-item">
+                        <span class="label">Processed:</span>
+                        <span class="value" id="processedCount">0</span>
+                    </div>
+                    <div class="progress-item">
+                        <span class="label">Batch:</span>
+                        <span class="value" id="batchCount">0</span>
+                    </div>
+                    <div class="progress-item">
+                        <span class="label">Errors:</span>
+                        <span class="value" id="errorCount">0</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Statistics -->
+            <div class="stats-section">
+                <h3 class="section-title">Statistics</h3>
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <span class="stat-value" id="totalBackedUp">0</span>
+                        <span class="stat-label">Total Backed Up</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-value" id="lastBackupDate">Never</span>
+                        <span class="stat-label">Last Backup</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-value" id="storageUsed">0%</span>
+                        <span class="stat-label">Storage Used</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="actions-section">
+                <h3 class="section-title">Quick Actions</h3>
+                <div class="action-buttons">
+                    <button class="btn btn-outline" id="exportJsonBtn">
+                        <span class="btn-icon">📄</span>
+                        <span class="btn-text">Export JSON</span>
+                    </button>
+                    
+                    <button class="btn btn-outline" id="exportCsvBtn">
+                        <span class="btn-icon">📊</span>
+                        <span class="btn-text">Export CSV</span>
+                    </button>
+                    
+                    <button class="btn btn-outline" id="settingsBtn">
+                        <span class="btn-icon">⚙️</span>
+                        <span class="btn-text">Settings</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Error Messages -->
+            <div class="error-section" id="errorSection" style="display: none;">
+                <div class="error-message" id="errorMessage">
+                    <span class="error-icon">⚠️</span>
+                    <span class="error-text" id="errorText"></span>
+                </div>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer-info">
+                <span class="version">v1.0.0</span>
+                <span class="separator">•</span>
+                <a href="#" class="help-link" id="helpLink">Help</a>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay" style="display: none;">
+        <div class="loading-spinner"></div>
+        <div class="loading-text">Loading...</div>
+    </div>
+
+    <script src="popup.js"></script>
+</body>
+</html>

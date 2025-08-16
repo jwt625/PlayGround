@@ -1,0 +1,19 @@
+<svg width="128" height="128" viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="128" height="128" rx="20" fill="#ff0000"/>
+  
+  <!-- YouTube Play Button -->
+  <polygon points="45,35 45,93 85,64" fill="white"/>
+  
+  <!-- Backup/Download Arrow -->
+  <g transform="translate(85, 85)">
+    <rect x="-15" y="-15" width="30" height="30" rx="15" fill="white"/>
+    <polygon points="-8,-5 0,5 8,-5" fill="#ff0000"/>
+    <rect x="-2" y="-10" width="4" height="10" fill="#ff0000"/>
+  </g>
+  
+  <!-- Small indicator dots -->
+  <circle cx="25" cy="25" r="3" fill="white" opacity="0.8"/>
+  <circle cx="35" cy="25" r="3" fill="white" opacity="0.6"/>
+  <circle cx="45" cy="25" r="3" fill="white" opacity="0.4"/>
+</svg>
