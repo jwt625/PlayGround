@@ -446,15 +446,55 @@ function scrapeVideoInfo() {
       }
     }
 
-    // Extract video description from the description expander
-    const descriptionExpander = watchMetadata.querySelector('ytd-text-inline-expander');
-    if (descriptionExpander) {
-      // Try to get the full description from the attributed string
-      const attributedDesc = descriptionExpander.querySelector('yt-attributed-string');
-      if (attributedDesc && attributedDesc.textContent) {
-        videoInfo.description = attributedDesc.textContent.trim();
-        console.log('Found description length:', videoInfo.description.length);
+    // Extract video description from multiple possible locations within ytd-watch-metadata
+    let descriptionFound = false;
+
+    // Method 1: Try the expanded description first (most complete)
+    const expandedDesc = watchMetadata.querySelector('ytd-text-inline-expander #expanded yt-attributed-string');
+    if (expandedDesc && expandedDesc.textContent && expandedDesc.textContent.trim()) {
+      videoInfo.description = expandedDesc.textContent.trim();
+      videoInfo.descriptionSource = 'expanded';
+      descriptionFound = true;
+      console.log('Found expanded description length:', videoInfo.description.length);
+    }
+
+    // Method 2: Try the snippet description (visible portion)
+    if (!descriptionFound) {
+      const snippetDesc = watchMetadata.querySelector('ytd-text-inline-expander #attributed-snippet-text');
+      if (snippetDesc && snippetDesc.textContent && snippetDesc.textContent.trim()) {
+        videoInfo.description = snippetDesc.textContent.trim();
+        videoInfo.descriptionSource = 'snippet';
+        descriptionFound = true;
+        console.log('Found snippet description length:', videoInfo.description.length);
       }
+    }
+
+    // Method 3: Try the description text container
+    if (!descriptionFound) {
+      const descContainer = watchMetadata.querySelector('#description-text-container #attributed-description-text');
+      if (descContainer && descContainer.textContent && descContainer.textContent.trim()) {
+        videoInfo.description = descContainer.textContent.trim();
+        videoInfo.descriptionSource = 'container';
+        descriptionFound = true;
+        console.log('Found container description length:', videoInfo.description.length);
+      }
+    }
+
+    // Method 4: Fallback to any attributed string in the description area
+    if (!descriptionFound) {
+      const fallbackDesc = watchMetadata.querySelector('#description yt-attributed-string, ytd-text-inline-expander yt-attributed-string');
+      if (fallbackDesc && fallbackDesc.textContent && fallbackDesc.textContent.trim()) {
+        videoInfo.description = fallbackDesc.textContent.trim();
+        videoInfo.descriptionSource = 'fallback';
+        descriptionFound = true;
+        console.log('Found fallback description length:', videoInfo.description.length);
+      }
+    }
+
+    if (!descriptionFound) {
+      console.log('⚠️ No description found');
+      videoInfo.description = '';
+      videoInfo.descriptionSource = 'none';
     }
 
     // Extract video duration from the player
