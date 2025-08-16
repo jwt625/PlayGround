@@ -101,17 +101,30 @@ class YouTubeBackupPopup {
 
         this.updatePageStatus(isLikedVideosPage, tab.url);
 
+        // Always try to test content script communication on YouTube
+        console.log('🧪 Testing content script communication...');
+        try {
+          const response = await this.sendMessageToTab(tab.id, { type: 'test' }, 2000);
+          console.log('🧪 Test response:', response);
+        } catch (error) {
+          console.log('🧪 Test failed:', error.message);
+        }
+
         if (isLikedVideosPage) {
+          console.log('✅ On liked videos page, trying to get status from content script');
           // Try to get page info from content script (with timeout)
           try {
             const response = await this.sendMessageToTab(tab.id, { type: 'getStatus' }, 2000);
+            console.log('📊 Got status response:', response);
             if (response && response.totalVideosOnPage) {
               this.updateVideoCount(response.totalVideosOnPage);
             }
           } catch (error) {
             // Content script might not be loaded yet, that's okay
-            console.log('Content script not ready, will retry later');
+            console.log('⚠️ Content script not ready, will retry later:', error.message);
           }
+        } else {
+          console.log('❌ Not on liked videos page, skipping content script communication');
         }
       } else {
         // No tab info available
@@ -317,31 +330,51 @@ class YouTubeBackupPopup {
    */
   async startBackup() {
     try {
+      console.log('🚀 startBackup called');
       this.showLoading(true);
-      
+
       // Get current tab
+      console.log('🔍 Getting current tab...');
       const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
-      
+      console.log('🔍 Current tab:', tab);
+
       if (!tab || !tab.url.includes('youtube.com')) {
+        console.log('❌ Not on YouTube page');
         throw new Error('Please navigate to YouTube liked videos page');
       }
-      
-      // Send start backup message to content script
-      const response = await chrome.tabs.sendMessage(tab.id, {
+
+      // Check if it's the liked videos page specifically
+      const isLikedVideosPage = tab.url.includes('/playlist') && tab.url.includes('list=LL');
+      console.log('🔍 Is liked videos page:', isLikedVideosPage);
+      console.log('🔍 Current URL:', tab.url);
+
+      if (!isLikedVideosPage) {
+        console.log('❌ Not on liked videos page specifically');
+        throw new Error('Please navigate to YouTube liked videos page (youtube.com/playlist?list=LL)');
+      }
+
+      console.log('📤 Sending startBackup message to content script...');
+      // Send start backup message to content script with timeout
+      const response = await this.sendMessageToTab(tab.id, {
         type: 'startBackup',
         data: {}
-      });
-      
+      }, 5000);
+
+      console.log('📥 Received response:', response);
+
       if (response && response.success) {
+        console.log('✅ Backup started successfully');
         this.isBackupActive = true;
         this.showProgress(true);
         this.updateBackupControls('scraping', { active: true });
       } else {
+        console.log('❌ Backup failed:', response);
         throw new Error(response?.error || 'Failed to start backup');
       }
-      
+
     } catch (error) {
-      console.error('Failed to start backup:', error);
+      console.error('❌ Failed to start backup:', error);
+      console.error('❌ Error stack:', error.stack);
       this.showError(error.message);
     } finally {
       this.showLoading(false);
@@ -477,16 +510,26 @@ class YouTubeBackupPopup {
    * @returns {Promise<Object>} Response from content script
    */
   async sendMessageToTab(tabId, message, timeout = 3000) {
+    console.log('📤 Popup sending message to tab:', tabId);
+    console.log('📤 Message:', message);
+    console.log('📤 Timeout:', timeout);
+
     return new Promise((resolve, reject) => {
       const timeoutId = setTimeout(() => {
+        console.log('⏰ Tab message timeout after', timeout, 'ms');
         reject(new Error('Tab message timeout'));
       }, timeout);
 
       chrome.tabs.sendMessage(tabId, message, (response) => {
         clearTimeout(timeoutId);
+        console.log('📥 Received response from tab:', response);
+        console.log('📥 Chrome runtime last error:', chrome.runtime.lastError);
+
         if (chrome.runtime.lastError) {
+          console.error('❌ Chrome runtime error:', chrome.runtime.lastError.message);
           reject(new Error(chrome.runtime.lastError.message));
         } else {
+          console.log('✅ Message sent successfully, response:', response);
           resolve(response);
         }
       });

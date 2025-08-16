@@ -130,7 +130,16 @@ class YouTubeBackupBackground {
           const settings = await this.loadSettings();
           sendResponse(settings);
           break;
-          
+
+        case 'backupStatus':
+          const backupStatus = {
+            isActive: this.extensionState === 'scraping',
+            currentSession: this.currentSession,
+            extensionState: this.extensionState
+          };
+          sendResponse(backupStatus);
+          break;
+
         default:
           console.warn('Unknown message type:', message.type);
           sendResponse({ success: false, error: 'Unknown message type' });
@@ -152,7 +161,7 @@ class YouTubeBackupBackground {
     }
     
     // Create new session
-    this.currentSession = DataSchemas.createBackupSession({
+    this.currentSession = (self.DataSchemas || DataSchemas).createBackupSession({
       settings: await this.storageManager.getSettings()
     });
     

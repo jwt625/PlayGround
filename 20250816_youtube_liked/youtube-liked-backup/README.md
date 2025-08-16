@@ -2,6 +2,22 @@
 
 A Chrome extension to backup metadata from YouTube liked videos with automatic removal capability to circumvent the 5000 video limit.
 
+## 🚀 Quick Start & Fix Verification
+
+### Installation
+1. Open Chrome and navigate to `chrome://extensions/`
+2. Enable "Developer mode" (top-right toggle)
+3. Click "Load unpacked" and select the `youtube-liked-backup` folder
+4. Extension should load without errors ✅
+
+### Testing the Connection Fix
+The "Could not establish connection. Receiving end does not exist" error has been fixed:
+
+1. **Load the extension** - No "window is not defined" errors should appear
+2. **Navigate to any YouTube page** (not necessarily liked videos)
+3. **Click the extension icon** - Popup should open without connection errors ✅
+4. **Navigate to YouTube liked videos** (`youtube.com/playlist?list=LL`) for full functionality
+
 ## Features
 
 - **Comprehensive Backup**: Scrapes complete metadata including titles, channels, durations, thumbnails, and more
@@ -10,14 +26,6 @@ A Chrome extension to backup metadata from YouTube liked videos with automatic r
 - **Multiple Export Formats**: Export data as JSON or CSV
 - **Rate Limiting**: Respects YouTube's limits to avoid detection
 - **Progress Tracking**: Real-time progress indicators and error reporting
-
-## Installation & Usage
-
-### Installation
-1. Open Chrome and navigate to `chrome://extensions/`
-2. Enable "Developer mode" (top-right toggle)
-3. Click "Load unpacked" and select the `youtube-liked-backup` folder
-4. Extension should load without errors
 
 ### Usage
 1. Navigate to YouTube liked videos: `https://www.youtube.com/playlist?list=LL`

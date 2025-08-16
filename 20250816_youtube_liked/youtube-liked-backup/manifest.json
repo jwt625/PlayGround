@@ -10,12 +10,20 @@
     "downloads",
     "tabs",
     "activeTab",
-    "scripting"
+    "scripting",
+    "unlimitedStorage",
+    "cookies"
   ],
 
   "host_permissions": [
     "https://www.youtube.com/*",
-    "https://i.ytimg.com/*"
+    "https://i.ytimg.com/*",
+    "https://*.googlevideo.com/*",
+    "https://*.youtube.com/*"
+  ],
+
+  "optional_permissions": [
+    "background"
   ],
   
   "background": {
@@ -48,8 +56,12 @@
   
   "web_accessible_resources": [
     {
-      "resources": ["content/*", "utils/*"],
+      "resources": ["content/*", "utils/*", "icons/*"],
       "matches": ["https://www.youtube.com/*"]
     }
-  ]
+  ],
+
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self'"
+  }
 }

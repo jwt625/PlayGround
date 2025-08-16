@@ -60,8 +60,12 @@ class PaginationHandler {
         await this.waitForContentLoad();
         
         // Scrape new videos
+        console.log('🔄 Scraping current batch of videos...');
         currentVideos = await this.videoScraper.scrapeVisibleVideos();
+        console.log(`🔄 Found ${currentVideos.length} total videos on page`);
+
         newVideos = this.filterNewVideos(currentVideos);
+        console.log(`🔄 Found ${newVideos.length} new videos (${this.processedVideoIds.size} already processed)`);
         
         if (newVideos.length > 0) {
           allVideos.push(...newVideos);

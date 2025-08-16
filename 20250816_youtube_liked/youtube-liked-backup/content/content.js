@@ -23,21 +23,26 @@ class YouTubeBackupContent {
    * Initialize content script
    */
   async init() {
-    // Only run on YouTube liked videos page
-    if (!this.isLikedVideosPage()) {
-      return;
-    }
-    
-    console.log('YouTube Liked Videos Backup Extension loaded');
-    
-    // Set up message listeners
+    console.log('YouTube Liked Videos Backup Extension content script loaded on:', window.location.href);
+
+    // Always set up message listeners so popup can communicate
     this.setupMessageListeners();
-    
-    // Wait for page to fully load
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', () => this.onPageReady());
+    console.log('Message listeners set up');
+
+    // Only initialize backup functionality on liked videos page
+    if (this.isLikedVideosPage()) {
+      console.log('On YouTube liked videos page - initializing backup functionality');
+
+      // Wait for page to fully load
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', () => this.onPageReady());
+      } else {
+        this.onPageReady();
+      }
     } else {
-      this.onPageReady();
+      console.log('Not on YouTube liked videos page - backup functionality disabled');
+      console.log('Current URL:', window.location.href);
+      console.log('Expected URL pattern: youtube.com/playlist?list=LL');
     }
   }
 
@@ -60,10 +65,14 @@ class YouTubeBackupContent {
    * Set up message listeners for communication with background script
    */
   setupMessageListeners() {
+    console.log('🔧 Setting up message listeners in content script');
     chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+      console.log('📨 Content script received message:', message);
+      console.log('📨 Message sender:', sender);
       this.handleMessage(message, sender, sendResponse);
       return true; // Keep message channel open for async responses
     });
+    console.log('✅ Message listeners set up successfully');
   }
 
   /**
@@ -74,37 +83,100 @@ class YouTubeBackupContent {
    */
   async handleMessage(message, sender, sendResponse) {
     try {
+      console.log('🔧 handleMessage called with:', message.type);
+      console.log('🔧 Full message:', message);
+      console.log('🔧 Sender:', sender);
+      console.log('🔧 Current page check - isLikedVideosPage():', this.isLikedVideosPage());
+
+      // Use direct string comparison as fallback if Constants not available
+      const messageTypes = window.Constants?.MESSAGE_TYPES || {
+        START_BACKUP: 'startBackup',
+        PAUSE_BACKUP: 'pauseBackup',
+        STOP_BACKUP: 'stopBackup',
+        GET_STATUS: 'getStatus',
+        SETTINGS_UPDATED: 'settingsUpdated'
+      };
+
+      console.log('🔧 Available message types:', messageTypes);
+      console.log('🔧 Checking message type:', message.type);
+
       switch (message.type) {
-        case window.Constants?.MESSAGE_TYPES?.START_BACKUP:
-          await this.startBackup(message.data);
-          sendResponse({ success: true });
+        case messageTypes.START_BACKUP:
+        case 'startBackup': // Direct fallback
+          console.log('🚀 START_BACKUP message received');
+          if (!this.isLikedVideosPage()) {
+            console.log('❌ Not on liked videos page, sending error response');
+            sendResponse({
+              success: false,
+              error: 'Please navigate to YouTube liked videos page (youtube.com/playlist?list=LL)'
+            });
+          } else {
+            console.log('✅ On liked videos page, starting backup');
+            try {
+              // First notify background script to start session
+              console.log('📤 Notifying background script to start backup session...');
+              const sessionResult = await this.sendMessage({
+                type: 'startBackup',
+                data: message.data
+              });
+
+              if (!sessionResult.success) {
+                throw new Error(sessionResult.error || 'Failed to start backup session');
+              }
+
+              console.log('✅ Background session started, beginning content scraping...');
+              // Now start the actual scraping process
+              await this.startBackup(message.data);
+              console.log('✅ Backup started successfully, sending success response');
+              sendResponse({ success: true });
+            } catch (error) {
+              console.error('❌ Failed to start backup:', error);
+              sendResponse({
+                success: false,
+                error: error.message
+              });
+            }
+          }
           break;
-          
-        case window.Constants?.MESSAGE_TYPES?.PAUSE_BACKUP:
+
+        case messageTypes.PAUSE_BACKUP:
+        case 'pauseBackup': // Direct fallback
+          console.log('⏸️ PAUSE_BACKUP message received');
           await this.pauseBackup();
           sendResponse({ success: true });
           break;
-          
-        case window.Constants?.MESSAGE_TYPES?.STOP_BACKUP:
+
+        case messageTypes.STOP_BACKUP:
+        case 'stopBackup': // Direct fallback
+          console.log('⏹️ STOP_BACKUP message received');
           await this.stopBackup();
           sendResponse({ success: true });
           break;
-          
-        case window.Constants?.MESSAGE_TYPES?.GET_STATUS:
-          sendResponse(this.getBackupStatus());
+
+        case messageTypes.GET_STATUS:
+        case 'getStatus': // Direct fallback
+          console.log('📊 GET_STATUS message received');
+          const status = this.getBackupStatus();
+          console.log('📊 Sending status response:', status);
+          sendResponse(status);
           break;
-          
-        case window.Constants?.MESSAGE_TYPES?.SETTINGS_UPDATED:
+
+        case messageTypes.SETTINGS_UPDATED:
+        case 'settingsUpdated': // Direct fallback
+          console.log('⚙️ SETTINGS_UPDATED message received');
           await this.updateSettings(message.data);
           sendResponse({ success: true });
           break;
-          
+
         default:
-          console.warn('Unknown message type:', message.type);
+          console.warn('❓ Unknown message type:', message.type);
+          console.warn('❓ Available types:', Object.values(messageTypes));
           sendResponse({ success: false, error: 'Unknown message type' });
       }
     } catch (error) {
-      console.error('Error handling message:', error);
+      console.error('❌ Error handling message:', error);
+      console.error('❌ Error stack:', error.stack);
+      console.error('❌ Message that caused error:', message);
       sendResponse({ success: false, error: error.message });
     }
   }
@@ -349,43 +421,67 @@ class YouTubeBackupContent {
    * Cleanup when page unloads
    */
   cleanup() {
-    this.paginationHandler.removeScrollListener();
+    console.log('🧹 YouTubeBackupContent cleanup called');
+    if (this.paginationHandler && this.paginationHandler.removeScrollListener) {
+      this.paginationHandler.removeScrollListener();
+    }
     this.isBackupActive = false;
+    console.log('🧹 Cleanup completed');
   }
 }
 
 // Initialize content script when DOM is ready
 let youtubeBackupContent = null;
 
+console.log('🔧 Content script file loaded, DOM state:', document.readyState);
+console.log('🔧 Current URL:', window.location.href);
+console.log('🔧 Hostname:', window.location.hostname);
+
 if (document.readyState === 'loading') {
+  console.log('🔧 DOM still loading, waiting for DOMContentLoaded');
   document.addEventListener('DOMContentLoaded', initializeContent);
 } else {
+  console.log('🔧 DOM ready, initializing immediately');
   initializeContent();
 }
 
 function initializeContent() {
-  // Only initialize on YouTube liked videos page
-  if (window.location.hostname === 'www.youtube.com' && 
-      (window.location.pathname.includes('/playlist') && 
-       window.location.search.includes('list=LL'))) {
+  console.log('🔧 initializeContent called');
+  console.log('🔧 Current hostname:', window.location.hostname);
+  console.log('🔧 Current pathname:', window.location.pathname);
+  console.log('🔧 Current search:', window.location.search);
+
+  // Always initialize on YouTube pages to handle popup communication
+  if (window.location.hostname === 'www.youtube.com') {
+    console.log('✅ On YouTube, creating YouTubeBackupContent instance');
     youtubeBackupContent = new YouTubeBackupContent();
+    console.log('✅ YouTubeBackupContent instance created:', !!youtubeBackupContent);
+  } else {
+    console.log('❌ Not on YouTube, skipping initialization');
   }
 }
 
 // Handle page navigation (YouTube is a SPA)
 let lastUrl = location.href;
+console.log('🔧 Setting up navigation observer, initial URL:', lastUrl);
+
 new MutationObserver(() => {
   const url = location.href;
   if (url !== lastUrl) {
+    console.log('🔄 URL changed from:', lastUrl, 'to:', url);
     lastUrl = url;
-    
+
     // Cleanup previous instance
     if (youtubeBackupContent) {
-      youtubeBackupContent.cleanup();
+      console.log('🧹 Cleaning up previous content script instance');
+      if (youtubeBackupContent.cleanup) {
+        youtubeBackupContent.cleanup();
+      }
       youtubeBackupContent = null;
     }
-    
-    // Initialize new instance if on liked videos page
+
+    // Initialize new instance
+    console.log('🔄 Reinitializing content script after navigation');
     setTimeout(initializeContent, 1000);
   }
 }).observe(document, { subtree: true, childList: true });

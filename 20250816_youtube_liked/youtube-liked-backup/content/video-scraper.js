@@ -37,14 +37,38 @@ class VideoScraper {
    * @returns {Array<Element>} Array of video container elements
    */
   getVideoElements() {
+    console.log('🔍 Looking for video elements...');
+    console.log('🔍 Primary selector:', this.selectors.VIDEO_CONTAINER);
+    console.log('🔍 Alt selector:', this.selectors.VIDEO_CONTAINER_ALT);
+
     // Try primary selector first
     let elements = document.querySelectorAll(this.selectors.VIDEO_CONTAINER);
-    
+    console.log('🔍 Found', elements.length, 'elements with primary selector');
+
     // Fallback to alternative selector
     if (elements.length === 0) {
       elements = document.querySelectorAll(this.selectors.VIDEO_CONTAINER_ALT);
+      console.log('🔍 Found', elements.length, 'elements with alt selector');
     }
-    
+
+    // Debug: try some other common selectors
+    if (elements.length === 0) {
+      const debugSelectors = [
+        'ytd-playlist-video-renderer',
+        'ytd-grid-video-renderer',
+        '[data-video-id]',
+        'ytd-video-renderer',
+        '.ytd-playlist-video-renderer',
+        '.ytd-grid-video-renderer'
+      ];
+
+      console.log('🔍 No videos found, trying debug selectors...');
+      debugSelectors.forEach(selector => {
+        const debugElements = document.querySelectorAll(selector);
+        console.log(`🔍 Debug selector "${selector}": ${debugElements.length} elements`);
+      });
+    }
+
     return Array.from(elements);
   }
 
