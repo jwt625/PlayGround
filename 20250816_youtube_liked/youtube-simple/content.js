@@ -3,7 +3,7 @@ console.log('YouTube Simple Extension content script loaded');
 // Listen for messages from popup
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   console.log('Content script received message:', message);
-  
+
   if (message.type === 'getVideoTitles') {
     try {
       const videos = getVideoTitles();
@@ -13,9 +13,23 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       console.error('Error getting video titles:', error);
       sendResponse({ success: false, error: error.message });
     }
+    return false; // Synchronous response
+  } else if (message.type === 'scrollToBottom') {
+    console.log('Scrolling to bottom of page...');
+
+    try {
+      // Simple scroll to bottom
+      window.scrollTo(0, document.body.scrollHeight);
+      console.log('Scrolled to bottom successfully');
+      sendResponse({ success: true });
+    } catch (error) {
+      console.error('Error scrolling:', error);
+      sendResponse({ success: false, error: error.message });
+    }
+    return false; // Synchronous response
   }
-  
-  return true; // Keep message channel open for async response
+
+  return false; // Default to synchronous
 });
 
 function getVideoTitles() {
@@ -135,7 +149,9 @@ function extractVideoData(element) {
 
 function extractVideoId(url) {
   if (!url) return null;
-  
+
   const match = url.match(/[?&]v=([^&]+)/);
   return match ? match[1] : null;
 }
+
+

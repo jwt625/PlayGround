@@ -28,6 +28,15 @@
       background: #ccc;
       cursor: not-allowed;
     }
+
+    #exportJson {
+      background: #28a745;
+      margin-top: 10px;
+    }
+
+    #exportJson:hover:not(:disabled) {
+      background: #218838;
+    }
     
     #status {
       margin-bottom: 15px;
@@ -84,6 +93,8 @@
   <h3>YouTube Video Titles</h3>
   
   <button id="grabTitles">Grab Video Titles</button>
+  <button id="scrollDown">Scroll to Bottom</button>
+  <button id="exportJson" disabled>Export JSON</button>
   
   <div id="status" style="display: none;"></div>
   
