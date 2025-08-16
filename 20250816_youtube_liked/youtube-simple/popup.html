@@ -46,6 +46,15 @@
     #exportJson:hover:not(:disabled) {
       background: #218838;
     }
+
+    #scrapeVideo {
+      background: #007bff;
+      margin-top: 10px;
+    }
+
+    #scrapeVideo:hover:not(:disabled) {
+      background: #0056b3;
+    }
     
     #status {
       margin-bottom: 15px;
@@ -96,18 +105,49 @@
     .video-channel {
       color: #666;
     }
+
+    #scrapedData {
+      margin-top: 15px;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      background: #f8f9fa;
+      font-family: monospace;
+      font-size: 12px;
+      max-height: 200px;
+      overflow-y: auto;
+      white-space: pre-wrap;
+      word-break: break-all;
+      cursor: pointer;
+      display: none;
+    }
+
+    #scrapedData:hover {
+      background: #e9ecef;
+    }
+
+    .copy-hint {
+      font-size: 10px;
+      color: #666;
+      margin-top: 5px;
+      text-align: center;
+    }
   </style>
 </head>
 <body>
-  <h3>YouTube Video Titles</h3>
+  <h3>YouTube Video Manager</h3>
   
   <button id="grabTitles">Grab Video Titles</button>
   <button id="scrollDown">Scroll to Bottom</button>
   <button id="removeTop">Remove Top Video</button>
+  <button id="scrapeVideo">Scrape Video Info</button>
   <button id="exportJson" disabled>Export JSON</button>
   
   <div id="status" style="display: none;"></div>
-  
+
+  <div id="scrapedData" style="display: none;"></div>
+  <div class="copy-hint" id="copyHint" style="display: none;">Click the data above to copy to clipboard</div>
+
   <div id="videoList"></div>
   
   <script src="popup.js"></script>

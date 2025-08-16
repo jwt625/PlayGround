@@ -2,9 +2,12 @@ document.addEventListener('DOMContentLoaded', function() {
   const grabButton = document.getElementById('grabTitles');
   const scrollButton = document.getElementById('scrollDown');
   const removeButton = document.getElementById('removeTop');
+  const scrapeButton = document.getElementById('scrapeVideo');
   const exportButton = document.getElementById('exportJson');
   const statusDiv = document.getElementById('status');
   const videoListDiv = document.getElementById('videoList');
+  const scrapedDataDiv = document.getElementById('scrapedData');
+  const copyHintDiv = document.getElementById('copyHint');
 
   let currentVideos = []; // Store the current video data
 
@@ -119,6 +122,43 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   });
 
+  scrapeButton.addEventListener('click', async function() {
+    try {
+      scrapeButton.disabled = true;
+      scrapeButton.textContent = 'Scraping...';
+
+      showStatus('Getting current tab...', 'info');
+
+      // Get current tab
+      const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+
+      if (!tab.url.includes('youtube.com/watch')) {
+        throw new Error('Please navigate to a YouTube video page first');
+      }
+
+      showStatus('Scraping video information...', 'info');
+
+      // Send message to content script to scrape video info
+      const response = await chrome.tabs.sendMessage(tab.id, {
+        type: 'scrapeVideoInfo'
+      });
+
+      if (response && response.success) {
+        showStatus('Video information scraped successfully!', 'success');
+        displayScrapedData(response.videoInfo);
+      } else {
+        throw new Error(response?.error || 'Failed to scrape video information');
+      }
+
+    } catch (error) {
+      console.error('Error:', error);
+      showStatus(`Error: ${error.message}`, 'error');
+    } finally {
+      scrapeButton.disabled = false;
+      scrapeButton.textContent = 'Scrape Video Info';
+    }
+  });
+
   exportButton.addEventListener('click', function() {
     try {
       if (currentVideos.length === 0) {
@@ -175,23 +215,52 @@ document.addEventListener('DOMContentLoaded', function() {
   
   function displayVideos(videos) {
     videoListDiv.innerHTML = '';
-    
+
     if (videos.length === 0) {
       videoListDiv.innerHTML = '<div class="video-item">No videos found</div>';
       return;
     }
-    
+
     videos.forEach((video, index) => {
       const videoItem = document.createElement('div');
       videoItem.className = 'video-item';
-      
+
       videoItem.innerHTML = `
         <div class="video-title">${index + 1}. ${video.title || 'No title'}</div>
         <div class="video-channel">Channel: ${video.channel || 'Unknown'}</div>
         ${video.videoId ? `<div style="color: #999; font-size: 11px;">ID: ${video.videoId}</div>` : ''}
       `;
-      
+
       videoListDiv.appendChild(videoItem);
     });
+  }
+
+  function displayScrapedData(videoInfo) {
+    // Format the video info as pretty JSON
+    const jsonString = JSON.stringify(videoInfo, null, 2);
+
+    // Display in the scraped data div
+    scrapedDataDiv.textContent = jsonString;
+    scrapedDataDiv.style.display = 'block';
+    copyHintDiv.style.display = 'block';
+
+    // Add click-to-copy functionality
+    scrapedDataDiv.onclick = function() {
+      navigator.clipboard.writeText(jsonString).then(() => {
+        // Temporarily change the hint text
+        const originalText = copyHintDiv.textContent;
+        copyHintDiv.textContent = 'Copied to clipboard!';
+        copyHintDiv.style.color = '#28a745';
+
+        setTimeout(() => {
+          copyHintDiv.textContent = originalText;
+          copyHintDiv.style.color = '#666';
+        }, 2000);
+      }).catch(err => {
+        console.error('Failed to copy to clipboard:', err);
+        copyHintDiv.textContent = 'Failed to copy to clipboard';
+        copyHintDiv.style.color = '#dc3545';
+      });
+    };
   }
 });

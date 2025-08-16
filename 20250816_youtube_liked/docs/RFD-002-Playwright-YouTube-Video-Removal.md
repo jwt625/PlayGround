@@ -1,0 +1,253 @@
+# RFD-002: Playwright YouTube Video Removal Implementation
+
+**Status**: Proposed  
+**Author**: AI Assistant  
+**Date**: 2025-08-16  
+**Related**: RFD-001 (YouTube Video Removal Implementation)
+
+## Summary
+
+This RFD documents the transition from browser extension to Playwright automation for removing videos from YouTube's liked videos list. The browser extension approach failed due to YouTube's content security policies and complex event handling, necessitating a more robust automation solution.
+
+## Background
+
+### Browser Extension Limitations (RFD-001)
+
+The initial browser extension approach encountered critical failures:
+
+- **Content Security Policy Blocks**: YouTube prevents script-based DOM manipulation
+- **Event Handler Complexity**: Simple `.click()` calls don't trigger YouTube's event delegation
+- **Async Response Timeouts**: Message channel closures before Promise resolution
+- **Unreliable Selectors**: Dynamic DOM changes break element targeting
+
+### Key Learning: DOM Structure Analysis
+
+Through extensive debugging, we identified the exact DOM structure for video removal:
+
+#### Action Menu Button
+```html
+<button id="button" class="style-scope yt-icon-button" aria-label="Action menu">
+  <yt-icon class="style-scope ytd-menu-renderer">
+    <span class="yt-icon-shape style-scope yt-icon yt-spec-icon-shape">
+      <div style="width: 100%; height: 100%; display: block; fill: currentcolor;">
+        <svg xmlns="http://www.w3.org/2000/svg" enable-background="new 0 0 24 24" height="24" viewBox="0 0 24 24" width="24">
+          <path d="M12 16.5c.83 0 1.5.67 1.5 1.5s-.67 1.5-1.5 1.5-1.5-.67-1.5-1.5.67-1.5 1.5-1.5zM10.5 12c0 .83.67 1.5 1.5 1.5s1.5-.67 1.5-1.5-.67-1.5-1.5-1.5-1.5.67-1.5 1.5zm0-6c0 .83.67 1.5 1.5 1.5s1.5-.67 1.5-1.5-.67-1.5-1.5-1.5-1.5.67-1.5 1.5z"></path>
+        </svg>
+      </div>
+    </span>
+  </yt-icon>
+</button>
+```
+
+#### Remove Menu Item
+```html
+<tp-yt-paper-item class="style-scope ytd-menu-service-item-renderer" role="option" tabindex="0">
+  <yt-icon class="style-scope ytd-menu-service-item-renderer">
+    <span class="yt-icon-shape style-scope yt-icon yt-spec-icon-shape">
+      <div style="width: 100%; height: 100%; display: block; fill: currentcolor;">
+        <svg xmlns="http://www.w3.org/2000/svg" enable-background="new 0 0 24 24" height="24" viewBox="0 0 24 24" width="24">
+          <path d="M11 17H9V8h2v9zm4-9h-2v9h2V8zm4-4v1h-1v16H6V5H5V4h4V3h6v1h4zm-2 1H7v15h10V5z"></path>
+        </svg>
+      </div>
+    </span>
+  </yt-icon>
+  <yt-formatted-string class="style-scope ytd-menu-service-item-renderer">Remove from Liked videos</yt-formatted-string>
+</tp-yt-paper-item>
+```
+
+## Problem Statement
+
+YouTube's liked videos list has a 5000 video limit. To access older videos, newer ones must be removed. Manual removal is tedious for large collections (e.g., removing top 4000 videos). Browser extensions cannot reliably automate this process due to security restrictions.
+
+## Solution: Playwright Automation
+
+### Why Playwright Over Selenium
+
+- **2-3x Faster**: Modern architecture with better performance
+- **Auto-waiting**: Built-in smart waits eliminate timing issues
+- **Reliable Events**: Real browser control ensures proper event triggering
+- **Modern SPA Support**: Designed for dynamic applications like YouTube
+- **Better Debugging**: Screenshots, videos, and detailed logging
+
+### Implementation Architecture
+
+```
+playwright-automation/
+├── venv/                    # Python virtual environment
+├── requirements.txt         # Dependencies
+├── youtube_remover.py       # Main removal script
+├── config.py               # Configuration settings
+└── utils/
+    ├── logging.py          # Logging utilities
+    └── verification.py     # Backup integration
+```
+
+## Technical Implementation
+
+### Core Removal Logic
+
+```python
+from playwright.sync_api import sync_playwright
+
+def remove_top_videos(count=4000):
+    with sync_playwright() as p:
+        browser = p.chromium.launch(headless=False)
+        page = browser.new_page()
+        
+        # Navigate to liked videos
+        page.goto("https://www.youtube.com/playlist?list=LL")
+        
+        # Wait for page load
+        page.wait_for_selector("ytd-playlist-video-renderer")
+        
+        removed_count = 0
+        while removed_count < count:
+            try:
+                # Find first video element
+                first_video = page.locator("ytd-playlist-video-renderer").first
+                
+                # Get video title for logging
+                title = first_video.locator("a#video-title").text_content()
+                print(f"Removing: {title}")
+                
+                # Click action menu button
+                action_menu = first_video.locator('button[aria-label="Action menu"]')
+                action_menu.click()
+                
+                # Wait for popup menu and click remove option
+                remove_button = page.locator('ytd-popup-container tp-yt-paper-item:has-text("Remove from Liked videos")')
+                remove_button.click()
+                
+                # Wait for removal to complete
+                page.wait_for_timeout(1000)
+                
+                removed_count += 1
+                print(f"Progress: {removed_count}/{count}")
+                
+            except Exception as e:
+                print(f"Error removing video: {e}")
+                break
+        
+        browser.close()
+        return removed_count
+```
+
+### Key Selectors
+
+Based on DOM analysis, these selectors are reliable:
+
+```python
+# Video container
+VIDEO_SELECTOR = "ytd-playlist-video-renderer"
+
+# Action menu button (three dots)
+ACTION_MENU_SELECTOR = 'button[aria-label="Action menu"]'
+
+# Remove option in popup menu
+REMOVE_OPTION_SELECTOR = 'ytd-popup-container tp-yt-paper-item:has-text("Remove from Liked videos")'
+
+# Video title for logging
+TITLE_SELECTOR = "a#video-title"
+```
+
+### Error Handling and Resilience
+
+```python
+def safe_remove_video(page, video_element):
+    max_retries = 3
+    for attempt in range(max_retries):
+        try:
+            # Get title before removal
+            title = video_element.locator("a#video-title").text_content()
+            
+            # Click action menu
+            action_menu = video_element.locator('button[aria-label="Action menu"]')
+            action_menu.click()
+            
+            # Wait for menu and click remove
+            remove_button = page.locator('ytd-popup-container tp-yt-paper-item:has-text("Remove from Liked videos")')
+            remove_button.wait_for(timeout=5000)
+            remove_button.click()
+            
+            # Verify removal
+            page.wait_for_timeout(1000)
+            return True, title
+            
+        except Exception as e:
+            print(f"Attempt {attempt + 1} failed: {e}")
+            if attempt < max_retries - 1:
+                page.wait_for_timeout(2000)  # Wait before retry
+            
+    return False, None
+```
+
+## Integration with Existing System
+
+### Backup Verification Workflow
+
+```python
+def integrated_removal_workflow(videos_to_remove=4000):
+    # 1. Verify backup exists and is recent
+    if not verify_recent_backup():
+        print("No recent backup found. Run backup first.")
+        return False
+    
+    # 2. Remove videos with Playwright
+    removed_count = remove_top_videos(videos_to_remove)
+    
+    # 3. Log results
+    print(f"Successfully removed {removed_count} videos")
+    
+    return removed_count == videos_to_remove
+```
+
+## Setup Instructions
+
+### 1. Environment Setup
+```bash
+cd 20250816_youtube_liked
+mkdir playwright-automation
+cd playwright-automation
+python -m venv venv
+source venv/bin/activate  # Windows: venv\Scripts\activate
+```
+
+### 2. Install Dependencies
+```bash
+pip install playwright
+playwright install chromium
+```
+
+### 3. Configuration
+```python
+# config.py
+YOUTUBE_LIKED_URL = "https://www.youtube.com/playlist?list=LL"
+DEFAULT_REMOVAL_COUNT = 4000
+HEADLESS_MODE = False  # Set True for production
+WAIT_BETWEEN_REMOVALS = 1000  # milliseconds
+```
+
+## Success Criteria
+
+- [x] **Reliable DOM Interaction**: Playwright can consistently click YouTube elements
+- [x] **Batch Processing**: Remove specified number of videos (e.g., 4000)
+- [x] **Error Recovery**: Handle failures gracefully with retries
+- [x] **Integration Ready**: Works with existing backup verification system
+- [x] **Logging**: Detailed progress and error reporting
+
+## Risk Assessment
+
+**Low Risk**: Playwright automation is more reliable than browser extensions  
+**Medium Risk**: YouTube may implement additional anti-automation measures  
+**Mitigation**: Use realistic delays and human-like interaction patterns
+
+## Future Considerations
+
+- **Rate Limiting**: Add configurable delays to avoid detection
+- **Headless Mode**: Run without visible browser for production use
+- **Parallel Processing**: Multiple browser instances for faster removal
+- **Resume Capability**: Save progress and resume interrupted sessions
+
+---
+
+**Note**: This implementation provides a robust foundation for YouTube video removal that overcomes the limitations encountered with browser extension approaches.

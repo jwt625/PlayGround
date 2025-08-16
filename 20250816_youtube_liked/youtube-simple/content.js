@@ -41,6 +41,17 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       });
 
     return true; // Async response
+  } else if (message.type === 'scrapeVideoInfo') {
+    console.log('Scraping video info from current page...');
+
+    try {
+      const videoInfo = scrapeVideoInfo();
+      sendResponse(videoInfo);
+    } catch (error) {
+      console.error('Error scraping video info:', error);
+      sendResponse({ success: false, error: error.message });
+    }
+    return false; // Synchronous response
   }
 
   return false; // Default to synchronous
@@ -318,6 +329,154 @@ async function removeTopVideo() {
   } catch (error) {
     console.error('❌ Error in removeTopVideo:', error);
     return { success: false, error: `Removal error: ${error.message}` };
+  }
+}
+
+function scrapeVideoInfo() {
+  console.log('🎬 Scraping video info from current page...');
+  console.log('Current URL:', window.location.href);
+
+  // Check if we're on a video page
+  if (!window.location.href.includes('/watch?v=')) {
+    return { success: false, error: 'Not on a video page. Please navigate to a YouTube video first.' };
+  }
+
+  const videoInfo = {
+    scrapedAt: new Date().toISOString(),
+    clickedAt: new Date().toISOString(), // When the scrape button was clicked
+    source: 'YouTube Video Info Scraper',
+    url: window.location.href
+  };
+
+  try {
+    // Extract video ID from URL
+    const urlParams = new URLSearchParams(window.location.search);
+    videoInfo.videoId = urlParams.get('v');
+    console.log('Video ID:', videoInfo.videoId);
+
+    // Find the main ytd-watch-metadata element
+    const watchMetadata = document.querySelector('ytd-watch-metadata');
+    if (!watchMetadata) {
+      return { success: false, error: 'ytd-watch-metadata element not found. Page may not be fully loaded.' };
+    }
+
+    console.log('✅ Found ytd-watch-metadata element');
+
+    // Extract video title from ytd-watch-metadata
+    const titleElement = watchMetadata.querySelector('h1 yt-formatted-string');
+    if (titleElement && titleElement.textContent) {
+      videoInfo.title = titleElement.textContent.trim();
+      console.log('Found title:', videoInfo.title);
+    }
+
+    // Extract channel information from ytd-watch-metadata
+    const channelElement = watchMetadata.querySelector('ytd-channel-name a');
+    if (channelElement) {
+      videoInfo.channel = channelElement.textContent?.trim();
+      videoInfo.channelUrl = channelElement.href;
+      console.log('Found channel:', videoInfo.channel);
+    }
+
+    // Extract subscriber count
+    const subscriberElement = watchMetadata.querySelector('#owner-sub-count');
+    if (subscriberElement && subscriberElement.textContent) {
+      videoInfo.subscriberCount = subscriberElement.textContent.trim();
+      console.log('Found subscriber count:', videoInfo.subscriberCount);
+    }
+
+    // Extract view count and upload date from ytd-watch-info-text
+    const watchInfoText = watchMetadata.querySelector('ytd-watch-info-text');
+    if (watchInfoText) {
+      // Get the formatted info string that contains both views and date
+      const infoElement = watchInfoText.querySelector('#info yt-formatted-string, #info');
+      if (infoElement && infoElement.textContent) {
+        const infoText = infoElement.textContent.trim();
+        console.log('Found info text:', infoText);
+
+        // Parse views and date from the combined text (e.g., "229K views  2 days ago")
+        const parts = infoText.split(/\s{2,}/); // Split on multiple spaces
+        if (parts.length >= 2) {
+          videoInfo.viewCount = parts[0];
+          videoInfo.uploadDate = parts[1];
+        } else {
+          // Fallback: try to extract views and date separately
+          if (infoText.includes('view')) {
+            const viewMatch = infoText.match(/[\d,KMB.]+\s*views?/i);
+            if (viewMatch) videoInfo.viewCount = viewMatch[0];
+          }
+          if (infoText.includes('ago') || infoText.includes('Premiered') || infoText.includes('Published')) {
+            const dateMatch = infoText.match(/\d+\s+(second|minute|hour|day|week|month|year)s?\s+ago|Premiered\s+.+|Published\s+.+/i);
+            if (dateMatch) videoInfo.uploadDate = dateMatch[0];
+          }
+        }
+      }
+
+      // Also try to get the tooltip for more precise date
+      const tooltip = watchInfoText.querySelector('tp-yt-paper-tooltip #tooltip');
+      if (tooltip && tooltip.textContent) {
+        const tooltipText = tooltip.textContent.trim();
+        console.log('Found tooltip with precise date:', tooltipText);
+        videoInfo.preciseDate = tooltipText;
+      }
+    }
+
+    // Extract like and dislike counts from the like/dislike buttons
+    const likeButton = watchMetadata.querySelector('like-button-view-model button, segmented-like-dislike-button-view-model like-button-view-model button');
+    if (likeButton) {
+      const likeText = likeButton.querySelector('.yt-spec-button-shape-next__button-text-content');
+      if (likeText && likeText.textContent && likeText.textContent.trim() !== '') {
+        videoInfo.likeCount = likeText.textContent.trim();
+        console.log('Found like count:', videoInfo.likeCount);
+      }
+
+      // Get aria-label for more detailed like info
+      const ariaLabel = likeButton.getAttribute('aria-label');
+      if (ariaLabel) {
+        videoInfo.likeAriaLabel = ariaLabel;
+        console.log('Found like aria-label:', ariaLabel);
+      }
+    }
+
+    const dislikeButton = watchMetadata.querySelector('dislike-button-view-model button, segmented-like-dislike-button-view-model dislike-button-view-model button');
+    if (dislikeButton) {
+      const dislikeText = dislikeButton.querySelector('.yt-spec-button-shape-next__button-text-content');
+      if (dislikeText && dislikeText.textContent && dislikeText.textContent.trim() !== '') {
+        videoInfo.dislikeCount = dislikeText.textContent.trim();
+        console.log('Found dislike count:', videoInfo.dislikeCount);
+      }
+    }
+
+    // Extract video description from the description expander
+    const descriptionExpander = watchMetadata.querySelector('ytd-text-inline-expander');
+    if (descriptionExpander) {
+      // Try to get the full description from the attributed string
+      const attributedDesc = descriptionExpander.querySelector('yt-attributed-string');
+      if (attributedDesc && attributedDesc.textContent) {
+        videoInfo.description = attributedDesc.textContent.trim();
+        console.log('Found description length:', videoInfo.description.length);
+      }
+    }
+
+    // Extract video duration from the player
+    const durationElement = document.querySelector('.ytp-time-duration');
+    if (durationElement && durationElement.textContent) {
+      videoInfo.duration = durationElement.textContent.trim();
+      console.log('Found duration:', videoInfo.duration);
+    }
+
+    // Extract comment count (this might be below the fold)
+    const commentCountElement = document.querySelector('ytd-comments-header-renderer #count yt-formatted-string');
+    if (commentCountElement && commentCountElement.textContent) {
+      videoInfo.commentCount = commentCountElement.textContent.trim();
+      console.log('Found comment count:', videoInfo.commentCount);
+    }
+
+    console.log('✅ Successfully scraped video info:', videoInfo);
+    return { success: true, videoInfo: videoInfo };
+
+  } catch (error) {
+    console.error('❌ Error scraping video info:', error);
+    return { success: false, error: `Scraping error: ${error.message}` };
   }
 }
 
