@@ -1,6 +1,7 @@
 document.addEventListener('DOMContentLoaded', function() {
   const grabButton = document.getElementById('grabTitles');
   const scrollButton = document.getElementById('scrollDown');
+  const removeButton = document.getElementById('removeTop');
   const exportButton = document.getElementById('exportJson');
   const statusDiv = document.getElementById('status');
   const videoListDiv = document.getElementById('videoList');
@@ -79,6 +80,42 @@ document.addEventListener('DOMContentLoaded', function() {
     } finally {
       scrollButton.disabled = false;
       scrollButton.textContent = 'Scroll to Bottom';
+    }
+  });
+
+  removeButton.addEventListener('click', async function() {
+    try {
+      removeButton.disabled = true;
+      removeButton.textContent = 'Removing...';
+
+      showStatus('Getting current tab...', 'info');
+
+      // Get current tab
+      const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+
+      if (!tab.url.includes('youtube.com')) {
+        throw new Error('Please navigate to YouTube first');
+      }
+
+      showStatus('Removing top video...', 'info');
+
+      // Send message to content script to remove top video
+      const response = await chrome.tabs.sendMessage(tab.id, {
+        type: 'removeTopVideo'
+      });
+
+      if (response && response.success) {
+        showStatus(`Removed video: ${response.videoTitle || 'Unknown'}`, 'success');
+      } else {
+        throw new Error(response?.error || 'Failed to remove video');
+      }
+
+    } catch (error) {
+      console.error('Error:', error);
+      showStatus(`Error: ${error.message}`, 'error');
+    } finally {
+      removeButton.disabled = false;
+      removeButton.textContent = 'Remove Top Video';
     }
   });
 

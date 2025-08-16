@@ -27,6 +27,20 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       sendResponse({ success: false, error: error.message });
     }
     return false; // Synchronous response
+  } else if (message.type === 'removeTopVideo') {
+    console.log('Attempting to remove top video...');
+
+    // Handle async removeTopVideo function
+    removeTopVideo()
+      .then(result => {
+        sendResponse(result);
+      })
+      .catch(error => {
+        console.error('Error removing video:', error);
+        sendResponse({ success: false, error: error.message });
+      });
+
+    return true; // Async response
   }
 
   return false; // Default to synchronous
@@ -152,6 +166,159 @@ function extractVideoId(url) {
 
   const match = url.match(/[?&]v=([^&]+)/);
   return match ? match[1] : null;
+}
+
+// Helper function to simulate proper mouse clicks
+function simulateClick(element) {
+  console.log('🖱️ Simulating click on element:', element);
+
+  // Create and dispatch multiple events to ensure YouTube responds
+  const events = [
+    new MouseEvent('mousedown', { bubbles: true, cancelable: true }),
+    new MouseEvent('mouseup', { bubbles: true, cancelable: true }),
+    new MouseEvent('click', { bubbles: true, cancelable: true })
+  ];
+
+  events.forEach(event => {
+    element.dispatchEvent(event);
+  });
+
+  // Also try the simple click as fallback
+  element.click();
+}
+
+async function removeTopVideo() {
+  console.log('🗑️ Looking for top video to remove...');
+
+  try {
+    // Find the first video element
+    const selectors = [
+      'ytd-playlist-video-renderer',
+      'ytd-grid-video-renderer',
+      'ytd-video-renderer',
+      '[data-video-id]'
+    ];
+
+    let firstVideo = null;
+    for (const selector of selectors) {
+      const videos = document.querySelectorAll(selector);
+      console.log(`🔍 Checking selector "${selector}": found ${videos.length} elements`);
+      if (videos.length > 0) {
+        firstVideo = videos[0];
+        console.log(`🎯 Found first video using selector: ${selector}`);
+        break;
+      }
+    }
+
+    if (!firstVideo) {
+      return { success: false, error: 'No videos found on page' };
+    }
+
+    // Get video title for confirmation
+    const titleElement = firstVideo.querySelector('a#video-title, h3 a, a[href*="/watch?v="]');
+    const videoTitle = titleElement ? titleElement.textContent?.trim() : 'Unknown video';
+    console.log(`🎬 Video to remove: "${videoTitle}"`);
+
+    // Look for the action menu button
+    const actionMenuButton = firstVideo.querySelector('button[aria-label="Action menu"]');
+
+    if (!actionMenuButton) {
+      console.log('❌ Action menu button not found');
+      return { success: false, error: 'Action menu button not found' };
+    }
+
+    console.log('📋 Found action menu button, clicking...');
+    simulateClick(actionMenuButton);
+
+    // Wait for the menu to appear and then look for the remove option
+    return new Promise((resolve) => {
+      const maxAttempts = 5;
+      let attempts = 0;
+      let resolved = false;
+
+      // Set a timeout to prevent hanging
+      const timeoutId = setTimeout(() => {
+        if (!resolved) {
+          resolved = true;
+          console.log('⏰ Timeout reached, resolving with error');
+          resolve({ success: false, error: 'Operation timed out after 5 seconds' });
+        }
+      }, 5000);
+
+      const checkForMenu = () => {
+        if (resolved) return;
+
+        attempts++;
+        console.log(`🔍 Attempt ${attempts}/${maxAttempts} to find menu...`);
+
+        try {
+          // Look for the remove option in ytd-popup-container
+          const popupContainer = document.querySelector('ytd-popup-container');
+          if (!popupContainer) {
+            console.log('❌ Popup container not found');
+            if (attempts < maxAttempts) {
+              setTimeout(checkForMenu, 300);
+              return;
+            }
+            if (!resolved) {
+              resolved = true;
+              clearTimeout(timeoutId);
+              resolve({ success: false, error: 'Menu popup not found after multiple attempts' });
+            }
+            return;
+          }
+
+          console.log('📋 Found popup container, looking for remove option...');
+
+          // Look for the specific menu item with "Remove from Liked videos" text
+          const removeMenuItems = popupContainer.querySelectorAll('tp-yt-paper-item');
+          console.log(`📋 Found ${removeMenuItems.length} paper items in popup`);
+
+          let removeItem = null;
+          for (const item of removeMenuItems) {
+            const text = item.textContent || '';
+            console.log(`📋 Menu item text: "${text.trim()}"`);
+
+            if (text.includes('Remove from Liked videos') || text.includes('Remove from liked videos')) {
+              removeItem = item;
+              break;
+            }
+          }
+
+          if (removeItem) {
+            console.log('🗑️ Found "Remove from Liked videos" option, clicking...');
+            simulateClick(removeItem);
+            console.log('✅ Successfully clicked remove option');
+            if (!resolved) {
+              resolved = true;
+              clearTimeout(timeoutId);
+              resolve({ success: true, videoTitle: videoTitle });
+            }
+          } else {
+            if (!resolved) {
+              resolved = true;
+              clearTimeout(timeoutId);
+              resolve({ success: false, error: 'Remove option not found in menu' });
+            }
+          }
+        } catch (error) {
+          console.error('❌ Error in menu handling:', error);
+          if (!resolved) {
+            resolved = true;
+            clearTimeout(timeoutId);
+            resolve({ success: false, error: `Menu handling error: ${error.message}` });
+          }
+        }
+      };
+
+      // Start checking for menu after initial delay
+      setTimeout(checkForMenu, 500);
+    });
+
+  } catch (error) {
+    console.error('❌ Error in removeTopVideo:', error);
+    return { success: false, error: `Removal error: ${error.message}` };
+  }
 }
 
 
