@@ -11,23 +11,25 @@ A Chrome extension to backup metadata from YouTube liked videos with automatic r
 - **Rate Limiting**: Respects YouTube's limits to avoid detection
 - **Progress Tracking**: Real-time progress indicators and error reporting
 
-## Installation
+## Installation & Usage
 
-### Development Installation
-
-1. Clone or download this repository
-2. Open Chrome and navigate to `chrome://extensions/`
-3. Enable "Developer mode" in the top right
-4. Click "Load unpacked" and select the `youtube-liked-backup` folder
-5. The extension should now appear in your extensions list
+### Installation
+1. Open Chrome and navigate to `chrome://extensions/`
+2. Enable "Developer mode" (top-right toggle)
+3. Click "Load unpacked" and select the `youtube-liked-backup` folder
+4. Extension should load without errors
 
 ### Usage
+1. Navigate to YouTube liked videos: `https://www.youtube.com/playlist?list=LL`
+2. Click the extension icon in toolbar
+3. Click "Start Backup" to begin backup process
+4. Monitor progress and export data as needed
 
-1. Navigate to your YouTube liked videos page (`https://www.youtube.com/playlist?list=LL`)
-2. Click the extension icon in the toolbar
-3. Click "Start Backup" to begin the backup process
-4. Monitor progress in the popup
-5. Export your data using the export buttons
+### Troubleshooting
+- **Extension won't load**: Check for errors at `chrome://extensions/`
+- **Background script errors**: Click "Inspect views: service worker" to debug
+- **Popup shows loading**: Reload extension and try again
+- **Content script issues**: Check browser console (F12) on YouTube page
 
 ## Architecture
 
@@ -95,42 +97,35 @@ Access settings through the extension options page:
 - Verification scoring (0-100)
 - Missing field detection
 
-## Development
+## Development & Technical Notes
 
-### Prerequisites
-- Chrome browser
-- Basic knowledge of JavaScript and Chrome Extensions
+### Current Status
+- ✅ Phase 1 (Core Functionality) - Complete
+- 🔄 Phase 2 (Verification & Removal) - Planned
+- 📋 Phase 3 (Advanced Features) - Planned
 
-### Building
-No build process required - this is a vanilla JavaScript extension.
+### Known Issues
+- Icons not implemented (uses default Chrome icon)
+- Background script initialization may need reload on first install
+- Network request interception not yet implemented
 
-### Testing
-1. Load the extension in developer mode
-2. Navigate to YouTube liked videos
-3. Test backup functionality
-4. Check browser console for errors
+### Architecture Notes
+- Manifest V3 service worker architecture
+- Dual storage system (Chrome Storage + IndexedDB fallback)
+- Modular design with clear separation of concerns
+- Rate limiting and error handling throughout
 
-## Limitations
+## Limitations & Privacy
 
-- Requires manual navigation to YouTube liked videos page
-- Subject to YouTube's rate limiting and anti-bot measures
-- Cannot access private or deleted videos
-- Limited by Chrome extension storage quotas
+**Current Limitations:**
+- Manual navigation to YouTube liked videos required
+- Subject to YouTube's anti-bot measures
+- Cannot access private/deleted videos
+- Chrome extension storage quotas apply
 
-## Privacy
-
-- All data processing happens locally
+**Privacy:**
+- All processing happens locally
 - No external servers or data transmission
-- User controls all data export and deletion
+- User controls all data and exports
 
-## License
-
-This project is for educational purposes. Please respect YouTube's Terms of Service.
-
-## Contributing
-
-This is part of a larger playground repository. Feel free to suggest improvements or report issues.
-
-## Support
-
-For issues or questions, please refer to the main repository documentation or create an issue in the GitHub repository.
+**License:** Educational use only. Respect YouTube's Terms of Service.

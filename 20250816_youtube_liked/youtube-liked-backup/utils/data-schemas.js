@@ -152,7 +152,7 @@ function createErrorLog(type, message, context = {}) {
  * @returns {string} Session ID
  */
 function generateSessionId() {
-  return `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+  return `session_${Date.now()}_${Math.random().toString(36).substring(2, 11)}`;
 }
 
 /**
@@ -200,8 +200,8 @@ if (typeof module !== 'undefined' && module.exports) {
     validateVideoRecord
   };
 } else {
-  // Browser environment
-  window.DataSchemas = {
+  // Browser/Service Worker environment
+  self.DataSchemas = {
     BackupStatus,
     RemovalStatus,
     DataSource,

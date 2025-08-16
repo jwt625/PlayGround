@@ -474,5 +474,5 @@ class DataValidator {
 if (typeof module !== 'undefined' && module.exports) {
   module.exports = DataValidator;
 } else {
-  window.DataValidator = DataValidator;
+  self.DataValidator = DataValidator;
 }

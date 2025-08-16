@@ -4,17 +4,22 @@
  */
 
 // Import required modules
-importScripts(
-  '../utils/data-schemas.js',
-  '../utils/constants.js',
-  'storage-manager.js',
-  'export-manager.js'
-);
+try {
+  importScripts(
+    '../utils/data-schemas.js',
+    '../utils/constants.js',
+    'storage-manager.js',
+    'export-manager.js'
+  );
+  console.log('Background scripts loaded successfully');
+} catch (error) {
+  console.error('Failed to load background scripts:', error);
+}
 
 class YouTubeBackupBackground {
   constructor() {
-    this.storageManager = new StorageManager();
-    this.exportManager = new ExportManager(this.storageManager);
+    this.storageManager = new YouTubeStorageManager();
+    this.exportManager = new YouTubeExportManager(this.storageManager);
     this.currentSession = null;
     this.extensionState = 'idle';
     this.backupStats = {
@@ -493,4 +498,9 @@ class YouTubeBackupBackground {
 }
 
 // Initialize background service worker
-const youtubeBackupBackground = new YouTubeBackupBackground();
+try {
+  const youtubeBackupBackground = new YouTubeBackupBackground();
+  console.log('YouTube Backup Background initialized successfully');
+} catch (error) {
+  console.error('Failed to initialize background service worker:', error);
+}

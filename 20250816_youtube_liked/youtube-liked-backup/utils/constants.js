@@ -157,8 +157,12 @@ const UTILS = {
    * Check if current page is YouTube liked videos
    */
   isLikedVideosPage() {
-    return window.location.pathname.includes('/playlist') && 
-           window.location.search.includes('list=LL');
+    // Only available in content script context where window.location exists
+    if (typeof window !== 'undefined' && window.location) {
+      return window.location.pathname.includes('/playlist') &&
+             window.location.search.includes('list=LL');
+    }
+    return false;
   },
   
   /**
@@ -202,8 +206,8 @@ if (typeof module !== 'undefined' && module.exports) {
     UTILS
   };
 } else {
-  // Browser environment
-  window.Constants = {
+  // Browser/Service Worker environment
+  self.Constants = {
     YOUTUBE_PATTERNS,
     YOUTUBE_SELECTORS,
     STORAGE_KEYS,

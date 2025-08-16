@@ -3,7 +3,7 @@
  * Handles Chrome storage API and quota management
  */
 
-class StorageManager {
+class YouTubeStorageManager {
   constructor() {
     this.isIndexedDBAvailable = false;
     this.db = null;
@@ -63,7 +63,7 @@ class StorageManager {
   async saveVideo(video) {
     try {
       // Validate video record
-      const validation = window.DataSchemas?.validateVideoRecord(video);
+      const validation = self.DataSchemas?.validateVideoRecord(video);
       if (!validation?.isValid) {
         throw new Error(`Invalid video record: ${validation?.errors?.join(', ')}`);
       }
@@ -227,10 +227,10 @@ class StorageManager {
   async getSettings() {
     try {
       const result = await chrome.storage.local.get('settings');
-      return result.settings || window.DataSchemas?.createBackupSettings();
+      return result.settings || self.DataSchemas?.createBackupSettings();
     } catch (error) {
       console.error('Failed to get settings:', error);
-      return window.DataSchemas?.createBackupSettings();
+      return self.DataSchemas?.createBackupSettings();
     }
   }
 
@@ -398,7 +398,7 @@ class StorageManager {
 
 // Export for different environments
 if (typeof module !== 'undefined' && module.exports) {
-  module.exports = StorageManager;
+  module.exports = YouTubeStorageManager;
 } else {
-  window.StorageManager = StorageManager;
+  self.YouTubeStorageManager = YouTubeStorageManager;
 }

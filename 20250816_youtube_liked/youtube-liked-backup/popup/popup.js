@@ -58,20 +58,27 @@ class YouTubeBackupPopup {
   async loadInitialData() {
     try {
       this.showLoading(true);
-      
-      // Get extension status
-      this.extensionStatus = await this.sendMessage({ type: 'getStatus' });
-      
-      // Get backup statistics
-      const stats = await this.sendMessage({ type: 'getStats' });
-      
-      // Update UI
-      this.updateUI();
-      this.updateStats(stats);
-      
-      // Check current page
+
+      // Check current page first (doesn't require background script)
       await this.checkCurrentPage();
-      
+
+      // Try to get extension status with timeout
+      try {
+        this.extensionStatus = await this.sendMessageWithTimeout({ type: 'getStatus' }, 3000);
+
+        // Get backup statistics
+        const stats = await this.sendMessageWithTimeout({ type: 'getStats' }, 3000);
+
+        // Update UI
+        this.updateUI();
+        this.updateStats(stats);
+
+      } catch (bgError) {
+        console.warn('Background script not ready:', bgError);
+        // Show basic UI without background data
+        this.showBasicUI();
+      }
+
     } catch (error) {
       console.error('Failed to load initial data:', error);
       this.showError('Failed to load extension data');
@@ -86,29 +93,33 @@ class YouTubeBackupPopup {
   async checkCurrentPage() {
     try {
       const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
-      
+
       if (tab && tab.url) {
-        const isLikedVideosPage = tab.url.includes('youtube.com') && 
-                                 tab.url.includes('/playlist') && 
+        const isLikedVideosPage = tab.url.includes('youtube.com') &&
+                                 tab.url.includes('/playlist') &&
                                  tab.url.includes('list=LL');
-        
+
         this.updatePageStatus(isLikedVideosPage, tab.url);
-        
+
         if (isLikedVideosPage) {
-          // Try to get page info from content script
+          // Try to get page info from content script (with timeout)
           try {
-            const response = await chrome.tabs.sendMessage(tab.id, { type: 'getStatus' });
+            const response = await this.sendMessageToTab(tab.id, { type: 'getStatus' }, 2000);
             if (response && response.totalVideosOnPage) {
               this.updateVideoCount(response.totalVideosOnPage);
             }
           } catch (error) {
-            // Content script might not be loaded yet
-            console.log('Content script not ready');
+            // Content script might not be loaded yet, that's okay
+            console.log('Content script not ready, will retry later');
           }
         }
+      } else {
+        // No tab info available
+        this.updatePageStatus(false, '');
       }
     } catch (error) {
       console.error('Failed to check current page:', error);
+      this.updatePageStatus(false, '');
     }
   }
 
@@ -228,15 +239,34 @@ class YouTubeBackupPopup {
   }
 
   /**
+   * Show basic UI when background script is not available
+   */
+  showBasicUI() {
+    // Update status indicator
+    const statusDot = document.getElementById('statusDot');
+    const statusText = document.getElementById('statusText');
+    statusDot.className = 'status-dot warning';
+    statusText.textContent = 'Loading...';
+
+    // Show default stats
+    document.getElementById('totalBackedUp').textContent = '0';
+    document.getElementById('lastBackupDate').textContent = 'Never';
+    document.getElementById('storageUsed').textContent = '0%';
+
+    // Disable backup controls initially
+    document.getElementById('startBackupBtn').disabled = true;
+  }
+
+  /**
    * Update statistics display
    * @param {Object} stats - Backup statistics
    */
   updateStats(stats) {
     if (!stats) return;
-    
+
     // Total backed up
     document.getElementById('totalBackedUp').textContent = stats.totalVideos || 0;
-    
+
     // Last backup date
     const lastBackupEl = document.getElementById('lastBackupDate');
     if (stats.lastBackupDate) {
@@ -245,7 +275,7 @@ class YouTubeBackupPopup {
     } else {
       lastBackupEl.textContent = 'Never';
     }
-    
+
     // Storage usage
     const storageUsedEl = document.getElementById('storageUsed');
     if (stats.storageUsage) {
@@ -408,13 +438,52 @@ class YouTubeBackupPopup {
   }
 
   /**
+   * Send message to background script with timeout
+   * @param {Object} message - Message to send
+   * @param {number} timeout - Timeout in milliseconds
+   * @returns {Promise<Object>} Response from background script
+   */
+  async sendMessageWithTimeout(message, timeout = 5000) {
+    return new Promise((resolve, reject) => {
+      const timeoutId = setTimeout(() => {
+        reject(new Error('Message timeout'));
+      }, timeout);
+
+      chrome.runtime.sendMessage(message, (response) => {
+        clearTimeout(timeoutId);
+        if (chrome.runtime.lastError) {
+          reject(new Error(chrome.runtime.lastError.message));
+        } else {
+          resolve(response);
+        }
+      });
+    });
+  }
+
+  /**
    * Send message to background script
    * @param {Object} message - Message to send
    * @returns {Promise<Object>} Response from background script
    */
   async sendMessage(message) {
+    return this.sendMessageWithTimeout(message, 5000);
+  }
+
+  /**
+   * Send message to content script in tab
+   * @param {number} tabId - Tab ID
+   * @param {Object} message - Message to send
+   * @param {number} timeout - Timeout in milliseconds
+   * @returns {Promise<Object>} Response from content script
+   */
+  async sendMessageToTab(tabId, message, timeout = 3000) {
     return new Promise((resolve, reject) => {
-      chrome.runtime.sendMessage(message, (response) => {
+      const timeoutId = setTimeout(() => {
+        reject(new Error('Tab message timeout'));
+      }, timeout);
+
+      chrome.tabs.sendMessage(tabId, message, (response) => {
+        clearTimeout(timeoutId);
         if (chrome.runtime.lastError) {
           reject(new Error(chrome.runtime.lastError.message));
         } else {

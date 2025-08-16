@@ -3,7 +3,7 @@
  * Handles data export functionality using Chrome downloads API
  */
 
-class ExportManager {
+class YouTubeExportManager {
   constructor(storageManager) {
     this.storageManager = storageManager;
     this.exportFormats = {
@@ -445,7 +445,7 @@ class ExportManager {
 
 // Export for different environments
 if (typeof module !== 'undefined' && module.exports) {
-  module.exports = ExportManager;
+  module.exports = YouTubeExportManager;
 } else {
-  window.ExportManager = ExportManager;
+  self.YouTubeExportManager = YouTubeExportManager;
 }

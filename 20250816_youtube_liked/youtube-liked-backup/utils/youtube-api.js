@@ -5,8 +5,10 @@
 
 class YouTubeAPI {
   constructor() {
-    this.selectors = window.Constants?.YOUTUBE_SELECTORS || {};
-    this.patterns = window.Constants?.YOUTUBE_PATTERNS || {};
+    // Use self for service worker compatibility, but fall back to window for content scripts
+    const globalScope = typeof window !== 'undefined' ? window : self;
+    this.selectors = globalScope.Constants?.YOUTUBE_SELECTORS || {};
+    this.patterns = globalScope.Constants?.YOUTUBE_PATTERNS || {};
   }
 
   /**
@@ -14,8 +16,12 @@ class YouTubeAPI {
    * @returns {boolean} Whether on liked videos page
    */
   isLikedVideosPage() {
-    return window.location.pathname.includes('/playlist') && 
-           window.location.search.includes('list=LL');
+    // Only available in content script context where window.location exists
+    if (typeof window !== 'undefined' && window.location) {
+      return window.location.pathname.includes('/playlist') &&
+             window.location.search.includes('list=LL');
+    }
+    return false;
   }
 
   /**
@@ -427,5 +433,7 @@ class YouTubeAPI {
 if (typeof module !== 'undefined' && module.exports) {
   module.exports = YouTubeAPI;
 } else {
-  window.YouTubeAPI = YouTubeAPI;
+  // Use self for service worker compatibility, but fall back to window for content scripts
+  const globalScope = typeof window !== 'undefined' ? window : self;
+  globalScope.YouTubeAPI = YouTubeAPI;
 }
