@@ -200,7 +200,7 @@ class YouTubeAuth:
         
         # Try to load saved session
         session_info = self.load_session_info()
-        if session_info and self.context_dir.exists():
+        if session_info and self.context_file.exists():
             self.logger.info("Attempting to use saved session...")
             try:
                 # The context should already be loaded with the saved state

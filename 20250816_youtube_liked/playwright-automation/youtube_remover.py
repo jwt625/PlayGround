@@ -149,6 +149,11 @@ class YouTubeVideoRemover:
 
                             log_removal_progress(self.logger, self.removed_count, count, title)
 
+                            # Refresh page to update the video list after removal
+                            self.logger.debug("Refreshing page to update video list")
+                            page.reload()
+                            page.wait_for_selector(VIDEO_SELECTOR, timeout=PAGE_LOAD_TIMEOUT)
+
                             # Wait between removals to avoid rate limiting
                             if WAIT_BETWEEN_REMOVALS > 0:
                                 page.wait_for_timeout(WAIT_BETWEEN_REMOVALS)

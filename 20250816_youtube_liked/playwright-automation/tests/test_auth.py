@@ -17,7 +17,7 @@ def test_authentication():
     
     with sync_playwright() as p:
         # Start with fresh browser
-        browser = p.chromium.launch(headless=False)
+        browser = p.firefox.launch(headless=False)
         context = browser.new_context()
         page = context.new_page()
         
@@ -69,10 +69,10 @@ def test_session_reuse():
     print("Testing saved session...")
     
     with sync_playwright() as p:
-        browser = p.chromium.launch(headless=False)
-        
+        browser = p.firefox.launch(headless=False)
+
         # Load context with saved session
-        context = browser.new_context(storage_state=str(auth.context_dir))
+        context = browser.new_context(storage_state=str(auth.context_file))
         page = context.new_page()
         
         try:

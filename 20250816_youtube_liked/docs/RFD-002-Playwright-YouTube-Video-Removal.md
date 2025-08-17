@@ -236,6 +236,9 @@ WAIT_BETWEEN_REMOVALS = 1000  # milliseconds
 - [x] **Error Recovery**: Handle failures gracefully with retries
 - [x] **Integration Ready**: Works with existing backup verification system
 - [x] **Logging**: Detailed progress and error reporting
+- [x] **Page Refresh Handling**: Automatic page refresh after each removal to handle SPA updates
+- [x] **Session Persistence**: Proper file-based session storage for seamless re-authentication
+- [x] **Cross-Platform Browser Support**: Firefox-based implementation for better compatibility
 
 ## Risk Assessment
 
@@ -289,6 +292,7 @@ The implementation includes a user-guided authentication flow:
 
 - **Issue**: Session storage was using directory path instead of file path
 - **Fix**: Changed `context_dir` to `context_file` in auth.py
+- **Additional Fix**: Updated all references in youtube_remover.py and test files
 - **Result**: Proper session saving and loading for seamless re-authentication
 
 ### Usage
@@ -297,15 +301,39 @@ The implementation includes a user-guided authentication flow:
 cd playwright-automation
 source venv/bin/activate
 
-# Test with 3 videos first
-python demo.py
+# Test with different video counts
+python demo.py                    # Default: 3 videos
+python demo.py --count 5          # Remove 5 videos
+python demo.py --count 10         # Remove 10 videos
 
-# Remove 4000 videos (production)
-python youtube_remover.py
+# Production removal
+python youtube_remover.py                    # Default: 4000 videos
+python youtube_remover.py --count 2000      # Remove 2000 videos
+python youtube_remover.py --count 100       # Remove 100 videos
 
-# Custom options
-python youtube_remover.py --count 2000 --headless
+# Advanced options
+python youtube_remover.py --count 2000 --headless    # Headless mode
+python youtube_remover.py --clear-session            # Clear saved session
+python youtube_remover.py --force-login              # Force new login
 ```
+
+### Page Refresh Solution
+
+**Updated 2025-08-16**: Added automatic page refresh after each video removal.
+
+- **Issue**: YouTube SPA doesn't update DOM after video removal, causing automation to target stale elements
+- **Solution**: Added `page.reload()` after each successful removal
+- **Implementation**: Waits for video list to reload before continuing to next video
+- **Result**: Reliable sequential video removal without DOM staleness issues
+
+### Demo Script Enhancement
+
+**Updated 2025-08-16**: Enhanced demo script with configurable video count.
+
+- **Feature**: Added `--count` parameter to specify number of videos to remove
+- **Default**: Still defaults to 3 videos for safe testing
+- **Usage**: `python demo.py --count 10` to remove 10 videos
+- **Progress**: Shows real-time progress (e.g., "1/10 (10.0%)")
 
 ### Troubleshooting
 
@@ -314,6 +342,12 @@ If you encounter browser launch issues:
 1. **Reinstall Firefox**: `playwright install firefox`
 2. **Clear sessions**: `python youtube_remover.py --clear-session`
 3. **Force fresh login**: `python youtube_remover.py --force-login`
+
+If you encounter AttributeError about 'context_dir':
+
+1. **Update codebase**: Ensure all files use `context_file` instead of `context_dir`
+2. **Clear old sessions**: `python youtube_remover.py --clear-session`
+3. **Restart demo**: `python demo.py --count 2`
 
 ---
 
