@@ -141,26 +141,53 @@ class YouTubeVideoRemover:
                 max_consecutive_failures = 5
 
                 # Go through the list sequentially
-                for video_index in range(actual_count):
+                videos_removed_in_current_batch = 0
+                current_video_index = 0
+
+                for removal_iteration in range(actual_count):
                     try:
-                        self.logger.debug(f"Targeting video at index {video_index}")
-                        target_video = all_videos[video_index]
+                        # Refresh page every 100 videos if count > 100
+                        if count > 100 and videos_removed_in_current_batch >= 100:
+                            self.logger.info(f"Refreshing page after removing {videos_removed_in_current_batch} videos (total: {self.removed_count})...")
+                            page.reload()
+                            page.wait_for_selector(VIDEO_SELECTOR, timeout=PAGE_LOAD_TIMEOUT)
+
+                            # Re-fetch video elements after refresh
+                            all_videos = page.locator(VIDEO_SELECTOR).all()
+                            self.logger.info(f"Page refreshed. Found {len(all_videos)} videos remaining")
+
+                            # Reset batch counter and start from the top of the refreshed list
+                            videos_removed_in_current_batch = 0
+                            current_video_index = 0
+
+                            if not all_videos:
+                                self.logger.warning("No videos found after refresh")
+                                break
+
+                        # Target the current video (always from the top since removed videos disappear)
+                        if current_video_index >= len(all_videos):
+                            self.logger.warning(f"No more videos available at index {current_video_index}")
+                            break
+
+                        target_video = all_videos[current_video_index]
+                        self.logger.debug(f"Targeting video at index {current_video_index} (removal #{self.removed_count + 1})")
 
                         # Wait for the video element to be stable and visible
-                        target_video.wait_for(state="visible", timeout=5000)
-                        
+                        target_video.wait_for(state="visible", timeout=500)
+
                         # Attempt to remove the video
                         success, title = self.safe_remove_video(page, target_video)
-                        
+
                         if success:
                             self.removed_count += 1
+                            videos_removed_in_current_batch += 1
                             consecutive_failures = 0
 
                             # Log the removed video
                             video_info = {
                                 "title": title,
                                 "removed_at": datetime.now().isoformat(),
-                                "position": video_index + 1
+                                "position": self.removed_count
                             }
                             self.removed_videos.append(video_info)
 
@@ -169,24 +196,30 @@ class YouTubeVideoRemover:
                             # Wait between removals to avoid rate limiting
                             if WAIT_BETWEEN_REMOVALS > 0:
                                 page.wait_for_timeout(WAIT_BETWEEN_REMOVALS)
+
+                            # Don't increment current_video_index since the video was removed and list shifted
                         else:
                             consecutive_failures += 1
-                            self.logger.warning(f"Failed to remove video at index {video_index}. Consecutive failures: {consecutive_failures}")
+                            self.logger.warning(f"Failed to remove video at index {current_video_index}. Consecutive failures: {consecutive_failures}")
 
                             if consecutive_failures >= max_consecutive_failures:
                                 self.logger.error(f"Too many consecutive failures ({consecutive_failures}). Stopping.")
                                 break
 
+                            # Move to next video if removal failed
+                            current_video_index += 1
+
                     except Exception as e:
-                        log_error_with_context(self.logger, e, f"removing video at index {video_index}")
+                        log_error_with_context(self.logger, e, f"removing video at index {current_video_index}")
                         consecutive_failures += 1
 
                         if consecutive_failures >= max_consecutive_failures:
                             self.logger.error("Too many consecutive failures. Stopping.")
                             break
 
-                        # Wait before continuing
-                        page.wait_for_timeout(2000)
+                        # Wait before continuing and move to next video
+                        page.wait_for_timeout(1000)
+                        current_video_index += 1
                 
             except Exception as e:
                 log_error_with_context(self.logger, e, "during browser automation")
