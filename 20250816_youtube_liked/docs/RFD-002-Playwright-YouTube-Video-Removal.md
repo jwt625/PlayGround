@@ -101,32 +101,38 @@ def remove_top_videos(count=4000):
         # Wait for page load
         page.wait_for_selector("ytd-playlist-video-renderer")
         
+        # Get all videos once at the beginning
+        page.wait_for_selector("ytd-playlist-video-renderer")
+        all_videos = page.locator("ytd-playlist-video-renderer").all()
+        actual_count = min(count, len(all_videos))
+
         removed_count = 0
-        while removed_count < count:
+        # Go through the list sequentially
+        for video_index in range(actual_count):
             try:
-                # Find first video element
-                first_video = page.locator("ytd-playlist-video-renderer").first
-                
+                # Target video by index in original list
+                target_video = all_videos[video_index]
+
                 # Get video title for logging
-                title = first_video.locator("a#video-title").text_content()
+                title = target_video.locator("a#video-title").text_content()
                 print(f"Removing: {title}")
-                
+
                 # Click action menu button
-                action_menu = first_video.locator('button[aria-label="Action menu"]')
+                action_menu = target_video.locator('button[aria-label="Action menu"]')
                 action_menu.click()
-                
+
                 # Wait for popup menu and click remove option
                 remove_button = page.locator('ytd-popup-container tp-yt-paper-item:has-text("Remove from Liked videos")')
                 remove_button.click()
-                
+
                 # Wait for removal to complete
                 page.wait_for_timeout(1000)
-                
+
                 removed_count += 1
-                print(f"Progress: {removed_count}/{count}")
-                
+                print(f"Progress: {removed_count}/{actual_count}")
+
             except Exception as e:
-                print(f"Error removing video: {e}")
+                print(f"Error removing video at index {video_index}: {e}")
                 break
         
         browser.close()
@@ -236,7 +242,7 @@ WAIT_BETWEEN_REMOVALS = 1000  # milliseconds
 - [x] **Error Recovery**: Handle failures gracefully with retries
 - [x] **Integration Ready**: Works with existing backup verification system
 - [x] **Logging**: Detailed progress and error reporting
-- [x] **Page Refresh Handling**: Automatic page refresh after each removal to handle SPA updates
+- [x] **Sequential Video Removal**: Efficient iteration through original video list without DOM dependencies
 - [x] **Session Persistence**: Proper file-based session storage for seamless re-authentication
 - [x] **Cross-Platform Browser Support**: Firefox-based implementation for better compatibility
 
@@ -301,15 +307,14 @@ The implementation includes a user-guided authentication flow:
 cd playwright-automation
 source venv/bin/activate
 
-# Test with different video counts
-python demo.py                    # Default: 3 videos
-python demo.py --count 5          # Remove 5 videos
-python demo.py --count 10         # Remove 10 videos
-
-# Production removal
-python youtube_remover.py                    # Default: 4000 videos
-python youtube_remover.py --count 2000      # Remove 2000 videos
+# Test with small counts first
+python youtube_remover.py --count 3         # Test with 3 videos
+python youtube_remover.py --count 10        # Remove 10 videos
 python youtube_remover.py --count 100       # Remove 100 videos
+
+# Production removal (fast and efficient)
+python youtube_remover.py                   # Default: 4000 videos
+python youtube_remover.py --count 2000      # Remove 2000 videos
 
 # Advanced options
 python youtube_remover.py --count 2000 --headless    # Headless mode
@@ -317,23 +322,24 @@ python youtube_remover.py --clear-session            # Clear saved session
 python youtube_remover.py --force-login              # Force new login
 ```
 
-### Page Refresh Solution
+### Sequential Video Removal Solution
 
-**Updated 2025-08-16**: Added automatic page refresh after each video removal.
+**Updated 2025-08-16**: Implemented efficient sequential video removal without page refreshes.
 
-- **Issue**: YouTube SPA doesn't update DOM after video removal, causing automation to target stale elements
-- **Solution**: Added `page.reload()` after each successful removal
-- **Implementation**: Waits for video list to reload before continuing to next video
-- **Result**: Reliable sequential video removal without DOM staleness issues
+- **Issue**: YouTube SPA doesn't update DOM immediately after video removal, causing targeting issues
+- **Initial Approach**: Page refresh after each removal (slow, triggers rate limiting after ~46 refreshes)
+- **Correct Solution**: Query all videos once, then iterate through the original list sequentially
+- **Implementation**: `all_videos[0], all_videos[1], all_videos[2]...` removes videos in order
+- **Result**: Fast, reliable removal without DOM update dependencies or rate limiting
 
-### Demo Script Enhancement
+### Simplified Architecture
 
-**Updated 2025-08-16**: Enhanced demo script with configurable video count.
+**Updated 2025-08-16**: Removed redundant demo script, consolidated into main script.
 
-- **Feature**: Added `--count` parameter to specify number of videos to remove
-- **Default**: Still defaults to 3 videos for safe testing
-- **Usage**: `python demo.py --count 10` to remove 10 videos
-- **Progress**: Shows real-time progress (e.g., "1/10 (10.0%)")
+- **Change**: Removed separate `demo.py` wrapper script
+- **Rationale**: Unnecessary complexity, main script handles all use cases
+- **Usage**: `python youtube_remover.py --count 3` for testing
+- **Progress**: Shows real-time progress and detailed logging
 
 ### Troubleshooting
 

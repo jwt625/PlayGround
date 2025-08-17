@@ -62,9 +62,12 @@ class YouTubeVideoRemover:
                 remove_button.wait_for(state="visible", timeout=ELEMENT_WAIT_TIMEOUT)
                 remove_button.click()
                 
-                # Wait for removal to complete
+                # Wait for removal to complete and verify the action worked
                 page.wait_for_timeout(REMOVAL_WAIT_TIMEOUT)
-                
+
+                # Additional wait to ensure YouTube processes the removal
+                page.wait_for_timeout(1000)
+
                 self.logger.debug(f"Successfully removed: {title}")
                 return True, title
                 
@@ -118,22 +121,36 @@ class YouTubeVideoRemover:
                 page.wait_for_selector(VIDEO_SELECTOR, timeout=PAGE_LOAD_TIMEOUT)
                 self.logger.info("Ready to start video removal")
                 
+                # Get all videos once at the beginning
+                page.wait_for_selector(VIDEO_SELECTOR, timeout=PAGE_LOAD_TIMEOUT)
+                all_videos = page.locator(VIDEO_SELECTOR).all()
+                total_videos_available = len(all_videos)
+
+                self.logger.info(f"Found {total_videos_available} videos in playlist")
+
+                if total_videos_available == 0:
+                    self.logger.warning("No videos found in the playlist")
+                    return 0
+
+                # Limit count to available videos
+                actual_count = min(count, total_videos_available)
+                self.logger.info(f"Will remove {actual_count} videos")
+
                 self.removed_count = 0
                 consecutive_failures = 0
                 max_consecutive_failures = 5
-                
-                while self.removed_count < count:
+
+                # Go through the list sequentially
+                for video_index in range(actual_count):
                     try:
-                        # Find first video element
-                        first_video = page.locator(VIDEO_SELECTOR).first
-                        
-                        # Check if video exists
-                        if not first_video.count():
-                            self.logger.warning("No more videos found in the playlist")
-                            break
+                        self.logger.debug(f"Targeting video at index {video_index}")
+                        target_video = all_videos[video_index]
+
+                        # Wait for the video element to be stable and visible
+                        target_video.wait_for(state="visible", timeout=5000)
                         
                         # Attempt to remove the video
-                        success, title = self.safe_remove_video(page, first_video)
+                        success, title = self.safe_remove_video(page, target_video)
                         
                         if success:
                             self.removed_count += 1
@@ -143,36 +160,31 @@ class YouTubeVideoRemover:
                             video_info = {
                                 "title": title,
                                 "removed_at": datetime.now().isoformat(),
-                                "position": self.removed_count
+                                "position": video_index + 1
                             }
                             self.removed_videos.append(video_info)
 
-                            log_removal_progress(self.logger, self.removed_count, count, title)
-
-                            # Refresh page to update the video list after removal
-                            self.logger.debug("Refreshing page to update video list")
-                            page.reload()
-                            page.wait_for_selector(VIDEO_SELECTOR, timeout=PAGE_LOAD_TIMEOUT)
+                            log_removal_progress(self.logger, self.removed_count, actual_count, title)
 
                             # Wait between removals to avoid rate limiting
                             if WAIT_BETWEEN_REMOVALS > 0:
                                 page.wait_for_timeout(WAIT_BETWEEN_REMOVALS)
                         else:
                             consecutive_failures += 1
-                            self.logger.warning(f"Failed to remove video. Consecutive failures: {consecutive_failures}")
-                            
+                            self.logger.warning(f"Failed to remove video at index {video_index}. Consecutive failures: {consecutive_failures}")
+
                             if consecutive_failures >= max_consecutive_failures:
                                 self.logger.error(f"Too many consecutive failures ({consecutive_failures}). Stopping.")
                                 break
-                        
+
                     except Exception as e:
-                        log_error_with_context(self.logger, e, "in main removal loop")
+                        log_error_with_context(self.logger, e, f"removing video at index {video_index}")
                         consecutive_failures += 1
-                        
+
                         if consecutive_failures >= max_consecutive_failures:
                             self.logger.error("Too many consecutive failures. Stopping.")
                             break
-                        
+
                         # Wait before continuing
                         page.wait_for_timeout(2000)
                 
