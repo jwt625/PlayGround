@@ -70,3 +70,6 @@ venv.bak/
 
 */node_modules/*
 20250621_MCPxScience/build/*
+
+*.log
+*/log/*
