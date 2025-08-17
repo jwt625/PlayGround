@@ -123,11 +123,23 @@ class YouTubeMetadataScraper:
                 # Keep only recent records in memory, older ones are saved to disk
                 self.scraped_metadata = self.scraped_metadata[-batch_size:]
     
+
+
+    async def wait_for_video_load(self, page: Page) -> None:
+        """Wait for video player to load without interfering with autoplay."""
+        try:
+            # Just wait for video player to load - don't click anything
+            await page.wait_for_timeout(1000)
+            self.logger.debug("Waited for video player to load")
+
+        except Exception as e:
+            self.logger.debug(f"Failed to wait for video load: {e}")
+
     async def skip_ads(self, page: Page) -> None:
         """Skip YouTube ads if they appear."""
         try:
-            # Wait longer for ads to potentially load and skip button to appear
-            await page.wait_for_timeout(2000)
+            # Wait for ads to potentially load and skip button to appear
+            await page.wait_for_timeout(1000)
 
             # Common ad skip selectors
             skip_selectors = [
@@ -147,10 +159,10 @@ class YouTubeMetadataScraper:
                 for selector in skip_selectors:
                     try:
                         skip_button = page.locator(selector)
-                        if skip_button.count() > 0:
+                        if await skip_button.count() > 0:
                             await skip_button.click()
                             self.logger.debug(f"Skipped ad after {attempt + 1} seconds")
-                            await page.wait_for_timeout(1000)  # Wait for skip to process
+                            await page.wait_for_timeout(500)  # Wait for skip to process
                             skip_button_found = True
                             break
                     except Exception as e:
@@ -160,7 +172,7 @@ class YouTubeMetadataScraper:
                 if skip_button_found:
                     break
 
-                await page.wait_for_timeout(1000)  # Wait 1 second before next attempt
+                await page.wait_for_timeout(500)  # Wait 0.5 second before next attempt
 
             # If no skip button found, check if we're still in an ad and wait it out
             if not skip_button_found:
@@ -174,14 +186,14 @@ class YouTubeMetadataScraper:
                 for _ in range(30):  # Check for 30 seconds max for unskippable ads
                     ad_present = False
                     for indicator in ad_indicators:
-                        if page.locator(indicator).count() > 0:
+                        if await page.locator(indicator).count() > 0:
                             ad_present = True
                             break
 
                     if not ad_present:
                         break
 
-                    await page.wait_for_timeout(1000)  # Wait 1 second and check again
+                    await page.wait_for_timeout(500)  # Wait 0.5 second and check again
 
         except Exception as e:
             self.logger.debug(f"Ad skipping failed: {e}")
@@ -194,6 +206,9 @@ class YouTubeMetadataScraper:
         try:
             # Navigate to video page
             await page.goto(clean_url, timeout=10000)
+
+            # Wait for video player to load (autoplay will handle playback)
+            await self.wait_for_video_load(page)
 
             # Skip any ads that might appear
             await self.skip_ads(page)
@@ -212,14 +227,14 @@ class YouTubeMetadataScraper:
             
             # Extract title
             title_element = page.locator(VIDEO_TITLE_SELECTOR)
-            if title_element.count() > 0:
+            if await title_element.count() > 0:
                 title = await title_element.text_content()
                 if title:
                     metadata['title'] = title.strip()
 
             # Extract channel information
             channel_element = page.locator(CHANNEL_NAME_SELECTOR)
-            if channel_element.count() > 0:
+            if await channel_element.count() > 0:
                 channel_name = await channel_element.text_content()
                 channel_url = await channel_element.get_attribute('href')
                 if channel_name:
@@ -229,7 +244,7 @@ class YouTubeMetadataScraper:
 
             # Extract subscriber count
             subscriber_element = page.locator(SUBSCRIBER_COUNT_SELECTOR)
-            if subscriber_element.count() > 0:
+            if await subscriber_element.count() > 0:
                 subscriber_count = await subscriber_element.text_content()
                 if subscriber_count:
                     metadata['subscriberCount'] = subscriber_count.strip()
@@ -245,14 +260,14 @@ class YouTubeMetadataScraper:
             
             # Extract duration
             duration_element = page.locator(DURATION_SELECTOR)
-            if duration_element.count() > 0:
+            if await duration_element.count() > 0:
                 duration = await duration_element.text_content()
                 if duration:
                     metadata['duration'] = duration.strip()
 
             # Extract comment count (optional)
             comment_element = page.locator(COMMENT_COUNT_SELECTOR)
-            if comment_element.count() > 0:
+            if await comment_element.count() > 0:
                 comment_count = await comment_element.text_content()
                 if comment_count:
                     metadata['commentCount'] = comment_count.strip()
@@ -278,7 +293,7 @@ class YouTubeMetadataScraper:
         """Extract view count and upload date information."""
         try:
             info_element = page.locator(VIEW_DATE_INFO_SELECTOR)
-            if info_element.count() > 0:
+            if await info_element.count() > 0:
                 info_text = await info_element.text_content()
                 if info_text:
                     info_text = info_text.strip()
@@ -296,7 +311,7 @@ class YouTubeMetadataScraper:
 
             # Extract precise date from tooltip
             precise_element = page.locator(PRECISE_DATE_SELECTOR)
-            if precise_element.count() > 0:
+            if await precise_element.count() > 0:
                 precise_date = await precise_element.text_content()
                 if precise_date:
                     metadata['preciseDate'] = precise_date.strip()
@@ -307,28 +322,53 @@ class YouTubeMetadataScraper:
     async def _extract_engagement_metrics(self, page: Page, metadata: Dict) -> None:
         """Extract like/dislike counts."""
         try:
-            # Like button extraction - use first() to avoid strict mode violation
-            like_button = page.locator(LIKE_BUTTON_SELECTOR).first()
-            if like_button.count() > 0:
-                like_text_element = like_button.locator(BUTTON_TEXT_SELECTOR).first()
-                if like_text_element.count() > 0:
-                    like_text = await like_text_element.text_content()
-                    if like_text and like_text.strip():
-                        metadata['likeCount'] = like_text.strip()
+            # Like button extraction with timeout
+            try:
+                like_buttons = page.locator(LIKE_BUTTON_SELECTOR)
+                like_count = await like_buttons.count()
+                if like_count > 0:
+                    like_button = like_buttons.first()
 
-                # Get aria-label for detailed like info
-                aria_label = await like_button.get_attribute('aria-label')
-                if aria_label:
-                    metadata['likeAriaLabel'] = aria_label
+                    # Try to get like text with timeout
+                    try:
+                        like_text_elements = like_button.locator(BUTTON_TEXT_SELECTOR)
+                        if await like_text_elements.count() > 0:
+                            like_text = await like_text_elements.first().text_content(timeout=3000)
+                            if like_text and like_text.strip():
+                                metadata['likeCount'] = like_text.strip()
+                    except Exception as e:
+                        self.logger.debug(f"Failed to get like text: {e}")
 
-            # Dislike button extraction - use first() to avoid strict mode violation
-            dislike_button = page.locator(DISLIKE_BUTTON_SELECTOR).first()
-            if dislike_button.count() > 0:
-                dislike_text_element = dislike_button.locator(BUTTON_TEXT_SELECTOR).first()
-                if dislike_text_element.count() > 0:
-                    dislike_text = await dislike_text_element.text_content()
-                    if dislike_text and dislike_text.strip():
-                        metadata['dislikeCount'] = dislike_text.strip()
+                    # Get aria-label for detailed like info with timeout
+                    try:
+                        aria_label = await like_button.get_attribute('aria-label', timeout=3000)
+                        if aria_label:
+                            metadata['likeAriaLabel'] = aria_label
+                    except Exception as e:
+                        self.logger.debug(f"Failed to get like aria-label: {e}")
+
+            except Exception as e:
+                self.logger.debug(f"Failed to process like button: {e}")
+
+            # Dislike button extraction with timeout
+            try:
+                dislike_buttons = page.locator(DISLIKE_BUTTON_SELECTOR)
+                dislike_count = await dislike_buttons.count()
+                if dislike_count > 0:
+                    dislike_button = dislike_buttons.first()
+
+                    # Try to get dislike text with timeout
+                    try:
+                        dislike_text_elements = dislike_button.locator(BUTTON_TEXT_SELECTOR)
+                        if await dislike_text_elements.count() > 0:
+                            dislike_text = await dislike_text_elements.first().text_content(timeout=3000)
+                            if dislike_text and dislike_text.strip():
+                                metadata['dislikeCount'] = dislike_text.strip()
+                    except Exception as e:
+                        self.logger.debug(f"Failed to get dislike text: {e}")
+
+            except Exception as e:
+                self.logger.debug(f"Failed to process dislike button: {e}")
 
         except Exception as e:
             self.logger.warning(f"Failed to extract engagement metrics: {e}")
@@ -349,7 +389,7 @@ class YouTubeMetadataScraper:
             for selector in show_more_selectors:
                 try:
                     show_more = page.locator(selector)
-                    if show_more.count() > 0:
+                    if await show_more.count() > 0:
                         await show_more.click()
                         await page.wait_for_timeout(500)  # Wait for expansion
                         self.logger.debug("Clicked 'Show more' button")
@@ -362,7 +402,7 @@ class YouTubeMetadataScraper:
         for i, selector in enumerate(DESCRIPTION_SELECTORS):
             try:
                 desc_element = page.locator(selector)
-                if desc_element.count() > 0:
+                if await desc_element.count() > 0:
                     description = await desc_element.text_content()
                     if description and description.strip():
                         metadata['description'] = description.strip()
@@ -396,8 +436,11 @@ class YouTubeMetadataScraper:
         self.logger.info(f"Average pause between videos: {average_pause} seconds")
 
         async with async_playwright() as p:
-            # Launch browser with session persistence
-            browser = await p.firefox.launch(headless=self.headless)
+            # Launch browser with session persistence and muted audio
+            browser = await p.firefox.launch(
+                headless=self.headless,
+                args=['--mute-audio', '--disable-audio-output']  # Always mute audio
+            )
 
             # Load saved session if available
             session_file = Path("sessions/browser_context.json")
