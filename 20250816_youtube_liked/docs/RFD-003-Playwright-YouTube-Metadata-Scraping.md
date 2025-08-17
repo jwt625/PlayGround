@@ -19,6 +19,31 @@ The existing system provides:
 - **Sample Detailed Data**: Examples in `detailed.json` showing rich metadata structure
 - **Chrome Extension**: Working metadata extraction from individual video pages
 
+### Analysis of Existing `detailed.json` Format
+
+The `detailed.json` file contains 5 example records with the following key observations:
+
+1. **Consistent Field Structure**: All records follow identical schema
+2. **Rich Engagement Data**: Includes like counts, view counts, subscriber counts
+3. **Description Handling**: Two types - "snippet" (truncated) and "expanded" (full)
+4. **Date Formats**: Both relative ("2 days ago") and precise ("230,090 views • Aug 14, 2025")
+5. **Optional Fields**: `commentCount` only present in 2 of 5 records
+6. **URL Format**: Includes `&ab_channel=` parameter in all URLs
+7. **Timestamp Precision**: ISO format with milliseconds for `scrapedAt` and `clickedAt`
+
+### Reference Implementation: `youtube-simple/content.js`
+
+The `youtube-simple` Chrome extension provides a **proven, working implementation** of video metadata extraction with the `scrapeVideoInfo()` function (lines 335-521). Key features:
+
+1. **Robust Selector Strategy**: Uses `ytd-watch-metadata` as primary container
+2. **4-Tier Description Fallback**: Handles expanded, snippet, container, and fallback selectors
+3. **Combined View/Date Parsing**: Extracts both view count and upload date from single element
+4. **Engagement Metrics**: Proven selectors for like/dislike counts and aria-labels
+5. **Error Handling**: Graceful degradation when elements are missing
+6. **Field Validation**: Checks for content existence before assignment
+
+This implementation has been **tested and validated** against real YouTube pages and produces the exact format seen in `detailed.json`.
+
 ### Problem Statement
 
 The current video list contains only basic metadata extracted from the playlist view:
@@ -85,14 +110,45 @@ async def process_video(video_id: str, basic_info: dict) -> dict:
 ```
 
 #### Metadata Extraction Strategy
-Based on the successful Chrome extension approach (`youtube-simple/content.js`):
+Based on the proven `youtube-simple/content.js` reference implementation:
 
-1. **Primary Data Sources**:
-   - `ytd-watch-metadata` element (main container)
-   - Video player elements for duration
-   - Comment section for engagement metrics
+1. **Primary Container**: `ytd-watch-metadata` element (main metadata container)
+2. **Proven Selectors** (from working Chrome extension):
 
-2. **Extracted Fields** (matching `detailed.json` format exactly):
+   ```javascript
+   // Core video information
+   videoId: URLSearchParams.get('v')                    // From URL
+   title: 'ytd-watch-metadata h1 yt-formatted-string'   // Video title
+   url: window.location.href                            // Current page URL
+
+   // Channel information
+   channel: 'ytd-watch-metadata ytd-channel-name a'     // Channel name
+   channelUrl: channelElement.href                      // Channel URL
+   subscriberCount: 'ytd-watch-metadata #owner-sub-count' // Subscriber count
+
+   // View count and upload date (combined extraction)
+   viewCount + uploadDate: 'ytd-watch-info-text #info yt-formatted-string'
+   preciseDate: 'ytd-watch-info-text tp-yt-paper-tooltip #tooltip'
+
+   // Like/dislike engagement
+   likeCount: 'like-button-view-model .yt-spec-button-shape-next__button-text-content'
+   likeAriaLabel: likeButton.getAttribute('aria-label')
+   dislikeCount: 'dislike-button-view-model .yt-spec-button-shape-next__button-text-content'
+
+   // Description (4-tier fallback strategy)
+   description: [
+     'ytd-text-inline-expander #expanded yt-attributed-string',      // Method 1: Expanded
+     'ytd-text-inline-expander #attributed-snippet-text',            // Method 2: Snippet
+     '#description-text-container #attributed-description-text',     // Method 3: Container
+     '#description yt-attributed-string, ytd-text-inline-expander yt-attributed-string' // Method 4: Fallback
+   ]
+
+   // Technical details
+   duration: '.ytp-time-duration'                       // Video player duration
+   commentCount: 'ytd-comments-header-renderer #count yt-formatted-string' // Comments
+   ```
+
+3. **Extracted Fields** (matching `detailed.json` format exactly):
    ```python
    VideoMetadata = {
        # Core identifiers (from playlist + video page)
@@ -185,32 +241,150 @@ class YouTubeSession:
 ```
 
 ### Metadata Extraction Engine
-Based on proven selectors from `youtube-simple/content.js`:
+Direct Playwright translation of proven `youtube-simple/content.js` selectors:
 
 ```python
 class MetadataExtractor:
-    """Extracts metadata from YouTube video pages."""
-    
+    """Extracts metadata from YouTube video pages using proven selectors."""
+
     async def extract_all_metadata(self, page) -> dict:
-        """Extract comprehensive metadata from video page."""
-        metadata = {}
-        
-        # Title and basic info
-        metadata.update(await self.extract_title_info(page))
-        
-        # Channel information
-        metadata.update(await self.extract_channel_info(page))
-        
-        # Engagement metrics
-        metadata.update(await self.extract_engagement_metrics(page))
-        
-        # Description and content
-        metadata.update(await self.extract_description(page))
-        
-        # Technical details
-        metadata.update(await self.extract_technical_info(page))
-        
+        """Extract comprehensive metadata using youtube-simple reference implementation."""
+
+        # Initialize with processing metadata
+        metadata = {
+            'scrapedAt': datetime.now().isoformat(),
+            'clickedAt': datetime.now().isoformat(),
+            'source': 'YouTube Video Info Scraper',
+            'url': page.url
+        }
+
+        # Extract video ID from URL
+        video_id = await page.evaluate('() => new URLSearchParams(window.location.search).get("v")')
+        metadata['videoId'] = video_id
+
+        # Wait for main container (critical for all other extractions)
+        await page.wait_for_selector('ytd-watch-metadata', timeout=10000)
+
+        # Extract title
+        title = await page.text_content('ytd-watch-metadata h1 yt-formatted-string')
+        if title:
+            metadata['title'] = title.strip()
+
+        # Extract channel information
+        channel_element = page.locator('ytd-watch-metadata ytd-channel-name a')
+        if await channel_element.count() > 0:
+            metadata['channel'] = (await channel_element.text_content()).strip()
+            metadata['channelUrl'] = await channel_element.get_attribute('href')
+
+        # Extract subscriber count
+        subscriber_count = await page.text_content('ytd-watch-metadata #owner-sub-count')
+        if subscriber_count:
+            metadata['subscriberCount'] = subscriber_count.strip()
+
+        # Extract view count and upload date (combined parsing like youtube-simple)
+        await self.extract_view_and_date_info(page, metadata)
+
+        # Extract like/dislike counts
+        await self.extract_engagement_metrics(page, metadata)
+
+        # Extract description using 4-tier fallback strategy
+        await self.extract_description_with_fallback(page, metadata)
+
+        # Extract duration from video player
+        duration = await page.text_content('.ytp-time-duration')
+        if duration:
+            metadata['duration'] = duration.strip()
+
+        # Extract comment count (optional field)
+        comment_count = await page.text_content('ytd-comments-header-renderer #count yt-formatted-string')
+        if comment_count:
+            metadata['commentCount'] = comment_count.strip()
+
         return metadata
+
+    async def extract_view_and_date_info(self, page, metadata):
+        """Extract view count and upload date using youtube-simple parsing logic."""
+        info_text = await page.text_content('ytd-watch-info-text #info yt-formatted-string, ytd-watch-info-text #info')
+        if info_text:
+            info_text = info_text.strip()
+            # Split on multiple spaces like youtube-simple does
+            parts = [part.strip() for part in info_text.split('  ') if part.strip()]
+            if len(parts) >= 2:
+                metadata['viewCount'] = parts[0]
+                metadata['uploadDate'] = parts[1]
+            else:
+                # Fallback parsing for edge cases
+                if 'view' in info_text.lower():
+                    import re
+                    view_match = re.search(r'[\d,KMB.]+\s*views?', info_text, re.IGNORECASE)
+                    if view_match:
+                        metadata['viewCount'] = view_match.group(0)
+
+        # Extract precise date from tooltip
+        precise_date = await page.text_content('ytd-watch-info-text tp-yt-paper-tooltip #tooltip')
+        if precise_date:
+            metadata['preciseDate'] = precise_date.strip()
+
+    async def extract_engagement_metrics(self, page, metadata):
+        """Extract like/dislike counts using youtube-simple selectors."""
+        # Like button extraction
+        like_button = page.locator('like-button-view-model button, segmented-like-dislike-button-view-model like-button-view-model button')
+        if await like_button.count() > 0:
+            like_text = await like_button.locator('.yt-spec-button-shape-next__button-text-content').text_content()
+            if like_text and like_text.strip():
+                metadata['likeCount'] = like_text.strip()
+
+            # Get aria-label for detailed like info
+            aria_label = await like_button.get_attribute('aria-label')
+            if aria_label:
+                metadata['likeAriaLabel'] = aria_label
+
+        # Dislike button extraction
+        dislike_button = page.locator('dislike-button-view-model button, segmented-like-dislike-button-view-model dislike-button-view-model button')
+        if await dislike_button.count() > 0:
+            dislike_text = await dislike_button.locator('.yt-spec-button-shape-next__button-text-content').text_content()
+            if dislike_text and dislike_text.strip():
+                metadata['dislikeCount'] = dislike_text.strip()
+
+    async def extract_description_with_fallback(self, page, metadata):
+        """Extract description using 4-tier fallback strategy from youtube-simple."""
+        description_found = False
+
+        # Method 1: Expanded description (most complete)
+        expanded_desc = await page.text_content('ytd-text-inline-expander #expanded yt-attributed-string')
+        if expanded_desc and expanded_desc.strip():
+            metadata['description'] = expanded_desc.strip()
+            metadata['descriptionSource'] = 'expanded'
+            description_found = True
+
+        # Method 2: Snippet description (visible portion)
+        if not description_found:
+            snippet_desc = await page.text_content('ytd-text-inline-expander #attributed-snippet-text')
+            if snippet_desc and snippet_desc.strip():
+                metadata['description'] = snippet_desc.strip()
+                metadata['descriptionSource'] = 'snippet'
+                description_found = True
+
+        # Method 3: Description text container
+        if not description_found:
+            container_desc = await page.text_content('#description-text-container #attributed-description-text')
+            if container_desc and container_desc.strip():
+                metadata['description'] = container_desc.strip()
+                metadata['descriptionSource'] = 'container'
+                description_found = True
+
+        # Method 4: Fallback to any attributed string
+        if not description_found:
+            fallback_desc = await page.text_content('#description yt-attributed-string, ytd-text-inline-expander yt-attributed-string')
+            if fallback_desc and fallback_desc.strip():
+                metadata['description'] = fallback_desc.strip()
+                metadata['descriptionSource'] = 'fallback'
+                description_found = True
+
+        # No description found
+        if not description_found:
+            metadata['description'] = ''
+            metadata['descriptionSource'] = 'none'
 ```
 
 ### Progress Tracking System
@@ -263,52 +437,64 @@ async def human_like_navigation(page, video_id: str):
 
 ## Data Schema and Validation
 
-### Enhanced Video Record
+### Enhanced Video Record (Exact `detailed.json` Schema)
 ```python
 @dataclass
 class VideoRecord:
     # Core identifiers
-    videoId: str
-    title: str
-    url: str
-    
+    videoId: str                    # Required: "rCsfW22MCO0"
+    title: str                      # Required: "My net worth in salt forks"
+    url: str                        # Required: Full YouTube URL with channel param
+
     # Channel information
-    channel: str
-    channelUrl: Optional[str] = None
-    subscriberCount: Optional[str] = None
-    
+    channel: str                    # Required: "Ben Walker"
+    channelUrl: str                 # Required: "https://www.youtube.com/@bnwlkr"
+    subscriberCount: str            # Required: "234K subscribers"
+
     # Content metadata
-    description: Optional[str] = None
-    duration: Optional[str] = None
-    uploadDate: Optional[str] = None
-    preciseDate: Optional[str] = None
-    
+    description: str                # Required: Full or snippet description
+    descriptionSource: str          # Required: "snippet"|"expanded"|"container"|"fallback"|"none"
+    duration: str                   # Required: "10:43"
+
+    # Upload and timing info
+    uploadDate: str                 # Required: "2 days ago" or "Streamed live on..."
+    preciseDate: str                # Required: "230,090 views • Aug 14, 2025"
+
     # Engagement metrics
-    viewCount: Optional[str] = None
-    likeCount: Optional[str] = None
-    dislikeCount: Optional[str] = None
-    commentCount: Optional[str] = None
-    
-    # Processing metadata
+    viewCount: str                  # Required: "230K views"
+    likeCount: str                  # Required: "22K"
+    likeAriaLabel: str              # Required: "like this video along with 22,765 other people"
+    dislikeCount: str               # Required: "200"
+    commentCount: Optional[str] = None  # Optional: "3,860 Comments"
+
+    # Processing metadata (exact format from detailed.json)
     scrapedAt: str = field(default_factory=lambda: datetime.now().isoformat())
-    source: str = "Playwright YouTube Metadata Scraper"
-    processingStatus: str = "success"
-    errorMessage: Optional[str] = None
+    clickedAt: str = field(default_factory=lambda: datetime.now().isoformat())
+    source: str = "YouTube Video Info Scraper"  # Match existing format exactly
 ```
 
 ## Testing Strategy
 
 ### Initial Testing Phase
 1. **Small Batch Test**: Process first 10 videos from the list
-2. **Data Validation**: Compare output with `detailed.json` examples
-3. **Error Handling**: Test with known private/deleted videos
-4. **Performance Measurement**: Time per video and total throughput
+2. **Schema Validation**: Exact match with `detailed.json` field structure
+3. **Data Quality Check**: Compare field formats and content types
+4. **Error Handling**: Test with known private/deleted videos
+5. **Performance Measurement**: Time per video and total throughput
 
-### Validation Criteria
-- All required fields present for accessible videos
-- Consistent data format with existing examples
-- Proper error handling for inaccessible content
-- Resume functionality works correctly
+### Validation Criteria (Exact `detailed.json` Compliance)
+- **Required Fields**: All 16 core fields present for accessible videos
+- **Field Formats**: Exact string formats matching examples:
+  - `subscriberCount`: "234K subscribers" format
+  - `viewCount`: "230K views" or "1,025,114 views" format
+  - `preciseDate`: "views • date" format
+  - `likeAriaLabel`: "like this video along with X other people" format
+- **Optional Fields**: `commentCount` only when available ("X Comments" format)
+- **URL Format**: Include `&ab_channel=` parameter
+- **Timestamps**: ISO format with milliseconds precision
+- **Description Source**: Proper classification as snippet/expanded/container/fallback/none
+- **Error Handling**: Graceful degradation for inaccessible content
+- **Resume Functionality**: Accurate progress tracking and resumption
 
 ## Success Metrics
 
