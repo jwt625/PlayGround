@@ -24,7 +24,7 @@ from config import (
     METADATA_CONTAINER, VIDEO_TITLE_SELECTOR, CHANNEL_NAME_SELECTOR,
     SUBSCRIBER_COUNT_SELECTOR, VIEW_DATE_INFO_SELECTOR, PRECISE_DATE_SELECTOR,
     LIKE_BUTTON_SELECTOR, DISLIKE_BUTTON_SELECTOR, BUTTON_TEXT_SELECTOR,
-    DURATION_SELECTOR, COMMENT_COUNT_SELECTOR, DESCRIPTION_SELECTORS,
+    DURATION_SELECTOR, COMMENT_COUNT_SELECTOR,
     HEADLESS_MODE, LOG_LEVEL, LOG_FORMAT
 )
 from utils.logging import setup_logger
@@ -416,41 +416,83 @@ class YouTubeMetadataScraper:
             self.logger.warning(f"Failed to extract engagement metrics: {e}")
     
     async def _extract_description_with_fallback(self, page: Page, metadata: Dict) -> None:
-        """Extract description using 4-tier fallback strategy."""
+        """Extract description using 4-tier fallback strategy scoped within ytd-watch-metadata."""
         description_sources = ['expanded', 'snippet', 'container', 'fallback']
 
         try:
-            # Try to click "Show more" button to expand description
+            # First, locate the ytd-watch-metadata container (like the reference implementation)
+            watch_metadata = page.locator('ytd-watch-metadata')
+            if await watch_metadata.count() == 0:
+                self.logger.warning("ytd-watch-metadata container not found")
+                metadata['description'] = ''
+                metadata['descriptionSource'] = 'none'
+                return
+
+            # Try to click "Show more" button to expand description within the metadata container
+            # Use comprehensive selectors for the "Show more" button
             show_more_selectors = [
-                'tp-yt-paper-button#expand',
-                'ytd-text-inline-expander tp-yt-paper-button',
-                'button:has-text("Show more")',
-                '#expand'
+                'tp-yt-paper-button#expand',                                    # Primary expand button
+                'ytd-text-inline-expander tp-yt-paper-button',                 # Button within expander
+                'ytd-text-inline-expander button[aria-label*="more"]',         # Aria-label based
+                'ytd-text-inline-expander button[aria-label*="Show more"]',    # Explicit "Show more"
+                'button:has-text("Show more")',                                # Text-based fallback
+                'button:has-text("...more")',                                  # Alternative text
+                '#expand',                                                     # ID-based fallback
+                'ytd-text-inline-expander [role="button"]'                     # Role-based fallback
             ]
 
-            for selector in show_more_selectors:
+            show_more_clicked = False
+            for i, selector in enumerate(show_more_selectors):
                 try:
-                    show_more = page.locator(selector)
+                    show_more = watch_metadata.locator(selector)
                     if await show_more.count() > 0:
-                        await show_more.click()
-                        await page.wait_for_timeout(500)  # Wait for expansion
-                        self.logger.debug("Clicked 'Show more' button")
-                        break
-                except:
+                        # Check if the button is visible and clickable
+                        if await show_more.is_visible():
+                            await show_more.click()
+                            await page.wait_for_timeout(5000)  # Wait for expansion
+                            self.logger.debug(f"Successfully clicked 'Show more' button using selector {i+1}: {selector}")
+                            show_more_clicked = True
+                            break
+                        else:
+                            self.logger.debug(f"Show more button found but not visible with selector: {selector}")
+                except Exception as e:
+                    self.logger.debug(f"Show more selector {i+1} failed: {e}")
                     continue
+
+            if not show_more_clicked:
+                self.logger.debug("No 'Show more' button found or clicked - description may already be expanded or not available")
         except Exception as e:
             self.logger.debug(f"Failed to expand description: {e}")
 
-        for i, selector in enumerate(DESCRIPTION_SELECTORS):
+        # Use relative selectors within the ytd-watch-metadata container (matching reference implementation)
+        relative_description_selectors = [
+            'ytd-text-inline-expander #expanded yt-attributed-string',      # Method 1: Expanded
+            'ytd-text-inline-expander #attributed-snippet-text',            # Method 2: Snippet
+            '#description-text-container #attributed-description-text',     # Method 3: Container
+            '#description yt-attributed-string, ytd-text-inline-expander yt-attributed-string'  # Method 4: Fallback
+        ]
+
+        self.logger.debug("Starting description extraction with 4-tier fallback strategy")
+        for i, selector in enumerate(relative_description_selectors):
             try:
-                desc_element = page.locator(selector)
-                if await desc_element.count() > 0:
+                self.logger.debug(f"Trying description method {i+1} ({description_sources[i]}) with selector: {selector}")
+                desc_element = watch_metadata.locator(selector)
+                element_count = await desc_element.count()
+                self.logger.debug(f"Found {element_count} elements for selector: {selector}")
+
+                if element_count > 0:
                     description = await desc_element.text_content()
+                    self.logger.debug(f"Raw description content: {repr(description[:100] if description else None)}...")
+
                     if description and description.strip():
                         metadata['description'] = description.strip()
                         metadata['descriptionSource'] = description_sources[i]
-                        self.logger.debug(f"Description extracted using method {i+1}: {description_sources[i]}")
+                        self.logger.info(f"✅ Description extracted using method {i+1}: {description_sources[i]} (length: {len(description.strip())})")
                         return
+                    else:
+                        self.logger.debug(f"Description element found but content is empty or whitespace-only")
+                else:
+                    self.logger.debug(f"No elements found for selector: {selector}")
             except Exception as e:
                 self.logger.debug(f"Description method {i+1} failed: {e}")
                 continue
