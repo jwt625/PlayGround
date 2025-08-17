@@ -11,9 +11,10 @@ import random
 import re
 import signal
 import sys
+import time
 from datetime import datetime
 from pathlib import Path
-from typing import Dict, List, Optional, Set
+from typing import Dict, List, Optional
 from urllib.parse import urlparse, parse_qs
 
 from playwright.async_api import async_playwright, Page, BrowserContext
@@ -37,7 +38,7 @@ class YouTubeMetadataScraper:
     def __init__(self, headless: bool = HEADLESS_MODE):
         self.logger = setup_logger("metadata_scraper")
         self.headless = headless
-        self.scraped_videos: Set[str] = set()
+        self.scraped_videos: List[str] = []  # Use list to preserve order
         self.scraped_metadata: List[Dict] = []
         self.progress_file = Path("metadata_progress.json")
         self.incremental_file = Path("incremental_metadata.jsonl")  # JSONL format for appending
@@ -80,7 +81,7 @@ class YouTubeMetadataScraper:
                 with open(self.progress_file, 'r') as f:
                     progress = json.load(f)
                 
-                self.scraped_videos = set(progress.get('scraped_video_ids', []))
+                self.scraped_videos = progress.get('scraped_video_ids', [])
                 self.scraped_metadata = progress.get('scraped_metadata', [])
                 
                 self.logger.info(f"Loaded progress: {len(self.scraped_videos)} videos already scraped")
@@ -92,7 +93,7 @@ class YouTubeMetadataScraper:
         """Save current scraping progress."""
         try:
             progress = {
-                'scraped_video_ids': list(self.scraped_videos),
+                'scraped_video_ids': self.scraped_videos,
                 'scraped_metadata': self.scraped_metadata,
                 'last_updated': datetime.now().isoformat()
             }
@@ -129,7 +130,7 @@ class YouTubeMetadataScraper:
         """Wait for video player to load without interfering with autoplay."""
         try:
             # Just wait for video player to load - don't click anything
-            await page.wait_for_timeout(1000)
+            await page.wait_for_timeout(500)
             self.logger.debug("Waited for video player to load")
 
         except Exception as e:
@@ -153,9 +154,9 @@ class YouTubeMetadataScraper:
                 '[aria-label*="Skip ad"]'
             ]
 
-            # Wait up to 20 seconds for skip button to appear
+            # Wait up to 10 seconds for skip button to appear
             skip_button_found = False
-            for attempt in range(20):  # 20 seconds max wait for skip button
+            for attempt in range(15):  # 10 seconds max wait for skip button
                 for selector in skip_selectors:
                     try:
                         skip_button = page.locator(selector)
@@ -183,7 +184,7 @@ class YouTubeMetadataScraper:
                     '[class*="ad-showing"]'
                 ]
 
-                for _ in range(30):  # Check for 30 seconds max for unskippable ads
+                for _ in range(10):  # Check for 10 seconds max for unskippable ads
                     ad_present = False
                     for indicator in ad_indicators:
                         if await page.locator(indicator).count() > 0:
@@ -202,20 +203,33 @@ class YouTubeMetadataScraper:
         """Extract comprehensive metadata from a video page."""
         video_id = video_info['videoId']
         clean_url = self.clean_video_url(video_info['url'])
+        start_time = time.time()
 
         try:
             # Navigate to video page
-            await page.goto(clean_url, timeout=10000)
+            nav_start = time.time()
+            await page.goto(clean_url, timeout=2000)
+            nav_time = time.time() - nav_start
+            self.logger.debug(f"Navigation took {nav_time:.2f}s")
 
             # Wait for video player to load (autoplay will handle playback)
+            load_start = time.time()
             await self.wait_for_video_load(page)
+            load_time = time.time() - load_start
+            self.logger.debug(f"Video load wait took {load_time:.2f}s")
 
             # Skip any ads that might appear
+            ad_start = time.time()
             await self.skip_ads(page)
+            ad_time = time.time() - ad_start
+            self.logger.debug(f"Ad skipping took {ad_time:.2f}s")
 
             # Wait for main metadata container
+            container_start = time.time()
             await page.wait_for_selector(METADATA_CONTAINER, timeout=METADATA_TIMEOUT)
-            
+            container_time = time.time() - container_start
+            self.logger.debug(f"Metadata container wait took {container_time:.2f}s")
+
             # Initialize metadata with processing info
             metadata = {
                 'scrapedAt': datetime.now().isoformat(),
@@ -224,7 +238,10 @@ class YouTubeMetadataScraper:
                 'url': page.url,
                 'videoId': video_id
             }
-            
+
+            # Extract all metadata with timing
+            extract_start = time.time()
+
             # Extract title
             title_element = page.locator(VIDEO_TITLE_SELECTOR)
             if await title_element.count() > 0:
@@ -248,16 +265,16 @@ class YouTubeMetadataScraper:
                 subscriber_count = await subscriber_element.text_content()
                 if subscriber_count:
                     metadata['subscriberCount'] = subscriber_count.strip()
-            
+
             # Extract view count and upload date
             await self._extract_view_and_date_info(page, metadata)
-            
+
             # Extract engagement metrics
             await self._extract_engagement_metrics(page, metadata)
-            
+
             # Extract description with fallback strategy
             await self._extract_description_with_fallback(page, metadata)
-            
+
             # Extract duration
             duration_element = page.locator(DURATION_SELECTOR)
             if await duration_element.count() > 0:
@@ -271,8 +288,10 @@ class YouTubeMetadataScraper:
                 comment_count = await comment_element.text_content()
                 if comment_count:
                     metadata['commentCount'] = comment_count.strip()
-            
-            self.logger.info(f"Successfully extracted metadata for video: {video_id}")
+
+            extract_time = time.time() - extract_start
+            total_time = time.time() - start_time
+            self.logger.info(f"Successfully extracted metadata for video: {video_id} (extract: {extract_time:.2f}s, total: {total_time:.2f}s)")
             return metadata
             
         except Exception as e:
@@ -468,7 +487,9 @@ class YouTubeMetadataScraper:
 
                     # Add to results
                     self.scraped_metadata.append(metadata)
-                    self.scraped_videos.add(video_id)
+                    # Add to scraped videos list (preserve order, avoid duplicates)
+                    if video_id not in self.scraped_videos:
+                        self.scraped_videos.append(video_id)
 
                     # Save incremental metadata immediately for maximum safety
                     self.save_incremental_metadata(metadata)

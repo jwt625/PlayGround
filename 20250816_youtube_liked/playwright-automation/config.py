@@ -18,7 +18,7 @@ REMOVE_OPTION_SELECTOR = 'ytd-popup-container tp-yt-paper-item:has-text("Remove 
 TITLE_SELECTOR = "a#video-title"
 
 # Metadata scraping settings (RFD-003)
-DEFAULT_SCRAPE_COUNT = 10
+DEFAULT_SCRAPE_COUNT = 10000
 DEFAULT_AVERAGE_PAUSE = 2.5  # seconds
 METADATA_TIMEOUT = 10000  # 10 seconds
 
