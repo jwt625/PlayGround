@@ -256,7 +256,7 @@ class YouTubeVideoRemover:
         self.logger.info(f"Removal completed. Successfully removed {self.removed_count} videos")
         return self.removed_count
     
-    def integrated_removal_workflow(self, videos_to_remove: int = DEFAULT_REMOVAL_COUNT, max_retries: int = 3000) -> bool:
+    def integrated_removal_workflow(self, videos_to_remove: int = DEFAULT_REMOVAL_COUNT, max_retries: int = MAX_RETRIES) -> bool:
         """
         Complete workflow with backup verification and video removal.
         Includes retry logic for partial completions.
@@ -329,8 +329,8 @@ def main():
                        help="Clear saved login session and exit")
     parser.add_argument("--force-login", action="store_true",
                        help="Force new login (ignore saved session)")
-    parser.add_argument("--max-retries", type=int, default=3,
-                       help="Maximum number of retry attempts for partial completions (default: 3)")
+    parser.add_argument("--max-retries", type=int, default=MAX_RETRIES,
+                       help=f"Maximum number of retry attempts for partial completions (default: {MAX_RETRIES})")
 
     args = parser.parse_args()
 
