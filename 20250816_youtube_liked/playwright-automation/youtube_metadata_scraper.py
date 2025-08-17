@@ -9,6 +9,7 @@ import json
 import logging
 import random
 import re
+import signal
 import sys
 from datetime import datetime
 from pathlib import Path
@@ -39,6 +40,7 @@ class YouTubeMetadataScraper:
         self.scraped_videos: Set[str] = set()
         self.scraped_metadata: List[Dict] = []
         self.progress_file = Path("metadata_progress.json")
+        self.incremental_file = Path("incremental_metadata.jsonl")  # JSONL format for appending
         
     def load_youtube_liked_json(self, file_path: str) -> List[Dict]:
         """Load and parse youtube_liked.json file."""
@@ -94,22 +96,108 @@ class YouTubeMetadataScraper:
                 'scraped_metadata': self.scraped_metadata,
                 'last_updated': datetime.now().isoformat()
             }
-            
+
             with open(self.progress_file, 'w') as f:
                 json.dump(progress, f, indent=2)
-                
+
         except Exception as e:
             self.logger.error(f"Failed to save progress: {e}")
+
+    def save_incremental_metadata(self, metadata: Dict) -> None:
+        """Append individual video metadata to incremental file immediately for safety."""
+        try:
+            # Append to JSONL file (one JSON object per line)
+            with open(self.incremental_file, 'a', encoding='utf-8') as f:
+                json.dump(metadata, f, ensure_ascii=False)
+                f.write('\n')  # New line for JSONL format
+
+        except Exception as e:
+            self.logger.warning(f"Failed to save incremental metadata: {e}")
+
+    def cleanup_memory_periodically(self, current_index: int, batch_size: int = 100) -> None:
+        """Clean up memory periodically to handle large datasets."""
+        if current_index > 0 and current_index % batch_size == 0:
+            # Keep only essential data in memory for very large runs
+            if len(self.scraped_metadata) > batch_size * 2:
+                self.logger.info(f"Memory cleanup: keeping last {batch_size} records in memory")
+                # Keep only recent records in memory, older ones are saved to disk
+                self.scraped_metadata = self.scraped_metadata[-batch_size:]
     
+    async def skip_ads(self, page: Page) -> None:
+        """Skip YouTube ads if they appear."""
+        try:
+            # Wait longer for ads to potentially load and skip button to appear
+            await page.wait_for_timeout(2000)
+
+            # Common ad skip selectors
+            skip_selectors = [
+                '.ytp-ad-skip-button',
+                '.ytp-skip-ad-button',
+                'button[class*="skip"]',
+                '.videoAdUiSkipButton',
+                '.ytp-ad-skip-button-modern',
+                'button:has-text("Skip Ad")',
+                'button:has-text("Skip Ads")',
+                '[aria-label*="Skip ad"]'
+            ]
+
+            # Wait up to 20 seconds for skip button to appear
+            skip_button_found = False
+            for attempt in range(20):  # 20 seconds max wait for skip button
+                for selector in skip_selectors:
+                    try:
+                        skip_button = page.locator(selector)
+                        if skip_button.count() > 0:
+                            await skip_button.click()
+                            self.logger.debug(f"Skipped ad after {attempt + 1} seconds")
+                            await page.wait_for_timeout(1000)  # Wait for skip to process
+                            skip_button_found = True
+                            break
+                    except Exception as e:
+                        self.logger.debug(f"Skip selector {selector} failed: {e}")
+                        continue
+
+                if skip_button_found:
+                    break
+
+                await page.wait_for_timeout(1000)  # Wait 1 second before next attempt
+
+            # If no skip button found, check if we're still in an ad and wait it out
+            if not skip_button_found:
+                ad_indicators = [
+                    '.ytp-ad-player-overlay',
+                    '.ytp-ad-text',
+                    '.video-ads',
+                    '[class*="ad-showing"]'
+                ]
+
+                for _ in range(30):  # Check for 30 seconds max for unskippable ads
+                    ad_present = False
+                    for indicator in ad_indicators:
+                        if page.locator(indicator).count() > 0:
+                            ad_present = True
+                            break
+
+                    if not ad_present:
+                        break
+
+                    await page.wait_for_timeout(1000)  # Wait 1 second and check again
+
+        except Exception as e:
+            self.logger.debug(f"Ad skipping failed: {e}")
+
     async def extract_video_metadata(self, page: Page, video_info: Dict) -> Dict:
         """Extract comprehensive metadata from a video page."""
         video_id = video_info['videoId']
         clean_url = self.clean_video_url(video_info['url'])
-        
+
         try:
             # Navigate to video page
-            await page.goto(clean_url, timeout=30000)
-            
+            await page.goto(clean_url, timeout=10000)
+
+            # Skip any ads that might appear
+            await self.skip_ads(page)
+
             # Wait for main metadata container
             await page.wait_for_selector(METADATA_CONTAINER, timeout=METADATA_TIMEOUT)
             
@@ -124,24 +212,24 @@ class YouTubeMetadataScraper:
             
             # Extract title
             title_element = page.locator(VIDEO_TITLE_SELECTOR)
-            if await title_element.count() > 0:
+            if title_element.count() > 0:
                 title = await title_element.text_content()
                 if title:
                     metadata['title'] = title.strip()
-            
+
             # Extract channel information
             channel_element = page.locator(CHANNEL_NAME_SELECTOR)
-            if await channel_element.count() > 0:
+            if channel_element.count() > 0:
                 channel_name = await channel_element.text_content()
                 channel_url = await channel_element.get_attribute('href')
                 if channel_name:
                     metadata['channel'] = channel_name.strip()
                 if channel_url:
                     metadata['channelUrl'] = channel_url
-            
+
             # Extract subscriber count
             subscriber_element = page.locator(SUBSCRIBER_COUNT_SELECTOR)
-            if await subscriber_element.count() > 0:
+            if subscriber_element.count() > 0:
                 subscriber_count = await subscriber_element.text_content()
                 if subscriber_count:
                     metadata['subscriberCount'] = subscriber_count.strip()
@@ -157,14 +245,14 @@ class YouTubeMetadataScraper:
             
             # Extract duration
             duration_element = page.locator(DURATION_SELECTOR)
-            if await duration_element.count() > 0:
+            if duration_element.count() > 0:
                 duration = await duration_element.text_content()
                 if duration:
                     metadata['duration'] = duration.strip()
-            
+
             # Extract comment count (optional)
             comment_element = page.locator(COMMENT_COUNT_SELECTOR)
-            if await comment_element.count() > 0:
+            if comment_element.count() > 0:
                 comment_count = await comment_element.text_content()
                 if comment_count:
                     metadata['commentCount'] = comment_count.strip()
@@ -190,7 +278,7 @@ class YouTubeMetadataScraper:
         """Extract view count and upload date information."""
         try:
             info_element = page.locator(VIEW_DATE_INFO_SELECTOR)
-            if await info_element.count() > 0:
+            if info_element.count() > 0:
                 info_text = await info_element.text_content()
                 if info_text:
                     info_text = info_text.strip()
@@ -205,10 +293,10 @@ class YouTubeMetadataScraper:
                             view_match = re.search(r'[\d,KMB.]+\s*views?', info_text, re.IGNORECASE)
                             if view_match:
                                 metadata['viewCount'] = view_match.group(0)
-            
+
             # Extract precise date from tooltip
             precise_element = page.locator(PRECISE_DATE_SELECTOR)
-            if await precise_element.count() > 0:
+            if precise_element.count() > 0:
                 precise_date = await precise_element.text_content()
                 if precise_date:
                     metadata['preciseDate'] = precise_date.strip()
@@ -221,9 +309,9 @@ class YouTubeMetadataScraper:
         try:
             # Like button extraction - use first() to avoid strict mode violation
             like_button = page.locator(LIKE_BUTTON_SELECTOR).first()
-            if await like_button.count() > 0:
+            if like_button.count() > 0:
                 like_text_element = like_button.locator(BUTTON_TEXT_SELECTOR).first()
-                if await like_text_element.count() > 0:
+                if like_text_element.count() > 0:
                     like_text = await like_text_element.text_content()
                     if like_text and like_text.strip():
                         metadata['likeCount'] = like_text.strip()
@@ -235,9 +323,9 @@ class YouTubeMetadataScraper:
 
             # Dislike button extraction - use first() to avoid strict mode violation
             dislike_button = page.locator(DISLIKE_BUTTON_SELECTOR).first()
-            if await dislike_button.count() > 0:
+            if dislike_button.count() > 0:
                 dislike_text_element = dislike_button.locator(BUTTON_TEXT_SELECTOR).first()
-                if await dislike_text_element.count() > 0:
+                if dislike_text_element.count() > 0:
                     dislike_text = await dislike_text_element.text_content()
                     if dislike_text and dislike_text.strip():
                         metadata['dislikeCount'] = dislike_text.strip()
@@ -261,7 +349,7 @@ class YouTubeMetadataScraper:
             for selector in show_more_selectors:
                 try:
                     show_more = page.locator(selector)
-                    if await show_more.count() > 0:
+                    if show_more.count() > 0:
                         await show_more.click()
                         await page.wait_for_timeout(500)  # Wait for expansion
                         self.logger.debug("Clicked 'Show more' button")
@@ -274,7 +362,7 @@ class YouTubeMetadataScraper:
         for i, selector in enumerate(DESCRIPTION_SELECTORS):
             try:
                 desc_element = page.locator(selector)
-                if await desc_element.count() > 0:
+                if desc_element.count() > 0:
                     description = await desc_element.text_content()
                     if description and description.strip():
                         metadata['description'] = description.strip()
@@ -339,10 +427,16 @@ class YouTubeMetadataScraper:
                     self.scraped_metadata.append(metadata)
                     self.scraped_videos.add(video_id)
 
-                    # Save progress every 10 videos
-                    if (i + 1) % 10 == 0:
-                        self.save_progress()
-                        self.logger.info(f"Progress saved: {i+1} videos processed")
+                    # Save incremental metadata immediately for maximum safety
+                    self.save_incremental_metadata(metadata)
+
+                    # Save progress after EVERY video for safety
+                    self.save_progress()
+
+                    # Memory management for large datasets
+                    self.cleanup_memory_periodically(i + 1)
+
+                    self.logger.info(f"✅ Completed video {i+1}/{len(videos_to_scrape)}: {video_id}")
 
                     # Random pause between videos (except for the last one)
                     if i < len(videos_to_scrape) - 1:
@@ -363,19 +457,95 @@ class YouTubeMetadataScraper:
         self.logger.info(f"Scraping completed. Total videos scraped: {len(self.scraped_metadata)}")
         return self.scraped_metadata
 
+    def consolidate_incremental_data(self) -> List[Dict]:
+        """Consolidate incremental metadata from JSONL file and memory."""
+        all_metadata = []
+
+        # Read from incremental JSONL file
+        if self.incremental_file.exists():
+            try:
+                with open(self.incremental_file, 'r', encoding='utf-8') as f:
+                    for line_num, line in enumerate(f, 1):
+                        line = line.strip()
+                        if line:
+                            try:
+                                metadata = json.loads(line)
+                                all_metadata.append(metadata)
+                            except json.JSONDecodeError as e:
+                                self.logger.warning(f"Failed to parse line {line_num} in incremental file: {e}")
+
+                self.logger.info(f"Loaded {len(all_metadata)} records from incremental file")
+            except Exception as e:
+                self.logger.warning(f"Failed to read incremental file: {e}")
+
+        # Also include any metadata still in memory (shouldn't be much due to memory cleanup)
+        all_metadata.extend(self.scraped_metadata)
+
+        # Remove duplicates based on videoId (keep last occurrence)
+        seen_ids = set()
+        unique_metadata = []
+        for metadata in reversed(all_metadata):  # Reverse to keep last occurrence
+            video_id = metadata.get('videoId')
+            if video_id and video_id not in seen_ids:
+                seen_ids.add(video_id)
+                unique_metadata.append(metadata)
+
+        unique_metadata.reverse()  # Restore original order
+        return unique_metadata
+
     def save_final_output(self, output_file: str) -> None:
         """Save the final scraped metadata to a JSON file."""
         try:
+            # Consolidate all data including incremental data
+            final_metadata = self.consolidate_incremental_data()
+
             with open(output_file, 'w', encoding='utf-8') as f:
-                json.dump(self.scraped_metadata, f, indent=2, ensure_ascii=False)
+                json.dump(final_metadata, f, indent=2, ensure_ascii=False)
 
             self.logger.info(f"Final output saved to {output_file}")
             print(f"✅ Scraped metadata saved to: {output_file}")
-            print(f"📊 Total videos processed: {len(self.scraped_metadata)}")
+            print(f"📊 Total videos processed: {len(final_metadata)}")
+
+            # Clean up incremental file
+            self.cleanup_incremental_file()
 
         except Exception as e:
             self.logger.error(f"Failed to save final output: {e}")
             raise
+
+    def cleanup_incremental_file(self) -> None:
+        """Clean up incremental metadata file after successful consolidation."""
+        try:
+            if self.incremental_file.exists():
+                self.incremental_file.unlink()
+                self.logger.info("Cleaned up incremental file")
+        except Exception as e:
+            self.logger.warning(f"Failed to clean up incremental file: {e}")
+
+    def handle_graceful_shutdown(self, output_file: str = None) -> None:
+        """Handle graceful shutdown by consolidating data."""
+        try:
+            if output_file is None:
+                timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+                output_file = f"scraped_metadata_interrupted_{timestamp}.json"
+
+            print(f"\n⚠️  Graceful shutdown initiated...")
+            print(f"💾 Consolidating scraped data...")
+
+            final_metadata = self.consolidate_incremental_data()
+
+            if final_metadata:
+                with open(output_file, 'w', encoding='utf-8') as f:
+                    json.dump(final_metadata, f, indent=2, ensure_ascii=False)
+
+                print(f"✅ Scraped metadata saved to: {output_file}")
+                print(f"📊 Total videos processed: {len(final_metadata)}")
+            else:
+                print("ℹ️  No metadata to save")
+
+        except Exception as e:
+            print(f"❌ Error during graceful shutdown: {e}")
+            self.logger.error(f"Graceful shutdown failed: {e}")
 
 
 async def main():
@@ -427,7 +597,21 @@ async def main():
     print(f"⏱️  Average pause: {args.pause} seconds")
     print(f"💾 Output file: {args.output}")
     print(f"🖥️  Headless mode: {args.headless}")
+    print("⚠️  Press Ctrl+C to stop gracefully")
     print()
+
+    # Initialize scraper for signal handling
+    scraper = None
+
+    def signal_handler(signum, frame):
+        """Handle graceful shutdown on Ctrl+C."""
+        _ = signum, frame  # Suppress unused parameter warnings
+        if scraper:
+            scraper.handle_graceful_shutdown(args.output)
+        sys.exit(0)
+
+    # Set up signal handler
+    signal.signal(signal.SIGINT, signal_handler)
 
     try:
         # Initialize scraper
@@ -450,13 +634,16 @@ async def main():
         return 0
 
     except KeyboardInterrupt:
-        print("\n⚠️  Scraping interrupted by user")
-        print("💾 Progress has been saved and can be resumed")
+        # This should be handled by signal handler, but just in case
+        if scraper:
+            scraper.handle_graceful_shutdown(args.output)
         return 1
 
     except Exception as e:
         print(f"❌ Error: {e}")
         logging.error(f"Scraping failed: {e}")
+        if scraper:
+            scraper.handle_graceful_shutdown(args.output)
         return 1
 
 
