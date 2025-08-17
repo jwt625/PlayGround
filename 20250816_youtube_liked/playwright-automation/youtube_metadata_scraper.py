@@ -139,8 +139,31 @@ class YouTubeMetadataScraper:
     async def skip_ads(self, page: Page) -> None:
         """Skip YouTube ads if they appear."""
         try:
-            # Wait for ads to potentially load and skip button to appear
+            # Wait for video player to load
             await page.wait_for_timeout(1000)
+
+            # Check video duration - if > 10 minutes, it's not an ad
+            try:
+                duration_element = page.locator('.ytp-time-duration')
+                if await duration_element.count() > 0:
+                    duration_text = await duration_element.text_content(timeout=2000)
+                    if duration_text:
+                        # Parse duration (format: "MM:SS" or "HH:MM:SS")
+                        duration_parts = duration_text.strip().split(':')
+                        if len(duration_parts) >= 2:
+                            if len(duration_parts) == 3:  # HH:MM:SS format
+                                hours = int(duration_parts[0])
+                                minutes = int(duration_parts[1])
+                                if hours > 0 or minutes >= 10:  # > 10 minutes
+                                    self.logger.debug(f"Video duration {duration_text} > 10min, skipping ad detection")
+                                    return
+                            elif len(duration_parts) == 2:  # MM:SS format
+                                minutes = int(duration_parts[0])
+                                if minutes >= 10:  # > 10 minutes
+                                    self.logger.debug(f"Video duration {duration_text} > 10min, skipping ad detection")
+                                    return
+            except Exception as e:
+                self.logger.debug(f"Could not check video duration: {e}, proceeding with ad detection")
 
             # Common ad skip selectors
             skip_selectors = [
@@ -476,6 +499,18 @@ class YouTubeMetadataScraper:
             page = await context.new_page()
 
             try:
+                # Initial YouTube load - navigate to first video and wait for full initialization
+                if videos_to_scrape:
+                    first_video = videos_to_scrape[0]
+                    first_video_url = self.clean_video_url(first_video['url'])
+
+                    self.logger.info(f"Initial YouTube load: navigating to first video {first_video['videoId']}")
+                    await page.goto(first_video_url, timeout=10000)
+
+                    self.logger.info("Waiting 30 seconds for YouTube to fully load...")
+                    await page.wait_for_timeout(30000)  # 30 seconds for YouTube to fully initialize
+                    self.logger.info("Initial YouTube load complete")
+
                 # Process videos
                 for i, video_info in enumerate(videos_to_scrape):
                     video_id = video_info['videoId']
