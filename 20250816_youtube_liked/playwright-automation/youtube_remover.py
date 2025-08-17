@@ -95,13 +95,13 @@ class YouTubeVideoRemover:
         self.logger.info(f"Starting removal of {count} videos from YouTube liked list")
 
         with sync_playwright() as p:
-            browser = p.chromium.launch(headless=self.headless)
+            browser = p.firefox.launch(headless=self.headless)
 
             # Try to load saved session context
             session_info = self.auth.load_session_info()
-            if session_info and self.auth.context_dir.exists():
+            if session_info and self.auth.context_file.exists():
                 self.logger.info("Loading browser with saved session...")
-                context = browser.new_context(storage_state=str(self.auth.context_dir))
+                context = browser.new_context(storage_state=str(self.auth.context_file))
             else:
                 self.logger.info("Starting fresh browser session...")
                 context = browser.new_context()

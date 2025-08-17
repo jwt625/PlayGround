@@ -21,7 +21,7 @@ class YouTubeAuth:
         self.session_dir = Path(session_dir)
         self.session_dir.mkdir(exist_ok=True)
         self.session_file = self.session_dir / "youtube_session.json"
-        self.context_dir = self.session_dir / "browser_context"
+        self.context_file = self.session_dir / "browser_context.json"
         
     def save_session_info(self, context: BrowserContext) -> bool:
         """
@@ -35,13 +35,13 @@ class YouTubeAuth:
         """
         try:
             # Save browser context (cookies, localStorage, etc.)
-            context.storage_state(path=str(self.context_dir))
-            
+            context.storage_state(path=str(self.context_file))
+
             # Save session metadata
             session_info = {
                 "saved_at": datetime.now().isoformat(),
                 "expires_at": (datetime.now() + timedelta(days=30)).isoformat(),
-                "context_path": str(self.context_dir)
+                "context_path": str(self.context_file)
             }
             
             with open(self.session_file, 'w') as f:
@@ -94,10 +94,8 @@ class YouTubeAuth:
         try:
             if self.session_file.exists():
                 self.session_file.unlink()
-            if self.context_dir.exists():
-                # Remove context directory and contents
-                import shutil
-                shutil.rmtree(self.context_dir)
+            if self.context_file.exists():
+                self.context_file.unlink()
             self.logger.info("Session data cleared")
         except Exception as e:
             self.logger.error(f"Failed to clear session: {e}")

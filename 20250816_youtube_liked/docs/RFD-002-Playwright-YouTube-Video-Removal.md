@@ -92,7 +92,7 @@ from playwright.sync_api import sync_playwright
 
 def remove_top_videos(count=4000):
     with sync_playwright() as p:
-        browser = p.chromium.launch(headless=False)
+        browser = p.firefox.launch(headless=False)
         page = browser.new_page()
         
         # Navigate to liked videos
@@ -216,7 +216,7 @@ source venv/bin/activate  # Windows: venv\Scripts\activate
 ### 2. Install Dependencies
 ```bash
 pip install playwright
-playwright install chromium
+playwright install firefox
 ```
 
 ### 3. Configuration
@@ -274,6 +274,23 @@ The implementation includes a user-guided authentication flow:
 3. **Session expiry**: Graceful fallback to manual login
 4. **Session management**: `--clear-session`, `--force-login` options
 
+### Browser Engine Selection
+
+**Updated 2025-08-16**: Switched from Chromium to Firefox due to compatibility issues.
+
+- **Issue**: Chromium was experiencing `TargetClosedError` crashes on macOS
+- **Root Cause**: Browser context creation failures and potential system compatibility issues
+- **Solution**: Firefox provides better stability and compatibility
+- **Impact**: No functional changes - all automation features work identically
+
+### Session Storage Fix
+
+**Updated 2025-08-16**: Fixed session persistence implementation.
+
+- **Issue**: Session storage was using directory path instead of file path
+- **Fix**: Changed `context_dir` to `context_file` in auth.py
+- **Result**: Proper session saving and loading for seamless re-authentication
+
 ### Usage
 
 ```bash
@@ -290,6 +307,14 @@ python youtube_remover.py
 python youtube_remover.py --count 2000 --headless
 ```
 
+### Troubleshooting
+
+If you encounter browser launch issues:
+
+1. **Reinstall Firefox**: `playwright install firefox`
+2. **Clear sessions**: `python youtube_remover.py --clear-session`
+3. **Force fresh login**: `python youtube_remover.py --force-login`
+
 ---
 
-**Note**: This implementation provides a robust foundation for YouTube video removal that overcomes the limitations encountered with browser extension approaches, including proper authentication handling.
+**Note**: This implementation provides a robust foundation for YouTube video removal that overcomes the limitations encountered with browser extension approaches, including proper authentication handling and cross-platform browser compatibility.
