@@ -9,7 +9,7 @@ YOUTUBE_LIKED_URL = "https://www.youtube.com/playlist?list=LL"
 DEFAULT_REMOVAL_COUNT = 4000
 HEADLESS_MODE = False  # Set True for production
 WAIT_BETWEEN_REMOVALS = 500  # milliseconds
-MAX_RETRIES = 3
+MAX_RETRIES = 1000
 
 # Selectors based on DOM analysis from RFD-002
 VIDEO_SELECTOR = "ytd-playlist-video-renderer"

@@ -256,34 +256,54 @@ class YouTubeVideoRemover:
         self.logger.info(f"Removal completed. Successfully removed {self.removed_count} videos")
         return self.removed_count
     
-    def integrated_removal_workflow(self, videos_to_remove: int = DEFAULT_REMOVAL_COUNT) -> bool:
+    def integrated_removal_workflow(self, videos_to_remove: int = DEFAULT_REMOVAL_COUNT, max_retries: int = 3000) -> bool:
         """
         Complete workflow with backup verification and video removal.
-        
+        Includes retry logic for partial completions.
+
         Args:
             videos_to_remove: Number of videos to remove
-            
+            max_retries: Maximum number of retry attempts for partial completions
+
         Returns:
             True if workflow completed successfully
         """
         self.logger.info("Starting integrated removal workflow")
-        
+
         # Initialize removal tracking
         self.removed_videos = []
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         self.logger.info(f"Starting video removal session at {timestamp}")
-        
-        # Remove videos with Playwright
-        removed_count = self.remove_top_videos(videos_to_remove)
-        
-        # Log final results
-        success = removed_count == videos_to_remove
-        if success:
-            self.logger.info(f"✅ Workflow completed successfully! Removed {removed_count} videos")
-        else:
-            self.logger.warning(f"⚠️ Workflow partially completed. Removed {removed_count}/{videos_to_remove} videos")
-        
-        return success
+
+        total_removed = 0
+        retry_count = 0
+
+        while total_removed < videos_to_remove and retry_count <= max_retries:
+            remaining_to_remove = videos_to_remove - total_removed
+
+            if retry_count > 0:
+                self.logger.info(f"🔄 Retry attempt {retry_count}/{max_retries} - attempting to remove {remaining_to_remove} more videos")
+
+            # Remove videos with Playwright
+            removed_count = self.remove_top_videos(remaining_to_remove)
+            total_removed += removed_count
+
+            # Check if we completed successfully
+            if total_removed >= videos_to_remove:
+                self.logger.info(f"✅ Workflow completed successfully! Removed {total_removed} videos")
+                return True
+            else:
+                self.logger.warning(f"⚠️ Workflow partially completed. Removed {removed_count}/{remaining_to_remove} videos this attempt (total: {total_removed}/{videos_to_remove})")
+
+                if retry_count < max_retries:
+                    self.logger.info(f"🔄 Will retry after brief pause...")
+                    time.sleep(5)  # Brief pause before retry
+                    retry_count += 1
+                else:
+                    self.logger.error(f"❌ Maximum retries ({max_retries}) reached. Final count: {total_removed}/{videos_to_remove} videos")
+                    break
+
+        return total_removed >= videos_to_remove
 
     def clear_saved_session(self):
         """
@@ -309,7 +329,9 @@ def main():
                        help="Clear saved login session and exit")
     parser.add_argument("--force-login", action="store_true",
                        help="Force new login (ignore saved session)")
-    
+    parser.add_argument("--max-retries", type=int, default=3,
+                       help="Maximum number of retry attempts for partial completions (default: 3)")
+
     args = parser.parse_args()
 
     remover = YouTubeVideoRemover(headless=args.headless)
@@ -325,7 +347,7 @@ def main():
         print("Forcing new login...")
 
     # Run the removal workflow
-    success = remover.integrated_removal_workflow(args.count)
+    success = remover.integrated_removal_workflow(args.count, args.max_retries)
     if not success:
         exit(1)
 
