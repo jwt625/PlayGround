@@ -222,6 +222,18 @@ class YouTubeMetadataScraper:
         except Exception as e:
             self.logger.debug(f"Ad skipping failed: {e}")
 
+    async def extract_video_metadata_with_retry(self, page: Page, video_info: Dict, max_retries: int = 2) -> Dict:
+        """Extract video metadata with retry logic for connection issues."""
+        for attempt in range(max_retries + 1):
+            try:
+                return await self.extract_video_metadata(page, video_info)
+            except Exception as e:
+                if attempt < max_retries:
+                    self.logger.warning(f"Attempt {attempt + 1} failed for {video_info['videoId']}: {e}. Retrying...")
+                    await asyncio.sleep(2)  # Wait 2 seconds before retry
+                else:
+                    raise e
+
     async def extract_video_metadata(self, page: Page, video_info: Dict) -> Dict:
         """Extract comprehensive metadata from a video page."""
         video_id = video_info['videoId']
@@ -318,7 +330,18 @@ class YouTubeMetadataScraper:
             return metadata
             
         except Exception as e:
-            self.logger.error(f"Failed to extract metadata for {video_id}: {e}")
+            error_msg = str(e)
+
+            # Check for specific Playwright connection issues
+            if "'dict' object has no attribute '_object'" in error_msg:
+                self.logger.error(f"Playwright connection issue detected for {video_id}: {error_msg}")
+                self.logger.error("This typically indicates browser connection instability - browser restart recommended")
+                raise Exception(f"Playwright connection error: {error_msg}")
+            elif "Timeout" in error_msg:
+                self.logger.warning(f"Timeout error for {video_id}: {error_msg}")
+            else:
+                self.logger.error(f"Failed to extract metadata for {video_id}: {error_msg}")
+
             # Return minimal metadata with error info
             return {
                 'scrapedAt': datetime.now().isoformat(),
@@ -328,7 +351,7 @@ class YouTubeMetadataScraper:
                 'videoId': video_id,
                 'title': video_info.get('title', ''),
                 'channel': video_info.get('channel', ''),
-                'error': str(e)
+                'error': error_msg
             }
     
     async def _extract_view_and_date_info(self, page: Page, metadata: Dict) -> None:
@@ -503,7 +526,7 @@ class YouTubeMetadataScraper:
         self.logger.debug("No description found with any method")
 
     async def scrape_videos(self, videos: List[Dict], max_videos: int, average_pause: float) -> List[Dict]:
-        """Scrape metadata for a list of videos."""
+        """Scrape metadata for a list of videos with deep page refresh for stability."""
         self.load_progress()
 
         # Filter out already scraped videos
@@ -519,8 +542,12 @@ class YouTubeMetadataScraper:
         self.logger.info(f"Starting to scrape {len(videos_to_scrape)} videos")
         self.logger.info(f"Average pause between videos: {average_pause} seconds")
 
+        # Page refresh configuration - much lighter than browser restart
+        PAGE_REFRESH_INTERVAL = 100  # Deep refresh every 100 videos to reset YouTube state
+        self.logger.info(f"Page refresh interval: every {PAGE_REFRESH_INTERVAL} videos")
+
         async with async_playwright() as p:
-            # Launch browser with session persistence and muted audio
+            # Launch browser once and keep it running
             browser = await p.firefox.launch(
                 headless=self.headless,
                 args=['--mute-audio', '--disable-audio-output']  # Always mute audio
@@ -557,10 +584,35 @@ class YouTubeMetadataScraper:
                 for i, video_info in enumerate(videos_to_scrape):
                     video_id = video_info['videoId']
 
+                    # Deep page refresh periodically to reset YouTube state
+                    if i > 0 and i % PAGE_REFRESH_INTERVAL == 0:
+                        self.logger.info(f"🔄 Deep refreshing page after {i} videos to reset YouTube state")
+                        try:
+                            # Force a hard refresh to clear YouTube's internal state
+                            await page.reload(wait_until='networkidle')
+                            await page.wait_for_timeout(5000)  # Wait for page to stabilize
+                            self.logger.info("Page refresh complete")
+                        except Exception as e:
+                            self.logger.warning(f"Page refresh failed: {e}, continuing...")
+
                     self.logger.info(f"Processing video {i+1}/{len(videos_to_scrape)}: {video_id}")
 
-                    # Extract metadata
-                    metadata = await self.extract_video_metadata(page, video_info)
+                    try:
+                        # Extract metadata with retry logic for connection issues
+                        metadata = await self.extract_video_metadata_with_retry(page, video_info)
+                    except Exception as e:
+                        self.logger.error(f"Failed to extract metadata for {video_id} after retries: {e}")
+                        # Create minimal error metadata
+                        metadata = {
+                            'scrapedAt': datetime.now().isoformat(),
+                            'clickedAt': datetime.now().isoformat(),
+                            'source': 'YouTube Video Info Scraper',
+                            'url': self.clean_video_url(video_info['url']),
+                            'videoId': video_id,
+                            'title': video_info.get('title', ''),
+                            'channel': video_info.get('channel', ''),
+                            'error': str(e)
+                        }
 
                     # Add to results
                     self.scraped_metadata.append(metadata)
@@ -592,8 +644,16 @@ class YouTubeMetadataScraper:
                 self.save_progress()
 
             finally:
-                await context.close()
-                await browser.close()
+                if context:
+                    try:
+                        await context.close()
+                    except Exception as e:
+                        self.logger.warning(f"Error closing context: {e}")
+                if browser:
+                    try:
+                        await browser.close()
+                    except Exception as e:
+                        self.logger.warning(f"Error closing browser: {e}")
 
         self.logger.info(f"Scraping completed. Total videos scraped: {len(self.scraped_metadata)}")
         return self.scraped_metadata
