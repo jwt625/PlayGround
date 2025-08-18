@@ -123,7 +123,63 @@ class YouTubeMetadataScraper:
                 self.logger.info(f"Memory cleanup: keeping last {batch_size} records in memory")
                 # Keep only recent records in memory, older ones are saved to disk
                 self.scraped_metadata = self.scraped_metadata[-batch_size:]
-    
+
+    async def apply_manual_video_controls(self, page: Page) -> None:
+        """Apply manual mute and play controls after browser restart."""
+        try:
+            # Wait for video player to be ready
+            await page.wait_for_selector('.html5-video-player', timeout=10000)
+
+            # Focus on the video player first
+            await page.click('.html5-video-player')
+            await page.wait_for_timeout(500)
+
+            # Attempt to mute with 'M' key
+            self.logger.debug("🔇 Applying manual mute with 'M' key...")
+            await page.keyboard.press('m')
+            await page.wait_for_timeout(1000)
+
+            # Check if video is paused and try to play
+            video_status = await page.evaluate("""
+                () => {
+                    const video = document.querySelector('video');
+                    return video ? { paused: video.paused, muted: video.muted } : { paused: true, muted: false };
+                }
+            """)
+
+            if video_status.get('paused', True):
+                self.logger.debug("▶️ Video paused, applying manual play with Space key...")
+                await page.keyboard.press(' ')
+                await page.wait_for_timeout(1000)
+
+            self.logger.debug(f"🎮 Manual controls applied: muted={video_status.get('muted')}, was_paused={video_status.get('paused')}")
+
+        except Exception as e:
+            self.logger.debug(f"⚠️ Manual controls failed: {e}")
+
+    async def create_browser_session(self, p) -> tuple:
+        """Create a new browser session with proper configuration."""
+        # Launch browser with audio muting
+        browser = await p.firefox.launch(
+            headless=self.headless,
+            args=['--mute-audio', '--disable-audio-output']
+        )
+
+        # Load saved session if available
+        session_file = Path("sessions/browser_context.json")
+        if session_file.exists():
+            try:
+                context = await browser.new_context(storage_state=str(session_file))
+                self.logger.info("📁 Loaded saved browser session")
+            except Exception as e:
+                self.logger.warning(f"Failed to load saved session: {e}")
+                context = await browser.new_context()
+        else:
+            context = await browser.new_context()
+
+        page = await context.new_page()
+        return browser, context, page
+
 
 
     async def wait_for_video_load(self, page: Page) -> None:
@@ -526,7 +582,7 @@ class YouTubeMetadataScraper:
         self.logger.debug("No description found with any method")
 
     async def scrape_videos(self, videos: List[Dict], max_videos: int, average_pause: float) -> List[Dict]:
-        """Scrape metadata for a list of videos with deep page refresh for stability."""
+        """Scrape metadata for a list of videos with browser restart for stability."""
         self.load_progress()
 
         # Filter out already scraped videos
@@ -542,58 +598,53 @@ class YouTubeMetadataScraper:
         self.logger.info(f"Starting to scrape {len(videos_to_scrape)} videos")
         self.logger.info(f"Average pause between videos: {average_pause} seconds")
 
-        # Page refresh configuration - much lighter than browser restart
-        PAGE_REFRESH_INTERVAL = 100  # Deep refresh every 100 videos to reset YouTube state
-        self.logger.info(f"Page refresh interval: every {PAGE_REFRESH_INTERVAL} videos")
+        # Browser restart configuration to prevent heap growth errors
+        BROWSER_RESTART_INTERVAL = 250  # Restart browser every 250 videos to prevent connection issues
+        self.logger.info(f"Browser restart interval: every {BROWSER_RESTART_INTERVAL} videos")
 
         async with async_playwright() as p:
-            # Launch browser once and keep it running
-            browser = await p.firefox.launch(
-                headless=self.headless,
-                args=['--mute-audio', '--disable-audio-output']  # Always mute audio
-            )
-
-            # Load saved session if available
-            session_file = Path("sessions/browser_context.json")
-            if session_file.exists():
-                try:
-                    context = await browser.new_context(storage_state=str(session_file))
-                    self.logger.info("Loaded saved browser session")
-                except Exception as e:
-                    self.logger.warning(f"Failed to load saved session: {e}")
-                    context = await browser.new_context()
-            else:
-                context = await browser.new_context()
-
-            page = await context.new_page()
+            browser, context, page = None, None, None
 
             try:
-                # Initial YouTube load - navigate to first video and wait for full initialization
-                if videos_to_scrape:
-                    first_video = videos_to_scrape[0]
-                    first_video_url = self.clean_video_url(first_video['url'])
-
-                    self.logger.info(f"Initial YouTube load: navigating to first video {first_video['videoId']}")
-                    await page.goto(first_video_url, timeout=10000)
-
-                    self.logger.info("Waiting 30 seconds for YouTube to fully load...")
-                    await page.wait_for_timeout(30000)  # 30 seconds for YouTube to fully initialize
-                    self.logger.info("Initial YouTube load complete")
-
-                # Process videos
                 for i, video_info in enumerate(videos_to_scrape):
                     video_id = video_info['videoId']
 
-                    # Deep page refresh periodically to reset YouTube state
-                    if i > 0 and i % PAGE_REFRESH_INTERVAL == 0:
-                        self.logger.info(f"🔄 Deep refreshing page after {i} videos to reset YouTube state")
-                        try:
-                            # Force a hard refresh to clear YouTube's internal state
-                            await page.reload(wait_until='networkidle')
-                            await page.wait_for_timeout(5000)  # Wait for page to stabilize
-                            self.logger.info("Page refresh complete")
-                        except Exception as e:
-                            self.logger.warning(f"Page refresh failed: {e}, continuing...")
+                    # Browser restart logic every BROWSER_RESTART_INTERVAL videos
+                    if i == 0 or i % BROWSER_RESTART_INTERVAL == 0:
+                        self.logger.info(f"🔄 {'Starting' if i == 0 else 'Restarting'} browser session (video {i+1}/{len(videos_to_scrape)})")
+
+                        # Close existing browser if any
+                        if context:
+                            try:
+                                await context.close()
+                            except Exception as e:
+                                self.logger.warning(f"Error closing context: {e}")
+                        if browser:
+                            try:
+                                await browser.close()
+                            except Exception as e:
+                                self.logger.warning(f"Error closing browser: {e}")
+
+                        # Create new browser session
+                        browser, context, page = await self.create_browser_session(p)
+
+                        # Initial YouTube load for new browser session
+                        if i == 0:
+                            first_video_url = self.clean_video_url(video_info['url'])
+                            self.logger.info(f"Initial YouTube load: navigating to first video {video_id}")
+                            await page.goto(first_video_url, timeout=10000)
+                            self.logger.info("Waiting 30 seconds for YouTube to fully load...")
+                            await page.wait_for_timeout(30000)  # 30 seconds for YouTube to fully initialize
+                        else:
+                            # For browser restarts, navigate to current video and apply controls
+                            current_video_url = self.clean_video_url(video_info['url'])
+                            self.logger.info(f"Browser restart: navigating to video {video_id}")
+                            await page.goto(current_video_url, timeout=10000)
+                            await page.wait_for_timeout(5000)  # Wait for page to load
+
+                        # Apply manual controls after every browser restart (initial or restart)
+                        self.logger.info("🎮 Applying manual controls after browser restart...")
+                        await self.apply_manual_video_controls(page)
 
                     self.logger.info(f"Processing video {i+1}/{len(videos_to_scrape)}: {video_id}")
 
@@ -644,6 +695,7 @@ class YouTubeMetadataScraper:
                 self.save_progress()
 
             finally:
+                # Clean shutdown
                 if context:
                     try:
                         await context.close()
@@ -657,6 +709,7 @@ class YouTubeMetadataScraper:
 
         self.logger.info(f"Scraping completed. Total videos scraped: {len(self.scraped_metadata)}")
         return self.scraped_metadata
+
 
     def consolidate_incremental_data(self) -> List[Dict]:
         """Consolidate incremental metadata from JSONL file and memory."""
