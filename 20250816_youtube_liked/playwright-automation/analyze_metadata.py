@@ -449,7 +449,7 @@ def create_chronological_order_plot(df, output_dir):
     diag_max = min(x_max, y_max)
 
     if diag_min <= diag_max:  # Only draw if there's an overlap
-        plt.plot([diag_min, diag_max], [diag_min, diag_max], 'r--', alpha=0.5, linewidth=1, label='y=x reference')
+        plt.plot([diag_min, diag_max], [diag_min, diag_max], 'r--', alpha=0.5, linewidth=1)
 
     plt.xlabel('Rolling Most Recent Upload Date')
     plt.ylabel('Video Upload Date')
@@ -507,6 +507,75 @@ def create_chronological_order_plot(df, output_dir):
     return date_data
 
 
+def create_upload_date_vs_index_plot(df, output_dir):
+    """Create plot showing upload date vs flipped index (chronological order of liking)."""
+    date_data = df.dropna(subset=['upload_date']).copy()
+
+    if len(date_data) == 0:
+        print("No upload date data available for upload date vs index plot")
+        return
+
+    # Since the original list is from newest liked (index 0) to oldest liked (highest index),
+    # we need to flip it so that x-axis represents chronological order of liking
+    # Original index 0 (newest liked) becomes the highest number
+    # Original highest index (oldest liked) becomes 0
+    max_index = len(df) - 1
+    date_data['chronological_order'] = max_index - date_data['index']
+
+    # Sort by chronological order for plotting
+    date_data = date_data.sort_values('chronological_order')
+
+    plt.figure(figsize=(15, 10))
+
+    # Create scatter plot
+    plt.scatter(date_data['chronological_order'], date_data['upload_date'],
+                alpha=0.6, s=20, edgecolors='black', linewidth=0.3)
+
+    plt.xlabel('Index')
+    plt.ylabel('Video Upload Date')
+    # plt.title(f'Video Upload Date vs Chronological Order of Liking\n'
+    #           f'({len(date_data)} videos with upload dates)\n'
+    #           f'Shows when videos were uploaded vs the order you liked them')
+    plt.grid(True, alpha=1)
+
+    # Add some statistics
+    date_range = date_data['upload_date'].max() - date_data['upload_date'].min()
+    oldest_video = date_data['upload_date'].min()
+    newest_video = date_data['upload_date'].max()
+
+    # Add text box with statistics
+    # stats_text = f'Video Upload Date Range:\n{oldest_video.strftime("%Y-%m-%d")} to {newest_video.strftime("%Y-%m-%d")}\n({date_range.days} days span)'
+    # plt.text(0.02, 0.98, stats_text, transform=plt.gca().transAxes,
+    #          verticalalignment='top', bbox=dict(boxstyle='round', facecolor='wheat', alpha=0.8))
+
+    plt.tight_layout()
+
+    output_path = os.path.join(output_dir, 'upload_date_vs_index.png')
+    plt.savefig(output_path, dpi=300, bbox_inches='tight')
+    print(f"Saved: {output_path}")
+    plt.close()
+
+    # Print some insights
+    print(f"Upload date vs index analysis:")
+    print(f"  Total videos with dates: {len(date_data)}")
+    print(f"  Oldest video uploaded: {oldest_video.strftime('%Y-%m-%d')}")
+    print(f"  Newest video uploaded: {newest_video.strftime('%Y-%m-%d')}")
+    print(f"  Upload date span: {date_range.days} days")
+
+    # Find some interesting patterns
+    recent_likes_old_videos = date_data[
+        (date_data['chronological_order'] > len(date_data) * 0.8) &  # Recently liked (right 20% of plot)
+        (date_data['upload_date'] < date_data['upload_date'].quantile(0.2))  # But old videos (bottom 20% of plot)
+    ]
+
+    if len(recent_likes_old_videos) > 0:
+        print(f"  Found {len(recent_likes_old_videos)} recently liked videos that are quite old")
+        oldest_recent = recent_likes_old_videos.loc[recent_likes_old_videos['upload_date'].idxmin()]
+        print(f"    Oldest recently liked: '{oldest_recent['title'][:50]}...' from {oldest_recent['upload_date'].strftime('%Y-%m-%d')}")
+
+    return date_data
+
+
 def main():
     parser = argparse.ArgumentParser(description='Analyze YouTube metadata and create visualizations')
     parser.add_argument('json_file', nargs='?', 
@@ -556,6 +625,7 @@ def main():
     create_comments_vs_views_plot(df, output_dir)
     create_duration_analysis_plots(df, output_dir)
     create_upload_date_analysis(df, output_dir)
+    create_upload_date_vs_index_plot(df, output_dir)
     create_chronological_order_plot(df, output_dir)
 
     # Save processed data for further analysis
