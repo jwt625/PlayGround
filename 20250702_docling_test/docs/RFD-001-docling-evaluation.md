@@ -505,11 +505,121 @@ pip install torch torchvision --index-url https://download.pytorch.org/whl/cu118
 
 ---
 
+## 12. Marker Comparison Analysis
+
+### 12.1 Marker Setup and Testing
+
+Following the Docling evaluation, we also tested **Marker** (by DataLab), another advanced document processing library, to provide a comprehensive comparison.
+
+#### Installation
+```bash
+# Install Marker with full dependencies
+uv pip install marker-pdf[full]
+
+# Verify installation
+marker_single --help
+```
+
+#### Configuration Used
+```bash
+marker_single \
+  --highres_image_dpi 300 \
+  --lowres_image_dpi 150 \
+  --extract_images true \
+  --output_format markdown \
+  --debug \
+  --redo_inline_math \
+  --recognition_batch_size 8 \
+  --layout_batch_size 8 \
+  --detection_batch_size 8 \
+  --equation_batch_size 8 \
+  --table_rec_batch_size 8 \
+  --ocr_task_name ocr_with_boxes \
+  --keep_chars \
+  --paginate_output \
+  iVehicles_paper.pdf
+```
+
+### 12.2 Marker Results Summary
+
+| Metric | Marker Result | Docling Result |
+|--------|---------------|----------------|
+| **Processing Time** | ~8 minutes (including model downloads) | 143 seconds |
+| **Model Size** | ~2.7GB | ~2GB |
+| **Formula Extraction** | 5 display + 8 inline formulas | 5 formulas |
+| **Image Extraction** | 6 high-quality images | 7 images |
+| **Table Detection** | 71 table cells (detailed) | 2 tables |
+| **Debug Information** | Extensive (layout visualizations) | Moderate |
+| **Output Size** | 22.1 KB markdown | 28.7 KB markdown |
+
+### 12.3 Marker Strengths
+
+**🏆 Outstanding Features:**
+- **Comprehensive Debug Output**: Layout visualizations, PDF renders, detailed metadata
+- **Advanced Structure Detection**: 71 table cells vs 2 tables, precise block-level analysis
+- **High-Quality Image Extraction**: 6 images with proper naming and organization
+- **Multi-Stage Processing**: Separate models for layout, OCR, tables, equations
+- **Character-Level Precision**: Detailed character and span information
+- **Extensive Configuration**: 200+ configuration options for fine-tuning
+
+**📊 Technical Excellence:**
+- Uses Surya OCR (state-of-the-art)
+- Advanced CNN-based layout detection
+- Separate specialized models for different tasks
+- Detailed metadata with processing statistics
+
+### 12.4 Marker vs Docling Comparison
+
+| Feature | Marker | Docling | Winner |
+|---------|--------|---------|---------|
+| **Setup Complexity** | High (2.7GB models) | Medium (2GB models) | Docling |
+| **Processing Speed** | Slower (multi-stage) | Faster (single-stage) | Docling |
+| **Formula Quality** | Excellent LaTeX | Excellent LaTeX | Tie |
+| **Debug Information** | Outstanding | Good | Marker |
+| **Image Processing** | Excellent | Excellent | Tie |
+| **Structure Analysis** | Superior detail | Good | Marker |
+| **Configuration** | Extensive options | Moderate options | Marker |
+| **Output Organization** | Hierarchical | Flat | Marker |
+| **Memory Usage** | Higher | Lower | Docling |
+| **Ease of Use** | Complex | Simple | Docling |
+
+### 12.5 Use Case Recommendations
+
+**Choose Marker when:**
+- You need detailed document analysis and debugging
+- Structure preservation is critical
+- You have time for complex setup
+- You need extensive configuration options
+- You're doing research or detailed document analysis
+
+**Choose Docling when:**
+- You need fast, reliable processing
+- You want simple setup and integration
+- Processing speed is important
+- You need good formula extraction with less complexity
+- You're building production systems
+
+### 12.6 Marker Evaluation Rating
+
+**Overall Rating**: ⭐⭐⭐⭐⭐ (5/5 stars)
+
+**Breakdown:**
+- **Technical Capability**: ⭐⭐⭐⭐⭐ Outstanding
+- **Ease of Use**: ⭐⭐⭐ Good (complex setup)
+- **Processing Speed**: ⭐⭐⭐ Good (slower but thorough)
+- **Output Quality**: ⭐⭐⭐⭐⭐ Excellent
+- **Debug Features**: ⭐⭐⭐⭐⭐ Outstanding
+
+---
+
 **Document Information**:
 - **Created**: 2025-01-21
+- **Updated**: 2025-01-21 (Added Marker comparison)
 - **Test Environment**: Ubuntu with Python 3.10, UV package manager
 - **Docling Version**: 2.39.0
+- **Marker Version**: 1.8.4
 - **Test Document**: iVehicles academic paper (4 pages)
-- **Processing Time**: 143 seconds with full enrichment
+- **Docling Processing Time**: 143 seconds with full enrichment
+- **Marker Processing Time**: ~8 minutes with full configuration
 
-**Next Steps**: Proceed with integration planning and pilot implementation for academic document processing workflows.
+**Final Recommendation**: Both tools are excellent. **Docling for production efficiency**, **Marker for research and detailed analysis**.
