@@ -54,7 +54,7 @@ A detailed evaluation of the Marker document processing library, focusing on:
 
 #### Test Results Summary
 - **Document Tested**: iVehicles academic paper (4 pages)
-- **Processing Time**: ~8 minutes with full configuration
+- **Processing Time**: 31.5 seconds (0.5 minutes) with full configuration
 - **Formulas Extracted**: 5 display + 8 inline mathematical expressions
 - **Images Processed**: 6 high-quality images with debug visualizations
 - **Output Formats**: Markdown with extensive debug data
@@ -95,7 +95,7 @@ marker_single \
 | Feature | Docling | Marker | Best For |
 |---------|---------|--------|----------|
 | **Setup Time** | Fast | Slow (model downloads) | Docling |
-| **Processing Speed** | 2.4 min | 8 min | Docling |
+| **Processing Speed** | 2.4 min | 0.5 min | Marker |
 | **Formula Extraction** | 5 formulas | 13 expressions | Marker |
 | **Structure Analysis** | Good | Outstanding | Marker |
 | **Debug Features** | Moderate | Comprehensive | Marker |

@@ -544,7 +544,7 @@ marker_single \
 
 | Metric | Marker Result | Docling Result |
 |--------|---------------|----------------|
-| **Processing Time** | ~8 minutes (including model downloads) | 143 seconds |
+| **Processing Time** | 31.5 seconds (0.5 minutes) | 143 seconds (2.4 minutes) |
 | **Model Size** | ~2.7GB | ~2GB |
 | **Formula Extraction** | 5 display + 8 inline formulas | 5 formulas |
 | **Image Extraction** | 6 high-quality images | 7 images |
@@ -573,7 +573,7 @@ marker_single \
 | Feature | Marker | Docling | Winner |
 |---------|--------|---------|---------|
 | **Setup Complexity** | High (2.7GB models) | Medium (2GB models) | Docling |
-| **Processing Speed** | Slower (multi-stage) | Faster (single-stage) | Docling |
+| **Processing Speed** | Faster (0.5 min) | Slower (2.4 min) | Marker |
 | **Formula Quality** | Excellent LaTeX | Excellent LaTeX | Tie |
 | **Debug Information** | Outstanding | Good | Marker |
 | **Image Processing** | Excellent | Excellent | Tie |

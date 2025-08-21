@@ -96,9 +96,11 @@ marker_single \
 
 ### 4.1 Performance Metrics
 
+**⚡ Important Note**: Initial testing showed ~8 minutes, but this included one-time model downloads (~2.7GB). Subsequent runs with models cached show the true processing performance below.
+
 | Metric | Result | Rating |
 |--------|--------|--------|
-| Processing Time | ~8 minutes (including downloads) | ⭐⭐⭐ Good |
+| Processing Time | 31.5 seconds (0.5 minutes) | ⭐⭐⭐⭐⭐ Outstanding |
 | Total Elements Extracted | 1,000+ detailed blocks | ⭐⭐⭐⭐⭐ Excellent |
 | Mathematical Formulas | 5 display + 8 inline | ⭐⭐⭐⭐⭐ Excellent |
 | Images Processed | 6 high-quality extractions | ⭐⭐⭐⭐⭐ Excellent |
@@ -200,7 +202,7 @@ marker_single \
 | Feature | Marker | Docling | Winner |
 |---------|--------|---------|---------|
 | **Setup Complexity** | High (2.7GB) | Medium (2GB) | Docling |
-| **Processing Speed** | 8 minutes | 2.4 minutes | Docling |
+| **Processing Speed** | 0.5 minutes | 2.4 minutes | Marker |
 | **Formula Quality** | 13 expressions | 5 expressions | Marker |
 | **Debug Information** | Outstanding | Good | Marker |
 | **Structure Analysis** | 71 table cells | 2 tables | Marker |
