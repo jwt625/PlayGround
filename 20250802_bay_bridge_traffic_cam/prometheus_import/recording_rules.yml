@@ -1,0 +1,27 @@
+groups:
+  - name: historical_data_import
+    interval: 30s
+    rules:
+      # Import historical traffic_vehicles_total data
+      - record: traffic_vehicles_total:imported
+        expr: |
+          # This will be populated by the import script
+          # Placeholder for historical data import
+        labels:
+          source: "historical_import"
+          
+      # Import historical traffic_flow_rate_per_minute data  
+      - record: traffic_flow_rate_per_minute:imported
+        expr: |
+          # This will be populated by the import script
+          # Placeholder for historical data import
+        labels:
+          source: "historical_import"
+          
+      # Import historical system_status data
+      - record: system_status:imported
+        expr: |
+          # This will be populated by the import script
+          # Placeholder for historical data import
+        labels:
+          source: "historical_import"

@@ -104,27 +104,31 @@ func MonitorChromeEvents() {
 // updateTabSession handles Chrome tab session tracking
 func updateTabSession(newDomain string) {
 	now := time.Now()
-	
+
 	// Record the previous session if we had one
 	if currentTabDomain != "" && !currentTabStartTime.IsZero() {
 		sessionDuration := now.Sub(currentTabStartTime).Seconds()
-		
-		// Record session duration metrics
-		metrics.ChromeTabSessionDuration.WithLabelValues(currentTabDomain).Observe(sessionDuration)
-		metrics.ChromeTabTotalTime.WithLabelValues(currentTabDomain).Add(sessionDuration)
-		
+
+		// Get category for metrics (low cardinality)
+		currentCategory := GetDomainCategory(currentTabDomain)
+
+		// Record session duration metrics using categories
+		metrics.ChromeTabSessionDuration.WithLabelValues(currentCategory).Observe(sessionDuration)
+		metrics.ChromeTabTotalTime.WithLabelValues(currentCategory).Add(sessionDuration)
+
 		// Clear the previous tab's gauge
-		metrics.CurrentChromeTabGauge.WithLabelValues(currentTabDomain).Set(0)
-		
-		log.Printf("🕒 Chrome session ended: %s (%.1fs)", currentTabDomain, sessionDuration)
+		metrics.CurrentChromeTabGauge.WithLabelValues(currentCategory).Set(0)
+
+		log.Printf("🕒 Chrome session ended: %s [%s] (%.1fs)", currentTabDomain, currentCategory, sessionDuration)
 	}
-	
+
 	// Start new session
 	currentTabDomain = newDomain
 	currentTabStartTime = now
-	
+
 	if newDomain != "" {
-		log.Printf("🌐 Chrome session started: %s", newDomain)
+		newCategory := GetDomainCategory(newDomain)
+		log.Printf("🌐 Chrome session started: %s [%s]", newDomain, newCategory)
 	}
 }
 
@@ -132,7 +136,75 @@ func updateTabSession(newDomain string) {
 func UpdateCurrentTabGauge() {
 	if currentTabDomain != "" && !currentTabStartTime.IsZero() {
 		sessionDuration := time.Since(currentTabStartTime).Seconds()
-		metrics.CurrentChromeTabGauge.WithLabelValues(currentTabDomain).Set(sessionDuration)
+		currentCategory := GetDomainCategory(currentTabDomain)
+		metrics.CurrentChromeTabGauge.WithLabelValues(currentCategory).Set(sessionDuration)
+	}
+}
+
+// GetDomainCategory returns domain category for metrics (low cardinality) - exported for use by other packages
+func GetDomainCategory(domain string) string {
+	domain = strings.ToLower(domain)
+
+	// Development & Code
+	if strings.Contains(domain, "github") || strings.Contains(domain, "gitlab") ||
+	   strings.Contains(domain, "stackoverflow") || strings.Contains(domain, "codepen") {
+		return "development"
+	}
+
+	// Google Services
+	if strings.Contains(domain, "google") || strings.Contains(domain, "gmail") ||
+	   strings.Contains(domain, "drive") || strings.Contains(domain, "docs") {
+		return "google_services"
+	}
+
+	// Social Media
+	if strings.Contains(domain, "twitter") || strings.Contains(domain, "facebook") ||
+	   strings.Contains(domain, "linkedin") || strings.Contains(domain, "reddit") {
+		return "social_media"
+	}
+
+	// Entertainment
+	if strings.Contains(domain, "youtube") || strings.Contains(domain, "netflix") ||
+	   strings.Contains(domain, "spotify") || strings.Contains(domain, "twitch") {
+		return "entertainment"
+	}
+
+	// Communication
+	if strings.Contains(domain, "slack") || strings.Contains(domain, "teams") ||
+	   strings.Contains(domain, "discord") || strings.Contains(domain, "zoom") {
+		return "communication"
+	}
+
+	// News & Information
+	if strings.Contains(domain, "news") || strings.Contains(domain, "wikipedia") ||
+	   strings.Contains(domain, "medium") || strings.Contains(domain, "blog") {
+		return "information"
+	}
+
+	return "other"
+}
+
+// logDomainSwitch logs detailed domain switch for analysis (not metrics)
+func logDomainSwitch(fromDomain, toDomain string, timestamp float64) {
+	switchEvent := map[string]interface{}{
+		"timestamp":    timestamp,
+		"from_domain":  fromDomain,
+		"to_domain":    toDomain,
+		"from_category": GetDomainCategory(fromDomain),
+		"to_category":   GetDomainCategory(toDomain),
+		"event_type":   "domain_switch",
+	}
+
+	// Log to structured file for detailed analysis
+	jsonData, _ := json.Marshal(switchEvent)
+	logLine := string(jsonData) + "\n"
+
+	// Write to domain switches log file
+	file, err := os.OpenFile("/tmp/keystroke_tracker_domain_switches.jsonl",
+		os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+	if err == nil {
+		defer file.Close()
+		file.WriteString(logLine)
 	}
 }
 
@@ -142,14 +214,20 @@ func handleChromeEvent(event ChromeEvent) {
 	case "domain_switch":
 		fromDomain := SanitizeDomain(event.FromDomain)
 		toDomain := SanitizeDomain(event.ToDomain)
-		
-		// Increment Chrome-specific tab switch metric
-		metrics.ChromeTabSwitches.WithLabelValues(fromDomain, toDomain).Inc()
-		
-		// Update session tracking
+
+		// 1. Log detailed switch for analysis (high cardinality, but not metrics)
+		logDomainSwitch(fromDomain, toDomain, event.Timestamp)
+
+		// 2. Update metrics with LOW CARDINALITY categories only
+		fromCategory := GetDomainCategory(fromDomain)
+		toCategory := GetDomainCategory(toDomain)
+		metrics.ChromeTabSwitches.WithLabelValues(fromCategory, toCategory).Inc()
+
+		// 3. Update session tracking
 		updateTabSession(toDomain)
-		
-		log.Printf("🌐 Chrome: %s → %s", fromDomain, toDomain)
+
+		// 4. Console log with both detail and category
+		log.Printf("🌐 Chrome: %s → %s [%s → %s]", fromDomain, toDomain, fromCategory, toCategory)
 	}
 }
 

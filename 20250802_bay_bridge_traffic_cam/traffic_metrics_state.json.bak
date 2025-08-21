@@ -1,0 +1,9 @@
+{
+  "timestamp": 1755322105.364776,
+  "app_name": "bay-bridge-traffic-detector",
+  "app_instance": "main",
+  "counters": {
+    "left": 360953.0,
+    "right": 614882.0
+  }
+}

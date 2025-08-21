@@ -3,13 +3,13 @@ package metrics
 import "github.com/prometheus/client_golang/prometheus"
 
 var (
-	// Keystroke metrics with app and domain awareness
+	// Keystroke metrics with app awareness (domain removed to reduce cardinality)
 	KeystrokesTotal = prometheus.NewCounterVec(
 		prometheus.CounterOpts{
 			Name: "keystrokes_total",
-			Help: "Total number of keystrokes recorded by key type, application, and domain",
+			Help: "Total number of keystrokes recorded by key type and application",
 		},
-		[]string{"key_type", "app", "domain"},
+		[]string{"key_type", "app"},
 	)
 
 	// App time tracking metrics
@@ -62,37 +62,45 @@ var (
 		[]string{"from_app", "to_app"},
 	)
 
-	// Keystroke interval activity - actual counts per 1s window
+	// Keystroke interval activity - actual counts per 1s window (domain removed to reduce cardinality)
 	KeystrokeIntervalActivity = prometheus.NewGaugeVec(
 		prometheus.GaugeOpts{
 			Name: "keystroke_interval_activity",
-			Help: "Number of keystrokes in the current 1-second interval by app, type, and domain",
+			Help: "Number of keystrokes in the current 1-second interval by app and type",
 		},
-		[]string{"app", "key_type", "domain"},
+		[]string{"app", "key_type"},
 	)
 
-	// Mouse click metrics
+	// Mouse click metrics (domain removed to reduce cardinality)
 	MouseClicksTotal = prometheus.NewCounterVec(
 		prometheus.CounterOpts{
 			Name: "mouse_clicks_total",
-			Help: "Total number of mouse clicks recorded by button type, application, and domain",
+			Help: "Total number of mouse clicks recorded by button type and application",
 		},
-		[]string{"button_type", "app", "domain"},
+		[]string{"button_type", "app"},
 	)
 
 	// Chrome-specific metrics
+	ChromeKeystrokesTotal = prometheus.NewCounterVec(
+		prometheus.CounterOpts{
+			Name: "chrome_keystrokes_total",
+			Help: "Chrome keystrokes by domain category and key type",
+		},
+		[]string{"key_type", "domain_category"},
+	)
+
 	ChromeTabSwitches = prometheus.NewCounterVec(
 		prometheus.CounterOpts{
 			Name: "chrome_tab_switches_total",
-			Help: "Chrome tab switches between domains",
+			Help: "Chrome tab switches between domain categories",
 		},
-		[]string{"from_domain", "to_domain"},
+		[]string{"from_category", "to_category"},
 	)
 
 	ChromeTabSessionDuration = prometheus.NewHistogramVec(
 		prometheus.HistogramOpts{
 			Name: "chrome_tab_session_duration_seconds",
-			Help: "Duration of Chrome tab focus sessions by domain",
+			Help: "Duration of Chrome tab focus sessions by domain category",
 			Buckets: []float64{
 				// Quick switches (< 1 min)
 				0.5, 1, 2, 5, 10, 15, 30,
@@ -104,23 +112,23 @@ var (
 				8400, 9600, 10800, 12000, 13200, 14400,
 			},
 		},
-		[]string{"domain"},
+		[]string{"domain_category"},
 	)
 
 	ChromeTabTotalTime = prometheus.NewCounterVec(
 		prometheus.CounterOpts{
 			Name: "chrome_tab_total_time_seconds",
-			Help: "Total time spent on each Chrome domain",
+			Help: "Total time spent on each Chrome domain category",
 		},
-		[]string{"domain"},
+		[]string{"domain_category"},
 	)
 
 	CurrentChromeTabGauge = prometheus.NewGaugeVec(
 		prometheus.GaugeOpts{
 			Name: "current_chrome_tab_session_seconds",
-			Help: "Current session duration for the active Chrome tab domain",
+			Help: "Current session duration for the active Chrome tab domain category",
 		},
-		[]string{"domain"},
+		[]string{"domain_category"},
 	)
 )
 
@@ -134,6 +142,7 @@ func RegisterMetrics() {
 	prometheus.MustRegister(AppSwitchEvents)
 	prometheus.MustRegister(KeystrokeIntervalActivity)
 	prometheus.MustRegister(MouseClicksTotal)
+	prometheus.MustRegister(ChromeKeystrokesTotal)
 	prometheus.MustRegister(ChromeTabSwitches)
 	prometheus.MustRegister(ChromeTabSessionDuration)
 	prometheus.MustRegister(ChromeTabTotalTime)

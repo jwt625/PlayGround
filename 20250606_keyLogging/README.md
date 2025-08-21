@@ -104,6 +104,16 @@ go get github.com/prometheus/client_golang/prometheus/promhttp
 ./start-with-logs.sh
 ```
 
+**Check metrics health:**
+```bash
+./check-metrics.sh
+```
+
+**Clear metrics if needed:**
+```bash
+./clear-metrics.sh
+```
+
 You should see:
 ```
 🚀 Starting Keystroke Tracker...
@@ -242,6 +252,58 @@ histogram_quantile(0.95, chrome_tab_session_duration_seconds)
 - **Read-only**: No keystroke content is logged (only counts)
 - **No network**: No data sent to external servers
 - **Passive**: Doesn't interfere with normal typing
+
+## 📊 Metrics Management
+*Updated: August 3, 2025*
+
+### Monitoring Metric Health
+
+The system includes built-in tools to prevent metric explosion:
+
+```bash
+# Check current metric count and health
+./check-metrics.sh
+```
+
+This will show:
+- Total metric count
+- Cardinality by metric name
+- Problematic labels (if any)
+- Storage usage estimates
+- Health recommendations
+
+### Clearing Metrics
+
+If you need to reset metrics (e.g., after fixing cardinality issues):
+
+```bash
+# Interactive cleanup script
+./clear-metrics.sh
+```
+
+Options include:
+- Clear local Prometheus data
+- Clear application state files
+- Add metric relabeling rules
+- Full cleanup with instructions
+
+### Metric Design
+
+The system uses **low-cardinality labels** to prevent explosion:
+
+- **Apps**: Limited to installed applications (~10-50 unique values)
+- **Key types**: Fixed set (letter, number, special)
+- **Domain categories**: Fixed set (development, entertainment, etc.)
+- **No timestamps, URLs, or user input as labels**
+
+Chrome domains are categorized into:
+- `development` (GitHub, Stack Overflow)
+- `google_services` (Gmail, Drive, Docs)
+- `social_media` (Twitter, LinkedIn, Reddit)
+- `entertainment` (YouTube, Netflix, Spotify)
+- `communication` (Slack, Teams, Discord)
+- `information` (News, Wikipedia, Medium)
+- `other` (Everything else)
 
 ## 🔄 Stopping the System
 *Updated: June 6, 2025*

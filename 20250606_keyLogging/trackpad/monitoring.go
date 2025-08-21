@@ -62,19 +62,12 @@ func MonitorClickEvents() {
 							if err := json.Unmarshal([]byte(line), &clickEvent); err == nil {
 								// Convert app name to clean format (same as keystrokes)
 								appName := sanitizeAppName(clickEvent.App)
-								
-								// Get domain for current app (Chrome-aware)
-								domain := getDomainForApp(appName)
-								
-								// Increment Prometheus counter with domain
-								metrics.MouseClicksTotal.WithLabelValues(clickEvent.ButtonType, appName, domain).Inc()
-								
-								domainInfo := ""
-								if domain != "" {
-									domainInfo = " (" + domain + ")"
-								}
-								log.Printf("🖱️ %s click in %s%s (Prometheus updated)", 
-									strings.Title(clickEvent.ButtonType), appName, domainInfo)
+
+								// Increment Prometheus counter (domain removed for low cardinality)
+								metrics.MouseClicksTotal.WithLabelValues(clickEvent.ButtonType, appName).Inc()
+
+								log.Printf("🖱️ %s click in %s (Prometheus updated)",
+									strings.Title(clickEvent.ButtonType), appName)
 							}
 						}
 					}
