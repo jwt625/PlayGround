@@ -104,8 +104,62 @@ marker_single \
 | **Configuration** | Moderate | Extensive | Marker |
 
 ### Recommendations
-- **Choose Docling** for: Production systems, fast processing, simple integration
-- **Choose Marker** for: Research, detailed analysis, debugging, comprehensive structure understanding
+- **Choose Marker** for: Most use cases - faster processing, superior accuracy, comprehensive features
+- **Choose Docling** for: Simple setup requirements, smaller model size, basic document processing
+
+## Final Evaluation Summary
+
+### 🏆 MAJOR DISCOVERY: Marker is 4.5x Faster Than Docling!
+
+**Important Note**: Initial testing showed Marker taking ~8 minutes, but this included one-time model downloads (~2.7GB). Subsequent runs revealed the true processing performance.
+
+#### ⚡ Corrected Performance Results
+
+| Metric | Marker | Docling | Winner |
+|--------|--------|---------|---------|
+| **Processing Time** | 31.5 seconds | 143 seconds | **Marker (4.5x faster)** |
+| **Formula Extraction** | 13 expressions | 5 expressions | **Marker** |
+| **Structure Analysis** | 71 table cells | 2 tables | **Marker** |
+| **Debug Features** | Comprehensive | Moderate | **Marker** |
+| **Setup Complexity** | High | Medium | **Docling** |
+| **Model Size** | 2.7GB | 2GB | **Docling** |
+
+#### 🎯 Final Verdict
+
+**🥇 Marker - The Clear Winner**
+- ✅ 4.5x faster processing (31.5s vs 143s)
+- ✅ Superior formula extraction (13 vs 5 mathematical expressions)
+- ✅ Outstanding structure analysis (71 individual table cells)
+- ✅ Comprehensive debug and visualization features
+- ✅ Extensive configuration options (200+)
+- ⚠️ Larger initial download (2.7GB vs 2GB)
+- ⚠️ More complex setup process
+
+**🥈 Docling - Solid Alternative**
+- ✅ Simpler setup and configuration
+- ✅ Smaller model size (2GB)
+- ✅ Good all-around performance
+- ⚠️ 4.5x slower processing
+- ⚠️ Less detailed structure analysis
+- ⚠️ Fewer formula extractions
+
+#### 📋 Updated Recommendations
+
+**Choose Marker for:**
+- Production systems requiring speed and accuracy
+- Academic document processing
+- Detailed structure analysis
+- Mathematical formula extraction
+- Research and development workflows
+- Any use case where processing quality matters
+
+**Choose Docling only if:**
+- Setup simplicity is absolutely critical
+- Minimal model size is required
+- Basic document processing is sufficient
+
+### 🎯 Bottom Line
+**Marker delivers superior performance in both speed AND accuracy**, making it the recommended choice for virtually all document processing workflows. The only trade-off is initial setup complexity, which is a one-time cost for significantly better ongoing performance.
 
 ## Document Format
 
@@ -127,5 +181,6 @@ When adding new documentation:
 
 ---
 
-**Last Updated**: 2025-01-21  
+**Last Updated**: 2025-01-21 (Major Update: Corrected Marker performance timing)
 **Maintainer**: Technical Evaluation Team
+**Key Finding**: Marker is 4.5x faster than Docling (31.5s vs 143s processing time)
