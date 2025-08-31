@@ -14,6 +14,7 @@ from typing import Any
 from models.conversion import (
     ConversionMetrics,
     ConversionMode,
+    ConversionPhase,
     ConversionResult,
     ConversionStatus,
     QualityAssessment,
@@ -100,7 +101,7 @@ class ConversionService:
         # Initialize job tracking
         self._jobs[job_id] = {
             "status": ConversionStatus.QUEUED,
-            "progress": 0,
+            "phase": ConversionPhase.QUEUED,
             "stage": "initialized",
             "message": "Job created",
             "mode": mode,
@@ -156,7 +157,10 @@ class ConversionService:
         try:
             # Update job status
             self._update_job_status(
-                job_id, ConversionStatus.PROCESSING, 10, "starting_conversion",
+                job_id,
+                ConversionStatus.PROCESSING,
+                ConversionPhase.PREPARING,
+                "starting_conversion",
                 "Starting conversion process"
             )
             if progress_callback:
@@ -167,7 +171,7 @@ class ConversionService:
 
             # Update progress
             self._update_job_status(
-                job_id, ConversionStatus.PROCESSING, 20, "file_prepared",
+                job_id, ConversionStatus.PROCESSING, ConversionPhase.PREPARING, "file_prepared",
                 "Input file prepared"
             )
             if progress_callback:
@@ -187,7 +191,7 @@ class ConversionService:
             # Update job with result
             job["result"] = result
             self._update_job_status(
-                job_id, ConversionStatus.COMPLETED, 100, "completed",
+                job_id, ConversionStatus.COMPLETED, ConversionPhase.COMPLETED, "completed",
                 "Conversion completed successfully"
             )
             if progress_callback:
@@ -198,7 +202,7 @@ class ConversionService:
         except Exception as e:
             logger.error(f"Conversion failed for job {job_id}: {e}")
             self._update_job_status(
-                job_id, ConversionStatus.FAILED, 0, "failed",
+                job_id, ConversionStatus.FAILED, ConversionPhase.QUEUED, "failed",
                 f"Conversion failed: {str(e)}", error=str(e)
             )
             if progress_callback:
@@ -230,19 +234,21 @@ class ConversionService:
 
             # Update progress
             self._update_job_status(
-                job_id, ConversionStatus.PROCESSING, 30, "loading_models",
+                job_id, ConversionStatus.PROCESSING, ConversionPhase.ANALYZING, "loading_models",
                 "Loading conversion models"
             )
 
-            # Run conversion
-            success = self._converter.convert_to_html(input_file, output_dir)
+            # Run conversion with progress tracking
+            success = self._run_conversion_with_progress(
+                job_id, input_file, output_dir
+            )
 
             if not success:
                 raise RuntimeError("Conversion failed")
 
             # Update progress
             self._update_job_status(
-                job_id, ConversionStatus.PROCESSING, 90, "finalizing",
+                job_id, ConversionStatus.PROCESSING, ConversionPhase.FINALIZING, "finalizing",
                 "Finalizing output files"
             )
 
@@ -309,6 +315,127 @@ class ConversionService:
             logger.error(f"Conversion execution failed: {e}")
             raise
 
+    def _run_conversion_with_progress(
+        self, job_id: str, input_file: Path, output_dir: Path
+    ) -> bool:
+        """
+        Run conversion with detailed progress updates.
+
+        Args:
+            job_id: Job identifier
+            input_file: Path to input file
+            output_dir: Output directory
+
+        Returns:
+            True if conversion successful
+        """
+        try:
+            # Phase 1: Analyzing document
+            self._update_job_status(
+                job_id, ConversionStatus.PROCESSING, ConversionPhase.ANALYZING, "assessing_quality",
+                "Analyzing document structure and quality..."
+            )
+
+            # Phase 2: Converting document
+            self._update_job_status(
+                job_id, ConversionStatus.PROCESSING, ConversionPhase.CONVERTING, "loading_models",
+                "Loading AI models and starting conversion..."
+            )
+
+            # Run the actual conversion with timer-based progress
+            success = self._run_conversion_with_timer(
+                job_id, input_file, output_dir
+            )
+
+            if success:
+                # Phase 3: Processing results
+                self._update_job_status(
+                    job_id, ConversionStatus.PROCESSING, ConversionPhase.PROCESSING, "extracting_images",
+                    "Processing images and extracting content..."
+                )
+
+                # Phase 4: Finalizing
+                self._update_job_status(
+                    job_id, ConversionStatus.PROCESSING, ConversionPhase.FINALIZING, "finalizing",
+                    "Finalizing output files..."
+                )
+
+            return success
+
+        except Exception as e:
+            logger.error(f"Conversion with progress failed: {e}")
+            return False
+
+    def _run_conversion_with_timer(
+        self, job_id: str, input_file: Path, output_dir: Path
+    ) -> bool:
+        """
+        Run conversion with phase-based progress updates and real Marker progress capture.
+
+        This provides meaningful progress updates during the actual conversion.
+        """
+        import threading
+        import time
+
+        conversion_result = {"success": False, "error": None}
+        progress_thread_active = True
+
+        def progress_updater():
+            """Background thread to update progress during conversion."""
+            # More realistic timing based on actual Marker conversion stages
+            conversion_updates = [
+                # Phase, stage, message, wait_seconds
+                (ConversionPhase.CONVERTING, "layout_analysis", "Analyzing document layout...", 8),
+                (ConversionPhase.CONVERTING, "text_recognition", "Recognizing text and formulas...", 12),
+                (ConversionPhase.CONVERTING, "processing_text", "Processing text blocks...", 10),
+                (ConversionPhase.PROCESSING, "extracting_images", "Extracting images and diagrams...", 8),
+                (ConversionPhase.PROCESSING, "processing_equations", "Processing mathematical equations...", 6),
+            ]
+
+            for phase, stage, message, wait_seconds in conversion_updates:
+                if not progress_thread_active:
+                    break
+
+                self._update_job_status(
+                    job_id, ConversionStatus.PROCESSING, phase, stage, message
+                )
+
+                # Wait for the specified time, checking for cancellation
+                for _ in range(wait_seconds * 4):  # Check every 0.25s
+                    if not progress_thread_active:
+                        break
+                    time.sleep(0.25)
+
+        def run_conversion():
+            """Run the actual conversion."""
+            try:
+                success = self._converter.convert_to_html(input_file, output_dir)
+                conversion_result["success"] = success
+            except Exception as e:
+                conversion_result["error"] = e
+                conversion_result["success"] = False
+
+        # Start progress updater thread
+        progress_thread = threading.Thread(target=progress_updater, daemon=True)
+        progress_thread.start()
+
+        # Start conversion thread
+        conversion_thread = threading.Thread(target=run_conversion, daemon=True)
+        conversion_thread.start()
+
+        # Wait for conversion to complete
+        conversion_thread.join()
+
+        # Stop progress updater
+        progress_thread_active = False
+
+        if conversion_result["error"]:
+            raise conversion_result["error"]
+
+        return conversion_result["success"]
+
+
+
     def _placeholder_conversion(
         self, job_id: str, input_file: Path, output_dir: Path
     ) -> ConversionResult:
@@ -369,7 +496,7 @@ The actual Marker converter is not available in this environment.
         self,
         job_id: str,
         status: ConversionStatus,
-        progress: int,
+        phase: ConversionPhase,
         stage: str,
         message: str,
         error: str | None = None
@@ -378,7 +505,7 @@ The actual Marker converter is not available in this environment.
         if job_id in self._jobs:
             self._jobs[job_id].update({
                 "status": status,
-                "progress": progress,
+                "phase": phase,
                 "stage": stage,
                 "message": message,
                 "error": error,

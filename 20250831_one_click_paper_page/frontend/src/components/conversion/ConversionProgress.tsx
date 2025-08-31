@@ -3,7 +3,7 @@ import type { ConversionResult } from '../../lib/api/conversion';
 
 interface ConversionProgressProps {
   isConverting: boolean;
-  progress: number;
+  phase: string;
   stage: string;
   error: string | null;
   result: ConversionResult | null;
@@ -14,7 +14,7 @@ interface ConversionProgressProps {
 
 export const ConversionProgress: React.FC<ConversionProgressProps> = ({
   isConverting,
-  progress,
+  phase,
   stage,
   error,
   result,
@@ -36,18 +36,33 @@ export const ConversionProgress: React.FC<ConversionProgressProps> = ({
           </h3>
         </div>
 
-        {/* Progress Bar */}
+        {/* Phase Indicator */}
         {isConverting && (
           <div className="mb-4">
-            <div className="flex justify-between text-sm text-gray-600 mb-1">
-              <span>Progress</span>
-              <span>{progress}%</span>
+            <div className="flex justify-between text-sm text-gray-600 mb-2">
+              <span>Current Phase</span>
+              <span className="capitalize font-medium text-blue-600">{phase}</span>
             </div>
-            <div className="w-full bg-gray-200 rounded-full h-2">
-              <div
-                className="bg-blue-600 h-2 rounded-full transition-all duration-300"
-                style={{ width: `${progress}%` }}
-              />
+            <div className="flex space-x-2">
+              {['preparing', 'analyzing', 'converting', 'processing', 'finalizing'].map((phaseName, index) => (
+                <div
+                  key={phaseName}
+                  className={`flex-1 h-2 rounded-full transition-all duration-300 ${
+                    phase === phaseName
+                      ? 'bg-blue-600 animate-pulse'
+                      : ['preparing', 'analyzing', 'converting', 'processing', 'finalizing'].indexOf(phase) > index
+                      ? 'bg-green-500'
+                      : 'bg-gray-200'
+                  }`}
+                />
+              ))}
+            </div>
+            <div className="flex justify-between text-xs text-gray-500 mt-1">
+              <span>Preparing</span>
+              <span>Analyzing</span>
+              <span>Converting</span>
+              <span>Processing</span>
+              <span>Finalizing</span>
             </div>
           </div>
         )}

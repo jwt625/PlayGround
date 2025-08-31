@@ -11,7 +11,7 @@ export interface ConversionJobResponse {
 export interface ConversionStatusResponse {
   job_id: string;
   status: 'queued' | 'processing' | 'completed' | 'failed' | 'cancelled';
-  progress: number;
+  phase: 'queued' | 'preparing' | 'analyzing' | 'converting' | 'processing' | 'finalizing' | 'completed';
   stage: string;
   message: string;
   error?: string;
@@ -162,7 +162,7 @@ export class ConversionAPI {
  */
 export function useConversion() {
   const [isConverting, setIsConverting] = useState(false);
-  const [progress, setProgress] = useState(0);
+  const [phase, setPhase] = useState<string>('queued');
   const [stage, setStage] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [result, setResult] = useState<ConversionResult | null>(null);
@@ -174,7 +174,7 @@ export function useConversion() {
     repositoryName?: string
   ) => {
     setIsConverting(true);
-    setProgress(0);
+    setPhase('preparing');
     setStage('Uploading file...');
     setError(null);
     setResult(null);
@@ -182,19 +182,19 @@ export function useConversion() {
     try {
       // Start conversion
       const job = await ConversionAPI.uploadAndConvert(file, template, mode, repositoryName);
-      
+
       // Poll for completion
       const result = await ConversionAPI.pollStatus(
         job.job_id,
         (status) => {
-          setProgress(status.progress);
+          setPhase(status.phase);
           setStage(status.message);
         }
       );
 
       setResult(result);
       setStage('Conversion completed!');
-      setProgress(100);
+      setPhase('completed');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Conversion failed');
     } finally {
@@ -204,7 +204,7 @@ export function useConversion() {
 
   const reset = () => {
     setIsConverting(false);
-    setProgress(0);
+    setPhase('queued');
     setStage('');
     setError(null);
     setResult(null);
@@ -212,7 +212,7 @@ export function useConversion() {
 
   return {
     isConverting,
-    progress,
+    phase,
     stage,
     error,
     result,

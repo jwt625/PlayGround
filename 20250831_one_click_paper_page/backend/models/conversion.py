@@ -38,11 +38,22 @@ class ConversionJobResponse(BaseModel):
     message: str = Field(..., description="Human-readable status message")
 
 
+class ConversionPhase(str, Enum):
+    """Conversion phases."""
+    QUEUED = "queued"
+    PREPARING = "preparing"
+    ANALYZING = "analyzing"
+    CONVERTING = "converting"
+    PROCESSING = "processing"
+    FINALIZING = "finalizing"
+    COMPLETED = "completed"
+
+
 class ConversionStatusResponse(BaseModel):
     """Response model for conversion status check."""
     job_id: str = Field(..., description="Job identifier")
     status: ConversionStatus = Field(..., description="Current job status")
-    progress: int = Field(..., description="Progress percentage (0-100)")
+    phase: ConversionPhase = Field(..., description="Current conversion phase")
     stage: str = Field(..., description="Current processing stage")
     message: str = Field(..., description="Human-readable status message")
     error: str | None = Field(None, description="Error message if failed")

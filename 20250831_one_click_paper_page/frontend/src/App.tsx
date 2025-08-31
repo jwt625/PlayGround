@@ -186,7 +186,7 @@ function App() {
             <h2 className="text-2xl font-bold text-gray-800 mb-6">Converting Document</h2>
             <ConversionProgress
               isConverting={conversion.isConverting}
-              progress={conversion.progress}
+              phase={conversion.phase}
               stage={conversion.stage}
               error={conversion.error}
               result={conversion.result}

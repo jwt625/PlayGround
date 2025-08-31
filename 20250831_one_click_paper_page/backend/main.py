@@ -285,7 +285,7 @@ async def get_conversion_status(job_id: str) -> ConversionStatusResponse:
     return ConversionStatusResponse(
         job_id=job_id,
         status=job_status["status"],
-        progress=job_status["progress"],
+        phase=job_status["phase"],
         stage=job_status["stage"],
         message=job_status["message"],
         error=job_status.get("error"),
