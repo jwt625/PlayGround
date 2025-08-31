@@ -1,0 +1,78 @@
+# Override global gitignore for essential config files
+!package.json
+!tsconfig*.json
+!pyproject.toml
+
+# But still ignore these JSON files
+node_modules/
+.venv/
+dist/
+build/
+.pnpm-workspace-state.json
+**/node_modules/**/*.json
+**/.venv/**/*.json
+
+# Environment files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Build outputs
+dist/
+build/
+*.tsbuildinfo
+
+# Cache directories
+.cache/
+.parcel-cache/
+.vite/
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Test coverage
+coverage/
+*.lcov
+.nyc_output
+
+# Temporary files
+*.tmp
+*.temp
+.tmp/
+.temp/
