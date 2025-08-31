@@ -26,6 +26,9 @@ logger = logging.getLogger(__name__)
 sys.path.append(str(Path(__file__).parent.parent.parent / "scripts"))
 
 try:
+    from marker_converter import (
+        ConversionMode as ScriptConversionMode,
+    )
     from marker_converter import (  # type: ignore[import-not-found]
         MarkerConverter as ScriptMarkerConverter,
     )
@@ -33,6 +36,20 @@ try:
 except ImportError:
     logger.warning("Marker converter not available, using placeholder mode")
     MARKER_AVAILABLE = False
+
+
+def _convert_mode_to_script_mode(mode: ConversionMode) -> Any:
+    """Convert API ConversionMode to script ConversionMode."""
+    if not MARKER_AVAILABLE:
+        return mode  # Return as-is if marker not available
+
+    # Map API enum values to script enum values
+    mode_mapping = {
+        ConversionMode.AUTO: ScriptConversionMode.AUTO,
+        ConversionMode.FAST: ScriptConversionMode.FAST,
+        ConversionMode.QUALITY: ScriptConversionMode.QUALITY,
+    }
+    return mode_mapping.get(mode, ScriptConversionMode.AUTO)
 
 
 class ConversionService:
@@ -58,7 +75,8 @@ class ConversionService:
 
         # Initialize marker converter if available
         if MARKER_AVAILABLE:
-            self._converter = ScriptMarkerConverter(mode=ConversionMode.AUTO)
+            script_mode = _convert_mode_to_script_mode(ConversionMode.AUTO)
+            self._converter = ScriptMarkerConverter(mode=script_mode)
         else:
             self._converter = None
             logger.warning("Marker converter not available")
@@ -207,8 +225,8 @@ class ConversionService:
                 # Fallback to placeholder implementation
                 return self._placeholder_conversion(job_id, input_file, output_dir)
 
-            # Update converter mode
-            self._converter.mode = mode
+            # Update converter mode (convert API enum to script enum)
+            self._converter.mode = _convert_mode_to_script_mode(mode)
 
             # Update progress
             self._update_job_status(

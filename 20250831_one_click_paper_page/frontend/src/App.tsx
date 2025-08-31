@@ -2,18 +2,25 @@ import React, { useState } from 'react';
 import { GitHubAuth } from './components/auth/GitHubAuth';
 import { FileUpload } from './components/upload/FileUpload';
 import { TemplateSelector } from './components/templates/TemplateSelector';
+import { ConversionProgress } from './components/conversion/ConversionProgress';
+import { ConversionModeSelector } from './components/conversion/ConversionModeSelector';
 import type { PaperTemplate, GitHubUser } from './types/github';
+import type { ConversionResult, ConversionMode } from './lib/api/conversion';
 import { useGitHubAuth } from './lib/github/auth';
+import { useConversion } from './lib/api/conversion';
 import './App.css';
 
-type Step = 'auth' | 'upload' | 'template' | 'configure' | 'deploy';
+type Step = 'auth' | 'upload' | 'template' | 'convert' | 'configure' | 'deploy';
 
 function App() {
   const [currentStep, setCurrentStep] = useState<Step>('auth');
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const [selectedTemplate, setSelectedTemplate] = useState<PaperTemplate | null>(null);
   const [overleafUrl, setOverleafUrl] = useState<string>('');
+  const [conversionMode, setConversionMode] = useState<ConversionMode>('auto');
+  const [repositoryName, setRepositoryName] = useState<string>('');
   const { isAuthenticated, user } = useGitHubAuth();
+  const conversion = useConversion();
 
   // Auto-advance to upload step if already authenticated
   React.useEffect(() => {
@@ -41,11 +48,42 @@ function App() {
 
   const handleTemplateSelected = (template: PaperTemplate) => {
     setSelectedTemplate(template);
+    setCurrentStep('convert');
+
+    // Start conversion with the first selected file
+    if (selectedFiles.length > 0) {
+      conversion.startConversion(
+        selectedFiles[0],
+        template.id,
+        conversionMode,
+        repositoryName || undefined
+      );
+    }
+  };
+
+  const handleConversionComplete = (result: ConversionResult) => {
+    console.log('Conversion completed:', result);
     setCurrentStep('configure');
   };
 
+  const handleConversionCancel = () => {
+    conversion.reset();
+    setCurrentStep('template');
+  };
+
+  const handleConversionRetry = () => {
+    if (selectedFiles.length > 0 && selectedTemplate) {
+      conversion.startConversion(
+        selectedFiles[0],
+        selectedTemplate.id,
+        conversionMode,
+        repositoryName || undefined
+      );
+    }
+  };
+
   const getStepNumber = (step: Step): number => {
-    const steps: Step[] = ['auth', 'upload', 'template', 'configure', 'deploy'];
+    const steps: Step[] = ['auth', 'upload', 'template', 'convert', 'configure', 'deploy'];
     return steps.indexOf(step) + 1;
   };
 
@@ -130,10 +168,33 @@ function App() {
 
       case 'template':
         return (
-          <TemplateSelector
-            onTemplateSelected={handleTemplateSelected}
-            selectedTemplate={selectedTemplate || undefined}
-          />
+          <div className="w-full max-w-4xl mx-auto p-6">
+            <ConversionModeSelector
+              mode={conversionMode}
+              onModeChange={setConversionMode}
+            />
+            <TemplateSelector
+              onTemplateSelected={handleTemplateSelected}
+              selectedTemplate={selectedTemplate || undefined}
+            />
+          </div>
+        );
+
+      case 'convert':
+        return (
+          <div className="text-center p-8">
+            <h2 className="text-2xl font-bold text-gray-800 mb-6">Converting Document</h2>
+            <ConversionProgress
+              isConverting={conversion.isConverting}
+              progress={conversion.progress}
+              stage={conversion.stage}
+              error={conversion.error}
+              result={conversion.result}
+              onCancel={handleConversionCancel}
+              onRetry={handleConversionRetry}
+              onContinue={handleConversionComplete}
+            />
+          </div>
         );
 
       case 'configure':
