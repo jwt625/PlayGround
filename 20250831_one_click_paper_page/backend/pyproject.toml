@@ -13,13 +13,18 @@ dependencies = [
     "requests>=2.31.0",
     "python-dotenv>=1.0.0",
     "pypdf2>=3.0.0",
+    "python-multipart>=0.0.20",
+    "aiofiles>=24.1.0",
+    "websockets>=15.0.0",
 ]
 
 [dependency-groups]
 dev = [
     "mypy>=1.17.1",
     "pytest>=8.4.1",
+    "pytest-asyncio>=1.1.0",
     "ruff>=0.12.11",
+    "types-aiofiles>=24.1.0.20250822",
     "types-requests>=2.32.4.20250809",
 ]
 

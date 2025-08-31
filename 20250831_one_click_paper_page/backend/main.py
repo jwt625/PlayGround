@@ -4,12 +4,22 @@ Handles GitHub OAuth authentication and API endpoints.
 """
 
 import os
+from pathlib import Path
 
+import aiofiles
 import requests
 from dotenv import load_dotenv
-from fastapi import FastAPI, HTTPException
+from fastapi import BackgroundTasks, FastAPI, File, Form, HTTPException, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
+
+from models.conversion import (
+    ConversionJobResponse,
+    ConversionMode,
+    ConversionResult,
+    ConversionStatusResponse,
+)
+from services.conversion_service import ConversionService
 
 # Load environment variables
 load_dotenv()
@@ -177,6 +187,186 @@ async def revoke_oauth_token(request: OAuthRevokeRequest) -> dict[str, str]:
             status_code=500,
             detail=f"Failed to revoke token with GitHub: {str(e)}"
         )
+
+
+# Initialize conversion service
+conversion_service = ConversionService()
+
+
+@app.post("/api/convert/upload", response_model=ConversionJobResponse)
+async def upload_and_convert(
+    background_tasks: BackgroundTasks,
+    file: UploadFile = File(...),
+    template: str = Form(...),
+    mode: ConversionMode = Form(ConversionMode.AUTO),
+    repository_name: str = Form(None),
+) -> ConversionJobResponse:
+    """
+    Upload a file and start conversion process.
+
+    Args:
+        background_tasks: FastAPI background tasks
+        file: Uploaded PDF/DOCX file
+        template: Template to use for the website
+        mode: Conversion mode (auto, fast, quality)
+        repository_name: Optional custom repository name
+
+    Returns:
+        Job response with job ID and status
+    """
+    # Validate file type
+    if not file.filename:
+        raise HTTPException(status_code=400, detail="No file provided")
+
+    file_ext = Path(file.filename).suffix.lower()
+    if file_ext not in [".pdf", ".docx"]:
+        raise HTTPException(
+            status_code=400,
+            detail=(
+                f"Unsupported file type: {file_ext}. "
+                "Only PDF and DOCX are supported."
+            )
+        )
+
+    # Create conversion job
+    job_id = conversion_service.create_job(mode)
+
+    # Save uploaded file to temporary location
+    job_status = conversion_service.get_job_status(job_id)
+    if not job_status:
+        raise HTTPException(status_code=500, detail="Failed to create conversion job")
+
+    job_dir = job_status["job_dir"]
+    input_file_path = job_dir / file.filename
+
+    try:
+        # Save uploaded file
+        async with aiofiles.open(input_file_path, "wb") as f:
+            content = await file.read()
+            await f.write(content)
+
+        # Start conversion in background
+        background_tasks.add_task(
+            _run_conversion_task,
+            job_id,
+            input_file_path,
+        )
+
+        return ConversionJobResponse(
+            job_id=job_id,
+            status=job_status["status"],
+            message=f"File uploaded successfully. Conversion started with {mode} mode.",
+        )
+
+    except Exception as e:
+        # Cleanup on error
+        conversion_service.cleanup_job(job_id)
+        raise HTTPException(
+            status_code=500,
+            detail=f"Failed to process uploaded file: {str(e)}"
+        )
+
+
+@app.get("/api/convert/status/{job_id}", response_model=ConversionStatusResponse)
+async def get_conversion_status(job_id: str) -> ConversionStatusResponse:
+    """
+    Get the current status of a conversion job.
+
+    Args:
+        job_id: Job identifier
+
+    Returns:
+        Current job status and progress
+    """
+    job_status = conversion_service.get_job_status(job_id)
+    if not job_status:
+        raise HTTPException(status_code=404, detail=f"Job {job_id} not found")
+
+    return ConversionStatusResponse(
+        job_id=job_id,
+        status=job_status["status"],
+        progress=job_status["progress"],
+        stage=job_status["stage"],
+        message=job_status["message"],
+        error=job_status.get("error"),
+    )
+
+
+@app.get("/api/convert/result/{job_id}", response_model=ConversionResult)
+async def get_conversion_result(job_id: str) -> ConversionResult:
+    """
+    Get the result of a completed conversion job.
+
+    Args:
+        job_id: Job identifier
+
+    Returns:
+        Conversion result with output files and metrics
+    """
+    job_status = conversion_service.get_job_status(job_id)
+    if not job_status:
+        raise HTTPException(status_code=404, detail=f"Job {job_id} not found")
+
+    if job_status["status"] != "completed":
+        raise HTTPException(
+            status_code=400,
+            detail=(
+                f"Job {job_id} is not completed. "
+                f"Current status: {job_status['status']}"
+            )
+        )
+
+    result = job_status.get("result")
+    if not result:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Job {job_id} completed but no result available"
+        )
+
+    # Type assertion since we know result is ConversionResult from the service
+    return result  # type: ignore[no-any-return]
+
+
+@app.delete("/api/convert/cancel/{job_id}")
+async def cancel_conversion(job_id: str) -> dict[str, str]:
+    """
+    Cancel a conversion job and clean up files.
+
+    Args:
+        job_id: Job identifier
+
+    Returns:
+        Success message
+    """
+    job_status = conversion_service.get_job_status(job_id)
+    if not job_status:
+        raise HTTPException(status_code=404, detail=f"Job {job_id} not found")
+
+    # Clean up job files
+    success = conversion_service.cleanup_job(job_id)
+    if not success:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Failed to cleanup job {job_id}"
+        )
+
+    return {"message": f"Job {job_id} cancelled and cleaned up successfully"}
+
+
+async def _run_conversion_task(job_id: str, input_file_path: Path) -> None:
+    """
+    Background task to run the conversion process.
+
+    Args:
+        job_id: Job identifier
+        input_file_path: Path to input file
+    """
+    try:
+        await conversion_service.convert_file(job_id, input_file_path)
+    except Exception:
+        # Error handling is done within the conversion service
+        pass
+
 
 def main() -> None:
     """Run the FastAPI server."""
