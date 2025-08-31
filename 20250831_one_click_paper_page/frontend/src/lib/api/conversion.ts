@@ -17,6 +17,15 @@ export interface ConversionStatusResponse {
   error?: string;
 }
 
+export interface PaperMetadata {
+  title?: string;
+  authors?: string[];
+  abstract?: string;
+  keywords?: string[];
+  doi?: string;
+  arxiv_id?: string;
+}
+
 export interface ConversionResult {
   job_id: string;
   status: string;
@@ -38,6 +47,7 @@ export interface ConversionResult {
   image_count: number;
   html_file: string;
   markdown_file: string;
+  metadata?: PaperMetadata;
 }
 
 export type ConversionMode = 'auto' | 'fast' | 'quality';
@@ -166,6 +176,7 @@ export function useConversion() {
   const [stage, setStage] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [result, setResult] = useState<ConversionResult | null>(null);
+  const [jobId, setJobId] = useState<string | null>(null);
 
   const startConversion = async (
     file: File,
@@ -182,6 +193,7 @@ export function useConversion() {
     try {
       // Start conversion
       const job = await ConversionAPI.uploadAndConvert(file, template, mode, repositoryName);
+      setJobId(job.job_id);
 
       // Poll for completion
       const result = await ConversionAPI.pollStatus(
@@ -208,6 +220,7 @@ export function useConversion() {
     setStage('');
     setError(null);
     setResult(null);
+    setJobId(null);
   };
 
   return {
@@ -216,6 +229,7 @@ export function useConversion() {
     stage,
     error,
     result,
+    jobId,
     startConversion,
     reset,
   };

@@ -3,7 +3,7 @@ Pydantic models for conversion API endpoints.
 """
 
 from enum import Enum
-from typing import Any
+from typing import Any, List, Optional
 
 from pydantic import BaseModel, Field
 
@@ -87,6 +87,16 @@ class ConversionMetrics(BaseModel):
     )
 
 
+class PaperMetadata(BaseModel):
+    """Extracted paper metadata."""
+    title: Optional[str] = None
+    authors: List[str] = Field(default_factory=list)
+    abstract: Optional[str] = None
+    keywords: List[str] = Field(default_factory=list)
+    doi: Optional[str] = None
+    arxiv_id: Optional[str] = None
+
+
 class ConversionResult(BaseModel):
     """Complete conversion result."""
     job_id: str = Field(..., description="Job identifier")
@@ -97,6 +107,7 @@ class ConversionResult(BaseModel):
     image_count: int = Field(..., description="Number of extracted images")
     html_file: str = Field(..., description="Path to generated HTML file")
     markdown_file: str = Field(..., description="Path to generated markdown file")
+    metadata: Optional[PaperMetadata] = Field(None, description="Extracted paper metadata")
 
 
 class ConversionError(BaseModel):

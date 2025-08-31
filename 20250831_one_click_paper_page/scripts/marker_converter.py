@@ -443,6 +443,14 @@ class MarkerConverter:
         with open(markdown_file, 'w', encoding='utf-8') as f:
             f.write(markdown_content)
 
+        # Extract paper metadata from markdown
+        paper_metadata = self.extract_paper_metadata(markdown_content)
+        metadata_file = output_dir / "metadata.json"
+        import json
+        with open(metadata_file, 'w', encoding='utf-8') as f:
+            json.dump(paper_metadata, f, indent=2)
+        logger.info(f"Paper metadata saved to {metadata_file}")
+
         # Save images if any are extracted
         if hasattr(result, 'images') and result.images:
             images_dir = output_dir / "images"
@@ -540,6 +548,14 @@ To integrate Marker properly:
         # Save markdown
         with open(markdown_file, 'w', encoding='utf-8') as f:
             f.write(placeholder_markdown)
+
+        # Extract paper metadata from markdown
+        paper_metadata = self.extract_paper_metadata(placeholder_markdown)
+        metadata_file = output_dir / "metadata.json"
+        import json
+        with open(metadata_file, 'w', encoding='utf-8') as f:
+            json.dump(paper_metadata, f, indent=2)
+        logger.info(f"Paper metadata saved to {metadata_file}")
 
         # Convert to HTML using the helper method
         html_content = self._create_html_from_markdown(placeholder_markdown, input_path.name)
@@ -680,7 +696,7 @@ To integrate Marker properly:
             'size': input_path.stat().st_size if input_path.exists() else 0,
             'converter': 'marker'
         }
-        
+
         try:
             # In real implementation, Marker would extract:
             # - Document metadata from PDF
@@ -688,12 +704,110 @@ To integrate Marker properly:
             # - Text statistics
             # - Image count
             # - Table count
-            
+
             logger.info(f"Extracted metadata: {metadata}")
             return metadata
-            
+
         except Exception as e:
             logger.error(f"Metadata extraction error: {e}")
+            return metadata
+
+    def extract_paper_metadata(self, markdown_content: str) -> Dict[str, Any]:
+        """Extract paper-specific metadata from converted markdown."""
+        import re
+
+        metadata = {
+            'title': None,
+            'authors': [],
+            'abstract': None,
+            'keywords': [],
+            'doi': None,
+            'arxiv_id': None
+        }
+
+        try:
+            lines = markdown_content.split('\n')
+
+            # Extract title (usually the first heading)
+            for line in lines[:20]:  # Check first 20 lines
+                line = line.strip()
+                if line.startswith('# ') and len(line) > 3:
+                    title = line[2:].strip()
+                    # Clean up title (remove markdown formatting)
+                    title = re.sub(r'\*\*([^*]+)\*\*', r'\1', title)  # Remove bold
+                    title = re.sub(r'\*([^*]+)\*', r'\1', title)      # Remove italic
+                    if len(title) > 10 and not title.lower().startswith('abstract'):
+                        metadata['title'] = title
+                        break
+
+            # Extract authors (look for patterns like "Author Name1, Author Name2")
+            author_patterns = [
+                r'^([A-Z][a-z]+ [A-Z][a-z]+(?:, [A-Z][a-z]+ [A-Z][a-z]+)*)',  # "John Doe, Jane Smith"
+                r'^\*\*Authors?\*\*:?\s*(.+)',  # "**Authors**: John Doe, Jane Smith"
+                r'^Authors?\s*:?\s*(.+)',       # "Authors: John Doe, Jane Smith"
+            ]
+
+            for line in lines[:50]:  # Check first 50 lines
+                line = line.strip()
+                for pattern in author_patterns:
+                    match = re.match(pattern, line)
+                    if match:
+                        authors_text = match.group(1).strip()
+                        # Split by common separators
+                        authors = re.split(r',|;|\sand\s', authors_text)
+                        authors = [author.strip() for author in authors if author.strip()]
+                        # Filter out non-author text
+                        valid_authors = []
+                        for author in authors:
+                            # Simple heuristic: should contain at least first and last name
+                            if re.match(r'^[A-Z][a-z]+ [A-Z][a-z]+', author):
+                                valid_authors.append(author)
+                        if valid_authors:
+                            metadata['authors'] = valid_authors
+                            break
+                if metadata['authors']:
+                    break
+
+            # Extract abstract
+            abstract_start = -1
+            for i, line in enumerate(lines):
+                if re.match(r'^#+\s*abstract', line.strip(), re.IGNORECASE):
+                    abstract_start = i + 1
+                    break
+
+            if abstract_start > 0:
+                abstract_lines = []
+                for i in range(abstract_start, min(abstract_start + 20, len(lines))):
+                    line = lines[i].strip()
+                    if line.startswith('#') or line.startswith('##'):
+                        break
+                    if line:
+                        abstract_lines.append(line)
+
+                if abstract_lines:
+                    metadata['abstract'] = ' '.join(abstract_lines)
+
+            # Extract DOI
+            doi_pattern = r'(?:doi:|DOI:)?\s*(10\.\d+/[^\s]+)'
+            for line in lines:
+                match = re.search(doi_pattern, line, re.IGNORECASE)
+                if match:
+                    metadata['doi'] = match.group(1)
+                    break
+
+            # Extract arXiv ID
+            arxiv_pattern = r'(?:arxiv:|arXiv:)?\s*(\d{4}\.\d{4,5}(?:v\d+)?)'
+            for line in lines:
+                match = re.search(arxiv_pattern, line, re.IGNORECASE)
+                if match:
+                    metadata['arxiv_id'] = match.group(1)
+                    break
+
+            logger.info(f"Extracted paper metadata: {metadata}")
+            return metadata
+
+        except Exception as e:
+            logger.error(f"Paper metadata extraction error: {e}")
             return metadata
 
 def main():

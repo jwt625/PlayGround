@@ -275,6 +275,20 @@ class ConversionService:
             if markdown_file.exists():
                 markdown_length = len(markdown_file.read_text(encoding='utf-8'))
 
+            # Load paper metadata if available
+            paper_metadata = None
+            metadata_file = output_dir / "metadata.json"
+            if metadata_file.exists():
+                try:
+                    import json
+                    from models.conversion import PaperMetadata
+                    with open(metadata_file, 'r', encoding='utf-8') as f:
+                        metadata_dict = json.load(f)
+                    paper_metadata = PaperMetadata(**metadata_dict)
+                    logger.info(f"Loaded paper metadata: {paper_metadata}")
+                except Exception as e:
+                    logger.warning(f"Failed to load paper metadata: {e}")
+
             # Create conversion result
             result = ConversionResult(
                 job_id=job_id,
@@ -307,6 +321,7 @@ class ConversionService:
                 image_count=image_count,
                 html_file=str(html_file),
                 markdown_file=str(markdown_file),
+                metadata=paper_metadata,
             )
 
             return result
@@ -446,14 +461,53 @@ class ConversionService:
         html_file = output_dir / "index.html"
         markdown_file = output_dir / "document.md"
 
-        placeholder_content = f"""# Document Conversion (Placeholder)
+        # Create more realistic placeholder content with sample metadata
+        file_stem = input_file.stem.replace('_', ' ').replace('-', ' ').title()
+        placeholder_content = f"""# {file_stem}: A Sample Academic Paper
 
-This is a placeholder conversion for: {input_file.name}
+**Authors**: John Doe, Jane Smith, Alice Johnson
 
-The actual Marker converter is not available in this environment.
+## Abstract
+
+This is a placeholder conversion for the uploaded document: {input_file.name}.
+In a real conversion, this would contain the actual paper content extracted from your PDF.
+The Marker converter would analyze the document structure, extract text, images, and formatting.
+
+## Introduction
+
+This placeholder demonstrates the expected output format for academic papers.
+Your actual paper content would appear here after conversion.
+
+## Methodology
+
+The conversion process would extract:
+- Document structure and headings
+- Author information and metadata
+- Abstract and main content
+- Figures and tables
+- References and citations
+
+## Results
+
+Real conversion results would be displayed in this section.
+
+## Conclusion
+
+This concludes the placeholder conversion demonstration.
 """
 
         markdown_file.write_text(placeholder_content, encoding='utf-8')
+
+        # Create sample metadata for testing
+        from models.conversion import PaperMetadata
+        sample_metadata = PaperMetadata(
+            title=f"{file_stem}: A Sample Academic Paper",
+            authors=["John Doe", "Jane Smith", "Alice Johnson"],
+            abstract="This is a placeholder conversion for the uploaded document. In a real conversion, this would contain the actual paper content extracted from your PDF.",
+            keywords=["placeholder", "conversion", "academic"],
+            doi=None,
+            arxiv_id=None
+        )
 
         html_content = f"""<!DOCTYPE html>
 <html>
@@ -490,6 +544,7 @@ The actual Marker converter is not available in this environment.
             image_count=0,
             html_file=str(html_file),
             markdown_file=str(markdown_file),
+            metadata=sample_metadata,  # Sample metadata for testing
         )
 
     def _update_job_status(

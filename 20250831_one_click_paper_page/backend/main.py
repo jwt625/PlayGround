@@ -3,13 +3,14 @@ FastAPI backend for one-click paper page service.
 Handles GitHub OAuth authentication and API endpoints.
 """
 
+import logging
 import os
 from pathlib import Path
 
 import aiofiles
 import requests
 from dotenv import load_dotenv
-from fastapi import BackgroundTasks, FastAPI, File, Form, HTTPException, UploadFile
+from fastapi import BackgroundTasks, FastAPI, File, Form, Header, HTTPException, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
@@ -19,10 +20,23 @@ from models.conversion import (
     ConversionResult,
     ConversionStatusResponse,
 )
+from models.github import (
+    AVAILABLE_TEMPLATES,
+    CreateRepositoryRequest,
+    CreateRepositoryResponse,
+    DeploymentConfig,
+    DeploymentStatusResponse,
+    TemplateInfo,
+    TemplateType,
+)
 from services.conversion_service import ConversionService
+from services.github_service import GitHubService
 
 # Load environment variables
 load_dotenv()
+
+# Setup logging
+logger = logging.getLogger(__name__)
 
 app = FastAPI(
     title="One-Click Paper Page API",
@@ -200,6 +214,10 @@ async def upload_and_convert(
     template: str = Form(...),
     mode: ConversionMode = Form(ConversionMode.AUTO),
     repository_name: str = Form(None),
+    auto_deploy: bool = Form(False),
+    paper_title: str = Form(None),
+    paper_authors: str = Form(None),
+    authorization: str = Header(None),
 ) -> ConversionJobResponse:
     """
     Upload a file and start conversion process.
@@ -210,6 +228,10 @@ async def upload_and_convert(
         template: Template to use for the website
         mode: Conversion mode (auto, fast, quality)
         repository_name: Optional custom repository name
+        auto_deploy: Whether to automatically deploy to GitHub Pages
+        paper_title: Title of the paper
+        paper_authors: Comma-separated list of authors
+        authorization: GitHub OAuth token (required if auto_deploy=True)
 
     Returns:
         Job response with job ID and status
@@ -245,11 +267,34 @@ async def upload_and_convert(
             content = await file.read()
             await f.write(content)
 
+        # Prepare deployment config if auto_deploy is enabled
+        deployment_config = None
+        if auto_deploy:
+            if not authorization or not authorization.startswith("Bearer "):
+                raise HTTPException(
+                    status_code=400,
+                    detail="GitHub OAuth token required for auto-deployment"
+                )
+
+            # Parse authors
+            authors_list = []
+            if paper_authors:
+                authors_list = [author.strip() for author in paper_authors.split(",")]
+
+            deployment_config = {
+                "repository_name": repository_name or f"paper-{job_id[:8]}",
+                "template": template,
+                "paper_title": paper_title,
+                "paper_authors": authors_list,
+                "access_token": authorization.replace("Bearer ", "")
+            }
+
         # Start conversion in background
         background_tasks.add_task(
             _run_conversion_task,
             job_id,
             input_file_path,
+            deployment_config,
         )
 
         return ConversionJobResponse(
@@ -353,19 +398,214 @@ async def cancel_conversion(job_id: str) -> dict[str, str]:
     return {"message": f"Job {job_id} cancelled and cleaned up successfully"}
 
 
-async def _run_conversion_task(job_id: str, input_file_path: Path) -> None:
+# GitHub Deployment Endpoints
+
+@app.get("/api/templates", response_model=list[TemplateInfo])
+async def list_templates() -> list[TemplateInfo]:
     """
-    Background task to run the conversion process.
+    List available templates for GitHub Pages deployment.
+
+    Returns:
+        List of available templates with their information
+    """
+    return AVAILABLE_TEMPLATES
+
+
+@app.post("/api/github/repository/create", response_model=CreateRepositoryResponse)
+async def create_repository(
+    request: CreateRepositoryRequest,
+    authorization: str = Header(None),
+) -> CreateRepositoryResponse:
+    """
+    Create a new GitHub repository for the converted paper.
+
+    Args:
+        request: Repository creation request
+        authorization: GitHub OAuth token (Bearer token)
+
+    Returns:
+        Repository creation response with deployment tracking
+    """
+    if not authorization or not authorization.startswith("Bearer "):
+        raise HTTPException(
+            status_code=401,
+            detail="GitHub OAuth token required. Please authenticate first."
+        )
+
+    access_token = authorization.replace("Bearer ", "")
+
+    try:
+        github_service = GitHubService(access_token)
+        response = await github_service.create_repository(request)
+        return response
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Failed to create repository: {str(e)}"
+        )
+
+
+@app.post("/api/github/deploy/{deployment_id}")
+async def deploy_converted_content(
+    deployment_id: str,
+    config: DeploymentConfig,
+    authorization: str = Header(None),
+) -> dict[str, str]:
+    """
+    Deploy converted content to GitHub repository.
+
+    Args:
+        deployment_id: Deployment job ID
+        config: Deployment configuration
+        authorization: GitHub OAuth token (Bearer token)
+
+    Returns:
+        Deployment status message
+    """
+    if not authorization or not authorization.startswith("Bearer "):
+        raise HTTPException(
+            status_code=401,
+            detail="GitHub OAuth token required. Please authenticate first."
+        )
+
+    access_token = authorization.replace("Bearer ", "")
+
+    try:
+        # Get conversion result
+        conversion_result = conversion_service.get_job_result(config.conversion_job_id)
+        if not conversion_result:
+            raise HTTPException(
+                status_code=404,
+                detail=f"Conversion job {config.conversion_job_id} not found"
+            )
+
+        if not conversion_result.output_dir:
+            raise HTTPException(
+                status_code=400,
+                detail="Conversion not completed yet"
+            )
+
+        # Start deployment
+        github_service = GitHubService(access_token)
+        await github_service.deploy_converted_content(
+            deployment_id,
+            Path(conversion_result.output_dir),
+            config
+        )
+
+        return {"message": "Deployment started successfully"}
+
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Failed to deploy content: {str(e)}"
+        )
+
+
+@app.get("/api/github/deployment/{deployment_id}/status", response_model=DeploymentStatusResponse)
+async def get_deployment_status(
+    deployment_id: str,
+    authorization: str = Header(None),
+) -> DeploymentStatusResponse:
+    """
+    Get deployment status.
+
+    Args:
+        deployment_id: Deployment job ID
+        authorization: GitHub OAuth token (Bearer token)
+
+    Returns:
+        Deployment status information
+    """
+    if not authorization or not authorization.startswith("Bearer "):
+        raise HTTPException(
+            status_code=401,
+            detail="GitHub OAuth token required. Please authenticate first."
+        )
+
+    access_token = authorization.replace("Bearer ", "")
+
+    try:
+        github_service = GitHubService(access_token)
+        status = await github_service.get_deployment_status(deployment_id)
+        return status
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Failed to get deployment status: {str(e)}"
+        )
+
+
+async def _run_conversion_task(
+    job_id: str,
+    input_file_path: Path,
+    deployment_config: dict = None
+) -> None:
+    """
+    Background task to run the conversion process and optionally deploy.
 
     Args:
         job_id: Job identifier
         input_file_path: Path to input file
+        deployment_config: Optional deployment configuration
     """
     try:
-        await conversion_service.convert_file(job_id, input_file_path)
-    except Exception:
+        # Run conversion
+        result = await conversion_service.convert_file(job_id, input_file_path)
+
+        # If auto-deployment is enabled, deploy to GitHub
+        if deployment_config and result.success:
+            try:
+                logger.info(f"Starting auto-deployment for job {job_id}")
+
+                # Create GitHub service
+                github_service = GitHubService(deployment_config["access_token"])
+
+                # Create repository
+                from models.github import CreateRepositoryRequest, TemplateType, DeploymentConfig
+
+                # Map template string to enum
+                template_map = {
+                    "academic-pages": TemplateType.ACADEMIC_PAGES,
+                    "al-folio": TemplateType.AL_FOLIO,
+                    "minimal-academic": TemplateType.MINIMAL_ACADEMIC,
+                }
+                template_enum = template_map.get(deployment_config["template"], TemplateType.MINIMAL_ACADEMIC)
+
+                repo_request = CreateRepositoryRequest(
+                    name=deployment_config["repository_name"],
+                    description=f"Academic paper website: {deployment_config.get('paper_title', 'Untitled')}",
+                    template=template_enum,
+                    conversion_job_id=job_id
+                )
+
+                repo_response = await github_service.create_repository(repo_request)
+
+                # Deploy content
+                deploy_config = DeploymentConfig(
+                    repository_name=deployment_config["repository_name"],
+                    template=template_enum,
+                    paper_title=deployment_config.get("paper_title"),
+                    paper_authors=deployment_config.get("paper_authors", []),
+                )
+
+                await github_service.deploy_converted_content(
+                    repo_response.deployment_id,
+                    Path(result.output_dir),
+                    deploy_config
+                )
+
+                logger.info(f"Auto-deployment completed for job {job_id}")
+
+            except Exception as e:
+                logger.error(f"Auto-deployment failed for job {job_id}: {e}")
+                # Don't fail the conversion if deployment fails
+
+    except Exception as e:
+        logger.error(f"Conversion task failed for job {job_id}: {e}")
         # Error handling is done within the conversion service
-        pass
 
 
 def main() -> None:
