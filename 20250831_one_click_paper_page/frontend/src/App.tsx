@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { GitHubAuth } from './components/auth/GitHubAuth';
 import { FileUpload } from './components/upload/FileUpload';
 import { TemplateSelector } from './components/templates/TemplateSelector';
-import { PaperTemplate, GitHubUser } from './types/github';
+import type { PaperTemplate, GitHubUser } from './types/github';
 import { useGitHubAuth } from './lib/github/auth';
 import './App.css';
 

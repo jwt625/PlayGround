@@ -3,7 +3,7 @@
  */
 
 import { Octokit } from '@octokit/rest';
-import {
+import type {
   GitHubRepository,
   CreateRepositoryRequest,
   FileUpload,
@@ -11,8 +11,8 @@ import {
   GitHubCommit,
   WorkflowRun,
   PaperTemplate,
-  AVAILABLE_TEMPLATES,
 } from '../../types/github';
+import { AVAILABLE_TEMPLATES } from '../../types/github';
 
 export class GitHubRepositoryManager {
   private octokit: Octokit;

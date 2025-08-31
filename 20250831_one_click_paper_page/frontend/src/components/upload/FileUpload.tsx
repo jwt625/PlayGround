@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { FileProcessor, DragDropHandler, BatchFileUploader } from '../../lib/github/fileUpload';
-import { FileTypeDetection } from '../../types/github';
+import type { FileTypeDetection } from '../../types/github';
 
 interface FileUploadProps {
   onFilesSelected: (files: File[]) => void;

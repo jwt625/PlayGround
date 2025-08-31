@@ -2,7 +2,7 @@
  * GitHub OAuth authentication module
  */
 
-import { OAuthTokenResponse, GitHubUser, GitHubError } from '../../types/github';
+import type { OAuthTokenResponse, GitHubUser, GitHubError } from '../../types/github';
 
 export class GitHubAuth {
   private clientId: string;

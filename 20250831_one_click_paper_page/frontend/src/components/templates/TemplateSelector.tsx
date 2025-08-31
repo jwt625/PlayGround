@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { PaperTemplate, AVAILABLE_TEMPLATES } from '../../types/github';
+import type { PaperTemplate } from '../../types/github';
+import { AVAILABLE_TEMPLATES } from '../../types/github';
 
 interface TemplateSelectorProps {
   onTemplateSelected: (template: PaperTemplate) => void;

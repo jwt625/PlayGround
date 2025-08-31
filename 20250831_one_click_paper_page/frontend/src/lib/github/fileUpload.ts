@@ -2,7 +2,7 @@
  * File upload and processing utilities for GitHub integration
  */
 
-import { FileTypeDetection, SupportedFileType, FileUpload } from '../../types/github';
+import type { FileTypeDetection, SupportedFileType, FileUpload } from '../../types/github';
 
 export class FileProcessor {
   /**

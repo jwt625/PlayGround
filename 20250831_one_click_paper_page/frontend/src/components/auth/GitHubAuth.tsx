@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useGitHubAuth } from '../../lib/github/auth';
-import { GitHubUser } from '../../types/github';
+import type { GitHubUser } from '../../types/github';
 
 interface GitHubAuthProps {
   onAuthSuccess?: (user: GitHubUser, token: string) => void;
