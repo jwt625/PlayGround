@@ -112,13 +112,205 @@ Offer users a choice of ready-made GitHub Pages themes:
 Users pick their preferred template during onboarding; the system copies it into their new repo. Allow later theme switching via configuration.
 
 
-## Next Steps
-1. Build a **template repo** with:
-   - `convert-and-deploy.yml` workflow.
-   - Basic themes (Paper, Minimal).
-2. Build a **frontend** (Next.js) that:
-   - Authenticates with GitHub.
-   - Creates a repo from template.
-   - Commits uploaded files or Overleaf config.
-3. Add **preview builds** to temporary branches.
-4. Implement **fallback switch** for Pandoc/LaTeXML.
+## Development Phases
+
+### Phase 1: MVP Development in Playground Repo
+**Goal**: Build and test core functionality locally
+
+**Repository Structure**:
+```
+20250831_one_click_paper_page/
+├── frontend/                 # Vite + React/TypeScript app (run locally)
+├── backend/                  # Python scripts and API (if needed)
+├── template/                 # Template for user repos
+├── scripts/                  # Conversion tools (Python)
+└── docs/                     # Planning and documentation
+```
+
+**Development Tools & Standards**:
+- **Frontend**: Vite + React + TypeScript + pnpm
+- **Backend/Scripts**: Python + uv (venv/packages) + ruff (linting) + mypy (type checking)
+- **No npm or pip** - use pnpm and uv respectively
+
+**TODOs**:
+
+**Setup & Tooling**:
+- [ ] Set up frontend with Vite (`pnpm create vite@latest frontend --template react-ts`)
+- [ ] Configure frontend linting and type checking:
+  - [ ] ESLint + Prettier configuration
+  - [ ] TypeScript strict mode
+  - [ ] Pre-commit hooks with lint-staged
+- [ ] Set up Python environment:
+  - [ ] Initialize with uv (`uv init backend`)
+  - [ ] Configure ruff for linting (`ruff.toml`)
+  - [ ] Configure mypy for type checking (`mypy.ini`)
+  - [ ] Set up pre-commit hooks for Python
+
+**Core Development**:
+- [ ] Create template workflow structure (`template/.github/workflows/convert-and-deploy.yml`)
+- [ ] Build conversion scripts (Python + type hints):
+  - [ ] Docling integration (`scripts/docling_converter.py`)
+  - [ ] Marker integration (`scripts/marker_converter.py`)
+  - [ ] Pandoc fallback (`scripts/fallback_pandoc.py`)
+- [ ] Implement GitHub API integration (TypeScript):
+  - [ ] GitHub App authentication
+  - [ ] Repository creation from template
+  - [ ] File upload and commit functionality
+- [ ] Create basic UI components (React + TypeScript):
+  - [ ] File upload interface
+  - [ ] Template selection
+  - [ ] GitHub authentication flow
+- [ ] Test conversion pipeline locally with sample files
+- [ ] End-to-end test: create real user repo and trigger build
+
+### Phase 2: Integration Testing & Validation
+**Goal**: Validate full user journey with real GitHub integration
+
+**TODOs**:
+- [ ] Test with multiple file formats (PDF, DOCX, LaTeX zip)
+- [ ] Validate all three template options work correctly
+- [ ] Test Overleaf integration (Git clone + PAT)
+- [ ] Implement error handling and user feedback
+- [ ] Add conversion quality validation
+- [ ] Test GitHub Pages deployment from user repos
+- [ ] Performance testing (build times, file size limits)
+- [ ] Security review (token handling, file validation)
+
+### Phase 3: Production Migration
+**Goal**: Deploy as subpage of personal GitHub Pages site
+
+**Migration Options**:
+- **Option A**: Subpage of personal site (`username.github.io/paper-converter`)
+- **Option B**: Dedicated repository (`paper-to-website.github.io`)
+
+**TODOs**:
+- [ ] Configure Next.js for static export with basePath
+- [ ] Set up GitHub Actions for deployment
+- [ ] Update all API endpoints for production URLs
+- [ ] Add analytics and usage tracking
+- [ ] Create user documentation and examples
+- [ ] Set up monitoring and error reporting
+- [ ] Beta testing with real users
+- [ ] Performance optimization and caching
+
+### Phase 4: Enhancement & Scale (Future)
+**Goal**: Add advanced features and improve user experience
+
+**TODOs**:
+- [ ] Preview builds on temporary branches
+- [ ] Custom theme editor
+- [ ] Batch processing for multiple papers
+- [ ] Integration with academic platforms (arXiv, ResearchGate)
+- [ ] Advanced customization options
+- [ ] Plugin system for custom conversion steps
+- [ ] Analytics dashboard for users
+- [ ] API for programmatic access
+
+---
+
+## Development Standards & Configuration
+
+### Frontend (Vite + React + TypeScript)
+**Package Manager**: pnpm only
+```bash
+# Setup
+pnpm create vite@latest frontend --template react-ts
+cd frontend
+pnpm install
+
+# Development
+pnpm dev
+pnpm build
+pnpm lint
+pnpm type-check
+```
+
+**Required Configuration Files**:
+- `eslint.config.js` - ESLint with TypeScript rules
+- `prettier.config.js` - Code formatting
+- `tsconfig.json` - TypeScript strict mode
+- `vite.config.ts` - Vite configuration
+- `.gitignore` - Include node_modules, dist, .env
+
+**Linting & Type Checking**:
+```json
+// package.json scripts
+{
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "lint:fix": "eslint . --ext ts,tsx --fix",
+    "type-check": "tsc --noEmit",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
+  }
+}
+```
+
+### Backend/Scripts (Python)
+**Package Manager**: uv only (no pip)
+```bash
+# Setup
+uv init backend
+cd backend
+uv add docling marker-pdf pandas  # example dependencies
+uv add --dev ruff mypy pytest
+
+# Development
+uv run python script.py
+uv run ruff check .
+uv run mypy .
+```
+
+**Required Configuration Files**:
+- `pyproject.toml` - Project metadata and tool configuration
+- `ruff.toml` or `pyproject.toml` - Ruff linting rules
+- `mypy.ini` or `pyproject.toml` - MyPy type checking
+- `.gitignore` - Include __pycache__, .venv, .mypy_cache
+
+**Linting & Type Checking**:
+```toml
+# pyproject.toml
+[tool.ruff]
+line-length = 88
+target-version = "py311"
+select = ["E", "F", "I", "N", "W", "UP"]
+
+[tool.mypy]
+python_version = "3.11"
+strict = true
+warn_return_any = true
+warn_unused_configs = true
+
+[tool.ruff.isort]
+known-first-party = ["scripts"]
+```
+
+### Pre-commit Hooks
+**Setup for both frontend and backend**:
+```bash
+# Install pre-commit
+uv add --dev pre-commit  # for Python projects
+pnpm add -D lint-staged husky  # for frontend
+
+# .pre-commit-config.yaml
+repos:
+  - repo: local
+    hooks:
+      - id: ruff-check
+        name: ruff-check
+        entry: uv run ruff check --fix
+        language: system
+        types: [python]
+      - id: mypy
+        name: mypy
+        entry: uv run mypy
+        language: system
+        types: [python]
+      - id: eslint
+        name: eslint
+        entry: pnpm lint:fix
+        language: system
+        types: [typescript, tsx]
+```
