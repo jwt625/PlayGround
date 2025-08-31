@@ -76,3 +76,4 @@ coverage/
 *.temp
 .tmp/
 .temp/
+*/output*/*

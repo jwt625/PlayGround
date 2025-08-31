@@ -67,29 +67,85 @@ class MarkerConverter:
     def _marker_convert(self, input_path: Path, output_dir: Path) -> bool:
         """
         Actual Marker conversion implementation.
-        
-        This is a placeholder - in the real implementation, we would:
-        1. Import marker
-        2. Initialize the converter with appropriate settings
-        3. Process the PDF
-        4. Extract markdown with math, tables, and images
-        5. Convert markdown to HTML
+
+        Attempts to use real Marker library if available, falls back to placeholder.
         """
         try:
-            # Placeholder implementation
-            # In real implementation:
-            # from marker.convert import convert_single_pdf
-            # from marker.models import load_all_models
-            # 
-            # model_lst = load_all_models()
-            # full_text, images, out_meta = convert_single_pdf(str(input_path), model_lst)
-            
-            # For now, create a comprehensive HTML file as placeholder
-            output_file = output_dir / "index.html"
-            markdown_file = output_dir / "document.md"
-            
-            # Create placeholder markdown
-            placeholder_markdown = f"""# Document Converted with Marker
+            # Try to use real Marker library
+            try:
+                return self._real_marker_convert(input_path, output_dir)
+            except ImportError:
+                logger.warning("Marker library not available, using placeholder implementation")
+                return self._placeholder_marker_convert(input_path, output_dir)
+
+        except Exception as e:
+            logger.error(f"Marker conversion implementation error: {e}")
+            return False
+
+    def _real_marker_convert(self, input_path: Path, output_dir: Path) -> bool:
+        """Real Marker conversion using the marker-pdf library."""
+        from marker.models import create_model_dict
+        from marker.converters.pdf import PdfConverter
+
+        logger.info("Using real Marker library for conversion")
+
+        # Create model dictionary (this may take time on first run)
+        logger.info("Loading Marker models...")
+        artifact_dict = create_model_dict()
+
+        # Create converter
+        converter = PdfConverter(artifact_dict)
+
+        # Convert PDF to markdown
+        logger.info("Converting PDF to markdown...")
+        result = converter(str(input_path))
+
+        # Extract markdown content
+        markdown_content = result.markdown
+
+        # Save markdown
+        markdown_file = output_dir / "document.md"
+        with open(markdown_file, 'w', encoding='utf-8') as f:
+            f.write(markdown_content)
+
+        # Save images if any are extracted
+        if hasattr(result, 'images') and result.images:
+            images_dir = output_dir / "images"
+            images_dir.mkdir(exist_ok=True)
+            for img_name, img_data in result.images.items():
+                img_path = images_dir / img_name
+                try:
+                    # Handle different image data types
+                    if hasattr(img_data, 'save'):
+                        # PIL Image object
+                        img_data.save(img_path)
+                    elif isinstance(img_data, bytes):
+                        # Raw bytes
+                        with open(img_path, 'wb') as f:
+                            f.write(img_data)
+                    else:
+                        logger.warning(f"Unknown image data type for {img_name}: {type(img_data)}")
+                except Exception as e:
+                    logger.warning(f"Failed to save image {img_name}: {e}")
+            logger.info(f"Processed {len(result.images)} images to {images_dir}")
+
+        # Convert to HTML
+        html_content = self._create_html_from_markdown(markdown_content, input_path.name)
+        output_file = output_dir / "index.html"
+        with open(output_file, 'w', encoding='utf-8') as f:
+            f.write(html_content)
+
+        logger.info(f"Real Marker conversion completed: {output_file}")
+        logger.info(f"Markdown length: {len(markdown_content)} characters")
+        return True
+
+    def _placeholder_marker_convert(self, input_path: Path, output_dir: Path) -> bool:
+        """Placeholder implementation when Marker library is not available."""
+        output_file = output_dir / "index.html"
+        markdown_file = output_dir / "document.md"
+
+        # Create placeholder markdown
+        placeholder_markdown = f"""# Document Converted with Marker (Placeholder)
 
 **Source:** {input_path.name}
 
@@ -146,79 +202,17 @@ To integrate Marker properly:
 - Optimize for GitHub Actions environment (CPU-only)
 """
 
-            # Save markdown
-            with open(markdown_file, 'w', encoding='utf-8') as f:
-                f.write(placeholder_markdown)
-            
-            # Convert to HTML
-            placeholder_html = f"""
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document Converted with Marker</title>
-    <style>
-        body {{
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            line-height: 1.6;
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-            color: #333;
-        }}
-        h1, h2, h3 {{ color: #2c3e50; }}
-        table {{
-            border-collapse: collapse;
-            width: 100%;
-            margin: 20px 0;
-        }}
-        th, td {{
-            border: 1px solid #ddd;
-            padding: 12px;
-            text-align: left;
-        }}
-        th {{ background-color: #f2f2f2; }}
-        code {{
-            background-color: #f4f4f4;
-            padding: 2px 4px;
-            border-radius: 3px;
-            font-family: 'Monaco', 'Consolas', monospace;
-        }}
-        pre {{
-            background-color: #f4f4f4;
-            padding: 15px;
-            border-radius: 5px;
-            overflow-x: auto;
-        }}
-        .math {{ text-align: center; margin: 20px 0; }}
-    </style>
-    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-    <script>
-        window.MathJax = {{
-            tex: {{
-                inlineMath: [['$', '$'], ['\\\\(', '\\\\)']],
-                displayMath: [['$$', '$$'], ['\\\\[', '\\\\]']]
-            }}
-        }};
-    </script>
-</head>
-<body>
-{self._markdown_to_html(placeholder_markdown)}
-</body>
-</html>
-"""
-            
-            with open(output_file, 'w', encoding='utf-8') as f:
-                f.write(placeholder_html)
-            
-            logger.info(f"Placeholder HTML created at {output_file}")
-            return True
-            
-        except Exception as e:
-            logger.error(f"Marker conversion implementation error: {e}")
-            return False
+        # Save markdown
+        with open(markdown_file, 'w', encoding='utf-8') as f:
+            f.write(placeholder_markdown)
+
+        # Convert to HTML using the helper method
+        html_content = self._create_html_from_markdown(placeholder_markdown, input_path.name)
+        with open(output_file, 'w', encoding='utf-8') as f:
+            f.write(html_content)
+
+        logger.info(f"Placeholder HTML created at {output_file}")
+        return True
     
     def _markdown_to_html(self, markdown_content: str) -> str:
         """Convert markdown to HTML (simplified implementation)."""
@@ -233,7 +227,7 @@ To integrate Marker properly:
             
             if line.startswith('```'):
                 if in_code_block:
-                    html_lines.append('</pre>')
+                    html_lines.append('</code></pre>')
                     in_code_block = False
                 else:
                     html_lines.append('<pre><code>')
@@ -274,7 +268,75 @@ To integrate Marker properly:
             html_lines.append('</code></pre>')
         
         return '\n'.join(html_lines)
-    
+
+    def _create_html_from_markdown(self, markdown_content: str, source_filename: str) -> str:
+        """Create a complete HTML document from markdown content."""
+        html_body = self._markdown_to_html(markdown_content)
+
+        return f"""<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document Converted with Marker - {source_filename}</title>
+    <style>
+        body {{
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            color: #333;
+        }}
+        h1, h2, h3 {{ color: #2c3e50; }}
+        table {{
+            border-collapse: collapse;
+            width: 100%;
+            margin: 20px 0;
+        }}
+        th, td {{
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }}
+        th {{ background-color: #f2f2f2; }}
+        code {{
+            background-color: #f4f4f4;
+            padding: 2px 4px;
+            border-radius: 3px;
+            font-family: 'Monaco', 'Consolas', monospace;
+        }}
+        pre {{
+            background-color: #f4f4f4;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }}
+        .math {{ text-align: center; margin: 20px 0; }}
+        .marker-info {{
+            background-color: #e8f4fd;
+            border-left: 4px solid #2196F3;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }}
+    </style>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>
+        window.MathJax = {{
+            tex: {{
+                inlineMath: [['$', '$'], ['\\\\(', '\\\\)']],
+                displayMath: [['$$', '$$'], ['\\\\[', '\\\\]']]
+            }}
+        }};
+    </script>
+</head>
+<body>
+{html_body}
+</body>
+</html>"""
+
     def extract_metadata(self, input_path: Path) -> Dict[str, Any]:
         """Extract metadata from the PDF."""
         metadata = {

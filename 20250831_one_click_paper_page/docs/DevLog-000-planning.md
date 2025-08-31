@@ -169,6 +169,12 @@ Users pick their preferred template during onboarding; the system copies it into
 **Goal**: Validate full user journey with real GitHub integration
 
 **TODOs**:
+- [/] **CURRENT**: Focus on Marker converter for simplicity and quality
+  - [x] Create unit tests for marker_converter.py
+  - [ ] Implement actual Marker integration (replace placeholder)
+  - [ ] Test with sample PDF (2508.19977v1.pdf)
+  - [ ] Validate math formula extraction
+  - [ ] Test table and image extraction
 - [ ] Test with multiple file formats (PDF, DOCX, LaTeX zip)
 - [ ] Validate all three template options work correctly
 - [ ] Test Overleaf integration (Git clone + PAT)
