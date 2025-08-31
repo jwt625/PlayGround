@@ -8,6 +8,10 @@ dependencies = [
     "docling>=2.48.0",
     "marker-pdf>=1.9.0",
     "pandoc>=2.4",
+    "fastapi>=0.104.0",
+    "uvicorn[standard]>=0.24.0",
+    "requests>=2.31.0",
+    "python-dotenv>=1.0.0",
 ]
 
 [dependency-groups]
@@ -15,14 +19,17 @@ dev = [
     "mypy>=1.17.1",
     "pytest>=8.4.1",
     "ruff>=0.12.11",
+    "types-requests>=2.32.4.20250809",
 ]
 
 [tool.ruff]
 line-length = 88
 target-version = "py311"
+
+[tool.ruff.lint]
 select = ["E", "F", "I", "N", "W", "UP"]
 
-[tool.ruff.isort]
+[tool.ruff.lint.isort]
 known-first-party = ["scripts"]
 
 [tool.mypy]

@@ -38,7 +38,7 @@ export class GitHubAuth {
    */
   async exchangeCodeForToken(code: string, state?: string): Promise<OAuthTokenResponse> {
     try {
-      const response = await fetch('/api/github/oauth/token', {
+      const response = await fetch('http://localhost:8001/api/github/oauth/token', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -110,7 +110,7 @@ export class GitHubAuth {
    */
   async revokeToken(accessToken: string): Promise<void> {
     try {
-      const response = await fetch('/api/github/oauth/revoke', {
+      const response = await fetch('http://localhost:8001/api/github/oauth/revoke', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
