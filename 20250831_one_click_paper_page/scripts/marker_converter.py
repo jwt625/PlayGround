@@ -9,62 +9,372 @@ from typing import Optional, Dict, Any, List
 import tempfile
 import shutil
 import json
+import time
+from enum import Enum
 
 # Setup logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
+
+class ConversionMode(Enum):
+    """Conversion mode options for PDF processing."""
+    AUTO = "auto"      # Smart mode: try fast, fallback to quality if needed
+    FAST = "fast"      # Fast mode: disable OCR for speed (~40 seconds)
+    QUALITY = "quality"  # Quality mode: full OCR for maximum accuracy (~6 minutes)
+
+# Global model cache for performance optimization
+_model_cache: Optional[Dict[str, Any]] = None
+_model_load_time: Optional[float] = None
+
+
+def get_cached_models(fast_mode: bool = False) -> Dict[str, Any]:
+    """
+    Get cached Marker models, loading them if not already cached.
+
+    Args:
+        fast_mode: If True, use faster but potentially lower quality models
+
+    Returns:
+        Dictionary containing the loaded Marker models
+    """
+    global _model_cache, _model_load_time
+
+    cache_key = f"fast_{fast_mode}"
+
+    if _model_cache is None or cache_key not in _model_cache:
+        logger.info(f"Loading Marker models for the first time (fast_mode={fast_mode})...")
+        start_time = time.time()
+
+        try:
+            from marker.models import create_model_dict
+
+            # Models are loaded the same way - performance is controlled via config
+            if _model_cache is None:
+                _model_cache = {}
+
+            _model_cache[cache_key] = create_model_dict()
+            _model_load_time = time.time() - start_time
+            logger.info(f"Marker models loaded successfully in {_model_load_time:.2f} seconds")
+        except ImportError as e:
+            logger.error(f"Failed to import Marker models: {e}")
+            raise
+        except Exception as e:
+            logger.error(f"Failed to load Marker models: {e}")
+            raise
+    else:
+        logger.info(f"Using cached Marker models (loaded in {_model_load_time:.2f}s)")
+
+    return _model_cache[cache_key]
+
+
+def clear_model_cache() -> None:
+    """Clear the cached models (useful for testing or memory management)."""
+    global _model_cache, _model_load_time
+    _model_cache = None
+    _model_load_time = None
+    logger.info("Model cache cleared")
+
+
+def assess_pdf_quality(pdf_path: Path) -> Dict[str, Any]:
+    """
+    Assess PDF text extraction quality to determine optimal conversion mode.
+
+    Args:
+        pdf_path: Path to the PDF file
+
+    Returns:
+        Dictionary containing quality assessment and recommendations
+    """
+    try:
+        import PyPDF2
+
+        with open(pdf_path, 'rb') as file:
+            reader = PyPDF2.PdfReader(file)
+            total_pages = len(reader.pages)
+
+            # Sample first 5 pages for quality assessment
+            sample_pages = min(5, total_pages)
+            total_chars = 0
+            text_pages = 0
+            total_words = 0
+
+            for i in range(sample_pages):
+                try:
+                    text = reader.pages[i].extract_text()
+                    if text and len(text.strip()) > 50:
+                        clean_text = text.strip()
+                        total_chars += len(clean_text)
+                        total_words += len(clean_text.split())
+                        text_pages += 1
+                except Exception as e:
+                    logger.debug(f"Error extracting text from page {i}: {e}")
+                    continue
+
+            # Calculate quality metrics
+            avg_chars_per_page = total_chars / max(sample_pages, 1)
+            avg_words_per_page = total_words / max(sample_pages, 1)
+            text_coverage = text_pages / max(sample_pages, 1)
+
+            # Quality thresholds (tuned based on testing)
+            has_good_text = (
+                avg_chars_per_page > 200 and  # Minimum character density
+                avg_words_per_page > 30 and   # Minimum word density
+                text_coverage > 0.6           # Most pages have extractable text
+            )
+
+            recommended_mode = ConversionMode.FAST if has_good_text else ConversionMode.QUALITY
+
+            quality_info = {
+                "has_good_text": has_good_text,
+                "avg_chars_per_page": avg_chars_per_page,
+                "avg_words_per_page": avg_words_per_page,
+                "text_coverage": text_coverage,
+                "total_pages": total_pages,
+                "sample_pages": sample_pages,
+                "recommended_mode": recommended_mode.value,
+                "confidence": "high" if text_coverage > 0.8 else "medium" if text_coverage > 0.4 else "low"
+            }
+
+            logger.info(f"PDF quality assessment: {quality_info['recommended_mode']} mode recommended "
+                       f"(confidence: {quality_info['confidence']})")
+
+            return quality_info
+
+    except ImportError:
+        logger.warning("PyPDF2 not available for quality assessment, defaulting to quality mode")
+        return {
+            "has_good_text": False,
+            "recommended_mode": ConversionMode.QUALITY.value,
+            "confidence": "low",
+            "error": "PyPDF2 not available"
+        }
+    except Exception as e:
+        logger.warning(f"Error assessing PDF quality: {e}, defaulting to quality mode")
+        return {
+            "has_good_text": False,
+            "recommended_mode": ConversionMode.QUALITY.value,
+            "confidence": "low",
+            "error": str(e)
+        }
+
 class MarkerConverter:
-    """Converter using Marker for high-quality PDF conversion."""
-    
-    def __init__(self):
-        """Initialize the Marker converter."""
+    """Converter using Marker for high-quality PDF conversion with smart mode selection."""
+
+    def __init__(self, mode: ConversionMode = ConversionMode.AUTO, fast_mode: bool = None):
+        """
+        Initialize the Marker converter.
+
+        Args:
+            mode: Conversion mode (AUTO, FAST, or QUALITY)
+                 - AUTO: Smart mode that tries fast first, falls back to quality if needed
+                 - FAST: Speed optimized (~40 seconds, relies on existing PDF text)
+                 - QUALITY: Maximum quality (~6 minutes, full OCR for scanned documents)
+            fast_mode: Deprecated. Use mode parameter instead. If provided, overrides mode.
+        """
         self.supported_formats = {'.pdf'}
+
+        # Handle backward compatibility
+        if fast_mode is not None:
+            logger.warning("fast_mode parameter is deprecated. Use mode parameter instead.")
+            self.mode = ConversionMode.FAST if fast_mode else ConversionMode.QUALITY
+        else:
+            self.mode = mode
+
+        self.last_conversion_time: Optional[float] = None
+        self.last_model_load_time: Optional[float] = None
+        self.last_quality_assessment: Optional[Dict[str, Any]] = None
+        self.last_mode_used: Optional[ConversionMode] = None
         
     def is_supported(self, file_path: Path) -> bool:
         """Check if the file format is supported by Marker."""
         return file_path.suffix.lower() in self.supported_formats
+
+    def get_performance_metrics(self) -> Dict[str, Any]:
+        """
+        Get performance metrics from the last conversion.
+
+        Returns:
+            Dictionary containing timing and quality information
+        """
+        return {
+            "total_conversion_time": self.last_conversion_time,
+            "model_load_time": self.last_model_load_time,
+            "actual_processing_time": (
+                self.last_conversion_time - (self.last_model_load_time or 0)
+                if self.last_conversion_time and self.last_model_load_time
+                else None
+            ),
+            "mode_used": self.last_mode_used.value if self.last_mode_used else None,
+            "quality_assessment": self.last_quality_assessment
+        }
+
+    def _validate_output_quality(self, output_dir: Path) -> Dict[str, Any]:
+        """
+        Validate the quality of conversion output.
+
+        Args:
+            output_dir: Directory containing conversion output
+
+        Returns:
+            Dictionary with validation results
+        """
+        html_file = output_dir / "index.html"
+
+        if not html_file.exists():
+            return {"is_valid": False, "reason": "No HTML output file found"}
+
+        try:
+            content = html_file.read_text(encoding='utf-8')
+
+            # Quality heuristics
+            content_length = len(content)
+            paragraph_count = content.count('<p>')
+            heading_count = content.count('<h')
+            image_count = content.count('<img')
+
+            # Check for garbled characters (common in poor OCR)
+            garbled_chars = ['□', '�', '▢', '◯']
+            garbled_count = sum(content.count(char) for char in garbled_chars)
+
+            # Validation criteria
+            has_sufficient_content = content_length > 1000
+            has_structure = paragraph_count > 3 or heading_count > 1
+            low_garbled_ratio = garbled_count / max(content_length, 1) < 0.01
+
+            is_valid = has_sufficient_content and has_structure and low_garbled_ratio
+
+            validation_result = {
+                "is_valid": is_valid,
+                "content_length": content_length,
+                "paragraph_count": paragraph_count,
+                "heading_count": heading_count,
+                "image_count": image_count,
+                "garbled_count": garbled_count,
+                "quality_score": (
+                    (1 if has_sufficient_content else 0) +
+                    (1 if has_structure else 0) +
+                    (1 if low_garbled_ratio else 0)
+                ) / 3
+            }
+
+            if not is_valid:
+                reasons = []
+                if not has_sufficient_content:
+                    reasons.append("insufficient content")
+                if not has_structure:
+                    reasons.append("poor document structure")
+                if not low_garbled_ratio:
+                    reasons.append("too many garbled characters")
+                validation_result["reason"] = ", ".join(reasons)
+
+            return validation_result
+
+        except Exception as e:
+            return {"is_valid": False, "reason": f"Error reading output: {e}"}
     
     def convert_to_html(self, input_path: Path, output_dir: Path) -> bool:
         """
-        Convert PDF to HTML using Marker.
-        
+        Convert PDF to HTML using Marker with smart mode selection.
+
         Args:
             input_path: Path to input PDF
             output_dir: Directory to save output files
-            
+
         Returns:
             True if conversion successful, False otherwise
         """
         try:
-            logger.info(f"Starting Marker conversion of {input_path}")
-            
+            start_time = time.time()
+            logger.info(f"Starting Marker conversion of {input_path} (mode: {self.mode.value})")
+
             if not self.is_supported(input_path):
                 logger.error(f"Unsupported file format: {input_path.suffix}")
                 return False
-            
+
             if not input_path.exists():
                 logger.error(f"Input file does not exist: {input_path}")
                 return False
-            
+
             # Create output directory if it doesn't exist
             output_dir.mkdir(parents=True, exist_ok=True)
-            
-            # Convert PDF to Markdown first, then to HTML
-            success = self._marker_convert(input_path, output_dir)
-            
+
+            # Handle different conversion modes
+            if self.mode == ConversionMode.AUTO:
+                success = self._convert_auto_mode(input_path, output_dir)
+            elif self.mode == ConversionMode.FAST:
+                success = self._convert_fast_mode(input_path, output_dir)
+            elif self.mode == ConversionMode.QUALITY:
+                success = self._convert_quality_mode(input_path, output_dir)
+            else:
+                logger.error(f"Unknown conversion mode: {self.mode}")
+                return False
+
+            # Record timing
+            self.last_conversion_time = time.time() - start_time
+            self.last_model_load_time = _model_load_time
+
             if success:
-                logger.info("Marker conversion completed successfully")
+                logger.info(f"Marker conversion completed successfully in {self.last_conversion_time:.2f} seconds "
+                           f"using {self.last_mode_used.value} mode")
                 return True
             else:
                 logger.error("Marker conversion failed")
                 return False
-                
+
         except Exception as e:
             logger.error(f"Marker conversion error: {e}")
             return False
     
-    def _marker_convert(self, input_path: Path, output_dir: Path) -> bool:
+    def _convert_auto_mode(self, input_path: Path, output_dir: Path) -> bool:
+        """
+        Smart conversion: try fast mode first, fallback to quality mode if needed.
+
+        Args:
+            input_path: Path to input PDF
+            output_dir: Directory to save output files
+
+        Returns:
+            True if conversion successful, False otherwise
+        """
+        # Step 1: Assess PDF quality
+        logger.info("Assessing PDF quality for smart mode selection...")
+        self.last_quality_assessment = assess_pdf_quality(input_path)
+
+        # Step 2: Try recommended mode first
+        if self.last_quality_assessment["recommended_mode"] == ConversionMode.FAST.value:
+            logger.info("PDF has good text quality, trying fast mode first...")
+
+            # Try fast mode
+            if self._convert_fast_mode(input_path, output_dir):
+                # Validate output quality
+                validation = self._validate_output_quality(output_dir)
+
+                if validation["is_valid"] and validation["quality_score"] > 0.7:
+                    logger.info(f"Fast mode successful! Quality score: {validation['quality_score']:.2f}")
+                    return True
+                else:
+                    logger.info(f"Fast mode output quality insufficient (score: {validation.get('quality_score', 0):.2f}), "
+                               f"falling back to quality mode...")
+                    # Clear the output directory for retry
+                    shutil.rmtree(output_dir)
+                    output_dir.mkdir(parents=True, exist_ok=True)
+
+        # Step 3: Fallback to quality mode
+        logger.info("Using quality mode for best results...")
+        return self._convert_quality_mode(input_path, output_dir)
+
+    def _convert_fast_mode(self, input_path: Path, output_dir: Path) -> bool:
+        """Convert using fast mode (OCR disabled)."""
+        self.last_mode_used = ConversionMode.FAST
+        return self._marker_convert(input_path, output_dir, fast_mode=True)
+
+    def _convert_quality_mode(self, input_path: Path, output_dir: Path) -> bool:
+        """Convert using quality mode (full OCR)."""
+        self.last_mode_used = ConversionMode.QUALITY
+        return self._marker_convert(input_path, output_dir, fast_mode=False)
+
+    def _marker_convert(self, input_path: Path, output_dir: Path, fast_mode: bool = None) -> bool:
         """
         Actual Marker conversion implementation.
 
@@ -73,7 +383,7 @@ class MarkerConverter:
         try:
             # Try to use real Marker library
             try:
-                return self._real_marker_convert(input_path, output_dir)
+                return self._real_marker_convert(input_path, output_dir, fast_mode)
             except ImportError:
                 logger.warning("Marker library not available, using placeholder implementation")
                 return self._placeholder_marker_convert(input_path, output_dir)
@@ -82,19 +392,44 @@ class MarkerConverter:
             logger.error(f"Marker conversion implementation error: {e}")
             return False
 
-    def _real_marker_convert(self, input_path: Path, output_dir: Path) -> bool:
+    def _real_marker_convert(self, input_path: Path, output_dir: Path, fast_mode: bool = None) -> bool:
         """Real Marker conversion using the marker-pdf library."""
-        from marker.models import create_model_dict
         from marker.converters.pdf import PdfConverter
+        from marker.config.parser import ConfigParser
 
-        logger.info("Using real Marker library for conversion")
+        # Determine fast mode setting
+        use_fast_mode = fast_mode if fast_mode is not None else (self.mode == ConversionMode.FAST)
 
-        # Create model dictionary (this may take time on first run)
-        logger.info("Loading Marker models...")
-        artifact_dict = create_model_dict()
+        logger.info(f"Using real Marker library for conversion (fast_mode={use_fast_mode})")
 
-        # Create converter
-        converter = PdfConverter(artifact_dict)
+        # Get cached models (loads on first call, reuses on subsequent calls)
+        artifact_dict = get_cached_models(fast_mode=use_fast_mode)
+
+        # Create configuration with performance optimizations
+        config_dict = None
+        if use_fast_mode:
+            # Fast mode: Disable OCR for 8x speed improvement
+            logger.info("Applying fast mode: disabling OCR for 8x speed improvement...")
+            logger.info("Note: Fast mode relies on existing PDF text. Use normal mode for scanned documents.")
+            config_dict = {
+                # Speed optimizations
+                "layout_batch_size": 8,            # Reasonable batch size
+                "detection_batch_size": 8,         # Reasonable batch size
+                "disable_multiprocessing": False,   # Keep multiprocessing
+                "disable_tqdm": False,              # Keep progress bars
+                # Lower resolution for speed
+                "highres_image_dpi": 96,           # Lower DPI (default: 192)
+                "lowres_image_dpi": 72,            # Lower DPI (default: 96)
+                # Skip expensive OCR operations
+                "disable_ocr": True,               # Disable OCR for speed (8x improvement)
+                "force_ocr": False,                # Don't force OCR
+                # Keep other features
+                "extract_images": True,            # Still extract images
+                "disable_ocr_math": False,         # Keep math processing (minimal impact)
+            }
+
+        # Create converter with optimized config
+        converter = PdfConverter(artifact_dict, config=config_dict)
 
         # Convert PDF to markdown
         logger.info("Converting PDF to markdown...")

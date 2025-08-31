@@ -7,6 +7,7 @@ Tests both the placeholder implementation and prepares for real Marker integrati
 import pytest
 import tempfile
 import shutil
+import time
 from pathlib import Path
 from unittest.mock import patch, MagicMock
 import sys
@@ -15,7 +16,7 @@ import os
 # Add scripts directory to path for imports
 sys.path.insert(0, str(Path(__file__).parent.parent / "scripts"))
 
-from marker_converter import MarkerConverter
+from marker_converter import MarkerConverter, get_cached_models, clear_model_cache, ConversionMode, assess_pdf_quality
 
 
 class TestMarkerConverter:
@@ -291,6 +292,232 @@ class TestMarkerConverterErrorHandling:
         assert 'title' in metadata
         assert 'converter' in metadata
         assert metadata['converter'] == 'marker'
+
+
+class TestMarkerConverterPerformance:
+    """Performance tests for MarkerConverter with timing measurements."""
+
+    @pytest.fixture
+    def converter(self):
+        # Clear cache before each test to ensure clean state
+        clear_model_cache()
+        return MarkerConverter()
+
+    @pytest.fixture
+    def temp_dir(self):
+        """Create a temporary directory for test outputs."""
+        temp_dir = Path(tempfile.mkdtemp())
+        yield temp_dir
+        shutil.rmtree(temp_dir)
+
+    @pytest.fixture
+    def sample_pdf_path(self):
+        """Path to the sample PDF for testing."""
+        return Path(__file__).parent / "pdf" / "2508.19977v1.pdf"
+
+    @pytest.mark.performance
+    @pytest.mark.skipif(not Path(__file__).parent.joinpath("pdf", "2508.19977v1.pdf").exists(),
+                       reason="Sample PDF not available")
+    def test_first_conversion_timing(self, converter, sample_pdf_path, temp_dir):
+        """Test timing of first conversion (includes model loading)."""
+        try:
+            import marker
+        except ImportError:
+            pytest.skip("Marker library not installed")
+
+        start_time = time.time()
+        success = converter.convert_to_html(sample_pdf_path, temp_dir)
+        total_time = time.time() - start_time
+
+        if success:
+            metrics = converter.get_performance_metrics()
+            print(f"\nFirst conversion performance:")
+            print(f"  Total time: {total_time:.2f}s")
+            print(f"  Reported total time: {metrics['total_conversion_time']:.2f}s")
+            print(f"  Model load time: {metrics['model_load_time']:.2f}s")
+            print(f"  Processing time: {metrics['actual_processing_time']:.2f}s")
+
+            # Verify timing is reasonable (should be under 10 minutes for test PDF)
+            assert total_time < 600, f"Conversion took too long: {total_time:.2f}s"
+            assert metrics['model_load_time'] > 0, "Model load time should be recorded"
+            assert metrics['actual_processing_time'] > 0, "Processing time should be recorded"
+
+    @pytest.mark.performance
+    @pytest.mark.skipif(not Path(__file__).parent.joinpath("pdf", "2508.19977v1.pdf").exists(),
+                       reason="Sample PDF not available")
+    def test_second_conversion_timing(self, converter, sample_pdf_path, temp_dir):
+        """Test timing of second conversion (should use cached models)."""
+        try:
+            import marker
+        except ImportError:
+            pytest.skip("Marker library not installed")
+
+        # First conversion to load models
+        temp_dir1 = temp_dir / "first"
+        temp_dir1.mkdir()
+        converter.convert_to_html(sample_pdf_path, temp_dir1)
+        first_metrics = converter.get_performance_metrics()
+
+        # Second conversion should be faster (cached models)
+        temp_dir2 = temp_dir / "second"
+        temp_dir2.mkdir()
+        start_time = time.time()
+        success = converter.convert_to_html(sample_pdf_path, temp_dir2)
+        total_time = time.time() - start_time
+
+        if success:
+            second_metrics = converter.get_performance_metrics()
+            print(f"\nSecond conversion performance:")
+            print(f"  Total time: {total_time:.2f}s")
+            print(f"  First conversion total: {first_metrics['total_conversion_time']:.2f}s")
+            print(f"  Second conversion total: {second_metrics['total_conversion_time']:.2f}s")
+            print(f"  Speed improvement: {first_metrics['total_conversion_time'] / second_metrics['total_conversion_time']:.1f}x")
+
+            # Second conversion should be significantly faster
+            assert second_metrics['total_conversion_time'] < first_metrics['total_conversion_time'], \
+                "Second conversion should be faster due to cached models"
+
+    @pytest.mark.performance
+    def test_model_caching_behavior(self):
+        """Test that model caching works correctly."""
+        try:
+            import marker
+        except ImportError:
+            pytest.skip("Marker library not installed")
+
+        # Clear cache
+        clear_model_cache()
+
+        # First call should load models
+        start_time = time.time()
+        models1 = get_cached_models()
+        first_load_time = time.time() - start_time
+
+        # Second call should use cache
+        start_time = time.time()
+        models2 = get_cached_models()
+        second_load_time = time.time() - start_time
+
+        print(f"\nModel caching performance:")
+        print(f"  First load time: {first_load_time:.2f}s")
+        print(f"  Second load time: {second_load_time:.4f}s")
+        print(f"  Cache speedup: {first_load_time / second_load_time:.0f}x")
+
+        # Verify caching works
+        assert models1 is models2, "Should return the same cached object"
+        assert second_load_time < 0.1, "Cached access should be very fast"
+        assert first_load_time > second_load_time, "First load should be slower"
+
+    @pytest.mark.performance
+    @pytest.mark.skipif(not Path(__file__).parent.joinpath("pdf", "2508.19977v1.pdf").exists(),
+                       reason="Sample PDF not available")
+    def test_fast_mode_vs_normal_mode(self, sample_pdf_path, temp_dir):
+        """Test performance difference between fast mode and normal mode."""
+        try:
+            import marker
+        except ImportError:
+            pytest.skip("Marker library not installed")
+
+        # Clear cache before test
+        clear_model_cache()
+
+        # Test normal mode
+        normal_converter = MarkerConverter(fast_mode=False)
+        normal_dir = temp_dir / "normal"
+        normal_dir.mkdir()
+
+        start_time = time.time()
+        normal_success = normal_converter.convert_to_html(sample_pdf_path, normal_dir)
+        normal_time = time.time() - start_time
+        normal_metrics = normal_converter.get_performance_metrics()
+
+        # Test fast mode
+        fast_converter = MarkerConverter(fast_mode=True)
+        fast_dir = temp_dir / "fast"
+        fast_dir.mkdir()
+
+        start_time = time.time()
+        fast_success = fast_converter.convert_to_html(sample_pdf_path, fast_dir)
+        fast_time = time.time() - start_time
+        fast_metrics = fast_converter.get_performance_metrics()
+
+        if normal_success and fast_success:
+            print(f"\nFast mode vs Normal mode performance:")
+            print(f"  Normal mode total: {normal_time:.2f}s")
+            print(f"  Fast mode total: {fast_time:.2f}s")
+            print(f"  Speed improvement: {normal_time / fast_time:.1f}x")
+            print(f"  Normal processing: {normal_metrics['actual_processing_time']:.2f}s")
+            print(f"  Fast processing: {fast_metrics['actual_processing_time']:.2f}s")
+
+            # Fast mode should be faster (or at least not significantly slower)
+            # Allow for some variance in timing
+            assert fast_time <= normal_time * 1.1, "Fast mode should not be significantly slower"
+
+            # Both should produce valid output
+            assert (normal_dir / "index.html").exists(), "Normal mode should produce HTML"
+            assert (fast_dir / "index.html").exists(), "Fast mode should produce HTML"
+
+
+class TestSmartModeConversion:
+    """Tests for smart mode conversion with automatic fallback."""
+
+    @pytest.fixture
+    def temp_dir(self):
+        """Create a temporary directory for test outputs."""
+        temp_dir = Path(tempfile.mkdtemp())
+        yield temp_dir
+        shutil.rmtree(temp_dir)
+
+    @pytest.fixture
+    def sample_pdf_path(self):
+        """Path to the sample PDF for testing."""
+        return Path(__file__).parent / "pdf" / "2508.19977v1.pdf"
+
+    def test_conversion_mode_enum(self):
+        """Test ConversionMode enum values."""
+        assert ConversionMode.AUTO.value == "auto"
+        assert ConversionMode.FAST.value == "fast"
+        assert ConversionMode.QUALITY.value == "quality"
+
+    def test_pdf_quality_assessment(self, sample_pdf_path):
+        """Test PDF quality assessment function."""
+        if not sample_pdf_path.exists():
+            pytest.skip("Sample PDF not available")
+
+        try:
+            import PyPDF2
+        except ImportError:
+            pytest.skip("PyPDF2 not installed")
+
+        quality_info = assess_pdf_quality(sample_pdf_path)
+
+        # Verify structure
+        assert "has_good_text" in quality_info
+        assert "recommended_mode" in quality_info
+        assert "confidence" in quality_info
+        assert "total_pages" in quality_info
+
+        # For academic papers, should typically recommend fast mode
+        print(f"\nPDF Quality Assessment: {quality_info}")
+        assert quality_info["total_pages"] > 0
+        assert quality_info["confidence"] in ["low", "medium", "high"]
+
+    def test_converter_mode_initialization(self):
+        """Test converter initialization with different modes."""
+        # Test default mode
+        converter_auto = MarkerConverter()
+        assert converter_auto.mode == ConversionMode.AUTO
+
+        # Test explicit modes
+        converter_fast = MarkerConverter(mode=ConversionMode.FAST)
+        assert converter_fast.mode == ConversionMode.FAST
+
+        converter_quality = MarkerConverter(mode=ConversionMode.QUALITY)
+        assert converter_quality.mode == ConversionMode.QUALITY
+
+        # Test backward compatibility
+        converter_legacy = MarkerConverter(fast_mode=True)
+        assert converter_legacy.mode == ConversionMode.FAST
 
 
 if __name__ == "__main__":
