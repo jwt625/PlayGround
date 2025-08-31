@@ -37,41 +37,16 @@ class ScrapedMetadataAnalyzer:
         """Analyze a single video's metadata for errors or missing data."""
         issues = []
         video_id = video.get('videoId', 'unknown')
-        
-        # Check for explicit error field
+
+        # Check for error field - this is the primary indicator of scraping failure
         if 'error' in video:
-            issues.append(f"explicit_error: {video['error']}")
-        
-        # Check for heap growth error in any field
-        for field, value in video.items():
-            if isinstance(value, str) and "object has been collected to prevent unbounded heap growth" in value:
-                issues.append(f"heap_growth_error_in_{field}")
-        
+            issues.append(f"scraping_error: {video['error']}")
+
         # Check for missing or empty description
         description = video.get('description', '')
         if not description or description.strip() == '':
             issues.append("missing_description")
-        
-        # Check for missing critical fields
-        critical_fields = ['title', 'channel', 'videoId', 'url']
-        for field in critical_fields:
-            if not video.get(field):
-                issues.append(f"missing_{field}")
-        
-        # Check for placeholder/error values in key fields
-        title = video.get('title', '')
-        if title in ['', 'Error extracting title', 'N/A', 'Unknown']:
-            issues.append("invalid_title")
-        
-        channel = video.get('channel', '')
-        if channel in ['', 'Error extracting channel', 'N/A', 'Unknown']:
-            issues.append("invalid_channel")
-        
-        # Check for timeout errors in any field
-        for field, value in video.items():
-            if isinstance(value, str) and any(keyword in value.lower() for keyword in ['timeout', 'failed to', 'error']):
-                issues.append(f"error_in_{field}")
-        
+
         return {
             'video_id': video_id,
             'issues': issues,
@@ -85,41 +60,35 @@ class ScrapedMetadataAnalyzer:
             'total_videos': len(scraped_data),
             'videos_with_errors': 0,
             'videos_with_missing_descriptions': 0,
-            'videos_with_heap_errors': 0,
-            'videos_with_explicit_errors': 0,
-            'videos_with_missing_fields': 0,
+            'videos_with_scraping_errors': 0,
             'successful_videos': 0,
             'issue_breakdown': {},
             'failed_videos': []
         }
-        
+
         issue_counts = {}
-        
+
         for video in scraped_data:
             result = self.analyze_video_metadata(video)
-            
+
             if result['has_issues']:
                 analysis_results['videos_with_errors'] += 1
                 analysis_results['failed_videos'].append(result)
-                
+
                 # Count specific issue types
                 for issue in result['issues']:
                     if issue not in issue_counts:
                         issue_counts[issue] = 0
                     issue_counts[issue] += 1
-                    
+
                     # Update specific counters
-                    if 'heap_growth_error' in issue:
-                        analysis_results['videos_with_heap_errors'] += 1
+                    if 'scraping_error' in issue:
+                        analysis_results['videos_with_scraping_errors'] += 1
                     elif 'missing_description' in issue:
                         analysis_results['videos_with_missing_descriptions'] += 1
-                    elif 'explicit_error' in issue:
-                        analysis_results['videos_with_explicit_errors'] += 1
-                    elif 'missing_' in issue:
-                        analysis_results['videos_with_missing_fields'] += 1
             else:
                 analysis_results['successful_videos'] += 1
-        
+
         analysis_results['issue_breakdown'] = issue_counts
         return analysis_results
     
@@ -134,10 +103,10 @@ class ScrapedMetadataAnalyzer:
             },
             "videos": []
         }
-        
+
         for failed_video in failed_videos:
             original = failed_video['original_video']
-            
+
             # Extract basic info needed for youtube_liked.json format
             video_entry = {
                 "videoId": original.get('videoId', ''),
@@ -146,15 +115,9 @@ class ScrapedMetadataAnalyzer:
                 "url": original.get('url', ''),
                 "issues": failed_video['issues']  # Add issues for reference
             }
-            
-            # Clean up any error values
-            if video_entry['title'] in ['Error extracting title', 'N/A', 'Unknown']:
-                video_entry['title'] = ''
-            if video_entry['channel'] in ['Error extracting channel', 'N/A', 'Unknown']:
-                video_entry['channel'] = ''
-            
+
             youtube_liked_format['videos'].append(video_entry)
-        
+
         return youtube_liked_format
     
     def print_analysis_report(self, analysis: Dict) -> None:
@@ -162,25 +125,23 @@ class ScrapedMetadataAnalyzer:
         print("\n" + "="*60)
         print("📊 SCRAPED METADATA ANALYSIS REPORT")
         print("="*60)
-        
+
         print(f"📈 Total videos analyzed: {analysis['total_videos']}")
         print(f"✅ Successful videos: {analysis['successful_videos']}")
         print(f"❌ Videos with errors: {analysis['videos_with_errors']}")
         print(f"📊 Success rate: {(analysis['successful_videos']/analysis['total_videos']*100):.1f}%")
-        
+
         print("\n🔍 ERROR BREAKDOWN:")
         print("-" * 40)
-        print(f"🚫 Explicit errors: {analysis['videos_with_explicit_errors']}")
-        print(f"💾 Heap growth errors: {analysis['videos_with_heap_errors']}")
+        print(f"🚫 Scraping errors: {analysis['videos_with_scraping_errors']}")
         print(f"📝 Missing descriptions: {analysis['videos_with_missing_descriptions']}")
-        print(f"🔧 Missing fields: {analysis['videos_with_missing_fields']}")
-        
+
         if analysis['issue_breakdown']:
             print("\n📋 DETAILED ISSUE COUNTS:")
             print("-" * 40)
             for issue, count in sorted(analysis['issue_breakdown'].items(), key=lambda x: x[1], reverse=True):
                 print(f"  {issue}: {count}")
-        
+
         print("\n" + "="*60)
 
 
@@ -192,8 +153,8 @@ def main():
                        default=None)
     parser.add_argument('--missing-descriptions-only', action='store_true',
                        help='Only include videos with missing descriptions')
-    parser.add_argument('--heap-errors-only', action='store_true',
-                       help='Only include videos with heap growth errors')
+    parser.add_argument('--scraping-errors-only', action='store_true',
+                       help='Only include videos with scraping errors')
     
     args = parser.parse_args()
     
@@ -204,7 +165,6 @@ def main():
     
     # Generate output filename if not provided
     if args.output is None:
-        input_path = Path(args.input_file)
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         args.output = f"failed_videos_{timestamp}.json"
     
@@ -228,10 +188,10 @@ def main():
         if args.missing_descriptions_only:
             failed_videos = [v for v in failed_videos if any('missing_description' in issue for issue in v['issues'])]
             print(f"\n🔍 Filtering for missing descriptions only: {len(failed_videos)} videos")
-        
-        if args.heap_errors_only:
-            failed_videos = [v for v in failed_videos if any('heap_growth_error' in issue for issue in v['issues'])]
-            print(f"\n🔍 Filtering for heap errors only: {len(failed_videos)} videos")
+
+        if args.scraping_errors_only:
+            failed_videos = [v for v in failed_videos if any('scraping_error' in issue for issue in v['issues'])]
+            print(f"\n🔍 Filtering for scraping errors only: {len(failed_videos)} videos")
         
         if not failed_videos:
             print("\n✅ No failed videos found matching criteria!")

@@ -74,3 +74,4 @@ venv.bak/
 *.log
 */log/*
 *.jsonl
+*.bak
