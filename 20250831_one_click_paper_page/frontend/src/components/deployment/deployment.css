@@ -51,7 +51,9 @@
   border: 2px solid #e9ecef;
   border-radius: 8px;
   font-size: 1rem;
-  transition: border-color 0.2s, box-shadow 0.2s;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
 }
 
 .form-input:focus {
@@ -264,13 +266,13 @@
 
 .deployment-urls p {
   margin: 0.5rem 0;
-  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+  font-family: "Monaco", "Menlo", "Ubuntu Mono", monospace;
   font-size: 0.9rem;
 }
 
 .preview-info p {
   margin: 0.5rem 0;
-  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+  font-family: "Monaco", "Menlo", "Ubuntu Mono", monospace;
   font-size: 0.9rem;
 }
 
@@ -501,7 +503,7 @@
   padding: 0.5rem;
   background-color: #e9ecef;
   border-radius: 4px;
-  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+  font-family: "Monaco", "Menlo", "Ubuntu Mono", monospace;
   font-size: 0.9rem;
   margin-right: 0.5rem;
 }
@@ -557,16 +559,16 @@
     padding: 1rem;
     margin: 1rem;
   }
-  
+
   .template-grid {
     grid-template-columns: 1fr;
   }
-  
+
   .author-input-group,
   .repository-input-group {
     flex-direction: column;
   }
-  
+
   .result-links {
     flex-direction: column;
     align-items: center;

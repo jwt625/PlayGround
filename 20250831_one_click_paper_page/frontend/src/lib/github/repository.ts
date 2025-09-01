@@ -2,7 +2,7 @@
  * GitHub repository management module
  */
 
-import { Octokit } from '@octokit/rest';
+import { Octokit } from "@octokit/rest";
 import type {
   GitHubRepository,
   CreateRepositoryRequest,
@@ -11,8 +11,8 @@ import type {
   GitHubCommit,
   WorkflowRun,
   PaperTemplate,
-} from '../../types/github';
-import { AVAILABLE_TEMPLATES } from '../../types/github';
+} from "../../types/github";
+import { AVAILABLE_TEMPLATES } from "../../types/github";
 
 export class GitHubRepositoryManager {
   private octokit: Octokit;
@@ -37,14 +37,16 @@ export class GitHubRepositoryManager {
       }
 
       // Create the repository
-      const { data: repo } = await this.octokit.repos.createForAuthenticatedUser({
-        name: request.name,
-        description: request.description || `Academic paper website - ${request.name}`,
-        private: request.private || false,
-        auto_init: true,
-        gitignore_template: 'Node',
-        license_template: 'mit',
-      });
+      const { data: repo } =
+        await this.octokit.repos.createForAuthenticatedUser({
+          name: request.name,
+          description:
+            request.description || `Academic paper website - ${request.name}`,
+          private: request.private || false,
+          auto_init: true,
+          gitignore_template: "Node",
+          license_template: "mit",
+        });
 
       // Copy template files
       await this.copyTemplateFiles(repo.owner.login, repo.name, template);
@@ -54,7 +56,7 @@ export class GitHubRepositoryManager {
 
       return repo as GitHubRepository;
     } catch (error) {
-      console.error('Repository creation error:', error);
+      console.error("Repository creation error:", error);
       throw error;
     }
   }
@@ -76,15 +78,15 @@ export class GitHubRepositoryManager {
       // Create the files
       const files: FileUpload[] = [
         {
-          path: '.github/workflows/convert-and-deploy.yml',
+          path: ".github/workflows/convert-and-deploy.yml",
           content: workflowContent,
         },
         {
-          path: 'paper-config.json',
+          path: "paper-config.json",
           content: configContent,
         },
         {
-          path: 'README.md',
+          path: "README.md",
           content: readmeContent,
         },
       ];
@@ -94,7 +96,7 @@ export class GitHubRepositoryManager {
         files,
       });
     } catch (error) {
-      console.error('Template copying error:', error);
+      console.error("Template copying error:", error);
       throw error;
     }
   }
@@ -185,7 +187,7 @@ jobs:
     const config = {
       title: "Academic Paper",
       authors: [],
-      date: new Date().toISOString().split('T')[0],
+      date: new Date().toISOString().split("T")[0],
       theme: "academic",
       template: templateId,
     };
@@ -203,7 +205,7 @@ This repository contains an academic paper website generated using the **${templ
 
 ## Features
 
-${template.features.map(feature => `- ${feature}`).join('\n')}
+${template.features.map(feature => `- ${feature}`).join("\n")}
 
 ## How to Use
 
@@ -257,7 +259,7 @@ Generated with [Paper to Website](https://github.com/your-username/paper-to-webs
     request: CommitRequest
   ): Promise<GitHubCommit> {
     try {
-      const branch = request.branch || 'main';
+      const branch = request.branch || "main";
 
       // Get the current commit SHA
       const { data: ref } = await this.octokit.git.getRef({
@@ -277,17 +279,17 @@ Generated with [Paper to Website](https://github.com/your-username/paper-to-webs
 
       // Create blobs for each file
       const blobs = await Promise.all(
-        request.files.map(async (file) => {
+        request.files.map(async file => {
           const { data: blob } = await this.octokit.git.createBlob({
             owner,
             repo,
             content: file.content,
-            encoding: file.encoding || 'utf-8',
+            encoding: file.encoding || "utf-8",
           });
           return {
             path: file.path,
-            mode: '100644' as const,
-            type: 'blob' as const,
+            mode: "100644" as const,
+            type: "blob" as const,
             sha: blob.sha,
           };
         })
@@ -320,7 +322,7 @@ Generated with [Paper to Website](https://github.com/your-username/paper-to-webs
 
       return newCommit as GitHubCommit;
     } catch (error) {
-      console.error('File commit error:', error);
+      console.error("File commit error:", error);
       throw error;
     }
   }
@@ -334,14 +336,14 @@ Generated with [Paper to Website](https://github.com/your-username/paper-to-webs
         owner,
         repo,
         source: {
-          branch: 'main',
-          path: '/',
+          branch: "main",
+          path: "/",
         },
       });
     } catch (error) {
       // Pages might already be enabled
       if (error.status !== 409) {
-        console.error('GitHub Pages setup error:', error);
+        console.error("GitHub Pages setup error:", error);
         throw error;
       }
     }
@@ -360,7 +362,7 @@ Generated with [Paper to Website](https://github.com/your-username/paper-to-webs
 
       return data.workflow_runs as WorkflowRun[];
     } catch (error) {
-      console.error('Workflow runs fetch error:', error);
+      console.error("Workflow runs fetch error:", error);
       throw error;
     }
   }
@@ -377,7 +379,7 @@ Generated with [Paper to Website](https://github.com/your-username/paper-to-webs
 
       return data as GitHubRepository;
     } catch (error) {
-      console.error('Repository fetch error:', error);
+      console.error("Repository fetch error:", error);
       throw error;
     }
   }
@@ -388,13 +390,13 @@ Generated with [Paper to Website](https://github.com/your-username/paper-to-webs
   async listUserRepositories(): Promise<GitHubRepository[]> {
     try {
       const { data } = await this.octokit.repos.listForAuthenticatedUser({
-        sort: 'updated',
+        sort: "updated",
         per_page: 50,
       });
 
       return data as GitHubRepository[];
     } catch (error) {
-      console.error('Repository list error:', error);
+      console.error("Repository list error:", error);
       throw error;
     }
   }

@@ -1,6 +1,6 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { FileProcessor, DragDropHandler, BatchFileUploader } from '../../lib/github/fileUpload';
-import type { FileTypeDetection } from '../../types/github';
+import React, { useState, useRef, useEffect, useCallback } from "react";
+import { FileProcessor, DragDropHandler } from "../../lib/github/fileUpload";
+import type { FileTypeDetection } from "../../types/github";
 
 interface FileUploadProps {
   onFilesSelected: (files: File[]) => void;
@@ -13,14 +13,14 @@ export const FileUpload: React.FC<FileUploadProps> = ({
   onFilesSelected,
   onOverleafUrl,
   maxFiles = 5,
-  acceptedTypes = ['.pdf', '.docx', '.tex', '.zip'],
+  acceptedTypes = [".pdf", ".docx", ".tex", ".zip"],
 }) => {
-  const [dragActive, setDragActive] = useState(false);
+  const [dragActive] = useState(false);
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
-  const [overleafUrl, setOverleafUrl] = useState('');
-  const [uploadMode, setUploadMode] = useState<'file' | 'overleaf'>('file');
+  const [overleafUrl, setOverleafUrl] = useState("");
+  const [uploadMode, setUploadMode] = useState<"file" | "overleaf">("file");
   const [fileDetections, setFileDetections] = useState<FileTypeDetection[]>([]);
-  
+
   const fileInputRef = useRef<HTMLInputElement>(null);
   const dropZoneRef = useRef<HTMLDivElement>(null);
   const dragDropHandler = useRef<DragDropHandler | null>(null);
@@ -36,51 +36,59 @@ export const FileUpload: React.FC<FileUploadProps> = ({
     return () => {
       dragDropHandler.current?.destroy();
     };
-  }, []);
+  }, [handleFilesDropped]);
 
-  const handleFilesDropped = (files: FileList) => {
-    handleFileSelection(Array.from(files));
-  };
+  const handleFilesDropped = useCallback(
+    (files: FileList) => {
+      handleFileSelection(Array.from(files));
+    },
+    [handleFileSelection]
+  );
 
-  const handleFileInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileInputChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     const files = event.target.files;
     if (files) {
       handleFileSelection(Array.from(files));
     }
   };
 
-  const handleFileSelection = (files: File[]) => {
-    const validFiles: File[] = [];
-    const detections: FileTypeDetection[] = [];
+  const handleFileSelection = useCallback(
+    (files: File[]) => {
+      const validFiles: File[] = [];
+      const detections: FileTypeDetection[] = [];
 
-    files.forEach(file => {
-      const validation = FileProcessor.validateFile(file);
-      if (validation.valid) {
-        validFiles.push(file);
-        const detection = FileProcessor.detectFileType(file);
-        detections.push(detection);
-      } else {
-        alert(`Error with file ${file.name}: ${validation.error}`);
+      files.forEach(file => {
+        const validation = FileProcessor.validateFile(file);
+        if (validation.valid) {
+          validFiles.push(file);
+          const detection = FileProcessor.detectFileType(file);
+          detections.push(detection);
+        } else {
+          alert(`Error with file ${file.name}: ${validation.error}`);
+        }
+      });
+
+      if (validFiles.length + selectedFiles.length > maxFiles) {
+        alert(`Maximum ${maxFiles} files allowed`);
+        return;
       }
-    });
 
-    if (validFiles.length + selectedFiles.length > maxFiles) {
-      alert(`Maximum ${maxFiles} files allowed`);
-      return;
-    }
+      const newFiles = [...selectedFiles, ...validFiles];
+      const newDetections = [...fileDetections, ...detections];
 
-    const newFiles = [...selectedFiles, ...validFiles];
-    const newDetections = [...fileDetections, ...detections];
-    
-    setSelectedFiles(newFiles);
-    setFileDetections(newDetections);
-    onFilesSelected(newFiles);
-  };
+      setSelectedFiles(newFiles);
+      setFileDetections(newDetections);
+      onFilesSelected(newFiles);
+    },
+    [selectedFiles, fileDetections, maxFiles, onFilesSelected]
+  );
 
   const removeFile = (index: number) => {
     const newFiles = selectedFiles.filter((_, i) => i !== index);
     const newDetections = fileDetections.filter((_, i) => i !== index);
-    
+
     setSelectedFiles(newFiles);
     setFileDetections(newDetections);
     onFilesSelected(newFiles);
@@ -91,70 +99,72 @@ export const FileUpload: React.FC<FileUploadProps> = ({
     if (detection.confidence > 0.5) {
       onOverleafUrl(overleafUrl);
     } else {
-      alert('Please enter a valid Overleaf project URL');
+      alert("Please enter a valid Overleaf project URL");
     }
   };
 
   const getFileTypeIcon = (detection: FileTypeDetection) => {
     switch (detection.type) {
-      case 'pdf':
-        return '📄';
-      case 'docx':
-        return '📝';
-      case 'latex':
-        return '📐';
-      case 'zip':
-        return '📦';
-      case 'overleaf':
-        return '🌐';
+      case "pdf":
+        return "📄";
+      case "docx":
+        return "📝";
+      case "latex":
+        return "📐";
+      case "zip":
+        return "📦";
+      case "overleaf":
+        return "🌐";
       default:
-        return '📎';
+        return "📎";
     }
   };
 
   const getConfidenceColor = (confidence: number) => {
-    if (confidence >= 0.8) return 'text-green-600';
-    if (confidence >= 0.5) return 'text-yellow-600';
-    return 'text-red-600';
+    if (confidence >= 0.8) return "text-green-600";
+    if (confidence >= 0.5) return "text-yellow-600";
+    return "text-red-600";
   };
 
   return (
     <div className="w-full max-w-2xl mx-auto p-6 bg-white rounded-lg shadow-lg">
-      <h2 className="text-2xl font-bold text-gray-800 mb-6">Upload Your Paper</h2>
-      
+      <h2 className="text-2xl font-bold text-gray-800 mb-6">
+        Upload Your Paper
+      </h2>
+
       {/* Upload Mode Selector */}
       <div className="flex mb-6 bg-gray-100 rounded-lg p-1">
         <button
           className={`flex-1 py-2 px-4 rounded-md transition-colors ${
-            uploadMode === 'file'
-              ? 'bg-white text-blue-600 shadow-sm'
-              : 'text-gray-600 hover:text-gray-800'
+            uploadMode === "file"
+              ? "bg-white text-blue-600 shadow-sm"
+              : "text-gray-600 hover:text-gray-800"
           }`}
-          onClick={() => setUploadMode('file')}
+          onClick={() => setUploadMode("file")}
         >
           📁 Upload Files
         </button>
         <button
           className={`flex-1 py-2 px-4 rounded-md transition-colors ${
-            uploadMode === 'overleaf'
-              ? 'bg-white text-blue-600 shadow-sm'
-              : 'text-gray-600 hover:text-gray-800'
+            uploadMode === "overleaf"
+              ? "bg-white text-blue-600 shadow-sm"
+              : "text-gray-600 hover:text-gray-800"
           }`}
-          onClick={() => setUploadMode('overleaf')}
+          onClick={() => setUploadMode("overleaf")}
         >
           🌐 Overleaf Project
         </button>
       </div>
 
-      {uploadMode === 'file' ? (
+      {uploadMode === "file" ? (
         <>
           {/* File Upload Area */}
           <div
             ref={dropZoneRef}
             className={`border-2 border-dashed rounded-lg p-8 text-center transition-colors ${
               dragActive
-                ? 'border-blue-500 bg-blue-50'
-                : 'border-gray-300 hover:border-gray-400'
+                ? "border-blue-500 bg-blue-50"
+                : "border-gray-300 hover:border-gray-400"
             }`}
           >
             <div className="mb-4">
@@ -173,7 +183,7 @@ export const FileUpload: React.FC<FileUploadProps> = ({
               </svg>
             </div>
             <p className="text-lg text-gray-600 mb-2">
-              Drag and drop your files here, or{' '}
+              Drag and drop your files here, or{" "}
               <button
                 className="text-blue-600 hover:text-blue-700 underline"
                 onClick={() => fileInputRef.current?.click()}
@@ -188,7 +198,7 @@ export const FileUpload: React.FC<FileUploadProps> = ({
               ref={fileInputRef}
               type="file"
               multiple
-              accept={acceptedTypes.join(',')}
+              accept={acceptedTypes.join(",")}
               onChange={handleFileInputChange}
               className="hidden"
             />
@@ -213,15 +223,23 @@ export const FileUpload: React.FC<FileUploadProps> = ({
                           {getFileTypeIcon(detection)}
                         </span>
                         <div>
-                          <p className="font-medium text-gray-800">{file.name}</p>
+                          <p className="font-medium text-gray-800">
+                            {file.name}
+                          </p>
                           <p className="text-sm text-gray-500">
-                            {(file.size / 1024 / 1024).toFixed(2)} MB •{' '}
-                            <span className={getConfidenceColor(detection.confidence)}>
+                            {(file.size / 1024 / 1024).toFixed(2)} MB •{" "}
+                            <span
+                              className={getConfidenceColor(
+                                detection.confidence
+                              )}
+                            >
                               {detection.type.toUpperCase()}
                             </span>
                             {detection.confidence < 1.0 && (
                               <span className="text-gray-400">
-                                {' '}({Math.round(detection.confidence * 100)}% confidence)
+                                {" "}
+                                ({Math.round(detection.confidence * 100)}%
+                                confidence)
                               </span>
                             )}
                           </p>
@@ -232,7 +250,11 @@ export const FileUpload: React.FC<FileUploadProps> = ({
                         className="text-red-500 hover:text-red-700 p-1"
                         title="Remove file"
                       >
-                        <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <svg
+                          className="w-5 h-5"
+                          fill="currentColor"
+                          viewBox="0 0 20 20"
+                        >
                           <path
                             fillRule="evenodd"
                             d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
@@ -251,19 +273,23 @@ export const FileUpload: React.FC<FileUploadProps> = ({
         /* Overleaf URL Input */
         <div className="space-y-4">
           <div>
-            <label htmlFor="overleaf-url" className="block text-sm font-medium text-gray-700 mb-2">
+            <label
+              htmlFor="overleaf-url"
+              className="block text-sm font-medium text-gray-700 mb-2"
+            >
               Overleaf Project URL
             </label>
             <input
               id="overleaf-url"
               type="url"
               value={overleafUrl}
-              onChange={(e) => setOverleafUrl(e.target.value)}
+              onChange={e => setOverleafUrl(e.target.value)}
               placeholder="https://www.overleaf.com/project/..."
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             />
             <p className="mt-2 text-sm text-gray-500">
-              Enter the URL of your Overleaf project. Make sure it's set to public or you have sharing enabled.
+              Enter the URL of your Overleaf project. Make sure it's set to
+              public or you have sharing enabled.
             </p>
           </div>
           <button

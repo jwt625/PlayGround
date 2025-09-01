@@ -1,9 +1,9 @@
 /**
  * API client for deployment operations
  */
-import React from 'react';
+import React from "react";
 
-const API_BASE = 'http://localhost:8000/api';
+const API_BASE = "http://localhost:8000/api";
 
 export interface TemplateInfo {
   id: string;
@@ -50,7 +50,7 @@ export interface DeploymentConfig {
 
 export interface DeploymentStatusResponse {
   deployment_id: string;
-  status: 'pending' | 'queued' | 'in_progress' | 'success' | 'failure';
+  status: "pending" | "queued" | "in_progress" | "success" | "failure";
   repository: {
     html_url: string;
     name: string;
@@ -67,11 +67,11 @@ export class DeploymentAPI {
    */
   static async getTemplates(): Promise<TemplateInfo[]> {
     const response = await fetch(`${API_BASE}/templates`);
-    
+
     if (!response.ok) {
       throw new Error(`Failed to get templates: ${response.status}`);
     }
-    
+
     return response.json();
   }
 
@@ -83,17 +83,17 @@ export class DeploymentAPI {
     accessToken: string
   ): Promise<CreateRepositoryResponse> {
     const response = await fetch(`${API_BASE}/github/repository/create`, {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${accessToken}`,
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
       },
       body: JSON.stringify(request),
     });
 
     if (!response.ok) {
       const error = await response.json();
-      throw new Error(error.detail || 'Failed to create repository');
+      throw new Error(error.detail || "Failed to create repository");
     }
 
     return response.json();
@@ -108,17 +108,17 @@ export class DeploymentAPI {
     accessToken: string
   ): Promise<{ message: string }> {
     const response = await fetch(`${API_BASE}/github/deploy/${deploymentId}`, {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${accessToken}`,
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
       },
       body: JSON.stringify(config),
     });
 
     if (!response.ok) {
       const error = await response.json();
-      throw new Error(error.detail || 'Failed to deploy content');
+      throw new Error(error.detail || "Failed to deploy content");
     }
 
     return response.json();
@@ -131,15 +131,18 @@ export class DeploymentAPI {
     deploymentId: string,
     accessToken: string
   ): Promise<DeploymentStatusResponse> {
-    const response = await fetch(`${API_BASE}/github/deployment/${deploymentId}/status`, {
-      headers: {
-        'Authorization': `Bearer ${accessToken}`,
-      },
-    });
+    const response = await fetch(
+      `${API_BASE}/github/deployment/${deploymentId}/status`,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
 
     if (!response.ok) {
       const error = await response.json();
-      throw new Error(error.detail || 'Failed to get deployment status');
+      throw new Error(error.detail || "Failed to get deployment status");
     }
 
     return response.json();
@@ -150,40 +153,54 @@ export class DeploymentAPI {
  * React hook for managing deployment operations
  */
 export function useDeployment() {
-  const getAccessToken = (): string => {
-    const token = localStorage.getItem('github_access_token');
+  const getAccessToken = React.useCallback((): string => {
+    const token = localStorage.getItem("github_access_token");
     if (!token) {
-      throw new Error('GitHub access token not found. Please authenticate first.');
+      throw new Error(
+        "GitHub access token not found. Please authenticate first."
+      );
     }
     return token;
-  };
+  }, []);
 
-  const createRepository = async (request: CreateRepositoryRequest) => {
-    const token = getAccessToken();
-    return DeploymentAPI.createRepository(request, token);
-  };
+  const createRepository = React.useCallback(
+    async (request: CreateRepositoryRequest) => {
+      const token = getAccessToken();
+      return DeploymentAPI.createRepository(request, token);
+    },
+    [getAccessToken]
+  );
 
-  const deployContent = async (deploymentId: string, config: DeploymentConfig) => {
-    const token = getAccessToken();
-    return DeploymentAPI.deployContent(deploymentId, config, token);
-  };
+  const deployContent = React.useCallback(
+    async (deploymentId: string, config: DeploymentConfig) => {
+      const token = getAccessToken();
+      return DeploymentAPI.deployContent(deploymentId, config, token);
+    },
+    [getAccessToken]
+  );
 
-  const getDeploymentStatus = async (deploymentId: string) => {
-    const token = getAccessToken();
-    return DeploymentAPI.getDeploymentStatus(deploymentId, token);
-  };
+  const getDeploymentStatus = React.useCallback(
+    async (deploymentId: string) => {
+      const token = getAccessToken();
+      return DeploymentAPI.getDeploymentStatus(deploymentId, token);
+    },
+    [getAccessToken]
+  );
 
   const getTemplates = async () => {
     return DeploymentAPI.getTemplates();
   };
 
   // Memoize the returned object to prevent unnecessary re-renders
-  return React.useMemo(() => ({
-    createRepository,
-    deployContent,
-    getDeploymentStatus,
-    getTemplates,
-  }), []);
+  return React.useMemo(
+    () => ({
+      createRepository,
+      deployContent,
+      getDeploymentStatus,
+      getTemplates,
+    }),
+    [createRepository, deployContent, getDeploymentStatus]
+  );
 }
 
 /**
@@ -196,33 +213,42 @@ export const deploymentUtils = {
   generateRepositoryName: (title: string): string => {
     return title
       .toLowerCase()
-      .replace(/[^a-z0-9\s-]/g, '')
-      .replace(/\s+/g, '-')
+      .replace(/[^a-z0-9\s-]/g, "")
+      .replace(/\s+/g, "-")
       .substring(0, 50)
-      .replace(/^-+|-+$/g, ''); // Remove leading/trailing hyphens
+      .replace(/^-+|-+$/g, ""); // Remove leading/trailing hyphens
   },
 
   /**
    * Validate repository name
    */
-  validateRepositoryName: (name: string): { valid: boolean; error?: string } => {
+  validateRepositoryName: (
+    name: string
+  ): { valid: boolean; error?: string } => {
     if (!name) {
-      return { valid: false, error: 'Repository name is required' };
+      return { valid: false, error: "Repository name is required" };
     }
 
     if (name.length < 1 || name.length > 100) {
-      return { valid: false, error: 'Repository name must be 1-100 characters' };
-    }
-
-    if (!/^[a-zA-Z0-9._-]+$/.test(name)) {
-      return { 
-        valid: false, 
-        error: 'Repository name can only contain letters, numbers, hyphens, underscores, and periods' 
+      return {
+        valid: false,
+        error: "Repository name must be 1-100 characters",
       };
     }
 
-    if (name.startsWith('.') || name.startsWith('-')) {
-      return { valid: false, error: 'Repository name cannot start with a period or hyphen' };
+    if (!/^[a-zA-Z0-9._-]+$/.test(name)) {
+      return {
+        valid: false,
+        error:
+          "Repository name can only contain letters, numbers, hyphens, underscores, and periods",
+      };
+    }
+
+    if (name.startsWith(".") || name.startsWith("-")) {
+      return {
+        valid: false,
+        error: "Repository name cannot start with a period or hyphen",
+      };
     }
 
     return { valid: true };
@@ -233,7 +259,7 @@ export const deploymentUtils = {
    */
   parseAuthors: (authorsString: string): string[] => {
     return authorsString
-      .split(',')
+      .split(",")
       .map(author => author.trim())
       .filter(author => author.length > 0);
   },
@@ -242,7 +268,7 @@ export const deploymentUtils = {
    * Format authors array into string
    */
   formatAuthors: (authors: string[]): string => {
-    return authors.join(', ');
+    return authors.join(", ");
   },
 
   /**
@@ -251,11 +277,11 @@ export const deploymentUtils = {
   getEstimatedDeploymentTime: (template: string): number => {
     // Return estimated time in seconds
     switch (template) {
-      case 'minimal-academic':
+      case "minimal-academic":
         return 60; // 1 minute
-      case 'academic-pages':
+      case "academic-pages":
         return 120; // 2 minutes
-      case 'al-folio':
+      case "al-folio":
         return 180; // 3 minutes
       default:
         return 90; // 1.5 minutes

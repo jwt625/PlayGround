@@ -38,7 +38,7 @@ export interface CreateRepositoryRequest {
 export interface FileUpload {
   path: string;
   content: string;
-  encoding?: 'utf-8' | 'base64';
+  encoding?: "utf-8" | "base64";
 }
 
 export interface CommitRequest {
@@ -62,8 +62,16 @@ export interface GitHubCommit {
 export interface WorkflowRun {
   id: number;
   name: string;
-  status: 'queued' | 'in_progress' | 'completed';
-  conclusion: 'success' | 'failure' | 'neutral' | 'cancelled' | 'skipped' | 'timed_out' | 'action_required' | null;
+  status: "queued" | "in_progress" | "completed";
+  conclusion:
+    | "success"
+    | "failure"
+    | "neutral"
+    | "cancelled"
+    | "skipped"
+    | "timed_out"
+    | "action_required"
+    | null;
   html_url: string;
   created_at: string;
   updated_at: string;
@@ -91,7 +99,7 @@ export interface PaperConfig {
 export interface ConversionJob {
   id: string;
   repository: GitHubRepository;
-  status: 'pending' | 'processing' | 'completed' | 'failed';
+  status: "pending" | "processing" | "completed" | "failed";
   workflow_run?: WorkflowRun;
   created_at: string;
   completed_at?: string;
@@ -126,51 +134,53 @@ export interface GitHubError {
 // Template options based on the planning document
 export const AVAILABLE_TEMPLATES: PaperTemplate[] = [
   {
-    id: 'academic-pages',
-    name: 'Academic Pages (Jekyll)',
-    description: 'Full academic personal site with publications, talks, CV, portfolio',
-    repository_url: 'https://github.com/academicpages/academicpages.github.io',
+    id: "academic-pages",
+    name: "Academic Pages (Jekyll)",
+    description:
+      "Full academic personal site with publications, talks, CV, portfolio",
+    repository_url: "https://github.com/academicpages/academicpages.github.io",
     features: [
-      'Publications page',
-      'Talks and presentations',
-      'CV/Resume section',
-      'Portfolio showcase',
-      'Blog functionality',
-      'Google Analytics integration'
-    ]
+      "Publications page",
+      "Talks and presentations",
+      "CV/Resume section",
+      "Portfolio showcase",
+      "Blog functionality",
+      "Google Analytics integration",
+    ],
   },
   {
-    id: 'academic-project-page',
-    name: 'Academic Project Page (JS)',
-    description: 'Streamlined project/paper presentation page',
-    repository_url: 'https://github.com/academic-project-page-template/template',
+    id: "academic-project-page",
+    name: "Academic Project Page (JS)",
+    description: "Streamlined project/paper presentation page",
+    repository_url:
+      "https://github.com/academic-project-page-template/template",
     features: [
-      'Clean paper presentation',
-      'Abstract and methodology',
-      'Results visualization',
-      'Code and data links',
-      'Citation information',
-      'Responsive design'
-    ]
+      "Clean paper presentation",
+      "Abstract and methodology",
+      "Results visualization",
+      "Code and data links",
+      "Citation information",
+      "Responsive design",
+    ],
   },
   {
-    id: 'al-folio',
-    name: 'al-folio (Jekyll)',
-    description: 'Clean, responsive minimal academic landing page',
-    repository_url: 'https://github.com/alshedivat/al-folio',
+    id: "al-folio",
+    name: "al-folio (Jekyll)",
+    description: "Clean, responsive minimal academic landing page",
+    repository_url: "https://github.com/alshedivat/al-folio",
     features: [
-      'Minimal design',
-      'Publication list',
-      'Project showcase',
-      'News and updates',
-      'Math rendering',
-      'Dark mode support'
-    ]
-  }
+      "Minimal design",
+      "Publication list",
+      "Project showcase",
+      "News and updates",
+      "Math rendering",
+      "Dark mode support",
+    ],
+  },
 ];
 
 // File type detection
-export type SupportedFileType = 'pdf' | 'docx' | 'latex' | 'zip' | 'overleaf';
+export type SupportedFileType = "pdf" | "docx" | "latex" | "zip" | "overleaf";
 
 export interface FileTypeDetection {
   type: SupportedFileType;
@@ -182,7 +192,7 @@ export interface FileTypeDetection {
 // Conversion pipeline status
 export interface ConversionStep {
   name: string;
-  status: 'pending' | 'running' | 'completed' | 'failed';
+  status: "pending" | "running" | "completed" | "failed";
   message?: string;
   duration?: number;
 }
@@ -190,7 +200,7 @@ export interface ConversionStep {
 export interface ConversionPipeline {
   steps: ConversionStep[];
   current_step: number;
-  overall_status: 'pending' | 'running' | 'completed' | 'failed';
+  overall_status: "pending" | "running" | "completed" | "failed";
   started_at?: string;
   completed_at?: string;
 }

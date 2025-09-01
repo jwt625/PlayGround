@@ -23,8 +23,9 @@ class TemplateService:
                 id=TemplateType.ACADEMIC_PAGES,
                 name="Academic Pages",
                 description=(
-                    "A comprehensive academic website template with publications, talks, "
-                    "CV, and portfolio sections. Perfect for researchers and academics."
+                    "A comprehensive academic website template with publications, "
+                    "talks, CV, and portfolio sections. Perfect for researchers and "
+                    "academics."
                 ),
                 repository_owner="academicpages",
                 repository_name="academicpages.github.io",

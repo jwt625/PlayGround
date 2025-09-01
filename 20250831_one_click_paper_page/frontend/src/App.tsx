@@ -1,33 +1,35 @@
-import React, { useState } from 'react';
-import { GitHubAuth } from './components/auth/GitHubAuth';
-import { FileUpload } from './components/upload/FileUpload';
-import { TemplateSelector } from './components/templates/TemplateSelector';
-import { ConversionProgress } from './components/conversion/ConversionProgress';
-import { ConversionModeSelector } from './components/conversion/ConversionModeSelector';
-import { DeploymentConfig } from './components/deployment/DeploymentConfig';
-import { DeploymentStatus } from './components/deployment/DeploymentStatus';
-import type { PaperTemplate, GitHubUser } from './types/github';
-import type { ConversionResult, ConversionMode } from './lib/api/conversion';
-import type { DeploymentConfiguration } from './components/deployment/DeploymentConfig';
-import { useGitHubAuth } from './lib/github/auth';
-import { useConversion } from './lib/api/conversion';
-import { useDeployment } from './lib/api/deployment';
-import './App.css';
-import './components/deployment/deployment.css';
+import React, { useState } from "react";
+import { GitHubAuth } from "./components/auth/GitHubAuth";
+import { FileUpload } from "./components/upload/FileUpload";
+import { TemplateSelector } from "./components/templates/TemplateSelector";
+import { ConversionProgress } from "./components/conversion/ConversionProgress";
+import { ConversionModeSelector } from "./components/conversion/ConversionModeSelector";
+import { DeploymentConfig } from "./components/deployment/DeploymentConfig";
+import { DeploymentStatus } from "./components/deployment/DeploymentStatus";
+import type { PaperTemplate, GitHubUser } from "./types/github";
+import type { ConversionResult, ConversionMode } from "./lib/api/conversion";
+import type { DeploymentConfiguration } from "./components/deployment/DeploymentConfig";
+import { useGitHubAuth } from "./lib/github/auth";
+import { useConversion } from "./lib/api/conversion";
+import { useDeployment } from "./lib/api/deployment";
+import "./App.css";
+import "./components/deployment/deployment.css";
 
-type Step = 'auth' | 'upload' | 'template' | 'convert' | 'configure' | 'deploy';
+type Step = "auth" | "upload" | "template" | "convert" | "configure" | "deploy";
 
 function App() {
-  const [currentStep, setCurrentStep] = useState<Step>('auth');
+  const [currentStep, setCurrentStep] = useState<Step>("auth");
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
-  const [selectedTemplate, setSelectedTemplate] = useState<PaperTemplate | null>(null);
-  const [overleafUrl, setOverleafUrl] = useState<string>('');
-  const [conversionMode, setConversionMode] = useState<ConversionMode>('auto');
-  const [repositoryName] = useState<string>(''); // Keep for backward compatibility
-  const [deploymentConfig, setDeploymentConfig] = useState<DeploymentConfiguration | null>(null);
+  const [selectedTemplate, setSelectedTemplate] =
+    useState<PaperTemplate | null>(null);
+  const [, setOverleafUrl] = useState<string>("");
+  const [conversionMode, setConversionMode] = useState<ConversionMode>("auto");
+  const [repositoryName] = useState<string>(""); // Keep for backward compatibility
+  const [deploymentConfig, setDeploymentConfig] =
+    useState<DeploymentConfiguration | null>(null);
   const [deploymentId, setDeploymentId] = useState<string | null>(null);
-  const [templates, setTemplates] = useState<any[]>([]);
-  const [testDeploymentResult, setTestDeploymentResult] = useState<any>(null);
+  const [templates, setTemplates] = useState<PaperTemplate[]>([]);
+  const [, setTestDeploymentResult] = useState<unknown>(null);
   const [isTestingDeployment, setIsTestingDeployment] = useState(false);
   const { isAuthenticated, user, token } = useGitHubAuth();
   const conversion = useConversion();
@@ -35,19 +37,19 @@ function App() {
 
   // Auto-advance to upload step if already authenticated
   React.useEffect(() => {
-    if (isAuthenticated && currentStep === 'auth') {
-      setCurrentStep('upload');
+    if (isAuthenticated && currentStep === "auth") {
+      setCurrentStep("upload");
     }
   }, [isAuthenticated, currentStep]);
 
-  const handleAuthSuccess = (user: GitHubUser, _token: string) => {
-    console.log('Authentication successful:', user);
-    setCurrentStep('upload');
+  const handleAuthSuccess = (user: GitHubUser) => {
+    console.log("Authentication successful:", user);
+    setCurrentStep("upload");
   };
 
   const handleTestDeployment = async () => {
     if (!token) {
-      alert('Please authenticate with GitHub first');
+      alert("Please authenticate with GitHub first");
       return;
     }
 
@@ -56,13 +58,16 @@ function App() {
 
     try {
       // Use the optimized deployment approach
-      const response = await fetch('http://localhost:8000/api/github/test-deploy-optimized', {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
-      });
+      const response = await fetch(
+        "http://localhost:8000/api/github/test-deploy-optimized",
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
       if (!response.ok) {
         const error = await response.text();
@@ -73,33 +78,34 @@ function App() {
       setTestDeploymentResult(result);
 
       // Show success message with optimized approach benefits
-      alert(`🚀 Test deployment successful!\n\nRepository: ${result.repository.name}\nURL: ${result.repository.url}\nPages URL: ${result.repository.pages_url}\n\nThis uses our optimized approach with:\n✅ No fork security issues\n✅ Faster deployment\n✅ Automatic workflow setup\n\nCheck the repository - it should deploy automatically!`);
-
+      alert(
+        `🚀 Test deployment successful!\n\nRepository: ${result.repository.name}\nURL: ${result.repository.url}\nPages URL: ${result.repository.pages_url}\n\nThis uses our optimized approach with:\n✅ No fork security issues\n✅ Faster deployment\n✅ Automatic workflow setup\n\nCheck the repository - it should deploy automatically!`
+      );
     } catch (error) {
-      console.error('Test deployment failed:', error);
-      alert(`Test deployment failed: ${error instanceof Error ? error.message : String(error)}`);
+      console.error("Test deployment failed:", error);
+      alert(
+        `Test deployment failed: ${error instanceof Error ? error.message : String(error)}`
+      );
     } finally {
       setIsTestingDeployment(false);
     }
   };
 
-
-
   const handleFilesSelected = (files: File[]) => {
     setSelectedFiles(files);
     if (files.length > 0) {
-      setCurrentStep('template');
+      setCurrentStep("template");
     }
   };
 
   const handleOverleafUrl = (url: string) => {
     setOverleafUrl(url);
-    setCurrentStep('template');
+    setCurrentStep("template");
   };
 
   const handleTemplateSelected = (template: PaperTemplate) => {
     setSelectedTemplate(template);
-    setCurrentStep('convert');
+    setCurrentStep("convert");
 
     // Start conversion with the first selected file
     if (selectedFiles.length > 0) {
@@ -113,13 +119,13 @@ function App() {
   };
 
   const handleConversionComplete = (result: ConversionResult) => {
-    console.log('Conversion completed:', result);
-    setCurrentStep('configure');
+    console.log("Conversion completed:", result);
+    setCurrentStep("configure");
   };
 
   const handleConversionCancel = () => {
     conversion.reset();
-    setCurrentStep('template');
+    setCurrentStep("template");
   };
 
   const handleConversionRetry = () => {
@@ -140,31 +146,34 @@ function App() {
         const templateList = await deployment.getTemplates();
         setTemplates(templateList);
       } catch (error) {
-        console.error('Failed to load templates:', error);
+        console.error("Failed to load templates:", error);
       }
     };
 
     loadTemplates();
-  }, []); // Empty dependency array - only run once on mount
+  }, [deployment]); // Include deployment dependency
 
-  const handleDeploymentConfigChange = React.useCallback((config: DeploymentConfiguration) => {
-    setDeploymentConfig(config);
-  }, []);
+  const handleDeploymentConfigChange = React.useCallback(
+    (config: DeploymentConfiguration) => {
+      setDeploymentConfig(config);
+    },
+    []
+  );
 
   // Generate repository name from paper title
   const generateRepositoryName = (title: string) => {
     return title
       .toLowerCase()
-      .replace(/[^a-z0-9\s-]/g, '')
-      .replace(/\s+/g, '-')
+      .replace(/[^a-z0-9\s-]/g, "")
+      .replace(/\s+/g, "-")
       .substring(0, 50)
-      .replace(/^-+|-+$/g, '');
+      .replace(/^-+|-+$/g, "");
   };
 
   // Get default repository name
   const defaultRepositoryName = React.useMemo(() => {
     const title = conversion.result?.metadata?.title;
-    return title ? generateRepositoryName(title) : '';
+    return title ? generateRepositoryName(title) : "";
   }, [conversion.result?.metadata?.title]);
 
   const handleStartDeployment = async () => {
@@ -174,19 +183,19 @@ function App() {
 
     try {
       // Set deployment step immediately
-      setCurrentStep('deploy');
+      setCurrentStep("deploy");
 
       // Trigger full automated deployment (repository creation + content deployment)
-      const token = localStorage.getItem('github_access_token');
+      const token = localStorage.getItem("github_access_token");
       if (!token) {
-        throw new Error('GitHub token not found. Please authenticate first.');
+        throw new Error("GitHub token not found. Please authenticate first.");
       }
 
-      const response = await fetch('http://localhost:8000/api/github/deploy', {
-        method: 'POST',
+      const response = await fetch("http://localhost:8000/api/github/deploy", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
           conversion_job_id: conversion.jobId,
@@ -194,11 +203,11 @@ function App() {
           template: deploymentConfig.template,
           paper_title: deploymentConfig.paperTitle,
           paper_authors: deploymentConfig.paperAuthors,
-        })
+        }),
       });
 
       if (!response.ok) {
-        let errorMessage = 'Deployment failed';
+        let errorMessage = "Deployment failed";
         try {
           const error = await response.json();
           errorMessage = error.detail || errorMessage;
@@ -211,31 +220,37 @@ function App() {
 
       const result = await response.json();
       setDeploymentId(result.deployment_id);
-
     } catch (error) {
-      console.error('Deployment failed:', error);
+      console.error("Deployment failed:", error);
       alert(`Deployment failed: ${error}`);
-      setCurrentStep('configure'); // Go back to config on error
+      setCurrentStep("configure"); // Go back to config on error
     }
   };
 
-  const handleDeploymentComplete = (result: any) => {
-    console.log('Deployment completed:', result);
+  const handleDeploymentComplete = (result: unknown) => {
+    console.log("Deployment completed:", result);
     // Could show success message or redirect
   };
 
   const getStepNumber = (step: Step): number => {
-    const steps: Step[] = ['auth', 'upload', 'template', 'convert', 'configure', 'deploy'];
+    const steps: Step[] = [
+      "auth",
+      "upload",
+      "template",
+      "convert",
+      "configure",
+      "deploy",
+    ];
     return steps.indexOf(step) + 1;
   };
 
   const renderStepIndicator = () => {
     const steps: { key: Step; label: string }[] = [
-      { key: 'auth', label: 'Authenticate' },
-      { key: 'upload', label: 'Upload' },
-      { key: 'template', label: 'Template' },
-      { key: 'configure', label: 'Configure' },
-      { key: 'deploy', label: 'Deploy' },
+      { key: "auth", label: "Authenticate" },
+      { key: "upload", label: "Upload" },
+      { key: "template", label: "Template" },
+      { key: "configure", label: "Configure" },
+      { key: "deploy", label: "Deploy" },
     ];
 
     return (
@@ -251,16 +266,20 @@ function App() {
                 <div
                   className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-medium ${
                     isCompleted
-                      ? 'bg-green-500 text-white'
+                      ? "bg-green-500 text-white"
                       : isActive
-                      ? 'bg-blue-500 text-white'
-                      : isAccessible
-                      ? 'bg-gray-300 text-gray-700'
-                      : 'bg-gray-200 text-gray-400'
+                        ? "bg-blue-500 text-white"
+                        : isAccessible
+                          ? "bg-gray-300 text-gray-700"
+                          : "bg-gray-200 text-gray-400"
                   }`}
                 >
                   {isCompleted ? (
-                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                    <svg
+                      className="w-5 h-5"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                    >
                       <path
                         fillRule="evenodd"
                         d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
@@ -273,7 +292,7 @@ function App() {
                 </div>
                 <span
                   className={`mt-2 text-xs font-medium ${
-                    isActive ? 'text-blue-600' : 'text-gray-500'
+                    isActive ? "text-blue-600" : "text-gray-500"
                   }`}
                 >
                   {step.label}
@@ -283,8 +302,8 @@ function App() {
                 <div
                   className={`w-16 h-0.5 mx-4 ${
                     getStepNumber(currentStep) > index + 1
-                      ? 'bg-green-500'
-                      : 'bg-gray-300'
+                      ? "bg-green-500"
+                      : "bg-gray-300"
                   }`}
                 />
               )}
@@ -297,10 +316,10 @@ function App() {
 
   const renderCurrentStep = () => {
     switch (currentStep) {
-      case 'auth':
+      case "auth":
         return <GitHubAuth onAuthSuccess={handleAuthSuccess} />;
 
-      case 'upload':
+      case "upload":
         return (
           <FileUpload
             onFilesSelected={handleFilesSelected}
@@ -308,7 +327,7 @@ function App() {
           />
         );
 
-      case 'template':
+      case "template":
         return (
           <div className="w-full max-w-4xl mx-auto p-6">
             <ConversionModeSelector
@@ -322,10 +341,12 @@ function App() {
           </div>
         );
 
-      case 'convert':
+      case "convert":
         return (
           <div className="text-center p-8">
-            <h2 className="text-2xl font-bold text-gray-800 mb-6">Converting Document</h2>
+            <h2 className="text-2xl font-bold text-gray-800 mb-6">
+              Converting Document
+            </h2>
             <ConversionProgress
               isConverting={conversion.isConverting}
               phase={conversion.phase}
@@ -339,48 +360,62 @@ function App() {
           </div>
         );
 
-      case 'configure':
+      case "configure":
         return (
           <div className="max-w-4xl mx-auto">
             <DeploymentConfig
               templates={templates}
               onConfigChange={handleDeploymentConfigChange}
-              paperMetadata={conversion.result?.metadata ? {
-                title: conversion.result.metadata.title,
-                authors: conversion.result.metadata.authors,
-                abstract: conversion.result.metadata.abstract,
-              } : undefined}
-              githubUser={user ? {
-                login: user.login,
-                name: user.name || undefined,
-                avatar_url: user.avatar_url,
-              } : undefined}
+              paperMetadata={
+                conversion.result?.metadata
+                  ? {
+                      title: conversion.result.metadata.title,
+                      authors: conversion.result.metadata.authors,
+                      abstract: conversion.result.metadata.abstract,
+                    }
+                  : undefined
+              }
+              githubUser={
+                user
+                  ? {
+                      login: user.login,
+                      name: user.name || undefined,
+                      avatar_url: user.avatar_url,
+                    }
+                  : undefined
+              }
               initialConfig={{
-                repositoryName: defaultRepositoryName || '',
-                template: selectedTemplate?.id || 'minimal-academic',
-                paperTitle: conversion.result?.metadata?.title || '',
+                repositoryName: defaultRepositoryName || "",
+                template: selectedTemplate?.id || "minimal-academic",
+                paperTitle: conversion.result?.metadata?.title || "",
                 paperAuthors: conversion.result?.metadata?.authors || [],
               }}
-              onBackToTemplate={() => setCurrentStep('template')}
+              onBackToTemplate={() => setCurrentStep("template")}
               onDeploy={handleStartDeployment}
-              canDeploy={!!(deploymentConfig?.repositoryName && deploymentConfig?.template)}
+              canDeploy={
+                !!(
+                  deploymentConfig?.repositoryName && deploymentConfig?.template
+                )
+              }
             />
-
-
           </div>
         );
 
-      case 'deploy':
+      case "deploy":
         return (
           <div className="max-w-4xl mx-auto">
             <DeploymentStatus
-              deploymentId={deploymentId || 'pending'}
+              deploymentId={deploymentId || "pending"}
               onComplete={handleDeploymentComplete}
-              githubUser={user ? {
-                login: user.login,
-                name: user.name || undefined,
-                avatar_url: user.avatar_url,
-              } : undefined}
+              githubUser={
+                user
+                  ? {
+                      login: user.login,
+                      name: user.name || undefined,
+                      avatar_url: user.avatar_url,
+                    }
+                  : undefined
+              }
             />
           </div>
         );
@@ -399,7 +434,9 @@ function App() {
               <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
                 <span className="text-white font-bold text-lg">📄</span>
               </div>
-              <h1 className="text-xl font-bold text-gray-900">Paper to Website</h1>
+              <h1 className="text-xl font-bold text-gray-900">
+                Paper to Website
+              </h1>
             </div>
             {isAuthenticated && user && (
               <div className="flex items-center space-x-3">
@@ -408,7 +445,7 @@ function App() {
                   disabled={isTestingDeployment}
                   className="px-3 py-1 text-sm bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  {isTestingDeployment ? 'Testing...' : '🚀 Test Deploy'}
+                  {isTestingDeployment ? "Testing..." : "🚀 Test Deploy"}
                 </button>
                 <img
                   src={user.avatar_url}
@@ -430,7 +467,8 @@ function App() {
       <footer className="bg-white border-t mt-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <p className="text-center text-gray-500 text-sm">
-            Convert your academic papers into beautiful websites with GitHub Pages
+            Convert your academic papers into beautiful websites with GitHub
+            Pages
           </p>
         </div>
       </footer>

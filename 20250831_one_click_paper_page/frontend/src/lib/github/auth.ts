@@ -2,14 +2,22 @@
  * GitHub OAuth authentication module
  */
 
-import type { OAuthTokenResponse, GitHubUser, GitHubError } from '../../types/github';
+import type {
+  OAuthTokenResponse,
+  GitHubUser,
+  GitHubError,
+} from "../../types/github";
 
 export class GitHubAuth {
   private clientId: string;
   private redirectUri: string;
   private scopes: string[];
 
-  constructor(clientId: string, redirectUri: string, scopes: string[] = ['repo', 'user:email', 'workflow']) {
+  constructor(
+    clientId: string,
+    redirectUri: string,
+    scopes: string[] = ["repo", "user:email", "workflow"]
+  ) {
     this.clientId = clientId;
     this.redirectUri = redirectUri;
     this.scopes = scopes;
@@ -22,12 +30,12 @@ export class GitHubAuth {
     const params = new URLSearchParams({
       client_id: this.clientId,
       redirect_uri: this.redirectUri,
-      scope: this.scopes.join(' '),
-      response_type: 'code',
+      scope: this.scopes.join(" "),
+      response_type: "code",
     });
 
     if (state) {
-      params.append('state', state);
+      params.append("state", state);
     }
 
     return `https://github.com/login/oauth/authorize?${params.toString()}`;
@@ -36,28 +44,34 @@ export class GitHubAuth {
   /**
    * Exchange authorization code for access token
    */
-  async exchangeCodeForToken(code: string, state?: string): Promise<OAuthTokenResponse> {
+  async exchangeCodeForToken(
+    code: string,
+    state?: string
+  ): Promise<OAuthTokenResponse> {
     try {
-      const response = await fetch('http://localhost:8000/api/github/oauth/token', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          code,
-          state,
-          redirect_uri: this.redirectUri,
-        }),
-      });
+      const response = await fetch(
+        "http://localhost:8000/api/github/oauth/token",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            code,
+            state,
+            redirect_uri: this.redirectUri,
+          }),
+        }
+      );
 
       if (!response.ok) {
         const error: GitHubError = await response.json();
-        throw new Error(error.message || 'Failed to exchange code for token');
+        throw new Error(error.message || "Failed to exchange code for token");
       }
 
       return await response.json();
     } catch (error) {
-      console.error('Token exchange error:', error);
+      console.error("Token exchange error:", error);
       throw error;
     }
   }
@@ -67,21 +81,21 @@ export class GitHubAuth {
    */
   async getCurrentUser(accessToken: string): Promise<GitHubUser> {
     try {
-      const response = await fetch('https://api.github.com/user', {
+      const response = await fetch("https://api.github.com/user", {
         headers: {
-          'Authorization': `Bearer ${accessToken}`,
-          'Accept': 'application/vnd.github.v3+json',
+          Authorization: `Bearer ${accessToken}`,
+          Accept: "application/vnd.github.v3+json",
         },
       });
 
       if (!response.ok) {
         const error: GitHubError = await response.json();
-        throw new Error(error.message || 'Failed to get user information');
+        throw new Error(error.message || "Failed to get user information");
       }
 
       return await response.json();
     } catch (error) {
-      console.error('Get user error:', error);
+      console.error("Get user error:", error);
       throw error;
     }
   }
@@ -91,16 +105,16 @@ export class GitHubAuth {
    */
   async validateToken(accessToken: string): Promise<boolean> {
     try {
-      const response = await fetch('https://api.github.com/user', {
+      const response = await fetch("https://api.github.com/user", {
         headers: {
-          'Authorization': `Bearer ${accessToken}`,
-          'Accept': 'application/vnd.github.v3+json',
+          Authorization: `Bearer ${accessToken}`,
+          Accept: "application/vnd.github.v3+json",
         },
       });
 
       return response.ok;
     } catch (error) {
-      console.error('Token validation error:', error);
+      console.error("Token validation error:", error);
       return false;
     }
   }
@@ -110,22 +124,25 @@ export class GitHubAuth {
    */
   async revokeToken(accessToken: string): Promise<void> {
     try {
-      const response = await fetch('http://localhost:8000/api/github/oauth/revoke', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          access_token: accessToken,
-        }),
-      });
+      const response = await fetch(
+        "http://localhost:8000/api/github/oauth/revoke",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            access_token: accessToken,
+          }),
+        }
+      );
 
       if (!response.ok) {
         const error: GitHubError = await response.json();
-        throw new Error(error.message || 'Failed to revoke token');
+        throw new Error(error.message || "Failed to revoke token");
       }
     } catch (error) {
-      console.error('Token revocation error:', error);
+      console.error("Token revocation error:", error);
       throw error;
     }
   }
@@ -135,14 +152,14 @@ export class GitHubAuth {
  * Local storage utilities for token management
  */
 export class TokenStorage {
-  private static readonly TOKEN_KEY = 'github_access_token';
-  private static readonly USER_KEY = 'github_user';
-  private static readonly EXPIRY_KEY = 'github_token_expiry';
+  private static readonly TOKEN_KEY = "github_access_token";
+  private static readonly USER_KEY = "github_user";
+  private static readonly EXPIRY_KEY = "github_token_expiry";
 
   static saveToken(token: string, expiryHours: number = 24): void {
     const expiry = new Date();
     expiry.setHours(expiry.getHours() + expiryHours);
-    
+
     localStorage.setItem(this.TOKEN_KEY, token);
     localStorage.setItem(this.EXPIRY_KEY, expiry.toISOString());
   }
@@ -182,7 +199,7 @@ export class TokenStorage {
     try {
       return JSON.parse(userStr);
     } catch (error) {
-      console.error('Failed to parse stored user:', error);
+      console.error("Failed to parse stored user:", error);
       return null;
     }
   }
@@ -198,13 +215,13 @@ export class TokenStorage {
 export function useGitHubAuth() {
   const clientId = import.meta.env.VITE_GITHUB_CLIENT_ID;
   const redirectUri = `${window.location.origin}/auth/callback`;
-  
+
   const auth = new GitHubAuth(clientId, redirectUri);
 
   const login = () => {
     const state = Math.random().toString(36).substring(2, 15);
-    sessionStorage.setItem('oauth_state', state);
-    
+    sessionStorage.setItem("oauth_state", state);
+
     const authUrl = auth.getAuthorizationUrl(state);
     window.location.href = authUrl;
   };
@@ -215,20 +232,20 @@ export function useGitHubAuth() {
       try {
         await auth.revokeToken(token);
       } catch (error) {
-        console.error('Failed to revoke token:', error);
+        console.error("Failed to revoke token:", error);
       }
     }
-    
+
     TokenStorage.clearToken();
-    window.location.href = '/';
+    window.location.href = "/";
   };
 
   const handleCallback = async (code: string, state: string) => {
-    const storedState = sessionStorage.getItem('oauth_state');
-    sessionStorage.removeItem('oauth_state');
+    const storedState = sessionStorage.getItem("oauth_state");
+    sessionStorage.removeItem("oauth_state");
 
     if (state !== storedState) {
-      throw new Error('Invalid state parameter');
+      throw new Error("Invalid state parameter");
     }
 
     const tokenResponse = await auth.exchangeCodeForToken(code, state);

@@ -2,20 +2,20 @@
  * File upload and processing utilities for GitHub integration
  */
 
-import type { FileTypeDetection, SupportedFileType, FileUpload } from '../../types/github';
+import type { FileTypeDetection, FileUpload } from "../../types/github";
 
 export class FileProcessor {
   /**
    * Detect file type from uploaded file
    */
   static detectFileType(file: File): FileTypeDetection {
-    const extension = file.name.toLowerCase().split('.').pop() || '';
+    const extension = file.name.toLowerCase().split(".").pop() || "";
     const mimeType = file.type.toLowerCase();
 
     // PDF detection
-    if (extension === 'pdf' || mimeType === 'application/pdf') {
+    if (extension === "pdf" || mimeType === "application/pdf") {
       return {
-        type: 'pdf',
+        type: "pdf",
         confidence: 1.0,
         file,
       };
@@ -23,29 +23,30 @@ export class FileProcessor {
 
     // DOCX detection
     if (
-      extension === 'docx' ||
-      mimeType === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+      extension === "docx" ||
+      mimeType ===
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
     ) {
       return {
-        type: 'docx',
+        type: "docx",
         confidence: 1.0,
         file,
       };
     }
 
     // LaTeX detection
-    if (extension === 'tex' || extension === 'latex') {
+    if (extension === "tex" || extension === "latex") {
       return {
-        type: 'latex',
+        type: "latex",
         confidence: 1.0,
         file,
       };
     }
 
     // ZIP detection (could be LaTeX project)
-    if (extension === 'zip' || mimeType === 'application/zip') {
+    if (extension === "zip" || mimeType === "application/zip") {
       return {
-        type: 'zip',
+        type: "zip",
         confidence: 0.8, // Lower confidence as it could be anything
         file,
       };
@@ -53,7 +54,7 @@ export class FileProcessor {
 
     // Default to unknown
     return {
-      type: 'pdf', // Default fallback
+      type: "pdf", // Default fallback
       confidence: 0.1,
       file,
     };
@@ -63,19 +64,20 @@ export class FileProcessor {
    * Validate Overleaf URL
    */
   static validateOverleafUrl(url: string): FileTypeDetection {
-    const overleafPattern = /^https:\/\/(www\.)?overleaf\.com\/project\/[a-f0-9]+/;
+    const overleafPattern =
+      /^https:\/\/(www\.)?overleaf\.com\/project\/[a-f0-9]+/;
     const gitPattern = /^https:\/\/git\.overleaf\.com\/[a-f0-9]+/;
 
     if (overleafPattern.test(url) || gitPattern.test(url)) {
       return {
-        type: 'overleaf',
+        type: "overleaf",
         confidence: 1.0,
         overleaf_url: url,
       };
     }
 
     return {
-      type: 'overleaf',
+      type: "overleaf",
       confidence: 0.0,
       overleaf_url: url,
     };
@@ -90,7 +92,7 @@ export class FileProcessor {
       reader.onload = () => {
         const result = reader.result as string;
         // Remove data URL prefix (e.g., "data:application/pdf;base64,")
-        const base64 = result.split(',')[1];
+        const base64 = result.split(",")[1];
         resolve(base64);
       };
       reader.onerror = reject;
@@ -106,7 +108,7 @@ export class FileProcessor {
       const reader = new FileReader();
       reader.onload = () => resolve(reader.result as string);
       reader.onerror = reject;
-      reader.readAsText(file, 'utf-8');
+      reader.readAsText(file, "utf-8");
     });
   }
 
@@ -120,12 +122,12 @@ export class FileProcessor {
     const detection = this.detectFileType(file);
 
     // For text files (LaTeX), upload as UTF-8
-    if (detection.type === 'latex') {
+    if (detection.type === "latex") {
       const content = await this.fileToText(file);
       return {
         path: targetPath,
         content,
-        encoding: 'utf-8',
+        encoding: "utf-8",
       };
     }
 
@@ -134,7 +136,7 @@ export class FileProcessor {
     return {
       path: targetPath,
       content,
-      encoding: 'base64',
+      encoding: "base64",
     };
   }
 
@@ -142,17 +144,17 @@ export class FileProcessor {
    * Generate appropriate filename for uploaded file
    */
   static generateTargetPath(file: File, detection: FileTypeDetection): string {
-    const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
-    const extension = file.name.toLowerCase().split('.').pop() || 'bin';
-    
+    const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
+    const extension = file.name.toLowerCase().split(".").pop() || "bin";
+
     switch (detection.type) {
-      case 'pdf':
+      case "pdf":
         return `paper.pdf`;
-      case 'docx':
+      case "docx":
         return `paper.docx`;
-      case 'latex':
+      case "latex":
         return `main.tex`;
-      case 'zip':
+      case "zip":
         return `paper-source.zip`;
       default:
         return `uploaded-${timestamp}.${extension}`;
@@ -164,19 +166,19 @@ export class FileProcessor {
    */
   static validateFile(file: File): { valid: boolean; error?: string } {
     const maxSize = 50 * 1024 * 1024; // 50MB limit
-    const allowedTypes = [
-      'application/pdf',
-      'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-      'application/zip',
-      'text/plain',
-      'text/x-tex',
-      'application/x-tex',
-    ];
+    // const allowedTypes = [
+    //   'application/pdf',
+    //   'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+    //   'application/zip',
+    //   'text/plain',
+    //   'text/x-tex',
+    //   'application/x-tex',
+    // ];
 
     if (file.size > maxSize) {
       return {
         valid: false,
-        error: 'File size exceeds 50MB limit',
+        error: "File size exceeds 50MB limit",
       };
     }
 
@@ -184,7 +186,8 @@ export class FileProcessor {
     if (detection.confidence < 0.5) {
       return {
         valid: false,
-        error: 'Unsupported file type. Please upload PDF, DOCX, LaTeX, or ZIP files.',
+        error:
+          "Unsupported file type. Please upload PDF, DOCX, LaTeX, or ZIP files.",
       };
     }
 
@@ -233,15 +236,15 @@ export class BatchFileUploader {
 
   async prepareForUpload(): Promise<FileUpload[]> {
     const uploads: FileUpload[] = [];
-    
+
     for (let i = 0; i < this.files.length; i++) {
       const file = this.files[i];
       const detection = FileProcessor.detectFileType(file);
       const targetPath = FileProcessor.generateTargetPath(file, detection);
-      
+
       const upload = await FileProcessor.prepareFileForUpload(file, targetPath);
       uploads.push(upload);
-      
+
       // Update progress
       const progress = ((i + 1) / this.files.length) * 100;
       this.progress.updateProgress(progress);
@@ -282,36 +285,36 @@ export class DragDropHandler {
   }
 
   private setupEventListeners(): void {
-    this.element.addEventListener('dragover', this.handleDragOver.bind(this));
-    this.element.addEventListener('dragenter', this.handleDragEnter.bind(this));
-    this.element.addEventListener('dragleave', this.handleDragLeave.bind(this));
-    this.element.addEventListener('drop', this.handleDrop.bind(this));
+    this.element.addEventListener("dragover", this.handleDragOver.bind(this));
+    this.element.addEventListener("dragenter", this.handleDragEnter.bind(this));
+    this.element.addEventListener("dragleave", this.handleDragLeave.bind(this));
+    this.element.addEventListener("drop", this.handleDrop.bind(this));
   }
 
   private handleDragOver(event: DragEvent): void {
     event.preventDefault();
     event.stopPropagation();
-    this.element.classList.add('drag-over');
+    this.element.classList.add("drag-over");
   }
 
   private handleDragEnter(event: DragEvent): void {
     event.preventDefault();
     event.stopPropagation();
-    this.element.classList.add('drag-enter');
+    this.element.classList.add("drag-enter");
   }
 
   private handleDragLeave(event: DragEvent): void {
     event.preventDefault();
     event.stopPropagation();
-    this.element.classList.remove('drag-over', 'drag-enter');
+    this.element.classList.remove("drag-over", "drag-enter");
   }
 
   private handleDrop(event: DragEvent): void {
     event.preventDefault();
     event.stopPropagation();
-    
-    this.element.classList.remove('drag-over', 'drag-enter');
-    
+
+    this.element.classList.remove("drag-over", "drag-enter");
+
     const files = event.dataTransfer?.files;
     if (files && files.length > 0) {
       this.onFilesDropped(files);
@@ -319,9 +322,9 @@ export class DragDropHandler {
   }
 
   destroy(): void {
-    this.element.removeEventListener('dragover', this.handleDragOver);
-    this.element.removeEventListener('dragenter', this.handleDragEnter);
-    this.element.removeEventListener('dragleave', this.handleDragLeave);
-    this.element.removeEventListener('drop', this.handleDrop);
+    this.element.removeEventListener("dragover", this.handleDragOver);
+    this.element.removeEventListener("dragenter", this.handleDragEnter);
+    this.element.removeEventListener("dragleave", this.handleDragLeave);
+    this.element.removeEventListener("drop", this.handleDrop);
   }
 }

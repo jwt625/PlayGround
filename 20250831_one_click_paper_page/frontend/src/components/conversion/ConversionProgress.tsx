@@ -1,5 +1,5 @@
-import React from 'react';
-import type { ConversionResult } from '../../lib/api/conversion';
+import React from "react";
+import type { ConversionResult } from "../../lib/api/conversion";
 
 interface ConversionProgressProps {
   isConverting: boolean;
@@ -32,7 +32,11 @@ export const ConversionProgress: React.FC<ConversionProgressProps> = ({
         {/* Header */}
         <div className="text-center mb-4">
           <h3 className="text-lg font-semibold text-gray-900">
-            {isConverting ? 'Converting Document' : error ? 'Conversion Failed' : 'Conversion Complete'}
+            {isConverting
+              ? "Converting Document"
+              : error
+                ? "Conversion Failed"
+                : "Conversion Complete"}
           </h3>
         </div>
 
@@ -41,18 +45,32 @@ export const ConversionProgress: React.FC<ConversionProgressProps> = ({
           <div className="mb-4">
             <div className="flex justify-between text-sm text-gray-600 mb-2">
               <span>Current Phase</span>
-              <span className="capitalize font-medium text-blue-600">{phase}</span>
+              <span className="capitalize font-medium text-blue-600">
+                {phase}
+              </span>
             </div>
             <div className="flex space-x-2">
-              {['preparing', 'analyzing', 'converting', 'processing', 'finalizing'].map((phaseName, index) => (
+              {[
+                "preparing",
+                "analyzing",
+                "converting",
+                "processing",
+                "finalizing",
+              ].map((phaseName, index) => (
                 <div
                   key={phaseName}
                   className={`flex-1 h-2 rounded-full transition-all duration-300 ${
                     phase === phaseName
-                      ? 'bg-blue-600 animate-pulse'
-                      : ['preparing', 'analyzing', 'converting', 'processing', 'finalizing'].indexOf(phase) > index
-                      ? 'bg-green-500'
-                      : 'bg-gray-200'
+                      ? "bg-blue-600 animate-pulse"
+                      : [
+                            "preparing",
+                            "analyzing",
+                            "converting",
+                            "processing",
+                            "finalizing",
+                          ].indexOf(phase) > index
+                        ? "bg-green-500"
+                        : "bg-gray-200"
                   }`}
                 />
               ))}
@@ -70,7 +88,7 @@ export const ConversionProgress: React.FC<ConversionProgressProps> = ({
         {/* Status Message */}
         <div className="mb-4">
           <p className="text-sm text-gray-600 text-center">
-            {stage || 'Processing...'}
+            {stage || "Processing..."}
           </p>
         </div>
 
@@ -87,8 +105,16 @@ export const ConversionProgress: React.FC<ConversionProgressProps> = ({
             <div className="bg-red-50 border border-red-200 rounded-md p-3">
               <div className="flex">
                 <div className="flex-shrink-0">
-                  <svg className="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
-                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                  <svg
+                    className="h-5 w-5 text-red-400"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                      clipRule="evenodd"
+                    />
                   </svg>
                 </div>
                 <div className="ml-3">
@@ -105,8 +131,16 @@ export const ConversionProgress: React.FC<ConversionProgressProps> = ({
             <div className="bg-green-50 border border-green-200 rounded-md p-3">
               <div className="flex">
                 <div className="flex-shrink-0">
-                  <svg className="h-5 w-5 text-green-400" viewBox="0 0 20 20" fill="currentColor">
-                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                  <svg
+                    className="h-5 w-5 text-green-400"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                      clipRule="evenodd"
+                    />
                   </svg>
                 </div>
                 <div className="ml-3">
@@ -114,9 +148,15 @@ export const ConversionProgress: React.FC<ConversionProgressProps> = ({
                     Document converted successfully!
                   </p>
                   <div className="mt-2 text-xs text-green-700">
-                    <p>• Conversion time: {result.metrics.total_conversion_time.toFixed(1)}s</p>
+                    <p>
+                      • Conversion time:{" "}
+                      {result.metrics.total_conversion_time.toFixed(1)}s
+                    </p>
                     <p>• Mode used: {result.metrics.mode_used}</p>
-                    <p>• Content length: {result.markdown_length.toLocaleString()} characters</p>
+                    <p>
+                      • Content length:{" "}
+                      {result.markdown_length.toLocaleString()} characters
+                    </p>
                     <p>• Images extracted: {result.image_count}</p>
                   </div>
                 </div>
@@ -163,16 +203,44 @@ export const ConversionProgress: React.FC<ConversionProgressProps> = ({
                 View conversion details
               </summary>
               <div className="mt-2 space-y-1 text-xs text-gray-500">
-                <p><strong>Job ID:</strong> {result.job_id}</p>
-                <p><strong>Output files:</strong> {result.output_files.length}</p>
-                <p><strong>HTML file:</strong> {result.html_file}</p>
-                <p><strong>Markdown file:</strong> {result.markdown_file}</p>
-                <p><strong>Quality assessment:</strong></p>
+                <p>
+                  <strong>Job ID:</strong> {result.job_id}
+                </p>
+                <p>
+                  <strong>Output files:</strong> {result.output_files.length}
+                </p>
+                <p>
+                  <strong>HTML file:</strong> {result.html_file}
+                </p>
+                <p>
+                  <strong>Markdown file:</strong> {result.markdown_file}
+                </p>
+                <p>
+                  <strong>Quality assessment:</strong>
+                </p>
                 <ul className="ml-4 space-y-1">
-                  <li>• Good text: {result.metrics.quality_assessment.has_good_text ? 'Yes' : 'No'}</li>
-                  <li>• Confidence: {result.metrics.quality_assessment.confidence}</li>
-                  <li>• Text coverage: {(result.metrics.quality_assessment.text_coverage * 100).toFixed(1)}%</li>
-                  <li>• Avg chars/page: {result.metrics.quality_assessment.avg_chars_per_page.toFixed(0)}</li>
+                  <li>
+                    • Good text:{" "}
+                    {result.metrics.quality_assessment.has_good_text
+                      ? "Yes"
+                      : "No"}
+                  </li>
+                  <li>
+                    • Confidence: {result.metrics.quality_assessment.confidence}
+                  </li>
+                  <li>
+                    • Text coverage:{" "}
+                    {(
+                      result.metrics.quality_assessment.text_coverage * 100
+                    ).toFixed(1)}
+                    %
+                  </li>
+                  <li>
+                    • Avg chars/page:{" "}
+                    {result.metrics.quality_assessment.avg_chars_per_page.toFixed(
+                      0
+                    )}
+                  </li>
                 </ul>
               </div>
             </details>

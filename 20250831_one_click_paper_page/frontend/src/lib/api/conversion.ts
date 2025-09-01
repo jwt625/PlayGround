@@ -10,8 +10,15 @@ export interface ConversionJobResponse {
 
 export interface ConversionStatusResponse {
   job_id: string;
-  status: 'queued' | 'processing' | 'completed' | 'failed' | 'cancelled';
-  phase: 'queued' | 'preparing' | 'analyzing' | 'converting' | 'processing' | 'finalizing' | 'completed';
+  status: "queued" | "processing" | "completed" | "failed" | "cancelled";
+  phase:
+    | "queued"
+    | "preparing"
+    | "analyzing"
+    | "converting"
+    | "processing"
+    | "finalizing"
+    | "completed";
   stage: string;
   message: string;
   error?: string;
@@ -50,9 +57,9 @@ export interface ConversionResult {
   metadata?: PaperMetadata;
 }
 
-export type ConversionMode = 'auto' | 'fast' | 'quality';
+export type ConversionMode = "auto" | "fast" | "quality";
 
-const API_BASE = 'http://localhost:8000/api';
+const API_BASE = "http://localhost:8000/api";
 
 export class ConversionAPI {
   /**
@@ -61,25 +68,25 @@ export class ConversionAPI {
   static async uploadAndConvert(
     file: File,
     template: string,
-    mode: ConversionMode = 'auto',
+    mode: ConversionMode = "auto",
     repositoryName?: string
   ): Promise<ConversionJobResponse> {
     const formData = new FormData();
-    formData.append('file', file);
-    formData.append('template', template);
-    formData.append('mode', mode);
+    formData.append("file", file);
+    formData.append("template", template);
+    formData.append("mode", mode);
     if (repositoryName) {
-      formData.append('repository_name', repositoryName);
+      formData.append("repository_name", repositoryName);
     }
 
     const response = await fetch(`${API_BASE}/convert/upload`, {
-      method: 'POST',
+      method: "POST",
       body: formData,
     });
 
     if (!response.ok) {
       const error = await response.json();
-      throw new Error(error.detail || 'Upload failed');
+      throw new Error(error.detail || "Upload failed");
     }
 
     return response.json();
@@ -93,7 +100,7 @@ export class ConversionAPI {
 
     if (!response.ok) {
       const error = await response.json();
-      throw new Error(error.detail || 'Failed to get status');
+      throw new Error(error.detail || "Failed to get status");
     }
 
     return response.json();
@@ -107,7 +114,7 @@ export class ConversionAPI {
 
     if (!response.ok) {
       const error = await response.json();
-      throw new Error(error.detail || 'Failed to get result');
+      throw new Error(error.detail || "Failed to get result");
     }
 
     return response.json();
@@ -118,12 +125,12 @@ export class ConversionAPI {
    */
   static async cancel(jobId: string): Promise<{ message: string }> {
     const response = await fetch(`${API_BASE}/convert/cancel/${jobId}`, {
-      method: 'DELETE',
+      method: "DELETE",
     });
 
     if (!response.ok) {
       const error = await response.json();
-      throw new Error(error.detail || 'Failed to cancel');
+      throw new Error(error.detail || "Failed to cancel");
     }
 
     return response.json();
@@ -141,18 +148,18 @@ export class ConversionAPI {
       const poll = async () => {
         try {
           const status = await this.getStatus(jobId);
-          
+
           if (onProgress) {
             onProgress(status);
           }
 
-          if (status.status === 'completed') {
+          if (status.status === "completed") {
             const result = await this.getResult(jobId);
             resolve(result);
-          } else if (status.status === 'failed') {
-            reject(new Error(status.error || 'Conversion failed'));
-          } else if (status.status === 'cancelled') {
-            reject(new Error('Conversion was cancelled'));
+          } else if (status.status === "failed") {
+            reject(new Error(status.error || "Conversion failed"));
+          } else if (status.status === "cancelled") {
+            reject(new Error("Conversion was cancelled"));
           } else {
             // Continue polling
             setTimeout(poll, intervalMs);
@@ -172,8 +179,8 @@ export class ConversionAPI {
  */
 export function useConversion() {
   const [isConverting, setIsConverting] = useState(false);
-  const [phase, setPhase] = useState<string>('queued');
-  const [stage, setStage] = useState('');
+  const [phase, setPhase] = useState<string>("queued");
+  const [stage, setStage] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [result, setResult] = useState<ConversionResult | null>(null);
   const [jobId, setJobId] = useState<string | null>(null);
@@ -181,34 +188,36 @@ export function useConversion() {
   const startConversion = async (
     file: File,
     template: string,
-    mode: ConversionMode = 'auto',
+    mode: ConversionMode = "auto",
     repositoryName?: string
   ) => {
     setIsConverting(true);
-    setPhase('preparing');
-    setStage('Uploading file...');
+    setPhase("preparing");
+    setStage("Uploading file...");
     setError(null);
     setResult(null);
 
     try {
       // Start conversion
-      const job = await ConversionAPI.uploadAndConvert(file, template, mode, repositoryName);
+      const job = await ConversionAPI.uploadAndConvert(
+        file,
+        template,
+        mode,
+        repositoryName
+      );
       setJobId(job.job_id);
 
       // Poll for completion
-      const result = await ConversionAPI.pollStatus(
-        job.job_id,
-        (status) => {
-          setPhase(status.phase);
-          setStage(status.message);
-        }
-      );
+      const result = await ConversionAPI.pollStatus(job.job_id, status => {
+        setPhase(status.phase);
+        setStage(status.message);
+      });
 
       setResult(result);
-      setStage('Conversion completed!');
-      setPhase('completed');
+      setStage("Conversion completed!");
+      setPhase("completed");
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Conversion failed');
+      setError(err instanceof Error ? err.message : "Conversion failed");
     } finally {
       setIsConverting(false);
     }
@@ -216,8 +225,8 @@ export function useConversion() {
 
   const reset = () => {
     setIsConverting(false);
-    setPhase('queued');
-    setStage('');
+    setPhase("queued");
+    setStage("");
     setError(null);
     setResult(null);
     setJobId(null);
@@ -236,4 +245,4 @@ export function useConversion() {
 }
 
 // Import React for the hook
-import { useState } from 'react';
+import { useState } from "react";
