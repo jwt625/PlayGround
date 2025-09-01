@@ -6,11 +6,20 @@ Handles GitHub OAuth authentication and API endpoints.
 import logging
 import os
 from pathlib import Path
+from typing import Any
 
 import aiofiles
 import requests
 from dotenv import load_dotenv
-from fastapi import BackgroundTasks, FastAPI, File, Form, Header, HTTPException, UploadFile
+from fastapi import (
+    BackgroundTasks,
+    FastAPI,
+    File,
+    Form,
+    Header,
+    HTTPException,
+    UploadFile,
+)
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
@@ -27,7 +36,6 @@ from models.github import (
     DeploymentConfig,
     DeploymentStatusResponse,
     TemplateInfo,
-    TemplateType,
 )
 from services.conversion_service import ConversionService
 from services.github_service import GitHubService
@@ -294,7 +302,7 @@ async def upload_and_convert(
             _run_conversion_task,
             job_id,
             input_file_path,
-            deployment_config,
+            deployment_config or {},
         )
 
         return ConversionJobResponse(
@@ -472,6 +480,12 @@ async def deploy_converted_content(
 
     try:
         # Get conversion result
+        if not config.conversion_job_id:
+            raise HTTPException(
+                status_code=400,
+                detail="No conversion job ID provided in deployment config"
+            )
+
         conversion_result = conversion_service.get_job_result(config.conversion_job_id)
         if not conversion_result:
             raise HTTPException(
@@ -504,7 +518,10 @@ async def deploy_converted_content(
         )
 
 
-@app.get("/api/github/deployment/{deployment_id}/status", response_model=DeploymentStatusResponse)
+@app.get(
+    "/api/github/deployment/{deployment_id}/status",
+    response_model=DeploymentStatusResponse,
+)
 async def get_deployment_status(
     deployment_id: str,
     authorization: str = Header(None),
@@ -541,7 +558,7 @@ async def get_deployment_status(
 async def _run_conversion_task(
     job_id: str,
     input_file_path: Path,
-    deployment_config: dict = None
+    deployment_config: dict[str, Any] | None = None
 ) -> None:
     """
     Background task to run the conversion process and optionally deploy.
@@ -555,16 +572,20 @@ async def _run_conversion_task(
         # Run conversion
         result = await conversion_service.convert_file(job_id, input_file_path)
 
-        # If auto-deployment is enabled, deploy to GitHub
+        # If auto-deployment is enabled, deploy to GitHub via automated workflow
         if deployment_config and result.success:
             try:
-                logger.info(f"Starting auto-deployment for job {job_id}")
+                logger.info(f"Starting automated GitHub deployment for job {job_id}")
 
                 # Create GitHub service
                 github_service = GitHubService(deployment_config["access_token"])
 
-                # Create repository
-                from models.github import CreateRepositoryRequest, TemplateType, DeploymentConfig
+                # Create repository with GitHub Actions workflows
+                from models.github import (
+                    CreateRepositoryRequest,
+                    DeploymentConfig,
+                    TemplateType,
+                )
 
                 # Map template string to enum
                 template_map = {
@@ -572,18 +593,26 @@ async def _run_conversion_task(
                     "al-folio": TemplateType.AL_FOLIO,
                     "minimal-academic": TemplateType.MINIMAL_ACADEMIC,
                 }
-                template_enum = template_map.get(deployment_config["template"], TemplateType.MINIMAL_ACADEMIC)
+                template_enum = template_map.get(
+                    deployment_config["template"], TemplateType.MINIMAL_ACADEMIC
+                )
 
                 repo_request = CreateRepositoryRequest(
                     name=deployment_config["repository_name"],
-                    description=f"Academic paper website: {deployment_config.get('paper_title', 'Untitled')}",
+                    description=(
+                        f"Academic paper website: "
+                        f"{deployment_config.get('paper_title', 'Untitled')}"
+                    ),
                     template=template_enum,
                     conversion_job_id=job_id
                 )
 
-                repo_response = await github_service.create_repository(repo_request)
+                # Create repository with GitHub Actions workflows pre-configured
+                repo_response = await github_service.create_repository_from_template(
+                    repo_request
+                )
 
-                # Deploy content
+                # Deploy source content to trigger GitHub Actions
                 deploy_config = DeploymentConfig(
                     repository_name=deployment_config["repository_name"],
                     template=template_enum,
@@ -591,6 +620,7 @@ async def _run_conversion_task(
                     paper_authors=deployment_config.get("paper_authors", []),
                 )
 
+                # Upload source files to trigger automated conversion and deployment
                 await github_service.deploy_converted_content(
                     repo_response.deployment_id,
                     Path(result.output_dir),

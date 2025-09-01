@@ -48,7 +48,7 @@ jobs:
     - name: Install Python dependencies
       run: |
         uv venv
-        uv pip install docling marker-pdf pandoc-python-filter
+        uv pip install marker-pdf PyPDF2 docling pandoc-python-filter
         
     - name: Install system dependencies
       run: |
@@ -58,11 +58,34 @@ jobs:
     - name: Detect input type and convert
       id: convert
       run: |
+        echo "Starting conversion process..."
         python .github/scripts/detect_and_convert.py
-        
+        echo "Conversion completed successfully"
+
     - name: Apply theme template
+      id: theme
       run: |
+        echo "Applying theme template..."
         python .github/scripts/apply_theme.py
+        echo "Theme applied successfully"
+
+    - name: Verify output
+      run: |
+        echo "Verifying conversion output..."
+        if [ -f "./dist/index.html" ]; then
+          echo "✅ index.html generated successfully"
+          echo "File size: $(du -h ./dist/index.html | cut -f1)"
+        else
+          echo "❌ index.html not found"
+          exit 1
+        fi
+
+        if [ -d "./dist/images" ]; then
+          image_count=$(find ./dist/images -type f | wc -l)
+          echo "✅ Images directory found with $image_count images"
+        else
+          echo "ℹ️ No images directory found"
+        fi
         
     - name: Setup Pages
       uses: actions/configure-pages@v5

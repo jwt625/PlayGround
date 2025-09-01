@@ -3,7 +3,7 @@ Pydantic models for conversion API endpoints.
 """
 
 from enum import Enum
-from typing import Any, List, Optional
+from typing import Any
 
 from pydantic import BaseModel, Field
 
@@ -89,25 +89,27 @@ class ConversionMetrics(BaseModel):
 
 class PaperMetadata(BaseModel):
     """Extracted paper metadata."""
-    title: Optional[str] = None
-    authors: List[str] = Field(default_factory=list)
-    abstract: Optional[str] = None
-    keywords: List[str] = Field(default_factory=list)
-    doi: Optional[str] = None
-    arxiv_id: Optional[str] = None
+    title: str | None = None
+    authors: list[str] = Field(default_factory=list)
+    abstract: str | None = None
+    keywords: list[str] = Field(default_factory=list)
+    doi: str | None = None
+    arxiv_id: str | None = None
 
 
 class ConversionResult(BaseModel):
     """Complete conversion result."""
     job_id: str = Field(..., description="Job identifier")
     status: ConversionStatus = Field(..., description="Final job status")
+    success: bool = Field(..., description="Whether conversion was successful")
+    output_dir: str = Field(..., description="Output directory path")
     output_files: list[str] = Field(..., description="List of generated output files")
     metrics: ConversionMetrics = Field(..., description="Performance metrics")
     markdown_length: int = Field(..., description="Length of extracted markdown")
     image_count: int = Field(..., description="Number of extracted images")
     html_file: str = Field(..., description="Path to generated HTML file")
     markdown_file: str = Field(..., description="Path to generated markdown file")
-    metadata: Optional[PaperMetadata] = Field(None, description="Extracted paper metadata")
+    metadata: PaperMetadata | None = Field(None, description="Extracted paper metadata")
 
 
 class ConversionError(BaseModel):

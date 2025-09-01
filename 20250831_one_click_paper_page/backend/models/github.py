@@ -4,7 +4,6 @@ Pydantic models for GitHub API integration.
 
 from datetime import datetime
 from enum import Enum
-from typing import Any, Dict, List, Optional
 
 from pydantic import BaseModel, Field
 
@@ -30,8 +29,8 @@ class GitHubUser(BaseModel):
     """GitHub user information."""
     id: int
     login: str
-    name: Optional[str] = None
-    email: Optional[str] = None
+    name: str | None = None
+    email: str | None = None
     avatar_url: str
     html_url: str
 
@@ -41,7 +40,7 @@ class GitHubRepository(BaseModel):
     id: int
     name: str
     full_name: str
-    description: Optional[str] = None
+    description: str | None = None
     html_url: str
     clone_url: str
     ssh_url: str
@@ -50,13 +49,13 @@ class GitHubRepository(BaseModel):
     owner: GitHubUser
     created_at: datetime
     updated_at: datetime
-    pages_url: Optional[str] = None
+    pages_url: str | None = None
 
 
 class CreateRepositoryRequest(BaseModel):
     """Request to create a new repository."""
     name: str = Field(..., min_length=1, max_length=100)
-    description: Optional[str] = Field(None, max_length=350)
+    description: str | None = Field(None, max_length=350)
     private: bool = Field(default=False, description="Always false for open science")
     template: TemplateType = Field(default=TemplateType.ACADEMIC_PAGES)
     conversion_job_id: str = Field(..., description="ID of the conversion job")
@@ -81,7 +80,7 @@ class CommitRequest(BaseModel):
     """Request to commit files to repository."""
     repository_name: str
     message: str
-    files: List[FileContent]
+    files: list[FileContent]
     branch: str = Field(default="main")
 
 
@@ -98,7 +97,7 @@ class WorkflowRun(BaseModel):
     id: int
     name: str
     status: str  # queued, in_progress, completed
-    conclusion: Optional[str] = None  # success, failure, neutral, cancelled, etc.
+    conclusion: str | None = None  # success, failure, neutral, cancelled, etc.
     html_url: str
     created_at: datetime
     updated_at: datetime
@@ -111,12 +110,12 @@ class DeploymentJob(BaseModel):
     conversion_job_id: str
     status: DeploymentStatus
     template: TemplateType
-    workflow_run: Optional[WorkflowRun] = None
+    workflow_run: WorkflowRun | None = None
     created_at: datetime
-    completed_at: Optional[datetime] = None
-    error_message: Optional[str] = None
-    pages_url: Optional[str] = None
-    build_logs: List[str] = Field(default_factory=list)
+    completed_at: datetime | None = None
+    error_message: str | None = None
+    pages_url: str | None = None
+    build_logs: list[str] = Field(default_factory=list)
 
 
 class DeploymentStatusResponse(BaseModel):
@@ -124,12 +123,12 @@ class DeploymentStatusResponse(BaseModel):
     deployment_id: str
     status: DeploymentStatus
     repository: GitHubRepository
-    pages_url: Optional[str] = None
-    workflow_run: Optional[WorkflowRun] = None
+    pages_url: str | None = None
+    workflow_run: WorkflowRun | None = None
     progress_percentage: int = Field(ge=0, le=100)
     message: str
-    error_message: Optional[str] = None
-    estimated_completion: Optional[datetime] = None
+    error_message: str | None = None
+    estimated_completion: datetime | None = None
 
 
 class TemplateInfo(BaseModel):
@@ -137,8 +136,8 @@ class TemplateInfo(BaseModel):
     id: TemplateType
     name: str
     description: str
-    preview_url: Optional[str] = None
-    features: List[str]
+    preview_url: str | None = None
+    features: list[str]
     repository_url: str
 
 
@@ -146,7 +145,7 @@ class GitHubPagesConfig(BaseModel):
     """GitHub Pages configuration."""
     source_branch: str = Field(default="main")
     source_path: str = Field(default="/")
-    custom_domain: Optional[str] = None
+    custom_domain: str | None = None
     enforce_https: bool = Field(default=True)
 
 
@@ -154,18 +153,21 @@ class DeploymentConfig(BaseModel):
     """Complete deployment configuration."""
     repository_name: str
     template: TemplateType
+    conversion_job_id: str | None = None
     github_pages: GitHubPagesConfig = Field(default_factory=GitHubPagesConfig)
-    paper_title: Optional[str] = None
-    paper_authors: List[str] = Field(default_factory=list)
-    paper_date: Optional[str] = None
+    paper_title: str | None = None
+    paper_authors: list[str] = Field(default_factory=list)
+    paper_date: str | None = None
 
 
 # Template definitions
-AVAILABLE_TEMPLATES: List[TemplateInfo] = [
+AVAILABLE_TEMPLATES: list[TemplateInfo] = [
     TemplateInfo(
         id=TemplateType.ACADEMIC_PAGES,
         name="Academic Pages (Jekyll)",
-        description="Full academic personal site with publications, talks, CV, portfolio",
+        description=(
+            "Full academic personal site with publications, talks, CV, portfolio"
+        ),
         repository_url="https://github.com/academicpages/academicpages.github.io",
         features=[
             "Publications page",

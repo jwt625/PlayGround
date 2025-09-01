@@ -126,6 +126,22 @@ class ConversionService:
         """
         return self._jobs.get(job_id)
 
+    def get_job_result(self, job_id: str) -> ConversionResult | None:
+        """
+        Get the conversion result for a completed job.
+
+        Args:
+            job_id: Job identifier
+
+        Returns:
+            ConversionResult if job is completed, None otherwise
+        """
+        job = self._jobs.get(job_id)
+        if not job or job["status"] != ConversionStatus.COMPLETED:
+            return None
+
+        return job.get("result")
+
     async def convert_file(
         self,
         job_id: str,
@@ -171,8 +187,11 @@ class ConversionService:
 
             # Update progress
             self._update_job_status(
-                job_id, ConversionStatus.PROCESSING, ConversionPhase.PREPARING, "file_prepared",
-                "Input file prepared"
+                job_id,
+                ConversionStatus.PROCESSING,
+                ConversionPhase.PREPARING,
+                "file_prepared",
+                "Input file prepared",
             )
             if progress_callback:
                 await progress_callback(job_id, 20, "file_prepared")
@@ -191,8 +210,11 @@ class ConversionService:
             # Update job with result
             job["result"] = result
             self._update_job_status(
-                job_id, ConversionStatus.COMPLETED, ConversionPhase.COMPLETED, "completed",
-                "Conversion completed successfully"
+                job_id,
+                ConversionStatus.COMPLETED,
+                ConversionPhase.COMPLETED,
+                "completed",
+                "Conversion completed successfully",
             )
             if progress_callback:
                 await progress_callback(job_id, 100, "completed")
@@ -234,8 +256,11 @@ class ConversionService:
 
             # Update progress
             self._update_job_status(
-                job_id, ConversionStatus.PROCESSING, ConversionPhase.ANALYZING, "loading_models",
-                "Loading conversion models"
+                job_id,
+                ConversionStatus.PROCESSING,
+                ConversionPhase.ANALYZING,
+                "loading_models",
+                "Loading conversion models",
             )
 
             # Run conversion with progress tracking
@@ -248,8 +273,11 @@ class ConversionService:
 
             # Update progress
             self._update_job_status(
-                job_id, ConversionStatus.PROCESSING, ConversionPhase.FINALIZING, "finalizing",
-                "Finalizing output files"
+                job_id,
+                ConversionStatus.PROCESSING,
+                ConversionPhase.FINALIZING,
+                "finalizing",
+                "Finalizing output files",
             )
 
             # Get conversion metrics
@@ -281,8 +309,9 @@ class ConversionService:
             if metadata_file.exists():
                 try:
                     import json
+
                     from models.conversion import PaperMetadata
-                    with open(metadata_file, 'r', encoding='utf-8') as f:
+                    with open(metadata_file, encoding='utf-8') as f:
                         metadata_dict = json.load(f)
                     paper_metadata = PaperMetadata(**metadata_dict)
                     logger.info(f"Loaded paper metadata: {paper_metadata}")
@@ -293,6 +322,8 @@ class ConversionService:
             result = ConversionResult(
                 job_id=job_id,
                 status=ConversionStatus.COMPLETED,
+                success=True,
+                output_dir=str(output_dir),
                 output_files=output_files,
                 metrics=ConversionMetrics(
                     total_conversion_time=time.time() - start_time,
@@ -347,14 +378,20 @@ class ConversionService:
         try:
             # Phase 1: Analyzing document
             self._update_job_status(
-                job_id, ConversionStatus.PROCESSING, ConversionPhase.ANALYZING, "assessing_quality",
-                "Analyzing document structure and quality..."
+                job_id,
+                ConversionStatus.PROCESSING,
+                ConversionPhase.ANALYZING,
+                "assessing_quality",
+                "Analyzing document structure and quality...",
             )
 
             # Phase 2: Converting document
             self._update_job_status(
-                job_id, ConversionStatus.PROCESSING, ConversionPhase.CONVERTING, "loading_models",
-                "Loading AI models and starting conversion..."
+                job_id,
+                ConversionStatus.PROCESSING,
+                ConversionPhase.CONVERTING,
+                "loading_models",
+                "Loading AI models and starting conversion...",
             )
 
             # Run the actual conversion with timer-based progress
@@ -365,14 +402,20 @@ class ConversionService:
             if success:
                 # Phase 3: Processing results
                 self._update_job_status(
-                    job_id, ConversionStatus.PROCESSING, ConversionPhase.PROCESSING, "extracting_images",
-                    "Processing images and extracting content..."
+                    job_id,
+                    ConversionStatus.PROCESSING,
+                    ConversionPhase.PROCESSING,
+                    "extracting_images",
+                    "Processing images and extracting content...",
                 )
 
                 # Phase 4: Finalizing
                 self._update_job_status(
-                    job_id, ConversionStatus.PROCESSING, ConversionPhase.FINALIZING, "finalizing",
-                    "Finalizing output files..."
+                    job_id,
+                    ConversionStatus.PROCESSING,
+                    ConversionPhase.FINALIZING,
+                    "finalizing",
+                    "Finalizing output files...",
                 )
 
             return success
@@ -385,26 +428,52 @@ class ConversionService:
         self, job_id: str, input_file: Path, output_dir: Path
     ) -> bool:
         """
-        Run conversion with phase-based progress updates and real Marker progress capture.
+        Run conversion with phase-based progress updates and real Marker progress
+        capture.
 
         This provides meaningful progress updates during the actual conversion.
         """
         import threading
         import time
 
-        conversion_result = {"success": False, "error": None}
+        conversion_result: dict[str, bool | str | None] = {"success": False, "error": None}
         progress_thread_active = True
 
-        def progress_updater():
+        def progress_updater() -> None:
             """Background thread to update progress during conversion."""
             # More realistic timing based on actual Marker conversion stages
             conversion_updates = [
                 # Phase, stage, message, wait_seconds
-                (ConversionPhase.CONVERTING, "layout_analysis", "Analyzing document layout...", 8),
-                (ConversionPhase.CONVERTING, "text_recognition", "Recognizing text and formulas...", 12),
-                (ConversionPhase.CONVERTING, "processing_text", "Processing text blocks...", 10),
-                (ConversionPhase.PROCESSING, "extracting_images", "Extracting images and diagrams...", 8),
-                (ConversionPhase.PROCESSING, "processing_equations", "Processing mathematical equations...", 6),
+                (
+                    ConversionPhase.CONVERTING,
+                    "layout_analysis",
+                    "Analyzing document layout...",
+                    8,
+                ),
+                (
+                    ConversionPhase.CONVERTING,
+                    "text_recognition",
+                    "Recognizing text and formulas...",
+                    12,
+                ),
+                (
+                    ConversionPhase.CONVERTING,
+                    "processing_text",
+                    "Processing text blocks...",
+                    10,
+                ),
+                (
+                    ConversionPhase.PROCESSING,
+                    "extracting_images",
+                    "Extracting images and diagrams...",
+                    8,
+                ),
+                (
+                    ConversionPhase.PROCESSING,
+                    "processing_equations",
+                    "Processing mathematical equations...",
+                    6,
+                ),
             ]
 
             for phase, stage, message, wait_seconds in conversion_updates:
@@ -421,13 +490,13 @@ class ConversionService:
                         break
                     time.sleep(0.25)
 
-        def run_conversion():
+        def run_conversion() -> None:
             """Run the actual conversion."""
             try:
                 success = self._converter.convert_to_html(input_file, output_dir)
                 conversion_result["success"] = success
             except Exception as e:
-                conversion_result["error"] = e
+                conversion_result["error"] = str(e)
                 conversion_result["success"] = False
 
         # Start progress updater thread
@@ -445,9 +514,9 @@ class ConversionService:
         progress_thread_active = False
 
         if conversion_result["error"]:
-            raise conversion_result["error"]
+            raise RuntimeError(conversion_result["error"])
 
-        return conversion_result["success"]
+        return bool(conversion_result["success"])
 
 
 
@@ -470,8 +539,9 @@ class ConversionService:
 ## Abstract
 
 This is a placeholder conversion for the uploaded document: {input_file.name}.
-In a real conversion, this would contain the actual paper content extracted from your PDF.
-The Marker converter would analyze the document structure, extract text, images, and formatting.
+In a real conversion, this would contain the actual paper content extracted from
+your PDF. The Marker converter would analyze the document structure, extract text,
+images, and formatting.
 
 ## Introduction
 
@@ -503,7 +573,11 @@ This concludes the placeholder conversion demonstration.
         sample_metadata = PaperMetadata(
             title=f"{file_stem}: A Sample Academic Paper",
             authors=["John Doe", "Jane Smith", "Alice Johnson"],
-            abstract="This is a placeholder conversion for the uploaded document. In a real conversion, this would contain the actual paper content extracted from your PDF.",
+            abstract=(
+                "This is a placeholder conversion for the uploaded document. In a real "
+                "conversion, this would contain the actual paper content extracted "
+                "from your PDF."
+            ),
             keywords=["placeholder", "conversion", "academic"],
             doi=None,
             arxiv_id=None
@@ -526,6 +600,8 @@ This concludes the placeholder conversion demonstration.
         return ConversionResult(
             job_id=job_id,
             status=ConversionStatus.COMPLETED,
+            success=True,
+            output_dir=str(output_dir),
             output_files=[str(html_file), str(markdown_file)],
             metrics=ConversionMetrics(
                 total_conversion_time=1.0,

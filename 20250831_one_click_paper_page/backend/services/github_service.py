@@ -1,17 +1,17 @@
 """
-GitHub API service for repository creation and deployment.
+GitHub service for automated repository creation and deployment via GitHub Actions.
 """
 
 import asyncio
 import base64
+import json
 import logging
-import time
 import uuid
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Dict, List, Optional
 
 import aiohttp
+
 from models.github import (
     AVAILABLE_TEMPLATES,
     CommitRequest,
@@ -23,7 +23,6 @@ from models.github import (
     DeploymentStatus,
     DeploymentStatusResponse,
     FileContent,
-    GitHubPagesConfig,
     GitHubRepository,
     GitHubUser,
     TemplateInfo,
@@ -35,7 +34,8 @@ logger = logging.getLogger(__name__)
 
 
 class GitHubService:
-    """Service for GitHub API operations."""
+    """Service for automated GitHub repository creation and deployment via GitHub
+    Actions."""
 
     def __init__(self, access_token: str):
         """
@@ -51,9 +51,13 @@ class GitHubService:
             "Accept": "application/vnd.github.v3+json",
             "User-Agent": "one-click-paper-page/0.1.0",
         }
-        
+
         # In-memory deployment tracking (use Redis in production)
-        self._deployments: Dict[str, DeploymentJob] = {}
+        self._deployments: dict[str, DeploymentJob] = {}
+
+        # Template repository configuration
+        self.template_repo_owner = "one-click-paper-page"  # TODO: Make configurable
+        self.template_repo_name = "paper-website-template"
 
     async def get_authenticated_user(self) -> GitHubUser:
         """Get the authenticated user information."""
@@ -64,16 +68,16 @@ class GitHubService:
             ) as response:
                 if response.status != 200:
                     raise Exception(f"Failed to get user info: {response.status}")
-                
+
                 data = await response.json()
                 return GitHubUser(**data)
 
-    async def create_repository(
-        self, 
+    async def create_repository_from_template(
+        self,
         request: CreateRepositoryRequest
     ) -> CreateRepositoryResponse:
         """
-        Create a new repository for the converted paper.
+        Create a new repository from a template with GitHub Actions workflows.
 
         Args:
             request: Repository creation request
@@ -82,26 +86,38 @@ class GitHubService:
             Repository creation response with deployment tracking
         """
         try:
-            # Create the repository
+            # Create repository from template with GitHub Actions workflows
             repo_data = {
                 "name": request.name,
-                "description": request.description or f"Academic paper website - {request.name}",
+                "description": (
+                    request.description or f"Academic paper website - {request.name}"
+                ),
                 "private": False,  # Always public for open science
-                "auto_init": True,
-                "gitignore_template": "Jekyll",
-                "license_template": "mit",
+                "include_all_branches": False,  # Only main branch
             }
+
+            # Use template repository creation endpoint
+            template_url = (
+                f"{self.base_url}/repos/{self.template_repo_owner}/"
+                f"{self.template_repo_name}/generate"
+            )
 
             async with aiohttp.ClientSession() as session:
                 async with session.post(
-                    f"{self.base_url}/user/repos",
+                    template_url,
                     headers=self.headers,
                     json=repo_data
                 ) as response:
                     if response.status != 201:
-                        error_data = await response.json()
-                        raise Exception(f"Failed to create repository: {error_data}")
-                    
+                        # Fallback to regular repository creation if template doesn't
+                        # exist
+                        logger.warning(
+                            "Template repository not found, creating regular repository"
+                        )
+                        return await self._create_regular_repository_with_workflows(
+                            request
+                        )
+
                     repo_json = await response.json()
 
             # Convert to our model
@@ -123,11 +139,18 @@ class GitHubService:
                     avatar_url=repo_json["owner"]["avatar_url"],
                     html_url=repo_json["owner"]["html_url"],
                 ),
-                created_at=datetime.fromisoformat(repo_json["created_at"].replace("Z", "+00:00")),
-                updated_at=datetime.fromisoformat(repo_json["updated_at"].replace("Z", "+00:00")),
+                created_at=datetime.fromisoformat(
+                    repo_json["created_at"].replace("Z", "+00:00")
+                ),
+                updated_at=datetime.fromisoformat(
+                    repo_json["updated_at"].replace("Z", "+00:00")
+                ),
             )
 
-            # Create deployment job
+            # Enable GitHub Pages with Actions source
+            await self._enable_github_pages_with_actions(repository)
+
+            # Create deployment job for tracking
             deployment_id = str(uuid.uuid4())
             deployment_job = DeploymentJob(
                 id=deployment_id,
@@ -137,21 +160,34 @@ class GitHubService:
                 template=request.template,
                 created_at=datetime.now(),
             )
-            
+
             self._deployments[deployment_id] = deployment_job
 
-            logger.info(f"Created repository {repository.full_name} with deployment {deployment_id}")
+            logger.info(
+                f"Created repository {repository.full_name} from template with "
+                f"deployment {deployment_id}"
+            )
 
             return CreateRepositoryResponse(
                 repository=repository,
                 deployment_id=deployment_id,
                 status=DeploymentStatus.PENDING,
-                message="Repository created successfully. Deployment will begin shortly.",
+                message=(
+                    "Repository created with GitHub Actions workflows. "
+                    "Ready for content upload."
+                ),
             )
 
         except Exception as e:
-            logger.error(f"Failed to create repository: {e}")
+            logger.error(f"Failed to create repository from template: {e}")
             raise
+
+    # Keep the old method name for backward compatibility
+    async def create_repository(
+        self, request: CreateRepositoryRequest
+    ) -> CreateRepositoryResponse:
+        """Create repository (delegates to template-based creation)."""
+        return await self.create_repository_from_template(request)
 
     async def deploy_converted_content(
         self,
@@ -160,7 +196,8 @@ class GitHubService:
         config: DeploymentConfig,
     ) -> None:
         """
-        Deploy converted content to the repository.
+        Deploy converted content by uploading source files and triggering GitHub
+        Actions.
 
         Args:
             deployment_id: Deployment job ID
@@ -174,40 +211,49 @@ class GitHubService:
 
             # Update status
             deployment.status = DeploymentStatus.IN_PROGRESS
-            deployment.build_logs.append("Starting deployment process...")
-
-            # Get template
-            template = next(
-                (t for t in AVAILABLE_TEMPLATES if t.id == config.template),
-                None
-            )
-            if not template:
-                raise Exception(f"Template {config.template} not found")
-
-            # Prepare files for commit
-            files = await self._prepare_deployment_files(
-                converted_content_dir, template, config
+            deployment.build_logs.append(
+                "Starting automated deployment via GitHub Actions..."
             )
 
-            # Commit files to repository
+            # Prepare source files for GitHub Actions to process
+            files = await self._prepare_source_files(
+                converted_content_dir, config
+            )
+
+            # Commit source files to trigger GitHub Actions workflow
             commit_request = CommitRequest(
                 repository_name=deployment.repository.name,
-                message="Deploy converted academic paper",
+                message="Add converted paper content - trigger automated deployment",
                 files=files,
             )
 
-            await self._commit_files(deployment.repository, commit_request)
+            commit_response = await self._commit_files(
+                deployment.repository, commit_request
+            )
 
-            # Enable GitHub Pages
-            await self._enable_github_pages(deployment.repository)
+            # Wait for GitHub Actions workflow to start
+            await asyncio.sleep(2)  # Give GitHub a moment to detect the push
 
-            # Update deployment status
-            deployment.status = DeploymentStatus.SUCCESS
-            deployment.completed_at = datetime.now()
-            deployment.pages_url = f"https://{deployment.repository.owner.login}.github.io/{deployment.repository.name}"
-            deployment.build_logs.append("Deployment completed successfully!")
+            # Find and track the workflow run
+            workflow_run = await self._get_latest_workflow_run(deployment.repository)
+            if workflow_run:
+                deployment.workflow_run = workflow_run
+                deployment.build_logs.append(
+                    f"GitHub Actions workflow started: {workflow_run.html_url}"
+                )
 
-            logger.info(f"Deployment {deployment_id} completed successfully")
+            # Set status to in progress - GitHub Actions will handle the actual
+            # deployment
+            deployment.status = DeploymentStatus.IN_PROGRESS
+            deployment.pages_url = (
+                f"https://{deployment.repository.owner.login}.github.io/"
+                f"{deployment.repository.name}"
+            )
+            deployment.build_logs.append(
+                "GitHub Actions workflow triggered. Deployment in progress..."
+            )
+
+            logger.info(f"Deployment {deployment_id} triggered via GitHub Actions")
 
         except Exception as e:
             deployment = self._deployments.get(deployment_id)
@@ -215,13 +261,97 @@ class GitHubService:
                 deployment.status = DeploymentStatus.FAILURE
                 deployment.error_message = str(e)
                 deployment.build_logs.append(f"Deployment failed: {e}")
-            
+
             logger.error(f"Deployment {deployment_id} failed: {e}")
             raise
 
-    async def get_deployment_status(self, deployment_id: str) -> DeploymentStatusResponse:
+    async def _create_regular_repository_with_workflows(
+        self, request: CreateRepositoryRequest
+    ) -> CreateRepositoryResponse:
         """
-        Get deployment status.
+        Fallback method to create repository and add GitHub Actions workflows manually.
+        """
+        # Create regular repository
+        repo_data = {
+            "name": request.name,
+            "description": (
+                request.description or f"Academic paper website - {request.name}"
+            ),
+            "private": False,
+            "auto_init": True,
+            "gitignore_template": "Jekyll",
+            "license_template": "mit",
+        }
+
+        async with aiohttp.ClientSession() as session:
+            async with session.post(
+                f"{self.base_url}/user/repos",
+                headers=self.headers,
+                json=repo_data
+            ) as response:
+                if response.status != 201:
+                    error_data = await response.json()
+                    raise Exception(f"Failed to create repository: {error_data}")
+
+                repo_json = await response.json()
+
+        repository = GitHubRepository(
+            id=repo_json["id"],
+            name=repo_json["name"],
+            full_name=repo_json["full_name"],
+            description=repo_json.get("description"),
+            html_url=repo_json["html_url"],
+            clone_url=repo_json["clone_url"],
+            ssh_url=repo_json["ssh_url"],
+            default_branch=repo_json["default_branch"],
+            private=repo_json["private"],
+            owner=GitHubUser(
+                id=repo_json["owner"]["id"],
+                login=repo_json["owner"]["login"],
+                name=repo_json["owner"].get("name"),
+                email=repo_json["owner"].get("email"),
+                avatar_url=repo_json["owner"]["avatar_url"],
+                html_url=repo_json["owner"]["html_url"],
+            ),
+            created_at=datetime.fromisoformat(
+                repo_json["created_at"].replace("Z", "+00:00")
+            ),
+            updated_at=datetime.fromisoformat(
+                repo_json["updated_at"].replace("Z", "+00:00")
+            ),
+        )
+
+        # Add GitHub Actions workflows to the repository
+        await self._add_github_actions_workflows(repository, request.template)
+
+        # Enable GitHub Pages with Actions source
+        await self._enable_github_pages_with_actions(repository)
+
+        # Create deployment job
+        deployment_id = str(uuid.uuid4())
+        deployment_job = DeploymentJob(
+            id=deployment_id,
+            repository=repository,
+            conversion_job_id=request.conversion_job_id,
+            status=DeploymentStatus.PENDING,
+            template=request.template,
+            created_at=datetime.now(),
+        )
+
+        self._deployments[deployment_id] = deployment_job
+
+        return CreateRepositoryResponse(
+            repository=repository,
+            deployment_id=deployment_id,
+            status=DeploymentStatus.PENDING,
+            message="Repository created with GitHub Actions workflows.",
+        )
+
+    async def get_deployment_status(
+        self, deployment_id: str
+    ) -> DeploymentStatusResponse:
+        """
+        Get deployment status with GitHub Actions workflow monitoring.
 
         Args:
             deployment_id: Deployment job ID
@@ -233,27 +363,42 @@ class GitHubService:
         if not deployment:
             raise Exception(f"Deployment {deployment_id} not found")
 
-        # Calculate progress percentage
+        # Update deployment status from GitHub Actions workflow
+        await self._update_deployment_from_workflow(deployment)
+
+        # Calculate progress percentage based on workflow status
         progress = 0
         if deployment.status == DeploymentStatus.PENDING:
             progress = 10
         elif deployment.status == DeploymentStatus.QUEUED:
             progress = 20
         elif deployment.status == DeploymentStatus.IN_PROGRESS:
-            progress = 60
+            if deployment.workflow_run:
+                if deployment.workflow_run.status == "queued":
+                    progress = 30
+                elif deployment.workflow_run.status == "in_progress":
+                    progress = 70
+            else:
+                progress = 40
         elif deployment.status == DeploymentStatus.SUCCESS:
             progress = 100
         elif deployment.status == DeploymentStatus.FAILURE:
             progress = 0
 
-        # Generate status message
+        # Generate status message based on GitHub Actions workflow
         message = "Deployment pending"
         if deployment.status == DeploymentStatus.IN_PROGRESS:
-            message = "Deploying to GitHub Pages..."
+            if deployment.workflow_run:
+                if deployment.workflow_run.status == "queued":
+                    message = "GitHub Actions workflow queued..."
+                elif deployment.workflow_run.status == "in_progress":
+                    message = "GitHub Actions building and deploying..."
+            else:
+                message = "Waiting for GitHub Actions workflow to start..."
         elif deployment.status == DeploymentStatus.SUCCESS:
-            message = "Deployment completed successfully!"
+            message = "GitHub Actions deployment completed successfully!"
         elif deployment.status == DeploymentStatus.FAILURE:
-            message = f"Deployment failed: {deployment.error_message}"
+            message = f"GitHub Actions deployment failed: {deployment.error_message}"
 
         return DeploymentStatusResponse(
             deployment_id=deployment_id,
@@ -266,22 +411,213 @@ class GitHubService:
             error_message=deployment.error_message,
         )
 
-    async def list_templates(self) -> List[TemplateInfo]:
+    async def _add_github_actions_workflows(
+        self, repository: GitHubRepository, template: TemplateType
+    ) -> None:
+        """Add GitHub Actions workflows to the repository."""
+        try:
+            # Read workflow templates from local files
+            workflow_files = await self._get_workflow_template_files(template)
+
+            # Commit workflow files to repository
+            commit_request = CommitRequest(
+                repository_name=repository.name,
+                message="Add GitHub Actions workflows for automated deployment",
+                files=workflow_files,
+            )
+
+            await self._commit_files(repository, commit_request)
+            logger.info(f"Added GitHub Actions workflows to {repository.full_name}")
+
+        except Exception as e:
+            logger.error(f"Failed to add workflows to {repository.full_name}: {e}")
+            raise
+
+    async def _enable_github_pages_with_actions(
+        self, repository: GitHubRepository
+    ) -> None:
+        """Enable GitHub Pages with GitHub Actions as the source."""
+        try:
+            pages_config = {
+                "source": {
+                    "branch": repository.default_branch,
+                    "path": "/"
+                },
+                "build_type": "workflow"  # Use GitHub Actions for deployment
+            }
+
+            async with aiohttp.ClientSession() as session:
+                async with session.post(
+                    f"{self.base_url}/repos/{repository.full_name}/pages",
+                    headers=self.headers,
+                    json=pages_config
+                ) as response:
+                    if response.status == 201:
+                        logger.info(
+                            f"Enabled GitHub Pages with Actions for "
+                            f"{repository.full_name}"
+                        )
+                    elif response.status == 409:
+                        # Pages already enabled, update to use Actions
+                        async with session.put(
+                            f"{self.base_url}/repos/{repository.full_name}/pages",
+                            headers=self.headers,
+                            json=pages_config
+                        ) as update_response:
+                            if update_response.status == 200:
+                                logger.info(
+                                    f"Updated GitHub Pages to use Actions for "
+                                    f"{repository.full_name}"
+                                )
+                    else:
+                        error_data = await response.json()
+                        logger.warning(f"Failed to enable GitHub Pages: {error_data}")
+
+        except Exception as e:
+            logger.error(
+                f"Failed to enable GitHub Pages for {repository.full_name}: {e}"
+            )
+            # Don't raise - Pages can be enabled manually
+
+    async def list_templates(self) -> list[TemplateInfo]:
         """List available templates."""
         return AVAILABLE_TEMPLATES
+
+    async def _get_workflow_template_files(
+        self, template: TemplateType
+    ) -> list[FileContent]:
+        """Get GitHub Actions workflow files for the specified template."""
+        files = []
+
+        # Read the main conversion workflow
+        workflow_path = (
+            Path(__file__).parent.parent.parent
+            / "template"
+            / ".github"
+            / "workflows"
+            / "convert-and-deploy.yml"
+        )
+        if workflow_path.exists():
+            with open(workflow_path, encoding='utf-8') as f:
+                workflow_content = f.read()
+
+            files.append(FileContent(
+                path=".github/workflows/convert-and-deploy.yml",
+                content=workflow_content
+            ))
+
+        # Read the conversion scripts
+        scripts_dir = (
+            Path(__file__).parent.parent.parent / "template" / ".github" / "scripts"
+        )
+        if scripts_dir.exists():
+            for script_file in scripts_dir.glob("*.py"):
+                with open(script_file, encoding='utf-8') as f:
+                    script_content = f.read()
+
+                files.append(FileContent(
+                    path=f".github/scripts/{script_file.name}",
+                    content=script_content
+                ))
+
+        # Add template-specific workflow if needed
+        if template == TemplateType.MINIMAL_ACADEMIC:
+            template_workflow_path = (
+                Path(__file__).parent.parent.parent
+                / "template"
+                / "minimal-academic"
+                / ".github"
+                / "workflows"
+                / "pages.yml"
+            )
+            if template_workflow_path.exists():
+                with open(template_workflow_path, encoding='utf-8') as f:
+                    template_workflow_content = f.read()
+
+                files.append(FileContent(
+                    path=".github/workflows/pages.yml",
+                    content=template_workflow_content
+                ))
+
+        return files
+
+    async def _prepare_source_files(
+        self, converted_content_dir: Path, config: DeploymentConfig
+    ) -> list[FileContent]:
+        """Prepare source files for GitHub Actions to process."""
+        files = []
+
+        # Add the converted content files
+        if converted_content_dir.exists():
+            for file_path in converted_content_dir.rglob("*"):
+                if file_path.is_file():
+                    try:
+                        # Determine relative path from content directory
+                        rel_path = file_path.relative_to(converted_content_dir)
+
+                        # Read file content
+                        if file_path.suffix.lower() in [
+                            ".md",
+                            ".html",
+                            ".txt",
+                            ".yml",
+                            ".yaml",
+                            ".json",
+                        ]:
+                            # Text files
+                            with open(file_path, encoding='utf-8') as f:
+                                content = f.read()
+
+                            files.append(FileContent(
+                                path=str(rel_path),
+                                content=content
+                            ))
+                        else:
+                            # Binary files (images, etc.)
+                            with open(file_path, 'rb') as f:
+                                binary_content = f.read()
+
+                            # Encode as base64 for GitHub API
+                            encoded_content = base64.b64encode(binary_content).decode(
+                                "utf-8"
+                            )
+
+                            files.append(FileContent(
+                                path=str(rel_path),
+                                content=encoded_content,
+                                encoding="base64"
+                            ))
+                    except Exception as e:
+                        logger.warning(f"Failed to read file {file_path}: {e}")
+
+        # Add configuration file for the deployment
+        config_content = {
+            "paper_title": config.paper_title,
+            "paper_authors": config.paper_authors,
+            "paper_date": config.paper_date,
+            "template": config.template.value,
+            "repository_name": config.repository_name,
+        }
+
+        files.append(FileContent(
+            path="paper-config.json",
+            content=json.dumps(config_content, indent=2)
+        ))
+
+        return files
 
     async def _prepare_deployment_files(
         self,
         content_dir: Path,
         template: TemplateInfo,
         config: DeploymentConfig,
-    ) -> List[FileContent]:
+    ) -> list[FileContent]:
         """Prepare files for deployment."""
         files = []
-        
+
         # Add converted content
         if (content_dir / "index.html").exists():
-            with open(content_dir / "index.html", "r", encoding="utf-8") as f:
+            with open(content_dir / "index.html", encoding="utf-8") as f:
                 content = f.read()
                 # Customize content with paper metadata
                 content = self._customize_content(content, config)
@@ -309,25 +645,29 @@ class GitHubService:
         """Customize content with paper metadata."""
         # Simple template replacement
         if config.paper_title:
-            content = content.replace("<title>Document</title>", f"<title>{config.paper_title}</title>")
-        
+            content = content.replace(
+                "<title>Document</title>", f"<title>{config.paper_title}</title>"
+            )
+
         if config.paper_authors:
             authors_str = ", ".join(config.paper_authors)
             content = content.replace(
                 '<meta name="author" content="">',
                 f'<meta name="author" content="{authors_str}">'
             )
-        
+
         return content
 
     async def _get_template_files(
         self, template: TemplateInfo, config: DeploymentConfig
-    ) -> List[FileContent]:
+    ) -> list[FileContent]:
         """Get template-specific files."""
         files = []
 
         # Get template directory
-        template_dir = Path(__file__).parent.parent.parent / "template" / "minimal-academic"
+        template_dir = (
+            Path(__file__).parent.parent.parent / "template" / "minimal-academic"
+        )
 
         if config.template == TemplateType.MINIMAL_ACADEMIC and template_dir.exists():
             # Load template files
@@ -341,7 +681,7 @@ class GitHubService:
             for file_path in template_files:
                 full_path = template_dir / file_path
                 if full_path.exists():
-                    with open(full_path, "r", encoding="utf-8") as f:
+                    with open(full_path, encoding="utf-8") as f:
                         content = f.read()
 
                     # Customize content
@@ -371,21 +711,29 @@ plugins:
     def _customize_config(self, content: str, config: DeploymentConfig) -> str:
         """Customize _config.yml with paper metadata."""
         if config.paper_title:
-            content = content.replace('title: "Academic Paper"', f'title: "{config.paper_title}"')
+            content = content.replace(
+                'title: "Academic Paper"', f'title: "{config.paper_title}"'
+            )
 
         if config.paper_authors:
             authors_str = ', '.join(config.paper_authors)
-            content = content.replace('author: "Author Name"', f'author: "{authors_str}"')
+            content = content.replace(
+                'author: "Author Name"', f'author: "{authors_str}"'
+            )
 
-        content = content.replace('description: "Academic paper website generated by one-click-paper-page"',
-                                f'description: "{config.repository_name}"')
+        content = content.replace(
+            'description: "Academic paper website generated by one-click-paper-page"',
+            f'description: "{config.repository_name}"',
+        )
 
         return content
 
     def _customize_readme(self, content: str, config: DeploymentConfig) -> str:
         """Customize README.md with paper metadata."""
         if config.paper_title:
-            content = content.replace('# Academic Paper Website', f'# {config.paper_title}')
+            content = content.replace(
+                "# Academic Paper Website", f"# {config.paper_title}"
+            )
 
         return content
 
@@ -527,7 +875,9 @@ plugins:
                         logger.info(f"GitHub Pages enabled for {repository.full_name}")
                     elif response.status == 409:
                         # Pages already enabled
-                        logger.info(f"GitHub Pages already enabled for {repository.full_name}")
+                        logger.info(
+                            f"GitHub Pages already enabled for {repository.full_name}"
+                        )
                     else:
                         error_data = await response.json()
                         logger.warning(f"Failed to enable GitHub Pages: {error_data}")
@@ -535,3 +885,87 @@ plugins:
         except Exception as e:
             logger.warning(f"Failed to enable GitHub Pages: {e}")
             # Don't fail the deployment if Pages setup fails
+
+    async def _get_latest_workflow_run(
+        self, repository: GitHubRepository
+    ) -> WorkflowRun | None:
+        """Get the latest workflow run for the repository."""
+        try:
+            async with aiohttp.ClientSession() as session:
+                async with session.get(
+                    f"{self.base_url}/repos/{repository.full_name}/actions/runs",
+                    headers=self.headers,
+                    params={
+                        "per_page": 1,
+                        "status": "queued,in_progress,completed",
+                    },
+                ) as response:
+                    if response.status == 200:
+                        data = await response.json()
+                        runs = data.get("workflow_runs", [])
+                        if runs:
+                            run_data = runs[0]
+                            return WorkflowRun(
+                                id=run_data["id"],
+                                name=run_data["name"],
+                                status=run_data["status"],
+                                conclusion=run_data.get("conclusion"),
+                                html_url=run_data["html_url"],
+                                created_at=datetime.fromisoformat(
+                                    run_data["created_at"].replace("Z", "+00:00")
+                                ),
+                                updated_at=datetime.fromisoformat(
+                                    run_data["updated_at"].replace("Z", "+00:00")
+                                ),
+                            )
+            return None
+        except Exception as e:
+            logger.error(f"Failed to get workflow run for {repository.full_name}: {e}")
+            return None
+
+    async def _update_deployment_from_workflow(self, deployment: DeploymentJob) -> None:
+        """Update deployment status based on GitHub Actions workflow."""
+        if not deployment.workflow_run:
+            return
+
+        try:
+            # Get updated workflow run status
+            async with aiohttp.ClientSession() as session:
+                async with session.get(
+                    f"{self.base_url}/repos/{deployment.repository.full_name}/actions/runs/{deployment.workflow_run.id}",
+                    headers=self.headers
+                ) as response:
+                    if response.status == 200:
+                        run_data = await response.json()
+
+                        # Update workflow run
+                        deployment.workflow_run.status = run_data["status"]
+                        deployment.workflow_run.conclusion = run_data.get("conclusion")
+                        deployment.workflow_run.updated_at = datetime.fromisoformat(
+                            run_data["updated_at"].replace("Z", "+00:00")
+                        )
+
+                        # Update deployment status based on workflow
+                        if run_data["status"] == "completed":
+                            if run_data.get("conclusion") == "success":
+                                deployment.status = DeploymentStatus.SUCCESS
+                                deployment.completed_at = datetime.now()
+                                deployment.build_logs.append(
+                                    "GitHub Actions deployment completed successfully!"
+                                )
+                            else:
+                                deployment.status = DeploymentStatus.FAILURE
+                                deployment.completed_at = datetime.now()
+                                deployment.error_message = (
+                                    f"GitHub Actions workflow failed: "
+                                    f"{run_data.get('conclusion')}"
+                                )
+                                deployment.build_logs.append(
+                                    f"GitHub Actions workflow failed: "
+                                    f"{run_data.get('conclusion')}"
+                                )
+                        elif run_data["status"] in ["queued", "in_progress"]:
+                            deployment.status = DeploymentStatus.IN_PROGRESS
+
+        except Exception as e:
+            logger.error(f"Failed to update deployment from workflow: {e}")
