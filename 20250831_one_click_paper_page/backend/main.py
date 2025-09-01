@@ -18,6 +18,7 @@ from fastapi import (
     Form,
     Header,
     HTTPException,
+    Request,
     UploadFile,
 )
 from fastapi.middleware.cors import CORSMiddleware
@@ -419,6 +420,132 @@ async def list_templates() -> list[TemplateInfo]:
     return AVAILABLE_TEMPLATES
 
 
+@app.post("/api/deployment/{deployment_id}/enable-pages")
+async def enable_github_pages_backup(
+    deployment_id: str,
+    request: Request,
+) -> dict[str, Any]:
+    """
+    Enable GitHub Pages as a backup option when automated deployment fails.
+    """
+    try:
+        # Get access token from request headers
+        auth_header = request.headers.get("authorization")
+        if not auth_header or not auth_header.startswith("Bearer "):
+            raise HTTPException(status_code=401, detail="Missing or invalid authorization header")
+
+        access_token = auth_header.split(" ")[1]
+        github_service = GitHubService(access_token)
+
+        # Get deployment info
+        deployment = await github_service.get_deployment_status(deployment_id)
+        if not deployment:
+            raise HTTPException(status_code=404, detail="Deployment not found")
+
+        # Enable GitHub Pages as backup
+        success = await github_service.enable_github_pages_as_backup(deployment.repository)
+
+        if success:
+            return {
+                "success": True,
+                "message": "GitHub Pages enabled successfully as backup option",
+                "pages_url": f"https://{deployment.repository.owner.login}.github.io/{deployment.repository.name}"
+            }
+        else:
+            raise HTTPException(
+                status_code=500,
+                detail="Failed to enable GitHub Pages backup"
+            )
+
+    except Exception as e:
+        logger.error(f"Error enabling GitHub Pages backup: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.post("/api/github/deploy")
+async def deploy_to_github(
+    request: dict[str, Any],
+    authorization: str = Header(None),
+) -> dict[str, Any]:
+    """
+    Full automated deployment: create repository and deploy content.
+    """
+    if not authorization or not authorization.startswith("Bearer "):
+        raise HTTPException(
+            status_code=401,
+            detail="GitHub OAuth token required. Please authenticate first."
+        )
+
+    access_token = authorization.replace("Bearer ", "")
+
+    try:
+        # Get conversion result
+        conversion_job_id = request.get("conversion_job_id")
+        if not conversion_job_id:
+            raise HTTPException(status_code=400, detail="conversion_job_id is required")
+
+        conversion_result = conversion_service.get_job_result(conversion_job_id)
+        if not conversion_result:
+            raise HTTPException(
+                status_code=404,
+                detail=f"Conversion job {conversion_job_id} not found or not completed"
+            )
+
+        # Create GitHub service
+        github_service = GitHubService(access_token)
+
+        # Import required models
+        from models.github import (
+            CreateRepositoryRequest,
+            DeploymentConfig,
+            TemplateType,
+        )
+
+        # Map template string to enum
+        template_map = {
+            "academic-pages": TemplateType.ACADEMIC_PAGES,
+            "al-folio": TemplateType.AL_FOLIO,
+            "minimal-academic": TemplateType.MINIMAL_ACADEMIC,
+        }
+        template_enum = template_map.get(
+            request.get("template", "minimal-academic"), TemplateType.MINIMAL_ACADEMIC
+        )
+
+        # Create repository with GitHub Actions workflows
+        repo_request = CreateRepositoryRequest(
+            name=request["repository_name"],
+            description=(
+                f"Academic paper website: {request.get('paper_title', 'Untitled')}"
+            ),
+            template=template_enum,
+            conversion_job_id=conversion_job_id
+        )
+
+        repo_response = await github_service.create_repository_from_template(repo_request)
+
+        # Deploy content automatically
+        deploy_config = DeploymentConfig(
+            repository_name=request["repository_name"],
+            template=template_enum,
+            conversion_job_id=conversion_job_id,
+            paper_title=request.get("paper_title"),
+            paper_authors=request.get("paper_authors", []),
+        )
+
+        await github_service.deploy_content(repo_response.deployment_id, deploy_config)
+
+        return {
+            "success": True,
+            "deployment_id": repo_response.deployment_id,
+            "repository_url": repo_response.repository.html_url,
+            "message": "Repository created and deployment started successfully"
+        }
+
+    except Exception as e:
+        logger.error(f"Deployment failed: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
 @app.post("/api/github/repository/create", response_model=CreateRepositoryResponse)
 async def create_repository(
     request: CreateRepositoryRequest,
@@ -572,7 +699,7 @@ async def _run_conversion_task(
         # Run conversion
         result = await conversion_service.convert_file(job_id, input_file_path)
 
-        # If auto-deployment is enabled, deploy to GitHub via automated workflow
+        # If deployment config is provided, deploy to GitHub via automated workflow
         if deployment_config and result.success:
             try:
                 logger.info(f"Starting automated GitHub deployment for job {job_id}")

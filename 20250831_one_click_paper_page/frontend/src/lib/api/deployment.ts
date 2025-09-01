@@ -1,8 +1,9 @@
 /**
  * API client for deployment operations
  */
+import React from 'react';
 
-const API_BASE = 'http://localhost:8001/api';
+const API_BASE = 'http://localhost:8000/api';
 
 export interface TemplateInfo {
   id: string;
@@ -176,12 +177,13 @@ export function useDeployment() {
     return DeploymentAPI.getTemplates();
   };
 
-  return {
+  // Memoize the returned object to prevent unnecessary re-renders
+  return React.useMemo(() => ({
     createRepository,
     deployContent,
     getDeploymentStatus,
     getTemplates,
-  };
+  }), []);
 }
 
 /**

@@ -147,8 +147,8 @@ class GitHubService:
                 ),
             )
 
-            # Enable GitHub Pages with Actions source
-            await self._enable_github_pages_with_actions(repository)
+            # Note: GitHub Pages will be enabled by GitHub Actions workflow
+            # or manually as a backup option if deployment fails
 
             # Create deployment job for tracking
             deployment_id = str(uuid.uuid4())
@@ -324,8 +324,8 @@ class GitHubService:
         # Add GitHub Actions workflows to the repository
         await self._add_github_actions_workflows(repository, request.template)
 
-        # Enable GitHub Pages with Actions source
-        await self._enable_github_pages_with_actions(repository)
+        # Note: GitHub Pages will be enabled by GitHub Actions workflow
+        # or manually as a backup option if deployment fails
 
         # Create deployment job
         deployment_id = str(uuid.uuid4())
@@ -482,6 +482,26 @@ class GitHubService:
     async def list_templates(self) -> list[TemplateInfo]:
         """List available templates."""
         return AVAILABLE_TEMPLATES
+
+    async def enable_github_pages_as_backup(
+        self, repository: GitHubRepository
+    ) -> bool:
+        """
+        Enable GitHub Pages as a backup option when automated deployment fails.
+
+        Args:
+            repository: GitHub repository to enable Pages for
+
+        Returns:
+            True if Pages was enabled successfully, False otherwise
+        """
+        try:
+            logger.info(f"Enabling GitHub Pages as backup for {repository.full_name}")
+            await self._enable_github_pages_with_actions(repository)
+            return True
+        except Exception as e:
+            logger.error(f"Failed to enable GitHub Pages backup for {repository.full_name}: {e}")
+            return False
 
     async def _get_workflow_template_files(
         self, template: TemplateType

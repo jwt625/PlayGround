@@ -311,6 +311,50 @@
   background-color: #545b62;
 }
 
+/* Action Buttons at Top */
+.action-buttons-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  padding: 1rem;
+  background: #f8f9fa;
+  border-radius: 8px;
+  border: 1px solid #e9ecef;
+}
+
+.action-buttons-top .btn {
+  min-width: 160px;
+}
+
+/* Info Banner */
+.info-banner {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 1rem;
+  background: #e3f2fd;
+  border: 1px solid #bbdefb;
+  border-radius: 8px;
+}
+
+.info-icon {
+  font-size: 1.25rem;
+  margin-top: 0.125rem;
+}
+
+.info-banner h4 {
+  margin: 0 0 0.5rem 0;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #1565c0;
+}
+
+.info-banner .help-text {
+  margin: 0;
+  color: #1976d2;
+}
+
 /* Deployment Status Styles */
 .deployment-status {
   max-width: 600px;

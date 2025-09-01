@@ -15,6 +15,9 @@ interface DeploymentConfigProps {
     name?: string;
     avatar_url: string;
   };
+  onBackToTemplate?: () => void;
+  onDeploy?: () => void;
+  canDeploy?: boolean;
 }
 
 export interface DeploymentConfiguration {
@@ -22,7 +25,6 @@ export interface DeploymentConfiguration {
   template: string;
   paperTitle: string;
   paperAuthors: string[];
-  autoDeployEnabled: boolean;
 }
 
 export function DeploymentConfig({
@@ -30,7 +32,10 @@ export function DeploymentConfig({
   onConfigChange,
   initialConfig = {},
   paperMetadata,
-  githubUser
+  githubUser,
+  onBackToTemplate,
+  onDeploy,
+  canDeploy = false
 }: DeploymentConfigProps) {
   // Generate smart defaults from paper metadata
   const generateRepositoryName = (title: string) => {
@@ -47,7 +52,6 @@ export function DeploymentConfig({
     template: 'minimal-academic',
     paperTitle: '',
     paperAuthors: [],
-    autoDeployEnabled: true,
     ...initialConfig
   });
 
@@ -107,27 +111,38 @@ export function DeploymentConfig({
 
   return (
     <div className="deployment-config">
-      <h3>🚀 Deployment Configuration</h3>
-      
-      {/* Auto-deploy toggle */}
-      <div className="config-section">
-        <label className="toggle-label">
-          <input
-            type="checkbox"
-            checked={config.autoDeployEnabled}
-            onChange={(e) => updateConfig({ autoDeployEnabled: e.target.checked })}
-          />
-          <span className="toggle-text">
-            Enable automatic GitHub Pages deployment
-          </span>
-        </label>
-        <p className="help-text">
-          When enabled, a GitHub repository will be created automatically and your paper will be deployed as a live website.
-        </p>
+      {/* Action Buttons at Top */}
+      <div className="action-buttons-top">
+        <button
+          onClick={onBackToTemplate}
+          className="btn btn-secondary"
+        >
+          ← Back to Template
+        </button>
+
+        <button
+          onClick={onDeploy}
+          disabled={!canDeploy || !config.repositoryName}
+          className="btn btn-primary"
+        >
+          🚀 Deploy to GitHub Pages
+        </button>
       </div>
 
-      {config.autoDeployEnabled && (
-        <>
+      <h3>🚀 Deployment Configuration</h3>
+      
+      {/* Deployment Information */}
+      <div className="config-section">
+        <div className="info-banner">
+          <div className="info-icon">ℹ️</div>
+          <div>
+            <h4>Automatic GitHub Actions Deployment</h4>
+            <p className="help-text">
+              Your repository will be created with GitHub Actions workflows that automatically convert and deploy your paper when you push files.
+            </p>
+          </div>
+        </div>
+      </div>
           {/* Paper Information */}
           <div className="config-section">
             <h4>📄 Paper Information</h4>
@@ -281,8 +296,6 @@ export function DeploymentConfig({
               </div>
             </div>
           </div>
-        </>
-      )}
     </div>
   );
 }

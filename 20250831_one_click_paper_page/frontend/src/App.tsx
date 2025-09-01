@@ -103,42 +103,54 @@ function App() {
     };
 
     loadTemplates();
-  }, [deployment]);
+  }, []); // Empty dependency array - only run once on mount
 
   const handleDeploymentConfigChange = (config: DeploymentConfiguration) => {
     setDeploymentConfig(config);
   };
 
   const handleStartDeployment = async () => {
-    if (!deploymentConfig || !conversion.result) {
+    if (!deploymentConfig || !conversion.result || !user) {
       return;
     }
 
     try {
+      // Set deployment step immediately
       setCurrentStep('deploy');
 
-      // Create repository
-      const repoResponse = await deployment.createRepository({
-        name: deploymentConfig.repositoryName,
-        description: `Academic paper website: ${deploymentConfig.paperTitle || 'Untitled'}`,
-        private: false, // Always public for open science
-        template: deploymentConfig.template,
-        conversion_job_id: conversion.jobId || '',
+      // Trigger full automated deployment (repository creation + content deployment)
+      const token = localStorage.getItem('github_token');
+      if (!token) {
+        throw new Error('GitHub token not found');
+      }
+
+      const response = await fetch('/api/github/deploy', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          conversion_job_id: conversion.jobId,
+          repository_name: deploymentConfig.repositoryName,
+          template: deploymentConfig.template,
+          paper_title: deploymentConfig.paperTitle,
+          paper_authors: deploymentConfig.paperAuthors,
+        })
       });
 
-      setDeploymentId(repoResponse.deployment_id);
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.detail || 'Deployment failed');
+      }
 
-      // Deploy content
-      await deployment.deployContent(repoResponse.deployment_id, {
-        repository_name: deploymentConfig.repositoryName,
-        template: deploymentConfig.template,
-        paper_title: deploymentConfig.paperTitle,
-        paper_authors: deploymentConfig.paperAuthors,
-      });
+      const result = await response.json();
+      setDeploymentId(result.deployment_id);
 
     } catch (error) {
       console.error('Deployment failed:', error);
-      // Handle error - could show error message to user
+      alert(`Deployment failed: ${error}`);
+      setCurrentStep('configure'); // Go back to config on error
     }
   };
 
@@ -283,97 +295,28 @@ function App() {
                 template: selectedTemplate?.id || 'minimal-academic',
                 paperTitle: '',
                 paperAuthors: [],
-                autoDeployEnabled: true,
               }}
+              onBackToTemplate={() => setCurrentStep('template')}
+              onDeploy={handleStartDeployment}
+              canDeploy={!!deploymentConfig?.repositoryName}
             />
 
-            <div className="text-center mt-8">
-              <button
-                onClick={() => setCurrentStep('template')}
-                className="bg-gray-500 text-white px-6 py-3 rounded-lg hover:bg-gray-600 mr-4"
-              >
-                ← Back to Template
-              </button>
 
-              {deploymentConfig?.autoDeployEnabled ? (
-                <button
-                  onClick={handleStartDeployment}
-                  disabled={!deploymentConfig || !deploymentConfig.repositoryName}
-                  className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  🚀 Deploy to GitHub Pages
-                </button>
-              ) : (
-                <button
-                  onClick={() => setCurrentStep('deploy')}
-                  className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700"
-                >
-                  Continue →
-                </button>
-              )}
-            </div>
           </div>
         );
 
       case 'deploy':
         return (
           <div className="max-w-4xl mx-auto">
-            {deploymentId ? (
-              <DeploymentStatus
-                deploymentId={deploymentId}
-                onComplete={handleDeploymentComplete}
-                githubUser={user ? {
-                  login: user.login,
-                  name: user.name || undefined,
-                  avatar_url: user.avatar_url,
-                } : undefined}
-              />
-            ) : (
-              <div className="text-center p-8">
-                <h2 className="text-2xl font-bold text-gray-800 mb-4">Manual Deployment</h2>
-                <p className="text-gray-600 mb-6">
-                  Your conversion is complete! You can now manually create a repository and deploy your content.
-                </p>
-
-                <div className="bg-blue-50 p-6 rounded-lg mb-6">
-                  <h3 className="font-semibold text-blue-800 mb-4">Conversion Summary:</h3>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-left">
-                    <div>
-                      <p className="text-blue-700"><strong>Files:</strong> {selectedFiles.length} uploaded</p>
-                      {overleafUrl && <p className="text-blue-700"><strong>Overleaf:</strong> {overleafUrl}</p>}
-                      <p className="text-blue-700"><strong>Template:</strong> {selectedTemplate?.name}</p>
-                    </div>
-                    <div>
-                      <p className="text-blue-700"><strong>User:</strong> {user?.login}</p>
-                      <p className="text-blue-700"><strong>Mode:</strong> {conversionMode}</p>
-                      {conversion.result && (
-                        <p className="text-blue-700"><strong>Status:</strong> Conversion Complete</p>
-                      )}
-                    </div>
-                  </div>
-                </div>
-
-                <div className="space-y-4">
-                  <button
-                    onClick={() => setCurrentStep('configure')}
-                    className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700"
-                  >
-                    ← Back to Configure Deployment
-                  </button>
-
-                  {conversion.result && (
-                    <div className="mt-4">
-                      <p className="text-sm text-gray-600 mb-2">
-                        Download your converted files to deploy manually:
-                      </p>
-                      <button className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
-                        📥 Download Converted Files
-                      </button>
-                    </div>
-                  )}
-                </div>
-              </div>
-            )}
+            <DeploymentStatus
+              deploymentId={deploymentId || 'pending'}
+              onComplete={handleDeploymentComplete}
+              githubUser={user ? {
+                login: user.login,
+                name: user.name || undefined,
+                avatar_url: user.avatar_url,
+              } : undefined}
+            />
           </div>
         );
 
