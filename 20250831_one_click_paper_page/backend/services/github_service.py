@@ -355,8 +355,12 @@ class GitHubService:
         if not deployment:
             raise Exception(f"Deployment {deployment_id} not found")
 
-        # Update deployment status from GitHub Actions workflow
-        await self._update_deployment_from_workflow(deployment)
+        # Update deployment status from GitHub Actions workflow (with error handling)
+        try:
+            await self._update_deployment_from_workflow(deployment)
+        except Exception as e:
+            logger.warning(f"Failed to update deployment status from workflow: {e}")
+            # Continue with current status instead of failing
 
         # Calculate progress percentage based on workflow status
         progress = 0
@@ -649,6 +653,40 @@ class GitHubService:
             )
 
         return content
+
+    async def _wait_for_fork_ready(self, repository: GitHubRepository, max_wait_seconds: int = 30) -> str:
+        """Wait for forked repository to be ready and return the default branch name."""
+        start_time = asyncio.get_event_loop().time()
+
+        while (asyncio.get_event_loop().time() - start_time) < max_wait_seconds:
+            try:
+                async with aiohttp.ClientSession() as session:
+                    # Get repository info to check if it's ready
+                    async with session.get(
+                        f"{self.base_url}/repos/{repository.full_name}",
+                        headers=self.headers
+                    ) as response:
+                        if response.status == 200:
+                            repo_data = await response.json()
+                            default_branch = repo_data.get("default_branch", "main")
+
+                            # Check if the default branch exists
+                            async with session.get(
+                                f"{self.base_url}/repos/{repository.full_name}/git/refs/heads/{default_branch}",
+                                headers=self.headers
+                            ) as branch_response:
+                                if branch_response.status == 200:
+                                    logger.info(f"Fork {repository.full_name} is ready with branch '{default_branch}'")
+                                    return default_branch
+
+                logger.info(f"Fork {repository.full_name} not ready yet, waiting...")
+                await asyncio.sleep(2)
+
+            except Exception as e:
+                logger.warning(f"Error checking fork readiness: {e}")
+                await asyncio.sleep(2)
+
+        raise Exception(f"Fork {repository.full_name} not ready after {max_wait_seconds} seconds")
 
     async def _commit_files(
         self, repository: GitHubRepository, request: CommitRequest

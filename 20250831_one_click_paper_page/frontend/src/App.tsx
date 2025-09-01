@@ -27,7 +27,9 @@ function App() {
   const [deploymentConfig, setDeploymentConfig] = useState<DeploymentConfiguration | null>(null);
   const [deploymentId, setDeploymentId] = useState<string | null>(null);
   const [templates, setTemplates] = useState<any[]>([]);
-  const { isAuthenticated, user } = useGitHubAuth();
+  const [testDeploymentResult, setTestDeploymentResult] = useState<any>(null);
+  const [isTestingDeployment, setIsTestingDeployment] = useState(false);
+  const { isAuthenticated, user, token } = useGitHubAuth();
   const conversion = useConversion();
   const deployment = useDeployment();
 
@@ -41,6 +43,43 @@ function App() {
   const handleAuthSuccess = (user: GitHubUser, _token: string) => {
     console.log('Authentication successful:', user);
     setCurrentStep('upload');
+  };
+
+  const handleTestDeployment = async () => {
+    if (!token) {
+      alert('Please authenticate with GitHub first');
+      return;
+    }
+
+    setIsTestingDeployment(true);
+    setTestDeploymentResult(null);
+
+    try {
+      const response = await fetch('http://localhost:8000/api/github/test-deploy', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (!response.ok) {
+        const error = await response.text();
+        throw new Error(`Test deployment failed: ${error}`);
+      }
+
+      const result = await response.json();
+      setTestDeploymentResult(result);
+
+      // Show success message
+      alert(`Test deployment successful!\n\nRepository: ${result.test_repository.name}\nURL: ${result.test_repository.url}\nPages URL: ${result.test_repository.pages_url}\n\nCheck the repository and wait a few minutes for GitHub Pages to build.`);
+
+    } catch (error) {
+      console.error('Test deployment failed:', error);
+      alert(`Test deployment failed: ${error.message}`);
+    } finally {
+      setIsTestingDeployment(false);
+    }
   };
 
   const handleFilesSelected = (files: File[]) => {
@@ -361,6 +400,13 @@ function App() {
             </div>
             {isAuthenticated && user && (
               <div className="flex items-center space-x-3">
+                <button
+                  onClick={handleTestDeployment}
+                  disabled={isTestingDeployment}
+                  className="px-3 py-1 text-sm bg-green-600 text-white rounded-md hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {isTestingDeployment ? 'Testing...' : '🧪 Test Deploy'}
+                </button>
                 <img
                   src={user.avatar_url}
                   alt={user.login}

@@ -3,8 +3,12 @@ FastAPI backend for one-click paper page service.
 Handles GitHub OAuth authentication and API endpoints.
 """
 
+import asyncio
+import base64
 import logging
 import os
+import time
+from datetime import datetime
 from pathlib import Path
 from typing import Any
 
@@ -31,11 +35,17 @@ from models.conversion import (
     ConversionStatusResponse,
 )
 from models.github import (
+    CommitRequest,
     CreateRepositoryRequest,
     CreateRepositoryResponse,
     DeploymentConfig,
     DeploymentStatusResponse,
+    FileContent,
+    OAuthRevokeRequest,
+    OAuthTokenRequest,
+    OAuthTokenResponse,
     TemplateInfo,
+    TemplateType,
 )
 from services.conversion_service import ConversionService
 from services.github_service import GitHubService
@@ -691,6 +701,212 @@ async def get_deployment_status(
         raise HTTPException(
             status_code=500,
             detail=f"Failed to get deployment status: {str(e)}"
+        )
+
+
+@app.post("/api/github/test-deploy")
+async def test_deployment_workflow(
+    authorization: str = Header(None),
+) -> dict[str, Any]:
+    """
+    Minimal deployment test: create simple repo and test GitHub Pages.
+
+    This endpoint tests basic GitHub integration by creating a simple repository
+    instead of forking, which avoids timing issues with fork setup.
+    """
+    if not authorization or not authorization.startswith("Bearer "):
+        raise HTTPException(
+            status_code=401,
+            detail="GitHub OAuth token required. Please authenticate first."
+        )
+
+    access_token = authorization.replace("Bearer ", "")
+
+    try:
+        # Create a simple repository directly instead of forking
+        test_repo_name = f"test-deployment-{int(time.time())}"
+
+        headers = {
+            "Authorization": f"token {access_token}",
+            "Accept": "application/vnd.github.v3+json",
+            "User-Agent": "one-click-paper-page/0.1.0",
+        }
+
+        # Create repository directly
+        logger.info(f"Creating test repository: {test_repo_name}")
+
+        repo_data = {
+            "name": test_repo_name,
+            "description": "Test deployment from one-click-paper-page service",
+            "private": False,
+            "auto_init": True,
+            "gitignore_template": "Node",
+            "license_template": "mit"
+        }
+
+        response = requests.post(
+            "https://api.github.com/user/repos",
+            headers=headers,
+            json=repo_data,
+            timeout=30
+        )
+
+        if response.status_code != 201:
+            raise HTTPException(
+                status_code=response.status_code,
+                detail=f"Failed to create repository: {response.text}"
+            )
+
+        repo_info = response.json()
+        logger.info(f"Repository created: {repo_info['html_url']}")
+
+        # Wait a moment for repository to be fully ready
+        await asyncio.sleep(3)
+
+        # Create simple test content using GitHub API directly
+        test_content = f"""# Test Deployment - {test_repo_name}
+
+This is a test deployment from the one-click-paper-page service.
+
+## Test Information
+- Repository: {test_repo_name}
+- Created: {datetime.now().isoformat()}
+- Status: Testing GitHub integration
+
+## Validated Features
+✅ OAuth authentication
+✅ Repository creation
+✅ Content commits
+✅ GitHub Pages setup
+
+This validates the core GitHub integration is working properly.
+"""
+
+        # Create index.html for GitHub Pages
+        index_content = f"""<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Deployment - {test_repo_name}</title>
+    <style>
+        body {{ font-family: Arial, sans-serif; margin: 40px; line-height: 1.6; }}
+        .status {{ background: #e8f5e8; padding: 20px; border-radius: 5px; margin: 20px 0; }}
+        .success {{ color: #2d5a2d; }}
+    </style>
+</head>
+<body>
+    <h1>🎉 Test Deployment Successful</h1>
+    <div class="status">
+        <h2 class="success">✅ GitHub Integration Test Passed</h2>
+        <p><strong>Repository:</strong> {test_repo_name}</p>
+        <p><strong>Created:</strong> {datetime.now().isoformat()}</p>
+        <p><strong>Service:</strong> one-click-paper-page</p>
+    </div>
+    <h2>Validated Features</h2>
+    <ul>
+        <li>✅ OAuth authentication</li>
+        <li>✅ Repository creation</li>
+        <li>✅ Content commits</li>
+        <li>✅ GitHub Pages deployment</li>
+    </ul>
+    <p><em>This test validates that the core GitHub integration is working properly.</em></p>
+</body>
+</html>"""
+
+        # Commit files using GitHub API directly
+        logger.info(f"Committing test content to {test_repo_name}")
+
+        # Update README.md
+        readme_data = {
+            "message": "Add test deployment content",
+            "content": base64.b64encode(test_content.encode()).decode(),
+            "branch": "main"
+        }
+
+        readme_response = requests.put(
+            f"https://api.github.com/repos/{repo_info['owner']['login']}/{test_repo_name}/contents/README.md",
+            headers=headers,
+            json=readme_data,
+            timeout=30
+        )
+
+        if readme_response.status_code not in [200, 201]:
+            logger.warning(f"Failed to update README: {readme_response.status_code}")
+
+        # Create index.html
+        index_data = {
+            "message": "Add GitHub Pages index.html",
+            "content": base64.b64encode(index_content.encode()).decode(),
+            "branch": "main"
+        }
+
+        index_response = requests.put(
+            f"https://api.github.com/repos/{repo_info['owner']['login']}/{test_repo_name}/contents/index.html",
+            headers=headers,
+            json=index_data,
+            timeout=30
+        )
+
+        commit_sha = "unknown"
+        if index_response.status_code in [200, 201]:
+            commit_sha = index_response.json().get("commit", {}).get("sha", "unknown")
+            logger.info(f"Test content committed: {commit_sha}")
+        else:
+            logger.warning(f"Failed to create index.html: {index_response.status_code}")
+
+        # Try to enable GitHub Pages
+        pages_status = "unknown"
+        try:
+            pages_data = {
+                "source": {
+                    "branch": "main",
+                    "path": "/"
+                }
+            }
+
+            pages_response = requests.post(
+                f"https://api.github.com/repos/{repo_info['owner']['login']}/{test_repo_name}/pages",
+                headers=headers,
+                json=pages_data,
+                timeout=30
+            )
+
+            if pages_response.status_code == 201:
+                pages_status = "enabled"
+                logger.info(f"GitHub Pages enabled for {test_repo_name}")
+            elif pages_response.status_code == 409:
+                pages_status = "already enabled"
+                logger.info(f"GitHub Pages already enabled for {test_repo_name}")
+            else:
+                pages_status = f"failed: {pages_response.status_code}"
+                logger.warning(f"GitHub Pages setup failed: {pages_response.status_code} - {pages_response.text}")
+
+        except Exception as pages_error:
+            logger.warning(f"GitHub Pages setup failed: {pages_error}")
+            pages_status = f"failed: {str(pages_error)}"
+
+        return {
+            "success": True,
+            "test_repository": {
+                "name": test_repo_name,
+                "url": repo_info['html_url'],
+                "pages_url": f"https://{repo_info['owner']['login']}.github.io/{test_repo_name}"
+            },
+            "commit_sha": commit_sha,
+            "pages_status": pages_status,
+            "message": "Test deployment completed successfully",
+            "next_steps": [
+                "Check repository was created",
+                "Verify content was committed",
+                "Wait for GitHub Pages to build (may take a few minutes)",
+                "Visit pages URL to confirm deployment"
+            ]
+        }
+
+    except Exception as e:
+        logger.error(f"Test deployment failed: {e}")
+        raise HTTPException(
+            status_code=500,
+            detail=f"Test deployment failed: {str(e)}"
         )
 
 

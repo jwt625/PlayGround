@@ -185,3 +185,22 @@ class DeploymentConfig(BaseModel):
 
 
 # Template definitions moved to TemplateService
+
+
+class OAuthTokenRequest(BaseModel):
+    """Request for OAuth token exchange."""
+    code: str
+    state: str | None = None
+    redirect_uri: str
+
+
+class OAuthTokenResponse(BaseModel):
+    """Response from OAuth token exchange."""
+    access_token: str
+    token_type: str = "bearer"
+    scope: str = ""
+
+
+class OAuthRevokeRequest(BaseModel):
+    """Request to revoke OAuth token."""
+    access_token: str
