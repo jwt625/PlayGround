@@ -517,9 +517,19 @@ async def deploy_to_github(
             conversion_job_id=conversion_job_id
         )
 
-        repo_response = await github_service.create_repository_from_template(
-            repo_request
-        )
+        # Use dual deployment if enabled in config
+        if request.get("enable_dual_deployment", True):
+            dual_result = await github_service.create_dual_deployment(repo_request)
+            repo_response = CreateRepositoryResponse(
+                repository=dual_result.standalone_repo,
+                deployment_id=dual_result.deployment_id,
+                status=dual_result.status,
+                message=dual_result.message
+            )
+        else:
+            repo_response = await github_service.create_repository_from_template(
+                repo_request
+            )
 
         # Deploy content automatically
         deploy_config = DeploymentConfig(
@@ -738,6 +748,66 @@ async def test_optimized_deployment(
         raise HTTPException(
             status_code=500,
             detail=f"Optimized deployment test failed: {str(e)}"
+        )
+
+
+@app.post("/api/github/test-dual-deploy")
+async def test_dual_deploy(
+    authorization: str = Header(..., alias="Authorization")
+) -> dict[str, Any]:
+    """Test the dual deployment system."""
+    if not authorization or not authorization.startswith("Bearer "):
+        raise HTTPException(status_code=401, detail="Authorization header required")
+
+    access_token = authorization.replace("Bearer ", "")
+
+    try:
+        github_service = GitHubService(access_token)
+
+        # Create test dual deployment
+        import time
+        test_repo_name = f"test-dual-{int(time.time())}"
+
+        repo_request = CreateRepositoryRequest(
+            name=test_repo_name,
+            description="Test dual deployment system",
+            template=TemplateType.MINIMAL_ACADEMIC,
+            conversion_job_id="test-dual-deployment"
+        )
+
+        # Test dual deployment
+        result = await github_service.create_dual_deployment(repo_request)
+
+        return {
+            "success": True,
+            "approach": "dual_deployment",
+            "standalone_repo": {
+                "name": result.standalone_repo.name,
+                "url": result.standalone_repo.html_url,
+                "pages_url": result.standalone_url
+            },
+            "main_repo": {
+                "name": result.main_repo.name if result.main_repo else None,
+                "url": result.main_repo.html_url if result.main_repo else None,
+                "sub_route_url": result.sub_route_url
+            },
+            "deployment_id": result.deployment_id,
+            "status": result.status.value,
+            "message": result.message,
+            "benefits": [
+                "✅ Standalone paper repository created",
+                "✅ Main GitHub Pages repo setup/updated",
+                "✅ Paper added to main repo papers collection",
+                "✅ Sync workflow configured",
+                "✅ Both URLs available for sharing"
+            ]
+        }
+
+    except Exception as e:
+        logger.error(f"Dual deployment test failed: {e}")
+        raise HTTPException(
+            status_code=500,
+            detail=f"Dual deployment test failed: {str(e)}"
         )
 
 

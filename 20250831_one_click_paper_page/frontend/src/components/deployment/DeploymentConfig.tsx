@@ -25,6 +25,7 @@ export interface DeploymentConfiguration {
   template: string;
   paperTitle: string;
   paperAuthors: string[];
+  enableDualDeployment?: boolean;
 }
 
 export function DeploymentConfig({
@@ -54,6 +55,7 @@ export function DeploymentConfig({
       template: initialConfig.template || "minimal-academic",
       paperTitle: initialConfig.paperTitle || "",
       paperAuthors: initialConfig.paperAuthors || [],
+      enableDualDeployment: initialConfig.enableDualDeployment !== false, // Default to true
     };
   });
 
@@ -220,6 +222,26 @@ export function DeploymentConfig({
           <p className="help-text">
             Repository name must contain only letters, numbers, hyphens,
             underscores, and periods.
+          </p>
+        </div>
+      </div>
+
+      {/* Simplified Deployment Info */}
+      <div className="config-section">
+        <h4>🏠 GitHub Pages Deployment</h4>
+
+        <div className="deployment-info">
+          <p className="help-text">
+            Your paper will be automatically deployed to GitHub Pages:
+          </p>
+          <ul className="deployment-benefits">
+            <li>🌐 <strong>Website URL:</strong> username.github.io/{config.repositoryName || 'your-paper'}</li>
+            <li>📄 <strong>Repository:</strong> github.com/username/{config.repositoryName || 'your-paper'}</li>
+            <li>⚡ <strong>Automatic:</strong> GitHub Pages serves your content automatically</li>
+            <li>🔧 <strong>Simple:</strong> One repository, one deployment, no complex setup</li>
+          </ul>
+          <p className="note">
+            ✨ Clean and simple - GitHub automatically makes your repository available as a website!
           </p>
         </div>
       </div>

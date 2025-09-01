@@ -91,6 +91,57 @@ function App() {
     }
   };
 
+  const handleTestDualDeployment = async () => {
+    if (!token) {
+      alert("Please authenticate with GitHub first");
+      return;
+    }
+
+    setIsTestingDeployment(true);
+    setTestDeploymentResult(null);
+
+    try {
+      const response = await fetch(
+        "http://localhost:8000/api/github/test-dual-deploy",
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (!response.ok) {
+        const error = await response.text();
+        throw new Error(`Dual deployment test failed: ${error}`);
+      }
+
+      const result = await response.json();
+      setTestDeploymentResult(result);
+
+      // Show success message with simplified dual deployment benefits
+      alert(
+        `🏠 Simplified dual deployment successful!\n\n` +
+        `Repository: ${result.standalone_repo.name}\n` +
+        `Website URL: ${result.standalone_url}\n\n` +
+        `Benefits:\n` +
+        `✅ Jekyll workflow included in initial commit\n` +
+        `✅ GitHub Pages enabled automatically\n` +
+        `✅ Single commit - no timing issues\n` +
+        `✅ Automatic builds on every push\n\n` +
+        `Your paper will be built and deployed automatically!`
+      );
+    } catch (error) {
+      console.error("Dual deployment test failed:", error);
+      alert(
+        `Dual deployment test failed: ${error instanceof Error ? error.message : String(error)}`
+      );
+    } finally {
+      setIsTestingDeployment(false);
+    }
+  };
+
   const handleFilesSelected = (files: File[]) => {
     setSelectedFiles(files);
     if (files.length > 0) {
@@ -440,13 +491,22 @@ function App() {
             </div>
             {isAuthenticated && user && (
               <div className="flex items-center space-x-3">
-                <button
-                  onClick={handleTestDeployment}
-                  disabled={isTestingDeployment}
-                  className="px-3 py-1 text-sm bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  {isTestingDeployment ? "Testing..." : "🚀 Test Deploy"}
-                </button>
+                <div className="flex gap-2">
+                  <button
+                    onClick={handleTestDeployment}
+                    disabled={isTestingDeployment}
+                    className="px-3 py-1 text-sm bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {isTestingDeployment ? "Testing..." : "🚀 Test Deploy"}
+                  </button>
+                  <button
+                    onClick={handleTestDualDeployment}
+                    disabled={isTestingDeployment}
+                    className="px-3 py-1 text-sm bg-purple-600 text-white rounded-md hover:bg-purple-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {isTestingDeployment ? "Testing..." : "🏠 Dual Deploy"}
+                  </button>
+                </div>
                 <img
                   src={user.avatar_url}
                   alt={user.login}

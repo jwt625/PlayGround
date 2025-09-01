@@ -182,6 +182,30 @@ class DeploymentConfig(BaseModel):
     paper_title: str | None = None
     paper_authors: list[str] = Field(default_factory=list)
     paper_date: str | None = None
+    # Dual deployment options
+    enable_dual_deployment: bool = Field(default=True)
+    main_repo_name: str | None = None  # e.g., "username.github.io"
+
+
+class GitHubPagesRepo(BaseModel):
+    """GitHub Pages repository information."""
+    repository: GitHubRepository
+    is_pages_enabled: bool
+    pages_url: str | None = None
+    has_custom_domain: bool = False
+    custom_domain: str | None = None
+    papers_directory_exists: bool = False
+
+
+class DualDeploymentResult(BaseModel):
+    """Result of dual deployment operation."""
+    standalone_repo: GitHubRepository
+    main_repo: GitHubRepository | None = None
+    standalone_url: str
+    sub_route_url: str | None = None
+    deployment_id: str
+    status: DeploymentStatus
+    message: str
 
 
 # Template definitions moved to TemplateService

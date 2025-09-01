@@ -16,17 +16,17 @@ class TestConversionService:
     """Test cases for ConversionService."""
 
     @pytest.fixture
-    def temp_dir(self):
+    def temp_dir(self) -> Path:
         """Create a temporary directory for testing."""
         with tempfile.TemporaryDirectory() as tmp_dir:
             yield Path(tmp_dir)
 
     @pytest.fixture
-    def conversion_service(self, temp_dir):
+    def conversion_service(self, temp_dir: Path) -> ConversionService:
         """Create a ConversionService instance for testing."""
         return ConversionService(temp_dir=temp_dir)
 
-    def test_create_job(self, conversion_service):
+    def test_create_job(self, conversion_service: ConversionService) -> None:
         """Test job creation."""
         job_id = conversion_service.create_job(ConversionMode.AUTO)
 
