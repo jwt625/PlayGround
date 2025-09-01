@@ -25,7 +25,6 @@ from models.github import (
     DeploymentStatusResponse,
     DualDeploymentResult,
     FileContent,
-    GitHubPagesRepo,
     GitHubRepository,
     GitHubUser,
     TemplateInfo,
@@ -116,174 +115,114 @@ class GitHubService:
                 data = await response.json()
                 return GitHubUser(**data)
 
-    async def detect_github_pages_repo(self) -> GitHubPagesRepo | None:
+    async def create_repository_from_template(
+        self,
+        request: CreateRepositoryRequest
+    ) -> CreateRepositoryResponse:
         """
-        Detect if user has an existing GitHub Pages repository.
-
-        Checks for:
-        1. username.github.io repository
-        2. Organization pages (orgname.github.io)
-        3. Custom domain configurations
-
-        Returns:
-            GitHubPagesRepo if found, None otherwise
-        """
-        try:
-            user = await self.get_authenticated_user()
-
-            # Check for personal GitHub Pages repo (username.github.io)
-            pages_repo_name = f"{user.login}.github.io"
-
-            async with aiohttp.ClientSession() as session:
-                # Try to get the repository
-                async with session.get(
-                    f"{self.base_url}/repos/{user.login}/{pages_repo_name}",
-                    headers=self.headers
-                ) as response:
-                    if response.status == 200:
-                        repo_data = await response.json()
-                        repository = GitHubRepository(**repo_data)
-
-                        # Check if GitHub Pages is enabled
-                        pages_info = await self._get_pages_info(repository)
-
-                        # Check if papers/ directory exists
-                        papers_dir_exists = await self._check_papers_directory(
-                            repository
-                        )
-
-                        return GitHubPagesRepo(
-                            repository=repository,
-                            is_pages_enabled=pages_info["enabled"],
-                            pages_url=pages_info.get("url"),
-                            has_custom_domain=(
-                                pages_info.get("custom_domain") is not None
-                            ),
-                            custom_domain=pages_info.get("custom_domain"),
-                            papers_directory_exists=papers_dir_exists
-                        )
-                    elif response.status == 404:
-                        # Repository doesn't exist
-                        return None
-                    else:
-                        logger.warning(
-                            f"Unexpected response checking for Pages repo: "
-                            f"{response.status}"
-                        )
-                        return None
-
-        except Exception as e:
-            logger.error(f"Failed to detect GitHub Pages repo: {e}")
-            return None
-
-    async def _get_pages_info(self, repository: GitHubRepository) -> dict[str, Any]:
-        """Get GitHub Pages information for a repository."""
-        try:
-            async with aiohttp.ClientSession() as session:
-                async with session.get(
-                    f"{self.base_url}/repos/{repository.full_name}/pages",
-                    headers=self.headers
-                ) as response:
-                    if response.status == 200:
-                        pages_data = await response.json()
-                        return {
-                            "enabled": True,
-                            "url": pages_data.get("html_url"),
-                            "custom_domain": pages_data.get("cname"),
-                            "source": pages_data.get("source", {})
-                        }
-                    elif response.status == 404:
-                        return {"enabled": False}
-                    else:
-                        logger.warning(
-                            f"Unexpected response getting pages info: {response.status}"
-                        )
-                        return {"enabled": False}
-        except Exception as e:
-            logger.error(f"Failed to get pages info: {e}")
-            return {"enabled": False}
-
-    async def _check_papers_directory(self, repository: GitHubRepository) -> bool:
-        """Check if papers/ directory exists in the repository."""
-        try:
-            async with aiohttp.ClientSession() as session:
-                async with session.get(
-                    f"{self.base_url}/repos/{repository.full_name}/contents/papers",
-                    headers=self.headers
-                ) as response:
-                    return response.status == 200
-        except Exception as e:
-            logger.debug(
-                f"Papers directory check failed (expected if doesn't exist): {e}"
-            )
-            return False
-
-
-
-
-
-    async def create_dual_deployment(
-        self, request: CreateRepositoryRequest
-    ) -> DualDeploymentResult:
-        """
-        Create simplified dual deployment: one paper repo serves both URLs.
-
-        This method:
-        1. Creates standalone paper repository with optimized template
-        2. Adds Jekyll GitHub Pages workflow
-        3. Enables GitHub Pages with Actions
-        4. Returns both URL patterns (same content, same repo)
+        Create a new repository by forking from the actual template repository.
 
         Args:
             request: Repository creation request
 
         Returns:
-            DualDeploymentResult with repository and URL information
+            Repository creation response with deployment tracking
         """
-        logger.info(f"🚀 Starting simplified dual deployment for: {request.name}")
-
         try:
-            user = await self.get_authenticated_user()
+            # Get template repository configuration
+            template_repo = self.template_service.get_template_repository(
+                request.template
+            )
 
-            # Create standalone paper repository with Jekyll workflow included
-            logger.info("📄 Creating paper repository with Jekyll workflow...")
-            repo_response = await self.create_repository_optimized(request)
+            # Step 1: Fork the template repository
+            logger.info(f"Forking template repository {template_repo.full_name}")
 
-            # Enable GitHub Pages with Actions (Jekyll workflow already included)
-            logger.info("🔧 Enabling GitHub Pages...")
-            await self._enable_github_pages_with_actions(repo_response.repository)
+            fork_data = {
+                "name": request.name,
+                "default_branch_only": True,  # Only fork the default branch
+            }
 
-            # Generate URLs - both point to the same repository's GitHub Pages
-            base_url = f"https://{user.login}.github.io/{request.name}"
+            async with aiohttp.ClientSession() as session:
+                async with session.post(
+                    f"{self.base_url}/repos/{template_repo.repository_owner}/"
+                    f"{template_repo.repository_name}/forks",
+                    headers=self.headers,
+                    json=fork_data
+                ) as response:
+                    if response.status != 202:  # GitHub returns 202 for fork creation
+                        error_data = await response.text()
+                        logger.error(
+                            f"Fork creation failed: {response.status} - {error_data}"
+                        )
+                        # Fallback to regular repository creation
+                        return await self._create_regular_repository_with_workflows(
+                            request
+                        )
 
-            logger.info("✅ Simplified dual deployment completed successfully")
+                    repo_json = await response.json()
 
-            return DualDeploymentResult(
-                standalone_repo=repo_response.repository,
-                main_repo=None,  # No separate main repo needed
-                standalone_url=base_url,
-                sub_route_url=base_url + "/",  # Same content, different URL pattern
-                deployment_id=repo_response.deployment_id,
+            # Convert to our model
+            repository = GitHubRepository(
+                id=repo_json["id"],
+                name=repo_json["name"],
+                full_name=repo_json["full_name"],
+                description=repo_json.get("description"),
+                html_url=repo_json["html_url"],
+                clone_url=repo_json["clone_url"],
+                ssh_url=repo_json["ssh_url"],
+                default_branch=repo_json["default_branch"],
+                private=repo_json["private"],
+                owner=GitHubUser(
+                    id=repo_json["owner"]["id"],
+                    login=repo_json["owner"]["login"],
+                    name=repo_json["owner"].get("name"),
+                    email=repo_json["owner"].get("email"),
+                    avatar_url=repo_json["owner"]["avatar_url"],
+                    html_url=repo_json["owner"]["html_url"],
+                ),
+                created_at=datetime.fromisoformat(
+                    repo_json["created_at"].replace("Z", "+00:00")
+                ),
+                updated_at=datetime.fromisoformat(
+                    repo_json["updated_at"].replace("Z", "+00:00")
+                ),
+            )
+
+            # Step 2: Wait for fork to be ready, then enable GitHub Pages
+            await asyncio.sleep(3)  # Give GitHub time to set up the fork
+            await self._enable_github_pages(repository)
+
+            # Create deployment job for tracking
+            deployment_id = str(uuid.uuid4())
+            deployment_job = DeploymentJob(
+                id=deployment_id,
+                repository=repository,
+                conversion_job_id=request.conversion_job_id,
+                status=DeploymentStatus.PENDING,
+                template=request.template,
+                created_at=datetime.now(),
+            )
+
+            self._deployments[deployment_id] = deployment_job
+
+            logger.info(
+                f"Forked repository {repository.full_name} from template "
+                f"{template_repo.full_name} with deployment {deployment_id}"
+            )
+
+            return CreateRepositoryResponse(
+                repository=repository,
+                deployment_id=deployment_id,
                 status=DeploymentStatus.PENDING,
                 message=(
-                    "Paper repository created with GitHub Pages workflow. "
-                    "Jekyll will build and deploy automatically."
-                )
+                    "Repository created with GitHub Actions workflows. "
+                    "Ready for content upload."
+                ),
             )
 
         except Exception as e:
-            logger.error(f"❌ Simplified dual deployment failed: {e}")
+            logger.error(f"Failed to create repository from template: {e}")
             raise
-
-
-
-
-
-
-
-
-
-    # Note: create_repository_from_template removed - replaced by optimized approach
 
     # Main repository creation method - now uses optimized approach
     async def create_repository(
@@ -482,7 +421,7 @@ class GitHubService:
             # Step 3: Copy template content using Git API
             await self._copy_template_content_bulk(repository, template_data)
 
-            # Step 4: Enable GitHub Pages (Jekyll workflow included in initial commit)
+            # Step 5: Enable GitHub Pages
             await self._enable_github_pages_with_actions(repository)
 
             # Create deployment job
@@ -509,6 +448,53 @@ class GitHubService:
 
         except Exception as e:
             logger.error(f"❌ Failed to create optimized repository: {e}")
+            raise
+
+    async def create_dual_deployment(
+        self, request: CreateRepositoryRequest
+    ) -> DualDeploymentResult:
+        """
+        Create dual deployment: standalone paper repository with automatic GitHub Pages.
+
+        Based on simplified architecture from DevLog-006:
+        - Creates single paper repository with optimized template
+        - Enables automatic GitHub Pages at username.github.io/repo-name/
+        - No complex dual-repo management needed
+
+        Args:
+            request: Repository creation request
+
+        Returns:
+            DualDeploymentResult with standalone repository info
+        """
+        logger.info(f"🏠 Creating dual deployment for: {request.name}")
+
+        try:
+            # Use optimized repository creation for the standalone repo
+            repo_response = await self.create_repository_optimized(request)
+
+            # Generate URLs for the standalone deployment
+            standalone_url = f"https://{repo_response.repository.owner.login}.github.io/{repo_response.repository.name}/"
+
+            # In simplified architecture, the sub-route URL is the same as standalone
+            # since GitHub automatically serves repos at username.github.io/repo-name/
+            sub_route_url = standalone_url
+
+            logger.info(f"✅ Dual deployment created: {repo_response.repository.full_name}")
+            logger.info(f"📍 Standalone URL: {standalone_url}")
+
+            return DualDeploymentResult(
+                standalone_repo=repo_response.repository,
+                main_repo=None,  # Not needed in simplified architecture
+                standalone_url=standalone_url,
+                sub_route_url=sub_route_url,
+                deployment_id=repo_response.deployment_id,
+                status=repo_response.status,
+                message="Dual deployment created with simplified architecture - single repository with automatic GitHub Pages."
+            )
+
+        except Exception as e:
+            logger.error(f"❌ Failed to create dual deployment: {e}")
             raise
 
     async def get_deployment_status(
@@ -756,6 +742,7 @@ class GitHubService:
     async def _prepare_deployment_files(
         self,
         content_dir: Path,
+        template: TemplateInfo,
         config: DeploymentConfig,
     ) -> list[FileContent]:
         """Prepare files for deployment."""
@@ -782,80 +769,10 @@ class GitHubService:
                             encoding="base64"
                         ))
 
-        # Add Jekyll workflow for GitHub Pages
-        jekyll_workflow = self._get_jekyll_workflow_content()
-        files.append(FileContent(
-            path=".github/workflows/jekyll.yml",
-            content=jekyll_workflow
-        ))
-
         # Template files are already in the cloned repository - no need to add them
         # manually
 
         return files
-
-    def _get_jekyll_workflow_content(self) -> str:
-        """Get Jekyll workflow content for GitHub Pages deployment."""
-        return """# Jekyll GitHub Pages deployment workflow
-name: Deploy Jekyll site to Pages
-
-on:
-  # Runs on pushes targeting the default branch
-  push:
-    branches: ["main"]
-
-  # Allows you to run this workflow manually from the Actions tab
-  workflow_dispatch:
-
-# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
-permissions:
-  contents: read
-  pages: write
-  id-token: write
-
-# Allow only one concurrent deployment, skipping runs queued between
-# the run in-progress and latest queued. However, do NOT cancel in-progress
-# runs as we want to allow these production deployments to complete.
-concurrency:
-  group: "pages"
-  cancel-in-progress: false
-
-jobs:
-  # Build job
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: Setup Ruby
-        uses: ruby/setup-ruby@4a9ddd6f338a97768b8006bf671dfbad383215f4
-        with:
-          ruby-version: '3.1'
-          bundler-cache: true
-          cache-version: 0
-      - name: Setup Pages
-        id: pages
-        uses: actions/configure-pages@v5
-      - name: Build with Jekyll
-        run: |
-          bundle exec jekyll build --baseurl "${{ steps.pages.outputs.base_path }}"
-        env:
-          JEKYLL_ENV: production
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
-
-  # Deployment job
-  deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
-    needs: build
-    steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
-"""
 
     def _customize_content(self, content: str, config: DeploymentConfig) -> str:
         """Customize content with paper metadata."""
@@ -905,13 +822,254 @@ jobs:
 
         return content
 
-    # Note: test_deployment_workflow removed - replaced by optimized approach
+    async def test_deployment_workflow(self) -> dict[str, Any]:
+        """
+        Full deployment test: fork template repo, commit test content, setup CI/CD.
 
+        This method tests the complete deployment pipeline:
+        1. Fork a template repository
+        2. Wait for fork to be ready
+        3. Add test commit
+        4. Set up GitHub Actions CI/CD for deployment
+        """
+        import time
+        from datetime import datetime
 
+        test_repo_name = f"test-deployment-{int(time.time())}"
 
-    # Note: _wait_for_fork_ready_async removed - no longer needed
+        # Step 1: Fork template repository
+        template_owner = "academicpages"
+        template_repo = "academicpages.github.io"
 
-    # Note: _commit_test_content removed - no longer needed with optimized approach
+        logger.info(f"Forking template repository: {template_owner}/{template_repo}")
+
+        fork_data = {
+            "name": test_repo_name,
+            "default_branch_only": True  # Only fork the default branch for faster setup
+        }
+
+        async with aiohttp.ClientSession() as session:
+            async with session.post(
+                f"https://api.github.com/repos/{template_owner}/{template_repo}/forks",
+                headers=self.headers,
+                json=fork_data
+            ) as response:
+                if response.status != 202:
+                    error_text = await response.text()
+                    raise Exception(
+                        f"Failed to fork repository: {response.status} - {error_text}"
+                    )
+
+                repo_info = await response.json()
+                logger.info(f"Fork initiated: {repo_info['html_url']}")
+
+        # Step 2: Wait for fork to be ready and get default branch
+        logger.info("Waiting for fork to be ready...")
+        default_branch = await self._wait_for_fork_ready_async(
+            repo_info, max_wait_seconds=60
+        )
+
+        # Step 3: Create test content for the forked academic template
+        logger.info(
+            f"Adding test content to forked repository on branch '{default_branch}'"
+        )
+
+        # Create a test paper content that fits the academic template
+        test_paper_content = f"""---
+title: "Test Paper: Validating One-Click Paper Deployment"
+collection: publications
+permalink: /publication/test-paper-{int(time.time())}
+excerpt: 'This is a test paper created to validate the one-click paper deployment.'
+date: {datetime.now().strftime('%Y-%m-%d')}
+venue: 'Test Conference on Automated Academic Publishing'
+paperurl: 'http://academicpages.github.io/files/test-paper.pdf'
+citation: 'Test Author. (2025). &quot;Test Paper: Validating One-Click Paper
+    Deployment.&quot; <i>Test Conference</i>. 1(1).'
+---
+
+# Test Paper: Validating One-Click Paper Deployment
+
+## Abstract
+
+This test paper validates the functionality of the one-click paper deployment
+system. The system successfully:
+
+1. ✅ Authenticated with GitHub OAuth
+2. ✅ Forked the academic template repository
+3. ✅ Added test content to the forked repository
+4. ✅ Set up GitHub Actions CI/CD pipeline
+5. ✅ Deployed to GitHub Pages
+
+## Introduction
+
+The one-click paper deployment system enables researchers to quickly convert
+their academic papers into professional websites hosted on GitHub Pages.
+
+## Methodology
+
+This test validates the core deployment pipeline by:
+- Forking the academicpages template
+- Adding test publication content
+- Triggering automated deployment
+
+## Results
+
+**Repository**: {test_repo_name}
+**Created**: {datetime.now().isoformat()}
+**Template**: academicpages/academicpages.github.io
+**Status**: ✅ Deployment successful
+
+## Conclusion
+
+The one-click paper deployment system is functioning correctly and ready for
+production use.
+
+---
+
+*This test paper was automatically generated by the one-click-paper-page service.*
+"""
+
+        # Step 4: Add test publication to the academic template
+        logger.info(f"Adding test publication to {test_repo_name}")
+
+        publication_filename = f"test-paper-{int(time.time())}.md"
+        commit_sha = await self._commit_test_content(
+            repo_info, publication_filename, test_paper_content, default_branch
+        )
+
+        # Step 5: Set up GitHub Actions CI/CD and GitHub Pages with comprehensive
+        # testing
+        deployment_status = await self._setup_cicd_and_pages(repo_info, default_branch)
+
+        # Generate dynamic next steps based on actual deployment status
+        next_steps = [
+            "✅ Template repository forked successfully",
+            "✅ Test publication content added"
+        ]
+
+        if deployment_status["workflows_found"] > 0:
+            next_steps.append(
+                f"✅ Found {deployment_status['workflows_found']} GitHub Actions "
+                f"workflows"
+            )
+
+        if deployment_status["workflow_triggered"]:
+            next_steps.append(
+                f"✅ GitHub Actions workflow triggered: "
+                f"{deployment_status['latest_run_status']}"
+            )
+        else:
+            next_steps.append("⏳ Waiting for GitHub Actions workflow to trigger...")
+
+        if deployment_status["deployment_url"]:
+            next_steps.append(
+                f"🌐 Deployment URL: {deployment_status['deployment_url']}"
+            )
+
+        next_steps.extend([
+            "📝 Check the Actions tab for build progress",
+            "⏳ Full deployment may take 2-5 minutes",
+            "🔄 Refresh the Pages URL to see updates"
+        ])
+
+        return {
+            "success": True,
+            "test_repository": {
+                "name": test_repo_name,
+                "url": repo_info['html_url'],
+                "pages_url": deployment_status.get("deployment_url") or f"https://{repo_info['owner']['login']}.github.io/{test_repo_name}",
+                "template_source": f"{template_owner}/{template_repo}",
+                "actions_url": f"{repo_info['html_url']}/actions"
+            },
+            "deployment_details": {
+                "commit_sha": commit_sha,
+                "default_branch": default_branch,
+                "workflows_found": deployment_status["workflows_found"],
+                "workflow_triggered": deployment_status["workflow_triggered"],
+                "latest_run_status": deployment_status["latest_run_status"],
+                "pages_status": deployment_status["pages_status"]
+            },
+            "ci_cd_validation": deployment_status["ci_cd_validation"],
+            "message": "Template fork and CI/CD deployment testing completed",
+            "next_steps": next_steps
+        }
+
+    async def _wait_for_fork_ready_async(
+        self, repo_info: dict[str, Any], max_wait_seconds: int = 60
+    ) -> str:
+        """Wait for forked repository to be ready and return the default branch name."""
+        start_time = asyncio.get_event_loop().time()
+        repo_full_name = repo_info["full_name"]
+
+        while (asyncio.get_event_loop().time() - start_time) < max_wait_seconds:
+            try:
+                async with aiohttp.ClientSession() as session:
+                    # Check if repository is accessible
+                    async with session.get(
+                        f"{self.base_url}/repos/{repo_full_name}",
+                        headers=self.headers
+                    ) as response:
+                        if response.status == 200:
+                            repo_data = await response.json()
+                            default_branch = str(
+                                repo_data.get("default_branch", "main")
+                            )
+
+                            # Check if the default branch exists
+                            async with session.get(
+                                f"{self.base_url}/repos/{repo_full_name}/git/refs/heads/{default_branch}",
+                                headers=self.headers
+                            ) as branch_response:
+                                if branch_response.status == 200:
+                                    logger.info(
+                                        f"Fork {repo_full_name} is ready with branch "
+                                        f"'{default_branch}'"
+                                    )
+                                    return default_branch
+
+                logger.info(f"Fork {repo_full_name} not ready yet, waiting...")
+                await asyncio.sleep(3)
+
+            except Exception as e:
+                logger.warning(f"Error checking fork readiness: {e}")
+                await asyncio.sleep(3)
+
+        raise Exception(
+            f"Fork {repo_full_name} not ready after {max_wait_seconds} seconds"
+        )
+
+    async def _commit_test_content(
+        self, repo_info: dict[str, Any], filename: str, content: str, branch: str
+    ) -> str:
+        """Commit test content to the repository."""
+        import base64
+
+        publication_data = {
+            "message": "Add test publication to validate deployment",
+            "content": base64.b64encode(content.encode()).decode(),
+            "branch": branch
+        }
+
+        async with aiohttp.ClientSession() as session:
+            async with session.put(
+                f"{self.base_url}/repos/{repo_info['full_name']}/contents/_publications/{filename}",
+                headers=self.headers,
+                json=publication_data
+            ) as response:
+                if response.status in [200, 201]:
+                    response_data = await response.json()
+                    commit_sha = str(
+                        response_data.get("commit", {}).get("sha", "unknown")
+                    )
+                    logger.info(f"Test publication committed: {commit_sha}")
+                    return commit_sha
+                else:
+                    error_text = await response.text()
+                    logger.warning(
+                        f"Failed to create test publication: {response.status} - "
+                        f"{error_text}"
+                    )
+                    return "failed"
 
     async def _setup_cicd_and_pages(
         self, repo_info: dict[str, Any], default_branch: str
@@ -1641,11 +1799,8 @@ jobs:
                                 json=new_blob_data
                             ) as new_blob_response:
                                 if new_blob_response.status != 201:
-                                    error_data = await new_blob_response.text()
-                                    file_path = file_item['path']
                                     logger.warning(
-                                        f"Failed to create blob for {file_path}: "
-                                        f"{new_blob_response.status} - {error_data}"
+                                        f"Failed to create blob: {file_item['path']}"
                                     )
                                     continue
 
@@ -1655,39 +1810,7 @@ jobs:
                                     "mode": file_item["mode"]
                                 }
 
-                # Step 3: Add Jekyll workflow file
-                jekyll_workflow_content = self._get_jekyll_workflow_content()
-                encoded_content = base64.b64encode(
-                    jekyll_workflow_content.encode()
-                ).decode()
-                jekyll_blob_data = {
-                    "content": encoded_content,
-                    "encoding": "base64"
-                }
-
-                async with session.post(
-                    f"{self.base_url}/repos/{repository.full_name}/git/blobs",
-                    headers=self.headers,
-                    json=jekyll_blob_data
-                ) as jekyll_blob_response:
-                    if jekyll_blob_response.status == 201:
-                        jekyll_blob_result = await jekyll_blob_response.json()
-                        blob_shas[".github/workflows/jekyll.yml"] = {
-                            "sha": jekyll_blob_result["sha"],
-                            "mode": "100644"
-                        }
-                        logger.info("✅ Added Jekyll workflow to repository")
-                    else:
-                        error_data = await jekyll_blob_response.text()
-                        logger.warning(
-                            f"Failed to create Jekyll workflow blob: "
-                            f"{jekyll_blob_response.status} - {error_data}"
-                        )
-
-                # Step 4: Create new tree with the new blob SHAs
-                if not blob_shas:
-                    raise Exception("No blobs were successfully created")
-
+                # Step 3: Create new tree with the new blob SHAs
                 tree_items = []
                 for file_path, blob_info in blob_shas.items():
                     tree_items.append({
@@ -1697,29 +1820,10 @@ jobs:
                         "sha": blob_info["sha"]  # Use new blob SHA from target repo
                     })
 
-                logger.info(f"Creating tree with {len(tree_items)} items")
 
-                # Get current tree to use as base (auto_init creates initial commit)
-                commit_url = (
-                    f"{self.base_url}/repos/{repository.full_name}/git/commits/"
-                    f"{current_commit_sha}"
-                )
-                async with session.get(
-                    commit_url, headers=self.headers
-                ) as commit_response:
-                    if commit_response.status != 200:
-                        raise Exception(
-                            f"Failed to get current commit: {commit_response.status}"
-                        )
 
-                    commit_data = await commit_response.json()
-                    base_tree_sha = commit_data["tree"]["sha"]
-
-                # Create tree with base_tree (since repo was auto-initialized)
-                tree_data = {
-                    "base_tree": base_tree_sha,
-                    "tree": tree_items
-                }
+                # Create tree
+                tree_data = {"tree": tree_items}
                 async with session.post(
                     f"{self.base_url}/repos/{repository.full_name}/git/trees",
                     headers=self.headers,
@@ -1727,7 +1831,6 @@ jobs:
                 ) as response:
                     if response.status != 201:
                         error_data = await response.json()
-                        logger.error(f"Tree creation failed with data: {tree_data}")
                         raise Exception(f"Failed to create tree: {error_data}")
 
                     new_tree_data = await response.json()
@@ -1838,28 +1941,92 @@ jobs:
         workflow_path = ".github/workflows/deploy.yml"
         workflow_content_b64 = base64.b64encode(workflow_content.encode()).decode()
 
-        file_data = {
-            "message": "Add GitHub Actions deployment workflow",
-            "content": workflow_content_b64,
-        }
-
         try:
             async with aiohttp.ClientSession() as session:
-                async with session.put(
-                    f"{self.base_url}/repos/{repository.full_name}/contents/{workflow_path}",
-                    headers=self.headers,
-                    json=file_data
+                # Use Git API approach (same as template copying) - this actually works!
+
+                # Step 1: Get current branch reference
+                async with session.get(
+                    f"{self.base_url}/repos/{repository.full_name}/git/refs/heads/{repository.default_branch}",
+                    headers=self.headers
                 ) as response:
-                    if response.status == 201:
-                        logger.info(
-                            f"✅ Deployment workflow added to {repository.full_name}"
-                        )
-                    else:
-                        error_data = await response.json()
-                        logger.warning(f"Failed to add workflow: {error_data}")
+                    if response.status != 200:
+                        raise Exception(f"Failed to get branch ref: {response.status}")
+
+                    ref_data = await response.json()
+                    current_commit_sha = ref_data["object"]["sha"]
+
+                # Step 2: Create blob for workflow file
+                workflow_blob_data = {
+                    "content": workflow_content_b64,
+                    "encoding": "base64"
+                }
+
+                async with session.post(
+                    f"{self.base_url}/repos/{repository.full_name}/git/blobs",
+                    headers=self.headers,
+                    json=workflow_blob_data
+                ) as blob_response:
+                    if blob_response.status != 201:
+                        raise Exception(f"Failed to create workflow blob: {blob_response.status}")
+
+                    blob_result = await blob_response.json()
+                    workflow_blob_sha = blob_result["sha"]
+
+                # Step 3: Create tree with workflow file
+                tree_items = [{
+                    "path": workflow_path,
+                    "mode": "100644",
+                    "type": "blob",
+                    "sha": workflow_blob_sha
+                }]
+
+                tree_data = {"tree": tree_items}
+                async with session.post(
+                    f"{self.base_url}/repos/{repository.full_name}/git/trees",
+                    headers=self.headers,
+                    json=tree_data
+                ) as tree_response:
+                    if tree_response.status != 201:
+                        tree_error = await tree_response.json()
+                        raise Exception(f"Failed to create tree: {tree_error}")
+
+                    tree_result = await tree_response.json()
+                    new_tree_sha = tree_result["sha"]
+
+                # Step 4: Create commit
+                commit_data = {
+                    "message": "Add GitHub Actions deployment workflow",
+                    "tree": new_tree_sha,
+                    "parents": [current_commit_sha]
+                }
+
+                async with session.post(
+                    f"{self.base_url}/repos/{repository.full_name}/git/commits",
+                    headers=self.headers,
+                    json=commit_data
+                ) as commit_response:
+                    if commit_response.status != 201:
+                        commit_error = await commit_response.json()
+                        raise Exception(f"Failed to create commit: {commit_error}")
+
+                    commit_result = await commit_response.json()
+                    new_commit_sha = commit_result["sha"]
+
+                # Step 5: Update branch reference
+                ref_update = {"sha": new_commit_sha}
+                async with session.patch(
+                    f"{self.base_url}/repos/{repository.full_name}/git/refs/heads/{repository.default_branch}",
+                    headers=self.headers,
+                    json=ref_update
+                ) as ref_response:
+                    if ref_response.status != 200:
+                        ref_error = await ref_response.json()
+                        raise Exception(f"Failed to update branch: {ref_error}")
+
+                logger.info(f"✅ Deployment workflow added to {repository.full_name}")
 
         except Exception as e:
             logger.error(f"❌ Failed to add deployment workflow: {e}")
             # Don't fail the entire process if workflow addition fails
-
 
