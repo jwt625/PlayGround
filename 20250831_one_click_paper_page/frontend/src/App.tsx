@@ -55,7 +55,8 @@ function App() {
     setTestDeploymentResult(null);
 
     try {
-      const response = await fetch('http://localhost:8000/api/github/test-deploy', {
+      // Use the optimized deployment approach
+      const response = await fetch('http://localhost:8000/api/github/test-deploy-optimized', {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -71,16 +72,18 @@ function App() {
       const result = await response.json();
       setTestDeploymentResult(result);
 
-      // Show success message
-      alert(`Test deployment successful!\n\nRepository: ${result.test_repository.name}\nURL: ${result.test_repository.url}\nPages URL: ${result.test_repository.pages_url}\n\nCheck the repository and wait a few minutes for GitHub Pages to build.`);
+      // Show success message with optimized approach benefits
+      alert(`🚀 Test deployment successful!\n\nRepository: ${result.repository.name}\nURL: ${result.repository.url}\nPages URL: ${result.repository.pages_url}\n\nThis uses our optimized approach with:\n✅ No fork security issues\n✅ Faster deployment\n✅ Automatic workflow setup\n\nCheck the repository - it should deploy automatically!`);
 
     } catch (error) {
       console.error('Test deployment failed:', error);
-      alert(`Test deployment failed: ${error.message}`);
+      alert(`Test deployment failed: ${error instanceof Error ? error.message : String(error)}`);
     } finally {
       setIsTestingDeployment(false);
     }
   };
+
+
 
   const handleFilesSelected = (files: File[]) => {
     setSelectedFiles(files);
@@ -403,9 +406,9 @@ function App() {
                 <button
                   onClick={handleTestDeployment}
                   disabled={isTestingDeployment}
-                  className="px-3 py-1 text-sm bg-green-600 text-white rounded-md hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="px-3 py-1 text-sm bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  {isTestingDeployment ? 'Testing...' : '🧪 Test Deploy'}
+                  {isTestingDeployment ? 'Testing...' : '🚀 Test Deploy'}
                 </button>
                 <img
                   src={user.avatar_url}

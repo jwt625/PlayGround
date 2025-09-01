@@ -31,12 +31,10 @@ from models.conversion import (
     ConversionStatusResponse,
 )
 from models.github import (
-    CommitRequest,
     CreateRepositoryRequest,
     CreateRepositoryResponse,
     DeploymentConfig,
     DeploymentStatusResponse,
-    FileContent,
     OAuthRevokeRequest,
     OAuthTokenRequest,
     OAuthTokenResponse,
@@ -67,19 +65,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Pydantic models for request/response
-class OAuthTokenRequest(BaseModel):
-    code: str
-    state: str | None = None
-    redirect_uri: str
-
-class OAuthTokenResponse(BaseModel):
-    access_token: str
-    token_type: str
-    scope: str
-
-class OAuthRevokeRequest(BaseModel):
-    access_token: str
+# Additional Pydantic models for request/response
 
 class ErrorResponse(BaseModel):
     message: str
@@ -438,7 +424,9 @@ async def enable_github_pages_backup(
         # Get access token from request headers
         auth_header = request.headers.get("authorization")
         if not auth_header or not auth_header.startswith("Bearer "):
-            raise HTTPException(status_code=401, detail="Missing or invalid authorization header")
+            raise HTTPException(
+                status_code=401, detail="Missing or invalid authorization header"
+            )
 
         access_token = auth_header.split(" ")[1]
         github_service = GitHubService(access_token)
@@ -449,7 +437,9 @@ async def enable_github_pages_backup(
             raise HTTPException(status_code=404, detail="Deployment not found")
 
         # Enable GitHub Pages as backup
-        success = await github_service.enable_github_pages_as_backup(deployment.repository)
+        success = await github_service.enable_github_pages_as_backup(
+            deployment.repository
+        )
 
         if success:
             return {
@@ -527,7 +517,9 @@ async def deploy_to_github(
             conversion_job_id=conversion_job_id
         )
 
-        repo_response = await github_service.create_repository_from_template(repo_request)
+        repo_response = await github_service.create_repository_from_template(
+            repo_request
+        )
 
         # Deploy content automatically
         deploy_config = DeploymentConfig(
@@ -697,6 +689,55 @@ async def get_deployment_status(
         raise HTTPException(
             status_code=500,
             detail=f"Failed to get deployment status: {str(e)}"
+        )
+
+
+@app.post("/api/github/test-deploy-optimized")
+async def test_optimized_deployment(
+    authorization: str = Header(None),
+) -> dict[str, Any]:
+    """Test the optimized deployment approach - simplified for debugging."""
+    if not authorization or not authorization.startswith("Bearer "):
+        raise HTTPException(
+            status_code=401,
+            detail="GitHub OAuth token required. Please authenticate first."
+        )
+
+    access_token = authorization.replace("Bearer ", "")
+
+    try:
+        github_service = GitHubService(access_token)
+
+        # Simple test - just create the request object first
+        import time
+        test_repo_name = f"test-optimized-{int(time.time())}"
+
+        # Create request with minimal data
+        request = CreateRepositoryRequest(
+            name=test_repo_name,
+            description="Test optimized deployment",
+            template=TemplateType.ACADEMIC_PAGES,
+            conversion_job_id="test-optimized"
+        )
+
+        # Test the optimized approach
+        result = await github_service.create_repository_optimized(request)
+
+        return {
+            "success": True,
+            "repository": {
+                "name": result.repository.name,
+                "url": result.repository.html_url,
+            },
+            "deployment_id": result.deployment_id,
+            "message": "Optimized deployment test successful"
+        }
+
+    except Exception as e:
+        logger.error(f"Optimized deployment test failed: {e}")
+        raise HTTPException(
+            status_code=500,
+            detail=f"Optimized deployment test failed: {str(e)}"
         )
 
 

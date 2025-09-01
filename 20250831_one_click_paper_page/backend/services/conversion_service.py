@@ -27,10 +27,10 @@ logger = logging.getLogger(__name__)
 sys.path.append(str(Path(__file__).parent.parent.parent / "scripts"))
 
 try:
-    from marker_converter import (
+    from marker_converter import (  # type: ignore[import-not-found]
         ConversionMode as ScriptConversionMode,
     )
-    from marker_converter import (  # type: ignore[import-not-found]
+    from marker_converter import (
         MarkerConverter as ScriptMarkerConverter,
     )
     MARKER_AVAILABLE = True
@@ -436,7 +436,10 @@ class ConversionService:
         import threading
         import time
 
-        conversion_result: dict[str, bool | str | None] = {"success": False, "error": None}
+        conversion_result: dict[str, bool | str | None] = {
+            "success": False,
+            "error": None
+        }
         progress_thread_active = True
 
         def progress_updater() -> None:
