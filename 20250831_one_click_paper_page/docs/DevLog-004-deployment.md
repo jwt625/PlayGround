@@ -397,4 +397,161 @@ The current deployment system fails at multiple critical points and needs major 
 
 ---
 
-**Next DevLog**: Will document the complete redesign of the deployment system to handle GitHub API timing issues and fork readiness properly.
+## Update: Minimal Deployment Workflow Testing
+
+**Date**: 2025-09-01
+**Focus**: Implementing and testing minimal deployment workflow to validate GitHub integration
+**Status**: 🚧 IN PROGRESS
+
+### Background
+
+Following the complete deployment system failures documented above, we implemented a minimal deployment workflow test to validate the core GitHub integration without the complex conversion pipeline. This approach allows us to isolate and fix GitHub API integration issues.
+
+### Implementation: Test Deployment Endpoint
+
+#### ✅ Created `/api/github/test-deploy` Endpoint
+
+**Purpose**: Test the complete deployment pipeline with minimal complexity:
+1. Fork a real academic template repository
+2. Add test content (academic publication)
+3. Enable GitHub Actions on the fork
+4. Set up GitHub Pages with CI/CD
+5. Monitor workflow execution and deployment
+
+**Architecture Improvements**:
+- **✅ Moved logic to GitHubService** - Removed 300+ lines from main.py, properly organized in services
+- **✅ Added comprehensive testing** - Validates workflows, Pages setup, deployment status
+- **✅ Enhanced error handling** - Graceful handling of GitHub API timing issues
+- **✅ Detailed logging** - Step-by-step progress tracking with emojis for clarity
+
+#### ✅ Frontend Integration
+
+**Added Test Button**: "🧪 Test Deploy" button in header when authenticated
+- Uses existing OAuth tokens
+- Provides detailed success/error feedback
+- Shows repository URLs and next steps
+
+### Test Results
+
+#### ✅ Successful Components
+
+1. **🍴 Repository Forking**: Successfully forks `academicpages/academicpages.github.io`
+   - Fork creation works reliably
+   - Repository appears in user's GitHub account
+   - Template structure preserved
+
+2. **📝 Content Commits**: Successfully adds test publication
+   - Creates proper Jekyll frontmatter in `_publications/` directory
+   - Commit appears in repository history
+   - Content follows academic template structure
+
+3. **⏳ Fork Readiness Detection**: Properly waits for fork to be ready
+   - Detects actual default branch (not hardcoded)
+   - Polls until repository is accessible
+   - Handles GitHub API timing issues
+
+4. **🔍 Workflow Discovery**: Successfully detects existing workflows
+   - Finds GitHub Actions workflows in template
+   - Reports workflow names and states
+   - Validates template has CI/CD configured
+
+#### ❌ Current Issue: GitHub Actions Security
+
+**Problem**: GitHub automatically disables workflows on forked repositories for security reasons.
+
+**Error Message**:
+```
+"Workflows aren't being run on this forked repository
+Because this repository contained workflow files when it was forked,
+we have disabled them from running on this fork. Make sure you understand
+the configured workflows and their expected usage before enabling Actions
+on this repository."
+```
+
+**Attempted Solution**: Added `_enable_github_actions()` method using GitHub API:
+```http
+PUT /repos/{owner}/{repo}/actions/permissions
+{
+  "enabled": true,
+  "allowed_actions": "all"
+}
+```
+
+**Status**: API call executes without error, but Actions remain disabled. This may require:
+- Different API endpoint or permissions
+- Manual enablement through GitHub UI
+- Alternative approach to workflow triggering
+
+### Current Test Workflow Status
+
+#### ✅ Working Steps:
+1. **Fork Template Repository** - ✅ Complete
+2. **Wait for Fork Readiness** - ✅ Complete
+3. **Add Test Content** - ✅ Complete
+4. **Detect Workflows** - ✅ Complete
+5. **Setup GitHub Pages** - ✅ Complete
+
+#### ❌ Blocked Steps:
+6. **Enable GitHub Actions** - ❌ Actions remain disabled despite API call
+7. **Trigger Workflow** - ❌ Cannot trigger due to disabled Actions
+8. **Monitor Deployment** - ❌ No workflow runs to monitor
+
+### Comprehensive Test Response
+
+The test now returns detailed deployment information:
+
+```json
+{
+  "success": true,
+  "test_repository": {
+    "name": "test-deployment-1756710785",
+    "url": "https://github.com/jwt625/test-deployment-1756710785",
+    "pages_url": "https://jwt625.github.io/test-deployment-1756710785",
+    "template_source": "academicpages/academicpages.github.io",
+    "actions_url": "https://github.com/jwt625/test-deployment-1756710785/actions"
+  },
+  "deployment_details": {
+    "commit_sha": "abc123...",
+    "default_branch": "master",
+    "workflows_found": 2,
+    "workflow_triggered": false,
+    "latest_run_status": "none",
+    "pages_status": "enabled with GitHub Actions"
+  },
+  "ci_cd_validation": [
+    "Found workflow: pages-deploy",
+    "Found workflow: ci",
+    "Actions enabled: enabled",
+    "Pages setup: enabled with GitHub Actions",
+    "No workflow runs triggered yet"
+  ]
+}
+```
+
+### Next Steps
+
+#### 🔍 Investigate GitHub Actions Enablement
+1. **Research alternative APIs** for enabling Actions on forks
+2. **Test manual enablement** through GitHub UI to confirm workflow functionality
+3. **Consider alternative approaches** (e.g., creating new repo instead of forking)
+
+#### 🧪 Alternative Testing Approaches
+1. **Manual workflow trigger** via GitHub API after manual Actions enablement
+2. **Repository dispatch events** to trigger workflows programmatically
+3. **Direct deployment** without relying on template workflows
+
+#### 📋 Validation Priorities
+1. **Confirm template workflows work** when Actions are manually enabled
+2. **Test GitHub Pages deployment** with Actions-based builds
+3. **Validate end-to-end pipeline** from commit to live site
+
+### Lessons Learned
+
+1. **GitHub Security Model**: Forked repositories have strict security controls that may require manual intervention
+2. **API Limitations**: Some GitHub features may not be fully controllable via API
+3. **Testing Strategy**: Minimal workflow testing successfully isolated the core issue
+4. **Architecture Benefits**: Moving logic to services improved code organization and testability
+
+---
+
+**Next DevLog**: Will document the resolution of GitHub Actions enablement and complete CI/CD pipeline validation.
