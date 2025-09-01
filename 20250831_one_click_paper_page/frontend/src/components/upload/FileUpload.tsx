@@ -25,35 +25,6 @@ export const FileUpload: React.FC<FileUploadProps> = ({
   const dropZoneRef = useRef<HTMLDivElement>(null);
   const dragDropHandler = useRef<DragDropHandler | null>(null);
 
-  useEffect(() => {
-    if (dropZoneRef.current) {
-      dragDropHandler.current = new DragDropHandler(
-        dropZoneRef.current,
-        handleFilesDropped
-      );
-    }
-
-    return () => {
-      dragDropHandler.current?.destroy();
-    };
-  }, [handleFilesDropped]);
-
-  const handleFilesDropped = useCallback(
-    (files: FileList) => {
-      handleFileSelection(Array.from(files));
-    },
-    [handleFileSelection]
-  );
-
-  const handleFileInputChange = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const files = event.target.files;
-    if (files) {
-      handleFileSelection(Array.from(files));
-    }
-  };
-
   const handleFileSelection = useCallback(
     (files: File[]) => {
       const validFiles: File[] = [];
@@ -84,6 +55,35 @@ export const FileUpload: React.FC<FileUploadProps> = ({
     },
     [selectedFiles, fileDetections, maxFiles, onFilesSelected]
   );
+
+  const handleFilesDropped = useCallback(
+    (files: FileList) => {
+      handleFileSelection(Array.from(files));
+    },
+    [handleFileSelection]
+  );
+
+  useEffect(() => {
+    if (dropZoneRef.current) {
+      dragDropHandler.current = new DragDropHandler(
+        dropZoneRef.current,
+        handleFilesDropped
+      );
+    }
+
+    return () => {
+      dragDropHandler.current?.destroy();
+    };
+  }, [handleFilesDropped]);
+
+  const handleFileInputChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const files = event.target.files;
+    if (files) {
+      handleFileSelection(Array.from(files));
+    }
+  };
 
   const removeFile = (index: number) => {
     const newFiles = selectedFiles.filter((_, i) => i !== index);

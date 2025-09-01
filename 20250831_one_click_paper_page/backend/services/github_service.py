@@ -1720,18 +1720,60 @@ production use.
                     ref_data = await response.json()
                     current_commit_sha = ref_data["object"]["sha"]
 
-                # Step 2: We'll use the current commit as parent for the new commit
+                # Step 2: Create blobs for template files in the new repository
+                # We need to fetch content from template repo and create new blobs
+                template_repo = template_data["repo"]
+                blob_shas = {}
 
-                # Step 3: Create new tree with template files
-                tree_items = []
+                blob_files = [f for f in template_data['tree'] if f['type'] == 'blob']
+                logger.info(f"Creating blobs for {len(blob_files)} files")
+
                 for file_item in template_data["tree"]:
                     if file_item["type"] == "blob":  # Only files, not directories
-                        tree_items.append({
-                            "path": file_item["path"],
-                            "mode": file_item["mode"],
-                            "type": "blob",
-                            "sha": file_item["sha"]  # Reference existing blob
-                        })
+                        # Fetch file content from template repository
+                        async with session.get(
+                            f"{self.base_url}/repos/{template_repo}/git/blobs/{file_item['sha']}",
+                            headers=self.headers
+                        ) as blob_response:
+                            if blob_response.status != 200:
+                                file_path = file_item['path']
+                                logger.warning(f"Failed to fetch blob for {file_path}")
+                                continue
+
+                            blob_data = await blob_response.json()
+
+                            # Create new blob in target repository
+                            new_blob_data = {
+                                "content": blob_data["content"],
+                                "encoding": blob_data["encoding"]
+                            }
+
+                            async with session.post(
+                                f"{self.base_url}/repos/{repository.full_name}/git/blobs",
+                                headers=self.headers,
+                                json=new_blob_data
+                            ) as new_blob_response:
+                                if new_blob_response.status != 201:
+                                    logger.warning(
+                                        f"Failed to create blob: {file_item['path']}"
+                                    )
+                                    continue
+
+                                new_blob_result = await new_blob_response.json()
+                                blob_shas[file_item["path"]] = {
+                                    "sha": new_blob_result["sha"],
+                                    "mode": file_item["mode"]
+                                }
+
+                # Step 3: Create new tree with the new blob SHAs
+                tree_items = []
+                for file_path, blob_info in blob_shas.items():
+                    tree_items.append({
+                        "path": file_path,
+                        "mode": blob_info["mode"],
+                        "type": "blob",
+                        "sha": blob_info["sha"]  # Use new blob SHA from target repo
+                    })
 
                 # Create tree
                 tree_data = {"tree": tree_items}
