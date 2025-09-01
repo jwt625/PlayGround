@@ -47,37 +47,26 @@ export function DeploymentConfig({
       .replace(/^-+|-+$/g, '');
   };
 
-  const [config, setConfig] = useState<DeploymentConfiguration>({
-    repositoryName: '',
-    template: 'minimal-academic',
-    paperTitle: '',
-    paperAuthors: [],
-    ...initialConfig
+  const [config, setConfig] = useState<DeploymentConfiguration>(() => {
+    // Initialize with proper defaults from initialConfig
+    return {
+      repositoryName: initialConfig.repositoryName || '',
+      template: initialConfig.template || 'minimal-academic',
+      paperTitle: initialConfig.paperTitle || '',
+      paperAuthors: initialConfig.paperAuthors || [],
+    };
   });
 
-  // Update config when paperMetadata becomes available
+  // No longer needed - initialization happens in useState
+
+  // Call onConfigChange with initial config on mount (only once)
+  const hasCalledInitialConfig = React.useRef(false);
   React.useEffect(() => {
-    if (paperMetadata) {
-      const title = paperMetadata.title || '';
-      const authors = paperMetadata.authors || [];
-      const repoName = title ? generateRepositoryName(title) : '';
-
-      const newConfig = {
-        ...config,
-        paperTitle: title,
-        paperAuthors: authors,
-        repositoryName: repoName || config.repositoryName,
-      };
-
-      setConfig(newConfig);
-      onConfigChange(newConfig);
+    if (!hasCalledInitialConfig.current) {
+      onConfigChange(config);
+      hasCalledInitialConfig.current = true;
     }
-  }, [paperMetadata]);
-
-  // Call onConfigChange with initial config on mount
-  React.useEffect(() => {
-    onConfigChange(config);
-  }, []); // Only on mount
+  }, [onConfigChange]);
 
   const [authorInput, setAuthorInput] = useState('');
 
@@ -215,7 +204,7 @@ export function DeploymentConfig({
                   onChange={(e) => updateConfig({ repositoryName: e.target.value })}
                   placeholder="my-paper-website"
                   className="form-input"
-                  pattern="[a-zA-Z0-9._-]+"
+                  pattern="[a-zA-Z0-9._\-]+"
                 />
                 <button
                   type="button"

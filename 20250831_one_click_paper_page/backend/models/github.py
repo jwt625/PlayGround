@@ -25,6 +25,28 @@ class TemplateType(str, Enum):
     MINIMAL_ACADEMIC = "minimal-academic"
 
 
+class TemplateRepository(BaseModel):
+    """Template repository configuration."""
+    id: TemplateType
+    name: str
+    description: str
+    repository_owner: str
+    repository_name: str
+    branch: str = Field(default="main")
+    features: list[str] = Field(default_factory=list)
+    preview_url: str | None = None
+
+    @property
+    def full_name(self) -> str:
+        """Get the full repository name (owner/repo)."""
+        return f"{self.repository_owner}/{self.repository_name}"
+
+    @property
+    def clone_url(self) -> str:
+        """Get the HTTPS clone URL."""
+        return f"https://github.com/{self.full_name}.git"
+
+
 class GitHubUser(BaseModel):
     """GitHub user information."""
     id: int
@@ -132,13 +154,15 @@ class DeploymentStatusResponse(BaseModel):
 
 
 class TemplateInfo(BaseModel):
-    """Template information."""
-    id: TemplateType
+    """Template information for frontend."""
+    id: str  # Changed from TemplateType to string for frontend compatibility
     name: str
     description: str
     preview_url: str | None = None
     features: list[str]
     repository_url: str
+    repository_owner: str
+    repository_name: str
 
 
 class GitHubPagesConfig(BaseModel):
@@ -160,50 +184,4 @@ class DeploymentConfig(BaseModel):
     paper_date: str | None = None
 
 
-# Template definitions
-AVAILABLE_TEMPLATES: list[TemplateInfo] = [
-    TemplateInfo(
-        id=TemplateType.ACADEMIC_PAGES,
-        name="Academic Pages (Jekyll)",
-        description=(
-            "Full academic personal site with publications, talks, CV, portfolio"
-        ),
-        repository_url="https://github.com/academicpages/academicpages.github.io",
-        features=[
-            "Publications page",
-            "Talks and presentations",
-            "CV/Resume section",
-            "Portfolio showcase",
-            "Blog functionality",
-            "Google Analytics integration"
-        ]
-    ),
-    TemplateInfo(
-        id=TemplateType.AL_FOLIO,
-        name="al-folio (Jekyll)",
-        description="Clean, responsive minimal academic landing page",
-        repository_url="https://github.com/alshedivat/al-folio",
-        features=[
-            "Responsive design",
-            "Publication list",
-            "Project showcase",
-            "Blog support",
-            "Dark/light theme",
-            "Math formula support"
-        ]
-    ),
-    TemplateInfo(
-        id=TemplateType.MINIMAL_ACADEMIC,
-        name="Minimal Academic (Static)",
-        description="Simple, fast-loading academic paper presentation",
-        features=[
-            "Minimal design",
-            "Fast loading",
-            "Mobile responsive",
-            "PDF download",
-            "Citation export",
-            "Social sharing"
-        ],
-        repository_url="https://github.com/jwt625/minimal-academic-template"
-    )
-]
+# Template definitions moved to TemplateService

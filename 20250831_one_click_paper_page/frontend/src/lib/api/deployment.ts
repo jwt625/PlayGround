@@ -151,7 +151,7 @@ export class DeploymentAPI {
  */
 export function useDeployment() {
   const getAccessToken = (): string => {
-    const token = localStorage.getItem('github_token');
+    const token = localStorage.getItem('github_access_token');
     if (!token) {
       throw new Error('GitHub access token not found. Please authenticate first.');
     }

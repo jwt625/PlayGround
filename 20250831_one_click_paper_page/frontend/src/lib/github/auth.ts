@@ -9,7 +9,7 @@ export class GitHubAuth {
   private redirectUri: string;
   private scopes: string[];
 
-  constructor(clientId: string, redirectUri: string, scopes: string[] = ['repo', 'user:email']) {
+  constructor(clientId: string, redirectUri: string, scopes: string[] = ['repo', 'user:email', 'workflow']) {
     this.clientId = clientId;
     this.redirectUri = redirectUri;
     this.scopes = scopes;

@@ -39,12 +39,12 @@ export function DeploymentStatus({ deploymentId, onComplete, githubUser }: Deplo
 
     const pollStatus = async () => {
       try {
-        const token = localStorage.getItem('github_token');
+        const token = localStorage.getItem('github_access_token');
         if (!token) {
           throw new Error('GitHub token not found');
         }
 
-        const response = await fetch(`/api/github/deployment/${deploymentId}/status`, {
+        const response = await fetch(`http://localhost:8000/api/github/deployment/${deploymentId}/status`, {
           headers: {
             'Authorization': `Bearer ${token}`
           }

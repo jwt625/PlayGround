@@ -31,7 +31,6 @@ from models.conversion import (
     ConversionStatusResponse,
 )
 from models.github import (
-    AVAILABLE_TEMPLATES,
     CreateRepositoryRequest,
     CreateRepositoryResponse,
     DeploymentConfig,
@@ -417,7 +416,8 @@ async def list_templates() -> list[TemplateInfo]:
     Returns:
         List of available templates with their information
     """
-    return AVAILABLE_TEMPLATES
+    from services.template_service import template_service
+    return template_service.get_all_templates()
 
 
 @app.post("/api/deployment/{deployment_id}/enable-pages")
@@ -532,7 +532,19 @@ async def deploy_to_github(
             paper_authors=request.get("paper_authors", []),
         )
 
-        await github_service.deploy_content(repo_response.deployment_id, deploy_config)
+        # Get conversion result for deployment
+        conversion_result = conversion_service.get_job_result(conversion_job_id)
+        if not conversion_result or not conversion_result.output_dir:
+            raise HTTPException(
+                status_code=400,
+                detail="Conversion not completed yet"
+            )
+
+        await github_service.deploy_converted_content(
+            repo_response.deployment_id,
+            Path(conversion_result.output_dir),
+            deploy_config
+        )
 
         return {
             "success": True,

@@ -105,9 +105,25 @@ function App() {
     loadTemplates();
   }, []); // Empty dependency array - only run once on mount
 
-  const handleDeploymentConfigChange = (config: DeploymentConfiguration) => {
+  const handleDeploymentConfigChange = React.useCallback((config: DeploymentConfiguration) => {
     setDeploymentConfig(config);
+  }, []);
+
+  // Generate repository name from paper title
+  const generateRepositoryName = (title: string) => {
+    return title
+      .toLowerCase()
+      .replace(/[^a-z0-9\s-]/g, '')
+      .replace(/\s+/g, '-')
+      .substring(0, 50)
+      .replace(/^-+|-+$/g, '');
   };
+
+  // Get default repository name
+  const defaultRepositoryName = React.useMemo(() => {
+    const title = conversion.result?.metadata?.title;
+    return title ? generateRepositoryName(title) : '';
+  }, [conversion.result?.metadata?.title]);
 
   const handleStartDeployment = async () => {
     if (!deploymentConfig || !conversion.result || !user) {
@@ -119,12 +135,12 @@ function App() {
       setCurrentStep('deploy');
 
       // Trigger full automated deployment (repository creation + content deployment)
-      const token = localStorage.getItem('github_token');
+      const token = localStorage.getItem('github_access_token');
       if (!token) {
-        throw new Error('GitHub token not found');
+        throw new Error('GitHub token not found. Please authenticate first.');
       }
 
-      const response = await fetch('/api/github/deploy', {
+      const response = await fetch('http://localhost:8000/api/github/deploy', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -140,8 +156,15 @@ function App() {
       });
 
       if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.detail || 'Deployment failed');
+        let errorMessage = 'Deployment failed';
+        try {
+          const error = await response.json();
+          errorMessage = error.detail || errorMessage;
+        } catch {
+          // If response is not JSON (e.g., HTML error page), use status text
+          errorMessage = `${response.status}: ${response.statusText}`;
+        }
+        throw new Error(errorMessage);
       }
 
       const result = await response.json();
@@ -291,14 +314,14 @@ function App() {
                 avatar_url: user.avatar_url,
               } : undefined}
               initialConfig={{
-                repositoryName: repositoryName || '',
+                repositoryName: defaultRepositoryName || '',
                 template: selectedTemplate?.id || 'minimal-academic',
-                paperTitle: '',
-                paperAuthors: [],
+                paperTitle: conversion.result?.metadata?.title || '',
+                paperAuthors: conversion.result?.metadata?.authors || [],
               }}
               onBackToTemplate={() => setCurrentStep('template')}
               onDeploy={handleStartDeployment}
-              canDeploy={!!deploymentConfig?.repositoryName}
+              canDeploy={!!(deploymentConfig?.repositoryName && deploymentConfig?.template)}
             />
 
 

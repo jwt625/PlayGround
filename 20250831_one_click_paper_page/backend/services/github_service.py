@@ -13,7 +13,6 @@ from pathlib import Path
 import aiohttp
 
 from models.github import (
-    AVAILABLE_TEMPLATES,
     CommitRequest,
     CommitResponse,
     CreateRepositoryRequest,
@@ -26,7 +25,6 @@ from models.github import (
     GitHubRepository,
     GitHubUser,
     TemplateInfo,
-    TemplateType,
     WorkflowRun,
 )
 
@@ -55,9 +53,9 @@ class GitHubService:
         # In-memory deployment tracking (use Redis in production)
         self._deployments: dict[str, DeploymentJob] = {}
 
-        # Template repository configuration
-        self.template_repo_owner = "one-click-paper-page"  # TODO: Make configurable
-        self.template_repo_name = "paper-website-template"
+        # Import template service
+        from services.template_service import template_service
+        self.template_service = template_service
 
     async def get_authenticated_user(self) -> GitHubUser:
         """Get the authenticated user information."""
@@ -77,7 +75,7 @@ class GitHubService:
         request: CreateRepositoryRequest
     ) -> CreateRepositoryResponse:
         """
-        Create a new repository from a template with GitHub Actions workflows.
+        Create a new repository by forking from the actual template repository.
 
         Args:
             request: Repository creation request
@@ -86,34 +84,28 @@ class GitHubService:
             Repository creation response with deployment tracking
         """
         try:
-            # Create repository from template with GitHub Actions workflows
-            repo_data = {
-                "name": request.name,
-                "description": (
-                    request.description or f"Academic paper website - {request.name}"
-                ),
-                "private": False,  # Always public for open science
-                "include_all_branches": False,  # Only main branch
-            }
+            # Get template repository configuration
+            template_repo = self.template_service.get_template_repository(request.template)
 
-            # Use template repository creation endpoint
-            template_url = (
-                f"{self.base_url}/repos/{self.template_repo_owner}/"
-                f"{self.template_repo_name}/generate"
-            )
+            # Step 1: Fork the template repository
+            logger.info(f"Forking template repository {template_repo.full_name}")
+
+            fork_data = {
+                "name": request.name,
+                "default_branch_only": True,  # Only fork the default branch
+            }
 
             async with aiohttp.ClientSession() as session:
                 async with session.post(
-                    template_url,
+                    f"{self.base_url}/repos/{template_repo.repository_owner}/"
+                    f"{template_repo.repository_name}/forks",
                     headers=self.headers,
-                    json=repo_data
+                    json=fork_data
                 ) as response:
-                    if response.status != 201:
-                        # Fallback to regular repository creation if template doesn't
-                        # exist
-                        logger.warning(
-                            "Template repository not found, creating regular repository"
-                        )
+                    if response.status != 202:  # GitHub returns 202 for fork creation
+                        error_data = await response.text()
+                        logger.error(f"Fork creation failed: {response.status} - {error_data}")
+                        # Fallback to regular repository creation
                         return await self._create_regular_repository_with_workflows(
                             request
                         )
@@ -147,8 +139,9 @@ class GitHubService:
                 ),
             )
 
-            # Note: GitHub Pages will be enabled by GitHub Actions workflow
-            # or manually as a backup option if deployment fails
+            # Step 2: Wait for fork to be ready, then enable GitHub Pages
+            await asyncio.sleep(3)  # Give GitHub time to set up the fork
+            await self._enable_github_pages(repository)
 
             # Create deployment job for tracking
             deployment_id = str(uuid.uuid4())
@@ -164,8 +157,8 @@ class GitHubService:
             self._deployments[deployment_id] = deployment_job
 
             logger.info(
-                f"Created repository {repository.full_name} from template with "
-                f"deployment {deployment_id}"
+                f"Forked repository {repository.full_name} from template {template_repo.full_name} "
+                f"with deployment {deployment_id}"
             )
 
             return CreateRepositoryResponse(
@@ -321,8 +314,7 @@ class GitHubService:
             ),
         )
 
-        # Add GitHub Actions workflows to the repository
-        await self._add_github_actions_workflows(repository, request.template)
+        # Template repositories come with their own workflows - no need to add them manually
 
         # Note: GitHub Pages will be enabled by GitHub Actions workflow
         # or manually as a backup option if deployment fails
@@ -411,27 +403,33 @@ class GitHubService:
             error_message=deployment.error_message,
         )
 
-    async def _add_github_actions_workflows(
-        self, repository: GitHubRepository, template: TemplateType
-    ) -> None:
-        """Add GitHub Actions workflows to the repository."""
+    async def _enable_github_pages(self, repository: GitHubRepository) -> None:
+        """Enable GitHub Pages for the repository."""
         try:
-            # Read workflow templates from local files
-            workflow_files = await self._get_workflow_template_files(template)
+            pages_config = {
+                "source": {
+                    "branch": repository.default_branch,
+                    "path": "/"
+                }
+            }
 
-            # Commit workflow files to repository
-            commit_request = CommitRequest(
-                repository_name=repository.name,
-                message="Add GitHub Actions workflows for automated deployment",
-                files=workflow_files,
-            )
-
-            await self._commit_files(repository, commit_request)
-            logger.info(f"Added GitHub Actions workflows to {repository.full_name}")
+            async with aiohttp.ClientSession() as session:
+                async with session.post(
+                    f"{self.base_url}/repos/{repository.full_name}/pages",
+                    headers=self.headers,
+                    json=pages_config
+                ) as response:
+                    if response.status == 201:
+                        logger.info(f"GitHub Pages enabled for {repository.full_name}")
+                    elif response.status == 409:
+                        logger.info(f"GitHub Pages already enabled for {repository.full_name}")
+                    else:
+                        error_data = await response.text()
+                        logger.warning(f"Failed to enable GitHub Pages: {response.status} - {error_data}")
 
         except Exception as e:
-            logger.error(f"Failed to add workflows to {repository.full_name}: {e}")
-            raise
+            logger.warning(f"Failed to enable GitHub Pages for {repository.full_name}: {e}")
+            # Don't fail the deployment if Pages setup fails
 
     async def _enable_github_pages_with_actions(
         self, repository: GitHubRepository
@@ -481,7 +479,7 @@ class GitHubService:
 
     async def list_templates(self) -> list[TemplateInfo]:
         """List available templates."""
-        return AVAILABLE_TEMPLATES
+        return self.template_service.get_all_templates()
 
     async def enable_github_pages_as_backup(
         self, repository: GitHubRepository
@@ -503,63 +501,7 @@ class GitHubService:
             logger.error(f"Failed to enable GitHub Pages backup for {repository.full_name}: {e}")
             return False
 
-    async def _get_workflow_template_files(
-        self, template: TemplateType
-    ) -> list[FileContent]:
-        """Get GitHub Actions workflow files for the specified template."""
-        files = []
-
-        # Read the main conversion workflow
-        workflow_path = (
-            Path(__file__).parent.parent.parent
-            / "template"
-            / ".github"
-            / "workflows"
-            / "convert-and-deploy.yml"
-        )
-        if workflow_path.exists():
-            with open(workflow_path, encoding='utf-8') as f:
-                workflow_content = f.read()
-
-            files.append(FileContent(
-                path=".github/workflows/convert-and-deploy.yml",
-                content=workflow_content
-            ))
-
-        # Read the conversion scripts
-        scripts_dir = (
-            Path(__file__).parent.parent.parent / "template" / ".github" / "scripts"
-        )
-        if scripts_dir.exists():
-            for script_file in scripts_dir.glob("*.py"):
-                with open(script_file, encoding='utf-8') as f:
-                    script_content = f.read()
-
-                files.append(FileContent(
-                    path=f".github/scripts/{script_file.name}",
-                    content=script_content
-                ))
-
-        # Add template-specific workflow if needed
-        if template == TemplateType.MINIMAL_ACADEMIC:
-            template_workflow_path = (
-                Path(__file__).parent.parent.parent
-                / "template"
-                / "minimal-academic"
-                / ".github"
-                / "workflows"
-                / "pages.yml"
-            )
-            if template_workflow_path.exists():
-                with open(template_workflow_path, encoding='utf-8') as f:
-                    template_workflow_content = f.read()
-
-                files.append(FileContent(
-                    path=".github/workflows/pages.yml",
-                    content=template_workflow_content
-                ))
-
-        return files
+    # Removed _get_workflow_template_files - templates now come with their own workflows
 
     async def _prepare_source_files(
         self, converted_content_dir: Path, config: DeploymentConfig
@@ -656,8 +598,7 @@ class GitHubService:
                             encoding="base64"
                         ))
 
-        # Add template-specific files
-        files.extend(await self._get_template_files(template, config))
+        # Template files are already in the cloned repository - no need to add them manually
 
         return files
 
@@ -678,55 +619,7 @@ class GitHubService:
 
         return content
 
-    async def _get_template_files(
-        self, template: TemplateInfo, config: DeploymentConfig
-    ) -> list[FileContent]:
-        """Get template-specific files."""
-        files = []
-
-        # Get template directory
-        template_dir = (
-            Path(__file__).parent.parent.parent / "template" / "minimal-academic"
-        )
-
-        if config.template == TemplateType.MINIMAL_ACADEMIC and template_dir.exists():
-            # Load template files
-            template_files = [
-                "_config.yml",
-                "Gemfile",
-                "README.md",
-                ".github/workflows/pages.yml"
-            ]
-
-            for file_path in template_files:
-                full_path = template_dir / file_path
-                if full_path.exists():
-                    with open(full_path, encoding="utf-8") as f:
-                        content = f.read()
-
-                    # Customize content
-                    if file_path == "_config.yml":
-                        content = self._customize_config(content, config)
-                    elif file_path == "README.md":
-                        content = self._customize_readme(content, config)
-
-                    files.append(FileContent(path=file_path, content=content))
-        else:
-            # Fallback to basic configuration
-            files.append(FileContent(
-                path="_config.yml",
-                content=f"""title: {config.paper_title or 'Academic Paper'}
-description: {config.repository_name}
-author: {', '.join(config.paper_authors) if config.paper_authors else 'Author Name'}
-theme: minima
-plugins:
-  - jekyll-feed
-  - jekyll-sitemap
-  - jekyll-seo-tag
-"""
-            ))
-
-        return files
+    # Removed _get_template_files - templates now come with their own configuration
 
     def _customize_config(self, content: str, config: DeploymentConfig) -> str:
         """Customize _config.yml with paper metadata."""
