@@ -115,6 +115,27 @@ class GitHubService:
                 data = await response.json()
                 return GitHubUser(**data)
 
+    async def get_token_scopes(self) -> list[str]:
+        """Get the scopes for the current access token."""
+        async with aiohttp.ClientSession() as session:
+            async with session.get(
+                f"{self.base_url}/user",
+                headers=self.headers
+            ) as response:
+                if response.status != 200:
+                    raise Exception(f"Failed to get user info: {response.status}")
+
+                # GitHub returns scopes in the X-OAuth-Scopes header
+                scopes_header = response.headers.get("X-OAuth-Scopes", "")
+                scopes = [
+                    scope.strip()
+                    for scope in scopes_header.split(",")
+                    if scope.strip()
+                ]
+
+                logger.info(f"🔑 Current token scopes: {scopes}")
+                return scopes
+
     async def create_repository_from_template(
         self,
         request: CreateRepositoryRequest
@@ -480,7 +501,9 @@ class GitHubService:
             # since GitHub automatically serves repos at username.github.io/repo-name/
             sub_route_url = standalone_url
 
-            logger.info(f"✅ Dual deployment created: {repo_response.repository.full_name}")
+            logger.info(
+                f"✅ Dual deployment created: {repo_response.repository.full_name}"
+            )
             logger.info(f"📍 Standalone URL: {standalone_url}")
 
             return DualDeploymentResult(
@@ -490,7 +513,10 @@ class GitHubService:
                 sub_route_url=sub_route_url,
                 deployment_id=repo_response.deployment_id,
                 status=repo_response.status,
-                message="Dual deployment created with simplified architecture - single repository with automatic GitHub Pages."
+                message=(
+                    "Dual deployment created with simplified architecture - "
+                    "single repository with automatic GitHub Pages."
+                )
             )
 
         except Exception as e:
@@ -1616,13 +1642,24 @@ production use.
                         tree_data = await response.json()
                         default_branch = "master"
 
-                # Filter to essential files only
-                essential_files = self._filter_essential_template_files(
-                    tree_data["tree"]
+                # Log all files before filtering
+                all_files_raw = tree_data["tree"]
+                logger.info(f"📋 Raw template files ({len(all_files_raw)} total):")
+                for i, f in enumerate(all_files_raw):  # Show ALL files
+                    logger.info(f"  {i+1}. {f['path']} ({f['type']})")
+
+                # Use ALL files from template, only skip README.md to avoid conflict
+                all_files = [f for f in tree_data["tree"] if f["path"] != "README.md"]
+
+                # NO FILTERING - Use all files including .github
+                logger.info(
+                    f"📋 Using ALL template files ({len(all_files)} total):"
                 )
+                for i, f in enumerate(all_files):  # Show ALL files
+                    logger.info(f"  {i+1}. {f['path']} ({f['type']})")
 
                 template_data = {
-                    "tree": essential_files,
+                    "tree": all_files,
                     "default_branch": default_branch,
                     "repo": template_repo
                 }
@@ -1632,7 +1669,7 @@ production use.
 
                 logger.info(
                     f"✅ Cached template data for {template_repo} "
-                    f"({len(essential_files)} files)"
+                    f"({len(all_files)} files) - Using ALL files (no filtering)"
                 )
                 return template_data
 
@@ -1662,6 +1699,7 @@ production use.
             "_teaching/",
             "Gemfile",
             "package.json",
+            ".github/",  # Include .github directory (now with workflow scope)
         ]
 
         # Files to skip
@@ -1674,25 +1712,43 @@ production use.
             "talkmap.py",
             "scripts/",
             "markdown_generator/",
-            ".github/workflows/scrape_talks.yml",  # Skip the old workflow
+            # Note: Now including .github files since we have workflow scope
         ]
 
         essential_files = []
+        skipped_files = []
+
         for item in tree_items:
             path = item["path"]
 
             # Skip files we don't need
             if any(skip in path for skip in skip_patterns):
+                skipped_files.append(path)
+                continue
+
+            # Explicitly include ALL .github files (now that we have workflow scope)
+            if path.startswith(".github"):
+                essential_files.append(item)
                 continue
 
             # Include essential files/directories
             if any(essential in path for essential in essential_patterns):
                 essential_files.append(item)
+            else:
+                # Log files that don't match any pattern
+                logger.debug(f"File doesn't match any pattern: {path}")
 
         logger.info(
             f"📋 Filtered {len(tree_items)} files to {len(essential_files)} "
-            f"essential files"
+            f"essential files, skipped {len(skipped_files)} files"
         )
+
+        # Log ALL skipped files for debugging
+        if skipped_files:
+            logger.info(f"🚫 Skipped files ({len(skipped_files)} total):")
+            for i, path in enumerate(skipped_files):
+                logger.info(f"  {i+1}. {path}")
+
         return essential_files
 
     async def _create_empty_repository(
@@ -1770,8 +1826,21 @@ production use.
                 template_repo = template_data["repo"]
                 blob_shas = {}
 
-                blob_files = [f for f in template_data['tree'] if f['type'] == 'blob']
+                # Include ALL blob files from template
+                all_template_files = template_data['tree']
+                blob_files = [f for f in all_template_files if f['type'] == 'blob']
+
                 logger.info(f"Creating blobs for {len(blob_files)} files")
+
+                # Debug: Log which .github files are being processed
+                github_blob_files = [
+                    f['path'] for f in blob_files if f['path'].startswith('.github/')
+                ]
+
+                if github_blob_files:
+                    logger.info(f"📁 GitHub files found: {github_blob_files}")
+                else:
+                    logger.warning("⚠️ No .github files found in template files!")
 
                 for file_item in template_data["tree"]:
                     if file_item["type"] == "blob":  # Only files, not directories
@@ -1799,8 +1868,10 @@ production use.
                                 json=new_blob_data
                             ) as new_blob_response:
                                 if new_blob_response.status != 201:
+                                    blob_error = await new_blob_response.json()
                                     logger.warning(
-                                        f"Failed to create blob: {file_item['path']}"
+                                        f"Failed to create blob: {file_item['path']} - "
+                                        f"{blob_error}"
                                     )
                                     continue
 
@@ -1810,8 +1881,15 @@ production use.
                                     "mode": file_item["mode"]
                                 }
 
-                # Step 3: Create new tree with the new blob SHAs
+                logger.info(
+                    f"✅ Successfully created {len(blob_shas)} blobs out of "
+                    f"{len(blob_files)} files"
+                )
+
+                # Step 3: Create new tree with ONLY blob files (Git creates directories automatically)
                 tree_items = []
+
+                # Add blob files with new SHAs
                 for file_path, blob_info in blob_shas.items():
                     tree_items.append({
                         "path": file_path,
@@ -1820,10 +1898,22 @@ production use.
                         "sha": blob_info["sha"]  # Use new blob SHA from target repo
                     })
 
+                # DON'T add tree entries - Git automatically creates directory structure from file paths
+
 
 
                 # Create tree
                 tree_data = {"tree": tree_items}
+                logger.info(f"🌳 Creating tree with {len(tree_items)} items")
+
+                # Log all files being added to tree for debugging
+                logger.info("📁 Files being added to tree:")
+                for i, item in enumerate(tree_items):  # Show ALL files
+                    logger.info(
+                        f"  {i+1}. {item['path']} (mode: {item['mode']}, "
+                        f"type: {item['type']})"
+                    )
+
                 async with session.post(
                     f"{self.base_url}/repos/{repository.full_name}/git/trees",
                     headers=self.headers,
@@ -1831,6 +1921,16 @@ production use.
                 ) as response:
                     if response.status != 201:
                         error_data = await response.json()
+                        logger.error(
+                            f"❌ Tree creation failed with {len(tree_items)} items"
+                        )
+                        logger.error(f"❌ Error response: {error_data}")
+                        logger.error("❌ All tree items being processed:")
+                        for i, item in enumerate(tree_items):
+                            logger.error(
+                            f"  {i+1}. {item['path']} (mode: {item['mode']}, "
+                            f"type: {item['type']}, sha: {item['sha'][:8]}...)"
+                        )
                         raise Exception(f"Failed to create tree: {error_data}")
 
                     new_tree_data = await response.json()
@@ -1968,7 +2068,9 @@ jobs:
                     json=workflow_blob_data
                 ) as blob_response:
                     if blob_response.status != 201:
-                        raise Exception(f"Failed to create workflow blob: {blob_response.status}")
+                        raise Exception(
+                            f"Failed to create workflow blob: {blob_response.status}"
+                        )
 
                     blob_result = await blob_response.json()
                     workflow_blob_sha = blob_result["sha"]

@@ -1,7 +1,7 @@
 # DevLog-006: Simplified GitHub Pages Deployment
 
 **Date**: 2025-09-01
-**Status**: ✅ Complete
+**Status**: 🔄 In Progress - Jekyll Workflow Creation Issue
 **Priority**: High
 
 ## 🎯 Architecture Decision
@@ -72,8 +72,8 @@ User clicks "Deploy Paper"
 - ✅ Template content + Jekyll workflow in single atomic commit
 - ✅ No fork security issues or timing problems
 
-### ✅ Jekyll Workflow Integration
-- ✅ Automatic Jekyll workflow creation (`.github/workflows/jekyll.yml`)
+### 🔄 Jekyll Workflow Integration
+- ❌ **ISSUE**: Jekyll workflow creation failing with 404 errors
 - ✅ Proper GitHub Pages permissions configuration
 - ✅ Ruby setup and Jekyll build process
 - ✅ Artifact upload and deployment automation
@@ -217,4 +217,145 @@ jobs:
 
 ---
 
-**Status**: ✅ **COMPLETE** - Simplified GitHub Pages deployment with Jekyll automation is fully implemented and ready for production use.
+## 🚨 Current Issue: Jekyll Workflow Creation
+
+### Problem Description
+The Jekyll workflow file (`.github/workflows/deploy.yml`) is failing to be created due to GitHub API 404 errors during tree creation. This affects the automatic deployment functionality.
+
+### Error Details
+```
+Failed to create tree: {'message': 'Not Found', 'documentation_url': 'https://docs.github.com/rest/git/trees#create-a-tree', 'status': '404'}
+```
+
+### Root Cause Analysis
+1. **Eventual Consistency Issue**: After template files are committed, there's a brief window where the Git Tree API can't resolve the `base_tree` SHA
+2. **Atomic Approach Attempted**: Tried including workflow in same commit as template files, but still hits same 404 on tree creation
+3. **Contents API Fallback**: Contents API also returns 404 when trying to create `.github/workflows/deploy.yml`
+
+### Attempted Solutions
+1. ✅ **Atomic Workflow Creation**: Include workflow in template copy commit (still 404s)
+2. ✅ **Contents API with Retry**: Use Contents API with fresh branch resolution and sleep (still 404s)
+3. ✅ **Git API with Retry**: Retry tree creation with fresh base_tree resolution (still 404s)
+4. ❌ **Empty Repository Approach**: Create repository without `auto_init` (caused blob creation conflicts)
+
+### Current Status
+- ✅ **Template Copying**: Works reliably (34 files copied successfully)
+- ✅ **Repository Creation**: Repository created with template content
+- ✅ **GitHub Pages Setup**: Pages enabled with Actions as source
+- ❌ **Jekyll Workflow**: Workflow file creation consistently fails with 404
+
+### Impact
+- **Repositories are created** with template content
+- **GitHub Pages is enabled** but uses default Jekyll (no custom workflow)
+- **Manual workflow addition** would be required for full functionality
+- **Automatic deployment** works with default Jekyll but lacks custom configuration
+
+## 🔍 Testing and Debugging Results (2025-09-01)
+
+### Issue Investigation: Tree Creation 404 Errors
+
+**Problem**: Template copying consistently fails with 404 errors during Git tree creation when using the optimized Git API approach.
+
+**Key Findings**:
+
+1. **Filtering Dependency**:
+   - ✅ **With filtering enabled**: Template copying works (42 files processed)
+   - ❌ **Without filtering**: Tree creation fails with 404 error (55+ files processed)
+   - ❌ **Skipping only README.md**: Still fails with 404 error (55 files)
+
+2. **File Analysis**:
+   ```
+   Before filtering (72 files): Includes .github/, .github/workflows/, binary fonts, scripts
+   After filtering (42 files): Only essential Jekyll files, NO .github files
+   ```
+
+3. **Root Cause**: The `.github` files (workflows, CODEOWNERS, etc.) are causing the Git tree creation to fail with 404 errors. When filtering excludes these files, the operation succeeds.
+
+4. **Specific Problematic Files**:
+   - `.github/CODEOWNERS`
+   - `.github/workflows/ci.yaml`
+   - `.github/workflows/publish-gem.yml`
+   - `.github/config.yml`, `.github/stale.yml`, etc.
+
+### Technical Details
+
+**Error Pattern**:
+```
+✅ Repository creation: Success
+✅ Blob creation: 55/55 files successful
+❌ Tree creation: 404 Not Found
+```
+
+**Working Configuration** (with filtering):
+- 42 files processed
+- Excludes all `.github` directory contents
+- Includes only Jekyll theme essentials
+
+**Failing Configuration** (without filtering):
+- 55+ files processed
+- Includes `.github` workflows and configuration
+- Tree creation fails consistently
+
+### Implications
+
+1. **GitHub Workflows Missing**: Current working approach excludes all `.github` files, meaning no CI/CD workflows are copied to deployed repositories.
+
+2. **Manual Workflow Addition Still Needed**: The original plan to add Jekyll deployment workflows via Git API still encounters the same 404 tree creation issue.
+
+3. **Fork-Based Approach Validation**: These findings support the fork-based deployment approach where enhanced templates (with workflows pre-added) are forked instead of dynamically adding workflows.
+
+## 🔍 BREAKTHROUGH: Root Cause Discovered ✅
+
+### Critical OAuth Scope Issue Identified
+
+After extensive debugging with comprehensive logging, we discovered the **exact root cause** of the 404 tree creation errors:
+
+**🎯 Issue**: GitHub API requires the `workflow` scope to create any files in the `.github/workflows/` directory.
+
+**🧪 Evidence from Testing**:
+- ✅ **Non-workflow `.github` files work perfectly**: CODEOWNERS, config.yml, settings.yml, etc. (39 files successful)
+- ❌ **ANY `.github/workflows/` file causes 404**: Adding just ONE workflow file breaks tree creation (40 files → 404 error)
+- 🔑 **Current user token missing workflow scope**: Token has `['repo', 'user:email']` but lacks `'workflow'`
+
+**📚 Official GitHub Documentation Confirms**:
+> "OAuth app tokens and personal access tokens (classic) need the repo scope to use this endpoint. **The workflow scope is also required in order to modify files in the .github/workflows directory.**"
+
+### Solution Implemented ✅
+
+1. **OAuth Configuration**: Already includes `workflow` scope in `frontend/src/lib/github/auth.ts`
+2. **Token Scope Verification**: Added `🔑 Check Scopes` button in header banner
+3. **Backend Endpoint**: Added `GET /api/github/token/scopes` to verify current permissions
+4. **Template Filtering Updated**: Re-enabled `.github/workflows/` inclusion (now that we know the fix)
+
+### User Action Required ⚠️
+
+**Existing users must re-authenticate** to get the `workflow` scope:
+1. Sign out of GitHub authentication
+2. Sign back in to trigger new OAuth flow
+3. Accept the additional `workflow` permission
+4. Verify token now shows: `['repo', 'user:email', 'workflow']`
+
+### Impact 🚀
+
+This discovery means:
+- **No API limitations**: GitHub API works fine with proper permissions
+- **No need for workarounds**: Fork-based approach was unnecessary complexity
+- **Simple fix**: Just need users to re-authenticate
+- **Full automation possible**: `.github/workflows/` files can be included in initial deployment
+
+### Next Steps
+1. **Test with workflow scope**: Verify deployment works after user re-authenticates with `workflow` scope
+2. **Add scope validation**: Warn users if they're missing the `workflow` scope before deployment
+3. **Update documentation**: Document the re-authentication requirement for existing users
+4. **Test full automation**: Verify `.github/workflows/` files are properly included in deployment
+5. **Performance optimization**: Fine-tune the Jekyll workflow for faster builds
+
+### Completed ✅
+1. ~~**Investigate GitHub API limitations**~~: **SOLVED** - Missing OAuth `workflow` scope
+2. ~~**Fork-based approach**~~: **UNNECESSARY** - Direct API works with proper permissions
+3. ~~**Alternative workflow creation**~~: **UNNECESSARY** - Git Tree API works fine
+4. ~~**Manual workflow option**~~: **UNNECESSARY** - Full automation possible
+
+---
+
+**Status**: 🎯 **BREAKTHROUGH ACHIEVED** - Root cause identified and solution implemented. Pending user re-authentication test.

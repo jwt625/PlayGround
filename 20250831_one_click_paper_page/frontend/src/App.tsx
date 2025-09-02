@@ -31,6 +31,8 @@ function App() {
   const [templates, setTemplates] = useState<PaperTemplate[]>([]);
   const [, setTestDeploymentResult] = useState<unknown>(null);
   const [isTestingDeployment, setIsTestingDeployment] = useState(false);
+  const [tokenScopes, setTokenScopes] = useState<string[] | null>(null);
+  const [isCheckingScopes, setIsCheckingScopes] = useState(false);
   const { isAuthenticated, user, token } = useGitHubAuth();
   const conversion = useConversion();
   const deployment = useDeployment();
@@ -139,6 +141,44 @@ function App() {
       );
     } finally {
       setIsTestingDeployment(false);
+    }
+  };
+
+  const handleCheckTokenScopes = async () => {
+    if (!token) {
+      alert("Please authenticate with GitHub first");
+      return;
+    }
+
+    setIsCheckingScopes(true);
+    try {
+      const response = await fetch("http://localhost:8000/api/github/token/scopes", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(`Failed to check scopes: ${response.status}`);
+      }
+
+      const data = await response.json();
+      setTokenScopes(data.scopes);
+      console.log("Token scopes:", data.scopes);
+
+      const hasWorkflowScope = data.scopes.includes('workflow');
+      const scopesList = data.scopes.join(', ');
+
+      alert(
+        `Token Scopes: ${scopesList}\n\n` +
+        `Workflow scope: ${hasWorkflowScope ? '✅ Present' : '❌ Missing'}\n\n` +
+        `${hasWorkflowScope ? 'Ready for .github/workflows deployment!' : 'Need to re-authenticate to get workflow scope'}`
+      );
+    } catch (error) {
+      console.error("Error checking token scopes:", error);
+      alert(`Failed to check token scopes: ${error}`);
+    } finally {
+      setIsCheckingScopes(false);
     }
   };
 
@@ -506,7 +546,23 @@ function App() {
                   >
                     {isTestingDeployment ? "Testing..." : "🏠 Dual Deploy"}
                   </button>
+                  <button
+                    onClick={handleCheckTokenScopes}
+                    disabled={isCheckingScopes}
+                    className="px-3 py-1 text-sm bg-orange-600 text-white rounded-md hover:bg-orange-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {isCheckingScopes ? "Checking..." : "🔑 Check Scopes"}
+                  </button>
                 </div>
+                {tokenScopes && (
+                  <div className="text-xs text-gray-600 flex items-center">
+                    {tokenScopes.includes('workflow') ? (
+                      <span className="text-green-600">✅ Workflow</span>
+                    ) : (
+                      <span className="text-red-600">❌ No Workflow</span>
+                    )}
+                  </div>
+                )}
                 <img
                   src={user.avatar_url}
                   alt={user.login}

@@ -11,9 +11,11 @@ export const GitHubAuth: React.FC<GitHubAuthProps> = ({
   onAuthSuccess,
   onAuthError,
 }) => {
-  const { login, logout, handleCallback, isAuthenticated, user } =
+  const { login, logout, handleCallback, isAuthenticated, user, token } =
     useGitHubAuth();
   const [isLoading, setIsLoading] = useState(false);
+  const [tokenScopes, setTokenScopes] = useState<string[] | null>(null);
+  const [isCheckingScopes, setIsCheckingScopes] = useState(false);
 
   useEffect(() => {
     // Handle OAuth callback
@@ -65,6 +67,35 @@ export const GitHubAuth: React.FC<GitHubAuthProps> = ({
     }
   };
 
+  const checkTokenScopes = async () => {
+    if (!token) {
+      onAuthError?.("No token found");
+      return;
+    }
+
+    setIsCheckingScopes(true);
+    try {
+      const response = await fetch("http://localhost:8000/api/github/token/scopes", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(`Failed to check scopes: ${response.status}`);
+      }
+
+      const data = await response.json();
+      setTokenScopes(data.scopes);
+      console.log("Token scopes:", data.scopes);
+    } catch (error) {
+      console.error("Error checking token scopes:", error);
+      onAuthError?.(`Failed to check token scopes: ${error}`);
+    } finally {
+      setIsCheckingScopes(false);
+    }
+  };
+
   if (isLoading) {
     return (
       <div className="flex items-center justify-center p-8">
@@ -96,30 +127,59 @@ export const GitHubAuth: React.FC<GitHubAuthProps> = ({
           </div>
         </div>
 
-        <div className="flex items-center justify-between pt-4 border-t border-gray-200">
-          <div className="flex items-center space-x-2">
-            <svg
-              className="w-5 h-5 text-green-500"
-              fill="currentColor"
-              viewBox="0 0 20 20"
+        <div className="pt-4 border-t border-gray-200 space-y-3">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-2">
+              <svg
+                className="w-5 h-5 text-green-500"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                  clipRule="evenodd"
+                />
+              </svg>
+              <span className="text-sm text-green-600 font-medium">
+                Connected
+              </span>
+            </div>
+
+            <button
+              onClick={handleLogout}
+              className="text-sm text-gray-600 hover:text-gray-800 underline"
             >
-              <path
-                fillRule="evenodd"
-                d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                clipRule="evenodd"
-              />
-            </svg>
-            <span className="text-sm text-green-600 font-medium">
-              Connected
-            </span>
+              Sign Out
+            </button>
           </div>
 
-          <button
-            onClick={handleLogout}
-            className="text-sm text-gray-600 hover:text-gray-800 underline"
-          >
-            Sign Out
-          </button>
+          {/* Token Scopes Section */}
+          <div className="flex items-center justify-between">
+            <button
+              onClick={checkTokenScopes}
+              disabled={isCheckingScopes}
+              className="px-3 py-1 text-xs bg-blue-100 text-blue-700 rounded hover:bg-blue-200 disabled:opacity-50"
+            >
+              {isCheckingScopes ? "Checking..." : "Check Token Scopes"}
+            </button>
+
+            {tokenScopes && (
+              <div className="text-xs text-gray-600">
+                {tokenScopes.includes('workflow') ? (
+                  <span className="text-green-600">✅ Workflow scope</span>
+                ) : (
+                  <span className="text-red-600">❌ Missing workflow scope</span>
+                )}
+              </div>
+            )}
+          </div>
+
+          {tokenScopes && (
+            <div className="text-xs text-gray-500">
+              <strong>Scopes:</strong> {tokenScopes.join(', ')}
+            </div>
+          )}
         </div>
       </div>
     );

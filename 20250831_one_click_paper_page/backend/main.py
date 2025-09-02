@@ -35,6 +35,7 @@ from models.github import (
     CreateRepositoryResponse,
     DeploymentConfig,
     DeploymentStatusResponse,
+    GitHubUser,
     OAuthRevokeRequest,
     OAuthTokenRequest,
     OAuthTokenResponse,
@@ -200,6 +201,59 @@ async def revoke_oauth_token(request: OAuthRevokeRequest) -> dict[str, str]:
         raise HTTPException(
             status_code=500,
             detail=f"Failed to revoke token with GitHub: {str(e)}"
+        )
+
+
+@app.get("/api/github/user", response_model=GitHubUser)
+async def get_github_user(
+    authorization: str = Header(..., description="Bearer token")
+) -> GitHubUser:
+    """Get authenticated GitHub user information."""
+    try:
+        # Extract token from Authorization header
+        if not authorization.startswith("Bearer "):
+            raise HTTPException(
+                status_code=401,
+                detail="Invalid authorization header format"
+            )
+
+        token = authorization.replace("Bearer ", "")
+        github_service = GitHubService(token)
+
+        return await github_service.get_authenticated_user()
+
+    except Exception as e:
+        logger.error(f"Failed to get GitHub user: {e}")
+        raise HTTPException(
+            status_code=401,
+            detail="Failed to authenticate with GitHub"
+        )
+
+
+@app.get("/api/github/token/scopes")
+async def get_token_scopes(
+    authorization: str = Header(..., description="Bearer token")
+) -> dict[str, list[str]]:
+    """Get the scopes for the current GitHub access token."""
+    try:
+        # Extract token from Authorization header
+        if not authorization.startswith("Bearer "):
+            raise HTTPException(
+                status_code=401,
+                detail="Invalid authorization header format"
+            )
+
+        token = authorization.replace("Bearer ", "")
+        github_service = GitHubService(token)
+
+        scopes = await github_service.get_token_scopes()
+        return {"scopes": scopes}
+
+    except Exception as e:
+        logger.error(f"Failed to get token scopes: {e}")
+        raise HTTPException(
+            status_code=401,
+            detail="Failed to get token scopes"
         )
 
 
