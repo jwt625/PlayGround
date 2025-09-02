@@ -17,11 +17,17 @@ RUN apt-get update && apt-get install -y \
 # Set working directory
 WORKDIR /app
 
-# Copy requirements first for better caching
-COPY requirements.txt .
+# Copy dependency file first for better Docker layer caching
+COPY pyproject.toml .
 
-# Install Python dependencies
-RUN pip install --no-cache-dir -r requirements.txt
+# Install Python dependencies from pyproject.toml
+RUN pip install --no-cache-dir \
+    pyzmq>=25.0.0 \
+    msgpack>=1.0.0 \
+    psutil>=5.9.0 \
+    click>=8.0.0 \
+    rich>=13.0.0 \
+    typer>=0.9.0
 
 # Copy application code
 COPY . .
