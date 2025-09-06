@@ -442,6 +442,9 @@ class GitHubService:
             # Step 3: Copy template content using Git API
             await self._copy_template_content_bulk(repository, template_data)
 
+            # Step 4: Add deployment workflow (if not already present in template)
+            await self._add_deployment_workflow_if_needed(repository, template_data)
+
             # Step 5: Enable GitHub Pages
             await self._enable_github_pages_with_actions(repository)
 
@@ -1977,6 +1980,25 @@ production use.
             logger.error(f"❌ Failed to copy template content: {e}")
             raise
 
+    async def _add_deployment_workflow_if_needed(
+        self, repository: GitHubRepository, template_data: dict[str, Any]
+    ) -> None:
+        """Add deployment workflow if not already present in template."""
+        # Check if template already has deployment workflows
+        template_files = template_data.get("tree", [])
+        has_deployment_workflow = any(
+            f["path"].startswith(".github/workflows/") and
+            ("jekyll" in f["path"].lower() or "deploy" in f["path"].lower() or "pages" in f["path"].lower())
+            for f in template_files
+        )
+
+        if has_deployment_workflow:
+            logger.info(f"✅ Template already has deployment workflow, skipping custom workflow")
+            return
+
+        logger.info(f"⚙️ Adding custom deployment workflow to {repository.full_name}")
+        await self._add_deployment_workflow(repository)
+
     async def _add_deployment_workflow(self, repository: GitHubRepository) -> None:
         """Add a custom GitHub Actions deployment workflow."""
         logger.info(f"⚙️ Adding deployment workflow to {repository.full_name}")
@@ -2075,8 +2097,19 @@ jobs:
                     blob_result = await blob_response.json()
                     workflow_blob_sha = blob_result["sha"]
 
-                # Step 3: Create tree with workflow file
-                tree_items = [{
+                # Step 3: Get current tree and add workflow file to it
+                async with session.get(
+                    f"{self.base_url}/repos/{repository.full_name}/git/trees/{current_commit_sha}?recursive=1",
+                    headers=self.headers
+                ) as tree_response:
+                    if tree_response.status != 200:
+                        raise Exception(f"Failed to get current tree: {tree_response.status}")
+
+                    current_tree_data = await tree_response.json()
+                    existing_tree_items = current_tree_data["tree"]
+
+                # Add workflow file to existing tree items
+                tree_items = existing_tree_items + [{
                     "path": workflow_path,
                     "mode": "100644",
                     "type": "blob",
@@ -2131,4 +2164,6 @@ jobs:
         except Exception as e:
             logger.error(f"❌ Failed to add deployment workflow: {e}")
             # Don't fail the entire process if workflow addition fails
+
+
 
