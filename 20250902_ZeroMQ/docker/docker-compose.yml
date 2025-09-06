@@ -1,0 +1,154 @@
+version: '3.8'
+
+services:
+  coordinator:
+    build: .
+    container_name: zmq-coordinator
+    hostname: coordinator
+    ports:
+      - "5570:5570"  # Worker task distribution
+      - "5571:5571"  # Status updates
+      - "5572:5572"  # Monitor interface
+    environment:
+      - ROLE=coordinator
+      - WORKER_PORT=5570
+      - STATUS_PORT=5571
+      - MONITOR_PORT=5572
+      - LOG_LEVEL=INFO
+    command: python 02-cluster-patterns/coordinator.py
+    networks:
+      - zmq-cluster
+    volumes:
+      - ./logs:/app/logs
+    restart: unless-stopped
+
+  worker1:
+    build: .
+    container_name: zmq-worker1
+    hostname: worker1
+    environment:
+      - ROLE=worker
+      - NODE_ID=worker1
+      - COORDINATOR_HOST=coordinator
+      - COORDINATOR_WORKER_PORT=5570
+      - COORDINATOR_STATUS_PORT=5571
+      - LOG_LEVEL=INFO
+    command: python 02-cluster-patterns/worker.py worker1
+    networks:
+      - zmq-cluster
+    volumes:
+      - ./logs:/app/logs
+    depends_on:
+      - coordinator
+    restart: unless-stopped
+
+  worker2:
+    build: .
+    container_name: zmq-worker2
+    hostname: worker2
+    environment:
+      - ROLE=worker
+      - NODE_ID=worker2
+      - COORDINATOR_HOST=coordinator
+      - COORDINATOR_WORKER_PORT=5570
+      - COORDINATOR_STATUS_PORT=5571
+      - LOG_LEVEL=INFO
+    command: python 02-cluster-patterns/worker.py worker2
+    networks:
+      - zmq-cluster
+    volumes:
+      - ./logs:/app/logs
+    depends_on:
+      - coordinator
+    restart: unless-stopped
+
+  worker3:
+    build: .
+    container_name: zmq-worker3
+    hostname: worker3
+    environment:
+      - ROLE=worker
+      - NODE_ID=worker3
+      - COORDINATOR_HOST=coordinator
+      - COORDINATOR_WORKER_PORT=5570
+      - COORDINATOR_STATUS_PORT=5571
+      - LOG_LEVEL=INFO
+    command: python 02-cluster-patterns/worker.py worker3
+    networks:
+      - zmq-cluster
+    volumes:
+      - ./logs:/app/logs
+    depends_on:
+      - coordinator
+    restart: unless-stopped
+
+  monitor:
+    build: .
+    container_name: zmq-monitor
+    hostname: monitor
+    ports:
+      - "5572:5572"  # Monitor API
+      - "8080:8080"  # Web dashboard (if implemented)
+    environment:
+      - ROLE=monitor
+      - COORDINATOR_HOST=coordinator
+      - STATUS_PORT=5571
+      - MONITOR_PORT=5572
+      - LOG_LEVEL=INFO
+    command: python 02-cluster-patterns/monitor.py coordinator
+    networks:
+      - zmq-cluster
+    volumes:
+      - ./logs:/app/logs
+    depends_on:
+      - coordinator
+    restart: unless-stopped
+
+  # Test client for submitting tasks
+  client:
+    build: .
+    container_name: zmq-client
+    hostname: client
+    environment:
+      - ROLE=client
+      - COORDINATOR_HOST=coordinator
+      - COORDINATOR_PORT=5570
+    command: sleep infinity  # Keep container running for manual testing
+    networks:
+      - zmq-cluster
+    volumes:
+      - ./logs:/app/logs
+    depends_on:
+      - coordinator
+      - worker1
+      - worker2
+      - worker3
+    profiles:
+      - testing
+
+  # Network simulation container for testing failures
+  network-sim:
+    build: .
+    container_name: zmq-network-sim
+    hostname: network-sim
+    privileged: true
+    environment:
+      - ROLE=network-sim
+    command: sleep infinity
+    networks:
+      - zmq-cluster
+    volumes:
+      - ./scripts:/app/scripts
+    profiles:
+      - testing
+
+networks:
+  zmq-cluster:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
+
+volumes:
+  logs:
+    driver: local

@@ -1,0 +1,163 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "zmq-cluster-learning"
+version = "0.1.0"
+description = "ZeroMQ learning environment for cluster_runner integration"
+authors = [
+    {name = "Augment & Wentao", email = "jwt625@gmail.com"},
+]
+readme = "README.md"
+license = {text = "MIT"}
+requires-python = ">=3.11"
+keywords = ["zeromq", "cluster", "distributed", "coordination"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: System :: Distributed Computing",
+    "Topic :: System :: Networking",
+]
+
+dependencies = [
+    # ZeroMQ and async support
+    "pyzmq>=25.0.0",
+    
+    # Serialization
+    "msgpack>=1.0.0",
+    
+    # Monitoring and metrics
+    "psutil>=5.9.0",
+    
+    # CLI and utilities
+    "click>=8.0.0",
+    "rich>=13.0.0",
+    "typer>=0.9.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    # Testing
+    "pytest>=7.0.0",
+    "pytest-asyncio>=0.21.0",
+    "pytest-cov>=4.0.0",
+    
+    # Code quality
+    "black>=23.0.0",
+    "ruff>=0.1.0",
+    "mypy>=1.0.0",
+]
+
+web = [
+    # Web dashboard dependencies
+    "flask>=2.3.0",
+    "flask-socketio>=5.3.0",
+    "plotly>=5.14.0",
+    "dash>=2.10.0",
+]
+
+all = [
+    "zmq-cluster-learning[dev,web]"
+]
+
+# [project.scripts]
+# Will be added later when we have proper module structure
+
+[project.urls]
+Homepage = "https://github.com/jwt625/PlayGround"
+Repository = "https://github.com/jwt625/PlayGround"
+Documentation = "https://github.com/jwt625/PlayGround/tree/main/20250902_ZeroMQ"
+Issues = "https://github.com/jwt625/PlayGround/issues"
+
+[tool.hatch.build.targets.wheel]
+include = [
+    "01-zmq-basics/*.py",
+    "02-cluster-patterns/*.py",
+    "03-cluster-runner-simulation/*.py",
+    "docker/*",
+    "docs/*",
+    "*.md",
+    "*.toml"
+]
+
+[tool.black]
+line-length = 88
+target-version = ['py311']
+include = '\.pyi?$'
+
+[tool.ruff]
+target-version = "py311"
+line-length = 88
+select = [
+    "E",  # pycodestyle errors
+    "W",  # pycodestyle warnings
+    "F",  # pyflakes
+    "I",  # isort
+    "B",  # flake8-bugbear
+    "C4", # flake8-comprehensions
+    "UP", # pyupgrade
+]
+ignore = [
+    "E501",  # line too long, handled by black
+    "B008",  # do not perform function calls in argument defaults
+    "C901",  # too complex
+]
+
+[tool.mypy]
+python_version = "3.11"
+check_untyped_defs = true
+disallow_any_generics = true
+disallow_incomplete_defs = true
+disallow_untyped_defs = true
+no_implicit_optional = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+warn_return_any = true
+strict_equality = true
+
+[[tool.mypy.overrides]]
+module = [
+    "zmq.*",
+    "msgpack.*",
+    "psutil.*",
+]
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+minversion = "7.0"
+addopts = "-ra -q --strict-markers --strict-config"
+testpaths = ["tests"]
+asyncio_mode = "auto"
+markers = [
+    "slow: marks tests as slow (deselect with '-m \"not slow\"')",
+    "integration: marks tests as integration tests",
+    "unit: marks tests as unit tests",
+]
+
+[tool.coverage.run]
+source = ["."]
+omit = [
+    "*/tests/*",
+    "*/test_*",
+    "*/__init__.py",
+    ".venv/*",
+]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "if self.debug:",
+    "if settings.DEBUG",
+    "raise AssertionError",
+    "raise NotImplementedError",
+    "if 0:",
+    "if __name__ == .__main__.:",
+    "class .*\\bProtocol\\):",
+    "@(abc\\.)?abstractmethod",
+]
