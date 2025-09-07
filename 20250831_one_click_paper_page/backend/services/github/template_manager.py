@@ -72,7 +72,7 @@ class TemplateManager:
             "Accept": "application/vnd.github.v3+json",
             "User-Agent": "one-click-paper-page/0.1.0",
         }
-        
+
         # Class-level template cache shared across instances
         self._template_cache = TemplateCache()
 

@@ -8,7 +8,6 @@ This service handles:
 - Jekyll deployment workflow templates
 """
 
-import asyncio
 import base64
 import logging
 from typing import Any
@@ -48,12 +47,12 @@ class WorkflowService:
             ("jekyll" in f["path"].lower() or "deploy" in f["path"].lower() or "pages" in f["path"].lower())
             for f in template_files
         )
-        
+
         if has_deployment_workflow:
             logger.info("✅ Template already has deployment workflow")
         else:
             logger.info("⚙️ Template does not have deployment workflow")
-            
+
         return has_deployment_workflow
 
     async def add_deployment_workflow_if_needed(

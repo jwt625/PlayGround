@@ -2,13 +2,10 @@
 Unit tests for RepositoryService.
 """
 
-import json
-from unittest.mock import AsyncMock, patch
 
 import pytest
-import aiohttp
 
-from models.github import CreateRepositoryRequest, GitHubUser, GitHubRepository
+from models.github import CreateRepositoryRequest, GitHubRepository, GitHubUser
 from services.github.repository_service import RepositoryService
 
 
@@ -86,7 +83,6 @@ class TestRepositoryService:
 
     def test_github_user_model_validation(self):
         """Test that GitHubUser model requires all necessary fields."""
-        from models.github import GitHubUser
 
         # Test that GitHubUser requires html_url field
         user_data = {
@@ -115,7 +111,6 @@ class TestRepositoryService:
 
     def test_github_repository_model_validation(self):
         """Test that GitHubRepository model requires all necessary fields."""
-        from models.github import GitHubRepository, GitHubUser
         from datetime import datetime
 
         # Create a valid user first

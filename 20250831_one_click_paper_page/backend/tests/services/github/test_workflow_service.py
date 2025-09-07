@@ -4,7 +4,7 @@ Unit tests for WorkflowService.
 
 import pytest
 
-from models.github import GitHubRepository, GitHubUser, WorkflowRun
+from models.github import GitHubRepository, GitHubUser
 from services.github.workflow_service import WorkflowService
 
 
@@ -83,7 +83,7 @@ class TestWorkflowService:
     def test_workflow_service_initialization(self, mock_github_token):
         """Test workflow service initialization."""
         service = WorkflowService(mock_github_token)
-        
+
         assert service.access_token == mock_github_token
         assert service.base_url == "https://api.github.com"
         assert service.headers["Authorization"] == f"token {mock_github_token}"
@@ -99,7 +99,7 @@ class TestWorkflowService:
             'get_latest_workflow_run',
             'get_jekyll_deployment_workflow'
         ]
-        
+
         for method_name in required_methods:
             assert hasattr(workflow_service, method_name)
             assert callable(getattr(workflow_service, method_name))
@@ -107,7 +107,7 @@ class TestWorkflowService:
     def test_workflow_service_methods_are_async_or_sync(self, workflow_service):
         """Test that workflow service methods have correct async/sync signatures."""
         import inspect
-        
+
         # Async methods
         async_methods = [
             'has_deployment_workflow',
@@ -115,14 +115,14 @@ class TestWorkflowService:
             'add_deployment_workflow',
             'get_latest_workflow_run'
         ]
-        
+
         for method_name in async_methods:
             method = getattr(workflow_service, method_name)
             assert inspect.iscoroutinefunction(method), f"{method_name} should be async"
-        
+
         # Sync methods
         sync_methods = ['get_jekyll_deployment_workflow']
-        
+
         for method_name in sync_methods:
             method = getattr(workflow_service, method_name)
             assert not inspect.iscoroutinefunction(method), f"{method_name} should be sync"
@@ -142,7 +142,7 @@ class TestWorkflowService:
     def test_get_jekyll_deployment_workflow(self, workflow_service):
         """Test getting Jekyll deployment workflow content."""
         workflow_content = workflow_service.get_jekyll_deployment_workflow()
-        
+
         assert isinstance(workflow_content, str)
         assert "name: Deploy Academic Site" in workflow_content
         assert "jekyll build" in workflow_content
@@ -153,14 +153,14 @@ class TestWorkflowService:
     def test_workflow_content_structure(self, workflow_service):
         """Test that workflow content has proper YAML structure."""
         workflow_content = workflow_service.get_jekyll_deployment_workflow()
-        
+
         # Check for key YAML sections
         assert "on:" in workflow_content
         assert "permissions:" in workflow_content
         assert "jobs:" in workflow_content
         assert "build:" in workflow_content
         assert "deploy:" in workflow_content
-        
+
         # Check for GitHub Actions specific content
         assert "github-pages" in workflow_content
         assert "pages: write" in workflow_content
@@ -169,23 +169,23 @@ class TestWorkflowService:
     def test_workflow_service_method_signatures(self, workflow_service):
         """Test that workflow service methods have correct signatures."""
         import inspect
-        
+
         # Test has_deployment_workflow signature
         sig = inspect.signature(workflow_service.has_deployment_workflow)
         params = list(sig.parameters.keys())
         assert 'template_data' in params
-        
+
         # Test add_deployment_workflow_if_needed signature
         sig = inspect.signature(workflow_service.add_deployment_workflow_if_needed)
         params = list(sig.parameters.keys())
         assert 'repository' in params
         assert 'template_data' in params
-        
+
         # Test add_deployment_workflow signature
         sig = inspect.signature(workflow_service.add_deployment_workflow)
         params = list(sig.parameters.keys())
         assert 'repository' in params
-        
+
         # Test get_latest_workflow_run signature
         sig = inspect.signature(workflow_service.get_latest_workflow_run)
         params = list(sig.parameters.keys())
@@ -196,20 +196,20 @@ class TestWorkflowService:
         # Test template with workflow
         assert "tree" in mock_template_data_with_workflow
         assert isinstance(mock_template_data_with_workflow["tree"], list)
-        
+
         workflow_files = [
-            f for f in mock_template_data_with_workflow["tree"] 
+            f for f in mock_template_data_with_workflow["tree"]
             if f["path"].startswith(".github/workflows/")
         ]
         assert len(workflow_files) == 1
         assert "jekyll" in workflow_files[0]["path"]
-        
+
         # Test template without workflow
         assert "tree" in mock_template_data_without_workflow
         assert isinstance(mock_template_data_without_workflow["tree"], list)
-        
+
         workflow_files = [
-            f for f in mock_template_data_without_workflow["tree"] 
+            f for f in mock_template_data_without_workflow["tree"]
             if f["path"].startswith(".github/workflows/")
         ]
         assert len(workflow_files) == 0

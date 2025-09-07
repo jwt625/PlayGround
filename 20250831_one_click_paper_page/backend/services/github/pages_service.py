@@ -205,8 +205,8 @@ class GitHubPagesService:
             return False
 
     async def update_pages_config(
-        self, 
-        repository: GitHubRepository, 
+        self,
+        repository: GitHubRepository,
         source_branch: str = None,
         source_path: str = "/",
         build_type: str = "workflow"

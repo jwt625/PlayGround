@@ -6,13 +6,12 @@ token exchange and revocation.
 """
 
 import os
-from typing import Any
 
 import requests
 from fastapi import APIRouter, HTTPException
 
 from models.github import OAuthRevokeRequest, OAuthTokenRequest, OAuthTokenResponse
-from routers import RouterBase, handle_router_error
+from routers import RouterBase
 
 # GitHub OAuth configuration
 GITHUB_CLIENT_ID = os.getenv("GITHUB_CLIENT_ID")
@@ -43,7 +42,7 @@ async def exchange_oauth_token(request: OAuthTokenRequest) -> OAuthTokenResponse
         HTTPException: If token exchange fails or configuration is invalid
     """
     auth_router.log_operation("exchange_oauth_token", f"code={request.code[:8]}...")
-    
+
     try:
         if not GITHUB_CLIENT_SECRET:
             raise HTTPException(
@@ -86,7 +85,7 @@ async def exchange_oauth_token(request: OAuthTokenRequest) -> OAuthTokenResponse
             )
 
         auth_router.log_operation("exchange_oauth_token", "success")
-        
+
         return OAuthTokenResponse(
             access_token=token_response["access_token"],
             token_type=token_response.get("token_type", "bearer"),
@@ -133,7 +132,7 @@ async def revoke_oauth_token(request: OAuthRevokeRequest) -> dict[str, str]:
         HTTPException: If token revocation fails or configuration is invalid
     """
     auth_router.log_operation("revoke_oauth_token", "starting revocation")
-    
+
     try:
         if not GITHUB_CLIENT_SECRET or not GITHUB_CLIENT_ID:
             raise HTTPException(

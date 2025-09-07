@@ -43,7 +43,7 @@ class GitOperationsService:
         """Get a Git reference (branch/tag)."""
         if ref is None:
             ref = f"heads/{repository.default_branch}"
-        
+
         async with aiohttp.ClientSession() as session:
             async with session.get(
                 f"{self.base_url}/repos/{repository.full_name}/git/refs/{ref}",
@@ -51,7 +51,7 @@ class GitOperationsService:
             ) as response:
                 if response.status != 200:
                     raise Exception(f"Failed to get reference {ref}: {response.status}")
-                
+
                 return await response.json()
 
     async def create_blob(
@@ -62,7 +62,7 @@ class GitOperationsService:
             "content": content,
             "encoding": encoding
         }
-        
+
         async with aiohttp.ClientSession() as session:
             async with session.post(
                 f"{self.base_url}/repos/{repository.full_name}/git/blobs",
@@ -72,7 +72,7 @@ class GitOperationsService:
                 if response.status != 201:
                     error_data = await response.json()
                     raise Exception(f"Failed to create blob: {error_data}")
-                
+
                 result = await response.json()
                 return result["sha"]
 
@@ -81,7 +81,7 @@ class GitOperationsService:
     ) -> str:
         """Create a Git tree and return its SHA."""
         tree_data = {"tree": tree_items}
-        
+
         async with aiohttp.ClientSession() as session:
             async with session.post(
                 f"{self.base_url}/repos/{repository.full_name}/git/trees",
@@ -91,15 +91,15 @@ class GitOperationsService:
                 if response.status != 201:
                     error_data = await response.json()
                     raise Exception(f"Failed to create tree: {error_data}")
-                
+
                 result = await response.json()
                 return result["sha"]
 
     async def create_commit(
-        self, 
-        repository: GitHubRepository, 
-        message: str, 
-        tree_sha: str, 
+        self,
+        repository: GitHubRepository,
+        message: str,
+        tree_sha: str,
         parent_shas: list[str]
     ) -> str:
         """Create a Git commit and return its SHA."""
@@ -108,7 +108,7 @@ class GitOperationsService:
             "tree": tree_sha,
             "parents": parent_shas
         }
-        
+
         async with aiohttp.ClientSession() as session:
             async with session.post(
                 f"{self.base_url}/repos/{repository.full_name}/git/commits",
@@ -118,7 +118,7 @@ class GitOperationsService:
                 if response.status != 201:
                     error_data = await response.json()
                     raise Exception(f"Failed to create commit: {error_data}")
-                
+
                 result = await response.json()
                 return result["sha"]
 
@@ -127,7 +127,7 @@ class GitOperationsService:
     ) -> None:
         """Update a Git reference to point to a new commit."""
         ref_data = {"sha": sha}
-        
+
         async with aiohttp.ClientSession() as session:
             async with session.patch(
                 f"{self.base_url}/repos/{repository.full_name}/git/refs/{ref}",
@@ -149,7 +149,7 @@ class GitOperationsService:
             ) as response:
                 if response.status != 200:
                     raise Exception(f"Failed to get blob {blob_sha}: {response.status}")
-                
+
                 return await response.json()
 
     async def copy_template_content_bulk(
@@ -191,8 +191,8 @@ class GitOperationsService:
 
                         # Create new blob in target repository
                         new_blob_sha = await self.create_blob(
-                            repository, 
-                            blob_data["content"], 
+                            repository,
+                            blob_data["content"],
                             blob_data["encoding"]
                         )
 
@@ -228,16 +228,16 @@ class GitOperationsService:
             # Step 4: Create commit
             commit_message = f"Initialize repository with {template_data['repo']} template"
             new_commit_sha = await self.create_commit(
-                repository, 
-                commit_message, 
-                new_tree_sha, 
+                repository,
+                commit_message,
+                new_tree_sha,
                 [current_commit_sha]
             )
 
             # Step 5: Update branch reference
             await self.update_reference(
-                repository, 
-                f"heads/{repository.default_branch}", 
+                repository,
+                f"heads/{repository.default_branch}",
                 new_commit_sha
             )
 

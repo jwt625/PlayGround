@@ -2,12 +2,11 @@
 Shared test configuration and fixtures for GitHub services refactoring tests.
 """
 
-import json
-from unittest.mock import AsyncMock, MagicMock
-from typing import Any, Dict
+from typing import Any
+from unittest.mock import AsyncMock
 
-import pytest
 import aiohttp
+import pytest
 
 
 @pytest.fixture
@@ -17,7 +16,7 @@ def mock_github_token() -> str:
 
 
 @pytest.fixture
-def mock_github_user() -> Dict[str, Any]:
+def mock_github_user() -> dict[str, Any]:
     """Mock GitHub user data."""
     return {
         "login": "testuser",
@@ -29,7 +28,7 @@ def mock_github_user() -> Dict[str, Any]:
 
 
 @pytest.fixture
-def mock_github_repository() -> Dict[str, Any]:
+def mock_github_repository() -> dict[str, Any]:
     """Mock GitHub repository data."""
     return {
         "id": 67890,
@@ -49,7 +48,7 @@ def mock_github_repository() -> Dict[str, Any]:
 
 
 @pytest.fixture
-def mock_template_content() -> Dict[str, Any]:
+def mock_template_content() -> dict[str, Any]:
     """Mock template repository content."""
     return {
         "files": [
@@ -61,7 +60,7 @@ def mock_template_content() -> Dict[str, Any]:
             },
             {
                 "name": "_config.yml",
-                "path": "_config.yml", 
+                "path": "_config.yml",
                 "content": "dGl0bGU6IFRlc3QgU2l0ZQ==",  # Base64 encoded "title: Test Site"
                 "type": "file"
             }
@@ -78,18 +77,18 @@ def mock_template_content() -> Dict[str, Any]:
 def mock_aiohttp_session():
     """Mock aiohttp ClientSession for GitHub API calls."""
     session = AsyncMock(spec=aiohttp.ClientSession)
-    
+
     # Mock successful responses by default
     mock_response = AsyncMock()
     mock_response.status = 200
     mock_response.json = AsyncMock(return_value={"success": True})
     mock_response.text = AsyncMock(return_value='{"success": true}')
-    
+
     session.get.return_value.__aenter__.return_value = mock_response
     session.post.return_value.__aenter__.return_value = mock_response
     session.patch.return_value.__aenter__.return_value = mock_response
     session.put.return_value.__aenter__.return_value = mock_response
-    
+
     return session
 
 
@@ -130,7 +129,7 @@ def mock_github_api_responses():
 
 class MockGitHubService:
     """Mock GitHub service for testing routers."""
-    
+
     def __init__(self, token: str):
         self.token = token
         self.headers = {
@@ -138,13 +137,13 @@ class MockGitHubService:
             "Accept": "application/vnd.github.v3+json",
             "User-Agent": "one-click-paper-page/0.1.0",
         }
-    
+
     async def get_authenticated_user(self):
         return {"login": "testuser", "id": 12345}
-    
+
     async def get_token_scopes(self):
         return ["repo", "user", "workflow"]
-    
+
     async def create_repository_optimized(self, request):
         return {
             "repository": {"name": request.name, "full_name": f"testuser/{request.name}"},

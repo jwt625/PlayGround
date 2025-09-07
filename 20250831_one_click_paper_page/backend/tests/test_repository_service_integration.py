@@ -2,7 +2,6 @@
 Integration test to verify RepositoryService can be used alongside existing GitHubService.
 """
 
-import pytest
 from services.github.repository_service import RepositoryService
 from services.github_service import GitHubService
 
@@ -23,7 +22,7 @@ class TestRepositoryServiceIntegration:
         """Test that existing GitHubService still works."""
         service = GitHubService("test-token")
         assert service.access_token == "test-token"
-        
+
         # Check that GitHubService still has its methods
         assert hasattr(service, 'get_authenticated_user')
         assert hasattr(service, 'create_repository')
@@ -32,13 +31,13 @@ class TestRepositoryServiceIntegration:
         """Test that both services have the same interface for repository methods."""
         repo_service = RepositoryService("test-token")
         github_service = GitHubService("test-token")
-        
+
         # Methods that should exist in both
         common_methods = [
             'get_authenticated_user',
             'get_token_scopes'
         ]
-        
+
         for method in common_methods:
             assert hasattr(repo_service, method), f"RepositoryService missing {method}"
             assert hasattr(github_service, method), f"GitHubService missing {method}"
@@ -48,7 +47,7 @@ class TestRepositoryServiceIntegration:
         token = "test-token-123"
         repo_service = RepositoryService(token)
         github_service = GitHubService(token)
-        
+
         # Both should have the same headers
         assert repo_service.headers["Authorization"] == github_service.headers["Authorization"]
         assert repo_service.headers["Accept"] == github_service.headers["Accept"]

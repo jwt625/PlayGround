@@ -11,7 +11,6 @@ This service handles:
 import logging
 import uuid
 from datetime import datetime
-from typing import Any
 
 import aiohttp
 
@@ -49,8 +48,8 @@ class DeploymentTracker:
         self._deployments: dict[str, DeploymentJob] = {}
 
     def create_deployment_job(
-        self, 
-        repository: GitHubRepository, 
+        self,
+        repository: GitHubRepository,
         request: CreateRepositoryRequest
     ) -> str:
         """
@@ -75,7 +74,7 @@ class DeploymentTracker:
 
         self._deployments[deployment_id] = deployment_job
         logger.info(f"Created deployment job {deployment_id} for {repository.full_name}")
-        
+
         return deployment_id
 
     def get_deployment_job(self, deployment_id: str) -> DeploymentJob | None:
@@ -91,8 +90,8 @@ class DeploymentTracker:
         return self._deployments.get(deployment_id)
 
     def update_deployment_status(
-        self, 
-        deployment_id: str, 
+        self,
+        deployment_id: str,
         status: DeploymentStatus,
         message: str = None,
         error_message: str = None
@@ -115,10 +114,10 @@ class DeploymentTracker:
             return False
 
         deployment.status = status
-        
+
         if message:
             deployment.build_logs.append(message)
-            
+
         if error_message:
             deployment.error_message = error_message
             deployment.build_logs.append(f"Error: {error_message}")
@@ -274,20 +273,20 @@ class DeploymentTracker:
         """
         current_time = datetime.now()
         cleanup_count = 0
-        
+
         deployment_ids_to_remove = []
-        
+
         for deployment_id, deployment in self._deployments.items():
             if deployment.completed_at:
                 age_hours = (current_time - deployment.completed_at).total_seconds() / 3600
                 if age_hours > max_age_hours:
                     deployment_ids_to_remove.append(deployment_id)
-        
+
         for deployment_id in deployment_ids_to_remove:
             del self._deployments[deployment_id]
             cleanup_count += 1
-            
+
         if cleanup_count > 0:
             logger.info(f"Cleaned up {cleanup_count} completed deployments")
-            
+
         return cleanup_count

@@ -54,7 +54,7 @@ class TestGitOperationsService:
                 },
                 {
                     "path": "_config.yml",
-                    "type": "blob", 
+                    "type": "blob",
                     "sha": "def456",
                     "mode": "100644"
                 },
@@ -70,7 +70,7 @@ class TestGitOperationsService:
     def test_git_operations_service_initialization(self, mock_github_token):
         """Test Git operations service initialization."""
         service = GitOperationsService(mock_github_token)
-        
+
         assert service.access_token == mock_github_token
         assert service.base_url == "https://api.github.com"
         assert service.headers["Authorization"] == f"token {mock_github_token}"
@@ -88,7 +88,7 @@ class TestGitOperationsService:
             'get_blob_content',
             'copy_template_content_bulk'
         ]
-        
+
         for method_name in required_methods:
             assert hasattr(git_operations_service, method_name)
             assert callable(getattr(git_operations_service, method_name))
@@ -96,7 +96,7 @@ class TestGitOperationsService:
     def test_git_operations_service_methods_are_async(self, git_operations_service):
         """Test that all Git operations methods are async."""
         import inspect
-        
+
         async_methods = [
             'get_reference',
             'create_blob',
@@ -106,7 +106,7 @@ class TestGitOperationsService:
             'get_blob_content',
             'copy_template_content_bulk'
         ]
-        
+
         for method_name in async_methods:
             method = getattr(git_operations_service, method_name)
             assert inspect.iscoroutinefunction(method), f"{method_name} should be async"
@@ -114,26 +114,26 @@ class TestGitOperationsService:
     def test_git_operations_service_method_signatures(self, git_operations_service, mock_repository):
         """Test that Git operations methods have correct signatures."""
         import inspect
-        
+
         # Test get_reference signature
         sig = inspect.signature(git_operations_service.get_reference)
         params = list(sig.parameters.keys())
         assert 'repository' in params
         assert 'ref' in params
-        
+
         # Test create_blob signature
         sig = inspect.signature(git_operations_service.create_blob)
         params = list(sig.parameters.keys())
         assert 'repository' in params
         assert 'content' in params
         assert 'encoding' in params
-        
+
         # Test create_tree signature
         sig = inspect.signature(git_operations_service.create_tree)
         params = list(sig.parameters.keys())
         assert 'repository' in params
         assert 'tree_items' in params
-        
+
         # Test create_commit signature
         sig = inspect.signature(git_operations_service.create_commit)
         params = list(sig.parameters.keys())
@@ -141,20 +141,20 @@ class TestGitOperationsService:
         assert 'message' in params
         assert 'tree_sha' in params
         assert 'parent_shas' in params
-        
+
         # Test update_reference signature
         sig = inspect.signature(git_operations_service.update_reference)
         params = list(sig.parameters.keys())
         assert 'repository' in params
         assert 'ref' in params
         assert 'sha' in params
-        
+
         # Test get_blob_content signature
         sig = inspect.signature(git_operations_service.get_blob_content)
         params = list(sig.parameters.keys())
         assert 'template_repo' in params
         assert 'blob_sha' in params
-        
+
         # Test copy_template_content_bulk signature
         sig = inspect.signature(git_operations_service.copy_template_content_bulk)
         params = list(sig.parameters.keys())
@@ -164,11 +164,11 @@ class TestGitOperationsService:
     def test_git_operations_service_default_parameters(self, git_operations_service, mock_repository):
         """Test that methods have correct default parameters."""
         import inspect
-        
+
         # Test get_reference default ref parameter
         sig = inspect.signature(git_operations_service.get_reference)
         assert sig.parameters['ref'].default is None
-        
+
         # Test create_blob default encoding parameter
         sig = inspect.signature(git_operations_service.create_blob)
         assert sig.parameters['encoding'].default == "base64"
@@ -178,7 +178,7 @@ class TestGitOperationsService:
         assert "repo" in mock_template_data
         assert "tree" in mock_template_data
         assert isinstance(mock_template_data["tree"], list)
-        
+
         # Check that tree items have required fields
         for item in mock_template_data["tree"]:
             assert "path" in item

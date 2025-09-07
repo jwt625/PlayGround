@@ -2,17 +2,17 @@
 Unit tests for DeploymentTracker.
 """
 
-import pytest
 from datetime import datetime, timedelta
 
+import pytest
+
 from models.github import (
-    CreateRepositoryRequest, 
-    DeploymentJob, 
-    DeploymentStatus, 
-    GitHubRepository, 
+    CreateRepositoryRequest,
+    DeploymentStatus,
+    GitHubRepository,
     GitHubUser,
     TemplateType,
-    WorkflowRun
+    WorkflowRun,
 )
 from services.github.deployment_tracker import DeploymentTracker
 
@@ -75,7 +75,7 @@ class TestDeploymentTracker:
     def test_deployment_tracker_initialization(self, mock_github_token):
         """Test deployment tracker initialization."""
         tracker = DeploymentTracker(mock_github_token)
-        
+
         assert tracker.access_token == mock_github_token
         assert tracker.base_url == "https://api.github.com"
         assert tracker.headers["Authorization"] == f"token {mock_github_token}"
@@ -96,7 +96,7 @@ class TestDeploymentTracker:
             'get_all_deployments',
             'cleanup_completed_deployments'
         ]
-        
+
         for method_name in required_methods:
             assert hasattr(deployment_tracker, method_name)
             assert callable(getattr(deployment_tracker, method_name))
@@ -104,17 +104,17 @@ class TestDeploymentTracker:
     def test_deployment_tracker_methods_async_sync(self, deployment_tracker):
         """Test that deployment tracker methods have correct async/sync signatures."""
         import inspect
-        
+
         # Async methods
         async_methods = [
             'get_deployment_status',
             'update_deployment_from_workflow'
         ]
-        
+
         for method_name in async_methods:
             method = getattr(deployment_tracker, method_name)
             assert inspect.iscoroutinefunction(method), f"{method_name} should be async"
-        
+
         # Sync methods
         sync_methods = [
             'create_deployment_job',
@@ -124,7 +124,7 @@ class TestDeploymentTracker:
             'get_all_deployments',
             'cleanup_completed_deployments'
         ]
-        
+
         for method_name in sync_methods:
             method = getattr(deployment_tracker, method_name)
             assert not inspect.iscoroutinefunction(method), f"{method_name} should be sync"
@@ -132,10 +132,10 @@ class TestDeploymentTracker:
     def test_create_deployment_job(self, deployment_tracker, mock_repository, mock_create_request):
         """Test creating a deployment job."""
         deployment_id = deployment_tracker.create_deployment_job(mock_repository, mock_create_request)
-        
+
         assert isinstance(deployment_id, str)
         assert len(deployment_id) > 0
-        
+
         # Check that deployment was stored
         deployment = deployment_tracker.get_deployment_job(deployment_id)
         assert deployment is not None
@@ -149,7 +149,7 @@ class TestDeploymentTracker:
     def test_get_deployment_job_existing(self, deployment_tracker, mock_repository, mock_create_request):
         """Test getting an existing deployment job."""
         deployment_id = deployment_tracker.create_deployment_job(mock_repository, mock_create_request)
-        
+
         deployment = deployment_tracker.get_deployment_job(deployment_id)
         assert deployment is not None
         assert deployment.id == deployment_id
@@ -162,15 +162,15 @@ class TestDeploymentTracker:
     def test_update_deployment_status_success(self, deployment_tracker, mock_repository, mock_create_request):
         """Test updating deployment status successfully."""
         deployment_id = deployment_tracker.create_deployment_job(mock_repository, mock_create_request)
-        
+
         success = deployment_tracker.update_deployment_status(
-            deployment_id, 
+            deployment_id,
             DeploymentStatus.IN_PROGRESS,
             message="Deployment started"
         )
-        
+
         assert success is True
-        
+
         deployment = deployment_tracker.get_deployment_job(deployment_id)
         assert deployment.status == DeploymentStatus.IN_PROGRESS
         assert "Deployment started" in deployment.build_logs
@@ -178,15 +178,15 @@ class TestDeploymentTracker:
     def test_update_deployment_status_with_error(self, deployment_tracker, mock_repository, mock_create_request):
         """Test updating deployment status with error."""
         deployment_id = deployment_tracker.create_deployment_job(mock_repository, mock_create_request)
-        
+
         success = deployment_tracker.update_deployment_status(
             deployment_id,
             DeploymentStatus.FAILURE,
             error_message="Deployment failed"
         )
-        
+
         assert success is True
-        
+
         deployment = deployment_tracker.get_deployment_job(deployment_id)
         assert deployment.status == DeploymentStatus.FAILURE
         assert deployment.error_message == "Deployment failed"
@@ -199,16 +199,16 @@ class TestDeploymentTracker:
             "nonexistent-id",
             DeploymentStatus.SUCCESS
         )
-        
+
         assert success is False
 
     def test_set_workflow_run(self, deployment_tracker, mock_repository, mock_create_request, mock_workflow_run):
         """Test setting workflow run for deployment."""
         deployment_id = deployment_tracker.create_deployment_job(mock_repository, mock_create_request)
-        
+
         success = deployment_tracker.set_workflow_run(deployment_id, mock_workflow_run)
         assert success is True
-        
+
         deployment = deployment_tracker.get_deployment_job(deployment_id)
         assert deployment.workflow_run == mock_workflow_run
 
@@ -222,11 +222,11 @@ class TestDeploymentTracker:
         # Initially empty
         deployments = deployment_tracker.get_all_deployments()
         assert len(deployments) == 0
-        
+
         # Create some deployments
         id1 = deployment_tracker.create_deployment_job(mock_repository, mock_create_request)
         id2 = deployment_tracker.create_deployment_job(mock_repository, mock_create_request)
-        
+
         deployments = deployment_tracker.get_all_deployments()
         assert len(deployments) == 2
         assert id1 in deployments
@@ -237,15 +237,15 @@ class TestDeploymentTracker:
         # Create deployment and mark as completed
         deployment_id = deployment_tracker.create_deployment_job(mock_repository, mock_create_request)
         deployment = deployment_tracker.get_deployment_job(deployment_id)
-        
+
         # Manually set completed_at to old date
         deployment.completed_at = datetime.now() - timedelta(hours=25)
         deployment.status = DeploymentStatus.SUCCESS
-        
+
         # Cleanup should remove it
         cleanup_count = deployment_tracker.cleanup_completed_deployments(max_age_hours=24)
         assert cleanup_count == 1
-        
+
         # Deployment should be gone
         assert deployment_tracker.get_deployment_job(deployment_id) is None
 
@@ -254,28 +254,28 @@ class TestDeploymentTracker:
         # Create deployment and mark as recently completed
         deployment_id = deployment_tracker.create_deployment_job(mock_repository, mock_create_request)
         deployment = deployment_tracker.get_deployment_job(deployment_id)
-        
+
         # Set completed_at to recent date
         deployment.completed_at = datetime.now() - timedelta(hours=1)
         deployment.status = DeploymentStatus.SUCCESS
-        
+
         # Cleanup should not remove it
         cleanup_count = deployment_tracker.cleanup_completed_deployments(max_age_hours=24)
         assert cleanup_count == 0
-        
+
         # Deployment should still exist
         assert deployment_tracker.get_deployment_job(deployment_id) is not None
 
     def test_deployment_tracker_method_signatures(self, deployment_tracker):
         """Test that deployment tracker methods have correct signatures."""
         import inspect
-        
+
         # Test create_deployment_job signature
         sig = inspect.signature(deployment_tracker.create_deployment_job)
         params = list(sig.parameters.keys())
         assert 'repository' in params
         assert 'request' in params
-        
+
         # Test update_deployment_status signature
         sig = inspect.signature(deployment_tracker.update_deployment_status)
         params = list(sig.parameters.keys())

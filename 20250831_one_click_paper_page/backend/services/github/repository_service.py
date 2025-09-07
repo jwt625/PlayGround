@@ -264,7 +264,7 @@ class RepositoryService:
     ) -> str:
         """Wait for repository to be ready and return default branch."""
         import asyncio
-        
+
         start_time = asyncio.get_event_loop().time()
 
         while (asyncio.get_event_loop().time() - start_time) < max_wait_seconds:

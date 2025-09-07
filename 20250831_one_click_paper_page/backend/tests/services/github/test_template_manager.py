@@ -3,11 +3,10 @@ Unit tests for TemplateManager and TemplateCache.
 """
 
 import time
-from unittest.mock import patch
 
 import pytest
 
-from services.github.template_manager import TemplateManager, TemplateCache
+from services.github.template_manager import TemplateCache, TemplateManager
 
 
 class TestTemplateCache:
@@ -28,7 +27,7 @@ class TestTemplateCache:
         """Test setting and getting cache data."""
         test_data = {"files": ["test.md"], "repo": "test/repo"}
         template_cache.set("test/repo", test_data)
-        
+
         assert template_cache.is_cached("test/repo")
         cached_data = template_cache.get("test/repo")
         assert cached_data == test_data
@@ -84,7 +83,7 @@ class TestTemplateManager:
     def test_template_manager_initialization(self, mock_github_token):
         """Test template manager initialization."""
         manager = TemplateManager(mock_github_token)
-        
+
         assert manager.access_token == mock_github_token
         assert manager.base_url == "https://api.github.com"
         assert manager.headers["Authorization"] == f"token {mock_github_token}"
@@ -98,7 +97,7 @@ class TestTemplateManager:
         assert hasattr(template_manager, 'filter_essential_template_files')
         assert hasattr(template_manager, 'clear_cache')
         assert hasattr(template_manager, 'get_cache_info')
-        
+
         # Check that methods are callable
         assert callable(template_manager.get_template_content_cached)
         assert callable(template_manager.filter_essential_template_files)
@@ -117,9 +116,9 @@ class TestTemplateManager:
             {"path": "_posts/2023-01-01-test.md", "type": "blob"},
             {"path": "LICENSE", "type": "blob"},  # Should be skipped
         ]
-        
+
         filtered_files = template_manager.filter_essential_template_files(mock_tree_items)
-        
+
         # Check that essential files are included
         filtered_paths = [f["path"] for f in filtered_files]
         assert "_config.yml" in filtered_paths
@@ -127,7 +126,7 @@ class TestTemplateManager:
         assert ".github/workflows/deploy.yml" in filtered_paths
         assert "index.md" in filtered_paths
         assert "_posts/2023-01-01-test.md" in filtered_paths
-        
+
         # Check that skipped files are not included
         assert "README.md" not in filtered_paths
         assert "scripts/build.py" not in filtered_paths
@@ -136,7 +135,7 @@ class TestTemplateManager:
     def test_get_cache_info(self, template_manager):
         """Test getting cache information."""
         cache_info = template_manager.get_cache_info()
-        
+
         assert "cached_templates" in cache_info
         assert "cache_size" in cache_info
         assert "ttl_seconds" in cache_info
@@ -149,28 +148,28 @@ class TestTemplateManager:
         # Add some test data to cache
         template_manager._template_cache.set("test/repo", {"data": "test"})
         assert template_manager._template_cache.is_cached("test/repo")
-        
+
         # Clear cache
         template_manager.clear_cache()
-        
+
         # Cache should still have the data since it's not expired
         assert template_manager._template_cache.is_cached("test/repo")
 
     def test_template_manager_methods_exist_and_are_async(self, template_manager):
         """Test that required async methods exist."""
         import inspect
-        
+
         # Check async methods
         async_methods = ['get_template_content_cached']
-        
+
         for method_name in async_methods:
             method = getattr(template_manager, method_name)
             assert callable(method)
             assert inspect.iscoroutinefunction(method), f"{method_name} should be async"
-        
+
         # Check sync methods
         sync_methods = ['filter_essential_template_files', 'clear_cache', 'get_cache_info']
-        
+
         for method_name in sync_methods:
             method = getattr(template_manager, method_name)
             assert callable(method)

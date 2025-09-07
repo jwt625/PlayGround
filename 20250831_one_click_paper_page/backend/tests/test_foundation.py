@@ -3,6 +3,7 @@ Test foundation setup for GitHub services refactoring.
 """
 
 import pytest
+
 from tests.conftest import MockGitHubService
 
 
@@ -46,13 +47,13 @@ class TestFoundationSetup:
     def test_directory_structure_exists(self):
         """Test that the required directory structure exists."""
         import os
-        
+
         # Check that the services/github directory exists
         assert os.path.exists("services/github")
-        
+
         # Check that the routers directory exists
         assert os.path.exists("routers")
-        
+
         # Check that test directories exist
         assert os.path.exists("tests/services/github")
         assert os.path.exists("tests/routers")

@@ -1993,7 +1993,7 @@ production use.
         )
 
         if has_deployment_workflow:
-            logger.info(f"✅ Template already has deployment workflow, skipping custom workflow")
+            logger.info("✅ Template already has deployment workflow, skipping custom workflow")
             return
 
         logger.info(f"⚙️ Adding custom deployment workflow to {repository.full_name}")

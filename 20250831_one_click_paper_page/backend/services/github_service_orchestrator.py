@@ -49,7 +49,7 @@ class GitHubServiceOrchestrator:
             access_token: GitHub OAuth access token
         """
         self.access_token = access_token
-        
+
         # Initialize all modular services
         self.repository_service = RepositoryService(access_token)
         self.template_manager = TemplateManager(access_token)
@@ -298,7 +298,7 @@ class GitHubServiceOrchestrator:
         try:
             # Create optimized repository
             primary_result = await self.create_repository_optimized(request)
-            
+
             # Enable backup Pages
             backup_enabled = await self.enable_github_pages_as_backup(primary_result.repository)
 

@@ -9,6 +9,7 @@ import logging
 from typing import Any
 
 from fastapi import Header, HTTPException
+
 from services.github_service import GitHubService
 
 # Setup logging
@@ -33,7 +34,7 @@ def get_github_service(authorization: str = Header(..., description="Bearer toke
             status_code=401,
             detail="Invalid authorization header format. Expected 'Bearer <token>'"
         )
-    
+
     token = authorization.replace("Bearer ", "")
     return GitHubService(token)
 
@@ -52,10 +53,10 @@ def handle_router_error(operation_name: str, error: Exception) -> HTTPException:
     # Re-raise HTTP exceptions as-is
     if isinstance(error, HTTPException):
         return error
-    
+
     # Log the error for debugging
     logger.error(f"{operation_name} failed: {error}")
-    
+
     # Return generic 500 error for unexpected exceptions
     return HTTPException(
         status_code=500,
@@ -70,7 +71,7 @@ class RouterBase:
     This class can be extended by router modules to inherit shared
     error handling and logging patterns.
     """
-    
+
     def __init__(self, name: str):
         """
         Initialize router base.
@@ -80,7 +81,7 @@ class RouterBase:
         """
         self.name = name
         self.logger = logging.getLogger(f"routers.{name}")
-    
+
     def log_operation(self, operation: str, details: str = "") -> None:
         """
         Log router operation with consistent formatting.
@@ -93,7 +94,7 @@ class RouterBase:
         if details:
             message += f": {details}"
         self.logger.info(message)
-    
+
     def handle_error(self, operation: str, error: Exception) -> HTTPException:
         """
         Handle router operation error with logging.

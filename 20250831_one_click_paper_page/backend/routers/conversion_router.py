@@ -78,7 +78,7 @@ async def upload_and_convert(
         HTTPException: If file validation fails or processing error occurs
     """
     conversion_router.log_operation("upload_and_convert", f"file={file.filename}, mode={mode}")
-    
+
     try:
         # Validate file type
         if not file.filename:
@@ -179,7 +179,7 @@ async def get_conversion_status(job_id: str) -> ConversionStatusResponse:
         HTTPException: If job not found
     """
     conversion_router.log_operation("get_conversion_status", f"job_id={job_id}")
-    
+
     try:
         job_status = conversion_service.get_job_status(job_id)
         if not job_status:
@@ -214,7 +214,7 @@ async def get_conversion_result(job_id: str) -> ConversionResult:
         HTTPException: If job not found or not completed
     """
     conversion_router.log_operation("get_conversion_result", f"job_id={job_id}")
-    
+
     try:
         job_status = conversion_service.get_job_status(job_id)
         if not job_status:
@@ -237,7 +237,7 @@ async def get_conversion_result(job_id: str) -> ConversionResult:
             )
 
         conversion_router.log_operation("get_conversion_result", f"job_id={job_id}, success")
-        
+
         # Type assertion since we know result is ConversionResult from the service
         return result  # type: ignore[no-any-return]
     except HTTPException:
@@ -261,7 +261,7 @@ async def cancel_conversion(job_id: str) -> dict[str, str]:
         HTTPException: If job not found or cleanup fails
     """
     conversion_router.log_operation("cancel_conversion", f"job_id={job_id}")
-    
+
     try:
         job_status = conversion_service.get_job_status(job_id)
         if not job_status:
@@ -276,7 +276,7 @@ async def cancel_conversion(job_id: str) -> dict[str, str]:
             )
 
         conversion_router.log_operation("cancel_conversion", f"job_id={job_id}, success")
-        
+
         return {"message": f"Job {job_id} cancelled and cleaned up successfully"}
     except HTTPException:
         raise  # Re-raise HTTP exceptions as-is

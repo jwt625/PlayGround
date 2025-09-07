@@ -5,8 +5,8 @@ Integration tests for GitHubServiceOrchestrator.
 import pytest
 
 from models.github import CreateRepositoryRequest, TemplateType
-from services.github_service_orchestrator import GitHubServiceOrchestrator
 from services.github_service import GitHubService
+from services.github_service_orchestrator import GitHubServiceOrchestrator
 
 
 class TestGitHubServiceOrchestrator:
@@ -35,9 +35,9 @@ class TestGitHubServiceOrchestrator:
     def test_orchestrator_initialization(self, mock_github_token):
         """Test orchestrator initialization."""
         orchestrator = GitHubServiceOrchestrator(mock_github_token)
-        
+
         assert orchestrator.access_token == mock_github_token
-        
+
         # Check that all modular services are initialized
         assert orchestrator.repository_service is not None
         assert orchestrator.template_manager is not None
@@ -45,7 +45,7 @@ class TestGitHubServiceOrchestrator:
         assert orchestrator.workflow_service is not None
         assert orchestrator.pages_service is not None
         assert orchestrator.deployment_tracker is not None
-        
+
         # Check compatibility properties
         assert orchestrator.headers is not None
         assert orchestrator.base_url == "https://api.github.com"
@@ -55,15 +55,15 @@ class TestGitHubServiceOrchestrator:
         """Test that orchestrator has the same public API as original service."""
         # Get public methods from both services
         orchestrator_methods = [
-            method for method in dir(orchestrator) 
+            method for method in dir(orchestrator)
             if not method.startswith('_') and callable(getattr(orchestrator, method))
         ]
-        
+
         original_methods = [
-            method for method in dir(original_service) 
+            method for method in dir(original_service)
             if not method.startswith('_') and callable(getattr(original_service, method))
         ]
-        
+
         # Key public methods that must exist in both
         required_methods = [
             'get_authenticated_user',
@@ -75,7 +75,7 @@ class TestGitHubServiceOrchestrator:
             'get_deployment_status',
             'enable_github_pages_as_backup'
         ]
-        
+
         for method in required_methods:
             assert method in orchestrator_methods, f"Orchestrator missing method: {method}"
             assert method in original_methods, f"Original service missing method: {method}"
@@ -83,7 +83,7 @@ class TestGitHubServiceOrchestrator:
     def test_orchestrator_method_signatures_match_original(self, orchestrator, original_service):
         """Test that orchestrator method signatures match original service."""
         import inspect
-        
+
         methods_to_check = [
             'get_authenticated_user',
             'get_token_scopes',
@@ -92,22 +92,22 @@ class TestGitHubServiceOrchestrator:
             'create_repository_optimized',
             'get_deployment_status'
         ]
-        
+
         for method_name in methods_to_check:
             if hasattr(orchestrator, method_name) and hasattr(original_service, method_name):
                 orchestrator_sig = inspect.signature(getattr(orchestrator, method_name))
                 original_sig = inspect.signature(getattr(original_service, method_name))
-                
+
                 # Parameters should match
                 orchestrator_params = list(orchestrator_sig.parameters.keys())
                 original_params = list(original_sig.parameters.keys())
-                
+
                 assert orchestrator_params == original_params, f"Parameter mismatch in {method_name}"
 
     def test_orchestrator_async_methods_are_async(self, orchestrator):
         """Test that async methods in orchestrator are properly async."""
         import inspect
-        
+
         async_methods = [
             'get_authenticated_user',
             'get_token_scopes',
@@ -119,7 +119,7 @@ class TestGitHubServiceOrchestrator:
             'enable_github_pages_as_backup',
             'create_dual_deployment'
         ]
-        
+
         for method_name in async_methods:
             if hasattr(orchestrator, method_name):
                 method = getattr(orchestrator, method_name)
@@ -128,9 +128,9 @@ class TestGitHubServiceOrchestrator:
     def test_orchestrator_sync_methods_are_sync(self, orchestrator):
         """Test that sync methods in orchestrator are properly sync."""
         import inspect
-        
+
         sync_methods = []  # list_templates is now async in original service
-        
+
         for method_name in sync_methods:
             if hasattr(orchestrator, method_name):
                 method = getattr(orchestrator, method_name)
@@ -141,19 +141,19 @@ class TestGitHubServiceOrchestrator:
         # Check that services have the expected methods
         assert hasattr(orchestrator.repository_service, 'get_authenticated_user')
         assert hasattr(orchestrator.repository_service, 'create_empty_repository')
-        
+
         assert hasattr(orchestrator.template_manager, 'get_template_content_cached')
         assert hasattr(orchestrator.template_manager, 'filter_essential_template_files')
-        
+
         assert hasattr(orchestrator.git_operations_service, 'copy_template_content_bulk')
         assert hasattr(orchestrator.git_operations_service, 'create_blob')
-        
+
         assert hasattr(orchestrator.workflow_service, 'add_deployment_workflow_if_needed')
         assert hasattr(orchestrator.workflow_service, 'get_jekyll_deployment_workflow')
-        
+
         assert hasattr(orchestrator.pages_service, 'enable_github_pages_with_actions')
         assert hasattr(orchestrator.pages_service, 'enable_github_pages_as_backup')
-        
+
         assert hasattr(orchestrator.deployment_tracker, 'create_deployment_job')
         assert hasattr(orchestrator.deployment_tracker, 'get_deployment_status')
 
@@ -163,18 +163,18 @@ class TestGitHubServiceOrchestrator:
         assert "Authorization" in orchestrator.headers
         assert "Accept" in orchestrator.headers
         assert "User-Agent" in orchestrator.headers
-        
+
         assert "Authorization" in original_service.headers
         assert "Accept" in original_service.headers
         assert "User-Agent" in original_service.headers
-        
+
         # Headers should be identical
         assert orchestrator.headers["Accept"] == original_service.headers["Accept"]
         assert orchestrator.headers["User-Agent"] == original_service.headers["User-Agent"]
-        
+
         # Base URL should match
         assert orchestrator.base_url == original_service.base_url
-        
+
         # Template service should be available
         assert orchestrator.template_service is not None
         assert original_service.template_service is not None
@@ -182,7 +182,7 @@ class TestGitHubServiceOrchestrator:
     def test_orchestrator_service_initialization_with_same_token(self, mock_github_token):
         """Test that all services are initialized with the same token."""
         orchestrator = GitHubServiceOrchestrator(mock_github_token)
-        
+
         # All services should have the same access token
         assert orchestrator.repository_service.access_token == mock_github_token
         assert orchestrator.template_manager.access_token == mock_github_token
@@ -219,6 +219,7 @@ class TestGitHubServiceOrchestrator:
     def test_dual_deployment_result_structure(self, orchestrator):
         """Test that create_dual_deployment method has correct signature and return type."""
         import inspect
+
         from models.github import DualDeploymentResult
 
         # Check method signature
@@ -235,8 +236,14 @@ class TestGitHubServiceOrchestrator:
 
     def test_dual_deployment_result_model_fields(self):
         """Test that DualDeploymentResult has the expected fields."""
-        from models.github import DualDeploymentResult, GitHubRepository, GitHubUser, DeploymentStatus
         from datetime import datetime
+
+        from models.github import (
+            DeploymentStatus,
+            DualDeploymentResult,
+            GitHubRepository,
+            GitHubUser,
+        )
 
         # Create a mock repository
         user = GitHubUser(

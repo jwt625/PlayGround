@@ -8,27 +8,16 @@ import os
 from pathlib import Path
 from typing import Any
 
-import aiofiles
 from dotenv import load_dotenv
 from fastapi import (
-    BackgroundTasks,
     FastAPI,
-    File,
-    Form,
     Header,
     HTTPException,
     Request,
-    UploadFile,
 )
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
-from models.conversion import (
-    ConversionJobResponse,
-    ConversionMode,
-    ConversionResult,
-    ConversionStatusResponse,
-)
 from models.github import (
     CreateRepositoryRequest,
     CreateRepositoryResponse,
@@ -38,9 +27,9 @@ from models.github import (
     TemplateInfo,
     TemplateType,
 )
-from services.github_service import GitHubService
 from routers.auth_router import router as auth_router
 from routers.conversion_router import router as conversion_router
+from services.github_service import GitHubService
 from shared_services import conversion_service
 
 # Load environment variables
@@ -256,7 +245,9 @@ async def deploy_to_github(
         github_service = GitHubService(access_token)
 
         # Use existing repository service to generate unique, valid name
-        repository_name = await github_service.repository_service.generate_unique_repository_name(paper_title)
+        repository_name = await github_service.repository_service.generate_unique_repository_name(
+            paper_title
+        )
         logger.info(f"🏗️ Generated repository name: {repository_name}")
 
         # Import required models
