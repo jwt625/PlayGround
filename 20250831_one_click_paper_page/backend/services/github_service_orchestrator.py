@@ -9,6 +9,8 @@ import logging
 from pathlib import Path
 from typing import Any
 
+import aiohttp
+
 from models.github import (
     CreateRepositoryRequest,
     CreateRepositoryResponse,
@@ -406,7 +408,29 @@ class GitHubServiceOrchestrator:
             ref_data = await self.git_operations_service.get_reference(repository)
             current_commit_sha = ref_data["object"]["sha"]
 
-            # Step 2: Create blobs for all files
+            # Step 2: Get existing repository tree to preserve existing files (same as workflow service)
+            async with aiohttp.ClientSession() as session:
+                async with session.get(
+                    f"{self.git_operations_service.base_url}/repos/{repository.full_name}/git/trees/{current_commit_sha}?recursive=1",
+                    headers=self.git_operations_service.headers
+                ) as tree_response:
+                    if tree_response.status != 200:
+                        logger.warning(f"Failed to get current tree: {tree_response.status}")
+                        existing_tree_items = []
+                    else:
+                        current_tree_data = await tree_response.json()
+                        existing_tree_items = current_tree_data["tree"]
+
+            logger.info(f"📋 Found {len(existing_tree_items)} existing files in repository")
+
+            # Log existing .github files specifically
+            github_files = [item["path"] for item in existing_tree_items if item["path"].startswith(".github/")]
+            if github_files:
+                logger.info(f"🔧 Found existing .github files: {github_files}")
+            else:
+                logger.warning("⚠️ No .github files found in existing repository")
+
+            # Step 3: Create blobs for new files
             blob_shas = {}
             for file_info in files_to_commit:
                 file_path = file_info["path"]
@@ -428,8 +452,21 @@ class GitHubServiceOrchestrator:
                 blob_shas[file_path] = blob_sha
                 logger.info(f"📄 Created blob for {file_path}")
 
-            # Step 3: Create tree with all files
+            # Step 4: Merge existing files with new files (same as workflow service)
+            new_file_paths = set(blob_shas.keys())
+
+            # Add existing files that are not being overwritten
             tree_items = []
+            for existing_item in existing_tree_items:
+                if existing_item["path"] not in new_file_paths and existing_item["type"] == "blob":
+                    tree_items.append({
+                        "path": existing_item["path"],
+                        "mode": existing_item["mode"],
+                        "type": existing_item["type"],
+                        "sha": existing_item["sha"]
+                    })
+
+            # Add new files
             for file_path, blob_sha in blob_shas.items():
                 tree_items.append({
                     "path": file_path,
@@ -439,16 +476,16 @@ class GitHubServiceOrchestrator:
                 })
 
             new_tree_sha = await self.git_operations_service.create_tree(repository, tree_items)
-            logger.info(f"🌳 Created tree with {len(tree_items)} files")
+            logger.info(f"🌳 Created tree with {len(tree_items)} files ({len(existing_tree_items)} existing + {len(blob_shas)} new)")
 
-            # Step 4: Create commit
+            # Step 5: Create commit
             commit_message = f"Add converted paper content: {config.paper_title or 'Untitled'}"
             new_commit_sha = await self.git_operations_service.create_commit(
                 repository, commit_message, new_tree_sha, [current_commit_sha]
             )
             logger.info(f"📝 Created commit: {commit_message}")
 
-            # Step 5: Update branch reference
+            # Step 6: Update branch reference
             await self.git_operations_service.update_reference(
                 repository, f"heads/{repository.default_branch}", new_commit_sha
             )
