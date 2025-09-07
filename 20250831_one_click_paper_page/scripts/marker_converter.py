@@ -367,11 +367,33 @@ class MarkerConverter:
     def _convert_fast_mode(self, input_path: Path, output_dir: Path) -> bool:
         """Convert using fast mode (OCR disabled)."""
         self.last_mode_used = ConversionMode.FAST
+
+        # Set default quality assessment for fast mode
+        if self.last_quality_assessment is None:
+            self.last_quality_assessment = {
+                "has_good_text": True,
+                "recommended_mode": ConversionMode.FAST.value,
+                "confidence": "medium",
+                "avg_chars_per_page": 1000,  # Default estimate
+                "text_coverage": 0.9  # Default estimate
+            }
+
         return self._marker_convert(input_path, output_dir, fast_mode=True)
 
     def _convert_quality_mode(self, input_path: Path, output_dir: Path) -> bool:
         """Convert using quality mode (full OCR)."""
         self.last_mode_used = ConversionMode.QUALITY
+
+        # Set default quality assessment for quality mode
+        if self.last_quality_assessment is None:
+            self.last_quality_assessment = {
+                "has_good_text": False,
+                "recommended_mode": ConversionMode.QUALITY.value,
+                "confidence": "high",
+                "avg_chars_per_page": 800,  # Default estimate
+                "text_coverage": 0.95  # Default estimate
+            }
+
         return self._marker_convert(input_path, output_dir, fast_mode=False)
 
     def _marker_convert(self, input_path: Path, output_dir: Path, fast_mode: bool = None) -> bool:

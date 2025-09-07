@@ -218,14 +218,30 @@ class GitHubServiceOrchestrator:
                 message="Starting automated deployment via GitHub Actions..."
             )
 
-            # For now, mark as success (actual implementation would commit files)
-            self.deployment_tracker.update_deployment_status(
-                deployment_id,
-                DeploymentStatus.SUCCESS,
-                message="Deployment completed successfully!"
+            # Prepare converted content files for upload
+            files_to_commit = await self._prepare_converted_content_files(
+                converted_content_dir, config
             )
 
-            logger.info(f"Deployment {deployment_id} triggered via GitHub Actions")
+            if files_to_commit:
+                # Commit the converted content to the repository
+                await self._commit_converted_content(
+                    deployment.repository, files_to_commit, config
+                )
+
+                self.deployment_tracker.update_deployment_status(
+                    deployment_id,
+                    DeploymentStatus.SUCCESS,
+                    message="Converted content uploaded successfully! GitHub Actions will build and deploy the site."
+                )
+            else:
+                self.deployment_tracker.update_deployment_status(
+                    deployment_id,
+                    DeploymentStatus.SUCCESS,
+                    message="No content files found to deploy."
+                )
+
+            logger.info(f"Deployment {deployment_id} content uploaded successfully")
 
         except Exception as e:
             from models.github import DeploymentStatus
@@ -295,3 +311,180 @@ class GitHubServiceOrchestrator:
         except Exception as e:
             logger.error(f"❌ Failed to create dual deployment: {e}")
             raise
+
+    async def _prepare_converted_content_files(
+        self, converted_content_dir: Path, config: DeploymentConfig
+    ) -> list[dict[str, Any]]:
+        """Prepare converted content files for upload to repository."""
+        import base64
+        import json
+
+        files_to_commit = []
+
+        if not converted_content_dir.exists():
+            logger.warning(f"Converted content directory does not exist: {converted_content_dir}")
+            return files_to_commit
+
+        logger.info(f"📁 Preparing files from {converted_content_dir}")
+
+        # Process all files in the converted content directory
+        for file_path in converted_content_dir.rglob("*"):
+            if file_path.is_file():
+                try:
+                    # Determine relative path from content directory
+                    rel_path = file_path.relative_to(converted_content_dir)
+
+                    # Skip hidden files and system files
+                    if any(part.startswith('.') for part in rel_path.parts):
+                        continue
+
+                    logger.info(f"📄 Processing file: {rel_path}")
+
+                    # Read file content based on type
+                    if file_path.suffix.lower() in [
+                        ".md", ".html", ".txt", ".yml", ".yaml", ".json", ".css", ".js"
+                    ]:
+                        # Text files - read as UTF-8
+                        with open(file_path, encoding='utf-8') as f:
+                            content = f.read()
+
+                        # Customize content with paper metadata if it's an HTML file
+                        if file_path.suffix.lower() == ".html":
+                            content = self._customize_html_content(content, config)
+
+                        files_to_commit.append({
+                            "path": str(rel_path),
+                            "content": content,
+                            "encoding": "utf-8"
+                        })
+                    else:
+                        # Binary files (images, PDFs, etc.) - encode as base64
+                        with open(file_path, 'rb') as f:
+                            binary_content = f.read()
+
+                        encoded_content = base64.b64encode(binary_content).decode("utf-8")
+                        files_to_commit.append({
+                            "path": str(rel_path),
+                            "content": encoded_content,
+                            "encoding": "base64"
+                        })
+
+                except Exception as e:
+                    logger.warning(f"Failed to process file {file_path}: {e}")
+                    continue
+
+        # Add paper configuration file
+        config_content = {
+            "paper_title": config.paper_title,
+            "paper_authors": config.paper_authors,
+            "paper_date": config.paper_date,
+            "template": config.template.value,
+            "repository_name": config.repository_name,
+        }
+
+        files_to_commit.append({
+            "path": "paper-config.json",
+            "content": json.dumps(config_content, indent=2),
+            "encoding": "utf-8"
+        })
+
+        logger.info(f"✅ Prepared {len(files_to_commit)} files for upload")
+        return files_to_commit
+
+    async def _commit_converted_content(
+        self, repository: GitHubRepository, files_to_commit: list[dict[str, Any]], config: DeploymentConfig
+    ) -> None:
+        """Commit converted content files to the repository using Git API."""
+        if not files_to_commit:
+            logger.info("No files to commit")
+            return
+
+        logger.info(f"🚀 Committing {len(files_to_commit)} files to {repository.full_name}")
+
+        try:
+            # Step 1: Get current repository state
+            ref_data = await self.git_operations_service.get_reference(repository)
+            current_commit_sha = ref_data["object"]["sha"]
+
+            # Step 2: Create blobs for all files
+            blob_shas = {}
+            for file_info in files_to_commit:
+                file_path = file_info["path"]
+                content = file_info["content"]
+                encoding = file_info["encoding"]
+
+                # Convert encoding format for GitHub API
+                api_encoding = "base64" if encoding == "base64" else "utf-8"
+
+                # For UTF-8 files, we need to encode as base64 for the API
+                if encoding == "utf-8":
+                    import base64
+                    content = base64.b64encode(content.encode('utf-8')).decode('utf-8')
+                    api_encoding = "base64"
+
+                blob_sha = await self.git_operations_service.create_blob(
+                    repository, content, api_encoding
+                )
+                blob_shas[file_path] = blob_sha
+                logger.info(f"📄 Created blob for {file_path}")
+
+            # Step 3: Create tree with all files
+            tree_items = []
+            for file_path, blob_sha in blob_shas.items():
+                tree_items.append({
+                    "path": file_path,
+                    "mode": "100644",  # Regular file mode
+                    "type": "blob",
+                    "sha": blob_sha
+                })
+
+            new_tree_sha = await self.git_operations_service.create_tree(repository, tree_items)
+            logger.info(f"🌳 Created tree with {len(tree_items)} files")
+
+            # Step 4: Create commit
+            commit_message = f"Add converted paper content: {config.paper_title or 'Untitled'}"
+            new_commit_sha = await self.git_operations_service.create_commit(
+                repository, commit_message, new_tree_sha, [current_commit_sha]
+            )
+            logger.info(f"📝 Created commit: {commit_message}")
+
+            # Step 5: Update branch reference
+            await self.git_operations_service.update_reference(
+                repository, f"heads/{repository.default_branch}", new_commit_sha
+            )
+            logger.info(f"✅ Updated {repository.default_branch} branch")
+
+            logger.info(f"🎉 Successfully committed converted content to {repository.full_name}")
+
+        except Exception as e:
+            logger.error(f"❌ Failed to commit converted content: {e}")
+            raise
+
+    def _customize_html_content(self, content: str, config: DeploymentConfig) -> str:
+        """Customize HTML content with paper metadata."""
+        # Replace title
+        if config.paper_title:
+            content = content.replace(
+                "<title>Document</title>",
+                f"<title>{config.paper_title}</title>"
+            )
+            content = content.replace(
+                "<title>Document Conversion</title>",
+                f"<title>{config.paper_title}</title>"
+            )
+
+        # Replace author meta tag
+        if config.paper_authors:
+            authors_str = ", ".join(config.paper_authors)
+            content = content.replace(
+                '<meta name="author" content="">',
+                f'<meta name="author" content="{authors_str}">'
+            )
+            # Also add author meta tag if it doesn't exist
+            if '<meta name="author"' not in content and '<head>' in content:
+                content = content.replace(
+                    '<head>',
+                    f'<head>\n    <meta name="author" content="{authors_str}">'
+                )
+
+        return content

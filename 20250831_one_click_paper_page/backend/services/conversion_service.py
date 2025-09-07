@@ -282,6 +282,8 @@ class ConversionService:
 
             # Get conversion metrics
             metrics = self._converter.get_performance_metrics()
+            if metrics is None:
+                metrics = {}  # Provide default empty dict if metrics are None
 
             # Build result
             html_file = output_dir / "index.html"
@@ -534,8 +536,14 @@ class ConversionService:
         markdown_file = output_dir / "document.md"
 
         # Create more realistic placeholder content with sample metadata
-        file_stem = input_file.stem.replace('_', ' ').replace('-', ' ').title()
-        placeholder_content = f"""# {file_stem}: A Sample Academic Paper
+        # Extract a cleaner title from the filename
+        file_stem = input_file.stem.replace('_', ' ').replace('-', ' ')
+        # Remove common file prefixes/suffixes
+        file_stem = file_stem.replace('paper', '').replace('document', '').replace('draft', '').strip()
+        # Capitalize properly
+        file_stem = file_stem.title() if file_stem else "Untitled Paper"
+
+        placeholder_content = f"""# {file_stem}
 
 **Authors**: John Doe, Jane Smith, Alice Johnson
 
@@ -574,7 +582,7 @@ This concludes the placeholder conversion demonstration.
         # Create sample metadata for testing
         from models.conversion import PaperMetadata
         sample_metadata = PaperMetadata(
-            title=f"{file_stem}: A Sample Academic Paper",
+            title=file_stem,
             authors=["John Doe", "Jane Smith", "Alice Johnson"],
             abstract=(
                 "This is a placeholder conversion for the uploaded document. In a real "
@@ -589,10 +597,11 @@ This concludes the placeholder conversion demonstration.
         html_content = f"""<!DOCTYPE html>
 <html>
 <head>
-    <title>Document Conversion</title>
+    <title>{file_stem}</title>
+    <meta name="author" content="John Doe, Jane Smith, Alice Johnson">
 </head>
 <body>
-    <h1>Document Conversion (Placeholder)</h1>
+    <h1>{file_stem}</h1>
     <p>This is a placeholder conversion for: {input_file.name}</p>
     <p>The actual Marker converter is not available in this environment.</p>
 </body>
