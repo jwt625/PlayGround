@@ -733,9 +733,21 @@ To integrate Marker properly:
                 line = line.strip()
                 if line.startswith('# ') and len(line) > 3:
                     title = line[2:].strip()
+
                     # Clean up title (remove markdown formatting)
                     title = re.sub(r'\*\*([^*]+)\*\*', r'\1', title)  # Remove bold
                     title = re.sub(r'\*([^*]+)\*', r'\1', title)      # Remove italic
+
+                    # Remove markdown links: [text](url) -> text
+                    title = re.sub(r'\[([^\]]+)\]\([^)]+\)', r'\1', title)
+
+                    # Clean up arXiv references and URLs
+                    title = re.sub(r'arXiv:\d+\.\d+v?\d*\s*\[[^\]]+\]\s*\d+\s+\w+\s+\d+', '', title, flags=re.IGNORECASE)
+                    title = re.sub(r'\[arXiv:[^\]]+\]', '', title, flags=re.IGNORECASE)
+
+                    # Remove extra whitespace
+                    title = re.sub(r'\s+', ' ', title).strip()
+
                     if len(title) > 10 and not title.lower().startswith('abstract'):
                         metadata['title'] = title
                         break

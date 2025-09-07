@@ -131,53 +131,24 @@ export interface GitHubError {
   }>;
 }
 
-// Template options based on the planning document
-export const AVAILABLE_TEMPLATES: PaperTemplate[] = [
-  {
-    id: "academic-pages",
-    name: "Academic Pages (Jekyll)",
-    description:
-      "Full academic personal site with publications, talks, CV, portfolio",
-    repository_url: "https://github.com/academicpages/academicpages.github.io",
-    features: [
-      "Publications page",
-      "Talks and presentations",
-      "CV/Resume section",
-      "Portfolio showcase",
-      "Blog functionality",
-      "Google Analytics integration",
-    ],
-  },
-  {
-    id: "academic-project-page",
-    name: "Academic Project Page (JS)",
-    description: "Streamlined project/paper presentation page",
-    repository_url:
-      "https://github.com/academic-project-page-template/template",
-    features: [
-      "Clean paper presentation",
-      "Abstract and methodology",
-      "Results visualization",
-      "Code and data links",
-      "Citation information",
-      "Responsive design",
-    ],
-  },
-  {
-    id: "al-folio",
-    name: "al-folio (Jekyll)",
-    description: "Clean, responsive minimal academic landing page",
-    repository_url: "https://github.com/alshedivat/al-folio",
-    features: [
-      "Minimal design",
-      "Publication list",
-      "Project showcase",
-      "News and updates",
-      "Math rendering",
-      "Dark mode support",
-    ],
-  },
-];
+// Simplified: Use only minimal-academic template
+export const DEFAULT_TEMPLATE: PaperTemplate = {
+  id: "minimal-academic",
+  name: "Minimal Academic",
+  description: "Lightweight, fast-loading academic template focused on content. Ideal for single papers.",
+  repository_url: "https://github.com/pages-themes/minimal",
+  features: [
+    "Lightweight and fast",
+    "Clean typography",
+    "Math support",
+    "Mobile responsive",
+    "Easy customization",
+    "GitHub Pages compatible"
+  ],
+};
+
+// Keep for backward compatibility but only include the default template
+export const AVAILABLE_TEMPLATES: PaperTemplate[] = [DEFAULT_TEMPLATE];
 
 // File type detection
 export type SupportedFileType = "pdf" | "docx" | "latex" | "zip" | "overleaf";

@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { GitHubAuth } from "./components/auth/GitHubAuth";
 import { FileUpload } from "./components/upload/FileUpload";
-import { TemplateSelector } from "./components/templates/TemplateSelector";
 import { ConversionProgress } from "./components/conversion/ConversionProgress";
 import { ConversionModeSelector } from "./components/conversion/ConversionModeSelector";
 import { DeploymentConfig } from "./components/deployment/DeploymentConfig";
@@ -12,10 +11,11 @@ import type { DeploymentConfiguration } from "./components/deployment/Deployment
 import { useGitHubAuth } from "./lib/github/auth";
 import { useConversion } from "./lib/api/conversion";
 import { useDeployment } from "./lib/api/deployment";
+import { DEFAULT_TEMPLATE } from "./types/github";
 import "./App.css";
 import "./components/deployment/deployment.css";
 
-type Step = "auth" | "upload" | "template" | "convert" | "configure" | "deploy";
+type Step = "auth" | "upload" | "convert" | "configure" | "deploy";
 
 function App() {
   const [currentStep, setCurrentStep] = useState<Step>("auth");
@@ -185,13 +185,25 @@ function App() {
   const handleFilesSelected = (files: File[]) => {
     setSelectedFiles(files);
     if (files.length > 0) {
-      setCurrentStep("template");
+      // Skip template selection, go directly to conversion
+      setSelectedTemplate(DEFAULT_TEMPLATE);
+      setCurrentStep("convert");
+
+      // Start conversion immediately with default template
+      conversion.startConversion(
+        files[0],
+        DEFAULT_TEMPLATE.id,
+        conversionMode,
+        repositoryName || undefined
+      );
     }
   };
 
   const handleOverleafUrl = (url: string) => {
     setOverleafUrl(url);
-    setCurrentStep("template");
+    // Skip template selection for Overleaf too
+    setSelectedTemplate(DEFAULT_TEMPLATE);
+    setCurrentStep("convert");
   };
 
   const handleTemplateSelected = (template: PaperTemplate) => {
@@ -216,7 +228,7 @@ function App() {
 
   const handleConversionCancel = () => {
     conversion.reset();
-    setCurrentStep("template");
+    setCurrentStep("upload");
   };
 
   const handleConversionRetry = () => {
@@ -327,7 +339,6 @@ function App() {
     const steps: Step[] = [
       "auth",
       "upload",
-      "template",
       "convert",
       "configure",
       "deploy",
@@ -339,7 +350,7 @@ function App() {
     const steps: { key: Step; label: string }[] = [
       { key: "auth", label: "Authenticate" },
       { key: "upload", label: "Upload" },
-      { key: "template", label: "Template" },
+      { key: "convert", label: "Convert" },
       { key: "configure", label: "Configure" },
       { key: "deploy", label: "Deploy" },
     ];
@@ -418,19 +429,7 @@ function App() {
           />
         );
 
-      case "template":
-        return (
-          <div className="w-full max-w-4xl mx-auto p-6">
-            <ConversionModeSelector
-              mode={conversionMode}
-              onModeChange={setConversionMode}
-            />
-            <TemplateSelector
-              onTemplateSelected={handleTemplateSelected}
-              selectedTemplate={selectedTemplate || undefined}
-            />
-          </div>
-        );
+      // Template step removed - using default template automatically
 
       case "convert":
         return (
@@ -481,7 +480,7 @@ function App() {
                 paperTitle: conversion.result?.metadata?.title || "",
                 paperAuthors: conversion.result?.metadata?.authors || [],
               }}
-              onBackToTemplate={() => setCurrentStep("template")}
+              onBackToTemplate={() => setCurrentStep("upload")}
               onDeploy={handleStartDeployment}
               canDeploy={
                 !!(

@@ -8,6 +8,7 @@ This service handles:
 - Jekyll deployment workflow templates
 """
 
+import asyncio
 import base64
 import logging
 from typing import Any
@@ -77,8 +78,6 @@ class WorkflowService:
 
         try:
             async with aiohttp.ClientSession() as session:
-                # Use Git API approach (same as template copying)
-
                 # Step 1: Get current branch reference
                 async with session.get(
                     f"{self.base_url}/repos/{repository.full_name}/git/refs/heads/{repository.default_branch}",
@@ -217,12 +216,10 @@ class WorkflowService:
 on:
   push:
     branches: [ main, master ]
-  pull_request:
-    branches: [ main, master ]
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
   pages: write
   id-token: write
 
@@ -231,11 +228,13 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  build:
+  build-and-deploy:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Setup Ruby
         uses: ruby/setup-ruby@v1
@@ -255,14 +254,9 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
 
-  deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
-    needs: build
-    steps:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
 """

@@ -38,10 +38,10 @@ from models.github import (
     TemplateInfo,
     TemplateType,
 )
-# ConversionService moved to routers/conversion_router.py
 from services.github_service import GitHubService
 from routers.auth_router import router as auth_router
 from routers.conversion_router import router as conversion_router
+from shared_services import conversion_service
 
 # Load environment variables
 load_dotenv()
@@ -67,6 +67,8 @@ app.add_middleware(
 # Include routers
 app.include_router(auth_router)
 app.include_router(conversion_router)
+
+# Conversion service is now imported from shared_services
 
 # Additional Pydantic models for request/response
 
@@ -231,16 +233,31 @@ async def deploy_to_github(
         if not conversion_job_id:
             raise HTTPException(status_code=400, detail="conversion_job_id is required")
 
-        # TODO: This will be handled by conversion router
-        conversion_result = None  # conversion_service.get_job_result(conversion_job_id)
+        conversion_result = conversion_service.get_job_result(conversion_job_id)
         if not conversion_result:
             raise HTTPException(
                 status_code=404,
                 detail=f"Conversion job {conversion_job_id} not found or not completed"
             )
 
+        # Extract paper title and authors from conversion result metadata
+        paper_title = "Untitled"
+        paper_authors = []
+
+        if conversion_result.metadata:
+            if conversion_result.metadata.title:
+                paper_title = conversion_result.metadata.title
+                logger.info(f"✅ Extracted paper title: {paper_title}")
+            if conversion_result.metadata.authors:
+                paper_authors = conversion_result.metadata.authors
+                logger.info(f"✅ Extracted authors: {paper_authors}")
+
         # Create GitHub service
         github_service = GitHubService(access_token)
+
+        # Use existing repository service to generate unique, valid name
+        repository_name = await github_service.repository_service.generate_unique_repository_name(paper_title)
+        logger.info(f"🏗️ Generated repository name: {repository_name}")
 
         # Import required models
         from models.github import (
@@ -249,52 +266,62 @@ async def deploy_to_github(
             TemplateType,
         )
 
-        # Map template string to enum
-        template_map = {
-            "academic-pages": TemplateType.ACADEMIC_PAGES,
-            "al-folio": TemplateType.AL_FOLIO,
-            "minimal-academic": TemplateType.MINIMAL_ACADEMIC,
-        }
-        template_enum = template_map.get(
-            request.get("template", "minimal-academic"), TemplateType.MINIMAL_ACADEMIC
-        )
+        # Always use minimal-academic template
+        template_enum = TemplateType.MINIMAL_ACADEMIC
 
         # Create repository with GitHub Actions workflows
         repo_request = CreateRepositoryRequest(
-            name=request["repository_name"],
-            description=(
-                f"Academic paper website: {request.get('paper_title', 'Untitled')}"
-            ),
+            name=repository_name,
+            description=f"Academic paper website: {paper_title}",
             template=template_enum,
             conversion_job_id=conversion_job_id
         )
 
         # Use dual deployment if enabled in config
-        if request.get("enable_dual_deployment", True):
-            dual_result = await github_service.create_dual_deployment(repo_request)
-            repo_response = CreateRepositoryResponse(
-                repository=dual_result.standalone_repo,
-                deployment_id=dual_result.deployment_id,
-                status=dual_result.status,
-                message=dual_result.message
-            )
-        else:
-            repo_response = await github_service.create_repository_from_template(
-                repo_request
-            )
+        try:
+            if request.get("enable_dual_deployment", True):
+                dual_result = await github_service.create_dual_deployment(repo_request)
+                repo_response = CreateRepositoryResponse(
+                    repository=dual_result.standalone_repo,
+                    deployment_id=dual_result.deployment_id,
+                    status=dual_result.status,
+                    message=dual_result.message
+                )
+            else:
+                repo_response = await github_service.create_repository_from_template(
+                    repo_request
+                )
+        except Exception as e:
+            error_msg = str(e)
+            if "name already exists" in error_msg.lower():
+                # Generate a unique alternative name
+                import time
+                timestamp = int(time.time())
+                alternative_name = f"{repository_name}-{timestamp}"
+                raise HTTPException(
+                    status_code=409,
+                    detail=(
+                        f"Repository name '{repository_name}' already exists. "
+                        f"Try using '{alternative_name}' or choose a different name."
+                    )
+                )
+            else:
+                raise HTTPException(
+                    status_code=500,
+                    detail=f"Failed to create repository: {error_msg}"
+                )
 
         # Deploy content automatically
         deploy_config = DeploymentConfig(
-            repository_name=request["repository_name"],
+            repository_name=repository_name,  # Use generated name
             template=template_enum,
             conversion_job_id=conversion_job_id,
-            paper_title=request.get("paper_title"),
-            paper_authors=request.get("paper_authors", []),
+            paper_title=paper_title,
+            paper_authors=paper_authors,
         )
 
         # Get conversion result for deployment
-        # TODO: This will be handled by conversion router
-        conversion_result = None  # conversion_service.get_job_result(conversion_job_id)
+        conversion_result = conversion_service.get_job_result(conversion_job_id)
         if not conversion_result or not conversion_result.output_dir:
             raise HTTPException(
                 status_code=400,
@@ -386,8 +413,7 @@ async def deploy_converted_content(
                 detail="No conversion job ID provided in deployment config"
             )
 
-        # TODO: This will be handled by conversion router
-        conversion_result = None  # conversion_service.get_job_result(config.conversion_job_id)
+        conversion_result = conversion_service.get_job_result(config.conversion_job_id)
         if not conversion_result:
             raise HTTPException(
                 status_code=404,

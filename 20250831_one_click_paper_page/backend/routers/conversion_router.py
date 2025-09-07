@@ -32,17 +32,14 @@ from models.github import (
     TemplateType,
 )
 from routers import RouterBase
-from services.conversion_service import ConversionService
 from services.github_service import GitHubService
+from shared_services import conversion_service
 
 # Initialize router
 router = APIRouter(prefix="/api/convert", tags=["conversion"])
 
 # Router base for logging and error handling
 conversion_router = RouterBase("conversion")
-
-# Initialize conversion service
-conversion_service = ConversionService()
 
 # Setup logging
 logger = logging.getLogger(__name__)
@@ -52,7 +49,7 @@ logger = logging.getLogger(__name__)
 async def upload_and_convert(
     background_tasks: BackgroundTasks,
     file: UploadFile = File(...),
-    template: str = Form(...),
+    template: str = Form("minimal-academic"),  # Always use minimal-academic
     mode: ConversionMode = Form(ConversionMode.AUTO),
     repository_name: str = Form(None),
     auto_deploy: bool = Form(False),
@@ -127,12 +124,19 @@ async def upload_and_convert(
             if paper_authors:
                 authors_list = [author.strip() for author in paper_authors.split(",")]
 
+            # Generate repository name (will be refined after conversion with extracted title)
+            if not repository_name:
+                import time
+                timestamp = int(time.time())
+                repository_name = f"paper-{timestamp}-{job_id[:8]}"
+
             deployment_config = {
-                "repository_name": repository_name or f"paper-{job_id[:8]}",
-                "template": template,
-                "paper_title": paper_title,
+                "repository_name": repository_name,
+                "template": "minimal-academic",  # Always use minimal-academic
+                "paper_title": paper_title,  # Will be updated from conversion result
                 "paper_authors": authors_list,
-                "access_token": authorization.replace("Bearer ", "")
+                "access_token": authorization.replace("Bearer ", ""),
+                "job_id": job_id  # Add job_id for later metadata extraction
             }
 
         # Start conversion in background
@@ -302,25 +306,31 @@ async def _run_conversion_task(
             try:
                 logger.info(f"Starting automated GitHub deployment for job {job_id}")
 
+                # Extract paper title and authors from conversion result metadata
+                paper_title = "Untitled"
+                paper_authors = []
+
+                if result.metadata:
+                    if result.metadata.title:
+                        paper_title = result.metadata.title
+                        logger.info(f"✅ Extracted paper title: {paper_title}")
+                    if result.metadata.authors:
+                        paper_authors = result.metadata.authors
+                        logger.info(f"✅ Extracted authors: {paper_authors}")
+
                 # Create GitHub service
                 github_service = GitHubService(deployment_config["access_token"])
 
-                # Map template string to enum
-                template_map = {
-                    "academic-pages": TemplateType.ACADEMIC_PAGES,
-                    "al-folio": TemplateType.AL_FOLIO,
-                    "minimal-academic": TemplateType.MINIMAL_ACADEMIC,
-                }
-                template_enum = template_map.get(
-                    deployment_config["template"], TemplateType.MINIMAL_ACADEMIC
-                )
+                # Use existing repository service to generate unique, valid name
+                repo_name = await github_service.repository_service.generate_unique_repository_name(paper_title)
+                logger.info(f"🏗️ Generated repository name: {repo_name}")
+
+                # Always use minimal-academic template
+                template_enum = TemplateType.MINIMAL_ACADEMIC
 
                 repo_request = CreateRepositoryRequest(
-                    name=deployment_config["repository_name"],
-                    description=(
-                        f"Academic paper website: "
-                        f"{deployment_config.get('paper_title', 'Untitled')}"
-                    ),
+                    name=repo_name,
+                    description=f"Academic paper website: {paper_title}",
                     template=template_enum,
                     conversion_job_id=job_id
                 )
@@ -332,10 +342,10 @@ async def _run_conversion_task(
 
                 # Deploy source content to trigger GitHub Actions
                 deploy_config = DeploymentConfig(
-                    repository_name=deployment_config["repository_name"],
+                    repository_name=repo_name,
                     template=template_enum,
-                    paper_title=deployment_config.get("paper_title"),
-                    paper_authors=deployment_config.get("paper_authors", []),
+                    paper_title=paper_title,
+                    paper_authors=paper_authors,
                 )
 
                 # Upload source files to trigger automated conversion and deployment

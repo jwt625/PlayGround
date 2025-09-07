@@ -73,14 +73,101 @@ class RepositoryService:
                 ]
                 return scopes
 
+    def validate_repository_name(self, name: str) -> str:
+        """Convert paper title to valid GitHub repository name."""
+        import re
+        import time
+
+        if not name:
+            timestamp = int(time.time())
+            return f"paper-{timestamp}"
+
+        # Additional cleaning for paper titles
+        clean_name = name
+
+        # Remove markdown links: [text](url) -> text
+        clean_name = re.sub(r'\[([^\]]+)\]\([^)]+\)', r'\1', clean_name)
+
+        # Remove arXiv references and dates
+        clean_name = re.sub(r'arXiv:\d+\.\d+v?\d*\s*\[[^\]]+\]\s*\d+\s+\w+\s+\d+', '', clean_name, flags=re.IGNORECASE)
+        clean_name = re.sub(r'\[arXiv:[^\]]+\]', '', clean_name, flags=re.IGNORECASE)
+
+        # Convert to repository name format
+        clean_name = re.sub(r'[^a-zA-Z0-9\s-]', '', clean_name)
+        clean_name = re.sub(r'\s+', '-', clean_name.strip()).lower()
+
+        # Ensure starts with letter (GitHub requirement)
+        if not clean_name or not clean_name[0].isalpha():
+            clean_name = f"paper-{clean_name}" if clean_name else f"paper-{int(time.time())}"
+
+        # Remove trailing hyphens and limit length
+        clean_name = clean_name.rstrip('-')[:50]  # Leave room for timestamp
+
+        # Add timestamp for uniqueness
+        timestamp = int(time.time())
+        final_name = f"{clean_name}-{timestamp}" if clean_name else f"paper-{timestamp}"
+
+        return final_name[:100]  # GitHub limit
+
+    async def check_repository_exists(self, repo_name: str) -> bool:
+        """Check if a repository with the given name already exists."""
+        try:
+            # Get current user first
+            user = await self.get_current_user()
+
+            async with aiohttp.ClientSession() as session:
+                async with session.get(
+                    f"{self.base_url}/repos/{user.login}/{repo_name}",
+                    headers=self.headers
+                ) as response:
+                    return response.status == 200
+        except Exception:
+            return False
+
+    async def generate_unique_repository_name(self, base_name: str) -> str:
+        """Generate a unique repository name by checking for conflicts."""
+        import time
+
+        # First validate and clean the base name
+        clean_base = self.validate_repository_name(base_name)
+        logger.info(f"Cleaned repository name: '{base_name}' -> '{clean_base}'")
+
+        # Try the cleaned base name
+        if not await self.check_repository_exists(clean_base):
+            return clean_base
+
+        # If it exists, try with timestamp
+        timestamp = int(time.time())
+        timestamped_name = f"{clean_base}-{timestamp}"
+        timestamped_name = self.validate_repository_name(timestamped_name)
+        if not await self.check_repository_exists(timestamped_name):
+            return timestamped_name
+
+        # If that also exists, add a counter
+        for i in range(1, 100):
+            candidate_name = f"{clean_base}-{timestamp}-{i}"
+            candidate_name = self.validate_repository_name(candidate_name)
+            if not await self.check_repository_exists(candidate_name):
+                return candidate_name
+
+        # Fallback to UUID if all else fails
+        import uuid
+        fallback_name = f"paper-{timestamp}-{str(uuid.uuid4())[:8]}"
+        return self.validate_repository_name(fallback_name)
+
     async def create_empty_repository(
         self, request: CreateRepositoryRequest
     ) -> GitHubRepository:
-        """Create an empty repository."""
+        """Create an empty repository with unique name checking."""
+        # Ensure unique repository name
+        unique_name = await self.generate_unique_repository_name(request.name)
+        if unique_name != request.name:
+            logger.info(f"Repository name '{request.name}' exists, using '{unique_name}'")
+
         repo_data = {
-            "name": request.name,
+            "name": unique_name,
             "description": request.description or
-                f"Academic paper website - {request.name}",
+                f"Academic paper website - {unique_name}",
             "private": False,
             "has_issues": True,
             "has_projects": False,
