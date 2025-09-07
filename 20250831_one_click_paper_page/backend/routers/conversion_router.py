@@ -73,7 +73,7 @@ async def upload_and_convert(
 
     Returns:
         Job response with job ID and status
-        
+
     Raises:
         HTTPException: If file validation fails or processing error occurs
     """
@@ -174,7 +174,7 @@ async def get_conversion_status(job_id: str) -> ConversionStatusResponse:
 
     Returns:
         Current job status and progress
-        
+
     Raises:
         HTTPException: If job not found
     """
@@ -191,6 +191,7 @@ async def get_conversion_status(job_id: str) -> ConversionStatusResponse:
             phase=job_status["phase"],
             stage=job_status["stage"],
             message=job_status["message"],
+            progress=job_status["progress"],
             error=job_status.get("error"),
         )
     except HTTPException:
@@ -209,7 +210,7 @@ async def get_conversion_result(job_id: str) -> ConversionResult:
 
     Returns:
         Conversion result with output files and metrics
-        
+
     Raises:
         HTTPException: If job not found or not completed
     """
@@ -256,7 +257,7 @@ async def cancel_conversion(job_id: str) -> dict[str, str]:
 
     Returns:
         Success message
-        
+
     Raises:
         HTTPException: If job not found or cleanup fails
     """

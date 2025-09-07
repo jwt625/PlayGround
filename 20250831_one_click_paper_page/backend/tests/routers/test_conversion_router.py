@@ -32,7 +32,8 @@ class TestUploadAndConvert:
             "job_dir": Path("/tmp/test_job_123"),
             "phase": "queued",
             "stage": "initializing",
-            "message": "Job created"
+            "message": "Job created",
+            "progress": 0
         }
 
         # Mock file operations
@@ -105,7 +106,8 @@ class TestUploadAndConvert:
             "job_dir": Path("/tmp/test_job_123"),
             "phase": "queued",
             "stage": "initializing",
-            "message": "Job created"
+            "message": "Job created",
+            "progress": 0
         }
 
         test_file = BytesIO(b"fake pdf content")
@@ -135,6 +137,7 @@ class TestGetConversionStatus:
             "phase": "analyzing",
             "stage": "extracting_text",
             "message": "Extracting text from PDF",
+            "progress": 50,
             "error": None
         }
 
@@ -192,7 +195,8 @@ class TestGetConversionResult:
 
         mock_service.get_job_status.return_value = {
             "status": "completed",
-            "result": mock_result
+            "result": mock_result,
+            "progress": 100
         }
 
         response = client.get("/api/convert/result/test_job_123")
@@ -207,7 +211,8 @@ class TestGetConversionResult:
     def test_get_result_job_not_completed(self, mock_service):
         """Test result retrieval for incomplete job."""
         mock_service.get_job_status.return_value = {
-            "status": "processing"
+            "status": "processing",
+            "progress": 50
         }
 
         response = client.get("/api/convert/result/test_job_123")
@@ -221,7 +226,8 @@ class TestGetConversionResult:
         """Test result retrieval when no result is available."""
         mock_service.get_job_status.return_value = {
             "status": "completed",
-            "result": None
+            "result": None,
+            "progress": 100
         }
 
         response = client.get("/api/convert/result/test_job_123")
@@ -237,7 +243,8 @@ class TestCancelConversion:
     def test_cancel_success(self, mock_service):
         """Test successful job cancellation."""
         mock_service.get_job_status.return_value = {
-            "status": "processing"
+            "status": "processing",
+            "progress": 50
         }
         mock_service.cleanup_job.return_value = True
 
@@ -262,7 +269,8 @@ class TestCancelConversion:
     def test_cancel_cleanup_failure(self, mock_service):
         """Test cancellation when cleanup fails."""
         mock_service.get_job_status.return_value = {
-            "status": "processing"
+            "status": "processing",
+            "progress": 50
         }
         mock_service.cleanup_job.return_value = False
 

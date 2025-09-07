@@ -56,6 +56,7 @@ class ConversionStatusResponse(BaseModel):
     phase: ConversionPhase = Field(..., description="Current conversion phase")
     stage: str = Field(..., description="Current processing stage")
     message: str = Field(..., description="Human-readable status message")
+    progress: int = Field(..., description="Conversion progress percentage (0-100)")
     error: str | None = Field(None, description="Error message if failed")
 
 

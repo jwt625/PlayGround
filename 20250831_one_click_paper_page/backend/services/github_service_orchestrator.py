@@ -36,7 +36,7 @@ logger = logging.getLogger(__name__)
 class GitHubServiceOrchestrator:
     """
     Orchestrator for GitHub operations using modular services.
-    
+
     This class maintains the same public API as the original GitHubService
     but delegates to specialized services for implementation.
     """
@@ -300,7 +300,7 @@ class GitHubServiceOrchestrator:
             primary_result = await self.create_repository_optimized(request)
 
             # Enable backup Pages
-            backup_enabled = await self.enable_github_pages_as_backup(primary_result.repository)
+            await self.enable_github_pages_as_backup(primary_result.repository)
 
             return DualDeploymentResult(
                 standalone_repo=primary_result.repository,

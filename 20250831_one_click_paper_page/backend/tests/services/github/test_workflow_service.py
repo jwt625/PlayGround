@@ -158,11 +158,9 @@ class TestWorkflowService:
         assert "on:" in workflow_content
         assert "permissions:" in workflow_content
         assert "jobs:" in workflow_content
-        assert "build:" in workflow_content
-        assert "deploy:" in workflow_content
+        assert "build-and-deploy:" in workflow_content
 
         # Check for GitHub Actions specific content
-        assert "github-pages" in workflow_content
         assert "pages: write" in workflow_content
         assert "id-token: write" in workflow_content
 

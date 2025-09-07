@@ -31,13 +31,13 @@ async def exchange_oauth_token(request: OAuthTokenRequest) -> OAuthTokenResponse
 
     This endpoint handles the server-side token exchange required by GitHub OAuth.
     The client secret is kept secure on the server side.
-    
+
     Args:
         request: OAuth token request with authorization code
-        
+
     Returns:
         OAuth token response with access token
-        
+
     Raises:
         HTTPException: If token exchange fails or configuration is invalid
     """
@@ -121,13 +121,13 @@ async def revoke_oauth_token(request: OAuthRevokeRequest) -> dict[str, str]:
 
     This endpoint revokes the access token with GitHub to ensure
     proper cleanup when users log out.
-    
+
     Args:
         request: OAuth revoke request with access token
-        
+
     Returns:
         Success message
-        
+
     Raises:
         HTTPException: If token revocation fails or configuration is invalid
     """

@@ -107,6 +107,7 @@ class ConversionService:
             "mode": mode,
             "job_dir": job_dir,
             "created_at": time.time(),
+            "progress": 0,
             "error": None,
             "result": None,
         }
@@ -175,9 +176,10 @@ class ConversionService:
             self._update_job_status(
                 job_id,
                 ConversionStatus.PROCESSING,
-                ConversionPhase.PREPARING,
+                10,
                 "starting_conversion",
-                "Starting conversion process"
+                "Starting conversion process",
+                phase=ConversionPhase.PREPARING
             )
             if progress_callback:
                 await progress_callback(job_id, 10, "starting_conversion")
@@ -189,9 +191,10 @@ class ConversionService:
             self._update_job_status(
                 job_id,
                 ConversionStatus.PROCESSING,
-                ConversionPhase.PREPARING,
+                20,
                 "file_prepared",
                 "Input file prepared",
+                phase=ConversionPhase.PREPARING
             )
             if progress_callback:
                 await progress_callback(job_id, 20, "file_prepared")
@@ -212,9 +215,10 @@ class ConversionService:
             self._update_job_status(
                 job_id,
                 ConversionStatus.COMPLETED,
-                ConversionPhase.COMPLETED,
+                100,
                 "completed",
                 "Conversion completed successfully",
+                phase=ConversionPhase.COMPLETED
             )
             if progress_callback:
                 await progress_callback(job_id, 100, "completed")
@@ -224,8 +228,8 @@ class ConversionService:
         except Exception as e:
             logger.error(f"Conversion failed for job {job_id}: {e}")
             self._update_job_status(
-                job_id, ConversionStatus.FAILED, ConversionPhase.QUEUED, "failed",
-                f"Conversion failed: {str(e)}", error=str(e)
+                job_id, ConversionStatus.FAILED, 0, "failed",
+                f"Conversion failed: {str(e)}", phase=ConversionPhase.QUEUED, error=str(e)
             )
             if progress_callback:
                 await progress_callback(job_id, 0, "failed")
@@ -258,9 +262,10 @@ class ConversionService:
             self._update_job_status(
                 job_id,
                 ConversionStatus.PROCESSING,
-                ConversionPhase.ANALYZING,
+                30,
                 "loading_models",
                 "Loading conversion models",
+                phase=ConversionPhase.ANALYZING
             )
 
             # Run conversion with progress tracking
@@ -275,9 +280,10 @@ class ConversionService:
             self._update_job_status(
                 job_id,
                 ConversionStatus.PROCESSING,
-                ConversionPhase.FINALIZING,
+                90,
                 "finalizing",
                 "Finalizing output files",
+                phase=ConversionPhase.FINALIZING
             )
 
             # Get conversion metrics
@@ -382,18 +388,20 @@ class ConversionService:
             self._update_job_status(
                 job_id,
                 ConversionStatus.PROCESSING,
-                ConversionPhase.ANALYZING,
+                25,
                 "assessing_quality",
                 "Analyzing document structure and quality...",
+                phase=ConversionPhase.ANALYZING
             )
 
             # Phase 2: Converting document
             self._update_job_status(
                 job_id,
                 ConversionStatus.PROCESSING,
-                ConversionPhase.CONVERTING,
+                40,
                 "loading_models",
                 "Loading AI models and starting conversion...",
+                phase=ConversionPhase.CONVERTING
             )
 
             # Run the actual conversion with timer-based progress
@@ -406,18 +414,20 @@ class ConversionService:
                 self._update_job_status(
                     job_id,
                     ConversionStatus.PROCESSING,
-                    ConversionPhase.PROCESSING,
+                    75,
                     "extracting_images",
                     "Processing images and extracting content...",
+                    phase=ConversionPhase.PROCESSING
                 )
 
                 # Phase 4: Finalizing
                 self._update_job_status(
                     job_id,
                     ConversionStatus.PROCESSING,
-                    ConversionPhase.FINALIZING,
+                    95,
                     "finalizing",
                     "Finalizing output files...",
+                    phase=ConversionPhase.FINALIZING
                 )
 
             return success
@@ -448,45 +458,50 @@ class ConversionService:
             """Background thread to update progress during conversion."""
             # More realistic timing based on actual Marker conversion stages
             conversion_updates = [
-                # Phase, stage, message, wait_seconds
+                # Phase, stage, message, wait_seconds, progress
                 (
                     ConversionPhase.CONVERTING,
                     "layout_analysis",
                     "Analyzing document layout...",
                     8,
+                    45,
                 ),
                 (
                     ConversionPhase.CONVERTING,
                     "text_recognition",
                     "Recognizing text and formulas...",
                     12,
+                    55,
                 ),
                 (
                     ConversionPhase.CONVERTING,
                     "processing_text",
                     "Processing text blocks...",
                     10,
+                    65,
                 ),
                 (
                     ConversionPhase.PROCESSING,
                     "extracting_images",
                     "Extracting images and diagrams...",
                     8,
+                    80,
                 ),
                 (
                     ConversionPhase.PROCESSING,
                     "processing_equations",
                     "Processing mathematical equations...",
                     6,
+                    90,
                 ),
             ]
 
-            for phase, stage, message, wait_seconds in conversion_updates:
+            for phase, stage, message, wait_seconds, progress in conversion_updates:
                 if not progress_thread_active:
                     break
 
                 self._update_job_status(
-                    job_id, ConversionStatus.PROCESSING, phase, stage, message
+                    job_id, ConversionStatus.PROCESSING, progress, stage, message, phase=phase
                 )
 
                 # Wait for the specified time, checking for cancellation
@@ -639,21 +654,25 @@ This concludes the placeholder conversion demonstration.
         self,
         job_id: str,
         status: ConversionStatus,
-        phase: ConversionPhase,
+        progress: int,
         stage: str,
         message: str,
+        phase: ConversionPhase | None = None,
         error: str | None = None
     ) -> None:
         """Update job status in tracking dictionary."""
         if job_id in self._jobs:
-            self._jobs[job_id].update({
+            update_data = {
                 "status": status,
-                "phase": phase,
+                "progress": progress,
                 "stage": stage,
                 "message": message,
                 "error": error,
                 "updated_at": time.time(),
-            })
+            }
+            if phase is not None:
+                update_data["phase"] = phase
+            self._jobs[job_id].update(update_data)
 
     def cleanup_job(self, job_id: str) -> bool:
         """
