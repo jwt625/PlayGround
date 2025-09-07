@@ -10,7 +10,7 @@ This service handles:
 """
 
 import logging
-from typing import Any
+from typing import Any, cast
 
 import aiohttp
 
@@ -38,7 +38,7 @@ class GitOperationsService:
         }
 
     async def get_reference(
-        self, repository: GitHubRepository, ref: str = None
+        self, repository: GitHubRepository, ref: str | None = None
     ) -> dict[str, Any]:
         """Get a Git reference (branch/tag)."""
         if ref is None:
@@ -52,7 +52,7 @@ class GitOperationsService:
                 if response.status != 200:
                     raise Exception(f"Failed to get reference {ref}: {response.status}")
 
-                return await response.json()
+                return cast(dict[str, Any], await response.json())
 
     async def create_blob(
         self, repository: GitHubRepository, content: str, encoding: str = "base64"
@@ -74,7 +74,7 @@ class GitOperationsService:
                     raise Exception(f"Failed to create blob: {error_data}")
 
                 result = await response.json()
-                return result["sha"]
+                return cast(str, result["sha"])
 
     async def create_tree(
         self, repository: GitHubRepository, tree_items: list[dict[str, Any]]
@@ -93,7 +93,7 @@ class GitOperationsService:
                     raise Exception(f"Failed to create tree: {error_data}")
 
                 result = await response.json()
-                return result["sha"]
+                return cast(str, result["sha"])
 
     async def create_commit(
         self,
@@ -120,7 +120,7 @@ class GitOperationsService:
                     raise Exception(f"Failed to create commit: {error_data}")
 
                 result = await response.json()
-                return result["sha"]
+                return cast(str, result["sha"])
 
     async def update_reference(
         self, repository: GitHubRepository, ref: str, sha: str
@@ -150,7 +150,7 @@ class GitOperationsService:
                 if response.status != 200:
                     raise Exception(f"Failed to get blob {blob_sha}: {response.status}")
 
-                return await response.json()
+                return cast(dict[str, Any], await response.json())
 
     async def copy_template_content_bulk(
         self, repository: GitHubRepository, template_data: dict[str, Any]
@@ -187,7 +187,9 @@ class GitOperationsService:
                 if file_item["type"] == "blob":  # Only files, not directories
                     try:
                         # Fetch file content from template repository
-                        blob_data = await self.get_blob_content(template_repo, file_item['sha'])
+                        blob_data = await self.get_blob_content(
+                            template_repo, file_item['sha']
+                        )
 
                         # Create new blob in target repository
                         new_blob_sha = await self.create_blob(
@@ -202,7 +204,9 @@ class GitOperationsService:
                         }
 
                     except Exception as e:
-                        logger.warning(f"Failed to process blob for {file_item['path']}: {e}")
+                        logger.warning(
+                            f"Failed to process blob for {file_item['path']}: {e}"
+                        )
                         continue
 
             logger.info(
@@ -226,7 +230,9 @@ class GitOperationsService:
             new_tree_sha = await self.create_tree(repository, tree_items)
 
             # Step 4: Create commit
-            commit_message = f"Initialize repository with {template_data['repo']} template"
+            commit_message = (
+                f"Initialize repository with {template_data['repo']} template"
+            )
             new_commit_sha = await self.create_commit(
                 repository,
                 commit_message,

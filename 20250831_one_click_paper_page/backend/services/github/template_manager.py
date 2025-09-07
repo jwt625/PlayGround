@@ -105,11 +105,16 @@ class TemplateManager:
                             headers=self.headers
                         ) as main_response:
                             if main_response.status != 200:
-                                raise Exception(f"Failed to get template tree: {main_response.status}")
+                                raise Exception(
+                                    f"Failed to get template tree: "
+                                    f"{main_response.status}"
+                                )
                             tree_data = await main_response.json()
                             default_branch = "main"
                     elif response.status != 200:
-                        raise Exception(f"Failed to get template tree: {response.status}")
+                        raise Exception(
+                            f"Failed to get template tree: {response.status}"
+                        )
                     else:
                         tree_data = await response.json()
                         default_branch = "master"
@@ -190,7 +195,8 @@ class TemplateManager:
         for item in tree_items:
             path = item["path"]
 
-            # Explicitly include ALL .github files first (now that we have workflow scope)
+            # Explicitly include ALL .github files first (now that we have workflow
+            # scope)
             if path.startswith(".github"):
                 essential_files.append(item)
                 continue

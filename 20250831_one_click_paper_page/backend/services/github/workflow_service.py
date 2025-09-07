@@ -44,7 +44,11 @@ class WorkflowService:
         template_files = template_data.get("tree", [])
         has_deployment_workflow = any(
             f["path"].startswith(".github/workflows/") and
-            ("jekyll" in f["path"].lower() or "deploy" in f["path"].lower() or "pages" in f["path"].lower())
+            (
+                "jekyll" in f["path"].lower()
+                or "deploy" in f["path"].lower()
+                or "pages" in f["path"].lower()
+            )
             for f in template_files
         )
 
@@ -60,7 +64,9 @@ class WorkflowService:
     ) -> None:
         """Add deployment workflow if not already present in template."""
         if await self.has_deployment_workflow(template_data):
-            logger.info("✅ Template already has deployment workflow, skipping custom workflow")
+            logger.info(
+                "✅ Template already has deployment workflow, skipping custom workflow"
+            )
             return
 
         logger.info(f"⚙️ Adding custom deployment workflow to {repository.full_name}")
@@ -113,7 +119,9 @@ class WorkflowService:
                     headers=self.headers
                 ) as tree_response:
                     if tree_response.status != 200:
-                        raise Exception(f"Failed to get current tree: {tree_response.status}")
+                        raise Exception(
+                            f"Failed to get current tree: {tree_response.status}"
+                        )
 
                     current_tree_data = await tree_response.json()
                     existing_tree_items = current_tree_data["tree"]

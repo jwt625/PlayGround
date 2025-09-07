@@ -245,8 +245,10 @@ async def deploy_to_github(
         github_service = GitHubService(access_token)
 
         # Use existing repository service to generate unique, valid name
-        repository_name = await github_service.repository_service.generate_unique_repository_name(
-            paper_title
+        repository_name = (
+            await github_service.repository_service.generate_unique_repository_name(
+                paper_title
+            )
         )
         logger.info(f"🏗️ Generated repository name: {repository_name}")
 
@@ -582,34 +584,7 @@ async def test_dual_deploy(
         )
 
 
-@app.post("/api/github/test-deploy")
-async def test_deployment_workflow(
-    authorization: str = Header(None),
-) -> dict[str, Any]:
-    """
-    Full deployment test: fork template repo, commit test content, setup CI/CD.
 
-    This endpoint delegates to GitHubService to test the complete deployment pipeline.
-    """
-    if not authorization or not authorization.startswith("Bearer "):
-        raise HTTPException(
-            status_code=401,
-            detail="GitHub OAuth token required. Please authenticate first."
-        )
-
-    access_token = authorization.replace("Bearer ", "")
-
-    try:
-        github_service = GitHubService(access_token)
-        result = await github_service.test_deployment_workflow()
-        return result
-
-    except Exception as e:
-        logger.error(f"Test deployment failed: {e}")
-        raise HTTPException(
-            status_code=500,
-            detail=f"Test deployment failed: {str(e)}"
-        )
 
     except Exception as e:
         logger.error(f"Test deployment failed: {e}")

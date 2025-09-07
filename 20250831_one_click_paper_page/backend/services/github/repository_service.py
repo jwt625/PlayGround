@@ -10,7 +10,7 @@ This service handles:
 
 import logging
 from datetime import datetime
-from typing import Any
+from typing import Any, cast
 
 import aiohttp
 
@@ -89,7 +89,12 @@ class RepositoryService:
         clean_name = re.sub(r'\[([^\]]+)\]\([^)]+\)', r'\1', clean_name)
 
         # Remove arXiv references and dates
-        clean_name = re.sub(r'arXiv:\d+\.\d+v?\d*\s*\[[^\]]+\]\s*\d+\s+\w+\s+\d+', '', clean_name, flags=re.IGNORECASE)
+        clean_name = re.sub(
+            r'arXiv:\d+\.\d+v?\d*\s*\[[^\]]+\]\s*\d+\s+\w+\s+\d+',
+            '',
+            clean_name,
+            flags=re.IGNORECASE
+        )
         clean_name = re.sub(r'\[arXiv:[^\]]+\]', '', clean_name, flags=re.IGNORECASE)
 
         # Convert to repository name format
@@ -98,7 +103,9 @@ class RepositoryService:
 
         # Ensure starts with letter (GitHub requirement)
         if not clean_name or not clean_name[0].isalpha():
-            clean_name = f"paper-{clean_name}" if clean_name else f"paper-{int(time.time())}"
+            clean_name = (
+                f"paper-{clean_name}" if clean_name else f"paper-{int(time.time())}"
+            )
 
         # Remove trailing hyphens and limit length
         clean_name = clean_name.rstrip('-')[:50]  # Leave room for timestamp
@@ -113,7 +120,7 @@ class RepositoryService:
         """Check if a repository with the given name already exists."""
         try:
             # Get current user first
-            user = await self.get_current_user()
+            user = await self.get_authenticated_user()
 
             async with aiohttp.ClientSession() as session:
                 async with session.get(
@@ -162,7 +169,9 @@ class RepositoryService:
         # Ensure unique repository name
         unique_name = await self.generate_unique_repository_name(request.name)
         if unique_name != request.name:
-            logger.info(f"Repository name '{request.name}' exists, using '{unique_name}'")
+            logger.info(
+                f"Repository name '{request.name}' exists, using '{unique_name}'"
+            )
 
         repo_data = {
             "name": unique_name,
@@ -288,8 +297,8 @@ class RepositoryService:
                             ) as branch_response:
                                 if branch_response.status == 200:
                                     logger.info(
-                                        f"Repository {repo_full_name} is ready with branch "
-                                        f"'{default_branch}'"
+                                        f"Repository {repo_full_name} is ready "
+                                        f"with branch '{default_branch}'"
                                     )
                                     return default_branch
 
@@ -312,4 +321,4 @@ class RepositoryService:
                 if response.status != 200:
                     raise Exception(f"Failed to get repository info: {response.status}")
 
-                return await response.json()
+                return cast(dict[str, Any], await response.json())

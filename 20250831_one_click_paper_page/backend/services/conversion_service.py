@@ -27,7 +27,7 @@ logger = logging.getLogger(__name__)
 sys.path.append(str(Path(__file__).parent.parent.parent / "scripts"))
 
 try:
-    from marker_converter import (  # type: ignore[import-not-found]
+    from marker_converter import (
         ConversionMode as ScriptConversionMode,
     )
     from marker_converter import (
@@ -229,7 +229,9 @@ class ConversionService:
             logger.error(f"Conversion failed for job {job_id}: {e}")
             self._update_job_status(
                 job_id, ConversionStatus.FAILED, 0, "failed",
-                f"Conversion failed: {str(e)}", phase=ConversionPhase.QUEUED, error=str(e)
+                f"Conversion failed: {str(e)}",
+                phase=ConversionPhase.QUEUED,
+                error=str(e)
             )
             if progress_callback:
                 await progress_callback(job_id, 0, "failed")
@@ -501,7 +503,12 @@ class ConversionService:
                     break
 
                 self._update_job_status(
-                    job_id, ConversionStatus.PROCESSING, progress, stage, message, phase=phase
+                    job_id,
+                    ConversionStatus.PROCESSING,
+                    progress,
+                    stage,
+                    message,
+                    phase=phase
                 )
 
                 # Wait for the specified time, checking for cancellation
@@ -554,7 +561,12 @@ class ConversionService:
         # Extract a cleaner title from the filename
         file_stem = input_file.stem.replace('_', ' ').replace('-', ' ')
         # Remove common file prefixes/suffixes
-        file_stem = file_stem.replace('paper', '').replace('document', '').replace('draft', '').strip()
+        file_stem = (
+            file_stem.replace('paper', '')
+            .replace('document', '')
+            .replace('draft', '')
+            .strip()
+        )
         # Capitalize properly
         file_stem = file_stem.title() if file_stem else "Untitled Paper"
 

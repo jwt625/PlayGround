@@ -77,7 +77,9 @@ async def upload_and_convert(
     Raises:
         HTTPException: If file validation fails or processing error occurs
     """
-    conversion_router.log_operation("upload_and_convert", f"file={file.filename}, mode={mode}")
+    conversion_router.log_operation(
+        "upload_and_convert", f"file={file.filename}, mode={mode}"
+    )
 
     try:
         # Validate file type
@@ -100,7 +102,9 @@ async def upload_and_convert(
         # Save uploaded file to temporary location
         job_status = conversion_service.get_job_status(job_id)
         if not job_status:
-            raise HTTPException(status_code=500, detail="Failed to create conversion job")
+            raise HTTPException(
+                status_code=500, detail="Failed to create conversion job"
+            )
 
         job_dir = job_status["job_dir"]
         input_file_path = job_dir / file.filename
@@ -124,7 +128,8 @@ async def upload_and_convert(
             if paper_authors:
                 authors_list = [author.strip() for author in paper_authors.split(",")]
 
-            # Generate repository name (will be refined after conversion with extracted title)
+            # Generate repository name (will be refined after conversion with
+            # extracted title)
             if not repository_name:
                 import time
                 timestamp = int(time.time())
@@ -147,7 +152,9 @@ async def upload_and_convert(
             deployment_config,
         )
 
-        conversion_router.log_operation("upload_and_convert", f"job_id={job_id}, success")
+        conversion_router.log_operation(
+            "upload_and_convert", f"job_id={job_id}, success"
+        )
 
         return ConversionJobResponse(
             job_id=job_id,
@@ -237,7 +244,9 @@ async def get_conversion_result(job_id: str) -> ConversionResult:
                 detail=f"Job {job_id} completed but no result available"
             )
 
-        conversion_router.log_operation("get_conversion_result", f"job_id={job_id}, success")
+        conversion_router.log_operation(
+            "get_conversion_result", f"job_id={job_id}, success"
+        )
 
         # Type assertion since we know result is ConversionResult from the service
         return result  # type: ignore[no-any-return]
@@ -276,7 +285,9 @@ async def cancel_conversion(job_id: str) -> dict[str, str]:
                 detail=f"Failed to cleanup job {job_id}"
             )
 
-        conversion_router.log_operation("cancel_conversion", f"job_id={job_id}, success")
+        conversion_router.log_operation(
+            "cancel_conversion", f"job_id={job_id}, success"
+        )
 
         return {"message": f"Job {job_id} cancelled and cleaned up successfully"}
     except HTTPException:
@@ -323,7 +334,10 @@ async def _run_conversion_task(
                 github_service = GitHubService(deployment_config["access_token"])
 
                 # Use existing repository service to generate unique, valid name
-                repo_name = await github_service.repository_service.generate_unique_repository_name(paper_title)
+                repo_name = (
+                    await github_service.repository_service
+                    .generate_unique_repository_name(paper_title)
+                )
                 logger.info(f"🏗️ Generated repository name: {repo_name}")
 
                 # Always use minimal-academic template

@@ -73,7 +73,9 @@ class DeploymentTracker:
         )
 
         self._deployments[deployment_id] = deployment_job
-        logger.info(f"Created deployment job {deployment_id} for {repository.full_name}")
+        logger.info(
+            f"Created deployment job {deployment_id} for {repository.full_name}"
+        )
 
         return deployment_id
 
@@ -93,8 +95,8 @@ class DeploymentTracker:
         self,
         deployment_id: str,
         status: DeploymentStatus,
-        message: str = None,
-        error_message: str = None
+        message: str | None = None,
+        error_message: str | None = None
     ) -> bool:
         """
         Update deployment status.
@@ -172,16 +174,35 @@ class DeploymentTracker:
         elif deployment.status == DeploymentStatus.FAILURE:
             progress = 100
 
+        # Generate status message based on deployment state
+        status_message = "Deployment in progress"
+        if deployment.status == DeploymentStatus.PENDING:
+            status_message = "Deployment pending"
+        elif deployment.status == DeploymentStatus.QUEUED:
+            status_message = "Deployment queued"
+        elif deployment.status == DeploymentStatus.IN_PROGRESS:
+            if deployment.workflow_run:
+                if deployment.workflow_run.status == "queued":
+                    status_message = "Workflow queued"
+                elif deployment.workflow_run.status == "in_progress":
+                    status_message = "Workflow running"
+                else:
+                    status_message = "Deployment in progress"
+            else:
+                status_message = "Starting deployment"
+        elif deployment.status == DeploymentStatus.SUCCESS:
+            status_message = "Deployment completed successfully"
+        elif deployment.status == DeploymentStatus.FAILURE:
+            status_message = "Deployment failed"
+
         return DeploymentStatusResponse(
             deployment_id=deployment_id,
             status=deployment.status,
-            progress=progress,
-            repository_url=deployment.repository.html_url,
+            repository=deployment.repository,
             pages_url=f"https://{deployment.repository.owner.login}.github.io/{deployment.repository.name}",
-            build_logs=deployment.build_logs,
             workflow_run=deployment.workflow_run,
-            created_at=deployment.created_at,
-            completed_at=deployment.completed_at,
+            progress_percentage=progress,
+            message=status_message,
             error_message=deployment.error_message,
         )
 
@@ -245,11 +266,15 @@ class DeploymentTracker:
         """
         deployment = self._deployments.get(deployment_id)
         if not deployment:
-            logger.warning(f"Deployment {deployment_id} not found for workflow run update")
+            logger.warning(
+                f"Deployment {deployment_id} not found for workflow run update"
+            )
             return False
 
         deployment.workflow_run = workflow_run
-        logger.info(f"Set workflow run {workflow_run.id} for deployment {deployment_id}")
+        logger.info(
+            f"Set workflow run {workflow_run.id} for deployment {deployment_id}"
+        )
         return True
 
     def get_all_deployments(self) -> dict[str, DeploymentJob]:
@@ -278,7 +303,9 @@ class DeploymentTracker:
 
         for deployment_id, deployment in self._deployments.items():
             if deployment.completed_at:
-                age_hours = (current_time - deployment.completed_at).total_seconds() / 3600
+                age_hours = (
+                    (current_time - deployment.completed_at).total_seconds() / 3600
+                )
                 if age_hours > max_age_hours:
                     deployment_ids_to_remove.append(deployment_id)
 

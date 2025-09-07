@@ -9,7 +9,7 @@ This service handles:
 """
 
 import logging
-from typing import Any
+from typing import Any, cast
 
 import aiohttp
 
@@ -149,7 +149,9 @@ class GitHubPagesService:
             )
             return False
 
-    async def get_pages_info(self, repository: GitHubRepository) -> dict[str, Any] | None:
+    async def get_pages_info(
+        self, repository: GitHubRepository
+    ) -> dict[str, Any] | None:
         """Get GitHub Pages information for a repository."""
         try:
             async with aiohttp.ClientSession() as session:
@@ -158,14 +160,17 @@ class GitHubPagesService:
                     headers=self.headers
                 ) as response:
                     if response.status == 200:
-                        return await response.json()
+                        return cast(dict[str, Any], await response.json())
                     elif response.status == 404:
-                        logger.info(f"GitHub Pages not enabled for {repository.full_name}")
+                        logger.info(
+                            f"GitHub Pages not enabled for {repository.full_name}"
+                        )
                         return None
                     else:
                         error_data = await response.text()
                         logger.warning(
-                            f"Failed to get Pages info: {response.status} - {error_data}"
+                            f"Failed to get Pages info: {response.status} - "
+                            f"{error_data}"
                         )
                         return None
         except Exception as e:
@@ -192,7 +197,9 @@ class GitHubPagesService:
                         logger.info(f"GitHub Pages disabled for {repository.full_name}")
                         return True
                     elif response.status == 404:
-                        logger.info(f"GitHub Pages was not enabled for {repository.full_name}")
+                        logger.info(
+                            f"GitHub Pages was not enabled for {repository.full_name}"
+                        )
                         return True
                     else:
                         error_data = await response.text()
@@ -207,7 +214,7 @@ class GitHubPagesService:
     async def update_pages_config(
         self,
         repository: GitHubRepository,
-        source_branch: str = None,
+        source_branch: str | None = None,
         source_path: str = "/",
         build_type: str = "workflow"
     ) -> bool:
@@ -216,7 +223,8 @@ class GitHubPagesService:
 
         Args:
             repository: GitHub repository
-            source_branch: Source branch for Pages (defaults to repository default branch)
+            source_branch: Source branch for Pages (defaults to repository default
+                branch)
             source_path: Source path for Pages
             build_type: Build type ("legacy" or "workflow")
 
@@ -247,9 +255,12 @@ class GitHubPagesService:
                     else:
                         error_data = await response.text()
                         logger.warning(
-                            f"Failed to update Pages config: {response.status} - {error_data}"
+                            f"Failed to update Pages config: {response.status} - "
+                            f"{error_data}"
                         )
                         return False
         except Exception as e:
-            logger.error(f"Failed to update Pages config for {repository.full_name}: {e}")
+            logger.error(
+                f"Failed to update Pages config for {repository.full_name}: {e}"
+            )
             return False

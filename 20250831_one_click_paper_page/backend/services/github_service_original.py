@@ -1889,7 +1889,8 @@ production use.
                     f"{len(blob_files)} files"
                 )
 
-                # Step 3: Create new tree with ONLY blob files (Git creates directories automatically)
+                # Step 3: Create new tree with ONLY blob files (Git creates
+                # directories automatically)
                 tree_items = []
 
                 # Add blob files with new SHAs
@@ -1901,7 +1902,8 @@ production use.
                         "sha": blob_info["sha"]  # Use new blob SHA from target repo
                     })
 
-                # DON'T add tree entries - Git automatically creates directory structure from file paths
+                # DON'T add tree entries - Git automatically creates directory
+                # structure from file paths
 
 
 
@@ -1988,12 +1990,18 @@ production use.
         template_files = template_data.get("tree", [])
         has_deployment_workflow = any(
             f["path"].startswith(".github/workflows/") and
-            ("jekyll" in f["path"].lower() or "deploy" in f["path"].lower() or "pages" in f["path"].lower())
+            (
+                "jekyll" in f["path"].lower()
+                or "deploy" in f["path"].lower()
+                or "pages" in f["path"].lower()
+            )
             for f in template_files
         )
 
         if has_deployment_workflow:
-            logger.info("✅ Template already has deployment workflow, skipping custom workflow")
+            logger.info(
+                "✅ Template already has deployment workflow, skipping custom workflow"
+            )
             return
 
         logger.info(f"⚙️ Adding custom deployment workflow to {repository.full_name}")
@@ -2103,7 +2111,9 @@ jobs:
                     headers=self.headers
                 ) as tree_response:
                     if tree_response.status != 200:
-                        raise Exception(f"Failed to get current tree: {tree_response.status}")
+                        raise Exception(
+                            f"Failed to get current tree: {tree_response.status}"
+                        )
 
                     current_tree_data = await tree_response.json()
                     existing_tree_items = current_tree_data["tree"]

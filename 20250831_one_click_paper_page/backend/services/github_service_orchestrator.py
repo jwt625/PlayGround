@@ -1,8 +1,8 @@
 """
 GitHub service orchestrator - lightweight coordinator for modular GitHub services.
 
-This orchestrator delegates to specialized services while maintaining the same public API
-as the original monolithic GitHubService for zero breaking changes.
+This orchestrator delegates to specialized services while maintaining the same public
+API as the original monolithic GitHubService for zero breaking changes.
 """
 
 import logging
@@ -15,6 +15,7 @@ from models.github import (
     CreateRepositoryRequest,
     CreateRepositoryResponse,
     DeploymentConfig,
+    DeploymentStatus,
     DeploymentStatusResponse,
     DualDeploymentResult,
     GitHubRepository,
@@ -114,29 +115,37 @@ class GitHubServiceOrchestrator:
                 request.template
             )
             template_url = f"https://github.com/{template_repo.full_name}"
-            template_data = await self.template_manager.get_template_content_cached(template_url)
+            template_data = await self.template_manager.get_template_content_cached(
+                template_url
+            )
 
             # Step 2: Create empty repository
             repository = await self.repository_service.create_empty_repository(request)
 
             # Step 3: Copy template content using Git API
-            await self.git_operations_service.copy_template_content_bulk(repository, template_data)
+            await self.git_operations_service.copy_template_content_bulk(
+                repository, template_data
+            )
 
             # Step 4: Add deployment workflow (if not already present in template)
-            await self.workflow_service.add_deployment_workflow_if_needed(repository, template_data)
+            await self.workflow_service.add_deployment_workflow_if_needed(
+                repository, template_data
+            )
 
             # Step 5: Enable GitHub Pages
             await self.pages_service.enable_github_pages_with_actions(repository)
 
             # Step 6: Create deployment job for tracking
-            deployment_id = self.deployment_tracker.create_deployment_job(repository, request)
+            deployment_id = self.deployment_tracker.create_deployment_job(
+                repository, request
+            )
 
             logger.info(f"✅ Optimized repository created: {repository.full_name}")
 
             return CreateRepositoryResponse(
                 repository=repository,
                 deployment_id=deployment_id,
-                status=self.deployment_tracker.get_deployment_job(deployment_id).status,
+                status=self._get_deployment_status(deployment_id),
                 message="Repository created with optimized Git API approach.",
             )
 
@@ -165,17 +174,23 @@ class GitHubServiceOrchestrator:
             # Step 1: Fork the template repository
             logger.info(f"Forking template repository {template_repo.full_name}")
             repository = await self.repository_service.fork_repository(
-                template_repo.owner, template_repo.name, request.name
+                template_repo.repository_owner,
+                template_repo.repository_name,
+                request.name
             )
 
             # Step 2: Wait for repository to be ready
-            await self.repository_service.wait_for_repository_ready(repository.full_name)
+            await self.repository_service.wait_for_repository_ready(
+                repository.full_name
+            )
 
             # Step 3: Enable GitHub Pages
             await self.pages_service.enable_github_pages_with_actions(repository)
 
             # Step 4: Create deployment job for tracking
-            deployment_id = self.deployment_tracker.create_deployment_job(repository, request)
+            deployment_id = self.deployment_tracker.create_deployment_job(
+                repository, request
+            )
 
             logger.info(
                 f"Forked repository {repository.full_name} from template "
@@ -185,7 +200,7 @@ class GitHubServiceOrchestrator:
             return CreateRepositoryResponse(
                 repository=repository,
                 deployment_id=deployment_id,
-                status=self.deployment_tracker.get_deployment_job(deployment_id).status,
+                status=self._get_deployment_status(deployment_id),
                 message=(
                     "Repository created with GitHub Actions workflows. "
                     "Ready for content upload."
@@ -234,7 +249,10 @@ class GitHubServiceOrchestrator:
                 self.deployment_tracker.update_deployment_status(
                     deployment_id,
                     DeploymentStatus.SUCCESS,
-                    message="Converted content uploaded successfully! GitHub Actions will build and deploy the site."
+                    message=(
+                        "Converted content uploaded successfully! GitHub Actions will "
+                        "build and deploy the site."
+                    )
                 )
             else:
                 self.deployment_tracker.update_deployment_status(
@@ -314,6 +332,11 @@ class GitHubServiceOrchestrator:
             logger.error(f"❌ Failed to create dual deployment: {e}")
             raise
 
+    def _get_deployment_status(self, deployment_id: str) -> DeploymentStatus:
+        """Get deployment status safely."""
+        deployment_job = self.deployment_tracker.get_deployment_job(deployment_id)
+        return deployment_job.status if deployment_job else DeploymentStatus.PENDING
+
     async def _prepare_converted_content_files(
         self, converted_content_dir: Path, config: DeploymentConfig
     ) -> list[dict[str, Any]]:
@@ -321,10 +344,12 @@ class GitHubServiceOrchestrator:
         import base64
         import json
 
-        files_to_commit = []
+        files_to_commit: list[dict[str, Any]] = []
 
         if not converted_content_dir.exists():
-            logger.warning(f"Converted content directory does not exist: {converted_content_dir}")
+            logger.warning(
+                f"Converted content directory does not exist: {converted_content_dir}"
+            )
             return files_to_commit
 
         logger.info(f"📁 Preparing files from {converted_content_dir}")
@@ -364,7 +389,9 @@ class GitHubServiceOrchestrator:
                         with open(file_path, 'rb') as f:
                             binary_content = f.read()
 
-                        encoded_content = base64.b64encode(binary_content).decode("utf-8")
+                        encoded_content = base64.b64encode(binary_content).decode(
+                            "utf-8"
+                        )
                         files_to_commit.append({
                             "path": str(rel_path),
                             "content": encoded_content,
@@ -394,37 +421,51 @@ class GitHubServiceOrchestrator:
         return files_to_commit
 
     async def _commit_converted_content(
-        self, repository: GitHubRepository, files_to_commit: list[dict[str, Any]], config: DeploymentConfig
+        self,
+        repository: GitHubRepository,
+        files_to_commit: list[dict[str, Any]],
+        config: DeploymentConfig
     ) -> None:
         """Commit converted content files to the repository using Git API."""
         if not files_to_commit:
             logger.info("No files to commit")
             return
 
-        logger.info(f"🚀 Committing {len(files_to_commit)} files to {repository.full_name}")
+        logger.info(
+            f"🚀 Committing {len(files_to_commit)} files to {repository.full_name}"
+        )
 
         try:
             # Step 1: Get current repository state
             ref_data = await self.git_operations_service.get_reference(repository)
             current_commit_sha = ref_data["object"]["sha"]
 
-            # Step 2: Get existing repository tree to preserve existing files (same as workflow service)
+            # Step 2: Get existing repository tree to preserve existing files
+            # (same as workflow service)
             async with aiohttp.ClientSession() as session:
                 async with session.get(
                     f"{self.git_operations_service.base_url}/repos/{repository.full_name}/git/trees/{current_commit_sha}?recursive=1",
                     headers=self.git_operations_service.headers
                 ) as tree_response:
                     if tree_response.status != 200:
-                        logger.warning(f"Failed to get current tree: {tree_response.status}")
+                        logger.warning(
+                            f"Failed to get current tree: {tree_response.status}"
+                        )
                         existing_tree_items = []
                     else:
                         current_tree_data = await tree_response.json()
                         existing_tree_items = current_tree_data["tree"]
 
-            logger.info(f"📋 Found {len(existing_tree_items)} existing files in repository")
+            logger.info(
+                f"📋 Found {len(existing_tree_items)} existing files in repository"
+            )
 
             # Log existing .github files specifically
-            github_files = [item["path"] for item in existing_tree_items if item["path"].startswith(".github/")]
+            github_files = [
+                item["path"]
+                for item in existing_tree_items
+                if item["path"].startswith(".github/")
+            ]
             if github_files:
                 logger.info(f"🔧 Found existing .github files: {github_files}")
             else:
@@ -458,7 +499,10 @@ class GitHubServiceOrchestrator:
             # Add existing files that are not being overwritten
             tree_items = []
             for existing_item in existing_tree_items:
-                if existing_item["path"] not in new_file_paths and existing_item["type"] == "blob":
+                if (
+                    existing_item["path"] not in new_file_paths
+                    and existing_item["type"] == "blob"
+                ):
                     tree_items.append({
                         "path": existing_item["path"],
                         "mode": existing_item["mode"],
@@ -475,11 +519,18 @@ class GitHubServiceOrchestrator:
                     "sha": blob_sha
                 })
 
-            new_tree_sha = await self.git_operations_service.create_tree(repository, tree_items)
-            logger.info(f"🌳 Created tree with {len(tree_items)} files ({len(existing_tree_items)} existing + {len(blob_shas)} new)")
+            new_tree_sha = await self.git_operations_service.create_tree(
+                repository, tree_items
+            )
+            logger.info(
+                f"🌳 Created tree with {len(tree_items)} files "
+                f"({len(existing_tree_items)} existing + {len(blob_shas)} new)"
+            )
 
             # Step 5: Create commit
-            commit_message = f"Add converted paper content: {config.paper_title or 'Untitled'}"
+            commit_message = (
+                f"Add converted paper content: {config.paper_title or 'Untitled'}"
+            )
             new_commit_sha = await self.git_operations_service.create_commit(
                 repository, commit_message, new_tree_sha, [current_commit_sha]
             )
@@ -491,7 +542,9 @@ class GitHubServiceOrchestrator:
             )
             logger.info(f"✅ Updated {repository.default_branch} branch")
 
-            logger.info(f"🎉 Successfully committed converted content to {repository.full_name}")
+            logger.info(
+                f"🎉 Successfully committed converted content to {repository.full_name}"
+            )
 
         except Exception as e:
             logger.error(f"❌ Failed to commit converted content: {e}")
