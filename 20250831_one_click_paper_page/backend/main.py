@@ -222,11 +222,26 @@ async def deploy_to_github(
         if not conversion_job_id:
             raise HTTPException(status_code=400, detail="conversion_job_id is required")
 
+        # Check job status first for better error messages
+        job_status = conversion_service.get_job_status(conversion_job_id)
+        if not job_status:
+            raise HTTPException(
+                status_code=404,
+                detail=f"Conversion job {conversion_job_id} not found"
+            )
+
+        if job_status["status"] != "completed":
+            status = job_status['status']
+            raise HTTPException(
+                status_code=400,
+                detail=f"Conversion job {conversion_job_id} not ready. Status: {status}"
+            )
+
         conversion_result = conversion_service.get_job_result(conversion_job_id)
         if not conversion_result:
             raise HTTPException(
-                status_code=404,
-                detail=f"Conversion job {conversion_job_id} not found or not completed"
+                status_code=500,
+                detail=f"Conversion job {conversion_job_id} result unavailable"
             )
 
         # Extract paper title and authors from conversion result metadata
@@ -406,11 +421,28 @@ async def deploy_converted_content(
                 detail="No conversion job ID provided in deployment config"
             )
 
-        conversion_result = conversion_service.get_job_result(config.conversion_job_id)
-        if not conversion_result:
+        # Check job status first for better error messages
+        job_status = conversion_service.get_job_status(config.conversion_job_id)
+        if not job_status:
             raise HTTPException(
                 status_code=404,
                 detail=f"Conversion job {config.conversion_job_id} not found"
+            )
+
+        if job_status["status"] != "completed":
+            status = job_status['status']
+            job_id = config.conversion_job_id
+            raise HTTPException(
+                status_code=400,
+                detail=f"Conversion job {job_id} not ready. Status: {status}"
+            )
+
+        conversion_result = conversion_service.get_job_result(config.conversion_job_id)
+        if not conversion_result:
+            job_id = config.conversion_job_id
+            raise HTTPException(
+                status_code=500,
+                detail=f"Conversion job {job_id} result unavailable"
             )
 
         if not conversion_result.output_dir:

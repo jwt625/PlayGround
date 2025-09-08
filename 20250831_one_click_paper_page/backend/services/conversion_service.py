@@ -27,10 +27,10 @@ logger = logging.getLogger(__name__)
 sys.path.append(str(Path(__file__).parent.parent.parent / "scripts"))
 
 try:
-    from marker_converter import (
+    from marker_converter import (  # type: ignore[import-untyped]
         ConversionMode as ScriptConversionMode,
     )
-    from marker_converter import (
+    from marker_converter import (  # type: ignore[import-untyped]
         MarkerConverter as ScriptMarkerConverter,
     )
     MARKER_AVAILABLE = True
