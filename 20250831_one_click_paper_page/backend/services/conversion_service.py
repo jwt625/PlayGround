@@ -24,7 +24,9 @@ from models.conversion import (
 logger = logging.getLogger(__name__)
 
 # Import the marker converter from scripts
-sys.path.append(str(Path(__file__).parent.parent.parent / "scripts"))
+scripts_path = Path(__file__).parent.parent.parent / "scripts"
+if str(scripts_path) not in sys.path:
+    sys.path.insert(0, str(scripts_path))
 
 try:
     from marker_converter import (  # type: ignore[import-untyped]
@@ -34,8 +36,12 @@ try:
         MarkerConverter as ScriptMarkerConverter,
     )
     MARKER_AVAILABLE = True
-except ImportError:
-    logger.warning("Marker converter not available, using placeholder mode")
+    logger.info(f"✅ Marker converter imported successfully from {scripts_path}")
+except ImportError as e:
+    logger.warning(f"❌ Marker converter not available: {e}")
+    MARKER_AVAILABLE = False
+except Exception as e:
+    logger.error(f"❌ Error importing marker converter: {e}")
     MARKER_AVAILABLE = False
 
 
@@ -254,8 +260,8 @@ class ConversionService:
 
         try:
             if not MARKER_AVAILABLE or not self._converter:
-                # Fallback to placeholder implementation
-                return self._placeholder_conversion(job_id, input_file, output_dir)
+                # Marker library is required for conversion
+                raise RuntimeError(f"Marker library is not available. MARKER_AVAILABLE={MARKER_AVAILABLE}, converter={self._converter}")
 
             # Update converter mode (convert API enum to script enum)
             self._converter.mode = _convert_mode_to_script_mode(mode)
@@ -546,121 +552,6 @@ class ConversionService:
         return bool(conversion_result["success"])
 
 
-
-    def _placeholder_conversion(
-        self, job_id: str, input_file: Path, output_dir: Path
-    ) -> ConversionResult:
-        """Placeholder conversion when Marker is not available."""
-        logger.info("Using placeholder conversion")
-
-        # Create placeholder files
-        html_file = output_dir / "index.html"
-        markdown_file = output_dir / "document.md"
-
-        # Create more realistic placeholder content with sample metadata
-        # Extract a cleaner title from the filename
-        file_stem = input_file.stem.replace('_', ' ').replace('-', ' ')
-        # Remove common file prefixes/suffixes
-        file_stem = (
-            file_stem.replace('paper', '')
-            .replace('document', '')
-            .replace('draft', '')
-            .strip()
-        )
-        # Capitalize properly
-        file_stem = file_stem.title() if file_stem else "Untitled Paper"
-
-        placeholder_content = f"""# {file_stem}
-
-**Authors**: John Doe, Jane Smith, Alice Johnson
-
-## Abstract
-
-This is a placeholder conversion for the uploaded document: {input_file.name}.
-In a real conversion, this would contain the actual paper content extracted from
-your PDF. The Marker converter would analyze the document structure, extract text,
-images, and formatting.
-
-## Introduction
-
-This placeholder demonstrates the expected output format for academic papers.
-Your actual paper content would appear here after conversion.
-
-## Methodology
-
-The conversion process would extract:
-- Document structure and headings
-- Author information and metadata
-- Abstract and main content
-- Figures and tables
-- References and citations
-
-## Results
-
-Real conversion results would be displayed in this section.
-
-## Conclusion
-
-This concludes the placeholder conversion demonstration.
-"""
-
-        markdown_file.write_text(placeholder_content, encoding='utf-8')
-
-        # Create sample metadata for testing
-        from models.conversion import PaperMetadata
-        sample_metadata = PaperMetadata(
-            title=file_stem,
-            authors=["John Doe", "Jane Smith", "Alice Johnson"],
-            abstract=(
-                "This is a placeholder conversion for the uploaded document. In a real "
-                "conversion, this would contain the actual paper content extracted "
-                "from your PDF."
-            ),
-            keywords=["placeholder", "conversion", "academic"],
-            doi=None,
-            arxiv_id=None
-        )
-
-        html_content = f"""<!DOCTYPE html>
-<html>
-<head>
-    <title>{file_stem}</title>
-    <meta name="author" content="John Doe, Jane Smith, Alice Johnson">
-</head>
-<body>
-    <h1>{file_stem}</h1>
-    <p>This is a placeholder conversion for: {input_file.name}</p>
-    <p>The actual Marker converter is not available in this environment.</p>
-</body>
-</html>"""
-
-        html_file.write_text(html_content, encoding='utf-8')
-
-        return ConversionResult(
-            job_id=job_id,
-            status=ConversionStatus.COMPLETED,
-            success=True,
-            output_dir=str(output_dir),
-            output_files=[str(html_file), str(markdown_file)],
-            metrics=ConversionMetrics(
-                total_conversion_time=1.0,
-                mode_used=ConversionMode.FAST,
-                quality_assessment=QualityAssessment(
-                    has_good_text=True,
-                    recommended_mode=ConversionMode.FAST,
-                    confidence="low",
-                    avg_chars_per_page=100,
-                    text_coverage=1.0,
-                ),
-                model_load_time=None,
-                processing_time=None,
-            ),
-            markdown_length=len(placeholder_content),
-            image_count=0,
-            html_file=str(html_file),
-            markdown_file=str(markdown_file),
-            metadata=sample_metadata,  # Sample metadata for testing
-        )
 
     def _update_job_status(
         self,

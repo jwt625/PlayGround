@@ -143,37 +143,6 @@ class TestConversionService:
         assert job_status["stage"] == "converting"
         assert job_status["message"] == "Converting document"
 
-    def test_placeholder_conversion(self, conversion_service, temp_dir):
-        """Test placeholder conversion method."""
-        test_file = temp_dir / "test.pdf"
-        test_file.write_text("fake pdf content")
-
-        output_dir = temp_dir / "output"
-        output_dir.mkdir()
-
-        result = conversion_service._placeholder_conversion(
-            "test-job", test_file, output_dir
-        )
-
-        # Verify result
-        assert result.job_id == "test-job"
-        assert result.status == ConversionStatus.COMPLETED
-        assert len(result.output_files) == 2  # HTML and markdown
-        assert result.markdown_length > 0
-        assert result.image_count == 0
-
-        # Verify files were created
-        html_file = output_dir / "index.html"
-        markdown_file = output_dir / "document.md"
-        assert html_file.exists()
-        assert markdown_file.exists()
-
-        # Verify content
-        html_content = html_file.read_text()
-        markdown_content = markdown_file.read_text()
-        assert "test.pdf" in html_content
-        assert "test.pdf" in markdown_content
-
     @pytest.mark.asyncio
     async def test_convert_file_error_handling(self, conversion_service, temp_dir):
         """Test error handling during conversion."""

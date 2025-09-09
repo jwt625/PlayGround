@@ -12,6 +12,19 @@ import json
 import time
 from enum import Enum
 
+# Import text cleaning utilities
+import sys
+from pathlib import Path
+
+# Add current directory to path for imports
+current_dir = Path(__file__).parent
+if str(current_dir) not in sys.path:
+    sys.path.insert(0, str(current_dir))
+
+from utils.text_cleaning import TextCleaner
+from conversion.metadata_extractor import MetadataExtractor
+from conversion.image_handler import ImageHandler
+
 # Setup logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
@@ -181,6 +194,10 @@ class MarkerConverter:
         else:
             self.mode = mode
 
+        # Initialize metadata extractor and image handler
+        self.metadata_extractor = MetadataExtractor()
+        self.image_handler = ImageHandler()
+
         self.last_conversion_time: Optional[float] = None
         self.last_model_load_time: Optional[float] = None
         self.last_quality_assessment: Optional[Dict[str, Any]] = None
@@ -231,7 +248,7 @@ class MarkerConverter:
             content_length = len(content)
             paragraph_count = content.count('<p>')
             heading_count = content.count('<h')
-            image_count = content.count('<img')
+            image_count = self.image_handler.count_images_in_content(content)
 
             # Check for garbled characters (common in poor OCR)
             garbled_chars = ['□', '�', '▢', '◯']
@@ -396,25 +413,8 @@ class MarkerConverter:
 
         return self._marker_convert(input_path, output_dir, fast_mode=False)
 
+
     def _marker_convert(self, input_path: Path, output_dir: Path, fast_mode: bool = None) -> bool:
-        """
-        Actual Marker conversion implementation.
-
-        Attempts to use real Marker library if available, falls back to placeholder.
-        """
-        try:
-            # Try to use real Marker library
-            try:
-                return self._real_marker_convert(input_path, output_dir, fast_mode)
-            except ImportError:
-                logger.warning("Marker library not available, using placeholder implementation")
-                return self._placeholder_marker_convert(input_path, output_dir)
-
-        except Exception as e:
-            logger.error(f"Marker conversion implementation error: {e}")
-            return False
-
-    def _real_marker_convert(self, input_path: Path, output_dir: Path, fast_mode: bool = None) -> bool:
         """Real Marker conversion using the marker-pdf library."""
         from marker.converters.pdf import PdfConverter
         from marker.config.parser import ConfigParser
@@ -474,25 +474,10 @@ class MarkerConverter:
         logger.info(f"Paper metadata saved to {metadata_file}")
 
         # Save images if any are extracted
-        if hasattr(result, 'images') and result.images:
-            images_dir = output_dir / "images"
-            images_dir.mkdir(exist_ok=True)
-            for img_name, img_data in result.images.items():
-                img_path = images_dir / img_name
-                try:
-                    # Handle different image data types
-                    if hasattr(img_data, 'save'):
-                        # PIL Image object
-                        img_data.save(img_path)
-                    elif isinstance(img_data, bytes):
-                        # Raw bytes
-                        with open(img_path, 'wb') as f:
-                            f.write(img_data)
-                    else:
-                        logger.warning(f"Unknown image data type for {img_name}: {type(img_data)}")
-                except Exception as e:
-                    logger.warning(f"Failed to save image {img_name}: {e}")
-            logger.info(f"Processed {len(result.images)} images to {images_dir}")
+        self.image_handler.extract_and_save_images(result, output_dir)
+
+        # Update image paths in markdown content
+        markdown_content = self.image_handler.update_image_paths_in_markdown(markdown_content)
 
         # Convert to HTML
         html_content = self._create_html_from_markdown(markdown_content, input_path.name)
@@ -504,89 +489,6 @@ class MarkerConverter:
         logger.info(f"Markdown length: {len(markdown_content)} characters")
         return True
 
-    def _placeholder_marker_convert(self, input_path: Path, output_dir: Path) -> bool:
-        """Placeholder implementation when Marker library is not available."""
-        output_file = output_dir / "index.html"
-        markdown_file = output_dir / "document.md"
-
-        # Create placeholder markdown
-        placeholder_markdown = f"""# Document Converted with Marker (Placeholder)
-
-**Source:** {input_path.name}
-
-## Overview
-
-This document was converted using Marker, a high-quality PDF to Markdown converter that excels at:
-
-- Mathematical formula extraction and conversion
-- Table structure preservation
-- Image extraction with proper positioning
-- Multi-column layout handling
-- Academic paper formatting
-
-## Features
-
-### Mathematical Formulas
-Marker can extract complex mathematical expressions like:
-- Inline math: $E = mc^2$
-- Display math: $$\\int_{{-\\infty}}^{{\\infty}} e^{{-x^2}} dx = \\sqrt{{\\pi}}$$
-
-### Tables
-| Feature | Marker | Other Tools |
-|---------|--------|-------------|
-| Math Support | ✓ | Limited |
-| Table Extraction | ✓ | Basic |
-| Image Handling | ✓ | Poor |
-| Speed | Fast | Varies |
-
-### Code Blocks
-```python
-# Marker usage example
-from marker.convert import convert_single_pdf
-from marker.models import load_all_models
-
-model_lst = load_all_models()
-full_text, images, out_meta = convert_single_pdf("document.pdf", model_lst)
-```
-
-## Implementation Notes
-
-To integrate Marker properly:
-
-1. Install marker-pdf: `pip install marker-pdf`
-2. Load the required models (this may take time on first run)
-3. Configure GPU/CPU usage based on available hardware
-4. Handle extracted images and save them to the output directory
-5. Convert the resulting markdown to HTML with proper styling
-
-## Next Steps
-
-- Replace this placeholder with actual Marker integration
-- Implement image extraction and handling
-- Add proper error handling for different PDF types
-- Optimize for GitHub Actions environment (CPU-only)
-"""
-
-        # Save markdown
-        with open(markdown_file, 'w', encoding='utf-8') as f:
-            f.write(placeholder_markdown)
-
-        # Extract paper metadata from markdown
-        paper_metadata = self.extract_paper_metadata(placeholder_markdown)
-        metadata_file = output_dir / "metadata.json"
-        import json
-        with open(metadata_file, 'w', encoding='utf-8') as f:
-            json.dump(paper_metadata, f, indent=2)
-        logger.info(f"Paper metadata saved to {metadata_file}")
-
-        # Convert to HTML using the helper method
-        html_content = self._create_html_from_markdown(placeholder_markdown, input_path.name)
-        with open(output_file, 'w', encoding='utf-8') as f:
-            f.write(html_content)
-
-        logger.info(f"Placeholder HTML created at {output_file}")
-        return True
-    
     def _markdown_to_html(self, markdown_content: str) -> str:
         """Convert markdown to HTML (simplified implementation)."""
         # This is a very basic markdown to HTML converter
@@ -631,7 +533,9 @@ To integrate Marker properly:
                     html_lines.append('</table>')
                     in_table = False
                 if line:
-                    html_lines.append(f'<p>{line}</p>')
+                    # Process images in the line
+                    processed_line = self.image_handler.process_images_in_html_line(line)
+                    html_lines.append(f'<p>{processed_line}</p>')
                 else:
                     html_lines.append('<br>')
         
@@ -641,6 +545,8 @@ To integrate Marker properly:
             html_lines.append('</code></pre>')
         
         return '\n'.join(html_lines)
+
+
 
     def _create_html_from_markdown(self, markdown_content: str, source_filename: str) -> str:
         """Create a complete HTML document from markdown content."""
@@ -736,113 +642,11 @@ To integrate Marker properly:
 
     def extract_paper_metadata(self, markdown_content: str) -> Dict[str, Any]:
         """Extract paper-specific metadata from converted markdown."""
-        import re
+        return self.metadata_extractor.extract_paper_metadata(markdown_content)
 
-        metadata = {
-            'title': None,
-            'authors': [],
-            'abstract': None,
-            'keywords': [],
-            'doi': None,
-            'arxiv_id': None
-        }
 
-        try:
-            lines = markdown_content.split('\n')
 
-            # Extract title (usually the first heading)
-            for line in lines[:20]:  # Check first 20 lines
-                line = line.strip()
-                if line.startswith('# ') and len(line) > 3:
-                    title = line[2:].strip()
 
-                    # Clean up title (remove markdown formatting)
-                    title = re.sub(r'\*\*([^*]+)\*\*', r'\1', title)  # Remove bold
-                    title = re.sub(r'\*([^*]+)\*', r'\1', title)      # Remove italic
-
-                    # Remove markdown links: [text](url) -> text
-                    title = re.sub(r'\[([^\]]+)\]\([^)]+\)', r'\1', title)
-
-                    # Clean up arXiv references and URLs
-                    title = re.sub(r'arXiv:\d+\.\d+v?\d*\s*\[[^\]]+\]\s*\d+\s+\w+\s+\d+', '', title, flags=re.IGNORECASE)
-                    title = re.sub(r'\[arXiv:[^\]]+\]', '', title, flags=re.IGNORECASE)
-
-                    # Remove extra whitespace
-                    title = re.sub(r'\s+', ' ', title).strip()
-
-                    if len(title) > 10 and not title.lower().startswith('abstract'):
-                        metadata['title'] = title
-                        break
-
-            # Extract authors (look for patterns like "Author Name1, Author Name2")
-            author_patterns = [
-                r'^([A-Z][a-z]+ [A-Z][a-z]+(?:, [A-Z][a-z]+ [A-Z][a-z]+)*)',  # "John Doe, Jane Smith"
-                r'^\*\*Authors?\*\*:?\s*(.+)',  # "**Authors**: John Doe, Jane Smith"
-                r'^Authors?\s*:?\s*(.+)',       # "Authors: John Doe, Jane Smith"
-            ]
-
-            for line in lines[:50]:  # Check first 50 lines
-                line = line.strip()
-                for pattern in author_patterns:
-                    match = re.match(pattern, line)
-                    if match:
-                        authors_text = match.group(1).strip()
-                        # Split by common separators
-                        authors = re.split(r',|;|\sand\s', authors_text)
-                        authors = [author.strip() for author in authors if author.strip()]
-                        # Filter out non-author text
-                        valid_authors = []
-                        for author in authors:
-                            # Simple heuristic: should contain at least first and last name
-                            if re.match(r'^[A-Z][a-z]+ [A-Z][a-z]+', author):
-                                valid_authors.append(author)
-                        if valid_authors:
-                            metadata['authors'] = valid_authors
-                            break
-                if metadata['authors']:
-                    break
-
-            # Extract abstract
-            abstract_start = -1
-            for i, line in enumerate(lines):
-                if re.match(r'^#+\s*abstract', line.strip(), re.IGNORECASE):
-                    abstract_start = i + 1
-                    break
-
-            if abstract_start > 0:
-                abstract_lines = []
-                for i in range(abstract_start, min(abstract_start + 20, len(lines))):
-                    line = lines[i].strip()
-                    if line.startswith('#') or line.startswith('##'):
-                        break
-                    if line:
-                        abstract_lines.append(line)
-
-                if abstract_lines:
-                    metadata['abstract'] = ' '.join(abstract_lines)
-
-            # Extract DOI
-            doi_pattern = r'(?:doi:|DOI:)?\s*(10\.\d+/[^\s]+)'
-            for line in lines:
-                match = re.search(doi_pattern, line, re.IGNORECASE)
-                if match:
-                    metadata['doi'] = match.group(1)
-                    break
-
-            # Extract arXiv ID
-            arxiv_pattern = r'(?:arxiv:|arXiv:)?\s*(\d{4}\.\d{4,5}(?:v\d+)?)'
-            for line in lines:
-                match = re.search(arxiv_pattern, line, re.IGNORECASE)
-                if match:
-                    metadata['arxiv_id'] = match.group(1)
-                    break
-
-            logger.info(f"Extracted paper metadata: {metadata}")
-            return metadata
-
-        except Exception as e:
-            logger.error(f"Paper metadata extraction error: {e}")
-            return metadata
 
 def main():
     """Test the Marker converter."""

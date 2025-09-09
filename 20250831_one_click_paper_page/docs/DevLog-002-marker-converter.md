@@ -63,12 +63,7 @@ WARNING: `TableRecEncoderDecoderModel` is not compatible with mps backend. Defau
 **Architecture**: Implemented dual-mode converter
 ```python
 def _marker_convert(self, input_path: Path, output_dir: Path) -> bool:
-    try:
-        # Try real Marker first
-        return self._real_marker_convert(input_path, output_dir)
-    except ImportError:
-        # Fallback to placeholder
-        return self._placeholder_marker_convert(input_path, output_dir)
+  return self._real_marker_convert(input_path, output_dir)
 ```
 
 **Benefits**:
