@@ -17,6 +17,11 @@ This directory contains a clean, educational implementation of the Transformer m
 - **Layer Normalization**: Applied in residual connections
 - **Positional Encoding**: Sine and cosine functions to inject position information
 
+### Code Quality
+- **Full Type Annotations**: Complete type hints for better IDE support and code clarity
+- **Comprehensive Documentation**: Detailed docstrings explaining parameters and return types
+- **Clean Architecture**: Well-structured classes with clear separation of concerns
+
 ### Architecture
 - **Encoder**: Stack of N=6 identical layers, each with self-attention and feed-forward sublayers
 - **Decoder**: Stack of N=6 identical layers with masked self-attention, encoder-decoder attention, and feed-forward sublayers

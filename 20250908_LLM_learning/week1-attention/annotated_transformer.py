@@ -15,24 +15,30 @@ import copy
 from typing import Optional, Callable, Tuple
 
 
-def clones(module, N):
+def clones(module: nn.Module, N: int) -> nn.ModuleList:
     """Produce N identical layers."""
     return nn.ModuleList([copy.deepcopy(module) for _ in range(N)])
 
 
-def attention(query, key, value, mask=None, dropout=None):
+def attention(
+    query: torch.Tensor,
+    key: torch.Tensor,
+    value: torch.Tensor,
+    mask: Optional[torch.Tensor] = None,
+    dropout: Optional[nn.Dropout] = None
+) -> Tuple[torch.Tensor, torch.Tensor]:
     """
     Compute 'Scaled Dot Product Attention'
-    
+
     Args:
         query: [batch_size, h, seq_len, d_k]
-        key: [batch_size, h, seq_len, d_k] 
+        key: [batch_size, h, seq_len, d_k]
         value: [batch_size, h, seq_len, d_v]
         mask: [batch_size, 1, seq_len, seq_len] or [batch_size, 1, 1, seq_len]
         dropout: dropout layer
-    
+
     Returns:
-        attention output and attention weights
+        Tuple of (attention output, attention weights)
     """
     d_k = query.size(-1)
     
@@ -58,7 +64,7 @@ class MultiHeadAttention(nn.Module):
     """
     Multi-Head Attention mechanism
     """
-    def __init__(self, h, d_model, dropout=0.1):
+    def __init__(self, h: int, d_model: int, dropout: float = 0.1):
         """
         Args:
             h: number of attention heads
@@ -67,23 +73,32 @@ class MultiHeadAttention(nn.Module):
         """
         super(MultiHeadAttention, self).__init__()
         assert d_model % h == 0
-        
+
         # We assume d_v always equals d_k
-        self.d_k = d_model // h
-        self.h = h
-        
+        self.d_k: int = d_model // h
+        self.h: int = h
+
         # Linear projections for Q, K, V and output
-        self.linears = clones(nn.Linear(d_model, d_model), 4)
-        self.attn = None
-        self.dropout = nn.Dropout(p=dropout)
-        
-    def forward(self, query, key, value, mask=None):
+        self.linears: nn.ModuleList = clones(nn.Linear(d_model, d_model), 4)
+        self.attn: Optional[torch.Tensor] = None
+        self.dropout: nn.Dropout = nn.Dropout(p=dropout)
+
+    def forward(
+        self,
+        query: torch.Tensor,
+        key: torch.Tensor,
+        value: torch.Tensor,
+        mask: Optional[torch.Tensor] = None
+    ) -> torch.Tensor:
         """
         Args:
             query: [batch_size, seq_len, d_model]
             key: [batch_size, seq_len, d_model]
             value: [batch_size, seq_len, d_model]
             mask: [batch_size, seq_len, seq_len] or [batch_size, 1, seq_len]
+
+        Returns:
+            Multi-head attention output: [batch_size, seq_len, d_model]
         """
         if mask is not None:
             # Same mask applied to all h heads
@@ -111,13 +126,13 @@ class PositionwiseFeedForward(nn.Module):
     Position-wise Feed-Forward Network
     FFN(x) = max(0, xW1 + b1)W2 + b2
     """
-    def __init__(self, d_model, d_ff, dropout=0.1):
+    def __init__(self, d_model: int, d_ff: int, dropout: float = 0.1):
         super(PositionwiseFeedForward, self).__init__()
-        self.w_1 = nn.Linear(d_model, d_ff)
-        self.w_2 = nn.Linear(d_ff, d_model)
-        self.dropout = nn.Dropout(dropout)
+        self.w_1: nn.Linear = nn.Linear(d_model, d_ff)
+        self.w_2: nn.Linear = nn.Linear(d_ff, d_model)
+        self.dropout: nn.Dropout = nn.Dropout(dropout)
 
-    def forward(self, x):
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
         return self.w_2(self.dropout(F.relu(self.w_1(x))))
 
 
@@ -125,13 +140,13 @@ class LayerNorm(nn.Module):
     """
     Layer Normalization
     """
-    def __init__(self, features, eps=1e-6):
+    def __init__(self, features: int, eps: float = 1e-6):
         super(LayerNorm, self).__init__()
-        self.a_2 = nn.Parameter(torch.ones(features))
-        self.b_2 = nn.Parameter(torch.zeros(features))
-        self.eps = eps
+        self.a_2: nn.Parameter = nn.Parameter(torch.ones(features))
+        self.b_2: nn.Parameter = nn.Parameter(torch.zeros(features))
+        self.eps: float = eps
 
-    def forward(self, x):
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
         mean = x.mean(-1, keepdim=True)
         std = x.std(-1, keepdim=True)
         return self.a_2 * (x - mean) / (std + self.eps) + self.b_2
@@ -142,12 +157,12 @@ class SublayerConnection(nn.Module):
     A residual connection followed by a layer norm.
     Note for code simplicity the norm is first as opposed to last.
     """
-    def __init__(self, size, dropout):
+    def __init__(self, size: int, dropout: float):
         super(SublayerConnection, self).__init__()
-        self.norm = LayerNorm(size)
-        self.dropout = nn.Dropout(dropout)
+        self.norm: LayerNorm = LayerNorm(size)
+        self.dropout: nn.Dropout = nn.Dropout(dropout)
 
-    def forward(self, x, sublayer):
+    def forward(self, x: torch.Tensor, sublayer: Callable[[torch.Tensor], torch.Tensor]) -> torch.Tensor:
         """Apply residual connection to any sublayer with the same size."""
         return x + self.dropout(sublayer(self.norm(x)))
 
@@ -156,14 +171,20 @@ class EncoderLayer(nn.Module):
     """
     Encoder is made up of self-attention and feed forward
     """
-    def __init__(self, size, self_attn, feed_forward, dropout):
+    def __init__(
+        self,
+        size: int,
+        self_attn: MultiHeadAttention,
+        feed_forward: PositionwiseFeedForward,
+        dropout: float
+    ):
         super(EncoderLayer, self).__init__()
-        self.self_attn = self_attn
-        self.feed_forward = feed_forward
-        self.sublayer = clones(SublayerConnection(size, dropout), 2)
-        self.size = size
+        self.self_attn: MultiHeadAttention = self_attn
+        self.feed_forward: PositionwiseFeedForward = feed_forward
+        self.sublayer: nn.ModuleList = clones(SublayerConnection(size, dropout), 2)
+        self.size: int = size
 
-    def forward(self, x, mask):
+    def forward(self, x: torch.Tensor, mask: Optional[torch.Tensor]) -> torch.Tensor:
         """Follow Figure 1 (left) for connections."""
         x = self.sublayer[0](x, lambda x: self.self_attn(x, x, x, mask))
         return self.sublayer[1](x, self.feed_forward)
@@ -173,12 +194,17 @@ class Encoder(nn.Module):
     """
     Core encoder is a stack of N layers
     """
-    def __init__(self, layer, N):
+    def __init__(self, layer: EncoderLayer, N: int):
+        """
+        Args:
+            layer: A single EncoderLayer instance to be cloned N times
+            N: Number of encoder layers in the stack
+        """
         super(Encoder, self).__init__()
-        self.layers = clones(layer, N)
-        self.norm = LayerNorm(layer.size)
-        
-    def forward(self, x, mask):
+        self.layers: nn.ModuleList = clones(layer, N)
+        self.norm: LayerNorm = LayerNorm(layer.size)
+
+    def forward(self, x: torch.Tensor, mask: Optional[torch.Tensor]) -> torch.Tensor:
         """Pass the input (and mask) through each layer in turn."""
         for layer in self.layers:
             x = layer(x, mask)
@@ -189,15 +215,28 @@ class DecoderLayer(nn.Module):
     """
     Decoder is made of self-attn, src-attn, and feed forward
     """
-    def __init__(self, size, self_attn, src_attn, feed_forward, dropout):
+    def __init__(
+        self,
+        size: int,
+        self_attn: MultiHeadAttention,
+        src_attn: MultiHeadAttention,
+        feed_forward: PositionwiseFeedForward,
+        dropout: float
+    ):
         super(DecoderLayer, self).__init__()
-        self.size = size
-        self.self_attn = self_attn
-        self.src_attn = src_attn
-        self.feed_forward = feed_forward
-        self.sublayer = clones(SublayerConnection(size, dropout), 3)
- 
-    def forward(self, x, memory, src_mask, tgt_mask):
+        self.size: int = size
+        self.self_attn: MultiHeadAttention = self_attn
+        self.src_attn: MultiHeadAttention = src_attn
+        self.feed_forward: PositionwiseFeedForward = feed_forward
+        self.sublayer: nn.ModuleList = clones(SublayerConnection(size, dropout), 3)
+
+    def forward(
+        self,
+        x: torch.Tensor,
+        memory: torch.Tensor,
+        src_mask: Optional[torch.Tensor],
+        tgt_mask: Optional[torch.Tensor]
+    ) -> torch.Tensor:
         """Follow Figure 1 (right) for connections."""
         m = memory
         x = self.sublayer[0](x, lambda x: self.self_attn(x, x, x, tgt_mask))
@@ -209,12 +248,23 @@ class Decoder(nn.Module):
     """
     Generic N layer decoder with masking
     """
-    def __init__(self, layer, N):
+    def __init__(self, layer: DecoderLayer, N: int):
+        """
+        Args:
+            layer: A single DecoderLayer instance to be cloned N times
+            N: Number of decoder layers in the stack
+        """
         super(Decoder, self).__init__()
-        self.layers = clones(layer, N)
-        self.norm = LayerNorm(layer.size)
-        
-    def forward(self, x, memory, src_mask, tgt_mask):
+        self.layers: nn.ModuleList = clones(layer, N)
+        self.norm: LayerNorm = LayerNorm(layer.size)
+
+    def forward(
+        self,
+        x: torch.Tensor,
+        memory: torch.Tensor,
+        src_mask: Optional[torch.Tensor],
+        tgt_mask: Optional[torch.Tensor]
+    ) -> torch.Tensor:
         for layer in self.layers:
             x = layer(x, memory, src_mask, tgt_mask)
         return self.norm(x)
@@ -224,12 +274,12 @@ class Embeddings(nn.Module):
     """
     Standard embedding layer
     """
-    def __init__(self, d_model, vocab):
+    def __init__(self, d_model: int, vocab: int):
         super(Embeddings, self).__init__()
-        self.lut = nn.Embedding(vocab, d_model)
-        self.d_model = d_model
+        self.lut: nn.Embedding = nn.Embedding(vocab, d_model)
+        self.d_model: int = d_model
 
-    def forward(self, x):
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
         return self.lut(x) * math.sqrt(self.d_model)
 
 
@@ -237,24 +287,24 @@ class PositionalEncoding(nn.Module):
     """
     Implement the PE function using sine and cosine functions
     """
-    def __init__(self, d_model, dropout, max_len=5000):
+    def __init__(self, d_model: int, dropout: float, max_len: int = 5000):
         super(PositionalEncoding, self).__init__()
-        self.dropout = nn.Dropout(p=dropout)
-        
+        self.dropout: nn.Dropout = nn.Dropout(p=dropout)
+
         # Compute the positional encodings once in log space
         pe = torch.zeros(max_len, d_model)
         position = torch.arange(0, max_len).unsqueeze(1).float()
-        
+
         div_term = torch.exp(torch.arange(0, d_model, 2).float() *
                            -(math.log(10000.0) / d_model))
-        
+
         pe[:, 0::2] = torch.sin(position * div_term)
         pe[:, 1::2] = torch.cos(position * div_term)
         pe = pe.unsqueeze(0)
-        
+
         self.register_buffer('pe', pe)
-        
-    def forward(self, x):
+
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
         x = x + self.pe[:, :x.size(1)].requires_grad_(False)
         return self.dropout(x)
 
@@ -263,11 +313,11 @@ class Generator(nn.Module):
     """
     Define standard linear + softmax generation step
     """
-    def __init__(self, d_model, vocab):
+    def __init__(self, d_model: int, vocab: int):
         super(Generator, self).__init__()
-        self.proj = nn.Linear(d_model, vocab)
+        self.proj: nn.Linear = nn.Linear(d_model, vocab)
 
-    def forward(self, x):
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
         return F.log_softmax(self.proj(x), dim=-1)
 
 
@@ -275,26 +325,53 @@ class EncoderDecoder(nn.Module):
     """
     A standard Encoder-Decoder architecture
     """
-    def __init__(self, encoder, decoder, src_embed, tgt_embed, generator):
+    def __init__(
+        self,
+        encoder: Encoder,
+        decoder: Decoder,
+        src_embed: nn.Sequential,
+        tgt_embed: nn.Sequential,
+        generator: Generator
+    ):
         super(EncoderDecoder, self).__init__()
-        self.encoder = encoder
-        self.decoder = decoder
-        self.src_embed = src_embed
-        self.tgt_embed = tgt_embed
-        self.generator = generator
+        self.encoder: Encoder = encoder
+        self.decoder: Decoder = decoder
+        self.src_embed: nn.Sequential = src_embed
+        self.tgt_embed: nn.Sequential = tgt_embed
+        self.generator: Generator = generator
 
-    def forward(self, src, tgt, src_mask, tgt_mask):
+    def forward(
+        self,
+        src: torch.Tensor,
+        tgt: torch.Tensor,
+        src_mask: Optional[torch.Tensor],
+        tgt_mask: Optional[torch.Tensor]
+    ) -> torch.Tensor:
         """Take in and process masked src and target sequences."""
         return self.decode(self.encode(src, src_mask), src_mask, tgt, tgt_mask)
 
-    def encode(self, src, src_mask):
+    def encode(self, src: torch.Tensor, src_mask: Optional[torch.Tensor]) -> torch.Tensor:
         return self.encoder(self.src_embed(src), src_mask)
 
-    def decode(self, memory, src_mask, tgt, tgt_mask):
+    def decode(
+        self,
+        memory: torch.Tensor,
+        src_mask: Optional[torch.Tensor],
+        tgt: torch.Tensor,
+        tgt_mask: Optional[torch.Tensor]
+    ) -> torch.Tensor:
         return self.decoder(self.tgt_embed(tgt), memory, src_mask, tgt_mask)
 
 
-def make_model(src_vocab, tgt_vocab, N=6, d_model=512, d_ff=2048, h=8, dropout=0.1):
+def make_model(
+    src_vocab: int,
+    tgt_vocab: int,
+    N: int = 6,
+    d_model: int = 512,
+    d_ff: int = 2048,
+    h: int = 8,
+    dropout: float = 0.1
+) -> EncoderDecoder:
     """
     Helper: Construct a model from hyperparameters
 
@@ -306,6 +383,9 @@ def make_model(src_vocab, tgt_vocab, N=6, d_model=512, d_ff=2048, h=8, dropout=0
         d_ff: feed-forward dimension
         h: number of attention heads
         dropout: dropout rate
+
+    Returns:
+        Complete EncoderDecoder model
     """
     c = copy.deepcopy
     attn = MultiHeadAttention(h, d_model)
@@ -328,18 +408,32 @@ def make_model(src_vocab, tgt_vocab, N=6, d_model=512, d_ff=2048, h=8, dropout=0
     return model
 
 
-def subsequent_mask(size):
+def subsequent_mask(size: int) -> torch.Tensor:
     """
     Mask out subsequent positions for decoder self-attention
+
+    Args:
+        size: sequence length
+
+    Returns:
+        Lower triangular mask tensor
     """
     attn_shape = (1, size, size)
     subsequent_mask = torch.triu(torch.ones(attn_shape), diagonal=1).type(torch.uint8)
     return subsequent_mask == 0
 
 
-# Utility functions for creating masks
-def make_std_mask(tgt, pad):
-    """Create a mask to hide padding and future words."""
+def make_std_mask(tgt: torch.Tensor, pad: int) -> torch.Tensor:
+    """
+    Create a mask to hide padding and future words.
+
+    Args:
+        tgt: target tensor
+        pad: padding token id
+
+    Returns:
+        Combined padding and subsequent mask
+    """
     tgt_mask = (tgt != pad).unsqueeze(-2)
     tgt_mask = tgt_mask & subsequent_mask(tgt.size(-1)).type_as(tgt_mask.data)
     return tgt_mask
