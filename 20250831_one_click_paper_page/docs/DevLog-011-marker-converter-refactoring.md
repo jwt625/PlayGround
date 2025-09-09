@@ -271,7 +271,62 @@ def test_extract_title_skips_arxiv_metadata():
 - Malformed repository names from poor title extraction
 - Difficulty maintaining 1000+ line converter file
 
-**Dependencies**: 
+**Dependencies**:
 - Current marker converter functionality must be preserved
 - All existing tests must continue to pass
 - No breaking changes to public API
+
+## 🐛 Issues Encountered and Resolved
+
+### Critical Bug: Import Failures Breaking Backend Conversion
+
+**Date**: 2025-01-08
+**Status**: ✅ RESOLVED
+
+**Problem**: After completing phases 1-3, the frontend conversion started failing with:
+```
+'NoneType' object has no attribute 'mode'
+Conversion execution failed: Marker library is not available. Cannot perform conversion.
+```
+
+**Root Cause**: The refactoring introduced complex import fallback logic that interfered with the backend's module import mechanism:
+
+1. **Complex Import Logic**: The try-catch import patterns in `marker_converter.py` and `metadata_extractor.py` were manipulating `sys.path` in ways that broke when imported from the backend service
+2. **Backend Import Failure**: `ConversionService` couldn't import `marker_converter` module, causing `MARKER_AVAILABLE = False` and `self._converter = None`
+3. **Placeholder Removal**: When placeholder conversion was removed, the code tried to access `self._converter.mode` on a `None` object
+
+**Debug Process**:
+1. **Identified Real vs Placeholder**: Conversion was suspiciously fast (no images, fake quality metrics) indicating placeholder mode
+2. **Traced Import Chain**: Backend → ConversionService → marker_converter import failure
+3. **Tested Import Isolation**: Direct import from scripts directory worked, but backend environment failed
+4. **Path Resolution Issues**: Complex relative import fallbacks were causing path conflicts
+
+**Solution**:
+1. **Simplified Import Logic**: Replaced complex try-catch patterns with straightforward path manipulation
+2. **Robust Path Handling**: Used `sys.path.insert(0, ...)` instead of `append()` for priority
+3. **Better Error Logging**: Added detailed logging to track import success/failure
+4. **Removed Placeholder Dependencies**: Cleaned up all references to removed placeholder methods
+
+**Code Changes**:
+```python
+# Before (problematic)
+try:
+    from .utils.text_cleaning import TextCleaner
+except ImportError:
+    sys.path.append(str(Path(__file__).parent))
+    from utils.text_cleaning import TextCleaner
+
+# After (working)
+current_dir = Path(__file__).parent
+if str(current_dir) not in sys.path:
+    sys.path.insert(0, str(current_dir))
+from utils.text_cleaning import TextCleaner
+```
+
+**Verification**: Integration tests now pass, showing real marker conversion with:
+- ✅ Layout recognition and OCR processing
+- ✅ Image extraction and path fixing
+- ✅ Proper metadata extraction
+- ✅ 30-40 second conversion times (vs instant placeholder)
+
+**Lesson Learned**: Keep import logic simple and avoid complex path manipulation that can interfere with different execution environments.
