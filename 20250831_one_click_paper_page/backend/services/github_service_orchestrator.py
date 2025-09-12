@@ -378,6 +378,10 @@ class GitHubServiceOrchestrator:
                         # Customize content with paper metadata if it's an HTML file
                         if file_path.suffix.lower() == ".html":
                             content = self._customize_html_content(content, config)
+                            # Add Jekyll front matter so Jekyll processes the HTML file
+                            if not content.startswith('---'):
+                                jekyll_front_matter = "---\nlayout: null\n---\n"
+                                content = jekyll_front_matter + content
 
                         files_to_commit.append({
                             "path": str(rel_path),

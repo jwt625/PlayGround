@@ -62,19 +62,13 @@ class WorkflowService:
     async def add_deployment_workflow_if_needed(
         self, repository: GitHubRepository, template_data: dict[str, Any]
     ) -> None:
-        """Add deployment workflow if not already present in template."""
-        if await self.has_deployment_workflow(template_data):
-            logger.info(
-                "✅ Template already has deployment workflow, skipping custom workflow"
-            )
-            return
-
-        logger.info(f"⚙️ Adding custom deployment workflow to {repository.full_name}")
+        """Add standardized deployment workflow (template workflows already filtered out)."""
+        logger.info(f"⚙️ Adding deploy.yml as the ONLY workflow to {repository.full_name}")
         await self.add_deployment_workflow(repository)
 
     async def add_deployment_workflow(self, repository: GitHubRepository) -> None:
-        """Add a custom GitHub Actions deployment workflow."""
-        logger.info(f"⚙️ Adding deployment workflow to {repository.full_name}")
+        """Add deployment workflow (no cleanup needed - workflows already filtered during template copy)."""
+        logger.info(f"⚙️ Adding deploy.yml workflow to {repository.full_name}")
 
         # Get the Jekyll deployment workflow content
         workflow_content = self.get_jekyll_deployment_workflow()
@@ -126,7 +120,7 @@ class WorkflowService:
                     current_tree_data = await tree_response.json()
                     existing_tree_items = current_tree_data["tree"]
 
-                # Add workflow file to existing tree items
+                # Add our deployment workflow to existing files
                 tree_items = existing_tree_items + [{
                     "path": workflow_path,
                     "mode": "100644",
@@ -149,7 +143,7 @@ class WorkflowService:
 
                 # Step 4: Create commit
                 commit_data = {
-                    "message": "Add GitHub Actions deployment workflow",
+                    "message": "Add deploy.yml workflow",
                     "tree": new_tree_sha,
                     "parents": [current_commit_sha]
                 }
@@ -177,7 +171,7 @@ class WorkflowService:
                         ref_error = await ref_response.json()
                         raise Exception(f"Failed to update branch: {ref_error}")
 
-                logger.info(f"✅ Deployment workflow added to {repository.full_name}")
+                logger.info(f"✅ deploy.yml added as the ONLY workflow to {repository.full_name}")
 
         except Exception as e:
             logger.error(f"❌ Failed to add deployment workflow: {e}")

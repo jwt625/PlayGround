@@ -144,7 +144,7 @@ class DeploymentStatusResponse(BaseModel):
     """Response for deployment status queries."""
     deployment_id: str
     status: DeploymentStatus
-    repository: GitHubRepository
+    repository: GitHubRepository | None = None
     pages_url: str | None = None
     workflow_run: WorkflowRun | None = None
     progress_percentage: int = Field(ge=0, le=100)
