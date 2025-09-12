@@ -76,12 +76,12 @@ class TestConversionService:
 
     @pytest.mark.asyncio
     async def test_convert_file_with_progress_callback(
-        self, conversion_service, temp_dir
+        self, conversion_service
     ):
-        """Test conversion with progress callback."""
-        # Create a test file
-        test_file = temp_dir / "test.pdf"
-        test_file.write_text("fake pdf content")
+        """Test conversion with progress callback using real PDF."""
+        # Use actual PDF from test folder
+        test_pdf = Path(__file__).parent.parent.parent / "tests" / "pdf" / "attention_is_all_you_need.pdf"
+        assert test_pdf.exists(), f"Test PDF not found: {test_pdf}"
 
         # Create job
         job_id = conversion_service.create_job(ConversionMode.FAST)
@@ -89,17 +89,18 @@ class TestConversionService:
         # Mock progress callback
         progress_callback = AsyncMock()
 
-        # Mock the marker converter to not be available (use placeholder)
-        with patch.object(conversion_service, '_converter', None):
-            result = await conversion_service.convert_file(
-                job_id, test_file, progress_callback
-            )
+        # Run conversion with real PDF and progress callback
+        result = await conversion_service.convert_file(
+            job_id, test_pdf, progress_callback
+        )
 
         # Verify progress callback was called
         assert progress_callback.call_count >= 3  # At least start, middle, end
 
         # Verify result
         assert result.status == ConversionStatus.COMPLETED
+        assert result.success is True
+        assert len(result.output_files) >= 2  # HTML and markdown files
 
     def test_update_job_status(self, conversion_service):
         """Test job status updates."""
