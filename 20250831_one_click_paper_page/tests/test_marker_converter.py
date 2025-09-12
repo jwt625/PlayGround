@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Unit tests for the Marker converter.
-Tests both the placeholder implementation and prepares for real Marker integration.
+Tests real Marker integration.
 """
 
 import pytest
@@ -94,47 +94,6 @@ class TestMarkerConverter:
         assert result is True
         assert output_dir.exists()
         assert output_dir.is_dir()
-    
-    def test_convert_placeholder_success(self, converter, fake_pdf_path, temp_dir):
-        """Test successful conversion with placeholder implementation."""
-        result = converter.convert_to_html(fake_pdf_path, temp_dir)
-        
-        assert result is True
-        
-        # Check that output files are created
-        html_file = temp_dir / "index.html"
-        markdown_file = temp_dir / "document.md"
-        
-        assert html_file.exists()
-        assert markdown_file.exists()
-        
-        # Check file contents
-        html_content = html_file.read_text()
-        markdown_content = markdown_file.read_text()
-        
-        assert "Document Converted with Marker" in html_content
-        assert "Document Converted with Marker" in markdown_content
-        assert fake_pdf_path.name in markdown_content
-    
-    def test_convert_real_pdf_placeholder(self, converter, sample_pdf_path, temp_dir):
-        """Test conversion with real PDF file (placeholder implementation)."""
-        if not sample_pdf_path.exists():
-            pytest.skip(f"Sample PDF not found at {sample_pdf_path}")
-        
-        result = converter.convert_to_html(sample_pdf_path, temp_dir)
-        
-        assert result is True
-        
-        # Check output files
-        html_file = temp_dir / "index.html"
-        markdown_file = temp_dir / "document.md"
-        
-        assert html_file.exists()
-        assert markdown_file.exists()
-        
-        # Verify content includes PDF name
-        markdown_content = markdown_file.read_text()
-        assert sample_pdf_path.name in markdown_content
     
     def test_extract_metadata_basic(self, converter, fake_pdf_path):
         """Test basic metadata extraction."""

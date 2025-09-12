@@ -75,28 +75,6 @@ class TestConversionService:
             await conversion_service.convert_file("non-existent-job", test_file)
 
     @pytest.mark.asyncio
-    async def test_convert_file_placeholder_mode(self, conversion_service, temp_dir):
-        """Test conversion using placeholder mode."""
-        # Create a test file
-        test_file = temp_dir / "test.pdf"
-        test_file.write_text("fake pdf content")
-
-        # Create job
-        job_id = conversion_service.create_job(ConversionMode.AUTO)
-
-        # Mock the marker converter to not be available
-        with patch.object(conversion_service, '_converter', None):
-            result = await conversion_service.convert_file(job_id, test_file)
-
-        # Verify result
-        assert result.job_id == job_id
-        assert result.status == ConversionStatus.COMPLETED
-        assert len(result.output_files) >= 2  # HTML and markdown files
-        assert result.metrics.mode_used == ConversionMode.FAST
-        assert result.markdown_length > 0
-        assert result.image_count == 0
-
-    @pytest.mark.asyncio
     async def test_convert_file_with_progress_callback(
         self, conversion_service, temp_dir
     ):
