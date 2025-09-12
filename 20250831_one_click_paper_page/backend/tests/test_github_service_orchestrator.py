@@ -284,3 +284,43 @@ class TestGitHubServiceOrchestrator:
         assert result.deployment_id == "test-deployment-123"
         assert result.status == DeploymentStatus.PENDING
         assert result.message == "Test dual deployment"
+
+    def test_customize_html_content_with_images(self, orchestrator):
+        """Test HTML content customization with image conversion."""
+        from models.github import DeploymentConfig, TemplateType
+
+        config = DeploymentConfig(
+            paper_title="Test Paper",
+            paper_authors=["John Doe"],
+            template=TemplateType.MINIMAL_ACADEMIC,
+            repository_name="test-repo"
+        )
+
+        html_content = """
+        <html>
+        <head>
+            <title>Document</title>
+        </head>
+        <body>
+            <p>Some text before image.</p>
+            <p>![](_page_1_Figure_2.jpeg)</p>
+            <p>Fig. 1. Caption text.</p>
+            <p>More content.</p>
+            <p>![](_page_7_Figure_1.jpeg)</p>
+            <p>Another figure.</p>
+        </body>
+        </html>
+        """
+
+        result = orchestrator._customize_html_content(html_content, config)
+
+        # Check that title and author are updated
+        assert "Test Paper" in result
+        assert "John Doe" in result
+
+        # Check that Markdown image syntax is converted to HTML img tags
+        assert "![](_page_1_Figure_2.jpeg)" not in result
+        assert "![](_page_7_Figure_1.jpeg)" not in result
+        assert '<img src="images/_page_1_Figure_2.jpeg" alt="Figure 2"' in result
+        assert '<img src="images/_page_7_Figure_1.jpeg" alt="Figure 1"' in result
+        assert 'style="max-width: 100%; height: auto;"' in result
