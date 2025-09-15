@@ -1,0 +1,10 @@
+[project]
+name = "20250913-filters"
+version = "0.1.0"
+description = "Add your description here"
+requires-python = ">=3.12"
+dependencies = [
+    "matplotlib>=3.10.6",
+    "numpy>=2.3.3",
+    "scipy>=1.16.2",
+]
