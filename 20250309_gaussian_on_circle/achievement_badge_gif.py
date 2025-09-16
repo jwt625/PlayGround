@@ -12,7 +12,7 @@ import io
 from PIL import Image, ImageDraw, ImageFont
 import math
 
-def add_achievement_banner(image_array, text="CERTIFIED OUTSIDE FIVE SIGMA"):
+def add_achievement_banner(image_array, text="CERTIFIED OUTSIDE FIVE SIGMA", text_rotation=0):
     """Add a circular achievement banner around the image"""
     # Convert numpy array to PIL Image
     img = Image.fromarray(image_array)
@@ -96,8 +96,8 @@ def add_achievement_banner(image_array, text="CERTIFIED OUTSIDE FIVE SIGMA"):
         if char == ' ':
             continue
 
-        # Calculate angle for this character - start from top, go clockwise
-        angle = (i / num_chars) * 2 * math.pi - math.pi / 2  # Start from top
+        # Calculate angle for this character - start from top, go clockwise, add rotation
+        angle = (i / num_chars) * 2 * math.pi - math.pi / 2 + text_rotation  # Start from top + rotation
 
         # Calculate position
         char_x = center_x + text_radius * math.cos(angle)
@@ -267,22 +267,29 @@ def generate_preview():
     img_bytes = pio.to_image(fig_plotly, format='png', width=900, height=900)
     image = imageio.imread(io.BytesIO(img_bytes))
 
-    # Add the achievement banner
-    enhanced_image = add_achievement_banner(image)
+    # Add the achievement banner (no rotation for preview)
+    enhanced_image = add_achievement_banner(image, text_rotation=0)
 
     # Save as PNG
     preview_filename = 'achievement_preview.png'
     imageio.imwrite(preview_filename, enhanced_image)
     print(f"Preview saved as {preview_filename}")
 
-def main():
+def main(quick=False):
     """Generate the achievement badge GIF"""
     print("Creating 3D Gaussian figure...")
     fig_plotly = create_gaussian_figure()
 
-    print("Generating achievement badge GIF...")
+    if quick:
+        print("Generating quick preview GIF (10 frames)...")
+        num_frames = 10
+        gif_filename = 'orbit_plotly_achievement_quick.gif'
+    else:
+        print("Generating full achievement badge GIF (72 frames)...")
+        num_frames = 72
+        gif_filename = 'orbit_plotly_achievement.gif'
+
     frames = []
-    num_frames = 72  # number of frames in the orbit shot
     d = 1.8        # distance of the camera from the center
     cam_z = 0.3    # fixed z coordinate for the camera
 
@@ -291,6 +298,9 @@ def main():
         angle_rad = np.deg2rad(angle)
         cam_x = d * np.cos(angle_rad)
         cam_y = d * np.sin(angle_rad)
+
+        # Calculate text rotation (counter-clockwise, one full rotation during the gif)
+        text_rotation_rad = -angle_rad  # Negative for counter-clockwise
 
         # Update the camera view for the 3D scene.
         fig_plotly.update_layout(
@@ -303,17 +313,21 @@ def main():
         img_bytes = pio.to_image(fig_plotly, format='png', width=900, height=900)  # 1.5x larger
         image = imageio.imread(io.BytesIO(img_bytes))
 
-        # Add the achievement banner
-        enhanced_image = add_achievement_banner(image)
+        # Add the achievement banner with rotating text
+        enhanced_image = add_achievement_banner(image, text_rotation=text_rotation_rad)
         frames.append(enhanced_image)
 
-    gif_filename = 'orbit_plotly_achievement.gif'
     imageio.mimsave(gif_filename, frames, fps=20)
     print(f"Achievement badge GIF saved as {gif_filename}")
 
 if __name__ == "__main__":
     import sys
-    if len(sys.argv) > 1 and sys.argv[1] == "preview":
-        generate_preview()
+    if len(sys.argv) > 1:
+        if sys.argv[1] == "preview":
+            generate_preview()
+        elif sys.argv[1] == "quick":
+            main(quick=True)
+        else:
+            main()
     else:
         main()
