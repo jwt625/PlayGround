@@ -144,7 +144,22 @@ class DeploymentTracker:
         """
         deployment = self._deployments.get(deployment_id)
         if not deployment:
-            raise Exception(f"Deployment {deployment_id} not found")
+            # Handle special case for "pending" or invalid deployment IDs
+            if deployment_id == "pending":
+                # Return a default pending status for frontend polling
+                return DeploymentStatusResponse(
+                    deployment_id=deployment_id,
+                    status=DeploymentStatus.PENDING,
+                    repository=None,
+                    message="No active deployment found",
+                    progress_percentage=0,
+                    pages_url=None,
+                    workflow_run=None,
+                    error_message=None,
+                    estimated_completion=None
+                )
+            else:
+                raise Exception(f"Deployment {deployment_id} not found")
 
         # Update deployment status from GitHub Actions workflow (with error handling)
         try:

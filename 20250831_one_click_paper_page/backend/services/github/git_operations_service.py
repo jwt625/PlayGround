@@ -167,11 +167,31 @@ class GitOperationsService:
             template_repo = template_data["repo"]
             blob_shas = {}
 
-            # Include ALL blob files from template
+            # Include ALL blob files from template EXCEPT workflow files
             all_template_files = template_data['tree']
-            blob_files = [f for f in all_template_files if f['type'] == 'blob']
+            blob_files = []
+            filtered_workflows = []
 
-            logger.info(f"Creating blobs for {len(blob_files)} files")
+            for f in all_template_files:
+                if f['type'] == 'blob':
+                    # Filter out ALL workflow files - deploy.yml will be added separately
+                    if (f['path'].startswith('.github/workflows/') and
+                        f['path'].endswith(('.yml', '.yaml'))):
+                        filtered_workflows.append(f['path'])
+                        logger.info(f"🗑️ Filtering out template workflow: {f['path']}")
+                        continue
+
+                    # Filter out template's index.md - our index.html should be the main page
+                    if f['path'] == 'index.md':
+                        logger.info(f"🗑️ Filtering out template index.md - our index.html will be the main page")
+                        continue
+
+                    blob_files.append(f)
+
+            if filtered_workflows:
+                logger.info(f"✅ Filtered out {len(filtered_workflows)} template workflow(s) - deploy.yml will be the ONLY workflow")
+
+            logger.info(f"Creating blobs for {len(blob_files)} files (workflows excluded)")
 
             # Debug: Log which .github files are being processed
             github_blob_files = [
@@ -183,8 +203,7 @@ class GitOperationsService:
             else:
                 logger.warning("⚠️ No .github files found in template files!")
 
-            for file_item in template_data["tree"]:
-                if file_item["type"] == "blob":  # Only files, not directories
+            for file_item in blob_files:  # Use filtered blob files (workflows already excluded)
                     try:
                         # Fetch file content from template repository
                         blob_data = await self.get_blob_content(

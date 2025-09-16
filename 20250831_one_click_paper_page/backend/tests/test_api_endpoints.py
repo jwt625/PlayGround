@@ -180,24 +180,30 @@ class TestAPIEndpoints:
             assert "client secret not configured" in response.json()["detail"]
 
     @pytest.mark.asyncio
-    async def test_full_conversion_workflow_placeholder(self):
-        """Test full conversion workflow using placeholder mode."""
+    async def test_full_conversion_workflow_real_pdf(self):
+        """Test full conversion workflow using real PDF file."""
         import asyncio
+        from pathlib import Path
 
-        # Create a job
-        fake_pdf = io.BytesIO(b"%PDF-1.4 fake pdf content")
+        # Use actual PDF from test folder
+        test_pdf_path = Path(__file__).parent.parent.parent / "tests" / "pdf" / "attention_is_all_you_need.pdf"
+        assert test_pdf_path.exists(), f"Test PDF not found: {test_pdf_path}"
+
+        # Read the real PDF file
+        with open(test_pdf_path, "rb") as f:
+            pdf_content = f.read()
 
         response = client.post(
             "/api/convert/upload",
-            files={"file": ("test_full.pdf", fake_pdf, "application/pdf")},
-            data={"template": "academic-pages", "mode": "fast"}
+            files={"file": ("attention_is_all_you_need.pdf", io.BytesIO(pdf_content), "application/pdf")},
+            data={"template": "minimal-academic", "mode": "fast"}
         )
 
         assert response.status_code == 200
         job_id = response.json()["job_id"]
 
-        # Wait a bit for background processing
-        await asyncio.sleep(2)
+        # Wait for background processing (real PDF takes longer)
+        await asyncio.sleep(5)
 
         # Check status
         response = client.get(f"/api/convert/status/{job_id}")
@@ -216,6 +222,7 @@ class TestAPIEndpoints:
             assert result_data["status"] == "completed"
             assert len(result_data["output_files"]) >= 2
             assert result_data["markdown_length"] > 0
+            assert result_data["success"] is True
 
         # Clean up
         client.delete(f"/api/convert/cancel/{job_id}")

@@ -378,6 +378,10 @@ class GitHubServiceOrchestrator:
                         # Customize content with paper metadata if it's an HTML file
                         if file_path.suffix.lower() == ".html":
                             content = self._customize_html_content(content, config)
+                            # Add Jekyll front matter so Jekyll processes the HTML file
+                            if not content.startswith('---'):
+                                jekyll_front_matter = "---\nlayout: null\n---\n"
+                                content = jekyll_front_matter + content
 
                         files_to_commit.append({
                             "path": str(rel_path),
@@ -551,7 +555,9 @@ class GitHubServiceOrchestrator:
             raise
 
     def _customize_html_content(self, content: str, config: DeploymentConfig) -> str:
-        """Customize HTML content with paper metadata."""
+        """Customize HTML content with paper metadata and fix image references."""
+        import re
+
         # Replace title
         if config.paper_title:
             content = content.replace(
@@ -576,5 +582,21 @@ class GitHubServiceOrchestrator:
                     '<head>',
                     f'<head>\n    <meta name="author" content="{authors_str}">'
                 )
+
+        # Convert Markdown image syntax to HTML img tags
+        # Pattern: ![](_page_X_Figure_Y.jpeg) -> <img src="images/_page_X_Figure_Y.jpeg" alt="Figure Y">
+        def replace_image(match):
+            image_filename = match.group(1)
+            # Extract figure info for alt text
+            if '_Figure_' in image_filename:
+                figure_num = image_filename.split('_Figure_')[-1].split('.')[0]
+                alt_text = f"Figure {figure_num}"
+            else:
+                alt_text = "Figure"
+
+            return f'<img src="images/{image_filename}" alt="{alt_text}" style="max-width: 100%; height: auto;">'
+
+        # Replace Markdown image syntax: ![](_page_X_Figure_Y.jpeg)
+        content = re.sub(r'!\[\]\((_page_\d+_Figure_\d+\.\w+)\)', replace_image, content)
 
         return content
