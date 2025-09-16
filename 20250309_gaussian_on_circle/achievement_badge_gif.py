@@ -19,7 +19,7 @@ def add_achievement_banner(image_array, text="CERTIFIED OUTSIDE FIVE SIGMA"):
     width, height = img.size
     
     # Create a new image with some padding for the banner
-    banner_width = 180  # width of the banner ring (1.5x larger to match central image)
+    banner_width = 140  # smaller banner to make central plot appear larger
     new_size = max(width, height) + 2 * banner_width
     new_img = Image.new('RGBA', (new_size, new_size), (255, 255, 255, 0))
     
@@ -48,10 +48,14 @@ def add_achievement_banner(image_array, text="CERTIFIED OUTSIDE FIVE SIGMA"):
                      center_x + radius, center_y + radius],
                     outline=color, width=3)
 
-    # Draw inner circle border
-    draw.ellipse([center_x - inner_radius, center_y - inner_radius,
-                 center_x + inner_radius, center_y + inner_radius],
-                outline=(*dark_blue, 255), width=4)
+    # Draw inner circle border (same thickness as outer circle)
+    for i in range(10):
+        radius = inner_radius + i * 2
+        alpha = 255 - i * 15
+        color = (*dark_blue, alpha)
+        draw.ellipse([center_x - radius, center_y - radius,
+                     center_x + radius, center_y + radius],
+                    outline=color, width=3)
     
     # Add text around the circle
     font_size = 72  # 3x larger than before (was 24)
@@ -122,23 +126,7 @@ def add_achievement_banner(image_array, text="CERTIFIED OUTSIDE FIVE SIGMA"):
         paste_y = int(char_y - rotated_char.height // 2)
         new_img.paste(rotated_char, (paste_x, paste_y), rotated_char)
     
-    # Add some decorative elements
-    # Small stars or dots around the banner
-    for i in range(8):
-        star_angle = i * math.pi / 4
-        star_radius = outer_radius + 15
-        star_x = center_x + star_radius * math.cos(star_angle)
-        star_y = center_y + star_radius * math.sin(star_angle)
-        
-        # Draw a small star/diamond
-        star_size = 8
-        points = [
-            (star_x, star_y - star_size),  # top
-            (star_x + star_size//2, star_y),  # right
-            (star_x, star_y + star_size),  # bottom
-            (star_x - star_size//2, star_y)   # left
-        ]
-        draw.polygon(points, fill=(*dark_blue, 255))  # Dark blue stars
+
     
     # Convert back to numpy array
     return np.array(new_img.convert('RGB'))
@@ -227,7 +215,7 @@ def create_gaussian_figure():
 
     # Add annotation with arrow at the top of the circle (point (0,1,0))
     fig_plotly.update_layout(
-        width=900, height=900, margin=dict(l=0, r=0, b=0, t=0),  # 1.5x larger (was 600x600)
+        width=900, height=900, margin=dict(l=0, r=0, b=0, t=0),
         showlegend=False,
         scene=dict(
             xaxis=dict(title='', showticklabels=False, ticks='', showgrid=True),
@@ -241,6 +229,7 @@ def create_gaussian_figure():
                     text="you are here",
                     showarrow=True,
                     arrowhead=2,
+                    arrowwidth=4,
                     arrowcolor="red",
                     ax=0,   # horizontal offset (in pixels)
                     ay=-120, # vertical offset (in pixels) - adjusted for larger size
@@ -260,8 +249,8 @@ def generate_preview():
     print("Generating preview frame...")
     # Set camera to first position (angle = 0)
     angle = 0
-    d = 2.5        # distance of the camera from the center
-    cam_z = 0.5    # fixed z coordinate for the camera
+    d = 1.8        # distance of the camera from the center
+    cam_z = 0.3    # fixed z coordinate for the camera
 
     angle_rad = np.deg2rad(angle)
     cam_x = d * np.cos(angle_rad)
@@ -294,8 +283,8 @@ def main():
     print("Generating achievement badge GIF...")
     frames = []
     num_frames = 72  # number of frames in the orbit shot
-    d = 2.5        # distance of the camera from the center
-    cam_z = 0.5    # fixed z coordinate for the camera
+    d = 1.8        # distance of the camera from the center
+    cam_z = 0.3    # fixed z coordinate for the camera
 
     for angle in np.linspace(0, 360, num_frames, endpoint=False):
         print(f"Processing frame {len(frames)+1}/{num_frames} (angle: {angle:.1f}°)")
