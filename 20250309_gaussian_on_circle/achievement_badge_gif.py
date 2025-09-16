@@ -37,7 +37,23 @@ def add_achievement_banner(image_array, text="CERTIFIED OUTSIDE FIVE SIGMA", tex
     # Draw outer circle (gold/yellow border)
     outer_radius = new_size // 2 - 10
     inner_radius = outer_radius - banner_width
-    
+
+    # Fill only the banner ring area with white background (not the center)
+    # Create a mask for the ring area
+    mask = Image.new('L', (new_size, new_size), 0)
+    mask_draw = ImageDraw.Draw(mask)
+
+    # Draw outer circle on mask
+    mask_draw.ellipse([center_x - outer_radius, center_y - outer_radius,
+                      center_x + outer_radius, center_y + outer_radius], fill=255)
+    # Cut out inner circle from mask
+    mask_draw.ellipse([center_x - inner_radius, center_y - inner_radius,
+                      center_x + inner_radius, center_y + inner_radius], fill=0)
+
+    # Create white ring image
+    white_ring = Image.new('RGBA', (new_size, new_size), (255, 255, 255, 255))
+    new_img.paste(white_ring, (0, 0), mask)
+
     # Draw the banner ring with gradient-like effect (dark blue like Ghost in the Shell)
     dark_blue = (0, 51, 102)  # Dark blue color like the laughing man icon
     for i in range(10):
