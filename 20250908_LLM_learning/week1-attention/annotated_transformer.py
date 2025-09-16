@@ -12,7 +12,10 @@ import torch.nn as nn
 import torch.nn.functional as F
 from torch.nn import Parameter
 import copy
-from typing import Optional, Callable, Tuple
+import matplotlib.pyplot as plt
+import seaborn as sns
+import numpy as np
+from typing import Optional, Callable, Tuple, List, Dict
 
 
 def clones(module: nn.Module, N: int) -> nn.ModuleList:
@@ -421,6 +424,106 @@ def subsequent_mask(size: int) -> torch.Tensor:
     attn_shape = (1, size, size)
     subsequent_mask = torch.triu(torch.ones(attn_shape), diagonal=1).type(torch.uint8)
     return subsequent_mask == 0
+
+
+def visualize_attention(
+    attention_weights: torch.Tensor,
+    input_tokens: List[str],
+    output_tokens: List[str],
+    layer: int = 0,
+    head: int = 0,
+    save_path: Optional[str] = None
+) -> None:
+    """
+    Visualize attention weights as a heatmap
+
+    Args:
+        attention_weights: [batch, heads, seq_len, seq_len] attention weights
+        input_tokens: List of input token strings
+        output_tokens: List of output token strings
+        layer: Which layer's attention to visualize
+        head: Which attention head to visualize
+        save_path: Optional path to save the plot
+    """
+    # Extract attention for specific head
+    attn = attention_weights[0, head].detach().cpu().numpy()
+
+    # Create heatmap
+    plt.figure(figsize=(10, 8))
+    sns.heatmap(
+        attn,
+        xticklabels=input_tokens,
+        yticklabels=output_tokens,
+        cmap='Blues',
+        annot=True,
+        fmt='.2f',
+        cbar_kws={'label': 'Attention Weight'}
+    )
+
+    plt.title(f'Attention Weights - Layer {layer}, Head {head}')
+    plt.xlabel('Input Tokens (Keys)')
+    plt.ylabel('Output Tokens (Queries)')
+    plt.tight_layout()
+
+    if save_path:
+        plt.savefig(save_path, dpi=300, bbox_inches='tight')
+    plt.show()
+
+
+def visualize_multi_head_attention(
+    model: 'EncoderDecoder',
+    src: torch.Tensor,
+    tgt: torch.Tensor,
+    src_mask: torch.Tensor,
+    tgt_mask: torch.Tensor,
+    src_tokens: List[str],
+    tgt_tokens: List[str],
+    layer_idx: int = 0
+) -> None:
+    """
+    Visualize all attention heads for a specific layer
+
+    Args:
+        model: The transformer model
+        src: Source tensor
+        tgt: Target tensor
+        src_mask: Source mask
+        tgt_mask: Target mask
+        src_tokens: Source token strings
+        tgt_tokens: Target token strings
+        layer_idx: Which encoder/decoder layer to visualize
+    """
+    model.eval()
+    with torch.no_grad():
+        # Forward pass to get attention weights
+        memory = model.encode(src, src_mask)
+        _ = model.decode(memory, src_mask, tgt, tgt_mask)
+
+        # Get encoder self-attention from specified layer
+        encoder_attn = model.encoder.layers[layer_idx].self_attn.attn
+
+        if encoder_attn is not None:
+            num_heads = encoder_attn.size(1)
+            fig, axes = plt.subplots(2, num_heads//2, figsize=(15, 8))
+            axes = axes.flatten()
+
+            for head in range(num_heads):
+                attn = encoder_attn[0, head].cpu().numpy()
+
+                sns.heatmap(
+                    attn,
+                    xticklabels=src_tokens,
+                    yticklabels=src_tokens,
+                    cmap='Blues',
+                    ax=axes[head],
+                    cbar=False,
+                    square=True
+                )
+                axes[head].set_title(f'Head {head}')
+
+            plt.suptitle(f'Encoder Self-Attention - Layer {layer_idx}')
+            plt.tight_layout()
+            plt.show()
 
 
 def make_std_mask(tgt: torch.Tensor, pad: int) -> torch.Tensor:
