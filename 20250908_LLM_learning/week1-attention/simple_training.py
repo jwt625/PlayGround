@@ -108,11 +108,12 @@ class TrainingMonitor:
 
 
 class SimpleLossCompute:
-    """A simple loss compute and train function."""
-    def __init__(self, generator, criterion, opt=None):
+    """Enhanced loss compute and train function with gradient clipping."""
+    def __init__(self, generator, criterion, opt=None, clip_grad=1.0):
         self.generator = generator
         self.criterion = criterion
         self.opt = opt
+        self.clip_grad = clip_grad
 
     def __call__(self, x, y, norm):
         x = self.generator(x)
@@ -126,6 +127,10 @@ class SimpleLossCompute:
         normalized_loss.backward()
 
         if self.opt is not None:
+            # Apply gradient clipping to prevent exploding gradients
+            if self.clip_grad > 0:
+                torch.nn.utils.clip_grad_norm_(self.opt.param_groups[0]['params'], self.clip_grad)
+
             self.opt.step()
             self.opt.zero_grad()
 
@@ -185,19 +190,27 @@ def run_epoch(data_iter, model, loss_compute, monitor: TrainingMonitor = None, e
 
 
 def greedy_decode(model, src, src_mask, max_len, start_symbol):
-    """Greedy decoding for inference"""
-    memory = model.encode(src, src_mask)
-    ys = torch.ones(1, 1).fill_(start_symbol).type_as(src.data)
-    
-    for i in range(max_len-1):
-        out = model.decode(memory, src_mask, 
-                          ys, 
-                          subsequent_mask(ys.size(1)).type_as(src.data))
+    """Greedy decoding for inference - simplified for language modeling"""
+    device = src.device
+    ys = torch.ones(1, 1, dtype=torch.long, device=device).fill_(start_symbol)
+
+    for i in range(max_len - 1):
+        # Create target mask
+        tgt_mask = subsequent_mask(ys.size(1)).type_as(src).to(device)
+
+        # Forward pass
+        out = model.forward(src, ys, src_mask, tgt_mask)
+
+        # Get probabilities for the last token
         prob = model.generator(out[:, -1])
-        _, next_word = torch.max(prob, dim = 1)
+
+        # Get the most likely next token
+        _, next_word = torch.max(prob, dim=1)
         next_word = next_word.data[0]
-        ys = torch.cat([ys, 
-                       torch.ones(1, 1).type_as(src.data).fill_(next_word)], dim=1)
+
+        # Append to sequence
+        ys = torch.cat([ys, torch.ones(1, 1, dtype=torch.long, device=device).fill_(next_word)], dim=1)
+
     return ys
 
 
@@ -365,19 +378,21 @@ def create_shakespeare_data(file_path: str = "tinyshakespeare.txt"):
 
 
 def shakespeare_data_gen(data, batch_size=16, seq_len=64, num_batches=50, vocab_size=65):
-    """Generate batches from Shakespeare character data with improved sampling"""
+    """Generate batches from Shakespeare character data for language modeling"""
     data_len = len(data)
-    pad_token = vocab_size  # Use vocab_size as padding token (not in actual vocab)
 
-    for _ in range(num_batches):
+    for batch_idx in range(num_batches):
         batch_data = []
         for _ in range(batch_size):
             # Ensure we don't go out of bounds
-            max_start = data_len - seq_len - 2
+            max_start = data_len - seq_len - 1
             if max_start <= 0:
-                # Fallback for very short sequences
+                # If data is too short, just use what we have
                 start_idx = 0
-                seq = data[:seq_len + 1] + [pad_token] * max(0, seq_len + 1 - len(data))
+                seq = data[:min(seq_len + 1, len(data))]
+                # Pad if necessary
+                while len(seq) < seq_len + 1:
+                    seq.append(0)  # Use 0 as padding (should be rare)
             else:
                 start_idx = np.random.randint(0, max_start)
                 seq = data[start_idx:start_idx + seq_len + 1]
@@ -386,10 +401,107 @@ def shakespeare_data_gen(data, batch_size=16, seq_len=64, num_batches=50, vocab_
 
         # Convert to tensors
         batch_tensor = torch.LongTensor(batch_data)
-        src = batch_tensor[:, :-1]  # Input sequence
-        tgt = batch_tensor[:, 1:]   # Target sequence (shifted by 1)
 
-        yield Batch(src, tgt, pad_token)
+        # For language modeling: input is seq[:-1], target is seq[1:]
+        src = batch_tensor[:, :-1]  # Input sequence [0, 1, 2, ..., seq_len-1]
+        tgt = batch_tensor[:, 1:]   # Target sequence [1, 2, 3, ..., seq_len]
+
+        # Debug: Print first batch to verify data
+        if batch_idx == 0:
+            print(f"  Data sample - src shape: {src.shape}, tgt shape: {tgt.shape}")
+            print(f"  First sequence src: {src[0][:10].tolist()}")
+            print(f"  First sequence tgt: {tgt[0][:10].tolist()}")
+
+        yield Batch(src, tgt, pad=0)  # Use 0 as padding token
+
+
+def nucleus_sample_decode(model, src, src_mask, max_len, start_symbol, temperature=0.8, top_p=0.9, repetition_penalty=1.1):
+    """Nucleus (top-p) sampling with repetition penalty for better text generation"""
+    device = src.device
+    ys = torch.ones(1, 1, dtype=torch.long, device=device).fill_(start_symbol)
+
+    for i in range(max_len - 1):
+        # Create target mask
+        tgt_mask = subsequent_mask(ys.size(1)).type_as(src).to(device)
+
+        # Forward pass
+        out = model.forward(src, ys, src_mask, tgt_mask)
+
+        # Get logits for the last token
+        logits = model.generator(out[:, -1])
+
+        # Apply repetition penalty
+        if repetition_penalty != 1.0:
+            for token_id in set(ys[0].tolist()):
+                logits[0, token_id] /= repetition_penalty
+
+        # Apply temperature scaling
+        logits = logits / temperature
+
+        # Nucleus (top-p) sampling
+        sorted_logits, sorted_indices = torch.sort(logits, descending=True)
+        cumulative_probs = torch.cumsum(torch.softmax(sorted_logits, dim=-1), dim=-1)
+
+        # Remove tokens with cumulative probability above the threshold
+        sorted_indices_to_remove = cumulative_probs > top_p
+        # Shift the indices to the right to keep also the first token above the threshold
+        sorted_indices_to_remove[..., 1:] = sorted_indices_to_remove[..., :-1].clone()
+        sorted_indices_to_remove[..., 0] = 0
+
+        # Set logits to -inf for tokens to remove
+        indices_to_remove = sorted_indices[sorted_indices_to_remove]
+        logits[0, indices_to_remove] = float('-inf')
+
+        # Sample from the filtered distribution
+        probs = torch.softmax(logits, dim=-1)
+        next_word = torch.multinomial(probs, 1)
+        next_word = next_word.data[0, 0]
+
+        # Append to sequence
+        ys = torch.cat([ys, torch.ones(1, 1, dtype=torch.long, device=device).fill_(next_word)], dim=1)
+
+    return ys
+
+
+def sample_decode(model, src, src_mask, max_len, start_symbol, temperature=1.0, top_k=None):
+    """Improved sampling-based decoding with repetition penalty"""
+    device = src.device
+    ys = torch.ones(1, 1, dtype=torch.long, device=device).fill_(start_symbol)
+
+    for i in range(max_len - 1):
+        # Create target mask
+        tgt_mask = subsequent_mask(ys.size(1)).type_as(src).to(device)
+
+        # Forward pass
+        out = model.forward(src, ys, src_mask, tgt_mask)
+
+        # Get probabilities for the last token
+        logits = model.generator(out[:, -1])
+
+        # Apply repetition penalty for recent tokens
+        if ys.size(1) > 1:
+            recent_tokens = ys[0, -min(10, ys.size(1)):].tolist()  # Last 10 tokens
+            for token_id in set(recent_tokens):
+                logits[0, token_id] *= 0.85  # Reduce probability of recent tokens
+
+        # Apply temperature scaling
+        logits = logits / temperature
+
+        # Apply top-k filtering if specified
+        if top_k is not None:
+            top_k_logits, top_k_indices = torch.topk(logits, top_k)
+            logits = torch.full_like(logits, float('-inf'))
+            logits.scatter_(1, top_k_indices, top_k_logits)
+
+        # Sample from the distribution
+        probs = torch.softmax(logits, dim=-1)
+        next_word = torch.multinomial(probs, 1)
+        next_word = next_word.data[0, 0]
+
+        # Append to sequence
+        ys = torch.cat([ys, torch.ones(1, 1, dtype=torch.long, device=device).fill_(next_word)], dim=1)
+
+    return ys
 
 
 def train_shakespeare_task(chars, char_to_idx, idx_to_char, data, vocab_size, visualize: bool = True, save_plots: bool = True):
@@ -397,13 +509,12 @@ def train_shakespeare_task(chars, char_to_idx, idx_to_char, data, vocab_size, vi
     print("Training Transformer on Shakespeare text...")
     print("=" * 60)
 
-    # Enhanced model parameters for Shakespeare with regularization
-    criterion = nn.CrossEntropyLoss()  # Standard cross-entropy loss
+    # Enhanced model parameters for better Shakespeare generation
+    criterion = nn.CrossEntropyLoss(ignore_index=0)  # Ignore padding tokens (using 0 as pad)
 
-    # Create appropriately sized model for character-level text generation
-    # Add 1 to vocab_size for padding token
-    model_vocab_size = vocab_size + 1
-    model = make_model(model_vocab_size, model_vocab_size, N=3, d_model=128, d_ff=512, h=4, dropout=0.3)
+    # Create better-sized model for character-level text generation
+    model_vocab_size = vocab_size  # No need to add 1, using existing vocab for padding
+    model = make_model(model_vocab_size, model_vocab_size, N=4, d_model=256, d_ff=512, h=8, dropout=0.1)
 
     # Move to GPU if available
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
@@ -426,12 +537,16 @@ def train_shakespeare_task(chars, char_to_idx, idx_to_char, data, vocab_size, vi
     # Initialize training monitor
     monitor = TrainingMonitor()
 
-    # Enhanced optimizer with weight decay for regularization
-    model_opt = Adam(model.parameters(), lr=0.001, betas=(0.9, 0.98), eps=1e-9, weight_decay=0.01)
+    # Enhanced optimizer with better learning rate scheduling
+    model_opt = Adam(model.parameters(), lr=0.0005, betas=(0.9, 0.98), eps=1e-9, weight_decay=0.01)
 
-    # Training loop with regularization focus
+    # Cosine annealing scheduler for better convergence
+    from torch.optim.lr_scheduler import CosineAnnealingLR
+    scheduler = CosineAnnealingLR(model_opt, T_max=25, eta_min=1e-6)
+
+    # Extended training for better results
     model.train()
-    num_epochs = 12  # Moderate epochs to prevent overfitting
+    num_epochs = 25
     print(f"Training for {num_epochs} epochs with regularization to prevent overfitting...")
     print("Focus on generalization rather than memorization.")
 
@@ -439,12 +554,12 @@ def train_shakespeare_task(chars, char_to_idx, idx_to_char, data, vocab_size, vi
         print(f"\nEpoch {epoch + 1}/{num_epochs}")
         print("-" * 40)
 
-        # Better data generation to prevent overfitting
+        # Improved data generation parameters
         data_iter = []
-        # Use consistent parameters - match seq_len in data generation with training expectations
-        batch_size = 8   # Smaller batch size for longer sequences
-        seq_len = 128    # Reasonable sequence length for character-level modeling
-        num_batches = 40  # Moderate number of batches
+        # Better parameters for quality learning
+        batch_size = 12   # Balanced batch size
+        seq_len = 64     # Longer sequences for better context
+        num_batches = 75  # More batches for better coverage
 
         for batch in shakespeare_data_gen(data, batch_size=batch_size, seq_len=seq_len, num_batches=num_batches, vocab_size=vocab_size):
             batch.src = batch.src.to(device)
@@ -454,18 +569,11 @@ def train_shakespeare_task(chars, char_to_idx, idx_to_char, data, vocab_size, vi
             batch.tgt_mask = batch.tgt_mask.to(device)
             data_iter.append(batch)
 
-        # Gentle learning rate decay to maintain learning
-        if epoch == 7:
-            for param_group in model_opt.param_groups:
-                param_group['lr'] *= 0.8
-                print(f"  Learning rate reduced to: {param_group['lr']:.6f}")
-        elif epoch == 12:
-            for param_group in model_opt.param_groups:
-                param_group['lr'] *= 0.8
-                print(f"  Learning rate reduced to: {param_group['lr']:.6f}")
-
-        loss_compute = SimpleLossCompute(model.generator, criterion, model_opt)
+        loss_compute = SimpleLossCompute(model.generator, criterion, model_opt, clip_grad=1.0)
         avg_loss, avg_perplexity = run_epoch(data_iter, model, loss_compute, monitor, epoch)
+
+        # Update learning rate
+        scheduler.step()
 
         # Log epoch metrics
         monitor.log_epoch(epoch, avg_loss, avg_perplexity)
@@ -476,10 +584,10 @@ def train_shakespeare_task(chars, char_to_idx, idx_to_char, data, vocab_size, vi
         print(f"  Batch size: {batch_size}, Seq length: {seq_len}, Batches: {num_batches}")
 
         # Monitor for overfitting
-        if avg_loss < 0.001:
+        if avg_loss < 0.5:
             print(f"  WARNING: Very low loss ({avg_loss:.6f}) - possible overfitting!")
 
-        # Generate sample text every 3 epochs to monitor progress more frequently
+        # Generate sample text every 3 epochs to monitor progress
         if (epoch + 1) % 3 == 0:
             print(f"  Sample generation after epoch {epoch + 1}:")
             model.eval()
@@ -489,10 +597,19 @@ def train_shakespeare_task(chars, char_to_idx, idx_to_char, data, vocab_size, vi
             src_mask = torch.ones(1, 1, len(prompt_indices)).to(device)
 
             with torch.no_grad():
-                result = greedy_decode(model, src, src_mask, max_len=len(prompt_indices) + 40, start_symbol=prompt_indices[0])
+                # Use nucleus sampling for better generation
+                result = nucleus_sample_decode(model, src, src_mask, max_len=len(prompt_indices) + 60,
+                                             start_symbol=prompt_indices[0], temperature=0.7, top_p=0.9, repetition_penalty=1.2)
                 generated_indices = result[0].cpu().tolist()
                 generated_text = ''.join([idx_to_char.get(idx, '?') for idx in generated_indices])
-                print(f"  '{generated_text}'")
+                print(f"  Nucleus: '{generated_text[:80]}...'")
+
+                # Also try regular sampling for comparison
+                result2 = sample_decode(model, src, src_mask, max_len=len(prompt_indices) + 60,
+                                      start_symbol=prompt_indices[0], temperature=0.8, top_k=15)
+                generated_indices2 = result2[0].cpu().tolist()
+                generated_text2 = ''.join([idx_to_char.get(idx, '?') for idx in generated_indices2])
+                print(f"  Regular: '{generated_text2[:80]}...'")
             model.train()
 
     # Plot training curves
@@ -537,20 +654,39 @@ def train_shakespeare_task(chars, char_to_idx, idx_to_char, data, vocab_size, vi
             src = torch.LongTensor([prompt_indices]).to(device)
             src_mask = torch.ones(1, 1, len(prompt_indices)).to(device)
 
-            # Generate longer continuation
-            max_gen_length = len(prompt_indices) + 80
-            result = greedy_decode(model, src, src_mask, max_len=max_gen_length, start_symbol=prompt_indices[0])
+            # Generate longer continuation with multiple methods
+            max_gen_length = len(prompt_indices) + 120
 
-            # Convert back to text
-            generated_indices = result[0].cpu().tolist()
-            generated_text = ''.join([idx_to_char.get(idx, '?') for idx in generated_indices])
+            print("  Greedy decoding:")
+            result_greedy = greedy_decode(model, src, src_mask, max_len=max_gen_length, start_symbol=prompt_indices[0])
+            generated_indices_greedy = result_greedy[0].cpu().tolist()
+            generated_text_greedy = ''.join([idx_to_char.get(idx, '?') for idx in generated_indices_greedy])
+            print(f"    '{generated_text_greedy[:100]}...'")
 
-            print(f"Generated: '{generated_text}'")
-            print(f"Length: {len(generated_text)} characters")
+            print("  Nucleus sampling (top-p=0.9):")
+            result_nucleus = nucleus_sample_decode(model, src, src_mask, max_len=max_gen_length,
+                                                 start_symbol=prompt_indices[0], temperature=0.7, top_p=0.9, repetition_penalty=1.2)
+            generated_indices_nucleus = result_nucleus[0].cpu().tolist()
+            generated_text_nucleus = ''.join([idx_to_char.get(idx, '?') for idx in generated_indices_nucleus])
+            print(f"    '{generated_text_nucleus[:100]}...'")
 
-            # Calculate some basic metrics
-            unique_chars = len(set(generated_text))
-            print(f"Unique characters: {unique_chars}/{vocab_size}")
+            print("  Top-k sampling (k=20):")
+            result_topk = sample_decode(model, src, src_mask, max_len=max_gen_length,
+                                      start_symbol=prompt_indices[0], temperature=0.8, top_k=20)
+            generated_indices_topk = result_topk[0].cpu().tolist()
+            generated_text_topk = ''.join([idx_to_char.get(idx, '?') for idx in generated_indices_topk])
+            print(f"    '{generated_text_topk[:100]}...'")
+
+            # Calculate metrics for nucleus sampling result (usually best)
+            unique_chars = len(set(generated_text_nucleus))
+            print(f"  Unique characters (nucleus): {unique_chars}/{vocab_size}")
+            print(f"  Length: {len(generated_text_nucleus)} characters")
+
+            # Check for repetition patterns
+            words = generated_text_nucleus.split()
+            if len(words) > 1:
+                unique_words = len(set(words))
+                print(f"  Word diversity: {unique_words}/{len(words)} unique words")
 
     # Final model statistics
     print(f"\nFinal Training Statistics:")
@@ -575,13 +711,8 @@ if __name__ == "__main__":
 
     if choice == "2":
         print("Training on Shakespeare text...")
-        try:
-            chars, char_to_idx, idx_to_char, data, vocab_size = create_shakespeare_data()
-            train_shakespeare_task(chars, char_to_idx, idx_to_char, data, vocab_size)
-        except Exception as e:
-            print(f"Error setting up Shakespeare data: {e}")
-            print("Falling back to copy task...")
-            train_copy_task()
+        chars, char_to_idx, idx_to_char, data, vocab_size = create_shakespeare_data()
+        train_shakespeare_task(chars, char_to_idx, idx_to_char, data, vocab_size)
     else:
         print("Training on copy task...")
         train_copy_task()
