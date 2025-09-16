@@ -76,3 +76,5 @@ venv.bak/
 */log/*
 *.jsonl
 *.bak
+20250702_docling_test/extracted_pages_*.md
+20250908_LLM_learning/*.pt
