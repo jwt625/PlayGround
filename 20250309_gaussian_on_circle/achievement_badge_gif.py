@@ -269,8 +269,8 @@ def generate_preview():
     cam_z = 0.3    # fixed z coordinate for the camera
 
     angle_rad = np.deg2rad(angle)
-    cam_x = d * np.cos(angle_rad)
-    cam_y = d * np.sin(angle_rad)
+    cam_x = d * np.cos(-angle_rad)
+    cam_y = d * np.sin(-angle_rad)
 
     # Update the camera view for the 3D scene.
     fig_plotly.update_layout(
@@ -312,8 +312,8 @@ def main(quick=False):
     for angle in np.linspace(0, 360, num_frames, endpoint=False):
         print(f"Processing frame {len(frames)+1}/{num_frames} (angle: {angle:.1f}°)")
         angle_rad = np.deg2rad(angle)
-        cam_x = d * np.cos(angle_rad)
-        cam_y = d * np.sin(angle_rad)
+        cam_x = d * np.cos(-angle_rad)
+        cam_y = d * np.sin(-angle_rad)
 
         # Calculate text rotation (counter-clockwise, one full rotation during the gif)
         text_rotation_rad = -angle_rad  # Negative for counter-clockwise
