@@ -19,7 +19,7 @@ def add_achievement_banner(image_array, text="CERTIFIED OUTSIDE FIVE SIGMA"):
     width, height = img.size
     
     # Create a new image with some padding for the banner
-    banner_width = 120  # width of the banner ring
+    banner_width = 180  # width of the banner ring (1.5x larger to match central image)
     new_size = max(width, height) + 2 * banner_width
     new_img = Image.new('RGBA', (new_size, new_size), (255, 255, 255, 0))
     
@@ -38,72 +38,85 @@ def add_achievement_banner(image_array, text="CERTIFIED OUTSIDE FIVE SIGMA"):
     outer_radius = new_size // 2 - 10
     inner_radius = outer_radius - banner_width
     
-    # Draw the banner ring with gradient-like effect
+    # Draw the banner ring with gradient-like effect (dark blue like Ghost in the Shell)
+    dark_blue = (0, 51, 102)  # Dark blue color like the laughing man icon
     for i in range(10):
         radius = outer_radius - i * 2
         alpha = 255 - i * 15
-        color = (255, 215, 0, alpha)  # Gold color with varying alpha
-        draw.ellipse([center_x - radius, center_y - radius, 
-                     center_x + radius, center_y + radius], 
+        color = (*dark_blue, alpha)  # Dark blue with varying alpha
+        draw.ellipse([center_x - radius, center_y - radius,
+                     center_x + radius, center_y + radius],
                     outline=color, width=3)
-    
+
     # Draw inner circle border
     draw.ellipse([center_x - inner_radius, center_y - inner_radius,
                  center_x + inner_radius, center_y + inner_radius],
-                outline=(255, 215, 0, 255), width=4)
+                outline=(*dark_blue, 255), width=4)
     
     # Add text around the circle
-    try:
-        # Try to use a bold font, fall back to default if not available
-        font_size = 24
+    font_size = 72  # 3x larger than before (was 24)
+    font = None
+
+    # Try multiple font paths for different systems
+    font_paths = [
+        "/System/Library/Fonts/Arial Bold.ttf",  # macOS
+        "/System/Library/Fonts/Helvetica.ttc",   # macOS fallback
+        "Arial-Bold",                             # System font name
+        "arial.ttf",                              # Windows
+        "DejaVuSans-Bold.ttf"                     # Linux
+    ]
+
+    for font_path in font_paths:
         try:
-            font = ImageFont.truetype("Arial-Bold", font_size)
+            font = ImageFont.truetype(font_path, font_size)
+            print(f"Using font: {font_path}")
+            break
         except:
-            try:
-                font = ImageFont.truetype("arial.ttf", font_size)
-            except:
-                font = ImageFont.load_default()
-    except:
+            continue
+
+    # If no TrueType font found, create a larger default font
+    if font is None:
+        print("Warning: Using default font - text may be smaller")
         font = ImageFont.load_default()
-    
+
     # Calculate text positioning around the circle
     text_radius = (outer_radius + inner_radius) // 2
-    text_chars = list(text)
-    num_chars = len(text_chars)
-    
-    # Add spaces between words for better distribution
-    spaced_text = text.replace(" ", "  ")
+
+    # Add extra space between end and beginning by adding padding characters
+    # This creates a gap between "SIGMA" and "CERTIFIED"
+    spaced_text = text.replace(" ", "  ") + "      "  # Extra spaces at the end
     text_chars = list(spaced_text)
     num_chars = len(text_chars)
-    
+
     for i, char in enumerate(text_chars):
         if char == ' ':
             continue
-            
-        # Calculate angle for this character
+
+        # Calculate angle for this character - start from top, go clockwise
         angle = (i / num_chars) * 2 * math.pi - math.pi / 2  # Start from top
-        
+
         # Calculate position
         char_x = center_x + text_radius * math.cos(angle)
         char_y = center_y + text_radius * math.sin(angle)
-        
+
         # Calculate rotation angle for the character
-        char_angle = angle + math.pi / 2  # Perpendicular to radius
-        
-        # Create a temporary image for the rotated character
-        char_img = Image.new('RGBA', (50, 50), (255, 255, 255, 0))
+        # Rotate in the opposite direction (clockwise) and remove the -90° offset
+        char_angle = -math.degrees(angle)  # Negative for clockwise rotation, no extra offset
+
+        # Create a temporary image for the rotated character (larger for bigger font)
+        char_img = Image.new('RGBA', (150, 150), (255, 255, 255, 0))
         char_draw = ImageDraw.Draw(char_img)
-        
+
         # Draw character in the center of temp image
         bbox = char_draw.textbbox((0, 0), char, font=font)
         char_width = bbox[2] - bbox[0]
         char_height = bbox[3] - bbox[1]
-        char_draw.text((25 - char_width//2, 25 - char_height//2), char, 
-                      fill=(0, 0, 0, 255), font=font)
-        
+        char_draw.text((75 - char_width//2, 75 - char_height//2), char,
+                      fill=(*dark_blue, 255), font=font)  # Dark blue text
+
         # Rotate the character
-        rotated_char = char_img.rotate(math.degrees(char_angle), expand=True)
-        
+        rotated_char = char_img.rotate(char_angle, expand=True)
+
         # Paste the rotated character
         paste_x = int(char_x - rotated_char.width // 2)
         paste_y = int(char_y - rotated_char.height // 2)
@@ -125,7 +138,7 @@ def add_achievement_banner(image_array, text="CERTIFIED OUTSIDE FIVE SIGMA"):
             (star_x, star_y + star_size),  # bottom
             (star_x - star_size//2, star_y)   # left
         ]
-        draw.polygon(points, fill=(255, 215, 0, 255))
+        draw.polygon(points, fill=(*dark_blue, 255))  # Dark blue stars
     
     # Convert back to numpy array
     return np.array(new_img.convert('RGB'))
@@ -214,7 +227,7 @@ def create_gaussian_figure():
 
     # Add annotation with arrow at the top of the circle (point (0,1,0))
     fig_plotly.update_layout(
-        width=600, height=600, margin=dict(l=0, r=0, b=0, t=0),
+        width=900, height=900, margin=dict(l=0, r=0, b=0, t=0),  # 1.5x larger (was 600x600)
         showlegend=False,
         scene=dict(
             xaxis=dict(title='', showticklabels=False, ticks='', showgrid=True),
@@ -230,8 +243,8 @@ def create_gaussian_figure():
                     arrowhead=2,
                     arrowcolor="red",
                     ax=0,   # horizontal offset (in pixels)
-                    ay=-80, # vertical offset (in pixels)
-                    font=dict(color="black", size=20)
+                    ay=-120, # vertical offset (in pixels) - adjusted for larger size
+                    font=dict(color="black", size=30)  # larger font for bigger image
                 )
             ]
         )
@@ -239,11 +252,45 @@ def create_gaussian_figure():
     
     return fig_plotly
 
+def generate_preview():
+    """Generate a preview of the first frame as PNG"""
+    print("Creating 3D Gaussian figure...")
+    fig_plotly = create_gaussian_figure()
+
+    print("Generating preview frame...")
+    # Set camera to first position (angle = 0)
+    angle = 0
+    d = 2.5        # distance of the camera from the center
+    cam_z = 0.5    # fixed z coordinate for the camera
+
+    angle_rad = np.deg2rad(angle)
+    cam_x = d * np.cos(angle_rad)
+    cam_y = d * np.sin(angle_rad)
+
+    # Update the camera view for the 3D scene.
+    fig_plotly.update_layout(
+        scene_camera=dict(
+            eye=dict(x=cam_x, y=cam_y, z=cam_z)
+        )
+    )
+
+    # Export the current view as a PNG image (requires kaleido).
+    img_bytes = pio.to_image(fig_plotly, format='png', width=900, height=900)
+    image = imageio.imread(io.BytesIO(img_bytes))
+
+    # Add the achievement banner
+    enhanced_image = add_achievement_banner(image)
+
+    # Save as PNG
+    preview_filename = 'achievement_preview.png'
+    imageio.imwrite(preview_filename, enhanced_image)
+    print(f"Preview saved as {preview_filename}")
+
 def main():
     """Generate the achievement badge GIF"""
     print("Creating 3D Gaussian figure...")
     fig_plotly = create_gaussian_figure()
-    
+
     print("Generating achievement badge GIF...")
     frames = []
     num_frames = 72  # number of frames in the orbit shot
@@ -255,18 +302,18 @@ def main():
         angle_rad = np.deg2rad(angle)
         cam_x = d * np.cos(angle_rad)
         cam_y = d * np.sin(angle_rad)
-        
+
         # Update the camera view for the 3D scene.
         fig_plotly.update_layout(
             scene_camera=dict(
                 eye=dict(x=cam_x, y=cam_y, z=cam_z)
             )
         )
-        
+
         # Export the current view as a PNG image (requires kaleido).
-        img_bytes = pio.to_image(fig_plotly, format='png', width=600, height=600)
+        img_bytes = pio.to_image(fig_plotly, format='png', width=900, height=900)  # 1.5x larger
         image = imageio.imread(io.BytesIO(img_bytes))
-        
+
         # Add the achievement banner
         enhanced_image = add_achievement_banner(image)
         frames.append(enhanced_image)
@@ -276,4 +323,8 @@ def main():
     print(f"Achievement badge GIF saved as {gif_filename}")
 
 if __name__ == "__main__":
-    main()
+    import sys
+    if len(sys.argv) > 1 and sys.argv[1] == "preview":
+        generate_preview()
+    else:
+        main()
