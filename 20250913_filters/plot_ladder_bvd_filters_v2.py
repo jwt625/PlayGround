@@ -117,7 +117,7 @@ def abcd_to_s(abcd, Z0=50):
         S21 = 2 / denom
         return S11, S21
 
-def ladder_filter_sparameters(f, N_parallel, fs_center=1e6, k_squared=0.1, Q=1000, Z0=50):
+def ladder_filter_sparameters(f, N_parallel, fs_center=1e9, k_squared=0.1, Q=1000, Z0=50):
     """
     Calculate S-parameters for ladder filter using ABCD matrices.
 
@@ -155,7 +155,7 @@ def ladder_filter_sparameters(f, N_parallel, fs_center=1e6, k_squared=0.1, Q=100
     Z_series_center = bvd_impedance(f_center_single, fs_center, k_squared, Q)
     Z_parallel_center = bvd_impedance(f_center_single, fs_for_parallel, k_squared, Q)
 
-    print(f'\nAt center frequency ({fs_center/1e6:.3f} MHz):')
+    print(f'\nAt center frequency ({fs_center/1e9:.3f} GHz):')
     print(f'Series resonator impedance: {Z_series_center[0]:.2f} Ω')
     print(f'Parallel resonator impedance: {Z_parallel_center[0]:.2f} Ω')
     print(f'Parallel resonator admittance: {1/Z_parallel_center[0]:.6f} S')
@@ -210,9 +210,9 @@ def ladder_filter_sparameters(f, N_parallel, fs_center=1e6, k_squared=0.1, Q=100
 def plot_ladder_filters_interactive():
     """Plot interactive ladder filter S-parameters and impedances using Plotly."""
 
-    # Frequency range around 1 MHz - wider range
-    fs_center = 1e6  # 1 MHz
-    f = np.linspace(0.6e6, 1.4e6, 10000)  # ±10% around center
+    # Frequency range around 1 GHz - wider range
+    fs_center = 1e9  # 1 GHz
+    f = np.linspace(0.6e9, 1.4e9, 10000)  # ±40% around center
 
     # Fixed parameters
     k_squared = 0.15  # 10% coupling
@@ -242,7 +242,7 @@ def plot_ladder_filters_interactive():
     )
 
     # Plot 1: BVD impedance showing series and parallel resonance behavior
-    f_bvd = np.linspace(0.8e6, 1.5e6, 10000)
+    f_bvd = np.linspace(0.8e9, 1.5e9, 10000)
 
     # Calculate series and parallel resonance frequencies
     fp = fs_center * np.sqrt(1 + k_squared / (1 - k_squared))
@@ -260,8 +260,8 @@ def plot_ladder_filters_interactive():
     Z_toPlot = 1.0/Z_parallel
     Z_toPlot_db = 20 * np.log10(np.abs(Z_toPlot))
 
-    print(f'fs_center_parallel = {fs_center_parallel/1e6:.3f} MHz')
-    print(f'fs_center = {fs_center/1e6:.3f} MHz')
+    print(f'fs_center_parallel = {fs_center_parallel/1e9:.3f} GHz')
+    print(f'fs_center = {fs_center/1e9:.3f} GHz')
 
     # Add traces to subplot 1 (row=1, col=1)
     # fig.add_trace(
@@ -279,28 +279,28 @@ def plot_ladder_filters_interactive():
     # )
 
     fig.add_trace(
-        go.Scatter(x=f_bvd/1e6, y=(Z_series_db), mode='lines', name='Series Resonator |Z|',
+        go.Scatter(x=f_bvd/1e9, y=(Z_series_db), mode='lines', name='Series Resonator |Z|',
                   line=dict(color='red', width=2), legendgroup='plot1'),        row=1, col=1
     )
 
     fig.add_trace(
-        go.Scatter(x=f_bvd/1e6, y=(Z_parallel_db), mode='lines', name='Parallel Resonator |Z|',
+        go.Scatter(x=f_bvd/1e9, y=(Z_parallel_db), mode='lines', name='Parallel Resonator |Z|',
                   line=dict(color='blue', width=2), legendgroup='plot1'),        row=1, col=1
     )
 
     fig.add_trace(
-        go.Scatter(x=f_bvd/1e6, y=(Z_toPlot_db), mode='lines', name='Series + 1/Parallel |Z|',
+        go.Scatter(x=f_bvd/1e9, y=(Z_toPlot_db), mode='lines', name='Series + 1/Parallel |Z|',
                   line=dict(color='green', width=2, dash='dash'), legendgroup='plot1'),        row=1, col=1
     )
 
     # Add vertical lines for resonance frequencies
-    fig.add_vline(x=fs_center/1e6, line_dash="dash", line_color="red", opacity=0.7,
-                  annotation_text=f'fs = {fs_center/1e6:.3f} MHz', row=1, col=1)
-    fig.add_vline(x=fp/1e6, line_dash="dash", line_color="blue", opacity=0.7,
-                  annotation_text=f'fp = {fp/1e6:.3f} MHz', row=1, col=1)
+    fig.add_vline(x=fs_center/1e9, line_dash="dash", line_color="red", opacity=0.7,
+                  annotation_text=f'fs = {fs_center/1e9:.3f} GHz', row=1, col=1)
+    fig.add_vline(x=fp/1e9, line_dash="dash", line_color="blue", opacity=0.7,
+                  annotation_text=f'fp = {fp/1e9:.3f} GHz', row=1, col=1)
 
     # Update subplot 1 axes
-    fig.update_xaxes(title_text="Frequency (MHz)", row=1, col=1)
+    fig.update_xaxes(title_text="Frequency (GHz)", row=1, col=1)
     fig.update_yaxes(title_text="|Z| (dB-Ω)", range=[0, 180], row=1, col=1)
     # fig.update_yaxes(title_text="|Z| (dB-Ω)", range=[-100, 100], row=1, col=1)
 
@@ -309,7 +309,7 @@ def plot_ladder_filters_interactive():
         S11, S21 = ladder_filter_sparameters(f, N, fs_center, k_squared, Q)
         S21_db = 20 * np.log10(np.abs(S21))
         fig.add_trace(
-            go.Scatter(x=f/1e6, y=S21_db, mode='lines',
+            go.Scatter(x=f/1e9, y=S21_db, mode='lines',
                       name=f'N_par = {N}, N_ser = {N+1}',
                       line=dict(color=colors[i], width=2), legendgroup='plot2'),
             row=1, col=2
@@ -320,7 +320,7 @@ def plot_ladder_filters_interactive():
                   annotation_text='-3dB', row=1, col=2)
 
     # Update subplot 2 axes
-    fig.update_xaxes(title_text="Frequency (MHz)", row=1, col=2)
+    fig.update_xaxes(title_text="Frequency (GHz)", row=1, col=2)
     fig.update_yaxes(title_text="S21 (dB)", range=[-120, 5], row=1, col=2)
 
     # Plot 3: S11 (Reflection)
@@ -328,7 +328,7 @@ def plot_ladder_filters_interactive():
         S11, S21 = ladder_filter_sparameters(f, N, fs_center, k_squared, Q)
         S11_db = 20 * np.log10(np.abs(S11))
         fig.add_trace(
-            go.Scatter(x=f/1e6, y=S11_db, mode='lines',
+            go.Scatter(x=f/1e9, y=S11_db, mode='lines',
                       name=f'N_par = {N}, N_ser = {N+1}',
                       line=dict(color=colors[i], width=2), legendgroup='plot3'),
             row=2, col=1
@@ -339,7 +339,7 @@ def plot_ladder_filters_interactive():
                   annotation_text='-10dB', row=2, col=1)
 
     # Update subplot 3 axes
-    fig.update_xaxes(title_text="Frequency (MHz)", row=2, col=1)
+    fig.update_xaxes(title_text="Frequency (GHz)", row=2, col=1)
     fig.update_yaxes(title_text="S11 (dB)", range=[-120, 5], row=2, col=1)
 
     # Plot 4: Combined S-parameters for N=3
@@ -349,13 +349,13 @@ def plot_ladder_filters_interactive():
     S21_db = 20 * np.log10(np.abs(S21))
 
     fig.add_trace(
-        go.Scatter(x=f/1e6, y=S21_db, mode='lines', name='S21 (Transmission)',
+        go.Scatter(x=f/1e9, y=S21_db, mode='lines', name='S21 (Transmission)',
                   line=dict(color='blue', width=2), legendgroup='plot4'),
         row=2, col=2
     )
 
     fig.add_trace(
-        go.Scatter(x=f/1e6, y=S11_db, mode='lines', name='S11 (Reflection)',
+        go.Scatter(x=f/1e9, y=S11_db, mode='lines', name='S11 (Reflection)',
                   line=dict(color='red', width=2), legendgroup='plot4'),
         row=2, col=2
     )
@@ -367,7 +367,7 @@ def plot_ladder_filters_interactive():
                   annotation_text='-10dB', row=2, col=2)
 
     # Update subplot 4 axes
-    fig.update_xaxes(title_text="Frequency (MHz)", row=2, col=2)
+    fig.update_xaxes(title_text="Frequency (GHz)", row=2, col=2)
     fig.update_yaxes(title_text="S-Parameters (dB)", range=[-120, 5], row=2, col=2)
 
     # Show the interactive plot
@@ -383,9 +383,9 @@ def plot_ladder_filters_interactive():
 def plot_ladder_filters():
     """Plot ladder filter S-parameters and impedances using matplotlib (original version)."""
 
-    # Frequency range around 1 MHz - wider range
-    fs_center = 1e6  # 1 MHz
-    f = np.linspace(0.9e6, 1.1e6, 1000)  # ±10% around center
+    # Frequency range around 1 GHz - wider range
+    fs_center = 1e9  # 1 GHz
+    f = np.linspace(0.9e9, 1.1e9, 1000)  # ±10% around center
 
     # Fixed parameters
     k_squared = 0.01  # 10% coupling
@@ -402,7 +402,7 @@ def plot_ladder_filters():
 
     # Plot 1: BVD impedance showing series and parallel resonance behavior
     ax1.set_title('BVD Resonator Impedance Characteristics')
-    f_bvd = np.linspace(0.8e6, 1.5e6, 3000)
+    f_bvd = np.linspace(0.8e9, 1.5e9, 3000)
 
     # Calculate series and parallel resonance frequencies
     fp = fs_center * np.sqrt(1 + k_squared / (1 - k_squared))
