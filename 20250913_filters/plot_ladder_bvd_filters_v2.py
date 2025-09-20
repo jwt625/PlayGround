@@ -223,15 +223,17 @@ def plot_ladder_filters_interactive():
 
     # Create subplots using plotly
     fig = make_subplots(
-        rows=2, cols=2,
+        rows=2, cols=1,
         subplot_titles=(
             'BVD Resonator Impedance Characteristics',
-            'Transmission Coefficient S21',
-            'Reflection Coefficient S11',
-            'S-Parameters for N_par = 3 Configuration'
+            'Transmission Coefficient S21'
+            # 'Reflection Coefficient S11',
+            # 'S-Parameters for N_par = 3 Configuration'
         ),
-        specs=[[{"secondary_y": False}, {"secondary_y": False}],
-               [{"secondary_y": False}, {"secondary_y": False}]]
+        # specs=[[{"secondary_y": False}, {"secondary_y": False}],
+        #        [{"secondary_y": False}, {"secondary_y": False}]]
+        specs=[[{"secondary_y": False}],
+               [{"secondary_y": False}]]
     )
 
     fig.update_layout(
@@ -242,7 +244,7 @@ def plot_ladder_filters_interactive():
     )
 
     # Plot 1: BVD impedance showing series and parallel resonance behavior
-    f_bvd = np.linspace(0.8e9, 1.5e9, 10000)
+    f_bvd = np.linspace(0.6e9, 1.4e9, 10000)
 
     # Calculate series and parallel resonance frequencies
     fp = fs_center * np.sqrt(1 + k_squared / (1 - k_squared))
@@ -288,10 +290,10 @@ def plot_ladder_filters_interactive():
                   line=dict(color='blue', width=2), legendgroup='plot1'),        row=1, col=1
     )
 
-    fig.add_trace(
-        go.Scatter(x=f_bvd/1e9, y=(Z_toPlot_db), mode='lines', name='Series + 1/Parallel |Z|',
-                  line=dict(color='green', width=2, dash='dash'), legendgroup='plot1'),        row=1, col=1
-    )
+    # fig.add_trace(
+    #     go.Scatter(x=f_bvd/1e9, y=(Z_toPlot_db), mode='lines', name='Series + 1/Parallel |Z|',
+    #               line=dict(color='green', width=2, dash='dash'), legendgroup='plot1'),        row=1, col=1
+    # )
 
     # Add vertical lines for resonance frequencies
     fig.add_vline(x=fs_center/1e9, line_dash="dash", line_color="red", opacity=0.7,
@@ -312,63 +314,63 @@ def plot_ladder_filters_interactive():
             go.Scatter(x=f/1e9, y=S21_db, mode='lines',
                       name=f'N_par = {N}, N_ser = {N+1}',
                       line=dict(color=colors[i], width=2), legendgroup='plot2'),
-            row=1, col=2
+            row=2, col=1
         )
 
     # Add horizontal line for -3dB
     fig.add_hline(y=-3, line_dash="dot", line_color="black", opacity=0.7,
-                  annotation_text='-3dB', row=1, col=2)
+                  annotation_text='-3dB', row=2, col=1)
 
     # Update subplot 2 axes
-    fig.update_xaxes(title_text="Frequency (GHz)", row=1, col=2)
-    fig.update_yaxes(title_text="S21 (dB)", range=[-120, 5], row=1, col=2)
-
-    # Plot 3: S11 (Reflection)
-    for i, N in enumerate(N_values):
-        S11, S21 = ladder_filter_sparameters(f, N, fs_center, k_squared, Q)
-        S11_db = 20 * np.log10(np.abs(S11))
-        fig.add_trace(
-            go.Scatter(x=f/1e9, y=S11_db, mode='lines',
-                      name=f'N_par = {N}, N_ser = {N+1}',
-                      line=dict(color=colors[i], width=2), legendgroup='plot3'),
-            row=2, col=1
-        )
-
-    # Add horizontal line for -10dB
-    fig.add_hline(y=-10, line_dash="dot", line_color="black", opacity=0.7,
-                  annotation_text='-10dB', row=2, col=1)
-
-    # Update subplot 3 axes
     fig.update_xaxes(title_text="Frequency (GHz)", row=2, col=1)
-    fig.update_yaxes(title_text="S11 (dB)", range=[-120, 5], row=2, col=1)
+    fig.update_yaxes(title_text="S21 (dB)", range=[-120, 5], row=2, col=1)
 
-    # Plot 4: Combined S-parameters for N=3
-    N_demo = 3
-    S11, S21 = ladder_filter_sparameters(f, N_demo, fs_center, k_squared, Q)
-    S11_db = 20 * np.log10(np.abs(S11))
-    S21_db = 20 * np.log10(np.abs(S21))
+    # # Plot 3: S11 (Reflection)
+    # for i, N in enumerate(N_values):
+    #     S11, S21 = ladder_filter_sparameters(f, N, fs_center, k_squared, Q)
+    #     S11_db = 20 * np.log10(np.abs(S11))
+    #     fig.add_trace(
+    #         go.Scatter(x=f/1e9, y=S11_db, mode='lines',
+    #                   name=f'N_par = {N}, N_ser = {N+1}',
+    #                   line=dict(color=colors[i], width=2), legendgroup='plot3'),
+    #         row=2, col=1
+    #     )
 
-    fig.add_trace(
-        go.Scatter(x=f/1e9, y=S21_db, mode='lines', name='S21 (Transmission)',
-                  line=dict(color='blue', width=2), legendgroup='plot4'),
-        row=2, col=2
-    )
+    # # Add horizontal line for -10dB
+    # fig.add_hline(y=-10, line_dash="dot", line_color="black", opacity=0.7,
+    #               annotation_text='-10dB', row=2, col=1)
 
-    fig.add_trace(
-        go.Scatter(x=f/1e9, y=S11_db, mode='lines', name='S11 (Reflection)',
-                  line=dict(color='red', width=2), legendgroup='plot4'),
-        row=2, col=2
-    )
+    # # Update subplot 3 axes
+    # fig.update_xaxes(title_text="Frequency (GHz)", row=2, col=1)
+    # fig.update_yaxes(title_text="S11 (dB)", range=[-120, 5], row=2, col=1)
 
-    # Add horizontal lines
-    fig.add_hline(y=-3, line_dash="dot", line_color="blue", opacity=0.7,
-                  annotation_text='-3dB', row=2, col=2)
-    fig.add_hline(y=-10, line_dash="dot", line_color="red", opacity=0.7,
-                  annotation_text='-10dB', row=2, col=2)
+    # # Plot 4: Combined S-parameters for N=3
+    # N_demo = 3
+    # S11, S21 = ladder_filter_sparameters(f, N_demo, fs_center, k_squared, Q)
+    # S11_db = 20 * np.log10(np.abs(S11))
+    # S21_db = 20 * np.log10(np.abs(S21))
 
-    # Update subplot 4 axes
-    fig.update_xaxes(title_text="Frequency (GHz)", row=2, col=2)
-    fig.update_yaxes(title_text="S-Parameters (dB)", range=[-120, 5], row=2, col=2)
+    # fig.add_trace(
+    #     go.Scatter(x=f/1e9, y=S21_db, mode='lines', name='S21 (Transmission)',
+    #               line=dict(color='blue', width=2), legendgroup='plot4'),
+    #     row=2, col=2
+    # )
+
+    # fig.add_trace(
+    #     go.Scatter(x=f/1e9, y=S11_db, mode='lines', name='S11 (Reflection)',
+    #               line=dict(color='red', width=2), legendgroup='plot4'),
+    #     row=2, col=2
+    # )
+
+    # # Add horizontal lines
+    # fig.add_hline(y=-3, line_dash="dot", line_color="blue", opacity=0.7,
+    #               annotation_text='-3dB', row=2, col=2)
+    # fig.add_hline(y=-10, line_dash="dot", line_color="red", opacity=0.7,
+    #               annotation_text='-10dB', row=2, col=2)
+
+    # # Update subplot 4 axes
+    # fig.update_xaxes(title_text="Frequency (GHz)", row=2, col=2)
+    # fig.update_yaxes(title_text="S-Parameters (dB)", range=[-120, 5], row=2, col=2)
 
     # Show the interactive plot
     fig.show()
