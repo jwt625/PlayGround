@@ -19,8 +19,11 @@ BVD model parameters:
 
 import numpy as np
 import matplotlib.pyplot as plt
+import plotly.graph_objects as go
+from plotly.subplots import make_subplots
+import plotly.io as pio
 
-def bvd_impedance(f, fs, k_squared, Q, R1=50.0):
+def bvd_impedance(f, fs, k_squared, Q):
     """
     Calculate BVD resonator impedance using correct model.
 
@@ -29,7 +32,6 @@ def bvd_impedance(f, fs, k_squared, Q, R1=50.0):
     fs: series resonance frequency [Hz]
     k_squared: electromechanical coupling factor k² = Cm/(Cm + C0)
     Q: quality factor
-    R1: motional resistance [ohms]
 
     Returns:
     Z: complex impedance
@@ -38,7 +40,9 @@ def bvd_impedance(f, fs, k_squared, Q, R1=50.0):
     - Series resonance: fs = 1/(2π√(Lm*Cm))
     - Parallel resonance: fp = fs * √(1 + Cm/C0)
     - Coupling factor: k² = Cm/(Cm + C0)
-    - Quality factor: Q = ωs*Lm/R1 = 1/(ωs*R1*Cm)
+    - Quality factor: Q = ωs*Lm/Rm where Rm is motional resistance
+
+    The component values are calculated consistently from fs, k², and Q.
     """
     omega = 2 * np.pi * f
     omega_s = 2 * np.pi * fs
@@ -46,18 +50,22 @@ def bvd_impedance(f, fs, k_squared, Q, R1=50.0):
     # From k² = Cm/(Cm + C0), we get Cm/C0 = k²/(1 - k²)
     Cm_C0_ratio = k_squared / (1 - k_squared)
 
-    # From Q = 1/(ωs*R1*Cm), we get Cm
-    Cm = 1.0 / (omega_s * R1 * Q)
+    # Choose a reference value for Cm (this sets the impedance scale)
+    # We'll use a typical value that gives reasonable impedance levels
+    Cm = 1e-12  # 1 pF reference
 
     # From fs = 1/(2π√(Lm*Cm)), we get Lm
     Lm = 1.0 / (omega_s**2 * Cm)
+
+    # From Q = ωs*Lm/Rm, we get Rm (motional resistance)
+    Rm = omega_s * Lm / Q
 
     # From Cm/C0 ratio, we get C0
     C0 = Cm / Cm_C0_ratio
 
     # BVD impedance calculation
-    # Motional branch: R1 + jωLm + 1/(jωCm)
-    Z_motional = R1 + 1j*omega*Lm + 1.0/(1j*omega*Cm)
+    # Motional branch: Rm + jωLm + 1/(jωCm)
+    Z_motional = Rm + 1j*omega*Lm + 1.0/(1j*omega*Cm)
 
     # Static capacitance: 1/(jωC0)
     Z_static = 1.0/(1j*omega*C0)
@@ -143,37 +151,205 @@ def ladder_filter_sparameters(f, N_parallel, fs_center=1e6, k_squared=0.1, Q=100
         ABCD_total[i] = np.eye(2)
 
     # Build ladder network using ABCD matrices
-    for stage in range(N_parallel):
-        # Add series resonator
-        # For series: resonator tuned so its series resonance fs is at passband
-        # This gives low impedance at passband frequency
-        Z_series = bvd_impedance(f, fs_series[stage], k_squared, Q, R1=50.0)
-        for i in range(nfreq):
-            ABCD_series = series_abcd(Z_series[i])
-            ABCD_total[i] = ABCD_total[i] @ ABCD_series
+    # Topology: Series → Shunt → Series → Shunt → ... → Series
+    # For N_parallel = 2: Series → Shunt → Series → Shunt → Series (3 series, 2 shunt)
 
-        # Add parallel (shunt) resonator
-        # For shunt: use the pre-calculated fs that gives desired fp
-        # This gives high impedance at the target fp (blocks signal to ground)
-        Z_shunt = bvd_impedance(f, fs_parallel[stage], k_squared, Q, R1=50.0)
-        Y_shunt = 1.0 / Z_shunt
-        for i in range(nfreq):
-            ABCD_shunt = shunt_abcd(Y_shunt[i])
-            ABCD_total[i] = ABCD_total[i] @ ABCD_shunt
-
-    # Add final series resonator
-    Z_series_final = bvd_impedance(f, fs_series[-1], k_squared, Q, R1=50.0)
-    for i in range(nfreq):
-        ABCD_series_final = series_abcd(Z_series_final[i])
-        ABCD_total[i] = ABCD_total[i] @ ABCD_series_final
+    # Build the complete ladder
+    for i in range(N_series + N_parallel):
+        if i % 2 == 0:  # Even positions: Series elements
+            series_idx = i // 2
+            Z_series = bvd_impedance(f, fs_series[series_idx], k_squared, Q)
+            for freq_idx in range(nfreq):
+                ABCD_series = series_abcd(Z_series[freq_idx])
+                ABCD_total[freq_idx] = ABCD_total[freq_idx] @ ABCD_series
+        else:  # Odd positions: Shunt elements
+            shunt_idx = i // 2
+            Z_shunt = bvd_impedance(f, fs_parallel[shunt_idx], k_squared, Q)
+            Y_shunt = 1.0 / Z_shunt
+            for freq_idx in range(nfreq):
+                ABCD_shunt = shunt_abcd(Y_shunt[freq_idx])
+                ABCD_total[freq_idx] = ABCD_total[freq_idx] @ ABCD_shunt
 
     # Convert ABCD to S-parameters
     S11, S21 = abcd_to_s(ABCD_total, Z0)
 
     return S11, S21
 
+def plot_ladder_filters_interactive():
+    """Plot interactive ladder filter S-parameters and impedances using Plotly."""
+
+    # Frequency range around 1 MHz - wider range
+    fs_center = 1e6  # 1 MHz
+    f = np.linspace(0.9e6, 1.1e6, 1000)  # ±10% around center
+
+    # Fixed parameters
+    k_squared = 0.1  # 10% coupling
+    Q = 3000
+    # Filter configurations
+    N_values = [2, 3, 4]
+    colors = ['blue', 'red', 'green']
+
+    # Create subplots using plotly
+    fig = make_subplots(
+        rows=2, cols=2,
+        subplot_titles=(
+            'BVD Resonator Impedance Characteristics',
+            'Transmission Coefficient S21',
+            'Reflection Coefficient S11',
+            'S-Parameters for N_par = 3 Configuration'
+        ),
+        specs=[[{"secondary_y": False}, {"secondary_y": False}],
+               [{"secondary_y": False}, {"secondary_y": False}]]
+    )
+
+    fig.update_layout(
+        title_text=f'Ladder Filter with BVD Resonators (Q = {Q}, k² = {k_squared*100}%)',
+        title_x=0.5,
+        height=800,
+        showlegend=True
+    )
+
+    # Plot 1: BVD impedance showing series and parallel resonance behavior
+    f_bvd = np.linspace(0.8e6, 1.5e6, 10000)
+
+    # Calculate series and parallel resonance frequencies
+    fp = fs_center * np.sqrt(1 + k_squared / (1 - k_squared))
+
+    # Plot impedance for series-type resonator (used in series branch)
+    Z_series = bvd_impedance(f_bvd, fs_center, k_squared, Q)
+    Z_series_db = 20 * np.log10(np.abs(Z_series))
+
+    # Plot impedance for parallel-type resonator (used in shunt branch)
+    fs_center_parallel = fs_center / np.sqrt(1 + k_squared / (1 - k_squared))
+    Z_parallel = bvd_impedance(f_bvd, fs_center_parallel, k_squared, Q)
+    Z_parallel_db = 20 * np.log10(np.abs(Z_parallel))
+
+    # Combined impedance
+    Z_toPlot = 1.0/Z_parallel
+    Z_toPlot_db = 20 * np.log10(np.abs(Z_toPlot))
+
+    print(f'fs_center_parallel = {fs_center_parallel/1e6:.3f} MHz')
+    print(f'fs_center = {fs_center/1e6:.3f} MHz')
+
+    # Add traces to subplot 1 (row=1, col=1)
+    # fig.add_trace(
+    #     go.Scatter(x=f_bvd/1e6, y=np.imag(Z_series), mode='lines', name='Series Resonator |Z|',
+    #               line=dict(color='red', width=2), legendgroup='plot1'), row=1, col=1)
+
+    # fig.add_trace(
+    #     go.Scatter(x=f_bvd/1e6, y=np.imag(Z_parallel), mode='lines', name='Parallel Resonator |Z|',
+    #               line=dict(color='blue', width=2), legendgroup='plot1'),        row=1, col=1
+    # )
+
+    # fig.add_trace(
+    #     go.Scatter(x=f_bvd/1e6, y=np.imag(1.0/Z_parallel), mode='lines', name='Series + 1/Parallel |Z|',
+    #               line=dict(color='green', width=2, dash='dash'), legendgroup='plot1'),        row=1, col=1
+    # )
+
+    fig.add_trace(
+        go.Scatter(x=f_bvd/1e6, y=(Z_series_db), mode='lines', name='Series Resonator |Z|',
+                  line=dict(color='red', width=2), legendgroup='plot1'),        row=1, col=1
+    )
+
+    fig.add_trace(
+        go.Scatter(x=f_bvd/1e6, y=(Z_parallel_db), mode='lines', name='Parallel Resonator |Z|',
+                  line=dict(color='blue', width=2), legendgroup='plot1'),        row=1, col=1
+    )
+
+    fig.add_trace(
+        go.Scatter(x=f_bvd/1e6, y=(Z_toPlot_db), mode='lines', name='Series + 1/Parallel |Z|',
+                  line=dict(color='green', width=2, dash='dash'), legendgroup='plot1'),        row=1, col=1
+    )
+
+    # Add vertical lines for resonance frequencies
+    fig.add_vline(x=fs_center/1e6, line_dash="dash", line_color="red", opacity=0.7,
+                  annotation_text=f'fs = {fs_center/1e6:.3f} MHz', row=1, col=1)
+    fig.add_vline(x=fp/1e6, line_dash="dash", line_color="blue", opacity=0.7,
+                  annotation_text=f'fp = {fp/1e6:.3f} MHz', row=1, col=1)
+
+    # Update subplot 1 axes
+    fig.update_xaxes(title_text="Frequency (MHz)", row=1, col=1)
+    fig.update_yaxes(title_text="|Z| (dB-Ω)", range=[0, 180], row=1, col=1)
+    # fig.update_yaxes(title_text="|Z| (dB-Ω)", range=[-100, 100], row=1, col=1)
+
+    # Plot 2: S21 (Transmission)
+    for i, N in enumerate(N_values):
+        S11, S21 = ladder_filter_sparameters(f, N, fs_center, k_squared, Q)
+        S21_db = 20 * np.log10(np.abs(S21))
+        fig.add_trace(
+            go.Scatter(x=f/1e6, y=S21_db, mode='lines',
+                      name=f'N_par = {N}, N_ser = {N+1}',
+                      line=dict(color=colors[i], width=2), legendgroup='plot2'),
+            row=1, col=2
+        )
+
+    # Add horizontal line for -3dB
+    fig.add_hline(y=-3, line_dash="dot", line_color="black", opacity=0.7,
+                  annotation_text='-3dB', row=1, col=2)
+
+    # Update subplot 2 axes
+    fig.update_xaxes(title_text="Frequency (MHz)", row=1, col=2)
+    fig.update_yaxes(title_text="S21 (dB)", range=[-120, 5], row=1, col=2)
+
+    # Plot 3: S11 (Reflection)
+    for i, N in enumerate(N_values):
+        S11, S21 = ladder_filter_sparameters(f, N, fs_center, k_squared, Q)
+        S11_db = 20 * np.log10(np.abs(S11))
+        fig.add_trace(
+            go.Scatter(x=f/1e6, y=S11_db, mode='lines',
+                      name=f'N_par = {N}, N_ser = {N+1}',
+                      line=dict(color=colors[i], width=2), legendgroup='plot3'),
+            row=2, col=1
+        )
+
+    # Add horizontal line for -10dB
+    fig.add_hline(y=-10, line_dash="dot", line_color="black", opacity=0.7,
+                  annotation_text='-10dB', row=2, col=1)
+
+    # Update subplot 3 axes
+    fig.update_xaxes(title_text="Frequency (MHz)", row=2, col=1)
+    fig.update_yaxes(title_text="S11 (dB)", range=[-120, 5], row=2, col=1)
+
+    # Plot 4: Combined S-parameters for N=3
+    N_demo = 3
+    S11, S21 = ladder_filter_sparameters(f, N_demo, fs_center, k_squared, Q)
+    S11_db = 20 * np.log10(np.abs(S11))
+    S21_db = 20 * np.log10(np.abs(S21))
+
+    fig.add_trace(
+        go.Scatter(x=f/1e6, y=S21_db, mode='lines', name='S21 (Transmission)',
+                  line=dict(color='blue', width=2), legendgroup='plot4'),
+        row=2, col=2
+    )
+
+    fig.add_trace(
+        go.Scatter(x=f/1e6, y=S11_db, mode='lines', name='S11 (Reflection)',
+                  line=dict(color='red', width=2), legendgroup='plot4'),
+        row=2, col=2
+    )
+
+    # Add horizontal lines
+    fig.add_hline(y=-3, line_dash="dot", line_color="blue", opacity=0.7,
+                  annotation_text='-3dB', row=2, col=2)
+    fig.add_hline(y=-10, line_dash="dot", line_color="red", opacity=0.7,
+                  annotation_text='-10dB', row=2, col=2)
+
+    # Update subplot 4 axes
+    fig.update_xaxes(title_text="Frequency (MHz)", row=2, col=2)
+    fig.update_yaxes(title_text="S-Parameters (dB)", range=[-120, 5], row=2, col=2)
+
+    # Show the interactive plot
+    fig.show()
+
+    # Save as HTML for interactivity
+    fig.write_html("ladder_bvd_sparameters_interactive.html")
+
+    # Also save static image for compatibility
+    fig.write_image("ladder_bvd_sparameters.png", width=1500, height=800)
+
+
 def plot_ladder_filters():
-    """Plot ladder filter S-parameters and impedances."""
+    """Plot ladder filter S-parameters and impedances using matplotlib (original version)."""
 
     # Frequency range around 1 MHz - wider range
     fs_center = 1e6  # 1 MHz
@@ -200,19 +376,24 @@ def plot_ladder_filters():
     fp = fs_center * np.sqrt(1 + k_squared / (1 - k_squared))
 
     # Plot impedance for series-type resonator (used in series branch)
-    Z_series = bvd_impedance(f_bvd, fs_center, k_squared, Q, R1=50.0)
+    Z_series = bvd_impedance(f_bvd, fs_center, k_squared, Q)
     Z_series_db = 20 * np.log10(np.abs(Z_series))
     ax1.plot(f_bvd/1e6, Z_series_db, 'red', linewidth=2, label='Series Resonator |Z|')
 
     # Plot impedance for parallel-type resonator (used in shunt branch)
     # For shunt, we care about admittance, so plot -|Z| to show low impedance at parallel resonance
     fs_center_parallel = fs_center / np.sqrt(1 + k_squared / (1 - k_squared))
-    Z_parallel = bvd_impedance(f_bvd, fs_center_parallel, k_squared, Q, R1=50.0)  # Slightly offset
+    Z_parallel = bvd_impedance(f_bvd, fs_center_parallel, k_squared, Q)
     Z_parallel_db = 20 * np.log10(np.abs(Z_parallel))
     ax1.plot(f_bvd/1e6, Z_parallel_db, 'blue', linewidth=2, label='Parallel Resonator |Z|')
     # print fs_center_parallel and fs_center
     print(f'fs_center_parallel = {fs_center_parallel/1e6:.3f} MHz')
     print(f'fs_center = {fs_center/1e6:.3f} MHz')
+    # plot Y_parallel + Z_series
+    Z_toPlot = Z_series + 1.0/Z_parallel
+    Z_toPlot_db = 20 * np.log10(np.abs(Z_toPlot))
+    ax1.plot(f_bvd/1e6, Z_toPlot_db, 'green', linewidth=2, label='Series + 1/Parallel |Z|', linestyle='--')
+
 
     # Mark resonance frequencies
     ax1.axvline(x=fs_center/1e6, color='red', linestyle='--', alpha=0.7,
@@ -279,7 +460,6 @@ def plot_ladder_filters():
     plt.show()
 
 
-
 def print_filter_summary():
     """Print summary of ladder filter characteristics."""
     
@@ -314,8 +494,12 @@ if __name__ == "__main__":
     print_filter_summary()
     print()
 
-    # Generate plots
-    plot_ladder_filters()
+    # Generate interactive plots
+    print("Generating interactive plots...")
+    plot_ladder_filters_interactive()
 
     print("Plots saved as:")
-    print("• ladder_bvd_sparameters.png")
+    print("• ladder_bvd_sparameters_interactive.html (interactive)")
+    print("• ladder_bvd_sparameters.png (static)")
+    print()
+    print("Open the HTML file in your browser for interactive plots!")
