@@ -23,15 +23,16 @@ import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 import plotly.io as pio
 
-def bvd_impedance(f, fs, k_squared, Q):
+def bvd_impedance(f, fs, k_squared, Q, Z0=50.0):
     """
-    Calculate BVD resonator impedance using correct model.
+    Calculate BVD resonator impedance using correct model with proper scaling.
 
     Parameters:
     f: frequency array [Hz]
     fs: series resonance frequency [Hz]
     k_squared: electromechanical coupling factor k² = Cm/(Cm + C0)
     Q: quality factor
+    Z0: characteristic impedance for scaling (default 50Ω)
 
     Returns:
     Z: complex impedance
@@ -42,7 +43,7 @@ def bvd_impedance(f, fs, k_squared, Q):
     - Coupling factor: k² = Cm/(Cm + C0)
     - Quality factor: Q = ωs*Lm/Rm where Rm is motional resistance
 
-    The component values are calculated consistently from fs, k², and Q.
+    Component values are scaled to give reasonable impedance levels around Z0.
     """
     omega = 2 * np.pi * f
     omega_s = 2 * np.pi * fs
@@ -50,14 +51,18 @@ def bvd_impedance(f, fs, k_squared, Q):
     # From k² = Cm/(Cm + C0), we get Cm/C0 = k²/(1 - k²)
     Cm_C0_ratio = k_squared / (1 - k_squared)
 
-    # Choose a reference value for Cm (this sets the impedance scale)
-    # We'll use a typical value that gives reasonable impedance levels
-    Cm = 1e-12  # 1 pF reference
+    # Scale Cm to give reasonable impedance levels
+    # For a ladder filter, we want each series element to contribute only a small
+    # fraction of the total impedance. With N series elements, target Rm ≈ Z0/(5*N)
+    # But since we don't know N here, use a conservative scaling
+    # Choose Rm ≈ Z0/20 for low series resistance
+    Rm_target = Z0 / 10.0
+    Cm = 1.0 / (omega_s * Q * Rm_target)
 
     # From fs = 1/(2π√(Lm*Cm)), we get Lm
     Lm = 1.0 / (omega_s**2 * Cm)
 
-    # From Q = ωs*Lm/Rm, we get Rm (motional resistance)
+    # Motional resistance from Q
     Rm = omega_s * Lm / Q
 
     # From Cm/C0 ratio, we get C0
@@ -141,6 +146,33 @@ def ladder_filter_sparameters(f, N_parallel, fs_center=1e6, k_squared=0.1, Q=100
     # Calculate fs needed so that fp = fs * sqrt(1 + k²/(1-k²)) = fs_center
     fs_for_parallel = fs_center / np.sqrt(1 + k_squared / (1 - k_squared))
     fs_parallel = np.full(N_parallel, fs_for_parallel)
+    # print fs_series and fs_parallel
+    print(f'fs_series = {fs_series}')
+    print(f'fs_parallel = {fs_parallel}')
+
+    # Debug: Check impedance levels at center frequency
+    f_center_single = np.array([fs_center])
+    Z_series_center = bvd_impedance(f_center_single, fs_center, k_squared, Q)
+    Z_parallel_center = bvd_impedance(f_center_single, fs_for_parallel, k_squared, Q)
+
+    print(f'\nAt center frequency ({fs_center/1e6:.3f} MHz):')
+    print(f'Series resonator impedance: {Z_series_center[0]:.2f} Ω')
+    print(f'Parallel resonator impedance: {Z_parallel_center[0]:.2f} Ω')
+    print(f'Parallel resonator admittance: {1/Z_parallel_center[0]:.6f} S')
+
+    # Calculate component values for reference
+    omega_s = 2 * np.pi * fs_center
+    Z0 = 50.0
+    Rm_target = Z0 / 10.0
+    Cm = 1.0 / (omega_s * Q * Rm_target)
+    C0 = Cm * (1 - k_squared) / k_squared
+    Lm = 1.0 / (omega_s**2 * Cm)
+    print(f'Component values:')
+    print(f'  Cm: {Cm*1e12:.2f} pF')
+    print(f'  C0: {C0*1e12:.2f} pF')
+    print(f'  Lm: {Lm*1e3:.2f} mH')
+    print(f'  Rm: {Rm_target:.2f} Ω')
+    print(f'Total series resistance for {N_series} elements: {N_series * Rm_target:.1f} Ω')
 
     # Initialize overall ABCD matrix for each frequency
     nfreq = len(f)
@@ -180,13 +212,13 @@ def plot_ladder_filters_interactive():
 
     # Frequency range around 1 MHz - wider range
     fs_center = 1e6  # 1 MHz
-    f = np.linspace(0.9e6, 1.1e6, 1000)  # ±10% around center
+    f = np.linspace(0.6e6, 1.4e6, 10000)  # ±10% around center
 
     # Fixed parameters
-    k_squared = 0.1  # 10% coupling
-    Q = 3000
+    k_squared = 0.15  # 10% coupling
+    Q = 200
     # Filter configurations
-    N_values = [2, 3, 4]
+    N_values = [3, 4, 5]
     colors = ['blue', 'red', 'green']
 
     # Create subplots using plotly
@@ -356,7 +388,7 @@ def plot_ladder_filters():
     f = np.linspace(0.9e6, 1.1e6, 1000)  # ±10% around center
 
     # Fixed parameters
-    k_squared = 0.1  # 10% coupling
+    k_squared = 0.01  # 10% coupling
     Q = 1000
 
     # Filter configurations
