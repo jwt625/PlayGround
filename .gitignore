@@ -78,3 +78,4 @@ venv.bak/
 *.bak
 20250702_docling_test/extracted_pages_*.md
 20250908_LLM_learning/*.pt
+20250913_filters/*.html
