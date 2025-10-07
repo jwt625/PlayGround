@@ -1,17 +1,20 @@
 #!/usr/bin/env python3
 """CLI script to download GLM-4.5-Air model."""
 
-import asyncio
 import argparse
+import asyncio
 import logging
 import sys
 from pathlib import Path
-from typing import Optional
 
 # Add src to path for imports
 sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 
-from glm_server.model_downloader import ModelDownloader, download_glm_model, ModelDownloadError
+from glm_server.model_downloader import (
+    ModelDownloader,
+    ModelDownloadError,
+    download_glm_model,
+)
 
 
 def setup_logging(level: str = "INFO") -> None:
@@ -29,7 +32,7 @@ def print_model_info(downloader: ModelDownloader) -> None:
         print("\n" + "="*60)
         print("GLM-4.5-Air Model Information")
         print("="*60)
-        
+
         # Get basic model info
         model_info = downloader.get_model_info()
         print(f"Model ID: {model_info['model_id']}")
@@ -38,37 +41,37 @@ def print_model_info(downloader: ModelDownloader) -> None:
         print(f"Downloads: {model_info.get('downloads', 'N/A'):,}")
         print(f"Likes: {model_info.get('likes', 'N/A'):,}")
         print(f"Last Modified: {model_info.get('last_modified', 'N/A')}")
-        
+
         # Get size information
         print("\n" + "-"*40)
         print("Download Size Estimation")
         print("-"*40)
-        
+
         size_info = downloader.estimate_download_size()
         print(f"Total Size: {size_info['total_size_gb']:.2f} GB")
         print(f"Total Files: {size_info['total_files']:,}")
-        
+
         # Show large files
         if size_info['large_files']:
-            print(f"\nLarge Files (>100MB):")
+            print("\nLarge Files (>100MB):")
             for file_info in size_info['large_files'][:10]:  # Show top 10
                 lfs_marker = " (LFS)" if file_info['lfs'] else ""
                 print(f"  {file_info['path']}: {file_info['size_gb']:.2f} GB{lfs_marker}")
-            
+
             if len(size_info['large_files']) > 10:
                 print(f"  ... and {len(size_info['large_files']) - 10} more large files")
-        
+
         # Show file type breakdown
         if size_info['file_types']:
-            print(f"\nFile Type Breakdown:")
-            for ext, size_gb in sorted(size_info['file_types'].items(), 
+            print("\nFile Type Breakdown:")
+            for ext, size_gb in sorted(size_info['file_types'].items(),
                                      key=lambda x: x[1], reverse=True):
                 if size_gb > 0.01:  # Only show files >10MB
                     ext_display = ext if ext else "(no extension)"
                     print(f"  {ext_display}: {size_gb:.2f} GB")
-        
+
         print("\n" + "="*60)
-        
+
     except ModelDownloadError as e:
         print(f"Error getting model info: {e}")
         sys.exit(1)
@@ -107,18 +110,18 @@ async def main() -> None:
         type=Path,
         help="Only verify existing model at given path"
     )
-    
+
     args = parser.parse_args()
-    
+
     setup_logging(args.log_level)
     logger = logging.getLogger(__name__)
-    
+
     # Create downloader
     downloader = ModelDownloader(
         model_id=args.model_id,
         token=args.token
     )
-    
+
     # Handle verify-only mode
     if args.verify_only:
         logger.info(f"Verifying model at: {args.verify_only}")
@@ -131,42 +134,42 @@ async def main() -> None:
             print(f"Total Size: {verification['total_size_gb']:.2f} GB")
             print(f"Weight Files: {verification['weight_files_count']}")
             print(f"Essential Files Found: {len(verification['essential_files_found'])}")
-            
+
             if verification['essential_files_missing']:
                 print(f"Missing Files: {verification['essential_files_missing']}")
-            
+
             if verification['verification_passed']:
                 print("\n✅ Model verification PASSED")
                 sys.exit(0)
             else:
                 print("\n❌ Model verification FAILED")
                 sys.exit(1)
-                
+
         except ModelDownloadError as e:
             logger.error(f"Verification failed: {e}")
             sys.exit(1)
-    
+
     # Show model information
     print_model_info(downloader)
-    
+
     # Handle info-only mode
     if args.info_only:
         logger.info("Info-only mode, exiting without download")
         return
-    
+
     # Confirm download
     size_info = downloader.estimate_download_size()
     print(f"\nThis will download {size_info['total_size_gb']:.2f} GB of data.")
-    
+
     if not args.output_dir:
         default_dir = Path.cwd() / "models" / args.model_id.replace("/", "_")
         print(f"Default download location: {default_dir}")
-    
+
     response = input("\nProceed with download? [y/N]: ").strip().lower()
     if response not in ['y', 'yes']:
         print("Download cancelled.")
         return
-    
+
     # Download model
     try:
         logger.info("Starting model download...")
@@ -175,14 +178,14 @@ async def main() -> None:
             local_dir=args.output_dir,
             token=args.token
         )
-        
+
         print(f"\n✅ Model successfully downloaded to: {model_path}")
-        
+
         # Show final verification
         verification = downloader.verify_model_files(model_path)
         print(f"📊 Final size: {verification['total_size_gb']:.2f} GB")
         print(f"📁 Weight files: {verification['weight_files_count']}")
-        
+
     except ModelDownloadError as e:
         logger.error(f"Download failed: {e}")
         sys.exit(1)
