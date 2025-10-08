@@ -119,6 +119,11 @@ def main() -> None:
         help="Logging level (default: INFO)"
     )
     parser.add_argument(
+        "--enforce-eager",
+        action="store_true",
+        help="Disable CUDA graphs (use eager mode). Use this if you get OOM during initialization"
+    )
+    parser.add_argument(
         "--save-config",
         help="Save configuration to file"
     )
@@ -147,6 +152,7 @@ def main() -> None:
     config.gpu_memory_utilization = args.gpu_memory_utilization
     config.tensor_parallel_size = args.tensor_parallel_size
     config.require_auth = not args.no_auth
+    config.enforce_eager = args.enforce_eager
 
     if args.api_key:
         config.api_key = args.api_key
@@ -189,7 +195,8 @@ def main() -> None:
             host=config.host,
             port=config.port,
             model_path=config.model_path,
-            log_level=args.log_level
+            log_level=args.log_level,
+            server_config=config
         )
     except KeyboardInterrupt:
         print("\n🛑 Server stopped by user")

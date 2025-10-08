@@ -67,6 +67,10 @@ class InferenceConfig(BaseModel):
         default=True,
         description="Enable chunked prefill for better memory usage"
     )
+    enforce_eager: bool = Field(
+        default=False,
+        description="Disable CUDA graphs (use eager mode). Set to True if OOM during initialization"
+    )
     block_size: int = Field(
         default=32,
         description="Block size for attention (32 optimal for H100)"

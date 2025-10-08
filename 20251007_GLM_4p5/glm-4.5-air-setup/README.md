@@ -19,6 +19,26 @@ uv run python scripts/download_model.py
 
 ### 3. Start the Server
 
+
+```bash
+PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True \
+uv run python scripts/start_server.py \
+    --gpu-memory-utilization 0.9 \
+    --max-model-len 16384 \
+    --api-key "<your-api-key-here>"
+```
+
+Trade off between context length and number of concurrent requests:
+```bash
+PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True \
+uv run python scripts/start_server.py \
+    --gpu-memory-utilization 0.9 \
+    --max-model-len 65536 \
+    --max-num-seqs 8 \
+    --enforce-eager \
+    --api-key "<your-api-key-here>"
+```
+
 **Option A: Using the Python script (recommended)**
 ```bash
 uv run python scripts/start_server.py

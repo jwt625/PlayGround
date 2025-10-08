@@ -85,10 +85,12 @@ async def lifespan(app: FastAPI):
     # Startup
     logger.info("Starting GLM-4.5-Air server...")
 
-    # Get optimized configuration
-    config = get_optimized_h100_config()
+    # Get optimized configuration (only if not already set)
+    if config is None:
+        config = get_optimized_h100_config()
     logger.info(f"Generated API key: {config.api_key}")
     logger.info(f"Server will run on {config.host}:{config.port}")
+    logger.info(f"Enforce eager mode: {config.enforce_eager}")
 
     # Initialize GLM server
     glm_server = GLMVLLMServer(config)
@@ -161,7 +163,7 @@ async def create_completion(
             max_tokens=request.max_tokens,
             temperature=request.temperature,
             top_p=request.top_p,
-            top_k=request.top_k if request.top_k > 0 else None,
+            top_k=request.top_k if request.top_k and request.top_k > 0 else None,
             stop=request.stop,
             stream=False
         )
@@ -189,7 +191,7 @@ async def create_completion_stream(
                 max_tokens=request.max_tokens,
                 temperature=request.temperature,
                 top_p=request.top_p,
-                top_k=request.top_k if request.top_k > 0 else None,
+                top_k=request.top_k if request.top_k and request.top_k > 0 else None,
                 stop=request.stop,
                 stream=True
             ):
@@ -238,9 +240,16 @@ def run_server(
     host: str = "0.0.0.0",
     port: int = 8000,
     model_path: str = "models/GLM-4.5-Air-FP8",
-    log_level: str = "info"
+    log_level: str = "info",
+    server_config: InferenceConfig | None = None
 ):
     """Run the GLM-4.5-Air server."""
+    global config
+
+    # Use provided config if available
+    if server_config:
+        config = server_config
+
     # Configure logging
     logging.basicConfig(
         level=getattr(logging, log_level.upper()),
