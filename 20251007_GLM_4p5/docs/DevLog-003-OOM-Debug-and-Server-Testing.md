@@ -119,7 +119,7 @@ uv run python scripts/start_server.py \
     --max-model-len 65536 \
     --max-num-seqs 8 \
     --enforce-eager \
-    --api-key "glm-4pZbgPw71IKknGxeCbT3znqKzNscqgAnQNUdFPE99Lw"
+    --api-key "your-api-key-here"
 ```
 
 **Trade-offs**:
@@ -178,7 +178,7 @@ curl -X POST "http://localhost:8000/v1/completions" \
 **Request**:
 ```bash
 curl -X POST "http://localhost:8000/v1/completions" \
-  -H "Authorization: Bearer glm-4pZbgPw71IKknGxeCbT3znqKzNscqgAnQNUdFPE99Lw" \
+  -H "Authorization: Bearer your-api-key-here" \
   -H "Content-Type: application/json" \
   -d '{"prompt": "What is 2+2?", "max_tokens": 50}'
 ```
@@ -211,7 +211,7 @@ curl -X POST "http://localhost:8000/v1/completions" \
 **Request**:
 ```bash
 curl -X POST "http://localhost:8000/v1/completions" \
-  -H "Authorization: Bearer glm-4pZbgPw71IKknGxeCbT3znqKzNscqgAnQNUdFPE99Lw" \
+  -H "Authorization: Bearer your-api-key-here" \
   -H "Content-Type: application/json" \
   -d '{
     "prompt": "[gMASK]<sop><|system|>\nYou are a helpful AI assistant.<|user|>\nWhat is 2+2?<|assistant|>\n",
