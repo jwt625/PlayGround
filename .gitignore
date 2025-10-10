@@ -81,3 +81,4 @@ venv.bak/
 20250913_filters/*.html
 *.safetensors
 *.pyc
+*.png
