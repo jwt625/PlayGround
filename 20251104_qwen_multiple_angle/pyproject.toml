@@ -1,0 +1,15 @@
+[project]
+name = "qwen-image-edit"
+version = "0.1.0"
+description = "Qwen Image Edit 2509 inference server"
+requires-python = ">=3.10"
+dependencies = [
+    "torch>=2.0.0",
+    "torchvision>=0.15.0",
+    "transformers>=4.40.0",
+    "accelerate>=0.20.0",
+    "pillow>=10.0.0",
+    "fastapi>=0.100.0",
+    "uvicorn[standard]>=0.23.0",
+    "python-multipart>=0.0.6",
+]
