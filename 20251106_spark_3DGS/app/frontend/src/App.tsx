@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { FileUpload } from './components/FileUpload';
 import { SplatViewer } from './components/SplatViewer';
 import './App.css';
@@ -7,6 +7,19 @@ function App() {
   const [splatUrl, setSplatUrl] = useState<string | undefined>();
   const [uploading, setUploading] = useState(false);
   const [uploadStatus, setUploadStatus] = useState<string>('');
+
+  // Check for URL parameter on mount
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const urlParam = params.get('url');
+
+    if (urlParam) {
+      console.log('Loading from URL parameter:', urlParam);
+      setSplatUrl(urlParam);
+      setUploadStatus('Loading from URL...');
+      setTimeout(() => setUploadStatus(''), 3000);
+    }
+  }, []);
 
   // Test with existing file
   const loadTestFile = () => {
@@ -63,7 +76,7 @@ function App() {
       }}>
         <h1 style={{ margin: 0 }}>3D Gaussian Splatting Viewer</h1>
         <p style={{ margin: '8px 0 0 0', fontSize: '14px', color: '#aaa' }}>
-          Upload a .ply file to view with Spark renderer (SH3 support)
+          Upload a .ply file or use ?url=YOUR_PLY_URL to load from external sources
         </p>
       </header>
 
