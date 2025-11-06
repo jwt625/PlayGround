@@ -16,6 +16,7 @@ export function SplatViewer({ splatUrl }: SplatViewerProps) {
   const rendererRef = useRef<THREE.WebGLRenderer | null>(null);
   const controlsRef = useRef<OrbitControls | null>(null);
   const splatMeshRef = useRef<SplatMesh | null>(null);
+  const keysPressed = useRef<Set<string>>(new Set());
 
   useEffect(() => {
     if (!containerRef.current) return;
@@ -32,7 +33,7 @@ export function SplatViewer({ splatUrl }: SplatViewerProps) {
       0.1,
       1000
     );
-    camera.position.set(0, 1, 3);
+    camera.position.set(0, 0, 5);
     cameraRef.current = camera;
 
     // Initialize renderer with performance optimizations
@@ -53,14 +54,63 @@ export function SplatViewer({ splatUrl }: SplatViewerProps) {
     controls.update();
     controlsRef.current = controls;
 
+    // Keyboard controls for camera movement
+    const moveSpeed = 0.1;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      keysPressed.current.add(e.key.toLowerCase());
+    };
+    const handleKeyUp = (e: KeyboardEvent) => {
+      keysPressed.current.delete(e.key.toLowerCase());
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    window.addEventListener('keyup', handleKeyUp);
+
     // Animation loop
     let animationId: number;
     const animate = () => {
       animationId = requestAnimationFrame(animate);
 
-      // Update controls
-      if (controlsRef.current) {
-        controlsRef.current.update();
+      // Handle WASD camera movement
+      if (controlsRef.current && cameraRef.current) {
+        const controls = controlsRef.current;
+        const camera = cameraRef.current;
+
+        // Get camera direction vectors
+        const forward = new THREE.Vector3();
+        camera.getWorldDirection(forward);
+        forward.y = 0; // Keep movement horizontal
+        forward.normalize();
+
+        const right = new THREE.Vector3();
+        right.crossVectors(forward, camera.up).normalize();
+
+        // Apply movement based on keys pressed
+        if (keysPressed.current.has('w')) {
+          camera.position.addScaledVector(forward, moveSpeed);
+          controls.target.addScaledVector(forward, moveSpeed);
+        }
+        if (keysPressed.current.has('s')) {
+          camera.position.addScaledVector(forward, -moveSpeed);
+          controls.target.addScaledVector(forward, -moveSpeed);
+        }
+        if (keysPressed.current.has('a')) {
+          camera.position.addScaledVector(right, -moveSpeed);
+          controls.target.addScaledVector(right, -moveSpeed);
+        }
+        if (keysPressed.current.has('d')) {
+          camera.position.addScaledVector(right, moveSpeed);
+          controls.target.addScaledVector(right, moveSpeed);
+        }
+        if (keysPressed.current.has('q')) {
+          camera.position.y -= moveSpeed;
+          controls.target.y -= moveSpeed;
+        }
+        if (keysPressed.current.has('e')) {
+          camera.position.y += moveSpeed;
+          controls.target.y += moveSpeed;
+        }
+
+        controls.update();
       }
 
       renderer.render(scene, camera);
@@ -84,6 +134,8 @@ export function SplatViewer({ splatUrl }: SplatViewerProps) {
     return () => {
       cancelAnimationFrame(animationId);
       window.removeEventListener('resize', handleResize);
+      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('keyup', handleKeyUp);
 
       if (controlsRef.current) {
         controlsRef.current.dispose();
@@ -119,6 +171,7 @@ export function SplatViewer({ splatUrl }: SplatViewerProps) {
       // Create and add splat mesh - it loads asynchronously in the background
       const splatMesh = new SplatMesh({ url: splatUrl });
       splatMesh.position.set(0, 0, 0);
+      splatMesh.scale.set(0.5, 0.5, 0.5); // Scale down to fit better in view
       sceneRef.current.add(splatMesh);
       splatMeshRef.current = splatMesh;
 
