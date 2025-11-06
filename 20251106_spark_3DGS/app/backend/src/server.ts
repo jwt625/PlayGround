@@ -59,57 +59,72 @@ app.post('/upload', upload.single('file'), async (req, res) => {
 
     const inputPath = req.file.path;
     const outputPath = inputPath.replace('.ply', '.sog');
-    
-    console.log(`Converting ${inputPath} to ${outputPath}...`);
 
-    // Convert PLY to SOG using splat-transform
-    const { stdout, stderr } = await execAsync(
-      `splat-transform "${inputPath}" "${outputPath}" -w`,
-      { maxBuffer: 50 * 1024 * 1024 } // 50MB buffer for large outputs
-    );
+    console.log(`Processing ${inputPath}...`);
 
-    if (stderr) {
-      console.error('Conversion stderr:', stderr);
-    }
-    if (stdout) {
-      console.log('Conversion stdout:', stdout);
-    }
+    // Try to convert PLY to SOG using splat-transform if available
+    let convertedPath = inputPath;
+    let conversionSucceeded = false;
 
-    // Check if output file exists
     try {
+      console.log(`Attempting conversion to ${outputPath}...`);
+      const { stdout, stderr } = await execAsync(
+        `splat-transform "${inputPath}" "${outputPath}" -w`,
+        { maxBuffer: 50 * 1024 * 1024 } // 50MB buffer for large outputs
+      );
+
+      if (stderr) {
+        console.error('Conversion stderr:', stderr);
+      }
+      if (stdout) {
+        console.log('Conversion stdout:', stdout);
+      }
+
+      // Check if output file exists
       await fs.access(outputPath);
-    } catch {
-      throw new Error('Conversion failed: output file not created');
+      convertedPath = outputPath;
+      conversionSucceeded = true;
+      console.log('Conversion successful!');
+
+      // Clean up original PLY file after successful conversion
+      await fs.unlink(inputPath);
+    } catch (conversionError) {
+      console.warn('Conversion failed or splat-transform not available:',
+        conversionError instanceof Error ? conversionError.message : 'Unknown error');
+      console.log('Serving original PLY file instead (Spark supports PLY natively)');
+      // Keep the original PLY file
+      convertedPath = inputPath;
+      conversionSucceeded = false;
     }
 
     // Get file stats
-    const stats = await fs.stat(outputPath);
+    const stats = await fs.stat(convertedPath);
     const originalStats = await fs.stat(inputPath);
 
-    // Return URL to the converted file
-    const fileUrl = `http://localhost:${PORT}/files/${path.basename(outputPath)}`;
-    
+    // Return URL to the file (converted or original)
+    const fileUrl = `http://localhost:${PORT}/files/${path.basename(convertedPath)}`;
+
     res.json({
       success: true,
       url: fileUrl,
       originalSize: originalStats.size,
       convertedSize: stats.size,
-      compressionRatio: (originalStats.size / stats.size).toFixed(2),
+      compressionRatio: conversionSucceeded ? (originalStats.size / stats.size).toFixed(2) : '1.00',
+      converted: conversionSucceeded,
+      format: conversionSucceeded ? 'sog' : 'ply',
     });
 
-    // Clean up original PLY file after successful conversion
-    await fs.unlink(inputPath);
-    console.log(`Conversion complete: ${fileUrl}`);
+    console.log(`Upload complete: ${fileUrl} (${conversionSucceeded ? 'converted to SOG' : 'serving as PLY'})`);
   } catch (error) {
     console.error('Upload/conversion error:', error);
-    
+
     // Clean up files on error
     if (req.file) {
       try {
         await fs.unlink(req.file.path);
       } catch {}
     }
-    
+
     res.status(500).json({
       error: error instanceof Error ? error.message : 'Unknown error occurred'
     });

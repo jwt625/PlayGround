@@ -37,7 +37,12 @@ function App() {
       const data = await response.json();
       console.log('Server response:', data);
       setSplatUrl(data.url);
-      setUploadStatus(`Conversion complete! (${data.compressionRatio}x compression)`);
+
+      if (data.converted) {
+        setUploadStatus(`Converted to ${data.format.toUpperCase()}! (${data.compressionRatio}x compression)`);
+      } else {
+        setUploadStatus(`Upload complete! Serving as ${data.format.toUpperCase()} (conversion not available)`);
+      }
       setTimeout(() => setUploadStatus(''), 3000);
     } catch (error) {
       console.error('Upload error:', error);
