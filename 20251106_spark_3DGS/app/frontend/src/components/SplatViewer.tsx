@@ -21,6 +21,15 @@ export function SplatViewer({ splatUrl }: SplatViewerProps) {
   useEffect(() => {
     if (!containerRef.current) return;
 
+    const container = containerRef.current;
+
+    // Clear any existing canvas elements (in case of StrictMode double-mount)
+    while (container.firstChild) {
+      container.removeChild(container.firstChild);
+    }
+
+    console.log('Container dimensions:', container.clientWidth, container.clientHeight);
+
     // Initialize Three.js scene
     const scene = new THREE.Scene();
     scene.background = new THREE.Color(0x000000);
@@ -29,7 +38,7 @@ export function SplatViewer({ splatUrl }: SplatViewerProps) {
     // Initialize camera
     const camera = new THREE.PerspectiveCamera(
       75,
-      containerRef.current.clientWidth / containerRef.current.clientHeight,
+      container.clientWidth / container.clientHeight,
       0.1,
       1000
     );
@@ -41,16 +50,17 @@ export function SplatViewer({ splatUrl }: SplatViewerProps) {
       antialias: false,  // Disable antialiasing for better performance
       powerPreference: 'high-performance'
     });
-    renderer.setSize(containerRef.current.clientWidth, containerRef.current.clientHeight);
+    renderer.setSize(container.clientWidth, container.clientHeight);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));  // Cap pixel ratio for performance
-    containerRef.current.appendChild(renderer.domElement);
+
+    container.appendChild(renderer.domElement);
     rendererRef.current = renderer;
 
     // Add orbit controls
     const controls = new OrbitControls(camera, renderer.domElement);
     controls.enableDamping = true;
     controls.dampingFactor = 0.05;
-    controls.target.set(0, 0, 0);
+    controls.target.set(0, 1, 0);  // Look at center of splat (raised up)
     controls.update();
     controlsRef.current = controls;
 
@@ -170,7 +180,7 @@ export function SplatViewer({ splatUrl }: SplatViewerProps) {
       console.log('Creating SplatMesh...');
       // Create and add splat mesh - it loads asynchronously in the background
       const splatMesh = new SplatMesh({ url: splatUrl });
-      splatMesh.position.set(0, 0, 0);
+      splatMesh.position.set(0, 1, 0);  // Raise splat to center it in view
       splatMesh.scale.set(0.5, 0.5, 0.5); // Scale down to fit better in view
       sceneRef.current.add(splatMesh);
       splatMeshRef.current = splatMesh;
