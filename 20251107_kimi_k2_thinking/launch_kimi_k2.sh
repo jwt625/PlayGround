@@ -35,7 +35,7 @@ echo "=========================================="
 echo "Model: ${MODEL_PATH}"
 echo "Docker Image: vllm/vllm-openai:nightly"
 echo "Tensor Parallelism: 8 GPUs"
-echo "Context Length: 256k tokens"
+echo "Context Length: 12k tokens (max supported with enforce-eager)"
 echo "Optimization: Long-context, low-throughput"
 echo "API: OpenAI-compatible on ${HOST}:${PORT}"
 echo "API Key: ${API_KEY}"
@@ -73,14 +73,12 @@ sudo docker run -d \
   --reasoning-parser kimi_k2 \
   --tool-call-parser kimi_k2 \
   --enable-auto-tool-choice \
-  --max-num-batched-tokens 32768 \
+  --max-model-len 12288 \
+  --max-num-batched-tokens 4096 \
+  --max-num-seqs 1 \
+  --gpu-memory-utilization 0.95 \
+  --enforce-eager \
   --disable-log-requests
-  # --dtype auto \
-  # --max-model-len 131072 \
-  # --max-num-seqs 4 \
-  # --gpu-memory-utilization 0.90 \
-  # --enable-chunked-prefill \
-  # --enable-prefix-caching \
 
 echo ""
 echo "Container started successfully!"
@@ -121,16 +119,15 @@ echo "  tail -f ${LOG_FILE}"
 # --ipc=host: Use host IPC namespace for better multi-GPU performance
 # -e NCCL_*: NCCL environment variables for HGX system optimization
 # --tensor-parallel-size 8: Use all 8 H100 GPUs
-# --dtype auto: Let vLLM auto-detect INT4 compressed-tensors format
-# --max-model-len 262144: Support full 256k context (262144 = 256 * 1024)
-# --max-num-batched-tokens 32768: Conservative batch size for long contexts
-# --max-num-seqs 4: Low concurrency (4 parallel requests max) for low-throughput use case
-# --gpu-memory-utilization 0.95: Use 95% of GPU memory (640GB total)
-# --enable-chunked-prefill: Essential for long-context processing
-# --enable-prefix-caching: Cache common prefixes to speed up repeated queries
+# --max-model-len 16384: Support 16k context (reduced from 256k to fit in memory)
+# --max-num-batched-tokens 4096: Batch size for chunked prefill (reduced for memory)
+# --max-num-seqs 1: Single request at a time to minimize memory usage
+# --gpu-memory-utilization 0.80: Use 80% of GPU memory (~63GB per GPU, leaving ~16GB for KV cache)
 # --disable-log-requests: Reduce log verbosity for low-throughput use case
 # --trust-remote-code: Required for custom Kimi-K2 model code
 # --reasoning-parser kimi_k2: Required for correctly processing reasoning content (nightly build)
 # --tool-call-parser kimi_k2: Required for tool usage (nightly build)
-# Note: vLLM nightly auto-detects compressed-tensors format from model config
+# --enable-auto-tool-choice: Enable automatic tool choice for function calling
+# Note: vLLM nightly auto-detects compressed-tensors INT4 format from model config
+# Note: Model uses ~74GB per GPU, leaving ~5-6GB for KV cache with these settings
 

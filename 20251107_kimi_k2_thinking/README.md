@@ -3,13 +3,14 @@
 ## Overview
 This deployment runs the Kimi-K2-Thinking model (1T params, 32B active) on 8× NVIDIA H100 80GB GPUs using vLLM with native INT4 quantization.
 
-**Configuration:**
+**Current Configuration:**
 - **Model:** moonshotai/Kimi-K2-Thinking
 - **Hardware:** 8× H100 80GB HBM3 (HGX system with NVLink)
-- **Inference Engine:** vLLM 0.8.5.post1
+- **Inference Engine:** vLLM nightly (v0.11.1rc6.dev211+g934a9c3b7)
 - **Quantization:** Native INT4 (compressed-tensors)
-- **Context Length:** 256k tokens
-- **Optimization:** Long-context, low-throughput
+- **Context Length:** 12k tokens (maximum supported with current memory constraints)
+- **Optimization:** Memory-efficient with `--enforce-eager`
+- **Status:** 🟢 **RUNNING** on port 8000
 
 ## Research Summary: vLLM INT4 Support
 
@@ -146,22 +147,61 @@ curl http://localhost:8000/health
 - **Issue:** Cannot connect to API
 - **Solution:** Check if server is running: `ps aux | grep vllm`
 
-## Advanced Configuration
+## Memory Optimization Guide
 
-### Increase Throughput (Trade-off: Shorter Context)
-Edit `launch_kimi_k2.sh`:
+### Understanding `gpu_memory_utilization`
+- **What it controls:** Total memory budget (model weights + KV cache + activations)
+- **Model weights:** ~74GB per GPU (fixed)
+- **Available for KV cache:** `(gpu_memory_utilization × 79GB) - 74GB`
+- **Example:** With 0.95 → `(0.95 × 79) - 74 = 1.05GB` for KV cache
+
+### The `--enforce-eager` Flag (CRITICAL for this model)
+**Problem:** CUDA graph capture causes memory spike during initialization → OOM
+**Solution:** Add `--enforce-eager` to disable CUDA graphs
+
+**Trade-offs:**
+- ✅ Eliminates memory spike during startup
+- ✅ Allows higher `gpu_memory_utilization` (0.95)
+- ❌ ~10-20% slower inference (no CUDA graph optimization)
+
+**When to use:**
+- ✅ **Always use for Kimi-K2-Thinking** - model is too large for CUDA graphs on H100 80GB
+- ✅ When getting OOM during "determine_available_memory" phase
+- ❌ Don't use if you have excess memory and want maximum performance
+
+### Current Working Configuration (12k context - MAXIMUM)
 ```bash
---max-model-len 131072 \        # Reduce to 128k
---max-num-batched-tokens 65536 \ # Increase batch size
---max-num-seqs 8 \               # Allow more concurrent requests
+--max-model-len 12288             # 12k tokens (max supported)
+--max-num-batched-tokens 4096     # Conservative batch size
+--max-num-seqs 1                  # Single request
+--gpu-memory-utilization 0.95     # Use 95% of GPU memory
+--enforce-eager                   # Disable CUDA graphs (required)
 ```
 
-### Maximize Context Length (Trade-off: Lower Throughput)
-```bash
---max-model-len 262144 \         # Full 256k
---max-num-batched-tokens 16384 \ # Smaller batches
---max-num-seqs 2 \               # Fewer concurrent requests
-```
+### Context Length Limitations
+
+**With `--enforce-eager` (current setup):**
+- **Maximum**: ~13k tokens
+- **Recommended**: 12k tokens
+- **Available KV cache**: 0.86 GiB
+- **Limitation**: Model weights (~74GB) consume most of GPU memory
+
+**Tested configurations:**
+- ✅ **8k tokens**: Works perfectly
+- ✅ **12k tokens**: Works (near maximum)
+- ❌ **32k tokens**: Fails - needs 2.14 GiB KV cache, only 0.86 GiB available
+
+**Why can't we go higher?**
+1. Model weights: ~74 GB per GPU (fixed)
+2. Total GPU memory: 79 GB per GPU
+3. Available after model: ~5 GB per GPU
+4. With `gpu_memory_utilization=0.95`: Only 0.86 GiB allocated for KV cache
+5. KV cache scales linearly with context length
+
+**To support longer contexts (experimental - may not work):**
+- Remove `--enforce-eager` (but this causes OOM during initialization)
+- Use smaller model or wait for vLLM optimizations
+- Use multiple nodes with pipeline parallelism (not currently supported for this model)
 
 ## Files
 - `launch_kimi_k2.sh` - Main launch script

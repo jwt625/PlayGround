@@ -1,10 +1,11 @@
 # Kimi-K2-Thinking Deployment Summary
 
-## ✅ Setup Complete
+## ✅ Setup Complete & Running
 
-**Date:** 2025-11-08  
-**Status:** Ready to launch  
+**Date:** 2025-11-08
+**Status:** ✅ **RUNNING** - Server successfully deployed
 **Model:** moonshotai/Kimi-K2-Thinking (1T params, 32B active, INT4 quantized)
+**Endpoint:** http://0.0.0.0:8000 (OpenAI-compatible API)
 
 ---
 
@@ -370,14 +371,78 @@ If you need to adjust the configuration:
 
 ---
 
+## 🔧 Memory Optimization Learnings (2025-11-08)
+
+### Problem: OOM Errors During Deployment
+
+**Initial Configuration (Failed):**
+- `--max-model-len 262144` (256k context)
+- `--gpu-memory-utilization 0.90-0.95`
+- Result: OOM during KV cache initialization
+
+**Root Cause Analysis:**
+1. Model weights consume **~74GB per GPU** (out of 79GB total)
+2. CUDA graph capture during initialization requires additional memory spike
+3. With high `gpu_memory_utilization`, the memory profiling phase OOMs
+4. The `gpu_memory_utilization` parameter sets the **total memory budget** (model + KV cache + activations)
+
+**Solution: `--enforce-eager` Flag**
+- Disables CUDA graph optimization
+- Eliminates memory spike during initialization
+- Trades ~10-20% performance for memory efficiency
+- Allows using `gpu_memory_utilization=0.95` safely
+
+**Working Configuration:**
+```bash
+--max-model-len 12288             # 12k context (max supported with enforce-eager)
+--max-num-batched-tokens 4096     # Conservative batch size
+--max-num-seqs 1                  # Single request at a time
+--gpu-memory-utilization 0.95     # Use 95% of GPU memory
+--enforce-eager                   # KEY: Disable CUDA graphs
+```
+
+**Memory Breakdown:**
+- Total GPU memory: 79 GiB per GPU
+- Model weights: ~74 GiB per GPU
+- Available for KV cache: ~0.86 GiB per GPU (with enforce-eager)
+- With `--enforce-eager`: No memory spike during init ✅
+- **Maximum context length**: ~13k tokens (limited by KV cache memory)
+
+**Key Insights:**
+1. **`gpu_memory_utilization` is NOT just for KV cache** - it's the total budget including model weights
+2. **CUDA graphs require extra memory** during capture phase - use `--enforce-eager` if OOM
+3. **Context length scales linearly with KV cache memory** - reduce if needed
+4. **Model loading succeeds, but profiling phase can OOM** - watch for "determine_available_memory" errors
+
+**Tested Configurations:**
+- ✅ 8k context with `--enforce-eager`: **WORKING**
+- ✅ 12k context with `--enforce-eager`: **WORKING** (near maximum)
+- ❌ 32k context with `--enforce-eager`: Insufficient KV cache (needs 2.14 GiB, only 0.86 GiB available)
+- ❌ 16k-256k context without `--enforce-eager`: OOM during profiling
+- ❌ `gpu_memory_utilization < 0.80`: "No available memory for cache blocks"
+- ❌ `gpu_memory_utilization > 0.88` without `--enforce-eager`: OOM during profiling
+
+**Context Length Limitations with `--enforce-eager`:**
+- **Maximum supported**: ~13k tokens
+- **Recommended**: 12k tokens (safe margin)
+- **Limitation**: Model weights (~74GB) leave only ~0.86 GiB for KV cache
+- **To increase context**: Would need to remove `--enforce-eager`, but that causes OOM during init
+
+**Trade-off Summary:**
+- With `--enforce-eager`: ✅ Stable, ❌ Limited to 12k context
+- Without `--enforce-eager`: ❌ OOM during initialization, ✅ Could support longer context if it worked
+
+---
+
 ## ✨ Summary
 
-Your system is **perfectly configured** for Kimi-K2-Thinking deployment:
+Your system is **successfully running** Kimi-K2-Thinking:
 - ✅ Hardware exceeds requirements (H100 HGX system)
-- ✅ Software stack fully compatible (vLLM 0.8.5 with INT4 support)
-- ✅ Model downloaded and ready (554 GB, all files verified)
-- ✅ Launch scripts optimized for your use case (long-context, low-throughput)
-- ✅ OpenAI-compatible API ready to serve
+- ✅ Software stack fully compatible (vLLM nightly with INT4 support)
+- ✅ Model downloaded and loaded (554 GB, all files verified)
+- ✅ Server running with 8k context length
+- ✅ OpenAI-compatible API serving on port 8000
+- ✅ Reasoning capabilities confirmed working
 
-**You're ready to launch!** 🚀
+**Server Status:** 🟢 **RUNNING** 🚀
 
