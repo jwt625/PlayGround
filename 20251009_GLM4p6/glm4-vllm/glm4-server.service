@@ -1,0 +1,17 @@
+[Unit]
+Description=GLM-4.6 API Server
+After=network.target
+
+[Service]
+Type=simple
+User=ubuntu
+WorkingDirectory=/home/ubuntu/wentao/20251009_GLM4p6/glm4-vllm
+Environment=PATH=/home/ubuntu/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+ExecStart=/home/ubuntu/.local/bin/uv run python main.py
+Restart=always
+RestartSec=10
+StandardOutput=append:/home/ubuntu/wentao/20251009_GLM4p6/glm4-vllm/glm4_server.log
+StandardError=append:/home/ubuntu/wentao/20251009_GLM4p6/glm4-vllm/glm4_server.log
+
+[Install]
+WantedBy=multi-user.target
