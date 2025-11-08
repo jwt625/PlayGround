@@ -5,7 +5,7 @@ set -e
 
 docker rm -f open-webui 2>/dev/null || true
 
-docker run -d --name open-webui -p 8080:8080 \
+docker run -d --name open-webui -p 8088:8080 \
   --env-file .env.openwebui -v open-webui:/app/backend/data \
   ghcr.io/open-webui/open-webui:main
 
