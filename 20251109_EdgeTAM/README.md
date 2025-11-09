@@ -4,6 +4,8 @@
 
 This project sets up and tests the EdgeTAM (Edge Track Anything Model) from Hugging Face on Apple Silicon hardware. EdgeTAM is a lightweight variant of SAM 2 optimized for on-device execution with only 13.9M parameters.
 
+**Model:** [yonigozlan/EdgeTAM-hf](https://huggingface.co/yonigozlan/EdgeTAM-hf)
+
 ## Setup
 
 ### Environment
@@ -23,6 +25,8 @@ pillow>=10.0.0
 requests>=2.31.0
 numpy>=1.24.0
 timm>=0.9.0
+gradio>=4.0.0
+matplotlib>=3.7.0
 ```
 
 Install with:
@@ -126,11 +130,30 @@ masks = processor.post_process_masks(
 uv run python test_edgetam.py
 ```
 
+### Interactive Gradio App
+
+Launch the interactive web interface for real-time segmentation:
+
+```bash
+uv run python app.py
+```
+
+The Gradio app provides:
+- **Image Upload**: Browse and select images from your local system
+- **Interactive Point Selection**: Click on the image to add positive (green) or negative (red) points
+- **Real-time Segmentation**: Generate masks based on your point prompts
+- **Multiple Mask Output**: Option to generate multiple mask candidates
+- **Bounding Box Mode**: Use two points to define a bounding box for segmentation
+- **Visual Feedback**: See both the annotated image with points and the segmentation overlay
+
+The app will open in your default browser at `http://localhost:7860`.
+
 ## Files
 
 - `pyproject.toml` - Project configuration and dependencies
 - `download_model.py` - Model download script
 - `test_edgetam.py` - Comprehensive test suite with 4 test cases
+- `app.py` - Interactive Gradio web application for segmentation
 - `model_backups/` - Model tarball backups for recovery
 - `test_images/` - Test images for segmentation
 
