@@ -21,7 +21,7 @@ def test_basic_segmentation():
     # Check device availability
     if torch.backends.mps.is_available():
         device = "mps"  # Apple Silicon GPU
-        print(f"✓ Using device: MPS (Apple Silicon GPU)")
+        print(f"✓ Using device: MPS")
     elif torch.cuda.is_available():
         device = "cuda"
         print(f"✓ Using device: CUDA GPU")
