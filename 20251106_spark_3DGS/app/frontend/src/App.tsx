@@ -47,6 +47,9 @@ function App() {
         <p style={{ margin: '0 0 10px 0', fontSize: '0.9em', color: '#ccc' }}>
           <strong>Controls:</strong> WASDQE to move, Mouse to rotate
         </p>
+        <p style={{ margin: '0 0 10px 0', fontSize: '0.8em', color: '#aaa' }}>
+          Load custom files: <code style={{ background: 'rgba(255,255,255,0.1)', padding: '2px 4px', borderRadius: '3px' }}>?url=YOUR_PLY_URL</code>
+        </p>
         <p style={{ margin: '0', fontSize: '0.75em', color: '#999' }}>
           Built on top of <a href="https://github.com/sparkjsdev/spark" target="_blank" rel="noopener noreferrer" style={{ color: '#64B5F6', textDecoration: 'none' }}>spark</a> by <a href="https://outside5sigma.com/" target="_blank" rel="noopener noreferrer" style={{ color: '#64B5F6', textDecoration: 'none' }}>Wentao</a>
         </p>
