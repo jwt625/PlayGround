@@ -24,7 +24,7 @@ function App() {
   // Test with existing file
   const loadTestFile = () => {
     console.log('Loading test file...');
-    setSplatUrl('http://localhost:3000/files/upload-1762455220300-383288333.sog');
+    setSplatUrl('http://localhost:3001/files/upload-1762455220300-383288333.sog');
   };
 
   const handleFileSelect = async (file: File) => {
@@ -37,7 +37,7 @@ function App() {
       formData.append('file', file);
 
       console.log('Uploading to server...');
-      const response = await fetch('http://localhost:3000/upload', {
+      const response = await fetch('http://localhost:3001/upload', {
         method: 'POST',
         body: formData,
       });
@@ -67,81 +67,102 @@ function App() {
   };
 
   return (
-    <div style={{ width: '100vw', height: '100vh', display: 'flex', flexDirection: 'column' }}>
-      <header style={{
-        padding: '20px',
-        background: '#282c34',
-        color: 'white',
-        borderBottom: '2px solid #444',
-      }}>
-        <h1 style={{ margin: 0 }}>3D Gaussian Splatting Viewer</h1>
-        <p style={{ margin: '8px 0 0 0', fontSize: '14px', color: '#aaa' }}>
-          Upload a .ply file or use ?url=YOUR_PLY_URL to load from external sources
-        </p>
-      </header>
-
-      <main style={{ flex: 1, display: 'flex', flexDirection: 'column', padding: '20px', gap: '20px' }}>
-        {!splatUrl ? (
-          <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <div style={{ maxWidth: '600px', width: '100%' }}>
-              <button
-                onClick={loadTestFile}
-                style={{
-                  marginBottom: '20px',
-                  padding: '10px 20px',
-                  background: '#2196F3',
-                  color: 'white',
-                  border: 'none',
-                  borderRadius: '4px',
-                  cursor: 'pointer',
-                  width: '100%',
-                }}
-              >
-                Load Test File (Already Converted)
-              </button>
-              <FileUpload onFileSelect={handleFileSelect} />
-              {uploading && (
-                <div style={{ marginTop: '20px', textAlign: 'center', color: '#666' }}>
-                  {uploadStatus}
-                </div>
-              )}
-              {uploadStatus && !uploading && (
-                <div style={{
-                  marginTop: '20px',
-                  textAlign: 'center',
-                  color: uploadStatus.startsWith('Error') ? '#f44336' : '#4CAF50',
-                }}>
-                  {uploadStatus}
-                </div>
-              )}
-            </div>
+    <div style={{ width: '100vw', height: '100vh', position: 'relative' }}>
+      {!splatUrl ? (
+        // Upload screen - centered
+        <div style={{
+          width: '100%',
+          height: '100%',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          background: '#1a1a1a',
+        }}>
+          <div style={{ maxWidth: '600px', width: '100%', padding: '20px' }}>
+            <h1 style={{ color: 'white', textAlign: 'center', marginBottom: '10px' }}>
+              3D Gaussian Splatting Viewer
+            </h1>
+            <p style={{ color: '#aaa', textAlign: 'center', marginBottom: '30px', fontSize: '14px' }}>
+              Upload a .ply file or use ?url=YOUR_PLY_URL to load from external sources
+            </p>
+            <button
+              onClick={loadTestFile}
+              style={{
+                marginBottom: '20px',
+                padding: '10px 20px',
+                background: '#2196F3',
+                color: 'white',
+                border: 'none',
+                borderRadius: '4px',
+                cursor: 'pointer',
+                width: '100%',
+              }}
+            >
+              Load Test File (Already Converted)
+            </button>
+            <FileUpload onFileSelect={handleFileSelect} />
+            {uploading && (
+              <div style={{ marginTop: '20px', textAlign: 'center', color: '#666' }}>
+                {uploadStatus}
+              </div>
+            )}
+            {uploadStatus && !uploading && (
+              <div style={{
+                marginTop: '20px',
+                textAlign: 'center',
+                color: uploadStatus.startsWith('Error') ? '#f44336' : '#4CAF50',
+              }}>
+                {uploadStatus}
+              </div>
+            )}
           </div>
-        ) : (
-          <>
-            <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
-              <button
-                onClick={() => setSplatUrl(undefined)}
-                style={{
-                  padding: '10px 20px',
-                  background: '#4CAF50',
-                  color: 'white',
-                  border: 'none',
-                  borderRadius: '4px',
-                  cursor: 'pointer',
-                }}
-              >
-                Upload New File
-              </button>
-              {uploadStatus && (
-                <span style={{ color: '#4CAF50' }}>{uploadStatus}</span>
-              )}
-            </div>
-            <div style={{ flex: 1, border: '1px solid #ccc', borderRadius: '8px', overflow: 'hidden' }}>
-              <SplatViewer splatUrl={splatUrl} />
-            </div>
-          </>
-        )}
-      </main>
+        </div>
+      ) : (
+        // Fullscreen viewer with overlay
+        <>
+          <SplatViewer splatUrl={splatUrl} />
+
+          {/* Top-left overlay with title and controls */}
+          <div style={{
+            position: 'absolute',
+            top: '20px',
+            left: '20px',
+            background: 'rgba(0, 0, 0, 0.7)',
+            color: 'white',
+            padding: '15px 20px',
+            borderRadius: '8px',
+            backdropFilter: 'blur(10px)',
+            maxWidth: '400px',
+            zIndex: 1000,
+          }}>
+            <h1 style={{ margin: '0 0 10px 0', fontSize: '1.5em' }}>
+              3D Gaussian Splatting Viewer
+            </h1>
+            <p style={{ margin: '0 0 10px 0', fontSize: '0.9em', color: '#ccc' }}>
+              <strong>Controls:</strong> WASDQE to move, Mouse to rotate
+            </p>
+            <button
+              onClick={() => setSplatUrl(undefined)}
+              style={{
+                padding: '8px 16px',
+                background: '#4CAF50',
+                color: 'white',
+                border: 'none',
+                borderRadius: '4px',
+                cursor: 'pointer',
+                fontSize: '0.9em',
+              }}
+            >
+              Upload New File
+            </button>
+            {uploadStatus && (
+              <div style={{ marginTop: '10px', fontSize: '0.85em', color: '#4CAF50' }}>
+                {uploadStatus}
+              </div>
+            )}
+          </div>
+        </>
+      )}
     </div>
   );
 }

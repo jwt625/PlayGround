@@ -14,7 +14,7 @@ const __dirname = dirname(__filename);
 const execAsync = promisify(exec);
 
 const app = express();
-const PORT = 3000;
+const PORT = 3001;
 
 // Enable CORS
 app.use(cors());
