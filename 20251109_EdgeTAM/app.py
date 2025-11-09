@@ -12,6 +12,15 @@ from transformers import Sam2Processor, EdgeTamModel
 import matplotlib.pyplot as plt
 from matplotlib.colors import ListedColormap
 import io
+import logging
+import traceback
+
+# Configure logging
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+)
+logger = logging.getLogger(__name__)
 
 MODEL_NAME = "yonigozlan/EdgeTAM-hf"
 
@@ -24,10 +33,11 @@ device = None
 def initialize_model():
     """Initialize the EdgeTAM model and processor."""
     global model, processor, device
-    
+
     if model is not None:
+        logger.info("Model already loaded")
         return "Model already loaded"
-    
+
     # Determine device
     if torch.backends.mps.is_available():
         device = "mps"
@@ -35,12 +45,17 @@ def initialize_model():
         device = "cuda"
     else:
         device = "cpu"
-    
+
+    logger.info(f"Initializing model on device: {device}")
+
     try:
         model = EdgeTamModel.from_pretrained(MODEL_NAME, local_files_only=True).to(device)
         processor = Sam2Processor.from_pretrained(MODEL_NAME, local_files_only=True)
+        logger.info(f"Model loaded successfully on {device.upper()}")
         return f"✓ Model loaded successfully on {device.upper()}"
     except Exception as e:
+        logger.error(f"Error loading model: {str(e)}")
+        logger.error(traceback.format_exc())
         return f"Error loading model: {str(e)}"
 
 
@@ -88,79 +103,126 @@ def segment_image(image, points_data, multimask_output, use_box):
     Returns:
         Tuple of (annotated image, mask overlay, info text)
     """
+    logger.info("=" * 60)
+    logger.info("Starting segmentation")
+    logger.info(f"Points data: {points_data}")
+    logger.info(f"Multimask output: {multimask_output}")
+    logger.info(f"Use box: {use_box}")
+
     if model is None:
+        logger.warning("Model not initialized")
         return None, None, "Please initialize the model first!"
-    
+
     if image is None:
+        logger.warning("No image provided")
         return None, None, "Please upload an image first!"
-    
+
     # Parse points data
     if not points_data or "points" not in points_data or len(points_data["points"]) == 0:
+        logger.warning("No points provided")
         return image, None, "Please click on the image to add points!"
-    
+
     points = points_data["points"]
-    
+    logger.info(f"Number of points: {len(points)}")
+
     # Extract coordinates and labels
     coords = [[p[0], p[1]] for p in points]
     labels = [p[2] for p in points]  # 1 for positive, 0 for negative
-    
+    logger.info(f"Coordinates: {coords}")
+    logger.info(f"Labels: {labels}")
+
     try:
         if use_box and len(coords) >= 2:
             # Use bounding box mode - create box from first two points
+            logger.info("Using bounding box mode")
             x_coords = [p[0] for p in coords[:2]]
             y_coords = [p[1] for p in coords[:2]]
             box = [min(x_coords), min(y_coords), max(x_coords), max(y_coords)]
-            
+            logger.info(f"Bounding box: {box}")
+
             inputs = processor(
                 images=image,
                 input_boxes=[[[box]]],
                 return_tensors="pt"
             ).to(device)
-            
+
             info = f"Using bounding box: {box}\n"
         else:
             # Use point prompts
+            logger.info("Using point prompts mode")
             input_points = [[coords]]
             input_labels = [[labels]]
-            
+            logger.info(f"Input points: {input_points}")
+            logger.info(f"Input labels: {input_labels}")
+
             inputs = processor(
                 images=image,
                 input_points=input_points,
                 input_labels=input_labels,
                 return_tensors="pt"
             ).to(device)
-            
+
             info = f"Using {len(coords)} point(s)\n"
-        
+
+        logger.info("Running inference...")
         # Run inference
         with torch.no_grad():
             outputs = model(**inputs, multimask_output=multimask_output)
-        
+        logger.info("Inference completed")
+
+        logger.info("Post-processing masks...")
         # Post-process masks
         masks = processor.post_process_masks(
             outputs.pred_masks.cpu(),
             inputs["original_sizes"]
         )[0]
-        
+        logger.info(f"Masks shape: {masks.shape}")
+
         # Get IoU scores
-        iou_scores = outputs.iou_scores.cpu().numpy()[0]
-        
+        iou_scores = outputs.iou_scores.cpu().numpy()
+        logger.info(f"IoU scores type: {type(iou_scores)}")
+        logger.info(f"IoU scores shape: {iou_scores.shape}")
+        logger.info(f"IoU scores values: {iou_scores}")
+
+        # Flatten IoU scores if needed (handle both [N] and [1, N] shapes)
+        if iou_scores.ndim > 1:
+            iou_scores = iou_scores.flatten()
+
+        logger.info(f"Flattened IoU scores: {iou_scores}")
+
         # Select best mask (highest IoU)
         best_mask_idx = np.argmax(iou_scores)
+        logger.info(f"Best mask index: {best_mask_idx}")
         best_mask = masks[0, best_mask_idx].numpy()
-        
+        logger.info(f"Best mask shape: {best_mask.shape}")
+
         # Create visualizations
+        logger.info("Creating visualizations...")
         img_with_points = visualize_points(image, coords, labels)
         mask_overlay = create_overlay(image, best_mask)
-        
+        logger.info("Visualizations created")
+
         # Add info
-        info += f"Generated {masks.shape[1]} mask(s)\n"
-        info += f"IoU scores: {', '.join([f'{score:.3f}' for score in iou_scores])}\n"
-        info += f"Best mask index: {best_mask_idx} (IoU: {iou_scores[best_mask_idx]:.3f})"
-        
+        logger.info("Building info string...")
+        info += f"Generated {int(masks.shape[1])} mask(s)\n"
+
+        # Format IoU scores safely
+        iou_scores_list = iou_scores.tolist()
+        logger.info(f"IoU scores as list: {iou_scores_list}")
+        iou_scores_str = ', '.join([f'{float(score):.3f}' for score in iou_scores_list])
+        logger.info(f"IoU scores string: {iou_scores_str}")
+
+        info += f"IoU scores: {iou_scores_str}\n"
+        info += f"Best mask index: {int(best_mask_idx)} (IoU: {float(iou_scores[best_mask_idx]):.3f})"
+
+        logger.info("Segmentation completed successfully")
+        logger.info("=" * 60)
         return img_with_points, mask_overlay, info
-        
+
     except Exception as e:
+        logger.error(f"Error during segmentation: {str(e)}")
+        logger.error(f"Error type: {type(e)}")
+        logger.error(f"Traceback:\n{traceback.format_exc()}")
         return image, None, f"Error during segmentation: {str(e)}"
 
 
