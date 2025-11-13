@@ -30,6 +30,59 @@ processor = None
 device = None
 
 
+def preprocess_image(image):
+    """
+    Preprocess uploaded image to ensure compatibility.
+    Handles various image formats (TIFF, BMP, WebP, etc.) and converts to RGB.
+
+    Args:
+        image: PIL Image or path to image file
+
+    Returns:
+        PIL Image in RGB format
+    """
+    logger.info("=" * 60)
+    logger.info("preprocess_image() called")
+    logger.info(f"Input type: {type(image)}")
+    logger.info(f"Input value: {image}")
+
+    if image is None:
+        logger.warning("Image is None, returning None")
+        return None
+
+    try:
+        # If image is a path string, open it
+        if isinstance(image, str):
+            logger.info(f"Image is a string path: {image}")
+            image = Image.open(image)
+            logger.info(f"Opened image from path: {image.format}, {image.mode}, {image.size}")
+
+        # Log original image info
+        logger.info(f"Original image - format: {image.format}, mode: {image.mode}, size: {image.size}")
+
+        # Convert to RGB if needed (handles RGBA, L, CMYK, etc.)
+        if image.mode != "RGB":
+            logger.info(f"Converting image from {image.mode} to RGB")
+            image = image.convert("RGB")
+            logger.info(f"Conversion successful")
+        else:
+            logger.info("Image already in RGB mode, no conversion needed")
+
+        logger.info(f"Preprocessed image - mode: {image.mode}, size: {image.size}")
+        logger.info("preprocess_image() completed successfully")
+        logger.info("=" * 60)
+        return image
+
+    except Exception as e:
+        logger.error("=" * 60)
+        logger.error(f"ERROR in preprocess_image()")
+        logger.error(f"Error type: {type(e).__name__}")
+        logger.error(f"Error message: {str(e)}")
+        logger.error(f"Traceback:\n{traceback.format_exc()}")
+        logger.error("=" * 60)
+        raise
+
+
 def initialize_model():
     """Initialize the EdgeTAM model and processor."""
     global model, processor, device
@@ -77,29 +130,39 @@ def create_overlay(image, mask, alpha=0.5, color=[30, 144, 255]):
 
 def visualize_points(image, points, labels):
     """Visualize points on the image."""
-    img_copy = image.copy()
-    draw = ImageDraw.Draw(img_copy)
-    
-    for point, label in zip(points, labels):
-        x, y = point
-        # Positive points in green, negative in red
-        color = (0, 255, 0) if label == 1 else (255, 0, 0)
-        radius = 8
-        draw.ellipse([x-radius, y-radius, x+radius, y+radius], fill=color, outline="white", width=2)
-    
-    return img_copy
+    logger.info(f"visualize_points() - Image type: {type(image)}, mode: {image.mode if hasattr(image, 'mode') else 'N/A'}")
+    logger.info(f"visualize_points() - Points: {points}, Labels: {labels}")
+
+    try:
+        img_copy = image.copy()
+        draw = ImageDraw.Draw(img_copy)
+
+        for point, label in zip(points, labels):
+            x, y = point
+            # Positive points in green, negative in red
+            color = (0, 255, 0) if label == 1 else (255, 0, 0)
+            radius = 8
+            draw.ellipse([x-radius, y-radius, x+radius, y+radius], fill=color, outline="white", width=2)
+            logger.info(f"Drew point at ({x}, {y}) with color {color}")
+
+        logger.info("visualize_points() completed successfully")
+        return img_copy
+    except Exception as e:
+        logger.error(f"Error in visualize_points: {str(e)}")
+        logger.error(traceback.format_exc())
+        raise
 
 
 def segment_image(image, points_data, multimask_output, use_box):
     """
     Perform segmentation on the image using the provided points or box.
-    
+
     Args:
         image: PIL Image
         points_data: Dictionary containing point coordinates and labels
         multimask_output: Whether to output multiple masks
         use_box: Whether to use bounding box mode
-    
+
     Returns:
         Tuple of (annotated image, mask overlay, info text)
     """
@@ -116,6 +179,12 @@ def segment_image(image, points_data, multimask_output, use_box):
     if image is None:
         logger.warning("No image provided")
         return None, None, "Please upload an image first!"
+
+    # Preprocess image to ensure RGB format
+    try:
+        image = preprocess_image(image)
+    except Exception as e:
+        return None, None, f"Error processing image: {str(e)}"
 
     # Parse points data
     if not points_data or "points" not in points_data or len(points_data["points"]) == 0:
@@ -235,20 +304,22 @@ def clear_points():
 with gr.Blocks(title="EdgeTAM Interactive Segmentation") as demo:
     gr.Markdown("""
     # 🎯 EdgeTAM Interactive Segmentation
-    
-    Interactive image segmentation using [EdgeTAM](https://huggingface.co/yonigozlan/EdgeTAM-hf) - 
+
+    Interactive image segmentation using [EdgeTAM](https://huggingface.co/yonigozlan/EdgeTAM-hf) -
     a lightweight variant of SAM 2 optimized for on-device execution.
-    
+
     ## How to use:
     1. Click "Initialize Model" to load EdgeTAM
-    2. Upload an image
+    2. Upload an image (supports JPG, PNG, TIFF, BMP, WebP, GIF, and more)
     3. Click on the image to add positive points (green) or negative points (red)
     4. Adjust parameters if needed
     5. Click "Segment" to generate the mask
-    
-    **Point Labels:** 
+
+    **Point Labels:**
     - Positive points (1): Click on the object you want to segment
     - Negative points (0): Click on areas you want to exclude
+
+    **Supported Image Formats:** JPG, PNG, TIFF, BMP, WebP, GIF, and other PIL-compatible formats
     """)
     
     with gr.Row():
@@ -260,7 +331,7 @@ with gr.Blocks(title="EdgeTAM Interactive Segmentation") as demo:
         with gr.Column(scale=1):
             # Input image with interactive points
             input_image = gr.Image(
-                label="Input Image (Click to add points)",
+                label="Input Image (Click to add points) - Supports: JPG, PNG, TIFF, BMP, WebP, GIF",
                 type="pil",
                 sources=["upload"],
                 interactive=True
@@ -309,26 +380,73 @@ with gr.Blocks(title="EdgeTAM Interactive Segmentation") as demo:
             )
     
     # Event handlers
+    def handle_image_upload(image):
+        """Handle image upload and preprocessing."""
+        logger.info("=" * 60)
+        logger.info("handle_image_upload() called")
+        logger.info(f"Image type: {type(image)}")
+
+        if image is None:
+            logger.warning("No image uploaded")
+            return None
+
+        try:
+            logger.info("Attempting to preprocess uploaded image...")
+            processed_image = preprocess_image(image)
+            logger.info("Image preprocessing successful")
+            logger.info("=" * 60)
+            return processed_image
+        except Exception as e:
+            logger.error(f"Failed to process uploaded image: {str(e)}")
+            logger.error(traceback.format_exc())
+            logger.error("=" * 60)
+            return None
+
     def update_points(image, current_points, label, evt: gr.SelectData):
         """Update points when user clicks on image."""
+        logger.info("=" * 60)
+        logger.info("update_points() called")
+        logger.info(f"Image type: {type(image)}")
+        logger.info(f"Current points: {current_points}")
+        logger.info(f"Label: {label}")
+        logger.info(f"Click event index: {evt.index}")
+
         if image is None:
+            logger.warning("No image provided to update_points")
             return current_points, None, "Please upload an image first!"
-        
+
+        # Preprocess image to ensure RGB format
+        try:
+            logger.info("Preprocessing image in update_points...")
+            image = preprocess_image(image)
+            logger.info("Image preprocessing in update_points successful")
+        except Exception as e:
+            logger.error(f"Error in update_points preprocessing: {str(e)}")
+            logger.error(traceback.format_exc())
+            return current_points, None, f"Error processing image: {str(e)}"
+
         x, y = evt.index[0], evt.index[1]
-        
+        logger.info(f"Click coordinates: ({x}, {y})")
+
         if current_points is None:
             current_points = {"points": []}
-        
+
         current_points["points"].append([x, y, label])
-        
+        logger.info(f"Added point. Total points: {len(current_points['points'])}")
+
         # Visualize points
         coords = [[p[0], p[1]] for p in current_points["points"]]
         labels = [p[2] for p in current_points["points"]]
+
+        logger.info("Visualizing points...")
         img_with_points = visualize_points(image, coords, labels)
-        
+        logger.info("Points visualization complete")
+
         info = f"Added point at ({x}, {y}) with label {label}\n"
         info += f"Total points: {len(current_points['points'])}"
-        
+
+        logger.info("update_points() completed successfully")
+        logger.info("=" * 60)
         return current_points, img_with_points, info
     
     def clear_all():
@@ -340,19 +458,26 @@ with gr.Blocks(title="EdgeTAM Interactive Segmentation") as demo:
         fn=initialize_model,
         outputs=init_status
     )
-    
+
+    # Handle image upload
+    input_image.upload(
+        fn=handle_image_upload,
+        inputs=[input_image],
+        outputs=[input_image]
+    )
+
     input_image.select(
         fn=update_points,
         inputs=[input_image, points_data, point_label],
         outputs=[points_data, output_points, info_text]
     )
-    
+
     segment_btn.click(
         fn=segment_image,
         inputs=[input_image, points_data, multimask_output, use_box],
         outputs=[output_points, output_mask, info_text]
     )
-    
+
     clear_btn.click(
         fn=clear_all,
         outputs=[points_data, output_points, output_mask, info_text]

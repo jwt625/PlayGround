@@ -82,3 +82,6 @@ venv.bak/
 *.safetensors
 *.pyc
 *.png
+*.webp
+*.tiff
+*.bmp
