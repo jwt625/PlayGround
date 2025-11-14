@@ -4,11 +4,11 @@ from matplotlib.animation import FuncAnimation, PillowWriter
 from mpl_toolkits.mplot3d import Axes3D
 
 # Parameters
-n_spins = 20  # Number of spins
-n_frames = 250  # Total frames for animation
-pulse_90_duration = 8  # Duration of 90° pulse in frames (faster)
-pulse_180_duration = 10  # Duration of 180° pulse in frames (faster)
-tau = 70  # Time between pulses (in frame units)
+n_spins = 15  # Number of spins (reduced)
+n_frames = 150  # Total frames for animation (reduced)
+pulse_90_duration = 5  # Duration of 90° pulse in frames (faster)
+pulse_180_duration = 6  # Duration of 180° pulse in frames (faster)
+tau = 50  # Time between pulses (in frame units)
 
 # Define time segments
 # Segment 1: 90° pulse (0 to pulse_90_duration)
@@ -110,8 +110,8 @@ def hahn_echo_evolution(time_idx, frequencies):
 
     return x, y, z, phase_label
 
-# Create figure
-fig = plt.figure(figsize=(10, 8))
+# Create figure with smaller size
+fig = plt.figure(figsize=(8, 6), dpi=80)
 ax = fig.add_subplot(111, projection='3d')
 
 def init():
@@ -172,12 +172,12 @@ def animate(frame):
 
 # Create animation
 print("Creating animation...")
-anim = FuncAnimation(fig, animate, init_func=init, frames=n_frames, 
+anim = FuncAnimation(fig, animate, init_func=init, frames=n_frames,
                     interval=50, blit=False)
 
-# Save as GIF
+# Save as GIF with optimization
 print("Saving GIF...")
-writer = PillowWriter(fps=20)
+writer = PillowWriter(fps=15)  # Lower fps
 anim.save('hahn_echo_bloch.gif', writer=writer)
 print("Animation saved as 'hahn_echo_bloch.gif'")
 
