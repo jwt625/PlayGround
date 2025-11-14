@@ -9,19 +9,21 @@ n_frames = 150  # Total frames for animation
 pulse_90_duration = 5  # Duration of 90° pulse in frames
 pulse_180_duration = 6  # Duration of 180° pulse in frames
 tau = 50  # Time between pulses (in frame units)
+extra_time = 30  # Extra time after echo to observe decay
 
 # Diffusion parameters
-diffusion_coefficient = 0.005  # Diffusion rate
+diffusion_coefficient = 0.05  # Diffusion rate
 gradient_strength = 0.01  # Gradient strength (frequency change per unit z)
 
 # Define time segments
 t1_end = pulse_90_duration
 t2_end = t1_end + tau
 t3_end = t2_end + pulse_180_duration
-t4_end = t3_end + tau
+t4_end = t3_end + tau  # Echo time
+t_total = t4_end + extra_time  # Total simulation time
 
 # Time points
-t = np.linspace(0, t4_end, n_frames)
+t = np.linspace(0, t_total, n_frames)
 dt = t[1] - t[0] if len(t) > 1 else 1
 
 # Initialize spin positions in real space (z-coordinates)
@@ -77,8 +79,8 @@ def hahn_echo_evolution(time_idx, with_diffusion=True):
     if time <= t1_end:
         angle = (time / pulse_90_duration) * (np.pi / 2)
         x, y, z = rotate_x(x, y, z, angle)
-        phase_label = f'90° Pulse\n{np.degrees(angle):.0f}°'
-    
+        phase_label = f'90° Pulse'
+
     # Segment 2: Free precession
     elif time <= t2_end:
         # Integrate phase from end of pulse to current time
@@ -88,12 +90,12 @@ def hahn_echo_evolution(time_idx, with_diffusion=True):
             # No diffusion: constant frequencies
             time_since_pulse = time - t1_end
             phases = base_frequencies * time_since_pulse
-        
+
         x = -np.sin(phases)
         y = -np.cos(phases)
         z = np.zeros(n_spins)
-        phase_label = f'Free Precession\n{time-t1_end:.0f}/{tau:.0f}'
-    
+        phase_label = f'Free Precession'
+
     # Segment 3: 180° pulse around y-axis
     elif time <= t3_end:
         # Get positions just before 180° pulse
@@ -101,17 +103,17 @@ def hahn_echo_evolution(time_idx, with_diffusion=True):
             phases = integrate_phase(int(t1_end/dt), int(t2_end/dt), z_positions)
         else:
             phases = base_frequencies * tau
-        
+
         x_before = -np.sin(phases)
         y_before = -np.cos(phases)
         z_before = np.zeros(n_spins)
-        
+
         pulse_progress = (time - t2_end) / pulse_180_duration
         angle = pulse_progress * np.pi
         x, y, z = rotate_y(x_before, y_before, z_before, angle)
-        phase_label = f'180° Pulse\n{np.degrees(angle):.0f}°'
+        phase_label = f'180° Pulse'
     
-    # Segment 4: Refocusing
+    # Segment 4: Refocusing and beyond
     else:
         # Phase evolution: first half + second half (with sign flip from 180° pulse)
         if with_diffusion:
@@ -123,12 +125,17 @@ def hahn_echo_evolution(time_idx, with_diffusion=True):
         else:
             time_after_180 = time - t3_end
             phases = base_frequencies * (tau - time_after_180)
-        
+
         x = -np.sin(phases)
         y = -np.cos(phases)
         z = np.zeros(n_spins)
-        phase_label = f'Echo\n{time-t3_end:.0f}/{tau:.0f}'
-    
+
+        # Update label based on whether we're before or after echo
+        if time <= t4_end:
+            phase_label = f'Echo'
+        else:
+            phase_label = f'Post-Echo Decay'
+
     return x, y, z, phase_label
 
 def draw_bloch_sphere(ax):
@@ -228,9 +235,9 @@ def animate(frame):
     ax2.set_title('With Diffusion\n(Overlapping Origins)', fontsize=11, fontweight='bold')
     ax2.view_init(elev=20, azim=45)
 
-    # Add phase label
-    fig.text(0.5, 0.95, label, ha='center', fontsize=12, fontweight='bold',
-            bbox=dict(boxstyle='round', facecolor='wheat', alpha=0.8))
+    # Add overall title with parameters
+    title_text = f'Hahn Echo with Diffusion | D={diffusion_coefficient:.3f}, G={gradient_strength:.3f} | {label}'
+    fig.suptitle(title_text, fontsize=12, fontweight='bold', y=0.98)
 
     # Bottom plot: Net magnetization over time
     ax3.clear()
@@ -249,7 +256,7 @@ def animate(frame):
     ax3.set_title('Sum of All Spins (Net Magnetization)', fontsize=11, fontweight='bold')
     ax3.legend(loc='upper right', fontsize=8, ncol=2)
     ax3.grid(True, alpha=0.3)
-    ax3.set_xlim([0, t4_end])
+    ax3.set_xlim([0, t_total])
     ax3.set_ylim([-1.1, 1.1])
 
     plt.tight_layout(rect=[0, 0, 1, 0.93])
@@ -261,11 +268,12 @@ print("Creating animation...")
 anim = FuncAnimation(fig, animate, init_func=init, frames=n_frames,
                     interval=50, blit=False)
 
-# Save as GIF
+# Save as GIF with parameters in filename
 print("Saving GIF...")
 writer = PillowWriter(fps=15)
-anim.save('hahn_echo_diffusion.gif', writer=writer)
-print("Animation saved as 'hahn_echo_diffusion.gif'")
+filename = f'hahn_echo_D{diffusion_coefficient:.3f}_G{gradient_strength:.3f}.gif'
+anim.save(filename, writer=writer)
+print(f"Animation saved as '{filename}'")
 
 plt.close()
 print("Done!")
