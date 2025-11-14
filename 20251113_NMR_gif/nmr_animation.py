@@ -95,13 +95,13 @@ class HahnEchoAnimator:
         self.mag_history_magnitude.append(net_mag_magnitude)
         self.time_history.append(self.simulator.t[frame])
         
-        # Get real space z-positions for this frame
+        # Get real space positions for this frame
         if self.simulator.diffusion_sim is not None:
-            z_real = self.simulator.diffusion_sim.positions[frame, :]
-            
+            positions_real = self.simulator.diffusion_sim.positions[frame, :, :]  # Shape: (n_spins, 3)
+
             # Draw spins with their real space origins
-            origins = np.zeros((self.simulator.n_spins, 3))
-            origins[:, 2] = z_real * 0.3  # Scale factor for visualization
+            # Scale positions for visualization (0.3 scale factor)
+            origins = positions_real * 0.3
             nmr_viz.plot_spins(self.ax1, x1, y1, z1, color='red', alpha=0.6, origins=origins)
         else:
             nmr_viz.plot_spins(self.ax1, x1, y1, z1, color='red', alpha=0.6)
