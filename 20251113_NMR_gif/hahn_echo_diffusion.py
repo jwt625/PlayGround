@@ -4,7 +4,7 @@ from matplotlib.animation import FuncAnimation, PillowWriter
 from mpl_toolkits.mplot3d import Axes3D
 
 # Parameters
-n_spins = 15  # Number of spins
+n_spins = 60  # Number of spins
 n_frames = 150  # Total frames for animation
 pulse_90_duration = 5  # Duration of 90° pulse in frames
 pulse_180_duration = 6  # Duration of 180° pulse in frames
@@ -12,7 +12,7 @@ tau = 50  # Time between pulses (in frame units)
 
 # Diffusion parameters
 diffusion_coefficient = 0.005  # Diffusion rate
-gradient_strength = 0.005  # Gradient strength (frequency change per unit z)
+gradient_strength = 0.01  # Gradient strength (frequency change per unit z)
 
 # Define time segments
 t1_end = pulse_90_duration
@@ -33,8 +33,8 @@ z_positions[0, :] = np.random.randn(n_spins) * 0.1  # Small initial spread
 for i in range(1, n_frames):
     z_positions[i, :] = z_positions[i-1, :] + np.random.randn(n_spins) * np.sqrt(2 * diffusion_coefficient * dt)
 
-# Base frequencies (small spread)
-base_frequencies = np.linspace(-0.05, 0.05, n_spins)
+# Base frequencies (Gaussian distribution, 5x wider spread)
+base_frequencies = np.random.randn(n_spins) * 0.25  # 5x wider: 0.05 * 5 = 0.25 std dev
 
 def rotate_x(x, y, z, angle):
     """Rotate vectors around x-axis by angle (in radians)"""
@@ -141,10 +141,17 @@ def draw_bloch_sphere(ax):
     ax.plot_surface(x, y, z, alpha=0.1, color='cyan', edgecolor='none')
     ax.plot_wireframe(x, y, z, alpha=0.15, color='gray', linewidth=0.3)
 
-# Create figure with two subplots side by side
-fig = plt.figure(figsize=(12, 5), dpi=80)
-ax1 = fig.add_subplot(121, projection='3d')
-ax2 = fig.add_subplot(122, projection='3d')
+# Storage for magnetization history
+mag_history_x = []
+mag_history_y = []
+mag_history_magnitude = []
+time_history = []
+
+# Create figure with 3 subplots: two 3D on top, one 2D below
+fig = plt.figure(figsize=(12, 8), dpi=80)
+ax1 = fig.add_subplot(2, 2, 1, projection='3d')
+ax2 = fig.add_subplot(2, 2, 2, projection='3d')
+ax3 = fig.add_subplot(2, 1, 2)  # 2D plot below spanning both columns
 
 def init():
     """Initialize animation"""
@@ -158,6 +165,17 @@ def animate(frame):
     # Left plot: With diffusion (real space positions)
     draw_bloch_sphere(ax1)
     x1, y1, z1, label = hahn_echo_evolution(frame, with_diffusion=True)
+
+    # Calculate net magnetization (sum of all spins)
+    net_mag_x = np.sum(x1) / n_spins
+    net_mag_y = np.sum(y1) / n_spins
+    net_mag_magnitude = np.sqrt(net_mag_x**2 + net_mag_y**2)
+
+    # Store history
+    mag_history_x.append(net_mag_x)
+    mag_history_y.append(net_mag_y)
+    mag_history_magnitude.append(net_mag_magnitude)
+    time_history.append(t[frame])
 
     # Get real space z-positions for this frame
     z_real = z_positions[frame, :]
@@ -213,6 +231,28 @@ def animate(frame):
     # Add phase label
     fig.text(0.5, 0.95, label, ha='center', fontsize=12, fontweight='bold',
             bbox=dict(boxstyle='round', facecolor='wheat', alpha=0.8))
+
+    # Bottom plot: Net magnetization over time
+    ax3.clear()
+    ax3.plot(time_history, mag_history_x, 'r-', label='Mx (transverse)', linewidth=2)
+    ax3.plot(time_history, mag_history_y, 'b-', label='My (transverse)', linewidth=2)
+    ax3.plot(time_history, mag_history_magnitude, 'k-', label='|M_xy| (magnitude)', linewidth=2.5)
+
+    # Mark pulse times
+    ax3.axvline(t1_end, color='green', linestyle='--', alpha=0.5, linewidth=1.5, label='90° pulse end')
+    ax3.axvline(t2_end, color='orange', linestyle='--', alpha=0.5, linewidth=1.5, label='180° pulse start')
+    ax3.axvline(t3_end, color='purple', linestyle='--', alpha=0.5, linewidth=1.5, label='180° pulse end')
+    ax3.axvline(t4_end, color='red', linestyle='--', alpha=0.5, linewidth=1.5, label='Echo time')
+
+    ax3.set_xlabel('Time', fontsize=11)
+    ax3.set_ylabel('Net Magnetization', fontsize=11)
+    ax3.set_title('Sum of All Spins (Net Magnetization)', fontsize=11, fontweight='bold')
+    ax3.legend(loc='upper right', fontsize=8, ncol=2)
+    ax3.grid(True, alpha=0.3)
+    ax3.set_xlim([0, t4_end])
+    ax3.set_ylim([-1.1, 1.1])
+
+    plt.tight_layout(rect=[0, 0, 1, 0.93])
 
     return []
 
