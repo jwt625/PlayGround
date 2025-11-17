@@ -83,6 +83,11 @@ ax.set_aspect('auto')
 ax.set_xlim(-0.1, 3.1)
 ax.set_ylim(-0.2, 3.5)
 
+# Add vertical dashed lines for frequencies
+ax.axvline(omega_s, color='red', linestyle=':', linewidth=2, alpha=0.6, zorder=1)
+ax.axvline(omega_i, color='red', linestyle=':', linewidth=2, alpha=0.6, zorder=1)
+ax.axvline(omega_p, color='green', linestyle=':', linewidth=2, alpha=0.6, zorder=1)
+
 # Create inset for phase matching diagram (pump ON case)
 ax_inset = fig.add_axes([0.55, 0.15, 0.38, 0.35])  # [left, bottom, width, height]
 ax_inset.set_facecolor('white')
