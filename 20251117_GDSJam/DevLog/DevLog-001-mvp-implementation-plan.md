@@ -1,12 +1,33 @@
 # DevLog-001: MVP Implementation Plan
 
 ## Metadata
-- **Document Version:** 1.0
+- **Document Version:** 1.1
 - **Created:** 2025-11-18
+- **Last Updated:** 2025-11-18
 - **Author:** Wentao Jiang
-- **Status:** Active
+- **Status:** Active - Ready for Implementation
 - **Target Completion:** 12 weeks (3 months)
 - **Related Documents:** DevLog-000-planning.md
+
+## Changelog
+- **v1.1 (2025-11-18):** Technical review and refinement
+  - Added Service Worker caching for Pyodide and offline support
+  - Clarified hybrid rendering strategy (Container instancing + viewport culling)
+  - Specified dark mode only (no light mode)
+  - Added comprehensive keyboard shortcuts (arrows, Enter, Shift+Enter, F, Space+Drag)
+  - Clarified session ID format (long UUID, no password)
+  - Added chunked geometry transfer with compression and validation
+  - Specified FPS counter always visible (top-right)
+  - Added grid overlay toggle to MVP scope
+  - Removed screenshot export (use OS tools)
+  - Removed geometry export (no editing in MVP)
+  - Deferred measurement sharing to post-MVP
+  - Deferred "Jump to Cell" to post-MVP
+  - Added unit testing requirements
+  - Added comprehensive error handling requirements
+  - Added Technical Decisions & Rationale section
+  - Added Appendix with technical concept explanations
+- **v1.0 (2025-11-18):** Initial implementation plan
 
 ---
 
@@ -24,10 +45,12 @@ This document outlines the detailed implementation plan for GDSJam MVP: a peer-t
 - **GDSII Parsing:** Pyodide + gdstk (WebAssembly)
 - **Collaboration:** Y.js + y-webrtc (peer-to-peer)
 - **Spatial Indexing:** rbush (R-tree for hit-testing and culling)
-- **Styling:** Tailwind CSS
+- **Styling:** Tailwind CSS (dark mode only)
 - **Package Manager:** pnpm
 - **Linting & Formatting:** Biome (unified linter/formatter), Prettier (fallback), svelte-check
 - **Type Checking:** TypeScript strict mode, svelte-check
+- **Caching:** Service Worker for Pyodide caching and offline support
+- **Coordinate System:** Micrometers (µm) as internal unit
 
 ### Backend (Future Only)
 - **Language:** Python 3.11+
@@ -38,7 +61,8 @@ This document outlines the detailed implementation plan for GDSJam MVP: a peer-t
 
 ### Deployment
 - **Hosting:** Vercel or Netlify (static site)
-- **Signaling:** Public y-webrtc signaling servers
+- **Signaling:** Public y-webrtc signaling servers (MVP), self-hosted option post-MVP
+- **Session IDs:** Long UUID format for security (no password protection in MVP)
 
 ---
 
@@ -90,9 +114,10 @@ gdsjam/
 
 ### Performance Requirements
 1. **Bundle Size:** Target < 2MB (excluding Pyodide, which loads separately)
-2. **Initial Load:** < 3 seconds on 4G connection
+2. **Initial Load:** < 3 seconds on 4G connection (Service Worker caching for subsequent loads)
 3. **Rendering:** 60fps for 100MB GDSII files (500K-1M polygons)
-4. **Memory:** < 500MB RAM usage for typical layouts
+4. **Memory:** Up to 1GB RAM usage acceptable for 100MB files
+5. **FPS Display:** Always visible in top-right corner for performance monitoring
 
 ---
 
@@ -122,18 +147,22 @@ gdsjam/
 - [ ] Install and configure Biome: `pnpm add -D @biomejs/biome`
 - [ ] Create `biome.json` with strict rules (no unused vars, consistent formatting)
 - [ ] Install Tailwind CSS: `pnpm add -D tailwindcss postcss autoprefixer`
-- [ ] Configure Tailwind with `npx tailwindcss init -p`
+- [ ] Configure Tailwind with `npx tailwindcss init -p` (dark mode only)
 - [ ] Set up Husky + lint-staged for pre-commit hooks
 - [ ] Create `.github/workflows/ci.yml` for automated checks
 - [ ] Add `svelte-check` to CI pipeline
+- [ ] Set up Service Worker for Pyodide caching and offline support
+- [ ] Configure Vite for Service Worker registration
 
 #### TODO: Rendering Prototype
 - [ ] Install Pixi.js: `pnpm add pixi.js`
 - [ ] Create `src/lib/renderer/PixiRenderer.ts` class
 - [ ] Implement basic WebGL canvas initialization
-- [ ] Add zoom and pan controls (mouse wheel + drag)
+- [ ] Add zoom and pan controls (mouse wheel + drag, Space + drag)
 - [ ] Render simple test geometry (rectangles, polygons)
-- [ ] Implement viewport culling (only render visible geometry)
+- [ ] Implement viewport culling (only render visible geometry and instances)
+- [ ] Implement hybrid rendering strategy (keep hierarchy, use Container instancing)
+- [ ] Add FPS counter (always visible, top-right corner)
 - [ ] Test with synthetic data (10K, 100K, 1M polygons)
 - [ ] Measure FPS and memory usage
 - [ ] Document performance benchmarks in `docs/benchmarks.md`
@@ -224,20 +253,26 @@ gdsjam/
 #### TODO: Navigation Controls
 - [ ] Create `src/components/viewer/ViewportControls.svelte`
 - [ ] Implement mouse wheel zoom (zoom to cursor position)
-- [ ] Implement pan (middle mouse drag or space + drag)
+- [ ] Implement pan (middle mouse drag or Space + drag)
 - [ ] Add zoom in/out buttons
 - [ ] Add reset view button (zoom to fit all geometry)
-- [ ] Implement keyboard shortcuts (Z: zoom in, X: zoom out, F: fit view)
-- [ ] Add minimap (optional, low priority)
+- [ ] Implement keyboard shortcuts:
+  - [ ] Arrow keys: Pan viewport
+  - [ ] Enter: Zoom in
+  - [ ] Shift+Enter: Zoom out
+  - [ ] F: Fit view (zoom to fit all geometry)
+  - [ ] Space+Drag: Pan (alternative to middle mouse)
+  - [ ] Mouse wheel: Zoom to cursor position
 
 #### TODO: Layer Panel
 - [ ] Create `src/components/panels/LayerPanel.svelte`
 - [ ] Display list of all layers with names and colors
 - [ ] Add visibility toggle checkboxes
-- [ ] Add color picker for each layer
 - [ ] Implement "show all" / "hide all" buttons
 - [ ] Add layer search/filter
 - [ ] Persist layer visibility state in Y.js shared map (sync across users)
+- [ ] Sync layer colors across users by default (store in Y.js)
+- [ ] Add grid overlay toggle option (sync across users)
 
 ---
 
@@ -245,12 +280,12 @@ gdsjam/
 
 #### TODO: Session Management
 - [ ] Create `src/lib/collaboration/SessionManager.ts`
-- [ ] Generate unique room IDs (use nanoid or similar)
+- [ ] Generate unique room IDs using long UUID format (crypto.randomUUID())
 - [ ] Implement "Create Session" flow (upload file → create room → get shareable link)
 - [ ] Implement "Join Session" flow (paste link → connect to room)
 - [ ] Display connection status (connecting, connected, disconnected)
 - [ ] Handle host disconnect (show "Host disconnected, session ended" message)
-- [ ] Store session state in Y.js (geometry data, layer visibility, comments)
+- [ ] Store session state in Y.js (full geometry data, metadata, layer visibility, grid visibility, comments, cursors/FOV)
 
 #### TODO: User Presence
 - [ ] Create `src/lib/collaboration/PresenceManager.ts`
@@ -265,6 +300,10 @@ gdsjam/
 #### TODO: Geometry Transfer (Host to Peers)
 - [ ] Implement geometry serialization (GDSDocument → JSON)
 - [ ] Transfer geometry via Y.js shared map (chunked for large files)
+- [ ] Implement chunked transfer with progress indicator
+- [ ] Add transfer resume capability (handle interruptions)
+- [ ] Compress geometry data before transfer (gzip/brotli)
+- [ ] Validate data integrity after transfer (checksum)
 - [ ] Show progress indicator for peers receiving data
 - [ ] Implement geometry deserialization (JSON → GDSDocument)
 - [ ] Handle transfer errors (timeout, connection drop)
@@ -277,7 +316,7 @@ gdsjam/
 - [ ] Render comment markers on canvas (small icons at pinned positions)
 - [ ] Create `src/components/panels/CommentPanel.svelte` sidebar
 - [ ] Display all comments in chronological order
-- [ ] Implement comment threading (replies)
+- [ ] Implement single-threaded replies (reply to comment, no nested threads)
 - [ ] Add delete comment functionality (author only)
 - [ ] Sync comments via Y.js CRDT
 
@@ -289,34 +328,39 @@ gdsjam/
 - [ ] Create `src/components/panels/HierarchyPanel.svelte`
 - [ ] Display cell tree (root cells and their instances)
 - [ ] Implement expand/collapse for cell instances
-- [ ] Add "Jump to Cell" functionality (click cell → zoom to its bounding box)
 - [ ] Show instance count for each cell
 - [ ] Highlight selected cell in viewer
+- [ ] Note: "Jump to Cell" functionality deferred to post-MVP
 
 #### TODO: Measurement Tools
 - [ ] Create `src/components/tools/MeasureTool.svelte`
 - [ ] Implement ruler tool (click two points → show distance)
-- [ ] Display distance in GDS units (micrometers)
+- [ ] Display distance in micrometers (µm)
 - [ ] Implement area measurement (click polygon → show area)
 - [ ] Add measurement overlay on canvas
 - [ ] Allow deleting measurements
 - [ ] Store measurements in local state (not synced for MVP)
+- [ ] Note: Measurement sharing deferred to post-MVP
 
 #### TODO: Export Features
-- [ ] Implement screenshot export (canvas → PNG)
-- [ ] Add "Export Screenshot" button
 - [ ] Implement comment export (comments → JSON file)
 - [ ] Add "Export Comments" button
-- [ ] Implement geometry export (GDSDocument → GDS file, using gdstk)
-- [ ] Test round-trip fidelity (import → export → import)
+- [ ] Add "Download Original GDS" button (re-download uploaded file)
+- [ ] Note: Screenshot export removed from MVP (users can use OS screenshot tools)
+- [ ] Note: Geometry export removed from MVP (no editing, so no modified geometry)
 
 #### TODO: UI/UX Refinement
 - [ ] Create responsive layout (sidebar + main canvas)
 - [ ] Add loading states for all async operations
-- [ ] Implement error handling and user-friendly error messages
+- [ ] Implement comprehensive error handling:
+  - [ ] Malformed GDSII files
+  - [ ] Parsing failures
+  - [ ] WebRTC connection failures
+  - [ ] Out-of-memory errors
+  - [ ] User-friendly error messages for all scenarios
 - [ ] Add tooltips for all buttons and controls
 - [ ] Create keyboard shortcut help modal
-- [ ] Implement dark mode (optional)
+- [ ] Implement dark mode only (no light mode)
 - [ ] Add app logo and branding
 - [ ] Create onboarding flow (first-time user guide)
 
@@ -339,6 +383,16 @@ gdsjam/
 ---
 
 ### Week 9: Testing & Bug Fixes
+
+#### TODO: Unit Testing
+- [ ] Set up Vitest for unit tests
+- [ ] Write tests for critical paths:
+  - [ ] GDSII parser (parsing, serialization, deserialization)
+  - [ ] Renderer (viewport culling, instance rendering)
+  - [ ] Spatial indexing (R-tree queries, hit-testing)
+  - [ ] Y.js integration (comment sync, cursor sync, layer visibility sync)
+- [ ] Add test coverage reporting
+- [ ] Target: >70% coverage for core libraries
 
 #### TODO: Real-World Testing
 - [ ] Collect 20+ GDSII files from various sources (KLayout, GDSFactory, academic labs)
@@ -395,10 +449,14 @@ gdsjam/
 #### TODO: Load Time Optimization
 - [ ] Implement progressive loading (show UI before Pyodide loads)
 - [ ] Add loading progress indicators
-- [ ] Optimize Pyodide initialization (cache if possible)
+- [ ] Implement Service Worker caching for Pyodide runtime
+- [ ] Cache Pyodide in Service Worker after first load (instant subsequent loads)
+- [ ] Cache app bundle and static assets
+- [ ] Store parsed GDS data in IndexedDB for offline viewing
 - [ ] Preload critical resources
 - [ ] Test on slow connections (3G, 4G)
-- [ ] Target initial load < 3 seconds on 4G
+- [ ] Target initial load < 3 seconds on 4G (first visit)
+- [ ] Target instant load on subsequent visits (Service Worker cache)
 
 ---
 
@@ -508,6 +566,66 @@ gdsjam/
 
 ---
 
+## Technical Decisions & Rationale
+
+### Confirmed Design Decisions (2025-11-18)
+
+#### Rendering Strategy
+- **Decision:** Hybrid rendering approach
+  - Keep cell hierarchy intact for navigation
+  - Use Pixi.js Container instancing for repeated cells
+  - Implement viewport culling for instances and polygons
+- **Rationale:** Balances memory efficiency with rendering performance while preserving hierarchy information
+
+#### Coordinate System
+- **Decision:** Micrometers (µm) as internal unit
+- **Rationale:** Standard unit in GDSII files, matches industry conventions
+
+#### UI/UX Decisions
+- **Dark Mode Only:** No light mode in MVP (simplifies development, matches EDA tool conventions)
+- **FPS Counter:** Always visible in top-right corner (performance transparency)
+- **Grid Overlay:** Toggle option included in MVP (easy to implement, useful for alignment)
+- **Keyboard Shortcuts:** Comprehensive set including arrows (pan), Enter (zoom in), Shift+Enter (zoom out), F (fit view), Space+Drag (pan)
+
+#### Collaboration Architecture
+- **Session IDs:** Long UUID format (crypto.randomUUID()) for security, no password protection in MVP
+- **Signaling Server:** Public y-webrtc servers for MVP, self-hosted option post-MVP
+- **Y.js Shared State:** Full geometry data, metadata, comments, cursors/FOV, layer visibility, grid visibility
+- **Layer Colors:** Synced across users by default (stored in Y.js)
+- **Comment Threading:** Single-threaded replies only (no nested threads)
+
+#### Data Transfer
+- **Geometry Transfer:** Chunked transfer with progress indicator, resume capability, compression (gzip/brotli), integrity validation (checksum)
+- **Rationale:** Ensures reliable transfer of large files (100MB+) over WebRTC
+
+#### Performance & Caching
+- **Service Worker:** Cache Pyodide runtime and app bundle for instant subsequent loads
+- **Offline Support:** Store parsed GDS data in IndexedDB for offline viewing
+- **Memory Budget:** Up to 1GB RAM acceptable for 100MB files (modern browsers handle this well)
+
+#### GDSII Parsing
+- **Parser Choice:** Pyodide + gdstk
+- **Rationale:** Full GDSII compatibility and generality, leverages mature library
+
+### Deferred to Post-MVP
+
+#### Features Explicitly Removed from MVP
+- **Measurement Sharing:** Local-only measurements in MVP, sharing deferred to post-MVP
+- **Jump to Cell:** Cell navigation deferred to post-MVP
+- **Minimap:** Deferred to post-MVP
+- **Screenshot Export:** Removed (users can use OS screenshot tools)
+- **Geometry Export:** Removed (no editing in MVP, just re-download original file)
+- **Custom Layer Colors:** Deferred to post-MVP (sync default colors only in MVP)
+- **Light Mode:** Dark mode only in MVP
+
+#### Known Concerns for Future Consideration
+- **WebRTC Reliability:** Corporate firewalls may block WebRTC (note for testing, fallback to relay server post-MVP)
+- **Coordinate Precision:** JavaScript Number precision limits for very large layouts (>10mm) - acceptable for MVP target files
+- **Safari Compatibility:** Historical WebRTC issues on Safari (note for cross-browser testing in Week 9)
+- **Host Migration:** y-webrtc doesn't provide built-in host migration (accept limitation for MVP, custom implementation post-MVP)
+
+---
+
 ## Risk Mitigation
 
 ### High-Risk Items
@@ -604,6 +722,104 @@ pnpm add -D svelte-check
 # Run type checking
 pnpm svelte-check
 ```
+
+---
+
+## Appendix: Technical Concepts
+
+### Service Worker for Performance Optimization
+
+**What is a Service Worker?**
+- JavaScript worker that runs in the background, separate from the web page
+- Acts as a programmable network proxy between the app and the network
+- Enables caching, offline support, and background sync
+
+**How it improves load time for GDSJam:**
+1. **First Visit:** Download Pyodide (~10-15MB) and app bundle → slow initial load
+2. **Service Worker Caches:** Pyodide runtime, gdstk package, app bundle, static assets
+3. **Subsequent Visits:** Load from cache → instant startup (no network requests)
+4. **Offline Viewing:** Previously loaded GDS files stored in IndexedDB → view offline
+
+**Implementation Strategy:**
+- Cache Pyodide runtime after first successful load
+- Cache app bundle and static assets (HTML, CSS, JS)
+- Store parsed GDS data in IndexedDB for offline access
+- Update cache in background when new versions available
+
+### R-tree Spatial Indexing
+
+**What is an R-tree?**
+- Spatial indexing data structure for organizing 2D/3D rectangles
+- Similar to binary search tree, but for bounding boxes
+- Enables fast spatial queries: "Which objects are in this region?"
+
+**How it works:**
+- Organizes bounding boxes in a tree structure
+- Each node contains the bounding box of all its children
+- Query traverses tree, pruning branches that don't intersect query region
+
+**Performance Benefits:**
+- **Without R-tree:** Check all 1M polygons → 1M comparisons per query
+- **With R-tree:** Check tree nodes → ~log(1M) ≈ 20 comparisons per query
+- **50,000x speedup** for typical viewport culling queries
+
+**Use Cases in GDSJam:**
+1. **Viewport Culling:** "Which polygons are visible in current viewport?" → Only render those
+2. **Hit Testing:** "User clicked at (x, y), which polygon?" → Fast lookup
+3. **Bounding Box Queries:** "What's the extent of this cell?" → Quick calculation
+
+**Library:** `rbush` - high-performance JavaScript R-tree implementation
+
+### Hybrid Rendering Strategy
+
+**Three Rendering Approaches:**
+
+**Option A: Flatten Hierarchy**
+- Convert all cell instances into absolute polygons
+- Example: Cell A with 100 instances of Cell B (50 polygons each) → 5,000 polygons
+- **Pros:** Simple rendering, fast draw calls
+- **Cons:** Massive memory usage (100x increase), loses hierarchy, slow parsing
+
+**Option B: Render Instances Individually**
+- Store cell definitions once, render instances with transformations
+- Example: Store Cell B once (50 polygons), render 100 times with transforms
+- **Pros:** Memory efficient, preserves hierarchy, fast parsing
+- **Cons:** Transformation overhead per instance
+
+**Option C: Hybrid (Selected for MVP)**
+- Keep hierarchy for navigation and memory efficiency
+- Use Pixi.js Container instancing for repeated cells (GPU instancing)
+- Apply viewport culling to instances (don't render off-screen instances)
+- Future: Flatten only when zoomed out (LOD optimization)
+
+**Why Hybrid?**
+- Balances memory efficiency (store geometry once) with rendering performance (GPU instancing)
+- Preserves hierarchy for navigation (cell tree, instance count)
+- Enables future optimizations (LOD, progressive loading)
+
+### Y.js CRDT for Collaboration
+
+**What is Y.js?**
+- Conflict-free Replicated Data Type (CRDT) library for real-time collaboration
+- Automatically resolves conflicts when multiple users edit simultaneously
+- 100-1000x faster than other CRDT implementations
+
+**What goes into Y.js shared state?**
+1. **Full Geometry Data:** Parsed GDSII structure (polygons, cells, instances)
+2. **User Metadata:** User names, colors, connection status
+3. **Comments:** Pinned comments with position, author, text, timestamp
+4. **Cursors/FOV:** Real-time cursor positions and viewport (field of view)
+5. **Rendering Settings:** Layer visibility, layer colors, grid visibility
+
+**Why store full geometry in Y.js?**
+- Ensures all peers have identical geometry data
+- Enables host migration (any peer can become new host)
+- Simplifies sync logic (single source of truth)
+
+**Performance Considerations:**
+- Y.js can handle large documents (100MB+ geometry data)
+- Initial sync transfers full document (chunked with progress indicator)
+- Subsequent updates are incremental (only changes synced)
 
 ---
 
