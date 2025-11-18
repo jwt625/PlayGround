@@ -12,12 +12,16 @@ This summary consolidates the conceptual, architectural, and product recommendat
 - **GDSII** (Graphic Design System II) originated from Calma in the 1970s as a stream format for IC mask data.
 - Despite being the universal interchange format, modern workflows remain **file-centric, siloed, and desktop-bound**.
 - Collaborative review processes rely on screenshots, KLayout sessions, or shared drives, offering no real-time collaboration or annotation.
+- **Proprietary, closed-source tools** dominate the EDA industry, limiting innovation and accessibility.
 
 ### The Opportunity
 - The success of **Figma** in UI design and **Miro / FigJam** in ideation shows that professionals value **real-time, multiplayer creation**.
 - **EDA** tools have lagged behind this trend due to proprietary data formats and heavy local compute.
-- A browser-native layout viewer/editor with **live collaboration, comments, and LLM-assisted parametric editing** would fill this gap.
-- The ecosystem can start open-source-first (like KLayout) and monetize via collaborative SaaS hosting and enterprise deployments.
+- A browser-native layout viewer/editor with **live collaboration and comments** would fill this gap.
+- **Target audience:** Academic researchers, photonics designers, chip design newcomers, and open-source hardware communities.
+- **Cultural shift:** Promote open-source practices in chip design, similar to the software industry's transformation.
+- **Emerging markets:** Photonics, quantum computing, and open-source silicon (e.g., SkyWater PDK, Tiny Tapeout) are more receptive to open collaboration.
+- The ecosystem starts **fully open-source and peer-to-peer**, with optional paid hosting for teams needing persistence and advanced features.
 
 ---
 
@@ -34,89 +38,138 @@ It is concise, memorable, and conveys the key message: *“Collaborative layout 
 ## Product Vision
 **“Design silicon together — real-time, browser-based, and code-driven.”**
 
-GDSJam will serve as a **multiplayer layout workspace** with:
-1. Real-time viewing and editing of GDSII layouts in a WebGL renderer.
+GDSJam will serve as a **multiplayer layout viewer** (MVP) with future editing capabilities:
+1. Real-time viewing of GDSII layouts in a WebGL renderer (editing in future phases).
 2. Multi-user presence (live cursors, comments, and annotations).
-3. Integration with code-based generation tools like **GDSFactory** for parametric reproducibility.
-4. Optional LLM-driven command interface for natural-language geometric edits.
-5. Versioning, diffing, and controlled hierarchical editing (cell-based awareness).
+3. **Peer-to-peer architecture** requiring no server infrastructure (optional hosted service for persistence).
+4. **Open-source first** to promote collaboration in academic, photonics, and emerging chip design communities.
+5. Future integration with code-based generation tools like **GDSFactory** for parametric reproducibility.
+6. Future optional LLM-driven command interface for natural-language geometric edits.
+7. Future versioning, diffing, and controlled hierarchical editing (cell-based awareness).
 
 ---
 
-## Architecture Overview
+## Architecture Overview (Revised for P2P MVP)
 
-### Frontend (Web)
-- **Framework:** React + WebGL2 (or WebGPU-ready) for interactive geometry rendering.
-- **Editor Layer:**
-  - Multi-user presence via **Y.js** or **Automerge** CRDT.
-  - Annotation and chat sidebars, comment pins.
-  - Parameter panel for live control of GDSFactory variables.
-  - Command palette for LLM-assisted editing.
+### Frontend (Web) — Client-Side Only
+- **Framework:** React + WebGL2 for interactive geometry rendering.
+- **GDSII Parsing:**
+  - **Option A:** Pyodide (Python in WebAssembly) + gdstk for full GDSII compatibility.
+  - **Option B:** Pure JavaScript GDSII parser (lighter weight, may need custom implementation).
+  - Parse files entirely in browser, convert to renderable geometry.
+- **Collaboration Layer:**
+  - **Y.js** CRDT for shared state (comments, cursor positions, layer visibility).
+  - **y-webrtc** connector for peer-to-peer synchronization.
+  - WebRTC signaling via public signaling server (e.g., y-webrtc default servers).
+  - First user to upload file becomes "host" and shares geometry data with peers.
 - **Rendering Pipeline:**
-  - Load layout tiles (vector or raster) from server.
+  - Direct WebGL rendering of polygon geometry (no tiling for MVP).
+  - Spatial indexing (R-tree or quadtree) for efficient hit-testing and culling.
   - Support for zoom, pan, layer visibility, and measurement tools.
   - Hierarchical display for cells, instances, and layers.
+- **UI Components:**
+  - File upload interface.
+  - Layer panel with visibility toggles and color mapping.
+  - Annotation sidebar for comments and discussions.
+  - Measurement tools (ruler, area calculation).
+  - User presence indicators (cursors with usernames).
 
-### Backend (Server)
-- **Core Engine:** Python-based microservice integrating **GDSFactory + gdstk** for geometry generation.
-- **Services:**
-  - Session management & collaborative state sync.
-  - Op-log and versioning (Git-like commit graph).
-  - Validation layer for safe geometry edits (DRC rules, snapping).
-  - Optional LLM service translating text commands to geometry ops.
-- **Storage:**
-  - Layout metadata, annotations, and snapshots in PostgreSQL.
-  - GDS files and generated tiles in object storage (S3/MinIO).
-- **APIs:**
-  - REST for metadata and assets.
-  - WebSocket layer for real-time collaboration.
-  - Optional OpenAPI spec for integrations (PDK, CI pipelines).
+### Backend (None for MVP)
+- **No server required** for core functionality.
+- **Signaling server:** Use existing public y-webrtc signaling servers for WebRTC peer discovery.
+- **Future hosted service** (post-MVP Phase 3):
+  - Optional Python backend for persistent storage.
+  - User authentication and project management.
+  - GDSFactory integration for parametric generation.
+  - PostgreSQL for metadata, S3 for file storage.
 
-### Integration
-- **Import/Export:** GDSII, OASIS, JSON geometry.
-- **Optional SEM/TEM Viewer:** Web-based tiled image viewer (OME-Zarr + Viv) for correlative design/failure analysis.
+### Data Flow (P2P Architecture)
+1. **User A** uploads GDSII file → parsed in browser → creates Y.js session.
+2. **User B** joins via shared link → connects to User A via WebRTC.
+3. **User A** transfers geometry data to User B via WebRTC data channel.
+4. Both users see same layout, cursors, and comments in real-time.
+5. If **User A** disconnects → User B becomes new host (or session ends if no migration).
+
+### Integration (MVP)
+- **Import:** GDSII files (local upload only).
+- **Export:** Screenshot (PNG), comments (JSON), geometry (GDS or JSON).
+- **Future:** OASIS support, GDSFactory integration, SEM/TEM overlay.
 
 ---
 
-## Collaboration Model
-- **Multi-user sessions:** Shared layouts with per-user cursors.
-- **Commenting:** Pin comments to shapes, layers, or code lines.
-- **Version control:** Auto-save deltas as structured operations (move, rotate, change_layer).
-- **Hierarchy-aware editing:** Explicit choice to edit master cell, create variant, or override instance.
-- **Permissions:** Owner, editor, viewer roles.
+## Collaboration Model (P2P for MVP)
+- **Multi-user sessions:** Peer-to-peer shared layouts with per-user cursors.
+- **Commenting:** Pin comments to geometry coordinates, synced via Y.js CRDT.
+- **Host migration:** First user becomes host; if host disconnects, another user takes over (or session ends).
+- **No persistence:** Session state and files lost when all users disconnect (acceptable for MVP).
+- **No permissions:** All users have equal access in MVP (future: owner, editor, viewer roles).
+- **Future features:**
+  - Version control with structured operation logs.
+  - Hierarchy-aware editing with master cell vs instance control.
+  - Persistent storage via optional hosted service.
 
 ---
 
-## MVP Recommendations
-**Goal:** Build a minimal but functional collaborative viewer/editor in 3–6 months.
+## MVP Recommendations (Revised)
+**Goal:** Build a minimal peer-to-peer collaborative viewer in 2–3 months.
 
-### Core MVP Features
+### Core MVP Features (View-Only)
 1. **WebGL-based GDSII viewer**
-   - Load layouts (from GDSII or pre-converted JSON).
+   - Load layouts from local GDSII files (client-side parsing).
    - Zoom, pan, and toggle layers.
    - Show cell hierarchy.
-2. **Multi-user collaboration**
-   - Shared sessions via WebSocket/Y.js.
+   - Target: Handle up to 100MB files at 60fps.
+2. **Peer-to-peer multi-user collaboration**
+   - Shared sessions via WebRTC + Y.js (no central server required).
+   - First user to upload becomes host; host migration on disconnect.
    - Presence indicators (cursor + username).
+   - Session state lost when all users disconnect (acceptable for MVP).
 3. **Annotation/comment system**
-   - Pin comments to geometry.
+   - Pin comments to geometry coordinates.
    - Threaded discussions and basic chat.
-4. **Integration with GDSFactory**
-   - Re-render geometry when parameters change.
-   - Optional code editor (Monaco) with live preview.
-5. **Backend services**
-   - Minimal Python API to parse GDS and serve JSON geometry.
-   - MongoDB/PostgreSQL for comments and sessions.
-   - User authentication and session storage.
-6. **UI polish**
-   - Layer panel, measurement tool, and screenshot export.
+   - Comments synced via CRDT (Y.js).
+4. **Client-side architecture**
+   - GDSII parsing in browser (WebAssembly via Pyodide + gdstk, or pure JS parser).
+   - No backend required for MVP.
+   - All processing happens in browser.
+5. **UI essentials**
+   - Layer panel with visibility toggles.
+   - Measurement tool (distance, area).
+   - Screenshot export.
+   - Simple file upload interface.
 
-### Stretch Goals (Post-MVP)
-- **Versioning and diffs** between layout revisions.
-- **Natural-language edit commands** (LLM integration).
-- **SEM/TEM image viewer** for overlay and measurement.
-- **Enterprise mode** (on-prem hosting, SSO).
-- **Public hub** for sharing open-source designs.
+### Explicitly Out of Scope for MVP
+- **Editing capabilities** (move, copy, delete, create shapes).
+- **GDSFactory integration** (parametric generation).
+- **Persistent storage** (files/sessions lost on disconnect).
+- **Authentication/authorization** (no user accounts).
+- **Design rule checking** (DRC).
+- **Versioning and diffs**.
+- **Tiling/LOD optimization** (simple full-geometry rendering).
+
+### Post-MVP Phases
+**Phase 1 (3–6 months post-MVP):** Add basic editing
+- Move, copy, delete operations.
+- Simple shape creation (rectangles, polygons).
+- Layer changes.
+- Undo/redo with CRDT.
+
+**Phase 2 (6–12 months):** Parametric generation
+- GDSFactory integration with live preview.
+- Code editor (Monaco) for Python scripts.
+- Parameter panel for interactive control.
+
+**Phase 3 (12–18 months):** Optional hosted service
+- Central server for persistent storage.
+- User authentication and project management.
+- Version control and diffs.
+- This becomes the paid subscription tier.
+
+**Phase 4 (18+ months):** Advanced features
+- Natural-language edit commands (LLM integration).
+- SEM/TEM image viewer for overlay.
+- Public hub for sharing open-source designs.
+- Enterprise features (SSO, on-prem deployment).
 
 ---
 
@@ -130,15 +183,16 @@ GDSJam will serve as a **multiplayer layout workspace** with:
 
 ---
 
-## Technical Stack Summary
-| Layer | Tooling |
-|--------|----------|
-| **Frontend** | React, WebGL2/WebGPU, Y.js, Tailwind |
-| **Backend** | Python (FastAPI/Flask) + GDSFactory + gdstk |
-| **Storage** | PostgreSQL + S3-compatible object store |
-| **Realtime** | WebSocket, Redis, Y.js persistence |
-| **Deployment** | Docker/Kubernetes; Cloudflare or AWS |
-| **Optional AI** | OpenAI API or local LLM for command parsing |
+## Technical Stack Summary (Revised for P2P MVP)
+| Layer | MVP (P2P) | Future (Hosted Service) |
+|--------|-----------|------------------------|
+| **Frontend** | React, WebGL2, Y.js, y-webrtc, Tailwind | Same + Monaco editor |
+| **GDSII Parsing** | Pyodide + gdstk (or pure JS parser) | Same |
+| **Backend** | None (P2P only) | Python (FastAPI) + GDSFactory + gdstk |
+| **Storage** | None (ephemeral) | PostgreSQL + S3-compatible object store |
+| **Realtime** | WebRTC (y-webrtc), public signaling servers | WebSocket, Redis, Y.js persistence |
+| **Deployment** | Static hosting (Vercel, Netlify, GitHub Pages) | Docker/Kubernetes; Cloudflare or AWS |
+| **Optional AI** | N/A | OpenAI API or local LLM for command parsing |
 
 ---
 
@@ -150,169 +204,302 @@ GDSJam will serve as a **multiplayer layout workspace** with:
 ## Evaluation & Critical Questions
 
 ### Overall Assessment
-This is an **ambitious and well-structured** planning document with a compelling vision. The problem space is well-defined, and the technical approach is thoughtful. Main risks include technical complexity (rendering performance, CRDT for geometry), market validation, and potential scope creep.
+This is an **ambitious and well-structured** planning document with a compelling vision. The **revised P2P MVP approach** significantly reduces technical complexity and time-to-market while validating the core collaboration value proposition. The problem space is well-defined, and the peer-to-peer architecture aligns well with the open-source, academic target audience.
+
+### Key Decisions Made (Based on Feedback)
+1. **MVP is view-only** — No editing capabilities, focusing purely on collaborative viewing and commenting.
+2. **Peer-to-peer architecture** — No backend server required; first user hosts, with host migration on disconnect.
+3. **Ephemeral sessions** — Files and state lost when all users disconnect (acceptable for MVP).
+4. **Target audience** — Academics, photonics designers, chip design newcomers, and open-source communities.
+5. **No tiling for MVP** — Simple full-geometry rendering for files up to ~100MB.
+6. **DRC postponed** — Design rule checking deferred to post-MVP phases.
+7. **Security via client-side** — No authentication/authorization in MVP; optional hosted service handles this later.
+8. **Cultural shift goal** — Promote open-source practices in traditionally closed EDA industry.
 
 ### Critical Questions Requiring Resolution
 
-#### 1. Performance & Scale
-- **How large are typical GDSII files?** Modern IC layouts can have millions of polygons. Has WebGL performance been validated for interactive framerates with real-world files?
-- **Tiling strategy**: The document mentions "layout tiles" but doesn't specify the approach. Will this use:
-  - Pre-rendered raster tiles (like Google Maps)?
-  - Streamed vector geometry with LOD (level-of-detail)?
-  - Hybrid approach?
-- **Memory constraints**: Browser memory limits could block large designs. What's the strategy for hierarchical streaming and progressive loading?
-- **Benchmark targets**: What file sizes and polygon counts should the MVP support?
+#### 1. Performance & Scale [ADDRESSED]
+**Research findings:**
+- **WebGL performance**: Modern WebGL can render millions of polygons at 60fps. Examples include 3D Gaussian Splatting (200MB files) and GIS applications rendering hundreds of thousands of polygons.
+- **Target file size**: 100MB GDSII files are reasonable for MVP. This covers many academic designs, photonics layouts, and smaller IC blocks.
+- **Typical GDSII sizes**: Academic/research layouts: 1-100MB; Small commercial blocks: 100MB-1GB; Full SoC: 1GB+.
+- **Tiling strategy**: **Skipped for MVP** as agreed. Simple full-geometry rendering with spatial indexing (R-tree/quadtree) for culling.
+- **Memory constraints**: Modern browsers handle 100MB+ files well. Future optimization: hierarchical streaming and LOD for larger files.
+- **Benchmark target**: Render 100MB file (est. 500K-1M polygons) at 60fps on mid-range laptop.
 
-#### 2. CRDT Complexity for Geometric Data
-- **Y.js suitability**: CRDTs work well for text/JSON, but geometric operations (move, rotate, boolean ops) have complex conflict resolution:
-  - How to handle two users moving the same polygon simultaneously?
-  - How to resolve conflicts in hierarchical edits (one user edits a cell instance while another edits the master)?
-  - What happens when operations don't commute (e.g., rotate then move vs move then rotate)?
-- **Alternative consideration**: Should Operational Transform (OT) be considered instead, given the structured nature of layout operations?
-- **Conflict resolution UX**: How will conflicts be presented to users?
+#### 2. CRDT Complexity for Geometric Data [SIMPLIFIED FOR MVP]
+**Research findings:**
+- **Y.js + WebRTC is proven**: Widely used for collaborative editing (ProseMirror, CodeMirror, Monaco). The y-webrtc connector enables true P2P without server.
+- **MVP scope eliminates complexity**: Since MVP is **view-only**, CRDT only needs to handle:
+  - Cursor positions (simple coordinate updates)
+  - Comments (text + coordinate pins)
+  - Layer visibility toggles (boolean flags)
+  - User presence (join/leave events)
+- **No geometric editing conflicts** in MVP — problem deferred to Phase 1.
+- **Future consideration**: When adding editing, use operation-based CRDT with explicit conflict resolution UI (e.g., "User A and User B both moved this polygon — choose version").
+- **Y.js performance**: Benchmarks show Y.js is 100-1000x faster than other CRDT implementations.
 
-#### 3. GDSFactory Integration & Parametric Workflows
-- **Parametric vs Direct Editing**: These are fundamentally different workflows:
-  - Can users edit GDSFactory-generated geometry directly (breaking the parametric link)?
-  - Is round-tripping between code and GUI edits supported?
-  - How is the "source of truth" determined?
-- **Code ownership**: If multiple users edit parameters simultaneously, how are Python code changes merged?
-- **Version control**: Should GDSFactory scripts be in Git while layouts are in the app, or unified versioning?
+#### 3. GDSFactory Integration & Parametric Workflows [DEFERRED TO PHASE 2]
+**Decision**: GDSFactory integration is **not part of MVP**. This eliminates complex questions about parametric vs direct editing, code ownership, and version control.
 
-#### 4. Hierarchy & Cell Management
-- **Instance editing complexity**: "Hierarchy-aware editing" is mentioned but this is extremely complex:
-  - If a cell is instantiated 10,000 times, editing the master affects all instances
-  - Creating variants vs overrides vs instance-specific edits needs careful UX design
-  - How to visualize the impact of a change before committing?
-  - How to handle circular dependencies or deep hierarchies?
-- **Cell library management**: How are standard cells and PDK components managed?
+**Future approach (Phase 2)**:
+- GDSFactory scripts run client-side via Pyodide (Python in WebAssembly).
+- Parameters exposed in UI panel; changes trigger re-generation.
+- Code editor (Monaco) for advanced users.
+- Clear separation: parametric designs are "code-driven" (read-only geometry), direct edits create "manual" variants.
+- Version control: GDSFactory scripts in Git, generated layouts in app (or both).
 
-#### 5. Validation & Design Rule Checking
-- **Real-time DRC**: Running design rule checks on every edit could be computationally expensive:
-  - What's the strategy for incremental DRC?
-  - Client-side vs server-side validation?
-  - How to handle long-running checks without blocking the UI?
-- **PDK integration**: Different fabs have different rules. How will this be made extensible?
-- **Rule complexity**: Some DRC rules require global analysis. How are these handled?
+#### 4. Hierarchy & Cell Management [DEFERRED TO PHASE 1+]
+**Decision**: MVP is **view-only**, so hierarchy editing is not relevant.
 
-#### 6. Business Model & Go-to-Market
-- **Licensing strategy**: Document mentions "open-source-first" but also "SaaS hosting" and "enterprise deployments":
-  - What components are open-source vs proprietary?
-  - What's the monetization model (freemium, per-seat, usage-based)?
-  - How to prevent competitors from forking and competing?
-- **Competitive landscape**:
-  - Are there existing players (Cadence, Synopsys, Siemens) who might see this as a threat?
-  - What's the defensible moat?
-  - Why wouldn't KLayout add collaboration features?
-- **Target market**: Academic researchers, small startups, or enterprise IC design teams?
+**MVP requirements**:
+- Display cell hierarchy tree (read-only).
+- Navigate to cell definitions (click instance → jump to master cell).
+- Show instance count and placement info.
 
-#### 7. LLM Integration Feasibility
-- **Natural language to geometry** (Phase 3) is extremely ambitious:
-  - How to handle ambiguous commands ("make it bigger" - by how much?)?
-  - How to validate LLM-generated geometry for correctness?
-  - How to mitigate hallucination risks in safety-critical designs?
-  - What's the training data strategy (layouts are proprietary)?
-- **Alternative approach**: Should this be scoped as "LLM-assisted parameter tuning" rather than "free-form geometry generation"?
+**Future considerations (Phase 1+)**:
+- Editing master cells with visual preview of affected instances.
+- "Edit in place" vs "create variant" workflow.
+- Cell library browser for PDK components.
+- Circular dependency detection and warnings.
 
-#### 8. Security & IP Protection
-- **Authentication & access control**: Not mentioned in detail:
-  - How to handle IP protection (layouts are highly confidential)?
-  - Enterprise SSO integration?
-  - Audit logs for compliance?
-  - Data residency requirements (ITAR, export controls)?
-- **Offline support**: EDA tools often run in air-gapped environments. Will offline mode be supported?
+#### 5. Validation & Design Rule Checking [DEFERRED POST-MVP]
+**Decision**: DRC is **explicitly out of scope** for MVP and early phases, as agreed.
 
-#### 9. Data Fidelity & Compatibility
-- **Import/Export fidelity**: GDSII has many edge cases:
-  - Text labels, custom properties, non-Manhattan geometry
-  - Layer mapping and datatype preservation
-  - Precision and rounding (GDSII uses integer coordinates)
-  - How to ensure lossless round-tripping?
-- **Format support**: OASIS is mentioned but what about:
-  - LEF/DEF for place-and-route?
-  - OpenAccess databases?
-  - Proprietary formats (Cadence, Synopsys)?
+**Rationale**:
+- MVP is view-only (no editing to validate).
+- DRC is complex and fab-specific.
+- Target audience (academics, photonics) often has relaxed or custom rules.
 
-#### 10. User Validation
-- **Market research**: Has this been validated with actual IC designers?
-  - What's their current pain point priority?
-  - Would they trust a web app with confidential IP?
-  - What's their willingness to pay?
-- **Workflow integration**: How does this fit into existing EDA toolchains (Cadence Virtuoso, Synopsys ICC, etc.)?
+**Future approach (Phase 3+)**:
+- Client-side DRC for simple rules (width, spacing) using WebAssembly.
+- Server-side DRC for complex rules (density, antenna, etc.).
+- PDK plugin system for fab-specific rules.
+- Incremental checking (only validate changed regions).
 
-### Technical Recommendations
+#### 6. Business Model & Go-to-Market [CLARIFIED]
+**Licensing strategy**:
+- **Core viewer (MVP)**: Fully open-source (MIT or Apache 2.0 license).
+- **P2P collaboration**: Open-source (Y.js, y-webrtc are already open).
+- **Future hosted service**: Freemium SaaS model:
+  - Free tier: P2P mode (ephemeral sessions).
+  - Paid tier: Persistent storage, version control, team management, SSO.
+- **Enterprise**: On-prem deployment with support contracts.
+
+**Target market (prioritized)**:
+1. **Academic researchers**: Photonics, quantum, open-source silicon (SkyWater, Tiny Tapeout).
+2. **Photonics industry**: Emerging market, more open than traditional IC design.
+3. **Chip design newcomers**: Startups, hobbyists, students.
+4. **Open-source hardware community**: Collaborative design culture.
+
+**Competitive landscape**:
+- **Traditional EDA (Cadence, Synopsys)**: Serve large enterprises, unlikely to target open-source/academic market.
+- **KLayout**: Desktop-only, no collaboration features. Could add them, but GDSJam's web-native + P2P approach is differentiated.
+- **Moat**: First-mover in collaborative web-based layout viewing, open-source community, ease of use.
+
+**Cultural shift goal**: Make chip design more like software development (open, collaborative, version-controlled).
+
+#### 7. LLM Integration Feasibility [DEFERRED TO PHASE 4+]
+**Decision**: LLM integration is **far future** (18+ months), not a priority for MVP or early phases.
+
+**Future approach (Phase 4+)**:
+- **Scope**: LLM-assisted parameter tuning for GDSFactory scripts, not free-form geometry generation.
+- **Use cases**:
+  - "Increase waveguide width by 10%" → adjust parameter.
+  - "Add a ring resonator here" → insert GDSFactory component.
+  - "Optimize for minimum loss" → suggest parameter ranges.
+- **Validation**: All LLM suggestions require user approval before applying.
+- **Training data**: Use open-source layouts (SkyWater, photonics PDKs) and GDSFactory examples.
+- **Risk mitigation**: LLM is a "copilot" not an autopilot; user always in control.
+
+#### 8. Security & IP Protection [ADDRESSED VIA ARCHITECTURE]
+**MVP approach (P2P)**:
+- **No server = no server-side security risk**: Files never leave user's browser except via direct P2P transfer.
+- **No authentication needed**: Users share session links directly (like Google Meet).
+- **IP protection**: Users control who joins their session (share link only with trusted collaborators).
+- **Data residency**: Not applicable (no central storage).
+- **Offline support**: Not in MVP (requires WebRTC signaling), but future: local-only mode for viewing.
+
+**Future hosted service (Phase 3)**:
+- **Authentication**: Email/password, OAuth (Google, GitHub), enterprise SSO.
+- **Access control**: Project-level permissions (owner, editor, viewer).
+- **Audit logs**: Track all edits, views, and exports for compliance.
+- **Data residency**: Configurable storage regions for ITAR/export control compliance.
+- **Encryption**: At-rest and in-transit encryption for stored layouts.
+
+**Target audience alignment**: Academics and photonics designers are less concerned about IP protection than traditional IC designers, making P2P approach acceptable for MVP.
+
+#### 9. Data Fidelity & Compatibility [ADDRESSED]
+**Research findings**:
+- **gdstk library**: Mature C++/Python library with full GDSII support (text labels, properties, non-Manhattan geometry, precise coordinates).
+- **Pyodide compatibility**: gdstk can be compiled to WebAssembly via Pyodide for browser use.
+- **Alternative**: Pure JavaScript GDSII parser (lighter weight, but may need custom implementation for full spec compliance).
+
+**MVP approach**:
+- **Import**: GDSII only (via gdstk or JS parser).
+- **Export**: GDSII (lossless round-trip), PNG screenshots, JSON geometry.
+- **Fidelity**: Preserve all GDSII features (layers, datatypes, text, properties, precision).
+- **Validation**: Test with real-world files from KLayout, GDSFactory, and academic sources.
+
+**Future format support**:
+- **OASIS**: More compact than GDSII, used for large designs (Phase 2).
+- **LEF/DEF**: For place-and-route integration (Phase 3+).
+- **OpenAccess**: If demand from enterprise users (Phase 4+).
+- **Proprietary formats**: Unlikely (closed specs, legal issues).
+
+#### 10. User Validation [POSTPONED UNTIL AFTER MVP]
+**Decision**: User validation will happen **after MVP is built**, as agreed.
+
+**Rationale**:
+- MVP is low-cost to build (2-3 months, no backend).
+- Easier to get feedback with working prototype than mockups.
+- Target audience (academics, photonics) is accessible for beta testing.
+
+**Post-MVP validation plan**:
+1. **Beta testing**: Share with academic labs, photonics groups, Tiny Tapeout community.
+2. **Feedback collection**: Surveys, interviews, usage analytics.
+3. **Pain point discovery**: What features are most valuable? What's missing?
+4. **Workflow integration**: How does it fit into existing tools (KLayout, GDSFactory, etc.)?
+5. **Willingness to pay**: Gauge interest in hosted service vs self-hosted.
+
+**Initial outreach targets**:
+- University photonics labs (MIT, Stanford, UCSB, etc.)
+- GDSFactory community (already 2M+ downloads)
+- Tiny Tapeout participants (open-source silicon)
+- r/chipdesign, r/photonics communities
+
+### Technical Recommendations (Updated with Research)
 
 #### Rendering Architecture
-- Consider **WebGPU** over WebGL2 for better compute shader support (useful for geometry processing)
-- Evaluate **Pixi.js** or **Three.js** for rendering abstraction vs custom WebGL
-- **Quadtree/R-tree** spatial indexing will be essential for hit-testing and culling
-- Prototype with a real 100MB+ GDSII file early to validate performance assumptions
+**Research findings**:
+- **WebGL2 is sufficient for MVP**: Proven performance with millions of polygons. WebGPU can be considered for Phase 2+ if needed.
+- **Pixi.js vs Three.js**:
+  - **Pixi.js**: Optimized for 2D, faster for sprites and simple shapes.
+  - **Three.js**: More overhead (3D engine), but better for complex geometry and effects.
+  - **Recommendation**: Start with **Pixi.js** for 2D layout rendering, or custom WebGL for maximum control.
+- **Spatial indexing**: R-tree or quadtree essential for hit-testing and culling (libraries: rbush, flatbush).
+- **Early prototype**: Test with real 100MB GDSII file to validate assumptions.
 
-#### Backend Architecture
-- **gdstk** is fast but C++-based. Consider **KLayout's Python API** as an alternative for more mature GDSII handling
-- **Microservices might be overkill for MVP** - start monolithic, split later when scaling needs are clear
-- **WebSocket scaling**: Y.js + Redis works, but consider **Liveblocks** or **PartyKit** for managed CRDT infrastructure
-- Consider **FlatBuffers** or **Cap'n Proto** for zero-copy serialization of geometry data
+#### GDSII Parsing (Client-Side)
+**Options researched**:
+1. **Pyodide + gdstk**:
+   - Pros: Full GDSII compatibility, proven library.
+   - Cons: Large bundle size (~10-15MB), slower initial load.
+   - Best for: Complete GDSII support with minimal development.
+2. **Pure JavaScript parser**:
+   - Pros: Smaller bundle, faster load.
+   - Cons: Need to implement GDSII spec (complex).
+   - Best for: Optimized performance, custom features.
+3. **Hybrid**: Use Pyodide for parsing, convert to lightweight JSON for rendering.
+
+**Recommendation**: Start with **Pyodide + gdstk** for MVP (faster development), optimize later if needed.
+
+#### P2P Architecture
+**Research findings**:
+- **Y.js + y-webrtc**: Proven stack for P2P collaboration (used in CodeMirror, ProseMirror).
+- **WebRTC data channels**: Can transfer large files (100MB+) P2P, but may need chunking.
+- **Signaling servers**: y-webrtc provides public servers; can self-host if needed.
+- **Host migration**: Requires custom logic (not built into y-webrtc), but feasible.
+- **Fallback**: If WebRTC fails (corporate firewalls), fall back to WebSocket relay server.
 
 #### Data Model
-- Need a **canonical representation** for geometry that's:
-  - Efficient to serialize/deserialize
-  - Compatible with GDSII semantics (layers, datatypes, cells, arrays)
-  - Diffable for version control
-  - Supports both parametric and direct-edit workflows
-- Document the schema early and validate with real GDSII files
+- **Canonical representation**: JSON-based geometry format:
+  - Polygons: `{layer, datatype, points: [[x,y], ...]}`
+  - Cells: `{name, polygons, instances}`
+  - Instances: `{cell_ref, x, y, rotation, mirror, array}`
+- **Efficient serialization**: Use MessagePack or FlatBuffers for compact transfer.
+- **GDSII compatibility**: Preserve all GDSII semantics (integer coordinates, layer/datatype, text, properties).
 
-### MVP Scope Recommendations
+### MVP Scope Recommendations [ADOPTED]
 
-**Current MVP may still be too large.** Consider an even smaller "Phase 0" (2-3 months):
+**Agreed approach: View-only collaborative viewer (2-3 months)**
 
-**Phase 0: Collaborative Viewer Only**
+**MVP Features (Confirmed)**:
 1. Static viewer (no editing)
-2. Multi-user cursors + presence indicators
+2. Multi-user cursors + presence indicators (P2P via Y.js + WebRTC)
 3. Pin comments to geometry
 4. Layer visibility controls
 5. Basic measurement tools
 6. Screenshot/export
+7. Cell hierarchy navigation
+8. File upload (local GDSII files)
 
-**Benefits:**
+**Benefits (Validated)**:
 - Gets a useful tool to users faster
 - Validates collaboration UX before tackling harder editing problems
 - Proves rendering performance with real files
 - Builds user base and feedback loop
 - Lower technical risk
+- No backend infrastructure needed (P2P)
+- Can be hosted as static site (Vercel, Netlify, GitHub Pages)
 
-**Then Phase 1: Add Editing**
-- Move, copy, delete operations
-- Layer changes
-- Simple shape creation
-- Undo/redo with CRDT
+**Post-MVP Phases (Confirmed)**:
+- **Phase 1 (3-6 months)**: Add editing (move, copy, delete, create shapes)
+- **Phase 2 (6-12 months)**: GDSFactory integration (parametric generation)
+- **Phase 3 (12-18 months)**: Hosted service (persistent storage, auth)
+- **Phase 4 (18+ months)**: Advanced features (LLM, SEM/TEM overlay, enterprise)
 
-### Success Metrics (Missing from Document)
+### Success Metrics (Defined for MVP)
 
-Define measurable success criteria for MVP:
-- **Adoption**: X active users within 6 months
-- **Engagement**: Y layouts shared/reviewed per week
-- **Performance**: Render Z million polygons at 60fps
-- **Collaboration**: Average N users per session
-- **Time savings**: Reduce review cycle time by X%
+**Technical metrics**:
+- Render 100MB GDSII file (500K-1M polygons) at 60fps on mid-range laptop
+- P2P connection established within 5 seconds
+- Comment sync latency < 100ms
+- Support 5+ concurrent users per session without performance degradation
 
-### Risk Mitigation Strategy
+**Adoption metrics (6 months post-launch)**:
+- 100+ active users (weekly)
+- 500+ layouts viewed
+- 50+ collaborative sessions
+- 10+ GitHub stars/week
 
-**High-Risk Items to Prototype Early:**
+**Engagement metrics**:
+- Average 2-3 users per collaborative session
+- Average 5+ comments per layout review
+- 20%+ of users return within 7 days
+
+**Qualitative metrics**:
+- Positive feedback from beta testers (academic labs, photonics groups)
+- Feature requests indicating product-market fit
+- Community contributions (bug reports, PRs)
+
+### Risk Mitigation Strategy (Updated)
+
+**High-Risk Items to Prototype Early (MVP-focused)**:
 1. **Rendering performance** with real 100MB+ GDSII files
-2. **CRDT for geometric operations** - build simple prototype
-3. **GDSFactory integration** with parameter changes and live preview
-4. **User interviews** with 10-20 IC designers to validate assumptions
+   - Action: Build minimal WebGL renderer, test with real files from KLayout/GDSFactory
+   - Timeline: Week 1-2
+2. **GDSII parsing in browser** (Pyodide + gdstk)
+   - Action: Test Pyodide bundle size, load time, parsing speed
+   - Timeline: Week 1-2
+3. **P2P collaboration** (Y.js + WebRTC)
+   - Action: Build simple P2P demo with cursor sharing
+   - Timeline: Week 2-3
+4. **User validation** (postponed until after MVP)
+   - Action: Beta test with academic labs, photonics groups
+   - Timeline: Post-MVP (month 4+)
 
-### Alternative Hybrid Approach
+**De-risked items (removed from MVP)**:
+- CRDT for geometric operations (no editing in MVP)
+- GDSFactory integration (Phase 2)
+- DRC validation (Phase 3+)
+- Backend infrastructure (P2P only)
 
-Consider a **hybrid model** to reduce complexity:
-- **Viewing + annotation** in browser (full collaboration)
-- **Editing via GDSFactory scripts** with live preview (parametric)
-- **Simple direct edits** (move, copy, delete) in browser
-- **Complex edits** stay in traditional EDA tools
+### Alternative Hybrid Approach [ADOPTED AS LONG-TERM STRATEGY]
 
-This reduces CRDT complexity while still enabling meaningful collaboration.
+**Agreed approach** (aligns with phased roadmap):
+- **MVP (Phase 0)**: Viewing + annotation in browser (full P2P collaboration)
+- **Phase 1**: Simple direct edits (move, copy, delete) in browser
+- **Phase 2**: Editing via GDSFactory scripts with live preview (parametric)
+- **Phase 3+**: Complex edits stay in traditional EDA tools (import/export workflow)
+
+**Benefits**:
+- Reduces CRDT complexity (simple operations only)
+- Leverages GDSFactory's strengths (parametric, reproducible)
+- Integrates with existing workflows (KLayout, Cadence, etc.)
+- Focuses on collaboration (the unique value proposition)
+
+**Philosophy**: GDSJam is a **collaboration layer** on top of existing tools, not a replacement for full-featured EDA suites.
 
 ### Missing Considerations
 
@@ -323,13 +510,83 @@ This reduces CRDT complexity while still enabling meaningful collaboration.
 5. **Accessibility**: WCAG compliance for enterprise adoption
 6. **Mobile support**: Tablet viewing for on-the-go reviews?
 
-### Recommended Next Steps
+### Recommended Next Steps (Prioritized for MVP)
 
-1. **User research**: Interview 10-20 IC designers to validate problem and solution
-2. **Technical prototypes**: Build proof-of-concepts for high-risk areas
-3. **Competitive analysis**: Deep dive on existing tools and their limitations
-4. **Refined MVP scope**: Based on user feedback, define minimal feature set
-5. **Architecture decision records**: Document key technical decisions and tradeoffs
-6. **Success metrics**: Define measurable goals for MVP launch
-7. **Go-to-market strategy**: Pricing, positioning, initial target segment
+**Immediate (Week 1-2): Technical Validation**
+1. **Rendering prototype**: Build minimal WebGL viewer, test with 100MB GDSII file
+   - Tools: Pixi.js or custom WebGL, rbush for spatial indexing
+   - Test files: Download from KLayout examples, GDSFactory gallery
+2. **GDSII parsing**: Test Pyodide + gdstk in browser
+   - Measure: Bundle size, load time, parsing speed
+   - Alternative: Evaluate pure JS parser options
+3. **P2P demo**: Build simple Y.js + WebRTC cursor sharing
+   - Tools: y-webrtc, simple-peer
+   - Test: Multi-device connection, latency, reliability
+
+**Short-term (Week 3-8): MVP Development**
+4. **Core viewer**: Implement zoom, pan, layer visibility, hierarchy navigation
+5. **Collaboration**: Integrate Y.js for comments and presence
+6. **UI**: Build layer panel, comment sidebar, measurement tools
+7. **File handling**: Upload GDSII, parse, render, export screenshot
+
+**Medium-term (Week 9-12): Polish & Launch**
+8. **Testing**: Cross-browser testing, performance optimization
+9. **Documentation**: User guide, API docs, GitHub README
+10. **Deployment**: Host on Vercel/Netlify, set up analytics
+11. **Beta launch**: Share with GDSFactory community, academic labs, r/chipdesign
+
+**Post-MVP (Month 4+): Validation & Iteration**
+12. **User research**: Collect feedback from beta testers
+13. **Feature prioritization**: Based on user feedback, plan Phase 1
+14. **Community building**: Engage with open-source silicon community
+15. **Go-to-market**: Refine positioning, pricing for hosted service
+
+---
+
+## Evaluation Summary
+
+### Key Strengths of Revised Plan
+1. **Dramatically reduced scope**: View-only MVP eliminates most technical complexity
+2. **P2P architecture**: No backend infrastructure needed, faster time-to-market
+3. **Clear target audience**: Academics, photonics, open-source communities (less IP-sensitive)
+4. **Proven technology stack**: Y.js, WebRTC, Pyodide, WebGL all have successful precedents
+5. **Low-risk validation**: 2-3 month MVP, static hosting, minimal cost
+6. **Phased roadmap**: Clear progression from viewer → editor → parametric → hosted service
+7. **Cultural alignment**: Open-source first, promoting collaboration in chip design
+
+### Remaining Risks (Manageable)
+1. **Rendering performance**: Mitigated by early prototyping with real 100MB files
+2. **P2P reliability**: WebRTC can fail behind corporate firewalls (fallback: relay server)
+3. **GDSII parsing complexity**: Mitigated by using mature gdstk library
+4. **Market adoption**: Mitigated by targeting receptive communities (academics, photonics)
+5. **Host migration UX**: Requires custom implementation (not built into y-webrtc)
+
+### Critical Success Factors
+1. **Early technical validation**: Prototype rendering + P2P in weeks 1-2
+2. **Real-world testing**: Use actual GDSII files from KLayout, GDSFactory, academic sources
+3. **Community engagement**: Launch to GDSFactory users, Tiny Tapeout, photonics labs
+4. **Iterative development**: Ship MVP fast, gather feedback, iterate
+5. **Clear positioning**: "Figma for chip layouts" — collaboration layer, not EDA replacement
+
+### Go/No-Go Decision Points
+**After Week 2 (Technical Validation)**:
+- GO if: 100MB file renders at 60fps, P2P connection works reliably
+- NO-GO if: Performance is poor, WebRTC too unreliable, Pyodide too slow
+
+**After MVP Launch (Month 3)**:
+- GO to Phase 1 if: 50+ active users, positive feedback, feature requests for editing
+- PIVOT if: Low adoption, users want different features, technical issues
+
+**After Phase 1 (Month 6)**:
+- GO to hosted service if: Users request persistence, willingness to pay validated
+- STAY OPEN-SOURCE if: Community prefers P2P, no clear monetization path
+
+### Final Recommendation
+**PROCEED WITH MVP DEVELOPMENT** — The revised plan is well-scoped, technically feasible, and aligned with a receptive target audience. The P2P architecture eliminates infrastructure complexity while still delivering the core collaboration value proposition. Early prototyping will validate the highest-risk assumptions (rendering performance, GDSII parsing, P2P reliability) before committing to full development.
+
+**Estimated timeline**: 2-3 months to MVP, 6-12 months to Phase 1 (editing), 12-18 months to hosted service.
+
+**Estimated cost**: Minimal (static hosting, no backend), primarily developer time.
+
+**Expected outcome**: Useful tool for academic/photonics community, foundation for future commercial service, cultural shift toward open collaboration in chip design.
 
