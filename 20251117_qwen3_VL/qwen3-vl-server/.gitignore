@@ -8,3 +8,10 @@ wheels/
 
 # Virtual environments
 .venv
+
+# Runtime files
+logs/
+*.pid
+
+# Environment files
+.env

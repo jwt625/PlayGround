@@ -1,0 +1,142 @@
+# ============================================================================
+# 3D Reconstruction Project .gitignore
+# ============================================================================
+
+# ----------------------------------------------------------------------------
+# Large Binary Files & Model Checkpoints (25GB+ total)
+# ----------------------------------------------------------------------------
+# SAM-3D model checkpoints and dependencies
+sam-3d-objects/
+sam-3d-body/
+sam-3d-body-vith/
+sam-3d-body-dinov3/
+
+# Model checkpoint files
+*.ckpt
+*.pth
+*.pt
+*.safetensors
+
+# ----------------------------------------------------------------------------
+# COLMAP Outputs (hundreds of MB each)
+# ----------------------------------------------------------------------------
+# COLMAP databases (500MB+ each)
+*.db
+database*.db
+
+# COLMAP reconstruction outputs
+colmap_output/
+colmap_output_v*/
+
+# 3DGS undistorted data (300MB+ each)
+3dgs_data/
+3dgs_data_v*/
+*_undistorted/
+
+# ----------------------------------------------------------------------------
+# Image Data
+# ----------------------------------------------------------------------------
+# Original images (keep in repo or use Git LFS)
+# images/
+
+# Cropped images (failed experiment, 424MB)
+images_cropped/
+
+# ----------------------------------------------------------------------------
+# Reconstruction Outputs
+# ----------------------------------------------------------------------------
+# Point cloud files
+*.ply
+*.xyz
+*.las
+*.laz
+
+# Mesh files
+*.obj
+*.stl
+*.off
+
+# ----------------------------------------------------------------------------
+# Logs
+# ----------------------------------------------------------------------------
+*.log
+training*.log
+colmap*.log
+vehicle_reconstruction.log
+
+# ----------------------------------------------------------------------------
+# Python
+# ----------------------------------------------------------------------------
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual environments
+venv/
+env/
+ENV/
+.venv
+
+# ----------------------------------------------------------------------------
+# Jupyter Notebook
+# ----------------------------------------------------------------------------
+.ipynb_checkpoints
+*.ipynb
+
+# ----------------------------------------------------------------------------
+# IDE & Editor
+# ----------------------------------------------------------------------------
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# ----------------------------------------------------------------------------
+# Temporary & Cache Files
+# ----------------------------------------------------------------------------
+*.tmp
+*.temp
+*.cache
+.cache/
+tmp/
+temp/
+
+# ----------------------------------------------------------------------------
+# Keep Important Files (negation patterns)
+# ----------------------------------------------------------------------------
+# Keep documentation
+!*.md
+!README.md
+!COLMAP_OPTIMIZATION_GUIDE.md
+!DevLog_3DGS_Training_Failed.md
+
+# Keep scripts
+!*.py
+!*.sh
+
+# Keep configuration files
+!*.yaml
+!*.yml
+!*.json
+!*.toml
+
