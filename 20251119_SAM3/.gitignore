@@ -139,4 +139,6 @@ temp/
 !*.yml
 !*.json
 !*.toml
+*.json
+*.glb
 
