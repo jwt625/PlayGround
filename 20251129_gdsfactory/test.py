@@ -97,13 +97,61 @@ for i in range(len(circuits) - 1):
         bend='bend_euler'
     )
 
-# Export the chain's input and output ports, plus MZI outputs
-c_chip.add_port("input", port=circuits[0].ports["o1"])  # First spiral input (chain input)
+# Create four vertical heaters with same spacing as the cells
+heater_length = 100  # Length of heated section
+heaters = []
+
+# Get the ports we want to connect to
+ports_to_connect = [
+    circuits[0].ports["o1"],  # First spiral input
+    circuits[0].ports["o3"],  # MZI 1 output
+    circuits[1].ports["o3"],  # MZI 2 output
+    circuits[2].ports["o3"],  # MZI 3 output
+]
+
+# Create and position heaters vertically
+for i, port in enumerate(ports_to_connect):
+    heater = c_chip << gf.components.straight_heater_metal(
+        length=heater_length,
+        cross_section='strip'
+    )
+    # Rotate to make it vertical (90 degrees)
+    heater.rotate(90)
+
+    # Position the heater: place it offset from the port
+    # Move heater so its o1 port is offset vertically from the target port
+    offset_y = 50  # Offset distance in um
+    heater.movex(port.x - 50).movey(port.y + offset_y)
+
+    heaters.append(heater)
+
+# Route from each port to its corresponding heater
+for i, port in enumerate(ports_to_connect):
+    gf.routing.route_single(
+        c_chip,
+        port1=port,
+        port2=heaters[i].ports["o1"],
+        cross_section='strip',
+        bend='bend_euler'
+    )
+
+# Export the chain's input and output ports
+c_chip.add_port("input", port=heaters[0].ports["o2"])  # Input through first heater
 c_chip.add_port("output", port=waveguides[-1].ports["o2"])  # Last waveguide output (chain output)
 
-# Export all MZI o3 outputs (the unused outputs from each MZI)
-for i, circuit in enumerate(circuits):
-    c_chip.add_port(f"mzi_{i+1}_output", port=circuit.ports["o3"])
+# Export heater outputs (o2 ports)
+for i, heater in enumerate(heaters):
+    if i == 0:
+        c_chip.add_port(f"heater_{i+1}_output", port=heater.ports["o2"])
+    else:
+        c_chip.add_port(f"mzi_{i}_heater_output", port=heater.ports["o2"])
+
+# Export electrical ports for all heaters
+for i, heater in enumerate(heaters):
+    # Each heater has electrical ports for the metal contacts
+    for port in heater.ports:
+        if 'e' in port.name:  # Electrical ports
+            c_chip.add_port(f"heater_{i+1}_{port.name}", port=port)
 
 # Print port information
 print("Chip ports:")
