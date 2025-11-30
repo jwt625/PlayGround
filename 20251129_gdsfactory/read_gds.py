@@ -59,6 +59,12 @@ def inspect_gds(gds_file, log_file=None):
                 if hasattr(ref, 'cell'):
                     print(f"    Reference to cell: {ref.cell.name if ref.cell else 'Unknown'}", file=output)
                 print(f"      Origin: {ref.origin}", file=output)
+                print(f"      Rotation: {ref.rotation} degrees", file=output)
+                print(f"      Magnification: {ref.magnification}", file=output)
+                print(f"      X-reflection: {ref.x_reflection}", file=output)
+                if hasattr(ref, 'columns') and ref.columns > 1:
+                    print(f"      Array: {ref.columns} columns x {ref.rows} rows", file=output)
+                    print(f"      Spacing: {ref.spacing}", file=output)
 
             print("", file=output)
 
