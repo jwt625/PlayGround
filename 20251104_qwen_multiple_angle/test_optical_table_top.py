@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
-"""Test camera angle change on optical table image."""
+"""Test top-down view of optical table image."""
 
 import torch
 from PIL import Image
 from diffusers import QwenImageEditPlusPipeline
 
 print("=" * 60)
-print("Optical Table Camera Angle Test")
+print("Optical Table Top-Down View Test")
 print("=" * 60)
 
 # Load the input image
@@ -49,9 +49,9 @@ print("  Setting LoRA adapters...")
 pipeline.set_adapters(["lightning", "multiple_angles"], adapter_weights=[1.0, 1.0])
 print("  LoRAs loaded successfully!")
 
-# Test camera rotation down by 45 degrees
-prompt_cn = "将镜头向下旋转45度"
-prompt_en = "Rotate the camera down by 45 degrees"
+# Test top-down view explicitly
+prompt_cn = "将镜头转为俯视"
+prompt_en = "Turn camera to top-down view"
 
 print("\n" + "=" * 60)
 print(f"Test: {prompt_en}")
@@ -68,11 +68,11 @@ output = pipeline(
     num_inference_steps=40,
     guidance_scale=1.0,
     true_cfg_scale=4.0,
-    generator=torch.Generator(device='cuda:0').manual_seed(789)
+    generator=torch.Generator(device='cuda:0').manual_seed(890)
 ).images[0]
 
 # Save the output
-output_path = "test_output/optical_table_rotate_down_45.png"
+output_path = "test_output/optical_table_top_down.png"
 output.save(output_path)
 print(f"  Success! Saved: {output_path}")
 print(f"  Output size: {output.size}")
@@ -81,5 +81,5 @@ print("\n" + "=" * 60)
 print("Test Complete")
 print("=" * 60)
 print(f"\nGenerated file: {output_path}")
-print("The camera has been rotated down by 45 degrees.")
+print("The camera has been changed to a top-down view.")
 
