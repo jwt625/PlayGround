@@ -194,8 +194,26 @@ for i, port in enumerate(ports_to_connect):
         bend='bend_euler'
     )
 
+# Route from vertical heater outputs to stacked MZI inputs
+# Based on x-ordering: leftmost heater to leftmost MZI, etc.
+heater_to_mzi_connections = [
+    (heaters[0].ports["o2"], stacked_mzis[0].ports["o1"]),  # heater_1 → stacked_mzi_1
+    (heaters[1].ports["o2"], stacked_mzis[1].ports["o1"]),  # heater_2 → stacked_mzi_2
+    (heaters[2].ports["o2"], stacked_mzis[2].ports["o1"]),  # heater_3 → stacked_mzi_3
+    (heaters[3].ports["o2"], stacked_mzis[3].ports["o1"]),  # heater_4 → stacked_mzi_4
+]
+
+for heater_port, mzi_port in heater_to_mzi_connections:
+    gf.routing.route_single(
+        c_chip,
+        port1=heater_port,
+        port2=mzi_port,
+        cross_section='strip',
+        bend='bend_euler'
+    )
+
 # Export the chain's input and output ports
-c_chip.add_port("input", port=heaters[0].ports["o2"])  # Input through first heater
+c_chip.add_port("input", port=heaters[0].ports["o1"])  # Input through first heater (changed from o2 to o1)
 c_chip.add_port("output", port=waveguides[-1].ports["o2"])  # Last waveguide output (chain output)
 
 # Export heater outputs (o2 ports)
