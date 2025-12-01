@@ -323,9 +323,110 @@ fanin_routes = gf.routing.route_bundle_sbend(
 for i, mzi in enumerate(stacked_mzis):
     c_chip.add_port(f"stacked_mzi_{i+1}_o1", port=mzi.ports['o1'])
 
-# Export the MMI output ports (o5 and o6)
-c_chip.add_port("mmi4x2_output_1", port=mmi4x2.ports['o5'])
-c_chip.add_port("mmi4x2_output_2", port=mmi4x2.ports['o6'])
+# Add fan-out after 4x2 MMI to separate the waveguides more
+# Fan-out with 5 um separation and max 20 um length along x
+fanout_output_spacing = 5.0  # 5 um separation
+fanout_length_x = 10.0  # 10 um along x for the S-bend transition
+
+# Get MMI output ports directly
+mmi_output_ports = [mmi4x2.ports['o5'], mmi4x2.ports['o6']]
+
+# Calculate center y position for fan-out outputs
+mmi_output_y_positions = [p.y for p in mmi_output_ports]
+fanout_y_center = sum(mmi_output_y_positions) / len(mmi_output_y_positions)
+fanout_total_output_span = (len(mmi_output_ports) - 1) * fanout_output_spacing
+fanout_y_start_output = fanout_y_center - fanout_total_output_span / 2
+
+# Create output waveguides for the fan-out (no extra straight)
+# REVERSED order: start from highest y and go down to match MMI output order
+fanout_output_wgs = []
+for i in range(len(mmi_output_ports)):
+    wg = c_chip << gf.components.straight(length=5, cross_section='strip')
+    wg.movex(mmi4x2.ports['o5'].x + fanout_length_x)  # Position after fan-out transition
+    # Reversed: highest y first (i=0 gets highest y position)
+    wg.movey(fanout_y_start_output + (len(mmi_output_ports) - 1 - i) * fanout_output_spacing)
+    fanout_output_wgs.append(wg)
+
+# Create the fan-out using S-bend routing (max 20 um along x)
+fanout_routes = gf.routing.route_bundle_sbend(
+    component=c_chip,
+    ports1=mmi_output_ports,
+    ports2=[wg.ports['o1'] for wg in fanout_output_wgs],
+    cross_section='strip'
+)
+
+# Export the fan-out output ports
+c_chip.add_port("mmi4x2_output_1", port=fanout_output_wgs[0].ports['o2'])
+c_chip.add_port("mmi4x2_output_2", port=fanout_output_wgs[1].ports['o2'])
+
+# Add a set of 8 grating couplers at x=1100 um along y direction
+# Waveguide output should be facing -x (180 degrees)
+gc_array = c_chip << gf.components.grating_coupler_array(
+    n=8,
+    pitch=127,  # Standard pitch of 127 um
+    rotation=-90  # Default rotation
+)
+
+# Position the grating coupler array at x=1100
+# The array is created centered at origin with ports at 90 degrees (facing +y)
+# We need to rotate it so ports face -x (180 degrees)
+# Rotation from 90° to 180° requires +90° rotation
+gc_array.rotate(90)
+gc_array.movex(1100)
+# Move the grating array along +y by one pitch (127 um)
+gc_array.movey(127)
+
+# Export grating coupler ports
+for i in range(8):
+    c_chip.add_port(f"gc_{i}", port=gc_array.ports[f'o{i}'])
+
+# Route fan-out outputs to grating couplers
+# After moving GC array by +127 um, the new positions are:
+# gc_4: y = 190.5
+# gc_5: y = 317.5
+# CORRECTED: Fan-out output 0 (higher, y=239.75) → gc_5 (y=317.5), Fan-out output 1 (lower, y=234.75) → gc_4 (y=190.5)
+gf.routing.route_single(
+    c_chip,
+    port1=fanout_output_wgs[0].ports['o2'],  # Higher fan-out output (y=239.75)
+    port2=gc_array.ports['o5'],  # gc_5 (y=317.5)
+    cross_section='strip',
+    bend='bend_euler'
+)
+
+gf.routing.route_single(
+    c_chip,
+    port1=fanout_output_wgs[1].ports['o2'],  # Lower fan-out output (y=234.75)
+    port2=gc_array.ports['o4'],  # gc_4 (y=190.5)
+    cross_section='strip',
+    bend='bend_euler'
+)
+
+# Route GC3 to the third MZI-spiral circuit's o2 port (the unused MZI output)
+gf.routing.route_single(
+    c_chip,
+    port1=gc_array.ports['o3'],  # gc_3
+    port2=circuits[2].ports['o2'],  # Third MZI-spiral circuit o2 (unused output)
+    cross_section='strip',
+    bend='bend_euler'
+)
+
+# Add loopback between gc_0 and gc_1
+gf.routing.route_single(
+    c_chip,
+    port1=gc_array.ports['o0'],  # gc_0
+    port2=gc_array.ports['o1'],  # gc_1
+    cross_section='strip',
+    bend='bend_euler'
+)
+
+# Add loopback between gc_6 and gc_7
+gf.routing.route_single(
+    c_chip,
+    port1=gc_array.ports['o6'],  # gc_6
+    port2=gc_array.ports['o7'],  # gc_7
+    cross_section='strip',
+    bend='bend_euler'
+)
 
 # Print port information
 print("Chip ports:")
