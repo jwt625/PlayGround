@@ -2,21 +2,34 @@
 
 import gdsfactory as gf
 import inspect
+from functools import partial
 from gdsfactory.component import Component
 from gdsfactory.add_pins import add_pins_container
+
+
+# Create custom MZI 1x2_2x2 with phase shifter (heater in top arm)
+mzi1x2_2x2_phase_shifter = partial(
+    gf.components.mzi,
+    combiner='mmi2x2',
+    port_e1_combiner='o3',
+    port_e0_combiner='o4',
+    straight_x_top='straight_heater_metal',
+    length_x=200  # default length
+)
 
 
 @gf.cell
 def spiral_mzi_circuit(n_loops: int = 6, mzi_length_x: float = 150.0) -> Component:
     """
-    Create a circuit with spiral, waveguide, and MZI connected together.
+    Create a circuit with spiral, waveguide, and MZI with integrated heater connected together.
 
     Args:
         n_loops: Number of loops in the spiral
         mzi_length_x: Length of the MZI arms in x direction
 
     Returns:
-        Component with three ports: o1 (spiral input), o2 (MZI output 1), o3 (MZI output 2)
+        Component with optical ports: o1 (spiral input), o2 (MZI output 1), o3 (MZI output 2)
+        and electrical ports from the MZI heater
     """
     c = gf.Component()
 
@@ -30,7 +43,7 @@ def spiral_mzi_circuit(n_loops: int = 6, mzi_length_x: float = 150.0) -> Compone
         spacing=3,
         n_loops=n_loops
     )
-    c_mzi = gf.components.mzi1x2_2x2(
+    c_mzi = mzi1x2_2x2_phase_shifter(
         cross_section='strip',
         length_y=0.0,
         length_x=mzi_length_x,
@@ -55,10 +68,15 @@ def spiral_mzi_circuit(n_loops: int = 6, mzi_length_x: float = 150.0) -> Compone
         bend='bend_euler'
     )
 
-    # Export unused ports
+    # Export optical ports
     c.add_port("o1", port=ref_spiral.ports["o1"])  # Spiral input
     c.add_port("o2", port=ref_mzi.ports["o1"])     # MZI output 1
     c.add_port("o3", port=ref_mzi.ports["o3"])     # MZI output 2
+
+    # Export electrical ports from MZI heater
+    for port in ref_mzi.ports:
+        if 'e' in port.name or port.port_type == 'electrical':
+            c.add_port(f"mzi_{port.name}", port=port)
 
     return c
 
@@ -146,12 +164,18 @@ for i, heater in enumerate(heaters):
     else:
         c_chip.add_port(f"mzi_{i}_heater_output", port=heater.ports["o2"])
 
-# Export electrical ports for all heaters
+# Export electrical ports for all standalone heaters
 for i, heater in enumerate(heaters):
     # Each heater has electrical ports for the metal contacts
     for port in heater.ports:
         if 'e' in port.name:  # Electrical ports
             c_chip.add_port(f"heater_{i+1}_{port.name}", port=port)
+
+# Export electrical ports from MZI heaters in each circuit
+for i, circuit in enumerate(circuits):
+    for port in circuit.ports:
+        if 'mzi_e' in port.name:  # MZI heater electrical ports
+            c_chip.add_port(f"circuit_{i+1}_{port.name}", port=port)
 
 # Print port information
 print("Chip ports:")
