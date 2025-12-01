@@ -17,6 +17,16 @@ mzi1x2_2x2_phase_shifter = partial(
     length_x=200  # default length
 )
 
+# Create custom MZI 1x2_1x2 with phase shifter (heater in top arm)
+# This has 1x2 splitter and 1x2 combiner (only one output)
+mzi1x2_1x2_phase_shifter = partial(
+    gf.components.mzi,
+    splitter='mmi1x2',
+    combiner='mmi1x2',
+    straight_x_top='straight_heater_metal',
+    length_x=200  # default length
+)
+
 
 @gf.cell
 def spiral_mzi_circuit(n_loops: int = 6, mzi_length_x: float = 150.0) -> Component:
@@ -115,6 +125,37 @@ for i in range(len(circuits) - 1):
         bend='bend_euler'
     )
 
+# Create four additional MZI 1x2_1x2 circuits stacked along x
+# Get MZI dimensions for spacing
+test_mzi = mzi1x2_1x2_phase_shifter(
+    cross_section='strip',
+    length_y=0.0,
+    length_x=150.0,
+    delta_length=0.0,
+)
+mzi_width = test_mzi.xmax - test_mzi.xmin
+mzi_height = test_mzi.ymax - test_mzi.ymin
+
+# Create four MZIs stacked along x with consistent y offset to prevent overlap
+x_start = -280  # Starting x position
+x_spacing = mzi_width + 10  # Add 10 um spacing between MZIs along x
+y_start = 280  # Starting y position
+y_shift = mzi_height / 2 + 5  # Half height plus 5 um buffer for consistent y shift
+y_shift = -y_shift
+stacked_mzis = []
+for i in range(4):
+    mzi = c_chip << mzi1x2_1x2_phase_shifter(
+        cross_section='strip',
+        length_y=0.0,
+        length_x=150.0,
+        delta_length=0.0,
+    )
+    # Position the MZI: stack along x, with consistent y offset for each
+    x_pos = x_start + i * x_spacing
+    y_pos = y_start + i * y_shift  # Consistent downward shift
+    mzi.move((x_pos, y_pos))
+    stacked_mzis.append(mzi)
+
 # Create four vertical heaters with same spacing as the cells
 heater_length = 100  # Length of heated section
 heaters = []
@@ -176,6 +217,18 @@ for i, circuit in enumerate(circuits):
     for port in circuit.ports:
         if 'mzi_e' in port.name:  # MZI heater electrical ports
             c_chip.add_port(f"circuit_{i+1}_{port.name}", port=port)
+
+# Export electrical ports from stacked MZIs
+for i, mzi in enumerate(stacked_mzis):
+    for port in mzi.ports:
+        if port.port_type == 'electrical':
+            c_chip.add_port(f"stacked_mzi_{i+1}_{port.name}", port=port)
+
+# Export optical ports from stacked MZIs
+for i, mzi in enumerate(stacked_mzis):
+    for port in mzi.ports:
+        if port.port_type == 'optical':
+            c_chip.add_port(f"stacked_mzi_{i+1}_{port.name}", port=port)
 
 # Print port information
 print("Chip ports:")
