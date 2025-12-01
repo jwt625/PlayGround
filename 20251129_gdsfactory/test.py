@@ -104,7 +104,7 @@ for i, x_pos in enumerate(wg_positions):
     waveguides.append(wg)
 
 # Create three spiral-MZI circuits with n_loops = 6, 7, 8
-n_loops_list = [9, 10, 11]
+n_loops_list = [11, 10, 9]
 circuits = []
 
 for i, n_loops in enumerate(n_loops_list):
@@ -560,6 +560,168 @@ for i, pad_info in enumerate(bottom_pads):
 
 print(f"Created {len(bottom_pads)} bond pads on BOTTOM edge")
 print(f"  X range: [{bottom_start_x:.1f}, {bottom_start_x + (len(bottom_pads)-1)*pad_pitch:.1f}]")
+
+# ============================================================================
+# ELECTRICAL ROUTING: Connect heater ports to bond pads
+# ============================================================================
+
+print(f"\n=== Electrical Routing ===")
+
+# Routing parameters
+metal_width = 15.0  # 15 um wide metal traces
+metal_layer = (49, 0)  # M3 layer
+
+# Route LEFT edge pads
+# Strategy: Maintain Y-order to avoid crossings and overlaps
+# 1. Collect all merge points and sort by Y
+# 2. Assign each a unique Y-channel at intermediate X (spaced by metal_width)
+# 3. Route: merge -> intermediate_x at unique Y -> bond pad's Y -> bond pad
+print(f"Routing {len(left_pads)} groups to LEFT edge...")
+
+# Define intermediate X position for LEFT edge routing (between ports and pads)
+# This should be to the left of all heater ports
+intermediate_x_left = left_edge_x + 200.0  # 200 um to the right of bond pads
+
+# First pass: calculate all merge points and assign unique Y channels
+left_routing_info = []
+for i, pad_info in enumerate(left_pads):
+    ports = pad_info['ports']
+    bondpad_name = pad_info['bondpad_name']
+    bondpad_port = c_chip.ports[bondpad_name]
+
+    # Calculate merge point at average position
+    merge_point_x = sum(p.x for p in ports) / len(ports)
+    merge_point_y = sum(p.y for p in ports) / len(ports)
+
+    left_routing_info.append({
+        'pad_info': pad_info,
+        'ports': ports,
+        'bondpad_port': bondpad_port,
+        'merge_x': merge_point_x,
+        'merge_y': merge_point_y,
+        'channel_y': bondpad_port.y,
+        'sort_key': merge_point_y  # Sort by merge point Y
+    })
+
+# Sort by Y position to assign non-overlapping channels
+left_routing_info.sort(key=lambda x: x['sort_key'])
+
+# Assign unique Y positions at intermediate_x (spaced by metal_width + gap)
+channel_spacing = metal_width + 5.0  # 5 um gap between traces
+for idx, info in enumerate(left_routing_info):
+    # Assign Y position at intermediate X, evenly spaced
+    info['intermediate_y'] = info['merge_y'] + idx * channel_spacing - (len(left_routing_info) - 1) * channel_spacing / 2
+
+# Second pass: do the actual routing
+for info in left_routing_info:
+    ports = info['ports']
+    merge_point_x = info['merge_x']
+    merge_point_y = info['merge_y']
+    intermediate_y = info['intermediate_y']
+    channel_y = info['channel_y']
+    bondpad_port = info['bondpad_port']
+
+    # Step 1: Route each port to merge point (short local connections)
+    for port in ports:
+        points = [
+            (port.x, port.y),
+            (merge_point_x, merge_point_y)
+        ]
+        path = gf.Path(points)
+        trace = c_chip << path.extrude(width=metal_width, layer=metal_layer)
+
+    # Step 2: Route from merge point to bond pad with Manhattan routing
+    # Path: merge -> (merge_x, intermediate_y) -> (intermediate_x, intermediate_y) -> (intermediate_x, channel_y) -> bond pad
+    route_points = [
+        (merge_point_x, merge_point_y),        # Start at merge point
+        (merge_point_x, intermediate_y),        # Go VERTICAL to intermediate Y level
+        (intermediate_x_left, intermediate_y),  # Go HORIZONTAL to intermediate X
+        (intermediate_x_left, channel_y),       # Go VERTICAL to bond pad's Y channel
+        (bondpad_port.x, channel_y)             # Go HORIZONTAL to bond pad
+    ]
+
+    path = gf.Path(route_points)
+    trace = c_chip << path.extrude(width=metal_width, layer=metal_layer)
+
+print(f"  ✓ Routed {len(left_pads)} groups to LEFT edge")
+
+# Route BOTTOM edge pads
+# Strategy: Maintain X-order to avoid crossings and overlaps
+# 1. Collect all merge points and sort by X
+# 2. Assign each a unique X-channel at intermediate Y (spaced by metal_width)
+# 3. Route: merge -> intermediate_y at unique X -> bond pad's X -> bond pad
+print(f"Routing {len(bottom_pads)} groups to BOTTOM edge...")
+
+# Define intermediate Y position for BOTTOM edge routing (between ports and pads)
+# This should be below all heater ports
+intermediate_y_bottom = bottom_edge_y + 200.0  # 200 um above bond pads
+
+# First pass: calculate all merge points and assign unique X channels
+bottom_routing_info = []
+for i, pad_info in enumerate(bottom_pads):
+    ports = pad_info['ports']
+    bondpad_name = pad_info['bondpad_name']
+    bondpad_port = c_chip.ports[bondpad_name]
+
+    # Calculate merge point at average position
+    merge_point_x = sum(p.x for p in ports) / len(ports)
+    merge_point_y = sum(p.y for p in ports) / len(ports)
+
+    bottom_routing_info.append({
+        'pad_info': pad_info,
+        'ports': ports,
+        'bondpad_port': bondpad_port,
+        'merge_x': merge_point_x,
+        'merge_y': merge_point_y,
+        'channel_x': bondpad_port.x,
+        'sort_key': merge_point_x  # Sort by merge point X
+    })
+
+# Sort by X position to assign non-overlapping channels
+bottom_routing_info.sort(key=lambda x: x['sort_key'])
+
+# Assign unique X positions at intermediate_y (spaced by metal_width + gap)
+channel_spacing = metal_width + 5.0  # 5 um gap between traces
+for idx, info in enumerate(bottom_routing_info):
+    # Assign X position at intermediate Y, evenly spaced
+    info['intermediate_x'] = info['merge_x'] + idx * channel_spacing - (len(bottom_routing_info) - 1) * channel_spacing / 2
+
+# Second pass: do the actual routing
+for info in bottom_routing_info:
+    ports = info['ports']
+    merge_point_x = info['merge_x']
+    merge_point_y = info['merge_y']
+    intermediate_x = info['intermediate_x']
+    channel_x = info['channel_x']
+    bondpad_port = info['bondpad_port']
+
+    # Step 1: Route each port to merge point (short local connections)
+    for port in ports:
+        points = [
+            (port.x, port.y),
+            (merge_point_x, merge_point_y)
+        ]
+        path = gf.Path(points)
+        trace = c_chip << path.extrude(width=metal_width, layer=metal_layer)
+
+    # Step 2: Route from merge point to bond pad with Manhattan routing
+    # Path: merge -> (intermediate_x, merge_y) -> (intermediate_x, intermediate_y) -> (channel_x, intermediate_y) -> bond pad
+    route_points = [
+        (merge_point_x, merge_point_y),         # Start at merge point
+        (intermediate_x, merge_point_y),        # Go HORIZONTAL to intermediate X level
+        (intermediate_x, intermediate_y_bottom), # Go VERTICAL to intermediate Y
+        (channel_x, intermediate_y_bottom),     # Go HORIZONTAL to bond pad's X channel
+        (channel_x, bondpad_port.y)             # Go VERTICAL to bond pad
+    ]
+
+    path = gf.Path(route_points)
+    trace = c_chip << path.extrude(width=metal_width, layer=metal_layer)
+
+print(f"  ✓ Routed {len(bottom_pads)} groups to BOTTOM edge")
+print(f"\n✓ Electrical routing complete!")
+print(f"  Total traces: {len(left_pads) + len(bottom_pads)}")
+print(f"  Metal width: {metal_width} μm")
+print(f"  Metal layer: M3 ({metal_layer[0]}/{metal_layer[1]})")
 
 # Print port information
 print("\n=== Chip Ports ===")
