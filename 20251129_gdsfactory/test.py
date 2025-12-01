@@ -242,11 +242,72 @@ for i, mzi in enumerate(stacked_mzis):
         if port.port_type == 'electrical':
             c_chip.add_port(f"stacked_mzi_{i+1}_{port.name}", port=port)
 
-# Export optical ports from stacked MZIs
+# Extend stacked MZI o2 ports to x=710 um and add fan-in
+target_x = 710.0
+fanin_input_spacing = 28.5  # Same as the y spacing between stacked MZIs
+fanin_output_spacing = 1.0  # 1 um output spacing
+
+# First, extend each stacked MZI o2 port to x=710 using straight waveguides
+extended_ports = []
 for i, mzi in enumerate(stacked_mzis):
-    for port in mzi.ports:
-        if port.port_type == 'optical':
-            c_chip.add_port(f"stacked_mzi_{i+1}_{port.name}", port=port)
+    o2_port = mzi.ports['o2']
+
+    # Calculate the length needed to reach x=710
+    current_x = o2_port.x
+    extension_length = target_x - current_x
+
+    if extension_length > 0:
+        # Create a straight waveguide to extend to x=710
+        extension_wg = c_chip << gf.components.straight(
+            length=extension_length,
+            cross_section='strip'
+        )
+        extension_wg.connect('o1', o2_port)
+        extended_ports.append(extension_wg.ports['o2'])
+    else:
+        # Already past x=710, just use the existing port
+        extended_ports.append(o2_port)
+
+# Now create the fan-in starting at x=710
+# Get the y positions of the extended ports
+y_positions = [port.y for port in extended_ports]
+
+# Calculate the center y position for the fan-in output
+y_center = sum(y_positions) / len(y_positions)
+y_start_output = y_center - (len(extended_ports) - 1) * fanin_output_spacing / 2
+
+# Create input waveguides for the fan-in (short straights at x=710)
+fanin_input_wgs = []
+for i, port in enumerate(extended_ports):
+    wg = c_chip << gf.components.straight(length=30, cross_section='strip')
+    wg.connect('o1', port)
+    fanin_input_wgs.append(wg)
+
+# Create output waveguides for the fan-in with 1 um spacing
+# Flip the order: highest y first (to match the input order from top to bottom)
+fanin_output_wgs = []
+for i in range(len(extended_ports)):
+    wg = c_chip << gf.components.straight(length=30, cross_section='strip')
+    wg.movex(target_x + 30 + 150)  # Position after input wgs + transition length
+    # Reverse the order: start from highest y and go down
+    wg.movey(y_start_output + (len(extended_ports) - 1 - i) * fanin_output_spacing)
+    fanin_output_wgs.append(wg)
+
+# Route the fan-in using S-bends
+fanin_routes = gf.routing.route_bundle_sbend(
+    component=c_chip,
+    ports1=[wg.ports['o2'] for wg in fanin_input_wgs],
+    ports2=[wg.ports['o1'] for wg in fanin_output_wgs],
+    cross_section='strip'
+)
+
+# Export optical ports from stacked MZIs (o1 ports only, since o2 are now connected)
+for i, mzi in enumerate(stacked_mzis):
+    c_chip.add_port(f"stacked_mzi_{i+1}_o1", port=mzi.ports['o1'])
+
+# Export the fan-in output ports
+for i, wg in enumerate(fanin_output_wgs):
+    c_chip.add_port(f"fanin_output_{i+1}", port=wg.ports['o2'])
 
 # Print port information
 print("Chip ports:")
