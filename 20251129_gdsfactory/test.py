@@ -428,8 +428,141 @@ gf.routing.route_single(
     bend='bend_euler'
 )
 
+# ============================================================================
+# CREATE BOND PADS FOR ELECTRICAL ROUTING
+# ============================================================================
+
+# Get current chip extent
+chip_xmin = c_chip.xmin
+chip_xmax = c_chip.xmax
+chip_ymin = c_chip.ymin
+chip_ymax = c_chip.ymax
+
+print(f"\n=== Chip Extent (before bond pads) ===")
+print(f"X: [{chip_xmin:.1f}, {chip_xmax:.1f}] um")
+print(f"Y: [{chip_ymin:.1f}, {chip_ymax:.1f}] um")
+
+# Bond pad parameters with 500 um buffer from pattern extent
+edge_buffer = 500.0  # 500 um buffer from pattern extent
+left_edge_x = chip_xmin - edge_buffer  # Left edge x-coordinate for bond pads
+bottom_edge_y = chip_ymin - edge_buffer  # Bottom edge y-coordinate for bond pads
+pad_pitch = 100.0  # 100 um pitch between bond pads
+pad_size = 80.0  # 80 um x 80 um bond pads
+
+print(f"\n=== Bond Pad Edge Positions (with {edge_buffer} um buffer) ===")
+print(f"LEFT edge x: {left_edge_x:.1f} um")
+print(f"BOTTOM edge y: {bottom_edge_y:.1f} um")
+
+# Group heater ports by heater and end (left/right)
+# Each heater has 2 ends, each end has 4 ports that should be merged into 1 bond pad
+
+heater_groups = {
+    # Standalone heaters (4 heaters x 2 ends = 8 bond pads)
+    'heater_1_left': ['heater_1_l_e1', 'heater_1_l_e2', 'heater_1_l_e3', 'heater_1_l_e4'],
+    'heater_1_right': ['heater_1_r_e1', 'heater_1_r_e2', 'heater_1_r_e3', 'heater_1_r_e4'],
+    'heater_2_left': ['heater_2_l_e1', 'heater_2_l_e2', 'heater_2_l_e3', 'heater_2_l_e4'],
+    'heater_2_right': ['heater_2_r_e1', 'heater_2_r_e2', 'heater_2_r_e3', 'heater_2_r_e4'],
+    'heater_3_left': ['heater_3_l_e1', 'heater_3_l_e2', 'heater_3_l_e3', 'heater_3_l_e4'],
+    'heater_3_right': ['heater_3_r_e1', 'heater_3_r_e2', 'heater_3_r_e3', 'heater_3_r_e4'],
+    'heater_4_left': ['heater_4_l_e1', 'heater_4_l_e2', 'heater_4_l_e3', 'heater_4_l_e4'],
+    'heater_4_right': ['heater_4_r_e1', 'heater_4_r_e2', 'heater_4_r_e3', 'heater_4_r_e4'],
+
+    # Circuit MZI heaters (3 circuits x 2 ends = 6 bond pads)
+    # Each MZI has 2 heater sections (e1,e3,e6,e8 and e2,e4,e5,e7)
+    'circuit_1_mzi_1': ['circuit_1_mzi_e1', 'circuit_1_mzi_e3', 'circuit_1_mzi_e6', 'circuit_1_mzi_e8'],
+    'circuit_1_mzi_2': ['circuit_1_mzi_e2', 'circuit_1_mzi_e4', 'circuit_1_mzi_e5', 'circuit_1_mzi_e7'],
+    'circuit_2_mzi_1': ['circuit_2_mzi_e1', 'circuit_2_mzi_e3', 'circuit_2_mzi_e6', 'circuit_2_mzi_e8'],
+    'circuit_2_mzi_2': ['circuit_2_mzi_e2', 'circuit_2_mzi_e4', 'circuit_2_mzi_e5', 'circuit_2_mzi_e7'],
+    'circuit_3_mzi_1': ['circuit_3_mzi_e1', 'circuit_3_mzi_e3', 'circuit_3_mzi_e6', 'circuit_3_mzi_e8'],
+    'circuit_3_mzi_2': ['circuit_3_mzi_e2', 'circuit_3_mzi_e4', 'circuit_3_mzi_e5', 'circuit_3_mzi_e7'],
+
+    # Stacked MZI heaters (4 MZIs x 2 ends = 8 bond pads)
+    'stacked_mzi_1_1': ['stacked_mzi_1_e1', 'stacked_mzi_1_e3', 'stacked_mzi_1_e6', 'stacked_mzi_1_e8'],
+    'stacked_mzi_1_2': ['stacked_mzi_1_e2', 'stacked_mzi_1_e4', 'stacked_mzi_1_e5', 'stacked_mzi_1_e7'],
+    'stacked_mzi_2_1': ['stacked_mzi_2_e1', 'stacked_mzi_2_e3', 'stacked_mzi_2_e6', 'stacked_mzi_2_e8'],
+    'stacked_mzi_2_2': ['stacked_mzi_2_e2', 'stacked_mzi_2_e4', 'stacked_mzi_2_e5', 'stacked_mzi_2_e7'],
+    'stacked_mzi_3_1': ['stacked_mzi_3_e1', 'stacked_mzi_3_e3', 'stacked_mzi_3_e6', 'stacked_mzi_3_e8'],
+    'stacked_mzi_3_2': ['stacked_mzi_3_e2', 'stacked_mzi_3_e4', 'stacked_mzi_3_e5', 'stacked_mzi_3_e7'],
+    'stacked_mzi_4_1': ['stacked_mzi_4_e1', 'stacked_mzi_4_e3', 'stacked_mzi_4_e6', 'stacked_mzi_4_e8'],
+    'stacked_mzi_4_2': ['stacked_mzi_4_e2', 'stacked_mzi_4_e4', 'stacked_mzi_4_e5', 'stacked_mzi_4_e7'],
+}
+
+# Calculate average position for each group and determine which edge to route to
+bond_pad_info = []
+for group_name, port_names in heater_groups.items():
+    # Get the ports
+    ports = [c_chip.ports[name] for name in port_names if name in c_chip.ports]
+    if not ports:
+        continue
+
+    # Calculate average position
+    avg_x = sum(p.x for p in ports) / len(ports)
+    avg_y = sum(p.y for p in ports) / len(ports)
+
+    # Decide which edge: LEFT if x < 100, BOTTOM otherwise
+    edge = 'LEFT' if avg_x < 100 else 'BOTTOM'
+
+    bond_pad_info.append({
+        'name': group_name,
+        'ports': ports,
+        'avg_x': avg_x,
+        'avg_y': avg_y,
+        'edge': edge
+    })
+
+# Sort by position
+left_pads = sorted([p for p in bond_pad_info if p['edge'] == 'LEFT'], key=lambda p: p['avg_y'])
+bottom_pads = sorted([p for p in bond_pad_info if p['edge'] == 'BOTTOM'], key=lambda p: p['avg_x'])
+
+print(f"\n=== Bond Pad Assignment ===")
+print(f"Total heater groups: {len(bond_pad_info)}")
+print(f"LEFT edge bond pads: {len(left_pads)}")
+print(f"BOTTOM edge bond pads: {len(bottom_pads)}")
+
+# Create bond pads along LEFT edge
+# Move down by 200 um to be closer to bottom-left corner
+left_start_y = -200.0  # Starting y position for left edge pads
+
+for i, pad_info in enumerate(left_pads):
+    # Create a rectangular bond pad
+    pad = c_chip << gf.components.rectangle(size=(pad_size, pad_size), layer='M3')
+    pad_y = left_start_y + i * pad_pitch
+    pad.move((left_edge_x, pad_y))
+
+    # Add port to the bond pad for routing
+    c_chip.add_port(f"bondpad_{pad_info['name']}",
+                    center=(left_edge_x + pad_size/2, pad_y + pad_size/2),
+                    width=40.0, orientation=0, layer='M3', port_type='electrical')
+
+    # Store mapping for later routing
+    pad_info['bondpad_name'] = f"bondpad_{pad_info['name']}"
+
+print(f"Created {len(left_pads)} bond pads on LEFT edge")
+print(f"  Y range: [{left_start_y:.1f}, {left_start_y + (len(left_pads)-1)*pad_pitch:.1f}]")
+
+# Create bond pads along BOTTOM edge
+# Move left by 200 um to be closer to bottom-left corner
+bottom_start_x = 0.0  # Starting x position for bottom edge pads
+
+for i, pad_info in enumerate(bottom_pads):
+    # Create a rectangular bond pad
+    pad = c_chip << gf.components.rectangle(size=(pad_size, pad_size), layer='M3')
+    pad_x = bottom_start_x + i * pad_pitch
+    pad.move((pad_x, bottom_edge_y))
+
+    # Add port to the bond pad for routing
+    c_chip.add_port(f"bondpad_{pad_info['name']}",
+                    center=(pad_x + pad_size/2, bottom_edge_y + pad_size/2),
+                    width=40.0, orientation=90, layer='M3', port_type='electrical')
+
+    # Store mapping for later routing
+    pad_info['bondpad_name'] = f"bondpad_{pad_info['name']}"
+
+print(f"Created {len(bottom_pads)} bond pads on BOTTOM edge")
+print(f"  X range: [{bottom_start_x:.1f}, {bottom_start_x + (len(bottom_pads)-1)*pad_pitch:.1f}]")
+
 # Print port information
-print("Chip ports:")
+print("\n=== Chip Ports ===")
 c_chip.pprint_ports()
 
 # Option 1: Add pins with port names and text labels (RECOMMENDED)
@@ -437,7 +570,7 @@ c_chip.pprint_ports()
 # c_chip_with_pins.write_gds("test.gds")
 
 # Option 2: Just draw port markers on their layers (without text labels)
-c_chip.draw_ports()
+# c_chip.draw_ports()
 c_chip.write_gds("test.gds")
 
 # Show in KLayout
