@@ -245,7 +245,7 @@ for i, mzi in enumerate(stacked_mzis):
 # Extend stacked MZI o2 ports to x=710 um and add fan-in
 target_x = 710.0
 fanin_input_spacing = 28.5  # Same as the y spacing between stacked MZIs
-fanin_output_spacing = 1.0  # 1 um output spacing
+fanin_output_spacing = 1.25  # 1.25 um output spacing (matches 4x2 MMI input port spacing)
 
 # First, extend each stacked MZI o2 port to x=710 using straight waveguides
 extended_ports = []
@@ -283,21 +283,39 @@ for i, port in enumerate(extended_ports):
     wg.connect('o1', port)
     fanin_input_wgs.append(wg)
 
-# Create output waveguides for the fan-in with 1 um spacing
-# Flip the order: highest y first (to match the input order from top to bottom)
-fanin_output_wgs = []
-for i in range(len(extended_ports)):
-    wg = c_chip << gf.components.straight(length=30, cross_section='strip')
-    wg.movex(target_x + 30 + 150)  # Position after input wgs + transition length
-    # Reverse the order: start from highest y and go down
-    wg.movey(y_start_output + (len(extended_ports) - 1 - i) * fanin_output_spacing)
-    fanin_output_wgs.append(wg)
+# Add a 4x2 MMI - we'll connect it directly to the fan-in S-bend outputs
+mmi4x2 = c_chip << gf.components.mmi(inputs=4, outputs=2)
 
-# Route the fan-in using S-bends
+# Position the MMI after the fan-in input waveguides
+# The fan-in input waveguides end at x=740, so place MMI further out
+mmi4x2.movex(target_x + 30 + 200)  # Position after input wgs + some gap
+
+# Calculate the target y positions for fan-in outputs (FLIPPED order)
+# These will be the positions where the S-bend outputs should end up
+fanin_output_y_positions = []
+for i in range(len(extended_ports)):
+    # Reversed order: start from highest y and go down
+    y = y_start_output + (len(extended_ports) - 1 - i) * fanin_output_spacing
+    fanin_output_y_positions.append(y)
+
+# Center the MMI vertically with the calculated fan-in output positions
+fanin_y_center = sum(fanin_output_y_positions) / len(fanin_output_y_positions)
+
+# Get MMI input port y positions to calculate its center
+mmi_input_ports = [mmi4x2.ports[f'o{i+1}'] for i in range(4)]
+mmi_input_y_positions = [p.y for p in mmi_input_ports]
+mmi_y_center = sum(mmi_input_y_positions) / len(mmi_input_y_positions)
+
+# Move MMI to align centers
+mmi4x2.movey(fanin_y_center - mmi_y_center)
+
+# Now route directly from fan-in inputs to MMI inputs using S-bends
+# The S-bends will handle the pitch transition AND connect to the MMI
+# Connect with FLIPPED order to MMI inputs
 fanin_routes = gf.routing.route_bundle_sbend(
     component=c_chip,
     ports1=[wg.ports['o2'] for wg in fanin_input_wgs],
-    ports2=[wg.ports['o1'] for wg in fanin_output_wgs],
+    ports2=[mmi4x2.ports[f'o{i+1}'] for i in range(3, -1, -1)],  # Reversed: o4, o3, o2, o1
     cross_section='strip'
 )
 
@@ -305,9 +323,9 @@ fanin_routes = gf.routing.route_bundle_sbend(
 for i, mzi in enumerate(stacked_mzis):
     c_chip.add_port(f"stacked_mzi_{i+1}_o1", port=mzi.ports['o1'])
 
-# Export the fan-in output ports
-for i, wg in enumerate(fanin_output_wgs):
-    c_chip.add_port(f"fanin_output_{i+1}", port=wg.ports['o2'])
+# Export the MMI output ports (o5 and o6)
+c_chip.add_port("mmi4x2_output_1", port=mmi4x2.ports['o5'])
+c_chip.add_port("mmi4x2_output_2", port=mmi4x2.ports['o6'])
 
 # Print port information
 print("Chip ports:")
