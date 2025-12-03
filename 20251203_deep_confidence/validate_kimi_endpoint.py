@@ -14,9 +14,12 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # Kimi-k2 endpoint configuration
-KIMI_API_BASE = os.getenv("KIMI_API_BASE", "http://10.254.134.32:8000/v1")
+KIMI_API_BASE = os.getenv("KIMI_API_BASE")
 KIMI_API_KEY = os.getenv("KIMI_API_KEY", "")
 KIMI_MODEL_ID = os.getenv("KIMI_MODEL_ID", "kimi-k2")
+
+if not KIMI_API_BASE:
+    raise ValueError("KIMI_API_BASE environment variable is required")
 
 def test_basic_completion():
     """Test 1: Basic single completion"""

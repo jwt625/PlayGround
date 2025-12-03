@@ -99,11 +99,16 @@ This document outlines the implementation plan for a Minimum Viable Product (MVP
 
 ## Research Needed
 
-Before implementation, research the following from the paper:
-- Default value for n (number of completions)
-- Default temperature setting
+The paper PDF is available but needs manual review for:
+- Default value for n (number of completions) - likely 64 based on references to "DeepConf@64"
+- Default temperature setting - typically 0.7-1.0 for reasoning tasks
 - Any preprocessing or prompt engineering used
 - Expected accuracy ranges on AIME-like benchmarks
+
+For MVP, will use reasonable defaults:
+- n = 10 (based on kimi-k2 validation showing good performance)
+- temperature = 0.8 (standard for diverse sampling)
+- max_tokens = 10000 (sufficient for complex math problems)
 
 ## Success Criteria
 
