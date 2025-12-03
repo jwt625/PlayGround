@@ -23,21 +23,22 @@ def test_basic_completion():
     print("\n" + "="*80)
     print("TEST 1: Basic Single Completion")
     print("="*80)
-    
+
     client = OpenAI(api_key=KIMI_API_KEY or "dummy", base_url=KIMI_API_BASE)
-    
+
     try:
         start_time = time.time()
         response = client.chat.completions.create(
             model=KIMI_MODEL_ID,
             messages=[{"role": "user", "content": "What is 15 + 27?"}],
-            max_tokens=100,
+            max_tokens=5000,
             temperature=0.7
         )
         elapsed = time.time() - start_time
-        
+
+        content = response.choices[0].message.content or ""
         print(f"✓ Basic completion successful ({elapsed:.2f}s)")
-        print(f"Response: {response.choices[0].message.content[:200]}")
+        print(f"Response: {content[:200]}")
         return True
     except Exception as e:
         print(f"✗ Basic completion failed: {e}")
@@ -48,15 +49,15 @@ def test_multiple_completions():
     print("\n" + "="*80)
     print("TEST 2: Multiple Completions (n=5)")
     print("="*80)
-    
+
     client = OpenAI(api_key=KIMI_API_KEY or "dummy", base_url=KIMI_API_BASE)
-    
+
     try:
         start_time = time.time()
         response = client.chat.completions.create(
             model=KIMI_MODEL_ID,
             messages=[{"role": "user", "content": "What is 23 * 17?"}],
-            max_tokens=100,
+            max_tokens=5000,
             temperature=0.8,
             n=5
         )
@@ -69,7 +70,10 @@ def test_multiple_completions():
         
         for i, choice in enumerate(response.choices):
             content = choice.message.content or ""
-            print(f"\n  Choice {i+1}: {content[:100]}...")
+            reasoning = getattr(choice.message, 'reasoning', None) or ""
+            print(f"\n  Choice {i+1}:")
+            print(f"    Content: {content[:100] if content else '[EMPTY]'}...")
+            print(f"    Reasoning: {reasoning[:100] if reasoning else '[EMPTY]'}...")
 
         return num_choices == 5
     except Exception as e:
@@ -81,14 +85,14 @@ def test_logprobs_support():
     print("\n" + "="*80)
     print("TEST 3: Logprobs Support")
     print("="*80)
-    
+
     client = OpenAI(api_key=KIMI_API_KEY or "dummy", base_url=KIMI_API_BASE)
-    
+
     try:
         response = client.chat.completions.create(
             model=KIMI_MODEL_ID,
             messages=[{"role": "user", "content": "What is 5 + 3?"}],
-            max_tokens=50,
+            max_tokens=5000,
             temperature=0.7,
             logprobs=True,
             top_logprobs=3
@@ -121,14 +125,14 @@ def test_reasoning_fields():
     print("\n" + "="*80)
     print("TEST 4: Reasoning Field Separation")
     print("="*80)
-    
+
     client = OpenAI(api_key=KIMI_API_KEY or "dummy", base_url=KIMI_API_BASE)
-    
+
     try:
         response = client.chat.completions.create(
             model=KIMI_MODEL_ID,
             messages=[{"role": "user", "content": "Solve: If a train travels 120 km in 2 hours, what is its average speed?"}],
-            max_tokens=200,
+            max_tokens=5000,
             temperature=0.7
         )
         
@@ -165,7 +169,7 @@ def test_high_volume_completions():
         response = client.chat.completions.create(
             model=KIMI_MODEL_ID,
             messages=[{"role": "user", "content": "What is 144 / 12?"}],
-            max_tokens=100,
+            max_tokens=5000,
             temperature=0.8,
             n=10
         )
