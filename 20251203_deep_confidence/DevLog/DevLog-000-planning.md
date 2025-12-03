@@ -88,3 +88,49 @@ Stopping low-confidence traces mid-generation requires the server to evaluate co
 - The only DeepConf feature not implementable client-side is **engine-level online early stopping**, which requires server modification.
 
 Client-side DeepConf offers nearly all practical benefits described in the original paper and can be deployed immediately on top of current endpoints.
+
+
+# DeepConf Paper — Direct Answers
+
+## 1. Token-Level Confidence
+- **Recommended k:** The paper never states a recommended k.  
+  However, implementation uses `top_logprobs = 20`, meaning **k = 19**.
+- **Is k=3 sufficient?** The paper does not test this. Its effective k≈20 suggests that **k=3 is noisier** and deviates from their setup.
+- **Normalization/clipping:** None. Confidence is just the negative mean of top-k logprobs.
+
+## 2. Trace-Level Metrics — Exact Definitions
+### Tail Confidence
+- Defined as average confidence over the **last 2048 tokens**.
+- Not a percentage (e.g., not “last 20%”); it is a **fixed window**.
+
+### Lowest Group Confidence
+- Sliding window size: **2048 tokens**.  
+- Stride: **1 token** (fully overlapping windows).  
+- Metric: the **minimum** confidence across all sliding windows.
+
+### Bottom-10% Confidence
+- Compute group confidences over all 2048-token windows.
+- Take the **lowest 10%** of these windows.
+- Metric = **mean of those lowest 10%**, not the 10th percentile.
+
+## 3. Filtering Strategy
+- Only two η values are used:
+  - **η = 10%** (keep top 10% most-confident traces; aggressive)
+  - **η = 90%** (keep top 90%; conservative)
+- No other η values are recommended.
+- No metric combining is proposed.  
+  - **Offline:** Tail Confidence or Bottom-10% Confidence perform best.  
+  - **Online:** Lowest Group Confidence is used.
+
+## 4. Confidence-Weighted Majority Voting
+- Vote weight formula:
+  \[
+  V(a) = \sum_{t} C_t \cdot \mathbf{1}[answer(t)=a]
+  \]
+- **Weight = C_t**, not `C_t * vote_count`; the summation naturally accounts for counts.
+- No alternate weighting scheme is described.
+
+## 5. Answer Extraction
+- Final answer must appear inside **`\boxed{...}`**.
+- Extract the boxed content.
+- Paper does **not** specify any normalization (e.g., numeric vs. textual formats). It assumes numeric answers inside the box.
