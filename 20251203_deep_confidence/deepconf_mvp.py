@@ -288,24 +288,68 @@ def evaluate_problem(problem: Dict[str, Any]) -> Dict[str, Any]:
     logger.info(f"Evaluating problem {problem['id']}")
     logger.debug(f"Problem text: {problem['problem'][:100]}...")
 
-    # Generate traces
+    # Single-shot baseline (n=1)
+    logger.debug("Generating single-shot baseline...")
+    raw_single = generate_traces(problem["problem"], n=1)
+    single_trace = process_traces(raw_single)[0] if raw_single else None
+
+    single_shot_result = {
+        "answer": single_trace.answer if single_trace else None,
+        "correct": (single_trace.answer == problem["answer"]) if single_trace and single_trace.answer else False,
+        "reasoning": single_trace.reasoning if single_trace else "",
+        "content": single_trace.content if single_trace else "",
+        "tail_confidence": single_trace.tail_confidence if single_trace else 0.0,
+        "lowest_group_confidence": single_trace.lowest_group_confidence if single_trace else 0.0,
+        "bottom_10_confidence": single_trace.bottom_10_confidence if single_trace else 0.0,
+        "num_tokens": len(single_trace.token_confidences) if single_trace else 0,
+        "token_confidences": single_trace.token_confidences if single_trace else []
+    }
+
+    # Multi-sample generation (n=10)
+    logger.debug(f"Generating {N_COMPLETIONS} completions...")
     raw_traces = generate_traces(problem["problem"])
     traces = process_traces(raw_traces)
 
     num_with_answers = sum(1 for t in traces if t.answer)
-    logger.info(f"Problem {problem['id']}: Extracted answers from {num_with_answers}/{len(traces)} traces")
+    logger.info(f"Problem {problem['id']}: Single-shot={'✓' if single_shot_result['correct'] else '✗'}, Multi-sample: {num_with_answers}/{len(traces)} traces with answers")
 
-    # Baseline: simple majority voting
+    # Baseline: simple majority voting with full details
     baseline_answer, baseline_votes = majority_voting(traces)
+
+    # Build detailed voting breakdown for baseline
+    baseline_voting_details = []
+    for i, trace in enumerate(traces):
+        baseline_voting_details.append({
+            "trace_index": i,
+            "voted_for": trace.answer,
+            "has_answer": trace.answer is not None
+        })
 
     results = {
         "problem_id": problem["id"],
+        "problem_text": problem["problem"],
         "ground_truth": problem["answer"],
         "num_traces": len(traces),
         "num_with_answers": sum(1 for t in traces if t.answer),
-        "baseline": {
+        "single_shot_baseline": single_shot_result,
+        "traces": [
+            {
+                "trace_index": i,
+                "reasoning": t.reasoning,
+                "content": t.content,
+                "extracted_answer": t.answer,
+                "tail_confidence": t.tail_confidence,
+                "lowest_group_confidence": t.lowest_group_confidence,
+                "bottom_10_confidence": t.bottom_10_confidence,
+                "num_tokens": len(t.token_confidences),
+                "token_confidences": t.token_confidences
+            }
+            for i, t in enumerate(traces)
+        ],
+        "baseline_majority_voting": {
             "answer": baseline_answer,
-            "votes": baseline_votes,
+            "vote_counts": baseline_votes,
+            "voting_details": baseline_voting_details,
             "correct": baseline_answer == problem["answer"] if baseline_answer else False
         },
         "deepconf": {}
@@ -318,10 +362,24 @@ def evaluate_problem(problem: Dict[str, Any]) -> Dict[str, Any]:
             filtered = filter_traces(traces, threshold, metric)
             answer, weights = confidence_weighted_voting(filtered, metric)
 
+            # Build detailed voting breakdown for DeepConf
+            deepconf_voting_details = []
+            for trace in filtered:
+                trace_idx = traces.index(trace)  # Find original index
+                deepconf_voting_details.append({
+                    "trace_index": trace_idx,
+                    "voted_for": trace.answer,
+                    "confidence_weight": trace.get_confidence(metric),
+                    "has_answer": trace.answer is not None
+                })
+
             results["deepconf"][metric][f"eta_{int(threshold*100)}"] = {
                 "answer": answer,
-                "weights": weights,
+                "vote_weights": weights,
+                "voting_details": deepconf_voting_details,
                 "num_filtered": len(filtered),
+                "num_total": len(traces),
+                "filtered_trace_indices": [traces.index(t) for t in filtered],
                 "correct": answer == problem["answer"] if answer else False
             }
 
@@ -344,6 +402,10 @@ def run_evaluation(num_problems: Optional[int] = None) -> Dict[str, Any]:
     else:
         logger.info(f"Evaluating on all {len(problems)} problems")
 
+    # Results file with timestamp
+    results_file = f"deepconf_results_{timestamp}.json"
+    logger.info(f"Results will be saved to: {results_file}")
+
     # Evaluate each problem with progress bar
     all_results = []
     with tqdm(total=len(problems), desc="Evaluating problems", unit="problem") as pbar:
@@ -351,6 +413,25 @@ def run_evaluation(num_problems: Optional[int] = None) -> Dict[str, Any]:
             try:
                 result = evaluate_problem(problem)
                 all_results.append(result)
+
+                # Save results incrementally after each problem
+                summary = {
+                    "config": {
+                        "n_completions": N_COMPLETIONS,
+                        "temperature": TEMPERATURE,
+                        "max_tokens": MAX_TOKENS,
+                        "top_logprobs": TOP_LOGPROBS,
+                        "k": K,
+                        "window_size": WINDOW_SIZE,
+                        "filter_thresholds": FILTER_THRESHOLDS
+                    },
+                    "num_problems_evaluated": len(all_results),
+                    "num_problems_total": len(problems),
+                    "results": all_results
+                }
+                with open(results_file, "w") as f:
+                    json.dump(summary, f, indent=2)
+
                 pbar.update(1)
                 pbar.set_postfix({"correct": sum(1 for r in all_results if r["baseline"]["correct"])})
             except Exception as e:
@@ -364,12 +445,18 @@ def run_evaluation(num_problems: Optional[int] = None) -> Dict[str, Any]:
     logger.info("="*80)
 
     total = len(all_results)
-    baseline_correct = sum(1 for r in all_results if r["baseline"]["correct"])
 
-    logger.info(f"\nBaseline (Simple Majority Voting):")
+    # Single-shot baseline
+    single_shot_correct = sum(1 for r in all_results if r["single_shot_baseline"]["correct"])
+    logger.info(f"\nSingle-Shot Baseline (n=1):")
+    logger.info(f"  Accuracy: {single_shot_correct}/{total} = {single_shot_correct/total*100:.1f}%")
+
+    # Multi-sample majority voting baseline
+    baseline_correct = sum(1 for r in all_results if r["baseline_majority_voting"]["correct"])
+    logger.info(f"\nMulti-Sample Baseline (Simple Majority Voting, n={N_COMPLETIONS}):")
     logger.info(f"  Accuracy: {baseline_correct}/{total} = {baseline_correct/total*100:.1f}%")
 
-    logger.info(f"\nDeepConf (Confidence-Weighted Voting):")
+    logger.info(f"\nDeepConf (Confidence-Weighted Voting, n={N_COMPLETIONS}):")
     for metric in ["tail", "lowest_group", "bottom_10"]:
         logger.info(f"\n  Metric: {metric}")
         for threshold in FILTER_THRESHOLDS:
@@ -378,10 +465,11 @@ def run_evaluation(num_problems: Optional[int] = None) -> Dict[str, Any]:
             avg_filtered = sum(r["deepconf"][metric][key]["num_filtered"] for r in all_results) / total
             logger.info(f"    η={int(threshold*100)}%: {correct}/{total} = {correct/total*100:.1f}% (avg {avg_filtered:.1f} traces)")
 
-    # Detailed results
+    # Detailed results (already saved incrementally)
     summary = {
         "total_problems": total,
-        "baseline_accuracy": baseline_correct / total if total > 0 else 0,
+        "single_shot_accuracy": single_shot_correct / total if total > 0 else 0,
+        "baseline_majority_accuracy": baseline_correct / total if total > 0 else 0,
         "deepconf_accuracy": {},
         "per_problem_results": all_results
     }
@@ -392,6 +480,10 @@ def run_evaluation(num_problems: Optional[int] = None) -> Dict[str, Any]:
             key = f"eta_{int(threshold*100)}"
             correct = sum(1 for r in all_results if r["deepconf"][metric][key]["correct"])
             summary["deepconf_accuracy"][metric][key] = correct / total if total > 0 else 0
+
+    # Save final version with aggregate stats
+    with open(results_file, "w") as f:
+        json.dump(summary, f, indent=2)
 
     return summary
 
@@ -409,13 +501,11 @@ def main():
             logger.error(f"Usage: {sys.argv[0]} [num_problems]")
             sys.exit(1)
 
-    # Run evaluation
+    # Run evaluation (results saved incrementally)
     summary = run_evaluation(num_problems)
 
-    # Save results with timestamp
+    # Results already saved incrementally
     results_file = f"deepconf_results_{timestamp}.json"
-    with open(results_file, "w") as f:
-        json.dump(summary, f, indent=2)
 
     logger.info(f"\n" + "="*80)
     logger.info(f"Results saved to {results_file}")
