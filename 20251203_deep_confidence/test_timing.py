@@ -16,45 +16,34 @@ load_dotenv()
 KIMI_API_BASE = os.getenv("KIMI_API_BASE")
 KIMI_API_KEY = os.getenv("KIMI_API_KEY", "")
 KIMI_MODEL_ID = os.getenv("KIMI_MODEL_ID", "kimi-k2")
+N_COMPLETIONS = 12
 
 if not KIMI_API_BASE:
     raise ValueError("KIMI_API_BASE environment variable is required")
 
 def test_timing():
-    """Test timing tracking with a complex problem that generates >10k tokens"""
+    """Test timing tracking with a problem that generates ~10k tokens"""
     client = OpenAI(api_key=KIMI_API_KEY or "dummy", base_url=KIMI_API_BASE)
 
-    # Complex multi-step geometry problem that requires extensive reasoning
-    problem = """Consider a regular dodecahedron with edge length 1.
+    # Simpler problem targeting ~10k tokens total
+    problem = """Solve the following math problem step by step. Show all your reasoning and calculations.
 
-1. First, calculate the exact coordinates of all 20 vertices of the dodecahedron when centered at the origin with one vertex at (φ, 1, 0), where φ is the golden ratio.
+Problem: A rectangular garden has a length that is 3 meters more than twice its width. The perimeter of the garden is 54 meters.
 
-2. Next, inscribe a sphere inside the dodecahedron. Calculate the exact radius of this insphere.
+1. Find the width and length of the garden.
+2. Calculate the area of the garden.
+3. If a diagonal path is built across the garden, what is the length of this path?
+4. If the garden is divided into 6 equal rectangular plots, what are the dimensions of each plot?
+5. If a fence costs $15 per meter, what is the total cost to fence the entire garden?
 
-3. Now, consider all 30 edges of the dodecahedron. For each edge, construct a plane perpendicular to that edge passing through its midpoint. These 30 planes divide 3D space into regions. Calculate the total number of bounded regions created.
-
-4. Select the 12 pentagonal faces of the dodecahedron. For each face, calculate the center point and construct a pyramid with apex at the origin and base as that pentagonal face. Calculate the total volume of all 12 pyramids combined.
-
-5. Consider the dual polyhedron of the dodecahedron (which is an icosahedron). Calculate the edge length of this dual icosahedron.
-
-6. Now imagine truncating each of the 20 vertices of the original dodecahedron by cutting off a small regular pentagonal pyramid at each vertex, such that the truncation removes exactly 1/10 of the distance from each vertex to the center. Describe the resulting polyhedron: how many faces does it have, how many edges, and how many vertices? What types of faces does it have?
-
-7. Calculate the surface area of this truncated dodecahedron.
-
-8. Calculate the volume of this truncated dodecahedron.
-
-9. If you were to place identical spheres at each vertex of the original dodecahedron such that neighboring spheres are tangent to each other, what would be the radius of each sphere?
-
-10. Finally, consider the convex hull of the centers of all faces of the original dodecahedron. What polyhedron is formed, and what is its volume?
-
-Show all your work step by step, including all intermediate calculations, coordinate geometry, trigonometry, and algebraic manipulations. Verify your answers using multiple methods where possible. Provide your final answer for the volume of the truncated dodecahedron in \\boxed{} format."""
+Show all your work step by step, including equations, substitutions, and calculations. Provide your final answers in \\boxed{} format."""
 
     print("="*80)
-    print("TIMING TEST - COMPLEX PROBLEM (TARGET: >10K TOKENS)")
+    print("TIMING TEST - SIMPLE PROBLEM (TARGET: ~10K TOKENS)")
     print("="*80)
     print(f"\nProblem length: {len(problem)} characters")
-    print(f"\nGenerating 2 completions with max_tokens=64000...")
-    print("Expected: 10-step problem, ~2-4k tokens per step = 20-40k tokens total")
+    print(f"\nGenerating {N_COMPLETIONS} completions with max_tokens=64000...")
+    print("Expected: Simple multi-step problem, ~5k tokens per completion = ~10k tokens total")
 
     # Track timing
     start_time = time.time()
@@ -65,7 +54,7 @@ Show all your work step by step, including all intermediate calculations, coordi
         messages=[{"role": "user", "content": problem}],
         max_tokens=64000,  # Set to 40k to allow full solution with verification
         temperature=0.8,
-        n=2,  # Reduced to 2 to save time
+        n=N_COMPLETIONS,  # Reduced to 2 to save time
         logprobs=True,
         top_logprobs=20
     )
