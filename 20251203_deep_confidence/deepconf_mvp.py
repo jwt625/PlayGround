@@ -9,6 +9,7 @@ import re
 import json
 import math
 import logging
+import time
 from datetime import datetime
 from typing import List, Dict, Any, Optional, Tuple
 from dataclasses import dataclass
@@ -49,7 +50,7 @@ K = 19  # top_logprobs = 20, so k = 19
 TOP_LOGPROBS = 20
 N_COMPLETIONS = 10
 TEMPERATURE = 0.8
-MAX_TOKENS = 10000
+MAX_TOKENS = 64000
 WINDOW_SIZE = 2048  # For trace-level metrics
 FILTER_THRESHOLDS = [0.1, 0.9]  # η = 10% and 90%
 
@@ -99,13 +100,24 @@ def load_aime_dataset() -> List[Dict[str, Any]]:
 
 def generate_traces(problem: str, n: int = N_COMPLETIONS) -> List[Dict[str, Any]]:
     """Generate n reasoning traces with logprobs for a given problem"""
-    client = OpenAI(api_key=KIMI_API_KEY or "dummy", base_url=KIMI_API_BASE)
+    # Set a long timeout for large reasoning traces (30 minutes)
+    # kimi-k2 with 64K max_tokens and n=10 can take a very long time
+    client = OpenAI(
+        api_key=KIMI_API_KEY or "dummy",
+        base_url=KIMI_API_BASE,
+        timeout=1800.0  # 30 minutes - adjust based on your server performance
+    )
 
     prompt = f"""Solve the following math problem. Show your reasoning and provide the final answer in \\boxed{{}} format.
 
 Problem: {problem}"""
 
     logger.debug(f"Generating {n} completions...")
+
+    # Track timing
+    start_time = time.time()
+    start_timestamp = datetime.now().isoformat()
+
     response = client.chat.completions.create(
         model=KIMI_MODEL_ID,
         messages=[{"role": "user", "content": prompt}],
@@ -115,6 +127,10 @@ Problem: {problem}"""
         logprobs=True,
         top_logprobs=TOP_LOGPROBS
     )
+
+    end_time = time.time()
+    end_timestamp = datetime.now().isoformat()
+    elapsed_time = end_time - start_time
 
     traces = []
     for choice in response.choices:
@@ -137,7 +153,17 @@ Problem: {problem}"""
             "token_logprobs": token_logprobs
         })
 
-    logger.debug(f"Generated {len(traces)} traces")
+    # Add timing metadata to all traces
+    timing_info = {
+        "api_call_start": start_timestamp,
+        "api_call_end": end_timestamp,
+        "api_call_duration_seconds": elapsed_time
+    }
+
+    for trace in traces:
+        trace.update(timing_info)
+
+    logger.debug(f"Generated {len(traces)} traces in {elapsed_time:.2f}s")
     return traces
 
 
@@ -285,6 +311,9 @@ def confidence_weighted_voting(traces: List[Trace], metric: str) -> Tuple[Option
 
 def evaluate_problem(problem: Dict[str, Any]) -> Dict[str, Any]:
     """Evaluate a single problem with DeepConf"""
+    problem_start_time = time.time()
+    problem_start_timestamp = datetime.now().isoformat()
+
     logger.info(f"Evaluating problem {problem['id']}")
     logger.debug(f"Problem text: {problem['problem'][:100]}...")
 
@@ -292,6 +321,19 @@ def evaluate_problem(problem: Dict[str, Any]) -> Dict[str, Any]:
     logger.debug("Generating single-shot baseline...")
     raw_single = generate_traces(problem["problem"], n=1)
     single_trace = process_traces(raw_single)[0] if raw_single else None
+
+    # Extract timing info from raw trace
+    single_timing = {}
+    single_duration = None
+    if raw_single:
+        single_timing = {
+            "api_call_start": raw_single[0].get("api_call_start"),
+            "api_call_end": raw_single[0].get("api_call_end"),
+            "api_call_duration_seconds": raw_single[0].get("api_call_duration_seconds")
+        }
+        single_duration = raw_single[0].get("api_call_duration_seconds")
+
+    num_tokens_single = len(single_trace.token_confidences) if single_trace else 0
 
     single_shot_result = {
         "answer": single_trace.answer if single_trace else None,
@@ -301,8 +343,10 @@ def evaluate_problem(problem: Dict[str, Any]) -> Dict[str, Any]:
         "tail_confidence": single_trace.tail_confidence if single_trace else 0.0,
         "lowest_group_confidence": single_trace.lowest_group_confidence if single_trace else 0.0,
         "bottom_10_confidence": single_trace.bottom_10_confidence if single_trace else 0.0,
-        "num_tokens": len(single_trace.token_confidences) if single_trace else 0,
-        "token_confidences": single_trace.token_confidences if single_trace else []
+        "num_tokens": num_tokens_single,
+        "token_confidences": single_trace.token_confidences if single_trace else [],
+        "tokens_per_second": (num_tokens_single / single_duration) if single_duration and single_duration > 0 else None,
+        **single_timing
     }
 
     # Multi-sample generation (n=10)
@@ -325,6 +369,18 @@ def evaluate_problem(problem: Dict[str, Any]) -> Dict[str, Any]:
             "has_answer": trace.answer is not None
         })
 
+    # Extract timing info from multi-sample traces (all have same API call timing)
+    multi_timing = {}
+    if raw_traces:
+        multi_timing = {
+            "api_call_start": raw_traces[0].get("api_call_start"),
+            "api_call_end": raw_traces[0].get("api_call_end"),
+            "api_call_duration_seconds": raw_traces[0].get("api_call_duration_seconds")
+        }
+
+    # Calculate tokens per second safely
+    duration = multi_timing.get("api_call_duration_seconds")
+
     results = {
         "problem_id": problem["id"],
         "problem_text": problem["problem"],
@@ -342,10 +398,12 @@ def evaluate_problem(problem: Dict[str, Any]) -> Dict[str, Any]:
                 "lowest_group_confidence": t.lowest_group_confidence,
                 "bottom_10_confidence": t.bottom_10_confidence,
                 "num_tokens": len(t.token_confidences),
-                "token_confidences": t.token_confidences
+                "token_confidences": t.token_confidences,
+                "tokens_per_second": (len(t.token_confidences) / duration) if duration and duration > 0 else None
             }
             for i, t in enumerate(traces)
         ],
+        "multi_sample_timing": multi_timing,
         "baseline_majority_voting": {
             "answer": baseline_answer,
             "vote_counts": baseline_votes,
@@ -382,6 +440,17 @@ def evaluate_problem(problem: Dict[str, Any]) -> Dict[str, Any]:
                 "filtered_trace_indices": [traces.index(t) for t in filtered],
                 "correct": answer == problem["answer"] if answer else False
             }
+
+    # Add problem-level timing
+    problem_end_time = time.time()
+    problem_end_timestamp = datetime.now().isoformat()
+    problem_duration = problem_end_time - problem_start_time
+
+    results["timing"] = {
+        "problem_start": problem_start_timestamp,
+        "problem_end": problem_end_timestamp,
+        "problem_duration_seconds": problem_duration
+    }
 
     return results
 
@@ -433,7 +502,7 @@ def run_evaluation(num_problems: Optional[int] = None) -> Dict[str, Any]:
                     json.dump(summary, f, indent=2)
 
                 pbar.update(1)
-                pbar.set_postfix({"correct": sum(1 for r in all_results if r["baseline"]["correct"])})
+                pbar.set_postfix({"correct": sum(1 for r in all_results if r["baseline_majority_voting"]["correct"])})
             except Exception as e:
                 logger.error(f"Error evaluating problem {problem['id']}: {e}", exc_info=True)
                 pbar.update(1)
