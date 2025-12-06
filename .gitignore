@@ -91,3 +91,4 @@ venv.bak/
 *.lance
 
 *cache*
+*.html

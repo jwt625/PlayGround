@@ -5,15 +5,39 @@ matplotlib.use('Agg')  # Use non-interactive backend
 import matplotlib.pyplot as plt
 from collections import Counter
 import os
+import argparse
+from pathlib import Path
 from pyvis.network import Network
 
+# Parse command line arguments
+parser = argparse.ArgumentParser(description='Visualize GraphRAG knowledge graph')
+parser.add_argument('--input-dir', type=str, default='./christmas/output',
+                    help='Directory containing entities.parquet and relationships.parquet (default: ./christmas/output)')
+parser.add_argument('--output-dir', type=str, default='./christmas/plot',
+                    help='Directory to save visualization outputs (default: ./christmas/plot)')
+parser.add_argument('--title', type=str, default='Knowledge Graph',
+                    help='Title for the visualization (default: Knowledge Graph)')
+args = parser.parse_args()
+
+# Convert to Path objects
+input_dir = Path(args.input_dir)
+output_dir = Path(args.output_dir)
+
 # Create output directory
-os.makedirs('./christmas/plot', exist_ok=True)
+os.makedirs(output_dir, exist_ok=True)
 
 # Load entities and relationships
 print("Loading data...")
-entities_df = pd.read_parquet('./christmas/output/entities.parquet')
-relationships_df = pd.read_parquet('./christmas/output/relationships.parquet')
+entities_file = input_dir / 'entities.parquet'
+relationships_file = input_dir / 'relationships.parquet'
+
+if not entities_file.exists():
+    raise FileNotFoundError(f"Entities file not found: {entities_file}")
+if not relationships_file.exists():
+    raise FileNotFoundError(f"Relationships file not found: {relationships_file}")
+
+entities_df = pd.read_parquet(entities_file)
+relationships_df = pd.read_parquet(relationships_file)
 
 print(f"Loaded {len(entities_df)} entities and {len(relationships_df)} relationships")
 
@@ -94,7 +118,7 @@ nx.draw_networkx_labels(
     font_color='black'
 )
 
-plt.title("A Christmas Carol - Knowledge Graph\n(Top 20 entities and their connections)", 
+plt.title(f"{args.title}\n(Top 20 entities and their connections)",
           fontsize=16, fontweight='bold', pad=20)
 
 # Add legend
@@ -109,7 +133,7 @@ plt.axis('off')
 plt.tight_layout()
 
 # Save the static PNG figure
-png_file = './christmas/plot/knowledge_graph.png'
+png_file = output_dir / 'knowledge_graph.png'
 plt.savefig(png_file, dpi=300, bbox_inches='tight', facecolor='white')
 print(f"\nStatic graph visualization saved to: {png_file}")
 plt.close()
@@ -193,8 +217,8 @@ for edge in subgraph.edges(data=True):
     )
 
 # Save interactive HTML
-html_file = './christmas/plot/knowledge_graph.html'
-net.save_graph(html_file)
+html_file = output_dir / 'knowledge_graph.html'
+net.save_graph(str(html_file))
 print(f"Interactive graph visualization saved to: {html_file}")
 print("\nVisualization complete! Open the HTML file in a browser to explore the graph interactively.")
 
