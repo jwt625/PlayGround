@@ -219,6 +219,31 @@ for edge in subgraph.edges(data=True):
 # Save interactive HTML
 html_file = output_dir / 'knowledge_graph.html'
 net.save_graph(str(html_file))
+
+# Add custom CSS to control tooltip width and text wrapping
+with open(html_file, 'r', encoding='utf-8') as f:
+    html_content = f.read()
+
+# Inject custom CSS for tooltip styling
+custom_css = """
+<style>
+/* Custom tooltip styling */
+.vis-tooltip {
+    max-width: 300px !important;
+    white-space: normal !important;
+    word-wrap: break-word !important;
+    overflow-wrap: break-word !important;
+}
+</style>
+"""
+
+# Insert the custom CSS before the closing </head> tag
+html_content = html_content.replace('</head>', custom_css + '</head>')
+
+# Write the modified HTML back
+with open(html_file, 'w', encoding='utf-8') as f:
+    f.write(html_content)
+
 print(f"Interactive graph visualization saved to: {html_file}")
 print("\nVisualization complete! Open the HTML file in a browser to explore the graph interactively.")
 
