@@ -9,4 +9,5 @@ Projects that have spun off:
 - [Tab Tree Tracker](https://github.com/jwt625/TabTreeTracker): a Chrome extension that visualizes your browser tab navigation history as an interactive tree structure. Track, analyze, and visualize how your browsing sessions evolve over time.
 - [Bay Bridge Traffic Cam](https://github.com/jwt625/bay-bridge-traffic-cam): a comprehensive real-time traffic detection and monitoring system for Bay Bridge with **Prometheus + Grafana integration** and **public dashboard access**.
 - [3dgs-viewer](https://github.com/jwt625/3dgs-viewer): simple 3d gaussian splatting viewer based on [spark](https://github.com/sparkjsdev/spark).
+- [GDSJam]([https://gdsjam.com/](https://github.com/jwt625/gdsjam/)): Web-based live collaborative GDSII viewer for semiconductor layout visualization. Website: [gdsjam.com](https://gdsjam.com/).
 
