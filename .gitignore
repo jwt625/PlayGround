@@ -93,3 +93,4 @@ venv.bak/
 
 *cache*
 *.html
+*.lyrdb

@@ -88,12 +88,21 @@ def transceiver_chip_mvp() -> gf.Component:
     # Grid configuration
     grid_rows = 4
     grid_cols = 2
-    row_pitch = 100.0  # 2x laser pitch (50 µm * 2)
     col_spacing = 150.0  # Horizontal spacing between columns
 
     # Starting position for grid
     grid_start_x = 300
     grid_start_y = 1850  # Align with top laser
+
+    # Variable row spacing to provide more room for routing between rows 1 and 2
+    # Row 0 at Y=1850, Row 1 at Y=1759 (91 µm spacing, reduced by 9 µm)
+    # Row 2 at Y=1641 (118 µm spacing, increased by 18 µm)
+    # Row 3 at Y=1550 (91 µm spacing, reduced by 9 µm)
+    row_y_positions = [1850, 1750, 1601, 1500]
+
+    print("\n" + "=" * 80)
+    print("TX MUX RING POSITIONS AND PORTS")
+    print("=" * 80)
 
     for i in range(8):
         row = i // grid_cols  # 0, 0, 1, 1, 2, 2, 3, 3
@@ -108,11 +117,27 @@ def transceiver_chip_mvp() -> gf.Component:
             pin_on_left=True
         )
 
-        # Position in grid
+        # Position in grid with variable row spacing
         ring_x = grid_start_x + col * col_spacing
-        ring_y = grid_start_y - row * row_pitch
+        ring_y = row_y_positions[row]
+
+        # Add y shift for second column rings
+        if col == 1:
+            if row % 2 == 0:  # Even rows: shift up
+                ring_y += 3.0
+            else:  # Odd rows: shift down
+                ring_y -= 3.0
+
         ring.move((ring_x, ring_y))
         tx_mux_rings.append(ring)
+
+        # Print ring position and port coordinates
+        print(f"\nRing {i} @ ({ring_x}, {ring_y}) [Row {row}, Col {col}]:")
+        for port_name in ['o1', 'o2', 'o3', 'o4']:
+            port = ring.ports[port_name]
+            print(f"  {port_name}: ({port.center[0]:.1f}, {port.center[1]:.1f}), orientation={port.orientation}°")
+
+    print("=" * 80)
     
     # ========================================================================
     # ROUTING: Lasers to TX Mux Rings (CROSSING-FREE STRATEGY WITH WAYPOINTS)
@@ -125,16 +150,27 @@ def transceiver_chip_mvp() -> gf.Component:
     # - Lasers 6,7 route BELOW rings 6,7 (row 3)
 
     # Row 0: Lasers 0,1 → Rings 1,0 (route ABOVE the rings)
-    # Laser 0 → Ring 1 o4 (crosses over to right, stays on top)
-    # o4 faces 0° (positive X), so waveguide must approach from the right
+    # Ring positions: Row 0 at Y=1850, o3/o4 ports at ~Y=1921.4, o1/o2 ports at ~Y=1814.3
+    # Horizontal routing must be ABOVE o3 ports (Y > 1921.4)
+
     laser_0_port = laser_die.ports["laser_0_o1"]
-    ring_1_port = tx_mux_rings[1].ports["o4"]
-    waypoint_y_above_row0 = 1950  # Above row 0 rings (Y=1850)
+    ring_1_port = tx_mux_rings[1].ports["o3"]
+    laser_1_port = laser_die.ports["laser_1_o1"]
+    ring_0_port = tx_mux_rings[0].ports["o3"]
+
+    # Routing parameters
     dx_base = 30  # Base horizontal offset from ports
     dx_spacing = 15  # Horizontal spacing between vertical waveguide segments
-    dy_spacing = 50  # Vertical spacing between routes (must be > 2*bend_radius = 20 µm)
+    dy_spacing = 15  # Vertical spacing between horizontal routes
 
-    # Laser 0 gets first X offset
+    # Row 0 horizontal routing Y positions (above o3 ports)
+    # Row 0 at Y=1850, o3/o4 at Y=1921.4
+    # Must have at least 20 µm clearance from o3 ports for bends (2× bend radius of 10 µm)
+    # o3 ports at 1921.4, so waypoints must be > 1941.4
+    waypoint_y_row0_top = 1950  # For laser 0 (highest, 28.6 µm above o3)
+    waypoint_y_row0_bottom = 1945  # For laser 1 (23.6 µm above o3, > 20 µm minimum)
+
+    # Laser 0 → Ring 1 o3 (crosses over to right, stays on top, approaches o3 from left)
     dx_0 = dx_base
     gf.routing.route_single(
         c,
@@ -142,19 +178,14 @@ def transceiver_chip_mvp() -> gf.Component:
         ring_1_port,
         waypoints=[
             (laser_0_port.center[0] + dx_0, laser_0_port.center[1]),
-            (laser_0_port.center[0] + dx_0, waypoint_y_above_row0),
-            (ring_1_port.center[0] + dx_base, waypoint_y_above_row0),
-            (ring_1_port.center[0] + dx_base, ring_1_port.center[1]),
+            (laser_0_port.center[0] + dx_0, waypoint_y_row0_top),
+            (ring_1_port.center[0] - dx_base, waypoint_y_row0_top),
+            (ring_1_port.center[0] - dx_base, ring_1_port.center[1]),
         ],
         cross_section="strip",
     )
 
-    # Laser 1 → Ring 0 o4 (goes to left, stays on top)
-    # o4 faces 0° (positive X), so waveguide must approach from the right
-    laser_1_port = laser_die.ports["laser_1_o1"]
-    ring_0_port = tx_mux_rings[0].ports["o4"]
-
-    # Laser 1 gets second X offset
+    # Laser 1 → Ring 0 o3 (goes to left, stays on top, approaches o3 from left)
     dx_1 = dx_base + dx_spacing
     gf.routing.route_single(
         c,
@@ -162,135 +193,145 @@ def transceiver_chip_mvp() -> gf.Component:
         ring_0_port,
         waypoints=[
             (laser_1_port.center[0] + dx_1, laser_1_port.center[1]),
-            (laser_1_port.center[0] + dx_1, waypoint_y_above_row0 - dy_spacing),
-            (ring_0_port.center[0] + dx_base, waypoint_y_above_row0 - dy_spacing),
-            (ring_0_port.center[0] + dx_base, ring_0_port.center[1]),
+            (laser_1_port.center[0] + dx_1, waypoint_y_row0_bottom),
+            (ring_0_port.center[0] - dx_base, waypoint_y_row0_bottom),
+            (ring_0_port.center[0] - dx_base, ring_0_port.center[1]),
         ],
         cross_section="strip",
     )
 
-    # Row 1: Lasers 2,3 → Rings 3,2 (route BELOW the rings)
-    # Laser 2 → Ring 3 o4 (crosses over to right, stays below)
-    # o4 faces 0° (positive X), so waveguide must approach from the right
-    laser_2_port = laser_die.ports["laser_2_o1"]
-    ring_3_port = tx_mux_rings[3].ports["o4"]
-    waypoint_y_below_row1 = 1700  # Below row 1 rings (Y=1750)
+    # Row 1: Lasers 2,3 → Rings 2,3 (route BELOW the rings)
+    # Ring positions: Row 1 at Y=1759, o3/o4 at Y=1830.4, o1/o2 at Y=1759
+    #                 Row 2 at Y=1641, o3/o4 at Y=1712.4, o1/o2 at Y=1641
+    # Horizontal routing must be BELOW row 1's o1/o2 (< 1759) and ABOVE row 2's o3/o4 (> 1712.4)
+    # Valid range: 1712.4 < Y < 1759 (46.6 µm of space - much better!)
 
-    # Laser 2 gets third X offset
-    dx_2 = dx_base + 2 * dx_spacing
+    laser_2_port = laser_die.ports["laser_2_o1"]
+    ring_2_port = tx_mux_rings[2].ports["o2"]
+    laser_3_port = laser_die.ports["laser_3_o1"]
+    ring_3_port = tx_mux_rings[3].ports["o2"]
+
+    # Row 1 horizontal routing Y positions (between row 2's o3/o4 at 1712.4 and row 1's o1/o2 at 1759)
+    # Laser 2 is at Y=1750, Laser 3 is at Y=1700
+    # Available space: 1712.4 to 1759 = 46.6 µm
+    # Need 20 µm clearance from laser positions and ring ports
+    # Laser 2 at 1750: waypoint must be < 1730 (20 µm below laser) or > 1770 (20 µm above laser)
+    # Laser 3 at 1700: waypoint must be > 1720 (20 µm above laser) or < 1680 (20 µm below laser)
+    waypoint_y_row1_top = 1730  # For laser 2 (20 µm below laser at 1750, 17.6 µm above row 2 o3/o4)
+    waypoint_y_row1_bottom = 1720  # For laser 3 (20 µm above laser at 1700, 7.6 µm above row 2 o3/o4)
+
+    # Laser 2 → Ring 2 o2 (goes to left, reuse dx_1 from laser 1)
     gf.routing.route_single(
         c,
         laser_2_port,
-        ring_3_port,
+        ring_2_port,
         waypoints=[
-            (laser_2_port.center[0] + dx_2, laser_2_port.center[1]),
-            (laser_2_port.center[0] + dx_2, waypoint_y_below_row1),
-            (ring_3_port.center[0] + dx_base, waypoint_y_below_row1),
-            (ring_3_port.center[0] + dx_base, ring_3_port.center[1]),
+            (laser_2_port.center[0] + dx_1, laser_2_port.center[1]),
+            (laser_2_port.center[0] + dx_1, waypoint_y_row1_top),
+            (ring_2_port.center[0] + dx_base - 10, waypoint_y_row1_top),
+            (ring_2_port.center[0] + dx_base - 10, ring_2_port.center[1]),
         ],
         cross_section="strip",
     )
 
-    # Laser 3 → Ring 2 o4 (goes to left, stays below)
-    # o4 faces 0° (positive X), so waveguide must approach from the right
-    laser_3_port = laser_die.ports["laser_3_o1"]
-    ring_2_port = tx_mux_rings[2].ports["o4"]
-
-    # Laser 3 gets fourth X offset
-    dx_3 = dx_base + 3 * dx_spacing
+    # Laser 3 → Ring 3 o2 (crosses over to right, reuse dx_0 from laser 0)
     gf.routing.route_single(
         c,
         laser_3_port,
-        ring_2_port,
+        ring_3_port,
         waypoints=[
-            (laser_3_port.center[0] + dx_3, laser_3_port.center[1]),
-            (laser_3_port.center[0] + dx_3, waypoint_y_below_row1 - dy_spacing),
-            (ring_2_port.center[0] + dx_base, waypoint_y_below_row1 - dy_spacing),
-            (ring_2_port.center[0] + dx_base, ring_2_port.center[1]),
+            (laser_3_port.center[0] + dx_0, laser_3_port.center[1]),
+            (laser_3_port.center[0] + dx_0, waypoint_y_row1_bottom),
+            (ring_3_port.center[0] + dx_base - 10, waypoint_y_row1_bottom),
+            (ring_3_port.center[0] + dx_base - 10, ring_3_port.center[1]),
         ],
         cross_section="strip",
     )
 
-    # Row 2: Lasers 4,5 → Rings 5,4 (route ABOVE the rings)
-    # Laser 4 → Ring 5 o4 (crosses over to right, stays on top)
-    # o4 faces 0° (positive X), so waveguide must approach from the right
-    laser_4_port = laser_die.ports["laser_4_o1"]
-    ring_5_port = tx_mux_rings[5].ports["o4"]
-    waypoint_y_above_row2 = 1750  # Above row 2 rings (Y=1650)
+    # Row 2: Lasers 4,5 → Rings 5,4 (route ABOVE the rings, similar to row 0)
+    # Ring positions: Row 2 at Y=1601, o3/o4 at Y=1672.4, o1/o2 at Y=1601
+    #                 Row 3 at Y=1500, o3/o4 at Y=1571.4, o1/o2 at Y=1500
+    # Horizontal routing must be ABOVE row 2's o3/o4 ports (Y > 1672.4)
 
-    # Laser 4 gets fifth X offset
-    dx_4 = dx_base + 4 * dx_spacing
+    laser_4_port = laser_die.ports["laser_4_o1"]
+    ring_5_port = tx_mux_rings[5].ports["o3"]
+    laser_5_port = laser_die.ports["laser_5_o1"]
+    ring_4_port = tx_mux_rings[4].ports["o3"]
+
+    # Row 2 horizontal routing Y positions (above o3 ports)
+    # Row 2 at Y=1601, o3/o4 at Y=1672.4
+    # Must have at least 20 µm clearance from o3 ports for bends (2× bend radius of 10 µm)
+    # o3 ports at 1672.4, so waypoints must be > 1692.4
+    waypoint_y_row2_top = 1700  # For laser 4 (highest, 27.6 µm above o3)
+    waypoint_y_row2_bottom = 1695  # For laser 5 (22.6 µm above o3, > 20 µm minimum)
+
+    # Laser 4 → Ring 5 o3 (crosses over to right, stays on top, approaches o3 from left)
     gf.routing.route_single(
         c,
         laser_4_port,
         ring_5_port,
         waypoints=[
-            (laser_4_port.center[0] + dx_4, laser_4_port.center[1]),
-            (laser_4_port.center[0] + dx_4, waypoint_y_above_row2),
-            (ring_5_port.center[0] + dx_base, waypoint_y_above_row2),
-            (ring_5_port.center[0] + dx_base, ring_5_port.center[1]),
+            (laser_4_port.center[0] + dx_0, laser_4_port.center[1]),
+            (laser_4_port.center[0] + dx_0, waypoint_y_row2_top),
+            (ring_5_port.center[0] - dx_base, waypoint_y_row2_top),
+            (ring_5_port.center[0] - dx_base, ring_5_port.center[1]),
         ],
         cross_section="strip",
     )
 
-    # Laser 5 → Ring 4 o4 (goes to left, stays on top)
-    # o4 faces 0° (positive X), so waveguide must approach from the right
-    laser_5_port = laser_die.ports["laser_5_o1"]
-    ring_4_port = tx_mux_rings[4].ports["o4"]
-
-    # Laser 5 gets sixth X offset
-    dx_5 = dx_base + 5 * dx_spacing
+    # Laser 5 → Ring 4 o3 (goes to left, stays on top, approaches o3 from left)
     gf.routing.route_single(
         c,
         laser_5_port,
         ring_4_port,
         waypoints=[
-            (laser_5_port.center[0] + dx_5, laser_5_port.center[1]),
-            (laser_5_port.center[0] + dx_5, waypoint_y_above_row2 - dy_spacing),
-            (ring_4_port.center[0] + dx_base, waypoint_y_above_row2 - dy_spacing),
-            (ring_4_port.center[0] + dx_base, ring_4_port.center[1]),
+            (laser_5_port.center[0] + dx_1, laser_5_port.center[1]),
+            (laser_5_port.center[0] + dx_1, waypoint_y_row2_bottom),
+            (ring_4_port.center[0] - dx_base, waypoint_y_row2_bottom),
+            (ring_4_port.center[0] - dx_base, ring_4_port.center[1]),
         ],
         cross_section="strip",
     )
 
-    # Row 3: Lasers 6,7 → Rings 7,6 (route BELOW the rings)
-    # Laser 6 → Ring 7 o4 (crosses over to right, stays below)
-    # o4 faces 0° (positive X), so waveguide must approach from the right
-    laser_6_port = laser_die.ports["laser_6_o1"]
-    ring_7_port = tx_mux_rings[7].ports["o4"]
-    waypoint_y_below_row3 = 1500  # Below row 3 rings (Y=1550)
+    # Row 3: Lasers 6,7 → Rings 6,7 (route BELOW the rings, similar to row 1)
+    # Ring positions: Row 3 at Y=1500, o3/o4 at Y=1571.4, o1/o2 at Y=1500
+    # No row 4 below, so horizontal routing can be freely below row 3's o1/o2 (< 1500)
 
-    # Laser 6 gets seventh X offset
-    dx_6 = dx_base + 6 * dx_spacing
+    laser_6_port = laser_die.ports["laser_6_o1"]
+    ring_6_port = tx_mux_rings[6].ports["o2"]
+    laser_7_port = laser_die.ports["laser_7_o1"]
+    ring_7_port = tx_mux_rings[7].ports["o2"]
+
+    # Row 3 horizontal routing Y positions (below row 3's o1/o2 at 1500)
+    # Laser 6 at Y=1550, Laser 7 at Y=1500
+    # No row below, so just need > 20 µm clearance from row 3's o1/o2 and lasers
+    waypoint_y_row3_top = 1480  # For laser 6 (20 µm below row 3 o1/o2)
+    waypoint_y_row3_bottom = 1470  # For laser 7 (30 µm below row 3 o1/o2)
+
+    # Laser 6 → Ring 6 o2 (goes to left, reuse dx_1 from laser 1)
     gf.routing.route_single(
         c,
         laser_6_port,
-        ring_7_port,
+        ring_6_port,
         waypoints=[
-            (laser_6_port.center[0] + dx_6, laser_6_port.center[1]),
-            (laser_6_port.center[0] + dx_6, waypoint_y_below_row3),
-            (ring_7_port.center[0] + dx_base, waypoint_y_below_row3),
-            (ring_7_port.center[0] + dx_base, ring_7_port.center[1]),
+            (laser_6_port.center[0] + dx_1, laser_6_port.center[1]),
+            (laser_6_port.center[0] + dx_1, waypoint_y_row3_top),
+            (ring_6_port.center[0] + dx_base - 10, waypoint_y_row3_top),
+            (ring_6_port.center[0] + dx_base - 10, ring_6_port.center[1]),
         ],
         cross_section="strip",
     )
 
-    # Laser 7 → Ring 6 o4 (goes to left, stays below)
-    # o4 faces 0° (positive X), so waveguide must approach from the right
-    laser_7_port = laser_die.ports["laser_7_o1"]
-    ring_6_port = tx_mux_rings[6].ports["o4"]
-
-    # Laser 7 gets eighth X offset
-    dx_7 = dx_base + 7 * dx_spacing
+    # Laser 7 → Ring 7 o2 (crosses over to right, reuse dx_0 from laser 0)
     gf.routing.route_single(
         c,
         laser_7_port,
-        ring_6_port,
+        ring_7_port,
         waypoints=[
-            (laser_7_port.center[0] + dx_7, laser_7_port.center[1]),
-            (laser_7_port.center[0] + dx_7, waypoint_y_below_row3 - dy_spacing),
-            (ring_6_port.center[0] + dx_base, waypoint_y_below_row3 - dy_spacing),
-            (ring_6_port.center[0] + dx_base, ring_6_port.center[1]),
+            (laser_7_port.center[0] + dx_0, laser_7_port.center[1]),
+            (laser_7_port.center[0] + dx_0, waypoint_y_row3_bottom),
+            (ring_7_port.center[0] + dx_base - 10, waypoint_y_row3_bottom),
+            (ring_7_port.center[0] + dx_base - 10, ring_7_port.center[1]),
         ],
         cross_section="strip",
     )
@@ -306,7 +347,6 @@ def transceiver_chip_mvp() -> gf.Component:
         (1, "o1", 0, "o2"),  # Ring 1 o1 → Ring 0 o2 (right to left, bottom bus)
         (0, "o1", 2, "o3"),  # Ring 0 o1 → Ring 2 o3 (left col, bottom to top, row 0→1)
         (2, "o4", 3, "o3"),  # Ring 2 o4 → Ring 3 o3 (left to right, top bus)
-        (3, "o4", 5, "o2"),  # Ring 3 o4 → Ring 5 o2 (right col, top to bottom, row 1→2)
         (5, "o1", 4, "o2"),  # Ring 5 o1 → Ring 4 o2 (right to left, bottom bus)
         (4, "o1", 6, "o3"),  # Ring 4 o1 → Ring 6 o3 (left col, bottom to top, row 2→3)
         (6, "o4", 7, "o3"),  # Ring 6 o4 → Ring 7 o3 (left to right, top bus)
@@ -319,6 +359,21 @@ def transceiver_chip_mvp() -> gf.Component:
             tx_mux_rings[dst_ring].ports[dst_port],
             cross_section="strip",
         )
+
+    # Special routing for Ring 3 o4 → Ring 5 o2 with x-shift to avoid intersection
+    r3_port = tx_mux_rings[3].ports["o4"]
+    r5_port = tx_mux_rings[5].ports["o2"]
+    x_shift = 25.0  # 25 µm shift to the right
+    gf.routing.route_single(
+        c,
+        r3_port,
+        r5_port,
+        waypoints=[
+            (r3_port.center[0] + x_shift, r3_port.center[1]),
+            (r5_port.center[0] + x_shift, r5_port.center[1]),
+        ],
+        cross_section="strip",
+    )
 
     # ========================================================================
     # TRANSMIT PATH (continued)
