@@ -1,23 +1,26 @@
 """
-Demux + Modulation Module
+Demux + Modulation + AWG Module
 
-This module creates a reusable demux and modulation unit that will be repeated 4 times
-in the transceiver chip. Each module:
+This module creates a reusable demux, modulation, and recombination unit that will be
+repeated 4 times in the transceiver chip. Each module:
 - Takes 1 input waveguide carrying 8 multiplexed wavelengths
 - Demultiplexes using 8 add-drop ring resonators with PIN
 - Modulates each wavelength using 8 PIN modulators
-- Outputs 8 separate modulated waveguides
+- Recombines all 8 modulated wavelengths using an AWG
+- Outputs 1 waveguide carrying all 8 modulated wavelengths
 
 Layout:
 - 8 rings in 1 row × 8 columns (horizontal arrangement)
 - 8 modulators in 1 row × 8 columns (horizontal arrangement, below rings)
 - 110 µm horizontal pitch (matching PIN modulator length)
-- 3 µm cumulative Y offset between rings for routing clearance
+- 7 µm cumulative Y offset between rings for routing clearance
 - 7 µm cumulative Y offset between modulators for routing clearance
+- AWG positioned to the right of modulators for recombination
 """
 
 import gdsfactory as gf
 from ring_double_pin import ring_double_pin
+from custom_awg_debug import awg_manual_route
 
 
 @gf.cell
@@ -31,8 +34,8 @@ def demux_modulation_module(
     ring_to_modulator_dy: float = 50.0,
 ) -> gf.Component:
     """
-    Create a demux + modulation module with 8 rings and 8 modulators.
-    
+    Create a demux + modulation + AWG module with 8 rings, 8 modulators, and 1 AWG.
+
     Args:
         base_x: Base X position for the module
         base_y: Base Y position for the module (Ring 0 position)
@@ -41,11 +44,11 @@ def demux_modulation_module(
         modulator_pitch_x: Horizontal spacing between modulators
         modulator_y_offset: Cumulative Y offset between adjacent modulators (each modulator is offset by this amount)
         ring_to_modulator_dy: Vertical separation from rings to modulators
-        
+
     Returns:
         Component with:
-        - Input port: bus_input (right side, for input waveguide)
-        - Output ports: mod_0_out to mod_7_out (modulator outputs)
+        - Input port: bus_input (right side, for input waveguide carrying 8 wavelengths)
+        - Output port: awg_out (AWG output carrying all 8 recombined modulated wavelengths)
     """
     c = gf.Component("Demux_Modulation_Module")
     
@@ -160,80 +163,96 @@ def demux_modulation_module(
             extended_ports.append(mod_out_port)
 
     # ========================================================================
-    # FAN-IN: ROUTE TO ALIGNED OUTPUT PORTS
+    # AWG: RECOMBINE MODULATED WAVELENGTHS
     # ========================================================================
 
-    # Add short straight waveguides after the aligned ports for fan-in input
-    fanin_input_length = 30.0
-    fanin_input_wgs = []
-    for i in range(8):
-        wg = c << gf.components.straight(length=fanin_input_length, cross_section="strip")
-        wg.connect("o1", extended_ports[i])
-        fanin_input_wgs.append(wg)
+    # Create AWG with 8 inputs (for 8 wavelengths) and 20 arms
+    awg = c << awg_manual_route(
+        arms=20,
+        outputs=8,
+        fpr_spacing=50.0,
+        delta_length=10.0
+    )
 
-    # Calculate target positions for fan-in outputs (tighter spacing)
-    # Get the Y positions of the fan-in inputs
-    y_positions = [wg.ports["o2"].center[1] for wg in fanin_input_wgs]
-    y_center = sum(y_positions) / len(y_positions)
+    # Rotate and mirror AWG so E ports point left (180°) to face modulator outputs
+    awg.rotate(90)
+    awg.mirror()  # Mirror along Y-axis to make E ports point left
+    awg.mirror((1, 0))  # Mirror along X-axis (horizontal line) to flip port order vertically
 
-    # Target output spacing (1 µm)
-    fanin_output_spacing = 1.0
-    fanin_total_output_span = (len(fanin_input_wgs) - 1) * fanin_output_spacing
-    fanin_y_start_output = y_center - fanin_total_output_span / 2
+    # Position AWG to the right of modulator outputs (max 50 µm away)
+    awg_x_offset = 50.0  # Distance from modulator outputs to AWG
 
-    # Create output waveguides for the fan-in
-    fanin_output_wgs = []
-    fanin_output_x = x_ports + fanin_input_length + 50.0  # Position after fan-in transition
-    for i in range(8):
-        wg = c << gf.components.straight(length=5, cross_section="strip")
-        wg.movex(fanin_output_x)
-        wg.movey(fanin_y_start_output + i * fanin_output_spacing)
-        fanin_output_wgs.append(wg)
+    # Calculate modulator output center
+    mod_output_y_center = sum(port.center[1] for port in extended_ports) / len(extended_ports)
+    mod_output_x = extended_ports[0].center[0]
 
-    # Route using S-bend bundle
+    # Calculate AWG E port center
+    awg_e_port_y_center = sum(awg.ports[f"E{i}"].center[1] for i in range(8)) / 8
+    awg_e_port_x = awg.ports["E0"].center[0]
+
+    # Position AWG: align Y centers and place to the right
+    awg.move((
+        mod_output_x + awg_x_offset - awg_e_port_x,
+        mod_output_y_center - awg_e_port_y_center
+    ))
+
+    # ========================================================================
+    # ROUTING: MODULATOR OUTPUTS TO AWG INPUTS
+    # ========================================================================
+
+    # Route directly from modulator outputs to AWG inputs using S-bend bundle
+    awg_ports = [awg.ports[f"E{i}"] for i in range(8)]
+
     gf.routing.route_bundle_sbend(
         component=c,
-        ports1=[wg.ports["o2"] for wg in fanin_input_wgs],
-        ports2=[wg.ports["o1"] for wg in fanin_output_wgs],
+        ports1=extended_ports,
+        ports2=awg_ports,
         cross_section="strip"
     )
 
-    # Expose the fan-in output ports
-    for i in range(8):
-        c.add_port(f"mod_{i}_out", port=fanin_output_wgs[i].ports["o2"])
+    # ========================================================================
+    # EXPOSE OUTPUT PORT
+    # ========================================================================
+
+    # Expose AWG output port (o1) as module output
+    c.add_port("awg_out", port=awg.ports["o1"])
 
     return c
 
 
 if __name__ == "__main__":
-    print("Creating Demux + Modulation Module...")
+    print("Creating Demux + Modulation + AWG Module...")
     print("=" * 80)
-    
+
     c = demux_modulation_module(
         base_x=100.0,
         base_y=500.0,
     )
-    
+
     # Write GDS
     gds_file = "demux_modulation_module.gds"
     c.write_gds(gds_file)
-    print(f"GDS file written: {gds_file}")
-    
+    print(f"\nGDS file written: {gds_file}")
+
     # Print summary
     bbox = c.bbox()
     print(f"\nModule dimensions: {bbox.width():.1f} × {bbox.height():.1f} µm")
-    
+
     print(f"\nPorts:")
-    print(f"  - Input: bus_input")
-    print(f"  - Outputs: mod_0_out to mod_7_out")
+    print(f"  - Input: bus_input (8 wavelengths)")
+    print(f"  - Output: awg_out (8 recombined modulated wavelengths)")
     print(f"  - Total ports: {len(c.ports)}")
-    
+
+    print(f"\nPort details:")
+    for port in c.ports:
+        print(f"  {port.name}: center=({port.center[0]:.1f}, {port.center[1]:.1f}), orientation={port.orientation}°")
+
     # Show in viewer
     try:
         c.show()
     except Exception as e:
         print(f"\nViewer error (GDS file is OK): {e}")
-    
+
     print("\n" + "=" * 80)
     print("MODULE COMPLETE")
     print("=" * 80)

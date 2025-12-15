@@ -177,38 +177,39 @@ Input (from right) ──→ o4   o3 ← o4   o3 ← o4   o3 ← ... ← o4   o3
    - All modulator outputs extended to same X position (x_max + 10 µm)
    - Straight waveguide extensions added where needed
 
-7. **Fan-in routing**
-   - 30 µm straight waveguides after aligned outputs
-   - S-bend bundle routing to compress spacing
-   - Final output spacing: 1 µm pitch
-   - Output ports: `mod_0_out` to `mod_7_out`
+7. **AWG integration**
+   - AWG positioned 50 µm from modulator outputs
+   - Direct S-bend bundle routing from modulator outputs to AWG inputs
+   - AWG rotated 90° and mirrored to align E ports (inputs) with modulators
+   - AWG recombines 8 modulated wavelengths into single output
 
 ### Module Specifications
 
-- **Dimensions**: 996.5 × 181.6 µm
-- **Input port**: `bus_input` (right side, aligned with Ring 7 o4)
-- **Output ports**: `mod_0_out` to `mod_7_out` (1 µm pitch, tightly spaced)
-- **Total ports**: 9 (1 input + 8 outputs)
+- **Dimensions**: 1015.8 × 181.6 µm
+- **Input port**: `bus_input` (8 multiplexed wavelengths)
+- **Output port**: `awg_out` (8 recombined modulated wavelengths)
+- **Total ports**: 2 (1 input, 1 output)
 
 ### Design Decisions
 
 1. **Y offset**: 7 µm chosen to match doping width, minimizing space while providing routing clearance
 2. **Ring-to-modulator separation**: 50 µm provides adequate clearance for drop waveguide routing
 3. **S-bends for top bus**: Explicit S-bend components used instead of automatic routing for predictable layout
-4. **Fan-in output spacing**: 1 µm pitch enables direct connection to AWG or other dense components
-5. **Output alignment**: All outputs at same X coordinate simplifies module-level integration
+4. **Direct modulator-to-AWG routing**: S-bend bundle handles pitch transition from 110 µm to 1.357 µm in 50 µm length
+5. **AWG pitch**: 1.357 µm determined by FPR geometry (width1=10 µm, inputs=8)
 
 ### Testing
 
 - GDS file generated: `demux_modulation_module.gds`
 - Visual inspection: Layout verified, no crossings detected
-- Port count: 9 ports (1 input, 8 outputs) as expected
+- Port count: 2 ports (1 input, 1 output) as expected
+- AWG orientation verified: E ports face left at 180°
 
 ### Next Steps
 
 1. Integrate module into transceiver chip layout
 2. Connect 1×4 splitter outputs to 4 module inputs
-3. Connect module outputs to AWG inputs
+3. Connect module AWG outputs to chip-level combiner
 4. Add electrical routing for ring and modulator control signals
 
 ## Implementation Results
