@@ -159,43 +159,33 @@ def transceiver_chip_mvp() -> gf.Component:
     ring_0_port = tx_mux_rings[0].ports["o3"]
 
     # Routing parameters
-    dx_base = 30  # Base horizontal offset from ports
+    dx_laser_base = 30 + 125  # Horizontal offset from laser ports (shifted 125 µm right for compactness)
     dx_spacing = 15  # Horizontal spacing between vertical waveguide segments
+    dx_ring_approach = 30  # Horizontal offset when approaching ring ports
     dy_spacing = 15  # Vertical spacing between horizontal routes
 
-    # Row 0 horizontal routing Y positions (above o3 ports)
-    # Row 0 at Y=1850, o3/o4 at Y=1921.4
-    # Must have at least 20 µm clearance from o3 ports for bends (2× bend radius of 10 µm)
-    # o3 ports at 1921.4, so waypoints must be > 1941.4
-    waypoint_y_row0_top = 1950  # For laser 0 (highest, 28.6 µm above o3)
-    waypoint_y_row0_bottom = 1945  # For laser 1 (23.6 µm above o3, > 20 µm minimum)
-
-    # Laser 0 → Ring 1 o3 (crosses over to right, stays on top, approaches o3 from left)
-    dx_0 = dx_base
+    # Laser 0 → Ring 1 o3 (crosses over to right, approaches o3 from left)
+    dx_0 = dx_laser_base
     gf.routing.route_single(
         c,
         laser_0_port,
         ring_1_port,
         waypoints=[
             (laser_0_port.center[0] + dx_0, laser_0_port.center[1]),
-            (laser_0_port.center[0] + dx_0, waypoint_y_row0_top),
-            (ring_1_port.center[0] - dx_base, waypoint_y_row0_top),
-            (ring_1_port.center[0] - dx_base, ring_1_port.center[1]),
+            (laser_0_port.center[0] + dx_0, ring_1_port.center[1]),
         ],
         cross_section="strip",
     )
 
-    # Laser 1 → Ring 0 o3 (goes to left, stays on top, approaches o3 from left)
-    dx_1 = dx_base + dx_spacing
+    # Laser 1 → Ring 0 o3 (goes to left, approaches o3 from left)
+    dx_1 = dx_laser_base + dx_spacing
     gf.routing.route_single(
         c,
         laser_1_port,
         ring_0_port,
         waypoints=[
             (laser_1_port.center[0] + dx_1, laser_1_port.center[1]),
-            (laser_1_port.center[0] + dx_1, waypoint_y_row0_bottom),
-            (ring_0_port.center[0] - dx_base, waypoint_y_row0_bottom),
-            (ring_0_port.center[0] - dx_base, ring_0_port.center[1]),
+            (laser_1_port.center[0] + dx_1, ring_0_port.center[1]),
         ],
         cross_section="strip",
     )
@@ -228,8 +218,8 @@ def transceiver_chip_mvp() -> gf.Component:
         waypoints=[
             (laser_2_port.center[0] + dx_1, laser_2_port.center[1]),
             (laser_2_port.center[0] + dx_1, waypoint_y_row1_top),
-            (ring_2_port.center[0] + dx_base - 10, waypoint_y_row1_top),
-            (ring_2_port.center[0] + dx_base - 10, ring_2_port.center[1]),
+            (ring_2_port.center[0] + dx_ring_approach - 10, waypoint_y_row1_top),
+            (ring_2_port.center[0] + dx_ring_approach - 10, ring_2_port.center[1]),
         ],
         cross_section="strip",
     )
@@ -242,8 +232,8 @@ def transceiver_chip_mvp() -> gf.Component:
         waypoints=[
             (laser_3_port.center[0] + dx_0, laser_3_port.center[1]),
             (laser_3_port.center[0] + dx_0, waypoint_y_row1_bottom),
-            (ring_3_port.center[0] + dx_base - 10, waypoint_y_row1_bottom),
-            (ring_3_port.center[0] + dx_base - 10, ring_3_port.center[1]),
+            (ring_3_port.center[0] + dx_ring_approach - 10, waypoint_y_row1_bottom),
+            (ring_3_port.center[0] + dx_ring_approach - 10, ring_3_port.center[1]),
         ],
         cross_section="strip",
     )
@@ -258,37 +248,26 @@ def transceiver_chip_mvp() -> gf.Component:
     laser_5_port = laser_die.ports["laser_5_o1"]
     ring_4_port = tx_mux_rings[4].ports["o3"]
 
-    # Row 2 horizontal routing Y positions (above o3 ports)
-    # Row 2 at Y=1601, o3/o4 at Y=1672.4
-    # Must have at least 20 µm clearance from o3 ports for bends (2× bend radius of 10 µm)
-    # o3 ports at 1672.4, so waypoints must be > 1692.4
-    waypoint_y_row2_top = 1700  # For laser 4 (highest, 27.6 µm above o3)
-    waypoint_y_row2_bottom = 1695  # For laser 5 (22.6 µm above o3, > 20 µm minimum)
-
-    # Laser 4 → Ring 5 o3 (crosses over to right, stays on top, approaches o3 from left)
+    # Laser 4 → Ring 5 o3 (crosses over to right, approaches o3 from left)
     gf.routing.route_single(
         c,
         laser_4_port,
         ring_5_port,
         waypoints=[
             (laser_4_port.center[0] + dx_0, laser_4_port.center[1]),
-            (laser_4_port.center[0] + dx_0, waypoint_y_row2_top),
-            (ring_5_port.center[0] - dx_base, waypoint_y_row2_top),
-            (ring_5_port.center[0] - dx_base, ring_5_port.center[1]),
+            (laser_4_port.center[0] + dx_0, ring_5_port.center[1]),
         ],
         cross_section="strip",
     )
 
-    # Laser 5 → Ring 4 o3 (goes to left, stays on top, approaches o3 from left)
+    # Laser 5 → Ring 4 o3 (goes to left, approaches o3 from left)
     gf.routing.route_single(
         c,
         laser_5_port,
         ring_4_port,
         waypoints=[
             (laser_5_port.center[0] + dx_1, laser_5_port.center[1]),
-            (laser_5_port.center[0] + dx_1, waypoint_y_row2_bottom),
-            (ring_4_port.center[0] - dx_base, waypoint_y_row2_bottom),
-            (ring_4_port.center[0] - dx_base, ring_4_port.center[1]),
+            (laser_5_port.center[0] + dx_1, ring_4_port.center[1]),
         ],
         cross_section="strip",
     )
@@ -316,8 +295,8 @@ def transceiver_chip_mvp() -> gf.Component:
         waypoints=[
             (laser_6_port.center[0] + dx_1, laser_6_port.center[1]),
             (laser_6_port.center[0] + dx_1, waypoint_y_row3_top),
-            (ring_6_port.center[0] + dx_base - 10, waypoint_y_row3_top),
-            (ring_6_port.center[0] + dx_base - 10, ring_6_port.center[1]),
+            (ring_6_port.center[0] + dx_ring_approach - 10, waypoint_y_row3_top),
+            (ring_6_port.center[0] + dx_ring_approach - 10, ring_6_port.center[1]),
         ],
         cross_section="strip",
     )
@@ -330,8 +309,8 @@ def transceiver_chip_mvp() -> gf.Component:
         waypoints=[
             (laser_7_port.center[0] + dx_0, laser_7_port.center[1]),
             (laser_7_port.center[0] + dx_0, waypoint_y_row3_bottom),
-            (ring_7_port.center[0] + dx_base - 10, waypoint_y_row3_bottom),
-            (ring_7_port.center[0] + dx_base - 10, ring_7_port.center[1]),
+            (ring_7_port.center[0] + dx_ring_approach - 10, waypoint_y_row3_bottom),
+            (ring_7_port.center[0] + dx_ring_approach - 10, ring_7_port.center[1]),
         ],
         cross_section="strip",
     )
