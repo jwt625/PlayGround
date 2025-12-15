@@ -89,26 +89,29 @@ def demux_modulation_module(
     # ========================================================================
     # ROUTING: BUS WAVEGUIDE (TOP BUS, RIGHT TO LEFT)
     # ========================================================================
-    
+
     # Input from right side connects to Ring 7 o4
     # Path: Input → Ring 7 o4 → Ring 7 o3 → Ring 6 o4 → ... → Ring 0 o3
-    
+
     # Create input port on the right side (aligned with Ring 7 o4)
     ring_7_o4 = rings[7].ports["o4"]
     c.add_port("bus_input", port=ring_7_o4)
-    
+
     # Route through all rings using S-bends for Y offset
     for i in range(7, 0, -1):  # Ring 7 to Ring 1
         src_port = rings[i].ports["o3"]
         dst_port = rings[i-1].ports["o4"]
-        
-        # Use route_single with automatic S-bend handling
-        gf.routing.route_single(
-            c,
-            src_port,
-            dst_port,
+
+        # Calculate S-bend size (horizontal and vertical distance)
+        dx = dst_port.center[0] - src_port.center[0]
+        dy = dst_port.center[1] - src_port.center[1]
+
+        # Use S-bend to connect between rings with Y offset
+        sbend = c << gf.components.bend_s(
+            size=(dx, dy),
             cross_section="strip",
         )
+        sbend.connect("o1", src_port)
     
     # ========================================================================
     # ROUTING: DROP WAVEGUIDES (RING TO MODULATOR)
@@ -131,12 +134,74 @@ def demux_modulation_module(
         )
     
     # ========================================================================
-    # EXPOSE MODULATOR OUTPUT PORTS
+    # EXTEND MODULATOR OUTPUTS TO ALIGNED X POSITION
     # ========================================================================
-    
+
+    # Find the maximum X coordinate from all modulator output ports
+    x_max = max(mod.ports["o2"].center[0] for mod in modulators)
+    x_ports = x_max + 10.0  # Add 10 µm margin
+
+    # Add straight waveguides to extend all outputs to the same X position
+    extended_ports = []
     for i in range(8):
-        c.add_port(f"mod_{i}_out", port=modulators[i].ports["o2"])
-    
+        mod_out_port = modulators[i].ports["o2"]
+        extension_length = x_ports - mod_out_port.center[0]
+
+        if extension_length > 0:
+            # Create straight waveguide extension
+            extension = c << gf.components.straight(
+                length=extension_length,
+                cross_section="strip"
+            )
+            extension.connect("o1", mod_out_port)
+            extended_ports.append(extension.ports["o2"])
+        else:
+            # No extension needed, just use the port directly
+            extended_ports.append(mod_out_port)
+
+    # ========================================================================
+    # FAN-IN: ROUTE TO ALIGNED OUTPUT PORTS
+    # ========================================================================
+
+    # Add short straight waveguides after the aligned ports for fan-in input
+    fanin_input_length = 30.0
+    fanin_input_wgs = []
+    for i in range(8):
+        wg = c << gf.components.straight(length=fanin_input_length, cross_section="strip")
+        wg.connect("o1", extended_ports[i])
+        fanin_input_wgs.append(wg)
+
+    # Calculate target positions for fan-in outputs (tighter spacing)
+    # Get the Y positions of the fan-in inputs
+    y_positions = [wg.ports["o2"].center[1] for wg in fanin_input_wgs]
+    y_center = sum(y_positions) / len(y_positions)
+
+    # Target output spacing (1 µm)
+    fanin_output_spacing = 1.0
+    fanin_total_output_span = (len(fanin_input_wgs) - 1) * fanin_output_spacing
+    fanin_y_start_output = y_center - fanin_total_output_span / 2
+
+    # Create output waveguides for the fan-in
+    fanin_output_wgs = []
+    fanin_output_x = x_ports + fanin_input_length + 50.0  # Position after fan-in transition
+    for i in range(8):
+        wg = c << gf.components.straight(length=5, cross_section="strip")
+        wg.movex(fanin_output_x)
+        wg.movey(fanin_y_start_output + i * fanin_output_spacing)
+        fanin_output_wgs.append(wg)
+
+    # Route using S-bend bundle
+    gf.routing.route_bundle_sbend(
+        component=c,
+        ports1=[wg.ports["o2"] for wg in fanin_input_wgs],
+        ports2=[wg.ports["o1"] for wg in fanin_output_wgs],
+        cross_section="strip"
+    )
+
+    # Expose the fan-in output ports
+    for i in range(8):
+        c.add_port(f"mod_{i}_out", port=fanin_output_wgs[i].ports["o2"])
+
     return c
 
 

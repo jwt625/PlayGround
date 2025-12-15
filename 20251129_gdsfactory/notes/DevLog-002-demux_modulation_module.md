@@ -143,6 +143,74 @@ Input (from right) ──→ o4   o3 ← o4   o3 ← o4   o3 ← ... ← o4   o3
 - This horizontal layout is much simpler to route than the 4×2 grid used for TX mux
 - The module will be instantiated 4 times at Y positions: [2100, 1700, 1300, 900]
 
+## Implementation Status
+
+### Completed
+
+1. **Module function created** (`demux_modulation_module.py`)
+   - Function signature: `demux_modulation_module(base_x, base_y, ...)`
+   - Returns component with 1 input port and 8 output ports
+
+2. **Ring array placement**
+   - 8 rings in 1×8 horizontal arrangement
+   - 110 µm X pitch
+   - 7 µm cumulative Y offset (Ring i at Y = base_y + i × 7 µm)
+   - Component: `ring_double_pin` with standard parameters
+
+3. **Modulator array placement**
+   - 8 modulators in 1×8 horizontal arrangement
+   - 110 µm X pitch
+   - 7 µm cumulative Y offset (Modulator i at Y = base_y - 50 µm + i × 7 µm)
+   - Vertical separation: 50 µm from rings (reduced from initial 150 µm)
+   - Component: `straight_pin` with length=100 µm
+
+4. **Bus waveguide routing (top bus)**
+   - Input port: `bus_input` (exposed at Ring 7 o4)
+   - S-bend connections between rings to handle 7 µm Y offset
+   - Path: Input → Ring 7 → Ring 6 → ... → Ring 0
+
+5. **Drop waveguide routing**
+   - Each ring's o2 port connected to corresponding modulator o1 port
+   - Direct routing using `route_single`
+
+6. **Output alignment**
+   - All modulator outputs extended to same X position (x_max + 10 µm)
+   - Straight waveguide extensions added where needed
+
+7. **Fan-in routing**
+   - 30 µm straight waveguides after aligned outputs
+   - S-bend bundle routing to compress spacing
+   - Final output spacing: 1 µm pitch
+   - Output ports: `mod_0_out` to `mod_7_out`
+
+### Module Specifications
+
+- **Dimensions**: 996.5 × 181.6 µm
+- **Input port**: `bus_input` (right side, aligned with Ring 7 o4)
+- **Output ports**: `mod_0_out` to `mod_7_out` (1 µm pitch, tightly spaced)
+- **Total ports**: 9 (1 input + 8 outputs)
+
+### Design Decisions
+
+1. **Y offset**: 7 µm chosen to match doping width, minimizing space while providing routing clearance
+2. **Ring-to-modulator separation**: 50 µm provides adequate clearance for drop waveguide routing
+3. **S-bends for top bus**: Explicit S-bend components used instead of automatic routing for predictable layout
+4. **Fan-in output spacing**: 1 µm pitch enables direct connection to AWG or other dense components
+5. **Output alignment**: All outputs at same X coordinate simplifies module-level integration
+
+### Testing
+
+- GDS file generated: `demux_modulation_module.gds`
+- Visual inspection: Layout verified, no crossings detected
+- Port count: 9 ports (1 input, 8 outputs) as expected
+
+### Next Steps
+
+1. Integrate module into transceiver chip layout
+2. Connect 1×4 splitter outputs to 4 module inputs
+3. Connect module outputs to AWG inputs
+4. Add electrical routing for ring and modulator control signals
+
 ## Implementation Results
 
 ### Module Created Successfully
