@@ -86,3 +86,10 @@ venv.bak/
 *.tiff
 *.bmp
 *.oas
+
+*.parquet
+*.lancedb
+*.lance
+
+*cache*
+*.html

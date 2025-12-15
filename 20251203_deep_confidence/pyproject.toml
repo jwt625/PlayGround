@@ -1,0 +1,11 @@
+[project]
+name = "20251203-deep-confidence"
+version = "0.1.0"
+description = "Add your description here"
+requires-python = ">=3.12"
+dependencies = [
+    "datasets>=4.4.1",
+    "openai>=2.8.1",
+    "python-dotenv>=1.2.1",
+    "tqdm>=4.67.1",
+]
