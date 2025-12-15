@@ -181,12 +181,13 @@ Mock silicon photonics transceiver chip with 8 wavelength channels and 4 spatial
 - Monitoring detector array: 170×375 µm at (50, 1250)
 - Input ports facing right to receive laser taps
 
-**Bottom-Left Section (Y: 0-1000 µm)**
+**Bottom-Left Section (Y: 0-1250 µm)**
 - RX Detector chip 1: 170×375 µm at (50, 50)
 - RX Detector chip 2: 170×375 µm at (50, 450)
 - RX Detector chip 3: 170×375 µm at (50, 850)
-- RX Detector chip 4: 170×375 µm at (250, 50)
-- Spacing: 400 µm vertical, 200 µm horizontal
+- RX Detector chip 4: 170×375 µm at (50, 1250)
+- Spacing: 400 µm vertical
+- Note: All chips aligned in same column (x=50) for parallel waveguide routing
 
 ### Transmit Path (X: 500-2800 µm)
 **Stage 1: TX Multiplexing (X: 500-700 µm)**
