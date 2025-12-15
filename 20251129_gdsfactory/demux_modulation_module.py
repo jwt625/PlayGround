@@ -90,17 +90,47 @@ def demux_modulation_module(
         modulators.append(mod)
     
     # ========================================================================
+    # ROUTING: BUS WAVEGUIDE INPUT (TOP BUS, WITH UPWARD BEND AND S-BEND)
+    # ========================================================================
+
+    # Route Ring 7 o4 upward and to the left for chip-level routing ease
+    # Path: bus_input → S-bend (left and down) → 180° bend up → Ring 7 o4
+
+    ring_7_o4 = rings[7].ports["o4"]
+
+    # Add 180° Euler bend to turn upward from Ring 7 o4
+    bend_radius = 10.0
+    bend_180 = c << gf.components.bend_euler(radius=bend_radius, angle=180)
+    bend_180.connect("o1", ring_7_o4)
+
+    # After 180° bend, the output port is pointing left (180°) and positioned above Ring 7 o4
+    # Calculate S-bend parameters to route left and down to align with Ring 0 level
+
+    # Vertical offset: Ring 7 is at base_y + 7*ring_y_offset, need to go down to base_y level
+    # Plus the height added by the 180° bend (2 * bend_radius)
+    vertical_offset = 7 * ring_y_offset + 2 * bend_radius - 20  # 49 + 20 = 69 µm down
+
+    # Horizontal distance: route to the left side (align with Ring 0 or further left)
+    # Ring 7 is at base_x + 7*ring_pitch_x, route to base_x - some margin
+    horizontal_distance = -(7 * ring_pitch_x + 50.0)  # -(770 + 50) = -820 µm (negative = left)
+
+    # S-bend to route left and down from the 180° bend output
+    # The bend output is pointing left (180°), so S-bend goes left and down
+    sbend_input = c << gf.components.bend_s(
+        size=(horizontal_distance, -vertical_offset),
+        cross_section="strip",
+    )
+    sbend_input.connect("o1", bend_180.ports["o2"])
+
+    # Expose the S-bend output as the module input port
+    c.add_port("bus_input", port=sbend_input.ports["o2"])
+
+    # ========================================================================
     # ROUTING: BUS WAVEGUIDE (TOP BUS, RIGHT TO LEFT)
     # ========================================================================
 
-    # Input from right side connects to Ring 7 o4
-    # Path: Input → Ring 7 o4 → Ring 7 o3 → Ring 6 o4 → ... → Ring 0 o3
-
-    # Create input port on the right side (aligned with Ring 7 o4)
-    ring_7_o4 = rings[7].ports["o4"]
-    c.add_port("bus_input", port=ring_7_o4)
-
     # Route through all rings using S-bends for Y offset
+    # Path: Ring 7 o4 → Ring 7 o3 → Ring 6 o4 → ... → Ring 0 o3
     for i in range(7, 0, -1):  # Ring 7 to Ring 1
         src_port = rings[i].ports["o3"]
         dst_port = rings[i-1].ports["o4"]
@@ -115,7 +145,7 @@ def demux_modulation_module(
             cross_section="strip",
         )
         sbend.connect("o1", src_port)
-    
+
     # ========================================================================
     # ROUTING: DROP WAVEGUIDES (RING TO MODULATOR)
     # ========================================================================

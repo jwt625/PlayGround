@@ -14,6 +14,7 @@ import gdsfactory as gf
 from laser_bar_module import laser_bar, detector
 from ring_double_pin import ring_double_pin
 from custom_awg_debug import awg_manual_route
+from demux_modulation_module import demux_modulation_module
 
 
 @gf.cell
@@ -360,52 +361,77 @@ def transceiver_chip_mvp() -> gf.Component:
 
     # Stage 2: Spatial splitting - 1x4 splitter
     splitter = c << gf.components.splitter_tree(noutputs=4, spacing=(90, 50))
-    splitter.move((800, 2000))
-    
-    # Stage 3: TX Demultiplexing - 4 groups of 8 add-drop rings (32 total)
-    # Each ring drops one wavelength from the bus to a separate waveguide
-    tx_demux_groups = []
-    demux_y_positions = [2100, 1700, 1300, 900]
+    # Move down by 300 µm and left by 100 µm from original position (800, 2000)
+    splitter.move((700, 1700))
 
-    for _, y_base in enumerate(demux_y_positions):
-        group_rings = []
-        for i in range(8):
-            ring = c << ring_double_pin(
-                gap=0.2,
-                radius=10.0,
-                length_x=20.0,
-                length_y=50.0,
-                via_stack_width=10.0,
-                pin_on_left=True
-            )
-            ring.move((1100, y_base + i * 80))  # Increased spacing for larger rings
-            group_rings.append(ring)
-        tx_demux_groups.append(group_rings)
-    
-    # Stage 4: Modulation - 32 PIN modulators
-    tx_modulators = []
-    for y_base in demux_y_positions:
-        for i in range(8):
-            mod = c << gf.components.straight_pin(length=100.0)
-            mod.move((1400, y_base + i * 80))  # Match ring spacing
-            tx_modulators.append(mod)
-    
-    # Stage 5: TX Recombining - 4 AWGs
-    # Use custom AWG with manual routing for consistent path lengths and no crossings
-    tx_awgs = []
-    for y_pos in demux_y_positions:
-        awg = c << awg_manual_route(
-            arms=20,
-            outputs=8,
-            fpr_spacing=50.0,
-            delta_length=10.0
+    # Connect TX mux output (Ring 7 o4) to splitter input
+    # First add a 50 µm straight extension from Ring 7 o4
+    tx_mux_output = tx_mux_rings[7].ports["o4"]
+
+    straight_extension = c << gf.components.straight(length=50.0, cross_section="strip")
+    straight_extension.connect("o1", tx_mux_output)
+
+    # Then connect the extension output to splitter input
+    # Splitter tree has port 'o1_0_0' as input and 'o2_1_1', 'o2_1_2', 'o2_1_3', 'o2_1_4' as outputs
+    splitter_input = splitter.ports["o1_0_0"]
+
+    gf.routing.route_single(
+        c,
+        straight_extension.ports["o2"],
+        splitter_input,
+        cross_section="strip",
+    )
+
+    # Stage 3-5: TX Demux + Modulation + Recombining - 4 integrated modules
+    # Each module contains: 8 demux rings + 8 PIN modulators + 1 AWG
+    tx_modules = []
+    module_y_positions = [1800, 1600, 1400, 1200]
+    module_x_position = 1100  # Starting X position for modules
+
+    for y_pos in module_y_positions:
+        module = c << demux_modulation_module(
+            base_x=module_x_position,
+            base_y=y_pos,
         )
-        awg.move((1700, y_pos))
-        tx_awgs.append(awg)
+        tx_modules.append(module)
+
+    # Connect splitter outputs to demux module inputs
+    # Splitter at Y=1700, modules at Y=[1800, 1600, 1400, 1200]
+    # Module inputs: tx_modules[0-3].ports["bus_input"] at Y=[1800, 1600, 1400, 1200] (high to low)
+
+    # Get splitter output ports and sort by Y position (high to low) to match module order
+    # This avoids routing crossings
+    splitter_port_names = ["o2_1_1", "o2_1_2", "o2_1_3", "o2_1_4"]
+    splitter_ports_with_y = [(splitter.ports[name], splitter.ports[name].center[1])
+                              for name in splitter_port_names]
+    splitter_ports_with_y.sort(key=lambda x: x[1], reverse=True)  # Sort by Y, high to low
+
+    splitter_outputs = [port for port, _ in splitter_ports_with_y]
+
+    # Get module input ports
+    module_inputs = [module.ports["bus_input"] for module in tx_modules]
+
+    # Print port coordinates for debugging
+    print("\n=== Splitter Output Ports ===")
+    for i, port in enumerate(splitter_outputs):
+        print(f"  Splitter output {i} ({port.name}): center=({port.center[0]:.1f}, {port.center[1]:.1f}), orientation={port.orientation}")
+
+    print("\n=== Module Input Ports ===")
+    for i, port in enumerate(module_inputs):
+        print(f"  Module {i} bus_input: center=({port.center[0]:.1f}, {port.center[1]:.1f}), orientation={port.orientation}")
+    print()
+
+    # Route bundle from splitter outputs to module inputs
+    gf.routing.route_bundle(
+        c,
+        ports1=splitter_outputs,
+        ports2=module_inputs,
+        cross_section="strip",
+    )
     
     # Stage 6: TX Edge couplers
     tx_edge_couplers = []
-    for y_pos in demux_y_positions:
+    for y_pos in module_y_positions:
         edge = c << gf.components.edge_coupler_silicon()
         edge.move((2700, y_pos))
         tx_edge_couplers.append(edge)
@@ -472,9 +498,11 @@ if __name__ == "__main__":
     print(f"  - Monitoring detectors: 8")
     print(f"  - RX detectors: 32 (4 chips × 8)")
     print(f"  - TX mux rings: 8")
-    print(f"  - TX demux rings: 32 (4 groups × 8)")
-    print(f"  - PIN modulators: 32")
-    print(f"  - AWGs: 8 (4 TX + 4 RX)")
+    print(f"  - TX demux+modulation modules: 4 (each with 8 rings + 8 modulators + 1 AWG)")
+    print(f"    - Total TX demux rings: 32")
+    print(f"    - Total PIN modulators: 32")
+    print(f"    - Total TX AWGs: 4 (integrated in modules)")
+    print(f"  - RX AWGs: 4")
     print(f"  - Edge couplers: 8 (4 TX + 4 RX)")
     print(f"  - 1×4 Splitter: 1")
 
