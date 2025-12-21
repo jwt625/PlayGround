@@ -160,8 +160,67 @@ tmux new -s training -d "cd /home/ubuntu/GitHub/PlayGround/20250908_LLM_learning
 
 ---
 
+## Training Issues and Resolutions
+
+### Issue #1: HTTP 403 Error on eval_bundle.zip Download
+
+**Problem:**
+Training failed at step 2000 (15.6% complete) when attempting to download evaluation bundle:
+```
+Downloading https://karpathy-public.s3.us-west-2.amazonaws.com/eval_bundle.zip...
+urllib.error.HTTPError: HTTP Error 403: Forbidden
+```
+
+**Root Cause:**
+- The S3 bucket `karpathy-public.s3.us-west-2.amazonaws.com` is no longer accessible
+- Both `eval_bundle.zip` and `identity_conversations.jsonl` files return 403 Forbidden
+- This is a known issue tracked in [nanochat issue #379](https://github.com/karpathy/nanochat/issues/379)
+
+**Impact:**
+- Base training crashed at first evaluation checkpoint (step 2000)
+- Subsequent pipeline stages failed due to missing checkpoint directories:
+  - `/home/ubuntu/.cache/nanochat/base_checkpoints`
+  - `/home/ubuntu/.cache/nanochat/mid_checkpoints`
+  - `/home/ubuntu/.cache/nanochat/chatsft_checkpoints`
+
+**Resolution:**
+Downloaded workaround files from GitHub issue #379 (provided by user @ddudek):
+
+1. **eval_bundle.zip** (24.87 MB):
+   ```bash
+   cd /home/ubuntu/.cache/nanochat
+   wget -O eval_bundle.zip "https://github.com/user-attachments/files/24214174/eval_bundle.zip"
+   unzip -o eval_bundle.zip
+   ```
+
+2. **identity_conversations.jsonl** (2.29 MB):
+   ```bash
+   cd /home/ubuntu/.cache/nanochat
+   wget -O identity_conversations.jsonl.zip "https://github.com/user-attachments/files/24214240/identity_conversations.jsonl.zip"
+   unzip -o identity_conversations.jsonl.zip
+   ```
+
+**Verification:**
+```bash
+ls -la /home/ubuntu/.cache/nanochat/eval_bundle/
+ls -la /home/ubuntu/.cache/nanochat/identity_conversations.jsonl
+```
+
+**Files cached:**
+- `eval_bundle/` directory with CORE evaluation datasets
+  - 7 evaluation categories (symbolic_problem_solving, world_knowledge, commonsense_reasoning, safety, reading_comprehension, programming, language_understanding)
+  - `core.yaml` configuration
+  - `eval_meta_data.csv` metadata
+  - Reference GPT-2 model results
+- `identity_conversations.jsonl` for mid-training identity learning
+
+**Status:** ✅ Resolved - All required files cached locally
+
+---
+
 ## Next Steps
 
+- Re-run training with cached evaluation files
 - Monitor training progress and validate loss convergence
 - Analyze GPU power and thermal data post-training
 - Evaluate model performance metrics (CORE, validation bpb)
