@@ -346,12 +346,92 @@ python -m nanochat.dataset -n 300 &  # Extra margin beyond 280 required
 
 ---
 
-## Next Steps
+---
 
-- Re-run training with cached evaluation files
-- Monitor training progress and validate loss convergence
-- Analyze GPU power and thermal data post-training
-- Evaluate model performance metrics (CORE, validation bpb)
-- Document final training results
-- **Consider training a larger model (depth=20 or depth=24) to better utilize available GPU memory**
+## Training Run #2: 2025-12-21 (depth=16, batch_size=8)
+
+### Status: Base Training Complete, Mid-Training Failed
+
+**Base Training Results:**
+- Status: Completed successfully
+- Total steps: 12,800/12,800 (100%)
+- Training time: 259 minutes (4.3 hours)
+- Final validation bpb: 0.8669
+- CORE metric: 0.1614
+- Model saved: `/home/ubuntu/.cache/nanochat/base_checkpoints/d16`
+
+**Performance Metrics:**
+- Average time per step: ~1,217 ms
+- Throughput: ~430,600 tokens/sec
+- MFU: ~43.8%
+- Final loss: 2.904
+
+**Evaluation Results:**
+- hellaswag_zeroshot: 38.77% accuracy
+- arc_easy: 54.04% accuracy
+- arc_challenge: 25.68% accuracy
+- winogrande: 52.96% accuracy
+- piqa: 68.72% accuracy
+- boolq: 46.80% accuracy
+
+### Issue #2: Mid-Training Data File Corruption
+
+**Problem:**
+Mid-training phase failed with JSON decode error:
+```
+json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+```
+
+**Root Cause:**
+The `identity_conversations.jsonl` file was corrupted - it contained an HTTP 403 XML error response (278 bytes) instead of the actual JSONL data (2.2MB). This occurred because the AWS S3 bucket hosting the file (https://karpathy-public.s3.us-west-2.amazonaws.com/) returned 403 Forbidden errors.
+
+**File Content (Corrupted):**
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<Error><Code>AccessDenied</Code><Message>Access Denied</Message>...</Error>
+```
+
+**Resolution:**
+1. **Immediate fix**: Downloaded correct file from GitHub issue #379 workaround:
+   - Source: https://github.com/user-attachments/files/24214240/identity_conversations.jsonl.zip
+   - File size: 2.2MB (correct) vs 278 bytes (corrupted)
+   - Location: `/home/ubuntu/.cache/nanochat/identity_conversations.jsonl`
+   - Verified: Valid JSONL format with 996 identity conversation entries
+
+2. **Permanent fix**: Modified `run_2gpu.sh` to prevent re-downloading:
+   - Changed line 38 from unconditional `curl` to conditional download
+   - Now checks if file exists and is valid (not 278 bytes)
+   - Downloads from GitHub workaround instead of broken AWS S3 URL
+   - Only downloads if file is missing or corrupted
+
+**Modified code in `run_2gpu.sh` (lines 39-49):**
+```bash
+# Download identity_conversations.jsonl only if it doesn't exist or is corrupted (278 bytes = AWS 403 error)
+IDENTITY_FILE="$NANOCHAT_BASE_DIR/identity_conversations.jsonl"
+if [ ! -f "$IDENTITY_FILE" ] || [ $(stat -c%s "$IDENTITY_FILE") -eq 278 ]; then
+    echo "Downloading identity_conversations.jsonl from GitHub workaround (AWS S3 returns 403)..."
+    curl -L -o "$NANOCHAT_BASE_DIR/identity_conversations.jsonl.zip" "https://github.com/user-attachments/files/24214240/identity_conversations.jsonl.zip"
+    unzip -o "$NANOCHAT_BASE_DIR/identity_conversations.jsonl.zip" -d "$NANOCHAT_BASE_DIR"
+    rm -f "$NANOCHAT_BASE_DIR/identity_conversations.jsonl.zip"
+    echo "Downloaded identity_conversations.jsonl ($(stat -c%s "$IDENTITY_FILE") bytes)"
+else
+    echo "identity_conversations.jsonl already exists ($(stat -c%s "$IDENTITY_FILE") bytes), skipping download"
+fi
+```
+
+**Impact:**
+- Mid-training phase failed during data loading
+- Subsequent pipeline stages also failed (cascading failure)
+- Base training completed successfully and checkpoints are intact
+
+**Status:** Resolved (2025-12-21 17:23)
+- File re-downloaded and verified: 2.2 MB, 996 lines
+- Script modified to prevent future re-downloads
+- Ready to resume mid-training phase
+
+**Next Steps:**
+1. Resume pipeline from mid-training phase (skip base training)
+2. Monitor mid-training progress
+3. Complete full pipeline (mid_train -> chat_sft -> chat_eval)
+4. Consider training a larger model (depth=20 or depth=24) to better utilize available GPU memory
 
