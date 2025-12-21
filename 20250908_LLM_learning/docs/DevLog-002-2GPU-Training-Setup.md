@@ -214,7 +214,135 @@ ls -la /home/ubuntu/.cache/nanochat/identity_conversations.jsonl
   - Reference GPT-2 model results
 - `identity_conversations.jsonl` for mid-training identity learning
 
-**Status:** ✅ Resolved - All required files cached locally
+**Status:** Resolved - All required files cached locally
+
+---
+
+---
+
+## GPU Resource Utilization Analysis
+
+### Current Training Run Metrics (2025-12-21 08:16)
+
+**GPU Memory Usage:**
+- GPU 0: 28,481 MiB / 81,559 MiB (34.9% utilized)
+- GPU 1: 20,772 MiB / 81,559 MiB (25.5% utilized)
+- Average: ~30% memory utilization
+
+**GPU Compute Utilization:**
+- GPU 0: 89% compute utilization, 681W / 700W power
+- GPU 1: 99% compute utilization, 673W / 700W power
+- Average: ~94% compute utilization
+
+**Current Model Configuration:**
+- Depth: 16 layers
+- Model dimension: 1024 (depth × 64)
+- Number of heads: 8
+- Parameters: ~470M
+- Device batch size: 8
+- Sequence length: 2048
+
+**Memory Breakdown (per GPU, estimated):**
+- Model parameters (BF16): ~940 MB (470M params × 2 bytes)
+- Optimizer states (AdamW): ~3,760 MB (2 buffers × 4 bytes × 470M params)
+- Gradients (BF16): ~940 MB
+- Activations (batch_size=8, seq_len=2048): ~14-16 GB
+- **Total estimated**: ~20 GB per GPU
+- **Actual usage**: ~20-28 GB per GPU (matches estimate)
+
+### Analysis: Compute-Bound vs Memory-Bound
+
+**Key Finding:** Training is **compute-bound**, not memory-bound.
+
+- Compute utilization: ~94% (GPUs working at full capacity)
+- Memory utilization: ~30% (significant unused VRAM)
+
+**Implications:**
+1. **Can we train a larger model?** Yes, we have ~50-60 GB unused VRAM per GPU
+2. **Should we train a larger model?** It depends on training time tolerance
+3. **What would change?** Larger model = slower training steps, but better final quality
+
+### Proposed Larger Model Configurations
+
+#### Option 1: Conservative Increase (depth=24)
+**Configuration:**
+- Depth: 24 layers (vs. current 16)
+- Model dimension: 1536 (24 × 64)
+- Number of heads: 12
+- Parameters: ~1.06B (vs. current 470M)
+- Device batch size: 8 (unchanged)
+
+**Expected Resource Usage:**
+- Memory per GPU: ~45 GB (vs. current ~25 GB)
+- Memory headroom: ~35 GB remaining
+- Training time per step: ~1.8× slower (proportional to FLOPs increase)
+- Total training time: ~7.7 hours (vs. current ~4.3 hours)
+
+**Chinchilla-optimal training:**
+- Training tokens: ~21B (20 × 1.06B params)
+- Dataset requirement: ~400 shards (vs. current 200)
+
+#### Option 2: Aggressive Increase (depth=32, original 8×H100 config)
+**Configuration:**
+- Depth: 32 layers (original configuration)
+- Model dimension: 2048 (32 × 64)
+- Number of heads: 16
+- Parameters: ~1.9B (original target)
+- Device batch size: 6-8 (may need reduction)
+
+**Expected Resource Usage:**
+- Memory per GPU: ~70-75 GB (approaching limit)
+- Memory headroom: ~5-10 GB remaining (tight)
+- Training time per step: ~4× slower (proportional to FLOPs increase)
+- Total training time: ~17 hours (vs. current ~4.3 hours)
+
+**Chinchilla-optimal training:**
+- Training tokens: ~38B (20 × 1.9B params)
+- Dataset requirement: ~800 shards (original target)
+
+#### Option 3: Balanced Increase (depth=20)
+**Configuration:**
+- Depth: 20 layers
+- Model dimension: 1280 (20 × 64)
+- Number of heads: 10
+- Parameters: ~738M
+- Device batch size: 8 (unchanged)
+
+**Expected Resource Usage:**
+- Memory per GPU: ~33 GB (vs. current ~25 GB)
+- Memory headroom: ~47 GB remaining (very safe)
+- Training time per step: ~1.4× slower
+- Total training time: ~6 hours (vs. current ~4.3 hours)
+
+**Chinchilla-optimal training:**
+- Training tokens: ~14.8B (20 × 738M params)
+- Dataset requirement: ~280 shards
+
+### Recommendation
+
+**Recommended: Option 3 (depth=20)** for the next training run:
+
+**Rationale:**
+1. **Significant quality improvement**: 57% more parameters (738M vs. 470M)
+2. **Manageable time increase**: Only ~40% longer training (~6 hrs vs. 4.3 hrs)
+3. **Safe memory margins**: Uses only ~40% of available VRAM
+4. **Better hardware utilization**: Increases memory usage from 30% to 40%
+5. **Reasonable dataset requirement**: 280 shards (vs. 200 current, 800 original)
+
+**To implement:**
+```bash
+# Modify run_2gpu.sh line 57:
+torchrun --standalone --nproc_per_node=$NPROC_PER_NODE -m scripts.base_train -- --depth=20 --device_batch_size=8 --run=$WANDB_RUN
+
+# Download additional shards (line 27):
+python -m nanochat.dataset -n 300 &  # Extra margin beyond 280 required
+```
+
+**Expected outcomes:**
+- Model size: 738M parameters (vs. GPT-2 Medium's 350M, GPT-2 Large's 774M)
+- Training time: ~6 hours base training + ~1.5 hours mid/sft = ~7.5 hours total
+- Memory usage: ~33 GB per GPU (~40% utilization)
+- Compute usage: ~95% (unchanged, still compute-bound)
 
 ---
 
@@ -225,4 +353,5 @@ ls -la /home/ubuntu/.cache/nanochat/identity_conversations.jsonl
 - Analyze GPU power and thermal data post-training
 - Evaluate model performance metrics (CORE, validation bpb)
 - Document final training results
+- **Consider training a larger model (depth=20 or depth=24) to better utilize available GPU memory**
 
