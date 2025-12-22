@@ -502,3 +502,90 @@ python parse_training_logs.py --log-dir /path/to/logs --output custom_plot.png
 - Loss curves plotted against both training steps and wall-clock time
 - Enables comparison across different training runs and configurations
 
+### Interactive Visualization Update
+
+**Enhanced plotting capabilities:**
+- Migrated from static matplotlib plots to interactive Plotly HTML dashboards
+- Custom hover tooltips showing full metric details without abbreviation
+- Script now defaults to `nanochat/` directory when run from parent folder
+- Generates `loss_curves.html` (6.1 MB) with zoom, pan, and hover interactions
+- Static PNG output still available via `--static` flag
+
+**Usage:**
+```bash
+python parse_training_logs.py              # Interactive HTML (default)
+python parse_training_logs.py --static     # Static PNG
+python parse_training_logs.py --csv        # Also export CSV files
+```
+
+---
+
+## Training Run #3: 2025-12-21 (depth=24, batch_size=8)
+
+### Status: In Progress (37.7% complete)
+
+**Model Configuration:**
+- Depth: 24 layers
+- Parameters: 880,803,840 (~881M, 2.6× larger than depth=16)
+- Target steps: 33,600 (Chinchilla-optimal: 20:1 token:param ratio)
+- Target tokens: 17.6B (vs 6.7B for depth=16)
+
+**Current Progress (as of step 12,678):**
+- Steps completed: 12,678 / 33,600 (37.7%)
+- Training time: 622 minutes (10.4 hours)
+- Current loss: 2.70-2.84 range
+- Time per step: ~2.94 seconds (45% slower than depth=16)
+- Throughput: ~178K tokens/sec
+- MFU: ~50.3%
+
+**Loss Comparison with depth=16 model:**
+```
+Step   | depth=16 (336M) | depth=24 (881M) | Improvement
+-------|-----------------|-----------------|------------
+     0 |        11.0904  |        11.0904  |    0.0000
+  1000 |         3.4627  |         3.3553  |   -0.1074
+  5000 |         3.0704  |         2.9279  |   -0.1425
+ 10000 |         2.9700  |         2.8135  |   -0.1565
+ 12000 |         2.9072  |         2.8153  |   -0.0918
+```
+
+**Key findings:**
+- Larger model achieves 3-5% lower loss at equivalent step counts
+- Loss advantage most pronounced at steps 5,000-10,000
+- Already outperforms fully-trained depth=16 model despite being only 37% complete
+
+**Estimated completion:**
+- Remaining time: ~16 hours
+- Total training time: ~26 hours
+- Expected final loss: <2.7 (significantly better than depth=16's 2.90)
+
+### Issue #3: Missing Intermediate Checkpoints
+
+**Problem:**
+Training runs do not save intermediate checkpoints by default. The `save_every` parameter defaults to `-1`, meaning checkpoints are only saved at the final training step.
+
+**Impact:**
+- Training interruption results in complete loss of progress
+- No recovery points for long-running training jobs (26+ hours)
+- Current depth=24 run at 37% completion has no checkpoint to resume from
+
+**Root Cause:**
+Default configuration inherited from original `run1000.sh` script, which assumes uninterrupted 41.6-hour training runs on 8×H100 nodes. Design prioritizes disk space savings over fault tolerance.
+
+**Resolution:**
+Modified `run_2gpu.sh` to include `--save_every=3000` parameter:
+```bash
+torchrun --standalone --nproc_per_node=$NPROC_PER_NODE -m scripts.base_train -- \
+    --depth=16 --device_batch_size=8 --save_every=3000 --run=$WANDB_RUN
+```
+
+**Checkpoint policy:**
+- Saves checkpoint every 3,000 steps
+- For depth=24 (33,600 steps): checkpoints at steps 3000, 6000, 9000, 12000, 15000, 18000, 21000, 24000, 27000, 30000, 33600
+- Checkpoint size: ~3.5 GB per checkpoint for 881M parameter model
+- Total disk usage: ~38.5 GB for all checkpoints
+
+**Status:** Fixed for future runs. Current depth=24 run will continue without intermediate checkpoints until completion.
+
+**Recommendation:** For production runs exceeding 10 hours, always set `save_every` to a reasonable interval (2000-5000 steps depending on model size and training duration).
+
