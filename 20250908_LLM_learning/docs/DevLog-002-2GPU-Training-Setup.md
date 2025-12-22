@@ -435,3 +435,70 @@ fi
 3. Complete full pipeline (mid_train -> chat_sft -> chat_eval)
 4. Consider training a larger model (depth=20 or depth=24) to better utilize available GPU memory
 
+---
+
+## Training Log Analysis and Loss Curve Extraction
+
+### Log Parser Implementation
+
+Created `parse_training_logs.py` to extract training metrics from terminal output logs for post-hoc analysis.
+
+**Functionality:**
+- Parses training step logs using regex pattern matching
+- Extracts metrics: step number, loss, gradient norm, learning rate multiplier, time per step, throughput, MFU, cumulative training time
+- Outputs structured CSV files for analysis
+- Generates multi-panel visualization plots
+
+**Usage:**
+```bash
+python parse_training_logs.py --csv
+python parse_training_logs.py --log-dir /path/to/logs --output custom_plot.png
+```
+
+**Output files:**
+- CSV format: `training_YYYYMMDD_HHMMSS.csv` with columns: step, loss, grad_norm, lrm, dt_ms, tok_per_sec, mfu, total_time_min
+- Visualization: `loss_curves.png` with 4 subplots (loss vs step, loss vs time, MFU vs step, throughput vs step)
+
+### Parsed Training Runs
+
+**Run 1: training_20251221_070319 (Base Training - Complete)**
+- Steps: 12,800 (0 to 12,799)
+- Loss: 11.09 to 2.77 (8.32 reduction)
+- Training time: 259.23 minutes (4.3 hours)
+- Average throughput: 431,260 tokens/sec
+- Average MFU: 43.90%
+- Status: Complete base training run
+
+**Run 2: training_20251221_172457 (Mid-Training)**
+- Steps: 813 (1 to 813)
+- Loss: 2.08 to 1.26 (0.82 reduction)
+- Training time: 15.98 minutes
+- Status: Mid-training phase
+
+**Run 3: training_20251221_183935 (Base Training - Incomplete)**
+- Steps: 11,939 (0 to 11,938)
+- Loss: 11.09 to 2.68 (8.41 reduction)
+- Training time: 586.16 minutes (9.8 hours)
+- Status: Stopped before completion at step 11,938/12,800 (93.3%)
+
+**Runs 4-5: training_20251221_171757, training_20251221_172138**
+- Status: Failed or aborted early (no training steps logged)
+
+### Key Observations
+
+**Loss convergence:**
+- Initial loss: ~11.09 (random initialization)
+- Rapid descent in first 1,000 steps: 11.09 to 3.46 (67% reduction)
+- Slower convergence after step 5,000: 3.07 to 2.90 (5.5% reduction)
+- Final loss: 2.77-2.90 depending on run completion
+
+**Training stability:**
+- Consistent throughput: ~430K tokens/sec across all runs
+- Stable MFU: ~43.8-43.9% throughout training
+- No significant performance degradation over time
+
+**Data availability:**
+- All training metrics now available in CSV format for further analysis
+- Loss curves plotted against both training steps and wall-clock time
+- Enables comparison across different training runs and configurations
+
