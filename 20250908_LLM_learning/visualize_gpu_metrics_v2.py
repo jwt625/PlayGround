@@ -195,7 +195,7 @@ if __name__ == "__main__":
     csv_file = "gpu_metrics_20251221_070042.csv"
     output_file = "gpu_metrics_plot.html"
     power_threshold = 200
-    downsample_factor = 100
+    downsample_factor = 1
     buffer_minutes = 10
 
     # Load and process data

@@ -166,10 +166,14 @@ This script serves as reference implementation for correct NVML Field Values API
 
 ### Visualization Update
 
-Updated `visualize_gpu_metrics_v2.py`:
-- Changed `downsample_factor` from 100 to 1 (no point skipping)
-- All data points now included in visualization
-- Enables accurate analysis of transient power behavior
+Created `visualize_gpu_metrics_v2_enhanced.py` for v2 CSV format:
+- Plots both instant and average power curves (solid and dotted lines respectively)
+- Includes all datapoints without downsampling (downsample_factor=1)
+- Extracts timestamp from CSV filename for output files
+- Generates interactive HTML plot: `gpu_metrics_plot-v2_<timestamp>.html`
+- Exports text summary: `gpu_metrics_v2_summary_<timestamp>.txt`
+- Supports idle period detection and automatic trimming with configurable buffer
+- Compatible with both Python and C monitor implementations
 
 ### Benefits
 
@@ -192,7 +196,7 @@ Updated `visualize_gpu_metrics_v2.py`:
 - `test_nvml_fields.py` - API validation and reference implementation (Python)
 - `test_nvml_fields.c` - C implementation validating full NVML API access
 - `Makefile` - Build configuration for C programs
-- `visualize_gpu_metrics_v2.py` - Visualization script (updated for full resolution)
+- `visualize_gpu_metrics_v2_enhanced.py` - Visualization script for v2 format (instant + average power)
 
 ## C Implementation Investigation
 
