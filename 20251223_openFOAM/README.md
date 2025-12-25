@@ -313,7 +313,24 @@ ls -lt peacock_*.log | head -1
 **Installation:**
 - Installed `moose-peacock` conda package version 2025.04.17
 - Package includes all required dependencies: PyQt5, VTK, matplotlib, pandas
-- Installed alongside peacock-trame without conflicts
+
+**Known Issue: Qt5/Qt6 Library Conflict**
+
+The environment has both Qt5 and Qt6 installed, causing segmentation faults:
+
+**Root Cause:**
+- `moose-peacock` → requires `vtk` → requires `vtk-base 9.3.1`
+- `vtk-base 9.3.1` → requires `qt6-main` (VTK switched from Qt5 to Qt6 in version 9.3.x)
+- `moose-peacock` → also requires `pyqt` → requires `qt-main` (Qt5)
+- Result: Both `qt-main` (Qt5) and `qt6-main` (Qt6) are installed
+- macOS runtime error: "Class QT_ROOT_LEVEL_POOL is implemented in both libQt5Core and libQt6Core"
+
+**Why Both Versions Exist:**
+- VTK 9.2.6 and earlier used Qt5
+- VTK 9.3.0+ switched to Qt6
+- The `moose-peacock` package depends on VTK 9.3.1, which requires Qt6
+- But Peacock's GUI (PyQt5) requires Qt5
+- Conda installs both to satisfy all dependencies, but they conflict at runtime
 
 **Setup:**
 - Created `run_peacock_qt.sh` wrapper script for easy launching
@@ -336,13 +353,31 @@ ls -lt peacock_*.log | head -1
    - Lighter weight
    - Some compatibility issues with current MOOSE (requires hit.explode() monkey patch)
 
-**Usage:**
-```bash
-# Original Peacock (desktop)
-./run_peacock_qt.sh ~/peacock-work/moose/examples/ex08_materials/ex08.i
+**Attempted Solution: Dedicated Qt5 Environment**
 
-# Peacock-Trame (web)
+Attempted to create separate conda environment `peacock-qt5` with Qt5-compatible dependencies, but encountered macOS-specific conda packaging issues.
+
+**Issue Summary:**
+1. Qt5/Qt6 conflict successfully resolved by isolating Qt5 in separate environment
+2. Secondary issue: libgfortran RPATH error on macOS ARM64
+   - Error: "Library not loaded: @rpath/libgfortran.5.dylib (duplicate LC_RPATH)"
+   - Root cause: Conda packages have malformed RPATH entries on macOS
+   - Affects both pkgs/main and conda-forge libopenblas packages
+
+**Workaround:**
+Use Peacock-Trame (web-based version) which works correctly:
+
+```bash
 ./run_peacock.sh ~/peacock-work/moose/examples/ex08_materials ex08.i
 ```
+
+**Technical Details:**
+- peacock-qt5 environment created with: Python 3.10.16, VTK 9.2.6, Qt5 only
+- Qt5/Qt6 conflict resolved, but libgfortran linking prevents execution
+- See DevLog-001-Peacock-Qt5-Qt6-Conflict.md for detailed analysis
+
+**Current Status:**
+- Original Peacock (PyQt5): ❌ **Not working** - macOS conda packaging issue
+- Peacock-Trame (web-based): ✅ **Working** - Recommended
 
 
