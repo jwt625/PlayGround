@@ -195,4 +195,65 @@ With proper environment variables set, MOOSE examples build successfully using c
 - MOOSE example applications must be compiled before use with peacock-trame
 - peacock-trame requires both the MOOSE Python modules and compiled executables for full functionality
 
+### 2025-12-24: Peacock-Trame GUI Fix and Usage
+
+**Issue:** peacock-trame 0.1.2 expects `hit.explode()` function which was removed from current MOOSE version
+
+**Error:**
+```
+WARNING: setInputFile exception: module 'hit' has no attribute 'explode'
+```
+
+**Root Cause:**
+- peacock-trame calls `hit.explode(root)` in `InputFile.py` after parsing input files
+- The `hit` module (compiled from `~/peacock-work/moose/framework/contrib/hit/hit.pyx`) no longer includes the `explode()` function
+- This is a version compatibility issue between peacock-trame and the current MOOSE repository
+
+**Solution:**
+Created a wrapper script `run_peacock.sh` that monkey-patches the `hit` module to add a no-op `explode()` function before launching peacock-trame.
+
+**Usage:**
+```bash
+# Run with default example (ex01_inputfile)
+./run_peacock.sh
+
+# Run with specific example
+./run_peacock.sh ~/peacock-work/moose/examples/ex08_materials ex08.i
+```
+
+The GUI will be available at: http://localhost:8080/
+
+**Environment Setup:**
+The script automatically sets:
+- `PYTHONPATH` to include MOOSE Python modules and compiled hit module
+- `PATH` to include moose conda environment binaries
+- Creates timestamped log files for each run
+
+**Available Examples:**
+All examples are in `~/peacock-work/moose/examples/`:
+- ex01_inputfile - Basic input file and mesh loading
+- ex02_kernel - Custom kernel implementation
+- ex03_coupling - Coupled physics
+- ex04_bcs - Boundary conditions
+- ex05_amr - Adaptive mesh refinement
+- ex06_transient - Transient simulations
+- ex07_ics - Initial conditions
+- ex08_materials - Material properties
+- ex09_stateful_materials - Stateful materials
+- ex10_aux - Auxiliary variables
+
+**Troubleshooting:**
+```bash
+# Check if peacock-trame is running
+ps aux | grep peacock-trame
+
+# Stop the GUI
+pkill -f peacock-trame
+
+# View latest log
+ls -lt peacock_*.log | head -1
+```
+
+**Note:** The warning "ParaView is not available" is expected. The GUI will still work for input file editing and basic visualization.
+
 
