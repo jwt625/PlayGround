@@ -59,16 +59,31 @@ source ~/miniforge3/bin/activate moose
 conda install -c conda-forge moose-dev
 ```
 
-### Step 3: Install Peacock-Trame for GUI visualization
+### Step 3: Install Peacock GUI (Two Options)
 
-Peacock-Trame provides a web-based interface for MOOSE input file editing and simulation visualization.
+MOOSE provides two GUI options for input file editing and simulation visualization:
+
+#### Option A: Peacock (Original PyQt5-based Desktop GUI)
+
+The traditional desktop application with full Qt5 interface.
+
+```bash
+# Install via conda (includes all dependencies: PyQt5, VTK, matplotlib, pandas)
+mamba install -c https://conda.software.inl.gov/public moose-peacock
+```
+
+#### Option B: Peacock-Trame (Web-based GUI)
+
+Modern web-based interface that runs in your browser.
 - GitHub: https://github.com/Kitware/peacock
 - PyPI: https://pypi.org/project/peacock-trame/
 
 ```bash
-# Make sure moose environment is activated
+# Install via pip
 pip install peacock-trame
 ```
+
+**Note:** You can install both! They serve different use cases and don't conflict.
 
 ## Verification
 
@@ -83,21 +98,27 @@ Expected output should include:
 moose    /Users/wentaojiang/miniforge3/envs/moose
 ```
 
-### Verify Peacock-Trame installation:
+### Verify Peacock installations:
+
+**Check installed packages:**
 ```bash
-# Using the moose environment's Python directly
+~/miniforge3/bin/mamba list -n moose | grep peacock
+```
+Expected output:
+```
+moose-peacock      2025.04.17    openmpi_0    conda.software.inl.gov/public
+peacock-trame      0.1.2         pypi_0       pypi
+```
+
+**Test Peacock-Trame (web-based):**
+```bash
 ~/miniforge3/envs/moose/bin/python -c "import peacock_trame; print('Peacock-Trame installed successfully')"
-
-# OR activate the environment first
-conda activate moose
-python -c "import peacock_trame; print('Peacock-Trame installed successfully')"
 ```
 
-### Check installed version:
+**Test Original Peacock (PyQt5):**
 ```bash
-~/miniforge3/envs/moose/bin/pip list | grep peacock
+~/miniforge3/envs/moose/bin/python -c "from peacock.CheckRequirements import has_requirements; print('Peacock requirements:', 'OK' if has_requirements() else 'MISSING')"
 ```
-Expected output: `peacock-trame      0.1.2`
 
 ## Examples
 
@@ -128,22 +149,53 @@ cd ~/peacock-work/moose/examples/ex08_materials
 make -j4
 ```
 
-This creates the `ex08-opt` executable required by peacock-trame.
+This creates the `ex08-opt` executable required by both Peacock GUIs.
 
-## Running peacock-trame
+## Running Peacock GUIs
 
-After building the example executable:
+### Option 1: Original Peacock (PyQt5 Desktop GUI)
+
+The traditional desktop application with full Qt5 interface:
 
 ```bash
-# Set PYTHONPATH to include MOOSE Python modules
-export PYTHONPATH=~/peacock-work/moose/python:$PYTHONPATH
+# Using the wrapper script (recommended)
+./run_peacock_qt.sh ~/peacock-work/moose/examples/ex08_materials/ex08.i
 
-# Run peacock-trame with the example
+# Or run directly
+~/miniforge3/envs/moose/bin/python ~/peacock-work/moose/python/peacock/peacock -i ~/peacock-work/moose/examples/ex08_materials/ex08.i
+```
+
+**Features:**
+- Native desktop application
+- Full Qt5 interface with all widgets
+- Integrated input file editor
+- Mesh and results visualization
+- Execution control
+
+### Option 2: Peacock-Trame (Web-based GUI)
+
+Modern web-based interface that runs in your browser:
+
+```bash
+# Using the wrapper script (recommended - includes hit.explode() fix)
+./run_peacock.sh ~/peacock-work/moose/examples/ex08_materials ex08.i
+
+# Or run directly (may have compatibility issues)
 cd ~/peacock-work/moose/examples/ex08_materials
+export PYTHONPATH=~/peacock-work/moose/python:$PYTHONPATH
 peacock-trame -I ./ex08.i
 ```
 
-**Note:** The `PYTHONPATH` must be set to include `~/peacock-work/moose/python` because peacock-trame requires the `mooseutils` module which is not installed via pip but is part of the MOOSE repository.
+The GUI will be available at: http://localhost:8080/
+
+**Features:**
+- Web-based interface (runs in browser)
+- Modern Trame framework
+- Input file editing
+- Basic visualization
+- Can be accessed remotely
+
+**Note:** Both GUIs require the `PYTHONPATH` to include `~/peacock-work/moose/python` because they need the `mooseutils` module which is part of the MOOSE repository.
 
 ## Development Log
 
@@ -255,5 +307,42 @@ ls -lt peacock_*.log | head -1
 ```
 
 **Note:** The warning "ParaView is not available" is expected. The GUI will still work for input file editing and basic visualization.
+
+### 2025-12-25: Original Peacock (PyQt5) Installation
+
+**Installation:**
+- Installed `moose-peacock` conda package version 2025.04.17
+- Package includes all required dependencies: PyQt5, VTK, matplotlib, pandas
+- Installed alongside peacock-trame without conflicts
+
+**Setup:**
+- Created `run_peacock_qt.sh` wrapper script for easy launching
+- Both Peacock GUIs (original and trame) can coexist in the same environment
+- Original Peacock provides traditional desktop GUI experience
+- Peacock-Trame provides modern web-based interface
+
+**Key Differences:**
+1. **Original Peacock (PyQt5)**:
+   - Native desktop application
+   - Full Qt5 widget interface
+   - More mature and feature-complete
+   - Better for local development
+   - Requires X11/display server
+
+2. **Peacock-Trame**:
+   - Web-based (runs in browser)
+   - Modern Trame framework
+   - Can be accessed remotely
+   - Lighter weight
+   - Some compatibility issues with current MOOSE (requires hit.explode() monkey patch)
+
+**Usage:**
+```bash
+# Original Peacock (desktop)
+./run_peacock_qt.sh ~/peacock-work/moose/examples/ex08_materials/ex08.i
+
+# Peacock-Trame (web)
+./run_peacock.sh ~/peacock-work/moose/examples/ex08_materials ex08.i
+```
 
 
