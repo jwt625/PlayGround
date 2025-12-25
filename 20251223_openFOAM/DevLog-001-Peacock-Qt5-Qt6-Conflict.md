@@ -107,60 +107,91 @@ Created `run_peacock_qt5.sh` to run Peacock from the dedicated environment:
 
 ## Result
 
-**Status:** In progress - Qt5/Qt6 conflict resolved, working on libgfortran RPATH issue.
+**Status:** ✅ RESOLVED - Peacock Qt5 GUI successfully running
 
 ### Issues Encountered
 
-1. **Qt5/Qt6 Conflict:** RESOLVED
+1. **Qt5/Qt6 Conflict:** ✅ RESOLVED
    - Created isolated environment with only Qt5
    - VTK 9.2.6 successfully installed with Qt5 dependencies
 
-2. **libgfortran RPATH Issue:** IN PROGRESS
+2. **libgfortran RPATH Issue:** ✅ RESOLVED
    - macOS dyld error: "Library not loaded: @rpath/libgfortran.5.dylib"
    - Error message: "duplicate LC_RPATH '@loader_path'"
    - Root cause: Multiple conda packages have duplicate RPATH entries on macOS ARM64
    - Affected libraries identified:
-     - libopenblas.0.dylib: Had duplicate `@loader_path` and `@loader_path/` entries
-     - libgfortran.5.dylib: Likely has duplicate RPATH entries as well
+     - libopenblas.0.dylib: 2 duplicate `@loader_path` entries + 1 `@loader_path/` entry
+     - libgfortran.5.dylib: 2 duplicate `@loader_path` entries + 1 `@loader_path/` entry
+     - libquadmath.0.dylib: 2 duplicate `@loader_path` entries + 1 `@loader_path/` entry
 
-### Solutions Implemented
+### Solutions Attempted
 
-1. **Environment Variable Approach:** FAILED
+1. **Environment Variable Approach:** ❌ FAILED
    - Set DYLD_LIBRARY_PATH environment variable - did not resolve
    - macOS dyld rejects libraries with duplicate RPATH entries before searching paths
 
-2. **Package Reinstallation:** FAILED
+2. **Package Reinstallation:** ❌ FAILED
    - Tried conda-forge libopenblas instead of pkgs/main - same issue
    - Both libopenblas 0.3.30 (pkgs/main) and 0.3.28 (conda-forge) have duplicate RPATH
 
-3. **Binary Patching with install_name_tool:** IN PROGRESS
-   - Created fix_libopenblas_rpath.sh script
-   - Successfully fixed libopenblas.0.dylib (removed duplicates, added single RPATH)
-   - Verification: libopenblas now has only one LC_RPATH entry
-   - Next step: Fix libgfortran.5.dylib and any other affected libraries
+3. **Binary Patching with install_name_tool:** ✅ SUCCESS
+   - Created `fix_all_rpath.sh` script to fix all affected libraries
+   - Successfully fixed all three critical libraries
+   - Each library now has only one LC_RPATH entry
 
-### Current Progress
+### Final Solution
 
+Created consolidated script `fix_all_rpath.sh` that:
+1. Checks each library for duplicate RPATH entries
+2. Creates backups before modification
+3. Removes all duplicate RPATH entries using `install_name_tool`
+4. Adds back a single correct `@loader_path` entry
+5. Verifies the fix
+
+**Libraries Fixed:**
 ```bash
-# Fixed libopenblas.0.dylib
-otool -l ~/miniforge3/envs/peacock-qt5/lib/libopenblas.0.dylib | grep -A 2 LC_RPATH
-# Output: Single LC_RPATH entry @loader_path
-
-# Still needs fixing: libgfortran.5.dylib
-# Need to check and fix duplicate RPATH entries
+libopenblas.0.dylib:  3 entries → 1 entry ✓
+libgfortran.5.dylib:  3 entries → 1 entry ✓
+libquadmath.0.dylib:  3 entries → 1 entry ✓
 ```
 
-### Next Steps
+**Verification:**
+```bash
+./fix_all_rpath.sh
+# All libraries successfully patched
+# Peacock Qt5 GUI launches without errors
+```
 
-1. Check libgfortran.5.dylib for duplicate RPATH entries
-2. Extend fix script to patch all affected libraries
-3. Test Peacock Qt5 GUI after all RPATH fixes applied
-4. Document the complete fix procedure for future reference
+### Known Warnings (Non-Fatal)
+
+When running Peacock, the following warnings appear but do not affect functionality:
+
+1. **dyld missing symbol warnings:**
+   ```
+   dyld: symbol '__ZNKSt3__119bad_expected_accessIvE4whatEv' missing from root
+   ```
+   - C++ standard library compatibility warnings between conda's libc++ and macOS system frameworks
+   - Handled gracefully by dyld with placeholder values
+   - Non-fatal, informational only
+
+2. **Qt CSS parser warnings:**
+   ```
+   QCssParser::parseColorValue: Specified color without alpha value but alpha given
+   ```
+   - Harmless Qt CSS syntax warnings
+   - Does not affect GUI functionality
 
 ### Technical Notes
 
 The duplicate RPATH issue is a conda packaging bug on macOS ARM64. The workaround uses `install_name_tool` to:
-- Delete all existing LC_RPATH entries
-- Add back a single correct RPATH entry
+- Delete all existing LC_RPATH entries (may require multiple passes for duplicates)
+- Add back a single correct RPATH entry (`@loader_path`)
 - This invalidates code signatures but generates fake signatures (acceptable for local use)
+- Backups are created automatically before modification
+
+### Files Created
+
+- `fix_all_rpath.sh` - Consolidated RPATH fix script for all affected libraries
+- `run_peacock_qt5.sh` - Launch script for Peacock Qt5 GUI using peacock-qt5 environment
+- Removed: `run_peacock_qt.sh` (obsolete, used conflicting moose environment)
 

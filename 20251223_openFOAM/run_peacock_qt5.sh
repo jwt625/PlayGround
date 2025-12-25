@@ -44,6 +44,9 @@ export DYLD_LIBRARY_PATH=~/miniforge3/envs/peacock-qt5/lib:$DYLD_LIBRARY_PATH
 
     # Run Peacock using the peacock-qt5 environment
     ~/miniforge3/envs/peacock-qt5/bin/python ~/peacock-work/moose/python/peacock/peacock -i "$INPUT_FILE"
+
+    # No input file
+    # ~/miniforge3/envs/peacock-qt5/bin/python ~/peacock-work/moose/python/peacock/peacock
     
     exit_code=$?
     if [ $exit_code -ne 0 ]; then
