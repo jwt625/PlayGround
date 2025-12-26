@@ -19,7 +19,7 @@ WALL_THICKNESS = 0.05       # Thickness of cell walls (for visualization)
 
 # Order 1 slab geometry
 SLAB_ROWS = 18               # Number of rows in hexagonal grid
-SLAB_COLS = 12               # Number of columns in hexagonal grid
+SLAB_COLS = 10               # Number of columns in hexagonal grid
 
 # Visualization
 FIGURE_SIZE = (10, 10)      # Figure size in inches
