@@ -254,38 +254,59 @@ if __name__ == "__main__":
 
     print(f"Wireframe: {len(wireframe_verts)} vertices, {len(wireframe_edges)} edges, {len(wireframe_faces)} faces")
 
-    # Add an UNTRANSFORMED Order 1 slab for comparison (90° Y rotation only)
-    print("\nAdding Order 1 slab with 90° Y rotation for reference...")
-    untransformed_slab_verts, untransformed_slab_edges, untransformed_slab_faces = create_honeycomb_slab(
-        rows=SLAB_ROWS,
-        cols=SLAB_COLS,
-        radius=CELL_RADIUS,
-        depth=CELL_DEPTH,
-        center=(0, 0, 0)
-    )
-    # Apply 90° rotation around Y axis
-    untransformed_slab_verts = rotate_vertices(untransformed_slab_verts, 'x', np.pi/2)
+    # Add TRANSFORMED Order 1 slabs to all walls of all cells (with deduplication)
+    print("\nAdding TRANSFORMED Order 1 slabs to all cells...")
+    # Start with empty arrays instead of wireframe (to hide the mock grid)
+    vertices = np.empty((0, 3))
+    edges = []
+    all_slab_faces = []
 
-    # Add untransformed slab to wireframe
-    vertex_offset_1 = len(wireframe_verts)
-    temp_verts = np.vstack([wireframe_verts, untransformed_slab_verts])
-    untransformed_edges_offset = [(i + vertex_offset_1, j + vertex_offset_1) for i, j in untransformed_slab_edges]
-    temp_edges = wireframe_edges + untransformed_edges_offset
-    untransformed_faces_offset = [[i + vertex_offset_1 for i in face] for face in untransformed_slab_faces]
+    # Get cell positions
+    positions = hex_grid_positions(ORDER2_SLAB_ROWS, ORDER2_SLAB_COLS, ORDER2_HEX_RADIUS)
+    positions = np.array(positions)
+    positions[:, 0] -= positions[:, 0].mean()
+    positions[:, 1] -= positions[:, 1].mean()
 
-    # Add a single TRANSFORMED Order 1 slab to one wall
-    print("Adding TRANSFORMED Order 1 slab to cell 0, wall 0...")
-    vertices, edges, faces = add_single_wall_slab(
-        temp_verts, temp_edges,
-        cell_index=0,
-        wall_index=0,
-        rows=ORDER2_SLAB_ROWS,
-        cols=ORDER2_SLAB_COLS,
-        radius=ORDER2_HEX_RADIUS
-    )
+    # Calculate all unique wall positions to avoid duplicates
+    vertex_angles = np.linspace(0, 2*np.pi, 7)[:-1] + np.pi/2
+    face_angles = vertex_angles + np.pi/6
+    face_distance = ORDER2_HEX_RADIUS * np.sqrt(3) / 2
 
-    # Combine all faces
-    all_faces = wireframe_faces + untransformed_faces_offset + faces
+    added_walls = set()
+    num_cells = len(positions)
+
+    for cell_idx in range(num_cells):
+        cell_x, cell_y = positions[cell_idx]
+        for wall_idx in range(6):
+            # Calculate wall center position
+            angle = face_angles[wall_idx]
+            wall_x = cell_x + face_distance * np.cos(angle)
+            wall_y = cell_y + face_distance * np.sin(angle)
+
+            # Round to avoid floating point precision issues
+            wall_key = (round(wall_x, 6), round(wall_y, 6))
+
+            # Skip if this wall was already added
+            if wall_key in added_walls:
+                continue
+
+            added_walls.add(wall_key)
+            print(f"  Adding wall at ({wall_x:.2f}, {wall_y:.2f})...")
+
+            vertices, edges, slab_faces = add_single_wall_slab(
+                vertices, edges,
+                cell_index=cell_idx,
+                wall_index=wall_idx,
+                rows=ORDER2_SLAB_ROWS,
+                cols=ORDER2_SLAB_COLS,
+                radius=ORDER2_HEX_RADIUS
+            )
+            all_slab_faces.extend(slab_faces)
+
+    print(f"  Total unique walls added: {len(added_walls)}")
+
+    # Only use slab faces (wireframe hidden)
+    all_faces = all_slab_faces
 
     print(f"Total: {len(vertices)} vertices, {len(edges)} edges, {len(all_faces)} faces")
 
@@ -296,15 +317,15 @@ if __name__ == "__main__":
     plot_cell(vertices, edges, all_faces, ax=ax)
     setup_3d_axis(ax, vertices)
 
-    # Add axis markers for debugging
-    axis_length = ORDER2_HEX_RADIUS * 2
-    ax.plot([0, axis_length], [0, 0], [0, 0], 'r-', linewidth=3, label='X axis')
-    ax.plot([0, 0], [0, axis_length], [0, 0], 'g-', linewidth=3, label='Y axis')
-    ax.plot([0, 0], [0, 0], [0, axis_length], 'b-', linewidth=3, label='Z axis')
-    ax.legend()
+    # Add axis markers for debugging (hidden)
+    # axis_length = ORDER2_HEX_RADIUS * 2
+    # ax.plot([0, axis_length], [0, 0], [0, 0], 'r-', linewidth=3, label='X axis')
+    # ax.plot([0, 0], [0, axis_length], [0, 0], 'g-', linewidth=3, label='Y axis')
+    # ax.plot([0, 0], [0, 0], [0, axis_length], 'b-', linewidth=3, label='Z axis')
+    # ax.legend()
 
     # Show debug markers for sidewall centers
-    SHOW_DEBUG_MARKERS = True
+    SHOW_DEBUG_MARKERS = False
     if SHOW_DEBUG_MARKERS:
         # Get cell positions
         positions = hex_grid_positions(ORDER2_SLAB_ROWS, ORDER2_SLAB_COLS, ORDER2_HEX_RADIUS)
@@ -328,7 +349,7 @@ if __name__ == "__main__":
                 ax.text(wall_x, wall_y, 2, f'C{cell_idx}W{wall_idx}',
                        fontsize=8, color='red', weight='bold')
 
-    ax.set_title(f'Order 2 Slab ({ORDER2_SLAB_ROWS}x{ORDER2_SLAB_COLS})\nUntransformed (offset) + Transformed Wall',
+    ax.set_title(f'Order 2 Slab ({ORDER2_SLAB_ROWS}x{ORDER2_SLAB_COLS}) - Complete',
                  fontsize=14, pad=20)
 
     plt.tight_layout()
