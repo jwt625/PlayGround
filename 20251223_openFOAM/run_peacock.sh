@@ -3,14 +3,13 @@
 # This script fixes the compatibility issue between peacock-trame and current MOOSE version
 # by adding the missing hit.explode() function
 #
-# IMPORTANT NOTE:
-# The current MOOSE source code is incompatible with conda-provided libmesh.
-# MOOSE examples cannot be built with the conda environment.
-# This script now uses a simple test input file that works without an executable.
-#
 # Usage:
-#   ./run_peacock.sh                    # Uses default test_simple directory
-#   ./run_peacock.sh <dir> <file.i>     # Uses custom directory and input file
+#   ./run_peacock.sh                              # Uses default example (ex08_materials/ex08.i)
+#   ./run_peacock.sh <example_dir> <input_file>   # Uses custom directory and input file
+#
+# Examples:
+#   ./run_peacock.sh ~/peacock-work/moose/examples/ex01_inputfile ex01.i
+#   ./run_peacock.sh ~/peacock-work/moose/examples/ex08_materials ex08.i
 
 # Set up environment
 export PYTHONPATH=~/peacock-work/moose/framework/contrib/hit:~/peacock-work/moose/python:$PYTHONPATH
@@ -25,11 +24,15 @@ log_file=~/Documents/GitHub/PlayGround/20251223_openFOAM/peacock_${timestamp}.lo
 EXAMPLE_DIR=$(eval echo "${1:-~/peacock-work/moose/examples/ex08_materials}")
 INPUT_FILE="${2:-ex08.i}"
 
+# Port configuration (default 8082 to avoid conflict with Grafana on 8080)
+PORT="${3:-8082}"
+
 # Change to the example directory
 cd "$EXAMPLE_DIR" || { echo "Error: Cannot change to directory $EXAMPLE_DIR"; exit 1; }
 
-# Export INPUT_FILE as environment variable for Python to access
+# Export INPUT_FILE and PORT as environment variables for Python to access
 export PEACOCK_INPUT_FILE="$INPUT_FILE"
+export PEACOCK_PORT="$PORT"
 
 # Redirect all output (stdout and stderr) to both terminal and log file
 {
@@ -38,14 +41,10 @@ export PEACOCK_INPUT_FILE="$INPUT_FILE"
     echo "========================================"
     echo "Working directory: $EXAMPLE_DIR"
     echo "Input file: $INPUT_FILE"
+    echo "Port: $PORT"
     echo "Log file: $log_file"
     echo ""
-    echo "IMPORTANT: Peacock-Trame will run in limited mode."
-    echo "The MOOSE executable is not available due to library incompatibility."
-    echo "You can still edit the input file structure, but mesh visualization"
-    echo "and execution features will not work."
-    echo ""
-    echo "GUI will be available at: http://localhost:8080/"
+    echo "GUI will be available at: http://localhost:$PORT/"
     echo "========================================"
     echo ""
 
@@ -65,10 +64,11 @@ def explode(node):
     pass
 hit.explode = explode
 
-# Now run peacock-trame
+# Now run peacock-trame with custom port
 from peacock_trame.app.main import main
 input_file = os.environ.get('PEACOCK_INPUT_FILE', 'ex01.i')
-sys.argv = ['peacock-trame', '-I', './' + input_file]
+port = int(os.environ.get('PEACOCK_PORT', '8082'))
+sys.argv = ['peacock-trame', '-I', './' + input_file, '--port', str(port)]
 main()
 "
 } 2>&1 | tee "$log_file"
