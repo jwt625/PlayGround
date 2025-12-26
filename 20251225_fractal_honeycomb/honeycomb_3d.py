@@ -6,7 +6,7 @@ Order 0: Basic hexagonal cell module
 import numpy as np
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
-from mpl_toolkits.mplot3d.art3d import Line3DCollection
+from mpl_toolkits.mplot3d.art3d import Line3DCollection, Poly3DCollection
 
 # ============================================================================
 # PARAMETERS - Tune these
@@ -18,17 +18,19 @@ CELL_DEPTH = 3.0            # Height/depth of the hexagonal tube
 WALL_THICKNESS = 0.05       # Thickness of cell walls (for visualization)
 
 # Order 1 slab geometry
-SLAB_ROWS = 3               # Number of rows in hexagonal grid
-SLAB_COLS = 3               # Number of columns in hexagonal grid
+SLAB_ROWS = 18               # Number of rows in hexagonal grid
+SLAB_COLS = 12               # Number of columns in hexagonal grid
 
 # Visualization
 FIGURE_SIZE = (10, 10)      # Figure size in inches
 VIEW_ELEVATION = 20         # Camera elevation angle (degrees)
 VIEW_AZIMUTH = 45           # Camera azimuth angle (degrees)
+RENDER_MODE = 'solid'       # 'wireframe' or 'solid'
 EDGE_COLOR = '#2a2a2a'      # Color of edges
 EDGE_WIDTH = 0.8            # Width of edge lines
-FACE_ALPHA = 0.1            # Transparency of faces (0=invisible, 1=opaque)
-FACE_COLOR = '#cccccc'      # Color of faces
+FACE_ALPHA = 0.8            # Transparency of faces (0=invisible, 1=opaque)
+FACE_COLOR = '#d0d0d0'      # Color of faces
+SHOW_EDGES = True           # Show edges in solid mode
 
 # ============================================================================
 # GEOMETRY FUNCTIONS
@@ -73,6 +75,7 @@ def create_hexagonal_cell(radius=1.0, depth=3.0, center=(0, 0, 0)):
     Returns:
         vertices: Array of shape (12, 3) - 6 bottom + 6 top vertices
         edges: List of (i, j) tuples defining edges to draw
+        faces: List of vertex index lists defining faces
     """
     cx, cy, cz = center
 
@@ -101,7 +104,16 @@ def create_hexagonal_cell(radius=1.0, depth=3.0, center=(0, 0, 0)):
     for i in range(6):
         edges.append((i, i + 6))
 
-    return vertices, edges
+    # Define faces for solid rendering
+    faces = []
+
+    # Only side faces (6 rectangular faces) - no top/bottom for hollow appearance
+    for i in range(6):
+        next_i = (i + 1) % 6
+        # Each side is a quad: bottom[i], bottom[next_i], top[next_i], top[i]
+        faces.append([i, next_i, next_i + 6, i + 6])
+
+    return vertices, edges, faces
 
 
 def hex_grid_positions(rows=3, cols=3, radius=1.0):
@@ -188,6 +200,7 @@ def create_honeycomb_slab(rows=3, cols=3, radius=1.0, depth=3.0, center=(0, 0, 0
     Returns:
         vertices: Combined vertex array
         edges: Deduplicated edge list
+        faces: List of faces for solid rendering
     """
     # Get grid positions
     positions = hex_grid_positions(rows, cols, radius)
@@ -199,18 +212,23 @@ def create_honeycomb_slab(rows=3, cols=3, radius=1.0, depth=3.0, center=(0, 0, 0
 
     all_vertices = []
     all_edges = []
+    all_faces = []
     vertex_offset = 0
 
     # Create each cell
     for x, y in positions:
         cell_center = (x + center[0], y + center[1], center[2])
-        verts, edges = create_hexagonal_cell(radius, depth, cell_center)
+        verts, edges, faces = create_hexagonal_cell(radius, depth, cell_center)
 
         # Offset edge indices
         edges_offset = [(i + vertex_offset, j + vertex_offset) for i, j in edges]
 
+        # Offset face indices
+        faces_offset = [[i + vertex_offset for i in face] for face in faces]
+
         all_vertices.append(verts)
         all_edges.extend(edges_offset)
+        all_faces.extend(faces_offset)
         vertex_offset += len(verts)
 
     # Combine all vertices
@@ -219,31 +237,34 @@ def create_honeycomb_slab(rows=3, cols=3, radius=1.0, depth=3.0, center=(0, 0, 0
     # Deduplicate edges (shared walls between adjacent cells)
     edges = deduplicate_edges(all_edges, vertices)
 
-    return vertices, edges
+    return vertices, edges, all_faces
 
 
 # ============================================================================
 # VISUALIZATION FUNCTIONS
 # ============================================================================
 
-def plot_cell(vertices, edges, ax=None, edge_color=None, edge_width=None, 
-              face_alpha=None, face_color=None):
+def plot_cell(vertices, edges, faces=None, ax=None, edge_color=None, edge_width=None,
+              face_alpha=None, face_color=None, render_mode=None, show_edges=None):
     """
-    Plot a hexagonal cell using matplotlib 3D.
-    
+    Plot a hexagonal cell or slab using matplotlib 3D.
+
     Args:
         vertices: Array of shape (N, 3)
         edges: List of (i, j) tuples
+        faces: List of face vertex indices (for solid rendering)
         ax: Matplotlib 3D axis (creates new if None)
         edge_color, edge_width, face_alpha, face_color: Visual parameters
-    
+        render_mode: 'wireframe' or 'solid'
+        show_edges: Whether to show edges in solid mode
+
     Returns:
         ax: The matplotlib 3D axis
     """
     if ax is None:
         fig = plt.figure(figsize=FIGURE_SIZE)
         ax = fig.add_subplot(111, projection='3d')
-    
+
     # Use global parameters if not specified
     if edge_color is None:
         edge_color = EDGE_COLOR
@@ -253,28 +274,33 @@ def plot_cell(vertices, edges, ax=None, edge_color=None, edge_width=None,
         face_alpha = FACE_ALPHA
     if face_color is None:
         face_color = FACE_COLOR
-    
-    # Draw edges
-    edge_segments = []
-    for i, j in edges:
-        edge_segments.append([vertices[i], vertices[j]])
-    
-    edge_collection = Line3DCollection(edge_segments, colors=edge_color, 
-                                       linewidths=edge_width)
-    ax.add_collection3d(edge_collection)
-    
-    # Optionally draw faces with transparency
-    if face_alpha > 0:
-        # Bottom face
-        bottom_face = vertices[:6]
-        ax.plot_trisurf(bottom_face[:, 0], bottom_face[:, 1], bottom_face[:, 2],
-                       color=face_color, alpha=face_alpha, shade=True)
-        
-        # Top face
-        top_face = vertices[6:12]
-        ax.plot_trisurf(top_face[:, 0], top_face[:, 1], top_face[:, 2],
-                       color=face_color, alpha=face_alpha, shade=True)
-    
+    if render_mode is None:
+        render_mode = RENDER_MODE
+    if show_edges is None:
+        show_edges = SHOW_EDGES
+
+    if render_mode == 'solid' and faces is not None:
+        # Solid rendering with proper occlusion
+        face_verts = []
+        for face in faces:
+            face_verts.append([vertices[i] for i in face])
+
+        poly_collection = Poly3DCollection(face_verts,
+                                          facecolors=face_color,
+                                          alpha=face_alpha,
+                                          edgecolors=edge_color if show_edges else None,
+                                          linewidths=edge_width if show_edges else 0)
+        ax.add_collection3d(poly_collection)
+    else:
+        # Wireframe rendering
+        edge_segments = []
+        for i, j in edges:
+            edge_segments.append([vertices[i], vertices[j]])
+
+        edge_collection = Line3DCollection(edge_segments, colors=edge_color,
+                                           linewidths=edge_width)
+        ax.add_collection3d(edge_collection)
+
     return ax
 
 
@@ -309,28 +335,59 @@ def setup_3d_axis(ax, vertices):
 
 
 # ============================================================================
-# MAIN - Test Order 0 module
+# MAIN - Test modules
 # ============================================================================
 
 if __name__ == "__main__":
-    # Create a single Order 0 cell
-    vertices, edges = create_hexagonal_cell(
-        radius=CELL_RADIUS,
-        depth=CELL_DEPTH,
-        center=(0, 0, 0)
-    )
-    
-    # Visualize
-    fig = plt.figure(figsize=FIGURE_SIZE)
-    ax = fig.add_subplot(111, projection='3d')
-    
-    plot_cell(vertices, edges, ax=ax)
-    setup_3d_axis(ax, vertices)
-    
-    ax.set_title('Order 0: Single Hexagonal Cell', fontsize=14, pad=20)
-    
-    plt.tight_layout()
-    plt.savefig('order_0_cell.png', dpi=150, bbox_inches='tight')
-    print("Saved: order_0_cell.png")
+    import sys
+
+    # Choose what to visualize
+    mode = sys.argv[1] if len(sys.argv) > 1 else "slab"
+
+    if mode == "cell":
+        # Test Order 0: Single cell
+        vertices, edges, faces = create_hexagonal_cell(
+            radius=CELL_RADIUS,
+            depth=CELL_DEPTH,
+            center=(0, 0, 0)
+        )
+
+        fig = plt.figure(figsize=FIGURE_SIZE)
+        ax = fig.add_subplot(111, projection='3d')
+
+        plot_cell(vertices, edges, faces, ax=ax)
+        setup_3d_axis(ax, vertices)
+
+        ax.set_title('Order 0: Single Hexagonal Cell', fontsize=14, pad=20)
+
+        plt.tight_layout()
+        plt.savefig('order_0_cell.png', dpi=150, bbox_inches='tight')
+        print("Saved: order_0_cell.png")
+
+    elif mode == "slab":
+        # Test Order 1: Honeycomb slab
+        vertices, edges, faces = create_honeycomb_slab(
+            rows=SLAB_ROWS,
+            cols=SLAB_COLS,
+            radius=CELL_RADIUS,
+            depth=CELL_DEPTH,
+            center=(0, 0, 0)
+        )
+
+        print(f"Slab: {len(vertices)} vertices, {len(edges)} edges (after deduplication), {len(faces)} faces")
+
+        fig = plt.figure(figsize=FIGURE_SIZE)
+        ax = fig.add_subplot(111, projection='3d')
+
+        plot_cell(vertices, edges, faces, ax=ax)
+        setup_3d_axis(ax, vertices)
+
+        ax.set_title(f'Order 1: Honeycomb Slab ({SLAB_ROWS}x{SLAB_COLS})',
+                     fontsize=14, pad=20)
+
+        plt.tight_layout()
+        plt.savefig('order_1_slab.png', dpi=150, bbox_inches='tight')
+        print("Saved: order_1_slab.png")
+
     plt.show()
 
