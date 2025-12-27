@@ -1,0 +1,6 @@
+module PshFFI {
+    header "../../psh.h"
+    link "psh_ffi"
+    export *
+}
+

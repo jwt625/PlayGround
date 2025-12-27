@@ -41,6 +41,12 @@ perf.data.old
 .AppleDouble
 .LSOverride
 
+# Swift build artifacts
+psh-macos/.build/
+psh-macos/.swiftpm/
+*.xcodeproj
+*.xcworkspace
+
 # Temporary files
 *.tmp
 *.temp
