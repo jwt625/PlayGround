@@ -287,3 +287,66 @@ detail_instruction = "Include a brief body if the changes are complex."
 length_instruction = "Generate a concise one-line commit message."
 detail_instruction = "Provide only the commit title (one line)."
 
+[[snippet]]
+id = "context-catchup"
+namespace = "c"
+description = "Catch up on project by reading DevLogs and/or inspecting codebase"
+tags = ["context", "devlog", "codebase", "onboarding", "catchup"]
+template = """{{ scope_instruction }}
+{{ detail_instruction }}
+{{ emoji_instruction }}
+
+{{ focus_instruction }}
+{{ output_instruction }}
+{{ tone_instruction }}"""
+
+[snippet.ops.base]
+scope_instruction = "Read DevLogs and inspect the current codebase to gain complete project context."
+detail_instruction = "Provide a comprehensive understanding of both project history and current implementation."
+emoji_instruction = "Do not use any emoji in your response."
+focus_instruction = "Focus on: current implementation status, key design decisions, architecture, and next steps."
+output_instruction = "Summarize your findings and indicate you're ready to work on the project."
+tone_instruction = "Maintain a professional but approachable tone."
+
+# Scope modifiers - what to read
+[snippet.ops.rd]
+scope_instruction = """Read and analyze all DevLog files to understand:
+- Development history and timeline
+- Key design decisions and rationale
+- Current implementation status
+- Completed features and pending tasks"""
+
+[snippet.ops.cb]
+scope_instruction = """Inspect the current codebase to understand:
+- Architecture and component structure
+- Implementation details and patterns
+- Code organization and dependencies
+- Testing coverage and quality"""
+
+[snippet.ops.full]
+scope_instruction = """Read and analyze the following to gain complete project context:
+
+1. **DevLog Files**: Review development history, decisions, and current status
+2. **Current Codebase**: Inspect implementation, architecture, and code structure
+3. **Documentation**: Review README, design docs, and inline documentation"""
+
+# Focus modifiers - what to emphasize
+[snippet.ops.arch]
+focus_instruction = "Focus primarily on: architecture, design patterns, component relationships, and system structure."
+
+[snippet.ops.status]
+focus_instruction = "Focus primarily on: current implementation status, completed features, pending tasks, and blockers."
+
+[snippet.ops.tech]
+focus_instruction = "Focus primarily on: technical implementation details, code quality, testing coverage, and technical debt."
+
+[snippet.ops.next]
+focus_instruction = "Focus primarily on: next steps, pending tasks, roadmap, and what needs to be done."
+
+# Output format modifiers
+[snippet.ops.sum]
+output_instruction = "Provide a structured summary with key findings organized by category."
+
+[snippet.ops.rdy]
+output_instruction = "After catching up, confirm you're ready and ask what task to work on next."
+
