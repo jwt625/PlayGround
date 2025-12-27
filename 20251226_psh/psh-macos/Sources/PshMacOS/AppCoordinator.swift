@@ -6,9 +6,11 @@ public class AppCoordinator {
     private let pshEngine = PshEngine()
     private let accessibilityManager = AccessibilityManager()
     private let hotkeyManager = HotkeyManager()
-    
+
     private var overlayWindowController: OverlayWindowController?
-    
+    private var configWindowController: ConfigWindowController?
+    private var snippetsPath: String?
+
     public init() {}
     
     /// Initialize the app
@@ -31,20 +33,22 @@ public class AppCoordinator {
         }
         
         // Find snippets file
-        guard let snippetsPath = findSnippetsFile() else {
-            showError("Snippets file not found", 
+        guard let foundSnippetsPath = findSnippetsFile() else {
+            showError("Snippets file not found",
                      "Could not find snippets.toml. Please ensure it exists at ~/.config/psh/snippets.toml")
             return
         }
-        
+
+        self.snippetsPath = foundSnippetsPath
+
         // Initialize psh engine
-        guard pshEngine.initialize(snippetsPath: snippetsPath) else {
-            showError("Initialization Failed", 
+        guard pshEngine.initialize(snippetsPath: foundSnippetsPath) else {
+            showError("Initialization Failed",
                      "Failed to initialize psh engine. Check snippets.toml for errors.")
             return
         }
-        
-        print("Psh engine initialized with snippets from: \(snippetsPath)")
+
+        print("Psh engine initialized with snippets from: \(foundSnippetsPath)")
         
         // Register hotkey
         let success = hotkeyManager.registerHotkey { [weak self] in
@@ -62,35 +66,46 @@ public class AppCoordinator {
     /// Handle hotkey press
     private func handleHotkeyPressed() {
         print("Hotkey pressed!")
-        
+
         // Read focused text
-        guard let originalText = accessibilityManager.readFocusedText() else {
-            print("Could not read focused text")
-            showBriefNotification("No text field focused")
+        let originalText = accessibilityManager.readFocusedText()
+
+        // If no text field focused OR text is empty, show config/snippet browser
+        if originalText == nil || originalText!.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+            print("No text or empty field, showing config window")
+            showConfigWindow()
             return
         }
-        
-        print("Read text: \(originalText.prefix(100))...")
-        
+
+        let text = originalText!
+        print("Read text: \(text.prefix(100))...")
+
         // Expand text
-        let result = pshEngine.expand(originalText)
-        
+        let result = pshEngine.expand(text)
+
         switch result {
         case .success(let expandedText, let warnings):
             // Check if text actually changed
-            if expandedText == originalText {
+            if expandedText == text {
                 print("No directives found in text")
                 showBriefNotification("No psh directives found")
                 return
             }
-            
+
+            // Check if we should skip confirmation
+            if UserPreferences.shared.skipConfirmation {
+                print("Auto-applying expansion (skip confirmation enabled)")
+                applyExpansion(expandedText)
+                return
+            }
+
             // Show overlay with preview
             showOverlay(
-                original: originalText,
+                original: text,
                 expanded: expandedText,
                 warnings: warnings
             )
-            
+
         case .failure(let error):
             print("Expansion failed: \(error)")
             showError("Expansion Failed", error)
@@ -141,6 +156,7 @@ public class AppCoordinator {
                 original: original,
                 expanded: expanded,
                 warnings: warnings,
+                snippetsPath: self?.snippetsPath,
                 onApply: { [weak self] in
                     // Restore accessory mode before applying
                     NSApp.setActivationPolicy(.accessory)
@@ -154,6 +170,30 @@ public class AppCoordinator {
             )
 
             self?.overlayWindowController = controller
+            controller.showWindow(nil)
+
+            // Activate our app and make window key
+            NSApp.activate(ignoringOtherApps: true)
+            controller.window?.makeKeyAndOrderFront(nil)
+        }
+    }
+
+    /// Show config window (when no text is present)
+    private func showConfigWindow() {
+        DispatchQueue.main.async { [weak self] in
+            // Temporarily change to regular app to allow activation
+            NSApp.setActivationPolicy(.regular)
+
+            let controller = ConfigWindowController(
+                snippetsPath: self?.snippetsPath,
+                onClose: {
+                    print("Config window closed")
+                    // Restore accessory mode
+                    NSApp.setActivationPolicy(.accessory)
+                }
+            )
+
+            self?.configWindowController = controller
             controller.showWindow(nil)
 
             // Activate our app and make window key

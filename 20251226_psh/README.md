@@ -24,10 +24,21 @@ swift run
 
 ### Usage
 
+**Normal Mode:**
 1. Focus any text field
 2. Type a directive: `;;d,ne`
 3. Press `Cmd+Shift+;`
 4. Review preview, press Enter to apply
+
+**Quick Mode (Auto-Apply):**
+1. Enable "Don't ask again" in overlay or settings
+2. Type directive and press `Cmd+Shift+;`
+3. Text is replaced immediately
+
+**Browse Snippets:**
+1. Focus empty text field (or any field)
+2. Press `Cmd+Shift+;`
+3. Browse available snippets and settings
 
 ## Directive Syntax
 
@@ -69,7 +80,11 @@ snippets.toml   Snippet library
 - `AccessibilityManager.swift`: Read/write text via AX API
 - `HotkeyManager.swift`: Global hotkey (Cmd+Shift+;)
 - `AppCoordinator.swift`: Main coordinator
-- `OverlayWindow.swift`: SwiftUI preview overlay
+- `OverlayWindow.swift`: SwiftUI preview overlay with config options
+- `ConfigWindow.swift`: Config and snippet browser window
+- `SnippetBrowserView.swift`: Snippet browser UI
+- `SnippetInfo.swift`: Snippet metadata parser
+- `UserPreferences.swift`: User settings persistence
 - `main.swift`: Menu bar app entry point
 
 ## Test Results
@@ -140,9 +155,24 @@ swift build -c release
 - `psh-macos/README.md`: macOS app architecture details
 - `psh-ffi/psh.h`: C API documentation
 
+## Features
+
+- [x] Directive parsing and expansion
+- [x] Global hotkey (Cmd+Shift+;)
+- [x] Preview overlay with diff view
+- [x] Snippet browser with search
+- [x] Auto-apply mode (skip confirmation)
+- [x] User preferences persistence
+- [x] Config window (shown when no text present)
+- [x] Warning display for unknown directives
+- [ ] Hotkey customization UI
+- [ ] Usage statistics tracking
+
 ## Status
 
 Phase 1 (Rust Core): Complete
-Phase 2 (macOS App): Complete
+Phase 2 (macOS App): Complete with enhanced UI
 Ready for testing and feedback.
+
+See `DevLogs/DevLog-001-implementation_plan.md` for detailed implementation status.
 

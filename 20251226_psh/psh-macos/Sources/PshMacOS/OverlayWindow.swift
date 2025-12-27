@@ -5,17 +5,18 @@ import Cocoa
 public class OverlayWindowController: NSWindowController {
     private let onApply: () -> Void
     private let onCancel: () -> Void
-    
+
     public init(
         original: String,
         expanded: String,
         warnings: [Warning],
+        snippetsPath: String?,
         onApply: @escaping () -> Void,
         onCancel: @escaping () -> Void
     ) {
         self.onApply = onApply
         self.onCancel = onCancel
-        
+
         // Create the window
         let window = NSWindow(
             contentRect: NSRect(x: 0, y: 0, width: 600, height: 400),
@@ -35,6 +36,7 @@ public class OverlayWindowController: NSWindowController {
             original: original,
             expanded: expanded,
             warnings: warnings,
+            snippetsPath: snippetsPath,
             onApply: { [weak window] in
                 window?.close()
                 // Small delay to let window close and focus return
@@ -52,7 +54,7 @@ public class OverlayWindowController: NSWindowController {
 
         super.init(window: window)
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -63,18 +65,21 @@ struct OverlayView: View {
     let original: String
     let expanded: String
     let warnings: [Warning]
+    let snippetsPath: String?
     let onApply: () -> Void
     let onCancel: () -> Void
-    
+
     @State private var selectedTab = 0
-    
+    @State private var skipConfirmation = UserPreferences.shared.skipConfirmation
+    @State private var showSnippetBrowser = false
+
     var body: some View {
         VStack(spacing: 0) {
             // Warnings section (if any)
             if !warnings.isEmpty {
                 warningsSection
             }
-            
+
             // Tab selector
             Picker("", selection: $selectedTab) {
                 Text("Preview").tag(0)
@@ -82,23 +87,30 @@ struct OverlayView: View {
             }
             .pickerStyle(.segmented)
             .padding()
-            
+
             // Content area
             if selectedTab == 0 {
                 previewSection
             } else {
                 diffSection
             }
-            
+
+            // Config section
+            configSection
+
             // Action buttons
             HStack(spacing: 12) {
                 Button("Cancel (Esc)") {
                     onCancel()
                 }
                 .keyboardShortcut(.cancelAction)
-                
+
                 Spacer()
-                
+
+                Button("Browse Snippets") {
+                    showSnippetBrowser = true
+                }
+
                 Button("Apply (⏎)") {
                     onApply()
                 }
@@ -108,6 +120,29 @@ struct OverlayView: View {
             .padding()
         }
         .frame(minWidth: 500, minHeight: 300)
+        .sheet(isPresented: $showSnippetBrowser) {
+            if let path = snippetsPath {
+                let snippets = SnippetInfoParser.parseSnippetsFile(at: path)
+                SnippetBrowserView(snippets: snippets) {
+                    showSnippetBrowser = false
+                }
+            }
+        }
+    }
+
+    private var configSection: some View {
+        VStack(spacing: 8) {
+            Divider()
+            HStack {
+                Toggle("Don't ask again (apply expansions immediately)", isOn: $skipConfirmation)
+                    .onChange(of: skipConfirmation) { newValue in
+                        UserPreferences.shared.skipConfirmation = newValue
+                    }
+                Spacer()
+            }
+            .padding(.horizontal)
+            .padding(.vertical, 8)
+        }
     }
     
     private var warningsSection: some View {

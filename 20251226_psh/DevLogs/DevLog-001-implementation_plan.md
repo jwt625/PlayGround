@@ -395,13 +395,18 @@ MVP is complete when:
 **Phase 2: macOS App COMPLETE** (2025-12-27)
 - Swift Package Manager project structure
 - Menu bar app (no dock icon, runs in background)
-- **Components implemented**:
+- **Core Components**:
   - `PshWrapper.swift` - Memory-safe Swift wrapper around C FFI
   - `AccessibilityManager.swift` - Read/write text via pasteboard (Cmd+A, Cmd+C, Cmd+V)
   - `HotkeyManager.swift` - Global hotkey (Cmd+Shift+;) via Carbon
-  - `AppCoordinator.swift` - Main app coordinator
-  - `OverlayWindow.swift` - SwiftUI preview overlay with warnings
+  - `AppCoordinator.swift` - Main app coordinator with auto-apply support
   - `main.swift` - App entry point with menu bar integration
+- **UI Components**:
+  - `OverlayWindow.swift` - Preview overlay with config options
+  - `ConfigWindow.swift` - Config/snippet browser window
+  - `SnippetBrowserView.swift` - Snippet browser with search
+  - `SnippetInfo.swift` - Snippet metadata parser
+  - `UserPreferences.swift` - Settings persistence
 - **Build system**: Automated Rust library compilation
 - **Snippets**: Supports `~/.config/psh/snippets.toml` + bundled defaults
 - **Permissions**: Auto-requests accessibility permissions
@@ -427,17 +432,46 @@ MVP is complete when:
    - Prevents macOS error sound from pasting into wrong window
 
 **Testing Status**: VERIFIED WORKING (2025-12-27)
-- ✅ Hotkey activation (Cmd+Shift+;)
-- ✅ Text reading from focused field
-- ✅ Directive parsing and expansion
-- ✅ Overlay window shows with focus
-- ✅ Preview display with warnings
-- ✅ Apply button replaces text correctly
-- ✅ Focus returns to original app after apply
+- Hotkey activation (Cmd+Shift+;)
+- Text reading from focused field
+- Directive parsing and expansion
+- Overlay window shows with focus
+- Preview display with warnings
+- Apply button replaces text correctly
+- Focus returns to original app after apply
+
+**Enhanced Features Added** (2025-12-27):
+1. **User Preferences System** (`UserPreferences.swift`)
+   - Persistent settings using UserDefaults
+   - Skip confirmation toggle
+   - Custom snippets path storage
+   - Hotkey configuration storage
+
+2. **Enhanced Overlay UI** (`OverlayWindow.swift`)
+   - "Don't ask again" checkbox for auto-apply mode
+   - "Browse Snippets" button
+   - Settings persist immediately when changed
+
+3. **Snippet Browser** (`SnippetBrowserView.swift`, `SnippetInfo.swift`)
+   - Search/filter by namespace, description, tags
+   - List + detail view
+   - Shows operations and template preview
+   - TOML parser for snippet metadata extraction
+
+4. **Config Window** (`ConfigWindow.swift`)
+   - Shown when hotkey pressed with empty text field
+   - Three tabs: Snippets, Settings, About
+   - Full snippet browser integration
+   - Settings management UI
+
+5. **Auto-Apply Mode** (`AppCoordinator.swift`)
+   - When "skip confirmation" enabled, apply immediately
+   - No overlay shown for faster workflow
+   - Empty text field shows config window instead
 
 **Next Steps**:
-1. Add preferences UI (Phase 2.6)
-2. Add snippet search/help UI (Phase 2.7)
+1. Test all new features with real usage
+2. Add hotkey customization UI
 3. Refine snippet library with more domain-specific templates
 4. Add Phase 1.6-1.7 features (config management, usage tracking)
 5. End-to-end testing with various applications (Phase 3.2)
