@@ -255,9 +255,9 @@ length_instruction = "Expand with additional detail, examples, and elaboration."
 
 [[snippet]]
 id = "git-commit"
-namespace = "git.cm"
-description = "Generate git commit messages"
-tags = ["git", "commit"]
+namespace = "git"
+description = "Git-related operations"
+tags = ["git", "version-control"]
 template = """{{ length_instruction }}
 {{ emoji_instruction }}
 Follow conventional commit format: type(scope): description
@@ -265,8 +265,15 @@ Types: feat, fix, docs, style, refactor, test, chore
 {{ detail_instruction }}
 {{ tone_instruction }}"""
 
-# Git commit namespace defaults
+# Git namespace defaults
 [snippet.ops.base]
+length_instruction = "Generate a clear, descriptive commit message for the changes."
+emoji_instruction = "Do not use any emoji in your response."
+detail_instruction = "Include a brief body if the changes are complex."
+tone_instruction = "Maintain a professional but approachable tone."
+
+# Git commit op - same as base for now
+[snippet.ops.cm]
 length_instruction = "Generate a clear, descriptive commit message for the changes."
 emoji_instruction = "Do not use any emoji in your response."
 detail_instruction = "Include a brief body if the changes are complex."

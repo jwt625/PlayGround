@@ -13,7 +13,7 @@ This file contains the expanded prompts from all test cases to verify the snippe
 
 ---
 
-## Test Case 1: `;;d,ne,l2`
+## Test Case 1: `;;d.ne,l2`
 **Description:** Documentation: no emoji, concise
 
 **Expanded Prompt:**
@@ -28,8 +28,8 @@ Maintain a professional but approachable tone.
 
 ---
 
-## Test Case 2: `;;d,d.l5,d.pro`
-**Description:** Documentation: very detailed, professional
+## Test Case 2: `;;d.l5,pro`
+**Description:** Documentation: very detailed, d.pro (namespace-scoped pro)
 
 **Expanded Prompt:**
 ```
@@ -43,22 +43,7 @@ Use formal, technical documentation style suitable for API references and offici
 
 ---
 
-## Test Case 3: `;;d,l4,pro`
-**Description:** Documentation: detailed, d.pro (namespace-scoped pro)
-
-**Expanded Prompt:**
-```
-Create comprehensive documentation including API reference and advanced usage.
-Do not use any emoji in your response.
-CREATE documentation files for this project.
-Generate appropriate documentation including README, API docs, usage guides, etc.
-Use proper formatting with headings, code blocks, and examples where appropriate.
-Use formal, technical documentation style suitable for API references and official documentation.
-```
-
----
-
-## Test Case 4: `;;d,l4;pro`
+## Test Case 3: `;;d.l4;pro`
 **Description:** Documentation: detailed, then global pro (separate segments)
 
 **Expanded Prompt:**
@@ -77,7 +62,7 @@ Use strictly professional, formal language suitable for business documentation.
 
 ---
 
-## Test Case 5: `;;sum,blt,l3`
+## Test Case 4: `;;sum.blt,l3`
 **Description:** Summarize: bullet points, moderate
 
 **Expanded Prompt:**
@@ -92,7 +77,7 @@ Maintain a professional but approachable tone.
 
 ---
 
-## Test Case 6: `;;sum,sum.num,sum.l1`
+## Test Case 5: `;;sum.num,l1`
 **Description:** Summarize: numbered, one sentence
 
 **Expanded Prompt:**
@@ -107,19 +92,7 @@ Maintain a professional but approachable tone.
 
 ---
 
-## Test Case 7: `;;sum.num,l1`
-**Description:** Summarize: numbered, one sentence
-
-**Expanded Prompt:**
-```
-Be extremely concise. Provide only essential information in 1-2 sentences.
-Do not use any emoji in your response.
-Maintain a professional but approachable tone.
-```
-
----
-
-## Test Case 8: `;;plan,stp,l4`
+## Test Case 6: `;;plan.stp,l4`
 **Description:** Plan: detailed steps, comprehensive
 
 **Expanded Prompt:**
@@ -134,7 +107,7 @@ Maintain a professional but approachable tone.
 
 ---
 
-## Test Case 9: `;;cr,lang=rust,l4`
+## Test Case 7: `;;cr.base,lang=rust,l4`
 **Description:** Code review: Rust, comprehensive
 
 **Expanded Prompt:**
@@ -153,7 +126,7 @@ Provide specific, actionable feedback.
 
 ---
 
-## Test Case 10: `;;rr,pro,l1`
+## Test Case 8: `;;rr.pro,l1`
 **Description:** Rewrite: professional, concise
 
 **Expanded Prompt:**
@@ -166,7 +139,7 @@ Preserve the core meaning while adapting the style appropriately.
 
 ---
 
-## Test Case 11: `;;rr,rr.cas,rr.l5`
+## Test Case 9: `;;rr.cas,l5`
 **Description:** Rewrite: casual, expanded
 
 **Expanded Prompt:**
@@ -179,7 +152,7 @@ Preserve the core meaning while adapting the style appropriately.
 
 ---
 
-## Test Case 12: `;;git.cm,l1`
+## Test Case 10: `;;git.cm,l1`
 **Description:** Git commit: title only
 
 **Expanded Prompt:**
@@ -277,7 +250,7 @@ Do NOT create any new documentation files (*.md, README, docs, etc.). Only provi
 
 ## Summary
 
-All 18 test cases passed successfully. The snippet system correctly:
+All 16 test cases passed successfully. The snippet system correctly:
 - Parses directives with namespace and operations
 - Resolves snippets from the collection
 - Applies operation overrides (ne, l1-l5, pro, cas, blt, num, stp, etc.)

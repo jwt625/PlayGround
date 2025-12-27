@@ -264,7 +264,7 @@ value = "default"
             let path = CString::new(temp_file.to_str().unwrap()).unwrap();
             assert!(psh_init(path.as_ptr()));
 
-            let text = CString::new("Hello ;;t world").unwrap();
+            let text = CString::new("Hello ;;t.base world").unwrap();
             let result = psh_expand(text.as_ptr());
             assert!(!result.is_null());
 
@@ -300,7 +300,7 @@ template = "Test"
             let path = CString::new(temp_file.to_str().unwrap()).unwrap();
             assert!(psh_init(path.as_ptr()));
 
-            let text = CString::new(";;unknown").unwrap();
+            let text = CString::new(";;unknown.op").unwrap();
             let result = psh_expand(text.as_ptr());
             assert!(!result.is_null());
 
@@ -342,7 +342,7 @@ template = "Test"
         unsafe {
             psh_shutdown(); // Ensure clean state
 
-            let text = CString::new(";;test").unwrap();
+            let text = CString::new(";;test.op").unwrap();
             let result = psh_expand(text.as_ptr());
             assert!(!result.is_null());
 
@@ -366,6 +366,9 @@ template = "Test"
 id = "test"
 namespace = "t"
 template = "Version 1"
+
+[snippet.ops.base]
+dummy = "value"
 "#;
 
         let test_toml_v2 = r#"
@@ -373,6 +376,9 @@ template = "Version 1"
 id = "test"
 namespace = "t"
 template = "Version 2"
+
+[snippet.ops.base]
+dummy = "value"
 "#;
 
         let temp_file = std::env::temp_dir().join("test_reload.toml");
@@ -382,7 +388,7 @@ template = "Version 2"
             let path = CString::new(temp_file.to_str().unwrap()).unwrap();
             assert!(psh_init(path.as_ptr()));
 
-            let text = CString::new(";;t").unwrap();
+            let text = CString::new(";;t.base").unwrap();
             let result = psh_expand(text.as_ptr());
             let expanded = CStr::from_ptr((*result).text).to_str().unwrap();
             assert!(expanded.contains("Version 1"));
@@ -424,8 +430,8 @@ value = "default"
             let path = CString::new(temp_file.to_str().unwrap()).unwrap();
             assert!(psh_init(path.as_ptr()));
 
-            // Test with unknown namespace, unknown op, and unknown key
-            let text = CString::new(";;unknown,badop,badkey=value").unwrap();
+            // Test with unknown namespace
+            let text = CString::new(";;unknown.badop,badkey=value").unwrap();
             let result = psh_expand(text.as_ptr());
             assert!(!result.is_null());
 
@@ -438,7 +444,7 @@ value = "default"
             psh_free_result(result);
 
             // Test with valid namespace but unknown op
-            let text = CString::new(";;t,unknown_op").unwrap();
+            let text = CString::new(";;t.unknown_op").unwrap();
             let result = psh_expand(text.as_ptr());
             let result_ref = &*result;
             assert_eq!(result_ref.warning_count, 1);
@@ -449,7 +455,7 @@ value = "default"
             psh_free_result(result);
 
             // Test with valid namespace but unknown key
-            let text = CString::new(";;t,base,unknown_key=value").unwrap();
+            let text = CString::new(";;t.base,unknown_key=value").unwrap();
             let result = psh_expand(text.as_ptr());
             let result_ref = &*result;
             assert_eq!(result_ref.warning_count, 1);
@@ -484,10 +490,16 @@ id = "test1"
 namespace = "t1"
 template = "First"
 
+[snippet.ops.base]
+dummy = "value"
+
 [[snippet]]
 id = "test2"
 namespace = "t2"
 template = "Second"
+
+[snippet.ops.base]
+dummy = "value"
 "#;
 
         let temp_file = std::env::temp_dir().join("test_multiple.toml");
@@ -497,7 +509,7 @@ template = "Second"
             let path = CString::new(temp_file.to_str().unwrap()).unwrap();
             assert!(psh_init(path.as_ptr()));
 
-            let text = CString::new("Start ;;t1 middle ;;t2 end").unwrap();
+            let text = CString::new("Start ;;t1.base middle ;;t2.base end").unwrap();
             let result = psh_expand(text.as_ptr());
             assert!(!result.is_null());
 

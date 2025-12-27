@@ -377,7 +377,7 @@ detail = "medium"
         let collection = create_test_collection();
         let resolver = Resolver::new(collection);
 
-        let directives = parse_directives(";;d,ne");
+        let directives = parse_directives(";;d.ne");
         let result = resolver.resolve(&directives[0]).unwrap();
 
         assert_eq!(result.rendered, "Provide detailed documentation with false emoji.");
@@ -390,7 +390,7 @@ detail = "medium"
         let resolver = Resolver::new(collection);
 
         // l5 comes after ne, so l5's emoji=true overrides ne's emoji=false
-        let directives = parse_directives(";;d,ne,l5");
+        let directives = parse_directives(";;d.ne,l5");
         let result = resolver.resolve(&directives[0]).unwrap();
 
         assert_eq!(result.rendered, "Provide very detailed documentation with true emoji.");
@@ -402,7 +402,7 @@ detail = "medium"
         let collection = create_test_collection();
         let resolver = Resolver::new(collection);
 
-        let directives = parse_directives(";;cr,base,lang=python,detail=high");
+        let directives = parse_directives(";;cr.base,lang=python,detail=high");
         let result = resolver.resolve(&directives[0]).unwrap();
 
         assert_eq!(result.rendered, "Review this python code with high detail.");
@@ -414,7 +414,7 @@ detail = "medium"
         let collection = create_test_collection();
         let resolver = Resolver::new(collection);
 
-        let directives = parse_directives(";;unknown,op1");
+        let directives = parse_directives(";;unknown.op1");
         let result = resolver.resolve(&directives[0]).unwrap();
 
         assert_eq!(result.rendered, "");
@@ -428,7 +428,7 @@ detail = "medium"
         let resolver = Resolver::new(collection);
 
         // Provide a valid op first, then an unknown one
-        let directives = parse_directives(";;d,ne,unknown_op");
+        let directives = parse_directives(";;d.ne,unknown_op");
         let result = resolver.resolve(&directives[0]).unwrap();
 
         assert_eq!(result.warnings.len(), 1);
@@ -441,7 +441,7 @@ detail = "medium"
         let resolver = Resolver::new(collection);
 
         // Provide a valid op first, then an unknown key
-        let directives = parse_directives(";;d,ne,unknown_key=value");
+        let directives = parse_directives(";;d.ne,unknown_key=value");
         let result = resolver.resolve(&directives[0]).unwrap();
 
         assert_eq!(result.warnings.len(), 1);
@@ -453,7 +453,7 @@ detail = "medium"
         let collection = create_test_collection();
         let resolver = Resolver::new(collection);
 
-        let directives = parse_directives(";;d,ne;cr,base,lang=rust");
+        let directives = parse_directives(";;d.ne;cr.base,lang=rust");
         let result = resolver.resolve(&directives[0]).unwrap();
 
         assert!(result.rendered.contains("detailed documentation"));
@@ -466,18 +466,12 @@ detail = "medium"
         let collection = create_test_collection();
         let resolver = Resolver::new(collection);
 
-        // Test that both syntaxes work: "ne" and "d.ne"
-        let directives1 = parse_directives(";;d,ne");
-        let result1 = resolver.resolve(&directives1[0]).unwrap();
+        // Test namespace.op syntax
+        let directives = parse_directives(";;d.ne");
+        let result = resolver.resolve(&directives[0]).unwrap();
 
-        let directives2 = parse_directives(";;d,d.ne");
-        let result2 = resolver.resolve(&directives2[0]).unwrap();
-
-        // Both should produce the same result
-        assert_eq!(result1.rendered, result2.rendered);
-        assert_eq!(result1.rendered, "Provide detailed documentation with false emoji.");
-        assert!(result1.warnings.is_empty());
-        assert!(result2.warnings.is_empty());
+        assert_eq!(result.rendered, "Provide detailed documentation with false emoji.");
+        assert!(result.warnings.is_empty());
     }
 
     #[test]
@@ -485,8 +479,8 @@ detail = "medium"
         let collection = create_test_collection();
         let resolver = Resolver::new(collection);
 
-        // Test mixed syntax: some ops with namespace prefix, some without
-        let directives = parse_directives(";;d,ne,d.l5");
+        // Test multiple ops: namespace.op1,op2
+        let directives = parse_directives(";;d.ne,l5");
         let result = resolver.resolve(&directives[0]).unwrap();
 
         assert_eq!(result.rendered, "Provide very detailed documentation with true emoji.");
@@ -498,17 +492,16 @@ detail = "medium"
         let collection = create_test_collection();
         let resolver = Resolver::new(collection);
 
-        // Test that using wrong namespace prefix produces a warning
-        // We need to provide at least one valid op so the template can render
-        let directives = parse_directives(";;d,ne,cr.base");
+        // Test that using unknown op produces a warning
+        let directives = parse_directives(";;cr.unknown_op");
         let result = resolver.resolve(&directives[0]).unwrap();
 
-        // Should have one warning for the wrong namespace
+        // Should have one warning for the unknown op
         assert_eq!(result.warnings.len(), 1);
         assert!(matches!(result.warnings[0], Warning::UnknownOperation { .. }));
 
-        // But the valid op should still work
-        assert!(result.rendered.contains("detailed documentation"));
+        // But the template should still render with base values
+        assert!(result.rendered.contains("Review this generic code"));
     }
 
     fn create_test_collection_with_global_ops() -> SnippetCollection {

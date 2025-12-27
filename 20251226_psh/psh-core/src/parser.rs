@@ -55,7 +55,7 @@ pub enum Operation {
 /// ```
 /// use psh_core::parse_directives;
 ///
-/// let text = "Please ;;d,ne,l5 explain this code";
+/// let text = "Please ;;d.ne,l5 explain this code";
 /// let directives = parse_directives(text);
 /// assert_eq!(directives.len(), 1);
 /// ```
@@ -156,14 +156,16 @@ fn find_directive_end(text: &str, start: usize) -> usize {
     i
 }
 
-/// Parse a segment (namespace,op1,op2,key=value)
+/// Parse a segment (namespace.op1,op2,key=value)
 ///
 /// Supports two formats:
-/// 1. With namespace: `d,ne,l5` -> namespace=`d`, ops=`["ne", "l5"]`
+/// 1. With namespace: `d.ne,l5` -> namespace=`d`, ops=`["ne", "l5"]`
 /// 2. Global ops only: `ne,l5` -> namespace=`_global`, ops=`["ne", "l5"]`
 ///
-/// A segment is treated as global-only if the first element looks like an operation
-/// (contains '=' for key-value, or is a short code without dots that could be a namespace)
+/// IMPORTANT: Namespace must always be followed by a dot and at least one op.
+/// - `d.ne,l5` is VALID (namespace `d`, ops `ne,l5`)
+/// - `d,ne,l5` is INVALID (namespace must have dot)
+/// - `ne,l5` is VALID (global ops only)
 fn parse_segment(segment: &str) -> Option<Segment> {
     let parts: Vec<&str> = segment.split(',').collect();
 
@@ -177,70 +179,45 @@ fn parse_segment(segment: &str) -> Option<Segment> {
         return None;
     }
 
-    // Determine if this is a global-only segment (no namespace)
-    // It's global-only if the first element looks like an operation:
-    // - Contains '=' (key-value pair)
-    // - Is a short code that looks like a known op pattern (l1-l5, ne, e, pro, cas, tec, blt, num, etc.)
-    let is_global_only = first.contains('=') || is_likely_op(first);
+    // Check if the first part contains a dot (namespace.op format)
+    // Use find to get the FIRST dot, so "d.ne" -> namespace="d", op="ne"
+    // Multi-level namespaces are not supported for now
+    if let Some(dot_pos) = first.find('.') {
+        // Format: namespace.op,op2,op3
+        let namespace = first[..dot_pos].to_string();
+        let first_op = &first[dot_pos + 1..];
 
-    let (namespace, op_start_idx) = if is_global_only {
-        // No namespace, all parts are operations
-        ("_global".to_string(), 0)
+        if namespace.is_empty() || first_op.is_empty() {
+            return None;
+        }
+
+        // First op comes from the namespace.op part
+        let mut operations = vec![parse_operation(first_op)?];
+
+        // Remaining ops come from the comma-separated parts
+        for part in &parts[1..] {
+            if let Some(op) = parse_operation(part.trim()) {
+                operations.push(op);
+            }
+        }
+
+        Some(Segment {
+            namespace,
+            operations,
+        })
     } else {
-        // First part is namespace, rest are operations
-        (first.to_string(), 1)
-    };
+        // No dot in first part - this is global ops only
+        // All parts are operations
+        let operations: Vec<Operation> = parts
+            .iter()
+            .filter_map(|&part| parse_operation(part.trim()))
+            .collect();
 
-    let operations: Vec<Operation> = parts[op_start_idx..]
-        .iter()
-        .filter_map(|&part| parse_operation(part.trim()))
-        .collect();
-
-    Some(Segment {
-        namespace,
-        operations,
-    })
-}
-
-/// Check if a string looks like an operation rather than a namespace
-///
-/// Operations are typically:
-/// - Short codes: l1-l5, ne, e, pro, cas, tec, blt, num, stp, ask, base
-/// - Namespace-scoped ops: d.ne, sum.l1, etc. (but these have dots)
-///
-/// Namespaces are typically:
-/// - Single letters or short words: d, sum, plan, cr, rr, qa, fmt
-/// - Dot-separated paths: py.venv, git.cm
-///
-/// Heuristic: If it's a very short code (1-4 chars) that matches common op patterns,
-/// or if it contains a dot (namespace-scoped op), treat it as an op.
-/// Otherwise, treat it as a namespace.
-fn is_likely_op(s: &str) -> bool {
-    // Known global op patterns
-    const KNOWN_OPS: &[&str] = &[
-        "l1", "l2", "l3", "l4", "l5",  // Length levels
-        "ne", "e",                      // Emoji control
-        "pro", "cas", "tec",            // Tone modifiers
-        "blt", "num",                   // Format modifiers
-        "stp", "ask",                   // Other modifiers
-        "nd",                           // Documentation control
-        "base",                         // Base op
-    ];
-
-    // Check if it's a known op
-    if KNOWN_OPS.contains(&s) {
-        return true;
+        Some(Segment {
+            namespace: "_global".to_string(),
+            operations,
+        })
     }
-
-    // If it contains a dot and is not a simple namespace (like "py.venv"),
-    // it's likely a namespace-scoped op (like "d.ne")
-    // We distinguish by checking if the part after the dot looks like an op
-    if let Some(dot_pos) = s.find('.') {
-        let after_dot = &s[dot_pos + 1..];
-        return KNOWN_OPS.contains(&after_dot);
-    }
-
-    false
 }
 
 /// Parse an operation or key-value pair
@@ -271,7 +248,7 @@ mod tests {
 
     #[test]
     fn test_parse_simple_directive() {
-        let text = ";;d,ne,l5";
+        let text = ";;d.ne,l5";
         let directives = parse_directives(text);
 
         assert_eq!(directives.len(), 1);
@@ -282,24 +259,24 @@ mod tests {
 
     #[test]
     fn test_parse_multiple_segments() {
-        let text = ";;d,ne,l5;py.venv";
+        let text = ";;d.ne,l5;sum.blt";
         let directives = parse_directives(text);
 
         assert_eq!(directives.len(), 1);
         assert_eq!(directives[0].segments.len(), 2);
         assert_eq!(directives[0].segments[0].namespace, "d");
-        assert_eq!(directives[0].segments[1].namespace, "py.venv");
+        assert_eq!(directives[0].segments[1].namespace, "sum");
     }
 
     #[test]
     fn test_parse_key_value() {
-        let text = ";;cr,lang=py,l4";
+        let text = ";;cr.base,lang=py,l4";
         let directives = parse_directives(text);
 
         assert_eq!(directives.len(), 1);
-        assert_eq!(directives[0].segments[0].operations.len(), 2);
+        assert_eq!(directives[0].segments[0].operations.len(), 3);
 
-        match &directives[0].segments[0].operations[0] {
+        match &directives[0].segments[0].operations[1] {
             Operation::KeyValue { key, value } => {
                 assert_eq!(key, "lang");
                 assert_eq!(value, "py");
@@ -310,7 +287,7 @@ mod tests {
 
     #[test]
     fn test_parse_multiple_directives() {
-        let text = "Please ;;d,ne,l5 explain ;;sum,blt this code";
+        let text = "Please ;;d.ne,l5 explain ;;sum.blt this code";
         let directives = parse_directives(text);
 
         assert_eq!(directives.len(), 2);
@@ -320,7 +297,7 @@ mod tests {
 
     #[test]
     fn test_escaped_sentinel() {
-        let text = "Use \\;; for literal semicolons ;;d,ne";
+        let text = "Use \\;; for literal semicolons ;;d.ne";
         let directives = parse_directives(text);
 
         assert_eq!(directives.len(), 1);
@@ -329,7 +306,7 @@ mod tests {
 
     #[test]
     fn test_empty_directive() {
-        let text = ";; ;;d,ne";
+        let text = ";; ;;d.ne";
         let directives = parse_directives(text);
 
         // Empty directive should be skipped
@@ -339,7 +316,7 @@ mod tests {
 
     #[test]
     fn test_directive_positions() {
-        let text = "Start ;;d,ne end";
+        let text = "Start ;;d.ne end";
         let directives = parse_directives(text);
 
         assert_eq!(directives.len(), 1);
@@ -397,8 +374,8 @@ mod tests {
 
     #[test]
     fn test_namespace_vs_global_distinction() {
-        // "d,ne" should be namespace "d" with op "ne"
-        let text1 = ";;d,ne";
+        // "d.ne" should be namespace "d" with op "ne"
+        let text1 = ";;d.ne";
         let directives1 = parse_directives(text1);
         assert_eq!(directives1[0].segments[0].namespace, "d");
         assert_eq!(directives1[0].segments[0].operations.len(), 1);
@@ -411,18 +388,23 @@ mod tests {
     }
 
     #[test]
-    fn test_namespace_scoped_op_in_global() {
-        // "d.ne" should be treated as global with namespace-scoped op "d.ne"
+    fn test_namespace_with_multiple_ops() {
+        // "d.ne,l5" should be namespace "d" with ops "ne" and "l5"
         let text = ";;d.ne,l5";
         let directives = parse_directives(text);
 
         assert_eq!(directives.len(), 1);
         assert_eq!(directives[0].segments.len(), 1);
-        assert_eq!(directives[0].segments[0].namespace, "_global");
+        assert_eq!(directives[0].segments[0].namespace, "d");
         assert_eq!(directives[0].segments[0].operations.len(), 2);
 
         match &directives[0].segments[0].operations[0] {
-            Operation::Op(op) => assert_eq!(op, "d.ne"),
+            Operation::Op(op) => assert_eq!(op, "ne"),
+            _ => panic!("Expected Op"),
+        }
+
+        match &directives[0].segments[0].operations[1] {
+            Operation::Op(op) => assert_eq!(op, "l5"),
             _ => panic!("Expected Op"),
         }
     }

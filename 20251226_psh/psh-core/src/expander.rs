@@ -123,10 +123,10 @@ format = "bullet points"
     #[test]
     fn test_expand_single_directive() {
         let expander = create_test_expander();
-        let text = "Please ;;d,l1 explain this.";
-        
+        let text = "Please ;;d.l1 explain this.";
+
         let result = expander.expand(text).unwrap();
-        
+
         assert_eq!(result.text, "Please Provide concise documentation. explain this.");
         assert!(result.warnings.is_empty());
         assert_eq!(result.resolved.len(), 1);
@@ -135,10 +135,10 @@ format = "bullet points"
     #[test]
     fn test_expand_multiple_directives() {
         let expander = create_test_expander();
-        let text = "First ;;d,l1 then ;;sum,blt done.";
-        
+        let text = "First ;;d.l1 then ;;sum.blt done.";
+
         let result = expander.expand(text).unwrap();
-        
+
         assert!(result.text.contains("Provide concise documentation."));
         assert!(result.text.contains("Summarize in bullet points format."));
         assert!(result.warnings.is_empty());
@@ -149,9 +149,9 @@ format = "bullet points"
     fn test_expand_no_directives() {
         let expander = create_test_expander();
         let text = "No directives here.";
-        
+
         let result = expander.expand(text).unwrap();
-        
+
         assert_eq!(result.text, text);
         assert!(result.warnings.is_empty());
         assert_eq!(result.resolved.len(), 0);
@@ -160,7 +160,7 @@ format = "bullet points"
     #[test]
     fn test_expand_with_warnings() {
         let expander = create_test_expander();
-        let text = "Test ;;unknown,op1 here.";
+        let text = "Test ;;unknown.op1 here.";
 
         let result = expander.expand(text).unwrap();
 
@@ -181,17 +181,15 @@ format = "bullet points"
 
         // Test cases demonstrating both syntaxes (with and without namespace prefix)
         let namespace_tests = vec![
-            (";;d,ne,l2", "Documentation: no emoji, concise"),
-            (";;d,d.l5,d.pro", "Documentation: very detailed, professional"),
-            (";;d,l4,pro", "Documentation: detailed, d.pro (namespace-scoped pro)"),
-            (";;d,l4;pro", "Documentation: detailed, then global pro (separate segments)"),
-            (";;sum,blt,l3", "Summarize: bullet points, moderate"),
-            (";;sum,sum.num,sum.l1", "Summarize: numbered, one sentence"),
+            (";;d.ne,l2", "Documentation: no emoji, concise"),
+            (";;d.l5,pro", "Documentation: very detailed, d.pro (namespace-scoped pro)"),
+            (";;d.l4;pro", "Documentation: detailed, then global pro (separate segments)"),
+            (";;sum.blt,l3", "Summarize: bullet points, moderate"),
             (";;sum.num,l1", "Summarize: numbered, one sentence"),
-            (";;plan,stp,l4", "Plan: detailed steps, comprehensive"),
-            (";;cr,lang=rust,l4", "Code review: Rust, comprehensive"),
-            (";;rr,pro,l1", "Rewrite: professional, concise"),
-            (";;rr,rr.cas,rr.l5", "Rewrite: casual, expanded"),
+            (";;plan.stp,l4", "Plan: detailed steps, comprehensive"),
+            (";;cr.base,lang=rust,l4", "Code review: Rust, comprehensive"),
+            (";;rr.pro,l1", "Rewrite: professional, concise"),
+            (";;rr.cas,l5", "Rewrite: casual, expanded"),
             (";;git.cm,l1", "Git commit: title only"),
         ];
 
