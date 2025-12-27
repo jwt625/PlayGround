@@ -1,0 +1,274 @@
+# psh Snippet Collection
+# Comprehensive prompt snippets for LLM interactions
+#
+# Design: Global ops provide defaults, namespace-specific ops override them
+# Multiple ops can be combined - later ops override earlier ones
+# Default: no emoji (ne), professional tone
+
+# ============================================================================
+# GLOBAL OPS - Default configurations applicable across all namespaces
+# ============================================================================
+
+[global]
+
+# Base defaults - applied first if no other ops specified
+[global.ops.base]
+length_instruction = "Provide a moderately detailed response (2-3 paragraphs)."
+emoji_instruction = "Do not use any emoji in your response."
+tone_instruction = "Maintain a professional but approachable tone."
+format_instruction = ""
+detail_instruction = ""
+
+# Length levels - ONLY set length_instruction
+[global.ops.l1]
+length_instruction = "Be extremely concise. Provide only essential information in 1-2 sentences."
+
+[global.ops.l2]
+length_instruction = "Be concise but complete. Limit response to 1 paragraph."
+
+[global.ops.l3]
+length_instruction = "Provide a moderately detailed response (2-3 paragraphs)."
+
+[global.ops.l4]
+length_instruction = "Provide a detailed response with comprehensive coverage (4-5 paragraphs)."
+
+[global.ops.l5]
+length_instruction = "Provide an extremely detailed, in-depth response with extensive examples and edge cases."
+
+# Emoji control - ne (no emoji) is the default
+[global.ops.ne]
+emoji_instruction = "Do not use any emoji in your response."
+
+[global.ops.e]
+emoji_instruction = "You may use emoji sparingly for clarity and emphasis."
+
+# Tone modifiers
+[global.ops.pro]
+tone_instruction = "Use strictly professional, formal language suitable for business documentation."
+
+[global.ops.cas]
+tone_instruction = "Use casual, conversational language as if explaining to a friend."
+
+[global.ops.tec]
+tone_instruction = "Use technical, precise language with appropriate jargon and terminology."
+
+# Format modifiers
+[global.ops.blt]
+format_instruction = "as a bulleted list with clear, actionable points."
+
+[global.ops.num]
+format_instruction = "as a numbered list in logical order."
+
+# ============================================================================
+# NAMESPACE-SPECIFIC SNIPPETS
+# ============================================================================
+
+[[snippet]]
+id = "doc-create"
+namespace = "d"
+description = "Explicitly instruct to CREATE documentation files (README, docs, etc.)"
+tags = ["documentation", "files", "creation"]
+template = """{{ length_instruction }}
+{{ emoji_instruction }}
+CREATE documentation files for this project.
+Generate appropriate documentation including README, API docs, usage guides, etc.
+Use proper formatting with headings, code blocks, and examples where appropriate.
+{{ tone_instruction }}"""
+
+# Documentation namespace defaults - no emoji, professional tone
+[snippet.ops.base]
+length_instruction = "Create moderate documentation with installation, usage, and examples."
+emoji_instruction = "Do not use any emoji in your response."
+tone_instruction = "Maintain a professional but approachable tone."
+format_instruction = ""
+detail_instruction = ""
+
+# Documentation-specific length ops - ONLY override length_instruction
+[snippet.ops.l1]
+length_instruction = "Create minimal essential documentation only (README with basic usage)."
+
+[snippet.ops.l2]
+length_instruction = "Create concise documentation covering key features and basic usage."
+
+[snippet.ops.l3]
+length_instruction = "Create moderate documentation with installation, usage, and examples."
+
+[snippet.ops.l4]
+length_instruction = "Create comprehensive documentation including API reference and advanced usage."
+
+[snippet.ops.l5]
+length_instruction = "Create extensive documentation with detailed API reference, examples, edge cases, and troubleshooting."
+
+[[snippet]]
+id = "summarize"
+namespace = "sum"
+description = "Summarize content in various formats"
+tags = ["summarize", "condense"]
+template = """{{ length_instruction }}
+{{ emoji_instruction }}
+Summarize the following content {{ format_instruction }}
+Focus on the key points and main takeaways.
+{{ detail_instruction }}
+{{ tone_instruction }}"""
+
+# Summary namespace defaults
+[snippet.ops.base]
+length_instruction = "Provide a moderate summary (3-5 key points)."
+emoji_instruction = "Do not use any emoji in your response."
+format_instruction = "in paragraph form"
+detail_instruction = "Preserve important details and context."
+tone_instruction = "Maintain a professional but approachable tone."
+
+# Summary-specific length ops - ONLY override length and detail
+[snippet.ops.l1]
+length_instruction = "Provide a one-sentence summary capturing only the core essence."
+detail_instruction = "Focus only on the single most important point."
+
+[snippet.ops.l3]
+length_instruction = "Provide a moderate summary (3-5 key points)."
+detail_instruction = "Preserve important details and context."
+
+[snippet.ops.l5]
+length_instruction = "Provide a comprehensive summary covering all major points and supporting details."
+detail_instruction = "Include context, nuances, and supporting information."
+
+# Summary-specific format ops - ONLY override format
+[snippet.ops.blt]
+format_instruction = "as a bulleted list with clear, actionable points."
+
+[snippet.ops.num]
+format_instruction = "as a numbered list in logical order."
+
+[[snippet]]
+id = "plan"
+namespace = "plan"
+description = "Generate step-by-step plans and strategies"
+tags = ["planning", "strategy"]
+template = """{{ length_instruction }}
+{{ emoji_instruction }}
+Create a {{ format_instruction }} plan to accomplish the stated goal.
+{{ structure_instruction }}
+Consider dependencies, prerequisites, and potential challenges.
+{{ tone_instruction }}"""
+
+# Planning namespace defaults
+[snippet.ops.base]
+length_instruction = "Provide a moderately detailed response (2-3 paragraphs)."
+emoji_instruction = "Do not use any emoji in your response."
+format_instruction = "clear, step-by-step"
+structure_instruction = "Break down into detailed steps with substeps where needed. Include rationale for each major step."
+tone_instruction = "Maintain a professional but approachable tone."
+
+# Planning-specific ops - ONLY override what's needed
+[snippet.ops.stp]
+structure_instruction = "Break down into detailed steps with substeps where needed. Include rationale for each major step."
+
+[snippet.ops.l1]
+length_instruction = "Provide a high-level plan with 3-5 major steps only."
+structure_instruction = "List only major steps without substeps."
+
+[snippet.ops.l4]
+length_instruction = "Provide a detailed plan with comprehensive steps, timelines, and resource considerations."
+structure_instruction = "Break down into detailed steps with substeps, timelines, dependencies, and resource requirements."
+
+[[snippet]]
+id = "code-review"
+namespace = "cr"
+description = "Code review with language-specific best practices"
+tags = ["code", "review"]
+template = """{{ length_instruction }}
+{{ emoji_instruction }}
+Review the following {{ lang }} code with {{ detail }} level of detail.
+Focus on:
+- Code quality and best practices
+- Potential bugs or edge cases
+- Performance considerations
+- Readability and maintainability
+{{ tone_instruction }}
+Provide specific, actionable feedback."""
+
+# Code review namespace defaults
+[snippet.ops.base]
+lang = "code"
+detail = "moderate"
+length_instruction = "Provide a moderate code review covering main quality aspects."
+emoji_instruction = "Do not use any emoji in your response."
+tone_instruction = "Maintain a professional but approachable tone."
+
+# Code review-specific length ops - ONLY override length and detail
+[snippet.ops.l2]
+detail = "basic"
+length_instruction = "Provide a basic code review focusing on critical issues only."
+
+[snippet.ops.l3]
+detail = "moderate"
+length_instruction = "Provide a moderate code review covering main quality aspects."
+
+[snippet.ops.l4]
+detail = "comprehensive"
+length_instruction = "Provide a comprehensive code review with detailed analysis."
+
+[snippet.ops.l5]
+detail = "exhaustive"
+length_instruction = "Provide an exhaustive code review covering all aspects including edge cases and optimizations."
+
+[[snippet]]
+id = "rewrite"
+namespace = "rr"
+description = "Rewrite text in different styles or tones"
+tags = ["rewrite", "style"]
+template = """{{ emoji_instruction }}
+Rewrite the following text {{ tone_instruction }}
+{{ length_instruction }}
+Preserve the core meaning while adapting the style appropriately."""
+
+# Rewrite namespace defaults
+[snippet.ops.base]
+emoji_instruction = "Do not use any emoji in your response."
+tone_instruction = "Maintain the original tone."
+length_instruction = "Maintain approximately the same length."
+
+# Rewrite-specific tone ops - ONLY override tone
+[snippet.ops.pro]
+tone_instruction = "in a formal, professional business tone suitable for executive communication."
+
+[snippet.ops.cas]
+tone_instruction = "in a casual, friendly conversational tone."
+
+[snippet.ops.tec]
+tone_instruction = "in a technical, precise manner with appropriate jargon."
+
+# Rewrite-specific length ops - ONLY override length
+[snippet.ops.l1]
+length_instruction = "Make it significantly more concise while preserving key points."
+
+[snippet.ops.l5]
+length_instruction = "Expand with additional detail, examples, and elaboration."
+
+[[snippet]]
+id = "git-commit"
+namespace = "git.cm"
+description = "Generate git commit messages"
+tags = ["git", "commit"]
+template = """{{ length_instruction }}
+{{ emoji_instruction }}
+Follow conventional commit format: type(scope): description
+Types: feat, fix, docs, style, refactor, test, chore
+{{ detail_instruction }}
+{{ tone_instruction }}"""
+
+# Git commit namespace defaults
+[snippet.ops.base]
+length_instruction = "Generate a clear, descriptive commit message for the changes."
+emoji_instruction = "Do not use any emoji in your response."
+detail_instruction = "Include a brief body if the changes are complex."
+tone_instruction = "Maintain a professional but approachable tone."
+
+# Git commit-specific ops - ONLY override what's needed
+[snippet.ops.full]
+detail_instruction = "Include a brief body if the changes are complex."
+
+[snippet.ops.l1]
+length_instruction = "Generate a concise one-line commit message."
+detail_instruction = "Provide only the commit title (one line)."
+

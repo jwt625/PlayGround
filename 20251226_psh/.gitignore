@@ -1,0 +1,47 @@
+# Rust build artifacts
+/target/
+**/target/
+
+# Cargo lock file (uncomment if building a library)
+# Cargo.lock
+
+# Backup files
+**/*.rs.bk
+*.pdb
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Rust-analyzer
+rust-project.json
+
+# Testing and coverage
+*.profraw
+*.profdata
+/coverage/
+
+# Documentation build
+/doc/
+
+# Flamegraph profiling
+flamegraph.svg
+perf.data
+perf.data.old
+
+# Benchmarking
+/benches/target/
+
+# macOS specific
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Temporary files
+*.tmp
+*.temp
+

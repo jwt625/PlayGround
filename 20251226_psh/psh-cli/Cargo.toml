@@ -1,0 +1,13 @@
+[package]
+name = "psh-cli"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+
+[dependencies]
+psh-core = { path = "../psh-core" }
+clap.workspace = true
+
+[lints]
+workspace = true

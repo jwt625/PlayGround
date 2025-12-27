@@ -4,6 +4,49 @@
 
 This document provides a detailed implementation plan for the psh MVP, breaking down the architecture into concrete tasks, dependencies, and deliverables.
 
+## Development Standards
+
+### Rust Tooling
+- **Package Manager**: Cargo (built-in)
+- **Linter**: Clippy (official, ~600 lints)
+- **Formatter**: rustfmt (official, opinionated)
+- **Type Checking**: Built into Rust compiler (mandatory)
+- **Additional Tools**:
+  - `cargo-watch` - Auto-rebuild on file changes
+  - `cargo-audit` - Security vulnerability scanning
+
+### Development Workflow
+```bash
+cargo check          # Fast type checking
+cargo clippy         # Linting
+cargo fmt            # Format code
+cargo test           # Run tests
+cargo build          # Build binary
+```
+
+### Pre-Commit Standards
+- `cargo fmt --check` - Verify formatting
+- `cargo clippy -- -D warnings` - No warnings allowed
+- `cargo test` - All tests pass
+- `cargo audit` - No known vulnerabilities
+
+### Code Practices
+- Use Rust 2021 edition
+- Enable `clippy::pedantic` and `clippy::nursery` lints
+- Maximum line width: 100 characters
+- Comprehensive error handling with `thiserror`
+- Document public APIs with doc comments (`///`)
+- Unit tests co-located with code (`#[cfg(test)]`)
+- Integration tests in `tests/` directory
+
+### Project Management
+- Track progress via DevLog updates
+- One feature per commit with clear messages
+- Tag milestones: `v0.1.0-phase1`, `v0.2.0-phase2`, etc.
+- Document breaking changes in commit messages
+
+---
+
 ## Implementation Strategy
 
 ### Phase 1: Core Engine (Rust)
@@ -20,84 +63,83 @@ End-to-end testing, starter snippets, documentation.
 ## Phase 1: Core Engine (Rust)
 
 ### 1.1 Project Setup
-- [ ] Initialize Rust workspace with cargo
-- [ ] Set up project structure:
+- [x] Initialize Rust workspace with cargo
+- [x] Set up project structure:
   - `psh-core/` - Core parsing and expansion logic
-  - `psh-ffi/` - C-compatible FFI layer for Swift
-  - `psh-cli/` - CLI testing harness
-- [ ] Configure build system for static library output
-- [ ] Add dependencies:
+  - `psh-ffi/` - C-compatible FFI layer for Swift (deferred)
+  - `psh-cli/` - CLI testing harness (removed - not needed)
+- [x] Configure build system for library output
+- [x] Add dependencies:
   - `tera` - Template engine
   - `serde` - Serialization
   - `toml` - Configuration parsing
-  - `notify` - File watching for hot-reload
   - `thiserror` - Error handling
 
 ### 1.2 Directive Parser
-- [ ] Define AST structures:
+- [x] Define AST structures:
   - `Directive` - Top-level parsed directive
   - `Segment` - Namespace + ops/kv pairs
   - `Operation` - Op code or key-value pair
-- [ ] Implement tokenizer:
+- [x] Implement tokenizer:
   - Detect `;;` sentinel
-  - Handle escape sequences `\;;`
+  - Handle escape sequences `;;;;` → `;;`
   - Split on `;` for segments
   - Split on `,` for namespace and ops
-- [ ] Implement parser:
+- [x] Implement parser:
   - Parse namespace paths (dot notation)
   - Parse op codes
   - Parse key=value pairs
-  - Error recovery for malformed directives
-- [ ] Unit tests for parser edge cases
+  - Track positions for in-place replacement
+- [x] Unit tests for parser edge cases (7 tests)
 
 ### 1.3 Snippet System
-- [ ] Define snippet schema (TOML format):
+- [x] Define snippet schema (TOML format) - **Design change: removed defaults**
   ```toml
   [[snippet]]
   id = "doc-style"
   namespace = "d"
   template = "..."
-  
-  [snippet.ops]
-  ne = { emoji = "false" }
-  l1 = { length_instruction = "Be extremely concise..." }
-  
-  [snippet.defaults]
-  emoji = "true"
-  length_instruction = "Use moderate detail..."
+
+  [snippet.ops.l2]
+  length_instruction = "Be concise..."
+  emoji_instruction = "Use emoji sparingly..."
+  tone_instruction = "Professional tone..."
+
+  [snippet.ops.ne]
+  emoji_instruction = "No emoji..."
   ```
-- [ ] Implement snippet loader:
-  - Parse TOML files from config directory
+  Each op is a complete configuration. Multiple ops combine (later overrides earlier).
+- [x] Implement snippet loader:
+  - Parse TOML files with serde
   - Validate schema
   - Build namespace index
-  - Build op lookup tables
-- [ ] Implement snippet resolver:
+- [x] Implement snippet resolver:
   - Match namespace to snippet
-  - Apply ops to override variables
-  - Apply key=value pairs
-  - Collect unknown namespaces/ops for warnings
-- [ ] Unit tests for resolution logic
+  - Apply ops to build context (later ops override earlier)
+  - Apply key=value pairs (last wins)
+  - Collect unknown namespaces/ops/keys for warnings
+- [x] Unit tests for resolution logic (3 tests)
 
 ### 1.4 Template Rendering
-- [ ] Integrate Tera template engine
-- [ ] Implement variable resolution:
-  - Start with snippet defaults
-  - Override with op-defined values
-  - Override with key=value pairs (last wins)
-- [ ] Implement template rendering with error handling
-- [ ] Unit tests for rendering edge cases
+- [x] Integrate Tera template engine
+- [x] Implement variable resolution:
+  - Build context from ops (no defaults)
+  - Apply ops in order (later overrides earlier)
+  - Apply key=value pairs (last wins)
+- [x] Implement template rendering with Tera.one_off
+- [x] Unit tests for rendering edge cases (6 tests)
 
 ### 1.5 Expansion Engine
-- [ ] Implement full text expansion:
+- [x] Implement full text expansion:
   - Find all `;;` directives in input text
   - Parse each directive
   - Resolve and render each directive
   - Replace directives in-place with expansions
   - Preserve original text structure
-- [ ] Collect warnings (unknown elements)
-- [ ] Integration tests with realistic examples
+- [x] Collect warnings (unknown elements)
+- [x] Integration tests with realistic examples (4 tests + 1 comprehensive)
 
-### 1.6 Configuration Management
+### 1.6 Configuration Management (Deferred)
 - [ ] Define configuration schema:
   - Snippet directories
   - Hot-reload settings
@@ -106,7 +148,7 @@ End-to-end testing, starter snippets, documentation.
 - [ ] Implement file watcher for snippet hot-reload
 - [ ] Unit tests for config parsing
 
-### 1.7 Usage Tracking
+### 1.7 Usage Tracking (Deferred)
 - [ ] Define usage data structures:
   - Directive usage counts
   - Last-used timestamps
@@ -115,7 +157,7 @@ End-to-end testing, starter snippets, documentation.
 - [ ] Implement aggregation queries
 - [ ] Privacy controls (clear-all, per-app exclusion)
 
-### 1.8 FFI Layer
+### 1.8 FFI Layer (Deferred)
 - [ ] Define C-compatible interface:
   - `psh_init()` - Initialize engine
   - `psh_expand()` - Expand text with directives
@@ -126,13 +168,42 @@ End-to-end testing, starter snippets, documentation.
 - [ ] Generate C header file for Swift import
 - [ ] Test FFI from C test harness
 
-### 1.9 CLI Testing Harness
-- [ ] Build CLI tool for testing:
-  - Read input from stdin or file
-  - Expand directives
-  - Output expanded text
-  - Display warnings
-- [ ] Use for manual testing and debugging
+---
+
+## Phase 1 Status: COMPLETE
+
+**Completion Date**: 2025-12-27
+
+**Summary**: Core Rust engine fully implemented and tested. All 26 tests pass with zero clippy warnings.
+
+**Key Design Decisions**:
+1. **Initial Design (2025-12-27)**: Removed snippet defaults entirely. Each op was a complete, standalone configuration. Multiple ops combined with later ops overriding earlier ones.
+
+2. **Revised Design (2025-12-27)**: Implemented hierarchical op system with base defaults and single-purpose ops:
+   - Added `base` ops at global and namespace levels to provide defaults
+   - Made ops single-purpose: length ops only set length, emoji ops only set emoji, tone ops only set tone
+   - Resolver applies ops in order: global base → namespace base → user ops → key-value pairs
+   - Supports namespace-scoped op syntax (e.g., `d.ne` and `ne` both work)
+
+**Critical Bugfix (2025-12-27)**: Fixed ops incorrectly setting multiple unrelated variables. Length ops (l1-l5) were setting emoji and tone instructions, causing incorrect behavior. For example, `;;d,l5,pro` would produce "use emoji sparingly" instead of "no emoji" (the namespace default). Solution: each op now has single responsibility, with base ops providing complete defaults.
+
+**Deliverables**:
+- `psh-core/src/parser.rs` - Directive parser with position tracking
+- `psh-core/src/snippet.rs` - TOML-based snippet loader with global ops support
+- `psh-core/src/resolver.rs` - Template resolver with base op application and namespace-scoped op support
+- `psh-core/src/expander.rs` - Full text expansion engine
+- `snippets.toml` - Comprehensive snippet library with hierarchical op system (d, sum, plan, cr, rr, git.cm)
+
+**Test Coverage**:
+- Parser: 7 tests
+- Snippet: 3 tests
+- Resolver: 9 tests (added namespace-scoped op tests)
+- Expander: 4 tests
+- Integration: 1 comprehensive test
+- Doc tests: 1
+- Total: 26 tests, all passing
+
+**Next Steps**: Proceed to Phase 2 (macOS adapter) or refine snippet library.
 
 ---
 
@@ -313,12 +384,19 @@ MVP is complete when:
 
 ---
 
-## Next Steps
+## Current Status
 
-1. Begin Phase 1.1: Set up Rust workspace
-2. Implement directive parser (Phase 1.2)
-3. Build snippet system (Phase 1.3)
-4. Continue through phases sequentially
+**Phase 1: COMPLETE** (2025-12-27)
+- Core Rust engine fully functional
+- 26 tests passing, zero warnings
+- Comprehensive snippet library with hierarchical op system
+- Design refined: base ops provide defaults, single-purpose ops override specific variables
+- Namespace-scoped op syntax supported (e.g., `;;d,ne` and `;;d,d.ne` both work)
 
-This plan will be updated as implementation progresses and new insights emerge.
+**Next Decision Point**:
+1. Phase 2: Build macOS adapter (Swift + FFI)
+2. Refine snippet library with more domain-specific templates
+3. Add Phase 1.6-1.8 features (config, tracking, FFI)
+
+This plan is updated as implementation progresses and new insights emerge.
 

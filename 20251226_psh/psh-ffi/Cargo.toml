@@ -1,0 +1,16 @@
+[package]
+name = "psh-ffi"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+
+[lib]
+crate-type = ["staticlib", "cdylib"]
+
+[dependencies]
+psh-core = { path = "../psh-core" }
+libc.workspace = true
+
+[lints]
+workspace = true

@@ -1,0 +1,39 @@
+[workspace]
+resolver = "2"
+members = [
+    "psh-core",
+    "psh-ffi",
+    "psh-cli",
+]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+authors = ["psh contributors"]
+license = "MIT"
+
+[workspace.dependencies]
+# Core dependencies
+serde = { version = "1.0", features = ["derive"] }
+toml = "0.8"
+tera = "1.19"
+thiserror = "1.0"
+notify = "6.1"
+
+# FFI dependencies
+libc = "0.2"
+
+# CLI dependencies
+clap = { version = "4.5", features = ["derive"] }
+
+# Dev dependencies
+criterion = "0.5"
+
+[workspace.lints.rust]
+unsafe_code = "forbid"
+missing_docs = "warn"
+
+[workspace.lints.clippy]
+pedantic = "warn"
+nursery = "warn"
+
