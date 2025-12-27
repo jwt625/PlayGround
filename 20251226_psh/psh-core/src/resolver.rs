@@ -115,6 +115,7 @@ impl Resolver {
     /// 2. Apply snippet-specific base op (if it exists, overrides global base)
     /// 3. Apply user-specified ops (global first, then snippet-specific)
     /// 4. Apply key-value pairs (override everything)
+    ///
     /// Later ops override earlier ones
     fn build_context(
         &self,

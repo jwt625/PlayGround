@@ -140,7 +140,7 @@ impl SnippetCollection {
 
     /// Get global ops
     #[must_use]
-    pub fn global_ops(&self) -> &HashMap<String, HashMap<String, String>> {
+    pub const fn global_ops(&self) -> &HashMap<String, HashMap<String, String>> {
         &self.global_ops
     }
 

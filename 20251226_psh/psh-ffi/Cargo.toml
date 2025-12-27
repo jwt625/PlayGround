@@ -12,5 +12,10 @@ crate-type = ["staticlib", "cdylib"]
 psh-core = { path = "../psh-core" }
 libc.workspace = true
 
-[lints]
-workspace = true
+[lints.rust]
+unsafe_code = "allow"
+missing_docs = "warn"
+
+[lints.clippy]
+pedantic = "warn"
+nursery = "warn"
