@@ -94,6 +94,11 @@ impl Resolver {
     fn resolve_segment(&self, segment: &Segment) -> Result<(String, Vec<Warning>), ResolverError> {
         let mut warnings = Vec::new();
 
+        // Handle global-only directives (no namespace, just ops)
+        if segment.namespace == "_global" {
+            return self.resolve_global_segment(segment);
+        }
+
         // Get the snippet
         let Some(snippet) = self.snippets.get(&segment.namespace) else {
             warnings.push(Warning::UnknownNamespace(segment.namespace.clone()));
@@ -108,6 +113,102 @@ impl Resolver {
         let rendered = Self::render_template(&snippet.template, &context)?;
 
         Ok((rendered, warnings))
+    }
+
+    /// Resolve a global-only segment (no namespace, just global ops)
+    ///
+    /// For global-only directives like ";;ne,l5", we apply the global ops
+    /// and render a simple template that outputs the instructions.
+    fn resolve_global_segment(&self, segment: &Segment) -> Result<(String, Vec<Warning>), ResolverError> {
+        let mut context = HashMap::new();
+        let mut warnings = Vec::new();
+
+        // Apply global base op if it exists
+        if let Some(variables) = self.snippets.global_ops().get("base") {
+            for (key, value) in variables {
+                context.insert(key.clone(), value.clone());
+            }
+        }
+
+        // Apply user-specified global operations
+        for operation in &segment.operations {
+            match operation {
+                Operation::Op(op_code) => {
+                    // For global segments, we only look up global ops
+                    if let Some(variables) = self.snippets.global_ops().get(op_code.as_str()) {
+                        for (key, value) in variables {
+                            context.insert(key.clone(), value.clone());
+                        }
+                    } else {
+                        // Unknown global op
+                        warnings.push(Warning::UnknownOperation {
+                            namespace: "_global".to_string(),
+                            op: op_code.clone(),
+                        });
+                    }
+                }
+                Operation::KeyValue { key, value } => {
+                    // Check if key exists in any global op
+                    let key_exists = self.snippets.global_ops().values().any(|op| op.contains_key(key));
+
+                    if !key_exists {
+                        warnings.push(Warning::UnknownKey {
+                            namespace: "_global".to_string(),
+                            key: key.clone(),
+                        });
+                    }
+
+                    // Apply the key-value override
+                    context.insert(key.clone(), value.clone());
+                }
+            }
+        }
+
+        // Render a simple template that outputs the instructions
+        // We'll concatenate all non-empty instruction values
+        let template = Self::build_global_template(&context);
+        let rendered = Self::render_template(&template, &context)?;
+
+        Ok((rendered, warnings))
+    }
+
+    /// Build a template for global-only directives
+    ///
+    /// Creates a template that outputs all the instruction variables in a sensible order
+    fn build_global_template(context: &HashMap<String, String>) -> String {
+        let mut parts = Vec::new();
+
+        // Order: length, emoji, tone, format, detail, then any others
+        let ordered_keys = [
+            "length_instruction",
+            "emoji_instruction",
+            "tone_instruction",
+            "format_instruction",
+            "detail_instruction",
+        ];
+
+        for key in &ordered_keys {
+            if let Some(value) = context.get(*key) {
+                if !value.is_empty() {
+                    parts.push(format!("{{{{ {key} }}}}"));
+                }
+            }
+        }
+
+        // Add any other keys not in the ordered list
+        for (key, value) in context {
+            if !ordered_keys.contains(&key.as_str()) && !value.is_empty() {
+                parts.push(format!("{{{{ {key} }}}}"));
+            }
+        }
+
+        if parts.is_empty() {
+            // No instructions, return empty
+            String::new()
+        } else {
+            // Join with newlines
+            parts.join("\n")
+        }
     }
 
     /// Build template context from operations
@@ -408,6 +509,110 @@ detail = "medium"
 
         // But the valid op should still work
         assert!(result.rendered.contains("detailed documentation"));
+    }
+
+    fn create_test_collection_with_global_ops() -> SnippetCollection {
+        let toml = r#"
+[global]
+
+[global.ops.base]
+length_instruction = "Provide a moderate response."
+emoji_instruction = "No emoji."
+tone_instruction = "Professional tone."
+
+[global.ops.l1]
+length_instruction = "Be very concise."
+
+[global.ops.l5]
+length_instruction = "Be very detailed."
+
+[global.ops.ne]
+emoji_instruction = "No emoji at all."
+
+[global.ops.pro]
+tone_instruction = "Strictly professional."
+
+[[snippet]]
+id = "doc"
+namespace = "d"
+template = "Documentation: {{ length_instruction }} {{ emoji_instruction }}"
+
+[snippet.ops.base]
+length_instruction = "Moderate docs."
+emoji_instruction = "No emoji."
+"#;
+
+        let mut collection = SnippetCollection::new();
+        collection.load_from_string(toml).unwrap();
+        collection
+    }
+
+    #[test]
+    fn test_global_only_single_op() {
+        let collection = create_test_collection_with_global_ops();
+        let resolver = Resolver::new(collection);
+
+        let directives = parse_directives(";;ne");
+        let result = resolver.resolve(&directives[0]).unwrap();
+
+        assert!(result.rendered.contains("No emoji at all"));
+        assert!(result.warnings.is_empty());
+    }
+
+    #[test]
+    fn test_global_only_multiple_ops() {
+        let collection = create_test_collection_with_global_ops();
+        let resolver = Resolver::new(collection);
+
+        let directives = parse_directives(";;ne,l5");
+        let result = resolver.resolve(&directives[0]).unwrap();
+
+        assert!(result.rendered.contains("Be very detailed"));
+        assert!(result.rendered.contains("No emoji at all"));
+        assert!(result.warnings.is_empty());
+    }
+
+    #[test]
+    fn test_global_only_with_tone() {
+        let collection = create_test_collection_with_global_ops();
+        let resolver = Resolver::new(collection);
+
+        let directives = parse_directives(";;l5,pro");
+        let result = resolver.resolve(&directives[0]).unwrap();
+
+        assert!(result.rendered.contains("Be very detailed"));
+        assert!(result.rendered.contains("Strictly professional"));
+        assert!(result.warnings.is_empty());
+    }
+
+    #[test]
+    fn test_global_only_unknown_op() {
+        let collection = create_test_collection_with_global_ops();
+        let resolver = Resolver::new(collection);
+
+        let directives = parse_directives(";;ne,unknown_op");
+        let result = resolver.resolve(&directives[0]).unwrap();
+
+        // Should have warning for unknown op
+        assert_eq!(result.warnings.len(), 1);
+        assert!(matches!(result.warnings[0], Warning::UnknownOperation { .. }));
+
+        // But known op should still work
+        assert!(result.rendered.contains("No emoji at all"));
+    }
+
+    #[test]
+    fn test_global_only_with_key_value() {
+        let collection = create_test_collection_with_global_ops();
+        let resolver = Resolver::new(collection);
+
+        // Note: directives end at whitespace, so we use a single-word value
+        let directives = parse_directives(";;ne,length_instruction=CustomLength");
+        let result = resolver.resolve(&directives[0]).unwrap();
+
+        assert!(result.rendered.contains("CustomLength"));
+        assert!(result.rendered.contains("No emoji at all"));
+        assert!(result.warnings.is_empty());
     }
 }
 

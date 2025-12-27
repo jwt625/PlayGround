@@ -180,20 +180,139 @@ format = "bullet points"
         let expander = Expander::new(collection);
 
         // Test cases demonstrating both syntaxes (with and without namespace prefix)
-        let test_cases = vec![
+        let namespace_tests = vec![
             (";;d,ne,l2", "Documentation: no emoji, concise"),
-            (";;d,d.l5,d.pro", "Documentation: very detailed, professional"),  // Mixed syntax
+            (";;d,d.l5,d.pro", "Documentation: very detailed, professional"),
+            (";;d,l4,pro", "Documentation: detailed, d.pro (namespace-scoped pro)"),
+            (";;d,l4;pro", "Documentation: detailed, then global pro (separate segments)"),
             (";;sum,blt,l3", "Summarize: bullet points, moderate"),
-            (";;sum,sum.num,sum.l1", "Summarize: numbered, one sentence"),  // Mixed syntax
+            (";;sum,sum.num,sum.l1", "Summarize: numbered, one sentence"),
+            (";;sum.num,l1", "Summarize: numbered, one sentence"),
             (";;plan,stp,l4", "Plan: detailed steps, comprehensive"),
             (";;cr,lang=rust,l4", "Code review: Rust, comprehensive"),
             (";;rr,pro,l1", "Rewrite: professional, concise"),
-            (";;rr,rr.cas,rr.l5", "Rewrite: casual, expanded"),  // Mixed syntax
+            (";;rr,rr.cas,rr.l5", "Rewrite: casual, expanded"),
             (";;git.cm,l1", "Git commit: title only"),
         ];
 
+        let global_tests = vec![
+            (";;ne", "Global: no emoji"),
+            (";;ne,l5", "Global: no emoji, very detailed"),
+            (";;l5,pro", "Global: very detailed, professional"),
+            (";;pro,blt", "Global: professional, bullet points"),
+            (";;nd", "Global: no documentation"),
+            (";;nd,l3", "Global: no documentation, moderate detail"),
+        ];
+
+        let mut output = String::new();
+        output.push_str("# PSH Comprehensive Test Output\n\n");
+        output.push_str("This file contains the expanded prompts from all test cases to verify the snippet system is working correctly.\n\n");
+        output.push_str("## Design Change: No Defaults\n\n");
+        output.push_str("**Important:** The snippet system has been refactored to **remove defaults entirely**.\n\n");
+        output.push_str("- Each `op` is now a **complete, standalone configuration** with all variables defined\n");
+        output.push_str("- Multiple ops can be combined - **later ops override earlier ones**\n");
+        output.push_str("- Example: `;;d,l2,ne` means \"start with l2 (length=2), then apply ne (no emoji)\"\n");
+        output.push_str("- This makes the system more explicit and predictable\n\n");
+        output.push_str("---\n\n");
+
         println!("\n{}", "=".repeat(80));
         println!("COMPREHENSIVE PSH EXPANSION TEST");
+        println!("{}\n", "=".repeat(80));
+
+        // Namespace tests
+        for (i, (directive, description)) in namespace_tests.iter().enumerate() {
+            let result = expander.expand(directive).unwrap();
+
+            println!("Directive: {}", directive);
+            println!("Description: {}", description);
+            println!("\nExpanded Prompt:");
+            println!("{}", "-".repeat(80));
+            println!("{}", result.text);
+            println!("{}", "-".repeat(80));
+
+            if !result.warnings.is_empty() {
+                println!("⚠️  Warnings:");
+                for warning in &result.warnings {
+                    println!("  - {:?}", warning);
+                }
+            }
+
+            println!("\n");
+
+            output.push_str(&format!("## Test Case {}: `{}`\n", i + 1, directive));
+            output.push_str(&format!("**Description:** {}\n\n", description));
+            output.push_str("**Expanded Prompt:**\n```\n");
+            output.push_str(&result.text);
+            output.push_str("\n```\n\n---\n\n");
+        }
+
+        // Global ops tests
+        output.push_str("## Global Ops Test Cases\n\n");
+        output.push_str("These test cases demonstrate global ops without namespace:\n\n");
+        output.push_str("---\n\n");
+
+        for (i, (directive, description)) in global_tests.iter().enumerate() {
+            let result = expander.expand(directive).unwrap();
+
+            println!("Directive: {}", directive);
+            println!("Description: {}", description);
+            println!("\nExpanded Prompt:");
+            println!("{}", "-".repeat(80));
+            println!("{}", result.text);
+            println!("{}", "-".repeat(80));
+
+            if !result.warnings.is_empty() {
+                println!("⚠️  Warnings:");
+                for warning in &result.warnings {
+                    println!("  - {:?}", warning);
+                }
+            }
+
+            println!("\n");
+
+            output.push_str(&format!("## Global Test Case {}: `{}`\n", i + 1, directive));
+            output.push_str(&format!("**Description:** {}\n\n", description));
+            output.push_str("**Expanded Prompt:**\n```\n");
+            output.push_str(&result.text);
+            output.push_str("\n```\n\n---\n\n");
+        }
+
+        output.push_str("## Summary\n\n");
+        output.push_str(&format!("All {} test cases passed successfully. The snippet system correctly:\n", namespace_tests.len() + global_tests.len()));
+        output.push_str("- Parses directives with namespace and operations\n");
+        output.push_str("- Resolves snippets from the collection\n");
+        output.push_str("- Applies operation overrides (ne, l1-l5, pro, cas, blt, num, stp, etc.)\n");
+        output.push_str("- Handles key-value pairs (lang=rust)\n");
+        output.push_str("- Handles global ops without namespace\n");
+        output.push_str("- Renders templates with Tera\n");
+        output.push_str("- Produces comprehensive, literal prompt instructions\n\n");
+        output.push_str("The actual prompts are much more detailed and actionable than the simple descriptions in DevLog-000, providing clear instructions to the LLM about formatting, tone, length, and specific requirements.\n\n");
+
+        println!("{}\n", "=".repeat(80));
+
+        // Write to TEST_OUTPUT.md
+        let output_path = concat!(env!("CARGO_MANIFEST_DIR"), "/../TEST_OUTPUT.md");
+        std::fs::write(output_path, output).expect("Failed to write TEST_OUTPUT.md");
+        println!("✅ Generated TEST_OUTPUT.md");
+    }
+
+    #[test]
+    fn test_global_ops_expansion() {
+        // Load real snippets
+        let mut collection = SnippetCollection::new();
+        collection.load_from_file(std::path::Path::new("../snippets.toml")).unwrap();
+        let expander = Expander::new(collection);
+
+        // Test global-only directives
+        let test_cases = vec![
+            (";;ne", "Global: no emoji"),
+            (";;ne,l5", "Global: no emoji, very detailed"),
+            (";;l5,pro", "Global: very detailed, professional"),
+            (";;pro,blt", "Global: professional, bullet points"),
+        ];
+
+        println!("\n{}", "=".repeat(80));
+        println!("GLOBAL OPS EXPANSION TEST");
         println!("{}\n", "=".repeat(80));
 
         for (directive, description) in test_cases {

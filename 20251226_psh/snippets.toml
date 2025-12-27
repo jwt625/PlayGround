@@ -59,6 +59,10 @@ format_instruction = "as a bulleted list with clear, actionable points."
 [global.ops.num]
 format_instruction = "as a numbered list in logical order."
 
+# Documentation control
+[global.ops.nd]
+doc_instruction = "Do NOT create any new documentation files (*.md, README, docs, etc.). Only provide explanations or code as requested."
+
 # ============================================================================
 # NAMESPACE-SPECIFIC SNIPPETS
 # ============================================================================
@@ -98,6 +102,10 @@ length_instruction = "Create comprehensive documentation including API reference
 
 [snippet.ops.l5]
 length_instruction = "Create extensive documentation with detailed API reference, examples, edge cases, and troubleshooting."
+
+# Documentation-specific tone op - ONLY override tone_instruction
+[snippet.ops.pro]
+tone_instruction = "Use formal, technical documentation style suitable for API references and official documentation."
 
 [[snippet]]
 id = "summarize"
