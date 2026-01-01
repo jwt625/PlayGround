@@ -139,6 +139,7 @@ cargo build --release
 
 ```bash
 cargo test --workspace
+cargo test --workspace -- --nocapture test_comprehensive_examples
 cargo clippy --workspace -- -D warnings
 ```
 

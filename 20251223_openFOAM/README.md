@@ -377,7 +377,7 @@ Use Peacock-Trame (web-based version) which works correctly:
 - See DevLog-001-Peacock-Qt5-Qt6-Conflict.md for detailed analysis
 
 **Current Status:**
-- Original Peacock (PyQt5): ❌ **Not working** - macOS conda packaging issue
-- Peacock-Trame (web-based): ✅ **Working** - Recommended
+- Original Peacock (PyQt5): **Not working** - macOS conda packaging issue
+- Peacock-Trame (web-based): **Working** - Recommended
 
 
