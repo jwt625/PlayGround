@@ -82,6 +82,7 @@
   [csv]
     type = CSV
     file_base = therm_step03_out
-    execute_on = final
+    # execute_on = final
+    execute_on = 'INITIAL TIMESTEP_END'
   []
 []
