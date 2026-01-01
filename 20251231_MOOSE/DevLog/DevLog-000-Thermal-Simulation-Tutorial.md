@@ -151,6 +151,22 @@ Initial assessment was based on theoretical expectations rather than empirical v
 - Version: 2025.06.09 (moose-dev package)
 - Installation: Conda environment at `~/miniforge3/envs/moose`
 
+## Build Issues and Resolution
+
+### 2026-01-01: Combined Module Build Failure on macOS ARM64
+
+**Problem:**
+The MOOSE combined module build failed during Fortran plugin compilation with linker errors: `ld: library not found for -lm`. This occurred specifically when building test plugins in `modules/solid_mechanics/test/plugins/` for files like `elastic_incremental.f`, `elastic_predef.f`, `elastic_print_multiple_fields.f`, and `elastic_temperature.f`. The error manifested because conda's gfortran compiler on macOS was attempting to link against the math library using the `-lm` flag, which is standard on Linux but problematic on macOS where math functions are integrated into the system library `libSystem.dylib` rather than provided as a separate library.
+
+**Root Cause Analysis:**
+The issue stemmed from three interconnected factors in the conda-provided toolchain for macOS ARM64. First, the conda gfortran compiler retained Linux-style linking behavior that explicitly requests `-lm` during compilation. Second, the conda environment at `~/miniforge3/envs/moose/lib/` did not include a `libm.a` or `libm.dylib` file because macOS provides math functions through the system framework. Third, the gfortran compiler's default configuration did not have the correct SDK path to locate macOS system libraries, leading to a secondary error `ld: library not found for -lSystem` when the first issue was partially addressed. This combination created a situation where the build system expected a library that doesn't exist as a standalone entity on macOS.
+
+**Solution:**
+The fix involved three modifications to the `build_combined.sh` script. First, explicit compiler environment variables were set to ensure conda-provided compilers were used: `CC=clang`, `CXX=clang++`, and `FC=gfortran`. Second, the macOS SDK path was configured by setting `SDKROOT=$(xcrun --show-sdk-path)` and `CONDA_BUILD_SYSROOT=$SDKROOT`, allowing gfortran to locate system libraries like libSystem. Third, an empty `libm.a` archive was created in the conda environment's lib directory using a stub object file, satisfying the linker's requirement for `-lm` without actually providing any symbols (since they're already available in libSystem). This approach allowed the build to complete successfully while maintaining compatibility with the existing MOOSE build system that expects standard Unix-style library linking.
+
+**Verification:**
+After implementing these changes, the build completed successfully, producing the `combined-opt` executable (164KB, Mach-O 64-bit ARM64 format) at `~/peacock-work/moose/modules/combined/combined-opt`. All Fortran plugins compiled without errors, and the make system correctly skipped previously built targets when re-run, confirming that incremental builds work as expected. The numerous linker warnings about "could not create compact unwind" for Fortran functions are normal on macOS ARM64 and do not affect functionality.
+
 ## Conclusion
 
 The `thermal_step1.i` file is production-ready and demonstrates MOOSE's intelligent default behavior for boundary and initial conditions. The initial assessment error highlights the importance of empirical verification over theoretical assumptions when working with mature frameworks that implement sophisticated default behaviors.
