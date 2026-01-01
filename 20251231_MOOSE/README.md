@@ -381,3 +381,8 @@ Use Peacock-Trame (web-based version) which works correctly:
 - Peacock-Trame (web-based): **Working** - Recommended
 
 
+## Example build and run
+
+As of 20251231:
+- `./build_combined.sh` for building `combined-opt`
+- `~/peacock-work/moose/modules/combined/combined-opt -i thermal_step3.i`
