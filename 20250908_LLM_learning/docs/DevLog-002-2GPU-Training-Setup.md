@@ -54,6 +54,11 @@ Adapted the nanochat training pipeline from 8-GPU to 2-GPU configuration and imp
    --device_batch_size=8
    ```
 
+**Run with prepend timestamps**:
+- `sudo apt-get update && sudo apt-get install -y moreutils`
+- `./run_2gpu_d24.sh 2>&1 | ts '%Y-%m-%d %H:%M:%S' | tee training_(date +%Y%m%d_%H%M%S).log`
+
+
 ### Expected Model Specifications
 
 - Parameters: ~470M (vs. 1.9B in original)
