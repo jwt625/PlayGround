@@ -359,3 +359,17 @@ tmux new -s gpu_monitor_c -d "cd /home/ubuntu/GitHub/PlayGround/20250908_LLM_lea
 
 The C implementation is now the recommended solution for production GPU monitoring.
 
+## Visualization Script Enhancement and Data Processing
+
+### Command-Line Argument Support
+
+Both visualization scripts (`visualize_gpu_metrics_v2.py` for v1 format and `visualize_gpu_metrics_v2_enhanced.py` for v2 format) were enhanced to accept command-line arguments for improved usability. The scripts now support positional arguments for CSV filename and downsampling factor, along with optional flags for power threshold and buffer minutes. This eliminates the need to edit hardcoded values in the script for each processing run. The default downsampling factor is set to 10 for v2 format based on empirical analysis showing that NVML metrics update at approximately 10 Hz despite 100 Hz sampling, meaning 90% of consecutive samples are duplicates. For v1 format, analysis revealed even higher redundancy with 327 Hz sampling but only 10 Hz actual updates, requiring a downsampling factor of 32 to eliminate the 97% duplicate samples.
+
+### Data Quality Analysis and Processing Results
+
+Analysis of the actual metric update frequencies revealed significant differences between v1 and v2 implementations. The v1 Python implementation using pynvml sampled at 326.6 Hz but power values only changed at 9.9 Hz (3% unique samples), resulting in massive data redundancy. The v2 C implementation improved efficiency by sampling at 99.2 Hz with the same 9.9 Hz update rate, reducing redundancy from 97% to 90%. Two major datasets were processed and visualized: a 98 MB v2 format file capturing 4.24 hours of training with 1.5M samples (downsampled to 142K points), and a 1.2 GB v1 format file capturing 19.0 hours of training with 22.6M samples (downsampled to 698K points). The longer v1 run showed higher average power consumption (657W vs 571W) but lower peak power (784W vs 915W), suggesting different training workload characteristics. Both datasets had idle periods automatically detected and trimmed, with interactive HTML visualizations and summary statistics generated for analysis.
+
+### Visualization Output Files
+
+The processed datasets generated the following visualization artifacts: `gpu_metrics_plot-v2_20251222_210600.html` (300 MB, 4.24-hour run with instant and averaged power curves), `gpu_metrics_v2_summary_20251222_210600.txt` (summary statistics for v2 run), `gpu_metrics_plot_20251222_060524.html` (19.0-hour run with single power readings), and corresponding summary files. The v2 visualization includes both instant and averaged power as separate traces, allowing comparison of transient behavior versus 1-second averaged values. All visualizations use Plotly for interactive exploration with pan, zoom, and hover capabilities, making it easy to identify power spikes, thermal throttling events, and training phase transitions across multi-hour runs.
+

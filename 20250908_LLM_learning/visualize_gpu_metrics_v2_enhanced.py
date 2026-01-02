@@ -4,6 +4,14 @@ Visualize GPU power and temperature metrics from v2 CSV file.
 V2 format includes both instant and average power readings.
 Automatically detects and cuts off idle periods at the end.
 Creates interactive HTML visualization using Plotly.
+
+Usage:
+    python visualize_gpu_metrics_v2_enhanced.py <csv_file> [downsample_factor]
+
+Arguments:
+    csv_file: Path to the GPU metrics CSV file
+    downsample_factor: Optional downsampling factor (default: 10)
+                      Use 1 for no downsampling, 10 to keep every 10th sample, etc.
 """
 
 import pandas as pd
@@ -11,6 +19,8 @@ import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 import numpy as np
 import re
+import sys
+import argparse
 
 def extract_timestamp_from_filename(csv_file):
     """Extract timestamp from CSV filename like 'gpu_metrics_v2_20251222_210600.csv'"""
@@ -223,17 +233,49 @@ def export_summary(df, output_file='gpu_metrics_v2_summary.txt'):
     print(f"Summary exported to: {output_file}")
 
 if __name__ == "__main__":
-    # Configuration
-    csv_file = "gpu_metrics_v2_20251222_210600.csv"
+    # Parse command-line arguments
+    parser = argparse.ArgumentParser(
+        description='Visualize GPU metrics from v2 CSV file with instant and average power readings.',
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="""
+Examples:
+  # Process with default downsampling (factor=10)
+  python visualize_gpu_metrics_v2_enhanced.py gpu_metrics_v2_20251222_210600.csv
+
+  # Process with no downsampling
+  python visualize_gpu_metrics_v2_enhanced.py gpu_metrics_v2_20251222_210600.csv 1
+
+  # Process with heavy downsampling (every 100th sample)
+  python visualize_gpu_metrics_v2_enhanced.py gpu_metrics_v2_20251222_210600.csv 100
+        """
+    )
+    parser.add_argument('csv_file', type=str,
+                        help='Path to the GPU metrics CSV file')
+    parser.add_argument('downsample_factor', type=int, nargs='?', default=10,
+                        help='Downsampling factor (default: 10). Use 1 for no downsampling.')
+    parser.add_argument('--power-threshold', type=float, default=200,
+                        help='Power threshold in Watts to detect idle state (default: 200)')
+    parser.add_argument('--buffer-minutes', type=int, default=10,
+                        help='Minutes to add after detected idle cutoff (default: 10)')
+
+    args = parser.parse_args()
+
+    # Configuration from arguments
+    csv_file = args.csv_file
+    downsample_factor = args.downsample_factor
+    power_threshold = args.power_threshold
+    buffer_minutes = args.buffer_minutes
 
     # Extract timestamp from filename
     timestamp = extract_timestamp_from_filename(csv_file)
     output_html = f"gpu_metrics_plot-v2_{timestamp}.html"
     output_summary = f"gpu_metrics_v2_summary_{timestamp}.txt"
 
-    power_threshold = 200
-    downsample_factor = 1
-    buffer_minutes = 10
+    print(f"Processing: {csv_file}")
+    print(f"Downsample factor: {downsample_factor}")
+    print(f"Power threshold: {power_threshold}W")
+    print(f"Buffer minutes: {buffer_minutes}")
+    print()
 
     # Load and process data
     df_plot, cutoff_time = load_and_process_data(
