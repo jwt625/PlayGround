@@ -1,0 +1,15 @@
+[project]
+name = "claude-proxy"
+version = "0.1.0"
+description = "Logging proxy server for Claude Code inference requests"
+requires-python = ">=3.10"
+dependencies = [
+    "flask>=3.0.0",
+    "requests>=2.31.0",
+    "python-dotenv>=1.0.0",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
