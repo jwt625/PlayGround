@@ -5,3 +5,4 @@ __pycache__/
 .venv/
 .python-version
 
+viewer/node_modules/*
