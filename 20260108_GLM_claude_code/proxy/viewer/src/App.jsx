@@ -1,4 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
+import { JsonView, allExpanded, darkStyles } from 'react-json-view-lite'
+import 'react-json-view-lite/dist/index.css'
 import './App.css'
 
 function App() {
@@ -241,10 +243,9 @@ function App() {
                       {!collapsedPanels.has(`${idx}-request`) && (
                         <div className="content">
                           <div className="endpoint">{log.method} {log.path}</div>
-                          <details>
-                            <summary>Request body</summary>
-                            <pre>{JSON.stringify(log.body, null, 2)}</pre>
-                          </details>
+                          <div className="json-viewer-container">
+                            <JsonView data={log.body} shouldExpandNode={allExpanded} style={darkStyles} />
+                          </div>
                         </div>
                       )}
                     </div>

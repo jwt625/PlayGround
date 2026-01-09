@@ -9,9 +9,10 @@ import os
 import sys
 from datetime import datetime
 from pathlib import Path
+from typing import Any
 
 from dotenv import load_dotenv
-from flask import Flask, Request, Response, request
+from flask import Flask, Response, request
 import requests
 
 load_dotenv()
@@ -43,6 +44,105 @@ def log_entry(entry: dict) -> None:
     """Append log entry to JSONL file."""
     with open(get_log_filename(), "a") as f:
         f.write(json.dumps(entry, ensure_ascii=False) + "\n")
+
+
+def parse_sse_stream(stream_data: str) -> dict[str, Any]:
+    """
+    Parse Server-Sent Events stream and aggregate into a single response.
+
+    Returns a dict with the aggregated message content and metadata.
+    """
+    lines = stream_data.strip().split('\n')
+
+    message_data = {
+        "id": None,
+        "type": "message",
+        "role": "assistant",
+        "content": [],
+        "model": None,
+        "stop_reason": None,
+        "stop_sequence": None,
+        "usage": None
+    }
+
+    current_content_block = None
+    current_event = None
+    current_data = ""
+
+    for line in lines:
+        line = line.strip()
+
+        if line.startswith('event: '):
+            current_event = line[7:]
+            current_data = ""
+        elif line.startswith('data: '):
+            current_data = line[6:]
+
+            try:
+                data = json.loads(current_data)
+
+                if current_event == 'message_start':
+                    msg = data.get('message', {})
+                    message_data['id'] = msg.get('id')
+                    message_data['model'] = msg.get('model')
+                    message_data['role'] = msg.get('role', 'assistant')
+                    message_data['usage'] = msg.get('usage')
+
+                elif current_event == 'content_block_start':
+                    block = data.get('content_block', {})
+                    current_content_block = {
+                        'type': block.get('type'),
+                        'text': '' if block.get('type') == 'text' else None
+                    }
+                    if block.get('type') == 'thinking':
+                        current_content_block['thinking'] = ''
+
+                elif current_event == 'content_block_delta':
+                    delta = data.get('delta', {})
+                    if current_content_block:
+                        if delta.get('type') == 'text_delta':
+                            current_content_block['text'] += delta.get('text', '')
+                        elif delta.get('type') == 'thinking_delta':
+                            current_content_block['thinking'] += delta.get('thinking', '')
+
+                elif current_event == 'content_block_stop':
+                    if current_content_block:
+                        message_data['content'].append(current_content_block)
+                        current_content_block = None
+
+                elif current_event == 'message_delta':
+                    delta = data.get('delta', {})
+                    if 'stop_reason' in delta:
+                        message_data['stop_reason'] = delta['stop_reason']
+                    if 'stop_sequence' in delta:
+                        message_data['stop_sequence'] = delta['stop_sequence']
+                    usage = data.get('usage', {})
+                    if usage:
+                        if message_data['usage'] is None:
+                            message_data['usage'] = {}
+                        message_data['usage'].update(usage)
+
+                elif current_event == 'message_stop':
+                    pass
+
+            except json.JSONDecodeError:
+                continue
+
+    return message_data
+
+
+def is_sse_stream(content: bytes, headers: dict) -> bool:
+    """Check if the response is a Server-Sent Events stream."""
+    content_type = headers.get('content-type', headers.get('Content-Type', ''))
+    if 'text/event-stream' in content_type:
+        return True
+
+    # Also check if content starts with SSE format
+    try:
+        text = content.decode('utf-8', errors='ignore')[:100]
+        return text.startswith('event: ') or '\nevent: ' in text
+    except:
+        return False
 
 
 @app.route("/<path:path>", methods=["GET", "POST", "PUT", "DELETE", "PATCH"])
@@ -94,15 +194,27 @@ def proxy(path: str) -> Response:
         
         # Collect response data
         response_body = upstream_response.content
-        
+
         # Parse response body for logging
         response_body_parsed = None
         if response_body:
-            try:
-                response_body_parsed = json.loads(response_body)
-            except json.JSONDecodeError:
-                response_body_parsed = response_body.decode("utf-8", errors="replace")
-        
+            # Check if this is an SSE stream
+            if is_sse_stream(response_body, dict(upstream_response.headers)):
+                try:
+                    stream_text = response_body.decode("utf-8", errors="replace")
+                    response_body_parsed = parse_sse_stream(stream_text)
+                except Exception as e:
+                    # If parsing fails, log the raw stream (truncated)
+                    response_body_parsed = {
+                        "error": f"Failed to parse SSE stream: {str(e)}",
+                        "raw_preview": response_body.decode("utf-8", errors="replace")[:1000]
+                    }
+            else:
+                try:
+                    response_body_parsed = json.loads(response_body)
+                except json.JSONDecodeError:
+                    response_body_parsed = response_body.decode("utf-8", errors="replace")
+
         # Log response
         log_data["response"] = {
             "status": upstream_response.status_code,
