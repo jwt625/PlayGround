@@ -6,7 +6,7 @@ Projects that have spun off:
 - [VoiceModeTranscript](https://github.com/jwt625/VoiceModeTranscript): a real-time transcript recorder for ChatGPT voice conversations with dual audio capture, whisper.cpp streaming, and intelligent LLM deduplication.
   - actually works for any mic and system audio transcribing
 - [BPM (Beam Propagation Method)](https://github.com/jwt625/BPM): a toy Python library for simulating beam propagation in integrated photonics using the Beam Propagation Method (BPM). 
-  Try it: [huggingface.co/spaces/jwt625/BPM](https://huggingface.co/spaces/jwt625/BPM).
+  - Try it: [huggingface.co/spaces/jwt625/BPM](https://huggingface.co/spaces/jwt625/BPM).
 
 <img src="assets/BPM.png" alt="BPM" width="33%">
 
@@ -20,7 +20,8 @@ Projects that have spun off:
 
 <img src="assets/BBT.png" alt="BBT" width="33%">
 
-- [3dgs-viewer](https://github.com/jwt625/3dgs-viewer): simple 3d gaussian splatting viewer based on [spark](https://github.com/sparkjsdev/spark). Try it: [outside5sigma.com/3dgs-viewer](https://outside5sigma.com/3dgs-viewer).
+- [3dgs-viewer](https://github.com/jwt625/3dgs-viewer): simple 3d gaussian splatting viewer based on [spark](https://github.com/sparkjsdev/spark). 
+  - Try it: [outside5sigma.com/3dgs-viewer](https://outside5sigma.com/3dgs-viewer).
 
 <img src="assets/3dgs-viewer.png" alt="3dgs-viewer" width="33%">
 
