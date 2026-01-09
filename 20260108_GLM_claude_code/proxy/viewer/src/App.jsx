@@ -142,6 +142,7 @@ function App() {
             const model = log.body?.model || 'unknown'
             const status = log.response?.status || 'pending'
             const usage = log.response?.body?.usage
+            const duration = log.response?.duration_ms
             let totalTokens = 'no tokens'
             if (usage) {
               if (usage.input_tokens !== undefined && usage.output_tokens !== undefined) {
@@ -150,6 +151,7 @@ function App() {
                 totalTokens = `${usage.total_tokens} tokens`
               }
             }
+            const durationText = duration !== undefined ? `${duration.toFixed(0)}ms` : 'no duration'
 
             return (
               <div
@@ -157,7 +159,7 @@ function App() {
                 className={`minimap-item ${isError ? 'error' : 'success'} ${isSelected ? 'selected' : ''}`}
                 onClick={() => scrollToLog(idx)}
                 data-tooltip-id="minimap-tooltip"
-                data-tooltip-content={`${timestamp}\n${model}\nStatus: ${status}\n${totalTokens}`}
+                data-tooltip-content={`${timestamp}\n${model}\nStatus: ${status}\n${totalTokens}\nDuration: ${durationText}`}
               />
             )
           })}
@@ -257,6 +259,7 @@ function App() {
             const timestamp = new Date(log.timestamp).toLocaleString()
             const model = log.body?.model || 'unknown'
             const tokens = log.response?.body?.usage || log.response?.body?.input_tokens
+            const duration = log.response?.duration_ms
             const isCollapsed = collapsedItems.has(idx)
 
             return (
@@ -275,6 +278,11 @@ function App() {
                   {tokens && (
                     <span className="tokens">
                       {tokens.input_tokens || tokens} tokens
+                    </span>
+                  )}
+                  {duration !== undefined && (
+                    <span className="duration">
+                      {duration.toFixed(0)}ms
                     </span>
                   )}
                 </div>

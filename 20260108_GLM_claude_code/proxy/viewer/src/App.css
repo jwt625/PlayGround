@@ -227,6 +227,10 @@
   color: #a78bfa;
 }
 
+.metadata .duration {
+  color: #fbbf24;
+}
+
 .message {
   background: #0f0f0f;
   border-left: 3px solid #333;
