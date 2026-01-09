@@ -171,8 +171,9 @@ def proxy(path: str) -> Response:
             request_body = body.decode("utf-8", errors="replace")
     
     # Log request
+    request_timestamp = datetime.utcnow()
     log_data = {
-        "timestamp": datetime.utcnow().isoformat() + "Z",
+        "timestamp": request_timestamp.isoformat() + "Z",
         "direction": "request",
         "method": request.method,
         "path": path,
@@ -180,7 +181,7 @@ def proxy(path: str) -> Response:
         "headers": redact_headers(dict(request.headers)),
         "body": request_body,
     }
-    
+
     try:
         # Forward request to upstream
         upstream_response = requests.request(
@@ -191,9 +192,10 @@ def proxy(path: str) -> Response:
             stream=True,
             timeout=600,
         )
-        
+
         # Collect response data
         response_body = upstream_response.content
+        response_timestamp = datetime.utcnow()
 
         # Parse response body for logging
         response_body_parsed = None
@@ -216,10 +218,13 @@ def proxy(path: str) -> Response:
                     response_body_parsed = response_body.decode("utf-8", errors="replace")
 
         # Log response
+        duration_ms = (response_timestamp - request_timestamp).total_seconds() * 1000
         log_data["response"] = {
             "status": upstream_response.status_code,
             "headers": redact_headers(dict(upstream_response.headers)),
             "body": response_body_parsed,
+            "timestamp": response_timestamp.isoformat() + "Z",
+            "duration_ms": round(duration_ms, 2),
         }
         log_entry(log_data)
         

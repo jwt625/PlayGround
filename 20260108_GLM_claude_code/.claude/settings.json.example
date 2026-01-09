@@ -1,0 +1,9 @@
+{
+    "env": {
+        "ANTHROPIC_AUTH_TOKEN": "your-custom-auth-token",
+        "ANTHROPIC_BASE_URL": "http://127.0.0.1:58734",
+        "API_TIMEOUT_MS": "3000000",
+        "ANTHROPIC_DEFAULT_SONNET_MODEL": "zai-org/GLM-4.6-FP8",
+        "ANTHROPIC_DEFAULT_HAIKU_MODEL": "meta-llama/Llama-4-Maverick-17B-128E-Instruct-FP8"
+    }
+}

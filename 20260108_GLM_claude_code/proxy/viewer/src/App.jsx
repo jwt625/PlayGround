@@ -1,6 +1,8 @@
-import { useState, useEffect, useRef } from 'react'
-import { JsonView, allExpanded, darkStyles } from 'react-json-view-lite'
+import { useState, useEffect, useRef, useMemo } from 'react'
+import { JsonView, darkStyles } from 'react-json-view-lite'
+import { Tooltip } from 'react-tooltip'
 import 'react-json-view-lite/dist/index.css'
+import 'react-tooltip/dist/react-tooltip.css'
 import './App.css'
 
 function App() {
@@ -9,53 +11,12 @@ function App() {
   const [loading, setLoading] = useState(true)
   const [collapsedItems, setCollapsedItems] = useState(new Set())
   const [collapsedPanels, setCollapsedPanels] = useState(new Set())
-  const [visibleLogIndex, setVisibleLogIndex] = useState(null)
+  const [selectedLogIndex, setSelectedLogIndex] = useState(null)
+  const [windowSize, setWindowSize] = useState(10)
+  const [headerCollapsed, setHeaderCollapsed] = useState(false)
+  const [autoRefresh, setAutoRefresh] = useState(true)
   const logRefs = useRef([])
   const mainRef = useRef(null)
-
-  useEffect(() => {
-    fetchLogs()
-    const interval = setInterval(fetchLogs, 2000)
-    return () => clearInterval(interval)
-  }, [])
-
-  useEffect(() => {
-    const handleScroll = () => {
-      if (!mainRef.current) return
-
-      const mainRect = mainRef.current.getBoundingClientRect()
-      const mainCenter = mainRect.top + mainRect.height / 2
-
-      let closestIndex = null
-      let closestDistance = Infinity
-
-      logRefs.current.forEach((ref, idx) => {
-        if (!ref) return
-        const rect = ref.getBoundingClientRect()
-        const logCenter = rect.top + rect.height / 2
-        const distance = Math.abs(logCenter - mainCenter)
-
-        if (distance < closestDistance) {
-          closestDistance = distance
-          closestIndex = idx
-        }
-      })
-
-      setVisibleLogIndex(closestIndex)
-    }
-
-    const main = mainRef.current
-    if (main) {
-      main.addEventListener('scroll', handleScroll)
-      handleScroll()
-    }
-
-    return () => {
-      if (main) {
-        main.removeEventListener('scroll', handleScroll)
-      }
-    }
-  }, [logs, filter])
 
   const fetchLogs = async () => {
     try {
@@ -69,12 +30,41 @@ function App() {
     }
   }
 
-  const filteredLogs = logs.filter(log => {
-    if (filter === 'all') return true
-    if (filter === 'errors') return log.response?.status >= 400
-    if (filter === 'success') return log.response?.status < 400
-    return true
-  })
+  const filteredLogs = useMemo(() => {
+    return logs.filter(log => {
+      if (filter === 'all') return true
+      if (filter === 'errors') return log.response?.status >= 400
+      if (filter === 'success') return log.response?.status < 400
+      return true
+    })
+  }, [logs, filter])
+
+  useEffect(() => {
+    fetchLogs()
+    if (autoRefresh) {
+      const interval = setInterval(fetchLogs, 2000)
+      return () => clearInterval(interval)
+    }
+  }, [autoRefresh])
+
+  useEffect(() => {
+    if (selectedLogIndex === null && filteredLogs.length > 0) {
+      setSelectedLogIndex(Math.floor(filteredLogs.length / 2))
+    }
+  }, [filteredLogs, selectedLogIndex])
+
+  // Removed scroll-based selection - only timeline clicks update selection
+
+  const windowedLogs = useMemo(() => {
+    if (filteredLogs.length === 0) return []
+    if (selectedLogIndex === null) return filteredLogs.slice(0, windowSize)
+
+    const halfWindow = Math.floor(windowSize / 2)
+    const startIdx = Math.max(0, selectedLogIndex - halfWindow)
+    const endIdx = Math.min(filteredLogs.length, startIdx + windowSize)
+
+    return filteredLogs.slice(startIdx, endIdx)
+  }, [filteredLogs, selectedLogIndex, windowSize])
 
   const toggleCollapse = (idx) => {
     setCollapsedItems(prev => {
@@ -101,8 +91,11 @@ function App() {
     })
   }
 
-  const scrollToLog = (idx) => {
-    logRefs.current[idx]?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+  const scrollToLog = (absoluteIdx) => {
+    setSelectedLogIndex(absoluteIdx)
+    setTimeout(() => {
+      logRefs.current[0]?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+    }, 100)
   }
 
   const extractUserMessage = (body) => {
@@ -144,49 +137,120 @@ function App() {
         <div className="minimap-items">
           {filteredLogs.map((log, idx) => {
             const isError = log.response?.status >= 400
-            const isVisible = visibleLogIndex === idx
+            const isSelected = selectedLogIndex === idx
+            const timestamp = new Date(log.timestamp).toLocaleString()
+            const model = log.body?.model || 'unknown'
+            const status = log.response?.status || 'pending'
+            const usage = log.response?.body?.usage
+            let totalTokens = 'no tokens'
+            if (usage) {
+              if (usage.input_tokens !== undefined && usage.output_tokens !== undefined) {
+                totalTokens = `${usage.input_tokens + usage.output_tokens} tokens (${usage.input_tokens} in + ${usage.output_tokens} out)`
+              } else if (usage.total_tokens !== undefined) {
+                totalTokens = `${usage.total_tokens} tokens`
+              }
+            }
+
             return (
               <div
                 key={idx}
-                className={`minimap-item ${isError ? 'error' : 'success'} ${isVisible ? 'visible' : ''}`}
+                className={`minimap-item ${isError ? 'error' : 'success'} ${isSelected ? 'selected' : ''}`}
                 onClick={() => scrollToLog(idx)}
-                title={new Date(log.timestamp).toLocaleTimeString()}
+                data-tooltip-id="minimap-tooltip"
+                data-tooltip-content={`${timestamp}\n${model}\nStatus: ${status}\n${totalTokens}`}
               />
             )
           })}
         </div>
+        <Tooltip
+          id="minimap-tooltip"
+          place="right"
+          style={{
+            backgroundColor: '#1a1a1a',
+            color: '#e0e0e0',
+            border: '1px solid #333',
+            borderRadius: '4px',
+            padding: '8px 12px',
+            fontSize: '12px',
+            whiteSpace: 'pre-line',
+            zIndex: 9999
+          }}
+        />
       </aside>
 
       <div className="content">
-        <header className="header">
-          <h1>Claude Log Viewer</h1>
-          <div className="filters">
-            <button
-              className={filter === 'all' ? 'active' : ''}
-              onClick={() => setFilter('all')}
-            >
-              All ({logs.length})
-            </button>
-            <button
-              className={filter === 'success' ? 'active' : ''}
-              onClick={() => setFilter('success')}
-            >
-              Success
-            </button>
-            <button
-              className={filter === 'errors' ? 'active' : ''}
-              onClick={() => setFilter('errors')}
-            >
-              Errors
-            </button>
+        <header className={`header ${headerCollapsed ? 'collapsed' : ''}`}>
+          <div className="header-top">
+            <div className="header-title-row">
+              <h1>Claude Log Viewer</h1>
+              <button
+                className="collapse-header-btn"
+                onClick={() => setHeaderCollapsed(!headerCollapsed)}
+                title={headerCollapsed ? 'Expand header' : 'Collapse header'}
+              >
+                {headerCollapsed ? '▼' : '▲'}
+              </button>
+            </div>
+            {!headerCollapsed && (
+              <div className="filters">
+                <button
+                  className={filter === 'all' ? 'active' : ''}
+                  onClick={() => setFilter('all')}
+                >
+                  All ({logs.length})
+                </button>
+                <button
+                  className={filter === 'success' ? 'active' : ''}
+                  onClick={() => setFilter('success')}
+                >
+                  Success
+                </button>
+                <button
+                  className={filter === 'errors' ? 'active' : ''}
+                  onClick={() => setFilter('errors')}
+                >
+                  Errors
+                </button>
+                <button
+                  className={autoRefresh ? 'active' : ''}
+                  onClick={() => setAutoRefresh(!autoRefresh)}
+                  title={autoRefresh ? 'Auto-refresh enabled' : 'Auto-refresh disabled'}
+                >
+                  {autoRefresh ? 'Live' : 'Paused'}
+                </button>
+              </div>
+            )}
           </div>
+
+          {!headerCollapsed && (
+            <div className="range-controls">
+              <div className="range-info">
+                Showing {windowedLogs.length} of {filteredLogs.length} logs
+                {selectedLogIndex !== null && ` (centered around #${selectedLogIndex + 1})`}
+              </div>
+              <div className="window-size-control">
+                <label>
+                  Window size:
+                  <input
+                    type="number"
+                    min="10"
+                    max="200"
+                    step="10"
+                    value={windowSize}
+                    onChange={(e) => setWindowSize(parseInt(e.target.value) || 10)}
+                    className="window-size-input"
+                  />
+                </label>
+              </div>
+            </div>
+          )}
         </header>
 
         <main className="main" ref={mainRef}>
-        {filteredLogs.length === 0 ? (
+        {windowedLogs.length === 0 ? (
           <div className="empty">No logs found</div>
         ) : (
-          filteredLogs.map((log, idx) => {
+          windowedLogs.map((log, idx) => {
             const userMsg = extractUserMessage(log.body)
             const assistantResp = extractAssistantResponse(log.response?.body)
             const isError = log.response?.status >= 400
@@ -244,7 +308,7 @@ function App() {
                         <div className="content">
                           <div className="endpoint">{log.method} {log.path}</div>
                           <div className="json-viewer-container">
-                            <JsonView data={log.body} shouldExpandNode={allExpanded} style={darkStyles} />
+                            <JsonView data={log.body} style={darkStyles} />
                           </div>
                         </div>
                       )}
