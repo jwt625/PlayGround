@@ -24,6 +24,7 @@ function App() {
   const [searchQuery, setSearchQuery] = useState('')
   const [searchType, setSearchType] = useState('all')
   const [searchFields, setSearchFields] = useState(['user_message', 'assistant_response'])
+  const [timelineColorByAgent, setTimelineColorByAgent] = useState(true)
   const logRefs = useRef([])
   const mainRef = useRef(null)
   const resizerRef = useRef(null)
@@ -262,6 +263,14 @@ function App() {
             const status = log.response?.status || 'pending'
             const usage = log.response?.body?.usage
             const duration = log.response?.duration_ms
+            const agentType = log.agent_type
+            const toolInfo = log.tool_info || {}
+            const hasSubagents = log.has_subagent_spawns || false
+            const subagentCount = log.subagent_count || 0
+            const hasErrors = log.has_errors || false
+            const toolErrors = log.tool_errors || 0
+            const stopReason = log.stop_reason
+
             let totalTokens = 'no tokens'
             if (usage) {
               if (usage.input_tokens !== undefined && usage.output_tokens !== undefined) {
@@ -272,13 +281,46 @@ function App() {
             }
             const durationText = duration !== undefined ? `${duration.toFixed(0)}ms` : 'no duration'
 
+            // Build enhanced tooltip
+            let tooltipLines = [
+              timestamp,
+              model,
+              `Status: ${status}`
+            ]
+            if (agentType) {
+              tooltipLines.push(`Agent: ${agentType.label}`)
+            }
+            if (stopReason) {
+              tooltipLines.push(`Stop: ${stopReason}`)
+            }
+            if (toolInfo.count > 0) {
+              tooltipLines.push(`Tools: ${toolInfo.tool_names.join(', ')}`)
+            }
+            if (hasSubagents) {
+              tooltipLines.push(`Subagents: ${subagentCount}`)
+            }
+            if (hasErrors) {
+              tooltipLines.push(`Errors: ${toolErrors}`)
+            }
+            tooltipLines.push(totalTokens)
+            tooltipLines.push(`Duration: ${durationText}`)
+
+            const tooltipContent = tooltipLines.join('\n')
+
+            // Determine color
+            let itemStyle = {}
+            if (timelineColorByAgent && agentType) {
+              itemStyle.backgroundColor = agentType.color
+            }
+
             return (
               <div
                 key={idx}
                 className={`minimap-item ${isError ? 'error' : 'success'} ${isSelected ? 'selected' : ''}`}
                 onClick={() => scrollToLog(idx)}
                 data-tooltip-id="minimap-tooltip"
-                data-tooltip-content={`${timestamp}\n${model}\nStatus: ${status}\n${totalTokens}\nDuration: ${durationText}`}
+                data-tooltip-content={tooltipContent}
+                style={itemStyle}
               />
             )
           })}
@@ -355,6 +397,15 @@ function App() {
                   >
                     Timeline
                   </button>
+                  {showTimeline && (
+                    <button
+                      className={timelineColorByAgent ? 'active' : ''}
+                      onClick={() => setTimelineColorByAgent(!timelineColorByAgent)}
+                      title={timelineColorByAgent ? 'Disable agent color coding' : 'Enable agent color coding'}
+                    >
+                      Color by Agent
+                    </button>
+                  )}
                   <button
                     onClick={() => setCollapsedItems(new Set(windowedLogs.map((_, idx) => idx)))}
                     title="Collapse all log entries"
@@ -449,19 +500,79 @@ function App() {
             const duration = log.response?.duration_ms
             const isCollapsed = collapsedItems.has(idx)
 
+            // Enriched metadata
+            const agentType = log.agent_type
+            const toolInfo = log.tool_info || {}
+            const hasSubagents = log.has_subagent_spawns || false
+            const subagentCount = log.subagent_count || 0
+            const subagentSpawns = log.subagent_spawns || []
+            const hasErrors = log.has_errors || false
+            const toolErrors = log.tool_errors || 0
+            const stopReason = log.stop_reason
+
             return (
               <div
                 key={idx}
-                className="log-entry"
+                className={`log-entry ${agentType ? `agent-${agentType.name}` : ''}`}
                 ref={el => logRefs.current[idx] = el}
+                style={agentType ? { borderLeftColor: agentType.color } : {}}
               >
                 <div className="metadata" onClick={() => toggleCollapse(idx)}>
                   <span className="collapse-icon">{isCollapsed ? '▶' : '▼'}</span>
                   <span className="time">{timestamp}</span>
+
+                  {agentType && (
+                    <span
+                      className="agent-badge"
+                      style={{ backgroundColor: agentType.color }}
+                      data-tooltip-id="tooltip"
+                      data-tooltip-content={agentType.description}
+                    >
+                      {agentType.label}
+                    </span>
+                  )}
+
                   <span className="model">{model}</span>
                   <span className={`status ${isError ? 'error' : 'success'}`}>
                     {log.response?.status || 'pending'}
                   </span>
+
+                  {stopReason && (
+                    <span className={`stop-reason ${stopReason}`}>
+                      {stopReason}
+                    </span>
+                  )}
+
+                  {toolInfo.count > 0 && (
+                    <span
+                      className="tool-count"
+                      data-tooltip-id="tooltip"
+                      data-tooltip-content={toolInfo.tool_names.join(', ')}
+                    >
+                      {toolInfo.count} tool{toolInfo.count > 1 ? 's' : ''}
+                    </span>
+                  )}
+
+                  {hasSubagents && (
+                    <span
+                      className="subagent-badge"
+                      data-tooltip-id="tooltip"
+                      data-tooltip-content={`Spawns ${subagentCount} subagent${subagentCount > 1 ? 's' : ''}`}
+                    >
+                      {subagentCount} subagent{subagentCount > 1 ? 's' : ''}
+                    </span>
+                  )}
+
+                  {hasErrors && (
+                    <span
+                      className="error-badge"
+                      data-tooltip-id="tooltip"
+                      data-tooltip-content={`${toolErrors} tool error${toolErrors > 1 ? 's' : ''}`}
+                    >
+                      {toolErrors} error{toolErrors > 1 ? 's' : ''}
+                    </span>
+                  )}
+
                   {tokens && (
                     <span className="tokens">
                       {tokens.input_tokens || tokens} tokens
@@ -476,6 +587,76 @@ function App() {
 
                 {!isCollapsed && (
                   <>
+                    {hasSubagents && subagentSpawns.length > 0 && (
+                      <div className="message subagent-info">
+                        <div
+                          className="label clickable"
+                          onClick={() => togglePanel(idx, 'subagents')}
+                        >
+                          <span className="panel-icon">{collapsedPanels.has(`${idx}-subagents`) ? '▶' : '▼'}</span>
+                          Subagent Spawns ({subagentCount})
+                        </div>
+                        {!collapsedPanels.has(`${idx}-subagents`) && (
+                          <div className="content">
+                            {subagentSpawns.map((spawn, spawnIdx) => (
+                              <div key={spawnIdx} className="subagent-spawn-item">
+                                <div className="subagent-type">{spawn.subagent_type || 'Unknown'}</div>
+                                {spawn.description && (
+                                  <div className="subagent-desc">{spawn.description}</div>
+                                )}
+                                {spawn.model && (
+                                  <div className="subagent-model">Model: {spawn.model}</div>
+                                )}
+                                {spawn.has_resume && (
+                                  <span className="resume-badge">RESUME</span>
+                                )}
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    )}
+
+                    {toolInfo.count > 0 && (
+                      <div className="message tool-info">
+                        <div
+                          className="label clickable"
+                          onClick={() => togglePanel(idx, 'tools')}
+                        >
+                          <span className="panel-icon">{collapsedPanels.has(`${idx}-tools`) ? '▶' : '▼'}</span>
+                          Tools Used ({toolInfo.count})
+                        </div>
+                        {!collapsedPanels.has(`${idx}-tools`) && (
+                          <div className="content">
+                            <div className="tool-list">
+                              {toolInfo.tool_names.map((toolName, toolIdx) => {
+                                const category = toolName ?
+                                  (toolName.match(/Read|Glob|Grep|LSP/) ? 'read' :
+                                   toolName.match(/Edit|Write/) ? 'write' :
+                                   toolName.match(/Bash|KillShell/) ? 'execute' :
+                                   toolName.match(/Task|TodoWrite|EnterPlanMode|ExitPlanMode/) ? 'orchestration' :
+                                   toolName.match(/AskUserQuestion/) ? 'interaction' : 'other') : 'other'
+                                return (
+                                  <span key={toolIdx} className={`tool-badge tool-${category}`}>
+                                    {toolName}
+                                  </span>
+                                )
+                              })}
+                            </div>
+                            {Object.keys(toolInfo.categories).length > 0 && (
+                              <div className="tool-categories">
+                                {Object.entries(toolInfo.categories).map(([cat, count]) => (
+                                  <span key={cat} className="category-badge">
+                                    {cat}: {count}
+                                  </span>
+                                ))}
+                              </div>
+                            )}
+                          </div>
+                        )}
+                      </div>
+                    )}
+
                     {userMsg && (
                       <div className="message user">
                         <div
@@ -547,6 +728,7 @@ function App() {
                 logs={filteredLogs}
                 onSelectLog={scrollToLog}
                 selectedLogIndex={selectedLogIndex}
+                colorByAgent={timelineColorByAgent}
               />
             </div>
           </>

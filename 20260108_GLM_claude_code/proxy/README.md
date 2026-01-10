@@ -22,7 +22,7 @@ uv sync
 
 or
 ```bash
-uv pip install flask requests python-dotenv
+uv pip install flask requests python-dotenv flask_cors
 ```
 
 ## Running

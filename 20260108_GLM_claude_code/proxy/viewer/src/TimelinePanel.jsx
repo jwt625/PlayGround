@@ -2,7 +2,7 @@ import { useState, useMemo, useRef, useEffect } from 'react'
 import { Tooltip } from 'react-tooltip'
 import './TimelinePanel.css'
 
-function TimelinePanel({ logs, onSelectLog, selectedLogIndex }) {
+function TimelinePanel({ logs, onSelectLog, selectedLogIndex, colorByAgent = true }) {
   const [zoomRange, setZoomRange] = useState({ start: 0, end: 1 }) // 0 to 1 representing the visible portion
   const [isDragging, setIsDragging] = useState(false)
   const [dragStart, setDragStart] = useState(null)
@@ -24,6 +24,14 @@ function TimelinePanel({ logs, onSelectLog, selectedLogIndex }) {
       const status = log.response?.status || 'pending'
       const isError = status >= 400
       const usage = log.response?.body?.usage
+      const agentType = log.agent_type
+      const toolInfo = log.tool_info || {}
+      const hasSubagents = log.has_subagent_spawns || false
+      const subagentCount = log.subagent_count || 0
+      const hasErrors = log.has_errors || false
+      const toolErrors = log.tool_errors || 0
+      const stopReason = log.stop_reason
+
       let totalTokens = 'no tokens'
       if (usage) {
         if (usage.input_tokens !== undefined && usage.output_tokens !== undefined) {
@@ -34,6 +42,30 @@ function TimelinePanel({ logs, onSelectLog, selectedLogIndex }) {
       }
       const durationText = duration !== undefined ? `${duration.toFixed(0)}ms` : 'no duration'
       const timestamp = new Date(log.timestamp).toLocaleString()
+
+      // Build enhanced tooltip
+      let tooltipLines = [
+        timestamp,
+        model,
+        `Status: ${status}`
+      ]
+      if (agentType) {
+        tooltipLines.push(`Agent: ${agentType.label}`)
+      }
+      if (stopReason) {
+        tooltipLines.push(`Stop: ${stopReason}`)
+      }
+      if (toolInfo.count > 0) {
+        tooltipLines.push(`Tools: ${toolInfo.tool_names.join(', ')}`)
+      }
+      if (hasSubagents) {
+        tooltipLines.push(`Subagents: ${subagentCount}`)
+      }
+      if (hasErrors) {
+        tooltipLines.push(`Errors: ${toolErrors}`)
+      }
+      tooltipLines.push(totalTokens)
+      tooltipLines.push(`Duration: ${durationText}`)
 
       return {
         idx,
@@ -46,6 +78,8 @@ function TimelinePanel({ logs, onSelectLog, selectedLogIndex }) {
         totalTokens,
         durationText,
         timestamp,
+        tooltipContent: tooltipLines.join('\n'),
+        agentType,
         log,
         key: `${model}-${log.method}-${log.path}` // Group key
       }
@@ -295,16 +329,30 @@ function TimelinePanel({ logs, onSelectLog, selectedLogIndex }) {
           )}
           {rows.map((row, rowIdx) => (
             <div key={rowIdx} className="timeline-row">
-              {row.map((item) => (
-                <div
-                  key={item.idx}
-                  className={`timeline-item ${item.isError ? 'error' : 'success'} ${selectedLogIndex === item.idx ? 'selected' : ''}`}
-                  style={getItemStyle(item)}
-                  onClick={() => onSelectLog(item.idx)}
-                  data-tooltip-id="timeline-tooltip"
-                  data-tooltip-content={`${item.timestamp}\n${item.model}\nStatus: ${item.status}\n${item.totalTokens}\nDuration: ${item.durationText}`}
-                />
-              ))}
+              {row.map((item) => {
+                const itemStyle = getItemStyle(item)
+
+                // Apply agent color if enabled
+                if (colorByAgent && item.agentType) {
+                  itemStyle.background = item.agentType.color
+                } else {
+                  // Use default gradient based on error status
+                  itemStyle.background = item.isError
+                    ? 'linear-gradient(90deg, #ef4444 0%, #dc2626 100%)'
+                    : 'linear-gradient(90deg, #10b981 0%, #059669 100%)'
+                }
+
+                return (
+                  <div
+                    key={item.idx}
+                    className={`timeline-item ${selectedLogIndex === item.idx ? 'selected' : ''}`}
+                    style={itemStyle}
+                    onClick={() => onSelectLog(item.idx)}
+                    data-tooltip-id="timeline-tooltip"
+                    data-tooltip-content={item.tooltipContent}
+                  />
+                )
+              })}
             </div>
           ))}
         </div>

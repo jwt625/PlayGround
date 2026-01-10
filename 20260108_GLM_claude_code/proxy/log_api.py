@@ -11,6 +11,7 @@ from datetime import datetime
 from flask import Flask, jsonify
 from flask_cors import CORS
 from dotenv import load_dotenv
+from log_classifier import enrich_logs
 
 load_dotenv()
 
@@ -57,9 +58,10 @@ def read_all_logs():
 
 @app.route('/api/logs')
 def get_logs():
-    """Return all logs as JSON."""
+    """Return all logs as JSON with enriched metadata."""
     logs = read_all_logs()
-    return jsonify(logs)
+    enriched_logs = enrich_logs(logs)
+    return jsonify(enriched_logs)
 
 
 @app.route('/api/health')

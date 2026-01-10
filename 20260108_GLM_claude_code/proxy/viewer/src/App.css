@@ -313,6 +313,7 @@
 .log-entry {
   background: #1a1a1a;
   border: 1px solid #333;
+  border-left: 4px solid #333;
   border-radius: 0;
   padding: 16px;
   display: flex;
@@ -375,6 +376,58 @@
   color: #fbbf24;
 }
 
+.metadata .agent-badge {
+  color: #000;
+  font-weight: 600;
+  font-size: 11px;
+  padding: 4px 10px;
+  border-radius: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.metadata .stop-reason {
+  color: #888;
+  font-size: 11px;
+  text-transform: lowercase;
+  font-style: italic;
+}
+
+.metadata .stop-reason.tool_use {
+  color: #60a5fa;
+}
+
+.metadata .stop-reason.end_turn {
+  color: #10b981;
+}
+
+.metadata .stop-reason.max_tokens {
+  color: #f59e0b;
+}
+
+.metadata .tool-count {
+  color: #a78bfa;
+  font-weight: 500;
+}
+
+.metadata .subagent-badge {
+  background: #ec4899;
+  color: #fff;
+  font-weight: 600;
+  font-size: 11px;
+  padding: 4px 10px;
+  border-radius: 0;
+}
+
+.metadata .error-badge {
+  background: #ef4444;
+  color: #fff;
+  font-weight: 600;
+  font-size: 11px;
+  padding: 4px 10px;
+  border-radius: 0;
+}
+
 .message {
   background: #0f0f0f;
   border-left: 3px solid #333;
@@ -397,6 +450,114 @@
 .message.response.error {
   border-left-color: #ef4444;
   background: #1a0f0f;
+}
+
+.message.subagent-info {
+  border-left-color: #ec4899;
+  background: #1a0f1a;
+}
+
+.message.tool-info {
+  border-left-color: #a78bfa;
+  background: #0f0f1a;
+}
+
+.subagent-spawn-item {
+  background: #1a1a1a;
+  padding: 12px;
+  margin-bottom: 8px;
+  border-left: 3px solid #ec4899;
+}
+
+.subagent-spawn-item:last-child {
+  margin-bottom: 0;
+}
+
+.subagent-type {
+  font-weight: 600;
+  color: #ec4899;
+  font-size: 14px;
+  margin-bottom: 6px;
+}
+
+.subagent-desc {
+  color: #aaa;
+  font-size: 13px;
+  margin-bottom: 4px;
+}
+
+.subagent-model {
+  color: #888;
+  font-size: 12px;
+  font-style: italic;
+}
+
+.resume-badge {
+  display: inline-block;
+  background: #f59e0b;
+  color: #000;
+  font-weight: 600;
+  font-size: 10px;
+  padding: 2px 6px;
+  border-radius: 0;
+  margin-left: 8px;
+}
+
+.tool-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.tool-badge {
+  padding: 6px 12px;
+  border-radius: 0;
+  font-size: 12px;
+  font-weight: 500;
+  color: #fff;
+}
+
+.tool-badge.tool-read {
+  background: #3b82f6;
+}
+
+.tool-badge.tool-write {
+  background: #ef4444;
+}
+
+.tool-badge.tool-execute {
+  background: #f59e0b;
+}
+
+.tool-badge.tool-orchestration {
+  background: #ec4899;
+}
+
+.tool-badge.tool-interaction {
+  background: #8b5cf6;
+}
+
+.tool-badge.tool-other {
+  background: #6b7280;
+}
+
+.tool-categories {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding-top: 8px;
+  border-top: 1px solid #333;
+}
+
+.category-badge {
+  padding: 4px 10px;
+  background: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 0;
+  font-size: 11px;
+  color: #888;
+  text-transform: capitalize;
 }
 
 .message .label {
