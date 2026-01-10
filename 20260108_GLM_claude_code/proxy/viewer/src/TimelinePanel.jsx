@@ -2,6 +2,42 @@ import { useState, useMemo, useRef, useEffect } from 'react'
 import { Tooltip } from 'react-tooltip'
 import './TimelinePanel.css'
 
+// Agent type definitions (matching log_classifier.py)
+const AGENT_TYPES = {
+  "file_path_extractor": {
+    "label": "File Path Extractor",
+    "color": "#10b981",
+  },
+  "file_search": {
+    "label": "File Search Specialist",
+    "color": "#3b82f6",
+  },
+  "bash_processor": {
+    "label": "Bash Command Processor",
+    "color": "#f59e0b",
+  },
+  "summarizer": {
+    "label": "Conversation Summarizer",
+    "color": "#8b5cf6",
+  },
+  "architect": {
+    "label": "Software Architect",
+    "color": "#ec4899",
+  },
+  "topic_detector": {
+    "label": "Topic Change Detector",
+    "color": "#06b6d4",
+  },
+  "main_agent": {
+    "label": "Main Interactive Agent",
+    "color": "#ef4444",
+  },
+  "unknown": {
+    "label": "Unknown Agent",
+    "color": "#6b7280",
+  }
+}
+
 function TimelinePanel({ logs, onSelectLog, selectedLogIndex, colorByAgent = true }) {
   const [zoomRange, setZoomRange] = useState({ start: 0, end: 1 }) // 0 to 1 representing the visible portion
   const [isDragging, setIsDragging] = useState(false)
@@ -270,6 +306,17 @@ function TimelinePanel({ logs, onSelectLog, selectedLogIndex, colorByAgent = tru
     )
   }
 
+  // Compute unique agent types present in the logs
+  const uniqueAgentTypes = useMemo(() => {
+    const agentTypeSet = new Set()
+    logs.forEach(log => {
+      if (log.agent_type && log.agent_type.name) {
+        agentTypeSet.add(log.agent_type.name)
+      }
+    })
+    return Array.from(agentTypeSet).sort()
+  }, [logs])
+
   return (
     <div className="timeline-panel" ref={containerRef}>
       <div className="timeline-header">
@@ -277,6 +324,45 @@ function TimelinePanel({ logs, onSelectLog, selectedLogIndex, colorByAgent = tru
         <div className="timeline-hint">
           Drag to zoom | Double-click to reset
         </div>
+      </div>
+
+      {/* Color Legend */}
+      <div className="timeline-legend">
+        {colorByAgent ? (
+          // Agent type legend
+          <div className="legend-items">
+            {uniqueAgentTypes.map(agentName => {
+              const agentType = AGENT_TYPES[agentName] || AGENT_TYPES.unknown
+              return (
+                <div key={agentName} className="legend-item">
+                  <div
+                    className="legend-color-box"
+                    style={{ backgroundColor: agentType.color }}
+                  />
+                  <span className="legend-label">{agentType.label}</span>
+                </div>
+              )
+            })}
+          </div>
+        ) : (
+          // Success/Error legend
+          <div className="legend-items">
+            <div className="legend-item">
+              <div
+                className="legend-color-box"
+                style={{ background: 'linear-gradient(90deg, #10b981 0%, #059669 100%)' }}
+              />
+              <span className="legend-label">Success</span>
+            </div>
+            <div className="legend-item">
+              <div
+                className="legend-color-box"
+                style={{ background: 'linear-gradient(90deg, #ef4444 0%, #dc2626 100%)' }}
+              />
+              <span className="legend-label">Error</span>
+            </div>
+          </div>
+        )}
       </div>
 
       <div className="timeline-axis-container">

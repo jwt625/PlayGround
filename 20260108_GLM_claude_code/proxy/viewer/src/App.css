@@ -749,6 +749,35 @@
   border-color: #444;
 }
 
+.bottom-panel-resizer {
+  height: 4px;
+  background: #1a1a1a;
+  cursor: ns-resize;
+  flex-shrink: 0;
+  transition: background 0.2s;
+  position: relative;
+}
+
+.bottom-panel-resizer:hover {
+  background: #2563eb;
+}
+
+.bottom-panel-resizer::before {
+  content: '';
+  position: absolute;
+  top: -4px;
+  left: 0;
+  right: 0;
+  height: 12px;
+}
+
+.bottom-panel-container {
+  flex-shrink: 0;
+  overflow: hidden;
+  background: #0a0a0a;
+}
+
+/* Legacy support for old class names */
 .timeline-resizer {
   height: 4px;
   background: #1a1a1a;
@@ -760,15 +789,6 @@
 
 .timeline-resizer:hover {
   background: #2563eb;
-}
-
-.timeline-resizer::before {
-  content: '';
-  position: absolute;
-  top: -4px;
-  left: 0;
-  right: 0;
-  height: 12px;
 }
 
 .timeline-container {

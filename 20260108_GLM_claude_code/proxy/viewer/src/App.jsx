@@ -2,6 +2,7 @@ import { useState, useEffect, useRef, useMemo } from 'react'
 import { JsonView, darkStyles } from 'react-json-view-lite'
 import { Tooltip } from 'react-tooltip'
 import TimelinePanel from './TimelinePanel'
+import StatsPanel from './StatsPanel'
 import SearchBar from './SearchBar'
 import 'react-json-view-lite/dist/index.css'
 import 'react-tooltip/dist/react-tooltip.css'
@@ -17,8 +18,8 @@ function App() {
   const [windowSize, setWindowSize] = useState(10)
   const [headerCollapsed, setHeaderCollapsed] = useState(false)
   const [autoRefresh, setAutoRefresh] = useState(true)
-  const [showTimeline, setShowTimeline] = useState(false)
-  const [timelineHeight, setTimelineHeight] = useState(250)
+  const [activeBottomPanel, setActiveBottomPanel] = useState(null) // 'timeline' | 'stats' | null
+  const [bottomPanelHeight, setBottomPanelHeight] = useState(250)
   const [minDuration, setMinDuration] = useState(0)
   const [maxDuration, setMaxDuration] = useState(Infinity)
   const [searchQuery, setSearchQuery] = useState('')
@@ -185,8 +186,9 @@ function App() {
 
       const containerRect = container.getBoundingClientRect()
       const newHeight = containerRect.bottom - e.clientY
-      const clampedHeight = Math.max(150, Math.min(600, newHeight))
-      setTimelineHeight(clampedHeight)
+      // Only enforce minimum height, no maximum limit
+      const clampedHeight = Math.max(100, newHeight)
+      setBottomPanelHeight(clampedHeight)
     }
 
     const handleMouseUp = () => {
@@ -391,13 +393,20 @@ function App() {
                     {autoRefresh ? 'Live' : 'Paused'}
                   </button>
                   <button
-                    className={showTimeline ? 'active' : ''}
-                    onClick={() => setShowTimeline(!showTimeline)}
-                    title={showTimeline ? 'Hide timeline' : 'Show timeline'}
+                    className={activeBottomPanel === 'timeline' ? 'active' : ''}
+                    onClick={() => setActiveBottomPanel(activeBottomPanel === 'timeline' ? null : 'timeline')}
+                    title={activeBottomPanel === 'timeline' ? 'Hide timeline' : 'Show timeline'}
                   >
                     Timeline
                   </button>
-                  {showTimeline && (
+                  <button
+                    className={activeBottomPanel === 'stats' ? 'active' : ''}
+                    onClick={() => setActiveBottomPanel(activeBottomPanel === 'stats' ? null : 'stats')}
+                    title={activeBottomPanel === 'stats' ? 'Hide stats' : 'Show stats'}
+                  >
+                    Stats
+                  </button>
+                  {activeBottomPanel === 'timeline' && (
                     <button
                       className={timelineColorByAgent ? 'active' : ''}
                       onClick={() => setTimelineColorByAgent(!timelineColorByAgent)}
@@ -486,7 +495,7 @@ function App() {
           )}
         </header>
 
-        <main className="main" ref={mainRef} style={showTimeline ? { flex: `1 1 calc(100% - ${timelineHeight}px)` } : {}}>
+        <main className="main" ref={mainRef} style={activeBottomPanel ? { flex: `1 1 calc(100% - ${bottomPanelHeight}px)` } : {}}>
         {windowedLogs.length === 0 ? (
           <div className="empty">No logs found</div>
         ) : (
@@ -716,20 +725,25 @@ function App() {
         )}
         </main>
 
-        {showTimeline && (
+        {activeBottomPanel && (
           <>
             <div
-              className="timeline-resizer"
+              className="bottom-panel-resizer"
               ref={resizerRef}
               onMouseDown={handleResizerMouseDown}
             />
-            <div className="timeline-container" style={{ height: `${timelineHeight}px` }}>
-              <TimelinePanel
-                logs={filteredLogs}
-                onSelectLog={scrollToLog}
-                selectedLogIndex={selectedLogIndex}
-                colorByAgent={timelineColorByAgent}
-              />
+            <div className="bottom-panel-container" style={{ height: `${bottomPanelHeight}px` }}>
+              {activeBottomPanel === 'timeline' && (
+                <TimelinePanel
+                  logs={filteredLogs}
+                  onSelectLog={scrollToLog}
+                  selectedLogIndex={selectedLogIndex}
+                  colorByAgent={timelineColorByAgent}
+                />
+              )}
+              {activeBottomPanel === 'stats' && (
+                <StatsPanel logs={filteredLogs} />
+              )}
             </div>
           </>
         )}
