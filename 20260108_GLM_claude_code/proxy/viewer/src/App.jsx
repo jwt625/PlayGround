@@ -3,6 +3,7 @@ import { JsonView, darkStyles } from 'react-json-view-lite'
 import { Tooltip } from 'react-tooltip'
 import TimelinePanel from './TimelinePanel'
 import StatsPanel from './StatsPanel'
+import WorkflowPanel from './WorkflowPanel'
 import SearchBar from './SearchBar'
 import 'react-json-view-lite/dist/index.css'
 import 'react-tooltip/dist/react-tooltip.css'
@@ -10,6 +11,7 @@ import './App.css'
 
 function App() {
   const [logs, setLogs] = useState([])
+  const [workflowGraph, setWorkflowGraph] = useState(null)
   const [filter, setFilter] = useState('all')
   const [loading, setLoading] = useState(true)
   const [collapsedItems, setCollapsedItems] = useState(new Set())
@@ -18,7 +20,7 @@ function App() {
   const [windowSize, setWindowSize] = useState(10)
   const [headerCollapsed, setHeaderCollapsed] = useState(false)
   const [autoRefresh, setAutoRefresh] = useState(true)
-  const [activeBottomPanel, setActiveBottomPanel] = useState(null) // 'timeline' | 'stats' | null
+  const [activeBottomPanel, setActiveBottomPanel] = useState(null) // 'timeline' | 'stats' | 'workflow' | null
   const [bottomPanelHeight, setBottomPanelHeight] = useState(250)
   const [minDuration, setMinDuration] = useState(0)
   const [maxDuration, setMaxDuration] = useState(Infinity)
@@ -126,7 +128,21 @@ function App() {
     try {
       const response = await fetch('/api/logs')
       const data = await response.json()
-      setLogs(data)
+
+      // Handle enriched data structure from log_classifier
+      if (data && typeof data === 'object' && 'logs' in data) {
+        setLogs(data.logs || [])
+        setWorkflowGraph(data.workflow_graph || null)
+      } else if (Array.isArray(data)) {
+        // Fallback for old format
+        setLogs(data)
+        setWorkflowGraph(null)
+      } else {
+        console.error('Unexpected data format:', data)
+        setLogs([])
+        setWorkflowGraph(null)
+      }
+
       setLoading(false)
     } catch (error) {
       console.error('Failed to fetch logs:', error)
@@ -135,7 +151,7 @@ function App() {
   }
 
   const filteredLogs = useMemo(() => {
-    return logs.filter(log => {
+    const filtered = logs.filter(log => {
       // Status filter
       if (filter === 'errors' && log.response?.status < 400) return false
       if (filter === 'success' && log.response?.status >= 400) return false
@@ -156,6 +172,9 @@ function App() {
 
       return true
     })
+
+    // Reverse so newest logs appear first (at top)
+    return filtered.reverse()
   }, [logs, filter, minDuration, maxDuration, searchQuery, searchType, searchFields])
 
   useEffect(() => {
@@ -405,6 +424,13 @@ function App() {
                     title={activeBottomPanel === 'stats' ? 'Hide stats' : 'Show stats'}
                   >
                     Stats
+                  </button>
+                  <button
+                    className={activeBottomPanel === 'workflow' ? 'active' : ''}
+                    onClick={() => setActiveBottomPanel(activeBottomPanel === 'workflow' ? null : 'workflow')}
+                    title={activeBottomPanel === 'workflow' ? 'Hide workflow graph' : 'Show workflow graph'}
+                  >
+                    Workflow
                   </button>
                   {activeBottomPanel === 'timeline' && (
                     <button
@@ -743,6 +769,12 @@ function App() {
               )}
               {activeBottomPanel === 'stats' && (
                 <StatsPanel logs={filteredLogs} />
+              )}
+              {activeBottomPanel === 'workflow' && (
+                <WorkflowPanel
+                  logs={logs}
+                  workflowGraph={workflowGraph}
+                />
               )}
             </div>
           </>

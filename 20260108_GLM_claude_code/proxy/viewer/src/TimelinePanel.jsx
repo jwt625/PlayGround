@@ -52,6 +52,8 @@ function TimelinePanel({ logs, onSelectLog, selectedLogIndex, colorByAgent = tru
     if (logs.length === 0) return { rows: [], minTime: 0, maxTime: 0, duration: 0 }
 
     // Parse timestamps and calculate start/end times
+    // Logs come in newest-first from parent, which is correct for top-to-bottom rendering
+    // X-axis positioning uses (startTime - minTime), so newer timestamps automatically appear on the right
     const items = logs.map((log, idx) => {
       const startTime = new Date(log.timestamp).getTime()
       const duration = log.response?.duration_ms || 0
@@ -126,41 +128,9 @@ function TimelinePanel({ logs, onSelectLog, selectedLogIndex, colorByAgent = tru
     const maxTime = Math.max(...items.map(i => i.endTime))
     const duration = maxTime - minTime
 
-    // Group items into rows (same key, non-overlapping)
-    const rows = []
-    const rowsByKey = new Map()
-
-    items.forEach(item => {
-      // Try to find an existing row with the same key where this item fits
-      let placed = false
-      
-      if (rowsByKey.has(item.key)) {
-        const candidateRows = rowsByKey.get(item.key)
-        
-        for (const rowIdx of candidateRows) {
-          const row = rows[rowIdx]
-          const lastItem = row[row.length - 1]
-          
-          // Check if this item doesn't overlap with the last item in the row
-          if (item.startTime >= lastItem.endTime) {
-            row.push(item)
-            placed = true
-            break
-          }
-        }
-      }
-
-      // If not placed, create a new row
-      if (!placed) {
-        const newRowIdx = rows.length
-        rows.push([item])
-        
-        if (!rowsByKey.has(item.key)) {
-          rowsByKey.set(item.key, [])
-        }
-        rowsByKey.get(item.key).push(newRowIdx)
-      }
-    })
+    // Each item gets its own row (no grouping)
+    // Items are already in newest-first order, which renders top-to-bottom correctly
+    const rows = items.map(item => [item])
 
     return { rows, minTime, maxTime, duration }
   }, [logs])

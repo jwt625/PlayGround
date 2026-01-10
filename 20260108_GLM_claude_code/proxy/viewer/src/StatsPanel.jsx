@@ -300,14 +300,16 @@ function StatsPanel({ logs }) {
         <div className="stats-section">
           <h3 className="section-title">Agent Type Distribution</h3>
           <div className="pie-chart-container">
-            <PieChart data={Object.entries(stats.agentTypeCounts).map(([agentName, count]) => {
-              const agentType = AGENT_TYPES[agentName] || AGENT_TYPES.unknown
-              return {
-                label: agentType.label,
-                value: count,
-                color: agentType.color
-              }
-            })} />
+            <PieChart data={Object.entries(stats.agentTypeCounts)
+              .sort((a, b) => b[1] - a[1])
+              .map(([agentName, count]) => {
+                const agentType = AGENT_TYPES[agentName] || AGENT_TYPES.unknown
+                return {
+                  label: agentType.label,
+                  value: count,
+                  color: agentType.color
+                }
+              })} />
           </div>
         </div>
 

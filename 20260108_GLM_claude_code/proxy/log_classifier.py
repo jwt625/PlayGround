@@ -7,6 +7,7 @@ Enriches log entries with agent type, tool usage, subagent spawns, and other met
 import hashlib
 import json
 from typing import Dict, List, Any, Optional
+from workflow_graph import build_workflow_graph
 
 
 # Known agent type hashes (from system prompt analysis)
@@ -238,7 +239,18 @@ def enrich_log_entry(log_entry: Dict[str, Any]) -> Dict[str, Any]:
     return enriched
 
 
-def enrich_logs(logs: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
-    """Enrich all log entries."""
-    return [enrich_log_entry(log) for log in logs]
+def enrich_logs(logs: List[Dict[str, Any]]) -> Dict[str, Any]:
+    """
+    Enrich all log entries and build workflow graph.
+
+    Returns:
+        Dictionary with 'logs' and 'workflow_graph' keys
+    """
+    enriched_logs = [enrich_log_entry(log) for log in logs]
+    workflow_graph = build_workflow_graph(enriched_logs)
+
+    return {
+        'logs': enriched_logs,
+        'workflow_graph': workflow_graph
+    }
 
