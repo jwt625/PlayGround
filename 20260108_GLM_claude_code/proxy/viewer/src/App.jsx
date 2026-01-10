@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, useMemo } from 'react'
 import { JsonView, darkStyles } from 'react-json-view-lite'
 import { Tooltip } from 'react-tooltip'
+import TimelinePanel from './TimelinePanel'
 import 'react-json-view-lite/dist/index.css'
 import 'react-tooltip/dist/react-tooltip.css'
 import './App.css'
@@ -15,8 +16,14 @@ function App() {
   const [windowSize, setWindowSize] = useState(10)
   const [headerCollapsed, setHeaderCollapsed] = useState(false)
   const [autoRefresh, setAutoRefresh] = useState(true)
+  const [showTimeline, setShowTimeline] = useState(false)
+  const [timelineHeight, setTimelineHeight] = useState(250)
+  const [minDuration, setMinDuration] = useState(0)
+  const [maxDuration, setMaxDuration] = useState(Infinity)
   const logRefs = useRef([])
   const mainRef = useRef(null)
+  const resizerRef = useRef(null)
+  const isDraggingRef = useRef(false)
 
   const fetchLogs = async () => {
     try {
@@ -32,12 +39,20 @@ function App() {
 
   const filteredLogs = useMemo(() => {
     return logs.filter(log => {
-      if (filter === 'all') return true
-      if (filter === 'errors') return log.response?.status >= 400
-      if (filter === 'success') return log.response?.status < 400
+      // Status filter
+      if (filter === 'errors' && log.response?.status < 400) return false
+      if (filter === 'success' && log.response?.status >= 400) return false
+
+      // Duration filter
+      const duration = log.response?.duration_ms
+      if (duration !== undefined) {
+        if (duration < minDuration) return false
+        if (duration > maxDuration) return false
+      }
+
       return true
     })
-  }, [logs, filter])
+  }, [logs, filter, minDuration, maxDuration])
 
   useEffect(() => {
     fetchLogs()
@@ -52,6 +67,42 @@ function App() {
       setSelectedLogIndex(Math.floor(filteredLogs.length / 2))
     }
   }, [filteredLogs, selectedLogIndex])
+
+  // Handle timeline panel resize
+  useEffect(() => {
+    const handleMouseMove = (e) => {
+      if (!isDraggingRef.current) return
+
+      const container = mainRef.current?.parentElement
+      if (!container) return
+
+      const containerRect = container.getBoundingClientRect()
+      const newHeight = containerRect.bottom - e.clientY
+      const clampedHeight = Math.max(150, Math.min(600, newHeight))
+      setTimelineHeight(clampedHeight)
+    }
+
+    const handleMouseUp = () => {
+      isDraggingRef.current = false
+      document.body.style.cursor = ''
+      document.body.style.userSelect = ''
+    }
+
+    if (isDraggingRef.current) {
+      document.addEventListener('mousemove', handleMouseMove)
+      document.addEventListener('mouseup', handleMouseUp)
+      return () => {
+        document.removeEventListener('mousemove', handleMouseMove)
+        document.removeEventListener('mouseup', handleMouseUp)
+      }
+    }
+  }, [])
+
+  const handleResizerMouseDown = () => {
+    isDraggingRef.current = true
+    document.body.style.cursor = 'ns-resize'
+    document.body.style.userSelect = 'none'
+  }
 
   // Removed scroll-based selection - only timeline clicks update selection
 
@@ -220,6 +271,25 @@ function App() {
                 >
                   {autoRefresh ? 'Live' : 'Paused'}
                 </button>
+                <button
+                  className={showTimeline ? 'active' : ''}
+                  onClick={() => setShowTimeline(!showTimeline)}
+                  title={showTimeline ? 'Hide timeline' : 'Show timeline'}
+                >
+                  Timeline
+                </button>
+                <button
+                  onClick={() => setCollapsedItems(new Set(windowedLogs.map((_, idx) => idx)))}
+                  title="Collapse all log entries"
+                >
+                  Fold All
+                </button>
+                <button
+                  onClick={() => setCollapsedItems(new Set())}
+                  title="Expand all log entries"
+                >
+                  Unfold All
+                </button>
               </div>
             )}
           </div>
@@ -230,25 +300,65 @@ function App() {
                 Showing {windowedLogs.length} of {filteredLogs.length} logs
                 {selectedLogIndex !== null && ` (centered around #${selectedLogIndex + 1})`}
               </div>
-              <div className="window-size-control">
-                <label>
-                  Window size:
-                  <input
-                    type="number"
-                    min="10"
-                    max="200"
-                    step="10"
-                    value={windowSize}
-                    onChange={(e) => setWindowSize(parseInt(e.target.value) || 10)}
-                    className="window-size-input"
-                  />
-                </label>
+              <div className="control-row">
+                <div className="window-size-control">
+                  <label>
+                    Window size:
+                    <input
+                      type="number"
+                      min="10"
+                      max="200"
+                      step="10"
+                      value={windowSize}
+                      onChange={(e) => setWindowSize(parseInt(e.target.value) || 10)}
+                      className="window-size-input"
+                    />
+                  </label>
+                </div>
+                <div className="duration-filter-control">
+                  <label>
+                    Min duration (ms):
+                    <input
+                      type="number"
+                      min="0"
+                      step="100"
+                      value={minDuration}
+                      onChange={(e) => setMinDuration(parseInt(e.target.value) || 0)}
+                      className="duration-input"
+                      placeholder="0"
+                    />
+                  </label>
+                  <label>
+                    Max duration (ms):
+                    <input
+                      type="number"
+                      min="0"
+                      step="100"
+                      value={maxDuration === Infinity ? '' : maxDuration}
+                      onChange={(e) => setMaxDuration(e.target.value === '' ? Infinity : parseInt(e.target.value) || Infinity)}
+                      className="duration-input"
+                      placeholder="∞"
+                    />
+                  </label>
+                  {(minDuration > 0 || maxDuration !== Infinity) && (
+                    <button
+                      onClick={() => {
+                        setMinDuration(0)
+                        setMaxDuration(Infinity)
+                      }}
+                      className="clear-duration-btn"
+                      title="Clear duration filter"
+                    >
+                      Clear
+                    </button>
+                  )}
+                </div>
               </div>
             </div>
           )}
         </header>
 
-        <main className="main" ref={mainRef}>
+        <main className="main" ref={mainRef} style={showTimeline ? { flex: `1 1 calc(100% - ${timelineHeight}px)` } : {}}>
         {windowedLogs.length === 0 ? (
           <div className="empty">No logs found</div>
         ) : (
@@ -347,6 +457,23 @@ function App() {
           })
         )}
         </main>
+
+        {showTimeline && (
+          <>
+            <div
+              className="timeline-resizer"
+              ref={resizerRef}
+              onMouseDown={handleResizerMouseDown}
+            />
+            <div className="timeline-container" style={{ height: `${timelineHeight}px` }}>
+              <TimelinePanel
+                logs={filteredLogs}
+                onSelectLog={scrollToLog}
+                selectedLogIndex={selectedLogIndex}
+              />
+            </div>
+          </>
+        )}
       </div>
     </div>
   )
