@@ -3,8 +3,13 @@ import { Tooltip } from 'react-tooltip'
 import './TimelinePanel.css'
 
 function TimelinePanel({ logs, onSelectLog, selectedLogIndex }) {
-  const [zoom, setZoom] = useState(1)
+  const [zoomRange, setZoomRange] = useState({ start: 0, end: 1 }) // 0 to 1 representing the visible portion
+  const [isDragging, setIsDragging] = useState(false)
+  const [dragStart, setDragStart] = useState(null)
+  const [dragCurrent, setDragCurrent] = useState(null)
   const containerRef = useRef(null)
+  const timelineContentRef = useRef(null)
+  const timelineRowsRef = useRef(null)
 
   // Calculate timeline data
   const timelineData = useMemo(() => {
@@ -78,14 +83,22 @@ function TimelinePanel({ logs, onSelectLog, selectedLogIndex }) {
 
   const { rows, minTime, maxTime, duration } = timelineData
 
-  // Calculate position and width for each item
+  // Calculate position and width for each item based on zoom range
   const getItemStyle = (item) => {
-    const left = ((item.startTime - minTime) / duration) * 100
-    const width = (item.duration / duration) * 100
-    
+    // Position in the full timeline (0 to 1)
+    const fullLeft = (item.startTime - minTime) / duration
+    const fullWidth = item.duration / duration
+
+    // Visible range
+    const visibleDuration = zoomRange.end - zoomRange.start
+
+    // Position relative to the visible range
+    const relativeLeft = (fullLeft - zoomRange.start) / visibleDuration
+    const relativeWidth = fullWidth / visibleDuration
+
     return {
-      left: `${left}%`,
-      width: `${Math.max(width, 0.5)}%` // Minimum 0.5% width for visibility
+      left: `${relativeLeft * 100}%`,
+      width: `${Math.max(relativeWidth * 100, 0.5)}%` // Minimum 0.5% width for visibility
     }
   }
 
@@ -101,21 +114,105 @@ function TimelinePanel({ logs, onSelectLog, selectedLogIndex }) {
     return formatTime(elapsed)
   }
 
-  // Generate time axis markers
+  // Generate time axis markers based on visible range
   const timeMarkers = useMemo(() => {
     if (duration === 0) return []
-    
+
     const markerCount = 10
     const markers = []
-    
+    const visibleDuration = (zoomRange.end - zoomRange.start) * duration
+
     for (let i = 0; i <= markerCount; i++) {
       const position = (i / markerCount) * 100
-      const timestamp = minTime + (duration * i / markerCount)
+      const timestamp = minTime + (zoomRange.start * duration) + (visibleDuration * i / markerCount)
       markers.push({ position, timestamp })
     }
-    
+
     return markers
-  }, [minTime, duration])
+  }, [minTime, duration, zoomRange])
+
+  // Handle mouse down to start drag selection
+  const handleMouseDown = (e) => {
+    if (e.button !== 0) return // Only left click
+    const rect = timelineContentRef.current.getBoundingClientRect()
+    const x = (e.clientX - rect.left) / rect.width
+    setDragStart(x)
+    setDragCurrent(x)
+    setIsDragging(true)
+  }
+
+  // Handle mouse move during drag
+  const handleMouseMove = (e) => {
+    if (!isDragging || dragStart === null) return
+
+    const rect = timelineContentRef.current.getBoundingClientRect()
+    const x = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width))
+    setDragCurrent(x)
+  }
+
+  // Handle mouse up to end drag
+  const handleMouseUp = () => {
+    if (!isDragging || dragStart === null || dragCurrent === null) {
+      setIsDragging(false)
+      setDragStart(null)
+      setDragCurrent(null)
+      return
+    }
+
+    // Calculate new zoom range from the drag selection
+    // The drag coordinates are relative to the current visible range (0 to 1 on screen)
+    // We need to map them to the actual timeline coordinates
+    const dragStartNormalized = Math.min(dragStart, dragCurrent)
+    const dragEndNormalized = Math.max(dragStart, dragCurrent)
+
+    // Only zoom if there's a meaningful selection (at least 1% of visible range)
+    if (dragEndNormalized - dragStartNormalized > 0.01) {
+      // Map the screen coordinates to the actual timeline coordinates
+      const currentVisibleDuration = zoomRange.end - zoomRange.start
+      const newStart = zoomRange.start + (dragStartNormalized * currentVisibleDuration)
+      const newEnd = zoomRange.start + (dragEndNormalized * currentVisibleDuration)
+
+      setZoomRange({ start: newStart, end: newEnd })
+    }
+
+    setIsDragging(false)
+    setDragStart(null)
+    setDragCurrent(null)
+  }
+
+  // Handle double click to reset zoom
+  const handleDoubleClick = () => {
+    setZoomRange({ start: 0, end: 1 })
+  }
+
+  // Add/remove event listeners for drag
+  useEffect(() => {
+    if (isDragging) {
+      window.addEventListener('mousemove', handleMouseMove)
+      window.addEventListener('mouseup', handleMouseUp)
+      return () => {
+        window.removeEventListener('mousemove', handleMouseMove)
+        window.removeEventListener('mouseup', handleMouseUp)
+      }
+    }
+  }, [isDragging, dragStart, dragCurrent])
+
+  // Calculate selection rectangle for visual feedback
+  const selectionRect = useMemo(() => {
+    if (!isDragging || dragStart === null || dragCurrent === null) return null
+
+    const start = Math.min(dragStart, dragCurrent)
+    const end = Math.max(dragStart, dragCurrent)
+
+    // Get the full height of the timeline rows
+    const rowsHeight = timelineRowsRef.current?.scrollHeight || 0
+
+    return {
+      left: `${start * 100}%`,
+      width: `${(end - start) * 100}%`,
+      height: rowsHeight > 0 ? `${rowsHeight}px` : '100%'
+    }
+  }, [isDragging, dragStart, dragCurrent])
 
   if (logs.length === 0) {
     return (
@@ -129,15 +226,18 @@ function TimelinePanel({ logs, onSelectLog, selectedLogIndex }) {
     <div className="timeline-panel" ref={containerRef}>
       <div className="timeline-header">
         <div className="timeline-title">Request Timeline</div>
-        <div className="timeline-controls">
-          <button onClick={() => setZoom(z => Math.max(0.5, z - 0.25))}>-</button>
-          <span className="zoom-level">{(zoom * 100).toFixed(0)}%</span>
-          <button onClick={() => setZoom(z => Math.min(3, z + 0.25))}>+</button>
-          <button onClick={() => setZoom(1)}>Reset</button>
+        <div className="timeline-hint">
+          Drag to zoom | Double-click to reset
         </div>
       </div>
 
-      <div className="timeline-content" style={{ transform: `scaleX(${zoom})`, transformOrigin: 'left' }}>
+      <div
+        className="timeline-content"
+        ref={timelineContentRef}
+        onMouseDown={handleMouseDown}
+        onDoubleClick={handleDoubleClick}
+        style={{ cursor: isDragging ? 'col-resize' : 'crosshair' }}
+      >
         <div className="timeline-axis">
           {timeMarkers.map((marker, idx) => (
             <div
@@ -151,7 +251,23 @@ function TimelinePanel({ logs, onSelectLog, selectedLogIndex }) {
           ))}
         </div>
 
-        <div className="timeline-rows">
+        <div className="timeline-rows" ref={timelineRowsRef}>
+          {selectionRect && (
+            <div
+              className="selection-rect"
+              style={{
+                position: 'absolute',
+                top: 0,
+                left: selectionRect.left,
+                width: selectionRect.width,
+                height: selectionRect.height,
+                background: 'rgba(59, 130, 246, 0.2)',
+                border: '1px solid rgba(59, 130, 246, 0.5)',
+                pointerEvents: 'none',
+                zIndex: 100
+              }}
+            />
+          )}
           {rows.map((row, rowIdx) => (
             <div key={rowIdx} className="timeline-row">
               {row.map((item) => (

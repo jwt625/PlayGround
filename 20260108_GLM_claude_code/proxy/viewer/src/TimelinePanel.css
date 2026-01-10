@@ -23,41 +23,19 @@
   color: #e0e0e0;
 }
 
-.timeline-controls {
-  display: flex;
-  gap: 8px;
-  align-items: center;
-}
-
-.timeline-controls button {
-  padding: 4px 12px;
-  background: #0a0a0a;
-  border: 1px solid #333;
-  color: #e0e0e0;
-  border-radius: 0;
-  cursor: pointer;
-  font-size: 13px;
-  transition: all 0.2s;
-}
-
-.timeline-controls button:hover {
-  background: #252525;
-  border-color: #444;
-}
-
-.zoom-level {
-  font-size: 12px;
-  color: #888;
-  min-width: 45px;
-  text-align: center;
+.timeline-hint {
+  font-size: 11px;
+  color: #666;
+  font-style: italic;
 }
 
 .timeline-content {
   flex: 1;
-  overflow-x: auto;
-  overflow-y: auto;
+  overflow-x: hidden; /* No horizontal scrollbar */
+  overflow-y: auto; /* Keep vertical scrollbar */
   padding: 20px;
   position: relative;
+  user-select: none; /* Prevent text selection during drag */
 }
 
 .timeline-axis {
@@ -141,10 +119,9 @@
   font-size: 14px;
 }
 
-/* Scrollbar styling */
+/* Y-axis scrollbar styling */
 .timeline-content::-webkit-scrollbar {
   width: 8px;
-  height: 8px;
 }
 
 .timeline-content::-webkit-scrollbar-track {
@@ -159,4 +136,6 @@
 .timeline-content::-webkit-scrollbar-thumb:hover {
   background: #444;
 }
+
+
 

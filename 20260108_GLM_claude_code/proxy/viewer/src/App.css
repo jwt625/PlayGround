@@ -4,6 +4,101 @@
   overflow: hidden;
 }
 
+.search-bar {
+  background: #0a0a0a;
+  border-bottom: 1px solid #333;
+  padding: 12px;
+  flex-shrink: 0;
+}
+
+.search-input-group {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.search-input {
+  flex: 1;
+  background: #1a1a1a;
+  border: 1px solid #333;
+  color: #e0e0e0;
+  padding: 8px 12px;
+  font-size: 14px;
+  border-radius: 4px;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: #3b82f6;
+}
+
+.search-input::placeholder {
+  color: #666;
+}
+
+.search-type-select {
+  background: #1a1a1a;
+  border: 1px solid #333;
+  color: #e0e0e0;
+  padding: 8px 12px;
+  font-size: 14px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.search-type-select:focus {
+  outline: none;
+  border-color: #3b82f6;
+}
+
+.clear-search-btn {
+  background: #22c55e;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  font-size: 14px;
+  border-radius: 4px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.clear-search-btn:hover:not(:disabled) {
+  background: #16a34a;
+}
+
+.clear-search-btn:disabled {
+  background: #333;
+  color: #666;
+  cursor: not-allowed;
+}
+
+.search-fields {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  align-items: center;
+}
+
+.search-fields-label {
+  color: #999;
+  font-size: 13px;
+}
+
+.checkbox-field {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  color: #e0e0e0;
+  font-size: 13px;
+  user-select: none;
+}
+
+.checkbox-field input[type="checkbox"] {
+  cursor: pointer;
+  accent-color: #3b82f6;
+}
+
 .minimap {
   width: 60px;
   background: #0a0a0a;

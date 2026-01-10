@@ -1,7 +1,9 @@
 import { useState, useEffect, useRef, useMemo } from 'react'
 import { JsonView, darkStyles } from 'react-json-view-lite'
 import { Tooltip } from 'react-tooltip'
+import debounce from 'lodash.debounce'
 import TimelinePanel from './TimelinePanel'
+import SearchBar from './SearchBar'
 import 'react-json-view-lite/dist/index.css'
 import 'react-tooltip/dist/react-tooltip.css'
 import './App.css'
@@ -20,10 +22,78 @@ function App() {
   const [timelineHeight, setTimelineHeight] = useState(250)
   const [minDuration, setMinDuration] = useState(0)
   const [maxDuration, setMaxDuration] = useState(Infinity)
+  const [searchQuery, setSearchQuery] = useState('')
+  const [searchType, setSearchType] = useState('all')
+  const [searchFields, setSearchFields] = useState(['user_message', 'assistant_response'])
   const logRefs = useRef([])
   const mainRef = useRef(null)
   const resizerRef = useRef(null)
   const isDraggingRef = useRef(false)
+
+  const handleSearch = useMemo(
+    () => debounce((value) => setSearchQuery(value), 500),
+    []
+  )
+
+  const matchSearchQuery = (log, query, type, fields) => {
+    if (!query.trim()) return true
+
+    const searchText = buildSearchText(log, fields)
+
+    if (type === 'regex') {
+      try {
+        const regex = new RegExp(query, 'i')
+        return regex.test(searchText)
+      } catch (e) {
+        console.error('Invalid regex:', e)
+        return false
+      }
+    }
+
+    return searchText.toLowerCase().includes(query.toLowerCase())
+  }
+
+  const buildSearchText = (log, fields) => {
+    const texts = []
+
+    if (fields.includes('user_message')) {
+      const userMsg = extractUserMessage(log.body)
+      if (userMsg) texts.push(userMsg)
+    }
+
+    if (fields.includes('assistant_response')) {
+      const assistantResp = extractAssistantResponse(log.response?.body)
+      if (assistantResp) {
+        if (typeof assistantResp === 'string') {
+          texts.push(assistantResp)
+        } else {
+          texts.push(JSON.stringify(assistantResp))
+        }
+      }
+    }
+
+    if (fields.includes('request_body')) {
+      texts.push(JSON.stringify(log.body))
+    }
+
+    if (fields.includes('response_body')) {
+      texts.push(JSON.stringify(log.response?.body))
+    }
+
+    if (fields.includes('tools')) {
+      const toolsAvailable = log.body?.tools?.map(t => t.name).join(' ') || ''
+      const toolsUsed = extractToolNames(log.response?.body) || ''
+      texts.push(toolsAvailable, toolsUsed)
+    }
+
+    return texts.join(' ')
+  }
+
+  const extractToolNames = (responseBody) => {
+    if (!responseBody?.content) return ''
+    const toolUses = responseBody.content.filter(c => c.type === 'tool_use')
+    return toolUses.map(t => t.name).join(' ')
+  }
 
   const fetchLogs = async () => {
     try {
@@ -50,9 +120,16 @@ function App() {
         if (duration > maxDuration) return false
       }
 
+      // Search query filter
+      if (searchQuery) {
+        if (!matchSearchQuery(log, searchQuery, searchType, searchFields)) {
+          return false
+        }
+      }
+
       return true
     })
-  }, [logs, filter, minDuration, maxDuration])
+  }, [logs, filter, minDuration, maxDuration, searchQuery, searchType, searchFields])
 
   useEffect(() => {
     fetchLogs()
@@ -245,55 +322,64 @@ function App() {
               </button>
             </div>
             {!headerCollapsed && (
-              <div className="filters">
-                <button
-                  className={filter === 'all' ? 'active' : ''}
-                  onClick={() => setFilter('all')}
-                >
-                  All ({logs.length})
-                </button>
-                <button
-                  className={filter === 'success' ? 'active' : ''}
-                  onClick={() => setFilter('success')}
-                >
-                  Success
-                </button>
-                <button
-                  className={filter === 'errors' ? 'active' : ''}
-                  onClick={() => setFilter('errors')}
-                >
-                  Errors
-                </button>
-                <button
-                  className={autoRefresh ? 'active' : ''}
-                  onClick={() => setAutoRefresh(!autoRefresh)}
-                  title={autoRefresh ? 'Auto-refresh enabled' : 'Auto-refresh disabled'}
-                >
-                  {autoRefresh ? 'Live' : 'Paused'}
-                </button>
-                <button
-                  className={showTimeline ? 'active' : ''}
-                  onClick={() => setShowTimeline(!showTimeline)}
-                  title={showTimeline ? 'Hide timeline' : 'Show timeline'}
-                >
-                  Timeline
-                </button>
-                <button
-                  onClick={() => setCollapsedItems(new Set(windowedLogs.map((_, idx) => idx)))}
-                  title="Collapse all log entries"
-                >
-                  Fold All
-                </button>
-                <button
-                  onClick={() => setCollapsedItems(new Set())}
-                  title="Expand all log entries"
-                >
-                  Unfold All
-                </button>
-              </div>
+              <>
+                <SearchBar
+                  searchQuery={searchQuery}
+                  onSearchChange={handleSearch}
+                  searchType={searchType}
+                  onSearchTypeChange={setSearchType}
+                  searchFields={searchFields}
+                  onSearchFieldsChange={setSearchFields}
+                />
+                <div className="filters">
+                  <button
+                    className={filter === 'all' ? 'active' : ''}
+                    onClick={() => setFilter('all')}
+                  >
+                    All ({logs.length})
+                  </button>
+                  <button
+                    className={filter === 'success' ? 'active' : ''}
+                    onClick={() => setFilter('success')}
+                  >
+                    Success
+                  </button>
+                  <button
+                    className={filter === 'errors' ? 'active' : ''}
+                    onClick={() => setFilter('errors')}
+                  >
+                    Errors
+                  </button>
+                  <button
+                    className={autoRefresh ? 'active' : ''}
+                    onClick={() => setAutoRefresh(!autoRefresh)}
+                    title={autoRefresh ? 'Auto-refresh enabled' : 'Auto-refresh disabled'}
+                  >
+                    {autoRefresh ? 'Live' : 'Paused'}
+                  </button>
+                  <button
+                    className={showTimeline ? 'active' : ''}
+                    onClick={() => setShowTimeline(!showTimeline)}
+                    title={showTimeline ? 'Hide timeline' : 'Show timeline'}
+                  >
+                    Timeline
+                  </button>
+                  <button
+                    onClick={() => setCollapsedItems(new Set(windowedLogs.map((_, idx) => idx)))}
+                    title="Collapse all log entries"
+                  >
+                    Fold All
+                  </button>
+                  <button
+                    onClick={() => setCollapsedItems(new Set())}
+                    title="Expand all log entries"
+                  >
+                    Unfold All
+                  </button>
+                </div>
+              </>
             )}
           </div>
-
           {!headerCollapsed && (
             <div className="range-controls">
               <div className="range-info">
