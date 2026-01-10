@@ -23,6 +23,17 @@ function TimelinePanel({ logs, onSelectLog, selectedLogIndex }) {
       const model = log.body?.model || 'unknown'
       const status = log.response?.status || 'pending'
       const isError = status >= 400
+      const usage = log.response?.body?.usage
+      let totalTokens = 'no tokens'
+      if (usage) {
+        if (usage.input_tokens !== undefined && usage.output_tokens !== undefined) {
+          totalTokens = `${usage.input_tokens + usage.output_tokens} tokens (${usage.input_tokens} in + ${usage.output_tokens} out)`
+        } else if (usage.total_tokens !== undefined) {
+          totalTokens = `${usage.total_tokens} tokens`
+        }
+      }
+      const durationText = duration !== undefined ? `${duration.toFixed(0)}ms` : 'no duration'
+      const timestamp = new Date(log.timestamp).toLocaleString()
 
       return {
         idx,
@@ -32,6 +43,9 @@ function TimelinePanel({ logs, onSelectLog, selectedLogIndex }) {
         model,
         status,
         isError,
+        totalTokens,
+        durationText,
+        timestamp,
         log,
         key: `${model}-${log.method}-${log.path}` // Group key
       }
@@ -231,6 +245,20 @@ function TimelinePanel({ logs, onSelectLog, selectedLogIndex }) {
         </div>
       </div>
 
+      <div className="timeline-axis-container">
+        <div className="timeline-axis-pinned">
+          {timeMarkers.map((marker, idx) => (
+            <div
+              key={idx}
+              className="time-marker"
+              style={{ left: `${marker.position}%` }}
+            >
+              <div className="marker-label">{formatAxisTime(marker.timestamp)}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+
       <div
         className="timeline-content"
         ref={timelineContentRef}
@@ -238,20 +266,17 @@ function TimelinePanel({ logs, onSelectLog, selectedLogIndex }) {
         onDoubleClick={handleDoubleClick}
         style={{ cursor: isDragging ? 'col-resize' : 'crosshair' }}
       >
-        <div className="timeline-axis">
-          {timeMarkers.map((marker, idx) => (
-            <div
-              key={idx}
-              className="time-marker"
-              style={{ left: `${marker.position}%` }}
-            >
-              <div className="marker-line" />
-              <div className="marker-label">{formatAxisTime(marker.timestamp)}</div>
-            </div>
-          ))}
-        </div>
-
         <div className="timeline-rows" ref={timelineRowsRef}>
+          {/* Grid lines */}
+          <div className="timeline-grid">
+            {timeMarkers.map((marker, idx) => (
+              <div
+                key={idx}
+                className="grid-line"
+                style={{ left: `${marker.position}%` }}
+              />
+            ))}
+          </div>
           {selectionRect && (
             <div
               className="selection-rect"
@@ -277,7 +302,7 @@ function TimelinePanel({ logs, onSelectLog, selectedLogIndex }) {
                   style={getItemStyle(item)}
                   onClick={() => onSelectLog(item.idx)}
                   data-tooltip-id="timeline-tooltip"
-                  data-tooltip-content={`${item.model}\nStatus: ${item.status}\nDuration: ${formatTime(item.duration)}\nStart: ${new Date(item.startTime).toLocaleTimeString()}`}
+                  data-tooltip-content={`${item.timestamp}\n${item.model}\nStatus: ${item.status}\n${item.totalTokens}\nDuration: ${item.durationText}`}
                 />
               ))}
             </div>

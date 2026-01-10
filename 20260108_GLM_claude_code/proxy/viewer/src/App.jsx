@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef, useMemo } from 'react'
 import { JsonView, darkStyles } from 'react-json-view-lite'
 import { Tooltip } from 'react-tooltip'
-import debounce from 'lodash.debounce'
 import TimelinePanel from './TimelinePanel'
 import SearchBar from './SearchBar'
 import 'react-json-view-lite/dist/index.css'
@@ -30,10 +29,36 @@ function App() {
   const resizerRef = useRef(null)
   const isDraggingRef = useRef(false)
 
-  const handleSearch = useMemo(
-    () => debounce((value) => setSearchQuery(value), 500),
-    []
-  )
+  // Helper functions defined early to avoid temporal dead zone issues
+  const extractUserMessage = (body) => {
+    if (!body?.messages) return null
+    const lastUserMsg = [...body.messages].reverse().find(m => m.role === 'user')
+    if (!lastUserMsg?.content) return null
+
+    if (Array.isArray(lastUserMsg.content)) {
+      return lastUserMsg.content.map(c => c.text || c.type).join(' ')
+    }
+    return lastUserMsg.content
+  }
+
+  const extractAssistantResponse = (responseBody) => {
+    if (!responseBody) return null
+
+    if (responseBody.error) {
+      return { error: responseBody.error.message }
+    }
+
+    if (responseBody.content) {
+      if (Array.isArray(responseBody.content)) {
+        return responseBody.content.map(c => c.text || JSON.stringify(c)).join('\n')
+      }
+      return responseBody.content
+    }
+
+    return JSON.stringify(responseBody, null, 2)
+  }
+
+  const handleSearch = (value) => setSearchQuery(value)
 
   const matchSearchQuery = (log, query, type, fields) => {
     if (!query.trim()) return true
@@ -146,7 +171,11 @@ function App() {
   }, [filteredLogs, selectedLogIndex])
 
   // Handle timeline panel resize
-  useEffect(() => {
+  const handleResizerMouseDown = () => {
+    isDraggingRef.current = true
+    document.body.style.cursor = 'ns-resize'
+    document.body.style.userSelect = 'none'
+
     const handleMouseMove = (e) => {
       if (!isDraggingRef.current) return
 
@@ -163,22 +192,12 @@ function App() {
       isDraggingRef.current = false
       document.body.style.cursor = ''
       document.body.style.userSelect = ''
+      document.removeEventListener('mousemove', handleMouseMove)
+      document.removeEventListener('mouseup', handleMouseUp)
     }
 
-    if (isDraggingRef.current) {
-      document.addEventListener('mousemove', handleMouseMove)
-      document.addEventListener('mouseup', handleMouseUp)
-      return () => {
-        document.removeEventListener('mousemove', handleMouseMove)
-        document.removeEventListener('mouseup', handleMouseUp)
-      }
-    }
-  }, [])
-
-  const handleResizerMouseDown = () => {
-    isDraggingRef.current = true
-    document.body.style.cursor = 'ns-resize'
-    document.body.style.userSelect = 'none'
+    document.addEventListener('mousemove', handleMouseMove)
+    document.addEventListener('mouseup', handleMouseUp)
   }
 
   // Removed scroll-based selection - only timeline clicks update selection
@@ -224,34 +243,6 @@ function App() {
     setTimeout(() => {
       logRefs.current[0]?.scrollIntoView({ behavior: 'smooth', block: 'center' })
     }, 100)
-  }
-
-  const extractUserMessage = (body) => {
-    if (!body?.messages) return null
-    const lastUserMsg = [...body.messages].reverse().find(m => m.role === 'user')
-    if (!lastUserMsg?.content) return null
-    
-    if (Array.isArray(lastUserMsg.content)) {
-      return lastUserMsg.content.map(c => c.text || c.type).join(' ')
-    }
-    return lastUserMsg.content
-  }
-
-  const extractAssistantResponse = (responseBody) => {
-    if (!responseBody) return null
-    
-    if (responseBody.error) {
-      return { error: responseBody.error.message }
-    }
-    
-    if (responseBody.content) {
-      if (Array.isArray(responseBody.content)) {
-        return responseBody.content.map(c => c.text || JSON.stringify(c)).join('\n')
-      }
-      return responseBody.content
-    }
-    
-    return JSON.stringify(responseBody, null, 2)
   }
 
   if (loading) {

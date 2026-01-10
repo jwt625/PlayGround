@@ -1,10 +1,29 @@
+import { useState } from 'react'
+
 function SearchBar({ searchQuery, onSearchChange, searchType, onSearchTypeChange, searchFields, onSearchFieldsChange }) {
+  const [inputValue, setInputValue] = useState(searchQuery)
+
   const handleFieldChange = (field) => {
     if (searchFields.includes(field)) {
       onSearchFieldsChange(searchFields.filter(f => f !== field))
     } else {
       onSearchFieldsChange([...searchFields, field])
     }
+  }
+
+  const handleSearch = () => {
+    onSearchChange(inputValue)
+  }
+
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      onSearchChange(inputValue)
+    }
+  }
+
+  const handleClear = () => {
+    setInputValue('')
+    onSearchChange('')
   }
 
   const fieldOptions = [
@@ -20,11 +39,19 @@ function SearchBar({ searchQuery, onSearchChange, searchType, onSearchTypeChange
       <div className="search-input-group">
         <input
           type="text"
-          placeholder="Search logs..."
-          value={searchQuery}
-          onChange={(e) => onSearchChange(e.target.value)}
+          placeholder="Search logs... (press Enter)"
+          value={inputValue}
+          onChange={(e) => setInputValue(e.target.value)}
+          onKeyDown={handleKeyDown}
           className="search-input"
         />
+        <button
+          onClick={handleSearch}
+          className="search-btn"
+          title="Search"
+        >
+          Search
+        </button>
         <select
           value={searchType}
           onChange={(e) => onSearchTypeChange(e.target.value)}
@@ -34,10 +61,10 @@ function SearchBar({ searchQuery, onSearchChange, searchType, onSearchTypeChange
           <option value="regex">Regex</option>
         </select>
         <button
-          onClick={() => onSearchChange('')}
+          onClick={handleClear}
           className="clear-search-btn"
           title="Clear search"
-          disabled={!searchQuery}
+          disabled={!inputValue && !searchQuery}
         >
           Clear
         </button>

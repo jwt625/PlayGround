@@ -29,6 +29,19 @@
   font-style: italic;
 }
 
+.timeline-axis-container {
+  flex-shrink: 0;
+  background: #0a0a0a;
+  border-bottom: 1px solid #333;
+  padding: 0 20px;
+  padding-bottom: 4px;
+}
+
+.timeline-axis-pinned {
+  position: relative;
+  height: 16px;
+}
+
 .timeline-content {
   flex: 1;
   overflow-x: hidden; /* No horizontal scrollbar */
@@ -38,36 +51,42 @@
   user-select: none; /* Prevent text selection during drag */
 }
 
-.timeline-axis {
-  position: relative;
-  height: 30px;
-  margin-bottom: 10px;
-  border-bottom: 1px solid #333;
-}
-
 .time-marker {
   position: absolute;
   top: 0;
   height: 100%;
 }
 
-.marker-line {
-  width: 1px;
-  height: 20px;
-  background: #444;
-}
-
 .marker-label {
   font-size: 10px;
   color: #666;
-  margin-top: 4px;
   white-space: nowrap;
   transform: translateX(-50%);
+  line-height: 16px;
 }
 
 .timeline-rows {
   position: relative;
   min-height: 200px;
+}
+
+.timeline-grid {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.grid-line {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: rgba(68, 68, 68, 0.3);
+  pointer-events: none;
 }
 
 .timeline-row {

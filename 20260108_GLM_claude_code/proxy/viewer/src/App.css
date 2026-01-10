@@ -24,7 +24,7 @@
   color: #e0e0e0;
   padding: 8px 12px;
   font-size: 14px;
-  border-radius: 4px;
+  border-radius: 0;
 }
 
 .search-input:focus {
@@ -42,7 +42,7 @@
   color: #e0e0e0;
   padding: 8px 12px;
   font-size: 14px;
-  border-radius: 4px;
+  border-radius: 0;
   cursor: pointer;
 }
 
@@ -51,13 +51,28 @@
   border-color: #3b82f6;
 }
 
-.clear-search-btn {
-  background: #22c55e;
+.search-btn {
+  background: #3b82f6;
   color: white;
   border: none;
   padding: 8px 16px;
   font-size: 14px;
-  border-radius: 4px;
+  border-radius: 0;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.search-btn:hover {
+  background: #2563eb;
+}
+
+.clear-search-btn {
+  background: #1a1a1a;
+  color: #e0e0e0;
+  border: 1px solid #333;
+  padding: 8px 16px;
+  font-size: 14px;
+  border-radius: 0;
   cursor: pointer;
   white-space: nowrap;
 }
