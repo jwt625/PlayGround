@@ -89,8 +89,8 @@ class EntityExtractor:
         request_id = self.request_counter
         self.request_counter += 1
 
-        # IDENTIFY AGENT INSTANCE
-        agent_instance = self.agent_tracker.identify_or_create_agent(request_id, body)
+        # IDENTIFY AGENT INSTANCE (with timestamp)
+        agent_instance = self.agent_tracker.identify_or_create_agent(request_id, body, timestamp)
 
         request_entity = {
             'id': f'req_{request_id}',
@@ -244,6 +244,13 @@ class EntityExtractor:
                     tool_use_entity, 'tool_use', request_id
                 )
 
+                # Track tool use in agent tracker (for workflow DAG)
+                # Get timestamp from request
+                timestamp = ""
+                if request_id < len(self.api_requests):
+                    timestamp = self.api_requests[request_id].get('timestamp', '')
+                self.agent_tracker.track_tool_use(request_id, block, timestamp)
+
             self.tool_uses.append(tool_use_entity)
 
             # Special handling for Task tool
@@ -288,6 +295,13 @@ class EntityExtractor:
             }
             self.tool_results.append(tool_result_entity)
             self.tool_use_to_result[tool_use_id] = len(self.tool_results) - 1
+
+            # Track tool result in agent tracker (for workflow DAG)
+            if request_id is not None:
+                timestamp = ""
+                if request_id < len(self.api_requests):
+                    timestamp = self.api_requests[request_id].get('timestamp', '')
+                self.agent_tracker.track_tool_result(request_id, block, timestamp)
 
             # Extract agent ID from Task tool results
             if isinstance(result_content, list):
@@ -394,6 +408,7 @@ class EntityExtractor:
     def export_to_json(self, output_path: Path):
         """Export all entities to JSON file."""
         agent_hierarchy = self.agent_tracker.get_agent_hierarchy()
+        workflow_dag = self.agent_tracker.build_workflow_dag()
 
         data = {
             'metadata': {
@@ -420,6 +435,7 @@ class EntityExtractor:
                 'agent_hierarchy': agent_hierarchy,
                 'request_to_agent': self.agent_tracker.request_to_agent,
             },
+            'workflow_dag': workflow_dag,
         }
 
         with open(output_path, 'w') as f:

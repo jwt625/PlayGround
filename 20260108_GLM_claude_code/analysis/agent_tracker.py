@@ -30,7 +30,13 @@ class AgentInstance:
     spawned_by_task_id: Optional[str] = None
     parent_agent_id: Optional[str] = None
     first_user_message: str = ""
-    
+
+    # Workflow tracking - NEW
+    child_agent_ids: List[str] = field(default_factory=list)  # Agents spawned by this agent
+    tool_uses: List[Dict[str, Any]] = field(default_factory=list)  # Tool uses by this agent
+    tool_results: List[Dict[str, Any]] = field(default_factory=list)  # Tool results received
+    timestamps: List[str] = field(default_factory=list)  # Timestamp for each request
+
     def to_dict(self) -> Dict[str, Any]:
         """Convert to dictionary for JSON serialization."""
         return {
@@ -41,11 +47,17 @@ class AgentInstance:
             'first_request_id': self.first_request_id,
             'last_request_id': self.last_request_id,
             'message_count_history': self.message_count_history,
+            'timestamps': self.timestamps,  # Include full timestamps list
             'spawned_by_task_id': self.spawned_by_task_id,
             'parent_agent_id': self.parent_agent_id,
+            'child_agent_ids': self.child_agent_ids,
             'first_user_message': self.first_user_message[:200],  # Truncate for readability
             'total_requests': len(self.requests),
             'conversation_turns': len(self.message_count_history),
+            'tool_use_count': len(self.tool_uses),
+            'tool_result_count': len(self.tool_results),
+            'first_timestamp': self.timestamps[0] if self.timestamps else None,
+            'last_timestamp': self.timestamps[-1] if self.timestamps else None,
         }
 
 
@@ -140,6 +152,11 @@ class AgentInstanceTracker:
         self.task_prompts: Dict[str, Dict[str, str]] = {}  # prompt_hash -> {task_id, agent_id}
         self.agent_counter = 0
 
+        # Workflow tracking - NEW
+        self.tool_use_index: Dict[str, Dict[str, Any]] = {}  # tool_use_id -> {agent_id, request_id, tool_name, timestamp}
+        self.tool_result_index: Dict[str, Dict[str, Any]] = {}  # tool_use_id -> {agent_id, request_id, is_error, timestamp}
+        self.workflow_edges: List[Dict[str, Any]] = []  # All edges in the workflow DAG
+
     def compute_system_prompt_hash(self, system: List[Dict]) -> str:
         """Compute hash of system prompt."""
         texts = []
@@ -154,7 +171,7 @@ class AgentInstanceTracker:
             return compute_hash(combined, length=16)
         return 'no_system'
 
-    def identify_or_create_agent(self, request_id: int, body: Dict) -> AgentInstance:
+    def identify_or_create_agent(self, request_id: int, body: Dict, timestamp: str = "") -> AgentInstance:
         """
         Identify which agent instance this request belongs to.
 
@@ -186,6 +203,7 @@ class AgentInstanceTracker:
             agent.requests.append(request_id)
             agent.last_request_id = request_id
             agent.message_count_history.append(len(messages))
+            agent.timestamps.append(timestamp)
             self.request_to_agent[request_id] = agent_id
             return agent
 
@@ -200,6 +218,7 @@ class AgentInstanceTracker:
             agent.last_request_id = request_id
             agent.conversation_fingerprint = conversation_fingerprint
             agent.message_count_history.append(len(messages))
+            agent.timestamps.append(timestamp)
             self.fingerprint_to_agent[conversation_fingerprint] = agent_id
             self.request_to_agent[request_id] = agent_id
             return agent
@@ -219,6 +238,7 @@ class AgentInstanceTracker:
             last_request_id=request_id,
             message_count_history=[len(messages)],
             first_user_message=first_user_msg,
+            timestamps=[timestamp],
         )
 
         # Check if spawned by Task tool
@@ -226,6 +246,12 @@ class AgentInstanceTracker:
         if spawning_info:
             agent.spawned_by_task_id = spawning_info['task_id']
             agent.parent_agent_id = spawning_info['parent_agent_id']
+
+            # Add to parent's child list
+            if agent.parent_agent_id and agent.parent_agent_id in self.instances:
+                parent = self.instances[agent.parent_agent_id]
+                if agent_id not in parent.child_agent_ids:
+                    parent.child_agent_ids.append(agent_id)
 
         self.instances[agent_id] = agent
         self.fingerprint_to_agent[conversation_fingerprint] = agent_id
@@ -342,4 +368,207 @@ class AgentInstanceTracker:
     def export_all_instances(self) -> List[Dict[str, Any]]:
         """Export all agent instances as dictionaries."""
         return [agent.to_dict() for agent in self.instances.values()]
+
+    def track_tool_use(self, request_id: int, tool_use_block: Dict[str, Any], timestamp: str = ""):
+        """
+        Track a tool_use block from response content.
+
+        Args:
+            request_id: Request ID where tool was used
+            tool_use_block: Tool use content block
+            timestamp: Timestamp of the request
+        """
+        tool_use_id = tool_use_block.get('id')
+        tool_name = tool_use_block.get('name')
+
+        if not tool_use_id:
+            return
+
+        agent_id = self.request_to_agent.get(request_id)
+        if not agent_id:
+            return
+
+        # Store in index
+        self.tool_use_index[tool_use_id] = {
+            'tool_use_id': tool_use_id,
+            'tool_name': tool_name,
+            'agent_id': agent_id,
+            'request_id': request_id,
+            'timestamp': timestamp,
+            'input': tool_use_block.get('input', {}),
+        }
+
+        # Add to agent's tool_uses
+        agent = self.instances[agent_id]
+        agent.tool_uses.append({
+            'tool_use_id': tool_use_id,
+            'tool_name': tool_name,
+            'request_id': request_id,
+            'timestamp': timestamp,
+        })
+
+        # Special handling for Task tool (subagent spawn)
+        if tool_name == 'Task':
+            task_input = tool_use_block.get('input', {})
+            prompt = task_input.get('prompt', '')
+            subagent_type = task_input.get('subagent_type', '')
+
+            if prompt:
+                # Store for later matching with spawned agent
+                prompt_hash = compute_hash(prompt, length=16)
+                self.task_prompts[prompt_hash] = {
+                    'task_id': tool_use_id,
+                    'parent_agent_id': agent_id,
+                    'subagent_type': subagent_type,
+                    'prompt': prompt[:200],
+                }
+
+    def track_tool_result(self, request_id: int, tool_result_block: Dict[str, Any], timestamp: str = ""):
+        """
+        Track a tool_result block from request messages.
+
+        Args:
+            request_id: Request ID where result was received
+            tool_result_block: Tool result content block
+            timestamp: Timestamp of the request
+        """
+        tool_use_id = tool_result_block.get('tool_use_id')
+        is_error = tool_result_block.get('is_error', False)
+
+        if not tool_use_id:
+            return
+
+        agent_id = self.request_to_agent.get(request_id)
+        if not agent_id:
+            return
+
+        # Store in index
+        self.tool_result_index[tool_use_id] = {
+            'tool_use_id': tool_use_id,
+            'agent_id': agent_id,
+            'request_id': request_id,
+            'timestamp': timestamp,
+            'is_error': is_error,
+        }
+
+        # Add to agent's tool_results
+        agent = self.instances[agent_id]
+        agent.tool_results.append({
+            'tool_use_id': tool_use_id,
+            'request_id': request_id,
+            'timestamp': timestamp,
+            'is_error': is_error,
+        })
+
+        # Create workflow edge: tool_use -> tool_result
+        if tool_use_id in self.tool_use_index:
+            tool_use_info = self.tool_use_index[tool_use_id]
+            source_agent_id = tool_use_info['agent_id']
+            target_agent_id = agent_id
+
+            # Edge from agent that used tool to agent that received result
+            self.workflow_edges.append({
+                'type': 'tool_result',
+                'source_agent_id': source_agent_id,
+                'target_agent_id': target_agent_id,
+                'tool_use_id': tool_use_id,
+                'tool_name': tool_use_info['tool_name'],
+                'source_request_id': tool_use_info['request_id'],
+                'target_request_id': request_id,
+                'is_error': is_error,
+                'confidence': 1.0,  # Exact match via tool_use_id
+            })
+
+    def build_workflow_dag(self) -> Dict[str, Any]:
+        """
+        Build the complete workflow DAG showing branching and merging.
+
+        Returns:
+            Dictionary with nodes (agents) and edges (relationships)
+        """
+        nodes = []
+        edges = []
+
+        # Create nodes from agent instances
+        for agent_id, agent in self.instances.items():
+            node = {
+                'id': agent_id,
+                'agent_id': agent_id,
+                'agent_type': agent.system_prompt_hash,
+                'parent_agent_id': agent.parent_agent_id,
+                'child_agent_ids': agent.child_agent_ids,
+                'spawned_by_task_id': agent.spawned_by_task_id,
+                'request_count': len(agent.requests),
+                'tool_use_count': len(agent.tool_uses),
+                'tool_result_count': len(agent.tool_results),
+                'first_timestamp': agent.timestamps[0] if agent.timestamps else None,
+                'last_timestamp': agent.timestamps[-1] if agent.timestamps else None,
+                'is_root': agent.parent_agent_id is None,
+                'is_leaf': len(agent.child_agent_ids) == 0,
+            }
+            nodes.append(node)
+
+        # Add parent-child edges (subagent spawns)
+        for agent_id, agent in self.instances.items():
+            if agent.parent_agent_id:
+                edges.append({
+                    'type': 'subagent_spawn',
+                    'source_agent_id': agent.parent_agent_id,
+                    'target_agent_id': agent_id,
+                    'spawned_by_task_id': agent.spawned_by_task_id,
+                    'confidence': 0.95,
+                })
+
+        # Add tool result edges (already computed)
+        edges.extend(self.workflow_edges)
+
+        # Compute DAG metrics
+        root_agents = [n for n in nodes if n['is_root']]
+        leaf_agents = [n for n in nodes if n['is_leaf']]
+
+        return {
+            'nodes': nodes,
+            'edges': edges,
+            'metrics': {
+                'total_agents': len(nodes),
+                'root_agents': len(root_agents),
+                'leaf_agents': len(leaf_agents),
+                'total_edges': len(edges),
+                'spawn_edges': len([e for e in edges if e['type'] == 'subagent_spawn']),
+                'tool_result_edges': len([e for e in edges if e['type'] == 'tool_result']),
+            },
+            'root_agent_ids': [n['id'] for n in root_agents],
+        }
+
+    def get_agent_tree(self, root_agent_id: str, depth: int = 0) -> Dict[str, Any]:
+        """
+        Get tree structure starting from a root agent (for visualization).
+
+        Args:
+            root_agent_id: Agent ID to start from
+            depth: Current depth (for recursion)
+
+        Returns:
+            Tree structure with agent and children
+        """
+        if root_agent_id not in self.instances:
+            return None
+
+        agent = self.instances[root_agent_id]
+
+        tree = {
+            'agent_id': agent.agent_id,
+            'agent_type': agent.system_prompt_hash,
+            'depth': depth,
+            'request_count': len(agent.requests),
+            'children': [],
+        }
+
+        # Recursively add children
+        for child_id in agent.child_agent_ids:
+            child_tree = self.get_agent_tree(child_id, depth + 1)
+            if child_tree:
+                tree['children'].append(child_tree)
+
+        return tree
 
