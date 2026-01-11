@@ -808,6 +808,8 @@ function App() {
                   logs={logs}
                   workflowGraph={workflowGraph}
                   onRefresh={fetchWorkflow}
+                  onSelectLog={scrollToLog}
+                  selectedLogIndex={selectedLogIndex}
                 />
               )}
             </div>

@@ -55,12 +55,16 @@ def detect_sessions(logs: List[Dict[str, Any]], gap_minutes: float = 10.0) -> Li
     return sessions
 
 
-def build_tool_index(logs: List[Dict[str, Any]]) -> Tuple[Dict[str, int], Dict[str, str]]:
+def build_tool_index(logs: List[Dict[str, Any]], session_id: Optional[int] = None) -> Tuple[Dict[str, int], Dict[str, str]]:
     """
     Create tool_use_id → log_index and tool_use_id → tool_name mappings.
 
+    IMPORTANT: To prevent cross-session edge contamination, tool_use_ids are prefixed
+    with session_id if provided. This ensures tool_use_ids are unique across sessions.
+
     Args:
         logs: List of log entries
+        session_id: Optional session ID to prefix tool_use_ids (prevents cross-session matches)
 
     Returns:
         Tuple of (tool_index, tool_names) dictionaries
@@ -81,20 +85,26 @@ def build_tool_index(logs: List[Dict[str, Any]]) -> Tuple[Dict[str, int], Dict[s
                 tool_use_id = block.get('id')
                 tool_name = block.get('name')
                 if tool_use_id:
+                    # Prefix with session_id to prevent cross-session collisions
+                    if session_id is not None:
+                        tool_use_id = f"session_{session_id}_{tool_use_id}"
                     tool_index[tool_use_id] = idx
                     tool_names[tool_use_id] = tool_name
 
     return tool_index, tool_names
 
 
-def match_tool_results(logs: List[Dict[str, Any]], tool_index: Dict[str, int], tool_names: Dict[str, str]) -> List[Dict[str, Any]]:
+def match_tool_results(logs: List[Dict[str, Any]], tool_index: Dict[str, int], tool_names: Dict[str, str], session_id: Optional[int] = None) -> List[Dict[str, Any]]:
     """
     Find tool result dependencies by matching tool_use_id references.
+
+    IMPORTANT: Uses session-prefixed tool_use_ids to prevent cross-session edge contamination.
 
     Args:
         logs: List of log entries
         tool_index: Mapping of tool_use_id to log index
         tool_names: Mapping of tool_use_id to tool name
+        session_id: Optional session ID to prefix tool_use_ids (must match build_tool_index)
 
     Returns:
         List of edge dictionaries with type='tool_result'
@@ -122,21 +132,28 @@ def match_tool_results(logs: List[Dict[str, Any]], tool_index: Dict[str, int], t
                     tool_use_id = block.get('tool_use_id')
                     is_error = block.get('is_error', False)
 
-                    if tool_use_id and tool_use_id in tool_index:
-                        source_idx = tool_index[tool_use_id]
-                        tool_name = tool_names.get(tool_use_id)
+                    if tool_use_id:
+                        # Prefix with session_id to match tool_index keys
+                        if session_id is not None:
+                            prefixed_tool_use_id = f"session_{session_id}_{tool_use_id}"
+                        else:
+                            prefixed_tool_use_id = tool_use_id
 
-                        edges.append({
-                            'type': 'tool_result',
-                            'source': source_idx,
-                            'target': target_idx,
-                            'metadata': {
-                                'tool_use_id': tool_use_id,
-                                'tool_name': tool_name,
-                                'is_error': is_error
-                            },
-                            'confidence': 1.0
-                        })
+                        if prefixed_tool_use_id in tool_index:
+                            source_idx = tool_index[prefixed_tool_use_id]
+                            tool_name = tool_names.get(prefixed_tool_use_id)
+
+                            edges.append({
+                                'type': 'tool_result',
+                                'source': source_idx,
+                                'target': target_idx,
+                                'metadata': {
+                                    'tool_use_id': tool_use_id,  # Store original ID without prefix
+                                    'tool_name': tool_name,
+                                    'is_error': is_error
+                                },
+                                'confidence': 1.0
+                            })
 
     return edges
 
@@ -265,11 +282,11 @@ def build_workflow_graph(logs: List[Dict[str, Any]], max_logs_per_session: int =
 
         session_node_start = len(all_nodes)
 
-        # Build tool index for this session
-        tool_index, tool_names = build_tool_index(session_logs)
+        # Build tool index for this session with session_id prefix to prevent cross-session contamination
+        tool_index, tool_names = build_tool_index(session_logs, session_id=session_idx)
 
-        # Find edges within this session
-        tool_edges = match_tool_results(session_logs, tool_index, tool_names)
+        # Find edges within this session (using session_id prefix)
+        tool_edges = match_tool_results(session_logs, tool_index, tool_names, session_id=session_idx)
         spawn_edges = detect_subagent_spawns(session_logs)
 
         print(f"  Session {session_idx + 1}: {len(tool_edges)} tool edges, {len(spawn_edges)} spawn edges")

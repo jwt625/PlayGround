@@ -1,15 +1,16 @@
 import { useState, useEffect, useRef } from 'react'
 import * as d3 from 'd3'
+import { Tooltip } from 'react-tooltip'
 import './WorkflowPanel.css'
 
-function WorkflowPanel({ logs, workflowGraph, onRefresh }) {
+function WorkflowPanel({ logs, workflowGraph, onRefresh, onSelectLog, selectedLogIndex }) {
   const [showToolEdges, setShowToolEdges] = useState(true)
   const [showSpawnEdges, setShowSpawnEdges] = useState(true)
-  const [selectedNode, setSelectedNode] = useState(null)
   const svgRef = useRef(null)
   const simulationRef = useRef(null)
+  const nodeCirclesRef = useRef(null) // Store reference to node circles for selection updates
 
-  // D3 force simulation
+  // D3 force simulation - only rebuild when graph data changes
   useEffect(() => {
     if (!workflowGraph?.nodes || workflowGraph.nodes.length === 0 || !svgRef.current) {
       return
@@ -18,16 +19,70 @@ function WorkflowPanel({ logs, workflowGraph, onRefresh }) {
     const width = 1200
     const height = 800
 
-    // Prepare data
-    const nodes = workflowGraph.nodes.map(node => ({
-      ...node,
-      id: node.log_index !== undefined ? node.log_index : node.id,
-    }))
+    // Prepare data with tooltip content
+    const nodes = workflowGraph.nodes.map(node => {
+      // Build tooltip content similar to TimelinePanel
+      const timestamp = new Date(node.timestamp).toLocaleString()
+      const tooltipLines = [
+        `Node #${node.id}`,
+        timestamp,
+        `Agent: ${node.agent_label || node.agent_type}`,
+        `Model: ${node.model}`,
+        `Session: ${node.session_id}`,
+        `Stop: ${node.stop_reason || 'unknown'}`,
+        `Tokens: ${node.tokens.total} (${node.tokens.input} in + ${node.tokens.output} out)`,
+        `Duration: ${node.duration_ms ? node.duration_ms.toFixed(0) + 'ms' : 'unknown'}`,
+      ]
+
+      if (node.tool_count > 0) {
+        tooltipLines.push(`Tools: ${node.tool_count}`)
+      }
+      if (node.subagent_count > 0) {
+        tooltipLines.push(`Subagents: ${node.subagent_count}`)
+      }
+      if (node.has_errors) {
+        tooltipLines.push('⚠️ Has errors')
+      }
+
+      return {
+        ...node,
+        id: node.log_index !== undefined ? node.log_index : node.id,
+        tooltipContent: tooltipLines.join('\n')
+      }
+    })
 
     const edges = (workflowGraph.edges || []).filter(edge => {
       if (edge.type === 'tool_result' && !showToolEdges) return false
       if (edge.type === 'subagent_spawn' && !showSpawnEdges) return false
       return true
+    }).map(edge => {
+      // Build tooltip content for edges
+      const tooltipLines = []
+
+      if (edge.type === 'tool_result') {
+        tooltipLines.push('Tool Dependency')
+        tooltipLines.push(`Tool: ${edge.metadata.tool_name || 'unknown'}`)
+        tooltipLines.push(`From: Node #${edge.source}`)
+        tooltipLines.push(`To: Node #${edge.target}`)
+        if (edge.metadata.is_error) {
+          tooltipLines.push('⚠️ Tool returned error')
+        }
+        tooltipLines.push(`Confidence: ${(edge.confidence * 100).toFixed(0)}%`)
+      } else if (edge.type === 'subagent_spawn') {
+        tooltipLines.push('Subagent Spawn')
+        tooltipLines.push(`Type: ${edge.metadata.subagent_type}`)
+        tooltipLines.push(`Parent: Node #${edge.source}`)
+        tooltipLines.push(`Child: Node #${edge.target}`)
+        if (edge.metadata.time_diff_seconds !== undefined) {
+          tooltipLines.push(`Time gap: ${edge.metadata.time_diff_seconds.toFixed(1)}s`)
+        }
+        tooltipLines.push(`Confidence: ${(edge.confidence * 100).toFixed(0)}%`)
+      }
+
+      return {
+        ...edge,
+        tooltipContent: tooltipLines.join('\n')
+      }
     })
 
     // Clear previous content
@@ -76,7 +131,7 @@ function WorkflowPanel({ logs, workflowGraph, onRefresh }) {
 
     simulationRef.current = simulation
 
-    // Draw edges
+    // Draw edges with tooltips
     const link = g.append('g')
       .selectAll('line')
       .data(edges)
@@ -85,8 +140,17 @@ function WorkflowPanel({ logs, workflowGraph, onRefresh }) {
       .attr('stroke-width', 2)
       .attr('stroke-opacity', 0.6)
       .attr('marker-end', d => `url(#arrow-${d.type})`)
+      .attr('data-tooltip-id', 'workflow-tooltip')
+      .attr('data-tooltip-content', d => d.tooltipContent)
+      .style('cursor', 'pointer')
+      .on('mouseenter', function() {
+        d3.select(this).attr('stroke-width', 4).attr('stroke-opacity', 1.0)
+      })
+      .on('mouseleave', function() {
+        d3.select(this).attr('stroke-width', 2).attr('stroke-opacity', 0.6)
+      })
 
-    // Draw nodes
+    // Draw nodes with tooltips
     const node = g.append('g')
       .selectAll('g')
       .data(nodes)
@@ -95,17 +159,33 @@ function WorkflowPanel({ logs, workflowGraph, onRefresh }) {
         .on('start', dragstarted)
         .on('drag', dragged)
         .on('end', dragended))
-      .on('click', (event, d) => {
-        setSelectedNode(d.id)
+      .on('click', (_event, d) => {
+        if (onSelectLog && logs && logs.length > 0) {
+          // Node indices are chronological (0=oldest), but filteredLogs is reversed (0=newest)
+          // Must invert the index to select the correct log
+          const invertedIndex = logs.length - 1 - d.id
+          onSelectLog(invertedIndex)
+        }
       })
+      .attr('data-tooltip-id', 'workflow-tooltip')
+      .attr('data-tooltip-content', d => d.tooltipContent)
 
     // Node circles
-    node.append('circle')
+    const nodeCircles = node.append('circle')
       .attr('r', 20)
       .attr('fill', d => d.agent_color || '#6b7280')
       .attr('stroke', '#fff')
       .attr('stroke-width', 2)
       .style('cursor', 'pointer')
+      .on('mouseenter', function() {
+        d3.select(this).attr('r', 24)
+      })
+      .on('mouseleave', function() {
+        d3.select(this).attr('r', 20)
+      })
+
+    // Store reference for selection updates
+    nodeCirclesRef.current = nodeCircles
 
     // Node labels
     node.append('text')
@@ -172,6 +252,16 @@ function WorkflowPanel({ logs, workflowGraph, onRefresh }) {
     }
   }, [workflowGraph, showToolEdges, showSpawnEdges])
 
+  // Separate effect to update selection styling without rebuilding the graph
+  useEffect(() => {
+    if (!nodeCirclesRef.current) return
+
+    // Update all node circles to reflect current selection
+    nodeCirclesRef.current
+      .attr('stroke', d => (selectedLogIndex !== null && d.id === selectedLogIndex) ? '#fbbf24' : '#fff')
+      .attr('stroke-width', d => (selectedLogIndex !== null && d.id === selectedLogIndex) ? 4 : 2)
+  }, [selectedLogIndex])
+
   if (!workflowGraph || !workflowGraph.nodes || workflowGraph.nodes.length === 0) {
     return (
       <div className="workflow-panel">
@@ -221,6 +311,21 @@ function WorkflowPanel({ logs, workflowGraph, onRefresh }) {
           {/* D3 will render the graph here */}
         </svg>
       </div>
+
+      <Tooltip
+        id="workflow-tooltip"
+        place="top"
+        style={{
+          backgroundColor: '#1a1a1a',
+          color: '#e0e0e0',
+          border: '1px solid #333',
+          borderRadius: '4px',
+          padding: '8px 12px',
+          fontSize: '12px',
+          whiteSpace: 'pre-line',
+          zIndex: 9999
+        }}
+      />
     </div>
   )
 }
