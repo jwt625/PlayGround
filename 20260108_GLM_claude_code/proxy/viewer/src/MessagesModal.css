@@ -207,7 +207,6 @@
   white-space: pre-wrap;
   word-wrap: break-word;
   color: #cccccc;
-  max-height: 300px;
   overflow-y: auto;
 }
 
@@ -222,7 +221,7 @@
 .response-field {
   display: flex;
   gap: 8px;
-  margin-bottom: 8px;
+  margin-bottom: 4px;
   font-size: 11px;
 }
 
@@ -246,7 +245,6 @@
   padding: 8px;
   background: #2d2d30;
   border-radius: 4px;
-  max-height: 200px;
   overflow-y: auto;
 }
 

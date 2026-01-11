@@ -22,8 +22,8 @@
   background: #1a1a1a;
   border: 1px solid #333;
   color: #e0e0e0;
-  padding: 8px 12px;
-  font-size: 14px;
+  padding: 4px 4px;
+  font-size: 10px;
   border-radius: 0;
 }
 
@@ -40,8 +40,8 @@
   background: #1a1a1a;
   border: 1px solid #333;
   color: #e0e0e0;
-  padding: 8px 12px;
-  font-size: 14px;
+  padding: 4px 4px;
+  font-size: 10px;
   border-radius: 0;
   cursor: pointer;
 }
@@ -55,8 +55,8 @@
   background: #3b82f6;
   color: white;
   border: none;
-  padding: 8px 16px;
-  font-size: 14px;
+  padding: 4px 4px;
+  font-size: 10px;
   border-radius: 0;
   cursor: pointer;
   white-space: nowrap;
@@ -70,8 +70,8 @@
   background: #1a1a1a;
   color: #e0e0e0;
   border: 1px solid #333;
-  padding: 8px 16px;
-  font-size: 14px;
+  padding: 4px 4px;
+  font-size: 10px;
   border-radius: 0;
   cursor: pointer;
   white-space: nowrap;
@@ -102,10 +102,10 @@
 .checkbox-field {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 2px;
   cursor: pointer;
   color: #e0e0e0;
-  font-size: 13px;
+  font-size: 10px;
   user-select: none;
 }
 
@@ -209,22 +209,22 @@
 .header {
   display: flex;
   flex-direction: column;
-  gap: 16px;
-  padding: 20px;
+  gap: 4px;
+  padding: 8px;
   border-bottom: 1px solid #333;
   flex-shrink: 0;
   transition: all 0.3s ease;
 }
 
 .header.collapsed {
-  padding: 12px 20px;
+  padding: 4px 4px;
   gap: 0;
 }
 
 .header-top {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 4px;
 }
 
 .header-title-row {
@@ -234,19 +234,19 @@
 }
 
 .header h1 {
-  font-size: 24px;
+  font-size: 18px;
   font-weight: 600;
   margin: 0;
 }
 
 .collapse-header-btn {
-  padding: 6px 12px;
+  padding: 4px 4px;
   background: #1a1a1a;
   border: 1px solid #333;
   color: #888;
   border-radius: 0;
   cursor: pointer;
-  font-size: 14px;
+  font-size: 10px;
   transition: all 0.2s;
   flex-shrink: 0;
 }
@@ -259,17 +259,17 @@
 
 .filters {
   display: flex;
-  gap: 10px;
+  gap: 4px;
 }
 
 .filters button {
-  padding: 8px 16px;
+  padding: 4px 4px;
   background: #1a1a1a;
   border: 1px solid #333;
   color: #e0e0e0;
   border-radius: 0;
   cursor: pointer;
-  font-size: 14px;
+  font-size: 10px;
   transition: all 0.2s;
 }
 
@@ -287,8 +287,8 @@
 .main {
   display: flex;
   flex-direction: column;
-  gap: 24px;
-  padding: 20px;
+  gap: 4px;
+  padding: 4px;
   overflow-y: auto;
   flex: 1;
 }
@@ -315,15 +315,15 @@
   border: 1px solid #333;
   border-left: 4px solid #333;
   border-radius: 0;
-  padding: 16px;
+  padding: 4px;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 4px;
 }
 
 .metadata {
   display: flex;
-  gap: 12px;
+  gap: 4px;
   font-size: 13px;
   color: #888;
   flex-wrap: wrap;
@@ -343,7 +343,7 @@
 }
 
 .metadata span {
-  padding: 4px 8px;
+  padding: 2px 4px;
   background: #0f0f0f;
   border-radius: 0;
 }
@@ -353,7 +353,7 @@
   background: #374151;
   font-weight: 600;
   font-size: 11px;
-  padding: 4px 8px;
+  padding: 2px 4px;
   border-radius: 0;
   font-family: 'Courier New', monospace;
 }
@@ -390,7 +390,7 @@
   color: #000;
   font-weight: 600;
   font-size: 11px;
-  padding: 4px 10px;
+  padding: 2px 4px;
   border-radius: 0;
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -425,7 +425,7 @@
   color: #fff;
   font-weight: 600;
   font-size: 11px;
-  padding: 4px 10px;
+  padding: 2px 4px;
   border-radius: 0;
 }
 
@@ -434,14 +434,14 @@
   color: #fff;
   font-weight: 600;
   font-size: 11px;
-  padding: 4px 10px;
+  padding: 2px 4px;
   border-radius: 0;
 }
 
 .message {
   background: #0f0f0f;
   border-left: 3px solid #333;
-  padding: 12px;
+  padding: 4px;
   border-radius: 0;
 }
 
@@ -687,25 +687,25 @@
 .window-size-control {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 4px;
 }
 
 .window-size-control label {
   display: flex;
   align-items: center;
-  gap: 8px;
-  font-size: 13px;
+  gap: 4px;
+  font-size: 10px;
   color: #888;
 }
 
 .window-size-input {
   width: 80px;
-  padding: 6px 10px;
+  padding: 2px 4px;
   background: #0a0a0a;
   border: 1px solid #333;
   color: #e0e0e0;
   border-radius: 0;
-  font-size: 13px;
+  font-size: 10px;
 }
 
 .window-size-input:focus {
@@ -716,25 +716,25 @@
 .duration-filter-control {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 4px;
 }
 
 .duration-filter-control label {
   display: flex;
   align-items: center;
-  gap: 8px;
-  font-size: 13px;
+  gap: 4px;
+  font-size: 10px;
   color: #888;
 }
 
 .duration-input {
   width: 100px;
-  padding: 6px 10px;
+  padding: 2px 2px;
   background: #0a0a0a;
   border: 1px solid #333;
   color: #e0e0e0;
   border-radius: 0;
-  font-size: 13px;
+  font-size: 10px;
 }
 
 .duration-input:focus {
@@ -743,13 +743,13 @@
 }
 
 .clear-duration-btn {
-  padding: 6px 12px;
+  padding: 2px 2px;
   background: #1a1a1a;
   border: 1px solid #333;
   color: #888;
   border-radius: 0;
   cursor: pointer;
-  font-size: 12px;
+  font-size: 10px;
   transition: all 0.2s;
 }
 

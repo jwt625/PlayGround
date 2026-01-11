@@ -396,7 +396,9 @@ function AgentGanttPanel({ entitiesData, logs }) {
           onScroll={handleLabelsScroll}
           style={{
             overflowY: needsScroll ? 'auto' : 'hidden',
-            height: '100%'
+            height: '100%',
+            paddingTop: `${rowHeight * 0.3}px`,
+            paddingBottom: `${rowHeight * 0.3}px`
           }}
         >
           {visibleAgents.map((agent) => (
@@ -407,7 +409,8 @@ function AgentGanttPanel({ entitiesData, logs }) {
               style={{
                 borderLeftColor: agent.agentType.color,
                 height: `${rowHeight}px`,
-                minHeight: `${rowHeight}px`
+                minHeight: `${rowHeight}px`,
+                marginBottom: `${rowHeight * 0.2}px`
               }}
             >
               <span className="label-id">{agent.agent_id}</span>
@@ -435,7 +438,14 @@ function AgentGanttPanel({ entitiesData, logs }) {
             ))}
           </div>
 
-          <div className="gantt-rows" ref={rowsRef}>
+          <div
+            className="gantt-rows"
+            ref={rowsRef}
+            style={{
+              paddingTop: `${rowHeight * 0.3}px`,
+              paddingBottom: `${rowHeight * 0.3}px`
+            }}
+          >
             <div className="gantt-grid">
               {timeMarkers.map((marker, idx) => (
                 <div key={idx} className="grid-line" style={{ left: `${marker.fraction * 100}%` }} />

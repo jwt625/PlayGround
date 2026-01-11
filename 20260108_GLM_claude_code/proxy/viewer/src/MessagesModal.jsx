@@ -64,7 +64,7 @@ function MessagesModal({ isOpen, onClose, request, agent, entitiesData }) {
         <div className="tool-result">
           <div style={{ fontWeight: 600, marginBottom: '4px' }}>Tool Result</div>
           <div style={{ fontSize: '10px', color: '#858585' }}>
-            {resultText.substring(0, 500)}{resultText.length > 500 ? '...' : ''}
+            {resultText}
           </div>
         </div>
       )
@@ -212,13 +212,13 @@ function MessagesModal({ isOpen, onClose, request, agent, entitiesData }) {
                           responseBody.content.map((block, idx) => (
                             <div key={idx} className="content-block-preview">
                               <strong>{block.type}:</strong>{' '}
-                              {block.text ? block.text.substring(0, 200) + (block.text.length > 200 ? '...' : '') :
+                              {block.text ? block.text :
                                block.name ? `Tool: ${block.name}` :
-                               JSON.stringify(block).substring(0, 200)}
+                               JSON.stringify(block, null, 2)}
                             </div>
                           ))
                         ) : (
-                          <div>{JSON.stringify(responseBody.content).substring(0, 500)}</div>
+                          <div>{JSON.stringify(responseBody.content, null, 2)}</div>
                         )}
                       </div>
                     </div>
