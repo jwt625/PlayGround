@@ -57,8 +57,10 @@
 /* Modal body */
 .messages-modal-body {
   flex: 1;
-  overflow-y: auto;
+  overflow: hidden;
   padding: 16px;
+  display: flex;
+  flex-direction: column;
 }
 
 /* Request metadata */
@@ -67,6 +69,7 @@
   padding: 12px;
   background: #1e1e1e;
   border-radius: 4px;
+  flex-shrink: 0;
 }
 
 .metadata-grid {
@@ -78,6 +81,39 @@
 
 .metadata-label {
   color: #858585;
+}
+
+/* Two-column layout */
+.messages-columns {
+  display: flex;
+  gap: 16px;
+  flex: 1;
+  overflow: hidden;
+}
+
+.messages-column {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.info-column {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.column-header {
+  font-size: 12px;
+  font-weight: 600;
+  color: #4ec9b0;
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #3e3e42;
+  flex-shrink: 0;
 }
 
 /* Message items */
@@ -131,5 +167,106 @@
   margin: 8px 0;
   border-radius: 4px;
   border-left: 2px solid #c586c0;
+}
+
+/* System prompts section */
+.info-section {
+  flex-shrink: 0;
+}
+
+.system-prompt-item {
+  background: #1e1e1e;
+  border-radius: 4px;
+  padding: 12px;
+  margin-bottom: 12px;
+  border-left: 3px solid #ce9178;
+}
+
+.system-prompt-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #ce9178;
+}
+
+.cache-badge {
+  background: #2d2d30;
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-size: 9px;
+  color: #858585;
+  text-transform: uppercase;
+}
+
+.system-prompt-text {
+  font-size: 11px;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  color: #cccccc;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+/* Response details section */
+.response-details {
+  background: #1e1e1e;
+  border-radius: 4px;
+  padding: 12px;
+  border-left: 3px solid #c586c0;
+}
+
+.response-field {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 8px;
+  font-size: 11px;
+}
+
+.response-field.full-width {
+  flex-direction: column;
+}
+
+.field-label {
+  color: #858585;
+  min-width: 120px;
+  flex-shrink: 0;
+}
+
+.field-value {
+  color: #cccccc;
+  word-break: break-word;
+}
+
+.response-content {
+  margin-top: 8px;
+  padding: 8px;
+  background: #2d2d30;
+  border-radius: 4px;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.content-block-preview {
+  margin-bottom: 8px;
+  padding: 6px;
+  background: #1e1e1e;
+  border-radius: 3px;
+  font-size: 10px;
+  line-height: 1.4;
+}
+
+.content-block-preview:last-child {
+  margin-bottom: 0;
+}
+
+.empty-state {
+  text-align: center;
+  color: #858585;
+  padding: 20px;
+  font-size: 11px;
 }
 

@@ -44,7 +44,6 @@
   width: 200px;
   background: #0f0f0f;
   border-right: 1px solid #333;
-  overflow-y: hidden;
   overflow-x: hidden;
   flex-shrink: 0;
 }
@@ -87,7 +86,6 @@
 
 .gantt-timeline {
   flex: 1;
-  overflow-y: auto;
   overflow-x: hidden;
   position: relative;
   background: #0a0a0a;

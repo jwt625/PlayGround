@@ -13,8 +13,11 @@ function AgentGanttPanel({ entitiesData, logs }) {
   const [modalOpen, setModalOpen] = useState(false)
   const [selectedRequest, setSelectedRequest] = useState(null)
   const [selectedAgent, setSelectedAgent] = useState(null)
+  const [containerHeight, setContainerHeight] = useState(0)
   const timelineRef = useRef(null)
   const rowsRef = useRef(null)
+  const containerRef = useRef(null)
+  const labelsRef = useRef(null)
 
   // Process agent data
   const agentData = useMemo(() => {
@@ -93,21 +96,49 @@ function AgentGanttPanel({ entitiesData, logs }) {
     return `${(ms / 60000).toFixed(1)}m`
   }
 
-  // Calculate visible agents and row height based on Y-axis zoom
-  const { visibleAgents, rowHeight } = useMemo(() => {
-    if (agents.length === 0) return { visibleAgents: [], rowHeight: 2.7 }
+  // Calculate visible agents and row height based on Y-axis zoom and container height
+  const { visibleAgents, rowHeight, needsScroll } = useMemo(() => {
+    if (agents.length === 0) return { visibleAgents: [], rowHeight: 2.7, needsScroll: false }
 
     const startIdx = Math.floor(zoomY.start * agents.length)
     const endIdx = Math.ceil(zoomY.end * agents.length)
     const visible = agents.slice(startIdx, endIdx)
 
+    if (visible.length === 0 || containerHeight === 0) {
+      return { visibleAgents: visible, rowHeight: 2.7, needsScroll: false }
+    }
+
     // Calculate row height based on zoom level
     // Base height is 2.7px, scale inversely with the zoom range
     const zoomFactor = 1 / (zoomY.end - zoomY.start)
-    const calculatedHeight = 2.7 * zoomFactor
+    const baseRowHeight = 2.7 * zoomFactor
 
-    return { visibleAgents: visible, rowHeight: calculatedHeight }
-  }, [agents, zoomY])
+    // Minimum row height (with 20% spacing)
+    const MIN_ROW_HEIGHT = 2.7
+    const ROW_SPACING_FACTOR = 1.2 // 20% spacing between rows
+
+    // Calculate total height needed with minimum row height
+    const minTotalHeight = visible.length * MIN_ROW_HEIGHT * ROW_SPACING_FACTOR
+
+    // If min height fits in container, scale up to fill the space
+    let finalRowHeight = baseRowHeight
+    let scroll = false
+
+    if (minTotalHeight < containerHeight) {
+      // Scale up to fill available space
+      finalRowHeight = (containerHeight / visible.length) / ROW_SPACING_FACTOR
+    } else if (baseRowHeight < MIN_ROW_HEIGHT) {
+      // Use minimum height and enable scrolling
+      finalRowHeight = MIN_ROW_HEIGHT
+      scroll = true
+    } else {
+      // Use calculated height and check if scrolling is needed
+      const totalHeight = visible.length * baseRowHeight * ROW_SPACING_FACTOR
+      scroll = totalHeight > containerHeight
+    }
+
+    return { visibleAgents: visible, rowHeight: finalRowHeight, needsScroll: scroll }
+  }, [agents, zoomY, containerHeight])
 
   // Generate time markers based on X-axis zoom
   const timeMarkers = useMemo(() => {
@@ -122,6 +153,41 @@ function AgentGanttPanel({ entitiesData, logs }) {
     }
     return markers
   }, [minTime, duration, zoomX])
+
+  // Measure container height (use ResizeObserver for better detection)
+  useEffect(() => {
+    const measureHeight = () => {
+      if (containerRef.current) {
+        const rect = containerRef.current.getBoundingClientRect()
+        const newHeight = rect.height
+        console.log('Container height measured:', newHeight)
+        setContainerHeight(newHeight)
+      }
+    }
+
+    measureHeight()
+
+    // Use ResizeObserver for better height tracking
+    const resizeObserver = new ResizeObserver(() => {
+      measureHeight()
+    })
+
+    if (containerRef.current) {
+      resizeObserver.observe(containerRef.current)
+    }
+
+    window.addEventListener('resize', measureHeight)
+
+    return () => {
+      resizeObserver.disconnect()
+      window.removeEventListener('resize', measureHeight)
+    }
+  }, [])
+
+  // Debug: log when height or agents change
+  useEffect(() => {
+    console.log('Container height:', containerHeight, 'Visible agents:', visibleAgents.length, 'Row height:', rowHeight, 'Needs scroll:', needsScroll)
+  }, [containerHeight, visibleAgents.length, rowHeight, needsScroll])
 
   // Calculate position and width for bars based on X-axis zoom
   const getBarStyle = (request) => {
@@ -259,6 +325,19 @@ function AgentGanttPanel({ entitiesData, logs }) {
     setSelectedAgent(null)
   }
 
+  // Sync scroll between labels and timeline when scrolling is enabled
+  const handleTimelineScroll = (e) => {
+    if (labelsRef.current && needsScroll) {
+      labelsRef.current.scrollTop = e.target.scrollTop
+    }
+  }
+
+  const handleLabelsScroll = (e) => {
+    if (timelineRef.current && needsScroll) {
+      timelineRef.current.scrollTop = e.target.scrollTop
+    }
+  }
+
   // Add/remove event listeners for drag
   useEffect(() => {
     if (isDragging) {
@@ -310,8 +389,16 @@ function AgentGanttPanel({ entitiesData, logs }) {
         </div>
       </div>
 
-      <div className="gantt-container">
-        <div className="gantt-labels">
+      <div className="gantt-container" ref={containerRef}>
+        <div
+          className="gantt-labels"
+          ref={labelsRef}
+          onScroll={handleLabelsScroll}
+          style={{
+            overflowY: needsScroll ? 'auto' : 'hidden',
+            height: '100%'
+          }}
+        >
           {visibleAgents.map((agent) => (
             <div
               key={agent.agent_id}
@@ -334,6 +421,11 @@ function AgentGanttPanel({ entitiesData, logs }) {
           ref={timelineRef}
           onMouseDown={handleMouseDown}
           onDoubleClick={handleDoubleClick}
+          onScroll={handleTimelineScroll}
+          style={{
+            overflowY: needsScroll ? 'auto' : 'hidden',
+            height: '100%'
+          }}
         >
           <div className="gantt-axis">
             {timeMarkers.map((marker, idx) => (

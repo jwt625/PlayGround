@@ -19,7 +19,15 @@ function MessagesModal({ isOpen, onClose, request, agent, entitiesData }) {
   const contentBlocks = entitiesData.entities?.content_blocks || []
   const contentBlockMap = new Map(contentBlocks.map(cb => [cb.id, cb]))
 
-  // Get messages for this specific request
+  // Get the log entry for this request
+  const logEntry = request.log || {}
+  const requestBody = logEntry.body || {}
+  const responseBody = logEntry.response?.body || {}
+
+  // Extract system prompts
+  const systemPrompts = requestBody.system || []
+
+  // Get messages for this specific request and sort by position
   const requestMessages = messages.filter(m => {
     const reqId = m.request_id
     const reqIdNum = typeof reqId === 'number' ? reqId : parseInt(reqId.replace('req_', ''))
@@ -99,31 +107,126 @@ function MessagesModal({ isOpen, onClose, request, agent, entitiesData }) {
             </div>
           </div>
 
-          {/* Messages */}
-          {requestMessages.map((msg, idx) => {
-            const roleClass = msg.role === 'user' ? 'user' : 'assistant'
-            const roleColor = msg.role === 'user' ? '#569cd6' : '#4ec9b0'
+          {/* Two-column layout */}
+          <div className="messages-columns">
+            {/* Left column: Messages */}
+            <div className="messages-column">
+              <div className="column-header">Messages</div>
+              {requestMessages.map((msg, idx) => {
+                const roleClass = msg.role === 'user' ? 'user' : 'assistant'
+                const roleColor = msg.role === 'user' ? '#569cd6' : '#4ec9b0'
 
-            return (
-              <div key={idx} className={`message-item ${roleClass}`}>
-                <div className="message-header">
-                  <span className="message-role" style={{ color: roleColor }}>
-                    {msg.role}
-                  </span>
-                  <span style={{ color: '#858585' }}>{msg.timestamp || ''}</span>
+                return (
+                  <div key={idx} className={`message-item ${roleClass}`}>
+                    <div className="message-header">
+                      <span className="message-role" style={{ color: roleColor }}>
+                        {msg.role}
+                      </span>
+                      <span style={{ color: '#858585' }}>
+                        Pos: {msg.position_in_conversation || 0}
+                      </span>
+                    </div>
+                    <div className="message-content">
+                      {renderMessageContent(msg)}
+                    </div>
+                  </div>
+                )
+              })}
+
+              {requestMessages.length === 0 && (
+                <div style={{ textAlign: 'center', color: '#858585', padding: '20px' }}>
+                  No messages found for this request
                 </div>
-                <div className="message-content">
-                  {renderMessageContent(msg)}
+              )}
+            </div>
+
+            {/* Right column: System Prompt & Response */}
+            <div className="info-column">
+              {/* System Prompts */}
+              <div className="info-section">
+                <div className="column-header">System Prompts</div>
+                {systemPrompts.length > 0 ? (
+                  systemPrompts.map((prompt, idx) => (
+                    <div key={idx} className="system-prompt-item">
+                      <div className="system-prompt-header">
+                        Prompt {idx + 1}/{systemPrompts.length}
+                        {prompt.cache_control && (
+                          <span className="cache-badge">cached</span>
+                        )}
+                      </div>
+                      <div className="system-prompt-text">
+                        {prompt.text || ''}
+                      </div>
+                    </div>
+                  ))
+                ) : (
+                  <div className="empty-state">No system prompts</div>
+                )}
+              </div>
+
+              {/* Inference Response */}
+              <div className="info-section">
+                <div className="column-header">Inference Response</div>
+                <div className="response-details">
+                  <div className="response-field">
+                    <span className="field-label">Response ID:</span>
+                    <span className="field-value">{responseBody.id || 'N/A'}</span>
+                  </div>
+                  <div className="response-field">
+                    <span className="field-label">Model:</span>
+                    <span className="field-value">{responseBody.model || requestBody.model || 'N/A'}</span>
+                  </div>
+                  <div className="response-field">
+                    <span className="field-label">Stop Reason:</span>
+                    <span className="field-value">{responseBody.stop_reason || 'N/A'}</span>
+                  </div>
+                  {responseBody.stop_sequence && (
+                    <div className="response-field">
+                      <span className="field-label">Stop Sequence:</span>
+                      <span className="field-value">{responseBody.stop_sequence}</span>
+                    </div>
+                  )}
+                  {responseBody.usage && (
+                    <>
+                      <div className="response-field">
+                        <span className="field-label">Input Tokens:</span>
+                        <span className="field-value">{responseBody.usage.input_tokens || 0}</span>
+                      </div>
+                      <div className="response-field">
+                        <span className="field-label">Output Tokens:</span>
+                        <span className="field-value">{responseBody.usage.output_tokens || 0}</span>
+                      </div>
+                      <div className="response-field">
+                        <span className="field-label">Total Tokens:</span>
+                        <span className="field-value">
+                          {(responseBody.usage.input_tokens || 0) + (responseBody.usage.output_tokens || 0)}
+                        </span>
+                      </div>
+                    </>
+                  )}
+                  {responseBody.content && (
+                    <div className="response-field full-width">
+                      <span className="field-label">Response Content:</span>
+                      <div className="response-content">
+                        {Array.isArray(responseBody.content) ? (
+                          responseBody.content.map((block, idx) => (
+                            <div key={idx} className="content-block-preview">
+                              <strong>{block.type}:</strong>{' '}
+                              {block.text ? block.text.substring(0, 200) + (block.text.length > 200 ? '...' : '') :
+                               block.name ? `Tool: ${block.name}` :
+                               JSON.stringify(block).substring(0, 200)}
+                            </div>
+                          ))
+                        ) : (
+                          <div>{JSON.stringify(responseBody.content).substring(0, 500)}</div>
+                        )}
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
-            )
-          })}
-
-          {requestMessages.length === 0 && (
-            <div style={{ textAlign: 'center', color: '#858585', padding: '20px' }}>
-              No messages found for this request
             </div>
-          )}
+          </div>
         </div>
       </div>
     </div>
