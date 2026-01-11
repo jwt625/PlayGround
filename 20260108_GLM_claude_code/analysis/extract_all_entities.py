@@ -24,6 +24,10 @@ from collections import defaultdict
 from datetime import datetime
 import hashlib
 
+# Import agent tracking and deduplication
+from .agent_tracker import AgentInstanceTracker
+from .entity_deduplicator import EntityDeduplicator
+
 
 def compute_hash(text: str, length: int = 16) -> str:
     """Compute a short hash of text."""
@@ -32,7 +36,7 @@ def compute_hash(text: str, length: int = 16) -> str:
 
 class EntityExtractor:
     """Extract all entities from Claude Code workflow logs."""
-    
+
     def __init__(self):
         # Entity storage
         self.api_requests = []
@@ -46,17 +50,21 @@ class EntityExtractor:
         self.agents = {}  # agent_id -> agent info
         self.system_prompts = {}  # hash -> prompt text
         self.content_blocks = []
-        
+
         # Relationship tracking
         self.request_to_response = {}  # request_idx -> response_idx
         self.tool_use_to_result = {}  # tool_use_id -> tool_result
         self.task_to_agent = {}  # task_tool_use_id -> agent_id
         self.conversation_messages = defaultdict(list)  # conv_id -> [message_ids]
-        
+
         # Counters
         self.request_counter = 0
         self.message_counter = 0
         self.content_block_counter = 0
+
+        # Agent tracking and deduplication
+        self.agent_tracker = AgentInstanceTracker()
+        self.deduplicator = EntityDeduplicator(self.agent_tracker)
         
     def extract_from_log_file(self, log_path: Path):
         """Extract all entities from a single log file."""
@@ -75,11 +83,15 @@ class EntityExtractor:
     def process_log_entry(self, entry: Dict[str, Any], line_num: int):
         """Process a single log entry and extract all entities."""
         timestamp = entry.get('timestamp', '')
-        
+        body = entry.get('body', {})
+
         # Extract API Request
         request_id = self.request_counter
         self.request_counter += 1
-        
+
+        # IDENTIFY AGENT INSTANCE
+        agent_instance = self.agent_tracker.identify_or_create_agent(request_id, body)
+
         request_entity = {
             'id': f'req_{request_id}',
             'line_num': line_num,
@@ -88,25 +100,29 @@ class EntityExtractor:
             'path': entry.get('path'),
             'url': entry.get('url'),
             'headers': entry.get('headers', {}),
-            'body': entry.get('body', {}),
+            'body': body,
+            # Agent tracking metadata
+            'agent_id': agent_instance.agent_id,
+            'agent_type': agent_instance.system_prompt_hash,
+            'is_continuation': len(agent_instance.requests) > 1,
+            'conversation_turn': len(agent_instance.message_count_history),
+            'spawned_by_task': agent_instance.spawned_by_task_id,
+            'parent_agent': agent_instance.parent_agent_id,
         }
         self.api_requests.append(request_entity)
-        
-        # Extract Request Body entities
-        body = entry.get('body', {})
-        
+
         # Extract System Prompt
         if 'system' in body:
             self.extract_system_prompt(body['system'], request_id)
-        
+
         # Extract Tool Definitions
         if 'tools' in body:
             self.extract_tool_definitions(body['tools'], request_id)
-        
+
         # Extract Messages (conversation history)
         if 'messages' in body:
             self.extract_messages(body['messages'], request_id, timestamp)
-        
+
         # Extract API Response
         if 'response' in entry:
             response_entity = self.extract_response(entry['response'], request_id, timestamp)
@@ -182,12 +198,12 @@ class EntityExtractor:
                 # Structured content with multiple blocks
                 for block_idx, item in enumerate(content):
                     if isinstance(item, dict):
-                        block_id = self.extract_content_block(item, message_id, block_idx)
+                        block_id = self.extract_content_block(item, message_id, block_idx, request_id)
                         message_entity['content_blocks'].append(block_id)
 
             self.messages.append(message_entity)
 
-    def extract_content_block(self, block: Dict, message_id: str, position: int) -> str:
+    def extract_content_block(self, block: Dict, message_id: str, position: int, request_id: int = None) -> str:
         """Extract a single content block (text, tool_use, tool_result)."""
         block_id = f'block_{self.content_block_counter}'
         self.content_block_counter += 1
@@ -221,17 +237,38 @@ class EntityExtractor:
                 'tool_name': tool_name,
                 'input': tool_input,
             }
+
+            # Apply deduplication if request_id available
+            if request_id is not None:
+                tool_use_entity = self.deduplicator.deduplicate_entity(
+                    tool_use_entity, 'tool_use', request_id
+                )
+
             self.tool_uses.append(tool_use_entity)
 
             # Special handling for Task tool
             if tool_name == 'Task':
+                task_prompt = tool_input.get('prompt', '')
                 task_entity = {
                     'id': tool_use_id,
                     'tool_use_id': tool_use_id,
                     'description': tool_input.get('description', ''),
-                    'prompt': tool_input.get('prompt', ''),
+                    'prompt': task_prompt,
                     'subagent_type': tool_input.get('subagent_type', ''),
                 }
+
+                # Apply deduplication
+                if request_id is not None:
+                    task_entity = self.deduplicator.deduplicate_entity(
+                        task_entity, 'task', request_id
+                    )
+
+                    # Register task prompt for subagent matching (only for first occurrence)
+                    if not task_entity.get('is_duplicate'):
+                        agent_id = self.agent_tracker.request_to_agent.get(request_id)
+                        if agent_id and task_prompt:
+                            self.agent_tracker.register_task_prompt(tool_use_id, task_prompt, agent_id)
+
                 self.tasks.append(task_entity)
 
         elif block_type == 'tool_result':
@@ -305,7 +342,7 @@ class EntityExtractor:
 
             for block_idx, item in enumerate(body['content']):
                 if isinstance(item, dict):
-                    block_id = self.extract_content_block(item, message_id, block_idx)
+                    block_id = self.extract_content_block(item, message_id, block_idx, request_id)
                     message_entity['content_blocks'].append(block_id)
 
             self.messages.append(message_entity)
@@ -315,6 +352,9 @@ class EntityExtractor:
 
     def generate_summary(self) -> Dict[str, Any]:
         """Generate summary statistics of all extracted entities."""
+        agent_stats = self.agent_tracker.get_statistics()
+        dedup_stats = self.deduplicator.get_deduplication_stats()
+
         return {
             'counts': {
                 'api_requests': len(self.api_requests),
@@ -328,6 +368,8 @@ class EntityExtractor:
                 'agents': len(self.agents),
                 'system_prompts': len(self.system_prompts),
             },
+            'agent_tracking': agent_stats,
+            'deduplication': dedup_stats,
             'tool_usage': self.get_tool_usage_stats(),
             'task_types': self.get_task_type_stats(),
             'agent_info': list(self.agents.values()),
@@ -351,6 +393,8 @@ class EntityExtractor:
 
     def export_to_json(self, output_path: Path):
         """Export all entities to JSON file."""
+        agent_hierarchy = self.agent_tracker.get_agent_hierarchy()
+
         data = {
             'metadata': {
                 'extraction_timestamp': datetime.now().isoformat(),
@@ -367,11 +411,14 @@ class EntityExtractor:
                 'tasks': self.tasks,
                 'agents': list(self.agents.values()),
                 'system_prompts': list(self.system_prompts.values()),
+                'agent_instances': self.agent_tracker.export_all_instances(),
             },
             'relationships': {
                 'request_to_response': self.request_to_response,
                 'tool_use_to_result': self.tool_use_to_result,
                 'task_to_agent': self.task_to_agent,
+                'agent_hierarchy': agent_hierarchy,
+                'request_to_agent': self.agent_tracker.request_to_agent,
             },
         }
 
@@ -392,18 +439,39 @@ class EntityExtractor:
         for entity_type, count in summary['counts'].items():
             print(f"  {entity_type:20s}: {count:5d}")
 
-        print("\nTool Usage (top 10):")
+        print("\n" + "="*80)
+        print("AGENT TRACKING")
+        print("="*80)
+        agent_stats = summary['agent_tracking']
+        print(f"  Total Agent Instances: {agent_stats['total_agents']}")
+        print(f"  Total Requests: {agent_stats['total_requests']}")
+        print(f"  Avg Requests/Agent: {agent_stats['avg_requests_per_agent']:.2f}")
+        print(f"  Root Agents: {agent_stats['root_agents']}")
+        print(f"  Child Agents (spawned): {agent_stats['child_agents']}")
+        print(f"  Unique Agent Types: {agent_stats['unique_agent_types']}")
+
+        print("\n" + "="*80)
+        print("DEDUPLICATION STATISTICS")
+        print("="*80)
+        dedup_stats = summary['deduplication']
+        print(f"  Total Unique Entities: {dedup_stats['total_unique_entities']}")
+        print(f"  Total Occurrences: {dedup_stats['total_occurrences']}")
+        print(f"  Overall Duplication Ratio: {dedup_stats['overall_duplication_ratio']:.2f}x")
+        print(f"  Duplicates Removed: {dedup_stats['duplicates_removed']}")
+
+        print("\n  By Entity Type:")
+        for entity_type, stats in dedup_stats['by_entity_type'].items():
+            print(f"    {entity_type:15s}: {stats['unique']:4d} unique, {stats['total']:5d} total ({stats['duplication_ratio']:.1f}x)")
+
+        print("\n" + "="*80)
+        print("TOOL USAGE (top 10)")
+        print("="*80)
         for tool_name, count in list(summary['tool_usage'].items())[:10]:
             print(f"  {tool_name:30s}: {count:5d}")
 
         print("\nTask Subagent Types:")
         for subagent_type, count in summary['task_types'].items():
             print(f"  {subagent_type:30s}: {count:5d}")
-
-        print("\nAgents Discovered:")
-        for agent in summary['agent_info']:
-            print(f"  Agent ID: {agent['id']}")
-            print(f"    Task: {agent.get('task_tool_use_id', 'N/A')}")
 
         print("\nSystem Prompts:")
         for prompt_hash, prompt_info in self.system_prompts.items():

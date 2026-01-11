@@ -65,3 +65,49 @@ Each log entry contains:
 
 Visit `http://127.0.0.1:58734/` to verify the proxy is running.
 
+## Analysis Tools
+
+### Entity Extraction with Agent Tracking
+
+Extract all entities from logs with agent instance tracking and deduplication:
+
+```bash
+python3 -m analysis.extract_all_entities \
+    proxy/logs/requests_20260110.jsonl \
+    -o proxy/logs/entities_with_tracking.json
+```
+
+**Features**:
+- **Agent Instance Tracking**: Identifies individual agent instances across requests
+- **Entity Deduplication**: Removes duplicate tool definitions, system prompts, etc.
+- **Conversation Evolution**: Tracks how conversations evolve
+- **Parent-Child Relationships**: Links spawned subagents to parent agents
+
+**Output includes**:
+- Agent instances with conversation fingerprints
+- Deduplicated entities (tools, prompts, tasks)
+- Agent hierarchy and relationships
+- Comprehensive statistics
+
+See [docs/AGENT_TRACKING.md](../docs/AGENT_TRACKING.md) for detailed documentation.
+
+### Agent Tracking Visualization
+
+Open `proxy/viewer/agent_tracker_viz.html` in a browser to visualize:
+- Agent instance timelines
+- Conversation evolution
+- Request distribution
+- Agent type breakdown
+
+**Features**:
+- Interactive timeline with hover tooltips
+- Color-coded by agent type
+- Node size indicates message count
+- Sort by first request, total requests, or agent type
+
+### Other Analysis Scripts
+
+- `scripts/analyze_system_prompts.py`: Analyze system prompt patterns
+- `scripts/extract_all_tools.py`: Extract tool definitions
+- `scripts/analyze_workflow_orchestration.py`: Analyze workflow patterns
+
