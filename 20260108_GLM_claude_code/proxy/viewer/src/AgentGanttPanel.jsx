@@ -97,6 +97,17 @@ function AgentGanttPanel({ entitiesData, logs }) {
       }
     })
 
+    // Build tool_use index to find which request spawned each tool call
+    const toolUseIndex = new Map()
+    const toolUses = entitiesData.entities?.tool_uses || []
+    toolUses.forEach(toolUse => {
+      if (toolUse.request_id !== undefined && toolUse.id) {
+        if (!toolUseIndex.has(toolUse.id)) {
+          toolUseIndex.set(toolUse.id, toolUse.request_id)
+        }
+      }
+    })
+
     // Build edges from workflow_dag
     const spawnEdges = []
     const requestSequenceEdges = []
@@ -112,13 +123,11 @@ function AgentGanttPanel({ entitiesData, logs }) {
           const sourceAgent = agents[sourceIdx]
           const targetAgent = agents[targetIdx]
 
-          // Find the exact request that spawned this child (using task ID)
-          const spawnRequestId = taskIndex.get(edge.spawned_by_task_id)
+          // Find the exact request that spawned this child
+          // Use source_request_id from the edge (computed by extractor) as primary source
           let sourceRequest = null
-
-          if (spawnRequestId !== undefined) {
-            // Find the request in the parent agent's request list
-            sourceRequest = sourceAgent.requests.find(r => r.reqId === spawnRequestId)
+          if (edge.source_request_id !== undefined && edge.source_request_id !== null) {
+            sourceRequest = sourceAgent.requests.find(r => r.reqId === edge.source_request_id)
           }
 
           // Fallback to last request if we can't find the exact one
@@ -133,9 +142,13 @@ function AgentGanttPanel({ entitiesData, logs }) {
             targetAgentId: edge.target_agent_id,
             sourceIdx,
             targetIdx,
+            sourceRequestId: edge.source_request_id,  // Include for debugging
             sourceX: sourceRequest.endTime, // Right end of parent's spawning request
             targetX: targetRequest.timestamp, // Left start of child's first request
             spawned_by_task_id: edge.spawned_by_task_id,
+            spawned_by_tool_use_id: edge.spawned_by_tool_use_id,
+            spawn_method: edge.spawn_method,
+            tool_name: edge.tool_name,
             confidence: edge.confidence
           })
         }
@@ -754,6 +767,17 @@ function AgentGanttPanel({ entitiesData, logs }) {
 
                   if (!pathData) return null
 
+                  // Build tooltip content based on spawn method
+                  let tooltipContent = `Spawn: ${edge.sourceAgentId} → ${edge.targetAgentId}\n`
+                  if (edge.spawn_method === 'task') {
+                    tooltipContent += `Method: Task\nTask ID: ${edge.spawned_by_task_id || 'N/A'}\n`
+                  } else if (edge.spawn_method === 'tool_call') {
+                    tooltipContent += `Method: Tool Call\nTool: ${edge.tool_name || 'N/A'}\nTool Use ID: ${edge.spawned_by_tool_use_id || 'N/A'}\n`
+                  } else {
+                    tooltipContent += `Task/Tool ID: ${edge.spawned_by_task_id || edge.spawned_by_tool_use_id || 'N/A'}\n`
+                  }
+                  tooltipContent += `Confidence: ${edge.confidence || 'N/A'}`
+
                   return (
                     <path
                       key={`spawn-${idx}`}
@@ -764,7 +788,7 @@ function AgentGanttPanel({ entitiesData, logs }) {
                       markerEnd="url(#arrow-spawn)"
                       style={{ pointerEvents: 'stroke' }}
                       data-tooltip-id="gantt-tooltip"
-                      data-tooltip-content={`Spawn: ${edge.sourceAgentId} → ${edge.targetAgentId}\nTask: ${edge.spawned_by_task_id}\nConfidence: ${edge.confidence}`}
+                      data-tooltip-content={tooltipContent}
                     />
                   )
                 })}

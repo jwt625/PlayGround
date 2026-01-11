@@ -188,5 +188,119 @@ Analysis of current dependency tracking implementation and enhancement to includ
 
 1. `analysis/agent_tracker.py`: Added content reuse and request sequence tracking
 2. `analysis/extract_all_entities.py`: Integrated new tracking methods
-3. `proxy/viewer/src/AgentGanttPanel.jsx`: Render new edge types (NEXT STEP)
+3. `proxy/viewer/src/AgentGanttPanel.jsx`: Render new edge types (COMPLETE)
+
+## Tool-Spawned Subagent Discovery
+
+**Date**: 2026-01-11
+**Status**: COMPLETE ✓
+
+### Problem Identified
+
+Current subagent spawn detection only captures Task tool spawns via prompt hash matching. This misses validation subagents spawned by Bash tool calls.
+
+### Critical Bug Found and Fixed
+
+**Bug**: Command normalization was converting `"` to `'` but not removing quotes entirely. This caused hash mismatches when:
+- Parent command: `find ... -name "*.md"` → normalized to `find ... -name '*.md'` → hash: `30be1d9a23ea26ef`
+- Child command: `find ... -name *.md` → normalized to `find ... -name *.md` → hash: `10076fe56755b07f`
+
+The same command with/without quotes produced different hashes, preventing spawn detection.
+
+**Fix**: Modified `normalize_command()` to remove ALL quotes (both single and double) instead of converting between them:
+```python
+# Before:
+normalized = normalized.replace('"', "'")
+
+# After:
+normalized = normalized.replace('"', '')
+normalized = normalized.replace("'", '')
+```
+
+This ensures consistent matching regardless of quoting style in the original command.
+
+### Verified Examples
+
+**Example 1: agent_8 → agent_10**
+- Parent: agent_8, request 2 (request_id=19)
+  - Tool call: Bash with command `git branch -a`
+  - tool_use_id: `chatcmpl-tool-a5599c4c35f87d0c`
+- Child: agent_10, request 1 (request_id=27)
+  - First user message: `Command: git branch -a\nOutput: ...`
+  - System prompt: "You are Claude Code, Anthropic's official CLI for Claude."
+- **Status: ✓ DETECTED** - agent_10.parent_agent_id = agent_8
+
+**Example 2: agent_9 → agent_20**
+- Parent: agent_9, request 4 (request_id=45)
+  - Tool call: Bash with command `find /Users/.../proxy -maxdepth 1 -name "*.md" -o -name "*.txt" -o -name "*.json" -o -name "*.py" 2>/dev/null | head -20`
+  - tool_use_id: `chatcmpl-tool-bc38cc57532bce46`
+- Child: agent_20, request 1 (request_id=58)
+  - First user message: `Command: find /Users/.../proxy -maxdepth 1 -name *.md -o -name *.txt -o -name *.json -o -name *.py`
+  - Includes policy_spec for command validation
+- **Status: ✓ DETECTED** - agent_20.parent_agent_id = agent_9 (after quote normalization fix)
+
+### Pattern Analysis
+
+**Spawn Mechanism**:
+1. Parent agent calls Bash tool with `{command, description}`
+2. System spawns validation subagent (agent_10, agent_20)
+3. Child receives user message: `Command: <command>\n[Output: <output>]`
+4. Child validates/processes the command execution
+
+**Why Current Detection Fails**:
+- Current method only detects Task tool spawns via prompt hash matching
+- Bash tool spawns don't use Task tool
+- No task prompt to hash-match (command is in tool arguments, not task prompt)
+- Command appears in child's first user message, not in a task prompt
+
+### Proposed Solution
+
+**Method: Tool Argument Matching**
+
+Track Bash tool calls and match their `command` argument to child agent's first user message pattern `Command: <command>`.
+
+**Implementation Strategy**:
+
+1. Index Tool Call Commands (in `agent_tracker.py`):
+   - Build index: `tool_command_index[command_normalized] = {tool_use_id, agent_id, request_id, tool_name, command}`
+   - Normalize command: remove quotes, stderr redirects (`2>/dev/null`), pipes (`| head -20`)
+
+2. Match Child Agent First Message:
+   - Extract command from pattern `Command: <command>\n`
+   - Normalize and lookup in `tool_command_index`
+   - If match found → link as parent-child
+
+3. Enhanced Edge Structure:
+```json
+{
+  "type": "subagent_spawn",
+  "spawn_method": "tool_call",
+  "source_agent_id": "agent_9",
+  "target_agent_id": "agent_20",
+  "spawned_by_tool_use_id": "chatcmpl-tool-bc38cc57532bce46",
+  "spawned_by_task_id": null,
+  "tool_name": "Bash",
+  "command_hash": "a3f5e8c2",
+  "confidence": 0.90
+}
+```
+
+**New Fields**:
+- `spawn_method`: "task" or "tool_call"
+- `spawned_by_tool_use_id`: ID of the tool call that spawned the child
+- `tool_name`: Name of the tool that triggered spawn (e.g., "Bash")
+- `command_hash`: Hash of normalized command for debugging
+
+### Final Results
+
+**Metrics**:
+- Root agents: 25 → 21 (reduced by 4)
+- Spawn edges: 5 → 52 (5 Task + 47 Bash)
+- Child agents: 48 → 52
+
+**Impact**:
+- Successfully detected **47 additional Bash-spawned subagents**
+- Captured full workflow hierarchy including all validation subagents
+- Quote normalization bug fix was critical for matching commands with different quoting styles
+- Both simple and policy-spec message patterns now handled correctly
 

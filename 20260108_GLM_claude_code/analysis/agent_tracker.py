@@ -127,13 +127,13 @@ def extract_first_user_message(messages: List[Dict]) -> str:
     """Extract the first user message text from conversation."""
     if not messages:
         return ""
-    
+
     first_msg = messages[0]
     if first_msg.get('role') != 'user':
         return ""
-    
+
     content = first_msg.get('content', '')
-    
+
     if isinstance(content, str):
         return content
     elif isinstance(content, list):
@@ -141,8 +141,47 @@ def extract_first_user_message(messages: List[Dict]) -> str:
         for block in content:
             if isinstance(block, dict) and block.get('type') == 'text':
                 return block.get('text', '')
-    
+
     return ""
+
+
+def normalize_command(command: str) -> str:
+    """
+    Normalize a shell command for matching purposes.
+
+    Removes:
+    - Extra whitespace
+    - Stderr redirects (2>/dev/null, 2>&1)
+    - Pipe commands (| head -20, | grep, etc.)
+    - Quote variations (single vs double quotes)
+
+    Args:
+        command: Raw command string
+
+    Returns:
+        Normalized command string
+    """
+    import re
+
+    if not command:
+        return ""
+
+    # Remove stderr redirects
+    normalized = re.sub(r'\s*2>/dev/null\s*', ' ', command)
+    normalized = re.sub(r'\s*2>&1\s*', ' ', normalized)
+
+    # Remove pipe commands
+    normalized = re.sub(r'\s*\|[^|]*$', '', normalized)
+
+    # Remove all quotes (both single and double) for consistent matching
+    # This handles cases where the same command may have quoted or unquoted arguments
+    normalized = normalized.replace('"', '')
+    normalized = normalized.replace("'", '')
+
+    # Normalize whitespace
+    normalized = ' '.join(normalized.split())
+
+    return normalized.strip()
 
 
 class AgentInstanceTracker:
@@ -162,6 +201,9 @@ class AgentInstanceTracker:
 
         # Content reuse tracking
         self.response_content_index: Dict[str, List[Dict[str, Any]]] = {}  # content_hash -> [{agent_id, request_id, timestamp}]
+
+        # Tool-spawned subagent tracking
+        self.tool_command_index: Dict[str, Dict[str, Any]] = {}  # command_hash -> {tool_use_id, agent_id, request_id, tool_name, command}
 
     def compute_system_prompt_hash(self, system: List[Dict]) -> str:
         """Compute hash of system prompt."""
@@ -258,6 +300,18 @@ class AgentInstanceTracker:
                 parent = self.instances[agent.parent_agent_id]
                 if agent_id not in parent.child_agent_ids:
                     parent.child_agent_ids.append(agent_id)
+        else:
+            # Check if spawned by tool call (e.g., Bash)
+            tool_spawn_info = self.detect_tool_spawn(first_user_msg)
+            if tool_spawn_info:
+                agent.spawned_by_task_id = tool_spawn_info['tool_use_id']
+                agent.parent_agent_id = tool_spawn_info['parent_agent_id']
+
+                # Add to parent's child list
+                if agent.parent_agent_id and agent.parent_agent_id in self.instances:
+                    parent = self.instances[agent.parent_agent_id]
+                    if agent_id not in parent.child_agent_ids:
+                        parent.child_agent_ids.append(agent_id)
 
         self.instances[agent_id] = agent
         self.fingerprint_to_agent[conversation_fingerprint] = agent_id
@@ -320,6 +374,68 @@ class AgentInstanceTracker:
         # Look up in task prompts index
         if msg_hash in self.task_prompts:
             return self.task_prompts[msg_hash]
+
+        return None
+
+    def extract_command_from_message(self, message: str) -> Optional[str]:
+        """
+        Extract command from a validation subagent's first message.
+
+        Patterns:
+        1. Simple: "Command: <command>\n[Output: <output>]"
+        2. Policy spec: "<policy_spec>...</policy_spec>\n...\nCommand: <command>"
+
+        Args:
+            message: First user message text
+
+        Returns:
+            Extracted command string or None
+        """
+        import re
+
+        if not message:
+            return None
+
+        # Pattern 1: "Command: <command>" at the start (simple pattern)
+        match = re.match(r'^Command:\s*(.+?)(?:\n|$)', message, re.MULTILINE)
+        if match:
+            return match.group(1).strip()
+
+        # Pattern 2: "Command: <command>" anywhere in the message (policy spec pattern)
+        # Look for "Command:" followed by the command on the same line or next line
+        match = re.search(r'Command:\s*(.+?)(?:\n|$)', message, re.MULTILINE)
+        if match:
+            return match.group(1).strip()
+
+        return None
+
+    def detect_tool_spawn(self, first_user_message: str) -> Optional[Dict]:
+        """
+        Detect if this agent was spawned by a tool call (e.g., Bash).
+
+        Strategy: Extract command from first message and match against tool_command_index.
+
+        Args:
+            first_user_message: First user message text
+
+        Returns:
+            Dict with tool_use_id, parent_agent_id, tool_name if match found, None otherwise
+        """
+        if not first_user_message:
+            return None
+
+        # Extract command from message
+        command = self.extract_command_from_message(first_user_message)
+        if not command:
+            return None
+
+        # Normalize and hash the command
+        normalized_command = normalize_command(command)
+        command_hash = compute_hash(normalized_command, length=16)
+
+        # Look up in tool command index
+        if command_hash in self.tool_command_index:
+            return self.tool_command_index[command_hash]
 
         return None
 
@@ -399,40 +515,69 @@ class AgentInstanceTracker:
         if not agent_id:
             return
 
-        # Store in index
-        self.tool_use_index[tool_use_id] = {
-            'tool_use_id': tool_use_id,
-            'tool_name': tool_name,
-            'agent_id': agent_id,
-            'request_id': request_id,
-            'timestamp': timestamp,
-            'input': tool_use_block.get('input', {}),
-        }
+        # Store in index - only if not already seen (keep FIRST occurrence)
+        # This is critical because the same tool_use_id appears in conversation
+        # history across multiple requests, and we want the request where
+        # the tool was originally called, not subsequent requests that include
+        # it in their message history.
+        if tool_use_id not in self.tool_use_index:
+            self.tool_use_index[tool_use_id] = {
+                'tool_use_id': tool_use_id,
+                'tool_name': tool_name,
+                'agent_id': agent_id,
+                'request_id': request_id,
+                'timestamp': timestamp,
+                'input': tool_use_block.get('input', {}),
+            }
 
-        # Add to agent's tool_uses
-        agent = self.instances[agent_id]
-        agent.tool_uses.append({
-            'tool_use_id': tool_use_id,
-            'tool_name': tool_name,
-            'request_id': request_id,
-            'timestamp': timestamp,
-        })
+            # Add to agent's tool_uses (only on first occurrence)
+            agent = self.instances[agent_id]
+            agent.tool_uses.append({
+                'tool_use_id': tool_use_id,
+                'tool_name': tool_name,
+                'request_id': request_id,
+                'timestamp': timestamp,
+            })
 
         # Special handling for Task tool (subagent spawn)
+        # Note: These indexes are already protected by the tool_use_id check above,
+        # but we add explicit checks for clarity and safety
         if tool_name == 'Task':
             task_input = tool_use_block.get('input', {})
             prompt = task_input.get('prompt', '')
             subagent_type = task_input.get('subagent_type', '')
 
             if prompt:
-                # Store for later matching with spawned agent
+                # Store for later matching with spawned agent (only first occurrence)
                 prompt_hash = compute_hash(prompt, length=16)
-                self.task_prompts[prompt_hash] = {
-                    'task_id': tool_use_id,
-                    'parent_agent_id': agent_id,
-                    'subagent_type': subagent_type,
-                    'prompt': prompt[:200],
-                }
+                if prompt_hash not in self.task_prompts:
+                    self.task_prompts[prompt_hash] = {
+                        'task_id': tool_use_id,
+                        'parent_agent_id': agent_id,
+                        'request_id': request_id,
+                        'subagent_type': subagent_type,
+                        'prompt': prompt[:200],
+                    }
+
+        # Special handling for Bash tool (potential subagent spawn)
+        elif tool_name == 'Bash':
+            tool_input = tool_use_block.get('input', {})
+            command = tool_input.get('command', '')
+
+            if command:
+                # Normalize and index the command for later matching (only first occurrence)
+                normalized_command = normalize_command(command)
+                command_hash = compute_hash(normalized_command, length=16)
+
+                if command_hash not in self.tool_command_index:
+                    self.tool_command_index[command_hash] = {
+                        'tool_use_id': tool_use_id,
+                        'parent_agent_id': agent_id,
+                        'request_id': request_id,
+                        'tool_name': tool_name,
+                        'command': command,
+                        'normalized_command': normalized_command,
+                    }
 
     def track_tool_result(self, request_id: int, tool_result_block: Dict[str, Any], timestamp: str = ""):
         """
@@ -522,13 +667,46 @@ class AgentInstanceTracker:
         # Add parent-child edges (subagent spawns)
         for agent_id, agent in self.instances.items():
             if agent.parent_agent_id:
-                edges.append({
+                # Determine spawn method and gather metadata
+                spawn_method = 'task'  # default
+                tool_name = None
+                command_hash = None
+                source_request_id = None  # NEW: Track which request spawned this
+                spawned_by_tool_use_id = agent.spawned_by_task_id
+
+                # Check if spawned by tool call (Bash, etc.)
+                if spawned_by_tool_use_id and spawned_by_tool_use_id in self.tool_use_index:
+                    tool_info = self.tool_use_index[spawned_by_tool_use_id]
+                    tool_name = tool_info.get('tool_name')
+                    source_request_id = tool_info.get('request_id')  # NEW: Get spawning request
+
+                    if tool_name != 'Task':
+                        spawn_method = 'tool_call'
+
+                        # Get command hash if available
+                        for cmd_hash, cmd_info in self.tool_command_index.items():
+                            if cmd_info['tool_use_id'] == spawned_by_tool_use_id:
+                                command_hash = cmd_hash
+                                break
+
+                edge = {
                     'type': 'subagent_spawn',
+                    'spawn_method': spawn_method,
                     'source_agent_id': agent.parent_agent_id,
+                    'source_request_id': source_request_id,  # NEW: Add spawning request ID
                     'target_agent_id': agent_id,
-                    'spawned_by_task_id': agent.spawned_by_task_id,
+                    'spawned_by_task_id': agent.spawned_by_task_id if spawn_method == 'task' else None,
+                    'spawned_by_tool_use_id': spawned_by_tool_use_id,
                     'confidence': 0.95,
-                })
+                }
+
+                # Add optional fields
+                if tool_name:
+                    edge['tool_name'] = tool_name
+                if command_hash:
+                    edge['command_hash'] = command_hash
+
+                edges.append(edge)
 
         # Build request sequence edges
         self.build_request_sequence_edges()
