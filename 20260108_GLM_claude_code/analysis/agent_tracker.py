@@ -64,57 +64,60 @@ class AgentInstance:
 def compute_conversation_fingerprint(messages: List[Dict]) -> str:
     """
     Compute a unique fingerprint for a conversation based on message sequence.
-    
-    This creates a hash representing the conversation state. Two requests with
-    identical conversation history will have the same fingerprint.
-    
+
+    This creates a hash representing the conversation state based on CONTENT only,
+    not unique IDs or formatting. This allows identifying the same agent across
+    different tool invocations and content format variations.
+
     Args:
         messages: List of message dictionaries from API request
-        
+
     Returns:
         16-character hex hash representing the conversation state
     """
     if not messages:
         return compute_hash("empty", length=16)
-    
+
     fingerprint_parts = []
-    
+
     for msg in messages:
         role = msg.get('role', '')
         content = msg.get('content', [])
-        
-        # Create a signature for this message
+
+        # Normalize content to list of blocks
         if isinstance(content, str):
-            # Simple text message - use role + hash of content
-            content_hash = compute_hash(content, length=8)
-            fingerprint_parts.append(f"{role}:text:{content_hash}")
-        
-        elif isinstance(content, list):
-            # Structured content - use role + block types + IDs
-            block_signature = []
-            for block in content:
-                if isinstance(block, dict):
-                    block_type = block.get('type', 'unknown')
-                    
-                    if block_type == 'text':
-                        # For text blocks, use truncated hash
-                        text = block.get('text', '')
-                        text_hash = compute_hash(text, length=8)
-                        block_signature.append(f"text:{text_hash}")
-                    
-                    elif block_type == 'tool_use':
-                        # For tool_use, use tool_use_id (unique identifier)
-                        tool_use_id = block.get('id', '')
-                        tool_name = block.get('name', '')
-                        block_signature.append(f"tool_use:{tool_name}:{tool_use_id}")
-                    
-                    elif block_type == 'tool_result':
-                        # For tool_result, use tool_use_id it references
-                        tool_use_id = block.get('tool_use_id', '')
-                        block_signature.append(f"tool_result:{tool_use_id}")
-            
-            fingerprint_parts.append(f"{role}:[{','.join(block_signature)}]")
-    
+            # Convert string content to structured format
+            content = [{'type': 'text', 'text': content}]
+        elif not isinstance(content, list):
+            content = []
+
+        # Process structured content - use role + block types + content hashes (NOT IDs)
+        block_signature = []
+        for block in content:
+            if isinstance(block, dict):
+                block_type = block.get('type', 'unknown')
+
+                if block_type == 'text':
+                    # For text blocks, use truncated hash
+                    text = block.get('text', '')
+                    text_hash = compute_hash(text, length=8)
+                    block_signature.append(f"text:{text_hash}")
+
+                elif block_type == 'tool_use':
+                    # For tool_use, use tool_name + input hash (NOT tool_use_id)
+                    tool_name = block.get('name', '')
+                    tool_input = block.get('input', {})
+                    input_hash = compute_hash(str(tool_input), length=8)
+                    block_signature.append(f"tool_use:{tool_name}:{input_hash}")
+
+                elif block_type == 'tool_result':
+                    # For tool_result, use content hash (NOT tool_use_id reference)
+                    result_content = block.get('content', '')
+                    result_hash = compute_hash(str(result_content), length=8)
+                    block_signature.append(f"tool_result:{result_hash}")
+
+        fingerprint_parts.append(f"{role}:[{','.join(block_signature)}]")
+
     # Combine all message signatures and hash
     combined = '|||'.join(fingerprint_parts)
     return compute_hash(combined, length=16)
@@ -263,7 +266,8 @@ class AgentInstanceTracker:
         """
         Find if this conversation is a continuation of an existing agent.
 
-        Strategy: Check if the first N-1 messages match an existing agent's conversation.
+        Strategy: Check if the first N-k messages match an existing agent's conversation,
+        trying multiple backtrack depths (k=1,2,3,...) to handle tool use/result pairs.
 
         Args:
             messages: Current message list
@@ -275,16 +279,20 @@ class AgentInstanceTracker:
         if len(messages) <= 1:
             return None
 
-        # Compute fingerprint of conversation minus last message
-        parent_fingerprint = compute_conversation_fingerprint(messages[:-1])
+        # Try backtracking by 1, 2, 3, ... messages to find parent conversation
+        # This handles cases where conversation grew by multiple turns due to tool use/result
+        max_backtrack = min(len(messages) - 1, 5)  # Try up to 5 messages back
 
-        if parent_fingerprint in self.fingerprint_to_agent:
-            agent_id = self.fingerprint_to_agent[parent_fingerprint]
-            agent = self.instances[agent_id]
+        for backtrack in range(1, max_backtrack + 1):
+            parent_fingerprint = compute_conversation_fingerprint(messages[:-backtrack])
 
-            # Verify system prompt matches (same agent type)
-            if agent.system_prompt_hash == system_prompt_hash:
-                return agent
+            if parent_fingerprint in self.fingerprint_to_agent:
+                agent_id = self.fingerprint_to_agent[parent_fingerprint]
+                agent = self.instances[agent_id]
+
+                # Verify system prompt matches (same agent type)
+                if agent.system_prompt_hash == system_prompt_hash:
+                    return agent
 
         return None
 

@@ -1,0 +1,889 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Workflow Graph Visualization</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #1e1e1e;
+            color: #cccccc;
+            overflow: hidden;
+        }
+
+        .header {
+            background: #252526;
+            border-bottom: 1px solid #3e3e42;
+            padding: 12px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header h1 {
+            font-size: 14px;
+            font-weight: 400;
+            color: #cccccc;
+        }
+
+        .controls {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .controls input[type="file"] {
+            padding: 4px 8px;
+            background: #3c3c3c;
+            border: 1px solid #3e3e42;
+            border-radius: 2px;
+            color: #cccccc;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .controls select {
+            padding: 4px 8px;
+            background: #3c3c3c;
+            border: 1px solid #3e3e42;
+            border-radius: 2px;
+            color: #cccccc;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .main-container {
+            height: calc(100vh - 50px);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .stats-panel {
+            background: #252526;
+            border-bottom: 1px solid #3e3e42;
+            padding: 12px 20px;
+            display: none;
+        }
+
+        .stats-grid {
+            display: flex;
+            gap: 24px;
+            font-size: 12px;
+        }
+
+        .stat-item {
+            display: flex;
+            gap: 8px;
+        }
+
+        .stat-label {
+            color: #858585;
+        }
+
+        .stat-value {
+            color: #4ec9b0;
+            font-weight: 500;
+        }
+
+        #graphContainer {
+            flex: 1;
+            overflow: auto;
+            position: relative;
+        }
+
+        svg {
+            display: block;
+        }
+
+        .node-circle {
+            cursor: pointer;
+            transition: r 0.2s;
+        }
+
+        .node-circle:hover {
+            r: 8;
+        }
+
+        .node-label {
+            font-size: 10px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            pointer-events: none;
+            user-select: none;
+        }
+
+        .edge-line {
+            fill: none;
+            stroke-width: 2;
+            cursor: pointer;
+            transition: stroke-width 0.2s, opacity 0.2s;
+        }
+
+        .edge-line:hover {
+            stroke-width: 4;
+            opacity: 1 !important;
+        }
+
+        .edge-line.highlighted {
+            stroke-width: 4;
+            opacity: 1 !important;
+        }
+
+        .edge-spawn {
+            stroke: #569cd6;
+            opacity: 0.6;
+        }
+
+        .edge-sequential {
+            stroke: #4ec9b0;
+            opacity: 0.6;
+        }
+
+        .edge-tool {
+            stroke: #4e4e4e;
+            stroke-dasharray: 4 2;
+            opacity: 0.6;
+        }
+
+        .tooltip {
+            position: absolute;
+            background: #252526;
+            border: 1px solid #3e3e42;
+            border-radius: 3px;
+            padding: 8px 12px;
+            font-size: 11px;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.2s;
+            z-index: 1000;
+            max-width: 300px;
+        }
+
+        .tooltip-title {
+            color: #4ec9b0;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .tooltip-row {
+            color: #cccccc;
+            margin: 2px 0;
+        }
+
+        .tooltip-label {
+            color: #858585;
+        }
+
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: #252526;
+            border: 1px solid #3e3e42;
+            border-radius: 4px;
+            width: 90%;
+            max-width: 900px;
+            max-height: 90vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .modal-header {
+            padding: 12px 16px;
+            border-bottom: 1px solid #3e3e42;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #4ec9b0;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            color: #858585;
+            cursor: pointer;
+            font-size: 20px;
+            padding: 0;
+            width: 24px;
+            height: 24px;
+        }
+
+        .modal-close:hover {
+            color: #cccccc;
+        }
+
+        .modal-body {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px;
+        }
+
+        .message-item {
+            background: #1e1e1e;
+            border-radius: 4px;
+            padding: 12px;
+            margin-bottom: 12px;
+            border-left: 3px solid #3e3e42;
+        }
+
+        .message-item.user {
+            border-left-color: #569cd6;
+        }
+
+        .message-item.assistant {
+            border-left-color: #4ec9b0;
+        }
+
+        .message-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 11px;
+        }
+
+        .message-role {
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .message-content {
+            font-size: 11px;
+            line-height: 1.5;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .tool-use {
+            background: #2d2d30;
+            padding: 8px;
+            margin: 8px 0;
+            border-radius: 4px;
+            border-left: 2px solid #ce9178;
+        }
+
+        .tool-result {
+            background: #2d2d30;
+            padding: 8px;
+            margin: 8px 0;
+            border-radius: 4px;
+            border-left: 2px solid #c586c0;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Workflow Graph</h1>
+        <div class="controls">
+            <input type="file" id="fileInput" accept=".json">
+            <select id="rootSelect">
+                <option value="">Select root agent...</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="main-container">
+        <div id="statsPanel" class="stats-panel"></div>
+        <div id="graphContainer"></div>
+    </div>
+
+    <div id="tooltip" class="tooltip"></div>
+
+    <!-- Modal for viewing messages -->
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div id="modalTitle" class="modal-title"></div>
+                <button class="modal-close" onclick="closeModal()">&times;</button>
+            </div>
+            <div id="modalBody" class="modal-body"></div>
+        </div>
+    </div>
+
+    <script>
+        let workflowData = null;
+        let allData = null; // Store full JSON data for messages
+        let svg = null;
+        let g = null;
+        let zoom = null;
+
+        document.getElementById('fileInput').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    try {
+                        const data = JSON.parse(event.target.result);
+                        allData = data; // Store full data
+                        workflowData = data.workflow_dag;
+                        populateRootSelect();
+                        renderStats();
+                    } catch (error) {
+                        console.error('Error parsing JSON:', error);
+                        alert('Error parsing JSON file');
+                    }
+                };
+                reader.readAsText(file);
+            }
+        });
+
+        document.getElementById('rootSelect').addEventListener('change', function(e) {
+            const rootId = e.target.value;
+            if (rootId && workflowData) {
+                renderGraph(rootId);
+            }
+        });
+
+        function populateRootSelect() {
+            const select = document.getElementById('rootSelect');
+            select.innerHTML = '<option value="">Select root agent...</option>';
+
+            if (!workflowData || !workflowData.root_agent_ids) return;
+
+            workflowData.root_agent_ids.forEach(rootId => {
+                const node = workflowData.nodes.find(n => n.id === rootId);
+                if (node) {
+                    const option = document.createElement('option');
+                    option.value = rootId;
+                    option.textContent = `${rootId} (${node.request_count} requests, ${node.child_agent_ids.length} children)`;
+                    select.appendChild(option);
+                }
+            });
+
+            // Auto-select first root with children
+            const firstWithChildren = workflowData.root_agent_ids.find(rootId => {
+                const node = workflowData.nodes.find(n => n.id === rootId);
+                return node && node.child_agent_ids.length > 0;
+            });
+
+            if (firstWithChildren) {
+                select.value = firstWithChildren;
+                renderGraph(firstWithChildren);
+            }
+        }
+
+        function renderStats() {
+            const panel = document.getElementById('statsPanel');
+            if (!workflowData) {
+                panel.style.display = 'none';
+                return;
+            }
+
+            panel.style.display = 'block';
+            const metrics = workflowData.metrics;
+
+            panel.innerHTML = `
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <span class="stat-label">Total Agents:</span>
+                        <span class="stat-value">${metrics.total_agents}</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Root Agents:</span>
+                        <span class="stat-value">${metrics.root_agents}</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Spawn Edges:</span>
+                        <span class="stat-value">${metrics.spawn_edges}</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Tool Edges:</span>
+                        <span class="stat-value">${metrics.tool_result_edges}</span>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderGraph(rootId) {
+            const container = document.getElementById('graphContainer');
+            container.innerHTML = '';
+
+            if (!allData || !allData.entities) {
+                container.textContent = 'No data available. Please load a JSON file.';
+                return;
+            }
+
+            // Build agent map
+            const agentMap = new Map();
+            workflowData.nodes.forEach(node => agentMap.set(node.id, node));
+
+            // Get agent instances with request details
+            const agentInstances = allData.entities.agent_instances || [];
+            const apiRequests = allData.entities.api_requests || [];
+            const requestMap = new Map();
+            apiRequests.forEach(req => {
+                const reqId = typeof req.id === 'string' ? parseInt(req.id.replace('req_', '')) : req.id;
+                requestMap.set(reqId, req);
+            });
+
+            // Collect all agents in subtree starting from root
+            const agentsInTree = new Set();
+            const visited = new Set();
+
+            function collectAgents(agentId) {
+                if (visited.has(agentId)) return;
+                visited.add(agentId);
+                agentsInTree.add(agentId);
+
+                const node = agentMap.get(agentId);
+                if (!node) return;
+
+                node.child_agent_ids.forEach(childId => {
+                    collectAgents(childId);
+                });
+            }
+
+            collectAgents(rootId);
+
+            // Create request nodes for agents in tree
+            const requestNodes = [];
+            const requestEdges = [];
+            let nodeCounter = 0;
+
+            agentInstances.forEach(agent => {
+                if (!agentsInTree.has(agent.agent_id)) return;
+
+                const agentNode = agentMap.get(agent.agent_id);
+                if (!agentNode) return;
+
+                // Create a node for each request
+                agent.requests.forEach((reqId, idx) => {
+                    const req = requestMap.get(reqId);
+                    if (!req) return;
+
+                    const requestNode = {
+                        id: `${agent.agent_id}_req_${idx}`,
+                        nodeIndex: nodeCounter++,
+                        agent_id: agent.agent_id,
+                        agent_type: agent.system_prompt_hash,
+                        request_id: reqId,
+                        request_index: idx,
+                        timestamp: req.timestamp || agent.timestamps[idx] || '',
+                        is_root: agentNode.is_root && idx === 0,
+                        parent_agent_id: agentNode.parent_agent_id,
+                        child_agent_ids: agentNode.child_agent_ids,
+                        message_count: agent.message_count_history[idx] || 0,
+                        conversation_turn: idx + 1,
+                        total_requests: agent.requests.length
+                    };
+
+                    requestNodes.push(requestNode);
+
+                    // Add edge to previous request in same agent (sequential)
+                    if (idx > 0) {
+                        requestEdges.push({
+                            source: `${agent.agent_id}_req_${idx - 1}`,
+                            target: `${agent.agent_id}_req_${idx}`,
+                            type: 'sequential'
+                        });
+                    }
+                });
+            });
+
+            // Build tool_use_id to request_id map
+            const toolUseToRequest = new Map();
+            const messages = allData.entities.messages || [];
+            const contentBlocks = allData.entities.content_blocks || [];
+
+            messages.forEach(msg => {
+                const reqId = msg.request_id;
+                if (msg.content_blocks) {
+                    msg.content_blocks.forEach(blockId => {
+                        const block = contentBlocks.find(b => b.id === blockId);
+                        if (block && block.type === 'tool_use' && block.tool_use_id) {
+                            toolUseToRequest.set(block.tool_use_id, reqId);
+                        }
+                    });
+                }
+            });
+
+            // Add spawn edges (from specific parent request that spawned child to first request of child)
+            agentInstances.forEach(agent => {
+                if (!agentsInTree.has(agent.agent_id)) return;
+                if (!agent.parent_agent_id || !agentsInTree.has(agent.parent_agent_id)) return;
+
+                const parentAgent = agentInstances.find(a => a.agent_id === agent.parent_agent_id);
+                if (!parentAgent || parentAgent.requests.length === 0) return;
+
+                // Find which parent request spawned this child
+                let parentReqIdx = parentAgent.requests.length - 1; // Default to last request
+
+                if (agent.spawned_by_task_id) {
+                    // Look up which request contains this tool_use_id
+                    const spawningRequestId = toolUseToRequest.get(agent.spawned_by_task_id);
+                    if (spawningRequestId !== undefined) {
+                        // Find the index of this request in the parent's request list
+                        const idx = parentAgent.requests.indexOf(spawningRequestId);
+                        if (idx !== -1) {
+                            parentReqIdx = idx;
+                        }
+                    }
+                }
+
+                const childFirstReqIdx = 0;
+
+                requestEdges.push({
+                    source: `${agent.parent_agent_id}_req_${parentReqIdx}`,
+                    target: `${agent.agent_id}_req_${childFirstReqIdx}`,
+                    type: 'spawn'
+                });
+            });
+
+            if (requestNodes.length === 0) {
+                container.textContent = 'No requests to display';
+                return;
+            }
+
+            // Layout nodes (git-style tree layout)
+            const width = Math.max(1200, container.clientWidth);
+            const height = Math.max(800, requestNodes.length * 30);
+            const nodeHeight = 30;
+            const hierarchySpacing = 250; // Horizontal spacing between hierarchy levels (subagents)
+            const requestSpacing = 250; // Horizontal spacing between sequential requests
+
+            // Assign hierarchy depth to each agent
+            const agentDepths = new Map();
+
+            function assignDepth(agentId, depth = 0) {
+                if (agentDepths.has(agentId)) return;
+                agentDepths.set(agentId, depth);
+
+                const agentNode = agentMap.get(agentId);
+                if (!agentNode) return;
+
+                agentNode.child_agent_ids.forEach(childId => {
+                    assignDepth(childId, depth + 1);
+                });
+            }
+
+            assignDepth(rootId);
+
+            // Calculate X position for each node: hierarchy_depth + request_index
+            // This makes sequential requests advance in X like git commits
+            requestNodes.forEach(node => {
+                const agentDepth = agentDepths.get(node.agent_id) || 0;
+                // X = base position for agent hierarchy + offset for request index
+                node.x = 100 + (agentDepth * hierarchySpacing) + (node.request_index * requestSpacing);
+            });
+
+            // Group nodes by X position for Y positioning
+            const nodesByX = new Map();
+            requestNodes.forEach(node => {
+                if (!nodesByX.has(node.x)) {
+                    nodesByX.set(node.x, []);
+                }
+                nodesByX.get(node.x).push(node);
+            });
+
+            // Sort nodes within each X position by timestamp, then assign Y positions
+            nodesByX.forEach(nodes => {
+                nodes.sort((a, b) => {
+                    const timeA = new Date(a.timestamp).getTime();
+                    const timeB = new Date(b.timestamp).getTime();
+                    return timeA - timeB;
+                });
+            });
+
+            // Assign Y positions
+            requestNodes.forEach(node => {
+                const nodesAtX = nodesByX.get(node.x);
+                const index = nodesAtX.indexOf(node);
+                node.y = 50 + index * nodeHeight;
+            });
+
+            // Create SVG
+            svg = d3.select(container)
+                .append('svg')
+                .attr('width', width)
+                .attr('height', height);
+
+            // Add zoom
+            zoom = d3.zoom()
+                .scaleExtent([0.1, 4])
+                .on('zoom', (event) => {
+                    g.attr('transform', event.transform);
+                });
+
+            svg.call(zoom);
+
+            g = svg.append('g');
+
+            // Draw edges
+            const edges = g.append('g').selectAll('path')
+                .data(requestEdges)
+                .enter()
+                .append('path')
+                .attr('class', d => `edge-line edge-${d.type}`)
+                .attr('d', d => {
+                    const source = requestNodes.find(n => n.id === d.source);
+                    const target = requestNodes.find(n => n.id === d.target);
+                    if (!source || !target) return '';
+
+                    // Draw curved line (like git graph)
+                    const sx = source.x + 6;
+                    const sy = source.y;
+                    const tx = target.x - 6;
+                    const ty = target.y;
+
+                    const mx = (sx + tx) / 2;
+
+                    return `M ${sx} ${sy} C ${mx} ${sy}, ${mx} ${ty}, ${tx} ${ty}`;
+                })
+                .on('mouseover', showEdgeTooltip)
+                .on('mouseout', hideEdgeTooltip)
+                .on('click', (event, d) => {
+                    event.stopPropagation();
+                    toggleEdgeHighlight(event.currentTarget);
+                });
+
+            // Draw nodes
+            const nodes = g.append('g').selectAll('g')
+                .data(requestNodes)
+                .enter()
+                .append('g')
+                .attr('transform', d => `translate(${d.x}, ${d.y})`)
+                .style('cursor', 'pointer')
+                .on('click', (event, d) => showRequestModal(d));
+
+            nodes.append('circle')
+                .attr('class', 'node-circle')
+                .attr('r', 6)
+                .attr('fill', d => d.is_root ? '#4ec9b0' : '#569cd6')
+                .attr('stroke', '#1e1e1e')
+                .attr('stroke-width', 2)
+                .on('mouseover', showTooltip)
+                .on('mouseout', hideTooltip);
+
+            nodes.append('text')
+                .attr('class', 'node-label')
+                .attr('x', 12)
+                .attr('y', -8)
+                .attr('fill', '#cccccc')
+                .text(d => `${d.agent_id} [${d.conversation_turn}/${d.total_requests}] - ${new Date(d.timestamp).toLocaleTimeString()}`);
+        }
+
+        let tooltipType = null; // Track what type of tooltip is showing
+
+        function showTooltip(event, d) {
+            const tooltip = document.getElementById('tooltip');
+            tooltipType = 'node';
+            tooltip.style.opacity = 1;
+            tooltip.style.left = (event.pageX + 10) + 'px';
+            tooltip.style.top = (event.pageY + 10) + 'px';
+
+            const time = new Date(d.timestamp).toLocaleString();
+            tooltip.innerHTML = `
+                <div class="tooltip-title">Request ${d.conversation_turn}/${d.total_requests}</div>
+                <div class="tooltip-row"><span class="tooltip-label">Agent:</span> ${d.agent_id}</div>
+                <div class="tooltip-row"><span class="tooltip-label">Type:</span> ${d.agent_type.substring(0, 12)}...</div>
+                <div class="tooltip-row"><span class="tooltip-label">Time:</span> ${time}</div>
+                <div class="tooltip-row"><span class="tooltip-label">Messages:</span> ${d.message_count}</div>
+                <div class="tooltip-row"><em>Click to view conversation</em></div>
+            `;
+        }
+
+        function hideTooltip() {
+            if (tooltipType === 'node') {
+                document.getElementById('tooltip').style.opacity = 0;
+                tooltipType = null;
+            }
+        }
+
+        function showEdgeTooltip(event, d) {
+            const tooltip = document.getElementById('tooltip');
+            tooltipType = 'edge';
+            tooltip.style.opacity = 1;
+            tooltip.style.left = (event.pageX + 10) + 'px';
+            tooltip.style.top = (event.pageY + 10) + 'px';
+
+            const source = requestNodes.find(n => n.id === d.source);
+            const target = requestNodes.find(n => n.id === d.target);
+
+            if (!source || !target) {
+                tooltip.style.opacity = 0;
+                tooltipType = null;
+                return;
+            }
+
+            const edgeTypeLabel = {
+                'spawn': 'Spawn Edge',
+                'sequential': 'Sequential Edge',
+                'tool': 'Tool Edge'
+            }[d.type] || d.type;
+
+            const edgeColor = {
+                'spawn': '#569cd6',
+                'sequential': '#4ec9b0',
+                'tool': '#4e4e4e'
+            }[d.type] || '#cccccc';
+
+            tooltip.innerHTML = `
+                <div class="tooltip-title" style="color: ${edgeColor}">${edgeTypeLabel}</div>
+                <div class="tooltip-row"><span class="tooltip-label">From:</span> ${source.agent_id} [${source.conversation_turn}/${source.total_requests}]</div>
+                <div class="tooltip-row"><span class="tooltip-label">To:</span> ${target.agent_id} [${target.conversation_turn}/${target.total_requests}]</div>
+                <div class="tooltip-row"><span class="tooltip-label">Time:</span> ${new Date(source.timestamp).toLocaleTimeString()} → ${new Date(target.timestamp).toLocaleTimeString()}</div>
+                <div class="tooltip-row" style="margin-top: 4px;"><em>Click to highlight</em></div>
+            `;
+        }
+
+        function hideEdgeTooltip() {
+            if (tooltipType === 'edge') {
+                document.getElementById('tooltip').style.opacity = 0;
+                tooltipType = null;
+            }
+        }
+
+        function toggleEdgeHighlight(edgeElement) {
+            const isHighlighted = edgeElement.classList.contains('highlighted');
+
+            // Remove highlight from all edges
+            document.querySelectorAll('.edge-line.highlighted').forEach(el => {
+                el.classList.remove('highlighted');
+            });
+
+            // Toggle highlight on clicked edge
+            if (!isHighlighted) {
+                edgeElement.classList.add('highlighted');
+            }
+        }
+
+        function showRequestModal(requestNode) {
+            if (!allData || !allData.entities) return;
+
+            const agentInstances = allData.entities.agent_instances || [];
+            const agent = agentInstances.find(a => a.agent_id === requestNode.agent_id);
+            if (!agent) return;
+
+            const messages = allData.entities.messages || [];
+            const contentBlocks = allData.entities.content_blocks || [];
+            const contentBlockMap = new Map(contentBlocks.map(cb => [cb.id, cb]));
+
+            // Get messages for this specific request
+            const agentMessages = messages.filter(m => {
+                const reqId = m.request_id;
+                const reqIdNum = typeof reqId === 'number' ? reqId : parseInt(reqId.replace('req_', ''));
+                return reqIdNum === requestNode.request_id;
+            }).sort((a, b) => {
+                return (a.position_in_conversation || 0) - (b.position_in_conversation || 0);
+            });
+
+            document.getElementById('modalTitle').innerHTML = `
+                ${requestNode.agent_id} - Request ${requestNode.conversation_turn}/${requestNode.total_requests}
+            `;
+
+            let html = `
+                <div style="margin-bottom: 16px; padding: 12px; background: #1e1e1e; border-radius: 4px;">
+                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; font-size: 11px;">
+                        <div><span style="color: #858585;">Agent Type:</span> ${requestNode.agent_type.substring(0, 12)}...</div>
+                        <div><span style="color: #858585;">Request ID:</span> ${requestNode.request_id}</div>
+                        <div><span style="color: #858585;">Turn:</span> ${requestNode.conversation_turn}/${requestNode.total_requests}</div>
+                        <div><span style="color: #858585;">Messages:</span> ${requestNode.message_count}</div>
+                        <div><span style="color: #858585;">Time:</span> ${new Date(requestNode.timestamp).toLocaleString()}</div>
+                        <div><span style="color: #858585;">Children:</span> ${requestNode.child_agent_ids.length}</div>
+                    </div>
+                </div>
+            `;
+
+            agentMessages.forEach((msg, idx) => {
+                const roleClass = msg.role === 'user' ? 'user' : 'assistant';
+                const roleColor = msg.role === 'user' ? '#569cd6' : '#4ec9b0';
+
+                let contentHtml = '';
+
+                if (msg.content_blocks && msg.content_blocks.length > 0) {
+                    msg.content_blocks.forEach(blockId => {
+                        const block = contentBlockMap.get(blockId);
+                        if (!block) return;
+
+                        if (block.type === 'text') {
+                            contentHtml += `<div>${escapeHtml(block.text || '')}</div>`;
+                        } else if (block.type === 'tool_use') {
+                            contentHtml += `
+                                <div class="tool-use">
+                                    <div style="font-weight: 600; margin-bottom: 4px;">Tool: ${block.tool_name}</div>
+                                    <div style="font-size: 10px; color: #858585;">${JSON.stringify(block.tool_input, null, 2)}</div>
+                                </div>
+                            `;
+                        } else if (block.type === 'tool_result') {
+                            const resultText = typeof block.result_content === 'string'
+                                ? block.result_content
+                                : JSON.stringify(block.result_content, null, 2);
+                            contentHtml += `
+                                <div class="tool-result">
+                                    <div style="font-weight: 600; margin-bottom: 4px;">Tool Result</div>
+                                    <div style="font-size: 10px; color: #858585;">${escapeHtml(resultText.substring(0, 500))}${resultText.length > 500 ? '...' : ''}</div>
+                                </div>
+                            `;
+                        }
+                    });
+                } else if (typeof msg.content === 'string') {
+                    contentHtml = escapeHtml(msg.content);
+                }
+
+                html += `
+                    <div class="message-item ${roleClass}">
+                        <div class="message-header">
+                            <span class="message-role" style="color: ${roleColor}">${msg.role}</span>
+                            <span style="color: #858585;">${msg.timestamp || ''}</span>
+                        </div>
+                        <div class="message-content">${contentHtml}</div>
+                    </div>
+                `;
+            });
+
+            document.getElementById('modalBody').innerHTML = html;
+            document.getElementById('modal').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('modal').classList.remove('active');
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        document.getElementById('modal').addEventListener('click', (e) => {
+            if (e.target.id === 'modal') closeModal();
+        });
+
+        // Click on SVG background to clear edge highlights
+        document.addEventListener('click', (e) => {
+            if (e.target.tagName === 'svg' || e.target.id === 'graphContainer') {
+                document.querySelectorAll('.edge-line.highlighted').forEach(el => {
+                    el.classList.remove('highlighted');
+                });
+            }
+        });
+    </script>
+</body>
+</html>
+

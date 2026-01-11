@@ -569,10 +569,202 @@ All qualitative metrics achieved:
 - Easy to use and understand
 - Compact, professional visualization
 
-## Next Steps
+## Critical Bug Discovery and Fix (2026-01-11)
 
-1. Use this system for ongoing agent behavior analysis
-2. Consider adding more advanced analytics (conversation length distribution, spawning patterns)
-3. Integrate with existing workflow visualization tools
-4. Update DevLog-005 to mark Priority 1 and Priority 2 as COMPLETE
+### Bug Report: Agent Deduplication Failure
+
+**Severity**: CRITICAL
+**Impact**: Massive over-counting of agent instances (129 vs actual ~73)
+**Status**: Fix implemented, pending validation
+
+### Problem Description
+
+During validation testing, discovered that the agent deduplication logic was failing to identify sequential requests from the same agent, resulting in severe over-counting of agent instances.
+
+**Observed Behavior:**
+- 10 separate agent instances (agent_5, agent_12, agent_22, agent_30, agent_36, agent_45, agent_54, agent_72, agent_101, agent_105) were created for what should be a single agent having a multi-turn conversation
+- All 10 agents had identical first user message: "Thoroughly explore the codebase structure and architecture..."
+- All 10 agents were spawned by the same parent task: "chatcmpl-tool-a6399d82b26e7d47"
+- Message counts showed clear sequential pattern: [1,1], [3,3], [5,5], [7,7], [9,9], [11,11], [13,13], [15,15], [17,17], [19,19]
+
+**Expected Behavior:**
+- Should be identified as 1 agent instance with 20 requests
+- Message count history should show: [1, 1, 3, 3, 5, 5, 7, 7, 9, 9, 11, 11, 13, 13, 15, 15, 17, 17, 19, 19]
+
+### Root Cause Analysis
+
+Two critical bugs were identified in the agent identification logic:
+
+#### Bug 1: Insufficient Backtracking Depth
+
+**Location**: `agent_tracker.py`, `find_parent_conversation()` method
+
+**Issue**: The function only checked if the conversation grew by 1 message (`messages[:-1]`), but when agents invoke tools, the conversation grows by 2+ messages between requests:
+- Request N: `[user]` → assistant responds with tool_use
+- Tool executes → tool_result added
+- Request N+1: `[user, assistant_with_tool_use, user_with_tool_result]` (grew by 2)
+
+The parent conversation state (1 message) was never found because the function only tried removing the last message, not the last 2 messages.
+
+**Original Code:**
+```python
+def find_parent_conversation(self, messages, system_prompt_hash):
+    if len(messages) <= 1:
+        return None
+
+    # Only tries backtracking by 1
+    parent_fingerprint = compute_conversation_fingerprint(messages[:-1])
+
+    if parent_fingerprint in self.fingerprint_to_agent:
+        agent_id = self.fingerprint_to_agent[parent_fingerprint]
+        agent = self.instances[agent_id]
+        if agent.system_prompt_hash == system_prompt_hash:
+            return agent
+
+    return None
+```
+
+#### Bug 2: Content Format Sensitivity
+
+**Location**: `agent_tracker.py`, `compute_conversation_fingerprint()` function
+
+**Issue**: The same text content can be represented in two different formats in the API:
+- **Structured format**: `content = [{"type": "text", "text": "..."}]`
+- **Simple format**: `content = "..."`
+
+The fingerprint function treated these as completely different, even though the semantic content was identical. This caused the same agent's first message to produce different fingerprints depending on which format was used.
+
+**Example:**
+- Request 13: `content = [{"type": "text", "text": "Thoroughly explore..."}]`
+- Request 25: `content = "Thoroughly explore..."`
+- Result: Different fingerprints, treated as different agents
+
+**Original Code:**
+```python
+def compute_conversation_fingerprint(messages):
+    for msg in messages:
+        content = msg.get('content', [])
+
+        if isinstance(content, str):
+            # Path A: Simple text
+            content_hash = compute_hash(content, length=8)
+            fingerprint_parts.append(f"{role}:text:{content_hash}")
+
+        elif isinstance(content, list):
+            # Path B: Structured content
+            # Different processing, different fingerprint
+            ...
+```
+
+Additionally, the function was using unique `tool_use_id` values in the fingerprint, which made every tool invocation create a unique fingerprint even if the tool name and input were identical.
+
+### Implemented Fixes
+
+#### Fix 1: Multi-Depth Backtracking
+
+Modified `find_parent_conversation()` to try backtracking by 1, 2, 3, 4, 5 messages to handle tool use/result pairs:
+
+```python
+def find_parent_conversation(self, messages, system_prompt_hash):
+    if len(messages) <= 1:
+        return None
+
+    # Try backtracking by 1, 2, 3, ... messages
+    max_backtrack = min(len(messages) - 1, 5)
+
+    for backtrack in range(1, max_backtrack + 1):
+        parent_fingerprint = compute_conversation_fingerprint(messages[:-backtrack])
+
+        if parent_fingerprint in self.fingerprint_to_agent:
+            agent_id = self.fingerprint_to_agent[parent_fingerprint]
+            agent = self.instances[agent_id]
+            if agent.system_prompt_hash == system_prompt_hash:
+                return agent
+
+    return None
+```
+
+#### Fix 2: Content Normalization
+
+Modified `compute_conversation_fingerprint()` to:
+1. Normalize all content to structured format before fingerprinting
+2. Use content hashes instead of unique IDs for tool_use and tool_result blocks
+
+```python
+def compute_conversation_fingerprint(messages):
+    for msg in messages:
+        content = msg.get('content', [])
+
+        # Normalize content to list of blocks
+        if isinstance(content, str):
+            content = [{'type': 'text', 'text': content}]
+        elif not isinstance(content, list):
+            content = []
+
+        # Process all content uniformly
+        for block in content:
+            if block_type == 'text':
+                text_hash = compute_hash(text, length=8)
+                block_signature.append(f"text:{text_hash}")
+
+            elif block_type == 'tool_use':
+                # Use tool_name + input hash (NOT tool_use_id)
+                tool_name = block.get('name', '')
+                tool_input = block.get('input', {})
+                input_hash = compute_hash(str(tool_input), length=8)
+                block_signature.append(f"tool_use:{tool_name}:{input_hash}")
+
+            elif block_type == 'tool_result':
+                # Use content hash (NOT tool_use_id reference)
+                result_content = block.get('content', '')
+                result_hash = compute_hash(str(result_content), length=8)
+                block_signature.append(f"tool_result:{result_hash}")
+```
+
+### Preliminary Results
+
+After applying both fixes, re-ran entity extraction on `requests_20260110.jsonl`:
+
+**Before fixes:**
+- Total agent instances: 129
+- Child agents (spawned): 10
+- Specific subagent: 10 separate instances (agent_5, agent_12, agent_22, etc.)
+
+**After fixes:**
+- Total agent instances: 73 (43% reduction)
+- Child agents (spawned): 5
+- Specific subagent: 1 instance (agent_5) with 20 requests
+
+**Specific Example:**
+The subagent spawned by task "chatcmpl-tool-a6399d82b26e7d47" is now correctly identified as a single agent:
+- agent_id: agent_5
+- requests: 20 (previously split across 10 agents)
+- message_count_history: [1, 1, 3, 3, 5, 5, 7, 7, 9, 9, 11, 11, 13, 13, 15, 15, 17, 17, 19, 19]
+
+This correctly shows the conversation growing by 2 messages each time (tool_use + tool_result pattern).
+
+### Validation Status
+
+**Status**: PENDING USER VALIDATION
+
+The fixes have been implemented and preliminary testing shows significant improvement in agent deduplication accuracy. However, comprehensive validation is required to ensure:
+1. No false positives (different agents incorrectly merged)
+2. No false negatives (same agent still being split)
+3. All parent-child relationships remain valid
+4. Deduplication statistics are accurate
+5. No regression in other functionality
+
+### Files Modified
+
+- `analysis/agent_tracker.py`:
+  - Modified `compute_conversation_fingerprint()` (lines 64-123)
+  - Modified `find_parent_conversation()` (lines 262-294)
+
+### Next Steps
+
+1. User validation of fix correctness
+2. Comprehensive testing on full dataset
+3. Verify no regressions in other agent tracking functionality
+4. Update success criteria if validation passes
+5. Document lessons learned about API content format variations
 
