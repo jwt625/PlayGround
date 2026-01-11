@@ -577,6 +577,7 @@ function App() {
             const hasErrors = log.has_errors || false
             const toolErrors = log.tool_errors || 0
             const stopReason = log.stop_reason
+            const logIndex = log.log_index
 
             return (
               <div
@@ -587,6 +588,11 @@ function App() {
               >
                 <div className="metadata" onClick={() => toggleCollapse(idx)}>
                   <span className="collapse-icon">{isCollapsed ? '▶' : '▼'}</span>
+                  {logIndex !== undefined && (
+                    <span className="log-index" data-tooltip-id="tooltip" data-tooltip-content="Log index (matches workflow graph node number)">
+                      #{logIndex}
+                    </span>
+                  )}
                   <span className="time">{timestamp}</span>
 
                   {agentType && (

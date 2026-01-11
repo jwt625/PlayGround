@@ -348,6 +348,16 @@
   border-radius: 0;
 }
 
+.metadata .log-index {
+  color: #fff;
+  background: #374151;
+  font-weight: 600;
+  font-size: 11px;
+  padding: 4px 8px;
+  border-radius: 0;
+  font-family: 'Courier New', monospace;
+}
+
 .metadata .time {
   color: #aaa;
 }

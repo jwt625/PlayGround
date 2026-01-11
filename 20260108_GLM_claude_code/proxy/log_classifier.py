@@ -245,9 +245,14 @@ def enrich_logs_only(logs: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
     Does NOT build workflow graph.
 
     Returns:
-        List of enriched log entries
+        List of enriched log entries with log_index added
     """
-    return [enrich_log_entry(log) for log in logs]
+    enriched = []
+    for idx, log in enumerate(logs):
+        enriched_log = enrich_log_entry(log)
+        enriched_log['log_index'] = idx
+        enriched.append(enriched_log)
+    return enriched
 
 
 def enrich_logs(logs: List[Dict[str, Any]]) -> Dict[str, Any]:
