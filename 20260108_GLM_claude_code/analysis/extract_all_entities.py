@@ -122,11 +122,18 @@ class EntityExtractor:
         # Extract Messages (conversation history)
         if 'messages' in body:
             self.extract_messages(body['messages'], request_id, timestamp)
+            # Track request content for content reuse detection
+            self.agent_tracker.track_request_content(request_id, body['messages'], timestamp)
 
         # Extract API Response
         if 'response' in entry:
             response_entity = self.extract_response(entry['response'], request_id, timestamp)
             self.request_to_response[request_id] = len(self.api_responses) - 1
+
+            # Track response content for content reuse detection
+            response_body = entry['response'].get('body', {})
+            if 'content' in response_body:
+                self.agent_tracker.track_response_content(request_id, response_body['content'], timestamp)
     
     def extract_system_prompt(self, system: List[Dict], request_id: int):
         """Extract system prompt from request."""

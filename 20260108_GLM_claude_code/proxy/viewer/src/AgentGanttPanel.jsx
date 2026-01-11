@@ -22,12 +22,12 @@ function AgentGanttPanel({ entitiesData, logs }) {
   // Process agent data
   const agentData = useMemo(() => {
     if (!entitiesData || !logs || logs.length === 0) {
-      return { agents: [], minTime: 0, maxTime: 0, duration: 0, spawnEdges: [] }
+      return { agents: [], minTime: 0, maxTime: 0, duration: 0, spawnEdges: [], requestSequenceEdges: [], contentReuseEdges: [] }
     }
 
     const agentInstances = entitiesData.entities?.agent_instances || []
     if (agentInstances.length === 0) {
-      return { agents: [], minTime: 0, maxTime: 0, duration: 0, spawnEdges: [] }
+      return { agents: [], minTime: 0, maxTime: 0, duration: 0, spawnEdges: [], requestSequenceEdges: [], contentReuseEdges: [] }
     }
 
     // Build request map from enriched logs (already have agent_type from /api/logs)
@@ -97,8 +97,10 @@ function AgentGanttPanel({ entitiesData, logs }) {
       }
     })
 
-    // Build spawn edges from workflow_dag
+    // Build edges from workflow_dag
     const spawnEdges = []
+    const requestSequenceEdges = []
+    const contentReuseEdges = []
     const workflowEdges = entitiesData.workflow_dag?.edges || []
 
     workflowEdges.forEach(edge => {
@@ -137,6 +139,49 @@ function AgentGanttPanel({ entitiesData, logs }) {
             confidence: edge.confidence
           })
         }
+      } else if (edge.type === 'request_sequence') {
+        const agentIdx = agentIndex.get(edge.source_agent_id)
+        if (agentIdx !== undefined) {
+          const agent = agents[agentIdx]
+          const sourceRequest = agent.requests.find(r => r.reqId === edge.source_request_id)
+          const targetRequest = agent.requests.find(r => r.reqId === edge.target_request_id)
+
+          if (sourceRequest && targetRequest) {
+            requestSequenceEdges.push({
+              agentId: edge.source_agent_id,
+              agentIdx,
+              sourceRequestId: edge.source_request_id,
+              targetRequestId: edge.target_request_id,
+              sourceX: sourceRequest.endTime,
+              targetX: targetRequest.timestamp,
+              time_gap_ms: edge.time_gap_ms,
+              confidence: edge.confidence
+            })
+          }
+        }
+      } else if (edge.type === 'content_reuse') {
+        const sourceIdx = agentIndex.get(edge.source_agent_id)
+        const targetIdx = agentIndex.get(edge.target_agent_id)
+
+        if (sourceIdx !== undefined && targetIdx !== undefined) {
+          const sourceAgent = agents[sourceIdx]
+          const targetAgent = agents[targetIdx]
+          const sourceRequest = sourceAgent.requests.find(r => r.reqId === edge.source_request_id)
+          const targetRequest = targetAgent.requests.find(r => r.reqId === edge.target_request_id)
+
+          if (sourceRequest && targetRequest) {
+            contentReuseEdges.push({
+              sourceAgentId: edge.source_agent_id,
+              targetAgentId: edge.target_agent_id,
+              sourceIdx,
+              targetIdx,
+              sourceX: sourceRequest.endTime,
+              targetX: targetRequest.timestamp,
+              content_hash: edge.content_hash,
+              confidence: edge.confidence
+            })
+          }
+        }
       }
     })
 
@@ -147,10 +192,10 @@ function AgentGanttPanel({ entitiesData, logs }) {
     const maxTime = Math.max(...allEndTimes)
     const duration = maxTime - minTime
 
-    return { agents, minTime, maxTime, duration, spawnEdges }
+    return { agents, minTime, maxTime, duration, spawnEdges, requestSequenceEdges, contentReuseEdges }
   }, [entitiesData, logs])
 
-  const { agents, minTime, duration, spawnEdges } = agentData
+  const { agents, minTime, duration, spawnEdges, requestSequenceEdges, contentReuseEdges } = agentData
 
   // Format duration
   const formatDuration = (ms) => {
@@ -334,6 +379,41 @@ function AgentGanttPanel({ entitiesData, logs }) {
     return {
       path,
       x1, y1, x2, y2
+    }
+  }
+
+  // Calculate SVG path for request sequence arrow (horizontal line within same agent)
+  const getRequestSequenceArrowPath = (edge, containerWidth) => {
+    // Convert time to X position (0-1 range based on zoom)
+    const sourceXFull = (edge.sourceX - minTime) / duration
+    const targetXFull = (edge.targetX - minTime) / duration
+
+    const visibleDuration = zoomX.end - zoomX.start
+    const sourceXRel = (sourceXFull - zoomX.start) / visibleDuration
+    const targetXRel = (targetXFull - zoomX.start) / visibleDuration
+
+    const x1 = sourceXRel * containerWidth
+    const x2 = targetXRel * containerWidth
+
+    // Find agent's visible index
+    const agentVisibleIdx = visibleAgents.findIndex(a => a.agent_id === edge.agentId)
+
+    // If agent is not visible, skip this edge
+    if (agentVisibleIdx === -1) {
+      return null
+    }
+
+    // Calculate Y position (slightly below the center of the row)
+    const y = (agentVisibleIdx + 0.5) * (rowHeight * 1.2) + rowHeight * 0.5
+
+    // Simple horizontal line with slight curve
+    const midX = (x1 + x2) / 2
+    const curveOffset = 5 // Small vertical offset for curve
+    const path = `M ${x1} ${y} Q ${midX} ${y + curveOffset}, ${x2} ${y}`
+
+    return {
+      path,
+      x1, y, x2, y
     }
   }
 
@@ -644,7 +724,30 @@ function AgentGanttPanel({ entitiesData, logs }) {
                   >
                     <path d="M 0 0 L 10 5 L 0 10 z" fill="#888" />
                   </marker>
+                  <marker
+                    id="arrow-sequence"
+                    viewBox="0 0 10 10"
+                    refX="9"
+                    refY="5"
+                    markerWidth="5"
+                    markerHeight="5"
+                    orient="auto"
+                  >
+                    <path d="M 0 0 L 10 5 L 0 10 z" fill="#3b82f6" />
+                  </marker>
+                  <marker
+                    id="arrow-content"
+                    viewBox="0 0 10 10"
+                    refX="9"
+                    refY="5"
+                    markerWidth="6"
+                    markerHeight="6"
+                    orient="auto"
+                  >
+                    <path d="M 0 0 L 10 5 L 0 10 z" fill="#8b5cf6" />
+                  </marker>
                 </defs>
+                {/* Spawn edges */}
                 {spawnEdges.map((edge, idx) => {
                   const containerWidth = rowsRef.current.clientWidth
                   const pathData = getSpawnArrowPath(edge, containerWidth)
@@ -653,7 +756,7 @@ function AgentGanttPanel({ entitiesData, logs }) {
 
                   return (
                     <path
-                      key={idx}
+                      key={`spawn-${idx}`}
                       d={pathData.path}
                       stroke="#888"
                       strokeWidth="1.5"
@@ -662,6 +765,51 @@ function AgentGanttPanel({ entitiesData, logs }) {
                       style={{ pointerEvents: 'stroke' }}
                       data-tooltip-id="gantt-tooltip"
                       data-tooltip-content={`Spawn: ${edge.sourceAgentId} → ${edge.targetAgentId}\nTask: ${edge.spawned_by_task_id}\nConfidence: ${edge.confidence}`}
+                    />
+                  )
+                })}
+
+                {/* Request sequence edges */}
+                {requestSequenceEdges.map((edge, idx) => {
+                  const containerWidth = rowsRef.current.clientWidth
+                  const pathData = getRequestSequenceArrowPath(edge, containerWidth)
+
+                  if (!pathData) return null
+
+                  return (
+                    <path
+                      key={`seq-${idx}`}
+                      d={pathData.path}
+                      stroke="#3b82f6"
+                      strokeWidth="1.0"
+                      fill="none"
+                      markerEnd="url(#arrow-sequence)"
+                      style={{ pointerEvents: 'stroke', opacity: 0.6 }}
+                      data-tooltip-id="gantt-tooltip"
+                      data-tooltip-content={`Sequence: req ${edge.sourceRequestId} → ${edge.targetRequestId}\nGap: ${edge.time_gap_ms}ms\nAgent: ${edge.agentId}`}
+                    />
+                  )
+                })}
+
+                {/* Content reuse edges */}
+                {contentReuseEdges.map((edge, idx) => {
+                  const containerWidth = rowsRef.current.clientWidth
+                  const pathData = getSpawnArrowPath(edge, containerWidth)
+
+                  if (!pathData) return null
+
+                  return (
+                    <path
+                      key={`content-${idx}`}
+                      d={pathData.path}
+                      stroke="#8b5cf6"
+                      strokeWidth="1.5"
+                      strokeDasharray="5,5"
+                      fill="none"
+                      markerEnd="url(#arrow-content)"
+                      style={{ pointerEvents: 'stroke', opacity: 0.7 }}
+                      data-tooltip-id="gantt-tooltip"
+                      data-tooltip-content={`Content Reuse: ${edge.sourceAgentId} → ${edge.targetAgentId}\nHash: ${edge.content_hash}\nConfidence: ${edge.confidence}`}
                     />
                   )
                 })}

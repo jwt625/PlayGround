@@ -160,6 +160,9 @@ class AgentInstanceTracker:
         self.tool_result_index: Dict[str, Dict[str, Any]] = {}  # tool_use_id -> {agent_id, request_id, is_error, timestamp}
         self.workflow_edges: List[Dict[str, Any]] = []  # All edges in the workflow DAG
 
+        # Content reuse tracking
+        self.response_content_index: Dict[str, List[Dict[str, Any]]] = {}  # content_hash -> [{agent_id, request_id, timestamp}]
+
     def compute_system_prompt_hash(self, system: List[Dict]) -> str:
         """Compute hash of system prompt."""
         texts = []
@@ -527,7 +530,10 @@ class AgentInstanceTracker:
                     'confidence': 0.95,
                 })
 
-        # Add tool result edges (already computed)
+        # Build request sequence edges
+        self.build_request_sequence_edges()
+
+        # Add all workflow edges (tool_result, content_reuse, request_sequence)
         edges.extend(self.workflow_edges)
 
         # Compute DAG metrics
@@ -544,6 +550,8 @@ class AgentInstanceTracker:
                 'total_edges': len(edges),
                 'spawn_edges': len([e for e in edges if e['type'] == 'subagent_spawn']),
                 'tool_result_edges': len([e for e in edges if e['type'] == 'tool_result']),
+                'content_reuse_edges': len([e for e in edges if e['type'] == 'content_reuse']),
+                'request_sequence_edges': len([e for e in edges if e['type'] == 'request_sequence']),
             },
             'root_agent_ids': [n['id'] for n in root_agents],
         }
@@ -579,4 +587,155 @@ class AgentInstanceTracker:
                 tree['children'].append(child_tree)
 
         return tree
+
+    def track_response_content(self, request_id: int, content_blocks: List[Any], timestamp: str = ""):
+        """
+        Track response content for content reuse detection.
+
+        Args:
+            request_id: Request ID that produced this content
+            content_blocks: Response content blocks
+            timestamp: Timestamp of the response
+        """
+        agent_id = self.request_to_agent.get(request_id)
+        if not agent_id:
+            return
+
+        # Extract text content from response
+        text_parts = []
+        for block in content_blocks:
+            if isinstance(block, dict) and block.get('type') == 'text':
+                text = block.get('text', '')
+                if text:
+                    text_parts.append(text)
+
+        if not text_parts:
+            return
+
+        # Hash first 200 chars of combined text
+        combined_text = '\n'.join(text_parts)
+        normalized = ' '.join(combined_text.split())[:200]
+        content_hash = compute_hash(normalized, length=16)
+
+        if content_hash not in self.response_content_index:
+            self.response_content_index[content_hash] = []
+
+        self.response_content_index[content_hash].append({
+            'agent_id': agent_id,
+            'request_id': request_id,
+            'timestamp': timestamp,
+            'content_hash': content_hash,
+        })
+
+    def track_request_content(self, request_id: int, messages: List[Dict], timestamp: str = ""):
+        """
+        Track request content and detect content reuse from previous responses.
+
+        Args:
+            request_id: Request ID being processed
+            messages: Request messages
+            timestamp: Timestamp of the request
+        """
+        agent_id = self.request_to_agent.get(request_id)
+        if not agent_id:
+            return
+
+        # Extract text from user messages
+        for message in messages:
+            if not isinstance(message, dict):
+                continue
+
+            if message.get('role') != 'user':
+                continue
+
+            content = message.get('content', '')
+
+            # Handle string content
+            if isinstance(content, str):
+                normalized = ' '.join(content.split())[:200]
+                content_hash = compute_hash(normalized, length=16)
+
+                if content_hash in self.response_content_index:
+                    for source_info in self.response_content_index[content_hash]:
+                        source_agent_id = source_info['agent_id']
+                        source_request_id = source_info['request_id']
+
+                        # Only create edge if source comes before target and different agents
+                        if source_request_id < request_id and source_agent_id != agent_id:
+                            self.workflow_edges.append({
+                                'type': 'content_reuse',
+                                'source_agent_id': source_agent_id,
+                                'target_agent_id': agent_id,
+                                'source_request_id': source_request_id,
+                                'target_request_id': request_id,
+                                'content_hash': content_hash,
+                                'confidence': 0.85,
+                            })
+
+            # Handle array content
+            elif isinstance(content, list):
+                for block in content:
+                    if isinstance(block, dict) and block.get('type') == 'text':
+                        text = block.get('text', '')
+                        if text:
+                            normalized = ' '.join(text.split())[:200]
+                            content_hash = compute_hash(normalized, length=16)
+
+                            if content_hash in self.response_content_index:
+                                for source_info in self.response_content_index[content_hash]:
+                                    source_agent_id = source_info['agent_id']
+                                    source_request_id = source_info['request_id']
+
+                                    if source_request_id < request_id and source_agent_id != agent_id:
+                                        self.workflow_edges.append({
+                                            'type': 'content_reuse',
+                                            'source_agent_id': source_agent_id,
+                                            'target_agent_id': agent_id,
+                                            'source_request_id': source_request_id,
+                                            'target_request_id': request_id,
+                                            'content_hash': content_hash,
+                                            'confidence': 0.85,
+                                        })
+
+    def build_request_sequence_edges(self):
+        """
+        Build request sequence edges for each agent showing temporal flow.
+        Creates edges between consecutive requests within the same agent.
+        """
+        from datetime import datetime
+
+        for agent_id, agent in self.instances.items():
+            if len(agent.requests) < 2:
+                continue
+
+            # Sort requests with timestamps
+            request_times = []
+            for i, req_id in enumerate(agent.requests):
+                timestamp = agent.timestamps[i] if i < len(agent.timestamps) else None
+                request_times.append((req_id, timestamp))
+
+            # Create edges between consecutive requests
+            for i in range(len(request_times) - 1):
+                source_req_id, source_time = request_times[i]
+                target_req_id, target_time = request_times[i + 1]
+
+                # Calculate time gap
+                time_gap_ms = None
+                if source_time and target_time:
+                    try:
+                        source_dt = datetime.fromisoformat(source_time.replace('Z', '+00:00'))
+                        target_dt = datetime.fromisoformat(target_time.replace('Z', '+00:00'))
+                        time_gap_ms = int((target_dt - source_dt).total_seconds() * 1000)
+                    except (ValueError, AttributeError):
+                        pass
+
+                self.workflow_edges.append({
+                    'type': 'request_sequence',
+                    'source_agent_id': agent_id,
+                    'target_agent_id': agent_id,
+                    'source_request_id': source_req_id,
+                    'target_request_id': target_req_id,
+                    'time_gap_ms': time_gap_ms,
+                    'confidence': 1.0,
+                })
 
