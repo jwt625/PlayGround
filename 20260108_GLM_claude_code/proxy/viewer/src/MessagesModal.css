@@ -1,0 +1,135 @@
+/* Modal overlay */
+.messages-modal {
+  display: flex;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  z-index: 2000;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Modal content container */
+.messages-modal-content {
+  background: #252526;
+  border: 1px solid #3e3e42;
+  border-radius: 4px;
+  width: 90%;
+  max-width: 900px;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Modal header */
+.messages-modal-header {
+  padding: 12px 16px;
+  border-bottom: 1px solid #3e3e42;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.messages-modal-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #4ec9b0;
+}
+
+.messages-modal-close {
+  background: none;
+  border: none;
+  color: #858585;
+  cursor: pointer;
+  font-size: 20px;
+  padding: 0;
+  width: 24px;
+  height: 24px;
+}
+
+.messages-modal-close:hover {
+  color: #cccccc;
+}
+
+/* Modal body */
+.messages-modal-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px;
+}
+
+/* Request metadata */
+.request-metadata {
+  margin-bottom: 16px;
+  padding: 12px;
+  background: #1e1e1e;
+  border-radius: 4px;
+}
+
+.metadata-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  font-size: 11px;
+}
+
+.metadata-label {
+  color: #858585;
+}
+
+/* Message items */
+.message-item {
+  background: #1e1e1e;
+  border-radius: 4px;
+  padding: 12px;
+  margin-bottom: 12px;
+  border-left: 3px solid #3e3e42;
+}
+
+.message-item.user {
+  border-left-color: #569cd6;
+}
+
+.message-item.assistant {
+  border-left-color: #4ec9b0;
+}
+
+.message-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  font-size: 11px;
+}
+
+.message-role {
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.message-content {
+  font-size: 11px;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+/* Tool blocks */
+.tool-use {
+  background: #2d2d30;
+  padding: 8px;
+  margin: 8px 0;
+  border-radius: 4px;
+  border-left: 2px solid #ce9178;
+}
+
+.tool-result {
+  background: #2d2d30;
+  padding: 8px;
+  margin: 8px 0;
+  border-radius: 4px;
+  border-left: 2px solid #c586c0;
+}
+

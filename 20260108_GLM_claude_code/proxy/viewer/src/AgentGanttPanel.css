@@ -28,6 +28,12 @@
   color: #666;
 }
 
+.gantt-hint {
+  font-size: 10px;
+  color: #888;
+  font-style: italic;
+}
+
 .gantt-container {
   flex: 1;
   display: flex;
@@ -38,12 +44,12 @@
   width: 200px;
   background: #0f0f0f;
   border-right: 1px solid #333;
-  overflow-y: auto;
+  overflow-y: hidden;
+  overflow-x: hidden;
   flex-shrink: 0;
 }
 
 .gantt-label {
-  height: 2.7px;
   padding: 0 8px;
   display: flex;
   align-items: center;
@@ -54,6 +60,7 @@
   transition: background 0.2s;
   border-left: 2px solid transparent;
   color: #aaa;
+  flex-shrink: 0;
 }
 
 .gantt-label:hover {
@@ -80,9 +87,12 @@
 
 .gantt-timeline {
   flex: 1;
-  overflow: auto;
+  overflow-y: auto;
+  overflow-x: hidden;
   position: relative;
   background: #0a0a0a;
+  cursor: crosshair;
+  user-select: none;
 }
 
 .gantt-axis {
@@ -136,15 +146,12 @@
 
 .gantt-row {
   position: relative;
-  height: 2.2px;
-  margin-bottom: 0.5px;
   background: transparent;
+  flex-shrink: 0;
 }
 
 .gantt-bar {
   position: absolute;
-  top: 0.1px;
-  height: 2px;
   border-radius: 0;
   cursor: pointer;
   transition: all 0.2s;
@@ -186,5 +193,14 @@
 .gantt-labels::-webkit-scrollbar-thumb:hover,
 .gantt-timeline::-webkit-scrollbar-thumb:hover {
   background: #444;
+}
+
+/* Selection rectangle during drag */
+.gantt-selection {
+  position: absolute;
+  background: rgba(59, 130, 246, 0.2);
+  border: 1px solid rgba(59, 130, 246, 0.6);
+  pointer-events: none;
+  z-index: 1000;
 }
 
