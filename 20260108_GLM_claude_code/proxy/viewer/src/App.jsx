@@ -4,6 +4,7 @@ import { Tooltip } from 'react-tooltip'
 import TimelinePanel from './TimelinePanel'
 import StatsPanel from './StatsPanel'
 import WorkflowPanel from './WorkflowPanel'
+import AgentGanttPanel from './AgentGanttPanel'
 import SearchBar from './SearchBar'
 import 'react-json-view-lite/dist/index.css'
 import 'react-tooltip/dist/react-tooltip.css'
@@ -11,6 +12,7 @@ import './App.css'
 
 function App() {
   const [logs, setLogs] = useState([])
+  const [entitiesData, setEntitiesData] = useState(null)
   const [workflowGraph, setWorkflowGraph] = useState(null)
   const [workflowLoading, setWorkflowLoading] = useState(false)
   const [filter, setFilter] = useState('all')
@@ -21,7 +23,7 @@ function App() {
   const [windowSize, setWindowSize] = useState(10)
   const [headerCollapsed, setHeaderCollapsed] = useState(false)
   const [autoRefresh, setAutoRefresh] = useState(true)
-  const [activeBottomPanel, setActiveBottomPanel] = useState(null) // 'timeline' | 'stats' | 'workflow' | null
+  const [activeBottomPanel, setActiveBottomPanel] = useState(null) // 'timeline' | 'stats' | 'workflow' | 'gantt' | null
   const [bottomPanelHeight, setBottomPanelHeight] = useState(250)
   const [minDuration, setMinDuration] = useState(0)
   const [maxDuration, setMaxDuration] = useState(Infinity)
@@ -148,6 +150,19 @@ function App() {
     }
   }
 
+  const fetchEntities = async () => {
+    try {
+      // Fetch entities JSON
+      const entitiesResponse = await fetch('/api/entities')
+      if (entitiesResponse.ok) {
+        const entities = await entitiesResponse.json()
+        setEntitiesData(entities)
+      }
+    } catch (error) {
+      console.error('Failed to fetch entities:', error)
+    }
+  }
+
   const fetchWorkflow = async () => {
     if (workflowLoading) {
       console.log('Workflow already loading, skipping...')
@@ -205,8 +220,12 @@ function App() {
 
   useEffect(() => {
     fetchLogs()
+    fetchEntities()
     if (autoRefresh) {
-      const interval = setInterval(fetchLogs, 2000)
+      const interval = setInterval(() => {
+        fetchLogs()
+        fetchEntities()
+      }, 2000)
       return () => clearInterval(interval)
     }
   }, [autoRefresh])
@@ -464,6 +483,13 @@ function App() {
                     title={activeBottomPanel === 'workflow' ? 'Hide workflow graph' : 'Show workflow graph'}
                   >
                     Workflow {workflowLoading && '⏳'}
+                  </button>
+                  <button
+                    className={activeBottomPanel === 'gantt' ? 'active' : ''}
+                    onClick={() => setActiveBottomPanel(activeBottomPanel === 'gantt' ? null : 'gantt')}
+                    title={activeBottomPanel === 'gantt' ? 'Hide agent gantt' : 'Show agent gantt'}
+                  >
+                    Agent Gantt
                   </button>
                   {activeBottomPanel === 'timeline' && (
                     <button
@@ -816,6 +842,12 @@ function App() {
                   onRefresh={fetchWorkflow}
                   onSelectLog={scrollToLog}
                   selectedLogIndex={selectedLogIndex}
+                />
+              )}
+              {activeBottomPanel === 'gantt' && (
+                <AgentGanttPanel
+                  entitiesData={entitiesData}
+                  logs={logs}
                 />
               )}
             </div>

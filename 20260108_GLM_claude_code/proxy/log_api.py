@@ -248,6 +248,28 @@ def get_workflow():
         logger.info("Workflow graph building complete")
 
 
+@app.route('/api/entities')
+def get_entities():
+    """Return entities JSON file."""
+    # Find the most recent entities file
+    entities_files = sorted(
+        LOG_DIR.glob("entities_*.json"),
+        key=lambda p: p.stat().st_mtime,
+        reverse=True
+    )
+
+    if not entities_files:
+        return jsonify({"error": "No entities file found"}), 404
+
+    try:
+        with open(entities_files[0], 'r') as f:
+            entities = json.load(f)
+        return jsonify(entities)
+    except Exception as e:
+        logger.error(f"Failed to load entities: {e}")
+        return jsonify({"error": str(e)}), 500
+
+
 @app.route('/api/health')
 def health():
     """Health check endpoint."""
