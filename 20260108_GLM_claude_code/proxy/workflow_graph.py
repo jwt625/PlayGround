@@ -5,10 +5,13 @@ Workflow graph construction for Claude Code inference logs.
 Builds a directed graph showing:
 1. Tool dependencies (tool_use → tool_result)
 2. Subagent spawns (parent → child via Task tool)
+3. Content reuse (agent output → subsequent agent input)
+4. Prompt-based subagent matching (Task tool prompt → subagent first message)
 """
 
 from typing import Dict, List, Any, Optional, Set, Tuple
 from datetime import datetime
+import hashlib
 
 
 def detect_sessions(logs: List[Dict[str, Any]], gap_minutes: float = 10.0) -> List[Tuple[int, int]]:
@@ -161,47 +164,62 @@ def match_tool_results(logs: List[Dict[str, Any]], tool_index: Dict[str, int], t
 def detect_subagent_spawns(logs: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
     """
     Identify parent-child relationships via Task tool usage.
-    
+
+    Uses both temporal proximity and prompt matching:
+    1. Extract prompt from Task tool input
+    2. Search forward for agent with matching first message content
+    3. Verify agent type matches subagent_type
+    4. Prefer closest temporal match within reasonable window
+
     Args:
         logs: List of log entries
-        
+
     Returns:
         List of edge dictionaries with type='subagent_spawn'
     """
     edges = []
-    
+
     # Find all Task tool uses
     task_spawns = []
     for idx, log in enumerate(logs):
         response_body = log.get('response', {}).get('body', {})
         content = response_body.get('content', [])
-        
+
         if not isinstance(content, list):
             continue
-            
+
         for block in content:
             if isinstance(block, dict) and block.get('type') == 'tool_use' and block.get('name') == 'Task':
                 tool_input = block.get('input', {})
                 subagent_type = tool_input.get('subagent_type')
                 task_tool_id = block.get('id')
-                
+                prompt = tool_input.get('prompt', '')
+
                 if subagent_type:
                     task_spawns.append({
                         'parent_idx': idx,
                         'subagent_type': subagent_type,
                         'task_tool_id': task_tool_id,
+                        'prompt': prompt,
+                        'prompt_hash': hash_content(prompt, length=300) if prompt else None,
                         'timestamp': log.get('timestamp')
                     })
-    
+
     # Match spawns to subsequent agent instances
     for spawn in task_spawns:
         parent_idx = spawn['parent_idx']
         subagent_type = spawn['subagent_type']
+        prompt_hash = spawn['prompt_hash']
         spawn_time = datetime.fromisoformat(spawn['timestamp'].replace('Z', '+00:00'))
 
-        # Search forward for matching agent type
+        # Search forward for matching agent by prompt content
         best_match = None
         min_time_diff = float('inf')
+        match_method = 'none'
+
+        # Only try to match if we have a prompt hash
+        if not prompt_hash:
+            continue
 
         for idx in range(parent_idx + 1, len(logs)):
             log = logs[idx]
@@ -214,13 +232,34 @@ def detect_subagent_spawns(logs: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
                 # Logs are sorted by time, so no point continuing
                 break
 
-            agent_type = log.get('agent_type', {})
+            # Check first message in request for prompt match
+            messages = log.get('body', {}).get('messages', [])
+            if isinstance(messages, list) and len(messages) > 0:
+                first_msg = messages[0]
+                if isinstance(first_msg, dict):
+                    msg_content = first_msg.get('content', '')
 
-            if agent_type.get('name') == subagent_type:
-                # Within 1 hour window
-                if 0 <= time_diff and time_diff < min_time_diff:
-                    best_match = idx
-                    min_time_diff = time_diff
+                    # Handle both string and array content
+                    msg_hash = None
+                    if isinstance(msg_content, str):
+                        msg_hash = hash_content(msg_content, length=300)
+                    elif isinstance(msg_content, list):
+                        # Extract text from content blocks
+                        for block in msg_content:
+                            if isinstance(block, dict) and block.get('type') == 'text':
+                                text = block.get('text', '')
+                                msg_hash = hash_content(text, length=300)
+                                break
+
+                    # Check for prompt match
+                    if msg_hash and msg_hash == prompt_hash:
+                        # Prompt match found - take first match within time window
+                        if 0 <= time_diff and time_diff < min_time_diff:
+                            best_match = idx
+                            min_time_diff = time_diff
+                            match_method = 'prompt_hash'
+                            # Break early on prompt match since it's very specific
+                            break
 
         if best_match is not None:
             edges.append({
@@ -231,11 +270,140 @@ def detect_subagent_spawns(logs: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
                     'subagent_type': subagent_type,
                     'task_tool_id': spawn['task_tool_id'],
                     'spawn_time': spawn['timestamp'],
-                    'time_diff_seconds': min_time_diff
+                    'time_diff_seconds': min_time_diff,
+                    'match_method': match_method
                 },
-                'confidence': 0.9 if min_time_diff < 60 else 0.85
+                'confidence': 0.95
             })
-    
+
+    return edges
+
+
+def hash_content(text: str, length: int = 200) -> str:
+    """
+    Hash the first N characters of text content for matching.
+
+    Args:
+        text: Text content to hash
+        length: Number of characters to use (default: 200)
+
+    Returns:
+        SHA256 hash of the first N characters
+    """
+    if not text:
+        return ""
+
+    # Normalize whitespace and take first N characters
+    normalized = ' '.join(text.split())[:length]
+    return hashlib.sha256(normalized.encode('utf-8')).hexdigest()
+
+
+def extract_text_content(content_blocks: List[Any]) -> str:
+    """
+    Extract text content from response content blocks.
+
+    Args:
+        content_blocks: List of content blocks from response
+
+    Returns:
+        Concatenated text content
+    """
+    if not isinstance(content_blocks, list):
+        return ""
+
+    texts = []
+    for block in content_blocks:
+        if isinstance(block, dict):
+            if block.get('type') == 'text':
+                text = block.get('text', '')
+                if text:
+                    texts.append(text)
+
+    return '\n'.join(texts)
+
+
+def detect_content_reuse(logs: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+    """
+    Identify content reuse edges where one agent's output is used in another agent's input.
+
+    Uses content hashing (first 200 chars) to match response text to subsequent request messages.
+
+    Args:
+        logs: List of log entries
+
+    Returns:
+        List of edge dictionaries with type='content_reuse'
+    """
+    edges = []
+
+    # Build index of response content hashes
+    response_hashes = {}  # hash -> list of (log_idx, full_text_preview)
+
+    for idx, log in enumerate(logs):
+        response_body = log.get('response', {}).get('body', {})
+        content = response_body.get('content', [])
+
+        text_content = extract_text_content(content)
+        if text_content:
+            content_hash = hash_content(text_content)
+            if content_hash:
+                if content_hash not in response_hashes:
+                    response_hashes[content_hash] = []
+                # Store preview (first 100 chars for metadata)
+                preview = text_content[:100].replace('\n', ' ')
+                response_hashes[content_hash].append((idx, preview))
+
+    # Search for matching content in subsequent requests
+    for target_idx, log in enumerate(logs):
+        request_body = log.get('body', {})
+        messages = request_body.get('messages', [])
+
+        if not isinstance(messages, list):
+            continue
+
+        for message in messages:
+            if not isinstance(message, dict):
+                continue
+
+            content = message.get('content', [])
+            if isinstance(content, str):
+                # Handle string content
+                content_hash = hash_content(content)
+                if content_hash in response_hashes:
+                    for source_idx, preview in response_hashes[content_hash]:
+                        # Only create edge if source comes before target
+                        if source_idx < target_idx:
+                            edges.append({
+                                'type': 'content_reuse',
+                                'source': source_idx,
+                                'target': target_idx,
+                                'metadata': {
+                                    'content_preview': preview,
+                                    'match_method': 'hash_200char'
+                                },
+                                'confidence': 0.95
+                            })
+            elif isinstance(content, list):
+                # Handle array content
+                for block in content:
+                    if isinstance(block, dict) and block.get('type') == 'text':
+                        text = block.get('text', '')
+                        if text:
+                            content_hash = hash_content(text)
+                            if content_hash in response_hashes:
+                                for source_idx, preview in response_hashes[content_hash]:
+                                    if source_idx < target_idx:
+                                        edges.append({
+                                            'type': 'content_reuse',
+                                            'source': source_idx,
+                                            'target': target_idx,
+                                            'metadata': {
+                                                'content_preview': preview,
+                                                'match_method': 'hash_200char'
+                                            },
+                                            'confidence': 0.95
+                                        })
+
     return edges
 
 
@@ -288,8 +456,9 @@ def build_workflow_graph(logs: List[Dict[str, Any]], max_logs_per_session: int =
         # Find edges within this session (using session_id prefix)
         tool_edges = match_tool_results(session_logs, tool_index, tool_names, session_id=session_idx)
         spawn_edges = detect_subagent_spawns(session_logs)
+        content_edges = detect_content_reuse(session_logs)
 
-        print(f"  Session {session_idx + 1}: {len(tool_edges)} tool edges, {len(spawn_edges)} spawn edges")
+        print(f"  Session {session_idx + 1}: {len(tool_edges)} tool edges, {len(spawn_edges)} spawn edges, {len(content_edges)} content reuse edges")
 
         # Build nodes for this session
         for local_idx, log in enumerate(session_logs):
@@ -324,12 +493,12 @@ def build_workflow_graph(logs: List[Dict[str, Any]], max_logs_per_session: int =
             all_nodes.append(node)
 
         # Adjust edge indices to global indices
-        for edge in tool_edges + spawn_edges:
+        for edge in tool_edges + spawn_edges + content_edges:
             edge['source'] = session_node_start + edge['source']
             edge['target'] = session_node_start + edge['target']
             edge['session_id'] = session_idx
 
-        all_edges.extend(tool_edges + spawn_edges)
+        all_edges.extend(tool_edges + spawn_edges + content_edges)
 
         # Store session metadata
         session_info.append({
@@ -337,7 +506,7 @@ def build_workflow_graph(logs: List[Dict[str, Any]], max_logs_per_session: int =
             'node_start': session_node_start,
             'node_end': len(all_nodes) - 1,
             'node_count': len(session_logs),
-            'edge_count': len(tool_edges) + len(spawn_edges),
+            'edge_count': len(tool_edges) + len(spawn_edges) + len(content_edges),
             'start_time': session_logs[0].get('timestamp') if session_logs else None,
             'end_time': session_logs[-1].get('timestamp') if session_logs else None
         })

@@ -6,6 +6,7 @@ import './WorkflowPanel.css'
 function WorkflowPanel({ logs, workflowGraph, onRefresh, onSelectLog, selectedLogIndex }) {
   const [showToolEdges, setShowToolEdges] = useState(true)
   const [showSpawnEdges, setShowSpawnEdges] = useState(true)
+  const [showContentEdges, setShowContentEdges] = useState(true)
   const svgRef = useRef(null)
   const simulationRef = useRef(null)
   const nodeCirclesRef = useRef(null) // Store reference to node circles for selection updates
@@ -54,6 +55,7 @@ function WorkflowPanel({ logs, workflowGraph, onRefresh, onSelectLog, selectedLo
     const edges = (workflowGraph.edges || []).filter(edge => {
       if (edge.type === 'tool_result' && !showToolEdges) return false
       if (edge.type === 'subagent_spawn' && !showSpawnEdges) return false
+      if (edge.type === 'content_reuse' && !showContentEdges) return false
       return true
     }).map(edge => {
       // Build tooltip content for edges
@@ -76,6 +78,18 @@ function WorkflowPanel({ logs, workflowGraph, onRefresh, onSelectLog, selectedLo
         if (edge.metadata.time_diff_seconds !== undefined) {
           tooltipLines.push(`Time gap: ${edge.metadata.time_diff_seconds.toFixed(1)}s`)
         }
+        if (edge.metadata.match_method) {
+          tooltipLines.push(`Match: ${edge.metadata.match_method}`)
+        }
+        tooltipLines.push(`Confidence: ${(edge.confidence * 100).toFixed(0)}%`)
+      } else if (edge.type === 'content_reuse') {
+        tooltipLines.push('Content Reuse')
+        tooltipLines.push(`From: Node #${edge.source}`)
+        tooltipLines.push(`To: Node #${edge.target}`)
+        if (edge.metadata.content_preview) {
+          tooltipLines.push(`Preview: ${edge.metadata.content_preview}`)
+        }
+        tooltipLines.push(`Match: ${edge.metadata.match_method || 'hash'}`)
         tooltipLines.push(`Confidence: ${(edge.confidence * 100).toFixed(0)}%`)
       }
 
@@ -103,7 +117,7 @@ function WorkflowPanel({ logs, workflowGraph, onRefresh, onSelectLog, selectedLo
 
     // Create arrow markers for edges
     svg.append('defs').selectAll('marker')
-      .data(['tool_result', 'subagent_spawn'])
+      .data(['tool_result', 'subagent_spawn', 'content_reuse'])
       .join('marker')
       .attr('id', d => `arrow-${d}`)
       .attr('viewBox', '0 -5 10 10')
@@ -114,7 +128,12 @@ function WorkflowPanel({ logs, workflowGraph, onRefresh, onSelectLog, selectedLo
       .attr('orient', 'auto')
       .append('path')
       .attr('d', 'M0,-5L10,0L0,5')
-      .attr('fill', d => d === 'tool_result' ? '#94a3b8' : '#f59e0b')
+      .attr('fill', d => {
+        if (d === 'tool_result') return '#94a3b8'
+        if (d === 'subagent_spawn') return '#f59e0b'
+        if (d === 'content_reuse') return '#8b5cf6'
+        return '#666'
+      })
 
     // Create force simulation
     const simulation = d3.forceSimulation(nodes)
@@ -136,9 +155,15 @@ function WorkflowPanel({ logs, workflowGraph, onRefresh, onSelectLog, selectedLo
       .selectAll('line')
       .data(edges)
       .join('line')
-      .attr('stroke', d => d.type === 'tool_result' ? '#94a3b8' : '#f59e0b')
+      .attr('stroke', d => {
+        if (d.type === 'tool_result') return '#94a3b8'
+        if (d.type === 'subagent_spawn') return '#f59e0b'
+        if (d.type === 'content_reuse') return '#8b5cf6'
+        return '#666'
+      })
       .attr('stroke-width', 2)
-      .attr('stroke-opacity', 0.6)
+      .attr('stroke-opacity', d => d.type === 'content_reuse' ? 0.4 : 0.6)
+      .attr('stroke-dasharray', d => d.type === 'content_reuse' ? '5,5' : 'none')
       .attr('marker-end', d => `url(#arrow-${d.type})`)
       .attr('data-tooltip-id', 'workflow-tooltip')
       .attr('data-tooltip-content', d => d.tooltipContent)
@@ -146,8 +171,8 @@ function WorkflowPanel({ logs, workflowGraph, onRefresh, onSelectLog, selectedLo
       .on('mouseenter', function() {
         d3.select(this).attr('stroke-width', 4).attr('stroke-opacity', 1.0)
       })
-      .on('mouseleave', function() {
-        d3.select(this).attr('stroke-width', 2).attr('stroke-opacity', 0.6)
+      .on('mouseleave', function(_event, d) {
+        d3.select(this).attr('stroke-width', 2).attr('stroke-opacity', d.type === 'content_reuse' ? 0.4 : 0.6)
       })
 
     // Draw nodes with tooltips
@@ -286,7 +311,7 @@ function WorkflowPanel({ logs, workflowGraph, onRefresh, onSelectLog, selectedLo
             checked={showToolEdges}
             onChange={(e) => setShowToolEdges(e.target.checked)}
           />
-          Tool Dependencies
+          <span style={{ color: '#94a3b8' }}>●</span> Tool Dependencies
         </label>
         <label>
           <input
@@ -294,7 +319,15 @@ function WorkflowPanel({ logs, workflowGraph, onRefresh, onSelectLog, selectedLo
             checked={showSpawnEdges}
             onChange={(e) => setShowSpawnEdges(e.target.checked)}
           />
-          Subagent Spawns
+          <span style={{ color: '#f59e0b' }}>●</span> Subagent Spawns
+        </label>
+        <label>
+          <input
+            type="checkbox"
+            checked={showContentEdges}
+            onChange={(e) => setShowContentEdges(e.target.checked)}
+          />
+          <span style={{ color: '#8b5cf6' }}>●</span> Content Reuse
         </label>
         <span className="workflow-stats">
           {workflowGraph.nodes.length} nodes, {workflowGraph.edges.length} edges
