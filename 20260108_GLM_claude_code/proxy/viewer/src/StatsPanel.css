@@ -204,3 +204,141 @@
   white-space: nowrap;
 }
 
+/* Matrix layout styles */
+.metrics-matrix {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  border: 1px solid #333;
+  background: #1a1a1a;
+}
+
+.matrix-header {
+  display: grid;
+  grid-template-columns: 250px repeat(3, 1fr);
+  border-bottom: 2px solid #444;
+  background: #0f0f0f;
+}
+
+.matrix-row {
+  display: grid;
+  grid-template-columns: 250px repeat(3, 1fr);
+  border-bottom: 1px solid #333;
+}
+
+.matrix-row:last-child {
+  border-bottom: none;
+}
+
+.matrix-cell {
+  padding: 16px;
+  border-right: 1px solid #333;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100px;
+}
+
+.matrix-cell:last-child {
+  border-right: none;
+}
+
+.matrix-header .matrix-cell {
+  font-size: 12px;
+  font-weight: 600;
+  color: #aaa;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  min-height: 50px;
+}
+
+.matrix-cell.row-header {
+  background: #0f0f0f;
+  align-items: flex-start;
+  justify-content: flex-start;
+  padding: 20px;
+}
+
+.row-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: #aaa;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 16px;
+}
+
+/* Shared legend styles */
+.shared-legend {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
+}
+
+.shared-legend .legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 0;
+}
+
+.shared-legend .legend-color {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+  border: 1px solid #333;
+}
+
+.shared-legend .legend-label {
+  font-size: 11px;
+  color: #e0e0e0;
+}
+
+.shared-legend .legend-name {
+  font-weight: 400;
+}
+
+/* Adjust pie chart in matrix */
+.matrix-cell .pie-chart-wrapper {
+  gap: 0;
+  position: relative;
+}
+
+.matrix-cell .pie-chart-svg {
+  width: 200px;
+  height: 200px;
+}
+
+/* Tooltip styles */
+.pie-tooltip {
+  position: fixed;
+  background: #1a1a1a;
+  border: 1px solid #444;
+  padding: 8px 12px;
+  border-radius: 0;
+  pointer-events: none;
+  z-index: 1000;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+}
+
+.tooltip-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #e0e0e0;
+  margin-bottom: 4px;
+}
+
+.tooltip-value {
+  font-size: 13px;
+  color: #10b981;
+  font-weight: 500;
+}
+
+.tooltip-percentage {
+  font-size: 11px;
+  color: #888;
+  margin-top: 2px;
+}
+

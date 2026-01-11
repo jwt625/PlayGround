@@ -501,16 +501,18 @@ function App() {
                     </button>
                   )}
                   <button
-                    onClick={() => setCollapsedItems(new Set(windowedLogs.map((_, idx) => idx)))}
-                    title="Collapse all log entries"
+                    className="fold-toggle-btn"
+                    onClick={() => {
+                      const allCollapsed = collapsedItems.size === windowedLogs.length
+                      if (allCollapsed) {
+                        setCollapsedItems(new Set())
+                      } else {
+                        setCollapsedItems(new Set(windowedLogs.map((_, idx) => idx)))
+                      }
+                    }}
+                    title={collapsedItems.size === windowedLogs.length ? 'Expand all log entries' : 'Collapse all log entries'}
                   >
-                    Fold All
-                  </button>
-                  <button
-                    onClick={() => setCollapsedItems(new Set())}
-                    title="Expand all log entries"
-                  >
-                    Unfold All
+                    {collapsedItems.size === windowedLogs.length ? 'Unfold All' : 'Fold All'}
                   </button>
                 </div>
               </>

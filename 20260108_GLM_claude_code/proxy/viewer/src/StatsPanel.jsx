@@ -1,5 +1,24 @@
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import './StatsPanel.css'
+
+// Format milliseconds to hh:mm:ss (omit zero hours)
+function formatTime(ms) {
+  const totalSeconds = Math.floor(ms / 1000)
+  const hours = Math.floor(totalSeconds / 3600)
+  const minutes = Math.floor((totalSeconds % 3600) / 60)
+  const seconds = totalSeconds % 60
+
+  const parts = []
+  if (hours > 0) {
+    parts.push(`${hours}h`)
+  }
+  if (minutes > 0 || hours > 0) {
+    parts.push(`${minutes}m`)
+  }
+  parts.push(`${seconds}s`)
+
+  return parts.join(' ')
+}
 
 // Agent type definitions (matching log_classifier.py)
 const AGENT_TYPES = {
@@ -23,8 +42,10 @@ const STOP_REASON_COLORS = [
   "#8b5cf6", "#ec4899", "#f59e0b", "#10b981", "#3b82f6"
 ]
 
-// Simple SVG Pie Chart Component
-function PieChart({ data }) {
+// Simple SVG Pie Chart Component with tooltip
+function PieChart({ data, showLegend = true, valueFormatter = (v) => v.toLocaleString() }) {
+  const [tooltip, setTooltip] = useState(null)
+
   if (!data || data.length === 0) {
     return <div className="pie-empty">No data</div>
   }
@@ -75,6 +96,30 @@ function PieChart({ data }) {
     }
   })
 
+  const handleMouseEnter = (slice, event) => {
+    setTooltip({
+      label: slice.label,
+      value: valueFormatter(slice.value),
+      percentage: slice.percentage,
+      x: event.clientX,
+      y: event.clientY
+    })
+  }
+
+  const handleMouseMove = (slice, event) => {
+    setTooltip({
+      label: slice.label,
+      value: valueFormatter(slice.value),
+      percentage: slice.percentage,
+      x: event.clientX,
+      y: event.clientY
+    })
+  }
+
+  const handleMouseLeave = () => {
+    setTooltip(null)
+  }
+
   return (
     <div className="pie-chart-wrapper">
       <svg className="pie-chart-svg" viewBox={`0 0 ${size} ${size}`}>
@@ -86,20 +131,57 @@ function PieChart({ data }) {
             stroke="#0a0a0a"
             strokeWidth="2"
             className="pie-slice"
+            onMouseEnter={(e) => handleMouseEnter(slice, e)}
+            onMouseMove={(e) => handleMouseMove(slice, e)}
+            onMouseLeave={handleMouseLeave}
           />
         ))}
       </svg>
-      <div className="pie-legend">
-        {slices.map((slice, idx) => (
-          <div key={idx} className="legend-item">
-            <div className="legend-color" style={{ backgroundColor: slice.color }} />
-            <div className="legend-label">
-              <span className="legend-name">{slice.label}</span>
-              <span className="legend-value">{slice.value.toLocaleString()} ({slice.percentage}%)</span>
+      {showLegend && (
+        <div className="pie-legend">
+          {slices.map((slice, idx) => (
+            <div key={idx} className="legend-item">
+              <div className="legend-color" style={{ backgroundColor: slice.color }} />
+              <div className="legend-label">
+                <span className="legend-name">{slice.label}</span>
+              </div>
             </div>
+          ))}
+        </div>
+      )}
+      {tooltip && (
+        <div
+          className="pie-tooltip"
+          style={{
+            left: `${tooltip.x + 10}px`,
+            top: `${tooltip.y + 10}px`
+          }}
+        >
+          <div className="tooltip-label">{tooltip.label}</div>
+          <div className="tooltip-value">{tooltip.value}</div>
+          <div className="tooltip-percentage">{tooltip.percentage}%</div>
+        </div>
+      )}
+    </div>
+  )
+}
+
+// Shared legend component for matrix layout
+function SharedLegend({ data }) {
+  if (!data || data.length === 0) {
+    return null
+  }
+
+  return (
+    <div className="shared-legend">
+      {data.map((item, idx) => (
+        <div key={idx} className="legend-item">
+          <div className="legend-color" style={{ backgroundColor: item.color }} />
+          <div className="legend-label">
+            <span className="legend-name">{item.label}</span>
           </div>
-        ))}
-      </div>
+        </div>
+      ))}
     </div>
   )
 }
@@ -115,6 +197,9 @@ function StatsPanel({ logs }) {
         toolCounts: {},
         stopReasonCounts: {},
         tokensByAgent: {},
+        timeByAgent: {},
+        tokensByTool: {},
+        timeByTool: {},
         totalTokens: 0,
         durations: [],
         timeRange: null
@@ -125,6 +210,9 @@ function StatsPanel({ logs }) {
     const toolCounts = {}
     const stopReasonCounts = {}
     const tokensByAgent = {}
+    const timeByAgent = {}
+    const tokensByTool = {}
+    const timeByTool = {}
     let totalTokens = 0
     let successCount = 0
     let errorCount = 0
@@ -136,12 +224,26 @@ function StatsPanel({ logs }) {
       const agentType = log.agent_type?.name || 'unknown'
       agentTypeCounts[agentType] = (agentTypeCounts[agentType] || 0) + 1
 
-      // Tool counts
+      // Duration for this request
+      const duration = log.response?.duration_ms
+
+      // Time by agent
+      if (duration !== undefined && duration !== null) {
+        timeByAgent[agentType] = (timeByAgent[agentType] || 0) + duration
+      }
+
+      // Tool counts and metrics
       const toolInfo = log.tool_info || {}
       if (toolInfo.tool_names && Array.isArray(toolInfo.tool_names)) {
         toolInfo.tool_names.forEach(tool => {
           if (tool) {
             toolCounts[tool] = (toolCounts[tool] || 0) + 1
+
+            // Time by tool (distribute duration equally among tools in this request)
+            if (duration !== undefined && duration !== null) {
+              const timePerTool = duration / toolInfo.tool_names.length
+              timeByTool[tool] = (timeByTool[tool] || 0) + timePerTool
+            }
           }
         })
       }
@@ -150,12 +252,22 @@ function StatsPanel({ logs }) {
       const stopReason = log.stop_reason || 'unknown'
       stopReasonCounts[stopReason] = (stopReasonCounts[stopReason] || 0) + 1
 
-      // Tokens by agent
+      // Tokens by agent and tool
       const usage = log.response?.body?.usage
       if (usage) {
         const tokens = (usage.input_tokens || 0) + (usage.output_tokens || 0) || usage.total_tokens || 0
         tokensByAgent[agentType] = (tokensByAgent[agentType] || 0) + tokens
         totalTokens += tokens
+
+        // Tokens by tool (distribute tokens equally among tools in this request)
+        if (toolInfo.tool_names && Array.isArray(toolInfo.tool_names) && toolInfo.tool_names.length > 0) {
+          const tokensPerTool = tokens / toolInfo.tool_names.length
+          toolInfo.tool_names.forEach(tool => {
+            if (tool) {
+              tokensByTool[tool] = (tokensByTool[tool] || 0) + tokensPerTool
+            }
+          })
+        }
       }
 
       // Success/Error counts
@@ -167,7 +279,6 @@ function StatsPanel({ logs }) {
       }
 
       // Durations
-      const duration = log.response?.duration_ms
       if (duration !== undefined && duration !== null) {
         durations.push(duration)
       }
@@ -207,6 +318,9 @@ function StatsPanel({ logs }) {
       toolCounts,
       stopReasonCounts,
       tokensByAgent,
+      timeByAgent,
+      tokensByTool,
+      timeByTool,
       totalTokens,
       durationStats,
       timeRange
@@ -296,11 +410,23 @@ function StatsPanel({ logs }) {
           </div>
         )}
 
-        {/* Agent Type Distribution */}
+        {/* 2x3 Matrix: Agent/Tool x Usage/Time/Tokens */}
         <div className="stats-section">
-          <h3 className="section-title">Agent Type Distribution</h3>
-          <div className="pie-chart-container">
-            <PieChart data={Object.entries(stats.agentTypeCounts)
+          <h3 className="section-title">Agent and Tool Metrics</h3>
+
+          {/* Prepare agent data */}
+          {(() => {
+            const agentLegendData = Object.entries(stats.agentTypeCounts)
+              .sort((a, b) => b[1] - a[1])
+              .map(([agentName]) => {
+                const agentType = AGENT_TYPES[agentName] || AGENT_TYPES.unknown
+                return {
+                  label: agentType.label,
+                  color: agentType.color
+                }
+              })
+
+            const agentUsageData = Object.entries(stats.agentTypeCounts)
               .sort((a, b) => b[1] - a[1])
               .map(([agentName, count]) => {
                 const agentType = AGENT_TYPES[agentName] || AGENT_TYPES.unknown
@@ -309,30 +435,20 @@ function StatsPanel({ logs }) {
                   value: count,
                   color: agentType.color
                 }
-              })} />
-          </div>
-        </div>
+              })
 
-        {/* Tool Usage Distribution */}
-        <div className="stats-section">
-          <h3 className="section-title">Tool Usage Distribution (Top 10)</h3>
-          <div className="pie-chart-container">
-            <PieChart data={Object.entries(stats.toolCounts)
+            const agentTimeData = Object.entries(stats.timeByAgent)
               .sort((a, b) => b[1] - a[1])
-              .slice(0, 10)
-              .map(([toolName, count], idx) => ({
-                label: toolName,
-                value: count,
-                color: TOOL_COLORS[idx % TOOL_COLORS.length]
-              }))} />
-          </div>
-        </div>
+              .map(([agentName, time]) => {
+                const agentType = AGENT_TYPES[agentName] || AGENT_TYPES.unknown
+                return {
+                  label: agentType.label,
+                  value: time,
+                  color: agentType.color
+                }
+              })
 
-        {/* Tokens by Agent Type */}
-        <div className="stats-section">
-          <h3 className="section-title">Token Consumption by Agent Type</h3>
-          <div className="pie-chart-container">
-            <PieChart data={Object.entries(stats.tokensByAgent)
+            const agentTokenData = Object.entries(stats.tokensByAgent)
               .sort((a, b) => b[1] - a[1])
               .map(([agentName, tokens]) => {
                 const agentType = AGENT_TYPES[agentName] || AGENT_TYPES.unknown
@@ -341,8 +457,110 @@ function StatsPanel({ logs }) {
                   value: tokens,
                   color: agentType.color
                 }
-              })} />
-          </div>
+              })
+
+            // Prepare tool data (top 10)
+            const topTools = Object.entries(stats.toolCounts)
+              .sort((a, b) => b[1] - a[1])
+              .slice(0, 10)
+              .map(([toolName], idx) => ({
+                name: toolName,
+                color: TOOL_COLORS[idx % TOOL_COLORS.length]
+              }))
+
+            const toolLegendData = topTools.map(tool => ({
+              label: tool.name,
+              color: tool.color
+            }))
+
+            const toolUsageData = topTools.map(tool => ({
+              label: tool.name,
+              value: stats.toolCounts[tool.name] || 0,
+              color: tool.color
+            }))
+
+            const toolTimeData = topTools.map(tool => ({
+              label: tool.name,
+              value: stats.timeByTool[tool.name] || 0,
+              color: tool.color
+            }))
+
+            const toolTokenData = topTools.map(tool => ({
+              label: tool.name,
+              value: stats.tokensByTool[tool.name] || 0,
+              color: tool.color
+            }))
+
+            return (
+              <div className="metrics-matrix">
+                {/* Header row */}
+                <div className="matrix-header">
+                  <div className="matrix-cell"></div>
+                  <div className="matrix-cell">Usage Count</div>
+                  <div className="matrix-cell">Time Consumed (ms)</div>
+                  <div className="matrix-cell">Tokens Consumed</div>
+                </div>
+
+                {/* Agent row */}
+                <div className="matrix-row">
+                  <div className="matrix-cell row-header">
+                    <div className="row-title">Agent Types</div>
+                    <SharedLegend data={agentLegendData} />
+                  </div>
+                  <div className="matrix-cell">
+                    <PieChart
+                      data={agentUsageData}
+                      showLegend={false}
+                      valueFormatter={(v) => v.toLocaleString()}
+                    />
+                  </div>
+                  <div className="matrix-cell">
+                    <PieChart
+                      data={agentTimeData}
+                      showLegend={false}
+                      valueFormatter={(v) => formatTime(v)}
+                    />
+                  </div>
+                  <div className="matrix-cell">
+                    <PieChart
+                      data={agentTokenData}
+                      showLegend={false}
+                      valueFormatter={(v) => v.toLocaleString()}
+                    />
+                  </div>
+                </div>
+
+                {/* Tool row */}
+                <div className="matrix-row">
+                  <div className="matrix-cell row-header">
+                    <div className="row-title">Tool Types (Top 10)</div>
+                    <SharedLegend data={toolLegendData} />
+                  </div>
+                  <div className="matrix-cell">
+                    <PieChart
+                      data={toolUsageData}
+                      showLegend={false}
+                      valueFormatter={(v) => v.toLocaleString()}
+                    />
+                  </div>
+                  <div className="matrix-cell">
+                    <PieChart
+                      data={toolTimeData}
+                      showLegend={false}
+                      valueFormatter={(v) => formatTime(v)}
+                    />
+                  </div>
+                  <div className="matrix-cell">
+                    <PieChart
+                      data={toolTokenData}
+                      showLegend={false}
+                      valueFormatter={(v) => v.toLocaleString()}
+                    />
+                  </div>
+                </div>
+              </div>
+            )
+          })()}
         </div>
 
         {/* Stop Reason Distribution */}
