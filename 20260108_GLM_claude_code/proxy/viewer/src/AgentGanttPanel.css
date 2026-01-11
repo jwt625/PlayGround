@@ -91,6 +91,7 @@
   background: #0a0a0a;
   cursor: crosshair;
   user-select: none;
+  box-sizing: border-box;
 }
 
 .gantt-axis {
@@ -121,7 +122,8 @@
 
 .gantt-rows {
   position: relative;
-  padding: 20px;
+  padding-left: 0;
+  padding-right: 0;
 }
 
 .gantt-grid {
@@ -200,5 +202,16 @@
   border: 1px solid rgba(59, 130, 246, 0.6);
   pointer-events: none;
   z-index: 1000;
+}
+
+/* Spawn arrows */
+.gantt-arrows path {
+  cursor: pointer;
+  transition: stroke-width 0.2s, stroke 0.2s;
+}
+
+.gantt-arrows path:hover {
+  stroke: #bbb !important;
+  stroke-width: 2.5 !important;
 }
 

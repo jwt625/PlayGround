@@ -22,12 +22,12 @@ function AgentGanttPanel({ entitiesData, logs }) {
   // Process agent data
   const agentData = useMemo(() => {
     if (!entitiesData || !logs || logs.length === 0) {
-      return { agents: [], minTime: 0, maxTime: 0, duration: 0 }
+      return { agents: [], minTime: 0, maxTime: 0, duration: 0, spawnEdges: [] }
     }
 
     const agentInstances = entitiesData.entities?.agent_instances || []
     if (agentInstances.length === 0) {
-      return { agents: [], minTime: 0, maxTime: 0, duration: 0 }
+      return { agents: [], minTime: 0, maxTime: 0, duration: 0, spawnEdges: [] }
     }
 
     // Build request map from enriched logs (already have agent_type from /api/logs)
@@ -69,13 +69,76 @@ function AgentGanttPanel({ entitiesData, logs }) {
         agent_id: agent.agent_id,
         requests,
         parent_agent_id: agent.parent_agent_id,
+        child_agent_ids: agent.child_agent_ids || [],
         firstTimestamp: requests[0].timestamp,
+        lastTimestamp: requests[requests.length - 1].endTime,
         agentType: requests[0].agentType
       }
     }).filter(a => a !== null)
 
     // Sort by first timestamp (earliest first for proper Gantt chart)
     agents.sort((a, b) => a.firstTimestamp - b.firstTimestamp)
+
+    // Build agent index for quick lookup
+    const agentIndex = new Map()
+    agents.forEach((agent, idx) => {
+      agentIndex.set(agent.agent_id, idx)
+    })
+
+    // Build task index to find which request spawned each task
+    const taskIndex = new Map()
+    const tasks = entitiesData.entities?.tasks || []
+    tasks.forEach(task => {
+      if (task.first_seen_request !== undefined) {
+        // Only set if not already set (take the first occurrence)
+        if (!taskIndex.has(task.id)) {
+          taskIndex.set(task.id, task.first_seen_request)
+        }
+      }
+    })
+
+    // Build spawn edges from workflow_dag
+    const spawnEdges = []
+    const workflowEdges = entitiesData.workflow_dag?.edges || []
+
+    workflowEdges.forEach(edge => {
+      if (edge.type === 'subagent_spawn') {
+        const sourceIdx = agentIndex.get(edge.source_agent_id)
+        const targetIdx = agentIndex.get(edge.target_agent_id)
+
+        if (sourceIdx !== undefined && targetIdx !== undefined) {
+          const sourceAgent = agents[sourceIdx]
+          const targetAgent = agents[targetIdx]
+
+          // Find the exact request that spawned this child (using task ID)
+          const spawnRequestId = taskIndex.get(edge.spawned_by_task_id)
+          let sourceRequest = null
+
+          if (spawnRequestId !== undefined) {
+            // Find the request in the parent agent's request list
+            sourceRequest = sourceAgent.requests.find(r => r.reqId === spawnRequestId)
+          }
+
+          // Fallback to last request if we can't find the exact one
+          if (!sourceRequest) {
+            sourceRequest = sourceAgent.requests[sourceAgent.requests.length - 1]
+          }
+
+          const targetRequest = targetAgent.requests[0]
+
+          spawnEdges.push({
+            sourceAgentId: edge.source_agent_id,
+            targetAgentId: edge.target_agent_id,
+            sourceIdx,
+            targetIdx,
+            sourceX: sourceRequest.endTime, // Right end of parent's spawning request
+            targetX: targetRequest.timestamp, // Left start of child's first request
+            spawned_by_task_id: edge.spawned_by_task_id,
+            confidence: edge.confidence
+          })
+        }
+      }
+    })
 
     // Calculate time bounds
     const allTimestamps = agents.flatMap(a => a.requests.map(r => r.timestamp))
@@ -84,10 +147,10 @@ function AgentGanttPanel({ entitiesData, logs }) {
     const maxTime = Math.max(...allEndTimes)
     const duration = maxTime - minTime
 
-    return { agents, minTime, maxTime, duration }
+    return { agents, minTime, maxTime, duration, spawnEdges }
   }, [entitiesData, logs])
 
-  const { agents, minTime, duration } = agentData
+  const { agents, minTime, duration, spawnEdges } = agentData
 
   // Format duration
   const formatDuration = (ms) => {
@@ -202,6 +265,75 @@ function AgentGanttPanel({ entitiesData, logs }) {
       left: `${relativeLeft * 100}%`,
       width: `${Math.max(relativeWidth * 100, 0.5)}%`,
       background: request.agentType.color
+    }
+  }
+
+  // Calculate SVG path for spawn arrow (bezier S-curve)
+  const getSpawnArrowPath = (edge, containerWidth) => {
+    // Convert time to X position (0-1 range based on zoom)
+    const sourceXFull = (edge.sourceX - minTime) / duration
+    const targetXFull = (edge.targetX - minTime) / duration
+
+    const visibleDuration = zoomX.end - zoomX.start
+    const sourceXRel = (sourceXFull - zoomX.start) / visibleDuration
+    const targetXRel = (targetXFull - zoomX.start) / visibleDuration
+
+    const x1 = sourceXRel * containerWidth
+    const x2 = targetXRel * containerWidth
+
+    // Convert agent index to Y position (accounting for Y-axis zoom)
+    const sourceAgentVisibleIdx = visibleAgents.findIndex(a => a.agent_id === edge.sourceAgentId)
+    const targetAgentVisibleIdx = visibleAgents.findIndex(a => a.agent_id === edge.targetAgentId)
+
+    // If either agent is not visible, skip this edge
+    if (sourceAgentVisibleIdx === -1 || targetAgentVisibleIdx === -1) {
+      return null
+    }
+
+    // Calculate Y positions (center of each row)
+    const y1 = (sourceAgentVisibleIdx + 0.5) * (rowHeight * 1.2) + rowHeight * 0.3
+    const y2 = (targetAgentVisibleIdx + 0.5) * (rowHeight * 1.2) + rowHeight * 0.3
+
+    // Bezier S-curve control points
+    const dx = x2 - x1
+    const dy = y2 - y1
+
+    // Minimum horizontal offset for control points (in pixels)
+    const minHorizontalOffset = 100
+
+    // When dx is small, use a forward-backward-forward curve
+    // Otherwise use a simple S-curve
+    let path
+    if (Math.abs(dx) < minHorizontalOffset * 2) {
+      // Small horizontal distance: use forward-backward-forward curve
+      // This creates a more horizontal S-shape that looks better
+      const forwardOffset = minHorizontalOffset
+      const backwardOffset = -minHorizontalOffset
+
+      // First control point: go forward (right) from source
+      const cx1 = x1 + forwardOffset
+      const cy1 = y1 + dy * 0.25
+
+      // Second control point: go backward (left) before target
+      const cx2 = x2 + backwardOffset
+      const cy2 = y2 - dy * 0.25
+
+      path = `M ${x1} ${y1} C ${cx1} ${cy1}, ${cx2} ${cy2}, ${x2} ${y2}`
+    } else {
+      // Normal case: simple S-curve with control points at 50% of horizontal distance
+      const controlPointOffset = Math.abs(dx) * 0.5
+
+      const cx1 = x1 + controlPointOffset
+      const cy1 = y1
+      const cx2 = x2 - controlPointOffset
+      const cy2 = y2
+
+      path = `M ${x1} ${y1} C ${cx1} ${cy1}, ${cx2} ${cy2}, ${x2} ${y2}`
+    }
+
+    return {
+      path,
+      x1, y1, x2, y2
     }
   }
 
@@ -442,8 +574,12 @@ function AgentGanttPanel({ entitiesData, logs }) {
             className="gantt-rows"
             ref={rowsRef}
             style={{
-              paddingTop: `${rowHeight * 0.3}px`,
-              paddingBottom: `${rowHeight * 0.3}px`
+              paddingTop: `${rowHeight * 0.5}px`,
+              paddingBottom: `${rowHeight * 0.5}px`,
+              paddingLeft: '10px',
+              paddingRight: '10px',
+              minHeight: `${visibleAgents.length > 0 ? (visibleAgents.length * rowHeight + (visibleAgents.length - 1) * rowHeight * 0.2 + rowHeight * 1.0) : 0}px`,
+              width: 'calc(100% - 20px)'
             }}
           >
             <div className="gantt-grid">
@@ -452,13 +588,13 @@ function AgentGanttPanel({ entitiesData, logs }) {
               ))}
             </div>
 
-            {visibleAgents.map((agent) => (
+            {visibleAgents.map((agent, agentIdx) => (
               <div
                 key={agent.agent_id}
                 className="gantt-row"
                 style={{
                   height: `${rowHeight}px`,
-                  marginBottom: `${rowHeight * 0.2}px`
+                  marginBottom: agentIdx < visibleAgents.length - 1 ? `${rowHeight * 0.2}px` : '0'
                 }}
               >
                 {agent.requests.map((request, reqIdx) => {
@@ -481,6 +617,56 @@ function AgentGanttPanel({ entitiesData, logs }) {
                 })}
               </div>
             ))}
+
+            {/* Spawn arrows overlay */}
+            {timelineRef.current && rowsRef.current && (
+              <svg
+                className="gantt-arrows"
+                style={{
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  width: '100%',
+                  height: `${visibleAgents.length * rowHeight * 1.2 + rowHeight * 0.6}px`,
+                  pointerEvents: 'none',
+                  zIndex: 5
+                }}
+              >
+                <defs>
+                  <marker
+                    id="arrow-spawn"
+                    viewBox="0 0 10 10"
+                    refX="9"
+                    refY="5"
+                    markerWidth="6"
+                    markerHeight="6"
+                    orient="auto"
+                  >
+                    <path d="M 0 0 L 10 5 L 0 10 z" fill="#888" />
+                  </marker>
+                </defs>
+                {spawnEdges.map((edge, idx) => {
+                  const containerWidth = rowsRef.current.clientWidth
+                  const pathData = getSpawnArrowPath(edge, containerWidth)
+
+                  if (!pathData) return null
+
+                  return (
+                    <path
+                      key={idx}
+                      d={pathData.path}
+                      stroke="#888"
+                      strokeWidth="1.5"
+                      fill="none"
+                      markerEnd="url(#arrow-spawn)"
+                      style={{ pointerEvents: 'stroke' }}
+                      data-tooltip-id="gantt-tooltip"
+                      data-tooltip-content={`Spawn: ${edge.sourceAgentId} → ${edge.targetAgentId}\nTask: ${edge.spawned_by_task_id}\nConfidence: ${edge.confidence}`}
+                    />
+                  )
+                })}
+              </svg>
+            )}
 
             {/* Selection rectangle during drag */}
             {selectionRect && (
