@@ -12,6 +12,7 @@ import './App.css'
 function App() {
   const [logs, setLogs] = useState([])
   const [workflowGraph, setWorkflowGraph] = useState(null)
+  const [workflowLoading, setWorkflowLoading] = useState(false)
   const [filter, setFilter] = useState('all')
   const [loading, setLoading] = useState(true)
   const [collapsedItems, setCollapsedItems] = useState(new Set())
@@ -129,24 +130,49 @@ function App() {
       const response = await fetch('/api/logs')
       const data = await response.json()
 
-      // Handle enriched data structure from log_classifier
+      // New API returns just logs, no workflow graph
       if (data && typeof data === 'object' && 'logs' in data) {
         setLogs(data.logs || [])
-        setWorkflowGraph(data.workflow_graph || null)
       } else if (Array.isArray(data)) {
         // Fallback for old format
         setLogs(data)
-        setWorkflowGraph(null)
       } else {
         console.error('Unexpected data format:', data)
         setLogs([])
-        setWorkflowGraph(null)
       }
 
       setLoading(false)
     } catch (error) {
       console.error('Failed to fetch logs:', error)
       setLoading(false)
+    }
+  }
+
+  const fetchWorkflow = async () => {
+    if (workflowLoading) {
+      console.log('Workflow already loading, skipping...')
+      return
+    }
+
+    setWorkflowLoading(true)
+    try {
+      console.log('Fetching workflow graph...')
+      const response = await fetch('/api/workflow')
+      const data = await response.json()
+
+      if (data && typeof data === 'object') {
+        setLogs(data.logs || logs) // Update logs if included
+        setWorkflowGraph(data.workflow_graph || null)
+        console.log('Workflow graph loaded:', data.workflow_graph)
+      } else {
+        console.error('Unexpected workflow data format:', data)
+        setWorkflowGraph(null)
+      }
+    } catch (error) {
+      console.error('Failed to fetch workflow:', error)
+      setWorkflowGraph(null)
+    } finally {
+      setWorkflowLoading(false)
     }
   }
 
@@ -427,10 +453,17 @@ function App() {
                   </button>
                   <button
                     className={activeBottomPanel === 'workflow' ? 'active' : ''}
-                    onClick={() => setActiveBottomPanel(activeBottomPanel === 'workflow' ? null : 'workflow')}
+                    onClick={() => {
+                      const newPanel = activeBottomPanel === 'workflow' ? null : 'workflow'
+                      setActiveBottomPanel(newPanel)
+                      // Fetch workflow graph when opening the panel
+                      if (newPanel === 'workflow' && !workflowGraph) {
+                        fetchWorkflow()
+                      }
+                    }}
                     title={activeBottomPanel === 'workflow' ? 'Hide workflow graph' : 'Show workflow graph'}
                   >
-                    Workflow
+                    Workflow {workflowLoading && '⏳'}
                   </button>
                   {activeBottomPanel === 'timeline' && (
                     <button
@@ -774,6 +807,7 @@ function App() {
                 <WorkflowPanel
                   logs={logs}
                   workflowGraph={workflowGraph}
+                  onRefresh={fetchWorkflow}
                 />
               )}
             </div>

@@ -239,6 +239,17 @@ def enrich_log_entry(log_entry: Dict[str, Any]) -> Dict[str, Any]:
     return enriched
 
 
+def enrich_logs_only(logs: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+    """
+    Enrich all log entries with metadata (agent type, tool info, etc.).
+    Does NOT build workflow graph.
+
+    Returns:
+        List of enriched log entries
+    """
+    return [enrich_log_entry(log) for log in logs]
+
+
 def enrich_logs(logs: List[Dict[str, Any]]) -> Dict[str, Any]:
     """
     Enrich all log entries and build workflow graph.

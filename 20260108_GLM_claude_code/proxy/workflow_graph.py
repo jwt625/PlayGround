@@ -11,81 +11,121 @@ from typing import Dict, List, Any, Optional, Set, Tuple
 from datetime import datetime
 
 
-def build_tool_index(logs: List[Dict[str, Any]]) -> Dict[str, int]:
+def detect_sessions(logs: List[Dict[str, Any]], gap_minutes: float = 10.0) -> List[Tuple[int, int]]:
     """
-    Create tool_use_id → log_index mapping.
-    
+    Detect session boundaries based on time gaps.
+
+    Args:
+        logs: List of log entries (must be sorted by timestamp)
+        gap_minutes: Minimum gap in minutes to consider a new session (default: 10)
+
+    Returns:
+        List of (start_index, end_index) tuples for each session
+    """
+    if not logs:
+        return []
+
+    sessions = []
+    current_session_start = 0
+    prev_time = None
+
+    for i, log in enumerate(logs):
+        timestamp = log.get('timestamp', '')
+        if not timestamp:
+            continue
+
+        try:
+            curr_time = datetime.fromisoformat(timestamp.replace('Z', '+00:00'))
+        except (ValueError, AttributeError):
+            continue
+
+        if prev_time:
+            gap_seconds = (curr_time - prev_time).total_seconds()
+            if gap_seconds > (gap_minutes * 60):
+                # Session boundary detected
+                sessions.append((current_session_start, i - 1))
+                current_session_start = i
+
+        prev_time = curr_time
+
+    # Add final session
+    if current_session_start < len(logs):
+        sessions.append((current_session_start, len(logs) - 1))
+
+    return sessions
+
+
+def build_tool_index(logs: List[Dict[str, Any]]) -> Tuple[Dict[str, int], Dict[str, str]]:
+    """
+    Create tool_use_id → log_index and tool_use_id → tool_name mappings.
+
     Args:
         logs: List of log entries
-        
+
     Returns:
-        Dictionary mapping tool_use_id to log index
+        Tuple of (tool_index, tool_names) dictionaries
     """
     tool_index = {}
-    
+    tool_names = {}
+
     for idx, log in enumerate(logs):
         # Extract tool_use blocks from response
         response_body = log.get('response', {}).get('body', {})
         content = response_body.get('content', [])
-        
+
         if not isinstance(content, list):
             continue
-            
+
         for block in content:
             if isinstance(block, dict) and block.get('type') == 'tool_use':
                 tool_use_id = block.get('id')
+                tool_name = block.get('name')
                 if tool_use_id:
                     tool_index[tool_use_id] = idx
-    
-    return tool_index
+                    tool_names[tool_use_id] = tool_name
+
+    return tool_index, tool_names
 
 
-def match_tool_results(logs: List[Dict[str, Any]], tool_index: Dict[str, int]) -> List[Dict[str, Any]]:
+def match_tool_results(logs: List[Dict[str, Any]], tool_index: Dict[str, int], tool_names: Dict[str, str]) -> List[Dict[str, Any]]:
     """
     Find tool result dependencies by matching tool_use_id references.
-    
+
     Args:
         logs: List of log entries
         tool_index: Mapping of tool_use_id to log index
-        
+        tool_names: Mapping of tool_use_id to tool name
+
     Returns:
         List of edge dictionaries with type='tool_result'
     """
     edges = []
-    
+
     for target_idx, log in enumerate(logs):
         # Extract tool_result blocks from request
         request_body = log.get('body', {})
         messages = request_body.get('messages', [])
-        
+
         if not isinstance(messages, list):
             continue
-            
+
         for message in messages:
             if not isinstance(message, dict):
                 continue
-                
+
             content = message.get('content', [])
             if not isinstance(content, list):
                 continue
-                
+
             for block in content:
                 if isinstance(block, dict) and block.get('type') == 'tool_result':
                     tool_use_id = block.get('tool_use_id')
                     is_error = block.get('is_error', False)
-                    
+
                     if tool_use_id and tool_use_id in tool_index:
                         source_idx = tool_index[tool_use_id]
-                        
-                        # Extract tool name from source
-                        tool_name = None
-                        source_log = logs[source_idx]
-                        source_content = source_log.get('response', {}).get('body', {}).get('content', [])
-                        for src_block in source_content:
-                            if isinstance(src_block, dict) and src_block.get('id') == tool_use_id:
-                                tool_name = src_block.get('name')
-                                break
-                        
+                        tool_name = tool_names.get(tool_use_id)
+
                         edges.append({
                             'type': 'tool_result',
                             'source': source_idx,
@@ -97,7 +137,7 @@ def match_tool_results(logs: List[Dict[str, Any]], tool_index: Dict[str, int]) -
                             },
                             'confidence': 1.0
                         })
-    
+
     return edges
 
 
@@ -182,91 +222,122 @@ def detect_subagent_spawns(logs: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
     return edges
 
 
-def build_workflow_graph(logs: List[Dict[str, Any]], time_window_hours: float = 1.0, max_logs: int = 500) -> Dict[str, Any]:
+def build_workflow_graph(logs: List[Dict[str, Any]], max_logs_per_session: int = 1000, session_gap_minutes: float = 10.0) -> Dict[str, Any]:
     """
-    Build complete workflow graph with nodes and edges.
+    Build complete workflow graph with nodes and edges across all sessions.
 
     Args:
         logs: List of enriched log entries (can be in any order)
-        time_window_hours: Only process logs within this time window (default: 1 hour)
-        max_logs: Maximum number of logs to process (default: 500)
+        max_logs_per_session: Maximum number of logs to process per session (default: 1000)
+        session_gap_minutes: Time gap in minutes to detect session boundaries (default: 10)
 
     Returns:
-        Dictionary with 'nodes' and 'edges' arrays
+        Dictionary with 'nodes', 'edges', 'sessions', and 'metrics' arrays
     """
     if not logs:
-        return {'nodes': [], 'edges': [], 'metrics': {}}
+        return {'nodes': [], 'edges': [], 'sessions': [], 'metrics': {}}
 
     # Sort logs chronologically (oldest first) for graph computation
     sorted_logs = sorted(logs, key=lambda x: x.get('timestamp', ''))
 
-    # Apply time window filter - only process recent logs
-    if time_window_hours > 0 and len(sorted_logs) > 0:
-        latest_time = datetime.fromisoformat(sorted_logs[-1].get('timestamp', '').replace('Z', '+00:00'))
-        cutoff_time = latest_time.timestamp() - (time_window_hours * 3600)
+    # Detect session boundaries
+    sessions = detect_sessions(sorted_logs, gap_minutes=session_gap_minutes)
 
-        filtered_logs = []
-        for log in sorted_logs:
-            log_time = datetime.fromisoformat(log.get('timestamp', '').replace('Z', '+00:00'))
-            if log_time.timestamp() >= cutoff_time:
-                filtered_logs.append(log)
+    print(f"Detected {len(sessions)} sessions from {len(sorted_logs)} logs")
+    for idx, (start, end) in enumerate(sessions):
+        session_size = end - start + 1
+        start_time = sorted_logs[start].get('timestamp', 'unknown')
+        end_time = sorted_logs[end].get('timestamp', 'unknown')
+        print(f"  Session {idx + 1}: Logs {start}-{end} ({session_size} logs) | {start_time[:19]} to {end_time[:19]}")
 
-        sorted_logs = filtered_logs
-        print(f"Time window filter: {len(logs)} -> {len(sorted_logs)} logs (last {time_window_hours}h)")
+    # Process all sessions (apply per-session cap if needed)
+    all_nodes = []
+    all_edges = []
+    session_info = []
 
-    # Apply hard cap on number of logs
-    if len(sorted_logs) > max_logs:
-        sorted_logs = sorted_logs[-max_logs:]  # Take most recent
-        print(f"Max logs cap: limited to {max_logs} most recent logs")
+    for session_idx, (session_start, session_end) in enumerate(sessions):
+        session_logs = sorted_logs[session_start:session_end + 1]
 
-    if not sorted_logs:
-        return {'nodes': [], 'edges': [], 'metrics': {}}
+        # Apply per-session cap
+        if len(session_logs) > max_logs_per_session:
+            print(f"  Session {session_idx + 1}: Capping at {max_logs_per_session} most recent logs")
+            session_logs = session_logs[-max_logs_per_session:]
 
-    # Build tool index on sorted logs
-    tool_index = build_tool_index(sorted_logs)
+        session_node_start = len(all_nodes)
 
-    # Find all edges on sorted logs
-    tool_edges = match_tool_results(sorted_logs, tool_index)
-    spawn_edges = detect_subagent_spawns(sorted_logs)
-    all_edges = tool_edges + spawn_edges
+        # Build tool index for this session
+        tool_index, tool_names = build_tool_index(session_logs)
 
-    print(f"Graph edges: {len(tool_edges)} tool dependencies, {len(spawn_edges)} subagent spawns")
+        # Find edges within this session
+        tool_edges = match_tool_results(session_logs, tool_index, tool_names)
+        spawn_edges = detect_subagent_spawns(session_logs)
 
-    # Build nodes from sorted logs
-    nodes = []
-    for idx, log in enumerate(sorted_logs):
-        agent_type = log.get('agent_type', {})
-        response = log.get('response', {})
-        response_body = response.get('body', {})
-        usage = response_body.get('usage', {})
+        print(f"  Session {session_idx + 1}: {len(tool_edges)} tool edges, {len(spawn_edges)} spawn edges")
 
-        node = {
-            'id': idx,
-            'log_index': idx,
-            'timestamp': log.get('timestamp'),
-            'agent_type': agent_type.get('name', 'unknown'),
-            'agent_label': agent_type.get('label', 'Unknown'),
-            'agent_color': agent_type.get('color', '#6b7280'),
-            'model': log.get('body', {}).get('model', 'unknown'),
-            'duration_ms': response.get('duration_ms'),
-            'tokens': {
-                'input': usage.get('input_tokens', 0),
-                'output': usage.get('output_tokens', 0),
-                'total': usage.get('input_tokens', 0) + usage.get('output_tokens', 0)
-            },
-            'stop_reason': log.get('stop_reason'),
-            'has_errors': log.get('has_errors', False),
-            'tool_count': log.get('tool_info', {}).get('count', 0),
-            'subagent_count': log.get('subagent_count', 0)
-        }
-        nodes.append(node)
+        # Build nodes for this session
+        for local_idx, log in enumerate(session_logs):
+            agent_type = log.get('agent_type', {})
+            response = log.get('response', {})
+            response_body = response.get('body', {})
+            usage = response_body.get('usage', {})
 
-    # Compute graph metrics
-    metrics = compute_graph_metrics(nodes, all_edges)
+            global_idx = len(all_nodes)
+
+            node = {
+                'id': global_idx,
+                'log_index': global_idx,
+                'session_id': session_idx,
+                'session_local_index': local_idx,
+                'timestamp': log.get('timestamp'),
+                'agent_type': agent_type.get('name', 'unknown'),
+                'agent_label': agent_type.get('label', 'Unknown'),
+                'agent_color': agent_type.get('color', '#6b7280'),
+                'model': log.get('body', {}).get('model', 'unknown'),
+                'duration_ms': response.get('duration_ms'),
+                'tokens': {
+                    'input': usage.get('input_tokens', 0),
+                    'output': usage.get('output_tokens', 0),
+                    'total': usage.get('input_tokens', 0) + usage.get('output_tokens', 0)
+                },
+                'stop_reason': log.get('stop_reason'),
+                'has_errors': log.get('has_errors', False),
+                'tool_count': log.get('tool_info', {}).get('count', 0),
+                'subagent_count': log.get('subagent_count', 0)
+            }
+            all_nodes.append(node)
+
+        # Adjust edge indices to global indices
+        for edge in tool_edges + spawn_edges:
+            edge['source'] = session_node_start + edge['source']
+            edge['target'] = session_node_start + edge['target']
+            edge['session_id'] = session_idx
+
+        all_edges.extend(tool_edges + spawn_edges)
+
+        # Store session metadata
+        session_info.append({
+            'session_id': session_idx,
+            'node_start': session_node_start,
+            'node_end': len(all_nodes) - 1,
+            'node_count': len(session_logs),
+            'edge_count': len(tool_edges) + len(spawn_edges),
+            'start_time': session_logs[0].get('timestamp') if session_logs else None,
+            'end_time': session_logs[-1].get('timestamp') if session_logs else None
+        })
+
+    print(f"\nTotal: {len(all_nodes)} nodes, {len(all_edges)} edges across {len(sessions)} sessions")
+
+    # Skip expensive metrics calculation - not used by frontend
+    metrics = {
+        'total_nodes': len(all_nodes),
+        'total_edges': len(all_edges),
+        'session_count': len(sessions)
+    }
 
     return {
-        'nodes': nodes,
+        'nodes': all_nodes,
         'edges': all_edges,
+        'sessions': session_info,
         'metrics': metrics
     }
 
@@ -285,9 +356,12 @@ def compute_graph_metrics(nodes: List[Dict[str, Any]], edges: List[Dict[str, Any
     if not nodes:
         return {}
 
+    print(f"Computing metrics for {len(nodes)} nodes and {len(edges)} edges...")
+
     # Count edge types
     tool_edges = [e for e in edges if e['type'] == 'tool_result']
     spawn_edges = [e for e in edges if e['type'] == 'subagent_spawn']
+    print(f"Edge types: {len(tool_edges)} tool, {len(spawn_edges)} spawn")
 
     # Build adjacency lists
     children = {i: [] for i in range(len(nodes))}
@@ -299,23 +373,36 @@ def compute_graph_metrics(nodes: List[Dict[str, Any]], edges: List[Dict[str, Any
         children[source].append(target)
         parents[target].append(source)
 
+    print("Built adjacency lists")
+
     # Find root nodes (no parents)
     roots = [i for i in range(len(nodes)) if len(parents[i]) == 0]
+    print(f"Found {len(roots)} root nodes")
 
-    # Calculate max depth
-    def get_depth(node_id: int, visited: Set[int]) -> int:
-        if node_id in visited:
-            return 0
-        visited.add(node_id)
-        if not children[node_id]:
-            return 1
-        return 1 + max(get_depth(child, visited.copy()) for child in children[node_id])
-
-    max_depth = max((get_depth(root, set()) for root in roots), default=0)
+    # Calculate max depth using iterative BFS (much faster than recursive)
+    max_depth = 0
+    if roots:
+        from collections import deque
+        print("Calculating max depth...")
+        for root in roots:
+            queue = deque([(root, 1)])
+            visited = set()
+            while queue:
+                node_id, depth = queue.popleft()
+                if node_id in visited:
+                    continue
+                visited.add(node_id)
+                max_depth = max(max_depth, depth)
+                for child in children[node_id]:
+                    if child not in visited:
+                        queue.append((child, depth + 1))
+        print(f"Max depth: {max_depth}")
 
     # Calculate branching factor
+    print("Calculating branching factor...")
     non_leaf_nodes = [i for i in range(len(nodes)) if children[i]]
     avg_branching = sum(len(children[i]) for i in non_leaf_nodes) / len(non_leaf_nodes) if non_leaf_nodes else 0
+    print(f"Avg branching factor: {avg_branching:.2f}")
 
     return {
         'total_nodes': len(nodes),

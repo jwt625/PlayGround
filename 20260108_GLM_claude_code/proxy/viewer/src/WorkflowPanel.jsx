@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react'
 import * as d3 from 'd3'
 import './WorkflowPanel.css'
 
-function WorkflowPanel({ logs, workflowGraph }) {
+function WorkflowPanel({ logs, workflowGraph, onRefresh }) {
   const [showToolEdges, setShowToolEdges] = useState(true)
   const [showSpawnEdges, setShowSpawnEdges] = useState(true)
   const [selectedNode, setSelectedNode] = useState(null)
@@ -175,7 +175,14 @@ function WorkflowPanel({ logs, workflowGraph }) {
   if (!workflowGraph || !workflowGraph.nodes || workflowGraph.nodes.length === 0) {
     return (
       <div className="workflow-panel">
-        <div className="workflow-empty">No workflow data available</div>
+        <div className="workflow-empty">
+          No workflow data available
+          {onRefresh && (
+            <button onClick={onRefresh} style={{ marginLeft: '10px' }}>
+              Refresh Workflow
+            </button>
+          )}
+        </div>
       </div>
     )
   }
@@ -202,6 +209,11 @@ function WorkflowPanel({ logs, workflowGraph }) {
         <span className="workflow-stats">
           {workflowGraph.nodes.length} nodes, {workflowGraph.edges.length} edges
         </span>
+        {onRefresh && (
+          <button onClick={onRefresh} title="Rebuild workflow graph from latest logs">
+            Refresh
+          </button>
+        )}
       </div>
 
       <div className="workflow-canvas">
