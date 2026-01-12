@@ -188,9 +188,12 @@ function AgentGanttPanel({ entitiesData, logs }) {
               targetAgentId: edge.target_agent_id,
               sourceIdx,
               targetIdx,
+              sourceRequestId: edge.source_request_id,
+              targetRequestId: edge.target_request_id,
               sourceX: sourceRequest.endTime,
               targetX: targetRequest.timestamp,
               content_hash: edge.content_hash,
+              tool_use_id: edge.tool_use_id,
               confidence: edge.confidence
             })
           }
@@ -221,42 +224,26 @@ function AgentGanttPanel({ entitiesData, logs }) {
   const { visibleAgents, rowHeight, needsScroll } = useMemo(() => {
     if (agents.length === 0) return { visibleAgents: [], rowHeight: 2.7, needsScroll: false }
 
-    const startIdx = Math.floor(zoomY.start * agents.length)
-    const endIdx = Math.ceil(zoomY.end * agents.length)
+    // Clamp indices to valid array bounds
+    const startIdx = Math.max(0, Math.floor(zoomY.start * agents.length))
+    const endIdx = Math.min(agents.length, Math.ceil(zoomY.end * agents.length))
     const visible = agents.slice(startIdx, endIdx)
 
     if (visible.length === 0 || containerHeight === 0) {
       return { visibleAgents: visible, rowHeight: 2.7, needsScroll: false }
     }
 
-    // Calculate row height based on zoom level
-    // Base height is 2.7px, scale inversely with the zoom range
-    const zoomFactor = 1 / (zoomY.end - zoomY.start)
-    const baseRowHeight = 2.7 * zoomFactor
+    const ROW_SPACING_FACTOR = 1.2
 
-    // Minimum row height (with 20% spacing)
-    const MIN_ROW_HEIGHT = 2.7
-    const ROW_SPACING_FACTOR = 1.2 // 20% spacing between rows
+    // Row height scales with zoom - consistent behavior regardless of zoom level
+    // Use container height divided by the number of "virtual" rows in the zoom range
+    const zoomRange = zoomY.end - zoomY.start
+    const virtualRowCount = agents.length * zoomRange
+    const finalRowHeight = (containerHeight / virtualRowCount) / ROW_SPACING_FACTOR
 
-    // Calculate total height needed with minimum row height
-    const minTotalHeight = visible.length * MIN_ROW_HEIGHT * ROW_SPACING_FACTOR
-
-    // If min height fits in container, scale up to fill the space
-    let finalRowHeight = baseRowHeight
-    let scroll = false
-
-    if (minTotalHeight < containerHeight) {
-      // Scale up to fill available space
-      finalRowHeight = (containerHeight / visible.length) / ROW_SPACING_FACTOR
-    } else if (baseRowHeight < MIN_ROW_HEIGHT) {
-      // Use minimum height and enable scrolling
-      finalRowHeight = MIN_ROW_HEIGHT
-      scroll = true
-    } else {
-      // Use calculated height and check if scrolling is needed
-      const totalHeight = visible.length * baseRowHeight * ROW_SPACING_FACTOR
-      scroll = totalHeight > containerHeight
-    }
+    // Enable scroll if content exceeds container
+    const totalHeight = visible.length * finalRowHeight * ROW_SPACING_FACTOR
+    const scroll = totalHeight > containerHeight
 
     return { visibleAgents: visible, rowHeight: finalRowHeight, needsScroll: scroll }
   }, [agents, zoomY, containerHeight])
@@ -578,50 +565,20 @@ function AgentGanttPanel({ entitiesData, logs }) {
     // Zoom X-axis (time)
     if (zoomXAxis) {
       const currentRange = zoomX.end - zoomX.start
-      const newRange = Math.min(1, currentRange * zoomFactor)
-
-      // Calculate cursor position in full data space
+      const newRange = currentRange * zoomFactor
       const cursorInData = zoomX.start + cursorXFraction * currentRange
-
-      // Calculate new start/end keeping cursor position fixed
-      let newStart = cursorInData - cursorXFraction * newRange
-      let newEnd = cursorInData + (1 - cursorXFraction) * newRange
-
-      // Clamp to valid range [0, 1]
-      if (newStart < 0) {
-        newEnd = Math.min(1, newEnd - newStart)
-        newStart = 0
-      }
-      if (newEnd > 1) {
-        newStart = Math.max(0, newStart - (newEnd - 1))
-        newEnd = 1
-      }
-
+      const newStart = cursorInData - cursorXFraction * newRange
+      const newEnd = cursorInData + (1 - cursorXFraction) * newRange
       setZoomX({ start: newStart, end: newEnd })
     }
 
     // Zoom Y-axis (agents)
     if (zoomYAxis) {
       const currentRange = zoomY.end - zoomY.start
-      const newRange = Math.min(1, currentRange * zoomFactor)
-
-      // Calculate cursor position in full data space
+      const newRange = currentRange * zoomFactor
       const cursorInData = zoomY.start + cursorYFraction * currentRange
-
-      // Calculate new start/end keeping cursor position fixed
-      let newStart = cursorInData - cursorYFraction * newRange
-      let newEnd = cursorInData + (1 - cursorYFraction) * newRange
-
-      // Clamp to valid range [0, 1]
-      if (newStart < 0) {
-        newEnd = Math.min(1, newEnd - newStart)
-        newStart = 0
-      }
-      if (newEnd > 1) {
-        newStart = Math.max(0, newStart - (newEnd - 1))
-        newEnd = 1
-      }
-
+      const newStart = cursorInData - cursorYFraction * newRange
+      const newEnd = cursorInData + (1 - cursorYFraction) * newRange
       setZoomY({ start: newStart, end: newEnd })
     }
   }
@@ -845,11 +802,11 @@ function AgentGanttPanel({ entitiesData, logs }) {
                     viewBox="0 0 10 10"
                     refX="9"
                     refY="5"
-                    markerWidth="6"
-                    markerHeight="6"
+                    markerWidth="5"
+                    markerHeight="5"
                     orient="auto"
                   >
-                    <path d="M 0 0 L 10 5 L 0 10 z" fill="#8b5cf6" />
+                    <path d="M 0 0 L 10 5 L 0 10 z" fill="#c084fc" />
                   </marker>
                 </defs>
                 {/* Spawn edges */}
@@ -914,18 +871,24 @@ function AgentGanttPanel({ entitiesData, logs }) {
 
                   if (!pathData) return null
 
+                  // Build tooltip with request IDs for precise identification
+                  let tooltipContent = `Content Reuse: ${edge.sourceAgentId} req ${edge.sourceRequestId} -> ${edge.targetAgentId} req ${edge.targetRequestId}\n`
+                  if (edge.tool_use_id) {
+                    tooltipContent += `Tool Use ID: ${edge.tool_use_id}\n`
+                  }
+                  tooltipContent += `Hash: ${edge.content_hash}\nConfidence: ${edge.confidence}`
+
                   return (
                     <path
                       key={`content-${idx}`}
                       d={pathData.path}
-                      stroke="#8b5cf6"
+                      stroke="#c084fc"
                       strokeWidth="1.5"
-                      strokeDasharray="5,5"
                       fill="none"
                       markerEnd="url(#arrow-content)"
-                      style={{ pointerEvents: 'stroke', opacity: 0.7 }}
+                      style={{ pointerEvents: 'stroke', opacity: 0.8 }}
                       data-tooltip-id="gantt-tooltip"
-                      data-tooltip-content={`Content Reuse: ${edge.sourceAgentId} → ${edge.targetAgentId}\nHash: ${edge.content_hash}\nConfidence: ${edge.confidence}`}
+                      data-tooltip-content={tooltipContent}
                     />
                   )
                 })}

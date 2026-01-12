@@ -461,3 +461,71 @@ All 7 previously unmatched policy spec validators now correctly linked to parent
 - agent_53, agent_58 -> agent_6 (find with spacing variation)
 - agent_70 -> agent_4 (git commit heredoc)
 
+## Content Reuse Detection Bug
+
+**Date**: 2026-01-12
+**Status**: FIXED
+
+### Problem
+
+Content reuse detection was not finding any edges (0 detected) despite clear evidence of Task tool results flowing from child agents back to parent agents.
+
+**Example**: agent_5's response at request 218 appears in agent_4's request 219 as a `tool_result` block, but no content_reuse edge was created.
+
+### Root Cause
+
+The `track_request_content()` function only examined:
+1. String content in user messages
+2. `text` type blocks in array content
+
+It did NOT examine `tool_result` blocks, which is the primary mechanism for Task/Bash tool responses to flow back to parent agents.
+
+**Structure of tool_result in user message**:
+```json
+{
+  "role": "user",
+  "content": [
+    {
+      "type": "tool_result",
+      "tool_use_id": "chatcmpl-tool-a6399d82b26e7d47",
+      "content": [
+        {"type": "text", "text": "Now I have a comprehensive understanding..."}
+      ]
+    }
+  ]
+}
+```
+
+### Fix
+
+Modified `agent_tracker.py`:
+
+1. **Added `_check_content_reuse()` helper**: Refactored content matching with deduplication to avoid duplicate edges from accumulated conversation history.
+
+2. **Added `_extract_text_from_tool_result()` helper**: Handles tool_result content which can be string or array of text blocks.
+
+3. **Updated `track_request_content()`**: Now also examines `tool_result` blocks inside user messages.
+
+### Results
+
+| Metric | Before | After |
+|--------|--------|-------|
+| content_reuse edges | 0 | 5 |
+
+**Detected Edges**:
+| Source | Source Req | Target | Target Req | Tool Use ID |
+|--------|------------|--------|------------|-------------|
+| agent_5 | 218 | agent_4 | 219 | chatcmpl-tool-a6399d82b26e7d47 |
+| agent_6 | 217 | agent_4 | 219 | chatcmpl-tool-b90e643bb8855247 |
+| agent_7 | 215 | agent_4 | 219 | chatcmpl-tool-a2360b3e412511c7 |
+| agent_8 | 183 | agent_4 | 219 | chatcmpl-tool-bdac5fe90ee5f8aa |
+| agent_9 | 216 | agent_4 | 219 | chatcmpl-tool-8bd93476eed2e430 |
+
+All 5 edges correctly point from the child agent's final response request to the parent agent's request where the tool_result was received.
+
+### Visualization Update
+
+Updated `AgentGanttPanel.jsx`:
+- Added `sourceRequestId`, `targetRequestId`, `tool_use_id` to edge data
+- Updated tooltip to show precise request-level identification
+- Adjusted arrow styling: solid line, smaller arrowhead, brighter purple (#c084fc)

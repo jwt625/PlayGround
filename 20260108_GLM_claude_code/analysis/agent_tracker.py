@@ -854,6 +854,70 @@ class AgentInstanceTracker:
             'content_hash': content_hash,
         })
 
+    def _check_content_reuse(self, text: str, request_id: int, agent_id: str,
+                              tool_use_id: str = None) -> None:
+        """
+        Helper to check if text content matches a previous response and create edge.
+
+        Args:
+            text: Text content to check
+            request_id: Current request ID
+            agent_id: Current agent ID
+            tool_use_id: Optional tool_use_id for tool_result blocks
+        """
+        if not text:
+            return
+
+        normalized = ' '.join(text.split())[:200]
+        content_hash = compute_hash(normalized, length=16)
+
+        if content_hash not in self.response_content_index:
+            return
+
+        for source_info in self.response_content_index[content_hash]:
+            source_agent_id = source_info['agent_id']
+            source_request_id = source_info['request_id']
+
+            # Only create edge if source comes before target and different agents
+            if source_request_id < request_id and source_agent_id != agent_id:
+                # Create unique edge key to avoid duplicates from accumulated history
+                edge_key = (source_agent_id, source_request_id, agent_id, content_hash)
+
+                if edge_key not in self._content_reuse_edges_seen:
+                    self._content_reuse_edges_seen.add(edge_key)
+                    self.workflow_edges.append({
+                        'type': 'content_reuse',
+                        'source_agent_id': source_agent_id,
+                        'target_agent_id': agent_id,
+                        'source_request_id': source_request_id,
+                        'target_request_id': request_id,
+                        'content_hash': content_hash,
+                        'tool_use_id': tool_use_id,
+                        'confidence': 0.90 if tool_use_id else 0.85,
+                    })
+
+    def _extract_text_from_tool_result(self, result_content) -> str:
+        """
+        Extract text from tool_result content which can be string or array.
+
+        Args:
+            result_content: The content field of a tool_result block
+
+        Returns:
+            Extracted text or empty string
+        """
+        if isinstance(result_content, str):
+            return result_content
+        elif isinstance(result_content, list):
+            text_parts = []
+            for item in result_content:
+                if isinstance(item, dict) and item.get('type') == 'text':
+                    text = item.get('text', '')
+                    if text:
+                        text_parts.append(text)
+            return '\n'.join(text_parts)
+        return ''
+
     def track_request_content(self, request_id: int, messages: List[Dict], timestamp: str = ""):
         """
         Track request content and detect content reuse from previous responses.
@@ -867,6 +931,10 @@ class AgentInstanceTracker:
         if not agent_id:
             return
 
+        # Initialize tracking set if not exists
+        if not hasattr(self, '_content_reuse_edges_seen'):
+            self._content_reuse_edges_seen = set()
+
         # Extract text from user messages
         for message in messages:
             if not isinstance(message, dict):
@@ -879,50 +947,27 @@ class AgentInstanceTracker:
 
             # Handle string content
             if isinstance(content, str):
-                normalized = ' '.join(content.split())[:200]
-                content_hash = compute_hash(normalized, length=16)
-
-                if content_hash in self.response_content_index:
-                    for source_info in self.response_content_index[content_hash]:
-                        source_agent_id = source_info['agent_id']
-                        source_request_id = source_info['request_id']
-
-                        # Only create edge if source comes before target and different agents
-                        if source_request_id < request_id and source_agent_id != agent_id:
-                            self.workflow_edges.append({
-                                'type': 'content_reuse',
-                                'source_agent_id': source_agent_id,
-                                'target_agent_id': agent_id,
-                                'source_request_id': source_request_id,
-                                'target_request_id': request_id,
-                                'content_hash': content_hash,
-                                'confidence': 0.85,
-                            })
+                self._check_content_reuse(content, request_id, agent_id)
 
             # Handle array content
             elif isinstance(content, list):
                 for block in content:
-                    if isinstance(block, dict) and block.get('type') == 'text':
+                    if not isinstance(block, dict):
+                        continue
+
+                    block_type = block.get('type')
+
+                    # Handle text blocks
+                    if block_type == 'text':
                         text = block.get('text', '')
-                        if text:
-                            normalized = ' '.join(text.split())[:200]
-                            content_hash = compute_hash(normalized, length=16)
+                        self._check_content_reuse(text, request_id, agent_id)
 
-                            if content_hash in self.response_content_index:
-                                for source_info in self.response_content_index[content_hash]:
-                                    source_agent_id = source_info['agent_id']
-                                    source_request_id = source_info['request_id']
-
-                                    if source_request_id < request_id and source_agent_id != agent_id:
-                                        self.workflow_edges.append({
-                                            'type': 'content_reuse',
-                                            'source_agent_id': source_agent_id,
-                                            'target_agent_id': agent_id,
-                                            'source_request_id': source_request_id,
-                                            'target_request_id': request_id,
-                                            'content_hash': content_hash,
-                                            'confidence': 0.85,
-                                        })
+                    # Handle tool_result blocks (Task/Bash responses from child agents)
+                    elif block_type == 'tool_result':
+                        tool_use_id = block.get('tool_use_id')
+                        result_content = block.get('content', '')
+                        text = self._extract_text_from_tool_result(result_content)
+                        self._check_content_reuse(text, request_id, agent_id, tool_use_id)
 
     def build_request_sequence_edges(self):
         """
