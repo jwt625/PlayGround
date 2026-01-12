@@ -37,13 +37,14 @@ This project provides a complete suite of tools to:
 - Compute workflow metrics (depth, branching, etc.)
 - Identify root and leaf agents
 
-### 🎨 Interactive Visualization
+### Interactive Visualization
 
-- **Request-level nodes**: Each node = one API request
-- **Click to inspect**: View full conversation for any request
-- **Zoom and pan**: Navigate large workflows
+- **React-based viewer**: Real-time log browsing with multiple panels
+- **Timeline panel**: Chronological request visualization
 - **Statistics panel**: Overview of workflow metrics
-- **Multiple views**: HTML viewer + command-line tree printer
+- **Workflow graph**: D3.js force-directed graph with zoom/pan
+- **Agent Gantt chart**: Timeline view with spawn arrows showing parent-child relationships
+- **Request-level nodes**: Each node = one API request, click to inspect
 
 ## Quick Start
 
@@ -52,12 +53,22 @@ This project provides a complete suite of tools to:
 ```bash
 python3 -m analysis.extract_all_entities \
     proxy/logs/requests_20260110.jsonl \
-    -o proxy/logs/entities.json
+    -o proxy/logs/requests_20260110.json
 ```
 
-### 2. Visualize
+### 2. Start the Viewer
 
-Open `proxy/viewer/workflow_tree_viz.html` in a browser and load the JSON file.
+```bash
+# Start the log API server
+cd proxy
+uv run python log_api.py
+
+# In another terminal, start the React viewer
+cd proxy/viewer
+pnpm dev
+```
+
+Open `http://localhost:58735` in a browser.
 
 ## Project Structure
 
@@ -70,23 +81,30 @@ Open `proxy/viewer/workflow_tree_viz.html` in a browser and load the JSON file.
 │
 ├── proxy/                       # Claude Code proxy server
 │   ├── proxy_server.py          # HTTP proxy for logging
-│   ├── log_api.py               # Log file API
-│   └── viewer/                  # Visualization tools
-│       └── workflow_tree_viz.html  # Interactive HTML viewer
+│   ├── log_api.py               # Log file API server
+│   ├── log_classifier.py        # Log entry enrichment
+│   ├── workflow_graph.py        # Workflow DAG construction
+│   └── viewer/                  # React-based visualization
+│       ├── src/App.jsx          # Main viewer application
+│       ├── src/WorkflowPanel.jsx    # D3.js workflow graph
+│       ├── src/AgentGanttPanel.jsx  # Agent Gantt chart
+│       └── workflow_tree_viz.html   # Standalone HTML viewer
 │
 ├── scripts/                     # Utility scripts
-│   └── analyze_system_prompts.py  # System prompt analysis
+│   ├── analyze_system_prompts.py  # System prompt analysis
+│   └── extract_all_tools.py       # Tool definition extraction
 │
-└── docs/                        # Documentation
-    └── AGENT_WORKFLOW_TRACKING.md  # Technical documentation
+├── docs/                        # Documentation
+│   ├── AGENT_WORKFLOW_TRACKING.md  # Technical documentation
+│   └── LOG_ANALYSIS.md             # Log structure analysis
+│
+└── DevLog/                      # Development logs
 ```
 
 ## Documentation
 
-- **[Quick Start Guide](docs/QUICK_START.md)**: Get started in 5 minutes
 - **[Agent Workflow Tracking](docs/AGENT_WORKFLOW_TRACKING.md)**: Complete technical documentation
-- **[Visualization Update](docs/VISUALIZATION_UPDATE.md)**: Recent visualization improvements
-- **[Changelog](CHANGELOG.md)**: Version history and changes
+- **[Log Analysis](docs/LOG_ANALYSIS.md)**: Log structure and entity extraction details
 
 ## Usage Examples
 
@@ -96,10 +114,11 @@ Open `proxy/viewer/workflow_tree_viz.html` in a browser and load the JSON file.
 # Extract entities from logs
 python3 -m analysis.extract_all_entities \
     proxy/logs/requests.jsonl \
-    -o entities.json
+    -o proxy/logs/entities.json
 
-# Open HTML viewer
-open proxy/viewer/workflow_tree_viz.html
+# Start API server and viewer
+cd proxy && uv run python log_api.py &
+cd proxy/viewer && pnpm dev
 ```
 
 ### Analyze System Prompts
@@ -112,7 +131,8 @@ python3 scripts/analyze_system_prompts.py proxy/logs/requests.jsonl
 
 ```bash
 cd proxy
-python3 proxy_server.py
+source .venv/bin/activate
+python proxy_server.py
 ```
 
 Then configure Claude Code to use the proxy:
@@ -168,8 +188,9 @@ DEDUPLICATION
 
 ## Requirements
 
-- Python 3.9+
-- No external dependencies for analysis tools
+- Python 3.10+
+- Flask, requests, python-dotenv (for proxy server)
+- Node.js and pnpm (for React viewer)
 - Modern web browser for visualization
 
 ## Contributing

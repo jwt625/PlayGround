@@ -45,8 +45,15 @@ analysis/
 ├── entity_deduplicator.py    # EntityDeduplicator class
 └── extract_all_entities.py   # Main extraction script
 
-proxy/viewer/
-└── workflow_tree_viz.html    # Interactive tree visualization
+proxy/
+├── log_api.py                # REST API server for logs
+├── log_classifier.py         # Log entry enrichment (agent type, tool info)
+├── workflow_graph.py         # Session-aware workflow DAG construction
+└── viewer/
+    ├── src/App.jsx           # Main React application
+    ├── src/WorkflowPanel.jsx # D3.js force-directed graph
+    ├── src/AgentGanttPanel.jsx # Gantt chart with spawn arrows
+    └── workflow_tree_viz.html # Standalone HTML viewer
 ```
 
 ### AgentInstanceTracker
@@ -302,13 +309,17 @@ The workflow DAG includes comprehensive metrics:
 
 ## Future Enhancements
 
-Potential improvements:
+Implemented:
+- Timeline view (TimelinePanel.jsx)
+- Search and filter with regex support
+- Performance metrics (duration display)
+- Agent type color coding
 
-1. **Timeline view**: Show requests in chronological order
-2. **Tool dependency graph**: Visualize tool usage patterns
-3. **Agent type clustering**: Group agents by system prompt
-4. **Performance metrics**: Show request duration, token usage
-5. **Search and filter**: Find specific agents or requests
-6. **Export to formats**: GraphML, DOT, etc.
+Potential improvements:
+1. **Tool dependency graph**: Visualize tool usage patterns
+2. **Export to formats**: GraphML, DOT, etc.
+3. **Color-coded arrows**: By confidence level
+4. **Spawn path highlighting**: Trace spawn sequence on hover
+5. **Animation**: Animate spawn sequence playback
 
 

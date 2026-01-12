@@ -87,27 +87,36 @@ python3 -m analysis.extract_all_entities \
 - Agent instances with conversation fingerprints
 - Deduplicated entities (tools, prompts, tasks)
 - Agent hierarchy and relationships
+- Workflow DAG with spawn and tool result edges
 - Comprehensive statistics
 
-See [docs/AGENT_TRACKING.md](../docs/AGENT_TRACKING.md) for detailed documentation.
+See [docs/AGENT_WORKFLOW_TRACKING.md](../docs/AGENT_WORKFLOW_TRACKING.md) for detailed documentation.
 
-### Agent Tracking Visualization
+### React-Based Viewer
 
-Open `proxy/viewer/agent_tracker_viz.html` in a browser to visualize:
-- Agent instance timelines
-- Conversation evolution
-- Request distribution
-- Agent type breakdown
+Start the viewer to explore logs interactively:
 
-**Features**:
-- Interactive timeline with hover tooltips
-- Color-coded by agent type
-- Node size indicates message count
-- Sort by first request, total requests, or agent type
+```bash
+# Terminal 1: Start log API server
+uv run python log_api.py
+
+# Terminal 2: Start React viewer
+cd viewer
+pnpm dev
+```
+
+Open `http://localhost:58735` to access:
+- **Timeline Panel**: Chronological request visualization
+- **Stats Panel**: Workflow metrics overview
+- **Workflow Panel**: D3.js force-directed graph with spawn/tool edges
+- **Agent Gantt Panel**: Timeline view with spawn arrows
+
+### Standalone HTML Viewer
+
+For offline viewing, open `viewer/workflow_tree_viz.html` and load an entities JSON file.
 
 ### Other Analysis Scripts
 
-- `scripts/analyze_system_prompts.py`: Analyze system prompt patterns
-- `scripts/extract_all_tools.py`: Extract tool definitions
-- `scripts/analyze_workflow_orchestration.py`: Analyze workflow patterns
+- `../scripts/analyze_system_prompts.py`: Analyze system prompt patterns
+- `../scripts/extract_all_tools.py`: Extract tool definitions
 

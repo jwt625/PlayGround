@@ -1,116 +1,77 @@
-# Agent Tracker Visualization
+# Agent Gantt Panel
 
-Compact Gantt-chart style visualization for agent instance tracking.
+Gantt-chart style visualization for agent instance tracking, implemented as AgentGanttPanel.jsx.
 
 ## Features
 
 ### Layout
-- **Sidebar**: List of all agent instances with color coding
-- **Gantt Chart**: Timeline view showing request distribution
-- **Compact Design**: Minimal spacing, monospace font, dark theme
+- **Agent Labels**: Left sidebar with agent IDs and type indicators
+- **Gantt Chart**: Timeline view showing request distribution as horizontal bars
+- **Spawn Arrows**: SVG overlay showing parent-child agent relationships
 
-### Visualization Modes
+### Visualization
 
-**Group by Agent** (default):
-- Each agent's requests shown as connected points with lines
-- Visualizes conversation evolution for each agent
-- Lines connect sequential requests from the same agent
-
-**Chronological** (ungrouped):
-- All requests shown in time order
-- One row per request
-- Color-coded by agent type
+- Each agent displayed as a row with request segments
+- Request segments colored by agent type
+- Spawn arrows connect parent request to child agent's first request
+- Adaptive Bezier curves for spawn arrows:
+  - Small horizontal distance (<200px): forward-backward-forward curve
+  - Large horizontal distance: standard S-curve
 
 ### Interactions
 
-**Click on Agent** (sidebar or point):
+**Click on Request Segment**:
 - Opens modal with full conversation history
 - Shows all messages (user/assistant)
 - Displays tool uses and results
-- Formatted with syntax highlighting
 
-**Hover on Point**:
-- Shows compact tooltip with:
-  - Agent ID
-  - Request ID
-  - Turn number
-  - Message count
-  - Timestamp
+**Hover on Request**:
+- Shows tooltip with request metadata
 
-**Select Agent** (sidebar):
-- Highlights agent's rows in timeline
-- Keeps agent selected for easy tracking
+**Hover on Spawn Arrow**:
+- Highlights the spawn relationship
+- Shows spawn method (task spawn or tool spawn)
 
 ### Controls
 
-- **File Upload**: Load any entities JSON file
-- **Sort By**: 
-  - First Request (chronological)
-  - Total Requests (most active first)
-  - Agent Type (grouped by type)
-- **Group by Agent**: Toggle between grouped/chronological view
-
-## Design Principles
-
-1. **Compact**: Maximum information density
-2. **Fast**: Minimal DOM manipulation, efficient rendering
-3. **Clean**: No emojis, no unnecessary decorations
-4. **Functional**: Click to see details, hover for quick info
+- **Zoom**: Adjust time axis scale
+- **Pan**: Scroll through timeline
 
 ## Color Coding
 
-Each agent type gets a unique color:
-- Blue (#60a5fa)
-- Green (#34d399)
-- Yellow (#fbbf24)
-- Red (#f87171)
-- Purple (#a78bfa)
-- Orange (#fb923c)
-- Cyan (#22d3ee)
-- Pink (#f472b6)
-- Lime (#4ade80)
-- Gold (#facc15)
+Agent types are color-coded based on system prompt hash:
+- file_path_extractor: Green (#10b981)
+- file_search: Blue (#3b82f6)
+- bash_processor: Orange (#f59e0b)
+- summarizer: Purple (#8b5cf6)
+- architect: Pink (#ec4899)
+- topic_detector: Cyan (#06b6d4)
+- main_agent: Red (#ef4444)
+- unknown: Gray (#6b7280)
 
-## Modal Details
+## Implementation
 
-When clicking an agent, the modal shows:
+The panel is part of the React viewer application:
 
-**Header**:
-- Agent ID with color coding
-- Close button
-
-**Metadata**:
-- Agent type hash
-- Request count
-- Conversation turns
-- First/last request IDs
-- Conversation fingerprint
-
-**Messages**:
-- Chronologically ordered
-- User messages (blue border)
-- Assistant messages (green border)
-- Tool uses (orange border, collapsed)
-- Tool results (purple border, truncated to 500 chars)
-
-## Performance
-
-- Handles 100+ agents smoothly
-- Lazy rendering for large datasets
-- Efficient tooltip positioning
-- Minimal reflows
+```
+src/AgentGanttPanel.jsx  - Main component
+src/AgentGanttPanel.css  - Styles
+src/MessagesModal.jsx    - Conversation modal
+```
 
 ## Usage
 
-```bash
-# Generate entities file
-python3 -m analysis.extract_all_entities \
-    proxy/logs/requests_20260110.jsonl \
-    -o proxy/logs/entities_with_tracking.json
+Access via the React viewer:
 
-# Open visualization
-open proxy/viewer/agent_tracker_viz.html
+```bash
+# Start API server
+cd proxy
+uv run python log_api.py
+
+# Start viewer
+cd proxy/viewer
+pnpm dev
 ```
 
-The visualization auto-loads `../logs/entities_with_tracking.json` if available.
+Open `http://localhost:58735` and click the "Agent Gantt" panel button.
 
