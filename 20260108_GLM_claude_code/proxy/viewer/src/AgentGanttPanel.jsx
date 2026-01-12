@@ -326,6 +326,39 @@ function AgentGanttPanel({ entitiesData, logs }) {
     }
   }
 
+  // Helper: Calculate Y position for an agent, even if outside visible range
+  const getAgentYPosition = (agentId, fullAgentIdx) => {
+    // First check if agent is in visible range
+    const visibleIdx = visibleAgents.findIndex(a => a.agent_id === agentId)
+
+    if (visibleIdx !== -1) {
+      // Agent is visible - return its Y position
+      return {
+        y: (visibleIdx + 0.5) * (rowHeight * 1.2) + rowHeight * 0.3,
+        isVisible: true
+      }
+    }
+
+    // Agent is not visible - calculate position relative to visible range
+    const totalAgents = agents.length
+    const visibleStartIdx = Math.floor(zoomY.start * totalAgents)
+    const visibleHeight = visibleAgents.length * rowHeight * 1.2
+
+    if (fullAgentIdx < visibleStartIdx) {
+      // Agent is above visible range - position at top edge
+      return {
+        y: -rowHeight * 0.5,
+        isVisible: false
+      }
+    } else {
+      // Agent is below visible range - position at bottom edge
+      return {
+        y: visibleHeight + rowHeight * 0.5,
+        isVisible: false
+      }
+    }
+  }
+
   // Calculate SVG path for spawn arrow (bezier S-curve)
   const getSpawnArrowPath = (edge, containerWidth) => {
     // Convert time to X position (0-1 range based on zoom)
@@ -339,18 +372,12 @@ function AgentGanttPanel({ entitiesData, logs }) {
     const x1 = sourceXRel * containerWidth
     const x2 = targetXRel * containerWidth
 
-    // Convert agent index to Y position (accounting for Y-axis zoom)
-    const sourceAgentVisibleIdx = visibleAgents.findIndex(a => a.agent_id === edge.sourceAgentId)
-    const targetAgentVisibleIdx = visibleAgents.findIndex(a => a.agent_id === edge.targetAgentId)
+    // Get Y positions (works for both visible and non-visible agents)
+    const sourcePos = getAgentYPosition(edge.sourceAgentId, edge.sourceIdx)
+    const targetPos = getAgentYPosition(edge.targetAgentId, edge.targetIdx)
 
-    // If either agent is not visible, skip this edge
-    if (sourceAgentVisibleIdx === -1 || targetAgentVisibleIdx === -1) {
-      return null
-    }
-
-    // Calculate Y positions (center of each row)
-    const y1 = (sourceAgentVisibleIdx + 0.5) * (rowHeight * 1.2) + rowHeight * 0.3
-    const y2 = (targetAgentVisibleIdx + 0.5) * (rowHeight * 1.2) + rowHeight * 0.3
+    const y1 = sourcePos.y
+    const y2 = targetPos.y
 
     // Bezier S-curve control points
     const dx = x2 - x1
@@ -391,7 +418,9 @@ function AgentGanttPanel({ entitiesData, logs }) {
 
     return {
       path,
-      x1, y1, x2, y2
+      x1, y1, x2, y2,
+      sourceVisible: sourcePos.isVisible,
+      targetVisible: targetPos.isVisible
     }
   }
 
@@ -408,16 +437,9 @@ function AgentGanttPanel({ entitiesData, logs }) {
     const x1 = sourceXRel * containerWidth
     const x2 = targetXRel * containerWidth
 
-    // Find agent's visible index
-    const agentVisibleIdx = visibleAgents.findIndex(a => a.agent_id === edge.agentId)
-
-    // If agent is not visible, skip this edge
-    if (agentVisibleIdx === -1) {
-      return null
-    }
-
-    // Calculate Y position (slightly below the center of the row)
-    const y = (agentVisibleIdx + 0.5) * (rowHeight * 1.2) + rowHeight * 0.5
+    // Get Y position (works for both visible and non-visible agents)
+    const agentPos = getAgentYPosition(edge.agentId, edge.agentIdx)
+    const y = agentPos.y + rowHeight * 0.2  // Slightly below center
 
     // Simple horizontal line with slight curve
     const midX = (x1 + x2) / 2
@@ -426,7 +448,8 @@ function AgentGanttPanel({ entitiesData, logs }) {
 
     return {
       path,
-      x1, y, x2, y
+      x1, y, x2, y,
+      isVisible: agentPos.isVisible
     }
   }
 
@@ -535,6 +558,74 @@ function AgentGanttPanel({ entitiesData, logs }) {
     setZoomY({ start: 0, end: 1 })
   }
 
+  // Handle mouse wheel to zoom in/out centered on cursor
+  const handleWheel = (e) => {
+    e.preventDefault()
+
+    const rect = timelineRef.current.getBoundingClientRect()
+
+    // Get cursor position as fraction (0-1) of visible area
+    const cursorXFraction = (e.clientX - rect.left) / rect.width
+    const cursorYFraction = (e.clientY - rect.top) / rect.height
+
+    // Zoom factor: scroll up = zoom in, scroll down = zoom out
+    const zoomFactor = e.deltaY > 0 ? 1.15 : 0.85
+
+    // Check if shift is held for X-only zoom, or ctrl for Y-only zoom
+    const zoomXAxis = !e.ctrlKey
+    const zoomYAxis = !e.shiftKey
+
+    // Zoom X-axis (time)
+    if (zoomXAxis) {
+      const currentRange = zoomX.end - zoomX.start
+      const newRange = Math.min(1, currentRange * zoomFactor)
+
+      // Calculate cursor position in full data space
+      const cursorInData = zoomX.start + cursorXFraction * currentRange
+
+      // Calculate new start/end keeping cursor position fixed
+      let newStart = cursorInData - cursorXFraction * newRange
+      let newEnd = cursorInData + (1 - cursorXFraction) * newRange
+
+      // Clamp to valid range [0, 1]
+      if (newStart < 0) {
+        newEnd = Math.min(1, newEnd - newStart)
+        newStart = 0
+      }
+      if (newEnd > 1) {
+        newStart = Math.max(0, newStart - (newEnd - 1))
+        newEnd = 1
+      }
+
+      setZoomX({ start: newStart, end: newEnd })
+    }
+
+    // Zoom Y-axis (agents)
+    if (zoomYAxis) {
+      const currentRange = zoomY.end - zoomY.start
+      const newRange = Math.min(1, currentRange * zoomFactor)
+
+      // Calculate cursor position in full data space
+      const cursorInData = zoomY.start + cursorYFraction * currentRange
+
+      // Calculate new start/end keeping cursor position fixed
+      let newStart = cursorInData - cursorYFraction * newRange
+      let newEnd = cursorInData + (1 - cursorYFraction) * newRange
+
+      // Clamp to valid range [0, 1]
+      if (newStart < 0) {
+        newEnd = Math.min(1, newEnd - newStart)
+        newStart = 0
+      }
+      if (newEnd > 1) {
+        newStart = Math.max(0, newStart - (newEnd - 1))
+        newEnd = 1
+      }
+
+      setZoomY({ start: newStart, end: newEnd })
+    }
+  }
+
   // Handle bar click to show messages
   const handleBarClick = (e, agent, request) => {
     e.stopPropagation()
@@ -610,7 +701,7 @@ function AgentGanttPanel({ entitiesData, logs }) {
           {agents.length} agents | {totalRequests} requests | {formatDuration(duration)} total
         </div>
         <div className="gantt-hint">
-          Drag to zoom | Double-click to reset
+          Scroll to zoom | Shift: X-only | Ctrl: Y-only | Drag to select | Double-click to reset
         </div>
       </div>
 
@@ -649,6 +740,7 @@ function AgentGanttPanel({ entitiesData, logs }) {
           ref={timelineRef}
           onMouseDown={handleMouseDown}
           onDoubleClick={handleDoubleClick}
+          onWheel={handleWheel}
           onScroll={handleTimelineScroll}
           style={{
             overflowY: needsScroll ? 'auto' : 'hidden',

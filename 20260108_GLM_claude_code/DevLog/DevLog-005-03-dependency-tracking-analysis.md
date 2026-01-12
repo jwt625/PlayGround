@@ -304,3 +304,55 @@ Track Bash tool calls and match their `command` argument to child agent's first 
 - Quote normalization bug fix was critical for matching commands with different quoting styles
 - Both simple and policy-spec message patterns now handled correctly
 
+## Spawn Edge source_request_id Bug
+
+**Date**: 2026-01-11
+**Status**: FIXED
+
+### Problem
+
+Spawn arrows in the Gantt visualization were incorrectly pointing from the **last** request of the parent agent instead of the specific request where the tool/task was called.
+
+Example: agent_9 spawns agent_20 at request 45 (4th request), but the arrow was drawn from request 216 (18th/last request).
+
+### Root Cause
+
+The `tool_use_index`, `task_prompts`, and `tool_command_index` were being **overwritten** each time a tool_use_id was encountered. Since conversation history accumulates (each new request includes all previous assistant messages), the same tool_use_id appears in messages across multiple requests. The last request to process the tool_use_id would overwrite the original `request_id`.
+
+### Fix
+
+Modified `agent_tracker.py` to only store the **first** occurrence of each tool_use_id:
+
+```python
+# Before: Always overwrite
+self.tool_use_index[tool_use_id] = {...}
+
+# After: Only store first occurrence
+if tool_use_id not in self.tool_use_index:
+    self.tool_use_index[tool_use_id] = {...}
+```
+
+Applied same fix to:
+- `self.tool_use_index` (line 518)
+- `self.task_prompts` (line 553)
+- `self.tool_command_index` (line 571)
+
+Added `source_request_id` to spawn edges in `build_workflow_dag()` (line 690).
+
+Updated `AgentGanttPanel.jsx` to use `edge.source_request_id` directly instead of looking up through taskIndex/toolUseIndex.
+
+### Verification
+
+```
+Agent_20 spawn edge (FIXED):
+  Source: agent_9
+  source_request_id: 45
+  Parent requests: [17, 22, 29, 45, 81, 93, ...]
+  Expected: request 45 (4th request)
+  Actual: request 45
+  MATCH!
+
+Edges with source_request_id: 52 / 52
+ALL spawn edges have source_request_id!
+```
+
