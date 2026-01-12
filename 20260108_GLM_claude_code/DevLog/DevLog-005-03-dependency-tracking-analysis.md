@@ -356,3 +356,108 @@ Edges with source_request_id: 52 / 52
 ALL spawn edges have source_request_id!
 ```
 
+## Additional Normalization Bugs
+
+**Date**: 2026-01-12
+**Status**: FIXED
+
+### Bug 1: Multi-line Heredoc Command Extraction
+
+**Problem**: Commands using heredoc syntax (e.g., `git commit -m "$(cat <<'EOF'\n...\nEOF\n)"`) were not being extracted correctly. The regex only captured the first line, causing hash mismatches.
+
+**Fix**: Modified `extract_command_from_message()` to detect heredoc patterns and extract the full multi-line command until the closing marker:
+```python
+# Detect heredoc pattern
+heredoc_match = re.search(r"<<\s*'?(\w+)'?", first_line)
+if heredoc_match:
+    marker = heredoc_match.group(1)
+    # Find closing marker and include full content
+```
+
+### Bug 2: Stderr Redirect with Space
+
+**Problem**: Command normalization did not handle `2> /dev/null` (with space after `>`). Only `2>/dev/null` was matched.
+
+**Examples**:
+- Parent: `find ... -name "*.md" 2>/dev/null | head -20`
+- Child: `find ... -name *.md 2> /dev/null`
+- After quote removal, the space difference in redirect still caused hash mismatch.
+
+**Fix**: Updated regex to handle optional whitespace after redirect operator:
+```python
+# Before:
+normalized = re.sub(r'\s*2>/dev/null\s*', ' ', command)
+
+# After:
+normalized = re.sub(r'\s*2>+\s*/dev/null\s*', ' ', command)
+normalized = re.sub(r'\s*>+\s*/dev/null\s*', ' ', normalized)
+```
+
+### Results After Fixes
+
+**Metrics**:
+- Root agents: 21 -> 18 (3 additional parents detected)
+- Child agents: 52 -> 55
+
+### Final Root Agent Count: 11
+
+**Legitimate Root Agents**:
+- agent_0-4: Startup agents (warmup, git history, message analyzer, main CLI)
+- agent_65, agent_66, agent_68: User-initiated conversations
+
+**File Content Agents**:
+- agent_41, agent_49, agent_64: Receive raw file content (lockfiles, React code), no command pattern to match
+
+## Command Normalization Overhaul
+
+**Date**: 2026-01-12
+**Status**: FIXED
+
+### Problem
+
+The previous normalization approach used multiple regex patterns to remove specific variations (quotes, redirects, pipes) but still failed to match commands due to:
+
+1. **Quote style variations**: `"*.md"` vs `'*.md'` vs `*.md`
+2. **Spacing differences**: `\( -name` vs `\(-name`
+3. **Redirect variations**: `2>/dev/null` vs `2> /dev/null`
+4. **Compound commands**: Child receives `echo "error"` from parent's `curl ... || echo "error"`
+5. **Heredoc truncation**: Child receives first line only, parent has full multi-line content
+
+### Solution
+
+Replaced complex regex patterns with simple alphanumeric-only normalization:
+
+```python
+def normalize_command(command: str) -> str:
+    if not command:
+        return ""
+    # Keep only alphanumeric characters
+    normalized = re.sub(r'[^a-zA-Z0-9]', '', command)
+    return normalized.lower()
+```
+
+Added prefix/suffix matching in `detect_tool_spawn()`:
+
+```python
+# Prefix match: child is truncated version of parent
+if parent_normalized.startswith(child_normalized):
+    return cmd_info
+# Suffix match: child is latter part of compound command (|| or &&)
+if parent_normalized.endswith(child_normalized):
+    return cmd_info
+```
+
+### Results
+
+| Metric | Before | After |
+|--------|--------|-------|
+| Root agents | 18 | 11 |
+| Child agents | 55 | 62 |
+| Spawn edges | 55 | 62 |
+
+All 7 previously unmatched policy spec validators now correctly linked to parents:
+- agent_29, agent_31 -> agent_9 (curl/echo compound command)
+- agent_48, agent_50 -> agent_7 (find with grep pipe)
+- agent_53, agent_58 -> agent_6 (find with spacing variation)
+- agent_70 -> agent_4 (git commit heredoc)
+

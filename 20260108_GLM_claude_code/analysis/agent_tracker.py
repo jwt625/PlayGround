@@ -149,39 +149,37 @@ def normalize_command(command: str) -> str:
     """
     Normalize a shell command for matching purposes.
 
-    Removes:
-    - Extra whitespace
-    - Stderr redirects (2>/dev/null, 2>&1)
-    - Pipe commands (| head -20, | grep, etc.)
-    - Quote variations (single vs double quotes)
+    Simple approach: keep only alphanumeric characters and convert to lowercase.
+    This eliminates all variations in:
+    - Quotes (", ')
+    - Whitespace and spacing
+    - Redirects (2>/dev/null, >/dev/null)
+    - Pipes (| head -20)
+    - Escape characters (\\)
+    - Punctuation differences
+
+    The resulting string preserves:
+    - Command names (find, echo, curl, git)
+    - Path components and filenames
+    - Arguments and options (without dashes)
+    - Numbers (ports, counts, etc.)
 
     Args:
         command: Raw command string
 
     Returns:
-        Normalized command string
+        Normalized command string (alphanumeric only, lowercase)
     """
     import re
 
     if not command:
         return ""
 
-    # Remove stderr redirects
-    normalized = re.sub(r'\s*2>/dev/null\s*', ' ', command)
-    normalized = re.sub(r'\s*2>&1\s*', ' ', normalized)
+    # Keep only alphanumeric characters (letters and digits)
+    normalized = re.sub(r'[^a-zA-Z0-9]', '', command)
 
-    # Remove pipe commands
-    normalized = re.sub(r'\s*\|[^|]*$', '', normalized)
-
-    # Remove all quotes (both single and double) for consistent matching
-    # This handles cases where the same command may have quoted or unquoted arguments
-    normalized = normalized.replace('"', '')
-    normalized = normalized.replace("'", '')
-
-    # Normalize whitespace
-    normalized = ' '.join(normalized.split())
-
-    return normalized.strip()
+    # Convert to lowercase for case-insensitive matching
+    return normalized.lower()
 
 
 class AgentInstanceTracker:
@@ -384,6 +382,10 @@ class AgentInstanceTracker:
         Patterns:
         1. Simple: "Command: <command>\n[Output: <output>]"
         2. Policy spec: "<policy_spec>...</policy_spec>\n...\nCommand: <command>"
+        3. Heredoc: "Command: git commit -m \"$(cat <<'EOF'\n...\nEOF\n)\""
+
+        For heredoc commands, extracts the full multi-line command including the
+        heredoc content up to the closing marker.
 
         Args:
             message: First user message text
@@ -396,16 +398,43 @@ class AgentInstanceTracker:
         if not message:
             return None
 
-        # Pattern 1: "Command: <command>" at the start (simple pattern)
-        match = re.match(r'^Command:\s*(.+?)(?:\n|$)', message, re.MULTILINE)
-        if match:
-            return match.group(1).strip()
+        # Find "Command:" in the message
+        cmd_match = re.search(r'Command:\s*', message)
+        if not cmd_match:
+            return None
 
-        # Pattern 2: "Command: <command>" anywhere in the message (policy spec pattern)
-        # Look for "Command:" followed by the command on the same line or next line
-        match = re.search(r'Command:\s*(.+?)(?:\n|$)', message, re.MULTILINE)
-        if match:
-            return match.group(1).strip()
+        # Get everything after "Command: "
+        cmd_start = cmd_match.end()
+        remaining = message[cmd_start:]
+
+        if not remaining:
+            return None
+
+        # Check if this is a heredoc command (contains <<'MARKER' or <<MARKER or <<"MARKER")
+        # Common patterns: <<'EOF', <<EOF, <<"EOF", <<'END', etc.
+        heredoc_match = re.search(r"<<['\"]?([A-Za-z_][A-Za-z0-9_]*)['\"]?", remaining)
+
+        if heredoc_match:
+            # This is a heredoc command - extract until the closing marker
+            marker = heredoc_match.group(1)
+            # Find the closing marker (on its own line, possibly with trailing )")
+            # Pattern: \nMARKER followed by optional )\n or )")\n or just \n
+            close_pattern = rf'\n{re.escape(marker)}(?:\s*\)?"?\)?)?\s*(?:\n|$)'
+            close_match = re.search(close_pattern, remaining)
+
+            if close_match:
+                # Extract from start to end of closing marker
+                command = remaining[:close_match.end()].strip()
+                return command
+            else:
+                # Closing marker not found - fall back to first line
+                first_line = remaining.split('\n')[0].strip()
+                return first_line if first_line else None
+        else:
+            # Simple single-line command - extract until newline or end
+            match = re.match(r'^(.+?)(?:\n|$)', remaining)
+            if match:
+                return match.group(1).strip()
 
         return None
 
@@ -413,7 +442,9 @@ class AgentInstanceTracker:
         """
         Detect if this agent was spawned by a tool call (e.g., Bash).
 
-        Strategy: Extract command from first message and match against tool_command_index.
+        Strategy: Extract command from first message and match against tool_command_index
+        using prefix matching. The child command may be a truncated version of the parent
+        command (e.g., without trailing pipes or redirects).
 
         Args:
             first_user_message: First user message text
@@ -429,13 +460,31 @@ class AgentInstanceTracker:
         if not command:
             return None
 
-        # Normalize and hash the command
+        # Normalize the command (alphanumeric only, lowercase)
         normalized_command = normalize_command(command)
-        command_hash = compute_hash(normalized_command, length=16)
 
-        # Look up in tool command index
+        # First try exact hash match
+        command_hash = compute_hash(normalized_command, length=16)
         if command_hash in self.tool_command_index:
             return self.tool_command_index[command_hash]
+
+        # Try prefix/suffix matching for partial command matches
+        # Child command may be a prefix (truncated) or suffix (compound cmd || or &&)
+        min_len = 15  # Minimum length to avoid false positives
+        if len(normalized_command) >= min_len:
+            for cmd_hash, cmd_info in self.tool_command_index.items():
+                parent_normalized = cmd_info.get('normalized_command', '')
+                if len(parent_normalized) < min_len:
+                    continue
+                # Check if parent starts with child (child is prefix of parent)
+                if parent_normalized.startswith(normalized_command):
+                    return cmd_info
+                # Check if child starts with parent (for edge cases)
+                if normalized_command.startswith(parent_normalized):
+                    return cmd_info
+                # Check suffix: child may be latter part of compound command (|| or &&)
+                if parent_normalized.endswith(normalized_command):
+                    return cmd_info
 
         return None
 
