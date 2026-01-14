@@ -351,9 +351,20 @@ Two-stage hybrid pipeline implemented in `analysis/classify_messages.py`:
 - Separate execution: `--run-stage1` and `--run-stage2` flags allow independent runs
 - Stage 2 reads Stage 1 output file once at startup
 
+*Logging* (2026-01-14)
+- Python logging module with dual output: console (INFO+) and file (DEBUG+)
+- Timestamped format: `YYYY-MM-DD HH:MM:SS | LEVEL | message`
+- Log files saved to `analysis/logs/` with unique timestamp per run
+
+*Concurrency Optimization* (2026-01-14)
+- Stage 2 updated to use async/concurrent LLM calls via `httpx.AsyncClient`
+- 10 concurrent requests per batch (configurable)
+- Performance: ~33 sec per 10 messages vs ~2.7 min sequential (4.9x speedup)
+- Estimated total runtime: ~2.7 hours vs ~14 hours sequential
+
 *Initial Results* (partial run, 2026-01-14)
-- Stage 1: 497 high-value out of 940 processed (52.9% acceptance rate)
-- Stage 2: running in parallel on available high-value messages
+- Stage 1: 1,940 processed, 1,098 high-value (56.6% acceptance rate)
+- Stage 2: 740/3,684 processed, ETA ~01:00 AM
 
 **Step 3: Pattern Aggregation** (TODO)
 - Group insights by type and domain
