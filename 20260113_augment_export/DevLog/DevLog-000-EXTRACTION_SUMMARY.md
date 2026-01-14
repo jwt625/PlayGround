@@ -296,3 +296,50 @@ This means:
 - Exchange order is preserved by timestamp fields
 - The script handles both local and remote workspace paths
 
+## Bug Fix: Binary Parsing vs Proper LevelDB SDK
+
+### The Problem
+
+The original Python extraction script (`extract_augment_conversations.py`) used a naive binary parsing approach:
+1. Read `.ldb` and `.log` files as raw bytes
+2. Decode as UTF-8 with error handling
+3. Use bracket matching to find JSON objects
+
+This approach had a critical flaw: **LevelDB uses Snappy compression** for many of its data blocks. When compression is enabled, JSON data is fragmented across the binary with compression markers interspersed, making bracket matching fail.
+
+### Symptoms
+
+- Many workspaces reported "No conversations found" despite having data
+- Successfully extracted workspaces had far fewer conversations than visible in the Augment UI
+- Hexdump analysis showed JSON fragments with binary markers like `82 35 00 4c` breaking up the data
+
+### The Fix
+
+Replaced the binary parsing approach with a proper LevelDB SDK:
+
+```bash
+# Install Node.js LevelDB library
+npm install classic-level
+```
+
+New extraction script (`extract_with_leveldb.js`) uses the `classic-level` package which:
+- Properly handles LevelDB's internal format
+- Automatically decompresses Snappy-compressed blocks
+- Correctly iterates through all key-value pairs
+
+### Results Comparison
+
+| Metric | Binary Parsing | Proper LevelDB | Improvement |
+|--------|----------------|----------------|-------------|
+| Workspaces extracted | 14 | 21 | +50% |
+| Total exchanges | 414 | 52,254 | **+126x** |
+
+The proper LevelDB extraction recovered **126 times more data** than the binary parsing approach.
+
+### Known Limitations
+
+Workspaces currently open in VSCode may have locked databases, causing iterator errors. Close VSCode before extraction to access all data.
+
+### Lesson Learned
+
+When dealing with database formats, always use the proper SDK/library rather than attempting to parse binary files directly. Database formats often include compression, checksums, and internal structures that are not designed for direct reading.
