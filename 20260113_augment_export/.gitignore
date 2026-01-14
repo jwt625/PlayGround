@@ -1,3 +1,4 @@
 */node_modules/*
 augment_conversations_export/*
 augment_conversations_export_leveldb/*
+analysis/*.md
