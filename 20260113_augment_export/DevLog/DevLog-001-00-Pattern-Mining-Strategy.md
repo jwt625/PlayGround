@@ -1,7 +1,7 @@
 # DevLog-001: Pattern Mining Strategy
 
-**Date**: 2026-01-13
-**Status**: Completed - Initial Analysis
+**Date**: 2026-01-13 (Updated: 2026-01-14)
+**Status**: Phase 2 In Progress - Project Context Complete, Message Classification Next
 **Goal**: Extract patterns from Augment conversations to build consolidated instruction documentation
 
 ## Project Objective
@@ -172,10 +172,9 @@ Instruction Generation
 ### Key Findings
 
 **Data Quality**
-- Total exchanges: 52,391
-- Complete exchanges (request + response): 6,265 (12.0%)
-- Exchanges with request: 9,271 (17.7%)
-- Low request coverage due to Augment storing intermediate tool calls and streaming responses as separate exchanges
+- Total exchange records: 52,391 (includes tool calls, streaming chunks, and actual user-assistant exchanges)
+- User messages: 9,271 (the actual data for preference mining)
+- Note: Augment's LevelDB stores each tool call and streaming response chunk as a separate exchange record, inflating the total count. The relevant data for pattern mining is the 9,271 user messages, not the 52k total records.
 
 **Tool Preferences** (High Confidence)
 - Python package manager: uv (81.2%)
@@ -238,11 +237,107 @@ Note: High negative rate includes neutral instructions/questions misclassified b
 - Confidence scoring based on frequency only
 - No temporal analysis (preference evolution over time)
 
+## Phase 2: LLM-Based Pattern Mining
+
+### Design Decisions
+
+**Message Type Classification**
+- Multi-label classification (a message can be multiple types simultaneously)
+- Types: bug_report, feature_request, preference_statement, decision, correction, clarification, approval, conversational
+- Each type has optional confidence score
+- Example: "this is broken, let's use X instead" -> bug_report + decision
+
+Example types:
+- bug_report - reporting specific broken behavior
+- feature_request - asking for specific functionality
+- preference_statement - expressing how things should be done
+- decision - making a choice between alternatives
+- correction - fixing LLM mistake
+- clarification - providing more context
+- approval - confirming LLM's approach
+- conversational - filler/acknowledgment
+
+**Generalizability Scoring**
+- 0.0-0.3: Task-specific (applies only to current context)
+- 0.4-0.6: Contextual (applies to similar projects/domains)
+- 0.7-1.0: Universal (applies to all projects)
+
+**Insight Extraction Schema**
+```python
+{
+    "insight_type": "tool_preference|workflow|style|constraint|decision|value",
+    "domain": "python|javascript|docker|testing|general|...",
+    "statement": str,  # Concise free-form
+    "applies_to": "all_projects|web_apps|this_project_only|...",
+    "constraint_strength": "hard|soft"
+}
+```
+
+**Context Strategy for Message Analysis**
+- Project summary and metadata (extracted once per workspace)
+- Previous user message (up to 500 chars)
+- Previous final LLM response (up to 1000 chars, otherwise summarized) - the synthesized answer, not tool calls
+- LLM response (up to 1000 chars, otherwise summarized)
+- Optional: Next user message (up to 300 chars)
+
+### Workspace-Level Context Extraction (WIP)
+
+**Approach**: Extract project summaries from LLM responses (not user messages).
+
+When the LLM is asked to "inspect", "analyze", or "research" a codebase, the final response often contains comprehensive project summaries with architecture, components, and design decisions.
+
+**Extraction Script**: `analysis/extract_project_summaries.py`
+- Criteria: response_text > 1500 chars, contains markdown headers
+- Finds trigger request that prompted the summary
+- Outputs per-workspace JSON files to `analysis/project_summaries/`
+
+**Initial Extraction Results** (2026-01-13)
+- 2,408 summaries extracted from 22 workspaces
+- Top workspaces: lambda-daily-slackbot (632), lambda-chat-frontend-new (497), lambda-chat-backend (469)
+- Longest summaries: up to 32KB per response
+
+**Issues Identified**
+- Many extracted "summaries" are not actual project-level context (e.g., bug fix explanations, implementation details)
+- Over-extraction: some workspaces have 400+ summaries when only 3-5 high-quality ones are needed
+- Duplicate project names from different workspace IDs require disambiguation
+- Need stricter filtering criteria or LLM-based validation
+
+### Planned Pipeline
+
+**Step 1: Project Context Consolidation** (COMPLETE)
+- Heuristic-based filtering reduced 2,408 candidates to 155 high-quality summaries (93.6% reduction)
+- LLM-based validation using Llama-4-Maverick to classify each extracted summary as VALID/INVALID
+- For workspaces with multiple valid summaries: consolidation via GLM-4.6-FP8
+- For workspaces with zero valid summaries: generation from sampled responses, file types, and tech stack
+- Final output: 21 unique project summaries covering all workspaces
+- Results by source: 12 generated, 7 consolidated, 2 single-valid
+
+**Implementation**: `analysis/generate_missing_summaries.py`
+- Workflow: validate extracted summaries -> consolidate if multiple valid -> generate if none valid
+- Models: GLM-4.6-FP8 for generation/consolidation, Llama-4-Maverick-17B for validation
+- Output: `analysis/project_summaries/_consolidated_summaries.json`
+
+**Step 2: Message Classification** (TODO)
+- Pre-filter messages using regex (preference keywords, corrections, short decisive messages)
+- Batch 50-100 messages per API call
+- Include context: project metadata, adjacent messages
+- Extract: message_types, generalizability, insights, persona_traits
+
+**Step 3: Pattern Aggregation** (TODO)
+- Group insights by type and domain
+- Calculate confidence based on frequency and generalizability
+- Resolve conflicts (recent > old, explicit > implicit)
+- Generate consolidated instruction documents
+
+### Technical Notes
+
+- Internal inference endpoint at `internal-inference.bugnest.net`
+- GLM-4.6 includes thinking tokens; parsed via `</think>` delimiter
+- Validation check must distinguish VALID from INVALID (substring match is insufficient)
+
 ## Next Steps
 
-1. Consolidate conversation data from other machines
-2. Re-run analysis on combined dataset
-3. Implement universal vs project-specific rule classification
-4. Build digital twin infrastructure (4-layer architecture from DevLog-001-01)
-5. Generate actionable instruction documents for LLM integration
+1. Implement message classifier with multi-label types and generalizability scoring
+2. Build pattern aggregation and conflict resolution pipeline
+3. Generate actionable instruction documents for LLM integration
 
