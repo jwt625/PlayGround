@@ -1,7 +1,7 @@
 # DevLog-001: Pattern Mining Strategy
 
 **Date**: 2026-01-13 (Updated: 2026-01-14)
-**Status**: Phase 2 In Progress - Project Context Complete, Message Classification Next
+**Status**: Phase 2 In Progress - Message Classification Running
 **Goal**: Extract patterns from Augment conversations to build consolidated instruction documentation
 
 ## Project Objective
@@ -317,11 +317,43 @@ When the LLM is asked to "inspect", "analyze", or "research" a codebase, the fin
 - Models: GLM-4.6-FP8 for generation/consolidation, Llama-4-Maverick-17B for validation
 - Output: `analysis/project_summaries/_consolidated_summaries.json`
 
-**Step 2: Message Classification** (TODO)
-- Pre-filter messages using regex (preference keywords, corrections, short decisive messages)
-- Batch 50-100 messages per API call
-- Include context: project metadata, adjacent messages
-- Extract: message_types, generalizability, insights, persona_traits
+**Step 2: Message Classification** (IN PROGRESS)
+
+Two-stage hybrid pipeline implemented in `analysis/classify_messages.py`:
+
+*Stage 1: Fast Filter (Llama-4-Maverick-17B)*
+- Binary classification: HIGH_VALUE vs LOW_VALUE
+- HIGH_VALUE: preferences, corrections, decisions, constraints, frustration, feature requests
+- LOW_VALUE: acknowledgments, questions without opinions, conversational filler
+- Batch size: 20 messages, incremental saves after each batch
+- Purpose: reduce expensive GLM calls by filtering out ~50% of messages
+
+*Stage 2: Deep Classification (GLM-4.6-FP8)*
+- Multi-label classification: preference_statement, decision, correction, constraint, frustration, clarification, feature_request, approval, bug_report, conversational
+- Generalizability score (0.0-1.0): task-specific to universal applicability
+- Insight extraction with type, content, and confidence
+- Batch size: 10 messages, incremental saves after each batch
+
+*Context Assembly*
+- Project summary from consolidated summaries (Step 1 output)
+- Previous assistant response (extracted from response_nodes, type=0 text content)
+- Next assistant response (same extraction method)
+- Handles tool-only exchanges by searching backwards for actual user messages
+
+*Data Processing*
+- Raw data: 52,391 exchange records (includes tool calls and streaming chunks)
+- Deduplicated user messages: 6,591 unique messages
+- Deduplication via SHA-256 hash of message content
+
+*Interrupt Safety*
+- Both stages save results incrementally to JSON after each batch
+- Resume capability: loads existing results, tracks processed message hashes, skips already-processed
+- Separate execution: `--run-stage1` and `--run-stage2` flags allow independent runs
+- Stage 2 reads Stage 1 output file once at startup
+
+*Initial Results* (partial run, 2026-01-14)
+- Stage 1: 497 high-value out of 940 processed (52.9% acceptance rate)
+- Stage 2: running in parallel on available high-value messages
 
 **Step 3: Pattern Aggregation** (TODO)
 - Group insights by type and domain
@@ -337,7 +369,8 @@ When the LLM is asked to "inspect", "analyze", or "research" a codebase, the fin
 
 ## Next Steps
 
-1. Implement message classifier with multi-label types and generalizability scoring
-2. Build pattern aggregation and conflict resolution pipeline
-3. Generate actionable instruction documents for LLM integration
+1. Complete message classification (Stage 1 + Stage 2) on all 6,591 messages
+2. Analyze classification results: distribution of labels, generalizability scores, insight types
+3. Build pattern aggregation and conflict resolution pipeline
+4. Generate actionable instruction documents for LLM integration
 
