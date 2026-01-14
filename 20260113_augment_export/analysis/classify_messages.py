@@ -298,13 +298,103 @@ def parse_json_response(content: str, debug: bool = False) -> dict:
     raise ValueError(f"No valid JSON found in response: {content[:200]}")
 
 
+async def classify_stage1_batch_async(
+    messages: list[MessageContext],
+    output_path: str,
+    concurrency: int = 10
+) -> list[dict]:
+    """
+    Stage 1: Fast async classification with Llama-4 to filter high-value messages.
+    Uses concurrent requests for significant speedup (~9x with concurrency=20).
+    Saves incrementally to allow resuming interrupted runs.
+    """
+    results = []
+    output_file = Path(output_path)
+
+    # Load existing results if resuming
+    if output_file.exists():
+        with open(output_file, 'r', encoding='utf-8') as f:
+            existing = json.load(f)
+            results = existing.get("results", [])
+            processed_hashes = {r["message_hash"] for r in results}
+            messages = [m for m in messages if m.message_hash not in processed_hashes]
+            logger.info(f"Stage 1: Resuming with {len(results)} already done, {len(messages)} remaining")
+
+    if not messages:
+        logger.info("Stage 1: No messages to process")
+        return results
+
+    total_batches = (len(messages) + concurrency - 1) // concurrency
+    logger.info(f"Stage 1: Classifying {len(messages)} messages with Llama-4 ({concurrency} concurrent)...")
+
+    async with httpx.AsyncClient(timeout=120.0) as client:
+        for batch_idx in range(0, len(messages), concurrency):
+            batch = messages[batch_idx:batch_idx + concurrency]
+            batch_num = batch_idx // concurrency + 1
+
+            async def classify_one(msg):
+                try:
+                    user_prompt = STAGE1_USER_TEMPLATE.format(
+                        message=msg.user_message[:1500],
+                        prev_response=msg.prev_assistant_response[:500]
+                    )
+
+                    llm_messages = [
+                        {"role": "system", "content": STAGE1_SYSTEM_PROMPT},
+                        {"role": "user", "content": user_prompt}
+                    ]
+
+                    response = await call_llm_async(client, llm_messages, LLAMA4_MODEL, max_tokens=256)
+                    parsed = parse_json_response(response)
+
+                    is_high = parsed.get("value", "LOW").upper() == "HIGH"
+                    reason = parsed.get("reason", "")
+
+                    return {
+                        "message_hash": msg.message_hash,
+                        "is_high_value": is_high,
+                        "reason": reason,
+                        "message_preview": msg.user_message[:200]
+                    }
+                except Exception as e:
+                    logger.error(f"Error classifying message: {e}")
+                    return {
+                        "message_hash": msg.message_hash,
+                        "is_high_value": True,
+                        "reason": f"Error: {e}",
+                        "message_preview": msg.user_message[:200]
+                    }
+
+            # Process batch concurrently
+            tasks = [classify_one(msg) for msg in batch]
+            batch_results = await asyncio.gather(*tasks)
+            results.extend(batch_results)
+
+            # Save incrementally
+            high_count = sum(1 for r in results if r["is_high_value"])
+            with open(output_file, 'w', encoding='utf-8') as f:
+                json.dump({
+                    "total_processed": len(results),
+                    "high_value_count": high_count,
+                    "results": results
+                }, f, indent=2)
+
+            logger.info(f"Batch {batch_num}/{total_batches}: {high_count}/{len(results)} high-value")
+
+    high_value = sum(1 for r in results if r["is_high_value"])
+    logger.info(f"Stage 1 complete: {high_value}/{len(results)} messages marked high-value ({high_value/len(results)*100:.1f}%)")
+
+    return results
+
+
 def classify_stage1_batch(
     messages: list[MessageContext],
     output_path: str,
     batch_size: int = 20
 ) -> list[dict]:
     """
-    Stage 1: Fast classification with Llama-4.
+    Stage 1: Fast classification with Llama-4 (synchronous version - deprecated).
+    Use classify_stage1_batch_async for better performance.
     Saves incrementally to allow resuming interrupted runs.
     Returns list of result dicts.
     """
@@ -737,10 +827,10 @@ def main():
         output_dir.mkdir(exist_ok=True)
 
         logger.info("=" * 80)
-        logger.info("RUNNING STAGE 1: FAST FILTER")
+        logger.info("RUNNING STAGE 1: FAST FILTER (ASYNC)")
         logger.info("=" * 80)
         stage1_output = output_dir / "stage1_filter_results.json"
-        stage1_results = classify_stage1_batch(messages, str(stage1_output))
+        stage1_results = asyncio.run(classify_stage1_batch_async(messages, str(stage1_output), concurrency=10))
 
         high_value = sum(1 for r in stage1_results if r["is_high_value"])
         logger.info(f"Stage 1 complete: {high_value}/{len(stage1_results)} high-value messages")
@@ -782,10 +872,10 @@ def main():
 
         # Stage 1: Filter
         logger.info("=" * 80)
-        logger.info("RUNNING STAGE 1: FAST FILTER")
+        logger.info("RUNNING STAGE 1: FAST FILTER (ASYNC)")
         logger.info("=" * 80)
         stage1_output = output_dir / "stage1_filter_results.json"
-        stage1_results = classify_stage1_batch(messages, str(stage1_output))
+        stage1_results = asyncio.run(classify_stage1_batch_async(messages, str(stage1_output), concurrency=10))
         logger.info(f"Stage 1 results saved to {stage1_output}")
 
         # Build lookup of high-value message hashes
