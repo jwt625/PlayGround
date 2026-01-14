@@ -31,3 +31,6 @@ Projects that have spun off:
 <img src="assets/gdsjam.png" alt="gdsjam" width="33%">
 
 - [psh (Programmable Snippet Helper)](https://github.com/jwt625/psh): a text expansion tool with directive-based syntax for dynamic snippet expansion. Reuse frequently-used prompts for LLMs without repetitive typing. Type `;;d.ne,l2` instead of "be concise, no emoji" every time.
+- [Claude Code Inspector](https://github.com/jwt625/claude-code-inspector): comprehensive tools for analyzing, tracking, and visualizing Claude Code agent workflows. Extract entities from API logs, track agent instances, build workflow DAGs, and visualize with interactive React-based viewer.
+
+<img src="assets/claude-code-inspector.png" alt="Claude Code Inspector" width="33%">

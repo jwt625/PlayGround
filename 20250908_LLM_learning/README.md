@@ -81,6 +81,24 @@ Managed with `uv` for fast, reliable package management:
 - NumPy, Matplotlib for data handling and visualization
 - Jupyter for interactive development
 
+## Logging Conventions
+
+All training and experiment logs must include proper timestamps for correlation with GPU metrics.
+
+**Required format**: `YYYY-MM-DD HH:MM:SS.mmm <message>`
+
+**Implementation**: Use `ts` (from moreutils) to prepend timestamps:
+```bash
+./train_script.sh 2>&1 | ts '%Y-%m-%d %H:%M:%.S' | tee "training_$(date +%Y%m%d_%H%M%S).log"
+```
+
+Install moreutils if needed: `sudo apt install moreutils`
+
+This enables:
+- Precise correlation between training events and GPU power/temperature spikes
+- Post-hoc analysis of performance anomalies
+- Accurate timing of forward/backward passes
+
 ## Hardware Utilization Strategy
 
 This project is designed to fully exploit the dual H100 setup:

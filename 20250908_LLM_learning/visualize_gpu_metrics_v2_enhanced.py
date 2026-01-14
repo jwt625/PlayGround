@@ -161,6 +161,15 @@ def plot_metrics(df, cutoff_time=None, output_file='gpu_metrics_plot.html', even
     """
     time_hours = df['elapsed_sec'] / 3600
 
+    # Format time as HH:MM:SS.mmm for hover (stored once, used by first trace only)
+    time_formatted = []
+    for sec in df['elapsed_sec'].values:
+        hours = int(sec // 3600)
+        minutes = int((sec % 3600) // 60)
+        secs = int(sec % 60)
+        milliseconds = int((sec % 1) * 1000)
+        time_formatted.append(f"{hours:02d}:{minutes:02d}:{secs:02d}.{milliseconds:03d}")
+
     # Determine if we have events to show
     has_events = events_df is not None and len(events_df) > 0
 
@@ -184,7 +193,7 @@ def plot_metrics(df, cutoff_time=None, output_file='gpu_metrics_plot.html', even
             shared_xaxes=True
         )
 
-    # Power subplot
+    # Power subplot - first trace has time in hover, others don't
     power_traces = [
         {'y': df['gpu0_power_instant_w'], 'name': 'GPU 0 Power (Instant)', 'color': '#1f77b4', 'unit': 'W', 'dash': 'solid'},
         {'y': df['gpu0_power_avg_w'], 'name': 'GPU 0 Power (Avg)', 'color': '#1f77b4', 'unit': 'W', 'dash': 'dot'},
@@ -192,37 +201,66 @@ def plot_metrics(df, cutoff_time=None, output_file='gpu_metrics_plot.html', even
         {'y': df['gpu1_power_avg_w'], 'name': 'GPU 1 Power (Avg)', 'color': '#ff7f0e', 'unit': 'W', 'dash': 'dot'},
     ]
 
-    for trace_info in power_traces:
-        fig.add_trace(
-            go.Scatter(
-                x=time_hours,
-                y=trace_info['y'],
-                name=trace_info['name'],
-                mode='lines',
-                line=dict(color=trace_info['color'], width=1, dash=trace_info['dash']),
-                hovertemplate=f"{trace_info['name']}: %{{y:.1f}} {trace_info['unit']}<extra></extra>"
-            ),
-            row=1, col=1
-        )
+    for i, trace_info in enumerate(power_traces):
+        if i == 0:
+            # First trace includes formatted time
+            fig.add_trace(
+                go.Scatter(
+                    x=time_hours,
+                    y=trace_info['y'],
+                    name=trace_info['name'],
+                    mode='lines',
+                    line=dict(color=trace_info['color'], width=1, dash=trace_info['dash']),
+                    customdata=time_formatted,
+                    hovertemplate=f"<b>Time: %{{customdata}}</b><br>{trace_info['name']}: %{{y:.1f}} {trace_info['unit']}<extra></extra>"
+                ),
+                row=1, col=1
+            )
+        else:
+            fig.add_trace(
+                go.Scatter(
+                    x=time_hours,
+                    y=trace_info['y'],
+                    name=trace_info['name'],
+                    mode='lines',
+                    line=dict(color=trace_info['color'], width=1, dash=trace_info['dash']),
+                    hovertemplate=f"{trace_info['name']}: %{{y:.1f}} {trace_info['unit']}<extra></extra>"
+                ),
+                row=1, col=1
+            )
 
-    # Temperature subplot
+    # Temperature subplot - first trace has time in hover
     temp_traces = [
         {'y': df['gpu0_temp_c'], 'name': 'GPU 0 Temp', 'color': '#2ca02c', 'unit': 'C'},
         {'y': df['gpu1_temp_c'], 'name': 'GPU 1 Temp', 'color': '#d62728', 'unit': 'C'}
     ]
 
-    for trace_info in temp_traces:
-        fig.add_trace(
-            go.Scatter(
-                x=time_hours,
-                y=trace_info['y'],
-                name=trace_info['name'],
-                mode='lines',
-                line=dict(color=trace_info['color'], width=1),
-                hovertemplate=f"{trace_info['name']}: %{{y:.1f}} {trace_info['unit']}<extra></extra>"
-            ),
-            row=2, col=1
-        )
+    for i, trace_info in enumerate(temp_traces):
+        if i == 0:
+            fig.add_trace(
+                go.Scatter(
+                    x=time_hours,
+                    y=trace_info['y'],
+                    name=trace_info['name'],
+                    mode='lines',
+                    line=dict(color=trace_info['color'], width=1),
+                    customdata=time_formatted,
+                    hovertemplate=f"<b>Time: %{{customdata}}</b><br>{trace_info['name']}: %{{y:.1f}} {trace_info['unit']}<extra></extra>"
+                ),
+                row=2, col=1
+            )
+        else:
+            fig.add_trace(
+                go.Scatter(
+                    x=time_hours,
+                    y=trace_info['y'],
+                    name=trace_info['name'],
+                    mode='lines',
+                    line=dict(color=trace_info['color'], width=1),
+                    hovertemplate=f"{trace_info['name']}: %{{y:.1f}} {trace_info['unit']}<extra></extra>"
+                ),
+                row=2, col=1
+            )
 
     # Add cutoff line to subplots
     if cutoff_time is not None:
@@ -260,7 +298,7 @@ def plot_metrics(df, cutoff_time=None, output_file='gpu_metrics_plot.html', even
             show_legend = event_type not in event_types_added
             event_types_added.add(event_type)
 
-            # Add marker for event in the events subplot
+            # Add marker for event in the events subplot (using hours for x)
             fig.add_trace(
                 go.Scatter(
                     x=[event['elapsed_hours']],
