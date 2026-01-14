@@ -343,3 +343,21 @@ Workspaces currently open in VSCode may have locked databases, causing iterator 
 ### Lesson Learned
 
 When dealing with database formats, always use the proper SDK/library rather than attempting to parse binary files directly. Database formats often include compression, checksums, and internal structures that are not designed for direct reading.
+
+## Extracted home desktop
+
+Summary:
+
+- Total workspaces: 36
+- Total conversations: 417
+- Total exchanges: 40,675
+
+Top 5 workspaces by exchange count:
+
+- gdsjam: 16,801 exchanges in 123 conversations
+- 20250831_one_click_paper_page: 4,862 exchanges in 32 conversations
+- 20260108_GLM_claude_code: 2,982 exchanges in 29 conversations
+- age-of-agents: 2,505 exchanges in 21 conversations
+- 20251129_gdsfactory: 2,214 exchanges in 23 conversations
+
+
