@@ -9,6 +9,9 @@ import json
 import hashlib
 import time
 import os
+import logging
+import asyncio
+from datetime import datetime
 from pathlib import Path
 from dataclasses import dataclass, field, asdict
 from typing import Optional
@@ -17,6 +20,47 @@ import httpx
 from dotenv import load_dotenv
 
 load_dotenv()
+
+# Configure logging
+LOG_DIR = Path(__file__).parent / "logs"
+LOG_DIR.mkdir(exist_ok=True)
+
+def setup_logging(log_name: str = "classify_messages") -> logging.Logger:
+    """Set up logging with both console and file handlers."""
+    logger = logging.getLogger(log_name)
+
+    # Avoid adding handlers multiple times
+    if logger.handlers:
+        return logger
+
+    logger.setLevel(logging.DEBUG)
+
+    # Format with timestamp
+    formatter = logging.Formatter(
+        fmt="%(asctime)s | %(levelname)-8s | %(message)s",
+        datefmt="%Y-%m-%d %H:%M:%S"
+    )
+
+    # Console handler (INFO and above)
+    console_handler = logging.StreamHandler()
+    console_handler.setLevel(logging.INFO)
+    console_handler.setFormatter(formatter)
+    logger.addHandler(console_handler)
+
+    # File handler (DEBUG and above) - new file per run
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    log_file = LOG_DIR / f"{log_name}_{timestamp}.log"
+    file_handler = logging.FileHandler(log_file, encoding="utf-8")
+    file_handler.setLevel(logging.DEBUG)
+    file_handler.setFormatter(formatter)
+    logger.addHandler(file_handler)
+
+    logger.info(f"Logging to {log_file}")
+
+    return logger
+
+# Initialize logger
+logger = setup_logging()
 
 # LLM Configuration - use same env vars as generate_missing_summaries.py
 API_KEY = os.getenv("LAMBDA_API_KEY")
@@ -174,6 +218,40 @@ def call_llm(
     return content
 
 
+async def call_llm_async(
+    client: httpx.AsyncClient,
+    messages: list[dict],
+    model: str,
+    max_tokens: int = 1024,
+    temperature: float = 0.1
+) -> str:
+    """Async version of call_llm for concurrent requests."""
+    url = f"{API_BASE}/chat/completions"
+
+    payload = {
+        "model": model,
+        "messages": messages,
+        "max_tokens": max_tokens,
+        "temperature": temperature,
+    }
+
+    response = await client.post(
+        url,
+        json=payload,
+        headers={"Authorization": f"Bearer {API_KEY}"}
+    )
+    response.raise_for_status()
+    data = response.json()
+
+    content = data["choices"][0]["message"]["content"]
+
+    # Handle GLM thinking tokens
+    if "</think>" in content:
+        content = content.split("</think>")[-1].strip()
+
+    return content
+
+
 def parse_json_response(content: str, debug: bool = False) -> dict:
     """Parse JSON from LLM response, handling common issues."""
     original_content = content
@@ -213,8 +291,8 @@ def parse_json_response(content: str, debug: bool = False) -> dict:
             return json.loads(json_str)
         except json.JSONDecodeError as e:
             if debug:
-                print(f"Failed to parse JSON: {e}")
-                print(f"Content: {json_str[:500]}")
+                logger.debug(f"Failed to parse JSON: {e}")
+                logger.debug(f"Content: {json_str[:500]}")
             raise
 
     raise ValueError(f"No valid JSON found in response: {content[:200]}")
@@ -240,17 +318,17 @@ def classify_stage1_batch(
             existing = json.load(f)
             results = existing.get("results", [])
             processed_hashes = {r["message_hash"] for r in results}
-            print(f"Resuming Stage 1: {len(results)} already processed")
+            logger.info(f"Resuming Stage 1: {len(results)} already processed")
 
     # Filter to only unprocessed messages
     remaining = [m for m in messages if m.message_hash not in processed_hashes]
 
     if not remaining:
-        print(f"Stage 1: All {len(messages)} messages already processed")
+        logger.info(f"Stage 1: All {len(messages)} messages already processed")
         return results
 
     total_batches = (len(remaining) + batch_size - 1) // batch_size
-    print(f"\nStage 1: Classifying {len(remaining)} messages with Llama-4 ({len(results)} already done)...")
+    logger.info(f"Stage 1: Classifying {len(remaining)} messages with Llama-4 ({len(results)} already done)...")
 
     for batch_idx in range(0, len(remaining), batch_size):
         batch = remaining[batch_idx:batch_idx + batch_size]
@@ -282,7 +360,7 @@ def classify_stage1_batch(
                 })
 
             except Exception as e:
-                print(f"  Error classifying message: {e}")
+                logger.error(f"Error classifying message: {e}")
                 # Default to high value on error to avoid losing data
                 results.append({
                     "message_hash": msg.message_hash,
@@ -300,25 +378,70 @@ def classify_stage1_batch(
                 "results": results
             }, f, indent=2)
 
-        print(f"  Batch {batch_num}/{total_batches}: {high_count}/{len(results)} high-value (saved)")
+        logger.info(f"Batch {batch_num}/{total_batches}: {high_count}/{len(results)} high-value (saved)")
 
         # Small delay to avoid rate limiting
         time.sleep(0.1)
 
     high_value = sum(1 for r in results if r["is_high_value"])
-    print(f"Stage 1 complete: {high_value}/{len(results)} messages marked high-value ({high_value/len(results)*100:.1f}%)")
+    logger.info(f"Stage 1 complete: {high_value}/{len(results)} messages marked high-value ({high_value/len(results)*100:.1f}%)")
 
     return results
 
 
-def classify_stage2_batch(
+async def classify_single_message_async(
+    client: httpx.AsyncClient,
+    msg: MessageContext
+) -> dict:
+    """Classify a single message asynchronously."""
+    try:
+        user_prompt = STAGE2_USER_TEMPLATE.format(
+            project_summary=msg.project_summary[:1500],
+            prev_response=msg.prev_assistant_response[:800],
+            message=msg.user_message[:2000],
+            next_response=msg.next_assistant_response[:800]
+        )
+
+        llm_messages = [
+            {"role": "system", "content": STAGE2_SYSTEM_PROMPT},
+            {"role": "user", "content": user_prompt}
+        ]
+
+        response = await call_llm_async(client, llm_messages, GLM_MODEL, max_tokens=4096)
+        parsed = parse_json_response(response)
+
+        return {
+            "message_hash": msg.message_hash,
+            "workspace_id": msg.workspace_id,
+            "folder_path": msg.folder_path,
+            "conversation_id": msg.conversation_id,
+            "exchange_index": msg.exchange_index,
+            "user_message": msg.user_message,
+            "labels": parsed.get("labels", []),
+            "generalizability": parsed.get("generalizability", 0.0),
+            "insights": parsed.get("insights", []),
+            "reasoning": parsed.get("reasoning", "")
+        }
+
+    except Exception as e:
+        logger.error(f"Error classifying message: {e}")
+        return {
+            "message_hash": msg.message_hash,
+            "workspace_id": msg.workspace_id,
+            "folder_path": msg.folder_path,
+            "user_message": msg.user_message,
+            "error": str(e)
+        }
+
+
+async def classify_stage2_batch_async(
     messages: list[MessageContext],
     output_path: str,
-    batch_size: int = 10
+    concurrency: int = 10
 ) -> list[dict]:
     """
-    Stage 2: Deep classification with GLM-4.6.
-    Saves incrementally to avoid data loss.
+    Stage 2: Deep classification with GLM-4.6 using concurrent requests.
+    Saves incrementally after each batch to avoid data loss.
     """
     results = []
     output_file = Path(output_path)
@@ -330,80 +453,61 @@ def classify_stage2_batch(
             results = existing.get("results", [])
             processed_hashes = {r["message_hash"] for r in results}
             messages = [m for m in messages if m.message_hash not in processed_hashes]
-            print(f"Resuming: {len(results)} already processed, {len(messages)} remaining")
+            logger.info(f"Resuming: {len(results)} already processed, {len(messages)} remaining")
 
-    total_batches = (len(messages) + batch_size - 1) // batch_size
-    print(f"\nStage 2: Deep classification of {len(messages)} messages with GLM-4.6...")
+    if not messages:
+        logger.info("No messages to process")
+        return results
 
-    for batch_idx in range(0, len(messages), batch_size):
-        batch = messages[batch_idx:batch_idx + batch_size]
-        batch_num = batch_idx // batch_size + 1
+    total_batches = (len(messages) + concurrency - 1) // concurrency
+    logger.info(f"Stage 2: Deep classification of {len(messages)} messages with GLM-4.6 ({concurrency} concurrent)...")
 
-        for msg in batch:
-            try:
-                user_prompt = STAGE2_USER_TEMPLATE.format(
-                    project_summary=msg.project_summary[:1500],
-                    prev_response=msg.prev_assistant_response[:800],
-                    message=msg.user_message[:2000],
-                    next_response=msg.next_assistant_response[:800]
-                )
+    async with httpx.AsyncClient(timeout=120.0) as client:
+        for batch_idx in range(0, len(messages), concurrency):
+            batch = messages[batch_idx:batch_idx + concurrency]
+            batch_num = batch_idx // concurrency + 1
 
-                llm_messages = [
-                    {"role": "system", "content": STAGE2_SYSTEM_PROMPT},
-                    {"role": "user", "content": user_prompt}
-                ]
+            # Process batch concurrently
+            tasks = [classify_single_message_async(client, msg) for msg in batch]
+            batch_results = await asyncio.gather(*tasks)
 
-                response = call_llm(llm_messages, GLM_MODEL, max_tokens=4096)
-                parsed = parse_json_response(response)
+            results.extend(batch_results)
 
-                result = {
-                    "message_hash": msg.message_hash,
-                    "workspace_id": msg.workspace_id,
-                    "folder_path": msg.folder_path,
-                    "conversation_id": msg.conversation_id,
-                    "exchange_index": msg.exchange_index,
-                    "user_message": msg.user_message,
-                    "labels": parsed.get("labels", []),
-                    "generalizability": parsed.get("generalizability", 0.0),
-                    "insights": parsed.get("insights", []),
-                    "reasoning": parsed.get("reasoning", "")
-                }
-                results.append(result)
+            # Save incrementally after each batch
+            with open(output_file, 'w', encoding='utf-8') as f:
+                json.dump({"results": results}, f, indent=2)
 
-            except Exception as e:
-                print(f"  Error classifying message: {e}")
-                results.append({
-                    "message_hash": msg.message_hash,
-                    "workspace_id": msg.workspace_id,
-                    "folder_path": msg.folder_path,
-                    "user_message": msg.user_message,
-                    "error": str(e)
-                })
+            logger.info(f"Batch {batch_num}/{total_batches}: {len(results)} total processed")
 
-        # Save incrementally
-        with open(output_file, 'w', encoding='utf-8') as f:
-            json.dump({"results": results}, f, indent=2)
-
-        print(f"  Batch {batch_num}/{total_batches}: {len(results)} total processed")
-        time.sleep(0.2)
-
-    print(f"Stage 2 complete: {len(results)} messages classified")
+    logger.info(f"Stage 2 complete: {len(results)} messages classified")
     return results
+
+
+def classify_stage2_batch(
+    messages: list[MessageContext],
+    output_path: str,
+    concurrency: int = 10
+) -> list[dict]:
+    """
+    Stage 2: Deep classification with GLM-4.6.
+    Wrapper that runs the async version.
+    """
+    return asyncio.run(classify_stage2_batch_async(messages, output_path, concurrency))
 
 
 def load_project_summaries(summaries_path: str) -> dict[str, str]:
     """Load consolidated project summaries, keyed by folder_path."""
     with open(summaries_path, 'r', encoding='utf-8') as f:
         summaries = json.load(f)
-    
+
     result = {}
     for item in summaries:
         folder_path = item.get('folder_path', '')
         summary = item.get('final_summary', '')
         if folder_path and summary:
             result[folder_path] = summary
-    
-    print(f"Loaded {len(result)} project summaries")
+
+    logger.info(f"Loaded {len(result)} project summaries")
     return result
 
 
@@ -411,19 +515,19 @@ def load_workspace_conversations(data_dir: str) -> list[dict]:
     """Load all workspace conversation files."""
     data_path = Path(data_dir)
     workspaces = []
-    
+
     for json_file in sorted(data_path.glob("*.json")):
         if json_file.name == "extraction_summary.json":
             continue
-        
+
         try:
             with open(json_file, 'r', encoding='utf-8') as f:
                 data = json.load(f)
             workspaces.append(data)
         except Exception as e:
-            print(f"Error loading {json_file}: {e}")
-    
-    print(f"Loaded {len(workspaces)} workspaces")
+            logger.error(f"Error loading {json_file}: {e}")
+
+    logger.info(f"Loaded {len(workspaces)} workspaces")
     return workspaces
 
 
@@ -550,26 +654,26 @@ def main():
     project_summaries = load_project_summaries(args.summaries_path)
     workspaces = load_workspace_conversations(args.data_dir)
     messages = extract_messages_with_context(workspaces, project_summaries)
-    print(f"\nExtracted {len(messages)} unique user messages with context")
+    logger.info(f"Extracted {len(messages)} unique user messages with context")
 
     if args.test_context:
         # Show sample messages with FULL prev/next responses
-        print("\n" + "="*80)
-        print("SAMPLE MESSAGES WITH FULL CONTEXT")
-        print("="*80)
+        logger.info("=" * 80)
+        logger.info("SAMPLE MESSAGES WITH FULL CONTEXT")
+        logger.info("=" * 80)
         for i, msg in enumerate(messages[:5]):
-            print(f"\n{'='*80}")
-            print(f"MESSAGE {i+1}")
-            print(f"{'='*80}")
-            print(f"Workspace: {Path(msg.folder_path).name}")
-            print(f"Conversation: {msg.conversation_id}")
-            print(f"Exchange index: {msg.exchange_index}")
-            print(f"\n--- USER MESSAGE ({len(msg.user_message)} chars) ---")
-            print(msg.user_message)
-            print(f"\n--- PREV ASSISTANT RESPONSE ({len(msg.prev_assistant_response)} chars) ---")
-            print(msg.prev_assistant_response if msg.prev_assistant_response else "(none - first message in conversation)")
-            print(f"\n--- NEXT ASSISTANT RESPONSE ({len(msg.next_assistant_response)} chars) ---")
-            print(msg.next_assistant_response if msg.next_assistant_response else "(none)")
+            logger.info(f"{'='*80}")
+            logger.info(f"MESSAGE {i+1}")
+            logger.info(f"{'='*80}")
+            logger.info(f"Workspace: {Path(msg.folder_path).name}")
+            logger.info(f"Conversation: {msg.conversation_id}")
+            logger.info(f"Exchange index: {msg.exchange_index}")
+            logger.info(f"--- USER MESSAGE ({len(msg.user_message)} chars) ---")
+            logger.info(msg.user_message)
+            logger.info(f"--- PREV ASSISTANT RESPONSE ({len(msg.prev_assistant_response)} chars) ---")
+            logger.info(msg.prev_assistant_response if msg.prev_assistant_response else "(none - first message in conversation)")
+            logger.info(f"--- NEXT ASSISTANT RESPONSE ({len(msg.next_assistant_response)} chars) ---")
+            logger.info(msg.next_assistant_response if msg.next_assistant_response else "(none)")
 
     elif args.test_stage1 > 0:
         # Test Stage 1 on a small sample
@@ -579,13 +683,13 @@ def main():
 
         results = classify_stage1_batch(sample, str(output_path))
 
-        print("\n" + "="*80)
-        print("STAGE 1 RESULTS")
-        print("="*80)
+        logger.info("=" * 80)
+        logger.info("STAGE 1 RESULTS")
+        logger.info("=" * 80)
         for r in results:
             status = "HIGH" if r["is_high_value"] else "LOW"
-            print(f"\n[{status}] {r['message_preview'][:100]}...")
-            print(f"  Reason: {r['reason']}")
+            logger.info(f"[{status}] {r['message_preview'][:100]}...")
+            logger.info(f"  Reason: {r['reason']}")
 
     elif args.test_stage2 > 0:
         # Test Stage 2 on a small sample with debug output
@@ -594,13 +698,13 @@ def main():
         output_path.parent.mkdir(exist_ok=True)
 
         # Test with debug mode - show raw LLM output
-        print("\n" + "="*80)
-        print("TESTING GLM-4.6 RESPONSES (DEBUG)")
-        print("="*80)
+        logger.info("=" * 80)
+        logger.info("TESTING GLM-4.6 RESPONSES (DEBUG)")
+        logger.info("=" * 80)
 
         for i, msg in enumerate(sample):
-            print(f"\n--- Testing message {i+1} ---")
-            print(f"Message: {msg.user_message[:150]}...")
+            logger.info(f"--- Testing message {i+1} ---")
+            logger.info(f"Message: {msg.user_message[:150]}...")
 
             user_prompt = STAGE2_USER_TEMPLATE.format(
                 project_summary=msg.project_summary[:1500],
@@ -616,32 +720,32 @@ def main():
 
             try:
                 response = call_llm(llm_messages, GLM_MODEL, max_tokens=4096)
-                print(f"\nRaw response ({len(response)} chars):")
-                print(response[:1500])
+                logger.debug(f"Raw response ({len(response)} chars):")
+                logger.debug(response[:1500])
 
                 parsed = parse_json_response(response, debug=True)
-                print(f"\nParsed result:")
-                print(f"  Labels: {parsed.get('labels', [])}")
-                print(f"  Generalizability: {parsed.get('generalizability', 0)}")
-                print(f"  Insights: {parsed.get('insights', [])}")
+                logger.info(f"Parsed result:")
+                logger.info(f"  Labels: {parsed.get('labels', [])}")
+                logger.info(f"  Generalizability: {parsed.get('generalizability', 0)}")
+                logger.info(f"  Insights: {parsed.get('insights', [])}")
             except Exception as e:
-                print(f"Error: {e}")
+                logger.error(f"Error: {e}")
 
     elif args.run_stage1:
         # Run Stage 1 only
         output_dir = Path(args.output_dir)
         output_dir.mkdir(exist_ok=True)
 
-        print("\n" + "="*80)
-        print("RUNNING STAGE 1: FAST FILTER")
-        print("="*80)
+        logger.info("=" * 80)
+        logger.info("RUNNING STAGE 1: FAST FILTER")
+        logger.info("=" * 80)
         stage1_output = output_dir / "stage1_filter_results.json"
         stage1_results = classify_stage1_batch(messages, str(stage1_output))
 
         high_value = sum(1 for r in stage1_results if r["is_high_value"])
-        print(f"\nStage 1 complete: {high_value}/{len(stage1_results)} high-value messages")
-        print(f"Results saved to {stage1_output}")
-        print(f"\nRun --run-stage2 to classify high-value messages with GLM-4.6")
+        logger.info(f"Stage 1 complete: {high_value}/{len(stage1_results)} high-value messages")
+        logger.info(f"Results saved to {stage1_output}")
+        logger.info(f"Run --run-stage2 to classify high-value messages with GLM-4.6")
 
     elif args.run_stage2:
         # Run Stage 2 only (requires Stage 1 results)
@@ -649,8 +753,8 @@ def main():
         stage1_output = output_dir / "stage1_filter_results.json"
 
         if not stage1_output.exists():
-            print(f"Error: Stage 1 results not found at {stage1_output}")
-            print("Run --run-stage1 first")
+            logger.error(f"Stage 1 results not found at {stage1_output}")
+            logger.error("Run --run-stage1 first")
             return
 
         # Load Stage 1 results
@@ -662,27 +766,27 @@ def main():
         # Filter to high-value messages
         high_value_messages = [msg for msg in messages if msg.message_hash in high_value_hashes]
 
-        print(f"\nLoaded Stage 1 results: {len(high_value_hashes)} high-value messages")
+        logger.info(f"Loaded Stage 1 results: {len(high_value_hashes)} high-value messages")
 
-        print("\n" + "="*80)
-        print("RUNNING STAGE 2: DEEP CLASSIFICATION")
-        print("="*80)
+        logger.info("=" * 80)
+        logger.info("RUNNING STAGE 2: DEEP CLASSIFICATION")
+        logger.info("=" * 80)
         stage2_output = output_dir / "stage2_classification_results.json"
         classify_stage2_batch(high_value_messages, str(stage2_output))
 
-        print("\nStage 2 complete!")
+        logger.info("Stage 2 complete!")
 
     elif args.run_full:
         output_dir = Path(args.output_dir)
         output_dir.mkdir(exist_ok=True)
 
         # Stage 1: Filter
-        print("\n" + "="*80)
-        print("RUNNING STAGE 1: FAST FILTER")
-        print("="*80)
+        logger.info("=" * 80)
+        logger.info("RUNNING STAGE 1: FAST FILTER")
+        logger.info("=" * 80)
         stage1_output = output_dir / "stage1_filter_results.json"
         stage1_results = classify_stage1_batch(messages, str(stage1_output))
-        print(f"Stage 1 results saved to {stage1_output}")
+        logger.info(f"Stage 1 results saved to {stage1_output}")
 
         # Build lookup of high-value message hashes
         high_value_hashes = {r["message_hash"] for r in stage1_results if r["is_high_value"]}
@@ -690,13 +794,13 @@ def main():
         # Stage 2: Deep classification on high-value only
         high_value_messages = [msg for msg in messages if msg.message_hash in high_value_hashes]
 
-        print("\n" + "="*80)
-        print("RUNNING STAGE 2: DEEP CLASSIFICATION")
-        print("="*80)
+        logger.info("=" * 80)
+        logger.info("RUNNING STAGE 2: DEEP CLASSIFICATION")
+        logger.info("=" * 80)
         stage2_output = output_dir / "stage2_classification_results.json"
         classify_stage2_batch(high_value_messages, str(stage2_output))
 
-        print("\nPipeline complete!")
+        logger.info("Pipeline complete!")
 
     else:
         parser.print_help()
