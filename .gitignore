@@ -95,3 +95,6 @@ venv.bak/
 *.html
 *.lyrdb
 20251223_openFOAM/Miniforge3-MacOSX-arm64.sh
+20250521_tools/document-parser
+20250731_ansible/ansible_quickstart/inventory.yml
+*.aac

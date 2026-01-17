@@ -1,5 +1,7 @@
 # DevLog-002: Digital Twin Components
 
+> **Git Safety**: NEVER use `git add -A` from subdirectory - it stages entire repo. Always stage specific files, verify with `git status` before commit, and check `git show --name-status` before `git reset --hard`.
+
 **Date**: 2026-01-13  
 **Status**: Planning  
 **Parent**: DevLog-001-Pattern-Mining-Strategy.md  

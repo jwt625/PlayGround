@@ -1,5 +1,7 @@
 # DevLog-001-02: Insight Deduplication Approaches
 
+> **Git Safety**: NEVER use `git add -A` from subdirectory - it stages entire repo. Always stage specific files, verify with `git status` before commit, and check `git show --name-status` before `git reset --hard`.
+
 **Date**: 2026-01-17  
 **Status**: In Progress  
 **Parent**: DevLog-001-01-Digital-Twin-Components.md  

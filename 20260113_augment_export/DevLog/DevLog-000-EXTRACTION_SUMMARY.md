@@ -1,5 +1,7 @@
 # Augment Conversation History Extraction
 
+> **Git Safety**: NEVER use `git add -A` from subdirectory - it stages entire repo. Always stage specific files, verify with `git status` before commit, and check `git show --name-status` before `git reset --hard`.
+
 ## Overview
 
 This document describes how Augment stores conversation histories in VSCode and how to extract them for analysis or backup purposes.

@@ -1,5 +1,7 @@
 # DevLog-001: Pattern Mining Strategy
 
+> **Git Safety**: NEVER use `git add -A` from subdirectory - it stages entire repo. Always stage specific files, verify with `git status` before commit, and check `git show --name-status` before `git reset --hard`.
+
 **Date**: 2026-01-13 (Updated: 2026-01-17)
 **Status**: Phase 3 In Progress - Type Consolidation Complete
 **Goal**: Extract patterns from Augment conversations to build consolidated instruction documentation
