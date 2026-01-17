@@ -203,38 +203,100 @@ The digital twin serves as a retrievable knowledge base enabling SOTA LLMs to ma
 - Natural language with examples embedded
 - Human-readable and version-controllable
 
-### 4-Layer Architecture
+### Tiered Storage Architecture
 
-**Layer 1: Archive** (Raw Conversations)
-- Original JSON from extraction
-- Rarely accessed, mainly for re-processing if extraction logic improves
-- Not directly consumed by LLM
+The architecture uses 4 storage tiers, ordered by **retrieval frequency** (not by layer number):
 
-**Layer 2: Knowledge Base** (Primary LLM Interface)
+```
+┌─────────────────────────────────────────────────────────┐
+│                     ALWAYS LOADED                        │
+│  ┌─────────────────────────────────────────────────┐    │
+│  │ Index                                           │    │
+│  │ - hard_constraints.yaml                         │    │
+│  │ - lookup_tables/                                │    │
+│  │ - quick_reference.md                            │    │
+│  │ Size: ~3-5KB                                    │    │
+│  └─────────────────────────────────────────────────┘    │
+└─────────────────────────────────────────────────────────┘
+                          │
+              retrieval needed?
+                          │
+                          ▼
+┌─────────────────────────────────────────────────────────┐
+│                    ON-DEMAND (Tier 1)                    │
+│  ┌─────────────────────────────────────────────────┐    │
+│  │ Knowledge Base                                  │    │
+│  │ - Preference documents (markdown)               │    │
+│  │ - Workflow guides                               │    │
+│  │ - Full reasoning and context                    │    │
+│  │ Size: ~50-200KB total, retrieve ~5KB at a time │    │
+│  └─────────────────────────────────────────────────┘    │
+└─────────────────────────────────────────────────────────┘
+                          │
+              still uncertain?
+                          │
+                          ▼
+┌─────────────────────────────────────────────────────────┐
+│                    ON-DEMAND (Tier 2)                    │
+│  ┌─────────────────────────────────────────────────┐    │
+│  │ Evidence                                        │    │
+│  │ - Actual conversation excerpts                  │    │
+│  │ - Correction examples                           │    │
+│  │ - Approval examples                             │    │
+│  │ Size: ~500KB-1MB, retrieve specific examples   │    │
+│  └─────────────────────────────────────────────────┘    │
+└─────────────────────────────────────────────────────────┘
+                          │
+              never accessed at runtime
+                          │
+                          ▼
+┌─────────────────────────────────────────────────────────┐
+│                       COLD STORAGE                       │
+│  ┌─────────────────────────────────────────────────┐    │
+│  │ Archive                                         │    │
+│  │ - Raw conversation JSON                         │    │
+│  │ - Only for re-processing pipeline              │    │
+│  └─────────────────────────────────────────────────┘    │
+└─────────────────────────────────────────────────────────┘
+```
+
+**Index** (Always in System Prompt)
+- YAML lookup tables for common decisions
+- Hard constraints list (~20 rules that apply 80% of the time)
+- Quick reference before any action
+- Size budget: ~3-5KB to fit in every context
+
+**Knowledge Base** (Retrieved On-Demand)
 - Markdown documents organized hierarchically
-- LLM reads this 95% of the time
-- Includes preferences, workflows, examples, reasoning in prose
+- Primary source for preferences, workflows, reasoning
 - YAML sidecars for machine-readable rules
 - Cross-references as markdown links
+- Retrieved via semantic search or task-triggered lookup
 
-**Layer 3: Evidence & Provenance** (Supporting Material)
-- Curated exchanges supporting Layer 2 claims
-- Markdown format with context
-- Only accessed when LLM needs deeper context or examples
-- Much smaller than full conversation history (20-30% of exchanges)
-- Filtered to keep only: corrections, explicit preferences, decision moments, problem-solving patterns
+**Evidence** (Retrieved When Uncertain)
+- Curated exchanges supporting Knowledge Base claims
+- Markdown format with conversation context
+- Only accessed when LLM needs proof or analogous examples
+- Much smaller than full history (20-30% of exchanges)
+- Filtered to: corrections, explicit preferences, decision moments
 
-**Layer 4: Decision Index** (Fast Lookup)
-- YAML lookup tables for common decisions
-- Decision trees in markdown with Mermaid diagrams
-- Hard constraints list
-- Quick reference before deeper retrieval
+**Archive** (Cold Storage - Never at Runtime)
+- Original JSON from extraction
+- Only accessed for re-processing if extraction logic improves
+- Not consumed by LLM during normal operation
 
 ### Directory Structure
 
 ```
 digital_twin/
-├── knowledge_base/              # Layer 2 - Primary interface
+├── index/                       # Always loaded in system prompt
+│   ├── hard_constraints.yaml   # Non-negotiable rules
+│   ├── lookup_tables/          # Tool/framework quick lookups
+│   │   ├── python.yaml
+│   │   └── javascript.yaml
+│   └── quick_reference.md      # Condensed preference summary
+│
+├── knowledge_base/              # Retrieved on-demand (Tier 1)
 │   ├── _master_index.md        # Navigation hub
 │   ├── technical_preferences/
 │   │   ├── README.md
@@ -258,7 +320,7 @@ digital_twin/
 │       ├── overrides.md
 │       └── _graph.yaml
 │
-├── evidence/                    # Layer 3 - Supporting material
+├── evidence/                    # Retrieved when uncertain (Tier 2)
 │   ├── by_preference/
 │   │   ├── python_pkg_mgr/
 │   │   │   ├── correction_examples.md
@@ -266,13 +328,7 @@ digital_twin/
 │   │   └── no_emoji/
 │   └── by_domain/
 │
-├── decision_index/              # Layer 4 - Fast lookup
-│   ├── hard_constraints.yaml
-│   ├── lookup_tables/
-│   ├── decision_trees/
-│   └── quick_reference.md
-│
-└── archive/                     # Layer 1 - Raw data
+└── archive/                     # Cold storage - never at runtime
     └── raw_conversations/
 ```
 
@@ -385,37 +441,77 @@ priority: 80
 
 ### Retrieval Strategy
 
-**Multi-File Context Retrieval**
+**Tiered Retrieval Flow**
 
-LLM has access to a context retrieval tool that can be called multiple times:
+```
+┌─────────────────────────────────────────────────────────┐
+│                   User Message                           │
+│  "Set up a new FastAPI project"                         │
+└─────────────────────────────────────────────────────────┘
+                          │
+                          ▼
+┌─────────────────────────────────────────────────────────┐
+│         Step 1: Index Check (No retrieval needed)        │
+│                                                          │
+│  Index is already in system prompt. Agent checks:        │
+│  - hard_constraints.yaml: "Always use uv for Python"    │
+│  - quick_reference.md: Python project conventions       │
+│                                                          │
+│  → Hard constraint found? Follow it.                    │
+│  → No match or need more detail? Continue to Step 2.    │
+└─────────────────────────────────────────────────────────┘
+                          │
+                          ▼
+┌─────────────────────────────────────────────────────────┐
+│         Step 2: Knowledge Base Retrieval                 │
+│                                                          │
+│  Agent calls: retrieve_context("Python project setup")  │
+│                                                          │
+│  Returns:                                                │
+│  - workflows/project_initialization/python_web_app.md   │
+│  - technical_preferences/python/package_management.md   │
+│                                                          │
+│  → High-confidence match? Follow it.                    │
+│  → Ambiguous or conflicting? Continue to Step 3.        │
+└─────────────────────────────────────────────────────────┘
+                          │
+                          ▼
+┌─────────────────────────────────────────────────────────┐
+│         Step 3: Evidence Retrieval (Rare)                │
+│                                                          │
+│  Agent calls: retrieve_evidence("Python setup")         │
+│                                                          │
+│  Returns:                                                │
+│  - evidence/python_pkg_mgr/correction_examples.md       │
+│  - Actual conversation excerpts showing preference      │
+│                                                          │
+│  → Found analogous case? Follow precedent.              │
+│  → Still uncertain? Ask user.                           │
+└─────────────────────────────────────────────────────────┘
+```
+
+**Retrieval Tool Interface**
 
 ```python
 retrieve_context(
   query: str,
   max_files: int = 5,
-  include_evidence: bool = False,
-  domains: list[str] = None
+  tier: str = "knowledge_base"  # or "evidence"
 ) -> str  # Combined markdown context
 ```
 
-**Retrieval Flow**
+**Escalation Triggers**
 
-```
-LLM Query: "What package manager for Python?"
-  ↓
-1. Quick lookup in decision_index/ (Layer 4)
-   - If high confidence match: return + supporting files
-  ↓
-2. If no match or low confidence:
-   - Semantic search in knowledge_base/ (Layer 2)
-   - Return top 3-5 most relevant files
-  ↓
-3. If still uncertain:
-   - Check evidence/ (Layer 3) for similar examples
-   - Return analogous situations
-```
+| Scenario | Start At | Escalate When |
+|----------|----------|---------------|
+| Common task (Python setup) | Index | Never - constraint sufficient |
+| Tool choice question | Index → KB | No explicit rule in Index |
+| Style/formatting decision | KB | Conflicting rules found |
+| Novel situation | KB → Evidence | No direct match, need examples |
+| User correction received | Evidence | Check if known pattern |
+| Destructive action | Evidence | Always verify before proceeding |
 
-**Multi-File Context Assembly**
+**Context Assembly**
 
 The retrieval tool combines multiple files into a single markdown context:
 
@@ -423,7 +519,7 @@ The retrieval tool combines multiple files into a single markdown context:
 # Digital Twin Context
 
 Retrieved for query: "Python web application setup"
-Files: 4 | Confidence: High
+Tier: Knowledge Base | Files: 2 | Confidence: High
 
 ---
 
@@ -439,28 +535,16 @@ Files: 4 | Confidence: High
 
 ---
 
-## 3. technical_preferences/python/testing.md
-
-[full content]
-
----
-
-## Related Files (not included, available on request)
+## Related Files (available on request)
 - technical_preferences/python/virtual_environments.md
 - workflows/development/iteration_patterns.md
 ```
 
 **Context Budget Management**
-- Full content for top 2-3 most relevant files
-- Summaries for medium relevance files
-- Progressive disclosure: start with index, let agent request more detail
-- Deduplication: if multiple retrievals return same file, include only once
-
-**Query Patterns**
-- "What are preferences for Python package management?"
-- "How should I handle user authentication in a React app?"
-- "What's the testing approach for this type of project?"
-- "Should I ask permission for this action?"
+- Index: Always loaded (~3-5KB)
+- Knowledge Base: Retrieve ~5KB per query, top 2-3 files
+- Evidence: Retrieve only specific examples when needed
+- Deduplication: Same file returned by multiple queries included only once
 
 ## Success Metrics
 
@@ -549,15 +633,19 @@ Track how preferences change over time:
 - What confidence threshold for autonomous decision-making?
 - How to represent "it depends" scenarios?
 - How to capture implicit knowledge vs explicit rules?
-- What threshold for filtering exchanges into Layer 3 (evidence)?
+- What threshold for filtering exchanges into Evidence tier?
 - How to detect when preferences have evolved vs are context-dependent?
 
 ## Decisions Made
 
 1. **Format**: Markdown + YAML instead of JSON for LLM-native consumption
-2. **Layers**: 4-layer architecture (Archive, Knowledge Base, Evidence, Decision Index)
-3. **Primary Interface**: Layer 2 (Knowledge Base) in markdown with prose and examples
-4. **Retrieval**: Multi-file context assembly via retrieval tool
+2. **Tiered Architecture**: 4 tiers ordered by retrieval frequency:
+   - Index (always loaded, ~3-5KB)
+   - Knowledge Base (on-demand, semantic search)
+   - Evidence (when uncertain, specific examples)
+   - Archive (cold storage, never at runtime)
+3. **Primary Interface**: Knowledge Base in markdown with prose and examples
+4. **Retrieval**: Tiered escalation (Index → KB → Evidence → Ask User)
 5. **Evidence Filtering**: Keep only 20-30% of exchanges (corrections, preferences, decisions)
 6. **Priority System**: 0-1000 scale with hard constraints at 1000
 7. **Cross-Dependencies**: Encoded in YAML with conditional logic

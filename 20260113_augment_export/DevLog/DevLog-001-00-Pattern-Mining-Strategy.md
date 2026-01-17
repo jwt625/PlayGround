@@ -1,7 +1,7 @@
 # DevLog-001: Pattern Mining Strategy
 
-**Date**: 2026-01-13 (Updated: 2026-01-14)
-**Status**: Phase 2 In Progress - Message Classification Running
+**Date**: 2026-01-13 (Updated: 2026-01-17)
+**Status**: Phase 3 In Progress - Type Consolidation Complete
 **Goal**: Extract patterns from Augment conversations to build consolidated instruction documentation
 
 ## Project Objective
@@ -362,15 +362,37 @@ Two-stage hybrid pipeline implemented in `analysis/classify_messages.py`:
 - Performance: ~33 sec per 10 messages vs ~2.7 min sequential (4.9x speedup)
 - Estimated total runtime: ~2.7 hours vs ~14 hours sequential
 
-*Initial Results* (partial run, 2026-01-14)
-- Stage 1: 1,940 processed, 1,098 high-value (56.6% acceptance rate)
-- Stage 2: 740/3,684 processed, ETA ~01:00 AM
+*Final Results* (2026-01-14)
+- Two separate datasets from different machines (see Combined Dataset Summary below)
+- Stage 1 and Stage 2 complete for both datasets
+- Ready for pattern aggregation
 
-**Step 3: Pattern Aggregation** (TODO)
-- Group insights by type and domain
-- Calculate confidence based on frequency and generalizability
-- Resolve conflicts (recent > old, explicit > implicit)
-- Generate consolidated instruction documents
+**Step 3: Pattern Aggregation** (IN PROGRESS)
+
+*Type Consolidation* (2026-01-17) - COMPLETE
+- Reduced 352 insight type variants to 8 canonical types
+- Consolidation script: `analysis/consolidate_insight_types.sh`
+- Backup created: `backup_classification_and_leveldb_*.zip`
+- Output files: `stage2_consolidated.json` (preserves original `type`, adds `canonical_type`)
+
+Canonical type mapping:
+| Canonical | Count | Maps From |
+|-----------|-------|-----------|
+| workflow | 4,175 | workflow_pattern, debugging_approach, testing_approach, planning_preference, etc. |
+| constraint | 2,278 | constraint, requirement, functional_requirement, technical_requirement, etc. |
+| quality | 2,126 | quality_standard, code_style, naming_convention, documentation_practice, etc. |
+| communication | 1,200 | communication_preference, tone_preference, expectation, frustration, etc. |
+| misc | 930 | preference, decision, feature_request, bug_report, single-count types |
+| tool | 681 | tool_preference, framework, configuration, deployment_preference, etc. |
+| ui_ux | 228 | ui_preference, design_pattern, visual_preference, layout_preference, etc. |
+| architecture | 184 | architecture_preference, data_model_preference, state_management, etc. |
+
+*Remaining Steps*
+- Semantic deduplication within canonical types
+- Domain extraction (Python/JS/Docker/etc.)
+- Priority calculation from frequency + confidence + generalizability
+- Conflict detection and resolution
+- Generate Index tier (hard_constraints.yaml) and Knowledge Base docs
 
 ### Technical Notes
 
@@ -378,10 +400,104 @@ Two-stage hybrid pipeline implemented in `analysis/classify_messages.py`:
 - GLM-4.6 includes thinking tokens; parsed via `</think>` delimiter
 - Validation check must distinguish VALID from INVALID (substring match is insufficient)
 
+## Combined Dataset Summary (2026-01-14)
+
+### Dataset Sources
+
+Two independent datasets extracted from separate machines with minimal overlap (2 shared messages, 1 shared workspace):
+
+| Dataset | Path | Workspaces | Conversations | Exchanges | User Messages | High-Value | Stage 2 |
+|---------|------|------------|---------------|-----------|---------------|------------|---------|
+| Current (wentao) | `analysis/classification_results/` | 22 | 871 | 52,391 | 6,591 | 3,684 | 3,684 (100%) |
+| Archive (wentaojiang) | `augment_export_archive/analysis/classification_results/` | 36 | 417 | 40,675 | 3,476 | 2,250 | 2,250 (100%) |
+| **Combined** | - | 58 | 1,288 | 93,066 | 10,067 | 5,934 | 5,934 |
+
+Note: Exchange count includes tool calls and streaming chunks stored by Augment's LevelDB. User Messages is the deduplicated count of actual user messages relevant for pattern mining.
+
+### Combined Statistics
+
+| Metric | Value |
+|--------|-------|
+| Total Workspaces | 58 |
+| Total Conversations | 1,288 |
+| Total Exchanges (raw) | 93,066 |
+| Unique User Messages | 10,067 |
+| Messages Classified (Stage 2) | 5,934 |
+| Total Insights Extracted | 11,802 |
+| Unique Insight Types | 352 raw -> 8 canonical |
+| High-Value Insights (gen >= 0.8, conf >= 0.85) | 1,567 |
+
+### Label Distribution
+
+| Label | Count | % of messages |
+|-------|-------|---------------|
+| clarification | 3,797 | 64% |
+| correction | 2,291 | 39% |
+| preference_statement | 1,991 | 34% |
+| constraint | 1,977 | 33% |
+| decision | 1,022 | 17% |
+| bug_report | 984 | 17% |
+| frustration | 979 | 17% |
+| feature_request | 970 | 16% |
+| approval | 488 | 8% |
+| conversational | 242 | 4% |
+
+### Generalizability Distribution
+
+| Range | Count | % |
+|-------|-------|---|
+| 0.0-0.2 (task-specific) | 1,481 | 25% |
+| 0.3-0.5 (contextual) | 2,419 | 41% |
+| 0.6-0.8 (broadly applicable) | 1,529 | 26% |
+| 0.9-1.0 (universal) | 499 | 8% |
+
+### Insight Types (after consolidation)
+
+| Canonical Type | Count |
+|----------------|-------|
+| workflow | 4,175 |
+| constraint | 2,278 |
+| quality | 2,126 |
+| communication | 1,200 |
+| misc | 930 |
+| tool | 681 |
+| ui_ux | 228 |
+| architecture | 184 |
+
+### Sample High-Value Insights
+
+**Tool Preferences** (gen >= 0.8, conf >= 0.85)
+- Python: uv for packages, mypy for types, ruff for lint, pytest for testing
+- JavaScript/TypeScript: pnpm for packages
+- Database: psql over Python scripts for simple queries
+- API testing: curl over complex scripts
+- Media: ffmpeg over Python libraries
+
+**Constraints**
+- No file creation without explicit permission
+- No emojis in responses or documentation
+- No sycophantic phrases ("You're absolutely right")
+- Always save to disk, never just display
+- Zero tolerance for lint/type errors
+
+**Communication**
+- Concise, direct responses
+- Use own judgment instead of validating user statements
+- No hedging language when code is available to verify
+- No premature apologies; acknowledge errors directly
+
+**Quality Standards**
+- No slop, no redundant code
+- Minimal abstractions, prefer modifying existing code
+- Code must be lint and type clean
+- Avoid creating unnecessary files
+
 ## Next Steps
 
-1. Complete message classification (Stage 1 + Stage 2) on all 6,591 messages
-2. Analyze classification results: distribution of labels, generalizability scores, insight types
-3. Build pattern aggregation and conflict resolution pipeline
-4. Generate actionable instruction documents for LLM integration
+1. ~~Normalize insight types (352 variants to ~6-8 canonical types)~~ DONE
+2. Deduplicate insights by semantic similarity within canonical types
+3. Extract domain tags (Python/JS/Docker/etc.) from insight content
+4. Calculate priority scores and detect conflicts
+5. Generate Index tier (hard_constraints.yaml, quick_reference.md)
+6. Generate Knowledge Base documents per canonical type
 
