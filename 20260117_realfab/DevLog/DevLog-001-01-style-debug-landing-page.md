@@ -4,18 +4,15 @@
 This is a two-stage landing page experience. It begins with a **fullscreen "Curtain" Overlay** acting as a pre-loader or intro, which then transitions via a vertical slide-up effect to reveal the **Main Hero Section**. The aesthetic is clean, bold, and government-institutional but modernized with "Gen Z" design trends (brutalism/neo-grotesque typography).
 
 ## 2. Color Palette
-* **Intro Background (The Green Curtain):** Deep Forest Green (Hex approximation: `#104f35`)
-* **Main Website Background:** Warm Cream / Off-White (Hex approximation: `#f7f6ef`)
-* **Primary Text:** Jet Black (Hex approximation: `#0a0a0a`)
-* **Call-to-Action (CTA) Button:** Acid Green / Lime (Hex approximation: `#dcfd56`)
-* **Accent Colors (Illustrations):**
-    * *Milk Carton:* Red (`#c92a2a`) and White.
-    * *Broccoli:* Vibrant Green (`#2b8a3e`).
-    * *Steak:* Dark Red/Pink (`#e03131`) with white marbling.
+* **Intro Background (The Curtain):** Photolithography cleanroom yellow (`#ffcc00`)
+* **Main Website Background:** Off-White (`#F3F0D6`)
+* **Primary Text:** Off-Black (`#110000`)
+* **Call-to-Action (CTA) Button:** Light yellow-green (`#f4ffae`)
+* **Hero Description Text:** Brownish-gray (`#6b6159`)
 
 ## 3. Phase 1: Convergence Animation (00:00 - 01:02)
 **State:** Fullscreen overlay (100vw, 100vh).
-**Background:** Solid Deep Forest Green.
+**Background:** Photolithography cleanroom yellow (`#ffcc00`).
 **Elements:**
 * **3D Sticker Assets:** Three pyramid fabrication assets (RealFab equivalent of food items):
     1.  **LPBF Metal Printer** (equivalent to Broccoli)
@@ -55,62 +52,65 @@ This is a two-stage landing page experience. It begins with a **fullscreen "Curt
 ## 4. Phase 2: Curtain Transition (01:02 - 02:02)
 **Trigger:** After convergence animation completes (1.2s).
 **Mechanism:** "Curtain Up" Reveal.
-* The **Green Background Layer** (z-index: 100000) translates vertically upwards (`transform: translateY(-100%)`).
+* The **Yellow Background Layer** (z-index: 100000) translates vertically upwards (`transform: translateY(-100%)`).
 * **Easing:** Smooth ease-in-out (`cubic-bezier(0.65, 0, 0.35, 1)`).
 * **Duration:** 1000ms
 * **Simultaneous Action:** Items separate outward and move up during this phase (see Phase 1b above).
 
 ## 5. Phase 3: The Hero Section (00:01 - 00:02)
-**State:** The static layer revealed underneath the green curtain.
-**Background:** Solid Warm Cream.
+**State:** The static layer revealed underneath the yellow curtain.
+**Background:** Off-White (`#F3F0D6`).
 **Layout & UI Elements:**
 
 ### A. Global Header (Top Bar)
 * **Position:** Top center.
-* **Content:** A tiny US Flag icon followed by text: "AN OFFICIAL WEBSITE OF THE UNITED STATES GOVERNMENT".
-* **Style:** Uppercase, very small font size (approx 10-11px), wide letter-spacing (tracking), sans-serif.
+* **Content:** TWM logo (1.5x size: 30px × 18px) followed by text: "AN OFFICIAL WEBSITE OF THE OUTSIDE FIVE SIGMA".
+* **Style:** Uppercase, font-size 12px (10px mobile), monospace, letter-spacing 0.06em, padding 12px, border-bottom 0.5px.
 
 ### B. Hero Typography (Center)
-* **Headline:** "Real Food Starts Here"
-    * **Font Style:** Massive Sans-Serif (resembling *Helvetica Now Display* or *Inter*).
-    * **Weight:** Extra Bold / Black (800-900).
-    * **Tracking:** Tight (negative letter-spacing, e.g., `-0.04em`).
-    * **Alignment:** Centered, stacked on two lines if on mobile, likely 2-3 lines on desktop.
+* **Headline:** "Real Fab Starts Here"
+    * **Font Size:** 170px desktop, 16.5vw mobile.
+    * **Weight:** Bold (700).
+    * **Line Height:** 0.84.
+    * **Letter Spacing:** -0.02em.
+    * **Alignment:** Centered, line break between "Fab" and "Starts Here" (forced no-wrap on second line).
 * **Body Copy:**
-    * **Content:** "Better health begins on your plate—not in your medicine cabinet. The new Dietary Guidelines for Americans defines real food as whole, nutrient-dense, and naturally occurring, placing them back at the center of our diets."
-    * **Style:** Clean Sans-Serif. Medium weight. Dark Grey. Max-width constraint (approx 60ch) for readability. Center aligned.
+    * **Content:** "Better technology begins with accessible fabrication—not gatekept mega-fabs. The new paradigm for semiconductor manufacturing defines real chips as locally-made, additive-manufactured, and democratically accessible, placing them back at the center of innovation."
+    * **Style:** Font-weight 700 (bold), font-size 21px, line-height 1.3, color #6b6159, max-width 760px, text-wrap balance, center aligned.
 
 ### C. Call to Action (CTA)
 * **Text:** "View the Guidelines"
-    * **Button Shape:** Pill-shaped / Stadium border radius (fully rounded ends).
-    * **Button Color:** Acid Green (`#dcfd56`).
-    * **Text Color:** Black.
-    * **Typography:** Bold, small-medium size.
-
-### D. Hero Image (Bottom)
-* **Content:** A photograph of greenery/garden plants.
-* **Shape:** It appears to be a card or section with rounded top-left and top-right corners, rising from the bottom of the viewport or sitting just below the fold.
+    * **Button Shape:** Pill-shaped (border-radius 40px).
+    * **Button Color:** Light yellow-green (`#f4ffae`).
+    * **Text Color:** Off-black.
+    * **Padding:** 18px 28px.
+    * **Font:** 16px, line-height 1.5, font-weight 500.
+    * **Hover:** Background changes to `#d4e767`.
 
 ## 6. Technical Implementation Prompts for Agent
-* "Use a fixed position `div` for the Green Intro Layer with `z-index: 100000`."
+* "Use a fixed position `div` for the Yellow Intro Layer with `z-index: 100000`."
 * "Implement the convergence animation using Framer Motion with sequential delays and smooth easing."
-* "The Green Layer should animate `transform: translateY(-100%)` to reveal the `<main>` content underneath."
-* "Ensure the font rendering for the headline is set to `antialiased` and use a negative letter-spacing to match the brutalist aesthetic."
+* "The Yellow Layer should animate `transform: translateY(-100%)` to reveal the `<main>` content underneath."
+* "Position animated items as independent fixed elements (z-index: 100001) above the curtain to prevent unmounting during exit."
 
 ## 7. Implementation Status
 
 ### Completed
-* IntroCurtain component created with fullscreen deep forest green overlay
-* Hero section updated with correct typography (font-weight: 900, letter-spacing: -0.04em)
-* Title changed to "Real Fab Starts Here"
-* CTA button styled with acid green background and black text
-* Hero background color set to exact spec (#f7f6ef)
+* IntroCurtain component created with fullscreen photolithography yellow overlay (#ffcc00)
+* Hero section updated with correct typography from reference
+* Title: "Real Fab Starts Here" with line break, 170px desktop, 16.5vw mobile, line-height 0.84
+* Description: Bold (700), 21px, line-height 1.3, color #6b6159, max-width 760px
+* CTA button: Light yellow-green (#f4ffae), 18px 28px padding, 40px border-radius, 16px font
+* Hero and banner background colors matched (#F3F0D6)
+* Banner: TWM logo (30px × 18px), 12px font, 12px padding, 0.5px border
 * Replaced placeholder elements with actual pyramid images (lpbf-metal-printer, silicon-boule, tpp-system)
 * Animation timing configured to trigger after curtain reveal
 * Sequential convergence animation implemented with proper delays
 * Items stop 20% earlier during convergence phase
 * Curtain slide-up animation implemented with correct easing
 * Items positioned as fixed elements above curtain overlay
+* Section component padding removed to eliminate gaps between sections
+* Hero title second line forced to no-wrap ("Starts Here" stays together)
 
 ### Fixed
 * **Exit animation now working correctly**

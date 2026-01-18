@@ -104,7 +104,7 @@ export function Hero({
           animate="animate"
         >
           <motion.h1 className={styles.title} variants={heroVariants}>
-            {title}
+            Real Fab<br/><span style={{ whiteSpace: 'nowrap' }}>Starts Here</span>
           </motion.h1>
 
           <motion.p className={styles.description} variants={heroVariants}>

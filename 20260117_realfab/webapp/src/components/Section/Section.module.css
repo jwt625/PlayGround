@@ -1,7 +1,6 @@
 .section {
   position: relative;
   width: 100%;
-  padding: var(--spacing-20) 0;
 }
 
 .section.dark {
@@ -14,12 +13,5 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-}
-
-/* Mobile adjustments */
-@media (max-width: 768px) {
-  .section {
-    padding: var(--spacing-16) 0;
-  }
 }
 
