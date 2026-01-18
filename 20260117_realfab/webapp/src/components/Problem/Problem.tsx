@@ -60,85 +60,89 @@ export function Problem() {
     offset: ['start start', 'end end'],
   });
 
-  // State 1: 0.0 - 0.2 (fade out at end)
-  const state1Opacity = useTransform(scrollYProgress, [0, 0.15, 0.18, 0.2], [1, 1, 0, 0]);
-  const state1Y = useTransform(scrollYProgress, [0, 0.15, 0.18, 0.2], [0, 0, -20, -40]);
+  // 6 equal stages: each gets 0.167 (1/6) of scroll progress
+  // State 1: 0.0 - 0.167 | State 2: 0.167 - 0.333 | State 3: 0.333 - 0.5
+  // State 4: 0.5 - 0.667 | State 5: 0.667 - 0.833 | Exit: 0.833 - 1.0
 
-  // State 2: 0.2 - 0.4 (fade in after state 1 fades out, fade out at end)
-  const state2Opacity = useTransform(scrollYProgress, [0.2, 0.22, 0.38, 0.4], [0, 1, 1, 0]);
-  const state2Y = useTransform(scrollYProgress, [0.2, 0.22, 0.38, 0.4], [20, 0, 0, -20]);
-  const block1Opacity = useTransform(scrollYProgress, [0.2, 0.28], [0, 1]);
+  // State 1: 0.0 - 0.167
+  const state1Opacity = useTransform(scrollYProgress, [0, 0.12, 0.15, 0.167], [1, 1, 0, 0]);
+  const state1Y = useTransform(scrollYProgress, [0, 0.12, 0.15, 0.167], [0, 0, -20, -40]);
 
-  // State 3: 0.4 - 0.6 (fade in after state 2 fades out, fade out at end)
-  const state3Opacity = useTransform(scrollYProgress, [0.4, 0.42, 0.58, 0.6], [0, 1, 1, 0]);
-  const state3Y = useTransform(scrollYProgress, [0.4, 0.42, 0.58, 0.6], [20, 0, 0, -20]);
-  const block2Opacity = useTransform(scrollYProgress, [0.4, 0.48], [0, 1]);
+  // State 2: 0.167 - 0.333
+  const state2Opacity = useTransform(scrollYProgress, [0.167, 0.19, 0.30, 0.333], [0, 1, 1, 0]);
+  const state2Y = useTransform(scrollYProgress, [0.167, 0.19, 0.30, 0.333], [20, 0, 0, -20]);
+  const block1Opacity = useTransform(scrollYProgress, [0.167, 0.25], [0, 1]);
 
-  // State 4: 0.6 - 0.8 (fade in after state 3 fades out, fade out at end)
-  const state4Opacity = useTransform(scrollYProgress, [0.6, 0.62, 0.78, 0.8], [0, 1, 1, 0]);
-  const state4Y = useTransform(scrollYProgress, [0.6, 0.62, 0.78, 0.8], [20, 0, 0, -20]);
-  const block3Opacity = useTransform(scrollYProgress, [0.6, 0.68], [0, 1]);
+  // State 3: 0.333 - 0.5
+  const state3Opacity = useTransform(scrollYProgress, [0.333, 0.36, 0.47, 0.5], [0, 1, 1, 0]);
+  const state3Y = useTransform(scrollYProgress, [0.333, 0.36, 0.47, 0.5], [20, 0, 0, -20]);
+  const block2Opacity = useTransform(scrollYProgress, [0.333, 0.42], [0, 1]);
 
-  // State 5: 0.8 - 0.88 (fade in after state 4 fades out, stays visible with buffer)
-  const state5Opacity = useTransform(scrollYProgress, [0.8, 0.82, 0.88, 1], [0, 1, 1, 1]);
-  const state5Y = useTransform(scrollYProgress, [0.8, 0.82, 0.88, 1], [20, 0, 0, 0]);
-  const block4Opacity = useTransform(scrollYProgress, [0.8, 0.88], [0, 1]);
+  // State 4: 0.5 - 0.667
+  const state4Opacity = useTransform(scrollYProgress, [0.5, 0.53, 0.64, 0.667], [0, 1, 1, 0]);
+  const state4Y = useTransform(scrollYProgress, [0.5, 0.53, 0.64, 0.667], [20, 0, 0, -20]);
+  const block3Opacity = useTransform(scrollYProgress, [0.5, 0.58], [0, 1]);
 
-  // Exit animation: 0.94 - 1.0 (with buffer from 0.88 - 0.94)
-  // Text fades out first: 0.94 - 0.95
-  const exitTextOpacity = useTransform(scrollYProgress, [0.94, 0.95], [1, 0]);
+  // State 5: 0.667 - 0.833
+  const state5Opacity = useTransform(scrollYProgress, [0.667, 0.70, 0.80, 0.833], [0, 1, 1, 0]);
+  const state5Y = useTransform(scrollYProgress, [0.667, 0.70, 0.80, 0.833], [20, 0, 0, -20]);
+  const block4Opacity = useTransform(scrollYProgress, [0.667, 0.75], [0, 1]);
 
-  // Numbers fade out: 0.95 - 0.96
-  const numberOpacity = useTransform(scrollYProgress, [0.95, 0.96], [1, 0]);
+  // Exit animation: 0.833 - 1.0 (same duration as each content state)
+  // Text fades out: 0.833 - 0.85
+  const exitTextOpacity = useTransform(scrollYProgress, [0.833, 0.85], [1, 0]);
 
-  // Blocks expand to fill canvas in sequence (back to front with stagger): 0.96 - 1.0
-  // Expansion: width/height grow while bottom-right stays anchored (CSS position: absolute; bottom: 0; right: 0)
+  // Numbers fade out: 0.85 - 0.87
+  const numberOpacity = useTransform(scrollYProgress, [0.85, 0.87], [1, 0]);
 
-  // Block 1 (top layer, z-index 30) - entrance slide, then expand last
-  const block1X = useTransform(scrollYProgress, [0.2, 0.3], [100, 0]);
-  const block1Y = useTransform(scrollYProgress, [0.2, 0.3], [100, 0]);
-  const block1Width = useTransform(scrollYProgress, [0.99, 1.0], [STATS[1].blockSize!.width, 3000]);
-  const block1Height = useTransform(scrollYProgress, [0.99, 1.0], [STATS[1].blockSize!.height, 3000]);
-  const block1ZIndex = useTransform(scrollYProgress, [0.96, 0.961], [30, 230]);
+  // Blocks expand to fill canvas in sequence (back to front with stagger): 0.87 - 1.0
+  // Each block expands over ~0.04 range, staggered
 
-  // Block 2 (z-index 20) - expand third
-  const block2X = useTransform(scrollYProgress, [0.4, 0.5], [100, 0]);
-  const block2Y = useTransform(scrollYProgress, [0.4, 0.5], [100, 0]);
-  const block2Width = useTransform(scrollYProgress, [0.98, 1.0], [STATS[2].blockSize!.width, 3000]);
-  const block2Height = useTransform(scrollYProgress, [0.98, 1.0], [STATS[2].blockSize!.height, 3000]);
-  const block2ZIndex = useTransform(scrollYProgress, [0.96, 0.961], [20, 220]);
+  // Block 1 (top layer, z-index 30) - entrance slide
+  const block1X = useTransform(scrollYProgress, [0.167, 0.25], [100, 0]);
+  const block1Y = useTransform(scrollYProgress, [0.167, 0.25], [100, 0]);
+  const block1Width = useTransform(scrollYProgress, [0.96, 1.0], [STATS[1].blockSize!.width, 3000]);
+  const block1Height = useTransform(scrollYProgress, [0.96, 1.0], [STATS[1].blockSize!.height, 3000]);
+  const block1ZIndex = useTransform(scrollYProgress, [0.87, 0.871], [30, 230]);
 
-  // Block 3 (z-index 10) - expand second
-  const block3X = useTransform(scrollYProgress, [0.6, 0.7], [100, 0]);
-  const block3Y = useTransform(scrollYProgress, [0.6, 0.7], [100, 0]);
-  const block3Width = useTransform(scrollYProgress, [0.97, 1.0], [STATS[3].blockSize!.width, 3000]);
-  const block3Height = useTransform(scrollYProgress, [0.97, 1.0], [STATS[3].blockSize!.height, 3000]);
-  const block3ZIndex = useTransform(scrollYProgress, [0.96, 0.961], [10, 210]);
+  // Block 2 (z-index 20)
+  const block2X = useTransform(scrollYProgress, [0.333, 0.42], [100, 0]);
+  const block2Y = useTransform(scrollYProgress, [0.333, 0.42], [100, 0]);
+  const block2Width = useTransform(scrollYProgress, [0.93, 1.0], [STATS[2].blockSize!.width, 3000]);
+  const block2Height = useTransform(scrollYProgress, [0.93, 1.0], [STATS[2].blockSize!.height, 3000]);
+  const block2ZIndex = useTransform(scrollYProgress, [0.87, 0.871], [20, 220]);
 
-  // Block 4 (bottom layer, z-index 5) - expand first
-  const block4X = useTransform(scrollYProgress, [0.8, 0.9], [100, 0]);
-  const block4Y = useTransform(scrollYProgress, [0.8, 0.9], [100, 0]);
-  const block4Width = useTransform(scrollYProgress, [0.96, 1.0], [STATS[4].blockSize!.width, 3000]);
-  const block4Height = useTransform(scrollYProgress, [0.96, 1.0], [STATS[4].blockSize!.height, 3000]);
-  const block4ZIndex = useTransform(scrollYProgress, [0.96, 0.961], [5, 205]);
+  // Block 3 (z-index 10)
+  const block3X = useTransform(scrollYProgress, [0.5, 0.58], [100, 0]);
+  const block3Y = useTransform(scrollYProgress, [0.5, 0.58], [100, 0]);
+  const block3Width = useTransform(scrollYProgress, [0.90, 1.0], [STATS[3].blockSize!.width, 3000]);
+  const block3Height = useTransform(scrollYProgress, [0.90, 1.0], [STATS[3].blockSize!.height, 3000]);
+  const block3ZIndex = useTransform(scrollYProgress, [0.87, 0.871], [10, 210]);
+
+  // Block 4 (bottom layer, z-index 5) - expands first
+  const block4X = useTransform(scrollYProgress, [0.667, 0.75], [100, 0]);
+  const block4Y = useTransform(scrollYProgress, [0.667, 0.75], [100, 0]);
+  const block4Width = useTransform(scrollYProgress, [0.87, 1.0], [STATS[4].blockSize!.width, 3000]);
+  const block4Height = useTransform(scrollYProgress, [0.87, 1.0], [STATS[4].blockSize!.height, 3000]);
+  const block4ZIndex = useTransform(scrollYProgress, [0.87, 0.871], [5, 205]);
 
   // Number counters - linear interpolation based on scroll progress
-  const number1 = useTransform(scrollYProgress, [0.2, 0.3], [0, STATS[1].number!], {
+  const number1 = useTransform(scrollYProgress, [0.167, 0.25], [0, STATS[1].number!], {
     clamp: true,
   });
   const number1Rounded = useTransform(number1, (v) => Math.round(v));
 
-  const number2 = useTransform(scrollYProgress, [0.4, 0.5], [0, STATS[2].number!], {
+  const number2 = useTransform(scrollYProgress, [0.333, 0.42], [0, STATS[2].number!], {
     clamp: true,
   });
   const number2Rounded = useTransform(number2, (v) => Math.round(v));
 
-  const number3 = useTransform(scrollYProgress, [0.6, 0.7], [0, STATS[3].number!], {
+  const number3 = useTransform(scrollYProgress, [0.5, 0.58], [0, STATS[3].number!], {
     clamp: true,
   });
   const number3Rounded = useTransform(number3, (v) => Math.round(v));
 
-  const number4 = useTransform(scrollYProgress, [0.8, 0.9], [0, STATS[4].number!], {
+  const number4 = useTransform(scrollYProgress, [0.667, 0.75], [0, STATS[4].number!], {
     clamp: true,
   });
   const number4Rounded = useTransform(number4, (v) => Math.round(v));

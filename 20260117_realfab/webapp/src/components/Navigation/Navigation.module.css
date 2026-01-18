@@ -1,85 +1,108 @@
+/* Navigation capsule - horizontal, centered at top */
 .navigation {
   position: fixed;
   top: var(--spacing-6);
-  right: var(--spacing-6);
-  z-index: var(--z-sticky);
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  z-index: var(--z-fixed);
   pointer-events: none;
 }
 
 .navList {
   list-style: none;
   display: flex;
-  flex-direction: column;
-  gap: var(--spacing-4);
-  background: rgba(255, 255, 255, 0.8);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  padding: var(--spacing-4);
+  flex-direction: row;
+  align-items: center;
+  gap: 0;
+  /* Blended background: semi-transparent white overlay + blur picks up colors behind */
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(12px) brightness(1.2);
+  -webkit-backdrop-filter: blur(12px) brightness(1.2);
+  padding: var(--spacing-2) var(--spacing-3);
   border-radius: var(--radius-full);
-  box-shadow: var(--shadow-md);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   pointer-events: auto;
 }
 
 .navItem {
   position: relative;
+  display: flex;
+  align-items: center;
 }
 
 .navButton {
   display: flex;
   align-items: center;
-  gap: var(--spacing-3);
+  justify-content: center;
+  gap: 0;
   background: none;
   border: none;
   padding: var(--spacing-2);
   cursor: pointer;
   position: relative;
-  transition: transform var(--transition-fast) var(--ease-out);
+  border-radius: var(--radius-full);
+  transition: background-color var(--transition-fast) var(--ease-out);
+  min-width: 24px;
+  min-height: 24px;
 }
 
 .navButton:hover {
-  transform: scale(1.05);
+  background-color: rgba(255, 255, 255, 0.1);
 }
 
 .navButton:active {
-  transform: scale(0.95);
+  background-color: rgba(255, 255, 255, 0.15);
 }
 
 .navDot {
   display: block;
-  width: 8px;
-  height: 8px;
+  width: 6px;
+  height: 6px;
   border-radius: 50%;
-  background-color: var(--color-black);
+  background-color: #FFFFFF;
   flex-shrink: 0;
 }
 
+/* Hide dot when active (label shows instead) */
+.navButton.active .navDot {
+  display: none;
+}
+
 .navLabel {
-  font-size: var(--text-sm);
-  font-weight: var(--font-weight-medium);
-  color: var(--color-black);
+  font-size: var(--text-xs);
+  font-weight: var(--font-weight-semibold);
+  color: #FFFFFF;
   white-space: nowrap;
-  pointer-events: none;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  overflow: hidden;
 }
 
 /* Mobile adjustments */
 @media (max-width: 768px) {
   .navigation {
     top: var(--spacing-4);
-    right: var(--spacing-4);
   }
 
   .navList {
-    padding: var(--spacing-3);
-    gap: var(--spacing-3);
+    padding: var(--spacing-2);
+  }
+
+  .navButton {
+    padding: var(--spacing-1);
+    min-width: 20px;
+    min-height: 20px;
   }
 
   .navDot {
-    width: 6px;
-    height: 6px;
+    width: 5px;
+    height: 5px;
   }
 
   .navLabel {
-    font-size: var(--text-xs);
+    font-size: 10px;
   }
 }
 

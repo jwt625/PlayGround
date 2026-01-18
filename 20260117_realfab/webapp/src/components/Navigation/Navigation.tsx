@@ -1,6 +1,7 @@
 'use client';
 
-import { motion, useSpring } from 'framer-motion';
+import { useEffect, useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useActiveSection, scrollToSection } from '@/hooks/useActiveSection';
 import styles from './Navigation.module.css';
 
@@ -14,83 +15,91 @@ interface NavigationProps {
 }
 
 export function Navigation({ sections }: NavigationProps) {
+  const [isVisible, setIsVisible] = useState(false);
+
   const activeSection = useActiveSection(
     sections.map((s) => s.id),
     100
   );
 
-  // Spring animation for smooth dot position transitions
-  const activeDotSpring = useSpring(0, {
-    stiffness: 120,
-    damping: 20,
-  });
+  // Show navigation after scrolling past hero section
+  useEffect(() => {
+    const handleScroll = () => {
+      const heroSection = document.getElementById('hero');
+      if (heroSection) {
+        const heroBottom = heroSection.offsetTop + heroSection.offsetHeight;
+        setIsVisible(window.scrollY > heroBottom - 100);
+      }
+    };
 
-  // Update spring value when active section changes
-  const activeIndex = sections.findIndex((s) => s.id === activeSection);
-  if (activeIndex !== -1) {
-    activeDotSpring.set(activeIndex);
-  }
+    handleScroll(); // Check initial state
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   const handleNavClick = (sectionId: string) => {
     scrollToSection(sectionId, 80);
   };
 
   return (
-    <nav className={styles.navigation}>
-      <ul className={styles.navList}>
-        {sections.map((section, index) => {
-          const isActive = section.id === activeSection;
+    <AnimatePresence>
+      {isVisible && (
+        <motion.nav
+          className={styles.navigation}
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -20 }}
+          transition={{ duration: 0.3, ease: 'easeOut' }}
+        >
+          <ul className={styles.navList}>
+            {sections.map((section) => {
+              const isActive = section.id === activeSection;
 
-          return (
-            <li key={section.id} className={styles.navItem}>
-              <button
-                onClick={() => handleNavClick(section.id)}
-                className={styles.navButton}
-                aria-label={`Navigate to ${section.label}`}
-                aria-current={isActive ? 'true' : 'false'}
-              >
-                {/* Dot indicator */}
-                <motion.span
-                  className={styles.navDot}
-                  initial={{ opacity: 0 }}
-                  animate={{
-                    opacity: isActive ? 1 : 0.3,
-                    scale: isActive ? 1.2 : 1,
-                  }}
-                  transition={{
-                    type: 'spring',
-                    stiffness: 120,
-                    damping: 20,
-                    duration: 0.65,
-                  }}
-                />
+              return (
+                <li key={section.id} className={styles.navItem}>
+                  <button
+                    onClick={() => handleNavClick(section.id)}
+                    className={`${styles.navButton} ${isActive ? styles.active : ''}`}
+                    aria-label={`Navigate to ${section.label}`}
+                    aria-current={isActive ? 'true' : 'false'}
+                  >
+                    {/* Dot indicator - always visible for inactive, hidden for active */}
+                    <motion.span
+                      className={styles.navDot}
+                      animate={{
+                        opacity: isActive ? 0 : 0.5,
+                        scale: 1,
+                      }}
+                      transition={{
+                        type: 'spring',
+                        stiffness: 120,
+                        damping: 20,
+                      }}
+                    />
 
-                {/* Label - fades in on hover or when active */}
-                <motion.span
-                  className={styles.navLabel}
-                  initial={{ opacity: 0, x: -10 }}
-                  animate={{
-                    opacity: isActive ? 1 : 0,
-                    x: isActive ? 0 : -10,
-                  }}
-                  whileHover={{
-                    opacity: 1,
-                    x: 0,
-                  }}
-                  transition={{
-                    duration: 0.3,
-                    ease: 'easeOut',
-                    delay: isActive ? 0.2 : 0,
-                  }}
-                >
-                  {section.label}
-                </motion.span>
-              </button>
-            </li>
-          );
-        })}
-      </ul>
-    </nav>
+                    {/* Label - only visible when active */}
+                    <motion.span
+                      className={styles.navLabel}
+                      animate={{
+                        opacity: isActive ? 1 : 0,
+                        width: isActive ? 'auto' : 0,
+                      }}
+                      transition={{
+                        type: 'spring',
+                        stiffness: 120,
+                        damping: 20,
+                      }}
+                    >
+                      {section.label}
+                    </motion.span>
+                  </button>
+                </li>
+              );
+            })}
+          </ul>
+        </motion.nav>
+      )}
+    </AnimatePresence>
   );
 }
 

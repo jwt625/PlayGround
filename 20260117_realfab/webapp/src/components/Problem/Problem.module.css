@@ -1,6 +1,6 @@
-/* Scroll container - creates scroll distance for 4 states */
+/* Scroll container - creates scroll distance for 5 states + exit animation */
 .scrollContainer {
-  min-height: 400vh;
+  min-height: 800vh;
   background-color: #0A0505; /* Deep warm black */
   position: relative;
 }

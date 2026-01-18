@@ -336,40 +336,42 @@ const { scrollYProgress } = useScroll({
 - [x] Text positioned ~15vh from top with proper spacing
 - [x] Red blocks slide from bottom-right (diagonal entrance with x and y transforms)
 - [x] Numbers positioned at top-left of blocks
-- [x] Rolling number animations with spring physics (useSpring with useTransform)
+- [x] Rolling number animations (linear scroll-based)
 - [x] Progressive block sizing (400x400, 500x570, 600x740, 700x910)
 - [x] Layered z-index stacking for blocks (30, 20, 10, 5)
 - [x] Red color palette with 4 variations (#D62718, #E33224, #C41E1A, #B01810)
 - [x] Tooltip on "99%" with source note
 - [x] Text content takes left 75% width
-- [ ] Exit animation - NEEDS WORK
+- [x] Exit animation
+- [x] Navigation capsule (horizontal, top-center, appears after hero, blended background)
 - [ ] Mobile responsive with adjusted font sizes
 
 ## Implementation Progress
 
 ### Completed
-- Sticky scroll container (400vh) with 5 states
+- Sticky scroll container (800vh) with 6 equal stages (5 content states + exit)
+- Each stage gets 1/6 of scroll progress (~133vh per stage)
 - Section title "The State of Our Fabs" in grey (#888888)
-- 5 statistics (updated "500+" to "1,000+"):
+- 5 statistics:
   1. "Our industry is broken. The data is clear."
   2. "3 companies control 90%+ of advanced chip manufacturing"
   3. "1,000+ process steps in modern SOTA semiconductor fabrication"
   4. "99% of materials wasted in subtractive processes"
   5. "$20B+ cost to build a single leading-edge fab"
-- Non-overlapping text transitions with vertical movement (fade in moves up, fade out moves down)
+- Non-overlapping text transitions with vertical movement
 - Dark background (#0A0505) with white text and red highlights (#D62718)
-- 2-column grid layout (48% text left, 52% graphics right)
-- Text content width limited to 75%
-- Red blocks with diagonal slide-in animation (x and y transforms from 100 to 0)
-- Spring-based number counting animations
-- Tooltip on "99%" claim: "Ratio of total chemical/gas input mass to final chip mass. Different processing steps can vary."
-- Tooltip styling: dark background, drop shadow, border, proper hover area
-
-### In Progress
+- Red blocks with diagonal slide-in animation
+- Linear scroll-based number counting (removed spring physics for faster settling)
+- Tooltip on "99%" claim with proper styling
 - Exit animation sequence:
-  - Buffer zone added (0.88-0.94) so viewer stays on state 5 longer
-  - Text fades out first (0.94-0.95)
-  - Numbers fade out (0.95-0.96)
-  - Blocks should expand to fill canvas (0.96-1.0), back to front with stagger
-  - Z-index elevation for blocks during exit (above text container)
-  - Current issue: blocks not expanding correctly to cover full canvas; expansion logic needs rework (should move top-left corners toward canvas origin while growing width/height)
+  - Text fades out (0.833-0.85)
+  - Numbers fade out (0.85-0.87)
+  - Blocks expand from bottom-right corner to cover full canvas (0.87-1.0)
+  - Bottom-right corner anchored via CSS positioning
+  - Width/height expansion only (no x/y transform during exit)
+  - Z-index elevation for blocks during exit
+- Navigation capsule:
+  - Horizontal layout, top-center position
+  - Appears after scrolling past hero section
+  - White text with blended background (backdrop-filter blur + brightness)
+  - Inactive sections collapse to dots, active section shows text
