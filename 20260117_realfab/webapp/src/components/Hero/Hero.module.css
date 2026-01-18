@@ -6,10 +6,51 @@
   padding: var(--spacing-16) var(--spacing-4);
   position: relative;
   overflow: hidden;
+  background-color: var(--color-cream);
+}
+
+/* Parallax floating elements */
+.floatingElement1,
+.floatingElement2,
+.floatingElement3 {
+  position: absolute;
+  will-change: transform;
+  pointer-events: none;
+  opacity: 0.3;
+  z-index: 0;
+}
+
+.floatingElement1 {
+  top: 10%;
+  left: 10%;
+}
+
+.floatingElement2 {
+  top: 60%;
+  right: 15%;
+}
+
+.floatingElement3 {
+  bottom: 15%;
+  left: 15%;
+}
+
+.placeholder {
+  width: clamp(120px, 15vw, 200px);
+  height: clamp(120px, 15vw, 200px);
+  background: var(--color-beige);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  color: var(--color-gray-600);
 }
 
 .content {
   max-width: 800px;
+  position: relative;
+  z-index: 1;
   text-align: center;
   z-index: 1;
 }

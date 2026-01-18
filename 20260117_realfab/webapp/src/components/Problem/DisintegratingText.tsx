@@ -22,25 +22,33 @@ export function DisintegratingText({ text, className = '' }: DisintegratingTextP
   return (
     <div ref={containerRef} className={`${styles.container} ${className}`}>
       {chars.map((char, index) => {
-        const progress = index / chars.length;
-        const delay = progress * 0.5;
-        
+        const totalChars = chars.length;
+        // Reference formula: scrollProgress * (1 + charIndex / totalChars * 0.12)
+        const charFactor = 1 + (index / totalChars) * 0.12;
+        const delay = (index / totalChars) * 0.3;
+
         const opacity = useTransform(
           scrollYProgress,
-          [delay, delay + 0.2],
+          [delay, delay + 0.3 * charFactor],
           [0, 1]
         );
-        
+
         const y = useTransform(
           scrollYProgress,
-          [delay, delay + 0.2],
-          [20, 0]
+          [delay, delay + 0.3 * charFactor],
+          [30, 0]
         );
-        
-        const rotateX = useTransform(
+
+        const blur = useTransform(
           scrollYProgress,
-          [delay, delay + 0.2],
-          [90, 0]
+          [delay, delay + 0.3 * charFactor],
+          [10, 0]
+        );
+
+        const brightness = useTransform(
+          scrollYProgress,
+          [delay, delay + 0.3 * charFactor],
+          [0.5, 1]
         );
 
         return (
@@ -50,7 +58,7 @@ export function DisintegratingText({ text, className = '' }: DisintegratingTextP
             style={{
               opacity,
               y,
-              rotateX,
+              filter: `blur(${blur}px) brightness(${brightness})`,
               display: char === ' ' ? 'inline' : 'inline-block',
             }}
           >

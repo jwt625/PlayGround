@@ -25,14 +25,14 @@ export function StatCard({ value, description, color = '#E53935', index, scrollY
   const isInView = useInView(cardRef, { threshold: 0.5, triggerOnce: true });
   const [displayValue, setDisplayValue] = useState(value);
 
-  // Scroll-based card position
+  // Scroll-based card position - translate from 100vh to 0
   const cardStart = index * 0.15;
   const cardEnd = cardStart + 0.3;
-  
+
   const y = useTransform(
     scrollYProgress,
     [cardStart, cardEnd],
-    [100, 0]
+    ['100vh', '0vh']
   );
 
   const opacity = useTransform(

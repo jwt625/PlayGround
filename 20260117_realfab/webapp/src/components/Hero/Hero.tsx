@@ -1,7 +1,7 @@
 'use client';
 
-import { motion } from 'framer-motion';
-import { useState } from 'react';
+import { motion, useScroll, useTransform } from 'framer-motion';
+import { useState, useRef } from 'react';
 import { VideoModal } from '@/components/VideoModal';
 import { springs } from '@/lib/springs';
 import styles from './Hero.module.css';
@@ -40,10 +40,32 @@ export function Hero({
   videoThumbnail,
 }: HeroProps) {
   const [isVideoOpen, setIsVideoOpen] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ['start start', 'end start'],
+  });
+
+  // Parallax transforms for floating elements
+  const y1 = useTransform(scrollYProgress, [0, 1], [0, -150]);
+  const y2 = useTransform(scrollYProgress, [0, 1], [0, -100]);
+  const y3 = useTransform(scrollYProgress, [0, 1], [0, -200]);
 
   return (
     <>
-      <div className={styles.hero}>
+      <div ref={containerRef} className={styles.hero}>
+        {/* Parallax floating elements */}
+        <motion.div className={styles.floatingElement1} style={{ y: y1 }}>
+          <div className={styles.placeholder}>Chip 1</div>
+        </motion.div>
+        <motion.div className={styles.floatingElement2} style={{ y: y2 }}>
+          <div className={styles.placeholder}>Chip 2</div>
+        </motion.div>
+        <motion.div className={styles.floatingElement3} style={{ y: y3 }}>
+          <div className={styles.placeholder}>Chip 3</div>
+        </motion.div>
+
         <motion.div
           className={styles.content}
           variants={staggerContainer}

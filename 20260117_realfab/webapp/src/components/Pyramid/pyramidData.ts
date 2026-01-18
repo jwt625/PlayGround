@@ -54,12 +54,12 @@ export const pyramidItems: PyramidItem[] = [
   { id: 'wafer-fab', name: 'Wafer Fab Interior', description: 'Traditional fab with massive equipment', image: '/images/pyramid/wafer-fab-interior.webp', tier: 'bigfab', top: 75, left: 45, width: 12, height: 12, zIndex: 8, entryOrder: 30 },
   { id: 'slm', name: 'SLM Machine', description: 'Selective Laser Melting system', image: '/images/pyramid/slm-machine.webp', tier: 'bigfab', top: 72, left: 35, width: 10, height: 10, zIndex: 7, entryOrder: 31 },
   { id: 'nanoscribe', name: 'Nanoscribe Tool', description: 'Commercial TPP system for 3D nanoprinting', image: '/images/pyramid/nanoscribe-tool.webp', tier: 'bigfab', top: 72, left: 55, width: 10, height: 10, zIndex: 7, entryOrder: 32 },
-  { id: 'fdm-printer', name: '3D Printer (FDM)', description: 'Desktop FDM 3D printer', image: '/images/pyramid/3d-printer-fdm.webp', tier: 'bigfab', top: 58, left: 65, width: 9, height: 9, zIndex: 6, entryOrder: 33 },
+  { id: 'fdm-printer', name: '3D Printer (FDM)', description: 'Desktop FDM 3D printer', image: '/images/pyramid/fdm-3d-printer.webp', tier: 'bigfab', top: 58, left: 65, width: 9, height: 9, zIndex: 6, entryOrder: 33 },
   { id: 'laser-cutter', name: 'Laser Cutter', description: 'Desktop laser cutter', image: '/images/pyramid/laser-cutter.webp', tier: 'bigfab', top: 82, left: 40, width: 8, height: 8, zIndex: 5, entryOrder: 34 },
   { id: 'fume-extractor', name: 'Fume Extractor', description: 'Soldering fume extractor', image: '/images/pyramid/fume-extractor.webp', tier: 'bigfab', top: 82, left: 50, width: 8, height: 8, zIndex: 5, entryOrder: 35 },
   { id: 'storage', name: 'Component Storage', description: 'Organized component storage', image: '/images/pyramid/component-storage.webp', tier: 'bigfab', top: 88, left: 45, width: 7, height: 7, zIndex: 4, entryOrder: 36 },
-  { id: 'copper-wire', name: 'Copper Wire Spool', description: 'Fine copper wire for bonding', image: '/images/pyramid/copper-wire.webp', tier: 'bigfab', top: 60, left: 28, width: 9, height: 9, zIndex: 3, entryOrder: 37 },
-  { id: 'gold-wire', name: 'Gold Wire Spool', description: 'Gold bonding wire for interconnects', image: '/images/pyramid/gold-wire.webp', tier: 'bigfab', top: 85, left: 30, width: 12, height: 12, zIndex: 2, entryOrder: 38 },
+  { id: 'copper-wire', name: 'Copper Wire Spool', description: 'Fine copper wire for bonding', image: '/images/pyramid/copper-wire-spool.webp', tier: 'bigfab', top: 60, left: 28, width: 9, height: 9, zIndex: 3, entryOrder: 37 },
+  { id: 'gold-wire', name: 'Gold Wire Spool', description: 'Gold bonding wire for interconnects', image: '/images/pyramid/gold-wire-spool.webp', tier: 'bigfab', top: 85, left: 30, width: 12, height: 12, zIndex: 2, entryOrder: 38 },
 ];
 
 export const tierLabels = {
