@@ -5,7 +5,6 @@ import { IntroCurtain } from '@/components/IntroCurtain';
 import { Banner } from '@/components/Banner';
 import { Navigation } from '@/components/Navigation';
 import { Hero } from '@/components/Hero';
-import { Stats } from '@/components/Stats';
 import { Problem } from '@/components/Problem';
 import { Solution } from '@/components/Solution';
 import { Pyramid } from '@/components/Pyramid';
@@ -16,8 +15,7 @@ import styles from './page.module.css';
 
 const sections = [
   { id: 'hero', label: 'Home' },
-  { id: 'stats', label: 'Stats' },
-  { id: 'problem', label: 'Problem' },
+  { id: 'problem', label: 'State of Our Fabs' },
   { id: 'solution', label: 'Solution' },
   { id: 'pyramid', label: 'Pyramid' },
   { id: 'resources', label: 'Resources' },
@@ -44,12 +42,7 @@ export default function Home() {
           />
         </Section>
 
-        {/* Statistics Section */}
-        <Section id="stats">
-          <Stats />
-        </Section>
-
-        {/* Problem Section */}
+        {/* State of Our Fabs Section (Statistics) */}
         <Section id="problem">
           <Problem />
         </Section>
