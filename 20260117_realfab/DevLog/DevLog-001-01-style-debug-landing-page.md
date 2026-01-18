@@ -112,18 +112,15 @@ This is a two-stage landing page experience. It begins with a **fullscreen "Curt
 * Curtain slide-up animation implemented with correct easing
 * Items positioned as fixed elements above curtain overlay
 
-### Issues / Not Working
-* **CRITICAL: Items not animating during exit phase**
-    * Items remain stuck at their converged positions
-    * No outward separation movement visible
-    * Items disappear when curtain finishes sliding up instead of animating out
-    * Root cause: AnimatePresence exit animations not triggering properly for items
-    * Items are using `animate={phase}` to switch between 'converge' and 'exit' states
-    * When `isVisible` becomes false, entire component unmounts via AnimatePresence
-    * Items need to complete their exit animation before component unmounts
-
-### Next Steps
-* Debug why items are not animating to their exit state
-* Verify that phase state change from 'converge' to 'exit' is triggering item animations
-* Ensure items complete their outward+upward movement before component unmounts
-* Consider using exit animations via AnimatePresence instead of phase-based animate prop
+### Fixed
+* **Exit animation now working correctly**
+    * Root cause: Items were children of curtain overlay, got unmounted when curtain exited
+    * Solution: Moved items outside curtain as independent fixed-position elements
+    * Items now animate to exit positions (separate outward + move up) independently of curtain
+    * Curtain slides up simultaneously without affecting item animations
+* **Convergence order corrected**
+    * Item 3 (bottom-right) now moves second with 0.3s delay
+    * Item 2 (bottom-left) now moves third with 0.6s delay
+* **Z-index layering fixed**
+    * Later-moving items now appear on top of earlier-moving items
+    * Item 1: z-index 1, Item 3: z-index 2, Item 2: z-index 3

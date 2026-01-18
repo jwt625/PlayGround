@@ -11,9 +11,12 @@
 }
 
 .itemsContainer {
-  position: relative;
+  position: fixed;
+  inset: 0;
+  z-index: 100001; /* Above the curtain */
   width: 100vw;
   height: 100vh;
+  pointer-events: none; /* Don't block interactions */
 }
 
 .item1,
@@ -29,7 +32,7 @@
 .item1 {
   width: max(200px, 24vw);
   height: max(200px, 24vw);
-  z-index: 3;
+  z-index: 1; /* Moves first, should be at bottom */
   /* Center the item itself */
   margin-left: calc(max(200px, 24vw) / -2);
   margin-top: calc(max(200px, 24vw) / -2);
@@ -38,7 +41,7 @@
 .item2 {
   width: max(220px, 28vw);
   height: max(220px, 28vw);
-  z-index: 2;
+  z-index: 3; /* Moves third (last), should be on top */
   /* Center the item itself */
   margin-left: calc(max(220px, 28vw) / -2);
   margin-top: calc(max(220px, 28vw) / -2);
@@ -47,7 +50,7 @@
 .item3 {
   width: max(200px, 24vw);
   height: max(200px, 24vw);
-  z-index: 1;
+  z-index: 2; /* Moves second, should be in middle */
   /* Center the item itself */
   margin-left: calc(max(200px, 24vw) / -2);
   margin-top: calc(max(200px, 24vw) / -2);

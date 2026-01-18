@@ -49,7 +49,7 @@ export function IntroCurtain({ onComplete }: IntroCurtainProps) {
     },
     exit: {
       x: 0,
-      y: '-120vh', // Move up and out (no separate phase, goes directly)
+      y: '-200vh', // Move up and out (no separate phase, goes directly)
       transition: {
         duration: 1,
         ease: customEase,
@@ -66,15 +66,16 @@ export function IntroCurtain({ onComplete }: IntroCurtainProps) {
       transition: {
         duration: 0.6,
         ease: customEase,
-        delay: 0.3, // Starts when item 1 begins decelerating
+        delay: 0.6, // Moves third (after item 3)
       },
     },
     exit: {
-      x: '-16.5vw', // Separate halfway back while moving up (halfway between -8vw and -25vw)
-      y: '-120vh', // Move up and out
+      x: '-25vw', // Separate halfway back while moving up (halfway between -8vw and -25vw)
+      y: '-100vh', // Move up and out
       transition: {
         duration: 1,
         ease: customEase,
+        delay: 0, // Exit immediately when phase changes
       },
     },
   };
@@ -88,15 +89,16 @@ export function IntroCurtain({ onComplete }: IntroCurtainProps) {
       transition: {
         duration: 0.6,
         ease: customEase,
-        delay: 0.6, // Starts when item 2 begins decelerating
+        delay: 0.3, // Moves second (after item 1)
       },
     },
     exit: {
-      x: '16.5vw', // Separate halfway back while moving up (halfway between 8vw and 25vw)
-      y: '-120vh', // Move up and out
+      x: '25vw', // Separate halfway back while moving up (halfway between 8vw and 25vw)
+      y: '-100vh', // Move up and out
       transition: {
         duration: 1,
         ease: customEase,
+        delay: 0, // Exit immediately when phase changes
       },
     },
   };
@@ -114,69 +116,73 @@ export function IntroCurtain({ onComplete }: IntroCurtainProps) {
   };
 
   return (
-    <AnimatePresence>
-      {isVisible && (
+    <>
+      {/* Items - positioned independently */}
+      <div className={styles.itemsContainer}>
+        {/* Item 1: LPBF Metal Printer - moves down from top */}
         <motion.div
-          className={styles.overlay}
-          variants={curtainVariants}
+          className={styles.item1}
+          variants={item1Variants}
           initial="initial"
-          exit="exit"
+          animate={phase}
         >
-          <div className={styles.itemsContainer}>
-            {/* Item 1: LPBF Metal Printer - moves down from top */}
-            <motion.div
-              className={styles.item1}
-              variants={item1Variants}
-              initial="initial"
-              animate={phase}
-            >
-              <Image
-                src="/images/pyramid/lpbf-metal-printer.webp"
-                alt="LPBF Metal Printer"
-                width={400}
-                height={400}
-                priority
-                className={styles.image}
-              />
-            </motion.div>
-
-            {/* Item 2: Silicon Boule - moves up-right from bottom left */}
-            <motion.div
-              className={styles.item2}
-              variants={item2Variants}
-              initial="initial"
-              animate={phase}
-            >
-              <Image
-                src="/images/pyramid/silicon-boule.webp"
-                alt="Silicon Boule"
-                width={400}
-                height={400}
-                priority
-                className={styles.image}
-              />
-            </motion.div>
-
-            {/* Item 3: TPP System - moves left from bottom right */}
-            <motion.div
-              className={styles.item3}
-              variants={item3Variants}
-              initial="initial"
-              animate={phase}
-            >
-              <Image
-                src="/images/pyramid/tpp-system.webp"
-                alt="TPP System"
-                width={400}
-                height={400}
-                priority
-                className={styles.image}
-              />
-            </motion.div>
-          </div>
+          <Image
+            src="/images/pyramid/lpbf-metal-printer.webp"
+            alt="LPBF Metal Printer"
+            width={400}
+            height={400}
+            priority
+            className={styles.image}
+          />
         </motion.div>
-      )}
-    </AnimatePresence>
+
+        {/* Item 2: Silicon Boule - moves up-right from bottom left */}
+        <motion.div
+          className={styles.item2}
+          variants={item2Variants}
+          initial="initial"
+          animate={phase}
+        >
+          <Image
+            src="/images/pyramid/silicon-boule.webp"
+            alt="Silicon Boule"
+            width={400}
+            height={400}
+            priority
+            className={styles.image}
+          />
+        </motion.div>
+
+        {/* Item 3: TPP System - moves left from bottom right */}
+        <motion.div
+          className={styles.item3}
+          variants={item3Variants}
+          initial="initial"
+          animate={phase}
+        >
+          <Image
+            src="/images/pyramid/tpp-system.webp"
+            alt="TPP System"
+            width={400}
+            height={400}
+            priority
+            className={styles.image}
+          />
+        </motion.div>
+      </div>
+
+      {/* Curtain - slides up independently */}
+      <AnimatePresence>
+        {isVisible && (
+          <motion.div
+            className={styles.overlay}
+            variants={curtainVariants}
+            initial="initial"
+            exit="exit"
+          />
+        )}
+      </AnimatePresence>
+    </>
   );
 }
 
