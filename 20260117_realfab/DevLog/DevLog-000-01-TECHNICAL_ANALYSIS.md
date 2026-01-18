@@ -449,128 +449,245 @@ Please be as specific and technical as possible. Use timestamps from the video w
 ## Reply from Gemini:
 
 ```markdown
-# Motion Design Specification: RealFood.gov Reverse Engineering
+# Motion Design Specification: RealFood.gov (Revised)
 **Target:** realfood.gov
-**Analysis Source:** Screen Recording 2026-01-17 at 14.59.01.mov
-**Tech Stack Inference:** WebGL or Canvas likely not required; achievable with GSAP (ScrollTrigger, Flip), Lenis (smooth scroll), and CSS Grid/Flexbox.
+**Analysis Source:** Screen Recording 2026-01-17 at 14.59.01.mov + Source Code Inspection
+**Tech Stack:** Framer Motion (`motion/react`), Lenis (Smooth Scroll)
 
 ---
 
-## 1. Global Motion Systems
+## 1. Global Motion Systems & Physics
 
-### Smooth Scrolling
-* **Behavior:** Inertial scrolling with heavy damping. Scrolling stops gradually after the user releases input.
-* **Technical Spec:** Custom scroll container (likely `Lenis` or `Locomotive Scroll`).
-* **Properties:** `lerp: 0.1` (approximate smoothing factor).
+### Smooth Scrolling (Lenis)
+* **Behavior:** Inertial scrolling with heavy damping.
+* **Implementation:** Lenis instance wrapping the main content.
+* **Interactions:** `useScroll` hooks link animation progress to Lenis scroll position.
 
-### Navigation Pill (Sticky Header)
-* **Element:** Floating pill `div` at `top: 24px` centered horizontally.
-* **Behavior:** Permanently fixed (Sticky).
-* **Internal Animation:**
-    * **Text:** Cross-fade or vertical slide (`translateY`) when entering new sections.
-    * **Dots:** Active state indicator expands (`width: 6px` -> `24px`) with `ease-out` transition (~300ms).
-    * **Trigger:** `IntersectionObserver` crossing section thresholds.
+### Physics & Easing (Framer Motion)
+Instead of standard CSS easings, the site relies heavily on spring physics for natural motion.
+* **Spring A (Overshoot):** Used for food title transitions and entrance effects.
+    * **Behavior:** Fast attack with distinct overshoot (peak 6.64%) and slight settling undershoot.
+    * **Config:** `{ type: "spring", stiffness: 150, damping: 16 }`
+    * **Duration:** ~700ms effective.
+* **Spring B (Smooth Deceleration):** Used for navigation dots and UI elements.
+    * **Behavior:** Smooth braking, no bounce.
+    * **Config:** `{ type: "spring", stiffness: 120, damping: 20 }`
+    * **Duration:** ~650ms effective.
 
----
-
-## 2. Section-by-Section Breakdown
-
-### A. Hero Section (00:00 - 00:07)
-**Concept:** Depth & Introduction
-* **Floating Elements (Broccoli, Milk, Meat, etc.):**
-    * **Trigger:** `window.onload` (continuous) + Scroll (parallax).
-    * **Idle Animation:** `y: +/- 15px`, `rotation: +/- 5deg`, `duration: 3s`, `repeat: -1`, `yoyo: true`, `ease: sine.inOut`.
-    * **Scroll Behavior (Parallax):**
-        * Foreground items (Broccoli): `speed: 1.5` (Moves up faster than scroll).
-        * Midground (Milk): `speed: 1.2`.
-        * Background (Text "Real Food..."): `speed: 0.8` (Moves slower, creating depth).
-* **Hero Video Container:**
-    * **Initial State:** `scale: 0.9`, `border-radius: 40px`.
-    * **Scroll Trigger:** Top of container hits 80% viewport height.
-    * **Animation:** Scale to `1.0`, `border-radius` reduces to `20px` (or `0px` if full bleed).
-    * **Easing:** `power2.out`.
-
-### B. "America is Sick" Stats (00:07 - 00:25)
-**Concept:** The Dark Mode Switch & Card Deck
-* **Global Transition:**
-    * **Background:** Interpolates from `#FDFBF7` (Cream) to `#1A0505` (Black/Dark Brown).
-    * **Trigger:** Triggered when the "Stats" section hits 50% viewport.
-* **Left Text Column ("America is sick...", "50% of Americans..."):**
-    * **Behavior:** Sticky (Pinned).
-    * **Motion:** Text swaps using `opacity` and `y-axis` slide.
-        * Exit: `opacity: 0`, `y: -20px`.
-        * Enter: `opacity: 1`, `y: 0`.
-        * Sync: Ttied directly to the index of the visible card on the right.
-* **Right Graphics Column (Red Cards):**
-    * **Structure:** Stacked cards using `position: absolute`.
-    * **Trigger:** Scroll Scrub (Scrubbing).
-    * **Motion:** "Card Decking" effect.
-        * Base Card: Static.
-        * Overlay Cards (50%, 75%, 90%): Translate Y from `100vh` to `0` (stacking on top).
-        * **Z-Index:** Managed incrementally (1, 2, 3, 4).
-    * **Color Blocks:** Each card represents a percentage width or height, filling the screen progressively.
-
-### C. The Problem (00:25 - 00:36)
-**Concept:** Deconstruction & Clarity
-* **1992 Pyramid Image:**
-    * **Trigger:** Scroll Exit (Scrub).
-    * **Motion:** `scale: 1` -> `0.8`, `opacity: 1` -> `0`.
-* **"We can solve this crisis":**
-    * **Trigger:** Center Viewport.
-    * **Effect:** CSS Filter Blur Reveal.
-        * Start: `filter: blur(20px)`, `opacity: 0`.
-        * End: `filter: blur(0px)`, `opacity: 1`.
-        * Duration: 1s.
-* **"For the first time..." Paragraph:**
-    * **Effect:** Scroll-scrubbed Text Highlighter.
-    * **Implementation:** Split text into words/spans.
-    * **Initial State:** `opacity: 0.2` (grayed out).
-    * **Active State:** `opacity: 1.0` (white).
-    * **Trigger:** As scroll position passes each line's Y-coordinate.
-
-### D. The New Pyramid (00:36 - 01:00)
-**Concept:** Re-assembly (The "Explosion")
-* **Background:** Smooth transition back to `#FDFBF7` (Cream).
-* **Title "The New Pyramid":**
-    * **Start:** Center screen, Large (`5rem`).
-    * **Scroll Action:** Shrinks (`scale: 0.6`) and moves to sticky header position (`top: 100px`).
-* **Ingredients (The Core Effect):**
-    * **Initial State:** Elements scattered radially outside the viewport (off-screen top, left, right, bottom).
-    * **Trigger:** Pinned Section (Duration ~2000px scroll height).
-    * **Motion (Scrubbed):**
-        * Elements translate from `(x_random, y_random)` to `(0, 0)` (their final grid position in the pyramid).
-        * **Stagger:** Groups arrive in sequence.
-            * 0-30% Scroll: Protein (Meat/Fish) flies in from Left/Top.
-            * 30-60% Scroll: Veggies fly in from Right.
-            * 60-90% Scroll: Grains/Carbs fly in from Bottom.
-    * **Sidebar Text:** Contextual text fades in/out on the left side corresponding to the active group (Protein -> Veggies -> Grains).
-
-### E. Resources & Footer (01:10 - End)
-**Concept:** Utility & Finale
-* **Resources Cards:**
-    * **Trigger:** Scroll Scrub.
-    * **Effect:** Fan / Spread.
-        * Origin: `transform-origin: bottom center`.
-        * Left Card: `rotate: -10deg`, `x: -50px`.
-        * Center Card: `y: -20px`.
-        * Right Card: `rotate: 10deg`, `x: 50px`.
-* **Footer Carousel (Slot Machine):**
-    * **Element:** "Eat Real [Bread/Lettuce/Potatoes]".
-    * **Trigger:** Autoplay (Loop) or Scroll Trigger.
-    * **Motion:**
-        * Text: Vertical slide (`y: -100%`). Masked overflow.
-        * Image: Spring scale effect (`scale: 0.8` -> `1.0`) synced with text change.
+### GPU Acceleration Patterns
+Performance optimization is aggressive to handle heavy paint costs.
+* **Properties:** `will-change: transform, opacity` applied to all animating elements.
+* **Compositing:** `transform: translateZ(0)` forces layer promotion.
+* **Containment:** `contain: layout style paint` used on static containers to prevent reflow propagation.
+* **Visibility:** `backface-visibility: hidden` used on rotating cards.
 
 ---
 
-## 3. Implementation Cheat Sheet
+## 2. Component Breakdown
 
-| Section | Key GSAP Method | CSS Property Focus |
+### A. Navigation (Sticky Pill)
+* **Container:** Fixed position `top: 24px`.
+* **Scroll Offsets:**
+    * Desktop: `600px` trigger points.
+    * Mobile: `-100px` or `400px` (variable per section).
+* **Dot Animation:**
+    * **Motion:** `opacity` and `width` expansion.
+    * **Timing:** Uses **Spring B** (650ms).
+* **Label Animation:**
+    * **Desktop:** 300ms `ease-out`, often with 200ms stagger delay.
+    * **Mobile:** 200ms `ease-out` (snappier response).
+
+### B. Hero Section (00:00 - 00:07)
+* **Tech:** `useScroll({ offset: [...] })` mapped via `useTransform`.
+* **Floating Elements (Parallax):**
+    * **Implementation:** `motion.img` elements with `y` values mapped to `scrollYProgress`.
+    * **Depth:** Foreground elements move faster than background (standard parallax).
+* **Reveal:** Triggered at specific `scrollYProgress` thresholds.
+* **Optimization:** `will-change: transform` active during scroll.
+
+### C. "America is Sick" Stats (00:07 - 00:25)
+* **Structure:** `position: sticky` container for the left text column.
+* **Card Animation:**
+    * **Transition:** `y` translation from `100vh` to `0`.
+    * **Physics:** Linear mapping to scroll (scrubbing), but strictly clamped.
+* **Card Hover State:**
+    * **Scale:** `whileHover` uses Spring (`stiffness: 400, damping: 25`).
+    * **Filter:** `filter: saturate(1)` → `saturate(1.32)` (250ms ease-out).
+    * **Opacity:** `0.8` → `1` (250ms ease-out).
+
+### D. The Problem (00:25 - 00:36)
+* **Text Disintegration Effect:**
+    * **Target:** "For the first time..." paragraph.
+    * **Granularity:** **Character-level**. Each char is wrapped in a `motion.span` with class `disintegrating_char`.
+    * **CSS:** `display: inline-block`, `transform-origin: center center`.
+    * **Stagger Formula:**
+        `charProgress = scrollProgress * (1 + charIndex / totalChars * 0.12)`
+    * This formula ensures a wave-like propagation of opacity/blur across the text block rather than a flat linear fade.
+
+### E. The New Pyramid (00:36 - 01:00)
+* **Exit/Entry:** `AnimatePresence` manages the DOM mounting/unmounting of ingredients.
+* **Motion Variants:**
+    * **Hidden:** `{ opacity: 0, scale: 0.8, x: [off-screen-coordinate] }`
+    * **Visible:** `{ opacity: 1, scale: 1, x: 0 }`
+    * **Transition:** **Spring A** (Overshoot) for the "pop" effect as ingredients settle into the pyramid.
+* **Labels:** Side labels sync with the ingredient animation completion using `onLayoutAnimationComplete` callbacks or synchronized delays.
+
+---
+
+## 3. Revised Implementation Cheat Sheet
+
+| Section | Framer Motion Method | Critical CSS / Props |
 | :--- | :--- | :--- |
-| **Hero** | `ScrollTrigger` (scrub: true) | `transform: translate3d` |
-| **Stats** | `ScrollTrigger` (pin: true) | `z-index`, `clip-path` (optional) |
-| **Problem** | `SplitText` (or manual spans) | `filter: blur()`, `opacity` |
-| **Pyramid** | `Timeline` synced to Scroll | `position: absolute`, `left/top` |
-| **Cards** | `ScrollTrigger` (scrub: 1) | `transform: rotate()` |
+| **Hero** | `useScroll({ offset: ["start start", "end start"] })` + `useTransform` | `will-change: transform`, `translateZ(0)` |
+| **Stats** | `useScroll` (container ref), `motion.div` | `position: sticky`, `top: 20%` |
+| **Problem** | `useScroll`, `useTransform` mapped per char index | `display: inline-block`, `transform-origin: center` |
+| **Pyramid** | `AnimatePresence`, `motion.div` variants | `layout` prop (for smooth reflows), **Spring A** |
+| **Cards** | `useTransform` (rotation/y), `whileHover` | `filter: saturate()`, `backface-visibility: hidden` |
+| **Nav** | `useSpring` (linked to active index) | `opacity`, `width`, **Spring B** |
+```
 
+---
+
+## 4. Implementation Reference
+
+### Framer Motion Code Patterns
+
+**Scroll-linked parallax:**
+```javascript
+const { scrollYProgress } = useScroll({ target: containerRef, offset: ["start end", "end start"] });
+const y = useTransform(scrollYProgress, [0, 1], [100, -100]);
+return <motion.div style={{ y }} />;
+```
+
+**Spring transition config:**
+```javascript
+const springA = { type: "spring", stiffness: 150, damping: 16 }; // overshoot
+const springB = { type: "spring", stiffness: 120, damping: 20 }; // smooth
+const springHover = { type: "spring", stiffness: 400, damping: 25 }; // snappy
+```
+
+**Character-level text animation:**
+```javascript
+const chars = text.split("");
+return chars.map((char, i) => {
+  const progress = useTransform(scrollYProgress, [0, 1], [0, 1 + (i / chars.length) * 0.12]);
+  const opacity = useTransform(progress, [0, 0.5, 1], [0.2, 0.6, 1]);
+  return <motion.span style={{ opacity, display: "inline-block" }}>{char}</motion.span>;
+});
+```
+
+**Card hover state:**
+```javascript
+<motion.div
+  whileHover={{ scale: 1.02, filter: "saturate(1.32)" }}
+  transition={springHover}
+/>
+```
+
+### Missing Section Details
+
+**Blur Reveal (Problem Section):**
+- Target: "We can solve this crisis" heading
+- Start: `filter: blur(20px)`, `opacity: 0`
+- End: `filter: blur(0px)`, `opacity: 1`
+- Duration: ~1000ms, triggered at center viewport
+
+**Footer Carousel (Slot Machine):**
+- Text cycles: "Eat Real [Bread/Lettuce/Potatoes/...]"
+- Vertical slide: `y: -100%` with masked overflow
+- Image: Spring scale `0.8` to `1.0` synced with text change
+- Autoplay interval: ~3000ms
+
+**Resources Cards (Fan Effect):**
+- Transform origin: `bottom center`
+- Left card: `rotate: -10deg`, `x: -50px`
+- Center card: `y: -20px`
+- Right card: `rotate: 10deg`, `x: 50px`
+- Trigger: Scroll scrub into view
+
+### Color Palette
+
+| Name | Hex | Usage |
+|------|-----|-------|
+| Cream | `#FDFBF7` | Light mode background |
+| Dark Brown | `#1A0505` | Stats section background |
+| Red Accent | `#E53935` | Stats cards, highlights |
+| White | `#FFFFFF` | Text on dark |
+| Gray | `rgba(255,255,255,0.2)` | Inactive text |
+
+### Typography
+
+- Headings: Serif family (appears custom or licensed)
+- Body: Sans-serif, ~18px base
+- Hero title: ~5rem desktop, scales down mobile
+- Stats numbers: Bold, large scale (~8rem)
+
+### Breakpoints
+
+| Name | Width | Notes |
+|------|-------|-------|
+| Mobile | < 768px | Single column, reduced parallax |
+| Tablet | 768-1024px | Two column where applicable |
+| Desktop | > 1024px | Full layout, all effects active |
+
+Mobile adjustments:
+- Parallax intensity reduced (~50%)
+- Navigation label animations faster (200ms vs 300ms)
+- Scroll offsets adjusted per section
+
+### Z-Index Stack
+
+| Layer | Z-Index | Elements |
+|-------|---------|----------|
+| Navigation | 100 | Sticky header pill |
+| Modal/Overlay | 90 | Mobile menu |
+| Cards (stacking) | 1-10 | Stats cards increment |
+| Content | 1 | Default |
+| Background | -1 | Parallax backgrounds |
+
+### Performance Checklist
+
+- [ ] Apply `will-change: transform, opacity` to animated elements
+- [ ] Use `transform: translateZ(0)` for GPU compositing
+- [ ] Add `contain: layout style paint` to static containers
+- [ ] Ensure `backface-visibility: hidden` on 3D transforms
+- [ ] Lazy load images below fold
+- [ ] Debounce resize handlers
+- [ ] Use passive scroll listeners via Lenis
+
+### Dependencies
+
+```json
+{
+  "framer-motion": "^11.x",
+  "lenis": "^1.x",
+  "next": "^14.x",
+  "react": "^18.x"
+}
+```
+
+### File Structure Suggestion
+
+```
+src/
+  app/
+    layout.tsx          # Lenis provider, global styles
+    page.tsx            # Main page composition
+  components/
+    Navigation/         # Sticky pill nav
+    Hero/               # Parallax hero
+    Stats/              # Dark mode stats cards
+    Problem/            # Text reveal, blur effects
+    Pyramid/            # Ingredient assembly
+    Resources/          # Fan cards
+    Footer/             # Slot machine carousel
+  hooks/
+    useScrollProgress.ts
+    useParallax.ts
+  lib/
+    springs.ts          # Spring configs
+    animations.ts       # Shared variants
+  styles/
+    globals.css
+    variables.css
 ```
