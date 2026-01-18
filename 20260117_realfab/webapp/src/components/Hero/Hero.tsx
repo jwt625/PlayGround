@@ -2,6 +2,7 @@
 
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { useState, useRef } from 'react';
+import Image from 'next/image';
 import { VideoModal } from '@/components/VideoModal';
 import { springs } from '@/lib/springs';
 import styles from './Hero.module.css';
@@ -19,25 +20,25 @@ const staggerContainer = {
   animate: {
     transition: {
       staggerChildren: 0.15,
-      delayChildren: 0.2,
+      delayChildren: 0.5, // Delay after curtain reveals (1.5s intro + 1s curtain = 2.5s total, hero starts at ~0.5s after reveal)
     },
   },
 };
 
 interface HeroProps {
   title?: string;
-  subtitle?: string;
   description?: string;
   videoUrl?: string;
   videoThumbnail?: string;
+  showIntro?: boolean;
 }
 
 export function Hero({
-  title = "Build Real Chips",
-  subtitle = "RealFab.org",
-  description = "Decentralized semiconductor fabrication through additive manufacturing and distributed production.",
+  title = "Real Fab Starts Here",
+  description = "Better technology begins with accessible fabrication—not gatekept mega-fabs. The new paradigm for semiconductor manufacturing defines real chips as locally-made, additive-manufactured, and democratically accessible, placing them back at the center of innovation.",
   videoUrl,
   videoThumbnail,
+  showIntro = false,
 }: HeroProps) {
   const [isVideoOpen, setIsVideoOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -51,45 +52,68 @@ export function Hero({
   const y1 = useTransform(scrollYProgress, [0, 1], [0, -150]);
   const y2 = useTransform(scrollYProgress, [0, 1], [0, -100]);
   const y3 = useTransform(scrollYProgress, [0, 1], [0, -200]);
+  const rotate1 = useTransform(scrollYProgress, [0, 1], [0, 45]);
+  const rotate2 = useTransform(scrollYProgress, [0, 1], [0, -30]);
+  const rotate3 = useTransform(scrollYProgress, [0, 1], [0, 60]);
 
   return (
     <>
       <div ref={containerRef} className={styles.hero}>
         {/* Parallax floating elements */}
-        <motion.div className={styles.floatingElement1} style={{ y: y1 }}>
-          <div className={styles.placeholder}>Chip 1</div>
+        <motion.div
+          className={styles.floatingElement1}
+          style={{ y: y1, rotate: rotate1 }}
+        >
+          <Image
+            src="/images/pyramid/lpbf-metal-printer.webp"
+            alt="LPBF Metal Printer"
+            width={200}
+            height={200}
+            className={styles.floatingImage}
+          />
         </motion.div>
-        <motion.div className={styles.floatingElement2} style={{ y: y2 }}>
-          <div className={styles.placeholder}>Chip 2</div>
+        <motion.div
+          className={styles.floatingElement2}
+          style={{ y: y2, rotate: rotate2 }}
+        >
+          <Image
+            src="/images/pyramid/silicon-boule.webp"
+            alt="Silicon Boule"
+            width={200}
+            height={200}
+            className={styles.floatingImage}
+          />
         </motion.div>
-        <motion.div className={styles.floatingElement3} style={{ y: y3 }}>
-          <div className={styles.placeholder}>Chip 3</div>
+        <motion.div
+          className={styles.floatingElement3}
+          style={{ y: y3, rotate: rotate3 }}
+        >
+          <Image
+            src="/images/pyramid/tpp-system.webp"
+            alt="TPP System"
+            width={200}
+            height={200}
+            className={styles.floatingImage}
+          />
         </motion.div>
 
         <motion.div
           className={styles.content}
           variants={staggerContainer}
-          initial="initial"
+          initial={showIntro ? "initial" : false}
           animate="animate"
         >
           <motion.h1 className={styles.title} variants={heroVariants}>
             {title}
           </motion.h1>
-          
-          <motion.p className={styles.subtitle} variants={heroVariants}>
-            {subtitle}
-          </motion.p>
-          
+
           <motion.p className={styles.description} variants={heroVariants}>
             {description}
           </motion.p>
 
           <motion.div className={styles.ctas} variants={heroVariants}>
             <button className={styles.ctaPrimary}>
-              View the Manifesto
-            </button>
-            <button className={styles.ctaSecondary}>
-              See the Data
+              View the Guidelines
             </button>
           </motion.div>
 

@@ -1,5 +1,7 @@
 'use client';
 
+import { useState } from 'react';
+import { IntroCurtain } from '@/components/IntroCurtain';
 import { Banner } from '@/components/Banner';
 import { Navigation } from '@/components/Navigation';
 import { Hero } from '@/components/Hero';
@@ -22,8 +24,12 @@ const sections = [
 ];
 
 export default function Home() {
+  const [introComplete, setIntroComplete] = useState(false);
+
   return (
     <>
+      <IntroCurtain onComplete={() => setIntroComplete(true)} />
+
       <Banner />
       <Navigation sections={sections} />
 
@@ -31,10 +37,10 @@ export default function Home() {
         {/* Hero Section */}
         <Section id="hero" fullHeight>
           <Hero
-            title="Build Real Chips"
-            subtitle="RealFab.org"
-            description="The semiconductor industry has centralized fabrication into mega-fabs with hundreds of process steps, massive material waste, and monopolistic control. It's time for a revolution in how we make things."
+            title="Real Fab Starts Here"
+            description="Better technology begins with accessible fabrication—not gatekept mega-fabs. The new paradigm for semiconductor manufacturing defines real chips as locally-made, additive-manufactured, and democratically accessible, placing them back at the center of innovation."
             videoUrl="/videos/announcement-placeholder.mp4"
+            showIntro={!introComplete}
           />
         </Section>
 

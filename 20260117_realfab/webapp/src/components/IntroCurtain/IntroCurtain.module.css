@@ -1,0 +1,80 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100000;
+  background-color: #104f35; /* Deep Forest Green */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  will-change: transform;
+  overflow: hidden;
+}
+
+.itemsContainer {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+}
+
+.item1,
+.item2,
+.item3 {
+  position: absolute;
+  will-change: transform;
+  /* Position from center of viewport */
+  left: 50%;
+  top: 50%;
+}
+
+.item1 {
+  width: max(200px, 24vw);
+  height: max(200px, 24vw);
+  z-index: 3;
+  /* Center the item itself */
+  margin-left: calc(max(200px, 24vw) / -2);
+  margin-top: calc(max(200px, 24vw) / -2);
+}
+
+.item2 {
+  width: max(220px, 28vw);
+  height: max(220px, 28vw);
+  z-index: 2;
+  /* Center the item itself */
+  margin-left: calc(max(220px, 28vw) / -2);
+  margin-top: calc(max(220px, 28vw) / -2);
+}
+
+.item3 {
+  width: max(200px, 24vw);
+  height: max(200px, 24vw);
+  z-index: 1;
+  /* Center the item itself */
+  margin-left: calc(max(200px, 24vw) / -2);
+  margin-top: calc(max(200px, 24vw) / -2);
+}
+
+.image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.3));
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .item1 {
+    width: max(150px, 20vw);
+    height: max(150px, 20vw);
+  }
+
+  .item2 {
+    width: max(170px, 24vw);
+    height: max(170px, 24vw);
+  }
+
+  .item3 {
+    width: max(150px, 20vw);
+    height: max(150px, 20vw);
+  }
+}
+

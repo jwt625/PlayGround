@@ -78,13 +78,6 @@ export function PyramidItem({ item, scrollYProgress, onHover, isHovered }: Pyram
         scale,
         y,
       }}
-      onMouseEnter={() => onHover(item.id)}
-      onMouseLeave={() => onHover(null)}
-      whileHover={{
-        scale: 1.15,
-        zIndex: 100,
-      }}
-      transition={springs.hover}
     >
       <div className={styles.imageContainer}>
         <Image
@@ -95,17 +88,6 @@ export function PyramidItem({ item, scrollYProgress, onHover, isHovered }: Pyram
           className={styles.image}
         />
       </div>
-
-      {/* Tooltip */}
-      <motion.div
-        className={styles.tooltip}
-        initial={{ opacity: 0, y: 10 }}
-        animate={isHovered ? { opacity: 1, y: 0 } : { opacity: 0, y: 10 }}
-        transition={springs.springB}
-      >
-        <div className={styles.tooltipName}>{item.name}</div>
-        <div className={styles.tooltipDescription}>{item.description}</div>
-      </motion.div>
     </motion.div>
   );
 }

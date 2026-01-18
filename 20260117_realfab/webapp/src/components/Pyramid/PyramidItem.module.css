@@ -1,9 +1,8 @@
 /* Absolutely positioned item */
 .item {
   position: absolute;
-  cursor: pointer;
   will-change: transform, opacity;
-  pointer-events: auto;
+  pointer-events: none;
 }
 
 .imageContainer {
@@ -16,54 +15,13 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: transform var(--duration-base) var(--ease-out);
   overflow: visible;
-}
-
-.item:hover .imageContainer {
-  transform: scale(1.15);
-  filter: drop-shadow(0 8px 20px rgba(0, 0, 0, 0.25));
 }
 
 .image {
   object-fit: contain;
   width: 100%;
   height: 100%;
-}
-
-.tooltip {
-  position: absolute;
-  bottom: calc(100% + var(--spacing-2));
-  left: 50%;
-  transform: translateX(-50%);
-  background-color: rgba(0, 0, 0, 0.95);
-  backdrop-filter: blur(8px);
-  padding: var(--spacing-3) var(--spacing-4);
-  border-radius: var(--radius-md);
-  white-space: nowrap;
-  pointer-events: none;
-  z-index: 100;
-  box-shadow: var(--shadow-xl);
-}
-
-.tooltipName {
-  font-size: var(--text-sm);
-  font-weight: var(--font-weight-semibold);
-  color: var(--color-white);
-  margin-bottom: var(--spacing-1);
-}
-
-.tooltipDescription {
-  font-size: var(--text-xs);
-  color: rgba(255, 255, 255, 0.7);
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-  .tooltip {
-    white-space: normal;
-    max-width: 200px;
-  }
 }
 
 /* Reduced motion */
