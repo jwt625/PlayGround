@@ -80,8 +80,14 @@ def get_dominant_green(samples):
     return tuple(median_color)
 
 
-def remove_isolated_pixels(img_rgba):
-    """Remove pixels not connected to the largest blob (main object)."""
+def remove_isolated_pixels(img_rgba, keep_multiple=False):
+    """Remove pixels not connected to the main object(s).
+
+    Args:
+        img_rgba: RGBA PIL Image
+        keep_multiple: If True, keep all objects that overlap with the middle 50% of the image.
+                      If False, keep only the largest connected component.
+    """
     data = np.array(img_rgba)
     alpha = data[:, :, 3]
 
@@ -95,27 +101,71 @@ def remove_isolated_pixels(img_rgba):
         print("No objects found in image")
         return img_rgba
 
-    # Find the largest connected component
-    component_sizes = ndimage.sum(binary_mask, labeled, range(num_features + 1))
-    largest_component = np.argmax(component_sizes[1:]) + 1  # Skip background (0)
+    if keep_multiple:
+        # Keep all objects that overlap with the middle 50% of the image
+        height, width = alpha.shape
 
-    # Create mask for largest component only
-    main_object_mask = labeled == largest_component
+        # Define middle region (middle 50% horizontally and vertically)
+        middle_x_start = width // 4
+        middle_x_end = 3 * width // 4
+        middle_y_start = height // 4
+        middle_y_end = 3 * height // 4
 
-    # Count isolated pixels to be removed
-    isolated_pixels = np.sum(binary_mask & ~main_object_mask)
+        # Create mask for middle region
+        middle_region = np.zeros_like(binary_mask, dtype=bool)
+        middle_region[middle_y_start:middle_y_end, middle_x_start:middle_x_end] = True
 
-    if isolated_pixels > 0:
-        print(f"Removing {isolated_pixels:,} isolated pixels ({num_features - 1} small blobs)")
+        # Find which components overlap with the middle region
+        components_to_keep = set()
+        for component_id in range(1, num_features + 1):
+            component_mask = labeled == component_id
+            if np.any(component_mask & middle_region):
+                components_to_keep.add(component_id)
 
-        # Set alpha to 0 for all pixels not in main object
-        alpha[~main_object_mask] = 0
-        data[:, :, 3] = alpha
+        # Create mask for all components to keep
+        main_object_mask = np.zeros_like(binary_mask, dtype=bool)
+        for component_id in components_to_keep:
+            main_object_mask |= (labeled == component_id)
 
-        return Image.fromarray(data, 'RGBA')
+        # Count isolated pixels to be removed
+        isolated_pixels = np.sum(binary_mask & ~main_object_mask)
+
+        if isolated_pixels > 0:
+            kept_components = len(components_to_keep)
+            removed_components = num_features - kept_components
+            print(f"Removing {isolated_pixels:,} isolated pixels ({removed_components} small blobs)")
+            print(f"Keeping {kept_components} objects overlapping with center region")
+
+            # Set alpha to 0 for all pixels not in kept objects
+            alpha[~main_object_mask] = 0
+            data[:, :, 3] = alpha
+
+            return Image.fromarray(data, 'RGBA')
+        else:
+            print(f"Keeping all {num_features} objects (all overlap with center)")
+            return img_rgba
     else:
-        print("No isolated pixels found")
-        return img_rgba
+        # Original behavior: keep only the largest connected component
+        component_sizes = ndimage.sum(binary_mask, labeled, range(num_features + 1))
+        largest_component = np.argmax(component_sizes[1:]) + 1  # Skip background (0)
+
+        # Create mask for largest component only
+        main_object_mask = labeled == largest_component
+
+        # Count isolated pixels to be removed
+        isolated_pixels = np.sum(binary_mask & ~main_object_mask)
+
+        if isolated_pixels > 0:
+            print(f"Removing {isolated_pixels:,} isolated pixels ({num_features - 1} small blobs)")
+
+            # Set alpha to 0 for all pixels not in main object
+            alpha[~main_object_mask] = 0
+            data[:, :, 3] = alpha
+
+            return Image.fromarray(data, 'RGBA')
+        else:
+            print("No isolated pixels found")
+            return img_rgba
 
 
 def remove_green_background(img, target_green, tolerance=50, aggressive=True):
@@ -215,7 +265,7 @@ def inspect_vertical_cutline(img, output_path):
     print("-" * 60)
 
 
-def process_image(input_path, output_path, crop_center_third=False, inspect=False):
+def process_image(input_path, output_path, crop_center_third=False, inspect=False, keep_multiple=False):
     """Process a single image."""
     print(f"\nProcessing: {input_path}")
 
@@ -250,7 +300,7 @@ def process_image(input_path, output_path, crop_center_third=False, inspect=Fals
 
     # Step 5: Remove isolated pixels
     print("Removing isolated pixels...")
-    img_clean = remove_isolated_pixels(img_transparent)
+    img_clean = remove_isolated_pixels(img_transparent, keep_multiple=keep_multiple)
 
     # Step 6: Save as WebP
     output_path = Path(output_path)
@@ -262,18 +312,20 @@ def process_image(input_path, output_path, crop_center_third=False, inspect=Fals
 
 if __name__ == '__main__':
     if len(sys.argv) < 3:
-        print("Usage: python process_asset.py <input_image> <output_image.webp> [--crop] [--inspect]")
+        print("Usage: python process_asset.py <input_image> <output_image.webp> [--crop] [--inspect] [--keep-multiple]")
         print("\nExample:")
         print("  python process_asset.py assets/raw/MetalPowerContainer.png assets/eggs.webp")
-        print("  python process_asset.py input.png output.webp --crop     # Crop to center third")
-        print("  python process_asset.py input.png output.webp --inspect  # Show pixel inspection")
+        print("  python process_asset.py input.png output.webp --crop           # Crop to center third")
+        print("  python process_asset.py input.png output.webp --inspect        # Show pixel inspection")
+        print("  python process_asset.py input.png output.webp --keep-multiple  # Keep multiple objects in center")
         sys.exit(1)
 
     input_file = sys.argv[1]
     output_file = sys.argv[2]
     crop = '--crop' in sys.argv
     inspect = '--inspect' in sys.argv
+    keep_multiple = '--keep-multiple' in sys.argv
 
-    process_image(input_file, output_file, crop_center_third=crop, inspect=inspect)
+    process_image(input_file, output_file, crop_center_third=crop, inspect=inspect, keep_multiple=keep_multiple)
     print("\nDone!")
 

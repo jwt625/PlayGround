@@ -87,73 +87,67 @@ bash -c 'source .venv/bin/activate && python process_asset.py assets/raw/SolderP
 
 ## HIGH Priority (21 items) - Generate First
 
-**Status: 16/21 Complete (76%)**
+### Top Tier - Additive Core (13 items)
+- [x] 1. LPBF Metal Printer (steak) → `lpbf-metal-printer.webp` ✓
+- [x] 3. TPP System (salmon) → `tpp-system.webp` ✓
+- [x] 5. Direct-Write Tool (chicken) → `direct-write-tool.webp` ✓
+- [x] 6. Metal Powder Container (eggs) → `metal-powder.webp` ✓
+- [x] 7. Filament Spools (canned-tuna) → `filament-spools.webp` ✓
+- [x] 8. Photoresist Bottle (milk) → `photoresist.webp` ✓
+- [x] 10. Resin Vat (yogurt) → `resin-vat.webp` ✓
+- [x] 12. DI Water Bottle (olive-oil) → `di-water.webp` ✓
+- [x] 13. Silicon Boule (avocado) → `silicon-boule.webp` ✓
 
-### Top Tier - Additive Core (13 items) - 9/13 Complete
-- [x] 1. LPBF Metal Printer (steak) → `lpbf-metal-printer.webp` ✓ (587K)
-- [x] 3. TPP System (salmon) → `tpp-system.webp` ✓ (422K)
-- [x] 5. Direct-Write Tool (chicken) → `direct-write-tool.webp` ✓ (669K)
-- [x] 6. Metal Powder Container (eggs) → `metal-powder.webp` ✓ (895K)
-- [x] 7. Filament Spools (canned-tuna) → `filament-spools.webp` ✓ (682K)
-- [ ] 8. Photoresist Bottle (milk) → `photoresist.webp` (PNG exists, needs processing)
-- [x] 10. Resin Vat (yogurt) → `resin-vat.webp` ✓ (706K)
-- [x] 12. DI Water Bottle (olive-oil) → `di-water.webp` ✓ (378K)
-- [x] 13. Silicon Boule (avocado) → `silicon-boule.webp` ✓ (576K)
-- [ ] 2. SLM Machine (ground-beef) → `slm-machine.webp` (MISSING - need to generate)
-- [ ] 4. Nanoscribe Tool (shrimp) → `nanoscribe-tool.webp` (MISSING - need to generate)
-- [ ] 9. Aerosol Jet Printer (cheese) → `aerosol-jet-printer.webp` (MISSING - need to generate)
-- [ ] 11. Conductive Ink (butter) → `conductive-ink.webp` (MISSING - need to generate)
-
-### Middle Tier - Local & Accessible (8 items) - 7/8 Complete
-- [x] 18. Desktop PCB Mill (broccoli) → `desktop-pcb-mill.webp` ✓ (527K)
-- [x] 19. Benchtop SEM (carrots) → `benchtop-sem.webp` ✓ (203K)
-- [x] 20. Reflow Oven (lettuce) → `reflow-oven.webp` ✓ (419K)
-- [x] 21. Pick-and-Place (tomatoes) → `pick-and-place.webp` ✓ (573K)
-- [x] 22. Oscilloscope (apples) → `oscilloscope.webp` ✓ (722K)
-- [x] 25. Multimeter (bananas) → `multimeter.webp` ✓ (379K)
-- [x] 27. Soldering Station (strawberry) → `soldering-station.webp` ✓ (364K)
-- [x] 14. Solder Paste Syringe (almond) → `solder-paste.webp` ✓ (170K)
+### Middle Tier - Local & Accessible (8 items)
+- [x] 18. Desktop PCB Mill (broccoli) → `desktop-pcb-mill.webp` ✓
+- [x] 19. Benchtop SEM (carrots) → `benchtop-sem.webp` ✓
+- [x] 20. Reflow Oven (lettuce) → `reflow-oven.webp` ✓
+- [x] 21. Pick-and-Place (tomatoes) → `pick-and-place.webp` ✓
+- [x] 22. Oscilloscope (apples) → `oscilloscope.webp` ✓
+- [x] 25. Multimeter (bananas) → `multimeter.webp` ✓
+- [x] 27. Soldering Station (strawberry) → `soldering-station.webp` ✓
+- [x] 14. Solder Paste Syringe (almond) → `solder-paste.webp` ✓
 
 ### Bottom Tier - Big Fab (3 items)
-- [ ] 35. ASML EUV Machine (bread) → `asml-euv.webp`
-- [ ] 36. TSMC Fab Exterior (bowl-rice-beans) → `tsmc-fab-exterior.webp`
-- [ ] 37. Cleanroom Worker (bowl-oats) → `cleanroom-worker.webp`
+- [x] 35. ASML EUV Machine (bread) → `asml-euv.webp` ✓
+- [x] 36. TSMC Fab Exterior (bowl-rice-beans) → `tsmc-fab-exterior.webp` ✓
+- [x] 37. Cleanroom Worker (bowl-oats) → `cleanroom-worker.webp` ✓
 
 ---
 
 ## MEDIUM Priority (12 items) - Generate Second
 
-### Top Tier (6 items)
-- [ ] 2. SLM Machine (ground-beef) → `slm-machine.webp`
-- [ ] 4. Nanoscribe Tool (shrimp) → `nanoscribe-tool.webp`
-- [ ] 9. Aerosol Jet Printer (cheese) → `aerosol-jet-printer.webp`
-- [ ] 11. Conductive Ink (butter) → `conductive-ink.webp`
-- [ ] 17. SMD Components (peanuts) → `smd-components.webp`
+### Top Tier (5 items)
+- [x] 2. SLM Machine (ground-beef) → `slm-machine.webp` ✓
+- [x] 4. Nanoscribe Tool (shrimp) → `nanoscribe-tool.webp` ✓
+- [x] 9. Aerosol Jet Printer (cheese) → `aerosol-jet-printer.webp` ✓
+- [x] 11. Conductive Ink (butter) → `conductive-ink.webp` ✓
+- [x] 17. SMD Components (peanuts) → `smd-components.webp` ✓
 
 ### Middle Tier (6 items)
-- [ ] 23. Function Generator (cut-apple) → `function-generator.webp`
-- [ ] 24. Power Supply (oranges) → `power-supply.webp`
-- [ ] 26. Logic Analyzer (grapes) → `logic-analyzer.webp`
-- [ ] 28. Hot Air Rework (strawberry-right) → `hot-air-rework.webp`
-- [ ] 31. 3D Printer FDM (butternut) → `3d-printer-fdm.webp`
-- [ ] 32. Laser Cutter (potato) → `laser-cutter.webp`
+- [x] 23. Function Generator (cut-apple) → `function-generator.webp` ✓
+- [x] 24. Power Supply (oranges) → `power-supply.webp` ✓
+- [x] 26. Logic Analyzer (grapes) → `logic-analyzer.webp` ✓
+- [x] 28. Hot Air Rework (strawberry-right) → `hot-air-rework.webp` ✓
+- [x] 31. 3D Printer FDM (butternut) → `fdm-3d-printer.webp` ✓
+- [x] 32. Laser Cutter (potato) → `laser-cutter.webp` ✓
 
 ### Bottom Tier (1 item)
-- [ ] 38. Wafer Fab Interior (oats) → `wafer-fab-interior.webp`
+- [x] 38. Wafer Fab Interior (oats) → `wafer-fab-interior.webp` ✓
 
 ---
 
 ## LOW Priority (5 items) - Generate Last or Simplify
 
 ### Top Tier (2 items)
-- [ ] 15. Copper Wire Spool (walnut-kernel) → `copper-wire-spool.webp`
-- [ ] 16. Gold Wire Spool (walnut-shelled) → `gold-wire-spool.webp`
+- [x] 15. Copper Wire Spool (walnut-kernel) → `copper-wire-spool.webp` ✓
+- [x] 16. Gold Wire Spool (walnut-shelled) → `gold-wire-spool.webp` ✓
 
 ### Middle Tier (4 items)
-- [ ] 29. Tweezers Set (blueberry) → `tweezers-set.webp`
-- [ ] 30. Hand Tools Set (blueberries) → `hand-tools-set.webp`
-- [ ] 33. Fume Extractor (green-beans) → `fume-extractor.webp`
-- [ ] 34. Component Storage (frozen-peas) → `component-storage.webp`
+- [x] 29. Tweezers Set (blueberry) → `tweezers-set.webp` ✓
+- [x] 30. Hand Tools Set (blueberries) → `hand-tools-set.webp` ✓
+- [x] 33. Fume Extractor (green-beans) → `fume-extractor.webp` ✓
+- [x] 34. Component Storage (frozen-peas) → `component-storage.webp` ✓
 
 ---
 
@@ -197,25 +191,15 @@ This makes the assets self-documenting and avoids confusion. The food item names
 ---
 
 ## Quick Stats
-- **HIGH**: 21 assets (55%) - 5 completed, 16 remaining
-- **MEDIUM**: 12 assets (32%) - 0 completed, 12 remaining
-- **LOW**: 6 assets (16%) - 0 completed, 6 remaining
-- **TOTAL**: 38 assets - 5 completed (13%), 33 remaining (87%)
+- **HIGH**: 21 assets (55%) - 21 completed (100%)
+- **MEDIUM**: 12 assets (32%) - 12 completed (100%)
+- **LOW**: 5 assets (13%) - 5 completed (100%)
+- **TOTAL**: 38 assets - 38 completed (100%)
 
-**Minimum Viable Product**: Generate all 21 HIGH priority items first for functional pyramid section.
+**Status**: All pyramid assets complete and processed.
 
-**Next Batch Recommendation**: Continue with HIGH priority items:
-- LPBF Metal Printer (steak)
-- TPP System (salmon)
-- Direct-Write Tool (chicken)
-- Desktop PCB Mill (broccoli)
-- Benchtop SEM (carrots)
-- Reflow Oven (lettuce)
-- Pick-and-Place (tomatoes)
-- Oscilloscope (apples)
-- Multimeter (bananas)
-- Soldering Station (strawberry)
-- ASML EUV Machine (bread)
-- TSMC Fab Exterior (bowl-rice-beans)
-- Cleanroom Worker (bowl-oats)
+**Processing Notes**:
+- Assets with multiple objects (hand-tools-set, tweezers-set) processed with `--keep-multiple` flag
+- Script modified to preserve objects overlapping with center 50% of image
+- All assets converted to WebP with transparent backgrounds
 
