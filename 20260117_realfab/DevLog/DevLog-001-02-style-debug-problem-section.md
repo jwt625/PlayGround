@@ -325,18 +325,51 @@ const { scrollYProgress } = useScroll({
 
 ## Reference Alignment Checklist
 
-- [ ] Section title "The State of Our Fabs" persistent at top-left
-- [ ] 4-state scroll sequence with sticky container
-- [ ] Main canvas does not scroll (sticky positioning)
-- [ ] Text fades out/in on state transitions
-- [ ] Red blocks slide from bottom-right
-- [ ] Numbers positioned at top-left of blocks
-- [ ] Rolling number animations with spring physics
-- [ ] Progressive block sizing (400px → 600px → 700px height)
-- [ ] Layered z-index stacking for blocks (stepped chart effect)
-- [ ] Typography matches reference (font size, weight, spacing)
-- [ ] Dark background (#0A0505 or #0F0A0A) with white text
-- [ ] Red color palette with 3 variations
-- [ ] Highlighted phrases in red accent color
-- [ ] Smooth scroll-linked animations (no jumps)
+- [x] Section title "The State of Our Fabs" persistent at top-left (grey #888888)
+- [x] 5-state scroll sequence with sticky container
+- [x] Main canvas does not scroll (sticky positioning)
+- [x] Text fades out/in on state transitions (non-overlapping, with vertical movement)
+- [x] Typography matches reference (font size, weight, spacing)
+- [x] Dark background (#0A0505) with white text
+- [x] Highlighted phrases in red accent color
+- [x] Consistent font sizes across all text states
+- [x] Text positioned ~15vh from top with proper spacing
+- [x] Red blocks slide from bottom-right (diagonal entrance with x and y transforms)
+- [x] Numbers positioned at top-left of blocks
+- [x] Rolling number animations with spring physics (useSpring with useTransform)
+- [x] Progressive block sizing (400x400, 500x570, 600x740, 700x910)
+- [x] Layered z-index stacking for blocks (30, 20, 10, 5)
+- [x] Red color palette with 4 variations (#D62718, #E33224, #C41E1A, #B01810)
+- [x] Tooltip on "99%" with source note
+- [x] Text content takes left 75% width
+- [ ] Exit animation - NEEDS WORK
 - [ ] Mobile responsive with adjusted font sizes
+
+## Implementation Progress
+
+### Completed
+- Sticky scroll container (400vh) with 5 states
+- Section title "The State of Our Fabs" in grey (#888888)
+- 5 statistics (updated "500+" to "1,000+"):
+  1. "Our industry is broken. The data is clear."
+  2. "3 companies control 90%+ of advanced chip manufacturing"
+  3. "1,000+ process steps in modern SOTA semiconductor fabrication"
+  4. "99% of materials wasted in subtractive processes"
+  5. "$20B+ cost to build a single leading-edge fab"
+- Non-overlapping text transitions with vertical movement (fade in moves up, fade out moves down)
+- Dark background (#0A0505) with white text and red highlights (#D62718)
+- 2-column grid layout (48% text left, 52% graphics right)
+- Text content width limited to 75%
+- Red blocks with diagonal slide-in animation (x and y transforms from 100 to 0)
+- Spring-based number counting animations
+- Tooltip on "99%" claim: "Ratio of total chemical/gas input mass to final chip mass. Different processing steps can vary."
+- Tooltip styling: dark background, drop shadow, border, proper hover area
+
+### In Progress
+- Exit animation sequence:
+  - Buffer zone added (0.88-0.94) so viewer stays on state 5 longer
+  - Text fades out first (0.94-0.95)
+  - Numbers fade out (0.95-0.96)
+  - Blocks should expand to fill canvas (0.96-1.0), back to front with stagger
+  - Z-index elevation for blocks during exit (above text container)
+  - Current issue: blocks not expanding correctly to cover full canvas; expansion logic needs rework (should move top-left corners toward canvas origin while growing width/height)

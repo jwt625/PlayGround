@@ -25,11 +25,11 @@ const STATS = [
   },
   {
     id: 3,
-    heading: '500+ process steps in modern SOTA ',
+    heading: '1,000+ process steps in modern SOTA ',
     highlight: 'semiconductor fabrication',
-    number: 500,
+    number: 1000,
     suffix: '+',
-    blockSize: { width: 400, height: 600 },
+    blockSize: { width: 500, height: 570 },
     color: '#E33224',
   },
   {
@@ -38,7 +38,7 @@ const STATS = [
     highlight: 'subtractive processes',
     number: 99,
     suffix: '%',
-    blockSize: { width: 500, height: 700 },
+    blockSize: { width: 600, height: 740 },
     color: '#C41E1A',
   },
   {
@@ -47,7 +47,7 @@ const STATS = [
     highlight: 'single leading-edge fab',
     number: 20,
     suffix: 'B+',
-    blockSize: { width: 600, height: 800 },
+    blockSize: { width: 700, height: 910 },
     color: '#B01810',
   },
 ];
@@ -60,53 +60,120 @@ export function Problem() {
     offset: ['start start', 'end end'],
   });
 
-  // State 1: 0.0 - 0.2
-  const state1Opacity = useTransform(scrollYProgress, [0, 0.15, 0.2], [1, 1, 0]);
+  // State 1: 0.0 - 0.2 (fade out at end)
+  const state1Opacity = useTransform(scrollYProgress, [0, 0.15, 0.18, 0.2], [1, 1, 0, 0]);
+  const state1Y = useTransform(scrollYProgress, [0, 0.15, 0.18, 0.2], [0, 0, -20, -40]);
 
-  // State 2: 0.2 - 0.4
-  const state2Opacity = useTransform(scrollYProgress, [0.15, 0.2, 0.35, 0.4], [0, 1, 1, 0]);
-  const block1Y = useTransform(scrollYProgress, [0.2, 0.3], [100, 0]);
+  // State 2: 0.2 - 0.4 (fade in after state 1 fades out, fade out at end)
+  const state2Opacity = useTransform(scrollYProgress, [0.2, 0.22, 0.38, 0.4], [0, 1, 1, 0]);
+  const state2Y = useTransform(scrollYProgress, [0.2, 0.22, 0.38, 0.4], [20, 0, 0, -20]);
   const block1Opacity = useTransform(scrollYProgress, [0.2, 0.28], [0, 1]);
 
-  // State 3: 0.4 - 0.6
-  const state3Opacity = useTransform(scrollYProgress, [0.35, 0.4, 0.55, 0.6], [0, 1, 1, 0]);
-  const block2Y = useTransform(scrollYProgress, [0.4, 0.5], [100, 0]);
+  // State 3: 0.4 - 0.6 (fade in after state 2 fades out, fade out at end)
+  const state3Opacity = useTransform(scrollYProgress, [0.4, 0.42, 0.58, 0.6], [0, 1, 1, 0]);
+  const state3Y = useTransform(scrollYProgress, [0.4, 0.42, 0.58, 0.6], [20, 0, 0, -20]);
   const block2Opacity = useTransform(scrollYProgress, [0.4, 0.48], [0, 1]);
 
-  // State 4: 0.6 - 0.8
-  const state4Opacity = useTransform(scrollYProgress, [0.55, 0.6, 0.75, 0.8], [0, 1, 1, 0]);
-  const block3Y = useTransform(scrollYProgress, [0.6, 0.7], [100, 0]);
+  // State 4: 0.6 - 0.8 (fade in after state 3 fades out, fade out at end)
+  const state4Opacity = useTransform(scrollYProgress, [0.6, 0.62, 0.78, 0.8], [0, 1, 1, 0]);
+  const state4Y = useTransform(scrollYProgress, [0.6, 0.62, 0.78, 0.8], [20, 0, 0, -20]);
   const block3Opacity = useTransform(scrollYProgress, [0.6, 0.68], [0, 1]);
 
-  // State 5: 0.8 - 1.0
-  const state5Opacity = useTransform(scrollYProgress, [0.75, 0.8, 1], [0, 1, 1]);
-  const block4Y = useTransform(scrollYProgress, [0.8, 0.9], [100, 0]);
+  // State 5: 0.8 - 0.88 (fade in after state 4 fades out, stays visible with buffer)
+  const state5Opacity = useTransform(scrollYProgress, [0.8, 0.82, 0.88, 1], [0, 1, 1, 1]);
+  const state5Y = useTransform(scrollYProgress, [0.8, 0.82, 0.88, 1], [20, 0, 0, 0]);
   const block4Opacity = useTransform(scrollYProgress, [0.8, 0.88], [0, 1]);
+
+  // Exit animation: 0.94 - 1.0 (with buffer from 0.88 - 0.94)
+  // Text fades out first: 0.94 - 0.95
+  const exitTextOpacity = useTransform(scrollYProgress, [0.94, 0.95], [1, 0]);
+
+  // Numbers fade out: 0.95 - 0.96
+  const numberOpacity = useTransform(scrollYProgress, [0.95, 0.96], [1, 0]);
+
+  // Blocks expand to fill canvas in sequence (back to front with stagger): 0.96 - 1.0
+  // Expansion: move top-left corner of each block toward canvas top-left
+
+  // Block 1 (top layer, z-index 30) - entrance, then expand last
+  const block1FinalX = useTransform(scrollYProgress,
+    [0.2, 0.3, 0.99, 1.0],
+    [100, 0, 0, -100]  // Move left to cover canvas
+  );
+  const block1FinalY = useTransform(scrollYProgress,
+    [0.2, 0.3, 0.99, 1.0],
+    [100, 0, 0, -100]  // Move up to cover canvas
+  );
+  const block1Width = useTransform(scrollYProgress, [0.99, 1.0], [STATS[1].blockSize!.width, 2000]);
+  const block1Height = useTransform(scrollYProgress, [0.99, 1.0], [STATS[1].blockSize!.height, 2000]);
+  const block1ZIndex = useTransform(scrollYProgress, [0.96, 0.961], [30, 230]);
+
+  // Block 2 (z-index 20) - expand third
+  const block2FinalX = useTransform(scrollYProgress,
+    [0.4, 0.5, 0.98, 1.0],
+    [100, 0, 0, -100]
+  );
+  const block2FinalY = useTransform(scrollYProgress,
+    [0.4, 0.5, 0.98, 1.0],
+    [100, 0, 0, -100]
+  );
+  const block2Width = useTransform(scrollYProgress, [0.98, 1.0], [STATS[2].blockSize!.width, 2000]);
+  const block2Height = useTransform(scrollYProgress, [0.98, 1.0], [STATS[2].blockSize!.height, 2000]);
+  const block2ZIndex = useTransform(scrollYProgress, [0.96, 0.961], [20, 220]);
+
+  // Block 3 (z-index 10) - expand second
+  const block3FinalX = useTransform(scrollYProgress,
+    [0.6, 0.7, 0.97, 1.0],
+    [100, 0, 0, -100]
+  );
+  const block3FinalY = useTransform(scrollYProgress,
+    [0.6, 0.7, 0.97, 1.0],
+    [100, 0, 0, -100]
+  );
+  const block3Width = useTransform(scrollYProgress, [0.97, 1.0], [STATS[3].blockSize!.width, 2000]);
+  const block3Height = useTransform(scrollYProgress, [0.97, 1.0], [STATS[3].blockSize!.height, 2000]);
+  const block3ZIndex = useTransform(scrollYProgress, [0.96, 0.961], [10, 210]);
+
+  // Block 4 (bottom layer, z-index 5) - expand first
+  const block4FinalX = useTransform(scrollYProgress,
+    [0.8, 0.9, 0.96, 1.0],
+    [100, 0, 0, -100]
+  );
+  const block4FinalY = useTransform(scrollYProgress,
+    [0.8, 0.9, 0.96, 1.0],
+    [100, 0, 0, -100]
+  );
+  const block4Width = useTransform(scrollYProgress, [0.96, 1.0], [STATS[4].blockSize!.width, 2000]);
+  const block4Height = useTransform(scrollYProgress, [0.96, 1.0], [STATS[4].blockSize!.height, 2000]);
+  const block4ZIndex = useTransform(scrollYProgress, [0.96, 0.961], [5, 205]);
 
   // Number counters with spring physics
   const number1Progress = useTransform(scrollYProgress, [0.2, 0.3], [0, 1]);
-  const number1 = useSpring(useTransform(number1Progress, [0, 1], [0, STATS[1].number!]), {
+  const number1Spring = useSpring(useTransform(number1Progress, [0, 1], [0, STATS[1].number!]), {
     stiffness: 50,
     damping: 30,
   });
+  const number1 = useTransform(number1Spring, (latest) => Math.round(latest));
 
   const number2Progress = useTransform(scrollYProgress, [0.4, 0.5], [0, 1]);
-  const number2 = useSpring(useTransform(number2Progress, [0, 1], [0, STATS[2].number!]), {
+  const number2Spring = useSpring(useTransform(number2Progress, [0, 1], [0, STATS[2].number!]), {
     stiffness: 50,
     damping: 30,
   });
+  const number2 = useTransform(number2Spring, (latest) => Math.round(latest));
 
   const number3Progress = useTransform(scrollYProgress, [0.6, 0.7], [0, 1]);
-  const number3 = useSpring(useTransform(number3Progress, [0, 1], [0, STATS[3].number!]), {
+  const number3Spring = useSpring(useTransform(number3Progress, [0, 1], [0, STATS[3].number!]), {
     stiffness: 50,
     damping: 30,
   });
+  const number3 = useTransform(number3Spring, (latest) => Math.round(latest));
 
   const number4Progress = useTransform(scrollYProgress, [0.8, 0.9], [0, 1]);
-  const number4 = useSpring(useTransform(number4Progress, [0, 1], [0, STATS[4].number!]), {
+  const number4Spring = useSpring(useTransform(number4Progress, [0, 1], [0, STATS[4].number!]), {
     stiffness: 50,
     damping: 30,
   });
+  const number4 = useTransform(number4Spring, (latest) => Math.round(latest));
 
   return (
     <div ref={containerRef} className={styles.scrollContainer}>
@@ -117,7 +184,7 @@ export function Problem() {
         {/* Left column - Text content */}
         <div className={styles.leftColumn}>
           {/* State 1 */}
-          <motion.div className={styles.stateText} style={{ opacity: state1Opacity }}>
+          <motion.div className={styles.stateText} style={{ opacity: state1Opacity, y: state1Y }}>
             <h2 className={styles.headingLarge}>
               {STATS[0].heading}
               <br />
@@ -126,7 +193,7 @@ export function Problem() {
           </motion.div>
 
           {/* State 2 */}
-          <motion.div className={styles.stateText} style={{ opacity: state2Opacity }}>
+          <motion.div className={styles.stateText} style={{ opacity: state2Opacity, y: state2Y }}>
             <h2 className={styles.headingMedium}>
               {STATS[1].heading}
               <span className={styles.redHighlight}>{STATS[1].highlight}</span>
@@ -134,7 +201,7 @@ export function Problem() {
           </motion.div>
 
           {/* State 3 */}
-          <motion.div className={styles.stateText} style={{ opacity: state3Opacity }}>
+          <motion.div className={styles.stateText} style={{ opacity: state3Opacity, y: state3Y }}>
             <h2 className={styles.headingMedium}>
               {STATS[2].heading}
               <span className={styles.redHighlight}>{STATS[2].highlight}</span>
@@ -142,15 +209,29 @@ export function Problem() {
           </motion.div>
 
           {/* State 4 */}
-          <motion.div className={styles.stateText} style={{ opacity: state4Opacity }}>
+          <motion.div className={styles.stateText} style={{ opacity: state4Opacity, y: state4Y }}>
             <h2 className={styles.headingMedium}>
-              {STATS[3].heading}
+              <span className={styles.tooltipWrapper}>
+                <span className={styles.numberHighlight}>99%</span>
+                <span className={styles.tooltip}>
+                  Ratio of total chemical/gas input mass to final chip mass. Different processing steps can vary.
+                </span>
+              </span>
+              {' of materials wasted in '}
               <span className={styles.redHighlight}>{STATS[3].highlight}</span>
             </h2>
           </motion.div>
 
           {/* State 5 */}
-          <motion.div className={styles.stateText} style={{ opacity: state5Opacity }}>
+          <motion.div
+            className={styles.stateText}
+            style={{
+              opacity: useTransform([state5Opacity, exitTextOpacity], ([s5, exit]) =>
+                Math.min(s5 as number, exit as number)
+              ),
+              y: state5Y
+            }}
+          >
             <h2 className={styles.headingMedium}>
               {STATS[4].heading}
               <span className={styles.redHighlight}>{STATS[4].highlight}</span>
@@ -164,33 +245,36 @@ export function Problem() {
           <motion.div
             className={styles.redBlock}
             style={{
-              y: block1Y,
+              x: block1FinalX,
+              y: block1FinalY,
               opacity: block1Opacity,
-              width: STATS[1].blockSize!.width,
-              height: STATS[1].blockSize!.height,
+              width: block1Width,
+              height: block1Height,
               backgroundColor: STATS[1].color,
-              zIndex: 30,
+              zIndex: block1ZIndex,
             }}
           >
-            <motion.div className={styles.blockNumber}>
-              {number1.get().toFixed(0)}
+            <motion.div className={styles.blockNumber} style={{ opacity: numberOpacity }}>
+              {number1}
             </motion.div>
           </motion.div>
 
-          {/* Block 2 - State 3 (500+ steps) */}
+          {/* Block 2 - State 3 (1000+ steps) */}
           <motion.div
             className={styles.redBlock}
             style={{
-              y: block2Y,
+              x: block2FinalX,
+              y: block2FinalY,
               opacity: block2Opacity,
-              width: STATS[2].blockSize!.width,
-              height: STATS[2].blockSize!.height,
+              width: block2Width,
+              height: block2Height,
               backgroundColor: STATS[2].color,
-              zIndex: 20,
+              zIndex: block2ZIndex,
             }}
           >
-            <motion.div className={styles.blockNumber}>
-              {Math.round(number2.get())}{STATS[2].suffix}
+            <motion.div className={styles.blockNumber} style={{ opacity: numberOpacity }}>
+              <motion.span>{number2}</motion.span>
+              {STATS[2].suffix}
             </motion.div>
           </motion.div>
 
@@ -198,16 +282,18 @@ export function Problem() {
           <motion.div
             className={styles.redBlock}
             style={{
-              y: block3Y,
+              x: block3FinalX,
+              y: block3FinalY,
               opacity: block3Opacity,
-              width: STATS[3].blockSize!.width,
-              height: STATS[3].blockSize!.height,
+              width: block3Width,
+              height: block3Height,
               backgroundColor: STATS[3].color,
-              zIndex: 10,
+              zIndex: block3ZIndex,
             }}
           >
-            <motion.div className={styles.blockNumber}>
-              {Math.round(number3.get())}{STATS[3].suffix}
+            <motion.div className={styles.blockNumber} style={{ opacity: numberOpacity }}>
+              <motion.span>{number3}</motion.span>
+              {STATS[3].suffix}
             </motion.div>
           </motion.div>
 
@@ -215,16 +301,18 @@ export function Problem() {
           <motion.div
             className={styles.redBlock}
             style={{
-              y: block4Y,
+              x: block4FinalX,
+              y: block4FinalY,
               opacity: block4Opacity,
-              width: STATS[4].blockSize!.width,
-              height: STATS[4].blockSize!.height,
+              width: block4Width,
+              height: block4Height,
               backgroundColor: STATS[4].color,
-              zIndex: 5,
+              zIndex: block4ZIndex,
             }}
           >
-            <motion.div className={styles.blockNumber}>
-              ${Math.round(number4.get())}{STATS[4].suffix}
+            <motion.div className={styles.blockNumber} style={{ opacity: numberOpacity }}>
+              $<motion.span>{number4}</motion.span>
+              {STATS[4].suffix}
             </motion.div>
           </motion.div>
         </div>
