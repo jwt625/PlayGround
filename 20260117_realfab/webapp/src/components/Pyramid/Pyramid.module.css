@@ -54,8 +54,8 @@
 /* Pyramid Container - absolute positioning system */
 .pyramidContainer {
   position: relative;
-  width: min(90vw, 800px);
-  aspect-ratio: 1.1 / 1;
+  width: min(85vw, 900px);
+  aspect-ratio: 1.2 / 1;
   margin: 0 auto;
 }
 
