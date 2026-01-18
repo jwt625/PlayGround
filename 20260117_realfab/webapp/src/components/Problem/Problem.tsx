@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import styles from './Problem.module.css';
 
@@ -20,7 +20,7 @@ const STATS = [
     highlight: 'advanced chip manufacturing',
     number: 3,
     suffix: '',
-    blockSize: { width: 400, height: 400 },
+    blockSize: { width: 280, height: 280 },
     color: '#D62718',
   },
   {
@@ -29,7 +29,7 @@ const STATS = [
     highlight: 'semiconductor fabrication',
     number: 1000,
     suffix: '+',
-    blockSize: { width: 500, height: 570 },
+    blockSize: { width: 350, height: 420 },
     color: '#E33224',
   },
   {
@@ -38,7 +38,7 @@ const STATS = [
     highlight: 'subtractive processes',
     number: 99,
     suffix: '%',
-    blockSize: { width: 600, height: 740 },
+    blockSize: { width: 420, height: 560 },
     color: '#C41E1A',
   },
   {
@@ -47,18 +47,33 @@ const STATS = [
     highlight: 'single leading-edge fab',
     number: 20,
     suffix: 'B+',
-    blockSize: { width: 700, height: 910 },
+    blockSize: { width: 490, height: 700 },
     color: '#B01810',
   },
 ];
 
 export function Problem() {
   const containerRef = useRef<HTMLDivElement>(null);
+  const [blockScale, setBlockScale] = useState(1);
 
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ['start start', 'end end'],
   });
+
+  // Read CSS variable for responsive block scaling
+  useEffect(() => {
+    const updateBlockScale = () => {
+      if (containerRef.current) {
+        const scale = getComputedStyle(containerRef.current).getPropertyValue('--block-scale');
+        setBlockScale(parseFloat(scale) || 1);
+      }
+    };
+
+    updateBlockScale();
+    window.addEventListener('resize', updateBlockScale);
+    return () => window.removeEventListener('resize', updateBlockScale);
+  }, []);
 
   // 6 equal stages: each gets 0.167 (1/6) of scroll progress
   // State 1: 0.0 - 0.167 | State 2: 0.167 - 0.333 | State 3: 0.333 - 0.5
@@ -101,29 +116,29 @@ export function Problem() {
   // Block 1 (top layer, z-index 30) - entrance slide
   const block1X = useTransform(scrollYProgress, [0.167, 0.25], [100, 0]);
   const block1Y = useTransform(scrollYProgress, [0.167, 0.25], [100, 0]);
-  const block1Width = useTransform(scrollYProgress, [0.96, 1.0], [STATS[1].blockSize!.width, 3000]);
-  const block1Height = useTransform(scrollYProgress, [0.96, 1.0], [STATS[1].blockSize!.height, 3000]);
+  const block1Width = useTransform(scrollYProgress, [0.96, 1.0], [STATS[1].blockSize!.width * blockScale, 3000]);
+  const block1Height = useTransform(scrollYProgress, [0.96, 1.0], [STATS[1].blockSize!.height * blockScale, 3000]);
   const block1ZIndex = useTransform(scrollYProgress, [0.87, 0.871], [30, 230]);
 
   // Block 2 (z-index 20)
   const block2X = useTransform(scrollYProgress, [0.333, 0.42], [100, 0]);
   const block2Y = useTransform(scrollYProgress, [0.333, 0.42], [100, 0]);
-  const block2Width = useTransform(scrollYProgress, [0.93, 1.0], [STATS[2].blockSize!.width, 3000]);
-  const block2Height = useTransform(scrollYProgress, [0.93, 1.0], [STATS[2].blockSize!.height, 3000]);
+  const block2Width = useTransform(scrollYProgress, [0.93, 1.0], [STATS[2].blockSize!.width * blockScale, 3000]);
+  const block2Height = useTransform(scrollYProgress, [0.93, 1.0], [STATS[2].blockSize!.height * blockScale, 3000]);
   const block2ZIndex = useTransform(scrollYProgress, [0.87, 0.871], [20, 220]);
 
   // Block 3 (z-index 10)
   const block3X = useTransform(scrollYProgress, [0.5, 0.58], [100, 0]);
   const block3Y = useTransform(scrollYProgress, [0.5, 0.58], [100, 0]);
-  const block3Width = useTransform(scrollYProgress, [0.90, 1.0], [STATS[3].blockSize!.width, 3000]);
-  const block3Height = useTransform(scrollYProgress, [0.90, 1.0], [STATS[3].blockSize!.height, 3000]);
+  const block3Width = useTransform(scrollYProgress, [0.90, 1.0], [STATS[3].blockSize!.width * blockScale, 3000]);
+  const block3Height = useTransform(scrollYProgress, [0.90, 1.0], [STATS[3].blockSize!.height * blockScale, 3000]);
   const block3ZIndex = useTransform(scrollYProgress, [0.87, 0.871], [10, 210]);
 
   // Block 4 (bottom layer, z-index 5) - expands first
   const block4X = useTransform(scrollYProgress, [0.667, 0.75], [100, 0]);
   const block4Y = useTransform(scrollYProgress, [0.667, 0.75], [100, 0]);
-  const block4Width = useTransform(scrollYProgress, [0.87, 1.0], [STATS[4].blockSize!.width, 3000]);
-  const block4Height = useTransform(scrollYProgress, [0.87, 1.0], [STATS[4].blockSize!.height, 3000]);
+  const block4Width = useTransform(scrollYProgress, [0.87, 1.0], [STATS[4].blockSize!.width * blockScale, 3000]);
+  const block4Height = useTransform(scrollYProgress, [0.87, 1.0], [STATS[4].blockSize!.height * blockScale, 3000]);
   const block4ZIndex = useTransform(scrollYProgress, [0.87, 0.871], [5, 205]);
 
   // Number counters - linear interpolation based on scroll progress

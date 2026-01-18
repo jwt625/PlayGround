@@ -375,3 +375,33 @@ const { scrollYProgress } = useScroll({
   - Appears after scrolling past hero section
   - White text with blended background (backdrop-filter blur + brightness)
   - Inactive sections collapse to dots, active section shows text
+
+## Bug Fixes
+
+### Mobile Responsive Issues (2026-01-18)
+
+**Bug 1: Red blocks too large on small screens**
+- Original block sizes (400×400 to 700×910px) dominated mobile viewports
+- CSS `transform: scale()` ineffective due to inline Framer Motion width/height styles
+- Solution: Implemented CSS custom property `--block-scale` with responsive breakpoints
+  - Desktop: 1.0, Tablet (≤1024px): 0.8, Mobile (≤768px): 0.65, Small (≤480px): 0.55
+  - JavaScript reads CSS variable via `getComputedStyle()` and applies to animation values
+  - Reduced base block sizes by 30%: 280×280, 350×420, 420×560, 490×700
+
+**Bug 2: Block numbers too small on mobile**
+- Font size didn't scale proportionally with block size reduction
+- Solution: Adjusted font-size clamp values and increased mobile sizes
+  - Desktop: `clamp(36px, 6vw, 96px)`
+  - Mobile (≤768px): `clamp(28px, 6vw, 64px)` with reduced padding
+
+**Bug 3: Numbers too close to previous block edge**
+- Default padding (`var(--spacing-6)`) too large for scaled blocks
+- Solution: Reduced padding on mobile breakpoints
+  - Mobile (≤768px): block `var(--spacing-4)`, number `var(--spacing-2)`
+  - Small (≤480px): block `var(--spacing-3)`, number `var(--spacing-1)`
+
+**Bug 4: Text shifting horizontally between phases**
+- Tablet/mobile CSS changed `.stateText` from `position: absolute` to `position: relative`
+- Caused text to stack in document flow instead of overlaying
+- Solution: Kept `position: absolute` on mobile, removed `left: 0` to respect parent padding
+  - Text now aligns with section title "The State of Our Fabs" at `var(--spacing-8)`

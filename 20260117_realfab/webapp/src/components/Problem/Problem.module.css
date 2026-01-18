@@ -3,6 +3,9 @@
   min-height: 800vh;
   background-color: #0A0505; /* Deep warm black */
   position: relative;
+
+  /* Block size scale factor - responsive */
+  --block-scale: 1;
 }
 
 /* Sticky container - stays in viewport while scrolling */
@@ -155,7 +158,7 @@
 
 /* Numbers on red blocks */
 .blockNumber {
-  font-size: clamp(44px, 8vw, 120px);
+  font-size: clamp(36px, 6vw, 96px);
   font-weight: 900;
   color: #000000;
   font-variant-numeric: tabular-nums;
@@ -165,6 +168,10 @@
 
 /* Responsive adjustments */
 @media (max-width: 1024px) {
+  .scrollContainer {
+    --block-scale: 0.8;
+  }
+
   .stickyContainer {
     grid-template-columns: 1fr;
     grid-template-rows: auto auto 1fr;
@@ -185,24 +192,20 @@
   }
 
   .stateText {
-    position: relative;
+    position: absolute;
     top: 0;
-    transform: none;
-  }
-
-  .redBlock {
-    transform: scale(0.7);
-    transform-origin: bottom right;
+    width: 90%;
   }
 
   .blockNumber {
-    font-size: clamp(32px, 6vw, 80px);
+    font-size: clamp(28px, 5vw, 72px);
   }
 }
 
 @media (max-width: 768px) {
   .scrollContainer {
     min-height: 300vh; /* Shorter on mobile */
+    --block-scale: 0.65;
   }
 
   .headingLarge {
@@ -218,11 +221,27 @@
   }
 
   .redBlock {
-    transform: scale(0.5);
+    padding: var(--spacing-4);
   }
 
   .blockNumber {
-    font-size: clamp(24px, 5vw, 60px);
+    font-size: clamp(28px, 6vw, 64px);
+    padding: var(--spacing-2);
+  }
+}
+
+@media (max-width: 480px) {
+  .scrollContainer {
+    --block-scale: 0.55;
+  }
+
+  .redBlock {
+    padding: var(--spacing-3);
+  }
+
+  .blockNumber {
+    font-size: clamp(24px, 7vw, 56px);
+    padding: var(--spacing-1);
   }
 }
 
