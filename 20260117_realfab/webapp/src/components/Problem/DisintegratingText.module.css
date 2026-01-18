@@ -1,0 +1,17 @@
+.container {
+  perspective: 1000px;
+}
+
+.char {
+  transform-origin: center center;
+  will-change: transform, opacity;
+  transform-style: preserve-3d;
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .char {
+    will-change: auto;
+  }
+}
+

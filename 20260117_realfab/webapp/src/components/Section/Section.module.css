@@ -1,0 +1,25 @@
+.section {
+  position: relative;
+  width: 100%;
+  padding: var(--spacing-20) 0;
+}
+
+.section.dark {
+  background-color: var(--color-dark);
+  color: var(--color-white);
+}
+
+.section.fullHeight {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* Mobile adjustments */
+@media (max-width: 768px) {
+  .section {
+    padding: var(--spacing-16) 0;
+  }
+}
+

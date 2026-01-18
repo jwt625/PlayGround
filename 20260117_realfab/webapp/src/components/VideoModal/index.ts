@@ -1,0 +1,2 @@
+export { VideoModal } from './VideoModal';
+

@@ -1,0 +1,36 @@
+.container {
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: var(--spacing-6);
+  padding-right: var(--spacing-6);
+}
+
+.size-sm {
+  max-width: var(--container-3xl);
+}
+
+.size-md {
+  max-width: var(--container-5xl);
+}
+
+.size-lg {
+  max-width: var(--container-6xl);
+}
+
+.size-xl {
+  max-width: var(--container-7xl);
+}
+
+.size-full {
+  max-width: 100%;
+}
+
+/* Mobile adjustments */
+@media (max-width: 768px) {
+  .container {
+    padding-left: var(--spacing-4);
+    padding-right: var(--spacing-4);
+  }
+}
+

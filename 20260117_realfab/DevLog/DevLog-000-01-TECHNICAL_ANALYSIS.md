@@ -691,3 +691,380 @@ src/
     globals.css
     variables.css
 ```
+
+
+## Additional visual description
+
+
+```markdown
+# RealFood.gov Technical Design Specification
+**Source Analysis:** Reverse-engineered from visual video data
+**Target:** Pixel-perfect replication of motion, layout, and physics
+
+---
+
+## 1. PYRAMID SECTION - ITEM POSITIONING
+
+**Grid Logic:**
+Virtual grid approx **12 columns x 10 rows**.
+Container Aspect Ratio: **1.2 : 1** (Width : Height).
+
+**Tier 1: Protein, Dairy & Healthy Fats (Top Left Wedge)**
+* **Z-Index Stack:** High (10–20).
+* **Item Coordinates (Top %, Left %):**
+    1.  **Whole Milk Carton:** Top: 15%, Left: 42% (Anchor). Z: 20.
+    2.  **Roast Chicken:** Top: 12%, Left: 28%. Z: 18.
+    3.  **Steak (Raw):** Top: 25%, Left: 15%. Z: 15.
+    4.  **Salmon Fillet:** Top: 38%, Left: 22%. Z: 16.
+    5.  **Eggs (Fried):** Top: 35%, Left: 10%. Z: 14.
+    6.  **Yogurt Cup:** Top: 30%, Left: 35%. Z: 17.
+    7.  **Olive Oil Bottle:** Top: 20%, Left: 50%. Z: 12.
+
+**Tier 2: Vegetables & Fruits (Top Right Wedge)**
+* **Z-Index Stack:** Medium (10–20).
+* **Item Coordinates (Top %, Right %):**
+    1.  **Broccoli:** Top: 15%, Right: 35%. Z: 18.
+    2.  **Frozen Peas Bag:** Top: 22%, Right: 25%. Z: 19.
+    3.  **Red Apple:** Top: 30%, Right: 40%. Z: 17.
+    4.  **Carrots:** Top: 25%, Right: 15%. Z: 15.
+    5.  **Banana Bunch:** Top: 38%, Right: 45%. Z: 16.
+    6.  **Lettuce Head:** Top: 35%, Right: 10%. Z: 14.
+
+**Tier 3: Whole Grains (Bottom Center Wedge)**
+* **Z-Index Stack:** Low (5–10).
+* **Item Coordinates (Top %, Left %):**
+    1.  **Sourdough Loaf:** Top: 55%, Left: 50% (Centered). Z: 10.
+    2.  **Oats Bowl:** Top: 65%, Left: 40%. Z: 9.
+    3.  **Brown Rice Bowl:** Top: 65%, Left: 60%. Z: 9.
+    4.  **Loose Grains:** Scattered Bottom 75–85%, Left 35–65%.
+
+---
+
+## 2. PYRAMID SECTION - SCROLL TIMELINE
+
+**Total Scroll Distance:** 300vh (approx 3000px).
+**Behavior:** Section Pinned (Sticky).
+
+**0% – 10% (Intro)**
+* **Background:** `#FDFBF7` (Cream).
+* **Title:** "The New Pyramid" scales `1.0` → `0.6`, translates to `top: 80px`.
+
+**10% – 30% (Stage 1: Proteins)**
+* **Label:** "Protein..." fades in (Left, `top: 30%`).
+* **Motion:** Items fly in from **Top-Left Offscreen** (`x: -50vw, y: -50vh`).
+* **Physics:** Spring (Stiffness: 150, Damping: 16).
+
+**30% – 60% (Stage 2: Veggies)**
+* **Label:** "Vegetables..." fades in (Right, `top: 30%`).
+* **Motion:** Items fly in from **Top-Right Offscreen** (`x: 50vw, y: -50vh`).
+
+**60% – 85% (Stage 3: Grains)**
+* **Label:** "Whole Grains" fades in (Bottom Center, `top: 80%`).
+* **Motion:** Items fly in from **Bottom Offscreen** (`y: 50vh`).
+
+**85% – 100% (Lockup)**
+* **Labels:** All fade out.
+* **Final Title:** "Eat Real Food" fades in.
+* **Interactive:** Tooltips enable (`pointer-events: auto`).
+
+---
+
+## 3. PYRAMID SECTION - VISUAL SPECS
+
+* **Container:** `max-width: 1400px`, `height: 100vh`.
+* **Item Hover:**
+    * Scale: `1.15`.
+    * Filter: `saturate(1.2)`.
+    * Z-Index: `100` (Bring to front).
+    * Cursor: `pointer`.
+* **Tooltip:**
+    * Style: White Pill, `padding: 8px 16px`.
+    * Shadow: `0 4px 20px rgba(0,0,0,0.15)`.
+    * Offset: `y: -16px` from item top.
+
+---
+
+## 4. HERO SECTION - PARALLAX ELEMENTS
+
+**Scroll Range:** 0px – 1000px.
+
+* **Broccoli (Foreground):**
+    * Start: `top: 20%, left: 25%`. Size: `18vw`.
+    * Speed: **1.5x**.
+    * Rotation: `-15deg` → `-5deg`.
+* **Milk Carton (Midground):**
+    * Start: `top: 35%, right: 20%`. Size: `14vw`.
+    * Speed: **1.2x**.
+    * Rotation: `10deg` → `15deg`.
+* **Steak (Background):**
+    * Start: `bottom: -10%, left: 10%`. Size: `20vw`.
+    * Speed: **1.1x**.
+* **Title Text:**
+    * Speed: **0.8x** (Slower than scroll).
+
+---
+
+## 5. HERO SECTION - LAYOUT
+
+* **Banner:** `height: 40px`, BG: `#EAE8E0`, Text: `12px` Uppercase.
+* **H1 Title:**
+    * Font Size: `clamp(3.5rem, 9vw, 8.5rem)`.
+    * Line Height: `0.9`.
+    * Tracking: `-0.04em`.
+    * Color: `#1A1A1A`.
+* **CTA Button:**
+    * Size: `H: 56px`, `P: 0 32px`.
+    * Color: Lime `#D4E767` (BG), Black `#1A1A1A` (Text).
+    * Radius: `28px`.
+
+---
+
+## 6. TYPOGRAPHY MEASUREMENTS
+
+* **H1:** `8.5rem` (Desktop) / `3.5rem` (Mobile). Weight: 800.
+* **H2:** `4rem` (Desktop) / `2.5rem` (Mobile). Weight: 700.
+* **Body:** `1.125rem` (18px). Line Height: `1.5`. Color: `#4A4A4A`.
+* **Stats Numbers:** `12rem`. Weight: 900. Color: `#D91F26`.
+
+---
+
+## 7. STATS SECTION - CARD BEHAVIOR
+
+* **Card Size:** `width: 45vw`, `height: 60vh`.
+* **Entry:** `translateY(100vh)` → `0`.
+* **Scroll Trigger:** Each card spans `50vh` scroll distance.
+* **Stacking:** Card 1 (`z:10`), Card 2 (`z:20`), Card 3 (`z:30`).
+* **Hover:**
+    * Scale: `1.03`.
+    * Saturation: `1.2`.
+
+---
+
+## 8. PROBLEM/SOLUTION SECTIONS
+
+* **Disintegration:**
+    * Stagger: `index * 0.015s`.
+    * Values: Opacity `0.1` → `1`, Blur `4px` → `0`.
+* **Header Blur:**
+    * Start: `blur(24px)`, `opacity: 0`.
+    * End: `blur(0)`, `opacity: 1`.
+* **Backgrounds:**
+    * Problem: `#0F0505` (Dark).
+    * Solution: Transition to `#FDFBF7` (Light).
+
+---
+
+## 9. SPACING & LAYOUT
+
+* **Padding:** `120px` (Desktop) / `60px` (Mobile) Vertical.
+* **Max Width:** `1440px`.
+* **Grid Gaps:** `32px` (2rem).
+
+---
+
+## 10. COLOR PALETTE
+
+* **Backgrounds:** `#FDFBF7` (Cream), `#0F0505` (Dark Black/Red).
+* **Text:** `#1A1A1A` (Black), `#404040` (Dark Grey), `#FFFFFF` (White).
+* **Accents:**
+    * Red: `#D91F26`
+    * Lime: `#D4E767`
+    * Green: `#0A2A1A`
+
+---
+
+## 11. MOBILE RESPONSIVENESS
+
+* **Breakpoints:** `768px` (Tablet), `1024px` (Desktop).
+* **Changes:**
+    * Pyramid: Layout becomes static vertical stack or scaled static image.
+    * Parallax: Disabled or reduced to `0.2x`.
+    * H1 Size: Reduced 50%.
+
+---
+
+## 12. NAVIGATION PILL
+
+* **Size:** `H: 48px`, Width variable.
+* **Radius:** `24px`.
+* **Position:** Fixed `top: 24px`, Center `left: 50%`.
+* **Style:** BG `rgba(253, 251, 247, 0.8)`, `backdrop-blur(12px)`.
+* **Dots:**
+    * Inactive: `6px` circle.
+    * Active: `24px` pill.
+    * Animation: Spring B (Stiffness 120, Damping 20).
+```
+
+
+## Followup
+
+```markdown
+I need clarification on specific measurements that are still vague or contradictory:
+
+1. PYRAMID CONTAINER - Which is correct?
+   - Option A: "max-width: 1400px, height: 100vh, aspect-ratio: 1.2:1"
+   - Option B: "width: min(48vw, 550px), aspect-ratio: 1/1"
+   Provide the exact CSS for the pyramid container.
+
+2. PYRAMID ITEMS - Complete the list:
+   You listed ~20 items but the pyramid has 38 total. For EACH item provide:
+   - Item name (match to visible food item)
+   - top: X%, left: Y%, width: Z%, height: W%
+   - z-index value
+   - Animation entrance order (1st, 2nd, 3rd... 38th)
+
+3. PYRAMID SCROLL - Convert percentages to scrollYProgress values:
+   Instead of "10%-30%", provide:
+   - scrollYProgress 0.0-0.1: [what happens]
+   - scrollYProgress 0.1-0.3: [what happens]
+   - etc.
+   This is for useScroll/useTransform implementation.
+
+4. SVG PYRAMID OUTLINE:
+   - Exact SVG path coordinates (the triangle/pyramid shape)
+   - Stroke width, color, opacity
+   - At what scrollYProgress does stroke animation occur?
+   - Duration of stroke animation
+
+5. HERO PARALLAX - Exact transform ranges:
+   For broccoli "Speed: 1.5x", provide:
+   - scrollYProgress input range: [0, 1]
+   - y transform output range: [Xpx, Ypx]
+   Same for milk and steak.
+
+6. CHARACTER DISINTEGRATION - Which formula?
+   - Earlier doc: scrollProgress * (1 + charIndex / totalChars * 0.12)
+   - This doc: index * 0.015s
+   Which is correct? Provide exact formula.
+```
+
+
+## Answer
+
+```markdown
+# RealFood.gov Technical Clarifications
+
+## 1. PYRAMID CONTAINER
+**Correct Specification:**
+The container acts as the coordinate system for the absolute items.
+- Width: min(90vw, 800px) (Responsive width capped for layout stability)
+- Aspect Ratio: 1.1 / 1 (Slightly wider than tall)
+- Position: Relative
+- Margin: 0 auto
+
+## 2. PYRAMID ITEMS (38 Total)
+**Grid Logic:** Inverted Triangle.
+- Protein: Top-Left Wedge (0-50% W, 0-50% H)
+- Veg/Fruit: Top-Right Wedge (50-100% W, 0-50% H)
+- Grains: Bottom Center Wedge (25-75% W, 50-100% H)
+
+| Item Name | Top % | Left % | Width % | Z-Index | Entry Order |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **PROTEIN (TOP LEFT)** | | | | | **1-13** |
+| 1. Whole Milk | 10% | 35% | 16% | 20 | 1 |
+| 2. Roast Chicken | 5% | 22% | 18% | 19 | 2 |
+| 3. Steak (Raw) | 20% | 15% | 14% | 18 | 3 |
+| 4. Salmon Fillet | 28% | 25% | 15% | 17 | 4 |
+| 5. Eggs (Fried) | 25% | 5% | 12% | 16 | 5 |
+| 6. Yogurt Cup | 35% | 32% | 10% | 15 | 6 |
+| 7. Olive Oil | 15% | 45% | 8% | 14 | 7 |
+| 8. Cheese Block | 12% | 10% | 11% | 13 | 8 |
+| 9. Sardines Can | 38% | 12% | 10% | 12 | 9 |
+| 10. Tofu Block | 30% | 40% | 11% | 11 | 10 |
+| 11. Almonds | 42% | 20% | 7% | 10 | 11 |
+| 12. Walnuts | 5% | 38% | 6% | 9 | 12 |
+| 13. Black Beans | 18% | 2% | 9% | 8 | 13 |
+| **VEG/FRUIT (TOP RIGHT)** | | | | | **14-26** |
+| 14. Broccoli | 12% | 60% | 15% | 20 | 14 |
+| 15. Frozen Peas | 18% | 75% | 13% | 19 | 15 |
+| 16. Red Apple | 28% | 65% | 11% | 18 | 16 |
+| 17. Carrots | 20% | 85% | 12% | 17 | 17 |
+| 18. Banana Bunch | 35% | 55% | 14% | 16 | 18 |
+| 19. Lettuce Head | 30% | 88% | 13% | 15 | 19 |
+| 20. Tomato | 15% | 55% | 9% | 14 | 20 |
+| 21. Orange | 10% | 70% | 10% | 13 | 21 |
+| 22. Grapes | 38% | 78% | 12% | 12 | 22 |
+| 23. Bell Pepper | 5% | 82% | 10% | 11 | 23 |
+| 24. Spinach Leaf | 42% | 62% | 8% | 10 | 24 |
+| 25. Blueberries | 8% | 52% | 6% | 9 | 25 |
+| 26. Cucumber | 40% | 90% | 8% | 8 | 26 |
+| **GRAINS (BOTTOM CENTER)** | | | | | **27-38** |
+| 27. Sourdough Loaf | 55% | 42% | 16% | 10 | 27 |
+| 28. Oats Bowl | 65% | 32% | 14% | 9 | 28 |
+| 29. Brown Rice Bowl | 65% | 54% | 14% | 9 | 29 |
+| 30. Whole Wheat Pasta | 75% | 45% | 12% | 8 | 30 |
+| 31. Barley Sack | 72% | 35% | 10% | 7 | 31 |
+| 32. Quinoa Bowl | 72% | 55% | 10% | 7 | 32 |
+| 33. Corn Cob | 58% | 65% | 9% | 6 | 33 |
+| 34. Popcorn | 82% | 40% | 8% | 5 | 34 |
+| 35. Buckwheat | 82% | 50% | 8% | 5 | 35 |
+| 36. Millet | 88% | 45% | 7% | 4 | 36 |
+| 37. Rye Bread Slice | 60% | 28% | 9% | 3 | 37 |
+| 38. Loose Wheat Stalks | 85% | 30% | 12% | 2 | 38 |
+
+## 3. PYRAMID SCROLL (useScroll Implementation)
+**Total Scroll Height:** 300vh (3x viewport height).
+**Mapping Logic:** scrollYProgress 0.0 to 1.0 covers the full pinned section.
+
+- **0.00 - 0.10:** Intro Phase. Title scales down. Background is fully Cream.
+- **0.10 - 0.35:** Phase 1 (Protein).
+  - 0.10: "Protein" Label fades In.
+  - 0.10-0.30: Items 1-13 enter (Staggered by index).
+  - 0.35: "Protein" Label fades Out.
+- **0.35 - 0.60:** Phase 2 (Veg).
+  - 0.35: "Vegetables" Label fades In.
+  - 0.35-0.55: Items 14-26 enter.
+  - 0.60: "Vegetables" Label fades Out.
+- **0.60 - 0.85:** Phase 3 (Grains).
+  - 0.60: "Grains" Label fades In.
+  - 0.60-0.80: Items 27-38 enter.
+  - 0.85: "Grains" Label fades Out.
+- **0.85 - 1.00:** Lockup.
+  - 0.90: "Eat Real Food" Title fades In.
+  - 0.95: Tooltips enable.
+
+## 4. SVG PYRAMID OUTLINE
+**Path Coordinates (ViewBox 0 0 100 100):**
+M 5 5 L 95 5 L 50 95 Z (Inverted Triangle)
+
+**Styles:**
+- Stroke Width: 2px
+- Color: #E5E0D6 (Subtle Beige/Grey)
+- Opacity: 0.5 (Not fully opaque)
+- Fill: None
+
+**Animation:**
+- Trigger: scrollYProgress 0.05
+- Duration: Ranges from 0.05 to 0.95 (Draws continuously as items fill).
+- Method: stroke-dasharray / stroke-dashoffset linked 1:1 with scroll progress.
+
+## 5. HERO PARALLAX
+**Input Range:** scrollYProgress [0, 1] (Relative to Hero Section only).
+
+**Broccoli (Foreground, Speed 1.5x):**
+- Input: [0, 1]
+- Output Y: [0px, -600px] (Moves UP fast)
+
+**Milk (Midground, Speed 1.2x):**
+- Input: [0, 1]
+- Output Y: [0px, -450px] (Moves UP medium)
+
+**Steak (Background, Speed 1.1x):**
+- Input: [0, 1]
+- Output Y: [0px, -200px] (Moves UP slow)
+
+**Title Text (Speed 0.8x):**
+- Input: [0, 1]
+- Output Y: [0px, 150px] (Moves DOWN slightly relative to scroll, creating depth)
+
+## 6. CHARACTER DISINTEGRATION FORMULA
+**Correct Formula:**
+The correct approach for the "disintegration" wave is the mathematical formula, as it accounts for both scroll position and character index dynamically.
+
+const start = index / totalChars * 0.5;
+const end = start + 0.5;
+const opacity = useTransform(scrollYProgress, [start, end], [0.1, 1]);
+const blur = useTransform(scrollYProgress, [start, end], [4, 0]);
+
+This creates a "wave" of 50% viewport height that travels through the text. The first character starts animating at 0.0 and ends at 0.5. The last character starts at 0.5 and ends at 1.0.
+```

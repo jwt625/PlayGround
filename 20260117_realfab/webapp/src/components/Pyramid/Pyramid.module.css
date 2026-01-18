@@ -1,0 +1,149 @@
+/* Scroll container - 300vh total height */
+.container {
+  min-height: 300vh;
+  background: linear-gradient(180deg, var(--color-dark-brown) 0%, var(--color-cream-dark) 100%);
+  color: var(--color-white);
+  padding: var(--spacing-24) var(--spacing-8);
+  position: relative;
+}
+
+.content {
+  max-width: var(--container-7xl);
+  margin: 0 auto;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Title Container - scales down during scroll */
+.titleContainer {
+  text-align: center;
+  margin-bottom: var(--spacing-16);
+  z-index: 5;
+}
+
+.kicker {
+  font-size: var(--text-sm);
+  font-weight: var(--font-weight-semibold);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: rgba(255, 255, 255, 0.6);
+  margin-bottom: var(--spacing-4);
+}
+
+.heading {
+  font-size: clamp(2.5rem, 6vw, 4.5rem);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-tight);
+  margin-bottom: var(--spacing-6);
+  letter-spacing: -0.02em;
+}
+
+.description {
+  font-size: clamp(1.125rem, 2vw, 1.5rem);
+  line-height: var(--line-height-relaxed);
+  color: rgba(255, 255, 255, 0.8);
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+/* Pyramid Container - absolute positioning system */
+.pyramidContainer {
+  position: relative;
+  width: min(90vw, 800px);
+  aspect-ratio: 1.1 / 1;
+  margin: 0 auto;
+}
+
+/* Items Container - holds all absolutely positioned items */
+.itemsContainer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+/* Tier Labels - positioned and animated */
+.tierLabel {
+  position: absolute;
+  font-size: clamp(1.25rem, 2.5vw, 2rem);
+  font-weight: var(--font-weight-bold);
+  color: rgba(255, 255, 255, 0.9);
+  z-index: 5;
+  pointer-events: none;
+}
+
+.tierLabel[data-tier="additive"] {
+  top: 5%;
+  left: 20%;
+}
+
+.tierLabel[data-tier="local"] {
+  top: 5%;
+  right: 20%;
+}
+
+.tierLabel[data-tier="bigfab"] {
+  bottom: 10%;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+/* Final Title - appears at end of scroll */
+.finalTitle {
+  position: absolute;
+  bottom: var(--spacing-16);
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+  z-index: 10;
+}
+
+.finalTitle h3 {
+  font-size: clamp(1.5rem, 3vw, 2.5rem);
+  font-weight: var(--font-weight-bold);
+  margin-bottom: var(--spacing-4);
+}
+
+.finalTitle p {
+  font-size: clamp(1rem, 1.5vw, 1.25rem);
+  color: rgba(255, 255, 255, 0.8);
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .pyramidContainer {
+    width: min(95vw, 700px);
+  }
+
+  .tierLabel {
+    font-size: clamp(1rem, 2vw, 1.5rem);
+  }
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: var(--spacing-16) var(--spacing-4);
+    min-height: 250vh;
+  }
+
+  .pyramidContainer {
+    width: 95vw;
+  }
+
+  .tierLabel {
+    font-size: var(--text-lg);
+  }
+
+  .finalTitle h3 {
+    font-size: var(--text-2xl);
+  }
+
+  .finalTitle p {
+    font-size: var(--text-base);
+  }
+}
+
