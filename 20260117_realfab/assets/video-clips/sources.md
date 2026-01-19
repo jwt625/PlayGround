@@ -19,14 +19,14 @@
     - 2:22 - 3:32
 - [Hybrid laser assembly process](https://www.youtube.com/watch?v=p6JOtwmZzaI)
     - 1:33 - 1:46
-- [Siltronic insights]()
+- [Siltronic insights](https://www.youtube.com/watch?v=pmdibqc7-Hc)
     - 1:16 - 2:06
 - [FUJIFILM Dimatix, Inc. in Santa Clara, CA](https://www.youtube.com/watch?v=twBc-ubBBMs)
     - 4:42 - 4:59
     - 5:08 - 5:37
 - [Webinar: ​​Vacuum Fundamentals for Scientists and Engineers | by Pfeiffer Vacuum+Fab Solutions](https://www.youtube.com/watch?v=6zhuPkILIk4)
     - ~ 26:58
-    - manually recorded
+    - manually recorded (turbo pump explosion)
 - [RF GaN Experience | Fab Tour](https://www.youtube.com/watch?v=xACB3-FSTmg)
     - 0:34 - 2:30
 - [Unveiling High NA EUV | ASML](https://www.youtube.com/watch?v=h_zgURwr6nA)
@@ -52,5 +52,22 @@ New:
 - [SparkNano Omega™](https://www.youtube.com/watch?v=fafBpOJv3jM)
     - any segments near the middle
     - also used its audio
-
-
+- [An Introduction to EHLA Extreme High-speed Laser Application](https://www.youtube.com/watch?v=ZSSl1O8-YZc)
+    - 0:02 - 0:48
+- [TruLaser Cell 7040 Overview](https://www.youtube.com/watch?v=LW2pgvmz5Rw)
+    - 1:14 - 1:37
+- [Makera Z1 Capability Challenge — 4-Axis Simultaneous Machining a Unicorn](https://www.youtube.com/watch?v=cr40F4l56Jc)
+    - 0:58 - 1:03
+- [xTool F2 | A New Star in Portable Lasers — Fast. Easy. Powerful.](https://www.youtube.com/watch?v=ksk_wPL0Uo8)
+    - 0:16 - 0:21
+- [xTool P3 Sneak Peek | The Next-Generation CO2 Laser Flagship](https://www.youtube.com/watch?v=v072XXZM318)
+    - 0:02 - 0:13.5
+- [Microscale 3D printing of a spaceship](https://www.youtube.com/watch?v=wThtfAtB5U8)
+    - 0:07 - 1:05
+    - 5x it
+- [5-Axis Cutting of Silicon Carbide with Laser MicroJet®](https://www.youtube.com/watch?v=ry_Vuzw-ASM)
+    - 0:11 - 0:42
+    - 5x
+- [Eplus3D Metal 3D Printers Dual Lasers](https://www.youtube.com/watch?v=_qKsRRZNh74)
+    - only 30 s
+    - 10x
