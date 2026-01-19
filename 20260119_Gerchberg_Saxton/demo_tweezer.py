@@ -59,23 +59,32 @@ def create_spot_pattern(positions: list[tuple[float, float]], size: int, radius:
 
 def generate_start_end_positions(seed: int = 42) -> tuple[list, list]:
     """
-    Generate start (random half-filled 8x8) and end (compact 4x8) positions.
+    Generate start (random half-filled 11x11) and end (circular compact) positions.
     Returns positions in pixel coordinates.
     """
     np.random.seed(seed)
-    
-    # Start: randomly select 32 positions from 8x8 grid
-    all_positions = [(r, c) for r in range(8) for c in range(8)]
-    selected_indices = np.random.choice(64, 32, replace=False)
+
+    grid_size = 11
+    center = grid_size // 2  # Center of 11x11 grid is (5, 5)
+
+    # Start: randomly select ~half positions from 11x11 grid
+    all_positions = [(r, c) for r in range(grid_size) for c in range(grid_size)]
+    n_spots = len(all_positions) // 2  # 60 spots
+    selected_indices = np.random.choice(len(all_positions), n_spots, replace=False)
     start_grid = [all_positions[i] for i in selected_indices]
-    
-    # End: compact 4x8 grid centered
-    end_grid = [(r + 2, c) for r in range(4) for c in range(8)]  # offset by 2 rows to center
-    
+
+    # End: circular fill from center outward
+    # Sort all grid positions by distance from center
+    def dist_from_center(pos):
+        return (pos[0] - center) ** 2 + (pos[1] - center) ** 2
+
+    all_sorted = sorted(all_positions, key=dist_from_center)
+    end_grid = all_sorted[:n_spots]  # Take the n_spots closest to center
+
     # Convert to pixel coordinates
-    start_pixels = [grid_to_pixel(r, c, 8, 8, GRID_SIZE) for r, c in start_grid]
-    end_pixels = [grid_to_pixel(r, c, 8, 8, GRID_SIZE) for r, c in end_grid]
-    
+    start_pixels = [grid_to_pixel(r, c, grid_size, grid_size, GRID_SIZE) for r, c in start_grid]
+    end_pixels = [grid_to_pixel(r, c, grid_size, grid_size, GRID_SIZE) for r, c in end_grid]
+
     return start_pixels, end_pixels
 
 
@@ -135,8 +144,8 @@ def main():
     start_pos, end_pos = generate_start_end_positions(SEED)
     assignment = solve_assignment(start_pos, end_pos)
 
-    print(f"Start: 32 random spots in 8x8 grid")
-    print(f"End: Compact 4x8 array")
+    print(f"Start: {len(start_pos)} random spots in 11x11 grid")
+    print(f"End: Circular compact around center")
     print(f"Frames: {N_FRAMES}")
     print(f"GS iterations per frame: {GS_ITERATIONS}")
 
