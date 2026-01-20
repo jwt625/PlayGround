@@ -8,6 +8,18 @@
 
 ## Progress Summary
 
+**2026-01-20 (update 2)**
+
+L1 and L2 sample generation complete:
+- Created slm_guessr Python package with pattern generators
+- Implemented 16 L1 Foundations samples including aperture demos
+- Implemented 8 L2 Periodic Structures samples
+- Extended grating sweep range to 8px minimum period
+- Added coherent aperture and soft aperture samples (spot size control via phase)
+- Fixed GIF pause bug (continuous frame capture)
+- Gallery loads and displays samples from manifest
+- Total: 24 samples generated (48 GIFs)
+
 **2026-01-20**
 
 Frontend infrastructure complete:
@@ -18,11 +30,6 @@ Frontend infrastructure complete:
 - Built Home, Gallery, and Quiz page structures
 - Defined TypeScript types for samples and quiz state
 - Build verified successful
-
-Pending:
-- Python pattern generator package
-- Sample generation (145 animated GIFs)
-- Gallery/Quiz data integration
 
 ---
 
@@ -297,19 +304,22 @@ slm-guessr/
 | Home page with mode selection | Complete |
 | Gallery page structure (level sidebar) | Complete |
 | Quiz page structure (mode/difficulty selection) | Complete |
-| GifPlayer component (play/pause) | Complete |
+| GifPlayer component (play/pause with frame capture) | Complete |
 | SampleCard component | Complete |
 | TypeScript types | Complete |
-| Python pattern generators | Not started |
-| Sample generation pipeline | Not started |
+| Python pattern generators (L1, L2) | Complete |
+| Sample generation pipeline | Complete |
+| Gallery data integration | Complete |
+| L3-L7 pattern generators | Not started |
+| Quiz game logic | Not started |
 
 ---
 
 ## Next Steps
 
-1. Create `slm_guessr/` Python package structure
-2. Implement pattern generators (Level 1-2 first)
-3. Generate sample batch for proof of concept
-4. Wire up Gallery to load samples from manifest
-5. Implement Quiz game logic
+1. Implement L3 Spot Arrays generators
+2. Implement L4 Special Beams generators
+3. Implement L5-L7 generators
+4. Implement Quiz game logic with scoring
+5. Deploy to GitHub Pages
 

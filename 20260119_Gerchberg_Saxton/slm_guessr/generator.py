@@ -25,6 +25,12 @@ from .patterns import (
     create_spot_target,
     create_gaussian_spot_target,
     create_rectangular_slab_target,
+    create_binary_grating,
+    create_sinusoidal_grating,
+    create_blazed_grating,
+    create_checkerboard,
+    create_crossed_gratings,
+    create_multi_frequency_grating,
     compute_intensity,
 )
 
@@ -338,6 +344,153 @@ def gen_cubic_y(input_amp: np.ndarray):
     return frames
 
 
+def gen_coherent_aperture(input_amp: np.ndarray):
+    """Variable coherent aperture - demonstrates spot size vs aperture."""
+    frames = []
+    n_frames = 16
+    x = np.linspace(-GRID_SIZE // 2, GRID_SIZE // 2, GRID_SIZE)
+    X, Y = np.meshgrid(x, x)
+    R = np.sqrt(X**2 + Y**2)
+    # Fixed random phase for outer region (seeded for consistency)
+    rng = np.random.RandomState(42)
+    random_phase = rng.uniform(-np.pi, np.pi, (GRID_SIZE, GRID_SIZE))
+
+    for i in range(n_frames):
+        # Radius from small to large (small aperture = large spot)
+        radius = 20 + 80 * i / (n_frames - 1)  # 20 to 100 pixels
+        # Flat phase inside, random outside
+        phase = np.where(R <= radius, 0.0, random_phase)
+        intensity = compute_intensity(input_amp, phase)
+        frames.append((phase, intensity))
+    return frames
+
+
+def gen_soft_aperture(input_amp: np.ndarray):
+    """Soft-edged aperture - demonstrates edge smoothness effect."""
+    frames = []
+    n_frames = 16
+    x = np.linspace(-GRID_SIZE // 2, GRID_SIZE // 2, GRID_SIZE)
+    X, Y = np.meshgrid(x, x)
+    R = np.sqrt(X**2 + Y**2)
+    rng = np.random.RandomState(42)
+    random_phase = rng.uniform(-np.pi, np.pi, (GRID_SIZE, GRID_SIZE))
+
+    radius = 60  # Fixed radius
+    for i in range(n_frames):
+        # Edge softness from sharp to very soft
+        softness = 1 + 30 * i / (n_frames - 1)  # 1 to 31 pixels
+        # Soft transition using sigmoid-like function
+        mask = 1.0 / (1.0 + np.exp((R - radius) / softness))
+        # Blend flat phase (inside) with random phase (outside)
+        phase = mask * 0.0 + (1 - mask) * random_phase
+        intensity = compute_intensity(input_amp, phase)
+        frames.append((phase, intensity))
+    return frames
+
+
+# =============================================================================
+# L2: Periodic Structures Frame Generators
+# =============================================================================
+
+def gen_binary_grating_vertical(input_amp: np.ndarray):
+    """Binary grating vertical, period sweep."""
+    frames = []
+    n_frames = 16
+    for i in range(n_frames):
+        period = 64 - 56 * i / (n_frames - 1)  # 64 to 8 pixels
+        phase = create_binary_grating(GRID_SIZE, period=period, angle=0)
+        intensity = compute_intensity(input_amp, phase)
+        frames.append((phase, intensity))
+    return frames
+
+
+def gen_binary_grating_horizontal(input_amp: np.ndarray):
+    """Binary grating horizontal, period sweep."""
+    frames = []
+    n_frames = 16
+    for i in range(n_frames):
+        period = 64 - 56 * i / (n_frames - 1)  # 64 to 8 pixels
+        phase = create_binary_grating(GRID_SIZE, period=period, angle=np.pi/2)
+        intensity = compute_intensity(input_amp, phase)
+        frames.append((phase, intensity))
+    return frames
+
+
+def gen_binary_grating_rotated(input_amp: np.ndarray):
+    """Binary grating with rotating angle."""
+    frames = []
+    n_frames = 16
+    period = 24  # Smaller pitch for rotation demo
+    for i in range(n_frames):
+        angle = np.pi / 2 * i / (n_frames - 1)  # 0 to 90 deg
+        phase = create_binary_grating(GRID_SIZE, period=period, angle=angle)
+        intensity = compute_intensity(input_amp, phase)
+        frames.append((phase, intensity))
+    return frames
+
+
+def gen_sinusoidal_grating(input_amp: np.ndarray):
+    """Sinusoidal grating, period sweep."""
+    frames = []
+    n_frames = 16
+    for i in range(n_frames):
+        period = 64 - 56 * i / (n_frames - 1)  # 64 to 8 pixels
+        phase = create_sinusoidal_grating(GRID_SIZE, period=period, angle=0)
+        intensity = compute_intensity(input_amp, phase)
+        frames.append((phase, intensity))
+    return frames
+
+
+def gen_blazed_grating(input_amp: np.ndarray):
+    """Blazed grating, period sweep."""
+    frames = []
+    n_frames = 16
+    for i in range(n_frames):
+        period = 64 - 56 * i / (n_frames - 1)  # 64 to 8 pixels
+        phase = create_blazed_grating(GRID_SIZE, period=period, angle=0)
+        intensity = compute_intensity(input_amp, phase)
+        frames.append((phase, intensity))
+    return frames
+
+
+def gen_checkerboard(input_amp: np.ndarray):
+    """Checkerboard pattern, period sweep."""
+    frames = []
+    n_frames = 16
+    for i in range(n_frames):
+        period = 64 - 56 * i / (n_frames - 1)  # 64 to 8 pixels
+        phase = create_checkerboard(GRID_SIZE, period=period)
+        intensity = compute_intensity(input_amp, phase)
+        frames.append((phase, intensity))
+    return frames
+
+
+def gen_crossed_gratings(input_amp: np.ndarray):
+    """Crossed gratings with rotating angle."""
+    frames = []
+    n_frames = 16
+    period = 16  # 2x smaller pitch
+    for i in range(n_frames):
+        angle = np.pi / 4 * i / (n_frames - 1)  # 0 to 45 deg
+        phase = create_crossed_gratings(GRID_SIZE, period=period, angle=angle)
+        intensity = compute_intensity(input_amp, phase)
+        frames.append((phase, intensity))
+    return frames
+
+
+def gen_multi_frequency_grating(input_amp: np.ndarray):
+    """Multi-frequency grating, ratio sweep."""
+    frames = []
+    n_frames = 16
+    period1 = 32
+    for i in range(n_frames):
+        ratio = 2 + 3 * i / (n_frames - 1)  # period ratio from 2 to 5
+        period2 = period1 / ratio
+        phase = create_multi_frequency_grating(GRID_SIZE, period1=period1, period2=period2)
+        intensity = compute_intensity(input_amp, phase)
+        frames.append((phase, intensity))
+    return frames
+
 
 # =============================================================================
 # Sample Configuration Registry
@@ -456,12 +609,95 @@ L1_SAMPLES = [
         description="Cubic phase in Y - rotated Airy pattern",
         generator=gen_cubic_y,
     ),
+    SampleConfig(
+        id="coherent_aperture",
+        level=1,
+        category="foundations",
+        name="Coherent Aperture Size",
+        description="Varying coherent region size - smaller aperture = larger spot (Fourier relationship)",
+        generator=gen_coherent_aperture,
+    ),
+    SampleConfig(
+        id="soft_aperture",
+        level=1,
+        category="foundations",
+        name="Soft Aperture Edge",
+        description="Edge smoothness sweep - softer edges reduce ringing/sidelobes",
+        generator=gen_soft_aperture,
+    ),
+]
+
+L2_SAMPLES = [
+    SampleConfig(
+        id="binary_grating_vertical",
+        level=2,
+        category="periodic",
+        name="Binary Grating (Vertical)",
+        description="Vertical binary grating - period decreases, diffraction orders separate",
+        generator=gen_binary_grating_vertical,
+    ),
+    SampleConfig(
+        id="binary_grating_horizontal",
+        level=2,
+        category="periodic",
+        name="Binary Grating (Horizontal)",
+        description="Horizontal binary grating - diffraction in vertical direction",
+        generator=gen_binary_grating_horizontal,
+    ),
+    SampleConfig(
+        id="binary_grating_rotated",
+        level=2,
+        category="periodic",
+        name="Binary Grating (Rotating)",
+        description="Binary grating rotates 0° to 90° - watch diffraction spots rotate",
+        generator=gen_binary_grating_rotated,
+    ),
+    SampleConfig(
+        id="sinusoidal_grating",
+        level=2,
+        category="periodic",
+        name="Sinusoidal Grating",
+        description="Sinusoidal phase grating - only ±1 orders, no higher harmonics",
+        generator=gen_sinusoidal_grating,
+    ),
+    SampleConfig(
+        id="blazed_grating",
+        level=2,
+        category="periodic",
+        name="Blazed Grating",
+        description="Sawtooth phase grating - asymmetric diffraction, power in +1 order",
+        generator=gen_blazed_grating,
+    ),
+    SampleConfig(
+        id="checkerboard",
+        level=2,
+        category="periodic",
+        name="Checkerboard",
+        description="2D periodic pattern - 4-spot diffraction pattern",
+        generator=gen_checkerboard,
+    ),
+    SampleConfig(
+        id="crossed_gratings",
+        level=2,
+        category="periodic",
+        name="Crossed Gratings",
+        description="Two perpendicular gratings - XOR pattern creates grid diffraction",
+        generator=gen_crossed_gratings,
+    ),
+    SampleConfig(
+        id="multi_frequency_grating",
+        level=2,
+        category="periodic",
+        name="Multi-Frequency Grating",
+        description="Superposition of two frequencies - multiple diffraction orders",
+        generator=gen_multi_frequency_grating,
+    ),
 ]
 
 
 def get_all_samples() -> List[SampleConfig]:
     """Get all sample configurations."""
-    return L1_SAMPLES  # Add more levels here as implemented
+    return L1_SAMPLES + L2_SAMPLES
 
 
 def generate_all_samples(output_dir: Path) -> dict:

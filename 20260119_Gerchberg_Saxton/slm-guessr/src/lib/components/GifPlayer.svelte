@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { onMount, onDestroy } from 'svelte';
+
 	interface Props {
 		src: string;
 		alt?: string;
@@ -8,38 +10,70 @@
 
 	let isPlaying = $state(true);
 	let imgElement = $state<HTMLImageElement | null>(null);
-	let staticSrc = $state<string | null>(null);
+	let canvasElement = $state<HTMLCanvasElement | null>(null);
+	let animationId: number | null = null;
 
-	// Capture first frame when paused
-	function captureFrame() {
-		if (!imgElement) return;
-		const canvas = document.createElement('canvas');
-		canvas.width = imgElement.naturalWidth || 256;
-		canvas.height = imgElement.naturalHeight || 256;
-		const ctx = canvas.getContext('2d');
-		if (ctx) {
+	// Continuously capture frames to canvas while playing
+	function captureLoop() {
+		if (!imgElement || !canvasElement || !isPlaying) return;
+		const ctx = canvasElement.getContext('2d');
+		if (ctx && imgElement.complete && imgElement.naturalWidth > 0) {
+			canvasElement.width = imgElement.naturalWidth;
+			canvasElement.height = imgElement.naturalHeight;
 			ctx.drawImage(imgElement, 0, 0);
-			staticSrc = canvas.toDataURL('image/png');
+		}
+		animationId = requestAnimationFrame(captureLoop);
+	}
+
+	function startCapturing() {
+		if (animationId === null) {
+			captureLoop();
+		}
+	}
+
+	function stopCapturing() {
+		if (animationId !== null) {
+			cancelAnimationFrame(animationId);
+			animationId = null;
 		}
 	}
 
 	function togglePlay() {
 		if (isPlaying) {
-			captureFrame();
+			// Pausing - stop capturing, canvas already has last frame
+			stopCapturing();
 		} else {
-			staticSrc = null;
+			// Resuming - start capturing again
+			startCapturing();
 		}
 		isPlaying = !isPlaying;
 	}
+
+	onMount(() => {
+		// Start capture loop when mounted
+		startCapturing();
+	});
+
+	onDestroy(() => {
+		stopCapturing();
+	});
 </script>
 
 <div class="gif-player">
+	<!-- Hidden img for GIF source -->
 	<img
 		bind:this={imgElement}
-		src={isPlaying ? src : (staticSrc || src)}
+		{src}
 		{alt}
-		class="gif-image"
+		class="gif-source"
+		class:hidden={!isPlaying}
 	/>
+	<!-- Canvas shows captured frame when paused -->
+	<canvas
+		bind:this={canvasElement}
+		class="gif-canvas"
+		class:hidden={isPlaying}
+	></canvas>
 	<button class="play-toggle" onclick={togglePlay} title={isPlaying ? 'Pause' : 'Play'}>
 		{#if isPlaying}
 			<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
@@ -64,11 +98,16 @@
 		aspect-ratio: 1 / 1;
 	}
 
-	.gif-image {
+	.gif-source,
+	.gif-canvas {
 		width: 100%;
 		height: 100%;
 		object-fit: contain;
 		display: block;
+	}
+
+	.hidden {
+		display: none;
 	}
 
 	.play-toggle {
