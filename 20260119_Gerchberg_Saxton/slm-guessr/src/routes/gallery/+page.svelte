@@ -1,24 +1,66 @@
 <script lang="ts">
-	import type { Sample } from '$lib/types';
+	import { base } from '$app/paths';
+	import type { Sample, SampleManifest } from '$lib/types';
+	import SampleCard from '$lib/components/SampleCard.svelte';
+	import { onMount } from 'svelte';
 
-	// Placeholder data until samples.json is generated
-	const levels = [
-		{ id: 1, name: 'Foundations', count: 15 },
-		{ id: 2, name: 'Periodic Structures', count: 20 },
-		{ id: 3, name: 'Spot Arrays', count: 20 },
-		{ id: 4, name: 'Special Beams', count: 20 },
-		{ id: 5, name: 'Compound Patterns', count: 15 },
-		{ id: 6, name: 'Practical Applications', count: 15 },
-		{ id: 7, name: 'Shapes and Objects', count: 40 }
+	// Level metadata
+	const levelMeta = [
+		{ id: 1, name: 'Foundations' },
+		{ id: 2, name: 'Periodic Structures' },
+		{ id: 3, name: 'Spot Arrays' },
+		{ id: 4, name: 'Special Beams' },
+		{ id: 5, name: 'Compound Patterns' },
+		{ id: 6, name: 'Practical Applications' },
+		{ id: 7, name: 'Shapes and Objects' }
 	];
 
+	let allSamples = $state<Sample[]>([]);
 	let selectedLevel = $state<number | null>(null);
-	let samples = $state<Sample[]>([]);
+	let loading = $state(true);
+	let error = $state<string | null>(null);
+
+	// Compute level counts from loaded samples
+	let levels = $derived(
+		levelMeta.map(meta => ({
+			...meta,
+			count: allSamples.filter(s => s.level === meta.id).length
+		}))
+	);
+
+	// Filter samples for selected level
+	let filteredSamples = $derived(
+		selectedLevel === null
+			? []
+			: allSamples.filter(s => s.level === selectedLevel)
+	);
+
+	onMount(async () => {
+		try {
+			const res = await fetch(`${base}/samples.json`);
+			if (!res.ok) throw new Error(`Failed to load samples: ${res.status}`);
+			const manifest: SampleManifest = await res.json();
+			allSamples = manifest.samples;
+			// Auto-select first level with samples
+			const firstWithSamples = levels.find(l =>
+				allSamples.some(s => s.level === l.id)
+			);
+			if (firstWithSamples) {
+				selectedLevel = firstWithSamples.id;
+			}
+		} catch (e) {
+			error = e instanceof Error ? e.message : 'Unknown error';
+		} finally {
+			loading = false;
+		}
+	});
 
 	function selectLevel(level: number) {
 		selectedLevel = level;
-		// TODO: Load samples for this level from samples.json
-		samples = [];
+	}
+
+	function resolvePath(path: string): string {
+		return `${base}/${path}`;
 	}
 </script>
 
@@ -49,22 +91,34 @@
 		</aside>
 
 		<section class="samples">
-			{#if selectedLevel === null}
+			{#if loading}
+				<div class="empty-state">
+					<p>Loading samples...</p>
+				</div>
+			{:else if error}
+				<div class="empty-state">
+					<p class="text-error">{error}</p>
+					<p class="hint">Make sure samples.json exists in static/</p>
+				</div>
+			{:else if selectedLevel === null}
 				<div class="empty-state">
 					<p>Select a level to view samples</p>
 				</div>
-			{:else if samples.length === 0}
+			{:else if filteredSamples.length === 0}
 				<div class="empty-state">
 					<p>No samples generated yet for Level {selectedLevel}</p>
 					<p class="hint">Run the Python generator to create training samples</p>
 				</div>
 			{:else}
 				<div class="sample-grid">
-					{#each samples as sample}
-						<div class="sample-card">
-							<!-- TODO: SampleCard component -->
-							<p>{sample.name}</p>
-						</div>
+					{#each filteredSamples as sample (sample.id)}
+						<SampleCard
+							sample={{
+								...sample,
+								phase_gif: resolvePath(sample.phase_gif),
+								intensity_gif: resolvePath(sample.intensity_gif)
+							}}
+						/>
 					{/each}
 				</div>
 			{/if}

@@ -2,11 +2,9 @@
 	interface Props {
 		src: string;
 		alt?: string;
-		width?: number;
-		height?: number;
 	}
 
-	let { src, alt = '', width = 256, height = 256 }: Props = $props();
+	let { src, alt = '' }: Props = $props();
 
 	let isPlaying = $state(true);
 	let imgElement = $state<HTMLImageElement | null>(null);
@@ -16,8 +14,8 @@
 	function captureFrame() {
 		if (!imgElement) return;
 		const canvas = document.createElement('canvas');
-		canvas.width = imgElement.naturalWidth || width;
-		canvas.height = imgElement.naturalHeight || height;
+		canvas.width = imgElement.naturalWidth || 256;
+		canvas.height = imgElement.naturalHeight || 256;
 		const ctx = canvas.getContext('2d');
 		if (ctx) {
 			ctx.drawImage(imgElement, 0, 0);
@@ -35,7 +33,7 @@
 	}
 </script>
 
-<div class="gif-player" style="width: {width}px; height: {height}px;">
+<div class="gif-player">
 	<img
 		bind:this={imgElement}
 		src={isPlaying ? src : (staticSrc || src)}
@@ -62,6 +60,8 @@
 		background-color: var(--bg-tertiary);
 		border: 1px solid var(--border);
 		overflow: hidden;
+		width: 100%;
+		aspect-ratio: 1 / 1;
 	}
 
 	.gif-image {

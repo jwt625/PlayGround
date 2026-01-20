@@ -71,10 +71,12 @@
 	.sample-images {
 		display: flex;
 		gap: var(--spacing-sm);
+		min-width: 0;
 	}
 
 	.image-container {
 		flex: 1;
+		min-width: 0;
 		display: flex;
 		flex-direction: column;
 		gap: var(--spacing-xs);

@@ -140,14 +140,14 @@ All shapes rendered as binary silhouettes, GS-optimized phase masks.
 
 | Level | Count |
 |-------|-------|
-| L1 Foundations | 15 |
+| L1 Foundations | 20 |
 | L2 Periodic | 20 |
 | L3 Spots | 20 |
 | L4 Special Beams | 20 |
 | L5 Compound | 15 |
 | L6 Practical | 15 |
 | L7 Shapes | 40 |
-| **Total** | **145** |
+| **Total** | **150** |
 
 ---
 
