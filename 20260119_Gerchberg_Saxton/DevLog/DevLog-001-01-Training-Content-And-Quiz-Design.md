@@ -1,8 +1,28 @@
 # DevLog-001-01: Training Content and Quiz Design
 
-**Date:** 2026-01-20  
-**Author:** Wentao  
-**Status:** Planning
+**Date:** 2026-01-20
+**Author:** Wentao
+**Status:** In Progress
+
+---
+
+## Progress Summary
+
+**2026-01-20**
+
+Frontend infrastructure complete:
+- Initialized SvelteKit project with pnpm and TypeScript
+- Configured static adapter for GitHub Pages deployment
+- Implemented dark theme with sharp corners, monospace fonts
+- Created Header, GifPlayer, SampleCard components
+- Built Home, Gallery, and Quiz page structures
+- Defined TypeScript types for samples and quiz state
+- Build verified successful
+
+Pending:
+- Python pattern generator package
+- Sample generation (145 animated GIFs)
+- Gallery/Quiz data integration
 
 ---
 
@@ -24,17 +44,24 @@
 
 ## Training Sample Categories
 
-### Level 1: Foundations (~15 samples)
+### Level 1: Foundations (~20 samples)
 
 | Sample | Animation | Parameters Swept |
 |--------|-----------|------------------|
 | Uniform phase | Static | Baseline reference |
+| Single spot sweep X | GIF | Spot moves left to right, shows phase ramp tilt |
+| Single spot sweep Y | GIF | Spot moves bottom to top |
+| Single spot circular | GIF | Spot moves in circle, phase ramp rotates |
+| Gaussian spot sweep | GIF | Soft spot moves, no sinc ringing |
+| Rectangular slab sweep X | GIF | Rectangle moves horizontally, shows sinc envelope |
+| Rectangular slab sweep Y | GIF | Rectangle moves vertically |
 | Linear ramp X | GIF | kx: 0 to 2pi across grid |
 | Linear ramp Y | GIF | ky: 0 to 2pi across grid |
 | Linear ramp diagonal | GIF | Angle: 0 to 45 deg |
 | Quadratic phase (positive) | GIF | Curvature: weak to strong |
 | Quadratic phase (negative) | GIF | Curvature: weak to strong |
-| Cubic phase | GIF | Coefficient sweep |
+| Cubic phase X | GIF | Coefficient sweep |
+| Cubic phase Y | GIF | Coefficient sweep |
 
 ### Level 2: Periodic Structures (~20 samples)
 
@@ -225,10 +252,64 @@ slm-guessr/
 
 ---
 
+## Style Guidelines
+
+| Element | Specification |
+|---------|---------------|
+| Theme | Dark |
+| Corners | Sharp (no border-radius) |
+| Typography | Monospace for data, sans-serif for UI |
+| Colors | Neutral grays, accent color for interactive elements |
+| Icons | Clean minimal SVG only, no emoji anywhere |
+| Layout | Minimal, technical, high information density |
+| Spacing | Consistent, tight but readable |
+
+### Color Palette
+```
+--bg-primary: #0a0a0a
+--bg-secondary: #141414
+--bg-tertiary: #1e1e1e
+--text-primary: #e0e0e0
+--text-secondary: #888888
+--accent: #4a9eff
+--accent-hover: #6bb3ff
+--success: #4ade80
+--error: #f87171
+--border: #2a2a2a
+```
+
+### Component Style
+- Buttons: solid background, no rounded corners, subtle hover state
+- Cards: bordered, no shadow, sharp edges
+- GIF player: minimal controls, progress bar underneath
+- Quiz options: grid layout, clear hover/selected states
+
+---
+
+## Implementation Progress
+
+| Task | Status |
+|------|--------|
+| Svelte project setup (pnpm, SvelteKit) | Complete |
+| Static adapter configuration (GitHub Pages) | Complete |
+| Dark theme CSS with style guidelines | Complete |
+| Header component with navigation | Complete |
+| Home page with mode selection | Complete |
+| Gallery page structure (level sidebar) | Complete |
+| Quiz page structure (mode/difficulty selection) | Complete |
+| GifPlayer component (play/pause) | Complete |
+| SampleCard component | Complete |
+| TypeScript types | Complete |
+| Python pattern generators | Not started |
+| Sample generation pipeline | Not started |
+
+---
+
 ## Next Steps
 
 1. Create `slm_guessr/` Python package structure
 2. Implement pattern generators (Level 1-2 first)
 3. Generate sample batch for proof of concept
-4. Initialize Svelte project
+4. Wire up Gallery to load samples from manifest
+5. Implement Quiz game logic
 
