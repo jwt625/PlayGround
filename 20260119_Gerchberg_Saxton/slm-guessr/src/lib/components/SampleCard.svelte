@@ -5,9 +5,19 @@
 	interface Props {
 		sample: Sample;
 		showLabels?: boolean;
+		onOpenModal?: (sample: Sample) => void;
 	}
 
-	let { sample, showLabels = true }: Props = $props();
+	let { sample, showLabels = true, onOpenModal }: Props = $props();
+
+	// Shared play state for synchronized pause
+	let isPlaying = $state(true);
+
+	function handleGifClick() {
+		if (onOpenModal) {
+			onOpenModal(sample);
+		}
+	}
 </script>
 
 <div class="sample-card">
@@ -20,13 +30,23 @@
 
 	<div class="sample-images">
 		<div class="image-container">
-			<GifPlayer src={sample.phase_gif} alt="Phase mask" />
+			<GifPlayer
+				src={sample.phase_gif}
+				alt="Phase mask"
+				bind:playing={isPlaying}
+				onclick={onOpenModal ? handleGifClick : undefined}
+			/>
 			{#if showLabels}
 				<span class="image-label">Phase</span>
 			{/if}
 		</div>
 		<div class="image-container">
-			<GifPlayer src={sample.intensity_gif} alt="Intensity distribution" />
+			<GifPlayer
+				src={sample.intensity_gif}
+				alt="Intensity distribution"
+				bind:playing={isPlaying}
+				onclick={onOpenModal ? handleGifClick : undefined}
+			/>
 			{#if showLabels}
 				<span class="image-label">Intensity</span>
 			{/if}

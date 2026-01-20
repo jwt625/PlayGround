@@ -8,6 +8,19 @@
 
 ## Progress Summary
 
+**2026-01-20 (update 3)**
+
+Frontend and generator improvements:
+- Added modal popup for enlarged side-by-side GIF view in gallery
+- Synchronized pause/play between phase and intensity GIFs in each card
+- Added CLI options to generate_samples.py (--list, --samples for selective regeneration)
+- Tuned sample parameters:
+  - Coherent/Soft Aperture: start radius 2x smaller
+  - Linear Ramp X/Y: 4x smaller end pitch, 2x longer (32 frames)
+  - Linear Ramp Diagonal: 3x smaller pitch
+  - Quadratic/Cubic Phase: 4x longer (64 frames)
+- GIF pause-at-current-frame bug remains (deferred)
+
 **2026-01-20 (update 2)**
 
 L1 and L2 sample generation complete:

@@ -53,6 +53,7 @@ class SampleConfig:
     description: str
     generator: Callable  # Function that returns list of (phase, intensity) frames
     parameters: dict = None
+    duration_ms: int = None  # Override GIF frame duration (default: GIF_DURATION_MS)
 
 
 def normalize_for_image(arr: np.ndarray, is_phase: bool = False) -> np.ndarray:
@@ -258,11 +259,12 @@ def gen_slab_sweep_y(input_amp: np.ndarray):
 
 
 def gen_linear_ramp_x(input_amp: np.ndarray):
-    """Linear phase ramp in X, kx sweep."""
+    """Linear phase ramp in X, kx sweep. 2x faster, 2x longer, 4x smaller end pitch."""
     frames = []
-    n_frames = 16
+    n_frames = 32  # 2x more frames
     for i in range(n_frames):
-        kx = 2 * np.pi * i / (n_frames - 1) / (GRID_SIZE / 8)
+        # End at 4x smaller pitch (4x larger k)
+        kx = 2 * np.pi * i / (n_frames - 1) / (GRID_SIZE / 32)
         phase = create_linear_ramp(GRID_SIZE, kx=kx, ky=0)
         intensity = compute_intensity(input_amp, phase)
         frames.append((phase, intensity))
@@ -270,11 +272,12 @@ def gen_linear_ramp_x(input_amp: np.ndarray):
 
 
 def gen_linear_ramp_y(input_amp: np.ndarray):
-    """Linear phase ramp in Y, ky sweep."""
+    """Linear phase ramp in Y, ky sweep. 2x faster, 2x longer, 4x smaller end pitch."""
     frames = []
-    n_frames = 16
+    n_frames = 32  # 2x more frames
     for i in range(n_frames):
-        ky = 2 * np.pi * i / (n_frames - 1) / (GRID_SIZE / 8)
+        # End at 4x smaller pitch (4x larger k)
+        ky = 2 * np.pi * i / (n_frames - 1) / (GRID_SIZE / 32)
         phase = create_linear_ramp(GRID_SIZE, kx=0, ky=ky)
         intensity = compute_intensity(input_amp, phase)
         frames.append((phase, intensity))
@@ -282,10 +285,11 @@ def gen_linear_ramp_y(input_amp: np.ndarray):
 
 
 def gen_linear_ramp_diagonal(input_amp: np.ndarray):
-    """Linear phase ramp with rotating direction."""
+    """Linear phase ramp with rotating direction. 3x smaller pitch."""
     frames = []
     n_frames = 16
-    k_mag = 2 * np.pi / (GRID_SIZE / 8)
+    # 3x smaller pitch = 3x larger k_mag
+    k_mag = 2 * np.pi / (GRID_SIZE / 24)
     for i in range(n_frames):
         angle = np.pi / 4 * i / (n_frames - 1)  # 0 to 45 deg
         kx = k_mag * np.cos(angle)
@@ -297,9 +301,9 @@ def gen_linear_ramp_diagonal(input_amp: np.ndarray):
 
 
 def gen_quadratic_positive(input_amp: np.ndarray):
-    """Quadratic phase (positive curvature) sweep."""
+    """Quadratic phase (positive curvature) sweep. 4x longer."""
     frames = []
-    n_frames = 16
+    n_frames = 64  # 4x more frames
     for i in range(n_frames):
         curvature = 0.5 + 3.0 * i / (n_frames - 1)
         phase = create_quadratic_phase(GRID_SIZE, curvature)
@@ -309,9 +313,9 @@ def gen_quadratic_positive(input_amp: np.ndarray):
 
 
 def gen_quadratic_negative(input_amp: np.ndarray):
-    """Quadratic phase (negative curvature) sweep."""
+    """Quadratic phase (negative curvature) sweep. 4x longer."""
     frames = []
-    n_frames = 16
+    n_frames = 64  # 4x more frames
     for i in range(n_frames):
         curvature = -0.5 - 3.0 * i / (n_frames - 1)
         phase = create_quadratic_phase(GRID_SIZE, curvature)
@@ -321,9 +325,9 @@ def gen_quadratic_negative(input_amp: np.ndarray):
 
 
 def gen_cubic_x(input_amp: np.ndarray):
-    """Cubic phase in X sweep."""
+    """Cubic phase in X sweep. 4x longer."""
     frames = []
-    n_frames = 16
+    n_frames = 64  # 4x more frames
     for i in range(n_frames):
         coeff = 1.0 + 4.0 * i / (n_frames - 1)
         phase = create_cubic_phase(GRID_SIZE, coeff_x=coeff, coeff_y=0)
@@ -333,9 +337,9 @@ def gen_cubic_x(input_amp: np.ndarray):
 
 
 def gen_cubic_y(input_amp: np.ndarray):
-    """Cubic phase in Y sweep."""
+    """Cubic phase in Y sweep. 4x longer."""
     frames = []
-    n_frames = 16
+    n_frames = 64  # 4x more frames
     for i in range(n_frames):
         coeff = 1.0 + 4.0 * i / (n_frames - 1)
         phase = create_cubic_phase(GRID_SIZE, coeff_x=0, coeff_y=coeff)
@@ -357,7 +361,8 @@ def gen_coherent_aperture(input_amp: np.ndarray):
 
     for i in range(n_frames):
         # Radius from small to large (small aperture = large spot)
-        radius = 20 + 80 * i / (n_frames - 1)  # 20 to 100 pixels
+        # Start at 10px (2x smaller than before) up to 100px
+        radius = 10 + 90 * i / (n_frames - 1)  # 10 to 100 pixels
         # Flat phase inside, random outside
         phase = np.where(R <= radius, 0.0, random_phase)
         intensity = compute_intensity(input_amp, phase)
@@ -375,7 +380,7 @@ def gen_soft_aperture(input_amp: np.ndarray):
     rng = np.random.RandomState(42)
     random_phase = rng.uniform(-np.pi, np.pi, (GRID_SIZE, GRID_SIZE))
 
-    radius = 60  # Fixed radius
+    radius = 30  # Fixed radius (2x smaller than before)
     for i in range(n_frames):
         # Edge softness from sharp to very soft
         softness = 1 + 30 * i / (n_frames - 1)  # 1 to 31 pixels
@@ -698,6 +703,47 @@ L2_SAMPLES = [
 def get_all_samples() -> List[SampleConfig]:
     """Get all sample configurations."""
     return L1_SAMPLES + L2_SAMPLES
+
+
+def generate_selected_samples(output_dir: Path, sample_ids: List[str]) -> dict:
+    """
+    Generate selected training samples by ID.
+
+    Args:
+        output_dir: Base output directory for assets
+        sample_ids: List of sample IDs to generate
+
+    Returns:
+        Manifest dict with generated samples
+    """
+    input_amp = create_gaussian_input(GRID_SIZE)
+    all_samples = get_all_samples()
+    samples_by_id = {s.id: s for s in all_samples}
+
+    # Validate IDs
+    invalid_ids = [sid for sid in sample_ids if sid not in samples_by_id]
+    if invalid_ids:
+        print(f"Warning: Unknown sample IDs: {invalid_ids}")
+
+    samples_to_gen = [samples_by_id[sid] for sid in sample_ids if sid in samples_by_id]
+    manifest_entries = []
+
+    print(f"Generating {len(samples_to_gen)} samples...")
+
+    for i, config in enumerate(samples_to_gen):
+        print(f"  [{i+1}/{len(samples_to_gen)}] {config.name}...")
+        entry = generate_sample(config, output_dir, input_amp)
+        manifest_entries.append(entry)
+
+    manifest = {
+        "samples": manifest_entries,
+        "generated_at": datetime.now().isoformat(),
+        "version": "1.0.0",
+    }
+
+    # Note: Don't overwrite full manifest when generating subset
+    print(f"Generated {len(manifest_entries)} samples (manifest not updated)")
+    return manifest
 
 
 def generate_all_samples(output_dir: Path) -> dict:

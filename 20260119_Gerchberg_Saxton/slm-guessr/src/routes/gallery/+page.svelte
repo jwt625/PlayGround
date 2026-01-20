@@ -2,6 +2,7 @@
 	import { base } from '$app/paths';
 	import type { Sample, SampleManifest } from '$lib/types';
 	import SampleCard from '$lib/components/SampleCard.svelte';
+	import SampleModal from '$lib/components/SampleModal.svelte';
 	import { onMount } from 'svelte';
 
 	// Level metadata
@@ -19,6 +20,7 @@
 	let selectedLevel = $state<number | null>(null);
 	let loading = $state(true);
 	let error = $state<string | null>(null);
+	let modalSample = $state<Sample | null>(null);
 
 	// Compute level counts from loaded samples
 	let levels = $derived(
@@ -61,6 +63,14 @@
 
 	function resolvePath(path: string): string {
 		return `${base}/${path}`;
+	}
+
+	function openModal(sample: Sample) {
+		modalSample = sample;
+	}
+
+	function closeModal() {
+		modalSample = null;
 	}
 </script>
 
@@ -118,6 +128,11 @@
 								phase_gif: resolvePath(sample.phase_gif),
 								intensity_gif: resolvePath(sample.intensity_gif)
 							}}
+							onOpenModal={(s) => openModal({
+								...s,
+								phase_gif: resolvePath(sample.phase_gif),
+								intensity_gif: resolvePath(sample.intensity_gif)
+							})}
 						/>
 					{/each}
 				</div>
@@ -125,6 +140,8 @@
 		</section>
 	</div>
 </div>
+
+<SampleModal sample={modalSample} onClose={closeModal} />
 
 <style>
 	.gallery {

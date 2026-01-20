@@ -1,81 +1,68 @@
 <script lang="ts">
-	import { onMount, onDestroy } from 'svelte';
-
 	interface Props {
 		src: string;
 		alt?: string;
+		playing?: boolean;
+		onclick?: () => void;
 	}
 
-	let { src, alt = '' }: Props = $props();
+	let { src, alt = '', playing = $bindable(true), onclick }: Props = $props();
 
-	let isPlaying = $state(true);
 	let imgElement = $state<HTMLImageElement | null>(null);
-	let canvasElement = $state<HTMLCanvasElement | null>(null);
-	let animationId: number | null = null;
+	let frozenSrc = $state<string | null>(null);
 
-	// Continuously capture frames to canvas while playing
-	function captureLoop() {
-		if (!imgElement || !canvasElement || !isPlaying) return;
-		const ctx = canvasElement.getContext('2d');
-		if (ctx && imgElement.complete && imgElement.naturalWidth > 0) {
-			canvasElement.width = imgElement.naturalWidth;
-			canvasElement.height = imgElement.naturalHeight;
-			ctx.drawImage(imgElement, 0, 0);
+	// Capture current frame to data URL
+	function captureFrame(): string | null {
+		if (!imgElement || !imgElement.complete || imgElement.naturalWidth === 0) {
+			return null;
 		}
-		animationId = requestAnimationFrame(captureLoop);
-	}
-
-	function startCapturing() {
-		if (animationId === null) {
-			captureLoop();
-		}
-	}
-
-	function stopCapturing() {
-		if (animationId !== null) {
-			cancelAnimationFrame(animationId);
-			animationId = null;
-		}
+		const canvas = document.createElement('canvas');
+		canvas.width = imgElement.naturalWidth;
+		canvas.height = imgElement.naturalHeight;
+		const ctx = canvas.getContext('2d');
+		if (!ctx) return null;
+		ctx.drawImage(imgElement, 0, 0);
+		return canvas.toDataURL();
 	}
 
 	function togglePlay() {
-		if (isPlaying) {
-			// Pausing - stop capturing, canvas already has last frame
-			stopCapturing();
-		} else {
-			// Resuming - start capturing again
-			startCapturing();
+		if (playing) {
+			// Pausing - capture current frame first
+			frozenSrc = captureFrame();
 		}
-		isPlaying = !isPlaying;
+		playing = !playing;
 	}
 
-	onMount(() => {
-		// Start capture loop when mounted
-		startCapturing();
+	// When playing changes externally
+	$effect(() => {
+		if (!playing && !frozenSrc && imgElement) {
+			// External pause without frozen frame - capture now
+			frozenSrc = captureFrame();
+		}
+		if (playing) {
+			// Clear frozen frame when resuming
+			frozenSrc = null;
+		}
 	});
 
-	onDestroy(() => {
-		stopCapturing();
-	});
+	function handleClick() {
+		if (onclick) {
+			onclick();
+		}
+	}
 </script>
 
-<div class="gif-player">
-	<!-- Hidden img for GIF source -->
+<!-- svelte-ignore a11y_click_events_have_key_events -->
+<!-- svelte-ignore a11y_no_static_element_interactions -->
+<div class="gif-player" class:clickable={onclick} onclick={handleClick}>
 	<img
 		bind:this={imgElement}
-		{src}
+		src={playing ? src : (frozenSrc || src)}
 		{alt}
-		class="gif-source"
-		class:hidden={!isPlaying}
+		class="gif-img"
 	/>
-	<!-- Canvas shows captured frame when paused -->
-	<canvas
-		bind:this={canvasElement}
-		class="gif-canvas"
-		class:hidden={isPlaying}
-	></canvas>
-	<button class="play-toggle" onclick={togglePlay} title={isPlaying ? 'Pause' : 'Play'}>
-		{#if isPlaying}
+	<button class="play-toggle" onclick={(e) => { e.stopPropagation(); togglePlay(); }} title={playing ? 'Pause' : 'Play'}>
+		{#if playing}
 			<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
 				<rect x="6" y="4" width="4" height="16" />
 				<rect x="14" y="4" width="4" height="16" />
@@ -98,16 +85,19 @@
 		aspect-ratio: 1 / 1;
 	}
 
-	.gif-source,
-	.gif-canvas {
+	.gif-player.clickable {
+		cursor: pointer;
+	}
+
+	.gif-player.clickable:hover {
+		border-color: var(--accent);
+	}
+
+	.gif-img {
 		width: 100%;
 		height: 100%;
 		object-fit: contain;
 		display: block;
-	}
-
-	.hidden {
-		display: none;
 	}
 
 	.play-toggle {
