@@ -373,3 +373,88 @@ Analysis of the actual metric update frequencies revealed significant difference
 
 The processed datasets generated the following visualization artifacts: `gpu_metrics_plot-v2_20251222_210600.html` (300 MB, 4.24-hour run with instant and averaged power curves), `gpu_metrics_v2_summary_20251222_210600.txt` (summary statistics for v2 run), `gpu_metrics_plot_20251222_060524.html` (19.0-hour run with single power readings), and corresponding summary files. The v2 visualization includes both instant and averaged power as separate traces, allowing comparison of transient behavior versus 1-second averaged values. All visualizations use Plotly for interactive exploration with pan, zoom, and hover capabilities, making it easy to identify power spikes, thermal throttling events, and training phase transitions across multi-hour runs.
 
+## GPU Voltage and Current Metrics Investigation
+
+### Problem Statement
+
+Investigated whether GPU core voltage and current (amperage) can be monitored via software on Linux, similar to how power and temperature are accessible through NVML.
+
+### Summary: Voltage/Current NOT Available for Standard GPUs
+
+Comprehensive research confirms that NVIDIA does not expose voltage or current metrics for discrete GPUs through any standard software interface.
+
+| Method | Voltage | Current | Notes |
+|--------|---------|---------|-------|
+| NVML API | No | No | Not implemented for GPUs |
+| nvidia-smi | Deprecated (returns N/A) | No | `--query-gpu=voltage.gpu` removed |
+| DCGM | NVSwitch only | NVSwitch only | Field IDs 701-704 are for NVSwitches, not GPUs |
+| Linux sysfs/hwmon | No | No | NVIDIA driver does not expose hwmon interface |
+| I2C/SMBus | Blocked | Blocked | VRM I2C bus not exposed to userspace |
+
+### What IS Available
+
+| Metric | API | Notes |
+|--------|-----|-------|
+| Power (Watts) | `nvmlDeviceGetPowerUsage()`, Field Values API | Instant and averaged |
+| Total Energy (mJ) | `nvmlDeviceGetTotalEnergyConsumption()` | Cumulative since driver load |
+| NVSwitch Voltage | DCGM `DCGM_FI_DEV_NVSWITCH_VOLTAGE_MVOLT` (701) | NVSwitch only |
+| NVSwitch Current | DCGM `DCGM_FI_DEV_NVSWITCH_CURRENT_IDDQ` (702-704) | NVSwitch only |
+| Jetson Voltage/Current | INA3221 via sysfs | Embedded platforms only |
+
+### Validation: Energy Consumption via C API
+
+Created `nvml_test.c` to verify energy consumption availability:
+
+```c
+unsigned long long energy;
+result = nvmlDeviceGetTotalEnergyConsumption(device, &energy);
+// Returns cumulative energy in millijoules since driver load
+```
+
+**Test Results (H100 GPUs):**
+- GPU 0: Total Energy 865,830 kJ (cumulative)
+- GPU 1: Total Energy 648,324 kJ (cumulative)
+- Power Instant: 70.79 W, 70.58 W (idle)
+- Power Average: 70.79 W, 70.58 W (idle)
+
+Note: `nvidia-smi --query-gpu=energy.counter` does not work; the field is only accessible via C API.
+
+### I2C Investigation
+
+The NVIDIA driver exposes I2C adapters, but they are for DDC (monitor communication), not VRM access:
+
+```
+i2c-1  i2c  NVIDIA i2c adapter 2 at 7:00.0  I2C adapter
+i2c-2  i2c  NVIDIA i2c adapter 2 at 8:00.0  I2C adapter
+```
+
+Scanning these buses with `i2cdetect` returns no devices. The VRM I2C bus is internal and not exposed to userspace.
+
+### Technical Background
+
+1. **NVIDIA has intentionally locked I2C access to VRM** on consumer and datacenter GPUs from Pascal onwards (confirmed by HWiNFO developer Martin).
+
+2. **Windows tools (HWiNFO, GPU-Z)** also cannot read actual voltage on Pascal+ GPUs. They only display VID (Voltage ID) values reported by the driver, not measured output voltage.
+
+3. **DCGM voltage/current fields exist** but only for NVSwitches in datacenter configurations, not for GPU cores.
+
+4. **Jetson platforms differ** because they include INA3221 power monitors accessible via I2C sysfs nodes.
+
+### Workarounds for Voltage/Current Measurement
+
+If voltage/current measurement is required:
+
+1. **External power meter** on PCIe power cables (Kill-A-Watt or similar)
+2. **Shunt resistor + ADC** on power rails (hardware modification)
+3. **Server BMC/IPMI** if the server exposes GPU rail monitoring via baseboard management
+4. **Derive from Power**: With known power P and estimated voltage V (0.8-1.1V typical), estimate current I = P/V
+
+### Related Files
+
+- `nvml_test.c` - C program testing NVML power and energy APIs
+- Compiled with: `gcc -o nvml_test nvml_test.c -I/usr/local/cuda/include -L/usr/local/cuda/lib64 -lnvidia-ml`
+
+### Conclusion
+
+GPU voltage and current metrics are not accessible via software on standard NVIDIA GPUs. Power consumption (Watts) and cumulative energy (millijoules) are the closest available metrics. For precise voltage/current analysis, external measurement hardware is required.
+
