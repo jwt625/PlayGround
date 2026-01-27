@@ -42,19 +42,16 @@ def get_model_response(client: OpenAI, chat_args: Dict, num_candidates: int) -> 
     candidate_responses = []
     for idx in range(num_candidates):
         max_retries = 1
-        last_error = None
         while max_retries > 0:
             try:
                 response = client.chat.completions.create(**chat_args)
                 candidate_responses.append(response)
                 break
             except Exception as e:
-                last_error = e
-                print(f"API Error (attempt {2 - max_retries}): {type(e).__name__}: {e}")
                 max_retries -= 1
                 time.sleep(10)
     if len(candidate_responses) == 0:
-        raise Exception(f"Failed to get model response. Last error: {last_error}")
+        raise Exception("Failed to get model response")
     return candidate_responses
 
 def build_client(model_name: str) -> OpenAI:
@@ -89,45 +86,12 @@ def get_meshy_info() -> Dict[str, str]:
     """Get Meshy API key and VA API key."""
     return {"meshy_api_key": MESHY_API_KEY, "va_api_key": VA_API_KEY}
 
-# Global image max size setting (can be adjusted for different models)
-# Qwen models work better with smaller images (512px) due to token limits
-IMAGE_MAX_SIZE = 1024
-
-def set_image_max_size(max_size: int) -> None:
-    """Set the global max image size for image encoding."""
-    global IMAGE_MAX_SIZE
-    IMAGE_MAX_SIZE = max_size
-
-def get_image_base64(image_path: str, max_size: int = None) -> str:
-    """Return a full data URL for the image, preserving original jpg/png format.
-
-    Args:
-        image_path: Path to the image file.
-        max_size: Maximum dimension (width or height) for the image.
-                  Images larger than this will be resized proportionally.
-                  If None, uses the global IMAGE_MAX_SIZE setting.
-                  Set to 0 to disable resizing.
-    """
-    if max_size is None:
-        max_size = IMAGE_MAX_SIZE
+def get_image_base64(image_path: str) -> str:
+    """Return a full data URL for the image, preserving original jpg/png format."""
     image = Image.open(image_path)
-
-    # Resize if image is larger than max_size (max_size > 0)
-    if max_size and max_size > 0:
-        width, height = image.size
-        if width > max_size or height > max_size:
-            # Calculate new size while preserving aspect ratio
-            if width > height:
-                new_width = max_size
-                new_height = int(height * (max_size / width))
-            else:
-                new_height = max_size
-                new_width = int(width * (max_size / height))
-            image = image.resize((new_width, new_height), Image.Resampling.LANCZOS)
-
     img_byte_array = io.BytesIO()
     ext = os.path.splitext(image_path)[1].lower()
-
+    
     # Convert image to appropriate mode for saving
     if ext in ['.jpg', '.jpeg']:
         save_format = 'JPEG'
