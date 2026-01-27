@@ -456,48 +456,121 @@ alias viga-python="/Users/wentaojiang/Documents/GitHub/PlayGround/20251129_gdsfa
 
 ---
 
-## 9. Next Steps
+## 9. Implementation Status
 
-1. [DONE] Test remote Qwen3-VL server connection
-2. [DONE] Setup Python environment with gdsfactory
-3. [TODO] Create `prompts/pic_layout/generator.py` with adapted prompt
-4. [TODO] Create `prompts/pic_layout/verifier.py` with adapted prompt
-5. [TODO] Create `utils/gds_render.py` rendering utility
-6. [TODO] Create `tools/gdsfactory/exec.py` execution tool
-7. [TODO] Create `runners/pic_layout.py` runner script
-8. [TODO] Prepare test case: simple MZI layout
-9. [TODO] Run first iteration and validate workflow
-10. [TODO] Iterate and refine prompts based on results
+### Completed Components
+
+**1. Remote Qwen3-VL Server**
+- Server: http://192.222.54.152:8000/v1
+- Model: Qwen3-VL-32B-Instruct
+- API key: In `.env` file
+- Status: Tested and working
+
+**2. Python Environment**
+- Path: `/Users/wentaojiang/Documents/GitHub/PlayGround/20251129_gdsfactory/.venv`
+- Packages: gdsfactory 9.23.0, matplotlib 3.10.7, openai 2.15.0, Pillow 12.0.0
+- Status: Installed and tested
+
+**3. Generator Prompt**
+- File: `prompts/pic_layout/generator.py`
+- Variable: `pic_layout_generator_system`
+- Key features:
+  - Dimensional accuracy focus (waveguide widths, gaps, bend radii, lengths)
+  - Topological correctness (port connectivity, routing)
+  - Design rules (min width, min radius, min spacing)
+  - gdsfactory component library reference
+  - Code structure template
+- Output format: JSON `{"thought": "...", "code": "..."}`
+
+**4. Verifier Prompt**
+- File: `prompts/pic_layout/verifier.py`
+- Variable: `pic_layout_verifier_system`
+- Key features:
+  - Component identification checklist
+  - Dimensional verification (critical/major/minor/negligible error classification)
+  - Topological verification (connectivity, routing, symmetry, alignment)
+  - Design rule checking
+  - Layout quality assessment
+- Output format: JSON with component_check, dimensional_analysis, topological_check, design_rule_violations, overall_assessment, edit_suggestions
+
+**5. Rendering Utility**
+- File: `utils/gds_render.py`
+- Functions:
+  - `render_gds_to_png(component, output_path, dpi=300)` - Render component to PNG
+  - `execute_and_render(code_str, output_dir, component_name)` - Execute code and render
+  - `get_component_info(component)` - Extract component metadata
+- Status: Tested with gdsfactory 9.23.0 API
+
+**6. Manual Test Script**
+- File: `manual_test_pic_layout.py`
+- Functions:
+  - `test_generator_code(code_str, iteration, output_base)` - Execute code, render, save outputs
+  - `save_iteration_summary(iteration, code, result, feedback)` - Track iteration data
+- Outputs: GDS file, PNG render, code file, summary.json
+- Status: Tested and working
+
+**7. Verifier Caller**
+- File: `call_verifier.py`
+- Functions:
+  - `call_verifier(target_image, current_image, description, code)` - Call Qwen3-VL API
+  - `save_verifier_result(result, output_path)` - Save verifier response
+- Uses: OpenAI client with vLLM endpoint
+- Status: Ready (not yet tested with actual comparison)
+
+### Manual Testing Workflow
+
+For MVP, manual iteration process:
+
+1. Generate code (manually or with Claude using `prompts/pic_layout/generator.py`)
+2. Execute and render:
+   ```python
+   from manual_test_pic_layout import test_generator_code
+   result = test_generator_code(code, iteration=1)
+   ```
+3. Get verifier feedback:
+   ```python
+   from call_verifier import call_verifier
+   feedback = call_verifier(target_image, result['png_path'], description, code)
+   ```
+4. Refine code based on feedback
+5. Repeat with iteration=2, 3, etc.
+
+### Pending Tasks
+
+1. Prepare test case with target layout image
+2. Run first manual iteration to validate workflow
+3. Refine prompts based on actual results
+4. Document findings and edge cases
 
 ---
 
-## 9. Open Questions
+## 10. Open Questions
 
-1. **Dimensional measurement:** How does Qwen3-VL measure dimensions from PNG images?
-   - May need to add scale bars or dimension annotations to renders
-   - Consider adding text labels with measurements
+1. **Dimensional measurement:** How accurately can Qwen3-VL measure dimensions from PNG images?
+   - May need scale bars or dimension annotations
+   - Test with known dimensions first
 
 2. **Layer visualization:** How to distinguish layers in PNG renders?
-   - Use different colors for different layers in matplotlib
-   - Add legend showing layer assignments
+   - gdsfactory uses default color scheme
+   - May need custom layer colors or legend
 
-3. **Port visualization:** How to show port locations/names?
-   - gdsfactory `plot(show_ports=True)` shows port markers
-   - May need to enhance with port labels
+3. **Quantitative feedback:** Can VLM provide numerical measurements or only qualitative?
+   - Test Qwen3-VL's ability to estimate dimensions
+   - May need reference scale in prompt
 
-4. **Quantitative feedback:** Can VLM provide numerical measurements?
-   - Test Qwen3-VL's ability to estimate dimensions from images
-   - May need to provide reference scale in prompt
+4. **Prompt refinement:** How to improve prompts based on actual results?
+   - Track common failure modes
+   - Add examples to prompts if needed
 
 ---
 
-## 10. Conclusion
+## 11. Summary
 
-The VIGA workflow is well-suited for PIC layout generation with key adaptations:
-- Replace Blender → gdsfactory
-- Replace 3D rendering → 2D GDS rendering (matplotlib)
-- Replace aesthetic feedback → dimensional/topological feedback
-- Maintain iterative refinement loop with vision-language model
+VIGA workflow adapted for PIC layout generation:
+- Vision agent: Qwen3-VL-32B-Instruct (remote server)
+- Code agent: Claude/Augment (local)
+- Rendering: gdsfactory → matplotlib → PNG
+- Focus: Dimensional accuracy and topological correctness over visual similarity
 
-The hybrid architecture (Qwen3-VL for vision, Claude for code) should work effectively for PIC layouts, potentially with higher accuracy than 3D scenes due to the 2D nature and quantifiable metrics.
+All core components implemented and tested. Ready for first manual iteration with actual test case.
 
