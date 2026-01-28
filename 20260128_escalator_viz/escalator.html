@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Escalator 3D Visualization</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; overflow: hidden; }
+        #container { width: 100vw; height: 100vh; }
+        #controls-wrapper {
+            position: absolute; top: 10px; left: 10px;
+            display: flex; align-items: flex-start;
+        }
+        #controls {
+            background: rgba(255,255,255,0.95); padding: 15px;
+            border-radius: 8px 0 0 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            max-height: 90vh; overflow-y: auto; width: 280px;
+            transition: margin-left 0.3s ease;
+        }
+        #controls.hidden {
+            margin-left: -280px;
+        }
+        #toggle-btn {
+            background: rgba(255,255,255,0.95); border: none;
+            padding: 10px 6px; cursor: pointer; font-size: 16px;
+            border-radius: 0 8px 8px 0; box-shadow: 2px 2px 10px rgba(0,0,0,0.2);
+            transition: transform 0.3s ease;
+        }
+        #toggle-btn:hover { background: rgba(240,240,240,1); }
+        #toggle-btn.flipped { transform: scaleX(-1); }
+        #controls h3 { margin-bottom: 10px; color: #333; }
+        .control-group { margin-bottom: 12px; }
+        .control-group label { display: block; margin-bottom: 4px; font-size: 12px; color: #555; }
+        .control-group input[type="range"] { width: 100%; }
+        .control-group .value { font-size: 11px; color: #888; float: right; }
+        .section-title { font-weight: bold; margin: 15px 0 8px; padding-top: 10px; border-top: 1px solid #ddd; }
+        #info { position: absolute; bottom: 10px; left: 10px; background: rgba(0,0,0,0.7); color: white; padding: 8px 12px; border-radius: 4px; font-size: 12px; }
+    </style>
+</head>
+<body>
+    <div id="container"></div>
+    <div id="controls-wrapper">
+    <div id="controls">
+        <h3>Escalator Parameters</h3>
+        <div class="section-title">Step Dimensions (mm)</div>
+        <div class="control-group">
+            <label>Step Width: <span class="value" id="stepWidthVal">1000</span></label>
+            <input type="range" id="stepWidth" min="600" max="1200" value="1000" step="10">
+        </div>
+        <div class="control-group">
+            <label>Step Depth: <span class="value" id="stepDepthVal">400</span></label>
+            <input type="range" id="stepDepth" min="300" max="500" value="400" step="10">
+        </div>
+        <div class="control-group">
+            <label>Step Rise: <span class="value" id="stepRiseVal">200</span></label>
+            <input type="range" id="stepRise" min="150" max="250" value="200" step="5">
+        </div>
+        <div class="section-title">Groove Parameters</div>
+        <div class="control-group">
+            <label>Groove Count: <span class="value" id="grooveCountVal">24</span></label>
+            <input type="range" id="grooveCount" min="10" max="40" value="24" step="1">
+        </div>
+        <div class="control-group">
+            <label>Groove Width (mm): <span class="value" id="grooveWidthVal">4</span></label>
+            <input type="range" id="grooveWidth" min="2" max="8" value="4" step="0.5">
+        </div>
+        <div class="control-group">
+            <label>Groove Depth (mm): <span class="value" id="grooveDepthVal">5</span></label>
+            <input type="range" id="grooveDepth" min="2" max="10" value="5" step="0.5">
+        </div>
+        <div class="control-group">
+            <label>Overhang Length (mm): <span class="value" id="overhangVal">15</span></label>
+            <input type="range" id="overhang" min="5" max="30" value="15" step="1">
+        </div>
+        <div class="section-title">Escalator Config</div>
+        <div class="control-group">
+            <label>Number of Steps: <span class="value" id="stepCountVal">18</span></label>
+            <input type="range" id="stepCount" min="10" max="25" value="18" step="1">
+        </div>
+        <div class="control-group">
+            <label>Incline Angle (°): <span class="value" id="inclineVal">30</span></label>
+            <input type="range" id="incline" min="25" max="35" value="30" step="1">
+        </div>
+    </div>
+    <button id="toggle-btn" title="Toggle controls">◀</button>
+    </div>
+    <div id="info">Drag to rotate | Scroll to zoom | WASD to move | Q down / E up</div>
+    <script>
+        document.getElementById('toggle-btn').addEventListener('click', function() {
+            const controls = document.getElementById('controls');
+            const btn = this;
+            controls.classList.toggle('hidden');
+            btn.classList.toggle('flipped');
+        });
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+    <script src="escalator.js"></script>
+</body>
+</html>
+
