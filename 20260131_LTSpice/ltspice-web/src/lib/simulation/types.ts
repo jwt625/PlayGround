@@ -1,11 +1,6 @@
-/**
- * Simulation result types
- */
+/** Simulation result types */
 
-export interface ComplexNumber {
-	real: number;
-	img: number;
-}
+export interface ComplexNumber { real: number; img: number; }
 
 export interface RealDataType {
 	name: string;
@@ -19,40 +14,19 @@ export interface ComplexDataType {
 	values: ComplexNumber[];
 }
 
-export interface RealResult {
+interface BaseResult {
 	header: string;
 	numVariables: number;
 	variableNames: string[];
 	numPoints: number;
-	dataType: 'real';
-	data: RealDataType[];
 }
 
-export interface ComplexResult {
-	header: string;
-	numVariables: number;
-	variableNames: string[];
-	numPoints: number;
-	dataType: 'complex';
-	data: ComplexDataType[];
-}
-
+export interface RealResult extends BaseResult { dataType: 'real'; data: RealDataType[]; }
+export interface ComplexResult extends BaseResult { dataType: 'complex'; data: ComplexDataType[]; }
 export type SimulationResult = RealResult | ComplexResult;
 
-export interface SimulationError {
-	message: string;
-	errors: string[];
-}
+export interface SimulationStatus { initialized: boolean; running: boolean; error: string | null; }
 
-export interface SimulationStatus {
-	initialized: boolean;
-	running: boolean;
-	error: string | null;
-}
-
-/**
- * API for the simulation worker
- */
 export interface SimulationWorkerAPI {
 	init(): Promise<void>;
 	run(netlist: string): Promise<SimulationResult>;

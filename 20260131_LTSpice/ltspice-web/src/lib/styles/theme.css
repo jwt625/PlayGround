@@ -1,163 +1,41 @@
 /* LTSpice-inspired Dark Theme */
-
 :root {
-  /* Background colors */
   --bg-primary: #1e1e1e;
   --bg-secondary: #252526;
   --bg-tertiary: #2d2d30;
-  --bg-hover: #3e3e42;
   --bg-selected: #094771;
-  
-  /* Text colors */
   --text-primary: #d4d4d4;
   --text-secondary: #9d9d9d;
   --text-muted: #6d6d6d;
-  --text-accent: #4fc3f7;
-  
-  /* Border colors */
   --border-primary: #3c3c3c;
-  --border-secondary: #454545;
-  
-  /* Schematic colors (LTSpice-inspired) */
-  --schematic-bg: #000000;
-  --schematic-grid: #333333;
-  --schematic-grid-major: #444444;
-  --schematic-wire: #00ff00;
-  --schematic-wire-selected: #ffff00;
-  --schematic-junction: #00ff00;
-  --schematic-component: #00ffff;
-  --schematic-component-fill: #1e1e1e;
-  --schematic-text: #ffffff;
-  --schematic-value: #00ff00;
-  --schematic-pin: #ff0000;
-  
-  /* Component-specific colors */
-  --color-resistor: #00bfff;
-  --color-capacitor: #00ff7f;
-  --color-inductor: #ffa500;
-  --color-diode: #ff69b4;
-  --color-transistor: #9370db;
-  --color-source: #ff6347;
-  --color-ground: #808080;
-  
-  /* Waveform viewer colors */
-  --waveform-bg: #000000;
-  --waveform-grid: #2a2a2a;
-  --waveform-axis: #4a4a4a;
-  --waveform-cursor: #ffff00;
-  --waveform-cursor-text: #ffffff;
-  
-  /* Trace colors (10 distinct colors for multiple traces) */
-  --trace-1: #00ff00;
-  --trace-2: #ff0000;
-  --trace-3: #0080ff;
-  --trace-4: #ff00ff;
-  --trace-5: #00ffff;
-  --trace-6: #ffff00;
-  --trace-7: #ff8000;
-  --trace-8: #80ff00;
-  --trace-9: #8000ff;
-  --trace-10: #ff0080;
-  
-  /* UI element colors */
-  --menu-bg: #2d2d30;
-  --menu-hover: #3e3e42;
-  --menu-border: #454545;
   --toolbar-bg: #333337;
   --statusbar-bg: #007acc;
-  --statusbar-text: #ffffff;
-  
-  /* Button colors */
+  --statusbar-text: #fff;
   --btn-primary-bg: #0e639c;
   --btn-primary-hover: #1177bb;
-  --btn-secondary-bg: #3c3c3c;
-  --btn-secondary-hover: #4e4e4e;
-  
-  /* Input colors */
-  --input-bg: #3c3c3c;
-  --input-border: #3c3c3c;
-  --input-focus-border: #007acc;
-  
-  /* Scrollbar */
   --scrollbar-bg: #1e1e1e;
   --scrollbar-thumb: #424242;
-  --scrollbar-thumb-hover: #4f4f4f;
-  
-  /* Spacing */
   --spacing-xs: 4px;
   --spacing-sm: 8px;
   --spacing-md: 16px;
-  --spacing-lg: 24px;
-  --spacing-xl: 32px;
-  
-  /* Font */
   --font-mono: 'Consolas', 'Monaco', 'Courier New', monospace;
   --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   --font-size-xs: 10px;
   --font-size-sm: 12px;
   --font-size-md: 14px;
-  --font-size-lg: 16px;
-  
-  /* Grid */
-  --grid-size: 10px;
 }
 
-/* Global reset and base styles */
-*, *::before, *::after {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 html, body {
-  height: 100%;
-  width: 100%;
-  overflow: hidden;
-  background-color: var(--bg-primary);
-  color: var(--text-primary);
-  font-family: var(--font-sans);
-  font-size: var(--font-size-md);
-  line-height: 1.4;
+  height: 100%; width: 100%; overflow: hidden;
+  background: var(--bg-primary); color: var(--text-primary);
+  font: var(--font-size-md)/1.4 var(--font-sans);
 }
 
-/* Scrollbar styling */
-::-webkit-scrollbar {
-  width: 10px;
-  height: 10px;
-}
-
-::-webkit-scrollbar-track {
-  background: var(--scrollbar-bg);
-}
-
-::-webkit-scrollbar-thumb {
-  background: var(--scrollbar-thumb);
-  border-radius: 2px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: var(--scrollbar-thumb-hover);
-}
-
-/* Selection */
-::selection {
-  background: var(--bg-selected);
-  color: var(--text-primary);
-}
-
-/* Focus outline */
-:focus-visible {
-  outline: 1px solid var(--input-focus-border);
-  outline-offset: -1px;
-}
-
-/* Links */
-a {
-  color: var(--text-accent);
-  text-decoration: none;
-}
-
-a:hover {
-  text-decoration: underline;
-}
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: var(--scrollbar-bg); }
+::-webkit-scrollbar-thumb { background: var(--scrollbar-thumb); }
+::selection { background: var(--bg-selected); color: var(--text-primary); }
+:focus-visible { outline: 1px solid #007acc; outline-offset: -1px; }
 

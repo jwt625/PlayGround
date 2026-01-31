@@ -452,3 +452,40 @@ Key elements:
 5. Can import basic LTSpice .asc file
 6. UI feels responsive and LTSpice-like
 
+---
+
+## Development Rules
+
+1. **AI does NOT run the app** - The user runs the app and inspects results. AI writes code only.
+
+---
+
+## Implementation Status (2026-01-31)
+
+### Completed
+- Project setup: SvelteKit + pnpm + Vite
+- Simulation engine: NGSpice WASM via eecircuit-engine, Web Worker + Comlink
+- Netlist editor: textarea input (CodeMirror not yet integrated)
+- Waveform viewer: WebGL-based with webgl-plot
+  - Pan (drag), zoom (scroll)
+  - Box zoom (Z key)
+  - Cursors A/B
+  - Grid (G key toggle)
+  - Autoscale (F key or double-click)
+  - Tooltip on hover
+  - Legend
+
+### Code Cleanup (2026-01-31)
+Reduced codebase by ~47% while maintaining all functionality:
+- WaveformViewer.svelte: 905 -> 517 lines
+- simulation/types.ts: 63 -> 36 lines
+- styles/theme.css: 164 -> 41 lines
+- waveform/types.ts: 69 -> 41 lines
+
+### Not Started
+- Schematic editor (canvas, components, wires)
+- Component system
+- Netlist generation from schematic
+- ASC file parser
+- localStorage persistence
+- Undo/redo
