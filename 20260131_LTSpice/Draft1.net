@@ -1,0 +1,69 @@
+* /Users/wentaojiang/Documents/GitHub/PlayGround/20260131_LTSpice/Draft1.asc
+D1 0 N002 1N4148
+C1 N001 N002 {CC} V=X Rser=1m Lser=0 mfg=" ---" pn=" ---" type=" ---"
+V1 N001 0 SINE(0 6 5000) AC 0 Rser=50
+D2 N002 N003 1N4148
+D3 N003 N004 1N4148
+D4 N004 N005 1N4148
+D6 N006 N007 1N4148
+D5 N005 N006 1N4148
+D7 N008 N009 1N4148
+D8 N007 N008 1N4148
+D9 N010 N011 1N4148
+D10 N009 N010 1N4148
+D11 N012 N013 1N4148
+D12 N011 N012 1N4148
+C2 N001 N004 {CC} V=X Rser=1m Lser=0 mfg=" ---" pn=" ---" type=" ---"
+C3 N001 N006 {CC} V=X Rser=1m Lser=0 mfg=" ---" pn=" ---" type=" ---"
+C4 N001 N008 {CC} V=X Rser=1m Lser=0 mfg=" ---" pn=" ---" type=" ---"
+C5 N001 N010 {CC} V=X Rser=1m Lser=0 mfg=" ---" pn=" ---" type=" ---"
+C6 N001 N012 {CC} V=X Rser=1m Lser=0 mfg=" ---" pn=" ---" type=" ---"
+C7 N013 0 {CC} V=X Rser=1m Lser=0 mfg=" ---" pn=" ---" type=" ---"
+C8 N011 0 {CC} V=X Rser=1m Lser=0 mfg=" ---" pn=" ---" type=" ---"
+C9 N009 0 {CC} V=X Rser=1m Lser=0 mfg=" ---" pn=" ---" type=" ---"
+C10 N007 0 {CC} V=X Rser=1m Lser=0 mfg=" ---" pn=" ---" type=" ---"
+C11 N003 0 {CC} V=X Rser=1m Lser=0 mfg=" ---" pn=" ---" type=" ---"
+C12 N005 0 {CC} V=X Rser=1m Lser=0 mfg=" ---" pn=" ---" type=" ---"
+XU1 0 N015 N031 N014 N032 N015 N030 N014 NE555
+V2 N014 0 12 Rser=1
+C13 N032 0 10n
+C14 N015 0 10n
+R1 N014 N030 1k
+R2 N015 N030 13k
+D13 0 N018 1N4148
+C15 N016 N018 {CC} V=X Rser=1m Lser=0 mfg=" ---" pn=" ---" type=" ---"
+D14 N018 N019 1N4148
+D15 N019 N020 1N4148
+D16 N020 N021 1N4148
+D17 N022 N023 1N4148
+D18 N021 N022 1N4148
+D19 N024 N025 1N4148
+D20 N023 N024 1N4148
+D21 N026 N027 1N4148
+D22 N025 N026 1N4148
+D23 N028 N029 1N4148
+D24 N027 N028 1N4148
+C16 N016 N020 {CC} V=X Rser=1m Lser=0 mfg=" ---" pn=" ---" type=" ---"
+C17 N016 N022 {CC} V=X Rser=1m Lser=0 mfg=" ---" pn=" ---" type=" ---"
+C18 N016 N024 {CC} V=X Rser=1m Lser=0 mfg=" ---" pn=" ---" type=" ---"
+C19 N016 N026 {CC} V=X Rser=1m Lser=0 mfg=" ---" pn=" ---" type=" ---"
+C20 N016 N028 {CC} V=X Rser=1m Lser=0 mfg=" ---" pn=" ---" type=" ---"
+C21 N029 0 {CC} V=X Rser=1m Lser=0 mfg=" ---" pn=" ---" type=" ---"
+C22 N027 0 {CC} V=X Rser=1m Lser=0 mfg=" ---" pn=" ---" type=" ---"
+C23 N025 0 {CC} V=X Rser=1m Lser=0 mfg=" ---" pn=" ---" type=" ---"
+C24 N023 0 {CC} V=X Rser=1m Lser=0 mfg=" ---" pn=" ---" type=" ---"
+C25 N019 0 {CC} V=X Rser=1m Lser=0 mfg=" ---" pn=" ---" type=" ---"
+C26 N021 0 {CC} V=X Rser=1m Lser=0 mfg=" ---" pn=" ---" type=" ---"
+C27 N016 N017 10µ
+Q1 N014 N031 N017 0 NPN
+Q2 0 N031 N017 0 PNP
+.model D D
+.lib /Users/wentaojiang/Library/Application Support/LTspice/lib/cmp/standard.dio
+.model NPN NPN
+.model PNP PNP
+.lib /Users/wentaojiang/Library/Application Support/LTspice/lib/cmp/standard.bjt
+.tran 0 2 0 1m
+.param CC=1u
+.lib NE555.sub
+.backanno
+.end
