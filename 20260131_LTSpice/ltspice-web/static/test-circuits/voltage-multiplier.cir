@@ -1,0 +1,49 @@
+* Cockcroft-Walton Voltage Multiplier
+* Adapted from Draft1.net for NGSpice compatibility
+
+.param CC=1u
+
+* Input source
+Vin in 0 SIN(0 6 5000)
+
+* First voltage multiplier stage (6-stage Cockcroft-Walton)
+D1 0 n2 D1N4148
+C1 in n2 {CC}
+D2 n2 n3 D1N4148
+D3 n3 n4 D1N4148
+D4 n4 n5 D1N4148
+D5 n5 n6 D1N4148
+D6 n6 n7 D1N4148
+D7 n8 n9 D1N4148
+D8 n7 n8 D1N4148
+D9 n10 n11 D1N4148
+D10 n9 n10 D1N4148
+D11 n12 n13 D1N4148
+D12 n11 n12 D1N4148
+
+* Coupling capacitors
+C2 in n4 {CC}
+C3 in n6 {CC}
+C4 in n8 {CC}
+C5 in n10 {CC}
+C6 in n12 {CC}
+
+* Output capacitors
+C7 n13 0 {CC}
+C8 n11 0 {CC}
+C9 n9 0 {CC}
+C10 n7 0 {CC}
+C11 n3 0 {CC}
+C12 n5 0 {CC}
+
+* Load resistor
+Rload n13 0 100k
+
+* 1N4148 Diode Model
+.model D1N4148 D(Is=2.52e-9 Rs=0.568 N=1.752 Cjo=4e-12 M=0.4 tt=20e-9)
+
+* Transient analysis
+.tran 1u 2m
+
+.end
+
