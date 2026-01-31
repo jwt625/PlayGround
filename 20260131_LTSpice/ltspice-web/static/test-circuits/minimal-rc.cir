@@ -1,0 +1,12 @@
+* Minimal RC Circuit - Basic Test
+* Simple RC low-pass filter with pulse input
+
+R1 in out 1k
+C1 out 0 1u
+
+Vin in 0 PULSE(0 5 0 1n 1n 0.5m 1m)
+
+.tran 1u 5m
+
+.end
+

@@ -153,6 +153,18 @@ Acceptable for modern web applications.
 | Editor | CodeMirror 6 | Lighter than Monaco, extensible |
 | Styling | Vanilla CSS | Minimal footprint, LTSpice dark theme |
 
+### UI Style Guidelines
+
+**Sharp Corners Only**: All UI elements must have sharp corners (border-radius: 0) to match LTSpice's clean, technical aesthetic. This applies to:
+- Tooltips
+- Indicators (zoom mode, etc.)
+- Legends
+- Buttons
+- Panels
+- All other UI elements
+
+No rounded corners anywhere in the application.
+
 ### Component Library
 
 **MVP (No Import)**:

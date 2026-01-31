@@ -25,8 +25,10 @@
 	}
 
 	// State
+	let gridCanvas: HTMLCanvasElement;
 	let canvas: HTMLCanvasElement;
 	let overlayCanvas: HTMLCanvasElement;
+	let containerEl: HTMLDivElement;
 	let wglp: WebglPlot | null = null;
 	let lines: Map<string, WebglLine> = new Map();
 	let animationId: number | null = null;
@@ -39,10 +41,18 @@
 		{ id: 'B', x: 0.75, visible: false, color: '#00ffff' }
 	]);
 
+	// UI state
+	let showGrid = $state(true);
+	let zoomRectMode = $state(false);
+	let zoomRectStart: { x: number; y: number } | null = null;
+	let zoomRectEnd: { x: number; y: number } | null = null;
+	let mousePos = $state({ x: 0, y: 0, dataX: 0, dataY: 0 });
+	let showTooltip = $state(false);
+
 	// Interaction state
 	let isDragging = false;
 	let dragStart = { x: 0, y: 0 };
-	let dragMode: 'pan' | 'zoom-x' | 'zoom-y' | 'cursor-a' | 'cursor-b' | null = null;
+	let dragMode: 'pan' | 'zoom-x' | 'zoom-y' | 'zoom-rect' | 'cursor-a' | 'cursor-b' | null = null;
 
 	onMount(() => {
 		initWebGL();
@@ -81,6 +91,10 @@
 		const dpr = window.devicePixelRatio || 1;
 		canvas.width = canvas.clientWidth * dpr;
 		canvas.height = canvas.clientHeight * dpr;
+		if (gridCanvas) {
+			gridCanvas.width = canvas.width;
+			gridCanvas.height = canvas.height;
+		}
 		if (overlayCanvas) {
 			overlayCanvas.width = canvas.width;
 			overlayCanvas.height = canvas.height;
@@ -172,7 +186,22 @@
 		wglp.gOffsetY = -(bounds.yMin + bounds.yMax) / yRange;
 
 		wglp.update();
+		drawGridLayer();
 		drawOverlay();
+	}
+
+	function drawGridLayer() {
+		if (!gridCanvas) return;
+		const ctx = gridCanvas.getContext('2d');
+		if (!ctx) return;
+
+		const w = gridCanvas.width;
+		const h = gridCanvas.height;
+		ctx.clearRect(0, 0, w, h);
+
+		if (showGrid) {
+			drawGrid(ctx, w, h);
+		}
 	}
 
 	function drawOverlay() {
@@ -184,7 +213,10 @@
 		const h = overlayCanvas.height;
 		ctx.clearRect(0, 0, w, h);
 
-		drawGrid(ctx, w, h);
+		// Draw hover crosshair line when tooltip is visible
+		if (showTooltip && !zoomRectMode && traces.length > 0) {
+			drawHoverLine(ctx, w, h);
+		}
 
 		for (const cursor of cursors) {
 			if (cursor.visible) {
@@ -193,48 +225,118 @@
 		}
 
 		drawAxisLabels(ctx, w, h);
+
+		// Draw zoom rectangle if in zoom-rect mode
+		if (zoomRectMode && zoomRectStart && zoomRectEnd) {
+			drawZoomRect(ctx, w, h);
+		}
+	}
+
+	function drawHoverLine(ctx: CanvasRenderingContext2D, _w: number, h: number) {
+		const yRange = bounds.yMax - bounds.yMin;
+		const dpr = window.devicePixelRatio || 1;
+		const px = mousePos.x * dpr;
+
+		// Draw vertical dashed line at mouse X position
+		ctx.strokeStyle = 'rgba(255, 255, 255, 0.4)';
+		ctx.lineWidth = 1;
+		ctx.setLineDash([4, 4]);
+		ctx.beginPath();
+		ctx.moveTo(px, 0);
+		ctx.lineTo(px, h);
+		ctx.stroke();
+		ctx.setLineDash([]);
+
+		// Draw markers on each trace at the hover X position
+		const traceValues = getTraceValuesAtX(mousePos.dataX);
+		for (const [traceName, value] of traceValues) {
+			const trace = traces.find(t => t.name === traceName);
+			if (!trace || !trace.visible) continue;
+
+			const py = h - ((value - bounds.yMin) / yRange) * h;
+
+			// Draw small circle marker
+			ctx.fillStyle = `rgb(${trace.color.r * 255}, ${trace.color.g * 255}, ${trace.color.b * 255})`;
+			ctx.beginPath();
+			ctx.arc(px, py, 3, 0, Math.PI * 2);
+			ctx.fill();
+
+			// Draw horizontal dashed line to Y axis
+			ctx.strokeStyle = `rgba(${trace.color.r * 255}, ${trace.color.g * 255}, ${trace.color.b * 255}, 0.3)`;
+			ctx.lineWidth = 1;
+			ctx.setLineDash([2, 2]);
+			ctx.beginPath();
+			ctx.moveTo(px, py);
+			ctx.lineTo(0, py);
+			ctx.stroke();
+			ctx.setLineDash([]);
+		}
 	}
 
 	function drawGrid(ctx: CanvasRenderingContext2D, w: number, h: number) {
-		ctx.strokeStyle = '#333333';
-		ctx.lineWidth = 1;
+		const dpr = window.devicePixelRatio || 1;
 
-		// Vertical grid lines
+		// Grid styling - subtle dark gray, 1 CSS pixel wide
+		ctx.strokeStyle = '#333333';
+		ctx.lineWidth = dpr; // 1 CSS pixel
+
 		const xRange = bounds.xMax - bounds.xMin;
-		const xStep = calculateGridStep(xRange, w / 100);
+		const yRange = bounds.yMax - bounds.yMin;
+
+		// Target pixel spacing between grid lines
+		const targetSpacingCss = 40; // CSS pixels
+		const targetSpacingCanvas = targetSpacingCss * dpr;
+
+		// X axis: how many divisions fit at target spacing?
+		const xTargetDivisions = Math.max(4, Math.round(w / targetSpacingCanvas));
+		const xStep = calculateNiceStep(xRange, xTargetDivisions);
+
 		for (let x = Math.ceil(bounds.xMin / xStep) * xStep; x <= bounds.xMax; x += xStep) {
 			const px = ((x - bounds.xMin) / xRange) * w;
 			ctx.beginPath();
-			ctx.moveTo(px, 0);
-			ctx.lineTo(px, h);
+			ctx.moveTo(Math.round(px) + 0.5, 0);
+			ctx.lineTo(Math.round(px) + 0.5, h);
 			ctx.stroke();
 		}
 
-		// Horizontal grid lines
-		const yRange = bounds.yMax - bounds.yMin;
-		const yStep = calculateGridStep(yRange, h / 80);
+		// Y axis: 2x density compared to X
+		const yTargetDivisions = Math.max(4, Math.round(h / targetSpacingCanvas) * 2);
+		const yStep = calculateNiceStep(yRange, yTargetDivisions);
+
 		for (let y = Math.ceil(bounds.yMin / yStep) * yStep; y <= bounds.yMax; y += yStep) {
 			const py = h - ((y - bounds.yMin) / yRange) * h;
 			ctx.beginPath();
-			ctx.moveTo(0, py);
-			ctx.lineTo(w, py);
+			ctx.moveTo(0, Math.round(py) + 0.5);
+			ctx.lineTo(w, Math.round(py) + 0.5);
 			ctx.stroke();
 		}
 	}
 
-	function calculateGridStep(range: number, targetDivisions: number): number {
+	// Calculate a "nice" step value that gives approximately targetDivisions
+	// Nice values are 1, 1.5, 2, 2.5, 5 × 10^n - more options for finer control
+	function calculateNiceStep(range: number, targetDivisions: number): number {
+		if (targetDivisions <= 0 || range <= 0) return range || 1;
+
 		const rawStep = range / targetDivisions;
 		const magnitude = Math.pow(10, Math.floor(Math.log10(rawStep)));
 		const normalized = rawStep / magnitude;
-		let step: number;
-		if (normalized < 2) step = 1;
-		else if (normalized < 5) step = 2;
-		else step = 5;
-		return step * magnitude;
+
+		// Pick the nice number that gets us closest to target divisions
+		// More granular nice numbers: 1, 1.5, 2, 2.5, 5, 10
+		let niceStep: number;
+		if (normalized < 1.25) niceStep = 1;
+		else if (normalized < 1.75) niceStep = 1.5;
+		else if (normalized < 2.25) niceStep = 2;
+		else if (normalized < 3.5) niceStep = 2.5;
+		else if (normalized < 7.5) niceStep = 5;
+		else niceStep = 10;
+
+		return niceStep * magnitude;
 	}
 
 	function drawCursor(ctx: CanvasRenderingContext2D, cursor: Cursor, w: number, h: number) {
 		const xRange = bounds.xMax - bounds.xMin;
+		const yRange = bounds.yMax - bounds.yMin;
 		const px = ((cursor.x - bounds.xMin) / xRange) * w;
 
 		ctx.strokeStyle = cursor.color;
@@ -246,30 +348,148 @@
 		ctx.stroke();
 		ctx.setLineDash([]);
 
-		// Cursor label
+		// Get trace values at cursor X position
+		const traceValues = getTraceValuesAtX(cursor.x);
+
+		// Draw markers on traces and build tooltip content
+		ctx.font = '11px monospace';
+
+		for (const [traceName, value] of traceValues) {
+			const trace = traces.find(t => t.name === traceName);
+			if (!trace || !trace.visible) continue;
+
+			// Draw marker dot on trace
+			const py = h - ((value - bounds.yMin) / yRange) * h;
+			ctx.fillStyle = `rgb(${trace.color.r * 255}, ${trace.color.g * 255}, ${trace.color.b * 255})`;
+			ctx.beginPath();
+			ctx.arc(px, py, 4, 0, Math.PI * 2);
+			ctx.fill();
+
+			// Draw horizontal dashed line from marker to Y axis
+			ctx.strokeStyle = `rgba(${trace.color.r * 255}, ${trace.color.g * 255}, ${trace.color.b * 255}, 0.5)`;
+			ctx.lineWidth = 1;
+			ctx.setLineDash([3, 3]);
+			ctx.beginPath();
+			ctx.moveTo(px, py);
+			ctx.lineTo(0, py);
+			ctx.stroke();
+			ctx.setLineDash([]);
+		}
+
+		// Draw cursor info box
+		const boxX = px + 8;
+		const boxY = 20;
+		const lineHeight = 14;
+		const boxHeight = 20 + traceValues.size * lineHeight;
+		const boxWidth = 120;
+
+		// Adjust box position if too close to right edge
+		const adjustedBoxX = (boxX + boxWidth > w) ? px - boxWidth - 8 : boxX;
+
+		// Background
+		ctx.fillStyle = 'rgba(0, 0, 0, 0.85)';
+		ctx.fillRect(adjustedBoxX, boxY, boxWidth, boxHeight);
+		ctx.strokeStyle = cursor.color;
+		ctx.lineWidth = 1;
+		ctx.strokeRect(adjustedBoxX, boxY, boxWidth, boxHeight);
+
+		// Cursor label and X value
 		ctx.fillStyle = cursor.color;
-		ctx.font = '12px monospace';
-		ctx.fillText(cursor.id, px + 4, 16);
+		ctx.font = 'bold 11px monospace';
+		ctx.fillText(`${cursor.id}: ${formatValue(cursor.x, 's')}`, adjustedBoxX + 4, boxY + 14);
+
+		// Trace values
+		ctx.font = '10px monospace';
+		let yOffset = boxY + 28;
+		for (const [traceName, value] of traceValues) {
+			const trace = traces.find(t => t.name === traceName);
+			if (!trace || !trace.visible) continue;
+			ctx.fillStyle = `rgb(${trace.color.r * 255}, ${trace.color.g * 255}, ${trace.color.b * 255})`;
+			ctx.fillText(`${formatValue(value, 'V')}`, adjustedBoxX + 4, yOffset);
+			yOffset += lineHeight;
+		}
+	}
+
+	function getTraceValuesAtX(x: number): Map<string, number> {
+		const values = new Map<string, number>();
+		if (!timeData.length) return values;
+
+		// Find the index in timeData closest to x
+		let idx = 0;
+		for (let i = 0; i < timeData.length; i++) {
+			if (timeData[i] >= x) {
+				idx = i;
+				break;
+			}
+			idx = i;
+		}
+
+		// Interpolate if possible
+		if (idx > 0 && idx < timeData.length) {
+			const t0 = timeData[idx - 1];
+			const t1 = timeData[idx];
+			const ratio = (t1 !== t0) ? (x - t0) / (t1 - t0) : 0;
+
+			for (const trace of traces) {
+				if (!trace.visible) continue;
+				const v0 = trace.values[idx - 1];
+				const v1 = trace.values[idx];
+				const interpolated = v0 + (v1 - v0) * ratio;
+				values.set(trace.name, interpolated);
+			}
+		} else {
+			for (const trace of traces) {
+				if (!trace.visible) continue;
+				values.set(trace.name, trace.values[idx] || 0);
+			}
+		}
+
+		return values;
+	}
+
+	function drawZoomRect(ctx: CanvasRenderingContext2D, _w: number, _h: number) {
+		if (!zoomRectStart || !zoomRectEnd) return;
+
+		const x = Math.min(zoomRectStart.x, zoomRectEnd.x);
+		const y = Math.min(zoomRectStart.y, zoomRectEnd.y);
+		const w = Math.abs(zoomRectEnd.x - zoomRectStart.x);
+		const h = Math.abs(zoomRectEnd.y - zoomRectStart.y);
+
+		ctx.strokeStyle = '#ffffff';
+		ctx.lineWidth = 1;
+		ctx.setLineDash([4, 4]);
+		ctx.strokeRect(x, y, w, h);
+		ctx.setLineDash([]);
+
+		ctx.fillStyle = 'rgba(255, 255, 255, 0.1)';
+		ctx.fillRect(x, y, w, h);
 	}
 
 	function drawAxisLabels(ctx: CanvasRenderingContext2D, w: number, h: number) {
+		const dpr = window.devicePixelRatio || 1;
 		ctx.fillStyle = '#888888';
-		ctx.font = '10px monospace';
+		ctx.font = `${10 * dpr}px monospace`;
+
+		// Use same grid step calculation as drawGrid for consistency
+		const targetSpacingCss = 40;
+		const targetSpacingCanvas = targetSpacingCss * dpr;
 
 		// X-axis labels
 		const xRange = bounds.xMax - bounds.xMin;
-		const xStep = calculateGridStep(xRange, w / 100);
+		const xTargetDivisions = Math.max(4, Math.round(w / targetSpacingCanvas));
+		const xStep = calculateNiceStep(xRange, xTargetDivisions);
 		for (let x = Math.ceil(bounds.xMin / xStep) * xStep; x <= bounds.xMax; x += xStep) {
 			const px = ((x - bounds.xMin) / xRange) * w;
-			ctx.fillText(formatValue(x, 's'), px + 2, h - 4);
+			ctx.fillText(formatValue(x, 's'), px + 2, h - 4 * dpr);
 		}
 
 		// Y-axis labels
 		const yRange = bounds.yMax - bounds.yMin;
-		const yStep = calculateGridStep(yRange, h / 80);
+		const yTargetDivisions = Math.max(4, Math.round(h / targetSpacingCanvas));
+		const yStep = calculateNiceStep(yRange, yTargetDivisions);
 		for (let y = Math.ceil(bounds.yMin / yStep) * yStep; y <= bounds.yMax; y += yStep) {
 			const py = h - ((y - bounds.yMin) / yRange) * h;
-			ctx.fillText(formatValue(y, 'V'), 4, py - 2);
+			ctx.fillText(formatValue(y, 'V'), 4 * dpr, py - 2 * dpr);
 		}
 	}
 
@@ -288,9 +508,14 @@
 	// Mouse event handlers
 	function handleMouseDown(e: MouseEvent) {
 		isDragging = true;
-		dragStart = { x: e.offsetX, y: e.offsetY };
+		const dpr = window.devicePixelRatio || 1;
+		dragStart = { x: e.offsetX * dpr, y: e.offsetY * dpr };
 
-		if (e.shiftKey) {
+		if (zoomRectMode) {
+			dragMode = 'zoom-rect';
+			zoomRectStart = { x: e.offsetX * dpr, y: e.offsetY * dpr };
+			zoomRectEnd = { x: e.offsetX * dpr, y: e.offsetY * dpr };
+		} else if (e.shiftKey) {
 			dragMode = 'zoom-x';
 		} else if (e.ctrlKey || e.metaKey) {
 			dragMode = 'zoom-y';
@@ -300,38 +525,96 @@
 	}
 
 	function handleMouseMove(e: MouseEvent) {
-		if (!isDragging || !dragMode) return;
-
-		const dx = e.offsetX - dragStart.x;
-		const dy = e.offsetY - dragStart.y;
+		const dpr = window.devicePixelRatio || 1;
 		const w = canvas.clientWidth;
 		const h = canvas.clientHeight;
 
-		if (dragMode === 'pan') {
-			const xRange = bounds.xMax - bounds.xMin;
-			const yRange = bounds.yMax - bounds.yMin;
-			const xShift = -(dx / w) * xRange;
-			const yShift = (dy / h) * yRange;
+		// Update mouse position for tooltip
+		const xRange = bounds.xMax - bounds.xMin;
+		const yRange = bounds.yMax - bounds.yMin;
+		mousePos = {
+			x: e.offsetX,
+			y: e.offsetY,
+			dataX: bounds.xMin + (e.offsetX / w) * xRange,
+			dataY: bounds.yMax - (e.offsetY / h) * yRange
+		};
+		showTooltip = true;
+
+		if (!isDragging || !dragMode) {
+			// Still render to update hover line even when not dragging
+			render();
+			return;
+		}
+
+		const dx = e.offsetX * dpr - dragStart.x;
+		const dy = e.offsetY * dpr - dragStart.y;
+
+		if (dragMode === 'zoom-rect') {
+			zoomRectEnd = { x: e.offsetX * dpr, y: e.offsetY * dpr };
+			render();
+		} else if (dragMode === 'pan') {
+			const xShift = -(dx / (w * dpr)) * xRange;
+			const yShift = (dy / (h * dpr)) * yRange;
 			bounds = {
 				xMin: bounds.xMin + xShift,
 				xMax: bounds.xMax + xShift,
 				yMin: bounds.yMin + yShift,
 				yMax: bounds.yMax + yShift
 			};
+			dragStart = { x: e.offsetX * dpr, y: e.offsetY * dpr };
+			render();
+		} else {
+			dragStart = { x: e.offsetX * dpr, y: e.offsetY * dpr };
+			render();
 		}
-
-		dragStart = { x: e.offsetX, y: e.offsetY };
-		render();
 	}
 
 	function handleMouseUp() {
+		if (dragMode === 'zoom-rect' && zoomRectStart && zoomRectEnd) {
+			// Apply zoom to rectangle
+			const w = canvas.width;
+			const h = canvas.height;
+			const xRange = bounds.xMax - bounds.xMin;
+			const yRange = bounds.yMax - bounds.yMin;
+
+			const x1 = Math.min(zoomRectStart.x, zoomRectEnd.x);
+			const x2 = Math.max(zoomRectStart.x, zoomRectEnd.x);
+			const y1 = Math.min(zoomRectStart.y, zoomRectEnd.y);
+			const y2 = Math.max(zoomRectStart.y, zoomRectEnd.y);
+
+			// Only zoom if rectangle is big enough
+			if (x2 - x1 > 10 && y2 - y1 > 10) {
+				const newXMin = bounds.xMin + (x1 / w) * xRange;
+				const newXMax = bounds.xMin + (x2 / w) * xRange;
+				const newYMax = bounds.yMax - (y1 / h) * yRange;
+				const newYMin = bounds.yMax - (y2 / h) * yRange;
+
+				bounds = { xMin: newXMin, xMax: newXMax, yMin: newYMin, yMax: newYMax };
+			}
+
+			zoomRectStart = null;
+			zoomRectEnd = null;
+			zoomRectMode = false;
+			render();
+		}
+
 		isDragging = false;
 		dragMode = null;
 	}
 
+	function handleMouseLeave() {
+		showTooltip = false;
+		handleMouseUp();
+	}
+
 	function handleWheel(e: WheelEvent) {
 		e.preventDefault();
-		const zoomFactor = e.deltaY > 0 ? 1.1 : 0.9;
+
+		// Normalize deltaY across browsers - positive = zoom out, negative = zoom in
+		const delta = e.deltaY !== 0 ? e.deltaY : e.deltaX;
+		const zoomIn = delta < 0;
+		const zoomFactor = zoomIn ? 0.9 : 1.1; // < 1 = zoom in (smaller range), > 1 = zoom out
+
 		const rect = canvas.getBoundingClientRect();
 		const mouseX = (e.clientX - rect.left) / rect.width;
 		const mouseY = 1 - (e.clientY - rect.top) / rect.height;
@@ -342,12 +625,14 @@
 		const yPos = bounds.yMin + mouseY * yRange;
 
 		if (e.shiftKey) {
-			// Zoom Y only
+			// Zoom Y only - apply zoom factor to Y range only
 			const newYRange = yRange * zoomFactor;
+			const newYMin = yPos - mouseY * newYRange;
+			const newYMax = yPos + (1 - mouseY) * newYRange;
 			bounds = {
 				...bounds,
-				yMin: yPos - mouseY * newYRange,
-				yMax: yPos + (1 - mouseY) * newYRange
+				yMin: newYMin,
+				yMax: newYMax
 			};
 		} else if (e.ctrlKey || e.metaKey) {
 			// Zoom X only
@@ -379,6 +664,13 @@
 
 	// Keyboard handlers
 	function handleKeyDown(e: KeyboardEvent) {
+		const panAmount = 0.1; // 10% of view
+		const zoomFactor = 0.8; // 20% zoom per keypress
+		const xRange = bounds.xMax - bounds.xMin;
+		const yRange = bounds.yMax - bounds.yMin;
+		const xCenter = (bounds.xMin + bounds.xMax) / 2;
+		const yCenter = (bounds.yMin + bounds.yMax) / 2;
+
 		if (e.key === 'a' || e.key === 'A') {
 			cursors[0].visible = !cursors[0].visible;
 			notifyCursorChange();
@@ -389,6 +681,69 @@
 			render();
 		} else if (e.key === 'f' || e.key === 'F') {
 			autoscale();
+			render();
+		} else if (e.key === 'g' || e.key === 'G') {
+			// Toggle grid
+			showGrid = !showGrid;
+			render();
+		} else if (e.key === 'z' || e.key === 'Z') {
+			// Toggle zoom rectangle mode
+			zoomRectMode = !zoomRectMode;
+			zoomRectStart = null;
+			zoomRectEnd = null;
+		} else if (e.key === '+' || e.key === '=') {
+			// Zoom in (centered)
+			e.preventDefault();
+			const newXRange = xRange * zoomFactor;
+			const newYRange = yRange * zoomFactor;
+			bounds = {
+				xMin: xCenter - newXRange / 2,
+				xMax: xCenter + newXRange / 2,
+				yMin: yCenter - newYRange / 2,
+				yMax: yCenter + newYRange / 2
+			};
+			render();
+		} else if (e.key === '-' || e.key === '_') {
+			// Zoom out (centered)
+			e.preventDefault();
+			const newXRange = xRange / zoomFactor;
+			const newYRange = yRange / zoomFactor;
+			bounds = {
+				xMin: xCenter - newXRange / 2,
+				xMax: xCenter + newXRange / 2,
+				yMin: yCenter - newYRange / 2,
+				yMax: yCenter + newYRange / 2
+			};
+			render();
+		} else if (e.key === 'ArrowLeft') {
+			// Pan left
+			e.preventDefault();
+			const shift = xRange * panAmount;
+			bounds = { ...bounds, xMin: bounds.xMin - shift, xMax: bounds.xMax - shift };
+			render();
+		} else if (e.key === 'ArrowRight') {
+			// Pan right
+			e.preventDefault();
+			const shift = xRange * panAmount;
+			bounds = { ...bounds, xMin: bounds.xMin + shift, xMax: bounds.xMax + shift };
+			render();
+		} else if (e.key === 'ArrowUp') {
+			// Pan up
+			e.preventDefault();
+			const shift = yRange * panAmount;
+			bounds = { ...bounds, yMin: bounds.yMin + shift, yMax: bounds.yMax + shift };
+			render();
+		} else if (e.key === 'ArrowDown') {
+			// Pan down
+			e.preventDefault();
+			const shift = yRange * panAmount;
+			bounds = { ...bounds, yMin: bounds.yMin - shift, yMax: bounds.yMax - shift };
+			render();
+		} else if (e.key === 'Escape') {
+			// Cancel zoom rect mode
+			zoomRectMode = false;
+			zoomRectStart = null;
+			zoomRectEnd = null;
 			render();
 		}
 	}
@@ -406,11 +761,13 @@
 <!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
 <!-- svelte-ignore a11y_no_noninteractive_tabindex -->
 <div
+	bind:this={containerEl}
 	class="waveform-container"
+	class:zoom-rect-mode={zoomRectMode}
 	onmousedown={handleMouseDown}
 	onmousemove={handleMouseMove}
 	onmouseup={handleMouseUp}
-	onmouseleave={handleMouseUp}
+	onmouseleave={handleMouseLeave}
 	onwheel={handleWheel}
 	ondblclick={handleDoubleClick}
 	onkeydown={handleKeyDown}
@@ -418,6 +775,7 @@
 	role="application"
 	aria-label="Waveform viewer - use mouse to pan/zoom, A/B keys for cursors"
 >
+	<canvas bind:this={gridCanvas} class="grid-canvas"></canvas>
 	<canvas bind:this={canvas} class="waveform-canvas"></canvas>
 	<canvas bind:this={overlayCanvas} class="overlay-canvas"></canvas>
 	<div class="legend">
@@ -430,6 +788,27 @@
 			{/if}
 		{/each}
 	</div>
+
+	{#if showTooltip && !zoomRectMode && traces.length > 0}
+		<div class="tooltip" style="left: {mousePos.x + 15}px; top: {mousePos.y + 15}px;">
+			<div class="tooltip-header">X: {formatValue(mousePos.dataX, 's')}</div>
+			{#each traces as trace}
+				{#if trace.visible}
+					{@const values = getTraceValuesAtX(mousePos.dataX)}
+					{@const val = values.get(trace.name)}
+					{#if val !== undefined}
+						<div class="tooltip-row" style="color: rgb({trace.color.r * 255}, {trace.color.g * 255}, {trace.color.b * 255})">
+							{trace.name}: {formatValue(val, 'V')}
+						</div>
+					{/if}
+				{/if}
+			{/each}
+		</div>
+	{/if}
+
+	{#if zoomRectMode}
+		<div class="zoom-mode-indicator">ZOOM RECT (Z to cancel)</div>
+	{/if}
 </div>
 
 <style>
@@ -439,8 +818,14 @@
 		height: 100%;
 		background: #000000;
 		overflow: hidden;
+		cursor: crosshair;
 	}
 
+	.waveform-container.zoom-rect-mode {
+		cursor: crosshair;
+	}
+
+	.grid-canvas,
 	.waveform-canvas,
 	.overlay-canvas {
 		position: absolute;
@@ -460,9 +845,9 @@
 		right: 8px;
 		background: rgba(0, 0, 0, 0.7);
 		padding: 4px 8px;
-		border-radius: 4px;
 		font-size: 11px;
 		font-family: monospace;
+		pointer-events: none;
 	}
 
 	.legend-item {
@@ -476,6 +861,44 @@
 		width: 12px;
 		height: 2px;
 		background: currentColor;
+	}
+
+	.tooltip {
+		position: absolute;
+		background: rgba(0, 0, 0, 0.9);
+		border: 1px solid #444;
+		padding: 6px 10px;
+		font-family: monospace;
+		font-size: 10px;
+		pointer-events: none;
+		z-index: 100;
+		max-width: 200px;
+		white-space: nowrap;
+	}
+
+	.tooltip-header {
+		color: #aaa;
+		margin-bottom: 4px;
+		padding-bottom: 4px;
+		border-bottom: 1px solid #333;
+	}
+
+	.tooltip-row {
+		padding: 1px 0;
+	}
+
+	.zoom-mode-indicator {
+		position: absolute;
+		top: 8px;
+		left: 50%;
+		transform: translateX(-50%);
+		background: rgba(255, 200, 0, 0.9);
+		color: #000;
+		padding: 4px 12px;
+		font-family: monospace;
+		font-size: 11px;
+		font-weight: bold;
+		pointer-events: none;
 	}
 </style>
 
