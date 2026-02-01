@@ -38,7 +38,8 @@ export type EditorMode =
 	| 'delete'    // 5: Delete on click
 	| 'duplicate' // 6: Duplicate selected items
 	| 'move'      // 7: Move selected items
-	| 'place';    // Placing a component
+	| 'place'     // Placing a component
+	| 'probe';    // P: Voltage/current probe mode
 
 /** Mouse/interaction state */
 export interface InteractionState {
@@ -115,6 +116,28 @@ export interface Schematic {
 	components: Component[];
 	wires: Wire[];
 	junctions: Junction[];  // Explicit wire-to-wire connections
+	nodeLabels?: NodeLabel[];  // Node labels from netlist generation
+}
+
+/** Node label for display on schematic */
+export interface NodeLabel {
+	name: string;      // Node name (e.g., "0", "1", "in", "out")
+	x: number;         // Position in schematic coordinates
+	y: number;
+	isGround: boolean;
+}
+
+/** Probe types */
+export type ProbeType = 'voltage' | 'current' | 'voltage-diff';
+
+/** Probe definition */
+export interface Probe {
+	id: string;
+	type: ProbeType;
+	node1: string;           // First node (or component for current)
+	node2?: string;          // Second node for voltage-diff
+	componentId?: string;    // Component ID for current probe
+	label: string;           // Display label (e.g., "V(1)", "I(R1)")
 }
 
 /** Default values */
@@ -153,6 +176,7 @@ export const MODE_SHORTCUTS: Record<string, EditorMode> = {
 	'5': 'delete',    // F5 -> Delete mode
 	'6': 'duplicate', // F6 -> Duplicate mode
 	'7': 'move',      // F7 -> Move mode
+	'p': 'probe',     // P -> Probe mode
 };
 
 /** Get mode display name */
@@ -164,6 +188,7 @@ export function getModeName(mode: EditorMode): string {
 		case 'duplicate': return 'Duplicate (6)';
 		case 'move': return 'Move (7)';
 		case 'place': return 'Place';
+		case 'probe': return 'Probe (P)';
 		default: return mode;
 	}
 }

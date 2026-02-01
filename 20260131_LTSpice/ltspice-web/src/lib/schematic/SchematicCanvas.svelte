@@ -1,12 +1,26 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import type { ViewTransform, GridSettings, Point, Schematic, Component, ComponentType, Rotation, EditorMode, WireDrawState, Wire, Junction } from './types';
+	import type { ViewTransform, GridSettings, Point, Schematic, Component, ComponentType, Rotation, EditorMode, WireDrawState, Wire, Junction, ProbeType } from './types';
 	import { DEFAULT_VIEW, DEFAULT_GRID, DEFAULT_WIRE_DRAW, MODE_SHORTCUTS, getModeName } from './types';
 	import { renderComponent, hitTestComponent, nextRotation } from './component-renderer';
 	import { COMPONENT_DEFS, getComponentByShortcut } from './component-defs';
 	import { COMPONENT_PREFIX } from '$lib/netlist/types';
 
-	let { schematic = $bindable({ components: [], wires: [], junctions: [] }) }: { schematic: Schematic } = $props();
+	interface ProbeEvent {
+		type: ProbeType;
+		node1: string;
+		node2?: string;
+		componentId?: string;
+		label: string;
+	}
+
+	let {
+		schematic = $bindable({ components: [], wires: [], junctions: [] }),
+		onprobe
+	}: {
+		schematic: Schematic;
+		onprobe?: (event: ProbeEvent) => void;
+	} = $props();
 
 	let canvas: HTMLCanvasElement;
 	let ctx: CanvasRenderingContext2D | null = null;
@@ -32,6 +46,13 @@
 
 	// Wire drawing state
 	let wireDraw: WireDrawState = $state({ ...DEFAULT_WIRE_DRAW });
+
+	// Probe state for differential voltage measurement
+	let probeState = $state<{
+		isHolding: boolean;
+		firstNode: Point | null;
+		firstNodeName: string | null;
+	}>({ isHolding: false, firstNode: null, firstNodeName: null });
 
 	// Component counter for generating unique IDs
 	let componentCounters: Record<string, number> = $state({});
@@ -134,6 +155,14 @@
 
 		// Draw components
 		drawComponents();
+
+		// Draw node labels (if available)
+		drawNodeLabels();
+
+		// Draw probe cursor overlay in probe mode
+		if (mode === 'probe') {
+			drawProbeCursor();
+		}
 
 		ctx.restore();
 	}
@@ -337,6 +366,142 @@
 		}
 	}
 
+	function drawNodeLabels() {
+		if (!ctx || !schematic.nodeLabels || schematic.nodeLabels.length === 0) return;
+
+		const fontSize = Math.max(10, 12 / view.scale);
+		ctx.font = `${fontSize}px monospace`;
+		ctx.textAlign = 'left';
+		ctx.textBaseline = 'bottom';
+
+		for (const label of schematic.nodeLabels) {
+			// Draw background
+			const text = label.name;
+			const metrics = ctx.measureText(text);
+			const padding = 2 / view.scale;
+			const bgWidth = metrics.width + padding * 2;
+			const bgHeight = fontSize + padding * 2;
+
+			ctx.fillStyle = label.isGround ? '#004400' : '#000044';
+			ctx.fillRect(label.x + 3, label.y - bgHeight - 2, bgWidth, bgHeight);
+
+			// Draw text
+			ctx.fillStyle = label.isGround ? '#00ff00' : '#88ccff';
+			ctx.fillText(text, label.x + 3 + padding, label.y - 2 - padding);
+		}
+	}
+
+	/** Draw a voltage probe shape (pointed tip like multimeter probe) */
+	function drawVoltageProbe(x: number, y: number, color: string, label: string) {
+		if (!ctx) return;
+		const s = 1 / view.scale;  // Scale factor
+
+		// Probe tip pointing down-left (toward the circuit point)
+		ctx.save();
+		ctx.translate(x, y);
+
+		// Pointed tip
+		ctx.fillStyle = color;
+		ctx.beginPath();
+		ctx.moveTo(0, 0);  // Tip
+		ctx.lineTo(4 * s, -8 * s);
+		ctx.lineTo(8 * s, -8 * s);
+		ctx.lineTo(8 * s, -28 * s);
+		ctx.lineTo(4 * s, -28 * s);
+		ctx.lineTo(4 * s, -8 * s);
+		ctx.closePath();
+		ctx.fill();
+
+		// Handle
+		ctx.fillStyle = '#333333';
+		ctx.fillRect(3 * s, -40 * s, 6 * s, 14 * s);
+
+		// Label (+/-)
+		ctx.fillStyle = '#ffffff';
+		ctx.font = `bold ${10 * s}px sans-serif`;
+		ctx.textAlign = 'center';
+		ctx.textBaseline = 'middle';
+		ctx.fillText(label, 6 * s, -18 * s);
+
+		ctx.restore();
+	}
+
+	/** Draw a current clamp/transformer shape */
+	function drawCurrentClamp(x: number, y: number) {
+		if (!ctx) return;
+		const s = 1 / view.scale;
+
+		ctx.save();
+		ctx.translate(x, y);
+
+		// Clamp jaws (open loop shape)
+		ctx.strokeStyle = '#ff8800';
+		ctx.lineWidth = 3 * s;
+		ctx.beginPath();
+		// Left jaw
+		ctx.arc(0, -15 * s, 12 * s, 0.3 * Math.PI, 0.9 * Math.PI);
+		ctx.stroke();
+		ctx.beginPath();
+		// Right jaw
+		ctx.arc(0, -15 * s, 12 * s, 0.1 * Math.PI, -0.1 * Math.PI, true);
+		ctx.lineTo(6 * s, -15 * s);
+		ctx.stroke();
+
+		// Handle
+		ctx.fillStyle = '#ff8800';
+		ctx.fillRect(-4 * s, -30 * s, 8 * s, 8 * s);
+		ctx.fillStyle = '#333333';
+		ctx.fillRect(-3 * s, -45 * s, 6 * s, 16 * s);
+
+		// "I" label
+		ctx.fillStyle = '#ffffff';
+		ctx.font = `bold ${8 * s}px sans-serif`;
+		ctx.textAlign = 'center';
+		ctx.textBaseline = 'middle';
+		ctx.fillText('I', 0, -26 * s);
+
+		ctx.restore();
+	}
+
+	function drawProbeCursor() {
+		if (!ctx) return;
+		const pos = schematicPos;  // Use actual cursor position, not snapped
+
+		// Check what's under cursor
+		const compUnder = findComponentAt(pos);
+		const wireUnder = findWireAt(pos);
+
+		// If holding for differential probe
+		if (probeState.isHolding && probeState.firstNode) {
+			// Draw RED (+) probe fixed at first node (positive reference)
+			drawVoltageProbe(probeState.firstNode.x, probeState.firstNode.y, '#ff0000', '+');
+
+			// Draw dashed line between probes
+			ctx.strokeStyle = '#888888';
+			ctx.lineWidth = 1 / view.scale;
+			ctx.setLineDash([4 / view.scale, 4 / view.scale]);
+			ctx.beginPath();
+			ctx.moveTo(probeState.firstNode.x, probeState.firstNode.y);
+			ctx.lineTo(pos.x, pos.y);
+			ctx.stroke();
+			ctx.setLineDash([]);
+
+			// Draw BLACK (-) probe at cursor (negative reference)
+			drawVoltageProbe(pos.x, pos.y, '#000000', '-');
+		} else if (compUnder && compUnder.type !== 'ground') {
+			// Current probe - draw clamp at cursor
+			drawCurrentClamp(pos.x, pos.y);
+		} else if (wireUnder) {
+			// Voltage probe - draw red probe at cursor
+			drawVoltageProbe(pos.x, pos.y, '#ff0000', '+');
+		} else {
+			// Default - show faded probe at cursor
+			ctx.globalAlpha = 0.4;
+			drawVoltageProbe(pos.x, pos.y, '#888888', '?');
+			ctx.globalAlpha = 1.0;
+		}
+	}
+
 	function getHudText(): string {
 		const snapped = snapToGrid(schematicPos);
 		let text = `(${snapped.x}, ${snapped.y}) | Zoom: ${(view.scale * 100).toFixed(0)}%`;
@@ -362,6 +527,12 @@
 			text += ' | Click on item to duplicate, Esc=exit';
 		} else if (mode === 'move') {
 			text += ' | Drag to move, Esc=exit';
+		} else if (mode === 'probe') {
+			if (probeState.isHolding) {
+				text += ' | Release to measure V(+) - V(-), Esc=cancel';
+			} else {
+				text += ' | Click wire=V probe, Click component=I probe, Hold+drag=V diff';
+			}
 		} else if (selectedIds.size > 0 || selectedWireIds.size > 0) {
 			const total = selectedIds.size + selectedWireIds.size;
 			text += ` | Selected: ${total}`;
@@ -369,7 +540,7 @@
 		}
 
 		// Always show mode shortcuts hint
-		text += ' | 3=wire 5=del 6=dup 7=move';
+		text += ' | 3=wire 5=del 6=dup 7=move P=probe';
 
 		return text;
 	}
@@ -396,6 +567,12 @@
 			if (mode === 'duplicate') {
 				handleDuplicateClick(clickPos, snapped);
 				return;
+			}
+
+			// Handle probe mode - start differential probe on mousedown
+			if (mode === 'probe') {
+				handleProbeMouseDown(snapped);
+				// Don't return - let mouseup handle the actual probe action
 			}
 
 			// Handle component placement
@@ -634,6 +811,82 @@
 		}
 	}
 
+	/** Handle click in probe mode */
+	function handleProbeClick(clickPos: Point, snapped: Point) {
+		const comp = findComponentAt(clickPos);
+		const wire = findWireAt(clickPos);
+
+		if (comp && comp.type !== 'ground') {
+			// Current probe on component
+			const instName = comp.attributes['InstName'] || comp.id;
+			addProbe('current', instName, comp.id);
+			return;
+		}
+
+		if (wire) {
+			// Voltage probe on wire - find the node name
+			const nodeName = getNodeAtPosition(snapped);
+			if (nodeName) {
+				addProbe('voltage', nodeName);
+			}
+		}
+	}
+
+	/** Start differential probe (mousedown on wire) */
+	function handleProbeMouseDown(snapped: Point) {
+		const wire = findWireAt(snapped);
+		if (wire) {
+			const nodeName = getNodeAtPosition(snapped);
+			probeState = {
+				isHolding: true,
+				firstNode: snapped,
+				firstNodeName: nodeName
+			};
+			render();
+		}
+	}
+
+	/** Complete differential probe (mouseup) */
+	function handleProbeMouseUp(snapped: Point) {
+		if (probeState.isHolding && probeState.firstNodeName) {
+			const secondNodeName = getNodeAtPosition(snapped);
+			if (secondNodeName && secondNodeName !== probeState.firstNodeName) {
+				addProbe('voltage-diff', probeState.firstNodeName, undefined, secondNodeName);
+			}
+		}
+		probeState = { isHolding: false, firstNode: null, firstNodeName: null };
+		render();
+	}
+
+	/** Get node name at a position (from nodeLabels) */
+	function getNodeAtPosition(pos: Point): string | null {
+		if (!schematic.nodeLabels) return null;
+
+		// Find the closest node label
+		let closest: { name: string; dist: number } | null = null;
+		for (const label of schematic.nodeLabels) {
+			const dist = Math.hypot(label.x - pos.x, label.y - pos.y);
+			if (dist < 50 && (!closest || dist < closest.dist)) {
+				closest = { name: label.name, dist };
+			}
+		}
+		return closest?.name || null;
+	}
+
+	/** Add a probe (calls onprobe callback) */
+	function addProbe(type: ProbeType, node1: string, componentId?: string, node2?: string) {
+		const label = type === 'current'
+			? `I(${node1})`
+			: type === 'voltage-diff'
+				? `V(${node1},${node2})`
+				: `V(${node1})`;
+
+		// Call the onprobe callback if provided
+		if (onprobe) {
+			onprobe({ type, node1, node2, componentId, label });
+		}
+	}
+
 	/** Find component at position */
 	function findComponentAt(pos: Point): Component | null {
 		for (let i = schematic.components.length - 1; i >= 0; i--) {
@@ -747,7 +1000,21 @@
 		render();
 	}
 
-	function handleMouseUp() {
+	function handleMouseUp(e: MouseEvent) {
+		// Handle probe mode mouseup
+		if (mode === 'probe') {
+			const clickPos = screenToSchematic(e.offsetX, e.offsetY);
+			const snapped = snapToGrid(clickPos);
+
+			if (probeState.isHolding) {
+				// Complete differential probe
+				handleProbeMouseUp(snapped);
+			} else {
+				// Single click probe
+				handleProbeClick(clickPos, snapped);
+			}
+		}
+
 		isDragging = false;
 		dragStart = null;
 	}

@@ -3,15 +3,16 @@
 	import { initSimulation, runSimulation, terminateSimulation, type SimulationResult } from '$lib/simulation';
 	import { WaveformViewer, type TraceData, getTraceColor } from '$lib/waveform';
 	import { NetlistEditor } from '$lib/editor';
-	import { SchematicCanvas, type Schematic } from '$lib/schematic';
+	import { SchematicCanvas, type Schematic, type Probe } from '$lib/schematic';
 	import { ResizablePanel } from '$lib/components';
-	import { schematicToNetlist } from '$lib/netlist';
+	import { schematicToNetlist, generateNodeLabels } from '$lib/netlist';
 
 	let status = $state('Not initialized');
 	let simResult = $state<SimulationResult | null>(null);
 	let waveformTraces = $state<TraceData[]>([]);
 	let timeData = $state<number[]>([]);
 	let schematic = $state<Schematic>({ components: [], wires: [], junctions: [] });
+	let probes = $state<Probe[]>([]);
 
 	let netlistCollapsed = $state(false);
 	let schematicCollapsed = $state(false);
@@ -65,30 +66,83 @@ Vin in 0 PULSE(0 5 0 1n 1n 0.5m 1m)
 			status = `Simulation complete: ${result.numPoints} points, ${result.numVariables} variables`;
 
 			// Convert simulation result to waveform traces
-			if (result.dataType === 'real') {
-				const traces: TraceData[] = [];
-				let colorIndex = 0;
-
-				for (const data of result.data) {
-					if (data.type === 'time') {
-						// Time is the X axis
-						timeData = data.values as number[];
-					} else {
-						// Other variables are traces
-						traces.push({
-							id: data.name,
-							name: data.name,
-							type: data.type,
-							values: data.values as number[],
-							color: getTraceColor(colorIndex++),
-							visible: true
-						});
-					}
-				}
-				waveformTraces = traces;
-			}
+			updateWaveformFromResult(result);
 		} catch (err) {
 			status = `Simulation error: ${err}`;
+		}
+	}
+
+	/** Update waveform traces from simulation result, filtered by probes */
+	function updateWaveformFromResult(result: SimulationResult) {
+		if (result.dataType !== 'real') return;
+
+		const traces: TraceData[] = [];
+		let colorIndex = 0;
+
+		for (const data of result.data) {
+			if (data.type === 'time') {
+				timeData = data.values as number[];
+			} else {
+				// Check if this trace matches any probe
+				const matchesProbe = probes.length === 0 || probes.some(probe => {
+					const dataNameLower = data.name.toLowerCase();
+					if (probe.type === 'voltage') {
+						// Match v(node) format
+						return dataNameLower === `v(${probe.node1.toLowerCase()})`;
+					} else if (probe.type === 'voltage-diff') {
+						// Match v(node1,node2) or v(node1)-v(node2)
+						return dataNameLower === `v(${probe.node1.toLowerCase()},${probe.node2?.toLowerCase()})` ||
+							   dataNameLower === `v(${probe.node1.toLowerCase()})` ||
+							   dataNameLower === `v(${probe.node2?.toLowerCase()})`;
+					} else if (probe.type === 'current') {
+						// Match i(component) format
+						return dataNameLower.includes(probe.node1.toLowerCase());
+					}
+					return false;
+				});
+
+				if (matchesProbe) {
+					traces.push({
+						id: data.name,
+						name: data.name,
+						type: data.type,
+						values: data.values as number[],
+						color: getTraceColor(colorIndex++),
+						visible: true
+					});
+				}
+			}
+		}
+		waveformTraces = traces;
+	}
+
+	/** Handle probe event from schematic canvas */
+	function handleProbe(event: { type: string; node1: string; node2?: string; componentId?: string; label: string }) {
+		const { type, node1, node2, componentId, label } = event;
+
+		// Check if probe already exists
+		const existingIndex = probes.findIndex(p => p.label === label);
+		if (existingIndex >= 0) {
+			// Remove existing probe (toggle off)
+			probes = probes.filter((_, i) => i !== existingIndex);
+			status = `Removed probe: ${label}`;
+		} else {
+			// Add new probe
+			const newProbe: Probe = {
+				id: crypto.randomUUID(),
+				type: type as Probe['type'],
+				node1,
+				node2,
+				componentId,
+				label
+			};
+			probes = [...probes, newProbe];
+			status = `Added probe: ${label}`;
+		}
+
+		// Update waveform if we have simulation results
+		if (simResult) {
+			updateWaveformFromResult(simResult);
 		}
 	}
 
@@ -99,7 +153,11 @@ Vin in 0 PULSE(0 5 0 1n 1n 0.5m 1m)
 		}
 		const netlistText = schematicToNetlist(schematic, 'Generated from Schematic');
 		netlistInput = netlistText;
-		status = `Generated netlist: ${schematic.components.length} components, ${schematic.wires.length} wires`;
+
+		// Generate and attach node labels for display on schematic
+		schematic.nodeLabels = generateNodeLabels(schematic);
+
+		status = `Generated netlist: ${schematic.components.length} components, ${schematic.wires.length} wires, ${schematic.nodeLabels.length} nodes`;
 	}
 
 	function handleKeyDown(e: KeyboardEvent) {
@@ -108,11 +166,98 @@ Vin in 0 PULSE(0 5 0 1n 1n 0.5m 1m)
 			e.preventDefault();
 			runSim();
 		}
-		// Ctrl+G to generate netlist from schematic (when not in schematic canvas)
-		// Note: Ctrl+G in schematic canvas toggles grid, so we check if target is not canvas
+		// Ctrl+N to generate netlist from schematic
 		if ((e.ctrlKey || e.metaKey) && e.key === 'n') {
 			e.preventDefault();
 			generateNetlistFromSchematic();
+		}
+		// Ctrl+S to save schematic
+		if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+			e.preventDefault();
+			saveSchematic();
+		}
+		// Ctrl+O to open schematic
+		if ((e.ctrlKey || e.metaKey) && e.key === 'o') {
+			e.preventDefault();
+			openSchematicDialog();
+		}
+	}
+
+	/** Save schematic to JSON file */
+	function saveSchematic() {
+		if (schematic.components.length === 0 && schematic.wires.length === 0) {
+			status = 'Nothing to save';
+			return;
+		}
+
+		// Create a clean copy without nodeLabels (they're regenerated)
+		const saveData = {
+			version: 1,
+			schematic: {
+				components: schematic.components,
+				wires: schematic.wires,
+				junctions: schematic.junctions
+			},
+			netlist: netlistInput,
+			savedAt: new Date().toISOString()
+		};
+
+		const json = JSON.stringify(saveData, null, 2);
+		const blob = new Blob([json], { type: 'application/json' });
+		const url = URL.createObjectURL(blob);
+
+		const a = document.createElement('a');
+		a.href = url;
+		a.download = `schematic-${Date.now()}.json`;
+		a.click();
+
+		URL.revokeObjectURL(url);
+		status = `Saved schematic: ${schematic.components.length} components, ${schematic.wires.length} wires`;
+	}
+
+	/** Open file dialog to load schematic */
+	function openSchematicDialog() {
+		const input = document.createElement('input');
+		input.type = 'file';
+		input.accept = '.json';
+		input.onchange = (e) => {
+			const file = (e.target as HTMLInputElement).files?.[0];
+			if (file) {
+				loadSchematicFile(file);
+			}
+		};
+		input.click();
+	}
+
+	/** Load schematic from file */
+	async function loadSchematicFile(file: File) {
+		try {
+			const text = await file.text();
+			const data = JSON.parse(text);
+
+			if (!data.schematic) {
+				status = 'Invalid schematic file: missing schematic data';
+				return;
+			}
+
+			// Load schematic
+			schematic = {
+				components: data.schematic.components || [],
+				wires: data.schematic.wires || [],
+				junctions: data.schematic.junctions || []
+			};
+
+			// Load netlist if present
+			if (data.netlist) {
+				netlistInput = data.netlist;
+			}
+
+			// Clear probes
+			probes = [];
+
+			status = `Loaded: ${schematic.components.length} components, ${schematic.wires.length} wires`;
+		} catch (err) {
+			status = `Failed to load schematic: ${err}`;
 		}
 	}
 </script>
@@ -122,6 +267,13 @@ Vin in 0 PULSE(0 5 0 1n 1n 0.5m 1m)
 <div class="app">
 	<header class="toolbar">
 		<span class="app-title">LTSpice Web</span>
+		<button onclick={openSchematicDialog} title="Open schematic file">
+			Open (Ctrl+O)
+		</button>
+		<button onclick={saveSchematic} disabled={schematic.components.length === 0 && schematic.wires.length === 0} title="Save schematic to file">
+			Save (Ctrl+S)
+		</button>
+		<span class="toolbar-separator"></span>
 		<button onclick={generateNetlistFromSchematic} disabled={schematic.components.length === 0}>
 			Generate Netlist (Ctrl+N)
 		</button>
@@ -141,7 +293,7 @@ Vin in 0 PULSE(0 5 0 1n 1n 0.5m 1m)
 		<div class="right-panel">
 			<ResizablePanel title="Schematic" direction="vertical" initialSize={initialSizes.schematic} minSize={100} bind:collapsed={schematicCollapsed}>
 				<div class="panel-fill dark">
-					<SchematicCanvas bind:schematic />
+					<SchematicCanvas bind:schematic onprobe={handleProbe} />
 				</div>
 			</ResizablePanel>
 			<div class="waveform-and-info">
@@ -214,6 +366,12 @@ Vin in 0 PULSE(0 5 0 1n 1n 0.5m 1m)
 	.app-title {
 		font-weight: 600;
 		color: var(--text-primary);
+	}
+
+	.toolbar-separator {
+		width: 1px;
+		height: 20px;
+		background: var(--border-primary);
 	}
 
 	.trace-count {

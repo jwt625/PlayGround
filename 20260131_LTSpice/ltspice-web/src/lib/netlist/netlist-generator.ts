@@ -137,3 +137,25 @@ export function schematicToNetlist(schematic: Schematic, title?: string): string
 	return netlistToText(netlist);
 }
 
+/** Generate node labels for display on schematic */
+export function generateNodeLabels(schematic: Schematic): import('../schematic/types').NodeLabel[] {
+	const connectivity = analyzeConnectivity(schematic);
+	const labels: import('../schematic/types').NodeLabel[] = [];
+
+	for (const net of connectivity.nets) {
+		if (net.points.length === 0) continue;
+
+		// Find a good position for the label - prefer wire endpoints
+		// Use the first point as a simple heuristic
+		const pos = net.points[0];
+
+		labels.push({
+			name: net.name,
+			x: pos.x,
+			y: pos.y,
+			isGround: net.isGround
+		});
+	}
+
+	return labels;
+}

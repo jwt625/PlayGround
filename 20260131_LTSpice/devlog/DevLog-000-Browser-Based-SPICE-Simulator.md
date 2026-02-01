@@ -611,7 +611,80 @@ Implemented wire drawing with Manhattan-style routing:
 - Simulation info panel: 1/6 of available height (17%)
 - Panel sizes calculated dynamically based on viewport
 
+### Phase 7: Netlist Generation - Complete (2026-02-01)
+Implemented connectivity analysis and SPICE netlist generation from schematic:
+
+#### Netlist Module (`src/lib/netlist/`)
+- `types.ts` - Type definitions for nets, pin connections, SPICE components
+  - `COMPONENT_PREFIX` mapping: component type to SPICE prefix (resistor->R, inductor->L, etc.)
+  - `PIN_ORDER` mapping: correct pin ordering for each component type
+- `connectivity.ts` - Wire connectivity analysis using Union-Find algorithm
+  - Groups connected wire segments and component pins into nets
+  - Assigns node numbers (0 for ground, 1+ for other nodes)
+  - Detects floating pins and unconnected components
+- `netlist-generator.ts` - Converts schematic to SPICE netlist text
+  - `generateNetlist()` - Main function returning structured netlist
+  - `componentToSpice()` - Converts component to SPICE line with correct pin order
+  - `netlistToText()` - Formats as SPICE text
+  - `schematicToNetlist()` - Convenience wrapper
+  - `generateNodeLabels()` - Creates node labels for display on schematic
+
+#### UI Integration
+- "Generate Netlist (Ctrl+N)" button in toolbar
+- Populates netlist editor with generated SPICE code
+- Status bar shows component/wire/node counts
+
+### Phase 7.5: Node Labels and Probes - WIP (2026-02-01)
+Added node label display and probe mode for voltage/current measurement:
+
+#### Node Labels
+- Node numbers displayed on schematic after netlist generation
+- Green background for ground (node 0), blue for other nodes
+- Labels positioned at first point of each net
+
+#### Probe Mode (P key)
+- Press P to enter probe mode
+- Voltage probe: Click on wire to probe V(node)
+- Current probe: Click on component to probe I(component)
+- Differential voltage: Click and hold on first node (red + probe), drag to second node (black - probe)
+- Probe icons: Pointed probe shape for voltage, current clamp shape for current
+- Probes follow cursor position
+
+#### Probe Integration (Debug WIP)
+- `onprobe` callback prop on SchematicCanvas
+- Probe events dispatched to parent component
+- Probes stored in array, can be toggled on/off
+- Waveform filtering by active probes (partial implementation)
+- Known issues: Probe-to-trace matching needs refinement
+
+### Phase 10: Persistence - Partial (2026-02-01)
+Implemented schematic save/load to JSON files:
+
+#### Save Schematic (Ctrl+S)
+- Exports schematic as JSON file with timestamp filename
+- Includes: components, wires, junctions, netlist text
+- Format version for future compatibility
+
+#### Open Schematic (Ctrl+O)
+- File dialog to select .json file
+- Restores components, wires, junctions
+- Restores netlist if saved
+- Clears existing probes
+
+#### JSON Format
+```json
+{
+  "version": 1,
+  "schematic": {
+    "components": [...],
+    "wires": [...],
+    "junctions": [...]
+  },
+  "netlist": "* SPICE netlist...",
+  "savedAt": "2026-02-01T..."
+}
+```
+
 ### Not Started
-- Phase 7: Netlist generation from schematic
-- Phase 9: ASC file parser
-- Phase 10: localStorage persistence, undo/redo
+- Phase 9: ASC file parser (LTSpice .asc import/export)
+- Phase 10: localStorage auto-save, undo/redo
