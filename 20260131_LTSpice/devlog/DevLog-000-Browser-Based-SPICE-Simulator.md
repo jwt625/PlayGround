@@ -703,12 +703,26 @@ Added node label display and probe mode for voltage/current measurement:
 #### Current Probe Handling
 - Click on component to create current probe
 - Uses `targetComponent` in probe state to track component clicks separately from wire clicks
-- Works reliably for voltage sources and inductors (NGSpice outputs I(component) for these)
+- Works for all components (V, I, L, R, C, D, Q, M)
+
+#### Client-Side Current Calculation (Fixed 2026-02-01)
+NGSpice only outputs currents for voltage sources and inductors by default. The eecircuit-engine WASM build doesn't support `.save` directives, so we calculate currents client-side from node voltages:
+
+**Implementation** (`src/lib/netlist/current-calculator.ts`):
+- `parseValue()` - Parses component values with SI prefixes (1k, 1u, 1n, etc.)
+- `calculateComponentCurrent()` - Computes current for a single component
+- `calculateMissingCurrents()` - Batch calculates all missing currents
+
+**Formulas used**:
+- Resistor: `I = (V1 - V2) / R` (Ohm's law)
+- Capacitor: `I = C * d(V1 - V2)/dt` (numerical derivative)
+
+**Performance**: Negligible overhead - just array math on existing voltage data.
 
 #### Known Issues (Still WIP)
 - Voltage probe detection may still fail in some edge cases with complex wire networks
-- NGSpice only outputs currents for voltage sources and inductors by default; other components require `.save` directives
 - Differential voltage probe needs further testing
+- Diode/transistor currents cannot be calculated client-side (nonlinear)
 
 ### Phase 10: Persistence - Partial (2026-02-01)
 Implemented schematic save/load to JSON files:

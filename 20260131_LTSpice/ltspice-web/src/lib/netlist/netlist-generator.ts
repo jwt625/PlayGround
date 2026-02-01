@@ -17,10 +17,10 @@ export function generateNetlist(schematic: Schematic, title: string = 'Untitled 
 		errors: [],
 		warnings: []
 	};
-	
+
 	// Analyze connectivity
 	const connectivity = analyzeConnectivity(schematic);
-	
+
 	// Add connectivity errors/warnings
 	for (const err of connectivity.errors) {
 		if (err.startsWith('Warning:')) {
@@ -29,7 +29,7 @@ export function generateNetlist(schematic: Schematic, title: string = 'Untitled 
 			result.errors.push(err);
 		}
 	}
-	
+
 	// Build a map of component pins to net names
 	const pinToNet = new Map<string, string>();
 	for (const pc of connectivity.pinConnections) {
@@ -37,12 +37,12 @@ export function generateNetlist(schematic: Schematic, title: string = 'Untitled 
 		const net = connectivity.nets.find(n => n.id === pc.netId);
 		pinToNet.set(key, net?.name || '?');
 	}
-	
+
 	// Generate SPICE components
 	for (const comp of schematic.components) {
 		// Skip ground - it's not a component, it defines node 0
 		if (comp.type === 'ground') continue;
-		
+
 		const spiceComp = componentToSpice(comp, pinToNet);
 		if (spiceComp) {
 			result.components.push(spiceComp);
@@ -50,13 +50,15 @@ export function generateNetlist(schematic: Schematic, title: string = 'Untitled 
 			result.errors.push(`Failed to generate SPICE for ${comp.attributes['InstName'] || comp.id}`);
 		}
 	}
-	
-	// Add default simulation directive if none present
-	if (result.directives.length === 0) {
-		result.directives.push('.tran 1u 10m');
-	}
+
+	// Note: eecircuit-engine doesn't support .save directive, so we calculate
+	// resistor/capacitor currents client-side from node voltages instead.
+	// See current-calculator.ts for the implementation.
+
+	// Add default simulation directive (.tran is always needed for transient analysis)
+	result.directives.push('.tran 1u 10m');
 	result.directives.push('.end');
-	
+
 	return result;
 }
 

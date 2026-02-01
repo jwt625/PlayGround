@@ -1,11 +1,11 @@
 <script lang="ts">
 	import { onMount, onDestroy } from 'svelte';
-	import { initSimulation, runSimulation, terminateSimulation, type SimulationResult } from '$lib/simulation';
+	import { initSimulation, runSimulation, terminateSimulation, type SimulationResult, type RealDataType } from '$lib/simulation';
 	import { TabbedWaveformViewer, type TraceData, type WaveformTab, getTraceColor } from '$lib/waveform';
 	import { NetlistEditor } from '$lib/editor';
 	import { SchematicCanvas, type Schematic, type Probe } from '$lib/schematic';
 	import { ResizablePanel } from '$lib/components';
-	import { schematicToNetlist, generateNodeLabels } from '$lib/netlist';
+	import { schematicToNetlist, generateNodeLabels, calculateComponentCurrent } from '$lib/netlist';
 
 	let status = $state('Not initialized');
 	let simResult = $state<SimulationResult | null>(null);
@@ -110,12 +110,18 @@ Vin in 0 PULSE(0 5 0 1n 1n 0.5m 1m)
 		const traces: TraceData[] = [];
 		let colorIndex = activeTab.traces.length;
 
+		// Ensure we have time data
 		for (const data of simResult.data) {
-			if (data.type === 'time') {
-				if (timeData.length === 0) {
-					timeData = data.values as number[];
-				}
-			} else if (dataMatchesProbe(data.name, probe)) {
+			if (data.type === 'time' && timeData.length === 0) {
+				timeData = data.values as number[];
+				break;
+			}
+		}
+
+		// First, try to find matching data in simulation results
+		let foundInSimData = false;
+		for (const data of simResult.data) {
+			if (dataMatchesProbe(data.name, probe)) {
 				const alreadyExists = activeTab.traces.some(t => t.id === data.name);
 				if (!alreadyExists) {
 					traces.push({
@@ -126,6 +132,33 @@ Vin in 0 PULSE(0 5 0 1n 1n 0.5m 1m)
 						color: getTraceColor(colorIndex++),
 						visible: true
 					});
+					foundInSimData = true;
+				}
+			}
+		}
+
+		// If current probe not found in sim data, try to calculate it
+		if (!foundInSimData && probe.type === 'current' && probe.componentId && timeData.length > 0) {
+			const comp = schematic.components.find(c => c.id === probe.componentId);
+			if (comp && (comp.type === 'resistor' || comp.type === 'capacitor')) {
+				const calculatedCurrent = calculateComponentCurrent(
+					comp,
+					schematic,
+					simResult.data as RealDataType[],
+					timeData
+				);
+				if (calculatedCurrent) {
+					const alreadyExists = activeTab.traces.some(t => t.id === calculatedCurrent.name);
+					if (!alreadyExists) {
+						traces.push({
+							id: calculatedCurrent.name,
+							name: `${calculatedCurrent.name} (calc)`,
+							type: calculatedCurrent.type,
+							values: calculatedCurrent.values,
+							color: getTraceColor(colorIndex++),
+							visible: true
+						});
+					}
 				}
 			}
 		}
