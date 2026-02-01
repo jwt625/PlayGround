@@ -82,22 +82,28 @@ Vin in 0 PULSE(0 5 0 1n 1n 0.5m 1m)
 		}
 	}
 
-	/** Check if a simulation data entry matches a specific probe */
+	/** Check if a simulation data entry matches a specific probe (for voltage and current, not voltage-diff) */
 	function dataMatchesProbe(dataName: string, probe: Probe): boolean {
 		const dataNameLower = dataName.toLowerCase();
 		const node1Lower = probe.node1.toLowerCase();
 
 		if (probe.type === 'voltage') {
 			return dataNameLower === `v(${node1Lower})`;
-		} else if (probe.type === 'voltage-diff') {
-			const node2Lower = probe.node2?.toLowerCase() || '';
-			return dataNameLower === `v(${node1Lower})` || dataNameLower === `v(${node2Lower})`;
 		} else if (probe.type === 'current') {
 			return dataNameLower === `i(${node1Lower})` ||
 				   dataNameLower.includes(`(${node1Lower})`) ||
 				   dataNameLower.includes(`@${node1Lower}`);
 		}
+		// voltage-diff is handled separately - we need to compute the difference
 		return false;
+	}
+
+	/** Helper to find voltage data for a node */
+	function findVoltageData(nodeName: string): number[] | null {
+		if (!simResult || simResult.dataType !== 'real') return null;
+		if (nodeName === '0') return new Array(timeData.length).fill(0);
+		const data = simResult.data.find(d => d.name.toLowerCase() === `v(${nodeName.toLowerCase()})`);
+		return data ? data.values as number[] : null;
 	}
 
 	/** Add traces for a specific probe to the active tab */
@@ -118,46 +124,67 @@ Vin in 0 PULSE(0 5 0 1n 1n 0.5m 1m)
 			}
 		}
 
-		// First, try to find matching data in simulation results
-		let foundInSimData = false;
-		for (const data of simResult.data) {
-			if (dataMatchesProbe(data.name, probe)) {
-				const alreadyExists = activeTab.traces.some(t => t.id === data.name);
-				if (!alreadyExists) {
+		// Handle voltage-diff probe specially - compute V(node1) - V(node2)
+		if (probe.type === 'voltage-diff' && probe.node2) {
+			const traceId = `V(${probe.node1},${probe.node2})`;
+			const alreadyExists = activeTab.traces.some(t => t.id === traceId);
+			if (!alreadyExists) {
+				const v1 = findVoltageData(probe.node1);
+				const v2 = findVoltageData(probe.node2);
+				if (v1 && v2 && v1.length === v2.length) {
+					const diffValues = v1.map((v, i) => v - v2[i]);
 					traces.push({
-						id: data.name,
-						name: data.name,
-						type: data.type,
-						values: data.values as number[],
+						id: traceId,
+						name: traceId,
+						type: 'voltage',
+						values: diffValues,
 						color: getTraceColor(colorIndex++),
 						visible: true
 					});
-					foundInSimData = true;
 				}
 			}
-		}
-
-		// If current probe not found in sim data, try to calculate it
-		if (!foundInSimData && probe.type === 'current' && probe.componentId && timeData.length > 0) {
-			const comp = schematic.components.find(c => c.id === probe.componentId);
-			if (comp && (comp.type === 'resistor' || comp.type === 'capacitor')) {
-				const calculatedCurrent = calculateComponentCurrent(
-					comp,
-					schematic,
-					simResult.data as RealDataType[],
-					timeData
-				);
-				if (calculatedCurrent) {
-					const alreadyExists = activeTab.traces.some(t => t.id === calculatedCurrent.name);
+		} else {
+			// For voltage and current probes, try to find matching data in simulation results
+			let foundInSimData = false;
+			for (const data of simResult.data) {
+				if (dataMatchesProbe(data.name, probe)) {
+					const alreadyExists = activeTab.traces.some(t => t.id === data.name);
 					if (!alreadyExists) {
 						traces.push({
-							id: calculatedCurrent.name,
-							name: `${calculatedCurrent.name} (calc)`,
-							type: calculatedCurrent.type,
-							values: calculatedCurrent.values,
+							id: data.name,
+							name: data.name,
+							type: data.type,
+							values: data.values as number[],
 							color: getTraceColor(colorIndex++),
 							visible: true
 						});
+						foundInSimData = true;
+					}
+				}
+			}
+
+			// If current probe not found in sim data, try to calculate it
+			if (!foundInSimData && probe.type === 'current' && probe.componentId && timeData.length > 0) {
+				const comp = schematic.components.find(c => c.id === probe.componentId);
+				if (comp && (comp.type === 'resistor' || comp.type === 'capacitor')) {
+					const calculatedCurrent = calculateComponentCurrent(
+						comp,
+						schematic,
+						simResult.data as RealDataType[],
+						timeData
+					);
+					if (calculatedCurrent) {
+						const alreadyExists = activeTab.traces.some(t => t.id === calculatedCurrent.name);
+						if (!alreadyExists) {
+							traces.push({
+								id: calculatedCurrent.name,
+								name: `${calculatedCurrent.name} (calc)`,
+								type: calculatedCurrent.type,
+								values: calculatedCurrent.values,
+								color: getTraceColor(colorIndex++),
+								visible: true
+							});
+						}
 					}
 				}
 			}
@@ -336,11 +363,15 @@ Vin in 0 PULSE(0 5 0 1n 1n 0.5m 1m)
 	}
 </script>
 
+<svelte:head>
+	<title>WebSpice</title>
+</svelte:head>
+
 <svelte:window onkeydown={handleKeyDown} />
 
 <div class="app">
 	<header class="toolbar">
-		<span class="app-title">LTSpice Web</span>
+		<span class="app-title">WebSpice</span>
 		<button onclick={openSchematicDialog} title="Open schematic file">
 			Open (Ctrl+O)
 		</button>

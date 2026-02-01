@@ -719,9 +719,22 @@ NGSpice only outputs currents for voltage sources and inductors by default. The 
 
 **Performance**: Negligible overhead - just array math on existing voltage data.
 
+#### Differential Voltage Probe Fix (2026-02-01)
+Fixed bug where differential voltage probe was adding two separate traces instead of one.
+
+**Problem**: `dataMatchesProbe()` was returning true for both V(node1) and V(node2), causing two traces to be added.
+
+**Solution**:
+- Removed voltage-diff handling from `dataMatchesProbe()`
+- Added dedicated handling in `addProbeTracesToActiveTab()`:
+  - Fetches V(node1) and V(node2) data from simulation results
+  - Computes difference: `diffValues = V(node1) - V(node2)`
+  - Adds single trace named `V(node1,node2)`
+
+**Usage**: In probe mode (P), click and drag from one node to another to create differential probe.
+
 #### Known Issues (Still WIP)
 - Voltage probe detection may still fail in some edge cases with complex wire networks
-- Differential voltage probe needs further testing
 - Diode/transistor currents cannot be calculated client-side (nonlinear)
 
 ### Phase 10: Persistence - Partial (2026-02-01)

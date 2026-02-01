@@ -1,42 +1,82 @@
-# sv
+# WebSpice
 
-Everything you need to build a Svelte project, powered by [`sv`](https://github.com/sveltejs/cli).
+A browser-based SPICE circuit simulator with a minimal GUI. Runs entirely client-side using NGSpice compiled to WebAssembly.
 
-## Creating a project
+## Features
 
-If you're seeing this, you've probably already done this step. Congrats!
+- **Schematic Editor**: Canvas-based editor with component placement, wire routing, and grid snapping
+- **Component Library**: Resistor, Capacitor, Inductor, Voltage Source, Current Source, Ground, Diode, BJT (NPN/PNP), MOSFET (NMOS/PMOS)
+- **Netlist Generation**: Automatic SPICE netlist generation from schematic
+- **Simulation**: Transient analysis via NGSpice WASM (runs in Web Worker)
+- **Waveform Viewer**: WebGL-based plotting with pan, zoom, cursors, and multiple tabs
+- **Probing**: Voltage probes (click on wire), current probes (click on component), differential voltage (drag between nodes)
+- **Persistence**: Save/load schematics as JSON files
+
+## Keyboard Shortcuts
+
+| Key | Function |
+|-----|----------|
+| R, C, L, V, I, G, D, Q, M | Place component |
+| W or 3 | Wire mode |
+| 5 | Delete mode |
+| 6 | Duplicate mode |
+| 7 | Move mode |
+| P | Probe mode |
+| Ctrl+R | Rotate selected |
+| Ctrl+E | Mirror selected |
+| Ctrl+N | Generate netlist |
+| Ctrl+B | Run simulation |
+| Ctrl+S | Save schematic |
+| Ctrl+O | Open schematic |
+| Escape | Cancel operation |
+
+## Tech Stack
+
+- **Framework**: SvelteKit 2 + Svelte 5
+- **Build**: Vite
+- **Language**: TypeScript
+- **Simulation**: [eecircuit-engine](https://github.com/nickmitchko/eecircuit-engine) (NGSpice WASM)
+- **Editor**: CodeMirror 6 (SPICE syntax highlighting)
+- **Plotting**: webgl-plot
+- **Web Workers**: Comlink
+
+## Development
 
 ```sh
-# create a new project
-npx sv create my-app
+# Install dependencies
+pnpm install
+
+# Start development server
+pnpm dev
+
+# Build for production
+pnpm build
+
+# Preview production build
+pnpm preview
 ```
 
-To recreate this project with the same configuration:
+## Project Structure
 
-```sh
-# recreate this project
-npx sv create --template minimal --types ts --no-install ltspice-web
+```
+src/
+  lib/
+    components/     # UI components (ResizablePanel)
+    editor/         # CodeMirror netlist editor
+    netlist/        # Connectivity analysis, netlist generation, current calculation
+    schematic/      # Canvas editor, component definitions, renderer
+    simulation/     # NGSpice WASM wrapper, Web Worker
+    waveform/       # WebGL waveform viewer
+  routes/
+    +page.svelte    # Main application
 ```
 
-## Developing
+## Acknowledgments
 
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+- **LTSpice** by Analog Devices - Inspiration for UI design and keyboard shortcuts
+- **NGSpice** - Open source SPICE simulator
+- **EEcircuit** - Demonstrated NGSpice WASM feasibility; eecircuit-engine provides the simulation backend
 
-```sh
-npm run dev
+## License
 
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
-```
-
-## Building
-
-To create a production version of your app:
-
-```sh
-npm run build
-```
-
-You can preview the production build with `npm run preview`.
-
-> To deploy your app, you may need to install an [adapter](https://svelte.dev/docs/kit/adapters) for your target environment.
+MIT
