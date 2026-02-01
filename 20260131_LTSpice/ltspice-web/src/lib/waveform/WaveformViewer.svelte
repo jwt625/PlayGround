@@ -18,14 +18,14 @@
 	]);
 
 	let showGrid = $state(true);
-	let zoomRectMode = $state(false);
-	let zoomRectStart: { x: number; y: number } | null = null;
-	let zoomRectEnd: { x: number; y: number } | null = null;
+	let zoomStart: { x: number; y: number } | null = null;
+	let zoomEnd: { x: number; y: number } | null = null;
+	let zoomType: 'x' | 'y' | 'rect' | null = $state(null);
 	let mousePos = $state({ x: 0, y: 0, dataX: 0, dataY: 0 });
 	let showTooltip = $state(false);
 	let isDragging = false;
 	let dragStart = { x: 0, y: 0 };
-	let dragMode: 'pan' | 'zoom-rect' | null = null;
+	let dragMode: 'pan' | 'zoom' | null = null;
 
 	const getDpr = () => window.devicePixelRatio || 1;
 
@@ -133,10 +133,10 @@
 		const h = overlayCanvas.height;
 		ctx.clearRect(0, 0, w, h);
 
-		if (showTooltip && !zoomRectMode && traces.length > 0) drawHoverLine(ctx, h);
+		if (showTooltip && !zoomType && traces.length > 0) drawHoverLine(ctx, h);
 		for (const c of cursors) if (c.visible) drawCursor(ctx, c, w, h);
 		drawAxisLabels(ctx, w, h);
-		if (zoomRectMode && zoomRectStart && zoomRectEnd) drawZoomRect(ctx);
+		if (zoomType && zoomStart && zoomEnd) drawZoomSelection(ctx, w, h);
 	}
 
 	const rgb = (c: {r:number,g:number,b:number}, a=1) => a < 1 ? `rgba(${c.r*255},${c.g*255},${c.b*255},${a})` : `rgb(${c.r*255},${c.g*255},${c.b*255})`;
@@ -223,12 +223,31 @@
 		}
 	}
 
-	function drawZoomRect(ctx: CanvasRenderingContext2D) {
-		if (!zoomRectStart || !zoomRectEnd) return;
-		const x = Math.min(zoomRectStart.x, zoomRectEnd.x), y = Math.min(zoomRectStart.y, zoomRectEnd.y);
-		const w = Math.abs(zoomRectEnd.x - zoomRectStart.x), h = Math.abs(zoomRectEnd.y - zoomRectStart.y);
-		ctx.strokeStyle = '#fff'; ctx.lineWidth = 1; ctx.setLineDash([4,4]); ctx.strokeRect(x, y, w, h); ctx.setLineDash([]);
-		ctx.fillStyle = 'rgba(255,255,255,0.1)'; ctx.fillRect(x, y, w, h);
+	function drawZoomSelection(ctx: CanvasRenderingContext2D, canvasW: number, canvasH: number) {
+		if (!zoomStart || !zoomEnd || !zoomType) return;
+		ctx.strokeStyle = '#fff'; ctx.lineWidth = 1; ctx.setLineDash([4,4]);
+		ctx.fillStyle = 'rgba(255,255,255,0.1)';
+
+		if (zoomType === 'x') {
+			// Horizontal zoom - full height band
+			const x = Math.min(zoomStart.x, zoomEnd.x);
+			const w = Math.abs(zoomEnd.x - zoomStart.x);
+			ctx.fillRect(x, 0, w, canvasH);
+			ctx.strokeRect(x, 0, w, canvasH);
+		} else if (zoomType === 'y') {
+			// Vertical zoom - full width band
+			const y = Math.min(zoomStart.y, zoomEnd.y);
+			const h = Math.abs(zoomEnd.y - zoomStart.y);
+			ctx.fillRect(0, y, canvasW, h);
+			ctx.strokeRect(0, y, canvasW, h);
+		} else {
+			// Rectangle zoom
+			const x = Math.min(zoomStart.x, zoomEnd.x), y = Math.min(zoomStart.y, zoomEnd.y);
+			const w = Math.abs(zoomEnd.x - zoomStart.x), h = Math.abs(zoomEnd.y - zoomStart.y);
+			ctx.strokeRect(x, y, w, h);
+			ctx.fillRect(x, y, w, h);
+		}
+		ctx.setLineDash([]);
 	}
 
 	function drawAxisLabels(ctx: CanvasRenderingContext2D, w: number, h: number) {
@@ -241,13 +260,18 @@
 	}
 
 	function handleMouseDown(e: MouseEvent) {
-		isDragging = true;
 		const d = getDpr();
 		dragStart = { x: e.offsetX * d, y: e.offsetY * d };
-		if (zoomRectMode) {
-			dragMode = 'zoom-rect';
-			zoomRectStart = zoomRectEnd = { x: e.offsetX * d, y: e.offsetY * d };
-		} else {
+
+		if (e.button === 0) {
+			// Left click: zoom mode (Plotly-style)
+			isDragging = true;
+			dragMode = 'zoom';
+			zoomStart = zoomEnd = { x: e.offsetX * d, y: e.offsetY * d };
+			zoomType = null;
+		} else if (e.button === 1) {
+			// Middle click: pan
+			isDragging = true;
 			dragMode = 'pan';
 		}
 	}
@@ -260,8 +284,28 @@
 
 		if (!isDragging || !dragMode) { render(); return; }
 
-		if (dragMode === 'zoom-rect') {
-			zoomRectEnd = { x: e.offsetX * d, y: e.offsetY * d };
+		if (dragMode === 'zoom') {
+			zoomEnd = { x: e.offsetX * d, y: e.offsetY * d };
+
+			// Determine zoom type based on drag direction (Plotly-style)
+			if (zoomStart) {
+				const dx = Math.abs(zoomEnd.x - zoomStart.x);
+				const dy = Math.abs(zoomEnd.y - zoomStart.y);
+				const minDrag = 10; // Minimum pixels to start zoom
+
+				if (dx < minDrag && dy < minDrag) {
+					zoomType = null; // Not enough movement yet
+				} else {
+					const ratio = dx / (dy + 0.001); // Avoid division by zero
+					if (ratio > 3) {
+						zoomType = 'x'; // Mostly horizontal
+					} else if (ratio < 0.33) {
+						zoomType = 'y'; // Mostly vertical
+					} else {
+						zoomType = 'rect'; // Diagonal
+					}
+				}
+			}
 		} else if (dragMode === 'pan') {
 			const dx = e.offsetX * d - dragStart.x, dy = e.offsetY * d - dragStart.y;
 			bounds = { xMin: bounds.xMin - (dx / (w * d)) * xRange, xMax: bounds.xMax - (dx / (w * d)) * xRange,
@@ -272,19 +316,31 @@
 	}
 
 	function handleMouseUp() {
-		if (dragMode === 'zoom-rect' && zoomRectStart && zoomRectEnd) {
+		if (dragMode === 'zoom' && zoomStart && zoomEnd && zoomType) {
 			const w = canvas.width, h = canvas.height;
 			const xRange = bounds.xMax - bounds.xMin, yRange = bounds.yMax - bounds.yMin;
-			const x1 = Math.min(zoomRectStart.x, zoomRectEnd.x), x2 = Math.max(zoomRectStart.x, zoomRectEnd.x);
-			const y1 = Math.min(zoomRectStart.y, zoomRectEnd.y), y2 = Math.max(zoomRectStart.y, zoomRectEnd.y);
-			if (x2 - x1 > 10 && y2 - y1 > 10) {
+			const x1 = Math.min(zoomStart.x, zoomEnd.x), x2 = Math.max(zoomStart.x, zoomEnd.x);
+			const y1 = Math.min(zoomStart.y, zoomEnd.y), y2 = Math.max(zoomStart.y, zoomEnd.y);
+
+			if (zoomType === 'x' && x2 - x1 > 10) {
+				// X-only zoom
+				bounds = { ...bounds,
+					xMin: bounds.xMin + (x1/w)*xRange,
+					xMax: bounds.xMin + (x2/w)*xRange };
+			} else if (zoomType === 'y' && y2 - y1 > 10) {
+				// Y-only zoom
+				bounds = { ...bounds,
+					yMin: bounds.yMax - (y2/h)*yRange,
+					yMax: bounds.yMax - (y1/h)*yRange };
+			} else if (zoomType === 'rect' && x2 - x1 > 10 && y2 - y1 > 10) {
+				// Rectangle zoom
 				bounds = { xMin: bounds.xMin + (x1/w)*xRange, xMax: bounds.xMin + (x2/w)*xRange,
 					yMin: bounds.yMax - (y2/h)*yRange, yMax: bounds.yMax - (y1/h)*yRange };
 			}
-			zoomRectStart = zoomRectEnd = null;
-			zoomRectMode = false;
 			render();
 		}
+		zoomStart = zoomEnd = null;
+		zoomType = null;
 		isDragging = false;
 		dragMode = null;
 	}
@@ -355,7 +411,7 @@
 		else if (e.key === 'b' || e.key === 'B') { cursors[1].visible = !cursors[1].visible; render(); }
 		else if (e.key === 'f' || e.key === 'F') { autoscale(); render(); }
 		else if (e.key === 'g' || e.key === 'G') { showGrid = !showGrid; render(); }
-		else if (e.key === 'z' || e.key === 'Z') { zoomRectMode = !zoomRectMode; zoomRectStart = zoomRectEnd = null; }
+		else if (e.key === 'z' || e.key === 'Z') { zoomStart = zoomEnd = null; zoomType = null; }
 		else if (e.key === '+' || e.key === '=') {
 			e.preventDefault();
 			bounds = { xMin: xc - xRange*zf/2, xMax: xc + xRange*zf/2, yMin: yc - yRange*zf/2, yMax: yc + yRange*zf/2 };
@@ -368,7 +424,7 @@
 		else if (e.key === 'ArrowRight') { e.preventDefault(); bounds = { ...bounds, xMin: bounds.xMin + xRange*pan, xMax: bounds.xMax + xRange*pan }; render(); }
 		else if (e.key === 'ArrowUp') { e.preventDefault(); bounds = { ...bounds, yMin: bounds.yMin + yRange*pan, yMax: bounds.yMax + yRange*pan }; render(); }
 		else if (e.key === 'ArrowDown') { e.preventDefault(); bounds = { ...bounds, yMin: bounds.yMin - yRange*pan, yMax: bounds.yMax - yRange*pan }; render(); }
-		else if (e.key === 'Escape') { zoomRectMode = false; zoomRectStart = zoomRectEnd = null; render(); }
+		else if (e.key === 'Escape') { zoomStart = zoomEnd = null; zoomType = null; isDragging = false; dragMode = null; render(); }
 	}
 </script>
 
@@ -376,7 +432,7 @@
 <!-- svelte-ignore a11y_no_noninteractive_tabindex -->
 <div
 	class="waveform-container"
-	class:zoom-rect-mode={zoomRectMode}
+	class:zooming={zoomType !== null}
 	onmousedown={handleMouseDown}
 	onmousemove={handleMouseMove}
 	onmouseup={handleMouseUp}
@@ -402,7 +458,7 @@
 		{/each}
 	</div>
 
-	{#if showTooltip && !zoomRectMode && traces.length > 0}
+	{#if showTooltip && !zoomType && traces.length > 0}
 		<div class="tooltip" style="left: {mousePos.x + 15}px; top: {mousePos.y + 15}px;">
 			<div class="tooltip-header">X: {formatValue(mousePos.dataX, 's')}</div>
 			{#each traces as trace}
@@ -419,8 +475,10 @@
 		</div>
 	{/if}
 
-	{#if zoomRectMode}
-		<div class="zoom-mode-indicator">ZOOM RECT (Z to cancel)</div>
+	{#if zoomType}
+		<div class="zoom-mode-indicator">
+			{#if zoomType === 'x'}X ZOOM{:else if zoomType === 'y'}Y ZOOM{:else}BOX ZOOM{/if}
+		</div>
 	{/if}
 </div>
 
@@ -434,7 +492,7 @@
 		cursor: crosshair;
 	}
 
-	.waveform-container.zoom-rect-mode {
+	.waveform-container.zooming {
 		cursor: crosshair;
 	}
 
