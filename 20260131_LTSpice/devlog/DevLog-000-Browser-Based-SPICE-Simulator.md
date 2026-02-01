@@ -657,6 +657,59 @@ Added node label display and probe mode for voltage/current measurement:
 - Waveform filtering by active probes (partial implementation)
 - Known issues: Probe-to-trace matching needs refinement
 
+### Phase 8: Waveform Viewer Enhancements (2026-02-01)
+
+#### Plotly-Style Zoom Behavior
+- Default left-click drag now performs directional zoom:
+  - Horizontal drag (ratio > 3:1): X-only zoom with full-height selection band
+  - Vertical drag (ratio < 1:3): Y-only zoom with full-width selection band
+  - Diagonal drag (ratio between 1:3 and 3:1): Box zoom with rectangle selection
+- Pan moved to middle-click (scroll wheel click + drag)
+- Visual feedback: Dashed white outline with semi-transparent fill, mode indicator
+- Minimum 10 pixel drag required before zoom type is determined
+
+#### Tabbed Waveform Panels
+- Multiple waveform panels as tabs
+- Add (+) button to create new tabs
+- Close (x) button on each tab (at least one tab always exists)
+- Active tab highlighting
+- Probes add traces to the active tab instead of replacing all traces
+
+#### Delete Mode in Waveform (Key 5)
+- Toggle delete mode with key 5
+- Delete indicator shows instructions
+- Click on trace names in legend to remove traces
+- Escape exits delete mode
+
+### Probe System Improvements (2026-02-01)
+
+#### Fixed Probe-to-Trace Matching
+- Refactored `addProbeTracesToActiveTab()` to only add traces for a specific probe
+- Each probe click now adds only that specific trace to the active tab
+- Traces are not duplicated if already present in the active tab
+- Removed auto-trace generation on simulation run
+
+#### Improved Wire-to-Node Detection
+- Voltage probes now work anywhere on wires connected to a node, not just near node labels
+- Implemented BFS traversal through wire connectivity:
+  - Follows wire endpoints that touch each other
+  - Follows through junctions (explicit T-connections)
+  - Checks if junctions lie on wire segments
+- Uses pre-built lookup structures for efficiency:
+  - `endpointToWires`: Maps point keys to wires with that endpoint (O(1) lookup)
+  - `pointToNode`: Maps node label positions to node names (O(1) lookup)
+- Returns immediately when a node label is found (early exit)
+
+#### Current Probe Handling
+- Click on component to create current probe
+- Uses `targetComponent` in probe state to track component clicks separately from wire clicks
+- Works reliably for voltage sources and inductors (NGSpice outputs I(component) for these)
+
+#### Known Issues (Still WIP)
+- Voltage probe detection may still fail in some edge cases with complex wire networks
+- NGSpice only outputs currents for voltage sources and inductors by default; other components require `.save` directives
+- Differential voltage probe needs further testing
+
 ### Phase 10: Persistence - Partial (2026-02-01)
 Implemented schematic save/load to JSON files:
 
