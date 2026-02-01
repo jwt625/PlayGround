@@ -5,6 +5,7 @@
 	import { renderComponent, hitTestComponent, nextRotation } from './component-renderer';
 	import { COMPONENT_DEFS, getComponentByShortcut } from './component-defs';
 	import { COMPONENT_PREFIX } from '$lib/netlist/types';
+import { pointOnWire, pointsEqual } from '$lib/netlist/connectivity';
 
 	interface ProbeEvent {
 		type: ProbeType;
@@ -52,7 +53,8 @@
 		isHolding: boolean;
 		firstNode: Point | null;
 		firstNodeName: string | null;
-	}>({ isHolding: false, firstNode: null, firstNodeName: null });
+		targetComponent?: Component | null;
+	}>({ isHolding: false, firstNode: null, firstNodeName: null, targetComponent: null });
 
 	// Component counter for generating unique IDs
 	let componentCounters: Record<string, number> = $state({});
@@ -571,7 +573,7 @@
 
 			// Handle probe mode - start differential probe on mousedown
 			if (mode === 'probe') {
-				handleProbeMouseDown(snapped);
+				handleProbeMouseDown(clickPos, snapped);
 				// Don't return - let mouseup handle the actual probe action
 			}
 
@@ -811,34 +813,28 @@
 		}
 	}
 
-	/** Handle click in probe mode */
-	function handleProbeClick(clickPos: Point, snapped: Point) {
+	/** Start probe (mousedown) - for voltage probes on wires/nodes */
+	function handleProbeMouseDown(clickPos: Point, snapped: Point) {
+		// First check if clicking on a component (for current probe)
 		const comp = findComponentAt(clickPos);
-		const wire = findWireAt(clickPos);
-
 		if (comp && comp.type !== 'ground') {
-			// Current probe on component
-			const instName = comp.attributes['InstName'] || comp.id;
-			addProbe('current', instName, comp.id);
+			// Current probe - handle immediately on mousedown, complete on mouseup
+			probeState = {
+				isHolding: false, // false = component click, not wire
+				firstNode: snapped,
+				firstNodeName: null,
+				targetComponent: comp
+			};
 			return;
 		}
 
-		if (wire) {
-			// Voltage probe on wire - find the node name
-			const nodeName = getNodeAtPosition(snapped);
-			if (nodeName) {
-				addProbe('voltage', nodeName);
-			}
-		}
-	}
-
-	/** Start differential probe (mousedown on wire) */
-	function handleProbeMouseDown(snapped: Point) {
+		// Check for wire or node at position
 		const wire = findWireAt(snapped);
-		if (wire) {
-			const nodeName = getNodeAtPosition(snapped);
+		const nodeName = getNodeAtPosition(snapped);
+
+		if (wire || nodeName) {
 			probeState = {
-				isHolding: true,
+				isHolding: true, // true = voltage probe mode
 				firstNode: snapped,
 				firstNodeName: nodeName
 			};
@@ -846,23 +842,68 @@
 		}
 	}
 
-	/** Complete differential probe (mouseup) */
-	function handleProbeMouseUp(snapped: Point) {
-		if (probeState.isHolding && probeState.firstNodeName) {
+	/** Complete probe (mouseup) - handles both single-click and differential */
+	function handleProbeMouseUp(clickPos: Point, snapped: Point) {
+		// Handle component current probe
+		if (probeState.targetComponent) {
+			const comp = probeState.targetComponent;
+			const instName = comp.attributes['InstName'] || comp.id;
+			addProbe('current', instName, comp.id);
+			probeState = { isHolding: false, firstNode: null, firstNodeName: null, targetComponent: null };
+			render();
+			return;
+		}
+
+		// Handle voltage probe (wire/node click)
+		if (probeState.isHolding && probeState.firstNode) {
 			const secondNodeName = getNodeAtPosition(snapped);
-			if (secondNodeName && secondNodeName !== probeState.firstNodeName) {
-				addProbe('voltage-diff', probeState.firstNodeName, undefined, secondNodeName);
+			const firstNodeName = probeState.firstNodeName || getNodeAtPosition(probeState.firstNode);
+
+			// Check if this is a drag (differential) or single click
+			const dragDist = Math.hypot(snapped.x - probeState.firstNode.x, snapped.y - probeState.firstNode.y);
+			const isDrag = dragDist > 20; // More than 20 units = drag
+
+			if (isDrag && secondNodeName && firstNodeName && secondNodeName !== firstNodeName) {
+				// Differential voltage probe
+				addProbe('voltage-diff', firstNodeName, undefined, secondNodeName);
+			} else if (firstNodeName) {
+				// Single click - create single voltage probe
+				addProbe('voltage', firstNodeName);
 			}
 		}
-		probeState = { isHolding: false, firstNode: null, firstNodeName: null };
+		probeState = { isHolding: false, firstNode: null, firstNodeName: null, targetComponent: null };
 		render();
 	}
 
-	/** Get node name at a position (from nodeLabels) */
+	/** Get node name at a position (from nodeLabels) - works on wires too */
 	function getNodeAtPosition(pos: Point): string | null {
-		if (!schematic.nodeLabels) return null;
+		if (!schematic.nodeLabels || schematic.nodeLabels.length === 0) {
+			return null;
+		}
 
-		// Find the closest node label
+		// First, check if position is on any wire
+		for (const wire of schematic.wires) {
+			if (pointOnWire(pos, wire)) {
+				// Found a wire at this position - find which node it belongs to
+				// Check both endpoints of the wire against node labels
+				for (const label of schematic.nodeLabels) {
+					// Check if wire endpoint is close to any node label
+					const ep1Dist = Math.hypot(wire.x1 - label.x, wire.y1 - label.y);
+					const ep2Dist = Math.hypot(wire.x2 - label.x, wire.y2 - label.y);
+					if (ep1Dist < 5 || ep2Dist < 5) {
+						return label.name;
+					}
+				}
+				// If no direct match, check if any node label point is on this wire segment
+				for (const label of schematic.nodeLabels) {
+					if (pointOnWire({ x: label.x, y: label.y }, wire)) {
+						return label.name;
+					}
+				}
+			}
+		}
+
+		// Fallback: check if position is close to a node label directly
 		let closest: { name: string; dist: number } | null = null;
 		for (const label of schematic.nodeLabels) {
 			const dist = Math.hypot(label.x - pos.x, label.y - pos.y);
@@ -1005,14 +1046,8 @@
 		if (mode === 'probe') {
 			const clickPos = screenToSchematic(e.offsetX, e.offsetY);
 			const snapped = snapToGrid(clickPos);
-
-			if (probeState.isHolding) {
-				// Complete differential probe
-				handleProbeMouseUp(snapped);
-			} else {
-				// Single click probe
-				handleProbeClick(clickPos, snapped);
-			}
+			// handleProbeMouseUp handles both single-click and differential probes
+			handleProbeMouseUp(clickPos, snapped);
 		}
 
 		isDragging = false;

@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { onMount, onDestroy } from 'svelte';
 	import { initSimulation, runSimulation, terminateSimulation, type SimulationResult } from '$lib/simulation';
-	import { WaveformViewer, type TraceData, getTraceColor } from '$lib/waveform';
+	import { TabbedWaveformViewer, type TraceData, type WaveformTab, getTraceColor } from '$lib/waveform';
 	import { NetlistEditor } from '$lib/editor';
 	import { SchematicCanvas, type Schematic, type Probe } from '$lib/schematic';
 	import { ResizablePanel } from '$lib/components';
@@ -9,10 +9,13 @@
 
 	let status = $state('Not initialized');
 	let simResult = $state<SimulationResult | null>(null);
-	let waveformTraces = $state<TraceData[]>([]);
 	let timeData = $state<number[]>([]);
 	let schematic = $state<Schematic>({ components: [], wires: [], junctions: [] });
 	let probes = $state<Probe[]>([]);
+
+	// Waveform tabs
+	let waveformTabs = $state<WaveformTab[]>([{ id: 'default', name: 'Plot 1', traces: [] }]);
+	let activeTabId = $state('default');
 
 	let netlistCollapsed = $state(false);
 	let schematicCollapsed = $state(false);
@@ -58,50 +61,63 @@ Vin in 0 PULSE(0 5 0 1n 1n 0.5m 1m)
 	async function runSim() {
 		status = 'Running simulation...';
 		simResult = null;
-		waveformTraces = [];
+		// Clear all tabs' traces
+		waveformTabs = waveformTabs.map(tab => ({ ...tab, traces: [] }));
 		timeData = [];
 		try {
 			const result = await runSimulation(netlistInput);
 			simResult = result;
 			status = `Simulation complete: ${result.numPoints} points, ${result.numVariables} variables`;
 
-			// Convert simulation result to waveform traces
-			updateWaveformFromResult(result);
+			// Extract time data from result
+			for (const data of result.data) {
+				if (data.type === 'time') {
+					timeData = data.values as number[];
+					break;
+				}
+			}
+			// Note: Traces are added via probing, not automatically
 		} catch (err) {
 			status = `Simulation error: ${err}`;
 		}
 	}
 
-	/** Update waveform traces from simulation result, filtered by probes */
-	function updateWaveformFromResult(result: SimulationResult) {
-		if (result.dataType !== 'real') return;
+	/** Check if a simulation data entry matches a specific probe */
+	function dataMatchesProbe(dataName: string, probe: Probe): boolean {
+		const dataNameLower = dataName.toLowerCase();
+		const node1Lower = probe.node1.toLowerCase();
+
+		if (probe.type === 'voltage') {
+			return dataNameLower === `v(${node1Lower})`;
+		} else if (probe.type === 'voltage-diff') {
+			const node2Lower = probe.node2?.toLowerCase() || '';
+			return dataNameLower === `v(${node1Lower})` || dataNameLower === `v(${node2Lower})`;
+		} else if (probe.type === 'current') {
+			return dataNameLower === `i(${node1Lower})` ||
+				   dataNameLower.includes(`(${node1Lower})`) ||
+				   dataNameLower.includes(`@${node1Lower}`);
+		}
+		return false;
+	}
+
+	/** Add traces for a specific probe to the active tab */
+	function addProbeTracesToActiveTab(probe: Probe) {
+		if (!simResult || simResult.dataType !== 'real') return;
+
+		const activeTab = waveformTabs.find(t => t.id === activeTabId);
+		if (!activeTab) return;
 
 		const traces: TraceData[] = [];
-		let colorIndex = 0;
+		let colorIndex = activeTab.traces.length;
 
-		for (const data of result.data) {
+		for (const data of simResult.data) {
 			if (data.type === 'time') {
-				timeData = data.values as number[];
-			} else {
-				// Check if this trace matches any probe
-				const matchesProbe = probes.length === 0 || probes.some(probe => {
-					const dataNameLower = data.name.toLowerCase();
-					if (probe.type === 'voltage') {
-						// Match v(node) format
-						return dataNameLower === `v(${probe.node1.toLowerCase()})`;
-					} else if (probe.type === 'voltage-diff') {
-						// Match v(node1,node2) or v(node1)-v(node2)
-						return dataNameLower === `v(${probe.node1.toLowerCase()},${probe.node2?.toLowerCase()})` ||
-							   dataNameLower === `v(${probe.node1.toLowerCase()})` ||
-							   dataNameLower === `v(${probe.node2?.toLowerCase()})`;
-					} else if (probe.type === 'current') {
-						// Match i(component) format
-						return dataNameLower.includes(probe.node1.toLowerCase());
-					}
-					return false;
-				});
-
-				if (matchesProbe) {
+				if (timeData.length === 0) {
+					timeData = data.values as number[];
+				}
+			} else if (dataMatchesProbe(data.name, probe)) {
+				const alreadyExists = activeTab.traces.some(t => t.id === data.name);
+				if (!alreadyExists) {
 					traces.push({
 						id: data.name,
 						name: data.name,
@@ -113,36 +129,61 @@ Vin in 0 PULSE(0 5 0 1n 1n 0.5m 1m)
 				}
 			}
 		}
-		waveformTraces = traces;
+
+		if (traces.length > 0) {
+			waveformTabs = waveformTabs.map(tab =>
+				tab.id === activeTabId
+					? { ...tab, traces: [...tab.traces, ...traces] }
+					: tab
+			);
+		}
+	}
+
+	/** Handle trace deletion from waveform panel */
+	function handleDeleteTrace(tabId: string, traceId: string) {
+		waveformTabs = waveformTabs.map(tab =>
+			tab.id === tabId
+				? { ...tab, traces: tab.traces.filter(t => t.id !== traceId) }
+				: tab
+		);
+	}
+
+	/** Get total trace count across all tabs */
+	function getTotalTraceCount(): number {
+		return waveformTabs.reduce((sum, tab) => sum + tab.traces.length, 0);
 	}
 
 	/** Handle probe event from schematic canvas */
 	function handleProbe(event: { type: string; node1: string; node2?: string; componentId?: string; label: string }) {
 		const { type, node1, node2, componentId, label } = event;
 
-		// Check if probe already exists
+		// Create the probe object
+		const newProbe: Probe = {
+			id: crypto.randomUUID(),
+			type: type as Probe['type'],
+			node1,
+			node2,
+			componentId,
+			label
+		};
+
+		// Check if probe already exists in the probes list (for toggle behavior)
 		const existingIndex = probes.findIndex(p => p.label === label);
 		if (existingIndex >= 0) {
-			// Remove existing probe (toggle off)
+			// Remove existing probe (toggle off) - but don't remove traces
 			probes = probes.filter((_, i) => i !== existingIndex);
-			status = `Removed probe: ${label}`;
+			status = `Removed probe from list: ${label}`;
 		} else {
-			// Add new probe
-			const newProbe: Probe = {
-				id: crypto.randomUUID(),
-				type: type as Probe['type'],
-				node1,
-				node2,
-				componentId,
-				label
-			};
+			// Add to probes list for tracking
 			probes = [...probes, newProbe];
-			status = `Added probe: ${label}`;
 		}
 
-		// Update waveform if we have simulation results
+		// Always try to add the trace to the active tab (if not already there)
 		if (simResult) {
-			updateWaveformFromResult(simResult);
+			addProbeTracesToActiveTab(newProbe);
+			status = `Added probe: ${label}`;
+		} else {
+			status = `Probe added: ${label} (run simulation to see trace)`;
 		}
 	}
 
@@ -280,8 +321,8 @@ Vin in 0 PULSE(0 5 0 1n 1n 0.5m 1m)
 		<button onclick={runSim} disabled={status.includes('Initializing') || status.includes('Running')}>
 			Run Simulation (Ctrl+B)
 		</button>
-		{#if waveformTraces.length > 0}
-			<span class="trace-count">{waveformTraces.length} traces</span>
+		{#if getTotalTraceCount() > 0}
+			<span class="trace-count">{getTotalTraceCount()} traces</span>
 		{/if}
 	</header>
 	<main class="workspace">
@@ -299,14 +340,12 @@ Vin in 0 PULSE(0 5 0 1n 1n 0.5m 1m)
 			<div class="waveform-and-info">
 				<ResizablePanel title="Waveform" direction="vertical" initialSize={initialSizes.waveform} minSize={100} bind:collapsed={waveformCollapsed}>
 					<div class="panel-fill dark">
-						{#if waveformTraces.length > 0}
-							<WaveformViewer traces={waveformTraces} {timeData} />
-						{:else}
-							<div class="placeholder-center">
-								<p>Run a simulation to view waveforms</p>
-								<p class="hint">Scroll to zoom, drag to pan, double-click to fit</p>
-							</div>
-						{/if}
+						<TabbedWaveformViewer
+							bind:tabs={waveformTabs}
+							bind:activeTabId={activeTabId}
+							{timeData}
+							ondeletetrace={handleDeleteTrace}
+						/>
 					</div>
 				</ResizablePanel>
 				{#if simResult}
@@ -435,24 +474,6 @@ Vin in 0 PULSE(0 5 0 1n 1n 0.5m 1m)
 		margin: var(--spacing-xs) 0;
 		font-size: var(--font-size-xs);
 		color: var(--text-secondary);
-	}
-
-	.placeholder-center {
-		position: absolute;
-		top: 50%;
-		left: 50%;
-		transform: translate(-50%, -50%);
-		text-align: center;
-		color: var(--text-muted);
-	}
-
-	.placeholder-center p {
-		margin: var(--spacing-xs) 0;
-	}
-
-	.placeholder-center .hint {
-		font-size: var(--font-size-xs);
-		opacity: 0.7;
 	}
 
 	.statusbar {

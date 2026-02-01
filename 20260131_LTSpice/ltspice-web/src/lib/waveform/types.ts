@@ -24,6 +24,13 @@ export interface Cursor {
 	color: string;
 }
 
+/** Waveform tab - contains traces for one panel */
+export interface WaveformTab {
+	id: string;
+	name: string;
+	traces: TraceData[];
+}
+
 const TRACE_COLORS: TraceColor[] = [
 	{ r: 0, g: 1, b: 0, a: 1 },
 	{ r: 1, g: 0, b: 0, a: 1 },
