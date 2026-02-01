@@ -1,9 +1,11 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import type { ViewTransform, GridSettings, Point, Schematic } from './types';
+	import type { ViewTransform, GridSettings, Point, Schematic, Component, ComponentType, Rotation } from './types';
 	import { DEFAULT_VIEW, DEFAULT_GRID } from './types';
+	import { renderComponent, hitTestComponent, nextRotation } from './component-renderer';
+	import { COMPONENT_DEFS, getComponentByShortcut } from './component-defs';
 
-	let { schematic = { components: [], wires: [] } }: { schematic: Schematic } = $props();
+	let { schematic = $bindable({ components: [], wires: [] }) }: { schematic: Schematic } = $props();
 
 	let canvas: HTMLCanvasElement;
 	let ctx: CanvasRenderingContext2D | null = null;
@@ -15,24 +17,65 @@
 	let mousePos: Point = $state({ x: 0, y: 0 });
 	let schematicPos: Point = $state({ x: 0, y: 0 });
 
+	// Interaction mode
+	type Mode = 'select' | 'pan' | 'place';
+	let mode: Mode = $state('select');
+
+	// Selection state
+	let selectedIds: Set<string> = $state(new Set());
+
+	// Component placement state
+	let placingType: ComponentType | null = $state(null);
+	let placingRotation: Rotation = $state(0);
+	let placingMirror: boolean = $state(false);
+
+	// Component counter for generating unique IDs
+	let componentCounters: Record<string, number> = $state({});
+
 	const getDpr = () => (typeof window !== 'undefined' ? window.devicePixelRatio : 1) || 1;
+
+	let resizeObserver: ResizeObserver | null = null;
+	let container: HTMLDivElement;
 
 	onMount(() => {
 		ctx = canvas.getContext('2d');
-		resize();
-		window.addEventListener('resize', resize);
+
+		// Use ResizeObserver on the CONTAINER (not canvas) for accurate size tracking
+		resizeObserver = new ResizeObserver((entries) => {
+			for (const entry of entries) {
+				if (entry.target === container) {
+					resize(entry.contentRect.width, entry.contentRect.height);
+				}
+			}
+		});
+		resizeObserver.observe(container);
+
+		// Initial size from container
+		const rect = container.getBoundingClientRect();
+		resize(rect.width, rect.height);
 
 		return () => {
-			window.removeEventListener('resize', resize);
+			resizeObserver?.disconnect();
 		};
 	});
 
-	function resize() {
-		if (!canvas) return;
+	function resize(displayWidth: number, displayHeight: number) {
+		if (!canvas || displayWidth <= 0 || displayHeight <= 0) return;
 		const dpr = getDpr();
-		const rect = canvas.getBoundingClientRect();
-		canvas.width = rect.width * dpr;
-		canvas.height = rect.height * dpr;
+
+		// Set canvas internal resolution to match display size * dpr
+		const newWidth = Math.floor(displayWidth * dpr);
+		const newHeight = Math.floor(displayHeight * dpr);
+
+		// Adjust view offset to keep the center point stable
+		if (canvas.width > 0 && canvas.height > 0) {
+			view.offsetX += (newWidth - canvas.width) / 2;
+			view.offsetY += (newHeight - canvas.height) / 2;
+		}
+
+		canvas.width = newWidth;
+		canvas.height = newHeight;
+
 		render();
 	}
 
@@ -142,25 +185,143 @@
 
 	function drawComponents() {
 		if (!ctx) return;
-		// Placeholder - will be implemented in Phase 5
+
+		// Draw all placed components
 		for (const comp of schematic.components) {
-			ctx.fillStyle = '#569cd6';
-			ctx.fillRect(comp.x - 10, comp.y - 10, 20, 20);
-			ctx.fillStyle = '#fff';
-			ctx.font = `${12 / view.scale}px monospace`;
-			ctx.fillText(comp.attributes['InstName'] || comp.type, comp.x - 8, comp.y + 4);
+			const isSelected = selectedIds.has(comp.id);
+			renderComponent(ctx, comp, view.scale, isSelected, false);
+		}
+
+		// Draw ghost component if placing
+		if (placingType) {
+			const snapped = snapToGrid(schematicPos);
+			const ghostComp: Component = {
+				id: 'ghost',
+				type: placingType,
+				x: snapped.x,
+				y: snapped.y,
+				rotation: placingRotation,
+				mirror: placingMirror,
+				attributes: {},
+				pins: []
+			};
+			renderComponent(ctx, ghostComp, view.scale, false, true);
 		}
 	}
 
 	function getHudText(): string {
 		const snapped = snapToGrid(schematicPos);
-		return `(${snapped.x}, ${snapped.y}) | Zoom: ${(view.scale * 100).toFixed(0)}%`;
+		let text = `(${snapped.x}, ${snapped.y}) | Zoom: ${(view.scale * 100).toFixed(0)}%`;
+
+		if (placingType) {
+			const def = COMPONENT_DEFS[placingType];
+			text += ` | Placing: ${def.name}`;
+			if (placingRotation !== 0) text += ` R${placingRotation}°`;
+			if (placingMirror) text += ' M';
+			text += ' | Ctrl+R=rotate, Ctrl+E=mirror, Esc=cancel';
+		} else if (selectedIds.size > 0) {
+			text += ` | Selected: ${selectedIds.size}`;
+			text += ' | Ctrl+R=rotate, Ctrl+E=mirror, Del=delete';
+		}
+
+		return text;
 	}
 
 	function handleMouseDown(e: MouseEvent) {
-		if (e.button === 0 || e.button === 1) {  // Left or middle click
+		canvas.focus();
+
+		if (e.button === 0) {  // Left click
+			if (placingType) {
+				// Place component
+				placeComponent();
+				return;
+			}
+
+			// Check for component selection
+			const clickPos = screenToSchematic(e.offsetX, e.offsetY);
+			let clickedComp: Component | null = null;
+
+			// Find topmost component under cursor (iterate in reverse for z-order)
+			for (let i = schematic.components.length - 1; i >= 0; i--) {
+				const comp = schematic.components[i];
+				if (hitTestComponent(comp, clickPos.x, clickPos.y)) {
+					clickedComp = comp;
+					break;
+				}
+			}
+
+			if (clickedComp) {
+				if (e.shiftKey) {
+					// Toggle selection
+					if (selectedIds.has(clickedComp.id)) {
+						selectedIds.delete(clickedComp.id);
+					} else {
+						selectedIds.add(clickedComp.id);
+					}
+					selectedIds = new Set(selectedIds);  // Trigger reactivity
+				} else {
+					// Single select
+					selectedIds = new Set([clickedComp.id]);
+				}
+				render();
+				return;
+			}
+
+			// Click on empty space - prepare for potential pan, clear selection
+			if (!e.shiftKey) {
+				selectedIds = new Set();
+			}
+			// Don't set isDragging yet - wait for mouse move to confirm it's a drag
+			dragStart = { x: e.offsetX, y: e.offsetY };
+			render();
+		} else if (e.button === 1) {  // Middle click - always pan
 			isDragging = true;
 			dragStart = { x: e.offsetX, y: e.offsetY };
+		}
+	}
+
+	function placeComponent() {
+		if (!placingType) return;
+
+		const snapped = snapToGrid(schematicPos);
+		const def = COMPONENT_DEFS[placingType];
+
+		// Generate instance name
+		const prefix = placingType === 'ground' ? '' : placingType[0].toUpperCase();
+		const count = (componentCounters[placingType] || 0) + 1;
+		componentCounters[placingType] = count;
+		const instName = prefix ? `${prefix}${count}` : '';
+
+		// Create new component
+		const newComp: Component = {
+			id: crypto.randomUUID(),
+			type: placingType,
+			x: snapped.x,
+			y: snapped.y,
+			rotation: placingRotation,
+			mirror: placingMirror,
+			attributes: {
+				InstName: instName,
+				Value: getDefaultValue(placingType)
+			},
+			pins: def.pins.map((p, i) => ({ ...p, id: `${i}` }))
+		};
+
+		schematic.components = [...schematic.components, newComp];
+		render();
+	}
+
+	function getDefaultValue(type: ComponentType): string {
+		switch (type) {
+			case 'resistor': return '1k';
+			case 'capacitor': return '1u';
+			case 'inductor': return '1m';
+			case 'voltage': return 'DC 5';
+			case 'current': return 'DC 1m';
+			case 'diode': return 'D';
+			case 'npn': case 'pnp': return '2N2222';
+			case 'nmos': case 'pmos': return 'NMOS';
+			default: return '';
 		}
 	}
 
@@ -168,6 +329,16 @@
 		const dpr = getDpr();
 		mousePos = { x: e.offsetX, y: e.offsetY };
 		schematicPos = screenToSchematic(e.offsetX, e.offsetY);
+
+		// Start dragging if mouse moved with button held (dragStart set but not isDragging yet)
+		if (dragStart && !isDragging && (e.buttons & 1 || e.buttons & 4)) {
+			const dx = Math.abs(e.offsetX - dragStart.x);
+			const dy = Math.abs(e.offsetY - dragStart.y);
+			// Only start drag if moved more than 3 pixels (prevents accidental drags)
+			if (dx > 3 || dy > 3) {
+				isDragging = true;
+			}
+		}
 
 		if (isDragging && dragStart) {
 			const dx = (e.offsetX - dragStart.x) * dpr;
@@ -201,19 +372,100 @@
 	}
 
 	function handleKeyDown(e: KeyboardEvent) {
-		if (e.key === 'g' || e.key === 'G') {
+		// Escape cancels current operation
+		if (e.key === 'Escape') {
+			placingType = null;
+			mode = 'select';
+			selectedIds = new Set();
+			render();
+			return;
+		}
+
+		// Component shortcuts - can switch component while placing
+		if (!e.ctrlKey && !e.metaKey) {
+			const compDef = getComponentByShortcut(e.key);
+			if (compDef) {
+				placingType = compDef.type;
+				placingRotation = 0;
+				placingMirror = false;
+				mode = 'place';
+				render();
+				return;
+			}
+		}
+
+		// Ctrl+R to rotate while placing or rotate selected
+		if ((e.key === 'r' || e.key === 'R') && (e.ctrlKey || e.metaKey)) {
+			e.preventDefault();
+			if (placingType) {
+				placingRotation = nextRotation(placingRotation);
+				render();
+				return;
+			}
+			// Rotate selected components
+			if (selectedIds.size > 0) {
+				for (const comp of schematic.components) {
+					if (selectedIds.has(comp.id)) {
+						comp.rotation = nextRotation(comp.rotation);
+					}
+				}
+				render();
+				return;
+			}
+		}
+
+		// Ctrl+E to mirror
+		if ((e.key === 'e' || e.key === 'E') && (e.ctrlKey || e.metaKey)) {
+			e.preventDefault();
+			if (placingType) {
+				placingMirror = !placingMirror;
+				render();
+				return;
+			}
+			if (selectedIds.size > 0) {
+				for (const comp of schematic.components) {
+					if (selectedIds.has(comp.id)) {
+						comp.mirror = !comp.mirror;
+					}
+				}
+				render();
+				return;
+			}
+		}
+
+		// Delete selected components
+		if (e.key === 'Delete' || e.key === 'Backspace') {
+			if (selectedIds.size > 0) {
+				schematic.components = schematic.components.filter(c => !selectedIds.has(c.id));
+				selectedIds = new Set();
+				render();
+				return;
+			}
+		}
+
+		// Grid toggle (Ctrl+G or Shift+G to avoid conflict with Ground)
+		if ((e.key === 'g' || e.key === 'G') && (e.ctrlKey || e.shiftKey)) {
+			e.preventDefault();
 			grid.visible = !grid.visible;
 			render();
-		} else if (e.key === 'Home' || e.key === 'f' || e.key === 'F') {
-			// Reset view
+			return;
+		}
+
+		// View controls
+		if (e.key === 'Home' || (e.key === 'f' && !placingType)) {
 			view = { offsetX: canvas.width / 2, offsetY: canvas.height / 2, scale: 1 };
 			render();
-		} else if (e.key === '+' || e.key === '=') {
+			return;
+		}
+		if (e.key === '+' || e.key === '=') {
 			view.scale = Math.min(10, view.scale * 1.2);
 			render();
-		} else if (e.key === '-' || e.key === '_') {
+			return;
+		}
+		if (e.key === '-' || e.key === '_') {
 			view.scale = Math.max(0.1, view.scale / 1.2);
 			render();
+			return;
 		}
 	}
 
@@ -226,7 +478,7 @@
 </script>
 
 <!-- svelte-ignore a11y_no_noninteractive_tabindex -->
-<div class="schematic-container">
+<div class="schematic-container" bind:this={container}>
 	<canvas
 		bind:this={canvas}
 		class="schematic-canvas"
@@ -246,9 +498,13 @@
 		position: relative;
 		width: 100%;
 		height: 100%;
+		overflow: hidden;
 	}
 
 	.schematic-canvas {
+		position: absolute;
+		top: 0;
+		left: 0;
 		width: 100%;
 		height: 100%;
 		display: block;

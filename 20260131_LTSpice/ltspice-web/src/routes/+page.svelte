@@ -104,7 +104,7 @@ Vin in 0 PULSE(0 5 0 1n 1n 0.5m 1m)
 		<div class="right-panel">
 			<ResizablePanel title="Schematic" direction="vertical" initialSize={300} minSize={150} bind:collapsed={schematicCollapsed}>
 				<div class="panel-fill dark">
-					<SchematicCanvas {schematic} />
+					<SchematicCanvas bind:schematic />
 				</div>
 			</ResizablePanel>
 			<ResizablePanel title="Waveform" direction="vertical" initialSize={300} minSize={150} bind:collapsed={waveformCollapsed}>
