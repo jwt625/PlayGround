@@ -5,6 +5,7 @@
 	import { NetlistEditor } from '$lib/editor';
 	import { SchematicCanvas, type Schematic } from '$lib/schematic';
 	import { ResizablePanel } from '$lib/components';
+	import { schematicToNetlist } from '$lib/netlist';
 
 	let status = $state('Not initialized');
 	let simResult = $state<SimulationResult | null>(null);
@@ -91,11 +92,27 @@ Vin in 0 PULSE(0 5 0 1n 1n 0.5m 1m)
 		}
 	}
 
+	function generateNetlistFromSchematic() {
+		if (schematic.components.length === 0) {
+			status = 'No components in schematic';
+			return;
+		}
+		const netlistText = schematicToNetlist(schematic, 'Generated from Schematic');
+		netlistInput = netlistText;
+		status = `Generated netlist: ${schematic.components.length} components, ${schematic.wires.length} wires`;
+	}
+
 	function handleKeyDown(e: KeyboardEvent) {
 		// Ctrl+B to run simulation
 		if ((e.ctrlKey || e.metaKey) && e.key === 'b') {
 			e.preventDefault();
 			runSim();
+		}
+		// Ctrl+G to generate netlist from schematic (when not in schematic canvas)
+		// Note: Ctrl+G in schematic canvas toggles grid, so we check if target is not canvas
+		if ((e.ctrlKey || e.metaKey) && e.key === 'n') {
+			e.preventDefault();
+			generateNetlistFromSchematic();
 		}
 	}
 </script>
@@ -105,6 +122,9 @@ Vin in 0 PULSE(0 5 0 1n 1n 0.5m 1m)
 <div class="app">
 	<header class="toolbar">
 		<span class="app-title">LTSpice Web</span>
+		<button onclick={generateNetlistFromSchematic} disabled={schematic.components.length === 0}>
+			Generate Netlist (Ctrl+N)
+		</button>
 		<button onclick={runSim} disabled={status.includes('Initializing') || status.includes('Running')}>
 			Run Simulation (Ctrl+B)
 		</button>

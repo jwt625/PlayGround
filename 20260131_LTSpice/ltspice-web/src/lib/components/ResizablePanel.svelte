@@ -17,6 +17,7 @@
 		children: Snippet;
 	} = $props();
 
+	// svelte-ignore state_referenced_locally - intentionally capturing initial value only
 	let size = $state(initialSize);
 	let isResizing = $state(false);
 	let startPos = 0;
@@ -78,6 +79,7 @@
 		<div class="panel-content">
 			{@render children()}
 		</div>
+		<!-- svelte-ignore a11y_no_static_element_interactions -->
 		<div
 			class="resize-handle"
 			class:horizontal={direction === 'horizontal'}

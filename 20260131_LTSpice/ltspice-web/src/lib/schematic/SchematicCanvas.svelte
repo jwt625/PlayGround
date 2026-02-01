@@ -4,6 +4,7 @@
 	import { DEFAULT_VIEW, DEFAULT_GRID, DEFAULT_WIRE_DRAW, MODE_SHORTCUTS, getModeName } from './types';
 	import { renderComponent, hitTestComponent, nextRotation } from './component-renderer';
 	import { COMPONENT_DEFS, getComponentByShortcut } from './component-defs';
+	import { COMPONENT_PREFIX } from '$lib/netlist/types';
 
 	let { schematic = $bindable({ components: [], wires: [], junctions: [] }) }: { schematic: Schematic } = $props();
 
@@ -599,11 +600,11 @@
 				pins: comp.pins.map(p => ({ ...p }))
 			};
 
-			// Update instance name for the duplicate
+			// Update instance name for the duplicate using correct SPICE prefix
 			if (newComp.attributes['InstName']) {
 				const count = (componentCounters[comp.type] || 0) + 1;
 				componentCounters[comp.type] = count;
-				const prefix = comp.type === 'ground' ? '' : comp.type[0].toUpperCase();
+				const prefix = COMPONENT_PREFIX[comp.type] || '';
 				newComp.attributes['InstName'] = prefix ? `${prefix}${count}` : '';
 			}
 
@@ -681,8 +682,9 @@
 		const snapped = snapToGrid(schematicPos);
 		const def = COMPONENT_DEFS[placingType];
 
-		// Generate instance name
-		const prefix = placingType === 'ground' ? '' : placingType[0].toUpperCase();
+		// Generate instance name using correct SPICE prefix
+		// e.g., inductor -> L, current -> I, resistor -> R
+		const prefix = COMPONENT_PREFIX[placingType] || '';
 		const count = (componentCounters[placingType] || 0) + 1;
 		componentCounters[placingType] = count;
 		const instName = prefix ? `${prefix}${count}` : '';
