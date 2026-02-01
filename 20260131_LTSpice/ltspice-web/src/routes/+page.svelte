@@ -2,6 +2,7 @@
 	import { onMount, onDestroy } from 'svelte';
 	import { initSimulation, runSimulation, terminateSimulation, type SimulationResult } from '$lib/simulation';
 	import { WaveformViewer, type TraceData, getTraceColor } from '$lib/waveform';
+	import { NetlistEditor } from '$lib/editor';
 
 	let status = $state('Not initialized');
 	let simResult = $state<SimulationResult | null>(null);
@@ -55,9 +56,7 @@ Vin in 0 PULSE(0 5 0 1n 1n 0.5m 1m)
 							type: data.type,
 							values: data.values as number[],
 							color: getTraceColor(colorIndex++),
-							visible: true,
-							yScale: 1,
-							yOffset: 0
+							visible: true
 						});
 					}
 				}
@@ -93,7 +92,9 @@ Vin in 0 PULSE(0 5 0 1n 1n 0.5m 1m)
 		<div class="left-panel">
 			<div class="editor-panel">
 				<h3>Netlist</h3>
-				<textarea bind:value={netlistInput} spellcheck="false"></textarea>
+				<div class="editor-content">
+					<NetlistEditor bind:value={netlistInput} />
+				</div>
 			</div>
 		</div>
 		<div class="right-panel">
@@ -212,19 +213,9 @@ Vin in 0 PULSE(0 5 0 1n 1n 0.5m 1m)
 		border-bottom: 1px solid var(--border-primary);
 	}
 
-	.editor-panel textarea {
+	.editor-content {
 		flex: 1;
-		background: var(--bg-primary);
-		color: var(--text-primary);
-		border: none;
-		padding: var(--spacing-md);
-		font-family: var(--font-mono);
-		font-size: var(--font-size-sm);
-		resize: none;
-	}
-
-	.editor-panel textarea:focus {
-		outline: none;
+		overflow: hidden;
 	}
 
 	.waveform-panel {
