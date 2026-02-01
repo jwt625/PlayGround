@@ -22,14 +22,44 @@ export interface GridSettings {
 	visible: boolean;
 }
 
+/**
+ * Editor modes - mapped from LTSpice F-keys to number keys
+ * F2 -> 2: Component (handled by component shortcuts)
+ * F3 -> 3: Wire
+ * F4 -> 4: Net label (future)
+ * F5 -> 5: Delete
+ * F6 -> 6: Duplicate
+ * F7 -> 7: Move
+ * F8 -> 8: Drag (move with wires, future)
+ */
+export type EditorMode =
+	| 'select'    // Default mode - click to select
+	| 'wire'      // 3 or W: Draw wires
+	| 'delete'    // 5: Delete on click
+	| 'duplicate' // 6: Duplicate selected items
+	| 'move'      // 7: Move selected items
+	| 'place';    // Placing a component
+
 /** Mouse/interaction state */
 export interface InteractionState {
-	mode: 'select' | 'pan' | 'wire' | 'place';
+	mode: EditorMode;
 	isDragging: boolean;
 	dragStart: Point | null;
 	mousePos: Point;           // Screen coordinates
 	schematicPos: Point;       // Schematic coordinates
 	selectedIds: Set<string>;
+}
+
+/** Wire routing direction preference */
+export type WireDirection = 'horizontal-first' | 'vertical-first';
+
+/** Wire drawing state */
+export interface WireDrawState {
+	isDrawing: boolean;
+	startPoint: Point | null;
+	currentPoint: Point | null;
+	direction: WireDirection;
+	segments: Wire[];  // Completed segments in current wire chain
 }
 
 /** Component rotation (degrees, clockwise) */
@@ -70,10 +100,21 @@ export interface Wire {
 	y2: number;
 }
 
+/**
+ * Explicit junction - where wires are intentionally connected
+ * Wires crossing visually are NOT connected unless a junction exists
+ */
+export interface Junction {
+	id: string;
+	x: number;
+	y: number;
+}
+
 /** Complete schematic state */
 export interface Schematic {
 	components: Component[];
 	wires: Wire[];
+	junctions: Junction[];  // Explicit wire-to-wire connections
 }
 
 /** Default values */
@@ -97,4 +138,33 @@ export const DEFAULT_INTERACTION: InteractionState = {
 	schematicPos: { x: 0, y: 0 },
 	selectedIds: new Set()
 };
+
+export const DEFAULT_WIRE_DRAW: WireDrawState = {
+	isDrawing: false,
+	startPoint: null,
+	currentPoint: null,
+	direction: 'horizontal-first',
+	segments: []
+};
+
+/** Keyboard shortcut mappings (LTSpice F-keys -> number keys) */
+export const MODE_SHORTCUTS: Record<string, EditorMode> = {
+	'3': 'wire',      // F3 -> Wire mode
+	'5': 'delete',    // F5 -> Delete mode
+	'6': 'duplicate', // F6 -> Duplicate mode
+	'7': 'move',      // F7 -> Move mode
+};
+
+/** Get mode display name */
+export function getModeName(mode: EditorMode): string {
+	switch (mode) {
+		case 'select': return 'Select';
+		case 'wire': return 'Wire (3)';
+		case 'delete': return 'Delete (5)';
+		case 'duplicate': return 'Duplicate (6)';
+		case 'move': return 'Move (7)';
+		case 'place': return 'Place';
+		default: return mode;
+	}
+}
 

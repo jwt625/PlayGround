@@ -10,11 +10,28 @@
 	let simResult = $state<SimulationResult | null>(null);
 	let waveformTraces = $state<TraceData[]>([]);
 	let timeData = $state<number[]>([]);
-	let schematic = $state<Schematic>({ components: [], wires: [] });
+	let schematic = $state<Schematic>({ components: [], wires: [], junctions: [] });
 
 	let netlistCollapsed = $state(false);
 	let schematicCollapsed = $state(false);
 	let waveformCollapsed = $state(false);
+
+	// Calculate initial panel sizes based on viewport
+	// Schematic: 1/2 of total height, Waveform: 1/3 of total height, Info: 1/6 of total height
+	const toolbarHeight = 40;
+	const statusbarHeight = 24;
+
+	function getInitialSizes() {
+		if (typeof window === 'undefined') return { schematic: 400, waveform: 250, info: 100 };
+		const availableHeight = window.innerHeight - toolbarHeight - statusbarHeight;
+		// Schematic: 1/2, Waveform: 1/3, Info: 1/6
+		const schematicHeight = Math.round(availableHeight / 2);
+		const waveformHeight = Math.round(availableHeight / 3);
+		const infoHeight = Math.round(availableHeight / 6);
+		return { schematic: schematicHeight, waveform: waveformHeight, info: infoHeight };
+	}
+
+	let initialSizes = $state(getInitialSizes());
 	let netlistInput = $state(`* Minimal RC Circuit Test
 R1 in out 1k
 C1 out 0 1u
@@ -96,38 +113,40 @@ Vin in 0 PULSE(0 5 0 1n 1n 0.5m 1m)
 		{/if}
 	</header>
 	<main class="workspace">
-		<ResizablePanel title="Netlist" direction="horizontal" initialSize={350} minSize={200} bind:collapsed={netlistCollapsed}>
+		<ResizablePanel title="Netlist" direction="horizontal" initialSize={300} minSize={200} bind:collapsed={netlistCollapsed}>
 			<div class="panel-fill">
 				<NetlistEditor bind:value={netlistInput} />
 			</div>
 		</ResizablePanel>
 		<div class="right-panel">
-			<ResizablePanel title="Schematic" direction="vertical" initialSize={300} minSize={150} bind:collapsed={schematicCollapsed}>
+			<ResizablePanel title="Schematic" direction="vertical" initialSize={initialSizes.schematic} minSize={100} bind:collapsed={schematicCollapsed}>
 				<div class="panel-fill dark">
 					<SchematicCanvas bind:schematic />
 				</div>
 			</ResizablePanel>
-			<ResizablePanel title="Waveform" direction="vertical" initialSize={300} minSize={150} bind:collapsed={waveformCollapsed}>
-				<div class="panel-fill dark">
-					{#if waveformTraces.length > 0}
-						<WaveformViewer traces={waveformTraces} {timeData} />
-					{:else}
-						<div class="placeholder-center">
-							<p>Run a simulation to view waveforms</p>
-							<p class="hint">Scroll to zoom, drag to pan, double-click to fit</p>
-						</div>
-					{/if}
-				</div>
-			</ResizablePanel>
-			{#if simResult}
-				<div class="info-panel">
-					<h3>Simulation Info</h3>
-					<div class="result-info">
-						<p><strong>Variables:</strong> {simResult.variableNames.join(', ')}</p>
-						<p><strong>Points:</strong> {simResult.numPoints}</p>
+			<div class="waveform-and-info">
+				<ResizablePanel title="Waveform" direction="vertical" initialSize={initialSizes.waveform} minSize={100} bind:collapsed={waveformCollapsed}>
+					<div class="panel-fill dark">
+						{#if waveformTraces.length > 0}
+							<WaveformViewer traces={waveformTraces} {timeData} />
+						{:else}
+							<div class="placeholder-center">
+								<p>Run a simulation to view waveforms</p>
+								<p class="hint">Scroll to zoom, drag to pan, double-click to fit</p>
+							</div>
+						{/if}
 					</div>
-				</div>
-			{/if}
+				</ResizablePanel>
+				{#if simResult}
+					<div class="info-panel" style="height: {initialSizes.info}px">
+						<h3>Simulation Info</h3>
+						<div class="result-info">
+							<p><strong>Variables:</strong> {simResult.variableNames.join(', ')}</p>
+							<p><strong>Points:</strong> {simResult.numPoints}</p>
+						</div>
+					</div>
+				{/if}
+			</div>
 		</div>
 	</main>
 	<footer class="statusbar">
@@ -196,6 +215,13 @@ Vin in 0 PULSE(0 5 0 1n 1n 0.5m 1m)
 		overflow: hidden;
 	}
 
+	.waveform-and-info {
+		flex: 1;
+		display: flex;
+		flex-direction: column;
+		overflow: hidden;
+	}
+
 	.panel-fill {
 		width: 100%;
 		height: 100%;
@@ -210,6 +236,8 @@ Vin in 0 PULSE(0 5 0 1n 1n 0.5m 1m)
 	.info-panel {
 		background: var(--bg-secondary);
 		border-top: 1px solid var(--border-primary);
+		flex-shrink: 0;
+		overflow: auto;
 	}
 
 	.info-panel h3 {

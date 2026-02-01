@@ -503,12 +503,13 @@ Created canvas-based schematic editor with pan/zoom/grid:
 - Created `src/lib/schematic/SchematicCanvas.svelte` - Canvas component
   - Pan: Click and drag to pan the view
   - Zoom: Scroll wheel to zoom in/out (centered on mouse)
-  - Grid: Dot grid at 10-unit spacing (toggle with G key)
+  - Grid: Dot grid at 10-unit spacing (toggle with Ctrl+G)
   - Origin crosshair: Visual reference at (0,0)
-  - HUD: HTML overlay showing coordinates and zoom level
-  - Keyboard shortcuts: G (grid), F/Home (reset view), +/- (zoom)
+  - HUD: HTML overlay showing coordinates, zoom level, and mode hints
+  - Keyboard shortcuts: Ctrl+G (grid), F/Home (reset view), +/- (zoom)
   - Coordinate conversion: screen to schematic and back
   - Grid snapping for component placement
+  - ResizeObserver for proper canvas sizing without aspect ratio distortion
 
 Added resizable and collapsible panel system:
 - Created `src/lib/components/ResizablePanel.svelte`
@@ -520,9 +521,97 @@ Added resizable and collapsible panel system:
   - Schematic panel (top-right, vertical resize)
   - Waveform panel (bottom-right, vertical resize)
 
+### Phase 5: Component System - Complete (2026-02-01)
+Implemented full component rendering, placement, and manipulation:
+
+#### Component Definitions (`src/lib/schematic/component-defs.ts`)
+- Resistor (R key) - zigzag pattern
+- Capacitor (C key) - parallel plates
+- Inductor (L key) - coil pattern
+- Ground (G key) - standard ground symbol
+- Voltage Source (V key) - circle with +/- signs
+- Current Source (I key) - circle with arrow
+- Diode (D key) - triangle with bar
+- NPN BJT (Q key) - transistor with arrow out
+- PNP BJT (Shift+Q) - transistor with arrow in
+- NMOS (M key) - MOSFET symbol
+- PMOS (Shift+M) - PMOS with bubble
+- Each component has: paths (draw commands), pins, label/value offsets, bounding box
+
+#### Component Renderer (`src/lib/schematic/component-renderer.ts`)
+- Renders components on canvas with rotation and mirror transforms
+- Ghost preview for placement mode (semi-transparent)
+- Selection highlighting (yellow)
+- Labels counter-rotate to stay readable regardless of component rotation
+- Hit testing for component selection
+
+#### Component Placement
+- Press component shortcut key to enter placement mode
+- Ghost preview follows cursor (snapped to grid)
+- Click to place component
+- Can switch components while placing (e.g., R then C switches to capacitor)
+- Auto-generated instance names (R1, R2, C1, etc.)
+- Default values assigned (1k for resistors, 1u for capacitors, etc.)
+
+#### Component Selection and Manipulation
+- Click on component to select (yellow highlight)
+- Shift+click for multi-select
+- Ctrl+R to rotate (0 -> 90 -> 180 -> 270 degrees)
+- Ctrl+E to mirror/flip horizontally
+- Delete/Backspace to delete selected components
+- Escape to cancel placement or clear selection
+
+### Phase 6: Wire System - Complete (2026-02-01)
+Implemented wire drawing with Manhattan-style routing:
+
+#### Keyboard Shortcuts (LTSpice F-keys mapped to number keys)
+- 3 or W: Wire mode (F3)
+- 5: Delete mode (F5)
+- 7: Move mode (F7)
+- Space: Toggle wire direction (horizontal-first / vertical-first) while drawing
+- Escape: Cancel current operation, return to select mode
+
+#### Wire Drawing
+- Click to start wire, click again to place segment(s)
+- Manhattan routing: wires are always horizontal or vertical
+- Space key toggles between horizontal-first and vertical-first routing
+- Chained wire drawing: after placing, continues from endpoint
+- Ghost preview shows wire path before placement
+
+#### Wire Selection and Deletion
+- Click on wire to select (yellow highlight)
+- Shift+click for multi-select (components and wires)
+- Delete/Backspace removes selected wires and components
+- Delete mode (5): click to delete individual items
+
+#### Junction Detection (Updated 2026-02-01)
+- **Red junction dots** shown at:
+  - Wire endpoints connecting to component pins (auto-connect)
+  - Wire endpoints where 3+ segments meet (T-junction)
+  - Explicit junctions created when drawing wires onto existing wires
+- **Wires crossing visually are NOT connected** unless junction exists
+- When drawing a wire and clicking on an existing wire segment, a junction is automatically created
+- Junctions can be deleted in delete mode (5)
+
+#### Duplicate Mode (Added 2026-02-01)
+- Key 6: Duplicate mode (LTSpice F6)
+- Click on component or wire to duplicate with 2-grid-unit offset
+- Duplicated item is automatically selected
+
+#### Cursor Feedback (Added 2026-02-01)
+- Dynamic cursor based on mode:
+  - Delete mode: `not-allowed`
+  - Wire mode: `crosshair`
+  - Move mode: `move`
+  - Place/Duplicate mode: `copy`
+
+#### Layout Improvements (Added 2026-02-01)
+- Schematic panel: 1/2 of available height (50%)
+- Waveform panel: 1/3 of available height (33%)
+- Simulation info panel: 1/6 of available height (17%)
+- Panel sizes calculated dynamically based on viewport
+
 ### Not Started
-- Phase 5: Component system (renderers, placement, rotation)
-- Phase 6: Wire system (drawing, auto-routing, junctions)
 - Phase 7: Netlist generation from schematic
 - Phase 9: ASC file parser
 - Phase 10: localStorage persistence, undo/redo
