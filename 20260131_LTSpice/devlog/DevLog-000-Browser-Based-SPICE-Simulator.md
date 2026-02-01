@@ -460,12 +460,11 @@ Key elements:
 
 ---
 
-## Implementation Status (2026-01-31)
+## Implementation Status
 
-### Completed
+### Phase 1-2: Complete (2026-01-31)
 - Project setup: SvelteKit + pnpm + Vite
 - Simulation engine: NGSpice WASM via eecircuit-engine, Web Worker + Comlink
-- Netlist editor: textarea input (CodeMirror not yet integrated)
 - Waveform viewer: WebGL-based with webgl-plot
   - Pan (drag), zoom (scroll)
   - Box zoom (Z key)
@@ -482,10 +481,48 @@ Reduced codebase by ~47% while maintaining all functionality:
 - styles/theme.css: 164 -> 41 lines
 - waveform/types.ts: 69 -> 41 lines
 
+### Phase 3: Netlist Editor - Complete (2026-02-01)
+Integrated CodeMirror 6 with custom SPICE syntax highlighting:
+- Created `src/lib/editor/spice-language.ts` - SPICE language mode
+  - Comments (lines starting with `*` or `;`)
+  - Directives (`.tran`, `.ac`, `.dc`, `.op`, `.model`, etc.)
+  - Component names (`R1`, `C1`, `V1`, etc.)
+  - Numbers with SI prefixes (`1k`, `10u`, `100n`, `1meg`)
+  - Keywords (`PULSE`, `SINE`, `AC`, `DC`, etc.)
+- Created `src/lib/editor/spice-theme.ts` - Dark theme matching LTSpice
+  - Green comments, blue directives, yellow component names, light green numbers
+- Created `src/lib/editor/NetlistEditor.svelte` - Svelte wrapper component
+  - Line numbers, active line highlighting, undo/redo history
+  - Two-way binding with `bind:value`
+
+### Phase 4: Schematic Canvas Foundation - Complete (2026-02-01)
+Created canvas-based schematic editor with pan/zoom/grid:
+- Created `src/lib/schematic/types.ts` - Type definitions
+  - `Point`, `ViewTransform`, `GridSettings`, `InteractionState`
+  - `Component`, `Wire`, `Schematic`, `ComponentType`, `Rotation`, `Pin`
+- Created `src/lib/schematic/SchematicCanvas.svelte` - Canvas component
+  - Pan: Click and drag to pan the view
+  - Zoom: Scroll wheel to zoom in/out (centered on mouse)
+  - Grid: Dot grid at 10-unit spacing (toggle with G key)
+  - Origin crosshair: Visual reference at (0,0)
+  - HUD: HTML overlay showing coordinates and zoom level
+  - Keyboard shortcuts: G (grid), F/Home (reset view), +/- (zoom)
+  - Coordinate conversion: screen to schematic and back
+  - Grid snapping for component placement
+
+Added resizable and collapsible panel system:
+- Created `src/lib/components/ResizablePanel.svelte`
+  - Horizontal and vertical resize handles
+  - Collapse/expand buttons with directional arrows
+  - Panel headers with titles
+- Updated main layout with three resizable panels:
+  - Netlist panel (left, horizontal resize)
+  - Schematic panel (top-right, vertical resize)
+  - Waveform panel (bottom-right, vertical resize)
+
 ### Not Started
-- Schematic editor (canvas, components, wires)
-- Component system
-- Netlist generation from schematic
-- ASC file parser
-- localStorage persistence
-- Undo/redo
+- Phase 5: Component system (renderers, placement, rotation)
+- Phase 6: Wire system (drawing, auto-routing, junctions)
+- Phase 7: Netlist generation from schematic
+- Phase 9: ASC file parser
+- Phase 10: localStorage persistence, undo/redo

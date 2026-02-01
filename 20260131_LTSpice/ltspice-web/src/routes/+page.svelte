@@ -3,11 +3,18 @@
 	import { initSimulation, runSimulation, terminateSimulation, type SimulationResult } from '$lib/simulation';
 	import { WaveformViewer, type TraceData, getTraceColor } from '$lib/waveform';
 	import { NetlistEditor } from '$lib/editor';
+	import { SchematicCanvas, type Schematic } from '$lib/schematic';
+	import { ResizablePanel } from '$lib/components';
 
 	let status = $state('Not initialized');
 	let simResult = $state<SimulationResult | null>(null);
 	let waveformTraces = $state<TraceData[]>([]);
 	let timeData = $state<number[]>([]);
+	let schematic = $state<Schematic>({ components: [], wires: [] });
+
+	let netlistCollapsed = $state(false);
+	let schematicCollapsed = $state(false);
+	let waveformCollapsed = $state(false);
 	let netlistInput = $state(`* Minimal RC Circuit Test
 R1 in out 1k
 C1 out 0 1u
@@ -89,18 +96,19 @@ Vin in 0 PULSE(0 5 0 1n 1n 0.5m 1m)
 		{/if}
 	</header>
 	<main class="workspace">
-		<div class="left-panel">
-			<div class="editor-panel">
-				<h3>Netlist</h3>
-				<div class="editor-content">
-					<NetlistEditor bind:value={netlistInput} />
-				</div>
+		<ResizablePanel title="Netlist" direction="horizontal" initialSize={350} minSize={200} bind:collapsed={netlistCollapsed}>
+			<div class="panel-fill">
+				<NetlistEditor bind:value={netlistInput} />
 			</div>
-		</div>
+		</ResizablePanel>
 		<div class="right-panel">
-			<div class="waveform-panel">
-				<h3>Waveform Viewer</h3>
-				<div class="waveform-content">
+			<ResizablePanel title="Schematic" direction="vertical" initialSize={300} minSize={150} bind:collapsed={schematicCollapsed}>
+				<div class="panel-fill dark">
+					<SchematicCanvas {schematic} />
+				</div>
+			</ResizablePanel>
+			<ResizablePanel title="Waveform" direction="vertical" initialSize={300} minSize={150} bind:collapsed={waveformCollapsed}>
+				<div class="panel-fill dark">
 					{#if waveformTraces.length > 0}
 						<WaveformViewer traces={waveformTraces} {timeData} />
 					{:else}
@@ -110,7 +118,7 @@ Vin in 0 PULSE(0 5 0 1n 1n 0.5m 1m)
 						</div>
 					{/if}
 				</div>
-			</div>
+			</ResizablePanel>
 			{#if simResult}
 				<div class="info-panel">
 					<h3>Simulation Info</h3>
@@ -181,14 +189,6 @@ Vin in 0 PULSE(0 5 0 1n 1n 0.5m 1m)
 		overflow: hidden;
 	}
 
-	.left-panel {
-		width: 350px;
-		min-width: 250px;
-		display: flex;
-		flex-direction: column;
-		border-right: 1px solid var(--border-primary);
-	}
-
 	.right-panel {
 		flex: 1;
 		display: flex;
@@ -196,46 +196,28 @@ Vin in 0 PULSE(0 5 0 1n 1n 0.5m 1m)
 		overflow: hidden;
 	}
 
-	.editor-panel {
-		flex: 1;
-		display: flex;
-		flex-direction: column;
-		background: var(--bg-secondary);
+	.panel-fill {
+		width: 100%;
+		height: 100%;
+		overflow: hidden;
 	}
 
-	.editor-panel h3,
-	.waveform-panel h3,
+	.panel-fill.dark {
+		background: #1a1a1a;
+		position: relative;
+	}
+
+	.info-panel {
+		background: var(--bg-secondary);
+		border-top: 1px solid var(--border-primary);
+	}
+
 	.info-panel h3 {
 		padding: var(--spacing-sm) var(--spacing-md);
 		margin: 0;
 		font-size: var(--font-size-sm);
 		background: var(--bg-tertiary);
 		border-bottom: 1px solid var(--border-primary);
-	}
-
-	.editor-content {
-		flex: 1;
-		overflow: hidden;
-	}
-
-	.waveform-panel {
-		flex: 1;
-		display: flex;
-		flex-direction: column;
-		background: var(--bg-secondary);
-		min-height: 200px;
-	}
-
-	.waveform-content {
-		flex: 1;
-		position: relative;
-		background: #000000;
-	}
-
-	.info-panel {
-		height: 80px;
-		background: var(--bg-secondary);
-		border-top: 1px solid var(--border-primary);
 	}
 
 	.result-info {
