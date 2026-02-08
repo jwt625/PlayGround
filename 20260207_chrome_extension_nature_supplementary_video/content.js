@@ -68,38 +68,144 @@
       const arrayBuffer = await fetchResponse.arrayBuffer();
       console.log('[Video Player] ZIP downloaded, size:', arrayBuffer.byteLength);
 
-      // Convert to base64 to send to background
+      // Convert to base64 and send in chunks (max ~32MB per message to stay under 64MB limit)
       statusCallback('Processing ZIP...');
       const uint8Array = new Uint8Array(arrayBuffer);
       let binary = '';
-      const chunkSize = 8192;
-      for (let i = 0; i < uint8Array.length; i += chunkSize) {
-        const chunk = uint8Array.subarray(i, i + chunkSize);
+      const convChunkSize = 8192;
+      for (let i = 0; i < uint8Array.length; i += convChunkSize) {
+        const chunk = uint8Array.subarray(i, i + convChunkSize);
         binary += String.fromCharCode.apply(null, chunk);
       }
       const zipBase64 = btoa(binary);
-      console.log('[Video Player] ZIP converted to base64, sending to background...');
+      console.log('[Video Player] ZIP converted to base64, length:', zipBase64.length);
 
-      const response = await chrome.runtime.sendMessage({
-        type: 'EXTRACT_ZIP_DATA',
-        zipBase64: zipBase64
-      });
-      console.log('[Video Player] Got response from background:', response);
+      // Send in chunks if too large (32MB chunks to stay well under 64MB limit)
+      const MAX_CHUNK_SIZE = 32 * 1024 * 1024; // 32MB
+      const transferId = Date.now().toString() + Math.random().toString(36).substr(2, 9);
 
-      transcodeCallbacks.delete(zipUrl);
+      if (zipBase64.length > MAX_CHUNK_SIZE) {
+        console.log('[Video Player] Large file, sending in chunks...');
+        const totalChunks = Math.ceil(zipBase64.length / MAX_CHUNK_SIZE);
 
-      if (response.error) {
-        throw new Error(response.error);
+        for (let i = 0; i < totalChunks; i++) {
+          const start = i * MAX_CHUNK_SIZE;
+          const end = Math.min(start + MAX_CHUNK_SIZE, zipBase64.length);
+          const chunk = zipBase64.substring(start, end);
+
+          statusCallback(`Transferring... ${Math.round((i + 1) / totalChunks * 100)}%`);
+
+          const chunkResponse = await chrome.runtime.sendMessage({
+            type: 'EXTRACT_ZIP_CHUNK',
+            transferId: transferId,
+            chunkIndex: i,
+            totalChunks: totalChunks,
+            chunk: chunk
+          });
+
+          if (chunkResponse.error) {
+            throw new Error(chunkResponse.error);
+          }
+        }
+
+        // Now request extraction
+        statusCallback('Extracting...');
+        const response = await chrome.runtime.sendMessage({
+          type: 'EXTRACT_ZIP_PROCESS',
+          transferId: transferId
+        });
+        console.log('[Video Player] Got response from background:', response);
+
+        transcodeCallbacks.delete(zipUrl);
+
+        if (response.error) {
+          throw new Error(response.error);
+        }
+
+        // Check if response is chunked
+        if (response.chunked) {
+          console.log('[Video Player] Response is chunked, fetching chunks...');
+          const chunks = [];
+          for (let i = 0; i < response.totalChunks; i++) {
+            statusCallback(`Receiving result... ${Math.round((i + 1) / response.totalChunks * 100)}%`);
+            const chunkResp = await chrome.runtime.sendMessage({
+              type: 'GET_RESULT_CHUNK',
+              resultId: response.resultId,
+              chunkIndex: i
+            });
+            if (chunkResp.error) {
+              throw new Error(chunkResp.error);
+            }
+            chunks.push(chunkResp.chunk);
+          }
+          const base64 = chunks.join('');
+          const binaryString = atob(base64);
+          const bytes = new Uint8Array(binaryString.length);
+          for (let i = 0; i < binaryString.length; i++) {
+            bytes[i] = binaryString.charCodeAt(i);
+          }
+          const blob = new Blob([bytes], { type: response.mimeType });
+          return URL.createObjectURL(blob);
+        }
+
+        // Convert base64 back to blob URL
+        const binaryString = atob(response.base64);
+        const bytes = new Uint8Array(binaryString.length);
+        for (let i = 0; i < binaryString.length; i++) {
+          bytes[i] = binaryString.charCodeAt(i);
+        }
+        const blob = new Blob([bytes], { type: response.mimeType });
+        return URL.createObjectURL(blob);
+      } else {
+        // Small enough to send in one message
+        console.log('[Video Player] Sending to background in single message...');
+        const response = await chrome.runtime.sendMessage({
+          type: 'EXTRACT_ZIP_DATA',
+          zipBase64: zipBase64
+        });
+        console.log('[Video Player] Got response from background:', response);
+
+        transcodeCallbacks.delete(zipUrl);
+
+        if (response.error) {
+          throw new Error(response.error);
+        }
+
+        // Check if response is chunked (video might be larger than ZIP)
+        if (response.chunked) {
+          console.log('[Video Player] Response is chunked, fetching chunks...');
+          const chunks = [];
+          for (let i = 0; i < response.totalChunks; i++) {
+            statusCallback(`Receiving result... ${Math.round((i + 1) / response.totalChunks * 100)}%`);
+            const chunkResp = await chrome.runtime.sendMessage({
+              type: 'GET_RESULT_CHUNK',
+              resultId: response.resultId,
+              chunkIndex: i
+            });
+            if (chunkResp.error) {
+              throw new Error(chunkResp.error);
+            }
+            chunks.push(chunkResp.chunk);
+          }
+          const base64 = chunks.join('');
+          const binaryString = atob(base64);
+          const bytes = new Uint8Array(binaryString.length);
+          for (let i = 0; i < binaryString.length; i++) {
+            bytes[i] = binaryString.charCodeAt(i);
+          }
+          const blob = new Blob([bytes], { type: response.mimeType });
+          return URL.createObjectURL(blob);
+        }
+
+        // Convert base64 back to blob URL
+        const binaryString = atob(response.base64);
+        const bytes = new Uint8Array(binaryString.length);
+        for (let i = 0; i < binaryString.length; i++) {
+          bytes[i] = binaryString.charCodeAt(i);
+        }
+        const blob = new Blob([bytes], { type: response.mimeType });
+        return URL.createObjectURL(blob);
       }
-
-      // Convert base64 back to blob URL
-      const binaryString = atob(response.base64);
-      const bytes = new Uint8Array(binaryString.length);
-      for (let i = 0; i < binaryString.length; i++) {
-        bytes[i] = binaryString.charCodeAt(i);
-      }
-      const blob = new Blob([bytes], { type: response.mimeType });
-      return URL.createObjectURL(blob);
     } catch (error) {
       transcodeCallbacks.delete(zipUrl);
       throw error;

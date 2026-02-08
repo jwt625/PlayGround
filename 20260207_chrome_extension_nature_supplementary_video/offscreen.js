@@ -8,6 +8,44 @@ let port = null;
 const NATIVE_FORMATS = ['mp4', 'webm', 'ogg', 'm4v'];
 const TRANSCODE_FORMATS = ['avi', 'mkv', 'flv', 'wmv', 'mov'];
 
+// Max message size for port communication (32MB to stay under 64MB limit)
+const MAX_MESSAGE_SIZE = 32 * 1024 * 1024;
+
+// Send result, chunking if necessary
+function sendResult(result) {
+  if (!result.base64 || result.base64.length <= MAX_MESSAGE_SIZE) {
+    port.postMessage({ type: 'RESULT', result });
+    return;
+  }
+
+  // Need to send in chunks
+  const totalChunks = Math.ceil(result.base64.length / MAX_MESSAGE_SIZE);
+  console.log(`[Offscreen] Result too large (${result.base64.length}), sending in ${totalChunks} chunks`);
+
+  // First send metadata
+  port.postMessage({
+    type: 'RESULT_CHUNKED_START',
+    mimeType: result.mimeType,
+    totalChunks: totalChunks,
+    totalLength: result.base64.length
+  });
+
+  // Then send chunks
+  for (let i = 0; i < totalChunks; i++) {
+    const start = i * MAX_MESSAGE_SIZE;
+    const end = Math.min(start + MAX_MESSAGE_SIZE, result.base64.length);
+    const chunk = result.base64.substring(start, end);
+    port.postMessage({
+      type: 'RESULT_CHUNK',
+      chunkIndex: i,
+      chunk: chunk
+    });
+  }
+
+  // Signal completion
+  port.postMessage({ type: 'RESULT_CHUNKED_END' });
+}
+
 async function loadFFmpeg() {
   if (ffmpegLoaded) return ffmpeg;
 
@@ -381,11 +419,14 @@ async function extractZipFromData(zipBase64, tabId) {
 // Connect to background via port
 port = chrome.runtime.connect({ name: 'offscreen' });
 
+// Storage for chunked input from background
+let chunkedInput = null;
+
 port.onMessage.addListener((message) => {
   if (message.type === 'TRANSCODE') {
     transcodeVideo(message.videoUrl, message.tabId)
       .then(result => {
-        port.postMessage({ type: 'RESULT', result });
+        sendResult(result);
       })
       .catch(error => {
         port.postMessage({ type: 'RESULT', error: error.message || String(error) });
@@ -395,7 +436,7 @@ port.onMessage.addListener((message) => {
   if (message.type === 'EXTRACT_ZIP') {
     extractZipVideo(message.zipUrl, message.tabId)
       .then(result => {
-        port.postMessage({ type: 'RESULT', result });
+        sendResult(result);
       })
       .catch(error => {
         port.postMessage({ type: 'RESULT', error: error.message || String(error) });
@@ -405,7 +446,39 @@ port.onMessage.addListener((message) => {
   if (message.type === 'EXTRACT_ZIP_DATA') {
     extractZipFromData(message.zipBase64, message.tabId)
       .then(result => {
-        port.postMessage({ type: 'RESULT', result });
+        sendResult(result);
+      })
+      .catch(error => {
+        port.postMessage({ type: 'RESULT', error: error.message || String(error) });
+      });
+  }
+
+  // Handle chunked input from background
+  if (message.type === 'EXTRACT_ZIP_DATA_START') {
+    console.log(`[Offscreen] Receiving chunked data: ${message.totalChunks} chunks, ${message.totalLength} bytes`);
+    chunkedInput = {
+      totalChunks: message.totalChunks,
+      chunks: [],
+      received: 0,
+      tabId: message.tabId
+    };
+  }
+
+  if (message.type === 'EXTRACT_ZIP_DATA_CHUNK' && chunkedInput) {
+    chunkedInput.chunks[message.chunkIndex] = message.chunk;
+    chunkedInput.received++;
+    console.log(`[Offscreen] Received chunk ${message.chunkIndex + 1}/${chunkedInput.totalChunks}`);
+  }
+
+  if (message.type === 'EXTRACT_ZIP_DATA_END' && chunkedInput) {
+    console.log(`[Offscreen] All chunks received, combining and processing...`);
+    const zipBase64 = chunkedInput.chunks.join('');
+    const tabId = chunkedInput.tabId;
+    chunkedInput = null;
+
+    extractZipFromData(zipBase64, tabId)
+      .then(result => {
+        sendResult(result);
       })
       .catch(error => {
         port.postMessage({ type: 'RESULT', error: error.message || String(error) });
