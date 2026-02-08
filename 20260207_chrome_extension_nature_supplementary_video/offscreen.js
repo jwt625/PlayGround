@@ -31,7 +31,6 @@ function sendResult(result) {
   if (result.multiple && result.videos) {
     const jsonStr = JSON.stringify(result);
     const totalChunks = Math.ceil(jsonStr.length / MAX_MESSAGE_SIZE);
-    console.log(`[Offscreen] Multiple videos result too large (${jsonStr.length}), sending in ${totalChunks} chunks`);
 
     port.postMessage({
       type: 'RESULT_CHUNKED_START',
@@ -57,7 +56,6 @@ function sendResult(result) {
 
   // Single video - chunk the base64 data
   const totalChunks = Math.ceil(result.base64.length / MAX_MESSAGE_SIZE);
-  console.log(`[Offscreen] Result too large (${result.base64.length}), sending in ${totalChunks} chunks`);
 
   port.postMessage({
     type: 'RESULT_CHUNKED_START',
@@ -195,7 +193,6 @@ function uint8ToBase64(data) {
 
 // Extract video from ZIP file
 async function extractZipVideo(zipUrl, tabId) {
-  console.log('[Offscreen] extractZipVideo called with URL:', zipUrl);
 
   function reportProgress(status, progress = 0) {
     if (port) {
@@ -206,16 +203,12 @@ async function extractZipVideo(zipUrl, tabId) {
   reportProgress('Downloading ZIP...', 0);
 
   // Download the zip file with credentials to include cookies
-  console.log('[Offscreen] Fetching ZIP with credentials...');
   try {
     const response = await fetch(zipUrl, { credentials: 'include', mode: 'cors' });
-    console.log('[Offscreen] Fetch response status:', response.status, response.statusText);
-    console.log('[Offscreen] Response headers:', [...response.headers.entries()]);
     if (!response.ok) {
       throw new Error(`Fetch failed: ${response.status}`);
     }
   } catch (fetchError) {
-    console.error('[Offscreen] Fetch error:', fetchError);
     throw fetchError;
   }
 
@@ -340,7 +333,6 @@ async function extractZipVideo(zipUrl, tabId) {
 
 // Extract video from ZIP data (base64 encoded, already downloaded by content script)
 async function extractZipFromData(zipBase64, tabId) {
-  console.log('[Offscreen] extractZipFromData called, data length:', zipBase64.length);
 
   function reportProgress(status, progress = 0) {
     if (port) {
@@ -357,7 +349,6 @@ async function extractZipFromData(zipBase64, tabId) {
     zipData[i] = binaryString.charCodeAt(i);
   }
 
-  console.log('[Offscreen] ZIP data converted, size:', zipData.length);
 
   reportProgress('Extracting ZIP...', 0);
 
@@ -389,7 +380,6 @@ async function extractZipFromData(zipBase64, tabId) {
   // Sort by filename for consistent ordering
   videoFiles.sort((a, b) => a.name.localeCompare(b.name));
 
-  console.log('[Offscreen] Found video files:', videoFiles.map(v => v.name));
 
   const mimeTypes = {
     'mp4': 'video/mp4',
@@ -512,7 +502,6 @@ port.onMessage.addListener((message) => {
 
   // Handle chunked input from background
   if (message.type === 'EXTRACT_ZIP_DATA_START') {
-    console.log(`[Offscreen] Receiving chunked data: ${message.totalChunks} chunks, ${message.totalLength} bytes`);
     chunkedInput = {
       totalChunks: message.totalChunks,
       chunks: [],
@@ -524,11 +513,9 @@ port.onMessage.addListener((message) => {
   if (message.type === 'EXTRACT_ZIP_DATA_CHUNK' && chunkedInput) {
     chunkedInput.chunks[message.chunkIndex] = message.chunk;
     chunkedInput.received++;
-    console.log(`[Offscreen] Received chunk ${message.chunkIndex + 1}/${chunkedInput.totalChunks}`);
   }
 
   if (message.type === 'EXTRACT_ZIP_DATA_END' && chunkedInput) {
-    console.log(`[Offscreen] All chunks received, combining and processing...`);
     const zipBase64 = chunkedInput.chunks.join('');
     const tabId = chunkedInput.tabId;
     chunkedInput = null;

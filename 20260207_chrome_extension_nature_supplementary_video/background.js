@@ -93,7 +93,6 @@ chrome.runtime.onConnect.addListener((port) => {
 
       // Handle chunked results from offscreen
       if (message.type === 'RESULT_CHUNKED_START') {
-        console.log(`[Background] Receiving chunked result: ${message.totalChunks} chunks, ${message.totalLength} bytes`);
         chunkedResult = {
           mimeType: message.mimeType,
           isMultipleVideos: message.isMultipleVideos || false,
@@ -106,18 +105,15 @@ chrome.runtime.onConnect.addListener((port) => {
       if (message.type === 'RESULT_CHUNK' && chunkedResult) {
         chunkedResult.chunks[message.chunkIndex] = message.chunk;
         chunkedResult.received++;
-        console.log(`[Background] Received chunk ${message.chunkIndex + 1}/${chunkedResult.totalChunks}`);
       }
 
       if (message.type === 'RESULT_CHUNKED_END' && chunkedResult && pendingTranscode) {
-        console.log(`[Background] All chunks received, combining...`);
         const combined = chunkedResult.chunks.join('');
 
         let result;
         if (chunkedResult.isMultipleVideos) {
           // Parse the JSON for multiple videos
           result = JSON.parse(combined);
-          console.log(`[Background] Parsed multiple videos result: ${result.videos.length} videos`);
         } else {
           // Single video base64 data
           result = {
@@ -252,7 +248,6 @@ async function handleExtractZipData(zipBase64, tabId) {
     // Store result for chunked retrieval
     const resultId = Date.now().toString() + '_result';
     resultStorage.set(resultId, result);
-    console.log(`[Background] Result too large (${result.base64.length}), stored for chunked retrieval`);
 
     const totalChunks = Math.ceil(result.base64.length / MAX_RESPONSE_SIZE);
     return {
@@ -276,7 +271,6 @@ async function handleExtractZipChunk(transferId, chunkIndex, totalChunks, chunk)
   storage.chunks[chunkIndex] = chunk;
   storage.received++;
 
-  console.log(`[Background] Received chunk ${chunkIndex + 1}/${totalChunks} for transfer ${transferId}`);
 
   return { success: true, received: storage.received, total: totalChunks };
 }
@@ -295,7 +289,6 @@ async function handleExtractZipProcess(transferId, tabId) {
   const zipBase64 = storage.chunks.join('');
   chunkStorage.delete(transferId); // Clean up
 
-  console.log(`[Background] Processing combined data, length: ${zipBase64.length}`);
 
   // Now process like normal
   await ensureOffscreenDocument();
@@ -314,7 +307,6 @@ async function handleExtractZipProcess(transferId, tabId) {
   const MAX_CHUNK_SIZE = 32 * 1024 * 1024;
   if (zipBase64.length > MAX_CHUNK_SIZE) {
     const totalChunks = Math.ceil(zipBase64.length / MAX_CHUNK_SIZE);
-    console.log(`[Background] Sending to offscreen in ${totalChunks} chunks`);
 
     offscreenPort.postMessage({
       type: 'EXTRACT_ZIP_DATA_START',
@@ -367,7 +359,6 @@ async function handleExtractZipProcess(transferId, tabId) {
       // For multiple videos, serialize to JSON
       const jsonStr = JSON.stringify(result);
       resultStorage.set(resultId, { json: jsonStr, isMultipleVideos: true });
-      console.log(`[Background] Multiple videos result too large (${jsonStr.length}), stored for chunked retrieval`);
 
       const totalChunks = Math.ceil(jsonStr.length / MAX_RESPONSE_SIZE);
       return {
@@ -380,7 +371,6 @@ async function handleExtractZipProcess(transferId, tabId) {
     } else {
       // Single video
       resultStorage.set(resultId, result);
-      console.log(`[Background] Result too large (${result.base64.length}), stored for chunked retrieval`);
 
       const totalChunks = Math.ceil(result.base64.length / MAX_RESPONSE_SIZE);
       return {
@@ -414,7 +404,6 @@ async function handleGetResultChunk(resultId, chunkIndex) {
   // Clean up if this is the last chunk
   if (isLast) {
     resultStorage.delete(resultId);
-    console.log(`[Background] Last chunk sent, cleaned up result ${resultId}`);
   }
 
   return { chunk, isLast };

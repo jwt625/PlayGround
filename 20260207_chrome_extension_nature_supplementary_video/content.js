@@ -5,7 +5,6 @@
 (function() {
   'use strict';
 
-  console.log('[Video Player] Extension loaded on:', window.location.href);
 
   // Formats natively supported by HTML5 video
   const NATIVE_FORMATS = ['.mp4', '.webm', '.ogg', '.m4v'];
@@ -65,20 +64,17 @@
   // Extract video from ZIP via background/offscreen document
   // Returns either a single blob URL (string) or an array of { name, url } objects
   async function extractZipVideo(zipUrl, statusCallback) {
-    console.log('[Video Player] extractZipVideo called with URL:', zipUrl);
     transcodeCallbacks.set(zipUrl, statusCallback);
     statusCallback('Downloading ZIP...');
 
     try {
       // Download the ZIP in content script (has access to page cookies)
-      console.log('[Video Player] Fetching ZIP from content script...');
       const fetchResponse = await fetch(zipUrl, { credentials: 'include' });
       if (!fetchResponse.ok) {
         throw new Error(`Download failed: ${fetchResponse.status}`);
       }
 
       const arrayBuffer = await fetchResponse.arrayBuffer();
-      console.log('[Video Player] ZIP downloaded, size:', arrayBuffer.byteLength);
 
       // Convert to base64 and send in chunks (max ~32MB per message to stay under 64MB limit)
       statusCallback('Processing ZIP...');
@@ -90,14 +86,12 @@
         binary += String.fromCharCode.apply(null, chunk);
       }
       const zipBase64 = btoa(binary);
-      console.log('[Video Player] ZIP converted to base64, length:', zipBase64.length);
 
       // Send in chunks if too large (32MB chunks to stay well under 64MB limit)
       const MAX_CHUNK_SIZE = 32 * 1024 * 1024; // 32MB
       const transferId = Date.now().toString() + Math.random().toString(36).substr(2, 9);
 
       if (zipBase64.length > MAX_CHUNK_SIZE) {
-        console.log('[Video Player] Large file, sending in chunks...');
         const totalChunks = Math.ceil(zipBase64.length / MAX_CHUNK_SIZE);
 
         for (let i = 0; i < totalChunks; i++) {
@@ -126,7 +120,6 @@
           type: 'EXTRACT_ZIP_PROCESS',
           transferId: transferId
         });
-        console.log('[Video Player] Got response from background:', response);
 
         transcodeCallbacks.delete(zipUrl);
 
@@ -136,7 +129,6 @@
 
         // Check if response is chunked
         if (response.chunked) {
-          console.log('[Video Player] Response is chunked, fetching chunks...');
           const chunks = [];
           for (let i = 0; i < response.totalChunks; i++) {
             statusCallback(`Receiving result... ${Math.round((i + 1) / response.totalChunks * 100)}%`);
@@ -155,7 +147,6 @@
           // Check if this is multiple videos (JSON) or single video (base64)
           if (response.isMultipleVideos) {
             const parsed = JSON.parse(combined);
-            console.log('[Video Player] Parsed multiple videos:', parsed.videos.length);
             return parsed.videos.map(v => ({
               name: v.name,
               url: base64ToBlobUrl(v.base64, v.mimeType)
@@ -167,7 +158,6 @@
 
         // Check if multiple videos
         if (response.multiple && response.videos) {
-          console.log('[Video Player] Multiple videos found:', response.videos.length);
           return response.videos.map(v => ({
             name: v.name,
             url: base64ToBlobUrl(v.base64, v.mimeType)
@@ -178,12 +168,10 @@
         return base64ToBlobUrl(response.base64, response.mimeType);
       } else {
         // Small enough to send in one message
-        console.log('[Video Player] Sending to background in single message...');
         const response = await chrome.runtime.sendMessage({
           type: 'EXTRACT_ZIP_DATA',
           zipBase64: zipBase64
         });
-        console.log('[Video Player] Got response from background:', response);
 
         transcodeCallbacks.delete(zipUrl);
 
@@ -193,7 +181,6 @@
 
         // Check if response is chunked (video might be larger than ZIP)
         if (response.chunked) {
-          console.log('[Video Player] Response is chunked, fetching chunks...');
           const chunks = [];
           for (let i = 0; i < response.totalChunks; i++) {
             statusCallback(`Receiving result... ${Math.round((i + 1) / response.totalChunks * 100)}%`);
@@ -212,7 +199,6 @@
           // Check if this is multiple videos (JSON) or single video (base64)
           if (response.isMultipleVideos) {
             const parsed = JSON.parse(combined);
-            console.log('[Video Player] Parsed multiple videos:', parsed.videos.length);
             return parsed.videos.map(v => ({
               name: v.name,
               url: base64ToBlobUrl(v.base64, v.mimeType)
@@ -224,7 +210,6 @@
 
         // Check if multiple videos
         if (response.multiple && response.videos) {
-          console.log('[Video Player] Multiple videos found:', response.videos.length);
           return response.videos.map(v => ({
             name: v.name,
             url: base64ToBlobUrl(v.base64, v.mimeType)
@@ -313,7 +298,6 @@
         } catch (error) {
           status.textContent = 'Conversion failed: ' + error.message + '. Please download the video instead.';
           status.className = 'svp-video-status error';
-          console.error('[Video Player] Transcode error:', error);
         }
       });
       wrapper.appendChild(transcodeBtn);
@@ -428,7 +412,6 @@
 
         // Check if result is array (multiple videos)
         if (Array.isArray(result)) {
-          console.log('[Video Player] Creating UI for', result.length, 'videos');
 
           // Create tabs and video elements for each video
           result.forEach((videoInfo, index) => {
@@ -481,7 +464,6 @@
       } catch (error) {
         status.textContent = 'Extraction failed: ' + error.message;
         status.className = 'svp-video-status error';
-        console.error('[Video Player] ZIP extraction error:', error);
       }
     });
 
@@ -519,29 +501,23 @@
 
   // Replace video links with players
   function replaceVideoLinks() {
-    console.log('[Video Player] Scanning for video links...');
 
     // Find all supplementary items
     const suppItems = document.querySelectorAll('.c-article-supplementary__item[data-test="supp-item"]');
-    console.log('[Video Player] Found supplementary items:', suppItems.length);
 
     suppItems.forEach((item, index) => {
       // Find the link
       const link = item.querySelector('a[data-test="supp-info-link"]');
       if (!link) {
-        console.log('[Video Player] Item', index, '- no link found');
         return;
       }
 
       const href = link.getAttribute('href');
-      console.log('[Video Player] Item', index, '- href:', href);
 
       if (!isVideoLink(href)) {
-        console.log('[Video Player] Item', index, '- not a video link');
         return;
       }
 
-      console.log('[Video Player] Item', index, '- IS a video, replacing...');
 
       // Get title and description
       const title = link.textContent.trim();
@@ -569,24 +545,20 @@
         titleElement.parentNode.insertBefore(playerContainer, titleElement.nextSibling);
       }
 
-      console.log('[Video Player] Item', index, '- replaced successfully');
     });
   }
 
   // Replace video links on Science.org
   function replaceScienceVideoLinks() {
-    console.log('[Video Player] Scanning Science.org for video links...');
 
     // Find all supplementary material items
     const suppItems = document.querySelectorAll('.core-supplementary-material');
-    console.log('[Video Player] Found Science.org supplementary items:', suppItems.length);
 
     suppItems.forEach((item, index) => {
       // Find the download link
       const linkContainer = item.querySelector('.core-link');
       const link = linkContainer ? linkContainer.querySelector('a[download]') : null;
       if (!link) {
-        console.log('[Video Player] Item', index, '- no download link found');
         return;
       }
 
@@ -597,11 +569,9 @@
       const descElement = item.querySelector('.core-description');
       const description = descElement ? descElement.textContent.trim() : '';
 
-      console.log('[Video Player] Item', index, '- href:', href, 'desc:', description);
 
       // Check if it's a direct video link
       if (isVideoLink(href)) {
-        console.log('[Video Player] Item', index, '- IS a video, replacing...');
 
         // Check if already replaced
         if (item.querySelector('.svp-video-player-container')) return;
@@ -616,11 +586,9 @@
           item.insertBefore(playerContainer, linkContainer);
         }
 
-        console.log('[Video Player] Item', index, '- replaced successfully');
       }
       // Check if it's a zipped video
       else if (isZippedVideo(href, description)) {
-        console.log('[Video Player] Item', index, '- is a zipped video');
 
         // Check if already processed
         if (item.querySelector('.svp-video-player-container')) return;
@@ -635,14 +603,12 @@
           item.insertBefore(playerContainer, linkContainer);
         }
 
-        console.log('[Video Player] Item', index, '- zip player added');
       }
     });
   }
 
   // Initialize
   function init() {
-    console.log('[Video Player] Initializing...');
 
     // Detect which site we're on and use appropriate handler
     const hostname = window.location.hostname;
@@ -671,7 +637,6 @@
         scanHandler();
         hasRun = true;
         observer.disconnect(); // Stop observing after first debounced run
-        console.log('[Video Player] Observer disconnected after initial scan');
       }, 500);
     });
 
@@ -680,7 +645,6 @@
       subtree: true
     });
 
-    console.log('[Video Player] Initialization complete');
   }
 
   // Start when DOM is ready
