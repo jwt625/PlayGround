@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Nature Video Player Extension</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .test-container {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+        }
+        .instructions {
+            background: #e3f2fd;
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+        .c-article-section {
+            margin-top: 30px;
+        }
+        .c-article-supplementary__item {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+        }
+        .c-article-supplementary__title {
+            margin: 0 0 10px 0;
+        }
+        .c-article-supplementary__title a {
+            color: #0066cc;
+            text-decoration: none;
+        }
+        .c-article-supplementary__title a:hover {
+            text-decoration: underline;
+        }
+        .c-article-supplementary__description {
+            color: #666;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>Nature Video Player Extension - Test Page</h1>
+        
+        <div class="instructions">
+            <h3>📋 Instructions:</h3>
+            <ol>
+                <li>Install the extension in Chrome (see INSTALL.md)</li>
+                <li>Open this HTML file in Chrome</li>
+                <li>The download links below should be replaced with video players</li>
+                <li>If not, check the browser console (F12) for errors</li>
+            </ol>
+            <p><strong>Note:</strong> This uses sample videos from the internet. The extension will work the same way on actual Nature papers.</p>
+        </div>
+
+        <!-- Simulated Nature supplementary section -->
+        <div class="c-article-section" id="Sec33-section">
+            <h2>Supplementary information</h2>
+            <div class="c-article-section__content" id="Sec33-content">
+                <div data-test="supplementary-info">
+                    
+                    <!-- Test Video 1 -->
+                    <div class="c-article-supplementary__item" data-test="supp-item" id="MOESM1">
+                        <h3 class="c-article-supplementary__title u-h3">
+                            <a class="print-link" 
+                               data-track="click"
+                               data-track-action="view supplementary info" 
+                               data-test="supp-info-link"
+                               data-track-label="supplementary video 1"
+                               href="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
+                               data-supp-info-image="">Supplementary Video 1</a>
+                        </h3>
+                        <div class="c-article-supplementary__description" data-component="thumbnail-container">
+                            <p>Test video - Big Buck Bunny (sample video for testing)</p>
+                        </div>
+                    </div>
+
+                    <!-- Test Video 2 -->
+                    <div class="c-article-supplementary__item" data-test="supp-item" id="MOESM2">
+                        <h3 class="c-article-supplementary__title u-h3">
+                            <a class="print-link" 
+                               data-track="click"
+                               data-track-action="view supplementary info" 
+                               data-test="supp-info-link"
+                               data-track-label="supplementary video 2"
+                               href="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4"
+                               data-supp-info-image="">Supplementary Video 2</a>
+                        </h3>
+                        <div class="c-article-supplementary__description" data-component="thumbnail-container">
+                            <p>Test video - Elephants Dream (another sample video)</p>
+                        </div>
+                    </div>
+
+                    <!-- Non-video item (should not be replaced) -->
+                    <div class="c-article-supplementary__item" data-test="supp-item" id="MOESM3">
+                        <h3 class="c-article-supplementary__title u-h3">
+                            <a class="print-link" 
+                               data-track="click"
+                               data-track-action="view supplementary info" 
+                               data-test="supp-info-link"
+                               data-track-label="supplementary information"
+                               href="https://example.com/supplementary.pdf"
+                               data-supp-info-image="">Supplementary Information PDF</a>
+                        </h3>
+                        <div class="c-article-supplementary__description" data-component="thumbnail-container">
+                            <p>This is a PDF and should NOT be replaced with a video player.</p>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="instructions" style="margin-top: 30px; background: #f1f8e9;">
+            <h3>✅ Expected Result:</h3>
+            <ul>
+                <li>Video 1 and Video 2 should show inline video players</li>
+                <li>The PDF link should remain as a link (not replaced)</li>
+                <li>You should be able to play, pause, adjust speed, and go fullscreen</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>
+
