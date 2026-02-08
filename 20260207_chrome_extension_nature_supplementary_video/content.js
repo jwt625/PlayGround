@@ -74,29 +74,29 @@
   // Create video player element with custom controls
   function createVideoPlayer(videoUrl, description) {
     const container = document.createElement('div');
-    container.className = 'nature-video-player-container';
+    container.className = 'svp-video-player-container';
 
     const requiresTranscode = needsTranscoding(videoUrl);
 
     // Create wrapper for video and controls
     const wrapper = document.createElement('div');
-    wrapper.className = 'nature-video-wrapper';
+    wrapper.className = 'svp-video-wrapper';
 
     // Create video element
     const video = document.createElement('video');
-    video.className = 'nature-video-player';
+    video.className = 'svp-video-player';
     video.controls = true;
     video.preload = 'metadata';
 
     // Status element for transcoding
     const status = document.createElement('div');
-    status.className = 'nature-video-status';
+    status.className = 'svp-video-status';
     status.style.display = 'none';
 
     if (requiresTranscode) {
       // Show transcode button instead of loading video directly
       const transcodeBtn = document.createElement('button');
-      transcodeBtn.className = 'nature-transcode-btn';
+      transcodeBtn.className = 'svp-transcode-btn';
       transcodeBtn.textContent = '▶ Click to load video (requires conversion)';
       transcodeBtn.addEventListener('click', async () => {
         transcodeBtn.style.display = 'none';
@@ -112,7 +112,7 @@
           video.style.display = 'block';
         } catch (error) {
           status.textContent = 'Conversion failed: ' + error.message + '. Please download the video instead.';
-          status.className = 'nature-video-status error';
+          status.className = 'svp-video-status error';
           console.error('[Video Player] Transcode error:', error);
         }
       });
@@ -130,15 +130,15 @@
 
     // Create custom controls bar
     const controlsBar = document.createElement('div');
-    controlsBar.className = 'nature-video-controls';
+    controlsBar.className = 'svp-video-controls';
 
     // Speed control
     const speedLabel = document.createElement('span');
     speedLabel.textContent = 'Speed: ';
-    speedLabel.className = 'nature-control-label';
+    speedLabel.className = 'svp-control-label';
 
     const speedSelect = document.createElement('select');
-    speedSelect.className = 'nature-speed-select';
+    speedSelect.className = 'svp-speed-select';
     [0.5, 0.75, 1, 1.25, 1.5, 2].forEach(rate => {
       const option = document.createElement('option');
       option.value = rate;
@@ -153,13 +153,13 @@
     // Download link
     const downloadLink = document.createElement('a');
     downloadLink.href = videoUrl;
-    downloadLink.className = 'nature-download-link';
+    downloadLink.className = 'svp-download-link';
     downloadLink.textContent = '⬇ Download';
     downloadLink.download = '';
 
     // Fullscreen button
     const fullscreenBtn = document.createElement('button');
-    fullscreenBtn.className = 'nature-fullscreen-btn';
+    fullscreenBtn.className = 'svp-fullscreen-btn';
     fullscreenBtn.textContent = '⛶ Fullscreen';
     fullscreenBtn.addEventListener('click', () => {
       if (video.requestFullscreen) {
@@ -180,7 +180,7 @@
     // Add description if available
     if (description) {
       const descDiv = document.createElement('div');
-      descDiv.className = 'nature-video-description';
+      descDiv.className = 'svp-video-description';
       descDiv.textContent = description;
       container.appendChild(descDiv);
     }
@@ -190,29 +190,29 @@
 
   // Replace video links with players
   function replaceVideoLinks() {
-    console.log('[Nature Video Player] Scanning for video links...');
+    console.log('[Video Player] Scanning for video links...');
 
     // Find all supplementary items
     const suppItems = document.querySelectorAll('.c-article-supplementary__item[data-test="supp-item"]');
-    console.log('[Nature Video Player] Found supplementary items:', suppItems.length);
+    console.log('[Video Player] Found supplementary items:', suppItems.length);
 
     suppItems.forEach((item, index) => {
       // Find the link
       const link = item.querySelector('a[data-test="supp-info-link"]');
       if (!link) {
-        console.log('[Nature Video Player] Item', index, '- no link found');
+        console.log('[Video Player] Item', index, '- no link found');
         return;
       }
 
       const href = link.getAttribute('href');
-      console.log('[Nature Video Player] Item', index, '- href:', href);
+      console.log('[Video Player] Item', index, '- href:', href);
 
       if (!isVideoLink(href)) {
-        console.log('[Nature Video Player] Item', index, '- not a video link');
+        console.log('[Video Player] Item', index, '- not a video link');
         return;
       }
 
-      console.log('[Nature Video Player] Item', index, '- IS a video, replacing...');
+      console.log('[Video Player] Item', index, '- IS a video, replacing...');
 
       // Get title and description
       const title = link.textContent.trim();
@@ -220,7 +220,7 @@
       const description = descElement ? descElement.textContent.trim() : '';
 
       // Check if already replaced
-      if (item.querySelector('.nature-video-player-container')) return;
+      if (item.querySelector('.svp-video-player-container')) return;
 
       // Create player
       const playerContainer = createVideoPlayer(href, description);
@@ -230,7 +230,7 @@
       if (titleElement) {
         titleElement.innerHTML = '';
         const titleText = document.createElement('span');
-        titleText.className = 'nature-video-title';
+        titleText.className = 'svp-video-title';
         titleText.textContent = title;
         titleElement.appendChild(titleText);
       }
@@ -240,13 +240,13 @@
         titleElement.parentNode.insertBefore(playerContainer, titleElement.nextSibling);
       }
 
-      console.log('[Nature Video Player] Item', index, '- replaced successfully');
+      console.log('[Video Player] Item', index, '- replaced successfully');
     });
   }
 
   // Initialize
   function init() {
-    console.log('[Nature Video Player] Initializing...');
+    console.log('[Video Player] Initializing...');
 
     // Replace videos on initial load
     replaceVideoLinks();
@@ -264,7 +264,7 @@
         replaceVideoLinks();
         hasRun = true;
         observer.disconnect(); // Stop observing after first debounced run
-        console.log('[Nature Video Player] Observer disconnected after initial scan');
+        console.log('[Video Player] Observer disconnected after initial scan');
       }, 500);
     });
 
@@ -273,7 +273,7 @@
       subtree: true
     });
 
-    console.log('[Nature Video Player] Initialization complete');
+    console.log('[Video Player] Initialization complete');
   }
 
   // Start when DOM is ready

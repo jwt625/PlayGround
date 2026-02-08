@@ -1,4 +1,4 @@
-.nature-video-player-container {
+.svp-video-player-container {
   margin: 15px 0;
   max-width: 100%;
   border: 1px solid #ddd;
@@ -7,12 +7,12 @@
   background: #000;
 }
 
-.nature-video-wrapper {
+.svp-video-wrapper {
   position: relative;
   width: 100%;
 }
 
-.nature-video-player {
+.svp-video-player {
   width: 100%;
   max-width: 100%;
   height: auto;
@@ -20,7 +20,7 @@
   background: #000;
 }
 
-.nature-video-controls {
+.svp-video-controls {
   display: flex;
   align-items: center;
   gap: 12px;
@@ -30,12 +30,12 @@
   flex-wrap: wrap;
 }
 
-.nature-control-label {
+.svp-control-label {
   font-size: 13px;
   color: #333;
 }
 
-.nature-speed-select {
+.svp-speed-select {
   padding: 4px 8px;
   font-size: 13px;
   border: 1px solid #ccc;
@@ -44,11 +44,11 @@
   cursor: pointer;
 }
 
-.nature-speed-select:hover {
+.svp-speed-select:hover {
   border-color: #999;
 }
 
-.nature-fullscreen-btn {
+.svp-fullscreen-btn {
   padding: 6px 12px;
   font-size: 13px;
   border: 1px solid #ccc;
@@ -58,12 +58,12 @@
   margin-left: auto;
 }
 
-.nature-fullscreen-btn:hover {
+.svp-fullscreen-btn:hover {
   background: #e9e9e9;
   border-color: #999;
 }
 
-.nature-download-link {
+.svp-download-link {
   padding: 6px 12px;
   font-size: 13px;
   color: #0066cc;
@@ -72,18 +72,18 @@
   border-radius: 4px;
 }
 
-.nature-download-link:hover {
+.svp-download-link:hover {
   background: #0066cc;
   color: #fff;
 }
 
-.nature-video-title {
+.svp-video-title {
   font-weight: bold;
   margin-bottom: 8px;
   color: #333;
 }
 
-.nature-video-description {
+.svp-video-description {
   padding: 10px 15px;
   background: #f9f9f9;
   color: #666;
@@ -91,7 +91,7 @@
   border-top: 1px solid #eee;
 }
 
-.nature-transcode-btn {
+.svp-transcode-btn {
   display: block;
   width: 100%;
   padding: 40px 20px;
@@ -103,11 +103,11 @@
   text-align: center;
 }
 
-.nature-transcode-btn:hover {
+.svp-transcode-btn:hover {
   background: #555;
 }
 
-.nature-video-status {
+.svp-video-status {
   padding: 40px 20px;
   text-align: center;
   color: #fff;
@@ -115,7 +115,7 @@
   font-size: 14px;
 }
 
-.nature-video-status.error {
+.svp-video-status.error {
   background: #833;
   color: #fcc;
 }

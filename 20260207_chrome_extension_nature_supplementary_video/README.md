@@ -1,6 +1,6 @@
-# Nature Supplementary Video Player
+# Supplementary Video Player
 
-Chrome extension that replaces supplementary video download links on Nature/Springer pages with inline players.
+Chrome extension that replaces supplementary video download links on journal pages with inline players.
 
 Supports MP4, WebM, MOV, AVI, MKV (non-native formats transcoded via FFmpeg.wasm). Includes playback speed control (0.5x-2x) and fullscreen.
 
