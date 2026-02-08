@@ -96,7 +96,15 @@ chrome.runtime.onConnect.addListener((port) => {
         }
       }
 
+      if (message.type === 'DEBUG') {
+        console.log('[Background] DEBUG from offscreen:', message.msg);
+        if (message.stack) {
+          console.log('[Background] Stack:', message.stack);
+        }
+      }
+
       if (message.type === 'PROGRESS') {
+        console.log('[Background] Progress:', message.status, message.progress + '%');
         // Forward progress to content script
         if (message.tabId) {
           chrome.tabs.sendMessage(message.tabId, {
