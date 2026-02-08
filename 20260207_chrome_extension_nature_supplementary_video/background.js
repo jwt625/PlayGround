@@ -96,6 +96,7 @@ chrome.runtime.onConnect.addListener((port) => {
         console.log(`[Background] Receiving chunked result: ${message.totalChunks} chunks, ${message.totalLength} bytes`);
         chunkedResult = {
           mimeType: message.mimeType,
+          isMultipleVideos: message.isMultipleVideos || false,
           totalChunks: message.totalChunks,
           chunks: [],
           received: 0
@@ -110,11 +111,20 @@ chrome.runtime.onConnect.addListener((port) => {
 
       if (message.type === 'RESULT_CHUNKED_END' && chunkedResult && pendingTranscode) {
         console.log(`[Background] All chunks received, combining...`);
-        const base64 = chunkedResult.chunks.join('');
-        const result = {
-          base64: base64,
-          mimeType: chunkedResult.mimeType
-        };
+        const combined = chunkedResult.chunks.join('');
+
+        let result;
+        if (chunkedResult.isMultipleVideos) {
+          // Parse the JSON for multiple videos
+          result = JSON.parse(combined);
+          console.log(`[Background] Parsed multiple videos result: ${result.videos.length} videos`);
+        } else {
+          // Single video base64 data
+          result = {
+            base64: combined,
+            mimeType: chunkedResult.mimeType
+          };
+        }
         chunkedResult = null;
         pendingTranscode.resolve(result);
         pendingTranscode = null;
@@ -338,38 +348,68 @@ async function handleExtractZipProcess(transferId, tabId) {
 
   const result = await resultPromise;
 
-  // Check if result is too large to send in one message (>32MB base64)
+  // Check if result is too large to send in one message (>32MB)
   const MAX_RESPONSE_SIZE = 32 * 1024 * 1024;
-  if (result.base64 && result.base64.length > MAX_RESPONSE_SIZE) {
+
+  // Calculate total size
+  let totalSize = 0;
+  if (result.base64) {
+    totalSize = result.base64.length;
+  } else if (result.multiple && result.videos) {
+    totalSize = result.videos.reduce((sum, v) => sum + v.base64.length, 0);
+  }
+
+  if (totalSize > MAX_RESPONSE_SIZE) {
     // Store result for chunked retrieval
     const resultId = transferId + '_result';
-    resultStorage.set(resultId, result);
-    console.log(`[Background] Result too large (${result.base64.length}), stored for chunked retrieval`);
 
-    const totalChunks = Math.ceil(result.base64.length / MAX_RESPONSE_SIZE);
-    return {
-      chunked: true,
-      resultId: resultId,
-      totalChunks: totalChunks,
-      totalLength: result.base64.length,
-      mimeType: result.mimeType
-    };
+    if (result.multiple && result.videos) {
+      // For multiple videos, serialize to JSON
+      const jsonStr = JSON.stringify(result);
+      resultStorage.set(resultId, { json: jsonStr, isMultipleVideos: true });
+      console.log(`[Background] Multiple videos result too large (${jsonStr.length}), stored for chunked retrieval`);
+
+      const totalChunks = Math.ceil(jsonStr.length / MAX_RESPONSE_SIZE);
+      return {
+        chunked: true,
+        resultId: resultId,
+        totalChunks: totalChunks,
+        totalLength: jsonStr.length,
+        isMultipleVideos: true
+      };
+    } else {
+      // Single video
+      resultStorage.set(resultId, result);
+      console.log(`[Background] Result too large (${result.base64.length}), stored for chunked retrieval`);
+
+      const totalChunks = Math.ceil(result.base64.length / MAX_RESPONSE_SIZE);
+      return {
+        chunked: true,
+        resultId: resultId,
+        totalChunks: totalChunks,
+        totalLength: result.base64.length,
+        mimeType: result.mimeType
+      };
+    }
   }
 
   return result;
 }
 
 async function handleGetResultChunk(resultId, chunkIndex) {
-  const result = resultStorage.get(resultId);
-  if (!result) {
+  const stored = resultStorage.get(resultId);
+  if (!stored) {
     throw new Error('Result not found: ' + resultId);
   }
 
   const MAX_CHUNK_SIZE = 32 * 1024 * 1024;
+
+  // Handle both single video (base64) and multiple videos (json)
+  const data = stored.isMultipleVideos ? stored.json : stored.base64;
   const start = chunkIndex * MAX_CHUNK_SIZE;
-  const end = Math.min(start + MAX_CHUNK_SIZE, result.base64.length);
-  const chunk = result.base64.substring(start, end);
-  const isLast = end >= result.base64.length;
+  const end = Math.min(start + MAX_CHUNK_SIZE, data.length);
+  const chunk = data.substring(start, end);
+  const isLast = end >= data.length;
 
   // Clean up if this is the last chunk
   if (isLast) {

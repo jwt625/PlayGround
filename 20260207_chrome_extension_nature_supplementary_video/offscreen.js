@@ -13,16 +13,52 @@ const MAX_MESSAGE_SIZE = 32 * 1024 * 1024;
 
 // Send result, chunking if necessary
 function sendResult(result) {
-  if (!result.base64 || result.base64.length <= MAX_MESSAGE_SIZE) {
+  // Calculate total size of result
+  let totalSize = 0;
+  if (result.base64) {
+    totalSize = result.base64.length;
+  } else if (result.multiple && result.videos) {
+    totalSize = result.videos.reduce((sum, v) => sum + v.base64.length, 0);
+  }
+
+  // If small enough, send directly
+  if (totalSize <= MAX_MESSAGE_SIZE) {
     port.postMessage({ type: 'RESULT', result });
     return;
   }
 
-  // Need to send in chunks
+  // For multiple videos, serialize the whole result to JSON and chunk it
+  if (result.multiple && result.videos) {
+    const jsonStr = JSON.stringify(result);
+    const totalChunks = Math.ceil(jsonStr.length / MAX_MESSAGE_SIZE);
+    console.log(`[Offscreen] Multiple videos result too large (${jsonStr.length}), sending in ${totalChunks} chunks`);
+
+    port.postMessage({
+      type: 'RESULT_CHUNKED_START',
+      isMultipleVideos: true,
+      totalChunks: totalChunks,
+      totalLength: jsonStr.length
+    });
+
+    for (let i = 0; i < totalChunks; i++) {
+      const start = i * MAX_MESSAGE_SIZE;
+      const end = Math.min(start + MAX_MESSAGE_SIZE, jsonStr.length);
+      const chunk = jsonStr.substring(start, end);
+      port.postMessage({
+        type: 'RESULT_CHUNK',
+        chunkIndex: i,
+        chunk: chunk
+      });
+    }
+
+    port.postMessage({ type: 'RESULT_CHUNKED_END' });
+    return;
+  }
+
+  // Single video - chunk the base64 data
   const totalChunks = Math.ceil(result.base64.length / MAX_MESSAGE_SIZE);
   console.log(`[Offscreen] Result too large (${result.base64.length}), sending in ${totalChunks} chunks`);
 
-  // First send metadata
   port.postMessage({
     type: 'RESULT_CHUNKED_START',
     mimeType: result.mimeType,
@@ -30,7 +66,6 @@ function sendResult(result) {
     totalLength: result.base64.length
   });
 
-  // Then send chunks
   for (let i = 0; i < totalChunks; i++) {
     const start = i * MAX_MESSAGE_SIZE;
     const end = Math.min(start + MAX_MESSAGE_SIZE, result.base64.length);
@@ -42,7 +77,6 @@ function sendResult(result) {
     });
   }
 
-  // Signal completion
   port.postMessage({ type: 'RESULT_CHUNKED_END' });
 }
 
@@ -330,10 +364,9 @@ async function extractZipFromData(zipBase64, tabId) {
   // Extract the zip
   const zip = await JSZip.loadAsync(zipData);
 
-  // Find video files in the zip
+  // Find ALL video files in the zip
   const allFormats = [...NATIVE_FORMATS, ...TRANSCODE_FORMATS];
-  let videoFile = null;
-  let videoFileName = null;
+  const videoFiles = [];
 
   for (const fileName of Object.keys(zip.files)) {
     const lowerName = fileName.toLowerCase();
@@ -343,75 +376,99 @@ async function extractZipFromData(zipBase64, tabId) {
     }
     for (const ext of allFormats) {
       if (lowerName.endsWith('.' + ext)) {
-        videoFile = zip.files[fileName];
-        videoFileName = fileName;
+        videoFiles.push({ file: zip.files[fileName], name: fileName });
         break;
       }
     }
-    if (videoFile) break;
   }
 
-  if (!videoFile) {
+  if (videoFiles.length === 0) {
     throw new Error('No video file found in ZIP');
   }
 
-  console.log('[Offscreen] Found video file:', videoFileName);
-  reportProgress('Extracting video...', 50);
+  // Sort by filename for consistent ordering
+  videoFiles.sort((a, b) => a.name.localeCompare(b.name));
 
-  const videoData = await videoFile.async('uint8array');
-  const ext = videoFileName.split('.').pop().toLowerCase();
+  console.log('[Offscreen] Found video files:', videoFiles.map(v => v.name));
 
-  reportProgress('Processing...', 75);
+  const mimeTypes = {
+    'mp4': 'video/mp4',
+    'webm': 'video/webm',
+    'ogg': 'video/ogg',
+    'm4v': 'video/mp4'
+  };
 
-  // Check if native format or needs transcoding
-  if (NATIVE_FORMATS.includes(ext)) {
-    // Can play directly
-    const mimeTypes = {
-      'mp4': 'video/mp4',
-      'webm': 'video/webm',
-      'ogg': 'video/ogg',
-      'm4v': 'video/mp4'
-    };
+  const results = [];
+
+  for (let i = 0; i < videoFiles.length; i++) {
+    const { file: videoFile, name: videoFileName } = videoFiles[i];
+    reportProgress(`Extracting video ${i + 1}/${videoFiles.length}...`, Math.round((i / videoFiles.length) * 100));
+
+    const videoData = await videoFile.async('uint8array');
+    const ext = videoFileName.split('.').pop().toLowerCase();
+
+    // Check if native format or needs transcoding
+    if (NATIVE_FORMATS.includes(ext)) {
+      // Can play directly
+      results.push({
+        name: videoFileName,
+        base64: uint8ToBase64(videoData),
+        mimeType: mimeTypes[ext] || 'video/mp4'
+      });
+    } else {
+      // Needs transcoding
+      reportProgress(`Transcoding video ${i + 1}/${videoFiles.length}...`, 0);
+
+      const ff = await loadFFmpeg();
+      const inputName = `input_${i}.${ext}`;
+      const outputName = `output_${i}.mp4`;
+
+      const progressHandler = ({ progress }) => {
+        const baseProgress = (i / videoFiles.length) * 100;
+        const videoProgress = (progress * 100) / videoFiles.length;
+        reportProgress(`Transcoding video ${i + 1}/${videoFiles.length}...`, Math.round(baseProgress + videoProgress));
+      };
+      ff.on('progress', progressHandler);
+
+      await ff.writeFile(inputName, videoData);
+
+      await ff.exec([
+        '-i', inputName,
+        '-c:v', 'libx264',
+        '-preset', 'ultrafast',
+        '-crf', '28',
+        '-c:a', 'aac',
+        '-b:a', '128k',
+        outputName
+      ]);
+
+      ff.off('progress', progressHandler);
+
+      const data = await ff.readFile(outputName);
+      await ff.deleteFile(inputName);
+      await ff.deleteFile(outputName);
+
+      results.push({
+        name: videoFileName,
+        base64: uint8ToBase64(data),
+        mimeType: 'video/mp4'
+      });
+    }
+  }
+
+  reportProgress('Done!', 100);
+
+  // Return single video for backward compatibility, or array for multiple
+  if (results.length === 1) {
     return {
-      base64: uint8ToBase64(videoData),
-      mimeType: mimeTypes[ext] || 'video/mp4',
+      base64: results[0].base64,
+      mimeType: results[0].mimeType,
       needsTranscode: false
     };
   } else {
-    // Needs transcoding - do it here
-    reportProgress('Transcoding video...', 0);
-
-    const ff = await loadFFmpeg();
-    const inputName = `input.${ext}`;
-    const outputName = 'output.mp4';
-
-    const progressHandler = ({ progress }) => {
-      reportProgress('Transcoding...', Math.round(progress * 100));
-    };
-    ff.on('progress', progressHandler);
-
-    await ff.writeFile(inputName, videoData);
-
-    await ff.exec([
-      '-i', inputName,
-      '-c:v', 'libx264',
-      '-preset', 'ultrafast',
-      '-crf', '28',
-      '-c:a', 'aac',
-      '-b:a', '128k',
-      outputName
-    ]);
-
-    ff.off('progress', progressHandler);
-
-    const data = await ff.readFile(outputName);
-    await ff.deleteFile(inputName);
-    await ff.deleteFile(outputName);
-
     return {
-      base64: uint8ToBase64(data),
-      mimeType: 'video/mp4',
-      needsTranscode: false  // Already transcoded
+      videos: results,
+      multiple: true
     };
   }
 }

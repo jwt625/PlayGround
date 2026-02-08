@@ -51,7 +51,19 @@
     return TRANSCODE_FORMATS.some(ext => lowerHref.includes(ext));
   }
 
+  // Helper to convert base64 to blob URL
+  function base64ToBlobUrl(base64, mimeType) {
+    const binaryString = atob(base64);
+    const bytes = new Uint8Array(binaryString.length);
+    for (let i = 0; i < binaryString.length; i++) {
+      bytes[i] = binaryString.charCodeAt(i);
+    }
+    const blob = new Blob([bytes], { type: mimeType });
+    return URL.createObjectURL(blob);
+  }
+
   // Extract video from ZIP via background/offscreen document
+  // Returns either a single blob URL (string) or an array of { name, url } objects
   async function extractZipVideo(zipUrl, statusCallback) {
     console.log('[Video Player] extractZipVideo called with URL:', zipUrl);
     transcodeCallbacks.set(zipUrl, statusCallback);
@@ -138,24 +150,32 @@
             }
             chunks.push(chunkResp.chunk);
           }
-          const base64 = chunks.join('');
-          const binaryString = atob(base64);
-          const bytes = new Uint8Array(binaryString.length);
-          for (let i = 0; i < binaryString.length; i++) {
-            bytes[i] = binaryString.charCodeAt(i);
+          const combined = chunks.join('');
+
+          // Check if this is multiple videos (JSON) or single video (base64)
+          if (response.isMultipleVideos) {
+            const parsed = JSON.parse(combined);
+            console.log('[Video Player] Parsed multiple videos:', parsed.videos.length);
+            return parsed.videos.map(v => ({
+              name: v.name,
+              url: base64ToBlobUrl(v.base64, v.mimeType)
+            }));
           }
-          const blob = new Blob([bytes], { type: response.mimeType });
-          return URL.createObjectURL(blob);
+
+          return base64ToBlobUrl(combined, response.mimeType);
         }
 
-        // Convert base64 back to blob URL
-        const binaryString = atob(response.base64);
-        const bytes = new Uint8Array(binaryString.length);
-        for (let i = 0; i < binaryString.length; i++) {
-          bytes[i] = binaryString.charCodeAt(i);
+        // Check if multiple videos
+        if (response.multiple && response.videos) {
+          console.log('[Video Player] Multiple videos found:', response.videos.length);
+          return response.videos.map(v => ({
+            name: v.name,
+            url: base64ToBlobUrl(v.base64, v.mimeType)
+          }));
         }
-        const blob = new Blob([bytes], { type: response.mimeType });
-        return URL.createObjectURL(blob);
+
+        // Single video - convert base64 back to blob URL
+        return base64ToBlobUrl(response.base64, response.mimeType);
       } else {
         // Small enough to send in one message
         console.log('[Video Player] Sending to background in single message...');
@@ -187,24 +207,32 @@
             }
             chunks.push(chunkResp.chunk);
           }
-          const base64 = chunks.join('');
-          const binaryString = atob(base64);
-          const bytes = new Uint8Array(binaryString.length);
-          for (let i = 0; i < binaryString.length; i++) {
-            bytes[i] = binaryString.charCodeAt(i);
+          const combined = chunks.join('');
+
+          // Check if this is multiple videos (JSON) or single video (base64)
+          if (response.isMultipleVideos) {
+            const parsed = JSON.parse(combined);
+            console.log('[Video Player] Parsed multiple videos:', parsed.videos.length);
+            return parsed.videos.map(v => ({
+              name: v.name,
+              url: base64ToBlobUrl(v.base64, v.mimeType)
+            }));
           }
-          const blob = new Blob([bytes], { type: response.mimeType });
-          return URL.createObjectURL(blob);
+
+          return base64ToBlobUrl(combined, response.mimeType);
         }
 
-        // Convert base64 back to blob URL
-        const binaryString = atob(response.base64);
-        const bytes = new Uint8Array(binaryString.length);
-        for (let i = 0; i < binaryString.length; i++) {
-          bytes[i] = binaryString.charCodeAt(i);
+        // Check if multiple videos
+        if (response.multiple && response.videos) {
+          console.log('[Video Player] Multiple videos found:', response.videos.length);
+          return response.videos.map(v => ({
+            name: v.name,
+            url: base64ToBlobUrl(v.base64, v.mimeType)
+          }));
         }
-        const blob = new Blob([bytes], { type: response.mimeType });
-        return URL.createObjectURL(blob);
+
+        // Single video - convert base64 back to blob URL
+        return base64ToBlobUrl(response.base64, response.mimeType);
       }
     } catch (error) {
       transcodeCallbacks.delete(zipUrl);
@@ -369,18 +397,19 @@
     const wrapper = document.createElement('div');
     wrapper.className = 'svp-video-wrapper';
 
-    // Create video element (hidden initially)
-    const video = document.createElement('video');
-    video.className = 'svp-video-player';
-    video.controls = true;
-    video.preload = 'metadata';
-    video.style.display = 'none';
-    video.textContent = 'Your browser does not support HTML5 video.';
-
     // Status element
     const status = document.createElement('div');
     status.className = 'svp-video-status';
     status.style.display = 'none';
+
+    // Container for tabs (for multiple videos)
+    const tabsContainer = document.createElement('div');
+    tabsContainer.className = 'svp-video-tabs';
+    tabsContainer.style.display = 'none';
+
+    // Container for all videos
+    const videosContainer = document.createElement('div');
+    videosContainer.className = 'svp-videos-container';
 
     // Show extract button
     const extractBtn = document.createElement('button');
@@ -392,12 +421,63 @@
       status.textContent = 'Downloading ZIP...';
 
       try {
-        const videoUrl = await extractZipVideo(zipUrl, (msg) => {
+        const result = await extractZipVideo(zipUrl, (msg) => {
           status.textContent = msg;
         });
         status.style.display = 'none';
-        video.src = videoUrl;
-        video.style.display = 'block';
+
+        // Check if result is array (multiple videos)
+        if (Array.isArray(result)) {
+          console.log('[Video Player] Creating UI for', result.length, 'videos');
+
+          // Create tabs and video elements for each video
+          result.forEach((videoInfo, index) => {
+            // Create tab button
+            const tab = document.createElement('button');
+            tab.className = 'svp-video-tab' + (index === 0 ? ' active' : '');
+            tab.textContent = videoInfo.name.split('/').pop(); // Show only filename
+            tab.dataset.index = index;
+            tab.addEventListener('click', () => {
+              // Switch active tab
+              tabsContainer.querySelectorAll('.svp-video-tab').forEach(t => t.classList.remove('active'));
+              tab.classList.add('active');
+              // Switch visible video
+              videosContainer.querySelectorAll('.svp-video-item').forEach((v, i) => {
+                v.style.display = i === index ? 'block' : 'none';
+              });
+            });
+            tabsContainer.appendChild(tab);
+
+            // Create video container
+            const videoItem = document.createElement('div');
+            videoItem.className = 'svp-video-item';
+            videoItem.style.display = index === 0 ? 'block' : 'none';
+
+            const video = document.createElement('video');
+            video.className = 'svp-video-player';
+            video.controls = true;
+            video.preload = 'metadata';
+            video.src = videoInfo.url;
+
+            const videoLabel = document.createElement('div');
+            videoLabel.className = 'svp-video-label';
+            videoLabel.textContent = videoInfo.name.split('/').pop();
+
+            videoItem.appendChild(video);
+            videoItem.appendChild(videoLabel);
+            videosContainer.appendChild(videoItem);
+          });
+
+          tabsContainer.style.display = 'flex';
+        } else {
+          // Single video
+          const video = document.createElement('video');
+          video.className = 'svp-video-player';
+          video.controls = true;
+          video.preload = 'metadata';
+          video.src = result;
+          videosContainer.appendChild(video);
+        }
       } catch (error) {
         status.textContent = 'Extraction failed: ' + error.message;
         status.className = 'svp-video-status error';
@@ -407,29 +487,12 @@
 
     wrapper.appendChild(extractBtn);
     wrapper.appendChild(status);
-    wrapper.appendChild(video);
+    wrapper.appendChild(tabsContainer);
+    wrapper.appendChild(videosContainer);
 
     // Create custom controls bar
     const controlsBar = document.createElement('div');
     controlsBar.className = 'svp-video-controls';
-
-    // Speed control
-    const speedLabel = document.createElement('span');
-    speedLabel.textContent = 'Speed: ';
-    speedLabel.className = 'svp-control-label';
-
-    const speedSelect = document.createElement('select');
-    speedSelect.className = 'svp-speed-select';
-    [0.5, 0.75, 1, 1.25, 1.5, 2].forEach(rate => {
-      const option = document.createElement('option');
-      option.value = rate;
-      option.textContent = rate + 'x';
-      if (rate === 1) option.selected = true;
-      speedSelect.appendChild(option);
-    });
-    speedSelect.addEventListener('change', () => {
-      video.playbackRate = parseFloat(speedSelect.value);
-    });
 
     // Download link
     const downloadLink = document.createElement('a');
@@ -438,21 +501,6 @@
     downloadLink.textContent = 'Download ZIP';
     downloadLink.download = '';
 
-    // Fullscreen button
-    const fullscreenBtn = document.createElement('button');
-    fullscreenBtn.className = 'svp-fullscreen-btn';
-    fullscreenBtn.textContent = 'Fullscreen';
-    fullscreenBtn.addEventListener('click', () => {
-      if (video.requestFullscreen) {
-        video.requestFullscreen();
-      } else if (video.webkitRequestFullscreen) {
-        video.webkitRequestFullscreen();
-      }
-    });
-
-    controlsBar.appendChild(speedLabel);
-    controlsBar.appendChild(speedSelect);
-    controlsBar.appendChild(fullscreenBtn);
     controlsBar.appendChild(downloadLink);
 
     container.appendChild(wrapper);
