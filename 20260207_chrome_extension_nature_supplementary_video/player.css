@@ -120,3 +120,13 @@
   color: #fcc;
 }
 
+.svp-zip-notice {
+  margin: 10px 0;
+  padding: 12px 15px;
+  background: #fff3cd;
+  border: 1px solid #ffc107;
+  border-radius: 6px;
+  color: #856404;
+  font-size: 14px;
+}
+

@@ -97,6 +97,20 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       .catch(error => sendResponse({ error: error.message }));
     return true;
   }
+
+  if (message.type === 'EXTRACT_ZIP') {
+    handleExtractZip(message.zipUrl, sender.tab.id)
+      .then(result => sendResponse(result))
+      .catch(error => sendResponse({ error: error.message }));
+    return true;
+  }
+
+  if (message.type === 'EXTRACT_ZIP_DATA') {
+    handleExtractZipData(message.zipBase64, sender.tab.id)
+      .then(result => sendResponse(result))
+      .catch(error => sendResponse({ error: error.message }));
+    return true;
+  }
 });
 
 async function handleTranscode(videoUrl, tabId) {
@@ -115,6 +129,50 @@ async function handleTranscode(videoUrl, tabId) {
   offscreenPort.postMessage({
     type: 'TRANSCODE',
     videoUrl: videoUrl,
+    tabId: tabId
+  });
+
+  return await resultPromise;
+}
+
+async function handleExtractZip(zipUrl, tabId) {
+  await ensureOffscreenDocument();
+
+  const resultPromise = new Promise((resolve, reject) => {
+    pendingTranscode = { resolve, reject };
+    setTimeout(() => {
+      if (pendingTranscode) {
+        pendingTranscode.reject(new Error('ZIP extraction timed out'));
+        pendingTranscode = null;
+      }
+    }, 5 * 60 * 1000);
+  });
+
+  offscreenPort.postMessage({
+    type: 'EXTRACT_ZIP',
+    zipUrl: zipUrl,
+    tabId: tabId
+  });
+
+  return await resultPromise;
+}
+
+async function handleExtractZipData(zipBase64, tabId) {
+  await ensureOffscreenDocument();
+
+  const resultPromise = new Promise((resolve, reject) => {
+    pendingTranscode = { resolve, reject };
+    setTimeout(() => {
+      if (pendingTranscode) {
+        pendingTranscode.reject(new Error('ZIP extraction timed out'));
+        pendingTranscode = null;
+      }
+    }, 5 * 60 * 1000);
+  });
+
+  offscreenPort.postMessage({
+    type: 'EXTRACT_ZIP_DATA',
+    zipBase64: zipBase64,
     tabId: tabId
   });
 
