@@ -1,0 +1,17 @@
+{
+  "data": [
+    {
+      "input": "What are the main sources of thermal noise in ultrastable optical cavities used for laser frequency stabilization, and how can crystalline mirror coatings reduce this noise compared to traditional dielectric coatings?",
+      "ctxs": []
+    },
+    {
+      "input": "How do traveling-wave parametric amplifiers (TWPAs) achieve near-quantum-limited noise performance, and what is the difference between Josephson junction-based TWPAs and kinetic inductance TWPAs?",
+      "ctxs": []
+    },
+    {
+      "input": "What are the key material properties of lithium niobate that make it suitable for integrated photonics and electro-optic modulators?",
+      "ctxs": []
+    }
+  ]
+}
+
