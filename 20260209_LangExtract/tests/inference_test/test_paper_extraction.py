@@ -81,8 +81,10 @@ Focus on papers about:
 - Transmon, fluxonium, and other SC qubit types
 - Circuit QED (cQED)
 - Qubit coherence and materials
+- Fabrication methods and packaging methods
 - Quantum error correction for SC qubits
 - Dilution refrigerators and measurement setups
+- Microwave drive and readout techniques
 
 Extract the paper title, URL, authors (if mentioned), year, and explain why it's relevant.
 If no SC qubit related papers are found, set has_sc_qubit_content to false.
