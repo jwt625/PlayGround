@@ -1,0 +1,22 @@
+# Cloned third-party repo (google/langextract) — has its own .git/
+langextract/
+
+# Claude Code local settings (contains local paths)
+.claude/
+
+# Environment variables (contains API tokens/secrets)
+.env
+.env.*
+
+# Python virtual environments and build artifacts
+.venv/
+venv/
+*.egg-info/
+__pycache__/
+*.pyc
+
+# Re-allow file types blocked by parent .gitignore
+!*.json
+!*.csv
+!*.jsonl
+!*.txt
