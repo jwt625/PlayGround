@@ -529,13 +529,165 @@ Collection executed via parallel subagents across 3 waves on 2026-02-10.
 5. **Quality assessment** — manually review a sample of downloaded PDFs to verify they are complete and not HTML error pages
 6. **Build initial knowledge base** — extract chemicals, equipment, abbreviations from the highest-value theses (Frunzio, Geerlings, Kelly, Oriani)
 
+## OFS Blog Paper Extraction (2026-02-10)
+
+Processed all 86 OFS (Optics Friday Summary) blog posts from jwt625.github.io using LLM-based extraction to identify SC qubit related papers.
+
+### Extraction Setup
+
+- **Endpoint:** `https://<internal-inference-endpoint>/v1`
+- **Model:** `zai-org/GLM-4.7-FP8` (reasoning model with thinking tokens)
+- **Method:** Tool/function calling with structured output schema
+- **Timeout:** 300s (reasoning models need long timeouts)
+- **Max tokens:** 8192
+
+### Extraction Results
+
+| Metric | Count |
+|--------|-------|
+| Total OFS posts processed | 86 |
+| Posts with SC qubit content | 42 (49%) |
+| Total papers extracted | 76 |
+| Unique papers | 75 |
+
+### Comparison with Existing Dataset
+
+Compared 75 OFS-extracted papers against 207 existing PDFs in the dataset:
+- **Exact matches:** 4 papers already in dataset
+- **New papers:** 71 papers not yet in dataset
+
+### Scripts Created
+
+- `tests/inference_test/batch_extract_ofs.py` - Batch extraction with incremental JSONL saving, retry logic, resume capability
+- `tests/inference_test/test_paper_extraction.py` - Single URL extraction for testing
+- `tests/inference_test/audit_ofs_vs_dataset.py` - Comparison script
+
+### Output
+
+- `tests/inference_test/output/ofs_extractions.jsonl` - 86 lines, one per blog post, with extracted papers, timestamps, token usage
+
+---
+
+## Dataset Manifest Audit and Fix (2026-02-10)
+
+Audited the manifest JSONL against actual PDF files on disk. Found significant inconsistencies.
+
+### Initial State
+
+| Metric | Count |
+|--------|-------|
+| Manifest entries | 197 |
+| PDF files on disk | 207 |
+| Manifest entries with existing file | 131 |
+| Manifest entries with MISSING file | 66 |
+
+### Problems Identified
+
+1. **Path prefix mismatch:** 61 entries used `raw_documents/theses/...` instead of `semiconductor_processing_dataset/raw_documents/theses/...`
+2. **Orphan PDFs:** 76 PDFs existed on disk but had no manifest entry
+3. **Truly missing files:** 5 manifest entries pointed to PDFs that do not exist
+
+### Fixes Applied
+
+1. Fixed 61 path prefixes by prepending `semiconductor_processing_dataset/` to paths starting with `raw_documents/`
+2. Added 15 manifest entries for orphan thesis PDFs (ETH, Yale, Berkeley, Paris, TIFR, others)
+
+### Final State
+
+| Metric | Count |
+|--------|-------|
+| Manifest entries | 212 |
+| PDF files on disk | 207 |
+| Manifest entries with existing file | 207 |
+| Manifest entries with MISSING file | 5 |
+| Orphan PDFs | 0 |
+
+### Remaining Issues
+
+5 manifest entries point to PDFs that do not exist on disk:
+
+| document_id | status |
+|-------------|--------|
+| vandamme_2024_cmos_300mm_qubits | succeeded |
+| crowley_2021_superconducting_tsv_fabrication | succeeded |
+| yost_2020_qubits_integrated_tsv | succeeded |
+| zikiy_2024_flipchip_indium_microspheres | succeeded |
+| roy_ananda_yale_2016 | failed |
+
+These need to be either downloaded or removed from the manifest.
+
+**Update 2026-02-10:** 4 of these 5 files were found to be duplicates (same paper downloaded under different document IDs). The `roy_ananda_yale_2016` thesis remains marked as failed - the CDN returns empty content and no alternative source was found.
+
+---
+
+## Phase 1B: OFS Blog Extraction (2026-02-10)
+
+### Overview
+
+Extracted SC qubit-related papers from 86 OFS (Optics Friday Summary) blog posts at jwt625.github.io using LLM-based extraction (GLM-4.7-FP8 with function calling).
+
+### Extraction Results
+
+| Metric | Count |
+|--------|-------|
+| OFS posts processed | 86 |
+| Posts with SC qubit content | 42 (49%) |
+| Total papers extracted | 76 |
+| Unique papers | 75 |
+| Already in dataset | 15 |
+| New papers identified | 61 |
+
+### Download Results
+
+| Metric | Count |
+|--------|-------|
+| Papers successfully downloaded | 55 |
+| Duplicates in list (same paper, different URL) | 3 |
+| Non-PDF sources (blog posts) | 1 |
+| Failed downloads (DTIC, thesis 404) | 2 |
+| Total disk space | 478 MB |
+
+### Failed Downloads
+
+1. **DTIC report (AD1175159)** - "Biological Brain Microtubules Interfaced with Semiconductor Qubits" - DTIC returns blocked/empty content
+
+### Manual Downloads
+
+1. **NBI Copenhagen thesis** - Michaela Eichinger "Novel methods and materials for superconducting qubits and circuits" (2023) - downloaded manually, saved to `theses/copenhagen/eichinger_michaela_copenhagen_2023.pdf` (328 MB)
+
+### Papers Downloaded
+
+Location: `semiconductor_processing_dataset/raw_documents/papers/superconducting_qubits/ofs_batch/`
+
+Topics covered:
+- Quantum error correction (Google surface code, bosonic QEC, Floquet-Bacon-Shor)
+- Qubit coherence (2D transmons with 1ms T1, tantalum resonators, thermal annealing)
+- Fabrication (airbridges - Al and Nb, flip-chip, vacuum-gap capacitors)
+- Packaging and wiring (500-qubit wiring, flip-chip thermal, shielding)
+- Quantum networking (km-scale photonic links, state transfer, teleportation)
+- Control electronics (SFQ pulses, cryogenic pulse generators, JTWPA)
+- Cat qubits, dual-rail qubits, three-qubit gates
+- Historical: Nakamura 1999 charge qubit paper
+
+### Updated Dataset Statistics
+
+| Category | Phase 1A | Phase 1B | Total |
+|----------|----------|----------|-------|
+| Theses | 111 | 1 | 112 |
+| Papers | 96 | 55 | 151 |
+| **Total documents** | **207** | **56** | **263** |
+| Manifest entries | 213 | 55 | 268 |
+| Total disk space | 2.8 GB | 806 MB | 3.6 GB |
+
+---
+
 ## Notes
 
 - Storage: 2.8 GB local, will move to NAS after processing and ingestion
 - Automation: Parallel subagents worked well for bulk collection; 8 agents total across waves
-- Focus: All fabrication aspects, all qubit types — well covered
-- Timeline: Historical coverage achieved (2005–2025 for theses, 2007–2024 for papers)
-- Access: Lab websites (rsl.yale.edu, qulab.eng.yale.edu, schusterlab.stanford.edu) were by far the best sources — directly list thesis PDFs
+- Focus: All fabrication aspects, all qubit types - well covered
+- Timeline: Historical coverage achieved (2005-2025 for theses, 2007-2024 for papers)
+- Access: Lab websites (rsl.yale.edu, qulab.eng.yale.edu, schusterlab.stanford.edu) were by far the best sources - directly list thesis PDFs
 - ETH Research Collection has cookie/session challenges that block curl; some theses required alternate URL patterns
 - Tracking: JSONL manifest (`manifest_documents.jsonl`) is canonical; `collection_tracker.csv` is secondary
 
