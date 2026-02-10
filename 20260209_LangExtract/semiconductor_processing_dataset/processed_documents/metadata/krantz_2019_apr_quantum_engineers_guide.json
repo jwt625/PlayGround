@@ -1,0 +1,70 @@
+{
+  "document_id": "krantz_2019_apr_quantum_engineers_guide",
+  "source_type": "review_paper",
+  "institution": null,
+  "department": null,
+  "author": "Krantz, Philip",
+  "authors": [
+    "Krantz, Philip",
+    "Kjaergaard, Morten",
+    "Yan, Fei",
+    "Orlando, Terry P.",
+    "Gustavsson, Simon",
+    "Oliver, William D."
+  ],
+  "advisor": null,
+  "year": 2019,
+  "title": "A Quantum Engineer's Guide to Superconducting Qubits",
+  "journal": "Applied Physics Reviews",
+  "doi": "10.1063/1.5089550",
+  "arxiv_id": "1904.06560v5",
+  "url": "https://arxiv.org/pdf/1904.06560v5.pdf",
+  "download_date": "2026-02-10",
+  "file_path": "semiconductor_processing_dataset/raw_documents/papers/superconducting_qubits/reviews/krantz_2019_apr_quantum_engineers_guide.pdf",
+  "file_size_mb": 4.964,
+  "page_count": 0,
+  "domain": [
+    "superconducting_qubits"
+  ],
+  "qubit_types": [
+    "transmon"
+  ],
+  "fabrication_topics": [
+    "materials_studies",
+    "coherence_improvement"
+  ],
+  "keywords": [
+    "superconducting qubit",
+    "reviews"
+  ],
+  "has_supplementary": false,
+  "supplementary_file_path": null,
+  "has_process_flow": false,
+  "has_chemical_list": false,
+  "has_equipment_list": false,
+  "has_parameter_tables": false,
+  "fabrication_section": "Methods",
+  "page_range": null,
+  "extraction_status": {
+    "text_extracted": false,
+    "docling_complete": false,
+    "marker_complete": false,
+    "grobid_complete": false,
+    "best_extraction": null,
+    "chemicals_extracted": false,
+    "process_flow_extracted": false,
+    "parameters_extracted": false,
+    "equipment_extracted": false
+  },
+  "quality_flags": {
+    "ocr_quality": "native_pdf",
+    "table_extraction": "manual_review_needed",
+    "formula_preservation": "acceptable",
+    "figure_quality": "unknown"
+  },
+  "quality_assessment": "high_value",
+  "priority": "high",
+  "notes": "Collected in Wave 1; retry path handled via protocol logs",
+  "reviewed_by": null,
+  "review_date": null
+}

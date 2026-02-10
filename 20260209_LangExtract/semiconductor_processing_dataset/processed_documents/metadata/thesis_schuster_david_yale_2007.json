@@ -1,0 +1,66 @@
+{
+  "document_id": "thesis_schuster_david_yale_2007",
+  "source_type": "phd_thesis",
+  "institution": "Yale University",
+  "department": "Physics",
+  "author": "Schuster, David",
+  "authors": [
+    "Schuster, David"
+  ],
+  "advisor": "Schoelkopf, Robert",
+  "year": 2007,
+  "title": "Circuit Quantum Electrodynamics",
+  "journal": null,
+  "doi": null,
+  "arxiv_id": null,
+  "url": "https://schusterlab.stanford.edu/static/pdfs/Schuster_thesis.pdf",
+  "download_date": "2026-02-10",
+  "file_path": "raw_documents/theses/others/schuster_david_yale_2007.pdf",
+  "file_size_mb": 7.35,
+  "page_count": 0,
+  "domain": [
+    "superconducting_qubits"
+  ],
+  "qubit_types": [],
+  "fabrication_topics": [
+    "circuit QED",
+    "Cooper pair box",
+    "superconducting qubit"
+  ],
+  "keywords": [
+    "circuit QED",
+    "Cooper pair box",
+    "cavity",
+    "superconducting qubit"
+  ],
+  "has_supplementary": false,
+  "supplementary_file_path": null,
+  "has_process_flow": false,
+  "has_chemical_list": false,
+  "has_equipment_list": false,
+  "has_parameter_tables": false,
+  "fabrication_section": null,
+  "page_range": null,
+  "extraction_status": {
+    "text_extracted": false,
+    "docling_complete": false,
+    "marker_complete": false,
+    "grobid_complete": false,
+    "best_extraction": null,
+    "chemicals_extracted": false,
+    "process_flow_extracted": false,
+    "parameters_extracted": false,
+    "equipment_extracted": false
+  },
+  "quality_flags": {
+    "ocr_quality": "unknown",
+    "table_extraction": "unknown",
+    "formula_preservation": "unknown",
+    "figure_quality": "unknown"
+  },
+  "quality_assessment": "high_value",
+  "priority": "high",
+  "notes": "Schuster lab collection",
+  "reviewed_by": null,
+  "review_date": null
+}

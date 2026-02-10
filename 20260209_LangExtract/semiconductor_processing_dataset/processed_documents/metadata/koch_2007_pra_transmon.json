@@ -1,0 +1,79 @@
+{
+  "document_id": "koch_2007_pra_transmon",
+  "source_type": "journal_article",
+  "institution": null,
+  "department": null,
+  "author": "Koch, Jens",
+  "authors": [
+    "Koch, Jens",
+    "Yu, Terri M.",
+    "Gambetta, Jay",
+    "Houck, A. A.",
+    "Schuster, D. I.",
+    "Majer, J.",
+    "Blais, Alexandre",
+    "Devoret, M. H.",
+    "Girvin, S. M.",
+    "Schoelkopf, R. J."
+  ],
+  "advisor": null,
+  "year": 2007,
+  "title": "Charge-insensitive qubit design derived from the Cooper pair box",
+  "journal": "Physical Review A",
+  "doi": "10.1103/PhysRevA.76.042319",
+  "arxiv_id": "cond-mat/0703002",
+  "url": "https://arxiv.org/pdf/cond-mat/0703002",
+  "download_date": "2026-02-10",
+  "file_path": "semiconductor_processing_dataset/raw_documents/papers/superconducting_qubits/transmon/koch_2007_pra_transmon.pdf",
+  "file_size_mb": 1.182,
+  "page_count": 0,
+  "domain": [
+    "superconducting_qubits"
+  ],
+  "qubit_types": [
+    "transmon",
+    "Cooper_pair_box"
+  ],
+  "fabrication_topics": [
+    "qubit_design",
+    "charge_noise_insensitivity"
+  ],
+  "keywords": [
+    "transmon",
+    "Cooper pair box",
+    "charge noise",
+    "superconducting qubit",
+    "circuit QED",
+    "Josephson junction"
+  ],
+  "has_supplementary": false,
+  "supplementary_file_path": null,
+  "has_process_flow": false,
+  "has_chemical_list": false,
+  "has_equipment_list": false,
+  "has_parameter_tables": true,
+  "fabrication_section": "Methods",
+  "page_range": null,
+  "extraction_status": {
+    "text_extracted": false,
+    "docling_complete": false,
+    "marker_complete": false,
+    "grobid_complete": false,
+    "best_extraction": null,
+    "chemicals_extracted": false,
+    "process_flow_extracted": false,
+    "parameters_extracted": false,
+    "equipment_extracted": false
+  },
+  "quality_flags": {
+    "ocr_quality": "native_pdf",
+    "table_extraction": "unknown",
+    "formula_preservation": "unknown",
+    "figure_quality": "unknown"
+  },
+  "quality_assessment": "high_value",
+  "priority": "high",
+  "notes": "Wave 2 seminal paper collection. First transmon paper - foundational reference.",
+  "reviewed_by": null,
+  "review_date": null
+}

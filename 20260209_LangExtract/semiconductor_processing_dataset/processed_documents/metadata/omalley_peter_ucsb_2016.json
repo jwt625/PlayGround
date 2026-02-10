@@ -1,0 +1,67 @@
+{
+  "document_id": "omalley_peter_ucsb_2016",
+  "source_type": "phd_thesis",
+  "institution": "UC Santa Barbara",
+  "department": "Department of Physics",
+  "author": "O'Malley, Peter",
+  "authors": [
+    "O'Malley, Peter"
+  ],
+  "advisor": "Martinis, John M.",
+  "year": 2016,
+  "title": "Superconducting Qubits: Dephasing and Quantum Chemistry",
+  "journal": null,
+  "doi": null,
+  "arxiv_id": null,
+  "url": "https://web.physics.ucsb.edu/~martinisgroup/theses/OMalley2016.pdf",
+  "download_date": "2026-02-10",
+  "file_path": "semiconductor_processing_dataset/raw_documents/theses/ucsb/omalley_peter_ucsb_2016.pdf",
+  "file_size_mb": 4.03,
+  "page_count": 0,
+  "domain": [
+    "superconducting_qubits"
+  ],
+  "qubit_types": [
+    "xmon",
+    "transmon"
+  ],
+  "fabrication_topics": [
+    "dephasing",
+    "quantum chemistry"
+  ],
+  "keywords": [
+    "superconducting qubit",
+    "dephasing",
+    "quantum chemistry"
+  ],
+  "has_supplementary": false,
+  "supplementary_file_path": null,
+  "has_process_flow": false,
+  "has_chemical_list": false,
+  "has_equipment_list": false,
+  "has_parameter_tables": false,
+  "fabrication_section": null,
+  "page_range": null,
+  "extraction_status": {
+    "text_extracted": false,
+    "docling_complete": false,
+    "marker_complete": false,
+    "grobid_complete": false,
+    "best_extraction": null,
+    "chemicals_extracted": false,
+    "process_flow_extracted": false,
+    "parameters_extracted": false,
+    "equipment_extracted": false
+  },
+  "quality_flags": {
+    "ocr_quality": "unknown",
+    "table_extraction": "unknown",
+    "formula_preservation": "unknown",
+    "figure_quality": "unknown"
+  },
+  "quality_assessment": "high_value",
+  "priority": "high",
+  "notes": "Thesis collection wave 1",
+  "reviewed_by": null,
+  "review_date": null
+}

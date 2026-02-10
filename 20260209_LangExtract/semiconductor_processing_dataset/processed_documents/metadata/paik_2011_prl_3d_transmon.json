@@ -1,0 +1,83 @@
+{
+  "document_id": "paik_2011_prl_3d_transmon",
+  "source_type": "journal_article",
+  "institution": null,
+  "department": null,
+  "author": "Paik, Hanhee",
+  "authors": [
+    "Paik, Hanhee",
+    "Schuster, D. I.",
+    "Bishop, Lev S.",
+    "Kirchmair, G.",
+    "Catelani, G.",
+    "Sears, A. P.",
+    "Johnson, B. R.",
+    "Reagor, M. J.",
+    "Frunzio, L.",
+    "Glazman, L. I.",
+    "Girvin, S. M.",
+    "Devoret, M. H.",
+    "Schoelkopf, R. J."
+  ],
+  "advisor": null,
+  "year": 2011,
+  "title": "Observation of High Coherence in Josephson Junction Qubits Measured in a Three-Dimensional Circuit QED Architecture",
+  "journal": "Physical Review Letters",
+  "doi": "10.1103/PhysRevLett.107.240501",
+  "arxiv_id": "1105.4652",
+  "url": "https://arxiv.org/pdf/1105.4652",
+  "download_date": "2026-02-10",
+  "file_path": "semiconductor_processing_dataset/raw_documents/papers/superconducting_qubits/transmon/paik_2011_prl_3d_transmon.pdf",
+  "file_size_mb": 2.199,
+  "page_count": 0,
+  "domain": [
+    "superconducting_qubits"
+  ],
+  "qubit_types": [
+    "transmon",
+    "3D_transmon"
+  ],
+  "fabrication_topics": [
+    "3D_cavity",
+    "coherence_improvement",
+    "circuit_QED"
+  ],
+  "keywords": [
+    "3D transmon",
+    "circuit QED",
+    "coherence time",
+    "Josephson junction",
+    "superconducting qubit",
+    "three-dimensional cavity"
+  ],
+  "has_supplementary": false,
+  "supplementary_file_path": null,
+  "has_process_flow": false,
+  "has_chemical_list": false,
+  "has_equipment_list": false,
+  "has_parameter_tables": true,
+  "fabrication_section": "Methods",
+  "page_range": null,
+  "extraction_status": {
+    "text_extracted": false,
+    "docling_complete": false,
+    "marker_complete": false,
+    "grobid_complete": false,
+    "best_extraction": null,
+    "chemicals_extracted": false,
+    "process_flow_extracted": false,
+    "parameters_extracted": false,
+    "equipment_extracted": false
+  },
+  "quality_flags": {
+    "ocr_quality": "native_pdf",
+    "table_extraction": "unknown",
+    "formula_preservation": "unknown",
+    "figure_quality": "unknown"
+  },
+  "quality_assessment": "high_value",
+  "priority": "high",
+  "notes": "Wave 2 seminal paper collection. First 3D transmon demonstration.",
+  "reviewed_by": null,
+  "review_date": null
+}

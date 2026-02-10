@@ -1,0 +1,70 @@
+{
+  "document_id": "paper_anferov_2024_sst_mmwave_resonator",
+  "source_type": "journal_article",
+  "institution": "Stanford University",
+  "department": "Physics",
+  "author": "Anferov, Alexander",
+  "authors": [
+    "Anferov, Alexander",
+    "Harvey, Shannon P.",
+    "Wan, Fanghui",
+    "Simon, Jonathan",
+    "Schuster, David I."
+  ],
+  "advisor": "Schuster, David",
+  "year": 2024,
+  "title": "Low-loss Millimeter-wave Resonators with an Improved Coupling Structure",
+  "journal": "Superconductor Science and Technology",
+  "doi": null,
+  "arxiv_id": null,
+  "url": "https://schusterlab.stanford.edu/static/pdfs/Anferov_Nov2023.pdf",
+  "download_date": "2026-02-10",
+  "file_path": "raw_documents/papers/superconducting_qubits/resonators/anferov_2024_sst_mmwave_resonator.pdf",
+  "file_size_mb": 4.43,
+  "page_count": 0,
+  "domain": [
+    "superconducting_qubits"
+  ],
+  "qubit_types": [],
+  "fabrication_topics": [
+    "millimeter-wave resonator",
+    "coupling structure",
+    "low loss"
+  ],
+  "keywords": [
+    "millimeter-wave",
+    "resonator",
+    "low loss",
+    "coupling"
+  ],
+  "has_supplementary": false,
+  "supplementary_file_path": null,
+  "has_process_flow": true,
+  "has_chemical_list": false,
+  "has_equipment_list": false,
+  "has_parameter_tables": true,
+  "fabrication_section": null,
+  "page_range": null,
+  "extraction_status": {
+    "text_extracted": false,
+    "docling_complete": false,
+    "marker_complete": false,
+    "grobid_complete": false,
+    "best_extraction": null,
+    "chemicals_extracted": false,
+    "process_flow_extracted": false,
+    "parameters_extracted": false,
+    "equipment_extracted": false
+  },
+  "quality_flags": {
+    "ocr_quality": "unknown",
+    "table_extraction": "unknown",
+    "formula_preservation": "unknown",
+    "figure_quality": "unknown"
+  },
+  "quality_assessment": "high_value",
+  "priority": "high",
+  "notes": "Schuster lab collection",
+  "reviewed_by": null,
+  "review_date": null
+}

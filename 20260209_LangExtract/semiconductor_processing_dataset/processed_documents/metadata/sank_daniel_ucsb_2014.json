@@ -1,0 +1,68 @@
+{
+  "document_id": "sank_daniel_ucsb_2014",
+  "source_type": "phd_thesis",
+  "institution": "UC Santa Barbara",
+  "department": "Department of Physics",
+  "author": "Sank, Daniel",
+  "authors": [
+    "Sank, Daniel"
+  ],
+  "advisor": "Martinis, John M.",
+  "year": 2014,
+  "title": "Fast, Accurate State Measurement in Superconducting Qubits",
+  "journal": null,
+  "doi": null,
+  "arxiv_id": null,
+  "url": "https://web.physics.ucsb.edu/~martinisgroup/theses/Sank2014.pdf",
+  "download_date": "2026-02-10",
+  "file_path": "semiconductor_processing_dataset/raw_documents/theses/ucsb/sank_daniel_ucsb_2014.pdf",
+  "file_size_mb": 13.52,
+  "page_count": 0,
+  "domain": [
+    "superconducting_qubits"
+  ],
+  "qubit_types": [
+    "xmon",
+    "transmon",
+    "phase qubit"
+  ],
+  "fabrication_topics": [
+    "state measurement",
+    "readout"
+  ],
+  "keywords": [
+    "superconducting qubit",
+    "state measurement",
+    "readout"
+  ],
+  "has_supplementary": false,
+  "supplementary_file_path": null,
+  "has_process_flow": false,
+  "has_chemical_list": false,
+  "has_equipment_list": false,
+  "has_parameter_tables": false,
+  "fabrication_section": null,
+  "page_range": null,
+  "extraction_status": {
+    "text_extracted": false,
+    "docling_complete": false,
+    "marker_complete": false,
+    "grobid_complete": false,
+    "best_extraction": null,
+    "chemicals_extracted": false,
+    "process_flow_extracted": false,
+    "parameters_extracted": false,
+    "equipment_extracted": false
+  },
+  "quality_flags": {
+    "ocr_quality": "unknown",
+    "table_extraction": "unknown",
+    "formula_preservation": "unknown",
+    "figure_quality": "unknown"
+  },
+  "quality_assessment": "high_value",
+  "priority": "high",
+  "notes": "Thesis collection wave 1",
+  "reviewed_by": null,
+  "review_date": null
+}

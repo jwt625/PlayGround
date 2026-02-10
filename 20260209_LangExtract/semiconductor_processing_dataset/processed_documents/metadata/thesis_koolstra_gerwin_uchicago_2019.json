@@ -1,0 +1,65 @@
+{
+  "document_id": "thesis_koolstra_gerwin_uchicago_2019",
+  "source_type": "phd_thesis",
+  "institution": "University of Chicago",
+  "department": "Physics",
+  "author": "Koolstra, Gerwin",
+  "authors": [
+    "Koolstra, Gerwin"
+  ],
+  "advisor": "Schuster, David",
+  "year": 2019,
+  "title": "Trapping a Single Electron on Superfluid Helium Using a Superconducting Resonator",
+  "journal": null,
+  "doi": null,
+  "arxiv_id": null,
+  "url": "https://schusterlab.stanford.edu/static/pdfs/Koolstra_thesis.pdf",
+  "download_date": "2026-02-10",
+  "file_path": "raw_documents/theses/others/koolstra_gerwin_uchicago_2019.pdf",
+  "file_size_mb": 38.05,
+  "page_count": 0,
+  "domain": [
+    "superconducting_qubits"
+  ],
+  "qubit_types": [],
+  "fabrication_topics": [
+    "superfluid helium",
+    "superconducting resonator",
+    "electron trapping"
+  ],
+  "keywords": [
+    "electron on helium",
+    "superconducting resonator",
+    "single electron"
+  ],
+  "has_supplementary": false,
+  "supplementary_file_path": null,
+  "has_process_flow": false,
+  "has_chemical_list": false,
+  "has_equipment_list": false,
+  "has_parameter_tables": false,
+  "fabrication_section": null,
+  "page_range": null,
+  "extraction_status": {
+    "text_extracted": false,
+    "docling_complete": false,
+    "marker_complete": false,
+    "grobid_complete": false,
+    "best_extraction": null,
+    "chemicals_extracted": false,
+    "process_flow_extracted": false,
+    "parameters_extracted": false,
+    "equipment_extracted": false
+  },
+  "quality_flags": {
+    "ocr_quality": "unknown",
+    "table_extraction": "unknown",
+    "formula_preservation": "unknown",
+    "figure_quality": "unknown"
+  },
+  "quality_assessment": "high_value",
+  "priority": "high",
+  "notes": "Schuster lab collection",
+  "reviewed_by": null,
+  "review_date": null
+}

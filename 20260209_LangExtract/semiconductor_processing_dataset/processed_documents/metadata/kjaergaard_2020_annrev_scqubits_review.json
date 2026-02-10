@@ -1,0 +1,71 @@
+{
+  "document_id": "kjaergaard_2020_annrev_scqubits_review",
+  "source_type": "review_paper",
+  "institution": null,
+  "department": null,
+  "author": "Kjaergaard, Morten",
+  "authors": [
+    "Kjaergaard, Morten",
+    "Schwartz, Mollie E.",
+    "Braumuller, Jochen",
+    "Krantz, Philip",
+    "Wang, Joel I-Jan",
+    "Gustavsson, Simon",
+    "Oliver, William D."
+  ],
+  "advisor": null,
+  "year": 2020,
+  "title": "Superconducting Qubits: Current State of Play",
+  "journal": "Annual Review of Condensed Matter Physics",
+  "doi": "10.1146/annurev-conmatphys-031119-050605",
+  "arxiv_id": "1905.13641v3",
+  "url": "https://arxiv.org/pdf/1905.13641v3.pdf",
+  "download_date": "2026-02-10",
+  "file_path": "semiconductor_processing_dataset/raw_documents/papers/superconducting_qubits/reviews/kjaergaard_2020_annrev_scqubits_review.pdf",
+  "file_size_mb": 4.127,
+  "page_count": 0,
+  "domain": [
+    "superconducting_qubits"
+  ],
+  "qubit_types": [
+    "transmon"
+  ],
+  "fabrication_topics": [
+    "materials_studies",
+    "coherence_improvement"
+  ],
+  "keywords": [
+    "superconducting qubit",
+    "reviews"
+  ],
+  "has_supplementary": false,
+  "supplementary_file_path": null,
+  "has_process_flow": false,
+  "has_chemical_list": false,
+  "has_equipment_list": false,
+  "has_parameter_tables": false,
+  "fabrication_section": "Methods",
+  "page_range": null,
+  "extraction_status": {
+    "text_extracted": false,
+    "docling_complete": false,
+    "marker_complete": false,
+    "grobid_complete": false,
+    "best_extraction": null,
+    "chemicals_extracted": false,
+    "process_flow_extracted": false,
+    "parameters_extracted": false,
+    "equipment_extracted": false
+  },
+  "quality_flags": {
+    "ocr_quality": "native_pdf",
+    "table_extraction": "manual_review_needed",
+    "formula_preservation": "acceptable",
+    "figure_quality": "unknown"
+  },
+  "quality_assessment": "high_value",
+  "priority": "high",
+  "notes": "Collected in Wave 1; retry path handled via protocol logs",
+  "reviewed_by": null,
+  "review_date": null
+}

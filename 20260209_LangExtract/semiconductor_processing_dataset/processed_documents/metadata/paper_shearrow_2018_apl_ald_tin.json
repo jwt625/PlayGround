@@ -1,0 +1,76 @@
+{
+  "document_id": "paper_shearrow_2018_apl_ald_tin",
+  "source_type": "journal_article",
+  "institution": "University of Chicago",
+  "department": "Physics",
+  "author": "Shearrow, Abigail",
+  "authors": [
+    "Shearrow, Abigail",
+    "Koolstra, Gerwin",
+    "Whiteley, Samuel J.",
+    "Earnest, Nathan",
+    "Barry, Peter S.",
+    "Heremans, F. Joseph",
+    "Awschalom, David D.",
+    "Shirokoff, Erik",
+    "Schuster, David I."
+  ],
+  "advisor": "Schuster, David",
+  "year": 2018,
+  "title": "Atomic layer deposition of titanium nitride for quantum circuits",
+  "journal": "Applied Physics Letters",
+  "doi": null,
+  "arxiv_id": null,
+  "url": "https://schusterlab.stanford.edu/static/pdfs/Abigail2018.pdf",
+  "download_date": "2026-02-10",
+  "file_path": "raw_documents/papers/superconducting_qubits/fabrication/shearrow_2018_apl_ald_tin.pdf",
+  "file_size_mb": 0.93,
+  "page_count": 0,
+  "domain": [
+    "superconducting_qubits"
+  ],
+  "qubit_types": [],
+  "fabrication_topics": [
+    "ALD",
+    "titanium nitride",
+    "thin film deposition",
+    "quantum circuits"
+  ],
+  "keywords": [
+    "ALD",
+    "titanium nitride",
+    "TiN",
+    "quantum circuit",
+    "fabrication"
+  ],
+  "has_supplementary": false,
+  "supplementary_file_path": null,
+  "has_process_flow": true,
+  "has_chemical_list": true,
+  "has_equipment_list": true,
+  "has_parameter_tables": false,
+  "fabrication_section": null,
+  "page_range": null,
+  "extraction_status": {
+    "text_extracted": false,
+    "docling_complete": false,
+    "marker_complete": false,
+    "grobid_complete": false,
+    "best_extraction": null,
+    "chemicals_extracted": false,
+    "process_flow_extracted": false,
+    "parameters_extracted": false,
+    "equipment_extracted": false
+  },
+  "quality_flags": {
+    "ocr_quality": "unknown",
+    "table_extraction": "unknown",
+    "formula_preservation": "unknown",
+    "figure_quality": "unknown"
+  },
+  "quality_assessment": "high_value",
+  "priority": "high",
+  "notes": "Schuster lab collection",
+  "reviewed_by": null,
+  "review_date": null
+}

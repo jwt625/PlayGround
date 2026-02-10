@@ -1,0 +1,60 @@
+{
+  "document_id": "krayzman_lev_yale_2022",
+  "source_type": "phd_thesis",
+  "institution": "Yale University",
+  "department": "Applied Physics",
+  "author": "Krayzman, Lev",
+  "authors": [
+    "Krayzman, Lev"
+  ],
+  "advisor": "Schoelkopf",
+  "year": 2022,
+  "title": "Thin-film 3D Resonators for Superconducting Quantum Circuits",
+  "journal": null,
+  "doi": null,
+  "arxiv_id": null,
+  "url": "https://rsl.yale.edu/sites/default/files/2024-08/2022-Thesis-Lev-Krayzman.pdf",
+  "download_date": "2026-02-10",
+  "file_path": "semiconductor_processing_dataset/raw_documents/theses/yale/krayzman_lev_yale_2022.pdf",
+  "file_size_mb": 34.97,
+  "page_count": 0,
+  "domain": [
+    "superconducting_qubits"
+  ],
+  "qubit_types": [],
+  "fabrication_topics": [],
+  "keywords": [
+    "superconducting qubit",
+    "fabrication"
+  ],
+  "has_supplementary": false,
+  "supplementary_file_path": null,
+  "has_process_flow": false,
+  "has_chemical_list": false,
+  "has_equipment_list": false,
+  "has_parameter_tables": false,
+  "fabrication_section": null,
+  "page_range": null,
+  "extraction_status": {
+    "text_extracted": false,
+    "docling_complete": false,
+    "marker_complete": false,
+    "grobid_complete": false,
+    "best_extraction": null,
+    "chemicals_extracted": false,
+    "process_flow_extracted": false,
+    "parameters_extracted": false,
+    "equipment_extracted": false
+  },
+  "quality_flags": {
+    "ocr_quality": "unknown",
+    "table_extraction": "unknown",
+    "formula_preservation": "unknown",
+    "figure_quality": "unknown"
+  },
+  "quality_assessment": "high_value",
+  "priority": "high",
+  "notes": "Yale thesis collection wave 2 - RSL (Schoelkopf group)",
+  "reviewed_by": null,
+  "review_date": null
+}

@@ -1,0 +1,66 @@
+{
+  "document_id": "lienhard_benjamin_mit_2021",
+  "source_type": "phd_thesis",
+  "institution": "MIT",
+  "department": "Department of EECS",
+  "author": "Lienhard, Benjamin",
+  "authors": [
+    "Lienhard, Benjamin"
+  ],
+  "advisor": "Oliver, William D.",
+  "year": 2021,
+  "title": "Machine Learning Assisted Superconducting Qubit Readout",
+  "journal": null,
+  "doi": null,
+  "arxiv_id": null,
+  "url": "https://dspace.mit.edu/handle/1721.1/140024",
+  "download_date": "2026-02-10",
+  "file_path": "semiconductor_processing_dataset/raw_documents/theses/mit/lienhard_benjamin_mit_2021.pdf",
+  "file_size_mb": 56.99,
+  "page_count": 0,
+  "domain": [
+    "superconducting_qubits"
+  ],
+  "qubit_types": [
+    "transmon"
+  ],
+  "fabrication_topics": [
+    "qubit readout",
+    "machine learning"
+  ],
+  "keywords": [
+    "superconducting qubit",
+    "readout",
+    "machine learning"
+  ],
+  "has_supplementary": false,
+  "supplementary_file_path": null,
+  "has_process_flow": false,
+  "has_chemical_list": false,
+  "has_equipment_list": false,
+  "has_parameter_tables": false,
+  "fabrication_section": null,
+  "page_range": null,
+  "extraction_status": {
+    "text_extracted": false,
+    "docling_complete": false,
+    "marker_complete": false,
+    "grobid_complete": false,
+    "best_extraction": null,
+    "chemicals_extracted": false,
+    "process_flow_extracted": false,
+    "parameters_extracted": false,
+    "equipment_extracted": false
+  },
+  "quality_flags": {
+    "ocr_quality": "unknown",
+    "table_extraction": "unknown",
+    "formula_preservation": "unknown",
+    "figure_quality": "unknown"
+  },
+  "quality_assessment": "high_value",
+  "priority": "high",
+  "notes": "Thesis collection wave 1",
+  "reviewed_by": null,
+  "review_date": null
+}

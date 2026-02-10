@@ -1,0 +1,71 @@
+{
+  "document_id": "paper_anferov_2024_pra_niobium_trilayer",
+  "source_type": "journal_article",
+  "institution": "University of Chicago",
+  "department": "Physics",
+  "author": "Anferov, Alexander",
+  "authors": [
+    "Anferov, Alexander",
+    "Lee, Kan-Heng",
+    "Zhao, Fang",
+    "Simon, Jonathan",
+    "Schuster, David I."
+  ],
+  "advisor": "Schuster, David",
+  "year": 2024,
+  "title": "Improved Coherence in Optically-Defined Niobium Trilayer Junction Qubits",
+  "journal": "Physical Review Applied",
+  "doi": null,
+  "arxiv_id": null,
+  "url": "https://schusterlab.stanford.edu/static/pdfs/Anferov2023.pdf",
+  "download_date": "2026-02-10",
+  "file_path": "raw_documents/papers/superconducting_qubits/fabrication/anferov_2024_pra_niobium_trilayer.pdf",
+  "file_size_mb": 4.01,
+  "page_count": 0,
+  "domain": [
+    "superconducting_qubits"
+  ],
+  "qubit_types": [],
+  "fabrication_topics": [
+    "niobium trilayer",
+    "Josephson junction",
+    "optical lithography",
+    "qubit fabrication"
+  ],
+  "keywords": [
+    "niobium",
+    "trilayer junction",
+    "coherence",
+    "fabrication"
+  ],
+  "has_supplementary": false,
+  "supplementary_file_path": null,
+  "has_process_flow": true,
+  "has_chemical_list": false,
+  "has_equipment_list": true,
+  "has_parameter_tables": false,
+  "fabrication_section": null,
+  "page_range": null,
+  "extraction_status": {
+    "text_extracted": false,
+    "docling_complete": false,
+    "marker_complete": false,
+    "grobid_complete": false,
+    "best_extraction": null,
+    "chemicals_extracted": false,
+    "process_flow_extracted": false,
+    "parameters_extracted": false,
+    "equipment_extracted": false
+  },
+  "quality_flags": {
+    "ocr_quality": "unknown",
+    "table_extraction": "unknown",
+    "formula_preservation": "unknown",
+    "figure_quality": "unknown"
+  },
+  "quality_assessment": "high_value",
+  "priority": "high",
+  "notes": "Schuster lab collection",
+  "reviewed_by": null,
+  "review_date": null
+}

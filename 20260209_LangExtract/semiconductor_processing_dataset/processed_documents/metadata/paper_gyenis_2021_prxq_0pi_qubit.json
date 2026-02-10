@@ -1,0 +1,73 @@
+{
+  "document_id": "paper_gyenis_2021_prxq_0pi_qubit",
+  "source_type": "journal_article",
+  "institution": "Princeton University",
+  "department": "Physics",
+  "author": "Gyenis, Andras",
+  "authors": [
+    "Gyenis, Andras",
+    "Mundada, Pranav S.",
+    "Di Paolo, Agustin",
+    "Hazard, Thomas M.",
+    "You, Xinyuan",
+    "Schuster, David I.",
+    "Koch, Jens",
+    "Blais, Alexandre",
+    "Houck, Andrew A."
+  ],
+  "advisor": "Schuster, David",
+  "year": 2021,
+  "title": "Experimental Realization of a Protected Superconducting Circuit Derived from the 0-pi Qubit",
+  "journal": "PRX Quantum",
+  "doi": null,
+  "arxiv_id": null,
+  "url": "https://schusterlab.stanford.edu/static/pdfs/Gyenis2019.pdf",
+  "download_date": "2026-02-10",
+  "file_path": "raw_documents/papers/superconducting_qubits/materials/gyenis_2021_prxq_0pi_qubit.pdf",
+  "file_size_mb": 8.46,
+  "page_count": 0,
+  "domain": [
+    "superconducting_qubits"
+  ],
+  "qubit_types": [],
+  "fabrication_topics": [
+    "0-pi qubit",
+    "protected circuit",
+    "Josephson junction array"
+  ],
+  "keywords": [
+    "0-pi qubit",
+    "protected circuit",
+    "superconducting"
+  ],
+  "has_supplementary": false,
+  "supplementary_file_path": null,
+  "has_process_flow": false,
+  "has_chemical_list": false,
+  "has_equipment_list": false,
+  "has_parameter_tables": false,
+  "fabrication_section": null,
+  "page_range": null,
+  "extraction_status": {
+    "text_extracted": false,
+    "docling_complete": false,
+    "marker_complete": false,
+    "grobid_complete": false,
+    "best_extraction": null,
+    "chemicals_extracted": false,
+    "process_flow_extracted": false,
+    "parameters_extracted": false,
+    "equipment_extracted": false
+  },
+  "quality_flags": {
+    "ocr_quality": "unknown",
+    "table_extraction": "unknown",
+    "formula_preservation": "unknown",
+    "figure_quality": "unknown"
+  },
+  "quality_assessment": "high_value",
+  "priority": "high",
+  "notes": "Schuster lab collection",
+  "reviewed_by": null,
+  "review_date": null
+}

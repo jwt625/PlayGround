@@ -1,0 +1,78 @@
+{
+  "document_id": "paper_sigillito_2014_apl_spin_microresonator",
+  "source_type": "journal_article",
+  "institution": "Princeton University",
+  "department": "Physics",
+  "author": "Sigillito, Anthony J.",
+  "authors": [
+    "Sigillito, Anthony J.",
+    "Malissa, Hans",
+    "Tyryshkin, Alexei M.",
+    "Riemann, H.",
+    "Abrosimov, N. V.",
+    "Becker, P.",
+    "Pohl, H.-J.",
+    "Thewalt, M. L. W.",
+    "Itoh, K. M.",
+    "Morton, J. J. L.",
+    "Houck, A. A.",
+    "Schuster, D. I.",
+    "Lyon, S. A."
+  ],
+  "advisor": "Schuster, David",
+  "year": 2014,
+  "title": "Fast, low-power manipulation of spin ensembles in superconducting microresonators",
+  "journal": "Applied Physics Letters",
+  "doi": null,
+  "arxiv_id": null,
+  "url": "https://schusterlab.stanford.edu/static/pdfs/Sigillito2014.pdf",
+  "download_date": "2026-02-10",
+  "file_path": "raw_documents/papers/superconducting_qubits/resonators/sigillito_2014_apl_spin_microresonator.pdf",
+  "file_size_mb": 1.13,
+  "page_count": 0,
+  "domain": [
+    "superconducting_qubits"
+  ],
+  "qubit_types": [],
+  "fabrication_topics": [
+    "microresonator",
+    "spin ensemble",
+    "ESR"
+  ],
+  "keywords": [
+    "microresonator",
+    "spin",
+    "ESR",
+    "superconducting"
+  ],
+  "has_supplementary": false,
+  "supplementary_file_path": null,
+  "has_process_flow": false,
+  "has_chemical_list": false,
+  "has_equipment_list": false,
+  "has_parameter_tables": false,
+  "fabrication_section": null,
+  "page_range": null,
+  "extraction_status": {
+    "text_extracted": false,
+    "docling_complete": false,
+    "marker_complete": false,
+    "grobid_complete": false,
+    "best_extraction": null,
+    "chemicals_extracted": false,
+    "process_flow_extracted": false,
+    "parameters_extracted": false,
+    "equipment_extracted": false
+  },
+  "quality_flags": {
+    "ocr_quality": "unknown",
+    "table_extraction": "unknown",
+    "formula_preservation": "unknown",
+    "figure_quality": "unknown"
+  },
+  "quality_assessment": "high_value",
+  "priority": "high",
+  "notes": "Schuster lab collection",
+  "reviewed_by": null,
+  "review_date": null
+}

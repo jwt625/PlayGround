@@ -1,0 +1,68 @@
+{
+  "document_id": "thesis_oriani_andrew_uchicago_2022",
+  "source_type": "phd_thesis",
+  "institution": "University of Chicago",
+  "department": "Physics",
+  "author": "Oriani, Andrew",
+  "authors": [
+    "Oriani, Andrew"
+  ],
+  "advisor": "Schuster, David",
+  "year": 2022,
+  "title": "Multimodal and Ultra High-Q Superconducting Niobium Cavities for Circuit Quantum Electrodynamics",
+  "journal": null,
+  "doi": null,
+  "arxiv_id": null,
+  "url": "https://schusterlab.stanford.edu/static/pdfs/Oriani_Thesis.pdf",
+  "download_date": "2026-02-10",
+  "file_path": "raw_documents/theses/others/oriani_andrew_uchicago_2022.pdf",
+  "file_size_mb": 44.85,
+  "page_count": 0,
+  "domain": [
+    "superconducting_qubits"
+  ],
+  "qubit_types": [],
+  "fabrication_topics": [
+    "niobium cavities",
+    "high-Q resonators",
+    "cavity fabrication",
+    "surface treatment"
+  ],
+  "keywords": [
+    "niobium",
+    "high-Q",
+    "cavity",
+    "circuit QED",
+    "fabrication"
+  ],
+  "has_supplementary": false,
+  "supplementary_file_path": null,
+  "has_process_flow": false,
+  "has_chemical_list": false,
+  "has_equipment_list": false,
+  "has_parameter_tables": false,
+  "fabrication_section": null,
+  "page_range": null,
+  "extraction_status": {
+    "text_extracted": false,
+    "docling_complete": false,
+    "marker_complete": false,
+    "grobid_complete": false,
+    "best_extraction": null,
+    "chemicals_extracted": false,
+    "process_flow_extracted": false,
+    "parameters_extracted": false,
+    "equipment_extracted": false
+  },
+  "quality_flags": {
+    "ocr_quality": "unknown",
+    "table_extraction": "unknown",
+    "formula_preservation": "unknown",
+    "figure_quality": "unknown"
+  },
+  "quality_assessment": "high_value",
+  "priority": "high",
+  "notes": "Schuster lab collection",
+  "reviewed_by": null,
+  "review_date": null
+}

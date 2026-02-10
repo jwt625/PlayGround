@@ -1,0 +1,78 @@
+{
+  "document_id": "paper_paik_2011_prl_3d_transmon",
+  "source_type": "journal_article",
+  "institution": "Yale University",
+  "department": "Physics",
+  "author": "Paik, Hanhee",
+  "authors": [
+    "Paik, Hanhee",
+    "Schuster, D. I.",
+    "Bishop, Lev S.",
+    "Kirchmair, G.",
+    "Catelani, G.",
+    "Sears, A. P.",
+    "Johnson, B. R.",
+    "Reagor, M. J.",
+    "Frunzio, L.",
+    "Glazman, L. I.",
+    "Girvin, S. M.",
+    "Devoret, M. H.",
+    "Schoelkopf, R. J."
+  ],
+  "advisor": "Schuster, David",
+  "year": 2011,
+  "title": "Observation of High Coherence in Josephson Junction Qubits Measured in a Three-Dimensional Circuit QED Architecture",
+  "journal": "Physical Review Letters",
+  "doi": null,
+  "arxiv_id": null,
+  "url": "https://schusterlab.stanford.edu/static/pdfs/Paik2011.pdf",
+  "download_date": "2026-02-10",
+  "file_path": "raw_documents/papers/superconducting_qubits/fabrication/paik_2011_prl_3d_transmon.pdf",
+  "file_size_mb": 0.49,
+  "page_count": 0,
+  "domain": [
+    "superconducting_qubits"
+  ],
+  "qubit_types": [],
+  "fabrication_topics": [
+    "3D transmon",
+    "aluminum cavity",
+    "high coherence"
+  ],
+  "keywords": [
+    "3D transmon",
+    "high coherence",
+    "circuit QED",
+    "Josephson junction"
+  ],
+  "has_supplementary": false,
+  "supplementary_file_path": null,
+  "has_process_flow": false,
+  "has_chemical_list": false,
+  "has_equipment_list": false,
+  "has_parameter_tables": false,
+  "fabrication_section": null,
+  "page_range": null,
+  "extraction_status": {
+    "text_extracted": false,
+    "docling_complete": false,
+    "marker_complete": false,
+    "grobid_complete": false,
+    "best_extraction": null,
+    "chemicals_extracted": false,
+    "process_flow_extracted": false,
+    "parameters_extracted": false,
+    "equipment_extracted": false
+  },
+  "quality_flags": {
+    "ocr_quality": "unknown",
+    "table_extraction": "unknown",
+    "formula_preservation": "unknown",
+    "figure_quality": "unknown"
+  },
+  "quality_assessment": "high_value",
+  "priority": "high",
+  "notes": "Schuster lab collection",
+  "reviewed_by": null,
+  "review_date": null
+}

@@ -1,0 +1,86 @@
+{
+  "document_id": "bu_2024_npjqi_tantalum_airbridges",
+  "source_type": "journal_article",
+  "institution": "Alibaba Quantum Laboratory",
+  "department": null,
+  "author": "Bu, Kunliang",
+  "authors": [
+    "Bu, Kunliang",
+    "Huai, Sainan",
+    "Zhang, Zhenxing",
+    "Li, Dengfeng",
+    "Li, Yuan",
+    "Hu, Jingjing",
+    "Yang, Xiaopei",
+    "Dai, Maochun",
+    "Cai, Tianqi",
+    "Zheng, Yi-Cong",
+    "Zhang, Shengyu"
+  ],
+  "advisor": null,
+  "year": 2024,
+  "title": "Tantalum airbridges for scalable superconducting quantum processors",
+  "journal": "npj Quantum Information",
+  "doi": "10.1038/s41534-025-00972-8",
+  "arxiv_id": "2401.03537",
+  "url": "https://arxiv.org/abs/2401.03537",
+  "download_date": "2026-02-10",
+  "file_path": "semiconductor_processing_dataset/raw_documents/papers/superconducting_qubits/transmon/bu_2024_npjqi_tantalum_airbridges.pdf",
+  "file_size_mb": 35.17,
+  "page_count": 0,
+  "domain": [
+    "superconducting_qubits"
+  ],
+  "qubit_types": [
+    "transmon"
+  ],
+  "fabrication_topics": [
+    "tantalum_films",
+    "airbridge_fabrication",
+    "lift-off_process",
+    "scalable_fabrication",
+    "multi-qubit_processor"
+  ],
+  "keywords": [
+    "tantalum",
+    "airbridges",
+    "scalable processor",
+    "13-qubit",
+    "T1 > 100 us",
+    "CZ gate fidelity",
+    "lift-off",
+    "barrier layer",
+    "piranha clean",
+    "quantum LDPC codes"
+  ],
+  "has_supplementary": true,
+  "supplementary_file_path": null,
+  "has_process_flow": true,
+  "has_chemical_list": false,
+  "has_equipment_list": false,
+  "has_parameter_tables": true,
+  "fabrication_section": "Methods",
+  "page_range": null,
+  "extraction_status": {
+    "text_extracted": false,
+    "docling_complete": false,
+    "marker_complete": false,
+    "grobid_complete": false,
+    "best_extraction": null,
+    "chemicals_extracted": false,
+    "process_flow_extracted": false,
+    "parameters_extracted": false,
+    "equipment_extracted": false
+  },
+  "quality_flags": {
+    "ocr_quality": "native_pdf",
+    "table_extraction": "unknown",
+    "formula_preservation": "unknown",
+    "figure_quality": "unknown"
+  },
+  "quality_assessment": "high_value",
+  "priority": "high",
+  "notes": "Wave 2 recent fabrication paper. Novel Ta airbridge fabrication method compatible with all superconducting materials. 13-qubit processor demo with median T1 > 100 us.",
+  "reviewed_by": null,
+  "review_date": null
+}

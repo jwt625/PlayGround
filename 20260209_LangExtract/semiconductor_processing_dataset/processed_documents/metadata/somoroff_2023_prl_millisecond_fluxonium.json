@@ -1,0 +1,76 @@
+{
+  "document_id": "somoroff_2023_prl_millisecond_fluxonium",
+  "source_type": "journal_article",
+  "institution": null,
+  "department": null,
+  "author": "Somoroff, Aaron",
+  "authors": [
+    "Somoroff, Aaron",
+    "Truong, Quentin",
+    "Archambault, Alysson",
+    "Bhatt, Agrim",
+    "Wilen, C. D.",
+    "McDermott, Robert",
+    "Manucharyan, Vladimir E."
+  ],
+  "advisor": null,
+  "year": 2023,
+  "title": "Millisecond Coherence in a Superconducting Qubit",
+  "journal": "Physical Review Letters",
+  "doi": "10.1103/PhysRevLett.130.267001",
+  "arxiv_id": "2301.09942",
+  "url": "https://arxiv.org/pdf/2301.09942",
+  "download_date": "2026-02-10",
+  "file_path": "semiconductor_processing_dataset/raw_documents/papers/superconducting_qubits/fluxonium/somoroff_2023_prl_millisecond_fluxonium.pdf",
+  "file_size_mb": 0.787,
+  "page_count": 0,
+  "domain": [
+    "superconducting_qubits"
+  ],
+  "qubit_types": [
+    "fluxonium"
+  ],
+  "fabrication_topics": [
+    "coherence_improvement",
+    "materials_studies",
+    "Josephson_junction_fabrication"
+  ],
+  "keywords": [
+    "fluxonium",
+    "millisecond coherence",
+    "T1",
+    "T2",
+    "superconducting qubit",
+    "decoherence"
+  ],
+  "has_supplementary": true,
+  "supplementary_file_path": null,
+  "has_process_flow": false,
+  "has_chemical_list": false,
+  "has_equipment_list": false,
+  "has_parameter_tables": true,
+  "fabrication_section": "Methods",
+  "page_range": null,
+  "extraction_status": {
+    "text_extracted": false,
+    "docling_complete": false,
+    "marker_complete": false,
+    "grobid_complete": false,
+    "best_extraction": null,
+    "chemicals_extracted": false,
+    "process_flow_extracted": false,
+    "parameters_extracted": false,
+    "equipment_extracted": false
+  },
+  "quality_flags": {
+    "ocr_quality": "native_pdf",
+    "table_extraction": "unknown",
+    "formula_preservation": "unknown",
+    "figure_quality": "unknown"
+  },
+  "quality_assessment": "high_value",
+  "priority": "high",
+  "notes": "Wave 2 seminal paper collection. Millisecond coherence milestone for fluxonium.",
+  "reviewed_by": null,
+  "review_date": null
+}

@@ -1,0 +1,69 @@
+{
+  "document_id": "paper_romanenko_2017_prl_niobium_degradation",
+  "source_type": "journal_article",
+  "institution": "Fermilab / University of Chicago",
+  "department": "Physics",
+  "author": "Romanenko, Anna",
+  "authors": [
+    "Romanenko, Anna",
+    "Schuster, David I."
+  ],
+  "advisor": "Schuster, David",
+  "year": 2017,
+  "title": "Nature of the Low Field Q Degradation in Superconducting Niobium Cavities",
+  "journal": "Physical Review Letters",
+  "doi": null,
+  "arxiv_id": null,
+  "url": "https://schusterlab.stanford.edu/static/pdfs/Romanenko2017.pdf",
+  "download_date": "2026-02-10",
+  "file_path": "raw_documents/papers/superconducting_qubits/resonators/romanenko_2017_prl_niobium_degradation.pdf",
+  "file_size_mb": 0.43,
+  "page_count": 0,
+  "domain": [
+    "superconducting_qubits"
+  ],
+  "qubit_types": [],
+  "fabrication_topics": [
+    "niobium cavity",
+    "Q degradation",
+    "surface loss",
+    "two-level systems"
+  ],
+  "keywords": [
+    "niobium",
+    "Q factor",
+    "degradation",
+    "superconducting cavity",
+    "TLS"
+  ],
+  "has_supplementary": false,
+  "supplementary_file_path": null,
+  "has_process_flow": false,
+  "has_chemical_list": false,
+  "has_equipment_list": false,
+  "has_parameter_tables": false,
+  "fabrication_section": null,
+  "page_range": null,
+  "extraction_status": {
+    "text_extracted": false,
+    "docling_complete": false,
+    "marker_complete": false,
+    "grobid_complete": false,
+    "best_extraction": null,
+    "chemicals_extracted": false,
+    "process_flow_extracted": false,
+    "parameters_extracted": false,
+    "equipment_extracted": false
+  },
+  "quality_flags": {
+    "ocr_quality": "unknown",
+    "table_extraction": "unknown",
+    "formula_preservation": "unknown",
+    "figure_quality": "unknown"
+  },
+  "quality_assessment": "high_value",
+  "priority": "high",
+  "notes": "Schuster lab collection",
+  "reviewed_by": null,
+  "review_date": null
+}

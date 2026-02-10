@@ -1,0 +1,67 @@
+{
+  "document_id": "steffen_2015_building_logical_qubits_system",
+  "source_type": "journal_article",
+  "institution": null,
+  "department": null,
+  "author": "Gambetta, Jay M.",
+  "authors": [
+    "Gambetta, Jay M.",
+    "Chow, Jerry M.",
+    "Steffen, Matthias"
+  ],
+  "advisor": null,
+  "year": 2015,
+  "title": "Building logical qubits in a superconducting quantum computing system",
+  "journal": null,
+  "doi": null,
+  "arxiv_id": "1510.04375v1",
+  "url": "https://arxiv.org/pdf/1510.04375v1.pdf",
+  "download_date": "2026-02-10",
+  "file_path": "semiconductor_processing_dataset/raw_documents/papers/superconducting_qubits/materials_studies/steffen_2015_building_logical_qubits_system.pdf",
+  "file_size_mb": 0.873,
+  "page_count": 0,
+  "domain": [
+    "superconducting_qubits"
+  ],
+  "qubit_types": [
+    "transmon"
+  ],
+  "fabrication_topics": [
+    "system_integration",
+    "materials_studies"
+  ],
+  "keywords": [
+    "superconducting qubit",
+    "fabrication"
+  ],
+  "has_supplementary": false,
+  "supplementary_file_path": null,
+  "has_process_flow": false,
+  "has_chemical_list": false,
+  "has_equipment_list": false,
+  "has_parameter_tables": false,
+  "fabrication_section": "Methods",
+  "page_range": null,
+  "extraction_status": {
+    "text_extracted": false,
+    "docling_complete": false,
+    "marker_complete": false,
+    "grobid_complete": false,
+    "best_extraction": null,
+    "chemicals_extracted": false,
+    "process_flow_extracted": false,
+    "parameters_extracted": false,
+    "equipment_extracted": false
+  },
+  "quality_flags": {
+    "ocr_quality": "native_pdf",
+    "table_extraction": "manual_review_needed",
+    "formula_preservation": "acceptable",
+    "figure_quality": "unknown"
+  },
+  "quality_assessment": "medium_value",
+  "priority": "medium",
+  "notes": "Collected in Wave 2; protocol-compliant attempt + manifest logging; file validated with SHA256 and PDF header",
+  "reviewed_by": null,
+  "review_date": null
+}

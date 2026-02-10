@@ -1,0 +1,65 @@
+{
+  "document_id": "thesis_yang_ge_uchicago_2020",
+  "source_type": "phd_thesis",
+  "institution": "University of Chicago",
+  "department": "Physics",
+  "author": "Yang, Ge",
+  "authors": [
+    "Yang, Ge"
+  ],
+  "advisor": "Schuster, David",
+  "year": 2020,
+  "title": "Circuit Quantum Electrodynamics with Electrons on Helium",
+  "journal": null,
+  "doi": null,
+  "arxiv_id": null,
+  "url": "https://schusterlab.stanford.edu/static/pdfs/Yang_Thesis.pdf",
+  "download_date": "2026-02-10",
+  "file_path": "raw_documents/theses/others/yang_ge_uchicago_2020.pdf",
+  "file_size_mb": 94.05,
+  "page_count": 0,
+  "domain": [
+    "superconducting_qubits"
+  ],
+  "qubit_types": [],
+  "fabrication_topics": [
+    "electrons on helium",
+    "superconducting resonator",
+    "micro-channel device"
+  ],
+  "keywords": [
+    "electrons on helium",
+    "circuit QED",
+    "superconducting resonator"
+  ],
+  "has_supplementary": false,
+  "supplementary_file_path": null,
+  "has_process_flow": false,
+  "has_chemical_list": false,
+  "has_equipment_list": false,
+  "has_parameter_tables": false,
+  "fabrication_section": null,
+  "page_range": null,
+  "extraction_status": {
+    "text_extracted": false,
+    "docling_complete": false,
+    "marker_complete": false,
+    "grobid_complete": false,
+    "best_extraction": null,
+    "chemicals_extracted": false,
+    "process_flow_extracted": false,
+    "parameters_extracted": false,
+    "equipment_extracted": false
+  },
+  "quality_flags": {
+    "ocr_quality": "unknown",
+    "table_extraction": "unknown",
+    "formula_preservation": "unknown",
+    "figure_quality": "unknown"
+  },
+  "quality_assessment": "high_value",
+  "priority": "high",
+  "notes": "Schuster lab collection",
+  "reviewed_by": null,
+  "review_date": null
+}

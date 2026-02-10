@@ -1,0 +1,77 @@
+{
+  "document_id": "murray_2021_mser_material_matters_sc_qubits",
+  "source_type": "review_paper",
+  "institution": "IBM T.J. Watson Research Center",
+  "department": "IBM Quantum",
+  "author": "Murray, Conal E.",
+  "authors": [
+    "Murray, Conal E."
+  ],
+  "advisor": null,
+  "year": 2021,
+  "title": "Material matters in superconducting qubits",
+  "journal": "Materials Science and Engineering: R: Reports",
+  "doi": "10.1016/j.mser.2021.100646",
+  "arxiv_id": "2106.05919",
+  "url": "https://arxiv.org/abs/2106.05919",
+  "download_date": "2026-02-10",
+  "file_path": "semiconductor_processing_dataset/raw_documents/papers/superconducting_qubits/reviews/murray_2021_mser_material_matters_sc_qubits.pdf",
+  "file_size_mb": 1.87,
+  "page_count": 0,
+  "domain": [
+    "superconducting_qubits"
+  ],
+  "qubit_types": [
+    "transmon"
+  ],
+  "fabrication_topics": [
+    "materials_studies",
+    "dielectric_loss",
+    "surface_treatment",
+    "substrate_preparation",
+    "junction_fabrication",
+    "TLS_defects"
+  ],
+  "keywords": [
+    "materials review",
+    "dielectric loss",
+    "two-level systems",
+    "TLS",
+    "surface oxides",
+    "interface loss",
+    "substrate",
+    "fabrication methods",
+    "energy participation ratio",
+    "loss tangent"
+  ],
+  "has_supplementary": false,
+  "supplementary_file_path": null,
+  "has_process_flow": false,
+  "has_chemical_list": false,
+  "has_equipment_list": false,
+  "has_parameter_tables": true,
+  "fabrication_section": "Throughout",
+  "page_range": null,
+  "extraction_status": {
+    "text_extracted": false,
+    "docling_complete": false,
+    "marker_complete": false,
+    "grobid_complete": false,
+    "best_extraction": null,
+    "chemicals_extracted": false,
+    "process_flow_extracted": false,
+    "parameters_extracted": false,
+    "equipment_extracted": false
+  },
+  "quality_flags": {
+    "ocr_quality": "native_pdf",
+    "table_extraction": "unknown",
+    "formula_preservation": "unknown",
+    "figure_quality": "unknown"
+  },
+  "quality_assessment": "high_value",
+  "priority": "high",
+  "notes": "Wave 2 recent fabrication paper. Comprehensive review from IBM on materials science aspects of superconducting qubit fabrication.",
+  "reviewed_by": null,
+  "review_date": null
+}

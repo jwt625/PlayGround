@@ -1,0 +1,88 @@
+{
+  "document_id": "place_2021_ncomms_tantalum_qubits",
+  "source_type": "journal_article",
+  "institution": null,
+  "department": null,
+  "author": "Place, Alexander P. M.",
+  "authors": [
+    "Place, Alexander P. M.",
+    "Rodgers, Lila V. H.",
+    "Mundada, Pranav",
+    "Smitham, Basil M.",
+    "Fitzpatrick, Mattias",
+    "Leng, Zhaoqi",
+    "Premkumar, Anjali",
+    "Bryon, Jacob",
+    "Vrajitoarea, Andrei",
+    "Sussman, Sara",
+    "Cheng, Guangming",
+    "Madhavan, Trisha",
+    "Babber, Harshvardhan K.",
+    "Le, Maxime",
+    "Chowdhury, Youqi K.",
+    "Joshi, Neereja M.",
+    "Houck, Andrew A."
+  ],
+  "advisor": null,
+  "year": 2021,
+  "title": "New material platform for superconducting transmon qubits with coherence times exceeding 0.3 milliseconds",
+  "journal": "Nature Communications",
+  "doi": "10.1038/s41467-021-22030-5",
+  "arxiv_id": "2003.00024",
+  "url": "https://arxiv.org/pdf/2003.00024",
+  "download_date": "2026-02-10",
+  "file_path": "semiconductor_processing_dataset/raw_documents/papers/superconducting_qubits/materials_studies/place_2021_ncomms_tantalum_qubits.pdf",
+  "file_size_mb": 9.390,
+  "page_count": 0,
+  "domain": [
+    "superconducting_qubits"
+  ],
+  "qubit_types": [
+    "transmon"
+  ],
+  "fabrication_topics": [
+    "materials_studies",
+    "tantalum",
+    "coherence_improvement",
+    "thin_film_deposition"
+  ],
+  "keywords": [
+    "tantalum",
+    "transmon",
+    "coherence time",
+    "materials platform",
+    "superconducting qubit",
+    "T1",
+    "thin film"
+  ],
+  "has_supplementary": true,
+  "supplementary_file_path": null,
+  "has_process_flow": true,
+  "has_chemical_list": false,
+  "has_equipment_list": true,
+  "has_parameter_tables": true,
+  "fabrication_section": "Methods",
+  "page_range": null,
+  "extraction_status": {
+    "text_extracted": false,
+    "docling_complete": false,
+    "marker_complete": false,
+    "grobid_complete": false,
+    "best_extraction": null,
+    "chemicals_extracted": false,
+    "process_flow_extracted": false,
+    "parameters_extracted": false,
+    "equipment_extracted": false
+  },
+  "quality_flags": {
+    "ocr_quality": "native_pdf",
+    "table_extraction": "unknown",
+    "formula_preservation": "unknown",
+    "figure_quality": "unknown"
+  },
+  "quality_assessment": "high_value",
+  "priority": "high",
+  "notes": "Wave 2 seminal paper collection. Tantalum platform breakthrough - 0.3ms coherence.",
+  "reviewed_by": null,
+  "review_date": null
+}
