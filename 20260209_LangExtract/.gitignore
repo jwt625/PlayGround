@@ -20,3 +20,5 @@ __pycache__/
 !*.csv
 !*.jsonl
 !*.txt
+*.md
+*.lock

@@ -105,14 +105,60 @@ Create comparison matrix with scores for each metric.
 - Selected 7 representative test documents
 - Defined evaluation metrics
 
+### 2026-02-10: Tool Evaluation Completed
+
+- Installed and tested Marker and Docling on 7 test documents
+- Marker outperformed Docling on quality metrics:
+  - Better LaTeX equation preservation
+  - Superior table formatting
+  - More accurate reference extraction
+  - Cleaner output structure
+- Docling had issues with equation rendering and table formatting
+- Decision: Selected Marker for full dataset processing
+
+### 2026-02-11: Full Dataset Processing on H100 Server
+
+**Initial Setup:**
+- Created concurrent processing script with 4 workers
+- Implemented progress tracking with JSONL file for resume capability
+- Transferred 264 PDFs (3.6 GB) to processing server
+- Setup virtual environment with uv
+
+**Performance Optimization:**
+- Initial run: Single GPU (GPU 0), 4 workers, ~23 docs/hour
+- Identified GPU 1 was idle
+- Modified script to support multi-GPU processing:
+  - Added GPU device assignment per worker
+  - Implemented round-robin GPU distribution
+  - Increased to 8 workers (4 per GPU)
+- Post-optimization: Dual GPU, 8 workers, ~230 docs/hour (10x speedup)
+
+**Final Processing Results:**
+- Completed: 260/264 documents (98.5% success rate)
+- Failed: 4 documents (1.5% failure rate)
+- Output size: 56 MB markdown
+- Total processing time: 112.7 minutes (1.88 hours)
+- Average processing time: 29.0 seconds per document
+- Processing rate: 230 documents/hour (dual GPU)
+
+**Technical Details:**
+- Script: `tests/inference_test/process_all_pdfs_marker.py`
+- Command: `python3 process_all_pdfs_marker.py --workers 8 --gpus 2`
+- Progress file: `marker_processing_progress.jsonl`
+- Output directory: `semiconductor_processing_dataset/processed_documents/text_extracted/marker/`
+- Running in tmux session for stability
+
 ### Next Steps
 
-- [ ] Install Marker
-- [ ] Install Docling  
-- [ ] Setup GROBID
-- [ ] Run conversion on 7 test documents
-- [ ] Evaluate results
-- [ ] Document findings and recommendation
+- [x] Install Marker
+- [x] Install Docling
+- [ ] Setup GROBID (deferred - Marker sufficient)
+- [x] Run conversion on 7 test documents
+- [x] Evaluate results
+- [x] Document findings and recommendation
+- [x] Process full dataset (264 documents)
+- [ ] Quality check on converted documents
+- [ ] Begin knowledge extraction phase
 
 ---
 

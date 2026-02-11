@@ -82,21 +82,25 @@ def save_result(result: ProcessingResult):
             f.write(json.dumps(asdict(result)) + "\n")
 
 
-def convert_single_pdf(doc_id: str, source_path: str) -> ProcessingResult:
+def convert_single_pdf(doc_id: str, source_path: str, gpu_id: int = 0) -> ProcessingResult:
     """Convert a single PDF using Marker. Runs in subprocess."""
+    import os
+    # Set CUDA device for this worker process
+    os.environ['CUDA_VISIBLE_DEVICES'] = str(gpu_id)
+
     pdf_path = PROJECT_ROOT / source_path
     output_dir = OUTPUT_BASE / "marker"
     output_dir.mkdir(parents=True, exist_ok=True)
     output_file = output_dir / f"{doc_id}.md"
-    
+
     input_size = pdf_path.stat().st_size if pdf_path.exists() else 0
-    
+
     start_time = time.time()
     try:
         # Import inside function to avoid issues with multiprocessing
         from marker.converters.pdf import PdfConverter
         from marker.models import create_model_dict
-        
+
         model_dict = create_model_dict()
         converter = PdfConverter(artifact_dict=model_dict)
         result = converter(str(pdf_path))
@@ -141,7 +145,7 @@ def signal_handler(signum, frame):
     print("Press Ctrl+C again to force quit.")
 
 
-def run_processing(max_workers: int = 2, limit: int = None, dry_run: bool = False):
+def run_processing(max_workers: int = 2, limit: int = None, dry_run: bool = False, num_gpus: int = 2):
     """Run the full processing pipeline."""
     global shutdown_requested
 
@@ -179,7 +183,7 @@ def run_processing(max_workers: int = 2, limit: int = None, dry_run: bool = Fals
     # Ensure output directory exists
     (OUTPUT_BASE / "marker").mkdir(parents=True, exist_ok=True)
 
-    print(f"\nStarting processing with {max_workers} workers...")
+    print(f"\nStarting processing with {max_workers} workers across {num_gpus} GPUs...")
     print(f"Progress file: {PROGRESS_FILE}")
     print("-" * 60)
 
@@ -189,11 +193,12 @@ def run_processing(max_workers: int = 2, limit: int = None, dry_run: bool = Fals
 
     # Use ProcessPoolExecutor for CPU-intensive work
     with ProcessPoolExecutor(max_workers=max_workers) as executor:
-        # Submit all tasks
-        future_to_doc = {
-            executor.submit(convert_single_pdf, doc["document_id"], doc["source_path"]): doc
-            for doc in pending
-        }
+        # Submit all tasks with round-robin GPU assignment
+        future_to_doc = {}
+        for idx, doc in enumerate(pending):
+            gpu_id = idx % num_gpus  # Round-robin across GPUs
+            future = executor.submit(convert_single_pdf, doc["document_id"], doc["source_path"], gpu_id)
+            future_to_doc[future] = doc
 
         # Process completed futures as they finish
         for future in as_completed(future_to_doc):
@@ -271,6 +276,8 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Concurrent PDF to Markdown Processor using Marker")
     parser.add_argument("--workers", "-w", type=int, default=2,
                         help="Number of parallel workers (default: 2, keep low due to memory)")
+    parser.add_argument("--gpus", "-g", type=int, default=2,
+                        help="Number of GPUs to use (default: 2)")
     parser.add_argument("--limit", "-l", type=int, default=None,
                         help="Limit number of documents to process")
     parser.add_argument("--dry-run", "-n", action="store_true",
@@ -282,5 +289,5 @@ if __name__ == "__main__":
     if args.status:
         show_status()
     else:
-        run_processing(max_workers=args.workers, limit=args.limit, dry_run=args.dry_run)
+        run_processing(max_workers=args.workers, limit=args.limit, dry_run=args.dry_run, num_gpus=args.gpus)
 
