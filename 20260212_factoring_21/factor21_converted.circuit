@@ -1,0 +1,4513 @@
+{
+  "record_type": "psiquantum.circuit",
+  "title": "Factoring 21",
+  "copyright": "Copyright (c) 2026. All rights reserved.",
+  "record_format": 2,
+  "modified": "2026-02-12T20:52:11.528683Z",
+  "style": {
+    "copyright_el": {
+      "visible": false
+    }
+  },
+  "operations": [
+    {
+      "type": "register",
+      "id": "r1",
+      "label": "val0"
+    },
+    {
+      "type": "register",
+      "id": "r2",
+      "label": "val1"
+    },
+    {
+      "type": "register",
+      "id": "r3",
+      "label": "val2"
+    },
+    {
+      "type": "register",
+      "id": "r4",
+      "label": "val3"
+    },
+    {
+      "type": "register",
+      "id": "r5",
+      "label": "val4"
+    },
+    {
+      "type": "register",
+      "id": "r6",
+      "label": "exp0"
+    },
+    {
+      "type": "register",
+      "id": "r7",
+      "label": "exp1"
+    },
+    {
+      "type": "register",
+      "id": "r8",
+      "label": "exp2"
+    },
+    {
+      "type": "register",
+      "id": "r9",
+      "label": "exp3"
+    },
+    {
+      "type": "register",
+      "id": "r10",
+      "label": "exp4"
+    },
+    {
+      "type": "register",
+      "id": "r11",
+      "label": "exp5"
+    },
+    {
+      "type": "register",
+      "id": "r12",
+      "label": "exp6"
+    },
+    {
+      "type": "register",
+      "id": "r13",
+      "label": "exp7"
+    },
+    {
+      "type": "register",
+      "id": "r14",
+      "label": "exp8"
+    },
+    {
+      "type": "register",
+      "id": "r15",
+      "label": "exp9"
+    },
+    {
+      "input_registers": "r1",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate1"
+    },
+    {
+      "input_registers": "r6",
+      "gate_type": "hadamard",
+      "type": "gate",
+      "id": "gate2"
+    },
+    {
+      "input_registers": "r7",
+      "gate_type": "hadamard",
+      "type": "gate",
+      "id": "gate3"
+    },
+    {
+      "input_registers": "r8",
+      "gate_type": "hadamard",
+      "type": "gate",
+      "id": "gate4"
+    },
+    {
+      "input_registers": "r9",
+      "gate_type": "hadamard",
+      "type": "gate",
+      "id": "gate5"
+    },
+    {
+      "input_registers": "r10",
+      "gate_type": "hadamard",
+      "type": "gate",
+      "id": "gate6"
+    },
+    {
+      "input_registers": "r11",
+      "gate_type": "hadamard",
+      "type": "gate",
+      "id": "gate7"
+    },
+    {
+      "input_registers": "r12",
+      "gate_type": "hadamard",
+      "type": "gate",
+      "id": "gate8"
+    },
+    {
+      "input_registers": "r13",
+      "gate_type": "hadamard",
+      "type": "gate",
+      "id": "gate9"
+    },
+    {
+      "input_registers": "r14",
+      "gate_type": "hadamard",
+      "type": "gate",
+      "id": "gate10"
+    },
+    {
+      "input_registers": "r15",
+      "gate_type": "hadamard",
+      "type": "gate",
+      "id": "gate11"
+    },
+    {
+      "input_registers": "r1",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate12",
+      "controlled_by": "r6"
+    },
+    {
+      "input_registers": "r2",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate13",
+      "controlled_by": "r6"
+    },
+    {
+      "input_registers": "r3",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate14",
+      "controlled_by": "r4"
+    },
+    {
+      "input_registers": "r1",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate15",
+      "controlled_by": "r7"
+    },
+    {
+      "input_registers": "r3",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate16",
+      "controlled_by": "r7,r5"
+    },
+    {
+      "input_registers": "r7",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate17",
+      "controlled_by": "r4"
+    },
+    {
+      "input_registers": "r5",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate18",
+      "controlled_by": "r7,r3"
+    },
+    {
+      "input_registers": "r7",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate19",
+      "controlled_by": "r4"
+    },
+    {
+      "input_registers": "r3",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate20",
+      "controlled_by": "r7,r5"
+    },
+    {
+      "input_registers": "r1",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate21",
+      "controlled_by": "r4,r3"
+    },
+    {
+      "input_registers": "r3",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate22",
+      "controlled_by": "r7,r1"
+    },
+    {
+      "input_registers": "r4",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate23",
+      "controlled_by": "r7"
+    },
+    {
+      "input_registers": "r1",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate24",
+      "controlled_by": "r4,r3"
+    },
+    {
+      "input_registers": "r5",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate25",
+      "controlled_by": "r3,r1"
+    },
+    {
+      "input_registers": "r4",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate26",
+      "controlled_by": "r7"
+    },
+    {
+      "input_registers": "r5",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate27"
+    },
+    {
+      "input_registers": "r2",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate28",
+      "controlled_by": "r5,r4"
+    },
+    {
+      "input_registers": "r5",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate29"
+    },
+    {
+      "input_registers": "r5",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate30",
+      "controlled_by": "r3,r1"
+    },
+    {
+      "input_registers": "r3",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate31",
+      "controlled_by": "r7"
+    },
+    {
+      "input_registers": "r4",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate32",
+      "controlled_by": "r7,r2"
+    },
+    {
+      "input_registers": "r5",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate33",
+      "controlled_by": "r4"
+    },
+    {
+      "input_registers": "r1",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate34",
+      "controlled_by": "r7,r4"
+    },
+    {
+      "input_registers": "r2",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate35",
+      "controlled_by": "r5,r4"
+    },
+    {
+      "input_registers": "r3",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate36"
+    },
+    {
+      "input_registers": "r5",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate37",
+      "controlled_by": "r4,r3"
+    },
+    {
+      "input_registers": "r3",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate38",
+      "controlled_by": "r7,r2"
+    },
+    {
+      "input_registers": "r4",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate39",
+      "controlled_by": "r3"
+    },
+    {
+      "input_registers": "r5",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate40",
+      "controlled_by": "r4,r1"
+    },
+    {
+      "input_registers": "r4",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate41",
+      "controlled_by": "r3"
+    },
+    {
+      "input_registers": "r4",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate42",
+      "controlled_by": "r7,r2"
+    },
+    {
+      "input_registers": "r1",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate43",
+      "controlled_by": "r7,r4"
+    },
+    {
+      "input_registers": "r3",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate44",
+      "controlled_by": "r4,r1"
+    },
+    {
+      "input_registers": "r1",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate45",
+      "controlled_by": "r7,r2"
+    },
+    {
+      "input_registers": "r5",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate46",
+      "controlled_by": "r4"
+    },
+    {
+      "input_registers": "r5",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate47",
+      "controlled_by": "r3,r1"
+    },
+    {
+      "input_registers": "r1",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate48",
+      "controlled_by": "r4"
+    },
+    {
+      "input_registers": "r7",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate49",
+      "controlled_by": "r4"
+    },
+    {
+      "input_registers": "r7",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate50",
+      "controlled_by": "r5"
+    },
+    {
+      "input_registers": "r3",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate51",
+      "controlled_by": "r7,r1"
+    },
+    {
+      "input_registers": "r7",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate52",
+      "controlled_by": "r5"
+    },
+    {
+      "input_registers": "r7",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate53",
+      "controlled_by": "r4"
+    },
+    {
+      "input_registers": "r1",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate54",
+      "controlled_by": "r4,r3"
+    },
+    {
+      "input_registers": "r4",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate55",
+      "controlled_by": "r7,r2"
+    },
+    {
+      "input_registers": "r1",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate56",
+      "controlled_by": "r4,r3"
+    },
+    {
+      "input_registers": "r5",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate57",
+      "controlled_by": "r4"
+    },
+    {
+      "input_registers": "r3",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate58",
+      "controlled_by": "r5,r1"
+    },
+    {
+      "input_registers": "r1",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate59",
+      "controlled_by": "r7,r2"
+    },
+    {
+      "input_registers": "r3",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate60",
+      "controlled_by": "r4,r1"
+    },
+    {
+      "input_registers": "r1",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate61",
+      "controlled_by": "r4,r3"
+    },
+    {
+      "input_registers": "r5",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate62",
+      "controlled_by": "r4"
+    },
+    {
+      "input_registers": "r4",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate63",
+      "controlled_by": "r7,r2"
+    },
+    {
+      "input_registers": "r5",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate64",
+      "controlled_by": "r4"
+    },
+    {
+      "input_registers": "r2",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate65",
+      "controlled_by": "r4,r1"
+    },
+    {
+      "input_registers": "r1",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate66",
+      "controlled_by": "r7,r2"
+    },
+    {
+      "input_registers": "r3",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate67"
+    },
+    {
+      "input_registers": "r2",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate68",
+      "controlled_by": "r3,r1"
+    },
+    {
+      "input_registers": "r1",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate69",
+      "controlled_by": "r4,r2"
+    },
+    {
+      "input_registers": "r4",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate70"
+    },
+    {
+      "input_registers": "r7",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate71",
+      "controlled_by": "r4,r3"
+    },
+    {
+      "input_registers": "r2",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate72",
+      "controlled_by": "r7,r1"
+    },
+    {
+      "input_registers": "r7",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate73",
+      "controlled_by": "r4,r3"
+    },
+    {
+      "input_registers": "r4",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate74"
+    },
+    {
+      "input_registers": "r2",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate75",
+      "controlled_by": "r3"
+    },
+    {
+      "input_registers": "r1",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate76",
+      "controlled_by": "r4,r2"
+    },
+    {
+      "input_registers": "r2",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate77",
+      "controlled_by": "r3"
+    },
+    {
+      "input_registers": "r4",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate78"
+    },
+    {
+      "input_registers": "r2",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate79",
+      "controlled_by": "r5,r1"
+    },
+    {
+      "input_registers": "r5",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate80",
+      "controlled_by": "r7,r4"
+    },
+    {
+      "input_registers": "r2",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate81",
+      "controlled_by": "r5,r1"
+    },
+    {
+      "input_registers": "r5",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate82",
+      "controlled_by": "r7,r4"
+    },
+    {
+      "input_registers": "r4",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate83"
+    },
+    {
+      "input_registers": "r4",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate84"
+    },
+    {
+      "input_registers": "r5",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate85",
+      "controlled_by": "r8,r4"
+    },
+    {
+      "input_registers": "r2",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate86",
+      "controlled_by": "r5,r1"
+    },
+    {
+      "input_registers": "r5",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate87",
+      "controlled_by": "r8,r4"
+    },
+    {
+      "input_registers": "r2",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate88",
+      "controlled_by": "r5,r1"
+    },
+    {
+      "input_registers": "r4",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate89"
+    },
+    {
+      "input_registers": "r2",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate90",
+      "controlled_by": "r3"
+    },
+    {
+      "input_registers": "r1",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate91",
+      "controlled_by": "r4,r2"
+    },
+    {
+      "input_registers": "r2",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate92",
+      "controlled_by": "r3"
+    },
+    {
+      "input_registers": "r4",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate93"
+    },
+    {
+      "input_registers": "r8",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate94",
+      "controlled_by": "r4,r3"
+    },
+    {
+      "input_registers": "r2",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate95",
+      "controlled_by": "r8,r1"
+    },
+    {
+      "input_registers": "r8",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate96",
+      "controlled_by": "r4,r3"
+    },
+    {
+      "input_registers": "r4",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate97"
+    },
+    {
+      "input_registers": "r1",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate98",
+      "controlled_by": "r4,r2"
+    },
+    {
+      "input_registers": "r2",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate99",
+      "controlled_by": "r3,r1"
+    },
+    {
+      "input_registers": "r3",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate100"
+    },
+    {
+      "input_registers": "r1",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate101",
+      "controlled_by": "r8,r2"
+    },
+    {
+      "input_registers": "r2",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate102",
+      "controlled_by": "r4,r1"
+    },
+    {
+      "input_registers": "r5",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate103",
+      "controlled_by": "r4"
+    },
+    {
+      "input_registers": "r4",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate104",
+      "controlled_by": "r8,r2"
+    },
+    {
+      "input_registers": "r5",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate105",
+      "controlled_by": "r4"
+    },
+    {
+      "input_registers": "r1",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate106",
+      "controlled_by": "r4,r3"
+    },
+    {
+      "input_registers": "r3",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate107",
+      "controlled_by": "r4,r1"
+    },
+    {
+      "input_registers": "r1",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate108",
+      "controlled_by": "r8,r2"
+    },
+    {
+      "input_registers": "r3",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate109",
+      "controlled_by": "r5,r1"
+    },
+    {
+      "input_registers": "r5",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate110",
+      "controlled_by": "r4"
+    },
+    {
+      "input_registers": "r1",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate111",
+      "controlled_by": "r4,r3"
+    },
+    {
+      "input_registers": "r4",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate112",
+      "controlled_by": "r8,r2"
+    },
+    {
+      "input_registers": "r1",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate113",
+      "controlled_by": "r4,r3"
+    },
+    {
+      "input_registers": "r8",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate114",
+      "controlled_by": "r4"
+    },
+    {
+      "input_registers": "r8",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate115",
+      "controlled_by": "r5"
+    },
+    {
+      "input_registers": "r3",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate116",
+      "controlled_by": "r8,r1"
+    },
+    {
+      "input_registers": "r8",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate117",
+      "controlled_by": "r5"
+    },
+    {
+      "input_registers": "r8",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate118",
+      "controlled_by": "r4"
+    },
+    {
+      "input_registers": "r1",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate119",
+      "controlled_by": "r4"
+    },
+    {
+      "input_registers": "r5",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate120",
+      "controlled_by": "r3,r1"
+    },
+    {
+      "input_registers": "r5",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate121",
+      "controlled_by": "r4"
+    },
+    {
+      "input_registers": "r1",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate122",
+      "controlled_by": "r8,r2"
+    },
+    {
+      "input_registers": "r3",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate123",
+      "controlled_by": "r4,r1"
+    },
+    {
+      "input_registers": "r1",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate124",
+      "controlled_by": "r8,r4"
+    },
+    {
+      "input_registers": "r4",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate125",
+      "controlled_by": "r8,r2"
+    },
+    {
+      "input_registers": "r4",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate126",
+      "controlled_by": "r3"
+    },
+    {
+      "input_registers": "r5",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate127",
+      "controlled_by": "r4,r1"
+    },
+    {
+      "input_registers": "r4",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate128",
+      "controlled_by": "r3"
+    },
+    {
+      "input_registers": "r3",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate129",
+      "controlled_by": "r8,r2"
+    },
+    {
+      "input_registers": "r5",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate130",
+      "controlled_by": "r4,r3"
+    },
+    {
+      "input_registers": "r3",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate131"
+    },
+    {
+      "input_registers": "r2",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate132",
+      "controlled_by": "r5,r4"
+    },
+    {
+      "input_registers": "r1",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate133",
+      "controlled_by": "r8,r4"
+    },
+    {
+      "input_registers": "r5",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate134",
+      "controlled_by": "r4"
+    },
+    {
+      "input_registers": "r4",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate135",
+      "controlled_by": "r8,r2"
+    },
+    {
+      "input_registers": "r3",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate136",
+      "controlled_by": "r8"
+    },
+    {
+      "input_registers": "r5",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate137",
+      "controlled_by": "r3,r1"
+    },
+    {
+      "input_registers": "r5",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate138"
+    },
+    {
+      "input_registers": "r2",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate139",
+      "controlled_by": "r5,r4"
+    },
+    {
+      "input_registers": "r5",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate140"
+    },
+    {
+      "input_registers": "r4",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate141",
+      "controlled_by": "r8"
+    },
+    {
+      "input_registers": "r5",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate142",
+      "controlled_by": "r3,r1"
+    },
+    {
+      "input_registers": "r1",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate143",
+      "controlled_by": "r4,r3"
+    },
+    {
+      "input_registers": "r4",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate144",
+      "controlled_by": "r8"
+    },
+    {
+      "input_registers": "r3",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate145",
+      "controlled_by": "r8,r1"
+    },
+    {
+      "input_registers": "r1",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate146",
+      "controlled_by": "r4,r3"
+    },
+    {
+      "input_registers": "r3",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate147",
+      "controlled_by": "r8,r5"
+    },
+    {
+      "input_registers": "r8",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate148",
+      "controlled_by": "r4"
+    },
+    {
+      "input_registers": "r5",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate149",
+      "controlled_by": "r8,r3"
+    },
+    {
+      "input_registers": "r8",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate150",
+      "controlled_by": "r4"
+    },
+    {
+      "input_registers": "r3",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate151",
+      "controlled_by": "r8,r5"
+    },
+    {
+      "input_registers": "r1",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate152",
+      "controlled_by": "r8"
+    },
+    {
+      "input_registers": "r3",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate153",
+      "controlled_by": "r4"
+    },
+    {
+      "input_registers": "r3",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate154",
+      "controlled_by": "r4"
+    },
+    {
+      "input_registers": "r1",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate155",
+      "controlled_by": "r9"
+    },
+    {
+      "input_registers": "r3",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate156",
+      "controlled_by": "r9,r5"
+    },
+    {
+      "input_registers": "r9",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate157",
+      "controlled_by": "r4"
+    },
+    {
+      "input_registers": "r5",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate158",
+      "controlled_by": "r9,r3"
+    },
+    {
+      "input_registers": "r9",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate159",
+      "controlled_by": "r4"
+    },
+    {
+      "input_registers": "r3",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate160",
+      "controlled_by": "r9,r5"
+    },
+    {
+      "input_registers": "r1",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate161",
+      "controlled_by": "r4,r3"
+    },
+    {
+      "input_registers": "r3",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate162",
+      "controlled_by": "r9,r1"
+    },
+    {
+      "input_registers": "r4",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate163",
+      "controlled_by": "r9"
+    },
+    {
+      "input_registers": "r1",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate164",
+      "controlled_by": "r4,r3"
+    },
+    {
+      "input_registers": "r5",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate165",
+      "controlled_by": "r3,r1"
+    },
+    {
+      "input_registers": "r4",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate166",
+      "controlled_by": "r9"
+    },
+    {
+      "input_registers": "r5",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate167"
+    },
+    {
+      "input_registers": "r2",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate168",
+      "controlled_by": "r5,r4"
+    },
+    {
+      "input_registers": "r5",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate169"
+    },
+    {
+      "input_registers": "r5",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate170",
+      "controlled_by": "r3,r1"
+    },
+    {
+      "input_registers": "r3",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate171",
+      "controlled_by": "r9"
+    },
+    {
+      "input_registers": "r4",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate172",
+      "controlled_by": "r9,r2"
+    },
+    {
+      "input_registers": "r5",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate173",
+      "controlled_by": "r4"
+    },
+    {
+      "input_registers": "r1",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate174",
+      "controlled_by": "r9,r4"
+    },
+    {
+      "input_registers": "r2",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate175",
+      "controlled_by": "r5,r4"
+    },
+    {
+      "input_registers": "r3",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate176"
+    },
+    {
+      "input_registers": "r5",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate177",
+      "controlled_by": "r4,r3"
+    },
+    {
+      "input_registers": "r3",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate178",
+      "controlled_by": "r9,r2"
+    },
+    {
+      "input_registers": "r4",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate179",
+      "controlled_by": "r3"
+    },
+    {
+      "input_registers": "r5",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate180",
+      "controlled_by": "r4,r1"
+    },
+    {
+      "input_registers": "r4",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate181",
+      "controlled_by": "r3"
+    },
+    {
+      "input_registers": "r4",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate182",
+      "controlled_by": "r9,r2"
+    },
+    {
+      "input_registers": "r1",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate183",
+      "controlled_by": "r9,r4"
+    },
+    {
+      "input_registers": "r3",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate184",
+      "controlled_by": "r4,r1"
+    },
+    {
+      "input_registers": "r1",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate185",
+      "controlled_by": "r9,r2"
+    },
+    {
+      "input_registers": "r5",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate186",
+      "controlled_by": "r4"
+    },
+    {
+      "input_registers": "r5",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate187",
+      "controlled_by": "r3,r1"
+    },
+    {
+      "input_registers": "r1",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate188",
+      "controlled_by": "r4"
+    },
+    {
+      "input_registers": "r9",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate189",
+      "controlled_by": "r4"
+    },
+    {
+      "input_registers": "r9",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate190",
+      "controlled_by": "r5"
+    },
+    {
+      "input_registers": "r3",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate191",
+      "controlled_by": "r9,r1"
+    },
+    {
+      "input_registers": "r9",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate192",
+      "controlled_by": "r5"
+    },
+    {
+      "input_registers": "r9",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate193",
+      "controlled_by": "r4"
+    },
+    {
+      "input_registers": "r1",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate194",
+      "controlled_by": "r4,r3"
+    },
+    {
+      "input_registers": "r4",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate195",
+      "controlled_by": "r9,r2"
+    },
+    {
+      "input_registers": "r1",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate196",
+      "controlled_by": "r4,r3"
+    },
+    {
+      "input_registers": "r5",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate197",
+      "controlled_by": "r4"
+    },
+    {
+      "input_registers": "r3",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate198",
+      "controlled_by": "r5,r1"
+    },
+    {
+      "input_registers": "r1",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate199",
+      "controlled_by": "r9,r2"
+    },
+    {
+      "input_registers": "r3",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate200",
+      "controlled_by": "r4,r1"
+    },
+    {
+      "input_registers": "r1",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate201",
+      "controlled_by": "r4,r3"
+    },
+    {
+      "input_registers": "r5",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate202",
+      "controlled_by": "r4"
+    },
+    {
+      "input_registers": "r4",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate203",
+      "controlled_by": "r9,r2"
+    },
+    {
+      "input_registers": "r5",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate204",
+      "controlled_by": "r4"
+    },
+    {
+      "input_registers": "r2",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate205",
+      "controlled_by": "r4,r1"
+    },
+    {
+      "input_registers": "r1",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate206",
+      "controlled_by": "r9,r2"
+    },
+    {
+      "input_registers": "r3",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate207"
+    },
+    {
+      "input_registers": "r2",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate208",
+      "controlled_by": "r3,r1"
+    },
+    {
+      "input_registers": "r1",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate209",
+      "controlled_by": "r4,r2"
+    },
+    {
+      "input_registers": "r4",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate210"
+    },
+    {
+      "input_registers": "r9",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate211",
+      "controlled_by": "r4,r3"
+    },
+    {
+      "input_registers": "r2",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate212",
+      "controlled_by": "r9,r1"
+    },
+    {
+      "input_registers": "r9",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate213",
+      "controlled_by": "r4,r3"
+    },
+    {
+      "input_registers": "r4",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate214"
+    },
+    {
+      "input_registers": "r2",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate215",
+      "controlled_by": "r3"
+    },
+    {
+      "input_registers": "r1",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate216",
+      "controlled_by": "r4,r2"
+    },
+    {
+      "input_registers": "r2",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate217",
+      "controlled_by": "r3"
+    },
+    {
+      "input_registers": "r4",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate218"
+    },
+    {
+      "input_registers": "r2",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate219",
+      "controlled_by": "r5,r1"
+    },
+    {
+      "input_registers": "r5",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate220",
+      "controlled_by": "r9,r4"
+    },
+    {
+      "input_registers": "r2",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate221",
+      "controlled_by": "r5,r1"
+    },
+    {
+      "input_registers": "r5",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate222",
+      "controlled_by": "r9,r4"
+    },
+    {
+      "input_registers": "r4",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate223"
+    },
+    {
+      "input_registers": "r4",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate224"
+    },
+    {
+      "input_registers": "r5",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate225",
+      "controlled_by": "r10,r4"
+    },
+    {
+      "input_registers": "r2",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate226",
+      "controlled_by": "r5,r1"
+    },
+    {
+      "input_registers": "r5",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate227",
+      "controlled_by": "r10,r4"
+    },
+    {
+      "input_registers": "r2",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate228",
+      "controlled_by": "r5,r1"
+    },
+    {
+      "input_registers": "r4",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate229"
+    },
+    {
+      "input_registers": "r2",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate230",
+      "controlled_by": "r3"
+    },
+    {
+      "input_registers": "r1",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate231",
+      "controlled_by": "r4,r2"
+    },
+    {
+      "input_registers": "r2",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate232",
+      "controlled_by": "r3"
+    },
+    {
+      "input_registers": "r4",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate233"
+    },
+    {
+      "input_registers": "r10",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate234",
+      "controlled_by": "r4,r3"
+    },
+    {
+      "input_registers": "r2",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate235",
+      "controlled_by": "r10,r1"
+    },
+    {
+      "input_registers": "r10",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate236",
+      "controlled_by": "r4,r3"
+    },
+    {
+      "input_registers": "r4",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate237"
+    },
+    {
+      "input_registers": "r1",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate238",
+      "controlled_by": "r4,r2"
+    },
+    {
+      "input_registers": "r2",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate239",
+      "controlled_by": "r3,r1"
+    },
+    {
+      "input_registers": "r3",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate240"
+    },
+    {
+      "input_registers": "r1",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate241",
+      "controlled_by": "r10,r2"
+    },
+    {
+      "input_registers": "r2",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate242",
+      "controlled_by": "r4,r1"
+    },
+    {
+      "input_registers": "r5",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate243",
+      "controlled_by": "r4"
+    },
+    {
+      "input_registers": "r4",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate244",
+      "controlled_by": "r10,r2"
+    },
+    {
+      "input_registers": "r5",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate245",
+      "controlled_by": "r4"
+    },
+    {
+      "input_registers": "r1",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate246",
+      "controlled_by": "r4,r3"
+    },
+    {
+      "input_registers": "r3",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate247",
+      "controlled_by": "r4,r1"
+    },
+    {
+      "input_registers": "r1",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate248",
+      "controlled_by": "r10,r2"
+    },
+    {
+      "input_registers": "r3",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate249",
+      "controlled_by": "r5,r1"
+    },
+    {
+      "input_registers": "r5",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate250",
+      "controlled_by": "r4"
+    },
+    {
+      "input_registers": "r1",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate251",
+      "controlled_by": "r4,r3"
+    },
+    {
+      "input_registers": "r4",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate252",
+      "controlled_by": "r10,r2"
+    },
+    {
+      "input_registers": "r1",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate253",
+      "controlled_by": "r4,r3"
+    },
+    {
+      "input_registers": "r10",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate254",
+      "controlled_by": "r4"
+    },
+    {
+      "input_registers": "r10",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate255",
+      "controlled_by": "r5"
+    },
+    {
+      "input_registers": "r3",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate256",
+      "controlled_by": "r10,r1"
+    },
+    {
+      "input_registers": "r10",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate257",
+      "controlled_by": "r5"
+    },
+    {
+      "input_registers": "r10",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate258",
+      "controlled_by": "r4"
+    },
+    {
+      "input_registers": "r1",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate259",
+      "controlled_by": "r4"
+    },
+    {
+      "input_registers": "r5",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate260",
+      "controlled_by": "r3,r1"
+    },
+    {
+      "input_registers": "r5",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate261",
+      "controlled_by": "r4"
+    },
+    {
+      "input_registers": "r1",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate262",
+      "controlled_by": "r10,r2"
+    },
+    {
+      "input_registers": "r3",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate263",
+      "controlled_by": "r4,r1"
+    },
+    {
+      "input_registers": "r1",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate264",
+      "controlled_by": "r10,r4"
+    },
+    {
+      "input_registers": "r4",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate265",
+      "controlled_by": "r10,r2"
+    },
+    {
+      "input_registers": "r4",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate266",
+      "controlled_by": "r3"
+    },
+    {
+      "input_registers": "r5",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate267",
+      "controlled_by": "r4,r1"
+    },
+    {
+      "input_registers": "r4",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate268",
+      "controlled_by": "r3"
+    },
+    {
+      "input_registers": "r3",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate269",
+      "controlled_by": "r10,r2"
+    },
+    {
+      "input_registers": "r5",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate270",
+      "controlled_by": "r4,r3"
+    },
+    {
+      "input_registers": "r3",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate271"
+    },
+    {
+      "input_registers": "r2",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate272",
+      "controlled_by": "r5,r4"
+    },
+    {
+      "input_registers": "r1",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate273",
+      "controlled_by": "r10,r4"
+    },
+    {
+      "input_registers": "r5",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate274",
+      "controlled_by": "r4"
+    },
+    {
+      "input_registers": "r4",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate275",
+      "controlled_by": "r10,r2"
+    },
+    {
+      "input_registers": "r3",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate276",
+      "controlled_by": "r10"
+    },
+    {
+      "input_registers": "r5",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate277",
+      "controlled_by": "r3,r1"
+    },
+    {
+      "input_registers": "r5",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate278"
+    },
+    {
+      "input_registers": "r2",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate279",
+      "controlled_by": "r5,r4"
+    },
+    {
+      "input_registers": "r5",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate280"
+    },
+    {
+      "input_registers": "r4",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate281",
+      "controlled_by": "r10"
+    },
+    {
+      "input_registers": "r5",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate282",
+      "controlled_by": "r3,r1"
+    },
+    {
+      "input_registers": "r1",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate283",
+      "controlled_by": "r4,r3"
+    },
+    {
+      "input_registers": "r4",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate284",
+      "controlled_by": "r10"
+    },
+    {
+      "input_registers": "r3",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate285",
+      "controlled_by": "r10,r1"
+    },
+    {
+      "input_registers": "r1",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate286",
+      "controlled_by": "r4,r3"
+    },
+    {
+      "input_registers": "r3",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate287",
+      "controlled_by": "r10,r5"
+    },
+    {
+      "input_registers": "r10",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate288",
+      "controlled_by": "r4"
+    },
+    {
+      "input_registers": "r5",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate289",
+      "controlled_by": "r10,r3"
+    },
+    {
+      "input_registers": "r10",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate290",
+      "controlled_by": "r4"
+    },
+    {
+      "input_registers": "r3",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate291",
+      "controlled_by": "r10,r5"
+    },
+    {
+      "input_registers": "r1",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate292",
+      "controlled_by": "r10"
+    },
+    {
+      "input_registers": "r3",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate293",
+      "controlled_by": "r4"
+    },
+    {
+      "input_registers": "r3",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate294",
+      "controlled_by": "r4"
+    },
+    {
+      "input_registers": "r1",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate295",
+      "controlled_by": "r11"
+    },
+    {
+      "input_registers": "r3",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate296",
+      "controlled_by": "r11,r5"
+    },
+    {
+      "input_registers": "r11",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate297",
+      "controlled_by": "r4"
+    },
+    {
+      "input_registers": "r5",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate298",
+      "controlled_by": "r11,r3"
+    },
+    {
+      "input_registers": "r11",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate299",
+      "controlled_by": "r4"
+    },
+    {
+      "input_registers": "r3",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate300",
+      "controlled_by": "r11,r5"
+    },
+    {
+      "input_registers": "r1",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate301",
+      "controlled_by": "r4,r3"
+    },
+    {
+      "input_registers": "r3",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate302",
+      "controlled_by": "r11,r1"
+    },
+    {
+      "input_registers": "r4",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate303",
+      "controlled_by": "r11"
+    },
+    {
+      "input_registers": "r1",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate304",
+      "controlled_by": "r4,r3"
+    },
+    {
+      "input_registers": "r5",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate305",
+      "controlled_by": "r3,r1"
+    },
+    {
+      "input_registers": "r4",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate306",
+      "controlled_by": "r11"
+    },
+    {
+      "input_registers": "r5",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate307"
+    },
+    {
+      "input_registers": "r2",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate308",
+      "controlled_by": "r5,r4"
+    },
+    {
+      "input_registers": "r5",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate309"
+    },
+    {
+      "input_registers": "r5",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate310",
+      "controlled_by": "r3,r1"
+    },
+    {
+      "input_registers": "r3",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate311",
+      "controlled_by": "r11"
+    },
+    {
+      "input_registers": "r4",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate312",
+      "controlled_by": "r11,r2"
+    },
+    {
+      "input_registers": "r5",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate313",
+      "controlled_by": "r4"
+    },
+    {
+      "input_registers": "r1",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate314",
+      "controlled_by": "r11,r4"
+    },
+    {
+      "input_registers": "r2",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate315",
+      "controlled_by": "r5,r4"
+    },
+    {
+      "input_registers": "r3",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate316"
+    },
+    {
+      "input_registers": "r5",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate317",
+      "controlled_by": "r4,r3"
+    },
+    {
+      "input_registers": "r3",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate318",
+      "controlled_by": "r11,r2"
+    },
+    {
+      "input_registers": "r4",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate319",
+      "controlled_by": "r3"
+    },
+    {
+      "input_registers": "r5",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate320",
+      "controlled_by": "r4,r1"
+    },
+    {
+      "input_registers": "r4",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate321",
+      "controlled_by": "r3"
+    },
+    {
+      "input_registers": "r4",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate322",
+      "controlled_by": "r11,r2"
+    },
+    {
+      "input_registers": "r1",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate323",
+      "controlled_by": "r11,r4"
+    },
+    {
+      "input_registers": "r3",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate324",
+      "controlled_by": "r4,r1"
+    },
+    {
+      "input_registers": "r1",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate325",
+      "controlled_by": "r11,r2"
+    },
+    {
+      "input_registers": "r5",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate326",
+      "controlled_by": "r4"
+    },
+    {
+      "input_registers": "r5",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate327",
+      "controlled_by": "r3,r1"
+    },
+    {
+      "input_registers": "r1",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate328",
+      "controlled_by": "r4"
+    },
+    {
+      "input_registers": "r11",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate329",
+      "controlled_by": "r4"
+    },
+    {
+      "input_registers": "r11",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate330",
+      "controlled_by": "r5"
+    },
+    {
+      "input_registers": "r3",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate331",
+      "controlled_by": "r11,r1"
+    },
+    {
+      "input_registers": "r11",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate332",
+      "controlled_by": "r5"
+    },
+    {
+      "input_registers": "r11",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate333",
+      "controlled_by": "r4"
+    },
+    {
+      "input_registers": "r1",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate334",
+      "controlled_by": "r4,r3"
+    },
+    {
+      "input_registers": "r4",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate335",
+      "controlled_by": "r11,r2"
+    },
+    {
+      "input_registers": "r1",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate336",
+      "controlled_by": "r4,r3"
+    },
+    {
+      "input_registers": "r5",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate337",
+      "controlled_by": "r4"
+    },
+    {
+      "input_registers": "r3",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate338",
+      "controlled_by": "r5,r1"
+    },
+    {
+      "input_registers": "r1",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate339",
+      "controlled_by": "r11,r2"
+    },
+    {
+      "input_registers": "r3",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate340",
+      "controlled_by": "r4,r1"
+    },
+    {
+      "input_registers": "r1",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate341",
+      "controlled_by": "r4,r3"
+    },
+    {
+      "input_registers": "r5",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate342",
+      "controlled_by": "r4"
+    },
+    {
+      "input_registers": "r4",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate343",
+      "controlled_by": "r11,r2"
+    },
+    {
+      "input_registers": "r5",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate344",
+      "controlled_by": "r4"
+    },
+    {
+      "input_registers": "r2",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate345",
+      "controlled_by": "r4,r1"
+    },
+    {
+      "input_registers": "r1",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate346",
+      "controlled_by": "r11,r2"
+    },
+    {
+      "input_registers": "r3",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate347"
+    },
+    {
+      "input_registers": "r2",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate348",
+      "controlled_by": "r3,r1"
+    },
+    {
+      "input_registers": "r1",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate349",
+      "controlled_by": "r4,r2"
+    },
+    {
+      "input_registers": "r4",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate350"
+    },
+    {
+      "input_registers": "r11",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate351",
+      "controlled_by": "r4,r3"
+    },
+    {
+      "input_registers": "r2",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate352",
+      "controlled_by": "r11,r1"
+    },
+    {
+      "input_registers": "r11",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate353",
+      "controlled_by": "r4,r3"
+    },
+    {
+      "input_registers": "r4",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate354"
+    },
+    {
+      "input_registers": "r2",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate355",
+      "controlled_by": "r3"
+    },
+    {
+      "input_registers": "r1",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate356",
+      "controlled_by": "r4,r2"
+    },
+    {
+      "input_registers": "r2",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate357",
+      "controlled_by": "r3"
+    },
+    {
+      "input_registers": "r4",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate358"
+    },
+    {
+      "input_registers": "r2",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate359",
+      "controlled_by": "r5,r1"
+    },
+    {
+      "input_registers": "r5",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate360",
+      "controlled_by": "r11,r4"
+    },
+    {
+      "input_registers": "r2",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate361",
+      "controlled_by": "r5,r1"
+    },
+    {
+      "input_registers": "r5",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate362",
+      "controlled_by": "r11,r4"
+    },
+    {
+      "input_registers": "r4",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate363"
+    },
+    {
+      "input_registers": "r4",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate364"
+    },
+    {
+      "input_registers": "r5",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate365",
+      "controlled_by": "r12,r4"
+    },
+    {
+      "input_registers": "r2",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate366",
+      "controlled_by": "r5,r1"
+    },
+    {
+      "input_registers": "r5",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate367",
+      "controlled_by": "r12,r4"
+    },
+    {
+      "input_registers": "r2",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate368",
+      "controlled_by": "r5,r1"
+    },
+    {
+      "input_registers": "r4",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate369"
+    },
+    {
+      "input_registers": "r2",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate370",
+      "controlled_by": "r3"
+    },
+    {
+      "input_registers": "r1",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate371",
+      "controlled_by": "r4,r2"
+    },
+    {
+      "input_registers": "r2",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate372",
+      "controlled_by": "r3"
+    },
+    {
+      "input_registers": "r4",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate373"
+    },
+    {
+      "input_registers": "r12",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate374",
+      "controlled_by": "r4,r3"
+    },
+    {
+      "input_registers": "r2",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate375",
+      "controlled_by": "r12,r1"
+    },
+    {
+      "input_registers": "r12",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate376",
+      "controlled_by": "r4,r3"
+    },
+    {
+      "input_registers": "r4",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate377"
+    },
+    {
+      "input_registers": "r1",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate378",
+      "controlled_by": "r4,r2"
+    },
+    {
+      "input_registers": "r2",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate379",
+      "controlled_by": "r3,r1"
+    },
+    {
+      "input_registers": "r3",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate380"
+    },
+    {
+      "input_registers": "r1",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate381",
+      "controlled_by": "r12,r2"
+    },
+    {
+      "input_registers": "r2",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate382",
+      "controlled_by": "r4,r1"
+    },
+    {
+      "input_registers": "r5",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate383",
+      "controlled_by": "r4"
+    },
+    {
+      "input_registers": "r4",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate384",
+      "controlled_by": "r12,r2"
+    },
+    {
+      "input_registers": "r5",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate385",
+      "controlled_by": "r4"
+    },
+    {
+      "input_registers": "r1",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate386",
+      "controlled_by": "r4,r3"
+    },
+    {
+      "input_registers": "r3",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate387",
+      "controlled_by": "r4,r1"
+    },
+    {
+      "input_registers": "r1",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate388",
+      "controlled_by": "r12,r2"
+    },
+    {
+      "input_registers": "r3",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate389",
+      "controlled_by": "r5,r1"
+    },
+    {
+      "input_registers": "r5",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate390",
+      "controlled_by": "r4"
+    },
+    {
+      "input_registers": "r1",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate391",
+      "controlled_by": "r4,r3"
+    },
+    {
+      "input_registers": "r4",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate392",
+      "controlled_by": "r12,r2"
+    },
+    {
+      "input_registers": "r1",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate393",
+      "controlled_by": "r4,r3"
+    },
+    {
+      "input_registers": "r12",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate394",
+      "controlled_by": "r4"
+    },
+    {
+      "input_registers": "r12",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate395",
+      "controlled_by": "r5"
+    },
+    {
+      "input_registers": "r3",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate396",
+      "controlled_by": "r12,r1"
+    },
+    {
+      "input_registers": "r12",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate397",
+      "controlled_by": "r5"
+    },
+    {
+      "input_registers": "r12",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate398",
+      "controlled_by": "r4"
+    },
+    {
+      "input_registers": "r1",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate399",
+      "controlled_by": "r4"
+    },
+    {
+      "input_registers": "r5",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate400",
+      "controlled_by": "r3,r1"
+    },
+    {
+      "input_registers": "r5",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate401",
+      "controlled_by": "r4"
+    },
+    {
+      "input_registers": "r1",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate402",
+      "controlled_by": "r12,r2"
+    },
+    {
+      "input_registers": "r3",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate403",
+      "controlled_by": "r4,r1"
+    },
+    {
+      "input_registers": "r1",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate404",
+      "controlled_by": "r12,r4"
+    },
+    {
+      "input_registers": "r4",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate405",
+      "controlled_by": "r12,r2"
+    },
+    {
+      "input_registers": "r4",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate406",
+      "controlled_by": "r3"
+    },
+    {
+      "input_registers": "r5",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate407",
+      "controlled_by": "r4,r1"
+    },
+    {
+      "input_registers": "r4",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate408",
+      "controlled_by": "r3"
+    },
+    {
+      "input_registers": "r3",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate409",
+      "controlled_by": "r12,r2"
+    },
+    {
+      "input_registers": "r5",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate410",
+      "controlled_by": "r4,r3"
+    },
+    {
+      "input_registers": "r3",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate411"
+    },
+    {
+      "input_registers": "r2",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate412",
+      "controlled_by": "r5,r4"
+    },
+    {
+      "input_registers": "r1",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate413",
+      "controlled_by": "r12,r4"
+    },
+    {
+      "input_registers": "r5",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate414",
+      "controlled_by": "r4"
+    },
+    {
+      "input_registers": "r4",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate415",
+      "controlled_by": "r12,r2"
+    },
+    {
+      "input_registers": "r3",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate416",
+      "controlled_by": "r12"
+    },
+    {
+      "input_registers": "r5",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate417",
+      "controlled_by": "r3,r1"
+    },
+    {
+      "input_registers": "r5",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate418"
+    },
+    {
+      "input_registers": "r2",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate419",
+      "controlled_by": "r5,r4"
+    },
+    {
+      "input_registers": "r5",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate420"
+    },
+    {
+      "input_registers": "r4",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate421",
+      "controlled_by": "r12"
+    },
+    {
+      "input_registers": "r5",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate422",
+      "controlled_by": "r3,r1"
+    },
+    {
+      "input_registers": "r1",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate423",
+      "controlled_by": "r4,r3"
+    },
+    {
+      "input_registers": "r4",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate424",
+      "controlled_by": "r12"
+    },
+    {
+      "input_registers": "r3",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate425",
+      "controlled_by": "r12,r1"
+    },
+    {
+      "input_registers": "r1",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate426",
+      "controlled_by": "r4,r3"
+    },
+    {
+      "input_registers": "r3",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate427",
+      "controlled_by": "r12,r5"
+    },
+    {
+      "input_registers": "r12",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate428",
+      "controlled_by": "r4"
+    },
+    {
+      "input_registers": "r5",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate429",
+      "controlled_by": "r12,r3"
+    },
+    {
+      "input_registers": "r12",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate430",
+      "controlled_by": "r4"
+    },
+    {
+      "input_registers": "r3",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate431",
+      "controlled_by": "r12,r5"
+    },
+    {
+      "input_registers": "r1",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate432",
+      "controlled_by": "r12"
+    },
+    {
+      "input_registers": "r3",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate433",
+      "controlled_by": "r4"
+    },
+    {
+      "input_registers": "r3",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate434",
+      "controlled_by": "r4"
+    },
+    {
+      "input_registers": "r1",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate435",
+      "controlled_by": "r13"
+    },
+    {
+      "input_registers": "r3",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate436",
+      "controlled_by": "r13,r5"
+    },
+    {
+      "input_registers": "r13",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate437",
+      "controlled_by": "r4"
+    },
+    {
+      "input_registers": "r5",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate438",
+      "controlled_by": "r13,r3"
+    },
+    {
+      "input_registers": "r13",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate439",
+      "controlled_by": "r4"
+    },
+    {
+      "input_registers": "r3",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate440",
+      "controlled_by": "r13,r5"
+    },
+    {
+      "input_registers": "r1",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate441",
+      "controlled_by": "r4,r3"
+    },
+    {
+      "input_registers": "r3",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate442",
+      "controlled_by": "r13,r1"
+    },
+    {
+      "input_registers": "r4",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate443",
+      "controlled_by": "r13"
+    },
+    {
+      "input_registers": "r1",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate444",
+      "controlled_by": "r4,r3"
+    },
+    {
+      "input_registers": "r5",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate445",
+      "controlled_by": "r3,r1"
+    },
+    {
+      "input_registers": "r4",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate446",
+      "controlled_by": "r13"
+    },
+    {
+      "input_registers": "r5",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate447"
+    },
+    {
+      "input_registers": "r2",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate448",
+      "controlled_by": "r5,r4"
+    },
+    {
+      "input_registers": "r5",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate449"
+    },
+    {
+      "input_registers": "r5",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate450",
+      "controlled_by": "r3,r1"
+    },
+    {
+      "input_registers": "r3",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate451",
+      "controlled_by": "r13"
+    },
+    {
+      "input_registers": "r4",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate452",
+      "controlled_by": "r13,r2"
+    },
+    {
+      "input_registers": "r5",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate453",
+      "controlled_by": "r4"
+    },
+    {
+      "input_registers": "r1",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate454",
+      "controlled_by": "r13,r4"
+    },
+    {
+      "input_registers": "r2",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate455",
+      "controlled_by": "r5,r4"
+    },
+    {
+      "input_registers": "r3",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate456"
+    },
+    {
+      "input_registers": "r5",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate457",
+      "controlled_by": "r4,r3"
+    },
+    {
+      "input_registers": "r3",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate458",
+      "controlled_by": "r13,r2"
+    },
+    {
+      "input_registers": "r4",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate459",
+      "controlled_by": "r3"
+    },
+    {
+      "input_registers": "r5",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate460",
+      "controlled_by": "r4,r1"
+    },
+    {
+      "input_registers": "r4",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate461",
+      "controlled_by": "r3"
+    },
+    {
+      "input_registers": "r4",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate462",
+      "controlled_by": "r13,r2"
+    },
+    {
+      "input_registers": "r1",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate463",
+      "controlled_by": "r13,r4"
+    },
+    {
+      "input_registers": "r3",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate464",
+      "controlled_by": "r4,r1"
+    },
+    {
+      "input_registers": "r1",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate465",
+      "controlled_by": "r13,r2"
+    },
+    {
+      "input_registers": "r5",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate466",
+      "controlled_by": "r4"
+    },
+    {
+      "input_registers": "r5",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate467",
+      "controlled_by": "r3,r1"
+    },
+    {
+      "input_registers": "r1",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate468",
+      "controlled_by": "r4"
+    },
+    {
+      "input_registers": "r13",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate469",
+      "controlled_by": "r4"
+    },
+    {
+      "input_registers": "r13",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate470",
+      "controlled_by": "r5"
+    },
+    {
+      "input_registers": "r3",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate471",
+      "controlled_by": "r13,r1"
+    },
+    {
+      "input_registers": "r13",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate472",
+      "controlled_by": "r5"
+    },
+    {
+      "input_registers": "r13",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate473",
+      "controlled_by": "r4"
+    },
+    {
+      "input_registers": "r1",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate474",
+      "controlled_by": "r4,r3"
+    },
+    {
+      "input_registers": "r4",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate475",
+      "controlled_by": "r13,r2"
+    },
+    {
+      "input_registers": "r1",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate476",
+      "controlled_by": "r4,r3"
+    },
+    {
+      "input_registers": "r5",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate477",
+      "controlled_by": "r4"
+    },
+    {
+      "input_registers": "r3",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate478",
+      "controlled_by": "r5,r1"
+    },
+    {
+      "input_registers": "r1",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate479",
+      "controlled_by": "r13,r2"
+    },
+    {
+      "input_registers": "r3",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate480",
+      "controlled_by": "r4,r1"
+    },
+    {
+      "input_registers": "r1",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate481",
+      "controlled_by": "r4,r3"
+    },
+    {
+      "input_registers": "r5",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate482",
+      "controlled_by": "r4"
+    },
+    {
+      "input_registers": "r4",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate483",
+      "controlled_by": "r13,r2"
+    },
+    {
+      "input_registers": "r5",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate484",
+      "controlled_by": "r4"
+    },
+    {
+      "input_registers": "r2",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate485",
+      "controlled_by": "r4,r1"
+    },
+    {
+      "input_registers": "r1",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate486",
+      "controlled_by": "r13,r2"
+    },
+    {
+      "input_registers": "r3",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate487"
+    },
+    {
+      "input_registers": "r2",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate488",
+      "controlled_by": "r3,r1"
+    },
+    {
+      "input_registers": "r1",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate489",
+      "controlled_by": "r4,r2"
+    },
+    {
+      "input_registers": "r4",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate490"
+    },
+    {
+      "input_registers": "r13",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate491",
+      "controlled_by": "r4,r3"
+    },
+    {
+      "input_registers": "r2",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate492",
+      "controlled_by": "r13,r1"
+    },
+    {
+      "input_registers": "r13",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate493",
+      "controlled_by": "r4,r3"
+    },
+    {
+      "input_registers": "r4",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate494"
+    },
+    {
+      "input_registers": "r2",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate495",
+      "controlled_by": "r3"
+    },
+    {
+      "input_registers": "r1",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate496",
+      "controlled_by": "r4,r2"
+    },
+    {
+      "input_registers": "r2",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate497",
+      "controlled_by": "r3"
+    },
+    {
+      "input_registers": "r4",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate498"
+    },
+    {
+      "input_registers": "r2",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate499",
+      "controlled_by": "r5,r1"
+    },
+    {
+      "input_registers": "r5",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate500",
+      "controlled_by": "r13,r4"
+    },
+    {
+      "input_registers": "r2",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate501",
+      "controlled_by": "r5,r1"
+    },
+    {
+      "input_registers": "r5",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate502",
+      "controlled_by": "r13,r4"
+    },
+    {
+      "input_registers": "r4",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate503"
+    },
+    {
+      "input_registers": "r4",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate504"
+    },
+    {
+      "input_registers": "r5",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate505",
+      "controlled_by": "r14,r4"
+    },
+    {
+      "input_registers": "r2",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate506",
+      "controlled_by": "r5,r1"
+    },
+    {
+      "input_registers": "r5",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate507",
+      "controlled_by": "r14,r4"
+    },
+    {
+      "input_registers": "r2",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate508",
+      "controlled_by": "r5,r1"
+    },
+    {
+      "input_registers": "r4",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate509"
+    },
+    {
+      "input_registers": "r2",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate510",
+      "controlled_by": "r3"
+    },
+    {
+      "input_registers": "r1",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate511",
+      "controlled_by": "r4,r2"
+    },
+    {
+      "input_registers": "r2",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate512",
+      "controlled_by": "r3"
+    },
+    {
+      "input_registers": "r4",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate513"
+    },
+    {
+      "input_registers": "r14",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate514",
+      "controlled_by": "r4,r3"
+    },
+    {
+      "input_registers": "r2",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate515",
+      "controlled_by": "r14,r1"
+    },
+    {
+      "input_registers": "r14",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate516",
+      "controlled_by": "r4,r3"
+    },
+    {
+      "input_registers": "r4",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate517"
+    },
+    {
+      "input_registers": "r1",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate518",
+      "controlled_by": "r4,r2"
+    },
+    {
+      "input_registers": "r2",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate519",
+      "controlled_by": "r3,r1"
+    },
+    {
+      "input_registers": "r3",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate520"
+    },
+    {
+      "input_registers": "r1",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate521",
+      "controlled_by": "r14,r2"
+    },
+    {
+      "input_registers": "r2",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate522",
+      "controlled_by": "r4,r1"
+    },
+    {
+      "input_registers": "r5",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate523",
+      "controlled_by": "r4"
+    },
+    {
+      "input_registers": "r4",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate524",
+      "controlled_by": "r14,r2"
+    },
+    {
+      "input_registers": "r5",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate525",
+      "controlled_by": "r4"
+    },
+    {
+      "input_registers": "r1",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate526",
+      "controlled_by": "r4,r3"
+    },
+    {
+      "input_registers": "r3",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate527",
+      "controlled_by": "r4,r1"
+    },
+    {
+      "input_registers": "r1",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate528",
+      "controlled_by": "r14,r2"
+    },
+    {
+      "input_registers": "r3",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate529",
+      "controlled_by": "r5,r1"
+    },
+    {
+      "input_registers": "r5",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate530",
+      "controlled_by": "r4"
+    },
+    {
+      "input_registers": "r1",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate531",
+      "controlled_by": "r4,r3"
+    },
+    {
+      "input_registers": "r4",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate532",
+      "controlled_by": "r14,r2"
+    },
+    {
+      "input_registers": "r1",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate533",
+      "controlled_by": "r4,r3"
+    },
+    {
+      "input_registers": "r14",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate534",
+      "controlled_by": "r4"
+    },
+    {
+      "input_registers": "r14",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate535",
+      "controlled_by": "r5"
+    },
+    {
+      "input_registers": "r3",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate536",
+      "controlled_by": "r14,r1"
+    },
+    {
+      "input_registers": "r14",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate537",
+      "controlled_by": "r5"
+    },
+    {
+      "input_registers": "r14",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate538",
+      "controlled_by": "r4"
+    },
+    {
+      "input_registers": "r1",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate539",
+      "controlled_by": "r4"
+    },
+    {
+      "input_registers": "r5",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate540",
+      "controlled_by": "r3,r1"
+    },
+    {
+      "input_registers": "r5",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate541",
+      "controlled_by": "r4"
+    },
+    {
+      "input_registers": "r1",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate542",
+      "controlled_by": "r14,r2"
+    },
+    {
+      "input_registers": "r3",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate543",
+      "controlled_by": "r4,r1"
+    },
+    {
+      "input_registers": "r1",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate544",
+      "controlled_by": "r14,r4"
+    },
+    {
+      "input_registers": "r4",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate545",
+      "controlled_by": "r14,r2"
+    },
+    {
+      "input_registers": "r4",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate546",
+      "controlled_by": "r3"
+    },
+    {
+      "input_registers": "r5",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate547",
+      "controlled_by": "r4,r1"
+    },
+    {
+      "input_registers": "r4",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate548",
+      "controlled_by": "r3"
+    },
+    {
+      "input_registers": "r3",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate549",
+      "controlled_by": "r14,r2"
+    },
+    {
+      "input_registers": "r5",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate550",
+      "controlled_by": "r4,r3"
+    },
+    {
+      "input_registers": "r3",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate551"
+    },
+    {
+      "input_registers": "r2",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate552",
+      "controlled_by": "r5,r4"
+    },
+    {
+      "input_registers": "r1",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate553",
+      "controlled_by": "r14,r4"
+    },
+    {
+      "input_registers": "r5",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate554",
+      "controlled_by": "r4"
+    },
+    {
+      "input_registers": "r4",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate555",
+      "controlled_by": "r14,r2"
+    },
+    {
+      "input_registers": "r3",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate556",
+      "controlled_by": "r14"
+    },
+    {
+      "input_registers": "r5",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate557",
+      "controlled_by": "r3,r1"
+    },
+    {
+      "input_registers": "r5",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate558"
+    },
+    {
+      "input_registers": "r2",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate559",
+      "controlled_by": "r5,r4"
+    },
+    {
+      "input_registers": "r5",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate560"
+    },
+    {
+      "input_registers": "r4",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate561",
+      "controlled_by": "r14"
+    },
+    {
+      "input_registers": "r5",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate562",
+      "controlled_by": "r3,r1"
+    },
+    {
+      "input_registers": "r1",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate563",
+      "controlled_by": "r4,r3"
+    },
+    {
+      "input_registers": "r4",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate564",
+      "controlled_by": "r14"
+    },
+    {
+      "input_registers": "r3",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate565",
+      "controlled_by": "r14,r1"
+    },
+    {
+      "input_registers": "r1",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate566",
+      "controlled_by": "r4,r3"
+    },
+    {
+      "input_registers": "r3",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate567",
+      "controlled_by": "r14,r5"
+    },
+    {
+      "input_registers": "r14",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate568",
+      "controlled_by": "r4"
+    },
+    {
+      "input_registers": "r5",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate569",
+      "controlled_by": "r14,r3"
+    },
+    {
+      "input_registers": "r14",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate570",
+      "controlled_by": "r4"
+    },
+    {
+      "input_registers": "r3",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate571",
+      "controlled_by": "r14,r5"
+    },
+    {
+      "input_registers": "r1",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate572",
+      "controlled_by": "r14"
+    },
+    {
+      "input_registers": "r3",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate573",
+      "controlled_by": "r4"
+    },
+    {
+      "input_registers": "r3",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate574",
+      "controlled_by": "r4"
+    },
+    {
+      "input_registers": "r1",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate575",
+      "controlled_by": "r15"
+    },
+    {
+      "input_registers": "r3",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate576",
+      "controlled_by": "r15,r5"
+    },
+    {
+      "input_registers": "r15",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate577",
+      "controlled_by": "r4"
+    },
+    {
+      "input_registers": "r5",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate578",
+      "controlled_by": "r15,r3"
+    },
+    {
+      "input_registers": "r15",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate579",
+      "controlled_by": "r4"
+    },
+    {
+      "input_registers": "r3",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate580",
+      "controlled_by": "r15,r5"
+    },
+    {
+      "input_registers": "r1",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate581",
+      "controlled_by": "r4,r3"
+    },
+    {
+      "input_registers": "r3",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate582",
+      "controlled_by": "r15,r1"
+    },
+    {
+      "input_registers": "r4",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate583",
+      "controlled_by": "r15"
+    },
+    {
+      "input_registers": "r1",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate584",
+      "controlled_by": "r4,r3"
+    },
+    {
+      "input_registers": "r5",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate585",
+      "controlled_by": "r3,r1"
+    },
+    {
+      "input_registers": "r4",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate586",
+      "controlled_by": "r15"
+    },
+    {
+      "input_registers": "r5",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate587"
+    },
+    {
+      "input_registers": "r2",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate588",
+      "controlled_by": "r5,r4"
+    },
+    {
+      "input_registers": "r5",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate589"
+    },
+    {
+      "input_registers": "r5",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate590",
+      "controlled_by": "r3,r1"
+    },
+    {
+      "input_registers": "r3",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate591",
+      "controlled_by": "r15"
+    },
+    {
+      "input_registers": "r4",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate592",
+      "controlled_by": "r15,r2"
+    },
+    {
+      "input_registers": "r5",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate593",
+      "controlled_by": "r4"
+    },
+    {
+      "input_registers": "r1",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate594",
+      "controlled_by": "r15,r4"
+    },
+    {
+      "input_registers": "r2",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate595",
+      "controlled_by": "r5,r4"
+    },
+    {
+      "input_registers": "r3",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate596"
+    },
+    {
+      "input_registers": "r5",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate597",
+      "controlled_by": "r4,r3"
+    },
+    {
+      "input_registers": "r3",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate598",
+      "controlled_by": "r15,r2"
+    },
+    {
+      "input_registers": "r4",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate599",
+      "controlled_by": "r3"
+    },
+    {
+      "input_registers": "r5",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate600",
+      "controlled_by": "r4,r1"
+    },
+    {
+      "input_registers": "r4",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate601",
+      "controlled_by": "r3"
+    },
+    {
+      "input_registers": "r4",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate602",
+      "controlled_by": "r15,r2"
+    },
+    {
+      "input_registers": "r1",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate603",
+      "controlled_by": "r15,r4"
+    },
+    {
+      "input_registers": "r3",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate604",
+      "controlled_by": "r4,r1"
+    },
+    {
+      "input_registers": "r1",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate605",
+      "controlled_by": "r15,r2"
+    },
+    {
+      "input_registers": "r5",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate606",
+      "controlled_by": "r4"
+    },
+    {
+      "input_registers": "r5",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate607",
+      "controlled_by": "r3,r1"
+    },
+    {
+      "input_registers": "r1",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate608",
+      "controlled_by": "r4"
+    },
+    {
+      "input_registers": "r15",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate609",
+      "controlled_by": "r4"
+    },
+    {
+      "input_registers": "r15",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate610",
+      "controlled_by": "r5"
+    },
+    {
+      "input_registers": "r3",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate611",
+      "controlled_by": "r15,r1"
+    },
+    {
+      "input_registers": "r15",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate612",
+      "controlled_by": "r5"
+    },
+    {
+      "input_registers": "r15",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate613",
+      "controlled_by": "r4"
+    },
+    {
+      "input_registers": "r1",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate614",
+      "controlled_by": "r4,r3"
+    },
+    {
+      "input_registers": "r4",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate615",
+      "controlled_by": "r15,r2"
+    },
+    {
+      "input_registers": "r1",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate616",
+      "controlled_by": "r4,r3"
+    },
+    {
+      "input_registers": "r5",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate617",
+      "controlled_by": "r4"
+    },
+    {
+      "input_registers": "r3",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate618",
+      "controlled_by": "r5,r1"
+    },
+    {
+      "input_registers": "r1",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate619",
+      "controlled_by": "r15,r2"
+    },
+    {
+      "input_registers": "r3",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate620",
+      "controlled_by": "r4,r1"
+    },
+    {
+      "input_registers": "r1",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate621",
+      "controlled_by": "r4,r3"
+    },
+    {
+      "input_registers": "r5",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate622",
+      "controlled_by": "r4"
+    },
+    {
+      "input_registers": "r4",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate623",
+      "controlled_by": "r15,r2"
+    },
+    {
+      "input_registers": "r5",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate624",
+      "controlled_by": "r4"
+    },
+    {
+      "input_registers": "r2",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate625",
+      "controlled_by": "r4,r1"
+    },
+    {
+      "input_registers": "r1",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate626",
+      "controlled_by": "r15,r2"
+    },
+    {
+      "input_registers": "r3",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate627"
+    },
+    {
+      "input_registers": "r2",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate628",
+      "controlled_by": "r3,r1"
+    },
+    {
+      "input_registers": "r1",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate629",
+      "controlled_by": "r4,r2"
+    },
+    {
+      "input_registers": "r4",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate630"
+    },
+    {
+      "input_registers": "r15",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate631",
+      "controlled_by": "r4,r3"
+    },
+    {
+      "input_registers": "r2",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate632",
+      "controlled_by": "r15,r1"
+    },
+    {
+      "input_registers": "r15",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate633",
+      "controlled_by": "r4,r3"
+    },
+    {
+      "input_registers": "r4",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate634"
+    },
+    {
+      "input_registers": "r2",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate635",
+      "controlled_by": "r3"
+    },
+    {
+      "input_registers": "r1",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate636",
+      "controlled_by": "r4,r2"
+    },
+    {
+      "input_registers": "r2",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate637",
+      "controlled_by": "r3"
+    },
+    {
+      "input_registers": "r4",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate638"
+    },
+    {
+      "input_registers": "r2",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate639",
+      "controlled_by": "r5,r1"
+    },
+    {
+      "input_registers": "r5",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate640",
+      "controlled_by": "r15,r4"
+    },
+    {
+      "input_registers": "r2",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate641",
+      "controlled_by": "r5,r1"
+    },
+    {
+      "input_registers": "r5",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate642",
+      "controlled_by": "r15,r4"
+    },
+    {
+      "input_registers": "r4",
+      "gate_type": "cnot",
+      "type": "gate",
+      "id": "gate643"
+    },
+    {
+      "input_registers": "r15",
+      "gate_type": "hadamard",
+      "type": "gate",
+      "id": "gate644"
+    }
+  ]
+}
