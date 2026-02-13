@@ -69,7 +69,7 @@ Extract all references from 260 converted markdown files, build a citation graph
 
 **Script:** `tests/inference_test/extract_reference_sections.py`
 
-**Output:** `tests/inference_test/output/reference_sections.jsonl`
+**Output:** `data/phase1_reference_sections/reference_sections.jsonl`
 ```json
 {"document_id": "place_2021_ncomms_tantalum_qubits", "ref_section_start": 151, "ref_count_estimate": 52, "references_text": "..."}
 ```
@@ -113,7 +113,7 @@ Extract all references from 260 converted markdown files, build a citation graph
 2. Fuzzy match by normalized title + year (Levenshtein distance < 0.1)
 3. Author overlap as tiebreaker
 
-**Output:** `tests/inference_test/output/citation_graph.json`
+**Output:** `data/phase3_citation_graph/citation_graph.json`
 ```json
 {
   "nodes": {
@@ -131,7 +131,7 @@ Extract all references from 260 converted markdown files, build a citation graph
 
 **Goal:** Rank papers by citation count, identify download candidates.
 
-**Output:** `tests/inference_test/output/citation_stats.json`
+**Output:** `data/phase3_citation_graph/dedup_stats.json`
 ```json
 {
   "total_unique_references": 5000,
@@ -252,9 +252,9 @@ Extract all references from 260 converted markdown files, build a citation graph
 | Max retries on JSON error | 3 |
 
 **Output Files:**
-- `output/phase2_extracted_refs.jsonl` - Extracted references (one JSON per document)
-- `output/phase2_progress.json` - Resume checkpoint
-- `output/phase2_run_YYYYMMDD_HHMMSS.log` - Timestamped run log
+- `data/phase2_structured_refs/phase2_extracted_refs.jsonl` - Extracted references (one JSON per document)
+- `data/phase2_structured_refs/phase2_progress.json` - Resume checkpoint
+- `tests/inference_test/output/phase2_run_YYYYMMDD_HHMMSS.log` - Timestamped run log
 
 **Key Implementation Notes:**
 1. **Chunking strategy:** Simple line-based splitting (each line = one reference). Avoids relying on unreliable `ref_count_estimate` from Phase 1.
@@ -346,9 +346,9 @@ Multi-pass approach to handle various identifier formats:
 | 10 | 14 | Foxen 2018 - Qubit interconnects |
 
 **Output Files:**
-- `output/unique_references.jsonl` - 12,479 deduplicated references with citation counts
-- `output/citation_graph.json` - Graph with 12,550 nodes and 23,367 edges
-- `output/dedup_stats.json` - Summary statistics
+- `data/phase3_citation_graph/unique_references.jsonl` - 12,479 deduplicated references with citation counts
+- `data/phase3_citation_graph/citation_graph.json` - Graph with 12,550 nodes and 23,367 edges
+- `data/phase3_citation_graph/dedup_stats.json` - Summary statistics
 
 ### 2026-02-13: Visualization Complete
 
@@ -379,20 +379,57 @@ Interactive D3.js force-directed graph visualization with:
 
 ## File Locations
 
+### Scripts (tracked in GitHub)
+
 ```
 tests/inference_test/
 ├── extract_reference_sections.py      # Phase 1: regex extraction
 ├── test_extract_references_llm.py     # Phase 2: single doc test script
 ├── batch_extract_refs_phase2.py       # Phase 2: batch processing
 ├── build_citation_graph.py            # Phase 3: dedup + graph construction
+├── generate_ofs_manifest.py           # Utility: OFS paper manifest generator
+├── collect_external_refs_r2.py        # Round 2: concurrent PDF collector
 ├── output/
-│   ├── reference_sections.jsonl       # Phase 1 output
-│   ├── phase2_extracted_refs.jsonl    # Phase 2 output (25,075 refs)
-│   ├── phase2_progress.json           # Phase 2 resume checkpoint
 │   ├── phase2_run_*.log               # Phase 2 timestamped logs
-│   ├── unique_references.jsonl        # Phase 3 output (12,479 unique refs)
-│   ├── citation_graph.json            # Phase 3 output (12,550 nodes, 23,367 edges)
-│   ├── dedup_stats.json               # Phase 3 statistics
 │   └── citation_graph_viewer.html     # Interactive visualization
+```
+
+### Data (tracked in HF dataset repo: `data/`)
+
+```
+data/
+├── knowledge_base/                    # Domain ontologies and lookup tables
+│   ├── abbreviations.json
+│   ├── chemical_database.json
+│   ├── equipment_database.json
+│   └── process_ontology.json
+├── collection_r1/                     # Round 1 paper collection metadata
+│   ├── manifest_documents.jsonl
+│   ├── collection_attempts.jsonl
+│   └── metadata/                      # Per-paper metadata (194 files)
+├── collection_r2/                     # Round 2 paper collection metadata
+│   ├── collection_summary_r2.json
+│   ├── manifest_documents_r2.jsonl
+│   ├── collection_attempts_r2.jsonl
+│   └── unresolved_references_r2.jsonl
+├── text_extraction/                   # PDF→MD conversion tracking
+│   ├── marker_processing_progress.jsonl
+│   ├── marker_processing_success.jsonl
+│   └── evaluation_results.jsonl
+├── phase1_reference_sections/         # Phase 1 output
+│   └── reference_sections.jsonl
+├── phase2_structured_refs/            # Phase 2 output
+│   ├── phase2_extracted_refs.jsonl    # 25,075 refs from 260 docs
+│   └── phase2_progress.json           # Resume checkpoint
+├── phase3_citation_graph/             # Phase 3 output
+│   ├── unique_references.jsonl        # 12,479 deduplicated refs
+│   ├── citation_graph.json            # 12,550 nodes, 23,367 edges
+│   ├── dedup_stats.json               # Summary statistics
+│   ├── external_refs_cited_gt10.json  # Top-cited external refs
+│   └── new_papers_to_download.json    # Download candidates
+└── ofs_extraction/                    # OFS blog extraction results
+    ├── extracted_papers.json
+    ├── ofs_extractions.jsonl
+    └── raw_response.json
 ```
 

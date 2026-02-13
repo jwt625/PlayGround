@@ -23,6 +23,9 @@ __pycache__/
 *.md
 *.lock
 
+# Data files — tracked via HF dataset repo in data/
+data/
+
 # Large binary data (PDFs, archives)
 semiconductor_processing_dataset/raw_documents_R2/papers/
 semiconductor_processing_dataset/*.zip
