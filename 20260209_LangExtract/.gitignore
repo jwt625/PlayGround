@@ -22,3 +22,7 @@ __pycache__/
 !*.txt
 *.md
 *.lock
+
+# Large binary data (PDFs, archives)
+semiconductor_processing_dataset/raw_documents_R2/papers/
+semiconductor_processing_dataset/*.zip
