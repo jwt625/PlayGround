@@ -15,6 +15,8 @@ from __future__ import annotations
 
 import json
 import re
+import html
+import argparse
 from pathlib import Path
 from typing import Optional, Tuple
 
@@ -55,6 +57,9 @@ REFERENCE_HEADERS = [
     # Subheadings with ####
     r"^####\s*References?\s*$",
     r"^####\s*Supplemental\s+References?\s*$",
+    # Numbered headers: ## 10. References / # **10. References**
+    r"^#{1,6}\s*\*{0,2}\s*\d+\.?\s*References?\s*\*{0,2}\s*$",
+    r"^#{1,6}\s*\*{0,2}\s*\d+\.?\s*Bibliography\s*\*{0,2}\s*$",
     # Underline style headers
     r"^References?\s*\n[=-]+$",
     r"^Bibliography\s*\n[=-]+$",
@@ -82,10 +87,16 @@ REF_LINE_PATTERNS = [
     r"^\s*\d+\.\s+[A-Z]",                 # 1. Author style
     r"^<sup>\d+</sup>",                   # <sup>1</sup> style
     r"^\s*<span[^>]*>\s*\[\d+\]",         # <span>[1] style (no dash)
+    # Marker variants with closing span before content
+    r"^\s*-\s*<span[^>]*>.*?</span>\s*(\[\d+\]|\d+[.)]|[A-Z])",
+    r"^\s*<span[^>]*>.*?</span>\s*(\[\d+\]|\d+[.)]|[A-Z])",
+    # Escaped/malformed superscript variants
+    r"^\s*-\s*<sup>.*?</sup>\s*[A-Z]",
+    r"^\s*<sup>.*?</sup>\s*[A-Z]",
 ]
 
 # Minimum consecutive reference lines to trigger fallback detection
-MIN_REF_CLUSTER_SIZE = 5
+MIN_REF_CLUSTER_SIZE = 3
 
 # Patterns to extract reference number from a line (for sequential detection)
 # Try in order: more specific patterns first
@@ -102,16 +113,22 @@ def is_reference_line(line: str) -> bool:
     stripped = line.strip()
     if not stripped:
         return False
+    normalized = html.unescape(stripped)
+    normalized = normalized.replace("</span>", " ")
+    normalized = re.sub(r"\s+", " ", normalized).strip()
     for pattern in REF_LINE_PATTERNS:
-        if re.match(pattern, stripped):
+        if re.match(pattern, stripped) or re.match(pattern, normalized):
             return True
     return False
 
 
 def get_ref_number(line: str) -> Optional[int]:
     """Extract reference number from a line - try multiple patterns."""
+    line_norm = html.unescape(line)
+    line_norm = re.sub(r"<[^>]+>", " ", line_norm)
+    line_norm = re.sub(r"\s+", " ", line_norm).strip()
     for pattern in REF_NUM_PATTERNS:
-        match = pattern.search(line)
+        match = pattern.search(line_norm)
         if match:
             return int(match.group(1))
     return None
@@ -281,8 +298,8 @@ def find_reference_section(content: str) -> Tuple[Optional[int], Optional[int], 
         section_text = "\n".join(lines[seq_start:seq_end])
         return seq_start, seq_end, section_text, "sequential"
 
-    # Strategy 3: Fallback - search for reference clusters in the last 40% of the file
-    search_start = int(len(lines) * 0.6)  # Start from 60% into the file
+    # Strategy 3: Fallback - search for reference clusters in the last half of the file
+    search_start = int(len(lines) * 0.5)
     cluster_start, cluster_end = find_reference_cluster(lines, search_start)
 
     if cluster_start is not None:
@@ -354,16 +371,25 @@ def process_file(md_path: Path) -> dict:
 
 def main():
     """Process all markdown files."""
+    parser = argparse.ArgumentParser(description="Extract reference sections from markdown files")
+    parser.add_argument("--input-dir", type=Path, default=MARKER_DIR)
+    parser.add_argument("--output-file", type=Path, default=OUTPUT_FILE)
+    args = parser.parse_args()
+
+    marker_dir = args.input_dir
+    output_file = args.output_file
+    output_dir = output_file.parent
+
     print("=" * 60)
     print("Phase 1: Reference Section Extraction (v2 - improved)")
     print("=" * 60)
 
     # Find all markdown files
-    md_files = sorted(MARKER_DIR.glob("*.md"))
+    md_files = sorted(marker_dir.glob("*.md"))
     print(f"Found {len(md_files)} markdown files")
 
     # Process each file
-    OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+    output_dir.mkdir(parents=True, exist_ok=True)
 
     stats = {
         "success": 0,
@@ -375,7 +401,7 @@ def main():
         "by_cluster": 0,
     }
 
-    with open(OUTPUT_FILE, "w") as f:
+    with open(output_file, "w") as f:
         for i, md_path in enumerate(md_files, 1):
             result = process_file(md_path)
             f.write(json.dumps(result) + "\n")
@@ -406,9 +432,8 @@ def main():
     print(f"  No references found: {stats['no_references']} files")
     print(f"  Errors: {stats['error']} files")
     print(f"  Total references estimated: {stats['total_refs']}")
-    print(f"Output: {OUTPUT_FILE}")
+    print(f"Output: {output_file}")
 
 
 if __name__ == "__main__":
     main()
-

@@ -16,9 +16,7 @@ __pycache__/
 *.pyc
 
 # Re-allow file types blocked by parent .gitignore
-!*.json
 !*.csv
-!*.jsonl
 !*.txt
 *.md
 *.lock
@@ -29,3 +27,4 @@ data/
 # Large binary data (PDFs, archives)
 semiconductor_processing_dataset/raw_documents_R2/papers/
 semiconductor_processing_dataset/*.zip
+semiconductor_processing_dataset/raw_documents_R2/_tmp_browser_downloads/*

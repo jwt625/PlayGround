@@ -622,28 +622,59 @@ def main():
     """Main entry point."""
     import argparse
 
-    parser = argparse.ArgumentParser(description='Build citation graph from Phase 2 extracted references')
-    parser.add_argument('--input', '-i', type=Path,
-                        default=Path('output/phase2_extracted_refs.jsonl'),
-                        help='Input JSONL file from Phase 2')
-    parser.add_argument('--metadata-dir', '-m', type=Path,
-                        default=Path('../../semiconductor_processing_dataset/processed_documents/metadata'),
-                        help='Directory containing source paper metadata JSON files')
+    parser = argparse.ArgumentParser(
+        description='Build citation graph from Phase 2 extracted references',
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="""
+Examples:
+  # Single batch (R1 only):
+  python build_citation_graph.py -i output/phase2_extracted_refs.jsonl
+
+  # Multiple batches (R1 + R2):
+  python build_citation_graph.py \\
+    -i output/phase2_extracted_refs.jsonl \\
+    -i output/phase2_extracted_refs_r2.jsonl \\
+    -m ../../semiconductor_processing_dataset/processed_documents/metadata \\
+    -m ../../semiconductor_processing_dataset/processed_documents_R2/metadata \\
+    -o output
+        """
+    )
+    parser.add_argument('--input', '-i', type=Path, action='append', dest='inputs',
+                        help='Input JSONL file(s) from Phase 2 (can specify multiple)')
+    parser.add_argument('--metadata-dir', '-m', type=Path, action='append', dest='metadata_dirs',
+                        help='Directory(ies) containing source paper metadata JSON files (can specify multiple)')
     parser.add_argument('--output-dir', '-o', type=Path,
                         default=Path('output'),
                         help='Output directory')
     args = parser.parse_args()
 
-    # Load Phase 2 data (references extracted from source papers)
-    print(f"Loading Phase 2 data from {args.input}...")
-    all_refs, doc_to_refs = load_phase2_data(args.input)
-    doc_ids = set(doc_to_refs.keys())
-    print(f"  Loaded {len(all_refs)} references from {len(doc_ids)} documents")
+    # Set defaults if not provided
+    if not args.inputs:
+        args.inputs = [Path('output/phase2_extracted_refs.jsonl')]
+    if not args.metadata_dirs:
+        args.metadata_dirs = [Path('../../semiconductor_processing_dataset/processed_documents/metadata')]
 
-    # Load source paper metadata
-    print(f"Loading source paper metadata from {args.metadata_dir}...")
-    source_metadata = load_source_paper_metadata(args.metadata_dir)
-    print(f"  Loaded metadata for {len(source_metadata)} source papers")
+    # Load Phase 2 data from all input files
+    all_refs = []
+    doc_to_refs = {}
+    for input_path in args.inputs:
+        print(f"Loading Phase 2 data from {input_path}...")
+        refs, doc_refs = load_phase2_data(input_path)
+        all_refs.extend(refs)
+        doc_to_refs.update(doc_refs)
+        print(f"  Loaded {len(refs)} references from {len(doc_refs)} documents")
+
+    doc_ids = set(doc_to_refs.keys())
+    print(f"Total: {len(all_refs)} references from {len(doc_ids)} documents")
+
+    # Load source paper metadata from all metadata directories
+    source_metadata = {}
+    for metadata_dir in args.metadata_dirs:
+        print(f"Loading source paper metadata from {metadata_dir}...")
+        meta = load_source_paper_metadata(metadata_dir)
+        source_metadata.update(meta)
+        print(f"  Loaded metadata for {len(meta)} source papers")
+    print(f"Total: metadata for {len(source_metadata)} source papers")
 
     # Generate canonical IDs for source papers
     print("Generating canonical IDs for source papers...")

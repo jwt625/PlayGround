@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Citation Graph Viewer</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #1a1a2e; color: #eee; overflow: hidden; }
+        #container { width: 100vw; height: 100vh; position: relative; }
+        svg { width: 100%; height: 100%; }
+        .node { cursor: pointer; }
+        .node circle { stroke: #fff; stroke-width: 1.5px; }
+        .node.in-dataset circle { fill: #4ecdc4; }
+        .node.external circle { fill: #ff6b6b; }
+        .node.highlighted circle { stroke: #ffd93d; stroke-width: 3px; }
+        .link { stroke: #555; stroke-opacity: 0.4; fill: none; }
+        .link.highlighted { stroke: #ffd93d; stroke-opacity: 0.8; }
+        #tooltip { position: absolute; background: rgba(0,0,0,0.9); border: 1px solid #4ecdc4; border-radius: 8px; padding: 12px; max-width: 400px; font-size: 13px; pointer-events: none; opacity: 0; transition: opacity 0.2s; z-index: 1000; }
+        #tooltip h3 { color: #4ecdc4; margin-bottom: 8px; font-size: 14px; }
+        #tooltip .meta { color: #aaa; font-size: 12px; margin: 4px 0; }
+        #tooltip .citations { color: #ffd93d; font-weight: bold; }
+        #controls { position: absolute; top: 20px; left: 20px; background: rgba(0,0,0,0.8); padding: 15px; border-radius: 8px; z-index: 100; }
+        #controls h2 { font-size: 16px; margin-bottom: 10px; color: #4ecdc4; }
+        #controls label { display: block; margin: 8px 0; font-size: 13px; }
+        #controls input[type="range"] { width: 150px; }
+        #controls input[type="text"] { width: 150px; padding: 5px; border: 1px solid #555; background: #222; color: #eee; border-radius: 4px; }
+        #controls select { width: 160px; padding: 5px; border: 1px solid #555; background: #222; color: #eee; border-radius: 4px; }
+        #stats { position: absolute; bottom: 20px; left: 20px; background: rgba(0,0,0,0.8); padding: 15px; border-radius: 8px; font-size: 12px; }
+        #legend { position: absolute; top: 20px; right: 20px; background: rgba(0,0,0,0.8); padding: 15px; border-radius: 8px; }
+        #legend div { display: flex; align-items: center; margin: 5px 0; font-size: 13px; }
+        #legend .dot { width: 12px; height: 12px; border-radius: 50%; margin-right: 8px; }
+        #loading { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 18px; }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <div id="loading">Loading citation graph...</div>
+        <svg></svg>
+        <div id="tooltip"></div>
+        <div id="controls">
+            <h2>Citation Graph</h2>
+            <label>Min Citations: <span id="minCiteVal">5</span>
+                <input type="range" id="minCitations" min="1" max="50" value="5">
+            </label>
+            <label>Search:
+                <input type="text" id="search" placeholder="Search papers...">
+            </label>
+            <label><input type="checkbox" id="showLabels"> Show Labels</label>
+            <label>Size by:
+                <select id="sizeBy">
+                    <option value="auto">Auto (refs/citations)</option>
+                    <option value="citations">Citations received</option>
+                    <option value="references">References made</option>
+                </select>
+            </label>
+        </div>
+        <div id="legend">
+            <div><span class="dot" style="background:#4ecdc4"></span> In Dataset (260 papers)</div>
+            <div><span class="dot" style="background:#ff6b6b"></span> External References</div>
+        </div>
+        <div id="stats"></div>
+    </div>
+<script>
+const width = window.innerWidth;
+const height = window.innerHeight;
+let allNodes = [], allLinks = [], simulation, nodeElements, linkElements, labelElements;
+let nodeMap = new Map(), refDataMap = new Map();
+
+const svg = d3.select("svg").attr("viewBox", [0, 0, width, height]);
+const g = svg.append("g");
+
+// Zoom behavior
+const zoom = d3.zoom().scaleExtent([0.1, 10]).on("zoom", (e) => g.attr("transform", e.transform));
+svg.call(zoom);
+
+// Load data
+Promise.all([
+    fetch('citation_graph.json').then(r => r.json()),
+    fetch('unique_references.jsonl').then(r => r.text())
+]).then(([graph, refsText]) => {
+    document.getElementById('loading').style.display = 'none';
+
+    // Parse references
+    refsText.trim().split('\n').forEach(line => {
+        if (line) {
+            const ref = JSON.parse(line);
+            refDataMap.set(ref.ref_id, ref);
+        }
+    });
+
+    // Count outgoing references (how many papers each node cites)
+    const outgoingCount = new Map();
+    graph.edges.forEach(e => {
+        outgoingCount.set(e.from, (outgoingCount.get(e.from) || 0) + 1);
+    });
+
+    // Count incoming citations (how many times each node is cited)
+    const incomingCount = new Map();
+    graph.edges.forEach(e => {
+        incomingCount.set(e.to, (incomingCount.get(e.to) || 0) + 1);
+    });
+
+    // Build nodes
+    Object.entries(graph.nodes).forEach(([id, data]) => {
+        const refData = refDataMap.get(id);
+        const refCount = outgoingCount.get(id) || 0;
+        const citeCount = incomingCount.get(id) || (refData ? refData.citation_count : 0);
+        allNodes.push({
+            id, ...data,
+            citationCount: citeCount,
+            refCount: refCount,
+            title: refData?.canonical?.title || id,
+            authors: refData?.canonical?.authors || [],
+            year: refData?.canonical?.year || data.year,
+            journal: refData?.canonical?.journal || '',
+            doi: refData?.canonical?.doi || '',
+            arxiv: refData?.canonical?.arxiv_id || ''
+        });
+        nodeMap.set(id, allNodes[allNodes.length - 1]);
+    });
+
+    // Build links
+    graph.edges.forEach(e => {
+        if (nodeMap.has(e.from) && nodeMap.has(e.to)) {
+            allLinks.push({ source: e.from, target: e.to });
+        }
+    });
+
+    initGraph();
+    updateStats();
+}).catch(err => {
+    document.getElementById('loading').textContent = 'Error loading data: ' + err.message;
+});
+
+function getNodeSize(d) {
+    const sizeBy = document.getElementById('sizeBy').value;
+    if (sizeBy === 'citations') return d.citationCount;
+    if (sizeBy === 'references') return d.refCount;
+    // Auto: in-dataset uses refs, external uses citations
+    return d.in_dataset ? d.refCount : d.citationCount;
+}
+
+function getNodeRadius(d) {
+    return Math.max(3, Math.log(getNodeSize(d) + 1) * 3);
+}
+
+function initGraph() {
+    const minCite = +document.getElementById('minCitations').value;
+    const visibleNodes = allNodes.filter(n => n.in_dataset || n.citationCount >= minCite);
+    const visibleIds = new Set(visibleNodes.map(n => n.id));
+    const visibleLinks = allLinks.filter(l => visibleIds.has(l.source.id || l.source) && visibleIds.has(l.target.id || l.target));
+
+    // Clear previous
+    g.selectAll("*").remove();
+
+    // Links
+    linkElements = g.append("g").attr("class", "links").selectAll("line")
+        .data(visibleLinks).join("line").attr("class", "link");
+
+    // Nodes
+    nodeElements = g.append("g").attr("class", "nodes").selectAll("g")
+        .data(visibleNodes, d => d.id).join("g")
+        .attr("class", d => `node ${d.in_dataset ? 'in-dataset' : 'external'}`)
+        .call(d3.drag().on("start", dragStart).on("drag", dragging).on("end", dragEnd));
+
+    nodeElements.append("circle")
+        .attr("r", d => getNodeRadius(d));
+
+    // Labels (hidden by default)
+    labelElements = nodeElements.append("text")
+        .attr("dx", 8).attr("dy", 3).attr("font-size", 10).attr("fill", "#ccc")
+        .text(d => d.title?.substring(0, 20) + (d.title?.length > 20 ? '...' : ''))
+        .style("display", "none");
+
+    // Events
+    nodeElements.on("mouseover", showTooltip).on("mouseout", hideTooltip).on("click", highlightConnected);
+
+    // Force simulation
+    simulation = d3.forceSimulation(visibleNodes)
+        .force("link", d3.forceLink(visibleLinks).id(d => d.id).distance(50))
+        .force("charge", d3.forceManyBody().strength(-100))
+        .force("center", d3.forceCenter(width / 2, height / 2))
+        .force("collision", d3.forceCollide().radius(d => getNodeRadius(d) + 2))
+        .on("tick", ticked);
+}
+
+function ticked() {
+    linkElements.attr("x1", d => d.source.x).attr("y1", d => d.source.y)
+        .attr("x2", d => d.target.x).attr("y2", d => d.target.y);
+    nodeElements.attr("transform", d => `translate(${d.x},${d.y})`);
+}
+
+function dragStart(e, d) { if (!e.active) simulation.alphaTarget(0.3).restart(); d.fx = d.x; d.fy = d.y; }
+function dragging(e, d) { d.fx = e.x; d.fy = e.y; }
+function dragEnd(e, d) { if (!e.active) simulation.alphaTarget(0); d.fx = null; d.fy = null; }
+
+function showTooltip(e, d) {
+    const tooltip = document.getElementById('tooltip');
+    const authors = d.authors?.slice(0, 3).join(', ') + (d.authors?.length > 3 ? ' et al.' : '');
+    tooltip.innerHTML = `
+        <h3>${d.title || d.id}</h3>
+        <div class="meta">${authors} (${d.year || 'N/A'})</div>
+        <div class="meta">${d.journal || ''}</div>
+        ${d.doi ? `<div class="meta">DOI: ${d.doi}</div>` : ''}
+        ${d.arxiv ? `<div class="meta">arXiv: ${d.arxiv}</div>` : ''}
+        <div class="citations">Citations: ${d.citationCount} | References: ${d.refCount}</div>
+        <div class="meta">${d.in_dataset ? '📄 In Dataset' : '📚 External Reference'}</div>
+    `;
+    tooltip.style.left = (e.pageX + 15) + 'px';
+    tooltip.style.top = (e.pageY + 15) + 'px';
+    tooltip.style.opacity = 1;
+}
+
+function hideTooltip() { document.getElementById('tooltip').style.opacity = 0; }
+
+function highlightConnected(e, d) {
+    const connected = new Set([d.id]);
+    allLinks.forEach(l => {
+        if ((l.source.id || l.source) === d.id) connected.add(l.target.id || l.target);
+        if ((l.target.id || l.target) === d.id) connected.add(l.source.id || l.source);
+    });
+    nodeElements.classed("highlighted", n => connected.has(n.id));
+    linkElements.classed("highlighted", l => (l.source.id || l.source) === d.id || (l.target.id || l.target) === d.id);
+}
+
+function updateStats() {
+    const minCite = +document.getElementById('minCitations').value;
+    const visible = allNodes.filter(n => n.in_dataset || n.citationCount >= minCite).length;
+    document.getElementById('stats').innerHTML = `
+        <div>Total Nodes: ${allNodes.length}</div>
+        <div>Visible Nodes: ${visible}</div>
+        <div>Total Edges: ${allLinks.length}</div>
+    `;
+}
+
+// Controls
+document.getElementById('minCitations').addEventListener('input', function() {
+    document.getElementById('minCiteVal').textContent = this.value;
+    initGraph(); updateStats();
+});
+
+document.getElementById('showLabels').addEventListener('change', function() {
+    labelElements?.style("display", this.checked ? "block" : "none");
+});
+
+document.getElementById('sizeBy').addEventListener('change', function() {
+    // Update node radii without reinitializing
+    nodeElements?.select("circle").transition().duration(300)
+        .attr("r", d => getNodeRadius(d));
+    // Update collision force
+    simulation?.force("collision", d3.forceCollide().radius(d => getNodeRadius(d) + 2));
+    simulation?.alpha(0.3).restart();
+});
+
+document.getElementById('search').addEventListener('input', function() {
+    const q = this.value.toLowerCase();
+    nodeElements?.classed("highlighted", d => q && (d.title?.toLowerCase().includes(q) || d.id.toLowerCase().includes(q)));
+});
+
+svg.on("click", function(e) {
+    if (e.target.tagName === 'svg') {
+        nodeElements?.classed("highlighted", false);
+        linkElements?.classed("highlighted", false);
+    }
+});
+</script>
+</body>
+</html>
+

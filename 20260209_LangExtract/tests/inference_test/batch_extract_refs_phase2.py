@@ -5,10 +5,22 @@ Features:
 - 5 concurrent API calls
 - Resume-safe: skips already processed documents
 - Progress logging
+- CLI arguments for input/output file paths
+
+Usage:
+  # R1 (default):
+  python batch_extract_refs_phase2.py
+
+  # R2:
+  python batch_extract_refs_phase2.py \
+    --input-file tests/inference_test/output/reference_sections_r2.jsonl \
+    --output-file tests/inference_test/output/phase2_extracted_refs_r2.jsonl \
+    --progress-file tests/inference_test/output/phase2_progress_r2.json
 """
 
 from __future__ import annotations
 
+import argparse
 import asyncio
 import json
 import logging
@@ -36,13 +48,11 @@ API_TOKEN = os.getenv("API_TOKEN")
 MODEL_ID = os.getenv("MODEL_ID", "zai-org/GLM-4.7-FP8")
 
 OUTPUT_DIR = Path(__file__).parent / "output"
-REFERENCE_SECTIONS_FILE = OUTPUT_DIR / "reference_sections.jsonl"
-PHASE2_OUTPUT_FILE = OUTPUT_DIR / "phase2_extracted_refs.jsonl"
-PROGRESS_FILE = OUTPUT_DIR / "phase2_progress.json"
 
-# Timestamped log file
-RUN_TIMESTAMP = time.strftime("%Y%m%d_%H%M%S")
-LOG_FILE = OUTPUT_DIR / f"phase2_run_{RUN_TIMESTAMP}.log"
+# Default paths (R1)
+DEFAULT_INPUT_FILE = OUTPUT_DIR / "reference_sections.jsonl"
+DEFAULT_OUTPUT_FILE = OUTPUT_DIR / "phase2_extracted_refs.jsonl"
+DEFAULT_PROGRESS_FILE = OUTPUT_DIR / "phase2_progress.json"
 
 MAX_CONCURRENT = 5
 MAX_REFS_PER_CHUNK = 10
@@ -53,25 +63,54 @@ TIMEOUT = 600.0
 from test_extract_references_llm import EXTRACT_REFS_TOOL, SYSTEM_PROMPT
 
 
-def load_progress() -> set:
+def parse_args():
+    parser = argparse.ArgumentParser(description="Phase 2: Extract structured references using LLM")
+    parser.add_argument(
+        "--input-file", "-i",
+        type=Path,
+        default=DEFAULT_INPUT_FILE,
+        help="Input JSONL file with reference sections (default: reference_sections.jsonl)"
+    )
+    parser.add_argument(
+        "--output-file", "-o",
+        type=Path,
+        default=DEFAULT_OUTPUT_FILE,
+        help="Output JSONL file for extracted references (default: phase2_extracted_refs.jsonl)"
+    )
+    parser.add_argument(
+        "--progress-file", "-p",
+        type=Path,
+        default=DEFAULT_PROGRESS_FILE,
+        help="Progress JSON file for resume support (default: phase2_progress.json)"
+    )
+    parser.add_argument(
+        "--max-concurrent", "-c",
+        type=int,
+        default=MAX_CONCURRENT,
+        help=f"Maximum concurrent API calls (default: {MAX_CONCURRENT})"
+    )
+    return parser.parse_args()
+
+
+def load_progress(progress_file: Path) -> set:
     """Load set of already processed document IDs."""
-    if PROGRESS_FILE.exists():
-        with open(PROGRESS_FILE) as f:
+    if progress_file.exists():
+        with open(progress_file) as f:
             data = json.load(f)
             return set(data.get("completed", []))
     return set()
 
 
-def save_progress(completed: set):
+def save_progress(completed: set, progress_file: Path):
     """Save progress to file."""
-    with open(PROGRESS_FILE, "w") as f:
+    with open(progress_file, "w") as f:
         json.dump({"completed": list(completed), "last_update": time.strftime("%Y-%m-%d %H:%M:%S")}, f)
 
 
-def load_all_documents() -> list:
+def load_all_documents(input_file: Path) -> list:
     """Load all successful reference sections."""
     docs = []
-    with open(REFERENCE_SECTIONS_FILE) as f:
+    with open(input_file) as f:
         for line in f:
             if not line.strip():
                 continue
@@ -147,56 +186,70 @@ async def process_document(client: httpx.AsyncClient, doc: dict, semaphore: asyn
 
 
 async def main():
+    args = parse_args()
+
+    input_file = args.input_file
+    output_file = args.output_file
+    progress_file = args.progress_file
+    max_concurrent = args.max_concurrent
+
+    # Derive log file name from output file
+    run_timestamp = time.strftime("%Y%m%d_%H%M%S")
+    log_file = output_file.parent / f"{output_file.stem}_run_{run_timestamp}.log"
+
     # Add file handler with timestamp
-    file_handler = logging.FileHandler(LOG_FILE)
+    file_handler = logging.FileHandler(log_file)
     file_handler.setLevel(logging.INFO)
     file_handler.setFormatter(logging.Formatter('%(asctime)s [%(levelname)s] %(message)s', datefmt='%Y-%m-%d %H:%M:%S'))
     logging.getLogger().addHandler(file_handler)
 
     logger.info("=" * 70)
     logger.info("Phase 2: Batch Reference Extraction")
-    logger.info(f"Log file: {LOG_FILE}")
+    logger.info(f"Input file:    {input_file}")
+    logger.info(f"Output file:   {output_file}")
+    logger.info(f"Progress file: {progress_file}")
+    logger.info(f"Log file:      {log_file}")
     logger.info("=" * 70)
 
-    docs = load_all_documents()
-    completed = load_progress()
+    docs = load_all_documents(input_file)
+    completed = load_progress(progress_file)
     pending = [d for d in docs if d["document_id"] not in completed]
 
     logger.info(f"Total documents: {len(docs)}")
     logger.info(f"Already completed: {len(completed)}")
     logger.info(f"Pending: {len(pending)}")
-    logger.info(f"Concurrent calls: {MAX_CONCURRENT}")
+    logger.info(f"Concurrent calls: {max_concurrent}")
     logger.info("=" * 70)
 
     if not pending:
         logger.info("All documents already processed!")
         return
 
-    semaphore = asyncio.Semaphore(MAX_CONCURRENT)
+    semaphore = asyncio.Semaphore(max_concurrent)
     headers = {"Authorization": f"Bearer {API_TOKEN}", "Content-Type": "application/json"}
 
     async with httpx.AsyncClient(timeout=TIMEOUT, headers=headers) as client:
         for i, doc in enumerate(pending):
             doc_id = doc["document_id"]
             logger.info(f"[{i+1}/{len(pending)}] Processing: {doc_id}")
-            
+
             start = time.time()
             result = await process_document(client, doc, semaphore)
             elapsed = time.time() - start
-            
+
             # Append to output file
-            with open(PHASE2_OUTPUT_FILE, "a") as f:
+            with open(output_file, "a") as f:
                 f.write(json.dumps(result) + "\n")
-            
+
             # Update progress
             completed.add(doc_id)
-            save_progress(completed)
-            
+            save_progress(completed, progress_file)
+
             logger.info(f"  Extracted {result['ref_count']} refs in {elapsed:.1f}s")
 
     logger.info("=" * 70)
     logger.info(f"Phase 2 complete! Processed {len(pending)} documents.")
-    logger.info(f"Output: {PHASE2_OUTPUT_FILE}")
+    logger.info(f"Output: {output_file}")
 
 
 if __name__ == "__main__":
