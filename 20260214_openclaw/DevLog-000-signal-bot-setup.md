@@ -211,6 +211,87 @@ Key fields:
 
 ---
 
+## Issue 5: Broken Thinking Tokens Leaking into Messages
+
+### Symptom
+Custom inference endpoints may output broken thinking tokens with only a closing `</think>` tag (no opening `<think>` tag). This causes internal reasoning content to leak into user-facing messages:
+
+```
+Let me analyze this step by step...
+
+First, I need to consider...</think>Here is your answer.
+```
+
+The user receives the entire text instead of just "Here is your answer."
+
+### Root Cause
+The `stripReasoningTagsFromText` function in OpenClaw was not handling orphan closing tags — it only stripped content between matched `<think>...</think>` pairs.
+
+### Solution
+Modified `src/shared/text/reasoning-tags.ts` to detect orphan closing tags and strip all content before them. When an orphan `</think>` is encountered (not inside a thinking block), the function now resets the accumulated result, keeping only content after the tag.
+
+PR submitted: https://github.com/openclaw/openclaw/pull/17455
+
+### Code Change (reasoning-tags.ts)
+```typescript
+if (!inThinking) {
+  if (isClose) {
+    // Orphan closing tag: strip everything before it (broken thinking output)
+    result = "";
+  } else {
+    result += cleaned.slice(lastIndex, idx);
+    inThinking = true;
+  }
+} else if (isClose) {
+  inThinking = false;
+}
+```
+
+### Testing
+- All 41 unit tests pass
+- Added 3 new test cases for orphan closing tag handling
+
+### Lesson Learned
+When using non-standard inference endpoints, verify that thinking/reasoning tags are properly formatted. If not, this fix handles the common case of missing opening tags.
+
+---
+
+## Gateway Management: Stop/Start with tmux and Logging
+
+### Stop the Gateway
+```bash
+cd /path/to/openclaw
+node dist/entry.js gateway stop
+```
+
+### Start in tmux with Logging
+```bash
+# Create tmux session running OpenClaw with output logged to file
+tmux new-session -d -s openclaw "node dist/entry.js gateway run 2>&1 | tee ~/openclaw.log"
+
+# Attach to the session (to view live output)
+tmux attach -t openclaw
+
+# Detach from tmux (while attached): Ctrl+B, then D
+```
+
+### Useful tmux/Gateway Commands
+| Command | Purpose |
+|---------|---------|
+| `tmux list-sessions` | List all tmux sessions |
+| `tmux attach -t openclaw` | Attach to the openclaw session |
+| `tmux kill-session -t openclaw` | Kill the tmux session |
+| `tail -f ~/openclaw.log` | Follow the log file |
+| `node dist/entry.js gateway stop` | Stop the gateway service |
+| `node dist/entry.js gateway status` | Check gateway status |
+
+### Why Use tmux?
+- Gateway stays running after terminal disconnect
+- Can attach/detach to view output
+- Combined with `tee`, all output is logged to a file for debugging
+
+---
+
 ## Summary of Critical Learnings
 
 1. Use SMS registration for signal-cli, not QR linking
@@ -219,4 +300,6 @@ Key fields:
 4. Check `~/.openclaw/logs/gateway.err.log` for inference errors
 5. Gateway auto-reloads on config changes
 6. The `pnpm openclaw logs` command does not support `--tail` option; use `--limit` instead
+7. Custom inference endpoints may output broken thinking tokens — PR #17455 fixes orphan `</think>` tags
+8. Use tmux + tee for persistent gateway sessions with logging
 
