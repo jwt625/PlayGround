@@ -5,6 +5,10 @@ const EARTH_R_KM = 6371;
 const DEG = Math.PI / 180;
 const TARGET_LAT_DEG = 37.7749;
 const TARGET_LON_DEG = -122.4194;
+// Filing-derived assumption used in this visual:
+// SpaceX Gen1 modification technical attachment reports max satellite EIRP density ~12.7 dBW/MHz.
+const SAT_EIRP_DENSITY_DBW_PER_MHZ = 12.7;
+const SAT_SIGNAL_BW_MHZ = 250;
 
 const els = {
   preset: document.getElementById('preset'),
@@ -260,6 +264,8 @@ function computeModel(params) {
 
   const sigma = params.phaseJitDeg * DEG;
   const coherenceLoss = Math.exp(-(sigma * sigma));
+  const satEirpDbw = SAT_EIRP_DENSITY_DBW_PER_MHZ + 10 * Math.log10(SAT_SIGNAL_BW_MHZ);
+  const satEirpW = Math.pow(10, satEirpDbw / 10);
 
   return {
     lambdaM,
@@ -274,6 +280,8 @@ function computeModel(params) {
     boresight,
     targetPos,
     localBasis,
+    satEirpDbw,
+    satEirpW,
   };
 }
 
@@ -487,10 +495,18 @@ function drawGround(model, params) {
   ctx.clearRect(0, 0, w, h);
 
   // Odd grid ensures the exact focus point (x=0,y=0) is sampled at center pixel.
-  const nx = 301;
-  const ny = 301;
-  const mapW = w * 0.96;
-  const mapH = h * 0.85;
+  // 2:1 aspect ratio as requested.
+  const nx = 401;
+  const ny = 201;
+  const mapAspect = 2.0;
+  const maxW = w * 0.96;
+  const maxH = h * 0.85;
+  let mapW = maxW;
+  let mapH = mapW / mapAspect;
+  if (mapH > maxH) {
+    mapH = maxH;
+    mapW = mapH * mapAspect;
+  }
   const ox = (w - mapW) / 2;
   const oy = h * 0.08;
 
@@ -544,9 +560,13 @@ function drawGround(model, params) {
         const dy = s.y - py;
         const dz = s.z - pz;
         const r = Math.sqrt(dx * dx + dy * dy + dz * dz);
+        // Power flux from one satellite beam at range r from EIRP: S = EIRP / (4*pi*r^2).
+        // Coherent field summation uses sqrt(S) as complex amplitude.
+        const sFlux = model.satEirpW / (4 * Math.PI * r * r);
+        const aField = Math.sqrt(Math.max(sFlux, 0));
         const ph = k * (r - s.r0) + s.phaseError;
-        er += s.amp * Math.cos(ph);
-        ei += s.amp * Math.sin(ph);
+        er += s.amp * aField * Math.cos(ph);
+        ei += s.amp * aField * Math.sin(ph);
       }
       const p = er * er + ei * ei;
       data[iy * nx + ix] = p;
@@ -564,8 +584,10 @@ function drawGround(model, params) {
   let ei0 = 0;
   for (const s of sats) {
     const ph0 = s.phaseError;
-    er0 += s.amp * Math.cos(ph0);
-    ei0 += s.amp * Math.sin(ph0);
+    const sFlux0 = model.satEirpW / (4 * Math.PI * s.r0 * s.r0);
+    const a0 = Math.sqrt(Math.max(sFlux0, 0));
+    er0 += s.amp * a0 * Math.cos(ph0);
+    ei0 += s.amp * a0 * Math.sin(ph0);
   }
   const pCenterExact = er0 * er0 + ei0 * ei0;
   const cx = (nx - 1) / 2;
@@ -574,12 +596,12 @@ function drawGround(model, params) {
 
   const image = ctx.createImageData(nx, ny);
   const pFloor = Math.max(pmin, pmax * 1e-12);
-  const lmax = Math.log10(pmax + 1e-20);
-  const lmin = Math.log10(pFloor);
-  const lspan = Math.max(1e-9, lmax - lmin);
+  const dbMax = 10 * Math.log10(pmax + 1e-30);
+  const dbMin = Math.max(10 * Math.log10(pFloor + 1e-30), dbMax - 60);
+  const dbSpan = Math.max(1e-9, dbMax - dbMin);
   for (let i = 0; i < data.length; i += 1) {
-    const lv = (Math.log10(Math.max(data[i], pFloor)) - lmin) / lspan;
-    const v = clamp(lv, 0, 1);
+    const db = 10 * Math.log10(Math.max(data[i], pFloor) + 1e-30);
+    const v = clamp((db - dbMin) / dbSpan, 0, 1);
     const hue = (0.68 - 0.7 * v + 1) % 1;
     const rgb = hsvToRgb(hue, 0.88, Math.max(0.15, v));
     image.data[4 * i] = rgb.r;
@@ -603,6 +625,26 @@ function drawGround(model, params) {
   ctx.font = `${12 * window.devicePixelRatio}px IBM Plex Sans`;
   ctx.fillText('Centered focus target', ox + 10 * window.devicePixelRatio, oy + 18 * window.devicePixelRatio);
 
+  // Colorbar (absolute power flux scale in dBW/m^2).
+  const cbW = 14 * window.devicePixelRatio;
+  const cbH = mapH * 0.68;
+  const cbX = ox + mapW - cbW - 10 * window.devicePixelRatio;
+  const cbY = oy + 26 * window.devicePixelRatio;
+  for (let iy = 0; iy < cbH; iy += 1) {
+    const t = 1 - iy / Math.max(1, cbH - 1);
+    const hue = (0.68 - 0.7 * t + 1) % 1;
+    const rgb = hsvToRgb(hue, 0.88, Math.max(0.15, t));
+    ctx.fillStyle = `rgb(${rgb.r},${rgb.g},${rgb.b})`;
+    ctx.fillRect(cbX, cbY + iy, cbW, 1);
+  }
+  ctx.strokeStyle = 'rgba(225,240,255,0.75)';
+  ctx.lineWidth = 1 * window.devicePixelRatio;
+  ctx.strokeRect(cbX, cbY, cbW, cbH);
+  ctx.fillStyle = '#d6ebff';
+  ctx.font = `${11 * window.devicePixelRatio}px IBM Plex Sans`;
+  ctx.fillText(`${dbMax.toFixed(1)} dBW/m^2`, cbX - 95 * window.devicePixelRatio, cbY + 9 * window.devicePixelRatio);
+  ctx.fillText(`${dbMin.toFixed(1)} dBW/m^2`, cbX - 95 * window.devicePixelRatio, cbY + cbH);
+
   const centerX = ox + mapW / 2;
   const centerY = oy + mapH / 2;
   ctx.strokeStyle = 'rgba(255,255,255,0.85)';
@@ -623,9 +665,18 @@ function drawGround(model, params) {
   ctx.stroke();
 
   const kmPerPix = (extentM / 1000) / mapW;
-  const barKm = Math.max(0.02, model.spotM / 1000);
-  const barPx = barKm / kmPerPix;
-  const bx = ox + mapW - barPx - 20 * window.devicePixelRatio;
+  const rightMargin = 20 * window.devicePixelRatio;
+  const maxBarPx = Math.max(10 * window.devicePixelRatio, mapW * 0.28);
+  const maxBarKm = maxBarPx * kmPerPix;
+  const pow10 = Math.pow(10, Math.floor(Math.log10(Math.max(maxBarKm, 1e-12))));
+  const candidates = [1, 2, 5, 10].map((m) => m * pow10);
+  let barKm = candidates[0];
+  for (const c of candidates) {
+    if (c <= maxBarKm) barKm = c;
+  }
+  barKm = Math.max(barKm, 1e-6);
+  const barPx = Math.min(barKm / kmPerPix, maxBarPx);
+  const bx = ox + mapW - barPx - rightMargin;
   const by = oy + mapH - 20 * window.devicePixelRatio;
   ctx.strokeStyle = '#ffffff';
   ctx.lineWidth = 2 * window.devicePixelRatio;
@@ -634,7 +685,7 @@ function drawGround(model, params) {
   ctx.lineTo(bx + barPx, by);
   ctx.stroke();
   ctx.fillStyle = '#d6ebff';
-  ctx.fillText(`${barKm.toFixed(2)} km est. spot scale`, bx, by - 6 * window.devicePixelRatio);
+  ctx.fillText(`${formatDistanceKm(barKm)} est. spot scale`, bx, by - 6 * window.devicePixelRatio);
 
   // Return diagnostics for stats panel.
   const dxPix = imax - cx;
@@ -643,6 +694,8 @@ function drawGround(model, params) {
     pCenterExact,
     pCenterGrid,
     pMax: pmax,
+    pMaxDbwM2: dbMax,
+    pMinDbwM2: dbMin,
     peakOffsetM: Math.sqrt(dxPix * dxPix + dyPix * dyPix) * (extentM / (nx - 1)),
     peakOffsetPix: Math.sqrt(dxPix * dxPix + dyPix * dyPix),
     extentM,
@@ -660,10 +713,12 @@ function showValues(params, model, groundDiag = null) {
   els.presetLabel.textContent = els.preset.options[els.preset.selectedIndex].text;
 
   const spotCm = model.spotM * 100;
+  const satEirpKw = model.satEirpW / 1000;
   const diagLines = groundDiag ? [
     `<div><b>P(0,0) exact / Pmax:</b> ${(groundDiag.pCenterExact / (groundDiag.pMax + 1e-12)).toFixed(4)}</div>`,
     `<div><b>P(center pixel) / Pmax:</b> ${(groundDiag.pCenterGrid / (groundDiag.pMax + 1e-12)).toFixed(4)}</div>`,
     `<div><b>Peak offset from center:</b> ${groundDiag.peakOffsetM.toExponential(3)} m (${groundDiag.peakOffsetPix.toFixed(2)} px)</div>`,
+    `<div><b>Peak flux:</b> ${formatFluxWm2(groundDiag.pMax)} (${groundDiag.pMaxDbwM2.toFixed(1)} dBW/m^2)</div>`,
   ] : [];
 
   els.stats.innerHTML = [
@@ -673,6 +728,7 @@ function showValues(params, model, groundDiag = null) {
     `<div><b>Implied sky coverage:</b> ${model.coveragePct.toFixed(2)}%</div>`,
     `<div><b>Effective footprint diameter:</b> ${(2 * EARTH_R_KM * model.psiMax).toFixed(0)} km</div>`,
     `<div><b>Estimated spot scale:</b> ${spotCm.toFixed(2)} cm</div>`,
+    `<div><b>Per-sat EIRP assumption:</b> ${model.satEirpDbw.toFixed(1)} dBW (${satEirpKw.toFixed(2)} kW), from ${SAT_EIRP_DENSITY_DBW_PER_MHZ.toFixed(1)} dBW/MHz over ${SAT_SIGNAL_BW_MHZ} MHz</div>`,
     `<div><b>Coherence factor exp(-sigma^2):</b> ${model.coherenceLoss.toFixed(3)}</div>`,
     ...diagLines,
   ].join('');
@@ -751,3 +807,25 @@ applyPreset('meme');
 resize3D();
 updateAll();
 animate();
+
+function formatDistanceKm(km) {
+  if (km >= 1) return `${km.toFixed(2)} km`;
+  const m = km * 1000;
+  if (m >= 1) return `${m.toFixed(2)} m`;
+  const cm = m * 100;
+  if (cm >= 1) return `${cm.toFixed(2)} cm`;
+  const mm = cm * 10;
+  return `${mm.toFixed(2)} mm`;
+}
+
+function formatFluxWm2(v) {
+  if (v <= 0 || !Number.isFinite(v)) return '0 W/m^2';
+  if (v >= 1) return `${v.toFixed(3)} W/m^2`;
+  const m = v * 1e3;
+  if (m >= 1) return `${m.toFixed(3)} mW/m^2`;
+  const u = v * 1e6;
+  if (u >= 1) return `${u.toFixed(3)} uW/m^2`;
+  const n = v * 1e9;
+  if (n >= 1) return `${n.toFixed(3)} nW/m^2`;
+  return `${(v * 1e12).toFixed(3)} pW/m^2`;
+}
