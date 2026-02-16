@@ -47,20 +47,23 @@ function clamp(v, lo, hi) {
 }
 
 function hsvToRgb(h, s, v) {
-  const i = Math.floor(h * 6);
-  const f = h * 6 - i;
-  const p = v * (1 - s);
-  const q = v * (1 - f * s);
-  const t = v * (1 - (1 - f) * s);
-  const m = i % 6;
+  const hh = Number.isFinite(h) ? ((h % 1) + 1) % 1 : 0;
+  const ss = Number.isFinite(s) ? clamp(s, 0, 1) : 0;
+  const vv = Number.isFinite(v) ? clamp(v, 0, 1) : 0;
+  const i = Math.floor(hh * 6);
+  const f = hh * 6 - i;
+  const p = vv * (1 - ss);
+  const q = vv * (1 - f * ss);
+  const t = vv * (1 - (1 - f) * ss);
+  const m = ((i % 6) + 6) % 6;
   const arr = [
-    [v, t, p],
-    [q, v, p],
-    [p, v, t],
-    [p, q, v],
-    [t, p, v],
-    [v, p, q],
-  ][m];
+    [vv, t, p],
+    [q, vv, p],
+    [p, vv, t],
+    [p, q, vv],
+    [t, p, vv],
+    [vv, p, q],
+  ][m] || [0, 0, 0];
   return { r: Math.round(arr[0] * 255), g: Math.round(arr[1] * 255), b: Math.round(arr[2] * 255) };
 }
 
@@ -168,6 +171,7 @@ function sampleDirectionsInCap(count, psiMax, minSep, rand) {
 function computeModel(params) {
   const rand = mulberry32(params.seed);
   const lambdaM = 0.299792458 / params.freqGHz;
+  const k = 2 * Math.PI / lambdaM;
   const psiMax = psiMaxRad(params.shellKm, 0);
   const targetUp = latLonToUnit(TARGET_LAT_DEG, TARGET_LON_DEG);
   const localBasis = localBasisFromUp(targetUp);
@@ -197,7 +201,6 @@ function computeModel(params) {
 
   const satellites = dirs.map((d) => {
     const phaseErr = gaussian(rand) * params.phaseJitDeg * DEG;
-    const p = 0.8 + 0.4 * rand();
     const satPos = {
       x: d.x * rShell,
       y: d.y * rShell,
@@ -210,16 +213,32 @@ function computeModel(params) {
     const ux = vx / norm;
     const uy = vy / norm;
     const uz = vz / norm;
+    // Command phase to focus at the target point (modulo 2pi), plus residual jitter.
+    const commandPhase = ((-k * norm) % (2 * Math.PI) + 2 * Math.PI) % (2 * Math.PI);
     return {
       dir: d,
       satPos,
       sky: { x: ux, y: uy, z: uz },
-      amp: p,
-      phase: phaseErr,
-      az: Math.atan2(uy, ux),
-      theta: Math.acos(clamp(uz, -1, 1)),
+      skyLocal: {
+        x: ux * localBasis.east.x + uy * localBasis.east.y + uz * localBasis.east.z,
+        y: ux * localBasis.north.x + uy * localBasis.north.y + uz * localBasis.north.z,
+      },
+      amp: 1.0,
+      commandPhase,
+      phaseError: phaseErr,
+      phaseActual: commandPhase + phaseErr,
+      rangeM: norm * 1000,
+      // Local sky coordinates around the target zenith (for centered projection).
+      localAz: 0,
+      localTheta: 0,
     };
   });
+
+  for (let i = 0; i < satellites.length; i += 1) {
+    const ld = localDirs[i];
+    satellites[i].localAz = Math.atan2(ld.y, ld.x);
+    satellites[i].localTheta = Math.acos(clamp(ld.z, -1, 1));
+  }
 
   let sx = 0;
   let sy = 0;
@@ -254,6 +273,7 @@ function computeModel(params) {
     coveragePct,
     boresight,
     targetPos,
+    localBasis,
   };
 }
 
@@ -326,7 +346,7 @@ function update3D(model) {
     arr[3 * i + 1] = y;
     arr[3 * i + 2] = z;
 
-    const hue = ((s.phase % (2 * Math.PI)) + 2 * Math.PI) % (2 * Math.PI) / (2 * Math.PI);
+    const hue = (s.commandPhase % (2 * Math.PI)) / (2 * Math.PI);
     const rgb = hsvToRgb(hue, 0.65, 0.95);
     col[3 * i] = rgb.r / 255;
     col[3 * i + 1] = rgb.g / 255;
@@ -367,36 +387,70 @@ function drawSinglePanel(model, params) {
   ctx.setTransform(1, 0, 0, 1, 0, 0);
   ctx.clearRect(0, 0, w, h);
 
-  const leftW = Math.floor(w * 0.43);
-  const cx = leftW * 0.52;
-  const cy = h * 0.58;
-  const R = Math.min(leftW, h) * 0.34;
+  const leftW = Math.floor(w * 0.45);
+  const cx = leftW * 0.5;
+  const cy = h * 0.56;
+  const R = Math.min(leftW, h) * 0.33;
 
-  ctx.strokeStyle = 'rgba(140,170,210,0.25)';
-  ctx.lineWidth = 1.3;
-  for (let i = 1; i <= 4; i += 1) {
+  const beamHalf = Math.max(0.2 * DEG, params.beamHalfDeg * DEG);
+  const thSteps = 24;
+  const phSteps = 36;
+  const yaw = 35 * DEG;
+  const pitch = -24 * DEG;
+  const cyaw = Math.cos(yaw), syaw = Math.sin(yaw);
+  const cp = Math.cos(pitch), sp = Math.sin(pitch);
+  const p3 = [];
+  for (let it = 0; it <= thSteps; it += 1) {
+    const th = (it / thSteps) * (Math.PI * 0.5);
+    for (let ip = 0; ip <= phSteps; ip += 1) {
+      const ph = (ip / phSteps) * (2 * Math.PI);
+      const gain = Math.exp(-Math.log(2) * (th * th) / (beamHalf * beamHalf));
+      const rad = R * (0.08 + 0.92 * gain);
+      const x0 = rad * Math.sin(th) * Math.cos(ph);
+      const y0 = rad * Math.sin(th) * Math.sin(ph);
+      const z0 = rad * Math.cos(th);
+
+      const x1 = cyaw * x0 + syaw * z0;
+      const z1 = -syaw * x0 + cyaw * z0;
+      const y2 = cp * y0 - sp * z1;
+      const z2 = sp * y0 + cp * z1;
+      const u = cx + x1 * (1 + 0.18 * z2 / R);
+      const v = cy + y2 * (1 + 0.18 * z2 / R);
+      p3.push({ it, ip, u, v, gain });
+    }
+  }
+
+  ctx.strokeStyle = 'rgba(120,190,235,0.35)';
+  ctx.lineWidth = 1.1 * window.devicePixelRatio;
+  for (let it = 0; it <= thSteps; it += 3) {
     ctx.beginPath();
-    ctx.arc(cx, cy, (R * i) / 4, 0, 2 * Math.PI);
+    for (let ip = 0; ip <= phSteps; ip += 1) {
+      const p = p3[it * (phSteps + 1) + ip];
+      if (ip === 0) ctx.moveTo(p.u, p.v);
+      else ctx.lineTo(p.u, p.v);
+    }
+    ctx.stroke();
+  }
+  for (let ip = 0; ip <= phSteps; ip += 4) {
+    ctx.beginPath();
+    for (let it = 0; it <= thSteps; it += 1) {
+      const p = p3[it * (phSteps + 1) + ip];
+      if (it === 0) ctx.moveTo(p.u, p.v);
+      else ctx.lineTo(p.u, p.v);
+    }
     ctx.stroke();
   }
 
-  ctx.strokeStyle = '#6de0ff';
-  ctx.lineWidth = 2;
-  ctx.beginPath();
-  const beamHalf = params.beamHalfDeg * DEG;
-  for (let t = 0; t <= Math.PI; t += Math.PI / 360) {
-    const gain = Math.pow(Math.cos(Math.min(t, Math.PI / 2)), 2 / Math.max(beamHalf, 0.01));
-    const rr = R * Math.max(0.02, gain);
-    const x = cx + rr * Math.cos(t - Math.PI / 2);
-    const y = cy + rr * Math.sin(t - Math.PI / 2);
-    if (t === 0) ctx.moveTo(x, y);
-    else ctx.lineTo(x, y);
+  for (let i = 0; i < p3.length; i += 1) {
+    const p = p3[i];
+    const rgb = hsvToRgb(0.58 - 0.28 * p.gain, 0.82, 0.75 + 0.25 * p.gain);
+    ctx.fillStyle = `rgba(${rgb.r},${rgb.g},${rgb.b},0.55)`;
+    ctx.fillRect(p.u - 0.7 * window.devicePixelRatio, p.v - 0.7 * window.devicePixelRatio, 1.4 * window.devicePixelRatio, 1.4 * window.devicePixelRatio);
   }
-  ctx.stroke();
 
   ctx.fillStyle = '#9ec8ff';
   ctx.font = `${12 * window.devicePixelRatio}px IBM Plex Sans`;
-  ctx.fillText('Single-sat far-field (representative)', cx - R * 0.9, cy + R + 22 * window.devicePixelRatio);
+  ctx.fillText('Single-sat far-field (3D lobe)', cx - R * 0.9, cy + R + 22 * window.devicePixelRatio);
 
   const rx = leftW + (w - leftW) * 0.5;
   const ry = h * 0.53;
@@ -407,21 +461,22 @@ function drawSinglePanel(model, params) {
   ctx.arc(rx, ry, PR, 0, 2 * Math.PI);
   ctx.stroke();
 
+  const maxTheta = Math.max(model.psiMax, 1e-6);
   for (const s of model.satellites) {
-    const r = (s.theta / Math.max(model.satellites[0] ? Math.max(...model.satellites.map(v => v.theta)) : 1, 1e-6)) * PR;
-    const x = rx + r * Math.cos(s.az);
-    const y = ry + r * Math.sin(s.az);
-    const hue = ((s.phase % (2 * Math.PI)) + 2 * Math.PI) % (2 * Math.PI) / (2 * Math.PI);
+    const r = (s.localTheta / maxTheta) * PR;
+    const x = rx + r * Math.cos(s.localAz);
+    const y = ry + r * Math.sin(s.localAz);
+    const hue = (s.commandPhase % (2 * Math.PI)) / (2 * Math.PI);
     const rgb = hsvToRgb(hue, 0.85, 1.0);
     ctx.fillStyle = `rgba(${rgb.r},${rgb.g},${rgb.b},0.85)`;
-    const rr = (1.4 + 2.6 * s.amp) * window.devicePixelRatio;
+    const rr = (1.5 + 2.2 * s.amp) * window.devicePixelRatio;
     ctx.beginPath();
     ctx.arc(x, y, rr, 0, 2 * Math.PI);
     ctx.fill();
   }
 
   ctx.fillStyle = '#9ec8ff';
-  ctx.fillText('Active satellite sky projection', rx - PR * 0.78, ry + PR + 22 * window.devicePixelRatio);
+  ctx.fillText('Sky projection (color: command phase, size: power)', rx - PR * 0.98, ry + PR + 22 * window.devicePixelRatio);
 }
 
 function drawGround(model, params) {
@@ -431,8 +486,9 @@ function drawGround(model, params) {
   ctx.setTransform(1, 0, 0, 1, 0, 0);
   ctx.clearRect(0, 0, w, h);
 
-  const nx = 170;
-  const ny = 95;
+  // Odd grid ensures the exact focus point (x=0,y=0) is sampled at center pixel.
+  const nx = 301;
+  const ny = 301;
   const mapW = w * 0.96;
   const mapH = h * 0.85;
   const ox = (w - mapW) / 2;
@@ -440,31 +496,90 @@ function drawGround(model, params) {
 
   const lambda = model.lambdaM;
   const k = 2 * Math.PI / lambda;
-  const extentM = clamp(model.spotM * 2500, 50, 150000);
+  // Show a zoom window around the predicted diffraction spot; otherwise the peak is sub-pixel.
+  const extentM = clamp(model.spotM * 80, 0.01, 2000);
 
-  const data = new Float32Array(nx * ny);
+  const targetM = {
+    x: model.targetPos.x * 1000,
+    y: model.targetPos.y * 1000,
+    z: model.targetPos.z * 1000,
+  };
+  const east = model.localBasis.east;
+  const north = model.localBasis.north;
+  const sats = model.satellites.map((s) => {
+    const sx = s.satPos.x * 1000;
+    const sy = s.satPos.y * 1000;
+    const sz = s.satPos.z * 1000;
+    const dx = sx - targetM.x;
+    const dy = sy - targetM.y;
+    const dz = sz - targetM.z;
+    const r0 = Math.sqrt(dx * dx + dy * dy + dz * dz);
+    return {
+      x: sx, y: sy, z: sz,
+      r0,
+      amp: s.amp,
+      phaseError: s.phaseError,
+    };
+  });
+
+  const data = new Float64Array(nx * ny);
   let pmax = 0;
+  let pmin = Number.POSITIVE_INFINITY;
+  let imax = 0;
+  let jmax = 0;
 
   for (let iy = 0; iy < ny; iy += 1) {
     const y = ((iy / (ny - 1)) - 0.5) * extentM;
     for (let ix = 0; ix < nx; ix += 1) {
       const x = ((ix / (nx - 1)) - 0.5) * extentM;
+      const px = targetM.x + east.x * x + north.x * y;
+      const py = targetM.y + east.y * x + north.y * y;
+      const pz = targetM.z + east.z * x + north.z * y;
       let er = 0;
       let ei = 0;
-      for (const s of model.satellites) {
-        const ph = k * (s.sky.x * x + s.sky.y * y) + s.phase;
+      for (const s of sats) {
+        // Exact path-difference phase around the focused target:
+        // ph = k*(|r_sat - r_point| - |r_sat - r_target|) + residual phase error.
+        const dx = s.x - px;
+        const dy = s.y - py;
+        const dz = s.z - pz;
+        const r = Math.sqrt(dx * dx + dy * dy + dz * dz);
+        const ph = k * (r - s.r0) + s.phaseError;
         er += s.amp * Math.cos(ph);
         ei += s.amp * Math.sin(ph);
       }
       const p = er * er + ei * ei;
       data[iy * nx + ix] = p;
-      if (p > pmax) pmax = p;
+      if (p > pmax) {
+        pmax = p;
+        imax = ix;
+        jmax = iy;
+      }
+      if (p < pmin) pmin = p;
     }
   }
 
+  // Exact focus-point power at the target location (x=0,y=0), independent of grid sampling.
+  let er0 = 0;
+  let ei0 = 0;
+  for (const s of sats) {
+    const ph0 = s.phaseError;
+    er0 += s.amp * Math.cos(ph0);
+    ei0 += s.amp * Math.sin(ph0);
+  }
+  const pCenterExact = er0 * er0 + ei0 * ei0;
+  const cx = (nx - 1) / 2;
+  const cy = (ny - 1) / 2;
+  const pCenterGrid = data[cy * nx + cx];
+
   const image = ctx.createImageData(nx, ny);
+  const pFloor = Math.max(pmin, pmax * 1e-12);
+  const lmax = Math.log10(pmax + 1e-20);
+  const lmin = Math.log10(pFloor);
+  const lspan = Math.max(1e-9, lmax - lmin);
   for (let i = 0; i < data.length; i += 1) {
-    const v = Math.pow(data[i] / (pmax + 1e-9), 0.35);
+    const lv = (Math.log10(Math.max(data[i], pFloor)) - lmin) / lspan;
+    const v = clamp(lv, 0, 1);
     const hue = (0.68 - 0.7 * v + 1) % 1;
     const rgb = hsvToRgb(hue, 0.88, Math.max(0.15, v));
     image.data[4 * i] = rgb.r;
@@ -488,14 +603,23 @@ function drawGround(model, params) {
   ctx.font = `${12 * window.devicePixelRatio}px IBM Plex Sans`;
   ctx.fillText('Centered focus target', ox + 10 * window.devicePixelRatio, oy + 18 * window.devicePixelRatio);
 
-  const cx = ox + mapW / 2;
-  const cy = oy + mapH / 2;
+  const centerX = ox + mapW / 2;
+  const centerY = oy + mapH / 2;
   ctx.strokeStyle = 'rgba(255,255,255,0.85)';
   ctx.beginPath();
-  ctx.moveTo(cx - 10 * window.devicePixelRatio, cy);
-  ctx.lineTo(cx + 10 * window.devicePixelRatio, cy);
-  ctx.moveTo(cx, cy - 10 * window.devicePixelRatio);
-  ctx.lineTo(cx, cy + 10 * window.devicePixelRatio);
+  ctx.moveTo(centerX - 10 * window.devicePixelRatio, centerY);
+  ctx.lineTo(centerX + 10 * window.devicePixelRatio, centerY);
+  ctx.moveTo(centerX, centerY - 10 * window.devicePixelRatio);
+  ctx.lineTo(centerX, centerY + 10 * window.devicePixelRatio);
+  ctx.stroke();
+
+  // Mark global peak location.
+  const peakX = ox + (imax / (nx - 1)) * mapW;
+  const peakY = oy + (jmax / (ny - 1)) * mapH;
+  ctx.strokeStyle = 'rgba(255,220,0,0.95)';
+  ctx.lineWidth = 1.5 * window.devicePixelRatio;
+  ctx.beginPath();
+  ctx.arc(peakX, peakY, 6 * window.devicePixelRatio, 0, 2 * Math.PI);
   ctx.stroke();
 
   const kmPerPix = (extentM / 1000) / mapW;
@@ -511,9 +635,23 @@ function drawGround(model, params) {
   ctx.stroke();
   ctx.fillStyle = '#d6ebff';
   ctx.fillText(`${barKm.toFixed(2)} km est. spot scale`, bx, by - 6 * window.devicePixelRatio);
+
+  // Return diagnostics for stats panel.
+  const dxPix = imax - cx;
+  const dyPix = jmax - cy;
+  return {
+    pCenterExact,
+    pCenterGrid,
+    pMax: pmax,
+    peakOffsetM: Math.sqrt(dxPix * dxPix + dyPix * dyPix) * (extentM / (nx - 1)),
+    peakOffsetPix: Math.sqrt(dxPix * dxPix + dyPix * dyPix),
+    extentM,
+    nx,
+    ny,
+  };
 }
 
-function showValues(params, model) {
+function showValues(params, model, groundDiag = null) {
   els.freqVal.textContent = `${params.freqGHz.toFixed(1)}`;
   els.shellVal.textContent = `${params.shellKm.toFixed(0)}`;
   els.beamHalfVal.textContent = `${params.panelHalfDeg.toFixed(1)}`;
@@ -522,6 +660,12 @@ function showValues(params, model) {
   els.presetLabel.textContent = els.preset.options[els.preset.selectedIndex].text;
 
   const spotCm = model.spotM * 100;
+  const diagLines = groundDiag ? [
+    `<div><b>P(0,0) exact / Pmax:</b> ${(groundDiag.pCenterExact / (groundDiag.pMax + 1e-12)).toFixed(4)}</div>`,
+    `<div><b>P(center pixel) / Pmax:</b> ${(groundDiag.pCenterGrid / (groundDiag.pMax + 1e-12)).toFixed(4)}</div>`,
+    `<div><b>Peak offset from center:</b> ${groundDiag.peakOffsetM.toExponential(3)} m (${groundDiag.peakOffsetPix.toFixed(2)} px)</div>`,
+  ] : [];
+
   els.stats.innerHTML = [
     `<div><b>Active sats (all in view):</b> ${model.nActive}</div>`,
     `<div><b>Visibility cap (elev >= 0 deg):</b> ${model.visCap}</div>`,
@@ -530,6 +674,7 @@ function showValues(params, model) {
     `<div><b>Effective footprint diameter:</b> ${(2 * EARTH_R_KM * model.psiMax).toFixed(0)} km</div>`,
     `<div><b>Estimated spot scale:</b> ${spotCm.toFixed(2)} cm</div>`,
     `<div><b>Coherence factor exp(-sigma^2):</b> ${model.coherenceLoss.toFixed(3)}</div>`,
+    ...diagLines,
   ].join('');
 }
 
@@ -546,20 +691,20 @@ function readParams() {
 
 function applyPreset(name) {
   if (name === 'conservative') {
-    els.freq.value = '12';
+    els.freq.value = '11.7';
     els.shell.value = '550';
     els.beamHalf.value = '1.4';
-    els.phaseJit.value = '20';
+    els.phaseJit.value = '0';
   } else if (name === 'aggressive') {
-    els.freq.value = '20';
+    els.freq.value = '19.05';
     els.shell.value = '550';
     els.beamHalf.value = '1.8';
-    els.phaseJit.value = '10';
+    els.phaseJit.value = '0';
   } else {
-    els.freq.value = '30';
+    els.freq.value = '30.0';
     els.shell.value = '550';
     els.beamHalf.value = '2.0';
-    els.phaseJit.value = '3.0';
+    els.phaseJit.value = '0';
   }
 }
 
@@ -568,10 +713,10 @@ function updateAll() {
   const params = readParams();
   const model = computeModel(params);
   currentModel = model;
-  showValues(params, model);
+  const groundDiag = drawGround(model, params);
+  showValues(params, model, groundDiag);
   update3D(model);
   drawSinglePanel(model, params);
-  drawGround(model, params);
 }
 
 const controls = [
@@ -579,7 +724,10 @@ const controls = [
   els.beamHalf, els.phaseJit, els.seed,
 ];
 
-for (const c of controls) c.addEventListener('input', updateAll);
+for (const c of controls) {
+  c.addEventListener('input', updateAll);
+  c.addEventListener('change', updateAll);
+}
 els.preset.addEventListener('change', () => {
   applyPreset(els.preset.value);
   updateAll();

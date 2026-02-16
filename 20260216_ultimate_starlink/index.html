@@ -153,7 +153,17 @@
 
       <div class="row">
         <label for="freq">Frequency (GHz) <span id="freqVal"></span></label>
-        <input id="freq" type="range" min="10" max="40" step="0.5" value="30" />
+        <select id="freq">
+          <option value="10.7">10.7 (Ku DL edge)</option>
+          <option value="11.7">11.7 (Ku DL mid)</option>
+          <option value="12.7">12.7 (Ku DL edge)</option>
+          <option value="14.25">14.25 (Ku UL center)</option>
+          <option value="18.2">18.2 (Ka DL center)</option>
+          <option value="19.05">19.05 (Ka DL center)</option>
+          <option value="28.0">28.0 (Ka UL)</option>
+          <option value="29.5">29.5 (Ka UL)</option>
+          <option value="30.0" selected>30.0 (Meme-max)</option>
+        </select>
       </div>
 
       <div class="row">
@@ -179,12 +189,12 @@
 
       <div class="row">
         <label for="phaseJit">Phase Jitter RMS (deg) <span id="phaseJitVal"></span></label>
-        <input id="phaseJit" type="range" min="0" max="45" step="0.5" value="3" />
+        <input id="phaseJit" type="range" min="0" max="45" step="0.5" value="0" />
       </div>
 
       <div class="row">
         <label for="seed">Random Seed <span id="seedVal"></span></label>
-        <input id="seed" type="range" min="1" max="999" step="1" value="42" />
+        <input id="seed" type="range" min="0" max="999" step="1" value="0" />
       </div>
 
       <div class="kv" id="stats"></div>
