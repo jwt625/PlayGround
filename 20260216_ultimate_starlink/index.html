@@ -1,0 +1,213 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Ultimate Starlink Meme-Max Beam Visual</title>
+  <link rel="icon" href="data:," />
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://unpkg.com/three@0.163.0/build/three.module.js"
+      }
+    }
+  </script>
+  <style>
+    :root {
+      --bg: #091018;
+      --panel: #0f1b29;
+      --panel2: #132338;
+      --text: #dce9ff;
+      --muted: #87a1c1;
+      --accent: #46e0a0;
+      --line: #20344c;
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "IBM Plex Sans", "Segoe UI", sans-serif;
+      color: var(--text);
+      background: radial-gradient(circle at 20% 0%, #1b2a42 0%, var(--bg) 45%, #060b12 100%);
+    }
+
+    .wrap {
+      display: grid;
+      grid-template-columns: 340px 1fr;
+      min-height: 100vh;
+      gap: 12px;
+      padding: 12px;
+    }
+
+    .controls {
+      background: linear-gradient(180deg, var(--panel2), var(--panel));
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 14px;
+      overflow: auto;
+    }
+
+    .controls h1 {
+      margin: 0 0 8px;
+      font-size: 20px;
+      letter-spacing: 0.2px;
+    }
+
+    .sub {
+      margin: 0 0 14px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.35;
+    }
+
+    .row { margin: 9px 0 11px; }
+
+    label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 3px;
+    }
+
+    input[type="range"], select {
+      width: 100%;
+      background: #0a1422;
+      color: var(--text);
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      padding: 4px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1.25fr 1fr;
+      grid-template-rows: 54vh 40vh;
+      gap: 12px;
+    }
+
+    .panel {
+      position: relative;
+      background: linear-gradient(180deg, #0f1d30, #0b1726);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      overflow: hidden;
+      min-height: 220px;
+    }
+
+    .title {
+      position: absolute;
+      left: 10px;
+      top: 8px;
+      font-size: 12px;
+      letter-spacing: 0.4px;
+      text-transform: uppercase;
+      color: #acd3ff;
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    .kv {
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px solid var(--line);
+      font-size: 12px;
+      line-height: 1.5;
+      color: var(--muted);
+    }
+
+    .kv b { color: var(--text); }
+    .note {
+      font-size: 11px;
+      color: #8fa8c9;
+      margin-top: 8px;
+      line-height: 1.35;
+    }
+
+    canvas { width: 100%; height: 100%; display: block; }
+
+    #panel-single { grid-column: 2; grid-row: 1; }
+    #panel-ground { grid-column: 1 / span 2; grid-row: 2; }
+
+    @media (max-width: 1100px) {
+      .wrap { grid-template-columns: 1fr; }
+      .grid { grid-template-columns: 1fr; grid-template-rows: 45vh 45vh 40vh 40vh; }
+      #panel-single, #panel-ground { grid-column: auto; grid-row: auto; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <aside class="controls">
+      <h1>Ultimate Starlink Meme-Max</h1>
+      <p class="sub">3D geometry + phase/power sky projection + single-satellite pattern + formed ground power map.</p>
+
+      <div class="row">
+        <label for="preset">Preset <span id="presetLabel">Meme-Max</span></label>
+        <select id="preset">
+          <option value="meme" selected>Meme-Max</option>
+          <option value="aggressive">Aggressive</option>
+          <option value="conservative">Conservative</option>
+        </select>
+      </div>
+
+      <div class="row">
+        <label for="freq">Frequency (GHz) <span id="freqVal"></span></label>
+        <input id="freq" type="range" min="10" max="40" step="0.5" value="30" />
+      </div>
+
+      <div class="row">
+        <label for="shell">Shell Altitude (km) <span id="shellVal"></span></label>
+        <select id="shell">
+          <option value="340">340</option>
+          <option value="360">360</option>
+          <option value="525">525</option>
+          <option value="530">530</option>
+          <option value="535">535</option>
+          <option value="550" selected>550</option>
+          <option value="570">570</option>
+          <option value="604">604</option>
+          <option value="614">614</option>
+          <option value="1200">1200</option>
+        </select>
+      </div>
+
+      <div class="row">
+        <label for="beamHalf">Panel Half-Angle (deg) <span id="beamHalfVal"></span></label>
+        <input id="beamHalf" type="range" min="0.2" max="6" step="0.1" value="2.0" />
+      </div>
+
+      <div class="row">
+        <label for="phaseJit">Phase Jitter RMS (deg) <span id="phaseJitVal"></span></label>
+        <input id="phaseJit" type="range" min="0" max="45" step="0.5" value="3" />
+      </div>
+
+      <div class="row">
+        <label for="seed">Random Seed <span id="seedVal"></span></label>
+        <input id="seed" type="range" min="1" max="999" step="1" value="42" />
+      </div>
+
+      <div class="kv" id="stats"></div>
+      <div class="note">Model note: all satellites within line-of-sight view of the target point are used. Shell altitude uses researched discrete values.</div>
+    </aside>
+
+    <main class="grid">
+      <section class="panel" id="panel-3d">
+        <div class="title">3D Scene: Earth + Active Swarm + Target</div>
+      </section>
+
+      <section class="panel" id="panel-single">
+        <div class="title">Single-Satellite Far-Field + Sky Phase/Power Projection</div>
+        <canvas id="singleCanvas"></canvas>
+      </section>
+
+      <section class="panel" id="panel-ground">
+        <div class="title">Formed Ground Power Distribution</div>
+        <canvas id="groundCanvas"></canvas>
+      </section>
+    </main>
+  </div>
+
+  <script type="module" src="main.js"></script>
+</body>
+</html>
