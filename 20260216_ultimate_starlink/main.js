@@ -9,16 +9,22 @@ const TARGET_LON_DEG = -122.4194;
 // SpaceX Gen1 modification technical attachment reports max satellite EIRP density ~12.7 dBW/MHz.
 const SAT_EIRP_DENSITY_DBW_PER_MHZ = 12.7;
 const SAT_SIGNAL_BW_MHZ = 250;
+const DEFAULT_SAT_EIRP_DBW = SAT_EIRP_DENSITY_DBW_PER_MHZ + 10 * Math.log10(SAT_SIGNAL_BW_MHZ);
+const MAX_SIM_SATS = 800;
 
 const els = {
   preset: document.getElementById('preset'),
   freq: document.getElementById('freq'),
   shell: document.getElementById('shell'),
+  activeSatExp: document.getElementById('activeSatExp'),
+  satEirpDbw: document.getElementById('satEirpDbw'),
   beamHalf: document.getElementById('beamHalf'),
   phaseJit: document.getElementById('phaseJit'),
   seed: document.getElementById('seed'),
   freqVal: document.getElementById('freqVal'),
   shellVal: document.getElementById('shellVal'),
+  activeSatVal: document.getElementById('activeSatVal'),
+  satEirpVal: document.getElementById('satEirpVal'),
   beamHalfVal: document.getElementById('beamHalfVal'),
   phaseJitVal: document.getElementById('phaseJitVal'),
   seedVal: document.getElementById('seedVal'),
@@ -188,15 +194,17 @@ function computeModel(params) {
   const visApprox = visibleCountApprox(params.shellKm, params.totalConstellation);
   const visCap = Math.max(1, Math.floor(visApprox));
 
-  // Use all satellites that are within view of the target point.
-  const nActive = visCap;
+  // User-controlled active count (log slider), decoupled from geometric visibility cap for meme exploration.
+  const nActive = Math.max(1, params.activeSatCount);
+  const nSim = Math.max(1, Math.min(nActive, MAX_SIM_SATS));
+  const sampleWeight = nActive / nSim;
 
   const rShell = EARTH_R_KM + params.shellKm;
   const minSep = 0;
-  const localDirs = sampleDirectionsInCap(nActive, psiMax, minSep, rand);
+  const localDirs = sampleDirectionsInCap(nSim, psiMax, minSep, rand);
   const dirs = localDirs.map((d) => localToWorld(d, localBasis));
 
-  while (dirs.length < nActive) {
+  while (dirs.length < nSim) {
     const az = 2 * Math.PI * rand();
     const cosPsi = 1 - rand() * (1 - Math.cos(psiMax));
     const sinPsi = Math.sqrt(Math.max(0, 1 - cosPsi * cosPsi));
@@ -264,7 +272,7 @@ function computeModel(params) {
 
   const sigma = params.phaseJitDeg * DEG;
   const coherenceLoss = Math.exp(-(sigma * sigma));
-  const satEirpDbw = SAT_EIRP_DENSITY_DBW_PER_MHZ + 10 * Math.log10(SAT_SIGNAL_BW_MHZ);
+  const satEirpDbw = params.satEirpDbw;
   const satEirpW = Math.pow(10, satEirpDbw / 10);
 
   return {
@@ -272,6 +280,8 @@ function computeModel(params) {
     psiMax,
     visCap,
     nActive,
+    nSim,
+    sampleWeight,
     satellites,
     dEffKm,
     spotM,
@@ -563,7 +573,7 @@ function drawGround(model, params) {
         // Power flux from one satellite beam at range r from EIRP: S = EIRP / (4*pi*r^2).
         // Coherent field summation uses sqrt(S) as complex amplitude.
         const sFlux = model.satEirpW / (4 * Math.PI * r * r);
-        const aField = Math.sqrt(Math.max(sFlux, 0));
+        const aField = model.sampleWeight * Math.sqrt(Math.max(sFlux, 0));
         const ph = k * (r - s.r0) + s.phaseError;
         er += s.amp * aField * Math.cos(ph);
         ei += s.amp * aField * Math.sin(ph);
@@ -585,7 +595,7 @@ function drawGround(model, params) {
   for (const s of sats) {
     const ph0 = s.phaseError;
     const sFlux0 = model.satEirpW / (4 * Math.PI * s.r0 * s.r0);
-    const a0 = Math.sqrt(Math.max(sFlux0, 0));
+    const a0 = model.sampleWeight * Math.sqrt(Math.max(sFlux0, 0));
     er0 += s.amp * a0 * Math.cos(ph0);
     ei0 += s.amp * a0 * Math.sin(ph0);
   }
@@ -707,6 +717,8 @@ function drawGround(model, params) {
 function showValues(params, model, groundDiag = null) {
   els.freqVal.textContent = `${params.freqGHz.toFixed(1)}`;
   els.shellVal.textContent = `${params.shellKm.toFixed(0)}`;
+  els.activeSatVal.textContent = `${formatLargeInt(params.activeSatCount)}`;
+  els.satEirpVal.textContent = `${params.satEirpDbw.toFixed(1)}`;
   els.beamHalfVal.textContent = `${params.panelHalfDeg.toFixed(1)}`;
   els.phaseJitVal.textContent = `${params.phaseJitDeg.toFixed(1)}`;
   els.seedVal.textContent = `${params.seed}`;
@@ -722,22 +734,29 @@ function showValues(params, model, groundDiag = null) {
   ] : [];
 
   els.stats.innerHTML = [
-    `<div><b>Active sats (all in view):</b> ${model.nActive}</div>`,
-    `<div><b>Visibility cap (elev >= 0 deg):</b> ${model.visCap}</div>`,
+    `<div><b>Active sats (requested):</b> ${formatLargeInt(model.nActive)}</div>`,
+    `<div><b>Satellites explicitly simulated:</b> ${formatLargeInt(model.nSim)} (weighted x${model.sampleWeight.toFixed(1)})</div>`,
+    `<div><b>Visibility cap estimate (reference):</b> ${formatLargeInt(model.visCap)}</div>`,
     `<div><b>Target:</b> San Francisco (${TARGET_LAT_DEG.toFixed(4)}, ${TARGET_LON_DEG.toFixed(4)})</div>`,
     `<div><b>Implied sky coverage:</b> ${model.coveragePct.toFixed(2)}%</div>`,
     `<div><b>Effective footprint diameter:</b> ${(2 * EARTH_R_KM * model.psiMax).toFixed(0)} km</div>`,
     `<div><b>Estimated spot scale:</b> ${spotCm.toFixed(2)} cm</div>`,
-    `<div><b>Per-sat EIRP assumption:</b> ${model.satEirpDbw.toFixed(1)} dBW (${satEirpKw.toFixed(2)} kW), from ${SAT_EIRP_DENSITY_DBW_PER_MHZ.toFixed(1)} dBW/MHz over ${SAT_SIGNAL_BW_MHZ} MHz</div>`,
+    `<div><b>Per-sat EIRP:</b> ${model.satEirpDbw.toFixed(1)} dBW (${satEirpKw.toFixed(2)} kW EIRP-equivalent)</div>`,
+    `<div><b>Reference filing-derived default:</b> ${DEFAULT_SAT_EIRP_DBW.toFixed(1)} dBW from ${SAT_EIRP_DENSITY_DBW_PER_MHZ.toFixed(1)} dBW/MHz over ${SAT_SIGNAL_BW_MHZ} MHz</div>`,
     `<div><b>Coherence factor exp(-sigma^2):</b> ${model.coherenceLoss.toFixed(3)}</div>`,
     ...diagLines,
   ].join('');
 }
 
 function readParams() {
+  const activeSatExp = parseFloat(els.activeSatExp.value);
+  const activeSatCount = Math.max(1, Math.round(Math.pow(10, activeSatExp)));
   return {
     freqGHz: parseFloat(els.freq.value),
     shellKm: parseFloat(els.shell.value),
+    activeSatExp,
+    activeSatCount,
+    satEirpDbw: parseFloat(els.satEirpDbw.value),
     panelHalfDeg: parseFloat(els.beamHalf.value),
     phaseJitDeg: parseFloat(els.phaseJit.value),
     seed: parseInt(els.seed.value, 10),
@@ -749,16 +768,22 @@ function applyPreset(name) {
   if (name === 'conservative') {
     els.freq.value = '11.7';
     els.shell.value = '550';
+    els.activeSatExp.value = '2.2';
+    els.satEirpDbw.value = `${DEFAULT_SAT_EIRP_DBW.toFixed(1)}`;
     els.beamHalf.value = '1.4';
     els.phaseJit.value = '0';
   } else if (name === 'aggressive') {
     els.freq.value = '19.05';
     els.shell.value = '550';
+    els.activeSatExp.value = '3.0';
+    els.satEirpDbw.value = `${DEFAULT_SAT_EIRP_DBW.toFixed(1)}`;
     els.beamHalf.value = '1.8';
     els.phaseJit.value = '0';
   } else {
     els.freq.value = '30.0';
     els.shell.value = '550';
+    els.activeSatExp.value = '4.0';
+    els.satEirpDbw.value = `${DEFAULT_SAT_EIRP_DBW.toFixed(1)}`;
     els.beamHalf.value = '2.0';
     els.phaseJit.value = '0';
   }
@@ -776,7 +801,7 @@ function updateAll() {
 }
 
 const controls = [
-  els.freq, els.shell,
+  els.freq, els.shell, els.activeSatExp, els.satEirpDbw,
   els.beamHalf, els.phaseJit, els.seed,
 ];
 
@@ -828,4 +853,9 @@ function formatFluxWm2(v) {
   const n = v * 1e9;
   if (n >= 1) return `${n.toFixed(3)} nW/m^2`;
   return `${(v * 1e12).toFixed(3)} pW/m^2`;
+}
+
+function formatLargeInt(v) {
+  if (!Number.isFinite(v)) return 'NaN';
+  return Math.round(v).toLocaleString('en-US');
 }

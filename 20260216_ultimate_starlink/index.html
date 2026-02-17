@@ -183,6 +183,16 @@
       </div>
 
       <div class="row">
+        <label for="activeSatExp">Active Satellites (log10) <span id="activeSatVal"></span></label>
+        <input id="activeSatExp" type="range" min="0" max="6" step="0.01" value="3" />
+      </div>
+
+      <div class="row">
+        <label for="satEirpDbw">Per-sat EIRP (dBW) <span id="satEirpVal"></span></label>
+        <input id="satEirpDbw" type="range" min="30" max="60" step="0.1" value="36.7" />
+      </div>
+
+      <div class="row">
         <label for="beamHalf">Panel Half-Angle (deg) <span id="beamHalfVal"></span></label>
         <input id="beamHalf" type="range" min="0.2" max="6" step="0.1" value="2.0" />
       </div>
