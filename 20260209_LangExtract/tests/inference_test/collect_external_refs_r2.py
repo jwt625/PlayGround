@@ -17,6 +17,7 @@ import requests
 USER_AGENT = "LangExtract-R2-Collector/1.0 (+https://github.com/wentaojiang)"
 REQUEST_TIMEOUT = 25
 MAX_CANDIDATES_PER_SOURCE = 6
+DOC_PREFIX = "r2"
 
 
 def now_utc_iso() -> str:
@@ -89,14 +90,14 @@ def make_document_id(ref: dict, idx: int) -> str:
     if doi:
         base = slugify(doi.replace("/", "_"))
         if base:
-            return f"r2_{base}"
+            return f"{DOC_PREFIX}_{base}"
     if arxiv:
         base = slugify(arxiv.replace("/", "_"))
         if base:
-            return f"r2_arxiv_{base}"
+            return f"{DOC_PREFIX}_arxiv_{base}"
     title = slugify(ref.get("title") or "untitled", max_len=60)
     digest = hashlib.sha1((ref.get("title") or str(idx)).encode("utf-8")).hexdigest()[:10]
-    return f"r2_{year}_{title}_{digest}"
+    return f"{DOC_PREFIX}_{year}_{title}_{digest}"
 
 
 def checksum_sha256(path: Path) -> str:
@@ -417,9 +418,12 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="Collect OA PDFs for external refs cited > threshold")
     parser.add_argument("--input", default="tests/inference_test/output/external_refs_cited_gt10.json")
     parser.add_argument("--output-dir", default="semiconductor_processing_dataset/raw_documents_R2")
+    parser.add_argument("--tag", default="r2", help="Round tag used for output file names and doc_id prefix")
     parser.add_argument("--workers", type=int, default=8)
     parser.add_argument("--dry-run", action="store_true")
     args = parser.parse_args()
+    global DOC_PREFIX
+    DOC_PREFIX = (args.tag or "r2").strip().lower()
 
     input_path = Path(args.input)
     out_dir = Path(args.output_dir)
@@ -428,9 +432,9 @@ def main() -> None:
     papers_dir = out_dir / "papers"
     papers_dir.mkdir(parents=True, exist_ok=True)
 
-    attempts_path = out_dir / "collection_attempts_r2.jsonl"
-    manifest_path = out_dir / "manifest_documents_r2.jsonl"
-    summary_path = out_dir / "collection_summary_r2.json"
+    attempts_path = out_dir / f"collection_attempts_{DOC_PREFIX}.jsonl"
+    manifest_path = out_dir / f"manifest_documents_{DOC_PREFIX}.jsonl"
+    summary_path = out_dir / f"collection_summary_{DOC_PREFIX}.json"
 
     with input_path.open("r", encoding="utf-8") as f:
         refs = json.load(f)

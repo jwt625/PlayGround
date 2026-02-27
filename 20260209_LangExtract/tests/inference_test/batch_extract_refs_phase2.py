@@ -140,7 +140,7 @@ async def extract_chunk(client: httpx.AsyncClient, chunk: str, semaphore: asynci
             ],
             "tools": [EXTRACT_REFS_TOOL],
             "tool_choice": {"type": "function", "function": {"name": "extract_references"}},
-            "max_tokens": 8192,
+            "max_tokens": 32768,
             "temperature": 0.1
         }
 
@@ -254,4 +254,3 @@ async def main():
 
 if __name__ == "__main__":
     asyncio.run(main())
-

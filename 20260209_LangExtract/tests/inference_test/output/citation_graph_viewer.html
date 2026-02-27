@@ -13,6 +13,7 @@
         .node { cursor: pointer; }
         .node circle { stroke: #fff; stroke-width: 1.5px; }
         .node.in-dataset circle { fill: #4ecdc4; }
+        .node.in-dataset-seen circle { fill: #7dd3fc; }
         .node.external circle { fill: #ff6b6b; }
         .node.highlighted circle { stroke: #ffd93d; stroke-width: 3px; }
         .link { stroke: #555; stroke-opacity: 0.4; fill: none; }
@@ -57,8 +58,9 @@
             </label>
         </div>
         <div id="legend">
-            <div><span class="dot" style="background:#4ecdc4"></span> In Dataset (260 papers)</div>
-            <div><span class="dot" style="background:#ff6b6b"></span> External References</div>
+            <div><span class="dot" style="background:#4ecdc4"></span> In Dataset (strict source docs)</div>
+            <div><span class="dot" style="background:#7dd3fc"></span> Seen/Processed in R1-R3 manifests</div>
+            <div><span class="dot" style="background:#ff6b6b"></span> Truly External (not seen)</div>
         </div>
         <div id="stats"></div>
     </div>
@@ -139,7 +141,7 @@ function getNodeSize(d) {
     if (sizeBy === 'citations') return d.citationCount;
     if (sizeBy === 'references') return d.refCount;
     // Auto: in-dataset uses refs, external uses citations
-    return d.in_dataset ? d.refCount : d.citationCount;
+    return d.in_dataset_effective ? d.refCount : d.citationCount;
 }
 
 function getNodeRadius(d) {
@@ -148,7 +150,7 @@ function getNodeRadius(d) {
 
 function initGraph() {
     const minCite = +document.getElementById('minCitations').value;
-    const visibleNodes = allNodes.filter(n => n.in_dataset || n.citationCount >= minCite);
+    const visibleNodes = allNodes.filter(n => n.in_dataset_effective || n.citationCount >= minCite);
     const visibleIds = new Set(visibleNodes.map(n => n.id));
     const visibleLinks = allLinks.filter(l => visibleIds.has(l.source.id || l.source) && visibleIds.has(l.target.id || l.target));
 
@@ -162,7 +164,11 @@ function initGraph() {
     // Nodes
     nodeElements = g.append("g").attr("class", "nodes").selectAll("g")
         .data(visibleNodes, d => d.id).join("g")
-        .attr("class", d => `node ${d.in_dataset ? 'in-dataset' : 'external'}`)
+        .attr("class", d => {
+            if (d.in_dataset) return "node in-dataset";
+            if (d.in_dataset_effective) return "node in-dataset-seen";
+            return "node external";
+        })
         .call(d3.drag().on("start", dragStart).on("drag", dragging).on("end", dragEnd));
 
     nodeElements.append("circle")
@@ -206,7 +212,13 @@ function showTooltip(e, d) {
         ${d.doi ? `<div class="meta">DOI: ${d.doi}</div>` : ''}
         ${d.arxiv ? `<div class="meta">arXiv: ${d.arxiv}</div>` : ''}
         <div class="citations">Citations: ${d.citationCount} | References: ${d.refCount}</div>
-        <div class="meta">${d.in_dataset ? '📄 In Dataset' : '📚 External Reference'}</div>
+        <div class="meta">${
+            d.in_dataset
+                ? 'In Dataset (strict source doc)'
+                : (d.in_dataset_effective
+                    ? `Seen in manifests (${d.seen_manifest_status || 'status-unknown'})`
+                    : 'Truly External (not seen in manifests)')
+        }</div>
     `;
     tooltip.style.left = (e.pageX + 15) + 'px';
     tooltip.style.top = (e.pageY + 15) + 'px';
@@ -227,11 +239,17 @@ function highlightConnected(e, d) {
 
 function updateStats() {
     const minCite = +document.getElementById('minCitations').value;
-    const visible = allNodes.filter(n => n.in_dataset || n.citationCount >= minCite).length;
+    const visible = allNodes.filter(n => n.in_dataset_effective || n.citationCount >= minCite).length;
+    const strictDataset = allNodes.filter(n => n.in_dataset).length;
+    const seenDataset = allNodes.filter(n => !n.in_dataset && n.in_dataset_effective).length;
+    const trulyExternal = allNodes.filter(n => !n.in_dataset_effective).length;
     document.getElementById('stats').innerHTML = `
         <div>Total Nodes: ${allNodes.length}</div>
         <div>Visible Nodes: ${visible}</div>
         <div>Total Edges: ${allLinks.length}</div>
+        <div>In Dataset (strict): ${strictDataset}</div>
+        <div>Seen in R1-R3 manifests: ${seenDataset}</div>
+        <div>Truly External: ${trulyExternal}</div>
     `;
 }
 
@@ -268,4 +286,3 @@ svg.on("click", function(e) {
 </script>
 </body>
 </html>
-

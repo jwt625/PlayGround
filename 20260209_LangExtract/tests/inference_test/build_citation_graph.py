@@ -56,7 +56,29 @@ def normalize_arxiv(arxiv_id: Optional[str]) -> Optional[str]:
         arxiv_id = arxiv_id[6:]
     # Remove version suffix (e.g., 'v1', 'v2')
     arxiv_id = re.sub(r'v\d+$', '', arxiv_id)
+    # Reject malformed placeholders / junk IDs
+    if not re.match(r'^[a-z0-9.\-\/]+$', arxiv_id):
+        return None
+    if not re.search(r'\d', arxiv_id):
+        return None
     return arxiv_id if arxiv_id else None
+
+
+def normalize_title_for_matching(title: Optional[str]) -> str:
+    """Normalize title for coarse matching across manifests and extracted refs."""
+    if not title:
+        return ''
+    t = str(title).lower()
+    t = re.sub(r'[^a-z0-9\s]', ' ', t)
+    t = re.sub(r'\s+', ' ', t).strip()
+    return t
+
+
+def title_year_key(title: Optional[str], year: Optional[int]) -> Optional[str]:
+    t = normalize_title_for_matching(title)
+    if not t or not year:
+        return None
+    return f"{year}:{t[:120]}"
 
 
 def extract_last_name(author: str) -> Optional[str]:
@@ -258,6 +280,61 @@ def load_source_paper_metadata(metadata_dir: Path) -> dict[str, dict]:
     return source_metadata
 
 
+def load_manifest_source_metadata(manifest_path: Path) -> dict[str, dict]:
+    """
+    Load source paper metadata from collection manifest JSONL.
+    Expected rows include document_id/title/year/doi/arxiv fields.
+    Returns: {document_id: metadata_dict}
+    """
+    source_metadata = {}
+    if not manifest_path.exists():
+        print(f"  Warning: Manifest file not found: {manifest_path}")
+        return source_metadata
+
+    with open(manifest_path, 'r') as f:
+        for line in f:
+            line = line.strip()
+            if not line:
+                continue
+            try:
+                row = json.loads(line)
+            except json.JSONDecodeError:
+                continue
+            doc_id = row.get('document_id')
+            if not doc_id:
+                continue
+            source_metadata[doc_id] = {
+                'document_id': doc_id,
+                'title': row.get('title', ''),
+                'authors': row.get('authors', []),
+                'year': row.get('year'),
+                'doi': row.get('doi'),
+                'arxiv_id': row.get('arxiv') or row.get('arxiv_id'),
+                'journal': row.get('journal', ''),
+                'volume': row.get('volume'),
+                'pages': row.get('pages'),
+            }
+    return source_metadata
+
+
+def load_manifest_rows(manifest_path: Path) -> list[dict]:
+    """Load raw manifest rows for cross-round seen/processed annotation."""
+    rows = []
+    if not manifest_path.exists():
+        return rows
+    with open(manifest_path, 'r') as f:
+        for line in f:
+            line = line.strip()
+            if not line:
+                continue
+            try:
+                row = json.loads(line)
+            except json.JSONDecodeError:
+                continue
+            rows.append(row)
+    return rows
+
+
 def load_phase2_data(input_path: Path) -> tuple[list[dict], dict[str, list[dict]]]:
     """
     Load Phase 2 extracted references.
@@ -403,30 +480,93 @@ def deduplicate_references(all_refs: list[dict], source_as_refs: dict[str, dict]
             else:
                 parent[px] = py
 
+    # Lightweight root metadata cache for guarded arXiv unions.
+    root_title = defaultdict(str)
+    root_year = {}
+    root_doi_pre = defaultdict(set)
+    for rid, refs in ref_groups.items():
+        root = find(rid)
+        for ref in refs:
+            t = (ref.get('title') or '').strip()
+            if len(t) > len(root_title[root]):
+                root_title[root] = t
+            if root not in root_year and ref.get('year'):
+                root_year[root] = ref.get('year')
+            d = normalize_doi(ref.get('doi'))
+            if d:
+                root_doi_pre[root].add(d)
+
+    def can_union_by_arxiv(a_refid, b_refid):
+        """Conservative guard for arXiv merges to avoid large false unions."""
+        ra = find(a_refid)
+        rb = find(b_refid)
+        if ra == rb:
+            return False
+
+        # Never merge when DOI sets conflict.
+        if root_doi_pre.get(ra) and root_doi_pre.get(rb) and root_doi_pre[ra].isdisjoint(root_doi_pre[rb]):
+            return False
+
+        # Require weak metadata agreement when both sides have enough signal.
+        ta = normalize_title_for_matching(root_title.get(ra))
+        tb = normalize_title_for_matching(root_title.get(rb))
+        if ta and tb and len(ta) >= 18 and len(tb) >= 18:
+            same_prefix = ta[:45] == tb[:45]
+            if not same_prefix:
+                return False
+        ya = root_year.get(ra)
+        yb = root_year.get(rb)
+        if ya and yb:
+            try:
+                if abs(int(ya) - int(yb)) > 2:
+                    return False
+            except Exception:
+                pass
+        return True
+
     # Union ref_ids that share DOI
     for doi, refids in doi_to_refids.items():
         refids = list(refids)
         for i in range(1, len(refids)):
             union(refids[0], refids[i])
 
-    # Union ref_ids that share arXiv
+    # Union ref_ids that share arXiv (conservative to avoid false merges)
     for arxiv, refids in arxiv_to_refids.items():
         refids = list(refids)
         for i in range(1, len(refids)):
-            union(refids[0], refids[i])
+            a = refids[0]
+            b = refids[i]
+            if not can_union_by_arxiv(a, b):
+                continue
+            pa = find(a)
+            pb = find(b)
+            union(a, b)
+            pr = find(a)
+            if pa != pb:
+                if len(root_title.get(pa, '')) > len(root_title.get(pr, '')):
+                    root_title[pr] = root_title[pa]
+                if len(root_title.get(pb, '')) > len(root_title.get(pr, '')):
+                    root_title[pr] = root_title[pb]
+                if pr not in root_year:
+                    root_year[pr] = root_year.get(pa) or root_year.get(pb)
+                root_doi_pre[pr].update(root_doi_pre.get(pa, set()))
+                root_doi_pre[pr].update(root_doi_pre.get(pb, set()))
+
+    # Build strict identifier sets per merged root after DOI/arXiv union.
+    root_doi = defaultdict(set)
+    root_arx = defaultdict(set)
+    for ref_id, refs in ref_groups.items():
+        root = find(ref_id)
+        for ref in refs:
+            doi = normalize_doi(ref.get('doi'))
+            arx = normalize_arxiv(ref.get('arxiv_id'))
+            if doi:
+                root_doi[root].add(doi)
+            if arx:
+                root_arx[root].add(arx)
 
     # Pass 3: Match by normalized title + year + first author last name
     # This catches cases where some refs have DOI and some don't
-    def normalize_title_for_matching(title: str) -> str:
-        """Normalize title for fuzzy matching."""
-        if not title:
-            return ''
-        # Lowercase, remove punctuation, collapse whitespace
-        title = title.lower()
-        title = re.sub(r'[^a-z0-9\s]', '', title)
-        title = re.sub(r'\s+', ' ', title).strip()
-        # Take first 50 chars to handle truncation
-        return title[:50]
 
     # Build title+year+author index
     title_key_to_refids = defaultdict(set)
@@ -436,7 +576,7 @@ def deduplicate_references(all_refs: list[dict], source_as_refs: dict[str, dict]
             year = ref.get('year')
             authors = ref.get('authors', [])
 
-            norm_title = normalize_title_for_matching(title)
+            norm_title = normalize_title_for_matching(title)[:50]
             if not norm_title or len(norm_title) < 15:  # Skip short/empty titles
                 continue
             if not year:
@@ -451,11 +591,43 @@ def deduplicate_references(all_refs: list[dict], source_as_refs: dict[str, dict]
             title_key = f"{last_name}_{year}_{norm_title}"
             title_key_to_refids[title_key].add(ref_id)
 
-    # Union ref_ids that share title key
+    def can_union_by_title(a_refid: str, b_refid: str) -> bool:
+        """Prevent title-based unions when strict IDs are in conflict."""
+        ra = find(a_refid)
+        rb = find(b_refid)
+        if ra == rb:
+            return False
+
+        a_doi = root_doi.get(ra, set())
+        b_doi = root_doi.get(rb, set())
+        if a_doi and b_doi and a_doi.isdisjoint(b_doi):
+            return False
+
+        a_arx = root_arx.get(ra, set())
+        b_arx = root_arx.get(rb, set())
+        if a_arx and b_arx and a_arx.isdisjoint(b_arx):
+            return False
+
+        return True
+
+    # Union ref_ids that share title key, guarded by strict-ID compatibility
     for title_key, refids in title_key_to_refids.items():
         refids = list(refids)
         for i in range(1, len(refids)):
-            union(refids[0], refids[i])
+            a = refids[0]
+            b = refids[i]
+            if not can_union_by_title(a, b):
+                continue
+            pa = find(a)
+            pb = find(b)
+            union(a, b)
+            pr = find(a)
+            # Keep strict-ID sets in sync for subsequent compatibility checks.
+            if pa != pb:
+                root_doi[pr].update(root_doi.get(pa, set()))
+                root_doi[pr].update(root_doi.get(pb, set()))
+                root_arx[pr].update(root_arx.get(pa, set()))
+                root_arx[pr].update(root_arx.get(pb, set()))
 
     # Group by canonical parent
     merged_groups = defaultdict(list)
@@ -475,6 +647,19 @@ def deduplicate_references(all_refs: list[dict], source_as_refs: dict[str, dict]
         # Determine best match method
         method = ref_methods.get(ref_id, 'composite')
 
+        # Canonical DOI/arXiv should be aligned with ref_id when ref_id is strict.
+        refid_doi = None
+        refid_arx = None
+        if ref_id.startswith('doi:'):
+            refid_doi = ref_id[4:]
+            canonical['doi'] = refid_doi
+        elif ref_id.startswith('arxiv:'):
+            refid_arx = ref_id[6:]
+            canonical['arxiv_id'] = refid_arx
+
+        group_dois = sorted({normalize_doi(r.get('doi')) for r in refs if normalize_doi(r.get('doi'))})
+        group_arx = sorted({normalize_arxiv(r.get('arxiv_id')) for r in refs if normalize_arxiv(r.get('arxiv_id'))})
+
         unique_refs[ref_id] = {
             'ref_id': ref_id,
             'canonical': canonical,
@@ -483,6 +668,9 @@ def deduplicate_references(all_refs: list[dict], source_as_refs: dict[str, dict]
             'match_method': method,
             'merged_from': len(refs),
             'in_dataset': False,  # Will be updated below
+            'group_strict_doi_count': len(group_dois),
+            'group_strict_arxiv_count': len(group_arx),
+            'strict_id_conflict': bool(len(group_dois) > 1 or len(group_arx) > 1),
         }
 
     # Pass 4: Merge source papers into the pool
@@ -504,6 +692,62 @@ def deduplicate_references(all_refs: list[dict], source_as_refs: dict[str, dict]
     return unique_refs
 
 
+def annotate_seen_in_manifests(unique_refs: dict, manifest_rows: list[dict]) -> None:
+    """Annotate references that already appear in collection manifests."""
+    idx_doi = defaultdict(list)
+    idx_arx = defaultdict(list)
+    idx_ty = defaultdict(list)
+
+    for row in manifest_rows:
+        doi = normalize_doi(row.get('doi'))
+        arx = normalize_arxiv(row.get('arxiv') or row.get('arxiv_id'))
+        ty = title_year_key(row.get('title'), row.get('year'))
+        if doi:
+            idx_doi[doi].append(row)
+        if arx:
+            idx_arx[arx].append(row)
+        if ty:
+            idx_ty[ty].append(row)
+
+    rank = {'succeeded': 3, 'skipped': 2, 'attempted': 1, 'failed': 0}
+
+    for ref_data in unique_refs.values():
+        canonical = ref_data.get('canonical', {})
+        doi = normalize_doi(canonical.get('doi'))
+        arx = normalize_arxiv(canonical.get('arxiv_id'))
+        ty = title_year_key(canonical.get('title'), canonical.get('year'))
+
+        strict_matches = []
+        if doi:
+            strict_matches.extend(idx_doi.get(doi, []))
+        if arx:
+            strict_matches.extend(idx_arx.get(arx, []))
+
+        all_matches = list(strict_matches)
+        if not all_matches and ty:
+            all_matches.extend(idx_ty.get(ty, []))
+
+        best_status = None
+        best_score = -1
+        for m in all_matches:
+            st = (m.get('status') or '').lower()
+            sc = rank.get(st, -1)
+            if sc > best_score:
+                best_score = sc
+                best_status = st
+
+        ref_data['seen_in_manifest'] = bool(all_matches)
+        ref_data['seen_in_manifest_strict'] = bool(strict_matches)
+        ref_data['seen_manifest_status'] = best_status
+        ref_data['seen_manifest_doc_ids'] = sorted({
+            m.get('document_id') for m in all_matches if m.get('document_id')
+        })
+        ref_data['in_dataset_effective'] = bool(ref_data.get('in_dataset', False) or ref_data['seen_in_manifest'])
+        ref_data['in_dataset_effective_strict'] = bool(
+            ref_data.get('in_dataset', False) or ref_data['seen_in_manifest_strict']
+        )
+
+
 def build_citation_graph(unique_refs: dict, doc_id_to_ref_id: dict[str, str], all_doc_ids: set) -> dict:
     """
     Build citation graph adjacency list.
@@ -522,6 +766,11 @@ def build_citation_graph(unique_refs: dict, doc_id_to_ref_id: dict[str, str], al
     for ref_id, ref_data in unique_refs.items():
         nodes[ref_id] = {
             'in_dataset': ref_data.get('in_dataset', False),
+            'in_dataset_effective': ref_data.get('in_dataset_effective', ref_data.get('in_dataset', False)),
+            'in_dataset_effective_strict': ref_data.get('in_dataset_effective_strict', ref_data.get('in_dataset', False)),
+            'seen_in_manifest': ref_data.get('seen_in_manifest', False),
+            'seen_in_manifest_strict': ref_data.get('seen_in_manifest_strict', False),
+            'seen_manifest_status': ref_data.get('seen_manifest_status'),
             'year': ref_data['canonical'].get('year'),
             'title': ref_data['canonical'].get('title'),
         }
@@ -532,6 +781,11 @@ def build_citation_graph(unique_refs: dict, doc_id_to_ref_id: dict[str, str], al
             # This source paper doesn't have metadata - add it with doc_id as the node ID
             nodes[doc_id] = {
                 'in_dataset': True,  # It's a source paper
+                'in_dataset_effective': True,
+                'in_dataset_effective_strict': True,
+                'seen_in_manifest': True,
+                'seen_in_manifest_strict': True,
+                'seen_manifest_status': 'succeeded',
                 'year': None,
                 'title': doc_id,  # Use doc_id as title placeholder
             }
@@ -546,6 +800,11 @@ def build_citation_graph(unique_refs: dict, doc_id_to_ref_id: dict[str, str], al
             if citing_ref_id not in nodes:
                 nodes[citing_ref_id] = {
                     'in_dataset': citing_doc in all_doc_ids,
+                    'in_dataset_effective': citing_doc in all_doc_ids,
+                    'in_dataset_effective_strict': citing_doc in all_doc_ids,
+                    'seen_in_manifest': citing_doc in all_doc_ids,
+                    'seen_in_manifest_strict': citing_doc in all_doc_ids,
+                    'seen_manifest_status': 'succeeded' if citing_doc in all_doc_ids else None,
                     'year': None,
                     'title': citing_ref_id,
                 }
@@ -571,14 +830,22 @@ def compute_stats(all_refs: list, unique_refs: dict, doc_id_to_ref_id: dict, gra
     method_counts = defaultdict(int)
     for ref_data in unique_refs.values():
         method_counts[ref_data['match_method']] += 1
+    strict_conflict_refs = [
+        r for r in unique_refs.values()
+        if r.get('strict_id_conflict')
+    ]
 
-    # Separate in-dataset and external references
+    # Separate strict in-dataset and external references
     in_dataset_refs = [r for r in unique_refs.values() if r.get('in_dataset', False)]
     external_refs = [r for r in unique_refs.values() if not r.get('in_dataset', False)]
+    in_dataset_effective_refs = [r for r in unique_refs.values() if r.get('in_dataset_effective', r.get('in_dataset', False))]
+    external_effective_refs = [r for r in unique_refs.values() if not r.get('in_dataset_effective', r.get('in_dataset', False))]
 
-    # Sort external by citation count
+    # Sort external by citation count (strict and effective)
     external_refs.sort(key=lambda x: x['citation_count'], reverse=True)
     top_100 = external_refs[:100]
+    external_effective_refs.sort(key=lambda x: x['citation_count'], reverse=True)
+    top_100_effective = external_effective_refs[:100]
 
     # Count inter-dataset citations (edges where both from and to are in-dataset)
     # Use graph nodes to include all source papers (including those without metadata)
@@ -599,10 +866,13 @@ def compute_stats(all_refs: list, unique_refs: dict, doc_id_to_ref_id: dict, gra
         'total_in_dataset_nodes': len(in_dataset_node_ids),
         'in_dataset_references': len(in_dataset_refs),
         'external_references': len(external_refs),
+        'in_dataset_effective_references': len(in_dataset_effective_refs),
+        'external_effective_references': len(external_effective_refs),
         'inter_dataset_citations': len(inter_dataset_edges),
         'total_graph_nodes': len(graph['nodes']),
         'total_graph_edges': len(graph['edges']),
         'match_methods': dict(method_counts),
+        'strict_id_conflict_references': len(strict_conflict_refs),
         'top_100_external': [
             {
                 'ref_id': r['ref_id'],
@@ -614,6 +884,20 @@ def compute_stats(all_refs: list, unique_refs: dict, doc_id_to_ref_id: dict, gra
                 'arxiv_id': r['canonical'].get('arxiv_id'),
             }
             for r in top_100
+        ],
+        'top_100_external_effective': [
+            {
+                'ref_id': r['ref_id'],
+                'title': r['canonical'].get('title'),
+                'authors': r['canonical'].get('authors', [])[:3],
+                'year': r['canonical'].get('year'),
+                'citation_count': r['citation_count'],
+                'doi': r['canonical'].get('doi'),
+                'arxiv_id': r['canonical'].get('arxiv_id'),
+                'seen_in_manifest': r.get('seen_in_manifest', False),
+                'seen_manifest_status': r.get('seen_manifest_status'),
+            }
+            for r in top_100_effective
         ],
     }
 
@@ -643,9 +927,13 @@ Examples:
                         help='Input JSONL file(s) from Phase 2 (can specify multiple)')
     parser.add_argument('--metadata-dir', '-m', type=Path, action='append', dest='metadata_dirs',
                         help='Directory(ies) containing source paper metadata JSON files (can specify multiple)')
+    parser.add_argument('--manifest', '-c', type=Path, action='append', dest='manifest_paths',
+                        help='Collection manifest JSONL file(s) for source papers (can specify multiple)')
     parser.add_argument('--output-dir', '-o', type=Path,
                         default=Path('output'),
                         help='Output directory')
+    parser.add_argument('--fail-on-conflicts', action='store_true',
+                        help='Exit non-zero if strict-ID conflicts are detected in deduped references')
     args = parser.parse_args()
 
     # Set defaults if not provided
@@ -653,6 +941,8 @@ Examples:
         args.inputs = [Path('output/phase2_extracted_refs.jsonl')]
     if not args.metadata_dirs:
         args.metadata_dirs = [Path('../../semiconductor_processing_dataset/processed_documents/metadata')]
+    if not args.manifest_paths:
+        args.manifest_paths = []
 
     # Load Phase 2 data from all input files
     all_refs = []
@@ -674,6 +964,23 @@ Examples:
         meta = load_source_paper_metadata(metadata_dir)
         source_metadata.update(meta)
         print(f"  Loaded metadata for {len(meta)} source papers")
+
+    manifest_rows_all = []
+    for manifest_path in args.manifest_paths:
+        print(f"Loading source paper metadata from manifest {manifest_path}...")
+        meta = load_manifest_source_metadata(manifest_path)
+        manifest_rows_all.extend(load_manifest_rows(manifest_path))
+        merged = 0
+        for doc_id, m in meta.items():
+            if doc_id not in source_metadata:
+                source_metadata[doc_id] = m
+                merged += 1
+            else:
+                # Fill missing fields from manifest without overwriting richer metadata
+                for k in ['title', 'authors', 'year', 'doi', 'arxiv_id', 'journal', 'volume', 'pages']:
+                    if not source_metadata[doc_id].get(k) and m.get(k):
+                        source_metadata[doc_id][k] = m[k]
+        print(f"  Loaded metadata for {len(meta)} source papers from manifest ({merged} new, {len(meta) - merged} merged)")
     print(f"Total: metadata for {len(source_metadata)} source papers")
 
     # Generate canonical IDs for source papers
@@ -684,8 +991,11 @@ Examples:
     # Deduplicate references (including matching against source papers)
     print("Deduplicating references...")
     unique_refs = deduplicate_references(all_refs, source_as_refs)
+    annotate_seen_in_manifests(unique_refs, manifest_rows_all)
     in_dataset_count = sum(1 for r in unique_refs.values() if r.get('in_dataset', False))
-    print(f"  Found {len(unique_refs)} unique references ({in_dataset_count} in-dataset, {len(unique_refs) - in_dataset_count} external)")
+    in_dataset_effective_count = sum(1 for r in unique_refs.values() if r.get('in_dataset_effective', r.get('in_dataset', False)))
+    print(f"  Found {len(unique_refs)} unique references ({in_dataset_count} strict in-dataset, {len(unique_refs) - in_dataset_count} strict external)")
+    print(f"  Effective classification: {in_dataset_effective_count} in-dataset/seen, {len(unique_refs) - in_dataset_effective_count} truly external")
     print(f"  Dedup ratio: {len(all_refs)/len(unique_refs):.2f}x")
 
     # Build citation graph using canonical ref_ids
@@ -723,17 +1033,24 @@ Examples:
     print("\n=== Summary ===")
     print(f"Total raw references: {stats['total_raw_references']}")
     print(f"Unique references: {stats['unique_references']}")
-    print(f"  - In-dataset: {stats['in_dataset_references']}")
-    print(f"  - External: {stats['external_references']}")
+    print(f"  - In-dataset (strict): {stats['in_dataset_references']}")
+    print(f"  - External (strict): {stats['external_references']}")
+    print(f"  - In-dataset/seen (effective): {stats['in_dataset_effective_references']}")
+    print(f"  - External (effective): {stats['external_effective_references']}")
     print(f"Dedup ratio: {stats['dedup_ratio']}x")
     print(f"Inter-dataset citations: {stats['inter_dataset_citations']}")
     print(f"Match methods: {stats['match_methods']}")
-    print(f"\nTop 10 most-cited external references:")
-    for i, ref in enumerate(stats['top_100_external'][:10], 1):
+    print(f"Strict-ID conflicts: {stats['strict_id_conflict_references']}")
+    print(f"\nTop 10 most-cited external references (effective):")
+    for i, ref in enumerate(stats['top_100_external_effective'][:10], 1):
         title = ref['title'][:50] + '...' if ref['title'] and len(ref['title']) > 50 else ref['title']
         print(f"  {i}. [{ref['citation_count']} citations] {title} ({ref['year']})")
+
+    if args.fail_on_conflicts and stats['strict_id_conflict_references'] > 0:
+        raise SystemExit(
+            f"Validation failed: {stats['strict_id_conflict_references']} references have conflicting strict IDs."
+        )
 
 
 if __name__ == '__main__':
     main()
-
