@@ -26,8 +26,9 @@ TEST_DOCUMENTS = [
     ("eichinger_michaela_copenhagen_2023", "theses/copenhagen"),
 ]
 
-RAW_DOCS_BASE = Path(__file__).parent.parent.parent / "semiconductor_processing_dataset" / "raw_documents"
-OUTPUT_BASE = Path(__file__).parent.parent.parent / "semiconductor_processing_dataset" / "processed_documents" / "text_extracted"
+PROJECT_ROOT = Path(__file__).resolve().parents[4]
+RAW_DOCS_BASE = PROJECT_ROOT / "semiconductor_processing_dataset" / "raw_documents"
+OUTPUT_BASE = PROJECT_ROOT / "semiconductor_processing_dataset" / "processed_documents" / "text_extracted"
 
 
 @dataclass
@@ -174,4 +175,3 @@ if __name__ == "__main__":
         tools = [args.tool] if args.tool else None
         docs = [(d, s) for d, s in TEST_DOCUMENTS if d == args.doc] if args.doc else None
         run_benchmark(tools=tools, docs=docs)
-

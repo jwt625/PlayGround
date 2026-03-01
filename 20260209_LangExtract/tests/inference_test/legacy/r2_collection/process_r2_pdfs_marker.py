@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 """
-Concurrent PDF to Markdown Processor using Marker
+Concurrent PDF to Markdown Processor using Marker - R2 Batch
 
+Processes the R2 papers batch (238 PDFs) using Marker.
 Features:
-- Processes all PDFs in the dataset using Marker
+- Processes all PDFs in papers_r2 directory
 - Concurrent processing with configurable workers
 - Safe stop/resume: tracks progress in JSONL file
 - Graceful shutdown on Ctrl+C
@@ -24,12 +25,12 @@ import filelock
 
 # Paths relative to this script
 SCRIPT_DIR = Path(__file__).parent
-PROJECT_ROOT = SCRIPT_DIR.parent.parent
-RAW_DOCS_BASE = PROJECT_ROOT / "semiconductor_processing_dataset" / "raw_documents"
+PROJECT_ROOT = SCRIPT_DIR.parent.parent.parent.parent
+RAW_DOCS_DIR = PROJECT_ROOT / "semiconductor_processing_dataset" / "raw_documents" / "papers_r2" / "papers"
 OUTPUT_BASE = PROJECT_ROOT / "semiconductor_processing_dataset" / "processed_documents" / "text_extracted"
-MANIFEST_FILE = PROJECT_ROOT / "semiconductor_processing_dataset" / "processed_documents" / "metadata" / "manifest_documents.jsonl"
-PROGRESS_FILE = OUTPUT_BASE / "marker_processing_progress.jsonl"
-LOCK_FILE = OUTPUT_BASE / "marker_processing.lock"
+OUTPUT_DIR = OUTPUT_BASE / "marker_r2"
+PROGRESS_FILE = OUTPUT_BASE / "marker_r2_processing_progress.jsonl"
+LOCK_FILE = OUTPUT_BASE / "marker_r2_processing.lock"
 
 
 @dataclass
@@ -61,17 +62,13 @@ def load_completed_documents() -> set[str]:
     return completed
 
 
-def load_all_documents() -> list[dict]:
-    """Load all documents from manifest file."""
-    documents = []
-    with open(MANIFEST_FILE, "r") as f:
-        for line in f:
-            if line.strip():
-                doc = json.loads(line)
-                # Only include documents with succeeded status and valid source_path
-                if doc.get("status") == "succeeded" and doc.get("source_path"):
-                    documents.append(doc)
-    return documents
+def get_all_pdfs() -> list[tuple[str, Path]]:
+    """Get all PDFs from the R2 papers directory."""
+    pdfs = []
+    for pdf_path in sorted(RAW_DOCS_DIR.glob("*.pdf")):
+        doc_id = pdf_path.stem  # filename without extension
+        pdfs.append((doc_id, pdf_path))
+    return pdfs
 
 
 def save_result(result: ProcessingResult):
@@ -82,22 +79,19 @@ def save_result(result: ProcessingResult):
             f.write(json.dumps(asdict(result)) + "\n")
 
 
-def convert_single_pdf(doc_id: str, source_path: str, gpu_id: int = 0) -> ProcessingResult:
+def convert_single_pdf(doc_id: str, pdf_path: str, gpu_id: int = 0) -> ProcessingResult:
     """Convert a single PDF using Marker. Runs in subprocess."""
     import os
-    # Set CUDA device for this worker process
     os.environ['CUDA_VISIBLE_DEVICES'] = str(gpu_id)
 
-    pdf_path = PROJECT_ROOT / source_path
-    output_dir = OUTPUT_BASE / "marker"
-    output_dir.mkdir(parents=True, exist_ok=True)
-    output_file = output_dir / f"{doc_id}.md"
+    pdf_path = Path(pdf_path)
+    OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+    output_file = OUTPUT_DIR / f"{doc_id}.md"
 
     input_size = pdf_path.stat().st_size if pdf_path.exists() else 0
 
     start_time = time.time()
     try:
-        # Import inside function to avoid issues with multiprocessing
         from marker.converters.pdf import PdfConverter
         from marker.models import create_model_dict
 
@@ -113,7 +107,7 @@ def convert_single_pdf(doc_id: str, source_path: str, gpu_id: int = 0) -> Proces
         
         elapsed = time.time() - start_time
         return ProcessingResult(
-            document_id=doc_id, source_path=source_path, success=True,
+            document_id=doc_id, source_path=str(pdf_path), success=True,
             processing_time_seconds=round(elapsed, 2),
             input_size_bytes=input_size, output_size_bytes=output_size,
             page_count=page_count, error_message=None,
@@ -122,7 +116,7 @@ def convert_single_pdf(doc_id: str, source_path: str, gpu_id: int = 0) -> Proces
     except Exception as e:
         elapsed = time.time() - start_time
         return ProcessingResult(
-            document_id=doc_id, source_path=source_path, success=False,
+            document_id=doc_id, source_path=str(pdf_path), success=False,
             processing_time_seconds=round(elapsed, 2),
             input_size_bytes=input_size, output_size_bytes=None,
             page_count=None, error_message=f"{type(e).__name__}: {e}\n{traceback.format_exc()}",
@@ -149,29 +143,26 @@ def run_processing(max_workers: int = 2, limit: int = None, dry_run: bool = Fals
     """Run the full processing pipeline."""
     global shutdown_requested
 
-    # Setup signal handler
     signal.signal(signal.SIGINT, signal_handler)
     signal.signal(signal.SIGTERM, signal_handler)
 
-    # Load documents and progress
-    print("Loading manifest and progress...")
-    all_docs = load_all_documents()
+    print("Scanning for PDFs...")
+    all_pdfs = get_all_pdfs()
     completed = load_completed_documents()
 
-    # Filter to only unprocessed documents
-    pending = [d for d in all_docs if d["document_id"] not in completed]
+    pending = [(doc_id, pdf_path) for doc_id, pdf_path in all_pdfs if doc_id not in completed]
 
     if limit:
         pending = pending[:limit]
 
-    print(f"Total documents in manifest: {len(all_docs)}")
+    print(f"Total PDFs found: {len(all_pdfs)}")
     print(f"Already processed: {len(completed)}")
     print(f"Pending: {len(pending)}")
 
     if dry_run:
         print("\n[DRY RUN] Would process:")
-        for doc in pending[:20]:
-            print(f"  - {doc['document_id']}")
+        for doc_id, _ in pending[:20]:
+            print(f"  - {doc_id}")
         if len(pending) > 20:
             print(f"  ... and {len(pending) - 20} more")
         return
@@ -180,10 +171,10 @@ def run_processing(max_workers: int = 2, limit: int = None, dry_run: bool = Fals
         print("\nAll documents already processed!")
         return
 
-    # Ensure output directory exists
-    (OUTPUT_BASE / "marker").mkdir(parents=True, exist_ok=True)
+    OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
     print(f"\nStarting processing with {max_workers} workers across {num_gpus} GPUs...")
+    print(f"Output directory: {OUTPUT_DIR}")
     print(f"Progress file: {PROGRESS_FILE}")
     print("-" * 60)
 
@@ -191,16 +182,13 @@ def run_processing(max_workers: int = 2, limit: int = None, dry_run: bool = Fals
     error_count = 0
     start_time = time.time()
 
-    # Use ProcessPoolExecutor for CPU-intensive work
     with ProcessPoolExecutor(max_workers=max_workers) as executor:
-        # Submit all tasks with round-robin GPU assignment
         future_to_doc = {}
-        for idx, doc in enumerate(pending):
-            gpu_id = idx % num_gpus  # Round-robin across GPUs
-            future = executor.submit(convert_single_pdf, doc["document_id"], doc["source_path"], gpu_id)
-            future_to_doc[future] = doc
+        for idx, (doc_id, pdf_path) in enumerate(pending):
+            gpu_id = idx % num_gpus
+            future = executor.submit(convert_single_pdf, doc_id, str(pdf_path), gpu_id)
+            future_to_doc[future] = (doc_id, pdf_path)
 
-        # Process completed futures as they finish
         for future in as_completed(future_to_doc):
             if shutdown_requested:
                 print("\nCancelling pending tasks...")
@@ -208,7 +196,7 @@ def run_processing(max_workers: int = 2, limit: int = None, dry_run: bool = Fals
                     f.cancel()
                 break
 
-            doc = future_to_doc[future]
+            doc_id, _ = future_to_doc[future]
             try:
                 result = future.result()
                 save_result(result)
@@ -223,7 +211,7 @@ def run_processing(max_workers: int = 2, limit: int = None, dry_run: bool = Fals
                     print(f"✗ {result.document_id}: {error_short}")
             except Exception as e:
                 error_count += 1
-                print(f"✗ {doc['document_id']}: Future exception: {e}")
+                print(f"✗ {doc_id}: Future exception: {e}")
 
     elapsed = time.time() - start_time
     print("\n" + "=" * 60)
@@ -231,15 +219,15 @@ def run_processing(max_workers: int = 2, limit: int = None, dry_run: bool = Fals
     print(f"  Succeeded: {success_count}")
     print(f"  Failed: {error_count}")
     print(f"  Total time: {elapsed/60:.1f} minutes")
-    print(f"  Average: {elapsed/(success_count+error_count):.1f}s per document" if (success_count+error_count) > 0 else "")
+    if (success_count + error_count) > 0:
+        print(f"  Average: {elapsed/(success_count+error_count):.1f}s per document")
 
 
 def show_status():
     """Show current processing status."""
-    all_docs = load_all_documents()
+    all_pdfs = get_all_pdfs()
     completed = load_completed_documents()
 
-    # Load full progress for stats
     results = []
     if PROGRESS_FILE.exists():
         with open(PROGRESS_FILE, "r") as f:
@@ -256,10 +244,10 @@ def show_status():
     total_time = sum(r.get("processing_time_seconds", 0) for r in successes)
     total_output = sum(r.get("output_size_bytes", 0) or 0 for r in successes)
 
-    print(f"Total documents: {len(all_docs)}")
+    print(f"Total PDFs: {len(all_pdfs)}")
     print(f"Completed successfully: {len(successes)}")
     print(f"Failed: {len(failures)}")
-    print(f"Remaining: {len(all_docs) - len(completed)}")
+    print(f"Remaining: {len(all_pdfs) - len(completed)}")
     print(f"Total processing time: {total_time/3600:.1f} hours")
     print(f"Total output size: {total_output/1024/1024:.1f} MB")
 
@@ -273,9 +261,9 @@ def show_status():
 
 if __name__ == "__main__":
     import argparse
-    parser = argparse.ArgumentParser(description="Concurrent PDF to Markdown Processor using Marker")
+    parser = argparse.ArgumentParser(description="R2 Batch PDF to Markdown Processor using Marker")
     parser.add_argument("--workers", "-w", type=int, default=2,
-                        help="Number of parallel workers (default: 2, keep low due to memory)")
+                        help="Number of parallel workers (default: 2)")
     parser.add_argument("--gpus", "-g", type=int, default=2,
                         help="Number of GPUs to use (default: 2)")
     parser.add_argument("--limit", "-l", type=int, default=None,
@@ -290,4 +278,3 @@ if __name__ == "__main__":
         show_status()
     else:
         run_processing(max_workers=args.workers, limit=args.limit, dry_run=args.dry_run, num_gpus=args.gpus)
-

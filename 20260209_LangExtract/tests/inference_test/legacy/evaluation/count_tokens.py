@@ -46,7 +46,7 @@ def process_files(files: list[Path], enc: tiktoken.Encoding, label: str) -> tupl
 
 
 def main():
-    script_dir = Path(__file__).parent
+    script_dir = Path(__file__).resolve().parents[2]
     r1_dir = (script_dir / R1_DIR).resolve()
     r2_dir = (script_dir / R2_DIR).resolve()
 
@@ -95,7 +95,7 @@ def main():
         "r2_per_file": r2_stats
     }
 
-    output_path = Path(__file__).parent / "output" / "token_counts.json"
+    output_path = Path(__file__).resolve().parents[2] / "output" / "token_counts.json"
     with open(output_path, "w") as f:
         json.dump(output, f, indent=2)
     print(f"\nDetailed stats saved to: {output_path}")
@@ -103,4 +103,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-

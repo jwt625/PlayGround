@@ -18,7 +18,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Optional
 
-ROOT = Path(__file__).resolve().parents[2]
+ROOT = Path(__file__).resolve().parents[4]
 OUTPUT_DIR = ROOT / "tests/inference_test/output"
 TOP100_MD = OUTPUT_DIR / "top_100_external_refs_R2.md"
 DEDUP_STATS = OUTPUT_DIR / "dedup_stats.json"

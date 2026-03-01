@@ -9,10 +9,10 @@ Features:
 
 Usage:
   # R1 (default):
-  python batch_extract_refs_phase2.py
+  python tests/inference_test/pipeline/phase2_extract_structured_refs.py
 
   # R2:
-  python batch_extract_refs_phase2.py \
+  python tests/inference_test/pipeline/phase2_extract_structured_refs.py \
     --input-file tests/inference_test/output/reference_sections_r2.jsonl \
     --output-file tests/inference_test/output/phase2_extracted_refs_r2.jsonl \
     --progress-file tests/inference_test/output/phase2_progress_r2.json
@@ -47,7 +47,8 @@ API_URL = os.getenv("API_URL")
 API_TOKEN = os.getenv("API_TOKEN")
 MODEL_ID = os.getenv("MODEL_ID", "zai-org/GLM-4.7-FP8")
 
-OUTPUT_DIR = Path(__file__).parent / "output"
+PROJECT_ROOT = Path(__file__).resolve().parents[3]
+OUTPUT_DIR = PROJECT_ROOT / "tests" / "inference_test" / "output"
 
 # Default paths (R1)
 DEFAULT_INPUT_FILE = OUTPUT_DIR / "reference_sections.jsonl"
@@ -59,8 +60,54 @@ MAX_REFS_PER_CHUNK = 10
 MAX_RETRIES = 3
 TIMEOUT = 600.0
 
-# Import tool and prompt from test script
-from test_extract_references_llm import EXTRACT_REFS_TOOL, SYSTEM_PROMPT
+EXTRACT_REFS_TOOL = {
+    "type": "function",
+    "function": {
+        "name": "extract_references",
+        "description": "Parse raw reference text into structured bibliographic data",
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "references": {
+                    "type": "array",
+                    "description": "List of parsed references",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "ref_num": {"type": "integer"},
+                            "title": {"type": "string"},
+                            "authors": {"type": "array", "items": {"type": "string"}},
+                            "year": {"type": "integer"},
+                            "journal": {"type": "string"},
+                            "volume": {"type": "string"},
+                            "pages": {"type": "string"},
+                            "doi": {"type": "string"},
+                            "arxiv_id": {"type": "string"},
+                            "url": {"type": "string"},
+                        },
+                        "required": ["ref_num", "title", "authors", "year"],
+                    },
+                },
+                "total_count": {"type": "integer"},
+                "parse_notes": {"type": "string"},
+            },
+            "required": ["references", "total_count"],
+        },
+    },
+}
+
+SYSTEM_PROMPT = """You are a bibliographic data extraction expert. Parse raw references into structured fields.
+
+Requirements:
+1. Extract all references.
+2. Fields: ref_num, title, authors, year, journal, volume, pages, doi, arxiv_id, url.
+3. If authors > 5, return first 3 and last 2 only.
+4. DOI must be identifier only (no URL).
+5. arXiv must be ID only (no prefix/url).
+6. Omit or null for missing fields.
+7. Handle varied citation styles.
+
+You must call extract_references with the parsed output."""
 
 
 def parse_args():

@@ -5,7 +5,7 @@ from pathlib import Path
 from collections import defaultdict, Counter
 from difflib import SequenceMatcher
 
-ROOT = Path(__file__).resolve().parents[2]
+ROOT = Path(__file__).resolve().parents[3]
 OUT_DIR = ROOT / 'tests/inference_test/output'
 
 UNIQUE_REFS = OUT_DIR / 'unique_references.jsonl'

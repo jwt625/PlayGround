@@ -205,7 +205,7 @@ def main():
     result = extract_papers_from_text(content)
     
     # Save raw response
-    output_dir = Path(__file__).parent / "output"
+    output_dir = Path(__file__).resolve().parents[1] / "output"
     output_dir.mkdir(exist_ok=True)
     
     with open(output_dir / "raw_response.json", "w") as f:
@@ -261,4 +261,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-

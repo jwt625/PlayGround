@@ -65,7 +65,7 @@ def load_manifest(manifest_path: Path) -> list[dict]:
 
 
 def main():
-    base_dir = Path(__file__).parent.parent.parent
+    base_dir = Path(__file__).resolve().parents[4]
     ofs_path = base_dir / "tests/inference_test/output/ofs_extractions.jsonl"
     manifest_path = base_dir / "semiconductor_processing_dataset/processed_documents/metadata/manifest_documents.jsonl"
     
@@ -151,4 +151,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-

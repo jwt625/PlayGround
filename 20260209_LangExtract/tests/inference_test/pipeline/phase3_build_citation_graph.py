@@ -912,15 +912,16 @@ def main():
         epilog="""
 Examples:
   # Single batch (R1 only):
-  python build_citation_graph.py -i output/phase2_extracted_refs.jsonl
+  python tests/inference_test/pipeline/phase3_build_citation_graph.py -i tests/inference_test/output/phase2_extracted_refs.jsonl
 
   # Multiple batches (R1 + R2):
-  python build_citation_graph.py \\
-    -i output/phase2_extracted_refs.jsonl \\
-    -i output/phase2_extracted_refs_r2.jsonl \\
-    -m ../../semiconductor_processing_dataset/processed_documents/metadata \\
-    -m ../../semiconductor_processing_dataset/processed_documents_R2/metadata \\
-    -o output
+  python tests/inference_test/pipeline/phase3_build_citation_graph.py \\
+    -i tests/inference_test/output/phase2_extracted_refs.jsonl \\
+    -i tests/inference_test/output/phase2_extracted_refs_r2.jsonl \\
+    -m data/collection_r1/metadata \\
+    -c data/collection_r1/manifest_documents.jsonl \\
+    -c data/collection_r2/manifest_documents_r2.jsonl \\
+    -o tests/inference_test/output
         """
     )
     parser.add_argument('--input', '-i', type=Path, action='append', dest='inputs',

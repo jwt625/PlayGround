@@ -7,7 +7,7 @@ import urllib.request
 from difflib import SequenceMatcher
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parents[2]
+ROOT = Path(__file__).resolve().parents[3]
 REG = ROOT / 'tests/inference_test/output/canonical_reference_registry.jsonl'
 OUT_CAND = ROOT / 'tests/inference_test/output/relaxed_only_doi_candidates.jsonl'
 OUT_SUM = ROOT / 'tests/inference_test/output/relaxed_only_doi_candidates_summary.json'

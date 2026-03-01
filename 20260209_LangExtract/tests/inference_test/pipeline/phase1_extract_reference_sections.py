@@ -21,8 +21,9 @@ from pathlib import Path
 from typing import Optional, Tuple
 
 # Paths
-MARKER_DIR = Path(__file__).parent.parent.parent / "semiconductor_processing_dataset" / "processed_documents" / "text_extracted" / "marker"
-OUTPUT_DIR = Path(__file__).parent / "output"
+PROJECT_ROOT = Path(__file__).resolve().parents[3]
+MARKER_DIR = PROJECT_ROOT / "semiconductor_processing_dataset" / "processed_documents" / "text_extracted" / "marker"
+OUTPUT_DIR = PROJECT_ROOT / "tests" / "inference_test" / "output"
 OUTPUT_FILE = OUTPUT_DIR / "reference_sections.jsonl"
 
 # Patterns to identify reference section headers

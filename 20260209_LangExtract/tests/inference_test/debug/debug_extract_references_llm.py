@@ -26,7 +26,7 @@ API_URL = os.getenv("API_URL")
 API_TOKEN = os.getenv("API_TOKEN")
 MODEL_ID = os.getenv("MODEL_ID", "zai-org/GLM-4.7-FP8")
 
-OUTPUT_DIR = Path(__file__).parent / "output"
+OUTPUT_DIR = Path(__file__).resolve().parents[1] / "output"
 REFERENCE_SECTIONS_FILE = OUTPUT_DIR / "reference_sections.jsonl"
 
 # Tool definition for structured reference extraction
@@ -120,7 +120,7 @@ After analyzing, you MUST call extract_references with your findings."""
 def load_reference_section(document_id: str) -> Optional[dict]:
     """Load a specific document's reference section from the JSONL file."""
     if not REFERENCE_SECTIONS_FILE.exists():
-        print(f"Error: {REFERENCE_SECTIONS_FILE} not found. Run extract_reference_sections.py first.")
+        print(f"Error: {REFERENCE_SECTIONS_FILE} not found. Run phase1_extract_reference_sections.py first.")
         return None
     
     with open(REFERENCE_SECTIONS_FILE) as f:
@@ -303,7 +303,7 @@ def main():
     record = load_reference_section(document_id)
     if not record:
         print(f"Error: Document '{document_id}' not found in reference_sections.jsonl")
-        print("Run: python extract_reference_sections.py first")
+        print("Run: python tests/inference_test/pipeline/phase1_extract_reference_sections.py first")
         print("Or use --list to see available documents")
         return
 
@@ -401,4 +401,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-

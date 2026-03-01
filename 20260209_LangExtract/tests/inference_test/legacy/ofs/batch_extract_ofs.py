@@ -23,7 +23,7 @@ API_URL = os.getenv("API_URL")
 API_TOKEN = os.getenv("API_TOKEN")
 MODEL_ID = os.getenv("MODEL_ID", "zai-org/GLM-4.7-FP8")
 
-OUTPUT_DIR = Path(__file__).parent / "output"
+OUTPUT_DIR = Path(__file__).resolve().parents[2] / "output"
 OUTPUT_FILE = OUTPUT_DIR / "ofs_extractions.jsonl"
 GITHUB_API = "https://api.github.com"
 RAW_BASE = "https://raw.githubusercontent.com/jwt625/jwt625.github.io/master/_posts"
@@ -273,4 +273,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
