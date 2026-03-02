@@ -18,7 +18,6 @@ __pycache__/
 # Re-allow file types blocked by parent .gitignore
 !*.csv
 !*.txt
-!*.md
 *.lock
 
 # Data files — tracked via HF dataset repo in data/
