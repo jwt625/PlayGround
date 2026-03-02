@@ -18,7 +18,7 @@ __pycache__/
 # Re-allow file types blocked by parent .gitignore
 !*.csv
 !*.txt
-*.md
+!*.md
 *.lock
 
 # Data files — tracked via HF dataset repo in data/
@@ -28,3 +28,7 @@ data/
 semiconductor_processing_dataset/raw_documents_R2/papers/
 semiconductor_processing_dataset/*.zip
 semiconductor_processing_dataset/raw_documents_R2/_tmp_browser_downloads/*
+
+# Extracted corpus text artifacts (generated markdown)
+semiconductor_processing_dataset/processed_documents/text_extracted/**/*.md
+semiconductor_processing_dataset/processed_documents_R2/text_extracted/**/*.md
