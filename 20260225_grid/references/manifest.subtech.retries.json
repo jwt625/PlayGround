@@ -1,0 +1,48 @@
+{
+  "generated_at_utc": "2026-03-02T04:23:12.124386+00:00",
+  "total": 4,
+  "ok": 1,
+  "failed": 3,
+  "items": [
+    {
+      "category": "bess",
+      "key": "tesla_q4_2025_deployments",
+      "url": "https://ir.tesla.com/press-release/tesla-fourth-quarter-2025-production-deliveries-deployments",
+      "status": "failed",
+      "http_status": null,
+      "raw_path": null,
+      "md_path": "references/md/subtech/bess__tesla_q4_2025_deployments.md",
+      "error": "HTTPError: HTTP Error 403: Forbidden"
+    },
+    {
+      "category": "bess",
+      "key": "fluence_q3_2025",
+      "url": "https://ir.fluenceenergy.com/news-releases/news-release-details/fluence-energy-inc-reports-third-quarter-2025-results-reaffirms/",
+      "status": "failed",
+      "http_status": null,
+      "raw_path": null,
+      "md_path": "references/md/subtech/bess__fluence_q3_2025.md",
+      "error": "TimeoutError: The read operation timed out"
+    },
+    {
+      "category": "solar",
+      "key": "first_solar_2024_results_2025_guidance",
+      "url": "https://www.businesswire.com/news/home/20250225031936/en/First-Solar-Inc.-Announces-Fourth-Quarter-and-Full-Year-2024-Financial-Results-and-2025-Guidance",
+      "status": "failed",
+      "http_status": null,
+      "raw_path": null,
+      "md_path": "references/md/subtech/solar__first_solar_2024_results_2025_guidance.md",
+      "error": "HTTPError: HTTP Error 403: Forbidden"
+    },
+    {
+      "category": "solar",
+      "key": "canadian_solar_20f",
+      "url": "https://www.sec.gov/Archives/edgar/data/1375877/000141057825001046/csiq-20241231x20f.htm",
+      "status": "ok",
+      "http_status": 200,
+      "raw_path": "references/raw/subtech/solar/canadian_solar_20f.html",
+      "md_path": "references/md/subtech/solar__canadian_solar_20f.md",
+      "error": null
+    }
+  ]
+}

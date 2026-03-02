@@ -1,0 +1,250 @@
+{
+  "generated_at_utc": "2026-03-02T04:21:18.191340+00:00",
+  "total": 22,
+  "ok": 16,
+  "failed": 6,
+  "items": [
+    {
+      "category": "bess",
+      "key": "fluence_q3_2025",
+      "url": "https://ir.fluenceenergy.com/news-releases/news-release-details/fluence-energy-inc-reports-third-quarter-2025-results-reaffirms/",
+      "status": "failed",
+      "http_status": null,
+      "source_type": "unknown",
+      "raw_path": null,
+      "md_path": "references/md/subtech/bess__fluence_q3_2025.md",
+      "error": "TimeoutError: The read operation timed out"
+    },
+    {
+      "category": "bess",
+      "key": "nrel_atb_electricity_2025",
+      "url": "https://atb.nrel.gov/electricity/2025/",
+      "status": "failed",
+      "http_status": null,
+      "source_type": "unknown",
+      "raw_path": null,
+      "md_path": "references/md/subtech/bess__nrel_atb_electricity_2025.md",
+      "error": "HTTPError: HTTP Error 404: Not Found"
+    },
+    {
+      "category": "bess",
+      "key": "tesla_megafactory",
+      "url": "https://www.tesla.com/megafactory",
+      "status": "failed",
+      "http_status": null,
+      "source_type": "unknown",
+      "raw_path": null,
+      "md_path": "references/md/subtech/bess__tesla_megafactory.md",
+      "error": "HTTPError: HTTP Error 403: Forbidden"
+    },
+    {
+      "category": "bess",
+      "key": "tesla_q4_2025_deployments",
+      "url": "https://ir.tesla.com/press-release/tesla-fourth-quarter-2025-production-deliveries-deployments",
+      "status": "failed",
+      "http_status": null,
+      "source_type": "unknown",
+      "raw_path": null,
+      "md_path": "references/md/subtech/bess__tesla_q4_2025_deployments.md",
+      "error": "HTTPError: HTTP Error 403: Forbidden"
+    },
+    {
+      "category": "grid",
+      "key": "eia_electricity_monthly",
+      "url": "https://www.eia.gov/electricity/monthly/index.php",
+      "status": "ok",
+      "http_status": 200,
+      "source_type": "html",
+      "raw_path": "references/raw/subtech/grid/eia_electricity_monthly.html",
+      "md_path": "references/md/subtech/grid__eia_electricity_monthly.md",
+      "error": null
+    },
+    {
+      "category": "grid",
+      "key": "eia_steo",
+      "url": "https://www.eia.gov/steo",
+      "status": "ok",
+      "http_status": 200,
+      "source_type": "html",
+      "raw_path": "references/raw/subtech/grid/eia_steo.html",
+      "md_path": "references/md/subtech/grid__eia_steo.md",
+      "error": null
+    },
+    {
+      "category": "grid",
+      "key": "pjm_2027_2028_bra",
+      "url": "https://insidelines.pjm.com/pjm-auction-procures-134479-mw-of-generation-resources/",
+      "status": "ok",
+      "http_status": 200,
+      "source_type": "html",
+      "raw_path": "references/raw/subtech/grid/pjm_2027_2028_bra.html",
+      "md_path": "references/md/subtech/grid__pjm_2027_2028_bra.md",
+      "error": null
+    },
+    {
+      "category": "soec",
+      "key": "topsoe_soec_factory",
+      "url": "https://www.topsoe.com/news/topsoe-inaugurates-europes-largest-soec-manufacturing-facility",
+      "status": "ok",
+      "http_status": 200,
+      "source_type": "html",
+      "raw_path": "references/raw/subtech/soec/topsoe_soec_factory.html",
+      "md_path": "references/md/subtech/soec__topsoe_soec_factory.md",
+      "error": null
+    },
+    {
+      "category": "sofc",
+      "key": "bloom_equinix_100mw",
+      "url": "https://investor.bloomenergy.com/press-releases/press-release-details/2025/Bloom-Energy-Expands-Data-Center-Power-Agreement-with-Equinix-Surpassing-100MW/default.aspx",
+      "status": "ok",
+      "http_status": 200,
+      "source_type": "html",
+      "raw_path": "references/raw/subtech/sofc/bloom_equinix_100mw.html",
+      "md_path": "references/md/subtech/sofc__bloom_equinix_100mw.md",
+      "error": null
+    },
+    {
+      "category": "sofc",
+      "key": "fuelcell_energy_fy2025",
+      "url": "https://investor.fce.com/press-releases/press-release-details/2025/FuelCell-Energy-Ends-FY2025-with-Revenue-Growth-and-a-Focus-on-Data-Center-Opportunities/default.aspx",
+      "status": "ok",
+      "http_status": 200,
+      "source_type": "html",
+      "raw_path": "references/raw/subtech/sofc/fuelcell_energy_fy2025.html",
+      "md_path": "references/md/subtech/sofc__fuelcell_energy_fy2025.md",
+      "error": null
+    },
+    {
+      "category": "sofc",
+      "key": "netl_data_center_sofc_project",
+      "url": "https://www.netl.doe.gov/node/5959",
+      "status": "ok",
+      "http_status": 200,
+      "source_type": "html",
+      "raw_path": "references/raw/subtech/sofc/netl_data_center_sofc_project.html",
+      "md_path": "references/md/subtech/sofc__netl_data_center_sofc_project.md",
+      "error": null
+    },
+    {
+      "category": "sofc",
+      "key": "nrel_fuel_cell_power_model",
+      "url": "https://research-hub.nrel.gov/en/publications/fuel-cell-power-model-version-2-startup-guide-system-designs-and-",
+      "status": "ok",
+      "http_status": 200,
+      "source_type": "html",
+      "raw_path": "references/raw/subtech/sofc/nrel_fuel_cell_power_model.html",
+      "md_path": "references/md/subtech/sofc__nrel_fuel_cell_power_model.md",
+      "error": null
+    },
+    {
+      "category": "sofc",
+      "key": "nrel_sam_fuel_cell",
+      "url": "https://samrepo.nrelcloud.org/help/fuelcell.html",
+      "status": "ok",
+      "http_status": 200,
+      "source_type": "html",
+      "raw_path": "references/raw/subtech/sofc/nrel_sam_fuel_cell.html",
+      "md_path": "references/md/subtech/sofc__nrel_sam_fuel_cell.md",
+      "error": null
+    },
+    {
+      "category": "solar",
+      "key": "canadian_solar_20f",
+      "url": "https://www.sec.gov/Archives/edgar/data/1375877/000141057825001046/csiq-20241231x20f.htm",
+      "status": "failed",
+      "http_status": null,
+      "source_type": "unknown",
+      "raw_path": null,
+      "md_path": "references/md/subtech/solar__canadian_solar_20f.md",
+      "error": "HTTPError: HTTP Error 403: Forbidden"
+    },
+    {
+      "category": "solar",
+      "key": "first_solar_2024_results_2025_guidance",
+      "url": "https://www.businesswire.com/news/home/20250225031936/en/First-Solar-Inc.-Announces-Fourth-Quarter-and-Full-Year-2024-Financial-Results-and-2025-Guidance",
+      "status": "failed",
+      "http_status": null,
+      "source_type": "unknown",
+      "raw_path": null,
+      "md_path": "references/md/subtech/solar__first_solar_2024_results_2025_guidance.md",
+      "error": "TimeoutError: The read operation timed out"
+    },
+    {
+      "category": "solar",
+      "key": "trina_2023_annual",
+      "url": "https://www.trinasolar.com/us/resources/newsroom/2023-annual-report/",
+      "status": "ok",
+      "http_status": 200,
+      "source_type": "html",
+      "raw_path": "references/raw/subtech/solar/trina_2023_annual.html",
+      "md_path": "references/md/subtech/solar__trina_2023_annual.md",
+      "error": null
+    },
+    {
+      "category": "turbine",
+      "key": "ge_vernova_ceo_letter",
+      "url": "https://www.gevernova.com/investors/annual-report/ceo-letter",
+      "status": "ok",
+      "http_status": 200,
+      "source_type": "html",
+      "raw_path": "references/raw/subtech/turbine/ge_vernova_ceo_letter.html",
+      "md_path": "references/md/subtech/turbine__ge_vernova_ceo_letter.md",
+      "error": null
+    },
+    {
+      "category": "turbine",
+      "key": "mhi_mccoy_share",
+      "url": "https://power.mhi.com/news/240315.html",
+      "status": "ok",
+      "http_status": 200,
+      "source_type": "html",
+      "raw_path": "references/raw/subtech/turbine/mhi_mccoy_share.html",
+      "md_path": "references/md/subtech/turbine__mhi_mccoy_share.md",
+      "error": null
+    },
+    {
+      "category": "turbine",
+      "key": "mhi_us_power_outlook",
+      "url": "https://power.mhi.com/regions/amer/insights/us-power-outlook-and-long-term-trends",
+      "status": "ok",
+      "http_status": 200,
+      "source_type": "html",
+      "raw_path": "references/raw/subtech/turbine/mhi_us_power_outlook.html",
+      "md_path": "references/md/subtech/turbine__mhi_us_power_outlook.md",
+      "error": null
+    },
+    {
+      "category": "turbine",
+      "key": "siemens_energy_ir",
+      "url": "https://www.siemens-energy.com/global/en/home/investor-relations.html",
+      "status": "ok",
+      "http_status": 200,
+      "source_type": "html",
+      "raw_path": "references/raw/subtech/turbine/siemens_energy_ir.html",
+      "md_path": "references/md/subtech/turbine__siemens_energy_ir.md",
+      "error": null
+    },
+    {
+      "category": "turbine",
+      "key": "siemens_q1_fy26_analyst_pdf",
+      "url": "https://p3.aprimocdn.net/siemensenergy/d5e24758-5d19-44f7-b57d-b3ee0057e335/2026-02-11_Q1_Analyst_presentation-pdf_Original%20file.pdf",
+      "status": "ok",
+      "http_status": 200,
+      "source_type": "pdf",
+      "raw_path": "references/raw/subtech/turbine/siemens_q1_fy26_analyst_pdf.pdf",
+      "md_path": "references/md/subtech/turbine__siemens_q1_fy26_analyst_pdf.md",
+      "error": null
+    },
+    {
+      "category": "turbine",
+      "key": "siemens_q1_fy26_earnings_pdf",
+      "url": "https://p3.aprimocdn.net/siemensenergy/f8b7f2d2-e4f2-4fe5-8295-b3ee005765a4/2026-02-11_Earnings-Release-Q1-FY26-pdf_Original%20file.pdf",
+      "status": "ok",
+      "http_status": 200,
+      "source_type": "pdf",
+      "raw_path": "references/raw/subtech/turbine/siemens_q1_fy26_earnings_pdf.pdf",
+      "md_path": "references/md/subtech/turbine__siemens_q1_fy26_earnings_pdf.md",
+      "error": null
+    }
+  ]
+}

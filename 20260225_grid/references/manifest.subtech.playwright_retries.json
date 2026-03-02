@@ -1,0 +1,48 @@
+{
+  "generated_at_utc": "2026-03-02T04:24:02.150Z",
+  "total": 4,
+  "ok": 4,
+  "failed": 0,
+  "items": [
+    {
+      "category": "bess",
+      "key": "tesla_q4_2025_deployments",
+      "url": "https://ir.tesla.com/press-release/tesla-fourth-quarter-2025-production-deliveries-deployments",
+      "status": "ok",
+      "http_status": 200,
+      "raw_path": "references/raw/subtech/bess/tesla_q4_2025_deployments.html",
+      "md_path": "references/md/subtech/bess__tesla_q4_2025_deployments.md",
+      "error": null
+    },
+    {
+      "category": "bess",
+      "key": "fluence_q3_2025",
+      "url": "https://ir.fluenceenergy.com/news-releases/news-release-details/fluence-energy-inc-reports-third-quarter-2025-results-reaffirms/",
+      "status": "ok",
+      "http_status": 200,
+      "raw_path": "references/raw/subtech/bess/fluence_q3_2025.html",
+      "md_path": "references/md/subtech/bess__fluence_q3_2025.md",
+      "error": null
+    },
+    {
+      "category": "solar",
+      "key": "first_solar_2024_results_2025_guidance",
+      "url": "https://www.businesswire.com/news/home/20250225031936/en/First-Solar-Inc.-Announces-Fourth-Quarter-and-Full-Year-2024-Financial-Results-and-2025-Guidance",
+      "status": "ok",
+      "http_status": 200,
+      "raw_path": "references/raw/subtech/solar/first_solar_2024_results_2025_guidance.html",
+      "md_path": "references/md/subtech/solar__first_solar_2024_results_2025_guidance.md",
+      "error": null
+    },
+    {
+      "category": "bess",
+      "key": "tesla_megafactory",
+      "url": "https://www.tesla.com/megafactory",
+      "status": "ok",
+      "http_status": 200,
+      "raw_path": "references/raw/subtech/bess/tesla_megafactory.html",
+      "md_path": "references/md/subtech/bess__tesla_megafactory.md",
+      "error": null
+    }
+  ]
+}

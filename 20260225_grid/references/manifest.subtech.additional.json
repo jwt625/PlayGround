@@ -1,0 +1,96 @@
+{
+  "generated_at_utc": "2026-03-02T04:22:08.818372+00:00",
+  "total": 8,
+  "ok": 8,
+  "failed": 0,
+  "items": [
+    {
+      "category": "bess",
+      "key": "nrel_atb_utility_battery_2024",
+      "url": "https://atb.nrel.gov/electricity/2024/2023/utility-scale_battery_storage",
+      "status": "ok",
+      "http_status": 200,
+      "source_type": "html",
+      "raw_path": "references/raw/subtech/bess/nrel_atb_utility_battery_2024.html",
+      "md_path": "references/md/subtech/bess__nrel_atb_utility_battery_2024.md",
+      "error": null
+    },
+    {
+      "category": "bess",
+      "key": "nrel_battery_cost_proj_2025",
+      "url": "https://research-hub.nrel.gov/en/publications/cost-projections-for-utility-scale-battery-storage-2025-update/",
+      "status": "ok",
+      "http_status": 200,
+      "source_type": "html",
+      "raw_path": "references/raw/subtech/bess/nrel_battery_cost_proj_2025.html",
+      "md_path": "references/md/subtech/bess__nrel_battery_cost_proj_2025.md",
+      "error": null
+    },
+    {
+      "category": "sofc",
+      "key": "bloom_energy_server_datasheet_page",
+      "url": "https://www.bloomenergy.com/resource/bloom-energy-server/",
+      "status": "ok",
+      "http_status": 200,
+      "source_type": "html",
+      "raw_path": "references/raw/subtech/sofc/bloom_energy_server_datasheet_page.html",
+      "md_path": "references/md/subtech/sofc__bloom_energy_server_datasheet_page.md",
+      "error": null
+    },
+    {
+      "category": "sofc",
+      "key": "bloom_hydrogen_sofc_efficiency",
+      "url": "https://investor.bloomenergy.com/press-releases/press-release-details/2024/Bloom-Energy-Announces-Hydrogen-Solid-Oxide-Fuel-Cell-with-60-Electrical-Efficiency-and-90-High-Temperature-Combined-Heat-and-Power-Efficiency/default.aspx",
+      "status": "ok",
+      "http_status": 200,
+      "source_type": "html",
+      "raw_path": "references/raw/subtech/sofc/bloom_hydrogen_sofc_efficiency.html",
+      "md_path": "references/md/subtech/sofc__bloom_hydrogen_sofc_efficiency.md",
+      "error": null
+    },
+    {
+      "category": "solar",
+      "key": "nrel_atb_utility_pv_2024",
+      "url": "https://atb.nrel.gov/electricity/2024/utility-scale_pv",
+      "status": "ok",
+      "http_status": 200,
+      "source_type": "html",
+      "raw_path": "references/raw/subtech/solar/nrel_atb_utility_pv_2024.html",
+      "md_path": "references/md/subtech/solar__nrel_atb_utility_pv_2024.md",
+      "error": null
+    },
+    {
+      "category": "turbine",
+      "key": "ge_lm6000_fast_start",
+      "url": "https://www.gevernova.com/gas-power/services/gas-turbines/upgrades/lm6000-fast-start",
+      "status": "ok",
+      "http_status": 200,
+      "source_type": "html",
+      "raw_path": "references/raw/subtech/turbine/ge_lm6000_fast_start.html",
+      "md_path": "references/md/subtech/turbine__ge_lm6000_fast_start.md",
+      "error": null
+    },
+    {
+      "category": "turbine",
+      "key": "mhi_m501j_specs",
+      "url": "https://power.mhi.com/products/gasturbines/lineup/m501j",
+      "status": "ok",
+      "http_status": 200,
+      "source_type": "html",
+      "raw_path": "references/raw/subtech/turbine/mhi_m501j_specs.html",
+      "md_path": "references/md/subtech/turbine__mhi_m501j_specs.md",
+      "error": null
+    },
+    {
+      "category": "turbine",
+      "key": "siemens_sgt800_press",
+      "url": "https://press.siemens.com/global/en/feature/siemens-launches-performance-enhancement-select-sgt-800-gas-turbines",
+      "status": "ok",
+      "http_status": 200,
+      "source_type": "html",
+      "raw_path": "references/raw/subtech/turbine/siemens_sgt800_press.html",
+      "md_path": "references/md/subtech/turbine__siemens_sgt800_press.md",
+      "error": null
+    }
+  ]
+}

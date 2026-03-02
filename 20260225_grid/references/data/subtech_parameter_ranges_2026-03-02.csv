@@ -1,0 +1,15 @@
+category,subtechnology,parameter,unit,min,mean,max,basis,source_file
+sofc,planar_ng_chp,net_electrical_efficiency_lhv,fraction,0.45,0.55,0.60,"NETL SOFC range + Bloom H2/SOFC signal",references/md/subtech/sofc__netl_fuel_cell_handbook7.md
+sofc,planar_ng_chp,combined_heat_power_efficiency,fraction,0.70,0.82,0.90,"Bloom CHP statement + high-temp SOFC heat use",references/md/subtech/sofc__bloom_hydrogen_sofc_efficiency.md
+sofc,planar_hydrogen_ready,net_electrical_efficiency_lhv,fraction,0.50,0.58,0.62,"Bloom H2 efficiency announcement",references/md/subtech/sofc__bloom_hydrogen_sofc_efficiency.md
+sofc,mcfc_internal_reforming,net_electrical_efficiency_lhv,fraction,0.47,0.52,0.57,"NETL MCFC high-forties/low-fifties guidance",references/md/subtech/sofc__netl_fuel_cell_handbook7.md
+sofc,mcfc_internal_reforming,startup_time_hours,hours,8,24,72,"NETL slow startup characterization",references/md/subtech/sofc__netl_fuel_cell_handbook7.md
+turbine,aeroderivative_fast_start,startup_time_minutes,minutes,5,8,10,"GE LM6000 fast-start schedules",references/md/subtech/turbine__ge_lm6000_fast_start.md
+turbine,aeroderivative_fast_start,ramp_rate_fraction_nameplate_per_min,fraction_per_min,0.10,0.13,0.20,"Derived from 5/8/10-min startup envelope",references/md/subtech/turbine__ge_lm6000_fast_start.md
+turbine,heavy_duty_j_class_ccgt,net_electrical_efficiency_lhv,fraction,0.58,0.62,0.645,"M501J combined-cycle >64% LHV",references/md/subtech/turbine__mhi_m501j_specs.md
+turbine,heavy_duty_j_class_ccgt,simple_cycle_efficiency_lhv,fraction,0.41,0.44,0.46,"M501J simple-cycle reference around 44%",references/md/subtech/turbine__mhi_m501j_specs.md
+bess,li_ion_4h_utility_scale_cost_projection_2035,capex_usd_per_kwh,usd_per_kWh,152,247,349,"NREL 2025 update low/mid/high",references/md/subtech/bess__nrel_battery_cost_proj_2025.md
+bess,li_ion_4h_utility_scale_cost_projection_2050,capex_usd_per_kwh,usd_per_kWh,111,184,333,"NREL 2025 update low/mid/high",references/md/subtech/bess__nrel_battery_cost_proj_2025.md
+bess,li_ion_generic,round_trip_efficiency,fraction,0.85,0.89,0.93,"ATB 85% with project-variation range",references/md/subtech/bess__nrel_atb_utility_battery_2024.md
+solar,utility_pv_tracking,net_capacity_factor,fraction,0.214,0.28,0.34,"ATB utility PV resource class range",references/md/subtech/solar__nrel_atb_utility_pv_2024.md
+solar,utility_pv_tracking,annual_degradation,fraction_per_year,0.002,0.005,0.007,"ATB scenario degradation assumptions",references/md/subtech/solar__nrel_atb_utility_pv_2024.md

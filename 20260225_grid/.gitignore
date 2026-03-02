@@ -1,0 +1,9 @@
+references/.pw-firefox-profile/*
+.venv/
+node_modules/
+
+# Un-ignore file types blocked by parent .gitignore but needed in this project
+!*.json
+!*.csv
+!*.html
+!*.pdf

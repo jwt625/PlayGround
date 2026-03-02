@@ -1,0 +1,169 @@
+{
+  "generated_at_utc": "2026-03-01T19:23:11.281Z",
+  "total": 16,
+  "ok": 16,
+  "failed": 0,
+  "user_data_dir": "references/.pw-firefox-profile",
+  "items": [
+    {
+      "key": "berkeley_queues_landing",
+      "url": "https://emp.lbl.gov/queues",
+      "status": "ok",
+      "http_status": 200,
+      "source_type": "html",
+      "raw_path": "references/raw/berkeley_queues_landing.html",
+      "md_path": "references/md/berkeley_queues_landing.md",
+      "error": null
+    },
+    {
+      "key": "bloom_equinix_100mw",
+      "url": "https://investor.bloomenergy.com/press-releases/press-release-details/2025/Bloom-Energy-Expands-Data-Center-Power-Agreement-with-Equinix-Surpassing-100MW/default.aspx",
+      "status": "ok",
+      "http_status": 200,
+      "source_type": "html",
+      "raw_path": "references/raw/bloom_equinix_100mw.html",
+      "md_path": "references/md/bloom_equinix_100mw.md",
+      "error": null
+    },
+    {
+      "key": "doe_release_data_center_demand",
+      "url": "https://www.energy.gov/articles/doe-releases-new-report-evaluating-increase-electricity-demand-data-centers",
+      "status": "ok",
+      "http_status": 200,
+      "source_type": "html",
+      "raw_path": "references/raw/doe_release_data_center_demand.html",
+      "md_path": "references/md/doe_release_data_center_demand.md",
+      "error": null
+    },
+    {
+      "key": "eia_aeo2025_lcoe_pdf",
+      "url": "https://www.eia.gov/outlooks/aeo/electricity_generation/pdf/AEO2025_LCOE_report.pdf",
+      "status": "ok",
+      "http_status": 200,
+      "source_type": "pdf",
+      "raw_path": "references/raw/eia_aeo2025_lcoe_pdf.pdf",
+      "md_path": "references/md/eia_aeo2025_lcoe_pdf.md",
+      "error": null
+    },
+    {
+      "key": "eia_electricity_monthly",
+      "url": "https://www.eia.gov/electricity/monthly/index.php",
+      "status": "ok",
+      "http_status": 200,
+      "source_type": "html",
+      "raw_path": "references/raw/eia_electricity_monthly.html",
+      "md_path": "references/md/eia_electricity_monthly.md",
+      "error": null
+    },
+    {
+      "key": "eia_steo",
+      "url": "https://www.eia.gov/steo",
+      "status": "ok",
+      "http_status": 200,
+      "source_type": "html",
+      "raw_path": "references/raw/eia_steo.html",
+      "md_path": "references/md/eia_steo.md",
+      "error": null
+    },
+    {
+      "key": "ferc_nerc_ltra_2025_presentation",
+      "url": "https://www.ferc.gov/news-events/news/ferc-nerc-presentation-2025-long-term-reliability-assessment",
+      "status": "ok",
+      "http_status": 200,
+      "source_type": "html",
+      "raw_path": "references/raw/ferc_nerc_ltra_2025_presentation.html",
+      "md_path": "references/md/ferc_nerc_ltra_2025_presentation.md",
+      "error": null
+    },
+    {
+      "key": "ferc_order_2023_explainer",
+      "url": "https://www.ferc.gov/explainer-interconnection-final-rule",
+      "status": "ok",
+      "http_status": 200,
+      "source_type": "html",
+      "raw_path": "references/raw/ferc_order_2023_explainer.html",
+      "md_path": "references/md/ferc_order_2023_explainer.md",
+      "error": null
+    },
+    {
+      "key": "ferc_order_2023a_explainer",
+      "url": "https://www.ferc.gov/explainer-interconnection-final-rule-2023-A",
+      "status": "ok",
+      "http_status": 200,
+      "source_type": "html",
+      "raw_path": "references/raw/ferc_order_2023a_explainer.html",
+      "md_path": "references/md/ferc_order_2023a_explainer.md",
+      "error": null
+    },
+    {
+      "key": "lbnl_2024_data_center_report",
+      "url": "https://eta.lbl.gov/publications/2024-lbnl-data-center-energy-usage-report",
+      "status": "ok",
+      "http_status": 200,
+      "source_type": "html",
+      "raw_path": "references/raw/lbnl_2024_data_center_report.html",
+      "md_path": "references/md/lbnl_2024_data_center_report.md",
+      "error": null
+    },
+    {
+      "key": "openai_stargate",
+      "url": "https://openai.com/blog/announcing-the-stargate-project/",
+      "status": "ok",
+      "http_status": 200,
+      "source_type": "html",
+      "raw_path": "references/raw/openai_stargate.html",
+      "md_path": "references/md/openai_stargate.md",
+      "error": null
+    },
+    {
+      "key": "osti_queued_up_2025",
+      "url": "https://www.osti.gov/biblio/3008763",
+      "status": "ok",
+      "http_status": 200,
+      "source_type": "html",
+      "raw_path": "references/raw/osti_queued_up_2025.html",
+      "md_path": "references/md/osti_queued_up_2025.md",
+      "error": null
+    },
+    {
+      "key": "pjm_2026_2027_bra",
+      "url": "https://insidelines.pjm.com/pjm-auction-procures-134311-mw-of-generation-resources-supply-responds-to-price-signal/",
+      "status": "ok",
+      "http_status": 200,
+      "source_type": "html",
+      "raw_path": "references/raw/pjm_2026_2027_bra.html",
+      "md_path": "references/md/pjm_2026_2027_bra.md",
+      "error": null
+    },
+    {
+      "key": "pjm_2027_2028_bra",
+      "url": "https://insidelines.pjm.com/pjm-auction-procures-134479-mw-of-generation-resources/",
+      "status": "ok",
+      "http_status": 200,
+      "source_type": "html",
+      "raw_path": "references/raw/pjm_2027_2028_bra.html",
+      "md_path": "references/md/pjm_2027_2028_bra.md",
+      "error": null
+    },
+    {
+      "key": "treasury_45y_48e_release",
+      "url": "https://home.treasury.gov/news/press-releases/jy2787",
+      "status": "ok",
+      "http_status": 200,
+      "source_type": "html",
+      "raw_path": "references/raw/treasury_45y_48e_release.html",
+      "md_path": "references/md/treasury_45y_48e_release.md",
+      "error": null
+    },
+    {
+      "key": "wecc_large_load_report",
+      "url": "https://www.wecc.org/wecc-document/19111",
+      "status": "ok",
+      "http_status": 200,
+      "source_type": "html",
+      "raw_path": "references/raw/wecc_large_load_report.html",
+      "md_path": "references/md/wecc_large_load_report.md",
+      "error": null
+    }
+  ]
+}

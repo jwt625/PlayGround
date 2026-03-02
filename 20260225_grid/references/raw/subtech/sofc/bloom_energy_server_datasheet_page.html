@@ -1,0 +1,1671 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+	<meta charset="UTF-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<link rel="pingback" href="https://www.bloomenergy.com/xmlrpc.php" />
+
+	<script type="text/javascript">
+		document.documentElement.className = 'js';
+	</script>
+	
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin /><style id="et-divi-open-sans-inline-css">/* Original: https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800&#038;subset=latin,latin-ext&#038;display=swap *//* User Agent: Mozilla/5.0 (Unknown; Linux x86_64) AppleWebKit/538.1 (KHTML, like Gecko) Safari/538.1 Daum/4.1 */@font-face {font-family: 'Open Sans';font-style: italic;font-weight: 300;font-stretch: normal;font-display: swap;src: url(https://fonts.gstatic.com/s/opensans/v44/memQYaGs126MiZpBA-UFUIcVXSCEkx2cmqvXlWq8tWZ0Pw86hd0Rk5hkWV4exQ.ttf) format('truetype');}@font-face {font-family: 'Open Sans';font-style: italic;font-weight: 400;font-stretch: normal;font-display: swap;src: url(https://fonts.gstatic.com/s/opensans/v44/memQYaGs126MiZpBA-UFUIcVXSCEkx2cmqvXlWq8tWZ0Pw86hd0Rk8ZkWV4exQ.ttf) format('truetype');}@font-face {font-family: 'Open Sans';font-style: italic;font-weight: 600;font-stretch: normal;font-display: swap;src: url(https://fonts.gstatic.com/s/opensans/v44/memQYaGs126MiZpBA-UFUIcVXSCEkx2cmqvXlWq8tWZ0Pw86hd0RkxhjWV4exQ.ttf) format('truetype');}@font-face {font-family: 'Open Sans';font-style: italic;font-weight: 700;font-stretch: normal;font-display: swap;src: url(https://fonts.gstatic.com/s/opensans/v44/memQYaGs126MiZpBA-UFUIcVXSCEkx2cmqvXlWq8tWZ0Pw86hd0RkyFjWV4exQ.ttf) format('truetype');}@font-face {font-family: 'Open Sans';font-style: italic;font-weight: 800;font-stretch: normal;font-display: swap;src: url(https://fonts.gstatic.com/s/opensans/v44/memQYaGs126MiZpBA-UFUIcVXSCEkx2cmqvXlWq8tWZ0Pw86hd0Rk0ZjWV4exQ.ttf) format('truetype');}@font-face {font-family: 'Open Sans';font-style: normal;font-weight: 300;font-stretch: normal;font-display: swap;src: url(https://fonts.gstatic.com/s/opensans/v44/memSYaGs126MiZpBA-UvWbX2vVnXBbObj2OVZyOOSr4dVJWUgsiH0B4uaVc.ttf) format('truetype');}@font-face {font-family: 'Open Sans';font-style: normal;font-weight: 400;font-stretch: normal;font-display: swap;src: url(https://fonts.gstatic.com/s/opensans/v44/memSYaGs126MiZpBA-UvWbX2vVnXBbObj2OVZyOOSr4dVJWUgsjZ0B4uaVc.ttf) format('truetype');}@font-face {font-family: 'Open Sans';font-style: normal;font-weight: 600;font-stretch: normal;font-display: swap;src: url(https://fonts.gstatic.com/s/opensans/v44/memSYaGs126MiZpBA-UvWbX2vVnXBbObj2OVZyOOSr4dVJWUgsgH1x4uaVc.ttf) format('truetype');}@font-face {font-family: 'Open Sans';font-style: normal;font-weight: 700;font-stretch: normal;font-display: swap;src: url(https://fonts.gstatic.com/s/opensans/v44/memSYaGs126MiZpBA-UvWbX2vVnXBbObj2OVZyOOSr4dVJWUgsg-1x4uaVc.ttf) format('truetype');}@font-face {font-family: 'Open Sans';font-style: normal;font-weight: 800;font-stretch: normal;font-display: swap;src: url(https://fonts.gstatic.com/s/opensans/v44/memSYaGs126MiZpBA-UvWbX2vVnXBbObj2OVZyOOSr4dVJWUgshZ1x4uaVc.ttf) format('truetype');}/* User Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:27.0) Gecko/20100101 Firefox/27.0 */@font-face {font-family: 'Open Sans';font-style: italic;font-weight: 300;font-stretch: normal;font-display: swap;src: url(https://fonts.gstatic.com/l/font?kit=memQYaGs126MiZpBA-UFUIcVXSCEkx2cmqvXlWq8tWZ0Pw86hd0Rk5hkWV4exg&skey=743457fe2cc29280&v=v44) format('woff');}@font-face {font-family: 'Open Sans';font-style: italic;font-weight: 400;font-stretch: normal;font-display: swap;src: url(https://fonts.gstatic.com/l/font?kit=memQYaGs126MiZpBA-UFUIcVXSCEkx2cmqvXlWq8tWZ0Pw86hd0Rk8ZkWV4exg&skey=743457fe2cc29280&v=v44) format('woff');}@font-face {font-family: 'Open Sans';font-style: italic;font-weight: 600;font-stretch: normal;font-display: swap;src: url(https://fonts.gstatic.com/l/font?kit=memQYaGs126MiZpBA-UFUIcVXSCEkx2cmqvXlWq8tWZ0Pw86hd0RkxhjWV4exg&skey=743457fe2cc29280&v=v44) format('woff');}@font-face {font-family: 'Open Sans';font-style: italic;font-weight: 700;font-stretch: normal;font-display: swap;src: url(https://fonts.gstatic.com/l/font?kit=memQYaGs126MiZpBA-UFUIcVXSCEkx2cmqvXlWq8tWZ0Pw86hd0RkyFjWV4exg&skey=743457fe2cc29280&v=v44) format('woff');}@font-face {font-family: 'Open Sans';font-style: italic;font-weight: 800;font-stretch: normal;font-display: swap;src: url(https://fonts.gstatic.com/l/font?kit=memQYaGs126MiZpBA-UFUIcVXSCEkx2cmqvXlWq8tWZ0Pw86hd0Rk0ZjWV4exg&skey=743457fe2cc29280&v=v44) format('woff');}@font-face {font-family: 'Open Sans';font-style: normal;font-weight: 300;font-stretch: normal;font-display: swap;src: url(https://fonts.gstatic.com/l/font?kit=memSYaGs126MiZpBA-UvWbX2vVnXBbObj2OVZyOOSr4dVJWUgsiH0B4uaVQ&skey=62c1cbfccc78b4b2&v=v44) format('woff');}@font-face {font-family: 'Open Sans';font-style: normal;font-weight: 400;font-stretch: normal;font-display: swap;src: url(https://fonts.gstatic.com/l/font?kit=memSYaGs126MiZpBA-UvWbX2vVnXBbObj2OVZyOOSr4dVJWUgsjZ0B4uaVQ&skey=62c1cbfccc78b4b2&v=v44) format('woff');}@font-face {font-family: 'Open Sans';font-style: normal;font-weight: 600;font-stretch: normal;font-display: swap;src: url(https://fonts.gstatic.com/l/font?kit=memSYaGs126MiZpBA-UvWbX2vVnXBbObj2OVZyOOSr4dVJWUgsgH1x4uaVQ&skey=62c1cbfccc78b4b2&v=v44) format('woff');}@font-face {font-family: 'Open Sans';font-style: normal;font-weight: 700;font-stretch: normal;font-display: swap;src: url(https://fonts.gstatic.com/l/font?kit=memSYaGs126MiZpBA-UvWbX2vVnXBbObj2OVZyOOSr4dVJWUgsg-1x4uaVQ&skey=62c1cbfccc78b4b2&v=v44) format('woff');}@font-face {font-family: 'Open Sans';font-style: normal;font-weight: 800;font-stretch: normal;font-display: swap;src: url(https://fonts.gstatic.com/l/font?kit=memSYaGs126MiZpBA-UvWbX2vVnXBbObj2OVZyOOSr4dVJWUgshZ1x4uaVQ&skey=62c1cbfccc78b4b2&v=v44) format('woff');}/* User Agent: Mozilla/5.0 (Windows NT 6.3; rv:39.0) Gecko/20100101 Firefox/39.0 */@font-face {font-family: 'Open Sans';font-style: italic;font-weight: 300;font-stretch: normal;font-display: swap;src: url(https://fonts.gstatic.com/s/opensans/v44/memQYaGs126MiZpBA-UFUIcVXSCEkx2cmqvXlWq8tWZ0Pw86hd0Rk5hkWV4ewA.woff2) format('woff2');}@font-face {font-family: 'Open Sans';font-style: italic;font-weight: 400;font-stretch: normal;font-display: swap;src: url(https://fonts.gstatic.com/s/opensans/v44/memQYaGs126MiZpBA-UFUIcVXSCEkx2cmqvXlWq8tWZ0Pw86hd0Rk8ZkWV4ewA.woff2) format('woff2');}@font-face {font-family: 'Open Sans';font-style: italic;font-weight: 600;font-stretch: normal;font-display: swap;src: url(https://fonts.gstatic.com/s/opensans/v44/memQYaGs126MiZpBA-UFUIcVXSCEkx2cmqvXlWq8tWZ0Pw86hd0RkxhjWV4ewA.woff2) format('woff2');}@font-face {font-family: 'Open Sans';font-style: italic;font-weight: 700;font-stretch: normal;font-display: swap;src: url(https://fonts.gstatic.com/s/opensans/v44/memQYaGs126MiZpBA-UFUIcVXSCEkx2cmqvXlWq8tWZ0Pw86hd0RkyFjWV4ewA.woff2) format('woff2');}@font-face {font-family: 'Open Sans';font-style: italic;font-weight: 800;font-stretch: normal;font-display: swap;src: url(https://fonts.gstatic.com/s/opensans/v44/memQYaGs126MiZpBA-UFUIcVXSCEkx2cmqvXlWq8tWZ0Pw86hd0Rk0ZjWV4ewA.woff2) format('woff2');}@font-face {font-family: 'Open Sans';font-style: normal;font-weight: 300;font-stretch: normal;font-display: swap;src: url(https://fonts.gstatic.com/s/opensans/v44/memSYaGs126MiZpBA-UvWbX2vVnXBbObj2OVZyOOSr4dVJWUgsiH0B4uaVI.woff2) format('woff2');}@font-face {font-family: 'Open Sans';font-style: normal;font-weight: 400;font-stretch: normal;font-display: swap;src: url(https://fonts.gstatic.com/s/opensans/v44/memSYaGs126MiZpBA-UvWbX2vVnXBbObj2OVZyOOSr4dVJWUgsjZ0B4uaVI.woff2) format('woff2');}@font-face {font-family: 'Open Sans';font-style: normal;font-weight: 600;font-stretch: normal;font-display: swap;src: url(https://fonts.gstatic.com/s/opensans/v44/memSYaGs126MiZpBA-UvWbX2vVnXBbObj2OVZyOOSr4dVJWUgsgH1x4uaVI.woff2) format('woff2');}@font-face {font-family: 'Open Sans';font-style: normal;font-weight: 700;font-stretch: normal;font-display: swap;src: url(https://fonts.gstatic.com/s/opensans/v44/memSYaGs126MiZpBA-UvWbX2vVnXBbObj2OVZyOOSr4dVJWUgsg-1x4uaVI.woff2) format('woff2');}@font-face {font-family: 'Open Sans';font-style: normal;font-weight: 800;font-stretch: normal;font-display: swap;src: url(https://fonts.gstatic.com/s/opensans/v44/memSYaGs126MiZpBA-UvWbX2vVnXBbObj2OVZyOOSr4dVJWUgshZ1x4uaVI.woff2) format('woff2');}</style><style id="et-builder-googlefonts-cached-inline">/* Original: https://fonts.googleapis.com/css?family=Roboto:100,100italic,300,300italic,regular,italic,500,500italic,700,700italic,900,900italic&#038;subset=latin,latin-ext&#038;display=swap *//* User Agent: Mozilla/5.0 (Unknown; Linux x86_64) AppleWebKit/538.1 (KHTML, like Gecko) Safari/538.1 Daum/4.1 */@font-face {font-family: 'Roboto';font-style: italic;font-weight: 100;font-stretch: normal;font-display: swap;src: url(https://fonts.gstatic.com/s/roboto/v51/KFOKCnqEu92Fr1Mu53ZEC9_Vu3r1gIhOszmOClHrs6ljXfMMLoHRuAb-lg.ttf) format('truetype');}@font-face {font-family: 'Roboto';font-style: italic;font-weight: 300;font-stretch: normal;font-display: swap;src: url(https://fonts.gstatic.com/s/roboto/v51/KFOKCnqEu92Fr1Mu53ZEC9_Vu3r1gIhOszmOClHrs6ljXfMMLt_QuAb-lg.ttf) format('truetype');}@font-face {font-family: 'Roboto';font-style: italic;font-weight: 400;font-stretch: normal;font-display: swap;src: url(https://fonts.gstatic.com/s/roboto/v51/KFOKCnqEu92Fr1Mu53ZEC9_Vu3r1gIhOszmOClHrs6ljXfMMLoHQuAb-lg.ttf) format('truetype');}@font-face {font-family: 'Roboto';font-style: italic;font-weight: 500;font-stretch: normal;font-display: swap;src: url(https://fonts.gstatic.com/s/roboto/v51/KFOKCnqEu92Fr1Mu53ZEC9_Vu3r1gIhOszmOClHrs6ljXfMMLrPQuAb-lg.ttf) format('truetype');}@font-face {font-family: 'Roboto';font-style: italic;font-weight: 700;font-stretch: normal;font-display: swap;src: url(https://fonts.gstatic.com/s/roboto/v51/KFOKCnqEu92Fr1Mu53ZEC9_Vu3r1gIhOszmOClHrs6ljXfMMLmbXuAb-lg.ttf) format('truetype');}@font-face {font-family: 'Roboto';font-style: italic;font-weight: 900;font-stretch: normal;font-display: swap;src: url(https://fonts.gstatic.com/s/roboto/v51/KFOKCnqEu92Fr1Mu53ZEC9_Vu3r1gIhOszmOClHrs6ljXfMMLijXuAb-lg.ttf) format('truetype');}@font-face {font-family: 'Roboto';font-style: normal;font-weight: 100;font-stretch: normal;font-display: swap;src: url(https://fonts.gstatic.com/s/roboto/v51/KFOMCnqEu92Fr1ME7kSn66aGLdTylUAMQXC89YmC2DPNWubEbFmaiA8.ttf) format('truetype');}@font-face {font-family: 'Roboto';font-style: normal;font-weight: 300;font-stretch: normal;font-display: swap;src: url(https://fonts.gstatic.com/s/roboto/v51/KFOMCnqEu92Fr1ME7kSn66aGLdTylUAMQXC89YmC2DPNWuaabVmaiA8.ttf) format('truetype');}@font-face {font-family: 'Roboto';font-style: normal;font-weight: 400;font-stretch: normal;font-display: swap;src: url(https://fonts.gstatic.com/s/roboto/v51/KFOMCnqEu92Fr1ME7kSn66aGLdTylUAMQXC89YmC2DPNWubEbVmaiA8.ttf) format('truetype');}@font-face {font-family: 'Roboto';font-style: normal;font-weight: 500;font-stretch: normal;font-display: swap;src: url(https://fonts.gstatic.com/s/roboto/v51/KFOMCnqEu92Fr1ME7kSn66aGLdTylUAMQXC89YmC2DPNWub2bVmaiA8.ttf) format('truetype');}@font-face {font-family: 'Roboto';font-style: normal;font-weight: 700;font-stretch: normal;font-display: swap;src: url(https://fonts.gstatic.com/s/roboto/v51/KFOMCnqEu92Fr1ME7kSn66aGLdTylUAMQXC89YmC2DPNWuYjalmaiA8.ttf) format('truetype');}@font-face {font-family: 'Roboto';font-style: normal;font-weight: 900;font-stretch: normal;font-display: swap;src: url(https://fonts.gstatic.com/s/roboto/v51/KFOMCnqEu92Fr1ME7kSn66aGLdTylUAMQXC89YmC2DPNWuZtalmaiA8.ttf) format('truetype');}/* User Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:27.0) Gecko/20100101 Firefox/27.0 */@font-face {font-family: 'Roboto';font-style: italic;font-weight: 100;font-stretch: normal;font-display: swap;src: url(https://fonts.gstatic.com/l/font?kit=KFOKCnqEu92Fr1Mu53ZEC9_Vu3r1gIhOszmOClHrs6ljXfMMLoHRuAb-lQ&skey=c608c610063635f9&v=v51) format('woff');}@font-face {font-family: 'Roboto';font-style: italic;font-weight: 300;font-stretch: normal;font-display: swap;src: url(https://fonts.gstatic.com/l/font?kit=KFOKCnqEu92Fr1Mu53ZEC9_Vu3r1gIhOszmOClHrs6ljXfMMLt_QuAb-lQ&skey=c608c610063635f9&v=v51) format('woff');}@font-face {font-family: 'Roboto';font-style: italic;font-weight: 400;font-stretch: normal;font-display: swap;src: url(https://fonts.gstatic.com/l/font?kit=KFOKCnqEu92Fr1Mu53ZEC9_Vu3r1gIhOszmOClHrs6ljXfMMLoHQuAb-lQ&skey=c608c610063635f9&v=v51) format('woff');}@font-face {font-family: 'Roboto';font-style: italic;font-weight: 500;font-stretch: normal;font-display: swap;src: url(https://fonts.gstatic.com/l/font?kit=KFOKCnqEu92Fr1Mu53ZEC9_Vu3r1gIhOszmOClHrs6ljXfMMLrPQuAb-lQ&skey=c608c610063635f9&v=v51) format('woff');}@font-face {font-family: 'Roboto';font-style: italic;font-weight: 700;font-stretch: normal;font-display: swap;src: url(https://fonts.gstatic.com/l/font?kit=KFOKCnqEu92Fr1Mu53ZEC9_Vu3r1gIhOszmOClHrs6ljXfMMLmbXuAb-lQ&skey=c608c610063635f9&v=v51) format('woff');}@font-face {font-family: 'Roboto';font-style: italic;font-weight: 900;font-stretch: normal;font-display: swap;src: url(https://fonts.gstatic.com/l/font?kit=KFOKCnqEu92Fr1Mu53ZEC9_Vu3r1gIhOszmOClHrs6ljXfMMLijXuAb-lQ&skey=c608c610063635f9&v=v51) format('woff');}@font-face {font-family: 'Roboto';font-style: normal;font-weight: 100;font-stretch: normal;font-display: swap;src: url(https://fonts.gstatic.com/l/font?kit=KFOMCnqEu92Fr1ME7kSn66aGLdTylUAMQXC89YmC2DPNWubEbFmaiAw&skey=a0a0114a1dcab3ac&v=v51) format('woff');}@font-face {font-family: 'Roboto';font-style: normal;font-weight: 300;font-stretch: normal;font-display: swap;src: url(https://fonts.gstatic.com/l/font?kit=KFOMCnqEu92Fr1ME7kSn66aGLdTylUAMQXC89YmC2DPNWuaabVmaiAw&skey=a0a0114a1dcab3ac&v=v51) format('woff');}@font-face {font-family: 'Roboto';font-style: normal;font-weight: 400;font-stretch: normal;font-display: swap;src: url(https://fonts.gstatic.com/l/font?kit=KFOMCnqEu92Fr1ME7kSn66aGLdTylUAMQXC89YmC2DPNWubEbVmaiAw&skey=a0a0114a1dcab3ac&v=v51) format('woff');}@font-face {font-family: 'Roboto';font-style: normal;font-weight: 500;font-stretch: normal;font-display: swap;src: url(https://fonts.gstatic.com/l/font?kit=KFOMCnqEu92Fr1ME7kSn66aGLdTylUAMQXC89YmC2DPNWub2bVmaiAw&skey=a0a0114a1dcab3ac&v=v51) format('woff');}@font-face {font-family: 'Roboto';font-style: normal;font-weight: 700;font-stretch: normal;font-display: swap;src: url(https://fonts.gstatic.com/l/font?kit=KFOMCnqEu92Fr1ME7kSn66aGLdTylUAMQXC89YmC2DPNWuYjalmaiAw&skey=a0a0114a1dcab3ac&v=v51) format('woff');}@font-face {font-family: 'Roboto';font-style: normal;font-weight: 900;font-stretch: normal;font-display: swap;src: url(https://fonts.gstatic.com/l/font?kit=KFOMCnqEu92Fr1ME7kSn66aGLdTylUAMQXC89YmC2DPNWuZtalmaiAw&skey=a0a0114a1dcab3ac&v=v51) format('woff');}/* User Agent: Mozilla/5.0 (Windows NT 6.3; rv:39.0) Gecko/20100101 Firefox/39.0 */@font-face {font-family: 'Roboto';font-style: italic;font-weight: 100;font-stretch: normal;font-display: swap;src: url(https://fonts.gstatic.com/s/roboto/v51/KFOKCnqEu92Fr1Mu53ZEC9_Vu3r1gIhOszmOClHrs6ljXfMMLoHRuAb-kw.woff2) format('woff2');}@font-face {font-family: 'Roboto';font-style: italic;font-weight: 300;font-stretch: normal;font-display: swap;src: url(https://fonts.gstatic.com/s/roboto/v51/KFOKCnqEu92Fr1Mu53ZEC9_Vu3r1gIhOszmOClHrs6ljXfMMLt_QuAb-kw.woff2) format('woff2');}@font-face {font-family: 'Roboto';font-style: italic;font-weight: 400;font-stretch: normal;font-display: swap;src: url(https://fonts.gstatic.com/s/roboto/v51/KFOKCnqEu92Fr1Mu53ZEC9_Vu3r1gIhOszmOClHrs6ljXfMMLoHQuAb-kw.woff2) format('woff2');}@font-face {font-family: 'Roboto';font-style: italic;font-weight: 500;font-stretch: normal;font-display: swap;src: url(https://fonts.gstatic.com/s/roboto/v51/KFOKCnqEu92Fr1Mu53ZEC9_Vu3r1gIhOszmOClHrs6ljXfMMLrPQuAb-kw.woff2) format('woff2');}@font-face {font-family: 'Roboto';font-style: italic;font-weight: 700;font-stretch: normal;font-display: swap;src: url(https://fonts.gstatic.com/s/roboto/v51/KFOKCnqEu92Fr1Mu53ZEC9_Vu3r1gIhOszmOClHrs6ljXfMMLmbXuAb-kw.woff2) format('woff2');}@font-face {font-family: 'Roboto';font-style: italic;font-weight: 900;font-stretch: normal;font-display: swap;src: url(https://fonts.gstatic.com/s/roboto/v51/KFOKCnqEu92Fr1Mu53ZEC9_Vu3r1gIhOszmOClHrs6ljXfMMLijXuAb-kw.woff2) format('woff2');}@font-face {font-family: 'Roboto';font-style: normal;font-weight: 100;font-stretch: normal;font-display: swap;src: url(https://fonts.gstatic.com/s/roboto/v51/KFOMCnqEu92Fr1ME7kSn66aGLdTylUAMQXC89YmC2DPNWubEbFmaiAo.woff2) format('woff2');}@font-face {font-family: 'Roboto';font-style: normal;font-weight: 300;font-stretch: normal;font-display: swap;src: url(https://fonts.gstatic.com/s/roboto/v51/KFOMCnqEu92Fr1ME7kSn66aGLdTylUAMQXC89YmC2DPNWuaabVmaiAo.woff2) format('woff2');}@font-face {font-family: 'Roboto';font-style: normal;font-weight: 400;font-stretch: normal;font-display: swap;src: url(https://fonts.gstatic.com/s/roboto/v51/KFOMCnqEu92Fr1ME7kSn66aGLdTylUAMQXC89YmC2DPNWubEbVmaiAo.woff2) format('woff2');}@font-face {font-family: 'Roboto';font-style: normal;font-weight: 500;font-stretch: normal;font-display: swap;src: url(https://fonts.gstatic.com/s/roboto/v51/KFOMCnqEu92Fr1ME7kSn66aGLdTylUAMQXC89YmC2DPNWub2bVmaiAo.woff2) format('woff2');}@font-face {font-family: 'Roboto';font-style: normal;font-weight: 700;font-stretch: normal;font-display: swap;src: url(https://fonts.gstatic.com/s/roboto/v51/KFOMCnqEu92Fr1ME7kSn66aGLdTylUAMQXC89YmC2DPNWuYjalmaiAo.woff2) format('woff2');}@font-face {font-family: 'Roboto';font-style: normal;font-weight: 900;font-stretch: normal;font-display: swap;src: url(https://fonts.gstatic.com/s/roboto/v51/KFOMCnqEu92Fr1ME7kSn66aGLdTylUAMQXC89YmC2DPNWuZtalmaiAo.woff2) format('woff2');}</style><meta name='robots' content='index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1' />
+<script type="text/javascript">
+			let jqueryParams=[],jQuery=function(r){return jqueryParams=[...jqueryParams,r],jQuery},$=function(r){return jqueryParams=[...jqueryParams,r],$};window.jQuery=jQuery,window.$=jQuery;let customHeadScripts=!1;jQuery.fn=jQuery.prototype={},$.fn=jQuery.prototype={},jQuery.noConflict=function(r){if(window.jQuery)return jQuery=window.jQuery,$=window.jQuery,customHeadScripts=!0,jQuery.noConflict},jQuery.ready=function(r){jqueryParams=[...jqueryParams,r]},$.ready=function(r){jqueryParams=[...jqueryParams,r]},jQuery.load=function(r){jqueryParams=[...jqueryParams,r]},$.load=function(r){jqueryParams=[...jqueryParams,r]},jQuery.fn.ready=function(r){jqueryParams=[...jqueryParams,r]},$.fn.ready=function(r){jqueryParams=[...jqueryParams,r]};</script>
+	<!-- This site is optimized with the Yoast SEO plugin v27.0 - https://yoast.com/product/yoast-seo-wordpress/ -->
+	<title>Bloom Energy Server Data Sheet - Bloom Energy</title>
+	<link rel="canonical" href="https://www.bloomenergy.com/resource/bloom-energy-server/" />
+	<meta property="og:locale" content="en_US" />
+	<meta property="og:type" content="article" />
+	<meta property="og:title" content="Bloom Energy Server Data Sheet - Bloom Energy" />
+	<meta property="og:description" content="Bloom Energy’s solid oxide fuel cell (SOFC) platform provides a non-combustion pathway to convert fuels directly to electricity without combustion. The Energy Server is fuel-flexible and can generate energy using natural gas, blended hydrogen, biogas or hydrogen. A modular platform approach provides a pathway to upgrade existing systems to align with the sustainability goals of [&hellip;]" />
+	<meta property="og:url" content="https://www.bloomenergy.com/resource/bloom-energy-server/" />
+	<meta property="og:site_name" content="Bloom Energy" />
+	<meta property="article:publisher" content="https://www.facebook.com/bloomenergy/" />
+	<meta property="article:modified_time" content="2026-02-27T22:42:01+00:00" />
+	<meta property="og:image" content="https://www.bloomenergy.com/wp-content/uploads/bloom-energy-server-datasheet-feb-2026.png" />
+	<meta property="og:image:width" content="571" />
+	<meta property="og:image:height" content="739" />
+	<meta property="og:image:type" content="image/png" />
+	<meta name="twitter:card" content="summary_large_image" />
+	<meta name="twitter:site" content="@bloom_energy" />
+	<meta name="twitter:label1" content="Est. reading time" />
+	<meta name="twitter:data1" content="2 minutes" />
+	<script type="application/ld+json" class="yoast-schema-graph">{"@context":"https://schema.org","@graph":[{"@type":"WebPage","@id":"https://www.bloomenergy.com/resource/bloom-energy-server/","url":"https://www.bloomenergy.com/resource/bloom-energy-server/","name":"Bloom Energy Server Data Sheet - Bloom Energy","isPartOf":{"@id":"https://www.bloomenergy.com/#website"},"primaryImageOfPage":{"@id":"https://www.bloomenergy.com/resource/bloom-energy-server/#primaryimage"},"image":{"@id":"https://www.bloomenergy.com/resource/bloom-energy-server/#primaryimage"},"thumbnailUrl":"https://www.bloomenergy.com/wp-content/uploads/bloom-energy-server-datasheet-feb-2026.png","datePublished":"2019-09-20T15:32:33+00:00","dateModified":"2026-02-27T22:42:01+00:00","breadcrumb":{"@id":"https://www.bloomenergy.com/resource/bloom-energy-server/#breadcrumb"},"inLanguage":"en-US","potentialAction":[{"@type":"ReadAction","target":["https://www.bloomenergy.com/resource/bloom-energy-server/"]}]},{"@type":"ImageObject","inLanguage":"en-US","@id":"https://www.bloomenergy.com/resource/bloom-energy-server/#primaryimage","url":"https://www.bloomenergy.com/wp-content/uploads/bloom-energy-server-datasheet-feb-2026.png","contentUrl":"https://www.bloomenergy.com/wp-content/uploads/bloom-energy-server-datasheet-feb-2026.png","width":571,"height":739,"caption":"Bloom Energy Server"},{"@type":"BreadcrumbList","@id":"https://www.bloomenergy.com/resource/bloom-energy-server/#breadcrumb","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://www.bloomenergy.com/"},{"@type":"ListItem","position":2,"name":"Bloom Energy Server Data Sheet"}]},{"@type":"WebSite","@id":"https://www.bloomenergy.com/#website","url":"https://www.bloomenergy.com/","name":"Bloom Energy","description":"Bloom Energy delivers always-on, reliable, resilient, sustainable and cost effective on-site electricity for organizations globally","publisher":{"@id":"https://www.bloomenergy.com/#organization"},"potentialAction":[{"@type":"SearchAction","target":{"@type":"EntryPoint","urlTemplate":"https://www.bloomenergy.com/?s={search_term_string}"},"query-input":{"@type":"PropertyValueSpecification","valueRequired":true,"valueName":"search_term_string"}}],"inLanguage":"en-US"},{"@type":"Organization","@id":"https://www.bloomenergy.com/#organization","name":"Bloom Energy","url":"https://www.bloomenergy.com/","logo":{"@type":"ImageObject","inLanguage":"en-US","@id":"https://www.bloomenergy.com/#/schema/logo/image/","url":"https://www.bloomenergy.com/wp-content/uploads/Logo.svg","contentUrl":"https://www.bloomenergy.com/wp-content/uploads/Logo.svg","width":116,"height":64,"caption":"Bloom Energy"},"image":{"@id":"https://www.bloomenergy.com/#/schema/logo/image/"},"sameAs":["https://www.facebook.com/bloomenergy/","https://x.com/bloom_energy","https://www.instagram.com/bloomenergy","https://www.linkedin.com/company/bloom-energy","https://www.youtube.com/user/BloomEnergy"]}]}</script>
+	<!-- / Yoast SEO plugin. -->
+
+
+<link rel="alternate" type="application/rss+xml" title="Bloom Energy &raquo; Feed" href="https://www.bloomenergy.com/feed/" />
+<link rel="alternate" type="application/rss+xml" title="Bloom Energy &raquo; Comments Feed" href="https://www.bloomenergy.com/comments/feed/" />
+<link rel="alternate" title="oEmbed (JSON)" type="application/json+oembed" href="https://www.bloomenergy.com/wp-json/oembed/1.0/embed?url=https%3A%2F%2Fwww.bloomenergy.com%2Fresource%2Fbloom-energy-server%2F" />
+<link rel="alternate" title="oEmbed (XML)" type="text/xml+oembed" href="https://www.bloomenergy.com/wp-json/oembed/1.0/embed?url=https%3A%2F%2Fwww.bloomenergy.com%2Fresource%2Fbloom-energy-server%2F&#038;format=xml" />
+<meta content="Bloom Energy v.1.12" name="generator"/><style id='wp-block-library-inline-css' type='text/css'>
+:root{--wp-block-synced-color:#7a00df;--wp-block-synced-color--rgb:122,0,223;--wp-bound-block-color:var(--wp-block-synced-color);--wp-editor-canvas-background:#ddd;--wp-admin-theme-color:#007cba;--wp-admin-theme-color--rgb:0,124,186;--wp-admin-theme-color-darker-10:#006ba1;--wp-admin-theme-color-darker-10--rgb:0,107,160.5;--wp-admin-theme-color-darker-20:#005a87;--wp-admin-theme-color-darker-20--rgb:0,90,135;--wp-admin-border-width-focus:2px}@media (min-resolution:192dpi){:root{--wp-admin-border-width-focus:1.5px}}.wp-element-button{cursor:pointer}:root .has-very-light-gray-background-color{background-color:#eee}:root .has-very-dark-gray-background-color{background-color:#313131}:root .has-very-light-gray-color{color:#eee}:root .has-very-dark-gray-color{color:#313131}:root .has-vivid-green-cyan-to-vivid-cyan-blue-gradient-background{background:linear-gradient(135deg,#00d084,#0693e3)}:root .has-purple-crush-gradient-background{background:linear-gradient(135deg,#34e2e4,#4721fb 50%,#ab1dfe)}:root .has-hazy-dawn-gradient-background{background:linear-gradient(135deg,#faaca8,#dad0ec)}:root .has-subdued-olive-gradient-background{background:linear-gradient(135deg,#fafae1,#67a671)}:root .has-atomic-cream-gradient-background{background:linear-gradient(135deg,#fdd79a,#004a59)}:root .has-nightshade-gradient-background{background:linear-gradient(135deg,#330968,#31cdcf)}:root .has-midnight-gradient-background{background:linear-gradient(135deg,#020381,#2874fc)}:root{--wp--preset--font-size--normal:16px;--wp--preset--font-size--huge:42px}.has-regular-font-size{font-size:1em}.has-larger-font-size{font-size:2.625em}.has-normal-font-size{font-size:var(--wp--preset--font-size--normal)}.has-huge-font-size{font-size:var(--wp--preset--font-size--huge)}.has-text-align-center{text-align:center}.has-text-align-left{text-align:left}.has-text-align-right{text-align:right}.has-fit-text{white-space:nowrap!important}#end-resizable-editor-section{display:none}.aligncenter{clear:both}.items-justified-left{justify-content:flex-start}.items-justified-center{justify-content:center}.items-justified-right{justify-content:flex-end}.items-justified-space-between{justify-content:space-between}.screen-reader-text{border:0;clip-path:inset(50%);height:1px;margin:-1px;overflow:hidden;padding:0;position:absolute;width:1px;word-wrap:normal!important}.screen-reader-text:focus{background-color:#ddd;clip-path:none;color:#444;display:block;font-size:1em;height:auto;left:5px;line-height:normal;padding:15px 23px 14px;text-decoration:none;top:5px;width:auto;z-index:100000}html :where(.has-border-color){border-style:solid}html :where([style*=border-top-color]){border-top-style:solid}html :where([style*=border-right-color]){border-right-style:solid}html :where([style*=border-bottom-color]){border-bottom-style:solid}html :where([style*=border-left-color]){border-left-style:solid}html :where([style*=border-width]){border-style:solid}html :where([style*=border-top-width]){border-top-style:solid}html :where([style*=border-right-width]){border-right-style:solid}html :where([style*=border-bottom-width]){border-bottom-style:solid}html :where([style*=border-left-width]){border-left-style:solid}html :where(img[class*=wp-image-]){height:auto;max-width:100%}:where(figure){margin:0 0 1em}html :where(.is-position-sticky){--wp-admin--admin-bar--position-offset:var(--wp-admin--admin-bar--height,0px)}@media screen and (max-width:600px){html :where(.is-position-sticky){--wp-admin--admin-bar--position-offset:0px}}
+
+/*# sourceURL=wp-block-library-inline-css */
+</style>
+<style id='global-styles-inline-css' type='text/css'>
+:root{--wp--preset--aspect-ratio--square: 1;--wp--preset--aspect-ratio--4-3: 4/3;--wp--preset--aspect-ratio--3-4: 3/4;--wp--preset--aspect-ratio--3-2: 3/2;--wp--preset--aspect-ratio--2-3: 2/3;--wp--preset--aspect-ratio--16-9: 16/9;--wp--preset--aspect-ratio--9-16: 9/16;--wp--preset--color--black: #000000;--wp--preset--color--cyan-bluish-gray: #abb8c3;--wp--preset--color--white: #ffffff;--wp--preset--color--pale-pink: #f78da7;--wp--preset--color--vivid-red: #cf2e2e;--wp--preset--color--luminous-vivid-orange: #ff6900;--wp--preset--color--luminous-vivid-amber: #fcb900;--wp--preset--color--light-green-cyan: #7bdcb5;--wp--preset--color--vivid-green-cyan: #00d084;--wp--preset--color--pale-cyan-blue: #8ed1fc;--wp--preset--color--vivid-cyan-blue: #0693e3;--wp--preset--color--vivid-purple: #9b51e0;--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple: linear-gradient(135deg,rgb(6,147,227) 0%,rgb(155,81,224) 100%);--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan: linear-gradient(135deg,rgb(122,220,180) 0%,rgb(0,208,130) 100%);--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange: linear-gradient(135deg,rgb(252,185,0) 0%,rgb(255,105,0) 100%);--wp--preset--gradient--luminous-vivid-orange-to-vivid-red: linear-gradient(135deg,rgb(255,105,0) 0%,rgb(207,46,46) 100%);--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray: linear-gradient(135deg,rgb(238,238,238) 0%,rgb(169,184,195) 100%);--wp--preset--gradient--cool-to-warm-spectrum: linear-gradient(135deg,rgb(74,234,220) 0%,rgb(151,120,209) 20%,rgb(207,42,186) 40%,rgb(238,44,130) 60%,rgb(251,105,98) 80%,rgb(254,248,76) 100%);--wp--preset--gradient--blush-light-purple: linear-gradient(135deg,rgb(255,206,236) 0%,rgb(152,150,240) 100%);--wp--preset--gradient--blush-bordeaux: linear-gradient(135deg,rgb(254,205,165) 0%,rgb(254,45,45) 50%,rgb(107,0,62) 100%);--wp--preset--gradient--luminous-dusk: linear-gradient(135deg,rgb(255,203,112) 0%,rgb(199,81,192) 50%,rgb(65,88,208) 100%);--wp--preset--gradient--pale-ocean: linear-gradient(135deg,rgb(255,245,203) 0%,rgb(182,227,212) 50%,rgb(51,167,181) 100%);--wp--preset--gradient--electric-grass: linear-gradient(135deg,rgb(202,248,128) 0%,rgb(113,206,126) 100%);--wp--preset--gradient--midnight: linear-gradient(135deg,rgb(2,3,129) 0%,rgb(40,116,252) 100%);--wp--preset--font-size--small: 13px;--wp--preset--font-size--medium: 20px;--wp--preset--font-size--large: 36px;--wp--preset--font-size--x-large: 42px;--wp--preset--spacing--20: 0.44rem;--wp--preset--spacing--30: 0.67rem;--wp--preset--spacing--40: 1rem;--wp--preset--spacing--50: 1.5rem;--wp--preset--spacing--60: 2.25rem;--wp--preset--spacing--70: 3.38rem;--wp--preset--spacing--80: 5.06rem;--wp--preset--shadow--natural: 6px 6px 9px rgba(0, 0, 0, 0.2);--wp--preset--shadow--deep: 12px 12px 50px rgba(0, 0, 0, 0.4);--wp--preset--shadow--sharp: 6px 6px 0px rgba(0, 0, 0, 0.2);--wp--preset--shadow--outlined: 6px 6px 0px -3px rgb(255, 255, 255), 6px 6px rgb(0, 0, 0);--wp--preset--shadow--crisp: 6px 6px 0px rgb(0, 0, 0);}:root { --wp--style--global--content-size: 823px;--wp--style--global--wide-size: 1080px; }:where(body) { margin: 0; }.wp-site-blocks > .alignleft { float: left; margin-right: 2em; }.wp-site-blocks > .alignright { float: right; margin-left: 2em; }.wp-site-blocks > .aligncenter { justify-content: center; margin-left: auto; margin-right: auto; }:where(.is-layout-flex){gap: 0.5em;}:where(.is-layout-grid){gap: 0.5em;}.is-layout-flow > .alignleft{float: left;margin-inline-start: 0;margin-inline-end: 2em;}.is-layout-flow > .alignright{float: right;margin-inline-start: 2em;margin-inline-end: 0;}.is-layout-flow > .aligncenter{margin-left: auto !important;margin-right: auto !important;}.is-layout-constrained > .alignleft{float: left;margin-inline-start: 0;margin-inline-end: 2em;}.is-layout-constrained > .alignright{float: right;margin-inline-start: 2em;margin-inline-end: 0;}.is-layout-constrained > .aligncenter{margin-left: auto !important;margin-right: auto !important;}.is-layout-constrained > :where(:not(.alignleft):not(.alignright):not(.alignfull)){max-width: var(--wp--style--global--content-size);margin-left: auto !important;margin-right: auto !important;}.is-layout-constrained > .alignwide{max-width: var(--wp--style--global--wide-size);}body .is-layout-flex{display: flex;}.is-layout-flex{flex-wrap: wrap;align-items: center;}.is-layout-flex > :is(*, div){margin: 0;}body .is-layout-grid{display: grid;}.is-layout-grid > :is(*, div){margin: 0;}body{padding-top: 0px;padding-right: 0px;padding-bottom: 0px;padding-left: 0px;}:root :where(.wp-element-button, .wp-block-button__link){background-color: #32373c;border-width: 0;color: #fff;font-family: inherit;font-size: inherit;font-style: inherit;font-weight: inherit;letter-spacing: inherit;line-height: inherit;padding-top: calc(0.667em + 2px);padding-right: calc(1.333em + 2px);padding-bottom: calc(0.667em + 2px);padding-left: calc(1.333em + 2px);text-decoration: none;text-transform: inherit;}.has-black-color{color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-color{color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-color{color: var(--wp--preset--color--white) !important;}.has-pale-pink-color{color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-color{color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-color{color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-color{color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-color{color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-color{color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-color{color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-color{color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-color{color: var(--wp--preset--color--vivid-purple) !important;}.has-black-background-color{background-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-background-color{background-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-background-color{background-color: var(--wp--preset--color--white) !important;}.has-pale-pink-background-color{background-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-background-color{background-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-background-color{background-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-background-color{background-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-background-color{background-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-background-color{background-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-background-color{background-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-background-color{background-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-background-color{background-color: var(--wp--preset--color--vivid-purple) !important;}.has-black-border-color{border-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-border-color{border-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-border-color{border-color: var(--wp--preset--color--white) !important;}.has-pale-pink-border-color{border-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-border-color{border-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-border-color{border-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-border-color{border-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-border-color{border-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-border-color{border-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-border-color{border-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-border-color{border-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-border-color{border-color: var(--wp--preset--color--vivid-purple) !important;}.has-vivid-cyan-blue-to-vivid-purple-gradient-background{background: var(--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple) !important;}.has-light-green-cyan-to-vivid-green-cyan-gradient-background{background: var(--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan) !important;}.has-luminous-vivid-amber-to-luminous-vivid-orange-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange) !important;}.has-luminous-vivid-orange-to-vivid-red-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-orange-to-vivid-red) !important;}.has-very-light-gray-to-cyan-bluish-gray-gradient-background{background: var(--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray) !important;}.has-cool-to-warm-spectrum-gradient-background{background: var(--wp--preset--gradient--cool-to-warm-spectrum) !important;}.has-blush-light-purple-gradient-background{background: var(--wp--preset--gradient--blush-light-purple) !important;}.has-blush-bordeaux-gradient-background{background: var(--wp--preset--gradient--blush-bordeaux) !important;}.has-luminous-dusk-gradient-background{background: var(--wp--preset--gradient--luminous-dusk) !important;}.has-pale-ocean-gradient-background{background: var(--wp--preset--gradient--pale-ocean) !important;}.has-electric-grass-gradient-background{background: var(--wp--preset--gradient--electric-grass) !important;}.has-midnight-gradient-background{background: var(--wp--preset--gradient--midnight) !important;}.has-small-font-size{font-size: var(--wp--preset--font-size--small) !important;}.has-medium-font-size{font-size: var(--wp--preset--font-size--medium) !important;}.has-large-font-size{font-size: var(--wp--preset--font-size--large) !important;}.has-x-large-font-size{font-size: var(--wp--preset--font-size--x-large) !important;}
+/*# sourceURL=global-styles-inline-css */
+</style>
+
+<link rel='stylesheet' id='megamenu-css' href='https://www.bloomenergy.com/wp-content/uploads/maxmegamenu/style.css?ver=d134a5' type='text/css' media='all' />
+<link rel='stylesheet' id='dashicons-css' href='https://www.bloomenergy.com/wp-includes/css/dashicons.min.css?ver=6.9.1' type='text/css' media='all' />
+<link rel='stylesheet' id='wpfront-notification-bar-css' href='https://www.bloomenergy.com/wp-content/plugins/wpfront-notification-bar/css/wpfront-notification-bar.min.css?ver=3.5.1.05102' type='text/css' media='all' />
+<style id='divi-style-parent-inline-inline-css' type='text/css'>
+/*!
+Theme Name: Divi
+Theme URI: http://www.elegantthemes.com/gallery/divi/
+Version: 4.27.6
+Description: Smart. Flexible. Beautiful. Divi is the most powerful theme in our collection.
+Author: Elegant Themes
+Author URI: http://www.elegantthemes.com
+License: GNU General Public License v2
+License URI: http://www.gnu.org/licenses/gpl-2.0.html
+*/
+a,abbr,acronym,address,applet,b,big,blockquote,body,center,cite,code,dd,del,dfn,div,dl,dt,em,fieldset,font,form,h1,h2,h3,h4,h5,h6,html,i,iframe,img,ins,kbd,label,legend,li,object,ol,p,pre,q,s,samp,small,span,strike,strong,sub,sup,tt,u,ul,var{margin:0;padding:0;border:0;outline:0;font-size:100%;-ms-text-size-adjust:100%;-webkit-text-size-adjust:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:after,blockquote:before,q:after,q:before{content:"";content:none}blockquote{margin:20px 0 30px;border-left:5px solid;padding-left:20px}:focus{outline:0}del{text-decoration:line-through}pre{overflow:auto;padding:10px}figure{margin:0}table{border-collapse:collapse;border-spacing:0}article,aside,footer,header,hgroup,nav,section{display:block}body{font-family:Open Sans,Arial,sans-serif;font-size:14px;color:#666;background-color:#fff;line-height:1.7em;font-weight:500;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}body.page-template-page-template-blank-php #page-container{padding-top:0!important}body.et_cover_background{background-size:cover!important;background-position:top!important;background-repeat:no-repeat!important;background-attachment:fixed}a{color:#2ea3f2}a,a:hover{text-decoration:none}p{padding-bottom:1em}p:not(.has-background):last-of-type{padding-bottom:0}p.et_normal_padding{padding-bottom:1em}strong{font-weight:700}cite,em,i{font-style:italic}code,pre{font-family:Courier New,monospace;margin-bottom:10px}ins{text-decoration:none}sub,sup{height:0;line-height:1;position:relative;vertical-align:baseline}sup{bottom:.8em}sub{top:.3em}dl{margin:0 0 1.5em}dl dt{font-weight:700}dd{margin-left:1.5em}blockquote p{padding-bottom:0}embed,iframe,object,video{max-width:100%}h1,h2,h3,h4,h5,h6{color:#333;padding-bottom:10px;line-height:1em;font-weight:500}h1 a,h2 a,h3 a,h4 a,h5 a,h6 a{color:inherit}h1{font-size:30px}h2{font-size:26px}h3{font-size:22px}h4{font-size:18px}h5{font-size:16px}h6{font-size:14px}input{-webkit-appearance:none}input[type=checkbox]{-webkit-appearance:checkbox}input[type=radio]{-webkit-appearance:radio}input.text,input.title,input[type=email],input[type=password],input[type=tel],input[type=text],select,textarea{background-color:#fff;border:1px solid #bbb;padding:2px;color:#4e4e4e}input.text:focus,input.title:focus,input[type=text]:focus,select:focus,textarea:focus{border-color:#2d3940;color:#3e3e3e}input.text,input.title,input[type=text],select,textarea{margin:0}textarea{padding:4px}button,input,select,textarea{font-family:inherit}img{max-width:100%;height:auto}.clear{clear:both}br.clear{margin:0;padding:0}.pagination{clear:both}#et_search_icon:hover,.et-social-icon a:hover,.et_password_protected_form .et_submit_button,.form-submit .et_pb_buttontton.alt.disabled,.nav-single a,.posted_in a{color:#2ea3f2}.et-search-form,blockquote{border-color:#2ea3f2}#main-content{background-color:#fff}.container{width:80%;max-width:1080px;margin:auto;position:relative}body:not(.et-tb) #main-content .container,body:not(.et-tb-has-header) #main-content .container{padding-top:58px}.et_full_width_page #main-content .container:before{display:none}.main_title{margin-bottom:20px}.et_password_protected_form .et_submit_button:hover,.form-submit .et_pb_button:hover{background:rgba(0,0,0,.05)}.et_button_icon_visible .et_pb_button{padding-right:2em;padding-left:.7em}.et_button_icon_visible .et_pb_button:after{opacity:1;margin-left:0}.et_button_left .et_pb_button:hover:after{left:.15em}.et_button_left .et_pb_button:after{margin-left:0;left:1em}.et_button_icon_visible.et_button_left .et_pb_button,.et_button_left .et_pb_button:hover,.et_button_left .et_pb_module .et_pb_button:hover{padding-left:2em;padding-right:.7em}.et_button_icon_visible.et_button_left .et_pb_button:after,.et_button_left .et_pb_button:hover:after{left:.15em}.et_password_protected_form .et_submit_button:hover,.form-submit .et_pb_button:hover{padding:.3em 1em}.et_button_no_icon .et_pb_button:after{display:none}.et_button_no_icon.et_button_icon_visible.et_button_left .et_pb_button,.et_button_no_icon.et_button_left .et_pb_button:hover,.et_button_no_icon .et_pb_button,.et_button_no_icon .et_pb_button:hover{padding:.3em 1em!important}.et_button_custom_icon .et_pb_button:after{line-height:1.7em}.et_button_custom_icon.et_button_icon_visible .et_pb_button:after,.et_button_custom_icon .et_pb_button:hover:after{margin-left:.3em}#left-area .post_format-post-format-gallery .wp-block-gallery:first-of-type{padding:0;margin-bottom:-16px}.entry-content table:not(.variations){border:1px solid #eee;margin:0 0 15px;text-align:left;width:100%}.entry-content thead th,.entry-content tr th{color:#555;font-weight:700;padding:9px 24px}.entry-content tr td{border-top:1px solid #eee;padding:6px 24px}#left-area ul,.entry-content ul,.et-l--body ul,.et-l--footer ul,.et-l--header ul{list-style-type:disc;padding:0 0 23px 1em;line-height:26px}#left-area ol,.entry-content ol,.et-l--body ol,.et-l--footer ol,.et-l--header ol{list-style-type:decimal;list-style-position:inside;padding:0 0 23px;line-height:26px}#left-area ul li ul,.entry-content ul li ol{padding:2px 0 2px 20px}#left-area ol li ul,.entry-content ol li ol,.et-l--body ol li ol,.et-l--footer ol li ol,.et-l--header ol li ol{padding:2px 0 2px 35px}#left-area ul.wp-block-gallery{display:-webkit-box;display:-ms-flexbox;display:flex;-ms-flex-wrap:wrap;flex-wrap:wrap;list-style-type:none;padding:0}#left-area ul.products{padding:0!important;line-height:1.7!important;list-style:none!important}.gallery-item a{display:block}.gallery-caption,.gallery-item a{width:90%}#wpadminbar{z-index:100001}#left-area .post-meta{font-size:14px;padding-bottom:15px}#left-area .post-meta a{text-decoration:none;color:#666}#left-area .et_featured_image{padding-bottom:7px}.single .post{padding-bottom:25px}body.single .et_audio_content{margin-bottom:-6px}.nav-single a{text-decoration:none;color:#2ea3f2;font-size:14px;font-weight:400}.nav-previous{float:left}.nav-next{float:right}.et_password_protected_form p input{background-color:#eee;border:none!important;width:100%!important;border-radius:0!important;font-size:14px;color:#999!important;padding:16px!important;-webkit-box-sizing:border-box;box-sizing:border-box}.et_password_protected_form label{display:none}.et_password_protected_form .et_submit_button{font-family:inherit;display:block;float:right;margin:8px auto 0;cursor:pointer}.post-password-required p.nocomments.container{max-width:100%}.post-password-required p.nocomments.container:before{display:none}.aligncenter,div.post .new-post .aligncenter{display:block;margin-left:auto;margin-right:auto}.wp-caption{border:1px solid #ddd;text-align:center;background-color:#f3f3f3;margin-bottom:10px;max-width:96%;padding:8px}.wp-caption.alignleft{margin:0 30px 20px 0}.wp-caption.alignright{margin:0 0 20px 30px}.wp-caption img{margin:0;padding:0;border:0}.wp-caption p.wp-caption-text{font-size:12px;padding:0 4px 5px;margin:0}.alignright{float:right}.alignleft{float:left}img.alignleft{display:inline;float:left;margin-right:15px}img.alignright{display:inline;float:right;margin-left:15px}.page.et_pb_pagebuilder_layout #main-content{background-color:transparent}body #main-content .et_builder_inner_content>h1,body #main-content .et_builder_inner_content>h2,body #main-content .et_builder_inner_content>h3,body #main-content .et_builder_inner_content>h4,body #main-content .et_builder_inner_content>h5,body #main-content .et_builder_inner_content>h6{line-height:1.4em}body #main-content .et_builder_inner_content>p{line-height:1.7em}.wp-block-pullquote{margin:20px 0 30px}.wp-block-pullquote.has-background blockquote{border-left:none}.wp-block-group.has-background{padding:1.5em 1.5em .5em}@media (min-width:981px){#left-area{width:79.125%;padding-bottom:23px}#main-content .container:before{content:"";position:absolute;top:0;height:100%;width:1px;background-color:#e2e2e2}.et_full_width_page #left-area,.et_no_sidebar #left-area{float:none;width:100%!important}.et_full_width_page #left-area{padding-bottom:0}.et_no_sidebar #main-content .container:before{display:none}}@media (max-width:980px){#page-container{padding-top:80px}.et-tb #page-container,.et-tb-has-header #page-container{padding-top:0!important}#left-area,#sidebar{width:100%!important}#main-content .container:before{display:none!important}.et_full_width_page .et_gallery_item:nth-child(4n+1){clear:none}}@media print{#page-container{padding-top:0!important}}#wp-admin-bar-et-use-visual-builder a:before{font-family:ETmodules!important;content:"\e625";font-size:30px!important;width:28px;margin-top:-3px;color:#974df3!important}#wp-admin-bar-et-use-visual-builder:hover a:before{color:#fff!important}#wp-admin-bar-et-use-visual-builder:hover a,#wp-admin-bar-et-use-visual-builder a:hover{transition:background-color .5s ease;-webkit-transition:background-color .5s ease;-moz-transition:background-color .5s ease;background-color:#7e3bd0!important;color:#fff!important}* html .clearfix,:first-child+html .clearfix{zoom:1}.iphone .et_pb_section_video_bg video::-webkit-media-controls-start-playback-button{display:none!important;-webkit-appearance:none}.et_mobile_device .et_pb_section_parallax .et_pb_parallax_css{background-attachment:scroll}.et-social-facebook a.icon:before{content:"\e093"}.et-social-twitter a.icon:before{content:"\e094"}.et-social-google-plus a.icon:before{content:"\e096"}.et-social-instagram a.icon:before{content:"\e09a"}.et-social-rss a.icon:before{content:"\e09e"}.ai1ec-single-event:after{content:" ";display:table;clear:both}.evcal_event_details .evcal_evdata_cell .eventon_details_shading_bot.eventon_details_shading_bot{z-index:3}.wp-block-divi-layout{margin-bottom:1em}*{-webkit-box-sizing:border-box;box-sizing:border-box}#et-info-email:before,#et-info-phone:before,#et_search_icon:before,.comment-reply-link:after,.et-cart-info span:before,.et-pb-arrow-next:before,.et-pb-arrow-prev:before,.et-social-icon a:before,.et_audio_container .mejs-playpause-button button:before,.et_audio_container .mejs-volume-button button:before,.et_overlay:before,.et_password_protected_form .et_submit_button:after,.et_pb_button:after,.et_pb_contact_reset:after,.et_pb_contact_submit:after,.et_pb_font_icon:before,.et_pb_newsletter_button:after,.et_pb_pricing_table_button:after,.et_pb_promo_button:after,.et_pb_testimonial:before,.et_pb_toggle_title:before,.form-submit .et_pb_button:after,.mobile_menu_bar:before,a.et_pb_more_button:after{font-family:ETmodules!important;speak:none;font-style:normal;font-weight:400;-webkit-font-feature-settings:normal;font-feature-settings:normal;font-variant:normal;text-transform:none;line-height:1;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;text-shadow:0 0;direction:ltr}.et-pb-icon,.et_pb_custom_button_icon.et_pb_button:after,.et_pb_login .et_pb_custom_button_icon.et_pb_button:after,.et_pb_woo_custom_button_icon .button.et_pb_custom_button_icon.et_pb_button:after,.et_pb_woo_custom_button_icon .button.et_pb_custom_button_icon.et_pb_button:hover:after{content:attr(data-icon)}.et-pb-icon{font-family:ETmodules;speak:none;font-weight:400;-webkit-font-feature-settings:normal;font-feature-settings:normal;font-variant:normal;text-transform:none;line-height:1;-webkit-font-smoothing:antialiased;font-size:96px;font-style:normal;display:inline-block;-webkit-box-sizing:border-box;box-sizing:border-box;direction:ltr}#et-ajax-saving{display:none;-webkit-transition:background .3s,-webkit-box-shadow .3s;transition:background .3s,-webkit-box-shadow .3s;transition:background .3s,box-shadow .3s;transition:background .3s,box-shadow .3s,-webkit-box-shadow .3s;-webkit-box-shadow:rgba(0,139,219,.247059) 0 0 60px;box-shadow:0 0 60px rgba(0,139,219,.247059);position:fixed;top:50%;left:50%;width:50px;height:50px;background:#fff;border-radius:50px;margin:-25px 0 0 -25px;z-index:999999;text-align:center}#et-ajax-saving img{margin:9px}.et-safe-mode-indicator,.et-safe-mode-indicator:focus,.et-safe-mode-indicator:hover{-webkit-box-shadow:0 5px 10px rgba(41,196,169,.15);box-shadow:0 5px 10px rgba(41,196,169,.15);background:#29c4a9;color:#fff;font-size:14px;font-weight:600;padding:12px;line-height:16px;border-radius:3px;position:fixed;bottom:30px;right:30px;z-index:999999;text-decoration:none;font-family:Open Sans,sans-serif;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}.et_pb_button{font-size:20px;font-weight:500;padding:.3em 1em;line-height:1.7em!important;background-color:transparent;background-size:cover;background-position:50%;background-repeat:no-repeat;border:2px solid;border-radius:3px;-webkit-transition-duration:.2s;transition-duration:.2s;-webkit-transition-property:all!important;transition-property:all!important}.et_pb_button,.et_pb_button_inner{position:relative}.et_pb_button:hover,.et_pb_module .et_pb_button:hover{border:2px solid transparent;padding:.3em 2em .3em .7em}.et_pb_button:hover{background-color:hsla(0,0%,100%,.2)}.et_pb_bg_layout_light.et_pb_button:hover,.et_pb_bg_layout_light .et_pb_button:hover{background-color:rgba(0,0,0,.05)}.et_pb_button:after,.et_pb_button:before{font-size:32px;line-height:1em;content:"\35";opacity:0;position:absolute;margin-left:-1em;-webkit-transition:all .2s;transition:all .2s;text-transform:none;-webkit-font-feature-settings:"kern" off;font-feature-settings:"kern" off;font-variant:none;font-style:normal;font-weight:400;text-shadow:none}.et_pb_button.et_hover_enabled:hover:after,.et_pb_button.et_pb_hovered:hover:after{-webkit-transition:none!important;transition:none!important}.et_pb_button:before{display:none}.et_pb_button:hover:after{opacity:1;margin-left:0}.et_pb_column_1_3 h1,.et_pb_column_1_4 h1,.et_pb_column_1_5 h1,.et_pb_column_1_6 h1,.et_pb_column_2_5 h1{font-size:26px}.et_pb_column_1_3 h2,.et_pb_column_1_4 h2,.et_pb_column_1_5 h2,.et_pb_column_1_6 h2,.et_pb_column_2_5 h2{font-size:23px}.et_pb_column_1_3 h3,.et_pb_column_1_4 h3,.et_pb_column_1_5 h3,.et_pb_column_1_6 h3,.et_pb_column_2_5 h3{font-size:20px}.et_pb_column_1_3 h4,.et_pb_column_1_4 h4,.et_pb_column_1_5 h4,.et_pb_column_1_6 h4,.et_pb_column_2_5 h4{font-size:18px}.et_pb_column_1_3 h5,.et_pb_column_1_4 h5,.et_pb_column_1_5 h5,.et_pb_column_1_6 h5,.et_pb_column_2_5 h5{font-size:16px}.et_pb_column_1_3 h6,.et_pb_column_1_4 h6,.et_pb_column_1_5 h6,.et_pb_column_1_6 h6,.et_pb_column_2_5 h6{font-size:15px}.et_pb_bg_layout_dark,.et_pb_bg_layout_dark h1,.et_pb_bg_layout_dark h2,.et_pb_bg_layout_dark h3,.et_pb_bg_layout_dark h4,.et_pb_bg_layout_dark h5,.et_pb_bg_layout_dark h6{color:#fff!important}.et_pb_module.et_pb_text_align_left{text-align:left}.et_pb_module.et_pb_text_align_center{text-align:center}.et_pb_module.et_pb_text_align_right{text-align:right}.et_pb_module.et_pb_text_align_justified{text-align:justify}.clearfix:after{visibility:hidden;display:block;font-size:0;content:" ";clear:both;height:0}.et_pb_bg_layout_light .et_pb_more_button{color:#2ea3f2}.et_builder_inner_content{position:relative;z-index:1}header .et_builder_inner_content{z-index:2}.et_pb_css_mix_blend_mode_passthrough{mix-blend-mode:unset!important}.et_pb_image_container{margin:-20px -20px 29px}.et_pb_module_inner{position:relative}.et_hover_enabled_preview{z-index:2}.et_hover_enabled:hover{position:relative;z-index:2}.et_pb_all_tabs,.et_pb_module,.et_pb_posts_nav a,.et_pb_tab,.et_pb_with_background{position:relative;background-size:cover;background-position:50%;background-repeat:no-repeat}.et_pb_background_mask,.et_pb_background_pattern{bottom:0;left:0;position:absolute;right:0;top:0}.et_pb_background_mask{background-size:calc(100% + 2px) calc(100% + 2px);background-repeat:no-repeat;background-position:50%;overflow:hidden}.et_pb_background_pattern{background-position:0 0;background-repeat:repeat}.et_pb_with_border{position:relative;border:0 solid #333}.post-password-required .et_pb_row{padding:0;width:100%}.post-password-required .et_password_protected_form{min-height:0}body.et_pb_pagebuilder_layout.et_pb_show_title .post-password-required .et_password_protected_form h1,body:not(.et_pb_pagebuilder_layout) .post-password-required .et_password_protected_form h1{display:none}.et_pb_no_bg{padding:0!important}.et_overlay.et_pb_inline_icon:before,.et_pb_inline_icon:before{content:attr(data-icon)}.et_pb_more_button{color:inherit;text-shadow:none;text-decoration:none;display:inline-block;margin-top:20px}.et_parallax_bg_wrap{overflow:hidden;position:absolute;top:0;right:0;bottom:0;left:0}.et_parallax_bg{background-repeat:no-repeat;background-position:top;background-size:cover;position:absolute;bottom:0;left:0;width:100%;height:100%;display:block}.et_parallax_bg.et_parallax_bg__hover,.et_parallax_bg.et_parallax_bg_phone,.et_parallax_bg.et_parallax_bg_tablet,.et_parallax_gradient.et_parallax_gradient__hover,.et_parallax_gradient.et_parallax_gradient_phone,.et_parallax_gradient.et_parallax_gradient_tablet,.et_pb_section_parallax_hover:hover .et_parallax_bg:not(.et_parallax_bg__hover),.et_pb_section_parallax_hover:hover .et_parallax_gradient:not(.et_parallax_gradient__hover){display:none}.et_pb_section_parallax_hover:hover .et_parallax_bg.et_parallax_bg__hover,.et_pb_section_parallax_hover:hover .et_parallax_gradient.et_parallax_gradient__hover{display:block}.et_parallax_gradient{bottom:0;display:block;left:0;position:absolute;right:0;top:0}.et_pb_module.et_pb_section_parallax,.et_pb_posts_nav a.et_pb_section_parallax,.et_pb_tab.et_pb_section_parallax{position:relative}.et_pb_section_parallax .et_pb_parallax_css,.et_pb_slides .et_parallax_bg.et_pb_parallax_css{background-attachment:fixed}body.et-bfb .et_pb_section_parallax .et_pb_parallax_css,body.et-bfb .et_pb_slides .et_parallax_bg.et_pb_parallax_css{background-attachment:scroll;bottom:auto}.et_pb_section_parallax.et_pb_column .et_pb_module,.et_pb_section_parallax.et_pb_row .et_pb_column,.et_pb_section_parallax.et_pb_row .et_pb_module{z-index:9;position:relative}.et_pb_more_button:hover:after{opacity:1;margin-left:0}.et_pb_preload .et_pb_section_video_bg,.et_pb_preload>div{visibility:hidden}.et_pb_preload,.et_pb_section.et_pb_section_video.et_pb_preload{position:relative;background:#464646!important}.et_pb_preload:before{content:"";position:absolute;top:50%;left:50%;background:url(https://www.bloomenergy.com/wp-content/themes/Divi/includes/builder/styles/images/preloader.gif) no-repeat;border-radius:32px;width:32px;height:32px;margin:-16px 0 0 -16px}.box-shadow-overlay{position:absolute;top:0;left:0;width:100%;height:100%;z-index:10;pointer-events:none}.et_pb_section>.box-shadow-overlay~.et_pb_row{z-index:11}body.safari .section_has_divider{will-change:transform}.et_pb_row>.box-shadow-overlay{z-index:8}.has-box-shadow-overlay{position:relative}.et_clickable{cursor:pointer}.screen-reader-text{border:0;clip:rect(1px,1px,1px,1px);-webkit-clip-path:inset(50%);clip-path:inset(50%);height:1px;margin:-1px;overflow:hidden;padding:0;position:absolute!important;width:1px;word-wrap:normal!important}.et_multi_view_hidden,.et_multi_view_hidden_image{display:none!important}@keyframes multi-view-image-fade{0%{opacity:0}10%{opacity:.1}20%{opacity:.2}30%{opacity:.3}40%{opacity:.4}50%{opacity:.5}60%{opacity:.6}70%{opacity:.7}80%{opacity:.8}90%{opacity:.9}to{opacity:1}}.et_multi_view_image__loading{visibility:hidden}.et_multi_view_image__loaded{-webkit-animation:multi-view-image-fade .5s;animation:multi-view-image-fade .5s}#et-pb-motion-effects-offset-tracker{visibility:hidden!important;opacity:0;position:absolute;top:0;left:0}.et-pb-before-scroll-animation{opacity:0}header.et-l.et-l--header:after{clear:both;display:block;content:""}.et_pb_module{-webkit-animation-timing-function:linear;animation-timing-function:linear;-webkit-animation-duration:.2s;animation-duration:.2s}@-webkit-keyframes fadeBottom{0%{opacity:0;-webkit-transform:translateY(10%);transform:translateY(10%)}to{opacity:1;-webkit-transform:translateY(0);transform:translateY(0)}}@keyframes fadeBottom{0%{opacity:0;-webkit-transform:translateY(10%);transform:translateY(10%)}to{opacity:1;-webkit-transform:translateY(0);transform:translateY(0)}}@-webkit-keyframes fadeLeft{0%{opacity:0;-webkit-transform:translateX(-10%);transform:translateX(-10%)}to{opacity:1;-webkit-transform:translateX(0);transform:translateX(0)}}@keyframes fadeLeft{0%{opacity:0;-webkit-transform:translateX(-10%);transform:translateX(-10%)}to{opacity:1;-webkit-transform:translateX(0);transform:translateX(0)}}@-webkit-keyframes fadeRight{0%{opacity:0;-webkit-transform:translateX(10%);transform:translateX(10%)}to{opacity:1;-webkit-transform:translateX(0);transform:translateX(0)}}@keyframes fadeRight{0%{opacity:0;-webkit-transform:translateX(10%);transform:translateX(10%)}to{opacity:1;-webkit-transform:translateX(0);transform:translateX(0)}}@-webkit-keyframes fadeTop{0%{opacity:0;-webkit-transform:translateY(-10%);transform:translateY(-10%)}to{opacity:1;-webkit-transform:translateX(0);transform:translateX(0)}}@keyframes fadeTop{0%{opacity:0;-webkit-transform:translateY(-10%);transform:translateY(-10%)}to{opacity:1;-webkit-transform:translateX(0);transform:translateX(0)}}@-webkit-keyframes fadeIn{0%{opacity:0}to{opacity:1}}@keyframes fadeIn{0%{opacity:0}to{opacity:1}}.et-waypoint:not(.et_pb_counters){opacity:0}@media (min-width:981px){.et_pb_section.et_section_specialty div.et_pb_row .et_pb_column .et_pb_column .et_pb_module.et-last-child,.et_pb_section.et_section_specialty div.et_pb_row .et_pb_column .et_pb_column .et_pb_module:last-child,.et_pb_section.et_section_specialty div.et_pb_row .et_pb_column .et_pb_row_inner .et_pb_column .et_pb_module.et-last-child,.et_pb_section.et_section_specialty div.et_pb_row .et_pb_column .et_pb_row_inner .et_pb_column .et_pb_module:last-child,.et_pb_section div.et_pb_row .et_pb_column .et_pb_module.et-last-child,.et_pb_section div.et_pb_row .et_pb_column .et_pb_module:last-child{margin-bottom:0}}@media (max-width:980px){.et_overlay.et_pb_inline_icon_tablet:before,.et_pb_inline_icon_tablet:before{content:attr(data-icon-tablet)}.et_parallax_bg.et_parallax_bg_tablet_exist,.et_parallax_gradient.et_parallax_gradient_tablet_exist{display:none}.et_parallax_bg.et_parallax_bg_tablet,.et_parallax_gradient.et_parallax_gradient_tablet{display:block}.et_pb_column .et_pb_module{margin-bottom:30px}.et_pb_row .et_pb_column .et_pb_module.et-last-child,.et_pb_row .et_pb_column .et_pb_module:last-child,.et_section_specialty .et_pb_row .et_pb_column .et_pb_module.et-last-child,.et_section_specialty .et_pb_row .et_pb_column .et_pb_module:last-child{margin-bottom:0}.et_pb_more_button{display:inline-block!important}.et_pb_bg_layout_light_tablet.et_pb_button,.et_pb_bg_layout_light_tablet.et_pb_module.et_pb_button,.et_pb_bg_layout_light_tablet .et_pb_more_button{color:#2ea3f2}.et_pb_bg_layout_light_tablet .et_pb_forgot_password a{color:#666}.et_pb_bg_layout_light_tablet h1,.et_pb_bg_layout_light_tablet h2,.et_pb_bg_layout_light_tablet h3,.et_pb_bg_layout_light_tablet h4,.et_pb_bg_layout_light_tablet h5,.et_pb_bg_layout_light_tablet h6{color:#333!important}.et_pb_module .et_pb_bg_layout_light_tablet.et_pb_button{color:#2ea3f2!important}.et_pb_bg_layout_light_tablet{color:#666!important}.et_pb_bg_layout_dark_tablet,.et_pb_bg_layout_dark_tablet h1,.et_pb_bg_layout_dark_tablet h2,.et_pb_bg_layout_dark_tablet h3,.et_pb_bg_layout_dark_tablet h4,.et_pb_bg_layout_dark_tablet h5,.et_pb_bg_layout_dark_tablet h6{color:#fff!important}.et_pb_bg_layout_dark_tablet.et_pb_button,.et_pb_bg_layout_dark_tablet.et_pb_module.et_pb_button,.et_pb_bg_layout_dark_tablet .et_pb_more_button{color:inherit}.et_pb_bg_layout_dark_tablet .et_pb_forgot_password a{color:#fff}.et_pb_module.et_pb_text_align_left-tablet{text-align:left}.et_pb_module.et_pb_text_align_center-tablet{text-align:center}.et_pb_module.et_pb_text_align_right-tablet{text-align:right}.et_pb_module.et_pb_text_align_justified-tablet{text-align:justify}}@media (max-width:767px){.et_pb_more_button{display:inline-block!important}.et_overlay.et_pb_inline_icon_phone:before,.et_pb_inline_icon_phone:before{content:attr(data-icon-phone)}.et_parallax_bg.et_parallax_bg_phone_exist,.et_parallax_gradient.et_parallax_gradient_phone_exist{display:none}.et_parallax_bg.et_parallax_bg_phone,.et_parallax_gradient.et_parallax_gradient_phone{display:block}.et-hide-mobile{display:none!important}.et_pb_bg_layout_light_phone.et_pb_button,.et_pb_bg_layout_light_phone.et_pb_module.et_pb_button,.et_pb_bg_layout_light_phone .et_pb_more_button{color:#2ea3f2}.et_pb_bg_layout_light_phone .et_pb_forgot_password a{color:#666}.et_pb_bg_layout_light_phone h1,.et_pb_bg_layout_light_phone h2,.et_pb_bg_layout_light_phone h3,.et_pb_bg_layout_light_phone h4,.et_pb_bg_layout_light_phone h5,.et_pb_bg_layout_light_phone h6{color:#333!important}.et_pb_module .et_pb_bg_layout_light_phone.et_pb_button{color:#2ea3f2!important}.et_pb_bg_layout_light_phone{color:#666!important}.et_pb_bg_layout_dark_phone,.et_pb_bg_layout_dark_phone h1,.et_pb_bg_layout_dark_phone h2,.et_pb_bg_layout_dark_phone h3,.et_pb_bg_layout_dark_phone h4,.et_pb_bg_layout_dark_phone h5,.et_pb_bg_layout_dark_phone h6{color:#fff!important}.et_pb_bg_layout_dark_phone.et_pb_button,.et_pb_bg_layout_dark_phone.et_pb_module.et_pb_button,.et_pb_bg_layout_dark_phone .et_pb_more_button{color:inherit}.et_pb_module .et_pb_bg_layout_dark_phone.et_pb_button{color:#fff!important}.et_pb_bg_layout_dark_phone .et_pb_forgot_password a{color:#fff}.et_pb_module.et_pb_text_align_left-phone{text-align:left}.et_pb_module.et_pb_text_align_center-phone{text-align:center}.et_pb_module.et_pb_text_align_right-phone{text-align:right}.et_pb_module.et_pb_text_align_justified-phone{text-align:justify}}@media (max-width:479px){a.et_pb_more_button{display:block}}@media (min-width:768px) and (max-width:980px){[data-et-multi-view-load-tablet-hidden=true]:not(.et_multi_view_swapped){display:none!important}}@media (max-width:767px){[data-et-multi-view-load-phone-hidden=true]:not(.et_multi_view_swapped){display:none!important}}.et_pb_menu.et_pb_menu--style-inline_centered_logo .et_pb_menu__menu nav ul{-webkit-box-pack:center;-ms-flex-pack:center;justify-content:center}@-webkit-keyframes multi-view-image-fade{0%{-webkit-transform:scale(1);transform:scale(1);opacity:1}50%{-webkit-transform:scale(1.01);transform:scale(1.01);opacity:1}to{-webkit-transform:scale(1);transform:scale(1);opacity:1}}
+/*# sourceURL=divi-style-parent-inline-inline-css */
+</style>
+<link rel='stylesheet' id='divi-dynamic-late-css' href='https://www.bloomenergy.com/wp-content/et-cache/1539/et-divi-dynamic-tb-17985-tb-17953-1539-late.css?ver=1772232131' type='text/css' media='all' />
+<link rel='stylesheet' id='divi-dynamic-css' href='https://www.bloomenergy.com/wp-content/et-cache/1539/et-divi-dynamic-tb-17985-tb-17953-1539.css?ver=1772232131' type='text/css' media='all' />
+<link rel='stylesheet' id='divi-plus-styles-css' href='https://www.bloomenergy.com/wp-content/plugins/divi-plus/styles/style.min.css?ver=1.20.0' type='text/css' media='all' />
+<link rel='stylesheet' id='dp-owl-carousel-pro-styles-css' href='https://www.bloomenergy.com/wp-content/plugins/dp-owl-carousel-pro/styles/style.min.css?ver=2.4.8' type='text/css' media='all' />
+<link rel='stylesheet' id='wp-pagenavi-css' href='https://www.bloomenergy.com/wp-content/plugins/wp-pagenavi/pagenavi-css.css?ver=2.70' type='text/css' media='all' />
+<link rel='stylesheet' id='dp-divi-filtergrid-bundle-style-css' href='https://www.bloomenergy.com/wp-content/plugins/dp-divi-filtergrid/styles/bundle.css?ver=4.1.5' type='text/css' media='all' />
+<link rel='stylesheet' id='divi-style-css' href='https://www.bloomenergy.com/wp-content/themes/bloomenergy/style.css?ver=1771979442' type='text/css' media='all' />
+<script type="text/javascript" src="https://www.bloomenergy.com/wp-includes/js/jquery/jquery.min.js?ver=3.7.1" id="jquery-core-js"></script>
+<script type="text/javascript" src="https://www.bloomenergy.com/wp-includes/js/jquery/jquery-migrate.min.js?ver=3.4.1" id="jquery-migrate-js"></script>
+<script type="text/javascript" id="jquery-js-after">
+/* <![CDATA[ */
+jqueryParams.length&&$.each(jqueryParams,function(e,r){if("function"==typeof r){var n=String(r);n.replace("$","jQuery");var a=new Function("return "+n)();$(document).ready(a)}});
+//# sourceURL=jquery-js-after
+/* ]]> */
+</script>
+<script type="text/javascript" src="https://www.bloomenergy.com/wp-content/plugins/wpfront-notification-bar/js/wpfront-notification-bar.min.js?ver=3.5.1.05102" id="wpfront-notification-bar-js"></script>
+<link rel="https://api.w.org/" href="https://www.bloomenergy.com/wp-json/" /><link rel="alternate" title="JSON" type="application/json" href="https://www.bloomenergy.com/wp-json/wp/v2/resource/1539" /><link rel="EditURI" type="application/rsd+xml" title="RSD" href="https://www.bloomenergy.com/xmlrpc.php?rsd" />
+<link rel='shortlink' href='https://www.bloomenergy.com/?p=1539' />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" /><meta name="google-site-verification" content="23jl6mT5c4Ra9Be_-EHbfxizjSp84OraTeDC18FAXEM">
+
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-PT4NDZ4');</script>
+<!-- End Google Tag Manager -->
+
+<script type="text/javascript">
+jQuery(function($){
+jQuery('.makepopper').click(function(event) {
+jQuery(event.preventDefault());
+	jQuery('.popup').css('display', 'block');
+
+});
+jQuery('.close .et_pb_button').click(function() {
+jQuery('.popup').css('display', 'none');
+});});
+</script>
+
+<script>
+jQuery(document).ready(function(){
+    jQuery("#dropdownSelect").click(function(){
+        jQuery("#resource-categories").slideToggle("fast");
+    });
+});
+</script>
+
+<script type="text/javascript"> _linkedin_partner_id = "410244"; window._linkedin_data_partner_ids = window._linkedin_data_partner_ids || []; window._linkedin_data_partner_ids.push(_linkedin_partner_id); </script><script type="text/javascript"> (function(){var s = document.getElementsByTagName("script")[0]; var b = document.createElement("script"); b.type = "text/javascript";b.async = true; b.src = "https://snap.licdn.com/li.lms-analytics/insight.min.js[snap.licdn.com]"; s.parentNode.insertBefore(b, s);})(); </script> <noscript> <img height="1" width="1" style="display:none;" alt="" src="https://dc.ads.linkedin.com/collect/?pid=410244&amp;fmt=gif%5Bdc.ads.linkedin.com%5D"> </noscript>
+
+<script>
+	jQuery(function($){	
+	
+$(document).ready(function() {    
+
+$('#tabs li a:not(:first)').addClass('inactive');
+$('#et-main-area .tabcontainer').hide();
+$('#et-main-area .tabcontainer:first').show();
+    
+$('#tabs li a').click(function(){
+    var t = $(this).attr('id');
+  if($(this).hasClass('inactive')){ //this is the start of our condition 
+    $('#tabs li a').addClass('inactive');           
+    $(this).removeClass('inactive');
+    
+    $('#et-main-area .tabcontainer').hide();
+    $('#'+ t + 'C').fadeIn('slow');
+ }
+});
+
+});
+
+});
+	</script>
+
+<script src="/wp-content/themes/Divi/includes/builder/feature/dynamic-assets/assets/js/magnific-popup.js" defer></script>
+<link rel="stylesheet" href="/wp-content/themes/Divi/includes/builder/styles/magnific_popup.css" defer>
+
+<script type="text/javascript">
+jQuery(function($){
+	var owl = $('.owl-carousel');
+	
+
+	$('.carouselrow').on("mouseenter", function(e) {
+	
+    owl.trigger('play.owl.autoplay', 5000);
+	})
+	
+});
+</script>
+
+<script>
+jQuery(function($){
+    $('.et_pb_accordion .et_pb_toggle_open').addClass('et_pb_toggle_close').removeClass('et_pb_toggle_open');
+
+    $('.et_pb_accordion .et_pb_toggle').click(function() {
+      $this = $(this);
+      setTimeout(function(){
+         $this.closest('.et_pb_accordion').removeClass('et_pb_accordion_toggling');
+      },700);
+    });
+});
+</script>
+<script>
+	jQuery(function($){
+  $('.et_pb_toggle_title').click(function(){
+    var $toggle = $(this).closest('.et_pb_toggle');
+    if (!$toggle.hasClass('et_pb_accordion_toggling')) {
+      var $accordion = $toggle.closest('.et_pb_accordion');
+      if ($toggle.hasClass('et_pb_toggle_open')) {
+        $accordion.addClass('et_pb_accordion_toggling');
+        $toggle.find('.et_pb_toggle_content').slideToggle(700, function() { 
+          $toggle.removeClass('et_pb_toggle_open').addClass('et_pb_toggle_close'); 
+					
+        });
+      }
+      setTimeout(function(){ 
+        $accordion.removeClass('et_pb_accordion_toggling'); 
+      }, 750);
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+(function($) {
+	$(document).ready(function() {
+		$('a.video_popup, .video_popup a').magnificPopup({
+			type: 'iframe',
+			mainClass: 'mfp-fade',
+			removalDelay: 160,
+			preloader: false,
+			fixedContentPos: false
+		});
+	});
+})(jQuery);
+</script><link rel="icon" href="https://www.bloomenergy.com/wp-content/uploads/bloomfavicon.png" sizes="32x32" />
+<link rel="icon" href="https://www.bloomenergy.com/wp-content/uploads/bloomfavicon.png" sizes="192x192" />
+<link rel="apple-touch-icon" href="https://www.bloomenergy.com/wp-content/uploads/bloomfavicon.png" />
+<meta name="msapplication-TileImage" content="https://www.bloomenergy.com/wp-content/uploads/bloomfavicon.png" />
+<style id="et-divi-customizer-global-cached-inline-styles">body,.et_pb_column_1_2 .et_quote_content blockquote cite,.et_pb_column_1_2 .et_link_content a.et_link_main_url,.et_pb_column_1_3 .et_quote_content blockquote cite,.et_pb_column_3_8 .et_quote_content blockquote cite,.et_pb_column_1_4 .et_quote_content blockquote cite,.et_pb_blog_grid .et_quote_content blockquote cite,.et_pb_column_1_3 .et_link_content a.et_link_main_url,.et_pb_column_3_8 .et_link_content a.et_link_main_url,.et_pb_column_1_4 .et_link_content a.et_link_main_url,.et_pb_blog_grid .et_link_content a.et_link_main_url,body .et_pb_bg_layout_light .et_pb_post p,body .et_pb_bg_layout_dark .et_pb_post p{font-size:18px}.et_pb_slide_content,.et_pb_best_value{font-size:20px}body{color:#001f1b}h1,h2,h3,h4,h5,h6{color:#001f1b}body{line-height:1.6em}#et_search_icon:hover,.mobile_menu_bar:before,.mobile_menu_bar:after,.et_toggle_slide_menu:after,.et-social-icon a:hover,.et_pb_sum,.et_pb_pricing li a,.et_pb_pricing_table_button,.et_overlay:before,.entry-summary p.price ins,.et_pb_member_social_links a:hover,.et_pb_widget li a:hover,.et_pb_filterable_portfolio .et_pb_portfolio_filters li a.active,.et_pb_filterable_portfolio .et_pb_portofolio_pagination ul li a.active,.et_pb_gallery .et_pb_gallery_pagination ul li a.active,.wp-pagenavi span.current,.wp-pagenavi a:hover,.nav-single a,.tagged_as a,.posted_in a{color:#66b360}.et_pb_contact_submit,.et_password_protected_form .et_submit_button,.et_pb_bg_layout_light .et_pb_newsletter_button,.comment-reply-link,.form-submit .et_pb_button,.et_pb_bg_layout_light .et_pb_promo_button,.et_pb_bg_layout_light .et_pb_more_button,.et_pb_contact p input[type="checkbox"]:checked+label i:before,.et_pb_bg_layout_light.et_pb_module.et_pb_button{color:#66b360}.footer-widget h4{color:#66b360}.et-search-form,.nav li ul,.et_mobile_menu,.footer-widget li:before,.et_pb_pricing li:before,blockquote{border-color:#66b360}.et_pb_counter_amount,.et_pb_featured_table .et_pb_pricing_heading,.et_quote_content,.et_link_content,.et_audio_content,.et_pb_post_slider.et_pb_bg_layout_dark,.et_slide_in_menu_container,.et_pb_contact p input[type="radio"]:checked+label i:before{background-color:#66b360}.container,.et_pb_row,.et_pb_slider .et_pb_container,.et_pb_fullwidth_section .et_pb_title_container,.et_pb_fullwidth_section .et_pb_title_featured_container,.et_pb_fullwidth_header:not(.et_pb_fullscreen) .et_pb_fullwidth_header_container{max-width:1440px}.et_boxed_layout #page-container,.et_boxed_layout.et_non_fixed_nav.et_transparent_nav #page-container #top-header,.et_boxed_layout.et_non_fixed_nav.et_transparent_nav #page-container #main-header,.et_fixed_nav.et_boxed_layout #page-container #top-header,.et_fixed_nav.et_boxed_layout #page-container #main-header,.et_boxed_layout #page-container .container,.et_boxed_layout #page-container .et_pb_row{max-width:1600px}a{color:#3dae2b}.nav li ul{border-color:#3dae2b}.et_secondary_nav_enabled #page-container #top-header{background-color:#ffffff!important}#et-secondary-nav li ul{background-color:#ffffff}#top-header,#top-header a{color:#3e3e3e}.et_header_style_centered .mobile_nav .select_page,.et_header_style_split .mobile_nav .select_page,.et_nav_text_color_light #top-menu>li>a,.et_nav_text_color_dark #top-menu>li>a,#top-menu a,.et_mobile_menu li a,.et_nav_text_color_light .et_mobile_menu li a,.et_nav_text_color_dark .et_mobile_menu li a,#et_search_icon:before,.et_search_form_container input,span.et_close_search_field:after,#et-top-navigation .et-cart-info{color:#3e3e3e}.et_search_form_container input::-moz-placeholder{color:#3e3e3e}.et_search_form_container input::-webkit-input-placeholder{color:#3e3e3e}.et_search_form_container input:-ms-input-placeholder{color:#3e3e3e}#top-menu li a{font-size:16px}body.et_vertical_nav .container.et_search_form_container .et-search-form input{font-size:16px!important}#top-menu li.current-menu-ancestor>a,#top-menu li.current-menu-item>a,#top-menu li.current_page_item>a{color:#3dae2b}#main-footer{background-color:#37414a}#main-footer .footer-widget h4,#main-footer .widget_block h1,#main-footer .widget_block h2,#main-footer .widget_block h3,#main-footer .widget_block h4,#main-footer .widget_block h5,#main-footer .widget_block h6{color:#66b360}.footer-widget li:before{border-color:#66b360}#footer-widgets .footer-widget li:before{top:12.3px}#footer-bottom{background-color:#37414a}#footer-info,#footer-info a{color:#ffffff}#footer-bottom .et-social-icon a{color:#ffffff}body .et_pb_button{font-size:16px;background-color:#00ab44;border-color:#00ab44;border-radius:44px}body.et_pb_button_helper_class .et_pb_button,body.et_pb_button_helper_class .et_pb_module.et_pb_button{color:#000000}body .et_pb_button:after{content:'';font-size:16px}body .et_pb_bg_layout_light.et_pb_button:hover,body .et_pb_bg_layout_light .et_pb_button:hover,body .et_pb_button:hover{color:#001f1b!important;background-color:#004120;border-color:rgba(30,137,0,0)!important;border-radius:44px}@media only screen and (min-width:981px){.et_pb_section{padding:3% 0}.et_pb_fullwidth_section{padding:0}.et_pb_row{padding:1% 0}#main-footer .footer-widget h4,#main-footer .widget_block h1,#main-footer .widget_block h2,#main-footer .widget_block h3,#main-footer .widget_block h4,#main-footer .widget_block h5,#main-footer .widget_block h6{font-size:32px}.et_header_style_left #et-top-navigation,.et_header_style_split #et-top-navigation{padding:50px 0 0 0}.et_header_style_left #et-top-navigation nav>ul>li>a,.et_header_style_split #et-top-navigation nav>ul>li>a{padding-bottom:50px}.et_header_style_split .centered-inline-logo-wrap{width:100px;margin:-100px 0}.et_header_style_split .centered-inline-logo-wrap #logo{max-height:100px}.et_pb_svg_logo.et_header_style_split .centered-inline-logo-wrap #logo{height:100px}.et_header_style_centered #top-menu>li>a{padding-bottom:18px}.et_header_style_slide #et-top-navigation,.et_header_style_fullscreen #et-top-navigation{padding:41px 0 41px 0!important}.et_header_style_centered #main-header .logo_container{height:100px}#logo{max-height:75%}.et_pb_svg_logo #logo{height:75%}.et_header_style_left .et-fixed-header #et-top-navigation,.et_header_style_split .et-fixed-header #et-top-navigation{padding:50px 0 0 0}.et_header_style_left .et-fixed-header #et-top-navigation nav>ul>li>a,.et_header_style_split .et-fixed-header #et-top-navigation nav>ul>li>a{padding-bottom:50px}.et_header_style_centered header#main-header.et-fixed-header .logo_container{height:100px}.et_header_style_split #main-header.et-fixed-header .centered-inline-logo-wrap{width:100px;margin:-100px 0}.et_header_style_split .et-fixed-header .centered-inline-logo-wrap #logo{max-height:100px}.et_pb_svg_logo.et_header_style_split .et-fixed-header .centered-inline-logo-wrap #logo{height:100px}.et_header_style_slide .et-fixed-header #et-top-navigation,.et_header_style_fullscreen .et-fixed-header #et-top-navigation{padding:41px 0 41px 0!important}.et_fixed_nav #page-container .et-fixed-header#top-header{background-color:#ffffff!important}.et_fixed_nav #page-container .et-fixed-header#top-header #et-secondary-nav li ul{background-color:#ffffff}.et-fixed-header #top-menu a,.et-fixed-header #et_search_icon:before,.et-fixed-header #et_top_search .et-search-form input,.et-fixed-header .et_search_form_container input,.et-fixed-header .et_close_search_field:after,.et-fixed-header #et-top-navigation .et-cart-info{color:#3e3e3e!important}.et-fixed-header .et_search_form_container input::-moz-placeholder{color:#3e3e3e!important}.et-fixed-header .et_search_form_container input::-webkit-input-placeholder{color:#3e3e3e!important}.et-fixed-header .et_search_form_container input:-ms-input-placeholder{color:#3e3e3e!important}.et-fixed-header #top-menu li.current-menu-ancestor>a,.et-fixed-header #top-menu li.current-menu-item>a,.et-fixed-header #top-menu li.current_page_item>a{color:#4d9f43!important}.et-fixed-header#top-header a{color:#3e3e3e}}@media only screen and (min-width:1800px){.et_pb_row{padding:18px 0}.et_pb_section{padding:54px 0}.single.et_pb_pagebuilder_layout.et_full_width_page .et_post_meta_wrapper{padding-top:54px}.et_pb_fullwidth_section{padding:0}}h1,h1.et_pb_contact_main_title,.et_pb_title_container h1{font-size:40px}h2,.product .related h2,.et_pb_column_1_2 .et_quote_content blockquote p{font-size:34px}h3{font-size:29px}h4,.et_pb_circle_counter h3,.et_pb_number_counter h3,.et_pb_column_1_3 .et_pb_post h2,.et_pb_column_1_4 .et_pb_post h2,.et_pb_blog_grid h2,.et_pb_column_1_3 .et_quote_content blockquote p,.et_pb_column_3_8 .et_quote_content blockquote p,.et_pb_column_1_4 .et_quote_content blockquote p,.et_pb_blog_grid .et_quote_content blockquote p,.et_pb_column_1_3 .et_link_content h2,.et_pb_column_3_8 .et_link_content h2,.et_pb_column_1_4 .et_link_content h2,.et_pb_blog_grid .et_link_content h2,.et_pb_column_1_3 .et_audio_content h2,.et_pb_column_3_8 .et_audio_content h2,.et_pb_column_1_4 .et_audio_content h2,.et_pb_blog_grid .et_audio_content h2,.et_pb_column_3_8 .et_pb_audio_module_content h2,.et_pb_column_1_3 .et_pb_audio_module_content h2,.et_pb_gallery_grid .et_pb_gallery_item h3,.et_pb_portfolio_grid .et_pb_portfolio_item h2,.et_pb_filterable_portfolio_grid .et_pb_portfolio_item h2{font-size:24px}h5{font-size:21px}h6{font-size:18px}.et_pb_slide_description .et_pb_slide_title{font-size:61px}.et_pb_gallery_grid .et_pb_gallery_item h3,.et_pb_portfolio_grid .et_pb_portfolio_item h2,.et_pb_filterable_portfolio_grid .et_pb_portfolio_item h2,.et_pb_column_1_4 .et_pb_audio_module_content h2{font-size:21px}@media only screen and (max-width:980px){h1{font-size:36px}h2,.product .related h2,.et_pb_column_1_2 .et_quote_content blockquote p{font-size:30px}h3{font-size:26px}h4,.et_pb_circle_counter h3,.et_pb_number_counter h3,.et_pb_column_1_3 .et_pb_post h2,.et_pb_column_1_4 .et_pb_post h2,.et_pb_blog_grid h2,.et_pb_column_1_3 .et_quote_content blockquote p,.et_pb_column_3_8 .et_quote_content blockquote p,.et_pb_column_1_4 .et_quote_content blockquote p,.et_pb_blog_grid .et_quote_content blockquote p,.et_pb_column_1_3 .et_link_content h2,.et_pb_column_3_8 .et_link_content h2,.et_pb_column_1_4 .et_link_content h2,.et_pb_blog_grid .et_link_content h2,.et_pb_column_1_3 .et_audio_content h2,.et_pb_column_3_8 .et_audio_content h2,.et_pb_column_1_4 .et_audio_content h2,.et_pb_blog_grid .et_audio_content h2,.et_pb_column_3_8 .et_pb_audio_module_content h2,.et_pb_column_1_3 .et_pb_audio_module_content h2,.et_pb_gallery_grid .et_pb_gallery_item h3,.et_pb_portfolio_grid .et_pb_portfolio_item h2,.et_pb_filterable_portfolio_grid .et_pb_portfolio_item h2{font-size:21px}.et_pb_slider.et_pb_module .et_pb_slides .et_pb_slide_description .et_pb_slide_title{font-size:55px}.et_pb_gallery_grid .et_pb_gallery_item h3,.et_pb_portfolio_grid .et_pb_portfolio_item h2,.et_pb_filterable_portfolio_grid .et_pb_portfolio_item h2,.et_pb_column_1_4 .et_pb_audio_module_content h2{font-size:19px}h5{font-size:19px}h6{font-size:16px}.et_pb_section{padding:20px 0}.et_pb_section.et_pb_fullwidth_section{padding:0}.et_pb_row,.et_pb_column .et_pb_row_inner{padding:10px 0}}@media only screen and (max-width:767px){h1{font-size:26px}h2,.product .related h2,.et_pb_column_1_2 .et_quote_content blockquote p{font-size:22px}h3{font-size:18px}h4,.et_pb_circle_counter h3,.et_pb_number_counter h3,.et_pb_column_1_3 .et_pb_post h2,.et_pb_column_1_4 .et_pb_post h2,.et_pb_blog_grid h2,.et_pb_column_1_3 .et_quote_content blockquote p,.et_pb_column_3_8 .et_quote_content blockquote p,.et_pb_column_1_4 .et_quote_content blockquote p,.et_pb_blog_grid .et_quote_content blockquote p,.et_pb_column_1_3 .et_link_content h2,.et_pb_column_3_8 .et_link_content h2,.et_pb_column_1_4 .et_link_content h2,.et_pb_blog_grid .et_link_content h2,.et_pb_column_1_3 .et_audio_content h2,.et_pb_column_3_8 .et_audio_content h2,.et_pb_column_1_4 .et_audio_content h2,.et_pb_blog_grid .et_audio_content h2,.et_pb_column_3_8 .et_pb_audio_module_content h2,.et_pb_column_1_3 .et_pb_audio_module_content h2,.et_pb_gallery_grid .et_pb_gallery_item h3,.et_pb_portfolio_grid .et_pb_portfolio_item h2,.et_pb_filterable_portfolio_grid .et_pb_portfolio_item h2{font-size:15px}.et_pb_slider.et_pb_module .et_pb_slides .et_pb_slide_description .et_pb_slide_title{font-size:39px}.et_pb_gallery_grid .et_pb_gallery_item h3,.et_pb_portfolio_grid .et_pb_portfolio_item h2,.et_pb_filterable_portfolio_grid .et_pb_portfolio_item h2,.et_pb_column_1_4 .et_pb_audio_module_content h2{font-size:13px}h5{font-size:13px}h6{font-size:12px}.et_pb_section{padding:30px 0}.et_pb_section.et_pb_fullwidth_section{padding:0}}	#main-header,#et-top-navigation{font-family:'Roboto',Helvetica,Arial,Lucida,sans-serif}</style><style type="text/css">/** Mega Menu CSS: fs **/</style>
+</head>
+<body class="wp-singular resource-template-default single single-resource postid-1539 wp-theme-Divi wp-child-theme-bloomenergy et-tb-has-template et-tb-has-header et-tb-has-footer mega-menu-primary-menu et_button_icon_visible et_button_no_icon et_button_custom_icon et_pb_button_helper_class et_cover_background et_pb_gutter et_pb_gutters3 et_smooth_scroll et_left_sidebar et_divi_theme et-db">
+	                <style type="text/css">
+                #wpfront-notification-bar, #wpfront-notification-bar-editor            {
+            background: #30D060;
+            background: -moz-linear-gradient(top, #30D060 0%, #30D060 100%);
+            background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#30D060), color-stop(100%,#30D060));
+            background: -webkit-linear-gradient(top, #30D060 0%,#30D060 100%);
+            background: -o-linear-gradient(top, #30D060 0%,#30D060 100%);
+            background: -ms-linear-gradient(top, #30D060 0%,#30D060 100%);
+            background: linear-gradient(to bottom, #30D060 0%, #30D060 100%);
+            filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#30D060', endColorstr='#30D060',GradientType=0 );
+            background-repeat: no-repeat;
+                        }
+            #wpfront-notification-bar div.wpfront-message, #wpfront-notification-bar-editor.wpfront-message            {
+            color: #000000;
+                        }
+            #wpfront-notification-bar a.wpfront-button, #wpfront-notification-bar-editor a.wpfront-button            {
+            background: #FFFFFF;
+            background: -moz-linear-gradient(top, #FFFFFF 0%, #FFFFFF 100%);
+            background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#FFFFFF), color-stop(100%,#FFFFFF));
+            background: -webkit-linear-gradient(top, #FFFFFF 0%,#FFFFFF 100%);
+            background: -o-linear-gradient(top, #FFFFFF 0%,#FFFFFF 100%);
+            background: -ms-linear-gradient(top, #FFFFFF 0%,#FFFFFF 100%);
+            background: linear-gradient(to bottom, #FFFFFF 0%, #FFFFFF 100%);
+            filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#FFFFFF', endColorstr='#FFFFFF',GradientType=0 );
+
+            background-repeat: no-repeat;
+            color: #000000;
+            }
+            #wpfront-notification-bar-open-button            {
+            background-color: #A6FFC1;
+            right: 10px;
+                        }
+            #wpfront-notification-bar-open-button.top                {
+                background-image: url(https://www.bloomenergy.com/wp-content/plugins/wpfront-notification-bar/images/arrow_down.png);
+                }
+
+                #wpfront-notification-bar-open-button.bottom                {
+                background-image: url(https://www.bloomenergy.com/wp-content/plugins/wpfront-notification-bar/images/arrow_up.png);
+                }
+                #wpfront-notification-bar-table, .wpfront-notification-bar tbody, .wpfront-notification-bar tr            {
+                        }
+            #wpfront-notification-bar div.wpfront-close            {
+            border: 1px solid #555555;
+            background-color: #555555;
+            color: #000000;
+            }
+            #wpfront-notification-bar div.wpfront-close:hover            {
+            border: 1px solid #aaaaaa;
+            background-color: #aaaaaa;
+            }
+             #wpfront-notification-bar-spacer { display:block; }@media screen and (max-width: 768px) { #wpfront-notification-bar-spacer { display:none; } }                </style>
+                            <div id="wpfront-notification-bar-spacer" class="wpfront-notification-bar-spacer   ">
+                <div id="wpfront-notification-bar-open-button" aria-label="reopen" role="button" class="wpfront-notification-bar-open-button hidden top wpfront-bottom-shadow"></div>
+                <div id="wpfront-notification-bar" class="wpfront-notification-bar wpfront-fixed load top ">
+                                         
+                            <table id="wpfront-notification-bar-table" border="0" cellspacing="0" cellpadding="0" role="presentation">                        
+                                <tr>
+                                    <td>
+                                     
+                                    <div class="wpfront-message wpfront-div">
+                                        <div><a href="/2026-power-report/" data-wpel-link="internal">Download the 2026 Data Center Power Report</a></div>                                    </div>
+                                                                                                       
+                                    </td>
+                                </tr>              
+                            </table>
+                            
+                                    </div>
+            </div>
+            
+            <script type="text/javascript">
+                function __load_wpfront_notification_bar() {
+                    if (typeof wpfront_notification_bar === "function") {
+                        wpfront_notification_bar({"position":1,"height":0,"fixed_position":false,"animate_delay":0,"close_button":false,"button_action_close_bar":false,"auto_close_after":0,"display_after":0,"is_admin_bar_showing":false,"display_open_button":false,"keep_closed":false,"keep_closed_for":0,"position_offset":0,"display_scroll":false,"display_scroll_offset":100,"keep_closed_cookie":"wpfront-notification-bar-keep-closed","log":false,"id_suffix":"","log_prefix":"[WPFront Notification Bar]","theme_sticky_selector":"","set_max_views":false,"max_views":0,"max_views_for":0,"max_views_cookie":"wpfront-notification-bar-max-views"});
+                    } else {
+                                    setTimeout(__load_wpfront_notification_bar, 100);
+                    }
+                }
+                __load_wpfront_notification_bar();
+            </script>
+            <script class="divioverlays-globalresponsivevalues">var dov_globalresponsivevalues = { min_width:769, max_width:980, tablet_width:768, phone_width:400 };</script><script type="text/javascript">var overlays_with_css_trigger = {};</script><script type="text/javascript">var overlays_with_automatic_trigger = {'17529': '{"at_type":"0","at_value":"0","at_onceperload":"0"}','17524': '{"at_type":"0","at_value":"0","at_onceperload":"0"}','17521': '{"at_type":"0","at_value":"0","at_onceperload":"0"}','17515': '{"at_type":"0","at_value":"0","at_onceperload":"0"}','17512': '{"at_type":"0","at_value":"0","at_onceperload":"0"}','15414': '{"at_type":"0","at_value":"0","at_onceperload":"0"}','13908': '{"at_type":"0","at_value":"0","at_onceperload":"0"}','12722': '{"at_type":"0","at_value":"0","at_onceperload":"0"}','10515': '{"at_type":"0","at_value":"0","at_onceperload":"0"}','9110': '{"at_type":"0","at_value":"0","at_onceperload":"0"}','9097': '{"at_type":"0","at_value":"0","at_onceperload":"0"}',};</script><div id="page-container">
+<div id="et-boc" class="et-boc">
+			
+		<header class="et-l et-l--header">
+			<div class="et_builder_inner_content et_pb_gutters3">
+		<div class="et_pb_section et_pb_section_0_tb_header js-header et_pb_with_background et_section_regular et_pb_section--with-menu" >
+				
+				
+				
+				
+				
+				
+				<div class="et_pb_row et_pb_row_0_tb_header align-center et_pb_equal_columns et_pb_gutters1 et_pb_row--with-menu">
+				<div class="et_pb_column et_pb_column_1_5 et_pb_column_0_tb_header  et_pb_css_mix_blend_mode_passthrough">
+				
+				
+				
+				
+				<div class="et_pb_module et_pb_image et_pb_image_0_tb_header">
+				
+				
+				
+				
+				<a href="/" data-wpel-link="internal"><span class="et_pb_image_wrap "><img decoding="async" width="116" height="64" src="https://www.bloomenergy.com/wp-content/uploads/Logo.svg" alt="Bloom Energy logo" title="Logo" class="wp-image-18984" /></span></a>
+			</div>
+			</div><div class="et_pb_column et_pb_column_3_5 et_pb_column_1_tb_header  et_pb_css_mix_blend_mode_passthrough et_pb_column--with-menu">
+				
+				
+				
+				
+				<div class="et_pb_module et_pb_menu et_pb_menu_0_tb_header menu-desktop et_pb_bg_layout_light  et_pb_text_align_left et_dropdown_animation_fade et_pb_menu--without-logo et_pb_menu--style-left_aligned">
+					
+					
+					
+					
+					<div class="et_pb_menu_inner_container clearfix">
+						
+						<div class="et_pb_menu__wrap">
+							<div class="et_pb_menu__menu">
+								<nav class="et-menu-nav"><div id="mega-menu-wrap-primary-menu" class="mega-menu-wrap"><div class="mega-menu-toggle"><div class="mega-toggle-blocks-left"></div><div class="mega-toggle-blocks-center"></div><div class="mega-toggle-blocks-right"><div class='mega-toggle-block mega-menu-toggle-animated-block mega-toggle-block-1' id='mega-toggle-block-1'><button aria-label="" class="mega-toggle-animated mega-toggle-animated-slider" type="button" aria-expanded="false">
+                  <span class="mega-toggle-animated-box">
+                    <span class="mega-toggle-animated-inner"></span>
+                  </span>
+                </button></div></div></div><ul id="mega-menu-primary-menu" class="mega-menu max-mega-menu mega-menu-horizontal mega-no-js" data-event="hover_intent" data-effect="fade_up" data-effect-speed="200" data-effect-mobile="disabled" data-effect-speed-mobile="0" data-panel-width="#et-main-area" data-panel-inner-width=".et_pb_row" data-mobile-force-width="false" data-second-click="go" data-document-click="collapse" data-vertical-behaviour="standard" data-breakpoint="1200" data-unbind="true" data-mobile-state="collapse_all" data-mobile-direction="vertical" data-hover-intent-timeout="300" data-hover-intent-interval="100"><li class="mega-et_pb_menu_page_id-9565 mega-menu-item mega-menu-item-type-post_type mega-menu-item-object-page mega-menu-item-has-children mega-menu-megamenu mega-menu-grid mega-align-bottom-left mega-menu-grid mega-disable-link mega-menu-item-11170 et_pb_menu_page_id-9565" id="mega-menu-item-11170"><a class="mega-menu-link" tabindex="0" aria-expanded="false" role="button">Technology<span class="mega-indicator" aria-hidden="true"></span></a>
+<ul class="mega-sub-menu" role='presentation'>
+<li class="mega-menu-row" id="mega-menu-11170-0">
+	<ul class="mega-sub-menu" style='--columns:12' role='presentation'>
+<li class="mega-menu-column mega-right-line mega-technology mega-menu-columns-7-of-12 right-line technology" style="--columns:12; --span:7" id="mega-menu-11170-0-0">
+		<ul class="mega-sub-menu">
+<li class="mega-et_pb_menu_page_id-15382 mega-menu-item mega-menu-item-type-post_type mega-menu-item-object-page mega-has-description mega-menu-item-15962 et_pb_menu_page_id-15382" id="mega-menu-item-15962"><a class="mega-menu-link" href="https://www.bloomenergy.com/onsite-power/" data-wpel-link="internal"><span class="mega-description-group"><span class="mega-menu-title">Why Onsite Power?</span><span class="mega-menu-description">How distributed power solves today’s grid challenges.</span></span></a></li><li class="mega-et_pb_menu_page_id-9565 mega-menu-item mega-menu-item-type-post_type mega-menu-item-object-page mega-has-description mega-menu-item-11202 et_pb_menu_page_id-9565" id="mega-menu-item-11202"><a class="mega-menu-link" href="https://www.bloomenergy.com/technology/" data-wpel-link="internal"><span class="mega-description-group"><span class="mega-menu-title">How it Works</span><span class="mega-menu-description">The science behind reliable, clean onsite energy.</span></span></a></li>		</ul>
+</li><li class="mega-menu-column mega-after-right-line mega-menu-columns-5-of-12 after-right-line" style="--columns:12; --span:5" id="mega-menu-11170-0-1">
+		<ul class="mega-sub-menu">
+<li class="mega-menu-item mega-menu-item-type-widget widget_custom_html mega-menu-item-custom_html-7" id="mega-menu-item-custom_html-7"><div class="textwidget custom-html-widget"><div class="feature-box">
+	<div class="wording">
+		<div class="type">REPORT</div>
+		<div class="headline">
+			<a href="/2026-power-report/" data-wpel-link="internal">2026 Data Center Power Report</a>
+		</div>
+		<div class="link"><a href="/2026-power-report/" data-wpel-link="internal">Read Report</a></div>
+	</div>
+	<div class="image">
+		<img decoding="async" src="/wp-content/uploads/power-report-thumbnail.jpg" alt="Bloom 2026 Power Report">
+</div>
+</div></div></li>		</ul>
+</li>	</ul>
+</li></ul>
+</li><li class="mega-et_pb_menu_page_id-17983 mega-menu-item mega-menu-item-type-custom mega-menu-item-object-custom mega-menu-item-has-children mega-menu-megamenu mega-menu-grid mega-align-bottom-left mega-menu-grid mega-disable-link mega-menu-item-17983 et_pb_menu_page_id-17983" id="mega-menu-item-17983"><a class="mega-menu-link" tabindex="0" aria-expanded="false" role="button">Solutions<span class="mega-indicator" aria-hidden="true"></span></a>
+<ul class="mega-sub-menu" role='presentation'>
+<li class="mega-menu-row" id="mega-menu-17983-0">
+	<ul class="mega-sub-menu" style='--columns:12' role='presentation'>
+<li class="mega-menu-column mega-menu-columns-4-of-12" style="--columns:12; --span:4" id="mega-menu-17983-0-0">
+		<ul class="mega-sub-menu">
+<li class="mega-et_pb_menu_page_id-14213 mega-menu-item mega-menu-item-type-custom mega-menu-item-object-custom mega-menu-item-has-children mega-menu-item-14213 et_pb_menu_page_id-14213" id="mega-menu-item-14213"><a class="mega-menu-link" href="#">Industries<span class="mega-indicator" aria-hidden="true"></span></a>
+			<ul class="mega-sub-menu">
+<li class="mega-et_pb_menu_page_id-14627 mega-menu-item mega-menu-item-type-post_type mega-menu-item-object-page mega-menu-item-14673 et_pb_menu_page_id-14627" id="mega-menu-item-14673"><a class="mega-menu-link" href="https://www.bloomenergy.com/industries/data-center-power/" data-wpel-link="internal">Data Centers</a></li><li class="mega-et_pb_menu_page_id-15351 mega-menu-item mega-menu-item-type-post_type mega-menu-item-object-page mega-menu-item-15428 et_pb_menu_page_id-15351" id="mega-menu-item-15428"><a class="mega-menu-link" href="https://www.bloomenergy.com/industries/manufacturing-energy/" data-wpel-link="internal">Manufacturing</a></li><li class="mega-et_pb_menu_page_id-6413 mega-menu-item mega-menu-item-type-post_type mega-menu-item-object-page mega-menu-item-14218 et_pb_menu_page_id-6413" id="mega-menu-item-14218"><a class="mega-menu-link" href="https://www.bloomenergy.com/industries/biotech-biopharma/" data-wpel-link="internal">Biotech &#038; Pharma</a></li><li class="mega-et_pb_menu_page_id-6428 mega-menu-item mega-menu-item-type-post_type mega-menu-item-object-page mega-menu-item-14220 et_pb_menu_page_id-6428" id="mega-menu-item-14220"><a class="mega-menu-link" href="https://www.bloomenergy.com/industries/energy-efficient-schools/" data-wpel-link="internal">Education</a></li><li class="mega-et_pb_menu_page_id-6694 mega-menu-item mega-menu-item-type-post_type mega-menu-item-object-page mega-menu-item-14224 et_pb_menu_page_id-6694" id="mega-menu-item-14224"><a class="mega-menu-link" href="https://www.bloomenergy.com/industries/utilities-industry/" data-wpel-link="internal">Utilities</a></li><li class="mega-et_pb_menu_page_id-5490 mega-menu-item mega-menu-item-type-post_type mega-menu-item-object-page mega-menu-item-14221 et_pb_menu_page_id-5490" id="mega-menu-item-14221"><a class="mega-menu-link" href="https://www.bloomenergy.com/industries/healthcare-energy-efficiency/" data-wpel-link="internal">Healthcare & Hospitals</a></li><li class="mega-et_pb_menu_page_id-6501 mega-menu-item mega-menu-item-type-post_type mega-menu-item-object-page mega-menu-item-14222 et_pb_menu_page_id-6501" id="mega-menu-item-14222"><a class="mega-menu-link" href="https://www.bloomenergy.com/industries/oil-gas/" data-wpel-link="internal">Oil &#038; Gas</a></li><li class="mega-et_pb_menu_page_id-6471 mega-menu-item mega-menu-item-type-post_type mega-menu-item-object-page mega-menu-item-14223 et_pb_menu_page_id-6471" id="mega-menu-item-14223"><a class="mega-menu-link" href="https://www.bloomenergy.com/industries/retail-sector/" data-wpel-link="internal">Retail</a></li><li class="mega-et_pb_menu_page_id-6486 mega-menu-item mega-menu-item-type-post_type mega-menu-item-object-page mega-menu-item-14214 et_pb_menu_page_id-6486" id="mega-menu-item-14214"><a class="mega-menu-link" href="https://www.bloomenergy.com/industries/tmt-sector/" data-wpel-link="internal">Tech, Media, & Telecom</a></li>			</ul>
+</li>		</ul>
+</li><li class="mega-menu-column mega-right-line mega-menu-columns-3-of-12 right-line" style="--columns:12; --span:3" id="mega-menu-17983-0-1">
+		<ul class="mega-sub-menu">
+<li class="mega-et_pb_menu_page_id-2336 mega-menu-item mega-menu-item-type-custom mega-menu-item-object-custom mega-menu-item-has-children mega-menu-item-2336 et_pb_menu_page_id-2336" id="mega-menu-item-2336"><a class="mega-menu-link" href="#">Applications<span class="mega-indicator" aria-hidden="true"></span></a>
+			<ul class="mega-sub-menu">
+<li class="mega-et_pb_menu_page_id-1391 mega-menu-item mega-menu-item-type-post_type mega-menu-item-object-page mega-menu-item-7095 et_pb_menu_page_id-1391" id="mega-menu-item-7095"><a class="mega-menu-link" href="https://www.bloomenergy.com/power-generation-system/" data-wpel-link="internal">Primary Power</a></li><li class="mega-et_pb_menu_page_id-1388 mega-menu-item mega-menu-item-type-post_type mega-menu-item-object-page mega-menu-item-1390 et_pb_menu_page_id-1388" id="mega-menu-item-1390"><a class="mega-menu-link" href="https://www.bloomenergy.com/microgrid/" data-wpel-link="internal">Microgrid</a></li><li class="mega-et_pb_menu_page_id-12235 mega-menu-item mega-menu-item-type-post_type mega-menu-item-object-page mega-menu-item-12287 et_pb_menu_page_id-12235" id="mega-menu-item-12287"><a class="mega-menu-link" href="https://www.bloomenergy.com/waste-heat-recovery-for-chp/" data-wpel-link="internal">Heat Capture</a></li><li class="mega-et_pb_menu_page_id-5212 mega-menu-item mega-menu-item-type-post_type mega-menu-item-object-page mega-menu-item-5214 et_pb_menu_page_id-5212" id="mega-menu-item-5214"><a class="mega-menu-link" href="https://www.bloomenergy.com/carbon-capture/" data-wpel-link="internal">Carbon Capture</a></li>			</ul>
+</li>		</ul>
+</li><li class="mega-menu-column mega-after-right-line mega-menu-columns-5-of-12 after-right-line" style="--columns:12; --span:5" id="mega-menu-17983-0-2">
+		<ul class="mega-sub-menu">
+<li class="mega-menu-item mega-menu-item-type-widget widget_custom_html mega-menu-item-custom_html-8" id="mega-menu-item-custom_html-8"><div class="textwidget custom-html-widget"><div class="feature-box">
+	<div class="wording">
+		<div class="type">REPORT</div>
+		<div class="headline">
+			<a href="/2026-power-report/" data-wpel-link="internal">2026 Data Center Power Report</a>
+		</div>
+		<div class="link"><a href="/2026-power-report/" data-wpel-link="internal">Read Report</a></div>
+	</div>
+	<div class="image">
+		<img decoding="async" src="/wp-content/uploads/power-report-thumbnail.jpg" alt="Bloom 2026 Power Report">
+</div>
+</div></div></li>		</ul>
+</li>	</ul>
+</li></ul>
+</li><li class="mega-et_pb_menu_page_id-1373 mega-menu-item mega-menu-item-type-post_type mega-menu-item-object-page mega-menu-item-has-children mega-menu-megamenu mega-menu-grid mega-align-bottom-left mega-menu-grid mega-disable-link mega-menu-item-1375 et_pb_menu_page_id-1373" id="mega-menu-item-1375"><a class="mega-menu-link" tabindex="0" aria-expanded="false" role="button">Resources<span class="mega-indicator" aria-hidden="true"></span></a>
+<ul class="mega-sub-menu" role='presentation'>
+<li class="mega-menu-row" id="mega-menu-1375-0">
+	<ul class="mega-sub-menu" style='--columns:12' role='presentation'>
+<li class="mega-menu-column mega-right-line mega-resources mega-menu-columns-6-of-12 right-line resources" style="--columns:12; --span:6" id="mega-menu-1375-0-0">
+		<ul class="mega-sub-menu">
+<li class="mega-et_pb_menu_page_id-18044 mega-menu-item mega-menu-item-type-custom mega-menu-item-object-custom mega-has-description mega-menu-item-18044 et_pb_menu_page_id-18044" id="mega-menu-item-18044"><a class="mega-menu-link" href="/resources#reports" data-wpel-link="internal"><span class="mega-description-group"><span class="mega-menu-title">Reports</span><span class="mega-menu-description">Data-driven insights on energy and industry.</span></span></a></li><li class="mega-et_pb_menu_page_id-18045 mega-menu-item mega-menu-item-type-custom mega-menu-item-object-custom mega-has-description mega-menu-item-18045 et_pb_menu_page_id-18045" id="mega-menu-item-18045"><a class="mega-menu-link" href="/resources#whitepapers" data-wpel-link="internal"><span class="mega-description-group"><span class="mega-menu-title">White Papers</span><span class="mega-menu-description">Deep dives into technology and trends.</span></span></a></li><li class="mega-et_pb_menu_page_id-18046 mega-menu-item mega-menu-item-type-custom mega-menu-item-object-custom mega-has-description mega-menu-item-18046 et_pb_menu_page_id-18046" id="mega-menu-item-18046"><a class="mega-menu-link" href="/resources/#casestudies" data-wpel-link="internal"><span class="mega-description-group"><span class="mega-menu-title">Case Studies</span><span class="mega-menu-description">Real-world customer applications.</span></span></a></li><li class="mega-et_pb_menu_page_id-18047 mega-menu-item mega-menu-item-type-custom mega-menu-item-object-custom mega-has-description mega-menu-item-18047 et_pb_menu_page_id-18047" id="mega-menu-item-18047"><a class="mega-menu-link" href="/resources#videos" data-wpel-link="internal"><span class="mega-description-group"><span class="mega-menu-title">Videos</span><span class="mega-menu-description">See onsite energy systems in action.</span></span></a></li><li class="mega-et_pb_menu_page_id-18048 mega-menu-item mega-menu-item-type-custom mega-menu-item-object-custom mega-has-description mega-menu-item-18048 et_pb_menu_page_id-18048" id="mega-menu-item-18048"><a class="mega-menu-link" href="/resources#datasheets" data-wpel-link="internal"><span class="mega-description-group"><span class="mega-menu-title">Data Sheets</span><span class="mega-menu-description">Product specifications and performance details.</span></span></a></li>		</ul>
+</li><li class="mega-menu-column mega-after-right-line mega-menu-columns-3-of-12 after-right-line" style="--columns:12; --span:3" id="mega-menu-1375-0-1">
+		<ul class="mega-sub-menu">
+<li class="mega-menu-item mega-menu-item-type-widget widget_custom_html mega-menu-item-custom_html-9" id="mega-menu-item-custom_html-9"><div class="textwidget custom-html-widget"><div class="feature-box text">
+	<div class="wording">
+		<div class="type">REPORT</div>
+		<div class="headline">
+			<a href="/2026-power-report/" data-wpel-link="internal">2026 Data Center Power Report</a>
+		</div>
+		<div class="link"><a href="/2026-power-report/" data-wpel-link="internal">Read Report</a></div>
+	</div>
+	
+</div></div></li>		</ul>
+</li><li class="mega-menu-column mega-menu-columns-3-of-12" style="--columns:12; --span:3" id="mega-menu-1375-0-2">
+		<ul class="mega-sub-menu">
+<li class="mega-menu-item mega-menu-item-type-widget widget_custom_html mega-menu-item-custom_html-10" id="mega-menu-item-custom_html-10"><div class="textwidget custom-html-widget"><div class="feature-box text">
+	<div class="wording">
+		<div class="type">REPORT</div>
+		<div class="headline">
+			<a href="/be-report-ai-race-fuel-cells/" data-wpel-link="internal">Fuel Cell Report:<br />Winning the AI Race for Power</a>
+		</div>
+		<div class="link"><a href="/be-report-ai-race-fuel-cells/" data-wpel-link="internal">Read Report</a></div>
+	</div>
+	
+</div></div></li>		</ul>
+</li>	</ul>
+</li></ul>
+</li><li class="mega-et_pb_menu_page_id-1370 mega-menu-item mega-menu-item-type-post_type mega-menu-item-object-page mega-align-bottom-left mega-menu-flyout mega-menu-item-1372 et_pb_menu_page_id-1370" id="mega-menu-item-1372"><a class="mega-menu-link" href="https://www.bloomenergy.com/customers/" tabindex="0" data-wpel-link="internal">Customers</a></li><li class="mega-et_pb_menu_page_id-10588 mega-menu-item mega-menu-item-type-post_type mega-menu-item-object-page mega-menu-item-has-children mega-menu-megamenu mega-menu-grid mega-align-bottom-left mega-menu-grid mega-disable-link mega-menu-item-11181 et_pb_menu_page_id-10588" id="mega-menu-item-11181"><a class="mega-menu-link" tabindex="0" aria-expanded="false" role="button">Company<span class="mega-indicator" aria-hidden="true"></span></a>
+<ul class="mega-sub-menu" role='presentation'>
+<li class="mega-menu-row" id="mega-menu-11181-0">
+	<ul class="mega-sub-menu" style='--columns:12' role='presentation'>
+<li class="mega-menu-column mega-company mega-menu-columns-4-of-12 company" style="--columns:12; --span:4" id="mega-menu-11181-0-0">
+		<ul class="mega-sub-menu">
+<li class="mega-et_pb_menu_page_id-10588 mega-menu-item mega-menu-item-type-post_type mega-menu-item-object-page mega-has-description mega-menu-item-11172 et_pb_menu_page_id-10588" id="mega-menu-item-11172"><a class="mega-menu-link" href="https://www.bloomenergy.com/company/" data-wpel-link="internal"><span class="mega-description-group"><span class="mega-menu-title">About Us</span><span class="mega-menu-description">Our mission, history, and vision.</span></span></a></li><li class="mega-et_pb_menu_page_id-16766 mega-menu-item mega-menu-item-type-custom mega-menu-item-object-custom mega-has-description mega-menu-item-16766 et_pb_menu_page_id-16766" id="mega-menu-item-16766"><a class="mega-menu-link" href="https://investor.bloomenergy.com/overview/default.aspx" data-wpel-link="external" target="_blank" rel="external noopener noreferrer"><span class="mega-description-group"><span class="mega-menu-title">Investors</span><span class="mega-menu-description">Financial and investor information.</span></span></a></li><li class="mega-et_pb_menu_page_id-7078 mega-menu-item mega-menu-item-type-post_type mega-menu-item-object-page mega-has-description mega-menu-item-7153 et_pb_menu_page_id-7078" id="mega-menu-item-7153"><a class="mega-menu-link" href="https://www.bloomenergy.com/partners/" data-wpel-link="internal"><span class="mega-description-group"><span class="mega-menu-title">Partners</span><span class="mega-menu-description">Join our network of strategic energy partners.</span></span></a></li>		</ul>
+</li><li class="mega-menu-column mega-company-two mega-right-line mega-menu-columns-6-of-12 company-two right-line" style="--columns:12; --span:6" id="mega-menu-11181-0-1">
+		<ul class="mega-sub-menu">
+<li class="mega-et_pb_menu_page_id-11886 mega-menu-item mega-menu-item-type-post_type mega-menu-item-object-page mega-has-description mega-menu-item-11964 et_pb_menu_page_id-11886" id="mega-menu-item-11964"><a class="mega-menu-link" href="https://www.bloomenergy.com/leadership-board/" data-wpel-link="internal"><span class="mega-description-group"><span class="mega-menu-title">Leadership</span><span class="mega-menu-description">Meet the team leading the energy transformation.</span></span></a></li><li class="mega-et_pb_menu_page_id-1784 mega-menu-item mega-menu-item-type-post_type mega-menu-item-object-page mega-has-description mega-menu-item-14144 et_pb_menu_page_id-1784" id="mega-menu-item-14144"><a class="mega-menu-link" href="https://www.bloomenergy.com/careers/" data-wpel-link="internal"><span class="mega-description-group"><span class="mega-menu-title">Careers</span><span class="mega-menu-description">Opportunities to build the future of energy.</span></span></a></li><li class="mega-et_pb_menu_page_id-10902 mega-menu-item mega-menu-item-type-post_type mega-menu-item-object-page mega-has-description mega-menu-item-11231 et_pb_menu_page_id-10902" id="mega-menu-item-11231"><a class="mega-menu-link" href="https://www.bloomenergy.com/sustainability/" data-wpel-link="internal"><span class="mega-description-group"><span class="mega-menu-title">Sustainability</span><span class="mega-menu-description">Our commitment to a cleaner energy future.</span></span></a></li>		</ul>
+</li><li class="mega-menu-column mega-after-right-line mega-blog-news-events mega-menu-columns-2-of-12 after-right-line blog-news-events" style="--columns:12; --span:2" id="mega-menu-11181-0-2">
+		<ul class="mega-sub-menu">
+<li class="mega-blog mega-et_pb_menu_page_id-1257 mega-menu-item mega-menu-item-type-post_type mega-menu-item-object-page mega-menu-item-16767 blog et_pb_menu_page_id-1257" id="mega-menu-item-16767"><a class="mega-menu-link" href="https://www.bloomenergy.com/blog/" data-wpel-link="internal">Blog</a></li><li class="mega-newsroom mega-et_pb_menu_page_id-12684 mega-menu-item mega-menu-item-type-custom mega-menu-item-object-custom mega-menu-item-12684 newsroom et_pb_menu_page_id-12684" id="mega-menu-item-12684"><a class="mega-menu-link" href="/newsroom/" data-wpel-link="internal">Newsroom</a></li><li class="mega-events mega-et_pb_menu_page_id-8480 mega-menu-item mega-menu-item-type-post_type mega-menu-item-object-page mega-menu-item-8875 events et_pb_menu_page_id-8480" id="mega-menu-item-8875"><a class="mega-menu-link" href="https://www.bloomenergy.com/events/" data-wpel-link="internal">Events</a></li>		</ul>
+</li>	</ul>
+</li></ul>
+</li><li class="mega-mobile-only mega-et_pb_menu_page_id-21 mega-menu-item mega-menu-item-type-post_type mega-menu-item-object-page mega-align-bottom-left mega-menu-flyout mega-menu-item-20605 mobile-only et_pb_menu_page_id-21" id="mega-menu-item-20605"><a class="mega-menu-link" href="https://www.bloomenergy.com/contact/" tabindex="0" data-wpel-link="internal">Contact</a></li></ul></div></nav>
+							</div>
+							
+							
+							<div class="et_mobile_nav_menu">
+				<div class="mobile_nav closed">
+					<span class="mobile_menu_bar"></span>
+				</div>
+			</div>
+						</div>
+						
+					</div>
+				</div>
+			</div><div class="et_pb_column et_pb_column_1_5 et_pb_column_2_tb_header button-column  et_pb_css_mix_blend_mode_passthrough et-last-child et_pb_column--with-menu">
+				
+				
+				
+				
+				<div class="et_pb_module et_pb_code et_pb_code_0_tb_header contact-translate-search">
+				
+				
+				
+				
+				<div class="et_pb_code_inner"><span class="et_pb_button_module_wrapper"><a href="/contact" class="et_pb_button topbar" data-wpel-link="internal">Contact Us</a> </span><span class="translation"></span> <span class="et_pb_menu__icon et_pb_menu__search-button"></span></div>
+			</div><div class="et_pb_module et_pb_menu et_pb_menu_1_tb_header menu-mobile et_pb_bg_layout_light  et_pb_text_align_right et_dropdown_animation_fade et_pb_menu--without-logo et_pb_menu--style-left_aligned">
+					
+					
+					
+					
+					<div class="et_pb_menu_inner_container clearfix">
+						
+						<div class="et_pb_menu__wrap">
+							<div class="et_pb_menu__menu">
+								<nav class="et-menu-nav"><ul id="menu-bloomenergy-main-menu" class="et-menu nav et_disable_top_tier"><li id="menu-item-11170" class="et_pb_menu_page_id-9565 menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children menu-item-11170"><a href="https://www.bloomenergy.com/technology/" data-wpel-link="internal">Technology</a>
+<ul class="sub-menu">
+	<li id="menu-item-15962" class="et_pb_menu_page_id-15382 menu-item menu-item-type-post_type menu-item-object-page menu-item-15962"><a href="https://www.bloomenergy.com/onsite-power/" data-wpel-link="internal">Why Onsite Power?</a></li>
+	<li id="menu-item-11202" class="et_pb_menu_page_id-9565 menu-item menu-item-type-post_type menu-item-object-page menu-item-11202"><a href="https://www.bloomenergy.com/technology/" data-wpel-link="internal">How it Works</a></li>
+</ul>
+</li>
+<li id="menu-item-17983" class="et_pb_menu_page_id-17983 menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-17983"><a href="#">Solutions</a>
+<ul class="sub-menu">
+	<li id="menu-item-14213" class="et_pb_menu_page_id-14213 menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-14213"><a href="#">Industries</a>
+	<ul class="sub-menu">
+		<li id="menu-item-14673" class="et_pb_menu_page_id-14627 menu-item menu-item-type-post_type menu-item-object-page menu-item-14673"><a href="https://www.bloomenergy.com/industries/data-center-power/" data-wpel-link="internal">Data Centers</a></li>
+		<li id="menu-item-15428" class="et_pb_menu_page_id-15351 menu-item menu-item-type-post_type menu-item-object-page menu-item-15428"><a href="https://www.bloomenergy.com/industries/manufacturing-energy/" data-wpel-link="internal">Manufacturing</a></li>
+		<li id="menu-item-14218" class="et_pb_menu_page_id-6413 menu-item menu-item-type-post_type menu-item-object-page menu-item-14218"><a href="https://www.bloomenergy.com/industries/biotech-biopharma/" data-wpel-link="internal">Biotech &#038; Pharma</a></li>
+		<li id="menu-item-14220" class="et_pb_menu_page_id-6428 menu-item menu-item-type-post_type menu-item-object-page menu-item-14220"><a href="https://www.bloomenergy.com/industries/energy-efficient-schools/" data-wpel-link="internal">Education</a></li>
+		<li id="menu-item-14224" class="et_pb_menu_page_id-6694 menu-item menu-item-type-post_type menu-item-object-page menu-item-14224"><a href="https://www.bloomenergy.com/industries/utilities-industry/" data-wpel-link="internal">Utilities</a></li>
+		<li id="menu-item-14221" class="et_pb_menu_page_id-5490 menu-item menu-item-type-post_type menu-item-object-page menu-item-14221"><a href="https://www.bloomenergy.com/industries/healthcare-energy-efficiency/" data-wpel-link="internal">Healthcare &#038; Hospitals</a></li>
+		<li id="menu-item-14222" class="et_pb_menu_page_id-6501 menu-item menu-item-type-post_type menu-item-object-page menu-item-14222"><a href="https://www.bloomenergy.com/industries/oil-gas/" data-wpel-link="internal">Oil &#038; Gas</a></li>
+		<li id="menu-item-14223" class="et_pb_menu_page_id-6471 menu-item menu-item-type-post_type menu-item-object-page menu-item-14223"><a href="https://www.bloomenergy.com/industries/retail-sector/" data-wpel-link="internal">Retail</a></li>
+		<li id="menu-item-14214" class="et_pb_menu_page_id-6486 menu-item menu-item-type-post_type menu-item-object-page menu-item-14214"><a href="https://www.bloomenergy.com/industries/tmt-sector/" data-wpel-link="internal">Tech, Media, &#038; Telecom</a></li>
+	</ul>
+</li>
+	<li id="menu-item-2336" class="et_pb_menu_page_id-2336 menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-2336"><a href="#">Applications</a>
+	<ul class="sub-menu">
+		<li id="menu-item-7095" class="et_pb_menu_page_id-1391 menu-item menu-item-type-post_type menu-item-object-page menu-item-7095"><a href="https://www.bloomenergy.com/power-generation-system/" data-wpel-link="internal">Primary Power</a></li>
+		<li id="menu-item-1390" class="et_pb_menu_page_id-1388 menu-item menu-item-type-post_type menu-item-object-page menu-item-1390"><a href="https://www.bloomenergy.com/microgrid/" data-wpel-link="internal">Microgrid</a></li>
+		<li id="menu-item-12287" class="et_pb_menu_page_id-12235 menu-item menu-item-type-post_type menu-item-object-page menu-item-12287"><a href="https://www.bloomenergy.com/waste-heat-recovery-for-chp/" data-wpel-link="internal">Heat Capture</a></li>
+		<li id="menu-item-5214" class="et_pb_menu_page_id-5212 menu-item menu-item-type-post_type menu-item-object-page menu-item-5214"><a href="https://www.bloomenergy.com/carbon-capture/" data-wpel-link="internal">Carbon Capture</a></li>
+	</ul>
+</li>
+</ul>
+</li>
+<li id="menu-item-1375" class="et_pb_menu_page_id-1373 menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children menu-item-1375"><a href="https://www.bloomenergy.com/resources/" data-wpel-link="internal">Resources</a>
+<ul class="sub-menu">
+	<li id="menu-item-18044" class="et_pb_menu_page_id-18044 menu-item menu-item-type-custom menu-item-object-custom menu-item-18044"><a href="/resources#reports" data-wpel-link="internal">Reports</a></li>
+	<li id="menu-item-18045" class="et_pb_menu_page_id-18045 menu-item menu-item-type-custom menu-item-object-custom menu-item-18045"><a href="/resources#whitepapers" data-wpel-link="internal">White Papers</a></li>
+	<li id="menu-item-18046" class="et_pb_menu_page_id-18046 menu-item menu-item-type-custom menu-item-object-custom menu-item-18046"><a href="/resources/#casestudies" data-wpel-link="internal">Case Studies</a></li>
+	<li id="menu-item-18047" class="et_pb_menu_page_id-18047 menu-item menu-item-type-custom menu-item-object-custom menu-item-18047"><a href="/resources#videos" data-wpel-link="internal">Videos</a></li>
+	<li id="menu-item-18048" class="et_pb_menu_page_id-18048 menu-item menu-item-type-custom menu-item-object-custom menu-item-18048"><a href="/resources#datasheets" data-wpel-link="internal">Data Sheets</a></li>
+</ul>
+</li>
+<li id="menu-item-1372" class="et_pb_menu_page_id-1370 menu-item menu-item-type-post_type menu-item-object-page menu-item-1372"><a href="https://www.bloomenergy.com/customers/" data-wpel-link="internal">Customers</a></li>
+<li id="menu-item-11181" class="et_pb_menu_page_id-10588 menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children menu-item-11181"><a href="https://www.bloomenergy.com/company/" data-wpel-link="internal">Company</a>
+<ul class="sub-menu">
+	<li id="menu-item-11172" class="et_pb_menu_page_id-10588 menu-item menu-item-type-post_type menu-item-object-page menu-item-11172"><a href="https://www.bloomenergy.com/company/" data-wpel-link="internal">About Us</a></li>
+	<li id="menu-item-11964" class="et_pb_menu_page_id-11886 menu-item menu-item-type-post_type menu-item-object-page menu-item-11964"><a href="https://www.bloomenergy.com/leadership-board/" data-wpel-link="internal">Leadership</a></li>
+	<li id="menu-item-14144" class="et_pb_menu_page_id-1784 menu-item menu-item-type-post_type menu-item-object-page menu-item-14144"><a href="https://www.bloomenergy.com/careers/" data-wpel-link="internal">Careers</a></li>
+	<li id="menu-item-16766" class="et_pb_menu_page_id-16766 menu-item menu-item-type-custom menu-item-object-custom menu-item-16766"><a href="https://investor.bloomenergy.com/overview/default.aspx" data-wpel-link="external" target="_blank" rel="external noopener noreferrer">Investors</a></li>
+	<li id="menu-item-7153" class="et_pb_menu_page_id-7078 menu-item menu-item-type-post_type menu-item-object-page menu-item-7153"><a href="https://www.bloomenergy.com/partners/" data-wpel-link="internal">Partners</a></li>
+	<li id="menu-item-11231" class="et_pb_menu_page_id-10902 menu-item menu-item-type-post_type menu-item-object-page menu-item-11231"><a href="https://www.bloomenergy.com/sustainability/" data-wpel-link="internal">Sustainability</a></li>
+	<li id="menu-item-16767" class="blog et_pb_menu_page_id-1257 menu-item menu-item-type-post_type menu-item-object-page menu-item-16767"><a href="https://www.bloomenergy.com/blog/" data-wpel-link="internal">Blog</a></li>
+	<li id="menu-item-8875" class="events et_pb_menu_page_id-8480 menu-item menu-item-type-post_type menu-item-object-page menu-item-8875"><a href="https://www.bloomenergy.com/events/" data-wpel-link="internal">Events</a></li>
+	<li id="menu-item-12684" class="newsroom et_pb_menu_page_id-12684 menu-item menu-item-type-custom menu-item-object-custom menu-item-12684"><a href="/newsroom/" data-wpel-link="internal">Newsroom</a></li>
+</ul>
+</li>
+<li id="menu-item-20605" class="mobile-only et_pb_menu_page_id-21 menu-item menu-item-type-post_type menu-item-object-page menu-item-20605"><a href="https://www.bloomenergy.com/contact/" data-wpel-link="internal">Contact</a></li>
+</ul></nav>
+							</div>
+							
+							
+							<div class="et_mobile_nav_menu">
+				<div class="mobile_nav closed">
+					<span class="mobile_menu_bar"></span>
+				</div>
+			</div>
+						</div>
+						
+					</div>
+				</div>
+			</div>
+				
+				
+				
+				
+			</div>
+				
+				
+			</div><div class="et_pb_section et_pb_section_1_tb_header search-section et_section_regular" >
+				
+				
+				
+				
+				
+				
+				<div class="et_pb_row et_pb_row_1_tb_header">
+				<div class="et_pb_column et_pb_column_4_4 et_pb_column_3_tb_header  et_pb_css_mix_blend_mode_passthrough et-last-child">
+				
+				
+				
+				
+				<div class="et_pb_with_border et_pb_module et_pb_search et_pb_search_0_tb_header  et_pb_text_align_left et_pb_bg_layout_light et_pb_hide_search_button">
+				
+				
+				
+				
+				<form role="search" method="get" class="et_pb_searchform" action="https://www.bloomenergy.com/">
+					<div>
+						<label class="screen-reader-text" for="s">Search for:</label>
+						<input type="text" name="s" placeholder="Search..." class="et_pb_s" />
+						<input type="hidden" name="et_pb_searchform_submit" value="et_search_proccess" />
+						
+						<input type="hidden" name="et_pb_include_posts" value="yes" />
+						<input type="hidden" name="et_pb_include_pages" value="yes" />
+						<input type="submit" value="Search" class="et_pb_searchsubmit">
+					</div>
+				</form>
+			</div>
+			</div>
+				
+				
+				
+				
+			</div>
+				
+				
+			</div>		</div>
+	</header>
+	<div id="et-main-area">
+	
+<div id="main-content">
+								
+<div class="et_post_meta_wrapper">
+		<div class="inner">
+							
+					<h1 class="entry-title">Bloom Energy Server Data Sheet</h1>
+
+		</div> <!-- .et_post_meta_wrapper -->
+		</div>
+		
+	<div class="container">
+		<div id="content-area" class="clearfix">
+		
+		
+			<div id="left-area">
+											<article id="post-1539" class="et_pb_post post-1539 resource type-resource status-publish has-post-thumbnail hentry category-microgrids category-power-generation resource_category-data-sheets">
+
+					<div class="entry-content">
+											
+						
+
+						<p>Bloom Energy’s solid oxide fuel cell (SOFC) platform provides a non-combustion pathway to convert fuels directly to electricity without combustion. The Energy Server is fuel-flexible and can generate energy using natural gas, blended hydrogen, biogas or hydrogen. A modular platform approach provides a pathway to upgrade existing systems to align with the sustainability goals of our customers over time. With no water consumption during normal operation and a high operational efficiency, the Bloom Energy Server significantly reduces greenhouse emissions today, while providing a pathway to operate with cleaner fuels in the future.</p>
+<p>The Bloom Energy Server system provides reliable and resilient power to facilities. It is designed in a modular concept ideal for on-site distributed power generation, operating 24×7, supporting the power demand in grid parallel or in a microgrid architecture. In addition, the heat from the flue gas can be captured from the Energy Server system and integrated in a heat capture application.</p>
+<p>Bloom Energy has deployed over 1.5 GW across 1,200+ sites. The Energy Server system is suitable to address power needs, having installations across industries, such as retail, data centers, hospitals, sporting arenas, manufacturing, and warehousing.</p>
+						
+												
+						
+						
+											</div> <!-- .entry-content -->
+					
+				</article> <!-- .et_pb_post -->
+
+						</div> <!-- #left-area -->
+			<div id="sidebar">
+			
+			
+			
+						<div class="resource-thumbnail">
+			<a href="https://www.bloomenergy.com/wp-content/uploads/bloom-energy-server-datasheet-feb-2026.pdf" data-wpel-link="internal"><img src="https://www.bloomenergy.com/wp-content/uploads/bloom-energy-server-datasheet-feb-2026.png"></a></div>
+			<div class="et_pb_button_module_wrapper"><a class="et_pb_button" href="https://www.bloomenergy.com/wp-content/uploads/bloom-energy-server-datasheet-feb-2026.pdf" data-wpel-link="internal">Download PDF</a></div>
+						
+								
+						
+						
+						
+			</div> <!-- #sidebar -->
+
+			
+		</div> <!-- #content-area -->
+		
+				
+	</div> <!-- .container -->
+	</div> <!-- #main-content -->
+
+	<footer class="et-l et-l--footer">
+			<div class="et_builder_inner_content et_pb_gutters3"><div class="et_pb_section et_pb_section_0_tb_footer et_pb_with_background et_section_regular et_pb_section--with-menu" >
+				
+				
+				
+				
+				
+				
+				<div class="et_pb_with_border et_pb_row et_pb_row_0_tb_footer">
+				<div class="et_pb_column et_pb_column_1_4 et_pb_column_0_tb_footer  et_pb_css_mix_blend_mode_passthrough">
+				
+				
+				
+				
+				<div class="et_pb_module et_pb_image et_pb_image_0_tb_footer">
+				
+				
+				
+				
+				<a href="/" data-wpel-link="internal"><span class="et_pb_image_wrap "><img loading="lazy" decoding="async" width="116" height="64" src="https://www.bloomenergy.com/wp-content/uploads/white-Logo.svg" alt="Bloom Energy logo" title="" class="wp-image-18990" /></span></a>
+			</div>
+			</div><div class="et_pb_column et_pb_column_1_4 et_pb_column_1_tb_footer  et_pb_css_mix_blend_mode_passthrough">
+				
+				
+				
+				
+				<div class="et_pb_module et_pb_text et_pb_text_0_tb_footer footer-menu-links  et_pb_text_align_left et_pb_bg_layout_dark">
+				
+				
+				
+				
+				<div class="et_pb_text_inner"><p><a href="/technology/" data-wpel-link="internal"><strong>Technology</strong></a></p>
+<p><a href="/onsite-power/" data-wpel-link="internal">Why onsite power?</a></p>
+<p><a href="/technology/" data-wpel-link="internal">How it works</a></p>
+<p><a href="/technology/powering-the-future/" data-wpel-link="internal">Powering the Future</a></p>
+<p><a href="/technology/powering-the-future/" data-wpel-link="internal">Technology Benefits</a></p></div>
+			</div>
+			</div><div class="et_pb_column et_pb_column_1_4 et_pb_column_2_tb_footer  et_pb_css_mix_blend_mode_passthrough">
+				
+				
+				
+				
+				<div class="et_pb_module et_pb_text et_pb_text_1_tb_footer footer-menu-links  et_pb_text_align_left et_pb_bg_layout_dark">
+				
+				
+				
+				
+				<div class="et_pb_text_inner"><p><strong>Industries</strong></p>
+<p><a href="/industries/data-center-power/" data-wpel-link="internal">Data Centers</a></p>
+<p><a href="/industries/manufacturing-energy/" data-wpel-link="internal">Manufacturing</a></p>
+<p><a href="/industries/biotech-biopharma/" data-wpel-link="internal">Biotech &amp; Biopharma</a></p>
+<p><a href="/industries/chemical-manufacturing/" data-wpel-link="internal">Chemicals</a></p>
+<p><a href="/industries/energy-efficient-schools/" data-wpel-link="internal">Education</a><a href="/industries/tmt-sector/" data-wpel-link="internal"></a></p>
+<p><a href="/industries/healthcare-energy-efficiency/" data-wpel-link="internal">Health &amp; Hospitals</a></p>
+<p><a href="/industries/oil-gas/" data-wpel-link="internal">Oil &amp; Gas</a></p>
+<p><a href="/industries/retail-sector/" data-wpel-link="internal">Retail</a></p>
+<p><a href="/industries/tmt-sector/" data-wpel-link="internal">Tech, Media &amp; Telecom</a></p>
+<p><a href="/industries/utilities-industry/" data-wpel-link="internal">Utilities</a></p></div>
+			</div>
+			</div><div class="et_pb_column et_pb_column_1_4 et_pb_column_3_tb_footer  et_pb_css_mix_blend_mode_passthrough et-last-child">
+				
+				
+				
+				
+				<div class="et_pb_module et_pb_text et_pb_text_2_tb_footer footer-menu-links  et_pb_text_align_left et_pb_bg_layout_dark">
+				
+				
+				
+				
+				<div class="et_pb_text_inner"><strong>Applications</strong></p>
+<p><a href="/power-generation-system/" data-wpel-link="internal">Primary Power</a></p>
+<p><a href="/microgrid/" data-wpel-link="internal">Microgrid</a></p>
+<p><a href="/waste-heat-recovery-for-chp/" data-wpel-link="internal">Heat &amp; Water Capture</a></p>
+<p><a href="/carbon-capture/" data-wpel-link="internal">Carbon Capture</a></p>
+<p><a href="/biogas-energy/" data-wpel-link="internal">Biogas Energy</a></p>
+<p><a href="/bloomelectrolyzer/" data-wpel-link="internal">Electrolyzers</a></p>
+<p><a href="/marine-fuel-cell/" data-wpel-link="internal">Marine Fuel Cell</a></div>
+			</div>
+			</div>
+				
+				
+				
+				
+			</div><div class="et_pb_with_border et_pb_row et_pb_row_1_tb_footer">
+				<div class="et_pb_column et_pb_column_1_4 et_pb_column_4_tb_footer  et_pb_css_mix_blend_mode_passthrough et_pb_column_empty">
+				
+				
+				
+				
+				
+			</div><div class="et_pb_column et_pb_column_1_4 et_pb_column_5_tb_footer  et_pb_css_mix_blend_mode_passthrough">
+				
+				
+				
+				
+				<div class="et_pb_module et_pb_text et_pb_text_3_tb_footer footer-menu-links  et_pb_text_align_left et_pb_bg_layout_dark">
+				
+				
+				
+				
+				<div class="et_pb_text_inner"><p><a href="/resources/" data-wpel-link="internal"><strong>Resources</strong></a></p>
+<p><a href="/resources/#reports" data-wpel-link="internal">Reports</a></p>
+<p><a href="/resources/#whitepapers" data-wpel-link="internal">White Papers</a></p>
+<p><a href="/resources#webinars" data-wpel-link="internal">Webinars</a></p>
+<p><a href="/resources/#casestudies" data-wpel-link="internal">Case Studies</a></p>
+<p><a href="/resources/#datasheets" data-wpel-link="internal">Data Sheets</a></p>
+<p><a href="/resources/#technotes" data-wpel-link="internal">Technical Notes</a></p>
+<p><a href="/resources/#videos" data-wpel-link="internal">Videos</a></p></div>
+			</div>
+			</div><div class="et_pb_column et_pb_column_1_4 et_pb_column_6_tb_footer  et_pb_css_mix_blend_mode_passthrough">
+				
+				
+				
+				
+				<div class="et_pb_module et_pb_text et_pb_text_4_tb_footer footer-menu-links  et_pb_text_align_left et_pb_bg_layout_dark">
+				
+				
+				
+				
+				<div class="et_pb_text_inner"><a href="/company/" data-wpel-link="internal"><strong>Company</strong></a></p>
+<p><a href="/company/" data-wpel-link="internal">About Us</a></p>
+<p><a href="/blog/" data-wpel-link="internal">Blog</a></p>
+<p><a href="/leadership-board/" data-wpel-link="internal">Leadership</a></p>
+<p><a href="/careers/" data-wpel-link="internal">Careers</a></p>
+<p><a href="https://investor.bloomenergy.com/overview/default.aspx?_gl=1*ouege5*_gcl_au*NTc1MDkyMzUwLjE3NjQ2OTI0NzEuNjU1MDU1NDYxLjE3NjU0MTYwMTcuMTc2NTQxNjAxNg.." data-wpel-link="external" target="_blank" rel="external noopener noreferrer">Investors</a></p>
+<p><a href="/newsroom/" data-wpel-link="internal">Newsroom</a></p>
+<p><a href="/sustainability/" data-wpel-link="internal">Sustainability</a></p>
+<p><a href="/events/" data-wpel-link="internal">Events</a></div>
+			</div>
+			</div><div class="et_pb_column et_pb_column_1_4 et_pb_column_7_tb_footer  et_pb_css_mix_blend_mode_passthrough et-last-child">
+				
+				
+				
+				
+				<div class="et_pb_module et_pb_text et_pb_text_5_tb_footer footer-menu-links arrows  et_pb_text_align_left et_pb_bg_layout_dark">
+				
+				
+				
+				
+				<div class="et_pb_text_inner"><p><a href="/customers/" data-wpel-link="internal">Customers</a></p>
+<p><a href="https://partner.bloomenergy.com/" target="_blank" rel="noopener external noreferrer" data-wpel-link="external">Partner Program</a></p>
+<p><a href="/supplychain/" data-wpel-link="internal">Supply Chain</a></p></div>
+			</div>
+			</div>
+				
+				
+				
+				
+			</div><div class="et_pb_row et_pb_row_2_tb_footer et_pb_row--with-menu">
+				<div class="et_pb_column et_pb_column_1_4 et_pb_column_8_tb_footer  et_pb_css_mix_blend_mode_passthrough">
+				
+				
+				
+				
+				<div class="et_pb_module et_pb_text et_pb_text_6_tb_footer  et_pb_text_align_left et_pb_bg_layout_light">
+				
+				
+				
+				
+				<div class="et_pb_text_inner"><a href="https://www.facebook.com/bloomenergy/" target="_blank" rel="noopener external noreferrer" data-wpel-link="external"><img loading="lazy" decoding="async" src="https://www.bloomenergy.com/wp-content/uploads/facebook-icon.svg" width="20" height="20" alt="Facebook icon" class="wp-image-17970 alignleft size-full" /></a><a href="https://www.instagram.com/bloomenergy" target="_blank" rel="noopener external noreferrer" data-wpel-link="external"><img loading="lazy" decoding="async" src="https://www.bloomenergy.com/wp-content/uploads/instagram-icon.svg" width="20" height="20" alt="Instagram icon" class="wp-image-17971 alignleft size-full" /></a><a href="https://x.com/bloom_energy" target="_blank" rel="noopener external noreferrer" data-wpel-link="external"><img loading="lazy" decoding="async" src="https://www.bloomenergy.com/wp-content/uploads/x-icon.svg" width="20" height="20" alt="X icon" class="wp-image-17971 alignleft size-full" /></a><a href="https://www.linkedin.com/company/bloom-energy" target="_blank" rel="noopener external noreferrer" data-wpel-link="external"><img loading="lazy" decoding="async" src="https://www.bloomenergy.com/wp-content/uploads/linkedIn-icon.svg" width="20" height="20" alt="Linkedn icon" class="wp-image-17971 alignleft size-full" /></a><a href="https://www.youtube.com/user/BloomEnergy" target="_blank" rel="noopener external noreferrer" data-wpel-link="external"><img loading="lazy" decoding="async" src="https://www.bloomenergy.com/wp-content/uploads/youtube-icon.svg" width="20" height="20" alt="YouTube icon" class="wp-image-17971 alignleft size-full" /></a></div>
+			</div>
+			</div><div class="et_pb_column et_pb_column_1_2 et_pb_column_9_tb_footer  et_pb_css_mix_blend_mode_passthrough et_pb_column--with-menu">
+				
+				
+				
+				
+				<div class="et_pb_module et_pb_menu et_pb_menu_0_tb_footer et_pb_bg_layout_light  et_pb_text_align_left et_dropdown_animation_fade et_pb_menu--without-logo et_pb_menu--style-centered">
+					
+					
+					
+					
+					<div class="et_pb_menu_inner_container clearfix">
+						
+						<div class="et_pb_menu__wrap">
+							<div class="et_pb_menu__menu">
+								<nav class="et-menu-nav"><ul id="menu-bloomenergy-footer-menu" class="et-menu nav et_disable_top_tier"><li id="menu-item-1818" class="et_pb_menu_page_id-1814 menu-item menu-item-type-post_type menu-item-object-page menu-item-1818"><a href="https://www.bloomenergy.com/legal/" data-wpel-link="internal">Terms of Use</a></li>
+<li id="menu-item-3096" class="et_pb_menu_page_id-3096 menu-item menu-item-type-custom menu-item-object-custom menu-item-3096"><a href="/privacy-policy" data-wpel-link="internal">Privacy Policy</a></li>
+<li id="menu-item-20188" class="cky-banner-element et_pb_menu_page_id-20188 menu-item menu-item-type-custom menu-item-object-custom menu-item-20188"><a href="#">Cookie Settings</a></li>
+<li id="menu-item-3097" class="optionsimage et_pb_menu_page_id-3097 menu-item menu-item-type-custom menu-item-object-custom menu-item-3097"><a href="https://forms.office.com/Pages/ResponsePage.aspx?id=RJ579IQNrEyUydj5CoXXy4v3IhoRpd1Fjci3aKgX5vpUNkU0VjlGVjBDM0tBT0wwTU5aUVIwVUtITS4u" data-wpel-link="external" target="_blank" rel="external noopener noreferrer">Your Privacy Choices</a></li>
+</ul></nav>
+							</div>
+							
+							
+							<div class="et_mobile_nav_menu">
+				<div class="mobile_nav closed">
+					<span class="mobile_menu_bar"></span>
+				</div>
+			</div>
+						</div>
+						
+					</div>
+				</div>
+			</div><div class="et_pb_column et_pb_column_1_4 et_pb_column_10_tb_footer  et_pb_css_mix_blend_mode_passthrough et-last-child">
+				
+				
+				
+				
+				<div class="et_pb_module et_pb_text et_pb_text_7_tb_footer  et_pb_text_align_right et_pb_bg_layout_dark">
+				
+				
+				
+				
+				<div class="et_pb_text_inner"><p>©2026 Bloom Energy. All&nbsp;rights&nbsp;reserved.</p></div>
+			</div>
+			</div>
+				
+				
+				
+				
+			</div>
+				
+				
+			</div>		</div>
+	</footer>
+		</div>
+
+			
+		</div>
+		</div>
+
+			<script type="speculationrules">
+{"prefetch":[{"source":"document","where":{"and":[{"href_matches":"/*"},{"not":{"href_matches":["/wp-*.php","/wp-admin/*","/wp-content/uploads/*","/wp-content/*","/wp-content/plugins/*","/wp-content/themes/bloomenergy/*","/wp-content/themes/Divi/*","/*\\?(.+)"]}},{"not":{"selector_matches":"a[rel~=\"nofollow\"]"}},{"not":{"selector_matches":".no-prefetch, .no-prefetch a"}}]},"eagerness":"conservative"}]}
+</script>
+<!-- HFCM by 99 Robots - Snippet # 1: Menu Show on Hover or Scroll Up -->
+<script>
+(function () {
+  const header = document.querySelector('.et_pb_section.js-header');
+  if (!header) return;
+
+  const DESKTOP_MIN   = 1200;
+  const DELTA         = 6;
+  const SHOW_FROM_Y   = 10;
+  const HIDE_AFTER_Y  = 0;
+  const HOVER_TOP_PX  = 58;
+
+  const MEGA_SELECTOR = '.mega-menu-wrap, .mega-menu, .mega-sub-menu';
+
+  let lastY = window.scrollY;
+
+  function isDesktop() {
+    return window.matchMedia(`(min-width:${DESKTOP_MIN}px)`).matches;
+  }
+
+  function hoverLockActive() {
+		if (document.body.classList.contains('search-open')) return true;
+    if (header.matches(':hover')) return true;
+    return Array.from(document.querySelectorAll(MEGA_SELECTOR)).some(el => el.matches(':hover'));
+  }
+
+  function setTop(px) {
+    document.documentElement.style.setProperty('--headerTop', (px || 0) + 'px');
+  }
+
+  function applyState({ hidden, fixed }) {
+    header.classList.toggle('is-hidden', !!hidden);
+    header.classList.toggle('fixed', !!fixed);
+    if (hidden) header.classList.remove('fixed'); // hidden always wins
+  }
+
+  function update() {
+    const y = window.scrollY;
+    const atTop = y <= SHOW_FROM_Y;
+
+    // <1200px: always fixed at top
+    if (!isDesktop()) {
+      setTop(0);
+      applyState({ hidden: false, fixed: true });
+      lastY = y;
+      return;
+    }
+
+    // Offset only at very top (notification bar case)
+    setTop(atTop ? HOVER_TOP_PX : 0);
+
+    // Hover always forces fixed + visible
+    if (hoverLockActive()) {
+      applyState({ hidden: false, fixed: true });
+      lastY = y;
+      return;
+    }
+
+    const diff = y - lastY;
+
+    // If no meaningful scroll, just ensure "at top" isn't stuck as fixed
+    if (Math.abs(diff) < DELTA) {
+      if (atTop) applyState({ hidden: false, fixed: false });
+      return;
+    }
+
+    if (diff > 0) {
+      // scrolling DOWN
+      if (y > HIDE_AFTER_Y) applyState({ hidden: true, fixed: false });
+      else applyState({ hidden: false, fixed: false });
+    } else {
+      // scrolling UP
+      if (atTop) applyState({ hidden: false, fixed: false });
+      else applyState({ hidden: false, fixed: true });
+    }
+
+    lastY = y;
+  }
+
+  window.addEventListener('scroll', update, { passive: true });
+  window.addEventListener('resize', update);
+
+  header.addEventListener('pointerenter', update);
+  header.addEventListener('pointerleave', update);
+
+  update();
+  requestAnimationFrame(update);
+  window.addEventListener('load', update);
+})();
+</script>
+
+<!-- /end HFCM by 99 Robots -->
+<!-- HFCM by 99 Robots - Snippet # 2: Show Search Section -->
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const SECTION_SEL = '.search-section';
+  const TOGGLE_SEL  = '.et_pb_menu__search-button';
+  const OPEN_CLASS  = 'is-visible';
+  const HEADER_SEL  = '.et_pb_section.js-header';
+  const FIXED_CLASS = 'fixed';
+
+  const root = document.documentElement;
+  const section = document.querySelector(SECTION_SEL);
+  const header  = document.querySelector(HEADER_SEL);
+
+  if (!section || !header) return;
+
+  let rafId = 0;
+  let lastFixed = header.classList.contains(FIXED_CLASS);
+
+  function setSearchTopNow() {
+    const rect = header.getBoundingClientRect();
+    const topPx = Math.max(0, Math.round(rect.bottom));
+    root.style.setProperty('--searchTop', topPx + 'px');
+  }
+
+  function settleSearchTop() {
+    cancelAnimationFrame(rafId);
+    setSearchTopNow();
+    rafId = requestAnimationFrame(() => {
+      setSearchTopNow();
+      rafId = requestAnimationFrame(() => {
+        setSearchTopNow();
+        setTimeout(setSearchTopNow, 120);
+      });
+    });
+  }
+
+  function open() {
+		document.body.classList.add('search-open');
+    section.classList.add(OPEN_CLASS);
+    section.setAttribute('aria-hidden', 'false');
+    settleSearchTop();
+		
+
+    const input = section.querySelector('input[type="search"], input[type="text"], input');
+    if (input) setTimeout(() => input.focus(), 50);
+  }
+
+  function close() {
+		document.body.classList.remove('search-open');
+    section.classList.remove(OPEN_CLASS);
+    section.setAttribute('aria-hidden', 'true');
+    root.style.removeProperty('--searchTop');
+		
+  }
+
+  function toggle() {
+    section.classList.contains(OPEN_CLASS) ? close() : open();
+  }
+
+  // Click toggle
+  document.addEventListener('click', (e) => {
+    const btn = e.target.closest(TOGGLE_SEL);
+    if (!btn) return;
+    e.preventDefault();
+    e.stopPropagation();
+    toggle();
+  }, true);
+
+  // Close outside
+  document.addEventListener('pointerdown', (e) => {
+    if (!section.classList.contains(OPEN_CLASS)) return;
+    if (section.contains(e.target)) return;
+    if (e.target.closest(TOGGLE_SEL)) return;
+    close();
+  }, true);
+
+  // Escape closes
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && section.classList.contains(OPEN_CLASS)) close();
+  });
+
+  // Keep aligned while open
+  window.addEventListener('scroll', () => {
+    if (section.classList.contains(OPEN_CLASS)) setSearchTopNow();
+  }, { passive: true });
+
+  window.addEventListener('resize', () => {
+    if (section.classList.contains(OPEN_CLASS)) setSearchTopNow();
+  });
+
+  // When user approaches the search button, your header may flip to .fixed
+  function approach() {
+    // if header is mid-flip to fixed, settle gives you the correct bottom
+    settleSearchTop();
+  }
+const toggleBtn = document.querySelector(TOGGLE_SEL);
+
+if (toggleBtn) {
+  toggleBtn.addEventListener('pointerenter', approach);
+  toggleBtn.addEventListener('focusin', approach);
+}
+  document.addEventListener('focusin', (e) => {
+    if (e.target.closest(TOGGLE_SEL)) approach();
+  }, true);
+
+  // ✅ Key off .fixed specifically
+  const mo = new MutationObserver(() => {
+    const isFixed = header.classList.contains(FIXED_CLASS);
+    if (isFixed === lastFixed) return; // only react when fixed state changes
+    lastFixed = isFixed;
+
+    // If search is open, settle; otherwise just update var once
+    if (section.classList.contains(OPEN_CLASS)) settleSearchTop();
+    else setSearchTopNow();
+  });
+
+  mo.observe(header, { attributes: true, attributeFilter: ['class'] });
+
+  // Optional: if your fixed transition animates, update after it finishes
+  header.addEventListener('transitionend', () => {
+    if (section.classList.contains(OPEN_CLASS)) settleSearchTop();
+  }, true);
+
+  section.setAttribute('aria-hidden', section.classList.contains(OPEN_CLASS) ? 'false' : 'true');
+});
+</script>
+
+<!-- /end HFCM by 99 Robots -->
+<!-- HFCM by 99 Robots - Snippet # 5: Mobile Menu Accordion -->
+<script>
+(function () {
+
+  function setBtnState(btn, isOpen) {
+    if (!btn) return;
+    btn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+    btn.classList.toggle('is-open', isOpen);
+    btn.classList.toggle('is-closed', !isOpen);
+    btn.textContent = isOpen ? '–' : '+';
+  }
+
+  function closeSiblingsSameLevel(li) {
+    const parentUL = li.parentElement; // ul.et_mobile_menu or ul.sub-menu
+    if (!parentUL) return;
+
+    const siblings = parentUL.querySelectorAll(':scope > li.menu-item-has-children');
+    siblings.forEach(sib => {
+      if (sib === li) return;
+      sib.classList.remove('is-open');
+      setBtnState(sib.querySelector(':scope > .mobile-submenu-toggle'), false);
+    });
+  }
+
+  function toggleItem(li) {
+    const willOpen = !li.classList.contains('is-open');
+
+    // Accordion behavior at this level only
+    if (willOpen) closeSiblingsSameLevel(li);
+
+    li.classList.toggle('is-open', willOpen);
+    setBtnState(li.querySelector(':scope > .mobile-submenu-toggle'), willOpen);
+  }
+
+  function initAccordion(root) {
+    if (!root) return;
+
+    const parents = root.querySelectorAll('li.menu-item-has-children');
+
+    parents.forEach(li => {
+      if (li.dataset.accordionInit === '1') return;
+      li.dataset.accordionInit = '1';
+
+      const link = li.querySelector(':scope > a');
+      const submenu = li.querySelector(':scope > ul.sub-menu');
+      if (!link || !submenu) return;
+
+      // default closed (CSS controls visibility)
+      li.classList.remove('is-open');
+
+      // Create toggle button
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'mobile-submenu-toggle is-closed';
+      btn.setAttribute('aria-label', 'Toggle submenu');
+      btn.textContent = '+';
+
+      link.after(btn);
+
+      // Icon click toggles
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        toggleItem(li);
+      });
+
+      // Title click toggles (since titles are not links)
+      link.addEventListener('click', (e) => {
+  e.preventDefault();
+  e.stopPropagation();
+  if (typeof e.stopImmediatePropagation === 'function') e.stopImmediatePropagation();
+  toggleItem(li);
+}, true);
+
+    });
+  }
+
+  function setupObserver() {
+    const wrap = document.querySelector('.menu-mobile');
+    if (!wrap) return;
+
+    const initIfReady = () => {
+      const menu = wrap.querySelector('ul.et_mobile_menu');
+      if (menu) initAccordion(menu);
+    };
+
+    // init immediately if already present
+    initIfReady();
+
+    // watch for Divi inserting/rebuilding the mobile menu
+    const obs = new MutationObserver(initIfReady);
+    obs.observe(wrap, { childList: true, subtree: true });
+  }
+
+  document.addEventListener('DOMContentLoaded', setupObserver);
+})();
+</script>
+
+<!-- /end HFCM by 99 Robots -->
+<!-- HFCM by 99 Robots - Snippet # 6: Hide Notification Bar after first scroll -->
+<script>
+(function () {
+  const spacer = document.querySelector('#wpfront-notification-bar-spacer');
+  if (!spacer) return;
+
+  function hideBar() {
+    document.body.classList.add('wpfront-hide-on-scroll');
+    window.removeEventListener('scroll', onScroll, { passive: true });
+  }
+
+  function onScroll() {
+    if (window.scrollY > 0) hideBar();
+  }
+
+  // If page loads already scrolled (anchor/back button), hide immediately
+  if (window.scrollY > 0) hideBar();
+
+  window.addEventListener('scroll', onScroll, { passive: true });
+})();
+</script>
+
+<!-- /end HFCM by 99 Robots -->
+<!-- HFCM by 99 Robots - Snippet # 7: Header Spacer Calculator -->
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const spacer = document.querySelector('#wpfront-notification-bar-spacer');
+  const root = document.documentElement;
+
+  function setNotifVar() {
+    // Only apply at the absolute top of the page
+    if (window.scrollY > 0 || !spacer) {
+      root.style.setProperty('--notifH', '0px');
+      return;
+    }
+
+    const h = Math.round(spacer.getBoundingClientRect().height || spacer.offsetHeight || 0);
+    root.style.setProperty('--notifH', (h > 0 ? h : 0) + 'px');
+  }
+
+  setNotifVar();
+  window.addEventListener('scroll', setNotifVar, { passive: true });
+  window.addEventListener('resize', setNotifVar);
+});
+</script>
+
+<!-- /end HFCM by 99 Robots -->
+<!-- HFCM by 99 Robots - Snippet # 16: Change Language Selected Item to 2 letters -->
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const select = document.querySelector('.gt_selector');
+  if (!select) return;
+
+  // Store original labels once
+  Array.from(select.options).forEach(opt => {
+    if (!opt.dataset.fullLabel) opt.dataset.fullLabel = opt.textContent;
+  });
+
+  function restoreFullLabels() {
+    Array.from(select.options).forEach(opt => {
+      opt.textContent = opt.dataset.fullLabel;
+    });
+  }
+
+  function showAbbreviation() {
+    const val = select.value;
+    if (!val) return;
+
+    const code = (val.split('|')[1] || '').toUpperCase();
+    if (!code) return;
+
+    // Restore all first, then abbreviate only the selected one
+    restoreFullLabels();
+    select.options[select.selectedIndex].textContent = code;
+  }
+
+  // Initial state
+  showAbbreviation();
+
+  // When user opens the dropdown, show full names
+  select.addEventListener('pointerdown', restoreFullLabels);
+  select.addEventListener('focus', restoreFullLabels);
+
+  // After user picks something, re-apply abbreviation AFTER the native UI closes
+  select.addEventListener('change', () => {
+    setTimeout(showAbbreviation, 0);
+  });
+
+  // If it does blur (mobile often), also ensure abbreviation
+  select.addEventListener('blur', showAbbreviation);
+});
+</script>
+
+<!-- /end HFCM by 99 Robots -->
+<!-- HFCM by 99 Robots - Snippet # 17: Tablet Mobile Show Nav on Scroll Up -->
+<script>
+(function () {
+  const DESKTOP_MIN = 1200; // anything below this is tablet/mobile
+  const HEADER_SEL  = '.et_pb_section.js-header';
+
+  const SHOW_FROM_Y = 10;   // treat as "at top"
+  const DELTA       = 4;    // ignore tiny scroll jitter (iOS)
+
+  const FIXED_CLASS = 'tm-fixed';
+
+  const header = document.querySelector(HEADER_SEL);
+  if (!header) return;
+
+  let lastY = window.scrollY;
+
+  function isTabletMobile() {
+    return !window.matchMedia(`(min-width:${DESKTOP_MIN}px)`).matches;
+  }
+
+  function setFixed(on) {
+    header.classList.toggle(FIXED_CLASS, !!on);
+  }
+
+  function update() {
+    // Never touch desktop
+    if (!isTabletMobile()) return;
+
+    const y = window.scrollY;
+    const atTop = y <= SHOW_FROM_Y;
+    const diff  = y - lastY;
+
+    // Prevent flicker from tiny scroll changes
+    if (Math.abs(diff) < DELTA) {
+      if (atTop) setFixed(false);
+      lastY = y;
+      return;
+    }
+
+    if (atTop) {
+      // At top: not fixed
+      setFixed(false);
+    } else if (diff < 0) {
+      // Scrolling UP: fixed
+      setFixed(true);
+    } else {
+      // Scrolling DOWN: not fixed
+      setFixed(false);
+    }
+
+    lastY = y;
+  }
+
+  // Init baseline + listeners
+  lastY = window.scrollY;
+  update();
+
+  window.addEventListener('scroll', update, { passive: true });
+  window.addEventListener('resize', () => {
+    lastY = window.scrollY;
+    update();
+  });
+
+  window.addEventListener('load', () => {
+    lastY = window.scrollY;
+    update();
+  });
+})();
+</script>
+
+<!-- /end HFCM by 99 Robots -->
+<!-- HFCM by 99 Robots - Snippet # 20: Create overlay and Adjust position of menu displayed on scroll up - mobile/tablet -->
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+
+  const header   = document.querySelector('.et_pb_section.js-header');
+  const moduleEl = document.querySelector('.et_pb_menu_1_tb_header.menu-mobile');
+  const main     = document.getElementById('main-content');
+	const page = document.getElementById('page-container');
+
+  if (!header || !moduleEl || !main) return;
+
+  // Offset variable
+  const setOffset = (val) => {
+    document.documentElement.style.setProperty('--mobileMenuTop', val);
+  };
+
+  function updateMenuOffset() {
+    const w = window.visualViewport?.width || window.innerWidth;
+    const y = window.scrollY || window.pageYOffset || 0;
+
+    const isMobile = w <= 767;
+    const isTablet = w >= 768 && w <= 1200;
+
+    // Mobile: always 120
+    if (isMobile) {
+      setOffset('120px');
+      return;
+    }
+
+    // Tablet: at top → measure header bottom; otherwise 120
+  if (isTablet) {
+    if (y <= 1) {
+      const rect = header.getBoundingClientRect();
+      setOffset(Math.round(rect.bottom) + 'px');
+    } else {
+      setOffset('120px');
+    }
+    return;
+  }
+
+    // Desktop (safe default)
+    setOffset('165px');
+  }
+
+  // Scroll lock: CSS-only (no body fixed)
+  function lockScroll() {
+    document.documentElement.classList.add('menu-locked');
+  document.body.classList.add('menu-locked');
+  page && page.classList.add('menu-locked');
+  }
+  function unlockScroll() {
+    document.documentElement.classList.remove('menu-locked');
+  document.body.classList.remove('menu-locked');
+  page && page.classList.remove('menu-locked');
+  }
+
+  // Open state inside THIS module
+  function getOpenNav() {
+    return moduleEl.querySelector('.et_mobile_nav_menu .mobile_nav.opened');
+  }
+
+  function getBtn() {
+    const openNav = getOpenNav();
+    return openNav ? openNav.querySelector('.mobile_menu_bar')
+                   : moduleEl.querySelector('.mobile_menu_bar');
+  }
+
+  function syncUI() {
+    const open = !!getOpenNav();
+
+    document.documentElement.classList.toggle('menu-overlay-on', open);
+
+    if (open) lockScroll();
+    else unlockScroll();
+  }
+
+  // Close when clicking "overlay" area (main content)
+  document.addEventListener('click', (e) => {
+    if (!getOpenNav()) return;
+    if (moduleEl.contains(e.target) || header.contains(e.target)) return;
+
+    if (main.contains(e.target)) {
+      getBtn()?.click();
+    }
+  });
+
+  // Watch menu open/close changes
+  new MutationObserver(syncUI).observe(moduleEl, {
+    subtree: true,
+    attributes: true,
+    attributeFilter: ['class']
+  });
+
+  // Watch header class changes for offset updates (harmless now, but fine to keep)
+  new MutationObserver(updateMenuOffset).observe(header, {
+    attributes: true,
+    attributeFilter: ['class']
+  });
+
+  // Update on resize/orientation change
+  window.addEventListener('resize', updateMenuOffset);
+
+  // Tablet needs scroll position to decide 165 vs 120
+  window.addEventListener('scroll', updateMenuOffset, { passive: true });
+
+  // Init
+  updateMenuOffset();
+  syncUI();
+		
+		
+		function stopBackgroundScroll(e) {
+  if (!getOpenNav()) return;
+
+  // allow scrolling inside the drawer
+  const menu = moduleEl.querySelector('.et_mobile_menu');
+  if (menu && menu.contains(e.target)) return;
+
+  e.preventDefault();
+}
+
+// Chrome: prevent wheel/touch scrolling behind the menu
+document.addEventListener('wheel', stopBackgroundScroll, { passive: false });
+document.addEventListener('touchmove', stopBackgroundScroll, { passive: false });
+
+});
+</script>
+
+<!-- /end HFCM by 99 Robots -->
+<!-- HFCM by 99 Robots - Snippet # 21: Hamburger Scroll Patch -->
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+
+  const header   = document.querySelector('.et_pb_section.js-header');
+  const moduleEl = document.querySelector('.et_pb_menu_1_tb_header.menu-mobile');
+  if (!header || !moduleEl) return;
+
+  // Same "open" detector you're already using
+  function getOpenNav() {
+    return moduleEl.querySelector('.et_mobile_nav_menu .mobile_nav.opened');
+  }
+
+  // Save/restore header inline styles so we don't permanently change anything
+  const saved = {};
+
+  function forceHeaderVisible() {
+    if (saved._active) return;
+    saved._active = true;
+
+    saved.transform = header.style.transform;
+    saved.opacity   = header.style.opacity;
+    saved.visibility= header.style.visibility;
+    saved.display   = header.style.display;
+    saved.pointerEvents = header.style.pointerEvents;
+
+    header.style.transform = 'translate3d(0,0,0)';
+    header.style.opacity = '1';
+    header.style.visibility = 'visible';
+    header.style.display = 'block';
+    header.style.pointerEvents = 'auto';
+  }
+
+  function restoreHeader() {
+    if (!saved._active) return;
+    saved._active = false;
+
+    header.style.transform = saved.transform || '';
+    header.style.opacity = saved.opacity || '';
+    header.style.visibility = saved.visibility || '';
+    header.style.display = saved.display || '';
+    header.style.pointerEvents = saved.pointerEvents || '';
+  }
+
+  function syncHeaderPin() {
+    if (getOpenNav()) forceHeaderVisible();
+    else restoreHeader();
+  }
+
+  // Observe class changes inside the module (Divi toggles opened)
+  new MutationObserver(syncHeaderPin).observe(moduleEl, {
+    subtree: true,
+    attributes: true,
+    attributeFilter: ['class']
+  });
+
+  // Also run once at load
+  syncHeaderPin();
+});
+</script>
+
+<!-- /end HFCM by 99 Robots -->
+<!-- HFCM by 99 Robots - Snippet # 23: Force Gtranslate to Load -->
+<script>
+(function () {
+  if (location.hostname !== 'www.bloomenergy.com') return;
+
+  const ID = 'google_translate_element2';
+  const SCRIPT_PART = 'translate_a/element.js';
+  const WAIT_MS = 6000; // footer race buffer (tweak to 8000-12000 if needed)
+
+  function hasEngine() {
+    return !!(window.google && google.translate && google.translate.TranslateElement);
+  }
+
+  function hasAnyElementScript() {
+    return Array.from(document.scripts).some(s =>
+      s.src && s.src.includes(SCRIPT_PART)
+    );
+  }
+
+  // Hard guards (covers re-entrancy)
+  window.__beGT = window.__beGT || { initing: false, inited: false };
+
+  function initOnce() {
+    if (window.__beGT.inited || window.__beGT.initing) return;
+    window.__beGT.initing = true;
+
+    setTimeout(() => {
+      try {
+        const el = document.getElementById(ID);
+        if (!el) return;
+        if (!hasEngine()) return;
+
+        if (!window.__beGT.inited) {
+          new google.translate.TranslateElement(
+            { pageLanguage: 'en', autoDisplay: false },
+            ID
+          );
+          window.__beGT.inited = true;
+        }
+      } finally {
+        window.__beGT.initing = false;
+      }
+    }, 0);
+  }
+
+  // Provide a callback name in case we inject
+  window.googleTranslateElementInit = function () { initOnce(); };
+
+  function maybeInject() {
+    // If plugin (or anything) already added element.js, don't add another.
+    if (hasAnyElementScript()) {
+      // Just wait for engine then init once.
+      let tries = 0;
+      const t = setInterval(() => {
+        tries++;
+        if (hasEngine() || tries > 40) { // ~10s
+          clearInterval(t);
+          initOnce();
+        }
+      }, 250);
+      return;
+    }
+
+    // Still missing after wait: inject ONE copy.
+    const s = document.createElement('script');
+    s.src = 'https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
+    s.async = true;
+    document.head.appendChild(s);
+  }
+
+  // Footer-safe: give GTranslate time to inject its own element.js (Init2), then decide.
+  setTimeout(maybeInject, WAIT_MS);
+
+})();
+</script>
+
+<!-- /end HFCM by 99 Robots -->
+		<script type="application/javascript">
+			(function() {
+				var file     = ["https:\/\/www.bloomenergy.com\/wp-content\/et-cache\/1539\/et-divi-dynamic-tb-17985-tb-17953-1539-late.css"];
+				var handle   = document.getElementById('divi-style-parent-inline-inline-css');
+				var location = handle.parentNode;
+
+				if (0===document.querySelectorAll('link[href="' + file + '"]').length) {
+					var link  = document.createElement('link');
+					link.rel  = 'stylesheet';
+					link.id   = 'et-dynamic-late-css';
+					link.href = file;
+
+					location.insertBefore(link, handle.nextSibling);
+				}
+			})();
+		</script>
+		<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PT4NDZ4" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) --><script type="text/javascript" id="divi-custom-script-js-extra">
+/* <![CDATA[ */
+var DIVI = {"item_count":"%d Item","items_count":"%d Items"};
+var et_builder_utils_params = {"condition":{"diviTheme":true,"extraTheme":false},"scrollLocations":["app","top"],"builderScrollLocations":{"desktop":"app","tablet":"app","phone":"app"},"onloadScrollLocation":"app","builderType":"fe"};
+var et_frontend_scripts = {"builderCssContainerPrefix":"#et-boc","builderCssLayoutPrefix":"#et-boc .et-l"};
+var et_pb_custom = {"ajaxurl":"https://www.bloomenergy.com/wp-admin/admin-ajax.php","images_uri":"https://www.bloomenergy.com/wp-content/themes/Divi/images","builder_images_uri":"https://www.bloomenergy.com/wp-content/themes/Divi/includes/builder/images","et_frontend_nonce":"820f6f13db","subscription_failed":"Please, check the fields below to make sure you entered the correct information.","et_ab_log_nonce":"278d438fa2","fill_message":"Please, fill in the following fields:","contact_error_message":"Please, fix the following errors:","invalid":"Invalid email","captcha":"Captcha","prev":"Prev","previous":"Previous","next":"Next","wrong_captcha":"You entered the wrong number in captcha.","wrong_checkbox":"Checkbox","ignore_waypoints":"no","is_divi_theme_used":"1","widget_search_selector":".widget_search","ab_tests":[],"is_ab_testing_active":"","page_id":"1539","unique_test_id":"","ab_bounce_rate":"5","is_cache_plugin_active":"yes","is_shortcode_tracking":"","tinymce_uri":"https://www.bloomenergy.com/wp-content/themes/Divi/includes/builder/frontend-builder/assets/vendors","accent_color":"#66b360","waypoints_options":[]};
+var et_pb_box_shadow_elements = [];
+//# sourceURL=divi-custom-script-js-extra
+/* ]]> */
+</script>
+<script type="text/javascript" src="https://www.bloomenergy.com/wp-content/themes/Divi/js/scripts.min.js?ver=4.27.6" id="divi-custom-script-js"></script>
+<script type="text/javascript" src="https://www.bloomenergy.com/wp-content/themes/Divi/js/smoothscroll.js?ver=4.27.6" id="smoothscroll-js"></script>
+<script type="text/javascript" src="https://www.bloomenergy.com/wp-content/themes/Divi/includes/builder/feature/dynamic-assets/assets/js/jquery.fitvids.js?ver=4.27.6" id="fitvids-js"></script>
+<script type="text/javascript" id="divi-plus-frontend-bundle-js-extra">
+/* <![CDATA[ */
+var DiviPlusFrontendData = {"version":"1.20.0","ajaxurl":"https://www.bloomenergy.com/wp-admin/admin-ajax.php","ajaxnonce":"0088c27d01"};
+//# sourceURL=divi-plus-frontend-bundle-js-extra
+/* ]]> */
+</script>
+<script type="text/javascript" src="https://www.bloomenergy.com/wp-content/plugins/divi-plus/scripts/frontend-bundle.min.js?ver=1.20.0" id="divi-plus-frontend-bundle-js"></script>
+<script type="text/javascript" id="et-builder-cpt-modules-wrapper-js-extra">
+/* <![CDATA[ */
+var et_modules_wrapper = {"builderCssContainerPrefix":"#et-boc","builderCssLayoutPrefix":"#et-boc .et-l"};
+//# sourceURL=et-builder-cpt-modules-wrapper-js-extra
+/* ]]> */
+</script>
+<script type="text/javascript" src="https://www.bloomenergy.com/wp-content/themes/Divi/includes/builder/scripts/cpt-modules-wrapper.js?ver=4.27.6" id="et-builder-cpt-modules-wrapper-js"></script>
+<script type="text/javascript" src="https://www.bloomenergy.com/wp-content/themes/Divi/core/admin/js/common.js?ver=4.27.6" id="et-core-common-js"></script>
+<script type="text/javascript" src="https://www.bloomenergy.com/wp-includes/js/hoverIntent.min.js?ver=1.10.2" id="hoverIntent-js"></script>
+<script type="text/javascript" src="https://www.bloomenergy.com/wp-content/plugins/megamenu/js/maxmegamenu.js?ver=3.7" id="megamenu-js"></script>
+<script type="text/javascript" id="gt_widget_script_75443569-js-before">
+/* <![CDATA[ */
+window.gtranslateSettings = /* document.write */ window.gtranslateSettings || {};window.gtranslateSettings['75443569'] = {"default_language":"en","languages":["ar","zh-CN","zh-TW","da","nl","en","fr","de","it","ja","ko","es"],"url_structure":"none","native_language_names":1,"detect_browser_language":1,"wrapper_selector":".translation","select_language_label":"Select Language","horizontal_position":"inline","flags_location":"\/wp-content\/plugins\/gtranslate\/flags\/"};
+//# sourceURL=gt_widget_script_75443569-js-before
+/* ]]> */
+</script><script src="https://www.bloomenergy.com/wp-content/plugins/gtranslate/js/dropdown.js?ver=6.9.1" data-no-optimize="1" data-no-minify="1" data-gt-orig-url="/resource/bloom-energy-server/" data-gt-orig-domain="www.bloomenergy.com" data-gt-widget-id="75443569" defer></script><style id="et-builder-module-design-tb-17985-tb-17953-1539-cached-inline-styles">.et_pb_section_0_tb_header{height:120px}.et_pb_section_0_tb_header.et_pb_section{padding-top:0px;padding-bottom:0px;margin-top:0px;margin-bottom:0px;background-color:#FFFFFF!important}.et_pb_image_0_tb_header{text-align:left;margin-left:0}.et_pb_image_0_tb_header .et_pb_image_wrap{display:block}.et_pb_menu_0_tb_header.et_pb_menu,.et_pb_menu_1_tb_header.et_pb_menu{background-color:#ffffff}.et_pb_menu_0_tb_header{padding-top:0px;padding-bottom:0px;margin-top:0px!important;margin-bottom:0px!important}.et_pb_menu_0_tb_header.et_pb_menu .nav li ul,.et_pb_menu_0_tb_header.et_pb_menu .et_mobile_menu,.et_pb_menu_0_tb_header.et_pb_menu .et_mobile_menu ul,.et_pb_menu_1_tb_header.et_pb_menu .nav li ul,.et_pb_menu_1_tb_header.et_pb_menu .et_mobile_menu,.et_pb_menu_1_tb_header.et_pb_menu .et_mobile_menu ul{background-color:#ffffff!important}.et_pb_menu_0_tb_header .et_pb_menu_inner_container>.et_pb_menu__logo-wrap,.et_pb_menu_0_tb_header .et_pb_menu__logo-slot,.et_pb_menu_1_tb_header .et_pb_menu_inner_container>.et_pb_menu__logo-wrap,.et_pb_menu_1_tb_header .et_pb_menu__logo-slot{width:auto;max-width:100%}.et_pb_menu_0_tb_header .et_pb_menu_inner_container>.et_pb_menu__logo-wrap .et_pb_menu__logo img,.et_pb_menu_0_tb_header .et_pb_menu__logo-slot .et_pb_menu__logo-wrap img,.et_pb_menu_1_tb_header .et_pb_menu_inner_container>.et_pb_menu__logo-wrap .et_pb_menu__logo img,.et_pb_menu_1_tb_header .et_pb_menu__logo-slot .et_pb_menu__logo-wrap img{height:auto;max-height:none}.et_pb_menu_0_tb_header .mobile_nav .mobile_menu_bar:before{font-size:0px;color:#66b360}.et_pb_menu_0_tb_header .et_pb_menu__icon.et_pb_menu__search-button,.et_pb_menu_0_tb_header .et_pb_menu__icon.et_pb_menu__close-search-button,.et_pb_menu_0_tb_header .et_pb_menu__icon.et_pb_menu__cart-button,.et_pb_menu_1_tb_header .et_pb_menu__icon.et_pb_menu__cart-button{color:#66b360}.et_pb_menu_1_tb_header.et_pb_menu ul li a{font-size:16px}.et_pb_menu_1_tb_header .mobile_nav .mobile_menu_bar:before{color:#001f1b}.et_pb_menu_1_tb_header .et_pb_menu__icon.et_pb_menu__search-button,.et_pb_menu_1_tb_header .et_pb_menu__icon.et_pb_menu__close-search-button{color:#000000}.et_pb_section_1_tb_header.et_pb_section{padding-top:0px;padding-bottom:0px;margin-top:0px;margin-bottom:0px}.et_pb_row_1_tb_header.et_pb_row{padding-top:0px!important;padding-bottom:0px!important;margin-top:0px!important;margin-bottom:0px!important;padding-top:0px;padding-bottom:0px}.et_pb_row_1_tb_header,body #page-container .et-db #et-boc .et-l .et_pb_row_1_tb_header.et_pb_row,body.et_pb_pagebuilder_layout.single #page-container #et-boc .et-l .et_pb_row_1_tb_header.et_pb_row,body.et_pb_pagebuilder_layout.single.et_full_width_page #page-container .et_pb_row_1_tb_header.et_pb_row{width:90%}.et_pb_search_0_tb_header form input.et_pb_s,.et_pb_search_0_tb_header form input.et_pb_s::placeholder{font-weight:300;font-size:88px;font-weight:300;font-size:88px;font-weight:300;font-size:88px;font-weight:300;font-size:88px}.et_pb_search_0_tb_header form input.et_pb_s::-ms-input-placeholder{font-weight:300;font-size:88px;font-weight:300;font-size:88px;font-weight:300;font-size:88px;font-weight:300;font-size:88px}.et_pb_search_0_tb_header form input.et_pb_s::-webkit-input-placeholder{font-weight:300;font-size:88px;font-weight:300;font-size:88px;font-weight:300;font-size:88px;font-weight:300;font-size:88px;color:#8c8c8c!important}.et_pb_search_0_tb_header form input.et_pb_s::-moz-placeholder{font-weight:300;font-size:88px;color:#8c8c8c!important}.et_pb_search_0_tb_header form input.et_pb_s::-moz-placeholder::-webkit-input-placeholder{font-weight:300;font-size:88px}.et_pb_search_0_tb_header form input.et_pb_s::-moz-placeholder::-moz-placeholder{font-weight:300;font-size:88px}.et_pb_search_0_tb_header form input.et_pb_s::-moz-placeholder::-ms-input-placeholder{font-weight:300;font-size:88px}.et_pb_search_0_tb_header.et_pb_search,.et_pb_search_0_tb_header input.et_pb_s{border-radius:0px 0px 0px 0px;overflow:hidden}.et_pb_search_0_tb_header.et_pb_search{border-width:0px 0px 1.5px 0px;border-color:#c6c6c6 #c6c6c6 rgba(26,26,26,0.25) #c6c6c6}.et_pb_search_0_tb_header{overflow-x:hidden;overflow-y:hidden;margin-bottom:50px!important}.et_pb_search_0_tb_header input.et_pb_s{padding-top:50px!important;padding-right:0em!important;padding-bottom:0em!important;padding-left:0em!important;height:auto;min-height:0}.et_pb_search_0_tb_header form input.et_pb_s:-ms-input-placeholder{color:#8c8c8c!important}@media only screen and (max-width:980px){.et_pb_image_0_tb_header .et_pb_image_wrap img{width:auto}.et_pb_search_0_tb_header.et_pb_search{border-bottom-width:1.5px;border-bottom-color:rgba(26,26,26,0.25)}}@media only screen and (max-width:767px){.et_pb_image_0_tb_header .et_pb_image_wrap img{width:auto}.et_pb_search_0_tb_header.et_pb_search{border-bottom-width:1.5px;border-bottom-color:rgba(26,26,26,0.25)}}.et_pb_section_0_tb_footer.et_pb_section{padding-top:60px;padding-bottom:60px;background-color:#001f1b!important}.et_pb_row_0_tb_footer{border-bottom-color:rgba(255,255,255,0.25)}.et_pb_image_0_tb_footer{text-align:left;margin-left:0}.et_pb_image_0_tb_footer .et_pb_image_wrap{display:block}.et_pb_text_0_tb_footer.et_pb_text:hover,.et_pb_text_0_tb_footer.et_pb_text a,.et_pb_text_1_tb_footer.et_pb_text:hover,.et_pb_text_1_tb_footer.et_pb_text a,.et_pb_text_2_tb_footer.et_pb_text:hover,.et_pb_text_2_tb_footer.et_pb_text a,.et_pb_text_3_tb_footer.et_pb_text:hover,.et_pb_text_3_tb_footer.et_pb_text a,.et_pb_text_4_tb_footer.et_pb_text:hover,.et_pb_text_4_tb_footer.et_pb_text a,.et_pb_text_5_tb_footer.et_pb_text:hover,.et_pb_text_5_tb_footer.et_pb_text a,.et_pb_menu_0_tb_footer.et_pb_menu ul li.current-menu-item a:hover,.et_pb_menu_0_tb_footer.et_pb_menu .nav li ul.sub-menu a{color:#FFFFFF!important}.et_pb_text_0_tb_footer,.et_pb_text_1_tb_footer,.et_pb_text_2_tb_footer,.et_pb_text_3_tb_footer,.et_pb_text_4_tb_footer,.et_pb_text_5_tb_footer{line-height:18.2px;font-size:14px;line-height:18.2px}.et_pb_text_0_tb_footer.et_pb_text,.et_pb_text_1_tb_footer.et_pb_text,.et_pb_text_2_tb_footer.et_pb_text,.et_pb_text_3_tb_footer.et_pb_text,.et_pb_text_4_tb_footer.et_pb_text,.et_pb_text_5_tb_footer.et_pb_text{transition:color 300ms ease 0ms}.et_pb_row_1_tb_footer{border-bottom-width:1.5px;border-bottom-color:rgba(255,255,255,0.25)}.et_pb_row_1_tb_footer.et_pb_row{padding-bottom:60px!important;padding-bottom:60px}.et_pb_row_2_tb_footer.et_pb_row{margin-top:60px!important}.et_pb_text_6_tb_footer{padding-top:5px!important}.et_pb_menu_0_tb_footer.et_pb_menu ul li a{font-size:12px;color:#FFFFFF!important}.et_pb_menu_0_tb_footer.et_pb_menu ul li.current-menu-item a{transition:color 300ms ease 0ms;color:#FFFFFF!important}.et_pb_menu_0_tb_footer.et_pb_menu .nav li ul,.et_pb_menu_0_tb_footer.et_pb_menu .et_mobile_menu,.et_pb_menu_0_tb_footer.et_pb_menu .et_mobile_menu ul{background-color:#ffffff!important}.et_pb_menu_0_tb_footer .et_pb_menu_inner_container>.et_pb_menu__logo-wrap,.et_pb_menu_0_tb_footer .et_pb_menu__logo-slot{width:auto;max-width:100%}.et_pb_menu_0_tb_footer .et_pb_menu_inner_container>.et_pb_menu__logo-wrap .et_pb_menu__logo img,.et_pb_menu_0_tb_footer .et_pb_menu__logo-slot .et_pb_menu__logo-wrap img{height:auto;max-height:none}.et_pb_menu_0_tb_footer .mobile_nav .mobile_menu_bar:before,.et_pb_menu_0_tb_footer .et_pb_menu__icon.et_pb_menu__search-button,.et_pb_menu_0_tb_footer .et_pb_menu__icon.et_pb_menu__close-search-button,.et_pb_menu_0_tb_footer .et_pb_menu__icon.et_pb_menu__cart-button{color:#66b360}.et_pb_text_7_tb_footer{font-size:12px}@media only screen and (max-width:980px){.et_pb_row_0_tb_footer{border-bottom-color:rgba(255,255,255,0.25)}.et_pb_image_0_tb_footer .et_pb_image_wrap img{width:auto}.et_pb_row_1_tb_footer{border-bottom-width:1.5px;border-bottom-color:rgba(255,255,255,0.25)}}@media only screen and (max-width:767px){.et_pb_row_0_tb_footer{border-bottom-color:rgba(255,255,255,0.25)}.et_pb_image_0_tb_footer .et_pb_image_wrap img{width:auto}.et_pb_row_1_tb_footer{border-bottom-width:1.5px;border-bottom-color:rgba(255,255,255,0.25)}}</style>	
+	<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9d5d9e5c3d3dffb8',t:'MTc3MjQyNTMyOC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>

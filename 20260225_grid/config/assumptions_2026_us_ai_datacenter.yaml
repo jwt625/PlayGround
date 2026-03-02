@@ -1,0 +1,489 @@
+meta:
+  name: ai_datacenter_power_model_assumptions
+  version: 0.1.0
+  as_of_date: 2026-03-01
+  region: US
+  currency: USD_2026_real
+  notes:
+    - "All numeric assumptions use min/mean/max for stochastic estimation."
+    - "Use triangular distribution by default unless model overrides."
+
+schema:
+  range_fields: [min, mean, max]
+  default_distribution: triangular
+
+source_registry:
+  planning_doc: /Users/wentaojiang/Documents/GitHub/PlayGround/20260225_grid/DevLog-000-planning.md
+  supply_chain_summary: /Users/wentaojiang/Documents/GitHub/PlayGround/20260225_grid/references/md/market_players_supply_chain_metrics_2026-03-01.md
+  supply_chain_data: /Users/wentaojiang/Documents/GitHub/PlayGround/20260225_grid/references/data/market_players_supply_chain_metrics_2026-03-01.csv
+  refs:
+    lbnl_dc_load: https://eta.lbl.gov/publications/2024-lbnl-data-center-energy-usage-report
+    queued_up_2025: https://emp.lbl.gov/queues
+    ferc_order_2023: https://www.ferc.gov/explainer-interconnection-final-rule
+    pjm_bra_2026_2027: https://insidelines.pjm.com/pjm-auction-procures-134311-mw-of-generation-resources-supply-responds-to-price-signal/
+    pjm_bra_2027_2028: https://insidelines.pjm.com/pjm-auction-procures-134479-mw-of-generation-resources/
+    eia_steo: https://www.eia.gov/steo
+    eia_electricity_monthly: https://www.eia.gov/electricity/monthly/index.php
+    eia_aeo_lcoe: https://www.eia.gov/outlooks/aeo/electricity_generation/pdf/AEO2025_LCOE_report.pdf
+    treasury_45y_48e: https://home.treasury.gov/news/press-releases/jy2787
+    bloom_equinix: https://investor.bloomenergy.com/press-releases/press-release-details/2025/Bloom-Energy-Expands-Data-Center-Power-Agreement-with-Equinix-Surpassing-100MW/default.aspx
+    netl_fuel_cell_handbook7: https://www.netl.doe.gov/sites/default/files/netl-file/FCHandbook7.pdf
+    ge_lm6000_fast_start: https://www.gevernova.com/gas-power/services/gas-turbines/upgrades/lm6000-fast-start
+    mhi_m501j_specs: https://power.mhi.com/products/gasturbines/lineup/m501j
+    nrel_atb_battery_2024: https://atb.nrel.gov/electricity/2024/2023/utility-scale_battery_storage
+    nrel_atb_utility_pv_2024: https://atb.nrel.gov/electricity/2024/utility-scale_pv
+    nrel_battery_cost_2025_update: https://doi.org/10.2172/2583471
+    bloom_hydrogen_sofc_2024: https://investor.bloomenergy.com/press-releases/press-release-details/2024/Bloom-Energy-Announces-Hydrogen-Solid-Oxide-Fuel-Cell-with-60-Electrical-Efficiency-and-90-High-Temperature-Combined-Heat-and-Power-Efficiency/default.aspx
+
+scale_cases_mw:
+  edge_10:
+    facility_nameplate_mw: { min: 10.0, mean: 10.0, max: 10.0 }
+    it_load_fraction_of_facility: { min: 0.75, mean: 0.80, max: 0.85 }
+    typical_permitting_months: { min: 4, mean: 8, max: 14 }
+  regional_100:
+    facility_nameplate_mw: { min: 100.0, mean: 100.0, max: 100.0 }
+    it_load_fraction_of_facility: { min: 0.75, mean: 0.80, max: 0.85 }
+    typical_permitting_months: { min: 8, mean: 16, max: 30 }
+  hyperscale_1000:
+    facility_nameplate_mw: { min: 1000.0, mean: 1000.0, max: 1000.0 }
+    it_load_fraction_of_facility: { min: 0.72, mean: 0.80, max: 0.86 }
+    typical_permitting_months: { min: 18, mean: 36, max: 72 }
+
+workload_and_compute:
+  rack_power_kw:
+    unit: kW_per_rack
+    value: { min: 120, mean: 135, max: 150 }
+    sources: [planning_doc]
+  cluster_utilization:
+    unit: fraction
+    value: { min: 0.60, mean: 0.78, max: 0.92 }
+  deferrable_workload_fraction:
+    unit: fraction
+    value: { min: 0.05, mean: 0.15, max: 0.30 }
+  interruptible_workload_fraction:
+    unit: fraction
+    value: { min: 0.00, mean: 0.05, max: 0.15 }
+  load_step_change_per_minute:
+    unit: fraction_of_it_load_per_min
+    value: { min: 0.05, mean: 0.15, max: 0.30 }
+
+thermal_and_efficiency:
+  pue_grid_or_turbine:
+    unit: ratio
+    value: { min: 1.25, mean: 1.32, max: 1.40 }
+    sources: [planning_doc]
+  pue_sofc_trigeneration:
+    unit: ratio
+    value: { min: 1.05, mean: 1.10, max: 1.15 }
+    sources: [planning_doc]
+  dc_bus_tco_reduction_vs_conventional_ac:
+    unit: fraction
+    value: { min: 0.05, mean: 0.065, max: 0.08 }
+    sources: [planning_doc]
+
+market_prices:
+  grid_energy_price:
+    unit: usd_per_MWh
+    value: { min: 45, mean: 85, max: 180 }
+    sources: [eia_electricity_monthly, pjm_bra_2026_2027, pjm_bra_2027_2028]
+  demand_charge:
+    unit: usd_per_kw_month
+    value: { min: 6, mean: 16, max: 35 }
+  capacity_charge_proxy:
+    unit: usd_per_kw_month
+    value: { min: 1, mean: 6, max: 20 }
+  natural_gas_henry_hub:
+    unit: usd_per_MMBtu
+    value: { min: 2.5, mean: 4.5, max: 8.0 }
+    sources: [eia_steo]
+  gas_basis_plus_transport_plus_tariff:
+    unit: usd_per_MMBtu
+    value: { min: 0.8, mean: 2.2, max: 5.0 }
+  delivered_natural_gas_cost:
+    unit: usd_per_MMBtu
+    value: { min: 3.3, mean: 6.7, max: 13.0 }
+  rng_or_offset_cost:
+    unit: usd_per_tCO2e
+    value: { min: 8, mean: 30, max: 80 }
+
+financing_and_tax:
+  discount_rate_wacc_nominal:
+    unit: fraction
+    value: { min: 0.08, mean: 0.11, max: 0.15 }
+  debt_ratio:
+    unit: fraction
+    value: { min: 0.40, mean: 0.55, max: 0.70 }
+  debt_interest_rate_nominal:
+    unit: fraction
+    value: { min: 0.055, mean: 0.075, max: 0.105 }
+  debt_tenor_years:
+    unit: years
+    value: { min: 7, mean: 12, max: 18 }
+  dscr_minimum:
+    unit: ratio
+    value: { min: 1.15, mean: 1.30, max: 1.45 }
+  federal_tax_rate_effective:
+    unit: fraction
+    value: { min: 0.21, mean: 0.25, max: 0.30 }
+  state_local_tax_rate_effective:
+    unit: fraction
+    value: { min: 0.00, mean: 0.04, max: 0.09 }
+  depreciation_power_assets_years:
+    unit: years
+    value: { min: 5, mean: 5, max: 5 }
+    sources: [planning_doc]
+  depreciation_it_assets_years:
+    unit: years
+    value: { min: 3, mean: 3, max: 3 }
+    sources: [planning_doc]
+  eligible_itc_fraction_bess:
+    unit: fraction
+    value: { min: 0.30, mean: 0.35, max: 0.40 }
+    sources: [treasury_45y_48e]
+  eligible_itc_fraction_sofc:
+    unit: fraction
+    value: { min: 0.00, mean: 0.15, max: 0.30 }
+    notes:
+      - "Eligibility varies by technology/fuel/compliance pathway; do not hard-code as guaranteed."
+
+revenue_and_sla:
+  gross_compute_revenue:
+    unit: usd_per_mw_month
+    value: { min: 500000, mean: 850000, max: 1200000 }
+    sources: [planning_doc]
+  sla_penalty_per_unserved_mwh:
+    unit: usd_per_MWh
+    value: { min: 5000, mean: 20000, max: 100000 }
+  outage_cost_multiplier_vs_energy_cost:
+    unit: ratio
+    value: { min: 20, mean: 80, max: 400 }
+
+technology_parameters:
+  sofc:
+    net_electrical_efficiency_lhv:
+      unit: fraction
+      value: { min: 0.42, mean: 0.54, max: 0.63 }
+      sources: [netl_fuel_cell_handbook7, bloom_hydrogen_sofc_2024]
+    ramp_rate_fraction_nameplate_per_min:
+      unit: fraction_per_min
+      value: { min: 0.003, mean: 0.012, max: 0.03 }
+    minimum_stable_load_fraction:
+      unit: fraction
+      value: { min: 0.50, mean: 0.60, max: 0.75 }
+    forced_outage_rate:
+      unit: fraction
+      value: { min: 0.02, mean: 0.05, max: 0.10 }
+    annual_degradation:
+      unit: fraction_per_year
+      value: { min: 0.005, mean: 0.015, max: 0.03 }
+    stack_replacement_cycle_years:
+      unit: years
+      value: { min: 4, mean: 5, max: 7 }
+      sources: [planning_doc]
+    startup_time_hours:
+      unit: hours
+      value: { min: 1, mean: 8, max: 36 }
+
+  sofc_subtechnologies:
+    planar_ng_chp:
+      net_electrical_efficiency_lhv:
+        unit: fraction
+        value: { min: 0.45, mean: 0.55, max: 0.60 }
+      combined_heat_power_efficiency:
+        unit: fraction
+        value: { min: 0.70, mean: 0.82, max: 0.90 }
+      startup_time_hours:
+        unit: hours
+        value: { min: 1, mean: 6, max: 24 }
+      ramp_rate_fraction_nameplate_per_min:
+        unit: fraction_per_min
+        value: { min: 0.005, mean: 0.015, max: 0.03 }
+      sources: [netl_fuel_cell_handbook7, bloom_hydrogen_sofc_2024]
+    planar_hydrogen_ready:
+      net_electrical_efficiency_lhv:
+        unit: fraction
+        value: { min: 0.50, mean: 0.58, max: 0.62 }
+      combined_heat_power_efficiency:
+        unit: fraction
+        value: { min: 0.75, mean: 0.85, max: 0.90 }
+      startup_time_hours:
+        unit: hours
+        value: { min: 1, mean: 6, max: 24 }
+      sources: [bloom_hydrogen_sofc_2024]
+    mcfc_internal_reforming:
+      net_electrical_efficiency_lhv:
+        unit: fraction
+        value: { min: 0.47, mean: 0.52, max: 0.57 }
+      startup_time_hours:
+        unit: hours
+        value: { min: 8, mean: 24, max: 72 }
+      notes:
+        - "MCFC documentation indicates slow startup and corrosive high-temperature operation."
+      sources: [netl_fuel_cell_handbook7]
+
+  turbine_aeroderivative:
+    net_electrical_efficiency_lhv:
+      unit: fraction
+      value: { min: 0.35, mean: 0.41, max: 0.46 }
+    ramp_rate_fraction_nameplate_per_min:
+      unit: fraction_per_min
+      value: { min: 0.08, mean: 0.13, max: 0.20 }
+      sources: [ge_lm6000_fast_start]
+    forced_outage_rate:
+      unit: fraction
+      value: { min: 0.03, mean: 0.06, max: 0.12 }
+    startup_time_hours:
+      unit: hours
+      value: { min: 0.08, mean: 0.15, max: 0.30 }
+      sources: [ge_lm6000_fast_start]
+
+  turbine_subtechnologies:
+    aeroderivative_fast_start:
+      startup_time_minutes:
+        unit: minutes
+        value: { min: 5, mean: 8, max: 10 }
+      ramp_rate_fraction_nameplate_per_min:
+        unit: fraction_per_min
+        value: { min: 0.10, mean: 0.13, max: 0.20 }
+      notes:
+        - "LM6000 Fast Start has 5/8/10 min startup schedules, with life-impact caveat at 5 min."
+      sources: [ge_lm6000_fast_start]
+    heavy_duty_j_class_ccgt:
+      net_electrical_efficiency_lhv:
+        unit: fraction
+        value: { min: 0.58, mean: 0.62, max: 0.645 }
+      simple_cycle_efficiency_lhv:
+        unit: fraction
+        value: { min: 0.41, mean: 0.44, max: 0.46 }
+      ramp_rate_fraction_nameplate_per_min:
+        unit: fraction_per_min
+        value: { min: 0.03, mean: 0.06, max: 0.10 }
+      startup_time_hours:
+        unit: hours
+        value: { min: 0.5, mean: 1.5, max: 4.0 }
+      sources: [mhi_m501j_specs]
+
+  bess_li_ion:
+    round_trip_efficiency:
+      unit: fraction
+      value: { min: 0.85, mean: 0.89, max: 0.93 }
+      sources: [nrel_atb_battery_2024]
+    usable_depth_of_discharge:
+      unit: fraction
+      value: { min: 0.80, mean: 0.90, max: 0.95 }
+    cycle_life_80pct_capacity:
+      unit: cycles
+      value: { min: 3000, mean: 6000, max: 10000 }
+    augmentation_capex_fraction_of_initial:
+      unit: fraction
+      value: { min: 0.08, mean: 0.18, max: 0.30 }
+    fixed_om_fraction_of_capex:
+      unit: fraction_per_year
+      value: { min: 0.02, mean: 0.025, max: 0.03 }
+      sources: [nrel_atb_battery_2024]
+    representative_duration_hours:
+      unit: hours
+      value: { min: 2, mean: 4, max: 8 }
+
+  bess_subtechnologies:
+    li_ion_4h_utility_scale_cost_projection_2035:
+      capex_usd_per_kwh:
+        unit: usd_per_kWh
+        value: { min: 152, mean: 247, max: 349 }
+      sources: [nrel_battery_cost_2025_update]
+    li_ion_4h_utility_scale_cost_projection_2050:
+      capex_usd_per_kwh:
+        unit: usd_per_kWh
+        value: { min: 111, mean: 184, max: 333 }
+      sources: [nrel_battery_cost_2025_update]
+
+  solar_pv_utility:
+    net_capacity_factor:
+      unit: fraction
+      value: { min: 0.214, mean: 0.28, max: 0.34 }
+      sources: [nrel_atb_utility_pv_2024]
+    annual_degradation:
+      unit: fraction_per_year
+      value: { min: 0.002, mean: 0.005, max: 0.007 }
+      sources: [nrel_atb_utility_pv_2024]
+    land_use_acres_per_mw:
+      unit: acres_per_mw
+      value: { min: 5, mean: 6, max: 7 }
+      sources: [planning_doc]
+
+  soec:
+    stack_efficiency_advantage_vs_alkaline_pem:
+      unit: fraction
+      value: { min: 0.10, mean: 0.20, max: 0.30 }
+      sources: [supply_chain_summary]
+    commercial_readiness_risk_multiplier:
+      unit: ratio
+      value: { min: 1.10, mean: 1.35, max: 1.80 }
+
+capex_assumptions:
+  generation_plant_capex:
+    sofc_usd_per_mw:
+      value: { min: 4000000, mean: 5500000, max: 7000000 }
+      sources: [planning_doc]
+    sofc_planar_ng_chp_usd_per_mw:
+      value: { min: 4200000, mean: 6000000, max: 8500000 }
+      sources: [planning_doc, bloom_equinix]
+    sofc_hydrogen_ready_usd_per_mw:
+      value: { min: 5000000, mean: 7000000, max: 10000000 }
+      sources: [bloom_hydrogen_sofc_2024]
+    mcfc_usd_per_mw:
+      value: { min: 3800000, mean: 5600000, max: 8500000 }
+      sources: [netl_fuel_cell_handbook7]
+    turbine_usd_per_mw:
+      value: { min: 1200000, mean: 1900000, max: 3200000 }
+    turbine_aeroderivative_simple_cycle_usd_per_mw:
+      value: { min: 1200000, mean: 2200000, max: 3600000 }
+    turbine_heavy_duty_ccgt_usd_per_mw:
+      value: { min: 1000000, mean: 1700000, max: 2800000 }
+    solar_usd_per_mw_ac:
+      value: { min: 800000, mean: 1300000, max: 2200000 }
+      sources: [nrel_atb_utility_pv_2024]
+    soec_usd_per_mw:
+      value: { min: 1800000, mean: 3000000, max: 5000000 }
+  storage_capex:
+    bess_usd_per_kwh_installed:
+      value: { min: 150, mean: 250, max: 380 }
+      sources: [nrel_battery_cost_2025_update]
+    bess_4h_usd_per_kwh_installed_2035:
+      value: { min: 152, mean: 247, max: 349 }
+      sources: [nrel_battery_cost_2025_update]
+    bess_4h_usd_per_kwh_installed_2050:
+      value: { min: 111, mean: 184, max: 333 }
+      sources: [nrel_battery_cost_2025_update]
+    bess_balance_of_system_fraction:
+      value: { min: 0.20, mean: 0.33, max: 0.45 }
+  site_and_bop_capex:
+    substation_switchyard_usd_per_mw:
+      value: { min: 150000, mean: 320000, max: 700000 }
+    gas_interconnect_last_mile_usd_per_mw:
+      value: { min: 50000, mean: 250000, max: 1000000 }
+    thermal_rejection_and_water_usd_per_mw:
+      value: { min: 60000, mean: 180000, max: 450000 }
+    controls_cyber_fire_life_safety_usd_per_mw:
+      value: { min: 30000, mean: 90000, max: 250000 }
+    sitework_permitting_owner_cost_fraction_of_total_epc:
+      value: { min: 0.08, mean: 0.15, max: 0.28 }
+  scale_discount_from_10mw_to_1000mw:
+    power_hardware_capex_discount_fraction:
+      value: { min: 0.10, mean: 0.125, max: 0.15 }
+      sources: [planning_doc]
+
+opex_assumptions:
+  fixed_opex_fraction_of_generation_capex:
+    sofc:
+      value: { min: 0.03, mean: 0.05, max: 0.08 }
+    turbine:
+      value: { min: 0.015, mean: 0.03, max: 0.05 }
+    solar:
+      value: { min: 0.008, mean: 0.015, max: 0.03 }
+    bess:
+      value: { min: 0.02, mean: 0.025, max: 0.03 }
+      sources: [nrel_atb_battery_2024]
+  variable_opex_excluding_fuel_usd_per_mwh:
+    sofc:
+      value: { min: 4, mean: 10, max: 22 }
+    turbine:
+      value: { min: 2, mean: 6, max: 14 }
+
+schedule_and_interconnection:
+  cod_months_by_scenario_and_scale:
+    legacy_grid:
+      edge_10: { min: 12, mean: 24, max: 42 }
+      regional_100: { min: 18, mean: 36, max: 54 }
+      hyperscale_1000: { min: 36, mean: 60, max: 96 }
+    offgrid_sofc:
+      edge_10: { min: 6, mean: 10, max: 18 }
+      regional_100: { min: 10, mean: 18, max: 30 }
+      hyperscale_1000: { min: 18, mean: 36, max: 72 }
+    offgrid_turbine:
+      edge_10: { min: 8, mean: 14, max: 24 }
+      regional_100: { min: 12, mean: 24, max: 40 }
+      hyperscale_1000: { min: 20, mean: 40, max: 78 }
+    green_microgrid:
+      edge_10: { min: 10, mean: 16, max: 28 }
+      regional_100: { min: 16, mean: 28, max: 48 }
+      hyperscale_1000: { min: 24, mean: 48, max: 84 }
+  interconnection_withdrawal_risk_factor:
+    unit: fraction
+    value: { min: 0.10, mean: 0.30, max: 0.60 }
+    sources: [queued_up_2025]
+
+supply_chain_risk:
+  lead_time_months_by_technology:
+    solar_pv: { min: 3, mean: 7, max: 14 }
+    bess: { min: 5, mean: 10, max: 18 }
+    turbine: { min: 12, mean: 26, max: 48 }
+    turbine_aeroderivative: { min: 9, mean: 18, max: 30 }
+    turbine_heavy_duty: { min: 18, mean: 32, max: 60 }
+    sofc: { min: 8, mean: 14, max: 26 }
+    mcfc: { min: 12, mean: 20, max: 36 }
+    soec: { min: 14, mean: 28, max: 48 }
+  schedule_risk_multiplier:
+    turbine: { min: 1.15, mean: 1.30, max: 1.45 }
+    bess: { min: 1.05, mean: 1.18, max: 1.30 }
+    sofc: { min: 1.10, mean: 1.24, max: 1.40 }
+    epc_labor: { min: 1.05, mean: 1.12, max: 1.25 }
+    sources: [supply_chain_summary]
+  epc_scarcity_cost_adder_fraction:
+    value: { min: 0.05, mean: 0.11, max: 0.18 }
+    sources: [supply_chain_summary]
+  supplier_diversity_index_hhi_proxy:
+    unit: fraction_0_to_1
+    solar: { min: 0.35, mean: 0.50, max: 0.65 }
+    bess: { min: 0.40, mean: 0.55, max: 0.72 }
+    turbine: { min: 0.60, mean: 0.75, max: 0.90 }
+    sofc: { min: 0.70, mean: 0.82, max: 0.95 }
+    soec: { min: 0.65, mean: 0.80, max: 0.92 }
+  reservation_prepayment_fraction_of_equipment_contract:
+    turbine: { min: 0.05, mean: 0.15, max: 0.30 }
+    sofc: { min: 0.03, mean: 0.10, max: 0.20 }
+
+policy_and_compliance:
+  section_301_tariff_adder_fraction:
+    unit: fraction
+    value: { min: 0.00, mean: 0.10, max: 0.25 }
+    sources: [planning_doc]
+  domestic_content_cost_impact_fraction:
+    unit: fraction
+    value: { min: -0.03, mean: 0.02, max: 0.10 }
+  emissions_permitting_delay_months:
+    unit: months
+    value: { min: 0, mean: 6, max: 24 }
+
+scenario_templates:
+  base_case:
+    quantile: mean
+  low_cost_fast_track:
+    quantile: min
+  stressed_supply_chain:
+    quantile: max
+    overrides:
+      supply_chain_risk.schedule_risk_multiplier.turbine: 1.45
+      supply_chain_risk.schedule_risk_multiplier.sofc: 1.40
+      schedule_and_interconnection.interconnection_withdrawal_risk_factor.value.mean: 0.50
+  carbon_constrained:
+    quantile: mean
+    overrides:
+      market_prices.rng_or_offset_cost.value.mean: 55
+      policy_and_compliance.emissions_permitting_delay_months.value.mean: 12
+
+model_outputs_required:
+  financial:
+    - project_npv_5y
+    - project_npv_10y
+    - project_npv_15y
+    - project_irr
+    - payback_month
+    - lcoc_usd_per_compute_unit
+  engineering:
+    - unserved_energy_mwh
+    - outage_hours
+    - reserve_margin_violation_hours
+    - battery_cycles_per_year
+    - sofc_capacity_factor
+    - turbine_capacity_factor
