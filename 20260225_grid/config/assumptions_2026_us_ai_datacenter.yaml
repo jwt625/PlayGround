@@ -13,9 +13,9 @@ schema:
   default_distribution: triangular
 
 source_registry:
-  planning_doc: /Users/wentaojiang/Documents/GitHub/PlayGround/20260225_grid/DevLog-000-planning.md
-  supply_chain_summary: /Users/wentaojiang/Documents/GitHub/PlayGround/20260225_grid/references/md/market_players_supply_chain_metrics_2026-03-01.md
-  supply_chain_data: /Users/wentaojiang/Documents/GitHub/PlayGround/20260225_grid/references/data/market_players_supply_chain_metrics_2026-03-01.csv
+  planning_doc: DevLog/DevLog-000-planning.md
+  supply_chain_summary: references/md/market_players_supply_chain_metrics_2026-03-01.md
+  supply_chain_data: references/data/market_players_supply_chain_metrics_2026-03-01.csv
   refs:
     lbnl_dc_load: https://eta.lbl.gov/publications/2024-lbnl-data-center-energy-usage-report
     queued_up_2025: https://emp.lbl.gov/queues
@@ -34,6 +34,14 @@ source_registry:
     nrel_atb_utility_pv_2024: https://atb.nrel.gov/electricity/2024/utility-scale_pv
     nrel_battery_cost_2025_update: https://doi.org/10.2172/2583471
     bloom_hydrogen_sofc_2024: https://investor.bloomenergy.com/press-releases/press-release-details/2024/Bloom-Energy-Announces-Hydrogen-Solid-Oxide-Fuel-Cell-with-60-Electrical-Efficiency-and-90-High-Temperature-Combined-Heat-and-Power-Efficiency/default.aspx
+    coreweave_s1a1_2025: https://www.sec.gov/Archives/edgar/data/2042022/000121390025066839/ea0249945-s1a1_white.htm
+    coreweave_q4_fy2025_results: https://investors.coreweave.com/news/news-details/2026/CoreWeave-Reports-Strong-Fourth-Quarter-and-Fiscal-Year-2025-Results
+    core_scientific_coreweave_update_2025_10_30: https://investors.corescientific.com/sec-filings/all-sec-filings/content/0001140361-25-039864/ef20057996_ex99-1.htm
+    nebius_q2_2025_results: https://www.sec.gov/Archives/edgar/data/1513845/000110465925075028/tm2522866d1_ex99-1.htm
+    nebius_q3_2025_shareholder_letter: https://www.sec.gov/Archives/edgar/data/1513845/000110465925110831/tm2531034d1_ex99-2.htm
+    nvidia_enterprise_support: https://www.nvidia.com/en-us/support/enterprise/
+    nvidia_warranty: https://www.nvidia.com/en-us/support/warranty/
+    google_dram_errors: https://research.google/pubs/dram-errors-in-the-wild-a-large-scale-field-study/
 
 scale_cases_mw:
   edge_10:
@@ -147,16 +155,71 @@ financing_and_tax:
       - "Eligibility varies by technology/fuel/compliance pathway; do not hard-code as guaranteed."
 
 revenue_and_sla:
+  selected_revenue_profile:
+    value: ai_infra_cloud_gpu_capacity
+    notes:
+      - "Selects which gross_compute_revenue profile is used by the simulator."
+  gross_compute_revenue_profiles:
+    colocation_power_hosting:
+      unit: usd_per_mw_month
+      value: { min: 90000, mean: 120000, max: 170000 }
+      notes:
+        - "Anchored to Core Scientific disclosed annual run-rate revenue and contracted MW."
+      sources: [core_scientific_coreweave_update_2025_10_30]
+    ai_infra_cloud_gpu_capacity:
+      unit: usd_per_mw_month
+      value: { min: 350000, mean: 500000, max: 750000 }
+      notes:
+        - "Anchored to CoreWeave FY2025 revenue normalized by disclosed active power footprint."
+      sources: [coreweave_q4_fy2025_results]
+    integrated_ai_platform:
+      unit: usd_per_mw_month
+      value: { min: 600000, mean: 950000, max: 1600000 }
+      notes:
+        - "Upper-value profile for downstream value capture; company disclosures provide strong revenue growth and contract evidence, but not fully normalized same-period active MW."
+      sources: [coreweave_q4_fy2025_results, nebius_q2_2025_results, nebius_q3_2025_shareholder_letter]
   gross_compute_revenue:
     unit: usd_per_mw_month
-    value: { min: 500000, mean: 850000, max: 1200000 }
-    sources: [planning_doc]
+    value: { min: 350000, mean: 500000, max: 750000 }
+    notes:
+      - "Default fallback band. The simulator uses selected_revenue_profile when available."
+    sources: [coreweave_q4_fy2025_results]
   sla_penalty_per_unserved_mwh:
     unit: usd_per_MWh
     value: { min: 5000, mean: 20000, max: 100000 }
   outage_cost_multiplier_vs_energy_cost:
     unit: ratio
     value: { min: 20, mean: 80, max: 400 }
+
+compute_economics:
+  compute_capex_usd_per_mw_it:
+    unit: usd_per_MW_IT
+    value: { min: 15000000, mean: 28000000, max: 50000000 }
+    notes:
+      - "Planning range for AI accelerator clusters (GPU + host + high-speed fabric + immediate deployment overhead)."
+  compute_asset_useful_life_years:
+    unit: years
+    value: { min: 3, mean: 4, max: 5 }
+    sources: [coreweave_s1a1_2025]
+  compute_refresh_fraction_at_useful_life:
+    unit: fraction_of_initial_compute_capex
+    value: { min: 0.40, mean: 0.60, max: 0.85 }
+  annual_compute_software_ops_fraction:
+    unit: fraction_per_year
+    value: { min: 0.03, mean: 0.08, max: 0.15 }
+  annual_compute_hw_service_fraction:
+    unit: fraction_per_year
+    value: { min: 0.02, mean: 0.05, max: 0.10 }
+    sources: [nvidia_enterprise_support, nvidia_warranty]
+  annual_compute_rma_repair_fraction:
+    unit: fraction_per_year
+    value: { min: 0.01, mean: 0.03, max: 0.07 }
+    notes:
+      - "RMA/repair reserve informed by warranty/RMA pathways and large-fleet field-failure evidence."
+    sources: [nvidia_warranty, google_dram_errors]
+  compute_spares_pool_fraction:
+    unit: fraction_of_compute_fleet
+    value: { min: 0.02, mean: 0.06, max: 0.12 }
 
 technology_parameters:
   sofc:

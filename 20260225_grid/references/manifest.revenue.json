@@ -1,0 +1,63 @@
+{
+  "generated_at_utc": "2026-03-02T18:20:09.064962+00:00",
+  "total": 5,
+  "ok": 5,
+  "failed": 0,
+  "items": [
+    {
+      "category": "revenue",
+      "key": "core_scientific_coreweave_update_2025_10_30",
+      "url": "https://investors.corescientific.com/sec-filings/all-sec-filings/content/0001140361-25-039864/ef20057996_ex99-1.htm",
+      "status": "ok",
+      "http_status": 200,
+      "source_type": "html",
+      "raw_path": "references/raw/revenue/core_scientific_coreweave_update_2025_10_30.html",
+      "md_path": "references/md/revenue/revenue__core_scientific_coreweave_update_2025_10_30.md",
+      "error": null
+    },
+    {
+      "category": "revenue",
+      "key": "coreweave_q4_fy2025_results",
+      "url": "https://investors.coreweave.com/news/news-details/2026/CoreWeave-Reports-Strong-Fourth-Quarter-and-Fiscal-Year-2025-Results",
+      "status": "ok",
+      "http_status": 200,
+      "source_type": "html",
+      "raw_path": "references/raw/revenue/coreweave_q4_fy2025_results.html",
+      "md_path": "references/md/revenue/revenue__coreweave_q4_fy2025_results.md",
+      "error": null
+    },
+    {
+      "category": "revenue",
+      "key": "nebius_q2_2025_results_ex99_1",
+      "url": "https://www.sec.gov/Archives/edgar/data/1513845/000110465925075028/tm2522866d1_ex99-1.htm",
+      "status": "ok",
+      "http_status": 200,
+      "source_type": "html",
+      "raw_path": "references/raw/revenue/nebius_q2_2025_results_ex99_1.html",
+      "md_path": "references/md/revenue/revenue__nebius_q2_2025_results_ex99_1.md",
+      "error": null
+    },
+    {
+      "category": "revenue",
+      "key": "nebius_q3_2025_shareholder_letter_ex99_2",
+      "url": "https://www.sec.gov/Archives/edgar/data/1513845/000110465925110831/tm2531034d1_ex99-2.htm",
+      "status": "ok",
+      "http_status": 200,
+      "source_type": "html",
+      "raw_path": "references/raw/revenue/nebius_q3_2025_shareholder_letter_ex99_2.html",
+      "md_path": "references/md/revenue/revenue__nebius_q3_2025_shareholder_letter_ex99_2.md",
+      "error": null
+    },
+    {
+      "category": "revenue",
+      "key": "nebius_q4_2025_results",
+      "url": "https://www.sec.gov/Archives/edgar/data/1513845/000110465925110831/tm2531034d1_ex99-1.htm",
+      "status": "ok",
+      "http_status": 200,
+      "source_type": "html",
+      "raw_path": "references/raw/revenue/nebius_q4_2025_results.html",
+      "md_path": "references/md/revenue/revenue__nebius_q4_2025_results.md",
+      "error": null
+    }
+  ]
+}

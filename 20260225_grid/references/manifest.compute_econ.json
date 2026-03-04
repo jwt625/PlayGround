@@ -1,0 +1,85 @@
+{
+  "generated_at_utc": "2026-03-02T05:06:23.106068+00:00",
+  "total": 7,
+  "ok": 7,
+  "failed": 0,
+  "items": [
+    {
+      "category": "compute",
+      "key": "coreweave_s1a1_2025",
+      "url": "https://www.sec.gov/Archives/edgar/data/2042022/000121390025066839/ea0249945-s1a1_white.htm",
+      "status": "ok",
+      "http_status": 200,
+      "source_type": "html",
+      "raw_path": "references/raw/subtech/compute/coreweave_s1a1_2025.html",
+      "md_path": "references/md/subtech/compute__coreweave_s1a1_2025.md",
+      "error": null
+    },
+    {
+      "category": "compute",
+      "key": "coreweave_sec_comment_2025",
+      "url": "https://www.sec.gov/Archives/edgar/data/1769628/000095012325000509/filename1.htm",
+      "status": "ok",
+      "http_status": 200,
+      "source_type": "html",
+      "raw_path": "references/raw/subtech/compute/coreweave_sec_comment_2025.html",
+      "md_path": "references/md/subtech/compute__coreweave_sec_comment_2025.md",
+      "error": null
+    },
+    {
+      "category": "compute",
+      "key": "corvex_s1_2025",
+      "url": "https://www.sec.gov/Archives/edgar/data/1734750/000121390025124017/ea0269747-s1_movano.htm",
+      "status": "ok",
+      "http_status": 200,
+      "source_type": "html",
+      "raw_path": "references/raw/subtech/compute/corvex_s1_2025.html",
+      "md_path": "references/md/subtech/compute__corvex_s1_2025.md",
+      "error": null
+    },
+    {
+      "category": "compute",
+      "key": "fail_slow_scale_arxiv",
+      "url": "https://arxiv.org/abs/2309.07242",
+      "status": "ok",
+      "http_status": 200,
+      "source_type": "html",
+      "raw_path": "references/raw/subtech/compute/fail_slow_scale_arxiv.html",
+      "md_path": "references/md/subtech/compute__fail_slow_scale_arxiv.md",
+      "error": null
+    },
+    {
+      "category": "compute",
+      "key": "google_dram_errors",
+      "url": "https://research.google/pubs/dram-errors-in-the-wild-a-large-scale-field-study/",
+      "status": "ok",
+      "http_status": 200,
+      "source_type": "html",
+      "raw_path": "references/raw/subtech/compute/google_dram_errors.html",
+      "md_path": "references/md/subtech/compute__google_dram_errors.md",
+      "error": null
+    },
+    {
+      "category": "compute",
+      "key": "nvidia_enterprise_support",
+      "url": "https://www.nvidia.com/en-us/support/enterprise/",
+      "status": "ok",
+      "http_status": 200,
+      "source_type": "html",
+      "raw_path": "references/raw/subtech/compute/nvidia_enterprise_support.html",
+      "md_path": "references/md/subtech/compute__nvidia_enterprise_support.md",
+      "error": null
+    },
+    {
+      "category": "compute",
+      "key": "nvidia_warranty",
+      "url": "https://www.nvidia.com/en-us/support/warranty/",
+      "status": "ok",
+      "http_status": 200,
+      "source_type": "html",
+      "raw_path": "references/raw/subtech/compute/nvidia_warranty.html",
+      "md_path": "references/md/subtech/compute__nvidia_warranty.md",
+      "error": null
+    }
+  ]
+}
