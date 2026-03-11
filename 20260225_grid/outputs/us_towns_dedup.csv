@@ -1,0 +1,563 @@
+geonameid,name,asciiname,state,county,lat,lon,population,feature_code,timezone
+5128581,New York City,New York City,NY,,40.71427,-74.00597,8804190,PPL,America/New_York
+5368361,Los Angeles,Los Angeles,CA,037,34.05223,-118.24368,3820914,PPLA2,America/Los_Angeles
+4887398,Chicago,Chicago,IL,031,41.85003,-87.65005,2664452,PPLA2,America/Chicago
+4699066,Houston,Houston,TX,201,29.76328,-95.36327,2314157,PPLA2,America/Chicago
+5308655,Phoenix,Phoenix,AZ,013,33.44838,-112.07404,1650070,PPLA,America/Phoenix
+4560349,Philadelphia,Philadelphia,PA,101,39.95238,-75.16362,1573916,PPLA2,America/New_York
+4726206,San Antonio,San Antonio,TX,029,29.42412,-98.49363,1526656,PPLA2,America/Chicago
+5391811,San Diego,San Diego,CA,073,32.71571,-117.16472,1404452,PPLA2,America/Los_Angeles
+4684888,Dallas,Dallas,TX,113,32.78306,-96.80667,1326087,PPLA2,America/Chicago
+4160021,Jacksonville,Jacksonville,FL,031,30.33218,-81.65565,1009833,PPLA2,America/New_York
+5392171,San Jose,San Jose,CA,085,37.33939,-121.89496,997368,PPLA2,America/Los_Angeles
+4671654,Austin,Austin,TX,453,30.26715,-97.74306,974447,PPLA,America/Chicago
+4509177,Columbus,Columbus,OH,049,39.96118,-82.99879,913175,PPLA,America/New_York
+4460243,Charlotte,Charlotte,NC,119,35.22709,-80.84313,911311,PPLA2,America/New_York
+4259418,Indianapolis,Indianapolis,IN,097,39.76838,-86.15804,887642,PPLA,America/Indiana/Indianapolis
+5809844,Seattle,Seattle,WA,033,47.60621,-122.33207,780995,PPLA2,America/Los_Angeles
+5419384,Denver,Denver,CO,031,39.73915,-104.9847,729019,PPLA,America/Denver
+4140963,Washington,Washington,DC,001,38.89511,-77.03637,689545,PPLC,America/New_York
+4644585,Nashville,Nashville,TN,037,36.16589,-86.78444,689447,PPLA,America/Chicago
+4544349,Oklahoma City,Oklahoma City,OK,109,35.46756,-97.51643,681054,PPLA,America/Chicago
+5520993,El Paso,El Paso,TX,141,31.75872,-106.48693,678815,PPLA2,America/Denver
+4930956,Boston,Boston,MA,025,42.35843,-71.05977,653833,PPLA,America/New_York
+5746545,Portland,Portland,OR,051,45.52345,-122.67621,652503,PPLA2,America/Los_Angeles
+4990729,Detroit,Detroit,MI,163,42.33143,-83.04575,645705,PPLA2,America/Detroit
+5506956,Las Vegas,Las Vegas,NV,003,36.17497,-115.13722,641903,PPLA2,America/Los_Angeles
+4645421,New South Memphis,New South Memphis,TN,157,35.08676,-90.05676,641608,PPLX,America/Chicago
+4299276,Louisville,Louisville,KY,111,38.25424,-85.75941,624444,PPLA2,America/Kentucky/Louisville
+5454711,Albuquerque,Albuquerque,NM,001,35.08449,-106.65114,564559,PPLA2,America/Denver
+5263045,Milwaukee,Milwaukee,WI,079,43.0389,-87.90647,563531,PPLA2,America/Chicago
+5318313,Tucson,Tucson,AZ,019,32.22174,-110.92648,542629,PPLA2,America/Phoenix
+5350937,Fresno,Fresno,CA,019,36.74773,-119.77237,542107,PPLA2,America/Los_Angeles
+5389489,Sacramento,Sacramento,CA,067,38.58157,-121.4944,524943,PPLA,America/Los_Angeles
+4180439,Atlanta,Atlanta,GA,121,33.749,-84.38798,510823,PPLA,America/New_York
+4164138,Miami,Miami,FL,086,25.77427,-80.19366,487014,PPLA2,America/New_York
+5074472,Omaha,Omaha,NE,055,41.25626,-95.94043,486051,PPLA2,America/Chicago
+4487042,Raleigh,Raleigh,NC,183,35.7721,-78.63861,482295,PPLA,America/New_York
+4393217,Kansas City,Kansas City,MO,095,39.09973,-94.57857,475378,PPL,America/Chicago
+5417598,Colorado Springs,Colorado Springs,CO,041,38.83388,-104.82136,456568,PPLA2,America/Denver
+4791259,Virginia Beach,Virginia Beach,VA,810,36.85293,-75.97799,454808,PPLA2,America/New_York
+4174757,Tampa,Tampa,FL,057,27.94752,-82.45843,414547,PPLA2,America/New_York
+4553433,Tulsa,Tulsa,OK,143,36.15398,-95.99277,413066,PPLA2,America/Chicago
+5037649,Minneapolis,Minneapolis,MN,053,44.97997,-93.26384,410939,PPLA2,America/Chicago
+4281730,Wichita,Wichita,KS,173,37.69224,-97.33754,396119,PPLA2,America/Chicago
+5325738,Bakersfield,Bakersfield,CA,029,35.37329,-119.01871,373640,PPLA2,America/Los_Angeles
+5150529,Cleveland,Cleveland,OH,035,41.4995,-81.69541,365379,PPLA2,America/New_York
+4335045,New Orleans,New Orleans,LA,071,29.95465,-90.07507,362701,PPLA2,America/Chicago
+4167147,Orlando,Orlando,FL,095,28.53834,-81.37924,334854,PPLA2,America/New_York
+4297983,Lexington,Lexington,KY,067,37.98869,-84.47772,320347,PPLA2,America/New_York
+4683416,Corpus Christi,Corpus Christi,TX,355,27.80058,-97.39638,316239,PPLA2,America/Chicago
+4508722,Cincinnati,Cincinnati,OH,061,39.12711,-84.51439,311097,PPLA2,America/New_York
+5206379,Pittsburgh,Pittsburgh,PA,003,40.44062,-79.99589,304391,PPLA2,America/New_York
+4300488,Meads,Meads,KY,019,38.41258,-82.70905,288649,PPL,America/New_York
+4469146,Greensboro,Greensboro,NC,081,36.07264,-79.79198,285342,PPL,America/New_York
+5261457,Madison,Madison,WI,025,43.07305,-89.40123,280305,PPLA,America/Chicago
+4407066,St. Louis,St. Louis,MO,510,38.62727,-90.19789,279695,PPLA2,America/Chicago
+5511077,Reno,Reno,NV,031,39.52963,-119.8138,264165,PPLA2,America/Los_Angeles
+4920423,Fort Wayne,Fort Wayne,IN,003,41.1306,-85.12886,260326,PPLA2,America/Indiana/Indianapolis
+5110629,Buffalo,Buffalo,NY,029,42.88645,-78.87837,258071,PPLA2,America/New_York
+4705349,Laredo,Laredo,TX,479,27.50641,-99.50754,256153,PPLA2,America/Chicago
+5525577,Lubbock,Lubbock,TX,303,33.57786,-101.85517,249042,PPLA2,America/Chicago
+7289169,Tri-Cities,Tri-Cities,WA,021,46.2454,-119.19617,244036,PPLS,America/Los_Angeles
+5586437,Boise,Boise,ID,001,43.6135,-116.20345,235684,PPLA,America/Boise
+5811696,Spokane,Spokane,WA,063,47.65966,-117.42908,229447,PPLA2,America/Los_Angeles
+4315588,Baton Rouge,Baton Rouge,LA,033,30.44332,-91.18747,227470,PPLA,America/Chicago
+4781708,Richmond,Richmond,VA,760,37.55376,-77.46026,226610,PPLA,America/New_York
+5780993,Salt Lake City,Salt Lake City,UT,035,40.76078,-111.89105,215548,PPLA,America/Denver
+4068590,Huntsville,Huntsville,AL,089,34.7304,-86.58594,215006,PPLA2,America/Chicago
+4853828,Des Moines,Des Moines,IA,153,41.60054,-93.60911,214133,PPLA,America/Chicago
+5134086,Rochester,Rochester,NY,055,43.15478,-77.61556,209802,PPLA2,America/New_York
+4188985,Columbus,Columbus,GA,215,32.46098,-84.98771,206922,PPLA2,America/New_York
+4119403,Little Rock,Little Rock,AR,119,34.74648,-92.28959,202591,PPLA,America/Chicago
+4174715,Tallahassee,Tallahassee,FL,073,30.43826,-84.28073,201731,PPLA,America/New_York
+5516233,Amarillo,Amarillo,TX,375,35.222,-101.8313,198645,PPLA2,America/Chicago
+4049979,Birmingham,Birmingham,AL,073,33.52066,-86.80249,196357,PPLA2,America/Chicago
+4076784,Montgomery,Montgomery,AL,101,32.36681,-86.29997,195287,PPLA,America/Chicago
+4994358,Grand Rapids,Grand Rapids,MI,081,42.96336,-85.66809,195097,PPLA2,America/Detroit
+4634946,Knoxville,Knoxville,TN,093,35.96064,-83.92074,190740,PPLA2,America/New_York
+4341513,Shreveport,Shreveport,LA,017,32.52515,-93.75018,187593,PPLA2,America/Chicago
+4676740,Brownsville,Brownsville,TX,061,25.90175,-97.49748,186738,PPLA2,America/Chicago
+4076598,Mobile,Mobile,AL,097,30.69436,-88.04305,183289,PPLA2,America/Chicago
+4612862,Chattanooga,Chattanooga,TN,065,35.04563,-85.30968,181099,PPLA2,America/New_York
+5393287,Santa Rosa,Santa Rosa,CA,097,38.44047,-122.71443,178127,PPLA2,America/Los_Angeles
+5725846,Eugene,Eugene,OR,039,44.05207,-123.08675,176654,PPLA2,America/Los_Angeles
+4149962,Cape Coral,Cape Coral,FL,071,26.56285,-81.94953,175229,PPL,America/New_York
+5231851,Sioux Falls,Sioux Falls,SD,099,43.54369,-96.72796,171544,PPLA2,America/Chicago
+4409896,Springfield,Springfield,MO,077,37.21533,-93.29824,170188,PPLA2,America/Chicago
+4169171,Port Saint Lucie,Port Saint Lucie,FL,111,27.29393,-80.35033,164603,PPL,America/New_York
+4951788,Springfield,Springfield,MA,013,42.10148,-72.58981,154341,PPL,America/New_York
+4431410,Jackson,Jackson,MS,049,32.29876,-90.18481,153701,PPLA,America/Chicago
+4221552,Savannah,Savannah,GA,051,32.08354,-81.09983,147780,PPLA2,America/New_York
+5140405,Syracuse,Syracuse,NY,067,43.04812,-76.14742,144142,PPLA2,America/New_York
+4575352,Columbia,Columbia,SC,079,34.00071,-81.03481,142416,PPLA,America/New_York
+4574324,Charleston,Charleston,SC,019,32.77632,-79.93275,132609,PPLA2,America/New_York
+5526337,Midland,Midland,TX,329,31.99735,-102.07791,132524,PPLA2,America/Chicago
+4739526,Waco,Waco,TX,309,31.54933,-97.14667,132356,PPLA2,America/Chicago
+4850751,Cedar Rapids,Cedar Rapids,IA,113,42.00833,-91.64407,130405,PPLA2,America/Chicago
+4381982,Columbia,Columbia,MO,019,38.95171,-92.33407,129330,PPLA2,America/Chicago
+4280539,Topeka,Topeka,KS,177,39.04833,-95.67804,125963,PPLA,America/Chicago
+4669635,Abilene,Abilene,TX,441,32.44874,-99.73314,125182,PPLA2,America/Chicago
+5406222,Victorville,Victorville,CA,071,34.53611,-117.29116,122225,PPL,America/Los_Angeles
+5336269,Chico,Chico,CA,007,39.72849,-121.83748,121345,PPL,America/Los_Angeles
+4257227,Evansville,Evansville,IN,163,37.97476,-87.55585,119943,PPLA2,America/Chicago
+5059163,Fargo,Fargo,ND,017,46.87719,-96.7898,118523,PPLA2,America/Chicago
+5640350,Billings,Billings,MT,111,45.78329,-108.50069,117116,PPLA2,America/Denver
+4499379,Wilmington,Wilmington,NC,129,34.23556,-77.94604,115933,PPLA2,America/New_York
+4672989,Beaumont,Beaumont,TX,245,30.08605,-94.10185,115282,PPLA2,America/Chicago
+4905687,Peoria,Peoria,IL,143,40.69365,-89.58899,115070,PPLA2,America/Chicago
+4998830,Lansing,Lansing,MI,065,42.73253,-84.55553,112644,PPLA,America/Detroit
+5043473,Rochester,Rochester,MN,109,44.02163,-92.4699,112225,PPLA2,America/Chicago
+4682464,College Station,College Station,TX,041,30.62798,-96.33441,107889,PPL,America/Chicago
+5254962,Green Bay,Green Bay,WI,009,44.51916,-88.01983,105207,PPLA2,America/Chicago
+5393180,Santa Maria,Santa Maria,CA,083,34.95303,-120.43572,105093,PPL,America/Los_Angeles
+4741752,Wichita Falls,Wichita Falls,TX,485,33.91371,-98.49339,104710,PPLA2,America/Chicago
+4738214,Tyler,Tyler,TX,423,32.35126,-95.30106,103700,PPLA2,America/Chicago
+4853423,Davenport,Davenport,IA,163,41.52364,-90.57764,102582,PPLA2,America/Chicago
+4926563,South Bend,South Bend,IN,141,41.68338,-86.25001,101516,PPLA2,America/Indiana/Indianapolis
+5106834,Albany,Albany,NY,001,42.65258,-73.75623,101228,PPLA,America/New_York
+4782167,Roanoke,Roanoke,VA,770,37.27097,-79.94143,100011,PPLA2,America/New_York
+5530022,San Angelo,San Angelo,TX,451,31.46377,-100.43704,99893,PPLA2,America/Chicago
+5188843,Erie,Erie,PA,049,42.12922,-80.08506,99475,PPLA2,America/New_York
+5322053,Yuma,Yuma,AZ,027,32.72532,-114.6244,95548,PPLA2,America/Phoenix
+4453066,Asheville,Asheville,NC,021,35.60095,-82.55402,95056,PPLA2,America/New_York
+5816605,Yakima,Yakima,WA,077,46.60207,-120.5059,93701,PPLA2,America/Los_Angeles
+5570160,Redding,Redding,CA,089,40.58654,-122.39168,91582,PPLA2,America/Los_Angeles
+4207400,Macon,Macon,GA,021,32.84069,-83.6324,91351,PPLA2,America/New_York
+4469160,Greenville,Greenville,NC,147,35.61266,-77.36635,90597,PPLA2,America/New_York
+4111410,Fort Smith,Fort Smith,AR,131,35.38592,-94.39855,88194,PPL,America/Chicago
+5359446,Indio,Indio,CA,065,33.7207,-116.21677,87533,PPL,America/Los_Angeles
+5713587,Bend,Bend,OR,017,44.05817,-121.31531,87014,PPLA2,America/Los_Angeles
+5024719,Duluth,Duluth,MN,137,46.78327,-92.10658,86110,PPLA2,America/Chicago
+4887158,Champaign,Champaign,IL,019,40.11642,-88.24338,86096,PPL,America/Chicago
+5786899,Bellingham,Bellingham,WA,073,48.75955,-122.48822,85146,PPLA2,America/Los_Angeles
+4876523,Sioux City,Sioux City,IA,193,42.49999,-96.40031,82821,PPLA2,America/Chicago
+5740099,Medford,Medford,OR,029,42.32652,-122.87559,79805,PPLA2,America/Los_Angeles
+5211303,Scranton,Scranton,PA,069,41.40916,-75.6649,77118,PPLA2,America/New_York
+5688025,Bismarck,Bismarck,ND,015,46.80833,-100.78374,75092,PPLA,America/Chicago
+4179320,Albany,Albany,GA,095,31.57851,-84.15574,74843,PPLA2,America/New_York
+4116834,Jonesboro,Jonesboro,AR,031,35.8423,-90.70428,73907,PPL,America/Chicago
+5768233,Rapid City,Rapid City,SD,103,44.08054,-103.23101,73569,PPLA2,America/Denver
+5546220,Saint George,Saint George,UT,053,37.10415,-113.58412,72897,PPL,America/Denver
+4428667,Gulfport,Gulfport,MS,047,30.36742,-89.09282,71856,PPL,America/Chicago
+5666639,Missoula,Missoula,MT,063,46.87215,-113.994,71022,PPLA2,America/Denver
+5294810,Flagstaff,Flagstaff,AZ,005,35.19807,-111.65127,70320,PPLA2,America/Phoenix
+4059102,Dothan,Dothan,AL,069,31.22323,-85.39049,68567,PPLA2,America/Chicago
+5251436,Eau Claire,Eau Claire,WI,035,44.81135,-91.49849,67778,PPLA2,America/Chicago
+4739157,Victoria,Victoria,TX,469,28.80527,-97.0036,67574,PPLA2,America/Chicago
+4632595,Jackson,Jackson,TN,113,35.61452,-88.81395,66975,PPLA2,America/Chicago
+4975802,Portland,Portland,ME,005,43.65737,-70.2589,66881,PPLA2,America/New_York
+5821086,Cheyenne,Cheyenne,WY,021,41.13998,-104.82025,65132,PPLA,America/Denver
+4128894,Rogers,Rogers,AR,007,36.33202,-94.11854,63159,PPL,America/Chicago
+4265737,Terre Haute,Terre Haute,IN,167,39.4667,-87.41391,60825,PPLA2,America/Indiana/Indianapolis
+5423573,Grand Junction,Grand Junction,CO,077,39.06387,-108.55065,60358,PPLA2,America/Denver
+5820705,Casper,Casper,WY,025,42.86663,-106.31308,60285,PPLA2,America/Denver
+5655240,Great Falls,Great Falls,MT,013,47.50024,-111.30081,59638,PPLA2,America/Denver
+5596475,Idaho Falls,Idaho Falls,ID,019,43.46658,-112.03414,59184,PPLA2,America/Boise
+4166673,Ocala,Ocala,FL,083,29.1872,-82.14009,58218,PPLA2,America/New_York
+5059429,Grand Forks,Grand Forks,ND,035,47.92526,-97.03285,57011,PPLA2,America/Chicago
+4228147,Valdosta,Valdosta,GA,185,30.83334,-83.28032,55724,PPLA2,America/New_York
+5301388,Lake Havasu City,Lake Havasu City,AZ,015,34.4839,-114.32245,53553,PPL,America/Phoenix
+4634662,Kingsport,Kingsport,TN,163,36.54843,-82.56182,53014,PPL,America/New_York
+4763231,Harrisonburg,Harrisonburg,VA,660,38.44957,-78.86892,52538,PPLA2,America/New_York
+5258957,La Crosse,La Crosse,WI,063,43.80136,-91.23958,52306,PPLA2,America/Chicago
+4535961,Enid,Enid,OK,047,36.39559,-97.87839,51776,PPLA2,America/Chicago
+5069297,Grand Island,Grand Island,NE,079,40.92501,-98.34201,51440,PPLA2,America/Chicago
+5777544,Logan,Logan,UT,005,41.73549,-111.83439,50371,PPLA2,America/Denver
+5192726,Harrisburg,Harrisburg,PA,043,40.2737,-76.88442,50183,PPLA,America/New_York
+4333669,Monroe,Monroe,LA,073,32.50931,-92.1193,49598,PPLA2,America/Chicago
+5690532,Minot,Minot,ND,101,48.23251,-101.29627,49450,PPLA2,America/Chicago
+5488441,Roswell,Roswell,NM,005,33.39437,-104.52491,48544,PPLA2,America/Denver
+4314550,Alexandria,Alexandria,LA,079,31.31129,-92.44514,47889,PPLA2,America/Chicago
+4278890,Salina,Salina,KS,169,38.84028,-97.61142,47813,PPLA2,America/Chicago
+5610810,Twin Falls,Twin Falls,ID,083,42.56297,-114.46087,47468,PPLA2,America/Boise
+4429295,Hattiesburg,Hattiesburg,MS,035,31.32712,-89.29034,46805,PPLA2,America/Chicago
+5178195,Altoona,Altoona,PA,013,40.51868,-78.39474,45344,PPL,America/New_York
+5084868,Concord,Concord,NH,013,43.20814,-71.53757,43976,PPLA,America/New_York
+4180531,Augusta,Augusta,GA,245,33.47097,-81.97484,43459,PPLA2,America/New_York
+5641727,Bozeman,Bozeman,MT,031,45.67965,-111.03856,43405,PPLA2,America/Denver
+5467328,Farmington,Farmington,NM,045,36.72806,-108.21869,42871,PPL,America/Denver
+5234372,Burlington,Burlington,VT,007,44.47588,-73.21207,42452,PPLA2,America/New_York
+5001929,Midland,Midland,MI,111,43.61558,-84.24721,42200,PPLA2,America/Detroit
+5309842,Prescott,Prescott,AZ,025,34.54002,-112.4685,41899,PPLA2,America/Phoenix
+5153924,Findlay,Findlay,OH,063,41.04422,-83.64993,41149,PPLA2,America/New_York
+5036420,Mankato,Mankato,MN,013,44.15906,-94.00915,41044,PPLA2,America/Chicago
+4247703,Quincy,Quincy,IL,001,39.9356,-91.40987,40780,PPLA2,America/Chicago
+4357141,Hagerstown,Hagerstown,MD,043,39.64176,-77.71999,40432,PPLA2,America/New_York
+4435764,Meridian,Meridian,MS,075,32.36431,-88.70366,39661,PPLA2,America/Chicago
+5462393,Clovis,Clovis,NM,009,34.4048,-103.20523,39480,PPLA2,America/Denver
+4379966,Cape Girardeau,Cape Girardeau,MO,031,37.30588,-89.51815,39462,PPL,America/Chicago
+5278120,Wausau,Wausau,WI,073,44.95914,-89.63012,39094,PPLA2,America/Chicago
+5471578,Hobbs,Hobbs,NM,025,32.70261,-103.13604,38416,PPL,America/Denver
+4167694,Panama City,Panama City,FL,005,30.15946,-85.65983,38286,PPLA2,America/Chicago
+4578737,Florence,Florence,SC,041,34.19543,-79.76256,38228,PPLA2,America/New_York
+4736096,Texarkana,Texarkana,TX,037,33.42513,-94.04769,37280,PPL,America/Chicago
+4708308,Lufkin,Lufkin,TX,005,31.33824,-94.7291,36333,PPLA2,America/Chicago
+5520076,Del Rio,Del Rio,TX,465,29.36273,-100.89676,36153,PPLA2,America/Chicago
+4448903,Tupelo,Tupelo,MS,081,34.25807,-88.70464,35680,PPLA2,America/Chicago
+5642934,Butte,Butte,MT,093,46.00382,-112.53474,34190,PPLA2,America/Denver
+4368711,Salisbury,Salisbury,MD,045,38.36067,-75.59937,32899,PPLA2,America/New_York
+5807540,Pullman,Pullman,WA,075,46.73127,-117.17962,32816,PPL,America/Los_Angeles
+5826027,Gillette,Gillette,WY,005,44.29109,-105.50222,32649,PPLA2,America/Denver
+4957280,Bangor,Bangor,ME,019,44.79884,-68.77265,32391,PPLA2,America/New_York
+4295251,Hopkinsville,Hopkinsville,KY,047,36.86561,-87.49117,32205,PPLA2,America/Chicago
+4428475,Greenville,Greenville,MS,151,33.40898,-91.05978,32156,PPLA2,America/Chicago
+4615145,Cookeville,Cookeville,TN,141,36.16284,-85.50164,32113,PPLA2,America/Chicago
+4165637,Navarre,Navarre,FL,113,30.40159,-86.86357,31378,PPL,America/Chicago
+4817641,Parkersburg,Parkersburg,WV,107,39.26674,-81.56151,30991,PPLA2,America/New_York
+8436572,South Kingstown,South Kingstown,RI,009,41.44718,-71.52494,30826,PPL,America/New_York
+5454627,Alamogordo,Alamogordo,NM,035,32.89953,-105.96027,30753,PPLA2,America/Denver
+5132143,Poughkeepsie,Poughkeepsie,NY,027,41.70037,-73.92097,30371,PPLA2,America/New_York
+5219585,Williamsport,Williamsport,PA,081,41.24119,-77.00108,29201,PPLA2,America/New_York
+5460459,Carlsbad,Carlsbad,NM,015,32.42067,-104.22884,28957,PPLA2,America/Denver
+5387494,Ridgecrest,Ridgecrest,CA,029,35.62246,-117.6709,28780,PPL,America/Los_Angeles
+5225857,Aberdeen,Aberdeen,SD,013,45.4647,-98.48648,28102,PPLA2,America/Chicago
+5445298,Dodge City,Dodge City,KS,057,37.7528,-100.01708,27912,PPLA2,America/Chicago
+5138022,Shirley,Shirley,NY,103,40.80149,-72.8676,27854,PPL,America/New_York
+4866445,Mason City,Mason City,IA,033,43.15357,-93.20104,27366,PPLA2,America/Chicago
+4569298,Anderson,Anderson,SC,007,34.50344,-82.65013,27335,PPLA2,America/New_York
+5563397,Eureka,Eureka,CA,023,40.80207,-124.16367,27017,PPLA2,America/Los_Angeles
+5692947,Williston,Williston,ND,105,48.14697,-103.61797,26977,PPLA2,America/Chicago
+5143396,Watertown,Watertown,NY,045,43.97478,-75.91076,26780,PPLA2,America/New_York
+4160812,Key West,Key West,FL,087,24.55524,-81.78163,25755,PPLA2,America/New_York
+5174358,Troy,Troy,OH,109,40.0395,-84.20328,25659,PPLA2,America/New_York
+4529469,Ardmore,Ardmore,OK,019,34.17426,-97.14363,25176,PPLA2,America/Chicago
+4884453,Belvidere,Belvidere,IL,007,42.26391,-88.84427,25132,PPLA2,America/Chicago
+5397018,Soledad,Soledad,CA,053,36.42469,-121.32632,25003,PPL,America/Los_Angeles
+4717560,Paris,Paris,TX,277,33.66094,-95.55551,24782,PPLA2,America/Chicago
+4857486,Fort Dodge,Fort Dodge,IA,187,42.49747,-94.16802,24649,PPLA2,America/Chicago
+4870380,Ottumwa,Ottumwa,IA,179,41.02001,-92.4113,24624,PPLA2,America/Chicago
+5697939,North Platte,North Platte,NE,111,41.12389,-100.76542,24194,PPLA2,America/Chicago
+5836898,Rock Springs,Rock Springs,WY,037,41.58746,-109.2029,23962,PPL,America/Denver
+5688789,Dickinson,Dickinson,ND,089,46.87918,-102.78962,23765,PPLA2,America/Denver
+5468773,Gallup,Gallup,NM,031,35.52808,-108.74258,23240,PPLA2,America/Denver
+5378500,Oakdale,Oakdale,CA,099,37.76659,-120.84715,22259,PPL,America/Los_Angeles
+5232741,Watertown,Watertown,SD,029,44.89941,-97.11507,22073,PPLA2,America/Chicago
+5660340,Kalispell,Kalispell,MT,029,48.19579,-114.31291,22052,PPLA2,America/Denver
+5000947,Marquette,Marquette,MI,103,46.54354,-87.39542,21297,PPLA2,America/Detroit
+4272782,Hays,Hays,KS,051,38.87918,-99.32677,21092,PPLA2,America/Chicago
+5445820,Liberal,Liberal,KS,175,37.04308,-100.921,20746,PPLA2,America/Chicago
+4277241,Pittsburg,Pittsburg,KS,037,37.41088,-94.70496,20409,PPL,America/Chicago
+5703670,Elko,Elko,NV,007,40.83242,-115.76312,20279,PPLA2,America/Los_Angeles
+4734350,Stephenville,Stephenville,TX,143,32.2207,-98.20226,20120,PPLA2,America/Chicago
+4406282,Rolla,Rolla,MO,161,37.95143,-91.77127,20019,PPLA2,America/Chicago
+5052916,Willmar,Willmar,MN,067,45.12191,-95.04334,19638,PPLA2,America/Chicago
+5807212,Port Angeles,Port Angeles,WA,009,48.11815,-123.43074,19448,PPLA2,America/Los_Angeles
+4529292,Altus,Altus,OK,065,34.63813,-99.33398,19214,PPLA2,America/Chicago
+4241704,Jacksonville,Jacksonville,IL,137,39.73394,-90.22901,19103,PPLA2,America/Chicago
+4805404,Fairmont,Fairmont,WV,049,39.48508,-80.14258,18733,PPLA2,America/New_York
+4542367,McAlester,McAlester,OK,121,34.93343,-95.76971,18310,PPLA2,America/Chicago
+5838198,Sheridan,Sheridan,WY,033,44.79719,-106.95618,17873,PPLA2,America/Denver
+4922968,Logansport,Logansport,IN,017,40.75448,-86.35667,17793,PPLA2,America/Indiana/Indianapolis
+4829307,Bay City,Bay City,TX,321,28.98276,-95.9694,17598,PPLA2,America/Chicago
+5164390,New Philadelphia,New Philadelphia,OH,157,40.48979,-81.44567,17484,PPLA2,America/New_York
+4798308,Beckley,Beckley,WV,081,37.77817,-81.18816,17056,PPLA2,America/New_York
+5789683,Centralia,Centralia,WA,041,46.71621,-122.9543,16753,PPL,America/Los_Angeles
+5293083,Douglas,Douglas,AZ,003,31.34455,-109.54534,16592,PPL,America/Phoenix
+4738721,Uvalde,Uvalde,TX,463,29.20968,-99.78617,16476,PPLA2,America/Chicago
+5720495,Coos Bay,Coos Bay,OR,011,43.3665,-124.21789,16182,PPL,America/Los_Angeles
+5229794,Mitchell,Mitchell,SD,035,43.70943,-98.0298,15669,PPLA2,America/Chicago
+5059836,Jamestown,Jamestown,ND,093,46.91054,-98.70844,15422,PPLA2,America/Chicago
+5308305,Payson,Payson,AZ,007,34.23087,-111.32514,15345,PPL,America/Phoenix
+5756304,The Dalles,The Dalles,OR,065,45.59456,-121.17868,15340,PPLA2,America/Los_Angeles
+5572400,Susanville,Susanville,CA,035,40.41628,-120.65301,15247,PPLA2,America/Los_Angeles
+5012495,Traverse City,Traverse City,MI,055,44.76306,-85.62063,15218,PPLA2,America/Detroit
+4437982,Natchez,Natchez,MS,001,31.56017,-91.40329,15128,PPLA2,America/Chicago
+4245152,Mount Vernon,Mount Vernon,IL,081,38.31727,-88.90312,15087,PPLA2,America/Chicago
+5699404,Scottsbluff,Scottsbluff,NE,157,41.86663,-103.66717,14802,PPL,America/Denver
+5017822,Bemidji,Bemidji,MN,007,47.47356,-94.88028,14594,PPLA2,America/Chicago
+5464806,Deming,Deming,NM,029,32.2687,-107.75864,14522,PPLA2,America/Denver
+4722837,Rio Grande City,Rio Grande City,TX,427,26.37979,-98.8203,14404,PPLA2,America/Chicago
+4940190,Hyannis,Hyannis,MA,001,41.65289,-70.2828,14120,PPL,America/New_York
+5582392,Sterling,Sterling,CO,075,40.62554,-103.20771,14104,PPLA2,America/Denver
+5767918,Pierre,Pierre,SD,065,44.36832,-100.35097,14091,PPLA,America/Chicago
+5129852,Oneonta,Oneonta,NY,077,42.45286,-75.06377,13862,PPL,America/New_York
+5009004,Sault Ste. Marie,Sault Ste. Marie,MI,033,46.4953,-84.34532,13827,PPLA2,America/Detroit
+5334423,Carpinteria,Carpinteria,CA,083,34.39888,-119.51846,13727,PPL,America/Los_Angeles
+5475433,Las Vegas,Las Vegas,NM,047,35.59393,-105.2239,13386,PPLA2,America/Denver
+5019116,Brainerd,Brainerd,MN,035,46.35802,-94.20083,13371,PPLA2,America/Chicago
+4321310,Crowley,Crowley,LA,001,30.21409,-92.37458,13144,PPLA2,America/Chicago
+5735537,La Grande,La Grande,OR,061,45.32458,-118.08772,13074,PPLA2,America/Los_Angeles
+5210117,Saint Marys,Saint Marys,PA,047,41.42784,-78.56086,13070,PPL,America/New_York
+4556050,Woodward,Woodward,OK,153,36.43365,-99.39039,12993,PPLA2,America/Chicago
+4428539,Grenada,Grenada,MS,043,33.769,-89.80842,12900,PPLA2,America/Chicago
+5582371,Steamboat Springs,Steamboat Springs,CO,107,40.48498,-106.83172,12435,PPLA2,America/Denver
+5063646,Beatrice,Beatrice,NE,067,40.26806,-96.74697,12388,PPLA2,America/Chicago
+5710669,Agate Beach,Agate Beach,OR,041,44.67734,-124.06178,12351,PPL,America/Los_Angeles
+4123037,Mountain Home,Mountain Home,AR,005,36.33534,-92.38516,12330,PPLA2,America/Chicago
+4069553,Jacksonville,Jacksonville,AL,015,33.81382,-85.7613,12222,PPL,America/Chicago
+4554858,Weatherford,Weatherford,OK,039,35.52616,-98.70757,12126,PPL,America/Chicago
+5056172,Maryville,Maryville,MO,147,40.3461,-94.87247,11879,PPLA2,America/Chicago
+5530921,Snyder,Snyder,TX,415,32.71789,-100.91762,11768,PPLA2,America/Chicago
+4308922,Somerset,Somerset,KY,199,37.09202,-84.60411,11439,PPLA2,America/New_York
+4104182,Camden,Camden,AR,103,33.58456,-92.83433,11347,PPLA2,America/Chicago
+4877138,Spencer,Spencer,IA,041,43.14136,-95.14444,11212,PPLA2,America/Chicago
+5784154,Vernal,Vernal,UT,047,40.45552,-109.52875,11200,PPLA2,America/Denver
+5028537,Grand Rapids,Grand Rapids,MN,061,47.23717,-93.53021,11127,PPLA2,America/Chicago
+4692279,Fredericksburg,Fredericksburg,TX,171,30.2752,-98.87198,11094,PPLA2,America/Chicago
+5113760,Corning,Corning,NY,101,42.14285,-77.05469,10897,PPL,America/New_York
+5836665,Riverton,Riverton,WY,013,43.02496,-108.3801,10873,PPL,America/Denver
+5314245,Show Low,Show Low,AZ,017,34.25421,-110.02983,10860,PPL,America/Phoenix
+4228425,Vidalia,Vidalia,GA,279,32.21769,-82.41346,10679,PPL,America/New_York
+5126194,Massena,Massena,NY,089,44.9281,-74.89186,10629,PPL,America/New_York
+5828648,Jackson,Jackson,WY,039,43.47993,-110.76243,10523,PPL,America/Denver
+4172383,Sebring,Sebring,FL,055,27.49559,-81.44091,10497,PPLA2,America/New_York
+4984075,Alpena,Alpena,MI,007,45.06168,-83.43275,10175,PPLA2,America/Detroit
+4300105,Mayfield,Mayfield,KY,083,36.74172,-88.63672,10080,PPLA2,America/Chicago
+5423092,Glenwood Springs,Glenwood Springs,CO,045,39.55054,-107.32478,9906,PPLA2,America/Denver
+5656497,Havre,Havre,MT,041,48.55,-109.68409,9834,PPLA2,America/Denver
+5411479,Alamosa,Alamosa,CO,003,37.46945,-105.87002,9819,PPLA2,America/Denver
+5821593,Cody,Cody,WY,029,44.52634,-109.05653,9792,PPLA2,America/Denver
+5312476,Safford,Safford,AZ,009,32.83395,-109.70758,9683,PPLA2,America/Phoenix
+5528182,Pecos,Pecos,TX,389,31.42291,-103.49323,9517,PPLA2,America/Chicago
+4381104,Chillicothe,Chillicothe,MO,117,39.79529,-93.55244,9487,PPLA2,America/Chicago
+5083330,Berlin,Berlin,NH,007,44.46867,-71.18508,9367,PPL,America/New_York
+4480153,Morehead City,Morehead City,NC,031,34.72294,-76.72604,9347,PPL,America/New_York
+4975966,Presque Isle,Presque Isle,ME,003,46.68115,-68.01586,9171,PPL,America/New_York
+4089536,Sheffield,Sheffield,AL,033,34.76509,-87.69864,9108,PPL,America/Chicago
+4830099,Andalusia,Andalusia,AL,039,31.30808,-86.48243,9063,PPLA2,America/Chicago
+5836068,Rawlins,Rawlins,WY,007,41.79107,-107.23866,9040,PPLA2,America/Denver
+4381643,Clinton,Clinton,MO,083,38.36863,-93.77827,8899,PPLA2,America/Chicago
+5666176,Miles City,Miles City,MT,017,46.40834,-105.84056,8796,PPLA2,America/Denver
+5491999,Socorro,Socorro,NM,053,34.0584,-106.89142,8722,PPLA2,America/Denver
+4355756,Frostburg,Frostburg,MD,001,39.65814,-78.92836,8667,PPL,America/New_York
+5318279,Tuba City,Tuba City,AZ,005,36.13499,-111.23986,8611,PPL,America/Denver
+5545269,Price,Price,UT,007,39.59941,-110.81071,8378,PPLA2,America/Denver
+5519862,Dalhart,Dalhart,TX,111,36.05948,-102.51325,8370,PPLA2,America/Chicago
+4758495,Farmville,Farmville,VA,147,37.3021,-78.39194,8169,PPLA2,America/New_York
+5442007,Trinidad,Trinidad,CO,071,37.16946,-104.50054,8153,PPLA2,America/Denver
+5594956,Hailey,Hailey,ID,013,43.51963,-114.31532,8134,PPLA2,America/Boise
+5000306,Ludington,Ludington,MI,105,43.95528,-86.45258,8058,PPLA2,America/Detroit
+5793832,Ephrata,Ephrata,WA,025,47.31764,-119.55365,8047,PPLA2,America/Los_Angeles
+5244247,Ashland,Ashland,WI,003,46.59244,-90.8838,8040,PPLA2,America/Chicago
+4996572,Houghton,Houghton,MI,061,47.12187,-88.56901,7970,PPLA2,America/Detroit
+5370006,Mammoth Lakes,Mammoth Lakes,CA,051,37.64855,-118.97208,7946,PPL,America/Los_Angeles
+5710360,Winnemucca,Winnemucca,NV,013,40.97296,-117.73568,7887,PPLA2,America/Los_Angeles
+5545710,Richfield,Richfield,UT,041,38.77247,-112.08409,7592,PPLA2,America/Denver
+5697383,McCook,McCook,NE,145,40.20195,-100.62571,7580,PPLA2,America/Chicago
+5427957,Lamar,Lamar,CO,099,38.08723,-102.62075,7555,PPLA2,America/Denver
+5296013,Globe,Globe,AZ,007,33.39422,-110.7865,7396,PPLA2,America/Phoenix
+5058868,Devils Lake,Devils Lake,ND,071,48.11278,-98.86512,7351,PPLA2,America/Chicago
+4452137,Aberdeen,Aberdeen,NC,125,35.13155,-79.42948,7343,PPL,America/New_York
+5350039,Fort Bragg,Fort Bragg,CA,045,39.44572,-123.80529,7289,PPL,America/Los_Angeles
+4159839,Islamorada,Islamorada,FL,087,24.9243,-80.62784,7131,PPL,America/New_York
+4304232,Pikeville,Pikeville,KY,195,37.47927,-82.51876,7012,PPLA2,America/New_York
+4760376,Galax,Galax,VA,640,36.66124,-80.92397,6914,PPLA2,America/New_York
+4277752,Pratt,Pratt,KS,151,37.64391,-98.73759,6849,PPLA2,America/Chicago
+5562087,Crescent City,Crescent City,CA,015,41.75595,-124.20175,6774,PPLA2,America/Los_Angeles
+5750984,Seaside,Seaside,OR,007,45.99316,-123.92264,6540,PPL,America/Los_Angeles
+5823516,Douglas,Douglas,WY,009,42.75969,-105.38221,6531,PPLA2,America/Denver
+4676327,Bridgeport,Bridgeport,TX,497,33.21012,-97.75476,6381,PPL,America/Chicago
+5031404,International Falls,International Falls,MN,071,48.60105,-93.41098,6158,PPLA2,America/Chicago
+5495292,Truth or Consequences,Truth or Consequences,NM,051,33.1284,-107.25281,6079,PPLA2,America/Denver
+5424099,Gunnison,Gunnison,CO,051,38.54582,-106.92532,6076,PPLA2,America/Denver
+5516203,Alpine,Alpine,TX,043,30.35862,-103.66206,5952,PPLA2,America/Chicago
+5662162,Lewistown,Lewistown,MT,027,47.06247,-109.42824,5874,PPLA2,America/Denver
+5694163,Chadron,Chadron,NE,045,42.82942,-102.99991,5775,PPLA2,America/Denver
+4246595,Pana,Pana,IL,021,39.38893,-89.08008,5607,PPL,America/Chicago
+5070216,Holdrege,Holdrege,NE,137,40.44029,-99.36982,5561,PPLA2,America/Chicago
+5543853,Nephi,Nephi,UT,023,39.71023,-111.83632,5560,PPLA2,America/Denver
+4676032,Brady,Brady,TX,307,31.13517,-99.33506,5549,PPLA2,America/Chicago
+5654391,Glendive,Glendive,MT,021,47.10529,-104.71246,5490,PPLA2,America/Denver
+5843495,Worland,Worland,WY,043,44.0169,-107.95537,5372,PPLA2,America/Denver
+4501057,Cape May Court House,Cape May Court House,NJ,009,39.08261,-74.82378,5338,PPLA2,America/New_York
+5543307,Moab,Moab,UT,019,38.57332,-109.54984,5235,PPLA2,America/Denver
+5300830,Kayenta,Kayenta,AZ,017,36.72778,-110.25458,5189,PPL,America/Denver
+4901279,Marseilles,Marseilles,IL,099,41.33087,-88.70813,4963,PPL,America/Chicago
+4155533,Flagler Beach,Flagler Beach,FL,035,29.47498,-81.127,4869,PPL,America/New_York
+5805734,Omak,Omak,WA,047,48.41099,-119.52755,4854,PPL,America/Los_Angeles
+5790660,Colville,Colville,WA,065,48.54657,-117.90554,4719,PPLA2,America/Los_Angeles
+5445479,Goodland,Goodland,KS,181,39.35083,-101.71017,4457,PPLA2,America/Denver
+5541458,Kanab,Kanab,UT,025,37.04749,-112.52631,4394,PPLA2,America/Denver
+5583981,American Falls,American Falls,ID,077,42.78602,-112.85444,4321,PPLA2,America/Boise
+5710035,West Wendover,West Wendover,NV,007,40.7391,-114.07335,4294,PPL,America/Los_Angeles
+4964024,Farmington,Farmington,ME,007,44.67062,-70.15117,4288,PPLA2,America/New_York
+4683696,Cotulla,Cotulla,TX,283,28.43693,-99.23503,4216,PPLA2,America/Chicago
+5503694,Ely,Ely,NV,033,39.24744,-114.88863,4134,PPLA2,America/Los_Angeles
+4093488,Thomasville,Thomasville,AL,025,31.91349,-87.73584,4051,PPL,America/Chicago
+5528669,Presidio,Presidio,TX,377,29.56074,-104.37215,3904,PPL,America/Chicago
+5446450,Scott City,Scott City,KS,171,38.48252,-100.90709,3838,PPLA2,America/Chicago
+5436808,Rocky Ford,Rocky Ford,CO,089,38.05251,-103.72023,3827,PPL,America/Denver
+5535484,Blanding,Blanding,UT,037,37.62433,-109.47966,3785,PPL,America/Denver
+5259448,Lancaster,Lancaster,WI,043,42.84749,-90.71068,3778,PPLA2,America/Chicago
+4188377,Cleveland,Cleveland,GA,311,34.59704,-83.76324,3773,PPLA2,America/New_York
+5074259,O'Neill,O'Neill,NE,089,42.45778,-98.64759,3653,PPLA2,America/Chicago
+4183305,Blackshear,Blackshear,GA,229,31.30605,-82.24207,3581,PPLA2,America/New_York
+5767189,Mobridge,Mobridge,SD,129,45.53722,-100.42791,3466,PPL,America/Chicago
+5654320,Glasgow,Glasgow,MT,105,48.19696,-106.63671,3414,PPLA2,America/Denver
+5025627,Ely,Ely,MN,137,47.90324,-91.86709,3408,PPL,America/Chicago
+5517030,Big Lake,Big Lake,TX,383,31.19154,-101.46039,3315,PPLA2,America/Chicago
+5550996,Ajo,Ajo,AZ,019,32.37172,-112.86071,3304,PPL,America/Phoenix
+4107823,De Witt,De Witt,AR,001,34.29288,-91.3379,3292,PPL,America/Chicago
+5505321,Hawthorne,Hawthorne,NV,021,38.52464,-118.62458,3269,PPLA2,America/Los_Angeles
+5677433,Shelby,Shelby,MT,101,48.50526,-111.85697,3268,PPLA2,America/Denver
+5594474,Grangeville,Grangeville,ID,049,45.92655,-116.12237,3155,PPLA2,America/Los_Angeles
+5600363,McCall,McCall,ID,085,44.91101,-116.09874,3106,PPL,America/Boise
+5606275,Salmon,Salmon,ID,059,45.17575,-113.8959,3036,PPLA2,America/Boise
+5518214,Canadian,Canadian,TX,211,35.91282,-100.38208,3013,PPLA2,America/Chicago
+4984692,Bad Axe,Bad Axe,MI,063,43.80196,-83.00078,3011,PPLA2,America/Detroit
+5000625,Manistique,Manistique,MI,153,45.95775,-86.24625,2982,PPLA2,America/Detroit
+4959834,Calais,Calais,ME,029,45.18376,-67.27662,2980,PPL,America/New_York
+4481427,Nags Head,Nags Head,NC,055,35.95739,-75.62406,2908,PPL,America/New_York
+4997238,Iron River,Iron River,MI,071,46.09273,-88.64235,2904,PPL,America/Menominee
+5531255,Sonora,Sonora,TX,435,30.56685,-100.64343,2863,PPLA2,America/Chicago
+5700344,Valentine,Valentine,NE,031,42.87278,-100.55097,2836,PPLA2,America/Chicago
+4332518,Many,Many,LA,085,31.56878,-93.48406,2790,PPLA2,America/Chicago
+5716833,Burns,Burns,OR,025,43.58626,-119.0541,2757,PPLA2,America/Los_Angeles
+5465650,Dulce,Dulce,NM,039,36.93362,-106.99893,2743,PPL,America/Denver
+5829425,Kemmerer,Kemmerer,WY,023,41.79245,-110.53767,2739,PPLA2,America/Denver
+5043752,Roseau,Roseau,MN,135,48.84609,-95.76277,2715,PPLA2,America/Chicago
+5662190,Libby,Libby,MT,053,48.38829,-115.556,2645,PPLA2,America/Denver
+5558829,Alturas,Alturas,CA,049,41.48714,-120.54349,2594,PPLA2,America/Los_Angeles
+5274034,Spooner,Spooner,WI,129,45.82245,-91.88934,2586,PPL,America/Chicago
+5144375,Whitehall,Whitehall,NY,115,43.55562,-73.40372,2582,PPL,America/New_York
+5273224,Silver Lake,Silver Lake,WI,137,44.05526,-89.22623,2480,PPL,America/Chicago
+5513795,Tonopah,Tonopah,NV,023,38.06716,-117.23008,2478,PPLA2,America/Los_Angeles
+4271159,Eureka,Eureka,KS,073,37.82392,-96.28917,2450,PPLA2,America/Chicago
+5441199,Telluride,Telluride,CO,113,37.93749,-107.81229,2399,PPLA2,America/Denver
+4287235,Cave City,Cave City,KY,009,37.13672,-85.95692,2394,PPL,America/Chicago
+5226824,Chamberlain,Chamberlain,SD,015,43.81083,-99.33066,2386,PPLA2,America/Chicago
+4434720,Magnolia,Magnolia,MS,113,31.14323,-90.45871,2371,PPLA2,America/Chicago
+5072532,Madison,Madison,NE,119,41.82834,-97.45505,2371,PPLA2,America/Chicago
+4740482,Weimar,Weimar,TX,089,29.70301,-96.78053,2161,PPL,America/Chicago
+4112430,Glenwood,Glenwood,AR,109,34.32677,-93.55074,2141,PPL,America/Chicago
+5526145,Memphis,Memphis,TX,191,34.72478,-100.53401,2138,PPLA2,America/Chicago
+5050290,Tracy,Tracy,MN,083,44.23329,-95.61918,2117,PPL,America/Chicago
+5058233,Belcourt,Belcourt,ND,079,48.83917,-99.74487,2078,PPL,America/Chicago
+5597606,Kellogg,Kellogg,ID,079,47.53826,-116.11933,2069,PPL,America/Los_Angeles
+5367846,Lone Pine,Lone Pine,CA,027,36.60626,-118.06462,2035,PPL,America/Los_Angeles
+5292912,Dolan Springs,Dolan Springs,AZ,015,35.59194,-114.27329,2033,PPL,America/Phoenix
+4403182,Piedmont,Piedmont,MO,223,37.15449,-90.69567,1977,PPL,America/Chicago
+4736721,Three Rivers,Three Rivers,TX,297,28.46027,-98.18251,1971,PPL,America/Chicago
+4997086,Indian River,Indian River,MI,031,45.41251,-84.61254,1959,PPL,America/Detroit
+5532924,Van Horn,Van Horn,TX,109,31.04029,-104.83073,1928,PPLA2,America/Chicago
+5428504,Limon,Limon,CO,073,39.26388,-103.69217,1911,PPL,America/Denver
+5079887,Superior,Superior,NE,129,40.02085,-98.07004,1884,PPL,America/Chicago
+5705957,Lovelock,Lovelock,NV,027,40.17935,-118.47348,1878,PPLA2,America/Los_Angeles
+5758413,Vale,Vale,OR,045,43.98211,-117.23823,1833,PPLA2,America/Boise
+5030242,Hinckley,Hinckley,MN,115,46.01134,-92.94437,1806,PPL,America/Chicago
+5455775,Arroyo Seco,Arroyo Seco,NM,055,36.51669,-105.56918,1785,PPL,America/Denver
+5394279,Seeley,Seeley,CA,025,32.79311,-115.69111,1739,PPL,America/Los_Angeles
+4227871,Union Point,Union Point,GA,133,33.61568,-83.0746,1709,PPL,America/New_York
+4152395,Cross City,Cross City,FL,029,29.63465,-83.12694,1707,PPLA2,America/New_York
+4064664,Gordo,Gordo,AL,107,33.32012,-87.9028,1687,PPL,America/Chicago
+5312677,Salome,Salome,AZ,012,33.78114,-113.61465,1530,PPL,America/Phoenix
+4108950,Dover,Dover,AR,115,35.40147,-93.11434,1398,PPL,America/Chicago
+5266764,Phillips,Phillips,WI,099,45.69663,-90.40043,1388,PPLA2,America/Chicago
+5052600,Wheaton,Wheaton,MN,155,45.80441,-96.49923,1362,PPLA2,America/Chicago
+5685767,West Yellowstone,West Yellowstone,MT,031,44.66215,-111.10411,1339,PPL,America/Denver
+4713452,Munday,Munday,TX,275,33.44926,-99.62286,1339,PPL,America/Chicago
+5028500,Grand Marais,Grand Marais,MN,031,47.75045,-90.33427,1327,PPLA2,America/Chicago
+5731035,Heppner,Heppner,OR,049,45.35318,-119.5578,1287,PPLA2,America/Los_Angeles
+5058568,Cavalier,Cavalier,ND,067,48.79388,-97.62231,1244,PPLA2,America/Chicago
+5766453,Lemmon,Lemmon,SD,105,45.94083,-102.15932,1232,PPL,America/Denver
+5292715,Dilkon,Dilkon,AZ,017,35.38529,-110.32068,1184,PPL,America/Denver
+12523068,Death Valley,Death Valley,CA,027,36.23962,-116.81133,1124,PPL,America/Los_Angeles
+4923796,Morocco,Morocco,IN,111,40.94615,-87.45336,1119,PPL,America/Chicago
+5499105,Alamo,Alamo,NV,017,37.36496,-115.16446,1080,PPL,America/Los_Angeles
+4467757,Gaston,Gaston,NC,131,36.50043,-77.64498,1067,PPL,America/New_York
+5007585,Roscommon,Roscommon,MI,143,44.49835,-84.59197,1061,PPLA2,America/Detroit
+5766888,Martin,Martin,SD,007,43.1725,-101.73265,1061,PPLA2,America/Denver
+5676740,Scobey,Scobey,MT,019,48.79252,-105.42083,1033,PPLA2,America/Denver
+4813774,Marlinton,Marlinton,WV,075,38.22345,-80.09451,1029,PPLA2,America/New_York
+5662396,Lincoln,Lincoln,MT,049,46.95494,-112.68171,1013,PPL,America/Denver
+5476526,Logan,Logan,NM,037,35.36533,-103.41079,966,PPL,America/Denver
+4846948,Anita,Anita,IA,029,41.44526,-94.7647,956,PPL,America/Chicago
+5707081,Owyhee,Owyhee,NV,007,41.94768,-116.09871,953,PPL,America/Los_Angeles
+5273328,Sister Bay,Sister Bay,WI,029,45.18721,-87.12095,911,PPL,America/Chicago
+5746793,Prairie City,Prairie City,OR,023,44.46321,-118.70995,880,PPL,America/Los_Angeles
+5812994,Taholah,Taholah,WA,027,47.3473,-124.29324,840,PPL,America/Los_Angeles
+5530210,Sanderson,Sanderson,TX,443,30.14241,-102.39403,837,PPLA2,America/Chicago
+5698120,Oshkosh,Oshkosh,NE,069,41.40498,-102.34436,828,PPLA2,America/Denver
+5740261,Merrill,Merrill,OR,035,42.02515,-121.60055,825,PPL,America/Los_Angeles
+5538942,Escalante,Escalante,UT,017,37.77027,-111.60212,790,PPL,America/Denver
+4264771,Shoals,Shoals,IN,101,38.66644,-86.79111,782,PPLA2,America/Indiana/Vincennes
+4968168,Jackman,Jackman,ME,025,45.62394,-70.25451,746,PPL,America/New_York
+5550492,Cuba,Cuba,NM,043,36.02224,-106.95837,736,PPL,America/Denver
+5325626,Baker,Baker,CA,071,35.26498,-116.07446,735,PPL,America/Los_Angeles
+5421506,Fairplay,Fairplay,CO,093,39.22471,-106.00196,681,PPLA2,America/Denver
+5040527,Ottertail,Ottertail,MN,111,46.42552,-95.55726,602,PPL,America/Chicago
+5764313,Dupree,Dupree,SD,137,45.04748,-101.60099,527,PPLA2,America/Denver
+5077686,Sargent,Sargent,NE,041,41.64056,-99.37122,509,PPL,America/Chicago
+5697774,Mullen,Mullen,NE,091,42.04278,-101.04266,499,PPLA2,America/Denver
+5642048,Broadus,Broadus,MT,075,45.44387,-105.41133,488,PPLA2,America/Denver
+4860085,Hawkeye,Hawkeye,IA,065,42.93859,-91.95017,423,PPL,America/Chicago
+5496513,Vaughn,Vaughn,NM,019,34.60173,-105.20833,413,PPL,America/Denver
+5463306,Cotton City,Cotton City,NM,023,32.08842,-108.87922,388,PPL,America/Denver
+4540064,Kaw City,Kaw City,OK,071,36.76031,-96.83337,375,PPL,America/Chicago
+4150879,Chokoloskee,Chokoloskee,FL,021,25.81288,-81.36202,359,PPL,America/New_York
+5520093,Dell City,Dell City,TX,229,31.93872,-105.20135,353,PPL,America/Denver
+5763144,Buffalo,Buffalo,SD,063,45.58416,-103.54603,345,PPLA2,America/Denver
+4989021,Clayton,Clayton,MI,091,41.86338,-84.23633,339,PPL,America/Detroit
+5469174,Gila,Gila,NM,017,32.9659,-108.57672,314,PPL,America/Denver
+5691114,Powers Lake,Powers Lake,ND,013,48.5628,-102.64796,307,PPL,America/Chicago
+5658541,Hysham,Hysham,MT,103,46.29277,-107.23423,304,PPLA2,America/Denver
+5832007,Medicine Bow,Medicine Bow,WY,007,41.89552,-106.20474,270,PPL,America/Denver
+5663166,Lodge Pole,Lodge Pole,MT,005,48.03472,-108.5332,265,PPL,America/Denver
+5520196,Dickens,Dickens,TX,125,33.62175,-100.83652,255,PPLA2,America/Chicago
+5744730,Paisley,Paisley,OR,037,42.69376,-120.54608,240,PPL,America/Los_Angeles
+5485633,Quemado,Quemado,NM,003,34.34394,-108.49562,228,PPL,America/Denver
+5662308,Lima,Lima,MT,001,44.63686,-112.59195,222,PPL,America/Denver
+5540148,Hanksville,Hanksville,UT,055,38.37304,-110.71404,212,PPL,America/Denver
+4344509,Venice,Venice,LA,075,29.27717,-89.35478,202,PPL,America/Chicago
+4359836,Kennedyville,Kennedyville,MD,029,39.30539,-75.99494,199,PPL,America/New_York
+5312930,San Miguel,San Miguel,AZ,019,31.61286,-111.78206,197,PPL,America/Phoenix
+5499537,Austin,Austin,NV,015,39.49326,-117.06953,192,PPL,America/Los_Angeles
+4678872,Cantu Addition,Cantu Addition,TX,047,27.20254,-98.15528,188,PPL,America/Chicago
+5706217,McDermitt,McDermitt,NV,013,41.99739,-117.7182,172,PPL,America/Los_Angeles
+5819347,Boulder,Boulder,WY,035,42.74828,-109.71765,170,PPL,America/Denver
+5326968,Bear Valley,Bear Valley,CA,003,38.46463,-120.03991,121,PPL,America/Los_Angeles
+4585598,Lodge,Lodge,SC,029,33.06794,-80.95371,118,PPL,America/New_York
+4551486,Smithville,Smithville,OK,089,34.46677,-94.64383,113,PPL,America/Chicago
+4590632,Pawleys Island,Pawleys Island,SC,043,33.43322,-79.12143,107,PPL,America/New_York
+5415980,Campo,Campo,CO,009,37.10502,-102.57964,105,PPL,America/Denver
+5514286,Ursine,Ursine,NV,017,37.98468,-114.21526,91,PPL,America/Los_Angeles
+5579648,Maybell,Maybell,CO,081,40.51775,-108.08703,72,PPL,America/Denver
+5470076,Grenville,Grenville,NM,059,36.5928,-103.61634,35,PPL,America/Denver
+4963837,Estcourt Station,Estcourt Station,ME,003,47.45891,-69.22425,4,PPL,America/New_York
+5785214,Yost,Yost,UT,003,41.96075,-113.54223,0,PPL,America/Denver
+5687484,Ynot (historical),Ynot (historical),MT,071,48.83668,-107.6762,0,PPLQ,America/Denver
+5534141,Woodsons,Woodsons,TX,043,29.00632,-103.2949,0,PPL,America/Chicago
+5145043,Woods,Woods,NY,041,43.88312,-74.60433,0,PPL,America/New_York
+4882409,Woodland,Woodland,IA,053,40.69612,-93.598,0,PPL,America/Chicago
+5816343,Winton,Winton,WA,007,47.7354,-120.7412,0,PPL,America/Los_Angeles
+5549481,Wheatgrass,Wheatgrass,UT,021,37.97192,-112.79356,0,PPL,America/Denver
+5842005,Vista West Trailer Park,Vista West Trailer Park,WY,011,44.41971,-104.40523,0,PPL,America/Denver
+5709763,Varyville (historical),Varyville (historical),NV,013,41.49295,-118.8074,0,PPLQ,America/Los_Angeles
+4738007,Turlington,Turlington,TX,161,31.69489,-96.05441,0,PPL,America/Chicago
+5513947,Troy (historical),Troy (historical),NV,023,38.343,-115.57447,0,PPLQ,America/Los_Angeles
+5548747,Trout Creek,Trout Creek,UT,023,39.68939,-113.8286,0,PPL,America/Denver
+5756999,Toketee Falls,Toketee Falls,OR,019,43.27568,-122.45088,0,PPL,America/Los_Angeles
+5682632,Tindall (historical),Tindall (historical),MT,033,47.15833,-107.61677,0,PPLQ,America/Denver
+4411002,Swift,Swift,MO,155,36.32923,-89.75425,0,PPL,America/Chicago
+5680924,Sullivan (historical),Sullivan (historical),MT,035,48.98749,-113.04954,0,PPLQ,America/Denver
+5608290,South Mountain,South Mountain,ID,073,42.7521,-116.92347,0,PPL,America/Boise
+5678860,Sourdough,Sourdough,MT,097,45.90189,-109.81435,0,PPL,America/Denver
+4978607,Silver Ridge,Silver Ridge,ME,003,45.80644,-68.32475,0,PPL,America/New_York
+5708498,Shores,Shores,NV,007,41.54019,-114.79948,0,PPL,America/Los_Angeles
+5570868,Sawyers Bar,Sawyers Bar,CA,093,41.29736,-123.13032,0,PPL,America/Los_Angeles
+5808968,Ruby (historical),Ruby (historical),WA,073,48.73735,-121.06234,0,PPLQ,America/Los_Angeles
+5312027,Rose Well Camp,Rose Well Camp,AZ,005,35.74193,-112.87269,0,PPL,America/Phoenix
+5007426,Rock Harbor Lodge,Rock Harbor Lodge,MI,083,48.14571,-88.48368,0,PPL,America/Detroit
+5836352,Redbird,Redbird,WY,027,43.24247,-104.28605,0,PPL,America/Denver
+5486687,Ramsdale Place,Ramsdale Place,NM,027,33.8023,-105.72332,0,PPL,America/Denver
+5207209,Pritchards Corner,Pritchards Corner,PA,085,41.2795,-80.4834,0,PPL,America/New_York
+5670625,Paris (historical),Paris (historical),MT,055,47.29111,-106.15892,0,PPLQ,America/Denver
+5379348,Omega,Omega,CA,057,39.33323,-120.74938,0,PPL,America/Los_Angeles
+4971414,Matinicus,Matinicus,ME,013,43.86508,-68.88698,0,PPL,America/New_York
+4332118,Luke Landing,Luke Landing,LA,101,29.59743,-91.54178,0,PPL,America/Chicago
+5302516,Lochiel,Lochiel,AZ,023,31.33566,-110.62397,0,PPL,America/Phoenix
+5696904,Lamont,Lamont,NE,057,40.32083,-101.87323,0,PPL,America/Denver
+4969045,Lac Frontiere,Lac Frontiere,ME,003,46.69531,-69.99341,0,PPL,America/New_York
+5765247,Grindstone,Grindstone,SD,055,44.13915,-101.96737,0,PPL,America/Denver
+4155953,Fort Jefferson,Fort Jefferson,FL,087,24.62793,-82.8729,0,PPL,America/New_York
+5648567,Diamond City,Diamond City,MT,007,46.59716,-111.42385,0,PPL,America/Denver
+5703141,Deep Hole,Deep Hole,NV,031,40.71907,-119.48325,0,PPL,America/Los_Angeles
+5590380,Custer,Custer,ID,037,44.38741,-114.69591,0,PPL,America/Boise
+5463116,Corner Ranch,Corner Ranch,NM,023,31.35622,-108.21114,0,PPL,America/Denver
+5688491,Clifton,Clifton,ND,069,47.89111,-100.0343,0,PPL,America/Chicago
+12523046,Chuckwalla Valley,Chuckwalla Valley,CA,065,33.72355,-115.22026,0,PPL,America/Los_Angeles
+5772852,Christmas Meadow Summer Home Area,Christmas Meadow Summer Home Area,UT,043,40.82689,-110.80767,0,PPL,America/Denver
+5500129,Birch (historical),Birch (historical),NV,011,39.92215,-115.87311,0,PPLQ,America/Los_Angeles
+4669815,Adamsville,Adamsville,TX,281,31.30128,-98.16892,0,PPL,America/Chicago
+5322291,Acebedo,Acebedo,CA,031,35.83191,-120.20181,0,PPL,America/Los_Angeles

@@ -1,0 +1,1469 @@
+<!DOCTYPE html>
+  <html lang="en">
+    <head>
+      <title>OEDI: End-Use Load Profiles for the U.S. Building Stock</title>
+      <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+      <meta http-equiv="Content-Style-Type" content="text/css" />
+      <meta name="Keywords" content="energy, power, buildings, commercial, residential, electricity, natural gas, load profile, load shape, Building Stock, US Building Stock, building, building science, building efficiency, demand response, EULP, End Use Load Profiles, load, end use, grid flexibility, grid, ResStock, ComStock, models, load profiles, Open Energy Data Initiative, OEDI, DOE-OEDI, data lake, energy, data, energy data, tool, app, webapp" />
+      <meta name="Description" content="The United States is embarking on an ambitious transition to a 100 clean energy economy by 2050 which will require improving the flexibility of electric grids. One way to achieve grid flexibility is to shed or shift demand to align with changing grid needs. To facilitate this it is critical to understand how and when energy is used. High quality end-use load profiles EULPs provide this information and can help cities states and utilities understand the time-sensitive value of energy efficiency demand response and distributed energy resources. Publicly available EULPs have traditionally had limited application because of age and incomplete geographic representation. To help fill this gap the U.S. Department of Energy DOE funded a three-year project End-Use Load Profiles for the U.S. Building Stock that culminated in this publicly available dataset of calibrated and validated 15-minute resolution load profiles for all major residential and commercial building types and end uses across all climate regions in the United States. These EULPs were created by calibrating the ResStock and ComStock physics-based building stock models using many different measured datasets as described in the Technical Report Documenting Methodology linked in the submission." />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+      <!-- Twitter Card data -->
+      <meta name="twitter:card" content="summary_large_image" />
+      <meta name="twitter:site" content="@ENERGY" />
+      <meta name="twitter:creator" content="@NREL" />
+      <meta name="twitter:title" content="Open Energy Data Initiative (OEDI)" />
+      <meta name="twitter:description" content="The United States is embarking on an ambitious transition to a 100 clean energy economy by 2050 which will require improving the flexibility of electric grids. One way to achieve grid flexibility is to shed or shift demand to align with changing grid needs. To facilitate this it is critical to understand how and when energy is used. High quality end-use load profiles EULPs provide this information and can help cities states and utilities understand the time-sensitive value of energy efficiency demand response and distributed energy resources. Publicly available EULPs have traditionally had limited application because of age and incomplete geographic representation. To help fill this gap the U.S. Department of Energy DOE funded a three-year project End-Use Load Profiles for the U.S. Building Stock that culminated in this publicly available dataset of calibrated and validated 15-minute resolution load profiles for all major residential and commercial building types and end uses across all climate regions in the United States. These EULPs were created by calibrating the ResStock and ComStock physics-based building stock models using many different measured datasets as described in the Technical Report Documenting Methodology linked in the submission.." />
+      <meta name="twitter:url" content="https://data.openei.org/" />
+      <meta name="twitter:image" content="http://data.openei.org/assets/img/OEDI-text-logo.png" />
+    
+        <!-- Open Graph data -->
+      <meta property="og:title" content="Open Energy Data Initiative (OEDI)" />
+      <meta property="og:type" content="website" />
+      <meta property="og:url" content="https://data.openei.org/" />
+      <meta property="og:image" content="http://data.openei.org/assets/img/OEDI-text-logo.png" />
+      <meta property="og:image:secure_url" content="https://data.openei.org/assets/img/OEDI-text-logo.png" />
+      <meta property="og:image:type" content="image/png" />
+      <meta property="og:image:alt" content="The Open Energy Data Initiative (OEDI) logo." />
+      <meta property="og:description" content="The United States is embarking on an ambitious transition to a 100 clean energy economy by 2050 which will require improving the flexibility of electric grids. One way to achieve grid flexibility is to shed or shift demand to align with changing grid needs. To facilitate this it is critical to understand how and when energy is used. High quality end-use load profiles EULPs provide this information and can help cities states and utilities understand the time-sensitive value of energy efficiency demand response and distributed energy resources. Publicly available EULPs have traditionally had limited application because of age and incomplete geographic representation. To help fill this gap the U.S. Department of Energy DOE funded a three-year project End-Use Load Profiles for the U.S. Building Stock that culminated in this publicly available dataset of calibrated and validated 15-minute resolution load profiles for all major residential and commercial building types and end uses across all climate regions in the United States. These EULPs were created by calibrating the ResStock and ComStock physics-based building stock models using many different measured datasets as described in the Technical Report Documenting Methodology linked in the submission." />
+      <meta property="og:site_name" content="OpenEI" />
+    
+      <!-- Favicon -->
+      <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">
+
+      <!-- iOS/Android/MS icons -->
+      <link rel="apple-touch-icon" sizes="180x180" href="/assets/img/icons/apple-touch-icon.png">
+      <link rel="icon" type="image/png" sizes="32x32" href="/assets/img/icons/favicon-32x32.png">
+      <link rel="icon" type="image/png" sizes="192x192" href="/assets/img/icons/android-chrome-192x192.png">
+      <link rel="icon" type="image/png" sizes="16x16" href="/assets/img/icons/favicon-16x16.png">
+    
+      <!-- Icon Manifest / Theme -->
+      <link rel="manifest" href="/site.webmanifest">
+      <link rel="mask-icon" href="/assets/img/icons/safari-pinned-tab.svg" color="#5bbad5">
+      <meta name="msapplication-TileColor" content="#00aba9">
+      <meta name="msapplication-TileImage" content="/mstile-144x144.png">
+      <meta name="theme-color" content="#ffffff">
+
+      <!-- Common CSS -->
+      <link rel="stylesheet" href="https://auth.openei.org/assets/css/common.css" type="text/css" media="screen" />
+
+
+      <!-- Fonts -->
+      <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css">
+      <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+      <link href="//fonts.googleapis.com/css?family=Oxygen|Ubuntu:300|Roboto:300" rel="stylesheet">
+
+      <!-- Custom fonts -->
+      <link rel="stylesheet" href="/assets/css/font-awesome-custom.css" type="text/css" />
+
+      <!-- Polyfills -->
+      <!--[if lte IE 8]><script type="text/javascript" src="/assets/js/polyfills/array.map.js"></script><![endif]-->
+
+      <!-- App CSS -->
+      <link rel="stylesheet" href="/assets/css/bootstrap.css" type="text/css" />
+      <link rel="stylesheet" href="/assets/css/bootstrap-datepicker.css" type="text/css" />
+      <link rel="stylesheet" href="/assets/css/jquery-ui-datepicker-bootstrap-custom.css" type="text/css" />
+      <link rel="stylesheet" href="/assets/css/bootstrap-tagmanager.css" type="text/css" />
+      <link rel="stylesheet" href="/assets/css/bootstrap-typeahead.css" type="text/css" />
+      <link rel="stylesheet" href="/assets/css/openei-nav.css" type="text/css" />
+      <link rel="stylesheet" href="/assets/css/main.css" type="text/css" />
+      <link rel="stylesheet" href="/assets/css/tutorial.css" type="text/css" />
+      <!--[if lte IE 9]><link rel="stylesheet" href="/assets/css/ie-hax.css" type="text/css" /><![endif]-->
+
+      <!-- jQuery -->
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha384-vk5WoKIaW/vJyUAd9n/wmopsmNhiy+L2Z+SBxGYnUkunIxVxAv/UtMOhba/xskxh" crossorigin="anonymous"></script>
+      <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js" integrity="sha384-Dziy8F2VlJQLMShA6FHWNul/veM9bCkRUaLqr199K94ntO5QUrLJBEbYegdSkkqX" crossorigin="anonymous"></script>
+
+      <!-- Common JS -->
+      <script type="text/javascript" src="/assets/js/common.js"></script>
+
+      <!-- App JS -->
+      <script type="text/javascript" src="/assets/js/main.js"></script>
+      <script type="text/javascript" src="/assets/js/bootstrap.js"></script>
+      <!-- <script type="text/javascript" src="/assets/js/bootstrap-datepicker.js"></script> -->
+      <script type="text/javascript" src="/assets/js/bootstrap-tagmanager.js"></script>
+      <script type="text/javascript" src="/assets/js/bootstrap-typeahead.js"></script>
+      <script type="text/javascript" src="/assets/js/tutorial/boot-tutorial.js"></script>
+
+      <!-- Head Scripts -->
+              <!-- Global site tag (gtag.js) - Google Analytics -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-GEZRSCPTPF"></script>
+        <script>
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-GEZRSCPTPF');
+        </script>
+          </head>
+    <body>
+      
+<nav class="navbar navbar-default navbar-static-top navbar-openei">
+  <div class="container-fluid">
+
+    <div class="navbar-header">
+      <a class="navbar-brand" href="//openei.org/wiki/Main_Page" aria-label="Main Page Link">
+        <img alt="OpenEI: Energy Information" height="36" width="95" src="/assets/img/OpenEI-Logo.svg" style="pointer-events: none;" />
+      </a>
+      <!-- Mobile button -->
+      <button class="openei-btn-wrapper navbar-toggle collapsed" data-toggle="collapse" data-target="#oeiNavbarCollpase" aria-expanded=" false">
+        <span class="openei-user-btn" >
+                    <span class="fa fa-user" aria-hidden="true"></span><span class="sr-only">My User</span>
+        </span>
+      </button>
+    </div>
+
+    <!-- Navbar-collapse -->
+    <div class="collapse navbar-collapse" id="oeiNavbarCollpase">
+      <ul class="nav navbar-nav primary-nav hidden-xs">
+        <li><a style="color:#525259;" href="/" title="Home">Open Energy Data Initiative (OEDI)</a></li>
+      </ul>
+
+      <!-- User Menu -->
+      <ul class="nav navbar-nav navbar-right openei-user">
+        <!-- User Menu Dropdown -->
+        <li class="dropdown user-menu">
+
+          <a href="https://auth.openei.org/account" class="dropdown-toggle openei-user-btn" data-toggle="dropdown" role="button" rel="nofollow" aria-haspopup="true" aria-expanded="false" >
+                        <span class="fa fa-user" aria-hidden="true"></span><span class="sr-only">My User</span>
+          </a>
+
+          <ul class="dropdown-menu">
+                          <li><a class="create_account" href="https://auth.openei.org/register?redir=https%3A%2F%2Fdata.openei.org%2Fsubmissions%2F4520">Sign Up</a></li>
+              <li><a class="log_in" href="https://auth.openei.org/login?redir=https%3A%2F%2Fdata.openei.org%2Fsubmissions%2F4520">Login</a></li>
+                      </ul>
+        </li><!-- end User Menu Dropdown -->
+      </ul><!-- end User Menu -->
+    </div><!-- end .navbar-collapse -->
+
+  </div><!-- end .container-fluid -->
+</nav>
+      <!-- <div id="background-canvas"> -->
+        <!--  hardcode an image for now. We will need to make an API (or JS tool) to transfer image rotation to other sites, or copy all of the images over. -->
+        <!-- <div id="background-image" class="fade-in" alt="background images sourced from unsplash.com" style="background-image: url('https://auth.openei.org/assets/img/unsplash/geyser.jpeg'); opacity: 0;"></div> -->
+      <!-- </div> -->
+
+      <div class="container xdr-body-container">
+        <div id="content" class="content ui-corner-all clear">
+          <a name="top" id="top"></a>
+          <!-- start content -->
+<nav class="navbar navbar-default xdr-nav">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#xdrLargeScreenNav" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand home-link" href="/home" aria-label="Link to Home">
+        <img class="home-logo" src="/assets/img/OEDI_logo_color.svg" alt="OEDI logo" aria-hidden="true" width="86"/>
+      </a>
+    </div>
+
+    <div class="collapse navbar-collapse jc-sb main-nav" id="xdrLargeScreenNav">
+      <ul class="nav navbar-nav">
+        <li class="dropdown active">
+          <a id="data-dropdown" class="dropdown-toggle" data-toggle="dropdown" href="#">
+            Data
+            <b class="caret"></b>
+          </a>
+          <ul class="dropdown-menu">
+            <li value='1' id="tutorialViewSubmissions"><a href="/submissions/all">View All Submissions</a></li>
+                        <li><a href="/data_lakes">Data Lakes</a></li>
+            <li role="separator" class="divider"></li>
+                        <li><a tabindex="-1" href="/submit">Submit Data</a></li>
+          </ul>
+        </li>
+        <li class="dropdown ">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+            Help
+            <b class="caret"></b>
+          </a>
+          <ul class="dropdown-menu">
+            <li><a tabindex="-1" href="/faq">Frequently Asked Questions</a></li>
+                        <li><a tabindex="-1" href="https://data.openei.org/submissions/11" target="_blank" rel="noopener">Data Submission Best Practices</a></li>
+            <li><a tabindex="-1" href="https://youtube.com/playlist?list=PL4lfI7kmtVfoYHJJfHA68ybf8iLsDsoiX" target="_blank" rel="noopener">Data Submission Tutorial Videos</a></li>
+            <li><a tabindex="-1" href=mailto:OpenEI.Webmaster@nrel.gov>Contact OpenEI Help</a></li>
+          </ul>
+        </li>
+        <li class=""><a href="/about">About</a></li>
+        <li class=""><a href="/search">Search</a></li>
+      </ul>
+            <form class="navbar-form navbar-right navbar-search white-form" action="/search" method="get">
+        <div class="form-group">
+          <input type="text" name="q" class="search-query form-control" placeholder="search open data" autocomplete="off" aria-label="Search Open Energy Data"><button style="background:none; border:none;" aria-label="Search open energy data"><i class="fa fa-search" aria-hidden="true"></button></i>
+        </div>
+      </form>
+          </div><!-- end .navbar-collapse -->
+  </div><!-- end .container-fluid -->
+</nav>
+
+<style>
+  #digitalWave {
+    position: relative;
+    width: 100%;
+    height: 15vh;
+    min-height: 100px;
+    /* background-color: rgba(63, 203, 203, 0.6); */
+  }
+  #digitalWave canvas {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+  }
+  #digitalWave::before {
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background-color: #56d1d1;
+    /* background: linear-gradient(#3fcbcb 40%, #fff); */
+    /* background: linear-gradient(#3fcbcb 45%, #fff 68%, rgba(0,0,0,0) 100%); */
+    /* background: linear-gradient(#56d1d1 0%, #33b4b4 40%, rgba(0,0,0,0) 100%); */
+  }
+  #digitalWave::after {
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    bottom: 0;
+    left: 0;
+    background: linear-gradient(rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.13) 20%, #fff 100%);
+  }
+</style>
+
+<div id="digitalWave">
+  <canvas id="canvasWaves">"Womp Womp! Your browser does not support canvas :'("</canvas>
+</div>
+
+<script>
+  window.addEventListener('resize', canvasResize);
+
+  var container = $('#digitalWave'),
+      canvas    = document.getElementById('canvasWaves');
+
+  canvasResize();
+
+  var ctx     =  canvas.getContext('2d'),
+      cw      =  canvas.width,
+      ch      =  Math.ceil(canvas.height*.7), // .5
+      frame   =  0,
+      opacity =  1;
+
+  opacity = 0; // comment out to make everything opaque
+
+  var styleColors = [
+    // Background of waves
+    'rgba(38, 79, 128, '+opacity+'.2)',// Darker Blue50, 143, 159
+    'rgba(86, 209, 209, '+opacity+'.4)', // Purple
+
+    'rgba(86, 209, 209, '+opacity+'.4)',// Medium Blue58, 169, 152
+    'rgba(49, 234, 247, '+opacity+'.15)',// Dark Blue
+
+    'rgba(49, 234, 247, '+opacity+'.5)',// Light BLue173, 226, 245
+    'rgba(255, 255, 255, '+opacity+'.0)',// White
+    'rgba(86, 209, 209, '+opacity+'.3)',// RED
+    'rgba(255, 255, 255, '+opacity+'.6)',// Hard White
+    // Foreground of waves
+  ];
+
+  function render() {
+    var cw = canvas.width,
+        hh = Math.ceil(ch*.75), // vertical spacing
+        bars = cw * .6; // horizontal spacing
+    
+    var grd, c, i, j, k, px, py, lh, wave;
+    
+    //Clear canvas (except buffer area)
+    ctx.clearRect(0, 0, cw, ch);
+    
+    //Render wave lines
+    var numWaves = styleColors.length;
+    // j = value iterating UP to max wave count
+    // k = value iterating DOWN from max wave count
+    for (j = 0, k = numWaves; j < numWaves; j++,k--) {
+      ctx.beginPath();
+      ctx.strokeStyle = styleColors[j];
+
+      for (i = 0 ; i < bars ; i++) {
+        //Start Points
+        var xOffset = 6; // controls Bar Width
+        var oddOffset = i%2==0 ? 1 : 2;
+        oddOffset = 0;
+        var angle = 20; // 40
+        px = i * xOffset + oddOffset;
+        py = (hh) + (j*angle);
+        //Wave shape
+        // px = i * 4;
+        // px = i * (j+2+k*.2);
+        // wave  = (Math.cos((((frame*.4)+i*5)*.35)*.15)+2)*1.75;
+        // wave *= (Math.sin(((frame-i*60)*.35)*.15)+2)*.25;
+        var speed = ((numWaves - k) % .3) + (j % .003);
+        var waveSpeed = (k%.21) + .001;
+        var topHeight = i%3==0 ? 2.9 : 3;
+        // topHeight = (Math.cos(i/topHeight)*j)<<0;
+        // topHeight = i%2==0 ?  2 : 3 ;
+        
+        var bottomHeight = i%2==0 ? (j)/(k) : (k)/(j);
+        // bottomHeight = i%2==0 ? .4 : .3;
+        // bottomHeight = 1;
+        
+        // var static = 60;
+        var static = (i%10);
+        var reverseFrame = j%2==0 ? (frame-i*static) : (frame+i*static);
+            
+        wave = (Math.cos((((frame*waveSpeed)+i*.35)*.5)*.15) +topHeight) * ((k+.5) *.55);
+        wave *= (Math.sin(((reverseFrame)*.12)*.15) +bottomHeight) *.25;
+
+        //Draw waves
+        var baseHeight = 15;
+        lh = baseHeight + (j*2);
+        ctx.lineWidth = (xOffset * 2);
+        var a = 0; // left offset
+        ctx.moveTo(px+a, py+(k));
+        ctx.lineTo(px+a, py-(lh*wave+(j)));
+        ctx.lineTo(px+a, py+(lh*wave-(j)));
+      }
+      
+      ctx.stroke();
+      ctx.closePath();
+    }
+    
+    function getRandInt(min, max) {
+      min = Math.ceil(min);
+      max = Math.floor(max);
+      return Math.floor(Math.random() * (max - min)) + min;
+    }
+    
+    //Overlay elements
+    ctx.globalCompositeOperation = 'destination-over';
+    // ctx.fillRect(0, ch/1.5, cw, ch);
+    ctx.globalCompositeOperation = 'source-over';
+    
+    //Render loop
+    frame += 1;
+    
+    // return; // block animation
+    
+    requestAnimationFrame(render);
+  }
+
+  function getRandomInt(max) {
+    return Math.floor(Math.random() * Math.floor(max));
+  }
+
+  function canvasResize(e) {
+    canvas.width = $('#digitalWave').width();
+    canvas.height = $('#digitalWave').height();
+  }
+
+  render();
+
+</script>  <script type="text/javascript" src="/assets/js/xdr.js"></script>
+  <script type="text/javascript" src="/assets/js/view.js?v=2.0"></script>
+  <script type="text/javascript" src="/assets/js/remote-sites.js"></script>
+  <script type="text/javascript" src="/assets/js/list-submissions.js"></script>
+  <script type="text/javascript" src="/assets/js/download-archive.js"></script>
+  <link rel="stylesheet" type="text/css" href="/assets/css/dataTables.css">
+  <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.js"></script>
+  <main id="app-container" style="position:relative;">
+    
+<script type="application/ld+json">
+  {
+  "@context": "http://schema.org",
+  "@type": "Dataset",
+  "name": "End-Use Load Profiles for the U.S. Building Stock",
+  "description": "The United States is embarking on an ambitious transition to a 100% clean energy economy by 2050, which will require improving the flexibility of electric grids. One way to achieve grid flexibility is to shed or shift demand to align with changing grid needs. To facilitate this, it is critical to understand how and when energy is used. High quality end-use load profiles (EULPs) provide this information, and can help cities, states, and utilities understand the time-sensitive value of energy efficiency, demand response, and distributed energy resources. Publicly available EULPs have traditionally had limited application because of age and incomplete geographic representation. To help fill this gap, the U.S. Department of Energy (DOE) funded a three-year project, End-Use Load Profiles for the U.S. Building Stock, that culminated in this publicly available dataset of calibrated and validated 15-minute resolution load profiles for all major residential and commercial building types and end uses, across all climate regions in the United States. These EULPs were created by calibrating the ResStock and ComStock physics-based building stock models using many different measured datasets, as described in the \"Technical Report Documenting Methodology\" linked in the submission.",
+  "license": "https://creativecommons.org/licenses/by/4.0/",
+  "identifier": "https://doi.org/10.25984/1876417",
+  "url": "https://data.openei.org/submissions/4520",
+  "sameAs": "https://doi.org/10.25984/1876417",  "datePublished": "2021-10-14",
+  "keywords": ["energy","power","buildings","commercial","residential","electricity","natural gas","load profile","load shape","Building Stock","US Building Stock","building","building science","building efficiency","demand response","EULP","End Use Load Profiles","load","end use","grid flexibility","grid","ResStock","ComStock","models","load profiles"],
+  "inLanguage": "English",
+  "includedInDataCatalog": {
+    "@type":"DataCatalog",
+    "name":"Open Energy Data Initiative (OEDI)",
+    "url": "https://data.openei.org/"
+  },
+  "creator": [{"name":"Eric Wilson","affiliation":"National Renewable Energy Laboratory NREL","@type":"Person"},{"name":"Andrew Parker","affiliation":"National Renewable Energy Laboratory NREL","@type":"Person"},{"name":"Anthony Fontanini","affiliation":"National Renewable Energy Laboratory NREL","@type":"Person"},{"name":"Elaina Present","affiliation":"National Renewable Energy Laboratory NREL","@type":"Person"},{"name":"Janet Reyna","affiliation":"National Renewable Energy Laboratory NREL","@type":"Person"},{"name":"Rajendra Adhikari","affiliation":"National Renewable Energy Laboratory NREL","@type":"Person"},{"name":"Carlo Bianchi","affiliation":"National Renewable Energy Laboratory NREL","@type":"Person"},{"name":"Christopher CaraDonna","affiliation":"National Renewable Energy Laboratory NREL","@type":"Person"},{"name":"Matthew Dahlhausen","affiliation":"National Renewable Energy Laboratory NREL","@type":"Person"},{"name":"Janghyun Kim","affiliation":"National Renewable Energy Laboratory NREL","@type":"Person"},{"name":"Amy LeBar","affiliation":"National Renewable Energy Laboratory NREL","@type":"Person"},{"name":"Lixi Liu","affiliation":"National Renewable Energy Laboratory NREL","@type":"Person"},{"name":"Marlena Praprost","affiliation":"National Renewable Energy Laboratory NREL","@type":"Person"},{"name":"Philip White","affiliation":"National Renewable Energy Laboratory NREL","@type":"Person"},{"name":"Liang Zhang","affiliation":"National Renewable Energy Laboratory NREL","@type":"Person"},{"name":"Peter DeWitt","affiliation":"National Renewable Energy Laboratory NREL","@type":"Person"},{"name":"Noel Merket","affiliation":"National Renewable Energy Laboratory NREL","@type":"Person"},{"name":"Andrew Speake","affiliation":"National Renewable Energy Laboratory NREL","@type":"Person"},{"name":"Tianzhen Hong","affiliation":"Lawrence Berkeley National Laboratory","@type":"Person"},{"name":"Han Li","affiliation":"Lawrence Berkeley National Laboratory","@type":"Person"},{"name":"Natalie Mims Frick","affiliation":"Lawrence Berkeley National Laboratory","@type":"Person"},{"name":"Zhe Wang","affiliation":"Lawrence Berkeley National Laboratory","@type":"Person"},{"name":"Aileen Blair","affiliation":"National Renewable Energy Laboratory NREL","@type":"Person"},{"name":"Henry Horsey","affiliation":"National Renewable Energy Laboratory NREL","@type":"Person"},{"name":"David Roberts","affiliation":"National Renewable Energy Laboratory NREL","@type":"Person"},{"name":"Kim Trenbath","affiliation":"National Renewable Energy Laboratory NREL","@type":"Person"},{"name":"Oluwatobi Adekanye","affiliation":"National Renewable Energy Laboratory NREL","@type":"Person"},{"name":"Eric Bonnema","affiliation":"National Renewable Energy Laboratory NREL","@type":"Person"},{"name":"Rawad El Kontar","affiliation":"National Renewable Energy Laboratory NREL","@type":"Person"},{"name":"Jonathan Gonzalez","affiliation":"National Renewable Energy Laboratory NREL","@type":"Person"},{"name":"Scott Horowitz","affiliation":"National Renewable Energy Laboratory NREL","@type":"Person"},{"name":"Dalton Jones","affiliation":"National Renewable Energy Laboratory NREL","@type":"Person"},{"name":"Ralph Muehleisen","affiliation":"Argonne National Laboratory","@type":"Person"},{"name":"Siby Platthotam","affiliation":"Argonne National Laboratory","@type":"Person"},{"name":"Matthew Reynolds","affiliation":"National Renewable Energy Laboratory NREL","@type":"Person"},{"name":"Joseph Robertson","affiliation":"National Renewable Energy Laboratory NREL","@type":"Person"},{"name":"Kevin Sayers","affiliation":"National Renewable Energy Laboratory NREL","@type":"Person"},{"name":"Qu Li","affiliation":"Argonne National Laboratory","@type":"Person"}],
+  "author": [{"name":"Eric Wilson","affiliation":"National Renewable Energy Laboratory NREL","@type":"Person"},{"name":"Andrew Parker","affiliation":"National Renewable Energy Laboratory NREL","@type":"Person"},{"name":"Anthony Fontanini","affiliation":"National Renewable Energy Laboratory NREL","@type":"Person"},{"name":"Elaina Present","affiliation":"National Renewable Energy Laboratory NREL","@type":"Person"},{"name":"Janet Reyna","affiliation":"National Renewable Energy Laboratory NREL","@type":"Person"},{"name":"Rajendra Adhikari","affiliation":"National Renewable Energy Laboratory NREL","@type":"Person"},{"name":"Carlo Bianchi","affiliation":"National Renewable Energy Laboratory NREL","@type":"Person"},{"name":"Christopher CaraDonna","affiliation":"National Renewable Energy Laboratory NREL","@type":"Person"},{"name":"Matthew Dahlhausen","affiliation":"National Renewable Energy Laboratory NREL","@type":"Person"},{"name":"Janghyun Kim","affiliation":"National Renewable Energy Laboratory NREL","@type":"Person"},{"name":"Amy LeBar","affiliation":"National Renewable Energy Laboratory NREL","@type":"Person"},{"name":"Lixi Liu","affiliation":"National Renewable Energy Laboratory NREL","@type":"Person"},{"name":"Marlena Praprost","affiliation":"National Renewable Energy Laboratory NREL","@type":"Person"},{"name":"Philip White","affiliation":"National Renewable Energy Laboratory NREL","@type":"Person"},{"name":"Liang Zhang","affiliation":"National Renewable Energy Laboratory NREL","@type":"Person"},{"name":"Peter DeWitt","affiliation":"National Renewable Energy Laboratory NREL","@type":"Person"},{"name":"Noel Merket","affiliation":"National Renewable Energy Laboratory NREL","@type":"Person"},{"name":"Andrew Speake","affiliation":"National Renewable Energy Laboratory NREL","@type":"Person"},{"name":"Tianzhen Hong","affiliation":"Lawrence Berkeley National Laboratory","@type":"Person"},{"name":"Han Li","affiliation":"Lawrence Berkeley National Laboratory","@type":"Person"},{"name":"Natalie Mims Frick","affiliation":"Lawrence Berkeley National Laboratory","@type":"Person"},{"name":"Zhe Wang","affiliation":"Lawrence Berkeley National Laboratory","@type":"Person"},{"name":"Aileen Blair","affiliation":"National Renewable Energy Laboratory NREL","@type":"Person"},{"name":"Henry Horsey","affiliation":"National Renewable Energy Laboratory NREL","@type":"Person"},{"name":"David Roberts","affiliation":"National Renewable Energy Laboratory NREL","@type":"Person"},{"name":"Kim Trenbath","affiliation":"National Renewable Energy Laboratory NREL","@type":"Person"},{"name":"Oluwatobi Adekanye","affiliation":"National Renewable Energy Laboratory NREL","@type":"Person"},{"name":"Eric Bonnema","affiliation":"National Renewable Energy Laboratory NREL","@type":"Person"},{"name":"Rawad El Kontar","affiliation":"National Renewable Energy Laboratory NREL","@type":"Person"},{"name":"Jonathan Gonzalez","affiliation":"National Renewable Energy Laboratory NREL","@type":"Person"},{"name":"Scott Horowitz","affiliation":"National Renewable Energy Laboratory NREL","@type":"Person"},{"name":"Dalton Jones","affiliation":"National Renewable Energy Laboratory NREL","@type":"Person"},{"name":"Ralph Muehleisen","affiliation":"Argonne National Laboratory","@type":"Person"},{"name":"Siby Platthotam","affiliation":"Argonne National Laboratory","@type":"Person"},{"name":"Matthew Reynolds","affiliation":"National Renewable Energy Laboratory NREL","@type":"Person"},{"name":"Joseph Robertson","affiliation":"National Renewable Energy Laboratory NREL","@type":"Person"},{"name":"Kevin Sayers","affiliation":"National Renewable Energy Laboratory NREL","@type":"Person"},{"name":"Qu Li","affiliation":"Argonne National Laboratory","@type":"Person"}],
+  "distribution": [{"@type":"DataDownload","about":"Aggregate and individual building timeseries end use load profiles.  See README.md file inside the dataset for data hierarchy, organization, etc.","encodingFormat":"data","isAccessibleForFree":true,"contentUrl":"https:\/\/data.openei.org\/s3_viewer?bucket=oedi-data-lake&prefix=nrel-pds-building-stock%2Fend-use-load-profiles-for-us-building-stock%2F","spatialCoverage":{"@type":"Place","geo":{"@type":"GeoShape","box":"24.5873 -125.4514 49.2637 -66.5318"}}},{"@type":"DataDownload","about":"Website with a detailed project description plus links to reports describing the methodology used to create the dataset.","encodingFormat":"website","isAccessibleForFree":true,"contentUrl":"https:\/\/www.nrel.gov\/buildings\/end-use-load-profiles.html","spatialCoverage":{"@type":"Place","geo":{"@type":"GeoShape","box":"24.5873 -125.4514 49.2637 -66.5318"}}},{"@type":"DataDownload","about":"This web-based data viewer allows you to explore the Residential dataset.  It is built on the same individual building load profiles provided in the End-Use Load Profiles dataset.","encodingFormat":"website","isAccessibleForFree":true,"contentUrl":"https:\/\/resstock.nrel.gov\/datasets","spatialCoverage":{"@type":"Place","geo":{"@type":"GeoShape","box":"24.5873 -125.4514 49.2637 -66.5318"}}},{"@type":"DataDownload","about":"This web-based data viewer allows you to explore the Commercial dataset.  It is built on the same individual building load profiles provided in the End-Use Load Profiles dataset.","encodingFormat":"website","isAccessibleForFree":true,"contentUrl":"https:\/\/comstock.nrel.gov\/page\/datasets","spatialCoverage":{"@type":"Place","geo":{"@type":"GeoShape","box":"24.5873 -125.4514 49.2637 -66.5318"}}},{"@type":"DataDownload","about":"Answers to frequently asked questions about the End-Use Load Profiles dataset and ComStock\/ResStock data viewers. ","encodingFormat":"website","isAccessibleForFree":true,"contentUrl":"https:\/\/comstock.nrel.gov\/page\/faq","spatialCoverage":{"@type":"Place","geo":{"@type":"GeoShape","box":"24.5873 -125.4514 49.2637 -66.5318"}}},{"@type":"DataDownload","about":"Publication on the methodology and results of model calibration, validation, and uncertainty quantification for the End-Use Load Profiles study.","encodingFormat":"image_document","isAccessibleForFree":true,"contentUrl":"https:\/\/www.nrel.gov\/docs\/fy22osti\/80889.pdf","spatialCoverage":{"@type":"Place","geo":{"@type":"GeoShape","box":"24.5873 -125.4514 49.2637 -66.5318"}}},{"@type":"DataDownload","about":"This file describes the organization of the datasets.","encodingFormat":"data","isAccessibleForFree":true,"contentUrl":"https:\/\/oedi-data-lake.s3.amazonaws.com\/nrel-pds-building-stock\/end-use-load-profiles-for-us-building-stock\/README.md","spatialCoverage":{"@type":"Place","geo":{"@type":"GeoShape","box":"24.5873 -125.4514 49.2637 -66.5318"}}},{"@type":"DataDownload","about":"AWS public dataset program registry page for data released as a part of the End-Use Load Profiles for the U.S. Building Stock project. The registry page contains information about dataset documentation, access, and contact, for each of the End-Use Load Profiles datasets.","encodingFormat":"website","isAccessibleForFree":true,"contentUrl":"https:\/\/registry.opendata.aws\/nrel-pds-building-stock\/","spatialCoverage":{"@type":"Place","geo":{"@type":"GeoShape","box":"-83 -180 83 180"}}}],
+  "sourceOrganization": [{"name":"Open Energy Data Initiative (OEDI)","@type":"Organization"},{"name":"National Renewable Energy Laboratory (NREL)","@type":"Organization"},{"name":"USDOE Office of Energy Efficiency and Renewable Energy (EERE), Multiple Programs (EE)","@type":"Organization"}]  }
+</script>
+
+
+    <script type="text/javascript">
+      //Onload
+      $(function(){
+        $('a.downloadlink').click(function(){
+          gtag('event', 'resource link', {
+            'resource': this.href,
+            'value': 1
+          });
+        });
+      });
+    </script>
+
+<script type="text/javascript">
+  $(document).ready(function (){
+    $(".scroll-item").click(function (){
+      const id = $(this)[0].id.split('_')[1];
+      $('html, body').animate({
+          scrollTop: $(`#${id}`).offset().top
+      }, 100);
+    });
+  })
+  .on('scroll', function(evt) {
+    // TODO: Add debounce
+      var closest = Infinity,
+          scrollId = null;
+      $('.scroll-section').each(function() {
+          const elemOffset = $(this).offset().top;
+          const distance = Math.abs(elemOffset - $(window).scrollTop());
+          if (closest > distance) {
+              closest = distance;
+              scrollId = $(this)[0].id;
+          }
+      });
+      $('.scroll-item').removeClass('active');
+      $(`#scroll_${scrollId}`).addClass('active');
+  });
+</script>
+<!-- Favorite Logic -->
+<script type="text/javascript" src="/assets/js/favorite.js"></script>
+
+<div class="d-flex justify-content-between align-items-start flex-wrap flex-md-nowrap" style="max-width: 1440px; width:100%; margin:0 auto;">
+  <section id="sub-nav" class="d-none d-lg-block position-sticky top-5 pt-5 mt-5" style="flex: 0 0 120px;">
+    <ul class="list-unstyled pt-4">
+              <li class="list-item scroll-li mb-1 d-none d-lg-flex">
+          <button id="scroll_description" type="button" class="d-flex justify-content-end btn no-focus scroll-item w-100 px-0 m-0">Description</button>
+        </li>
+                    <li class="list-item scroll-li mb-1 d-none d-lg-flex">
+          <button id="scroll_resourcesWrapper" type="button" class="d-flex justify-content-end btn no-focus scroll-item w-100 px-0 m-0">Resources</button>
+        </li>
+            <li class="list-item scroll-li mb-1 d-none d-lg-flex pb-2">
+        <button id="scroll_citation" type="button" class="d-flex justify-content-end btn no-focus scroll-item w-100 px-0 m-0">Citation</button>
+      </li>
+              <li id="relatedDatasets" class="list-item mb-1 d-none d-lg-flex py-4 border-top">
+          <a class="ms-auto" href="/search?q=FY19 AOP 3.4.6.57" title="Find data related to this project">Related Datasets</a>
+        </li>
+            <li id="askXDR" class="list-item mb-1 d-none d-lg-flex">
+          <button type="button" href="#askModal" class="btn btn-default w-100 px-3" id="askXDRBtn" data-toggle="modal" data-backdrop="false" title="Launch a virtual research assistant">
+            <img class="have2x" src="/assets/img/ask-oedi-logo.png" width="108" aria-label="Ask OEDI"/>
+          </button>
+      </li>
+          </ul>
+  </section>
+
+  <section class="submission-title-group w-100" style="margin: 0 4%;">
+    
+    <h1 class="submission-title font-serif mb-0">End-Use Load Profiles for the U.S. Building Stock</h1>
+
+    <div class="submission-main">
+      <div class="submission-abstract w-100">
+        <div class="submission-main-group">
+
+          <section class="submission-status-bar d-flex align-items-center">
+                          <div class="DOI d-flex align-items-center">
+                <strong class="me-2">DOI</strong>
+                <strong><a rel="noopener noreferrer" target="_blank" href="https://doi.org/10.25984/1876417" class="doi-link">10.25984/1876417</a></strong>
+              </div>
+                        <div class="status my-4 ms-auto d-flex align-items-center flex-wrap">
+              <span class="sub-status ms-auto me-2 publicly-accessible">Publicly accessible</span>
+              <span class="ms-auto"><a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener noreferrer">License</a>&nbsp;<img aria-hidden="true" alt="CC" class="have2x" width="34px" style="vertical-align: text-bottom;" src="../assets/img/cc-by.png"/></span>
+            </div>
+                                    <script type="text/javascript">
+              //Onload, load stars
+                $(function(){
+                  FAVORITE.starSetup('', '0');
+                  FAVORITE.subscribeSetup('', '0');
+
+              });
+            </script>
+            <div>
+              <button type="button" class="btn btn-sm btn-default favorite-button" id="subscribe-container" style="white-space: nowrap;" onclick="FAVORITE.subscribeSubmission('4520');">
+                  <span style="margin-right: 2px; font-size: 1.5rem;">
+                      <i id="subscribe-icon" class="fa fa-bell-o" aria-hidden="true"></i>
+                  </span>
+                  <span style="font-size: 12px;" id="subscribe-text" >Subscribe</span>
+                  <span id="subscribe-counter" class="favorite-counter">null</span>
+                </button>
+            </div>
+            <div>
+              <button type="button" class="btn btn-sm btn-default favorite-button" id="star-container" style="white-space: nowrap;" onclick="FAVORITE.starSubmission('4520');">
+                  <span style="margin-right: 2px; font-size: 1.5rem;">
+                      <i id="star-icon" class="fa fa-star-o" aria-hidden="true"></i>
+                  </span>
+                  <span style="font-size: 12px;" id="star-text">Star</span>
+                  <span id="star-counter" class="favorite-counter">null</span>
+              </button>
+          </div>
+          </section>
+
+          <section id="description" class="scroll-section">
+            <p class="abstract">The United States is embarking on an ambitious transition to a 100% clean energy economy by 2050, which will require improving the flexibility of electric grids. One way to achieve grid flexibility is to shed or shift demand to align with changing grid needs. To facilitate this, it is critical to understand how and when energy is used. High quality end-use load profiles (EULPs) provide this information, and can help cities, states, and utilities understand the time-sensitive value of energy efficiency, demand response, and distributed energy resources. Publicly available EULPs have traditionally had limited application because of age and incomplete geographic representation. To help fill this gap, the U.S. Department of Energy (DOE) funded a three-year project, End-Use Load Profiles for the U.S. Building Stock, that culminated in this publicly available dataset of calibrated and validated 15-minute resolution load profiles for all major residential and commercial building types and end uses, across all climate regions in the United States. These EULPs were created by calibrating the ResStock and ComStock physics-based building stock models using many different measured datasets, as described in the "Technical Report Documenting Methodology" linked in the submission.</p>
+          </section>
+
+          <section id="repoDetails" class="row">
+                                              </section>
+        </div>
+      </div>
+
+      <section id="resourcesWrapper" class="scroll-section table-view pt-5" style="display: none;">
+        <div id="resourceDescDisplay" class="p-4 pb-0" style="display: none;">
+          <div class="">
+            <div class="pb-4"><button type="button" class="close btn-remove" onclick="hideResourceDesc();">&times;</button></div>
+            <div class="desc-body"></div>
+          </div>
+          <div class="">
+            <div class="text-center p-4"><button type="button" class="btn-link btn-sm" onclick="hideResourceDesc();">Close</button></div>
+          </div>
+        </div>
+
+        <div id="bulkDownload" class="d-table">
+                  </div>
+
+        <section>
+                        <div class="sub-resource" data-full-desc="Aggregate and individual building timeseries end use load profiles.  See README.md file inside the dataset for data hierarchy, organization, etc.">
+                <div class="resource-heading d-flex align-items-start py-4">
+                  <div class="resource-icon text-center fafa_custom_aws" style="min-width:3rem; min-height:3rem;">
+                    <i class="fa fa-custom-aws" aria-hidden="true"></i>                  </div>
+
+                  <div class="resource-text flex-fill ms-3 me-5">
+                    <div class="resource-name" title="Aggregate and Individual Building Timeseries End Use Load Profiles">
+                      <p class="mb-0 text-break">Aggregate and Individual Building Timeseries End Use Load Profiles</p>
+                                          </div>
+
+                    <div class="resource-desc">
+                      Aggregate and individual building timeseries end use load profiles.  See README.md file inside the dataset for data hierarchy, organization, etc.                    </div>
+                    <div style="display: flex;">
+                                              <div class="resource-download-count text-muted mt-3" style="margin-right: 20px;">
+                          <small class="d-flex align-items-baseline" title="total downloads">
+                            <i class="fa fa-download me-2"></i> 394,264,664                          </small>
+                        </div>
+                                                                    <div class="resource-download-count text-muted mt-3">
+                          <small class="d-flex align-items-baseline">
+                            <input type="text" id="cliString" class="copy-text position-absolute" style="opacity:0;pointer-events:none;" value="aws s3 ls --no-sign-request s3://oedi-data-lake/nrel-pds-building-stock/end-use-load-profiles-for-us-building-stock/" />
+                            AWS CLI Access:&nbsp&nbsp<span style="background-color: #e9e9e9; padding: 0px 5px; border-radius: 5px;">aws s3 ls --no-sign-request s3://oedi-data-lake/nrel-pds-building-stock/end-use-load-profiles-for-us-building-stock/</span><button type="button" id="copyAwsCliBtn" class="btn btn-link btn-sm" onclick="copyCli(this);" aria-label="Click to Copy AWS CLI" style="padding: 0px 5px 0px 5px; border-width: 0px;"><i class="fa fa-clone fa-rotate-270 me-2"></i></button>
+                          </small>
+                        </div>
+                                                                  <!-- commenting the below out for now until azure data can be viewed in the cli. Goes along with commented out code above -->
+                                              <!-- <div class="resource-download-count text-muted mt-3">
+                          <small class="d-flex align-items-baseline">
+                            <input type="text" id="cliString" class="copy-text position-absolute" style="opacity:0;pointer-events:none;" value="<?#= $azureCliCopyLink; ?>" />
+                            Azure CLI Access:&nbsp&nbsp<span style="background-color: #e9e9e9; padding: 0px 5px; border-radius: 5px;"><?#= (strlen($azureCliCopyLink) > 60) ? utf8_decode(substr($azureCliCopyLink, 0, 60)).' ...' : utf8_decode($azureCliCopyLink); ?></span><button type="button" id="copyAzureCliBtn" class="btn btn-link btn-sm" onclick="copyCli(this);" aria-label="Click to Copy AWS CLI" style="padding: 0px 5px 0px 5px; border-width: 0px;"><i class="fa fa-clone fa-rotate-270 me-2"></i></button>
+                          </small>
+                        </div> -->
+                                          </div>
+                  </div>
+
+                  <div class="resource-download-details flex-fill d-flex flex-column align-items-start ms-auto">
+                    <div class="resource-download font-16"><a class='downloadlink d-flex align-items-baseline' href='https://data.openei.org/s3_viewer?bucket=oedi-data-lake&prefix=nrel-pds-building-stock%2Fend-use-load-profiles-for-us-building-stock%2F' target='_blank' rel='noopener noreferrer'><i class="me-3 fa fa-external-link-square"></i> <span class='d-flex flex-column align-items-start'>View Data Lake <small class='text-muted'> 265.34 TB </small></span></a></div>
+                  </div>
+                </div>
+              </div>
+                        <div class="sub-resource" data-full-desc="AWS public dataset program registry page for data released as a part of the End-Use Load Profiles for the U.S. Building Stock project. The registry page contains information about dataset documentation, access, and contact, for each of the End-Use Load Profiles datasets.">
+                <div class="resource-heading d-flex align-items-start py-4">
+                  <div class="resource-icon text-center fafa_custom_aws" style="min-width:3rem; min-height:3rem;">
+                    <i class="fa fa-custom-aws" aria-hidden="true"></i>                  </div>
+
+                  <div class="resource-text flex-fill ms-3 me-5">
+                    <div class="resource-name" title="End-Use Load Profiles Data Registry on AWS">
+                      <p class="mb-0 text-break">End-Use Load Profiles Data Registry on AWS</p>
+                                          </div>
+
+                    <div class="resource-desc">
+                      AWS public dataset program registry page for data released as a part of the End-Use Load Profiles for the U.S. Building Stock project. The registry page contains inform... <a href="javascript:void(0)" title="read more" class="resource-desc-more">more</a>                    </div>
+                    <div style="display: flex;">
+                                                                                        <!-- commenting the below out for now until azure data can be viewed in the cli. Goes along with commented out code above -->
+                                              <!-- <div class="resource-download-count text-muted mt-3">
+                          <small class="d-flex align-items-baseline">
+                            <input type="text" id="cliString" class="copy-text position-absolute" style="opacity:0;pointer-events:none;" value="<?#= $azureCliCopyLink; ?>" />
+                            Azure CLI Access:&nbsp&nbsp<span style="background-color: #e9e9e9; padding: 0px 5px; border-radius: 5px;"><?#= (strlen($azureCliCopyLink) > 60) ? utf8_decode(substr($azureCliCopyLink, 0, 60)).' ...' : utf8_decode($azureCliCopyLink); ?></span><button type="button" id="copyAzureCliBtn" class="btn btn-link btn-sm" onclick="copyCli(this);" aria-label="Click to Copy AWS CLI" style="padding: 0px 5px 0px 5px; border-width: 0px;"><i class="fa fa-clone fa-rotate-270 me-2"></i></button>
+                          </small>
+                        </div> -->
+                                          </div>
+                  </div>
+
+                  <div class="resource-download-details flex-fill d-flex flex-column align-items-start ms-auto">
+                    <div class="resource-download font-16"><a class='downloadlink d-flex align-items-baseline' href='https://registry.opendata.aws/nrel-pds-building-stock/' target='_blank' rel='noopener noreferrer'><i class="me-3 fa fa-external-link-square"></i> <span class='d-flex flex-column align-items-start'>View </span></a></div>
+                  </div>
+                </div>
+              </div>
+                        <div class="sub-resource" data-full-desc="Answers to frequently asked questions about the End-Use Load Profiles dataset and ComStock/ResStock data viewers. ">
+                <div class="resource-heading d-flex align-items-start py-4">
+                  <div class="resource-icon text-center fafa_link" style="min-width:3rem; min-height:3rem;">
+                    <i class="fa fa-link" aria-hidden="true"></i>                  </div>
+
+                  <div class="resource-text flex-fill ms-3 me-5">
+                    <div class="resource-name" title="FAQ for End-Use Load Profiles Dataset">
+                      <p class="mb-0 text-break">FAQ for End-Use Load Profiles Dataset</p>
+                                          </div>
+
+                    <div class="resource-desc">
+                      Answers to frequently asked questions about the End-Use Load Profiles dataset and ComStock/ResStock data viewers.                     </div>
+                    <div style="display: flex;">
+                                                                                        <!-- commenting the below out for now until azure data can be viewed in the cli. Goes along with commented out code above -->
+                                              <!-- <div class="resource-download-count text-muted mt-3">
+                          <small class="d-flex align-items-baseline">
+                            <input type="text" id="cliString" class="copy-text position-absolute" style="opacity:0;pointer-events:none;" value="<?#= $azureCliCopyLink; ?>" />
+                            Azure CLI Access:&nbsp&nbsp<span style="background-color: #e9e9e9; padding: 0px 5px; border-radius: 5px;"><?#= (strlen($azureCliCopyLink) > 60) ? utf8_decode(substr($azureCliCopyLink, 0, 60)).' ...' : utf8_decode($azureCliCopyLink); ?></span><button type="button" id="copyAzureCliBtn" class="btn btn-link btn-sm" onclick="copyCli(this);" aria-label="Click to Copy AWS CLI" style="padding: 0px 5px 0px 5px; border-width: 0px;"><i class="fa fa-clone fa-rotate-270 me-2"></i></button>
+                          </small>
+                        </div> -->
+                                          </div>
+                  </div>
+
+                  <div class="resource-download-details flex-fill d-flex flex-column align-items-start ms-auto">
+                    <div class="resource-download font-16"><a class='downloadlink d-flex align-items-baseline' href='https://comstock.nrel.gov/page/faq' target='_blank' rel='noopener noreferrer'><i class="me-3 fa fa-external-link-square"></i> <span class='d-flex flex-column align-items-start'>View </span></a></div>
+                  </div>
+                </div>
+              </div>
+                        <div class="sub-resource" data-full-desc="This file describes the organization of the datasets.">
+                <div class="resource-heading d-flex align-items-start py-4">
+                  <div class="resource-icon text-center fafa_link" style="min-width:3rem; min-height:3rem;">
+                    <i class="fa fa-link" aria-hidden="true"></i>                  </div>
+
+                  <div class="resource-text flex-fill ms-3 me-5">
+                    <div class="resource-name" title="README.md">
+                      <p class="mb-0 text-break">README.md</p>
+                                          </div>
+
+                    <div class="resource-desc">
+                      This file describes the organization of the datasets.                    </div>
+                    <div style="display: flex;">
+                                                                                        <!-- commenting the below out for now until azure data can be viewed in the cli. Goes along with commented out code above -->
+                                              <!-- <div class="resource-download-count text-muted mt-3">
+                          <small class="d-flex align-items-baseline">
+                            <input type="text" id="cliString" class="copy-text position-absolute" style="opacity:0;pointer-events:none;" value="<?#= $azureCliCopyLink; ?>" />
+                            Azure CLI Access:&nbsp&nbsp<span style="background-color: #e9e9e9; padding: 0px 5px; border-radius: 5px;"><?#= (strlen($azureCliCopyLink) > 60) ? utf8_decode(substr($azureCliCopyLink, 0, 60)).' ...' : utf8_decode($azureCliCopyLink); ?></span><button type="button" id="copyAzureCliBtn" class="btn btn-link btn-sm" onclick="copyCli(this);" aria-label="Click to Copy AWS CLI" style="padding: 0px 5px 0px 5px; border-width: 0px;"><i class="fa fa-clone fa-rotate-270 me-2"></i></button>
+                          </small>
+                        </div> -->
+                                          </div>
+                  </div>
+
+                  <div class="resource-download-details flex-fill d-flex flex-column align-items-start ms-auto">
+                    <div class="resource-download font-16"><a class='downloadlink d-flex align-items-baseline' href='https://oedi-data-lake.s3.amazonaws.com/nrel-pds-building-stock/end-use-load-profiles-for-us-building-stock/README.md' target='_blank' rel='noopener noreferrer'><i class="me-3 fa fa-external-link-square"></i> <span class='d-flex flex-column align-items-start'>View </span></a></div>
+                  </div>
+                </div>
+              </div>
+                        <div class="sub-resource" data-full-desc="Publication on the methodology and results of model calibration, validation, and uncertainty quantification for the End-Use Load Profiles study.">
+                <div class="resource-heading d-flex align-items-start py-4">
+                  <div class="resource-icon text-center fafa_link" style="min-width:3rem; min-height:3rem;">
+                    <i class="fa fa-link" aria-hidden="true"></i>                  </div>
+
+                  <div class="resource-text flex-fill ms-3 me-5">
+                    <div class="resource-name" title="Technical Report Documenting Methodology">
+                      <p class="mb-0 text-break">Technical Report Documenting Methodology</p>
+                                          </div>
+
+                    <div class="resource-desc">
+                      Publication on the methodology and results of model calibration, validation, and uncertainty quantification for the End-Use Load Profiles study.                    </div>
+                    <div style="display: flex;">
+                                                                                        <!-- commenting the below out for now until azure data can be viewed in the cli. Goes along with commented out code above -->
+                                              <!-- <div class="resource-download-count text-muted mt-3">
+                          <small class="d-flex align-items-baseline">
+                            <input type="text" id="cliString" class="copy-text position-absolute" style="opacity:0;pointer-events:none;" value="<?#= $azureCliCopyLink; ?>" />
+                            Azure CLI Access:&nbsp&nbsp<span style="background-color: #e9e9e9; padding: 0px 5px; border-radius: 5px;"><?#= (strlen($azureCliCopyLink) > 60) ? utf8_decode(substr($azureCliCopyLink, 0, 60)).' ...' : utf8_decode($azureCliCopyLink); ?></span><button type="button" id="copyAzureCliBtn" class="btn btn-link btn-sm" onclick="copyCli(this);" aria-label="Click to Copy AWS CLI" style="padding: 0px 5px 0px 5px; border-width: 0px;"><i class="fa fa-clone fa-rotate-270 me-2"></i></button>
+                          </small>
+                        </div> -->
+                                          </div>
+                  </div>
+
+                  <div class="resource-download-details flex-fill d-flex flex-column align-items-start ms-auto">
+                    <div class="resource-download font-16"><a class='downloadlink d-flex align-items-baseline' href='https://www.nrel.gov/docs/fy22osti/80889.pdf' target='_blank' rel='noopener noreferrer'><i class="me-3 fa fa-external-link-square"></i> <span class='d-flex flex-column align-items-start'>View </span></a></div>
+                  </div>
+                </div>
+              </div>
+                        <div class="sub-resource" data-full-desc="This web-based data viewer allows you to explore the Commercial dataset.  It is built on the same individual building load profiles provided in the End-Use Load Profiles dataset.">
+                <div class="resource-heading d-flex align-items-start py-4">
+                  <div class="resource-icon text-center fafa_link" style="min-width:3rem; min-height:3rem;">
+                    <i class="fa fa-link" aria-hidden="true"></i>                  </div>
+
+                  <div class="resource-text flex-fill ms-3 me-5">
+                    <div class="resource-name" title="Web-Based Data Viewer for Commercial Load Profiles">
+                      <p class="mb-0 text-break">Web-Based Data Viewer for Commercial Load Profiles</p>
+                                          </div>
+
+                    <div class="resource-desc">
+                      This web-based data viewer allows you to explore the Commercial dataset.  It is built on the same individual building load profiles provided in the End-Use Load Profile... <a href="javascript:void(0)" title="read more" class="resource-desc-more">more</a>                    </div>
+                    <div style="display: flex;">
+                                                                                        <!-- commenting the below out for now until azure data can be viewed in the cli. Goes along with commented out code above -->
+                                              <!-- <div class="resource-download-count text-muted mt-3">
+                          <small class="d-flex align-items-baseline">
+                            <input type="text" id="cliString" class="copy-text position-absolute" style="opacity:0;pointer-events:none;" value="<?#= $azureCliCopyLink; ?>" />
+                            Azure CLI Access:&nbsp&nbsp<span style="background-color: #e9e9e9; padding: 0px 5px; border-radius: 5px;"><?#= (strlen($azureCliCopyLink) > 60) ? utf8_decode(substr($azureCliCopyLink, 0, 60)).' ...' : utf8_decode($azureCliCopyLink); ?></span><button type="button" id="copyAzureCliBtn" class="btn btn-link btn-sm" onclick="copyCli(this);" aria-label="Click to Copy AWS CLI" style="padding: 0px 5px 0px 5px; border-width: 0px;"><i class="fa fa-clone fa-rotate-270 me-2"></i></button>
+                          </small>
+                        </div> -->
+                                          </div>
+                  </div>
+
+                  <div class="resource-download-details flex-fill d-flex flex-column align-items-start ms-auto">
+                    <div class="resource-download font-16"><a class='downloadlink d-flex align-items-baseline' href='https://comstock.nrel.gov/page/datasets' target='_blank' rel='noopener noreferrer'><i class="me-3 fa fa-external-link-square"></i> <span class='d-flex flex-column align-items-start'>View </span></a></div>
+                  </div>
+                </div>
+              </div>
+                        <div class="sub-resource" data-full-desc="This web-based data viewer allows you to explore the Residential dataset.  It is built on the same individual building load profiles provided in the End-Use Load Profiles dataset.">
+                <div class="resource-heading d-flex align-items-start py-4">
+                  <div class="resource-icon text-center fafa_link" style="min-width:3rem; min-height:3rem;">
+                    <i class="fa fa-link" aria-hidden="true"></i>                  </div>
+
+                  <div class="resource-text flex-fill ms-3 me-5">
+                    <div class="resource-name" title="Web-Based Data Viewer for Residential Load Profiles">
+                      <p class="mb-0 text-break">Web-Based Data Viewer for Residential Load Profiles</p>
+                                          </div>
+
+                    <div class="resource-desc">
+                      This web-based data viewer allows you to explore the Residential dataset.  It is built on the same individual building load profiles provided in the End-Use Load Profil... <a href="javascript:void(0)" title="read more" class="resource-desc-more">more</a>                    </div>
+                    <div style="display: flex;">
+                                                                                        <!-- commenting the below out for now until azure data can be viewed in the cli. Goes along with commented out code above -->
+                                              <!-- <div class="resource-download-count text-muted mt-3">
+                          <small class="d-flex align-items-baseline">
+                            <input type="text" id="cliString" class="copy-text position-absolute" style="opacity:0;pointer-events:none;" value="<?#= $azureCliCopyLink; ?>" />
+                            Azure CLI Access:&nbsp&nbsp<span style="background-color: #e9e9e9; padding: 0px 5px; border-radius: 5px;"><?#= (strlen($azureCliCopyLink) > 60) ? utf8_decode(substr($azureCliCopyLink, 0, 60)).' ...' : utf8_decode($azureCliCopyLink); ?></span><button type="button" id="copyAzureCliBtn" class="btn btn-link btn-sm" onclick="copyCli(this);" aria-label="Click to Copy AWS CLI" style="padding: 0px 5px 0px 5px; border-width: 0px;"><i class="fa fa-clone fa-rotate-270 me-2"></i></button>
+                          </small>
+                        </div> -->
+                                          </div>
+                  </div>
+
+                  <div class="resource-download-details flex-fill d-flex flex-column align-items-start ms-auto">
+                    <div class="resource-download font-16"><a class='downloadlink d-flex align-items-baseline' href='https://resstock.nrel.gov/datasets' target='_blank' rel='noopener noreferrer'><i class="me-3 fa fa-external-link-square"></i> <span class='d-flex flex-column align-items-start'>View </span></a></div>
+                  </div>
+                </div>
+              </div>
+                        <div class="sub-resource" data-full-desc="Website with a detailed project description plus links to reports describing the methodology used to create the dataset.">
+                <div class="resource-heading d-flex align-items-start py-4">
+                  <div class="resource-icon text-center fafa_link" style="min-width:3rem; min-height:3rem;">
+                    <i class="fa fa-link" aria-hidden="true"></i>                  </div>
+
+                  <div class="resource-text flex-fill ms-3 me-5">
+                    <div class="resource-name" title="Website for End Use Load Profiles project">
+                      <p class="mb-0 text-break">Website for End Use Load Profiles project</p>
+                                          </div>
+
+                    <div class="resource-desc">
+                      Website with a detailed project description plus links to reports describing the methodology used to create the dataset.                    </div>
+                    <div style="display: flex;">
+                                                                                        <!-- commenting the below out for now until azure data can be viewed in the cli. Goes along with commented out code above -->
+                                              <!-- <div class="resource-download-count text-muted mt-3">
+                          <small class="d-flex align-items-baseline">
+                            <input type="text" id="cliString" class="copy-text position-absolute" style="opacity:0;pointer-events:none;" value="<?#= $azureCliCopyLink; ?>" />
+                            Azure CLI Access:&nbsp&nbsp<span style="background-color: #e9e9e9; padding: 0px 5px; border-radius: 5px;"><?#= (strlen($azureCliCopyLink) > 60) ? utf8_decode(substr($azureCliCopyLink, 0, 60)).' ...' : utf8_decode($azureCliCopyLink); ?></span><button type="button" id="copyAzureCliBtn" class="btn btn-link btn-sm" onclick="copyCli(this);" aria-label="Click to Copy AWS CLI" style="padding: 0px 5px 0px 5px; border-width: 0px;"><i class="fa fa-clone fa-rotate-270 me-2"></i></button>
+                          </small>
+                        </div> -->
+                                          </div>
+                  </div>
+
+                  <div class="resource-download-details flex-fill d-flex flex-column align-items-start ms-auto">
+                    <div class="resource-download font-16"><a class='downloadlink d-flex align-items-baseline' href='https://www.nrel.gov/buildings/end-use-load-profiles.html' target='_blank' rel='noopener noreferrer'><i class="me-3 fa fa-external-link-square"></i> <span class='d-flex flex-column align-items-start'>View </span></a></div>
+                  </div>
+                </div>
+              </div>
+                  </section>
+      </section>
+
+      <section id="citation" class="scroll-section py-5" style="margin-bottom: 50rem;">
+        <h4 class="fw-light">Citation Formats</h4>
+        <ul id="citationTabs" class="underline-tabs nav nav-tabs" role="tablist">
+          <li class="nav-item active"><a class="nav-link me-4" id="apa-tab" data-toggle="tab" href="#apa" role="tab" aria-controls="apa" aria-selected="true">APA</a></li>
+          <li class="nav-item"><a class="nav-link me-4" id="mla-tab" data-toggle="tab" href="#mla" role="tab" aria-controls="mla" aria-selected="true">MLA</a></li>
+          <li class="nav-item"><a class="nav-link me-4" id="chicago-tab" data-toggle="tab" href="#chicago" role="tab" aria-controls="chicago" aria-selected="true">Chicago</a></li>
+          <li class="nav-item"><a class="nav-link me-4" id="ris-tab" data-toggle="tab" href="#ris" role="tab" aria-controls="ris" aria-selected="true">RIS</a></li>
+          <li class="nav-item"><a class="nav-link me-4" id="bibtex-tab" data-toggle="tab" href="#bibtex" role="tab" aria-controls="bibtex" aria-selected="true">BibTex</a></li>
+
+                      <li class="nav-item"><a class="nav-link me-4" id="doi-tab" data-toggle="tab" href="#doi" role="tab" aria-controls="doi" aria-selected="false">DOI</a></li>
+                  </ul>
+
+        <section id="citationContent" class="tab-content">
+          <div id="ris" class="tab-pane my-4" role="tabpanel" aria-labelledby="ris-tab">
+            <code class="d-block w-75 pb-4" aria-label="Citation info and link" style="color:black;background:transparent">TY  - DATA
+AB  - The United States is embarking on an ambitious transition to a 100% clean energy economy by 2050, which will require improving the flexibility of electric grids. One way to achieve grid flexibility is to shed or shift demand to align with changing grid needs. To facilitate this, it is critical to understand how and when energy is used. High quality end-use load profiles (EULPs) provide this information, and can help cities, states, and utilities understand the time-sensitive value of energy efficiency, demand response, and distributed energy resources. Publicly available EULPs have traditionally had limited application because of age and incomplete geographic representation. To help fill this gap, the U.S. Department of Energy (DOE) funded a three-year project, End-Use Load Profiles for the U.S. Building Stock, that culminated in this publicly available dataset of calibrated and validated 15-minute resolution load profiles for all major residential and commercial building types and end uses, across all climate regions in the United States. These EULPs were created by calibrating the ResStock and ComStock physics-based building stock models using many different measured datasets, as described in the "Technical Report Documenting Methodology" linked in the submission.
+AU  - Wilson, Eric
+A2  - Parker, Andrew
+A3  - Fontanini, Anthony
+A4  - Present, Elaina
+A5  - Reyna, Janet
+A6  - Adhikari, Rajendra
+A7  - Bianchi, Carlo
+A8  - CaraDonna, Christopher
+A9  - Dahlhausen, Matthew
+A10  - Kim, Janghyun
+A11  - LeBar, Amy
+A12  - Liu, Lixi
+A13  - Praprost, Marlena
+A14  - White, Philip
+A15  - Zhang, Liang
+A16  - DeWitt, Peter
+A17  - Merket, Noel
+A18  - Speake, Andrew
+A19  - Hong, Tianzhen
+A20  - Li, Han
+A21  - Mims Frick, Natalie
+A22  - Wang, Zhe
+A23  - Blair, Aileen
+A24  - Horsey, Henry
+A25  - Roberts, David
+A26  - Trenbath, Kim
+A27  - Adekanye, Oluwatobi
+A28  - Bonnema, Eric
+A29  - El Kontar, Rawad
+A30  - Gonzalez, Jonathan
+A31  - Horowitz, Scott
+A32  - Jones, Dalton
+A33  - Muehleisen, Ralph
+A34  - Platthotam, Siby
+A35  - Reynolds, Matthew
+A36  - Robertson, Joseph
+A37  - Sayers, Kevin
+A38  - Li, Qu
+DB  - Open Energy Data Initiative (OEDI)
+DP  - Open EI | National Laboratory of the Rockies
+DO  - 10.25984/1876417
+KW  - energy
+KW  - power
+KW  - buildings
+KW  - commercial
+KW  - residential
+KW  - electricity
+KW  - natural gas
+KW  - load profile
+KW  - load shape
+KW  - Building Stock
+KW  - US Building Stock
+KW  - building
+KW  - building science
+KW  - building efficiency
+KW  - demand response
+KW  - EULP
+KW  - End Use Load Profiles
+KW  - load
+KW  - end use
+KW  - grid flexibility
+KW  - grid
+KW  - ResStock
+KW  - ComStock
+KW  - models
+KW  - load profiles
+LA  - English
+DA  - 2021/10/14
+PY  - 2021
+PB  - National Renewable Energy Laboratory (NREL)
+T1  - End-Use Load Profiles for the U.S. Building Stock
+UR  - https://doi.org/10.25984/1876417
+ER  - </code>
+            <div class="d-flex align-items-center row px-2">
+              <input type="text" id="citationText" class="copy-text position-absolute" style="opacity:0;pointer-events:none" value="TY  - DATA
+AB  - The United States is embarking on an ambitious transition to a 100% clean energy economy by 2050, which will require improving the flexibility of electric grids. One way to achieve grid flexibility is to shed or shift demand to align with changing grid needs. To facilitate this, it is critical to understand how and when energy is used. High quality end-use load profiles (EULPs) provide this information, and can help cities, states, and utilities understand the time-sensitive value of energy efficiency, demand response, and distributed energy resources. Publicly available EULPs have traditionally had limited application because of age and incomplete geographic representation. To help fill this gap, the U.S. Department of Energy (DOE) funded a three-year project, End-Use Load Profiles for the U.S. Building Stock, that culminated in this publicly available dataset of calibrated and validated 15-minute resolution load profiles for all major residential and commercial building types and end uses, across all climate regions in the United States. These EULPs were created by calibrating the ResStock and ComStock physics-based building stock models using many different measured datasets, as described in the "Technical Report Documenting Methodology" linked in the submission.
+AU  - Wilson, Eric
+A2  - Parker, Andrew
+A3  - Fontanini, Anthony
+A4  - Present, Elaina
+A5  - Reyna, Janet
+A6  - Adhikari, Rajendra
+A7  - Bianchi, Carlo
+A8  - CaraDonna, Christopher
+A9  - Dahlhausen, Matthew
+A10  - Kim, Janghyun
+A11  - LeBar, Amy
+A12  - Liu, Lixi
+A13  - Praprost, Marlena
+A14  - White, Philip
+A15  - Zhang, Liang
+A16  - DeWitt, Peter
+A17  - Merket, Noel
+A18  - Speake, Andrew
+A19  - Hong, Tianzhen
+A20  - Li, Han
+A21  - Mims Frick, Natalie
+A22  - Wang, Zhe
+A23  - Blair, Aileen
+A24  - Horsey, Henry
+A25  - Roberts, David
+A26  - Trenbath, Kim
+A27  - Adekanye, Oluwatobi
+A28  - Bonnema, Eric
+A29  - El Kontar, Rawad
+A30  - Gonzalez, Jonathan
+A31  - Horowitz, Scott
+A32  - Jones, Dalton
+A33  - Muehleisen, Ralph
+A34  - Platthotam, Siby
+A35  - Reynolds, Matthew
+A36  - Robertson, Joseph
+A37  - Sayers, Kevin
+A38  - Li, Qu
+DB  - Open Energy Data Initiative (OEDI)
+DP  - Open EI | National Laboratory of the Rockies
+DO  - 10.25984/1876417
+KW  - energy
+KW  - power
+KW  - buildings
+KW  - commercial
+KW  - residential
+KW  - electricity
+KW  - natural gas
+KW  - load profile
+KW  - load shape
+KW  - Building Stock
+KW  - US Building Stock
+KW  - building
+KW  - building science
+KW  - building efficiency
+KW  - demand response
+KW  - EULP
+KW  - End Use Load Profiles
+KW  - load
+KW  - end use
+KW  - grid flexibility
+KW  - grid
+KW  - ResStock
+KW  - ComStock
+KW  - models
+KW  - load profiles
+LA  - English
+DA  - 2021/10/14
+PY  - 2021
+PB  - National Renewable Energy Laboratory (NREL)
+T1  - End-Use Load Profiles for the U.S. Building Stock
+UR  - https://doi.org/10.25984/1876417
+ER  - " readonly />
+              <button type="button" class="btn btn-link btn-copy-citation" onclick="copyLocation(this);" aria-label="Click to Copy RIS Citation">Copy to Clipboard</button>
+              <a href=/citation_ris_download?id=4520 type="button" class="btn btn-export-citation" aria-label="Click to Export Citation to RIS">Export Citation to RIS</a>
+            </div>
+          </div>
+
+          <div id="mla" class="tab-pane my-4" role="tabpanel" aria-labelledby="mla-tab">
+            <code class="d-block w-75 pb-4" aria-label="Citation info and link" style="color:black;background:transparent">Wilson, Eric, et al. <i>End-Use Load Profiles for the U.S. Building Stock</i>. National Renewable Energy Laboratory (NREL), 14 October, 2021, Open Energy Data Initiative (OEDI). https://doi.org/10.25984/1876417.</code>
+            <div class="d-flex align-items-center row px-2">
+              <input type="text" class="copy-text position-absolute" style="opacity:0;pointer-events:none" value='Wilson, Eric, et al. End-Use Load Profiles for the U.S. Building Stock. National Renewable Energy Laboratory (NREL), 14 October, 2021, Open Energy Data Initiative (OEDI). https://doi.org/10.25984/1876417.' readonly />
+              <button type="button" class="btn btn-link btn-copy-citation" onclick="copyLocation(this);" aria-label="Click to Copy MLA Citation">Copy to Clipboard</button>
+            </div>
+          </div>
+
+          <div id="apa" class="tab-pane active my-4" role="tabpanel" aria-labelledby="apa-tab">
+            <code class="d-block w-75 pb-4" aria-label="Citation info and link" style="color:black;background:transparent">Wilson, E., Parker, A., Fontanini, A., Present, E., Reyna, J., Adhikari, R., Bianchi, C., CaraDonna, C., Dahlhausen, M., Kim, J., LeBar, A., Liu, L., Praprost, M., White, P., Zhang, L., DeWitt, P., Merket, N., Speake, A., Hong, T., Li, H., Mims Frick, N., Wang, Z., Blair, A., Horsey, H., Roberts, D., Trenbath, K., Adekanye, O., Bonnema, E., El Kontar, R., Gonzalez, J., Horowitz, S., Jones, D., Muehleisen, R., Platthotam, S., Reynolds, M., Robertson, J., Sayers, K., & Li, Q. (2021). <i>End-Use Load Profiles for the U.S. Building Stock</i>. [Data set]. Open Energy Data Initiative (OEDI). National Renewable Energy Laboratory (NREL). https://doi.org/10.25984/1876417</code>
+            <div class="d-flex align-items-center row px-2">
+              <input type="text" class="copy-text position-absolute" style="opacity:0;pointer-events:none" value='Wilson, E., Parker, A., Fontanini, A., Present, E., Reyna, J., Adhikari, R., Bianchi, C., CaraDonna, C., Dahlhausen, M., Kim, J., LeBar, A., Liu, L., Praprost, M., White, P., Zhang, L., DeWitt, P., Merket, N., Speake, A., Hong, T., Li, H., Mims Frick, N., Wang, Z., Blair, A., Horsey, H., Roberts, D., Trenbath, K., Adekanye, O., Bonnema, E., El Kontar, R., Gonzalez, J., Horowitz, S., Jones, D., Muehleisen, R., Platthotam, S., Reynolds, M., Robertson, J., Sayers, K., & Li, Q. (2021). End-Use Load Profiles for the U.S. Building Stock. [Data set]. Open Energy Data Initiative (OEDI). National Renewable Energy Laboratory (NREL). https://doi.org/10.25984/1876417' readonly />
+              <button type="button" class="btn btn-link btn-copy-citation" onclick="copyLocation(this);" aria-label="Click to Copy APA Citation">Copy to Clipboard</button>
+            </div>
+          </div>
+
+          <div id="chicago" class="tab-pane my-4" role="tabpanel" aria-labelledby="chicago-tab">
+            <code class="d-block w-75 pb-4" aria-label="Citation info and link" style="color:black;background:transparent">Wilson, Eric, Andrew Parker, Anthony Fontanini, Elaina Present, Janet Reyna, Rajendra Adhikari, Carlo Bianchi, Christopher CaraDonna, Matthew Dahlhausen, Janghyun Kim, Amy LeBar, Lixi Liu, Marlena Praprost, Philip White, Liang Zhang, Peter DeWitt, Noel Merket, Andrew Speake, Tianzhen Hong, Han Li, Natalie Mims Frick, Zhe Wang, Aileen Blair, Henry Horsey, David Roberts, Kim Trenbath, Oluwatobi Adekanye, Eric Bonnema, Rawad El Kontar, Jonathan Gonzalez, Scott Horowitz, Dalton Jones, Ralph Muehleisen, Siby Platthotam, Matthew Reynolds, Joseph Robertson, Kevin Sayers, and Qu Li. <i>End-Use Load Profiles for the U.S. Building Stock</i>. National Renewable Energy Laboratory (NREL), October, 14, 2021.  Distributed by Open Energy Data Initiative (OEDI). https://doi.org/10.25984/1876417</code>
+            <div class="d-flex align-items-center row px-2">
+              <input type="text" class="copy-text position-absolute" style="opacity:0;pointer-events:none" value='Wilson, Eric, Andrew Parker, Anthony Fontanini, Elaina Present, Janet Reyna, Rajendra Adhikari, Carlo Bianchi, Christopher CaraDonna, Matthew Dahlhausen, Janghyun Kim, Amy LeBar, Lixi Liu, Marlena Praprost, Philip White, Liang Zhang, Peter DeWitt, Noel Merket, Andrew Speake, Tianzhen Hong, Han Li, Natalie Mims Frick, Zhe Wang, Aileen Blair, Henry Horsey, David Roberts, Kim Trenbath, Oluwatobi Adekanye, Eric Bonnema, Rawad El Kontar, Jonathan Gonzalez, Scott Horowitz, Dalton Jones, Ralph Muehleisen, Siby Platthotam, Matthew Reynolds, Joseph Robertson, Kevin Sayers, and Qu Li. End-Use Load Profiles for the U.S. Building Stock. National Renewable Energy Laboratory (NREL), October, 14, 2021.  Distributed by Open Energy Data Initiative (OEDI). https://doi.org/10.25984/1876417' readonly />
+              <button type="button" class="btn btn-link btn-copy-citation" onclick="copyLocation(this);" aria-label="Click to Copy Chicago Citation">Copy to Clipboard</button>
+            </div>
+          </div>
+
+          <div id="bibtex" class="tab-pane my-4" role="tabpanel" aria-labelledby="bibtex-tab">
+            <code class="d-block w-75 pb-4" aria-label="Citation info and link" style="color:black;background:transparent">@misc{OEDI_Dataset_4520,
+title = {End-Use Load Profiles for the U.S. Building Stock},
+author = {Wilson, Eric and Parker, Andrew and Fontanini, Anthony and Present, Elaina and Reyna, Janet and Adhikari, Rajendra and Bianchi, Carlo and CaraDonna, Christopher and Dahlhausen, Matthew and Kim, Janghyun and LeBar, Amy and Liu, Lixi and Praprost, Marlena and White, Philip and Zhang, Liang and DeWitt, Peter and Merket, Noel and Speake, Andrew and Hong, Tianzhen and Li, Han and Mims Frick, Natalie and Wang, Zhe and Blair, Aileen and Horsey, Henry and Roberts, David and Trenbath, Kim and Adekanye, Oluwatobi and Bonnema, Eric and El Kontar, Rawad and Gonzalez, Jonathan and Horowitz, Scott and Jones, Dalton and Muehleisen, Ralph and Platthotam, Siby and Reynolds, Matthew and Robertson, Joseph and Sayers, Kevin and Li, Qu},
+abstractNote = {The United States is embarking on an ambitious transition to a 100\% clean energy economy by 2050, which will require improving the flexibility of electric grids. One way to achieve grid flexibility is to shed or shift demand to align with changing grid needs. To facilitate this, it is critical to understand how and when energy is used. High quality end-use load profiles (EULPs) provide this information, and can help cities, states, and utilities understand the time-sensitive value of energy efficiency, demand response, and distributed energy resources. Publicly available EULPs have traditionally had limited application because of age and incomplete geographic representation. To help fill this gap, the U.S. Department of Energy (DOE) funded a three-year project, End-Use Load Profiles for the U.S. Building Stock, that culminated in this publicly available dataset of calibrated and validated 15-minute resolution load profiles for all major residential and commercial building types and end uses, across all climate regions in the United States. These EULPs were created by calibrating the ResStock and ComStock physics-based building stock models using many different measured datasets, as described in the "Technical Report Documenting Methodology" linked in the submission.},
+url = {https://data.openei.org/submissions/4520},
+year = {2021},
+howpublished = {Open Energy Data Initiative (OEDI), National Renewable Energy Laboratory (NREL), https://doi.org/10.25984/1876417},
+note = {Accessed: 2026-03-11},
+doi = {10.25984/1876417}
+}</code>
+            <div class="d-flex align-items-center row px-2">
+              <!-- use htmlentities() to convert quotes to an HTML entitiy or else the string for the input value gets cut off at the first quote if there are any -->
+              <input type="text" class="copy-text position-absolute" style="opacity:0;pointer-events:none" value="@misc{OEDI_Dataset_4520,
+title = {End-Use Load Profiles for the U.S. Building Stock},
+author = {Wilson, Eric and Parker, Andrew and Fontanini, Anthony and Present, Elaina and Reyna, Janet and Adhikari, Rajendra and Bianchi, Carlo and CaraDonna, Christopher and Dahlhausen, Matthew and Kim, Janghyun and LeBar, Amy and Liu, Lixi and Praprost, Marlena and White, Philip and Zhang, Liang and DeWitt, Peter and Merket, Noel and Speake, Andrew and Hong, Tianzhen and Li, Han and Mims Frick, Natalie and Wang, Zhe and Blair, Aileen and Horsey, Henry and Roberts, David and Trenbath, Kim and Adekanye, Oluwatobi and Bonnema, Eric and El Kontar, Rawad and Gonzalez, Jonathan and Horowitz, Scott and Jones, Dalton and Muehleisen, Ralph and Platthotam, Siby and Reynolds, Matthew and Robertson, Joseph and Sayers, Kevin and Li, Qu},
+abstractNote = {The United States is embarking on an ambitious transition to a 100\% clean energy economy by 2050, which will require improving the flexibility of electric grids. One way to achieve grid flexibility is to shed or shift demand to align with changing grid needs. To facilitate this, it is critical to understand how and when energy is used. High quality end-use load profiles (EULPs) provide this information, and can help cities, states, and utilities understand the time-sensitive value of energy efficiency, demand response, and distributed energy resources. Publicly available EULPs have traditionally had limited application because of age and incomplete geographic representation. To help fill this gap, the U.S. Department of Energy (DOE) funded a three-year project, End-Use Load Profiles for the U.S. Building Stock, that culminated in this publicly available dataset of calibrated and validated 15-minute resolution load profiles for all major residential and commercial building types and end uses, across all climate regions in the United States. These EULPs were created by calibrating the ResStock and ComStock physics-based building stock models using many different measured datasets, as described in the &quot;Technical Report Documenting Methodology&quot; linked in the submission.},
+url = {https://data.openei.org/submissions/4520},
+year = {2021},
+howpublished = {Open Energy Data Initiative (OEDI), National Renewable Energy Laboratory (NREL), https://doi.org/10.25984/1876417},
+note = {Accessed: 2026-03-11},
+doi = {10.25984/1876417}
+}" readonly />
+              <button type="button" class="btn btn-link btn-copy-citation" onclick="copyLocation(this);" aria-label="Click to Copy BibTex Citation">Copy to Clipboard</button>
+            </div>
+          </div>
+
+                      <div id="doi" class="tab-pane fade my-4" role="tabpanel" aria-labelledby="doi-tab">
+              <code class="d-block w-75 pb-4" aria-label="DOI info and link" style="color:black;background:transparent">https://dx.doi.org/10.25984/1876417</code>
+              <div class="d-flex align-items-center row px-2">
+                <input type="text" id="shareDOI" class="copy-text position-absolute" style="opacity:0;pointer-events:none" value="https://dx.doi.org/10.25984/1876417" readonly/>
+                <button type="button" id="copyCurrentDOIBtn" class="btn btn-link btn-copy-location" onclick="copyLocation(this);" aria-label="Click to Copy DOI">Copy to Clipboard</button>
+              </div>
+            </div>
+                  </section>
+
+      </section>
+
+      <!-- <section id="relatedDatasets" class="submission-secondary-group" style="display:none">
+        <h4><span class="group-title">Related Datasets</span></h4>
+        <small class="text-muted">Datasets associated with the same DOE project</small>
+              </section> -->
+    </div><!-- end submission main -->
+  </section>
+
+  <section class="submission-details mx-5 mx-md-0 pt-5 mt-5" style="flex: 0 0 220px;">
+    <h4 class="d-block d-md-none">Details</h4>
+
+    <div id="submissionDate" class=" flex ai-c py-3">
+      <div class="sub-date-info p-0">
+        <p class="mb-2">
+                      <span class="text-muted">Data from</span> <strong>Oct 14, 2021</strong>
+          
+          <p class="number mb-2">
+            <span class="text-muted">Last updated</span>
+            <strong>Mar 28, 2024</strong>
+          </p>
+
+                      <p class="mb-2">
+              <span class="text-muted">Submitted</span>
+              <strong>May 2, 2022</strong>
+            </p>
+          
+          <!-- Save for "A New Version of this Data Exists" Button -->
+        </p>
+        <span class="submission-publisher"></span>
+      </div>
+    </div>
+
+    <div id="doePublishedBy" class="py-3">
+      <h4 class="fw-light">Organization</h4>
+      <p class="mb-2">National Renewable Energy Laboratory (NREL)</p>
+    </div>
+
+    <div id="contactInfo" class="py-3">
+      <h4 class="fw-light">Contact</h4>
+
+      <div class="contact-details">
+        <p class="mb-2">NREL Load Profiles Project Team</p>
+                  <p class="mb-2">
+<script nonce='39564eeca44b' type="text/javascript">
+var th = "ilto"; em = "loa"+"d.p"+"rof"+"ile"+"s@n"+"rel"+".go"+"v"; tx = "load"+".pro"+"file"+"s@nr"+"el.g"+"ov";
+document.write('<a ' + 'hr' + 'ef="ma'+th+':'+em+'" rel="nofollow">'+tx+'</a>');
+</script>
+</p>
+                      </div>
+    </div>
+
+    <div id="submissionAuthors" class="py-3">
+      <h4 class="fw-light">Authors</h4>
+                        <div class="author-info px-0 mb-3">
+            <p class="mb-0">Eric Wilson</p>
+                          <span class="fw-normal text-muted font-12">National Renewable Energy Laboratory NREL</span>
+                      </div>
+                  <div class="author-info px-0 mb-3">
+            <p class="mb-0">Andrew Parker</p>
+                          <span class="fw-normal text-muted font-12">National Renewable Energy Laboratory NREL</span>
+                      </div>
+                  <div class="author-info px-0 mb-3">
+            <p class="mb-0">Anthony Fontanini</p>
+                          <span class="fw-normal text-muted font-12">National Renewable Energy Laboratory NREL</span>
+                      </div>
+                  <div class="author-info px-0 mb-3">
+            <p class="mb-0">Elaina Present</p>
+                          <span class="fw-normal text-muted font-12">National Renewable Energy Laboratory NREL</span>
+                      </div>
+                  <div class="author-info px-0 mb-3">
+            <p class="mb-0">Janet Reyna</p>
+                          <span class="fw-normal text-muted font-12">National Renewable Energy Laboratory NREL</span>
+                      </div>
+                  <div class="author-info px-0 mb-3">
+            <p class="mb-0">Rajendra Adhikari</p>
+                          <span class="fw-normal text-muted font-12">National Renewable Energy Laboratory NREL</span>
+                      </div>
+                  <div class="author-info px-0 mb-3">
+            <p class="mb-0">Carlo Bianchi</p>
+                          <span class="fw-normal text-muted font-12">National Renewable Energy Laboratory NREL</span>
+                      </div>
+                  <div class="author-info px-0 mb-3">
+            <p class="mb-0">Christopher CaraDonna</p>
+                          <span class="fw-normal text-muted font-12">National Renewable Energy Laboratory NREL</span>
+                      </div>
+                  <div class="author-info px-0 mb-3">
+            <p class="mb-0">Matthew Dahlhausen</p>
+                          <span class="fw-normal text-muted font-12">National Renewable Energy Laboratory NREL</span>
+                      </div>
+                  <div class="author-info px-0 mb-3">
+            <p class="mb-0">Janghyun Kim</p>
+                          <span class="fw-normal text-muted font-12">National Renewable Energy Laboratory NREL</span>
+                      </div>
+                  <div class="author-info px-0 mb-3">
+            <p class="mb-0">Amy LeBar</p>
+                          <span class="fw-normal text-muted font-12">National Renewable Energy Laboratory NREL</span>
+                      </div>
+                  <div class="author-info px-0 mb-3">
+            <p class="mb-0">Lixi Liu</p>
+                          <span class="fw-normal text-muted font-12">National Renewable Energy Laboratory NREL</span>
+                      </div>
+                  <div class="author-info px-0 mb-3">
+            <p class="mb-0">Marlena Praprost</p>
+                          <span class="fw-normal text-muted font-12">National Renewable Energy Laboratory NREL</span>
+                      </div>
+                  <div class="author-info px-0 mb-3">
+            <p class="mb-0">Philip White</p>
+                          <span class="fw-normal text-muted font-12">National Renewable Energy Laboratory NREL</span>
+                      </div>
+                  <div class="author-info px-0 mb-3">
+            <p class="mb-0">Liang Zhang</p>
+                          <span class="fw-normal text-muted font-12">National Renewable Energy Laboratory NREL</span>
+                      </div>
+                  <div class="author-info px-0 mb-3">
+            <p class="mb-0">Peter DeWitt</p>
+                          <span class="fw-normal text-muted font-12">National Renewable Energy Laboratory NREL</span>
+                      </div>
+                  <div class="author-info px-0 mb-3">
+            <p class="mb-0">Noel Merket</p>
+                          <span class="fw-normal text-muted font-12">National Renewable Energy Laboratory NREL</span>
+                      </div>
+                  <div class="author-info px-0 mb-3">
+            <p class="mb-0">Andrew Speake</p>
+                          <span class="fw-normal text-muted font-12">National Renewable Energy Laboratory NREL</span>
+                      </div>
+                  <div class="author-info px-0 mb-3">
+            <p class="mb-0">Tianzhen Hong</p>
+                          <span class="fw-normal text-muted font-12">Lawrence Berkeley National Laboratory</span>
+                      </div>
+                  <div class="author-info px-0 mb-3">
+            <p class="mb-0">Han Li</p>
+                          <span class="fw-normal text-muted font-12">Lawrence Berkeley National Laboratory</span>
+                      </div>
+                  <div class="author-info px-0 mb-3">
+            <p class="mb-0">Natalie Mims Frick</p>
+                          <span class="fw-normal text-muted font-12">Lawrence Berkeley National Laboratory</span>
+                      </div>
+                  <div class="author-info px-0 mb-3">
+            <p class="mb-0">Zhe Wang</p>
+                          <span class="fw-normal text-muted font-12">Lawrence Berkeley National Laboratory</span>
+                      </div>
+                  <div class="author-info px-0 mb-3">
+            <p class="mb-0">Aileen Blair</p>
+                          <span class="fw-normal text-muted font-12">National Renewable Energy Laboratory NREL</span>
+                      </div>
+                  <div class="author-info px-0 mb-3">
+            <p class="mb-0">Henry Horsey</p>
+                          <span class="fw-normal text-muted font-12">National Renewable Energy Laboratory NREL</span>
+                      </div>
+                  <div class="author-info px-0 mb-3">
+            <p class="mb-0">David Roberts</p>
+                          <span class="fw-normal text-muted font-12">National Renewable Energy Laboratory NREL</span>
+                      </div>
+                  <div class="author-info px-0 mb-3">
+            <p class="mb-0">Kim Trenbath</p>
+                          <span class="fw-normal text-muted font-12">National Renewable Energy Laboratory NREL</span>
+                      </div>
+                  <div class="author-info px-0 mb-3">
+            <p class="mb-0">Oluwatobi Adekanye</p>
+                          <span class="fw-normal text-muted font-12">National Renewable Energy Laboratory NREL</span>
+                      </div>
+                  <div class="author-info px-0 mb-3">
+            <p class="mb-0">Eric Bonnema</p>
+                          <span class="fw-normal text-muted font-12">National Renewable Energy Laboratory NREL</span>
+                      </div>
+                  <div class="author-info px-0 mb-3">
+            <p class="mb-0">Rawad El Kontar</p>
+                          <span class="fw-normal text-muted font-12">National Renewable Energy Laboratory NREL</span>
+                      </div>
+                  <div class="author-info px-0 mb-3">
+            <p class="mb-0">Jonathan Gonzalez</p>
+                          <span class="fw-normal text-muted font-12">National Renewable Energy Laboratory NREL</span>
+                      </div>
+                  <div class="author-info px-0 mb-3">
+            <p class="mb-0">Scott Horowitz</p>
+                          <span class="fw-normal text-muted font-12">National Renewable Energy Laboratory NREL</span>
+                      </div>
+                  <div class="author-info px-0 mb-3">
+            <p class="mb-0">Dalton Jones</p>
+                          <span class="fw-normal text-muted font-12">National Renewable Energy Laboratory NREL</span>
+                      </div>
+                  <div class="author-info px-0 mb-3">
+            <p class="mb-0">Ralph Muehleisen</p>
+                          <span class="fw-normal text-muted font-12">Argonne National Laboratory</span>
+                      </div>
+                  <div class="author-info px-0 mb-3">
+            <p class="mb-0">Siby Platthotam</p>
+                          <span class="fw-normal text-muted font-12">Argonne National Laboratory</span>
+                      </div>
+                  <div class="author-info px-0 mb-3">
+            <p class="mb-0">Matthew Reynolds</p>
+                          <span class="fw-normal text-muted font-12">National Renewable Energy Laboratory NREL</span>
+                      </div>
+                  <div class="author-info px-0 mb-3">
+            <p class="mb-0">Joseph Robertson</p>
+                          <span class="fw-normal text-muted font-12">National Renewable Energy Laboratory NREL</span>
+                      </div>
+                  <div class="author-info px-0 mb-3">
+            <p class="mb-0">Kevin Sayers</p>
+                          <span class="fw-normal text-muted font-12">National Renewable Energy Laboratory NREL</span>
+                      </div>
+                  <div class="author-info px-0 mb-3">
+            <p class="mb-0">Qu Li</p>
+                          <span class="fw-normal text-muted font-12">Argonne National Laboratory</span>
+                      </div>
+                  </div>
+
+    
+          <div id="sectors" class="py-3">
+        <h4 class="fw-light">Research Areas</h4>
+        <div class="d-flex flex-wrap align-items-start">
+                      <label for="field-sector-0" class="sector-btn me-4 mb-4 active" style="width:75px;">
+              <a class="d-flex flex-column align-items-center justify-content-center font-12"
+                href="/search?ra[]=Buildings+Efficiency"
+                title="search Buildings Efficiency">
+                <span tabindex="0" class="mx-0 sector-icon sector-buildings-efficiency"></span>
+                <span class="text-center">Buildings Efficiency</span>
+              </a>
+            </label>
+                      <label for="field-sector-1" class="sector-btn me-4 mb-4 active" style="width:75px;">
+              <a class="d-flex flex-column align-items-center justify-content-center font-12"
+                href="/search?ra[]=Energy+Analysis"
+                title="search Energy Analysis">
+                <span tabindex="0" class="mx-0 sector-icon sector-energy-analysis"></span>
+                <span class="text-center">Energy Analysis</span>
+              </a>
+            </label>
+                  </div>
+      </div>
+    
+    <div id="submissionKeywords" class="py-3">
+      <h4 class="fw-light">Keywords</h4>
+      <span class="text-muted font-12">
+        <a href="/search?q=energy">energy</a>, <a href="/search?q=power">power</a>, <a href="/search?q=buildings">buildings</a>, <a href="/search?q=commercial">commercial</a>, <a href="/search?q=residential">residential</a>, <a href="/search?q=electricity">electricity</a>, <a href="/search?q=natural gas">natural gas</a>, <a href="/search?q=load profile">load profile</a>, <a href="/search?q=load shape">load shape</a>, <a href="/search?q=Building Stock">Building Stock</a>, <a href="/search?q=US Building Stock">US Building Stock</a>, <a href="/search?q=building">building</a>, <a href="/search?q=building science">building science</a>, <a href="/search?q=building efficiency">building efficiency</a>, <a href="/search?q=demand response">demand response</a>, <a href="/search?q=EULP">EULP</a>, <a href="/search?q=End Use Load Profiles">End Use Load Profiles</a>, <a href="/search?q=load">load</a>, <a href="/search?q=end use">end use</a>, <a href="/search?q=grid flexibility">grid flexibility</a>, <a href="/search?q=grid">grid</a>, <a href="/search?q=ResStock">ResStock</a>, <a href="/search?q=ComStock">ComStock</a>, <a href="/search?q=models">models</a>, <a href="/search?q=load profiles">load profiles</a>      </span>
+    </div>
+
+          <div id="doeProjectName" class="py-3">
+        <h4 class="fw-light">DOE Project Details</h4>
+                  <p class="mb-2">
+            <span class="text-muted">Project Name</span>
+            <strong>End-Use Load Profiles for the U.S. Building Stock</strong>
+          </p>
+                                  <p class="mb-2">
+            <span class="text-muted">Project Number</span>
+            <strong>FY19 AOP 3.4.6.57</strong>
+          </p>
+              </div>
+    
+    <div id="share" class="py-3">
+      <h4 class="fw-light">Share</h4>
+      <div class="d-flex align-items-center flex-wrap">
+        <div class="share-item">
+          <input id="shareURI" class="copy-text position-absolute" style="pointer-events:none; opacity:0;" value="https://data.openei.org/submissions/4520" readonly aria-label="Location link"/>
+          <button class="btn btn-lg btn-link no-focus" type="button" onclick="copyLocation(this);" aria-lable="Click to Copy Location"><i class="fa fa-link" title="copy link"></i> <span class="sr-only">Location</span></button>
+        </div>
+        <div class="share-item">
+          <a class="btn btn-lg no-focus" href="https://twitter.com/share?url=https%3A%2F%2Fdata.openei.org%2Fsubmissions%2F4520&text=End-Use Load Profiles for the U.S. Building Stock&via=OEDI" target="_blank" rel="noopener noreferrer">
+            <i class="fa fa-twitter" title="twitter"></i>
+          </a>
+        </div>
+        <div class="share-item">
+          <a class="btn btn-lg no-focus" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fdata.openei.org%2Fsubmissions%2F4520&src=share_button" target="_blank" rel="noopener noreferrer">
+            <i class="fa fa-facebook-square" title="facebook"></i>
+          </a>
+        </div>
+        <div class="share-item">
+          <a class="btn btn-lg no-focus" href="https://www.linkedin.com/sharediv?mini=true&url=https%3A%2F%2Fdata.openei.org%2Fsubmissions%2F4520&title=End-Use Load Profiles for the U.S. Building Stock&source=OEDI" target="_blank" rel="noopener noreferrer">
+            <i class="fa fa-linkedin-square" title="linkedin"></i>
+          </a>
+        </div>
+        <div class="share-item">
+          <div id="qr-code-container" style="padding: 10px 16px;">
+    <!-- The QR code SVG will be appended here -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </section><!-- end right col -->
+</div><!-- end main content row -->
+
+<!-- QR Code Logic -->
+<script src="/assets/js/qrcode.min.js"></script>
+
+<script>
+  // 'use strict';
+  var svgNode = QRCode({
+    msg: 'https://data.openei.org/submissions/4520',
+    dim: 160,
+    ecl: "H",
+    ecb: 1,
+    pal: ['#000','#fff'],
+    vrb: 0
+  });
+
+  document.getElementById('qr-code-container').appendChild(svgNode);
+</script>
+<!-- Ask Logic -->
+<script>
+  $(document).ready(function(){
+    //Set AskXDR to initiate only on modal open (to increase page load times)
+    $('#askModal').on('shown.bs.modal', function(){
+      $(this).find('.modal-body iframe').each(function(){
+        if ($(this).data("src") && $(this).data("src") != $(this).attr("src")){
+          $(this).attr("src", $(this).data("src"));
+        }
+      });
+    });
+  });
+</script>
+
+<!-- Ask Modal -->
+<div id="askModal" class="modal fade" aria-labelledby="askHeader" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content dark">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h3 id="askHeader"><img class="have2x" src="/assets/img/ask-oedi-logo-lg.png" width="175" aria-label="Ask OEDI"/></h3>
+      </div>
+      <div class="modal-body">
+        <iframe width="100%" height="100%" frameborder="0" scrolling="yes" src="about:blank" data-src="https://askoedi.openei.org/"></iframe>
+      </div> <!-- End Modal Body -->
+      <div class="modal-footer">
+        <span class="disclaimer">Generative AI is experimental.
+          <a href="https://openei.org/wiki/OpenEI:General_disclaimer#Generative_AI" title="View OpenEI's Generative AI disclaimer." target="_blank">Disclaimer</a>.
+          <a href="https://openei.org/wiki/OpenEI:General_disclaimer#Generative_AI_Terms_and_Conditions" title="View OpenEI's Generative AI Terms and Conditions." target="_blank">Terms and Conditions</a>.
+        </span>
+        <button class="btn btn-default" id="closeAskModalBtn" data-dismiss="modal">Close</button>
+      </div>
+    </div><!-- end .modal-content -->
+  </div><!-- end .modal-dialog -->
+</div><!-- end .modal -->
+        <div id="pageAlert" class="alert lead" style="display:none;">
+          <button type="button" class="close" onclick="hideAlert(this.parentElement)">&times;</button>
+          <span><!-- Alert text goes here, populated by main.js --></span>
+        </div>
+  </main>
+
+<div id="downloadArchiverWrapper" class="fade">
+  <div class="download-archive-heading">
+    Submission Downloads<a id="toggleDownloadList" href="javascript:void(0);"><span class="pull-right"><i class="fa fa-chevron-down" aria-hidden="true"></i></span></a>
+  </div>
+  <div id="activeArchiveCreations">
+  </div>
+</div>
+</div> <!-- end .content -->
+
+<footer id="xdr-footer">
+  <div class="footer-container">
+
+    <!-- <div id="feedbackBtn">
+      <span class="glyphicon glyphicon-comment" aria-hidden="true"></span>
+    </div> -->
+
+    <div class="special-links noprintpdf">
+      <div class="footer-nav-bar">
+        <ul class="footer-links flex jc-c w">
+          <li class="footer-link"><a href="/about" title="About the Open Energy Data Initiative">About the Open Energy Data Initiative</a></li>
+          <li class="footer-link"><a href="//openei.org/wiki/OpenEI_International_Sponsors_and_Partners">Partners &amp; Sponsors</a></li>
+          <li class="footer-link"><a href="//openei.org/wiki/OpenEI:General_disclaimer">Disclaimers</a></li>
+          <li class="footer-link"><a href="//openei.org/services/" rel="nofollow">Developer Services</a></li>
+          <li class="footer-link">
+<script nonce='39564eeca44b' type="text/javascript">
+var th = "ilto"; em = "web"+"mas"+"ter"+"@op"+"ene"+"i.o"+"rg"; tx = "Cont"+"act "+"Open"+"EI H"+"elp";
+document.write('<a ' + 'hr' + 'ef="ma'+th+':'+em+'" rel="nofollow">'+tx+'</a>');
+</script>
+</li>
+        </ul>
+      </div>
+      <ul class="footer-info">
+        <li class="footer-about">The OEDI Data Lake is a centralized repository of datasets aggregated from the U.S. Department of Energy’s Programs, Offices, and National Laboratories.</li>
+        <li class="footer-copyright flex jc-c"><span>Content is available under <a rel="nofollow noopener noreferrer" href="https://creativecommons.org/licenses/by/4.0/" target="_blank"> Creative Commons Attribution 4.0 </a> unless otherwise noted.</span></li>
+      </ul>
+    </div>
+  </div>
+</footer>
+<style>
+  #privacyModal {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    max-width: 50rem;
+    border-radius: 0;
+    margin-bottom: 0;
+    z-index: 1059;
+  }
+  .pp-modal-content {
+    position: relative;
+    background-color: #2f3337;
+    color: white;
+    border: none;
+    border-radius: 7px;
+    outline: 0;
+  }
+
+  .pp-modal-content h3, 
+  .pp-link a, .pp-link a:visited {
+    color: #659ccc;
+  }
+
+  @media only screen and (min-width: 801px) {
+    .pp-link {
+      margin: 0 1em;
+    }
+    .pp-link.right {
+      float: right;
+    }
+  }
+
+  @media only screen and (max-width: 800px) {
+    .pp-link {
+      display: block;
+    }
+  }
+
+  #savePrivacyBtn {
+    width: 100%;
+  }
+</style>
+
+<!-- begin Privacy modal -->
+<div id="privacyModal" class="alert" role="dialog" tabindex="1" aria-labelledby="privacyHeader">
+  <div class="pp-modal-content">
+    <div class="modal-header">
+        <h3 id="privacyHeader" class="modal-title"><i class="fas fa-user-shield"></i> Privacy Policy Notification</h3>
+    </div>
+    <div class="modal-body">
+      <p>
+        This site uses cookies to store and share user preferences with other OpenEI sites, and uses Google Analytics to collect anonymous user information such as which pages are visited, for how often, and what searches or other webpages may have led users here.
+        You can prevent Google Analytics from recognizing you on return visits to this site by disabling cookies on your browser or by installing a Google Analytics Opt-out Browser Add-on.
+        By clicking "Accept" you agree this site can store cookies on your device and disclose information to OpenEI and Google Analytics in accordance with our privacy policy.
+      </p>
+      <p>
+        <span class="pp-link left"><a href="https://openei.org/wiki/OpenEI:General_disclaimer" rel="noopener" target="_blank">OpenEI Privacy Policy</a></span>
+        <span class="pp-link right"><a href="https://marketingplatform.google.com/about/analytics/terms/us/" rel="noopener noreferrer" target="_blank">Google Analytics Terms of Service</a></span>
+      </p>
+      <button class="btn btn-primary test" id="savePrivacyBtn" data-loading-text="Submiting..." tabindex="1">Accept</button>
+    </div>
+  </div><!-- end .pp-modal-content -->
+</div>
+<!-- end Privacy modal -->
+
+<script>
+ $(document).ready(function(){
+  $('#savePrivacyBtn').click(function(){
+    $.ajax({
+      url: "https://auth.openei.org/privacy_policy_set",
+      type: "POST",
+      crossDomain: true,
+      xhrFields: {
+        withCredentials: true
+      },
+      dataType: "json",
+      data: {
+        action: 'setAcceptedPrivacyPolicy',
+      },
+      error: function(jqXHR) {
+        showPageAlert('Something went wrong! Error: ' + response.error, 'alert-error');
+        return;
+      },
+      success: function(result) {
+        $('#privacyModal').hide();
+      }
+    });
+  });
+});
+</script>
+</div>
+</body>
+
+</html>
