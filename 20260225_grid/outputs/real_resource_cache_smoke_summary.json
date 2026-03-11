@@ -1,0 +1,21 @@
+{
+  "site_json": "outputs/us_towns_dedup.json",
+  "site_count_total": 562,
+  "site_count_selected": 2,
+  "start_index": 0,
+  "end_index": 2,
+  "solar_year": 2020,
+  "wind_year": 2014,
+  "min_call_spacing_seconds": 1.0,
+  "batch_size": 1000,
+  "batch_sleep_seconds": 0.0,
+  "cooldown_on_rate_limit_seconds": 5.0,
+  "dry_run": false,
+  "solar_calls_needed": 2,
+  "wind_calls_needed": 2,
+  "total_api_calls_needed": 4,
+  "sites_completed": 2,
+  "sites_failed": 0,
+  "rate_limit_events": 0,
+  "estimated_runtime_hours_at_configured_spacing": 0.0
+}

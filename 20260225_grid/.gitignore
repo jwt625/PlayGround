@@ -1,9 +1,31 @@
 references/.pw-firefox-profile/
 .venv/
 node_modules/
+.claude/
 
-# Un-ignore file types blocked by parent .gitignore but needed in this project
-!*.json
-!*.csv
-!*.html
-!*.pdf
+# Project scratch/debug outputs
+outputs/_debug_map.html
+outputs/_tmp*.json
+outputs/_tmp*.csv
+outputs/interactive_reliability_map_coarse.html
+outputs/us_reliability_map_cache_coarse.json
+outputs/us_boundary.html
+
+# Un-ignore only the canonical artifacts that should be tracked in this project
+!outputs/aidc_solar_wind_bess_reliability_regional_100.csv
+!outputs/aidc_solar_wind_bess_reliability_regional_100.json
+!outputs/interactive_reliability_map_dense.html
+!outputs/interactive_reliability_map_real_smoke2.html
+!outputs/real_resource_validation.json
+!outputs/real_resource_cache_smoke_summary.json
+!outputs/real_resource_cache_smoke_manifest.jsonl
+!outputs/us_reliability_map_dense.json
+!outputs/us_reliability_map_real_smoke2.json
+!outputs/us_towns_dedup.csv
+!outputs/us_towns_dedup.json
+!scripts/cache_real_resource_api_data.py
+!references/066304_1_5.0264545.pdf
+!references/raw/solar_wind/nsrdb_data_query_api.html
+!references/raw/solar_wind/oedi_end_use_load_profiles_building_stock.html
+!references/raw/solar_wind/smart_ds.html
+!references/raw/solar_wind/wind_integration_national_dataset_toolkit.html

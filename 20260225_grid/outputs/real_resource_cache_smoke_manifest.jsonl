@@ -1,0 +1,2 @@
+{"index": 0, "name": "New York City", "state": "NY", "lat": 40.71427, "lon": -74.00597, "solar_year": 2020, "wind_year": 2014, "need_solar": true, "need_wind": true, "status": "ok", "timestamp_utc": "2026-03-11T08:52:53Z"}
+{"index": 1, "name": "Los Angeles", "state": "CA", "lat": 34.05223, "lon": -118.24368, "solar_year": 2020, "wind_year": 2014, "need_solar": true, "need_wind": true, "status": "ok", "timestamp_utc": "2026-03-11T08:52:59Z"}

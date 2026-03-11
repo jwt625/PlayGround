@@ -10,6 +10,12 @@ from typing import Any
 import numpy as np
 import yaml
 
+from resource_profiles import (
+    RealResourceSettings,
+    fetch_real_resource_profiles,
+    load_api_credentials_from_env,
+)
+
 
 HOURS_PER_YEAR = 8760
 # CONUS reference bounds anchored to USGS extreme-point coordinates:
@@ -159,6 +165,11 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Precompute deterministic U.S. reliability map cache.")
     parser.add_argument("--config", type=Path, default=Path("config/assumptions_2026_us_ai_datacenter.yaml"))
     parser.add_argument("--site-json", type=Path, default=Path("outputs/us_towns_dedup.json"))
+    parser.add_argument("--resource-mode", choices=["synthetic", "real"], default="synthetic")
+    parser.add_argument("--resource-cache-root", type=Path, default=Path("references/data/solar_wind_api"))
+    parser.add_argument("--solar-year", type=int, default=2020)
+    parser.add_argument("--wind-year", type=int, default=2014)
+    parser.add_argument("--max-sites", type=int, default=0)
     parser.add_argument("--workload-mw", type=float, default=1000.0)
     parser.add_argument("--solar-grid-mw", default="0,600,1200,1800,2400,3000,3600,4200,4800,5400,6000")
     parser.add_argument("--wind-grid-mw", default="0,600,1200,1800,2400,3000,3600,4200,4800,5400,6000")
@@ -171,6 +182,8 @@ def main() -> None:
     args = parse_args()
     config = load_yaml(args.config)
     sites = load_sites(args.site_json)
+    if args.max_sites > 0:
+        sites = sites[: args.max_sites]
     solar_values = np.array(parse_list(args.solar_grid_mw), dtype=np.float64)
     wind_values = np.array(parse_list(args.wind_grid_mw), dtype=np.float64)
     bess_values = np.array(parse_list(args.bess_grid_mwh), dtype=np.float64)
@@ -186,14 +199,25 @@ def main() -> None:
         [0.0 for _ in range(len(sites))]
         for _ in range(len(solar_values) * len(wind_values) * len(bess_values))
     ]
+    resource_settings = RealResourceSettings(solar_year=args.solar_year, wind_year=args.wind_year)
+    credentials = load_api_credentials_from_env() if args.resource_mode == "real" else None
 
     for site_index, site in enumerate(sites):
         lat = float(site["lat"])
         lon = float(site["lon"])
-        solar_cf = solar_capacity_factor_from_location(lat, lon)
-        wind_cf = wind_capacity_factor_from_location(lat, lon)
-        solar_profile = synthetic_solar_profile(HOURS_PER_YEAR, solar_cf, lat)
-        wind_profile = synthetic_wind_profile(HOURS_PER_YEAR, wind_cf, lat, lon)
+        if args.resource_mode == "real":
+            solar_profile, wind_profile, _resource_meta = fetch_real_resource_profiles(
+                lat=lat,
+                lon=lon,
+                credentials=credentials,
+                cache_root=args.resource_cache_root,
+                settings=resource_settings,
+            )
+        else:
+            solar_cf = solar_capacity_factor_from_location(lat, lon)
+            wind_cf = wind_capacity_factor_from_location(lat, lon)
+            solar_profile = synthetic_solar_profile(HOURS_PER_YEAR, solar_cf, lat)
+            wind_profile = synthetic_wind_profile(HOURS_PER_YEAR, wind_cf, lat, lon)
         site_cube = vectorized_reliability_for_site(
             solar_profile,
             wind_profile,
@@ -211,13 +235,14 @@ def main() -> None:
 
     payload = {
         "meta": {
-            "model": "deterministic_synthetic_resource_v1",
+            "model": f"deterministic_{args.resource_mode}_resource_v1",
             "workload_mw": args.workload_mw,
             "battery_interpretation": "energy_only",
             "battery_power_assumption": "not_binding_up_to_workload",
             "hours": HOURS_PER_YEAR,
             "site_source": str(args.site_json),
             "site_count": len(sites),
+            "resource_mode": args.resource_mode,
             "bounds": {
                 "min_lat": CONUS_MIN_LAT,
                 "max_lat": CONUS_MAX_LAT,
@@ -227,6 +252,11 @@ def main() -> None:
             "sources": {
                 "us_town_points": "https://download.geonames.org/export/dump/US.zip",
                 "site_dedup_input": str(args.site_json),
+            },
+            "resource_cache_root": str(args.resource_cache_root),
+            "resource_years": {
+                "solar_year": args.solar_year,
+                "wind_year": args.wind_year,
             },
             "recommended_defaults": {
                 "solar_mw": 3000.0,

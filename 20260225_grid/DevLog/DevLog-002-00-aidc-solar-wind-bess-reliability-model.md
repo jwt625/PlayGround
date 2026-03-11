@@ -15,6 +15,13 @@
   - `1331` cached parameter combinations,
   - source site file `outputs/us_towns_dedup.json`.
 - The frontend no longer performs boundary masking or FE crop filtering. The cached sites themselves are now the display set.
+- Real solar and wind resource adapters are now implemented in `scripts/resource_profiles.py`.
+- The cache builder now supports both:
+  - `synthetic` resource mode,
+  - `real` resource mode.
+- A live one-site validation path is implemented in `scripts/validate_real_resource_downloads.py`.
+- A resumable overnight raw-data cache warmer is implemented in `scripts/cache_real_resource_api_data.py`.
+- Parser and conversion tests for the raw NSRDB and WIND Toolkit CSV formats are implemented in `tests/test_resource_profiles.py`.
 
 ### Current artifacts
 - Town-point builder:
@@ -26,6 +33,17 @@
   - `outputs/us_reliability_map_dense.json`
 - Dense interactive map:
   - `outputs/interactive_reliability_map_dense.html`
+- Real-data validation artifact:
+  - `outputs/real_resource_validation.json`
+- Real-data smoke cache:
+  - `outputs/us_reliability_map_real_smoke2.json`
+- Real-data smoke map:
+  - `outputs/interactive_reliability_map_real_smoke2.html`
+- Raw-cache smoke summary:
+  - `outputs/real_resource_cache_smoke_summary.json`
+- Overnight batch progress:
+  - `outputs/real_resource_cache_night1_manifest.jsonl`
+  - `outputs/real_resource_cache_night1_summary.json`
 
 ### Current product behavior
 - Sliders:
@@ -39,6 +57,30 @@
 - UI slider granularity remains finer than the cache and is handled by interpolation in-browser.
 - Reliability tooltip formatting is implemented to three decimal places.
 - The method section and formula description are rendered below the map.
+
+### Real-data ingestion status
+- Official API probes to NSRDB and WIND Toolkit succeeded with the current `.env` key and email.
+- The raw downloaded formats were validated against live data:
+  - NSRDB returns:
+    - metadata header rows,
+    - hourly `GHI`, `DNI`, `DHI`, `Temperature`, `Wind Speed`
+  - WIND Toolkit returns:
+    - metadata header row,
+    - hourly `wind speed at 100m`, `wind direction at 100m`, `air temperature at 100m`, `air pressure at 100m`
+- The current real-data conversion layer is intentionally simple:
+  - solar: `GHI` plus fixed losses and temperature derate,
+  - wind: generic turbine-style power curve from `windspeed_100m` plus fixed losses.
+- This is already materially better than the synthetic resource field for adequacy timing, but it is not yet a high-fidelity PV or turbine plant model.
+
+### Real-data validation results
+- Fixture-based parser/conversion tests are passing.
+- Live one-site validation succeeded with full-year hourly series for both datasets.
+- End-to-end smoke path succeeded:
+  - raw fetch,
+  - real-resource cache build,
+  - interactive HTML render.
+- Current blocker for full national real-data rebuild:
+  - public/demo API throughput and `429 OVER_RATE_LIMIT`, not code correctness.
 
 ## Objective
 Build a location-based adequacy and reliability model for an AI data center campus powered by solar, wind, battery energy storage, and optionally the grid. The primary product is an interactive 2D U.S. reliability map with three controls:
@@ -177,6 +219,14 @@ Scope:
 - Normalize traces to installed MW.
 - Produce site-level annual summaries and joint correlation metrics.
 
+Status:
+- Adapters implemented.
+- Parsers tested.
+- Live validation completed.
+- End-to-end smoke build completed.
+- Overnight raw-cache batch is in progress.
+- Full dense real-data rebuild should wait until sufficient raw site files are cached locally.
+
 ## Phase 4: Monte Carlo reliability
 Goal:
 - Estimate reliability distributions instead of only deterministic outcomes.
@@ -269,9 +319,12 @@ This is the correct architecture for responsiveness.
 - standalone U.S. boundary debug HTML used during geometry debugging
 
 ### Near-term next work
-- replace synthetic solar and wind traces with NSRDB and WIND Toolkit site traces
+- finish warming the raw NSRDB and WIND Toolkit cache for the town-based site set
+- rebuild the full dense reliability cache in `real` resource mode once enough site data is local
+- upgrade the resource conversion layer:
+  - better PV modeling,
+  - better wind turbine assumptions
 - keep the town-based site set as the dense map backbone unless a better national site sample is needed later
-- decide whether to precompute additional denser parameter axes once the real weather pipeline is in place
 - add offline Monte Carlo cache only after deterministic real-weather map validation
 
 ## Clarifications
