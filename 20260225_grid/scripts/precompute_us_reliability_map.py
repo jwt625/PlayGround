@@ -13,6 +13,7 @@ import yaml
 from resource_profiles import (
     RealResourceSettings,
     fetch_real_resource_profiles,
+    load_profile_cache,
     load_api_credentials_from_env,
 )
 
@@ -167,6 +168,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--site-json", type=Path, default=Path("outputs/us_towns_dedup.json"))
     parser.add_argument("--resource-mode", choices=["synthetic", "real"], default="synthetic")
     parser.add_argument("--resource-cache-root", type=Path, default=Path("references/data/solar_wind_api"))
+    parser.add_argument("--profile-cache-root", type=Path, default=Path("references/data/solar_wind_profiles"))
+    parser.add_argument("--local-real-only", action="store_true")
     parser.add_argument("--solar-year", type=int, default=2020)
     parser.add_argument("--wind-year", type=int, default=2014)
     parser.add_argument("--max-sites", type=int, default=0)
@@ -200,24 +203,39 @@ def main() -> None:
         for _ in range(len(solar_values) * len(wind_values) * len(bess_values))
     ]
     resource_settings = RealResourceSettings(solar_year=args.solar_year, wind_year=args.wind_year)
-    credentials = load_api_credentials_from_env() if args.resource_mode == "real" else None
+    credentials = None
+    active_sites: list[dict[str, Any]] = []
+    active_values_by_combo: list[list[float]] = [
+        []
+        for _ in range(len(solar_values) * len(wind_values) * len(bess_values))
+    ]
 
-    for site_index, site in enumerate(sites):
+    for site in sites:
         lat = float(site["lat"])
         lon = float(site["lon"])
         if args.resource_mode == "real":
-            solar_profile, wind_profile, _resource_meta = fetch_real_resource_profiles(
-                lat=lat,
-                lon=lon,
-                credentials=credentials,
-                cache_root=args.resource_cache_root,
-                settings=resource_settings,
-            )
+            profile_path = args.profile_cache_root / f"site_{int(site['site_id']):04d}.npz"
+            if profile_path.exists():
+                solar_profile, wind_profile, _resource_meta = load_profile_cache(profile_path)
+            elif args.local_real_only:
+                continue
+            else:
+                if credentials is None:
+                    credentials = load_api_credentials_from_env()
+                solar_profile, wind_profile, _resource_meta = fetch_real_resource_profiles(
+                    lat=lat,
+                    lon=lon,
+                    credentials=credentials,
+                    cache_root=args.resource_cache_root,
+                    settings=resource_settings,
+                )
         else:
             solar_cf = solar_capacity_factor_from_location(lat, lon)
             wind_cf = wind_capacity_factor_from_location(lat, lon)
             solar_profile = synthetic_solar_profile(HOURS_PER_YEAR, solar_cf, lat)
             wind_profile = synthetic_wind_profile(HOURS_PER_YEAR, wind_cf, lat, lon)
+        site_output_index = len(active_sites)
+        active_sites.append(site)
         site_cube = vectorized_reliability_for_site(
             solar_profile,
             wind_profile,
@@ -230,7 +248,9 @@ def main() -> None:
         for s_idx in range(len(solar_values)):
             for w_idx in range(len(wind_values)):
                 for b_idx in range(len(bess_values)):
-                    values_by_combo[combo_index][site_index] = round(float(site_cube[s_idx, w_idx, b_idx] * 100.0), 4)
+                    while len(active_values_by_combo[combo_index]) <= site_output_index:
+                        active_values_by_combo[combo_index].append(0.0)
+                    active_values_by_combo[combo_index][site_output_index] = round(float(site_cube[s_idx, w_idx, b_idx] * 100.0), 4)
                     combo_index += 1
 
     payload = {
@@ -241,7 +261,7 @@ def main() -> None:
             "battery_power_assumption": "not_binding_up_to_workload",
             "hours": HOURS_PER_YEAR,
             "site_source": str(args.site_json),
-            "site_count": len(sites),
+            "site_count": len(active_sites),
             "resource_mode": args.resource_mode,
             "bounds": {
                 "min_lat": CONUS_MIN_LAT,
@@ -254,6 +274,8 @@ def main() -> None:
                 "site_dedup_input": str(args.site_json),
             },
             "resource_cache_root": str(args.resource_cache_root),
+            "profile_cache_root": str(args.profile_cache_root),
+            "local_real_only": args.local_real_only,
             "resource_years": {
                 "solar_year": args.solar_year,
                 "wind_year": args.wind_year,
@@ -269,13 +291,13 @@ def main() -> None:
             "wind_mw": wind_values.tolist(),
             "bess_mwh": bess_values.tolist(),
         },
-        "sites": sites,
-        "values_by_combo": values_by_combo,
+        "sites": active_sites,
+        "values_by_combo": active_values_by_combo,
     }
 
     args.out.parent.mkdir(parents=True, exist_ok=True)
     args.out.write_text(json.dumps(payload), encoding="utf-8")
-    print(json.dumps({"sites": len(sites), "combos": len(values_by_combo), "out": str(args.out)}, indent=2))
+    print(json.dumps({"sites": len(active_sites), "combos": len(active_values_by_combo), "out": str(args.out)}, indent=2))
 
 
 if __name__ == "__main__":

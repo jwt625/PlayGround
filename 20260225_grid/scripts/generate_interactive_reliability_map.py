@@ -277,7 +277,7 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
         </div>
 
         <div class="footnote">
-          Cache model: deterministic synthetic resource v1. The UI does indexed lookup only; Monte Carlo is intentionally not run in-browser.
+          Cache model: __CACHE_MODEL__. The UI does indexed lookup only; Monte Carlo is intentionally not run in-browser.
         </div>
       </div>
       <div class="map-panel">
@@ -590,6 +590,7 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Generate interactive U.S. reliability map HTML.")
     parser.add_argument("--cache", type=Path, default=Path("outputs/us_reliability_map_cache.json"))
+    parser.add_argument("--fallback-cache", type=Path, default=None)
     parser.add_argument("--config", type=Path, default=Path("config/assumptions_2026_us_ai_datacenter.yaml"))
     parser.add_argument("--out", type=Path, default=Path("outputs/interactive_reliability_map.html"))
     return parser.parse_args()
@@ -598,6 +599,61 @@ def parse_args() -> argparse.Namespace:
 def mean_value(node: dict) -> float:
     value = node.get("value", node)
     return float(value["mean"])
+
+
+def load_payload(path: Path) -> dict:
+    return json.loads(path.read_text(encoding="utf-8"))
+
+
+def _axis_signature(payload: dict) -> tuple[tuple[float, ...], tuple[float, ...], tuple[float, ...]]:
+    axes = payload["axes"]
+    return (
+        tuple(float(v) for v in axes["solar_mw"]),
+        tuple(float(v) for v in axes["wind_mw"]),
+        tuple(float(v) for v in axes["bess_mwh"]),
+    )
+
+
+def merge_payloads(primary: dict, fallback: dict) -> dict:
+    if _axis_signature(primary) != _axis_signature(fallback):
+        raise ValueError("Primary and fallback cache axes do not match.")
+    fallback_sites = fallback["sites"]
+    primary_sites_by_id = {int(site["site_id"]): site for site in primary["sites"]}
+    fallback_site_ids = [int(site["site_id"]) for site in fallback_sites]
+    missing_primary_ids = set(primary_sites_by_id) - set(fallback_site_ids)
+    if missing_primary_ids:
+        raise ValueError(f"Primary cache contains site_ids absent from fallback cache: {sorted(missing_primary_ids)[:10]}")
+
+    merged_sites = [primary_sites_by_id.get(site_id, site) for site_id, site in zip(fallback_site_ids, fallback_sites)]
+    fallback_index_by_id = {site_id: idx for idx, site_id in enumerate(fallback_site_ids)}
+    primary_index_by_id = {int(site["site_id"]): idx for idx, site in enumerate(primary["sites"])}
+
+    merged_values_by_combo: list[list[float]] = []
+    for combo_index, fallback_slice in enumerate(fallback["values_by_combo"]):
+        primary_slice = primary["values_by_combo"][combo_index]
+        merged_slice = list(fallback_slice)
+        for site_id, primary_site_index in primary_index_by_id.items():
+            merged_slice[fallback_index_by_id[site_id]] = primary_slice[primary_site_index]
+        merged_values_by_combo.append(merged_slice)
+
+    merged_meta = dict(fallback["meta"])
+    merged_meta.update(
+        {
+            "model": f"{primary['meta'].get('model', 'primary')}+fallback",
+            "resource_mode": f"{primary['meta'].get('resource_mode', 'primary')}+fallback",
+            "site_count": len(merged_sites),
+            "primary_cache": primary["meta"].get("site_source", ""),
+            "fallback_cache": fallback["meta"].get("site_source", ""),
+            "primary_site_count": len(primary["sites"]),
+            "fallback_site_count": len(fallback["sites"]),
+        }
+    )
+    return {
+        "meta": merged_meta,
+        "axes": fallback["axes"],
+        "sites": merged_sites,
+        "values_by_combo": merged_values_by_combo,
+    }
 
 
 def build_method_side_html(payload: dict, config: dict) -> str:
@@ -632,7 +688,7 @@ def build_method_side_html(payload: dict, config: dict) -> str:
         ("Battery interpretation", str(meta["battery_interpretation"]).replace("_", " "), "BESS slider controls energy only in this version."),
         ("Battery power assumption", str(meta["battery_power_assumption"]).replace("_", " "), "Battery power is assumed non-binding up to workload."),
         ("Site set", f"{meta['site_count']} deduped town points", "Built from GeoNames populated places for the lower 48 + DC."),
-        ("Resource model", str(meta["model"]).replace("_", " "), "Synthetic location-dependent solar and wind traces; NSRDB/WIND not wired in yet."),
+        ("Resource model", str(meta["model"]).replace("_", " "), "Real cached site profiles override the fallback cache where available."),
     ]
 
     def render_card(title: str, items: list[tuple[str, str, str]] | list[tuple[str, str]]) -> str:
@@ -665,11 +721,14 @@ def build_method_side_html(payload: dict, config: dict) -> str:
 
 def main() -> None:
     args = parse_args()
-    payload = json.loads(args.cache.read_text(encoding="utf-8"))
+    payload = load_payload(args.cache)
+    if args.fallback_cache is not None:
+        payload = merge_payloads(payload, load_payload(args.fallback_cache))
     config = yaml.safe_load(args.config.read_text(encoding="utf-8"))
     html = HTML_TEMPLATE
     html = html.replace("__DATA_JSON__", json.dumps(payload))
     html = html.replace("__METHOD_SIDE_HTML__", build_method_side_html(payload, config))
+    html = html.replace("__CACHE_MODEL__", str(payload["meta"].get("model", "deterministic cache")).replace("_", " "))
     workload_mw = float(payload["meta"]["workload_mw"])
     step_1pct = max(1, int(round(workload_mw * 0.01)))
     html = html.replace("__SOLAR_SLIDER_MAX__", str(int(max(payload["axes"]["solar_mw"]))))

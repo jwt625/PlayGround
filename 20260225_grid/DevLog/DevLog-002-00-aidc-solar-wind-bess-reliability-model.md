@@ -21,7 +21,9 @@
   - `real` resource mode.
 - A live one-site validation path is implemented in `scripts/validate_real_resource_downloads.py`.
 - A resumable overnight raw-data cache warmer is implemented in `scripts/cache_real_resource_api_data.py`.
+- A derived per-site profile-cache builder is implemented in `scripts/build_site_profile_cache.py`.
 - Parser and conversion tests for the raw NSRDB and WIND Toolkit CSV formats are implemented in `tests/test_resource_profiles.py`.
+- Cache/profile merge tests are implemented in `tests/test_map_cache_pipeline.py`.
 
 ### Current artifacts
 - Town-point builder:
@@ -39,6 +41,10 @@
   - `outputs/us_reliability_map_real_smoke2.json`
 - Real-data smoke map:
   - `outputs/interactive_reliability_map_real_smoke2.html`
+- Derived profile-cache summary:
+  - `outputs/site_profile_cache_summary.json`
+- Partial real-data dense cache:
+  - `outputs/us_reliability_map_real_partial.json`
 - Raw-cache smoke summary:
   - `outputs/real_resource_cache_smoke_summary.json`
 - Overnight batch progress:
@@ -57,6 +63,9 @@
 - UI slider granularity remains finer than the cache and is handled by interpolation in-browser.
 - Reliability tooltip formatting is implemented to three decimal places.
 - The method section and formula description are rendered below the map.
+- The main dense HTML now supports a merged-cache mode:
+  - real cached site results are used where available,
+  - synthetic dense-cache values remain as fallback for sites whose real raw data has not been cached yet.
 
 ### Real-data ingestion status
 - Official API probes to NSRDB and WIND Toolkit succeeded with the current `.env` key and email.
@@ -71,14 +80,26 @@
   - solar: `GHI` plus fixed losses and temperature derate,
   - wind: generic turbine-style power curve from `windspeed_100m` plus fixed losses.
 - This is already materially better than the synthetic resource field for adequacy timing, but it is not yet a high-fidelity PV or turbine plant model.
+- Raw API responses are now being transformed into derived per-site profile cache files under:
+  - `references/data/solar_wind_profiles/`
+- Each derived site profile stores:
+  - hourly solar per-MW profile,
+  - hourly wind per-MW profile,
+  - source metadata from both raw datasets.
 
 ### Real-data validation results
 - Fixture-based parser/conversion tests are passing.
+- Profile-cache round-trip and cache-merge tests are passing.
 - Live one-site validation succeeded with full-year hourly series for both datasets.
 - End-to-end smoke path succeeded:
   - raw fetch,
   - real-resource cache build,
   - interactive HTML render.
+- Local derived profile-cache build succeeded for the currently cached raw files.
+- Current local real-data status:
+  - `235` site profiles built and usable,
+  - `235 / 562` sites currently represented with real derived profiles,
+  - remaining sites still fall back to the synthetic dense cache in the main frontend artifact.
 - Current blocker for full national real-data rebuild:
   - public/demo API throughput and `429 OVER_RATE_LIMIT`, not code correctness.
 
@@ -225,7 +246,9 @@ Status:
 - Live validation completed.
 - End-to-end smoke build completed.
 - Overnight raw-cache batch is in progress.
-- Full dense real-data rebuild should wait until sufficient raw site files are cached locally.
+- Derived local per-site profile cache is now implemented and working.
+- The frontend can already consume a partial real-data cache and fall back to the old dense synthetic cache for incomplete coverage.
+- Full dense real-data rebuild should wait until substantially more raw site files are cached locally.
 
 ## Phase 4: Monte Carlo reliability
 Goal:

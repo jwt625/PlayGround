@@ -256,3 +256,26 @@ def fetch_real_resource_profiles(
         "settings": json.loads(json.dumps(settings.__dict__)),
     }
     return solar_profile, wind_profile, metadata
+
+
+def save_profile_cache(
+    out_path: Path,
+    solar_profile: np.ndarray,
+    wind_profile: np.ndarray,
+    metadata: dict[str, Any],
+) -> None:
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+    np.savez_compressed(
+        out_path,
+        solar_profile=solar_profile.astype(np.float32),
+        wind_profile=wind_profile.astype(np.float32),
+        metadata_json=json.dumps(metadata),
+    )
+
+
+def load_profile_cache(path: Path) -> tuple[np.ndarray, np.ndarray, dict[str, Any]]:
+    with np.load(path, allow_pickle=False) as data:
+        solar_profile = data["solar_profile"].astype(np.float64)
+        wind_profile = data["wind_profile"].astype(np.float64)
+        metadata = json.loads(str(data["metadata_json"]))
+    return solar_profile, wind_profile, metadata
