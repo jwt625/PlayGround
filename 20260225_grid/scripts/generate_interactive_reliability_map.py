@@ -414,7 +414,25 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
 
     const lat = sites.map(s => s.lat);
     const lon = sites.map(s => s.lon);
-    const hoverBase = sites.map(s => `Lat ${s.lat.toFixed(3)}, Lon ${s.lon.toFixed(3)}`);
+    const resourceYears = DATA.meta.resource_years || {};
+    function formatPopulation(value) {
+      const population = Number(value || 0);
+      if (population <= 0) {
+        return "unknown";
+      }
+      return population.toLocaleString();
+    }
+
+    function formatHover(site, reliability) {
+      const title = site.name ? `${site.name}${site.state ? `, ${site.state}` : ""}` : `Site ${site.site_id}`;
+      const location = `Lat ${Number(site.lat).toFixed(3)}, Lon ${Number(site.lon).toFixed(3)}`;
+      const resource = site.resource_source_label || site.resource_source || "Unknown";
+      const population = `Population ${formatPopulation(site.population)}`;
+      const years = site.resource_source === "real"
+        ? `Data years solar ${resourceYears.solar_year ?? "n/a"}, wind ${resourceYears.wind_year ?? "n/a"}`
+        : "Data source synthetic fallback";
+      return `${title}<br>${population}<br>${location}<br>Resource ${resource}<br>${years}<br>Reliability ${reliability.toFixed(3)}%`;
+    }
 
     const solarInput = document.getElementById("solar");
     const windInput = document.getElementById("wind");
@@ -503,7 +521,7 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
 
     const initial = currentValues();
     const initialValues = interpolatedSlice(initial.solar, initial.wind, initial.bess);
-    const hoverText = initialValues.map((value, idx) => `${hoverBase[idx]}<br>Reliability ${value.toFixed(3)}%`);
+    const hoverText = initialValues.map((value, idx) => formatHover(sites[idx], value));
 
     const trace = {
       type: "scattergeo",
@@ -573,7 +591,7 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
       colorModeValue.textContent = colorMode.value === "fixed" ? "0-100%" : "Dynamic";
 
       const values = interpolatedSlice(solar, wind, bess);
-      const text = values.map((value, idx) => `${hoverBase[idx]}<br>Reliability ${value.toFixed(3)}%`);
+      const text = values.map((value, idx) => formatHover(sites[idx], value));
       siteCount.textContent = String(lat.length);
       let cmin = 0;
       let cmax = 100;
@@ -644,7 +662,17 @@ def merge_payloads(primary: dict, fallback: dict) -> dict:
     if missing_primary_ids:
         raise ValueError(f"Primary cache contains site_ids absent from fallback cache: {sorted(missing_primary_ids)[:10]}")
 
-    merged_sites = [primary_sites_by_id.get(site_id, site) for site_id, site in zip(fallback_site_ids, fallback_sites)]
+    merged_sites = []
+    for site_id, fallback_site in zip(fallback_site_ids, fallback_sites):
+        if site_id in primary_sites_by_id:
+            site = dict(primary_sites_by_id[site_id])
+            site["resource_source"] = "real"
+            site["resource_source_label"] = "Real NSRDB/WTK"
+        else:
+            site = dict(fallback_site)
+            site["resource_source"] = "fallback"
+            site["resource_source_label"] = "Synthetic fallback"
+        merged_sites.append(site)
     fallback_index_by_id = {site_id: idx for idx, site_id in enumerate(fallback_site_ids)}
     primary_index_by_id = {int(site["site_id"]): idx for idx, site in enumerate(primary["sites"])}
 
@@ -676,6 +704,25 @@ def merge_payloads(primary: dict, fallback: dict) -> dict:
         "sites": merged_sites,
         "values_by_combo": merged_values_by_combo,
     }
+
+
+def annotate_site_metadata(payload: dict) -> dict:
+    if any("resource_source" in site for site in payload["sites"]):
+        return payload
+    resource_mode = str(payload["meta"].get("resource_mode", "synthetic"))
+    if resource_mode == "real":
+        source = ("real", "Real NSRDB/WTK")
+    else:
+        source = ("synthetic", "Synthetic")
+    annotated_sites = []
+    for site in payload["sites"]:
+        annotated = dict(site)
+        annotated["resource_source"] = source[0]
+        annotated["resource_source_label"] = source[1]
+        annotated_sites.append(annotated)
+    payload = dict(payload)
+    payload["sites"] = annotated_sites
+    return payload
 
 
 def build_method_side_html(payload: dict, config: dict) -> str:
@@ -746,6 +793,7 @@ def main() -> None:
     payload = load_payload(args.cache)
     if args.fallback_cache is not None:
         payload = merge_payloads(payload, load_payload(args.fallback_cache))
+    payload = annotate_site_metadata(payload)
     config = yaml.safe_load(args.config.read_text(encoding="utf-8"))
     html = HTML_TEMPLATE
     html = html.replace("__DATA_JSON__", json.dumps(payload))
