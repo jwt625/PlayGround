@@ -226,6 +226,91 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
       color: var(--ink);
       line-height: 1.5;
     }
+    .map-panel {
+      position: relative;
+    }
+    .fullscreen-btn {
+      position: absolute;
+      top: 22px;
+      right: 22px;
+      z-index: 10;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 6px 10px;
+      cursor: pointer;
+      font-size: 13px;
+      font-family: Georgia, "Times New Roman", serif;
+      color: var(--muted);
+      transition: background 0.15s, color 0.15s;
+      box-shadow: 0 2px 8px rgba(50,40,20,0.10);
+    }
+    .fullscreen-btn:hover {
+      background: var(--accent);
+      color: #fff;
+    }
+    .map-panel.is-fullscreen {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      z-index: 9999;
+      border-radius: 0;
+      margin: 0;
+      padding: 0;
+    }
+    .map-panel.is-fullscreen #map {
+      height: 100vh !important;
+    }
+    .overlay-section {
+      margin-top: 14px;
+      padding-top: 14px;
+      border-top: 1px solid var(--border);
+    }
+    .overlay-section label.section-label {
+      display: block;
+      font-size: 14px;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+    .overlay-toggles {
+      display: grid;
+      gap: 8px;
+    }
+    .overlay-toggles label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      cursor: pointer;
+      padding: 6px 8px;
+      border-radius: 8px;
+      transition: background 0.15s;
+    }
+    .overlay-toggles label:hover {
+      background: rgba(14, 107, 92, 0.06);
+    }
+    .overlay-toggles input[type=checkbox] {
+      accent-color: var(--accent);
+      width: 16px;
+      height: 16px;
+    }
+    .overlay-legend {
+      display: inline-block;
+      width: 14px;
+      height: 3px;
+      border-radius: 2px;
+      vertical-align: middle;
+    }
+    .overlay-legend.dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+    }
+    .overlay-legend.area {
+      width: 14px;
+      height: 10px;
+      border-radius: 3px;
+      opacity: 0.6;
+    }
     @media (max-width: 980px) {
       .layout {
         grid-template-columns: 1fr;
@@ -281,11 +366,17 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
           </div>
         </div>
 
+        <div class="overlay-section" id="overlaySection" style="display:none">
+          <label class="section-label">Map Overlays</label>
+          <div class="overlay-toggles" id="overlayToggles"></div>
+        </div>
+
         <div class="footnote">
           Cache model: __CACHE_MODEL__. The UI does indexed lookup only; Monte Carlo is intentionally not run in-browser.
         </div>
       </div>
-      <div class="map-panel">
+      <div class="map-panel" id="mapPanel">
+        <button class="fullscreen-btn" id="fullscreenBtn" title="Toggle fullscreen">&#x26F6; Fullscreen</button>
         <div id="map"></div>
       </div>
     </div>
@@ -388,13 +479,19 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
             the reliability sweep across all slider combinations.
           </p>
           <ul>
-            <li>Solar raw data: NSRDB hourly CSV for solar year <strong>__SOLAR_YEAR__</strong> with \(GHI\), \(DNI\), \(DHI\), temperature, and wind speed.</li>
-            <li>Wind raw data: WIND Toolkit hourly CSV for wind year <strong>__WIND_YEAR__</strong> with \(windspeed_{100m}\), wind direction, temperature, and pressure.</li>
+            <li>Solar raw data: <a href="https://nsrdb.nrel.gov/" target="_blank">NREL NSRDB</a> hourly CSV for solar year <strong>__SOLAR_YEAR__</strong> with \(GHI\), \(DNI\), \(DHI\), temperature, and wind speed.</li>
+            <li>Wind raw data: <a href="https://www.nrel.gov/grid/wind-toolkit.html" target="_blank">NREL WIND Toolkit</a> hourly CSV for wind year <strong>__WIND_YEAR__</strong> with \(windspeed_{100m}\), wind direction, temperature, and pressure.</li>
             <li>Solar conversion: hourly PV output fraction per MW from \(GHI / 1000\), fixed losses, and a temperature derate.</li>
             <li>Wind conversion: hourly wind output fraction per MW from \(windspeed_{100m}\), a generic turbine power curve, and fixed losses.</li>
             <li>Per-site derived cache: one compressed profile file storing hourly solar, hourly wind, and source metadata for each successfully cached site.</li>
             <li>Reliability sweep: for each site and each \((C_{\mathrm{solar}}, C_{\mathrm{wind}}, E_{\max})\) tuple, the simulator computes \(G_t\), dispatches BESS hour by hour, and records the percentage of served hours.</li>
             <li>Current real-data coverage in this build: <strong>__REAL_SITE_COUNT__</strong> sites use real derived profiles; any remaining uncovered sites fall back to the older synthetic cache in the merged frontend artifact.</li>
+          </ul>
+          <h3 class="method-subhead">Overlay Data Sources</h3>
+          <ul>
+            <li>Natural gas pipelines: <a href="https://catalog.data.gov/dataset/natural-gas-pipelines" target="_blank">HIFLD Natural Gas Pipelines</a> (<a href="https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/Natural_Gas_Pipelines___Copy_shp/FeatureServer/0" target="_blank">ArcGIS FeatureServer</a>). 33,806 polyline features covering interstate and intrastate transmission pipelines. Simplified with Douglas-Peucker algorithm for browser rendering.</li>
+            <li>EPA nonattainment zones: <a href="https://www.epa.gov/green-book" target="_blank">EPA Green Book</a> via <a href="https://gispub.epa.gov/arcgis/rest/services/OAR_OAQPS/NonattainmentAreas/MapServer" target="_blank">ArcGIS MapServer</a>. Covers 8-hour Ozone (2015 NAAQS) and PM2.5 Annual (2012 NAAQS) nonattainment area boundaries. Relevant for backup generator permitting thresholds.</li>
+            <li>Data center / IXP facilities: <a href="https://www.peeringdb.com/" target="_blank">PeeringDB</a> US facility database. 1,347 CONUS data center and Internet exchange point locations with operator, connected network count, and IX count metadata.</li>
           </ul>
         </div>
         <div class="method-side">
@@ -514,7 +611,7 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
       return out;
     }
 
-    const recommended = DATA.meta.recommended_defaults || {solar_mw: 0, wind_mw: 0, bess_mwh: 0};
+    const recommended = DATA.meta.recommended_defaults || {solar_mw: 6000, wind_mw: 0, bess_mwh: 40000};
     solarInput.value = String(clamp(recommended.solar_mw, 0, Number(solarInput.max)));
     windInput.value = String(clamp(recommended.wind_mw, 0, Number(windInput.max)));
     bessInput.value = String(clamp(recommended.bess_mwh, 0, Number(bessInput.max)));
@@ -619,6 +716,229 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
     bessInput.addEventListener("input", render);
     colorMode.addEventListener("change", render);
     render();
+
+    // ---- Fullscreen toggle ----
+    const mapPanel = document.getElementById("mapPanel");
+    const fullscreenBtn = document.getElementById("fullscreenBtn");
+    fullscreenBtn.addEventListener("click", function() {
+      mapPanel.classList.toggle("is-fullscreen");
+      const isFS = mapPanel.classList.contains("is-fullscreen");
+      fullscreenBtn.innerHTML = isFS ? "&#x2716; Exit" : "&#x26F6; Fullscreen";
+      setTimeout(function() { Plotly.Plots.resize("map"); }, 50);
+    });
+    document.addEventListener("keydown", function(e) {
+      if (e.key === "Escape" && mapPanel.classList.contains("is-fullscreen")) {
+        mapPanel.classList.remove("is-fullscreen");
+        fullscreenBtn.innerHTML = "&#x26F6; Fullscreen";
+        setTimeout(function() { Plotly.Plots.resize("map"); }, 50);
+      }
+    });
+
+    // ---- Overlay layers ----
+    const OVERLAYS = __OVERLAY_JSON__;
+
+    const overlayConfig = [
+      {
+        key: "pipelines",
+        label: "Natural Gas Pipelines",
+        legendClass: "overlay-legend",
+        legendColor: "#b07020",
+        build: function(data) {
+          const traces = [];
+          const segs = data.segments;
+          // Batch segments into chunks to reduce trace count
+          const BATCH = 500;
+          for (let b = 0; b < segs.length; b += BATCH) {
+            const batchLat = [];
+            const batchLon = [];
+            const batchText = [];
+            const end = Math.min(b + BATCH, segs.length);
+            for (let i = b; i < end; i++) {
+              const s = segs[i];
+              const hover = (s.operator || "Unknown operator")
+                + (s.name ? "<br>" + s.name : "")
+                + (s.type ? "<br>Type: " + s.type : "");
+              for (let j = 0; j < s.lat.length; j++) {
+                batchLat.push(s.lat[j]);
+                batchLon.push(s.lon[j]);
+                batchText.push(hover);
+              }
+              batchLat.push(null);
+              batchLon.push(null);
+              batchText.push("");
+            }
+            traces.push({
+              type: "scattergeo",
+              lat: batchLat,
+              lon: batchLon,
+              text: batchText,
+              hovertemplate: "%{text}<extra>Pipeline</extra>",
+              mode: "lines",
+              line: { color: "rgba(176, 112, 32, 0.5)", width: 1.2 },
+              visible: true,
+              showlegend: false,
+            });
+          }
+          return traces;
+        },
+      },
+      {
+        key: "epa_zones",
+        label: "EPA Nonattainment",
+        legendClass: "overlay-legend area",
+        legendColor: "#c04040",
+        build: function(data) {
+          const traces = [];
+          const ozoneLat = [], ozoneLon = [], ozoneText = [];
+          const pmLat = [], pmLon = [], pmText = [];
+          for (const zone of data.zones) {
+            const tLat = zone.pollutant.startsWith("ozone") ? ozoneLat : pmLat;
+            const tLon = zone.pollutant.startsWith("ozone") ? ozoneLon : pmLon;
+            const tText = zone.pollutant.startsWith("ozone") ? ozoneText : pmText;
+            for (const ring of zone.rings) {
+              for (let j = 0; j < ring.lat.length; j++) {
+                tLat.push(ring.lat[j]);
+                tLon.push(ring.lon[j]);
+                tText.push((zone.name || "Nonattainment") + " (" + zone.pollutant.replace(/_/g, " ") + (zone.classification ? ", " + zone.classification : "") + ")");
+              }
+              tLat.push(ring.lat[0]);
+              tLon.push(ring.lon[0]);
+              tText.push("");
+              tLat.push(null);
+              tLon.push(null);
+              tText.push("");
+            }
+          }
+          if (ozoneLat.length > 0) {
+            traces.push({
+              type: "scattergeo",
+              lat: ozoneLat, lon: ozoneLon, text: ozoneText,
+              hovertemplate: "%{text}<extra></extra>",
+              mode: "lines",
+              line: { color: "rgba(192, 64, 64, 0.6)", width: 1.5 },
+              visible: true, showlegend: false,
+            });
+          }
+          if (pmLat.length > 0) {
+            traces.push({
+              type: "scattergeo",
+              lat: pmLat, lon: pmLon, text: pmText,
+              hovertemplate: "%{text}<extra></extra>",
+              mode: "lines",
+              line: { color: "rgba(160, 80, 160, 0.6)", width: 1.5 },
+              visible: true, showlegend: false,
+            });
+          }
+          return traces;
+        },
+      },
+      {
+        key: "fiber",
+        label: "Data Center / IXP Facilities",
+        legendClass: "overlay-legend dot",
+        legendColor: "#2070c0",
+        build: function(data) {
+          const pts = data.points;
+          return [{
+            type: "scattergeo",
+            lat: pts.map(p => p.lat),
+            lon: pts.map(p => p.lon),
+            text: pts.map(p => {
+              let h = "<b>" + (p.name || "Facility") + "</b>";
+              h += "<br>" + (p.city || "") + (p.state ? ", " + p.state : "");
+              if (p.org) h += "<br>Operator: " + p.org;
+              if (p.net_count) h += "<br>Connected networks: " + p.net_count;
+              if (p.ix_count) h += "<br>Internet exchanges: " + p.ix_count;
+              return h;
+            }),
+            hovertemplate: "%{text}<extra>DC/IXP</extra>",
+            mode: "markers",
+            marker: {
+              symbol: "diamond",
+              size: 5,
+              color: "rgba(32, 112, 192, 0.7)",
+              line: { color: "rgba(255,255,255,0.5)", width: 0.5 },
+            },
+            visible: true,
+            showlegend: false,
+          }];
+        },
+      },
+    ];
+
+    // Map overlay keys to their data payloads
+    const overlayDataMap = {};
+    if (OVERLAYS.pipelines) overlayDataMap["pipelines"] = OVERLAYS.pipelines;
+    if (OVERLAYS.epa_zones) overlayDataMap["epa_zones"] = OVERLAYS.epa_zones;
+    if (OVERLAYS.fiber) overlayDataMap["fiber"] = OVERLAYS.fiber;
+
+    // Build overlay traces and register toggles
+    const overlayTraceIndices = {}; // key → [traceIndex, ...]
+    let nextTraceIndex = 1; // trace 0 is reliability
+
+    const toggleContainer = document.getElementById("overlayToggles");
+    const overlaySection = document.getElementById("overlaySection");
+    overlaySection.style.display = "block";
+
+    // Reliability layer toggle (trace 0)
+    {
+      const label = document.createElement("label");
+      const cb = document.createElement("input");
+      cb.type = "checkbox";
+      cb.checked = true;
+      cb.id = "overlay_reliability";
+      const legend = document.createElement("span");
+      legend.className = "overlay-legend dot";
+      legend.style.background = "#0f6b58";
+      const text = document.createTextNode(" Reliability Sites");
+      label.appendChild(cb);
+      label.appendChild(legend);
+      label.appendChild(text);
+      toggleContainer.appendChild(label);
+      cb.addEventListener("change", function() {
+        Plotly.restyle("map", { visible: cb.checked }, [0]);
+      });
+    }
+
+    const additionalTraces = [];
+    let hasAnyOverlay = false;
+
+    for (const cfg of overlayConfig) {
+      const data = overlayDataMap[cfg.key];
+      if (!data) continue;
+      hasAnyOverlay = true;
+      const traces = cfg.build(data);
+      const indices = [];
+      for (const t of traces) {
+        additionalTraces.push(t);
+        indices.push(nextTraceIndex++);
+      }
+      overlayTraceIndices[cfg.key] = indices;
+
+      const label = document.createElement("label");
+      const cb = document.createElement("input");
+      cb.type = "checkbox";
+      cb.checked = true;
+      cb.id = "overlay_" + cfg.key;
+      const legend = document.createElement("span");
+      legend.className = cfg.legendClass;
+      legend.style.background = cfg.legendColor;
+      const text = document.createTextNode(" " + cfg.label);
+      label.appendChild(cb);
+      label.appendChild(legend);
+      label.appendChild(text);
+      toggleContainer.appendChild(label);
+
+      cb.addEventListener("change", function() {
+        for (const idx of indices) {
+          Plotly.restyle("map", { visible: cb.checked }, [idx]);
+        }
+      });
+    }
+
+    if (hasAnyOverlay) {
+      Plotly.addTraces("map", additionalTraces);
+    }
   </script>
 </body>
 </html>
@@ -630,6 +950,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--cache", type=Path, default=Path("outputs/us_reliability_map_cache.json"))
     parser.add_argument("--fallback-cache", type=Path, default=None)
     parser.add_argument("--config", type=Path, default=Path("config/assumptions_2026_us_ai_datacenter.yaml"))
+    parser.add_argument("--overlay-dir", type=Path, default=Path("outputs/overlays"))
     parser.add_argument("--out", type=Path, default=Path("outputs/interactive_reliability_map.html"))
     return parser.parse_args()
 
@@ -788,6 +1109,25 @@ def build_method_side_html(payload: dict, config: dict) -> str:
 
     return render_card("Symbols", symbols) + render_card("Assumptions", assumptions)
 
+def load_overlays(overlay_dir: Path) -> dict:
+    """Load all overlay JSON files from the overlay directory."""
+    overlays: dict = {}
+    overlay_files = {
+        "pipelines": "natural_gas_pipelines.json",
+        "epa_zones": "epa_nonattainment_zones.json",
+        "fiber": "fiber_infrastructure.json",
+    }
+    for key, filename in overlay_files.items():
+        path = overlay_dir / filename
+        if path.exists():
+            overlays[key] = json.loads(path.read_text(encoding="utf-8"))
+            size_mb = path.stat().st_size / 1e6
+            print(f"  overlay: {key} ({size_mb:.1f} MB)")
+        else:
+            print(f"  overlay: {key} — not found, skipping")
+    return overlays
+
+
 def main() -> None:
     args = parse_args()
     payload = load_payload(args.cache)
@@ -795,8 +1135,19 @@ def main() -> None:
         payload = merge_payloads(payload, load_payload(args.fallback_cache))
     payload = annotate_site_metadata(payload)
     config = yaml.safe_load(args.config.read_text(encoding="utf-8"))
+
+    payload["meta"]["recommended_defaults"] = {
+        "solar_mw": 6000.0,
+        "wind_mw": 0.0,
+        "bess_mwh": 40000.0,
+    }
+
+    print("Loading overlays …")
+    overlays = load_overlays(args.overlay_dir)
+
     html = HTML_TEMPLATE
     html = html.replace("__DATA_JSON__", json.dumps(payload))
+    html = html.replace("__OVERLAY_JSON__", json.dumps(overlays))
     html = html.replace("__METHOD_SIDE_HTML__", build_method_side_html(payload, config))
     html = html.replace("__CACHE_MODEL__", str(payload["meta"].get("model", "deterministic cache")).replace("_", " "))
     resource_years = payload["meta"].get("resource_years", {})
@@ -805,7 +1156,7 @@ def main() -> None:
     html = html.replace("__REAL_SITE_COUNT__", str(int(payload["meta"].get("real_site_count", payload["meta"].get("site_count", 0)))))
     workload_mw = float(payload["meta"]["workload_mw"])
     step_1pct = max(1, int(round(workload_mw * 0.01)))
-    html = html.replace("__SOLAR_SLIDER_MAX__", str(int(max(payload["axes"]["solar_mw"]))))
+    html = html.replace("__SOLAR_SLIDER_MAX__", str(max(10000, int(max(payload["axes"]["solar_mw"])))))
     html = html.replace("__WIND_SLIDER_MAX__", str(int(max(payload["axes"]["wind_mw"]))))
     html = html.replace("__BESS_SLIDER_MAX__", str(int(max(payload["axes"]["bess_mwh"]))))
     html = html.replace("__SOLAR_SLIDER_STEP__", str(step_1pct))
@@ -813,7 +1164,8 @@ def main() -> None:
     html = html.replace("__BESS_SLIDER_STEP__", str(step_1pct))
     args.out.parent.mkdir(parents=True, exist_ok=True)
     args.out.write_text(html, encoding="utf-8")
-    print(args.out)
+    size_mb = args.out.stat().st_size / 1e6
+    print(f"Output: {args.out} ({size_mb:.1f} MB)")
 
 
 if __name__ == "__main__":
