@@ -161,6 +161,11 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
     .equation-block p {
       margin: 0;
     }
+    .method-subhead {
+      margin: 22px 0 10px 0;
+      font-size: 18px;
+      letter-spacing: -0.01em;
+    }
     .method-grid {
       display: grid;
       grid-template-columns: 2fr 1fr;
@@ -376,6 +381,21 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
               \frac{\sum_{t=1}^{8760} \text{served}_t}{8760}
             \]</p>
           </div>
+          <h3 class="method-subhead">Real Data Pipeline</h3>
+          <p>
+            The cached map uses real hourly weather/resource traces where available. For each site, one NSRDB solar file
+            and one WIND Toolkit wind file are cached, converted into per-MW generation profiles, and then reused during
+            the reliability sweep across all slider combinations.
+          </p>
+          <ul>
+            <li>Solar raw data: NSRDB hourly CSV for solar year <strong>__SOLAR_YEAR__</strong> with \(GHI\), \(DNI\), \(DHI\), temperature, and wind speed.</li>
+            <li>Wind raw data: WIND Toolkit hourly CSV for wind year <strong>__WIND_YEAR__</strong> with \(windspeed_{100m}\), wind direction, temperature, and pressure.</li>
+            <li>Solar conversion: hourly PV output fraction per MW from \(GHI / 1000\), fixed losses, and a temperature derate.</li>
+            <li>Wind conversion: hourly wind output fraction per MW from \(windspeed_{100m}\), a generic turbine power curve, and fixed losses.</li>
+            <li>Per-site derived cache: one compressed profile file storing hourly solar, hourly wind, and source metadata for each successfully cached site.</li>
+            <li>Reliability sweep: for each site and each \((C_{\mathrm{solar}}, C_{\mathrm{wind}}, E_{\max})\) tuple, the simulator computes \(G_t\), dispatches BESS hour by hour, and records the percentage of served hours.</li>
+            <li>Current real-data coverage in this build: <strong>__REAL_SITE_COUNT__</strong> sites use real derived profiles; any remaining uncovered sites fall back to the older synthetic cache in the merged frontend artifact.</li>
+          </ul>
         </div>
         <div class="method-side">
           __METHOD_SIDE_HTML__
@@ -642,6 +662,8 @@ def merge_payloads(primary: dict, fallback: dict) -> dict:
             "model": f"{primary['meta'].get('model', 'primary')}+fallback",
             "resource_mode": f"{primary['meta'].get('resource_mode', 'primary')}+fallback",
             "site_count": len(merged_sites),
+            "resource_years": primary["meta"].get("resource_years", fallback["meta"].get("resource_years", {})),
+            "real_site_count": len(primary["sites"]),
             "primary_cache": primary["meta"].get("site_source", ""),
             "fallback_cache": fallback["meta"].get("site_source", ""),
             "primary_site_count": len(primary["sites"]),
@@ -729,6 +751,10 @@ def main() -> None:
     html = html.replace("__DATA_JSON__", json.dumps(payload))
     html = html.replace("__METHOD_SIDE_HTML__", build_method_side_html(payload, config))
     html = html.replace("__CACHE_MODEL__", str(payload["meta"].get("model", "deterministic cache")).replace("_", " "))
+    resource_years = payload["meta"].get("resource_years", {})
+    html = html.replace("__SOLAR_YEAR__", str(resource_years.get("solar_year", "n/a")))
+    html = html.replace("__WIND_YEAR__", str(resource_years.get("wind_year", "n/a")))
+    html = html.replace("__REAL_SITE_COUNT__", str(int(payload["meta"].get("real_site_count", payload["meta"].get("site_count", 0)))))
     workload_mw = float(payload["meta"]["workload_mw"])
     step_1pct = max(1, int(round(workload_mw * 0.01)))
     html = html.replace("__SOLAR_SLIDER_MAX__", str(int(max(payload["axes"]["solar_mw"]))))

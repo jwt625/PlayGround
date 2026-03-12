@@ -86,6 +86,11 @@
   - hourly solar per-MW profile,
   - hourly wind per-MW profile,
   - source metadata from both raw datasets.
+- The first full national raw-data batch for the current map definition has now completed.
+- Current batch scope:
+  - `562` town sites,
+  - `1` NSRDB solar year (`2020`),
+  - `1` WIND Toolkit wind year (`2014`).
 
 ### Real-data validation results
 - Fixture-based parser/conversion tests are passing.
@@ -97,11 +102,16 @@
   - interactive HTML render.
 - Local derived profile-cache build succeeded for the currently cached raw files.
 - Current local real-data status:
-  - `235` site profiles built and usable,
-  - `235 / 562` sites currently represented with real derived profiles,
-  - remaining sites still fall back to the synthetic dense cache in the main frontend artifact.
+  - `561` site profiles built and usable,
+  - `561 / 562` sites currently represented with real derived profiles,
+  - `1` site still falls back to the synthetic dense cache in the main frontend artifact.
+- The single failed site in the first national batch is:
+  - `Fort Jefferson, FL`
+  - NSRDB response: `No data available at the provided location`
+- The main dense frontend artifact has been refreshed against the updated partial real cache, so it is now effectively real-backed everywhere except that one fallback point.
 - Current blocker for full national real-data rebuild:
-  - public/demo API throughput and `429 OVER_RATE_LIMIT`, not code correctness.
+  - no longer the first single-year national batch,
+  - next blockers are multi-year expansion, better plant-conversion fidelity, and handling the one no-data site cleanly.
 
 ## Objective
 Build a location-based adequacy and reliability model for an AI data center campus powered by solar, wind, battery energy storage, and optionally the grid. The primary product is an interactive 2D U.S. reliability map with three controls:
@@ -245,10 +255,11 @@ Status:
 - Parsers tested.
 - Live validation completed.
 - End-to-end smoke build completed.
-- Overnight raw-cache batch is in progress.
+- First full national raw-cache batch completed.
 - Derived local per-site profile cache is now implemented and working.
 - The frontend can already consume a partial real-data cache and fall back to the old dense synthetic cache for incomplete coverage.
-- Full dense real-data rebuild should wait until substantially more raw site files are cached locally.
+- For the current one-year map definition, the dense map is now effectively complete.
+- Next expansion should be additional weather years rather than more sites.
 
 ## Phase 4: Monte Carlo reliability
 Goal:
