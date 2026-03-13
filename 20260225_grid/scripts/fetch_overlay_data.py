@@ -154,6 +154,71 @@ def fetch_peeringdb_facilities() -> Path:
 
 
 # ---------------------------------------------------------------------------
+# 4. Fiber Route Datasets (real carrier networks)
+# ---------------------------------------------------------------------------
+
+FIBER_ROUTE_SOURCES = {
+    "uniti_national_core": {
+        "url": "https://services.arcgis.com/QO7AhQX53d0m9M2s/arcgis/rest/services/Uniti_Wholesale_Map_Demo_4_WFL1/FeatureServer/70",
+        "description": "Uniti/Windstream National Core Network",
+        "filename": "fiber_uniti_national_core_raw.geojson",
+    },
+    "segra_consolidated": {
+        "url": "https://services2.arcgis.com/idZndEogp4LoOmcv/arcgis/rest/services/SegraFiberNetwork_Consolidated/FeatureServer/167",
+        "description": "Segra Fiber Network (East Coast GA-NY)",
+        "filename": "fiber_segra_consolidated_raw.geojson",
+    },
+    "nwpa_geotel": {
+        "url": "https://services7.arcgis.com/6h8O0NpKpUyHiCti/arcgis/rest/services/AGOL_Publish4/FeatureServer/13",
+        "description": "NWPA/GeoTel Multi-Carrier Fiber (PA+OH)",
+        "filename": "fiber_nwpa_geotel_raw.geojson",
+        "max_record_count": 1000,
+    },
+}
+
+
+def fetch_fiber_routes() -> list[Path]:
+    paths = []
+    for key, src in FIBER_ROUTE_SOURCES.items():
+        out = RAW_DIR / src["filename"]
+        if out.exists():
+            size_mb = out.stat().st_size / 1e6
+            print(f"[fiber/{key}] Already cached ({size_mb:.1f} MB): {out}")
+            paths.append(out)
+            continue
+        print(f"[fiber/{key}] Fetching {src['description']} …")
+        max_rc = src.get("max_record_count", 2000)
+        geojson = fetch_arcgis_geojson_paged(src["url"], max_record_count=max_rc)
+        out.write_text(json.dumps(geojson), encoding="utf-8")
+        size_mb = out.stat().st_size / 1e6
+        print(f"[fiber/{key}] Saved {len(geojson['features'])} features ({size_mb:.1f} MB): {out}")
+        paths.append(out)
+    return paths
+
+
+# ---------------------------------------------------------------------------
+# 5. Submarine Cable Routes (TeleGeography)
+# ---------------------------------------------------------------------------
+
+SUBMARINE_CABLE_URL = "https://www.submarinecablemap.com/api/v3/cable/cable-geo.json"
+
+
+def fetch_submarine_cables() -> Path:
+    out = RAW_DIR / "submarine_cables_raw.geojson"
+    if out.exists():
+        size_mb = out.stat().st_size / 1e6
+        print(f"[submarine] Already cached ({size_mb:.1f} MB): {out}")
+        return out
+    print("[submarine] Fetching TeleGeography submarine cable routes …")
+    data = fetch_json(SUBMARINE_CABLE_URL, timeout=120)
+    out.write_text(json.dumps(data), encoding="utf-8")
+    features = data.get("features", [])
+    size_mb = out.stat().st_size / 1e6
+    print(f"[submarine] Saved {len(features)} cable routes ({size_mb:.1f} MB): {out}")
+    return out
+
+
+# ---------------------------------------------------------------------------
 # Main
 # ---------------------------------------------------------------------------
 
@@ -185,6 +250,20 @@ def main() -> None:
     except Exception as exc:
         print(f"[peeringdb] ERROR: {exc}")
         errors.append(f"peeringdb: {exc}")
+
+    # 4. Fiber route datasets
+    try:
+        fetch_fiber_routes()
+    except Exception as exc:
+        print(f"[fiber-routes] ERROR: {exc}")
+        errors.append(f"fiber-routes: {exc}")
+
+    # 5. Submarine cables
+    try:
+        fetch_submarine_cables()
+    except Exception as exc:
+        print(f"[submarine] ERROR: {exc}")
+        errors.append(f"submarine: {exc}")
 
     print()
     if errors:

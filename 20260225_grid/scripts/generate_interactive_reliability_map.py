@@ -479,8 +479,8 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
             the reliability sweep across all slider combinations.
           </p>
           <ul>
-            <li>Solar raw data: <a href="https://nsrdb.nrel.gov/" target="_blank">NREL NSRDB</a> hourly CSV for solar year <strong>__SOLAR_YEAR__</strong> with \(GHI\), \(DNI\), \(DHI\), temperature, and wind speed.</li>
-            <li>Wind raw data: <a href="https://www.nrel.gov/grid/wind-toolkit.html" target="_blank">NREL WIND Toolkit</a> hourly CSV for wind year <strong>__WIND_YEAR__</strong> with \(windspeed_{100m}\), wind direction, temperature, and pressure.</li>
+            <li>Solar raw data: <a href="https://nsrdb.nrel.gov/" target="_blank">NREL NSRDB</a> (<a href="https://nsrdb.nrel.gov/data-viewer" target="_blank">data viewer</a>) hourly CSV for solar year <strong>__SOLAR_YEAR__</strong> with \(GHI\), \(DNI\), \(DHI\), temperature, and wind speed.</li>
+            <li>Wind raw data: <a href="https://www.nrel.gov/grid/wind-toolkit.html" target="_blank">NREL WIND Toolkit</a> (<a href="https://wrdb.nlr.gov/data-viewer" target="_blank">data viewer</a>) hourly CSV for wind year <strong>__WIND_YEAR__</strong> with \(windspeed_{100m}\), wind direction, temperature, and pressure.</li>
             <li>Solar conversion: hourly PV output fraction per MW from \(GHI / 1000\), fixed losses, and a temperature derate.</li>
             <li>Wind conversion: hourly wind output fraction per MW from \(windspeed_{100m}\), a generic turbine power curve, and fixed losses.</li>
             <li>Per-site derived cache: one compressed profile file storing hourly solar, hourly wind, and source metadata for each successfully cached site.</li>
@@ -492,6 +492,7 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
             <li>Natural gas pipelines: <a href="https://catalog.data.gov/dataset/natural-gas-pipelines" target="_blank">HIFLD Natural Gas Pipelines</a> (<a href="https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/Natural_Gas_Pipelines___Copy_shp/FeatureServer/0" target="_blank">ArcGIS FeatureServer</a>). 33,806 polyline features covering interstate and intrastate transmission pipelines. Simplified with Douglas-Peucker algorithm for browser rendering.</li>
             <li>EPA nonattainment zones: <a href="https://www.epa.gov/green-book" target="_blank">EPA Green Book</a> via <a href="https://gispub.epa.gov/arcgis/rest/services/OAR_OAQPS/NonattainmentAreas/MapServer" target="_blank">ArcGIS MapServer</a>. Covers 8-hour Ozone (2015 NAAQS) and PM2.5 Annual (2012 NAAQS) nonattainment area boundaries. Relevant for backup generator permitting thresholds.</li>
             <li>Data center / IXP facilities: <a href="https://www.peeringdb.com/" target="_blank">PeeringDB</a> US facility database. 1,347 CONUS data center and Internet exchange point locations with operator, connected network count, and IX count metadata.</li>
+            <li>Fiber routes: real carrier fiber networks from <a href="https://services.arcgis.com/QO7AhQX53d0m9M2s/arcgis/rest/services/Uniti_Wholesale_Map_Demo_4_WFL1/FeatureServer" target="_blank">Uniti/Windstream</a> national core (26K segments, CONUS backbone), <a href="https://services2.arcgis.com/idZndEogp4LoOmcv/arcgis/rest/services/SegraFiberNetwork_Consolidated/FeatureServer" target="_blank">Segra</a> consolidated network (70K segments, East Coast GA-NY corridor), and <a href="https://services7.arcgis.com/6h8O0NpKpUyHiCti/arcgis/rest/services/AGOL_Publish4/FeatureServer" target="_blank">GeoTel</a> multi-carrier dataset (22K segments, PA+OH, 18 carriers including CenturyLink, Zayo, Crown Castle). Submarine cable routes from <a href="https://www.submarinecablemap.com/" target="_blank">TeleGeography</a> (108 US-touching cables with owner, length, and landing point metadata). Each carrier network is color-coded: blue (Uniti), green (Segra), purple (GeoTel), dotted blue (submarine). <em>Note: coverage is densest in the eastern US and along major backbone corridors. Western US fiber route data is underrepresented because no free public carrier datasets with that footprint were found; comprehensive national fiber route data is held commercially by GeoTel/Ookla and Infrapedia.</em></li>
           </ul>
         </div>
         <div class="method-side">
@@ -864,6 +865,71 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
           }];
         },
       },
+      {
+        key: "fiber_routes",
+        label: "Fiber Backbone Routes",
+        legendClass: "overlay-legend",
+        legendColor: "#1a8ccc",
+        build: function(data) {
+          const traces = [];
+          const sourceStyles = {
+            uniti_core: { color: "rgba(26, 140, 204, 0.5)", width: 1.5, label: "Uniti/Windstream" },
+            segra:      { color: "rgba(80, 160, 50, 0.5)", width: 1.5, label: "Segra" },
+            geotel:     { color: "rgba(180, 100, 200, 0.5)", width: 1.5, label: "GeoTel Multi-Carrier" },
+            submarine:  { color: "rgba(26, 140, 204, 0.4)", width: 1.3, dash: "dot", label: "Submarine" },
+          };
+          const buckets = {};
+          for (const seg of data.segments) {
+            const src = seg.source || "unknown";
+            if (!buckets[src]) buckets[src] = { lat: [], lon: [], text: [] };
+            const b = buckets[src];
+            let hover;
+            if (src === "submarine") {
+              hover = "<b>" + (seg.name || "Submarine cable") + "</b>";
+              if (seg.owners) hover += "<br>Owners: " + seg.owners;
+              if (seg.length) hover += "<br>Length: " + seg.length;
+              if (seg.rfs) hover += "<br>In service: " + seg.rfs;
+              if (seg.suppliers) hover += "<br>Supplier: " + seg.suppliers;
+              if (seg.landing_points && seg.landing_points.length > 0) {
+                const lps = seg.landing_points.slice(0, 4).join(", ");
+                hover += "<br>Landings: " + lps + (seg.landing_points.length > 4 ? " +" + (seg.landing_points.length - 4) + " more" : "");
+              }
+            } else {
+              const srcLabel = (sourceStyles[src] || {}).label || src;
+              hover = "<b>" + (seg.carrier || seg.name || srcLabel + " fiber") + "</b>";
+              if (seg.carrier && seg.name) hover = "<b>" + seg.carrier + "</b><br>" + seg.name;
+              if (seg.type) hover += "<br>Type: " + seg.type;
+              if (seg.placement) hover += "<br>Placement: " + seg.placement;
+              if (seg.fiber_count) hover += "<br>Fiber count: " + seg.fiber_count;
+              if (seg.ownership) hover += "<br>Ownership: " + seg.ownership;
+              hover += "<br><i>" + srcLabel + "</i>";
+            }
+            for (let j = 0; j < seg.lat.length; j++) {
+              b.lat.push(seg.lat[j]);
+              b.lon.push(seg.lon[j]);
+              b.text.push(hover);
+            }
+            b.lat.push(null);
+            b.lon.push(null);
+            b.text.push("");
+          }
+          for (const [src, b] of Object.entries(buckets)) {
+            if (b.lat.length === 0) continue;
+            const style = sourceStyles[src] || { color: "rgba(26, 140, 204, 0.5)", width: 1.5 };
+            const traceObj = {
+              type: "scattergeo",
+              lat: b.lat, lon: b.lon, text: b.text,
+              hovertemplate: "%{text}<extra></extra>",
+              mode: "lines",
+              line: { color: style.color, width: style.width },
+              visible: true, showlegend: false,
+            };
+            if (style.dash) traceObj.line.dash = style.dash;
+            traces.push(traceObj);
+          }
+          return traces;
+        },
+      },
     ];
 
     // Map overlay keys to their data payloads
@@ -871,6 +937,7 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
     if (OVERLAYS.pipelines) overlayDataMap["pipelines"] = OVERLAYS.pipelines;
     if (OVERLAYS.epa_zones) overlayDataMap["epa_zones"] = OVERLAYS.epa_zones;
     if (OVERLAYS.fiber) overlayDataMap["fiber"] = OVERLAYS.fiber;
+    if (OVERLAYS.fiber_routes) overlayDataMap["fiber_routes"] = OVERLAYS.fiber_routes;
 
     // Build overlay traces and register toggles
     const overlayTraceIndices = {}; // key → [traceIndex, ...]
@@ -1116,6 +1183,7 @@ def load_overlays(overlay_dir: Path) -> dict:
         "pipelines": "natural_gas_pipelines.json",
         "epa_zones": "epa_nonattainment_zones.json",
         "fiber": "fiber_infrastructure.json",
+        "fiber_routes": "fiber_routes.json",
     }
     for key, filename in overlay_files.items():
         path = overlay_dir / filename

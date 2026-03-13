@@ -274,6 +274,163 @@ def build_fiber_points() -> Path:
 
 
 # ---------------------------------------------------------------------------
+# 4. Fiber Longhaul Routes
+# ---------------------------------------------------------------------------
+
+def _extract_lines_from_geojson(geom: dict, tolerance: float) -> list[dict]:
+    """Extract and simplify line segments from a GeoJSON geometry."""
+    lines = []
+    geom_type = geom["type"]
+    if geom_type == "LineString":
+        coord_lists = [geom["coordinates"]]
+    elif geom_type == "MultiLineString":
+        coord_lists = geom["coordinates"]
+    else:
+        return lines
+
+    for coords in coord_lists:
+        simplified = douglas_peucker(coords, tolerance)
+        if len(simplified) < 2:
+            continue
+        lats = [round(c[1], 3) for c in simplified]
+        lons = [round(c[0], 3) for c in simplified]
+        lines.append({"lat": lats, "lon": lons})
+    return lines
+
+
+def _process_carrier_fiber(raw_path: Path, source_key: str, tolerance: float) -> list[dict]:
+    """Process a carrier fiber GeoJSON file into simplified segments."""
+    if not raw_path.exists():
+        print(f"[fiber-routes/{source_key}] Not found, skipping")
+        return []
+    raw = json.loads(raw_path.read_text(encoding="utf-8"))
+    features = raw.get("features", [])
+    segments: list[dict] = []
+    pts_before = 0
+    pts_after = 0
+    for feat in features:
+        geom = feat.get("geometry")
+        if not geom:
+            continue
+        props = feat.get("properties", {})
+        for line in _extract_lines_from_geojson(geom, tolerance):
+            pts_before += len(line["lat"])
+            pts_after += len(line["lat"])
+            # Skip very short segments (< ~1km)
+            if len(line["lat"]) == 2:
+                dlat = abs(line["lat"][1] - line["lat"][0])
+                dlon = abs(line["lon"][1] - line["lon"][0])
+                if dlat + dlon < 0.01:
+                    continue
+            line["source"] = source_key
+            # Extract available metadata
+            name = props.get("Name") or props.get("NAME") or props.get("name") or ""
+            carrier = props.get("CARRIER") or props.get("Carrier") or ""
+            placement = props.get("CABLE_PLAC") or props.get("Placement") or props.get("placement") or ""
+            cable_type = props.get("TYPE") or props.get("type") or ""
+            fiber_count = props.get("Total_Fibe") or props.get("total_fibe") or ""
+            ownership = props.get("OWNERSHIP") or props.get("Ownership") or ""
+            if name:
+                line["name"] = name
+            if carrier:
+                line["carrier"] = carrier
+            if placement:
+                line["placement"] = placement
+            if cable_type:
+                line["type"] = cable_type
+            if fiber_count:
+                line["fiber_count"] = str(fiber_count)
+            if ownership:
+                line["ownership"] = ownership
+            segments.append(line)
+    print(f"[fiber-routes/{source_key}] {len(segments)} segments from {len(features)} features ({pts_before}→{pts_after} pts)")
+    return segments
+
+
+def build_fiber_routes(tolerance: float = 0.025) -> Path:
+    """Build fiber route overlay from carrier networks and submarine cables."""
+    out_path = OUT_DIR / "fiber_routes.json"
+
+    all_segments: list[dict] = []
+
+    # 1. Uniti/Windstream National Core (national backbone)
+    all_segments.extend(_process_carrier_fiber(
+        RAW_DIR / "fiber_uniti_national_core_raw.geojson", "uniti_core", tolerance))
+
+    # 2. Segra Fiber Network (East Coast corridor, finer detail)
+    all_segments.extend(_process_carrier_fiber(
+        RAW_DIR / "fiber_segra_consolidated_raw.geojson", "segra", tolerance))
+
+    # 3. NWPA/GeoTel Multi-Carrier (PA+OH, best attribution)
+    all_segments.extend(_process_carrier_fiber(
+        RAW_DIR / "fiber_nwpa_geotel_raw.geojson", "geotel", tolerance))
+
+    # 4. Submarine cables (US-touching, with enriched metadata)
+    submarine_path = RAW_DIR / "submarine_cables_raw.geojson"
+    detail_path = RAW_DIR / "submarine_cables_us_detail.json"
+    cable_details: dict = {}
+    if detail_path.exists():
+        cable_details = json.loads(detail_path.read_text(encoding="utf-8"))
+
+    if submarine_path.exists():
+        raw = json.loads(submarine_path.read_text(encoding="utf-8"))
+        features = raw.get("features", [])
+        us_count = 0
+        for feat in features:
+            geom = feat.get("geometry")
+            if not geom:
+                continue
+            props = feat.get("properties", {})
+            geom_type = geom["type"]
+            if geom_type == "MultiLineString":
+                flat_coords = [c for line_c in geom["coordinates"] for c in line_c]
+            elif geom_type == "LineString":
+                flat_coords = geom["coordinates"]
+            else:
+                continue
+            touches_us = any(-130 < c[0] < -60 and 20 < c[1] < 55 for c in flat_coords)
+            if not touches_us:
+                continue
+            us_count += 1
+            cable_id = props.get("id", "")
+            detail = cable_details.get(cable_id, {})
+            for line in _extract_lines_from_geojson(geom, tolerance * 2):
+                line["source"] = "submarine"
+                line["name"] = detail.get("name", props.get("name", ""))
+                line["owners"] = detail.get("owners", "")
+                line["length"] = detail.get("length", "")
+                line["rfs"] = detail.get("rfs", "")
+                line["suppliers"] = detail.get("suppliers", "")
+                line["landing_points"] = detail.get("landing_points", [])
+                all_segments.append(line)
+        print(f"[fiber-routes/submarine] {us_count} US-touching cables from {len(features)} total")
+    else:
+        print("[fiber-routes/submarine] Not found, skipping")
+
+    # Count by source
+    counts: dict[str, int] = {}
+    for s in all_segments:
+        src = s.get("source", "unknown")
+        counts[src] = counts.get(src, 0) + 1
+
+    payload = {
+        "type": "fiber_routes",
+        "segments": all_segments,
+        "meta": {
+            "source": "Uniti/Windstream + Segra + GeoTel + TeleGeography Submarine Cables",
+            "segment_count": len(all_segments),
+            "by_source": counts,
+            "tolerance_deg": tolerance,
+        },
+    }
+    out_path.write_text(json.dumps(payload), encoding="utf-8")
+    size_mb = out_path.stat().st_size / 1e6
+    counts_str = ", ".join(f"{k}:{v}" for k, v in sorted(counts.items()))
+    print(f"[fiber-routes] {len(all_segments)} segments ({counts_str}), {size_mb:.1f} MB: {out_path}")
+    return out_path
+
+
+# ---------------------------------------------------------------------------
 # Main
 # ---------------------------------------------------------------------------
 
@@ -286,6 +443,7 @@ def main() -> None:
     build_pipelines(tolerance=0.02)
     build_epa_zones(tolerance=0.01)
     build_fiber_points()
+    build_fiber_routes(tolerance=0.01)
 
     print()
     print("All overlay data processed.")
