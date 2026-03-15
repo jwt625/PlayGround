@@ -100,3 +100,6 @@ venv.bak/
 *.aac
 20260125_Vision-as-Inverse-Graphics/VIGA/
 20260225_grid/.claude/settings.local.json
+
+# track chrome extension manifest
+!20260207_chrome_extension_nature_supplementary_video/manifest.json

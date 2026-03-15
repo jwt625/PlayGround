@@ -1,0 +1,43 @@
+{
+  "manifest_version": 3,
+  "name": "Nature Supplementary Video Player",
+  "version": "1.0",
+  "description": "Inline player for supplementary videos on Nature/Springer, Science.org, and APS journals",
+  "permissions": [
+    "offscreen"
+  ],
+  "icons": {
+    "16": "icon16.png",
+    "48": "icon48.png",
+    "128": "icon128.png"
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "*://*.nature.com/*",
+        "*://*.springer.com/*",
+        "*://*.science.org/*",
+        "*://journals.aps.org/*"
+      ],
+      "js": ["content.js"],
+      "css": ["player.css"],
+      "run_at": "document_idle"
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "ffmpeg/ffmpeg-core.js",
+        "ffmpeg/ffmpeg-core.wasm",
+        "ffmpeg/ffmpeg.js",
+        "ffmpeg/814.ffmpeg.js",
+        "jszip/jszip.min.js",
+        "offscreen.html"
+      ],
+      "matches": ["<all_urls>"]
+    }
+  ]
+}
