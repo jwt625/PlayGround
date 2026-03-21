@@ -13,7 +13,9 @@ from __future__ import annotations
 import argparse
 import csv
 import hashlib
+import http.client
 import json
+import random
 import re
 import shutil
 import sys
@@ -232,10 +234,26 @@ def save_pdf_with_cookies(url: str, cookies: list[dict[str, Any]], destination: 
 
     opener = urllib.request.build_opener(urllib.request.HTTPCookieProcessor(jar))
     opener.addheaders = [("User-Agent", UA)]
-    with opener.open(urllib.request.Request(url), timeout=30) as response:
-        final_url = response.geturl()
-        content_type = response.headers.get("Content-Type", "")
-        data = response.read()
+    last_exc: Exception | None = None
+    for attempt in range(3):
+        try:
+            with opener.open(urllib.request.Request(url), timeout=30) as response:
+                final_url = response.geturl()
+                content_type = response.headers.get("Content-Type", "")
+                data = response.read()
+            break
+        except http.client.IncompleteRead as exc:
+            last_exc = exc
+            if attempt == 2:
+                raise
+            time.sleep(1.5 * (attempt + 1))
+        except Exception as exc:
+            last_exc = exc
+            if attempt == 2:
+                raise
+            time.sleep(1.5 * (attempt + 1))
+    else:  # pragma: no cover
+        raise last_exc if last_exc is not None else RuntimeError("Failed to fetch PDF")
     ensure_parent(destination)
     destination.write_bytes(data)
     is_pdf = destination.suffix.lower() == ".pdf" or content_type.lower().startswith("application/pdf")
@@ -450,10 +468,11 @@ def selected_records(records: list[ExportRecord], *, batch_limit: int, retry_tes
     candidates = [
         record
         for record in records
-        if record.best_pdf_link and (retry_tested or not record.paper_link_tested)
+        if record.best_pdf_link and not record.paper_cached and (retry_tested or not record.paper_link_tested)
     ]
     candidates.sort(
         key=lambda record: (
+            0 if record.paper_link_tested else 1,
             record.day,
             record.session_start,
             record.presentation_code or "",
@@ -501,6 +520,16 @@ def clone_profile_if_requested(profile_template: Path | None, run_dir: Path) -> 
     return run_dir
 
 
+def sleep_with_jitter(base_wait_ms: int, jitter_ms: int) -> None:
+    if jitter_ms <= 0:
+        time.sleep(max(0.0, base_wait_ms / 1000))
+        return
+    lower_ms = max(0, base_wait_ms - jitter_ms)
+    upper_ms = max(lower_ms, base_wait_ms + jitter_ms)
+    actual_ms = random.randint(lower_ms, upper_ms)
+    time.sleep(actual_ms / 1000)
+
+
 def validate_papers_with_firefox(
     records: list[ExportRecord],
     *,
@@ -512,6 +541,7 @@ def validate_papers_with_firefox(
     firefox_profile_template: Path | None,
     headless: bool,
     wait_ms: int,
+    wait_jitter_ms: int,
 ) -> None:
     targets = selected_records(records, batch_limit=sample_limit, retry_tested=retry_tested)
     if not targets:
@@ -559,7 +589,7 @@ def validate_papers_with_firefox(
 
             try:
                 driver.get(record.best_pdf_link)
-                time.sleep(min(4.0, wait_ms / 1000))
+                sleep_with_jitter(wait_ms, wait_jitter_ms)
                 final_url = driver.current_url
                 page_text = (driver.page_source or "")[:50000]
                 after_files = [path for path in download_dir.glob("*") if path.name not in before_files]
@@ -604,6 +634,8 @@ def validate_papers_with_chrome_cookies(
     sample_limit: int,
     retry_tested: bool,
     download_pdfs: bool,
+    manual_captcha: bool,
+    manual_captcha_wait_seconds: int,
     chrome_executable: Path,
     chrome_profile_template: Path | None,
     cookie_export_path: Path,
@@ -611,6 +643,7 @@ def validate_papers_with_chrome_cookies(
     cache_path: Path,
     headless: bool,
     wait_ms: int,
+    wait_jitter_ms: int,
 ) -> None:
     targets = selected_records(records, batch_limit=sample_limit, retry_tested=retry_tested)
     if not targets:
@@ -680,10 +713,41 @@ def validate_papers_with_chrome_cookies(
 
             try:
                 driver.get(record.best_pdf_link)
-                time.sleep(min(5.0, wait_ms / 1000))
+                sleep_with_jitter(wait_ms, wait_jitter_ms)
                 final_url = driver.current_url
                 page_text = (driver.page_source or "")[:50000]
                 status = status_from_probe_result(final_url, content_type, page_text, file_path)
+
+                if manual_captcha and status == "blocked_by_bot":
+                    print("")
+                    print("Manual captcha required.")
+                    print(f"Record: {record.presentation_code or record.session_id} {record.presentation_title}")
+                    print(f"Current URL: {final_url}")
+                    print(
+                        f"Waiting up to {manual_captcha_wait_seconds} seconds for the browser to reach an authenticated direct PDF URL."
+                    )
+                    deadline = time.time() + manual_captcha_wait_seconds
+                    retried_original_link = False
+                    while time.time() < deadline:
+                        time.sleep(2)
+                        final_url = driver.current_url
+                        if "directpdfaccess/" in final_url:
+                            break
+                        parsed = urllib.parse.urlparse(final_url)
+                        root_like = (
+                            parsed.scheme in {"http", "https"}
+                            and parsed.netloc == "opg.optica.org"
+                            and parsed.path in {"", "/"}
+                        )
+                        if root_like and not retried_original_link:
+                            driver.get(record.best_pdf_link)
+                            retried_original_link = True
+                            sleep_with_jitter(wait_ms, wait_jitter_ms)
+                            final_url = driver.current_url
+                            if "directpdfaccess/" in final_url:
+                                break
+                    page_text = (driver.page_source or "")[:50000]
+                    status = status_from_probe_result(final_url, content_type, page_text, file_path)
 
                 if "directpdfaccess/" in final_url:
                     status = "authenticated_pdf_url"
@@ -800,8 +864,11 @@ def main() -> int:
     parser.add_argument("--cookie-export-path", default="")
     parser.add_argument("--firefox-profile-template", default="")
     parser.add_argument("--headless", action="store_true")
+    parser.add_argument("--manual-captcha", action="store_true")
+    parser.add_argument("--manual-captcha-wait-seconds", type=int, default=900)
     parser.add_argument("--no-pdf-download", action="store_true")
     parser.add_argument("--wait-ms", type=int, default=15000)
+    parser.add_argument("--wait-jitter-ms", type=int, default=0)
     parser.add_argument("--retry-tested", action="store_true")
     parser.add_argument("--lock-path", default="")
     parser.add_argument("--batch-log-path", default="")
@@ -837,16 +904,19 @@ def main() -> int:
             if cookie_export_path is not None:
                 validate_papers_with_chrome_cookies(
                     records,
-                    sample_limit=args.sample_limit,
-                    retry_tested=args.retry_tested,
-                    download_pdfs=args.mode == "paper-cache" and not args.no_pdf_download,
-                    chrome_executable=chrome_executable,
-                    chrome_profile_template=chrome_profile_template,
-                    cookie_export_path=cookie_export_path,
+                sample_limit=args.sample_limit,
+                retry_tested=args.retry_tested,
+                download_pdfs=args.mode == "paper-cache" and not args.no_pdf_download,
+                manual_captcha=args.manual_captcha,
+                manual_captcha_wait_seconds=args.manual_captcha_wait_seconds,
+                chrome_executable=chrome_executable,
+                chrome_profile_template=chrome_profile_template,
+                cookie_export_path=cookie_export_path,
                     cache_dir=cache_dir,
                     cache_path=cache_path,
                     headless=args.headless,
                     wait_ms=args.wait_ms,
+                    wait_jitter_ms=args.wait_jitter_ms,
                 )
             else:
                 validate_papers_with_firefox(
@@ -859,6 +929,7 @@ def main() -> int:
                     firefox_profile_template=firefox_profile_template,
                     headless=args.headless,
                     wait_ms=args.wait_ms,
+                    wait_jitter_ms=args.wait_jitter_ms,
                 )
 
         json_path = outdir / f"{args.basename}.json"
