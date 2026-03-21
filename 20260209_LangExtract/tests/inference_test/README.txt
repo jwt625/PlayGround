@@ -23,6 +23,7 @@ Useful variants:
   python tests/inference_test/pipeline/run_pipeline.py --dry-run
   python tests/inference_test/pipeline/run_pipeline.py --from-step phase3
   python tests/inference_test/pipeline/run_pipeline.py --to-step phase3d
+  python tests/inference_test/pipeline/run_pipeline.py --from-step phase4a --to-step phase4d
 
 
 Step-by-step mapping (script -> purpose)
@@ -73,6 +74,32 @@ Step-by-step mapping (script -> purpose)
   purpose: regression checks (ID alignment, queue invariants, effective top-list)
   pass condition: violations == 0
 
+8) phase4a
+  script: tests/inference_test/pipeline/phase4a_extract_fab_entities.py
+  purpose: extract fabrication entities/attributes with source-grounded spans
+  main output:
+    - tests/inference_test/output/phase4a_fab_entities_raw.jsonl
+    - tests/inference_test/output/phase4a_fab_entities_summary.json
+
+9) phase4b
+  script: tests/inference_test/pipeline/phase4b_normalize_fab_entities.py
+  purpose: normalize aliases, assign canonical IDs, preserve provenance
+  main output:
+    - tests/inference_test/output/phase4b_fab_entities_normalized.jsonl
+    - tests/inference_test/output/phase4b_fab_entities_summary.json
+
+10) phase4c
+  script: tests/inference_test/pipeline/phase4c_build_fab_process_graph.py
+  purpose: build fabrication process graph nodes/edges from normalized entities
+  main output:
+    - tests/inference_test/output/phase4c_fab_process_graph.json
+    - tests/inference_test/output/phase4c_fab_process_graph_summary.json
+
+11) phase4d
+  script: tests/inference_test/pipeline/phase4d_validate_fab_integrity.py
+  purpose: integrity checks for provenance and graph edge-node consistency
+  pass condition: violations == 0
+
 
 Debug Scripts
 -------------
@@ -92,4 +119,3 @@ Legacy Scripts
 - tests/inference_test/legacy/one_off_fixes/*
 
 These are retained for reproducibility/history and are not part of the maintained workflow.
-

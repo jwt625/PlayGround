@@ -76,6 +76,22 @@ def cmd_phase3e() -> list[str]:
     return [PY, "tests/inference_test/pipeline/phase3_validate_integrity.py"]
 
 
+def cmd_phase4a() -> list[str]:
+    return [PY, "tests/inference_test/pipeline/phase4a_extract_fab_entities.py"]
+
+
+def cmd_phase4b() -> list[str]:
+    return [PY, "tests/inference_test/pipeline/phase4b_normalize_fab_entities.py"]
+
+
+def cmd_phase4c() -> list[str]:
+    return [PY, "tests/inference_test/pipeline/phase4c_build_fab_process_graph.py"]
+
+
+def cmd_phase4d() -> list[str]:
+    return [PY, "tests/inference_test/pipeline/phase4d_validate_fab_integrity.py"]
+
+
 STEPS = [
     ("phase1", "Extract reference sections", cmd_phase1),
     ("phase2", "Extract structured references", cmd_phase2),
@@ -84,13 +100,18 @@ STEPS = [
     ("phase3c", "Enrich DOI coverage", cmd_phase3c),
     ("phase3d", "Generate true-external queue", cmd_phase3d),
     ("phase3e", "Validate integrity", cmd_phase3e),
+    ("phase4a", "Extract fabrication entities", cmd_phase4a),
+    ("phase4b", "Normalize fabrication entities", cmd_phase4b),
+    ("phase4c", "Build fabrication process graph", cmd_phase4c),
+    ("phase4d", "Validate fabrication graph integrity", cmd_phase4d),
 ]
 
 
 def main() -> int:
     parser = argparse.ArgumentParser(description="Run maintained citation pipeline")
     parser.add_argument("--from-step", choices=[s[0] for s in STEPS], default=STEPS[0][0])
-    parser.add_argument("--to-step", choices=[s[0] for s in STEPS], default=STEPS[-1][0])
+    # Keep current default workflow unchanged (phase1..phase3e).
+    parser.add_argument("--to-step", choices=[s[0] for s in STEPS], default="phase3e")
     parser.add_argument("--dry-run", action="store_true", help="Print commands only")
     args = parser.parse_args()
 
@@ -117,4 +138,3 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-
