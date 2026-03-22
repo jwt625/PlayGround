@@ -1,0 +1,6 @@
+build/
+.sample_frames/
+.new_sample_frames/
+.new_sample_frames2/
+review_candidates/
+montage_manifest*.tsv
