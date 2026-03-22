@@ -1,0 +1,254 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="2200" height="1400">
+<style>text{font-family:'Droid Sans Mono';font-weight:normal;font-style:normal;}</style>
+<rect width="100%" height="100%" style="fill:white"></rect>
+<text transform="translate(313,404)" font-size="522" style="fill:rgb(72, 29, 111)">switch</text>
+<text transform="translate(6,1165)" font-size="457" style="fill:rgb(176, 221, 47)">coherent</text>
+<text transform="translate(1,782)" font-size="365" style="fill:rgb(55, 91, 141)">modulation</text>
+<text transform="translate(1291,1343)" font-size="229" style="fill:rgb(221, 227, 24)">couple</text>
+<text transform="translate(345,1334)" font-size="224" style="fill:rgb(60, 80, 139)">quantum</text>
+<text transform="translate(1121,883)" font-size="127" style="fill:rgb(223, 227, 24)">efficiency</text>
+<text transform="translate(58,515)" font-size="126" style="fill:rgb(178, 221, 45)">traffic</text>
+<text transform="translate(603,477)" font-size="126" style="fill:rgb(31, 158, 137)">sense</text>
+<text transform="translate(486,108)" font-size="123" style="fill:rgb(244, 230, 30)">train</text>
+<text transform="translate(1219,504)" font-size="118" style="fill:rgb(162, 218, 55)">wdm</text>
+<text transform="translate(1672,545)" font-size="118" style="fill:rgb(41, 121, 142)">length</text>
+<text transform="translate(6,855)" font-size="80" style="fill:rgb(134, 213, 73)">polarization</text>
+<text transform="translate(669,887)" font-size="78" style="fill:rgb(142, 214, 69)">detection</text>
+<text transform="translate(61,76)" font-size="78" style="fill:rgb(92, 200, 99)">nonlinear</text>
+<text transform="translate(1408,86)" font-size="78" style="fill:rgb(64, 189, 114)">spectral</text>
+<text transform="translate(733,534)" font-size="77" style="fill:rgb(31, 160, 136)">span</text>
+<text transform="translate(1418,205)" font-size="77" style="fill:rgb(68, 1, 84)">pump</text>
+<text transform="translate(1898,338) rotate(-90)" font-size="77" style="fill:rgb(72, 27, 109)">band</text>
+<text transform="translate(44,145)" font-size="77" style="fill:rgb(49, 104, 142)">symbol</text>
+<text transform="translate(1578,690) rotate(-90)" font-size="77" style="fill:rgb(71, 16, 99)">electrical</text>
+<text transform="translate(89,246)" font-size="76" style="fill:rgb(56, 185, 119)">center</text>
+<text transform="translate(47,1267)" font-size="76" style="fill:rgb(58, 186, 118)">delta</text>
+<text transform="translate(1988,94)" font-size="74" style="fill:rgb(213, 226, 26)">gb/s</text>
+<text transform="translate(1169,241)" font-size="74" style="fill:rgb(178, 221, 45)">dsp</text>
+<text transform="translate(1737,472)" font-size="74" style="fill:rgb(71, 19, 101)">node</text>
+<text transform="translate(272,1382)" font-size="70" style="fill:rgb(112, 207, 87)">osnr</text>
+<text transform="translate(117,1329)" font-size="70" style="fill:rgb(72, 26, 108)">snr</text>
+<text transform="translate(32,911)" font-size="70" style="fill:rgb(64, 189, 114)">real-time</text>
+<text transform="translate(140,319)" font-size="70" style="fill:rgb(42, 176, 127)">optic</text>
+<text transform="translate(59,542) rotate(-90)" font-size="70" style="fill:rgb(162, 218, 55)">enhance</text>
+<text transform="translate(1046,543)" font-size="70" style="fill:rgb(69, 5, 89)">gbps</text>
+<text transform="translate(203,577)" font-size="70" style="fill:rgb(119, 209, 83)">service</text>
+<text transform="translate(749,1394)" font-size="70" style="fill:rgb(132, 212, 75)">interconnect</text>
+<text transform="translate(885,121)" font-size="70" style="fill:rgb(35, 138, 141)">estimate</text>
+<text transform="translate(1946,1135) rotate(-90)" font-size="70" style="fill:rgb(152, 216, 62)">evaluate</text>
+<text transform="translate(25,1389)" font-size="70" style="fill:rgb(51, 98, 141)">level</text>
+<text transform="translate(1780,1397)" font-size="69" style="fill:rgb(31, 154, 138)">combine</text>
+<text transform="translate(61,404)" font-size="69" style="fill:rgb(31, 160, 136)">c-band</text>
+<text transform="translate(1728,1146)" font-size="69" style="fill:rgb(44, 177, 126)">pi</text>
+<text transform="translate(186,1096)" font-size="69" style="fill:rgb(32, 164, 134)">ai</text>
+<text transform="translate(1215,1187)" font-size="69" style="fill:rgb(31, 151, 139)">pd</text>
+<text transform="translate(1667,270)" font-size="69" style="fill:rgb(68, 2, 86)">pam4</text>
+<text transform="translate(1210,81)" font-size="69" style="fill:rgb(69, 55, 129)">hcf</text>
+<text transform="translate(1381,1211) rotate(-90)" font-size="69" style="fill:rgb(160, 218, 57)">launch</text>
+<text transform="translate(1317,1385)" font-size="53" style="fill:rgb(53, 95, 141)">high-speed</text>
+<text transform="translate(569,1189) rotate(-90)" font-size="53" style="fill:rgb(72, 35, 116)">dispersion</text>
+<text transform="translate(1967,823)" font-size="52" style="fill:rgb(72, 41, 121)">diagram</text>
+<text transform="translate(333,1289) rotate(-90)" font-size="52" style="fill:rgb(134, 213, 73)">bite</text>
+<text transform="translate(130,1014)" font-size="52" style="fill:rgb(41, 122, 142)">gbaud</text>
+<text transform="translate(551,1378)" font-size="52" style="fill:rgb(69, 53, 129)">delay</text>
+<text transform="translate(983,457)" font-size="52" style="fill:rgb(31, 151, 139)">spatial</text>
+<text transform="translate(1938,1209)" font-size="52" style="fill:rgb(49, 102, 142)">scenario</text>
+<text transform="translate(635,1206)" font-size="52" style="fill:rgb(197, 224, 33)">block</text>
+<text transform="translate(1219,551)" font-size="52" style="fill:rgb(84, 197, 104)">offer</text>
+<text transform="translate(841,1183) rotate(-90)" font-size="52" style="fill:rgb(157, 217, 59)">represent</text>
+<text transform="translate(1670,575)" font-size="52" style="fill:rgb(68, 58, 131)">pon</text>
+<text transform="translate(671,826) rotate(-90)" font-size="52" style="fill:rgb(31, 149, 139)">sensitivity</text>
+<text transform="translate(123,186)" font-size="52" style="fill:rgb(122, 209, 81)">maximum</text>
+<text transform="translate(965,1093)" font-size="52" style="fill:rgb(216, 226, 25)">right</text>
+<text transform="translate(1200,316)" font-size="52" style="fill:rgb(112, 207, 87)">edfa</text>
+<text transform="translate(1458,1212)" font-size="52" style="fill:rgb(66, 64, 134)">carrier</text>
+<text transform="translate(867,55)" font-size="52" style="fill:rgb(32, 164, 134)">factor</text>
+<text transform="translate(815,822)" font-size="52" style="fill:rgb(115, 208, 86)">science</text>
+<text transform="translate(2044,450) rotate(-90)" font-size="52" style="fill:rgb(33, 145, 140)">implement</text>
+<text transform="translate(1664,1156) rotate(-90)" font-size="52" style="fill:rgb(67, 61, 132)">multiple</text>
+<text transform="translate(62,554)" font-size="52" style="fill:rgb(63, 188, 115)">port</text>
+<text transform="translate(1333,31)" font-size="39" style="fill:rgb(71, 14, 97)">optimization</text>
+<text transform="translate(1190,359)" font-size="39" style="fill:rgb(244, 230, 30)">profile</text>
+<text transform="translate(688,583)" font-size="39" style="fill:rgb(64, 69, 136)">fabricate</text>
+<text transform="translate(1176,914)" font-size="39" style="fill:rgb(108, 205, 90)">characteristic</text>
+<text transform="translate(2188,571) rotate(-90)" font-size="39" style="fill:rgb(52, 97, 141)">need</text>
+<text transform="translate(2194,285) rotate(-90)" font-size="39" style="fill:rgb(72, 24, 106)">transmit</text>
+<text transform="translate(966,1200)" font-size="39" style="fill:rgb(127, 211, 78)">complexity</text>
+<text transform="translate(1475,740)" font-size="39" style="fill:rgb(35, 138, 141)">image</text>
+<text transform="translate(794,1295)" font-size="39" style="fill:rgb(117, 208, 84)">da</text>
+<text transform="translate(1505,117)" font-size="39" style="fill:rgb(37, 132, 142)">variation</text>
+<text transform="translate(1034,606) rotate(-90)" font-size="39" style="fill:rgb(71, 45, 123)">step</text>
+<text transform="translate(102,439)" font-size="39" style="fill:rgb(33, 145, 140)">framework</text>
+<text transform="translate(544,31)" font-size="39" style="fill:rgb(42, 176, 127)">consider</text>
+<text transform="translate(352,334)" font-size="39" style="fill:rgb(152, 216, 62)">coupler</text>
+<text transform="translate(40,1222) rotate(-90)" font-size="39" style="fill:rgb(71, 16, 99)">modulators</text>
+<text transform="translate(1700,302)" font-size="39" style="fill:rgb(37, 133, 142)">linear</text>
+<text transform="translate(1105,804) rotate(-90)" font-size="39" style="fill:rgb(103, 204, 92)">generation</text>
+<text transform="translate(1147,1085) rotate(-90)" font-size="39" style="fill:rgb(223, 227, 24)">observe</text>
+<text transform="translate(1160,160)" font-size="39" style="fill:rgb(112, 207, 87)">large</text>
+<text transform="translate(440,207)" font-size="39" style="fill:rgb(137, 213, 72)">advance</text>
+<text transform="translate(1671,1197)" font-size="39" style="fill:rgb(37, 133, 142)">analysis</text>
+<text transform="translate(918,327)" font-size="39" style="fill:rgb(30, 157, 137)">impact</text>
+<text transform="translate(1688,344)" font-size="39" style="fill:rgb(39, 126, 142)">new</text>
+<text transform="translate(1769,59)" font-size="39" style="fill:rgb(32, 163, 134)">frac</text>
+<text transform="translate(87,277)" font-size="39" style="fill:rgb(101, 203, 94)">domain</text>
+<text transform="translate(1792,1011)" font-size="39" style="fill:rgb(68, 57, 131)">rf</text>
+<text transform="translate(36,191) rotate(-90)" font-size="39" style="fill:rgb(63, 188, 115)">feature</text>
+<text transform="translate(338,108)" font-size="39" style="fill:rgb(99, 203, 95)">latency</text>
+<text transform="translate(932,261)" font-size="39" style="fill:rgb(76, 194, 108)">region</text>
+<text transform="translate(946,747) rotate(-90)" font-size="39" style="fill:rgb(31, 162, 135)">equalizer</text>
+<text transform="translate(1576,812)" font-size="39" style="fill:rgb(61, 188, 116)">maintain</text>
+<text transform="translate(343,1201)" font-size="39" style="fill:rgb(66, 63, 133)">topology</text>
+<text transform="translate(1204,1128)" font-size="39" style="fill:rgb(69, 5, 89)">allow</text>
+<text transform="translate(1759,713) rotate(-90)" font-size="39" style="fill:rgb(45, 113, 142)">qkd</text>
+<text transform="translate(1688,618)" font-size="39" style="fill:rgb(31, 152, 139)">tune</text>
+<text transform="translate(53,1205)" font-size="39" style="fill:rgb(37, 171, 130)">threshold</text>
+<text transform="translate(945,500)" font-size="39" style="fill:rgb(155, 217, 60)">access</text>
+<text transform="translate(2189,1165) rotate(-90)" font-size="39" style="fill:rgb(122, 209, 81)">multiplexing</text>
+<text transform="translate(2090,442) rotate(-90)" font-size="39" style="fill:rgb(226, 228, 24)">deployment</text>
+<text transform="translate(1460,1082)" font-size="39" style="fill:rgb(64, 70, 136)">penalty</text>
+<text transform="translate(1966,28)" font-size="35" style="fill:rgb(34, 141, 141)">consumption</text>
+<text transform="translate(1429,697)" font-size="35" style="fill:rgb(30, 156, 137)">alpha</text>
+<text transform="translate(1665,738)" font-size="35" style="fill:rgb(31, 158, 137)">shift</text>
+<text transform="translate(1953,1091)" font-size="35" style="fill:rgb(42, 120, 142)">tx</text>
+<text transform="translate(680,818)" font-size="35" style="fill:rgb(69, 56, 130)">matrix</text>
+<text transform="translate(1553,439)" font-size="35" style="fill:rgb(246, 230, 32)">connect</text>
+<text transform="translate(1114,1053) rotate(-90)" font-size="35" style="fill:rgb(71, 46, 124)">requirement</text>
+<text transform="translate(1783,84)" font-size="35" style="fill:rgb(168, 219, 52)">ensure</text>
+<text transform="translate(1972,573)" font-size="35" style="fill:rgb(68, 1, 84)">technique</text>
+<text transform="translate(2068,1370)" font-size="35" style="fill:rgb(115, 208, 86)">target</text>
+<text transform="translate(607,469) rotate(-90)" font-size="35" style="fill:rgb(70, 48, 126)">transceivers</text>
+<text transform="translate(1325,784) rotate(-90)" font-size="35" style="fill:rgb(62, 73, 137)">temperature</text>
+<text transform="translate(1213,397)" font-size="35" style="fill:rgb(37, 172, 130)">voltage</text>
+<text transform="translate(291,28)" font-size="35" style="fill:rgb(72, 36, 117)">crosstalk</text>
+<text transform="translate(631,400) rotate(-90)" font-size="35" style="fill:rgb(181, 222, 43)">express</text>
+<text transform="translate(938,207)" font-size="35" style="fill:rgb(49, 104, 142)">demand</text>
+<text transform="translate(1152,365) rotate(-90)" font-size="35" style="fill:rgb(103, 204, 92)">coefficient</text>
+<text transform="translate(446,809) rotate(-90)" font-size="35" style="fill:rgb(117, 208, 84)">significant</text>
+<text transform="translate(1993,462) rotate(-90)" font-size="35" style="fill:rgb(36, 135, 142)">prediction</text>
+<text transform="translate(913,355)" font-size="35" style="fill:rgb(37, 132, 142)">propose</text>
+<text transform="translate(2090,868)" font-size="35" style="fill:rgb(39, 127, 142)">zhang</text>
+<text transform="translate(416,877)" font-size="35" style="fill:rgb(144, 215, 67)">group</text>
+<text transform="translate(38,30)" font-size="35" style="fill:rgb(110, 206, 88)">confirm</text>
+<text transform="translate(2036,760)" font-size="35" style="fill:rgb(37, 132, 142)">lead</text>
+<text transform="translate(357,1054)" font-size="35" style="fill:rgb(58, 84, 140)">study</text>
+<text transform="translate(2059,467)" font-size="35" style="fill:rgb(69, 53, 129)">deploy</text>
+<text transform="translate(2080,913)" font-size="35" style="fill:rgb(62, 76, 138)">beam</text>
+<text transform="translate(241,1327)" font-size="35" style="fill:rgb(56, 88, 140)">wang</text>
+<text transform="translate(2071,1313)" font-size="35" style="fill:rgb(40, 125, 142)">extend</text>
+<text transform="translate(1712,110)" font-size="29" style="fill:rgb(42, 119, 142)">equalization</text>
+<text transform="translate(912,606) rotate(-90)" font-size="29" style="fill:rgb(69, 5, 89)">ecoc</text>
+<text transform="translate(1218,1070)" font-size="29" style="fill:rgb(71, 19, 101)">future</text>
+<text transform="translate(854,908)" font-size="26" style="fill:rgb(99, 203, 95)">implementation</text>
+<text transform="translate(1697,196)" font-size="26" style="fill:rgb(59, 82, 139)">practical</text>
+<text transform="translate(7,1321)" font-size="26" style="fill:rgb(52, 97, 141)">amplify</text>
+<text transform="translate(1502,1115)" font-size="26" style="fill:rgb(71, 42, 122)">grate</text>
+<text transform="translate(779,745) rotate(-90)" font-size="26" style="fill:rgb(36, 134, 142)">potential</text>
+<text transform="translate(1376,431)" font-size="26" style="fill:rgb(231, 228, 25)">change</text>
+<text transform="translate(712,1170) rotate(-90)" font-size="26" style="fill:rgb(34, 141, 141)">significantly</text>
+<text transform="translate(1691,638)" font-size="26" style="fill:rgb(194, 223, 35)">size</text>
+<text transform="translate(1411,318)" font-size="26" style="fill:rgb(69, 55, 129)">peak</text>
+<text transform="translate(266,1141)" font-size="26" style="fill:rgb(72, 33, 115)">eye</text>
+<text transform="translate(1376,1263)" font-size="26" style="fill:rgb(181, 222, 43)">pic</text>
+<text transform="translate(1682,24)" font-size="26" style="fill:rgb(70, 10, 93)">waveform</text>
+<text transform="translate(444,914)" font-size="26" style="fill:rgb(147, 215, 65)">raman</text>
+<text transform="translate(1790,561)" font-size="26" style="fill:rgb(38, 130, 142)">energy</text>
+<text transform="translate(32,1288)" font-size="26" style="fill:rgb(41, 175, 127)">shape</text>
+<text transform="translate(1134,27)" font-size="26" style="fill:rgb(36, 134, 142)">schematic</text>
+<text transform="translate(1204,1038)" font-size="26" style="fill:rgb(56, 88, 140)">modulate</text>
+<text transform="translate(1465,232)" font-size="26" style="fill:rgb(32, 147, 140)">edge</text>
+<text transform="translate(1990,1052) rotate(-90)" font-size="26" style="fill:rgb(231, 228, 25)">o-band</text>
+<text transform="translate(403,480)" font-size="26" style="fill:rgb(44, 114, 142)">comb</text>
+<text transform="translate(806,1209)" font-size="26" style="fill:rgb(80, 196, 106)">failure</text>
+<text transform="translate(140,1117)" font-size="26" style="fill:rgb(189, 223, 38)">additional</text>
+<text transform="translate(632,908)" font-size="26" style="fill:rgb(31, 159, 136)">improvement</text>
+<text transform="translate(1499,908)" font-size="26" style="fill:rgb(157, 217, 59)">interference</text>
+<text transform="translate(2118,50)" font-size="26" style="fill:rgb(139, 214, 70)">curve</text>
+<text transform="translate(230,808) rotate(-90)" font-size="26" style="fill:rgb(251, 231, 35)">experimentally</text>
+<text transform="translate(2183,776) rotate(-90)" font-size="26" style="fill:rgb(216, 226, 25)">amplification</text>
+<text transform="translate(867,244) rotate(-90)" font-size="26" style="fill:rgb(139, 214, 70)">approximately</text>
+<text transform="translate(134,785)" font-size="26" style="fill:rgb(47, 108, 142)">dc</text>
+<text transform="translate(1060,1141)" font-size="26" style="fill:rgb(68, 59, 132)">detect</text>
+<text transform="translate(1126,581)" font-size="26" style="fill:rgb(213, 226, 26)">difference</text>
+<text transform="translate(913,290)" font-size="26" style="fill:rgb(61, 78, 138)">controller</text>
+<text transform="translate(1618,560) rotate(-90)" font-size="26" style="fill:rgb(70, 52, 128)">define</text>
+<text transform="translate(382,1017)" font-size="26" style="fill:rgb(72, 35, 116)">exceed</text>
+<text transform="translate(1374,524)" font-size="26" style="fill:rgb(31, 162, 135)">laboratory</text>
+<text transform="translate(1729,1032)" font-size="26" style="fill:rgb(49, 103, 142)">lambda</text>
+<text transform="translate(182,536)" font-size="26" style="fill:rgb(33, 143, 141)">transceiver</text>
+<text transform="translate(1974,786) rotate(-90)" font-size="26" style="fill:rgb(92, 200, 99)">propagation</text>
+<text transform="translate(1684,222)" font-size="26" style="fill:rgb(34, 167, 133)">consist</text>
+<text transform="translate(1089,478)" font-size="26" style="fill:rgb(33, 166, 133)">engineer</text>
+<text transform="translate(1709,1359) rotate(-90)" font-size="26" style="fill:rgb(186, 222, 40)">resolution</text>
+<text transform="translate(207,344)" font-size="26" style="fill:rgb(208, 225, 28)">effective</text>
+<text transform="translate(1196,426)" font-size="26" style="fill:rgb(132, 212, 75)">physical</text>
+<text transform="translate(1776,806)" font-size="26" style="fill:rgb(32, 147, 140)">sequence</text>
+<text transform="translate(1022,1352) rotate(-90)" font-size="26" style="fill:rgb(35, 137, 142)">intensity</text>
+<text transform="translate(2092,1047) rotate(-90)" font-size="26" style="fill:rgb(31, 160, 136)">sum</text>
+<text transform="translate(491,807)" font-size="26" style="fill:rgb(37, 172, 130)">reduction</text>
+<text transform="translate(925,228)" font-size="26" style="fill:rgb(200, 224, 32)">calculate</text>
+<text transform="translate(408,536)" font-size="26" style="fill:rgb(36, 135, 142)">attenuation</text>
+<text transform="translate(1913,281) rotate(-90)" font-size="26" style="fill:rgb(72, 23, 105)">cause</text>
+<text transform="translate(2137,1129) rotate(-90)" font-size="26" style="fill:rgb(49, 104, 142)">capability</text>
+<text transform="translate(1137,648)" font-size="26" style="fill:rgb(78, 195, 107)">photon</text>
+<text transform="translate(1360,777) rotate(-90)" font-size="26" style="fill:rgb(37, 133, 142)">limitation</text>
+<text transform="translate(674,1157) rotate(-90)" font-size="26" style="fill:rgb(69, 56, 130)">compensation</text>
+<text transform="translate(562,182)" font-size="26" style="fill:rgb(42, 176, 127)">rx</text>
+<text transform="translate(90,580)" font-size="26" style="fill:rgb(105, 205, 91)">match</text>
+<text transform="translate(527,681)" font-size="26" style="fill:rgb(117, 208, 84)">form</text>
+<text transform="translate(1839,20)" font-size="26" style="fill:rgb(52, 97, 141)">vary</text>
+<text transform="translate(14,584)" font-size="26" style="fill:rgb(132, 212, 75)">soa</text>
+<text transform="translate(1066,741) rotate(-90)" font-size="26" style="fill:rgb(41, 123, 142)">various</text>
+<text transform="translate(145,1288)" font-size="26" style="fill:rgb(34, 139, 141)">efficient</text>
+<text transform="translate(908,391)" font-size="26" style="fill:rgb(46, 109, 142)">ssmf</text>
+<text transform="translate(105,330) rotate(-90)" font-size="26" style="fill:rgb(51, 98, 141)">map</text>
+<text transform="translate(106,1047)" font-size="26" style="fill:rgb(165, 219, 54)">mitigate</text>
+<text transform="translate(1208,189)" font-size="26" style="fill:rgb(72, 31, 112)">amplitude</text>
+<text transform="translate(1709,429)" font-size="26" style="fill:rgb(64, 69, 136)">insertion</text>
+<text transform="translate(82,785) rotate(-90)" font-size="26" style="fill:rgb(65, 68, 135)">comparison</text>
+<text transform="translate(2098,435)" font-size="26" style="fill:rgb(38, 173, 129)">make</text>
+<text transform="translate(2118,548) rotate(-90)" font-size="26" style="fill:rgb(70, 7, 90)">smf</text>
+<text transform="translate(1837,400)" font-size="26" style="fill:rgb(53, 183, 121)">rout</text>
+<text transform="translate(881,730) rotate(-90)" font-size="26" style="fill:rgb(162, 218, 55)">lightwave</text>
+<text transform="translate(1664,1385)" font-size="26" style="fill:rgb(160, 218, 57)">thz</text>
+<text transform="translate(1218,114)" font-size="26" style="fill:rgb(67, 61, 132)">simulate</text>
+<text transform="translate(2103,1248)" font-size="26" style="fill:rgb(152, 216, 62)">yield</text>
+<text transform="translate(1842,643)" font-size="26" style="fill:rgb(42, 120, 142)">e.g</text>
+<text transform="translate(1517,154)" font-size="26" style="fill:rgb(168, 219, 52)">compact</text>
+<text transform="translate(72,348)" font-size="26" style="fill:rgb(192, 223, 37)">versus</text>
+<text transform="translate(276,807)" font-size="26" style="fill:rgb(42, 119, 142)">national</text>
+<text transform="translate(1403,296)" font-size="26" style="fill:rgb(70, 51, 127)">validate</text>
+<text transform="translate(1438,556)" font-size="26" style="fill:rgb(42, 118, 142)">pair</text>
+<text transform="translate(2191,420) rotate(-90)" font-size="26" style="fill:rgb(70, 192, 111)">directly</text>
+<text transform="translate(1833,357)" font-size="26" style="fill:rgb(57, 85, 140)">mean</text>
+<text transform="translate(1907,1156)" font-size="26" style="fill:rgb(60, 79, 138)">small</text>
+<text transform="translate(1781,998) rotate(-90)" font-size="26" style="fill:rgb(67, 62, 133)">li</text>
+<text transform="translate(1579,392)" font-size="26" style="fill:rgb(202, 225, 31)">ring</text>
+<text transform="translate(1438,265)" font-size="26" style="fill:rgb(244, 230, 30)">type</text>
+<text transform="translate(740,1165) rotate(-90)" font-size="26" style="fill:rgb(72, 37, 118)">chen</text>
+<text transform="translate(1691,904)" font-size="26" style="fill:rgb(72, 41, 121)">pattern</text>
+<text transform="translate(526,1208)" font-size="26" style="fill:rgb(71, 47, 125)">second</text>
+<text transform="translate(1413,347)" font-size="26" style="fill:rgb(72, 22, 104)">offset</text>
+<text transform="translate(1093,1113)" font-size="26" style="fill:rgb(92, 200, 99)">mm</text>
+<text transform="translate(1808,687)" font-size="26" style="fill:rgb(137, 213, 72)">select</text>
+<text transform="translate(720,839)" font-size="26" style="fill:rgb(86, 198, 103)">fec</text>
+<text transform="translate(921,998)" font-size="26" style="fill:rgb(70, 52, 128)">mzm</text>
+<text transform="translate(1222,991)" font-size="26" style="fill:rgb(108, 205, 90)">recent</text>
+<text transform="translate(347,301)" font-size="26" style="fill:rgb(36, 170, 131)">overall</text>
+<text transform="translate(1815,708)" font-size="26" style="fill:rgb(46, 111, 142)">direct</text>
+<text transform="translate(1639,1176)" font-size="26" style="fill:rgb(72, 28, 110)">eo</text>
+<text transform="translate(1730,1084)" font-size="26" style="fill:rgb(157, 217, 59)">optimal</text>
+<text transform="translate(1299,1370) rotate(-90)" font-size="26" style="fill:rgb(61, 78, 138)">single-mode</text>
+<text transform="translate(748,1380) rotate(-90)" font-size="26" style="fill:rgb(239, 229, 28)">throughput</text>
+<text transform="translate(1460,854)" font-size="26" style="fill:rgb(31, 162, 135)">proc</text>
+<text transform="translate(41,100)" font-size="26" style="fill:rgb(42, 119, 142)">direction</text>
+<text transform="translate(500,1396) rotate(-90)" font-size="26" style="fill:rgb(72, 35, 116)">tb/s</text>
+<text transform="translate(1580,1346) rotate(-90)" font-size="26" style="fill:rgb(72, 38, 119)">realize</text>
+<text transform="translate(1765,783)" font-size="26" style="fill:rgb(31, 161, 135)">lo</text>
+<text transform="translate(1426,361)" font-size="26" style="fill:rgb(46, 109, 142)">ase</text>
+<text transform="translate(521,734)" font-size="26" style="fill:rgb(181, 222, 43)">load</text>
+<text transform="translate(1979,1321) rotate(-90)" font-size="26" style="fill:rgb(72, 41, 121)">utilize</text>
+<text transform="translate(1395,806)" font-size="26" style="fill:rgb(40, 174, 128)">position</text>
+<text transform="translate(787,403) rotate(-90)" font-size="26" style="fill:rgb(71, 16, 99)">compensate</text>
+<text transform="translate(1204,1090)" font-size="26" style="fill:rgb(66, 190, 113)">leverage</text>
+</svg>

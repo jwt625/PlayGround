@@ -19,12 +19,14 @@ from wordcloud import WordCloud
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Build corpus-wide OFC 2026 word maps.")
     parser.add_argument("--index", default="paper_text_index.json")
+    parser.add_argument("--extracted-text-dir", default="extracted_text")
     parser.add_argument("--top-terms", default="corpus_top_terms.csv")
     parser.add_argument("--top-bigrams", default="corpus_top_bigrams.csv")
     parser.add_argument("--top-trigrams", default="corpus_top_trigrams.csv")
     parser.add_argument("--wordmap-png", default="wordmap.png")
     parser.add_argument("--wordmap-svg", default="wordmap.svg")
     parser.add_argument("--tfidf-json", default="paper_tfidf_keywords.json")
+    parser.add_argument("--extra-stopwords-path", default="")
     parser.add_argument("--top-k", type=int, default=250)
     return parser.parse_args()
 
@@ -37,6 +39,25 @@ def ensure_nltk() -> None:
 def load_records(index_path: Path) -> dict[str, dict]:
     payload = json.loads(index_path.read_text(encoding="utf-8"))
     return payload["papers"]
+
+
+def resolve_text_path(record: dict, extracted_text_dir: Path) -> Path:
+    raw_path = record.get("text_path", "")
+    if raw_path:
+        candidate = Path(raw_path)
+        if candidate.exists():
+            return candidate
+        local_candidate = extracted_text_dir / candidate.name
+        if local_candidate.exists():
+            return local_candidate
+    pdf_name = record.get("pdf_name", "")
+    if pdf_name:
+        stem = Path(pdf_name).stem
+        for suffix in (".txt", ".md"):
+            candidate = extracted_text_dir / f"{stem}{suffix}"
+            if candidate.exists():
+                return candidate
+    raise FileNotFoundError(f"Could not resolve extracted text for record: {record.get('pdf_name') or raw_path}")
 
 
 def boilerplate_patterns() -> list[re.Pattern]:
@@ -63,10 +84,12 @@ def normalize_line(line: str) -> str:
 
 def repeated_noise_lines(records: dict[str, dict]) -> set[str]:
     doc_counts: Counter[str] = Counter()
+    extracted_text_dir = Path("extracted_text")
     for record in records.values():
         if record.get("status") != "success":
             continue
-        text = Path(record["text_path"]).read_text(encoding="utf-8", errors="ignore")
+        text_path = resolve_text_path(record, extracted_text_dir)
+        text = text_path.read_text(encoding="utf-8", errors="ignore")
         unique_lines = {
             normalize_line(line)
             for line in text.splitlines()
@@ -77,6 +100,18 @@ def repeated_noise_lines(records: dict[str, dict]) -> set[str]:
                 doc_counts[line] += 1
     min_docs = max(8, math.ceil(len(records) * 0.03))
     return {line for line, count in doc_counts.items() if count >= min_docs}
+
+
+def load_extra_stopwords(path: Path | None) -> set[str]:
+    if path is None or not path.exists():
+        return set()
+    stopwords: set[str] = set()
+    for line in path.read_text(encoding="utf-8").splitlines():
+        value = line.strip().lower()
+        if not value or value.startswith("#"):
+            continue
+        stopwords.add(value)
+    return stopwords
 
 
 def clean_text(raw_text: str, repeated_lines: set[str], lemmatizer: WordNetLemmatizer, stopwords: set[str]) -> tuple[str, list[str]]:
@@ -194,6 +229,7 @@ def main() -> None:
     ensure_nltk()
 
     index_path = Path(args.index).resolve()
+    extracted_text_dir = Path(args.extracted_text_dir).resolve()
     records = load_records(index_path)
     repeated_lines = repeated_noise_lines(records)
 
@@ -236,8 +272,80 @@ def main() -> None:
             "demonstrate",
             "demonstrated",
             "based",
+            "optical",
+            "signal",
+            "fiber",
+            "fibre",
+            "power",
+            "network",
+            "transmission",
+            "channel",
+            "data",
+            "loss",
+            "laser",
+            "bandwidth",
+            "phase",
+            "wavelength",
+            "time",
+            "link",
+            "rate",
+            "frequency",
+            "communication",
+            "measure",
+            "design",
+            "output",
+            "process",
+            "high",
+            "noise",
+            "technology",
+            "mode",
+            "device",
+            "gain",
+            "spectrum",
+            "experimental",
+            "measurement",
+            "method",
+            "photonic",
+            "photonics",
+            "operation",
+            "filter",
+            "amplifier",
+            "range",
+            "input",
+            "setup",
+            "architecture",
+            "receiver",
+            "silicon",
+            "core",
+            "path",
+            "control",
+            "waveguide",
+            "application",
+            "light",
+            "modulator",
+            "cable",
+            "test",
+            "function",
+            "parameter",
+            "structure",
+            "distribution",
+            "transmitter",
+            "db",
+            "dbm",
+            "nm",
+            "km",
+            "ghz",
+            "ber",
+            "ieee",
+            "ofc",
+            "china",
+            "usa",
+            "san",
+            "francisco",
+            "ca",
         }
     )
+    stopwords.update(load_extra_stopwords(Path(args.extra_stopwords_path)) if args.extra_stopwords_path else set())
 
     cleaned_docs: dict[str, str] = {}
     token_docs: dict[str, list[str]] = {}
@@ -246,7 +354,8 @@ def main() -> None:
     for pdf_name, record in sorted(records.items()):
         if record.get("status") != "success":
             continue
-        raw_text = Path(record["text_path"]).read_text(encoding="utf-8", errors="ignore")
+        text_path = resolve_text_path(record, extracted_text_dir)
+        raw_text = text_path.read_text(encoding="utf-8", errors="ignore")
         cleaned_text, tokens = clean_text(raw_text, repeated_lines, lemmatizer, stopwords)
         cleaned_docs[pdf_name] = cleaned_text
         token_docs[pdf_name] = tokens
