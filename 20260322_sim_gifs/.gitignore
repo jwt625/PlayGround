@@ -4,3 +4,9 @@ build/
 .new_sample_frames2/
 review_candidates/
 montage_manifest*.tsv
+still_image_shortlist.tsv
+still_image_shortlist.md
+render_montage.sh
+render_montage_fast_diverse.sh
+render_montage_subtitled_fast_diverse.sh
+render_montage_subtitled_twoline_fast3_plus_lumerical.sh
