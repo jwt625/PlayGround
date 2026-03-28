@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Multipole Cow Viewer</title>
+    <link rel="stylesheet" href="./styles.css">
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="control-panel">
+        <div class="eyebrow">Multipole Reconstruction</div>
+        <h1>Cow Surface Viewer</h1>
+        <p class="intro">
+          Orbit with drag, zoom with the wheel, and pan with right-drag. Switch between a focused view
+          or a comparison grid with every reconstruction order.
+        </p>
+
+        <section class="panel-block">
+          <div class="block-title">View Mode</div>
+          <div class="chip-row">
+            <button class="mode-chip active" data-mode="single">Single</button>
+            <button class="mode-chip" data-mode="grid">All Grid</button>
+          </div>
+        </section>
+
+        <section class="panel-block">
+          <div class="block-title">Cow Version</div>
+          <div class="version-grid" id="version-grid"></div>
+        </section>
+
+        <section class="panel-block metrics-card">
+          <div class="block-title">Selection</div>
+          <div class="metric-line">
+            <span>Name</span>
+            <strong id="metric-name">Loading...</strong>
+          </div>
+          <div class="metric-line">
+            <span>Surface RMSE</span>
+            <strong id="metric-rmse">-</strong>
+          </div>
+          <div class="metric-line">
+            <span>Vertices</span>
+            <strong id="metric-vertices">-</strong>
+          </div>
+          <div class="metric-line">
+            <span>Faces</span>
+            <strong id="metric-faces">-</strong>
+          </div>
+        </section>
+
+        <section class="panel-block hints-card">
+          <div class="block-title">Shortcuts</div>
+          <p><kbd>←</kbd> and <kbd>→</kbd> cycle through versions in single view.</p>
+          <p><kbd>G</kbd> toggles grid mode.</p>
+          <p><kbd>F</kbd> frames the current view.</p>
+        </section>
+      </aside>
+
+      <main class="viewer-column">
+        <header class="viewer-topbar">
+          <div>
+            <div class="topbar-label">Prepared Bounding Box</div>
+            <div class="topbar-value" id="bbox-label">1.0440 × 0.6397 × 0.3403</div>
+          </div>
+          <div>
+            <div class="topbar-label">Star Shell Proxy</div>
+            <div class="topbar-value" id="shell-label">Loading...</div>
+          </div>
+        </header>
+
+        <section class="canvas-wrap">
+          <canvas id="viewer-canvas"></canvas>
+          <div class="status-pill" id="status-pill">Loading models...</div>
+        </section>
+      </main>
+    </div>
+
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "https://unpkg.com/three@0.179.1/build/three.module.js",
+          "three/addons/": "https://unpkg.com/three@0.179.1/examples/jsm/"
+        }
+      }
+    </script>
+    <script type="module" src="./app.js"></script>
+  </body>
+</html>
