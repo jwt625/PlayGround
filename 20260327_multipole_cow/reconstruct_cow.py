@@ -23,6 +23,8 @@ OUTPUT_DIR = ROOT / "outputs"
 SOURCE_URL = "https://raw.githubusercontent.com/libigl/libigl-tutorial-data/master/cow.off"
 TARGET_BBOX = np.array([1.0440, 0.6397, 0.3403], dtype=float)
 MAX_DEGREE = 24
+STAR_RAY_COUNT = 2048
+STAR_VERIFY_RAY_COUNT = 8192
 
 
 @dataclass(frozen=True)
@@ -127,47 +129,92 @@ def signed_distance_gradient(mesh: trimesh.Trimesh, points: np.ndarray, epsilon:
         offset[axis] = epsilon
         plus = trimesh.proximity.signed_distance(mesh, points + offset)
         minus = trimesh.proximity.signed_distance(mesh, points - offset)
-        gradients[:, axis] = (plus - minus) / (2.0 * epsilon)
+        # trimesh uses the opposite sign convention from the paper:
+        # distance is negative outside the mesh. Negating the sampled
+        # gradient yields the outward gradient flow of the paper's d(x).
+        gradients[:, axis] = -(plus - minus) / (2.0 * epsilon)
     norms = np.linalg.norm(gradients, axis=1, keepdims=True)
     return gradients / np.maximum(norms, 1e-12)
 
 
-def find_star_shell(mesh: trimesh.Trimesh) -> tuple[np.ndarray, float, dict[str, float]]:
-    directions = fibonacci_sphere(1200)
-    bbox_diag = np.linalg.norm(mesh.bounding_box.extents)
-    epsilon = bbox_diag / 400.0
-    step_size = bbox_diag / 40.0
-    max_steps = 24
+def ray_star_diagnostics(mesh: trimesh.Trimesh, directions: np.ndarray) -> dict[str, float]:
+    counts = count_hits_per_ray(mesh, directions)
+    positive = counts[counts > 0]
+    return {
+        "single_hit_fraction": float(np.mean(counts == 1)),
+        "multi_hit_fraction": float(np.mean(counts > 1)),
+        "hit_fraction": float(np.mean(counts > 0)),
+        "max_hits_along_any_ray": float(np.max(counts)) if len(counts) else 0.0,
+        "min_hits_along_any_ray": float(np.min(counts)) if len(counts) else 0.0,
+        "min_positive_hits": float(np.min(positive)) if len(positive) else 0.0,
+    }
 
-    baseline_counts = count_hits_per_ray(mesh, directions)
-    best_vertices = mesh.vertices.copy()
-    best_time = 0.0
-    best_rate = float(np.mean(baseline_counts == 1))
-    best_multi = int(np.max(baseline_counts)) if len(baseline_counts) else 0
+
+def find_star_shell(mesh: trimesh.Trimesh) -> tuple[np.ndarray, float, dict[str, float]]:
+    directions = fibonacci_sphere(STAR_RAY_COUNT)
+    verify_directions = fibonacci_sphere(STAR_VERIFY_RAY_COUNT)
+    bbox_diag = np.linalg.norm(mesh.bounding_box.extents)
+    epsilon = bbox_diag / 600.0
+    step_size = bbox_diag / 80.0
+    max_steps = 96
     positions = mesh.vertices.copy()
+    best_vertices = positions.copy()
+    best_time = 0.0
+    baseline = trimesh.Trimesh(vertices=positions.copy(), faces=mesh.faces, process=False)
+    best_coarse = ray_star_diagnostics(baseline, directions)
+    best_verified = ray_star_diagnostics(baseline, verify_directions)
 
     for step in range(1, max_steps + 1):
         gradients = signed_distance_gradient(mesh, positions, epsilon=epsilon)
         positions = positions + step_size * gradients
+        if step % 4 != 0:
+            continue
         candidate_vertices = positions.copy()
         candidate = trimesh.Trimesh(vertices=candidate_vertices, faces=mesh.faces, process=False)
-        counts = count_hits_per_ray(candidate, directions)
-        one_hit_rate = float(np.mean(counts == 1))
-        max_hits = int(np.max(counts)) if len(counts) else 0
-        if one_hit_rate > best_rate or (math.isclose(one_hit_rate, best_rate) and max_hits < best_multi):
+        coarse = ray_star_diagnostics(candidate, directions)
+        is_better = (
+            coarse["single_hit_fraction"] > best_coarse["single_hit_fraction"]
+            or (
+                math.isclose(coarse["single_hit_fraction"], best_coarse["single_hit_fraction"])
+                and coarse["max_hits_along_any_ray"] < best_coarse["max_hits_along_any_ray"]
+            )
+        )
+        if is_better:
             best_vertices = candidate_vertices
             best_time = step * step_size
-            best_rate = one_hit_rate
-            best_multi = max_hits
-        if one_hit_rate > 0.995 and max_hits <= 1:
-            break
+            best_coarse = coarse
+            if coarse["single_hit_fraction"] >= 0.995:
+                best_verified = ray_star_diagnostics(candidate, verify_directions)
+        if coarse["max_hits_along_any_ray"] <= 1.0 and coarse["hit_fraction"] >= 0.999:
+            verified = ray_star_diagnostics(candidate, verify_directions)
+            if verified["max_hits_along_any_ray"] <= 1.0 and verified["hit_fraction"] >= 0.999:
+                diagnostics = {
+                    "star_shell_flow_time": step * step_size,
+                    "gradient_step_size": step_size,
+                    "gradient_epsilon": epsilon,
+                    "coarse_ray_count": float(STAR_RAY_COUNT),
+                    "verify_ray_count": float(STAR_VERIFY_RAY_COUNT),
+                    "coarse_single_hit_fraction": coarse["single_hit_fraction"],
+                    "coarse_hit_fraction": coarse["hit_fraction"],
+                    "verify_single_hit_fraction": verified["single_hit_fraction"],
+                    "verify_hit_fraction": verified["hit_fraction"],
+                    "max_hits_along_any_verified_ray": verified["max_hits_along_any_ray"],
+                    "numerically_star_shaped": 1.0,
+                }
+                return candidate_vertices, step * step_size, diagnostics
 
     diagnostics = {
         "star_shell_flow_time": best_time,
         "gradient_step_size": step_size,
         "gradient_epsilon": epsilon,
-        "single_hit_fraction": best_rate,
-        "max_hits_along_any_ray": float(best_multi),
+        "coarse_ray_count": float(STAR_RAY_COUNT),
+        "verify_ray_count": float(STAR_VERIFY_RAY_COUNT),
+        "coarse_single_hit_fraction": best_coarse["single_hit_fraction"],
+        "coarse_hit_fraction": best_coarse["hit_fraction"],
+        "verify_single_hit_fraction": best_verified["single_hit_fraction"],
+        "verify_hit_fraction": best_verified["hit_fraction"],
+        "max_hits_along_any_verified_ray": best_verified["max_hits_along_any_ray"],
+        "numerically_star_shaped": 0.0,
     }
     return best_vertices, best_time, diagnostics
 
@@ -178,6 +225,13 @@ def vertex_areas(mesh: trimesh.Trimesh) -> np.ndarray:
     for corner in range(3):
         np.add.at(areas, mesh.faces[:, corner], face_areas / 3.0)
     return areas
+
+
+def projected_sphere_vertex_areas(vertices: np.ndarray, faces: np.ndarray) -> np.ndarray:
+    radii = np.linalg.norm(vertices, axis=1, keepdims=True)
+    unit_vertices = vertices / np.maximum(radii, 1e-12)
+    sphere_mesh = trimesh.Trimesh(vertices=unit_vertices, faces=faces, process=False)
+    return vertex_areas(sphere_mesh)
 
 
 def wrap_angle(angle: np.ndarray) -> np.ndarray:
@@ -342,13 +396,13 @@ def fit_order(
     r_values: np.ndarray,
     dtheta: np.ndarray,
     dphi: np.ndarray,
-    areas: np.ndarray,
+    sphere_weights: np.ndarray,
     order: int,
 ) -> tuple[np.ndarray, np.ndarray, np.ndarray, list[HarmonicTerm]]:
     basis, terms = build_design_matrix(theta_star, phi_star, max_degree=order)
-    coeffs_r = weighted_complex_fit(basis, r_values.astype(complex), areas)
-    coeffs_theta = weighted_complex_fit(basis, dtheta.astype(complex), areas)
-    coeffs_phi = weighted_complex_fit(basis, dphi.astype(complex), areas)
+    coeffs_r = weighted_complex_fit(basis, r_values.astype(complex), sphere_weights)
+    coeffs_theta = weighted_complex_fit(basis, dtheta.astype(complex), sphere_weights)
+    coeffs_phi = weighted_complex_fit(basis, dphi.astype(complex), sphere_weights)
     coeffs_theta[0] = 0.0
     coeffs_phi[0] = 0.0
     return coeffs_r, coeffs_theta, coeffs_phi, terms
@@ -401,7 +455,7 @@ def main() -> None:
     dtheta = theta_values - theta_star
     dphi = wrap_angle(phi_values - phi_star)
 
-    areas = vertex_areas(original)
+    sphere_weights = projected_sphere_vertex_areas(star_vertices, original.faces)
     sample_angles, faces = build_uv_sphere(theta_count=100, phi_count=200)
     theta_sample = sample_angles[:, 0]
     phi_sample = sample_angles[:, 1]
@@ -443,7 +497,7 @@ def main() -> None:
             r_values=r_values,
             dtheta=dtheta,
             dphi=dphi,
-            areas=areas,
+            sphere_weights=sphere_weights,
             order=order,
         )
 
