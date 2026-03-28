@@ -25,7 +25,7 @@ const shellLabel = document.getElementById("shell-label");
 
 const scene = new THREE.Scene();
 scene.background = new THREE.Color("#efe7d6");
-scene.fog = new THREE.Fog("#efe7d6", 7.5, 16);
+scene.fog = new THREE.Fog("#efe7d6", 12, 28);
 
 const renderer = new THREE.WebGLRenderer({
   canvas,

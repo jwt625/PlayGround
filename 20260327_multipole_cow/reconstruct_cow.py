@@ -120,38 +120,56 @@ def count_hits_per_ray(mesh: trimesh.Trimesh, directions: np.ndarray) -> np.ndar
     return counts
 
 
+def signed_distance_gradient(mesh: trimesh.Trimesh, points: np.ndarray, epsilon: float) -> np.ndarray:
+    gradients = np.zeros_like(points)
+    for axis in range(3):
+        offset = np.zeros(3, dtype=float)
+        offset[axis] = epsilon
+        plus = trimesh.proximity.signed_distance(mesh, points + offset)
+        minus = trimesh.proximity.signed_distance(mesh, points - offset)
+        gradients[:, axis] = (plus - minus) / (2.0 * epsilon)
+    norms = np.linalg.norm(gradients, axis=1, keepdims=True)
+    return gradients / np.maximum(norms, 1e-12)
+
+
 def find_star_shell(mesh: trimesh.Trimesh) -> tuple[np.ndarray, float, dict[str, float]]:
-    directions = fibonacci_sphere(3000)
-    normals = mesh.vertex_normals
+    directions = fibonacci_sphere(1200)
     bbox_diag = np.linalg.norm(mesh.bounding_box.extents)
+    epsilon = bbox_diag / 400.0
+    step_size = bbox_diag / 40.0
+    max_steps = 24
 
     baseline_counts = count_hits_per_ray(mesh, directions)
     best_vertices = mesh.vertices.copy()
-    best_offset = 0.0
+    best_time = 0.0
     best_rate = float(np.mean(baseline_counts == 1))
     best_multi = int(np.max(baseline_counts)) if len(baseline_counts) else 0
+    positions = mesh.vertices.copy()
 
-    for fraction in np.linspace(0.0, 0.6, 31):
-        offset = fraction * bbox_diag
-        candidate_vertices = mesh.vertices + offset * normals
+    for step in range(1, max_steps + 1):
+        gradients = signed_distance_gradient(mesh, positions, epsilon=epsilon)
+        positions = positions + step_size * gradients
+        candidate_vertices = positions.copy()
         candidate = trimesh.Trimesh(vertices=candidate_vertices, faces=mesh.faces, process=False)
         counts = count_hits_per_ray(candidate, directions)
         one_hit_rate = float(np.mean(counts == 1))
         max_hits = int(np.max(counts)) if len(counts) else 0
         if one_hit_rate > best_rate or (math.isclose(one_hit_rate, best_rate) and max_hits < best_multi):
             best_vertices = candidate_vertices
-            best_offset = offset
+            best_time = step * step_size
             best_rate = one_hit_rate
             best_multi = max_hits
         if one_hit_rate > 0.995 and max_hits <= 1:
             break
 
     diagnostics = {
-        "star_shell_offset": best_offset,
+        "star_shell_flow_time": best_time,
+        "gradient_step_size": step_size,
+        "gradient_epsilon": epsilon,
         "single_hit_fraction": best_rate,
         "max_hits_along_any_ray": float(best_multi),
     }
-    return best_vertices, best_offset, diagnostics
+    return best_vertices, best_time, diagnostics
 
 
 def vertex_areas(mesh: trimesh.Trimesh) -> np.ndarray:
