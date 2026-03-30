@@ -103,6 +103,20 @@ so `L = 24` gives `625` modes per scalar field, or `1875` coefficients across th
 uv run python reconstruct_cow.py
 ```
 
+By default the script now fails fast if dense ray checks do not find a numerically star-shaped shell, or if a higher-order reconstruction exceeds the built-in geometric safety thresholds.
+
+If you explicitly want exploratory output even when the shell test fails, opt in with:
+
+```bash
+uv run python reconstruct_cow.py --allow-non-star-shell
+```
+
+Generate the reconstruction grid only when you explicitly want it:
+
+```bash
+uv run python reconstruct_cow.py --plot
+```
+
 ## Interactive Viewer
 
 Start a simple static server from the project root and open the viewer in your browser:
@@ -116,8 +130,61 @@ Then visit `http://localhost:8000/viewer/`.
 ## Outputs
 
 - `data/cow.obj`: prepared benchmark mesh in OBJ format
-- `outputs/cow_reconstruction_l0.obj` through `outputs/cow_reconstruction_l24.obj`
+- `outputs/cow_reconstruction_l*.obj` up to the last safe completed order
 - `outputs/coefficients.json`
 - `outputs/metrics.json`
-- `outputs/reconstruction_grid.png`
+- `outputs/reconstruction_grid.png` when `--plot` is used
 - `viewer/`: lightweight Three.js front end for interactive inspection
+
+## RCA
+
+On March 28, 2026, a regeneration run contributed to a full machine reboot instead of failing gracefully.
+
+Observed evidence:
+
+- The macOS panic report at `/Library/Logs/DiagnosticReports/panic-full-2026-03-28-100427.0002.panic` records a watchdog timeout rather than a normal Python exception.
+- The reconstruction process spent most of its time in repeated ray-intersection queries triggered by `trimesh.ray.intersects_location(...)`.
+- `outputs/metrics.json` recorded that the flowed shell was not numerically star-shaped:
+  - `numerically_star_shaped = 0.0`
+  - `max_hits_along_any_verified_ray = 5.0`
+- High-order reconstructions became geometrically unstable instead of converging visually. The reconstructed bounding-box max extent grew rapidly:
+  - `l = 18`: about `1.8`
+  - `l = 19`: about `3.5`
+  - `l = 20`: about `18`
+  - `l = 21`: about `48`
+  - `l = 22`: about `177`
+  - `l = 23`: about `1036`
+  - `l = 24`: about `4372`
+
+Root cause:
+
+- The code continued with coefficient fitting and mesh export even though the star-shell prerequisite of the paper had not been achieved.
+- At high order, the unstable angular/radial reconstruction produced extreme spikes and huge triangles.
+- The script combined that unstable geometry with expensive proximity and ray queries, which created sustained system load.
+- The current `surface_rmse` metric is one-way, so it understated severe outward spikes and did not act as a reliable safety signal.
+
+Contributing factors:
+
+- Dense repeated ray diagnostics in the distance-gradient-flow search.
+- No hard stop based on geometric blow-up.
+- Plotting and export still proceed after unstable high-order meshes are formed.
+- Other active system load can make the same script behavior much less safe.
+
+Corrective actions for future runs:
+
+- Abort reconstruction if a numerically star-shaped shell is not found.
+- Use a symmetric surface distance metric, not only original-to-reconstruction nearest distances.
+- Add explicit safety caps on bounding-box growth, edge-length outliers, and vertex norms.
+- Stop order escalation once quality degrades or geometry blows up.
+- Keep plotting optional and off by default for heavy runs.
+
+## FMEA
+
+| Failure mode | Cause | Effect | Detection | Mitigation |
+| --- | --- | --- | --- | --- |
+| Star-shell search never reaches a valid shell | Distance-gradient flow proxy is insufficient for this mesh and origin choice | Sphere map is not well-defined; downstream fit becomes unreliable | `numerically_star_shaped = 0.0`, multi-hit rays in `metrics.json` | Fail fast instead of continuing; improve shell construction before fitting |
+| High-order harmonic fit blows up | Ill-conditioned fit on an invalid or weakly parameterized shell | Spiky meshes, huge extents, misleading apparent improvement in one-way RMSE | Bounding-box growth, extreme edge lengths, visual spikes | Clamp or stop at a safe order; add geometric blow-up thresholds |
+| RMSE understates bad reconstructions | Metric only measures original vertices to candidate surface | Large outward spikes are weakly penalized | Compare one-way RMSE against symmetric RMSE and max distance | Replace with symmetric RMSE plus a worst-case distance metric |
+| Ray diagnostics overwhelm CPU | Many repeated `intersects_location` calls on dense rays | Machine becomes unresponsive; watchdog risk under load | High CPU usage, long stalls before first output | Reduce ray density adaptively, cache where possible, add per-stage runtime limits |
+| Proximity queries become too expensive on unstable meshes | Blown-up geometry increases nearest-point query cost | Slow export/metrics/plot stages, excessive memory churn | Sudden runtime jump at higher `l` | Refuse to evaluate meshes whose size/edge statistics exceed thresholds |
+| Plot generation magnifies instability cost | Large malformed meshes are still rendered | Extra memory and CPU use after reconstruction already degraded | Late-stage slowdown or failure during plotting | Keep plotting disabled by default for exploratory or heavy runs |

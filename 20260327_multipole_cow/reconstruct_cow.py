@@ -23,8 +23,12 @@ OUTPUT_DIR = ROOT / "outputs"
 SOURCE_URL = "https://raw.githubusercontent.com/libigl/libigl-tutorial-data/master/cow.off"
 TARGET_BBOX = np.array([1.0440, 0.6397, 0.3403], dtype=float)
 MAX_DEGREE = 24
-STAR_RAY_COUNT = 2048
-STAR_VERIFY_RAY_COUNT = 8192
+STAR_RAY_COUNT = 512
+STAR_VERIFY_RAY_COUNT = 2048
+MAX_BBOX_GROWTH = 8.0
+MAX_VERTEX_NORM_GROWTH = 8.0
+MAX_EDGE_P99_GROWTH = 25.0
+MAX_EDGE_MAX_GROWTH = 80.0
 
 
 @dataclass(frozen=True)
@@ -156,7 +160,7 @@ def find_star_shell(mesh: trimesh.Trimesh) -> tuple[np.ndarray, float, dict[str,
     bbox_diag = np.linalg.norm(mesh.bounding_box.extents)
     epsilon = bbox_diag / 600.0
     step_size = bbox_diag / 80.0
-    max_steps = 96
+    max_steps = 64
     positions = mesh.vertices.copy()
     best_vertices = positions.copy()
     best_time = 0.0
@@ -167,7 +171,7 @@ def find_star_shell(mesh: trimesh.Trimesh) -> tuple[np.ndarray, float, dict[str,
     for step in range(1, max_steps + 1):
         gradients = signed_distance_gradient(mesh, positions, epsilon=epsilon)
         positions = positions + step_size * gradients
-        if step % 4 != 0:
+        if step % 8 != 0:
             continue
         candidate_vertices = positions.copy()
         candidate = trimesh.Trimesh(vertices=candidate_vertices, faces=mesh.faces, process=False)
@@ -390,6 +394,50 @@ def compute_surface_rmse(reference: trimesh.Trimesh, candidate: trimesh.Trimesh)
     return float(np.sqrt(np.mean(distances**2)))
 
 
+def compute_surface_metrics(reference: trimesh.Trimesh, candidate: trimesh.Trimesh) -> dict[str, float]:
+    _, ref_to_candidate, _ = trimesh.proximity.closest_point(candidate, reference.vertices)
+    _, candidate_to_ref, _ = trimesh.proximity.closest_point(reference, candidate.vertices)
+    return {
+        "surface_rmse": float(np.sqrt(np.mean(ref_to_candidate**2))),
+        "surface_rmse_symmetric": float(
+            np.sqrt(0.5 * (np.mean(ref_to_candidate**2) + np.mean(candidate_to_ref**2)))
+        ),
+        "surface_max_distance": float(max(np.max(ref_to_candidate), np.max(candidate_to_ref))),
+        "reference_to_candidate_rmse": float(np.sqrt(np.mean(ref_to_candidate**2))),
+        "candidate_to_reference_rmse": float(np.sqrt(np.mean(candidate_to_ref**2))),
+    }
+
+
+def geometry_quality_metrics(mesh: trimesh.Trimesh) -> dict[str, float]:
+    edge_lengths = mesh.edges_unique_length
+    vertex_norms = np.linalg.norm(mesh.vertices, axis=1)
+    return {
+        "bbox_extent_max": float(np.max(mesh.bounding_box.extents)),
+        "vertex_norm_max": float(np.max(vertex_norms)),
+        "edge_p99": float(np.quantile(edge_lengths, 0.99)),
+        "edge_max": float(np.max(edge_lengths)),
+    }
+
+
+def validate_reconstruction(
+    mesh: trimesh.Trimesh,
+    baseline_quality: dict[str, float],
+) -> str | None:
+    if not np.isfinite(mesh.vertices).all():
+        return "non-finite vertices"
+
+    quality = geometry_quality_metrics(mesh)
+    if quality["bbox_extent_max"] > baseline_quality["bbox_extent_max"] * MAX_BBOX_GROWTH:
+        return "bounding box growth exceeded safety threshold"
+    if quality["vertex_norm_max"] > baseline_quality["vertex_norm_max"] * MAX_VERTEX_NORM_GROWTH:
+        return "vertex norm growth exceeded safety threshold"
+    if quality["edge_p99"] > baseline_quality["edge_p99"] * MAX_EDGE_P99_GROWTH:
+        return "99th percentile edge length exceeded safety threshold"
+    if quality["edge_max"] > baseline_quality["edge_max"] * MAX_EDGE_MAX_GROWTH:
+        return "maximum edge length exceeded safety threshold"
+    return None
+
+
 def fit_order(
     theta_star: np.ndarray,
     phi_star: np.ndarray,
@@ -412,14 +460,19 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Reconstruct the benchmark cow with spherical harmonics.")
     parser.add_argument("--max-degree", type=int, default=MAX_DEGREE, help="Maximum harmonic order to export.")
     parser.add_argument(
+        "--allow-non-star-shell",
+        action="store_true",
+        help="Continue even if dense ray checks fail to find a numerically star-shaped shell.",
+    )
+    parser.add_argument(
         "--skip-existing",
         action="store_true",
         help="Reuse existing OBJ outputs when present instead of overwriting them.",
     )
     parser.add_argument(
-        "--no-plot",
+        "--plot",
         action="store_true",
-        help="Skip reconstruction_grid.png generation.",
+        help="Generate reconstruction_grid.png after reconstruction.",
     )
     return parser.parse_args()
 
@@ -449,6 +502,11 @@ def main() -> None:
     original = load_and_prepare_mesh(mesh_path)
 
     star_vertices, _, diagnostics = find_star_shell(original)
+    if not diagnostics.get("numerically_star_shaped", 0.0) and not args.allow_non_star_shell:
+        raise RuntimeError(
+            "Dense ray diagnostics did not find a numerically star-shaped shell. "
+            "Re-run with --allow-non-star-shell only if you explicitly want exploratory output."
+        )
     r_values, theta_values, phi_values = spherical_from_cartesian(original.vertices)
     _, theta_star, phi_star = spherical_from_cartesian(star_vertices)
 
@@ -459,6 +517,7 @@ def main() -> None:
     sample_angles, faces = build_uv_sphere(theta_count=100, phi_count=200)
     theta_sample = sample_angles[:, 0]
     phi_sample = sample_angles[:, 1]
+    baseline_quality = geometry_quality_metrics(original)
 
     reconstructed_meshes: dict[int, trimesh.Trimesh] = {}
     existing_metrics = load_existing_metrics() if args.skip_existing else None
@@ -477,16 +536,15 @@ def main() -> None:
         if args.skip_existing and output_path.exists():
             recon = load_mesh(output_path)
             reconstructed_meshes[order] = recon
-            rmse = (
-                float(existing_order["surface_rmse"])
+            metric_row = (
+                dict(existing_order)
                 if existing_order is not None and "surface_rmse" in existing_order
-                else compute_surface_rmse(original, recon)
+                else compute_surface_metrics(original, recon)
             )
-            metrics["orders"][str(order)] = {
-                "surface_rmse": rmse,
-                "vertex_count": int(len(recon.vertices)),
-                "face_count": int(len(recon.faces)),
-            }
+            metric_row["vertex_count"] = int(len(recon.vertices))
+            metric_row["face_count"] = int(len(recon.faces))
+            metric_row.update(geometry_quality_metrics(recon))
+            metrics["orders"][str(order)] = metric_row
             write_metrics(metrics)
             print(f"l <= {order}: reused existing mesh")
             continue
@@ -512,20 +570,37 @@ def main() -> None:
 
         faces_oriented = orient_faces_outward(vertices, faces)
         recon = trimesh.Trimesh(vertices=vertices, faces=faces_oriented, process=True)
+        failure_reason = validate_reconstruction(recon, baseline_quality)
+        if failure_reason is not None:
+            quality = geometry_quality_metrics(recon)
+            metrics["orders"][str(order)] = {
+                "aborted": True,
+                "abort_reason": failure_reason,
+                "vertex_count": int(len(recon.vertices)),
+                "face_count": int(len(recon.faces)),
+                **quality,
+            }
+            write_metrics(metrics)
+            raise RuntimeError(f"Aborted at l <= {order}: {failure_reason}")
         reconstructed_meshes[order] = recon
         recon.export(output_path)
-        rmse = compute_surface_rmse(original, recon)
+        surface_metrics = compute_surface_metrics(original, recon)
         metrics["orders"][str(order)] = {
-            "surface_rmse": rmse,
+            **surface_metrics,
             "vertex_count": int(len(recon.vertices)),
             "face_count": int(len(recon.faces)),
+            **geometry_quality_metrics(recon),
         }
         if order == args.max_degree:
             save_coefficients(coeffs_r, coeffs_theta, coeffs_phi, terms)
         write_metrics(metrics)
-        print(f"l <= {order}: surface RMSE = {rmse:.6f}")
+        print(
+            "l <= "
+            f"{order}: symmetric surface RMSE = {surface_metrics['surface_rmse_symmetric']:.6f}, "
+            f"max distance = {surface_metrics['surface_max_distance']:.6f}"
+        )
 
-    if not args.no_plot:
+    if args.plot:
         plot_reconstructions(original, reconstructed_meshes)
 
     print("Prepared bbox:", np.round(original.bounding_box.extents, 6).tolist())
