@@ -50,3 +50,8 @@ Projects that have spun off:
   - Try it: [outside5sigma.com/WebSpice](https://outside5sigma.com/WebSpice/).
 
 <img src="assets/webspice.png" alt="WebSpice" width="50%">
+
+- Apr 2026: [USGS Minerals And Infrastructure Atlas](https://github.com/jwt625/USGS_Minerals_Infra_Atlas): a static interactive atlas for exploring USGS National Minerals Information Center regional GIS releases across Africa, China, Indo-Pacific, Latin America & Caribbean, and Southwest Asia.
+  - Try it: [jwt625.github.io/USGS_Minerals_Infra_Atlas](https://jwt625.github.io/USGS_Minerals_Infra_Atlas/).
+
+<img src="assets/USGS_Minerals_Infra_Atlas.png" alt="USGS Minerals And Infrastructure Atlas" width="50%">
