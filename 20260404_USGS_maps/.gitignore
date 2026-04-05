@@ -1,0 +1,4 @@
+.venv/
+downloads/
+extracted/
+__pycache__/

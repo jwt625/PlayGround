@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>USGS China Minerals and Infrastructure Atlas</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" rel="stylesheet" />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar" id="sidebar">
+        <div class="panel brand">
+          <div>
+            <p class="eyebrow">USGS data release</p>
+            <h1>China Minerals and Infrastructure Atlas</h1>
+          </div>
+          <button class="icon-button mobile-only" id="closeSidebarButton" aria-label="Close panel">×</button>
+        </div>
+
+        <section class="panel">
+          <label class="search-label" for="searchInput">Search places, commodities, operators, provinces</label>
+          <input id="searchInput" type="search" placeholder="Search visible layers" autocomplete="off" />
+          <div class="search-results" id="searchResults"></div>
+        </section>
+
+        <section class="panel controls-panel">
+          <div class="panel-header">
+            <h2>Basemap</h2>
+            <button class="text-button" id="homeButton">Reset View</button>
+          </div>
+          <div class="segmented" id="basemapSwitcher">
+            <button data-basemap="light" class="is-active">Monochrome</button>
+            <button data-basemap="satellite">Satellite</button>
+          </div>
+        </section>
+
+        <section class="panel controls-panel">
+          <div class="panel-header">
+            <h2>Layers</h2>
+            <div class="panel-actions">
+              <button class="text-button" id="showAllButton">Show All</button>
+              <button class="text-button" id="hideAllButton">Hide All</button>
+            </div>
+          </div>
+          <div id="layerList" class="layer-list"></div>
+        </section>
+
+        <section class="panel">
+          <div class="panel-header">
+            <h2>Selection</h2>
+            <span class="meta" id="selectionMeta">Nothing selected</span>
+          </div>
+          <div id="detailsCard" class="details-card empty">Click a feature to inspect its attributes.</div>
+        </section>
+      </aside>
+
+      <main class="map-frame">
+        <button class="icon-button panel-toggle" id="openSidebarButton" aria-label="Open panel">Layers</button>
+        <div id="map"></div>
+        <div class="map-overlay top-left">
+          <div class="status-chip" id="statusChip">Loading layers…</div>
+        </div>
+        <div class="map-overlay bottom-right">
+          <div class="legend" id="legend"></div>
+        </div>
+      </main>
+    </div>
+
+    <script type="module" src="./app.js"></script>
+  </body>
+</html>
+
