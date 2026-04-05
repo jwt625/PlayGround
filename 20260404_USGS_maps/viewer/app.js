@@ -8,6 +8,7 @@ const state = {
   layers: new Map(),
   searchIndex: [],
   basemap: "light",
+  theme: "light",
 };
 
 const lightTiles = [
@@ -20,10 +21,22 @@ const satelliteTiles = [
   "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
 ];
 
+const darkTiles = [
+  "https://a.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}.png",
+  "https://b.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}.png",
+  "https://c.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}.png",
+];
+
 const labelTiles = [
   "https://a.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}.png",
   "https://b.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}.png",
   "https://c.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}.png",
+];
+
+const darkLabelTiles = [
+  "https://a.basemaps.cartocdn.com/dark_only_labels/{z}/{x}/{y}.png",
+  "https://b.basemaps.cartocdn.com/dark_only_labels/{z}/{x}/{y}.png",
+  "https://c.basemaps.cartocdn.com/dark_only_labels/{z}/{x}/{y}.png",
 ];
 
 const statusChip = document.querySelector("#statusChip");
@@ -34,11 +47,21 @@ const selectionMeta = document.querySelector("#selectionMeta");
 const searchInput = document.querySelector("#searchInput");
 const searchResults = document.querySelector("#searchResults");
 const sidebar = document.querySelector("#sidebar");
+const appShell = document.querySelector(".app-shell");
+const sidebarResizer = document.querySelector("#sidebarResizer");
+const legendShell = document.querySelector("#legendShell");
+const legendToggleButton = document.querySelector("#legendToggleButton");
+const legendDragHandle = document.querySelector("#legendDragHandle");
+
+document.body.dataset.theme = state.theme;
+document.title = manifest.title;
 
 setupMap();
 renderLayerControls();
 wireChrome();
 updateLegend();
+setupSidebarResize();
+setupLegendInteractions();
 
 function setupMap() {
   state.map = new maplibregl.Map({
@@ -101,7 +124,22 @@ function renderLayerControls() {
   for (const [groupName, items] of Object.entries(groups)) {
     const group = document.createElement("div");
     group.className = "layer-group";
-    group.innerHTML = `<div class="layer-group-title">${groupName}</div>`;
+    group.dataset.group = groupName;
+    group.innerHTML = `
+      <button class="layer-group-header" type="button" data-group-toggle="${groupName}" aria-expanded="true">
+        <div class="layer-group-title-wrap">
+          <span class="layer-group-caret">▾</span>
+          <span class="layer-group-title">${groupName}</span>
+        </div>
+        <div class="layer-group-actions">
+          <button class="text-button" data-group-show="${groupName}">Show all</button>
+          <button class="text-button" data-group-hide="${groupName}">Hide all</button>
+        </div>
+      </button>
+      <div class="layer-group-body"></div>
+    `;
+
+    const groupBody = group.querySelector(".layer-group-body");
 
     for (const layer of items) {
       const wrapper = document.createElement("div");
@@ -112,9 +150,14 @@ function renderLayerControls() {
           <div>
             <label class="layer-title">
               <input type="checkbox" data-layer-toggle="${layer.id}" ${layer.visibleByDefault ? "checked" : ""} />
-              ${layer.title}
+              <span class="layer-name-row">
+                <span>${layer.title}</span>
+                <span class="layer-info" tabindex="0" aria-label="Layer description">
+                  i
+                  <span class="layer-tooltip">${escapeHtml(layer.summary)}</span>
+                </span>
+              </span>
             </label>
-            <p class="layer-summary">${layer.summary}</p>
             <div class="layer-meta">${layer.featureCount.toLocaleString()} features · ${layer.geometryType}</div>
           </div>
           <button class="text-button" data-fit-layer="${layer.id}">Fit</button>
@@ -123,7 +166,7 @@ function renderLayerControls() {
           <input type="range" min="0.15" max="1" step="0.05" value="0.85" data-layer-opacity="${layer.id}" />
         </div>
       `;
-      group.appendChild(wrapper);
+      groupBody.appendChild(wrapper);
     }
 
     layerList.appendChild(group);
@@ -162,17 +205,21 @@ function wireChrome() {
       item.classList.toggle("is-active", item === button);
     }
 
-    state.map.setLayoutProperty(
-      "basemap-light",
-      "visibility",
-      state.basemap === "light" ? "visible" : "none",
-    );
-    state.map.setLayoutProperty(
-      "basemap-satellite",
-      "visibility",
-      state.basemap === "satellite" ? "visible" : "none",
-    );
-    state.map.setPaintProperty("labels", "raster-opacity", state.basemap === "satellite" ? 1 : 0.85);
+    applyMapTheme();
+  });
+
+  document.querySelector("#themeSwitcher").addEventListener("click", (event) => {
+    const button = event.target.closest("[data-theme]");
+    if (!button) return;
+
+    state.theme = button.dataset.theme;
+    document.body.dataset.theme = state.theme;
+
+    for (const item of document.querySelectorAll("#themeSwitcher button")) {
+      item.classList.toggle("is-active", item === button);
+    }
+
+    applyMapTheme();
   });
 
   layerList.addEventListener("change", async (event) => {
@@ -190,15 +237,54 @@ function wireChrome() {
   });
 
   layerList.addEventListener("click", async (event) => {
+    const groupToggle = event.target.closest("[data-group-toggle]");
+    if (groupToggle && !event.target.closest("[data-group-show], [data-group-hide]")) {
+      const group = groupToggle.closest(".layer-group");
+      const collapsed = group.classList.toggle("is-collapsed");
+      groupToggle.setAttribute("aria-expanded", String(!collapsed));
+      return;
+    }
+
     const fitButton = event.target.closest("[data-fit-layer]");
-    if (!fitButton) return;
-    await ensureLayerLoaded(fitButton.dataset.fitLayer, true);
-    fitToLayer(fitButton.dataset.fitLayer);
+    if (fitButton) {
+      await ensureLayerLoaded(fitButton.dataset.fitLayer, true);
+      fitToLayer(fitButton.dataset.fitLayer);
+      return;
+    }
+
+    const groupShowButton = event.target.closest("[data-group-show]");
+    if (groupShowButton) {
+      const groupName = groupShowButton.dataset.groupShow;
+      const layers = manifest.layers.filter((layer) => layer.group === groupName);
+      for (const layer of layers) {
+        const checkbox = document.querySelector(`[data-layer-toggle="${layer.id}"]`);
+        checkbox.checked = true;
+        await ensureLayerLoaded(layer.id, true);
+      }
+      updateLegend();
+      return;
+    }
+
+    const groupHideButton = event.target.closest("[data-group-hide]");
+    if (groupHideButton) {
+      const groupName = groupHideButton.dataset.groupHide;
+      const layers = manifest.layers.filter((layer) => layer.group === groupName);
+      for (const layer of layers) {
+        const checkbox = document.querySelector(`[data-layer-toggle="${layer.id}"]`);
+        checkbox.checked = false;
+        setLayerVisibility(layer.id, false);
+      }
+      updateLegend();
+    }
   });
 
   searchInput.addEventListener("input", () => runSearch(searchInput.value));
   document.querySelector("#openSidebarButton").addEventListener("click", () => sidebar.classList.add("is-open"));
   document.querySelector("#closeSidebarButton").addEventListener("click", () => sidebar.classList.remove("is-open"));
+  legendToggleButton.addEventListener("click", () => {
+    const expanded = legendShell.classList.toggle("is-expanded");
+    legendToggleButton.textContent = expanded ? "Fold" : "Unfold";
+  });
 }
 
 async function ensureLayerLoaded(layerId, visible) {
@@ -358,6 +444,21 @@ function wireLayerInteractions(descriptor, sourceId, data) {
   }
 }
 
+function applyMapTheme() {
+  const lightVisible = state.basemap === "light";
+
+  state.map.getSource("basemapLight").setTiles(state.theme === "dark" ? darkTiles : lightTiles);
+  state.map.getSource("labels").setTiles(state.theme === "dark" ? darkLabelTiles : labelTiles);
+
+  state.map.setLayoutProperty("basemap-light", "visibility", lightVisible ? "visible" : "none");
+  state.map.setLayoutProperty(
+    "basemap-satellite",
+    "visibility",
+    state.basemap === "satellite" ? "visible" : "none",
+  );
+  state.map.setPaintProperty("labels", "raster-opacity", state.basemap === "satellite" ? 1 : 0.85);
+}
+
 function renderDetails(properties, descriptor) {
   const ignored = new Set(["title", "subtitle", "searchText"]);
   const rows = Object.entries(properties)
@@ -373,7 +474,7 @@ function renderDetails(properties, descriptor) {
     )
     .join("");
 
-  selectionMeta.textContent = descriptor.title;
+  selectionMeta.textContent = `${descriptor.region} · ${descriptor.title}`;
   detailsCard.classList.remove("empty");
   detailsCard.innerHTML = `
     <strong>${escapeHtml(pickDisplayText(properties.title, descriptor.title))}</strong>
@@ -430,11 +531,11 @@ function updateLegend() {
   });
 
   if (!visible.length) {
-    legend.innerHTML = "<strong>Legend</strong><div class='legend-item'><span>All thematic layers are hidden.</span></div>";
+    legend.innerHTML = "<div class='legend-item'><span>All thematic layers are hidden.</span></div>";
     return;
   }
 
-  legend.innerHTML = `<strong>Visible Layers</strong>${visible
+  legend.innerHTML = `${visible
     .map((layer) => {
       const marker =
         layer.geometryType === "Point"
@@ -442,7 +543,7 @@ function updateLegend() {
           : layer.geometryType.includes("Line")
             ? `<span class="legend-line" style="background:${layer.color}"></span>`
             : `<span class="legend-fill" style="background:${layer.color}"></span>`;
-      return `<div class="legend-item">${marker}<span>${layer.title}</span></div>`;
+      return `<div class="legend-item">${marker}<span>${layer.region} · ${layer.title}</span></div>`;
     })
     .join("")}`;
 }
@@ -456,7 +557,9 @@ function buildSearchIndex() {
       state.searchIndex.push({
         layerId: entry.descriptor.id,
         title: feature.properties.title || entry.descriptor.title,
-        subtitle: feature.properties.subtitle || entry.descriptor.title,
+        subtitle: [entry.descriptor.region, feature.properties.subtitle || entry.descriptor.title]
+          .filter(Boolean)
+          .join(" · "),
         searchText: feature.properties.searchText || "",
         geometry: feature.geometry,
       });
@@ -542,6 +645,75 @@ function groupBy(items, key) {
 
 function formatLabel(value) {
   return value.replace(/_/g, " ").replace(/([a-z])([A-Z])/g, "$1 $2");
+}
+
+function setupSidebarResize() {
+  if (!sidebarResizer) return;
+
+  sidebarResizer.addEventListener("pointerdown", (event) => {
+    if (window.innerWidth <= 960) return;
+
+    const startX = event.clientX;
+    const startWidth = sidebar.getBoundingClientRect().width;
+    sidebarResizer.setPointerCapture(event.pointerId);
+
+    const onMove = (moveEvent) => {
+      const nextWidth = Math.min(520, Math.max(260, startWidth + moveEvent.clientX - startX));
+      appShell.style.setProperty("--sidebar-width", `${nextWidth}px`);
+    };
+
+    const onUp = () => {
+      sidebarResizer.removeEventListener("pointermove", onMove);
+      sidebarResizer.removeEventListener("pointerup", onUp);
+      sidebarResizer.removeEventListener("pointercancel", onUp);
+    };
+
+    sidebarResizer.addEventListener("pointermove", onMove);
+    sidebarResizer.addEventListener("pointerup", onUp);
+    sidebarResizer.addEventListener("pointercancel", onUp);
+  });
+}
+
+function setupLegendInteractions() {
+  if (!legendShell || !legendDragHandle) return;
+
+  legendDragHandle.addEventListener("pointerdown", (event) => {
+    if (event.target.closest("button")) return;
+
+    const parent = legendShell.offsetParent || legendShell.parentElement;
+    const parentRect = parent.getBoundingClientRect();
+    const rect = legendShell.getBoundingClientRect();
+    const pointerOffsetX = event.clientX - rect.left;
+    const pointerOffsetY = event.clientY - rect.top;
+    const startLeft = rect.left - parentRect.left;
+    const startTop = rect.top - parentRect.top;
+
+    legendShell.style.left = `${startLeft}px`;
+    legendShell.style.top = `${startTop}px`;
+    legendShell.style.right = "auto";
+    legendShell.style.bottom = "auto";
+
+    legendDragHandle.setPointerCapture(event.pointerId);
+
+    const onMove = (moveEvent) => {
+      const maxLeft = Math.max(8, parentRect.width - rect.width - 8);
+      const maxTop = Math.max(8, parentRect.height - legendShell.offsetHeight - 8);
+      const nextLeft = moveEvent.clientX - parentRect.left - pointerOffsetX;
+      const nextTop = moveEvent.clientY - parentRect.top - pointerOffsetY;
+      legendShell.style.left = `${Math.min(maxLeft, Math.max(8, nextLeft))}px`;
+      legendShell.style.top = `${Math.min(maxTop, Math.max(8, nextTop))}px`;
+    };
+
+    const onUp = () => {
+      legendDragHandle.removeEventListener("pointermove", onMove);
+      legendDragHandle.removeEventListener("pointerup", onUp);
+      legendDragHandle.removeEventListener("pointercancel", onUp);
+    };
+
+    legendDragHandle.addEventListener("pointermove", onMove);
+    legendDragHandle.addEventListener("pointerup", onUp);
+    legendDragHandle.addEventListener("pointercancel", onUp);
+  });
 }
 
 function normalizeValue(value) {
