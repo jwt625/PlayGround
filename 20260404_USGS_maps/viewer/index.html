@@ -13,7 +13,7 @@
     <link href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" rel="stylesheet" />
     <link rel="stylesheet" href="./styles.css" />
   </head>
-  <body>
+  <body data-theme="dark">
     <div class="app-shell">
       <aside class="sidebar" id="sidebar">
         <div class="panel brand">
@@ -36,8 +36,8 @@
             <button class="text-button" id="homeButton">Reset View</button>
           </div>
           <div class="segmented" id="basemapSwitcher">
-            <button data-basemap="light" class="is-active">Monochrome</button>
-            <button data-basemap="satellite">Satellite</button>
+            <button data-basemap="light">Monochrome</button>
+            <button data-basemap="satellite" class="is-active">Satellite</button>
           </div>
         </section>
 
@@ -46,8 +46,8 @@
             <h2>Theme</h2>
           </div>
           <div class="segmented" id="themeSwitcher">
-            <button data-theme="light" class="is-active">Light</button>
-            <button data-theme="dark">Dark</button>
+            <button data-theme="light">Light</button>
+            <button data-theme="dark" class="is-active">Dark</button>
           </div>
         </section>
 

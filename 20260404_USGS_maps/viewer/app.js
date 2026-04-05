@@ -7,8 +7,10 @@ const state = {
   manifest,
   layers: new Map(),
   searchIndex: [],
-  basemap: "light",
-  theme: "light",
+  basemap: "satellite",
+  theme: "dark",
+  legendScope: new Set(),
+  visibleLayers: new Set(),
 };
 
 const lightTiles = [
@@ -114,6 +116,7 @@ function setupMap() {
         .filter((layer) => layer.visibleByDefault)
         .map((layer) => ensureLayerLoaded(layer.id, true)),
     );
+    applyMapTheme();
     statusChip.textContent = "Ready";
   });
 }
@@ -171,6 +174,12 @@ function renderLayerControls() {
 
     layerList.appendChild(group);
   }
+
+  for (const layer of manifest.layers) {
+    if (!layer.visibleByDefault) continue;
+    state.legendScope.add(layer.id);
+    state.visibleLayers.add(layer.id);
+  }
 }
 
 function wireChrome() {
@@ -180,18 +189,14 @@ function wireChrome() {
 
   document.querySelector("#showAllButton").addEventListener("click", async () => {
     for (const layer of manifest.layers) {
-      const checkbox = document.querySelector(`[data-layer-toggle="${layer.id}"]`);
-      checkbox.checked = true;
-      await ensureLayerLoaded(layer.id, true);
+      await applyLeftPanelSelection(layer.id, true);
     }
     updateLegend();
   });
 
   document.querySelector("#hideAllButton").addEventListener("click", () => {
     for (const layer of manifest.layers) {
-      const checkbox = document.querySelector(`[data-layer-toggle="${layer.id}"]`);
-      checkbox.checked = false;
-      setLayerVisibility(layer.id, false);
+      applyLeftPanelSelection(layer.id, false);
     }
     updateLegend();
   });
@@ -227,7 +232,7 @@ function wireChrome() {
     const opacity = event.target.closest("[data-layer-opacity]");
 
     if (checkbox) {
-      await ensureLayerLoaded(checkbox.dataset.layerToggle, checkbox.checked);
+      await applyLeftPanelSelection(checkbox.dataset.layerToggle, checkbox.checked, { syncCheckbox: false });
       updateLegend();
     }
 
@@ -257,9 +262,7 @@ function wireChrome() {
       const groupName = groupShowButton.dataset.groupShow;
       const layers = manifest.layers.filter((layer) => layer.group === groupName);
       for (const layer of layers) {
-        const checkbox = document.querySelector(`[data-layer-toggle="${layer.id}"]`);
-        checkbox.checked = true;
-        await ensureLayerLoaded(layer.id, true);
+        await applyLeftPanelSelection(layer.id, true);
       }
       updateLegend();
       return;
@@ -270,12 +273,20 @@ function wireChrome() {
       const groupName = groupHideButton.dataset.groupHide;
       const layers = manifest.layers.filter((layer) => layer.group === groupName);
       for (const layer of layers) {
-        const checkbox = document.querySelector(`[data-layer-toggle="${layer.id}"]`);
-        checkbox.checked = false;
-        setLayerVisibility(layer.id, false);
+        applyLeftPanelSelection(layer.id, false);
       }
       updateLegend();
     }
+  });
+
+  legend.addEventListener("click", async (event) => {
+    const item = event.target.closest("[data-legend-layer]");
+    if (!item) return;
+
+    const layerId = item.dataset.legendLayer;
+    const currentlyVisible = isLayerVisible(layerId);
+    await setLayerDisplayed(layerId, !currentlyVisible);
+    updateLegend();
   });
 
   searchInput.addEventListener("input", () => runSearch(searchInput.value));
@@ -491,6 +502,38 @@ function setLayerVisibility(layerId, visible) {
   }
 }
 
+function isLayerVisible(layerId) {
+  return state.visibleLayers.has(layerId);
+}
+
+async function applyLeftPanelSelection(layerId, selected, options = {}) {
+  const { syncCheckbox = true } = options;
+  if (syncCheckbox) {
+    const checkbox = document.querySelector(`[data-layer-toggle="${layerId}"]`);
+    if (checkbox) checkbox.checked = selected;
+  }
+
+  if (selected) {
+    state.legendScope.add(layerId);
+    await setLayerDisplayed(layerId, true);
+  } else {
+    state.legendScope.delete(layerId);
+    await setLayerDisplayed(layerId, false);
+  }
+}
+
+async function setLayerDisplayed(layerId, visible) {
+  if (visible) {
+    state.visibleLayers.add(layerId);
+    await ensureLayerLoaded(layerId, true);
+  } else {
+    state.visibleLayers.delete(layerId);
+    setLayerVisibility(layerId, false);
+  }
+
+  buildSearchIndex();
+}
+
 function setLayerOpacity(layerId, value) {
   const descriptor = manifest.layers.find((layer) => layer.id === layerId);
   if (!descriptor) return;
@@ -525,25 +568,23 @@ function fitToLayer(layerId) {
 }
 
 function updateLegend() {
-  const visible = manifest.layers.filter((layer) => {
-    const checkbox = document.querySelector(`[data-layer-toggle="${layer.id}"]`);
-    return checkbox?.checked;
-  });
+  const scopedLayers = manifest.layers.filter((layer) => state.legendScope.has(layer.id));
 
-  if (!visible.length) {
-    legend.innerHTML = "<div class='legend-item'><span>All thematic layers are hidden.</span></div>";
+  if (!scopedLayers.length) {
+    legend.innerHTML = `<div class="legend-item is-inactive legend-empty">Select layers from the left panel to build a working legend.</div>`;
     return;
   }
 
-  legend.innerHTML = `${visible
+  legend.innerHTML = `${scopedLayers
     .map((layer) => {
+      const active = isLayerVisible(layer.id);
       const marker =
         layer.geometryType === "Point"
           ? `<span class="swatch" style="background:${layer.color}"></span>`
           : layer.geometryType.includes("Line")
             ? `<span class="legend-line" style="background:${layer.color}"></span>`
             : `<span class="legend-fill" style="background:${layer.color}"></span>`;
-      return `<div class="legend-item">${marker}<span>${layer.region} · ${layer.title}</span></div>`;
+      return `<button class="legend-item ${active ? "is-active" : "is-inactive"}" data-legend-layer="${layer.id}" type="button">${marker}<span>${layer.region} · ${layer.title}</span></button>`;
     })
     .join("")}`;
 }
@@ -551,8 +592,7 @@ function updateLegend() {
 function buildSearchIndex() {
   state.searchIndex = [];
   for (const entry of state.layers.values()) {
-    const enabled = document.querySelector(`[data-layer-toggle="${entry.descriptor.id}"]`)?.checked;
-    if (!enabled) continue;
+    if (!isLayerVisible(entry.descriptor.id)) continue;
     for (const feature of entry.data.features.slice(0, 500)) {
       state.searchIndex.push({
         layerId: entry.descriptor.id,

@@ -496,10 +496,30 @@ body[data-theme="dark"] .legend-shell {
   gap: 8px;
   font-size: 11px;
   margin-top: 6px;
+  width: 100%;
+  padding: 4px 0;
+  border: 0;
+  background: transparent;
+  color: var(--ink);
+  text-align: left;
+  cursor: pointer;
 }
 
 .legend-item:first-child {
   margin-top: 0;
+}
+
+.legend-item.is-inactive {
+  opacity: 0.42;
+}
+
+.legend-empty {
+  cursor: default;
+  line-height: 1.45;
+}
+
+.legend-item:hover {
+  opacity: 1;
 }
 
 .legend-line {
