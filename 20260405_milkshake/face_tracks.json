@@ -1,0 +1,3677 @@
+{
+  "video_path": "milkshake_frames_6130_6643.mp4",
+  "fps": 23.976023976023978,
+  "frame_count": 514,
+  "width": 1920,
+  "height": 800,
+  "frame_step": 3,
+  "tracking": {
+    "method": "opencv_yunet + iou_center_tracker",
+    "detector_model": "face_detection_yunet_2023mar.onnx",
+    "max_faces": 2,
+    "max_missed_samples": 2,
+    "min_track_hits": 3
+  },
+  "frames": [
+    {
+      "frame_index": 0,
+      "time_sec": 0.0,
+      "detections": []
+    },
+    {
+      "frame_index": 3,
+      "time_sec": 0.125125,
+      "detections": []
+    },
+    {
+      "frame_index": 6,
+      "time_sec": 0.25025,
+      "detections": [
+        {
+          "track_id": 1,
+          "bbox": [
+            1179.64,
+            283.72,
+            63.99,
+            88.26
+          ],
+          "confidence": 0.76085
+        }
+      ]
+    },
+    {
+      "frame_index": 9,
+      "time_sec": 0.375375,
+      "detections": [
+        {
+          "track_id": 1,
+          "bbox": [
+            1182.44,
+            273.46,
+            57.16,
+            78.82
+          ],
+          "confidence": 0.73516
+        }
+      ]
+    },
+    {
+      "frame_index": 12,
+      "time_sec": 0.5005,
+      "detections": [
+        {
+          "track_id": 1,
+          "bbox": [
+            1171.64,
+            240.22,
+            56.42,
+            81.7
+          ],
+          "confidence": 0.81175
+        }
+      ]
+    },
+    {
+      "frame_index": 15,
+      "time_sec": 0.625625,
+      "detections": [
+        {
+          "track_id": 1,
+          "bbox": [
+            1137.61,
+            217.74,
+            62.87,
+            113.56
+          ],
+          "confidence": 0.79477
+        }
+      ]
+    },
+    {
+      "frame_index": 18,
+      "time_sec": 0.75075,
+      "detections": [
+        {
+          "track_id": 1,
+          "bbox": [
+            1114.28,
+            201.12,
+            66.69,
+            107.22
+          ],
+          "confidence": 0.81668
+        }
+      ]
+    },
+    {
+      "frame_index": 21,
+      "time_sec": 0.875875,
+      "detections": [
+        {
+          "track_id": 1,
+          "bbox": [
+            1119.04,
+            183.57,
+            52.2,
+            96.29
+          ],
+          "confidence": 0.79924
+        }
+      ]
+    },
+    {
+      "frame_index": 24,
+      "time_sec": 1.001,
+      "detections": [
+        {
+          "track_id": 1,
+          "bbox": [
+            1118.74,
+            176.84,
+            53.3,
+            95.67
+          ],
+          "confidence": 0.83157
+        }
+      ]
+    },
+    {
+      "frame_index": 27,
+      "time_sec": 1.126125,
+      "detections": [
+        {
+          "track_id": 1,
+          "bbox": [
+            1130.92,
+            170.6,
+            68.24,
+            97.33
+          ],
+          "confidence": 0.79429
+        }
+      ]
+    },
+    {
+      "frame_index": 30,
+      "time_sec": 1.25125,
+      "detections": [
+        {
+          "track_id": 1,
+          "bbox": [
+            1149.0,
+            158.48,
+            79.55,
+            95.17
+          ],
+          "confidence": 0.68937
+        }
+      ]
+    },
+    {
+      "frame_index": 33,
+      "time_sec": 1.376375,
+      "detections": [
+        {
+          "track_id": 1,
+          "bbox": [
+            1146.95,
+            148.59,
+            105.96,
+            122.09
+          ],
+          "confidence": 0.81291
+        }
+      ]
+    },
+    {
+      "frame_index": 36,
+      "time_sec": 1.5015,
+      "detections": [
+        {
+          "track_id": 1,
+          "bbox": [
+            1143.74,
+            139.04,
+            113.5,
+            130.91
+          ],
+          "confidence": 0.791
+        }
+      ]
+    },
+    {
+      "frame_index": 39,
+      "time_sec": 1.626625,
+      "detections": [
+        {
+          "track_id": 1,
+          "bbox": [
+            1106.3,
+            112.68,
+            100.95,
+            126.69
+          ],
+          "confidence": 0.89561
+        }
+      ]
+    },
+    {
+      "frame_index": 42,
+      "time_sec": 1.75175,
+      "detections": [
+        {
+          "track_id": 1,
+          "bbox": [
+            1039.51,
+            92.47,
+            133.01,
+            149.69
+          ],
+          "confidence": 0.87712
+        }
+      ]
+    },
+    {
+      "frame_index": 45,
+      "time_sec": 1.876875,
+      "detections": [
+        {
+          "track_id": 1,
+          "bbox": [
+            1015.52,
+            70.18,
+            123.09,
+            151.2
+          ],
+          "confidence": 0.9133
+        }
+      ]
+    },
+    {
+      "frame_index": 48,
+      "time_sec": 2.002,
+      "detections": [
+        {
+          "track_id": 1,
+          "bbox": [
+            989.44,
+            45.15,
+            113.87,
+            162.53
+          ],
+          "confidence": 0.91619
+        }
+      ]
+    },
+    {
+      "frame_index": 51,
+      "time_sec": 2.127125,
+      "detections": [
+        {
+          "track_id": 1,
+          "bbox": [
+            950.98,
+            23.89,
+            109.04,
+            160.8
+          ],
+          "confidence": 0.90191
+        }
+      ]
+    },
+    {
+      "frame_index": 54,
+      "time_sec": 2.25225,
+      "detections": [
+        {
+          "track_id": 1,
+          "bbox": [
+            913.6,
+            13.62,
+            108.33,
+            162.0
+          ],
+          "confidence": 0.92053
+        }
+      ]
+    },
+    {
+      "frame_index": 57,
+      "time_sec": 2.377375,
+      "detections": [
+        {
+          "track_id": 1,
+          "bbox": [
+            898.49,
+            25.15,
+            107.76,
+            148.44
+          ],
+          "confidence": 0.90373
+        }
+      ]
+    },
+    {
+      "frame_index": 60,
+      "time_sec": 2.5025,
+      "detections": [
+        {
+          "track_id": 1,
+          "bbox": [
+            899.83,
+            45.11,
+            99.36,
+            137.86
+          ],
+          "confidence": 0.905
+        }
+      ]
+    },
+    {
+      "frame_index": 63,
+      "time_sec": 2.627625,
+      "detections": [
+        {
+          "track_id": 1,
+          "bbox": [
+            891.18,
+            68.94,
+            103.44,
+            138.2
+          ],
+          "confidence": 0.90132
+        }
+      ]
+    },
+    {
+      "frame_index": 66,
+      "time_sec": 2.75275,
+      "detections": [
+        {
+          "track_id": 1,
+          "bbox": [
+            891.19,
+            76.89,
+            103.54,
+            144.0
+          ],
+          "confidence": 0.9024
+        }
+      ]
+    },
+    {
+      "frame_index": 69,
+      "time_sec": 2.877875,
+      "detections": [
+        {
+          "track_id": 1,
+          "bbox": [
+            883.08,
+            77.94,
+            106.48,
+            144.97
+          ],
+          "confidence": 0.90313
+        }
+      ]
+    },
+    {
+      "frame_index": 72,
+      "time_sec": 3.003,
+      "detections": [
+        {
+          "track_id": 1,
+          "bbox": [
+            879.45,
+            68.13,
+            107.58,
+            146.12
+          ],
+          "confidence": 0.90912
+        }
+      ]
+    },
+    {
+      "frame_index": 75,
+      "time_sec": 3.128125,
+      "detections": [
+        {
+          "track_id": 1,
+          "bbox": [
+            877.33,
+            60.55,
+            106.3,
+            142.46
+          ],
+          "confidence": 0.90395
+        }
+      ]
+    },
+    {
+      "frame_index": 78,
+      "time_sec": 3.25325,
+      "detections": [
+        {
+          "track_id": 1,
+          "bbox": [
+            873.02,
+            67.18,
+            99.85,
+            134.56
+          ],
+          "confidence": 0.90331
+        }
+      ]
+    },
+    {
+      "frame_index": 81,
+      "time_sec": 3.378375,
+      "detections": [
+        {
+          "track_id": 1,
+          "bbox": [
+            871.86,
+            73.38,
+            93.1,
+            133.96
+          ],
+          "confidence": 0.91112
+        }
+      ]
+    },
+    {
+      "frame_index": 84,
+      "time_sec": 3.5035,
+      "detections": [
+        {
+          "track_id": 1,
+          "bbox": [
+            868.57,
+            79.23,
+            97.09,
+            137.16
+          ],
+          "confidence": 0.90863
+        }
+      ]
+    },
+    {
+      "frame_index": 87,
+      "time_sec": 3.628625,
+      "detections": [
+        {
+          "track_id": 1,
+          "bbox": [
+            864.89,
+            88.03,
+            100.26,
+            137.46
+          ],
+          "confidence": 0.91146
+        }
+      ]
+    },
+    {
+      "frame_index": 90,
+      "time_sec": 3.75375,
+      "detections": [
+        {
+          "track_id": 1,
+          "bbox": [
+            861.74,
+            90.64,
+            101.65,
+            139.64
+          ],
+          "confidence": 0.89742
+        }
+      ]
+    },
+    {
+      "frame_index": 93,
+      "time_sec": 3.878875,
+      "detections": [
+        {
+          "track_id": 1,
+          "bbox": [
+            852.81,
+            96.84,
+            106.28,
+            141.41
+          ],
+          "confidence": 0.90296
+        }
+      ]
+    },
+    {
+      "frame_index": 96,
+      "time_sec": 4.004,
+      "detections": [
+        {
+          "track_id": 1,
+          "bbox": [
+            850.53,
+            101.26,
+            111.32,
+            144.99
+          ],
+          "confidence": 0.89862
+        }
+      ]
+    },
+    {
+      "frame_index": 99,
+      "time_sec": 4.129125,
+      "detections": [
+        {
+          "track_id": 1,
+          "bbox": [
+            841.17,
+            112.45,
+            97.17,
+            129.6
+          ],
+          "confidence": 0.89878
+        }
+      ]
+    },
+    {
+      "frame_index": 102,
+      "time_sec": 4.25425,
+      "detections": [
+        {
+          "track_id": 1,
+          "bbox": [
+            838.5,
+            138.15,
+            96.81,
+            124.28
+          ],
+          "confidence": 0.89617
+        }
+      ]
+    },
+    {
+      "frame_index": 105,
+      "time_sec": 4.379375,
+      "detections": [
+        {
+          "track_id": 1,
+          "bbox": [
+            808.93,
+            143.48,
+            112.99,
+            139.91
+          ],
+          "confidence": 0.88898
+        }
+      ]
+    },
+    {
+      "frame_index": 108,
+      "time_sec": 4.5045,
+      "detections": [
+        {
+          "track_id": 1,
+          "bbox": [
+            758.3,
+            125.85,
+            114.56,
+            145.13
+          ],
+          "confidence": 0.89521
+        }
+      ]
+    },
+    {
+      "frame_index": 111,
+      "time_sec": 4.629625,
+      "detections": [
+        {
+          "track_id": 1,
+          "bbox": [
+            732.07,
+            124.99,
+            106.09,
+            135.63
+          ],
+          "confidence": 0.88701
+        }
+      ]
+    },
+    {
+      "frame_index": 114,
+      "time_sec": 4.75475,
+      "detections": [
+        {
+          "track_id": 1,
+          "bbox": [
+            754.66,
+            136.59,
+            115.36,
+            142.71
+          ],
+          "confidence": 0.8936
+        }
+      ]
+    },
+    {
+      "frame_index": 117,
+      "time_sec": 4.879875,
+      "detections": [
+        {
+          "track_id": 1,
+          "bbox": [
+            792.81,
+            158.6,
+            119.26,
+            151.69
+          ],
+          "confidence": 0.90273
+        }
+      ]
+    },
+    {
+      "frame_index": 120,
+      "time_sec": 5.005,
+      "detections": [
+        {
+          "track_id": 1,
+          "bbox": [
+            836.3,
+            158.74,
+            122.74,
+            167.78
+          ],
+          "confidence": 0.91725
+        }
+      ]
+    },
+    {
+      "frame_index": 123,
+      "time_sec": 5.130125,
+      "detections": [
+        {
+          "track_id": 1,
+          "bbox": [
+            863.85,
+            130.19,
+            112.94,
+            160.99
+          ],
+          "confidence": 0.9198
+        }
+      ]
+    },
+    {
+      "frame_index": 126,
+      "time_sec": 5.25525,
+      "detections": [
+        {
+          "track_id": 1,
+          "bbox": [
+            874.82,
+            69.03,
+            116.95,
+            154.8
+          ],
+          "confidence": 0.90596
+        }
+      ]
+    },
+    {
+      "frame_index": 129,
+      "time_sec": 5.380375,
+      "detections": [
+        {
+          "track_id": 1,
+          "bbox": [
+            911.02,
+            53.44,
+            108.06,
+            158.91
+          ],
+          "confidence": 0.90726
+        }
+      ]
+    },
+    {
+      "frame_index": 132,
+      "time_sec": 5.5055,
+      "detections": [
+        {
+          "track_id": 1,
+          "bbox": [
+            925.32,
+            113.33,
+            113.8,
+            163.93
+          ],
+          "confidence": 0.89585
+        }
+      ]
+    },
+    {
+      "frame_index": 135,
+      "time_sec": 5.630625,
+      "detections": [
+        {
+          "track_id": 1,
+          "bbox": [
+            895.71,
+            117.39,
+            112.13,
+            171.26
+          ],
+          "confidence": 0.91299
+        }
+      ]
+    },
+    {
+      "frame_index": 138,
+      "time_sec": 5.75575,
+      "detections": [
+        {
+          "track_id": 1,
+          "bbox": [
+            835.19,
+            132.38,
+            122.49,
+            197.62
+          ],
+          "confidence": 0.91323
+        }
+      ]
+    },
+    {
+      "frame_index": 141,
+      "time_sec": 5.880875,
+      "detections": [
+        {
+          "track_id": 1,
+          "bbox": [
+            829.57,
+            199.67,
+            123.14,
+            186.31
+          ],
+          "confidence": 0.89825
+        }
+      ]
+    },
+    {
+      "frame_index": 144,
+      "time_sec": 6.006,
+      "detections": [
+        {
+          "track_id": 1,
+          "bbox": [
+            861.64,
+            288.82,
+            123.68,
+            171.73
+          ],
+          "confidence": 0.89268
+        }
+      ]
+    },
+    {
+      "frame_index": 147,
+      "time_sec": 6.131125,
+      "detections": [
+        {
+          "track_id": 1,
+          "bbox": [
+            896.38,
+            325.98,
+            124.51,
+            188.08
+          ],
+          "confidence": 0.90597
+        }
+      ]
+    },
+    {
+      "frame_index": 150,
+      "time_sec": 6.25625,
+      "detections": [
+        {
+          "track_id": 1,
+          "bbox": [
+            946.89,
+            288.03,
+            127.09,
+            172.04
+          ],
+          "confidence": 0.89982
+        }
+      ]
+    },
+    {
+      "frame_index": 153,
+      "time_sec": 6.381375,
+      "detections": [
+        {
+          "track_id": 1,
+          "bbox": [
+            967.93,
+            244.73,
+            123.01,
+            173.75
+          ],
+          "confidence": 0.89865
+        }
+      ]
+    },
+    {
+      "frame_index": 156,
+      "time_sec": 6.5065,
+      "detections": [
+        {
+          "track_id": 1,
+          "bbox": [
+            936.22,
+            269.63,
+            138.66,
+            163.74
+          ],
+          "confidence": 0.87881
+        }
+      ]
+    },
+    {
+      "frame_index": 159,
+      "time_sec": 6.631625,
+      "detections": [
+        {
+          "track_id": 1,
+          "bbox": [
+            911.34,
+            295.87,
+            137.26,
+            182.09
+          ],
+          "confidence": 0.87026
+        }
+      ]
+    },
+    {
+      "frame_index": 162,
+      "time_sec": 6.75675,
+      "detections": [
+        {
+          "track_id": 1,
+          "bbox": [
+            857.42,
+            273.69,
+            137.86,
+            195.18
+          ],
+          "confidence": 0.88913
+        }
+      ]
+    },
+    {
+      "frame_index": 165,
+      "time_sec": 6.881875,
+      "detections": [
+        {
+          "track_id": 1,
+          "bbox": [
+            838.04,
+            300.04,
+            132.05,
+            191.52
+          ],
+          "confidence": 0.88798
+        }
+      ]
+    },
+    {
+      "frame_index": 168,
+      "time_sec": 7.007,
+      "detections": [
+        {
+          "track_id": 1,
+          "bbox": [
+            846.16,
+            353.95,
+            137.0,
+            198.24
+          ],
+          "confidence": 0.87335
+        }
+      ]
+    },
+    {
+      "frame_index": 171,
+      "time_sec": 7.132125,
+      "detections": [
+        {
+          "track_id": 1,
+          "bbox": [
+            892.12,
+            388.42,
+            140.55,
+            191.84
+          ],
+          "confidence": 0.88306
+        }
+      ]
+    },
+    {
+      "frame_index": 174,
+      "time_sec": 7.25725,
+      "detections": [
+        {
+          "track_id": 1,
+          "bbox": [
+            952.03,
+            334.97,
+            153.93,
+            203.85
+          ],
+          "confidence": 0.82495
+        }
+      ]
+    },
+    {
+      "frame_index": 177,
+      "time_sec": 7.382375,
+      "detections": [
+        {
+          "track_id": 1,
+          "bbox": [
+            984.1,
+            251.75,
+            158.12,
+            210.59
+          ],
+          "confidence": 0.81246
+        }
+      ]
+    },
+    {
+      "frame_index": 180,
+      "time_sec": 7.5075,
+      "detections": [
+        {
+          "track_id": 1,
+          "bbox": [
+            970.85,
+            217.89,
+            162.56,
+            234.94
+          ],
+          "confidence": 0.85608
+        }
+      ]
+    },
+    {
+      "frame_index": 183,
+      "time_sec": 7.632625,
+      "detections": [
+        {
+          "track_id": 1,
+          "bbox": [
+            915.19,
+            254.59,
+            165.63,
+            233.39
+          ],
+          "confidence": 0.84667
+        }
+      ]
+    },
+    {
+      "frame_index": 186,
+      "time_sec": 7.75775,
+      "detections": [
+        {
+          "track_id": 1,
+          "bbox": [
+            882.68,
+            298.51,
+            161.22,
+            216.56
+          ],
+          "confidence": 0.82501
+        }
+      ]
+    },
+    {
+      "frame_index": 189,
+      "time_sec": 7.882875,
+      "detections": [
+        {
+          "track_id": 1,
+          "bbox": [
+            841.34,
+            286.17,
+            151.25,
+            208.06
+          ],
+          "confidence": 0.84146
+        }
+      ]
+    },
+    {
+      "frame_index": 192,
+      "time_sec": 8.008,
+      "detections": [
+        {
+          "track_id": 1,
+          "bbox": [
+            828.27,
+            305.54,
+            178.27,
+            245.0
+          ],
+          "confidence": 0.8414
+        }
+      ]
+    },
+    {
+      "frame_index": 195,
+      "time_sec": 8.133125,
+      "detections": [
+        {
+          "track_id": 1,
+          "bbox": [
+            809.66,
+            346.2,
+            171.36,
+            247.62
+          ],
+          "confidence": 0.84125
+        }
+      ]
+    },
+    {
+      "frame_index": 198,
+      "time_sec": 8.25825,
+      "detections": [
+        {
+          "track_id": 1,
+          "bbox": [
+            818.2,
+            376.41,
+            150.76,
+            233.08
+          ],
+          "confidence": 0.84453
+        }
+      ]
+    },
+    {
+      "frame_index": 201,
+      "time_sec": 8.383375,
+      "detections": [
+        {
+          "track_id": 1,
+          "bbox": [
+            878.15,
+            374.55,
+            170.35,
+            256.73
+          ],
+          "confidence": 0.85358
+        }
+      ]
+    },
+    {
+      "frame_index": 204,
+      "time_sec": 8.5085,
+      "detections": [
+        {
+          "track_id": 1,
+          "bbox": [
+            902.8,
+            363.73,
+            183.05,
+            251.05
+          ],
+          "confidence": 0.84989
+        }
+      ]
+    },
+    {
+      "frame_index": 207,
+      "time_sec": 8.633625,
+      "detections": [
+        {
+          "track_id": 1,
+          "bbox": [
+            891.12,
+            320.5,
+            162.24,
+            251.31
+          ],
+          "confidence": 0.83791
+        }
+      ]
+    },
+    {
+      "frame_index": 210,
+      "time_sec": 8.75875,
+      "detections": [
+        {
+          "track_id": 1,
+          "bbox": [
+            861.42,
+            281.15,
+            160.73,
+            253.13
+          ],
+          "confidence": 0.84881
+        }
+      ]
+    },
+    {
+      "frame_index": 213,
+      "time_sec": 8.883875,
+      "detections": [
+        {
+          "track_id": 1,
+          "bbox": [
+            852.58,
+            288.53,
+            158.96,
+            230.61
+          ],
+          "confidence": 0.85455
+        }
+      ]
+    },
+    {
+      "frame_index": 216,
+      "time_sec": 9.009,
+      "detections": [
+        {
+          "track_id": 1,
+          "bbox": [
+            854.92,
+            294.93,
+            167.52,
+            253.92
+          ],
+          "confidence": 0.84048
+        }
+      ]
+    },
+    {
+      "frame_index": 219,
+      "time_sec": 9.134125,
+      "detections": [
+        {
+          "track_id": 1,
+          "bbox": [
+            876.8,
+            310.41,
+            157.11,
+            235.92
+          ],
+          "confidence": 0.83263
+        }
+      ]
+    },
+    {
+      "frame_index": 222,
+      "time_sec": 9.25925,
+      "detections": [
+        {
+          "track_id": 1,
+          "bbox": [
+            874.57,
+            313.52,
+            163.9,
+            234.87
+          ],
+          "confidence": 0.8288
+        }
+      ]
+    },
+    {
+      "frame_index": 225,
+      "time_sec": 9.384375,
+      "detections": [
+        {
+          "track_id": 1,
+          "bbox": [
+            862.1,
+            319.67,
+            153.43,
+            227.58
+          ],
+          "confidence": 0.8228
+        }
+      ]
+    },
+    {
+      "frame_index": 228,
+      "time_sec": 9.5095,
+      "detections": [
+        {
+          "track_id": 1,
+          "bbox": [
+            857.02,
+            321.28,
+            151.39,
+            232.53
+          ],
+          "confidence": 0.8358
+        }
+      ]
+    },
+    {
+      "frame_index": 231,
+      "time_sec": 9.634625,
+      "detections": [
+        {
+          "track_id": 1,
+          "bbox": [
+            854.35,
+            330.42,
+            150.91,
+            214.97
+          ],
+          "confidence": 0.81929
+        }
+      ]
+    },
+    {
+      "frame_index": 234,
+      "time_sec": 9.75975,
+      "detections": [
+        {
+          "track_id": 1,
+          "bbox": [
+            860.32,
+            314.87,
+            146.14,
+            204.86
+          ],
+          "confidence": 0.81187
+        },
+        {
+          "track_id": 2,
+          "bbox": [
+            -2.21,
+            660.03,
+            98.12,
+            150.11
+          ],
+          "confidence": 0.65829
+        }
+      ]
+    },
+    {
+      "frame_index": 237,
+      "time_sec": 9.884875,
+      "detections": [
+        {
+          "track_id": 1,
+          "bbox": [
+            884.56,
+            299.85,
+            156.23,
+            225.94
+          ],
+          "confidence": 0.84157
+        },
+        {
+          "track_id": 2,
+          "bbox": [
+            6.26,
+            643.1,
+            135.23,
+            165.85
+          ],
+          "confidence": 0.85194
+        }
+      ]
+    },
+    {
+      "frame_index": 240,
+      "time_sec": 10.01,
+      "detections": [
+        {
+          "track_id": 1,
+          "bbox": [
+            914.24,
+            282.34,
+            159.49,
+            237.43
+          ],
+          "confidence": 0.84792
+        },
+        {
+          "track_id": 2,
+          "bbox": [
+            61.39,
+            641.34,
+            138.91,
+            160.55
+          ],
+          "confidence": 0.84675
+        }
+      ]
+    },
+    {
+      "frame_index": 243,
+      "time_sec": 10.135125,
+      "detections": [
+        {
+          "track_id": 1,
+          "bbox": [
+            937.18,
+            289.03,
+            136.43,
+            197.11
+          ],
+          "confidence": 0.79876
+        },
+        {
+          "track_id": 2,
+          "bbox": [
+            98.42,
+            649.16,
+            134.49,
+            157.56
+          ],
+          "confidence": 0.85131
+        }
+      ]
+    },
+    {
+      "frame_index": 246,
+      "time_sec": 10.26025,
+      "detections": [
+        {
+          "track_id": 1,
+          "bbox": [
+            962.7,
+            304.87,
+            144.84,
+            195.07
+          ],
+          "confidence": 0.81682
+        },
+        {
+          "track_id": 2,
+          "bbox": [
+            163.08,
+            652.93,
+            130.81,
+            156.7
+          ],
+          "confidence": 0.82857
+        }
+      ]
+    },
+    {
+      "frame_index": 249,
+      "time_sec": 10.385375,
+      "detections": [
+        {
+          "track_id": 1,
+          "bbox": [
+            990.98,
+            293.68,
+            154.16,
+            200.98
+          ],
+          "confidence": 0.81774
+        },
+        {
+          "track_id": 2,
+          "bbox": [
+            239.3,
+            650.54,
+            136.91,
+            158.12
+          ],
+          "confidence": 0.83951
+        }
+      ]
+    },
+    {
+      "frame_index": 252,
+      "time_sec": 10.5105,
+      "detections": [
+        {
+          "track_id": 1,
+          "bbox": [
+            1024.47,
+            294.17,
+            149.79,
+            212.08
+          ],
+          "confidence": 0.8223
+        },
+        {
+          "track_id": 2,
+          "bbox": [
+            299.96,
+            673.94,
+            161.68,
+            128.45
+          ],
+          "confidence": 0.70342
+        }
+      ]
+    },
+    {
+      "frame_index": 255,
+      "time_sec": 10.635625,
+      "detections": [
+        {
+          "track_id": 1,
+          "bbox": [
+            1053.97,
+            310.31,
+            139.87,
+            195.41
+          ],
+          "confidence": 0.82203
+        },
+        {
+          "track_id": 2,
+          "bbox": [
+            333.63,
+            684.49,
+            164.68,
+            121.88
+          ],
+          "confidence": 0.70701
+        }
+      ]
+    },
+    {
+      "frame_index": 258,
+      "time_sec": 10.76075,
+      "detections": [
+        {
+          "track_id": 1,
+          "bbox": [
+            1053.94,
+            285.81,
+            137.02,
+            178.84
+          ],
+          "confidence": 0.80317
+        }
+      ]
+    },
+    {
+      "frame_index": 261,
+      "time_sec": 10.885875,
+      "detections": [
+        {
+          "track_id": 1,
+          "bbox": [
+            1073.25,
+            271.6,
+            154.58,
+            197.63
+          ],
+          "confidence": 0.81135
+        },
+        {
+          "track_id": 2,
+          "bbox": [
+            425.64,
+            684.36,
+            159.34,
+            116.46
+          ],
+          "confidence": 0.72858
+        }
+      ]
+    },
+    {
+      "frame_index": 264,
+      "time_sec": 11.011,
+      "detections": [
+        {
+          "track_id": 1,
+          "bbox": [
+            1083.39,
+            287.27,
+            144.97,
+            189.53
+          ],
+          "confidence": 0.83311
+        },
+        {
+          "track_id": 2,
+          "bbox": [
+            471.24,
+            648.22,
+            128.59,
+            140.64
+          ],
+          "confidence": 0.79251
+        }
+      ]
+    },
+    {
+      "frame_index": 267,
+      "time_sec": 11.136125,
+      "detections": [
+        {
+          "track_id": 1,
+          "bbox": [
+            1083.11,
+            314.22,
+            145.98,
+            195.8
+          ],
+          "confidence": 0.83872
+        },
+        {
+          "track_id": 2,
+          "bbox": [
+            452.19,
+            652.87,
+            149.25,
+            148.77
+          ],
+          "confidence": 0.82908
+        }
+      ]
+    },
+    {
+      "frame_index": 270,
+      "time_sec": 11.26125,
+      "detections": [
+        {
+          "track_id": 1,
+          "bbox": [
+            1077.3,
+            331.55,
+            164.95,
+            195.95
+          ],
+          "confidence": 0.82127
+        },
+        {
+          "track_id": 2,
+          "bbox": [
+            452.27,
+            644.44,
+            151.51,
+            161.08
+          ],
+          "confidence": 0.86653
+        }
+      ]
+    },
+    {
+      "frame_index": 273,
+      "time_sec": 11.386375,
+      "detections": [
+        {
+          "track_id": 1,
+          "bbox": [
+            1081.08,
+            334.84,
+            159.16,
+            190.78
+          ],
+          "confidence": 0.81771
+        },
+        {
+          "track_id": 2,
+          "bbox": [
+            469.13,
+            633.95,
+            147.71,
+            153.96
+          ],
+          "confidence": 0.86243
+        }
+      ]
+    },
+    {
+      "frame_index": 276,
+      "time_sec": 11.5115,
+      "detections": [
+        {
+          "track_id": 1,
+          "bbox": [
+            1077.53,
+            324.07,
+            114.99,
+            159.98
+          ],
+          "confidence": 0.8526
+        },
+        {
+          "track_id": 2,
+          "bbox": [
+            478.27,
+            616.64,
+            151.24,
+            184.48
+          ],
+          "confidence": 0.86935
+        }
+      ]
+    },
+    {
+      "frame_index": 279,
+      "time_sec": 11.636625,
+      "detections": [
+        {
+          "track_id": 1,
+          "bbox": [
+            1077.72,
+            324.4,
+            116.81,
+            160.3
+          ],
+          "confidence": 0.84595
+        },
+        {
+          "track_id": 2,
+          "bbox": [
+            461.82,
+            592.75,
+            186.43,
+            219.75
+          ],
+          "confidence": 0.87482
+        }
+      ]
+    },
+    {
+      "frame_index": 282,
+      "time_sec": 11.76175,
+      "detections": [
+        {
+          "track_id": 1,
+          "bbox": [
+            1080.66,
+            317.25,
+            117.91,
+            168.11
+          ],
+          "confidence": 0.84919
+        },
+        {
+          "track_id": 2,
+          "bbox": [
+            476.42,
+            578.75,
+            184.02,
+            231.29
+          ],
+          "confidence": 0.87016
+        }
+      ]
+    },
+    {
+      "frame_index": 285,
+      "time_sec": 11.886875,
+      "detections": [
+        {
+          "track_id": 1,
+          "bbox": [
+            1074.27,
+            294.86,
+            120.59,
+            164.62
+          ],
+          "confidence": 0.82887
+        },
+        {
+          "track_id": 2,
+          "bbox": [
+            487.79,
+            572.01,
+            178.62,
+            231.89
+          ],
+          "confidence": 0.88251
+        }
+      ]
+    },
+    {
+      "frame_index": 288,
+      "time_sec": 12.012,
+      "detections": [
+        {
+          "track_id": 1,
+          "bbox": [
+            1076.18,
+            292.12,
+            118.15,
+            169.05
+          ],
+          "confidence": 0.84216
+        },
+        {
+          "track_id": 2,
+          "bbox": [
+            502.48,
+            556.93,
+            172.7,
+            234.25
+          ],
+          "confidence": 0.88432
+        }
+      ]
+    },
+    {
+      "frame_index": 291,
+      "time_sec": 12.137125,
+      "detections": [
+        {
+          "track_id": 1,
+          "bbox": [
+            1077.71,
+            285.65,
+            119.56,
+            176.38
+          ],
+          "confidence": 0.84436
+        },
+        {
+          "track_id": 2,
+          "bbox": [
+            499.67,
+            548.42,
+            179.17,
+            251.26
+          ],
+          "confidence": 0.88776
+        }
+      ]
+    },
+    {
+      "frame_index": 294,
+      "time_sec": 12.26225,
+      "detections": [
+        {
+          "track_id": 1,
+          "bbox": [
+            1083.08,
+            293.34,
+            113.75,
+            157.87
+          ],
+          "confidence": 0.8391
+        },
+        {
+          "track_id": 2,
+          "bbox": [
+            503.62,
+            535.21,
+            180.93,
+            258.69
+          ],
+          "confidence": 0.87875
+        }
+      ]
+    },
+    {
+      "frame_index": 297,
+      "time_sec": 12.387375,
+      "detections": [
+        {
+          "track_id": 1,
+          "bbox": [
+            1085.83,
+            288.37,
+            117.56,
+            166.98
+          ],
+          "confidence": 0.84552
+        },
+        {
+          "track_id": 2,
+          "bbox": [
+            510.37,
+            525.05,
+            181.87,
+            248.75
+          ],
+          "confidence": 0.8894
+        }
+      ]
+    },
+    {
+      "frame_index": 300,
+      "time_sec": 12.5125,
+      "detections": [
+        {
+          "track_id": 1,
+          "bbox": [
+            1088.71,
+            278.02,
+            132.25,
+            181.36
+          ],
+          "confidence": 0.83684
+        },
+        {
+          "track_id": 2,
+          "bbox": [
+            504.59,
+            518.37,
+            188.26,
+            253.97
+          ],
+          "confidence": 0.88092
+        }
+      ]
+    },
+    {
+      "frame_index": 303,
+      "time_sec": 12.637625,
+      "detections": [
+        {
+          "track_id": 1,
+          "bbox": [
+            1083.63,
+            282.5,
+            115.43,
+            168.61
+          ],
+          "confidence": 0.84914
+        },
+        {
+          "track_id": 2,
+          "bbox": [
+            506.34,
+            517.4,
+            182.48,
+            250.38
+          ],
+          "confidence": 0.88975
+        }
+      ]
+    },
+    {
+      "frame_index": 306,
+      "time_sec": 12.76275,
+      "detections": [
+        {
+          "track_id": 1,
+          "bbox": [
+            1083.97,
+            290.84,
+            120.06,
+            168.45
+          ],
+          "confidence": 0.85037
+        },
+        {
+          "track_id": 2,
+          "bbox": [
+            505.91,
+            514.86,
+            183.47,
+            250.35
+          ],
+          "confidence": 0.88941
+        }
+      ]
+    },
+    {
+      "frame_index": 309,
+      "time_sec": 12.887875,
+      "detections": [
+        {
+          "track_id": 1,
+          "bbox": [
+            1078.16,
+            287.24,
+            123.99,
+            178.04
+          ],
+          "confidence": 0.84584
+        },
+        {
+          "track_id": 2,
+          "bbox": [
+            505.24,
+            512.72,
+            183.1,
+            251.27
+          ],
+          "confidence": 0.88649
+        }
+      ]
+    },
+    {
+      "frame_index": 312,
+      "time_sec": 13.013,
+      "detections": [
+        {
+          "track_id": 1,
+          "bbox": [
+            1084.02,
+            286.23,
+            143.16,
+            180.74
+          ],
+          "confidence": 0.82699
+        },
+        {
+          "track_id": 2,
+          "bbox": [
+            508.63,
+            511.96,
+            179.27,
+            249.85
+          ],
+          "confidence": 0.88896
+        }
+      ]
+    },
+    {
+      "frame_index": 315,
+      "time_sec": 13.138125,
+      "detections": [
+        {
+          "track_id": 1,
+          "bbox": [
+            1082.73,
+            292.23,
+            118.35,
+            166.32
+          ],
+          "confidence": 0.84349
+        },
+        {
+          "track_id": 2,
+          "bbox": [
+            503.95,
+            509.64,
+            178.59,
+            252.5
+          ],
+          "confidence": 0.87878
+        }
+      ]
+    },
+    {
+      "frame_index": 318,
+      "time_sec": 13.26325,
+      "detections": [
+        {
+          "track_id": 1,
+          "bbox": [
+            1087.67,
+            294.14,
+            113.44,
+            165.33
+          ],
+          "confidence": 0.86949
+        },
+        {
+          "track_id": 2,
+          "bbox": [
+            507.22,
+            505.69,
+            180.94,
+            256.06
+          ],
+          "confidence": 0.87832
+        }
+      ]
+    },
+    {
+      "frame_index": 321,
+      "time_sec": 13.388375,
+      "detections": [
+        {
+          "track_id": 1,
+          "bbox": [
+            1089.62,
+            292.73,
+            116.51,
+            160.86
+          ],
+          "confidence": 0.85759
+        },
+        {
+          "track_id": 2,
+          "bbox": [
+            500.04,
+            497.48,
+            181.81,
+            265.75
+          ],
+          "confidence": 0.87986
+        }
+      ]
+    },
+    {
+      "frame_index": 324,
+      "time_sec": 13.5135,
+      "detections": [
+        {
+          "track_id": 1,
+          "bbox": [
+            1097.73,
+            281.07,
+            128.27,
+            186.94
+          ],
+          "confidence": 0.86374
+        },
+        {
+          "track_id": 2,
+          "bbox": [
+            508.11,
+            494.45,
+            178.67,
+            253.81
+          ],
+          "confidence": 0.87963
+        }
+      ]
+    },
+    {
+      "frame_index": 327,
+      "time_sec": 13.638625,
+      "detections": [
+        {
+          "track_id": 1,
+          "bbox": [
+            1088.84,
+            283.75,
+            115.96,
+            179.07
+          ],
+          "confidence": 0.86878
+        },
+        {
+          "track_id": 2,
+          "bbox": [
+            508.7,
+            492.05,
+            184.6,
+            249.94
+          ],
+          "confidence": 0.8829
+        }
+      ]
+    },
+    {
+      "frame_index": 330,
+      "time_sec": 13.76375,
+      "detections": [
+        {
+          "track_id": 1,
+          "bbox": [
+            1083.59,
+            288.91,
+            120.37,
+            171.14
+          ],
+          "confidence": 0.84355
+        },
+        {
+          "track_id": 2,
+          "bbox": [
+            511.2,
+            492.37,
+            180.6,
+            241.62
+          ],
+          "confidence": 0.88595
+        }
+      ]
+    },
+    {
+      "frame_index": 333,
+      "time_sec": 13.888875,
+      "detections": [
+        {
+          "track_id": 1,
+          "bbox": [
+            1091.85,
+            306.79,
+            115.76,
+            160.48
+          ],
+          "confidence": 0.8761
+        },
+        {
+          "track_id": 2,
+          "bbox": [
+            503.27,
+            487.3,
+            183.22,
+            237.22
+          ],
+          "confidence": 0.87845
+        }
+      ]
+    },
+    {
+      "frame_index": 336,
+      "time_sec": 14.014,
+      "detections": [
+        {
+          "track_id": 1,
+          "bbox": [
+            1085.04,
+            288.77,
+            118.14,
+            172.65
+          ],
+          "confidence": 0.86058
+        },
+        {
+          "track_id": 2,
+          "bbox": [
+            501.0,
+            485.61,
+            181.11,
+            241.74
+          ],
+          "confidence": 0.8766
+        }
+      ]
+    },
+    {
+      "frame_index": 339,
+      "time_sec": 14.139125,
+      "detections": [
+        {
+          "track_id": 1,
+          "bbox": [
+            1087.93,
+            286.67,
+            109.04,
+            157.94
+          ],
+          "confidence": 0.84849
+        },
+        {
+          "track_id": 2,
+          "bbox": [
+            501.01,
+            487.32,
+            185.82,
+            236.69
+          ],
+          "confidence": 0.8791
+        }
+      ]
+    },
+    {
+      "frame_index": 342,
+      "time_sec": 14.26425,
+      "detections": [
+        {
+          "track_id": 1,
+          "bbox": [
+            1083.22,
+            280.51,
+            114.67,
+            162.89
+          ],
+          "confidence": 0.86064
+        },
+        {
+          "track_id": 2,
+          "bbox": [
+            501.82,
+            483.45,
+            189.43,
+            246.03
+          ],
+          "confidence": 0.87219
+        }
+      ]
+    },
+    {
+      "frame_index": 345,
+      "time_sec": 14.389375,
+      "detections": [
+        {
+          "track_id": 1,
+          "bbox": [
+            1079.92,
+            269.37,
+            126.4,
+            183.69
+          ],
+          "confidence": 0.83877
+        },
+        {
+          "track_id": 2,
+          "bbox": [
+            504.55,
+            485.89,
+            189.09,
+            232.52
+          ],
+          "confidence": 0.86504
+        }
+      ]
+    },
+    {
+      "frame_index": 348,
+      "time_sec": 14.5145,
+      "detections": [
+        {
+          "track_id": 1,
+          "bbox": [
+            1071.23,
+            289.98,
+            120.37,
+            179.1
+          ],
+          "confidence": 0.83942
+        },
+        {
+          "track_id": 2,
+          "bbox": [
+            509.85,
+            495.16,
+            182.86,
+            208.28
+          ],
+          "confidence": 0.83901
+        }
+      ]
+    },
+    {
+      "frame_index": 351,
+      "time_sec": 14.639625,
+      "detections": [
+        {
+          "track_id": 1,
+          "bbox": [
+            1065.62,
+            290.14,
+            126.29,
+            180.24
+          ],
+          "confidence": 0.8234
+        },
+        {
+          "track_id": 2,
+          "bbox": [
+            511.8,
+            497.86,
+            179.6,
+            208.05
+          ],
+          "confidence": 0.8393
+        }
+      ]
+    },
+    {
+      "frame_index": 354,
+      "time_sec": 14.76475,
+      "detections": [
+        {
+          "track_id": 1,
+          "bbox": [
+            1067.21,
+            291.93,
+            122.39,
+            176.52
+          ],
+          "confidence": 0.82987
+        },
+        {
+          "track_id": 2,
+          "bbox": [
+            513.49,
+            496.25,
+            178.2,
+            206.74
+          ],
+          "confidence": 0.83455
+        }
+      ]
+    },
+    {
+      "frame_index": 357,
+      "time_sec": 14.889875,
+      "detections": [
+        {
+          "track_id": 1,
+          "bbox": [
+            1068.04,
+            286.89,
+            125.81,
+            187.03
+          ],
+          "confidence": 0.83896
+        },
+        {
+          "track_id": 2,
+          "bbox": [
+            513.82,
+            495.43,
+            173.08,
+            204.57
+          ],
+          "confidence": 0.84581
+        }
+      ]
+    },
+    {
+      "frame_index": 360,
+      "time_sec": 15.015,
+      "detections": [
+        {
+          "track_id": 1,
+          "bbox": [
+            1068.22,
+            284.44,
+            130.47,
+            188.74
+          ],
+          "confidence": 0.84278
+        },
+        {
+          "track_id": 2,
+          "bbox": [
+            515.09,
+            494.05,
+            168.37,
+            202.47
+          ],
+          "confidence": 0.85076
+        }
+      ]
+    },
+    {
+      "frame_index": 363,
+      "time_sec": 15.140125,
+      "detections": [
+        {
+          "track_id": 1,
+          "bbox": [
+            1075.71,
+            282.98,
+            118.48,
+            180.44
+          ],
+          "confidence": 0.84782
+        },
+        {
+          "track_id": 2,
+          "bbox": [
+            490.04,
+            473.88,
+            195.46,
+            242.98
+          ],
+          "confidence": 0.8478
+        }
+      ]
+    },
+    {
+      "frame_index": 366,
+      "time_sec": 15.26525,
+      "detections": [
+        {
+          "track_id": 1,
+          "bbox": [
+            1068.36,
+            260.09,
+            120.59,
+            172.83
+          ],
+          "confidence": 0.83893
+        },
+        {
+          "track_id": 2,
+          "bbox": [
+            484.34,
+            460.1,
+            199.17,
+            253.28
+          ],
+          "confidence": 0.84546
+        }
+      ]
+    },
+    {
+      "frame_index": 369,
+      "time_sec": 15.390375,
+      "detections": [
+        {
+          "track_id": 1,
+          "bbox": [
+            1070.0,
+            258.27,
+            125.43,
+            174.0
+          ],
+          "confidence": 0.83042
+        },
+        {
+          "track_id": 2,
+          "bbox": [
+            483.55,
+            454.69,
+            200.88,
+            252.46
+          ],
+          "confidence": 0.85722
+        }
+      ]
+    },
+    {
+      "frame_index": 372,
+      "time_sec": 15.5155,
+      "detections": [
+        {
+          "track_id": 1,
+          "bbox": [
+            1071.9,
+            250.17,
+            120.92,
+            188.25
+          ],
+          "confidence": 0.83838
+        },
+        {
+          "track_id": 2,
+          "bbox": [
+            480.41,
+            451.23,
+            202.55,
+            250.06
+          ],
+          "confidence": 0.85925
+        }
+      ]
+    },
+    {
+      "frame_index": 375,
+      "time_sec": 15.640625,
+      "detections": [
+        {
+          "track_id": 1,
+          "bbox": [
+            1070.34,
+            260.89,
+            133.38,
+            175.02
+          ],
+          "confidence": 0.83929
+        },
+        {
+          "track_id": 2,
+          "bbox": [
+            487.8,
+            447.67,
+            195.44,
+            247.44
+          ],
+          "confidence": 0.86217
+        }
+      ]
+    },
+    {
+      "frame_index": 378,
+      "time_sec": 15.76575,
+      "detections": [
+        {
+          "track_id": 1,
+          "bbox": [
+            1067.59,
+            296.82,
+            117.24,
+            163.66
+          ],
+          "confidence": 0.83309
+        },
+        {
+          "track_id": 2,
+          "bbox": [
+            484.46,
+            444.49,
+            202.53,
+            254.43
+          ],
+          "confidence": 0.84437
+        }
+      ]
+    },
+    {
+      "frame_index": 381,
+      "time_sec": 15.890875,
+      "detections": [
+        {
+          "track_id": 1,
+          "bbox": [
+            1076.99,
+            311.92,
+            123.75,
+            151.95
+          ],
+          "confidence": 0.82558
+        },
+        {
+          "track_id": 2,
+          "bbox": [
+            503.76,
+            450.82,
+            184.89,
+            229.64
+          ],
+          "confidence": 0.8533
+        }
+      ]
+    },
+    {
+      "frame_index": 384,
+      "time_sec": 16.016,
+      "detections": [
+        {
+          "track_id": 1,
+          "bbox": [
+            1066.75,
+            296.28,
+            119.8,
+            173.67
+          ],
+          "confidence": 0.84042
+        },
+        {
+          "track_id": 2,
+          "bbox": [
+            506.95,
+            451.15,
+            178.0,
+            216.75
+          ],
+          "confidence": 0.86349
+        }
+      ]
+    },
+    {
+      "frame_index": 387,
+      "time_sec": 16.141125,
+      "detections": [
+        {
+          "track_id": 1,
+          "bbox": [
+            1056.96,
+            291.18,
+            130.52,
+            178.85
+          ],
+          "confidence": 0.84003
+        },
+        {
+          "track_id": 2,
+          "bbox": [
+            498.23,
+            439.84,
+            181.97,
+            240.17
+          ],
+          "confidence": 0.87266
+        }
+      ]
+    },
+    {
+      "frame_index": 390,
+      "time_sec": 16.26625,
+      "detections": [
+        {
+          "track_id": 1,
+          "bbox": [
+            1060.12,
+            293.2,
+            127.88,
+            182.6
+          ],
+          "confidence": 0.8452
+        },
+        {
+          "track_id": 2,
+          "bbox": [
+            503.97,
+            442.02,
+            185.37,
+            221.58
+          ],
+          "confidence": 0.86977
+        }
+      ]
+    },
+    {
+      "frame_index": 393,
+      "time_sec": 16.391375,
+      "detections": [
+        {
+          "track_id": 1,
+          "bbox": [
+            1060.57,
+            296.25,
+            126.68,
+            182.6
+          ],
+          "confidence": 0.84307
+        },
+        {
+          "track_id": 2,
+          "bbox": [
+            503.32,
+            436.71,
+            185.67,
+            221.35
+          ],
+          "confidence": 0.86038
+        }
+      ]
+    },
+    {
+      "frame_index": 396,
+      "time_sec": 16.5165,
+      "detections": [
+        {
+          "track_id": 1,
+          "bbox": [
+            1062.21,
+            301.73,
+            138.5,
+            180.73
+          ],
+          "confidence": 0.84149
+        },
+        {
+          "track_id": 2,
+          "bbox": [
+            486.53,
+            421.69,
+            189.09,
+            244.45
+          ],
+          "confidence": 0.86267
+        }
+      ]
+    },
+    {
+      "frame_index": 399,
+      "time_sec": 16.641625,
+      "detections": [
+        {
+          "track_id": 1,
+          "bbox": [
+            1054.69,
+            297.4,
+            118.75,
+            159.98
+          ],
+          "confidence": 0.84821
+        },
+        {
+          "track_id": 2,
+          "bbox": [
+            493.56,
+            421.01,
+            182.8,
+            243.02
+          ],
+          "confidence": 0.85694
+        }
+      ]
+    },
+    {
+      "frame_index": 402,
+      "time_sec": 16.76675,
+      "detections": [
+        {
+          "track_id": 1,
+          "bbox": [
+            1097.32,
+            301.39,
+            216.89,
+            201.62
+          ],
+          "confidence": 0.56556
+        },
+        {
+          "track_id": 2,
+          "bbox": [
+            508.35,
+            427.91,
+            174.2,
+            225.22
+          ],
+          "confidence": 0.86858
+        }
+      ]
+    },
+    {
+      "frame_index": 405,
+      "time_sec": 16.891875,
+      "detections": [
+        {
+          "track_id": 1,
+          "bbox": [
+            1046.23,
+            248.32,
+            74.22,
+            122.08
+          ],
+          "confidence": 0.81292
+        },
+        {
+          "track_id": 2,
+          "bbox": [
+            494.17,
+            412.43,
+            187.45,
+            249.71
+          ],
+          "confidence": 0.86045
+        }
+      ]
+    },
+    {
+      "frame_index": 408,
+      "time_sec": 17.017,
+      "detections": [
+        {
+          "track_id": 1,
+          "bbox": [
+            1032.14,
+            234.63,
+            100.2,
+            124.95
+          ],
+          "confidence": 0.82424
+        },
+        {
+          "track_id": 2,
+          "bbox": [
+            491.83,
+            400.69,
+            189.11,
+            254.01
+          ],
+          "confidence": 0.85665
+        }
+      ]
+    },
+    {
+      "frame_index": 411,
+      "time_sec": 17.142125,
+      "detections": [
+        {
+          "track_id": 1,
+          "bbox": [
+            1034.75,
+            235.07,
+            79.62,
+            118.86
+          ],
+          "confidence": 0.75686
+        },
+        {
+          "track_id": 2,
+          "bbox": [
+            491.7,
+            396.61,
+            189.06,
+            258.93
+          ],
+          "confidence": 0.86513
+        }
+      ]
+    },
+    {
+      "frame_index": 414,
+      "time_sec": 17.26725,
+      "detections": [
+        {
+          "track_id": 1,
+          "bbox": [
+            1057.97,
+            275.63,
+            151.55,
+            161.26
+          ],
+          "confidence": 0.70777
+        },
+        {
+          "track_id": 2,
+          "bbox": [
+            497.42,
+            389.78,
+            184.58,
+            252.53
+          ],
+          "confidence": 0.85727
+        }
+      ]
+    },
+    {
+      "frame_index": 417,
+      "time_sec": 17.392375,
+      "detections": [
+        {
+          "track_id": 1,
+          "bbox": [
+            1028.4,
+            228.98,
+            98.85,
+            118.54
+          ],
+          "confidence": 0.75894
+        },
+        {
+          "track_id": 2,
+          "bbox": [
+            507.43,
+            379.16,
+            192.4,
+            247.52
+          ],
+          "confidence": 0.82915
+        }
+      ]
+    },
+    {
+      "frame_index": 420,
+      "time_sec": 17.5175,
+      "detections": [
+        {
+          "track_id": 1,
+          "bbox": [
+            1032.68,
+            207.17,
+            70.23,
+            109.94
+          ],
+          "confidence": 0.77697
+        },
+        {
+          "track_id": 2,
+          "bbox": [
+            512.14,
+            382.12,
+            183.21,
+            246.94
+          ],
+          "confidence": 0.85783
+        }
+      ]
+    },
+    {
+      "frame_index": 423,
+      "time_sec": 17.642625,
+      "detections": [
+        {
+          "track_id": 1,
+          "bbox": [
+            1026.03,
+            194.17,
+            95.66,
+            120.91
+          ],
+          "confidence": 0.7951
+        },
+        {
+          "track_id": 2,
+          "bbox": [
+            511.85,
+            376.78,
+            183.37,
+            234.12
+          ],
+          "confidence": 0.86405
+        }
+      ]
+    },
+    {
+      "frame_index": 426,
+      "time_sec": 17.76775,
+      "detections": [
+        {
+          "track_id": 1,
+          "bbox": [
+            1059.21,
+            211.5,
+            155.08,
+            183.02
+          ],
+          "confidence": 0.79859
+        },
+        {
+          "track_id": 2,
+          "bbox": [
+            499.02,
+            367.66,
+            181.76,
+            227.57
+          ],
+          "confidence": 0.86305
+        }
+      ]
+    },
+    {
+      "frame_index": 429,
+      "time_sec": 17.892875,
+      "detections": [
+        {
+          "track_id": 1,
+          "bbox": [
+            1081.79,
+            180.1,
+            168.89,
+            188.33
+          ],
+          "confidence": 0.7859
+        },
+        {
+          "track_id": 2,
+          "bbox": [
+            496.44,
+            367.99,
+            160.86,
+            227.69
+          ],
+          "confidence": 0.88131
+        }
+      ]
+    },
+    {
+      "frame_index": 432,
+      "time_sec": 18.018,
+      "detections": [
+        {
+          "track_id": 1,
+          "bbox": [
+            1102.02,
+            109.56,
+            191.39,
+            209.04
+          ],
+          "confidence": 0.79287
+        },
+        {
+          "track_id": 2,
+          "bbox": [
+            496.29,
+            360.83,
+            163.91,
+            232.28
+          ],
+          "confidence": 0.87308
+        }
+      ]
+    },
+    {
+      "frame_index": 435,
+      "time_sec": 18.143125,
+      "detections": [
+        {
+          "track_id": 1,
+          "bbox": [
+            1100.69,
+            52.7,
+            96.18,
+            128.3
+          ],
+          "confidence": 0.75144
+        },
+        {
+          "track_id": 2,
+          "bbox": [
+            503.63,
+            386.4,
+            154.19,
+            215.61
+          ],
+          "confidence": 0.86736
+        }
+      ]
+    },
+    {
+      "frame_index": 438,
+      "time_sec": 18.26825,
+      "detections": [
+        {
+          "track_id": 1,
+          "bbox": [
+            1121.63,
+            49.02,
+            69.13,
+            116.4
+          ],
+          "confidence": 0.72472
+        },
+        {
+          "track_id": 2,
+          "bbox": [
+            504.04,
+            373.33,
+            182.24,
+            234.78
+          ],
+          "confidence": 0.86315
+        }
+      ]
+    },
+    {
+      "frame_index": 441,
+      "time_sec": 18.393375,
+      "detections": [
+        {
+          "track_id": 1,
+          "bbox": [
+            1104.38,
+            146.41,
+            140.51,
+            169.51
+          ],
+          "confidence": 0.81356
+        },
+        {
+          "track_id": 2,
+          "bbox": [
+            501.81,
+            364.15,
+            188.44,
+            237.02
+          ],
+          "confidence": 0.862
+        }
+      ]
+    },
+    {
+      "frame_index": 444,
+      "time_sec": 18.5185,
+      "detections": [
+        {
+          "track_id": 1,
+          "bbox": [
+            1089.91,
+            151.47,
+            151.0,
+            185.03
+          ],
+          "confidence": 0.84006
+        },
+        {
+          "track_id": 2,
+          "bbox": [
+            503.5,
+            361.95,
+            191.78,
+            235.31
+          ],
+          "confidence": 0.86544
+        }
+      ]
+    },
+    {
+      "frame_index": 447,
+      "time_sec": 18.643625,
+      "detections": [
+        {
+          "track_id": 1,
+          "bbox": [
+            1064.27,
+            161.98,
+            133.43,
+            175.5
+          ],
+          "confidence": 0.8512
+        },
+        {
+          "track_id": 2,
+          "bbox": [
+            506.72,
+            366.48,
+            187.94,
+            232.96
+          ],
+          "confidence": 0.87708
+        }
+      ]
+    },
+    {
+      "frame_index": 450,
+      "time_sec": 18.76875,
+      "detections": [
+        {
+          "track_id": 1,
+          "bbox": [
+            1037.85,
+            152.68,
+            138.06,
+            187.85
+          ],
+          "confidence": 0.83194
+        },
+        {
+          "track_id": 2,
+          "bbox": [
+            513.33,
+            366.15,
+            186.83,
+            234.79
+          ],
+          "confidence": 0.87394
+        }
+      ]
+    },
+    {
+      "frame_index": 453,
+      "time_sec": 18.893875,
+      "detections": [
+        {
+          "track_id": 1,
+          "bbox": [
+            1052.37,
+            191.29,
+            122.62,
+            155.41
+          ],
+          "confidence": 0.85548
+        },
+        {
+          "track_id": 2,
+          "bbox": [
+            506.02,
+            353.4,
+            202.87,
+            255.24
+          ],
+          "confidence": 0.86112
+        }
+      ]
+    },
+    {
+      "frame_index": 456,
+      "time_sec": 19.019,
+      "detections": [
+        {
+          "track_id": 1,
+          "bbox": [
+            1056.05,
+            181.99,
+            141.76,
+            191.84
+          ],
+          "confidence": 0.85089
+        },
+        {
+          "track_id": 2,
+          "bbox": [
+            506.03,
+            342.44,
+            205.23,
+            269.06
+          ],
+          "confidence": 0.86242
+        }
+      ]
+    },
+    {
+      "frame_index": 459,
+      "time_sec": 19.144125,
+      "detections": [
+        {
+          "track_id": 1,
+          "bbox": [
+            1048.1,
+            192.68,
+            120.22,
+            177.47
+          ],
+          "confidence": 0.85238
+        },
+        {
+          "track_id": 2,
+          "bbox": [
+            516.45,
+            347.02,
+            201.68,
+            256.82
+          ],
+          "confidence": 0.87027
+        }
+      ]
+    },
+    {
+      "frame_index": 462,
+      "time_sec": 19.26925,
+      "detections": [
+        {
+          "track_id": 1,
+          "bbox": [
+            1037.23,
+            221.77,
+            129.42,
+            183.35
+          ],
+          "confidence": 0.84776
+        },
+        {
+          "track_id": 2,
+          "bbox": [
+            538.1,
+            362.91,
+            183.43,
+            226.07
+          ],
+          "confidence": 0.85454
+        }
+      ]
+    },
+    {
+      "frame_index": 465,
+      "time_sec": 19.394375,
+      "detections": [
+        {
+          "track_id": 1,
+          "bbox": [
+            1035.69,
+            219.98,
+            128.44,
+            171.58
+          ],
+          "confidence": 0.83801
+        },
+        {
+          "track_id": 2,
+          "bbox": [
+            542.6,
+            358.28,
+            185.67,
+            235.53
+          ],
+          "confidence": 0.85766
+        }
+      ]
+    },
+    {
+      "frame_index": 468,
+      "time_sec": 19.5195,
+      "detections": [
+        {
+          "track_id": 1,
+          "bbox": [
+            1033.48,
+            224.24,
+            127.76,
+            171.08
+          ],
+          "confidence": 0.83828
+        },
+        {
+          "track_id": 2,
+          "bbox": [
+            539.44,
+            353.5,
+            196.06,
+            239.8
+          ],
+          "confidence": 0.85784
+        }
+      ]
+    },
+    {
+      "frame_index": 471,
+      "time_sec": 19.644625,
+      "detections": [
+        {
+          "track_id": 1,
+          "bbox": [
+            1025.22,
+            219.89,
+            131.81,
+            190.53
+          ],
+          "confidence": 0.83644
+        },
+        {
+          "track_id": 2,
+          "bbox": [
+            546.49,
+            357.84,
+            187.54,
+            234.27
+          ],
+          "confidence": 0.86493
+        }
+      ]
+    },
+    {
+      "frame_index": 474,
+      "time_sec": 19.76975,
+      "detections": [
+        {
+          "track_id": 1,
+          "bbox": [
+            1032.39,
+            214.16,
+            131.46,
+            190.81
+          ],
+          "confidence": 0.83795
+        },
+        {
+          "track_id": 2,
+          "bbox": [
+            553.69,
+            344.16,
+            184.16,
+            235.06
+          ],
+          "confidence": 0.84638
+        }
+      ]
+    },
+    {
+      "frame_index": 477,
+      "time_sec": 19.894875,
+      "detections": [
+        {
+          "track_id": 1,
+          "bbox": [
+            1028.49,
+            201.55,
+            149.21,
+            202.7
+          ],
+          "confidence": 0.84449
+        },
+        {
+          "track_id": 2,
+          "bbox": [
+            548.11,
+            314.93,
+            192.73,
+            256.64
+          ],
+          "confidence": 0.86111
+        }
+      ]
+    },
+    {
+      "frame_index": 480,
+      "time_sec": 20.02,
+      "detections": [
+        {
+          "track_id": 1,
+          "bbox": [
+            1026.13,
+            186.95,
+            134.75,
+            202.64
+          ],
+          "confidence": 0.83603
+        },
+        {
+          "track_id": 2,
+          "bbox": [
+            553.9,
+            316.79,
+            187.67,
+            249.51
+          ],
+          "confidence": 0.87306
+        }
+      ]
+    },
+    {
+      "frame_index": 483,
+      "time_sec": 20.145125,
+      "detections": [
+        {
+          "track_id": 1,
+          "bbox": [
+            1015.24,
+            179.37,
+            132.41,
+            193.55
+          ],
+          "confidence": 0.85061
+        },
+        {
+          "track_id": 2,
+          "bbox": [
+            556.28,
+            308.54,
+            176.68,
+            253.34
+          ],
+          "confidence": 0.88026
+        }
+      ]
+    },
+    {
+      "frame_index": 486,
+      "time_sec": 20.27025,
+      "detections": [
+        {
+          "track_id": 1,
+          "bbox": [
+            1028.37,
+            196.6,
+            129.12,
+            180.35
+          ],
+          "confidence": 0.88361
+        },
+        {
+          "track_id": 2,
+          "bbox": [
+            580.7,
+            299.92,
+            154.96,
+            216.01
+          ],
+          "confidence": 0.88469
+        }
+      ]
+    },
+    {
+      "frame_index": 489,
+      "time_sec": 20.395375,
+      "detections": [
+        {
+          "track_id": 1,
+          "bbox": [
+            1035.85,
+            175.05,
+            137.94,
+            185.82
+          ],
+          "confidence": 0.84594
+        },
+        {
+          "track_id": 2,
+          "bbox": [
+            576.95,
+            273.22,
+            146.98,
+            238.69
+          ],
+          "confidence": 0.90116
+        }
+      ]
+    },
+    {
+      "frame_index": 492,
+      "time_sec": 20.5205,
+      "detections": [
+        {
+          "track_id": 1,
+          "bbox": [
+            1050.16,
+            180.63,
+            128.28,
+            165.19
+          ],
+          "confidence": 0.8706
+        },
+        {
+          "track_id": 2,
+          "bbox": [
+            565.59,
+            278.2,
+            145.43,
+            232.47
+          ],
+          "confidence": 0.90427
+        }
+      ]
+    },
+    {
+      "frame_index": 495,
+      "time_sec": 20.645625,
+      "detections": [
+        {
+          "track_id": 1,
+          "bbox": [
+            1065.89,
+            169.53,
+            146.04,
+            187.15
+          ],
+          "confidence": 0.85322
+        },
+        {
+          "track_id": 2,
+          "bbox": [
+            563.96,
+            277.53,
+            146.94,
+            229.6
+          ],
+          "confidence": 0.90025
+        }
+      ]
+    },
+    {
+      "frame_index": 498,
+      "time_sec": 20.77075,
+      "detections": [
+        {
+          "track_id": 1,
+          "bbox": [
+            1075.9,
+            166.52,
+            135.71,
+            184.41
+          ],
+          "confidence": 0.85675
+        },
+        {
+          "track_id": 2,
+          "bbox": [
+            564.49,
+            256.09,
+            149.07,
+            244.2
+          ],
+          "confidence": 0.8939
+        }
+      ]
+    },
+    {
+      "frame_index": 501,
+      "time_sec": 20.895875,
+      "detections": [
+        {
+          "track_id": 1,
+          "bbox": [
+            1083.85,
+            170.7,
+            128.65,
+            176.15
+          ],
+          "confidence": 0.86596
+        },
+        {
+          "track_id": 2,
+          "bbox": [
+            536.23,
+            206.67,
+            149.19,
+            259.85
+          ],
+          "confidence": 0.87771
+        }
+      ]
+    },
+    {
+      "frame_index": 504,
+      "time_sec": 21.021,
+      "detections": [
+        {
+          "track_id": 1,
+          "bbox": [
+            1083.33,
+            137.64,
+            132.15,
+            188.7
+          ],
+          "confidence": 0.86847
+        },
+        {
+          "track_id": 2,
+          "bbox": [
+            521.58,
+            192.84,
+            143.52,
+            251.59
+          ],
+          "confidence": 0.8822
+        }
+      ]
+    },
+    {
+      "frame_index": 507,
+      "time_sec": 21.146125,
+      "detections": [
+        {
+          "track_id": 1,
+          "bbox": [
+            1065.44,
+            60.75,
+            140.9,
+            238.9
+          ],
+          "confidence": 0.8648
+        },
+        {
+          "track_id": 2,
+          "bbox": [
+            516.05,
+            187.01,
+            144.41,
+            254.06
+          ],
+          "confidence": 0.89065
+        }
+      ]
+    },
+    {
+      "frame_index": 510,
+      "time_sec": 21.27125,
+      "detections": [
+        {
+          "track_id": 1,
+          "bbox": [
+            1063.73,
+            38.64,
+            161.89,
+            253.9
+          ],
+          "confidence": 0.86355
+        },
+        {
+          "track_id": 2,
+          "bbox": [
+            512.48,
+            190.29,
+            142.27,
+            247.73
+          ],
+          "confidence": 0.89725
+        }
+      ]
+    },
+    {
+      "frame_index": 513,
+      "time_sec": 21.396375,
+      "detections": [
+        {
+          "track_id": 1,
+          "bbox": [
+            1021.77,
+            64.82,
+            173.45,
+            262.38
+          ],
+          "confidence": 0.83466
+        },
+        {
+          "track_id": 2,
+          "bbox": [
+            503.93,
+            199.32,
+            156.28,
+            271.7
+          ],
+          "confidence": 0.86352
+        }
+      ]
+    }
+  ]
+}

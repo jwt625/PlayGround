@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "sharp": "^0.34.5",
+    "simple-icons": "^16.15.0"
+  }
+}

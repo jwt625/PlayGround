@@ -1,0 +1,18 @@
+{
+  "source": "face_tracks.csv",
+  "description": "Median bbox size per tracked face, for fixed-size SVG overlays.",
+  "tracks": [
+    {
+      "track_id": 1,
+      "samples": 170,
+      "median_width": 123.87,
+      "median_height": 174.51
+    },
+    {
+      "track_id": 2,
+      "samples": 93,
+      "median_width": 181.87,
+      "median_height": 237.02
+    }
+  ]
+}
