@@ -8,6 +8,70 @@ const state = {
   coverflowSignature: "",
 };
 
+const ROLE_BUCKETS = [
+  {
+    key: "founder",
+    label: "Founder",
+    color: "#cb5a32",
+    patterns: [/\bco-?founder\b/, /\bfounder\b/, /\bbuilding\b/, /\bstarted\b/],
+  },
+  {
+    key: "vc",
+    label: "VC / Investor",
+    color: "#d8873f",
+    patterns: [
+      /\bventure capitalist\b/,
+      /\bvc\b/,
+      /\binvestor\b/,
+      /\bangel investor\b/,
+      /\bseed investor\b/,
+      /\bgp\b/,
+      /\blp\b/,
+      /\bpartner\b/,
+      /\bpartners\b/,
+      /\bgeneral partner\b/,
+      /\blimited partner\b/,
+      /\bmanaging partner\b/,
+    ],
+  },
+  {
+    key: "ceo",
+    label: "CEO",
+    color: "#efc47d",
+    patterns: [/\bceo\b/, /\bchief executive officer\b/],
+  },
+  {
+    key: "cto",
+    label: "CTO",
+    color: "#8fb996",
+    patterns: [/\bcto\b/, /\bchief technology officer\b/],
+  },
+  {
+    key: "head",
+    label: "Head / Lead",
+    color: "#5aa9b2",
+    patterns: [/\bhead of\b/, /\bhead\b/, /\blead\b/, /\bvp\b/, /\bvice president\b/, /\bdirector\b/],
+  },
+  {
+    key: "professor",
+    label: "Professor",
+    color: "#4d7ea8",
+    patterns: [/\bprofessor\b/, /\bassociate professor\b/, /\bassistant professor\b/, /\blecturer\b/, /\bfaculty\b/],
+  },
+  {
+    key: "phd",
+    label: "PhD",
+    color: "#6d597a",
+    patterns: [/\bphd\b/, /\bph\.d\b/, /\bdoctoral\b/, /\bdoctorate\b/],
+  },
+  {
+    key: "masters",
+    label: "Master's",
+    color: "#a16ae8",
+    patterns: [/\bmasters\b/, /\bmaster's\b/, /\bm\.sc\b/, /\bmsc\b/, /\bms\b/],
+  },
+];
+
 const elements = {
   datasetSelect: document.querySelector("#datasetSelect"),
   searchInput: document.querySelector("#searchInput"),
@@ -26,6 +90,19 @@ const elements = {
   coverflowMeta: document.querySelector("#coverflowMeta"),
   coverflowPrev: document.querySelector("#coverflowPrev"),
   coverflowNext: document.querySelector("#coverflowNext"),
+  profileModal: document.querySelector("#profileModal"),
+  modalAvatar: document.querySelector("#modalAvatar"),
+  modalName: document.querySelector("#modalName"),
+  modalHandle: document.querySelector("#modalHandle"),
+  modalBio: document.querySelector("#modalBio"),
+  modalProfileLink: document.querySelector("#modalProfileLink"),
+  modalImageLink: document.querySelector("#modalImageLink"),
+  statsVisibleCount: document.querySelector("#statsVisibleCount"),
+  statsMatchedCount: document.querySelector("#statsMatchedCount"),
+  roleBars: document.querySelector("#roleBars"),
+  rolePie: document.querySelector("#rolePie"),
+  pieCenterValue: document.querySelector("#pieCenterValue"),
+  pieLegend: document.querySelector("#pieLegend"),
 };
 
 const FALLBACK_AVATAR =
@@ -91,6 +168,120 @@ function normalizedText(record) {
   return [record.name, record.handle, record.description].join(" ").toLowerCase();
 }
 
+function getRoleMatches(record) {
+  const haystack = normalizedText(record);
+  return ROLE_BUCKETS.filter((bucket) => bucket.patterns.some((pattern) => pattern.test(haystack)));
+}
+
+function computeRoleStats(records) {
+  const overlappingCounts = Object.fromEntries(ROLE_BUCKETS.map((bucket) => [bucket.key, 0]));
+  const pieCounts = Object.fromEntries(ROLE_BUCKETS.map((bucket) => [bucket.key, 0]));
+  let matchedProfiles = 0;
+
+  for (const record of records) {
+    const matches = getRoleMatches(record);
+    if (matches.length) {
+      matchedProfiles += 1;
+    }
+    for (const bucket of matches) {
+      overlappingCounts[bucket.key] += 1;
+    }
+    const primaryBucket = matches[0]?.key || "other";
+    if (primaryBucket === "other") {
+      continue;
+    }
+    pieCounts[primaryBucket] += 1;
+  }
+
+  const barRows = ROLE_BUCKETS.map((bucket) => {
+    const count = overlappingCounts[bucket.key];
+    return {
+      ...bucket,
+      count,
+      ratio: records.length ? count / records.length : 0,
+    };
+  }).sort((a, b) => b.count - a.count || a.label.localeCompare(b.label));
+
+  const pieRows = ROLE_BUCKETS.map((bucket) => ({
+    ...bucket,
+    count: pieCounts[bucket.key],
+  })).filter((row) => row.count > 0);
+
+  const unmatchedCount = records.length - pieRows.reduce((sum, row) => sum + row.count, 0);
+  if (unmatchedCount > 0) {
+    pieRows.push({
+      key: "other",
+      label: "Other",
+      color: "#c7c1b1",
+      count: unmatchedCount,
+    });
+  }
+
+  return {
+    matchedProfiles,
+    totalProfiles: records.length,
+    barRows,
+    pieRows,
+  };
+}
+
+function formatPercent(value) {
+  return `${(value * 100).toFixed(value > 0 && value < 0.1 ? 1 : 0)}%`;
+}
+
+function renderStats(records) {
+  const stats = computeRoleStats(records);
+  elements.statsVisibleCount.textContent = String(stats.totalProfiles);
+  elements.statsMatchedCount.textContent = `${stats.matchedProfiles} (${formatPercent(
+    stats.totalProfiles ? stats.matchedProfiles / stats.totalProfiles : 0,
+  )})`;
+  elements.pieCenterValue.textContent = String(stats.totalProfiles);
+
+  elements.roleBars.innerHTML = "";
+  const barFragment = document.createDocumentFragment();
+  for (const row of stats.barRows) {
+    const item = document.createElement("div");
+    item.className = "role-bar-row";
+    item.innerHTML = `
+      <div class="role-bar-meta">
+        <span class="role-bar-label">${escapeHtml(row.label)}</span>
+        <span class="role-bar-value">${row.count} · ${formatPercent(row.ratio)}</span>
+      </div>
+      <div class="role-bar-track">
+        <div class="role-bar-fill" style="--bar-width: ${row.ratio * 100}%; --bar-color: ${row.color};"></div>
+      </div>
+    `;
+    barFragment.append(item);
+  }
+  elements.roleBars.append(barFragment);
+
+  if (!stats.pieRows.length) {
+    elements.rolePie.style.background = "conic-gradient(#e6decd 0turn 1turn)";
+    elements.pieLegend.innerHTML = `<p class="pie-empty">No visible profiles to summarize.</p>`;
+    return;
+  }
+
+  let current = 0;
+  const stops = [];
+  for (const row of stats.pieRows) {
+    const slice = stats.totalProfiles ? row.count / stats.totalProfiles : 0;
+    const next = current + slice;
+    stops.push(`${row.color} ${current}turn ${next}turn`);
+    current = next;
+  }
+  elements.rolePie.style.background = `conic-gradient(${stops.join(", ")})`;
+  elements.pieLegend.innerHTML = stats.pieRows.map((row) => {
+    const ratio = stats.totalProfiles ? row.count / stats.totalProfiles : 0;
+    return `
+      <div class="pie-legend-row">
+        <span class="legend-swatch" style="--swatch-color: ${row.color};"></span>
+        <span class="legend-label">${escapeHtml(row.label)}</span>
+        <span class="legend-value">${row.count} · ${formatPercent(ratio)}</span>
+      </div>
+    `;
+  }).join("");
+}
+
 function filterRecords(records) {
   const query = elements.searchInput.value.trim().toLowerCase();
   const activeFilter = state.filter;
@@ -141,6 +332,7 @@ function buildCard(record) {
   const profileLink = fragment.querySelector(".profile-link");
 
   card.tabIndex = 0;
+  card.dataset.profileUrl = record.profile_url || "";
   image.src = record.profile_image_url || FALLBACK_AVATAR;
   image.alt = `${record.name || record.handle} profile picture`;
   image.addEventListener("error", () => {
@@ -154,6 +346,22 @@ function buildCard(record) {
   hoverHandle.textContent = record.handle || "";
   hoverBio.textContent = record.description || "No bio provided.";
   profileLink.href = record.profile_url || "#";
+  card.addEventListener("click", (event) => {
+    if (shouldIgnoreCardActivation(event)) {
+      return;
+    }
+    openProfileModal(record);
+  });
+  card.addEventListener("keydown", (event) => {
+    if (event.key !== "Enter" && event.key !== " ") {
+      return;
+    }
+    if (shouldIgnoreCardActivation(event)) {
+      return;
+    }
+    event.preventDefault();
+    openProfileModal(record);
+  });
 
   return fragment;
 }
@@ -164,6 +372,29 @@ function clamp(value, min, max) {
 
 function escapeHtml(value) {
   return String(value).replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;");
+}
+
+function hasSelectedText() {
+  const selection = window.getSelection();
+  return Boolean(selection && selection.toString().trim());
+}
+
+function shouldIgnoreCardActivation(event) {
+  const interactiveTarget = event.target.closest("a, button, input, select, textarea");
+  return Boolean(interactiveTarget) || hasSelectedText();
+}
+
+function openProfileModal(record) {
+  elements.modalAvatar.src = record.profile_image_url || FALLBACK_AVATAR;
+  elements.modalAvatar.alt = `${record.name || record.handle || "Unknown"} profile picture`;
+  elements.modalName.textContent = record.name || "Unknown";
+  elements.modalHandle.textContent = record.handle || "";
+  elements.modalBio.textContent = record.description || "No bio provided.";
+  elements.modalProfileLink.href = record.profile_url || "#";
+  elements.modalProfileLink.setAttribute("aria-disabled", record.profile_url ? "false" : "true");
+  elements.modalImageLink.href = record.profile_image_url || "#";
+  elements.modalImageLink.setAttribute("aria-disabled", record.profile_image_url ? "false" : "true");
+  elements.profileModal.showModal();
 }
 
 function getCoverflowStep() {
@@ -214,6 +445,7 @@ function buildCoverflowStructure() {
     item.addEventListener("click", () => {
       state.coverflowIndex = index;
       render();
+      openProfileModal(record);
     });
 
     elements.coverflowTrack.append(item);
@@ -263,6 +495,7 @@ function render() {
   const view = elements.viewSelect.value;
   state.filteredRecords = filtered;
 
+  renderStats(filtered);
   elements.results.className = `results-grid ${view}`;
   elements.results.innerHTML = "";
   elements.visibleCount.textContent = String(filtered.length);
@@ -327,6 +560,20 @@ function bindEvents() {
       state.coverflowIndex = clamp(state.coverflowIndex + 1, 0, state.filteredRecords.length - 1);
       render();
     }
+  });
+  elements.profileModal.addEventListener("click", (event) => {
+    const bounds = elements.profileModal.getBoundingClientRect();
+    const isBackdropClick =
+      event.clientX < bounds.left ||
+      event.clientX > bounds.right ||
+      event.clientY < bounds.top ||
+      event.clientY > bounds.bottom;
+    if (isBackdropClick) {
+      elements.profileModal.close();
+    }
+  });
+  elements.modalAvatar.addEventListener("error", () => {
+    elements.modalAvatar.src = FALLBACK_AVATAR;
   });
   window.addEventListener("resize", () => {
     if (elements.viewSelect.value === "coverflow") {

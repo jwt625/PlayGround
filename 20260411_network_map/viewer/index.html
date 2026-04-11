@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>X List Browser</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=DM+Serif+Display:ital@0;1&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="hero">
+        <div>
+          <p class="eyebrow">Local Explorer</p>
+          <h1>X Network Browser</h1>
+          <p class="hero-copy">
+            Browse scraped follower data like a gallery, a crate of album covers, or a searchable people index.
+          </p>
+        </div>
+        <div class="hero-stats">
+          <div class="stat-card">
+            <span class="stat-label">Dataset</span>
+            <strong id="datasetLabel">Loading...</strong>
+          </div>
+          <div class="stat-card">
+            <span class="stat-label">Visible</span>
+            <strong id="visibleCount">0</strong>
+          </div>
+          <div class="stat-card">
+            <span class="stat-label">Total</span>
+            <strong id="totalCount">0</strong>
+          </div>
+        </div>
+      </header>
+
+      <section class="control-panel">
+        <label class="control wide">
+          <span>Dataset</span>
+          <select id="datasetSelect"></select>
+        </label>
+        <label class="control search-control wide">
+          <span>Search</span>
+          <input id="searchInput" type="search" placeholder="Name, handle, bio..." />
+        </label>
+        <label class="control">
+          <span>Sort</span>
+          <select id="sortSelect">
+            <option value="name-asc">Name A-Z</option>
+            <option value="name-desc">Name Z-A</option>
+            <option value="handle-asc">Handle A-Z</option>
+            <option value="handle-desc">Handle Z-A</option>
+            <option value="bio-desc">Longest bio</option>
+            <option value="bio-asc">Shortest bio</option>
+          </select>
+        </label>
+        <label class="control">
+          <span>View</span>
+          <select id="viewSelect">
+            <option value="tiles">Tiles</option>
+            <option value="coverflow">Cover Flow</option>
+            <option value="list">List</option>
+          </select>
+        </label>
+      </section>
+
+      <section class="filter-bar">
+        <button class="chip active" data-filter="all" type="button">All</button>
+        <button class="chip" data-filter="bio" type="button">Has Bio</button>
+        <button class="chip" data-filter="no-bio" type="button">No Bio</button>
+        <button class="chip" data-filter="image" type="button">Has Image</button>
+      </section>
+
+      <section class="stats-panel" aria-labelledby="statsHeading">
+        <div class="stats-header">
+          <div>
+            <p class="eyebrow">Quick Read</p>
+            <h2 id="statsHeading">Title Breakdown</h2>
+            <p class="stats-copy">
+              Role signals are inferred from the visible profiles' names, handles, and bios, and update with your current dataset, search, and filters.
+            </p>
+          </div>
+          <div class="stats-summary">
+            <div class="stat-card">
+              <span class="stat-label">Profiles In View</span>
+              <strong id="statsVisibleCount">0</strong>
+            </div>
+            <div class="stat-card">
+              <span class="stat-label">Matched Any Role</span>
+              <strong id="statsMatchedCount">0</strong>
+            </div>
+          </div>
+        </div>
+        <div class="stats-grid">
+          <section class="chart-card" aria-labelledby="roleBarHeading">
+            <div class="chart-copy">
+              <p class="eyebrow">Bar Chart</p>
+              <h3 id="roleBarHeading">Role Signals</h3>
+            </div>
+            <div id="roleBars" class="role-bars"></div>
+          </section>
+          <section class="chart-card" aria-labelledby="rolePieHeading">
+            <div class="chart-copy">
+              <p class="eyebrow">Pie Chart</p>
+              <h3 id="rolePieHeading">Primary Identity Mix</h3>
+            </div>
+            <div class="pie-layout">
+              <div class="pie-wrap">
+                <div id="rolePie" class="role-pie" aria-label="Primary title composition chart"></div>
+                <div class="pie-center">
+                  <strong id="pieCenterValue">0</strong>
+                  <span>visible</span>
+                </div>
+              </div>
+              <div id="pieLegend" class="pie-legend"></div>
+            </div>
+          </section>
+        </div>
+      </section>
+
+      <main>
+        <section id="coverflowSection" class="coverflow-section hidden" aria-label="Cover Flow viewer">
+          <button id="coverflowPrev" class="coverflow-nav prev" type="button" aria-label="Previous profile">‹</button>
+          <div id="coverflowViewport" class="coverflow-viewport" tabindex="0">
+            <div id="coverflowTrack" class="coverflow-track"></div>
+          </div>
+          <button id="coverflowNext" class="coverflow-nav next" type="button" aria-label="Next profile">›</button>
+          <div id="coverflowMeta" class="coverflow-meta"></div>
+        </section>
+        <div id="emptyState" class="empty-state hidden">
+          <h2>No profiles found</h2>
+          <p>Try a different search, sort, or dataset.</p>
+        </div>
+        <section id="results" class="results-grid" aria-live="polite"></section>
+      </main>
+    </div>
+
+    <template id="cardTemplate">
+      <article class="profile-card">
+        <div class="image-wrap">
+          <img class="avatar" alt="" loading="lazy" />
+          <div class="image-glow"></div>
+        </div>
+        <div class="card-body">
+          <h2 class="name"></h2>
+          <p class="handle"></p>
+          <p class="bio"></p>
+        </div>
+        <div class="hover-panel">
+          <p class="hover-name"></p>
+          <p class="hover-handle"></p>
+          <p class="hover-bio"></p>
+          <a class="profile-link" target="_blank" rel="noreferrer">Open profile</a>
+        </div>
+      </article>
+    </template>
+
+    <dialog id="profileModal" class="profile-modal">
+      <form method="dialog" class="profile-modal-shell">
+        <button class="modal-close" type="submit" aria-label="Close profile details">×</button>
+      </form>
+      <div class="profile-modal-content">
+        <div class="profile-modal-image-wrap">
+          <img id="modalAvatar" class="profile-modal-avatar" alt="" />
+        </div>
+        <div class="profile-modal-body">
+          <p id="modalHandle" class="profile-modal-handle"></p>
+          <h2 id="modalName" class="profile-modal-name"></h2>
+          <p id="modalBio" class="profile-modal-bio"></p>
+          <div class="profile-modal-actions">
+            <a id="modalProfileLink" class="profile-link modal-profile-link" target="_blank" rel="noreferrer">
+              Open profile
+            </a>
+            <a id="modalImageLink" class="profile-link modal-profile-link" target="_blank" rel="noreferrer">
+              Open image
+            </a>
+          </div>
+        </div>
+      </div>
+    </dialog>
+
+    <script src="./app.js" defer></script>
+  </body>
+  </html>
