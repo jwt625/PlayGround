@@ -1,10 +1,12 @@
-# X Verified Followers Scraper
+# X Followers Scraper
 
-This project contains a Selenium-based scraper for exporting follower profile metadata from an X followers page while reusing an already-authenticated local Firefox profile.
+This project contains a Selenium-based scraper for exporting profile metadata from X list pages while reusing an already-authenticated local Firefox profile.
 
-It was built for the verified followers page first:
+Supported list types:
 
 - `https://x.com/<account>/verified_followers`
+- `https://x.com/<account>/followers`
+- `https://x.com/<account>/following`
 
 The scraper collects:
 
@@ -51,12 +53,31 @@ Run a scrape:
 ```bash
 ./.venv/bin/python scrape_verified_followers.py \
   --mode scrape \
+  --target-kind verified_followers \
   --pause 1.5 \
   --max-scrolls 250 \
   --stagnant-limit 8 \
   --scroll-fraction 0.8 \
   --min-overlap-ratio 0.15 \
   --output-prefix verified_followers
+```
+
+Scrape the full followers list:
+
+```bash
+./.venv/bin/python scrape_verified_followers.py \
+  --mode scrape \
+  --target-kind followers \
+  --output-prefix followers
+```
+
+Scrape the following list:
+
+```bash
+./.venv/bin/python scrape_verified_followers.py \
+  --mode scrape \
+  --target-kind following \
+  --output-prefix following
 ```
 
 Download profile images too:
@@ -80,6 +101,60 @@ The scraper now performs an overlap audit between adjacent scroll windows.
 
 This helps detect cases where scrolling moves too far and risks skipping entries in a virtualized list.
 
+## Resume Support
+
+The scraper supports interruption-safe checkpointing.
+
+- It writes a checkpoint file during scraping.
+- The checkpoint stores collected records, overlap audit entries, and the most recent scroll position metadata.
+- You can restart the scrape with `--resume` to continue from the prior checkpoint instead of starting over.
+- Final successful runs remove the checkpoint file after the main outputs are written.
+
+Example:
+
+```bash
+./.venv/bin/python scrape_verified_followers.py \
+  --mode scrape \
+  --target-kind verified_followers \
+  --output-prefix verified_followers_formal \
+  --checkpoint-every 1
+```
+
+Resume later:
+
+```bash
+./.venv/bin/python scrape_verified_followers.py \
+  --mode scrape \
+  --target-kind verified_followers \
+  --output-prefix verified_followers_formal \
+  --resume
+```
+
+## Local Viewer
+
+A lightweight local web UI is included for browsing scraped datasets with search, sort, and multiple layouts.
+
+Start the viewer:
+
+```bash
+python3 serve_viewer.py
+```
+
+Then open:
+
+```text
+http://127.0.0.1:8000
+```
+
+Viewer features:
+
+- dataset picker for available `output/*.json` files
+- search by name, handle, or bio
+- sort by name, handle, or bio length
+- filter chips for bio and image presence
+- three layouts: `Tiles`, `Cover Flow`, and `List`
+- hover details with name, handle, bio, and a direct profile link
+
 ## Outputs
 
 The script writes:
@@ -87,6 +162,7 @@ The script writes:
 - `output/<prefix>.json`
 - `output/<prefix>.csv`
 - `output/<prefix>_audit.json`
+- `output/<prefix>_checkpoint.json` while a scrape is in progress
 - optionally `output/profile_images/`
 
 ## Notes
