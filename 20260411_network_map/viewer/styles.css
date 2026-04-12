@@ -187,6 +187,11 @@ select {
   color: var(--muted);
 }
 
+.stats-side {
+  display: grid;
+  gap: 14px;
+}
+
 .stats-header h2,
 .chart-card h3 {
   margin: 0;
@@ -198,6 +203,11 @@ select {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 14px;
+}
+
+.stats-display-control {
+  max-width: 220px;
+  justify-self: end;
 }
 
 .stats-grid {
@@ -218,7 +228,29 @@ select {
   margin-bottom: 16px;
 }
 
+.chart-copy-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: end;
+}
+
+.chart-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: flex-end;
+}
+
 .chart-copy .eyebrow {
+  margin-bottom: 6px;
+}
+
+.legend-sort-control {
+  min-width: 180px;
+}
+
+.legend-sort-control span {
   margin-bottom: 6px;
 }
 
@@ -823,6 +855,20 @@ select {
 
   .pie-layout {
     grid-template-columns: 1fr;
+  }
+
+  .chart-copy-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .chart-controls {
+    justify-content: stretch;
+  }
+
+  .stats-display-control {
+    justify-self: stretch;
+    max-width: none;
   }
 }
 

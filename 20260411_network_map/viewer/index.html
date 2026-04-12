@@ -84,15 +84,24 @@
               Role signals are inferred from the visible profiles' names, handles, and bios, and update with your current dataset, search, and filters.
             </p>
           </div>
-          <div class="stats-summary">
-            <div class="stat-card">
-              <span class="stat-label">Profiles In View</span>
-              <strong id="statsVisibleCount">0</strong>
+          <div class="stats-side">
+            <div class="stats-summary">
+              <div class="stat-card">
+                <span class="stat-label">Profiles In View</span>
+                <strong id="statsVisibleCount">0</strong>
+              </div>
+              <div class="stat-card">
+                <span class="stat-label">Matched Any Role</span>
+                <strong id="statsMatchedCount">0</strong>
+              </div>
             </div>
-            <div class="stat-card">
-              <span class="stat-label">Matched Any Role</span>
-              <strong id="statsMatchedCount">0</strong>
-            </div>
+            <label class="control stats-display-control">
+              <span>Values</span>
+              <select id="statsValueDisplaySelect">
+                <option value="fraction-only">Fraction Only</option>
+                <option value="count-and-fraction">Count + Fraction</option>
+              </select>
+            </label>
           </div>
         </div>
         <div class="stats-grid">
@@ -104,9 +113,22 @@
             <div id="roleBars" class="role-bars"></div>
           </section>
           <section class="chart-card" aria-labelledby="rolePieHeading">
-            <div class="chart-copy">
-              <p class="eyebrow">Pie Chart</p>
-              <h3 id="rolePieHeading">Primary Identity Mix</h3>
+            <div class="chart-copy chart-copy-row">
+              <div>
+                <p class="eyebrow">Pie Chart</p>
+                <h3 id="rolePieHeading">Primary Identity Mix</h3>
+              </div>
+              <div class="chart-controls">
+              <label class="control legend-sort-control">
+                <span>Legend Sort</span>
+                <select id="pieLegendSortSelect">
+                  <option value="fraction-desc">Fraction Desc</option>
+                  <option value="fraction-asc">Fraction Asc</option>
+                  <option value="label-asc">Alphabetical A-Z</option>
+                  <option value="label-desc">Alphabetical Z-A</option>
+                </select>
+              </label>
+              </div>
             </div>
             <div class="pie-layout">
               <div class="pie-wrap">

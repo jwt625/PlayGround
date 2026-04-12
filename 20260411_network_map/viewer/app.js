@@ -6,9 +6,19 @@ const state = {
   filteredRecords: [],
   coverflowIndex: 0,
   coverflowSignature: "",
+  pieLegendSort: "fraction-desc",
+  statsValueDisplay: "fraction-only",
 };
 
 const ROLE_BUCKETS = [
+  {
+    key: "no_bio",
+    label: "No Bio",
+    color: "#9f988b",
+    match(record) {
+      return !record.description?.trim();
+    },
+  },
   {
     key: "founder",
     label: "Founder",
@@ -47,27 +57,141 @@ const ROLE_BUCKETS = [
     patterns: [/\bcto\b/, /\bchief technology officer\b/],
   },
   {
+    key: "swe",
+    label: "SWE",
+    color: "#5aa9b2",
+    patterns: [
+      /\bsoftware engineer\b/,
+      /\bswe\b/,
+      /\bsoftware developer\b/,
+      /\bdeveloper\b/,
+      /\bfull stack\b/,
+      /\bbackend\b/,
+      /\bfrontend\b/,
+      /\bsre\b/,
+      /\bprogrammer\b/,
+      /\bcoder\b/,
+    ],
+  },
+  {
+    key: "ai_ml",
+    label: "AI / ML",
+    color: "#4d7ea8",
+    patterns: [
+      /\bartificial intelligence\b/,
+      /\bmachine learning\b/,
+      /\bai\b/,
+      /\bml\b/,
+      /\blanguage model\b/,
+      /\blanguage models\b/,
+      /\bllm\b/,
+      /\bgenai\b/,
+      /\bdeep learning\b/,
+      /\binference\b/,
+    ],
+  },
+  {
+    key: "robotics",
+    label: "Robotics",
+    color: "#6d597a",
+    patterns: [/\brobotics\b/, /\brobots\b/, /\brobot\b/, /\bautonomy\b/, /\bdriverless\b/, /\bdrone\b/],
+  },
+  {
+    key: "chip_nanofab",
+    label: "Chip / Nanofab",
+    color: "#a16ae8",
+    patterns: [
+      /\bsemiconductor\b/,
+      /\bchip\b/,
+      /\bchiplets\b/,
+      /\basic\b/,
+      /\bvlsi\b/,
+      /\bfpga\b/,
+      /\bpcb\b/,
+      /\bnanofab\b/,
+      /\bnanofabrication\b/,
+      /\bprocess node\b/,
+      /\bsilicon\b/,
+      /\brisc-v\b/,
+      /\bembedded\b/,
+    ],
+  },
+  {
+    key: "electronics",
+    label: "Electronics",
+    color: "#8d99ae",
+    patterns: [
+      /\belectronics\b/,
+      /\belectronic\b/,
+      /\belectronics engineer\b/,
+      /\belectrical engineer\b/,
+      /\belectrical engineering\b/,
+      /\bcircuit\b/,
+      /\bcircuits\b/,
+      /\banalog\b/,
+      /\bdigital design\b/,
+      /\bpcb\b/,
+      /\bembedded systems\b/,
+      /\bfirmware\b/,
+    ],
+  },
+  {
+    key: "optics_photonics_rf",
+    label: "Optics / Photonics / RF",
+    color: "#7b9acc",
+    patterns: [
+      /\boptics\b/,
+      /\boptical\b/,
+      /\bphotonics\b/,
+      /\bphotonic\b/,
+      /\brf\b/,
+      /\bradio frequency\b/,
+      /\bmicrowave\b/,
+      /\bantenna\b/,
+      /\blidar\b/,
+      /\blasers?\b/,
+    ],
+  },
+  {
+    key: "research_scientist",
+    label: "Research / Scientist",
+    color: "#8a6f52",
+    patterns: [
+      /\bresearcher\b/,
+      /\bresearch\b/,
+      /\bscientist\b/,
+      /\bscience\b/,
+      /\bphysicist\b/,
+      /\bphysics\b/,
+      /\bbiophysics\b/,
+      /\bmathematician\b/,
+      /\bmath\b/,
+      /\bcryptology\b/,
+      /\bosint\b/,
+    ],
+  },
+  {
     key: "head",
     label: "Head / Lead",
-    color: "#5aa9b2",
+    color: "#84a59d",
     patterns: [/\bhead of\b/, /\bhead\b/, /\blead\b/, /\bvp\b/, /\bvice president\b/, /\bdirector\b/],
   },
   {
     key: "professor",
     label: "Professor",
-    color: "#4d7ea8",
+    color: "#52796f",
     patterns: [/\bprofessor\b/, /\bassociate professor\b/, /\bassistant professor\b/, /\blecturer\b/, /\bfaculty\b/],
   },
   {
     key: "phd",
     label: "PhD",
-    color: "#6d597a",
+    color: "#b56576",
     patterns: [/\bphd\b/, /\bph\.d\b/, /\bdoctoral\b/, /\bdoctorate\b/],
   },
   {
     key: "masters",
     label: "Master's",
-    color: "#a16ae8",
+    color: "#355070",
     patterns: [/\bmasters\b/, /\bmaster's\b/, /\bm\.sc\b/, /\bmsc\b/, /\bms\b/],
   },
 ];
@@ -103,6 +227,8 @@ const elements = {
   rolePie: document.querySelector("#rolePie"),
   pieCenterValue: document.querySelector("#pieCenterValue"),
   pieLegend: document.querySelector("#pieLegend"),
+  pieLegendSortSelect: document.querySelector("#pieLegendSortSelect"),
+  statsValueDisplaySelect: document.querySelector("#statsValueDisplaySelect"),
 };
 
 const FALLBACK_AVATAR =
@@ -170,7 +296,12 @@ function normalizedText(record) {
 
 function getRoleMatches(record) {
   const haystack = normalizedText(record);
-  return ROLE_BUCKETS.filter((bucket) => bucket.patterns.some((pattern) => pattern.test(haystack)));
+  return ROLE_BUCKETS.filter((bucket) => {
+    if (typeof bucket.match === "function") {
+      return bucket.match(record);
+    }
+    return bucket.patterns.some((pattern) => pattern.test(haystack));
+  });
 }
 
 function computeRoleStats(records) {
@@ -229,6 +360,38 @@ function formatPercent(value) {
   return `${(value * 100).toFixed(value > 0 && value < 0.1 ? 1 : 0)}%`;
 }
 
+function formatStatValue(count, ratio) {
+  const fraction = formatPercent(ratio);
+  if (state.statsValueDisplay === "fraction-only") {
+    return fraction;
+  }
+  return `${count} · ${fraction}`;
+}
+
+function sortPieRows(rows, totalProfiles) {
+  const mode = state.pieLegendSort;
+  const collator = new Intl.Collator(undefined, { sensitivity: "base" });
+  const sorted = [...rows];
+
+  sorted.sort((a, b) => {
+    const aRatio = totalProfiles ? a.count / totalProfiles : 0;
+    const bRatio = totalProfiles ? b.count / totalProfiles : 0;
+
+    if (mode === "fraction-desc") {
+      return bRatio - aRatio || collator.compare(a.label, b.label);
+    }
+    if (mode === "fraction-asc") {
+      return aRatio - bRatio || collator.compare(a.label, b.label);
+    }
+    if (mode === "label-desc") {
+      return collator.compare(b.label, a.label);
+    }
+    return collator.compare(a.label, b.label);
+  });
+
+  return sorted;
+}
+
 function renderStats(records) {
   const stats = computeRoleStats(records);
   elements.statsVisibleCount.textContent = String(stats.totalProfiles);
@@ -245,7 +408,7 @@ function renderStats(records) {
     item.innerHTML = `
       <div class="role-bar-meta">
         <span class="role-bar-label">${escapeHtml(row.label)}</span>
-        <span class="role-bar-value">${row.count} · ${formatPercent(row.ratio)}</span>
+        <span class="role-bar-value">${formatStatValue(row.count, row.ratio)}</span>
       </div>
       <div class="role-bar-track">
         <div class="role-bar-fill" style="--bar-width: ${row.ratio * 100}%; --bar-color: ${row.color};"></div>
@@ -270,13 +433,14 @@ function renderStats(records) {
     current = next;
   }
   elements.rolePie.style.background = `conic-gradient(${stops.join(", ")})`;
-  elements.pieLegend.innerHTML = stats.pieRows.map((row) => {
+  const legendRows = sortPieRows(stats.pieRows, stats.totalProfiles);
+  elements.pieLegend.innerHTML = legendRows.map((row) => {
     const ratio = stats.totalProfiles ? row.count / stats.totalProfiles : 0;
     return `
       <div class="pie-legend-row">
         <span class="legend-swatch" style="--swatch-color: ${row.color};"></span>
         <span class="legend-label">${escapeHtml(row.label)}</span>
-        <span class="legend-value">${row.count} · ${formatPercent(ratio)}</span>
+        <span class="legend-value">${formatStatValue(row.count, ratio)}</span>
       </div>
     `;
   }).join("");
@@ -524,6 +688,14 @@ function bindEvents() {
   elements.searchInput.addEventListener("input", render);
   elements.sortSelect.addEventListener("change", render);
   elements.viewSelect.addEventListener("change", render);
+  elements.pieLegendSortSelect.addEventListener("change", (event) => {
+    state.pieLegendSort = event.target.value;
+    render();
+  });
+  elements.statsValueDisplaySelect.addEventListener("change", (event) => {
+    state.statsValueDisplay = event.target.value;
+    render();
+  });
   elements.coverflowPrev.addEventListener("click", () => {
     state.coverflowIndex = clamp(state.coverflowIndex - 1, 0, state.filteredRecords.length - 1);
     render();
