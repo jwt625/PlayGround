@@ -194,6 +194,25 @@ const ROLE_BUCKETS = [
     color: "#355070",
     patterns: [/\bmasters\b/, /\bmaster's\b/, /\bm\.sc\b/, /\bmsc\b/, /\bms\b/],
   },
+  {
+    key: "undergrad",
+    label: "Undergrad",
+    color: "#6c757d",
+    patterns: [
+      /\bundergrad\b/,
+      /\bundergraduate\b/,
+      /\bcollege student\b/,
+      /\bcs student\b/,
+      /\bee student\b/,
+      /\bme student\b/,
+      /\bstudent @\b/,
+      /\bstudying at\b/,
+      /\bclass of 20\d{2}\b/,
+      /\bb\.s\b/,
+      /\bbs\b/,
+      /\bba\b/,
+    ],
+  },
 ];
 
 const elements = {
