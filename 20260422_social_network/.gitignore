@@ -1,0 +1,21 @@
+# Python
+__pycache__/
+.pytest_cache/
+.ruff_cache/
+.venv/
+
+# Frontend
+node_modules/
+.svelte-kit/
+build/
+.output/
+
+# Local environment
+.env
+.env.*
+!.env.example
+!.env.test
+
+# OS
+.DS_Store
+Thumbs.db
