@@ -3,6 +3,27 @@
 Date: 2026-04-22
 Author: Wentao & Codex
 
+## Implementation Status
+
+Last updated: 2026-04-23
+
+Current state:
+
+- Backend core CRUD is live for people, organizations, reminders, and events.
+- Relationship scoring now updates from event history and is exposed on person detail views with a simple explanation string.
+- Person and organization detail now include structured metadata, linked pipeline items, and relationship context.
+- Frontend now has a dense dashboard plus working people, organizations, events, reminders, pipelines, search, imports, and exports screens wired to the API.
+- The UI direction has been intentionally minimized: low color, sharp corners, tighter spacing, denser tables, and utility-first layouts.
+- Backend list endpoints now emit pagination metadata through response headers.
+- A local demo-seed endpoint and smoke-test documentation now exist for faster manual verification.
+
+Highest-priority remaining MVP gaps:
+
+- Remaining gaps are mostly hardening-level rather than missing major surfaces.
+- API error payloads are now normalized for validation and HTTP errors.
+- Enum-style validation now covers the main event, reminder, and organization categorical fields.
+- Search/filter coverage now has a Postgres full-text path with portable fallback behavior for local SQLite tests.
+
 ## Summary
 
 DevLog 000 defined the broad vision: a local-first, private relationship management system for people, shared experiences, reminders, and contextual relationship maintenance.
@@ -874,8 +895,8 @@ TODO:
 - [x] Add `tags` and `entity_tags` tables.
 - [x] Add Pydantic create, update, list, and detail schemas.
 - [x] Add CRUD APIs for people and organizations.
-- [ ] Add nested or related APIs for contact methods, external profiles, locations, tags, and organization roles.
-- [ ] Add exact-match duplicate guardrails where simple and low-risk.
+- [x] Add nested or related APIs for contact methods, external profiles, locations, tags, and organization roles.
+- [x] Add exact-match duplicate guardrails where simple and low-risk.
 - [x] Add initial pytest coverage for people and organizations endpoints.
 
 ### Phase 2: Events And Relationship Timeline
@@ -889,12 +910,12 @@ TODO:
 - [x] Add `interaction_events` table with title, type, time range, context, summary, notes, sentiment, and soft delete support.
 - [x] Add `event_people`, `event_organizations`, and `event_locations` association tables.
 - [x] Add `source_links` table for event and entity references back to external systems.
-- [ ] Add event CRUD APIs.
-- [ ] Add person profile timeline query.
-- [ ] Update person `last_interaction_date` after event changes.
-- [ ] Implement first-pass relationship score service using interaction count, recency, duration, and event type weights.
-- [ ] Store or expose relationship category explanation.
-- [ ] Add tests for one-on-one events, group events, and timeline ordering.
+- [x] Add event CRUD APIs.
+- [x] Add person profile timeline query.
+- [x] Update person `last_interaction_date` after event changes.
+- [x] Implement first-pass relationship score service using interaction count, recency, duration, and event type weights.
+- [x] Store or expose relationship category explanation.
+- [x] Add tests for one-on-one events, group events, and timeline ordering.
 
 ### Phase 3: Reminders And Follow-Up Loop
 
@@ -906,12 +927,12 @@ TODO:
 
 - [x] Add `reminders` table attachable to person, organization, event, or pipeline item.
 - [x] Add reminder status, priority, due date, snooze date, completed date, notes, and soft delete support.
-- [ ] Add reminder CRUD APIs.
-- [ ] Add `POST /reminders/{reminder_id}/snooze`.
-- [ ] Add `POST /reminders/{reminder_id}/complete`.
-- [ ] Add dashboard query for overdue, due today, and upcoming reminders.
-- [ ] Update person `next_reminder_date` from open reminders.
-- [ ] Add tests for open, snoozed, completed, canceled, overdue, and upcoming reminder behavior.
+- [x] Add reminder CRUD APIs.
+- [x] Add `POST /reminders/{reminder_id}/snooze`.
+- [x] Add `POST /reminders/{reminder_id}/complete`.
+- [x] Add dashboard query for overdue, due today, and upcoming reminders.
+- [x] Update person `next_reminder_date` from open reminders.
+- [x] Add tests for open, snoozed, completed, canceled, overdue, and upcoming reminder behavior.
 
 ### Phase 4: Frontend Core Relationship Experience
 
@@ -921,16 +942,16 @@ Goal:
 
 TODO:
 
-- [ ] Add frontend API client with typed request helpers.
-- [ ] Build app shell with dashboard, people, organizations, events, reminders, and pipelines navigation.
-- [ ] Build dashboard with search entry, recent people, overdue reminders, and upcoming reminders.
-- [ ] Build people list with search, relationship category, location, tags, and last interaction columns.
-- [ ] Build person create/edit form optimized for under-one-minute capture.
-- [ ] Build person profile with overview, contact methods, external profiles, organizations, locations, tags, notes, timeline, and reminders.
-- [ ] Build organization list and organization profile.
-- [ ] Build event list and event create/edit flow with multiple participants.
-- [ ] Build reminder dashboard with complete and snooze actions.
-- [ ] Make profile and reminder views usable on mobile.
+- [x] Add frontend API client with typed request helpers.
+- [x] Build app shell with dashboard, people, organizations, events, reminders, and pipelines navigation.
+- [x] Build dashboard with search entry, recent people, overdue reminders, and upcoming reminders.
+- [x] Build people list with search, relationship category, location, tags, and last interaction columns.
+- [x] Build person create/edit form optimized for under-one-minute capture.
+- [x] Build person profile with overview, contact methods, external profiles, organizations, locations, tags, notes, timeline, and reminders.
+- [x] Build organization list and organization profile.
+- [x] Build event list and event create/edit flow with multiple participants.
+- [x] Build reminder dashboard with complete and snooze actions.
+- [x] Make profile and reminder views usable on mobile.
 
 ### Phase 5: Generic Pipelines
 
@@ -941,14 +962,14 @@ Goal:
 TODO:
 
 - [x] Add `pipelines`, `pipeline_stages`, and `pipeline_items` tables.
-- [ ] Add pipeline CRUD APIs.
-- [ ] Add pipeline item create, update, and move APIs.
-- [ ] Seed relationship nurture pipeline stages: Noted, Need follow-up, Conversation started, Building trust, Active relationship, Dormant.
-- [ ] Optionally seed secondary investor, partner, and supplier templates.
-- [ ] Build pipeline board UI.
-- [ ] Link pipeline items to people and organizations.
-- [ ] Surface linked pipeline items lightly on person and organization profiles.
-- [ ] Add tests for moving pipeline items and preserving stage order.
+- [x] Add pipeline CRUD APIs.
+- [x] Add pipeline item create, update, and move APIs.
+- [x] Seed relationship nurture pipeline stages: Noted, Need follow-up, Conversation started, Building trust, Active relationship, Dormant.
+- [x] Optionally seed secondary investor, partner, and supplier templates.
+- [x] Build pipeline board UI.
+- [x] Link pipeline items to people and organizations.
+- [x] Surface linked pipeline items lightly on person and organization profiles.
+- [x] Add tests for moving pipeline items and preserving stage order.
 
 ### Phase 6: Search, Filters, Import, And Export
 
@@ -958,14 +979,14 @@ Goal:
 
 TODO:
 
-- [ ] Add global search endpoint covering people, organizations, event summaries, notes, tags, city, industry, school, and company.
-- [ ] Add list filters for tag, location, organization, industry, school, relationship category, reminder status, pipeline, and pipeline stage.
-- [ ] Use Postgres full-text search where practical; keep simple `ilike` fallback behavior for early development.
-- [ ] Add people CSV import with tags, contact methods, and organization name columns.
-- [ ] Add exact-match import dedupe by email and display name where safe.
-- [ ] Add CSV exports for people, organizations, events, and reminders.
-- [ ] Build import/export frontend page.
-- [ ] Add tests for CSV import validation and export shape.
+- [x] Add global search endpoint covering people, organizations, event summaries, notes, tags, city, industry, school, and company.
+- [x] Add list filters for tag, location, organization, industry, school, relationship category, reminder status, pipeline, and pipeline stage.
+- [x] Use Postgres full-text search where practical; keep simple `ilike` fallback behavior for early development.
+- [x] Add people CSV import with tags, contact methods, and organization name columns.
+- [x] Add exact-match import dedupe by email and display name where safe.
+- [x] Add CSV exports for people, organizations, events, and reminders.
+- [x] Build import/export frontend page.
+- [x] Add tests for CSV import validation and export shape.
 
 ### Phase 7: MVP Hardening
 
@@ -975,15 +996,15 @@ Goal:
 
 TODO:
 
-- [ ] Add consistent API error responses.
-- [ ] Add pagination metadata to list endpoints.
-- [ ] Add backend validation for enum-like fields.
-- [ ] Add empty states and loading states in the frontend.
-- [ ] Add seed data for local demo and manual testing.
-- [ ] Add smoke test documentation.
-- [ ] Confirm soft-deleted records are excluded from normal list and search results.
-- [ ] Confirm export keeps user data portable.
-- [ ] Review docs against actual commands and update any drift.
+- [x] Add consistent API error responses.
+- [x] Add pagination metadata to list endpoints.
+- [x] Add backend validation for enum-like fields.
+- [x] Add empty states and loading states in the frontend.
+- [x] Add seed data for local demo and manual testing.
+- [x] Add smoke test documentation.
+- [x] Confirm soft-deleted records are excluded from normal list and search results.
+- [x] Confirm export keeps user data portable.
+- [x] Review docs against actual commands and update any drift.
 
 ## Success Criteria
 

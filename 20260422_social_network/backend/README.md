@@ -16,6 +16,12 @@ The API runs at `http://localhost:8000`.
 
 Only Postgres is expected to run in Docker for the MVP local dev loop.
 
+## Demo Seed
+
+```sh
+curl -X POST http://localhost:8000/api/demo/seed
+```
+
 ## Checks
 
 ```sh

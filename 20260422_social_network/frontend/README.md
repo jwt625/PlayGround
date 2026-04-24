@@ -19,6 +19,18 @@ The backend should be run separately from `../backend` with `uv run uvicorn app.
 
 The frontend should call the backend at `http://localhost:8000`.
 
+## Current Pages
+
+- `/`
+- `/people`
+- `/organizations`
+- `/events`
+- `/reminders`
+- `/pipelines`
+- `/search`
+- `/imports`
+- `/exports`
+
 ## Build
 
 Production builds are not required for daily local development.

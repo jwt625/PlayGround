@@ -3,7 +3,11 @@ from uuid import UUID
 
 from pydantic import BaseModel, Field
 
-from app.schemas.common import ORMModel, TimestampedSchema
+from app.schemas.common import TimestampedSchema
+from app.schemas.event import EventRead
+from app.schemas.metadata import EntityLocationRead, EntityTagRead, PersonOrganizationRead
+from app.schemas.pipeline import PipelineItemRead
+from app.schemas.reminder import ReminderRead
 
 
 class ContactMethodBase(BaseModel):
@@ -36,17 +40,6 @@ class ExternalProfileCreate(ExternalProfileBase):
 
 class ExternalProfileRead(ExternalProfileBase, TimestampedSchema):
     id: UUID
-
-
-class PersonOrganizationRead(ORMModel):
-    id: UUID
-    organization_id: UUID
-    title: str | None = None
-    role_type: str | None = None
-    start_date: date | None = None
-    end_date: date | None = None
-    is_current: bool
-    notes: str | None = None
 
 
 class PersonBase(BaseModel):
@@ -92,3 +85,12 @@ class PersonRead(PersonBase, TimestampedSchema):
     contact_methods: list[ContactMethodRead] = []
     external_profiles: list[ExternalProfileRead] = []
     organization_roles: list[PersonOrganizationRead] = []
+
+
+class PersonDetailRead(PersonRead):
+    locations: list[EntityLocationRead] = []
+    tags: list[EntityTagRead] = []
+    recent_events: list[EventRead] = []
+    active_reminders: list[ReminderRead] = []
+    pipeline_items: list[PipelineItemRead] = []
+    relationship_score_reason: str | None = None

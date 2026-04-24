@@ -70,3 +70,21 @@ Or run all frontend checks together:
 ```sh
 pnpm check:all
 ```
+
+## Demo Seed
+
+Seed a small local dataset after the backend is running:
+
+```sh
+curl -X POST http://localhost:8000/api/demo/seed
+```
+
+## Smoke Test
+
+1. Start Postgres, backend, and frontend with the commands above.
+2. Optionally seed demo data with `POST /api/demo/seed`.
+3. Open `http://localhost:5173`.
+4. Verify `People`, `Organizations`, `Events`, `Reminders`, `Pipelines`, `Search`, `Imports`, and `Exports` all load.
+5. Create a person, log an event, add a reminder, and confirm the person detail updates.
+6. Add a pipeline item and advance it to the next stage.
+7. Export a CSV and confirm the new records are present.
