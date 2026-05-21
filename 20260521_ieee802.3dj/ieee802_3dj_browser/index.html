@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>IEEE P802.3dj Presentation Browser</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="app">
+      <header class="topbar">
+        <div>
+          <h1>IEEE P802.3dj Presentations</h1>
+          <p>Cached meeting materials, metadata, and extracted text.</p>
+        </div>
+        <div class="stats" id="stats">Loading</div>
+      </header>
+
+      <section class="controls" aria-label="Search and sorting controls">
+        <input id="search" type="search" placeholder="Search title, people, affiliation, filename, extracted text" />
+        <select id="sortBy" aria-label="Sort presentations">
+          <option value="date-desc">Date, newest first</option>
+          <option value="date-asc">Date, oldest first</option>
+          <option value="meeting-desc">Meeting, newest first</option>
+          <option value="meeting-asc">Meeting, oldest first</option>
+          <option value="title-asc">Title A-Z</option>
+          <option value="presenter-asc">Presenter A-Z</option>
+          <option value="size-desc">File size, largest first</option>
+        </select>
+        <label class="check"><input id="textSearch" type="checkbox" /> Include extracted text</label>
+      </section>
+
+      <section class="layout">
+        <aside class="months" aria-label="Meeting month filters">
+          <div class="panel-head">
+            <span>Months</span>
+            <button id="clearMonths" type="button">All</button>
+          </div>
+          <div id="monthList" class="month-list"></div>
+        </aside>
+
+        <aside class="presentations" aria-label="Presentations">
+          <div class="panel-head">
+            <span>Presentations</span>
+            <span id="resultCount"></span>
+          </div>
+          <div id="presentationList" class="presentation-list"></div>
+        </aside>
+
+        <section class="detail" aria-live="polite">
+          <div class="detail-head">
+            <div>
+              <div class="code" id="detailCode"></div>
+              <h2 id="detailTitle">Select a presentation</h2>
+              <p id="detailMeta"></p>
+            </div>
+            <nav class="links" id="detailLinks"></nav>
+          </div>
+
+          <div class="tabs" role="tablist">
+            <button class="tab active" id="overviewTab" type="button">Overview</button>
+            <button class="tab" id="markdownTab" type="button">Extracted Text</button>
+            <button class="tab" id="rawTab" type="button">Metadata</button>
+          </div>
+
+          <article class="overview" id="overviewView"></article>
+          <article class="markdown hidden" id="markdownView"></article>
+          <article class="row-view hidden" id="rawView"></article>
+        </section>
+      </section>
+    </main>
+    <script src="app.js"></script>
+  </body>
+</html>

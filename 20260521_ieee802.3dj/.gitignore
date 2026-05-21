@@ -1,0 +1,6 @@
+.venv-marker/
+__pycache__/
+ieee802_3dj_cache/
+ieee802_3dj_browser/extracted_text/
+ieee802_3dj_browser/metadata/
+IEEE-802p3dj-cache-checklist.md
