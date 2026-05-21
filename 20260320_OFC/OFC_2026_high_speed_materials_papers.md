@@ -58,6 +58,64 @@ Source: local cached OFC metadata in `output/full_metadata/ofc_full_metadata.csv
 | `M1H.1` | Over-3-Tb/s/lambda Free-Space MIMO Transmission Under Diffraction | NTT, Inc. | 3.6T/lambda FSO |
 | `M3F.3` | 4,096x4,096 Optical Circuit Switch Delivering 819.2 Tb/s | Nagoya University; Toyota Technological Institute | AI-networking OCS demo, 819.2T switching layer |
 
+## Optical Circuit Switching (OCS) / Optical AI Fabrics
+
+| Code | Presentation / paper | Affiliation(s) | OCS angle |
+|---|---|---|---|
+| `M2D.3` | High Port Count Silicon Photonic MEMS Circuit Switch | nEye.ai | SiPh MEMS OCS device requirements: switching speed, power, polarization, and loss |
+| `M3F.2` | Experimental Demonstration of O-Band 4x4x8lambda Wavelength Selective Switch at 100Gbps/lambda for Data Center Networks | Technische Universiteit Eindhoven; Huawei Technologies Duesseldorf GmbH | O-band modular WSS for data-center optical switching |
+| `M3F.3` | A 4,096x4,096 Strictly Non-Blocking Optical Circuit Switch Delivering 819.2 Tb/s via Space-and-Wavelength Routing | Nagoya University; Toyota Technological Institute | Large-radix non-blocking OCS using space-and-wavelength routing |
+| `M3F.4` | Reconfiguration-Aware Direct-Connect AI Cluster Using Spatial-and-Wavelength-Selective Switching | Columbia University; Massachusetts Institute of Technology | AI cluster integrated with spatial/wavelength switching and Linux network stack |
+| `M3F.5` | Training-Phase-Aware Optical Circuit Switching Reconfiguration for Large Language Model | University of Cambridge; imec | Phase-aware OCS reconfiguration for LLM training collectives |
+| `M3F.6` | Optical Switching for AI Factories | NVIDIA Corporation | System/architecture perspective on optical switching for large GPU clusters |
+| `M4F.2` | Accelerating LLM Training in Optical AI Clusters With Asynchronously-Invoked Hitless in-Job Partial TPE | University of Science and Technology of China | Hitless partial OCS topology reconfiguration during LLM training |
+| `W2A.28` | Performance Thresholds for Optical Circuit Switching in LLM Inference | University of California Berkeley | OCS reconfiguration-speed thresholds for LLM inference networks |
+| `W2A.31` | OCS-Based Double Resource Pooling for Flexible Intra- and Inter-Rail Connectivity in AIDC Networks | Shanghai Jiao Tong University | Flat OCS-based AIDC network with double resource pooling and lower power |
+| `W2A.41` | PCIe-Over-Optics With OSFP DR8 LPO and an Optical Circuit Switching Fabric for Composable CPU-GPU Resource Pooling | Alibaba Cloud Computing; Ruijie Networks | Dynamic OCS fabric for composable CPU-GPU resource pooling |
+| `W4H.3` | Cluster- and Reach-Scalable Optical Switching for Scale-Across AI System | KDDI Research, Inc.; GeNopsys Technologies, Inc. | OCS-based scale-across GPU cluster architecture over metro reach |
+| `W4H.4` | Auto-Allocating OCS Based on Real Time Flow-Granularity Controller for LM Training | Beijing University of Posts and Telecommunications; China Unicom Research Institute; Infrawaves; Institute of Computing Technology, CAS | Per-flow OCS controller for LM training hot-flow routing |
+| `W4H.6` | Research and Practice of Optical Network Technology for High Reliability Interconnection of Large Scale Data Centers | China Telecom Research Institute; China Telecommunications Corporation | Field/lab validation combining coherent transmission, OCS, and fast rerouting |
+| `Th2A.35` | HOCSS: a Hardware-Accelerated Optical Circuit Switch Scheduler for low-Latency Optimal Ports Matching | Institute of Computing Technology, CAS; University of Chinese Academy of Sciences | Hardware-accelerated OCS scheduler with sub-microsecond matching latency |
+| `Tu2C.6` | Demonstration of a Collision Control Mechanism for Inter-AIDC Traffic in a Spine-Leaf Multi-Granularity All-Optical Switching Network | Beijing University of Posts & Telecom | FPGA-tested collision control for multi-granularity all-optical switching |
+
+## Papers by Watched Google Scholar Alert Authors
+
+| Code | Presentation / paper | Affiliation(s) | Matched alert author(s) |
+|---|---|---|---|
+| `Th1H.2` | Silicon-Organic Hybrid (SOH) Racetrack Modulators for 200 Gbit/s PAM4 Signaling With Ultra-low Drive Voltages | Karlsruher Institut fur Technologie | Christian Koos |
+| `Th3J.5` | Silicon-Organic Hybrid (SOH) IQ Modulators With Sub-1 v pi-Voltages Operating at 200 GBd 16QAM and 144 GBd 64QAM | Karlsruhe Institute of Technology (KIT); SilOriX GmbH | Christian Koos |
+| `M2J.5` | Characterization of Multi-Path Interference of 10-km Hollow Core Fiber Using Swept Wavelength Interferometry | Nokia Bell Labs; Yangtze Optical Fibre and Cable Joint Stock Ltd Co; nokia | David Neilson |
+| `M3E.1` | Advances in Pump Delivery and Recycling for High-Efficiency Multicore Erbium-Doped Fiber Amplifiers | Nokia Bell Labs; Sumitomo Electric Industries, Ltd. | David Neilson |
+| `M4J.5` | Coexistence Demonstration of Reflective OFDR Sensing and Commercial Transceivers in a Submarine Testbed | Nokia Bell Labs | David Neilson |
+| `M4J.7` | Real-Time Coherent OFDR Over Live Networks: From Access to Subsea | Nokia Bell Labs | David Neilson |
+| `Th1K.1` | Real-Time, 1-m Resolution Measurement of the Optical Distribution Network of a 21-km, 1:32 PON With a Coherent Optical Frequency Domain Reflectometer | Nokia Bell Labs | David Neilson |
+| `Th4B.5` | 450 Tb/s GMI, 42.4 THz, OESCL-Band Transmission Over a Field-Deployed Fiber | NICT; University College London; Aston University; Lightera Laboratories | David Neilson |
+| `Th4C.7` | High-Resolution Trans-Oceanic Distributed Acoustic Sensing Enabled by a Bi-Directional Sensor Implementation | Nokia Bell Labs; Seismics Unusual LLC; Leidos Inc; Valey Kamalov LLC | David Neilson |
+| `Tu2C.2` | Distributed and Dynamic AI Agent Collaboration Over Optical Transport for Network Orchestration and Monitoring | Nokia Bell Labs | David Neilson |
+| `W3A.3` | Impact of Tight Channel Spacing With Fiber Switching in WDM Networks Using 800ZR+ Interfaces | Nokia Bell Labs, USA; NOKIA | David Neilson |
+| `W1B.4` | A 53-Gbaud NRZ/PAM4 x 8-Channel 1060-nm Single-Mode VCSEL-Based Ultra-Compact and High-Energy-Efficient CPO Transceiver for Full-Reach Datacenter Links | Furukawa Denki Kogyo Kabushiki Kaisha; Fuji Film Business Innovation Kabushiki Kaisha; Institute of Science Tokyo | Fumio Koyama |
+| `W4E.3` | 200-Gb/s 1060-nm Single-Mode Coupled-Cavity VCSEL Enabling Modal-Dispersion Free >50-GHz Bandwidth Over 500-m Multimode Fiber | Institute of Science Tokyo | Fumio Koyama |
+| `W4E.5` | O-Band Membrane Surface-Emitting Laser on a Si Substrate Demonstrating 100-Gbps PAM-4 Operation | Device Technology Labs., NTT, Inc.; Institute of Integrated Research, Institute of Science Tokyo | Fumio Koyama |
+| `Tu3C.2` | Ring Resonator-Based Dynamic Controller for Precise Wavelength Separation of a DWDM Laser Source | Intel Corporation | Haisheng Rong |
+| `M1E.4` | On-Chip Programmable MZI-Based Fourier Synthesizer for Ultra-Broadband Kerr-Comb Equalization | Columbia University | Michal Lipson |
+| `Th1F.5` | High-Power Kerr Comb Source for Data Communications | Columbia University | Michal Lipson |
+| `W4B.2` | All-Dielectric Integrated Microlens Coupler for Scalable and Efficient Photonic I/Os | University of California Berkeley | Ming C. Wu |
+| `M4B.5` | Highly-Integrated 16-Channel Silicon-Photonics Optical Engine Enabling PAM6 Transmission With BER < 1E-9 | Ciena Corporation | Peter Winzer |
+| `W1D.7` | Co-Design of Electronic and Photonic Systems for Future LPO, NPO, and CPO | Ciena Corporation | Peter Winzer |
+| `M1E.5` | Ultra-Broadband Bidirectional Spectrometer for Parallel Detection | Cambridge University; Glitterin Technology | Richard Penty |
+| `M2D.2` | Curved Tunable Directional Couplers Empower Ultralow-Crosstalk, Low-Loss Optical Switch Fabrics | University of Cambridge; Universiteit Gent; University of California, Los Angeles | Richard Penty |
+| `M3F.5` | Training-Phase-Aware Optical Circuit Switching Reconfiguration for Large Language Model | University of Cambridge; Interuniversitair Micro-Elektronica Centrum | Richard Penty |
+| `W2A.6` | Encoder-Decoder Codesign of Lightweight 3D Surface Profiler via Integrated Photonic Sampler | University of Cambridge; GlitterinTech Limited | Richard Penty |
+| `W2A.7` | Quasi-Wavelength-Agnostic Photonic Coupler Using 3D-Nanoprinting | University of Cambridge | Richard Penty |
+| `M1F.7` | Renyi Divergence-Based Nonlinear OLT-Side Tomlinson-Harashima Precoding for 100G FTN PON | The Chinese University of Hong Kong; South China University of Technology; University of California Davis; Politecnico di Torino | S. J. Ben Yoo |
+| `M4F.1` | 1024x1024 All-to-All Interconnect Thin-CLOS-LION System Using 64 Lambda Routing on Athermal 64x64 ULCF AWGRs | University of California Davis; Enablence, Inc | S. J. Ben Yoo |
+| `Th3C.1` | Chiplet-to-Chiplet All-to-All Interconnecting Photonic Interposer Using AWGRs With 3D Ultrafast-Laser-Inscription | UC Davis | S. J. Ben Yoo |
+| `Tu2D.2` | 3D Hybrid Bonded EIC-PIC Integration and Packaging Technologies | University of California Davis | S. J. Ben Yoo |
+| `Th1F.6` | A Photonic Integrated Mode-Locked Laser Based on Dispersion-Managed Mode-Locking Architecture | Ecole polytechnique federale de Lausanne; Helmholtz-Zentrum Dresden-Rossendorf | Tobias J. Kippenberg |
+| `Th2A.21` | Evaluation of an Erbium Doped Waveguide Amplifier RF Performance in Microwave Photonics Applications | Consorzio Nazionale Interuniversitario per le Telecomunicazioni; Scuola Superiore Sant'Anna; Ecole polytechnique federale de Lausanne | Tobias J. Kippenberg |
+| `W1A.5` | Lithium-Tantalate-on-Fused Silica Mach-Zehnder Modulators | Ecole Polytechnique Federale de Lausanne; Karlsruher Institut fur Technologie | Tobias J. Kippenberg; Christian Koos |
+| `W1A.7` | A 1.6 Tbit/s WDM Integrated Photonic IMDD Transmitter on Thin-Film Lithium Tantalate | Swiss Federal Institute of Technology; Karlsruher Institut fur Technologie; Shanghai Institute of Microsystem and Information Technology | Tobias J. Kippenberg; Christian Koos |
+
 ## Shortlist
 
 The densest must-read cluster for high-speed material/platform demos is: `Th4B.2`, `Th4B.3`, `Th4A.1`, `Th4A.2`, `Th4A.6`, `Th4A.7`, `W4J.4`, `Th1D.1`, `M4D.2`, and `M4D.4`.

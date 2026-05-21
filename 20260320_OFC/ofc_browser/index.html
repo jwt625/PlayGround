@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>OFC 2026 High-Speed Materials Papers</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="app">
+      <header class="topbar">
+        <div>
+          <h1>OFC 2026 Papers</h1>
+          <p>High-speed materials, heterogeneous integration, and 1.6T+ shortlist.</p>
+        </div>
+        <div class="stats" id="stats">Loading</div>
+      </header>
+
+      <section class="controls" aria-label="Filters">
+        <input id="search" type="search" placeholder="Search code, title, affiliation, note" />
+        <select id="sectionFilter" aria-label="Section filter">
+          <option value="">All sections</option>
+        </select>
+        <label class="check"><input id="availableOnly" type="checkbox" /> Has PDF/text</label>
+      </section>
+
+      <section class="layout">
+        <aside class="paper-list" aria-label="Papers">
+          <div class="list-head">
+            <span>Table</span>
+            <span id="resultCount"></span>
+          </div>
+          <div id="paperList"></div>
+        </aside>
+
+        <section class="detail" aria-live="polite">
+          <div class="detail-head">
+            <div>
+              <div class="code" id="detailCode"></div>
+              <h2 id="detailTitle">Select a paper</h2>
+              <p id="detailMeta"></p>
+            </div>
+            <nav class="links" id="detailLinks"></nav>
+          </div>
+          <div class="note" id="detailNote"></div>
+          <div class="tabs" role="tablist">
+            <button class="tab active" id="markdownTab" type="button">Markdown</button>
+            <button class="tab" id="tableTab" type="button">Table Row</button>
+          </div>
+          <article class="markdown" id="markdownView"></article>
+          <article class="row-view hidden" id="rowView"></article>
+        </section>
+      </section>
+    </main>
+    <script src="app.js"></script>
+  </body>
+</html>
