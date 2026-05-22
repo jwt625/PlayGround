@@ -57,6 +57,25 @@ a:hover {
   margin-bottom: 12px;
 }
 
+.topbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.icon-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--muted);
+  line-height: 1;
+}
+
+.icon-link:hover {
+  color: var(--text);
+  text-decoration: none;
+}
+
 h1,
 h2,
 h3,
