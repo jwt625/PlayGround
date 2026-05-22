@@ -36,6 +36,7 @@ METADATA_ROOT = OUTPUT_ROOT / "metadata"
 PROGRESS_JSONL = METADATA_ROOT / "progress.jsonl"
 DOCUMENTS_JSON = METADATA_ROOT / "documents.json"
 TALKS_JSON = METADATA_ROOT / "talks.json"
+CORRECTIONS_JSON = ROOT / "tools" / "metadata_corrections.json"
 PUBLIC_BASE_URL = "https://www.ieee802.org/3/dj/public/"
 BR_MARK = "\u241e"
 
@@ -131,7 +132,24 @@ def slug_doc_id(meeting: str, filename: str) -> str:
 
 
 def clean_inline(value: str) -> str:
-    return re.sub(r"\s+", " ", value.replace("\xa0", " ")).strip()
+    value = re.sub(r"<!--.*?-->", " ", value, flags=re.S)
+    value = value.replace("\xa0", " ")
+    value = re.sub(r"\s+", " ", value).strip()
+    value = re.sub(r"\bSam Kocsi\b", "Sam Kocsis", value)
+    replacements = {
+        "Tom Issenhtuh": "Tom Issenhuth",
+        "Robert Rodes": "Roberto Rodes",
+        "Laureent Alloin": "Laurent Alloin",
+        "Eric Manioff": "Eric Maniloff",
+        "Ali Ghaisi": "Ali Ghiasi",
+        "Rang-Chn Yu": "Rang-Chen Yu",
+        "Broadchom": "Broadcom",
+        "QianXiang": "Qian Xiang",
+        "Ariel Cohen,": "Ariel Cohen",
+    }
+    for old, new in replacements.items():
+        value = value.replace(old, new)
+    return value
 
 
 def clean_multiline(value: str) -> str:
@@ -204,6 +222,35 @@ def pair_presenters_affiliations(presenters: list[str], affiliations: list[str])
     if not paired and affiliations:
         paired.extend({"presenter": "", "affiliation": affiliation} for affiliation in affiliations)
     return paired
+
+
+def load_corrections() -> dict[str, dict[str, Any]]:
+    if not CORRECTIONS_JSON.exists():
+        return {}
+    return json.loads(CORRECTIONS_JSON.read_text(encoding="utf-8")).get("documents", {})
+
+
+def apply_corrections(doc: Document, corrections: dict[str, dict[str, Any]]) -> Document:
+    override = corrections.get(doc.doc_id)
+    if not override:
+        return doc
+    row = asdict(doc)
+    for key in (
+        "title",
+        "website_title",
+        "title_cell_text",
+        "presenters",
+        "affiliations",
+        "presenter_affiliations",
+    ):
+        if key in override:
+            row[key] = override[key]
+    if "presenters" in override or "affiliations" in override:
+        row["presenter_affiliations"] = override.get(
+            "presenter_affiliations",
+            pair_presenters_affiliations(row["presenters"], row["affiliations"]),
+        )
+    return Document(**row)
 
 
 def looks_like_file_code(value: str) -> bool:
@@ -305,6 +352,7 @@ def parse_checklist() -> list[Document]:
         r"\[(?P<title>[^\]]*)\]\((?P<url>[^)]+)\)"
     )
     docs: list[Document] = []
+    corrections = load_corrections()
     talk_metadata = load_talk_metadata()
     talk_metadata_by_title: dict[tuple[str, str], list[dict[str, Any]]] = {}
     for key, row in talk_metadata.items():
@@ -329,8 +377,7 @@ def parse_checklist() -> list[Document]:
         doc_id = slug_doc_id(meeting, filename)
         out_dir = EXTRACTED_ROOT / meeting
         marker_dir = out_dir / "_marker" / Path(filename).stem
-        docs.append(
-            Document(
+        doc = Document(
                 doc_id=doc_id,
                 meeting=meeting,
                 filename=filename,
@@ -356,7 +403,7 @@ def parse_checklist() -> list[Document]:
                 text_path=rel(out_dir / f"{Path(filename).stem}.txt"),
                 marker_output_dir=rel(marker_dir),
             )
-        )
+        docs.append(apply_corrections(doc, corrections))
     return docs
 
 

@@ -1,0 +1,587 @@
+{
+  "documents": {
+    "23_05__gui_3dj_01a_2305": {
+      "affiliations": [
+        "Huawei",
+        "Huawei",
+        "Huawei"
+      ],
+      "presenters": [
+        "Tao Gui",
+        "Qian Xiang",
+        "Xiang Liu"
+      ]
+    },
+    "23_05__li_3dj_09a_2305": {
+      "affiliations": [
+        "Intel",
+        "Intel",
+        "Intel",
+        "Intel",
+        "Intel",
+        "Intel",
+        "Intel",
+        "Intel",
+        "TE",
+        "TE"
+      ],
+      "presenters": [
+        "Mike Li",
+        "Jenny Jiang",
+        "Yi Heng Khor",
+        "Hsinho Wu",
+        "Masashi Shimanouchi",
+        "Ilia Radashkevich",
+        "Itamar Levin",
+        "Ariel Cohen",
+        "Megha Shanbhag",
+        "Nathan Tracy"
+      ]
+    },
+    "23_05__li_3dj_10a_2305": {
+      "affiliations": [
+        "Intel",
+        "Intel",
+        "Intel",
+        "Intel",
+        "Intel",
+        "Intel",
+        "Intel",
+        "Intel",
+        "Intel",
+        "TE",
+        "TE"
+      ],
+      "presenters": [
+        "Mike Li",
+        "Jenny Jiang",
+        "Yi Heng Khor",
+        "Hsinho Wu",
+        "Masashi Shimanouchi",
+        "Ilia Radashkevich",
+        "Itamar Levin",
+        "Ariel Cohen",
+        "Ajay Balankutty",
+        "Megha Shanbhag",
+        "Nathan Tracy"
+      ],
+      "title": "224 Gbps-PAM4 CR Link Simulation and Analysis with a 1 Meter DAC Channel: Design B",
+      "title_cell_text": "224 Gbps-PAM4 CR Link Simulation and Analysis with a 1 Meter DAC Channel: Design B",
+      "website_title": "224 Gbps-PAM4 CR Link Simulation and Analysis with a 1 Meter DAC Channel: Design B"
+    },
+    "23_07__he_3dj_03b_2307": {
+      "title": "Inner Codeword Self-sync Proposal",
+      "title_cell_text": "Inner Codeword Self-sync Proposal",
+      "website_title": "Inner Codeword Self-sync Proposal"
+    },
+    "23_07__mellitz_3dj_01a_2307": {
+      "affiliations": [
+        "Samtec",
+        "Intel",
+        "Alphawave Semi"
+      ],
+      "presenters": [
+        "Richard Mellitz",
+        "Kent Lusted",
+        "Matt Brown"
+      ]
+    },
+    "23_09__lusted_3dj_05_2309": {
+      "affiliations": [
+        "Intel Corporation",
+        "Alphawave Semi"
+      ],
+      "presenters": [
+        "Kent Lusted",
+        "Matt Brown"
+      ]
+    },
+    "24_06__brown_3dj_01a_2406": {
+      "title": "P802.3dj D1.0 Comment Resolution Agenda",
+      "title_cell_text": "P802.3dj D1.0 Comment Resolution Agenda",
+      "website_title": "P802.3dj D1.0 Comment Resolution Agenda"
+    },
+    "24_06__brown_3dj_01b_2406": {
+      "title": "P802.3dj D1.0 Comment Resolution Agenda",
+      "title_cell_text": "P802.3dj D1.0 Comment Resolution Agenda",
+      "website_title": "P802.3dj D1.0 Comment Resolution Agenda"
+    },
+    "24_06__brown_3dj_01c_2406": {
+      "title": "P802.3dj D1.0 Comment Resolution Agenda",
+      "title_cell_text": "P802.3dj D1.0 Comment Resolution Agenda",
+      "website_title": "P802.3dj D1.0 Comment Resolution Agenda"
+    },
+    "24_06__brown_3dj_01d_2406": {
+      "title": "P802.3dj D1.0 Comment Resolution Agenda",
+      "title_cell_text": "P802.3dj D1.0 Comment Resolution Agenda",
+      "website_title": "P802.3dj D1.0 Comment Resolution Agenda"
+    },
+    "24_06__brown_3dj_01e_2406": {
+      "title": "P802.3dj D1.0 Comment Resolution Agenda",
+      "title_cell_text": "P802.3dj D1.0 Comment Resolution Agenda",
+      "website_title": "P802.3dj D1.0 Comment Resolution Agenda"
+    },
+    "24_06__brown_3dj_01f_2406": {
+      "title": "P802.3dj D1.0 Comment Resolution Agenda",
+      "title_cell_text": "P802.3dj D1.0 Comment Resolution Agenda",
+      "website_title": "P802.3dj D1.0 Comment Resolution Agenda"
+    },
+    "24_06__brown_3dj_01g_2406": {
+      "title": "P802.3dj D1.0 Comment Resolution Agenda",
+      "title_cell_text": "P802.3dj D1.0 Comment Resolution Agenda",
+      "website_title": "P802.3dj D1.0 Comment Resolution Agenda"
+    },
+    "24_06__brown_3dj_01h_2406": {
+      "title": "P802.3dj D1.0 Comment Resolution Agenda",
+      "title_cell_text": "P802.3dj D1.0 Comment Resolution Agenda",
+      "website_title": "P802.3dj D1.0 Comment Resolution Agenda"
+    },
+    "24_06__brown_3dj_01j_2406": {
+      "title": "P802.3dj D1.0 Comment Resolution Agenda",
+      "title_cell_text": "P802.3dj D1.0 Comment Resolution Agenda",
+      "website_title": "P802.3dj D1.0 Comment Resolution Agenda"
+    },
+    "24_06__brown_3dj_02_2406": {
+      "affiliations": [
+        "Alphawave Semi"
+      ],
+      "presenters": [
+        "Matt Brown"
+      ],
+      "title": "802.3dj D1.0 Comment Resolution Common Topics",
+      "title_cell_text": "802.3dj D1.0 Comment Resolution Common Topics",
+      "website_title": "802.3dj D1.0 Comment Resolution Common Topics"
+    },
+    "24_06__brown_3dj_02a_2406": {
+      "affiliations": [
+        "Alphawave Semi",
+        "Huawei"
+      ],
+      "presenters": [
+        "Matt Brown",
+        "Leon Bruckman"
+      ],
+      "title": "802.3dj D1.0 Comment Resolution Common Topics",
+      "title_cell_text": "802.3dj D1.0 Comment Resolution Common Topics",
+      "website_title": "802.3dj D1.0 Comment Resolution Common Topics"
+    },
+    "24_06__brown_3dj_02b_2406": {
+      "affiliations": [
+        "Alphawave Semi",
+        "Huawei",
+        "Cisco",
+        "Cisco"
+      ],
+      "presenters": [
+        "Matt Brown",
+        "Leon Bruckman",
+        "Gary Nicholl",
+        "Adee Ran"
+      ],
+      "title": "802.3dj D1.0 Comment Resolution Common Topics",
+      "title_cell_text": "802.3dj D1.0 Comment Resolution Common Topics",
+      "website_title": "802.3dj D1.0 Comment Resolution Common Topics"
+    },
+    "24_06__loewenthal_3dj_01a_2406": {
+      "affiliations": [
+        "Alphawave Semi",
+        "Alphawave Semi",
+        "NVIDIA",
+        "NVIDIA"
+      ],
+      "presenters": [
+        "Arnon Loewenthal",
+        "Omri Levy",
+        "Zvi Rechtman",
+        "Amir Rubin"
+      ]
+    },
+    "24_06__nicholl_3dj_01a_2406": {
+      "title": "802.3dj D1.0 Comment Resolution Logic Track",
+      "title_cell_text": "802.3dj D1.0 Comment Resolution Logic Track",
+      "website_title": "802.3dj D1.0 Comment Resolution Logic Track"
+    },
+    "24_06__nicholl_3dj_01b_2406": {
+      "title": "802.3dj D1.0 Comment Resolution Logic Track",
+      "title_cell_text": "802.3dj D1.0 Comment Resolution Logic Track",
+      "website_title": "802.3dj D1.0 Comment Resolution Logic Track"
+    },
+    "24_06__ran_3dj_01a_2406": {
+      "title": "802.3dj D1.0 Comment Resolution Electrical Track",
+      "title_cell_text": "802.3dj D1.0 Comment Resolution Electrical Track",
+      "website_title": "802.3dj D1.0 Comment Resolution Electrical Track"
+    },
+    "24_06__ran_3dj_01b_2406": {
+      "title": "802.3dj D1.0 Comment Resolution Electrical Track",
+      "title_cell_text": "802.3dj D1.0 Comment Resolution Electrical Track",
+      "website_title": "802.3dj D1.0 Comment Resolution Electrical Track"
+    },
+    "24_06__ran_3dj_01c_2406": {
+      "title": "802.3dj D1.0 Comment Resolution Electrical Track",
+      "title_cell_text": "802.3dj D1.0 Comment Resolution Electrical Track",
+      "website_title": "802.3dj D1.0 Comment Resolution Electrical Track"
+    },
+    "24_06__ran_3dj_01d_2406": {
+      "title": "802.3dj D1.0 Comment Resolution Electrical Track",
+      "title_cell_text": "802.3dj D1.0 Comment Resolution Electrical Track",
+      "website_title": "802.3dj D1.0 Comment Resolution Electrical Track"
+    },
+    "24_06__ran_3dj_01e_2406": {
+      "title": "802.3dj D1.0 Comment Resolution Electrical Track",
+      "title_cell_text": "802.3dj D1.0 Comment Resolution Electrical Track",
+      "website_title": "802.3dj D1.0 Comment Resolution Electrical Track"
+    },
+    "24_06__ran_3dj_01f_2406": {
+      "title": "802.3dj D1.0 Comment Resolution Electrical Track",
+      "title_cell_text": "802.3dj D1.0 Comment Resolution Electrical Track",
+      "website_title": "802.3dj D1.0 Comment Resolution Electrical Track"
+    },
+    "24_07__Vince_Ferretti_and_Kazuhide_Nakajima": {
+      "affiliations": [
+        "Corning / Associate Rapporteur ITU-T SG15 Q5",
+        "NTT / Rapporteur ITU-T SG15 Q5"
+      ],
+      "presenters": [
+        "Vince Ferretti",
+        "Kazuhide Nakajima"
+      ],
+      "title": "ITU-T / IEEE Joint Workshop - A Review of ITU-T SG15 Q5 July 2024 Liaison Response on Single Mode Fiber Properties and revised Appendix for ITU-T G.652",
+      "title_cell_text": "ITU-T / IEEE Joint Workshop - A Review of ITU-T SG15 Q5 July 2024 Liaison Response on Single Mode Fiber Properties and revised Appendix for ITU-T G.652",
+      "website_title": "ITU-T / IEEE Joint Workshop - A Review of ITU-T SG15 Q5 July 2024 Liaison Response on Single Mode Fiber Properties and revised Appendix for ITU-T G.652"
+    },
+    "24_09__brown_3dj_02a_2409": {
+      "title": "P802.3dj D1.1 Comment Resolution Agenda",
+      "title_cell_text": "P802.3dj D1.1 Comment Resolution Agenda",
+      "website_title": "P802.3dj D1.1 Comment Resolution Agenda"
+    },
+    "24_09__brown_3dj_02b_2409": {
+      "title": "P802.3dj D1.1 Comment Resolution Agenda",
+      "title_cell_text": "P802.3dj D1.1 Comment Resolution Agenda",
+      "website_title": "P802.3dj D1.1 Comment Resolution Agenda"
+    },
+    "24_09__brown_3dj_02c_2409": {
+      "title": "P802.3dj D1.1 Comment Resolution Agenda",
+      "title_cell_text": "P802.3dj D1.1 Comment Resolution Agenda",
+      "website_title": "P802.3dj D1.1 Comment Resolution Agenda"
+    },
+    "24_09__mi_3dj_02a_2409": {
+      "affiliations": [
+        "Huawei Technologies Co., Ltd"
+      ],
+      "presenters": [
+        "Guangcan Mi"
+      ]
+    },
+    "24_09__nicholl_3dj_01a_2409": {
+      "title": "802.3dj D1.1 Comment Resolution Logic Topics",
+      "title_cell_text": "802.3dj D1.1 Comment Resolution Logic Topics",
+      "website_title": "802.3dj D1.1 Comment Resolution Logic Topics"
+    },
+    "24_11__issenhuth_3dj_01a_2411": {
+      "title": "802.3dj D1.2 Comment Resolution Optical Track",
+      "title_cell_text": "802.3dj D1.2 Comment Resolution Optical Track",
+      "website_title": "802.3dj D1.2 Comment Resolution Optical Track"
+    },
+    "24_11__maniloff_3dj_01a_2411": {
+      "affiliations": [
+        "Ciena",
+        "Ciena",
+        "Huawei",
+        "Huawei"
+      ],
+      "presenters": [
+        "Eric Maniloff",
+        "Riyaz Jamal",
+        "Xiang Liu",
+        "Qirui Fan"
+      ]
+    },
+    "24_11__ran_3dj_01a_2411": {
+      "title": "802.3dj D1.2 Comment Resolution Electrical Track",
+      "title_cell_text": "802.3dj D1.2 Comment Resolution Electrical Track",
+      "website_title": "802.3dj D1.2 Comment Resolution Electrical Track"
+    },
+    "25_01__brown_3dj_03a_2501": {
+      "title": "802.3dj D1.3 Comment Resolution Common Track",
+      "title_cell_text": "802.3dj D1.3 Comment Resolution Common Track",
+      "website_title": "802.3dj D1.3 Comment Resolution Common Track"
+    },
+    "25_01__brown_3dj_03b_2501": {
+      "title": "802.3dj D1.3 Comment Resolution Common Track",
+      "title_cell_text": "802.3dj D1.3 Comment Resolution Common Track",
+      "website_title": "802.3dj D1.3 Comment Resolution Common Track"
+    },
+    "25_01__issenhuth_3dj_01a_2501": {
+      "title": "802.3dj D1.3 Comment Resolution Optical Track",
+      "title_cell_text": "802.3dj D1.3 Comment Resolution Optical Track",
+      "website_title": "802.3dj D1.3 Comment Resolution Optical Track"
+    },
+    "25_03__brown_3dj_03a_2503": {
+      "title": "802.3dj D1.4 Comment Resolution Common Track",
+      "title_cell_text": "802.3dj D1.4 Comment Resolution Common Track",
+      "website_title": "802.3dj D1.4 Comment Resolution Common Track"
+    },
+    "25_03__nicholl_3dj_01a_2503": {
+      "title": "802.3dj D1.4 Comment Resolution Logic Track",
+      "title_cell_text": "802.3dj D1.4 Comment Resolution Logic Track",
+      "website_title": "802.3dj D1.4 Comment Resolution Logic Track"
+    },
+    "25_07__brown_3dj_03a_2507": {
+      "title": "802.3dj D2.0 Comment Resolution Common Track",
+      "title_cell_text": "802.3dj D2.0 Comment Resolution Common Track",
+      "website_title": "802.3dj D2.0 Comment Resolution Common Track"
+    },
+    "25_07__brown_3dj_03b_2507": {
+      "title": "802.3dj D2.0 Comment Resolution Common Track",
+      "title_cell_text": "802.3dj D2.0 Comment Resolution Common Track",
+      "website_title": "802.3dj D2.0 Comment Resolution Common Track"
+    },
+    "25_07__brown_3dj_03c_2507": {
+      "title": "802.3dj D2.0 Comment Resolution Common Track",
+      "title_cell_text": "802.3dj D2.0 Comment Resolution Common Track",
+      "website_title": "802.3dj D2.0 Comment Resolution Common Track"
+    },
+    "25_07__cole_3dj_01e_2507": {
+      "title": "Transmitter Functional Symbol Error Mask Test Proposal",
+      "title_cell_text": "Transmitter Functional Symbol Error Mask Test Proposal",
+      "website_title": "Transmitter Functional Symbol Error Mask Test Proposal"
+    },
+    "25_07__he_m_3dj_01c_2507": {
+      "affiliations": [
+        "TeraHop Pte. Ltd.",
+        "TeraHop Pte. Ltd.",
+        "TeraHop Pte. Ltd.",
+        "TeraHop Pte. Ltd."
+      ],
+      "presenters": [
+        "Michael He",
+        "Penny Xu",
+        "Xiangwei Zhang",
+        "Rang-Chen (Ryan) Yu"
+      ]
+    },
+    "25_07__he_x_3dj_01_2507": {
+      "affiliations": [
+        "Huawei",
+        "Huawei"
+      ],
+      "presenters": [
+        "Xiang He",
+        "Xuebo Wang"
+      ]
+    },
+    "25_07__ran_3dj_01_2507": {
+      "affiliations": [
+        "Cisco",
+        "Broadcom",
+        "TE Connectivity",
+        "Amphenol",
+        "Alphawave Semi"
+      ],
+      "presenters": [
+        "Adee Ran",
+        "Adam Healey",
+        "Howard Heck",
+        "Sam Kocsis",
+        "Matt Brown"
+      ],
+      "title": "802.3dj D2.0 Comment Resolution Electrical Track",
+      "title_cell_text": "802.3dj D2.0 Comment Resolution Electrical Track",
+      "website_title": "802.3dj D2.0 Comment Resolution Electrical Track"
+    },
+    "25_07__ran_3dj_01a_2507": {
+      "affiliations": [
+        "Cisco",
+        "Broadcom",
+        "TE Connectivity",
+        "Amphenol",
+        "Alphawave Semi"
+      ],
+      "presenters": [
+        "Adee Ran",
+        "Adam Healey",
+        "Howard Heck",
+        "Sam Kocsis",
+        "Matt Brown"
+      ],
+      "title": "802.3dj D2.0 Comment Resolution Electrical Track",
+      "title_cell_text": "802.3dj D2.0 Comment Resolution Electrical Track",
+      "website_title": "802.3dj D2.0 Comment Resolution Electrical Track"
+    },
+    "25_07__ran_3dj_01b_2507": {
+      "affiliations": [
+        "Cisco",
+        "Broadcom",
+        "TE Connectivity",
+        "Amphenol",
+        "Alphawave Semi"
+      ],
+      "presenters": [
+        "Adee Ran",
+        "Adam Healey",
+        "Howard Heck",
+        "Sam Kocsis",
+        "Matt Brown"
+      ],
+      "title": "802.3dj D2.0 Comment Resolution Electrical Track",
+      "title_cell_text": "802.3dj D2.0 Comment Resolution Electrical Track",
+      "website_title": "802.3dj D2.0 Comment Resolution Electrical Track"
+    },
+    "25_07__ran_3dj_01c_2507": {
+      "affiliations": [
+        "Cisco",
+        "Broadcom",
+        "TE Connectivity",
+        "Amphenol",
+        "Alphawave Semi"
+      ],
+      "presenters": [
+        "Adee Ran",
+        "Adam Healey",
+        "Howard Heck",
+        "Sam Kocsis",
+        "Matt Brown"
+      ],
+      "title": "802.3dj D2.0 Comment Resolution Electrical Track",
+      "title_cell_text": "802.3dj D2.0 Comment Resolution Electrical Track",
+      "website_title": "802.3dj D2.0 Comment Resolution Electrical Track"
+    },
+    "25_09__issenhuth_3dj_01a_2509": {
+      "title": "802.3dj D2.1 Comment Resolution Optical Track",
+      "title_cell_text": "802.3dj D2.1 Comment Resolution Optical Track",
+      "website_title": "802.3dj D2.1 Comment Resolution Optical Track"
+    },
+    "25_09__nicholl_3dj_01a_2509": {
+      "title": "802.3dj D2.1 Comment Resolution Logic Track",
+      "title_cell_text": "802.3dj D2.1 Comment Resolution Logic Track",
+      "website_title": "802.3dj D2.1 Comment Resolution Logic Track"
+    },
+    "25_09__ran_3dj_01a_2509": {
+      "title": "802.3dj D2.1 Comment Resolution Electrical Track",
+      "title_cell_text": "802.3dj D2.1 Comment Resolution Electrical Track",
+      "website_title": "802.3dj D2.1 Comment Resolution Electrical Track"
+    },
+    "25_09__ran_3dj_01b_2509": {
+      "title": "802.3dj D2.1 Comment Resolution Electrical Track",
+      "title_cell_text": "802.3dj D2.1 Comment Resolution Electrical Track",
+      "website_title": "802.3dj D2.1 Comment Resolution Electrical Track"
+    },
+    "25_09__temprana_3dj_01_2509": {
+      "title": "Supporting presentation for comments 337 & 338",
+      "title_cell_text": "Supporting presentation for comments 337 & 338",
+      "website_title": "Supporting presentation for comments 337 & 338"
+    },
+    "25_11__brown_3dj_02a_2511": {
+      "title": "P802.3dj D2.2 Comment Resolution Agenda",
+      "title_cell_text": "P802.3dj D2.2 Comment Resolution Agenda",
+      "website_title": "P802.3dj D2.2 Comment Resolution Agenda"
+    },
+    "25_11__brown_3dj_02b_2511": {
+      "title": "P802.3dj D2.2 Comment Resolution Agenda",
+      "title_cell_text": "P802.3dj D2.2 Comment Resolution Agenda",
+      "website_title": "P802.3dj D2.2 Comment Resolution Agenda"
+    },
+    "25_11__brown_3dj_03a_2511": {
+      "title": "802.3dj D2.2 Comment Resolution Common Track",
+      "title_cell_text": "802.3dj D2.2 Comment Resolution Common Track",
+      "website_title": "802.3dj D2.2 Comment Resolution Common Track"
+    },
+    "25_11__brown_3dj_03b_2511": {
+      "title": "802.3dj D2.2 Comment Resolution Common Track",
+      "title_cell_text": "802.3dj D2.2 Comment Resolution Common Track",
+      "website_title": "802.3dj D2.2 Comment Resolution Common Track"
+    },
+    "25_11__issenhuth_3dj_01a_2511": {
+      "title": "802.3dj D2.2 Comment Resolution Optical Track",
+      "title_cell_text": "802.3dj D2.2 Comment Resolution Optical Track",
+      "website_title": "802.3dj D2.2 Comment Resolution Optical Track"
+    },
+    "25_11__opsasnick_3dj_01a_2511": {
+      "title": "802.3dj D2.2 Comment Resolution Logic Track",
+      "title_cell_text": "802.3dj D2.2 Comment Resolution Logic Track",
+      "website_title": "802.3dj D2.2 Comment Resolution Logic Track"
+    },
+    "25_11__ran_3dj_01a_2511": {
+      "title": "802.3dj D2.2 Comment Resolution Electrical Track",
+      "title_cell_text": "802.3dj D2.2 Comment Resolution Electrical Track",
+      "website_title": "802.3dj D2.2 Comment Resolution Electrical Track"
+    },
+    "25_11__ran_3dj_01b_2511": {
+      "title": "802.3dj D2.2 Comment Resolution Electrical Track",
+      "title_cell_text": "802.3dj D2.2 Comment Resolution Electrical Track",
+      "website_title": "802.3dj D2.2 Comment Resolution Electrical Track"
+    },
+    "26_01__brown_3dj_02a_2601": {
+      "title": "P802.3dj D2.3 Comment Resolution Agenda",
+      "title_cell_text": "P802.3dj D2.3 Comment Resolution Agenda",
+      "website_title": "P802.3dj D2.3 Comment Resolution Agenda"
+    },
+    "26_01__brown_3dj_02b_2601": {
+      "title": "P802.3dj D2.3 Comment Resolution Agenda",
+      "title_cell_text": "P802.3dj D2.3 Comment Resolution Agenda",
+      "website_title": "P802.3dj D2.3 Comment Resolution Agenda"
+    },
+    "26_01__opsasnick_3dj_01b_2601": {
+      "title": "802.3dj D2.3 Comment Resolution Logic Topics",
+      "title_cell_text": "802.3dj D2.3 Comment Resolution Logic Topics",
+      "website_title": "802.3dj D2.3 Comment Resolution Logic Topics"
+    },
+    "26_01__ran_3dj_01b_2601": {
+      "title": "802.3dj D2.3 Comment Resolution Electrical Topics",
+      "title_cell_text": "802.3dj D2.3 Comment Resolution Electrical Topics",
+      "website_title": "802.3dj D2.3 Comment Resolution Electrical Topics"
+    },
+    "26_03__mellitz_3dj_02_2603": {
+      "title": "Document: IEEE802.3dj Modal ERL Proposal",
+      "title_cell_text": "Document: IEEE802.3dj Modal ERL Proposal",
+      "website_title": "Document: IEEE802.3dj Modal ERL Proposal"
+    },
+    "26_05__brown_3dj_02a_2605": {
+      "title": "P802.3dj D3.0 Comment Resolution Agenda",
+      "title_cell_text": "P802.3dj D3.0 Comment Resolution Agenda",
+      "website_title": "P802.3dj D3.0 Comment Resolution Agenda"
+    },
+    "26_05__brown_3dj_02b_2605": {
+      "title": "P802.3dj D3.0 Comment Resolution Agenda",
+      "title_cell_text": "P802.3dj D3.0 Comment Resolution Agenda",
+      "website_title": "P802.3dj D3.0 Comment Resolution Agenda"
+    },
+    "26_05__brown_3dj_02c_2605": {
+      "title": "P802.3dj D3.0 Comment Resolution Agenda",
+      "title_cell_text": "P802.3dj D3.0 Comment Resolution Agenda",
+      "website_title": "P802.3dj D3.0 Comment Resolution Agenda"
+    },
+    "26_05__brown_3dj_02d_2605": {
+      "title": "P802.3dj D3.0 Comment Resolution Agenda",
+      "title_cell_text": "P802.3dj D3.0 Comment Resolution Agenda",
+      "website_title": "P802.3dj D3.0 Comment Resolution Agenda"
+    },
+    "26_05__brown_3dj_02e_2605": {
+      "title": "P802.3dj D3.0 Comment Resolution Agenda",
+      "title_cell_text": "P802.3dj D3.0 Comment Resolution Agenda",
+      "website_title": "P802.3dj D3.0 Comment Resolution Agenda"
+    },
+    "26_05__issenhuth_3dj_01a_2605": {
+      "title": "802.3dj D3.0 Comment Resolution Optical Topics",
+      "title_cell_text": "802.3dj D3.0 Comment Resolution Optical Topics",
+      "website_title": "802.3dj D3.0 Comment Resolution Optical Topics"
+    },
+    "26_05__ran_3dj_01a_2605": {
+      "title": "802.3dj D3.0 Comment Resolution Electrical Topics",
+      "title_cell_text": "802.3dj D3.0 Comment Resolution Electrical Topics",
+      "website_title": "802.3dj D3.0 Comment Resolution Electrical Topics"
+    },
+    "26_05__ran_3dj_01b_2605": {
+      "title": "802.3dj D3.0 Comment Resolution Electrical Topics",
+      "title_cell_text": "802.3dj D3.0 Comment Resolution Electrical Topics",
+      "website_title": "802.3dj D3.0 Comment Resolution Electrical Topics"
+    },
+    "26_05__ran_3dj_01c_2605": {
+      "title": "802.3dj D3.0 Comment Resolution Electrical Topics",
+      "title_cell_text": "802.3dj D3.0 Comment Resolution Electrical Topics",
+      "website_title": "802.3dj D3.0 Comment Resolution Electrical Topics"
+    }
+  },
+  "generated_from": "IEEE-802p3dj-metadata-fix-checklist.md",
+  "notes": "Manual overrides for cached IEEE P802.3dj metadata. Parser-level cleanup handles HTML comments and repeated typo replacements."
+}
