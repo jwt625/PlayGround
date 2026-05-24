@@ -1,0 +1,490 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Pure SerDes Serializer Visualization</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --ink: #e7edf7;
+      --muted: #9da9ba;
+      --grid: #293343;
+      --panel: #111824;
+      --line: #2a3545;
+      --accent: #69a7ff;
+      --accent2: #ff9b52;
+      --green: #4ed0a2;
+      --bg: #080d14;
+      --canvas: #0d131d;
+      --control: #151e2b;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font: 14px/1.4 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--ink);
+      background: var(--bg);
+    }
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 18px;
+      background: rgba(8, 13, 20, 0.96);
+      border-bottom: 1px solid var(--line);
+      backdrop-filter: blur(8px);
+    }
+    h1 {
+      margin: 0;
+      font-size: 18px;
+      font-weight: 700;
+    }
+    .facts {
+      color: var(--muted);
+      font-size: 13px;
+    }
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+    }
+    button, label.toggle {
+      border: 1px solid #3a4658;
+      background: var(--control);
+      border-radius: 0;
+      padding: 7px 10px;
+      cursor: pointer;
+      color: var(--ink);
+    }
+    button:hover, label.toggle:hover { border-color: var(--accent); }
+    label.toggle {
+      display: inline-flex;
+      gap: 6px;
+      align-items: center;
+      user-select: none;
+    }
+    main {
+      max-width: 1420px;
+      margin: 0 auto;
+      padding: 16px;
+    }
+    section {
+      margin: 0 0 16px;
+      padding: 14px;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 0;
+      overflow-x: auto;
+    }
+    h2 {
+      margin: 0 0 8px;
+      font-size: 16px;
+    }
+    .note {
+      margin: 6px 0 10px;
+      color: var(--muted);
+      max-width: 1100px;
+    }
+    canvas {
+      display: block;
+      width: 1360px;
+      max-width: none;
+      background: var(--canvas);
+      border: 1px solid var(--line);
+      border-radius: 0;
+    }
+    .small-grid {
+      display: grid;
+      grid-template-columns: minmax(660px, 1fr) minmax(660px, 1fr);
+      gap: 16px;
+    }
+    .small-grid section { margin: 0; }
+    @media (max-width: 900px) {
+      .small-grid { grid-template-columns: 1fr; }
+      header { position: static; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div>
+      <h1>Pure 16:1 NRZ Serializer: mux tree, clocks, retiming, edge regeneration</h1>
+      <div class="facts">16 bits @ 7 GHz word rate -> 112 Gb/s serial stream. UI = 8.93 ps. Word period = 16 UI = 143 ps.</div>
+    </div>
+    <div class="controls">
+      <button id="randomize">Generate New Random Example</button>
+      <label class="toggle"><input id="labels" type="checkbox" checked> show bit labels</label>
+    </div>
+  </header>
+
+  <main>
+    <section>
+      <h2>1. Serializer Mux Tree / Trace Evolution</h2>
+      <p class="note">All streams are shown. Earlier stages are arranged so the last 2:1 mux receives even-position and odd-position streams, producing the final lane order b0, b1, ... b15 within each word.</p>
+      <canvas id="tree" width="1360" height="1040"></canvas>
+    </section>
+
+    <section>
+      <h2>2. Final 2:1 Interleaving Zoom</h2>
+      <p class="note">The final mux is controlled by 56 GHz half-rate timing: each input bit lasts 2 UI, and the output alternates every UI.</p>
+      <canvas id="finalZoom" width="1360" height="360"></canvas>
+    </section>
+
+    <div class="small-grid">
+      <section>
+        <h2>3. Latch Edge Regeneration Zoom</h2>
+        <p class="note">Conceptual model only: a slow/degraded input transition is sampled and relaunched as a sharper output transition aligned to a clean clock edge.</p>
+        <canvas id="regen" width="660" height="380"></canvas>
+      </section>
+
+      <section>
+        <h2>4. Latch -> 2:1 Mux -> Latch Panel</h2>
+        <p class="note">Logical 2:1 muxing is surrounded by active sampling and relaunch stages. The fast final stages may be custom differential high-speed logic.</p>
+        <canvas id="block" width="660" height="380"></canvas>
+      </section>
+    </div>
+  </main>
+
+  <script>
+    const UI = 1000 / 112;          // ps
+    const WORD = 16 * UI;           // ps
+    const WORDS = 3;
+    const TOTAL = WORDS * WORD;
+    const colors = {
+      ink: "#e7edf7", muted: "#9da9ba", grid: "#293343", line: "#2a3545",
+      accent: "#69a7ff", accent2: "#ff9b52", green: "#4ed0a2", pale: "#172236",
+      canvas: "#0d131d", band: "#151e2b", faint: "#1d2735", label0: "#8b97a8",
+      label1: "#b7d5ff", latch: "#123628", mux: "#142d4a", launch: "#412714"
+    };
+
+    let showLabels = true;
+    let bits = [];
+
+    function randBits() {
+      bits = Array.from({length: WORDS}, () =>
+        Array.from({length: 16}, () => Math.random() < 0.5 ? 0 : 1)
+      );
+      drawAll();
+    }
+
+    function stageLaneOrders() {
+      let stages = [];
+      stages[4] = [Array.from({length: 16}, (_, i) => i)];
+      for (let s = 3; s >= 0; s--) {
+        stages[s] = [];
+        for (const seq of stages[s + 1]) {
+          stages[s].push(seq.filter((_, i) => i % 2 === 0));
+          stages[s].push(seq.filter((_, i) => i % 2 === 1));
+        }
+      }
+      stages[0] = Array.from({length: 16}, (_, i) => [i]);
+      return stages;
+    }
+
+    function valuesFor(lanes) {
+      const out = [];
+      for (let w = 0; w < WORDS; w++) {
+        for (const lane of lanes) out.push(bits[w][lane]);
+      }
+      return out;
+    }
+
+    function labelsFor(lanes) {
+      const out = [];
+      for (let w = 0; w < WORDS; w++) {
+        for (const lane of lanes) out.push(`b${lane}[${w}]`);
+      }
+      return out;
+    }
+
+    function setupCanvas(id) {
+      const canvas = document.getElementById(id);
+      const ctx = canvas.getContext("2d");
+      const ratio = window.devicePixelRatio || 1;
+      const cssW = Number(canvas.getAttribute("width"));
+      const cssH = Number(canvas.getAttribute("height"));
+      canvas.style.width = cssW + "px";
+      canvas.style.height = cssH + "px";
+      canvas.width = Math.round(cssW * ratio);
+      canvas.height = Math.round(cssH * ratio);
+      ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+      ctx.fillStyle = colors.canvas;
+      ctx.fillRect(0, 0, cssW, cssH);
+      return {canvas, ctx, w: cssW, h: cssH};
+    }
+
+    function xmap(t, left, width, t0 = 0, t1 = TOTAL) {
+      return left + (t - t0) * width / (t1 - t0);
+    }
+
+    function drawGrid(ctx, left, top, width, height, t0, t1, wordLines = true, uiLines = false) {
+      ctx.save();
+      ctx.strokeStyle = colors.grid;
+      ctx.lineWidth = 1;
+      ctx.font = "11px -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif";
+      ctx.fillStyle = colors.muted;
+      for (let w = 0; w <= WORDS; w++) {
+        const t = w * WORD;
+        if (t < t0 || t > t1) continue;
+        const x = xmap(t, left, width, t0, t1);
+        ctx.globalAlpha = wordLines ? 1 : 0.35;
+        ctx.beginPath(); ctx.moveTo(x, top); ctx.lineTo(x, top + height); ctx.stroke();
+        ctx.globalAlpha = 1;
+        ctx.fillText(`${t.toFixed(0)} ps`, x + 3, top + height + 14);
+      }
+      if (uiLines) {
+        ctx.globalAlpha = 0.28;
+        for (let i = Math.ceil(t0 / UI); i <= Math.floor(t1 / UI); i++) {
+          const x = xmap(i * UI, left, width, t0, t1);
+          ctx.beginPath(); ctx.moveTo(x, top); ctx.lineTo(x, top + height); ctx.stroke();
+        }
+      }
+      ctx.restore();
+    }
+
+    function drawDigital(ctx, opts) {
+      const {left, y, width, rowH, values, cellPs, label, bitLabels, t0 = 0, t1 = TOTAL, color = colors.accent} = opts;
+      const low = y + rowH * 0.72, high = y + rowH * 0.24;
+      ctx.save();
+      ctx.strokeStyle = colors.faint;
+      ctx.beginPath(); ctx.moveTo(left, y + rowH); ctx.lineTo(left + width, y + rowH); ctx.stroke();
+      ctx.fillStyle = colors.ink;
+      ctx.font = "12px -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif";
+      ctx.textAlign = "right";
+      ctx.fillText(label, left - 8, y + rowH * 0.65);
+      ctx.strokeStyle = color;
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      let started = false;
+      const startIdx = Math.floor(t0 / cellPs);
+      const endIdx = Math.ceil(t1 / cellPs);
+      for (let i = startIdx; i < endIdx; i++) {
+        const v = values[i] ?? values[values.length - 1] ?? 0;
+        const yy = v ? high : low;
+        const xA = xmap(i * cellPs, left, width, t0, t1);
+        const xB = xmap((i + 1) * cellPs, left, width, t0, t1);
+        if (!started) { ctx.moveTo(xA, yy); started = true; }
+        else ctx.lineTo(xA, yy);
+        ctx.lineTo(xB, yy);
+        if (showLabels && bitLabels && xB - xA > 20) {
+          ctx.save();
+          ctx.fillStyle = v ? colors.label1 : colors.label0;
+          ctx.textAlign = "center";
+          ctx.font = "10px ui-monospace, SFMono-Regular, Menlo, monospace";
+          ctx.fillText(bitLabels[i] || "", (xA + xB) / 2, y + rowH * 0.56);
+          ctx.restore();
+        }
+      }
+      ctx.stroke();
+      ctx.restore();
+    }
+
+    function drawClock(ctx, left, y, width, rowH, periodPs, label, t0 = 0, t1 = TOTAL) {
+      const n = Math.ceil((t1 - t0) / (periodPs / 2)) + 2;
+      const vals = [];
+      for (let i = 0; i < n; i++) vals.push(i % 2 === 0 ? 1 : 0);
+      drawDigital(ctx, {left, y, width, rowH, values: vals, cellPs: periodPs / 2, label, color: colors.green, t0, t1});
+    }
+
+    function drawTree() {
+      const {ctx, w} = setupCanvas("tree");
+      const left = 145, right = 24, width = w - left - right;
+      const rowH = 18, gap = 3;
+      let y = 26;
+      const stages = stageLaneOrders();
+      drawGrid(ctx, left, 18, width, 940, 0, TOTAL, true, false);
+      ctx.font = "12px -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif";
+      ctx.fillStyle = colors.muted;
+      ctx.textAlign = "left";
+      ctx.fillText(`UI = ${UI.toFixed(2)} ps; word period = ${WORD.toFixed(0)} ps`, left, 14);
+
+      for (let s = 0; s <= 4; s++) {
+        const streams = stages[s];
+        const cellPs = WORD / (2 ** s);
+        ctx.fillStyle = colors.band;
+        ctx.fillRect(8, y - 2, w - 16, 20);
+        ctx.fillStyle = colors.ink;
+        ctx.font = "bold 12px -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif";
+        const rate = s === 0 ? "7 GHz word-valid" : `${7 * (2 ** s)} Gb/s per stream`;
+        ctx.fillText(`${16 / (2 ** s)} stream${streams.length === 1 ? "" : "s"}: ${s === 0 ? "parallel inputs" : `${16 / (2 ** (s - 1))}->${16 / (2 ** s)} mux stage`} (${rate})`, 14, y + 13);
+        y += 24;
+        streams.forEach((lanes, idx) => {
+          const vals = valuesFor(lanes);
+          const labs = labelsFor(lanes);
+          const laneText = lanes.map(i => "b" + i).join(",");
+          const label = s === 0 ? `b${idx}` : `S${s}.${idx} [${laneText}]`;
+          drawDigital(ctx, {left, y, width, rowH, values: vals, cellPs, label, bitLabels: labs, color: s === 4 ? colors.accent2 : colors.accent});
+          y += rowH + gap;
+        });
+        y += 7;
+      }
+
+      y += 6;
+      ctx.fillStyle = colors.band;
+      ctx.fillRect(8, y - 2, w - 16, 20);
+      ctx.fillStyle = colors.ink;
+      ctx.font = "bold 12px -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif";
+      ctx.fillText("Clock / phase references", 14, y + 13);
+      y += 24;
+      drawClock(ctx, left, y, width, rowH, WORD, "7 GHz word clk"); y += rowH + gap;
+      drawClock(ctx, left, y, width, rowH, WORD / 2, "14 GHz phase"); y += rowH + gap;
+      drawClock(ctx, left, y, width, rowH, WORD / 4, "28 GHz phase"); y += rowH + gap;
+      drawClock(ctx, left, y, width, rowH, WORD / 8, "56 GHz final half-rate");
+    }
+
+    function drawFinalZoom() {
+      const {ctx, w, h} = setupCanvas("finalZoom");
+      const left = 108, width = w - left - 34;
+      const t0 = 0, t1 = WORD;
+      drawGrid(ctx, left, 26, width, h - 80, t0, t1, true, true);
+      ctx.fillStyle = colors.muted;
+      ctx.font = "12px -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif";
+      ctx.fillText(`Zoom: one 143 ps word, UI grid = ${UI.toFixed(2)} ps`, left, 18);
+      const even = [0,2,4,6,8,10,12,14];
+      const odd = [1,3,5,7,9,11,13,15];
+      const out = Array.from({length: 16}, (_, i) => i);
+      drawDigital(ctx, {left, y: 54, width, rowH: 44, values: even.map(i => bits[0][i]), cellPs: 2 * UI, label: "even stream", bitLabels: even.map(i => `e${i/2}=b${i}[0]`), t0, t1});
+      drawDigital(ctx, {left, y: 118, width, rowH: 44, values: odd.map(i => bits[0][i]), cellPs: 2 * UI, label: "odd stream", bitLabels: odd.map(i => `o${(i-1)/2}=b${i}[0]`), t0, t1});
+      drawDigital(ctx, {left, y: 182, width, rowH: 44, values: out.map(i => bits[0][i]), cellPs: UI, label: "112 Gb/s out", bitLabels: out.map(i => `b${i}[0]`), t0, t1, color: colors.accent2});
+      drawClock(ctx, left, 260, width, 42, 2 * UI, "56 GHz select", t0, t1);
+    }
+
+    function smoothStep(x, center, rise) {
+      return 1 / (1 + Math.exp(-8 * (x - center) / rise));
+    }
+
+    function drawAnalogTrace(ctx, left, top, width, height, label, color, center, rise, alignLine) {
+      const t0 = -30, t1 = 50;
+      ctx.save();
+      ctx.fillStyle = colors.ink;
+      ctx.font = "12px -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif";
+      ctx.textAlign = "left";
+      ctx.fillText(label, left, top - 6);
+      ctx.strokeStyle = color;
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      for (let px = 0; px <= width; px++) {
+        const t = t0 + px * (t1 - t0) / width;
+        const v = smoothStep(t, center, rise);
+        const y = top + height - v * height;
+        if (px === 0) ctx.moveTo(left + px, y); else ctx.lineTo(left + px, y);
+      }
+      ctx.stroke();
+      if (alignLine) {
+        const x = xmap(0, left, width, t0, t1);
+        ctx.strokeStyle = colors.green;
+        ctx.setLineDash([4, 4]);
+        ctx.beginPath(); ctx.moveTo(x, top - 16); ctx.lineTo(x, top + height + 16); ctx.stroke();
+        ctx.setLineDash([]);
+        ctx.fillStyle = colors.green;
+        ctx.textAlign = "center";
+        ctx.fillText("clean sampling / launch edge", x, top + height + 32);
+      }
+      ctx.restore();
+    }
+
+    function drawRegen() {
+      const {ctx, w, h} = setupCanvas("regen");
+      const left = 64, width = w - 96;
+      ctx.strokeStyle = colors.grid;
+      ctx.fillStyle = colors.muted;
+      ctx.font = "11px -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif";
+      for (let i = -30; i <= 50; i += 10) {
+        const x = xmap(i, left, width, -30, 50);
+        ctx.beginPath(); ctx.moveTo(x, 42); ctx.lineTo(x, h - 48); ctx.stroke();
+        ctx.fillText(`${i} ps`, x - 12, h - 22);
+      }
+      drawAnalogTrace(ctx, left, 70, width, 90, "degraded input edge, approx. 20 ps rise", colors.accent, -4, 20, false);
+      drawAnalogTrace(ctx, left, 220, width, 90, "regenerated latch output, approx. 4 ps rise", colors.accent2, 0, 4, true);
+      ctx.fillStyle = colors.muted;
+      ctx.fillText("Phenomenological timing sketch, not a transistor-level simulation.", left, 28);
+    }
+
+    function arrow(ctx, x1, y1, x2, y2, text) {
+      ctx.strokeStyle = colors.ink;
+      ctx.fillStyle = colors.ink;
+      ctx.lineWidth = 1.7;
+      ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke();
+      const a = Math.atan2(y2 - y1, x2 - x1);
+      ctx.beginPath();
+      ctx.moveTo(x2, y2);
+      ctx.lineTo(x2 - 8 * Math.cos(a - 0.45), y2 - 8 * Math.sin(a - 0.45));
+      ctx.lineTo(x2 - 8 * Math.cos(a + 0.45), y2 - 8 * Math.sin(a + 0.45));
+      ctx.closePath(); ctx.fill();
+      if (text) {
+        ctx.font = "11px -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif";
+        ctx.fillStyle = colors.muted;
+        ctx.textAlign = "center";
+        ctx.fillText(text, (x1 + x2) / 2, y1 - 8);
+      }
+    }
+
+    function block(ctx, x, y, w, h, title, subtitle, fill) {
+      ctx.save();
+      ctx.beginPath();
+      ctx.rect(x, y, w, h);
+      ctx.fillStyle = fill;
+      ctx.strokeStyle = colors.line;
+      ctx.fill(); ctx.stroke();
+      ctx.fillStyle = colors.ink;
+      ctx.font = "bold 14px -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif";
+      ctx.textAlign = "center";
+      ctx.fillText(title, x + w / 2, y + 32);
+      ctx.font = "12px -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif";
+      ctx.fillStyle = colors.muted;
+      ctx.fillText(subtitle, x + w / 2, y + 54);
+      ctx.restore();
+    }
+
+    function drawBlock() {
+      const {ctx} = setupCanvas("block");
+      ctx.fillStyle = colors.muted;
+      ctx.font = "12px -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif";
+      ctx.fillText("One conceptual active serializer cell; repeated through the tree.", 28, 28);
+      block(ctx, 40, 90, 130, 86, "Latch", "sample / hold", colors.latch);
+      block(ctx, 250, 90, 130, 86, "2:1 Mux", "interleave A/B", colors.mux);
+      block(ctx, 460, 90, 130, 86, "Latch", "retime / launch", colors.launch);
+      arrow(ctx, 170, 133, 250, 133, "registered data");
+      arrow(ctx, 380, 133, 460, 133, "mux output");
+      arrow(ctx, 10, 133, 40, 133, "A/B inputs");
+      arrow(ctx, 590, 133, 638, 133, "next stage");
+      ctx.strokeStyle = colors.green;
+      ctx.setLineDash([5, 4]);
+      [[105, 222], [315, 222], [525, 222]].forEach(([x, y]) => {
+        ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x, 176); ctx.stroke();
+      });
+      ctx.setLineDash([]);
+      ctx.fillStyle = colors.green;
+      ctx.textAlign = "center";
+      ctx.font = "12px -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif";
+      ctx.fillText("local clock / phase", 315, 238);
+      ctx.fillStyle = colors.muted;
+      ctx.textAlign = "left";
+      ctx.fillText("Active stages re-buffer and retime edges.", 40, 292);
+      ctx.fillText("Final edge speed is limited by stage bandwidth and loading.", 40, 316);
+    }
+
+    function drawAll() {
+      drawTree();
+      drawFinalZoom();
+      drawRegen();
+      drawBlock();
+    }
+
+    document.getElementById("randomize").addEventListener("click", randBits);
+    document.getElementById("labels").addEventListener("change", (e) => {
+      showLabels = e.target.checked;
+      drawAll();
+    });
+    window.addEventListener("resize", drawAll);
+    randBits();
+  </script>
+</body>
+</html>
