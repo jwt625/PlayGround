@@ -6,7 +6,7 @@ import webbrowser
 
 
 def main() -> None:
-    html = Path(__file__).with_name("serializer_visualization.html").resolve()
+    html = Path(__file__).with_name("serializer_visualization_animated.html").resolve()
     if not html.exists():
         raise SystemExit(f"Missing {html.name}. Keep it next to this launcher.")
     webbrowser.open(html.as_uri())
