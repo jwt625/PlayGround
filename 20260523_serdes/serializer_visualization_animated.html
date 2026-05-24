@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Animated Pure SerDes Serializer Visualization</title>
+  <title>Animated Pure SerDes Visualization</title>
   <style>
     :root {
       color-scheme: dark;
@@ -15,6 +15,7 @@
       --accent: #69a7ff;
       --accent2: #ff9b52;
       --green: #4ed0a2;
+      --purple: #c49bff;
       --bg: #080d14;
       --canvas: #0d131d;
       --control: #151e2b;
@@ -64,6 +65,11 @@
       color: var(--ink);
     }
     button:hover, label.toggle:hover { border-color: var(--accent); }
+    button.active {
+      border-color: var(--accent);
+      background: #1b2b42;
+      color: #ffffff;
+    }
     label.toggle {
       display: inline-flex;
       gap: 6px;
@@ -107,6 +113,8 @@
       gap: 16px;
     }
     .small-grid section { margin: 0; }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
     @media (max-width: 900px) {
       .small-grid { grid-template-columns: 1fr; }
       header { position: static; }
@@ -116,10 +124,12 @@
 <body>
   <header>
     <div>
-      <h1>Animated Pure 16:1 NRZ Serializer</h1>
+      <h1>Animated Pure SerDes Visualization</h1>
       <div class="facts">Rolling oscilloscope-style view: new samples enter at right, older waveform history moves left. UI = 8.93 ps. Word period = 143 ps.</div>
     </div>
     <div class="controls">
+      <button id="serializerTab" class="active">Serializer</button>
+      <button id="deserializerTab">Deserializer</button>
       <button id="pause">Pause</button>
       <button id="randomize">New Random Stream</button>
       <label class="toggle"><input id="labels" type="checkbox" checked> show bit labels</label>
@@ -128,6 +138,7 @@
   </header>
 
   <main>
+    <div id="serializerPanel" class="tab-panel active">
     <section>
       <h2>1. Animated Serializer Mux Tree / Trace Evolution</h2>
       <p class="note">All mux-tree streams are shown. The visible window is three word periods wide; the right edge is the current sampling time.</p>
@@ -159,6 +170,27 @@
         <canvas id="block" width="660" height="380"></canvas>
       </section>
     </div>
+    </div>
+
+    <div id="deserializerPanel" class="tab-panel">
+      <section>
+        <h2>1. Animated Deserializer Demux Tree / Trace Evolution</h2>
+        <p class="note">The deserializer samples the 112 Gb/s serial stream, then routes alternating bits through staged 1:2 demuxes until 16 word-rate lanes are reconstructed.</p>
+        <canvas id="deserTree" width="1360" height="1040"></canvas>
+      </section>
+
+      <section>
+        <h2>2. Shift Register Word Assembly</h2>
+        <p class="note">A second equivalent view: each recovered UI sample fills one position in a 16-bit register; a divide-by-16 word-valid pulse captures the full parallel word.</p>
+        <canvas id="shiftRegister" width="1360" height="460"></canvas>
+      </section>
+
+      <section>
+        <h2>3. Sampler / CDR / Selected Lane Detail</h2>
+        <p class="note">The CDR is shown conceptually as recovered sampling phase, not as a transistor-level PLL. The highlighted lane follows the currently sampled bit position.</p>
+        <canvas id="deserDetail" width="1360" height="560"></canvas>
+      </section>
+    </div>
   </main>
 
   <script>
@@ -170,7 +202,7 @@
       accent: "#69a7ff", accent2: "#ff9b52", green: "#4ed0a2",
       canvas: "#0d131d", band: "#151e2b", faint: "#1d2735",
       label0: "#8b97a8", label1: "#b7d5ff", latch: "#123628",
-      mux: "#142d4a", launch: "#412714"
+      mux: "#142d4a", launch: "#412714", purple: "#c49bff"
     };
 
     let words = [];
@@ -179,6 +211,7 @@
     let running = true;
     let showLabels = true;
     let speed = 1;
+    let activeTab = "serializer";
     const basePsPerSecond = 260;
 
     function randomWord() {
@@ -209,6 +242,31 @@
       }
       stages[0] = Array.from({length: 16}, (_, i) => [i]);
       return stages;
+    }
+
+    function demuxStageLaneOrders() {
+      const stages = [[Array.from({length: 16}, (_, i) => i)]];
+      for (let s = 1; s <= 4; s++) {
+        stages[s] = [];
+        for (const seq of stages[s - 1]) {
+          stages[s].push(seq.filter((_, i) => i % 2 === 0));
+          stages[s].push(seq.filter((_, i) => i % 2 === 1));
+        }
+      }
+      return stages;
+    }
+
+    function currentSerialSample(t = simTime) {
+      const idx = Math.max(0, Math.floor(t / UI));
+      const lane = idx % 16;
+      const word = Math.floor(idx / 16);
+      ensureWords(t + WORD);
+      return {idx, lane, word, value: words[word]?.[lane] ?? 0, phase: ((t % UI) + UI) % UI};
+    }
+
+    function compactLaneList(lanes) {
+      if (lanes.length <= 4) return lanes.map(i => "b" + i).join(",");
+      return lanes.slice(0, 3).map(i => "b" + i).join(",") + "...";
     }
 
     function bitFor(lanes, t, cellPs) {
@@ -295,10 +353,16 @@
     }
 
     function drawTrace(ctx, opts) {
-      const {left, y, width, rowH, lanes, cellPs, label, color, t0, t1, risePs} = opts;
+      const {left, y, width, rowH, lanes, cellPs, label, color, t0, t1, risePs, activeIntensity = 0} = opts;
       const low = y + rowH * 0.72;
       const high = y + rowH * 0.24;
       ctx.save();
+      if (activeIntensity > 0) {
+        ctx.fillStyle = color;
+        ctx.globalAlpha = 0.08 + 0.14 * activeIntensity;
+        ctx.fillRect(left - 4, y - 1, width + 8, rowH + 2);
+        ctx.globalAlpha = 1;
+      }
       ctx.strokeStyle = colors.faint;
       ctx.beginPath(); ctx.moveTo(left, y + rowH); ctx.lineTo(left + width, y + rowH); ctx.stroke();
       ctx.fillStyle = colors.ink;
@@ -307,7 +371,9 @@
       ctx.fillText(label, left - 8, y + rowH * 0.65);
 
       ctx.strokeStyle = color;
-      ctx.lineWidth = 2;
+      ctx.lineWidth = activeIntensity > 0.2 ? 2.8 : 2;
+      ctx.shadowColor = color;
+      ctx.shadowBlur = activeIntensity * 14;
       ctx.beginPath();
       for (let px = 0; px <= width; px += 2) {
         const t = t0 + px * (t1 - t0) / width;
@@ -586,6 +652,178 @@
       drawClock(ctx, left, 260, width, 42, 2 * UI, "56 GHz select", t0, t1);
     }
 
+    function drawDeserializerTree() {
+      const {ctx, w} = setupCanvas("deserTree");
+      const left = 170, width = w - left - 24;
+      const t1 = simTime, t0 = t1 - TOTAL;
+      const sample = currentSerialSample(t1);
+      const pulse = 0.45 + 0.55 * (1 - sample.phase / UI);
+      drawRollingGrid(ctx, left, 18, width, 940, t0, t1, false);
+      ctx.fillStyle = colors.muted;
+      ctx.font = "12px -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif";
+      ctx.fillText(`Currently sampled: word ${sample.word}, b${sample.lane}=${sample.value}; highlighted rows contain the active demux path.`, left, 14);
+
+      const stages = demuxStageLaneOrders();
+      let y = 26;
+      const rowH = 18, gap = 3;
+      for (let s = 0; s <= 4; s++) {
+        const streams = stages[s];
+        const cellPs = UI * (2 ** s);
+        ctx.fillStyle = colors.band;
+        ctx.fillRect(8, y - 2, w - 16, 20);
+        ctx.fillStyle = colors.ink;
+        ctx.font = "bold 12px -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif";
+        const title = s === 0 ? "sampled serial input" : `demux stage ${s}`;
+        const rate = s === 0 ? "112 Gb/s stream, 8.9 ps UI" : `${112 / (2 ** s)} Gb/s stream, ${cellPs.toFixed(1)} ps bit period`;
+        ctx.fillText(`${streams.length} stream${streams.length === 1 ? "" : "s"}: ${title} (${rate})`, 14, y + 13);
+        y += 24;
+        streams.forEach((lanes, idx) => {
+          const laneText = lanes.map(i => "b" + i).join(",");
+          const label = s === 0 ? `serial in [${laneText}]` : (s === 4 ? `lane b${lanes[0]}` : `D${s}.${idx} [${laneText}]`);
+          const activeIntensity = lanes.includes(sample.lane) ? pulse : 0;
+          drawTrace(ctx, {
+            left, y, width, rowH, lanes, cellPs, label,
+            color: s === 4 ? colors.purple : colors.green,
+            t0, t1, risePs: s === 0 ? 6 : 4, activeIntensity
+          });
+          y += rowH + gap;
+        });
+        y += 7;
+      }
+
+      y += 6;
+      ctx.fillStyle = colors.band;
+      ctx.fillRect(8, y - 2, w - 16, 20);
+      ctx.fillStyle = colors.ink;
+      ctx.font = "bold 12px -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif";
+      ctx.fillText("Recovered clock / demux phase references", 14, y + 13);
+      y += 24;
+      drawClock(ctx, left, y, width, rowH, UI, "UI sample cadence", t0, t1); y += rowH + gap;
+      drawClock(ctx, left, y, width, rowH, 2 * UI, "56 GHz D1 select", t0, t1); y += rowH + gap;
+      drawClock(ctx, left, y, width, rowH, 4 * UI, "28 GHz D2 select", t0, t1); y += rowH + gap;
+      drawClock(ctx, left, y, width, rowH, 8 * UI, "14 GHz D3 select", t0, t1); y += rowH + gap;
+      drawClock(ctx, left, y, width, rowH, WORD, "7 GHz word valid", t0, t1);
+    }
+
+    function drawRegisterCell(ctx, x, y, w, h, label, value, filled, active) {
+      ctx.save();
+      ctx.shadowColor = active ? colors.purple : "transparent";
+      ctx.shadowBlur = active ? 22 : 0;
+      ctx.fillStyle = active ? "#251b37" : (filled ? "#142536" : "#101722");
+      ctx.strokeStyle = active ? colors.purple : colors.line;
+      ctx.lineWidth = active ? 2 : 1;
+      ctx.fillRect(x, y, w, h);
+      ctx.strokeRect(x, y, w, h);
+      ctx.fillStyle = colors.muted;
+      ctx.font = "11px -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif";
+      ctx.textAlign = "center";
+      ctx.fillText(label, x + w / 2, y + 16);
+      ctx.fillStyle = filled ? colors.ink : "#526070";
+      ctx.font = "bold 22px ui-monospace, SFMono-Regular, Menlo, monospace";
+      ctx.fillText(filled ? String(value) : "-", x + w / 2, y + 47);
+      ctx.restore();
+    }
+
+    function drawShiftRegister() {
+      const {ctx, w, h} = setupCanvas("shiftRegister");
+      const t1 = simTime, t0 = t1 - WORD;
+      const sample = currentSerialSample(t1);
+      const left = 96, width = w - left - 36;
+      drawRollingGrid(ctx, left, 34, width, 112, t0, t1, true);
+      drawTrace(ctx, {
+        left, y: 60, width, rowH: 54,
+        lanes: Array.from({length: 16}, (_, i) => i),
+        cellPs: UI, label: "sampled serial in", color: colors.green,
+        t0, t1, risePs: 6, activeIntensity: 0.25
+      });
+      drawClock(ctx, left, 124, width, 42, UI, "sample ticks", t0, t1);
+
+      ctx.fillStyle = colors.ink;
+      ctx.font = "bold 14px -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif";
+      ctx.textAlign = "left";
+      ctx.fillText(`Current assembly register: word ${sample.word}`, 32, 202);
+      const cellW = 70, cellH = 62, gap = 6;
+      const startX = 32, y = 220;
+      for (let i = 0; i < 16; i++) {
+        const filled = i <= sample.lane;
+        const value = words[sample.word]?.[i] ?? 0;
+        drawRegisterCell(ctx, startX + i * (cellW + gap), y, cellW, cellH, `b${i}`, value, filled, i === sample.lane);
+      }
+
+      const previousWord = Math.max(0, sample.word - 1);
+      ctx.fillStyle = colors.ink;
+      ctx.font = "bold 14px -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif";
+      ctx.fillText(`Parallel output latch: last complete word ${previousWord}`, 32, 326);
+      for (let i = 0; i < 16; i++) {
+        const value = words[previousWord]?.[i] ?? 0;
+        drawRegisterCell(ctx, startX + i * (cellW + gap), 344, cellW, 54, `b${i}`, value, true, sample.lane === 15 && sample.phase > UI * 0.55);
+      }
+
+      ctx.fillStyle = colors.muted;
+      ctx.font = "12px -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif";
+      ctx.fillText("The word-valid/load pulse is the recovered bit cadence divided by 16; it publishes all 16 lanes together.", 32, h - 22);
+    }
+
+    function drawLaneGrid(ctx, x, y, cellW, cellH, sample) {
+      for (let i = 0; i < 16; i++) {
+        const col = i % 8;
+        const row = Math.floor(i / 8);
+        const active = i === sample.lane;
+        const value = words[sample.word]?.[i] ?? 0;
+        drawRegisterCell(ctx, x + col * (cellW + 8), y + row * (cellH + 12), cellW, cellH, `b${i}`, value, i <= sample.lane, active);
+      }
+    }
+
+    function drawDeserializerDetail() {
+      const {ctx, w, h} = setupCanvas("deserDetail");
+      const t1 = simTime, t0 = t1 - WORD;
+      const sample = currentSerialSample(t1);
+      const stages = demuxStageLaneOrders();
+      const activeStreams = stages.map(streams => streams.findIndex(lanes => lanes.includes(sample.lane)));
+
+      ctx.fillStyle = colors.muted;
+      ctx.font = "12px -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif";
+      ctx.fillText(`Conceptual CDR: transitions adjust recovered phase; sampler decisions are shown at UI cadence. Following b${sample.lane} of word ${sample.word}.`, 30, 28);
+
+      drawMiniWave(ctx, 36, 78, 300, 62, Array.from({length: 16}, (_, i) => i), UI, "incoming serial waveform", colors.green, t0, t1, 6);
+      drawMiniClock(ctx, 36, 184, 300, 54, UI, "recovered UI sample phase", colors.green, t0, t1);
+      drawMiniClock(ctx, 36, 290, 300, 54, WORD, "divide-by-16 word-valid", colors.purple, t0, t1);
+
+      drawCircuitBlock(ctx, 420, 66, 140, 72, "CDR", "recover phase", colors.mux, clockValue(t1, UI));
+      drawCircuitBlock(ctx, 420, 176, 140, 72, "Sampler", `decision=${sample.value}`, colors.latch, 0.45 + 0.55 * (1 - sample.phase / UI));
+
+      glowLine(ctx, [[336, 109], [420, 102]], colors.green, 0.7, 4);
+      glowLine(ctx, [[336, 211], [420, 211]], colors.green, clockValue(t1, UI), 4);
+      glowLine(ctx, [[490, 138], [490, 176]], colors.green, clockValue(t1, UI), 4);
+
+      const blockY = 172;
+      const startX = 640;
+      let prevX = 560;
+      for (let s = 1; s <= 4; s++) {
+        const idx = activeStreams[s];
+        const lanes = stages[s][idx];
+        const x = startX + (s - 1) * 150;
+        const label = s === 4 ? `to lane b${lanes[0]}` : `D${s}.${idx}`;
+        const subtitle = compactLaneList(lanes);
+        drawCircuitBlock(ctx, x, blockY, 118, 82, label, subtitle, colors.mux, 0.75);
+        glowLine(ctx, [[prevX, 217], [x, 217]], colors.purple, 0.75, 5);
+        prevX = x + 118;
+      }
+      glowLine(ctx, [[prevX, 217], [1255, 217]], colors.purple, 0.85, 5);
+      ctx.fillStyle = colors.ink;
+      ctx.font = "bold 13px -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif";
+      ctx.textAlign = "center";
+      ctx.fillText(`active path for b${sample.lane}`, 1100, 196);
+
+      drawMiniWave(ctx, 1020, 300, 300, 62, [sample.lane], WORD, `selected output lane b${sample.lane}`, colors.purple, t0, t1, 4);
+      drawLaneGrid(ctx, 420, 334, 64, 54, sample);
+
+      ctx.fillStyle = colors.muted;
+      ctx.font = "12px -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif";
+      ctx.textAlign = "left";
+      ctx.fillText("Lane cells show the current word being assembled; the highlighted cell is receiving the present UI sample.", 420, h - 24);
+    }
+
     function logistic(x, center, rise) {
       const k = 2 * Math.log(9) / rise;
       return 1 / (1 + Math.exp(-k * (x - center)));
@@ -705,11 +943,26 @@
 
     function drawAll() {
       ensureWords(simTime + TOTAL);
-      drawTree();
-      drawFinalZoom();
-      drawS10Panel();
-      drawRegen();
-      drawBlock();
+      if (activeTab === "serializer") {
+        drawTree();
+        drawFinalZoom();
+        drawS10Panel();
+        drawRegen();
+        drawBlock();
+      } else {
+        drawDeserializerTree();
+        drawShiftRegister();
+        drawDeserializerDetail();
+      }
+    }
+
+    function setActiveTab(tab) {
+      activeTab = tab;
+      document.getElementById("serializerPanel").classList.toggle("active", tab === "serializer");
+      document.getElementById("deserializerPanel").classList.toggle("active", tab === "deserializer");
+      document.getElementById("serializerTab").classList.toggle("active", tab === "serializer");
+      document.getElementById("deserializerTab").classList.toggle("active", tab === "deserializer");
+      drawAll();
     }
 
     function animate(ts) {
@@ -726,6 +979,8 @@
       document.getElementById("pause").textContent = running ? "Pause" : "Play";
       lastFrame = null;
     });
+    document.getElementById("serializerTab").addEventListener("click", () => setActiveTab("serializer"));
+    document.getElementById("deserializerTab").addEventListener("click", () => setActiveTab("deserializer"));
     document.getElementById("randomize").addEventListener("click", resetStream);
     document.getElementById("labels").addEventListener("change", (e) => {
       showLabels = e.target.checked;

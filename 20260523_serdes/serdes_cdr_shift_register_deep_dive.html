@@ -1,0 +1,905 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SerDes CDR and Shift Register Deep Dive</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --ink: #e7edf7;
+      --muted: #9da9ba;
+      --grid: #293343;
+      --panel: #111824;
+      --line: #2a3545;
+      --accent: #69a7ff;
+      --accent2: #ff9b52;
+      --green: #4ed0a2;
+      --purple: #c49bff;
+      --bg: #080d14;
+      --canvas: #0d131d;
+      --control: #151e2b;
+      --red: #ff6f7d;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font: 14px/1.4 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--ink);
+      background: var(--bg);
+    }
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 18px;
+      background: rgba(8, 13, 20, 0.96);
+      border-bottom: 1px solid var(--line);
+      backdrop-filter: blur(8px);
+    }
+    h1 {
+      margin: 0;
+      font-size: 18px;
+      font-weight: 700;
+    }
+    .facts {
+      color: var(--muted);
+      font-size: 13px;
+    }
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+    }
+    button, label.toggle, select {
+      border: 1px solid #3a4658;
+      background: var(--control);
+      border-radius: 0;
+      padding: 7px 10px;
+      cursor: pointer;
+      color: var(--ink);
+    }
+    button:hover, label.toggle:hover, select:hover { border-color: var(--accent); }
+    label.toggle {
+      display: inline-flex;
+      gap: 6px;
+      align-items: center;
+      user-select: none;
+    }
+    input[type="range"] { width: 130px; }
+    main {
+      max-width: 1420px;
+      margin: 0 auto;
+      padding: 16px;
+    }
+    section {
+      margin: 0 0 16px;
+      padding: 14px;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 0;
+      overflow-x: auto;
+    }
+    h2 {
+      margin: 0 0 8px;
+      font-size: 16px;
+    }
+    .note {
+      margin: 6px 0 10px;
+      color: var(--muted);
+      max-width: 1180px;
+    }
+    canvas {
+      display: block;
+      width: 1360px;
+      max-width: none;
+      background: var(--canvas);
+      border: 1px solid var(--line);
+      border-radius: 0;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div>
+      <h1>CDR / PLL And Shift Register Deep Dive</h1>
+      <div class="facts">Behavioral mixed-signal view: UI = 8.93 ps, 16 UI word = 143 ps. New samples enter at right.</div>
+    </div>
+    <div class="controls">
+      <button id="pause">Pause</button>
+      <button id="resetCdr">Reset CDR</button>
+      <button id="phaseStep">Inject Phase Step</button>
+      <button id="randomize">New Random Data</button>
+      <button id="stepUi">Step 1 UI</button>
+      <label class="toggle">pattern
+        <select id="pattern">
+          <option value="random">random</option>
+          <option value="alt">alternating</option>
+          <option value="runs">long runs</option>
+        </select>
+      </label>
+      <label class="toggle"><input id="ideal" type="checkbox" checked> ideal centers</label>
+      <label class="toggle">speed <input id="speed" type="range" min="0.25" max="4" step="0.25" value="1"><span id="speedText">1.00x</span></label>
+    </div>
+  </header>
+
+  <main>
+    <section>
+      <h2>1. CDR Scope: Data, Edges, And Recovered Sampling Ticks</h2>
+      <p class="note">The recovered sample phase starts wrong, then the CDR nudges it using data transitions. This is a conceptual bang-bang CDR / PLL or phase-interpolator model, not transistor-level loop design.</p>
+      <canvas id="cdrScope" width="1360" height="470"></canvas>
+    </section>
+
+    <section>
+      <h2>2. CDR Loop Internals: Phase Detector, Charge Accumulation, Loop Filter, Phase Generator</h2>
+      <p class="note">UP/DOWN/HOLD decisions add or remove charge/control count. The loop filter smooths that control value, and the phase generator shifts the sampling phase.</p>
+      <canvas id="cdrLoop" width="1360" height="520"></canvas>
+    </section>
+
+    <section>
+      <h2>3. Basket Register Bank: How A Sample Picks A Storage Slot</h2>
+      <p class="note">The modulo-16 counter enables exactly one storage basket per UI. The output latch captures all baskets together at the word boundary.</p>
+      <canvas id="basket" width="1360" height="960"></canvas>
+    </section>
+
+    <section>
+      <h2>4. True Shift Chain: Serial-In / Parallel-Out Register</h2>
+      <p class="note">A different hardware-flavored view: every UI moves values through a chain. The final output latch still retimes the full word onto one common word clock.</p>
+      <canvas id="shiftChain" width="1360" height="470"></canvas>
+    </section>
+
+    <section>
+      <h2>5. Shift Mechanism Deep Dive: Master / Slave Latches And Snapshot Timing</h2>
+      <p class="note">A flip-flop stage is shown as two latches. The master samples while CLK is low, the slave publishes after the rising edge, and clock-to-Q delay prevents the new value from being consumed until the next edge.</p>
+      <canvas id="shiftMechanism" width="1360" height="720"></canvas>
+    </section>
+  </main>
+
+  <script>
+    const UI = 1000 / 112;
+    const WORD = 16 * UI;
+    const VIEW = 3 * WORD;
+    const colors = {
+      ink: "#e7edf7", muted: "#9da9ba", grid: "#293343", line: "#2a3545",
+      accent: "#69a7ff", accent2: "#ff9b52", green: "#4ed0a2",
+      purple: "#c49bff", red: "#ff6f7d", canvas: "#0d131d",
+      band: "#151e2b", faint: "#1d2735", latch: "#123628",
+      mux: "#142d4a", launch: "#412714"
+    };
+
+    let words = [];
+    let pattern = "random";
+    let simTime = 4 * WORD;
+    let running = true;
+    let speed = 1;
+    let lastFrame = null;
+    let cdrPhase = -3.2;
+    let rawControl = -3.2;
+    let filteredControl = -3.2;
+    let pdDecision = 0;
+    let phaseError = 0;
+    let lockedScore = 0;
+    let dataPhase = 0;
+    let lastProcessedUi = 0;
+    const basePsPerSecond = 145;
+    const history = [];
+    const maxHistory = 520;
+
+    function randomWord() {
+      if (pattern === "alt") {
+        const start = Math.random() < 0.5 ? 0 : 1;
+        return Array.from({length: 16}, (_, i) => (i + start) % 2);
+      }
+      if (pattern === "runs") {
+        const out = [];
+        let bit = Math.random() < 0.5 ? 0 : 1;
+        while (out.length < 16) {
+          const run = 3 + Math.floor(Math.random() * 5);
+          for (let i = 0; i < run && out.length < 16; i++) out.push(bit);
+          bit = bit ? 0 : 1;
+        }
+        return out;
+      }
+      return Array.from({length: 16}, () => Math.random() < 0.5 ? 0 : 1);
+    }
+
+    function resetData() {
+      words = [];
+      for (let i = 0; i < 64; i++) words.push(randomWord());
+      simTime = 4 * WORD;
+      lastProcessedUi = Math.floor(simTime / UI);
+      history.length = 0;
+    }
+
+    function resetCdr() {
+      cdrPhase = Math.random() < 0.5 ? -3.4 : 3.4;
+      rawControl = cdrPhase;
+      filteredControl = cdrPhase;
+      pdDecision = 0;
+      phaseError = 0;
+      lockedScore = 0;
+      history.length = 0;
+      lastProcessedUi = Math.floor(simTime / UI);
+    }
+
+    function ensureWords(t) {
+      const need = Math.ceil(t / WORD) + 10;
+      while (words.length < need) words.push(randomWord());
+    }
+
+    function sampleInfo(t = simTime) {
+      const shifted = Math.max(0, t - dataPhase);
+      const idx = Math.floor(shifted / UI);
+      const lane = ((idx % 16) + 16) % 16;
+      const word = Math.floor(idx / 16);
+      ensureWords(t + WORD);
+      return {idx, lane, word, value: words[word]?.[lane] ?? 0, phase: ((shifted % UI) + UI) % UI};
+    }
+
+    function bitAtIndex(idx) {
+      if (idx < 0) return 0;
+      const lane = idx % 16;
+      const word = Math.floor(idx / 16);
+      ensureWords((word + 2) * WORD);
+      return words[word]?.[lane] ?? 0;
+    }
+
+    function smooth01(x) {
+      const z = Math.max(0, Math.min(1, x));
+      return z * z * (3 - 2 * z);
+    }
+
+    function hashNoise(n) {
+      return Math.sin(n * 12.9898 + 78.233) - Math.floor(Math.sin(n * 12.9898 + 78.233));
+    }
+
+    function transitionJitter(uiIdx) {
+      const randomJitter = (hashNoise(uiIdx) - 0.5) * 0.72;
+      const sinusoidalJitter = 0.26 * Math.sin(uiIdx * 0.37) + 0.18 * Math.sin(uiIdx * 0.071 + 1.4);
+      return randomJitter + sinusoidalJitter;
+    }
+
+    function amplitudeNoise(t) {
+      return 0.035 * Math.sin(t * 1.71) + 0.018 * Math.sin(t * 5.13 + 0.7);
+    }
+
+    function analogValue(t) {
+      const shifted = t - dataPhase;
+      const idx = Math.floor(shifted / UI);
+      const cur = bitAtIndex(idx);
+      const prev = bitAtIndex(idx - 1);
+      const boundary = idx * UI + dataPhase + transitionJitter(idx);
+      const rise = 3.1;
+      let value = cur;
+      if (cur !== prev && t - boundary >= 0 && t - boundary < rise) {
+        value = prev + (cur - prev) * smooth01((t - boundary) / rise);
+      }
+      return Math.max(0, Math.min(1, value + amplitudeNoise(t)));
+    }
+
+    function clockValue(t, period, phase = 0, rise = 0.9) {
+      const p = ((t - phase) % period + period) % period;
+      const target = p < period / 2 ? 1 : 0;
+      const edge = p < period / 2 ? 0 : period / 2;
+      const prev = p < period / 2 ? 0 : 1;
+      if (p - edge >= 0 && p - edge < rise) return prev + (target - prev) * smooth01((p - edge) / rise);
+      return target;
+    }
+
+    function setupCanvas(id) {
+      const canvas = document.getElementById(id);
+      const ctx = canvas.getContext("2d");
+      const ratio = window.devicePixelRatio || 1;
+      const cssW = Number(canvas.getAttribute("width"));
+      const cssH = Number(canvas.getAttribute("height"));
+      canvas.style.width = cssW + "px";
+      canvas.style.height = cssH + "px";
+      canvas.width = Math.round(cssW * ratio);
+      canvas.height = Math.round(cssH * ratio);
+      ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+      ctx.fillStyle = colors.canvas;
+      ctx.fillRect(0, 0, cssW, cssH);
+      return {canvas, ctx, w: cssW, h: cssH};
+    }
+
+    function xmap(t, left, width, t0, t1) {
+      return left + (t - t0) * width / (t1 - t0);
+    }
+
+    function processUiBoundary(uiIdx) {
+      const prev = bitAtIndex(uiIdx - 1);
+      const cur = bitAtIndex(uiIdx);
+      if (prev !== cur) {
+        const expectedEdge = uiIdx * UI + cdrPhase;
+        const actualEdge = uiIdx * UI + dataPhase + transitionJitter(uiIdx);
+        const detectorNoise = (hashNoise(uiIdx + 0.37) - 0.5) * 0.34;
+        phaseError = Math.max(-UI / 2, Math.min(UI / 2, actualEdge - expectedEdge));
+        const noisyError = phaseError + detectorNoise;
+        pdDecision = Math.abs(noisyError) < 0.16 ? 0 : (noisyError > 0 ? 1 : -1);
+      } else {
+        phaseError = 0;
+        pdDecision = 0;
+      }
+      const vcoWander = 0.016 * Math.sin(uiIdx * 0.19) + 0.011 * (hashNoise(uiIdx + 4.1) - 0.5);
+      rawControl += pdDecision * 0.20 + vcoWander;
+      rawControl = Math.max(-4.2, Math.min(4.2, rawControl));
+      filteredControl += 0.13 * (rawControl - filteredControl);
+      cdrPhase += 0.18 * (filteredControl - cdrPhase) + vcoWander * 0.35;
+      cdrPhase = Math.max(-4.2, Math.min(4.2, cdrPhase));
+      lockedScore = 0.96 * lockedScore + 0.04 * (Math.abs(cdrPhase - dataPhase) < 0.45 ? 1 : 0);
+      history.push({t: uiIdx * UI, raw: rawControl, filt: filteredControl, phase: cdrPhase, err: phaseError, pd: pdDecision});
+      if (history.length > maxHistory) history.shift();
+    }
+
+    function stepSimulation(dtMs) {
+      simTime += dtMs * basePsPerSecond * speed / 1000;
+      ensureWords(simTime + VIEW);
+      const targetUi = Math.floor(simTime / UI);
+      for (let ui = lastProcessedUi + 1; ui <= targetUi; ui++) processUiBoundary(ui);
+      lastProcessedUi = targetUi;
+    }
+
+    function advanceByPs(ps) {
+      simTime += ps;
+      ensureWords(simTime + VIEW);
+      const targetUi = Math.floor(simTime / UI);
+      for (let ui = lastProcessedUi + 1; ui <= targetUi; ui++) processUiBoundary(ui);
+      lastProcessedUi = targetUi;
+    }
+
+    function drawText(ctx, text, x, y, color = colors.ink, size = 12, align = "left", bold = false) {
+      ctx.fillStyle = color;
+      ctx.font = `${bold ? "bold " : ""}${size}px -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif`;
+      ctx.textAlign = align;
+      ctx.fillText(text, x, y);
+    }
+
+    function drawGrid(ctx, left, top, width, height, t0, t1, showUi) {
+      ctx.save();
+      ctx.strokeStyle = colors.grid;
+      ctx.lineWidth = 1;
+      ctx.globalAlpha = 0.75;
+      const step = showUi ? UI : WORD;
+      const first = Math.ceil(t0 / step);
+      const last = Math.floor(t1 / step);
+      for (let i = first; i <= last; i++) {
+        const x = xmap(i * step, left, width, t0, t1);
+        ctx.globalAlpha = showUi ? (i % 16 === 0 ? 0.75 : 0.2) : 0.75;
+        ctx.beginPath(); ctx.moveTo(x, top); ctx.lineTo(x, top + height); ctx.stroke();
+      }
+      ctx.globalAlpha = 1;
+      drawText(ctx, "newest", left + width - 42, top + height + 17, colors.muted, 11);
+      ctx.restore();
+    }
+
+    function drawTrace(ctx, left, y, width, rowH, t0, t1, fn, label, color, glow = 0) {
+      const low = y + rowH * 0.74;
+      const high = y + rowH * 0.22;
+      ctx.save();
+      drawText(ctx, label, left - 10, y + rowH * 0.62, colors.ink, 12, "right");
+      ctx.strokeStyle = colors.faint;
+      ctx.beginPath(); ctx.moveTo(left, y + rowH); ctx.lineTo(left + width, y + rowH); ctx.stroke();
+      ctx.strokeStyle = color;
+      ctx.lineWidth = 2;
+      ctx.shadowColor = color;
+      ctx.shadowBlur = glow * 18;
+      ctx.beginPath();
+      for (let px = 0; px <= width; px += 2) {
+        const t = t0 + px * (t1 - t0) / width;
+        const v = fn(t);
+        const yy = low + (high - low) * v;
+        if (px === 0) ctx.moveTo(left + px, yy);
+        else ctx.lineTo(left + px, yy);
+      }
+      ctx.stroke();
+      ctx.restore();
+    }
+
+    function drawBlock(ctx, x, y, w, h, title, subtitle, fill, glow = 0) {
+      ctx.save();
+      ctx.shadowColor = glow > 0 ? colors.green : "transparent";
+      ctx.shadowBlur = glow * 22;
+      ctx.fillStyle = fill;
+      ctx.strokeStyle = glow > 0.2 ? colors.green : colors.line;
+      ctx.lineWidth = glow > 0.2 ? 2 : 1;
+      ctx.fillRect(x, y, w, h);
+      ctx.strokeRect(x, y, w, h);
+      const titleY = y + (h < 58 ? 19 : 30);
+      const subtitleY = y + (h < 58 ? 37 : 53);
+      drawText(ctx, title, x + w / 2, titleY, colors.ink, h < 58 ? 12 : 14, "center", true);
+      drawText(ctx, subtitle, x + w / 2, subtitleY, colors.muted, h < 58 ? 10 : 12, "center");
+      ctx.restore();
+    }
+
+    function glowLine(ctx, points, color, intensity, width = 4) {
+      ctx.save();
+      ctx.strokeStyle = color;
+      ctx.globalAlpha = 0.18 + 0.82 * intensity;
+      ctx.shadowColor = color;
+      ctx.shadowBlur = 3 + 18 * intensity;
+      ctx.lineWidth = width;
+      ctx.lineCap = "square";
+      ctx.lineJoin = "miter";
+      ctx.beginPath();
+      points.forEach(([x, y], i) => i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y));
+      ctx.stroke();
+      ctx.restore();
+    }
+
+    function drawCdrScope() {
+      const {ctx, w, h} = setupCanvas("cdrScope");
+      const left = 86, width = w - left - 34;
+      const t1 = simTime, t0 = t1 - VIEW;
+      drawGrid(ctx, left, 34, width, h - 84, t0, t1, true);
+      drawText(ctx, `CDR phase offset = ${cdrPhase.toFixed(2)} ps, data phase = ${dataPhase.toFixed(2)} ps, lock = ${(lockedScore * 100).toFixed(0)}%`, left, 20, colors.muted);
+      drawTrace(ctx, left, 62, width, 74, t0, t1, analogValue, "serial data", colors.green, 0.2);
+      drawTrace(ctx, left, 166, width, 50, t0, t1, t => clockValue(t, UI, cdrPhase + UI / 2), "recovered sample ticks", colors.accent, 0.3);
+      drawTrace(ctx, left, 238, width, 50, t0, t1, t => clockValue(t, WORD, cdrPhase), "divide-by-16 word clock", colors.purple);
+
+      if (document.getElementById("ideal").checked) {
+        ctx.save();
+        ctx.strokeStyle = colors.accent2;
+        ctx.globalAlpha = 0.32;
+        for (let i = Math.ceil(t0 / UI); i <= Math.floor(t1 / UI); i++) {
+          const x = xmap(i * UI + UI / 2 + dataPhase, left, width, t0, t1);
+          ctx.beginPath(); ctx.moveTo(x, 42); ctx.lineTo(x, h - 48); ctx.stroke();
+        }
+        ctx.restore();
+        drawText(ctx, "faint orange = ideal UI centers", left, h - 24, colors.accent2, 12);
+      }
+
+      ctx.save();
+      for (let i = Math.ceil(t0 / UI); i <= Math.floor(t1 / UI); i++) {
+        const xS = xmap(i * UI + UI / 2 + cdrPhase, left, width, t0, t1);
+        const v = analogValue(i * UI + UI / 2 + cdrPhase);
+        ctx.fillStyle = v > 0.5 ? colors.accent : colors.canvas;
+        ctx.strokeStyle = colors.accent;
+        ctx.lineWidth = 1.5;
+        ctx.beginPath(); ctx.arc(xS, 98 - 38 * (v - 0.5), 4, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+        if (bitAtIndex(i - 1) !== bitAtIndex(i)) {
+          const xE = xmap(i * UI + dataPhase + transitionJitter(i), left, width, t0, t1);
+          ctx.strokeStyle = colors.red;
+          ctx.globalAlpha = 0.8;
+          ctx.beginPath(); ctx.moveTo(xE, 44); ctx.lineTo(xE, 134); ctx.stroke();
+          ctx.globalAlpha = 1;
+        }
+      }
+      ctx.restore();
+      drawText(ctx, "red verticals = data transitions; blue dots = actual data decisions from recovered sample phase", left, 340, colors.muted);
+      const decisionText = pdDecision > 0 ? "UP: move recovered phase later" : pdDecision < 0 ? "DOWN: move recovered phase earlier" : "HOLD: no useful transition correction";
+      drawText(ctx, `latest phase detector decision: ${decisionText}`, left, 366, pdDecision > 0 ? colors.accent2 : pdDecision < 0 ? colors.accent : colors.muted, 14, "left", true);
+    }
+
+    function drawMiniHistory(ctx, x, y, w, h, key, label, color, scale = 4.2) {
+      ctx.save();
+      ctx.strokeStyle = colors.grid;
+      ctx.strokeRect(x, y, w, h);
+      drawText(ctx, label, x, y - 6, colors.muted, 11);
+      ctx.strokeStyle = color;
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      history.forEach((p, i) => {
+        const xx = x + i * w / Math.max(1, maxHistory - 1);
+        const v = Math.max(-scale, Math.min(scale, p[key]));
+        const yy = y + h * 0.5 - v * h * 0.42 / scale;
+        if (i === 0) ctx.moveTo(xx, yy);
+        else ctx.lineTo(xx, yy);
+      });
+      ctx.stroke();
+      ctx.restore();
+    }
+
+    function drawCdrLoop() {
+      const {ctx, w, h} = setupCanvas("cdrLoop");
+      drawText(ctx, "A transition creates an early/late decision. UP/DOWN pulses accumulate into control, then the loop filter smooths the phase generator command.", 28, 28, colors.muted);
+      const pdGlow = pdDecision !== 0 ? 0.9 : 0.18;
+      const upGlow = pdDecision > 0 ? 1 : 0.1;
+      const downGlow = pdDecision < 0 ? 1 : 0.1;
+      drawBlock(ctx, 44, 92, 140, 82, "Edge/Data", "samplers", colors.latch, 0.45);
+      drawBlock(ctx, 245, 92, 150, 82, "Phase Detector", pdDecision > 0 ? "UP" : pdDecision < 0 ? "DOWN" : "HOLD", colors.mux, pdGlow);
+      drawBlock(ctx, 466, 92, 150, 82, "Charge Pump", `raw=${rawControl.toFixed(2)}`, colors.launch, Math.abs(pdDecision));
+      drawBlock(ctx, 688, 92, 150, 82, "Loop Filter", `filt=${filteredControl.toFixed(2)}`, colors.latch, 0.35);
+      drawBlock(ctx, 910, 92, 170, 82, "Phase Gen", "PLL / PI model", colors.mux, 0.4);
+      drawBlock(ctx, 1160, 92, 150, 82, "Sampler Clock", `${cdrPhase.toFixed(2)} ps`, colors.latch, 0.5);
+      glowLine(ctx, [[184, 133], [245, 133]], colors.green, 0.65);
+      glowLine(ctx, [[395, 133], [466, 133]], pdDecision > 0 ? colors.accent2 : pdDecision < 0 ? colors.accent : colors.muted, pdGlow);
+      glowLine(ctx, [[616, 133], [688, 133]], colors.accent2, Math.min(1, Math.abs(rawControl) / 4.2));
+      glowLine(ctx, [[838, 133], [910, 133]], colors.green, Math.min(1, Math.abs(filteredControl) / 4.2));
+      glowLine(ctx, [[1080, 133], [1160, 133]], colors.accent, 0.65);
+
+      drawText(ctx, "UP", 506, 226, colors.accent2, 14, "center", true);
+      drawText(ctx, "DOWN", 578, 226, colors.accent, 14, "center", true);
+      glowLine(ctx, [[506, 205], [506, 176]], colors.accent2, upGlow, 6);
+      glowLine(ctx, [[578, 176], [578, 205]], colors.accent, downGlow, 6);
+      ctx.save();
+      ctx.strokeStyle = colors.line;
+      ctx.strokeRect(486, 248, 110, 160);
+      const level = (rawControl + 4.2) / 8.4;
+      ctx.fillStyle = pdDecision > 0 ? colors.accent2 : pdDecision < 0 ? colors.accent : colors.green;
+      ctx.globalAlpha = 0.82;
+      ctx.fillRect(486, 248 + 160 * (1 - level), 110, 160 * level);
+      ctx.globalAlpha = 1;
+      drawText(ctx, "charge / control bucket", 541, 430, colors.muted, 12, "center");
+      ctx.restore();
+
+      const capX = 720, capY = 262;
+      ctx.save();
+      ctx.strokeStyle = colors.green;
+      ctx.lineWidth = 3;
+      ctx.beginPath(); ctx.moveTo(capX, capY); ctx.lineTo(capX, capY + 120); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(capX + 54, capY); ctx.lineTo(capX + 54, capY + 120); ctx.stroke();
+      const filtLevel = (filteredControl + 4.2) / 8.4;
+      ctx.fillStyle = colors.green;
+      ctx.globalAlpha = 0.38 + 0.38 * filtLevel;
+      ctx.fillRect(capX + 8, capY + 120 * (1 - filtLevel), 38, 120 * filtLevel);
+      ctx.globalAlpha = 1;
+      drawText(ctx, "loop filter capacitor", capX + 28, 430, colors.muted, 12, "center");
+      ctx.restore();
+
+      const dialX = 1000, dialY = 324;
+      ctx.save();
+      ctx.strokeStyle = colors.accent;
+      ctx.lineWidth = 2;
+      ctx.beginPath(); ctx.arc(dialX, dialY, 70, 0, Math.PI * 2); ctx.stroke();
+      const angle = -Math.PI / 2 + cdrPhase / 4.2 * Math.PI * 0.82;
+      glowLine(ctx, [[dialX, dialY], [dialX + 62 * Math.cos(angle), dialY + 62 * Math.sin(angle)]], colors.accent, 0.8, 5);
+      drawText(ctx, "phase dial", dialX, 430, colors.muted, 12, "center");
+      ctx.restore();
+
+      drawMiniHistory(ctx, 38, 462, 290, 36, "err", "phase error history", colors.red, UI / 2);
+      drawMiniHistory(ctx, 366, 462, 290, 36, "raw", "raw control", colors.accent2);
+      drawMiniHistory(ctx, 694, 462, 290, 36, "filt", "filtered control", colors.green);
+      drawMiniHistory(ctx, 1022, 462, 290, 36, "phase", "recovered phase", colors.accent);
+    }
+
+    function drawCell(ctx, x, y, w, h, label, value, active, filled) {
+      ctx.save();
+      ctx.shadowColor = active ? colors.purple : "transparent";
+      ctx.shadowBlur = active ? 22 : 0;
+      ctx.fillStyle = active ? "#251b37" : filled ? "#142536" : "#101722";
+      ctx.strokeStyle = active ? colors.purple : colors.line;
+      ctx.lineWidth = active ? 2 : 1;
+      ctx.fillRect(x, y, w, h);
+      ctx.strokeRect(x, y, w, h);
+      drawText(ctx, label, x + w / 2, y + (h < 42 ? 13 : 16), colors.muted, h < 42 ? 9 : 11, "center");
+      drawText(ctx, filled ? String(value) : "-", x + w / 2, y + (h < 42 ? 28 : 48), filled ? colors.ink : "#526070", h < 42 ? 14 : 22, "center", true);
+      ctx.restore();
+    }
+
+    function drawTinyBit(ctx, x, y, label, value, active) {
+      ctx.save();
+      ctx.fillStyle = active ? "#251b37" : "#101722";
+      ctx.strokeStyle = active ? colors.purple : colors.line;
+      ctx.lineWidth = active ? 2 : 1;
+      ctx.fillRect(x, y, 34, 30);
+      ctx.strokeRect(x, y, 34, 30);
+      drawText(ctx, label, x + 17, y - 5, colors.muted, 10, "center");
+      drawText(ctx, String(value), x + 17, y + 21, active ? colors.purple : colors.ink, 14, "center", true);
+      ctx.restore();
+    }
+
+    function drawBasketSelectionSlice(ctx, i, x, y, sample, decoderX, decoderY, dataBusY) {
+      const active = i === sample.lane;
+      const filled = i <= sample.lane;
+      const value = words[sample.word]?.[i] ?? 0;
+      const intensity = active ? 0.95 : 0.08;
+      const weX = x + 12, weY = y + 18;
+      const gateX = x + 108, gateY = y + 18;
+      const latchX = x + 204, latchY = y + 18;
+      const routeY = y + 48;
+
+      ctx.save();
+      ctx.fillStyle = active ? "#15122b" : "#101722";
+      ctx.strokeStyle = active ? colors.purple : colors.line;
+      ctx.lineWidth = active ? 2 : 1;
+      ctx.fillRect(x, y, 294, 112);
+      ctx.strokeRect(x, y, 294, 112);
+      drawText(ctx, `basket b${i}`, x + 8, y + 15, active ? colors.purple : colors.muted, 11, "left", true);
+      ctx.restore();
+
+      drawBlock(ctx, weX, weY, 72, 46, `WE[${i}]`, active ? "1" : "0", colors.launch, active ? 0.9 : 0.05);
+      drawBlock(ctx, gateX, gateY, 74, 46, "TG/mux", active ? "open" : "closed", colors.mux, active ? 0.85 : 0.05);
+      drawBlock(ctx, latchX, gateY, 74, 46, "latch", filled ? `Q=${value}` : "hold", colors.latch, active ? 0.8 : 0.08);
+
+      glowLine(ctx, [[decoderX, decoderY], [weX + 36, decoderY], [weX + 36, weY]], colors.purple, intensity, active ? 4 : 2);
+      glowLine(ctx, [[weX + 72, routeY], [gateX, routeY]], colors.purple, intensity, active ? 4 : 2);
+      glowLine(ctx, [[gateX + 74, routeY], [latchX, routeY]], colors.green, intensity, active ? 4 : 2);
+
+      ctx.save();
+      ctx.strokeStyle = colors.green;
+      ctx.globalAlpha = active ? 0.95 : 0.22;
+      ctx.lineWidth = active ? 3 : 1.5;
+      ctx.beginPath();
+      ctx.moveTo(gateX + 37, dataBusY);
+      ctx.lineTo(gateX + 37, gateY + 46);
+      ctx.stroke();
+      ctx.restore();
+
+      drawCell(ctx, x + 98, y + 72, 96, 32, `stored b${i}`, value, active, filled);
+      return {gateX, gateY, latchX, routeY};
+    }
+
+    function drawBasket() {
+      const {ctx, w, h} = setupCanvas("basket");
+      const sample = sampleInfo(simTime);
+      const bitPhase = sample.phase / UI;
+      const bits = sample.lane.toString(2).padStart(4, "0").split("").map(Number);
+      drawText(ctx, `current sample token: word ${sample.word}, b${sample.lane}=${sample.value}; counter selects basket b${sample.lane}`, 28, 28, colors.muted);
+      drawBlock(ctx, 42, 62, 142, 70, "Sampler", `bit=${sample.value}`, colors.latch, 0.55);
+      drawBlock(ctx, 236, 62, 150, 70, "Modulo-16", `count=${sample.lane}`, colors.mux, 0.6);
+      for (let i = 0; i < 4; i++) drawTinyBit(ctx, 422 + i * 42, 83, `c${3 - i}`, bits[i], true);
+      drawBlock(ctx, 626, 62, 152, 70, "4->16 Decoder", `WE[${sample.lane}]=1`, colors.mux, 0.72);
+      drawBlock(ctx, 1002, 62, 174, 70, "Shared Data Bus", `data=${sample.value}`, colors.latch, 0.42);
+      glowLine(ctx, [[184, 97], [236, 97]], colors.green, 0.7);
+      glowLine(ctx, [[386, 97], [422, 97]], colors.purple, 0.7);
+      glowLine(ctx, [[590, 97], [626, 97]], colors.purple, 0.7);
+      glowLine(ctx, [[184, 116], [1002, 116]], colors.green, 0.38, 3);
+
+      const dataBusY = 174;
+      ctx.save();
+      ctx.strokeStyle = colors.green;
+      ctx.globalAlpha = 0.72;
+      ctx.lineWidth = 3;
+      ctx.beginPath(); ctx.moveTo(44, dataBusY); ctx.lineTo(w - 48, dataBusY); ctx.stroke();
+      drawText(ctx, "sampled data bus is physically available to every TG/mux input; only the selected WE opens one input path", 48, dataBusY - 12, colors.green, 12);
+      ctx.restore();
+
+      const startX = 42, startY = 218, tileW = 294, tileH = 112, colGap = 32, rowGap = 30;
+      let activeRoute = null;
+      for (let i = 0; i < 16; i++) {
+        const col = i % 4;
+        const row = Math.floor(i / 4);
+        const x = startX + col * (tileW + colGap);
+        const y = startY + row * (tileH + rowGap);
+        const route = drawBasketSelectionSlice(ctx, i, x, y, sample, 702, 132, dataBusY);
+        if (i === sample.lane) activeRoute = route;
+      }
+
+      if (activeRoute) {
+        const p = Math.min(1, bitPhase * 1.2);
+        const x1 = activeRoute.gateX + 37;
+        const y1 = dataBusY;
+        const x2 = activeRoute.gateX + 37;
+        const y2 = activeRoute.gateY + 46;
+        const x3 = activeRoute.latchX;
+        const y3 = activeRoute.routeY;
+        const tokenX = p < 0.45 ? x1 : x2 + (x3 - x2) * ((p - 0.45) / 0.55);
+        const tokenY = p < 0.45 ? y1 + (y2 - y1) * (p / 0.45) : y2 + (y3 - y2) * ((p - 0.45) / 0.55);
+        ctx.fillStyle = sample.value ? colors.purple : colors.canvas;
+        ctx.strokeStyle = colors.purple;
+        ctx.lineWidth = 2;
+        ctx.beginPath(); ctx.arc(tokenX, tokenY, 9, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+      }
+
+      drawText(ctx, "Each basket has the same local circuit. The decoder makes a one-hot WE; only one TG/mux opens, so only one latch captures this UI sample.", 48, 802, colors.muted);
+      const previousWord = Math.max(0, sample.word - 1);
+      drawText(ctx, `Parallel output latch: last complete word ${previousWord}; updates all lanes together on word_valid.`, 48, 836, colors.ink, 14, "left", true);
+      for (let i = 0; i < 16; i++) {
+        const x = 48 + i * 78;
+        const active = sample.lane === 15 && sample.phase > UI * 0.65;
+        drawCell(ctx, x, 858, 68, 56, `b${i}`, words[previousWord]?.[i] ?? 0, active, true);
+      }
+      drawText(ctx, "This basket model explains address/enable selection; a staged demux tree is one hardware way to create those enables.", 48, h - 24, colors.muted);
+    }
+
+    function drawShiftChain() {
+      const {ctx, w, h} = setupCanvas("shiftChain");
+      const sample = sampleInfo(simTime);
+      const uiIdx = Math.floor((simTime - dataPhase) / UI);
+      drawText(ctx, "On each UI tick, all cells update together: cell15 <= cell14 ... cell1 <= cell0, cell0 <= new sample.", 28, 28, colors.muted);
+      drawBlock(ctx, 42, 86, 120, 74, "New Sample", `bit=${sample.value}`, colors.latch, 0.55);
+      const startX = 202, y = 92, cellW = 58, cellH = 62, gap = 14;
+      const phase = sample.phase / UI;
+      for (let i = 0; i < 16; i++) {
+        const x = startX + i * (cellW + gap);
+        const value = bitAtIndex(uiIdx - i);
+        drawCell(ctx, x, y, cellW, cellH, `cell${i}`, value, phase < 0.2, true);
+        if (i < 15) glowLine(ctx, [[x + cellW, y + cellH / 2], [x + cellW + gap, y + cellH / 2]], colors.accent, phase < 0.2 ? 0.85 : 0.18, 3);
+      }
+      glowLine(ctx, [[162, 123], [202, 123]], colors.green, phase < 0.2 ? 0.9 : 0.28, 4);
+
+      const trackIdx = uiIdx - 5;
+      if (trackIdx >= 0) {
+        const cell = Math.min(15, uiIdx - trackIdx);
+        const x = startX + cell * (cellW + gap) + cellW / 2;
+        ctx.fillStyle = colors.accent2;
+        ctx.strokeStyle = colors.accent2;
+        ctx.lineWidth = 2;
+        ctx.beginPath(); ctx.arc(x, y + cellH + 28, 8, 0, Math.PI * 2); ctx.fill();
+        drawText(ctx, "tracked bit moves one cell per UI", x, y + cellH + 54, colors.accent2, 12, "center");
+      }
+
+      drawText(ctx, "Mapped assembly view at word boundary", 42, 256, colors.ink, 14, "left", true);
+      const previousWord = Math.max(0, sample.word - 1);
+      for (let i = 0; i < 16; i++) {
+        drawCell(ctx, 42 + i * 78, 286, 68, 56, `b${i}`, words[previousWord]?.[i] ?? 0, sample.lane === 15 && phase > 0.65, true);
+      }
+      drawTrace(ctx, 118, 374, w - 170, 42, simTime - WORD, simTime, t => clockValue(t, UI, cdrPhase + UI / 2), "UI shift clock", colors.green);
+      drawTrace(ctx, 118, 424, w - 170, 34, simTime - WORD, simTime, t => clockValue(t, WORD, cdrPhase), "word-valid latch", colors.purple);
+    }
+
+    function drawLatchSymbol(ctx, x, y, w, h, title, value, open, activeColor) {
+      ctx.save();
+      ctx.shadowColor = open ? activeColor : "transparent";
+      ctx.shadowBlur = open ? 18 : 0;
+      ctx.fillStyle = open ? "#172436" : "#101722";
+      ctx.strokeStyle = open ? activeColor : colors.line;
+      ctx.lineWidth = open ? 2 : 1;
+      ctx.fillRect(x, y, w, h);
+      ctx.strokeRect(x, y, w, h);
+      drawText(ctx, title, x + w / 2, y + 17, colors.muted, 10, "center");
+      drawText(ctx, open ? "open" : "hold", x + w / 2, y + 34, open ? activeColor : colors.muted, 10, "center", true);
+      drawText(ctx, String(value), x + w / 2, y + 58, colors.ink, 20, "center", true);
+      ctx.restore();
+    }
+
+    function drawDffStage(ctx, x, y, idx, dVal, mVal, qVal, masterOpen, slaveOpen, edgeFlash, publishFlash) {
+      const w = 132, h = 128;
+      ctx.save();
+      ctx.fillStyle = "#0f1621";
+      ctx.strokeStyle = edgeFlash ? colors.accent2 : colors.line;
+      ctx.lineWidth = edgeFlash ? 2 : 1;
+      ctx.fillRect(x, y, w, h);
+      ctx.strokeRect(x, y, w, h);
+      drawText(ctx, `DFF${idx}`, x + w / 2, y + 16, colors.ink, 12, "center", true);
+      drawText(ctx, `D=${dVal}`, x + 12, y + 116, colors.green, 11);
+      drawText(ctx, `Q=${qVal}`, x + w - 12, y + 116, publishFlash ? colors.accent2 : colors.purple, 11, "right");
+      drawLatchSymbol(ctx, x + 12, y + 28, 48, 72, "master", mVal, masterOpen, colors.green);
+      drawLatchSymbol(ctx, x + 72, y + 28, 48, 72, "slave", qVal, slaveOpen, colors.purple);
+      glowLine(ctx, [[x + 60, y + 64], [x + 72, y + 64]], slaveOpen ? colors.purple : colors.muted, slaveOpen ? 0.75 : 0.12, 2);
+      ctx.restore();
+    }
+
+    function shiftedBit(uiIdx, stage) {
+      return bitAtIndex(uiIdx - stage);
+    }
+
+    function drawShiftMechanism() {
+      const {ctx, w, h} = setupCanvas("shiftMechanism");
+      const shifted = simTime - dataPhase;
+      const uiIdx = Math.floor(shifted / UI);
+      const phase = ((shifted % UI) + UI) % UI / UI;
+      const masterOpen = phase < 0.5;
+      const slaveOpen = phase >= 0.5;
+      const edgeFlash = phase > 0.48 && phase < 0.57;
+      const publishFlash = phase > 0.56 && phase < 0.75;
+      const tCq = 0.13;
+      const afterTcq = phase > 0.5 + tCq;
+
+      drawText(ctx, "Expanded view of the first six shift stages. Each DFF snapshots its D input at the rising edge, then Q updates after tCQ.", 28, 28, colors.muted);
+      const stateText = masterOpen
+        ? "CLK low: masters transparent, slaves hold Q. D inputs are being prepared."
+        : edgeFlash
+          ? "rising edge: masters close, slaves open. Snapshot is taken."
+          : afterTcq
+            ? "after tCQ: Q outputs have published the old D values."
+            : "CLK high before tCQ: slaves opening, Q update is pending.";
+      drawText(ctx, stateText, 28, 52, edgeFlash ? colors.accent2 : colors.ink, 14, "left", true);
+
+      const startX = 52, y = 108, gap = 18, stageW = 132;
+      for (let i = 0; i < 6; i++) {
+        const x = startX + i * (stageW + gap);
+        const dVal = i === 0 ? bitAtIndex(uiIdx + 1) : shiftedBit(uiIdx, i - 1);
+        const mVal = masterOpen ? dVal : (i === 0 ? bitAtIndex(uiIdx) : shiftedBit(uiIdx - 1, i - 1));
+        const oldQ = shiftedBit(uiIdx - 1, i);
+        const newQ = i === 0 ? bitAtIndex(uiIdx) : shiftedBit(uiIdx - 1, i - 1);
+        const qVal = afterTcq ? newQ : oldQ;
+        drawDffStage(ctx, x, y, i, dVal, mVal, qVal, masterOpen, slaveOpen, edgeFlash, publishFlash);
+        if (i < 5) {
+          const intensity = publishFlash ? 0.85 : 0.2;
+          glowLine(ctx, [[x + stageW, y + 64], [x + stageW + gap, y + 64]], colors.accent, intensity, publishFlash ? 4 : 2);
+          drawText(ctx, `Q${i}->D${i + 1}`, x + stageW + gap / 2, y + 52, colors.muted, 9, "center");
+        }
+      }
+
+      drawText(ctx, "Snapshot equations at the edge", 52, 286, colors.ink, 14, "left", true);
+      const eqs = [
+        `Q0_next = serial_in_old = ${bitAtIndex(uiIdx)}`,
+        `Q1_next = Q0_old = ${shiftedBit(uiIdx - 1, 0)}`,
+        `Q2_next = Q1_old = ${shiftedBit(uiIdx - 1, 1)}`,
+        `Q3_next = Q2_old = ${shiftedBit(uiIdx - 1, 2)}`,
+        `Q4_next = Q3_old = ${shiftedBit(uiIdx - 1, 3)}`,
+        `Q5_next = Q4_old = ${shiftedBit(uiIdx - 1, 4)}`
+      ];
+      eqs.forEach((text, i) => drawText(ctx, text, 52 + (i % 3) * 350, 318 + Math.floor(i / 3) * 26, edgeFlash ? colors.accent2 : colors.muted, 13));
+
+      const timelineX = 52, timelineY = 398, timelineW = 1220;
+      ctx.save();
+      ctx.strokeStyle = colors.grid;
+      ctx.lineWidth = 1;
+      ctx.strokeRect(timelineX, timelineY - 22, timelineW, 62);
+      const pX = timelineX + phase * timelineW;
+      ctx.strokeStyle = colors.accent2;
+      ctx.lineWidth = 2;
+      ctx.beginPath(); ctx.moveTo(pX, timelineY - 28); ctx.lineTo(pX, timelineY + 48); ctx.stroke();
+      drawText(ctx, "one UI clock phase", timelineX, timelineY - 34, colors.muted, 11);
+      drawText(ctx, "CLK low: master open", timelineX + timelineW * 0.25, timelineY + 58, colors.green, 11, "center");
+      drawText(ctx, "rising edge", timelineX + timelineW * 0.5, timelineY + 58, colors.accent2, 11, "center");
+      drawText(ctx, "CLK high: slave open", timelineX + timelineW * 0.75, timelineY + 58, colors.purple, 11, "center");
+      ctx.fillStyle = colors.green;
+      ctx.globalAlpha = 0.16;
+      ctx.fillRect(timelineX, timelineY - 22, timelineW * 0.5, 62);
+      ctx.fillStyle = colors.purple;
+      ctx.fillRect(timelineX + timelineW * 0.5, timelineY - 22, timelineW * 0.5, 62);
+      ctx.globalAlpha = 1;
+      ctx.strokeStyle = colors.red;
+      ctx.setLineDash([4, 4]);
+      const setupX = timelineX + timelineW * 0.5 - 34;
+      const holdX = timelineX + timelineW * 0.5 + 24;
+      ctx.strokeRect(setupX, timelineY - 26, holdX - setupX, 70);
+      ctx.setLineDash([]);
+      drawText(ctx, "setup/hold aperture", (setupX + holdX) / 2, timelineY - 34, colors.red, 11, "center");
+      const tcqX = timelineX + timelineW * (0.5 + tCq);
+      ctx.strokeStyle = colors.accent;
+      ctx.beginPath(); ctx.moveTo(tcqX, timelineY - 22); ctx.lineTo(tcqX, timelineY + 40); ctx.stroke();
+      drawText(ctx, "tCQ: Q updates", tcqX, timelineY - 34, colors.accent, 11, "center");
+      ctx.restore();
+
+      const traceLeft = 112, traceW = 1196, t1 = simTime, t0 = t1 - WORD;
+      drawTrace(ctx, traceLeft, 514, traceW, 34, t0, t1, t => clockValue(t, UI, dataPhase), "CLK", colors.green);
+      drawTrace(ctx, traceLeft, 558, traceW, 34, t0, t1, t => bitAtIndex(Math.floor((t - dataPhase) / UI)), "serial_in / DFF0.D", colors.accent2);
+      drawTrace(ctx, traceLeft, 602, traceW, 34, t0, t1, t => bitAtIndex(Math.floor((t - dataPhase) / UI) - 1), "DFF0.Q old->new", colors.purple);
+      drawTrace(ctx, traceLeft, 646, traceW, 34, t0, t1, t => bitAtIndex(Math.floor((t - dataPhase) / UI) - 2), "DFF1.Q one cycle later", colors.accent);
+    }
+
+    function drawAll() {
+      drawCdrScope();
+      drawCdrLoop();
+      drawBasket();
+      drawShiftChain();
+      drawShiftMechanism();
+    }
+
+    function animate(ts) {
+      if (lastFrame === null) lastFrame = ts;
+      const dt = Math.min(50, ts - lastFrame);
+      lastFrame = ts;
+      if (running) stepSimulation(dt);
+      drawAll();
+      requestAnimationFrame(animate);
+    }
+
+    document.getElementById("pause").addEventListener("click", () => {
+      running = !running;
+      document.getElementById("pause").textContent = running ? "Pause" : "Play";
+      lastFrame = null;
+    });
+    document.getElementById("resetCdr").addEventListener("click", resetCdr);
+    document.getElementById("phaseStep").addEventListener("click", () => {
+      dataPhase = dataPhase > 0 ? -2.2 : 2.2;
+      pdDecision = 0;
+    });
+    document.getElementById("randomize").addEventListener("click", () => {
+      resetData();
+      resetCdr();
+    });
+    document.getElementById("stepUi").addEventListener("click", () => {
+      running = false;
+      document.getElementById("pause").textContent = "Play";
+      advanceByPs(UI);
+      drawAll();
+    });
+    document.getElementById("pattern").addEventListener("change", e => {
+      pattern = e.target.value;
+      resetData();
+      resetCdr();
+    });
+    document.getElementById("speed").addEventListener("input", e => {
+      speed = Number(e.target.value);
+      document.getElementById("speedText").textContent = `${speed.toFixed(2)}x`;
+    });
+    document.getElementById("ideal").addEventListener("change", drawAll);
+    window.addEventListener("resize", drawAll);
+
+    resetData();
+    resetCdr();
+    requestAnimationFrame(animate);
+  </script>
+</body>
+</html>
