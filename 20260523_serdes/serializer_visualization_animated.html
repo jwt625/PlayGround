@@ -467,7 +467,8 @@
       const b = waveformValue([8], t1, WORD, inputRise);
       const out = waveformValue([0, 8], t1, WORD / 2, outputRise);
       const latchClk = clockValue(t1, WORD);
-      const selectClk = clockValue(t1, WORD / 2);
+      const selectClk = clockValue(t1, WORD);
+      const launchClk = clockValue(t1, WORD / 2);
       const active = bitFor([0, 8], t1, WORD / 2).lane;
       const selectA = active === 0;
       const aGlow = (selectA ? 0.35 : 0.08) + 0.6 * a;
@@ -483,7 +484,8 @@
       drawMiniWave(ctx, waveX, 92, waveW, waveH, [0], WORD, "input lane b0 before latch", colors.accent, t0, t1, inputRise);
       drawMiniWave(ctx, waveX, 224, waveW, waveH, [8], WORD, "input lane b8 before latch", colors.accent, t0, t1, inputRise);
       drawMiniClock(ctx, waveX, 356, waveW, 56, WORD, "7 GHz latch clock", colors.green, t0, t1);
-      drawMiniClock(ctx, 600, 356, 280, 56, WORD / 2, "14 GHz mux select / launch", colors.green, t0, t1);
+      drawMiniClock(ctx, 600, 356, 280, 56, WORD, "7 GHz mux A/B select", colors.green, t0, t1);
+      drawMiniClock(ctx, 905, 356, 230, 56, WORD / 2, "14 GHz launch phase", colors.green, t0, t1);
       drawMiniWave(ctx, 1035, 168, 270, waveH, [0, 8], WORD / 2, "S1.0 after relaunch", colors.accent2, t0, t1, outputRise);
 
       const latchAX = 405, latchAY = 92;
@@ -504,11 +506,11 @@
       glowLine(ctx, [[waveX + waveW, 384], [467, 384], [467, 162]], colors.green, latchClk, 3);
       glowLine(ctx, [[waveX + waveW, 384], [467, 384], [467, 294]], colors.green, latchClk, 3);
       glowLine(ctx, [[740, 356], [740, 246]], colors.green, selectClk, 3);
-      glowLine(ctx, [[897, 356], [897, 246]], colors.green, selectClk, 3);
+      glowLine(ctx, [[897, 356], [897, 246]], colors.green, launchClk, 3);
 
       ctx.strokeStyle = colors.green;
       ctx.setLineDash([5, 4]);
-      [[467, 438, "clock into input latches"], [740, 438, "select into mux"], [897, 438, "launch clock"]].forEach(([x, y, label]) => {
+      [[467, 438, "clock into input latches"], [740, 438, "A/B select into mux"], [897, 438, "launch clock"]].forEach(([x, y, label]) => {
         ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x, y - 122); ctx.stroke();
         ctx.fillStyle = colors.green;
         ctx.textAlign = "center";
@@ -520,7 +522,7 @@
       ctx.fillStyle = colors.ink;
       ctx.font = "12px ui-monospace, SFMono-Regular, Menlo, monospace";
       ctx.textAlign = "left";
-      ctx.fillText(`b0=${a.toFixed(2)}  b8=${b.toFixed(2)}  latch_clk=${latchClk.toFixed(2)}  select=${selectClk.toFixed(2)}  S1.0=${out.toFixed(2)}`, 405, 482);
+      ctx.fillText(`b0=${a.toFixed(2)}  b8=${b.toFixed(2)}  latch_clk=${latchClk.toFixed(2)}  select=${selectClk.toFixed(2)}  launch=${launchClk.toFixed(2)}  S1.0=${out.toFixed(2)}`, 405, 482);
       ctx.fillStyle = colors.muted;
       ctx.font = "12px -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif";
       ctx.fillText("Clock and select traces are conceptual phase references; glow follows instantaneous high level.", 405, 502);
@@ -545,7 +547,7 @@
         ctx.fillRect(8, y - 2, w - 16, 20);
         ctx.fillStyle = colors.ink;
         ctx.font = "bold 12px -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif";
-        const rate = s === 0 ? "7 GHz word-valid" : `${7 * (2 ** s)} Gb/s per stream`;
+        const rate = s === 0 ? "7 GHz word-valid lanes" : `${7 * (2 ** s)} Gb/s stream, ${(WORD / (2 ** s)).toFixed(1)} ps bit period`;
         ctx.fillText(`${streams.length} stream${streams.length === 1 ? "" : "s"}: ${s === 0 ? "parallel inputs" : "mux stage"} (${rate})`, 14, y + 13);
         y += 24;
         streams.forEach((lanes, idx) => {
@@ -585,7 +587,8 @@
     }
 
     function logistic(x, center, rise) {
-      return 1 / (1 + Math.exp(-8 * (x - center) / rise));
+      const k = 2 * Math.log(9) / rise;
+      return 1 / (1 + Math.exp(-k * (x - center)));
     }
 
     function drawAnalogTrace(ctx, left, top, width, height, label, color, center, rise, phase) {
