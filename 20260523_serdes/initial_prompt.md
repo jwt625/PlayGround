@@ -86,3 +86,44 @@ Style requirements:
   3. latch edge regeneration zoom
 - Please write the code so I can run it directly.
 - Do not include any PAM4, FEC, equalization, DSP, coding, or channel-loss discussion.
+
+Follow-up requirements added after the initial request:
+
+1. Make the visualization interactive / browser-based:
+   - Prefer a self-contained HTML visualization, or a Python launcher that opens the HTML.
+   - Show all mux-tree streams with actual random example data, not only representative streams.
+   - Include a button to generate a new random bit-stream example.
+   - Include a button or checkbox to toggle bit labels.
+   - Keep the block diagram as a separate panel.
+
+2. Use a dark, sharp-corner UI:
+   - Use a dark theme for the full page, controls, panels, canvases, and plotted traces.
+   - Use sharp corners everywhere: no rounded cards, buttons, canvases, or block-diagram boxes.
+
+3. Add animation:
+   - Create an animated version if useful.
+   - Generate a continuous random stream of words/bits.
+   - Let time play along the x-axis with rolling oscilloscope / strip-chart behavior:
+     - newest samples enter from the right,
+     - older waveform history moves left.
+   - Interpolate transitions in time so traces move smoothly and are not jumpy.
+   - Include play/pause and speed controls if practical.
+
+4. Add an animated latch / mux path-detail panel:
+   - Show one concrete first-stage example, such as generation of `S1.0`.
+   - Use the actual mux-tree ordering used by the visualization. For example, if `S1.0` interleaves `b0` and `b8`, label that clearly.
+   - Draw a small latch/mux/latch path, such as:
+     - input lane `b0` waveform into latch A,
+     - input lane `b8` waveform into latch B,
+     - 2:1 mux,
+     - output latch,
+     - output waveform `S1.0`.
+   - Plot the actual rolling input and output waveforms next to the corresponding wires.
+   - Make wires or paths glow differently as the waveform activates them.
+   - Emphasize the currently selected mux path.
+
+5. Add clock and select traces to the latch / mux path-detail panel:
+   - Show the relevant input latch clock trace, e.g. 7 GHz.
+   - Show the relevant mux select / launch phase trace, e.g. 14 GHz for the `S1.0` first-stage example.
+   - Draw the clock/select waveforms next to their corresponding control wires.
+   - Make clock/select control paths glow according to their instantaneous level.
