@@ -1,0 +1,3 @@
+[submodule "20260523_serdes/20260523_serdes/JLSD"]
+	path = 20260523_serdes/20260523_serdes/JLSD
+	url = https://github.com/kevjzheng/JLSD.git

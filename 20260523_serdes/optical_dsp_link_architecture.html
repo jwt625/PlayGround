@@ -259,13 +259,13 @@
       {id: "payload", title: "Payload", subtitle: "slow lanes", group: "digital", x: 34, y: 64, w: 128, h: 60, detail: "placeholder"},
       {id: "fec-enc", title: "FEC Encode", subtitle: "+ parity", group: "fec", x: 226, y: 64, w: 132, h: 60, detail: "placeholder"},
       {id: "mapper", title: "Mapper", subtitle: "symbols", group: "digital", x: 422, y: 64, w: 122, h: 60, detail: "placeholder"},
-      {id: "tx-dsp", title: "Tx DSP", subtitle: "precomp", group: "dsp", x: 608, y: 64, w: 122, h: 60, detail: "placeholder"},
+      {id: "tx-dsp", title: "Tx DSP", subtitle: "precomp", group: "dsp", x: 608, y: 64, w: 122, h: 60, detail: "eye"},
       {id: "serializer", title: "SerDes / DAC", subtitle: "implemented", group: "digital", x: 794, y: 64, w: 138, h: 60, detail: "serializer"},
       {id: "photonic-tx", title: "Photonic Tx", subtitle: "modulator", group: "analog", x: 996, y: 64, w: 132, h: 60, detail: "placeholder"},
-      {id: "channel", title: "Optical Channel", subtitle: "fiber", group: "channel", x: 1192, y: 64, w: 134, h: 60, detail: "placeholder"},
+      {id: "channel", title: "Optical Channel", subtitle: "fiber", group: "channel", x: 1192, y: 64, w: 134, h: 60, detail: "eye"},
       {id: "rx-front", title: "Rx Front-End", subtitle: "PD/TIA/ADC", group: "analog", x: 1192, y: 418, w: 134, h: 60, detail: "placeholder"},
       {id: "cdr", title: "CDR / Timing", subtitle: "implemented", group: "digital", x: 990, y: 418, w: 138, h: 60, detail: "cdr"},
-      {id: "rx-dsp", title: "Rx DSP", subtitle: "equalizer", group: "dsp", x: 802, y: 418, w: 130, h: 60, detail: "placeholder"},
+      {id: "rx-dsp", title: "Rx DSP", subtitle: "equalizer", group: "dsp", x: 802, y: 418, w: 130, h: 60, detail: "eye"},
       {id: "demapper", title: "Soft Demapper", subtitle: "LLRs", group: "digital", x: 604, y: 418, w: 132, h: 60, detail: "placeholder"},
       {id: "fec-dec", title: "FEC Decode", subtitle: "correct", group: "fec", x: 410, y: 418, w: 132, h: 60, detail: "placeholder"},
       {id: "deserializer", title: "Deserializer", subtitle: "implemented", group: "digital", x: 214, y: 418, w: 132, h: 60, detail: "deserializer"},
@@ -288,7 +288,15 @@
       cdr: {
         title: "2. Expanded Block: CDR / Timing Recovery",
         note: "The recovered sample phase moves toward UI centers using early/late decisions. This compact view mirrors the CDR / PLL deep-dive model.",
-        links: [{label: "Open CDR Deep Dive", href: "serdes_cdr_shift_register_deep_dive.html"}]
+        links: [
+          {label: "Open CDR Deep Dive", href: "serdes_cdr_shift_register_deep_dive.html"},
+          {label: "Open Eye Diagram Lab", href: "eye_diagram_lab.html"}
+        ]
+      },
+      eye: {
+        title: "2. Expanded Block: Eye Diagram Lab",
+        note: "Channel loss, reflections, noise, timing jitter, Tx pre-emphasis, Rx FFE, and CDR phase can be explored in the dedicated animated eye lab.",
+        links: [{label: "Open Eye Diagram Lab", href: "eye_diagram_lab.html"}]
       },
       deserializer: {
         title: "2. Expanded Block: Deserializer / Word Assembly",
@@ -1299,6 +1307,30 @@
       drawText(ctx, "parallel output latch updates all lanes together", 52, 444, colors.muted, 12);
     }
 
+    function drawEyeLabDetail(ctx, w, h, block) {
+      drawText(ctx, "Eye Diagram Lab", 42, 46, colors.ink, 18, "left", true);
+      drawText(ctx, "Dedicated animated subpage: synthetic channel impairments, Tx FIR, Rx FFE, CDR/manual phase, and before/after eye heatmaps.", 42, 76, colors.muted, 13);
+      const stages = [
+        {title: "Tx FIR", sub: "pre / main / post taps", fill: colors.dsp, glow: block.id === "tx-dsp" ? 0.9 : 0.35},
+        {title: "Driver BW", sub: "finite edge speed", fill: colors.analog, glow: 0.35},
+        {title: "Channel", sub: "loss + reflection + noise", fill: colors.channel, glow: block.id === "channel" ? 0.9 : 0.35},
+        {title: "CDR Phase", sub: "sample timing", fill: colors.digital, glow: block.id === "cdr" ? 0.9 : 0.35},
+        {title: "Rx FFE", sub: "3-tap equalizer", fill: colors.dsp, glow: block.id === "rx-dsp" ? 0.9 : 0.35}
+      ];
+      stages.forEach((stage, i) => {
+        const x = 64 + i * 250;
+        drawInternalBlock(ctx, x, 138, 178, 82, stage.title, stage.sub, stage.fill, stage.glow);
+        if (i < stages.length - 1) drawConnector(ctx, x + 178, 179, x + 250, 179, colors.accent);
+      });
+      drawSignalCard(ctx, 104, 286, 250, 132, "before EQ eye", "folded from receive waveform", "equalized", "rx");
+      drawSignalCard(ctx, 414, 286, 250, 132, "after Rx FFE eye", "same stream after compensation", "equalized", "rx");
+      drawInternalBlock(ctx, 734, 286, 196, 78, "Metrics", "height / width / Q proxy", colors.digital, 0.45);
+      drawInternalBlock(ctx, 984, 286, 210, 78, "Histograms", "samples + jitter", colors.digital, 0.45);
+      drawText(ctx, "First release scope", 64, 468, colors.ink, 14, "left", true);
+      drawText(ctx, "NRZ and PAM4 from day one; both electrical SerDes and optical direct-detect wording; synthetic channels only; DFE saved for a later pass.", 64, 498, colors.muted, 13);
+      drawText(ctx, "Use the Open Eye Diagram Lab button above to launch the full control surface.", 64, 526, colors.accent, 13);
+    }
+
     function drawConnector(ctx, x1, y1, x2, y2, color) {
       ctx.save();
       ctx.strokeStyle = color;
@@ -1356,6 +1388,7 @@
       if (block.detail === "serializer") drawSerializerDetail(ctx, w, h);
       else if (block.detail === "cdr") drawCdrDetail(ctx, w, h);
       else if (block.detail === "deserializer") drawDeserializerDetail(ctx, w, h);
+      else if (block.detail === "eye") drawEyeLabDetail(ctx, w, h, block);
       else drawPlaceholderDetail(ctx, w, h, block);
     }
 
