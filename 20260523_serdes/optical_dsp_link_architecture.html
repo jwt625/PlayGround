@@ -198,6 +198,7 @@
           <option value="cwdm4" selected>4x200G CWDM4</option>
         </select>
       </label>
+      <label class="toggle">x span <input id="xspan" type="range" min="0.5" max="3" step="0.25" value="1"><span id="xspanText">1.00x</span></label>
       <label class="toggle">speed <input id="speed" type="range" min="0.25" max="4" step="0.25" value="1"><span id="speedText">1.00x</span></label>
     </div>
   </header>
@@ -317,6 +318,7 @@
     let detailOpen = false;
     let activeSignalCard = null;
     let signalCards = [];
+    let xSpan = 1;
 
     let cdrPhase = -3.1;
     let rawControl = -3.1;
@@ -443,6 +445,27 @@
     function smooth01(x) {
       const z = Math.max(0, Math.min(1, x));
       return z * z * (3 - 2 * z);
+    }
+
+    function smoother01(x) {
+      const z = Math.max(0, Math.min(1, x));
+      return z * z * z * (z * (z * 6 - 15) + 10);
+    }
+
+    function jitteredTransition(q, centerJitter, sharpness) {
+      const z = Math.max(0, Math.min(1, q));
+      const endpointFade = z * z * (1 - z) * (1 - z) * 16;
+      const warped = Math.max(0, Math.min(1, z + centerJitter * endpointFade));
+      const shape = Math.max(-1, Math.min(1, (sharpness - 1.1) * 1.4));
+      const flatBump = Math.pow(warped * (1 - warped), 3) * (2 * warped - 1);
+      return Math.max(0, Math.min(1, smoother01(warped) + shape * flatBump));
+    }
+
+    function eyeTransitionParams(edgeId) {
+      return {
+        jitter: (hashNoise(edgeId * 13.7 + 0.11) - 0.5) * 0.12,
+        sharpness: 0.72 + hashNoise(edgeId * 19.1 + 0.37) * 1.05
+      };
     }
 
     function hashNoise(n) {
@@ -737,7 +760,7 @@
       const total = optics === "cwdm4" ? 64 : 16;
       const visible = total === 64 ? [0, 1, 2, 3, -1, 60, 61, 62, 63] : [0, 1, 2, 3, -1, 12, 13, 14, 15];
       const laneH = h / visible.length;
-      const windowWords = 5.5;
+      const windowWords = 5.5 * xSpan;
       for (let row = 0; row < visible.length; row++) {
         const lane = visible[row];
         const yy = y + row * laneH + laneH * 0.5;
@@ -775,7 +798,7 @@
     }
 
     function drawFecGrid(ctx, x, y, w, h, rx) {
-      const cols = 12;
+      const cols = Math.max(6, Math.round(12 * xSpan));
       const rows = 4;
       const gap = 2;
       const cellW = (w - gap * (cols - 1)) / cols;
@@ -784,8 +807,8 @@
       const start = Math.floor(simTime / UI) % Math.max(1, (state?.fecBits.length ?? 1) - cols * rows);
       for (let r = 0; r < rows; r++) {
         for (let c = 0; c < cols; c++) {
-          const parity = c >= 9;
           const idx = start + r * cols + c;
+          const parity = idx % 16 >= 12;
           const bit = rx ? (state?.decodedBits[idx] ?? 0) : (state?.fecBits[idx] ?? 0);
           const err = false;
           ctx.fillStyle = err ? colors.red : parity ? "#5f408f" : "#255f9d";
@@ -798,7 +821,7 @@
     }
 
     function drawSymbolBars(ctx, x, y, w, h, mode) {
-      const n = 18;
+      const n = Math.max(6, Math.round(18 * xSpan));
       const start = Math.floor(simTime / UI) % Math.max(1, (linkState?.mappedSymbols.length ?? 1) - n);
       for (let i = 0; i < n; i++) {
         const level = linkState?.mappedSymbols[start + i]?.level ?? 0;
@@ -832,7 +855,7 @@
     }
 
     function uiAtPanelPx(px) {
-      return simTime / UI + px / UI_PIXELS;
+      return simTime / UI + px * xSpan / UI_PIXELS;
     }
 
     function txPrecompNormAtPx(px) {
@@ -941,11 +964,12 @@
     }
 
     function drawSampleCloud(ctx, x, y, w, h) {
-      const start = Math.floor(simTime / UI) % Math.max(1, (linkState?.rxSamples.length ?? 1) - 34);
-      for (let i = 0; i < 34; i++) {
+      const n = Math.max(8, Math.round(34 * xSpan));
+      const start = Math.floor(simTime / UI) % Math.max(1, (linkState?.rxSamples.length ?? 1) - n);
+      for (let i = 0; i < n; i++) {
         const sample = linkState?.rxSamples[start + i] ?? 0;
         const bit = sample > 0 ? 1 : 0;
-        const xx = x + i * w / 34;
+        const xx = x + i * w / n;
         const norm = modulation === "pam4" ? (sample + 3.6) / 7.2 : (sample + 1.4) / 2.8;
         const yy = y + h - Math.max(0.05, Math.min(0.95, norm)) * h;
         ctx.fillStyle = bit ? colors.green : colors.canvas;
@@ -959,7 +983,7 @@
     function drawCdrMini(ctx, x, y, w, h) {
       drawFastTrace(ctx, x, y, w, h * 0.55, colors.green, 0.15, 0, 2 / 3);
       ctx.strokeStyle = colors.accent;
-      const uiPerPixel = 1 / UI_PIXELS;
+      const uiPerPixel = xSpan / UI_PIXELS;
       const leftUi = simTime / UI;
       const first = Math.floor(leftUi - cdrPhase / UI) - 2;
       const last = Math.ceil(leftUi + w * uiPerPixel - cdrPhase / UI) + 2;
@@ -980,7 +1004,8 @@
       ctx.strokeStyle = colors.grid;
       ctx.strokeRect(x, y, w, h);
       const samples = linkState?.equalizedSymbols ?? [];
-      const traces = modulation === "pam4" ? 34 : 22;
+      const baseTraces = modulation === "pam4" ? 34 : 22;
+      const traces = Math.max(8, Math.round(baseTraces * xSpan));
       const span = Math.max(1, samples.length - traces - 4);
       const recoveredUi = Math.floor((simTime + cdrPhase + UI / 2) / UI);
       const start = recoveredUi % span;
@@ -996,12 +1021,8 @@
         const a = normSample(s0);
         const b = normSample(s1);
         const c = normSample(s2);
-        const leftJitter = (hashNoise(sampleId * 13.7 + 0.11) - 0.5) * 0.12;
-        const rightJitter = (hashNoise(sampleId * 17.3 + 0.23) - 0.5) * 0.12;
-        const leftSharpness = 0.72 + hashNoise(sampleId * 19.1 + 0.37) * 1.05;
-        const rightSharpness = 0.72 + hashNoise(sampleId * 23.9 + 0.41) * 1.05;
-        const leftTransition = Math.min(1, Math.abs(b - a) * 1.8);
-        const rightTransition = Math.min(1, Math.abs(c - b) * 1.8);
+        const leftTransition = eyeTransitionParams(sampleId + 1);
+        const rightTransition = eyeTransitionParams(sampleId + 2);
         ctx.strokeStyle = colors.green;
         ctx.globalAlpha = 0.42;
         ctx.beginPath();
@@ -1009,11 +1030,9 @@
           const p = px / w;
           const leftHalf = p < 0.5;
           const q = leftHalf ? Math.min(1, p * 2) : Math.max(0, p * 2 - 1);
-          const jitter = leftHalf ? leftJitter : rightJitter;
-          const sharpness = leftHalf ? leftSharpness : rightSharpness;
-          const transition = leftHalf ? leftTransition : rightTransition;
-          const edgePhase = Math.max(0, Math.min(1, (q - 0.5 - jitter) * sharpness + 0.5));
-          const curve = smooth01(edgePhase);
+          const jitter = leftHalf ? leftTransition.jitter : rightTransition.jitter;
+          const sharpness = leftHalf ? leftTransition.sharpness : rightTransition.sharpness;
+          const curve = jitteredTransition(q, jitter, sharpness);
           const base = leftHalf ? a + (b - a) * curve : b + (c - b) * curve;
           const yy = y + h - Math.max(0.04, Math.min(0.96, base)) * h;
           if (px === 0) ctx.moveTo(x + px, yy);
@@ -1036,7 +1055,7 @@
     }
 
     function drawSoftBits(ctx, x, y, w, h) {
-      const n = 12;
+      const n = Math.max(6, Math.round(12 * xSpan));
       const start = Math.floor(simTime / UI) % Math.max(1, (linkState?.softBits.length ?? 1) - n);
       for (let i = 0; i < n; i++) {
         const soft = linkState?.softBits[start + i] ?? {bit: 0, confidence: 0.2};
@@ -1143,7 +1162,7 @@
       const left = 172;
       const width = w - left - 40;
       const t1 = simTime;
-      const t0 = t1 - TOTAL;
+      const t0 = t1 - TOTAL * xSpan;
       drawGrid(ctx, left, 46, width, 178, t0, t1, false);
       drawText(ctx, "Compact serializer: wide, slow word-rate lanes are interleaved into faster streams, then into the final UI-rate output.", 32, 28, colors.muted);
       const rows = [
@@ -1166,8 +1185,8 @@
       drawConnector(ctx, 456, 330, 542, 330, colors.green);
       drawConnector(ctx, 702, 330, 790, 330, colors.purple);
       drawConnector(ctx, 950, 330, 1046, 330, colors.accent2);
-      drawTrace(ctx, left, 408, width, 34, t1 - WORD, t1, t => clockValue(t, WORD), "word clock", colors.green);
-      drawTrace(ctx, left, 452, width, 34, t1 - WORD, t1, t => clockValue(t, 2 * UI), "final select", colors.green);
+      drawTrace(ctx, left, 408, width, 34, t1 - WORD * xSpan, t1, t => clockValue(t, WORD), "word clock", colors.green);
+      drawTrace(ctx, left, 452, width, 34, t1 - WORD * xSpan, t1, t => clockValue(t, 2 * UI), "final select", colors.green);
       drawSignalCard(ctx, 1012, 410, 230, 86, optics === "cwdm4" ? "electrical lanes to optics" : "electrical stream to optics", optics === "cwdm4" ? "4 fast lanes before CWDM4" : "one fast stream", "serial");
     }
 
@@ -1175,7 +1194,7 @@
       const left = 96;
       const width = w - left - 42;
       const t1 = simTime;
-      const t0 = t1 - TOTAL;
+      const t0 = t1 - TOTAL * xSpan;
       drawGrid(ctx, left, 38, width, 208, t0, t1, true);
       drawText(ctx, `CDR phase offset = ${cdrPhase.toFixed(2)} ps, latest decision = ${pdDecision > 0 ? "UP" : pdDecision < 0 ? "DOWN" : "HOLD"}`, 32, 28, colors.muted);
       drawTrace(ctx, left, 62, width, 66, t0, t1, analogValue, "serial data", colors.green);
@@ -1243,7 +1262,7 @@
       const left = 110;
       const width = w - left - 40;
       const t1 = simTime;
-      const t0 = t1 - WORD;
+      const t0 = t1 - WORD * xSpan;
       drawGrid(ctx, left, 38, width, 118, t0, t1, true);
       drawText(ctx, `Recovered sample token: word ${sample.word}, b${sample.lane}=${sample.value}. The active lane glows through demux and word assembly.`, 32, 28, colors.muted);
       drawLaneTrace(ctx, left, 62, width, 48, Array.from({length: 16}, (_, i) => i), UI, "sampled serial stream", colors.green, t0, t1, 4);
@@ -1468,6 +1487,11 @@
     document.getElementById("speed").addEventListener("input", evt => {
       speed = Number(evt.target.value);
       document.getElementById("speedText").textContent = speed.toFixed(2) + "x";
+    });
+    document.getElementById("xspan").addEventListener("input", evt => {
+      xSpan = Number(evt.target.value);
+      document.getElementById("xspanText").textContent = xSpan.toFixed(2) + "x";
+      drawAll();
     });
     document.getElementById("depth").addEventListener("change", evt => {
       depth = evt.target.value;

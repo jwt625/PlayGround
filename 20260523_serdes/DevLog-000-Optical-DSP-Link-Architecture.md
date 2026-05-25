@@ -833,3 +833,41 @@ The first shared model can be behavioral and educational. It should prioritize c
   - Lowered deterministic channel bit-error injection probability in the educational FEC model.
   - Let the simplified FEC model correct up to two codeword bit flips for the displayed top-level view.
   - Reduced PAM4/NRZ receive sample noise so the default view usually shows FEC-cleaned recovered payload rather than frequent visible residual errors.
+
+### Canvas, Span, And Eye-Diagram Refinements
+
+- Fixed a browser zoom crash in `optical_dsp_link_architecture.html`.
+  - Root cause: `setupCanvas()` read the canvas `width` attribute every frame, then reassigned `canvas.width` to a device-pixel-ratio-scaled value.
+  - Since assigning `canvas.width` mutates the content attribute, the next frame treated the already-scaled pixel width as the logical design width and scaled it again.
+  - At non-100% zoom / fractional DPR this could grow the backing bitmap repeatedly until the renderer crashed.
+  - Fix: cache each canvas's logical CSS size once, resize the backing store only when needed, and keep drawing in stable logical coordinates.
+- Added a global `x span` slider beside the speed slider.
+  - `1.00x` preserves the existing horizontal ranges.
+  - Larger values show more UI / symbol / bit history in the same panel width.
+  - Smaller values zoom into a shorter span.
+  - The control now affects top-level time traces, parallel-lane traces, symbol bars, FEC grids, ADC sample dots, soft-bit bars, the Rx DSP eye accumulation count, and expanded serializer / CDR / deserializer trace windows.
+- Fixed FEC grid coloring under `x span`.
+  - The coded-bits panel previously colored parity cells from the visible column number, so changing the number of displayed columns changed the color pattern incorrectly.
+  - Parity coloring now comes from the actual codeword position: 12 data bits followed by 4 parity bits in each 16-bit educational codeword.
+- Increased selected mini-panel x resolution.
+  - Tx precomp now uses three times more horizontal sample points over the same displayed span.
+  - The compact CDR / timing recovered trace also uses three times denser point spacing.
+- Refined the Rx DSP eye panel after visual review.
+  - Removed explicit sample-point dots from the eye diagram.
+  - Removed added vertical level noise because independent per-pixel noise caused visible y discontinuities.
+  - Kept per-trace transition sharpness and timing variation, but constrained timing jitter to transition behavior rather than sampled levels.
+  - The current eye is still a behavioral reconstruction from `linkState.equalizedSymbols`; it is not yet a full analog waveform capture.
+  - Important modeling constraint: jitter/noise used for visual eye transitions must not move the actual sample endpoints. Otherwise the two half-transitions around the center sample produce vertical steps.
+
+### Remaining Eye-Diagram Work
+
+- The present eye diagram draws each overlay as two reconstructed half-transitions:
+
+```text
+s0 -> s1 -> s2
+```
+
+- This is better than decorative random curves, but it is still not a physically complete sampled waveform.
+- A more robust next implementation should generate a stored oversampled receive/equalized waveform array, then build the eye diagram by slicing triggered waveform windows from that array.
+- That would let transition jitter, bandwidth, noise, and equalizer response live in the signal model instead of being reconstructed inside the drawing function.
+- Until then, keep the eye endpoint-anchoring rule strict: all visual transition variation must preserve the actual sampled values at UI decision instants.
