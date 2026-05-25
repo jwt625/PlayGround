@@ -136,6 +136,35 @@
       border: 1px solid rgba(255,255,255,0.3);
       vertical-align: -2px;
     }
+    .modal {
+      position: fixed;
+      inset: 0;
+      z-index: 30;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      background: rgba(4, 7, 12, 0.82);
+    }
+    .modal.open { display: flex; }
+    .modal-panel {
+      width: min(1180px, calc(100vw - 48px));
+      background: var(--panel);
+      border: 1px solid var(--line);
+      padding: 14px;
+    }
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+    .modal-header h2 { margin: 0; }
+    .modal canvas {
+      width: 1148px;
+      max-width: 100%;
+    }
     @media (max-width: 900px) {
       header { position: static; }
     }
@@ -199,10 +228,24 @@
     </section>
   </main>
 
+  <div id="signalModal" class="modal" aria-hidden="true">
+    <div class="modal-panel">
+      <div class="modal-header">
+        <div>
+          <h2 id="modalTitle">Signal Detail</h2>
+          <p id="modalNote" class="note"></p>
+        </div>
+        <button id="modalClose">Close</button>
+      </div>
+      <canvas id="modalCanvas" width="1148" height="540"></canvas>
+    </div>
+  </div>
+
   <script>
     const UI = 1000 / 112;
     const WORD = 16 * UI;
     const TOTAL = 3 * WORD;
+    const UI_PIXELS = 6;
     const colors = {
       ink: "#e7edf7", muted: "#9da9ba", grid: "#293343", line: "#2a3545",
       accent: "#69a7ff", accent2: "#ff9b52", green: "#4ed0a2",
@@ -272,6 +315,8 @@
     let optics = "cwdm4";
     let hoverBlock = null;
     let detailOpen = false;
+    let activeSignalCard = null;
+    let signalCards = [];
 
     let cdrPhase = -3.1;
     let rawControl = -3.1;
@@ -328,15 +373,15 @@
         const received = codeword.slice();
         const errors = Array(codeword.length).fill(0);
         for (let i = 0; i < received.length; i++) {
-          const err = hashNoise(base * 0.17 + i * 9.31) > 0.965;
+          const err = hashNoise(base * 0.17 + i * 9.31) > 0.992;
           if (err) {
             received[i] ^= 1;
             errors[i] = 1;
           }
         }
         const corrected = received.slice();
-        const dataErrorCount = errors.slice(0, dataPerBlock).reduce((a, b) => a + b, 0);
-        if (dataErrorCount <= 1) {
+        const codewordErrorCount = errors.reduce((a, b) => a + b, 0);
+        if (codewordErrorCount <= 2) {
           for (let i = 0; i < dataPerBlock; i++) corrected[i] = data[i];
         }
         fecBlocks.push({data, parity, codeword, received, corrected, errors});
@@ -361,7 +406,7 @@
 
       const rxSamples = mappedSymbols.map((sym, i) => {
         const isi = 0.16 * (mappedSymbols[i - 1]?.level ?? 0) - 0.10 * (mappedSymbols[i - 2]?.level ?? 0);
-        const noise = (hashNoise(i * 5.13 + 0.7) - 0.5) * (modulation === "pam4" ? 0.72 : 0.30);
+        const noise = (hashNoise(i * 5.13 + 0.7) - 0.5) * (modulation === "pam4" ? 0.38 : 0.16);
         return sym.level + isi + noise;
       });
       const equalizedSymbols = rxSamples.map((sample, i) => sample - 0.13 * (rxSamples[i - 1] ?? 0) + 0.04 * (rxSamples[i - 2] ?? 0));
@@ -765,14 +810,33 @@
       ctx.lineWidth = 2;
       ctx.beginPath();
       for (let px = 0; px <= w; px++) {
-        const t = px / w * 10;
-        const v = 0.5 + 0.28 * Math.sin(t * 2.1 + simTime / 12) + 0.12 * Math.sin(t * 7.7);
+        const v = txPrecompNormAtPx(px);
         const yy = y + h - v * h;
         if (px === 0) ctx.moveTo(x + px, yy);
         else ctx.lineTo(x + px, yy);
       }
       ctx.stroke();
       drawTapBars(ctx, x + w - 48, y + 8, 36, h - 16);
+      drawText(ctx, "taps", x + w - 30, y + h - 2, colors.muted, 8, "center");
+    }
+
+    function uiAtPanelPx(px) {
+      return simTime / UI + px / UI_PIXELS;
+    }
+
+    function txPrecompNormAtPx(px) {
+      const syms = linkState?.mappedSymbols ?? [];
+      if (!syms.length) return 0.5;
+      const u = uiAtPanelPx(px);
+      const idx = Math.floor(u);
+      const taps = [-0.22, 0.88, -0.34];
+      const maxLevel = modulation === "pam4" ? 3 : 1;
+      const prev = syms[(idx - 1 + syms.length) % syms.length].level / maxLevel;
+      const cur = syms[idx % syms.length].level / maxLevel;
+      const next = syms[(idx + 1) % syms.length].level / maxLevel;
+      const shaped = taps[0] * prev + taps[1] * cur + taps[2] * next;
+      const ripple = 0.035 * Math.sin(u * 1.19) + 0.018 * Math.sin(u * 2.73 + 0.8);
+      return Math.max(0.03, Math.min(0.97, 0.5 + 0.42 * shaped + ripple));
     }
 
     function drawTapBars(ctx, x, y, w, h) {
@@ -783,6 +847,7 @@
         const bh = tap * h * 0.45;
         ctx.fillStyle = tap > 0 ? colors.green : colors.accent2;
         ctx.fillRect(cx, zero - Math.max(0, bh), w / 3 - 7, Math.abs(bh));
+        drawText(ctx, ["-1", "0", "+1"][i], cx + (w / 3 - 7) / 2, y + h + 8, colors.muted, 7, "center");
       });
     }
 
@@ -792,7 +857,7 @@
       for (let lane = 0; lane < lanes; lane++) {
         const yy = y + lane * laneH;
         const color = colors.accent2;
-        drawFastTrace(ctx, x, yy + 2, w, laneH - 4, color, noisy ? 0.18 : 0);
+        drawFastTrace(ctx, x, yy + 2, w, laneH - 4, color, noisy ? 0.18 : 0, lane);
       }
     }
 
@@ -805,31 +870,40 @@
         const yy = y + lane * laneH;
         const color = optics === "cwdm4" ? wavelengthColors[lane] : colors.accent2;
         ctx.globalAlpha = impaired ? 0.58 : 1;
-        drawFilledOpticalTrace(ctx, x, yy + 2, w, laneH - 4, color, impaired ? 0.32 : 0.08);
+        drawFilledOpticalTrace(ctx, x, yy + 2, w, laneH - 4, color, impaired ? 0.32 : 0.08, lane);
         ctx.globalAlpha = 1;
         if (optics === "cwdm4") drawText(ctx, `λ${lane + 1}`, x + w - 4, yy + laneH * 0.66, color, 9, "right", true);
       }
     }
 
-    function fastTraceY(px, x, y, w, h, noise) {
-      const idx = Math.floor(simTime / UI + px / 6);
+    function laneSymbolAt(ui, lane = 0) {
       const syms = linkState?.mappedSymbols ?? [];
-      const level = syms.length ? syms[idx % syms.length].level : (bitAtIndex(idx) ? 1 : -1);
-      const prevLevel = syms.length ? syms[(idx - 1 + syms.length) % syms.length].level : (bitAtIndex(idx - 1) ? 1 : -1);
+      if (!syms.length) return {level: bitAtIndex(Math.floor(ui)) ? 1 : -1};
+      const laneCount = optics === "cwdm4" ? 4 : 1;
+      const idx = Math.floor(ui) * laneCount + lane;
+      return syms[((idx % syms.length) + syms.length) % syms.length];
+    }
+
+    function fastTraceY(px, x, y, w, h, noise, lane = 0) {
+      const u = uiAtPanelPx(px);
+      const idx = Math.floor(u);
+      const level = laneSymbolAt(idx, lane).level;
+      const prevLevel = laneSymbolAt(idx - 1, lane).level;
       const norm = modulation === "pam4" ? (level + 3) / 6 : (level + 1) / 2;
       const prevNorm = modulation === "pam4" ? (prevLevel + 3) / 6 : (prevLevel + 1) / 2;
       const edge = level !== prevLevel ? (norm + prevNorm) / 2 : norm;
-      const ripple = noise * Math.sin(px * 0.23 + simTime * 0.3);
+      const deterministicNoise = (hashNoise(idx * 2.17) - 0.5) * 0.55 + 0.45 * Math.sin(u * 1.73 + 0.4);
+      const ripple = noise * deterministicNoise;
       const v = Math.max(0, Math.min(1, edge * 0.35 + norm * 0.65 + ripple));
       return y + h - v * h;
     }
 
-    function drawFilledOpticalTrace(ctx, x, y, w, h, color, noise) {
+    function drawFilledOpticalTrace(ctx, x, y, w, h, color, noise, lane = 0) {
       ctx.save();
       ctx.beginPath();
       ctx.moveTo(x, y + h);
       for (let px = 0; px <= w; px += 2) {
-        ctx.lineTo(x + px, fastTraceY(px, x, y, w, h, noise));
+        ctx.lineTo(x + px, fastTraceY(px, x, y, w, h, noise, lane));
       }
       ctx.lineTo(x + w, y + h);
       ctx.closePath();
@@ -837,17 +911,17 @@
       ctx.globalAlpha *= 0.24;
       ctx.fill();
       ctx.globalAlpha = Math.min(1, ctx.globalAlpha / 0.24);
-      drawFastTrace(ctx, x, y, w, h, color, noise);
+      drawFastTrace(ctx, x, y, w, h, color, noise, lane);
       ctx.restore();
     }
 
-    function drawFastTrace(ctx, x, y, w, h, color, noise) {
+    function drawFastTrace(ctx, x, y, w, h, color, noise, lane = 0) {
       ctx.save();
       ctx.strokeStyle = color;
       ctx.lineWidth = 1.8;
       ctx.beginPath();
       for (let px = 0; px <= w; px += 2) {
-        const yy = fastTraceY(px, x, y, w, h, noise);
+        const yy = fastTraceY(px, x, y, w, h, noise, lane);
         if (px === 0) ctx.moveTo(x + px, yy);
         else ctx.lineTo(x + px, yy);
       }
@@ -874,11 +948,16 @@
     function drawCdrMini(ctx, x, y, w, h) {
       drawFastTrace(ctx, x, y, w, h * 0.55, colors.green, 0.15);
       ctx.strokeStyle = colors.accent;
-      const phase = ((simTime / UI) % 1 + 1) % 1;
-      for (let i = -1; i <= 13; i++) {
-        const xx = x + (i + 0.5 - phase) * w / 12 + cdrPhase * 1.2;
+      const uiPerPixel = 1 / UI_PIXELS;
+      const leftUi = simTime / UI;
+      const first = Math.floor(leftUi - cdrPhase / UI) - 2;
+      const last = Math.ceil(leftUi + w * uiPerPixel - cdrPhase / UI) + 2;
+      for (let n = first; n <= last; n++) {
+        const sampleUi = n + 0.5 + cdrPhase / UI;
+        const xx = x + (sampleUi - leftUi) / uiPerPixel;
         if (xx < x || xx > x + w) continue;
-        const blink = 0.45 + 0.55 * Math.max(0, Math.sin((i - phase) * Math.PI + simTime * 0.45));
+        const local = Math.abs(((leftUi - sampleUi) % 1 + 1) % 1 - 0.5);
+        const blink = 0.38 + 0.62 * Math.max(0, 1 - local * 2);
         ctx.globalAlpha = blink;
         ctx.beginPath(); ctx.moveTo(xx, y + h * 0.6); ctx.lineTo(xx, y + h); ctx.stroke();
         ctx.beginPath(); ctx.arc(xx, y + h * 0.58, 2.2 + 1.4 * blink, 0, Math.PI * 2); ctx.stroke();
@@ -893,6 +972,7 @@
       const traces = modulation === "pam4" ? 34 : 22;
       const span = Math.max(1, samples.length - traces - 4);
       const start = Math.floor(simTime / UI) % span;
+      const triggerId = Math.floor(simTime / UI);
       const normSample = value => {
         const norm = modulation === "pam4" ? (value + 3.6) / 7.2 : (value + 1.4) / 2.8;
         return Math.max(0.04, Math.min(0.96, norm));
@@ -904,20 +984,34 @@
         const a = normSample(s0);
         const b = normSample(s1);
         const c = normSample(s2);
-        ctx.strokeStyle = modulation === "pam4" ? (k % 5 === 0 ? colors.accent2 : colors.green) : colors.green;
-        ctx.globalAlpha = 0.28 + 0.34 * Math.abs(Math.sin(k + simTime * 0.08));
+        ctx.strokeStyle = colors.green;
+        ctx.globalAlpha = 0.42;
         ctx.beginPath();
         for (let px = 0; px <= w; px++) {
           const p = px / w;
-          const left = a + (b - a) * smooth01(Math.min(1, p * 2));
-          const right = b + (c - b) * smooth01(Math.max(0, p * 2 - 1));
+          const q = p < 0.5 ? Math.min(1, p * 2) : Math.max(0, p * 2 - 1);
+          const curve = 0.5 - 0.5 * Math.cos(Math.PI * q);
+          const left = a + (b - a) * curve;
+          const right = b + (c - b) * curve;
           const v = p < 0.5 ? left : right;
-          const jitter = (hashNoise((start + k) * 17 + px * 0.03) - 0.5) * 0.018 + 0.01 * Math.sin(px * 0.09 + simTime * 0.2 + k);
-          const yy = y + h - Math.max(0.04, Math.min(0.96, v + jitter)) * h;
+          const transitionOnly = Math.sin(Math.PI * q);
+          const deterministicWiggle = 0.012 * transitionOnly * Math.sin(px * 0.12 + triggerId * 0.41 + k * 1.7);
+          const yy = y + h - Math.max(0.04, Math.min(0.96, v + deterministicWiggle)) * h;
           if (px === 0) ctx.moveTo(x + px, yy);
           else ctx.lineTo(x + px, yy);
         }
         ctx.stroke();
+        ctx.globalAlpha = 0.75;
+        ctx.fillStyle = colors.green;
+        [
+          [x, a],
+          [x + w * 0.5, b],
+          [x + w, c]
+        ].forEach(([xx, v]) => {
+          ctx.beginPath();
+          ctx.arc(xx, y + h - v * h, 1.8, 0, Math.PI * 2);
+          ctx.fill();
+        });
       }
       ctx.globalAlpha = 0.55;
       ctx.strokeStyle = colors.grid;
@@ -947,25 +1041,26 @@
 
     function drawArchitecture() {
       const {ctx, w} = setupCanvas("architecture");
+      signalCards = [];
       drawText(ctx, "Top-level direct-detect optical DSP link. Each tile below a block shows the signal representation at that point in the chain.", 34, 34, colors.muted, 13);
       drawText(ctx, "Tx path", 38, 54, colors.green, 12, "left", true);
       drawText(ctx, "Rx path", 38, 408, colors.green, 12, "left", true);
       links.forEach(link => drawArrow(ctx, link[0], link[1]));
       blocks.forEach(block => drawBlock(ctx, block));
-      drawSignalCard(ctx, 34, 148, 144, 120, "payload bits", optics === "cwdm4" ? "64 = 4 x 16 core lanes" : "16 x 12.5G = 200G", "parallel-bits");
-      drawSignalCard(ctx, 202, 148, 172, 120, "coded bits", "actual bits + parity bits", "fec");
-      drawSignalCard(ctx, 398, 148, 164, 120, "mapped symbols", modulation === "pam4" ? "2 bits per PAM4 symbol" : "1 bit per NRZ symbol", "symbols");
-      drawSignalCard(ctx, 586, 148, 164, 120, "precomp samples", "FIR-shaped for channel", "precomp");
-      drawSignalCard(ctx, 774, 148, 178, 120, "SerDes output", optics === "cwdm4" ? "4 fast electrical lanes" : "one fast electrical lane", "serial");
-      drawSignalCard(ctx, 976, 148, 170, 120, "optical launch", optics === "cwdm4" ? "CWDM4 wavelength colors" : "one modulated wavelength", "optical");
-      drawSignalCard(ctx, 1170, 148, 156, 120, "after channel", "loss + noise + ISI", "channel");
-      drawSignalCard(ctx, 1170, 502, 156, 120, "ADC samples", "noisy received samples", "samples", "rx");
-      drawSignalCard(ctx, 976, 502, 170, 120, "timing recovered", "sample phase markers", "cdr", "rx");
-      drawSignalCard(ctx, 782, 502, 170, 120, "equalized", "eye begins to open", "equalized", "rx");
-      drawSignalCard(ctx, 586, 502, 166, 120, "soft bits", "confidence / LLR bars", "soft", "rx");
-      drawSignalCard(ctx, 392, 502, 168, 120, "decoded bits", "corrected 0/1 codeword bits", "fec");
-      drawSignalCard(ctx, 200, 502, 164, 120, "deserialized", optics === "cwdm4" ? "64 recovered core lanes" : "16 recovered lanes", "parallel-bits", "rx");
-      drawSignalCard(ctx, 34, 502, 144, 120, "payload out", optics === "cwdm4" ? "64 = 4 x 16 output lanes" : "16 x 12.5G output", "parallel-bits", "rx");
+      addSignalCard(ctx, 34, 148, 144, 120, "payload bits", optics === "cwdm4" ? "64 = 4 x 16 core lanes" : "16 x 12.5G = 200G", "parallel-bits");
+      addSignalCard(ctx, 202, 148, 172, 120, "coded bits", "actual bits + parity bits", "fec");
+      addSignalCard(ctx, 398, 148, 164, 120, "mapped symbols", modulation === "pam4" ? "2 bits per PAM4 symbol" : "1 bit per NRZ symbol", "symbols");
+      addSignalCard(ctx, 586, 148, 164, 120, "precomp samples", "representative lane, FIR taps", "precomp");
+      addSignalCard(ctx, 774, 148, 178, 120, "SerDes output", optics === "cwdm4" ? "4 fast electrical lanes" : "one fast electrical lane", "serial");
+      addSignalCard(ctx, 976, 148, 170, 120, "optical launch", optics === "cwdm4" ? "CWDM4 wavelength colors" : "one modulated wavelength", "optical");
+      addSignalCard(ctx, 1170, 148, 156, 120, "after channel", "mild noise + ISI", "channel");
+      addSignalCard(ctx, 1170, 502, 156, 120, "ADC samples", "noisy received samples", "samples", "rx");
+      addSignalCard(ctx, 976, 502, 170, 120, "timing recovered", "sample phase markers", "cdr", "rx");
+      addSignalCard(ctx, 782, 502, 170, 120, "equalized", "eye begins to open", "equalized", "rx");
+      addSignalCard(ctx, 586, 502, 166, 120, "soft bits", "confidence / LLR bars", "soft", "rx");
+      addSignalCard(ctx, 392, 502, 168, 120, "decoded bits", "corrected 0/1 codeword bits", "fec");
+      addSignalCard(ctx, 200, 502, 164, 120, "deserialized", optics === "cwdm4" ? "64 recovered core lanes" : "16 recovered lanes", "parallel-bits", "rx");
+      addSignalCard(ctx, 34, 502, 144, 120, "payload out", optics === "cwdm4" ? "64 = 4 x 16 output lanes" : "16 x 12.5G output", "parallel-bits", "rx");
       drawTokens(ctx);
       const sample = sampleInfo();
       const implementedCount = blocks.filter(block => block.detail !== "placeholder").length;
@@ -976,6 +1071,12 @@
       drawMiniMetric(ctx, 900, 690, "CDR lock estimate", `${Math.round(lockedScore * 100)}%`, colors.accent);
       drawText(ctx, "Click a block to open its compact detail panel below. The home view stays focused on the full-link signal transformations.", 50, 740, colors.muted, 12);
       drawText(ctx, "Implemented: SerDes / DAC, CDR / Timing, Deserializer / Word Assembly", w - 50, 740, colors.accent, 12, "right");
+    }
+
+    function addSignalCard(ctx, x, y, w, h, title, subtitle, kind, direction = "tx") {
+      const card = {x, y, w, h, title, subtitle, kind, direction};
+      signalCards.push(card);
+      drawSignalCard(ctx, x, y, w, h, title, subtitle, kind, direction);
     }
 
     function drawGrid(ctx, left, top, width, height, t0, t1, showUi) {
@@ -1231,9 +1332,61 @@
       else drawPlaceholderDetail(ctx, w, h, block);
     }
 
+    function openSignalModal(card) {
+      activeSignalCard = card;
+      document.getElementById("modalTitle").textContent = card.title;
+      document.getElementById("modalNote").textContent = modalNoteFor(card);
+      document.getElementById("signalModal").classList.add("open");
+      document.getElementById("signalModal").setAttribute("aria-hidden", "false");
+      drawModal();
+    }
+
+    function closeSignalModal() {
+      activeSignalCard = null;
+      document.getElementById("signalModal").classList.remove("open");
+      document.getElementById("signalModal").setAttribute("aria-hidden", "true");
+    }
+
+    function modalNoteFor(card) {
+      if (card.kind === "precomp") return "This shows one representative electrical lane. FIR shaping means a finite impulse response filter: each output sample is a weighted sum of nearby symbols. The inset taps are precursor, main cursor, and postcursor weights.";
+      if (card.kind === "cdr") return "The markers use the same UI timebase as the waveform. They scroll with the incoming data and pulse at recovered sample instants.";
+      if (card.kind === "equalized") return "Large view of the eye built by overlapping equalized symbol windows from the shared receive model.";
+      return `${card.subtitle}. This expanded view reads from the same shared linkState as the top-level tile.`;
+    }
+
+    function drawModal() {
+      if (!activeSignalCard) return;
+      const {ctx, w, h} = setupCanvas("modalCanvas");
+      const margin = 34;
+      drawText(ctx, activeSignalCard.title, margin, 30, colors.ink, 15, "left", true);
+      drawText(ctx, activeSignalCard.subtitle, margin, 52, colors.muted, 12);
+      const innerX = margin;
+      const innerY = 78;
+      const innerW = w - margin * 2;
+      const innerH = h - 120;
+      ctx.strokeStyle = colors.line;
+      ctx.strokeRect(innerX, innerY, innerW, innerH);
+      const px = innerX + 24;
+      const py = innerY + 26;
+      const pw = innerW - 48;
+      const ph = innerH - 60;
+      if (activeSignalCard.kind === "parallel-bits") drawParallelBits(ctx, px, py, pw, ph, activeSignalCard.direction === "rx");
+      else if (activeSignalCard.kind === "fec") drawFecGrid(ctx, px, py, pw, ph, activeSignalCard.direction === "rx");
+      else if (activeSignalCard.kind === "symbols") drawSymbolBars(ctx, px, py, pw, ph, modulation);
+      else if (activeSignalCard.kind === "precomp") drawPrecompWave(ctx, px, py, pw, ph);
+      else if (activeSignalCard.kind === "serial") drawSerialBundle(ctx, px, py, pw, ph, false);
+      else if (activeSignalCard.kind === "optical") drawOpticalBundle(ctx, px, py, pw, ph, false);
+      else if (activeSignalCard.kind === "channel") drawOpticalBundle(ctx, px, py, pw, ph, true);
+      else if (activeSignalCard.kind === "samples") drawSampleCloud(ctx, px, py, pw, ph);
+      else if (activeSignalCard.kind === "cdr") drawCdrMini(ctx, px, py, pw, ph);
+      else if (activeSignalCard.kind === "equalized") drawEyeMini(ctx, px, py, pw, ph);
+      else if (activeSignalCard.kind === "soft") drawSoftBits(ctx, px, py, pw, ph);
+    }
+
     function drawAll() {
       drawArchitecture();
       if (detailOpen) drawDetail();
+      if (activeSignalCard) drawModal();
     }
 
     function step(dtMs) {
@@ -1260,9 +1413,21 @@
       return blocks.find(block => x >= block.x && x <= block.x + block.w && y >= block.y && y <= block.y + block.h) || null;
     }
 
+    function signalCardAt(canvas, evt) {
+      const rect = canvas.getBoundingClientRect();
+      const x = (evt.clientX - rect.left) * 1360 / rect.width;
+      const y = (evt.clientY - rect.top) * 760 / rect.height;
+      return signalCards.find(card => x >= card.x && x <= card.x + card.w && y >= card.y && y <= card.y + card.h) || null;
+    }
+
     resetStream();
     const architectureCanvas = document.getElementById("architecture");
     architectureCanvas.addEventListener("click", evt => {
+      const card = signalCardAt(architectureCanvas, evt);
+      if (card) {
+        openSignalModal(card);
+        return;
+      }
       const block = blockAt(architectureCanvas, evt);
       if (!block) return;
       activeBlock = block.id;
@@ -1272,8 +1437,9 @@
     });
     architectureCanvas.addEventListener("mousemove", evt => {
       const block = blockAt(architectureCanvas, evt);
+      const card = signalCardAt(architectureCanvas, evt);
       hoverBlock = block?.id || null;
-      architectureCanvas.style.cursor = block ? "pointer" : "default";
+      architectureCanvas.style.cursor = block || card ? "pointer" : "default";
     });
     architectureCanvas.addEventListener("mouseleave", () => {
       hoverBlock = null;
@@ -1286,6 +1452,10 @@
     document.getElementById("randomize").addEventListener("click", () => {
       resetStream();
       drawAll();
+    });
+    document.getElementById("modalClose").addEventListener("click", closeSignalModal);
+    document.getElementById("signalModal").addEventListener("click", evt => {
+      if (evt.target.id === "signalModal") closeSignalModal();
     });
     document.getElementById("speed").addEventListener("input", evt => {
       speed = Number(evt.target.value);

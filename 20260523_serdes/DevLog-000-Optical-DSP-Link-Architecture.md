@@ -800,3 +800,36 @@ The first shared model can be behavioral and educational. It should prioritize c
   - make optical channel use stored channel sample arrays rather than direct drawing from mapped symbols,
   - feed CDR timing from the same ADC samples,
   - expose uncorrectable FEC blocks and payload mismatches visually.
+
+### Interaction And Timing Refinements
+
+- Added click-to-expand signal tiles on the top-level architecture page.
+  - Clicking a waveform / grid / eye / soft-bit tile opens a modal with a larger rendering of the same signal view.
+  - The modal continues to animate from the same shared `linkState`.
+- Fixed the top-level CDR/timing tile so sample phase markers use the same UI-per-pixel scale as the waveform.
+  - Before this fix, the waveform and markers used different implicit horizontal timebases.
+  - Markers now scroll with the waveform and blink at recovered sample instants.
+- Clarified the precompensation tile:
+  - The tile currently shows one representative electrical lane, not all CWDM4 lanes.
+  - The three small bars are FIR tap weights: precursor `-1`, main cursor `0`, and postcursor `+1`.
+  - "FIR-shaped" means each output sample is a finite weighted sum of nearby input symbols, e.g. `y[n] = c[-1]x[n-1] + c[0]x[n] + c[+1]x[n+1]`, so the transmitter intentionally pre-distorts the waveform to counter expected channel memory.
+- Fixed trace-stability issue in Tx precomp, optical launch/channel, and CDR timing mini-panels:
+  - Noise/ripple terms are now functions of absolute signal/UI time instead of screen pixel plus animation time.
+  - This makes the plotted signal behave like a fixed trace moving through a viewport instead of morphing while it scrolls.
+- Fixed Rx DSP eye stability:
+  - Removed continuous animation-time terms from the eye overlay jitter and opacity.
+  - The eye now updates as a triggered snapshot when the UI trigger advances; traces do not drift continuously between trigger updates.
+- Removed decorative Rx DSP eye traces:
+  - The eye now uses one color only.
+  - It draws only the actual equalized symbol samples from `linkState`, with straight line segments between adjacent sample points and dots at the sample locations.
+  - Synthetic jitter and alternating trace colors were removed.
+- Refined Rx DSP eye after review:
+  - The eye still uses actual equalized sample levels from `linkState`.
+  - Curved/noisy-looking transitions are allowed between real sample levels for visual readability, but the levels/endpoints remain data-derived.
+- Fixed CWDM lane consistency:
+  - `SerDes output`, `optical launch`, and `optical channel` now deinterleave the mapped symbol stream across optical/electrical lanes.
+  - λ1..λ4 no longer show identical waveforms; each lane carries a different symbol subsequence from the shared data stream.
+- Reduced default impairment severity:
+  - Lowered deterministic channel bit-error injection probability in the educational FEC model.
+  - Let the simplified FEC model correct up to two codeword bit flips for the displayed top-level view.
+  - Reduced PAM4/NRZ receive sample noise so the default view usually shows FEC-cleaned recovered payload rather than frequent visible residual errors.
