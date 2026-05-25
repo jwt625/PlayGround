@@ -592,6 +592,7 @@
       const total = optics === "cwdm4" ? 64 : 16;
       const visible = total === 64 ? [0, 1, 2, 3, -1, 60, 61, 62, 63] : [0, 1, 2, 3, -1, 12, 13, 14, 15];
       const laneH = h / visible.length;
+      const windowWords = 5.5;
       for (let row = 0; row < visible.length; row++) {
         const lane = visible[row];
         const yy = y + row * laneH + laneH * 0.5;
@@ -602,18 +603,29 @@
         ctx.strokeStyle = corrected ? colors.green : colors.accent;
         ctx.lineWidth = 2;
         ctx.beginPath();
-        for (let i = 0; i < 12; i++) {
-          const bit = bitAtIndex(Math.floor(simTime / WORD) * 16 + lane + i * total);
-          const xx0 = x + i * w / 12;
-          const xx1 = x + (i + 0.75) * w / 12;
-          const yyv = yy + (bit ? -laneH * 0.18 : laneH * 0.18);
-          if (i === 0) ctx.moveTo(xx0, yyv);
-          ctx.lineTo(xx0, yyv);
-          ctx.lineTo(xx1, yyv);
+        for (let px = 0; px <= w; px += 2) {
+          const t = simTime - (1 - px / w) * windowWords * WORD;
+          const wordIdx = Math.floor(t / WORD);
+          const phase = ((t % WORD) + WORD) % WORD;
+          const cur = laneBit(lane, wordIdx, total);
+          const prev = laneBit(lane, wordIdx - 1, total);
+          let v = cur;
+          if (cur !== prev && phase < WORD * 0.10) {
+            v = prev + (cur - prev) * smooth01(phase / (WORD * 0.10));
+          }
+          const yyv = yy + (v ? -laneH * 0.18 : laneH * 0.18);
+          if (px === 0) ctx.moveTo(x + px, yyv);
+          else ctx.lineTo(x + px, yyv);
         }
         ctx.stroke();
         drawText(ctx, `l${lane}`, x - 2, yy + 3, colors.muted, 8, "right");
       }
+    }
+
+    function laneBit(lane, wordIdx, total) {
+      const laneGroup = Math.floor(lane / 16);
+      const idx = Math.max(0, wordIdx) * 16 + (lane % 16);
+      return bitAtIndex(idx + laneGroup * 97 + (total === 64 ? 31 : 0));
     }
 
     function drawFecGrid(ctx, x, y, w, h, rx) {
@@ -704,10 +716,37 @@
         const yy = y + lane * laneH;
         const color = optics === "cwdm4" ? wavelengthColors[lane] : colors.accent2;
         ctx.globalAlpha = impaired ? 0.58 : 1;
-        drawFastTrace(ctx, x, yy + 2, w, laneH - 4, color, impaired ? 0.32 : 0.08);
+        drawFilledOpticalTrace(ctx, x, yy + 2, w, laneH - 4, color, impaired ? 0.32 : 0.08);
         ctx.globalAlpha = 1;
         if (optics === "cwdm4") drawText(ctx, `λ${lane + 1}`, x + w - 4, yy + laneH * 0.66, color, 9, "right", true);
       }
+    }
+
+    function fastTraceY(px, x, y, w, h, noise) {
+      const idx = Math.floor(simTime / UI + px / 6);
+      const bit = bitAtIndex(idx);
+      const prev = bitAtIndex(idx - 1);
+      const edge = bit !== prev ? 0.5 : bit;
+      const ripple = noise * Math.sin(px * 0.23 + simTime * 0.3);
+      const v = Math.max(0, Math.min(1, edge * 0.35 + bit * 0.65 + ripple));
+      return y + h - v * h;
+    }
+
+    function drawFilledOpticalTrace(ctx, x, y, w, h, color, noise) {
+      ctx.save();
+      ctx.beginPath();
+      ctx.moveTo(x, y + h);
+      for (let px = 0; px <= w; px += 2) {
+        ctx.lineTo(x + px, fastTraceY(px, x, y, w, h, noise));
+      }
+      ctx.lineTo(x + w, y + h);
+      ctx.closePath();
+      ctx.fillStyle = color;
+      ctx.globalAlpha *= 0.24;
+      ctx.fill();
+      ctx.globalAlpha = Math.min(1, ctx.globalAlpha / 0.24);
+      drawFastTrace(ctx, x, y, w, h, color, noise);
+      ctx.restore();
     }
 
     function drawFastTrace(ctx, x, y, w, h, color, noise) {
@@ -716,13 +755,7 @@
       ctx.lineWidth = 1.8;
       ctx.beginPath();
       for (let px = 0; px <= w; px += 2) {
-        const idx = Math.floor(simTime / UI + px / 6);
-        const bit = bitAtIndex(idx);
-        const prev = bitAtIndex(idx - 1);
-        const edge = bit !== prev ? 0.5 : bit;
-        const ripple = noise * Math.sin(px * 0.23 + simTime * 0.3);
-        const v = Math.max(0, Math.min(1, edge * 0.35 + bit * 0.65 + ripple));
-        const yy = y + h - v * h;
+        const yy = fastTraceY(px, x, y, w, h, noise);
         if (px === 0) ctx.moveTo(x + px, yy);
         else ctx.lineTo(x + px, yy);
       }
@@ -746,27 +779,53 @@
     function drawCdrMini(ctx, x, y, w, h) {
       drawFastTrace(ctx, x, y, w, h * 0.55, colors.green, 0.15);
       ctx.strokeStyle = colors.accent;
-      for (let i = 0; i < 12; i++) {
-        const xx = x + (i + 0.5) * w / 12 + cdrPhase * 1.2;
+      const phase = ((simTime / UI) % 1 + 1) % 1;
+      for (let i = -1; i <= 13; i++) {
+        const xx = x + (i + 0.5 - phase) * w / 12 + cdrPhase * 1.2;
+        if (xx < x || xx > x + w) continue;
+        const blink = 0.45 + 0.55 * Math.max(0, Math.sin((i - phase) * Math.PI + simTime * 0.45));
+        ctx.globalAlpha = blink;
         ctx.beginPath(); ctx.moveTo(xx, y + h * 0.6); ctx.lineTo(xx, y + h); ctx.stroke();
+        ctx.beginPath(); ctx.arc(xx, y + h * 0.58, 2.2 + 1.4 * blink, 0, Math.PI * 2); ctx.stroke();
       }
+      ctx.globalAlpha = 1;
     }
 
     function drawEyeMini(ctx, x, y, w, h) {
       ctx.strokeStyle = colors.grid;
       ctx.strokeRect(x, y, w, h);
-      for (let k = 0; k < 7; k++) {
-        ctx.strokeStyle = k < 3 ? colors.red : colors.green;
-        ctx.globalAlpha = k < 3 ? 0.35 : 0.75;
+      const levels = modulation === "pam4" ? [0.13, 0.38, 0.62, 0.87] : [0.22, 0.78];
+      const traces = modulation === "pam4" ? 36 : 20;
+      const shake = 0.012 * Math.sin(simTime * 0.22);
+      for (let k = 0; k < traces; k++) {
+        const a = levels[k % levels.length];
+        const b = levels[Math.floor(k / levels.length + k * 1.7) % levels.length];
+        const c = levels[Math.floor(k * 2.3 + 1) % levels.length];
+        ctx.strokeStyle = modulation === "pam4" ? (k % 5 === 0 ? colors.accent2 : colors.green) : colors.green;
+        ctx.globalAlpha = 0.28 + 0.34 * Math.abs(Math.sin(k + simTime * 0.08));
         ctx.beginPath();
         for (let px = 0; px <= w; px++) {
           const p = px / w;
-          const eye = Math.sin(p * Math.PI);
-          const yy = y + h * (0.5 + (k < 3 ? 0.25 : 0.36) * Math.cos(k) * eye);
+          const left = a + (b - a) * smooth01(Math.min(1, p * 2));
+          const right = b + (c - b) * smooth01(Math.max(0, p * 2 - 1));
+          const v = p < 0.5 ? left : right;
+          const jitter = (hashNoise(k * 17 + px * 0.03) - 0.5) * 0.035 + shake * Math.sin(px * 0.09 + k);
+          const yy = y + h - Math.max(0.04, Math.min(0.96, v + jitter)) * h;
           if (px === 0) ctx.moveTo(x + px, yy);
           else ctx.lineTo(x + px, yy);
         }
         ctx.stroke();
+      }
+      ctx.globalAlpha = 0.55;
+      ctx.strokeStyle = colors.grid;
+      if (modulation === "pam4") {
+        [0.25, 0.5, 0.75].forEach(level => {
+          const yy = y + h - level * h;
+          ctx.beginPath(); ctx.moveTo(x, yy); ctx.lineTo(x + w, yy); ctx.stroke();
+        });
+      } else {
+        const yy = y + h * 0.5;
+        ctx.beginPath(); ctx.moveTo(x, yy); ctx.lineTo(x + w, yy); ctx.stroke();
       }
       ctx.globalAlpha = 1;
     }

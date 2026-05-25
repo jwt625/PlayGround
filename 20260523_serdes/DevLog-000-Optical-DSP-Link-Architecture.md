@@ -714,3 +714,7 @@ This path connects naturally to the existing SerDes, CDR, and shift-register wor
   - `4x200G CWDM4`: `64 = 4 x 16` core lanes, with `...` marking omitted middle lanes.
 - Updated FEC/codeword tiles to display actual animated `0`/`1` bit values rather than only colored blocks.
 - Kept SerDes electrical output lanes a single electrical color; wavelength coloring starts only at the optical launch / CWDM4 signal tile.
+- Filled the optical launch and optical channel traces down to the local baseline with transparent wavelength-colored tone to make the waveform read as an optical intensity/envelope modulation.
+- Changed payload, deserialized, and recovered payload lane tiles from word-jumping snapshots to smoothly scrolling slow-lane waveforms.
+- Updated the Rx DSP tile to render an animated modulation-aware eye diagram; PAM4 mode now shows multiple level transitions and three eye openings with small jitter/shake.
+- Updated the CDR/timing tile so sample phase markers scroll with the waveform and pulse/blink at the sample positions.
