@@ -1,0 +1,985 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Eye Diagram Lab</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --ink: #e7edf7;
+      --muted: #9da9ba;
+      --grid: #293343;
+      --panel: #111824;
+      --line: #2a3545;
+      --accent: #69a7ff;
+      --accent2: #ff9b52;
+      --green: #4ed0a2;
+      --purple: #c49bff;
+      --red: #ff6f7d;
+      --bg: #080d14;
+      --canvas: #0d131d;
+      --control: #151e2b;
+      --faint: #1d2735;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font: 14px/1.4 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--ink);
+      background: var(--bg);
+    }
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 18px;
+      background: rgba(8, 13, 20, 0.96);
+      border-bottom: 1px solid var(--line);
+      backdrop-filter: blur(8px);
+    }
+    h1 {
+      margin: 0;
+      font-size: 18px;
+      font-weight: 700;
+    }
+    .facts {
+      color: var(--muted);
+      font-size: 13px;
+    }
+    .controls, .control-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+    }
+    button, select, label.toggle, a.button {
+      border: 1px solid #3a4658;
+      background: var(--control);
+      border-radius: 0;
+      padding: 7px 10px;
+      cursor: pointer;
+      color: var(--ink);
+      text-decoration: none;
+      font: inherit;
+    }
+    button:hover, select:hover, label.toggle:hover, a.button:hover { border-color: var(--accent); }
+    button.active { border-color: var(--accent); background: #1b2b42; }
+    label.toggle {
+      display: inline-flex;
+      gap: 6px;
+      align-items: center;
+      user-select: none;
+    }
+    input[type="range"] { width: min(112px, 100%); }
+    main {
+      max-width: 1600px;
+      margin: 0 auto;
+      padding: 16px;
+    }
+    .lab-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 330px;
+      gap: 16px;
+      align-items: start;
+    }
+    section {
+      margin: 0 0 16px;
+      padding: 14px;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 0;
+    }
+    .lab-panel { min-width: 0; }
+    .controls-panel {
+      position: sticky;
+      top: 82px;
+      max-height: calc(100vh - 98px);
+      overflow-y: auto;
+    }
+    .controls-panel label.toggle {
+      width: 100%;
+      justify-content: space-between;
+    }
+    .controls-panel input[type="range"] {
+      flex: 1;
+      min-width: 90px;
+    }
+    .controls-panel select {
+      max-width: 178px;
+    }
+    h2 {
+      margin: 0 0 8px;
+      font-size: 16px;
+    }
+    .note {
+      margin: 6px 0 10px;
+      color: var(--muted);
+      max-width: 1120px;
+    }
+    .control-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 8px;
+    }
+    .control-group {
+      border: 1px solid var(--line);
+      background: #0a1018;
+      padding: 10px;
+    }
+    .control-group h3 {
+      margin: 0 0 8px;
+      font-size: 13px;
+      color: var(--green);
+    }
+    .readout {
+      min-width: 42px;
+      color: var(--muted);
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+    }
+    canvas {
+      display: block;
+      width: 100%;
+      height: auto;
+      background: var(--canvas);
+      border: 1px solid var(--line);
+      border-radius: 0;
+    }
+    @media (max-width: 1100px) {
+      .lab-layout { grid-template-columns: 1fr; }
+      .controls-panel {
+        position: static;
+        max-height: none;
+      }
+    }
+    @media (max-width: 900px) {
+      header { position: static; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div>
+      <h1>Eye Diagram Lab</h1>
+      <div class="facts">Synthetic electrical / optical SerDes channel lab with live before/after equalization eyes.</div>
+    </div>
+    <div class="controls">
+      <a class="button" href="optical_dsp_link_architecture.html">Back To Architecture</a>
+      <button id="pause">Pause</button>
+      <button id="randomize">New Data</button>
+      <button id="clearEye">Clear Eye</button>
+      <label class="toggle">preset
+        <select id="preset">
+          <option value="clean">Clean Link</option>
+          <option value="lossy" selected>Bandwidth Limited</option>
+          <option value="preemphasis">Tx Pre-Emphasis Helps</option>
+          <option value="reflection">Reflection Trouble</option>
+          <option value="jitter">Jitter Dominated</option>
+          <option value="pam4">PAM4 Margin Crunch</option>
+        </select>
+      </label>
+      <label class="toggle">speed <input id="speed" type="range" min="0.25" max="4" step="0.25" value="1"><span id="speedText">1.00x</span></label>
+    </div>
+  </header>
+
+  <main>
+    <div class="lab-layout">
+    <section class="lab-panel">
+      <h2>1. Interactive Eye And Compensation</h2>
+      <p class="note">The model is intentionally behavioral: a generated symbol stream is shaped by Tx FIR, finite driver bandwidth, synthetic channel loss/reflection/noise/jitter, CDR or manual sampling phase, and a 3-tap Rx FFE. DFE is intentionally left for a later pass.</p>
+      <canvas id="lab" width="1360" height="760"></canvas>
+    </section>
+
+    <section class="controls-panel">
+      <h2>Controls</h2>
+      <div class="control-grid">
+        <div class="control-group">
+          <h3>Signal</h3>
+          <div class="control-row">
+            <label class="toggle">modulation
+              <select id="modulation">
+                <option value="nrz">NRZ</option>
+                <option value="pam4" selected>PAM4</option>
+              </select>
+            </label>
+            <label class="toggle">pattern
+              <select id="pattern">
+                <option value="prbs" selected>PRBS-like</option>
+                <option value="random">Random</option>
+                <option value="alt">Alternating</option>
+                <option value="run">Long run</option>
+              </select>
+            </label>
+          </div>
+          <div class="control-row">
+            <label class="toggle">view
+              <select id="language">
+                <option value="both" selected>Electrical + optical</option>
+                <option value="electrical">Electrical SerDes</option>
+                <option value="optical">Optical direct-detect</option>
+              </select>
+            </label>
+          </div>
+        </div>
+
+        <div class="control-group">
+          <h3>Channel</h3>
+          <div class="control-row"><label class="toggle">loss <input id="loss" type="range" min="0" max="1" step="0.01"><span id="lossText" class="readout"></span></label></div>
+          <div class="control-row"><label class="toggle">reflection <input id="reflection" type="range" min="-0.45" max="0.45" step="0.01"><span id="reflectionText" class="readout"></span></label></div>
+          <div class="control-row"><label class="toggle">delay UI <input id="reflectionDelay" type="range" min="0.5" max="4" step="0.25"><span id="reflectionDelayText" class="readout"></span></label></div>
+          <div class="control-row"><label class="toggle">noise <input id="noise" type="range" min="0" max="0.5" step="0.01"><span id="noiseText" class="readout"></span></label></div>
+          <div class="control-row"><label class="toggle">jitter UI <input id="jitter" type="range" min="0" max="0.18" step="0.005"><span id="jitterText" class="readout"></span></label></div>
+        </div>
+
+        <div class="control-group">
+          <h3>Tx Compensation</h3>
+          <div class="control-row"><label class="toggle"><input id="txEnable" type="checkbox"> Tx FIR</label></div>
+          <div class="control-row"><label class="toggle">pre <input id="txPre" type="range" min="-0.5" max="0.3" step="0.01"><span id="txPreText" class="readout"></span></label></div>
+          <div class="control-row"><label class="toggle">post <input id="txPost" type="range" min="-0.7" max="0.3" step="0.01"><span id="txPostText" class="readout"></span></label></div>
+          <div class="control-row"><label class="toggle">driver BW <input id="driverBw" type="range" min="0" max="1" step="0.01"><span id="driverBwText" class="readout"></span></label></div>
+        </div>
+
+        <div class="control-group">
+          <h3>Rx / Timing</h3>
+          <div class="control-row"><label class="toggle"><input id="rxEnable" type="checkbox" checked> Rx FFE</label></div>
+          <div class="control-row"><label class="toggle">FFE pre <input id="rxPre" type="range" min="-0.5" max="0.5" step="0.01"><span id="rxPreText" class="readout"></span></label></div>
+          <div class="control-row"><label class="toggle">FFE post <input id="rxPost" type="range" min="-0.5" max="0.5" step="0.01"><span id="rxPostText" class="readout"></span></label></div>
+          <div class="control-row"><label class="toggle"><input id="cdrEnable" type="checkbox" checked> CDR</label></div>
+          <div class="control-row"><label class="toggle">manual phase <input id="phase" type="range" min="-0.45" max="0.45" step="0.01"><span id="phaseText" class="readout"></span></label></div>
+          <div class="control-row"><label class="toggle">persistence <input id="persistence" type="range" min="0.75" max="0.995" step="0.005"><span id="persistenceText" class="readout"></span></label></div>
+        </div>
+      </div>
+    </section>
+    </div>
+  </main>
+
+  <script>
+    const UI = 1;
+    const SPS = 128;
+    const HISTORY_UI = 220;
+    const EYE_UI = 2;
+    const EYE_X = 192;
+    const EYE_Y = 150;
+    const colors = {
+      ink: "#e7edf7", muted: "#9da9ba", grid: "#293343", line: "#2a3545",
+      accent: "#69a7ff", accent2: "#ff9b52", green: "#4ed0a2",
+      purple: "#c49bff", red: "#ff6f7d", canvas: "#0d131d",
+      band: "#151e2b", faint: "#1d2735", panel: "#111824"
+    };
+
+    const settings = {
+      modulation: "pam4",
+      pattern: "prbs",
+      language: "both",
+      loss: 0.55,
+      reflection: 0.12,
+      reflectionDelay: 1.5,
+      noise: 0.12,
+      jitter: 0.035,
+      txEnable: false,
+      txPre: -0.12,
+      txPost: -0.28,
+      driverBw: 0.45,
+      rxEnable: true,
+      rxPre: -0.10,
+      rxPost: -0.16,
+      cdrEnable: true,
+      manualPhase: 0,
+      persistence: 0.94
+    };
+
+    let running = true;
+    let speed = 1;
+    let simUi = 0;
+    let seed = 11;
+    let lastFrame = null;
+    let cdrPhase = -0.28;
+    let cdrControl = -0.28;
+    let cdrLock = 0;
+    let current = null;
+
+    const eyeBefore = makeEyeAccumulator();
+    const eyeAfter = makeEyeAccumulator();
+    const jitterHist = new Float32Array(EYE_X);
+    const sampleHist = new Float32Array(EYE_Y);
+
+    const presets = {
+      clean: {modulation: "nrz", loss: 0.12, reflection: 0, noise: 0.035, jitter: 0.01, txEnable: false, rxEnable: false, driverBw: 0.85, rxPre: 0, rxPost: 0},
+      lossy: {modulation: "pam4", loss: 0.55, reflection: 0.12, noise: 0.12, jitter: 0.035, txEnable: false, rxEnable: true, driverBw: 0.45, rxPre: -0.10, rxPost: -0.16},
+      preemphasis: {modulation: "pam4", loss: 0.62, reflection: 0.10, noise: 0.10, jitter: 0.025, txEnable: true, txPre: -0.16, txPost: -0.34, rxEnable: true, rxPre: -0.07, rxPost: -0.10, driverBw: 0.44},
+      reflection: {modulation: "nrz", loss: 0.42, reflection: 0.34, reflectionDelay: 2.0, noise: 0.06, jitter: 0.025, txEnable: false, rxEnable: true, rxPre: -0.05, rxPost: -0.30, driverBw: 0.52},
+      jitter: {modulation: "nrz", loss: 0.22, reflection: 0.02, noise: 0.04, jitter: 0.14, txEnable: false, rxEnable: false, driverBw: 0.70},
+      pam4: {modulation: "pam4", loss: 0.50, reflection: 0.16, noise: 0.18, jitter: 0.045, txEnable: true, txPre: -0.10, txPost: -0.22, rxEnable: true, rxPre: -0.10, rxPost: -0.14, driverBw: 0.48}
+    };
+
+    function makeEyeAccumulator() {
+      return {
+        bins: new Float32Array(EYE_X * EYE_Y),
+        metrics: {height: 0, width: 0, q: 0, isi: 0}
+      };
+    }
+
+    function clearAccumulators() {
+      eyeBefore.bins.fill(0);
+      eyeAfter.bins.fill(0);
+      jitterHist.fill(0);
+      sampleHist.fill(0);
+    }
+
+    function hashNoise(n) {
+      const s = Math.sin(n * 12.9898 + seed * 78.233) * 43758.5453;
+      return s - Math.floor(s);
+    }
+
+    function gaussian(idx, salt) {
+      const u1 = Math.max(1e-6, hashNoise(idx * 0.73 + salt));
+      const u2 = hashNoise(idx * 1.91 + salt + 9.3);
+      return Math.sqrt(-2 * Math.log(u1)) * Math.cos(2 * Math.PI * u2);
+    }
+
+    function prbsBit(n) {
+      let x = (n + seed * 8191) >>> 0;
+      x ^= x << 13; x ^= x >>> 17; x ^= x << 5;
+      return x & 1;
+    }
+
+    function symbolAt(n) {
+      if (settings.pattern === "alt") return n % 2 ? maxLevel() : -maxLevel();
+      if (settings.pattern === "run") {
+        const bit = Math.floor(n / 12) % 2;
+        return bit ? maxLevel() : -maxLevel();
+      }
+      if (settings.modulation === "pam4") {
+        const a = settings.pattern === "random" ? hashNoise(n * 2.1) > 0.5 : prbsBit(2 * n);
+        const b = settings.pattern === "random" ? hashNoise(n * 2.1 + 1) > 0.5 : prbsBit(2 * n + 1);
+        return [-3, -1, 3, 1][Number(a) * 2 + Number(b)];
+      }
+      const bit = settings.pattern === "random" ? hashNoise(n * 4.7) > 0.5 : prbsBit(n);
+      return bit ? 1 : -1;
+    }
+
+    function maxLevel() {
+      return settings.modulation === "pam4" ? 3 : 1;
+    }
+
+    function smooth01(x) {
+      const z = Math.max(0, Math.min(1, x));
+      return z * z * (3 - 2 * z);
+    }
+
+    function generateFrame() {
+      const nSym = HISTORY_UI + 28;
+      const offset = Math.floor(simUi) - 14;
+      const sym = new Float32Array(nSym);
+      for (let i = 0; i < nSym; i++) sym[i] = symbolAt(offset + i);
+
+      const txSym = new Float32Array(nSym);
+      const txNorm = settings.txEnable ? 1 / Math.max(1e-6, Math.abs(settings.txPre) + 1 + Math.abs(settings.txPost)) : 1;
+      for (let i = 0; i < nSym; i++) {
+        const pre = sym[Math.min(nSym - 1, i + 1)];
+        const cur = sym[i];
+        const post = sym[Math.max(0, i - 1)];
+        txSym[i] = settings.txEnable ? txNorm * (settings.txPre * pre + cur + settings.txPost * post) : cur;
+      }
+
+      const n = HISTORY_UI * SPS;
+      const tx = new Float32Array(n);
+      const driver = new Float32Array(n);
+      const channelMain = new Float32Array(n);
+      const channel = new Float32Array(n);
+      const equalized = new Float32Array(n);
+      const sampleBefore = new Float32Array(HISTORY_UI);
+      const sampleAfter = new Float32Array(HISTORY_UI);
+
+      for (let i = 0; i < n; i++) {
+        const ui = i / SPS;
+        const k = Math.floor(ui) + 14;
+        const p = ui - Math.floor(ui);
+        const prev = txSym[Math.max(0, k - 1)];
+        const cur = txSym[Math.min(nSym - 1, k)];
+        const boundaryJitter = settings.jitter * gaussian(offset + k, 0.17) + 0.5 * settings.jitter * Math.sin((offset + k) * 0.29);
+        const edge = Math.max(0.05, Math.min(0.95, 0.5 + boundaryJitter));
+        const transitionWidth = 0.05 + 0.32 * (1 - settings.driverBw) + 0.25 * settings.loss;
+        const q = (p - edge) / transitionWidth + 0.5;
+        const active = cur === prev ? cur : prev + (cur - prev) * smooth01(q);
+        tx[i] = active;
+      }
+
+      const alphaDriver = 0.08 + 0.78 * settings.driverBw;
+      driver[0] = tx[0];
+      for (let i = 1; i < n; i++) driver[i] = driver[i - 1] + alphaDriver * (tx[i] - driver[i - 1]);
+
+      const alphaCh = 0.04 + 0.58 * (1 - settings.loss);
+      const echo = Math.round(settings.reflectionDelay * SPS);
+      channelMain[0] = driver[0];
+      for (let i = 1; i < n; i++) {
+        channelMain[i] = channelMain[i - 1] + alphaCh * (driver[i] - channelMain[i - 1]);
+      }
+      for (let i = 0; i < n; i++) {
+        const refl = i >= echo ? settings.reflection * channelMain[i - echo] : 0;
+        const noise = settings.noise * gaussian(i + Math.floor(simUi) * 10000, 2.6);
+        channel[i] = channelMain[i] + refl + noise;
+      }
+
+      const rxSym = new Float32Array(HISTORY_UI + 4);
+      const phase = settings.cdrEnable ? cdrPhase : settings.manualPhase;
+      for (let k = 0; k < HISTORY_UI; k++) {
+        rxSym[k + 2] = sampleWave(channel, k + 0.5 + phase);
+        sampleBefore[k] = rxSym[k + 2];
+      }
+
+      updateCdr(channel, phase);
+
+      for (let k = 0; k < HISTORY_UI; k++) {
+        const pre = rxSym[k + 3];
+        const cur = rxSym[k + 2];
+        const post = rxSym[k + 1];
+        sampleAfter[k] = settings.rxEnable ? settings.rxPre * pre + cur + settings.rxPost * post : cur;
+      }
+
+      for (let i = 0; i < n; i++) {
+        const pre = channel[Math.min(n - 1, i + SPS)];
+        const cur = channel[i];
+        const post = channel[Math.max(0, i - SPS)];
+        equalized[i] = settings.rxEnable ? settings.rxPre * pre + cur + settings.rxPost * post : cur;
+      }
+
+      return {tx, driver, channelMain, channel, equalized, sampleBefore, sampleAfter, phase};
+    }
+
+    function updateCdr(wave, phase) {
+      if (!settings.cdrEnable) {
+        cdrLock = 0;
+        return;
+      }
+      let vote = 0;
+      let transitions = 0;
+      for (let k = 2; k < HISTORY_UI - 2; k++) {
+        const prev = decideLevel(sampleWave(wave, k - 0.5 + phase));
+        const cur = decideLevel(sampleWave(wave, k + 0.5 + phase));
+        if (prev === cur) continue;
+        const boundary = sampleWave(wave, k + phase);
+        const target = 0.5 * (prev + cur);
+        vote -= Math.sign((boundary - target) * (cur - prev));
+        transitions++;
+      }
+      const err = transitions ? vote / transitions : 0;
+      cdrControl = clamp(cdrControl + 0.010 * err + 0.002 * Math.sin(simUi * 0.017), -0.45, 0.45);
+      cdrPhase = clamp(cdrPhase + 0.12 * (cdrControl - cdrPhase), -0.45, 0.45);
+      cdrLock = 0.985 * cdrLock + 0.015 * (transitions > 8 && Math.abs(err) < 0.22 ? 1 : 0);
+    }
+
+    function foldEye(acc, wave, yRange, phaseUi = 0) {
+      const decay = settings.persistence;
+      for (let i = 0; i < acc.bins.length; i++) acc.bins[i] *= decay;
+      const usable = Math.min(wave.length, HISTORY_UI * SPS);
+      for (let i = 0; i < usable; i++) {
+        const phase = (((i / SPS - phaseUi) % EYE_UI) + EYE_UI) % EYE_UI / EYE_UI;
+        const x = Math.floor(phase * EYE_X);
+        const y = Math.floor((0.5 - wave[i] / (2 * yRange)) * EYE_Y);
+        if (x >= 0 && x < EYE_X && y >= 0 && y < EYE_Y) acc.bins[y * EYE_X + x] += 1;
+      }
+    }
+
+    function updateHistograms(frame, yRange) {
+      for (let i = 0; i < jitterHist.length; i++) jitterHist[i] *= settings.persistence;
+      for (let i = 0; i < sampleHist.length; i++) sampleHist[i] *= settings.persistence;
+      for (let k = 0; k < HISTORY_UI; k++) {
+        const jitter = clamp(0.5 + settings.jitter * gaussian(k + Math.floor(simUi), 8.1) * 2.4, 0, 1);
+        jitterHist[Math.floor(jitter * (EYE_X - 1))] += 1;
+        const y = Math.floor((0.5 - frame.sampleAfter[k] / (2 * yRange)) * EYE_Y);
+        if (y >= 0 && y < EYE_Y) sampleHist[y] += 1;
+      }
+    }
+
+    function computeMetrics(samples, acc, yRange) {
+      const means = estimateSampleMeans(samples);
+      const errors = [];
+      for (let i = 0; i < samples.length; i++) errors.push(samples[i] - nearestValue(samples[i], means));
+      const rms = Math.sqrt(errors.reduce((a, b) => a + b * b, 0) / Math.max(1, errors.length));
+      const spacings = [];
+      for (let i = 1; i < means.length; i++) spacings.push(means[i] - means[i - 1]);
+      const minSpacing = Math.max(0, Math.min(...spacings.map(Math.abs)));
+      const height = clamp((minSpacing - 6 * rms) / (2 * yRange), 0, 1);
+      const isi = estimateIsi(samples, means, rms);
+      return {
+        height,
+        width: measureEyeWidth(acc, yRange),
+        q: rms > 1e-6 ? minSpacing / (2 * rms) : 9.9,
+        isi,
+        means
+      };
+    }
+
+    function estimateSampleMeans(samples) {
+      const sorted = Array.from(samples).sort((a, b) => a - b);
+      const count = settings.modulation === "pam4" ? 4 : 2;
+      let means = Array.from({length: count}, (_, i) => {
+        const idx = Math.floor((i + 0.5) * sorted.length / count);
+        return sorted[clampIndex(idx, sorted.length)];
+      });
+      for (let iter = 0; iter < 4; iter++) {
+        const sums = means.map(() => 0);
+        const counts = means.map(() => 0);
+        for (const sample of samples) {
+          const idx = nearestIndex(sample, means);
+          sums[idx] += sample;
+          counts[idx]++;
+        }
+        means = means.map((mean, i) => counts[i] ? sums[i] / counts[i] : mean);
+      }
+      return means.sort((a, b) => a - b);
+    }
+
+    function estimateIsi(samples, means, rms) {
+      let err = 0;
+      for (const sample of samples) err += Math.abs(sample - nearestValue(sample, means));
+      const avgErr = err / Math.max(1, samples.length);
+      const levelSpan = Math.max(1e-6, means[means.length - 1] - means[0]);
+      return clamp((avgErr + rms) / levelSpan * 2.5, 0, 1);
+    }
+
+    function measureEyeWidth(acc, yRange) {
+      const thresholds = settings.modulation === "pam4" ? [-2, 0, 2] : [0];
+      let openBins = 0;
+      for (let x = 0; x < EYE_X; x++) {
+        let colMax = 0;
+        for (let y = 0; y < EYE_Y; y++) colMax = Math.max(colMax, acc.bins[y * EYE_X + x]);
+        if (colMax <= 0) continue;
+        let minGap = Infinity;
+        for (const th of thresholds) {
+          const thY = clampIndex(Math.floor((0.5 - th / (2 * yRange)) * EYE_Y), EYE_Y);
+          let lower = -1;
+          let upper = EYE_Y;
+          const cutoff = colMax * 0.08;
+          for (let y = thY; y < EYE_Y; y++) {
+            if (acc.bins[y * EYE_X + x] > cutoff) { lower = y; break; }
+          }
+          for (let y = thY; y >= 0; y--) {
+            if (acc.bins[y * EYE_X + x] > cutoff) { upper = y; break; }
+          }
+          minGap = Math.min(minGap, Math.max(0, lower - upper));
+        }
+        if (minGap / EYE_Y > 0.10) openBins++;
+      }
+      return clamp(openBins / EYE_X, 0, 1);
+    }
+
+    function updateModel() {
+      current = generateFrame();
+      const yRange = settings.modulation === "pam4" ? 4.6 : 1.8;
+      foldEye(eyeBefore, current.channel, yRange, current.phase);
+      foldEye(eyeAfter, current.equalized, yRange, current.phase);
+      updateHistograms(current, yRange);
+      eyeBefore.metrics = computeMetrics(current.sampleBefore, eyeBefore, yRange);
+      eyeAfter.metrics = computeMetrics(current.sampleAfter, eyeAfter, yRange);
+    }
+
+    const canvasLogicalSizes = new Map();
+    function setupCanvas(id) {
+      const canvas = document.getElementById(id);
+      const ctx = canvas.getContext("2d");
+      const ratio = window.devicePixelRatio || 1;
+      if (!canvasLogicalSizes.has(id)) {
+        canvasLogicalSizes.set(id, {w: Number(canvas.getAttribute("width")), h: Number(canvas.getAttribute("height"))});
+      }
+      const {w, h} = canvasLogicalSizes.get(id);
+      const pixelW = Math.round(w * ratio);
+      const pixelH = Math.round(h * ratio);
+      if (canvas.width !== pixelW || canvas.height !== pixelH) {
+        canvas.width = pixelW;
+        canvas.height = pixelH;
+      }
+      ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+      ctx.fillStyle = colors.canvas;
+      ctx.fillRect(0, 0, w, h);
+      return {ctx, w, h};
+    }
+
+    function drawText(ctx, text, x, y, color = colors.ink, size = 12, align = "left", bold = false) {
+      ctx.fillStyle = color;
+      ctx.font = `${bold ? "bold " : ""}${size}px -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif`;
+      ctx.textAlign = align;
+      ctx.fillText(text, x, y);
+    }
+
+    function drawLab() {
+      if (!current) updateModel();
+      const {ctx, w} = setupCanvas("lab");
+      const yRange = settings.modulation === "pam4" ? 4.6 : 1.8;
+      drawText(ctx, "Before equalization", 34, 32, colors.ink, 15, "left", true);
+      drawText(ctx, languageLabel("after channel / Rx front-end", "after optical channel / PD-TIA-ADC"), 34, 52, colors.muted, 12);
+      drawText(ctx, "After Rx FFE", 486, 32, colors.ink, 15, "left", true);
+      drawText(ctx, settings.rxEnable ? "UI-spaced 3-tap FFE applied to waveform" : "equalizer bypassed", 486, 52, colors.muted, 12);
+      drawEye(ctx, 34, 74, 410, 280, eyeBefore, yRange, false);
+      drawEye(ctx, 486, 74, 410, 280, eyeAfter, yRange, true);
+      drawHistPanel(ctx, 936, 74, 384, 280, yRange);
+      drawWavePanel(ctx, 34, 394, 830, 180, yRange);
+      drawTimingPanel(ctx, 904, 394, 416, 180);
+      drawTapPanel(ctx, 34, 612, 486, 110);
+      drawMetricPanel(ctx, 552, 612, 768, 110);
+      drawText(ctx, "Synthetic teaching model: normalized Tx FIR, driver bandwidth, low-pass channel, delayed reflection, AWGN, timing jitter, decision-based CDR estimate, and UI-spaced Rx FFE. DFE is reserved for the next pass.", 34, 746, colors.muted, 12);
+      drawText(ctx, running ? "running" : "paused", w - 36, 746, running ? colors.green : colors.accent2, 12, "right", true);
+    }
+
+    function drawEye(ctx, x, y, w, h, acc, yRange, after) {
+      ctx.strokeStyle = colors.line;
+      ctx.strokeRect(x, y, w, h);
+      drawEyeGrid(ctx, x, y, w, h, yRange);
+      let max = 1;
+      for (const v of acc.bins) if (v > max) max = v;
+      const cellW = w / EYE_X;
+      const cellH = h / EYE_Y;
+      for (let yy = 0; yy < EYE_Y; yy++) {
+        for (let xx = 0; xx < EYE_X; xx++) {
+          const v = acc.bins[yy * EYE_X + xx];
+          if (v < 0.02) continue;
+          const n = Math.min(1, Math.log1p(v) / Math.log1p(max));
+          ctx.fillStyle = heatColor(n, after);
+          ctx.globalAlpha = Math.min(0.95, 0.08 + n * 0.92);
+          ctx.fillRect(x + xx * cellW, y + yy * cellH, Math.ceil(cellW) + 0.4, Math.ceil(cellH) + 0.4);
+        }
+      }
+      ctx.globalAlpha = 1;
+      drawSamplePhase(ctx, x, y, w, h);
+      const m = acc.metrics;
+      drawLevelGuides(ctx, x, y, w, h, m.means || nominalLevels(), yRange);
+      drawText(ctx, `height ${Math.round(m.height * 100)}%`, x + 10, y + h - 32, colors.green, 12, "left", true);
+      drawText(ctx, `width ${Math.round(m.width * 100)}%`, x + 10, y + h - 12, colors.accent, 12, "left", true);
+    }
+
+    function drawLevelGuides(ctx, x, y, w, h, levels, yRange) {
+      ctx.save();
+      ctx.strokeStyle = colors.green;
+      ctx.globalAlpha = 0.38;
+      for (const level of levels) {
+        const yy = y + h * (0.5 - level / (2 * yRange));
+        ctx.beginPath(); ctx.moveTo(x, yy); ctx.lineTo(x + w, yy); ctx.stroke();
+      }
+      ctx.restore();
+    }
+
+    function drawEyeGrid(ctx, x, y, w, h, yRange) {
+      ctx.save();
+      ctx.strokeStyle = colors.grid;
+      ctx.globalAlpha = 0.55;
+      for (let k = 0; k <= EYE_UI; k++) {
+        const xx = x + k * w / EYE_UI;
+        ctx.beginPath(); ctx.moveTo(xx, y); ctx.lineTo(xx, y + h); ctx.stroke();
+      }
+      const thresholds = settings.modulation === "pam4" ? [-2, 0, 2] : [0];
+      for (const th of thresholds) {
+        const yy = y + h * (0.5 - th / (2 * yRange));
+        ctx.beginPath(); ctx.moveTo(x, yy); ctx.lineTo(x + w, yy); ctx.stroke();
+      }
+      ctx.globalAlpha = 1;
+      drawText(ctx, "2 UI", x + w - 8, y + h - 8, colors.muted, 10, "right");
+      ctx.restore();
+    }
+
+    function drawSamplePhase(ctx, x, y, w, h) {
+      const phase = ((0.5 + (settings.cdrEnable ? cdrPhase : settings.manualPhase)) % 1 + 1) % 1;
+      for (const base of [0, 1]) {
+        const xx = x + (base + phase) * w / EYE_UI;
+        ctx.strokeStyle = colors.accent2;
+        ctx.globalAlpha = 0.75;
+        ctx.beginPath(); ctx.moveTo(xx, y); ctx.lineTo(xx, y + h); ctx.stroke();
+      }
+      ctx.globalAlpha = 1;
+    }
+
+    function drawHistPanel(ctx, x, y, w, h, yRange) {
+      ctx.strokeStyle = colors.line;
+      ctx.strokeRect(x, y, w, h);
+      drawText(ctx, "Sample and jitter histograms", x + 12, y + 22, colors.ink, 14, "left", true);
+      drawText(ctx, languageLabel("vertical sample clusters", "received optical sample clusters"), x + 12, y + 42, colors.muted, 11);
+      const left = x + 24;
+      const top = y + 64;
+      const histW = w * 0.45;
+      const histH = h - 86;
+      let maxS = 1;
+      for (const v of sampleHist) if (v > maxS) maxS = v;
+      for (let i = 0; i < EYE_Y; i++) {
+        const bar = sampleHist[i] / maxS;
+        ctx.fillStyle = colors.green;
+        ctx.globalAlpha = 0.18 + bar * 0.72;
+        ctx.fillRect(left, top + i * histH / EYE_Y, bar * histW, Math.ceil(histH / EYE_Y));
+      }
+      ctx.globalAlpha = 0.65;
+      ctx.strokeStyle = colors.grid;
+      const sampleLevels = eyeAfter.metrics.means || nominalLevels();
+      for (const level of sampleLevels) {
+        const yy = top + histH * (0.5 - level / (2 * yRange));
+        ctx.beginPath(); ctx.moveTo(left, yy); ctx.lineTo(left + histW, yy); ctx.stroke();
+      }
+      ctx.globalAlpha = 1;
+      const jx = x + w * 0.56;
+      const jy = top;
+      const jw = w * 0.36;
+      const jh = histH;
+      let maxJ = 1;
+      for (const v of jitterHist) if (v > maxJ) maxJ = v;
+      ctx.strokeStyle = colors.grid;
+      ctx.strokeRect(jx, jy, jw, jh);
+      ctx.fillStyle = colors.accent2;
+      for (let i = 0; i < EYE_X; i++) {
+        const bar = jitterHist[i] / maxJ;
+        ctx.fillRect(jx + i * jw / EYE_X, jy + jh * (1 - bar), Math.ceil(jw / EYE_X), jh * bar);
+      }
+      drawText(ctx, "jitter", jx + jw / 2, y + h - 12, colors.muted, 10, "center");
+    }
+
+    function drawWavePanel(ctx, x, y, w, h, yRange) {
+      ctx.strokeStyle = colors.line;
+      ctx.strokeRect(x, y, w, h);
+      drawText(ctx, "Rolling waveform chain", x + 12, y + 22, colors.ink, 14, "left", true);
+      drawWave(ctx, x + 90, y + 42, w - 120, 32, current.tx, yRange, "Tx FIR", colors.accent);
+      drawWave(ctx, x + 90, y + 80, w - 120, 32, current.channel, yRange, languageLabel("channel + echo", "optical channel + echo"), colors.green);
+      drawWave(ctx, x + 90, y + 118, w - 120, 32, current.equalized, yRange, "Rx FFE", colors.purple);
+      drawText(ctx, `echo delay ${settings.reflectionDelay.toFixed(2)} UI`, x + w - 26, y + 106, colors.muted, 10, "right");
+      const left = x + 90;
+      const width = w - 120;
+      const phase = ((0.5 + current.phase) % 1 + 1) % 1;
+      ctx.strokeStyle = colors.accent2;
+      ctx.globalAlpha = 0.8;
+      for (let ui = 0; ui < HISTORY_UI; ui += 8) {
+        const xx = left + (ui + phase) / HISTORY_UI * width;
+        ctx.beginPath(); ctx.moveTo(xx, y + 38); ctx.lineTo(xx, y + h - 18); ctx.stroke();
+      }
+      ctx.globalAlpha = 1;
+    }
+
+    function drawWave(ctx, x, y, w, h, data, yRange, label, color) {
+      drawText(ctx, label, x - 14, y + h * 0.65, colors.muted, 11, "right");
+      ctx.strokeStyle = colors.grid;
+      ctx.beginPath(); ctx.moveTo(x, y + h / 2); ctx.lineTo(x + w, y + h / 2); ctx.stroke();
+      ctx.strokeStyle = color;
+      ctx.lineWidth = 1.7;
+      ctx.beginPath();
+      for (let px = 0; px <= w; px += 1.5) {
+        const idx = clampIndex(Math.floor(px / w * (data.length - 1)), data.length);
+        const yy = y + h * (0.5 - data[idx] / (2 * yRange));
+        if (px === 0) ctx.moveTo(x + px, yy);
+        else ctx.lineTo(x + px, yy);
+      }
+      ctx.stroke();
+    }
+
+    function drawTimingPanel(ctx, x, y, w, h) {
+      ctx.strokeStyle = colors.line;
+      ctx.strokeRect(x, y, w, h);
+      drawText(ctx, "Timing / CDR", x + 12, y + 22, colors.ink, 14, "left", true);
+      drawText(ctx, settings.cdrEnable ? "decision-derived phase estimate tracks transition balance" : "manual phase controls sample marker", x + 12, y + 42, colors.muted, 11);
+      drawGauge(ctx, x + 32, y + 72, 128, 74, "phase", `${(current.phase).toFixed(2)} UI`, current.phase / 0.45);
+      drawGauge(ctx, x + 190, y + 72, 128, 74, "CDR lock", `${Math.round(cdrLock * 100)}%`, cdrLock * 2 - 1);
+      drawGauge(ctx, x + 318, y + 72, 70, 74, "jitter", `${settings.jitter.toFixed(3)}`, settings.jitter / 0.18 * 2 - 1);
+    }
+
+    function drawGauge(ctx, x, y, w, h, label, value, norm) {
+      ctx.strokeStyle = colors.grid;
+      ctx.strokeRect(x, y, w, h);
+      drawText(ctx, label, x + 10, y + 20, colors.muted, 11);
+      drawText(ctx, value, x + 10, y + 48, colors.ink, 17, "left", true);
+      const zero = x + w / 2;
+      const xx = zero + clamp(norm, -1, 1) * (w / 2 - 12);
+      ctx.strokeStyle = colors.accent2;
+      ctx.beginPath(); ctx.moveTo(zero, y + h - 14); ctx.lineTo(xx, y + h - 14); ctx.stroke();
+    }
+
+    function drawTapPanel(ctx, x, y, w, h) {
+      ctx.strokeStyle = colors.line;
+      ctx.strokeRect(x, y, w, h);
+      drawText(ctx, "Compensation taps", x + 12, y + 22, colors.ink, 14, "left", true);
+      drawTapBars(ctx, x + 22, y + 42, 190, 48, settings.txEnable ? [settings.txPre, 1, settings.txPost] : [0, 1, 0], "Tx FIR");
+      drawTapBars(ctx, x + 254, y + 42, 190, 48, settings.rxEnable ? [settings.rxPre, 1, settings.rxPost] : [0, 1, 0], "Rx FFE");
+    }
+
+    function drawTapBars(ctx, x, y, w, h, taps, label) {
+      drawText(ctx, label, x, y - 8, colors.muted, 11);
+      const zero = y + h * 0.5;
+      ctx.strokeStyle = colors.grid;
+      ctx.beginPath(); ctx.moveTo(x, zero); ctx.lineTo(x + w, zero); ctx.stroke();
+      taps.forEach((tap, i) => {
+        const bw = w / 3 - 16;
+        const bx = x + i * w / 3 + 8;
+        const bh = clamp(tap, -1, 1) * h * 0.46;
+        ctx.fillStyle = tap >= 0 ? colors.green : colors.accent2;
+        ctx.fillRect(bx, zero - Math.max(0, bh), bw, Math.abs(bh));
+        drawText(ctx, ["pre", "main", "post"][i], bx + bw / 2, y + h + 14, colors.muted, 9, "center");
+      });
+    }
+
+    function drawMetricPanel(ctx, x, y, w, h) {
+      ctx.strokeStyle = colors.line;
+      ctx.strokeRect(x, y, w, h);
+      drawText(ctx, "Educational metrics", x + 12, y + 22, colors.ink, 14, "left", true);
+      const metrics = [
+        ["Before height", `${Math.round(eyeBefore.metrics.height * 100)}%`, colors.green],
+        ["After height", `${Math.round(eyeAfter.metrics.height * 100)}%`, colors.green],
+        ["After width", `${Math.round(eyeAfter.metrics.width * 100)}%`, colors.accent],
+        ["Q proxy", eyeAfter.metrics.q.toFixed(1), colors.purple],
+        ["ISI estimate", `${Math.round(eyeAfter.metrics.isi * 100)}%`, colors.accent2],
+        ["Mode", settings.modulation.toUpperCase(), colors.ink]
+      ];
+      metrics.forEach((m, i) => {
+        const bx = x + 18 + i * (w - 36) / metrics.length;
+        drawText(ctx, m[0], bx, y + 54, colors.muted, 10);
+        drawText(ctx, m[1], bx, y + 82, m[2], 18, "left", true);
+      });
+      drawText(ctx, "Metrics are measured from this teaching model, not compliance results.", x + w - 16, y + h - 14, colors.muted, 11, "right");
+    }
+
+    function heatColor(n, after) {
+      const r = after ? Math.floor(25 + n * 55) : Math.floor(30 + n * 80);
+      const g = after ? Math.floor(90 + n * 150) : Math.floor(100 + n * 100);
+      const b = after ? Math.floor(120 + n * 90) : Math.floor(80 + n * 45);
+      return `rgb(${r},${g},${b})`;
+    }
+
+    function languageLabel(electrical, optical) {
+      if (settings.language === "electrical") return electrical;
+      if (settings.language === "optical") return optical;
+      return `${electrical} / ${optical}`;
+    }
+
+    function clamp(v, lo, hi) {
+      return Math.max(lo, Math.min(hi, v));
+    }
+
+    function clampIndex(v, n) {
+      return Math.max(0, Math.min(n - 1, v));
+    }
+
+    function lerp(a, b, t) {
+      return a + (b - a) * t;
+    }
+
+    function sampleWave(wave, ui) {
+      const x = clamp(ui * SPS, 0, wave.length - 1);
+      const i0 = Math.floor(x);
+      const i1 = Math.min(wave.length - 1, i0 + 1);
+      return lerp(wave[i0], wave[i1], x - i0);
+    }
+
+    function nominalLevels() {
+      return settings.modulation === "pam4" ? [-3, -1, 1, 3] : [-1, 1];
+    }
+
+    function decideLevel(v) {
+      return nearestValue(v, nominalLevels());
+    }
+
+    function nearestValue(v, values) {
+      return values[nearestIndex(v, values)];
+    }
+
+    function nearestIndex(v, values) {
+      let best = 0;
+      let dist = Infinity;
+      for (let i = 0; i < values.length; i++) {
+        const d = Math.abs(v - values[i]);
+        if (d < dist) { dist = d; best = i; }
+      }
+      return best;
+    }
+
+    const bindings = [
+      ["modulation", "modulation", "value"],
+      ["pattern", "pattern", "value"],
+      ["language", "language", "value"],
+      ["loss", "loss", "number"],
+      ["reflection", "reflection", "number"],
+      ["reflectionDelay", "reflectionDelay", "number"],
+      ["noise", "noise", "number"],
+      ["jitter", "jitter", "number"],
+      ["txEnable", "txEnable", "checked"],
+      ["txPre", "txPre", "number"],
+      ["txPost", "txPost", "number"],
+      ["driverBw", "driverBw", "number"],
+      ["rxEnable", "rxEnable", "checked"],
+      ["rxPre", "rxPre", "number"],
+      ["rxPost", "rxPost", "number"],
+      ["cdrEnable", "cdrEnable", "checked"],
+      ["phase", "manualPhase", "number"],
+      ["persistence", "persistence", "number"]
+    ];
+
+    function syncControls() {
+      for (const [id, key, kind] of bindings) {
+        const el = document.getElementById(id);
+        if (kind === "checked") el.checked = Boolean(settings[key]);
+        else el.value = settings[key];
+      }
+      updateReadouts();
+    }
+
+    function updateReadouts() {
+      for (const key of ["loss", "reflection", "reflectionDelay", "noise", "jitter", "txPre", "txPost", "driverBw", "rxPre", "rxPost", "phase", "persistence"]) {
+        const el = document.getElementById(key + "Text");
+        if (!el) continue;
+        const value = key === "phase" ? settings.manualPhase : settings[key];
+        el.textContent = Number(value).toFixed(key === "reflectionDelay" ? 2 : 3);
+      }
+      document.getElementById("speedText").textContent = speed.toFixed(2) + "x";
+    }
+
+    function applyPreset(name) {
+      Object.assign(settings, presets[name]);
+      cdrPhase = -0.28;
+      cdrControl = -0.28;
+      cdrLock = 0;
+      clearAccumulators();
+      syncControls();
+    }
+
+    for (const [id, key, kind] of bindings) {
+      document.getElementById(id).addEventListener("input", evt => {
+        if (kind === "checked") settings[key] = evt.target.checked;
+        else if (kind === "number") settings[key] = Number(evt.target.value);
+        else settings[key] = evt.target.value;
+        clearAccumulators();
+        updateReadouts();
+      });
+    }
+
+    document.getElementById("preset").addEventListener("change", evt => applyPreset(evt.target.value));
+    document.getElementById("pause").addEventListener("click", () => {
+      running = !running;
+      document.getElementById("pause").textContent = running ? "Pause" : "Resume";
+    });
+    document.getElementById("randomize").addEventListener("click", () => {
+      seed = Math.floor(Math.random() * 100000) + 1;
+      simUi = 0;
+      cdrPhase = -0.28;
+      cdrControl = -0.28;
+      cdrLock = 0;
+      clearAccumulators();
+    });
+    document.getElementById("clearEye").addEventListener("click", clearAccumulators);
+    document.getElementById("speed").addEventListener("input", evt => {
+      speed = Number(evt.target.value);
+      updateReadouts();
+    });
+
+    function animate(ts) {
+      if (lastFrame === null) lastFrame = ts;
+      const dt = Math.min(50, ts - lastFrame);
+      lastFrame = ts;
+      if (running) simUi += dt * 0.014 * speed;
+      updateModel();
+      drawLab();
+      requestAnimationFrame(animate);
+    }
+
+    applyPreset("lossy");
+    window.addEventListener("resize", drawLab);
+    requestAnimationFrame(animate);
+  </script>
+</body>
+</html>
