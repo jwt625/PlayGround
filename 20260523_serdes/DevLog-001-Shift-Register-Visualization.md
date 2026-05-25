@@ -274,3 +274,10 @@ For true shift-chain mode:
 - The final output latch "resets" timing for the digital core: all 16 output lanes become valid together.
 - Word alignment is assumed known for the first version. A future view can add a training marker or comma-alignment concept.
 - This view should connect to the demux tree: staged demuxing is one hardware way to distribute sampled bits into slower lanes.
+
+## Implementation Feedback
+
+- Implemented in `serdes_cdr_shift_register_deep_dive.html` as basket-bank, shift-chain, and master/slave timing panels.
+- Expanded basket selection from one example slice to all 16 baskets: shared data bus, 4-to-16 decoder, one-hot `WE[i]`, local `TG/mux`, latch, and stored value.
+- Added shift-mechanism deep dive with DFF stages split into master/slave latches, clock phase, snapshot equations, setup/hold aperture, and `tCQ` update timing.
+- Useful next improvement: add a toggle between addressed basket-bank storage and pure cascaded DFF shifting, with the same tracked bit shown in both.

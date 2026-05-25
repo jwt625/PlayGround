@@ -229,3 +229,10 @@ Per animation step:
 - This model explains timing recovery, not protocol framing.
 - Long sequences with no transitions should show `HOLD` behavior or gradual reliance on the local oscillator.
 - The CDR determines when to sample; the demux or shift register determines where each sampled bit is stored.
+
+## Implementation Feedback
+
+- Implemented in `serdes_cdr_shift_register_deep_dive.html` as CDR scope and loop-internals panels.
+- Added bounded transition jitter, small amplitude noise, detector uncertainty, and oscillator wander so the CDR keeps making residual corrections after lock.
+- Visualized UP/DOWN/HOLD, charge bucket, loop-filter capacitor, phase dial, recovered sample ticks, ideal centers, and div-by-16 word clock.
+- Useful next improvement: expose noise/jitter amplitudes as UI sliders instead of fixed constants.

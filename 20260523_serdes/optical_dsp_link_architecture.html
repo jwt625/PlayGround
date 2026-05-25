@@ -1,0 +1,1145 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Optical DSP Link Architecture</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --ink: #e7edf7;
+      --muted: #9da9ba;
+      --grid: #293343;
+      --panel: #111824;
+      --line: #2a3545;
+      --accent: #69a7ff;
+      --accent2: #ff9b52;
+      --green: #4ed0a2;
+      --purple: #c49bff;
+      --red: #ff6f7d;
+      --bg: #080d14;
+      --canvas: #0d131d;
+      --control: #151e2b;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font: 14px/1.4 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--ink);
+      background: var(--bg);
+    }
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 18px;
+      background: rgba(8, 13, 20, 0.96);
+      border-bottom: 1px solid var(--line);
+      backdrop-filter: blur(8px);
+    }
+    h1 {
+      margin: 0;
+      font-size: 18px;
+      font-weight: 700;
+    }
+    .facts {
+      color: var(--muted);
+      font-size: 13px;
+    }
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+    }
+    button, select, label.toggle, a.button {
+      border: 1px solid #3a4658;
+      background: var(--control);
+      border-radius: 0;
+      padding: 7px 10px;
+      cursor: pointer;
+      color: var(--ink);
+      text-decoration: none;
+      font: inherit;
+    }
+    button:hover, select:hover, label.toggle:hover, a.button:hover { border-color: var(--accent); }
+    button.active { border-color: var(--accent); background: #1b2b42; }
+    label.toggle {
+      display: inline-flex;
+      gap: 6px;
+      align-items: center;
+      user-select: none;
+    }
+    input[type="range"] { width: 130px; }
+    main {
+      max-width: 1420px;
+      margin: 0 auto;
+      padding: 16px;
+    }
+    section {
+      margin: 0 0 16px;
+      padding: 14px;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 0;
+      overflow-x: auto;
+    }
+    h2 {
+      margin: 0 0 8px;
+      font-size: 16px;
+    }
+    .note {
+      margin: 6px 0 10px;
+      color: var(--muted);
+      max-width: 1120px;
+    }
+    canvas {
+      display: block;
+      width: 1360px;
+      max-width: none;
+      background: var(--canvas);
+      border: 1px solid var(--line);
+      border-radius: 0;
+    }
+    .detail-header {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+    .detail-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+    }
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 10px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+    .swatch {
+      display: inline-block;
+      width: 12px;
+      height: 12px;
+      margin-right: 5px;
+      border: 1px solid rgba(255,255,255,0.3);
+      vertical-align: -2px;
+    }
+    @media (max-width: 900px) {
+      header { position: static; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div>
+      <h1>Optical DSP Link Architecture</h1>
+      <div class="facts">Clickable top-level block diagram. Existing SerDes, CDR, and word-assembly visuals are exposed as expandable blocks.</div>
+    </div>
+    <div class="controls">
+      <button id="pause">Pause</button>
+      <button id="randomize">New Random Data</button>
+      <label class="toggle">depth
+        <select id="depth">
+          <option value="concept">Concept</option>
+          <option value="mechanism" selected>Mechanism</option>
+          <option value="dsp">DSP Detail</option>
+        </select>
+      </label>
+      <label class="toggle">modulation
+        <select id="modulation">
+          <option value="nrz">NRZ</option>
+          <option value="pam4" selected>PAM4</option>
+        </select>
+      </label>
+      <label class="toggle">optics
+        <select id="optics">
+          <option value="single">1 optical lane</option>
+          <option value="cwdm4" selected>4x200G CWDM4</option>
+        </select>
+      </label>
+      <label class="toggle">speed <input id="speed" type="range" min="0.25" max="4" step="0.25" value="1"><span id="speedText">1.00x</span></label>
+    </div>
+  </header>
+
+  <main>
+    <section>
+      <h2>1. Full Optical Link</h2>
+      <p class="note">Signals change representation as they move: slow parallel payload lanes, coded bits, mapped symbols, high-speed SerDes streams, wavelength-colored optics, sampled receive data, and recovered lanes. Click a block to open details below.</p>
+      <canvas id="architecture" width="1360" height="760"></canvas>
+      <div class="legend">
+        <span><span class="swatch" style="background:#142d4a"></span>digital / bits</span>
+        <span><span class="swatch" style="background:#251c46"></span>FEC / coding</span>
+        <span><span class="swatch" style="background:#123628"></span>DSP filters</span>
+        <span><span class="swatch" style="background:#412714"></span>analog / photonic</span>
+        <span><span class="swatch" style="background:#3b1f28"></span>channel impairments</span>
+      </div>
+    </section>
+
+    <section id="detailSection" style="display:none">
+      <div class="detail-header">
+        <div>
+          <h2 id="detailTitle">2. Expanded Block: Serializer / DAC / Driver</h2>
+          <p id="detailNote" class="note">Parallel words become a high-rate electrical stream. This compact panel reuses the same ordering as the existing serializer visualization.</p>
+        </div>
+        <div id="detailActions" class="detail-actions"></div>
+      </div>
+      <canvas id="detail" width="1360" height="540"></canvas>
+    </section>
+  </main>
+
+  <script>
+    const UI = 1000 / 112;
+    const WORD = 16 * UI;
+    const TOTAL = 3 * WORD;
+    const colors = {
+      ink: "#e7edf7", muted: "#9da9ba", grid: "#293343", line: "#2a3545",
+      accent: "#69a7ff", accent2: "#ff9b52", green: "#4ed0a2",
+      purple: "#c49bff", red: "#ff6f7d", canvas: "#0d131d",
+      band: "#151e2b", faint: "#1d2735", digital: "#142d4a",
+      fec: "#251c46", dsp: "#123628", analog: "#412714", channel: "#3b1f28"
+    };
+
+    const blocks = [
+      {id: "payload", title: "Payload", subtitle: "slow lanes", group: "digital", x: 34, y: 64, w: 128, h: 60, detail: "placeholder"},
+      {id: "fec-enc", title: "FEC Encode", subtitle: "+ parity", group: "fec", x: 226, y: 64, w: 132, h: 60, detail: "placeholder"},
+      {id: "mapper", title: "Mapper", subtitle: "symbols", group: "digital", x: 422, y: 64, w: 122, h: 60, detail: "placeholder"},
+      {id: "tx-dsp", title: "Tx DSP", subtitle: "precomp", group: "dsp", x: 608, y: 64, w: 122, h: 60, detail: "placeholder"},
+      {id: "serializer", title: "SerDes / DAC", subtitle: "implemented", group: "digital", x: 794, y: 64, w: 138, h: 60, detail: "serializer"},
+      {id: "photonic-tx", title: "Photonic Tx", subtitle: "modulator", group: "analog", x: 996, y: 64, w: 132, h: 60, detail: "placeholder"},
+      {id: "channel", title: "Optical Channel", subtitle: "fiber", group: "channel", x: 1192, y: 64, w: 134, h: 60, detail: "placeholder"},
+      {id: "rx-front", title: "Rx Front-End", subtitle: "PD/TIA/ADC", group: "analog", x: 1192, y: 418, w: 134, h: 60, detail: "placeholder"},
+      {id: "cdr", title: "CDR / Timing", subtitle: "implemented", group: "digital", x: 990, y: 418, w: 138, h: 60, detail: "cdr"},
+      {id: "rx-dsp", title: "Rx DSP", subtitle: "equalizer", group: "dsp", x: 802, y: 418, w: 130, h: 60, detail: "placeholder"},
+      {id: "demapper", title: "Soft Demapper", subtitle: "LLRs", group: "digital", x: 604, y: 418, w: 132, h: 60, detail: "placeholder"},
+      {id: "fec-dec", title: "FEC Decode", subtitle: "correct", group: "fec", x: 410, y: 418, w: 132, h: 60, detail: "placeholder"},
+      {id: "deserializer", title: "Deserializer", subtitle: "implemented", group: "digital", x: 214, y: 418, w: 132, h: 60, detail: "deserializer"},
+      {id: "recovered", title: "Recovered", subtitle: "slow lanes", group: "digital", x: 34, y: 418, w: 128, h: 60, detail: "placeholder"}
+    ];
+
+    const links = [
+      ["payload", "fec-enc"], ["fec-enc", "mapper"], ["mapper", "tx-dsp"], ["tx-dsp", "serializer"],
+      ["serializer", "photonic-tx"], ["photonic-tx", "channel"], ["channel", "rx-front"],
+      ["rx-front", "cdr"], ["cdr", "rx-dsp"], ["rx-dsp", "demapper"], ["demapper", "fec-dec"],
+      ["fec-dec", "deserializer"], ["deserializer", "recovered"]
+    ];
+
+    const details = {
+      serializer: {
+        title: "2. Expanded Block: Serializer / DAC / Driver",
+        note: "Parallel words become a high-rate stream. The compact view shows the mux-tree ordering and final interleaver already implemented in the serializer page.",
+        links: [{label: "Open Full SerDes Page", href: "serializer_visualization_animated.html"}]
+      },
+      cdr: {
+        title: "2. Expanded Block: CDR / Timing Recovery",
+        note: "The recovered sample phase moves toward UI centers using early/late decisions. This compact view mirrors the CDR / PLL deep-dive model.",
+        links: [{label: "Open CDR Deep Dive", href: "serdes_cdr_shift_register_deep_dive.html"}]
+      },
+      deserializer: {
+        title: "2. Expanded Block: Deserializer / Word Assembly",
+        note: "Recovered UI samples are routed into word positions, then captured together by a word-valid latch. The full deep dive shows basket and shift-chain models.",
+        links: [
+          {label: "Open SerDes Page", href: "serializer_visualization_animated.html"},
+          {label: "Open Shift Deep Dive", href: "serdes_cdr_shift_register_deep_dive.html"}
+        ]
+      },
+      placeholder: {
+        title: "2. Expanded Block: Planned DSP Block",
+        note: "This block is part of the top-level architecture and will be implemented in a later pass.",
+        links: []
+      }
+    };
+
+    let words = [];
+    let simTime = 4 * WORD;
+    let running = true;
+    let speed = 1;
+    let lastFrame = null;
+    let activeBlock = null;
+    let depth = "mechanism";
+    let modulation = "pam4";
+    let optics = "cwdm4";
+    let hoverBlock = null;
+    let detailOpen = false;
+
+    let cdrPhase = -3.1;
+    let rawControl = -3.1;
+    let filteredControl = -3.1;
+    let pdDecision = 0;
+    let phaseError = 0;
+    let lockedScore = 0;
+    let lastProcessedUi = Math.floor(simTime / UI);
+    const history = [];
+
+    function randomWord() {
+      return Array.from({length: 16}, () => Math.random() < 0.5 ? 0 : 1);
+    }
+
+    function resetStream() {
+      words = [];
+      for (let i = 0; i < 80; i++) words.push(randomWord());
+      simTime = 4 * WORD;
+      cdrPhase = -3.1;
+      rawControl = cdrPhase;
+      filteredControl = cdrPhase;
+      pdDecision = 0;
+      phaseError = 0;
+      lockedScore = 0;
+      history.length = 0;
+      lastProcessedUi = Math.floor(simTime / UI);
+      lastFrame = null;
+    }
+
+    function ensureWords(t) {
+      const need = Math.ceil(t / WORD) + 12;
+      while (words.length < need) words.push(randomWord());
+    }
+
+    function smooth01(x) {
+      const z = Math.max(0, Math.min(1, x));
+      return z * z * (3 - 2 * z);
+    }
+
+    function hashNoise(n) {
+      return Math.sin(n * 12.9898 + 78.233) - Math.floor(Math.sin(n * 12.9898 + 78.233));
+    }
+
+    function bitAtIndex(idx) {
+      if (idx < 0) return 0;
+      const lane = idx % 16;
+      const word = Math.floor(idx / 16);
+      ensureWords((word + 2) * WORD);
+      return words[word]?.[lane] ?? 0;
+    }
+
+    function sampleInfo(t = simTime) {
+      const idx = Math.max(0, Math.floor(t / UI));
+      const lane = idx % 16;
+      const word = Math.floor(idx / 16);
+      ensureWords(t + WORD);
+      return {idx, lane, word, value: words[word]?.[lane] ?? 0, phase: ((t % UI) + UI) % UI};
+    }
+
+    function bitFor(lanes, t, cellPs) {
+      if (t < 0) return {value: 0, lane: lanes[0], word: 0, idx: 0};
+      const idx = Math.floor(t / cellPs);
+      const pos = ((idx % lanes.length) + lanes.length) % lanes.length;
+      const word = Math.floor(idx / lanes.length);
+      ensureWords(t);
+      const lane = lanes[pos];
+      return {value: words[word]?.[lane] ?? 0, lane, word, idx};
+    }
+
+    function waveformValue(lanes, t, cellPs, risePs) {
+      const cur = bitFor(lanes, t, cellPs);
+      const boundary = cur.idx * cellPs;
+      const prev = bitFor(lanes, boundary - 0.001, cellPs);
+      if (cur.value !== prev.value && t - boundary >= 0 && t - boundary < risePs) {
+        return prev.value + (cur.value - prev.value) * smooth01((t - boundary) / risePs);
+      }
+      return cur.value;
+    }
+
+    function clockValue(t, period, phase = 0, rise = 1.1) {
+      const p = ((t - phase) % period + period) % period;
+      const target = p < period / 2 ? 1 : 0;
+      const edge = p < period / 2 ? 0 : period / 2;
+      const prev = p < period / 2 ? 0 : 1;
+      if (p - edge >= 0 && p - edge < rise) return prev + (target - prev) * smooth01((p - edge) / rise);
+      return target;
+    }
+
+    function transitionJitter(uiIdx) {
+      return (hashNoise(uiIdx) - 0.5) * 0.68 + 0.18 * Math.sin(uiIdx * 0.29);
+    }
+
+    function analogValue(t) {
+      const idx = Math.floor(t / UI);
+      const cur = bitAtIndex(idx);
+      const prev = bitAtIndex(idx - 1);
+      const boundary = idx * UI + transitionJitter(idx);
+      let value = cur;
+      if (cur !== prev && t - boundary >= 0 && t - boundary < 3.2) {
+        value = prev + (cur - prev) * smooth01((t - boundary) / 3.2);
+      }
+      const noise = 0.03 * Math.sin(t * 1.83) + 0.015 * Math.sin(t * 5.4 + 0.8);
+      return Math.max(0, Math.min(1, value + noise));
+    }
+
+    function processUiBoundary(uiIdx) {
+      const prev = bitAtIndex(uiIdx - 1);
+      const cur = bitAtIndex(uiIdx);
+      if (prev !== cur) {
+        const expectedEdge = uiIdx * UI + cdrPhase;
+        const actualEdge = uiIdx * UI + transitionJitter(uiIdx);
+        phaseError = Math.max(-UI / 2, Math.min(UI / 2, actualEdge - expectedEdge));
+        const noisyError = phaseError + (hashNoise(uiIdx + 0.37) - 0.5) * 0.32;
+        pdDecision = Math.abs(noisyError) < 0.16 ? 0 : (noisyError > 0 ? 1 : -1);
+      } else {
+        phaseError = 0;
+        pdDecision = 0;
+      }
+      const wander = 0.014 * Math.sin(uiIdx * 0.19) + 0.01 * (hashNoise(uiIdx + 4.1) - 0.5);
+      rawControl = Math.max(-4.2, Math.min(4.2, rawControl + pdDecision * 0.2 + wander));
+      filteredControl += 0.13 * (rawControl - filteredControl);
+      cdrPhase = Math.max(-4.2, Math.min(4.2, cdrPhase + 0.18 * (filteredControl - cdrPhase) + wander * 0.35));
+      lockedScore = 0.96 * lockedScore + 0.04 * (Math.abs(cdrPhase) < 0.45 ? 1 : 0);
+      history.push({raw: rawControl, filt: filteredControl, phase: cdrPhase, err: phaseError, pd: pdDecision});
+      if (history.length > 240) history.shift();
+    }
+
+    function stageLaneOrders() {
+      const stages = [];
+      stages[4] = [Array.from({length: 16}, (_, i) => i)];
+      for (let s = 3; s >= 0; s--) {
+        stages[s] = [];
+        for (const seq of stages[s + 1]) {
+          stages[s].push(seq.filter((_, i) => i % 2 === 0));
+          stages[s].push(seq.filter((_, i) => i % 2 === 1));
+        }
+      }
+      stages[0] = Array.from({length: 16}, (_, i) => [i]);
+      return stages;
+    }
+
+    function demuxStageLaneOrders() {
+      const stages = [[Array.from({length: 16}, (_, i) => i)]];
+      for (let s = 1; s <= 4; s++) {
+        stages[s] = [];
+        for (const seq of stages[s - 1]) {
+          stages[s].push(seq.filter((_, i) => i % 2 === 0));
+          stages[s].push(seq.filter((_, i) => i % 2 === 1));
+        }
+      }
+      return stages;
+    }
+
+    function setupCanvas(id) {
+      const canvas = document.getElementById(id);
+      const ctx = canvas.getContext("2d");
+      const ratio = window.devicePixelRatio || 1;
+      const cssW = Number(canvas.getAttribute("width"));
+      const cssH = Number(canvas.getAttribute("height"));
+      canvas.style.width = cssW + "px";
+      canvas.style.height = cssH + "px";
+      canvas.width = Math.round(cssW * ratio);
+      canvas.height = Math.round(cssH * ratio);
+      ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+      ctx.fillStyle = colors.canvas;
+      ctx.fillRect(0, 0, cssW, cssH);
+      return {canvas, ctx, w: cssW, h: cssH};
+    }
+
+    function drawText(ctx, text, x, y, color = colors.ink, size = 12, align = "left", bold = false) {
+      ctx.fillStyle = color;
+      ctx.font = `${bold ? "bold " : ""}${size}px -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif`;
+      ctx.textAlign = align;
+      ctx.fillText(text, x, y);
+    }
+
+    function xmap(t, left, width, t0, t1) {
+      return left + (t - t0) * width / (t1 - t0);
+    }
+
+    function drawBlock(ctx, block) {
+      const active = detailOpen && block.id === activeBlock;
+      const hover = block.id === hoverBlock;
+      const implemented = block.detail !== "placeholder";
+      ctx.save();
+      ctx.fillStyle = colors[block.group];
+      ctx.strokeStyle = active ? colors.accent2 : hover ? colors.accent : colors.line;
+      ctx.lineWidth = active ? 3 : 1.5;
+      ctx.shadowColor = implemented ? (active ? colors.accent2 : colors.accent) : "transparent";
+      ctx.shadowBlur = implemented ? (active ? 16 : 6) : 0;
+      ctx.beginPath();
+      ctx.rect(block.x, block.y, block.w, block.h);
+      ctx.fill();
+      ctx.stroke();
+      ctx.shadowBlur = 0;
+      drawText(ctx, block.title, block.x + block.w / 2, block.y + 30, colors.ink, 14, "center", true);
+      drawText(ctx, block.subtitle, block.x + block.w / 2, block.y + 52, implemented ? colors.accent : colors.muted, 11, "center");
+      if (implemented) {
+        ctx.fillStyle = active ? colors.accent2 : colors.accent;
+        ctx.fillRect(block.x + block.w - 16, block.y + 10, 7, 7);
+      }
+      ctx.restore();
+    }
+
+    function blockCenter(id) {
+      const b = blocks.find(item => item.id === id);
+      return {x: b.x + b.w / 2, y: b.y + b.h / 2, block: b};
+    }
+
+    function drawArrow(ctx, fromId, toId) {
+      const from = blockCenter(fromId);
+      const to = blockCenter(toId);
+      const horizontal = Math.abs(from.y - to.y) < 90;
+      let x1 = from.x, y1 = from.y, x2 = to.x, y2 = to.y;
+      if (horizontal) {
+        x1 = from.block.x + from.block.w;
+        x2 = to.block.x;
+      } else {
+        y1 = from.block.y + from.block.h;
+        y2 = to.block.y;
+      }
+      ctx.save();
+      ctx.strokeStyle = colors.grid;
+      ctx.fillStyle = colors.grid;
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(x1, y1);
+      if (!horizontal) {
+        const midY = (y1 + y2) / 2;
+        ctx.lineTo(x1, midY);
+        ctx.lineTo(x2, midY);
+      }
+      ctx.lineTo(x2, y2);
+      ctx.stroke();
+      const angle = Math.atan2(y2 - (horizontal ? y1 : (y1 + y2) / 2), x2 - (horizontal ? x1 : x2));
+      ctx.beginPath();
+      ctx.moveTo(x2, y2);
+      ctx.lineTo(x2 - 9 * Math.cos(angle - 0.45), y2 - 9 * Math.sin(angle - 0.45));
+      ctx.lineTo(x2 - 9 * Math.cos(angle + 0.45), y2 - 9 * Math.sin(angle + 0.45));
+      ctx.closePath();
+      ctx.fill();
+      ctx.restore();
+    }
+
+    function pathPoint(linkIndex, phase) {
+      const [fromId, toId] = links[linkIndex];
+      const from = blockCenter(fromId);
+      const to = blockCenter(toId);
+      const horizontal = Math.abs(from.y - to.y) < 90;
+      let x1 = from.x, y1 = from.y, x2 = to.x, y2 = to.y;
+      if (horizontal) {
+        x1 = from.block.x + from.block.w;
+        x2 = to.block.x;
+      } else {
+        y1 = from.block.y + from.block.h;
+        y2 = to.block.y;
+      }
+      if (horizontal) return {x: x1 + (x2 - x1) * phase, y: y1 + (y2 - y1) * phase};
+      const midY = (y1 + y2) / 2;
+      if (phase < 0.33) return {x: x1, y: y1 + (midY - y1) * phase / 0.33};
+      if (phase < 0.66) return {x: x1 + (x2 - x1) * (phase - 0.33) / 0.33, y: midY};
+      return {x: x2, y: midY + (y2 - midY) * (phase - 0.66) / 0.34};
+    }
+
+    function drawTokens(ctx) {
+      const progress = (simTime / 34) % links.length;
+      for (let k = 0; k < 5; k++) {
+        const p = (progress - k * 1.45 + links.length) % links.length;
+        const idx = Math.floor(p);
+        const phase = p - idx;
+        const pt = pathPoint(idx, phase);
+        const color = k % 2 === 0 ? colors.accent : colors.accent2;
+        ctx.save();
+        ctx.globalAlpha = 0.95 - k * 0.12;
+        ctx.fillStyle = color;
+        ctx.shadowColor = color;
+        ctx.shadowBlur = 12;
+        ctx.beginPath();
+        ctx.arc(pt.x, pt.y, 5.5, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+      }
+    }
+
+    function drawMiniMetric(ctx, x, y, label, value, color) {
+      drawText(ctx, label, x, y, colors.muted, 11);
+      drawText(ctx, value, x, y + 22, color, 17, "left", true);
+    }
+
+    function drawSignalCard(ctx, x, y, w, h, title, subtitle, kind, direction = "tx") {
+      ctx.save();
+      ctx.fillStyle = "#0a1018";
+      ctx.strokeStyle = colors.line;
+      ctx.lineWidth = 1;
+      ctx.fillRect(x, y, w, h);
+      ctx.strokeRect(x, y, w, h);
+      drawText(ctx, title, x + 10, y + 18, colors.ink, 11, "left", true);
+      drawText(ctx, subtitle, x + 10, y + h - 10, colors.muted, 10);
+      const px = x + 12;
+      const py = y + 30;
+      const pw = w - 24;
+      const ph = h - 54;
+      if (kind === "parallel-bits") drawParallelBits(ctx, px, py, pw, ph, direction === "rx");
+      else if (kind === "fec") drawFecGrid(ctx, px, py, pw, ph, direction === "rx");
+      else if (kind === "symbols") drawSymbolBars(ctx, px, py, pw, ph, modulation);
+      else if (kind === "precomp") drawPrecompWave(ctx, px, py, pw, ph);
+      else if (kind === "serial") drawSerialBundle(ctx, px, py, pw, ph, false);
+      else if (kind === "optical") drawOpticalBundle(ctx, px, py, pw, ph, false);
+      else if (kind === "channel") drawOpticalBundle(ctx, px, py, pw, ph, true);
+      else if (kind === "samples") drawSampleCloud(ctx, px, py, pw, ph);
+      else if (kind === "cdr") drawCdrMini(ctx, px, py, pw, ph);
+      else if (kind === "equalized") drawEyeMini(ctx, px, py, pw, ph);
+      else if (kind === "soft") drawSoftBits(ctx, px, py, pw, ph);
+      ctx.restore();
+    }
+
+    function drawParallelBits(ctx, x, y, w, h, corrected) {
+      const total = optics === "cwdm4" ? 64 : 16;
+      const visible = total === 64 ? [0, 1, 2, 3, -1, 60, 61, 62, 63] : [0, 1, 2, 3, -1, 12, 13, 14, 15];
+      const laneH = h / visible.length;
+      for (let row = 0; row < visible.length; row++) {
+        const lane = visible[row];
+        const yy = y + row * laneH + laneH * 0.5;
+        if (lane < 0) {
+          drawText(ctx, "...", x + w * 0.5, yy + 3, colors.muted, 10, "center", true);
+          continue;
+        }
+        ctx.strokeStyle = corrected ? colors.green : colors.accent;
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        for (let i = 0; i < 12; i++) {
+          const bit = bitAtIndex(Math.floor(simTime / WORD) * 16 + lane + i * total);
+          const xx0 = x + i * w / 12;
+          const xx1 = x + (i + 0.75) * w / 12;
+          const yyv = yy + (bit ? -laneH * 0.18 : laneH * 0.18);
+          if (i === 0) ctx.moveTo(xx0, yyv);
+          ctx.lineTo(xx0, yyv);
+          ctx.lineTo(xx1, yyv);
+        }
+        ctx.stroke();
+        drawText(ctx, `l${lane}`, x - 2, yy + 3, colors.muted, 8, "right");
+      }
+    }
+
+    function drawFecGrid(ctx, x, y, w, h, rx) {
+      const cols = 12;
+      const rows = 4;
+      const gap = 2;
+      const cellW = (w - gap * (cols - 1)) / cols;
+      const cellH = (h - gap * (rows - 1)) / rows;
+      for (let r = 0; r < rows; r++) {
+        for (let c = 0; c < cols; c++) {
+          const parity = c >= 9;
+          const idx = Math.floor(simTime / UI) + r * cols + c;
+          const dataBit = bitAtIndex(idx);
+          const parityBit = bitAtIndex(idx) ^ bitAtIndex(idx + 5) ^ bitAtIndex(idx + 11);
+          const bit = parity ? parityBit : dataBit;
+          const err = rx && ((r * 7 + c + Math.floor(simTime / UI)) % 23 === 0);
+          ctx.fillStyle = err ? colors.red : parity ? "#5f408f" : "#255f9d";
+          ctx.globalAlpha = parity ? 0.75 : 0.95;
+          ctx.fillRect(x + c * (cellW + gap), y + r * (cellH + gap), cellW, cellH);
+          ctx.globalAlpha = 1;
+          drawText(ctx, String(err ? 1 - bit : bit), x + c * (cellW + gap) + cellW / 2, y + r * (cellH + gap) + cellH * 0.72, colors.ink, 8, "center", true);
+        }
+      }
+    }
+
+    function drawSymbolBars(ctx, x, y, w, h, mode) {
+      const n = 18;
+      for (let i = 0; i < n; i++) {
+        const b0 = bitAtIndex(Math.floor(simTime / UI) + i * 2);
+        const b1 = bitAtIndex(Math.floor(simTime / UI) + i * 2 + 1);
+        const level = mode === "pam4" ? [-3, -1, 3, 1][b0 * 2 + b1] : (b0 ? 1 : -1);
+        const norm = mode === "pam4" ? (level + 3) / 6 : (level + 1) / 2;
+        const barH = 4 + norm * (h - 8);
+        ctx.fillStyle = mode === "pam4" ? colors.purple : colors.accent;
+        ctx.fillRect(x + i * w / n + 2, y + h - barH, w / n - 4, barH);
+      }
+      if (mode === "pam4") {
+        ctx.strokeStyle = colors.grid;
+        for (let k = 1; k < 4; k++) {
+          const yy = y + h - k * h / 4;
+          ctx.beginPath(); ctx.moveTo(x, yy); ctx.lineTo(x + w, yy); ctx.stroke();
+        }
+      }
+    }
+
+    function drawPrecompWave(ctx, x, y, w, h) {
+      ctx.strokeStyle = colors.green;
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      for (let px = 0; px <= w; px++) {
+        const t = px / w * 10;
+        const v = 0.5 + 0.28 * Math.sin(t * 2.1 + simTime / 12) + 0.12 * Math.sin(t * 7.7);
+        const yy = y + h - v * h;
+        if (px === 0) ctx.moveTo(x + px, yy);
+        else ctx.lineTo(x + px, yy);
+      }
+      ctx.stroke();
+      drawTapBars(ctx, x + w - 48, y + 8, 36, h - 16);
+    }
+
+    function drawTapBars(ctx, x, y, w, h) {
+      const taps = [-0.22, 0.88, -0.34];
+      taps.forEach((tap, i) => {
+        const cx = x + i * w / 3 + 4;
+        const zero = y + h * 0.5;
+        const bh = tap * h * 0.45;
+        ctx.fillStyle = tap > 0 ? colors.green : colors.accent2;
+        ctx.fillRect(cx, zero - Math.max(0, bh), w / 3 - 7, Math.abs(bh));
+      });
+    }
+
+    function drawSerialBundle(ctx, x, y, w, h, noisy) {
+      const lanes = optics === "cwdm4" ? 4 : 1;
+      const laneH = h / lanes;
+      for (let lane = 0; lane < lanes; lane++) {
+        const yy = y + lane * laneH;
+        const color = colors.accent2;
+        drawFastTrace(ctx, x, yy + 2, w, laneH - 4, color, noisy ? 0.18 : 0);
+      }
+    }
+
+    const wavelengthColors = ["#69a7ff", "#4ed0a2", "#ffcf5a", "#ff7b72"];
+
+    function drawOpticalBundle(ctx, x, y, w, h, impaired) {
+      const lanes = optics === "cwdm4" ? 4 : 1;
+      const laneH = h / lanes;
+      for (let lane = 0; lane < lanes; lane++) {
+        const yy = y + lane * laneH;
+        const color = optics === "cwdm4" ? wavelengthColors[lane] : colors.accent2;
+        ctx.globalAlpha = impaired ? 0.58 : 1;
+        drawFastTrace(ctx, x, yy + 2, w, laneH - 4, color, impaired ? 0.32 : 0.08);
+        ctx.globalAlpha = 1;
+        if (optics === "cwdm4") drawText(ctx, `λ${lane + 1}`, x + w - 4, yy + laneH * 0.66, color, 9, "right", true);
+      }
+    }
+
+    function drawFastTrace(ctx, x, y, w, h, color, noise) {
+      ctx.save();
+      ctx.strokeStyle = color;
+      ctx.lineWidth = 1.8;
+      ctx.beginPath();
+      for (let px = 0; px <= w; px += 2) {
+        const idx = Math.floor(simTime / UI + px / 6);
+        const bit = bitAtIndex(idx);
+        const prev = bitAtIndex(idx - 1);
+        const edge = bit !== prev ? 0.5 : bit;
+        const ripple = noise * Math.sin(px * 0.23 + simTime * 0.3);
+        const v = Math.max(0, Math.min(1, edge * 0.35 + bit * 0.65 + ripple));
+        const yy = y + h - v * h;
+        if (px === 0) ctx.moveTo(x + px, yy);
+        else ctx.lineTo(x + px, yy);
+      }
+      ctx.stroke();
+      ctx.restore();
+    }
+
+    function drawSampleCloud(ctx, x, y, w, h) {
+      for (let i = 0; i < 34; i++) {
+        const bit = bitAtIndex(Math.floor(simTime / UI) + i);
+        const xx = x + i * w / 34;
+        const yy = y + h * (bit ? 0.26 : 0.74) + Math.sin(i * 2.1 + simTime) * 5;
+        ctx.fillStyle = bit ? colors.green : colors.canvas;
+        ctx.strokeStyle = colors.green;
+        ctx.beginPath();
+        ctx.arc(xx, yy, 3, 0, Math.PI * 2);
+        ctx.fill(); ctx.stroke();
+      }
+    }
+
+    function drawCdrMini(ctx, x, y, w, h) {
+      drawFastTrace(ctx, x, y, w, h * 0.55, colors.green, 0.15);
+      ctx.strokeStyle = colors.accent;
+      for (let i = 0; i < 12; i++) {
+        const xx = x + (i + 0.5) * w / 12 + cdrPhase * 1.2;
+        ctx.beginPath(); ctx.moveTo(xx, y + h * 0.6); ctx.lineTo(xx, y + h); ctx.stroke();
+      }
+    }
+
+    function drawEyeMini(ctx, x, y, w, h) {
+      ctx.strokeStyle = colors.grid;
+      ctx.strokeRect(x, y, w, h);
+      for (let k = 0; k < 7; k++) {
+        ctx.strokeStyle = k < 3 ? colors.red : colors.green;
+        ctx.globalAlpha = k < 3 ? 0.35 : 0.75;
+        ctx.beginPath();
+        for (let px = 0; px <= w; px++) {
+          const p = px / w;
+          const eye = Math.sin(p * Math.PI);
+          const yy = y + h * (0.5 + (k < 3 ? 0.25 : 0.36) * Math.cos(k) * eye);
+          if (px === 0) ctx.moveTo(x + px, yy);
+          else ctx.lineTo(x + px, yy);
+        }
+        ctx.stroke();
+      }
+      ctx.globalAlpha = 1;
+    }
+
+    function drawSoftBits(ctx, x, y, w, h) {
+      const n = 12;
+      for (let i = 0; i < n; i++) {
+        const conf = 0.2 + 0.75 * Math.abs(Math.sin(i * 0.7 + simTime / 20));
+        ctx.fillStyle = conf > 0.55 ? colors.green : colors.accent2;
+        ctx.fillRect(x + i * w / n + 3, y + h * (1 - conf), w / n - 6, h * conf);
+      }
+    }
+
+    function drawArchitecture() {
+      const {ctx, w} = setupCanvas("architecture");
+      drawText(ctx, "Top-level direct-detect optical DSP link. Each tile below a block shows the signal representation at that point in the chain.", 34, 34, colors.muted, 13);
+      drawText(ctx, "Tx path", 38, 54, colors.green, 12, "left", true);
+      drawText(ctx, "Rx path", 38, 408, colors.green, 12, "left", true);
+      links.forEach(link => drawArrow(ctx, link[0], link[1]));
+      blocks.forEach(block => drawBlock(ctx, block));
+      drawSignalCard(ctx, 34, 148, 144, 120, "payload bits", optics === "cwdm4" ? "64 = 4 x 16 core lanes" : "16 x 12.5G = 200G", "parallel-bits");
+      drawSignalCard(ctx, 202, 148, 172, 120, "coded bits", "actual bits + parity bits", "fec");
+      drawSignalCard(ctx, 398, 148, 164, 120, "mapped symbols", modulation === "pam4" ? "2 bits per PAM4 symbol" : "1 bit per NRZ symbol", "symbols");
+      drawSignalCard(ctx, 586, 148, 164, 120, "precomp samples", "FIR-shaped for channel", "precomp");
+      drawSignalCard(ctx, 774, 148, 178, 120, "SerDes output", optics === "cwdm4" ? "4 fast electrical lanes" : "one fast electrical lane", "serial");
+      drawSignalCard(ctx, 976, 148, 170, 120, "optical launch", optics === "cwdm4" ? "CWDM4 wavelength colors" : "one modulated wavelength", "optical");
+      drawSignalCard(ctx, 1170, 148, 156, 120, "after channel", "loss + noise + ISI", "channel");
+      drawSignalCard(ctx, 1170, 502, 156, 120, "ADC samples", "noisy received samples", "samples", "rx");
+      drawSignalCard(ctx, 976, 502, 170, 120, "timing recovered", "sample phase markers", "cdr", "rx");
+      drawSignalCard(ctx, 782, 502, 170, 120, "equalized", "eye begins to open", "equalized", "rx");
+      drawSignalCard(ctx, 586, 502, 166, 120, "soft bits", "confidence / LLR bars", "soft", "rx");
+      drawSignalCard(ctx, 392, 502, 168, 120, "decoded bits", "corrected 0/1 codeword bits", "fec");
+      drawSignalCard(ctx, 200, 502, 164, 120, "deserialized", optics === "cwdm4" ? "64 recovered core lanes" : "16 recovered lanes", "parallel-bits", "rx");
+      drawSignalCard(ctx, 34, 502, 144, 120, "payload out", optics === "cwdm4" ? "64 = 4 x 16 output lanes" : "16 x 12.5G output", "parallel-bits", "rx");
+      drawTokens(ctx);
+      const sample = sampleInfo();
+      const implementedCount = blocks.filter(block => block.detail !== "placeholder").length;
+      drawMiniMetric(ctx, 50, 690, "current UI sample", `b${sample.lane}=${sample.value}`, colors.accent);
+      drawMiniMetric(ctx, 235, 690, "modulation", modulation.toUpperCase(), colors.purple);
+      drawMiniMetric(ctx, 420, 690, "optical format", optics === "cwdm4" ? "4x200G CWDM4" : "single lane", colors.green);
+      drawMiniMetric(ctx, 640, 690, "implemented expansions", `${implementedCount} blocks`, colors.accent2);
+      drawMiniMetric(ctx, 900, 690, "CDR lock estimate", `${Math.round(lockedScore * 100)}%`, colors.accent);
+      drawText(ctx, "Click a block to open its compact detail panel below. The home view stays focused on the full-link signal transformations.", 50, 740, colors.muted, 12);
+      drawText(ctx, "Implemented: SerDes / DAC, CDR / Timing, Deserializer / Word Assembly", w - 50, 740, colors.accent, 12, "right");
+    }
+
+    function drawGrid(ctx, left, top, width, height, t0, t1, showUi) {
+      ctx.save();
+      ctx.strokeStyle = colors.grid;
+      ctx.lineWidth = 1;
+      const step = showUi ? UI : WORD;
+      for (let i = Math.ceil(t0 / step); i <= Math.floor(t1 / step); i++) {
+        const x = xmap(i * step, left, width, t0, t1);
+        ctx.globalAlpha = showUi ? 0.25 : 0.8;
+        ctx.beginPath();
+        ctx.moveTo(x, top);
+        ctx.lineTo(x, top + height);
+        ctx.stroke();
+      }
+      ctx.globalAlpha = 1;
+      drawText(ctx, "newest", left + width - 42, top + height + 16, colors.muted, 11);
+      ctx.restore();
+    }
+
+    function drawTrace(ctx, left, y, width, rowH, t0, t1, fn, label, color) {
+      const low = y + rowH * 0.74;
+      const high = y + rowH * 0.22;
+      drawText(ctx, label, left - 10, y + rowH * 0.62, colors.ink, 12, "right");
+      ctx.save();
+      ctx.strokeStyle = color;
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      for (let px = 0; px <= width; px += 2) {
+        const t = t0 + px * (t1 - t0) / width;
+        const yy = low + (high - low) * fn(t);
+        if (px === 0) ctx.moveTo(left + px, yy);
+        else ctx.lineTo(left + px, yy);
+      }
+      ctx.stroke();
+      ctx.restore();
+    }
+
+    function drawLaneTrace(ctx, left, y, width, rowH, lanes, cellPs, label, color, t0, t1, risePs) {
+      drawTrace(ctx, left, y, width, rowH, t0, t1, t => waveformValue(lanes, t, cellPs, risePs), label, color);
+    }
+
+    function drawCell(ctx, x, y, w, h, label, value, active, filled = true) {
+      ctx.save();
+      ctx.fillStyle = active ? "#1b2b42" : colors.faint;
+      ctx.strokeStyle = active ? colors.accent2 : colors.line;
+      ctx.lineWidth = active ? 2 : 1;
+      ctx.fillRect(x, y, w, h);
+      ctx.strokeRect(x, y, w, h);
+      drawText(ctx, label, x + w / 2, y + 16, colors.muted, 10, "center");
+      drawText(ctx, filled ? String(value) : "-", x + w / 2, y + h - 13, filled ? colors.ink : "#526070", 17, "center", true);
+      ctx.restore();
+    }
+
+    function drawSerializerDetail(ctx, w, h) {
+      const left = 172;
+      const width = w - left - 40;
+      const t1 = simTime;
+      const t0 = t1 - TOTAL;
+      drawGrid(ctx, left, 46, width, 178, t0, t1, false);
+      drawText(ctx, "Compact serializer: wide, slow word-rate lanes are interleaved into faster streams, then into the final UI-rate output.", 32, 28, colors.muted);
+      const rows = [
+        {label: "source lane b0", lanes: [0], cellPs: WORD, color: colors.accent, rise: 20},
+        {label: "source lane b1", lanes: [1], cellPs: WORD, color: colors.accent, rise: 20},
+        {label: "S1.0 = b0,b8", lanes: [0, 8], cellPs: WORD / 2, color: colors.green, rise: 7},
+        {label: "S2.0 = b0,b4,b8,b12", lanes: [0, 4, 8, 12], cellPs: WORD / 4, color: colors.green, rise: 5},
+        {label: "S3.0 even substream", lanes: [0, 2, 4, 6, 8, 10, 12, 14], cellPs: WORD / 8, color: colors.purple, rise: 4},
+        {label: "final 112G serial stream", lanes: Array.from({length: 16}, (_, i) => i), cellPs: UI, color: colors.accent2, rise: 4}
+      ];
+      rows.forEach((row, i) => {
+        drawLaneTrace(ctx, left, 62 + i * 34, width, 24, row.lanes, row.cellPs, row.label, row.color, t0, t1, row.rise);
+      });
+      drawInternalBlock(ctx, 80, 292, 140, 76, "16 lanes", "7G word-rate", colors.digital, 0.35);
+      drawInternalBlock(ctx, 306, 292, 150, 76, "Mux Tree", "2:1 stages", colors.digital, 0.55);
+      drawInternalBlock(ctx, 542, 292, 160, 76, "Final Interleave", "even / odd", colors.digital, 0.65);
+      drawInternalBlock(ctx, 790, 292, 160, 76, optics === "cwdm4" ? "4 SerDes Lanes" : "1 SerDes Lane", optics === "cwdm4" ? "4x200G" : "single stream", colors.digital, 0.65);
+      drawInternalBlock(ctx, 1046, 292, 170, 76, "Driver / DAC", "electrical launch", colors.analog, 0.45);
+      drawConnector(ctx, 220, 330, 306, 330, colors.accent);
+      drawConnector(ctx, 456, 330, 542, 330, colors.green);
+      drawConnector(ctx, 702, 330, 790, 330, colors.purple);
+      drawConnector(ctx, 950, 330, 1046, 330, colors.accent2);
+      drawTrace(ctx, left, 408, width, 34, t1 - WORD, t1, t => clockValue(t, WORD), "word clock", colors.green);
+      drawTrace(ctx, left, 452, width, 34, t1 - WORD, t1, t => clockValue(t, 2 * UI), "final select", colors.green);
+      drawSignalCard(ctx, 1012, 410, 230, 86, optics === "cwdm4" ? "electrical lanes to optics" : "electrical stream to optics", optics === "cwdm4" ? "4 fast lanes before CWDM4" : "one fast stream", "serial");
+    }
+
+    function drawCdrDetail(ctx, w, h) {
+      const left = 96;
+      const width = w - left - 42;
+      const t1 = simTime;
+      const t0 = t1 - TOTAL;
+      drawGrid(ctx, left, 38, width, 208, t0, t1, true);
+      drawText(ctx, `CDR phase offset = ${cdrPhase.toFixed(2)} ps, latest decision = ${pdDecision > 0 ? "UP" : pdDecision < 0 ? "DOWN" : "HOLD"}`, 32, 28, colors.muted);
+      drawTrace(ctx, left, 62, width, 66, t0, t1, analogValue, "serial data", colors.green);
+      drawTrace(ctx, left, 150, width, 44, t0, t1, t => clockValue(t, UI, cdrPhase + UI / 2), "sample ticks", colors.accent);
+      drawTrace(ctx, left, 214, width, 34, t0, t1, t => clockValue(t, WORD, cdrPhase), "word valid", colors.purple);
+      for (let i = Math.ceil(t0 / UI); i <= Math.floor(t1 / UI); i++) {
+        const x = xmap(i * UI + UI / 2 + cdrPhase, left, width, t0, t1);
+        if (x < left || x > left + width) continue;
+        const v = analogValue(i * UI + UI / 2 + cdrPhase);
+        ctx.fillStyle = v > 0.5 ? colors.accent : colors.canvas;
+        ctx.strokeStyle = colors.accent;
+        ctx.beginPath();
+        ctx.arc(x, 132, 4, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+      }
+      const upGlow = pdDecision > 0 ? 1 : 0.12;
+      const downGlow = pdDecision < 0 ? 1 : 0.12;
+      drawInternalBlock(ctx, 80, 326, 138, 78, "Samplers", "data + edge", colors.digital, 0.5);
+      drawInternalBlock(ctx, 270, 326, 150, 78, "Phase Detector", pdDecision > 0 ? "UP" : pdDecision < 0 ? "DOWN" : "HOLD", colors.digital, pdDecision ? 0.85 : 0.2);
+      drawInternalBlock(ctx, 488, 326, 150, 78, "Accumulator", `raw=${rawControl.toFixed(2)}`, colors.analog, Math.max(upGlow, downGlow));
+      drawInternalBlock(ctx, 706, 326, 150, 78, "Loop Filter", `filt=${filteredControl.toFixed(2)}`, colors.dsp, 0.45);
+      drawInternalBlock(ctx, 924, 326, 170, 78, "Phase Gen", "PLL / PI", colors.digital, 0.45);
+      drawInternalBlock(ctx, 1160, 326, 150, 78, "Sampler Clock", `${cdrPhase.toFixed(2)} ps`, colors.digital, 0.5);
+      drawHistory(ctx, 90, 460, 280, 38, "err", colors.red, UI / 2);
+      drawHistory(ctx, 410, 460, 280, 38, "raw", colors.accent2, 4.2);
+      drawHistory(ctx, 730, 460, 280, 38, "filt", colors.green, 4.2);
+      drawHistory(ctx, 1050, 460, 250, 38, "phase", colors.accent, 4.2);
+    }
+
+    function drawInternalBlock(ctx, x, y, w, h, title, subtitle, fill, glow) {
+      ctx.save();
+      ctx.fillStyle = fill;
+      ctx.strokeStyle = colors.line;
+      ctx.lineWidth = 1.5;
+      ctx.shadowColor = fill;
+      ctx.shadowBlur = glow * 14;
+      ctx.fillRect(x, y, w, h);
+      ctx.strokeRect(x, y, w, h);
+      ctx.shadowBlur = 0;
+      drawText(ctx, title, x + w / 2, y + 31, colors.ink, 13, "center", true);
+      drawText(ctx, subtitle, x + w / 2, y + 54, colors.muted, 11, "center");
+      ctx.restore();
+    }
+
+    function drawHistory(ctx, x, y, w, h, key, color, scale) {
+      drawText(ctx, key, x, y - 7, colors.muted, 11);
+      ctx.save();
+      ctx.strokeStyle = colors.grid;
+      ctx.strokeRect(x, y, w, h);
+      ctx.strokeStyle = color;
+      ctx.beginPath();
+      history.forEach((p, i) => {
+        const xx = x + i * w / Math.max(1, history.length - 1);
+        const yy = y + h * 0.5 - Math.max(-scale, Math.min(scale, p[key])) * h * 0.42 / scale;
+        if (i === 0) ctx.moveTo(xx, yy);
+        else ctx.lineTo(xx, yy);
+      });
+      ctx.stroke();
+      ctx.restore();
+    }
+
+    function drawDeserializerDetail(ctx, w, h) {
+      const sample = sampleInfo();
+      const left = 110;
+      const width = w - left - 40;
+      const t1 = simTime;
+      const t0 = t1 - WORD;
+      drawGrid(ctx, left, 38, width, 118, t0, t1, true);
+      drawText(ctx, `Recovered sample token: word ${sample.word}, b${sample.lane}=${sample.value}. The active lane glows through demux and word assembly.`, 32, 28, colors.muted);
+      drawLaneTrace(ctx, left, 62, width, 48, Array.from({length: 16}, (_, i) => i), UI, "sampled serial stream", colors.green, t0, t1, 4);
+      drawTrace(ctx, left, 122, width, 38, t0, t1, t => clockValue(t, UI, cdrPhase + UI / 2), "UI sample clock", colors.accent);
+      const stages = demuxStageLaneOrders();
+      const activeStreams = stages.map(streams => streams.findIndex(lanes => lanes.includes(sample.lane)));
+      let prevX = 80;
+      const y = 230;
+      drawInternalBlock(ctx, 44, y, 126, 72, "Sampler", `bit=${sample.value}`, colors.digital, 0.55);
+      for (let s = 1; s <= 4; s++) {
+        const idx = activeStreams[s];
+        const lanes = stages[s][idx];
+        const x = 235 + (s - 1) * 160;
+        drawInternalBlock(ctx, x, y, 126, 72, s === 4 ? `lane b${lanes[0]}` : `D${s}.${idx}`, lanes.map(i => "b" + i).slice(0, 4).join(","), colors.digital, 0.75);
+        drawConnector(ctx, prevX + 90, y + 36, x, y + 36, colors.accent);
+        prevX = x;
+      }
+      drawInternalBlock(ctx, 930, y, 150, 72, "Assembly Reg", `write b${sample.lane}`, colors.digital, 0.6);
+      drawInternalBlock(ctx, 1150, y, 150, 72, "Output Latch", "word valid", colors.fec, sample.lane === 15 ? 0.9 : 0.25);
+      drawConnector(ctx, prevX + 126, y + 36, 930, y + 36, colors.accent);
+      drawConnector(ctx, 1080, y + 36, 1150, y + 36, colors.purple);
+      const cellW = 62;
+      const gap = 8;
+      for (let i = 0; i < 16; i++) {
+        const x = 52 + i * (cellW + gap);
+        drawCell(ctx, x, 376, cellW, 54, `b${i}`, words[sample.word]?.[i] ?? 0, i === sample.lane, i <= sample.lane);
+      }
+      const previousWord = Math.max(0, sample.word - 1);
+      for (let i = 0; i < 16; i++) {
+        const x = 52 + i * (cellW + gap);
+        drawCell(ctx, x, 456, cellW, 46, `out${i}`, words[previousWord]?.[i] ?? 0, sample.lane === 15 && sample.phase > UI * 0.6, true);
+      }
+      drawText(ctx, "assembly register updates one UI at a time", 52, 358, colors.muted, 12);
+      drawText(ctx, "parallel output latch updates all lanes together", 52, 444, colors.muted, 12);
+    }
+
+    function drawConnector(ctx, x1, y1, x2, y2, color) {
+      ctx.save();
+      ctx.strokeStyle = color;
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.moveTo(x1, y1);
+      ctx.lineTo(x2, y2);
+      ctx.stroke();
+      ctx.restore();
+    }
+
+    function drawPlaceholderDetail(ctx, w, h, block) {
+      drawText(ctx, `${block.title}: planned expansion`, 42, 50, colors.ink, 18, "left", true);
+      drawText(ctx, "This block is present in the high-level architecture but has not been implemented yet.", 42, 82, colors.muted, 13);
+      const concepts = {
+        "fec-enc": ["codeword grid", "parity bits", "FEC overhead", "correction budget"],
+        mapper: ["NRZ or PAM4 levels", "Gray coding", "symbol stream", "decision thresholds"],
+        "tx-dsp": ["pulse shaping", "Tx FIR taps", "pre-emphasis", "channel precompensation"],
+        channel: ["bandwidth loss", "noise / OSNR", "ISI", "dispersion later"],
+        "rx-dsp": ["Rx FFE", "DFE", "eye opening", "residual ISI"],
+        demapper: ["thresholds", "confidence", "LLR bars", "hard vs soft decisions"],
+        "fec-dec": ["syndrome", "soft decode", "corrected errors", "post-FEC BER"]
+      };
+      const list = concepts[block.id] || ["bit tokens", "live metrics", "expanded view", "future deep dive"];
+      list.forEach((item, i) => {
+        drawInternalBlock(ctx, 64 + i * 300, 160, 220, 86, item, depth, colors[block.group], 0.25 + i * 0.08);
+      });
+      drawText(ctx, "Proposed visual pattern", 64, 330, colors.ink, 14, "left", true);
+      drawText(ctx, "Compact before/after traces at Concept depth, internal sub-blocks at Mechanism depth, and metrics/equations at DSP Detail depth.", 64, 360, colors.muted, 13);
+      drawText(ctx, "This placeholder keeps the click/expand architecture usable while the implementation is consolidated block by block.", 64, 392, colors.muted, 13);
+    }
+
+    function updateDetailHeader() {
+      const block = blocks.find(item => item.id === activeBlock);
+      if (!block) return;
+      const info = details[block.detail] || details.placeholder;
+      document.getElementById("detailTitle").textContent = info.title;
+      document.getElementById("detailNote").textContent = info.note;
+      const actions = document.getElementById("detailActions");
+      actions.innerHTML = "";
+      for (const link of info.links) {
+        const a = document.createElement("a");
+        a.className = "button";
+        a.href = link.href;
+        a.textContent = link.label;
+        actions.appendChild(a);
+      }
+    }
+
+    function drawDetail() {
+      if (!detailOpen) return;
+      updateDetailHeader();
+      const {ctx, w, h} = setupCanvas("detail");
+      const block = blocks.find(item => item.id === activeBlock);
+      if (block.detail === "serializer") drawSerializerDetail(ctx, w, h);
+      else if (block.detail === "cdr") drawCdrDetail(ctx, w, h);
+      else if (block.detail === "deserializer") drawDeserializerDetail(ctx, w, h);
+      else drawPlaceholderDetail(ctx, w, h, block);
+    }
+
+    function drawAll() {
+      drawArchitecture();
+      if (detailOpen) drawDetail();
+    }
+
+    function step(dtMs) {
+      simTime += dtMs * 230 * speed / 1000;
+      ensureWords(simTime + TOTAL);
+      const targetUi = Math.floor(simTime / UI);
+      for (let ui = lastProcessedUi + 1; ui <= targetUi; ui++) processUiBoundary(ui);
+      lastProcessedUi = targetUi;
+    }
+
+    function animate(ts) {
+      if (lastFrame === null) lastFrame = ts;
+      const dt = Math.min(50, ts - lastFrame);
+      lastFrame = ts;
+      if (running) step(dt);
+      drawAll();
+      requestAnimationFrame(animate);
+    }
+
+    function blockAt(canvas, evt) {
+      const rect = canvas.getBoundingClientRect();
+      const x = (evt.clientX - rect.left) * 1360 / rect.width;
+      const y = (evt.clientY - rect.top) * 760 / rect.height;
+      return blocks.find(block => x >= block.x && x <= block.x + block.w && y >= block.y && y <= block.y + block.h) || null;
+    }
+
+    resetStream();
+    const architectureCanvas = document.getElementById("architecture");
+    architectureCanvas.addEventListener("click", evt => {
+      const block = blockAt(architectureCanvas, evt);
+      if (!block) return;
+      activeBlock = block.id;
+      detailOpen = true;
+      document.getElementById("detailSection").style.display = "";
+      drawAll();
+    });
+    architectureCanvas.addEventListener("mousemove", evt => {
+      const block = blockAt(architectureCanvas, evt);
+      hoverBlock = block?.id || null;
+      architectureCanvas.style.cursor = block ? "pointer" : "default";
+    });
+    architectureCanvas.addEventListener("mouseleave", () => {
+      hoverBlock = null;
+      architectureCanvas.style.cursor = "default";
+    });
+    document.getElementById("pause").addEventListener("click", () => {
+      running = !running;
+      document.getElementById("pause").textContent = running ? "Pause" : "Resume";
+    });
+    document.getElementById("randomize").addEventListener("click", () => {
+      resetStream();
+      drawAll();
+    });
+    document.getElementById("speed").addEventListener("input", evt => {
+      speed = Number(evt.target.value);
+      document.getElementById("speedText").textContent = speed.toFixed(2) + "x";
+    });
+    document.getElementById("depth").addEventListener("change", evt => {
+      depth = evt.target.value;
+      drawAll();
+    });
+    document.getElementById("modulation").addEventListener("change", evt => {
+      modulation = evt.target.value;
+      drawAll();
+    });
+    document.getElementById("optics").addEventListener("change", evt => {
+      optics = evt.target.value;
+      drawAll();
+    });
+    window.addEventListener("resize", drawAll);
+    requestAnimationFrame(animate);
+  </script>
+</body>
+</html>
