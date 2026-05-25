@@ -281,6 +281,7 @@
     let lockedScore = 0;
     let lastProcessedUi = Math.floor(simTime / UI);
     const history = [];
+    let linkState = null;
 
     function randomWord() {
       return Array.from({length: 16}, () => Math.random() < 0.5 ? 0 : 1);
@@ -289,6 +290,7 @@
     function resetStream() {
       words = [];
       for (let i = 0; i < 80; i++) words.push(randomWord());
+      rebuildLinkState();
       simTime = 4 * WORD;
       cdrPhase = -3.1;
       rawControl = cdrPhase;
@@ -299,6 +301,93 @@
       history.length = 0;
       lastProcessedUi = Math.floor(simTime / UI);
       lastFrame = null;
+    }
+
+    function rebuildLinkState() {
+      const payloadBits = [];
+      for (let w = 0; w < words.length; w++) {
+        for (let lane = 0; lane < 16; lane++) payloadBits.push(words[w][lane]);
+      }
+      while (payloadBits.length < 4096) payloadBits.push(hashNoise(payloadBits.length + 0.19) > 0.5 ? 1 : 0);
+
+      const fecBlocks = [];
+      const fecBits = [];
+      const decodedBits = [];
+      const recoveredPayloadBits = [];
+      const errorMask = [];
+      const dataPerBlock = 12;
+      for (let base = 0; base + dataPerBlock <= payloadBits.length; base += dataPerBlock) {
+        const data = payloadBits.slice(base, base + dataPerBlock);
+        const parity = [
+          data[0] ^ data[1] ^ data[2] ^ data[3] ^ data[8],
+          data[4] ^ data[5] ^ data[6] ^ data[7] ^ data[9],
+          data[0] ^ data[2] ^ data[4] ^ data[6] ^ data[10],
+          data[1] ^ data[3] ^ data[5] ^ data[7] ^ data[11]
+        ];
+        const codeword = data.concat(parity);
+        const received = codeword.slice();
+        const errors = Array(codeword.length).fill(0);
+        for (let i = 0; i < received.length; i++) {
+          const err = hashNoise(base * 0.17 + i * 9.31) > 0.965;
+          if (err) {
+            received[i] ^= 1;
+            errors[i] = 1;
+          }
+        }
+        const corrected = received.slice();
+        const dataErrorCount = errors.slice(0, dataPerBlock).reduce((a, b) => a + b, 0);
+        if (dataErrorCount <= 1) {
+          for (let i = 0; i < dataPerBlock; i++) corrected[i] = data[i];
+        }
+        fecBlocks.push({data, parity, codeword, received, corrected, errors});
+        fecBits.push(...codeword);
+        decodedBits.push(...corrected);
+        recoveredPayloadBits.push(...corrected.slice(0, dataPerBlock));
+        errorMask.push(...errors);
+      }
+
+      const mappedSymbols = [];
+      const symbolBits = modulation === "pam4" ? 2 : 1;
+      for (let i = 0; i < fecBits.length; i += symbolBits) {
+        if (modulation === "pam4") {
+          const b0 = fecBits[i] ?? 0;
+          const b1 = fecBits[i + 1] ?? 0;
+          mappedSymbols.push({bits: [b0, b1], level: [-3, -1, 3, 1][b0 * 2 + b1]});
+        } else {
+          const b = fecBits[i] ?? 0;
+          mappedSymbols.push({bits: [b], level: b ? 1 : -1});
+        }
+      }
+
+      const rxSamples = mappedSymbols.map((sym, i) => {
+        const isi = 0.16 * (mappedSymbols[i - 1]?.level ?? 0) - 0.10 * (mappedSymbols[i - 2]?.level ?? 0);
+        const noise = (hashNoise(i * 5.13 + 0.7) - 0.5) * (modulation === "pam4" ? 0.72 : 0.30);
+        return sym.level + isi + noise;
+      });
+      const equalizedSymbols = rxSamples.map((sample, i) => sample - 0.13 * (rxSamples[i - 1] ?? 0) + 0.04 * (rxSamples[i - 2] ?? 0));
+      const softBits = [];
+      const hardBits = [];
+      for (const sample of equalizedSymbols) {
+        if (modulation === "pam4") {
+          const levels = [
+            {bits: [0, 0], level: -3},
+            {bits: [0, 1], level: -1},
+            {bits: [1, 1], level: 1},
+            {bits: [1, 0], level: 3}
+          ];
+          const nearest = levels.reduce((best, cur) => Math.abs(sample - cur.level) < Math.abs(sample - best.level) ? cur : best, levels[0]);
+          hardBits.push(...nearest.bits);
+          softBits.push(
+            {bit: nearest.bits[0], confidence: Math.min(1, Math.abs(sample) / 2.4)},
+            {bit: nearest.bits[1], confidence: Math.min(1, Math.abs(Math.abs(sample) - 2) / 1.3)}
+          );
+        } else {
+          const bit = sample > 0 ? 1 : 0;
+          hardBits.push(bit);
+          softBits.push({bit, confidence: Math.min(1, Math.abs(sample) / 1.2)});
+        }
+      }
+      linkState = {payloadBits, fecBlocks, fecBits, decodedBits, recoveredPayloadBits, errorMask, mappedSymbols, rxSamples, equalizedSymbols, softBits, hardBits};
     }
 
     function ensureWords(t) {
@@ -607,8 +696,8 @@
           const t = simTime - (1 - px / w) * windowWords * WORD;
           const wordIdx = Math.floor(t / WORD);
           const phase = ((t % WORD) + WORD) % WORD;
-          const cur = laneBit(lane, wordIdx, total);
-          const prev = laneBit(lane, wordIdx - 1, total);
+          const cur = laneBit(lane, wordIdx, total, corrected);
+          const prev = laneBit(lane, wordIdx - 1, total, corrected);
           let v = cur;
           if (cur !== prev && phase < WORD * 0.10) {
             v = prev + (cur - prev) * smooth01(phase / (WORD * 0.10));
@@ -622,10 +711,11 @@
       }
     }
 
-    function laneBit(lane, wordIdx, total) {
+    function laneBit(lane, wordIdx, total, recovered = false) {
       const laneGroup = Math.floor(lane / 16);
       const idx = Math.max(0, wordIdx) * 16 + (lane % 16);
-      return bitAtIndex(idx + laneGroup * 97 + (total === 64 ? 31 : 0));
+      const source = recovered ? linkState?.recoveredPayloadBits : linkState?.payloadBits;
+      return source?.[(idx + laneGroup * 97 + (total === 64 ? 31 : 0)) % source.length] ?? bitAtIndex(idx);
     }
 
     function drawFecGrid(ctx, x, y, w, h, rx) {
@@ -634,29 +724,28 @@
       const gap = 2;
       const cellW = (w - gap * (cols - 1)) / cols;
       const cellH = (h - gap * (rows - 1)) / rows;
+      const state = linkState;
+      const start = Math.floor(simTime / UI) % Math.max(1, (state?.fecBits.length ?? 1) - cols * rows);
       for (let r = 0; r < rows; r++) {
         for (let c = 0; c < cols; c++) {
           const parity = c >= 9;
-          const idx = Math.floor(simTime / UI) + r * cols + c;
-          const dataBit = bitAtIndex(idx);
-          const parityBit = bitAtIndex(idx) ^ bitAtIndex(idx + 5) ^ bitAtIndex(idx + 11);
-          const bit = parity ? parityBit : dataBit;
-          const err = rx && ((r * 7 + c + Math.floor(simTime / UI)) % 23 === 0);
+          const idx = start + r * cols + c;
+          const bit = rx ? (state?.decodedBits[idx] ?? 0) : (state?.fecBits[idx] ?? 0);
+          const err = false;
           ctx.fillStyle = err ? colors.red : parity ? "#5f408f" : "#255f9d";
           ctx.globalAlpha = parity ? 0.75 : 0.95;
           ctx.fillRect(x + c * (cellW + gap), y + r * (cellH + gap), cellW, cellH);
           ctx.globalAlpha = 1;
-          drawText(ctx, String(err ? 1 - bit : bit), x + c * (cellW + gap) + cellW / 2, y + r * (cellH + gap) + cellH * 0.72, colors.ink, 8, "center", true);
+          drawText(ctx, String(bit), x + c * (cellW + gap) + cellW / 2, y + r * (cellH + gap) + cellH * 0.72, colors.ink, 8, "center", true);
         }
       }
     }
 
     function drawSymbolBars(ctx, x, y, w, h, mode) {
       const n = 18;
+      const start = Math.floor(simTime / UI) % Math.max(1, (linkState?.mappedSymbols.length ?? 1) - n);
       for (let i = 0; i < n; i++) {
-        const b0 = bitAtIndex(Math.floor(simTime / UI) + i * 2);
-        const b1 = bitAtIndex(Math.floor(simTime / UI) + i * 2 + 1);
-        const level = mode === "pam4" ? [-3, -1, 3, 1][b0 * 2 + b1] : (b0 ? 1 : -1);
+        const level = linkState?.mappedSymbols[start + i]?.level ?? 0;
         const norm = mode === "pam4" ? (level + 3) / 6 : (level + 1) / 2;
         const barH = 4 + norm * (h - 8);
         ctx.fillStyle = mode === "pam4" ? colors.purple : colors.accent;
@@ -724,11 +813,14 @@
 
     function fastTraceY(px, x, y, w, h, noise) {
       const idx = Math.floor(simTime / UI + px / 6);
-      const bit = bitAtIndex(idx);
-      const prev = bitAtIndex(idx - 1);
-      const edge = bit !== prev ? 0.5 : bit;
+      const syms = linkState?.mappedSymbols ?? [];
+      const level = syms.length ? syms[idx % syms.length].level : (bitAtIndex(idx) ? 1 : -1);
+      const prevLevel = syms.length ? syms[(idx - 1 + syms.length) % syms.length].level : (bitAtIndex(idx - 1) ? 1 : -1);
+      const norm = modulation === "pam4" ? (level + 3) / 6 : (level + 1) / 2;
+      const prevNorm = modulation === "pam4" ? (prevLevel + 3) / 6 : (prevLevel + 1) / 2;
+      const edge = level !== prevLevel ? (norm + prevNorm) / 2 : norm;
       const ripple = noise * Math.sin(px * 0.23 + simTime * 0.3);
-      const v = Math.max(0, Math.min(1, edge * 0.35 + bit * 0.65 + ripple));
+      const v = Math.max(0, Math.min(1, edge * 0.35 + norm * 0.65 + ripple));
       return y + h - v * h;
     }
 
@@ -764,10 +856,13 @@
     }
 
     function drawSampleCloud(ctx, x, y, w, h) {
+      const start = Math.floor(simTime / UI) % Math.max(1, (linkState?.rxSamples.length ?? 1) - 34);
       for (let i = 0; i < 34; i++) {
-        const bit = bitAtIndex(Math.floor(simTime / UI) + i);
+        const sample = linkState?.rxSamples[start + i] ?? 0;
+        const bit = sample > 0 ? 1 : 0;
         const xx = x + i * w / 34;
-        const yy = y + h * (bit ? 0.26 : 0.74) + Math.sin(i * 2.1 + simTime) * 5;
+        const norm = modulation === "pam4" ? (sample + 3.6) / 7.2 : (sample + 1.4) / 2.8;
+        const yy = y + h - Math.max(0.05, Math.min(0.95, norm)) * h;
         ctx.fillStyle = bit ? colors.green : colors.canvas;
         ctx.strokeStyle = colors.green;
         ctx.beginPath();
@@ -794,13 +889,21 @@
     function drawEyeMini(ctx, x, y, w, h) {
       ctx.strokeStyle = colors.grid;
       ctx.strokeRect(x, y, w, h);
-      const levels = modulation === "pam4" ? [0.13, 0.38, 0.62, 0.87] : [0.22, 0.78];
-      const traces = modulation === "pam4" ? 36 : 20;
-      const shake = 0.012 * Math.sin(simTime * 0.22);
+      const samples = linkState?.equalizedSymbols ?? [];
+      const traces = modulation === "pam4" ? 34 : 22;
+      const span = Math.max(1, samples.length - traces - 4);
+      const start = Math.floor(simTime / UI) % span;
+      const normSample = value => {
+        const norm = modulation === "pam4" ? (value + 3.6) / 7.2 : (value + 1.4) / 2.8;
+        return Math.max(0.04, Math.min(0.96, norm));
+      };
       for (let k = 0; k < traces; k++) {
-        const a = levels[k % levels.length];
-        const b = levels[Math.floor(k / levels.length + k * 1.7) % levels.length];
-        const c = levels[Math.floor(k * 2.3 + 1) % levels.length];
+        const s0 = samples[start + k] ?? 0;
+        const s1 = samples[start + k + 1] ?? 0;
+        const s2 = samples[start + k + 2] ?? 0;
+        const a = normSample(s0);
+        const b = normSample(s1);
+        const c = normSample(s2);
         ctx.strokeStyle = modulation === "pam4" ? (k % 5 === 0 ? colors.accent2 : colors.green) : colors.green;
         ctx.globalAlpha = 0.28 + 0.34 * Math.abs(Math.sin(k + simTime * 0.08));
         ctx.beginPath();
@@ -809,7 +912,7 @@
           const left = a + (b - a) * smooth01(Math.min(1, p * 2));
           const right = b + (c - b) * smooth01(Math.max(0, p * 2 - 1));
           const v = p < 0.5 ? left : right;
-          const jitter = (hashNoise(k * 17 + px * 0.03) - 0.5) * 0.035 + shake * Math.sin(px * 0.09 + k);
+          const jitter = (hashNoise((start + k) * 17 + px * 0.03) - 0.5) * 0.018 + 0.01 * Math.sin(px * 0.09 + simTime * 0.2 + k);
           const yy = y + h - Math.max(0.04, Math.min(0.96, v + jitter)) * h;
           if (px === 0) ctx.moveTo(x + px, yy);
           else ctx.lineTo(x + px, yy);
@@ -832,10 +935,13 @@
 
     function drawSoftBits(ctx, x, y, w, h) {
       const n = 12;
+      const start = Math.floor(simTime / UI) % Math.max(1, (linkState?.softBits.length ?? 1) - n);
       for (let i = 0; i < n; i++) {
-        const conf = 0.2 + 0.75 * Math.abs(Math.sin(i * 0.7 + simTime / 20));
+        const soft = linkState?.softBits[start + i] ?? {bit: 0, confidence: 0.2};
+        const conf = Math.max(0.08, Math.min(1, soft.confidence));
         ctx.fillStyle = conf > 0.55 ? colors.green : colors.accent2;
         ctx.fillRect(x + i * w / n + 3, y + h * (1 - conf), w / n - 6, h * conf);
+        drawText(ctx, String(soft.bit), x + (i + 0.5) * w / n, y + h * 0.96, colors.canvas, 7, "center", true);
       }
     }
 
@@ -1191,6 +1297,7 @@
     });
     document.getElementById("modulation").addEventListener("change", evt => {
       modulation = evt.target.value;
+      rebuildLinkState();
       drawAll();
     });
     document.getElementById("optics").addEventListener("change", evt => {
