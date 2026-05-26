@@ -1,4 +1,6 @@
 const state = {
+  datasets: {},
+  activeDataset: "3dj",
   rows: [],
   filtered: [],
   selected: null,
@@ -9,11 +11,14 @@ const state = {
 };
 
 const els = {
+  datasetSubtitle: document.querySelector("#datasetSubtitle"),
+  datasetTabs: document.querySelectorAll(".dataset-tab"),
   stats: document.querySelector("#stats"),
   search: document.querySelector("#search"),
   sortBy: document.querySelector("#sortBy"),
   textSearch: document.querySelector("#textSearch"),
   monthList: document.querySelector("#monthList"),
+  monthPanelTitle: document.querySelector("#monthPanelTitle"),
   clearMonths: document.querySelector("#clearMonths"),
   presentationList: document.querySelector("#presentationList"),
   resultCount: document.querySelector("#resultCount"),
@@ -29,6 +34,27 @@ const els = {
   rawView: document.querySelector("#rawView"),
 };
 
+const DATASETS = {
+  "3dj": {
+    label: "P802.3dj",
+    subtitle: "Cached IEEE P802.3dj public meeting materials, metadata, and extracted text.",
+    url: "metadata/talks.json",
+    payloadKey: "talks",
+    groupLabel: "Months",
+    fileNoun: "PDFs",
+    hasExtractedText: true,
+  },
+  e4ai: {
+    label: "E4AI",
+    subtitle: "Cached IEEE 802.3 Ethernet for AI Assessment public materials, metadata, and extracted text.",
+    url: "../ieee802_e4ai_metadata/documents.json",
+    payloadKey: "documents",
+    groupLabel: "Pages",
+    fileNoun: "files",
+    hasExtractedText: true,
+  },
+};
+
 const esc = (text = "") =>
   String(text).replace(/[&<>"']/g, (ch) => ({
     "&": "&amp;",
@@ -41,14 +67,30 @@ const esc = (text = "") =>
 const pathFromApp = (path) => (path ? `../${path}` : "");
 const compact = (value = "") => String(value).replace(/\s+/g, " ").trim();
 const firstValue = (...values) => values.find((value) => compact(value)) || "";
+const extensionLabel = (filename = "") => (filename.split(".").pop() || "file").toUpperCase();
+
+function activeConfig() {
+  return DATASETS[state.activeDataset];
+}
 
 function meetingSortValue(meeting) {
+  if (meeting === "public_index") return 99991231;
+  if (meeting === "channel") return 99991230;
+  const workshopDate = /(\d{4})-(\d{2})-(\d{2})/.exec(meeting || "");
+  if (workshopDate) return Number(`${workshopDate[1]}${workshopDate[2]}${workshopDate[3]}`);
   const match = /^(\d{2})_(\d{2})(\d{2})?$/.exec(meeting || "");
   if (!match) return 0;
   return Number(`20${match[1]}${match[2]}${match[3] || "00"}`);
 }
 
 function meetingLabel(meeting) {
+  if (meeting === "public_index") return "Public index";
+  if (meeting === "channel") return "Channel data";
+  const workshopDate = /(\d{4})-(\d{2})-(\d{2})/.exec(meeting || "");
+  if (workshopDate) {
+    const date = new Date(Date.UTC(Number(workshopDate[1]), Number(workshopDate[2]) - 1, Number(workshopDate[3])));
+    return date.toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric", timeZone: "UTC" });
+  }
   const match = /^(\d{2})_(\d{2})(\d{2})?$/.exec(meeting || "");
   if (!match) return meeting || "Unknown";
   const date = new Date(Date.UTC(2000 + Number(match[1]), Number(match[2]) - 1, Number(match[3] || "1")));
@@ -73,7 +115,7 @@ function displayTitle(row) {
 }
 
 function displayCode(row) {
-  return firstValue(row.presentation_code, row.file_code, row.stem);
+  return firstValue(row.presentation_code, row.file_code, row.stem, row.filename);
 }
 
 function displayPeople(row) {
@@ -101,7 +143,43 @@ function baseSearchText(row) {
     displayAffiliations(row),
     row.source_url,
     row.presentation_url,
+    row.dataset,
+    row.page_title,
+    row.page_kind,
   ].join(" ").toLowerCase();
+}
+
+function normalize3dj(row) {
+  return {
+    ...row,
+    dataset: "3dj",
+    source_size: row.source_size || 0,
+    source_url: row.source_url || row.presentation_url,
+    source_path: row.source_path || "",
+  };
+}
+
+function normalizeE4ai(row) {
+  const filename = row.path ? row.path.split("/").pop() : (row.url || "").split("/").pop() || "";
+  const stem = filename.replace(/\.[^.]+$/, "");
+  return {
+    ...row,
+    dataset: "e4ai",
+    meeting: row.page_slug,
+    filename,
+    stem,
+    website_title: row.title,
+    title_cell_text: row.title,
+    presentation_code: "",
+    file_code: "",
+    presentation_url: row.url,
+    source_url: row.url,
+    source_path: row.path,
+    source_size: row.size || 0,
+    markdown_path: row.markdown_path || "",
+    text_path: row.text_path || "",
+    marker_output_dir: "",
+  };
 }
 
 async function loadTextIndex() {
@@ -232,7 +310,7 @@ function renderList() {
           <span class="flags">
             <span class="flag">${esc(row.filename)}</span>
             ${row.markdown_path ? `<span class="flag">MD</span>` : `<span class="flag warn">MD</span>`}
-            ${row.source_path ? `<span class="flag">PDF</span>` : `<span class="flag warn">PDF</span>`}
+            ${row.source_path ? `<span class="flag">${esc(extensionLabel(row.filename))}</span>` : `<span class="flag warn">FILE</span>`}
           </span>
         </span>
       </button>`;
@@ -246,7 +324,7 @@ function renderList() {
 function renderLinks(row) {
   if (!row) return "";
   const links = [];
-  if (row.source_path) links.push(`<a href="${pathFromApp(row.source_path)}" target="_blank" rel="noreferrer">PDF</a>`);
+  if (row.source_path) links.push(`<a href="${pathFromApp(row.source_path)}" target="_blank" rel="noreferrer">File</a>`);
   if (row.markdown_path) links.push(`<a href="${pathFromApp(row.markdown_path)}" target="_blank" rel="noreferrer">Markdown</a>`);
   if (row.text_path) links.push(`<a href="${pathFromApp(row.text_path)}" target="_blank" rel="noreferrer">Text</a>`);
   if (row.source_parent_url) links.push(`<a href="${esc(row.source_parent_url)}" target="_blank" rel="noreferrer">Meeting Page</a>`);
@@ -288,6 +366,11 @@ function renderOverview(row) {
         <div class="label">File</div>
         <div>${esc(row.filename)} <span class="muted">${esc(fileSize(row.source_size))}</span></div>
       </section>
+      ${row.page_title ? `
+      <section class="info-block full">
+        <div class="label">Source Page</div>
+        <div>${esc(row.page_title)} <span class="muted">${esc(row.page_kind || "")}</span></div>
+      </section>` : ""}
       <section class="info-block full">
         <div class="label">Title Cell</div>
         <div>${esc(row.title_cell_text || displayTitle(row))}</div>
@@ -300,7 +383,7 @@ function renderOverview(row) {
         <div class="label">Sources</div>
         <p><span class="muted">Parent:</span> <a href="${esc(row.source_parent_url)}" target="_blank" rel="noreferrer">${esc(row.source_parent_url)}</a></p>
         <p><span class="muted">Presentation:</span> <a href="${esc(row.presentation_url || row.source_url)}" target="_blank" rel="noreferrer">${esc(row.presentation_url || row.source_url)}</a></p>
-        <p><span class="muted">Cached PDF:</span> <a href="${pathFromApp(row.source_path)}" target="_blank" rel="noreferrer">${esc(row.source_path)}</a></p>
+        <p><span class="muted">Cached file:</span> <a href="${pathFromApp(row.source_path)}" target="_blank" rel="noreferrer">${esc(row.source_path)}</a></p>
       </section>
     </div>`;
 }
@@ -311,7 +394,7 @@ function renderRaw(row) {
     "doc_id", "meeting", "filename", "stem", "title", "website_title", "title_cell_text",
     "presentation_code", "file_code", "presentation_date", "presentation_date_iso",
     "source_parent_url", "source_parent_path", "presentation_url", "source_url", "source_path",
-    "source_size", "sha256", "markdown_path", "text_path",
+    "source_size", "sha256", "markdown_path", "text_path", "dataset", "page_title", "page_kind", "status", "note",
   ];
   return `
     <table>
@@ -483,27 +566,58 @@ function setTab(tab) {
 function updateStats() {
   const meetings = new Set(state.rows.map((row) => row.meeting)).size;
   const mdCount = state.rows.filter((row) => row.markdown_path).length;
-  const textStatus = state.textIndexReady ? "text indexed" : "text ready";
-  els.stats.textContent = `${state.rows.length} PDFs · ${meetings} meetings · ${mdCount} extracted · ${textStatus}`;
+  const config = activeConfig();
+  const textStatus = config.hasExtractedText ? (state.textIndexReady ? "text indexed" : "text ready") : "metadata only";
+  els.stats.textContent = `${state.rows.length} ${config.fileNoun} · ${meetings} ${config.groupLabel.toLowerCase()} · ${mdCount} extracted · ${textStatus}`;
 }
 
-async function init() {
-  const response = await fetch("metadata/talks.json");
+async function loadDataset(key) {
+  if (state.datasets[key]) return state.datasets[key];
+  const config = DATASETS[key];
+  const response = await fetch(config.url);
   if (!response.ok) throw new Error(`${response.status} ${response.statusText}`);
   const data = await response.json();
-  state.rows = (data.talks || []).map((row) => ({
-    ...row,
+  const normalizer = key === "e4ai" ? normalizeE4ai : normalize3dj;
+  state.datasets[key] = (data[config.payloadKey] || []).map((row) => ({
+    ...normalizer(row),
     searchText: baseSearchText(row),
   }));
+  state.datasets[key].forEach((row) => {
+    row.searchText = baseSearchText(row);
+  });
+  return state.datasets[key];
+}
+
+async function setDataset(key) {
+  state.activeDataset = key;
+  state.rows = await loadDataset(key);
+  state.filtered = [];
+  state.selected = null;
+  state.selectedMonths.clear();
+  state.textIndexReady = state.rows.every((row) => row.fullText !== undefined) && activeConfig().hasExtractedText;
+  state.textIndexLoading = false;
+  els.datasetSubtitle.textContent = activeConfig().subtitle;
+  els.monthPanelTitle.textContent = activeConfig().groupLabel;
+  els.textSearch.disabled = !activeConfig().hasExtractedText;
+  els.textSearch.parentElement.classList.toggle("disabled", !activeConfig().hasExtractedText);
+  if (!activeConfig().hasExtractedText) els.textSearch.checked = false;
+  els.datasetTabs.forEach((button) => {
+    button.classList.toggle("active", button.dataset.dataset === key);
+  });
 
   updateStats();
   renderMonths();
   applyFilters();
   selectRow(state.filtered[0] || null);
+}
+
+async function init() {
+  await setDataset("3dj");
 
   els.search.addEventListener("input", applyFilters);
   els.sortBy.addEventListener("change", applyFilters);
   els.textSearch.addEventListener("change", () => {
+    if (!activeConfig().hasExtractedText) return;
     if (els.textSearch.checked) loadTextIndex();
     applyFilters();
   });
@@ -514,6 +628,9 @@ async function init() {
   els.overviewTab.addEventListener("click", () => setTab("overview"));
   els.markdownTab.addEventListener("click", () => setTab("markdown"));
   els.rawTab.addEventListener("click", () => setTab("raw"));
+  els.datasetTabs.forEach((button) => {
+    button.addEventListener("click", () => setDataset(button.dataset.dataset));
+  });
 }
 
 init().catch((error) => {

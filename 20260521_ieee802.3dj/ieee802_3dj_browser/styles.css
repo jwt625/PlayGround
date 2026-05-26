@@ -109,6 +109,31 @@ h1 {
   margin-bottom: 12px;
 }
 
+.dataset-tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.dataset-tab {
+  color: var(--text);
+  background: var(--panel);
+  border: 1px solid var(--line);
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+.dataset-tab:hover {
+  border-color: var(--accent);
+}
+
+.dataset-tab.active {
+  color: #041310;
+  background: var(--accent);
+  border-color: var(--accent);
+  font-weight: 760;
+}
+
 input,
 select {
   width: 100%;
@@ -140,6 +165,11 @@ button:focus-visible {
 
 .check input {
   width: auto;
+}
+
+.check.disabled {
+  color: var(--muted);
+  opacity: 0.65;
 }
 
 .layout {

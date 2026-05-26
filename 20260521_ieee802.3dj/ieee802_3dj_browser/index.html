@@ -3,15 +3,15 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>IEEE P802.3dj Presentation Browser</title>
+    <title>IEEE 802.3 Presentation Browser</title>
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
     <main class="app">
       <header class="topbar">
         <div>
-          <h1>IEEE P802.3dj Presentations</h1>
-          <p>Cached meeting materials, metadata, and extracted text.</p>
+          <h1>IEEE 802.3 Presentations</h1>
+          <p id="datasetSubtitle">Cached meeting materials, metadata, and extracted text.</p>
         </div>
         <div class="topbar-actions">
           <a
@@ -33,6 +33,11 @@
         </div>
       </header>
 
+      <nav class="dataset-tabs" aria-label="Corpus selector">
+        <button class="dataset-tab active" id="dataset3dj" type="button" data-dataset="3dj">P802.3dj</button>
+        <button class="dataset-tab" id="datasetE4ai" type="button" data-dataset="e4ai">E4AI</button>
+      </nav>
+
       <section class="controls" aria-label="Search and sorting controls">
         <input id="search" type="search" placeholder="Search title, people, affiliation, filename, extracted text" />
         <select id="sortBy" aria-label="Sort presentations">
@@ -50,7 +55,7 @@
       <section class="layout">
         <aside class="months" aria-label="Meeting month filters">
           <div class="panel-head">
-            <span>Months</span>
+            <span id="monthPanelTitle">Months</span>
             <button id="clearMonths" type="button">All</button>
           </div>
           <div id="monthList" class="month-list"></div>
