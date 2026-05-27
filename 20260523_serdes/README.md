@@ -1,10 +1,14 @@
-# SerDes Visualization Handoff
+# Optical DSP Link Visualizations
 
-This folder contains browser-based educational visualizations for SerDes concepts and a newer top-level optical DSP link architecture page. The optical page is now the project map: it ties payload bits, FEC, PAM4/NRZ mapping, Tx precompensation, SerDes/optical lanes, CDR timing, Rx equalization, soft bits, and recovered payload into one animated view.
+Browser-based educational visualizations for optical DSP and SerDes concepts. The served entry point is `index.html`: a clickable architecture overview that ties payload bits, FEC, PAM4/NRZ mapping, Tx precompensation, SerDes/optical lanes, CDR timing, Rx equalization, soft bits, and recovered payload into one animated view.
+
+Live site:
+
+https://jwt625.github.io/optical-dsp-link/
 
 ## Files
 
-- `initial_prompt.md`: original requirements and follow-up requests.
+- `index.html`: GitHub Pages entry point and top-level optical DSP link overview.
 - `optical_dsp_link_architecture.html`: top-level clickable optical DSP link architecture page.
   - Simulink-style full-link block diagram.
   - Expandable compact details for implemented SerDes / CDR / deserializer blocks.
@@ -21,19 +25,19 @@ This folder contains browser-based educational visualizations for SerDes concept
   - Master/slave DFF snapshot timing.
 - `serializer_visualization.py`: launcher for `serializer_visualization_animated.html`.
 - `serializer_visualization.html`: earlier static/intermediate page.
+- `eye_diagram_lab.html`: standalone interactive eye-diagram lab with Tx FIR, driver bandwidth, channel loss/reflection/noise/jitter, CDR/manual phase, and a 3-tap Rx FFE.
+- `initial_prompt.md`: original requirements and follow-up requests.
 - `DevLog-000-Optical-DSP-Link-Architecture.md`: full optical DSP architecture plan plus implementation feedback.
 - `DevLog-001-CDR-PLL-Visualization.md`: CDR/PLL proposal plus implementation feedback.
 - `DevLog-001-Shift-Register-Visualization.md`: shift-register proposal plus implementation feedback.
 
-## Important Git Note
+## Site Structure
 
-The parent repo has `.gitignore: *.html`, so new HTML pages are ignored by default. If adding another HTML file, use:
+The root page keeps the architecture-overview flow. Implemented blocks can be expanded inline from the overview or opened as full pages:
 
-```sh
-git add -f new_page.html
-```
-
-Tracked HTML files can still be modified normally once added.
+- Serializer / deserializer: `serializer_visualization_animated.html`
+- CDR / PLL and shift-register deep dive: `serdes_cdr_shift_register_deep_dive.html`
+- Interactive channel / eye-diagram lab: `eye_diagram_lab.html`
 
 ## Verification
 
@@ -43,7 +47,7 @@ The pages are plain HTML/CSS/JS. For a syntax check, extract the inline script a
 python3 - <<'PY'
 from pathlib import Path
 import re, subprocess, tempfile, os
-for name in ["optical_dsp_link_architecture.html", "serializer_visualization_animated.html", "serdes_cdr_shift_register_deep_dive.html"]:
+for name in ["index.html", "optical_dsp_link_architecture.html", "eye_diagram_lab.html", "serializer_visualization_animated.html", "serdes_cdr_shift_register_deep_dive.html"]:
     text = Path(name).read_text()
     script = re.search(r"<script>(.*)</script>", text, re.S).group(1)
     with tempfile.NamedTemporaryFile("w", suffix=".js", delete=False) as f:
@@ -59,13 +63,13 @@ for name in ["optical_dsp_link_architecture.html", "serializer_visualization_ani
 PY
 ```
 
-Open locally in a browser:
+Serve locally from this folder:
 
 ```sh
-open optical_dsp_link_architecture.html
-open serializer_visualization_animated.html
-open serdes_cdr_shift_register_deep_dive.html
+python3 -m http.server 8000
 ```
+
+Then open http://localhost:8000/.
 
 ## Modeling Boundaries
 

@@ -306,16 +306,27 @@
       return target;
     }
 
+    const canvasLogicalSizes = new Map();
+
     function setupCanvas(id) {
       const canvas = document.getElementById(id);
       const ctx = canvas.getContext("2d");
       const ratio = window.devicePixelRatio || 1;
-      const cssW = Number(canvas.getAttribute("width"));
-      const cssH = Number(canvas.getAttribute("height"));
-      canvas.style.width = cssW + "px";
-      canvas.style.height = cssH + "px";
-      canvas.width = Math.round(cssW * ratio);
-      canvas.height = Math.round(cssH * ratio);
+      if (!canvasLogicalSizes.has(id)) {
+        canvasLogicalSizes.set(id, {
+          w: Number(canvas.getAttribute("width")),
+          h: Number(canvas.getAttribute("height"))
+        });
+      }
+      const {w: cssW, h: cssH} = canvasLogicalSizes.get(id);
+      const pixelW = Math.round(cssW * ratio);
+      const pixelH = Math.round(cssH * ratio);
+      if (canvas.style.width !== cssW + "px") canvas.style.width = cssW + "px";
+      if (canvas.style.height !== cssH + "px") canvas.style.height = cssH + "px";
+      if (canvas.width !== pixelW || canvas.height !== pixelH) {
+        canvas.width = pixelW;
+        canvas.height = pixelH;
+      }
       ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
       ctx.fillStyle = colors.canvas;
       ctx.fillRect(0, 0, cssW, cssH);
