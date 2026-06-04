@@ -78,6 +78,100 @@ Source: local cached OFC metadata in `output/full_metadata/ofc_full_metadata.csv
 | `Th2A.35` | HOCSS: a Hardware-Accelerated Optical Circuit Switch Scheduler for low-Latency Optimal Ports Matching | Institute of Computing Technology, CAS; University of Chinese Academy of Sciences | Hardware-accelerated OCS scheduler with sub-microsecond matching latency |
 | `Tu2C.6` | Demonstration of a Collision Control Mechanism for Inter-AIDC Traffic in a Spine-Leaf Multi-Granularity All-Optical Switching Network | Beijing University of Posts & Telecom | FPGA-tested collision control for multi-granularity all-optical switching |
 
+## Scale-Up: AI Pods, Architecture, and Standards Presentations
+
+These are the most direct "scale-up" schedule matches from the cached OFC metadata. Several are talks/symposium presentations rather than technical-paper PDFs, so the browser may show metadata only.
+
+| Code | Presentation / paper | Affiliation(s) | Scale-up angle |
+|---|---|---|---|
+| `Tu1A.2` | Revolutionizing Networking for Gigawatt AI Factories | Plenary Session | Million-GPU-scale training framing across compute, memory scale-up, networking scale-up, and scale-out |
+| `M4F.6` | Scale-Out and Scale-Up Photonic Interconnects | Photonic Interconnects for Scalable AI | Direct architecture-level talk comparing photonic scale-out and scale-up interconnect roles |
+| `M4B.6` | Technology for AI Interconnect Scale-Up Solutions | Optical Engines | Evaluates optical scale-up networking technologies, reliability, and cluster-performance implications |
+| `M4B.1` | Integrated Optical I/O Chiplets for Bandwidth Scaling in AI Infrastructure | Optical Engines | Review of SiPh optical I/O chiplets for high-density, power-efficient AI bandwidth scaling |
+| `Tu3I.1` | Next Generation Interconnects for AI Scale Up - End User Perspective | Symposium: Next Generation Interconnects for AI Scale-up Systems | End-user view on optical scale-up deployment, larger domains, rack disaggregation, and bandwidth |
+| `Tu3I.2` | Practical Challenges in Scaling to Multi-Rack Pods | Symposium: Next Generation Interconnects for AI Scale-up Systems | System constraints for multi-rack scale-up domains: link performance, RAS, physical integration, and fiber management |
+| `Tu3I.3` | Next Generation Interconnects for AI Scale Up Systems Symposium Speaker | Symposium: Next Generation Interconnects for AI Scale-up Systems | Placeholder/metadata-only symposium talk; keep as a schedule hit until reviewed |
+| `Tu3I.4` | Sensing VCSEL Interconnects for Scaleup Applications | Symposium: Next Generation Interconnects for AI Scale-up Systems | VCSEL-based scale-up interconnects emphasizing cost, reliability, density, and supply chain |
+| `Tu3I.5` | Enabling Beyond CPO - Challenges and Opportunities | Symposium: Next Generation Interconnects for AI Scale-up Systems | CPO architecture path toward deeper data-center integration |
+| `Tu3I.6` | Advanced Interconnects for Silicon Photonics Packaging | Symposium: Next Generation Interconnects for AI Scale-up Systems | Detachable optical links, 2.5D assembly/test, and SiPh packaging for switch/compute applications |
+| `Tu3I.7` | Innovative Electrical and Optical Interconnects in Advanced Packaging | Symposium: Next Generation Interconnects for AI Scale-up Systems | Advanced-package electrical/optical interconnect tradeoffs for AI scale-up systems |
+| `Tu3I.8` | Manufacturing and Packaging of Optical Interconnects for AI Scale-up Systems | Symposium: Next Generation Interconnects for AI Scale-up Systems | Manufacturing and packaging process view for optical scale-up interconnects |
+| `Th1C.1` | 400G/Lane Signaling Ecosystem and Standard | Data Center Subsystems | Standards/ecosystem talk explicitly driven by AI scale-up and scale-out bandwidth demand |
+| `Th1A.1` | Intra-Data Center THz Interconnects | Short Reach Optical and THz Interconnects | Non-optical/THz short-reach option for scale-up domains; 224/448G PAM4 and UCIe-style formats |
+
+## Scale-Up: VCSELs, Micro-LEDs, PCSELs, and Surface-Emitting Sources
+
+| Code | Presentation / paper | Affiliation(s) | Scale-up angle |
+|---|---|---|---|
+| `Tu3I.4` | Sensing VCSEL Interconnects for Scaleup Applications | Symposium: Next Generation Interconnects for AI Scale-up Systems | Direct VCSEL scale-up talk; leverages sensing-VCSEL supply chain and dense low-power links |
+| `Th1G.4` | Multicore Fiber Coupled Backside-Emitting VCSEL/PD Arrays for High-Bandwidth Optical Interconnects in Data Center | LightXcelerate Inc | 19-core MCF-coupled optical chiplet with backside VCSEL/PD arrays flip-bonded to driver/TIA EICs |
+| `W1B.4` | A 53-Gbaud NRZ/PAM4 x 8-Channel 1060-nm Single-Mode VCSEL-Based Ultra-Compact and High-Energy-Efficient CPO Transceiver for Full-Reach Datacenter Links | Furukawa Denki Kogyo Kabushiki Kaisha; Fuji Film Business Innovation Kabushiki Kaisha; Institute of Science Tokyo | 8-channel 1060-nm SM-VCSEL CPO transceiver, 2-km parallel SMF, microlens-array coupling |
+| `W1B.5` | 106-Gbps 940-nm Flip-Chip Back-Emitting VCSEL With Metalens for NPO/CPO Applications | Laser Prototypes and Packaging | Back-emitting VCSEL with integrated metalens, high-temperature 106G PAM4, relaxed fiber-coupling tolerance |
+| `W1B.6` | Mass Production of VCSELs for Datacom and Sensing Applications | Laser Prototypes and Packaging | Manufacturing/process-control perspective on VCSEL foundry production and reliability |
+| `W4E.3` | 200-Gb/s 1060-nm Single-Mode Coupled-Cavity VCSEL Enabling Modal-Dispersion Free >50-GHz Bandwidth Over 500-m Multimode Fiber | Institute of Science Tokyo | High-speed single-mode VCSEL extending MMF reach to 500 m at 200G |
+| `W4E.4` | High-Performance, Cost-Effective SWIR VCSELs: a New Source for Optical Interconnects | Advanced Semiconductor Laser Sources | Mass-producible InP SWIR VCSELs for low-power/high-speed optical interconnects |
+| `Th4A.3` | High Temperature >35GHz Bandwidth Oxide-Confined VCSELs for 200G-PAM4 Links | Postdeadline Session I | 200G-PAM4 VCSEL reliability/performance at 25-80 C with >10-year lifetime claim |
+| `Th1A.2` | 200G/Lane 50-m Multimode VCSEL Link by Low-Material-Dispersion Graded-Index Plastic Optical Fiber | Short Reach Optical and THz Interconnects | Multimode VCSEL link route using low-material-dispersion GI-POF for short-reach scale-up |
+| `Th1A.3` | 180 Gb/s PAM-4 Optical Link by Cryogenic VCSEL | Short Reach Optical and THz Interconnects | Cryogenic VCSEL option for low-energy optical links near cold electronics/quantum systems |
+| `Th1A.4` | Record 91-mW Cryogenic VCSEL Enabling 140-Gb/s PAM-4 Transmission From 3 K to 40 K for Quantum Optical Interconnects | Short Reach Optical and THz Interconnects | High-power cryogenic VCSEL for 140G PAM4 over 3-40 K |
+| `M3H.2` | Demonstrating 80 Gb/s Optical Wireless Communication Using a Multi-Aperture VCSEL and a Multi-Mode Fiber-Coupled Receiver for Next-Generation LiFi Connectivity | Visible Light and Optical Wireless Communication | Multi-aperture VCSEL optical-wireless link; adjacent free-space short-reach approach |
+| `Th1G.3` | Low-Power and Short-Distance Wireless Optical Interconnection System Based on 1.6 GHz Bandwidth Red Micro-LED | Next-Generation Optical I/O | Micro-LED/uLED wireless optical interconnect: 1.5 Gbps at 0.22 pJ/bit DC power |
+| `W4E.2` | 500 mW O-Band Photonic-Crystal Surface-Emitting Lasers and Scalable 2D Arrays for Multi-Channel CPO Applications | Advanced Semiconductor Laser Sources | PCSEL route: high-power O-band source and 2x2 array for multi-channel CPO |
+| `W4E.5` | O-Band Membrane Surface-Emitting Laser on a Si Substrate Demonstrating 100-Gbps PAM-4 Operation | Device Technology Labs., NTT, Inc.; Institute of Integrated Research, Institute of Science Tokyo | Membrane surface-emitting laser on Si substrate; 100G PAM4 over 2-km SSMF |
+| `Th1G.5` | Ethernet-Over-OWC Using VCSELs: Transparent Gigabit Links With Low Latency and Robust Alignment Tolerance | Next-Generation Optical I/O | Commercial-component VCSEL-PIN optical-wireless link; not high aggregate rate, but relevant to alignment-tolerant short links |
+
+## Scale-Up: Wafer-Scale and Heterogeneous Manufacturing
+
+| Code | Presentation / paper | Affiliation(s) | Scale-up angle |
+|---|---|---|---|
+| `M4D.6` | Wafer-Scale Transfer Printing: Ready for Production, Ready for Impact | Universiteit Gent | Production-readiness of wafer-scale micro-transfer printing for III-V and LN on silicon |
+| `M4D.5` | 82-mm-Long Optical Link Using Micro-Transfer-Printed Directly Modulated Membrane Laser and Photodetector on SiN Waveguide: Toward Wafer-Scale Optical Interconnects | NTT, Inc. | Transfer-printed III-V laser/PD on SiN waveguide; toward wafer-scale optical interconnects |
+| `W2A.15` | Greater Than 100mW Coupled Power From O-Band Quantum Dot Laser to Silicon Nitride Waveguides Through Micro-Transfer Print Integration | Poster Session I | High-power QD laser-to-SiN coupling through micro-transfer printing |
+| `Th1D.1` | Photonics Heterogeneous Integration (PHI) of Thin-Film Lithium Niobate and Hydrogen-Free Silicon Nitride on a 200-mm Silicon Photonics Platform | Institute of Microelectronics (IME); National Semiconductor Translation and Innovation Centre | 200-mm die-to-wafer TFLN + SiN heterogeneous integration |
+| `M1D.4` | Wafer-Scale Heterogeneously Integrated Self-Injection-Locked Lasers | LiDAR Systems and Narrow Linewidth Lasers | 100-mm wafer-scale SiN heterogeneous laser platform with high yield for mass production |
+| `W2A.4` | Wafer-Scale, Ultra-Low-Loss and Polarization-Insensitive Si3N4 Photonic Integrated Circuits | Poster Session I | Wafer-scale SiN PIC platform and component library for low-loss, polarization-insensitive routing |
+| `Th3F.1` | Germanium Photodetectors With >100 GHz Bandwidth and >1.1 A/W Responsivity on 200-mm Silicon Photonics Platform | Photodetectors | Uniform wafer-scale Ge PD performance on 200-mm SiPh with >100 GHz bandwidth |
+| `M2B.2` | A 280 Gbps Optical Transceiver With Monolithically Integrated 110 GHz Silicon Microring Modulators and 110 GHz Germanium Photodetectors | Fudan University; Zhangjiang Laboratory | 300-mm SiPh MRM + Ge PD monolithic link; scale-up through CMOS-line manufacturing |
+| `W3E.4` | A 6.4 Tbps Optical Transmitter With Low-Loss and High-Uniformity Inverse-Designed Multiplexer on a 300-mm CMOS Platform | Zhangjiang Laboratory; Fudan University | 6.4T integrated transmitter on 300-mm CMOS/SiPh platform |
+| `Th4A.6` | TFLN-Based Wafer-Level Co-Packaged Optics Engine for Ultrahigh-Bandwidth Electro-Optical Modulation | Shanghai Jiao Tong University | Wafer-level TFLN EOM + EIC CPO engine with >100 GHz bandwidth |
+| `Tu2D.2` | 3D Hybrid Bonded EIC-PIC Integration and Packaging Technologies | University of California Davis | 3D hybrid bonding for EIC/PIC integration and advanced packaging |
+
+## Scale-Up: CPO, Chiplets, Glass, Fan-Out, and Fiber Attach
+
+| Code | Presentation / paper | Affiliation(s) | Scale-up angle |
+|---|---|---|---|
+| `Th3C.1` | Chiplet-to-Chiplet All-to-All Interconnecting Photonic Interposer Using AWGRs With 3D Ultrafast-Laser-Inscription | UC Davis | 3D photonic interposer with AWGRs for chiplet-to-chiplet all-to-all links |
+| `Th3C.2` | Integrated Glass Waveguide Substrate With Surface Coupled Photonic Chips for Massive Scaling of CPO | Corning Optical Communication GmbH & Co. KG; Corning Technology Center Korea | Glass substrate with embedded waveguides/electrical interconnects for scalable SiPh assembly |
+| `Th3C.3` | Vertical Optical Coupling Tapers for Co-Packaged Optics With Multimode Fiber and High-Speed Photodetectors | Co-packaged Optics and Advanced Packaging Techniques | Multimode-fiber-array coupling to high-speed PDs with >95% coupling and +/-25 um tolerance |
+| `Th3C.4` | High Performing Photonics Systems - CPO, Towards Photonics Chiplets | Fraunhofer IZM | Invited packaging/system paper on CPO, interposers, and photonic chiplets for 100T+ platforms |
+| `Th3C.5` | Ultra-Low Loss Compact SiP Polarization Compensator for CPO With an ELS | McGill University; Ericsson | External-laser-source support block for practical CPO transceivers |
+| `Th1D.3` | Glass Waveguides With 0.01 dB/cm Bend Loss for High-Speed, High-Density Optical Fan-Out for Co-Packaged Optics | Photonics Platforms, Fabrication Methods, and Low Loss Materials | Compact glass fan-out for fiber-to-chip pitch conversion with low coupling loss |
+| `Th1D.4` | Low Loss and Mass Producible Multi-Core Fiber Fan-in/Fan-Out Device Based on Laser Direct Writting Glass Waveguides | Photonics Platforms, Fabrication Methods, and Low Loss Materials | Laser-written glass fan-in/fan-out for MCF, with manufacturability-oriented writing speed |
+| `Th1D.8` | Scalable Freeform fan-in 48 Waveguide Array in Glass | Photonics Platforms, Fabrication Methods, and Low Loss Materials | 3D glass waveguide fan-in converting 1D to 2D arrays for dense optical routing |
+| `Th2A.8` | Meta-Lens for co-Package Optics and Fiber Array Unit Coupling | Poster Session II | Detachable FAU-to-SiPh coupling with metalens-assisted alignment tolerance |
+| `W4B.2` | All-Dielectric Integrated Microlens Coupler for Scalable and Efficient Photonic I/Os | University of California Berkeley | Wafer-scale SiON microlens coupler for robust, low-loss fiber-to-chip I/O |
+| `W1B.3` | >+25-dBm x 8-Channel SOA-Integrated DFB-LD-Based TOSA for CPO External Laser Sources | Laser Prototypes and Packaging | High-power 8-channel ELS source for CPO modules |
+| `M1B.1` | 9dB Link Margin Gain Using a Quantum Dot SOA in an 8-Wavelength DWDM 50Gbps NRZ CPO Link | Data Center WDM and Comb | QD SOA in DWDM CPO link to reduce transmitter power / improve link margin |
+
+## Scale-Up: Optical Engines, WDM Parallelism, and High-Radix Fabrics
+
+| Code | Presentation / paper | Affiliation(s) | Scale-up angle |
+|---|---|---|---|
+| `M4B.2` | A 256 Gb/s DWDM Optical I/O in a 3D-Stacked EIC/PIC Silicon Photonics Platform | NVIDIA Corporation | 3D-stacked 7-nm EIC / 65-nm SiPh DWDM optical I/O; high areal bandwidth density |
+| `M4B.5` | Highly-Integrated 16-Channel Silicon-Photonics Optical Engine Enabling PAM6 Transmission With BER < 1E-9 | Ciena Corporation | 16-channel SiPh optical engine exceeding 2 Tb/s aggregate |
+| `Th4A.7` | 1.6T (8x200Gb/s) 2xFR4 Silicon Photonic IMDD Transceiver With Monolithically Integrated Ultra-Low Crosstalk and Wideband Multiplexer | HGGenuine Optics Tech Co., Ltd. | Monolithic 1.6T SiPh transceiver in OSFP module with compact wideband MUX |
+| `Th1C.4` | 1.6 Tb/s Monolithic InP Transmitter PIC With DFB, MZM, and SOA Arrays | Nokia Corporation | Eight-channel monolithic InP transmitter PIC with sources, modulators, and SOAs |
+| `Th4A.1` | 4-ch x 400-Gbps PAM4 O-Band Membrane InGaAlAs EA-DFB Laser Array on a Si Photonics Platform | Device Innovation Center, NTT, Inc. | Heterogeneous 4-channel membrane EA-DFB laser array on Si; high shoreline density |
+| `Tu3J.3` | High-Bandwidth-Density Uncooled EML Array for up to 770 Gb/s/mm and 11 km Fiber Reach | High-Speed EAMs and EMLs | Compact uncooled EML array with integrated RF routing and high bandwidth density |
+| `M1B.2` | An 8x256 Gbps DWDM Silicon Photonic Microring Transmitter Using a 200 GHz Spaced Quantum-Dot Comb Laser | Data Center WDM and Comb | QD comb + SiPh MRM transmitter using WDM parallelism for 8x256G |
+| `M2A.4` | A 16x128 Gbps DWDM Wavelength-Locked Silicon Photonic Microring Transmitter Enabled by a Quantum-Dot Comb Laser | Silicon Photonics Modulators | 2 Tb/s/fiber DWDM SiPh transmitter using 16 wavelengths and wavelength locking |
+| `Th2A.13` | High-Efficiency Silicon Nitride Microcombs for Co-Packaged Optics | Poster Session II | 24-channel high-efficiency SiN microcomb for scalable datacenter/CPO interconnects |
+| `W2A.12` | A 4 Tbps 16-Channel DWDM Transmitter Using Extended-Depletion Silicon Photonic Microdisk Modulator Array | Xi'an Institute of Optics and Precision Mechanics | 16-channel SiPh microdisk modulator array, 4 Tb/s aggregate |
+| `M4F.1` | 1024x1024 All-to-All Interconnect Thin-CLOS-LION System Using 64 Lambda Routing on Athermal 64x64 ULCF AWGRs | University of California Davis; Enablence, Inc | 1024x1024 all-to-all optical interconnect using AWGR wavelength routing |
+| `M2D.3` | High Port Count Silicon Photonic MEMS Circuit Switch | nEye.ai | SiPh MEMS OCS as scalable, low-power switching fabric |
+| `M3F.3` | A 4,096x4,096 Strictly Non-Blocking Optical Circuit Switch Delivering 819.2 Tb/s via Space-and-Wavelength Routing | Nagoya University; Toyota Technological Institute | High-radix OCS fabric scaling with space x wavelength routing |
+| `W4C.7` | Si-SiN Focal Plane Switch Array Chip Enabled Parallel Solid-State LiDAR | Wireless Integrated Sensing and Communications | Parallel switch-array photonic architecture; adjacent evidence for large switch-array integration |
+
 ## Papers by Watched Google Scholar Alert Authors
 
 | Code | Presentation / paper | Affiliation(s) | Matched alert author(s) |
