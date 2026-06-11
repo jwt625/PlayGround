@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Crystal Growth Heat Demo</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <main class="app-shell">
+      <section class="simulation-pane" aria-label="Simulation">
+        <div class="canvas-wrap">
+          <canvas id="heatCanvas" width="840" height="720" aria-label="Heat transfer simulation canvas"></canvas>
+          <canvas id="legendCanvas" width="52" height="720" aria-label="Temperature legend"></canvas>
+        </div>
+        <div class="readouts">
+          <div>
+            <span class="label">Time</span>
+            <span id="timeReadout">0.0 s</span>
+          </div>
+          <div>
+            <span class="label">Max</span>
+            <span id="maxTempReadout">-- C</span>
+          </div>
+          <div>
+            <span class="label">Melt Area</span>
+            <span id="meltReadout">--</span>
+          </div>
+          <div>
+            <span class="label">Stability</span>
+            <span id="stabilityReadout">--</span>
+          </div>
+        </div>
+      </section>
+
+      <aside class="controls" aria-label="Controls">
+        <header>
+          <h1>Crystal Growth Heat Demo</h1>
+          <p>2D qualitative conduction model for a Cz-like hot zone. No flow, radiation, latent heat, or moving mesh yet.</p>
+        </header>
+
+        <div class="button-row">
+          <button id="toggleRun" type="button">Start</button>
+          <button id="reset" type="button">Reset</button>
+          <button id="step" type="button">Step</button>
+        </div>
+
+        <label class="control">
+          <span>Heater setpoint <output id="heaterOut">1525 C</output></span>
+          <input id="heaterTemp" type="range" min="1200" max="1800" step="5" value="1525">
+        </label>
+
+        <label class="control">
+          <span>Crystal cooling <output id="crystalOut">1050 C</output></span>
+          <input id="crystalTemp" type="range" min="500" max="1350" step="5" value="1050">
+        </label>
+
+        <label class="control">
+          <span>Outer wall <output id="ambientOut">650 C</output></span>
+          <input id="ambientTemp" type="range" min="100" max="1100" step="5" value="650">
+        </label>
+
+        <label class="control">
+          <span>Simulation speed <output id="speedOut">80x</output></span>
+          <input id="simSpeed" type="range" min="5" max="180" step="5" value="80">
+        </label>
+
+        <label class="control">
+          <span>Thermal preset</span>
+          <select id="materialPreset">
+            <option value="hotSilicon">Hot silicon baseline</option>
+            <option value="lowK">Lower-k melt sensitivity</option>
+            <option value="highK">Higher-k silicon sensitivity</option>
+          </select>
+        </label>
+
+        <label class="control">
+          <span>Geometry preset</span>
+          <select id="geometryPreset">
+            <option value="lab">Lab-scale 150 mm boule</option>
+            <option value="pv">PV-like wider melt</option>
+            <option value="compact">Compact teaching cell</option>
+          </select>
+        </label>
+
+        <label class="check-control">
+          <input id="axisymmetric" type="checkbox" checked>
+          <span>Axisymmetric radial correction</span>
+        </label>
+
+        <div class="source-note">
+          <h2>Model Notes</h2>
+          <p>Representative properties come from public silicon, fused-silica, graphite, and Cz modeling references. Values are constant by region, so this is for intuition and UI scaffolding only.</p>
+          <a href="DevLog-000-cgsim-replication-proposal.md">Proposal</a>
+          <a href="DevLog-001-heat-transfer-demo-work-plan.md">Work plan</a>
+        </div>
+      </aside>
+    </main>
+
+    <script src="app.js"></script>
+  </body>
+</html>
