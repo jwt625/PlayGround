@@ -1,0 +1,265 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1380" viewBox="0 0 1800 1380">
+  <defs>
+    <style>
+      .bg { fill: #080c10; }
+      .panel { fill: #0f151b; stroke: #2a3a42; stroke-width: 1.4; }
+      .node { fill: #111a21; stroke: #55aa8f; stroke-width: 1.6; }
+      .node2 { fill: #111827; stroke: #62a0d8; stroke-width: 1.6; }
+      .node3 { fill: #15161d; stroke: #c98b5a; stroke-width: 1.6; }
+      .mutedNode { fill: #101418; stroke: #54606a; stroke-width: 1.3; }
+      .chip { fill: #151e26; stroke: #2f4450; stroke-width: 1; }
+      .chipGreen { fill: #102019; stroke: #55aa8f; stroke-width: 1; }
+      .chipBlue { fill: #101b28; stroke: #62a0d8; stroke-width: 1; }
+      .chipOrange { fill: #241912; stroke: #c98b5a; stroke-width: 1; }
+      .title { fill: #e6edf2; font-family: Arial, Helvetica, sans-serif; font-size: 34px; font-weight: 700; letter-spacing: 0; }
+      .subtitle { fill: #9fb0bb; font-family: Arial, Helvetica, sans-serif; font-size: 16px; font-weight: 400; letter-spacing: 0; }
+      .section { fill: #d7e4e9; font-family: Arial, Helvetica, sans-serif; font-size: 20px; font-weight: 700; letter-spacing: 0; }
+      .label { fill: #eef6f4; font-family: Arial, Helvetica, sans-serif; font-size: 18px; font-weight: 700; letter-spacing: 0; }
+      .small { fill: #b8c7cf; font-family: Arial, Helvetica, sans-serif; font-size: 13px; font-weight: 400; letter-spacing: 0; }
+      .tiny { fill: #93a5af; font-family: Arial, Helvetica, sans-serif; font-size: 12px; font-weight: 400; letter-spacing: 0; }
+      .company { fill: #c9d9dd; font-family: Arial, Helvetica, sans-serif; font-size: 11px; font-weight: 700; letter-spacing: 0; }
+      .tag { fill: #d9f0e8; font-family: Arial, Helvetica, sans-serif; font-size: 12px; font-weight: 700; letter-spacing: 0; }
+      .edge { fill: none; stroke: #55aa8f; stroke-width: 2; marker-end: url(#arrowGreen); }
+      .edgeBlue { fill: none; stroke: #62a0d8; stroke-width: 2; marker-end: url(#arrowBlue); }
+      .edgeOrange { fill: none; stroke: #c98b5a; stroke-width: 2; marker-end: url(#arrowOrange); }
+      .edgeMuted { fill: none; stroke: #566673; stroke-width: 1.5; stroke-dasharray: 7 7; marker-end: url(#arrowMuted); }
+      .axis { stroke: #34434c; stroke-width: 2; }
+      .tick { stroke: #52616b; stroke-width: 1; }
+    </style>
+    <marker id="arrowGreen" markerWidth="11" markerHeight="8" refX="10" refY="4" orient="auto">
+      <path d="M0,0 L10,4 L0,8 z" fill="#55aa8f"/>
+    </marker>
+    <marker id="arrowBlue" markerWidth="11" markerHeight="8" refX="10" refY="4" orient="auto">
+      <path d="M0,0 L10,4 L0,8 z" fill="#62a0d8"/>
+    </marker>
+    <marker id="arrowOrange" markerWidth="11" markerHeight="8" refX="10" refY="4" orient="auto">
+      <path d="M0,0 L10,4 L0,8 z" fill="#c98b5a"/>
+    </marker>
+    <marker id="arrowMuted" markerWidth="11" markerHeight="8" refX="10" refY="4" orient="auto">
+      <path d="M0,0 L10,4 L0,8 z" fill="#566673"/>
+    </marker>
+  </defs>
+
+  <rect class="bg" x="0" y="0" width="1800" height="1380"/>
+
+  <text class="title" x="56" y="62">IEEE 802.3 Map for AI Scale-Up / Scale-Out Ethernet</text>
+  <text class="subtitle" x="58" y="91">Task forces, study groups, support ad hocs, key topics, and visible contributor ecosystems.</text>
+
+  <rect class="panel" x="50" y="122" width="1075" height="700"/>
+  <text class="section" x="76" y="158">Logical Relationships and Topic Flow</text>
+
+  <rect class="chipGreen" x="76" y="178" width="96" height="28"/>
+  <text class="tag" x="94" y="197">CORE AI</text>
+  <rect class="chipBlue" x="184" y="178" width="118" height="28"/>
+  <text class="tag" x="203" y="197">PHY SPEED</text>
+  <rect class="chipOrange" x="314" y="178" width="132" height="28"/>
+  <text class="tag" x="331" y="197">SUPPORTING</text>
+  <rect class="chip" x="458" y="178" width="124" height="28"/>
+  <text class="tag" x="478" y="197">ADJACENT</text>
+
+  <!-- Topic/source nodes -->
+  <rect class="node" x="80" y="248" width="260" height="164"/>
+  <text class="label" x="102" y="280">E4AI / NEA</text>
+  <text class="small" x="102" y="305">Ethernet for AI assessment</text>
+  <text class="tiny" x="102" y="330">Scale-up / scale-out framing</text>
+  <text class="tiny" x="102" y="350">400G+ per-lane feasibility</text>
+  <text class="tiny" x="102" y="370">Fiber for AI, channel data</text>
+  <text class="company" x="102" y="393">Affil: Huawei/Futurewei, Synopsys,</text>
+  <text class="company" x="102" y="407">Samtec, TE, Cisco</text>
+
+  <rect class="node2" x="430" y="238" width="260" height="170"/>
+  <text class="label" x="452" y="270">802.3dj</text>
+  <text class="small" x="452" y="295">200G/lane to 1.6T Ethernet</text>
+  <text class="tiny" x="452" y="320">DR/FR/SR optics, C2M/AUI</text>
+  <text class="tiny" x="452" y="340">FEC, latency, electrical PHYs</text>
+  <text class="tiny" x="452" y="360">Main cached presentation corpus</text>
+  <text class="company" x="452" y="385">Affil: Cisco, Huawei/Futurewei,</text>
+  <text class="company" x="452" y="399">Broadcom, Intel, Alphawave, Marvell</text>
+
+  <rect class="node2" x="795" y="248" width="260" height="164"/>
+  <text class="label" x="817" y="280">400GPL</text>
+  <text class="small" x="817" y="305">400 Gb/s per lane signaling</text>
+  <text class="tiny" x="817" y="330">Electrical interconnects</text>
+  <text class="tiny" x="817" y="350">SMF optics up to 500 m</text>
+  <text class="tiny" x="817" y="370">Cached active study group</text>
+  <text class="company" x="817" y="393">Affil: Cisco, Synopsys, Huawei,</text>
+  <text class="company" x="817" y="407">Broadcom, HPE, Qualcomm</text>
+
+  <rect class="node3" x="80" y="470" width="260" height="150"/>
+  <text class="label" x="102" y="502">B400G</text>
+  <text class="small" x="102" y="527">Beyond 400G study group</text>
+  <text class="tiny" x="102" y="552">Market need and objective formation</text>
+  <text class="tiny" x="102" y="572">Transitioned into P802.3df</text>
+  <text class="company" x="102" y="598">Lineage signal: Cisco, Huawei,</text>
+  <text class="company" x="102" y="612">Broadcom, Intel, Marvell</text>
+
+  <rect class="node2" x="430" y="470" width="260" height="150"/>
+  <text class="label" x="452" y="502">802.3df</text>
+  <text class="small" x="452" y="527">400G / 800G Ethernet</text>
+  <text class="tiny" x="452" y="552">Completed as IEEE Std 802.3df-2024</text>
+  <text class="tiny" x="452" y="572">Predecessor lineage for 802.3dj</text>
+  <text class="company" x="452" y="598">Affil lineage: Cisco, Huawei/Futurewei,</text>
+  <text class="company" x="452" y="612">Broadcom, Intel, Coherent</text>
+
+  <rect class="node" x="80" y="670" width="260" height="144"/>
+  <text class="label" x="102" y="702">200GMMF</text>
+  <text class="small" x="102" y="727">Study group for 200G/wavelength MMF</text>
+  <text class="tiny" x="102" y="752">850 nm / 1060 nm VCSEL-MMF</text>
+  <text class="tiny" x="102" y="772">Transitioned to P802.3ds</text>
+  <text class="company" x="102" y="797">Affil: Huawei, Lightera, Lumentum,</text>
+  <text class="company" x="102" y="811">Broadcom, Coherent</text>
+
+  <rect class="node" x="430" y="670" width="260" height="144"/>
+  <text class="label" x="452" y="702">802.3ds</text>
+  <text class="small" x="452" y="727">200G/wavelength MMF task force</text>
+  <text class="tiny" x="452" y="752">OM3/OM4/OM5, optimized MMF</text>
+  <text class="tiny" x="452" y="772">MPO MDI, launch, TDECQ/DFE</text>
+  <text class="company" x="452" y="797">Affil: Lightera, Huawei, Corning,</text>
+  <text class="company" x="452" y="811">Coherent, Lumentum, Panduit</text>
+
+  <rect class="node3" x="795" y="470" width="260" height="150"/>
+  <text class="label" x="817" y="502">802.3dq + COM</text>
+  <text class="small" x="817" y="527">Package/interface and channel tools</text>
+  <text class="tiny" x="817" y="552">Pin-optimized PHY interface</text>
+  <text class="tiny" x="817" y="572">COM reference code and channels</text>
+  <text class="company" x="817" y="598">Visible roles: Synopsys, Cisco,</text>
+  <text class="company" x="817" y="612">HPE, test/channel contributors</text>
+
+  <rect class="mutedNode" x="795" y="670" width="260" height="144"/>
+  <text class="label" x="817" y="702">Adjacent Watchlist</text>
+  <text class="small" x="817" y="727">802.3dt, 802.3dk, FMP, PDCC</text>
+  <text class="tiny" x="817" y="752">Metadata services, access optics</text>
+  <text class="tiny" x="817" y="772">Interop and data-center coordination</text>
+  <text class="company" x="817" y="797">Cache status: high-level pages only;</text>
+  <text class="company" x="817" y="811">presentation affiliation pass pending</text>
+
+  <!-- Edges -->
+  <path class="edgeBlue" d="M340 536 C370 536 392 536 420 536"/>
+  <path class="edgeBlue" d="M690 536 C724 502 744 386 786 322"/>
+  <path class="edgeBlue" d="M560 470 C560 440 560 425 560 418"/>
+  <path class="edge" d="M340 315 C368 306 392 306 420 306"/>
+  <path class="edge" d="M690 306 C728 306 752 306 786 306"/>
+  <path class="edge" d="M340 727 C374 727 396 727 420 727"/>
+  <path class="edgeOrange" d="M925 470 C915 440 915 426 925 422"/>
+  <path class="edgeOrange" d="M795 536 C760 510 724 455 700 345"/>
+  <path class="edgeMuted" d="M925 670 C925 646 925 634 925 630"/>
+  <path class="edgeMuted" d="M690 727 C730 727 755 727 786 727"/>
+
+  <text class="tiny" x="352" y="523">charter lineage</text>
+  <text class="tiny" x="704" y="292">next lane-rate push</text>
+  <text class="tiny" x="352" y="296">AI requirements</text>
+  <text class="tiny" x="344" y="714">PAR approved</text>
+  <text class="tiny" x="936" y="428">tools constrain specs</text>
+
+  <!-- Right panel: players -->
+  <rect class="panel" x="1150" y="122" width="600" height="700"/>
+  <text class="section" x="1176" y="158">Key People and Ecosystem Signals</text>
+  <text class="tiny" x="1178" y="183">People are IEEE officers or recurring public contributors. Organizations are visible affiliations / ecosystem inputs, not formal project owners.</text>
+
+  <rect class="chipGreen" x="1178" y="218" width="250" height="116"/>
+  <text class="label" x="1200" y="250">Key chairs / officers</text>
+  <text class="small" x="1200" y="276">John D'Ambrosia (Futurewei/Huawei)</text>
+  <text class="small" x="1200" y="298">Mark Nowell (Cisco)</text>
+  <text class="small" x="1200" y="320">Kent Lusted (Synopsys)</text>
+
+  <rect class="chipBlue" x="1452" y="218" width="250" height="116"/>
+  <text class="label" x="1474" y="250">Active TF/SG chairs</text>
+  <text class="small" x="1474" y="276">Mabud Choudhury (Genuine Optics)</text>
+  <text class="small" x="1474" y="298">Jason Potterf (Cisco)</text>
+  <text class="small" x="1474" y="320">David Ofelt (HPE)</text>
+
+  <rect class="chipOrange" x="1178" y="360" width="250" height="116"/>
+  <text class="label" x="1200" y="392">Support / adjacent</text>
+  <text class="small" x="1200" y="418">Howard Heck (TE Connectivity)</text>
+  <text class="small" x="1200" y="440">Yuanqiu Luo (Futurewei)</text>
+  <text class="small" x="1200" y="462">Jon Lewis (Dell)</text>
+
+  <rect class="chip" x="1452" y="360" width="250" height="116"/>
+  <text class="label" x="1474" y="392">MMF / cabling names</text>
+  <text class="small" x="1474" y="418">Murty (Broadcom), Bernier (Huawei)</text>
+  <text class="small" x="1474" y="440">D. Lewis (Speciphy/Lumentum)</text>
+  <text class="small" x="1474" y="462">Ferretti (Corning), Rodes (Coherent)</text>
+  <text class="tiny" x="1474" y="484">TIA, IEC, ISO/IEC liaison inputs</text>
+
+  <rect class="panel" x="1178" y="512" width="524" height="248"/>
+  <text class="label" x="1200" y="546">Visible contributor ecosystems</text>
+  <text class="small" x="1200" y="576">High-speed Ethernet decks: Cisco, Huawei / Futurewei, Broadcom,</text>
+  <text class="small" x="1200" y="598">Intel, Marvell, Alphawave Semi, Coherent, NVIDIA, Ciena.</text>
+  <text class="small" x="1200" y="630">Electrical / package / test: Samtec, Synopsys, TE Connectivity,</text>
+  <text class="small" x="1200" y="652">Amphenol, Keysight, Microchip, Molex, MaxLinear.</text>
+  <text class="small" x="1200" y="684">Optics / fiber / cabling: Corning, Lumentum, Source Photonics,</text>
+  <text class="small" x="1200" y="706">TeraHop, Panduit, TIA TR-42, IEC TC86, ISO/IEC SC25.</text>
+  <text class="small" x="1200" y="738">AI fabric inputs: OCP, UALink, UEC, OIF, SFF / SNIA, Meta, Microsoft.</text>
+
+  <!-- TIMELINE:START -->
+  <rect class="panel" x="50" y="850" width="1700" height="500"/>
+  <text class="section" x="76" y="887">Timeline View</text>
+  <text class="tiny" x="76" y="910">Workstream chronology and lineage</text>
+  <line class="tick" x1="130.0" y1="920" x2="130.0" y2="1290"/>
+  <text class="tiny" x="114.0" y="1315">2021</text>
+  <line class="tick" x1="385.0" y1="920" x2="385.0" y2="1290"/>
+  <text class="tiny" x="369.0" y="1315">2022</text>
+  <line class="tick" x1="640.0" y1="920" x2="640.0" y2="1290"/>
+  <text class="tiny" x="624.0" y="1315">2023</text>
+  <line class="tick" x1="895.0" y1="920" x2="895.0" y2="1290"/>
+  <text class="tiny" x="879.0" y="1315">2024</text>
+  <line class="tick" x1="1150.7" y1="920" x2="1150.7" y2="1290"/>
+  <text class="tiny" x="1134.7" y="1315">2025</text>
+  <line class="tick" x1="1405.7" y1="920" x2="1405.7" y2="1290"/>
+  <text class="tiny" x="1389.7" y="1315">2026</text>
+  <text class="tiny" x="76" y="953">MMF short reach</text>
+  <text class="tiny" x="76" y="1033">PHY speed lineage</text>
+  <text class="tiny" x="76" y="1099">400G/lane</text>
+  <text class="tiny" x="76" y="1165">AI requirements</text>
+  <text class="tiny" x="76" y="1231">Support / tools + adjacent</text>
+  <rect class="node" x="1322.6" y="930" width="112.0" height="46"/>
+  <text class="small" x="1338.6" y="950">200GMMF SG</text>
+  <text class="tiny" x="1338.6" y="968">2025-09-04 - 2025-12-17</text>
+  <rect class="node" x="1419.7" y="980" width="112.0" height="46"/>
+  <line class="tick" x1="1531.7" y1="1003" x2="1660.0" y2="1003" stroke-dasharray="5 5"/>
+  <line class="tick" x1="1660.0" y1="980" x2="1660.0" y2="1026" stroke-dasharray="5 5"/>
+  <text class="small" x="1435.7" y="1000">P802.3ds TF</text>
+  <text class="tiny" x="1435.7" y="1018">2026-01-21 - 2026-05-27 -&gt; active</text>
+  <rect class="node3" x="130.0" y="1010" width="222.9" height="46"/>
+  <text class="small" x="146.0" y="1030">B400G SG</text>
+  <text class="tiny" x="146.0" y="1048">2021-01 - 2021-11</text>
+  <rect class="node2" x="385.0" y="1010" width="528.2" height="46"/>
+  <text class="small" x="401.0" y="1030">P802.3df TF</text>
+  <text class="tiny" x="401.0" y="1048">2022-01 - 2024-01</text>
+  <rect class="node2" x="681.2" y="1060" width="808.3" height="46"/>
+  <line class="tick" x1="1489.5" y1="1083" x2="1660.0" y2="1083" stroke-dasharray="5 5"/>
+  <line class="tick" x1="1660.0" y1="1060" x2="1660.0" y2="1106" stroke-dasharray="5 5"/>
+  <text class="small" x="697.2" y="1080">P802.3dj TF</text>
+  <text class="tiny" x="697.2" y="1098">2023-03 - 2026-05 -&gt; active</text>
+  <rect class="node2" x="1488.8" y="1076" width="112.0" height="46"/>
+  <line class="tick" x1="1600.8" y1="1099" x2="1660.0" y2="1099" stroke-dasharray="5 5"/>
+  <line class="tick" x1="1660.0" y1="1076" x2="1660.0" y2="1122" stroke-dasharray="5 5"/>
+  <text class="small" x="1504.8" y="1096">400GPL SG</text>
+  <text class="tiny" x="1504.8" y="1114">2026-04-30 - 2026-06-30 -&gt; active</text>
+  <rect class="node" x="1150.7" y="1142" width="367.5" height="46"/>
+  <line class="tick" x1="1518.2" y1="1165" x2="1660.0" y2="1165" stroke-dasharray="5 5"/>
+  <line class="tick" x1="1660.0" y1="1142" x2="1660.0" y2="1188" stroke-dasharray="5 5"/>
+  <text class="small" x="1166.7" y="1162">E4AI / NEA</text>
+  <text class="tiny" x="1166.7" y="1180">2025-01-01 - 2026-06-11 -&gt; active</text>
+  <rect class="node3" x="1191.9" y="1208" width="112.0" height="46"/>
+  <text class="small" x="1207.9" y="1228">COM ad hoc</text>
+  <text class="tiny" x="1207.9" y="1246">2025-03-01 - 2025-07-17</text>
+  <rect class="node3" x="1405.7" y="1208" width="113.9" height="46"/>
+  <line class="tick" x1="1519.6" y1="1231" x2="1660.0" y2="1231" stroke-dasharray="5 5"/>
+  <line class="tick" x1="1660.0" y1="1208" x2="1660.0" y2="1254" stroke-dasharray="5 5"/>
+  <text class="small" x="1421.7" y="1228">P802.3dq</text>
+  <text class="tiny" x="1421.7" y="1246">2026-01-01 - 2026-06-13 -&gt; active</text>
+  <rect class="mutedNode" x="1405.7" y="1258" width="113.9" height="46"/>
+  <line class="tick" x1="1519.6" y1="1281" x2="1660.0" y2="1281" stroke-dasharray="5 5"/>
+  <line class="tick" x1="1660.0" y1="1258" x2="1660.0" y2="1304" stroke-dasharray="5 5"/>
+  <text class="small" x="1421.7" y="1278">P802.3dt</text>
+  <text class="tiny" x="1421.7" y="1296">2026-01-01 - 2026-06-13 -&gt; active</text>
+  <path class="edgeBlue" d="M352.9 1033.0 C368.9 1033.0 368.9 1033.0 385.0 1033.0"/>
+  <path class="edgeBlue" d="M591.2 1056.0 C640.7 1056.0 649.7 1083.0 681.2 1083.0"/>
+  <path class="edgeBlue" d="M1398.8 1106.0 C1448.3 1106.0 1457.3 1099.0 1488.8 1099.0"/>
+  <path class="edge" d="M1398.8 1142.0 C1448.3 1142.0 1457.3 1099.0 1488.8 1099.0"/>
+  <path class="edge" d="M1346.6 976.0 C1386.8 976.0 1394.1 1003.0 1419.7 1003.0"/>
+  <path class="edgeOrange" d="M1303.9 1231.0 C1387.1 1231.0 1405.6 1099.0 1488.8 1099.0"/>
+  <text class="tiny" x="76" y="1330">Footnote: dates from cached public IEEE 802.3 meeting indexes; sources/ranges in ieee802_3_ai_map/timeline_data.json.</text>
+  <!-- TIMELINE:END -->
+</svg>

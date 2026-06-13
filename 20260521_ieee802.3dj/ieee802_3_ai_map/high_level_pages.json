@@ -1,0 +1,150 @@
+{
+  "generated_at": "2026-06-13 08:31:24 PDT",
+  "pages": [
+    {
+      "slug": "8023-home",
+      "title": "IEEE 802.3 Ethernet Working Group",
+      "url": "https://www.ieee802.org/3/",
+      "role": "working-group index and active-project inventory",
+      "path": "ieee802_3_ai_map/high_level_pages/8023-home.html",
+      "size": 12383,
+      "sha256": "fcfe59fd53642356a18ad695c28b528efb4397843bab07aea1eace99a503a09d"
+    },
+    {
+      "slug": "contacts",
+      "title": "IEEE 802.3 Task Force, Study Group, and Ad Hoc Officers",
+      "url": "https://www.ieee802.org/3/contacts.html",
+      "role": "officer list for key-player labels",
+      "path": "ieee802_3_ai_map/high_level_pages/contacts.html",
+      "size": 11949,
+      "sha256": "a031fd36db0508bf7a15c86f27b2f611d5e55e118d80d4cec798f73e3cd54485"
+    },
+    {
+      "slug": "e4ai",
+      "title": "IEEE 802.3 NEA Ethernet for AI Assessment",
+      "url": "https://www.ieee802.org/3/ad_hoc/E4AI/public/index.html",
+      "role": "AI-specific assessment, use cases, 400G/lane consensus inputs",
+      "path": "ieee802_3_ai_map/high_level_pages/e4ai.html",
+      "size": 4434,
+      "sha256": "7776b1cb9a9e035d12c446078f80ce01cc5a4710009608c75cba05a70506af1f"
+    },
+    {
+      "slug": "b400g",
+      "title": "IEEE 802.3 Beyond 400 Gb/s Ethernet Study Group",
+      "url": "https://www.ieee802.org/3/B400G/",
+      "role": "predecessor study group for P802.3df",
+      "path": "ieee802_3_ai_map/high_level_pages/b400g.html",
+      "size": 5300,
+      "sha256": "ab87b3ca68116882fcc151233969593dcacaa597ea16cc4f1dc8eb6c8d0fe326"
+    },
+    {
+      "slug": "b400g-public",
+      "title": "IEEE 802.3 Beyond 400 Gb/s Ethernet Study Group Public Area",
+      "url": "https://www.ieee802.org/3/B400G/public/index.html",
+      "role": "public meeting index for B400G timeline range",
+      "path": "ieee802_3_ai_map/high_level_pages/b400g-public.html",
+      "size": 38401,
+      "sha256": "a458aca0565c4935bdf0ca08f17d788eb9e385aed343162cc8e51ef204bb0b28"
+    },
+    {
+      "slug": "df",
+      "title": "IEEE P802.3df 400 Gb/s and 800 Gb/s Ethernet Task Force",
+      "url": "https://www.ieee802.org/3/df/",
+      "role": "completed 400G/800G baseline project",
+      "path": "ieee802_3_ai_map/high_level_pages/df.html",
+      "size": 5239,
+      "sha256": "2993aad8f337917139ff813ef8a2b57bf2a1256c3e7b975325ca6aea3ec8cbcb"
+    },
+    {
+      "slug": "df-public",
+      "title": "IEEE P802.3df 400 Gb/s and 800 Gb/s Ethernet Task Force Public Area",
+      "url": "https://www.ieee802.org/3/df/public/index.html",
+      "role": "public meeting index for P802.3df timeline range",
+      "path": "ieee802_3_ai_map/high_level_pages/df-public.html",
+      "size": 5119,
+      "sha256": "d0de5915ba8d82beec6a349431260f7f8210adf36d5974d7e79b7b4a24877fdb"
+    },
+    {
+      "slug": "dj",
+      "title": "IEEE P802.3dj 200 Gb/s, 400 Gb/s, 800 Gb/s, and 1.6 Tb/s Ethernet Task Force",
+      "url": "https://www.ieee802.org/3/dj/",
+      "role": "current high-speed Ethernet PHY/electrical task force",
+      "path": "ieee802_3_ai_map/high_level_pages/dj.html",
+      "size": 4680,
+      "sha256": "ab5d8f6704a88082a6a77bbee14bbef88793e5dd8d7a4afde0b85d1213c6824d"
+    },
+    {
+      "slug": "400gpl",
+      "title": "IEEE 802.3 400 Gb/s/Lane Signaling Study Group",
+      "url": "https://www.ieee802.org/3/400GPL/index.html",
+      "role": "next 400G/lane electrical and <=500 m SMF path",
+      "path": "ieee802_3_ai_map/high_level_pages/400gpl.html",
+      "size": 4082,
+      "sha256": "288bb01b72a837cd3007d0af363d683571f5f201940a6c7ec7902d813cdb9a84"
+    },
+    {
+      "slug": "200gmmf",
+      "title": "IEEE 802.3 200 Gb/s per Wavelength MMF PHYs Study Group",
+      "url": "https://www.ieee802.org/3/200GMMF/index.html",
+      "role": "predecessor study group for P802.3ds",
+      "path": "ieee802_3_ai_map/high_level_pages/200gmmf.html",
+      "size": 3620,
+      "sha256": "fee4270fb3201e2defcc4d7330c93b06d1f20d418d646b34b76b11a89cdc0ec1"
+    },
+    {
+      "slug": "ds",
+      "title": "IEEE P802.3ds 200 Gb/s per Wavelength MMF PHYs Task Force",
+      "url": "https://www.ieee802.org/3/ds/",
+      "role": "current 200G/wavelength MMF task force",
+      "path": "ieee802_3_ai_map/high_level_pages/ds.html",
+      "size": 2747,
+      "sha256": "db0201b06ca403629ed0d54fff18ca52aa5ce75e3be6a0b5d84d1e30ded4f5a2"
+    },
+    {
+      "slug": "dq",
+      "title": "IEEE P802.3dq Pin-Optimized PHY Interface Task Force",
+      "url": "https://www.ieee802.org/3/dq/index.html",
+      "role": "package/host pin-optimized PHY interface project",
+      "path": "ieee802_3_ai_map/high_level_pages/dq.html",
+      "size": 2653,
+      "sha256": "32b39bce7166277c4008b08f164756b15ff96aacad524f7c6797856427d0101a"
+    },
+    {
+      "slug": "com",
+      "title": "IEEE 802.3 Channel Operating Margin Open Source Project Ad Hoc",
+      "url": "https://www.ieee802.org/3/ad_hoc/COM/index.html",
+      "role": "electrical channel feasibility/reference-code support",
+      "path": "ieee802_3_ai_map/high_level_pages/com.html",
+      "size": 3412,
+      "sha256": "f1a7147cc7f0fdfe25df75d8e0a5acc94047e5415da0c3d5dec4f5b5e3dc6b85"
+    },
+    {
+      "slug": "com-public",
+      "title": "IEEE 802.3 Channel Operating Margin Open Source Project Ad Hoc Public Area",
+      "url": "https://www.ieee802.org/3/ad_hoc/COM/public/index.html",
+      "role": "public meeting index for COM timeline range",
+      "path": "ieee802_3_ai_map/high_level_pages/com-public.html",
+      "size": 5562,
+      "sha256": "aec55a3875d6efa22c626ede813e010b0099aceeb186294dd0da8a86d0ca5059"
+    },
+    {
+      "slug": "dt",
+      "title": "IEEE P802.3dt Ethernet Metadata Services Task Force",
+      "url": "https://www.ieee802.org/3/dt/index.html",
+      "role": "Ethernet service-interface/per-packet metadata project",
+      "path": "ieee802_3_ai_map/high_level_pages/dt.html",
+      "size": 2578,
+      "sha256": "9f15b224a446a0f9a6c2e71c624348d150ac61d391b7d004396272be261c49e1"
+    },
+    {
+      "slug": "dk",
+      "title": "IEEE P802.3dk Greater than 50 Gb/s Bidirectional Optical Access PHYs Task Force",
+      "url": "https://www.ieee802.org/3/dk/index.html",
+      "role": "situational optical PHY context; less direct for AI clusters",
+      "path": "ieee802_3_ai_map/high_level_pages/dk.html",
+      "size": 67531,
+      "sha256": "72157ab673e6e3bec2776a770be1b2d7cec4f3c491e15fca862f4f4f0cb6554b"
+    }
+  ],
+  "note": "High-level source cache for IEEE 802.3 AI relationship map."
+}

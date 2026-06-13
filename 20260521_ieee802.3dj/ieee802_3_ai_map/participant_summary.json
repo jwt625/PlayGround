@@ -1,0 +1,196 @@
+{
+  "generated_at": "2026-06-13 08:26:39 PDT",
+  "note": "Counts are visible public presentation/meeting-page affiliation signals, not formal sponsor or membership counts.",
+  "summaries": {
+    "802.3dj": {
+      "source": "ieee802_3dj_browser/metadata/talks.json",
+      "method": "presentation metadata affiliation counts",
+      "top_affiliations": [
+        {
+          "name": "Cisco",
+          "count": 424
+        },
+        {
+          "name": "Huawei",
+          "count": 238
+        },
+        {
+          "name": "Broadcom",
+          "count": 191
+        },
+        {
+          "name": "Intel",
+          "count": 177
+        },
+        {
+          "name": "Huawei / Futurewei",
+          "count": 147
+        },
+        {
+          "name": "Alphawave Semi",
+          "count": 131
+        },
+        {
+          "name": "Marvell",
+          "count": 107
+        },
+        {
+          "name": "Coherent",
+          "count": 77
+        }
+      ]
+    },
+    "E4AI": {
+      "source": "ieee802_e4ai_metadata/documents.json",
+      "method": "presentation metadata affiliation counts",
+      "top_affiliations": [
+        {
+          "name": "Huawei / Futurewei",
+          "count": 21
+        },
+        {
+          "name": "Synopsys",
+          "count": 9
+        },
+        {
+          "name": "Samtec",
+          "count": 9
+        },
+        {
+          "name": "Huawei",
+          "count": 9
+        },
+        {
+          "name": "TE Connectivity",
+          "count": 8
+        },
+        {
+          "name": "Cisco",
+          "count": 6
+        },
+        {
+          "name": "Microchip",
+          "count": 4
+        },
+        {
+          "name": "Amphenol",
+          "count": 4
+        }
+      ]
+    },
+    "200GMMF": {
+      "source": "ieee802_3_ai_related_cache/200GMMF/*/index.html",
+      "method": "meeting table affiliation-column counts",
+      "top_affiliations": [
+        {
+          "name": "Huawei",
+          "count": 14
+        },
+        {
+          "name": "Lightera",
+          "count": 12
+        },
+        {
+          "name": "Lumentum",
+          "count": 9
+        },
+        {
+          "name": "Broadcom",
+          "count": 8
+        },
+        {
+          "name": "Coherent",
+          "count": 5
+        },
+        {
+          "name": "Speciphy / Lumentum",
+          "count": 1
+        },
+        {
+          "name": "Macom",
+          "count": 1
+        },
+        {
+          "name": "Marvell / Ghiasi Quantum",
+          "count": 1
+        }
+      ]
+    },
+    "802.3ds": {
+      "source": "ieee802_3_ai_related_cache/ds/*/index.html",
+      "method": "meeting table affiliation-column counts",
+      "top_affiliations": [
+        {
+          "name": "Lightera",
+          "count": 20
+        },
+        {
+          "name": "Huawei",
+          "count": 13
+        },
+        {
+          "name": "Corning",
+          "count": 8
+        },
+        {
+          "name": "Coherent",
+          "count": 6
+        },
+        {
+          "name": "Speciphy / Lumentum",
+          "count": 5
+        },
+        {
+          "name": "Ligent Tech",
+          "count": 4
+        },
+        {
+          "name": "Panduit",
+          "count": 4
+        },
+        {
+          "name": "Lumentum",
+          "count": 3
+        }
+      ]
+    },
+    "400GPL": {
+      "source": "ieee802_3_ai_related_cache/400GPL/*/index.html",
+      "method": "meeting table affiliation-column counts",
+      "top_affiliations": [
+        {
+          "name": "Cisco",
+          "count": 26
+        },
+        {
+          "name": "Synopsys",
+          "count": 20
+        },
+        {
+          "name": "Huawei",
+          "count": 11
+        },
+        {
+          "name": "Broadcom",
+          "count": 5
+        },
+        {
+          "name": "HPE",
+          "count": 5
+        },
+        {
+          "name": "Huawei / Futurewei",
+          "count": 4
+        },
+        {
+          "name": "Qualcomm",
+          "count": 4
+        },
+        {
+          "name": "Socionext",
+          "count": 3
+        }
+      ]
+    }
+  }
+}
