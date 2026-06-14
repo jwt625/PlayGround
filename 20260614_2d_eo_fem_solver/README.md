@@ -49,6 +49,11 @@ python3 -m http.server 5173
 open http://localhost:5173/web/
 ```
 
+The example buttons reload YAML with cache busting. If you edit
+`examples/parallel_plate.yaml` or another example on disk, click the
+corresponding example button again to load the current file contents into the
+browser editor. The app does not currently watch files automatically.
+
 Reference Python CLI:
 
 ```bash
@@ -77,14 +82,22 @@ Visualizer:
 - Quantity selector: `phi`, `Ex`, `Ey`, `|E|`, `epsilon_r`,
   `epsilon_r_xx`, `epsilon_r_yy`, `epsilon_r_xy`, `r13`, `r33`, `r22`,
   `r_eff`.
+- Quantity options and hover tooltips include short descriptions and
+  expressions, for example `expr: -d(phi)/dx (x electric-field component)`.
 - Scale selector: linear, linear symmetric, log magnitude.
 - Mesh overlay toggle.
 - Mesh size controls for `Simulation.mesh_nx` and `Simulation.mesh_ny`.
 - Draggable splitter between the YAML editor and plot/results panel.
+- Left pane is viewport-bounded; the YAML editor and log panel scroll
+  internally.
+- Right pane reserves stable rows for controls, progress, canvas, and numerical
+  results so the plot canvas does not jump during solve/error states.
 - Plot interaction: drag to pan, mouse wheel to zoom, double-click or Reset view
   to restore full-domain view, resize-aware canvas redraw.
 - Hover tooltip reports `x`, `y`, selected value, and the expression used for
   the selected quantity.
+- During solve, the plot clears and shows an in-canvas WIP state instead of
+  stale field data.
 - Solve progress indicator is shown during parse/validation/solve. True
   iteration-level progress requires moving the solver into a Web Worker or
   making the CG loop asynchronous.
@@ -107,6 +120,17 @@ Neumann outer boundaries. The next performance step is to move the same
 config/results contract into a Web Worker, then consider Rust/WASM or WebGPU
 only if the interactive mesh sizes need it.
 
+Important material-model status:
+
+- The electrostatic solve currently uses only `Materials.background.eps_r` in
+  the stiffness matrix. Rectangular material regions, `epsilon_r` maps,
+  anisotropic placeholders, EO coefficients, and material-boundary overlays are
+  visualization/diagnostic features until spatially varying assembly lands.
+- The next physics implementation step is per-triangle scalar permittivity:
+  evaluate the material at each triangle centroid, assemble that triangle with
+  `epsilon_0 * eps_r(material)`, and use the same spatially varying matrix for
+  potential, field, energy, charge, and capacitance.
+
 Performance notes:
 
 - Sparse stiffness storage uses CSR typed arrays in the browser core.
@@ -127,3 +151,25 @@ True FEM mesh path:
 - Reuse the existing P1 triangle stiffness assembly; it already accepts
   arbitrary triangle coordinates.
 - Replace node-inside-electrode Dirichlet pinning with boundary/entity tags.
+
+Current limitations:
+
+- Browser and Python assembly currently use scalar background `eps_r`; material
+  maps and material-boundary overlays are diagnostic until spatially varying
+  scalar/tensor assembly is added.
+- Electrode/material interfaces are not geometry-conforming.
+- Charge extraction is not yet boundary-edge integration on tagged conductor
+  boundaries.
+- The solver runs on the main browser thread. The UI yields before solving so
+  status/log/WIP can paint, but the numerical solve itself still blocks until
+  complete.
+- Web Worker execution, real iteration progress, preconditioning, nonuniform
+  refinement, true FEM meshing, anisotropic tensors, and EO overlap remain next
+  steps.
+
+Next implementation step:
+
+- Implement spatially varying scalar `eps_r` for material domains in
+  `web/core/solver.js` first, mirrored in `eo_fem/solver.py` for regression
+  checks. Add tests showing a high-epsilon insert changes capacitance relative
+  to the same geometry with homogeneous background permittivity.

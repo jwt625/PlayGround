@@ -1,5 +1,6 @@
 import { parseSimpleYaml } from "./core/config.js";
-import { electrodeContains, parseElectrodes } from "./core/geometry.js";
+import { parseElectrodes } from "./core/geometry.js";
+import { parseMaterials } from "./core/materials.js";
 import { quantityInfo } from "./core/quantities.js";
 import { getPlotValues, solveConfig } from "./core/solver.js";
 import { validateConfig } from "./core/validation.js";
@@ -30,6 +31,8 @@ const examplePaths = {
   parallel: "../examples/parallel_plate.yaml",
   cylinders: "../examples/two_cylinders.yaml",
   stack: "../examples/material_stack.yaml",
+  tfln: "../examples/tfln_partial_etched_mzm.yaml",
+  bto: "../examples/bto_on_sin_plasmonic.yaml",
 };
 
 let solveTimer = null;
@@ -46,6 +49,8 @@ document.querySelector("#solve-button").addEventListener("click", runSolve);
 document.querySelector("#parallel-button").addEventListener("click", () => loadExample("parallel"));
 document.querySelector("#cylinders-button").addEventListener("click", () => loadExample("cylinders"));
 document.querySelector("#stack-button").addEventListener("click", () => loadExample("stack"));
+document.querySelector("#tfln-button").addEventListener("click", () => loadExample("tfln"));
+document.querySelector("#bto-button").addEventListener("click", () => loadExample("bto"));
 quantitySelect.addEventListener("change", redrawLastResult);
 scaleSelect.addEventListener("change", redrawLastResult);
 meshToggle.addEventListener("change", redrawLastResult);
@@ -358,6 +363,7 @@ function renderPlot(config, result) {
   const p0 = toCanvas(result.mesh, [result.mesh.domain.xMin, result.mesh.domain.yMin]);
   const p1 = toCanvas(result.mesh, [result.mesh.domain.xMax, result.mesh.domain.yMax]);
   ctx.drawImage(offscreen, p0[0], p1[1], p1[0] - p0[0], p0[1] - p1[1]);
+  drawMaterialBoundaries(config, result);
   drawElectrodes(config, result);
   if (meshToggle.checked) drawMesh(result.mesh);
   renderColorbar(transform);
@@ -473,6 +479,24 @@ function drawMesh(mesh) {
   ctx.restore();
 }
 
+function drawMaterialBoundaries(config, result) {
+  const materials = parseMaterials(config).filter((material) => material.shape !== "background");
+  ctx.save();
+  ctx.lineJoin = "miter";
+  ctx.setLineDash([6, 4]);
+  for (const material of materials) {
+    drawShapePath(result.mesh, material.shape, material.params);
+    ctx.strokeStyle = "rgba(0,0,0,0.82)";
+    ctx.lineWidth = 3.0;
+    ctx.stroke();
+    drawShapePath(result.mesh, material.shape, material.params);
+    ctx.strokeStyle = "rgba(255,255,255,0.88)";
+    ctx.lineWidth = 1.35;
+    ctx.stroke();
+  }
+  ctx.restore();
+}
+
 function drawElectrodes(config, result) {
   const electrodes = parseElectrodes(config);
   ctx.save();
@@ -481,32 +505,24 @@ function drawElectrodes(config, result) {
       electrode.potential > 0 ? "rgba(255,255,255,0.72)" : "rgba(0,0,0,0.58)";
     ctx.strokeStyle = electrode.potential > 0 ? "rgba(20,20,20,0.9)" : "rgba(255,255,255,0.9)";
     ctx.lineWidth = 1.25;
-    drawElectrodePath(result.mesh, electrode);
+    drawShapePath(result.mesh, electrode.shape, electrode.params);
     ctx.fill();
     ctx.stroke();
   }
   ctx.restore();
 }
 
-function drawElectrodePath(mesh, electrode) {
-  const p = electrode.params;
+function drawShapePath(mesh, shape, params) {
+  const p = params;
   ctx.beginPath();
-  if (electrode.shape === "rectangle") {
+  if (shape === "rectangle") {
     const p0 = toCanvas(mesh, [p.x_min, p.y_min]);
     const p1 = toCanvas(mesh, [p.x_max, p.y_max]);
     ctx.rect(p0[0], p1[1], p1[0] - p0[0], p0[1] - p1[1]);
-  } else if (electrode.shape === "circle") {
+  } else if (shape === "circle") {
     const center = toCanvas(mesh, [p.x, p.y]);
     const edge = toCanvas(mesh, [p.x + p.radius, p.y]);
     ctx.arc(center[0], center[1], Math.abs(edge[0] - center[0]), 0, 2 * Math.PI);
-  } else {
-    for (let i = 0; i < mesh.nodes.length; i += 1) {
-      const [x, y] = mesh.nodes[i];
-      if (electrodeContains(electrode, x, y)) {
-        const [cx, cy] = toCanvas(mesh, [x, y]);
-        ctx.rect(cx - 1, cy - 1, 2, 2);
-      }
-    }
   }
 }
 

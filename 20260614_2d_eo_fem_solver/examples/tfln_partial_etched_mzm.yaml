@@ -1,0 +1,78 @@
+# Monolithic partially etched TFLN waveguide with one differential electrode pair.
+# Intent: one optical waveguide centered between S+ and S- electrodes. This is a
+# single-arm electrostatic cross-section, not a two-arm MZM layout.
+# Geometry anchor: common monolithic TFLN dimensions from high-speed MZM papers:
+# 500 nm X-cut LN, 200 nm etch, 800 nm rib, and multi-micron lateral electrode
+# gaps. Electrodes are drawn in direct contact with the partially etched LN slab.
+# Rectangular sidewalls are a solver limit.
+# Material anchor: LN RF eps ~27-43 depending axis; r33 ~27-31 pm/V at 1550 nm.
+Simulation:
+  name: tfln_single_waveguide_differential_pair
+  mesh_nx: 261
+  mesh_ny: 181
+  signal_electrode: signal_plus
+Domain:
+  x_min: -10e-6
+  x_max: 10e-6
+  y_min: -5e-6
+  y_max: 4e-6
+Materials:
+  background:
+    eps_r: 3.9
+  silicon_substrate:
+    shape: rectangle
+    eps_r: 11.7
+    x_min: -10e-6
+    x_max: 10e-6
+    y_min: -5e-6
+    y_max: -2e-6
+  buried_oxide:
+    shape: rectangle
+    eps_r: 3.9
+    x_min: -10e-6
+    x_max: 10e-6
+    y_min: -2e-6
+    y_max: 0.0
+  ln_slab_300nm:
+    shape: rectangle
+    eps_r: 30.0
+    eps_r_xx: 43.0
+    eps_r_yy: 28.0
+    eps_r_xy: 0.0
+    r13: 8.6e-12
+    r22: 6.8e-12
+    r33: 30.8e-12
+    r_eff: 27.0e-12
+    x_min: -10e-6
+    x_max: 10e-6
+    y_min: 0.0
+    y_max: 0.3e-6
+  ln_rib_200nm:
+    shape: rectangle
+    eps_r: 30.0
+    eps_r_xx: 43.0
+    eps_r_yy: 28.0
+    eps_r_xy: 0.0
+    r13: 8.6e-12
+    r22: 6.8e-12
+    r33: 30.8e-12
+    r_eff: 27.0e-12
+    x_min: -0.4e-6
+    x_max: 0.4e-6
+    y_min: 0.3e-6
+    y_max: 0.5e-6
+Electrodes:
+  signal_plus:
+    shape: rectangle
+    potential: 0.5
+    x_min: -3.7e-6
+    x_max: -1.2e-6
+    y_min: 0.3e-6
+    y_max: 1.3e-6
+  signal_minus:
+    shape: rectangle
+    potential: -0.5
+    x_min: 1.2e-6
+    x_max: 3.7e-6
+    y_min: 0.3e-6
+    y_max: 1.3e-6

@@ -87,6 +87,9 @@ function validateElectrodes(electrodes, errors) {
   if (names.length < 2) errors.push("Electrodes must define at least two conductors");
   let hasNonzero = false;
   let hasZero = false;
+  let hasPositive = false;
+  let hasNegative = false;
+  const potentials = new Set();
   for (const [name, electrode] of Object.entries(electrodes)) {
     if (!isPlainObject(electrode)) {
       errors.push(`Electrodes.${name} must be a mapping`);
@@ -98,12 +101,18 @@ function validateElectrodes(electrodes, errors) {
     requireFinite(electrode, "potential", `Electrodes.${name}.potential`, errors);
     const potential = Number(electrode.potential);
     if (Number.isFinite(potential)) {
+      potentials.add(potential);
       if (potential === 0) hasZero = true;
       else hasNonzero = true;
+      if (potential > 0) hasPositive = true;
+      if (potential < 0) hasNegative = true;
     }
     validateShapeParams(electrode, `Electrodes.${name}`, errors);
   }
-  if (!hasZero) errors.push("Electrodes should include at least one 0 V reference conductor");
+  if (potentials.size < 2) errors.push("Electrodes must define at least two distinct potentials");
+  if (!hasZero && !(hasPositive && hasNegative)) {
+    errors.push("Electrodes should include either a 0 V reference conductor or bipolar differential drive");
+  }
   if (!hasNonzero) errors.push("Electrodes should include at least one non-zero signal conductor");
 }
 

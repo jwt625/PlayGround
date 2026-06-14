@@ -143,6 +143,78 @@ Alternatives:
 7. Sweep electrode gap and EO-film thickness.
 8. Validate against analytic parallel-plate and coaxial/fringing reference cases.
 
+## Current Prototype Status
+
+As of 2026-06-14, the repository has a browser-first runnable prototype plus a Python reference path.
+
+Implemented browser path:
+
+- Static browser app under `web/`, served by `python3 -m http.server 5173`.
+- Client-side MOOSE-like YAML loading/editing.
+- Cache-busted example YAML fetches so clicking an example button reloads current disk contents rather than stale browser cache.
+- Structured triangular mesh:
+  - `nx` by `ny` Cartesian node grid over `Domain`.
+  - Each rectangular cell is split into two P1 triangles.
+  - Electrodes are currently imposed by pinning mesh nodes inside conductor shapes to Dirichlet potentials.
+- Scalar-permittivity electrostatic solve:
+  - P1 triangle stiffness assembly.
+  - CSR typed-array sparse storage.
+  - Conjugate-gradient solve on free nodes.
+  - Energy-method and electrode-node charge capacitance estimates.
+  - Current assembly is homogeneous: it uses `Materials.background.eps_r` only.
+    Non-background material regions are not yet included in the solve matrix.
+- Analytic validation cases:
+  - Parallel-plate reference.
+  - Two-cylinder reference.
+- Field/material visualization:
+  - `phi`, `Ex`, `Ey`, `|E|`.
+  - Diagnostic material/EO-property maps: `epsilon_r`, `epsilon_r_xx`, `epsilon_r_yy`, `epsilon_r_xy`, `r13`, `r33`, `r22`, `r_eff`.
+  - Material boundary outlines over field/material plots.
+  - Linear, symmetric linear, and log-magnitude color scaling.
+  - Colorbar, mesh overlay, electrode overlay, quantity descriptions and expressions.
+- Canvas interaction:
+  - Drag pan.
+  - Mouse-wheel zoom.
+  - Double-click or Reset view to restore domain view.
+  - Resize-aware redraw.
+  - Hover tooltip with `x`, `y`, selected value, and expression/description.
+- UI/runtime behavior:
+  - Dark theme and sharp-corner controls.
+  - Resizable editor/output panes.
+  - Left pane bounded to viewport; YAML and log scroll internally.
+  - Stable right-pane layout so canvas does not jump during solve/progress/error states.
+  - In-canvas WIP state while the solver is running.
+  - Timestamped log panel for validation, solve start, solve finish, and errors.
+  - Config validation before solving: finite numeric values, positive domain dimensions, valid mesh size, positive permittivity, valid conductor geometry, valid analytic-reference dimensions.
+
+Implemented reference path:
+
+- Python package `eo_fem` mirrors the simple structured scalar solver.
+- Pytest reference tests remain available for cross-checking.
+
+Current limitations:
+
+- The browser and Python solvers still use scalar background `eps_r` in assembly; material-property maps and material-boundary outlines are diagnostic only.
+- Electrode and material boundaries are not geometry-conforming.
+- Charge extraction is still based on conductor-node residuals, not tagged boundary-edge integration.
+- The solve still runs on the main browser thread; progress is a status/WIP indicator, not true iteration-level progress.
+- No Web Worker, preconditioner, WebGPU, true unstructured mesh, anisotropic tensor assembly, or EO overlap yet.
+- Python tests and browser tests are separate; browser tests are the primary product-path tests.
+
+Immediate next implementation target:
+
+1. Add spatially varying scalar permittivity to browser assembly.
+   - Parse material regions once with existing `parseMaterials`.
+   - For each P1 triangle, evaluate the material at the triangle centroid.
+   - Assemble local stiffness with `epsilon_0 * eps_r_centroid`.
+   - Keep `eps_r_xx`, `eps_r_yy`, and `eps_r_xy` as diagnostic placeholders until tensor assembly is implemented.
+2. Mirror the same centroid-based scalar assembly in the Python reference path.
+3. Add regression tests:
+   - Homogeneous material case remains unchanged.
+   - A high-`eps_r` slab between electrodes increases capacitance relative to low-`eps_r` background.
+   - Material ordering/overlap behavior follows the existing "later non-background material wins" map rule.
+4. Update result/log text to make clear whether a run used homogeneous or spatially varying scalar permittivity.
+
 ## Browser Visualizer Requirements
 
 The browser UI should expose enough numerical internals that the user can debug whether a result is physically plausible before trusting scalar metrics.
@@ -177,11 +249,15 @@ The browser UI should expose enough numerical internals that the user can debug 
 | M1 | Scalar-permittivity electrostatic solve with capacitance extraction |
 | M2 | Mesh convergence harness and analytic tests |
 | M3 | Browser visualizer for mesh, `phi`, `Ex`, `Ey`, `|E|`, colorbar, and material-property maps |
-| M4 | Web Worker solver execution and interactive parameter updates without blocking the UI |
-| M5 | Anisotropic permittivity tensors with material orientation |
-| M6 | Approximate optical-mode overlap and `VpiL` estimator |
-| M7 | Parameter sweeps and plots: `C_per_length`, `VpiL`, RC-limited length |
-| M8 | Imported optical mode support from external solvers |
+| M4 | Stable browser UX: validation, logging, pan/zoom/hover, cache-busted example reloads, stable layout |
+| M5 | Web Worker solver execution and real iteration-level progress without blocking the UI |
+| M6 | Spatially varying scalar permittivity in assembly; next task |
+| M7 | Nonuniform structured mesh refinement near electrode/material edges |
+| M8 | True geometry-conforming FEM mesh with region/boundary tags |
+| M9 | Anisotropic permittivity tensors with material orientation |
+| M10 | Approximate optical-mode overlap and `VpiL` estimator |
+| M11 | Parameter sweeps and plots: `C_per_length`, `VpiL`, RC-limited length |
+| M12 | Imported optical mode support from external solvers |
 
 ## Key Checks
 

@@ -101,6 +101,20 @@ test("material property maps expose isotropic and anisotropic placeholders", () 
   assert.ok(Math.max(...r13) >= 8.6e-12);
 });
 
+test("EO modulator examples parse, validate, solve, and expose EO maps", () => {
+  for (const path of [
+    "examples/tfln_partial_etched_mzm.yaml",
+    "examples/bto_on_sin_plasmonic.yaml",
+  ]) {
+    const config = parseSimpleYaml(fs.readFileSync(path, "utf8"));
+    validateConfig(config);
+    const result = solveConfig(config);
+    const rEff = materialPropertyField(result.mesh, result.materials, "r_eff");
+    assert.ok(result.capacitanceEnergy > 0, `${path} capacitance`);
+    assert.ok(Math.max(...rEff) > 0, `${path} r_eff`);
+  }
+});
+
 test("validation rejects non-finite and non-physical inputs before solve", () => {
   const config = parseSimpleYaml(PARALLEL_PLATE_CONFIG);
   config.Domain.x_max = config.Domain.x_min;

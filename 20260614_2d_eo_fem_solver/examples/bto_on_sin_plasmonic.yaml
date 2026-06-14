@@ -1,0 +1,72 @@
+# BTO-on-SiN waveguide with blanket BTO film and contacting electrodes.
+# Intent: one physical transverse slice through a BTO-loaded SiN phase shifter:
+# SiN core in oxide, full-width BTO film above it, and lateral electrodes in
+# direct contact with the BTO film. This is not a plasmonic slot cartoon.
+# Geometry anchor: BTO-on-SiN platforms use 800 x 800 nm SiN passives embedded
+# in SiO2. The BTO film thickness and electrode gap here are first-pass
+# estimator values and should be replaced by a specific process stack later.
+# Material anchor: BTO is strongly dispersive; representative 100 MHz values
+# eps_a ~1136, r42 ~481 pm/V, r33 ~125 pm/V are from Nature Materials 2025.
+Simulation:
+  name: bto_on_sin_blanket_film_differential_pair
+  mesh_nx: 281
+  mesh_ny: 221
+  signal_electrode: signal_plus
+Domain:
+  x_min: -4.0e-6
+  x_max: 4.0e-6
+  y_min: -3.0e-6
+  y_max: 3.0e-6
+Materials:
+  background:
+    eps_r: 3.9
+  silicon_substrate:
+    shape: rectangle
+    eps_r: 11.7
+    x_min: -4.0e-6
+    x_max: 4.0e-6
+    y_min: -3.0e-6
+    y_max: -2.0e-6
+  buried_oxide:
+    shape: rectangle
+    eps_r: 3.9
+    x_min: -4.0e-6
+    x_max: 4.0e-6
+    y_min: -2.0e-6
+    y_max: 0.4e-6
+  silicon_nitride_core:
+    shape: rectangle
+    eps_r: 7.5
+    x_min: -0.4e-6
+    x_max: 0.4e-6
+    y_min: -0.4e-6
+    y_max: 0.4e-6
+  bto_blanket_film:
+    shape: rectangle
+    eps_r: 1136.0
+    eps_r_xx: 1136.0
+    eps_r_yy: 130.0
+    eps_r_xy: 0.0
+    r13: 0.0
+    r22: 0.0
+    r33: 125.0e-12
+    r_eff: 481.0e-12
+    x_min: -4.0e-6
+    x_max: 4.0e-6
+    y_min: 0.4e-6
+    y_max: 0.8e-6
+Electrodes:
+  signal_plus:
+    shape: rectangle
+    potential: 0.5
+    x_min: -1.6e-6
+    x_max: -0.7e-6
+    y_min: 0.8e-6
+    y_max: 1.5e-6
+  signal_minus:
+    shape: rectangle
+    potential: -0.5
+    x_min: 0.7e-6
+    x_max: 1.6e-6
+    y_min: 0.8e-6
+    y_max: 1.5e-6
