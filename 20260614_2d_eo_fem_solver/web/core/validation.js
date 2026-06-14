@@ -5,19 +5,27 @@ const CIRCLE_KEYS = ["x", "y", "radius"];
 
 export function validateConfig(config) {
   const errors = [];
+  const opticalMode = isOpticalMode(config);
   requireBlock(config, "Simulation", errors);
   requireBlock(config, "Domain", errors);
   requireBlock(config, "Materials", errors);
-  requireBlock(config, "Electrodes", errors);
+  if (!opticalMode) requireBlock(config, "Electrodes", errors);
   validateDomain(config.Domain, errors);
-  validateSimulation(config.Simulation ?? {}, errors);
-  validateMaterials(config.Materials ?? {}, errors);
-  validateElectrodes(config.Electrodes ?? {}, errors);
-  validateOutputs(config.Outputs ?? {}, errors);
+  validateSimulation(config.Simulation ?? {}, errors, opticalMode);
+  validateMaterials(config.Materials ?? {}, errors, opticalMode);
+  if (!opticalMode) {
+    validateElectrodes(config.Electrodes ?? {}, errors);
+    validateOutputs(config.Outputs ?? {}, errors);
+  }
   if (errors.length > 0) {
     throw new Error(`Invalid simulation config:\n- ${errors.join("\n- ")}`);
   }
   return config;
+}
+
+export function isOpticalMode(config) {
+  const physics = String(config?.Simulation?.physics ?? "").toLowerCase();
+  return physics === "optical_mode" || physics === "mode_solver";
 }
 
 function requireBlock(config, key, errors) {
@@ -39,7 +47,7 @@ function validateDomain(domain, errors) {
   }
 }
 
-function validateSimulation(simulation, errors) {
+function validateSimulation(simulation, errors, opticalMode = false) {
   const nx = Number(simulation.mesh_nx ?? 81);
   const ny = Number(simulation.mesh_ny ?? 61);
   if (!Number.isInteger(nx) || nx < 3 || nx > 401) {
@@ -47,6 +55,21 @@ function validateSimulation(simulation, errors) {
   }
   if (!Number.isInteger(ny) || ny < 3 || ny > 401) {
     errors.push("Simulation.mesh_ny must be an integer from 3 to 401");
+  }
+  if (opticalMode) {
+    requirePositive(simulation, "wavelength", "Simulation.wavelength", errors);
+    if (simulation.num_modes !== undefined) {
+      const numModes = Number(simulation.num_modes);
+      if (!Number.isInteger(numModes) || numModes < 1 || numModes > 4) {
+        errors.push("Simulation.num_modes must be an integer from 1 to 4");
+      }
+    }
+    if (simulation.mode_max_iterations !== undefined) {
+      const maxIterations = Number(simulation.mode_max_iterations);
+      if (!Number.isInteger(maxIterations) || maxIterations < 50 || maxIterations > 5000) {
+        errors.push("Simulation.mode_max_iterations must be an integer from 50 to 5000");
+      }
+    }
   }
   validateRefinement(simulation.refinement, errors);
 }
@@ -78,7 +101,7 @@ function validateRefinement(refinement, errors) {
   }
 }
 
-function validateMaterials(materials, errors) {
+function validateMaterials(materials, errors, opticalMode = false) {
   if (!isPlainObject(materials)) return;
   for (const [name, material] of Object.entries(materials)) {
     if (!isPlainObject(material)) {
@@ -89,8 +112,17 @@ function validateMaterials(materials, errors) {
     if (!["background", "rectangle", "circle"].includes(shape)) {
       errors.push(`Materials.${name}.shape must be background, rectangle, or circle`);
     }
-    if (material.eps_r === undefined && material.eps_r_xx === undefined) {
-      errors.push(`Materials.${name} must define eps_r or eps_r_xx`);
+    if (
+      material.eps_r === undefined &&
+      material.eps_r_xx === undefined &&
+      material.n === undefined &&
+      material.n_xx === undefined
+    ) {
+      errors.push(
+        opticalMode
+          ? `Materials.${name} must define n, n_xx, eps_r, or eps_r_xx`
+          : `Materials.${name} must define eps_r or eps_r_xx`,
+      );
     }
     for (const key of MATERIAL_PROPERTY_KEYS) {
       if (material[key] !== undefined) {
@@ -98,6 +130,14 @@ function validateMaterials(materials, errors) {
       }
     }
     for (const key of ["eps_r", "eps_r_xx", "eps_r_yy"]) {
+      if (material[key] !== undefined) {
+        const value = Number(material[key]);
+        if (Number.isFinite(value) && value <= 0) {
+          errors.push(`Materials.${name}.${key} must be positive`);
+        }
+      }
+    }
+    for (const key of ["n", "n_xx", "n_yy"]) {
       if (material[key] !== undefined) {
         const value = Number(material[key]);
         if (Number.isFinite(value) && value <= 0) {

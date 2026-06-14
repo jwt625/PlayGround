@@ -1,0 +1,24 @@
+Simulation:
+  name: si_strip_scalar_mode
+  physics: optical_mode
+  wavelength: 1.55e-6
+  mesh_nx: 121
+  mesh_ny: 91
+  num_modes: 1
+  mode_max_iterations: 650
+  mode_tolerance: 2e-4
+Domain:
+  x_min: -2.0e-6
+  x_max: 2.0e-6
+  y_min: -1.5e-6
+  y_max: 1.5e-6
+Materials:
+  background:
+    n: 1.444
+  silicon_core:
+    shape: rectangle
+    n: 3.476
+    x_min: -0.25e-6
+    x_max: 0.25e-6
+    y_min: -0.11e-6
+    y_max: 0.11e-6

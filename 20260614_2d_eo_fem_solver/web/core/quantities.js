@@ -19,6 +19,26 @@ export const QUANTITIES = {
     description: "electric-field magnitude",
     expression: "sqrt(Ex^2 + Ey^2)",
   },
+  mode: {
+    label: "mode",
+    description: "scalar optical modal field",
+    expression: "psi",
+  },
+  mode_abs: {
+    label: "|mode|",
+    description: "scalar optical modal-field magnitude",
+    expression: "abs(psi)",
+  },
+  mode_intensity: {
+    label: "I",
+    description: "scalar optical modal intensity",
+    expression: "psi^2",
+  },
+  n: {
+    label: "n",
+    description: "optical refractive index",
+    expression: "material.n || sqrt(eps_r)",
+  },
   eps_r: {
     label: "epsilon_r",
     description: "relative permittivity",

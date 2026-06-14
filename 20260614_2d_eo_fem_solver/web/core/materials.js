@@ -1,6 +1,10 @@
 import { electrodeContains } from "./geometry.js";
 
 export const MATERIAL_PROPERTY_KEYS = [
+  "n",
+  "n_xx",
+  "n_yy",
+  "n_xy",
   "eps_r",
   "eps_r_xx",
   "eps_r_yy",
@@ -43,6 +47,13 @@ export function materialAt(materials, x, y) {
 export function materialPropertyAt(materials, x, y, property) {
   const material = materialAt(materials, x, y);
   if (material.properties[property] !== undefined) return material.properties[property];
+  if (property === "n") {
+    return opticalIndexAt(materials, x, y);
+  }
+  if (property === "n_xx" || property === "n_yy") {
+    return material.properties.n ?? opticalIndexAt(materials, x, y);
+  }
+  if (property === "n_xy") return 0.0;
   if (property === "eps_r_xx" || property === "eps_r_yy") {
     return material.properties.eps_r ?? 1.0;
   }
@@ -53,6 +64,14 @@ export function materialPropertyAt(materials, x, y, property) {
 export function scalarEpsRAt(materials, x, y) {
   const material = materialAt(materials, x, y);
   return material.properties.eps_r ?? material.properties.eps_r_xx ?? 1.0;
+}
+
+export function opticalIndexAt(materials, x, y) {
+  const material = materialAt(materials, x, y);
+  if (material.properties.n !== undefined) return material.properties.n;
+  if (material.properties.n_xx !== undefined) return material.properties.n_xx;
+  const epsR = material.properties.eps_r ?? material.properties.eps_r_xx ?? 1.0;
+  return Math.sqrt(epsR);
 }
 
 export function epsilonTensorAt(materials, x, y) {

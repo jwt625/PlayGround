@@ -6,6 +6,7 @@ import { parallelPlateCapacitance, twoCylinderCapacitance } from "../web/core/an
 import { EPS0 } from "../web/core/constants.js";
 import { parseSimpleYaml } from "../web/core/config.js";
 import { materialPropertyField } from "../web/core/materials.js";
+import { getModePlotValues, solveOpticalModeConfig } from "../web/core/mode_solver.js";
 import { quantityInfo } from "../web/core/quantities.js";
 import { makeStructuredTriMesh, solveConfig } from "../web/core/solver.js";
 import { validateConfig } from "../web/core/validation.js";
@@ -190,6 +191,33 @@ test("EO modulator examples parse, validate, solve, and expose EO maps", () => {
     assert.ok(result.capacitanceEnergy > 0, `${path} capacitance`);
     assert.ok(Math.max(...rEff) > 0, `${path} r_eff`);
   }
+});
+
+test("scalar optical mode example solves a guided Si strip mode", () => {
+  const config = parseSimpleYaml(fs.readFileSync("examples/si_strip_mode.yaml", "utf8"));
+  validateConfig(config);
+  const result = solveOpticalModeConfig(config);
+  assert.equal(result.physics, "optical_mode");
+  assert.ok(result.mode.nEff > 1.444, `n_eff ${result.mode.nEff}`);
+  assert.ok(result.mode.nEff < 3.476, `n_eff ${result.mode.nEff}`);
+  assert.ok(result.mode.confinement > 0.1, `confinement ${result.mode.confinement}`);
+  assert.equal(getModePlotValues(result, "mode_intensity").length, result.mesh.nodes.length);
+});
+
+test("scalar optical mode effective index increases with core index", () => {
+  const low = parseSimpleYaml(fs.readFileSync("examples/si_strip_mode.yaml", "utf8"));
+  const high = parseSimpleYaml(fs.readFileSync("examples/si_strip_mode.yaml", "utf8"));
+  low.Simulation.mesh_nx = 81;
+  low.Simulation.mesh_ny = 61;
+  low.Simulation.mode_max_iterations = 450;
+  high.Simulation.mesh_nx = 81;
+  high.Simulation.mesh_ny = 61;
+  high.Simulation.mode_max_iterations = 450;
+  low.Materials.silicon_core.n = 2.0;
+  high.Materials.silicon_core.n = 3.4;
+  const lowResult = solveOpticalModeConfig(low);
+  const highResult = solveOpticalModeConfig(high);
+  assert.ok(highResult.mode.nEff > lowResult.mode.nEff + 0.05);
 });
 
 test("validation rejects non-finite and non-physical inputs before solve", () => {

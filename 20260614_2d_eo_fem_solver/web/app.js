@@ -1,9 +1,10 @@
 import { parseSimpleYaml } from "./core/config.js";
 import { parseElectrodes } from "./core/geometry.js";
 import { parseMaterials } from "./core/materials.js";
+import { getModePlotValues, solveOpticalModeConfig } from "./core/mode_solver.js";
 import { quantityInfo } from "./core/quantities.js";
 import { getPlotValues, solveConfig } from "./core/solver.js";
-import { validateConfig } from "./core/validation.js";
+import { isOpticalMode, validateConfig } from "./core/validation.js";
 
 const workspace = document.querySelector(".workspace");
 const configEditor = document.querySelector("#config-editor");
@@ -33,6 +34,7 @@ const examplePaths = {
   stack: "../examples/material_stack.yaml",
   tfln: "../examples/tfln_partial_etched_mzm.yaml",
   bto: "../examples/bto_on_sin_plasmonic.yaml",
+  siMode: "../examples/si_strip_mode.yaml",
 };
 
 let solveTimer = null;
@@ -51,6 +53,7 @@ document.querySelector("#cylinders-button").addEventListener("click", () => load
 document.querySelector("#stack-button").addEventListener("click", () => loadExample("stack"));
 document.querySelector("#tfln-button").addEventListener("click", () => loadExample("tfln"));
 document.querySelector("#bto-button").addEventListener("click", () => loadExample("bto"));
+document.querySelector("#si-mode-button").addEventListener("click", () => loadExample("siMode"));
 quantitySelect.addEventListener("change", redrawLastResult);
 scaleSelect.addEventListener("change", redrawLastResult);
 meshToggle.addEventListener("change", redrawLastResult);
@@ -140,7 +143,7 @@ function runSolve() {
 function finishSolveRun(runId, t0, config) {
   if (runId !== solveRunId) return;
   try {
-    const result = solveConfig(config);
+      const result = isOpticalMode(config) ? solveOpticalModeConfig(config) : solveConfig(config);
     const elapsed = performance.now() - t0;
     lastConfig = config;
     lastResult = result;
@@ -153,7 +156,7 @@ function finishSolveRun(runId, t0, config) {
     setSolverStatus(`Solved in ${elapsed.toFixed(0)} ms`);
     appendLog(
       "success",
-      `Run ${runId}: solved in ${elapsed.toFixed(0)} ms; ${result.permittivityModel}; ${formatMeshSummary(result.mesh)}; CG ${result.iterations} iter; residual ${result.residual.toExponential(3)}`,
+      `Run ${runId}: solved in ${elapsed.toFixed(0)} ms; ${formatRunSummary(result)}`,
     );
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
@@ -277,6 +280,10 @@ function startPanelResize(event) {
 }
 
 function renderResults(result, elapsed) {
+  if (result.physics === "optical_mode") {
+    renderOpticalResults(result, elapsed);
+    return;
+  }
   const lines = [
     ["C energy", `${result.capacitanceEnergy.toExponential(6)} F/m`],
     ["C energy", `${result.units.fF_per_mm.toFixed(4)} fF/mm`],
@@ -300,9 +307,39 @@ function renderResults(result, elapsed) {
   renderResultLines(lines);
 }
 
+function renderOpticalResults(result, elapsed) {
+  const mode = result.mode;
+  renderResultLines([
+    ["n_eff", mode.nEff.toFixed(6)],
+    ["beta", `${mode.beta.toExponential(6)} 1/m`],
+    ["lambda", `${formatValue(result.wavelength)} m`],
+    ["Confinement", `${(100 * mode.confinement).toFixed(2)}%`],
+    ["Mode area", `${mode.modeArea.toExponential(6)} m^2`],
+    ["Model", result.scalarModel],
+    ["Mesh", formatMeshSummary(result.mesh)],
+    ["Eigen solve", `${mode.iterations} iter, residual ${mode.residual.toExponential(3)}`],
+    ["Runtime", `${elapsed.toFixed(0)} ms`],
+  ]);
+}
+
 function renderResultsPending(config, state) {
   const nx = config.Simulation?.mesh_nx ?? 81;
   const ny = config.Simulation?.mesh_ny ?? 61;
+  if (isOpticalMode(config)) {
+    renderResultLines([
+      ["n_eff", "..."],
+      ["beta", "..."],
+      ["lambda", `${formatValue(config.Simulation?.wavelength ?? 1.55e-6)} m`],
+      ["Confinement", "..."],
+      ["Mode area", "..."],
+      ["Model", "scalar optical mode"],
+      ["Mesh", `${nx} x ${ny}`],
+      ["Eigen solve", "..."],
+      ["Runtime", "..."],
+      ["Status", state],
+    ]);
+    return;
+  }
   renderResultLines([
     ["C energy", "..."],
     ["C energy", "... fF/mm"],
@@ -341,10 +378,14 @@ function redrawLastResult() {
 }
 
 function renderPlot(config, result) {
+  syncQuantityOptions(result);
   resizeCanvases();
   if (!view) resetViewport(result.mesh);
   const { nx, ny } = result.mesh;
-  const values = getPlotValues(result, quantitySelect.value);
+  const values =
+    result.physics === "optical_mode"
+      ? getModePlotValues(result, quantitySelect.value)
+      : getPlotValues(result, quantitySelect.value);
   const transform = makeScale(values, scaleSelect.value);
   activeScale = transform;
   const image = ctx.createImageData(nx, ny);
@@ -369,10 +410,48 @@ function renderPlot(config, result) {
   const p1 = toCanvas(result.mesh, [result.mesh.domain.xMax, result.mesh.domain.yMax]);
   ctx.drawImage(offscreen, p0[0], p1[1], p1[0] - p0[0], p0[1] - p1[1]);
   drawMaterialBoundaries(config, result);
-  drawElectrodes(config, result);
+  if (result.physics !== "optical_mode") drawElectrodes(config, result);
   if (meshToggle.checked) drawMesh(result.mesh);
   renderColorbar(transform);
   updateQuantityDescription();
+}
+
+function syncQuantityOptions(result) {
+  const optical = result.physics === "optical_mode";
+  const desired = optical
+    ? [
+        ["mode", "mode - scalar modal field"],
+        ["mode_abs", "|mode| - modal field magnitude"],
+        ["mode_intensity", "I - modal intensity"],
+        ["n", "n - optical refractive index"],
+        ["eps_r", "epsilon_r - relative permittivity"],
+      ]
+    : [
+        ["phi", "phi - electrostatic potential"],
+        ["Ex", "Ex - x electric-field component"],
+        ["Ey", "Ey - y electric-field component"],
+        ["normE", "|E| - electric-field magnitude"],
+        ["eps_r", "epsilon_r - relative permittivity"],
+        ["eps_r_xx", "epsilon_r_xx - permittivity tensor xx"],
+        ["eps_r_yy", "epsilon_r_yy - permittivity tensor yy"],
+        ["eps_r_xy", "epsilon_r_xy - permittivity tensor xy"],
+        ["r13", "r13 - EO tensor coefficient"],
+        ["r33", "r33 - EO tensor coefficient"],
+        ["r22", "r22 - EO tensor coefficient"],
+        ["r_eff", "r_eff - effective EO coefficient"],
+      ];
+  const currentValues = Array.from(quantitySelect.options).map((option) => option.value).join("|");
+  const nextValues = desired.map(([value]) => value).join("|");
+  if (currentValues === nextValues) return;
+  const previous = quantitySelect.value;
+  quantitySelect.innerHTML = "";
+  for (const [value, label] of desired) {
+    const option = document.createElement("option");
+    option.value = value;
+    option.textContent = label;
+    quantitySelect.append(option);
+  }
+  quantitySelect.value = desired.some(([value]) => value === previous) ? previous : desired[0][0];
 }
 
 function clearCanvas() {
@@ -515,6 +594,13 @@ function drawElectrodes(config, result) {
     ctx.stroke();
   }
   ctx.restore();
+}
+
+function formatRunSummary(result) {
+  if (result.physics === "optical_mode") {
+    return `${result.scalarModel}; ${formatMeshSummary(result.mesh)}; n_eff ${result.mode.nEff.toFixed(6)}; eig ${result.mode.iterations} iter; residual ${result.mode.residual.toExponential(3)}`;
+  }
+  return `${result.permittivityModel}; ${formatMeshSummary(result.mesh)}; CG ${result.iterations} iter; residual ${result.residual.toExponential(3)}`;
 }
 
 function drawShapePath(mesh, shape, params) {
