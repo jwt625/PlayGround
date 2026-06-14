@@ -153,7 +153,7 @@ function finishSolveRun(runId, t0, config) {
     setSolverStatus(`Solved in ${elapsed.toFixed(0)} ms`);
     appendLog(
       "success",
-      `Run ${runId}: solved in ${elapsed.toFixed(0)} ms; CG ${result.iterations} iter; residual ${result.residual.toExponential(3)}`,
+      `Run ${runId}: solved in ${elapsed.toFixed(0)} ms; ${result.permittivityModel}; CG ${result.iterations} iter; residual ${result.residual.toExponential(3)}`,
     );
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
@@ -282,6 +282,7 @@ function renderResults(result, elapsed) {
     ["C energy", `${result.units.fF_per_mm.toFixed(4)} fF/mm`],
     ["C energy", `${result.units.pF_per_cm.toFixed(4)} pF/cm`],
     ["C charge", `${result.capacitanceCharge.toExponential(6)} F/m`],
+    ["Epsilon", result.permittivityModel],
     ["Mesh", `${result.mesh.nx} x ${result.mesh.ny}, ${result.mesh.triangles.length} tris`],
     ["CG", `${result.iterations} iter, residual ${result.residual.toExponential(3)}`],
     ["Runtime", `${elapsed.toFixed(0)} ms`],
@@ -305,6 +306,7 @@ function renderResultsPending(config, state) {
     ["C energy", "... fF/mm"],
     ["C energy", "... pF/cm"],
     ["C charge", "..."],
+    ["Epsilon", "..."],
     ["Mesh", `${nx} x ${ny}`],
     ["CG", "..."],
     ["Runtime", "..."],
@@ -318,6 +320,7 @@ function renderResultsMessage(title, message) {
     ["C energy", "-"],
     ["C energy", "-"],
     ["C charge", "-"],
+    ["Epsilon", "-"],
     ["Mesh", "-"],
     ["CG", "-"],
     ["Runtime", "-"],

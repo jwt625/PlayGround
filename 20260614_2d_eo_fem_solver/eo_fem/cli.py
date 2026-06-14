@@ -15,6 +15,7 @@ def main() -> None:
     print(f"C_energy = {result.units['fF_per_mm']:.3f} fF/mm")
     print(f"C_energy = {result.units['pF_per_cm']:.3f} pF/cm")
     print(f"C_charge = {result.capacitance_charge:.6e} F/m")
+    print(f"Permittivity model = {result.permittivity_model}")
     print(f"CG iterations = {result.iterations}, residual = {result.residual:.3e}")
     if result.reference:
         ref = result.reference

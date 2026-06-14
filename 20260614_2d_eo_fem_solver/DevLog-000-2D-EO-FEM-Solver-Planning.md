@@ -194,26 +194,42 @@ Implemented reference path:
 
 Current limitations:
 
-- The browser and Python solvers still use scalar background `eps_r` in assembly; material-property maps and material-boundary outlines are diagnostic only.
+- The browser and Python solvers now use centroid-sampled, spatially varying scalar `eps_r` in assembly.
+- Tensor permittivity components and EO coefficients remain diagnostic until anisotropic assembly and RF-optical overlap are implemented.
 - Electrode and material boundaries are not geometry-conforming.
 - Charge extraction is still based on conductor-node residuals, not tagged boundary-edge integration.
 - The solve still runs on the main browser thread; progress is a status/WIP indicator, not true iteration-level progress.
-- No Web Worker, preconditioner, WebGPU, true unstructured mesh, anisotropic tensor assembly, or EO overlap yet.
+- No Web Worker, WebGPU, true unstructured mesh, anisotropic tensor assembly, or EO overlap yet.
 - Python tests and browser tests are separate; browser tests are the primary product-path tests.
 
-Immediate next implementation target:
+Performance status:
 
-1. Add spatially varying scalar permittivity to browser assembly.
+- Browser and Python solvers use Jacobi-preconditioned CG with default relative residual tolerance `1e-6`.
+- Root cause of the BTO slowdown was the high-contrast scalar dielectric matrix after enabling spatial `eps_r`: the `eps_r=1136` BTO film drove plain CG to about `14946` iterations at `1e-10`.
+- Jacobi PCG reduced the BTO example to `703` iterations with `1e-6` default relative residual tolerance.
+- Fresh Node benchmark for `examples/bto_on_sin_plasmonic.yaml`: about `0.89-0.91 s`, residual `9.834e-7`, capacitance `9.033904101636e-9 F/m`.
+- The BTO capacitance shift from the stricter `1e-10` solve was about `6e-10` relative in the benchmark, far below current structured-mesh/model error.
+- Browser tests improved materially: the EO example test block dropped from roughly `16.9 s` before PCG to under `2 s` after PCG on the same machine.
+- Python reference tests also pass with PCG, but the Python path remains pure-Python list/dict math and is not the interactive performance target.
+
+Completed scalar-permittivity implementation:
+
+1. Added spatially varying scalar permittivity to browser assembly.
    - Parse material regions once with existing `parseMaterials`.
    - For each P1 triangle, evaluate the material at the triangle centroid.
    - Assemble local stiffness with `epsilon_0 * eps_r_centroid`.
    - Keep `eps_r_xx`, `eps_r_yy`, and `eps_r_xy` as diagnostic placeholders until tensor assembly is implemented.
-2. Mirror the same centroid-based scalar assembly in the Python reference path.
-3. Add regression tests:
+2. Mirrored the same centroid-based scalar assembly in the Python reference path.
+3. Added regression tests:
    - Homogeneous material case remains unchanged.
    - A high-`eps_r` slab between electrodes increases capacitance relative to low-`eps_r` background.
    - Material ordering/overlap behavior follows the existing "later non-background material wins" map rule.
-4. Update result/log text to make clear whether a run used homogeneous or spatially varying scalar permittivity.
+4. Updated result/log text to make clear whether a run used homogeneous or spatially varying scalar permittivity.
+
+Immediate next implementation target:
+
+1. Add anisotropic tensor assembly for `epsilon_r_xx`, `epsilon_r_yy`, and `epsilon_r_xy`.
+2. Improve charge extraction with tagged conductor boundary edges after geometry-conforming meshing.
 
 ## Browser Visualizer Requirements
 
@@ -236,7 +252,8 @@ The browser UI should expose enough numerical internals that the user can debug 
   - Plot scalar `epsilon_r` for isotropic material definitions.
   - Reserve UI/config names for tensor components such as `epsilon_r_xx`, `epsilon_r_yy`, `epsilon_r_xy` once anisotropic assembly is implemented.
   - Reserve property-map slots for EO coefficients such as `r13`, `r33`, `r22`, and `r_eff`.
-  - Material maps are diagnostic overlays first; solver support for anisotropic tensors and EO overlap can come later.
+  - Scalar `epsilon_r` maps now correspond to the centroid-sampled scalar material model used by assembly.
+  - Tensor components and EO coefficients remain diagnostic overlays until anisotropic assembly and EO overlap are implemented.
 - Implementation constraint:
   - Keep visualization and result objects browser-native.
   - Avoid making Python a runtime dependency for the interactive browser UI.
@@ -251,7 +268,7 @@ The browser UI should expose enough numerical internals that the user can debug 
 | M3 | Browser visualizer for mesh, `phi`, `Ex`, `Ey`, `|E|`, colorbar, and material-property maps |
 | M4 | Stable browser UX: validation, logging, pan/zoom/hover, cache-busted example reloads, stable layout |
 | M5 | Web Worker solver execution and real iteration-level progress without blocking the UI |
-| M6 | Spatially varying scalar permittivity in assembly; next task |
+| M6 | Spatially varying scalar permittivity in assembly; completed with centroid sampling and PCG performance fix |
 | M7 | Nonuniform structured mesh refinement near electrode/material edges |
 | M8 | True geometry-conforming FEM mesh with region/boundary tags |
 | M9 | Anisotropic permittivity tensors with material orientation |

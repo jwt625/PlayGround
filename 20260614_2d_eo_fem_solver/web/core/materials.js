@@ -50,6 +50,15 @@ export function materialPropertyAt(materials, x, y, property) {
   return material.properties[property] ?? 0.0;
 }
 
+export function scalarEpsRAt(materials, x, y) {
+  const material = materialAt(materials, x, y);
+  return material.properties.eps_r ?? material.properties.eps_r_xx ?? 1.0;
+}
+
+export function usesSpatialPermittivity(materials) {
+  return materials.some((material) => material.shape !== "background");
+}
+
 export function materialPropertyField(mesh, materials, property) {
   const values = new Float64Array(mesh.nodes.length);
   for (let i = 0; i < mesh.nodes.length; i += 1) {

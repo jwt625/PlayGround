@@ -1,7 +1,7 @@
 import { capacitanceUnits, EPS0 } from "./constants.js";
 import { parallelPlateCapacitance, twoCylinderCapacitance } from "./analytic.js";
 import { electrodeContains, parseDomain, parseElectrodes } from "./geometry.js";
-import { materialPropertyField, parseMaterials } from "./materials.js";
+import { materialPropertyField, parseMaterials, scalarEpsRAt, usesSpatialPermittivity } from "./materials.js";
 import { validateConfig } from "./validation.js";
 
 export function solveConfig(config) {
@@ -14,7 +14,7 @@ export function solveConfig(config) {
   const materials = parseMaterials(config);
   const electrodes = parseElectrodes(config);
   const mesh = makeStructuredTriMesh(domain, nx, ny);
-  const stiffness = assembleStiffness(mesh, epsR);
+  const stiffness = assembleStiffness(mesh, materials);
   const { values: dirichlet, labels } = dirichletNodes(mesh, electrodes);
   const { phi, iterations, residual } = solveDirichlet(stiffness, dirichlet);
   const fields = computeFieldComponents(mesh, phi);
@@ -42,6 +42,9 @@ export function solveConfig(config) {
     residual,
     units: capacitanceUnits(capacitanceEnergy),
     reference,
+    permittivityModel: usesSpatialPermittivity(materials)
+      ? "spatial scalar eps_r (triangle centroid)"
+      : `homogeneous scalar eps_r=${epsR}`,
   };
 }
 
@@ -99,9 +102,10 @@ export function makeStructuredTriMesh(domain, nx, ny) {
   return { domain, nx, ny, nodes, triangles };
 }
 
-export function assembleStiffness(mesh, epsR) {
+export function assembleStiffness(mesh, materialsOrEpsR) {
   const rows = Array.from({ length: mesh.nodes.length }, () => new Map());
-  const eps = EPS0 * epsR;
+  const useMaterials = Array.isArray(materialsOrEpsR);
+  const homogeneousEps = useMaterials ? null : EPS0 * Number(materialsOrEpsR);
   for (const tri of mesh.triangles) {
     const pts = tri.map((i) => mesh.nodes[i]);
     const area2 =
@@ -119,6 +123,14 @@ export function assembleStiffness(mesh, epsR) {
       pts[0][0] - pts[2][0],
       pts[1][0] - pts[0][0],
     ];
+    const eps = useMaterials
+      ? EPS0 *
+        scalarEpsRAt(
+          materialsOrEpsR,
+          (pts[0][0] + pts[1][0] + pts[2][0]) / 3,
+          (pts[0][1] + pts[1][1] + pts[2][1]) / 3,
+        )
+      : homogeneousEps;
     for (let a = 0; a < 3; a += 1) {
       const ia = tri[a];
       for (let d = 0; d < 3; d += 1) {
@@ -170,7 +182,7 @@ function dirichletNodes(mesh, electrodes) {
   return { values, labels };
 }
 
-function solveDirichlet(matrix, dirichlet, tol = 1e-10, maxiter = 20000) {
+function solveDirichlet(matrix, dirichlet, tol = 1e-6, maxiter = 20000) {
   const n = matrix.n;
   const free = [];
   const freeIndex = new Int32Array(n);
@@ -202,17 +214,22 @@ function solveDirichlet(matrix, dirichlet, tol = 1e-10, maxiter = 20000) {
 function conjugateGradient(matrix, freeNodes, freeIndex, rhs, tol, maxiter) {
   const x = new Float64Array(rhs.length);
   const r = new Float64Array(rhs);
-  const p = new Float64Array(r);
+  const z = new Float64Array(rhs.length);
+  const p = new Float64Array(rhs.length);
   const ap = new Float64Array(rhs.length);
+  const invDiag = makeFreeInverseDiagonal(matrix, freeNodes);
   let rsold = dot(r, r);
   const rhsNorm = Math.sqrt(rsold) || 1.0;
   if (rhsNorm === 0) return { x, iterations: 0, residual: 0 };
+  applyJacobi(invDiag, r, z);
+  p.set(z);
+  let rzold = dot(r, z);
   let iteration = 0;
   for (iteration = 1; iteration <= maxiter; iteration += 1) {
     csrFreeMatvec(matrix, freeNodes, freeIndex, p, ap);
     const denom = dot(p, ap);
     if (denom === 0) break;
-    const alpha = rsold / denom;
+    const alpha = rzold / denom;
     for (let i = 0; i < x.length; i += 1) {
       x[i] += alpha * p[i];
       r[i] -= alpha * ap[i];
@@ -220,11 +237,34 @@ function conjugateGradient(matrix, freeNodes, freeIndex, rhs, tol, maxiter) {
     const rsnew = dot(r, r);
     const residual = Math.sqrt(rsnew) / rhsNorm;
     if (residual < tol) return { x, iterations: iteration, residual };
-    const beta = rsnew / rsold;
-    for (let i = 0; i < p.length; i += 1) p[i] = r[i] + beta * p[i];
+    applyJacobi(invDiag, r, z);
+    const rznew = dot(r, z);
+    const beta = rznew / rzold;
+    for (let i = 0; i < p.length; i += 1) p[i] = z[i] + beta * p[i];
     rsold = rsnew;
+    rzold = rznew;
   }
   return { x, iterations: iteration, residual: Math.sqrt(rsold) / rhsNorm };
+}
+
+function makeFreeInverseDiagonal(matrix, freeNodes) {
+  const invDiag = new Float64Array(freeNodes.length);
+  for (let i = 0; i < freeNodes.length; i += 1) {
+    const node = freeNodes[i];
+    let diagonal = 0.0;
+    for (let cursor = matrix.rowPtr[node]; cursor < matrix.rowPtr[node + 1]; cursor += 1) {
+      if (matrix.colIdx[cursor] === node) {
+        diagonal = matrix.values[cursor];
+        break;
+      }
+    }
+    invDiag[i] = diagonal !== 0 ? 1 / diagonal : 1.0;
+  }
+  return invDiag;
+}
+
+function applyJacobi(invDiag, input, output) {
+  for (let i = 0; i < input.length; i += 1) output[i] = invDiag[i] * input[i];
 }
 
 function csrFreeMatvec(matrix, freeNodes, freeIndex, vec, out) {

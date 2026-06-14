@@ -81,6 +81,23 @@ test("two cylinder browser solver is same order as analytic reference", () => {
   assert.ok(ratio > 0.45 && ratio < 1.8, `ratio ${ratio}`);
 });
 
+test("spatial scalar epsilon increases capacitance for a high-k slab", () => {
+  const low = structuredSlabConfig(1.0);
+  const high = structuredSlabConfig(30.0);
+  const lowResult = solveConfig(low);
+  const highResult = solveConfig(high);
+  assert.ok(highResult.capacitanceEnergy > 3 * lowResult.capacitanceEnergy);
+  assert.match(highResult.permittivityModel, /spatial scalar eps_r/);
+});
+
+test("overlapping material regions use later non-background material in assembly", () => {
+  const highLast = overlappingSlabConfig(2.0, 20.0);
+  const lowLast = overlappingSlabConfig(20.0, 2.0);
+  const highLastResult = solveConfig(highLast);
+  const lowLastResult = solveConfig(lowLast);
+  assert.ok(highLastResult.capacitanceEnergy > 2 * lowLastResult.capacitanceEnergy);
+});
+
 test("solver exposes field components on the mesh", () => {
   const config = parseSimpleYaml(PARALLEL_PLATE_CONFIG);
   const result = solveConfig(config);
@@ -129,3 +146,54 @@ test("quantity metadata exposes labels, descriptions, and expressions", () => {
   assert.equal(quantityInfo("phi").description, "electrostatic potential");
   assert.equal(quantityInfo("Ex").expression, "-d(phi)/dx");
 });
+
+function structuredSlabConfig(epsR) {
+  const config = parseSimpleYaml(PARALLEL_PLATE_CONFIG);
+  config.Simulation.mesh_nx = 61;
+  config.Simulation.mesh_ny = 61;
+  config.Domain.x_min = -6e-6;
+  config.Domain.x_max = 6e-6;
+  config.Domain.y_min = -4e-6;
+  config.Domain.y_max = 4e-6;
+  config.Materials = {
+    background: { eps_r: 1.0 },
+    slab: {
+      shape: "rectangle",
+      eps_r: epsR,
+      x_min: -6e-6,
+      x_max: 6e-6,
+      y_min: -1e-6,
+      y_max: 1e-6,
+    },
+  };
+  config.Electrodes.signal.y_min = 1e-6;
+  config.Electrodes.signal.y_max = 1.2e-6;
+  config.Electrodes.ground.y_min = -1.2e-6;
+  config.Electrodes.ground.y_max = -1e-6;
+  delete config.Outputs;
+  return config;
+}
+
+function overlappingSlabConfig(firstEpsR, secondEpsR) {
+  const config = structuredSlabConfig(1.0);
+  config.Materials = {
+    background: { eps_r: 1.0 },
+    first: {
+      shape: "rectangle",
+      eps_r: firstEpsR,
+      x_min: -6e-6,
+      x_max: 6e-6,
+      y_min: -1e-6,
+      y_max: 1e-6,
+    },
+    second: {
+      shape: "rectangle",
+      eps_r: secondEpsR,
+      x_min: -6e-6,
+      x_max: 6e-6,
+      y_min: -1e-6,
+      y_max: 1e-6,
+    },
+  };
+  return config;
+}

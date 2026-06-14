@@ -122,21 +122,22 @@ only if the interactive mesh sizes need it.
 
 Important material-model status:
 
-- The electrostatic solve currently uses only `Materials.background.eps_r` in
-  the stiffness matrix. Rectangular material regions, `epsilon_r` maps,
-  anisotropic placeholders, EO coefficients, and material-boundary overlays are
-  visualization/diagnostic features until spatially varying assembly lands.
-- The next physics implementation step is per-triangle scalar permittivity:
-  evaluate the material at each triangle centroid, assemble that triangle with
-  `epsilon_0 * eps_r(material)`, and use the same spatially varying matrix for
-  potential, field, energy, charge, and capacitance.
+- The electrostatic solve uses per-triangle scalar permittivity: each triangle
+  is assembled with `epsilon_0 * eps_r(material)` evaluated at its centroid.
+- Non-background material regions use the same ordering as the material maps:
+  if regions overlap, the later non-background material in `Materials` wins.
+- `epsilon_r_xx`, `epsilon_r_yy`, `epsilon_r_xy`, EO coefficients, and
+  material-boundary overlays remain diagnostic until anisotropic tensor
+  assembly and EO overlap are implemented.
 
 Performance notes:
 
 - Sparse stiffness storage uses CSR typed arrays in the browser core.
-- A 250 x 201 structured mesh is roughly sub-second in Node on a local laptop
-  for the homogeneous validation case; browser timing depends on rendering and
-  main-thread load.
+- The browser and Python solvers use Jacobi-preconditioned CG with a default
+  relative residual tolerance of `1e-6`, which is well below the current
+  geometry/discretization error of the structured-mesh prototype.
+- A 281 x 221 high-contrast BTO example is roughly 1 s in Node on a local
+  laptop; browser timing depends on rendering and main-thread load.
 - WebGPU is possible, but should come after a Web Worker split and a stable CSR
   or stencil kernel. The best first GPU target would be repeated sparse matvec
   in CG; assembly, validation, UI, and small meshes are not worth moving to GPU.
@@ -154,9 +155,8 @@ True FEM mesh path:
 
 Current limitations:
 
-- Browser and Python assembly currently use scalar background `eps_r`; material
-  maps and material-boundary overlays are diagnostic until spatially varying
-  scalar/tensor assembly is added.
+- Browser and Python assembly support spatially varying scalar `eps_r`, but not
+  anisotropic tensor permittivity.
 - Electrode/material interfaces are not geometry-conforming.
 - Charge extraction is not yet boundary-edge integration on tagged conductor
   boundaries.
@@ -169,7 +169,6 @@ Current limitations:
 
 Next implementation step:
 
-- Implement spatially varying scalar `eps_r` for material domains in
-  `web/core/solver.js` first, mirrored in `eo_fem/solver.py` for regression
-  checks. Add tests showing a high-epsilon insert changes capacitance relative
-  to the same geometry with homogeneous background permittivity.
+- Add anisotropic tensor assembly for `epsilon_r_xx`, `epsilon_r_yy`, and
+  `epsilon_r_xy`, then move charge extraction from conductor-node residuals to
+  tagged boundary-edge integration once geometry-conforming meshing exists.

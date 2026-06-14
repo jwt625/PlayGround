@@ -6,6 +6,7 @@ from typing import Any
 
 from .constants import EPS0, capacitance_units
 from .geometry import Domain, Electrode, parse_domain, parse_electrodes
+from .materials import Material, parse_materials, scalar_eps_r_at, uses_spatial_permittivity
 
 
 @dataclass
@@ -28,6 +29,7 @@ class SolveResult:
     residual: float
     units: dict[str, float]
     reference: dict[str, float] | None = None
+    permittivity_model: str = "homogeneous scalar eps_r"
 
 
 def solve_config(config: dict[str, Any]) -> SolveResult:
@@ -36,9 +38,10 @@ def solve_config(config: dict[str, Any]) -> SolveResult:
     ny = int(sim.get("mesh_ny", 61))
     domain = parse_domain(config)
     eps_r = float(config.get("Materials", {}).get("background", {}).get("eps_r", 1.0))
+    materials = parse_materials(config)
     electrodes = parse_electrodes(config)
     mesh = make_structured_tri_mesh(domain, nx, ny)
-    k_rows = assemble_stiffness(mesh, eps_r)
+    k_rows = assemble_stiffness(mesh, materials)
     dirichlet, labels = dirichlet_nodes(mesh, electrodes)
     phi, iterations, residual = solve_dirichlet(k_rows, dirichlet)
     energy = field_energy(k_rows, phi)
@@ -59,6 +62,11 @@ def solve_config(config: dict[str, Any]) -> SolveResult:
         residual=residual,
         units=capacitance_units(c_energy),
         reference=reference,
+        permittivity_model=(
+            "spatial scalar eps_r (triangle centroid)"
+            if uses_spatial_permittivity(materials)
+            else f"homogeneous scalar eps_r={eps_r:g}"
+        ),
     )
 
 
@@ -83,9 +91,10 @@ def make_structured_tri_mesh(domain: Domain, nx: int, ny: int) -> Mesh:
     return Mesh(domain=domain, nx=nx, ny=ny, nodes=nodes, triangles=triangles)
 
 
-def assemble_stiffness(mesh: Mesh, eps_r: float) -> list[dict[int, float]]:
+def assemble_stiffness(mesh: Mesh, materials_or_eps_r: list[Material] | float) -> list[dict[int, float]]:
     rows: list[dict[int, float]] = [dict() for _ in mesh.nodes]
-    eps = EPS0 * eps_r
+    use_materials = isinstance(materials_or_eps_r, list)
+    homogeneous_eps = None if use_materials else EPS0 * float(materials_or_eps_r)
     for tri in mesh.triangles:
         pts = [mesh.nodes[i] for i in tri]
         area2 = (
@@ -97,6 +106,14 @@ def assemble_stiffness(mesh: Mesh, eps_r: float) -> list[dict[int, float]]:
             continue
         b = [pts[1][1] - pts[2][1], pts[2][1] - pts[0][1], pts[0][1] - pts[1][1]]
         c = [pts[2][0] - pts[1][0], pts[0][0] - pts[2][0], pts[1][0] - pts[0][0]]
+        if use_materials:
+            eps = EPS0 * scalar_eps_r_at(
+                materials_or_eps_r,
+                (pts[0][0] + pts[1][0] + pts[2][0]) / 3.0,
+                (pts[0][1] + pts[1][1] + pts[2][1]) / 3.0,
+            )
+        else:
+            eps = homogeneous_eps
         for a in range(3):
             ia = tri[a]
             for d in range(3):
@@ -122,7 +139,7 @@ def dirichlet_nodes(
 
 
 def solve_dirichlet(
-    rows: list[dict[int, float]], dirichlet: dict[int, float], tol: float = 1e-10, maxiter: int = 20_000
+    rows: list[dict[int, float]], dirichlet: dict[int, float], tol: float = 1e-6, maxiter: int = 20_000
 ) -> tuple[list[float], int, float]:
     n = len(rows)
     free = [i for i in range(n) if i not in dirichlet]
@@ -143,38 +160,50 @@ def solve_dirichlet(
             out.append(sum(v * full[j] for j, v in rows[node].items() if j in free_set))
         return out
 
-    x, iterations, residual = conjugate_gradient(matvec, rhs, tol=tol, maxiter=maxiter)
+    inv_diag = [1.0 / rows[node].get(node, 1.0) for node in free]
+    x, iterations, residual = conjugate_gradient(matvec, rhs, inv_diag, tol=tol, maxiter=maxiter)
     for idx, node in enumerate(free):
         phi[node] = x[idx]
     return phi, iterations, residual
 
 
 def conjugate_gradient(
-    matvec, rhs: list[float], tol: float = 1e-10, maxiter: int = 20_000
+    matvec, rhs: list[float], inv_diag: list[float] | None = None, tol: float = 1e-6, maxiter: int = 20_000
 ) -> tuple[list[float], int, float]:
     x = [0.0] * len(rhs)
     r = rhs[:]
-    p = r[:]
     rsold = dot(r, r)
     rhs_norm = sqrt(rsold) or 1.0
     if rhs_norm == 0.0:
         return x, 0, 0.0
+    z = apply_jacobi(inv_diag, r)
+    p = z[:]
+    rzold = dot(r, z)
     for iteration in range(1, maxiter + 1):
         ap = matvec(p)
         denom = dot(p, ap)
         if denom == 0.0:
             break
-        alpha = rsold / denom
+        alpha = rzold / denom
         x = [xi + alpha * pi for xi, pi in zip(x, p)]
         r = [ri - alpha * api for ri, api in zip(r, ap)]
         rsnew = dot(r, r)
         residual = sqrt(rsnew) / rhs_norm
         if residual < tol:
             return x, iteration, residual
-        beta = rsnew / rsold
-        p = [ri + beta * pi for ri, pi in zip(r, p)]
+        z = apply_jacobi(inv_diag, r)
+        rznew = dot(r, z)
+        beta = rznew / rzold
+        p = [zi + beta * pi for zi, pi in zip(z, p)]
         rsold = rsnew
+        rzold = rznew
     return x, iteration, sqrt(rsold) / rhs_norm
+
+
+def apply_jacobi(inv_diag: list[float] | None, values: list[float]) -> list[float]:
+    if inv_diag is None:
+        return values[:]
+    return [diagonal * value for diagonal, value in zip(inv_diag, values)]
 
 
 def field_energy(rows: list[dict[int, float]], phi: list[float]) -> float:
