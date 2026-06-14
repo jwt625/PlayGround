@@ -79,5 +79,24 @@ def scalar_eps_r_at(materials: list[Material], x: float, y: float) -> float:
     return material.properties.get("eps_r", material.properties.get("eps_r_xx", 1.0))
 
 
+def epsilon_tensor_at(materials: list[Material], x: float, y: float) -> tuple[float, float, float]:
+    material = material_at(materials, x, y)
+    scalar = material.properties.get("eps_r", material.properties.get("eps_r_xx", 1.0))
+    return (
+        material.properties.get("eps_r_xx", scalar),
+        material.properties.get("eps_r_yy", scalar),
+        material.properties.get("eps_r_xy", 0.0),
+    )
+
+
 def uses_spatial_permittivity(materials: list[Material]) -> bool:
     return any(material.shape != "background" for material in materials)
+
+
+def uses_tensor_permittivity(materials: list[Material]) -> bool:
+    return any(
+        "eps_r_xx" in material.properties
+        or "eps_r_yy" in material.properties
+        or "eps_r_xy" in material.properties
+        for material in materials
+    )

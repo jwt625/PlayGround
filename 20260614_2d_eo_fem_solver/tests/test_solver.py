@@ -47,6 +47,32 @@ def test_spatial_scalar_epsilon_increases_capacitance_for_high_k_slab():
     assert "spatial scalar eps_r" in high_result.permittivity_model
 
 
+def test_isotropic_tensor_assembly_matches_scalar_assembly():
+    scalar = slab_config(12.0)
+    tensor = slab_config(1.0)
+    tensor["Materials"]["slab"] = {
+        **tensor["Materials"]["slab"],
+        "eps_r_xx": 12.0,
+        "eps_r_yy": 12.0,
+        "eps_r_xy": 0.0,
+    }
+    del tensor["Materials"]["slab"]["eps_r"]
+
+    scalar_result = solve_config(scalar)
+    tensor_result = solve_config(tensor)
+    rel_diff = abs(scalar_result.capacitance_energy - tensor_result.capacitance_energy) / scalar_result.capacitance_energy
+    assert rel_diff < 1e-10
+    assert "anisotropic eps_r tensor" in tensor_result.permittivity_model
+
+
+def test_vertical_field_capacitance_responds_more_to_eps_r_yy_than_eps_r_xx():
+    high_x = anisotropic_slab_config(30.0, 1.0)
+    high_y = anisotropic_slab_config(1.0, 30.0)
+    high_x_result = solve_config(high_x)
+    high_y_result = solve_config(high_y)
+    assert high_y_result.capacitance_energy > 2 * high_x_result.capacitance_energy
+
+
 def test_overlapping_material_regions_use_later_non_background_material_in_assembly():
     high_last = overlapping_slab_config(2.0, 20.0)
     low_last = overlapping_slab_config(20.0, 2.0)
@@ -105,4 +131,16 @@ def overlapping_slab_config(first_eps_r, second_eps_r):
             "y_max": 1e-6,
         },
     }
+    return cfg
+
+
+def anisotropic_slab_config(eps_r_xx, eps_r_yy):
+    cfg = slab_config(1.0)
+    cfg["Materials"]["slab"] = {
+        **cfg["Materials"]["slab"],
+        "eps_r_xx": eps_r_xx,
+        "eps_r_yy": eps_r_yy,
+        "eps_r_xy": 0.0,
+    }
+    del cfg["Materials"]["slab"]["eps_r"]
     return cfg

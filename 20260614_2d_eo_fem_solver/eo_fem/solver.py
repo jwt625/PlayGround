@@ -6,7 +6,13 @@ from typing import Any
 
 from .constants import EPS0, capacitance_units
 from .geometry import Domain, Electrode, parse_domain, parse_electrodes
-from .materials import Material, parse_materials, scalar_eps_r_at, uses_spatial_permittivity
+from .materials import (
+    Material,
+    epsilon_tensor_at,
+    parse_materials,
+    uses_spatial_permittivity,
+    uses_tensor_permittivity,
+)
 
 
 @dataclass
@@ -62,11 +68,7 @@ def solve_config(config: dict[str, Any]) -> SolveResult:
         residual=residual,
         units=capacitance_units(c_energy),
         reference=reference,
-        permittivity_model=(
-            "spatial scalar eps_r (triangle centroid)"
-            if uses_spatial_permittivity(materials)
-            else f"homogeneous scalar eps_r={eps_r:g}"
-        ),
+        permittivity_model=permittivity_model_description(materials, eps_r),
     )
 
 
@@ -94,7 +96,7 @@ def make_structured_tri_mesh(domain: Domain, nx: int, ny: int) -> Mesh:
 def assemble_stiffness(mesh: Mesh, materials_or_eps_r: list[Material] | float) -> list[dict[int, float]]:
     rows: list[dict[int, float]] = [dict() for _ in mesh.nodes]
     use_materials = isinstance(materials_or_eps_r, list)
-    homogeneous_eps = None if use_materials else EPS0 * float(materials_or_eps_r)
+    homogeneous_tensor = None if use_materials else (float(materials_or_eps_r), float(materials_or_eps_r), 0.0)
     for tri in mesh.triangles:
         pts = [mesh.nodes[i] for i in tri]
         area2 = (
@@ -107,19 +109,40 @@ def assemble_stiffness(mesh: Mesh, materials_or_eps_r: list[Material] | float) -
         b = [pts[1][1] - pts[2][1], pts[2][1] - pts[0][1], pts[0][1] - pts[1][1]]
         c = [pts[2][0] - pts[1][0], pts[0][0] - pts[2][0], pts[1][0] - pts[0][0]]
         if use_materials:
-            eps = EPS0 * scalar_eps_r_at(
+            eps_xx, eps_yy, eps_xy = epsilon_tensor_at(
                 materials_or_eps_r,
                 (pts[0][0] + pts[1][0] + pts[2][0]) / 3.0,
                 (pts[0][1] + pts[1][1] + pts[2][1]) / 3.0,
             )
         else:
-            eps = homogeneous_eps
+            eps_xx, eps_yy, eps_xy = homogeneous_tensor
         for a in range(3):
             ia = tri[a]
             for d in range(3):
-                value = eps * (b[a] * b[d] + c[a] * c[d]) / (4.0 * area)
+                value = (
+                    EPS0
+                    * (
+                        eps_xx * b[a] * b[d]
+                        + eps_xy * b[a] * c[d]
+                        + eps_xy * c[a] * b[d]
+                        + eps_yy * c[a] * c[d]
+                    )
+                    / (4.0 * area)
+                )
                 rows[ia][tri[d]] = rows[ia].get(tri[d], 0.0) + value
     return rows
+
+
+def permittivity_model_description(materials: list[Material], background_eps_r: float) -> str:
+    spatial = uses_spatial_permittivity(materials)
+    tensor = uses_tensor_permittivity(materials)
+    if tensor and spatial:
+        return "spatial anisotropic eps_r tensor (triangle centroid)"
+    if tensor:
+        return "homogeneous anisotropic eps_r tensor"
+    if spatial:
+        return "spatial scalar eps_r (triangle centroid)"
+    return f"homogeneous scalar eps_r={background_eps_r:g}"
 
 
 def dirichlet_nodes(

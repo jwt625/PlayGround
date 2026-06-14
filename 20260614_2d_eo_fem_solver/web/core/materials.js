@@ -55,8 +55,27 @@ export function scalarEpsRAt(materials, x, y) {
   return material.properties.eps_r ?? material.properties.eps_r_xx ?? 1.0;
 }
 
+export function epsilonTensorAt(materials, x, y) {
+  const material = materialAt(materials, x, y);
+  const scalar = material.properties.eps_r ?? material.properties.eps_r_xx ?? 1.0;
+  return {
+    xx: material.properties.eps_r_xx ?? scalar,
+    yy: material.properties.eps_r_yy ?? scalar,
+    xy: material.properties.eps_r_xy ?? 0.0,
+  };
+}
+
 export function usesSpatialPermittivity(materials) {
   return materials.some((material) => material.shape !== "background");
+}
+
+export function usesTensorPermittivity(materials) {
+  return materials.some(
+    (material) =>
+      material.properties.eps_r_xx !== undefined ||
+      material.properties.eps_r_yy !== undefined ||
+      material.properties.eps_r_xy !== undefined,
+  );
 }
 
 export function materialPropertyField(mesh, materials, property) {

@@ -1,10 +1,10 @@
 # 2D EO Electrostatic Prototype
 
 This is a browser-first prototype for the EO cross-section solver. The primary
-implementation is in `web/core` and runs scalar-permittivity 2D electrostatics
-on a structured triangular mesh entirely on the client side. The Python package
-is kept as a reference harness while the browser implementation becomes the
-main product path.
+implementation is in `web/core` and runs scalar or anisotropic tensor
+permittivity 2D electrostatics on a structured triangular mesh entirely on the
+client side. The Python package is kept as a reference harness while the
+browser implementation becomes the main product path.
 
 The input format is a deliberately small, MOOSE-like YAML subset:
 
@@ -74,6 +74,8 @@ Current mesh:
 - The browser backend creates an `nx` by `ny` Cartesian grid over `Domain`.
 - Each rectangular cell is split into two linear triangles: `(n00,n10,n11)` and
   `(n00,n11,n01)`.
+- Optional browser-side structured refinement can snap tensor-product grid
+  coordinates to material/electrode boundaries and add local guard spacing.
 - Electrodes are not yet geometry-conforming mesh boundaries; nodes inside each
   electrode shape are pinned to its Dirichlet potential.
 
@@ -115,20 +117,21 @@ Validation:
   and invalid analytic-reference dimensions.
 
 The current browser backend is intentionally simple: P1 triangles on a
-structured rectangle, scalar `eps_r`, Dirichlet conductor regions, and natural
-Neumann outer boundaries. The next performance step is to move the same
-config/results contract into a Web Worker, then consider Rust/WASM or WebGPU
-only if the interactive mesh sizes need it.
+structured rectangle, scalar or tensor `eps_r`, Dirichlet conductor regions,
+and natural Neumann outer boundaries. The next performance step is to move the
+same config/results contract into a Web Worker, then consider Rust/WASM or
+WebGPU only if the interactive mesh sizes need it.
 
 Important material-model status:
 
-- The electrostatic solve uses per-triangle scalar permittivity: each triangle
-  is assembled with `epsilon_0 * eps_r(material)` evaluated at its centroid.
+- The electrostatic solve uses per-triangle permittivity evaluated at the
+  triangle centroid.
+- If `eps_r_xx`, `eps_r_yy`, or `eps_r_xy` are present, assembly uses the
+  symmetric anisotropic tensor. Otherwise it reduces to scalar `eps_r`.
 - Non-background material regions use the same ordering as the material maps:
   if regions overlap, the later non-background material in `Materials` wins.
-- `epsilon_r_xx`, `epsilon_r_yy`, `epsilon_r_xy`, EO coefficients, and
-  material-boundary overlays remain diagnostic until anisotropic tensor
-  assembly and EO overlap are implemented.
+- EO coefficients and material-boundary overlays remain diagnostic until EO
+  overlap is implemented.
 
 Performance notes:
 
@@ -155,20 +158,24 @@ True FEM mesh path:
 
 Current limitations:
 
-- Browser and Python assembly support spatially varying scalar `eps_r`, but not
-  anisotropic tensor permittivity.
+- Browser and Python assembly support spatially varying scalar and anisotropic
+  tensor permittivity.
+- Browser structured refinement is available behind
+  `Simulation.refinement.enabled`; the Python reference path still uses the
+  uniform structured grid.
 - Electrode/material interfaces are not geometry-conforming.
 - Charge extraction is not yet boundary-edge integration on tagged conductor
   boundaries.
 - The solver runs on the main browser thread. The UI yields before solving so
   status/log/WIP can paint, but the numerical solve itself still blocks until
   complete.
-- Web Worker execution, real iteration progress, preconditioning, nonuniform
-  refinement, true FEM meshing, anisotropic tensors, and EO overlap remain next
-  steps.
+- Web Worker execution, real iteration progress, stronger preconditioning,
+  Python-side nonuniform refinement, true FEM meshing, tagged-edge charge
+  extraction, and EO overlap remain next steps.
 
 Next implementation step:
 
-- Add anisotropic tensor assembly for `epsilon_r_xx`, `epsilon_r_yy`, and
-  `epsilon_r_xy`, then move charge extraction from conductor-node residuals to
-  tagged boundary-edge integration once geometry-conforming meshing exists.
+- Mirror structured nonuniform refinement in the Python reference path, add
+  convergence tests for TFLN/BTO examples, then move charge extraction from
+  conductor-node residuals to tagged boundary-edge integration once
+  geometry-conforming meshing exists.

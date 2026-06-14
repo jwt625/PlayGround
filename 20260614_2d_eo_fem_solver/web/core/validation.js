@@ -48,6 +48,34 @@ function validateSimulation(simulation, errors) {
   if (!Number.isInteger(ny) || ny < 3 || ny > 401) {
     errors.push("Simulation.mesh_ny must be an integer from 3 to 401");
   }
+  validateRefinement(simulation.refinement, errors);
+}
+
+function validateRefinement(refinement, errors) {
+  if (refinement === undefined) return;
+  if (!isPlainObject(refinement)) {
+    errors.push("Simulation.refinement must be a mapping");
+    return;
+  }
+  if (refinement.enabled !== undefined && typeof refinement.enabled !== "boolean") {
+    errors.push("Simulation.refinement.enabled must be true or false");
+  }
+  for (const key of ["h_min", "h_max"]) {
+    if (refinement[key] !== undefined) requirePositive(refinement, key, `Simulation.refinement.${key}`, errors);
+  }
+  if (refinement.h_min !== undefined && refinement.h_max !== undefined) {
+    const hMin = Number(refinement.h_min);
+    const hMax = Number(refinement.h_max);
+    if (Number.isFinite(hMin) && Number.isFinite(hMax) && hMin > hMax) {
+      errors.push("Simulation.refinement.h_min must be less than or equal to h_max");
+    }
+  }
+  if (refinement.guard_layers !== undefined) {
+    const guardLayers = Number(refinement.guard_layers);
+    if (!Number.isInteger(guardLayers) || guardLayers < 0 || guardLayers > 8) {
+      errors.push("Simulation.refinement.guard_layers must be an integer from 0 to 8");
+    }
+  }
 }
 
 function validateMaterials(materials, errors) {
@@ -76,6 +104,17 @@ function validateMaterials(materials, errors) {
           errors.push(`Materials.${name}.${key} must be positive`);
         }
       }
+    }
+    const epsXx = Number(material.eps_r_xx ?? material.eps_r);
+    const epsYy = Number(material.eps_r_yy ?? material.eps_r);
+    const epsXy = Number(material.eps_r_xy ?? 0);
+    if (
+      Number.isFinite(epsXx) &&
+      Number.isFinite(epsYy) &&
+      Number.isFinite(epsXy) &&
+      epsXx * epsYy - epsXy * epsXy <= 0
+    ) {
+      errors.push(`Materials.${name} permittivity tensor must be positive definite`);
     }
     validateShapeParams(material, `Materials.${name}`, errors);
   }

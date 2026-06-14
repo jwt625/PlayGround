@@ -7,7 +7,7 @@ import { EPS0 } from "../web/core/constants.js";
 import { parseSimpleYaml } from "../web/core/config.js";
 import { materialPropertyField } from "../web/core/materials.js";
 import { quantityInfo } from "../web/core/quantities.js";
-import { solveConfig } from "../web/core/solver.js";
+import { makeStructuredTriMesh, solveConfig } from "../web/core/solver.js";
 import { validateConfig } from "../web/core/validation.js";
 
 const PARALLEL_PLATE_CONFIG = `
@@ -90,6 +90,34 @@ test("spatial scalar epsilon increases capacitance for a high-k slab", () => {
   assert.match(highResult.permittivityModel, /spatial scalar eps_r/);
 });
 
+test("isotropic tensor assembly matches scalar assembly", () => {
+  const scalar = structuredSlabConfig(12.0);
+  const tensor = structuredSlabConfig(1.0);
+  tensor.Materials.slab = {
+    ...tensor.Materials.slab,
+    eps_r_xx: 12.0,
+    eps_r_yy: 12.0,
+    eps_r_xy: 0.0,
+  };
+  delete tensor.Materials.slab.eps_r;
+
+  const scalarResult = solveConfig(scalar);
+  const tensorResult = solveConfig(tensor);
+  const relDiff =
+    Math.abs(scalarResult.capacitanceEnergy - tensorResult.capacitanceEnergy) /
+    scalarResult.capacitanceEnergy;
+  assert.ok(relDiff < 1e-10, `relative difference ${relDiff}`);
+  assert.match(tensorResult.permittivityModel, /anisotropic eps_r tensor/);
+});
+
+test("vertical-field capacitance responds more to eps_r_yy than eps_r_xx", () => {
+  const highX = anisotropicSlabConfig(30.0, 1.0);
+  const highY = anisotropicSlabConfig(1.0, 30.0);
+  const highXResult = solveConfig(highX);
+  const highYResult = solveConfig(highY);
+  assert.ok(highYResult.capacitanceEnergy > 2 * highXResult.capacitanceEnergy);
+});
+
 test("overlapping material regions use later non-background material in assembly", () => {
   const highLast = overlappingSlabConfig(2.0, 20.0);
   const lowLast = overlappingSlabConfig(20.0, 2.0);
@@ -105,6 +133,38 @@ test("solver exposes field components on the mesh", () => {
   assert.equal(result.fields.Ey.length, result.mesh.nodes.length);
   assert.equal(result.fields.normE.length, result.mesh.nodes.length);
   assert.ok(Math.max(...result.fields.normE) > 0);
+});
+
+test("structured refinement snaps mesh coordinates to rectangle boundaries", () => {
+  const config = structuredSlabConfig(10.0);
+  config.Simulation.refinement = {
+    enabled: true,
+    h_min: 0.1e-6,
+    h_max: 1.2e-6,
+    guard_layers: 1,
+  };
+  const result = solveConfig(config);
+  assert.equal(result.mesh.stats.type, "structured refined");
+  assert.ok(hasCoordinate(result.mesh.yCoords, -1e-6));
+  assert.ok(hasCoordinate(result.mesh.yCoords, 1e-6));
+  assert.ok(hasCoordinate(result.mesh.xCoords, -5e-6));
+  assert.ok(hasCoordinate(result.mesh.xCoords, 5e-6));
+  assert.ok(result.mesh.stats.minDy < result.mesh.stats.maxDy);
+  assert.ok(result.capacitanceEnergy > 0);
+});
+
+test("makeStructuredTriMesh preserves uniform coordinates when refinement is disabled", () => {
+  const config = parseSimpleYaml(PARALLEL_PLATE_CONFIG);
+  const mesh = makeStructuredTriMesh(
+    { xMin: -1, xMax: 1, yMin: -2, yMax: 2 },
+    5,
+    3,
+    { refinement: { enabled: false } },
+  );
+  assert.deepEqual(Array.from(mesh.xCoords), [-1, -0.5, 0, 0.5, 1]);
+  assert.deepEqual(Array.from(mesh.yCoords), [-2, 0, 2]);
+  assert.equal(mesh.stats.type, "structured uniform");
+  assert.equal(config.Simulation.mesh_nx, 121);
 });
 
 test("material property maps expose isotropic and anisotropic placeholders", () => {
@@ -196,4 +256,20 @@ function overlappingSlabConfig(firstEpsR, secondEpsR) {
     },
   };
   return config;
+}
+
+function anisotropicSlabConfig(epsRxx, epsRyy) {
+  const config = structuredSlabConfig(1.0);
+  config.Materials.slab = {
+    ...config.Materials.slab,
+    eps_r_xx: epsRxx,
+    eps_r_yy: epsRyy,
+    eps_r_xy: 0.0,
+  };
+  delete config.Materials.slab.eps_r;
+  return config;
+}
+
+function hasCoordinate(coords, target) {
+  return Array.from(coords).some((value) => Math.abs(value - target) < 1e-15);
 }

@@ -153,7 +153,7 @@ function finishSolveRun(runId, t0, config) {
     setSolverStatus(`Solved in ${elapsed.toFixed(0)} ms`);
     appendLog(
       "success",
-      `Run ${runId}: solved in ${elapsed.toFixed(0)} ms; ${result.permittivityModel}; CG ${result.iterations} iter; residual ${result.residual.toExponential(3)}`,
+      `Run ${runId}: solved in ${elapsed.toFixed(0)} ms; ${result.permittivityModel}; ${formatMeshSummary(result.mesh)}; CG ${result.iterations} iter; residual ${result.residual.toExponential(3)}`,
     );
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
@@ -283,7 +283,9 @@ function renderResults(result, elapsed) {
     ["C energy", `${result.units.pF_per_cm.toFixed(4)} pF/cm`],
     ["C charge", `${result.capacitanceCharge.toExponential(6)} F/m`],
     ["Epsilon", result.permittivityModel],
-    ["Mesh", `${result.mesh.nx} x ${result.mesh.ny}, ${result.mesh.triangles.length} tris`],
+    ["Mesh", formatMeshSummary(result.mesh)],
+    ["dx", `${formatValue(result.mesh.stats.minDx)} to ${formatValue(result.mesh.stats.maxDx)} m`],
+    ["dy", `${formatValue(result.mesh.stats.minDy)} to ${formatValue(result.mesh.stats.maxDy)} m`],
     ["CG", `${result.iterations} iter, residual ${result.residual.toExponential(3)}`],
     ["Runtime", `${elapsed.toFixed(0)} ms`],
   ];
@@ -665,8 +667,8 @@ function updateTooltip(event) {
   const point = eventPoint(event);
   const [x, y] = canvasToWorld(lastResult.mesh, point.x, point.y);
   const mesh = lastResult.mesh;
-  const i = Math.round(((x - mesh.domain.xMin) / (mesh.domain.xMax - mesh.domain.xMin)) * (mesh.nx - 1));
-  const j = Math.round(((y - mesh.domain.yMin) / (mesh.domain.yMax - mesh.domain.yMin)) * (mesh.ny - 1));
+  const i = nearestCoordinateIndex(mesh.xCoords, x);
+  const j = nearestCoordinateIndex(mesh.yCoords, y);
   if (i < 0 || i >= mesh.nx || j < 0 || j >= mesh.ny) {
     plotTooltip.hidden = true;
     return;
@@ -687,6 +689,22 @@ function updateTooltip(event) {
   const cssY = canvasRect.top - wrap.top + point.cssY + 14;
   plotTooltip.style.left = `${Math.min(cssX, wrap.width - 230)}px`;
   plotTooltip.style.top = `${Math.min(cssY, wrap.height - 96)}px`;
+}
+
+function formatMeshSummary(mesh) {
+  return `${mesh.stats.type}, ${mesh.nx} x ${mesh.ny}, ${mesh.triangles.length} tris`;
+}
+
+function nearestCoordinateIndex(coords, value) {
+  if (value < coords[0] || value > coords[coords.length - 1]) return -1;
+  let lo = 0;
+  let hi = coords.length - 1;
+  while (hi - lo > 1) {
+    const mid = Math.floor((lo + hi) / 2);
+    if (coords[mid] < value) lo = mid;
+    else hi = mid;
+  }
+  return Math.abs(coords[lo] - value) <= Math.abs(coords[hi] - value) ? lo : hi;
 }
 
 function eventPoint(event) {
