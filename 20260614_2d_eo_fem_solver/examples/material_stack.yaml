@@ -1,0 +1,54 @@
+Simulation:
+  name: tfln_stack_diagnostic
+  mesh_nx: 121
+  mesh_ny: 81
+  signal_electrode: signal
+Domain:
+  x_min: -8e-6
+  x_max: 8e-6
+  y_min: -5e-6
+  y_max: 5e-6
+Materials:
+  background:
+    eps_r: 1.0
+  oxide:
+    shape: rectangle
+    eps_r: 3.9
+    x_min: -8e-6
+    x_max: 8e-6
+    y_min: -3.0e-6
+    y_max: -0.3e-6
+  tfln:
+    shape: rectangle
+    eps_r: 30.0
+    eps_r_xx: 43.0
+    eps_r_yy: 28.0
+    eps_r_xy: 0.0
+    r13: 8.6e-12
+    r33: 30.8e-12
+    x_min: -8e-6
+    x_max: 8e-6
+    y_min: -0.3e-6
+    y_max: 0.3e-6
+Electrodes:
+  signal:
+    shape: rectangle
+    potential: 1.0
+    x_min: -1e-6
+    x_max: 1e-6
+    y_min: 1.0e-6
+    y_max: 1.3e-6
+  ground_left:
+    shape: rectangle
+    potential: 0.0
+    x_min: -5e-6
+    x_max: -3e-6
+    y_min: 1.0e-6
+    y_max: 1.3e-6
+  ground_right:
+    shape: rectangle
+    potential: 0.0
+    x_min: 3e-6
+    x_max: 5e-6
+    y_min: 1.0e-6
+    y_max: 1.3e-6

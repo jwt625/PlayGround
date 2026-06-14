@@ -1,0 +1,18 @@
+[project]
+name = "eo-fem"
+version = "0.1.0"
+description = "Lightweight 2D electrostatic prototype for EO modulator cross-sections."
+requires-python = ">=3.11"
+dependencies = []
+
+[project.optional-dependencies]
+test = ["pytest>=8"]
+
+[project.scripts]
+eo-fem = "eo_fem.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["eo_fem*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

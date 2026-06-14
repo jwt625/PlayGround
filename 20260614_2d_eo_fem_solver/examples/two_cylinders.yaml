@@ -1,0 +1,30 @@
+Simulation:
+  name: two_cylinders_homogeneous
+  mesh_nx: 121
+  mesh_ny: 101
+  signal_electrode: signal
+Domain:
+  x_min: -8e-6
+  x_max: 8e-6
+  y_min: -6e-6
+  y_max: 6e-6
+Materials:
+  background:
+    eps_r: 1.0
+Electrodes:
+  signal:
+    shape: circle
+    potential: 1.0
+    x: -1.5e-6
+    y: 0.0
+    radius: 0.5e-6
+  ground:
+    shape: circle
+    potential: 0.0
+    x: 1.5e-6
+    y: 0.0
+    radius: 0.5e-6
+Outputs:
+  reference: two_cylinders
+  radius: 0.5e-6
+  center_distance: 3.0e-6
