@@ -18,7 +18,8 @@
 
 body {
   margin: 0;
-  min-height: 100vh;
+  height: 100vh;
+  overflow: hidden;
   background: var(--bg);
   color: var(--ink);
   font: 14px/1.45 Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
@@ -33,8 +34,9 @@ select {
 }
 
 .app-shell {
-  min-height: 100vh;
+  height: 100vh;
   padding: 16px;
+  overflow: hidden;
 }
 
 .workspace {
@@ -44,18 +46,22 @@ select {
     8px
     minmax(420px, 1fr);
   gap: 0;
-  min-height: calc(100vh - 32px);
+  height: calc(100vh - 32px);
+  min-height: 0;
 }
 
 .editor-pane,
 .output-pane {
   min-width: 0;
+  min-height: 0;
 }
 
 .editor-pane {
   display: grid;
-  grid-template-rows: auto 1fr;
+  grid-template-rows: auto minmax(0, 1fr) minmax(110px, 170px);
   gap: 10px;
+  height: 100%;
+  overflow: hidden;
 }
 
 .toolbar {
@@ -117,6 +123,8 @@ button:hover {
 #config-editor {
   width: 100%;
   min-height: 0;
+  height: 100%;
+  overflow: auto;
   resize: none;
   border: 1px solid var(--line);
   border-radius: 0;
@@ -125,6 +133,70 @@ button:hover {
   color: #f3f7f7;
   font: 13px/1.45 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
   tab-size: 2;
+}
+
+.log-panel {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  min-height: 0;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  background: var(--panel-2);
+}
+
+.log-header {
+  padding: 7px 9px;
+  border-bottom: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.log-window {
+  overflow: auto;
+  padding: 6px 0;
+  font: 12px/1.35 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+.log-row {
+  display: grid;
+  grid-template-columns: 82px 68px minmax(0, 1fr);
+  gap: 8px;
+  padding: 3px 9px;
+  border-left: 3px solid transparent;
+}
+
+.log-row span {
+  min-width: 0;
+}
+
+.log-time,
+.log-level {
+  color: var(--muted);
+}
+
+.log-message {
+  color: var(--ink);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.log-row.info {
+  border-left-color: #54708f;
+}
+
+.log-row.success {
+  border-left-color: var(--accent);
+}
+
+.log-row.error {
+  border-left-color: #df5b61;
+}
+
+.log-row.error .log-level,
+.log-row.error .log-message {
+  color: #ff9a9f;
 }
 
 .panel-resizer {
@@ -141,9 +213,11 @@ button:hover {
 
 .output-pane {
   display: grid;
-  grid-template-rows: auto minmax(320px, 1fr) auto;
+  grid-template-rows: auto 4px minmax(0, 1fr) 204px;
   gap: 10px;
   padding-left: 12px;
+  height: 100%;
+  overflow: hidden;
 }
 
 .view-controls {
@@ -202,6 +276,11 @@ select {
   width: 100%;
   height: 4px;
   appearance: none;
+  visibility: hidden;
+}
+
+.solve-progress.is-active {
+  visibility: visible;
 }
 
 .solve-progress::-webkit-progress-bar {
@@ -259,17 +338,22 @@ select {
 .results {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-auto-rows: minmax(0, 1fr);
   gap: 8px;
+  min-height: 0;
+  overflow: hidden;
 }
 
 .results div {
   display: flex;
   justify-content: space-between;
   gap: 12px;
-  padding: 10px 12px;
+  padding: 7px 10px;
   border: 1px solid var(--line);
   border-radius: 0;
   background: var(--panel);
+  min-width: 0;
+  min-height: 0;
 }
 
 .results span {
@@ -279,6 +363,10 @@ select {
 .results strong {
   font-weight: 650;
   text-align: right;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 @media (max-width: 860px) {

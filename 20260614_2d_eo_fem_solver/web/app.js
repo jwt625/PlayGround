@@ -24,6 +24,7 @@ const panelResizer = document.querySelector("#panel-resizer");
 const resetViewButton = document.querySelector("#reset-view-button");
 const solveProgress = document.querySelector("#solve-progress");
 const plotTooltip = document.querySelector("#plot-tooltip");
+const logWindow = document.querySelector("#log-window");
 
 const examplePaths = {
   parallel: "../examples/parallel_plate.yaml",
@@ -39,6 +40,7 @@ let view = null;
 let activeScale = null;
 let isPanning = false;
 let panStart = null;
+let solveRunId = 0;
 
 document.querySelector("#solve-button").addEventListener("click", runSolve);
 document.querySelector("#parallel-button").addEventListener("click", () => loadExample("parallel"));
@@ -84,40 +86,116 @@ new ResizeObserver(() => {
 await loadExample("parallel");
 
 async function loadExample(name) {
-  const response = await fetch(examplePaths[name]);
+  appendLog("info", `Loading example: ${name}`);
+  const response = await fetch(`${examplePaths[name]}?t=${Date.now()}`, { cache: "no-store" });
+  if (!response.ok) {
+    appendLog("error", `Failed to load example ${name}: HTTP ${response.status}`);
+    return;
+  }
   configEditor.value = await response.text();
   syncMeshInputsFromEditor();
   runSolve();
 }
 
 function runSolve() {
+  const runId = (solveRunId += 1);
   const t0 = performance.now();
-  statusLine.textContent = "Solving...";
-  solveProgress.hidden = false;
+  setSolverStatus("Validating");
+  appendLog("info", `Run ${runId}: validation started`);
+  solveProgress.classList.add("is-active");
   solveProgress.removeAttribute("value");
   requestAnimationFrame(() => {
+    let config;
     try {
-      const config = parseSimpleYaml(configEditor.value);
+      if (runId !== solveRunId) return;
+      config = parseSimpleYaml(configEditor.value);
       validateConfig(config);
-      const result = solveConfig(config);
-      const elapsed = performance.now() - t0;
-      lastConfig = config;
-      lastResult = result;
-      const domainKey = makeDomainKey(result.mesh.domain);
-      if (!view || domainKey !== lastDomainKey) resetViewport(result.mesh);
-      lastDomainKey = domainKey;
-      syncMeshInputs(config);
-      renderResults(result, elapsed);
-      renderPlot(config, result);
-      statusLine.textContent = `Solved in ${elapsed.toFixed(0)} ms`;
+      appendLog("success", `Run ${runId}: validation passed`);
+      setSolverStatus("Solving");
+      appendLog(
+        "info",
+        `Run ${runId}: solve started (${config.Simulation?.mesh_nx ?? 81} x ${
+          config.Simulation?.mesh_ny ?? 61
+        } mesh)`,
+      );
+      renderResultsPending(config, "Solving");
+      drawWorkInProgress(`Solving ${config.Simulation?.mesh_nx ?? 81} x ${config.Simulation?.mesh_ny ?? 61} mesh...`);
+      runAfterPaint(() => finishSolveRun(runId, t0, config));
     } catch (error) {
-      statusLine.textContent = "Error";
-      results.textContent = error instanceof Error ? error.message : String(error);
+      const message = error instanceof Error ? error.message : String(error);
+      setSolverStatus("Validation failed");
+      appendLog("error", `Run ${runId}: ${message}`);
+      renderResultsMessage("Validation failed", message);
       clearCanvas();
-    } finally {
-      solveProgress.hidden = true;
+      solveProgress.classList.remove("is-active");
     }
   });
+}
+
+function finishSolveRun(runId, t0, config) {
+  if (runId !== solveRunId) return;
+  try {
+    const result = solveConfig(config);
+    const elapsed = performance.now() - t0;
+    lastConfig = config;
+    lastResult = result;
+    const domainKey = makeDomainKey(result.mesh.domain);
+    if (!view || domainKey !== lastDomainKey) resetViewport(result.mesh);
+    lastDomainKey = domainKey;
+    syncMeshInputs(config);
+    renderResults(result, elapsed);
+    renderPlot(config, result);
+    setSolverStatus(`Solved in ${elapsed.toFixed(0)} ms`);
+    appendLog(
+      "success",
+      `Run ${runId}: solved in ${elapsed.toFixed(0)} ms; CG ${result.iterations} iter; residual ${result.residual.toExponential(3)}`,
+    );
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    setSolverStatus("Error");
+    appendLog("error", `Run ${runId}: ${message}`);
+    renderResultsMessage("Solver error", message);
+    clearCanvas();
+  } finally {
+    solveProgress.classList.remove("is-active");
+  }
+}
+
+function runAfterPaint(callback) {
+  requestAnimationFrame(() => {
+    setTimeout(callback, 0);
+  });
+}
+
+function setSolverStatus(message) {
+  statusLine.textContent = message;
+}
+
+function appendLog(level, message) {
+  const row = document.createElement("div");
+  row.className = `log-row ${level}`;
+  const time = document.createElement("span");
+  time.className = "log-time";
+  time.textContent = timestamp();
+  const levelCell = document.createElement("span");
+  levelCell.className = "log-level";
+  levelCell.textContent = level.toUpperCase();
+  const messageCell = document.createElement("span");
+  messageCell.className = "log-message";
+  messageCell.textContent = message;
+  row.append(time, levelCell, messageCell);
+  logWindow.append(row);
+  while (logWindow.children.length > 120) logWindow.firstElementChild.remove();
+  logWindow.scrollTop = logWindow.scrollHeight;
+}
+
+function timestamp() {
+  const now = new Date();
+  const hh = String(now.getHours()).padStart(2, "0");
+  const mm = String(now.getMinutes()).padStart(2, "0");
+  const ss = String(now.getSeconds()).padStart(2, "0");
+  const ms = String(now.getMilliseconds()).padStart(3, "0");
+  return `${hh}:${mm}:${ss}.${ms}`;
 }
 
 function updateMeshValue(key, rawValue) {
@@ -211,8 +289,40 @@ function renderResults(result, elapsed) {
       ["Error", `${(100 * err).toFixed(2)}%`],
     );
   }
+  renderResultLines(lines);
+}
+
+function renderResultsPending(config, state) {
+  const nx = config.Simulation?.mesh_nx ?? 81;
+  const ny = config.Simulation?.mesh_ny ?? 61;
+  renderResultLines([
+    ["C energy", "..."],
+    ["C energy", "... fF/mm"],
+    ["C energy", "... pF/cm"],
+    ["C charge", "..."],
+    ["Mesh", `${nx} x ${ny}`],
+    ["CG", "..."],
+    ["Runtime", "..."],
+    ["Status", state],
+  ]);
+}
+
+function renderResultsMessage(title, message) {
+  renderResultLines([
+    ["C energy", "-"],
+    ["C energy", "-"],
+    ["C energy", "-"],
+    ["C charge", "-"],
+    ["Mesh", "-"],
+    ["CG", "-"],
+    ["Runtime", "-"],
+    [title, message],
+  ]);
+}
+
+function renderResultLines(lines) {
   results.innerHTML = lines
-    .map(([key, value]) => `<div><span>${key}</span><strong>${value}</strong></div>`)
+    .map(([key, value]) => `<div><span>${escapeHtml(key)}</span><strong>${escapeHtml(value)}</strong></div>`)
     .join("");
 }
 
@@ -259,6 +369,28 @@ function clearCanvas() {
   colorbarCtx.clearRect(0, 0, colorbarCanvas.width, colorbarCanvas.height);
   colorbarMax.textContent = "";
   colorbarMid.textContent = "";
+  colorbarMin.textContent = "";
+  plotTooltip.hidden = true;
+}
+
+function drawWorkInProgress(message) {
+  resizeCanvases();
+  ctx.save();
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.fillStyle = "#0f141b";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.strokeStyle = "#2a3441";
+  ctx.lineWidth = Math.max(1, window.devicePixelRatio || 1);
+  ctx.strokeRect(0.5, 0.5, canvas.width - 1, canvas.height - 1);
+  ctx.fillStyle = "#9aa7b5";
+  ctx.font = `${14 * (window.devicePixelRatio || 1)}px ui-monospace, SFMono-Regular, Menlo, Consolas, monospace`;
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+  ctx.fillText(message, canvas.width / 2, canvas.height / 2);
+  ctx.restore();
+  colorbarCtx.clearRect(0, 0, colorbarCanvas.width, colorbarCanvas.height);
+  colorbarMax.textContent = "";
+  colorbarMid.textContent = "WIP";
   colorbarMin.textContent = "";
   plotTooltip.hidden = true;
 }
@@ -591,6 +723,15 @@ function formatValue(value) {
   const abs = Math.abs(value);
   if (abs >= 1e4 || abs < 1e-2) return value.toExponential(2);
   return value.toPrecision(4);
+}
+
+function escapeHtml(value) {
+  return String(value)
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
 }
 
 function clamp(value, low, high) {

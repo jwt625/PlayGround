@@ -10,6 +10,41 @@ import { quantityInfo } from "../web/core/quantities.js";
 import { solveConfig } from "../web/core/solver.js";
 import { validateConfig } from "../web/core/validation.js";
 
+const PARALLEL_PLATE_CONFIG = `
+Simulation:
+  name: parallel_plate_width_gt_gap
+  mesh_nx: 121
+  mesh_ny: 81
+  signal_electrode: signal
+Domain:
+  x_min: -12e-6
+  x_max: 12e-6
+  y_min: -8e-6
+  y_max: 8e-6
+Materials:
+  background:
+    eps_r: 3.9
+Electrodes:
+  signal:
+    shape: rectangle
+    potential: 1.0
+    x_min: -5e-6
+    x_max: 5e-6
+    y_min: 1e-6
+    y_max: 1.4e-6
+  ground:
+    shape: rectangle
+    potential: 0.0
+    x_min: -5e-6
+    x_max: 5e-6
+    y_min: -1.4e-6
+    y_max: -1e-6
+Outputs:
+  reference: parallel_plate
+  plate_width: 10e-6
+  plate_gap: 2e-6
+`;
+
 test("parseSimpleYaml parses nested scalar mappings", () => {
   const config = parseSimpleYaml(`
 Simulation:
@@ -33,7 +68,7 @@ test("analytic references match closed forms", () => {
 });
 
 test("parallel plate browser solver is close to analytic reference", () => {
-  const config = parseSimpleYaml(fs.readFileSync("examples/parallel_plate.yaml", "utf8"));
+  const config = parseSimpleYaml(PARALLEL_PLATE_CONFIG);
   const result = solveConfig(config);
   const relErr = Math.abs(result.capacitanceEnergy - result.reference.capacitance) / result.reference.capacitance;
   assert.ok(relErr < 0.35, `relative error ${relErr}`);
@@ -47,7 +82,7 @@ test("two cylinder browser solver is same order as analytic reference", () => {
 });
 
 test("solver exposes field components on the mesh", () => {
-  const config = parseSimpleYaml(fs.readFileSync("examples/parallel_plate.yaml", "utf8"));
+  const config = parseSimpleYaml(PARALLEL_PLATE_CONFIG);
   const result = solveConfig(config);
   assert.equal(result.fields.Ex.length, result.mesh.nodes.length);
   assert.equal(result.fields.Ey.length, result.mesh.nodes.length);
@@ -67,11 +102,11 @@ test("material property maps expose isotropic and anisotropic placeholders", () 
 });
 
 test("validation rejects non-finite and non-physical inputs before solve", () => {
-  const config = parseSimpleYaml(fs.readFileSync("examples/parallel_plate.yaml", "utf8"));
+  const config = parseSimpleYaml(PARALLEL_PLATE_CONFIG);
   config.Domain.x_max = config.Domain.x_min;
   assert.throws(() => validateConfig(config), /Domain width must be positive/);
 
-  const badMaterial = parseSimpleYaml(fs.readFileSync("examples/parallel_plate.yaml", "utf8"));
+  const badMaterial = parseSimpleYaml(PARALLEL_PLATE_CONFIG);
   badMaterial.Materials.background.eps_r = 0;
   assert.throws(() => solveConfig(badMaterial), /eps_r must be positive/);
 });

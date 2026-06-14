@@ -88,6 +88,9 @@ Visualizer:
 - Solve progress indicator is shown during parse/validation/solve. True
   iteration-level progress requires moving the solver into a Web Worker or
   making the CG loop asynchronous.
+- Left-bottom log panel records timestamped validation, solve start, solve
+  finish, and error messages. Validation failures remain visible there with
+  actionable error text.
 - Dark theme with sharp-corner controls by default.
 - The `material_stack` example exercises diagnostic material-property maps.
 
