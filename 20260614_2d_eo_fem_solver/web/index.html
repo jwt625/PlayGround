@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>2D EO FEM Solver</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <section class="workspace" aria-label="Simulation workspace">
+        <div class="editor-pane">
+          <div class="toolbar">
+            <div class="toolbar-group" aria-label="Electrostatic examples">
+              <span>ES</span>
+              <button id="parallel-button" type="button">Parallel plate</button>
+              <button id="cylinders-button" type="button">Two cylinders</button>
+              <button id="stack-button" type="button">Stack</button>
+              <button id="tfln-button" type="button">TFLN</button>
+              <button id="bto-button" type="button">BTO</button>
+            </div>
+            <div class="toolbar-group" aria-label="Electromagnetic mode examples">
+              <span>EM</span>
+              <button id="si-mode-button" type="button">Si</button>
+              <button id="tfln-mode-button" type="button">TFLN</button>
+              <button id="bto-mode-button" type="button">BTO</button>
+            </div>
+            <label class="mesh-input">
+              nx
+              <input id="mesh-nx-input" type="number" min="3" max="401" step="2" />
+            </label>
+            <label class="mesh-input">
+              ny
+              <input id="mesh-ny-input" type="number" min="3" max="401" step="2" />
+            </label>
+            <label class="physics-input">
+              Physics
+              <select id="physics-select">
+                <option value="config">config</option>
+                <option value="electrostatic">ES</option>
+                <option value="optical_mode">EM scalar</option>
+                <option value="vector_mode">EM vector</option>
+              </select>
+            </label>
+            <button id="solve-button" type="button">Solve</button>
+            <output id="status">Idle</output>
+          </div>
+          <textarea id="config-editor" spellcheck="false" aria-label="Simulation YAML"></textarea>
+          <section class="log-panel" aria-label="Solver log">
+            <div class="log-header">Log</div>
+            <div id="log-window" class="log-window" aria-live="polite"></div>
+          </section>
+        </div>
+        <div id="panel-resizer" class="panel-resizer" role="separator" aria-orientation="vertical"></div>
+        <div class="output-pane">
+          <div class="view-controls" aria-label="Plot controls">
+            <label>
+              Quantity
+              <select id="quantity-select"></select>
+            </label>
+            <label id="mode-select-label" class="mode-select-label">
+              Mode
+              <select id="mode-select"></select>
+            </label>
+            <label>
+              Scale
+              <select id="scale-select">
+                <option value="linear">linear</option>
+                <option value="symmetric">linear symmetric</option>
+                <option value="log">log magnitude</option>
+              </select>
+            </label>
+            <label class="check-control">
+              <input id="mesh-toggle" type="checkbox" />
+              mesh
+            </label>
+            <button id="reset-view-button" type="button">Reset view</button>
+          </div>
+          <progress id="solve-progress" class="solve-progress"></progress>
+          <div class="canvas-wrap">
+            <canvas id="field-canvas" width="760" height="520" aria-label="Field and mesh plot"></canvas>
+            <div id="plot-tooltip" class="plot-tooltip" hidden></div>
+            <div class="colorbar" aria-hidden="true">
+              <canvas id="colorbar-canvas" width="24" height="220"></canvas>
+              <div class="colorbar-labels">
+                <span id="colorbar-max"></span>
+                <span id="colorbar-mid"></span>
+                <span id="colorbar-min"></span>
+              </div>
+            </div>
+          </div>
+          <div id="results" class="results" aria-live="polite"></div>
+        </div>
+      </section>
+    </main>
+    <script type="module" src="./app.js"></script>
+  </body>
+</html>
