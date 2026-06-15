@@ -36,8 +36,23 @@ export const QUANTITIES = {
   },
   n: {
     label: "n",
-    description: "optical refractive index",
-    expression: "material.n || sqrt(eps_r)",
+    description: "selected optical refractive index",
+    expression: "material.n_component || material.n || sqrt(eps_r)",
+  },
+  n_xx: {
+    label: "n_xx",
+    description: "optical refractive-index tensor xx component",
+    expression: "material.n_xx || n",
+  },
+  n_yy: {
+    label: "n_yy",
+    description: "optical refractive-index tensor yy component",
+    expression: "material.n_yy || n",
+  },
+  n_zz: {
+    label: "n_zz",
+    description: "optical refractive-index tensor zz component",
+    expression: "material.n_zz || n",
   },
   eps_r: {
     label: "epsilon_r",

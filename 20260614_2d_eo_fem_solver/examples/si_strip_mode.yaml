@@ -2,9 +2,10 @@ Simulation:
   name: si_strip_scalar_mode
   physics: optical_mode
   wavelength: 1.55e-6
+  target_neff: auto
   mesh_nx: 121
   mesh_ny: 91
-  num_modes: 1
+  num_modes: 4
   mode_max_iterations: 650
   mode_tolerance: 2e-4
 Domain:

@@ -34,6 +34,10 @@ path still needs to mirror it.
 - Charge extraction uses conductor-node residuals, not tagged boundary edges.
 - The Python reference path still uses the old uniform structured grid.
 - The stable local browser URL for this project is `http://localhost:5173/web/`.
+- Later update: DevLog 002 added a browser-only scalar optical/EM mode solver,
+  optical material-index tensor keys, ES/EM UI routing, and unified TFLN/BTO
+  YAMLs that share geometry/material definitions between electrostatic and EM
+  runs.
 
 ## Completed In This Slice
 
@@ -56,7 +60,11 @@ Verification:
 
 ```text
 npm test
-15 passed
+15 passed at completion of this slice
+
+Current browser suite after DevLog 002:
+npm test
+20 passed
 
 .venv/bin/python -m pytest -q
 10 passed

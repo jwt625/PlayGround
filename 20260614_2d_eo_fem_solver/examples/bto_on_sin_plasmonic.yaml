@@ -1,14 +1,35 @@
-# BTO-on-SiN waveguide with blanket BTO film and contacting electrodes.
-# Intent: one physical transverse slice through a BTO-loaded SiN phase shifter:
-# SiN core in oxide, full-width BTO film above it, and lateral electrodes in
+# BTO-on-Si waveguide with blanket BTO film and contacting electrodes.
+# Intent: one physical transverse slice through a BTO-loaded silicon phase shifter:
+# Si core in oxide, full-width BTO film above it, and lateral electrodes in
 # direct contact with the BTO film. This is not a plasmonic slot cartoon.
-# Geometry anchor: BTO-on-SiN platforms use 800 x 800 nm SiN passives embedded
-# in SiO2. The BTO film thickness and electrode gap here are first-pass
+# Geometry anchor: the demo uses an 800 x 800 nm silicon core embedded in SiO2.
+# The BTO film thickness and electrode gap here are first-pass
 # estimator values and should be replaced by a specific process stack later.
 # Material anchor: BTO is strongly dispersive; representative 100 MHz values
 # eps_a ~1136, r42 ~481 pm/V, r33 ~125 pm/V are from Nature Materials 2025.
+# Optical anchor: Si n ~3.476, SiO2 n ~1.444, and BTO no/ne near 2.30/2.27 at
+# 1550 nm. The BTO optical tensor below uses ordinary in x/y and extraordinary
+# in z as a first-pass unrotated uniaxial convention.
 Simulation:
-  name: bto_on_sin_blanket_film_differential_pair
+  name: bto_on_si_blanket_film_differential_pair
+  wavelength: 1.55e-6
+  target_neff: auto
+  mode_polarization: Ex
+  mode_window:
+    shape: rectangle
+    x_min: -2.0e-6
+    x_max: 2.0e-6
+    y_min: -1.0e-6
+    y_max: 1.5e-6
+  mode_region:
+    shape: rectangle
+    x_min: -0.55e-6
+    x_max: 0.55e-6
+    y_min: -0.45e-6
+    y_max: 0.85e-6
+  num_modes: 4
+  mode_max_iterations: 800
+  mode_tolerance: 3e-4
   mesh_nx: 281
   mesh_ny: 221
   signal_electrode: signal_plus
@@ -20,9 +41,11 @@ Domain:
 Materials:
   background:
     eps_r: 3.9
+    n: 1.444
   silicon_substrate:
     shape: rectangle
     eps_r: 11.7
+    n: 3.476
     x_min: -4.0e-6
     x_max: 4.0e-6
     y_min: -3.0e-6
@@ -30,13 +53,15 @@ Materials:
   buried_oxide:
     shape: rectangle
     eps_r: 3.9
+    n: 1.444
     x_min: -4.0e-6
     x_max: 4.0e-6
     y_min: -2.0e-6
     y_max: 0.4e-6
-  silicon_nitride_core:
+  silicon_core:
     shape: rectangle
-    eps_r: 7.5
+    eps_r: 11.7
+    n: 3.476
     x_min: -0.4e-6
     x_max: 0.4e-6
     y_min: -0.4e-6
@@ -47,6 +72,10 @@ Materials:
     eps_r_xx: 1136.0
     eps_r_yy: 130.0
     eps_r_xy: 0.0
+    n: 2.297
+    n_xx: 2.297
+    n_yy: 2.297
+    n_zz: 2.268
     r13: 0.0
     r22: 0.0
     r33: 125.0e-12

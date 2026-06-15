@@ -1,10 +1,14 @@
-# 2D EO Electrostatic Prototype
+# 2D EO Cross-Section Solver Prototype
 
-This is a browser-first prototype for the EO cross-section solver. The primary
-implementation is in `web/core` and runs scalar or anisotropic tensor
-permittivity 2D electrostatics on a structured triangular mesh entirely on the
-client side. The Python package is kept as a reference harness while the
-browser implementation becomes the main product path.
+This is a browser-first prototype for EO modulator cross-section studies. The
+primary implementation is in `web/core` and runs entirely on the client side:
+
+- 2D electrostatic extraction for capacitance and RF fields.
+- Tensor-permittivity RF assembly for anisotropic EO materials.
+- A first scalar optical/EM mode solver for waveguide field sanity checks.
+
+The Python package is kept as a reference harness for electrostatics while the
+browser implementation is the main product path.
 
 The input format is a deliberately small, MOOSE-like YAML subset:
 
@@ -54,6 +58,16 @@ The example buttons reload YAML with cache busting. If you edit
 corresponding example button again to load the current file contents into the
 browser editor. The app does not currently watch files automatically.
 
+The browser UI has two example groups:
+
+- `ES`: electrostatic examples.
+- `EM`: optical mode examples.
+
+The `Physics` selector can use the YAML route (`config`) or temporarily force
+`ES` / `EM mode`. The TFLN and BTO buttons in the ES and EM groups load the
+same physical device YAMLs; the EM buttons force optical mode solving without
+duplicating geometry/material definitions.
+
 Reference Python CLI:
 
 ```bash
@@ -79,11 +93,49 @@ Current mesh:
 - Electrodes are not yet geometry-conforming mesh boundaries; nodes inside each
   electrode shape are pinned to its Dirichlet potential.
 
+Optical/EM mode solver:
+
+- Enabled with:
+
+```yaml
+Simulation:
+  physics: optical_mode
+  wavelength: 1.55e-6
+  mode_polarization: Ex
+  target_neff: auto
+  num_modes: 4
+```
+
+- The current solver is scalar finite-difference Helmholtz:
+
+```text
+(L_t + k0^2 n(x,y)^2) psi = beta^2 psi
+n_eff = beta / k0
+```
+
+- `mode_polarization` selects the optical tensor component used by the scalar
+  solve:
+  - `Ex -> n_xx`
+  - `Ey -> n_yy`
+  - `Ez -> n_zz`
+  - omitted/unknown -> scalar `n`
+- `target_neff: auto` resolves to the maximum selected optical index over the
+  optical solve mesh and is reported in results. The current eigensolver still
+  computes largest-beta scalar modes; true target-centered search needs
+  shift-invert or a robust Lanczos filter.
+- `mode_window` can crop the EM eigenproblem around the waveguide while reusing
+  the same global `Domain` and `Materials`.
+- `mode_region` reports/selects modes by intensity overlap with a rectangular
+  waveguide/core region.
+- EM plot controls include a mode dropdown when `num_modes > 1`; changing the
+  selected mode updates the plot and result text without rerunning the solver.
+- This is not a full-vector mode solver and should be benchmarked against
+  Tidy3D/Lumerical/MPB before using for quantitative design.
+
 Visualizer:
 
-- Quantity selector: `phi`, `Ex`, `Ey`, `|E|`, `epsilon_r`,
-  `epsilon_r_xx`, `epsilon_r_yy`, `epsilon_r_xy`, `r13`, `r33`, `r22`,
-  `r_eff`.
+- Quantity selector uses nested groups for ES fields, EM mode fields, RF
+  material properties, optical material properties, and EO material properties.
 - Quantity options and hover tooltips include short descriptions and
   expressions, for example `expr: -d(phi)/dx (x electric-field component)`.
 - Scale selector: linear, linear symmetric, log magnitude.
@@ -92,8 +144,9 @@ Visualizer:
 - Draggable splitter between the YAML editor and plot/results panel.
 - Left pane is viewport-bounded; the YAML editor and log panel scroll
   internally.
-- Right pane reserves stable rows for controls, progress, canvas, and numerical
-  results so the plot canvas does not jump during solve/error states.
+- Right pane reserves stable rows for controls, progress, canvas, and a
+  scrollable plain-text numerical result panel so the plot canvas does not jump
+  during solve/error states.
 - Plot interaction: drag to pan, mouse wheel to zoom, double-click or Reset view
   to restore full-domain view, resize-aware canvas redraw.
 - Hover tooltip reports `x`, `y`, selected value, and the expression used for
@@ -132,6 +185,12 @@ Important material-model status:
   if regions overlap, the later non-background material in `Materials` wins.
 - EO coefficients and material-boundary overlays remain diagnostic until EO
   overlap is implemented.
+- Optical mode solves use `n`, `n_xx`, `n_yy`, and `n_zz` if available; if
+  optical index is absent, the browser falls back to `sqrt(eps_r)`.
+- TFLN and BTO examples now carry both RF and optical material properties in
+  one YAML file per physical device. Geometry/material definitions are shared
+  between ES and EM runs; physics-specific solver controls live under
+  `Simulation`.
 
 Performance notes:
 
@@ -171,11 +230,14 @@ Current limitations:
   complete.
 - Web Worker execution, real iteration progress, stronger preconditioning,
   Python-side nonuniform refinement, true FEM meshing, tagged-edge charge
-  extraction, and EO overlap remain next steps.
+  extraction, full-vector optical modes, target-centered optical eigen solving,
+  and EO overlap remain next steps.
 
 Next implementation step:
 
-- Mirror structured nonuniform refinement in the Python reference path, add
-  convergence tests for TFLN/BTO examples, then move charge extraction from
-  conductor-node residuals to tagged boundary-edge integration once
-  geometry-conforming meshing exists.
+- For electrostatics: mirror structured nonuniform refinement in the Python
+  reference path, add convergence tests for TFLN/BTO examples, then move charge
+  extraction from conductor-node residuals to tagged boundary-edge integration
+  once geometry-conforming meshing exists.
+- For optics: add a Tidy3D benchmark harness and replace the scalar
+  largest-beta mode solve with a robust target-centered/vector mode solver.

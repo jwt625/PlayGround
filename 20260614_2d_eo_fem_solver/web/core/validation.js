@@ -70,8 +70,26 @@ function validateSimulation(simulation, errors, opticalMode = false) {
         errors.push("Simulation.mode_max_iterations must be an integer from 50 to 5000");
       }
     }
+    if (simulation.target_neff !== undefined) {
+      const target = String(simulation.target_neff).toLowerCase();
+      if (target !== "auto") requirePositive(simulation, "target_neff", "Simulation.target_neff", errors);
+    }
+    validateModeRectangle(simulation.mode_region, "Simulation.mode_region", errors);
+    validateModeRectangle(simulation.mode_window, "Simulation.mode_window", errors);
   }
   validateRefinement(simulation.refinement, errors);
+}
+
+function validateModeRectangle(region, path, errors) {
+  if (region === undefined) return;
+  if (!isPlainObject(region)) {
+    errors.push(`${path} must be a mapping`);
+    return;
+  }
+  if (region.shape !== "rectangle") {
+    errors.push(`${path}.shape must be rectangle`);
+  }
+  validateShapeParams(region, path, errors);
 }
 
 function validateRefinement(refinement, errors) {
@@ -137,7 +155,7 @@ function validateMaterials(materials, errors, opticalMode = false) {
         }
       }
     }
-    for (const key of ["n", "n_xx", "n_yy"]) {
+    for (const key of ["n", "n_xx", "n_yy", "n_zz"]) {
       if (material[key] !== undefined) {
         const value = Number(material[key]);
         if (Number.isFinite(value) && value <= 0) {

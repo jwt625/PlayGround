@@ -198,6 +198,7 @@ test("scalar optical mode example solves a guided Si strip mode", () => {
   validateConfig(config);
   const result = solveOpticalModeConfig(config);
   assert.equal(result.physics, "optical_mode");
+  assert.equal(result.targetNeff, 3.476);
   assert.ok(result.mode.nEff > 1.444, `n_eff ${result.mode.nEff}`);
   assert.ok(result.mode.nEff < 3.476, `n_eff ${result.mode.nEff}`);
   assert.ok(result.mode.confinement > 0.1, `confinement ${result.mode.confinement}`);
@@ -218,6 +219,49 @@ test("scalar optical mode effective index increases with core index", () => {
   const lowResult = solveOpticalModeConfig(low);
   const highResult = solveOpticalModeConfig(high);
   assert.ok(highResult.mode.nEff > lowResult.mode.nEff + 0.05);
+});
+
+test("modulator optical-mode examples solve with tensor-selected index", () => {
+  for (const path of [
+    "examples/tfln_partial_etched_mzm.yaml",
+    "examples/bto_on_sin_plasmonic.yaml",
+  ]) {
+    const config = parseSimpleYaml(fs.readFileSync(path, "utf8"));
+    config.Simulation.physics = "optical_mode";
+    config.Simulation.mesh_nx = path.includes("tfln") ? 161 : 141;
+    config.Simulation.mesh_ny = 121;
+    validateConfig(config);
+    const result = solveOpticalModeConfig(config);
+    assert.equal(result.physics, "optical_mode");
+    assert.equal(result.polarization, "Ex");
+    assert.equal(result.targetNeff, Math.max(...result.nField));
+    assert.ok(result.mode.nEff > 1.44, `${path} n_eff ${result.mode.nEff}`);
+    assert.equal(getModePlotValues(result, "n_zz").length, result.mesh.nodes.length);
+  }
+});
+
+test("BTO optical demo uses a high-index silicon core", () => {
+  const config = parseSimpleYaml(fs.readFileSync("examples/bto_on_sin_plasmonic.yaml", "utf8"));
+  assert.equal(config.Materials.silicon_core.n, 3.476);
+  assert.equal(config.Materials.silicon_core.eps_r, 11.7);
+  assert.equal(config.Simulation.num_modes, 4);
+});
+
+test("optical tensor polarization selects different refractive-index maps", () => {
+  const ex = parseSimpleYaml(fs.readFileSync("examples/tfln_partial_etched_mzm.yaml", "utf8"));
+  const ey = parseSimpleYaml(fs.readFileSync("examples/tfln_partial_etched_mzm.yaml", "utf8"));
+  ex.Simulation.physics = "optical_mode";
+  ey.Simulation.physics = "optical_mode";
+  ex.Simulation.mesh_nx = 81;
+  ex.Simulation.mesh_ny = 61;
+  ex.Simulation.mode_max_iterations = 350;
+  ey.Simulation.mesh_nx = 81;
+  ey.Simulation.mesh_ny = 61;
+  ey.Simulation.mode_max_iterations = 350;
+  ey.Simulation.mode_polarization = "Ey";
+  const exResult = solveOpticalModeConfig(ex);
+  const eyResult = solveOpticalModeConfig(ey);
+  assert.ok(eyResult.mode.nEff > exResult.mode.nEff, `${eyResult.mode.nEff} <= ${exResult.mode.nEff}`);
 });
 
 test("validation rejects non-finite and non-physical inputs before solve", () => {

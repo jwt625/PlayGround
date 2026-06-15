@@ -6,8 +6,30 @@
 # gaps. Electrodes are drawn in direct contact with the partially etched LN slab.
 # Rectangular sidewalls are a solver limit.
 # Material anchor: LN RF eps ~27-43 depending axis; r33 ~27-31 pm/V at 1550 nm.
+# Optical anchor: near 1550 nm LN no ~2.21 and ne ~2.14. For this X-cut-style
+# cross-section, n_xx is assigned extraordinary index for an Ex-dominant TE-like
+# mode; n_yy/n_zz use ordinary index. Treat this as a tensor bookkeeping
+# convention until full-vector mode solving is implemented.
 Simulation:
   name: tfln_single_waveguide_differential_pair
+  wavelength: 1.55e-6
+  target_neff: auto
+  mode_polarization: Ex
+  mode_window:
+    shape: rectangle
+    x_min: -2.5e-6
+    x_max: 2.5e-6
+    y_min: -1.0e-6
+    y_max: 1.5e-6
+  mode_region:
+    shape: rectangle
+    x_min: -0.6e-6
+    x_max: 0.6e-6
+    y_min: 0.0
+    y_max: 0.6e-6
+  num_modes: 4
+  mode_max_iterations: 800
+  mode_tolerance: 3e-4
   mesh_nx: 261
   mesh_ny: 181
   signal_electrode: signal_plus
@@ -19,9 +41,11 @@ Domain:
 Materials:
   background:
     eps_r: 3.9
+    n: 1.444
   silicon_substrate:
     shape: rectangle
     eps_r: 11.7
+    n: 3.476
     x_min: -10e-6
     x_max: 10e-6
     y_min: -5e-6
@@ -29,6 +53,7 @@ Materials:
   buried_oxide:
     shape: rectangle
     eps_r: 3.9
+    n: 1.444
     x_min: -10e-6
     x_max: 10e-6
     y_min: -2e-6
@@ -39,6 +64,10 @@ Materials:
     eps_r_xx: 43.0
     eps_r_yy: 28.0
     eps_r_xy: 0.0
+    n: 2.211
+    n_xx: 2.138
+    n_yy: 2.211
+    n_zz: 2.211
     r13: 8.6e-12
     r22: 6.8e-12
     r33: 30.8e-12
@@ -53,6 +82,10 @@ Materials:
     eps_r_xx: 43.0
     eps_r_yy: 28.0
     eps_r_xy: 0.0
+    n: 2.211
+    n_xx: 2.138
+    n_yy: 2.211
+    n_zz: 2.211
     r13: 8.6e-12
     r22: 6.8e-12
     r33: 30.8e-12

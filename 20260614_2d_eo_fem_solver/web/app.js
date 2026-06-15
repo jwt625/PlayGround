@@ -18,10 +18,13 @@ const colorbarMax = document.querySelector("#colorbar-max");
 const colorbarMid = document.querySelector("#colorbar-mid");
 const colorbarMin = document.querySelector("#colorbar-min");
 const quantitySelect = document.querySelector("#quantity-select");
+const modeSelectLabel = document.querySelector("#mode-select-label");
+const modeSelect = document.querySelector("#mode-select");
 const scaleSelect = document.querySelector("#scale-select");
 const meshToggle = document.querySelector("#mesh-toggle");
 const meshNxInput = document.querySelector("#mesh-nx-input");
 const meshNyInput = document.querySelector("#mesh-ny-input");
+const physicsSelect = document.querySelector("#physics-select");
 const panelResizer = document.querySelector("#panel-resizer");
 const resetViewButton = document.querySelector("#reset-view-button");
 const solveProgress = document.querySelector("#solve-progress");
@@ -40,6 +43,7 @@ const examplePaths = {
 let solveTimer = null;
 let lastConfig = null;
 let lastResult = null;
+let lastElapsed = 0;
 let lastDomainKey = null;
 let view = null;
 let activeScale = null;
@@ -54,11 +58,20 @@ document.querySelector("#stack-button").addEventListener("click", () => loadExam
 document.querySelector("#tfln-button").addEventListener("click", () => loadExample("tfln"));
 document.querySelector("#bto-button").addEventListener("click", () => loadExample("bto"));
 document.querySelector("#si-mode-button").addEventListener("click", () => loadExample("siMode"));
+document.querySelector("#tfln-mode-button").addEventListener("click", () => loadExample("tfln", "optical_mode"));
+document.querySelector("#bto-mode-button").addEventListener("click", () => loadExample("bto", "optical_mode"));
 quantitySelect.addEventListener("change", redrawLastResult);
+modeSelect.addEventListener("change", () => {
+  if (!lastResult) return;
+  setSelectedModeIndex(lastResult, Number(modeSelect.value));
+  renderResults(lastResult, lastElapsed);
+  redrawLastResult();
+});
 scaleSelect.addEventListener("change", redrawLastResult);
 meshToggle.addEventListener("change", redrawLastResult);
 meshNxInput.addEventListener("change", () => updateMeshValue("mesh_nx", meshNxInput.value));
 meshNyInput.addEventListener("change", () => updateMeshValue("mesh_ny", meshNyInput.value));
+physicsSelect.addEventListener("change", runSolve);
 panelResizer.addEventListener("pointerdown", startPanelResize);
 resetViewButton.addEventListener("click", () => {
   if (lastResult) {
@@ -93,7 +106,7 @@ new ResizeObserver(() => {
 
 await loadExample("parallel");
 
-async function loadExample(name) {
+async function loadExample(name, physicsOverride = "config") {
   appendLog("info", `Loading example: ${name}`);
   const response = await fetch(`${examplePaths[name]}?t=${Date.now()}`, { cache: "no-store" });
   if (!response.ok) {
@@ -101,6 +114,7 @@ async function loadExample(name) {
     return;
   }
   configEditor.value = await response.text();
+  physicsSelect.value = physicsOverride;
   syncMeshInputsFromEditor();
   runSolve();
 }
@@ -116,7 +130,7 @@ function runSolve() {
     let config;
     try {
       if (runId !== solveRunId) return;
-      config = parseSimpleYaml(configEditor.value);
+      config = effectiveConfigForSolve(parseSimpleYaml(configEditor.value));
       validateConfig(config);
       appendLog("success", `Run ${runId}: validation passed`);
       setSolverStatus("Solving");
@@ -143,10 +157,12 @@ function runSolve() {
 function finishSolveRun(runId, t0, config) {
   if (runId !== solveRunId) return;
   try {
-      const result = isOpticalMode(config) ? solveOpticalModeConfig(config) : solveConfig(config);
+    const result = isOpticalMode(config) ? solveOpticalModeConfig(config) : solveConfig(config);
     const elapsed = performance.now() - t0;
     lastConfig = config;
     lastResult = result;
+    lastElapsed = elapsed;
+    syncModeOptions(result);
     const domainKey = makeDomainKey(result.mesh.domain);
     if (!view || domainKey !== lastDomainKey) resetViewport(result.mesh);
     lastDomainKey = domainKey;
@@ -261,6 +277,19 @@ function syncMeshInputs(config) {
   meshNyInput.value = String(config.Simulation?.mesh_ny ?? 61);
 }
 
+function effectiveConfigForSolve(config) {
+  const clone = structuredClone(config);
+  clone.Simulation = clone.Simulation ?? {};
+  if (physicsSelect.value === "electrostatic") {
+    delete clone.Simulation.physics;
+  } else if (physicsSelect.value === "optical_mode") {
+    clone.Simulation.physics = "optical_mode";
+    clone.Simulation.wavelength = clone.Simulation.wavelength ?? 1.55e-6;
+    clone.Simulation.mode_polarization = clone.Simulation.mode_polarization ?? "Ex";
+  }
+  return clone;
+}
+
 function startPanelResize(event) {
   event.preventDefault();
   panelResizer.setPointerCapture(event.pointerId);
@@ -308,12 +337,16 @@ function renderResults(result, elapsed) {
 }
 
 function renderOpticalResults(result, elapsed) {
-  const mode = result.mode;
+  const mode = selectedMode(result);
   renderResultLines([
+    ["Mode", `${selectedModeIndex(result)} of ${result.modes.length - 1}`],
     ["n_eff", mode.nEff.toFixed(6)],
     ["beta", `${mode.beta.toExponential(6)} 1/m`],
     ["lambda", `${formatValue(result.wavelength)} m`],
+    ["Polarization", result.polarization],
+    ["Target n_eff", result.targetNeff.toFixed(6)],
     ["Confinement", `${(100 * mode.confinement).toFixed(2)}%`],
+    ["Mode-region overlap", mode.targetOverlap === null ? "-" : `${(100 * mode.targetOverlap).toFixed(2)}%`],
     ["Mode area", `${mode.modeArea.toExponential(6)} m^2`],
     ["Model", result.scalarModel],
     ["Mesh", formatMeshSummary(result.mesh)],
@@ -326,10 +359,13 @@ function renderResultsPending(config, state) {
   const nx = config.Simulation?.mesh_nx ?? 81;
   const ny = config.Simulation?.mesh_ny ?? 61;
   if (isOpticalMode(config)) {
+    modeSelectLabel.hidden = false;
+    modeSelect.disabled = true;
     renderResultLines([
       ["n_eff", "..."],
       ["beta", "..."],
       ["lambda", `${formatValue(config.Simulation?.wavelength ?? 1.55e-6)} m`],
+      ["Target n_eff", `${config.Simulation?.target_neff ?? "auto"}`],
       ["Confinement", "..."],
       ["Mode area", "..."],
       ["Model", "scalar optical mode"],
@@ -340,6 +376,8 @@ function renderResultsPending(config, state) {
     ]);
     return;
   }
+  modeSelectLabel.hidden = true;
+  modeSelect.disabled = true;
   renderResultLines([
     ["C energy", "..."],
     ["C energy", "... fF/mm"],
@@ -368,9 +406,7 @@ function renderResultsMessage(title, message) {
 }
 
 function renderResultLines(lines) {
-  results.innerHTML = lines
-    .map(([key, value]) => `<div><span>${escapeHtml(key)}</span><strong>${escapeHtml(value)}</strong></div>`)
-    .join("");
+  results.textContent = lines.map(([key, value]) => `${key}: ${value}`).join("\n");
 }
 
 function redrawLastResult() {
@@ -379,13 +415,11 @@ function redrawLastResult() {
 
 function renderPlot(config, result) {
   syncQuantityOptions(result);
+  syncModeOptions(result);
   resizeCanvases();
   if (!view) resetViewport(result.mesh);
   const { nx, ny } = result.mesh;
-  const values =
-    result.physics === "optical_mode"
-      ? getModePlotValues(result, quantitySelect.value)
-      : getPlotValues(result, quantitySelect.value);
+  const values = getActivePlotValues(result, quantitySelect.value);
   const transform = makeScale(values, scaleSelect.value);
   activeScale = transform;
   const image = ctx.createImageData(nx, ny);
@@ -418,40 +452,154 @@ function renderPlot(config, result) {
 
 function syncQuantityOptions(result) {
   const optical = result.physics === "optical_mode";
-  const desired = optical
+  const groups = optical
     ? [
-        ["mode", "mode - scalar modal field"],
-        ["mode_abs", "|mode| - modal field magnitude"],
-        ["mode_intensity", "I - modal intensity"],
-        ["n", "n - optical refractive index"],
-        ["eps_r", "epsilon_r - relative permittivity"],
+        {
+          label: "EM Mode Fields",
+          options: [
+            ["mode", "mode - scalar modal field"],
+            ["mode_abs", "|mode| - modal field magnitude"],
+            ["mode_intensity", "I - modal intensity"],
+          ],
+        },
+        {
+          label: "Optical Material Properties",
+          options: [
+            ["n", "n - selected optical refractive index"],
+            ["n_xx", "n_xx - optical tensor xx"],
+            ["n_yy", "n_yy - optical tensor yy"],
+            ["n_zz", "n_zz - optical tensor zz"],
+          ],
+        },
+        {
+          label: "RF Material Properties",
+          options: [
+            ["eps_r", "epsilon_r - relative permittivity"],
+            ["eps_r_xx", "epsilon_r_xx - permittivity tensor xx"],
+            ["eps_r_yy", "epsilon_r_yy - permittivity tensor yy"],
+            ["eps_r_xy", "epsilon_r_xy - permittivity tensor xy"],
+          ],
+        },
+        {
+          label: "EO Material Properties",
+          options: [
+            ["r13", "r13 - EO tensor coefficient"],
+            ["r33", "r33 - EO tensor coefficient"],
+            ["r22", "r22 - EO tensor coefficient"],
+            ["r_eff", "r_eff - effective EO coefficient"],
+          ],
+        },
       ]
     : [
-        ["phi", "phi - electrostatic potential"],
-        ["Ex", "Ex - x electric-field component"],
-        ["Ey", "Ey - y electric-field component"],
-        ["normE", "|E| - electric-field magnitude"],
-        ["eps_r", "epsilon_r - relative permittivity"],
-        ["eps_r_xx", "epsilon_r_xx - permittivity tensor xx"],
-        ["eps_r_yy", "epsilon_r_yy - permittivity tensor yy"],
-        ["eps_r_xy", "epsilon_r_xy - permittivity tensor xy"],
-        ["r13", "r13 - EO tensor coefficient"],
-        ["r33", "r33 - EO tensor coefficient"],
-        ["r22", "r22 - EO tensor coefficient"],
-        ["r_eff", "r_eff - effective EO coefficient"],
+        {
+          label: "ES Fields",
+          options: [
+            ["phi", "phi - electrostatic potential"],
+            ["Ex", "Ex - x electric-field component"],
+            ["Ey", "Ey - y electric-field component"],
+            ["normE", "|E| - electric-field magnitude"],
+          ],
+        },
+        {
+          label: "RF Material Properties",
+          options: [
+            ["eps_r", "epsilon_r - relative permittivity"],
+            ["eps_r_xx", "epsilon_r_xx - permittivity tensor xx"],
+            ["eps_r_yy", "epsilon_r_yy - permittivity tensor yy"],
+            ["eps_r_xy", "epsilon_r_xy - permittivity tensor xy"],
+          ],
+        },
+        {
+          label: "Optical Material Properties",
+          options: [
+            ["n", "n - selected optical refractive index"],
+            ["n_xx", "n_xx - optical tensor xx"],
+            ["n_yy", "n_yy - optical tensor yy"],
+            ["n_zz", "n_zz - optical tensor zz"],
+          ],
+        },
+        {
+          label: "EO Material Properties",
+          options: [
+            ["r13", "r13 - EO tensor coefficient"],
+            ["r33", "r33 - EO tensor coefficient"],
+            ["r22", "r22 - EO tensor coefficient"],
+            ["r_eff", "r_eff - effective EO coefficient"],
+          ],
+        },
       ];
+  const desired = groups.flatMap((group) => group.options);
   const currentValues = Array.from(quantitySelect.options).map((option) => option.value).join("|");
   const nextValues = desired.map(([value]) => value).join("|");
   if (currentValues === nextValues) return;
   const previous = quantitySelect.value;
   quantitySelect.innerHTML = "";
-  for (const [value, label] of desired) {
-    const option = document.createElement("option");
-    option.value = value;
-    option.textContent = label;
-    quantitySelect.append(option);
+  for (const group of groups) {
+    const optgroup = document.createElement("optgroup");
+    optgroup.label = group.label;
+    for (const [value, label] of group.options) {
+      const option = document.createElement("option");
+      option.value = value;
+      option.textContent = label;
+      optgroup.append(option);
+    }
+    quantitySelect.append(optgroup);
   }
   quantitySelect.value = desired.some(([value]) => value === previous) ? previous : desired[0][0];
+}
+
+function getActivePlotValues(result, quantity) {
+  return result.physics === "optical_mode"
+    ? getModePlotValues(result, quantity)
+    : getPlotValues(result, quantity);
+}
+
+function syncModeOptions(result) {
+  const optical = result.physics === "optical_mode";
+  modeSelectLabel.hidden = !optical;
+  modeSelect.disabled = !optical;
+  if (!optical) {
+    modeSelect.innerHTML = "";
+    return;
+  }
+  const previous = Number(modeSelect.value);
+  const modes = result.modes ?? [];
+  const nextValues = modes.map((mode, index) => modeOptionLabel(mode, index)).join("|");
+  const currentValues = Array.from(modeSelect.options).map((option) => option.textContent).join("|");
+  if (nextValues !== currentValues) {
+    modeSelect.innerHTML = "";
+    modes.forEach((mode, index) => {
+      const option = document.createElement("option");
+      option.value = String(index);
+      option.textContent = modeOptionLabel(mode, index);
+      modeSelect.append(option);
+    });
+  }
+  const index = Number.isInteger(previous) && previous >= 0 && previous < modes.length ? previous : 0;
+  modeSelect.value = String(index);
+  setSelectedModeIndex(result, index);
+}
+
+function modeOptionLabel(mode, index) {
+  const overlap = mode.targetOverlap === null ? "" : `, overlap ${(100 * mode.targetOverlap).toFixed(1)}%`;
+  return `${index}: n_eff ${mode.nEff.toFixed(4)}${overlap}`;
+}
+
+function selectedModeIndex(result) {
+  const modes = result.modes ?? [];
+  const index = Number(result.selectedModeIndex ?? 0);
+  return Number.isInteger(index) && index >= 0 && index < modes.length ? index : 0;
+}
+
+function selectedMode(result) {
+  return result.modes?.[selectedModeIndex(result)] ?? result.mode;
+}
+
+function setSelectedModeIndex(result, index) {
+  const modes = result.modes ?? [];
+  const next = Number.isInteger(index) && index >= 0 && index < modes.length ? index : 0;
+  result.selectedModeIndex = next;
+  result.mode = modes[next] ?? result.mode;
 }
 
 function clearCanvas() {
@@ -598,7 +746,7 @@ function drawElectrodes(config, result) {
 
 function formatRunSummary(result) {
   if (result.physics === "optical_mode") {
-    return `${result.scalarModel}; ${formatMeshSummary(result.mesh)}; n_eff ${result.mode.nEff.toFixed(6)}; eig ${result.mode.iterations} iter; residual ${result.mode.residual.toExponential(3)}`;
+    return `${result.scalarModel}; ${formatMeshSummary(result.mesh)}; ${result.polarization}; n_eff ${result.mode.nEff.toFixed(6)}; eig ${result.mode.iterations} iter; residual ${result.mode.residual.toExponential(3)}`;
   }
   return `${result.permittivityModel}; ${formatMeshSummary(result.mesh)}; CG ${result.iterations} iter; residual ${result.residual.toExponential(3)}`;
 }
@@ -760,7 +908,7 @@ function updateTooltip(event) {
     return;
   }
   const idx = j * mesh.nx + i;
-  const values = getPlotValues(lastResult, quantitySelect.value);
+  const values = getActivePlotValues(lastResult, quantitySelect.value);
   const info = quantityInfo(quantitySelect.value);
   plotTooltip.innerHTML = [
     `x = ${formatValue(x)} m`,

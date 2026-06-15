@@ -104,9 +104,26 @@ Materials and validation:
   - `n`,
   - `n_xx`,
   - `n_yy`,
+  - `n_zz`,
   - `n_xy`.
 - `material.n` is preferred for optical mode solving.
 - If `n` is absent, optical index falls back to `sqrt(eps_r)` for compatibility.
+- `Simulation.mode_polarization` selects the tensor component used by the
+  current scalar optical solve:
+  - `Ex` -> `n_xx`,
+  - `Ey` -> `n_yy`,
+  - `Ez` -> `n_zz`,
+  - omitted/unknown -> scalar `n`.
+- `Simulation.target_neff` is now accepted.
+  - Default/`auto` resolves to the maximum selected optical index over the
+    optical solve mesh.
+  - The resolved target is reported in the UI and result object.
+  - The current MVP eigensolver still computes largest-beta scalar modes; true
+    target-centered mode search needs shift-invert or a robust Lanczos filter.
+- `Simulation.mode_window` optionally crops the EM eigenproblem to a rectangular
+  optical solve window while reusing the same global device geometry/materials.
+- `Simulation.mode_region` optionally reports and selects modes by intensity
+  overlap with a rectangular waveguide/core region.
 - Electrodes are no longer required when `Simulation.physics` is
   `optical_mode` or `mode_solver`.
 - Optical mode configs require `Simulation.wavelength`.
@@ -116,16 +133,29 @@ Materials and validation:
 UI:
 
 - Added a `Si mode` example button.
+- Split examples into ES and EM toolbar groups:
+  - ES: electrostatic capacitance/RF-field examples,
+  - EM: optical mode examples.
+- Added a physics selector:
+  - `config`: use the YAML physics route,
+  - `ES`: force electrostatic solve by removing `Simulation.physics`,
+  - `EM mode`: force optical mode solve by setting `Simulation.physics:
+    optical_mode`.
 - App dispatches to the electrostatic solver or optical mode solver based on
   `Simulation.physics`.
 - Result panel switches from capacitance fields to mode fields.
-- Quantity selector switches between electrostatic quantities and optical
-  quantities:
-  - `mode`,
-  - `mode_abs`,
-  - `mode_intensity`,
-  - `n`,
-  - `eps_r`.
+- Bottom-right result display is a single scrollable plain-text panel.
+- EM mode plots expose a mode dropdown. `num_modes` controls how many scalar
+  modes are available; changing the selected mode updates field plots and result
+  text without rerunning the solve.
+- Quantity selector now uses nested groups:
+  - ES fields,
+  - EM mode fields,
+  - RF material properties,
+  - optical material properties,
+  - EO material properties.
+- Canvas tooltip lookup now uses the active ES/EM plot-value route, so optical
+  mode fields and selected optical index values report correctly.
 
 Example:
 
@@ -134,6 +164,15 @@ Example:
   - SiO2-like background,
   - `lambda = 1.55 um`,
   - browser scalar mode solve.
+- TFLN and BTO now use one device YAML each for both ES and EM:
+  - `examples/tfln_partial_etched_mzm.yaml`,
+  - `examples/bto_on_sin_plasmonic.yaml`.
+- Geometry and material settings live once in `Domain`, `Materials`, and
+  `Electrodes`.
+- Physics-specific settings live in `Simulation`:
+  - ES uses `signal_electrode`, mesh, and electrode potentials.
+  - EM uses `physics: optical_mode` when forced by the UI, plus `wavelength`,
+    `mode_polarization`, `target_neff`, `mode_window`, and `mode_region`.
 
 Current browser scalar result for that example:
 
@@ -150,13 +189,91 @@ residual    1.993e-4
 This number should not be presented as the real TE0/TM0 vector mode of the
 strip. It is the scalar MVP output to benchmark and improve.
 
+Current browser scalar results for modulator optical examples:
+
+```text
+TFLN Ex-like mode
+n_eff       1.725795
+target      2.138000
+confinement 72.48%
+overlap     49.26%
+residual    8.374e-4
+
+BTO-on-Si Ex-like mode
+n_eff       3.043063
+target      3.476000
+confinement 97.85%
+overlap     99.46%
+residual    3.020e-4
+```
+
+For these browser MVP optical examples, the Si substrate remains part of the
+material stack with its optical index. The EM solve uses `mode_window` to crop
+the optical eigenproblem around the waveguide and `mode_region` to report/select
+the intended waveguide-localized scalar mode. This avoids duplicating or
+modifying geometry/material definitions between ES and EM runs.
+
+## Material Assumptions Added
+
+TFLN / LiNbO3:
+
+- LiNbO3 is treated as uniaxial near 1550 nm.
+- Representative values used:
+  - `n_o = 2.211`,
+  - `n_e = 2.138`.
+- For the X-cut-style bookkeeping convention used here:
+  - `n_xx = n_e`,
+  - `n_yy = n_o`,
+  - `n_zz = n_o`.
+- This is meant to let an Ex-dominant scalar mode use the extraordinary index.
+  A real vector solver must own the coordinate convention explicitly.
+
+BTO:
+
+- BTO is treated as uniaxial near 1550 nm.
+- Representative values used:
+  - `n_o = 2.297`,
+  - `n_e = 2.268`.
+- First-pass unrotated tensor:
+  - `n_xx = n_o`,
+  - `n_yy = n_o`,
+  - `n_zz = n_e`.
+- BTO domain orientation and poling are not modeled yet. The current tensor is
+  only a material-index input to the scalar mode solver.
+
+Si / SiO2 / SiN:
+
+- Si: `n = 3.476`, used for the BTO demo core and silicon substrate regions.
+- SiN: `n = 1.996` at 1550 nm, representative of stoichiometric/LPCVD-like SiN.
+- SiO2: `n = 1.444`.
+- The BTO demo now uses a high-index Si core rather than SiN so the scalar EM
+  demo is guided.
+- EM examples avoid substrate-mode dominance through `mode_window`, not by
+  changing the material stack.
+
+## Current Repository Status
+
+- Browser app supports both ES and EM routes from the same YAML editor.
+- TFLN and BTO use one YAML per physical device:
+  - ES buttons load the file and use the electrostatic route.
+  - EM buttons load the same file and force `Simulation.physics:
+    optical_mode` in the UI.
+- `README.md` has been updated to describe:
+  - the dual ES/EM client-side solver,
+  - optical material-index fields,
+  - `target_neff`, `mode_window`, and `mode_region`,
+  - the single scrollable plain-text result panel,
+  - the current validation commands and limitations.
+- `web/index.html` is updated on disk and served by the local server, but is
+  ignored by the repository's `*.html` ignore rule.
+
 ## Verification
 
 Browser tests:
 
 ```text
 npm test
-17 passed
+20 passed
 ```
 
 Python reference tests:
@@ -172,6 +289,11 @@ New browser tests:
 - Scalar `n_eff` lies between cladding and core index.
 - Core confinement is nonzero and meaningful.
 - Increasing core index increases scalar `n_eff`.
+- TFLN and BTO modulator optical-mode examples parse, validate, and solve.
+- Switching TFLN mode polarization from `Ex` to `Ey` changes the selected
+  optical tensor component and increases scalar `n_eff` because `n_yy > n_xx`.
+- `target_neff: auto` resolves to `max(n_selected)` for Si, TFLN, and BTO mode
+  examples.
 
 ## Proposal For Next Slices
 
@@ -238,10 +360,10 @@ Once vector optical fields are stable:
 - Scalar mode equation only.
 - No vector boundary conditions.
 - No PML or radiation-loss mode filtering.
-- No anisotropic optical tensor assembly.
+- No full-vector anisotropic optical assembly. Current tensor handling only
+  selects one scalar index component from `n_xx`, `n_yy`, or `n_zz`.
 - No dispersive material model.
 - Uniform-grid optical solve only.
 - Dirichlet outer boundary can bias weakly confined modes.
 - Current eigen solver is acceptable for MVP examples but not robust enough for
   crowded higher-order modes.
-

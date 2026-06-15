@@ -147,6 +147,36 @@ Alternatives:
 
 As of 2026-06-14, the repository has a browser-first runnable prototype plus a Python reference path.
 
+Status addendum after DevLog 001 and DevLog 002:
+
+- Browser electrostatics now supports centroid-sampled spatial scalar
+  permittivity and symmetric anisotropic RF tensors from `eps_r_xx`,
+  `eps_r_yy`, and `eps_r_xy`.
+- Browser structured nonuniform refinement exists through
+  `Simulation.refinement`.
+- The browser app now has both ES and EM routes:
+  - ES solves electrostatic capacitance/RF fields.
+  - EM solves a first scalar optical mode problem with tensor-selected optical
+    index components.
+- TFLN and BTO examples now use one YAML per physical device. `Domain`,
+  `Materials`, and `Electrodes` are shared; ES/EM solver controls live under
+  `Simulation`.
+- Optical material keys include `n`, `n_xx`, `n_yy`, `n_zz`, and `n_xy`.
+- EM mode settings include `wavelength`, `mode_polarization`, `target_neff`,
+  `mode_window`, `mode_region`, `num_modes`, and solver tolerance/iteration
+  controls.
+- The UI has ES/EM example groups, a physics selector, nested plot quantity
+  groups, and a single scrollable plain-text result panel.
+- Current verification:
+
+```text
+npm test
+20 passed
+
+.venv/bin/python -m pytest -q
+10 passed
+```
+
 Implemented browser path:
 
 - Static browser app under `web/`, served by `python3 -m http.server 5173`.
@@ -161,8 +191,8 @@ Implemented browser path:
   - CSR typed-array sparse storage.
   - Conjugate-gradient solve on free nodes.
   - Energy-method and electrode-node charge capacitance estimates.
-  - Current assembly is homogeneous: it uses `Materials.background.eps_r` only.
-    Non-background material regions are not yet included in the solve matrix.
+  - Later updates added spatial scalar and anisotropic tensor material assembly;
+    non-background material regions are now included in the solve matrix.
 - Analytic validation cases:
   - Parallel-plate reference.
   - Two-cylinder reference.
@@ -199,7 +229,8 @@ Current limitations:
 - Electrode and material boundaries are not geometry-conforming.
 - Charge extraction is still based on conductor-node residuals, not tagged boundary-edge integration.
 - The solve still runs on the main browser thread; progress is a status/WIP indicator, not true iteration-level progress.
-- No Web Worker, WebGPU, true unstructured mesh, anisotropic tensor assembly, or EO overlap yet.
+- No Web Worker, WebGPU, true unstructured mesh, tagged-edge charge extraction,
+  full-vector optical mode solver, or EO overlap yet.
 - Python tests and browser tests are separate; browser tests are the primary product-path tests.
 
 Performance status:

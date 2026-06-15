@@ -5,6 +5,7 @@ export const MATERIAL_PROPERTY_KEYS = [
   "n_xx",
   "n_yy",
   "n_xy",
+  "n_zz",
   "eps_r",
   "eps_r_xx",
   "eps_r_yy",
@@ -48,10 +49,10 @@ export function materialPropertyAt(materials, x, y, property) {
   const material = materialAt(materials, x, y);
   if (material.properties[property] !== undefined) return material.properties[property];
   if (property === "n") {
-    return opticalIndexAt(materials, x, y);
+    return opticalIndexAt(materials, x, y, "scalar");
   }
-  if (property === "n_xx" || property === "n_yy") {
-    return material.properties.n ?? opticalIndexAt(materials, x, y);
+  if (property === "n_xx" || property === "n_yy" || property === "n_zz") {
+    return opticalIndexAt(materials, x, y, property);
   }
   if (property === "n_xy") return 0.0;
   if (property === "eps_r_xx" || property === "eps_r_yy") {
@@ -66,10 +67,23 @@ export function scalarEpsRAt(materials, x, y) {
   return material.properties.eps_r ?? material.properties.eps_r_xx ?? 1.0;
 }
 
-export function opticalIndexAt(materials, x, y) {
+export function opticalIndexAt(materials, x, y, component = "scalar") {
   const material = materialAt(materials, x, y);
+  if (component === "n_xx" || component === "Ex" || component === "x") {
+    return material.properties.n_xx ?? material.properties.n ?? fallbackOpticalIndex(material);
+  }
+  if (component === "n_yy" || component === "Ey" || component === "y") {
+    return material.properties.n_yy ?? material.properties.n ?? fallbackOpticalIndex(material);
+  }
+  if (component === "n_zz" || component === "Ez" || component === "z") {
+    return material.properties.n_zz ?? material.properties.n ?? fallbackOpticalIndex(material);
+  }
   if (material.properties.n !== undefined) return material.properties.n;
   if (material.properties.n_xx !== undefined) return material.properties.n_xx;
+  return fallbackOpticalIndex(material);
+}
+
+function fallbackOpticalIndex(material) {
   const epsR = material.properties.eps_r ?? material.properties.eps_r_xx ?? 1.0;
   return Math.sqrt(epsR);
 }

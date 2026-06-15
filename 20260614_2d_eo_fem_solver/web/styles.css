@@ -73,6 +73,29 @@ select {
   flex-wrap: wrap;
 }
 
+.toolbar-group {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 34px;
+  padding: 0 6px;
+  border: 1px solid var(--line);
+  background: var(--panel-2);
+}
+
+.toolbar-group span {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 650;
+  letter-spacing: 0.04em;
+}
+
+.toolbar-group button {
+  height: 26px;
+  padding: 0 8px;
+  background: var(--panel);
+}
+
 button {
   height: 34px;
   padding: 0 12px;
@@ -103,14 +126,16 @@ button:hover {
   white-space: nowrap;
 }
 
-.mesh-input {
+.mesh-input,
+.physics-input {
   display: inline-flex;
   align-items: center;
   gap: 5px;
   color: var(--muted);
 }
 
-.mesh-input input {
+.mesh-input input,
+.physics-input select {
   width: 68px;
   height: 34px;
   border: 1px solid var(--line);
@@ -118,6 +143,10 @@ button:hover {
   background: var(--panel);
   color: var(--ink);
   padding: 0 7px;
+}
+
+.physics-input select {
+  width: 112px;
 }
 
 #config-editor {
@@ -245,6 +274,18 @@ select {
   padding: 0 8px;
 }
 
+#quantity-select {
+  min-width: 280px;
+}
+
+#mode-select {
+  min-width: 220px;
+}
+
+.mode-select-label[hidden] {
+  display: none;
+}
+
 .check-control {
   padding-left: 4px;
 }
@@ -336,37 +377,16 @@ select {
 }
 
 .results {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  grid-auto-rows: minmax(0, 1fr);
-  gap: 8px;
+  display: block;
   min-height: 0;
-  overflow: hidden;
-}
-
-.results div {
-  display: flex;
-  justify-content: space-between;
-  gap: 12px;
-  padding: 7px 10px;
+  overflow: auto;
+  padding: 10px 12px;
   border: 1px solid var(--line);
-  border-radius: 0;
   background: var(--panel);
-  min-width: 0;
-  min-height: 0;
-}
-
-.results span {
-  color: var(--muted);
-}
-
-.results strong {
-  font-weight: 650;
-  text-align: right;
-  min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  color: var(--ink);
+  font: 12px/1.55 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 }
 
 @media (max-width: 860px) {
@@ -425,6 +445,6 @@ select {
   }
 
   .results {
-    grid-template-columns: 1fr;
+    white-space: pre-wrap;
   }
 }
