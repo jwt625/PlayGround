@@ -99,14 +99,14 @@ Optical/EM mode solver:
 
 ```yaml
 Simulation:
-  physics: optical_mode
+  physics: vector_mode
   wavelength: 1.55e-6
-  mode_polarization: Ex
   target_neff: auto
   num_modes: 4
 ```
 
-- The current solver is scalar finite-difference Helmholtz:
+- `physics: optical_mode` remains as a legacy scalar finite-difference
+  Helmholtz path:
 
 ```text
 (L_t + k0^2 n(x,y)^2) psi = beta^2 psi
@@ -123,18 +123,23 @@ n_eff = beta / k0
   optical solve mesh and is reported in results. The current eigensolver still
   computes largest-beta scalar modes; true target-centered search needs
   shift-invert or a robust Lanczos filter.
+- `physics: vector_mode` adds the first client-side isotropic vector-mode
+  contract. It generates transverse Ex/Ey candidates on the same structured
+  grid, reconstructs Ez and Hx/Hy/Hz with finite-difference Maxwell relations,
+  reports TE/TM fractions, and exposes `Ex`, `Ey`, `Ez`, `Hx`, `Hy`, `Hz`,
+  `|E|`, `|H|`, and intensity in the plot controls.
+- Optical examples default to `physics: vector_mode`. The browser's ES toolbar
+  buttons explicitly override shared TFLN/BTO device YAMLs back to
+  electrostatic solves.
 - `mode_window` can crop the EM eigenproblem around the waveguide while reusing
   the same global `Domain` and `Materials`.
 - `mode_region` reports/selects modes by intensity overlap with a rectangular
   waveguide/core region.
 - EM plot controls include a mode dropdown when `num_modes > 1`; changing the
   selected mode updates the plot and result text without rerunning the solver.
-- EM quantity options are limited to EM mode fields and optical material
-  indices. `Ex`, `Ey`, and `Ez` are scalar-component proxies: the selected
-  `mode_polarization` component contains `psi`, and the other components are
-  zero until a full-vector mode solver exists.
-- This is not a full-vector mode solver and should be benchmarked against
-  Tidy3D/Lumerical/MPB before using for quantitative design.
+- Vector-mode results should still be benchmarked against Tidy3D/Lumerical/MPB
+  before using for quantitative design; PML, diagonal anisotropy, and true
+  target-centered shift-invert are not implemented yet.
 
 Visualizer:
 

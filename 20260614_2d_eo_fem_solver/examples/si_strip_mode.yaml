@@ -1,6 +1,6 @@
 Simulation:
-  name: si_strip_scalar_mode
-  physics: optical_mode
+  name: si_strip_vector_mode
+  physics: vector_mode
   wavelength: 1.55e-6
   target_neff: auto
   mesh_nx: 121

@@ -75,7 +75,7 @@ function modeComponentField(result, mode, component) {
   return new Float64Array(mode.field.length);
 }
 
-function selectedMode(result) {
+export function selectedMode(result) {
   const modes = result.modes ?? [];
   const index = Number(result.selectedModeIndex ?? 0);
   return modes[Number.isInteger(index) && index >= 0 && index < modes.length ? index : 0] ?? result.mode;
@@ -284,7 +284,7 @@ function signCrossingsAlongColumn(field, nx, ny, i) {
   return count;
 }
 
-function parseModeRectangle(region, name) {
+export function parseModeRectangle(region, name) {
   if (!region) return null;
   if (region.shape !== "rectangle") {
     throw new Error(`Simulation.${name} currently supports shape: rectangle`);
@@ -298,11 +298,11 @@ function parseModeRectangle(region, name) {
   };
 }
 
-function containsRegion(region, x, y) {
+export function containsRegion(region, x, y) {
   return x >= region.xMin && x <= region.xMax && y >= region.yMin && y <= region.yMax;
 }
 
-function regionToDomain(region) {
+export function regionToDomain(region) {
   return {
     xMin: region.xMin,
     xMax: region.xMax,
@@ -311,7 +311,7 @@ function regionToDomain(region) {
   };
 }
 
-function resolveTargetNeff(rawTarget, nField) {
+export function resolveTargetNeff(rawTarget, nField) {
   if (rawTarget === undefined || rawTarget === null || String(rawTarget).toLowerCase() === "auto") {
     return maxFinite(nField);
   }
@@ -340,7 +340,7 @@ function fallbackMaterialIndex(material) {
   return Math.sqrt(material.properties.eps_r ?? material.properties.eps_r_xx ?? 1.0);
 }
 
-function opticalIndexField(mesh, materials, polarization) {
+export function opticalIndexField(mesh, materials, polarization) {
   const values = new Float64Array(mesh.nodes.length);
   for (let i = 0; i < mesh.nodes.length; i += 1) {
     const [x, y] = mesh.nodes[i];
@@ -432,6 +432,6 @@ function dot(a, b) {
   return value;
 }
 
-function coordinateStep(coords) {
+export function coordinateStep(coords) {
   return coords.length > 1 ? coords[1] - coords[0] : 1;
 }

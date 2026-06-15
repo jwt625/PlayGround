@@ -10,6 +10,7 @@ import { getModePlotValues, solveOpticalModeConfig } from "../web/core/mode_solv
 import { quantityInfo } from "../web/core/quantities.js";
 import { makeStructuredTriMesh, solveConfig } from "../web/core/solver.js";
 import { validateConfig } from "../web/core/validation.js";
+import { getVectorModePlotValues, solveVectorModeConfig } from "../web/core/vector_mode_solver.js";
 
 const PARALLEL_PLATE_CONFIG = `
 Simulation:
@@ -195,6 +196,7 @@ test("EO modulator examples parse, validate, solve, and expose EO maps", () => {
 
 test("scalar optical mode example solves a guided Si strip mode", () => {
   const config = parseSimpleYaml(fs.readFileSync("examples/si_strip_mode.yaml", "utf8"));
+  config.Simulation.physics = "optical_mode";
   validateConfig(config);
   const result = solveOpticalModeConfig(config);
   assert.equal(result.physics, "optical_mode");
@@ -244,9 +246,21 @@ test("modulator optical-mode examples solve with tensor-selected index", () => {
 
 test("BTO optical demo uses a high-index silicon core", () => {
   const config = parseSimpleYaml(fs.readFileSync("examples/bto_on_sin_plasmonic.yaml", "utf8"));
+  assert.equal(config.Simulation.physics, "vector_mode");
   assert.equal(config.Materials.silicon_core.n, 3.476);
   assert.equal(config.Materials.silicon_core.eps_r, 11.7);
   assert.equal(config.Simulation.num_modes, 4);
+});
+
+test("optical examples default to vector mode", () => {
+  for (const path of [
+    "examples/si_strip_mode.yaml",
+    "examples/tfln_partial_etched_mzm.yaml",
+    "examples/bto_on_sin_plasmonic.yaml",
+  ]) {
+    const config = parseSimpleYaml(fs.readFileSync(path, "utf8"));
+    assert.equal(config.Simulation.physics, "vector_mode", path);
+  }
 });
 
 test("optical tensor polarization selects different refractive-index maps", () => {
@@ -266,6 +280,56 @@ test("optical tensor polarization selects different refractive-index maps", () =
   assert.ok(eyResult.mode.nEff > exResult.mode.nEff, `${eyResult.mode.nEff} <= ${exResult.mode.nEff}`);
 });
 
+test("vector optical mode exposes reconstructed electric and magnetic fields", () => {
+  const config = parseSimpleYaml(fs.readFileSync("examples/si_strip_mode.yaml", "utf8"));
+  config.Simulation.physics = "vector_mode";
+  config.Simulation.mesh_nx = 51;
+  config.Simulation.mesh_ny = 41;
+  config.Simulation.num_modes = 2;
+  config.Simulation.mode_max_iterations = 250;
+  config.Simulation.mode_tolerance = 8e-4;
+  validateConfig(config);
+  const result = solveVectorModeConfig(config);
+  assert.equal(result.physics, "vector_mode");
+  assert.equal(result.modes.length, 2);
+  assert.ok(result.mode.nEff > 1.444, `n_eff ${result.mode.nEff}`);
+  for (const quantity of [
+    "mode_Ex",
+    "mode_Ey",
+    "mode_Ez",
+    "mode_Hx",
+    "mode_Hy",
+    "mode_Hz",
+    "mode_normE",
+    "mode_normH",
+    "mode_intensity",
+  ]) {
+    assert.equal(getVectorModePlotValues(result, quantity).length, result.mesh.nodes.length, quantity);
+  }
+  assert.ok(Math.max(...result.mode.normE) > 0);
+  assert.ok(Math.max(...result.mode.normH) > 0);
+  assert.ok(result.mode.teFraction >= 0 && result.mode.teFraction <= 1);
+  assert.ok(result.mode.tmFraction >= 0 && result.mode.tmFraction <= 1);
+});
+
+test("vector optical mode effective index increases with core index", () => {
+  const low = parseSimpleYaml(fs.readFileSync("examples/si_strip_mode.yaml", "utf8"));
+  const high = parseSimpleYaml(fs.readFileSync("examples/si_strip_mode.yaml", "utf8"));
+  for (const config of [low, high]) {
+    config.Simulation.physics = "vector_mode";
+    config.Simulation.mesh_nx = 41;
+    config.Simulation.mesh_ny = 31;
+    config.Simulation.num_modes = 1;
+    config.Simulation.mode_max_iterations = 220;
+    config.Simulation.mode_tolerance = 1e-3;
+  }
+  low.Materials.silicon_core.n = 2.0;
+  high.Materials.silicon_core.n = 3.4;
+  const lowResult = solveVectorModeConfig(low);
+  const highResult = solveVectorModeConfig(high);
+  assert.ok(highResult.mode.nEff > lowResult.mode.nEff + 0.05);
+});
+
 test("validation rejects non-finite and non-physical inputs before solve", () => {
   const config = parseSimpleYaml(PARALLEL_PLATE_CONFIG);
   config.Domain.x_max = config.Domain.x_min;
@@ -280,6 +344,7 @@ test("quantity metadata exposes labels, descriptions, and expressions", () => {
   assert.equal(quantityInfo("phi").description, "electrostatic potential");
   assert.equal(quantityInfo("Ex").expression, "-d(phi)/dx");
   assert.equal(quantityInfo("mode_Ez").label, "Ez");
+  assert.equal(quantityInfo("mode_Hz").label, "Hz");
 });
 
 function structuredSlabConfig(epsR) {

@@ -2,6 +2,8 @@
 
 Date: 2026-06-14
 
+Update: 2026-06-15
+
 ## Decision
 
 The scalar optical mode solver from DevLog 002 is not sufficient. It is useful
@@ -19,6 +21,58 @@ Target behavior:
 - Support isotropic optical index first.
 - Add diagonal anisotropic optical tensors after isotropic vector validation.
 - Use Tidy3D as the primary benchmark/eval reference.
+
+## Implementation Status
+
+Initial browser-side `physics: vector_mode` support has been added.
+
+Files touched:
+
+- `web/core/vector_mode_solver.js`
+- `web/app.js`
+- `web/index.html`
+- `web/core/validation.js`
+- `web/core/quantities.js`
+- `web/core/mode_solver.js`
+- `tests-js/solver.test.js`
+- `README.md`
+
+Current behavior:
+
+- `physics: vector_mode` is recognized by validation and browser routing.
+- The UI exposes a separate `EM vector` physics option.
+- Optical example buttons and optical YAML defaults now use `vector_mode`.
+- Shared TFLN/BTO YAML files also default to `vector_mode`; their ES toolbar
+  buttons explicitly override the solve back to electrostatic.
+- The result contract now returns modal arrays for:
+  - `Ex`, `Ey`, `Ez`
+  - `Hx`, `Hy`, `Hz`
+  - `normE`, `normH`
+  - `intensity`
+  - `teFraction`, `tmFraction`
+  - `modeArea`, `targetOverlap`, `confinement`, `residual`
+- The plot quantity dropdown exposes vector-field quantities when
+  `vector_mode` is active.
+- The mode dropdown includes `n_eff`, TE fraction, and overlap.
+- `optical_mode` remains the legacy scalar solver path.
+- JS tests cover the vector result/plot-value contract and index-response
+  sanity on the Si strip example.
+
+Important limitation:
+
+This is not yet the final H-field Yee-grid FDFD eigenmode solver described
+below. The current implementation is a first contract-compatible slice: it
+generates transverse `Ex`/`Ey` candidates using the existing scalar structured
+grid eigensolve, then reconstructs `Ez` and `Hx`/`Hy`/`Hz` from finite-difference
+Maxwell relations. It is useful for UI integration, result plumbing, and early
+field-shape sanity checks, but it should not be treated as a validated
+full-vector mode solver.
+
+Verification:
+
+- `npm test`: passed, 22/22 JS tests.
+- `python3 -m pytest -q`: not run in the current environment because `pytest`
+  is not installed for the active Python.
 
 ## Why Scalar Is Not Enough
 
@@ -349,15 +403,17 @@ interfaces.
 
 ## Implementation Tasks
 
-- [ ] Create `web/core/vector_mode_solver.js`.
-- [ ] Add vector-mode result and plot-value contract.
-- [ ] Add derivative/stencil helpers for Yee-like grid.
+- [x] Create `web/core/vector_mode_solver.js`.
+- [x] Add vector-mode result and plot-value contract.
+- [x] Add finite-difference derivative helpers for vector field reconstruction.
+- [ ] Replace reconstruction helpers with a Yee-like staggered-grid stencil.
 - [ ] Add matrix-free block operator for isotropic vector mode.
 - [ ] Add eigensolver utilities:
       orthogonalization, Ritz projection, residual calculation.
-- [ ] Add field reconstruction for `Ex`, `Ey`, `Ez`, `Hx`, `Hy`, `Hz`.
-- [ ] Add mode sorting by target neff and region overlap.
-- [ ] Add UI quantity groups for true vector fields.
+- [x] Add field reconstruction for `Ex`, `Ey`, `Ez`, `Hx`, `Hy`, `Hz`.
+- [x] Add mode sorting by target neff and region overlap.
+- [x] Add UI quantity groups for vector fields.
+- [x] Add browser tests for vector result and plot-value contract.
 - [ ] Add tests for uniform box/slab sanity.
 - [ ] Add Tidy3D benchmark scripts and checked-in small reference JSON.
 - [ ] Add diagonal anisotropic tensor support.
@@ -380,9 +436,16 @@ interfaces.
 Do not keep extending scalar `Ex/Ey/Ez` UI proxies. Keep them clearly labeled as
 temporary.
 
+Completed first integration slice:
+
+1. Added `vector_mode` routing and UI controls.
+2. Added vector field result/plot contract.
+3. Added finite-difference field reconstruction and basic JS contract tests.
+
 Next coding slice should be:
 
 1. Add Tidy3D benchmark harness for Si strip and BTO-on-Si.
-2. Implement isotropic vector mode solver on a small uniform grid.
-3. Validate against slab/Si strip before touching anisotropy.
-
+2. Implement the actual isotropic H-field or carefully discretized E-field
+   vector eigen-operator on a small uniform grid.
+3. Add analytic uniform-box/slab sanity tests.
+4. Validate against slab/Si strip before touching anisotropy.

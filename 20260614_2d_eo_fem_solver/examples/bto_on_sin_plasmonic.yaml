@@ -12,6 +12,7 @@
 # in z as a first-pass unrotated uniaxial convention.
 Simulation:
   name: bto_on_si_blanket_film_differential_pair
+  physics: vector_mode
   wavelength: 1.55e-6
   target_neff: auto
   mode_polarization: Ex

@@ -39,10 +39,30 @@ export const QUANTITIES = {
     description: "scalar optical modal z component proxy",
     expression: "psi if mode_polarization == Ez else 0",
   },
+  mode_Hx: {
+    label: "Hx",
+    description: "optical modal x magnetic-field component",
+    expression: "(beta Ey - d(Ez)/dy) / (omega mu0)",
+  },
+  mode_Hy: {
+    label: "Hy",
+    description: "optical modal y magnetic-field component",
+    expression: "(d(Ez)/dx - beta Ex) / (omega mu0)",
+  },
+  mode_Hz: {
+    label: "Hz",
+    description: "optical modal z magnetic-field component",
+    expression: "(d(Ey)/dx - d(Ex)/dy) / (omega mu0)",
+  },
   mode_normE: {
     label: "|E|",
     description: "scalar optical modal magnitude",
     expression: "abs(psi)",
+  },
+  mode_normH: {
+    label: "|H|",
+    description: "optical modal magnetic-field magnitude",
+    expression: "sqrt(Hx^2 + Hy^2 + Hz^2)",
   },
   mode_abs: {
     label: "|mode|",

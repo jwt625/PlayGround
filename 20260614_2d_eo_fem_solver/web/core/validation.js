@@ -25,7 +25,7 @@ export function validateConfig(config) {
 
 export function isOpticalMode(config) {
   const physics = String(config?.Simulation?.physics ?? "").toLowerCase();
-  return physics === "optical_mode" || physics === "mode_solver";
+  return physics === "optical_mode" || physics === "mode_solver" || physics === "vector_mode";
 }
 
 function requireBlock(config, key, errors) {

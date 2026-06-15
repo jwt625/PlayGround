@@ -12,6 +12,7 @@
 # convention until full-vector mode solving is implemented.
 Simulation:
   name: tfln_single_waveguide_differential_pair
+  physics: vector_mode
   wavelength: 1.55e-6
   target_neff: auto
   mode_polarization: Ex

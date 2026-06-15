@@ -5,6 +5,7 @@ import { getModePlotValues, solveOpticalModeConfig } from "./core/mode_solver.js
 import { quantityInfo } from "./core/quantities.js";
 import { getPlotValues, solveConfig } from "./core/solver.js";
 import { isOpticalMode, validateConfig } from "./core/validation.js";
+import { getVectorModePlotValues, solveVectorModeConfig } from "./core/vector_mode_solver.js";
 
 const workspace = document.querySelector(".workspace");
 const configEditor = document.querySelector("#config-editor");
@@ -55,11 +56,11 @@ document.querySelector("#solve-button").addEventListener("click", runSolve);
 document.querySelector("#parallel-button").addEventListener("click", () => loadExample("parallel"));
 document.querySelector("#cylinders-button").addEventListener("click", () => loadExample("cylinders"));
 document.querySelector("#stack-button").addEventListener("click", () => loadExample("stack"));
-document.querySelector("#tfln-button").addEventListener("click", () => loadExample("tfln"));
-document.querySelector("#bto-button").addEventListener("click", () => loadExample("bto"));
-document.querySelector("#si-mode-button").addEventListener("click", () => loadExample("siMode"));
-document.querySelector("#tfln-mode-button").addEventListener("click", () => loadExample("tfln", "optical_mode"));
-document.querySelector("#bto-mode-button").addEventListener("click", () => loadExample("bto", "optical_mode"));
+document.querySelector("#tfln-button").addEventListener("click", () => loadExample("tfln", "electrostatic"));
+document.querySelector("#bto-button").addEventListener("click", () => loadExample("bto", "electrostatic"));
+document.querySelector("#si-mode-button").addEventListener("click", () => loadExample("siMode", "vector_mode"));
+document.querySelector("#tfln-mode-button").addEventListener("click", () => loadExample("tfln", "vector_mode"));
+document.querySelector("#bto-mode-button").addEventListener("click", () => loadExample("bto", "vector_mode"));
 quantitySelect.addEventListener("change", redrawLastResult);
 modeSelect.addEventListener("change", () => {
   if (!lastResult) return;
@@ -157,7 +158,12 @@ function runSolve() {
 function finishSolveRun(runId, t0, config) {
   if (runId !== solveRunId) return;
   try {
-    const result = isOpticalMode(config) ? solveOpticalModeConfig(config) : solveConfig(config);
+    const result =
+      String(config.Simulation?.physics ?? "").toLowerCase() === "vector_mode"
+        ? solveVectorModeConfig(config)
+        : isOpticalMode(config)
+          ? solveOpticalModeConfig(config)
+          : solveConfig(config);
     const elapsed = performance.now() - t0;
     lastConfig = config;
     lastResult = result;
@@ -286,6 +292,9 @@ function effectiveConfigForSolve(config) {
     clone.Simulation.physics = "optical_mode";
     clone.Simulation.wavelength = clone.Simulation.wavelength ?? 1.55e-6;
     clone.Simulation.mode_polarization = clone.Simulation.mode_polarization ?? "Ex";
+  } else if (physicsSelect.value === "vector_mode") {
+    clone.Simulation.physics = "vector_mode";
+    clone.Simulation.wavelength = clone.Simulation.wavelength ?? 1.55e-6;
   }
   return clone;
 }
@@ -309,7 +318,7 @@ function startPanelResize(event) {
 }
 
 function renderResults(result, elapsed) {
-  if (result.physics === "optical_mode") {
+  if (isModeResult(result)) {
     renderOpticalResults(result, elapsed);
     return;
   }
@@ -338,21 +347,32 @@ function renderResults(result, elapsed) {
 
 function renderOpticalResults(result, elapsed) {
   const mode = selectedMode(result);
-  renderResultLines([
+  const lines = [
     ["Mode", `${selectedModeIndex(result)} of ${result.modes.length - 1}`],
     ["n_eff", mode.nEff.toFixed(6)],
     ["beta", `${mode.beta.toExponential(6)} 1/m`],
     ["lambda", `${formatValue(result.wavelength)} m`],
-    ["Polarization", result.polarization],
     ["Target n_eff", result.targetNeff.toFixed(6)],
+  ];
+  if (result.physics === "vector_mode") {
+    lines.push(
+      ["TE fraction", `${(100 * mode.teFraction).toFixed(2)}%`],
+      ["TM fraction", `${(100 * mode.tmFraction).toFixed(2)}%`],
+      ["Boundary", result.boundaryCondition],
+    );
+  } else {
+    lines.push(["Polarization", result.polarization]);
+  }
+  lines.push(
     ["Confinement", `${(100 * mode.confinement).toFixed(2)}%`],
     ["Mode-region overlap", mode.targetOverlap === null ? "-" : `${(100 * mode.targetOverlap).toFixed(2)}%`],
     ["Mode area", `${mode.modeArea.toExponential(6)} m^2`],
-    ["Model", result.scalarModel],
+    ["Model", result.vectorModel ?? result.scalarModel],
     ["Mesh", formatMeshSummary(result.mesh)],
     ["Eigen solve", `${mode.iterations} iter, residual ${mode.residual.toExponential(3)}`],
     ["Runtime", `${elapsed.toFixed(0)} ms`],
-  ]);
+  );
+  renderResultLines(lines);
 }
 
 function renderResultsPending(config, state) {
@@ -368,7 +388,7 @@ function renderResultsPending(config, state) {
       ["Target n_eff", `${config.Simulation?.target_neff ?? "auto"}`],
       ["Confinement", "..."],
       ["Mode area", "..."],
-      ["Model", "scalar optical mode"],
+      ["Model", String(config.Simulation?.physics).toLowerCase() === "vector_mode" ? "vector optical mode" : "scalar optical mode"],
       ["Mesh", `${nx} x ${ny}`],
       ["Eigen solve", "..."],
       ["Runtime", "..."],
@@ -444,25 +464,38 @@ function renderPlot(config, result) {
   const p1 = toCanvas(result.mesh, [result.mesh.domain.xMax, result.mesh.domain.yMax]);
   ctx.drawImage(offscreen, p0[0], p1[1], p1[0] - p0[0], p0[1] - p1[1]);
   drawMaterialBoundaries(config, result);
-  if (result.physics !== "optical_mode") drawElectrodes(config, result);
+  if (!isModeResult(result)) drawElectrodes(config, result);
   if (meshToggle.checked) drawMesh(result.mesh);
   renderColorbar(transform);
   updateQuantityDescription();
 }
 
 function syncQuantityOptions(result) {
-  const optical = result.physics === "optical_mode";
+  const optical = isModeResult(result);
   const groups = optical
     ? [
         {
           label: "EM Mode Fields",
-          options: [
-            ["mode_Ex", "Ex - scalar modal x component"],
-            ["mode_Ey", "Ey - scalar modal y component"],
-            ["mode_Ez", "Ez - scalar modal z component"],
-            ["mode_normE", "|E| - scalar modal magnitude"],
-            ["mode_intensity", "I - modal intensity"],
-          ],
+          options:
+            result.physics === "vector_mode"
+              ? [
+                  ["mode_Ex", "Ex - electric field"],
+                  ["mode_Ey", "Ey - electric field"],
+                  ["mode_Ez", "Ez - longitudinal electric field"],
+                  ["mode_Hx", "Hx - magnetic field"],
+                  ["mode_Hy", "Hy - magnetic field"],
+                  ["mode_Hz", "Hz - longitudinal magnetic field"],
+                  ["mode_normE", "|E| - electric-field magnitude"],
+                  ["mode_normH", "|H| - magnetic-field magnitude"],
+                  ["mode_intensity", "I - modal intensity"],
+                ]
+              : [
+                  ["mode_Ex", "Ex - scalar modal x component"],
+                  ["mode_Ey", "Ey - scalar modal y component"],
+                  ["mode_Ez", "Ez - scalar modal z component"],
+                  ["mode_normE", "|E| - scalar modal magnitude"],
+                  ["mode_intensity", "I - modal intensity"],
+                ],
         },
         {
           label: "Optical Material Properties",
@@ -524,13 +557,13 @@ function syncQuantityOptions(result) {
 }
 
 function getActivePlotValues(result, quantity) {
-  return result.physics === "optical_mode"
-    ? getModePlotValues(result, quantity)
-    : getPlotValues(result, quantity);
+  if (result.physics === "vector_mode") return getVectorModePlotValues(result, quantity);
+  if (result.physics === "optical_mode") return getModePlotValues(result, quantity);
+  return getPlotValues(result, quantity);
 }
 
 function syncModeOptions(result) {
-  const optical = result.physics === "optical_mode";
+  const optical = isModeResult(result);
   modeSelectLabel.hidden = !optical;
   modeSelect.disabled = !optical;
   if (!optical) {
@@ -557,7 +590,8 @@ function syncModeOptions(result) {
 
 function modeOptionLabel(mode, index) {
   const overlap = mode.targetOverlap === null ? "" : `, overlap ${(100 * mode.targetOverlap).toFixed(1)}%`;
-  return `${index}: n_eff ${mode.nEff.toFixed(4)}${overlap}`;
+  const vector = mode.teFraction === undefined ? "" : `, TE ${(100 * mode.teFraction).toFixed(0)}%`;
+  return `${index}: n_eff ${mode.nEff.toFixed(4)}${vector}${overlap}`;
 }
 
 function selectedModeIndex(result) {
@@ -720,10 +754,17 @@ function drawElectrodes(config, result) {
 }
 
 function formatRunSummary(result) {
+  if (result.physics === "vector_mode") {
+    return `${result.vectorModel}; ${formatMeshSummary(result.mesh)}; n_eff ${result.mode.nEff.toFixed(6)}; TE ${(100 * result.mode.teFraction).toFixed(1)}%; eig ${result.mode.iterations} iter; residual ${result.mode.residual.toExponential(3)}`;
+  }
   if (result.physics === "optical_mode") {
     return `${result.scalarModel}; ${formatMeshSummary(result.mesh)}; ${result.polarization}; n_eff ${result.mode.nEff.toFixed(6)}; eig ${result.mode.iterations} iter; residual ${result.mode.residual.toExponential(3)}`;
   }
   return `${result.permittivityModel}; ${formatMeshSummary(result.mesh)}; CG ${result.iterations} iter; residual ${result.residual.toExponential(3)}`;
+}
+
+function isModeResult(result) {
+  return result.physics === "optical_mode" || result.physics === "vector_mode";
 }
 
 function drawShapePath(mesh, shape, params) {
