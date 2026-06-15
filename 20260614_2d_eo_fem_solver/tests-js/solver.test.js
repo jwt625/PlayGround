@@ -203,6 +203,8 @@ test("scalar optical mode example solves a guided Si strip mode", () => {
   assert.ok(result.mode.nEff < 3.476, `n_eff ${result.mode.nEff}`);
   assert.ok(result.mode.confinement > 0.1, `confinement ${result.mode.confinement}`);
   assert.equal(getModePlotValues(result, "mode_intensity").length, result.mesh.nodes.length);
+  assert.equal(Math.max(...getModePlotValues(result, "mode_Ex")), Math.max(...result.mode.field));
+  assert.equal(Math.max(...getModePlotValues(result, "mode_Ey")), 0);
 });
 
 test("scalar optical mode effective index increases with core index", () => {
@@ -277,6 +279,7 @@ test("validation rejects non-finite and non-physical inputs before solve", () =>
 test("quantity metadata exposes labels, descriptions, and expressions", () => {
   assert.equal(quantityInfo("phi").description, "electrostatic potential");
   assert.equal(quantityInfo("Ex").expression, "-d(phi)/dx");
+  assert.equal(quantityInfo("mode_Ez").label, "Ez");
 });
 
 function structuredSlabConfig(epsR) {

@@ -24,6 +24,26 @@ export const QUANTITIES = {
     description: "scalar optical modal field",
     expression: "psi",
   },
+  mode_Ex: {
+    label: "Ex",
+    description: "scalar optical modal x component proxy",
+    expression: "psi if mode_polarization == Ex else 0",
+  },
+  mode_Ey: {
+    label: "Ey",
+    description: "scalar optical modal y component proxy",
+    expression: "psi if mode_polarization == Ey else 0",
+  },
+  mode_Ez: {
+    label: "Ez",
+    description: "scalar optical modal z component proxy",
+    expression: "psi if mode_polarization == Ez else 0",
+  },
+  mode_normE: {
+    label: "|E|",
+    description: "scalar optical modal magnitude",
+    expression: "abs(psi)",
+  },
   mode_abs: {
     label: "|mode|",
     description: "scalar optical modal-field magnitude",

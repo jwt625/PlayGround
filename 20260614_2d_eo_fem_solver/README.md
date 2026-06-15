@@ -129,13 +129,17 @@ n_eff = beta / k0
   waveguide/core region.
 - EM plot controls include a mode dropdown when `num_modes > 1`; changing the
   selected mode updates the plot and result text without rerunning the solver.
+- EM quantity options are limited to EM mode fields and optical material
+  indices. `Ex`, `Ey`, and `Ez` are scalar-component proxies: the selected
+  `mode_polarization` component contains `psi`, and the other components are
+  zero until a full-vector mode solver exists.
 - This is not a full-vector mode solver and should be benchmarked against
   Tidy3D/Lumerical/MPB before using for quantitative design.
 
 Visualizer:
 
-- Quantity selector uses nested groups for ES fields, EM mode fields, RF
-  material properties, optical material properties, and EO material properties.
+- Quantity selector uses solver-specific nested groups. ES runs show ES/RF/EO
+  quantities; EM runs show EM mode fields and optical material indices.
 - Quantity options and hover tooltips include short descriptions and
   expressions, for example `expr: -d(phi)/dx (x electric-field component)`.
 - Scale selector: linear, linear symmetric, log magnitude.

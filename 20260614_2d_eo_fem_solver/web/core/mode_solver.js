@@ -54,6 +54,10 @@ export function solveOpticalModeConfig(config) {
 
 export function getModePlotValues(result, quantity) {
   const mode = selectedMode(result);
+  if (quantity === "mode_Ex") return modeComponentField(result, mode, "Ex");
+  if (quantity === "mode_Ey") return modeComponentField(result, mode, "Ey");
+  if (quantity === "mode_Ez") return modeComponentField(result, mode, "Ez");
+  if (quantity === "mode_normE") return mode.absField;
   if (quantity === "mode") return mode.field;
   if (quantity === "mode_abs") return mode.absField;
   if (quantity === "mode_intensity") return mode.intensity;
@@ -62,6 +66,13 @@ export function getModePlotValues(result, quantity) {
     return materialPropertyField(result.mesh, result.materials, quantity);
   }
   return materialPropertyField(result.mesh, result.materials, quantity);
+}
+
+function modeComponentField(result, mode, component) {
+  if (result.polarization === component || (result.polarization === "scalar" && component === "Ex")) {
+    return mode.field;
+  }
+  return new Float64Array(mode.field.length);
 }
 
 function selectedMode(result) {

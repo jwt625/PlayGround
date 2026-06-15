@@ -457,8 +457,10 @@ function syncQuantityOptions(result) {
         {
           label: "EM Mode Fields",
           options: [
-            ["mode", "mode - scalar modal field"],
-            ["mode_abs", "|mode| - modal field magnitude"],
+            ["mode_Ex", "Ex - scalar modal x component"],
+            ["mode_Ey", "Ey - scalar modal y component"],
+            ["mode_Ez", "Ez - scalar modal z component"],
+            ["mode_normE", "|E| - scalar modal magnitude"],
             ["mode_intensity", "I - modal intensity"],
           ],
         },
@@ -469,24 +471,6 @@ function syncQuantityOptions(result) {
             ["n_xx", "n_xx - optical tensor xx"],
             ["n_yy", "n_yy - optical tensor yy"],
             ["n_zz", "n_zz - optical tensor zz"],
-          ],
-        },
-        {
-          label: "RF Material Properties",
-          options: [
-            ["eps_r", "epsilon_r - relative permittivity"],
-            ["eps_r_xx", "epsilon_r_xx - permittivity tensor xx"],
-            ["eps_r_yy", "epsilon_r_yy - permittivity tensor yy"],
-            ["eps_r_xy", "epsilon_r_xy - permittivity tensor xy"],
-          ],
-        },
-        {
-          label: "EO Material Properties",
-          options: [
-            ["r13", "r13 - EO tensor coefficient"],
-            ["r33", "r33 - EO tensor coefficient"],
-            ["r22", "r22 - EO tensor coefficient"],
-            ["r_eff", "r_eff - effective EO coefficient"],
           ],
         },
       ]
@@ -507,15 +491,6 @@ function syncQuantityOptions(result) {
             ["eps_r_xx", "epsilon_r_xx - permittivity tensor xx"],
             ["eps_r_yy", "epsilon_r_yy - permittivity tensor yy"],
             ["eps_r_xy", "epsilon_r_xy - permittivity tensor xy"],
-          ],
-        },
-        {
-          label: "Optical Material Properties",
-          options: [
-            ["n", "n - selected optical refractive index"],
-            ["n_xx", "n_xx - optical tensor xx"],
-            ["n_yy", "n_yy - optical tensor yy"],
-            ["n_zz", "n_zz - optical tensor zz"],
           ],
         },
         {

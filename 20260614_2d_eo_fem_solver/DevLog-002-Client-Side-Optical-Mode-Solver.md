@@ -20,6 +20,9 @@ This is a pragmatic first slice:
 The scalar solver is not a replacement for Tidy3D, Lumerical MODE, MPB, or
 COMSOL. It is a local estimator and UI/contract scaffold.
 
+Follow-up full-vector implementation plan: see
+`DevLog-003-Full-Vector-EM-Mode-Solver-Plan.md`.
+
 ## Tidy3D Benchmark Notes
 
 Sources checked on 2026-06-14:
@@ -148,6 +151,10 @@ UI:
 - EM mode plots expose a mode dropdown. `num_modes` controls how many scalar
   modes are available; changing the selected mode updates field plots and result
   text without rerunning the solve.
+- EM quantity lists are now solver-specific and only show EM field/material
+  options. `Ex`, `Ey`, and `Ez` are scalar-component proxies: the selected
+  `mode_polarization` component contains `psi`, while the unselected components
+  are zero.
 - Quantity selector now uses nested groups:
   - ES fields,
   - EM mode fields,
