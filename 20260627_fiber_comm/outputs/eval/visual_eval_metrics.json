@@ -1,0 +1,628 @@
+{
+  "source_pdf": "references/cartledge_2017_dsp_fiber_nonlinearities.pdf",
+  "source_page_1_based": 8,
+  "source_page_png": "outputs/eval/source_page8.png",
+  "source_plot_crop": "outputs/eval/source_plot_crop.png",
+  "generated_plot_full": "outputs/eval/generated_plot_full.png",
+  "generated_plot_crop": "outputs/eval/generated_plot_crop.png",
+  "source_bbox_xyxy": [
+    969,
+    461,
+    1451,
+    924
+  ],
+  "generated_bbox_xyxy": [
+    160,
+    160,
+    1662,
+    1360
+  ],
+  "best_resize_only_axis_alignment": "flip_lr",
+  "best_resize_only_metrics": {
+    "mae_rgb_full": 16.316469192504883,
+    "rmse_rgb_full": 55.4566650390625,
+    "mae_by_channel_full": [
+      14.825692176818848,
+      14.599149703979492,
+      19.570758819580078
+    ],
+    "rmse_by_channel_full": [
+      50.86846923828125,
+      53.40669631958008,
+      61.544525146484375
+    ],
+    "signal_pixel_count": 279393,
+    "signal_pixel_fraction": 0.15501165113182425,
+    "ssim_full_rgb": 0.8540785312652588,
+    "mae_rgb_signal": 104.53274536132812,
+    "rmse_rgb_signal": 140.7898712158203,
+    "mae_by_channel_signal": [
+      94.85948181152344,
+      93.56230163574219,
+      125.45376586914062
+    ],
+    "rmse_by_channel_signal": [
+      129.1277313232422,
+      135.5927734375,
+      156.25120544433594
+    ]
+  },
+  "best_registered_axis_alignment": "rot180",
+  "best_registered_metrics": {
+    "mae_rgb_full": 9.622575759887695,
+    "rmse_rgb_full": 39.633567810058594,
+    "mae_by_channel_full": [
+      8.622184753417969,
+      7.326098442077637,
+      12.917882919311523
+    ],
+    "rmse_by_channel_full": [
+      35.36040496826172,
+      35.0903205871582,
+      47.23828887939453
+    ],
+    "signal_pixel_count": 235352,
+    "signal_pixel_fraction": 0.13057700843320016,
+    "ssim_full_rgb": 0.8833558559417725,
+    "mae_rgb_signal": 73.33594512939453,
+    "rmse_rgb_signal": 109.64429473876953,
+    "mae_by_channel_signal": [
+      65.60823059082031,
+      55.90005111694336,
+      98.48629760742188
+    ],
+    "rmse_by_channel_signal": [
+      97.8065414428711,
+      97.0849380493164,
+      130.6865997314453
+    ],
+    "optimizer_success": true,
+    "optimizer_fun_working_rgb_rmse": 67.94193267822266,
+    "tx_px": 8.85755487090925,
+    "ty_px": -9.541196836494178,
+    "sx": 0.8388543819998318,
+    "sy": 1.037562105796747,
+    "work_width": 420,
+    "work_height": 335
+  },
+  "all_alignment_trials": {
+    "identity": {
+      "mae_rgb_full": 16.31845474243164,
+      "rmse_rgb_full": 55.46022415161133,
+      "mae_by_channel_full": [
+        14.827518463134766,
+        14.601080894470215,
+        19.573822021484375
+      ],
+      "rmse_by_channel_full": [
+        50.87105178833008,
+        53.410404205322266,
+        61.54877853393555
+      ],
+      "signal_pixel_count": 279391,
+      "signal_pixel_fraction": 0.15501054150022192,
+      "ssim_full_rgb": 0.8540733456611633,
+      "mae_rgb_signal": 104.54537963867188,
+      "rmse_rgb_signal": 140.79930114746094,
+      "mae_by_channel_signal": [
+        94.87240600585938,
+        93.57628631591797,
+        125.47579193115234
+      ],
+      "rmse_by_channel_signal": [
+        129.13458251953125,
+        135.6025390625,
+        156.2624053955078
+      ]
+    },
+    "flip_lr": {
+      "mae_rgb_full": 16.316469192504883,
+      "rmse_rgb_full": 55.4566650390625,
+      "mae_by_channel_full": [
+        14.825692176818848,
+        14.599149703979492,
+        19.570758819580078
+      ],
+      "rmse_by_channel_full": [
+        50.86846923828125,
+        53.40669631958008,
+        61.544525146484375
+      ],
+      "signal_pixel_count": 279393,
+      "signal_pixel_fraction": 0.15501165113182425,
+      "ssim_full_rgb": 0.8540785312652588,
+      "mae_rgb_signal": 104.53274536132812,
+      "rmse_rgb_signal": 140.7898712158203,
+      "mae_by_channel_signal": [
+        94.85948181152344,
+        93.56230163574219,
+        125.45376586914062
+      ],
+      "rmse_by_channel_signal": [
+        129.1277313232422,
+        135.5927734375,
+        156.25120544433594
+      ]
+    },
+    "flip_ud": {
+      "mae_rgb_full": 16.319284439086914,
+      "rmse_rgb_full": 55.461910247802734,
+      "mae_by_channel_full": [
+        14.814194679260254,
+        14.587778091430664,
+        19.568317413330078
+      ],
+      "rmse_by_channel_full": [
+        50.886749267578125,
+        53.41581344604492,
+        61.544647216796875
+      ],
+      "signal_pixel_count": 279414,
+      "signal_pixel_fraction": 0.15502330226364847,
+      "ssim_full_rgb": 0.8540719151496887,
+      "mae_rgb_signal": 104.54370880126953,
+      "rmse_rgb_signal": 140.7979736328125,
+      "mae_by_channel_signal": [
+        94.78601837158203,
+        93.48786926269531,
+        125.43757629394531
+      ],
+      "rmse_by_channel_signal": [
+        129.16799926757812,
+        135.6087646484375,
+        156.24839782714844
+      ]
+    },
+    "rot180": {
+      "mae_rgb_full": 16.317256927490234,
+      "rmse_rgb_full": 55.458351135253906,
+      "mae_by_channel_full": [
+        14.811942100524902,
+        14.585421562194824,
+        19.565162658691406
+      ],
+      "rmse_by_channel_full": [
+        50.884098052978516,
+        53.41202926635742,
+        61.54042434692383
+      ],
+      "signal_pixel_count": 279409,
+      "signal_pixel_fraction": 0.1550205281846427,
+      "ssim_full_rgb": 0.8540781140327454,
+      "mae_rgb_signal": 104.53282165527344,
+      "rmse_rgb_signal": 140.79022216796875,
+      "mae_by_channel_signal": [
+        94.77155303955078,
+        93.47342681884766,
+        125.42027282714844
+      ],
+      "rmse_by_channel_signal": [
+        129.1624298095703,
+        135.600341796875,
+        156.23907470703125
+      ]
+    },
+    "transpose": {
+      "mae_rgb_full": 16.384811401367188,
+      "rmse_rgb_full": 55.56621170043945,
+      "mae_by_channel_full": [
+        14.867847442626953,
+        14.629582405090332,
+        19.664690017700195
+      ],
+      "rmse_by_channel_full": [
+        50.9637565612793,
+        53.49026107788086,
+        61.69712448120117
+      ],
+      "signal_pixel_count": 278863,
+      "signal_pixel_fraction": 0.1547175987572126,
+      "ssim_full_rgb": 0.8540715575218201,
+      "mae_rgb_signal": 105.05985260009766,
+      "rmse_rgb_signal": 141.1820068359375,
+      "mae_by_channel_signal": [
+        95.21126556396484,
+        93.82954406738281,
+        126.19987487792969
+      ],
+      "rmse_by_channel_signal": [
+        129.47000122070312,
+        135.9106903076172,
+        156.77133178710938
+      ]
+    },
+    "transpose_flip_lr": {
+      "mae_rgb_full": 16.386974334716797,
+      "rmse_rgb_full": 55.57000732421875,
+      "mae_by_channel_full": [
+        14.871025085449219,
+        14.633035659790039,
+        19.668088912963867
+      ],
+      "rmse_by_channel_full": [
+        50.966373443603516,
+        53.494319915771484,
+        61.70173645019531
+      ],
+      "signal_pixel_count": 278873,
+      "signal_pixel_fraction": 0.15472314691522415,
+      "ssim_full_rgb": 0.854065477848053,
+      "mae_rgb_signal": 105.06996154785156,
+      "rmse_rgb_signal": 141.18911743164062,
+      "mae_by_channel_signal": [
+        95.2258071899414,
+        93.84571838378906,
+        126.21427154541016
+      ],
+      "rmse_by_channel_signal": [
+        129.4744415283203,
+        135.91868591308594,
+        156.78038024902344
+      ]
+    },
+    "transpose_flip_ud": {
+      "mae_rgb_full": 16.38412094116211,
+      "rmse_rgb_full": 55.564788818359375,
+      "mae_by_channel_full": [
+        14.881382942199707,
+        14.643184661865234,
+        19.66961097717285
+      ],
+      "rmse_by_channel_full": [
+        50.953155517578125,
+        53.486610412597656,
+        61.697654724121094
+      ],
+      "signal_pixel_count": 278846,
+      "signal_pixel_fraction": 0.15470816688859299,
+      "ssim_full_rgb": 0.8540730476379395,
+      "mae_rgb_signal": 105.06056213378906,
+      "rmse_rgb_signal": 141.18252563476562,
+      "mae_by_channel_signal": [
+        95.2972640991211,
+        93.91699981689453,
+        126.23106384277344
+      ],
+      "rmse_by_channel_signal": [
+        129.44422912597656,
+        135.9038848876953,
+        156.77915954589844
+      ]
+    },
+    "transpose_rot180": {
+      "mae_rgb_full": 16.386281967163086,
+      "rmse_rgb_full": 55.568599700927734,
+      "mae_by_channel_full": [
+        14.88416576385498,
+        14.645954132080078,
+        19.67363929748535
+      ],
+      "rmse_by_channel_full": [
+        50.95578384399414,
+        53.490684509277344,
+        61.70225143432617
+      ],
+      "signal_pixel_count": 278848,
+      "signal_pixel_fraction": 0.15470927652019528,
+      "ssim_full_rgb": 0.8540671467781067,
+      "mae_rgb_signal": 105.07290649414062,
+      "rmse_rgb_signal": 141.1916046142578,
+      "mae_by_channel_signal": [
+        95.3116226196289,
+        93.9321517944336,
+        126.25269317626953
+      ],
+      "rmse_by_channel_signal": [
+        129.45033264160156,
+        135.91368103027344,
+        156.79010009765625
+      ]
+    }
+  },
+  "all_registered_trials": {
+    "identity": {
+      "mae_rgb_full": 9.621552467346191,
+      "rmse_rgb_full": 39.637943267822266,
+      "mae_by_channel_full": [
+        8.621185302734375,
+        7.325094223022461,
+        12.914955139160156
+      ],
+      "rmse_by_channel_full": [
+        35.365840911865234,
+        35.095664978027344,
+        47.24269104003906
+      ],
+      "signal_pixel_count": 235363,
+      "signal_pixel_fraction": 0.13058311140701287,
+      "ssim_full_rgb": 0.8833785057067871,
+      "mae_rgb_signal": 73.33040618896484,
+      "rmse_rgb_signal": 109.65464782714844,
+      "mae_by_channel_signal": [
+        65.6030502319336,
+        55.89655303955078,
+        98.46753692626953
+      ],
+      "rmse_by_channel_signal": [
+        97.81997680664062,
+        97.09852600097656,
+        130.69613647460938
+      ],
+      "optimizer_success": true,
+      "optimizer_fun_working_rgb_rmse": 67.94364166259766,
+      "tx_px": -8.880097033253675,
+      "ty_px": 9.526353603569396,
+      "sx": 0.8388543819998318,
+      "sy": 1.0375475963095928,
+      "work_width": 420,
+      "work_height": 335
+    },
+    "flip_lr": {
+      "mae_rgb_full": 9.621268272399902,
+      "rmse_rgb_full": 39.636322021484375,
+      "mae_by_channel_full": [
+        8.620896339416504,
+        7.324994087219238,
+        12.91533374786377
+      ],
+      "rmse_by_channel_full": [
+        35.36442184448242,
+        35.094783782958984,
+        47.240596771240234
+      ],
+      "signal_pixel_count": 235361,
+      "signal_pixel_fraction": 0.13058200177541057,
+      "ssim_full_rgb": 0.8833827972412109,
+      "mae_rgb_signal": 73.32867431640625,
+      "rmse_rgb_signal": 109.65060424804688,
+      "mae_by_channel_signal": [
+        65.60121154785156,
+        55.89585876464844,
+        98.4730453491211
+      ],
+      "rmse_by_channel_signal": [
+        97.81645965576172,
+        97.09648132324219,
+        130.69097900390625
+      ],
+      "optimizer_success": true,
+      "optimizer_fun_working_rgb_rmse": 67.94293975830078,
+      "tx_px": 8.873394807754993,
+      "ty_px": 9.526484118270227,
+      "sx": 0.8388543819998318,
+      "sy": 1.037617983712113,
+      "work_width": 420,
+      "work_height": 335
+    },
+    "flip_ud": {
+      "mae_rgb_full": 9.622920989990234,
+      "rmse_rgb_full": 39.63410949707031,
+      "mae_by_channel_full": [
+        8.62258529663086,
+        7.326246738433838,
+        12.91843318939209
+      ],
+      "rmse_by_channel_full": [
+        35.360904693603516,
+        35.09061813354492,
+        47.23898696899414
+      ],
+      "signal_pixel_count": 235352,
+      "signal_pixel_fraction": 0.13057700843320016,
+      "ssim_full_rgb": 0.8833511471748352,
+      "mae_rgb_signal": 73.33848571777344,
+      "rmse_rgb_signal": 109.64580535888672,
+      "mae_by_channel_signal": [
+        65.61128234863281,
+        55.90115737915039,
+        98.48992156982422
+      ],
+      "rmse_by_channel_signal": [
+        97.80796813964844,
+        97.08592224121094,
+        130.68865966796875
+      ],
+      "optimizer_success": true,
+      "optimizer_fun_working_rgb_rmse": 67.94256591796875,
+      "tx_px": -8.858737221404493,
+      "ty_px": -9.541941488024824,
+      "sx": 0.8388543819998318,
+      "sy": 1.0374906143100782,
+      "work_width": 420,
+      "work_height": 335
+    },
+    "rot180": {
+      "mae_rgb_full": 9.622575759887695,
+      "rmse_rgb_full": 39.633567810058594,
+      "mae_by_channel_full": [
+        8.622184753417969,
+        7.326098442077637,
+        12.917882919311523
+      ],
+      "rmse_by_channel_full": [
+        35.36040496826172,
+        35.0903205871582,
+        47.23828887939453
+      ],
+      "signal_pixel_count": 235352,
+      "signal_pixel_fraction": 0.13057700843320016,
+      "ssim_full_rgb": 0.8833558559417725,
+      "mae_rgb_signal": 73.33594512939453,
+      "rmse_rgb_signal": 109.64429473876953,
+      "mae_by_channel_signal": [
+        65.60823059082031,
+        55.90005111694336,
+        98.48629760742188
+      ],
+      "rmse_by_channel_signal": [
+        97.8065414428711,
+        97.0849380493164,
+        130.6865997314453
+      ],
+      "optimizer_success": true,
+      "optimizer_fun_working_rgb_rmse": 67.94193267822266,
+      "tx_px": 8.85755487090925,
+      "ty_px": -9.541196836494178,
+      "sx": 0.8388543819998318,
+      "sy": 1.037562105796747,
+      "work_width": 420,
+      "work_height": 335
+    },
+    "transpose": {
+      "mae_rgb_full": 9.858819007873535,
+      "rmse_rgb_full": 40.31826400756836,
+      "mae_by_channel_full": [
+        8.856602668762207,
+        7.565627574920654,
+        13.151955604553223
+      ],
+      "rmse_by_channel_full": [
+        36.131019592285156,
+        35.86619186401367,
+        47.80858612060547
+      ],
+      "signal_pixel_count": 236676,
+      "signal_pixel_fraction": 0.1313115845539281,
+      "ssim_full_rgb": 0.8824071884155273,
+      "mae_rgb_signal": 74.62358856201172,
+      "rmse_rgb_signal": 111.21724700927734,
+      "mae_by_channel_signal": [
+        66.92878723144531,
+        57.302696228027344,
+        99.62226867675781
+      ],
+      "rmse_by_channel_signal": [
+        99.65015411376953,
+        98.9430160522461,
+        131.88694763183594
+      ],
+      "optimizer_success": true,
+      "optimizer_fun_working_rgb_rmse": 67.94094848632812,
+      "tx_px": 10.160288744281079,
+      "ty_px": -9.152226781853937,
+      "sx": 0.845521048765381,
+      "sy": 1.032073508023472,
+      "work_width": 420,
+      "work_height": 335
+    },
+    "transpose_flip_lr": {
+      "mae_rgb_full": 9.859106063842773,
+      "rmse_rgb_full": 40.31501388549805,
+      "mae_by_channel_full": [
+        8.856895446777344,
+        7.565851211547852,
+        13.150410652160645
+      ],
+      "rmse_by_channel_full": [
+        36.127288818359375,
+        35.86222839355469,
+        47.80571746826172
+      ],
+      "signal_pixel_count": 236664,
+      "signal_pixel_fraction": 0.13130492676431424,
+      "ssim_full_rgb": 0.8823456764221191,
+      "mae_rgb_signal": 74.61750793457031,
+      "rmse_rgb_signal": 111.2094955444336,
+      "mae_by_channel_signal": [
+        66.92211151123047,
+        57.29529571533203,
+        99.60614013671875
+      ],
+      "rmse_by_channel_signal": [
+        99.6402587890625,
+        98.93212890625,
+        131.88145446777344
+      ],
+      "optimizer_success": true,
+      "optimizer_fun_working_rgb_rmse": 67.94120025634766,
+      "tx_px": -10.166674411323301,
+      "ty_px": -9.151694290919389,
+      "sx": 0.845521048765381,
+      "sy": 1.0320332753959656,
+      "work_width": 420,
+      "work_height": 335
+    },
+    "transpose_flip_ud": {
+      "mae_rgb_full": 9.858848571777344,
+      "rmse_rgb_full": 40.31846618652344,
+      "mae_by_channel_full": [
+        8.856612205505371,
+        7.565808296203613,
+        13.151870727539062
+      ],
+      "rmse_by_channel_full": [
+        36.131526947021484,
+        35.86676025390625,
+        47.80851364135742
+      ],
+      "signal_pixel_count": 236675,
+      "signal_pixel_fraction": 0.13131102973812694,
+      "ssim_full_rgb": 0.8824078440666199,
+      "mae_rgb_signal": 74.6242446899414,
+      "rmse_rgb_signal": 111.21807861328125,
+      "mae_by_channel_signal": [
+        66.9293212890625,
+        57.304256439208984,
+        99.62263488769531
+      ],
+      "rmse_by_channel_signal": [
+        99.6517105102539,
+        98.9446792602539,
+        131.88710021972656
+      ],
+      "optimizer_success": true,
+      "optimizer_fun_working_rgb_rmse": 67.94091796875,
+      "tx_px": 10.160254389052435,
+      "ty_px": 9.14954854390936,
+      "sx": 0.845521048765381,
+      "sy": 1.0321119523397078,
+      "work_width": 420,
+      "work_height": 335
+    },
+    "transpose_rot180": {
+      "mae_rgb_full": 9.859107971191406,
+      "rmse_rgb_full": 40.3150749206543,
+      "mae_by_channel_full": [
+        8.856839179992676,
+        7.566014289855957,
+        13.150355339050293
+      ],
+      "rmse_by_channel_full": [
+        36.12747573852539,
+        35.8626594543457,
+        47.805599212646484
+      ],
+      "signal_pixel_count": 236678,
+      "signal_pixel_fraction": 0.1313126941855304,
+      "ssim_full_rgb": 0.8823463916778564,
+      "mae_rgb_signal": 74.6156234741211,
+      "rmse_rgb_signal": 111.20684814453125,
+      "mae_by_channel_signal": [
+        66.92034149169922,
+        57.29554748535156,
+        99.60271453857422
+      ],
+      "rmse_by_channel_signal": [
+        99.63814544677734,
+        98.93072509765625,
+        131.87777709960938
+      ],
+      "optimizer_success": true,
+      "optimizer_fun_working_rgb_rmse": 67.94088745117188,
+      "tx_px": -10.166270904632214,
+      "ty_px": 9.147242858833785,
+      "sx": 0.845521048765381,
+      "sy": 1.0320724989526608,
+      "work_width": 420,
+      "work_height": 335
+    }
+  },
+  "artifacts": {
+    "source_aligned": "outputs/eval/source_plot_aligned_to_generated.png",
+    "source_registered": "outputs/eval/source_plot_registered_to_generated.png",
+    "generated_aligned": "outputs/eval/generated_plot_aligned.png",
+    "rgb_absdiff_heatmap": "outputs/eval/rgb_absdiff_heatmap.png",
+    "rgb_absdiff_heatmap_registered": "outputs/eval/rgb_absdiff_heatmap_registered.png",
+    "contact_sheet": "outputs/eval/visual_eval_contact_sheet.png"
+  }
+}

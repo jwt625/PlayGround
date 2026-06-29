@@ -1,0 +1,7 @@
+numpy
+scipy
+plotly
+pymupdf
+pillow
+scikit-image
+kaleido
