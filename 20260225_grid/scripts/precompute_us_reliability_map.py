@@ -177,6 +177,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--solar-grid-mw", default="0,600,1200,1800,2400,3000,3600,4200,4800,5400,6000")
     parser.add_argument("--wind-grid-mw", default="0,600,1200,1800,2400,3000,3600,4200,4800,5400,6000")
     parser.add_argument("--bess-grid-mwh", default="0,20000,40000,60000,80000,100000,120000,140000,160000,180000,200000")
+    parser.add_argument("--real-label", default="Real NSRDB/WTK", help="resource_source_label for sites in real mode")
     parser.add_argument("--out", type=Path, default=Path("outputs/us_reliability_map_cache.json"))
     return parser.parse_args()
 
@@ -253,9 +254,16 @@ def main() -> None:
                     active_values_by_combo[combo_index][site_output_index] = round(float(site_cube[s_idx, w_idx, b_idx] * 100.0), 4)
                     combo_index += 1
 
+    if args.resource_mode == "real":
+        for site in active_sites:
+            site["resource_source"] = "real"
+            site["resource_source_label"] = args.real_label
+
     payload = {
         "meta": {
             "model": f"deterministic_{args.resource_mode}_resource_v1",
+            "real_site_count": len(active_sites) if args.resource_mode == "real" else 0,
+            "resource_label": args.real_label if args.resource_mode == "real" else "Synthetic",
             "workload_mw": args.workload_mw,
             "battery_interpretation": "energy_only",
             "battery_power_assumption": "not_binding_up_to_workload",

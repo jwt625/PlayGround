@@ -479,13 +479,13 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
             the reliability sweep across all slider combinations.
           </p>
           <ul>
-            <li>Solar raw data: <a href="https://nsrdb.nrel.gov/" target="_blank">NREL NSRDB</a> (<a href="https://nsrdb.nrel.gov/data-viewer" target="_blank">data viewer</a>) hourly CSV for solar year <strong>__SOLAR_YEAR__</strong> with \(GHI\), \(DNI\), \(DHI\), temperature, and wind speed.</li>
-            <li>Wind raw data: <a href="https://www.nrel.gov/grid/wind-toolkit.html" target="_blank">NREL WIND Toolkit</a> (<a href="https://wrdb.nlr.gov/data-viewer" target="_blank">data viewer</a>) hourly CSV for wind year <strong>__WIND_YEAR__</strong> with \(windspeed_{100m}\), wind direction, temperature, and pressure.</li>
+            __SOLAR_SOURCE_LI__
+            __WIND_SOURCE_LI__
             <li>Solar conversion: hourly PV output fraction per MW from \(GHI / 1000\), fixed losses, and a temperature derate.</li>
             <li>Wind conversion: hourly wind output fraction per MW from \(windspeed_{100m}\), a generic turbine power curve, and fixed losses.</li>
             <li>Per-site derived cache: one compressed profile file storing hourly solar, hourly wind, and source metadata for each successfully cached site.</li>
             <li>Reliability sweep: for each site and each \((C_{\mathrm{solar}}, C_{\mathrm{wind}}, E_{\max})\) tuple, the simulator computes \(G_t\), dispatches BESS hour by hour, and records the percentage of served hours.</li>
-            <li>Current real-data coverage in this build: <strong>__REAL_SITE_COUNT__</strong> sites use real derived profiles; any remaining uncovered sites fall back to the older synthetic cache in the merged frontend artifact.</li>
+            <li>Current real-data coverage in this build: <strong>__REAL_SITE_COUNT__</strong> sites use real derived profiles; any remaining uncovered sites fall back to the synthetic cache in the merged frontend artifact.</li>
           </ul>
           <h3 class="method-subhead">Overlay Data Sources</h3>
           <ul>
@@ -1134,12 +1134,18 @@ def build_method_side_html(payload: dict, config: dict) -> str:
         (r"\(\mathrm{served}_t\)", r"Indicator equal to 1 if the full load is served in hour \(t\), else 0."),
     ]
 
+    def _step(values: list) -> int:
+        return int(round(values[1] - values[0])) if len(values) > 1 else 0
+
+    solar_step = _step(axes["solar_mw"])
+    wind_step = _step(axes["wind_mw"])
+    bess_step = _step(axes["bess_mwh"])
     assumptions = [
         ("Workload", f"{meta['workload_mw']:,.0f} MW constant load", "Fixed for all sites and all hours in the map product."),
-        ("Time resolution", f"{int(meta['hours'])} hourly steps", "Reliability is computed over one synthetic 8760-hour year."),
-        ("Solar range", f"{int(min(axes['solar_mw'])):,} to {int(max(axes['solar_mw'])):,} MW", "Cached every 600 MW and interpolated in-browser."),
-        ("Wind range", f"{int(min(axes['wind_mw'])):,} to {int(max(axes['wind_mw'])):,} MW", "Cached every 600 MW and interpolated in-browser."),
-        ("BESS range", f"{int(min(axes['bess_mwh'])):,} to {int(max(axes['bess_mwh'])):,} MWh", "Cached every 20,000 MWh and interpolated in-browser."),
+        ("Time resolution", f"{int(meta['hours'])} hourly steps", "Reliability is computed over one 8760-hour year."),
+        ("Solar range", f"{int(min(axes['solar_mw'])):,} to {int(max(axes['solar_mw'])):,} MW", f"Cached every {solar_step:,} MW and interpolated in-browser."),
+        ("Wind range", f"{int(min(axes['wind_mw'])):,} to {int(max(axes['wind_mw'])):,} MW", f"Cached every {wind_step:,} MW and interpolated in-browser."),
+        ("BESS range", f"{int(min(axes['bess_mwh'])):,} to {int(max(axes['bess_mwh'])):,} MWh", f"Cached every {bess_step:,} MWh and interpolated in-browser."),
         ("Round-trip efficiency", f"{rte:.2f}", f"Implies \\(\\eta_c = \\eta_d \\approx {eta:.3f}\\)."),
         ("Usable depth of discharge", f"{dod:.2f}", f"Sets \\(\\mathrm{{SOC}}_{{\\min}} = (1 - {dod:.2f}) E_{{\\max}}\\)."),
         ("Battery interpretation", str(meta["battery_interpretation"]).replace("_", " "), "BESS slider controls energy only in this version."),
@@ -1222,6 +1228,32 @@ def main() -> None:
     html = html.replace("__SOLAR_YEAR__", str(resource_years.get("solar_year", "n/a")))
     html = html.replace("__WIND_YEAR__", str(resource_years.get("wind_year", "n/a")))
     html = html.replace("__REAL_SITE_COUNT__", str(int(payload["meta"].get("real_site_count", payload["meta"].get("site_count", 0)))))
+    resource_label = str(payload["meta"].get("resource_label", "")).lower()
+    if "open-meteo" in resource_label or "era5" in resource_label:
+        solar_li = (
+            f'<li>Solar raw data: <a href="https://open-meteo.com/en/docs/historical-weather-api" target="_blank">'
+            f'Open-Meteo Historical Weather API</a> (ERA5 reanalysis, ~25 km) hourly '
+            f'<em>shortwave_radiation</em> (used as \\(GHI\\)) and temperature for solar year '
+            f'<strong>{resource_years.get("solar_year", "n/a")}</strong>.</li>'
+        )
+        wind_li = (
+            f'<li>Wind raw data: <a href="https://open-meteo.com/en/docs/historical-weather-api" target="_blank">'
+            f'Open-Meteo Historical Weather API</a> (ERA5 reanalysis, ~25 km) hourly '
+            f'<em>wind_speed_100m</em> for wind year <strong>{resource_years.get("wind_year", "n/a")}</strong>.</li>'
+        )
+    else:
+        solar_li = (
+            f'<li>Solar raw data: <a href="https://nsrdb.nrel.gov/" target="_blank">NREL NSRDB</a> '
+            f'(<a href="https://nsrdb.nrel.gov/data-viewer" target="_blank">data viewer</a>) hourly CSV for solar year '
+            f'<strong>{resource_years.get("solar_year", "n/a")}</strong> with \\(GHI\\), \\(DNI\\), \\(DHI\\), temperature, and wind speed.</li>'
+        )
+        wind_li = (
+            f'<li>Wind raw data: <a href="https://www.nrel.gov/grid/wind-toolkit.html" target="_blank">NREL WIND Toolkit</a> '
+            f'hourly CSV for wind year <strong>{resource_years.get("wind_year", "n/a")}</strong> '
+            f'with \\(windspeed_{{100m}}\\), wind direction, temperature, and pressure.</li>'
+        )
+    html = html.replace("__SOLAR_SOURCE_LI__", solar_li)
+    html = html.replace("__WIND_SOURCE_LI__", wind_li)
     workload_mw = float(payload["meta"]["workload_mw"])
     step_1pct = max(1, int(round(workload_mw * 0.01)))
     html = html.replace("__SOLAR_SLIDER_MAX__", str(max(10000, int(max(payload["axes"]["solar_mw"])))))
