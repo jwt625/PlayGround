@@ -55,3 +55,17 @@ Projects that have spun off:
   - Try it: [jwt625.github.io/USGS_Minerals_Infra_Atlas](https://jwt625.github.io/USGS_Minerals_Infra_Atlas/).
 
 <img src="assets/USGS_Minerals_Infra_Atlas.png" alt="USGS Minerals And Infrastructure Atlas" width="50%">
+
+- May 2026: [IEEE 802.3 AI / High-Speed Ethernet Cache](https://github.com/jwt625/ieee802_3dj_browser): a static browser and local cache for IEEE 802.3 public materials relevant to AI scale-up, AI scale-out, high-speed Ethernet, P802.3dj, E4AI, 200G/lane MMF, P802.3ds, and 400G/lane signaling.
+  - Try it: [outside5sigma.com/ieee802_3dj_browser](https://outside5sigma.com/ieee802_3dj_browser/).
+
+<img src="assets/ieee802_3dj_browser.png" alt="IEEE 802.3 AI / High-Speed Ethernet Cache" width="50%">
+
+- May 2026: [Optical DSP Link Visualizations](https://github.com/jwt625/optical-dsp-link): browser-based educational visualizations for optical DSP and SerDes concepts, including payload/FEC/PAM4 mapping, Tx precompensation, SerDes/DAC, optical channel impairment, CDR timing, Rx equalization, and recovered payload flow.
+  - Try it: [outside5sigma.com/optical-dsp-link](https://outside5sigma.com/optical-dsp-link/).
+
+<img src="assets/optical-dsp-link.png" alt="Optical DSP Link Visualizations" width="50%">
+
+- Jun 2026: [2D EO Cross-Section Solver Prototype](https://github.com/jwt625/PlayGround/tree/main/20260614_2d_eo_fem_solver): browser-first electro-optic modulator cross-section solver with YAML-configured geometry, 2D electrostatic extraction, tensor-permittivity RF assembly, optical mode solving, field visualization, and Python reference tests.
+
+<img src="assets/2d-eo-fem-solver.png" alt="2D EO Cross-Section Solver Prototype" width="50%">
