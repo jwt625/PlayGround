@@ -18,6 +18,7 @@ const colorbarCtx = colorbarCanvas.getContext("2d");
 const colorbarMax = document.querySelector("#colorbar-max");
 const colorbarMid = document.querySelector("#colorbar-mid");
 const colorbarMin = document.querySelector("#colorbar-min");
+const viewModeSelect = document.querySelector("#view-mode-select");
 const quantitySelect = document.querySelector("#quantity-select");
 const modeSelectLabel = document.querySelector("#mode-select-label");
 const modeSelect = document.querySelector("#mode-select");
@@ -61,6 +62,7 @@ document.querySelector("#bto-button").addEventListener("click", () => loadExampl
 document.querySelector("#si-mode-button").addEventListener("click", () => loadExample("siMode", "vector_mode"));
 document.querySelector("#tfln-mode-button").addEventListener("click", () => loadExample("tfln", "vector_mode"));
 document.querySelector("#bto-mode-button").addEventListener("click", () => loadExample("bto", "vector_mode"));
+viewModeSelect.addEventListener("change", redrawLastResult);
 quantitySelect.addEventListener("change", redrawLastResult);
 modeSelect.addEventListener("change", () => {
   if (!lastResult) return;
@@ -436,8 +438,17 @@ function redrawLastResult() {
 function renderPlot(config, result) {
   syncQuantityOptions(result);
   syncModeOptions(result);
+  syncViewModeControls();
   resizeCanvases();
   if (!view) resetViewport(result.mesh);
+  if (viewModeSelect.value === "geometry") {
+    renderGeometryView(config, result);
+    return;
+  }
+  if (viewModeSelect.value === "mesh") {
+    renderMeshView(config, result);
+    return;
+  }
   const { nx, ny } = result.mesh;
   const values = getActivePlotValues(result, quantitySelect.value);
   const transform = makeScale(values, scaleSelect.value);
@@ -468,6 +479,156 @@ function renderPlot(config, result) {
   if (meshToggle.checked) drawMesh(result.mesh);
   renderColorbar(transform);
   updateQuantityDescription();
+}
+
+function syncViewModeControls() {
+  const isResults = viewModeSelect.value === "results";
+  quantitySelect.disabled = !isResults;
+  scaleSelect.disabled = !isResults;
+  meshToggle.disabled = viewModeSelect.value === "geometry";
+  if (!isResults) {
+    quantitySelect.title = viewModeSelect.value === "geometry" ? "Geometry view" : "Mesh view";
+  }
+}
+
+function renderGeometryView(config, result) {
+  clearPlotFrame("#0f141b");
+  drawDomainFrame(result.mesh);
+  drawMaterialRegions(config, result);
+  drawElectrodeBoundaries(config, result);
+  drawGeometryVertices(config, result);
+  clearColorbar(viewModeSelect.value);
+  renderModeBadge("Geometry");
+}
+
+function renderMeshView(config, result) {
+  clearPlotFrame("#101720");
+  drawMeshCells(result.mesh, { fill: true });
+  drawMaterialBoundaries(config, result);
+  drawElectrodeBoundaries(config, result);
+  clearColorbar(viewModeSelect.value);
+  renderModeBadge("Mesh");
+}
+
+function clearPlotFrame(fillStyle) {
+  ctx.save();
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.fillStyle = fillStyle;
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.strokeStyle = "#2a3441";
+  ctx.lineWidth = Math.max(1, window.devicePixelRatio || 1);
+  ctx.strokeRect(0.5, 0.5, canvas.width - 1, canvas.height - 1);
+  ctx.restore();
+  plotTooltip.hidden = true;
+}
+
+function drawDomainFrame(mesh) {
+  ctx.save();
+  ctx.strokeStyle = "rgba(232,237,242,0.82)";
+  ctx.lineWidth = 1.4;
+  const p0 = toCanvas(mesh, [mesh.domain.xMin, mesh.domain.yMin]);
+  const p1 = toCanvas(mesh, [mesh.domain.xMax, mesh.domain.yMax]);
+  ctx.strokeRect(p0[0], p1[1], p1[0] - p0[0], p0[1] - p1[1]);
+  drawTextLabel(mesh, "domain", [(mesh.domain.xMin + mesh.domain.xMax) / 2, mesh.domain.yMax], "#e8edf2");
+  ctx.restore();
+}
+
+function drawMaterialRegions(config, result) {
+  const materials = parseMaterials(config).filter((material) => material.shape !== "background");
+  ctx.save();
+  for (const material of materials) {
+    drawShapePath(result.mesh, material.shape, material.params);
+    ctx.fillStyle = materialFill(material.name);
+    ctx.strokeStyle = "rgba(232,237,242,0.8)";
+    ctx.lineWidth = 1.25;
+    ctx.fill();
+    ctx.stroke();
+    drawTextLabel(result.mesh, material.name, shapeCenter(material.shape, material.params), "#f3f7f7");
+  }
+  ctx.restore();
+}
+
+function drawElectrodeBoundaries(config, result) {
+  const electrodes = parseElectrodes(config);
+  ctx.save();
+  for (const electrode of electrodes) {
+    drawShapePath(result.mesh, electrode.shape, electrode.params);
+    ctx.fillStyle = electrode.potential > 0 ? "rgba(248,249,250,0.38)" : "rgba(32,38,46,0.62)";
+    ctx.strokeStyle = electrode.potential > 0 ? "rgba(255,255,255,0.98)" : "rgba(154,167,181,0.98)";
+    ctx.lineWidth = 1.6;
+    ctx.fill();
+    ctx.stroke();
+    const label = `${electrode.name} ${formatValue(electrode.potential)} V`;
+    drawTextLabel(result.mesh, label, shapeCenter(electrode.shape, electrode.params), "#ffffff");
+  }
+  ctx.restore();
+}
+
+function drawGeometryVertices(config, result) {
+  const points = [];
+  points.push([result.mesh.domain.xMin, result.mesh.domain.yMin]);
+  points.push([result.mesh.domain.xMax, result.mesh.domain.yMin]);
+  points.push([result.mesh.domain.xMax, result.mesh.domain.yMax]);
+  points.push([result.mesh.domain.xMin, result.mesh.domain.yMax]);
+  for (const material of parseMaterials(config)) collectShapeVertices(material.shape, material.params, points);
+  for (const electrode of parseElectrodes(config)) collectShapeVertices(electrode.shape, electrode.params, points);
+  ctx.save();
+  ctx.fillStyle = "#1aa39a";
+  ctx.strokeStyle = "#071015";
+  ctx.lineWidth = 1;
+  for (const point of points) {
+    const [x, y] = toCanvas(result.mesh, point);
+    ctx.beginPath();
+    ctx.arc(x, y, 3.2, 0, 2 * Math.PI);
+    ctx.fill();
+    ctx.stroke();
+  }
+  ctx.restore();
+}
+
+function drawMeshCells(mesh, options = {}) {
+  ctx.save();
+  ctx.lineWidth = 0.55;
+  for (const tri of mesh.triangles) {
+    ctx.beginPath();
+    for (let k = 0; k < tri.length; k += 1) {
+      const [x, y] = toCanvas(mesh, mesh.nodes[tri[k]]);
+      if (k === 0) ctx.moveTo(x, y);
+      else ctx.lineTo(x, y);
+    }
+    ctx.closePath();
+    if (options.fill) {
+      ctx.fillStyle = triangleFill(mesh, tri);
+      ctx.fill();
+    }
+    ctx.strokeStyle = "rgba(232,237,242,0.24)";
+    ctx.stroke();
+  }
+  ctx.restore();
+}
+
+function renderModeBadge(label) {
+  ctx.save();
+  ctx.fillStyle = "rgba(8,12,17,0.82)";
+  ctx.strokeStyle = "rgba(42,52,65,0.95)";
+  ctx.lineWidth = 1;
+  const dpr = window.devicePixelRatio || 1;
+  ctx.font = `${12 * dpr}px ui-monospace, SFMono-Regular, Menlo, Consolas, monospace`;
+  const text = `${label} view`;
+  const width = ctx.measureText(text).width + 18 * dpr;
+  ctx.fillRect(12 * dpr, 12 * dpr, width, 26 * dpr);
+  ctx.strokeRect(12 * dpr + 0.5, 12 * dpr + 0.5, width, 26 * dpr);
+  ctx.fillStyle = "#e8edf2";
+  ctx.textBaseline = "middle";
+  ctx.fillText(text, 21 * dpr, 25 * dpr);
+  ctx.restore();
+}
+
+function clearColorbar(label = "") {
+  colorbarCtx.clearRect(0, 0, colorbarCanvas.width, colorbarCanvas.height);
+  colorbarMax.textContent = "";
+  colorbarMid.textContent = label;
+  colorbarMin.textContent = "";
 }
 
 function syncQuantityOptions(result) {
@@ -704,20 +865,7 @@ function renderColorbar(scale) {
 }
 
 function drawMesh(mesh) {
-  ctx.save();
-  ctx.strokeStyle = "rgba(255,255,255,0.22)";
-  ctx.lineWidth = 0.55;
-  for (const tri of mesh.triangles) {
-    ctx.beginPath();
-    for (let k = 0; k < tri.length; k += 1) {
-      const [x, y] = toCanvas(mesh, mesh.nodes[tri[k]]);
-      if (k === 0) ctx.moveTo(x, y);
-      else ctx.lineTo(x, y);
-    }
-    ctx.closePath();
-    ctx.stroke();
-  }
-  ctx.restore();
+  drawMeshCells(mesh);
 }
 
 function drawMaterialBoundaries(config, result) {
@@ -779,6 +927,76 @@ function drawShapePath(mesh, shape, params) {
     const edge = toCanvas(mesh, [p.x + p.radius, p.y]);
     ctx.arc(center[0], center[1], Math.abs(edge[0] - center[0]), 0, 2 * Math.PI);
   }
+}
+
+function collectShapeVertices(shape, params, points) {
+  if (shape === "rectangle") {
+    points.push([params.x_min, params.y_min]);
+    points.push([params.x_max, params.y_min]);
+    points.push([params.x_max, params.y_max]);
+    points.push([params.x_min, params.y_max]);
+  } else if (shape === "circle") {
+    points.push([params.x + params.radius, params.y]);
+    points.push([params.x, params.y + params.radius]);
+    points.push([params.x - params.radius, params.y]);
+    points.push([params.x, params.y - params.radius]);
+  }
+}
+
+function shapeCenter(shape, params) {
+  if (shape === "rectangle") {
+    return [(params.x_min + params.x_max) / 2, (params.y_min + params.y_max) / 2];
+  }
+  if (shape === "circle") return [params.x, params.y];
+  return [0, 0];
+}
+
+function pointInShape(shape, params, x, y) {
+  if (shape === "rectangle") {
+    return params.x_min <= x && x <= params.x_max && params.y_min <= y && y <= params.y_max;
+  }
+  if (shape === "circle") {
+    const dx = x - params.x;
+    const dy = y - params.y;
+    return dx * dx + dy * dy <= params.radius * params.radius;
+  }
+  return false;
+}
+
+function materialFill(name) {
+  const colors = [
+    "rgba(26,163,154,0.34)",
+    "rgba(225,175,73,0.34)",
+    "rgba(116,155,226,0.34)",
+    "rgba(209,103,136,0.34)",
+    "rgba(151,118,206,0.34)",
+  ];
+  return colors[hashString(name) % colors.length];
+}
+
+function triangleFill(mesh, tri) {
+  const [a, b, c] = tri.map((index) => mesh.nodes[index]);
+  const y = (a[1] + b[1] + c[1]) / 3;
+  const t = clamp((y - mesh.domain.yMin) / (mesh.domain.yMax - mesh.domain.yMin), 0, 1);
+  const color = plasmaColor(0.12 + 0.56 * t);
+  return `rgba(${color[0]},${color[1]},${color[2]},0.32)`;
+}
+
+function drawTextLabel(mesh, text, point, color) {
+  const [x, y] = toCanvas(mesh, point);
+  const dpr = window.devicePixelRatio || 1;
+  ctx.save();
+  ctx.font = `${11 * dpr}px ui-monospace, SFMono-Regular, Menlo, Consolas, monospace`;
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+  const metrics = ctx.measureText(text);
+  const width = metrics.width + 8 * dpr;
+  const height = 17 * dpr;
+  ctx.fillStyle = "rgba(8,12,17,0.72)";
+  ctx.fillRect(x - width / 2, y - height / 2, width, height);
+  ctx.fillStyle = color;
+  ctx.fillText(text, x, y);
+  ctx.restore();
 }
 
 function toCanvas(mesh, point) {
@@ -916,6 +1134,14 @@ function updateTooltip(event) {
   if (!lastResult) return;
   const point = eventPoint(event);
   const [x, y] = canvasToWorld(lastResult.mesh, point.x, point.y);
+  if (viewModeSelect.value === "geometry") {
+    updateGeometryTooltip(point, x, y);
+    return;
+  }
+  if (viewModeSelect.value === "mesh") {
+    updateMeshTooltip(point, x, y);
+    return;
+  }
   const mesh = lastResult.mesh;
   const i = nearestCoordinateIndex(mesh.xCoords, x);
   const j = nearestCoordinateIndex(mesh.yCoords, y);
@@ -941,6 +1167,50 @@ function updateTooltip(event) {
   plotTooltip.style.top = `${Math.min(cssY, wrap.height - 96)}px`;
 }
 
+function updateGeometryTooltip(point, x, y) {
+  const entities = [];
+  for (const material of parseMaterials(lastConfig).filter((item) => item.shape !== "background")) {
+    if (pointInShape(material.shape, material.params, x, y)) entities.push(`domain: ${material.name}`);
+  }
+  for (const electrode of parseElectrodes(lastConfig)) {
+    if (pointInShape(electrode.shape, electrode.params, x, y)) {
+      entities.push(`boundary: ${electrode.name} (${formatValue(electrode.potential)} V)`);
+    }
+  }
+  showTooltip(
+    point,
+    [
+      `x = ${formatValue(x)} m`,
+      `y = ${formatValue(y)} m`,
+      entities.length > 0 ? entities.join("<br />") : "domain: background",
+      "view: geometry",
+    ],
+    240,
+    112,
+  );
+}
+
+function updateMeshTooltip(point, x, y) {
+  const nearest = nearestMeshNode(lastResult.mesh, x, y);
+  const lines = [`x = ${formatValue(x)} m`, `y = ${formatValue(y)} m`, "view: mesh"];
+  if (nearest) {
+    lines.push(`nearest node: ${nearest.index}`, `distance: ${formatValue(nearest.distance)} m`);
+  }
+  lines.push(`triangles: ${lastResult.mesh.triangles.length}`);
+  showTooltip(point, lines, 230, 116);
+}
+
+function showTooltip(point, lines, maxWidth, maxHeight) {
+  plotTooltip.innerHTML = lines.join("<br />");
+  plotTooltip.hidden = false;
+  const wrap = canvas.parentElement.getBoundingClientRect();
+  const canvasRect = canvas.getBoundingClientRect();
+  const cssX = canvasRect.left - wrap.left + point.cssX + 14;
+  const cssY = canvasRect.top - wrap.top + point.cssY + 14;
+  plotTooltip.style.left = `${Math.min(cssX, wrap.width - maxWidth)}px`;
+  plotTooltip.style.top = `${Math.min(cssY, wrap.height - maxHeight)}px`;
+}
+
 function formatMeshSummary(mesh) {
   return `${mesh.stats.type}, ${mesh.nx} x ${mesh.ny}, ${mesh.triangles.length} tris`;
 }
@@ -955,6 +1225,19 @@ function nearestCoordinateIndex(coords, value) {
     else hi = mid;
   }
   return Math.abs(coords[lo] - value) <= Math.abs(coords[hi] - value) ? lo : hi;
+}
+
+function nearestMeshNode(mesh, x, y) {
+  let best = null;
+  const viewWidth = view.xMax - view.xMin;
+  const viewHeight = view.yMax - view.yMin;
+  const maxDistance = Math.hypot(viewWidth, viewHeight) * 0.03;
+  for (let index = 0; index < mesh.nodes.length; index += 1) {
+    const node = mesh.nodes[index];
+    const distance = Math.hypot(node[0] - x, node[1] - y);
+    if (!best || distance < best.distance) best = { index, distance };
+  }
+  return best && best.distance <= maxDistance ? best : null;
 }
 
 function eventPoint(event) {
@@ -1019,6 +1302,14 @@ function escapeHtml(value) {
     .replaceAll(">", "&gt;")
     .replaceAll('"', "&quot;")
     .replaceAll("'", "&#039;");
+}
+
+function hashString(value) {
+  let hash = 0;
+  for (let i = 0; i < value.length; i += 1) {
+    hash = (hash * 31 + value.charCodeAt(i)) >>> 0;
+  }
+  return hash;
 }
 
 function clamp(value, low, high) {

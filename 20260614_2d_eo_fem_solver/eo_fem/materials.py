@@ -3,7 +3,6 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Any
 
-
 MATERIAL_PROPERTY_KEYS = {
     "eps_r",
     "eps_r_xx",

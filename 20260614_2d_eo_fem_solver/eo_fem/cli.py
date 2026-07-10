@@ -19,6 +19,7 @@ def main() -> None:
     print(f"CG iterations = {result.iterations}, residual = {result.residual:.3e}")
     if result.reference:
         ref = result.reference
-        err = (result.capacitance_energy - ref["capacitance"]) / ref["capacitance"]
-        print(f"Reference({ref['name']}) = {ref['capacitance']:.6e} F/m")
+        reference_capacitance = float(ref["capacitance"])
+        err = (result.capacitance_energy - reference_capacitance) / reference_capacitance
+        print(f"Reference({ref['name']}) = {reference_capacitance:.6e} F/m")
         print(f"Relative error = {err:.3%}")

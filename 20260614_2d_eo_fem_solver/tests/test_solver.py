@@ -60,7 +60,10 @@ def test_isotropic_tensor_assembly_matches_scalar_assembly():
 
     scalar_result = solve_config(scalar)
     tensor_result = solve_config(tensor)
-    rel_diff = abs(scalar_result.capacitance_energy - tensor_result.capacitance_energy) / scalar_result.capacitance_energy
+    rel_diff = (
+        abs(scalar_result.capacitance_energy - tensor_result.capacitance_energy)
+        / scalar_result.capacitance_energy
+    )
     assert rel_diff < 1e-10
     assert "anisotropic eps_r tensor" in tensor_result.permittivity_model
 

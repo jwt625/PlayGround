@@ -278,8 +278,18 @@ select {
   min-width: 280px;
 }
 
+#view-mode-select {
+  min-width: 124px;
+}
+
 #mode-select {
   min-width: 220px;
+}
+
+.view-controls select:disabled,
+.view-controls input:disabled {
+  opacity: 0.58;
+  cursor: not-allowed;
 }
 
 .mode-select-label[hidden] {

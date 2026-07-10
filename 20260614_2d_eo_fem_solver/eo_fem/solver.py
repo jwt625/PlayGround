@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from collections.abc import Callable
 from dataclasses import dataclass
 from math import sqrt
 from typing import Any
@@ -34,7 +35,7 @@ class SolveResult:
     iterations: int
     residual: float
     units: dict[str, float]
-    reference: dict[str, float] | None = None
+    reference: dict[str, float | str] | None = None
     permittivity_model: str = "homogeneous scalar eps_r"
 
 
@@ -95,8 +96,6 @@ def make_structured_tri_mesh(domain: Domain, nx: int, ny: int) -> Mesh:
 
 def assemble_stiffness(mesh: Mesh, materials_or_eps_r: list[Material] | float) -> list[dict[int, float]]:
     rows: list[dict[int, float]] = [dict() for _ in mesh.nodes]
-    use_materials = isinstance(materials_or_eps_r, list)
-    homogeneous_tensor = None if use_materials else (float(materials_or_eps_r), float(materials_or_eps_r), 0.0)
     for tri in mesh.triangles:
         pts = [mesh.nodes[i] for i in tri]
         area2 = (
@@ -108,14 +107,15 @@ def assemble_stiffness(mesh: Mesh, materials_or_eps_r: list[Material] | float) -
             continue
         b = [pts[1][1] - pts[2][1], pts[2][1] - pts[0][1], pts[0][1] - pts[1][1]]
         c = [pts[2][0] - pts[1][0], pts[0][0] - pts[2][0], pts[1][0] - pts[0][0]]
-        if use_materials:
+        if isinstance(materials_or_eps_r, list):
             eps_xx, eps_yy, eps_xy = epsilon_tensor_at(
                 materials_or_eps_r,
                 (pts[0][0] + pts[1][0] + pts[2][0]) / 3.0,
                 (pts[0][1] + pts[1][1] + pts[2][1]) / 3.0,
             )
         else:
-            eps_xx, eps_yy, eps_xy = homogeneous_tensor
+            eps_r = float(materials_or_eps_r)
+            eps_xx, eps_yy, eps_xy = eps_r, eps_r, 0.0
         for a in range(3):
             ia = tri[a]
             for d in range(3):
@@ -191,7 +191,11 @@ def solve_dirichlet(
 
 
 def conjugate_gradient(
-    matvec, rhs: list[float], inv_diag: list[float] | None = None, tol: float = 1e-6, maxiter: int = 20_000
+    matvec: Callable[[list[float]], list[float]],
+    rhs: list[float],
+    inv_diag: list[float] | None = None,
+    tol: float = 1e-6,
+    maxiter: int = 20_000,
 ) -> tuple[list[float], int, float]:
     x = [0.0] * len(rhs)
     r = rhs[:]
@@ -202,14 +206,15 @@ def conjugate_gradient(
     z = apply_jacobi(inv_diag, r)
     p = z[:]
     rzold = dot(r, z)
+    iteration = 0
     for iteration in range(1, maxiter + 1):
         ap = matvec(p)
         denom = dot(p, ap)
         if denom == 0.0:
             break
         alpha = rzold / denom
-        x = [xi + alpha * pi for xi, pi in zip(x, p)]
-        r = [ri - alpha * api for ri, api in zip(r, ap)]
+        x = [xi + alpha * pi for xi, pi in zip(x, p, strict=True)]
+        r = [ri - alpha * api for ri, api in zip(r, ap, strict=True)]
         rsnew = dot(r, r)
         residual = sqrt(rsnew) / rhs_norm
         if residual < tol:
@@ -217,7 +222,7 @@ def conjugate_gradient(
         z = apply_jacobi(inv_diag, r)
         rznew = dot(r, z)
         beta = rznew / rzold
-        p = [zi + beta * pi for zi, pi in zip(z, p)]
+        p = [zi + beta * pi for zi, pi in zip(z, p, strict=True)]
         rsold = rsnew
         rzold = rznew
     return x, iteration, sqrt(rsold) / rhs_norm
@@ -226,7 +231,7 @@ def conjugate_gradient(
 def apply_jacobi(inv_diag: list[float] | None, values: list[float]) -> list[float]:
     if inv_diag is None:
         return values[:]
-    return [diagonal * value for diagonal, value in zip(inv_diag, values)]
+    return [diagonal * value for diagonal, value in zip(inv_diag, values, strict=True)]
 
 
 def field_energy(rows: list[dict[int, float]], phi: list[float]) -> float:
@@ -238,7 +243,7 @@ def electrode_charge(rows: list[dict[int, float]], phi: list[float], nodes: list
     return sum(sum(v * phi[j] for j, v in rows[i].items()) for i in nodes)
 
 
-def reference_capacitance(config: dict[str, Any], eps_r: float) -> dict[str, float] | None:
+def reference_capacitance(config: dict[str, Any], eps_r: float) -> dict[str, float | str] | None:
     from .analytic import parallel_plate_capacitance, two_cylinder_capacitance
 
     outputs = config.get("Outputs", {})
@@ -261,7 +266,7 @@ def reference_capacitance(config: dict[str, Any], eps_r: float) -> dict[str, flo
 
 
 def dot(a: list[float], b: list[float]) -> float:
-    return sum(x * y for x, y in zip(a, b))
+    return sum(x * y for x, y in zip(a, b, strict=True))
 
 
 def _electrode_potential(electrodes: list[Electrode], name: str) -> float:

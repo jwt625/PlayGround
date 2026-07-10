@@ -79,8 +79,17 @@ Validate:
 
 ```bash
 npm test
-python3 -m pip install -e ".[test]"
-python3 -m pytest -q
+uv sync --extra dev
+uv run pytest -q
+uv run ruff check .
+uv run mypy
+```
+
+Optional Gmsh/MFEM backend setup:
+
+```bash
+uv sync --extra dev --extra backend
+uv run pytest -q
 ```
 
 Current mesh:

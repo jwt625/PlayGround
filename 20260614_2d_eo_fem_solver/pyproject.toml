@@ -1,11 +1,27 @@
+[build-system]
+requires = ["setuptools>=69"]
+build-backend = "setuptools.build_meta"
+
 [project]
 name = "eo-fem"
 version = "0.1.0"
 description = "Lightweight 2D electrostatic prototype for EO modulator cross-sections."
 requires-python = ">=3.11"
+license = "GPL-3.0-or-later"
 dependencies = []
 
 [project.optional-dependencies]
+backend = [
+    "gmsh>=4.15.2",
+    "mfem>=4.8.0.1",
+    "numpy>=2",
+    "scipy>=1.14",
+]
+dev = [
+    "mypy>=1.17",
+    "pytest>=8",
+    "ruff>=0.12",
+]
 test = ["pytest>=8"]
 
 [project.scripts]
@@ -16,3 +32,19 @@ include = ["eo_fem*"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 120
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["B", "E", "F", "I", "UP"]
+
+[tool.mypy]
+python_version = "3.11"
+packages = ["eo_fem"]
+warn_unused_configs = true
+warn_return_any = true
+warn_unreachable = true
+disallow_untyped_defs = true
+no_implicit_optional = true
