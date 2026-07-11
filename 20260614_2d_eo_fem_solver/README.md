@@ -49,8 +49,131 @@ Outputs:
 Run:
 
 ```bash
-python3 -m http.server 5173
-open http://localhost:5173/web/
+make frontend
+```
+
+The launcher prints the frontend URL. It prefers port `5173`; if that port is
+occupied, it scans upward and uses the first available port without stopping
+the existing service. Override the starting port with `make frontend
+FE_PORT=5174`.
+
+The equivalent command without Make is:
+
+```bash
+.venv/bin/python -m eo_fem.dev_server --host 127.0.0.1 --port 5173 --directory .
+```
+
+Useful development targets:
+
+```bash
+make setup          # install frontend/reference/backend development dependencies
+make solve          # run CONFIG=examples/parallel_plate.yaml with the Python reference solver
+make backend-check  # verify the optional Gmsh and PyMFEM imports
+make gmsh-mesh      # persist a Gmsh mesh under artifacts/gmsh_preview
+make gmsh-examples  # generate advanced 2D mesh-control examples
+make gmsh-examples-3d # generate initial 3D tet and swept-prism examples
+make gmsh-test      # generate and validate the tagged Gmsh mesh fixture
+make check          # Python/browser tests, Ruff, and mypy
+```
+
+There is not yet a backend API server to start. Gmsh meshing is implemented,
+but the MFEM electrostatic solver, backend CLI route, and API service remain
+planned work in DevLog 004 milestones 3-5.
+
+Advanced Gmsh sizing/refinement research, COMSOL mesh-control mapping, and the
+2D/3D example roadmap are documented in
+`DevLog-006-Advanced-Gmsh-Mesh-Control-Research.md`. The primary-source evidence
+index is cached at `references/meshing/source-index.json`.
+
+### Geometry, mesh, and solution artifacts
+
+The browser workspace has independent `Geometry`, `Mesh`, and `Results` layers
+in its Model Builder. Use the `Open` controls in the top toolbar, or select a
+loaded layer in the model tree.
+
+When started with `make frontend`, the same local process also exposes a small
+development API and populates the `Library` selector:
+
+```bash
+curl http://127.0.0.1:5173/api/health
+curl http://127.0.0.1:5173/api/examples
+curl -X POST http://127.0.0.1:5173/api/mesh/generate \
+  -H 'Content-Type: application/json' \
+  --data '{"config_path":"examples/mesh_controls/parallel_plate_proximity.yaml","name":"api_parallel_plate"}'
+```
+
+Generation accepts only configs under `examples/`, writes under
+`artifacts/api/`, and runs each Gmsh build in an isolated subprocess because
+Gmsh uses process-global native state. A frontend mesh can also be deep-linked
+for repeatable inspection:
+
+```text
+http://127.0.0.1:5173/web/?artifact=/artifacts/mesh_controls/parallel_plate_proximity/parallel_plate_proximity.msh
+```
+
+- Geometry: current project YAML (`.yaml` / `.yml`) or JSON containing the same
+  config structure. Loading new geometry invalidates the previous mesh and
+  results.
+- Mesh: ASCII Gmsh MSH 4.1 (`.msh`) with first- or second-order line/triangle
+  elements, or normalized mesh JSON. Physical names and tagged boundary edges
+  are preserved.
+- Solution: JSON containing a mesh plus nodal field arrays. A solution may also
+  contain its source config so Geometry, Mesh, and Results can be restored
+  together.
+
+To generate and inspect a persistent Gmsh mesh:
+
+```bash
+make gmsh-mesh CONFIG=examples/parallel_plate.yaml
+make frontend
+```
+
+Then choose `Open -> Mesh` and select
+`artifacts/gmsh_preview/mesh_preview.msh`.
+
+Advanced validation artifacts:
+
+```bash
+make gmsh-examples
+make gmsh-examples-3d
+```
+
+The 2D artifacts under `artifacts/mesh_controls/` can be loaded in the browser.
+The 3D artifacts under `artifacts/mesh_controls_3d/` should currently be opened
+in Gmsh or ParaView; the in-app viewer remains 2D-only.
+
+Automated inspection outputs, including frontend screenshots, clipped ParaView
+screenshots, VTK conversions, and quality reports, are written under
+`artifacts/inspection/`.
+
+Normalized mesh JSON uses zero-based node indices:
+
+```json
+{
+  "mesh": {
+    "nodes": [[0.0, 0.0], [1.0, 0.0], [0.0, 1.0]],
+    "triangles": [[0, 1, 2]],
+    "boundaryEdges": [{"nodes": [0, 1], "name": "ground"}]
+  }
+}
+```
+
+A saved solution adds nodal fields whose lengths equal `mesh.nodes.length`:
+
+```json
+{
+  "schemaVersion": "eo-fem.workspace/v1",
+  "mesh": {
+    "nodes": [[0.0, 0.0], [1.0, 0.0], [0.0, 1.0]],
+    "triangles": [[0, 1, 2]]
+  },
+  "fields": {
+    "phi": [0.0, 1.0, 0.5]
+  },
+  "metadata": {
+    "backend": "mfem"
+  }
+}
 ```
 
 The example buttons reload YAML with cache busting. If you edit

@@ -1,11 +1,13 @@
 import { parseSimpleYaml } from "./core/config.js";
-import { parseElectrodes } from "./core/geometry.js";
+import { parseDomain, parseElectrodes } from "./core/geometry.js";
 import { parseMaterials } from "./core/materials.js";
 import { getModePlotValues, solveOpticalModeConfig } from "./core/mode_solver.js";
+import { selectTrianglesForView } from "./core/mesh_view.js";
 import { quantityInfo } from "./core/quantities.js";
 import { getPlotValues, solveConfig } from "./core/solver.js";
 import { isOpticalMode, validateConfig } from "./core/validation.js";
 import { getVectorModePlotValues, solveVectorModeConfig } from "./core/vector_mode_solver.js";
+import { loadGeometryArtifact, loadMeshArtifact, loadSolutionArtifact } from "./core/workspace_io.js";
 
 const workspace = document.querySelector(".workspace");
 const configEditor = document.querySelector("#config-editor");
@@ -32,6 +34,17 @@ const resetViewButton = document.querySelector("#reset-view-button");
 const solveProgress = document.querySelector("#solve-progress");
 const plotTooltip = document.querySelector("#plot-tooltip");
 const logWindow = document.querySelector("#log-window");
+const geometryFileInput = document.querySelector("#geometry-file-input");
+const meshFileInput = document.querySelector("#mesh-file-input");
+const solutionFileInput = document.querySelector("#solution-file-input");
+const geometryTreeNode = document.querySelector("#geometry-tree-node");
+const meshTreeNode = document.querySelector("#mesh-tree-node");
+const solutionTreeNode = document.querySelector("#solution-tree-node");
+const geometrySource = document.querySelector("#geometry-source");
+const meshSource = document.querySelector("#mesh-source");
+const solutionSource = document.querySelector("#solution-source");
+const validationExampleSelect = document.querySelector("#validation-example-select");
+const loadValidationButton = document.querySelector("#load-validation-button");
 
 const examplePaths = {
   parallel: "../examples/parallel_plate.yaml",
@@ -52,8 +65,17 @@ let activeScale = null;
 let isPanning = false;
 let panStart = null;
 let solveRunId = 0;
+const workspaceLayers = { geometry: null, mesh: null, results: null };
+let activeWorkspaceView = "results";
+const meshSpatialIndices = new WeakMap();
+const artifactCache = new Map();
+let validationExamples = [];
 
 document.querySelector("#solve-button").addEventListener("click", runSolve);
+document.querySelector("#open-geometry-button").addEventListener("click", () => geometryFileInput.click());
+document.querySelector("#open-mesh-button").addEventListener("click", () => meshFileInput.click());
+document.querySelector("#open-solution-button").addEventListener("click", () => solutionFileInput.click());
+loadValidationButton.addEventListener("click", () => loadValidationExample(validationExampleSelect.value));
 document.querySelector("#parallel-button").addEventListener("click", () => loadExample("parallel"));
 document.querySelector("#cylinders-button").addEventListener("click", () => loadExample("cylinders"));
 document.querySelector("#stack-button").addEventListener("click", () => loadExample("stack"));
@@ -62,7 +84,7 @@ document.querySelector("#bto-button").addEventListener("click", () => loadExampl
 document.querySelector("#si-mode-button").addEventListener("click", () => loadExample("siMode", "vector_mode"));
 document.querySelector("#tfln-mode-button").addEventListener("click", () => loadExample("tfln", "vector_mode"));
 document.querySelector("#bto-mode-button").addEventListener("click", () => loadExample("bto", "vector_mode"));
-viewModeSelect.addEventListener("change", redrawLastResult);
+viewModeSelect.addEventListener("change", () => activateWorkspaceView(viewModeSelect.value));
 quantitySelect.addEventListener("change", redrawLastResult);
 modeSelect.addEventListener("change", () => {
   if (!lastResult) return;
@@ -101,13 +123,88 @@ configEditor.addEventListener("input", () => {
   clearTimeout(solveTimer);
   solveTimer = setTimeout(runSolve, 500);
 });
+geometryFileInput.addEventListener("change", () => openSelectedArtifact("geometry", geometryFileInput));
+meshFileInput.addEventListener("change", () => openSelectedArtifact("mesh", meshFileInput));
+solutionFileInput.addEventListener("change", () => openSelectedArtifact("results", solutionFileInput));
+for (const node of [geometryTreeNode, meshTreeNode, solutionTreeNode]) {
+  node.addEventListener("click", () => activateWorkspaceView(node.dataset.view));
+}
 
 new ResizeObserver(() => {
   resizeCanvases();
   redrawLastResult();
 }).observe(canvas);
 
-await loadExample("parallel");
+await loadValidationLibrary();
+const requestedArtifact = new URLSearchParams(window.location.search).get("artifact");
+if (requestedArtifact) await loadValidationExample(requestedArtifact);
+else await loadExample("parallel");
+
+async function loadValidationLibrary() {
+  try {
+    const response = await fetch("../api/examples", { cache: "no-store" });
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    validationExamples = (await response.json()).examples;
+    validationExampleSelect.innerHTML = "";
+    const meshEntries = validationExamples
+      .filter((item) => item.kind === "mesh")
+      .sort((left, right) => Number(right.url.includes("/mesh_controls/")) - Number(left.url.includes("/mesh_controls/")));
+    for (const entry of meshEntries) {
+      const option = document.createElement("option");
+      option.value = entry.url;
+      option.textContent = `${entry.dimension}D · ${entry.label}`;
+      option.disabled = entry.dimension !== 2;
+      validationExampleSelect.append(option);
+    }
+    loadValidationButton.disabled = validationExampleSelect.options.length === 0;
+    appendLog("success", `Backend library: ${validationExamples.length} configs/artifacts discovered`);
+  } catch (error) {
+    loadValidationButton.disabled = true;
+    appendLog("error", `Backend library unavailable: ${error instanceof Error ? error.message : String(error)}`);
+  }
+}
+
+async function loadValidationExample(identifier) {
+  const entry = validationExamples.find((item) => item.url === identifier || item.id === identifier);
+  if (!entry) {
+    appendLog("error", `Validation artifact not found: ${identifier}`);
+    return;
+  }
+  if (entry.dimension !== 2) {
+    appendLog("info", `${entry.label} is 3D; inspect it in Gmsh or ParaView.`);
+    return;
+  }
+  const started = performance.now();
+  setSolverStatus(`Loading ${entry.label} from backend`);
+  try {
+    let artifact = artifactCache.get(entry.url);
+    let fetchMs = 0;
+    let parseMs = 0;
+    if (!artifact) {
+      const fetchStarted = performance.now();
+      const response = await fetch(entry.url, { cache: "no-store" });
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      const blob = await response.blob();
+      fetchMs = performance.now() - fetchStarted;
+      const parseStarted = performance.now();
+      const file = new File([blob], entry.url.split("/").at(-1), { type: "text/plain" });
+      artifact = await loadMeshOffMainThread(file);
+      parseMs = performance.now() - parseStarted;
+      artifactCache.set(entry.url, artifact);
+    }
+    applyMeshArtifact(artifact, entry.label);
+    const totalMs = performance.now() - started;
+    setSolverStatus(`Opened ${entry.label} in ${totalMs.toFixed(0)} ms`);
+    appendLog(
+      "success",
+      `Backend load ${entry.label}: total ${totalMs.toFixed(0)} ms, fetch ${fetchMs.toFixed(0)} ms, parse ${parseMs.toFixed(0)} ms${fetchMs === 0 ? ", memory cache" : ""}`,
+    );
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    setSolverStatus("Backend load failed");
+    appendLog("error", `Could not load ${entry.label}: ${message}`);
+  }
+}
 
 async function loadExample(name, physicsOverride = "config") {
   appendLog("info", `Loading example: ${name}`);
@@ -120,6 +217,179 @@ async function loadExample(name, physicsOverride = "config") {
   physicsSelect.value = physicsOverride;
   syncMeshInputsFromEditor();
   runSolve();
+}
+
+async function openSelectedArtifact(viewName, input) {
+  const file = input.files?.[0];
+  input.value = "";
+  if (!file) return;
+  const openStarted = performance.now();
+  setSolverStatus(`Opening ${file.name}`);
+  appendLog("info", `Opening ${viewName} artifact: ${file.name}`);
+  try {
+    if (viewName === "geometry") {
+      const text = await file.text();
+      const artifact = loadGeometryArtifact(text, file.name);
+      workspaceLayers.geometry = {
+        config: artifact.config,
+        result: geometryViewerResult(artifact),
+        source: file.name,
+      };
+      workspaceLayers.mesh = null;
+      workspaceLayers.results = null;
+      configEditor.value = file.name.toLowerCase().endsWith(".json")
+        ? JSON.stringify(artifact.config, null, 2)
+        : text;
+      syncMeshInputs(artifact.config);
+    } else if (viewName === "mesh") {
+      setSolverStatus(`Parsing ${file.name} in background`);
+      const artifact = await loadMeshOffMainThread(file);
+      applyMeshArtifact(artifact, file.name);
+    } else {
+      const text = await file.text();
+      const artifact = loadSolutionArtifact(text, file.name);
+      const result = solutionViewerResult(artifact);
+      workspaceLayers.results = { config: artifact.config, result, source: file.name };
+      workspaceLayers.mesh = { config: artifact.config, result: meshViewerResult(artifact), source: file.name };
+      if (artifact.config) {
+        workspaceLayers.geometry = {
+          config: artifact.config,
+          result: geometryViewerResult({ config: artifact.config, geometry: { domain: artifact.mesh.domain } }),
+          source: file.name,
+        };
+      }
+    }
+    refreshModelBrowser();
+    activateWorkspaceView(viewName);
+    setSolverStatus(`Opened ${file.name}`);
+    appendLog(
+      "success",
+      `Opened ${file.name} in ${(performance.now() - openStarted).toFixed(0)} ms: ${artifactSummary(workspaceLayers[viewName].result)}`,
+    );
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    setSolverStatus("Open failed");
+    appendLog("error", `Could not open ${file.name}: ${message}`);
+  }
+}
+
+function applyMeshArtifact(artifact, source) {
+  workspaceLayers.mesh = {
+    config: artifact.config,
+    result: meshViewerResult(artifact),
+    source,
+  };
+  workspaceLayers.results = null;
+  refreshModelBrowser();
+  activateWorkspaceView("mesh");
+}
+
+async function loadMeshOffMainThread(file) {
+  if (file.size <= 1_000_000) return loadMeshArtifact(await file.text(), file.name);
+  if (typeof Worker === "undefined") return loadMeshArtifact(await file.text(), file.name);
+  return new Promise((resolve, reject) => {
+    const worker = new Worker(new URL("./core/mesh_loader_worker.js", import.meta.url), { type: "module" });
+    worker.addEventListener("message", (event) => {
+      worker.terminate();
+      if (event.data.ok) resolve(event.data.artifact);
+      else reject(new Error(event.data.error));
+    }, { once: true });
+    worker.addEventListener("error", (event) => {
+      worker.terminate();
+      reject(new Error(event.message || "mesh loader worker failed"));
+    }, { once: true });
+    worker.postMessage({ file });
+  });
+}
+
+function registerSolvedWorkspace(config, result) {
+  const name = String(config.Simulation?.name ?? "current model");
+  workspaceLayers.geometry = { config, result, source: `${name} (YAML)` };
+  workspaceLayers.mesh = { config, result, source: `${result.mesh.stats.type}` };
+  workspaceLayers.results = { config, result, source: `${name} (current solve)` };
+  refreshModelBrowser();
+}
+
+function activateWorkspaceView(viewName) {
+  const layer = workspaceLayers[viewName];
+  if (!layer) {
+    appendLog("info", `${viewNameLabel(viewName)} is not loaded; use the Open controls.`);
+    viewModeSelect.value = activeWorkspaceView;
+    return;
+  }
+  activeWorkspaceView = viewName;
+  lastConfig = layer.config;
+  lastResult = layer.result;
+  viewModeSelect.value = viewName;
+  const domainKey = makeDomainKey(lastResult.mesh.domain);
+  if (!view || domainKey !== lastDomainKey) resetViewport(lastResult.mesh);
+  lastDomainKey = domainKey;
+  syncModeOptions(lastResult);
+  renderActiveLayerSummary(lastResult);
+  renderPlot(lastConfig, lastResult);
+  refreshModelBrowser();
+  setSolverStatus(`${viewNameLabel(viewName)}: ${layer.source}`);
+}
+
+function refreshModelBrowser() {
+  const definitions = [
+    ["geometry", geometryTreeNode, geometrySource],
+    ["mesh", meshTreeNode, meshSource],
+    ["results", solutionTreeNode, solutionSource],
+  ];
+  for (const [name, node, source] of definitions) {
+    const layer = workspaceLayers[name];
+    source.textContent = layer?.source ?? "not loaded";
+    node.classList.toggle("is-unavailable", !layer);
+    node.classList.toggle("is-active", viewModeSelect.value === name && Boolean(layer));
+  }
+}
+
+function geometryViewerResult(artifact) {
+  const domain = artifact.geometry?.domain ?? parseDomain(artifact.config);
+  return { artifactKind: "geometry", mesh: previewMesh(domain), sourceName: artifact.name ?? "geometry" };
+}
+
+function meshViewerResult(artifact) {
+  return { artifactKind: "mesh", mesh: artifact.mesh, sourceName: artifact.name ?? "mesh" };
+}
+
+function solutionViewerResult(artifact) {
+  return {
+    artifactKind: "solution",
+    mesh: artifact.mesh,
+    importedFields: artifact.fields,
+    metadata: artifact.metadata,
+    sourceName: artifact.name,
+  };
+}
+
+function previewMesh(domain) {
+  return {
+    domain,
+    nodes: [
+      [domain.xMin, domain.yMin],
+      [domain.xMax, domain.yMin],
+      [domain.xMax, domain.yMax],
+      [domain.xMin, domain.yMax],
+    ],
+    triangles: [],
+    boundaryEdges: [],
+    physicalGroups: [],
+    stats: { type: "geometry only", nodes: 4, triangles: 0, boundaryEdges: 0 },
+  };
+}
+
+function artifactSummary(result) {
+  if (result.artifactKind === "geometry") return "geometry only";
+  if (result.artifactKind === "solution") {
+    return `${formatMeshSummary(result.mesh)}, fields: ${Object.keys(result.importedFields).join(", ")}`;
+  }
+  return formatMeshSummary(result.mesh);
+}
+
+function viewNameLabel(viewName) {
+  return viewName === "results" ? "Results" : `${viewName[0].toUpperCase()}${viewName.slice(1)}`;
 }
 
 function runSolve() {
@@ -170,6 +440,7 @@ function finishSolveRun(runId, t0, config) {
     lastConfig = config;
     lastResult = result;
     lastElapsed = elapsed;
+    registerSolvedWorkspace(config, result);
     syncModeOptions(result);
     const domainKey = makeDomainKey(result.mesh.domain);
     if (!view || domainKey !== lastDomainKey) resetViewport(result.mesh);
@@ -431,8 +702,38 @@ function renderResultLines(lines) {
   results.textContent = lines.map(([key, value]) => `${key}: ${value}`).join("\n");
 }
 
+function renderActiveLayerSummary(result) {
+  if (!result.artifactKind) {
+    renderResults(result, lastElapsed);
+    return;
+  }
+  const mesh = result.mesh;
+  const lines = [
+    ["Artifact", result.sourceName ?? result.artifactKind],
+    ["Layer", result.artifactKind],
+    ["Mesh", formatMeshSummary(mesh)],
+  ];
+  if (mesh.physicalGroups?.length) {
+    lines.push(["Physical groups", mesh.physicalGroups.map((group) => group.name).join(", ")]);
+  }
+  if (mesh.stats.minEdge !== undefined) {
+    lines.push(
+      ["Element edge", `${formatValue(mesh.stats.minEdge)} to ${formatValue(mesh.stats.maxEdge)} m`],
+      ["Mean edge", `${formatValue(mesh.stats.meanEdge)} m`],
+      ["Triangle quality", `${mesh.stats.minQuality.toFixed(3)} min, ${mesh.stats.meanQuality.toFixed(3)} mean`],
+    );
+  }
+  if (result.artifactKind === "solution") {
+    lines.push(["Nodal fields", Object.keys(result.importedFields).join(", ")]);
+    for (const [key, value] of Object.entries(result.metadata ?? {}).slice(0, 8)) {
+      if (typeof value !== "object") lines.push([key, String(value)]);
+    }
+  }
+  renderResultLines(lines);
+}
+
 function redrawLastResult() {
-  if (lastConfig && lastResult) renderPlot(lastConfig, lastResult);
+  if (lastResult) renderPlot(lastConfig, lastResult);
 }
 
 function renderPlot(config, result) {
@@ -441,12 +742,24 @@ function renderPlot(config, result) {
   syncViewModeControls();
   resizeCanvases();
   if (!view) resetViewport(result.mesh);
+  if (result.artifactKind === "geometry") {
+    renderGeometryView(config, result);
+    return;
+  }
+  if (result.artifactKind === "mesh") {
+    renderMeshView(config, result);
+    return;
+  }
   if (viewModeSelect.value === "geometry") {
     renderGeometryView(config, result);
     return;
   }
   if (viewModeSelect.value === "mesh") {
     renderMeshView(config, result);
+    return;
+  }
+  if (result.artifactKind === "solution") {
+    renderImportedSolution(result);
     return;
   }
   const { nx, ny } = result.mesh;
@@ -503,11 +816,44 @@ function renderGeometryView(config, result) {
 
 function renderMeshView(config, result) {
   clearPlotFrame("#101720");
-  drawMeshCells(result.mesh, { fill: true });
-  drawMaterialBoundaries(config, result);
-  drawElectrodeBoundaries(config, result);
+  const renderStats = drawMeshCells(result.mesh, { fill: true });
+  if (config) {
+    drawMaterialBoundaries(config, result);
+    drawElectrodeBoundaries(config, result);
+  }
+  drawBoundaryEdges(result.mesh);
   clearColorbar(viewModeSelect.value);
-  renderModeBadge("Mesh");
+  const lod = renderStats.stride > 1 ? ` · LOD 1/${renderStats.stride}` : "";
+  renderModeBadge(`Mesh${lod}`);
+}
+
+function renderImportedSolution(result) {
+  clearPlotFrame("#101720");
+  const values = getActivePlotValues(result, quantitySelect.value);
+  const transform = makeScale(values, scaleSelect.value);
+  activeScale = transform;
+  ctx.save();
+  ctx.lineWidth = 0;
+  const selection = selectTrianglesForView(result.mesh, view ?? result.mesh.domain, meshTriangleBudget(result.mesh, 12_000));
+  for (const triangle of selection.triangles) {
+    const value = (values[triangle[0]] + values[triangle[1]] + values[triangle[2]]) / 3;
+    const color = divergingColor(transform.map(value));
+    ctx.beginPath();
+    triangle.forEach((nodeIndex, index) => {
+      const [x, y] = toCanvas(result.mesh, result.mesh.nodes[nodeIndex]);
+      if (index === 0) ctx.moveTo(x, y);
+      else ctx.lineTo(x, y);
+    });
+    ctx.closePath();
+    ctx.fillStyle = `rgb(${color[0]},${color[1]},${color[2]})`;
+    ctx.fill();
+  }
+  ctx.restore();
+  if (meshToggle.checked) drawMesh(result.mesh);
+  drawBoundaryEdges(result.mesh);
+  renderColorbar(transform);
+  updateQuantityDescription();
+  renderModeBadge("Results");
 }
 
 function clearPlotFrame(fillStyle) {
@@ -534,7 +880,7 @@ function drawDomainFrame(mesh) {
 }
 
 function drawMaterialRegions(config, result) {
-  const materials = parseMaterials(config).filter((material) => material.shape !== "background");
+  const materials = config?.Materials ? parseMaterials(config).filter((material) => material.shape !== "background") : [];
   ctx.save();
   for (const material of materials) {
     drawShapePath(result.mesh, material.shape, material.params);
@@ -549,7 +895,7 @@ function drawMaterialRegions(config, result) {
 }
 
 function drawElectrodeBoundaries(config, result) {
-  const electrodes = parseElectrodes(config);
+  const electrodes = config?.Electrodes ? parseElectrodes(config) : [];
   ctx.save();
   for (const electrode of electrodes) {
     drawShapePath(result.mesh, electrode.shape, electrode.params);
@@ -570,8 +916,8 @@ function drawGeometryVertices(config, result) {
   points.push([result.mesh.domain.xMax, result.mesh.domain.yMin]);
   points.push([result.mesh.domain.xMax, result.mesh.domain.yMax]);
   points.push([result.mesh.domain.xMin, result.mesh.domain.yMax]);
-  for (const material of parseMaterials(config)) collectShapeVertices(material.shape, material.params, points);
-  for (const electrode of parseElectrodes(config)) collectShapeVertices(electrode.shape, electrode.params, points);
+  for (const material of config?.Materials ? parseMaterials(config) : []) collectShapeVertices(material.shape, material.params, points);
+  for (const electrode of config?.Electrodes ? parseElectrodes(config) : []) collectShapeVertices(electrode.shape, electrode.params, points);
   ctx.save();
   ctx.fillStyle = "#1aa39a";
   ctx.strokeStyle = "#071015";
@@ -589,19 +935,67 @@ function drawGeometryVertices(config, result) {
 function drawMeshCells(mesh, options = {}) {
   ctx.save();
   ctx.lineWidth = 0.55;
-  for (const tri of mesh.triangles) {
-    ctx.beginPath();
-    for (let k = 0; k < tri.length; k += 1) {
-      const [x, y] = toCanvas(mesh, mesh.nodes[tri[k]]);
-      if (k === 0) ctx.moveTo(x, y);
-      else ctx.lineTo(x, y);
-    }
-    ctx.closePath();
-    if (options.fill) {
-      ctx.fillStyle = triangleFill(mesh, tri);
+  const selection = selectTrianglesForView(mesh, view ?? mesh.domain, meshTriangleBudget(mesh, 10_000));
+  const triangles = selection.triangles;
+  const shouldFill = options.fill && selection.stride === 1 && triangles.length <= 10_000;
+  if (shouldFill) {
+    for (const tri of triangles) {
+      ctx.beginPath();
+      appendTrianglePath(mesh, tri);
+      ctx.fillStyle = triangleSizeFill(mesh, tri);
       ctx.fill();
     }
-    ctx.strokeStyle = "rgba(232,237,242,0.24)";
+  }
+  ctx.strokeStyle = "rgba(232,237,242,0.28)";
+  const chunkSize = 1_000;
+  for (let start = 0; start < triangles.length; start += chunkSize) {
+    ctx.beginPath();
+    for (const tri of triangles.slice(start, start + chunkSize)) appendTrianglePath(mesh, tri);
+    ctx.stroke();
+  }
+  ctx.restore();
+  return selection;
+}
+
+function meshTriangleBudget(mesh, baseBudget) {
+  const domainArea = Math.max(
+    (mesh.domain.xMax - mesh.domain.xMin) * (mesh.domain.yMax - mesh.domain.yMin),
+    Number.EPSILON,
+  );
+  const viewport = view ?? mesh.domain;
+  const viewArea = Math.max((viewport.xMax - viewport.xMin) * (viewport.yMax - viewport.yMin), Number.EPSILON);
+  const zoom = Math.sqrt(domainArea / viewArea);
+  return Math.min(30_000, Math.max(baseBudget, Math.round(baseBudget * zoom)));
+}
+
+function appendTrianglePath(mesh, triangle) {
+  triangle.forEach((nodeIndex, index) => {
+    const [x, y] = toCanvas(mesh, mesh.nodes[nodeIndex]);
+    if (index === 0) ctx.moveTo(x, y);
+    else ctx.lineTo(x, y);
+  });
+  ctx.closePath();
+}
+
+function drawBoundaryEdges(mesh) {
+  if (!mesh.boundaryEdges?.length) return;
+  const groups = new Map();
+  for (const edge of mesh.boundaryEdges) {
+    const name = edge.groups?.[0]?.name ?? edge.name ?? "boundary";
+    if (!groups.has(name)) groups.set(name, []);
+    groups.get(name).push(edge);
+  }
+  ctx.save();
+  ctx.lineWidth = 2.1;
+  for (const [name, edges] of groups) {
+    const color = boundaryColor(name);
+    ctx.beginPath();
+    for (const edge of edges) {
+      const [a, b] = edge.nodes.map((index) => toCanvas(mesh, mesh.nodes[index]));
+      ctx.moveTo(a[0], a[1]);
+      ctx.lineTo(b[0], b[1]);
+    }
+    ctx.strokeStyle = color;
     ctx.stroke();
   }
   ctx.restore();
@@ -632,6 +1026,23 @@ function clearColorbar(label = "") {
 }
 
 function syncQuantityOptions(result) {
+  if (result.artifactKind === "solution") {
+    const fields = Object.keys(result.importedFields);
+    const current = quantitySelect.value;
+    quantitySelect.innerHTML = "";
+    const group = document.createElement("optgroup");
+    group.label = "Imported nodal fields";
+    for (const field of fields) {
+      const option = document.createElement("option");
+      option.value = field;
+      option.textContent = `${quantityInfo(field).label} - imported field`;
+      group.append(option);
+    }
+    quantitySelect.append(group);
+    quantitySelect.value = fields.includes(current) ? current : fields[0];
+    return;
+  }
+  if (result.artifactKind) return;
   const optical = isModeResult(result);
   const groups = optical
     ? [
@@ -718,6 +1129,7 @@ function syncQuantityOptions(result) {
 }
 
 function getActivePlotValues(result, quantity) {
+  if (result.artifactKind === "solution") return result.importedFields[quantity] ?? [];
   if (result.physics === "vector_mode") return getVectorModePlotValues(result, quantity);
   if (result.physics === "optical_mode") return getModePlotValues(result, quantity);
   return getPlotValues(result, quantity);
@@ -808,8 +1220,7 @@ function makeScale(values, mode) {
   if (finite.length === 0) {
     return { mode, min: 0, mid: 0, max: 1, map: () => 0.5 };
   }
-  let min = Math.min(...finite);
-  let max = Math.max(...finite);
+  let { min, max } = finiteExtrema(finite);
   if (mode === "symmetric") {
     const limit = Math.max(Math.abs(min), Math.abs(max)) || 1;
     min = -limit;
@@ -824,8 +1235,9 @@ function makeScale(values, mode) {
   }
   if (mode === "log") {
     const magnitudes = finite.map((value) => Math.abs(value)).filter((value) => value > 0);
-    const logMin = magnitudes.length > 0 ? Math.log10(Math.min(...magnitudes)) : -30;
-    const logMax = magnitudes.length > 0 ? Math.log10(Math.max(...magnitudes)) : 0;
+    const magnitudeExtrema = finiteExtrema(magnitudes);
+    const logMin = magnitudes.length > 0 ? Math.log10(magnitudeExtrema.min) : -30;
+    const logMax = magnitudes.length > 0 ? Math.log10(magnitudeExtrema.max) : 0;
     const span = logMax - logMin || 1;
     return {
       mode,
@@ -843,6 +1255,16 @@ function makeScale(values, mode) {
     max,
     map: (value) => clamp((value - min) / span, 0, 1),
   };
+}
+
+function finiteExtrema(values) {
+  let min = Infinity;
+  let max = -Infinity;
+  for (const value of values) {
+    if (value < min) min = value;
+    if (value > max) max = value;
+  }
+  return { min, max };
 }
 
 function renderColorbar(scale) {
@@ -869,7 +1291,7 @@ function drawMesh(mesh) {
 }
 
 function drawMaterialBoundaries(config, result) {
-  const materials = parseMaterials(config).filter((material) => material.shape !== "background");
+  const materials = config?.Materials ? parseMaterials(config).filter((material) => material.shape !== "background") : [];
   ctx.save();
   ctx.lineJoin = "miter";
   ctx.setLineDash([6, 4]);
@@ -887,7 +1309,7 @@ function drawMaterialBoundaries(config, result) {
 }
 
 function drawElectrodes(config, result) {
-  const electrodes = parseElectrodes(config);
+  const electrodes = config?.Electrodes ? parseElectrodes(config) : [];
   ctx.save();
   for (const electrode of electrodes) {
     ctx.fillStyle =
@@ -974,11 +1396,18 @@ function materialFill(name) {
   return colors[hashString(name) % colors.length];
 }
 
-function triangleFill(mesh, tri) {
+function boundaryColor(name) {
+  const colors = ["#f2c14e", "#58b4d1", "#e26d8f", "#8fd694", "#bd93f9", "#ff8c42"];
+  return colors[hashString(name) % colors.length];
+}
+
+function triangleSizeFill(mesh, tri) {
   const [a, b, c] = tri.map((index) => mesh.nodes[index]);
-  const y = (a[1] + b[1] + c[1]) / 3;
-  const t = clamp((y - mesh.domain.yMin) / (mesh.domain.yMax - mesh.domain.yMin), 0, 1);
-  const color = plasmaColor(0.12 + 0.56 * t);
+  const size = (Math.hypot(a[0] - b[0], a[1] - b[1]) + Math.hypot(b[0] - c[0], b[1] - c[1]) + Math.hypot(c[0] - a[0], c[1] - a[1])) / 3;
+  const min = Math.max(mesh.stats.minEdge ?? size, Number.MIN_VALUE);
+  const max = Math.max(mesh.stats.maxEdge ?? size, min * (1 + Number.EPSILON));
+  const t = clamp((Math.log(size) - Math.log(min)) / (Math.log(max) - Math.log(min)), 0, 1);
+  const color = plasmaColor(t);
   return `rgba(${color[0]},${color[1]},${color[2]},0.32)`;
 }
 
@@ -1143,6 +1572,10 @@ function updateTooltip(event) {
     return;
   }
   const mesh = lastResult.mesh;
+  if (!mesh.xCoords || !mesh.yCoords || lastResult.artifactKind === "solution") {
+    updateUnstructuredResultTooltip(point, x, y);
+    return;
+  }
   const i = nearestCoordinateIndex(mesh.xCoords, x);
   const j = nearestCoordinateIndex(mesh.yCoords, y);
   if (i < 0 || i >= mesh.nx || j < 0 || j >= mesh.ny) {
@@ -1169,10 +1602,10 @@ function updateTooltip(event) {
 
 function updateGeometryTooltip(point, x, y) {
   const entities = [];
-  for (const material of parseMaterials(lastConfig).filter((item) => item.shape !== "background")) {
+  for (const material of lastConfig?.Materials ? parseMaterials(lastConfig).filter((item) => item.shape !== "background") : []) {
     if (pointInShape(material.shape, material.params, x, y)) entities.push(`domain: ${material.name}`);
   }
-  for (const electrode of parseElectrodes(lastConfig)) {
+  for (const electrode of lastConfig?.Electrodes ? parseElectrodes(lastConfig) : []) {
     if (pointInShape(electrode.shape, electrode.params, x, y)) {
       entities.push(`boundary: ${electrode.name} (${formatValue(electrode.potential)} V)`);
     }
@@ -1184,6 +1617,28 @@ function updateGeometryTooltip(point, x, y) {
       `y = ${formatValue(y)} m`,
       entities.length > 0 ? entities.join("<br />") : "domain: background",
       "view: geometry",
+    ],
+    240,
+    112,
+  );
+}
+
+function updateUnstructuredResultTooltip(point, x, y) {
+  const nearest = nearestMeshNode(lastResult.mesh, x, y);
+  if (!nearest) {
+    plotTooltip.hidden = true;
+    return;
+  }
+  const values = getActivePlotValues(lastResult, quantitySelect.value);
+  const info = quantityInfo(quantitySelect.value);
+  const node = lastResult.mesh.nodes[nearest.index];
+  showTooltip(
+    point,
+    [
+      `x = ${formatValue(node[0])} m`,
+      `y = ${formatValue(node[1])} m`,
+      `node = ${nearest.index}`,
+      `${info.label} = ${formatValue(values[nearest.index])}`,
     ],
     240,
     112,
@@ -1212,7 +1667,9 @@ function showTooltip(point, lines, maxWidth, maxHeight) {
 }
 
 function formatMeshSummary(mesh) {
-  return `${mesh.stats.type}, ${mesh.nx} x ${mesh.ny}, ${mesh.triangles.length} tris`;
+  const topology = mesh.nx && mesh.ny ? `${mesh.nx} x ${mesh.ny}` : `${mesh.nodes.length} nodes`;
+  const boundaries = mesh.boundaryEdges?.length ? `, ${mesh.boundaryEdges.length} boundary edges` : "";
+  return `${mesh.stats.type}, ${topology}, ${mesh.triangles.length} tris${boundaries}`;
 }
 
 function nearestCoordinateIndex(coords, value) {
@@ -1228,16 +1685,49 @@ function nearestCoordinateIndex(coords, value) {
 }
 
 function nearestMeshNode(mesh, x, y) {
+  const spatialIndex = getMeshSpatialIndex(mesh);
   let best = null;
   const viewWidth = view.xMax - view.xMin;
   const viewHeight = view.yMax - view.yMin;
   const maxDistance = Math.hypot(viewWidth, viewHeight) * 0.03;
-  for (let index = 0; index < mesh.nodes.length; index += 1) {
+  const bx = clamp(Math.floor((x - spatialIndex.xMin) / spatialIndex.dx), 0, spatialIndex.columns - 1);
+  const by = clamp(Math.floor((y - spatialIndex.yMin) / spatialIndex.dy), 0, spatialIndex.rows - 1);
+  const radiusX = Math.max(1, Math.ceil(maxDistance / spatialIndex.dx));
+  const radiusY = Math.max(1, Math.ceil(maxDistance / spatialIndex.dy));
+  const candidates = [];
+  for (let row = Math.max(0, by - radiusY); row <= Math.min(spatialIndex.rows - 1, by + radiusY); row += 1) {
+    for (let column = Math.max(0, bx - radiusX); column <= Math.min(spatialIndex.columns - 1, bx + radiusX); column += 1) {
+      candidates.push(...spatialIndex.bins[row * spatialIndex.columns + column]);
+    }
+  }
+  for (const index of candidates) {
     const node = mesh.nodes[index];
     const distance = Math.hypot(node[0] - x, node[1] - y);
     if (!best || distance < best.distance) best = { index, distance };
   }
   return best && best.distance <= maxDistance ? best : null;
+}
+
+function getMeshSpatialIndex(mesh) {
+  const cached = meshSpatialIndices.get(mesh);
+  if (cached) return cached;
+  const width = Math.max(mesh.domain.xMax - mesh.domain.xMin, Number.EPSILON);
+  const height = Math.max(mesh.domain.yMax - mesh.domain.yMin, Number.EPSILON);
+  const targetBins = Math.max(4, Math.ceil(Math.sqrt(mesh.nodes.length)));
+  const aspect = width / height;
+  const columns = Math.max(2, Math.round(Math.sqrt(targetBins * aspect)));
+  const rows = Math.max(2, Math.round(targetBins / columns));
+  const dx = width / columns;
+  const dy = height / rows;
+  const bins = Array.from({ length: columns * rows }, () => []);
+  mesh.nodes.forEach((node, index) => {
+    const column = clamp(Math.floor((node[0] - mesh.domain.xMin) / dx), 0, columns - 1);
+    const row = clamp(Math.floor((node[1] - mesh.domain.yMin) / dy), 0, rows - 1);
+    bins[row * columns + column].push(index);
+  });
+  const spatialIndex = { xMin: mesh.domain.xMin, yMin: mesh.domain.yMin, dx, dy, columns, rows, bins };
+  meshSpatialIndices.set(mesh, spatialIndex);
+  return spatialIndex;
 }
 
 function eventPoint(event) {

@@ -64,6 +64,105 @@ select {
   overflow: hidden;
 }
 
+.editor-workspace {
+  display: grid;
+  grid-template-columns: 188px minmax(0, 1fr);
+  min-height: 0;
+  overflow: hidden;
+  border: 1px solid var(--line);
+}
+
+.model-browser {
+  min-width: 0;
+  overflow: auto;
+  border-right: 1px solid var(--line);
+  background: var(--panel-2);
+}
+
+.model-browser-header {
+  padding: 9px 10px;
+  border-bottom: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.model-root {
+  padding: 10px 9px 5px;
+  color: var(--ink);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.model-node {
+  display: grid;
+  grid-template-columns: 24px minmax(0, 1fr);
+  align-items: start;
+  gap: 7px;
+  width: 100%;
+  height: auto;
+  min-height: 48px;
+  padding: 7px 8px 7px 15px;
+  border: 0;
+  border-left: 3px solid transparent;
+  background: transparent;
+  text-align: left;
+}
+
+.model-node:hover,
+.model-node.is-active {
+  border-left-color: var(--accent);
+  background: rgba(26, 163, 154, 0.1);
+}
+
+.model-node strong,
+.model-node small {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.model-node strong {
+  color: var(--ink);
+  font-size: 12px;
+}
+
+.model-node small {
+  margin-top: 2px;
+  color: var(--muted);
+  font: 10px/1.25 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+.model-node.is-unavailable {
+  opacity: 0.52;
+}
+
+.model-node-icon {
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border: 1px solid var(--line);
+  color: white;
+  font: 700 10px/1 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+.geometry-icon { background: #326c78; }
+.mesh-icon { background: #765f2f; }
+.solution-icon { background: #6c3f69; }
+
+.model-browser-hint {
+  margin: 10px 9px;
+  padding-top: 9px;
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 10px;
+  line-height: 1.4;
+}
+
 .toolbar {
   display: flex;
   align-items: center;
@@ -94,6 +193,13 @@ select {
   height: 26px;
   padding: 0 8px;
   background: var(--panel);
+}
+
+.validation-library select {
+  width: 210px;
+  min-width: 160px;
+  height: 26px;
+  font-size: 12px;
 }
 
 button {
@@ -155,7 +261,7 @@ button:hover {
   height: 100%;
   overflow: auto;
   resize: none;
-  border: 1px solid var(--line);
+  border: 0;
   border-radius: 0;
   padding: 14px;
   background: var(--code);
@@ -423,6 +529,10 @@ select {
 
   .toolbar {
     flex-wrap: wrap;
+  }
+
+  .editor-workspace {
+    grid-template-columns: 140px minmax(0, 1fr);
   }
 
   .view-controls {

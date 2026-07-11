@@ -626,6 +626,141 @@ Exit criteria:
 - The solver returns quantitatively defensible `Ex`, `Ey`, `Ez`, `Hx`, `Hy`,
   `Hz`, `n_eff`, and residuals for benchmark cases.
 
+## Implementation Update: Artifact-Centric Frontend Workspace
+
+Date: 2026-07-10
+
+### Decision Supported
+
+The frontend must let a user inspect geometry, a generated mesh, or a saved
+solution independently, before the MFEM service exists. The design should also
+avoid a second frontend rewrite when backend/API artifacts arrive.
+
+The selected architecture uses one normalized workspace contract with three
+dependency-ordered layers:
+
+```text
+Geometry (config + domain/entities)
+  -> Mesh (nodes + elements + physical groups)
+    -> Results (mesh + nodal fields + solve metadata)
+```
+
+This follows the useful part of COMSOL's Model Builder model: a new geometry
+invalidates stale downstream mesh/results; a new mesh invalidates stale
+results; a saved solution may restore its embedded mesh and source geometry.
+Parsing and normalization live outside the renderer so local files, a future
+`POST /api/solve`, IndexedDB project storage, and test fixtures can all produce
+the same in-memory objects.
+
+### Implemented Frontend Features
+
+- Added `Open -> Geometry`, `Open -> Mesh`, and `Open -> Solution` controls.
+- Added a COMSOL-like Model Builder tree with Geometry, Mesh, and Results nodes,
+  source names, availability state, and active-layer navigation.
+- Geometry files open without running a solve.
+- Mesh files open without requiring geometry or a solution.
+- Saved solutions open without rerunning the solver.
+- Geometry, Mesh, and Results retain the existing zoom, pan, reset-view, and
+  layer-switching workflow.
+- Imported unstructured meshes render arbitrary triangles.
+- Gmsh physical names and entity-to-physical-group mappings are preserved.
+- Tagged physical boundary edges render with stable group colors.
+- Imported nodal solution fields populate the Quantity selector dynamically.
+- Unstructured result fields render over triangles and report nearest-node
+  values on hover.
+- Large-mesh hover uses a cached spatial bin index instead of scanning every
+  node on every pointer move.
+- Large mesh extrema calculations avoid spreading full arrays into function
+  arguments.
+
+### Supported Artifact Formats
+
+| Layer | Formats | Current behavior |
+|---|---|---|
+| Geometry | YAML/YML, config JSON | Requires a `Domain`; current material/electrode shapes render when present |
+| Mesh | ASCII Gmsh MSH 4.1 | Linear/quadratic line and triangle elements; corner topology is rendered |
+| Mesh | normalized JSON | `nodes`, `triangles`, optional `boundaryEdges`, groups, stats, and domain |
+| Results | JSON | Mesh plus one or more nodal arrays under `fields`, or common top-level field keys |
+
+Canonical schema identifier: `eo-fem.workspace/v1`.
+
+### Milestone Progress
+
+| Milestone | Status | Evidence / remaining work |
+|---|---|---|
+| 0: dependencies/licensing | Complete | Backend extras, GPL metadata, import tests |
+| 1: explicit schema | Partial | Compatibility translation exists; full explicit YAML parser/selection execution remains |
+| 2: Gmsh mesh generator | Partial | Background and electrode holes/tags work; explicit material domains remain |
+| 3: MFEM electrostatics | Not started | Imports only; no H1 assembly/solve or flux charge extraction |
+| 4: backend CLI | Not started | Current `eo_fem` command still runs the structured reference solver |
+| 5: local API | Not started | No `POST /api/solve` yet |
+| 6: frontend unstructured visualization | Partial | Local artifact loading, triangles, groups, nodal fields, and hover implemented; MFEM end-to-end result pending |
+
+### Tests And Measurements
+
+- Added unit coverage for geometry-only loading.
+- Added a minimal ASCII MSH 4.1 fixture covering nodes, triangles, line
+  elements, physical names, and entity/physical-group mapping.
+- Added normalized mesh JSON coverage.
+- Added saved-solution nodal-field coverage.
+- Full validation after the workspace change: 19 Python tests and 29 JavaScript
+  tests passed; Ruff and mypy also passed.
+- Real artifact smoke test:
+  `artifacts/gmsh_parallel_plate/parallel_plate.msh` parsed as 86,480 nodes,
+  171,242 triangles, and 570 tagged boundary edges in about 165 ms on the
+  development Mac mini Node runtime.
+
+### Bugs And Bug Fixes
+
+| Issue | Root cause | Fix / status |
+|---|---|---|
+| Frontend failed when port 5173 was occupied | Raw `python -m http.server` bound only the requested port | Added `eo_fem.dev_server`; it scans upward, prints the selected URL, and never kills the existing service |
+| New Open buttons were visible but did nothing in an existing browser tab | Updated HTML could be combined with a cached pre-workspace `app.js`, so no file-picker handlers were registered | Development server now sends `no-store`/`no-cache` headers and HTML assets carry a cache-busting version query |
+| Dev-server test could not connect when requesting ephemeral port `0` | Launcher returned the requested port rather than the OS-selected bound port | `create_server` now reports `server_address[1]`; normal fixed-port behavior is unchanged |
+| Imported mesh disappeared on resize/pan | Redraw required both `lastConfig` and `lastResult`, but standalone meshes intentionally have no config | Redraw now depends only on an active result/viewer layer |
+| Structured-only result hover assumptions | Result hover required `xCoords`, `yCoords`, `nx`, and `ny` | Imported results use nearest-node lookup on the unstructured mesh |
+| Large arrays risked JavaScript argument-limit errors | `Math.min(...values)` / `Math.max(...values)` spread every value | Replaced with iterative extrema reduction in artifact paths |
+| Large unstructured hover was O(node count) per event | Nearest-node search scanned the full node array | Added a cached spatial-bin index per mesh |
+| Opening the 171k-triangle mesh froze the page | Canvas built a single path containing every triangle and repeated the work during redraw | Added viewport culling, a 30k-triangle mesh-view budget, deterministic LOD sampling, and 4k-triangle stroke chunks; zooming increases effective local detail |
+| Large MSH load still took up to one or two minutes or intermittently froze after the first LOD fix | ASCII tokenization, topology allocation, structured cloning/render preparation, and an overly high full-view budget still competed on the browser main thread | MSH parsing now runs in a module Web Worker; full-domain preview starts near 6k triangles, grows with zoom up to 30k, and canvas strokes use 1k-triangle chunks |
+| Gmsh OCC reports `BOPAlgo_AlertTooSmallEdge` during the parallel-plate cut | Micron-scale geometry is close to OCC tolerance and the conductor subtraction creates small-edge warnings | Mesh/tag tests still pass; retain as an open geometry-tolerance investigation before treating meshing as production-stable |
+
+### Known Limitations / TODO
+
+1. Implement explicit material-domain fragmentation and physical surface tags in
+   the Gmsh generator; the current generator only meshes the background around
+   conductor holes.
+2. Define the backend writer for the exact `eo-fem.workspace/v1` solution JSON
+   contract and add schema validation/version migration.
+3. Add element/physical-group selection, visibility toggles, and a legend in
+   the Model Builder, closer to COMSOL selections.
+4. Replace flat per-triangle result coloring with interpolated nodal shading,
+   contours, and vector glyphs where useful.
+5. Add mesh-quality metrics, element picking, containing-triangle field
+   interpolation, and viewport-level rendering LOD for million-element meshes.
+6. Support additional Gmsh element families only when the numerical backend
+   emits them; binary MSH, quads, and mixed/high-order visualization are not
+   currently supported.
+7. Add project save/load (one bundle containing geometry, mesh, studies, and
+   solutions) after the backend result contract stabilizes.
+8. Decide whether JSON geometry should remain inspection-only or be converted
+   back to editable YAML before Solve.
+9. Add browser automation for file-picker flows; current parser tests and
+   headless page smoke tests do not exercise native chooser interaction.
+
+### Operational Commands
+
+```bash
+make frontend
+make gmsh-mesh CONFIG=examples/parallel_plate.yaml
+make backend-check
+make gmsh-test
+make check
+```
+
+`make gmsh-mesh` writes a persistent `.msh` and tag-map JSON for frontend
+inspection. `make gmsh-test` continues to use pytest temporary storage.
+
 ## Current Recommendation
 
 Start with Gmsh + MFEM electrostatics only. That gives immediate value:
@@ -638,3 +773,7 @@ Start with Gmsh + MFEM electrostatics only. That gives immediate value:
 Do not start with full-vector waveguide modes. Build confidence through the
 electrostatic validation ladder, then scalar optical FEM, then full-vector
 waveguide modes.
+
+Advanced local refinement, COMSOL mesh-control mapping, complex 2D examples,
+and the 3D mesh/viewer roadmap are tracked separately in
+`DevLog-006-Advanced-Gmsh-Mesh-Control-Research.md`.

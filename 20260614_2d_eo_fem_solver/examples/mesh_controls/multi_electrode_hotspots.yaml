@@ -1,0 +1,80 @@
+Simulation:
+  name: multi_electrode_hotspots
+  mesh_nx: 61
+  mesh_ny: 51
+  signal_electrode: signal_left
+Domain:
+  x_min: -14e-6
+  x_max: 14e-6
+  y_min: -9e-6
+  y_max: 9e-6
+Materials:
+  background:
+    eps_r: 3.9
+Electrodes:
+  signal_left:
+    shape: circle
+    potential: 1.0
+    x: -3.2e-6
+    y: 1.8e-6
+    radius: 0.55e-6
+  signal_right:
+    shape: circle
+    potential: 1.0
+    x: 3.2e-6
+    y: 1.8e-6
+    radius: 0.55e-6
+  ground_left:
+    shape: rectangle
+    potential: 0.0
+    x_min: -5.5e-6
+    x_max: -1.0e-6
+    y_min: -2.2e-6
+    y_max: -1.7e-6
+  ground_right:
+    shape: rectangle
+    potential: 0.0
+    x_min: 1.0e-6
+    x_max: 5.5e-6
+    y_min: -2.2e-6
+    y_max: -1.7e-6
+Mesh:
+  name: mesh1
+  dimension: 2
+  sequence_type: user_controlled
+  operations:
+    global_size:
+      type: size
+      selection: entire_geometry
+      h_min: 0.055e-6
+      h_max: 1.1e-6
+    signal_left_proximity:
+      type: boundary_proximity
+      selection: signal_left_boundary
+      h_min: 0.055e-6
+      h_max: 1.1e-6
+      distance_min: 0.07e-6
+      distance_max: 1.8e-6
+      sampling: 140
+    signal_right_proximity:
+      type: boundary_proximity
+      selection: signal_right_boundary
+      h_min: 0.055e-6
+      h_max: 1.1e-6
+      distance_min: 0.07e-6
+      distance_max: 1.8e-6
+      sampling: 140
+    lower_gap_box:
+      type: box_size
+      selection: entire_geometry
+      h_in: 0.10e-6
+      h_out: 1.1e-6
+      x_min: -6.0e-6
+      x_max: 6.0e-6
+      y_min: -2.8e-6
+      y_max: -1.1e-6
+      thickness: 1.0e-6
+    free_triangular:
+      type: free_triangular
+      selection: all_domains
+      algorithm: delaunay

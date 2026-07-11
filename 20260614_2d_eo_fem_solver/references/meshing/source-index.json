@@ -1,0 +1,111 @@
+{
+  "retrieved_at": "2026-07-10",
+  "scope": "Primary-source evidence for advanced Gmsh controls and COMSOL-inspired mesh workflow",
+  "local_validation": {
+    "environment": "Gmsh Python 4.15.2, macOS arm64",
+    "case": "Two conformal fragmented box volumes with a Constant field restricted by VolumesList and combined with a coarse field using Min",
+    "result": {
+      "mean_edge_target": 0.08975379977581904,
+      "mean_edge_other": 0.14371548986202384,
+      "edge_ratio": 0.6245241891600446,
+      "elements_target": 7286,
+      "elements_other": 1339
+    }
+  },
+  "sources": [
+    {
+      "id": "gmsh-manual-4.15.2",
+      "title": "Gmsh 4.15.2 Reference Manual",
+      "url": "https://gmsh.info/doc/texinfo/",
+      "publisher": "Gmsh",
+      "evidence": [
+        "Mesh size is the minimum of point, curvature, background-field, and per-entity constraints, bounded by global min/max and scale factor.",
+        "Distance, Threshold, Box, MathEval, Extend, Min, Max, Restrict, PostView and BoundaryLayer fields are available.",
+        "Restrict can target point, curve, surface, or volume entity lists.",
+        "model.mesh.setSize currently handles only point entities.",
+        "model.mesh.refine uniformly splits the current model mesh.",
+        "Extrude with Layers creates structured 3D meshes and Recombine can produce prisms, hexahedra, or pyramids."
+      ]
+    },
+    {
+      "id": "comsol-mesh-node-6.3",
+      "title": "COMSOL 6.3: The Mesh Node",
+      "url": "https://doc.comsol.com/6.3/doc/com.comsol.help.comsol/comsol_ref_mesh.24.11.html",
+      "publisher": "COMSOL",
+      "evidence": [
+        "Mesh sequences can be physics-controlled or user-controlled.",
+        "User-controlled defaults are Size plus Free Triangular in 2D or Free Tetrahedral in 3D.",
+        "Physics-controlled sequences are regenerated from active physics and are distinct from solution-error adaptation."
+      ]
+    },
+    {
+      "id": "comsol-size-6.3",
+      "title": "COMSOL 6.3: Size",
+      "url": "https://doc.comsol.com/6.3/doc/com.comsol.help.comsol/comsol_ref_mesh.24.86.html",
+      "publisher": "COMSOL",
+      "evidence": [
+        "Size attributes can target entire geometry, domains, boundaries, edges, or points through manual or named selections.",
+        "Controls include maximum/minimum size, growth rate, curvature factor, and narrow-region resolution."
+      ]
+    },
+    {
+      "id": "comsol-operations-6.3",
+      "title": "COMSOL 6.3: Meshing Operations and Attributes",
+      "url": "https://doc.comsol.com/6.3/doc/com.comsol.help.comsol/comsol_ref_mesh.24.41.html",
+      "publisher": "COMSOL",
+      "evidence": [
+        "Generator nodes include Free Triangular, Free Quad, Mapped, Free Tetrahedral, Swept, Boundary Layers, Edge, and Vertex.",
+        "Attributes include Size, Size Expression, Distribution, Boundary Layer Properties, Corner Refinement, and Identical Mesh.",
+        "Modifying operations include Refine, Adapt, and Convert."
+      ]
+    },
+    {
+      "id": "comsol-refine-6.3",
+      "title": "COMSOL 6.3: Refine",
+      "url": "https://doc.comsol.com/6.3/doc/com.comsol.help.comsol/comsol_ref_mesh.24.81.html",
+      "publisher": "COMSOL",
+      "evidence": [
+        "Refine can target domain, boundary, or 3D edge selections.",
+        "Regular refinement and longest-side splitting are available, including bounding-box restriction."
+      ]
+    },
+    {
+      "id": "comsol-adapt-6.3",
+      "title": "COMSOL 6.3: Modifying the Element Size Using Refine and Adapt",
+      "url": "https://doc.comsol.com/6.3/doc/com.comsol.help.comsol/comsol_ref_mesh.24.22.html",
+      "publisher": "COMSOL",
+      "evidence": [
+        "Refine splits existing elements; Adapt can refine and coarsen based on error estimate, absolute size, or isotropic metric."
+      ]
+    },
+    {
+      "id": "comsol-boundary-layers-6.3",
+      "title": "COMSOL 6.3: Boundary Layers",
+      "url": "https://doc.comsol.com/6.3/doc/com.comsol.help.comsol/comsol_ref_mesh.24.43.html",
+      "publisher": "COMSOL",
+      "evidence": [
+        "Boundary layers are selection-driven and support corner splitting/trimming and smooth transition to the interior.",
+        "2D uses layered quads; 3D uses prisms or hexahedra according to the boundary mesh."
+      ]
+    },
+    {
+      "id": "comsol-free-tet-6.3",
+      "title": "COMSOL 6.3: Free Tetrahedral",
+      "url": "https://doc.comsol.com/6.3/doc/com.comsol.help.comsol/comsol_ref_mesh.24.65.html",
+      "publisher": "COMSOL",
+      "evidence": [
+        "Free Tetrahedral fills selected or remaining domains and can bridge adjacent quad faces with pyramids.",
+        "Size, Size Expression, Distribution, and Corner Refinement attributes control the generator."
+      ]
+    },
+    {
+      "id": "comsol-quality-6.3",
+      "title": "COMSOL 6.3: Mesh Element Quality",
+      "url": "https://doc.comsol.com/6.3/doc/com.comsol.help.comsol/comsol_ref_mesh.24.24.html",
+      "publisher": "COMSOL",
+      "evidence": [
+        "COMSOL exposes skewness, maximum-angle, volume/circumradius, volume/length, condition-number, growth-rate, and curved-skewness measures."
+      ]
+    }
+  ]
+}

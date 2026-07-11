@@ -5,3 +5,9 @@ __pycache__/
 dist/
 build/
 *.egg-info/
+
+# Reproducible runtime and validation outputs. Keep source configs, generators,
+# tests, and reference metadata in Git; regenerate meshes and inspection media.
+/artifacts/
+
+!references/meshing/source-index.json

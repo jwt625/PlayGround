@@ -1,0 +1,64 @@
+Simulation:
+  name: two_cylinders_curvature_mesh
+  mesh_nx: 51
+  mesh_ny: 41
+  signal_electrode: signal
+Domain:
+  x_min: -8e-6
+  x_max: 8e-6
+  y_min: -6e-6
+  y_max: 6e-6
+Materials:
+  background:
+    eps_r: 1.0
+Electrodes:
+  signal:
+    shape: circle
+    potential: 1.0
+    x: -1.5e-6
+    y: 0.0
+    radius: 0.5e-6
+  ground:
+    shape: circle
+    potential: 0.0
+    x: 1.5e-6
+    y: 0.0
+    radius: 0.5e-6
+Mesh:
+  name: mesh1
+  dimension: 2
+  sequence_type: user_controlled
+  operations:
+    global_size:
+      type: size
+      selection: entire_geometry
+      h_min: 0.06e-6
+      h_max: 0.9e-6
+    curvature_size:
+      type: curvature
+      selection: entire_geometry
+      elements_per_2pi: 36
+    signal_proximity:
+      type: boundary_proximity
+      selection: signal_boundary
+      h_min: 0.06e-6
+      h_max: 0.9e-6
+      distance_min: 0.08e-6
+      distance_max: 1.5e-6
+      sampling: 160
+    ground_proximity:
+      type: boundary_proximity
+      selection: ground_boundary
+      h_min: 0.06e-6
+      h_max: 0.9e-6
+      distance_min: 0.08e-6
+      distance_max: 1.5e-6
+      sampling: 160
+    free_triangular:
+      type: free_triangular
+      selection: all_domains
+      algorithm: delaunay
+Outputs:
+  reference: two_cylinders
+  radius: 0.5e-6
+  center_distance: 3.0e-6

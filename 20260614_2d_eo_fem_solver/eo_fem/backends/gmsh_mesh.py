@@ -6,6 +6,8 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
+from eo_fem.backends.gmsh_fields import compile_mesh_sequence
+from eo_fem.backends.mesh_sequence import MeshSequenceSpec, parse_mesh_sequence
 from eo_fem.backends.schema import BoundarySpec, ExplicitModel, ShapeSpec, legacy_config_to_explicit_model
 
 
@@ -15,7 +17,7 @@ class GmshMeshArtifact:
     tag_map_path: Path
     node_count: int
     element_count: int
-    physical_groups: dict[str, dict[str, int | list[int]]]
+    physical_groups: dict[str, Any]
 
 
 def generate_legacy_gmsh_mesh(
@@ -26,6 +28,7 @@ def generate_legacy_gmsh_mesh(
 ) -> GmshMeshArtifact:
     model = legacy_config_to_explicit_model(config)
     mesh_size = _mesh_size_from_legacy_config(config)
+    mesh_sequence = parse_mesh_sequence(config, default_size=mesh_size)
     output_path = Path(output_dir)
     output_path.mkdir(parents=True, exist_ok=True)
     return generate_gmsh_mesh(
@@ -34,6 +37,7 @@ def generate_legacy_gmsh_mesh(
         output_path / f"{model_name}.tags.json",
         mesh_size=mesh_size,
         model_name=model_name,
+        mesh_sequence=mesh_sequence,
     )
 
 
@@ -44,11 +48,12 @@ def generate_gmsh_mesh(
     *,
     mesh_size: float,
     model_name: str = "eo_fem",
+    mesh_sequence: MeshSequenceSpec | None = None,
 ) -> GmshMeshArtifact:
     gmsh = importlib.import_module("gmsh")
     mesh_file = Path(mesh_path)
     tag_file = Path(tag_map_path)
-    gmsh.initialize()
+    gmsh.initialize(interruptible=False)
     try:
         gmsh.model.add(model_name)
         gmsh.option.setNumber("Mesh.MshFileVersion", 4.1)
@@ -73,7 +78,7 @@ def generate_gmsh_mesh(
         gmsh.model.occ.synchronize()
         _set_uniform_mesh_size(gmsh, mesh_size)
 
-        physical_groups: dict[str, dict[str, int | list[int]]] = {}
+        physical_groups: dict[str, Any] = {}
         physical_groups["background_domain"] = _add_physical_group(
             gmsh,
             dim=2,
@@ -89,7 +94,16 @@ def generate_gmsh_mesh(
                 name=boundary.name,
             )
 
+        if mesh_sequence is not None:
+            selections = _mesh_selections(model, physical_groups)
+            physical_groups["mesh_sequence"] = compile_mesh_sequence(gmsh, mesh_sequence, selections)
+
         gmsh.model.mesh.generate(2)
+        if mesh_sequence is not None:
+            for operation in mesh_sequence.operations:
+                if operation.enabled and operation.type == "uniform_refine":
+                    for _ in range(int(operation.parameters["levels"])):
+                        gmsh.model.mesh.refine()
         gmsh.write(str(mesh_file))
 
         node_tags, _, _ = gmsh.model.mesh.getNodes()
@@ -195,7 +209,7 @@ def _curve_matches_circle(gmsh: Any, tag: int, params: dict[str, float]) -> bool
 
 def _bbox_tolerance(params: dict[str, float]) -> float:
     span = max(params.get("x_max", 0.0) - params.get("x_min", 0.0), params.get("y_max", 0.0) - params.get("y_min", 0.0))
-    return max(abs(span) * 0.025, 1e-12)
+    return max(abs(span) * 0.05, 1e-12)
 
 
 def _close(left: float, right: float, tol: float) -> bool:
@@ -213,3 +227,18 @@ def _mesh_size_from_legacy_config(config: dict[str, Any]) -> float:
     dx = (float(domain["x_max"]) - float(domain["x_min"])) / max(int(sim.get("mesh_nx", 81)) - 1, 1)
     dy = (float(domain["y_max"]) - float(domain["y_min"])) / max(int(sim.get("mesh_ny", 61)) - 1, 1)
     return max(min(dx, dy), 1e-15)
+
+
+def _mesh_selections(model: ExplicitModel, physical_groups: dict[str, Any]) -> dict[str, dict[str, Any]]:
+    domain = physical_groups["background_domain"]
+    selections: dict[str, dict[str, Any]] = {
+        "entire_geometry": {"dim": domain["dim"], "entity_tags": domain["entity_tags"]},
+        "all_domains": {"dim": domain["dim"], "entity_tags": domain["entity_tags"]},
+        "background_domain": {"dim": domain["dim"], "entity_tags": domain["entity_tags"]},
+    }
+    for boundary in model.boundaries.values():
+        group = physical_groups[boundary.name]
+        value = {"dim": group["dim"], "entity_tags": group["entity_tags"]}
+        selections[boundary.name] = value
+        selections[f"{boundary.source}_boundary_selection"] = value
+    return selections

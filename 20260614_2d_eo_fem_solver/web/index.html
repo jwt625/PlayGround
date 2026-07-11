@@ -4,13 +4,24 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>2D EO FEM Solver</title>
-    <link rel="stylesheet" href="./styles.css" />
+    <link rel="stylesheet" href="./styles.css?v=20260710-2" />
   </head>
   <body>
     <main class="app-shell">
       <section class="workspace" aria-label="Simulation workspace">
         <div class="editor-pane">
           <div class="toolbar">
+            <div class="toolbar-group project-actions" aria-label="Open workspace artifacts">
+              <span>Open</span>
+              <button id="open-geometry-button" type="button" title="Open YAML or geometry JSON without solving">Geometry</button>
+              <button id="open-mesh-button" type="button" title="Open Gmsh MSH 4.1 or mesh JSON">Mesh</button>
+              <button id="open-solution-button" type="button" title="Open a saved solution JSON">Solution</button>
+            </div>
+            <div class="toolbar-group validation-library" aria-label="Backend validation library">
+              <span>Library</span>
+              <select id="validation-example-select" aria-label="Validation example"></select>
+              <button id="load-validation-button" type="button">Load</button>
+            </div>
             <div class="toolbar-group" aria-label="Electrostatic examples">
               <span>ES</span>
               <button id="parallel-button" type="button">Parallel plate</button>
@@ -45,7 +56,29 @@
             <button id="solve-button" type="button">Solve</button>
             <output id="status">Idle</output>
           </div>
-          <textarea id="config-editor" spellcheck="false" aria-label="Simulation YAML"></textarea>
+          <input id="geometry-file-input" type="file" accept=".yaml,.yml,.json,application/json,text/yaml" hidden />
+          <input id="mesh-file-input" type="file" accept=".msh,.json,application/json,text/plain" hidden />
+          <input id="solution-file-input" type="file" accept=".json,application/json" hidden />
+          <div class="editor-workspace">
+            <nav class="model-browser" aria-label="Model builder">
+              <div class="model-browser-header">Model Builder</div>
+              <div class="model-root">Study 1</div>
+              <button id="geometry-tree-node" class="model-node" type="button" data-view="geometry">
+                <span class="model-node-icon geometry-icon">G</span>
+                <span><strong>Geometry 1</strong><small id="geometry-source">not loaded</small></span>
+              </button>
+              <button id="mesh-tree-node" class="model-node" type="button" data-view="mesh">
+                <span class="model-node-icon mesh-icon">M</span>
+                <span><strong>Mesh 1</strong><small id="mesh-source">not loaded</small></span>
+              </button>
+              <button id="solution-tree-node" class="model-node" type="button" data-view="results">
+                <span class="model-node-icon solution-icon">R</span>
+                <span><strong>Results</strong><small id="solution-source">not loaded</small></span>
+              </button>
+              <div class="model-browser-hint">Open artifacts independently, then switch layers here.</div>
+            </nav>
+            <textarea id="config-editor" spellcheck="false" aria-label="Simulation YAML"></textarea>
+          </div>
           <section class="log-panel" aria-label="Solver log">
             <div class="log-header">Log</div>
             <div id="log-window" class="log-window" aria-live="polite"></div>
@@ -101,6 +134,6 @@
         </div>
       </section>
     </main>
-    <script type="module" src="./app.js"></script>
+    <script type="module" src="./app.js?v=20260710-7"></script>
   </body>
 </html>

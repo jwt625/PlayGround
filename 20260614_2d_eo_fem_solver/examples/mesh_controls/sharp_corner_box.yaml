@@ -1,0 +1,52 @@
+Simulation:
+  name: sharp_corner_box_refinement
+  mesh_nx: 51
+  mesh_ny: 41
+  signal_electrode: signal
+Domain:
+  x_min: -10e-6
+  x_max: 10e-6
+  y_min: -7e-6
+  y_max: 7e-6
+Materials:
+  background:
+    eps_r: 3.9
+Electrodes:
+  signal:
+    shape: rectangle
+    potential: 1.0
+    x_min: -4e-6
+    x_max: 0.0
+    y_min: 0.8e-6
+    y_max: 1.2e-6
+  ground:
+    shape: rectangle
+    potential: 0.0
+    x_min: 1.2e-6
+    x_max: 5.2e-6
+    y_min: -1.2e-6
+    y_max: -0.8e-6
+Mesh:
+  name: mesh1
+  dimension: 2
+  sequence_type: user_controlled
+  operations:
+    global_size:
+      type: size
+      selection: entire_geometry
+      h_min: 0.08e-6
+      h_max: 1.0e-6
+    corner_box:
+      type: box_size
+      selection: entire_geometry
+      h_in: 0.08e-6
+      h_out: 1.0e-6
+      x_min: -0.7e-6
+      x_max: 1.9e-6
+      y_min: -1.8e-6
+      y_max: 1.8e-6
+      thickness: 0.8e-6
+    free_triangular:
+      type: free_triangular
+      selection: all_domains
+      algorithm: delaunay
