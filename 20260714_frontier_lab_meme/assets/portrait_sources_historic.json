@@ -1,0 +1,202 @@
+[
+  {
+    "index": 1,
+    "label": "Oppenheimer",
+    "page_title": "J. Robert Oppenheimer",
+    "page_url": "https://en.wikipedia.org/wiki/J._Robert_Oppenheimer",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/85/Oppenheimer_%28cropped%29.jpg/960px-Oppenheimer_%28cropped%29.jpg",
+    "cached_file": "cached_pfps_historic/01_oppenheimer.jpg"
+  },
+  {
+    "index": 2,
+    "label": "von Neumann",
+    "page_title": "John von Neumann",
+    "page_url": "https://en.wikipedia.org/wiki/John_von_Neumann",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/5/5e/JohnvonNeumann-LosAlamos.gif",
+    "cached_file": "cached_pfps_historic/02_von_neumann.jpg"
+  },
+  {
+    "index": 3,
+    "label": "Curie",
+    "page_title": "Marie Curie",
+    "page_url": "https://en.wikipedia.org/wiki/Marie_Curie",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c8/Marie_Curie_c._1920s.jpg/960px-Marie_Curie_c._1920s.jpg",
+    "cached_file": "cached_pfps_historic/03_curie.jpg"
+  },
+  {
+    "index": 4,
+    "label": "Shannon",
+    "page_title": "Claude Shannon",
+    "page_url": "https://en.wikipedia.org/wiki/Claude_Shannon",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/C.E._Shannon._Tekniska_museet_43069_%282x3_crop%29.jpg/960px-C.E._Shannon._Tekniska_museet_43069_%282x3_crop%29.jpg",
+    "cached_file": "cached_pfps_historic/04_shannon.jpg"
+  },
+  {
+    "index": 5,
+    "label": "Moore",
+    "page_title": "Gordon Moore",
+    "page_url": "https://en.wikipedia.org/wiki/Gordon_Moore",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/e/eb/Gordon_Moore_1978_%28cropped%29.png",
+    "cached_file": "cached_pfps_historic/05_moore.jpg"
+  },
+  {
+    "index": 6,
+    "label": "Bush",
+    "page_title": "Vannevar Bush",
+    "page_url": "https://en.wikipedia.org/wiki/Vannevar_Bush",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f6/Vannevar_Bush%2C_1938%2C_Harris_%26_Ewing_%28cropped%29.jpg/960px-Vannevar_Bush%2C_1938%2C_Harris_%26_Ewing_%28cropped%29.jpg",
+    "cached_file": "cached_pfps_historic/06_bush.jpg"
+  },
+  {
+    "index": 7,
+    "label": "Turing",
+    "page_title": "Alan Turing",
+    "page_url": "https://en.wikipedia.org/wiki/Alan_Turing",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/c/ce/Alan_turing_header.jpg",
+    "cached_file": "cached_pfps_historic/07_turing.jpg"
+  },
+  {
+    "index": 8,
+    "label": "Rutherford",
+    "page_title": "Ernest Rutherford",
+    "page_url": "https://en.wikipedia.org/wiki/Ernest_Rutherford",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f8/Sir_Ernest_Rutherford_LCCN2014716719_-_restoration1.jpg/960px-Sir_Ernest_Rutherford_LCCN2014716719_-_restoration1.jpg",
+    "cached_file": "cached_pfps_historic/08_rutherford.jpg"
+  },
+  {
+    "index": 9,
+    "label": "Bardeen",
+    "page_title": "John Bardeen",
+    "page_url": "https://en.wikipedia.org/wiki/John_Bardeen",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/4/4a/Bardeen.jpg",
+    "cached_file": "cached_pfps_historic/09_bardeen.jpg"
+  },
+  {
+    "index": 10,
+    "label": "Land",
+    "page_title": "Edwin H. Land",
+    "page_url": "https://en.wikipedia.org/wiki/Edwin_H._Land",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/af/Edwin_H._Land%2C_founder%2C_Polaroid_%28cropped%29.jpg/960px-Edwin_H._Land%2C_founder%2C_Polaroid_%28cropped%29.jpg",
+    "cached_file": "cached_pfps_historic/10_land.jpg"
+  },
+  {
+    "index": 11,
+    "label": "Kelly",
+    "page_title": "Mervin Kelly",
+    "page_url": "https://en.wikipedia.org/wiki/Mervin_Kelly",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/1/1d/Bell_telephone_magazine_%281922%29_%2814753744644%29.jpg",
+    "cached_file": "cached_pfps_historic/11_kelly.jpg"
+  },
+  {
+    "index": 12,
+    "label": "Hopper",
+    "page_title": "Grace Hopper",
+    "page_url": "https://en.wikipedia.org/wiki/Grace_Hopper",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/98/Commodore_Grace_M._Hopper%2C_USN_%28covered%29_head_and_shoulders_crop.jpg/960px-Commodore_Grace_M._Hopper%2C_USN_%28covered%29_head_and_shoulders_crop.jpg",
+    "cached_file": "cached_pfps_historic/12_hopper.jpg"
+  },
+  {
+    "index": 13,
+    "label": "Franklin",
+    "page_title": "Rosalind Franklin",
+    "page_url": "https://en.wikipedia.org/wiki/Rosalind_Franklin",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/f/fd/Rosalind_Franklin_%28retouched%29.jpg",
+    "cached_file": "cached_pfps_historic/13_franklin.jpg"
+  },
+  {
+    "index": 14,
+    "label": "Kilby",
+    "page_title": "Jack Kilby",
+    "page_url": "https://en.wikipedia.org/wiki/Jack_Kilby",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/9/91/Jack_Kilby_%28cropped%29.png",
+    "cached_file": "cached_pfps_historic/14_kilby.jpg"
+  },
+  {
+    "index": 15,
+    "label": "Noyce",
+    "page_title": "Robert Noyce",
+    "page_url": "https://en.wikipedia.org/wiki/Robert_Noyce",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/8/82/Robert_Noyce_with_Motherboard_1959.png",
+    "cached_file": "cached_pfps_historic/15_noyce.jpg"
+  },
+  {
+    "index": 16,
+    "label": "Taylor",
+    "page_title": "Robert Taylor (computer scientist)",
+    "page_url": "https://en.wikipedia.org/wiki/Robert_Taylor_(computer_scientist)",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/bc/Bob_Taylor_in_2008.jpg/960px-Bob_Taylor_in_2008.jpg",
+    "cached_file": "cached_pfps_historic/16_taylor.jpg"
+  },
+  {
+    "index": 17,
+    "label": "Dijkstra",
+    "page_title": "Edsger W. Dijkstra",
+    "page_url": "https://en.wikipedia.org/wiki/Edsger_W._Dijkstra",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d9/Edsger_Wybe_Dijkstra.jpg/960px-Edsger_Wybe_Dijkstra.jpg",
+    "cached_file": "cached_pfps_historic/17_dijkstra.jpg"
+  },
+  {
+    "index": 18,
+    "label": "Elion",
+    "page_title": "Gertrude B. Elion",
+    "page_url": "https://en.wikipedia.org/wiki/Gertrude_B._Elion",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Gertrude_Elion.jpg/960px-Gertrude_Elion.jpg",
+    "cached_file": "cached_pfps_historic/18_elion.jpg"
+  },
+  {
+    "index": 19,
+    "label": "Ritchie",
+    "page_title": "Dennis Ritchie",
+    "page_url": "https://en.wikipedia.org/wiki/Dennis_Ritchie",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/2/23/Dennis_Ritchie_2011.jpg",
+    "cached_file": "cached_pfps_historic/19_ritchie.jpg"
+  },
+  {
+    "index": 20,
+    "label": "Sanger",
+    "page_title": "Frederick Sanger",
+    "page_url": "https://en.wikipedia.org/wiki/Frederick_Sanger",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/f/f8/Frederick_Sanger2.jpg",
+    "cached_file": "cached_pfps_historic/20_sanger.jpg"
+  },
+  {
+    "index": 21,
+    "label": "Gilbreth",
+    "page_title": "Lillian Moller Gilbreth",
+    "page_url": "https://en.wikipedia.org/wiki/Lillian_Moller_Gilbreth",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/7/71/Lillian_Moller_Gilbreth%2C_1921.jpg",
+    "cached_file": "cached_pfps_historic/21_gilbreth.jpg"
+  },
+  {
+    "index": 22,
+    "label": "Spärck Jones",
+    "page_title": "Karen Spärck Jones",
+    "page_url": "https://www.cl.cam.ac.uk/misc/obituaries/sparck-jones/photos/",
+    "image_url": "https://www.cl.cam.ac.uk/misc/obituaries/sparck-jones/photos/CU%20KSJ-002.tif",
+    "cached_file": "cached_pfps_historic/22_sp_rck_jones.jpg"
+  },
+  {
+    "index": 23,
+    "label": "Dresselhaus",
+    "page_title": "Mildred Dresselhaus",
+    "page_url": "https://en.wikipedia.org/wiki/Mildred_Dresselhaus",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/f/f5/Barack_Obama_greets_Burton_Richter_and_Mildred_Dresselhaus_%28cropped%29.jpg",
+    "cached_file": "cached_pfps_historic/23_dresselhaus.jpg"
+  },
+  {
+    "index": 24,
+    "label": "Vaughan",
+    "page_title": "Dorothy Vaughan",
+    "page_url": "https://www.nasa.gov/people/dorothy-vaughan/",
+    "image_url": "https://www.nasa.gov/wp-content/uploads/2017/03/dorothy-vaughan-10people.jpg",
+    "cached_file": "cached_pfps_historic/24_vaughan.jpg"
+  },
+  {
+    "index": 25,
+    "label": "Borlaug",
+    "page_title": "Norman Borlaug",
+    "page_url": "https://www.nobelprize.org/prizes/peace/1970/borlaug/",
+    "image_url": "https://www.nobelprize.org/images/borlaug-13223-landscape-medium.jpg",
+    "cached_file": "cached_pfps_historic/25_borlaug.jpg"
+  }
+]

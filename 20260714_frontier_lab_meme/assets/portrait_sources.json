@@ -1,0 +1,202 @@
+[
+  {
+    "index": 1,
+    "label": "Oppenheimer",
+    "page_title": "J. Robert Oppenheimer",
+    "page_url": "https://en.wikipedia.org/wiki/J._Robert_Oppenheimer",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/85/Oppenheimer_%28cropped%29.jpg/960px-Oppenheimer_%28cropped%29.jpg",
+    "cached_file": "cached_pfps/01_oppenheimer.jpg"
+  },
+  {
+    "index": 2,
+    "label": "von Neumann",
+    "page_title": "John von Neumann",
+    "page_url": "https://en.wikipedia.org/wiki/John_von_Neumann",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/5/5e/JohnvonNeumann-LosAlamos.gif",
+    "cached_file": "cached_pfps/02_von_neumann.jpg"
+  },
+  {
+    "index": 3,
+    "label": "Curie",
+    "page_title": "Marie Curie",
+    "page_url": "https://en.wikipedia.org/wiki/Marie_Curie",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c8/Marie_Curie_c._1920s.jpg/960px-Marie_Curie_c._1920s.jpg",
+    "cached_file": "cached_pfps/03_curie.jpg"
+  },
+  {
+    "index": 4,
+    "label": "Shannon",
+    "page_title": "Claude Shannon",
+    "page_url": "https://en.wikipedia.org/wiki/Claude_Shannon",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/C.E._Shannon._Tekniska_museet_43069_%282x3_crop%29.jpg/960px-C.E._Shannon._Tekniska_museet_43069_%282x3_crop%29.jpg",
+    "cached_file": "cached_pfps/04_shannon.jpg"
+  },
+  {
+    "index": 5,
+    "label": "Moore",
+    "page_title": "Gordon Moore",
+    "page_url": "https://en.wikipedia.org/wiki/Gordon_Moore",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/e/eb/Gordon_Moore_1978_%28cropped%29.png",
+    "cached_file": "cached_pfps/05_moore.jpg"
+  },
+  {
+    "index": 6,
+    "label": "Bush",
+    "page_title": "Vannevar Bush",
+    "page_url": "https://en.wikipedia.org/wiki/Vannevar_Bush",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f6/Vannevar_Bush%2C_1938%2C_Harris_%26_Ewing_%28cropped%29.jpg/960px-Vannevar_Bush%2C_1938%2C_Harris_%26_Ewing_%28cropped%29.jpg",
+    "cached_file": "cached_pfps/06_bush.jpg"
+  },
+  {
+    "index": 7,
+    "label": "Turing",
+    "page_title": "Alan Turing",
+    "page_url": "https://en.wikipedia.org/wiki/Alan_Turing",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/c/ce/Alan_turing_header.jpg",
+    "cached_file": "cached_pfps/07_turing.jpg"
+  },
+  {
+    "index": 8,
+    "label": "Rutherford",
+    "page_title": "Ernest Rutherford",
+    "page_url": "https://en.wikipedia.org/wiki/Ernest_Rutherford",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f8/Sir_Ernest_Rutherford_LCCN2014716719_-_restoration1.jpg/960px-Sir_Ernest_Rutherford_LCCN2014716719_-_restoration1.jpg",
+    "cached_file": "cached_pfps/08_rutherford.jpg"
+  },
+  {
+    "index": 9,
+    "label": "Bardeen",
+    "page_title": "John Bardeen",
+    "page_url": "https://en.wikipedia.org/wiki/John_Bardeen",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/4/4a/Bardeen.jpg",
+    "cached_file": "cached_pfps/09_bardeen.jpg"
+  },
+  {
+    "index": 10,
+    "label": "Land",
+    "page_title": "Edwin H. Land",
+    "page_url": "https://en.wikipedia.org/wiki/Edwin_H._Land",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/af/Edwin_H._Land%2C_founder%2C_Polaroid_%28cropped%29.jpg/960px-Edwin_H._Land%2C_founder%2C_Polaroid_%28cropped%29.jpg",
+    "cached_file": "cached_pfps/10_land.jpg"
+  },
+  {
+    "index": 11,
+    "label": "Kelly",
+    "page_title": "Mervin Kelly",
+    "page_url": "https://en.wikipedia.org/wiki/Mervin_Kelly",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/1/1d/Bell_telephone_magazine_%281922%29_%2814753744644%29.jpg",
+    "cached_file": "cached_pfps/11_kelly.jpg"
+  },
+  {
+    "index": 12,
+    "label": "Liskov",
+    "page_title": "Barbara Liskov",
+    "page_url": "https://en.wikipedia.org/wiki/Barbara_Liskov",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/38/Barbara_Liskov_MIT_computer_scientist_2010.jpg/960px-Barbara_Liskov_MIT_computer_scientist_2010.jpg",
+    "cached_file": "cached_pfps/12_liskov.jpg"
+  },
+  {
+    "index": 13,
+    "label": "Doudna",
+    "page_title": "Jennifer Doudna",
+    "page_url": "https://en.wikipedia.org/wiki/Jennifer_Doudna",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/Jennifer_Doudna_by_Christopher_Michel_in_2023_01.jpg/960px-Jennifer_Doudna_by_Christopher_Michel_in_2023_01.jpg",
+    "cached_file": "cached_pfps/13_doudna.jpg"
+  },
+  {
+    "index": 14,
+    "label": "Mead",
+    "page_title": "Carver Mead",
+    "page_url": "https://en.wikipedia.org/wiki/Carver_Mead",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/8/8a/Carver_Mead_S66626_F27_300pixels.png",
+    "cached_file": "cached_pfps/14_mead.jpg"
+  },
+  {
+    "index": 15,
+    "label": "Su",
+    "page_title": "Lisa Su",
+    "page_url": "https://en.wikipedia.org/wiki/Lisa_Su",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/de/SXSW-2024-alih-OB7A0861-Lisa_Su_%28cropped_2%29.jpg/960px-SXSW-2024-alih-OB7A0861-Lisa_Su_%28cropped_2%29.jpg",
+    "cached_file": "cached_pfps/15_su.jpg"
+  },
+  {
+    "index": 16,
+    "label": "Taylor",
+    "page_title": "Robert Taylor (computer scientist)",
+    "page_url": "https://en.wikipedia.org/wiki/Robert_Taylor_(computer_scientist)",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/bc/Bob_Taylor_in_2008.jpg/960px-Bob_Taylor_in_2008.jpg",
+    "cached_file": "cached_pfps/16_taylor.jpg"
+  },
+  {
+    "index": 17,
+    "label": "Lamport",
+    "page_title": "Leslie Lamport",
+    "page_url": "https://en.wikipedia.org/wiki/Leslie_Lamport",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/5/50/Leslie_Lamport.jpg",
+    "cached_file": "cached_pfps/17_lamport.jpg"
+  },
+  {
+    "index": 18,
+    "label": "Arnold",
+    "page_title": "Frances Arnold",
+    "page_url": "https://en.wikipedia.org/wiki/Frances_Arnold",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/28/Frances_Arnold_in_2021_at_Caltech_01_%28cropped%29.jpg/960px-Frances_Arnold_in_2021_at_Caltech_01_%28cropped%29.jpg",
+    "cached_file": "cached_pfps/18_arnold.jpg"
+  },
+  {
+    "index": 19,
+    "label": "Ritchie",
+    "page_title": "Dennis Ritchie",
+    "page_url": "https://en.wikipedia.org/wiki/Dennis_Ritchie",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/2/23/Dennis_Ritchie_2011.jpg",
+    "cached_file": "cached_pfps/19_ritchie.jpg"
+  },
+  {
+    "index": 20,
+    "label": "Church",
+    "page_title": "George Church (geneticist)",
+    "page_url": "https://en.wikipedia.org/wiki/George_Church_(geneticist)",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3b/George_Church_343263_by_christopher_michel_10-11-23.jpg/960px-George_Church_343263_by_christopher_michel_10-11-23.jpg",
+    "cached_file": "cached_pfps/20_church.jpg"
+  },
+  {
+    "index": 21,
+    "label": "Gilbreth",
+    "page_title": "Lillian Moller Gilbreth",
+    "page_url": "https://en.wikipedia.org/wiki/Lillian_Moller_Gilbreth",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/7/71/Lillian_Moller_Gilbreth%2C_1921.jpg",
+    "cached_file": "cached_pfps/21_gilbreth.jpg"
+  },
+  {
+    "index": 22,
+    "label": "Perlman",
+    "page_title": "Radia Perlman",
+    "page_url": "https://en.wikipedia.org/wiki/Radia_Perlman",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/af/Radia_Perlman_2009.jpg/960px-Radia_Perlman_2009.jpg",
+    "cached_file": "cached_pfps/22_perlman.jpg"
+  },
+  {
+    "index": 23,
+    "label": "Dresselhaus",
+    "page_title": "Mildred Dresselhaus",
+    "page_url": "https://en.wikipedia.org/wiki/Mildred_Dresselhaus",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/f/f5/Barack_Obama_greets_Burton_Richter_and_Mildred_Dresselhaus_%28cropped%29.jpg",
+    "cached_file": "cached_pfps/23_dresselhaus.jpg"
+  },
+  {
+    "index": 24,
+    "label": "Hamilton",
+    "page_title": "Margaret Hamilton (software engineer)",
+    "page_url": "https://en.wikipedia.org/wiki/Margaret_Hamilton_(software_engineer)",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/68/Margaret_Hamilton_1995.jpg/960px-Margaret_Hamilton_1995.jpg",
+    "cached_file": "cached_pfps/24_hamilton.jpg"
+  },
+  {
+    "index": 25,
+    "label": "Karikó",
+    "page_title": "Katalin Karikó",
+    "page_url": "https://en.wikipedia.org/wiki/Katalin_Karik%C3%B3",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/27/Katalin_Karik%C3%B3_by_Michel_2024_02.jpg/960px-Katalin_Karik%C3%B3_by_Michel_2024_02.jpg",
+    "cached_file": "cached_pfps/25_kariko.jpg"
+  }
+]
