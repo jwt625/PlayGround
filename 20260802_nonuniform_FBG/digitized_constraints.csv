@@ -1,0 +1,15 @@
+quantity,power_mW,value,unit,note
+cold_center,0,1547.493,nm,labeled in Figure 5a
+cold_peak,0,-31.053,dBm,digitized from plot
+cold_width_1dB,0,0.182,nm,digitized
+cold_width_2dB,0,0.264,nm,digitized
+cold_width_3dB,0,0.300,nm,interpolated because red trace occludes right branch
+cold_width_4dB,0,0.337,nm,digitized
+cold_envelope_peak,17,-32.80,dBm,digitized
+cold_envelope_peak,73,-34.59,dBm,digitized
+cold_envelope_peak,131,-35.49,dBm,digitized
+cold_envelope_peak,188,-36.16,dBm,digitized
+cold_envelope_peak,244,-36.53,dBm,digitized
+cold_envelope_peak,296,-36.80,dBm,digitized
+cold_envelope_peak,344,-37.05,dBm,digitized with larger color uncertainty
+cold_envelope_peak,367,-37.13,dBm,digitized with larger color uncertainty

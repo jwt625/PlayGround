@@ -1,0 +1,13 @@
+{
+  "objective": 1.7175671860772437,
+  "success": false,
+  "message": "Maximum number of iterations has been exceeded.",
+  "hotspot_center_mm": 7.9343721257591735,
+  "total_fwhm_mm": 2.7427597304358695,
+  "left_halfwidth_mm": 2.331345770870489,
+  "right_halfwidth_mm": 0.41141395956538046,
+  "left_shape_order": 2.060235810797035,
+  "right_shape_order": 4.424947063464347,
+  "osa_fwhm_nm": 0.02,
+  "comparison_smoothing_fwhm_nm": 0.06
+}

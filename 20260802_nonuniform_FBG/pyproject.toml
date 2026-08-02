@@ -1,0 +1,15 @@
+[project]
+name = "nonuniform-fbg"
+version = "0.1.0"
+description = "Transfer-matrix reconstruction of a thermally chirped fiber Bragg grating"
+requires-python = ">=3.11"
+dependencies = [
+  "matplotlib>=3.9",
+  "numpy>=2.0",
+  "pillow>=11.0",
+  "scipy>=1.14",
+]
+
+[tool.uv]
+package = false
+
