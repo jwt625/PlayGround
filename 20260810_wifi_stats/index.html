@@ -1,0 +1,252 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Speed Test — CSV replay</title>
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    />
+    <link rel="stylesheet" href="app.css" />
+  </head>
+  <body data-palette="#F6821F,#8D1EB1,#0051C3">
+    <header class="topbar">
+      <div class="topbar-inner">
+        <div class="brand">
+          <span class="brand-mark" aria-hidden="true">◈</span>
+          <h1>Speed Test</h1>
+          <span class="brand-sub">CSV replay</span>
+        </div>
+        <label class="filepick">
+          <input type="file" id="csvfile" accept=".csv,text/csv" />
+          <span>Load a results CSV…</span>
+        </label>
+      </div>
+    </header>
+
+    <main class="wrap">
+      <p class="loadstate" id="loadstate" role="status"></p>
+
+      <!-- ============ overview ============ -->
+      <section class="card card-overview">
+        <div class="card-head">
+          <h2>Your Internet Speed</h2>
+          <div class="measured">
+            Measured at <strong id="measuredAt">—</strong>
+          </div>
+        </div>
+
+        <div class="tiles">
+          <div class="tile">
+            <div class="tile-label">
+              <span class="swatch" style="--c: #f6821f"></span>Download
+            </div>
+            <div class="tile-value">
+              <span class="num" id="dlSpeed">—</span
+              ><span class="unit">Mbps</span>
+            </div>
+            <div class="tile-sub">90th percentile of samples</div>
+          </div>
+
+          <div class="tile">
+            <div class="tile-label">
+              <span class="swatch" style="--c: #8d1eb1"></span>Upload
+            </div>
+            <div class="tile-value">
+              <span class="num" id="ulSpeed">—</span
+              ><span class="unit">Mbps</span>
+            </div>
+            <div class="tile-sub">90th percentile of samples</div>
+          </div>
+
+          <div class="tile">
+            <div class="tile-label">
+              <span class="swatch" style="--c: #0051c3"></span>Latency
+            </div>
+            <div class="tile-value">
+              <span class="num" id="latIdle">—</span><span class="unit">ms</span>
+            </div>
+            <div class="tile-sub">
+              <span class="kv">
+                <span class="k">during download</span>
+                <span class="v" id="latDl">—</span>
+              </span>
+              <span class="kv">
+                <span class="k">during upload</span>
+                <span class="v" id="latUl">—</span>
+              </span>
+            </div>
+          </div>
+
+          <div class="tile">
+            <div class="tile-label">
+              <span class="swatch" style="--c: #0051c3"></span>Jitter
+            </div>
+            <div class="tile-value">
+              <span class="num" id="jitIdle">—</span><span class="unit">ms</span>
+            </div>
+            <div class="tile-sub">
+              <span class="kv">
+                <span class="k">during download</span>
+                <span class="v" id="jitDl">—</span>
+              </span>
+              <span class="kv">
+                <span class="k">during upload</span>
+                <span class="v" id="jitUl">—</span>
+              </span>
+            </div>
+          </div>
+
+          <div class="tile">
+            <div class="tile-label">Packet Loss</div>
+            <div class="tile-value">
+              <span class="num" id="loss">—</span><span class="unit">%</span>
+            </div>
+            <div class="tile-sub">
+              <span class="badge-src">not in CSV</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="charts">
+          <figure class="chart-fig">
+            <figcaption>
+              <span class="swatch" style="--c: #f6821f"></span>Download speed
+              over time
+            </figcaption>
+            <div class="chart" id="chartDownload" data-series="download"></div>
+          </figure>
+          <figure class="chart-fig">
+            <figcaption>
+              <span class="swatch" style="--c: #8d1eb1"></span>Upload speed over
+              time
+            </figcaption>
+            <div class="chart" id="chartUpload" data-series="upload"></div>
+          </figure>
+        </div>
+      </section>
+
+      <!-- ============ scores + map ============ -->
+      <div class="two-col">
+        <section class="card">
+          <div class="card-head">
+            <h2>Network Quality Score</h2>
+            <a
+              class="learn"
+              href="https://developers.cloudflare.com/fundamentals/speed/aim/"
+              target="_blank"
+              rel="noreferrer"
+              >Learn more</a
+            >
+          </div>
+          <ul class="scores" id="scores"></ul>
+          <p class="note">
+            Ratings are computed from this CSV with approximate AIM-style
+            thresholds (see <code>app.js</code>); Cloudflare's exact cutoffs are
+            not published in the export.
+          </p>
+        </section>
+
+        <section class="card">
+          <div class="card-head">
+            <h2>Server Location</h2>
+          </div>
+          <div id="map" class="map"></div>
+          <dl class="netinfo">
+            <div>
+              <dt>Connected via</dt>
+              <dd id="niProto">—</dd>
+            </div>
+            <div>
+              <dt>Server location</dt>
+              <dd id="niServer">—</dd>
+            </div>
+            <div>
+              <dt>Your network</dt>
+              <dd id="niAsn">—</dd>
+            </div>
+            <div>
+              <dt>Your IP address</dt>
+              <dd id="niIp">—</dd>
+            </div>
+          </dl>
+          <div class="metaform">
+            <label>
+              Place label
+              <input
+                type="text"
+                id="metaLabel"
+                placeholder="e.g. Reno-Tahoe Airport, Gate B3"
+              />
+            </label>
+            <p class="note">
+              Everything in this card comes from a hard-coded
+              <code>META</code> object — the CSV carries no location, ASN, IP, or
+              packet-loss fields. On a community site this is exactly the
+              metadata an uploader would type in.
+            </p>
+          </div>
+        </section>
+      </div>
+
+      <!-- ============ measurement breakdowns ============ -->
+      <div class="two-col">
+        <div class="stack">
+          <section class="card">
+            <div class="card-head"><h2>Latency Measurements</h2></div>
+            <div id="latencyRows" class="rows"></div>
+            <p class="note">
+              The thick bar covers the 25th–75th percentile. The solid line
+              marks the median, the dotted line the average.
+            </p>
+          </section>
+
+          <section class="card">
+            <div class="card-head"><h2>Packet Loss Measurements</h2></div>
+            <div id="packetRows" class="rows"></div>
+          </section>
+        </div>
+
+        <div class="stack">
+          <section class="card">
+            <div class="card-head"><h2>Download Measurements</h2></div>
+            <div id="downloadRows" class="rows"></div>
+          </section>
+
+          <section class="card">
+            <div class="card-head"><h2>Upload Measurements</h2></div>
+            <div id="uploadRows" class="rows"></div>
+          </section>
+        </div>
+      </div>
+
+      <!-- ============ table view (a11y / verification) ============ -->
+      <section class="card">
+        <details>
+          <summary><h2>Raw samples &amp; derivations</h2></summary>
+          <div id="derivations"></div>
+          <div class="tablewrap">
+            <table id="rawTable">
+              <caption>
+                Every row of the loaded CSV.
+              </caption>
+            </table>
+          </div>
+        </details>
+      </section>
+
+      <section class="card">
+        <details open>
+          <summary><h2>What the CSV can and cannot tell you</h2></summary>
+          <div class="prose" id="datanotes"></div>
+        </details>
+      </section>
+    </main>
+
+    <div id="tooltip" class="tooltip" role="tooltip" aria-hidden="true"></div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>
