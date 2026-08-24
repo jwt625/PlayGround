@@ -1,0 +1,132 @@
+schema_version: "0.1.0"
+edge_types:
+  - id: employment
+    source_types: [person]
+    target_types: [organization]
+    direction: person_to_organization
+    temporal: interval
+    required_attributes: [role, photonics_relevance]
+    optional_attributes: [group, seniority, employment_type, location]
+    aggregate_weight: 1.0
+  - id: research_training
+    source_types: [person]
+    target_types: [organization]
+    direction: trainee_to_lab_or_institution
+    temporal: interval
+    required_attributes: [training_type, photonics_relevance]
+    optional_attributes: [degree, field, advisor_person_ids]
+    aggregate_weight: 1.0
+  - id: founder
+    source_types: [person]
+    target_types: [organization]
+    direction: person_to_founded_organization
+    temporal: point_or_interval
+    required_attributes: [founder_type]
+    optional_attributes: [title, founder_sequence]
+    aggregate_weight: 3.0
+  - id: executive_role
+    source_types: [person]
+    target_types: [organization]
+    direction: person_to_organization
+    temporal: interval
+    required_attributes: [title, photonics_relevance]
+    optional_attributes: [group]
+    aggregate_weight: 2.0
+  - id: technical_leadership
+    source_types: [person]
+    target_types: [organization]
+    direction: person_to_organization
+    temporal: interval
+    required_attributes: [title, photonics_relevance]
+    optional_attributes: [group, seniority]
+    aggregate_weight: 1.0
+  - id: spinout
+    source_types: [organization]
+    target_types: [organization]
+    direction: source_institution_to_spinout
+    temporal: point
+    required_attributes: [spinout_basis]
+    optional_attributes: [event_id, founder_person_ids]
+    aggregate_weight: null
+  - id: ip_license
+    source_types: [organization, person]
+    target_types: [organization]
+    direction: licensor_to_licensee
+    temporal: point_or_interval
+    required_attributes: [technology_or_ip]
+    optional_attributes: [exclusive, event_id]
+    aggregate_weight: null
+  - id: acquisition
+    source_types: [organization]
+    target_types: [organization]
+    direction: acquired_organization_to_acquirer
+    temporal: point
+    required_attributes: [event_id]
+    optional_attributes: [integration_status]
+    aggregate_weight: null
+  - id: team_transfer
+    source_types: [organization]
+    target_types: [organization]
+    direction: origin_to_destination
+    temporal: point_or_interval
+    required_attributes: [person_ids, transfer_basis]
+    optional_attributes: [event_id]
+    aggregate_weight: null
+  - id: advisor
+    source_types: [person]
+    target_types: [organization]
+    direction: person_to_organization
+    temporal: interval
+    required_attributes: [advisor_type, photonics_relevance]
+    optional_attributes: [board_role]
+    aggregate_weight: 0.25
+  - id: investment
+    source_types: [organization, person]
+    target_types: [organization]
+    direction: investor_to_investee
+    temporal: point
+    required_attributes: [investment_type]
+    optional_attributes: [round, amount, currency, event_id]
+    aggregate_weight: null
+  - id: collaboration
+    source_types: [organization, person]
+    target_types: [organization, person]
+    direction: declared_source_to_target
+    temporal: interval
+    required_attributes: [collaboration_type, photonics_relevance]
+    optional_attributes: [program, event_id]
+    aggregate_weight: null
+  - id: publication_affiliation
+    source_types: [person]
+    target_types: [organization]
+    direction: author_to_affiliation
+    temporal: point
+    required_attributes: [publication_source_id]
+    optional_attributes: [author_position, group]
+    aggregate_weight: null
+  - id: patent_affiliation
+    source_types: [person]
+    target_types: [organization]
+    direction: inventor_to_assignee_or_affiliation
+    temporal: point
+    required_attributes: [patent_source_id, relationship_basis]
+    optional_attributes: [inventor_position]
+    aggregate_weight: null
+  - id: talent_flow
+    source_types: [organization]
+    target_types: [organization]
+    direction: prior_institution_to_later_institution
+    temporal: derived
+    required_attributes: [person_ids, contributing_edge_ids, weighting_version]
+    optional_attributes: [breakdown]
+    aggregate_weight: derived
+    derived_only: true
+
+attribute_enums:
+  photonics_relevance: [direct, enabling, adjacent, historical, unknown]
+  founder_type: [founder, co_founder, founding_employee]
+  training_type: [degree, postdoc, visiting_researcher, research_staff, other]
+  employment_type: [employee, contractor, intern, consultant, unknown]
+  spinout_basis: [formal_spinout, technology_transfer, lab_origin, team_origin]
+  advisor_type: [technical_advisor, scientific_advisor, board_member, board_observer]
+  investment_type: [venture, strategic, angel, grant, other]

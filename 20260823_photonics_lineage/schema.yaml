@@ -1,0 +1,248 @@
+schema_version: "0.1.0"
+status: frozen_for_phase_1
+description: Normalized contract for the photonics lineage research graph.
+
+conventions:
+  ids:
+    pattern: "^[a-z][a-z0-9]*(?:_[a-z0-9]+)*$"
+    prefixes:
+      person: person_
+      organization: org_
+      event: event_
+      edge: edge_
+      source: src_
+      claim: claim_
+    stability: IDs are immutable after merge; aliases and names may change.
+  dates:
+    format: ISO-8601
+    accepted_precision: [day, month, year, unknown]
+    examples: ["2025-06-17", "2025-06", "2025", null]
+    rule: Never invent month/day precision. Store precision explicitly.
+  nulls: Use null for unknown values; never use empty strings, unknown, N/A, or zero.
+  lists: Use [] for known-empty lists and null when completeness is unknown.
+  money:
+    amount_type: number
+    currency: ISO-4217
+  names:
+    rule: Preserve native-script names as aliases; canonical name is the most stable public form.
+
+evidence_grades:
+  A:
+    label: primary
+    validated_default: true
+  B:
+    label: strong_secondary
+    validated_default: true
+  C:
+    label: weak_but_useful
+    validated_default: false
+  D:
+    label: unverified_media_claim
+    validated_default: false
+  X:
+    label: inferred
+    validated_default: false
+
+common_types:
+  date_value:
+    fields:
+      value: {type: [string, "null"], format: iso_8601_partial}
+      precision: {type: string, enum: [day, month, year, unknown]}
+  geography:
+    fields:
+      country_code: {type: [string, "null"], pattern: "^[A-Z]{2}$"}
+      region: {type: [string, "null"]}
+      city: {type: [string, "null"]}
+    note: country_code is ISO-3166-1 alpha-2; region and city are display labels.
+  source_reference:
+    required: [source_id, supports]
+    fields:
+      source_id: {type: string, id_prefix: src_}
+      supports: {type: string, description: Exact field or claim supported by this source.}
+      locator: {type: [string, "null"], description: Page, paragraph, timestamp, patent claim, or quoted fragment locator.}
+      accessed_date: {type: [string, "null"], format: iso_8601_day}
+  evidence:
+    required: [grade, sources]
+    fields:
+      grade: {type: string, enum: [A, B, C, D, X]}
+      sources: {type: array, items: source_reference}
+      corroboration_count: {type: integer, minimum: 0}
+      rationale: {type: [string, "null"]}
+      reviewed_by: {type: [string, "null"]}
+      reviewed_date: {type: [string, "null"], format: iso_8601_day}
+    invariants:
+      - Grade X may have no sources but must include a rationale.
+      - Grades A-D require at least one source reference.
+      - Grade A describes source class, not truth certainty; conflicts remain explicit.
+
+entities:
+  source:
+    collection: sources
+    required: [id, url, title, publisher, source_type, evidence_grade, accessed_date]
+    fields:
+      id: {type: string, id_prefix: src_}
+      url: {type: string, format: uri}
+      canonical_url: {type: [string, "null"], format: uri}
+      title: {type: string}
+      publisher: {type: string}
+      publication_date: {type: [date_value, "null"]}
+      accessed_date: {type: string, format: iso_8601_day}
+      source_type:
+        type: string
+        enum: [official_company_bio, official_company_page, university_bio, cv, regulatory_filing, acquisition_filing, official_press_release, conference_bio, paper, thesis, patent, archived_webpage, standards_body, professional_society, reputable_technical_media, authoritative_interview, linkedin, crunchbase, company_directory, startup_database, promotional_pr, news_media, repost, other]
+      evidence_grade: {type: string, enum: [A, B, C, D]}
+      language: {type: [string, "null"], format: bcp_47}
+      archive_url: {type: [string, "null"], format: uri}
+      content_hash: {type: [string, "null"]}
+      notes: {type: [string, "null"]}
+
+  organization:
+    collection: organizations
+    required: [id, name, aliases, organization_type, technologies, geographies, status, research_status, sources]
+    fields:
+      id: {type: string, id_prefix: org_}
+      name: {type: string}
+      aliases:
+        type: array
+        items:
+          fields:
+            name: {type: string}
+            language: {type: [string, "null"]}
+            alias_type: {type: string, enum: [former_name, short_name, native_name, brand, legal_name, common_name]}
+      organization_type:
+        type: string
+        enum: [company, startup, university, academic_lab, industrial_lab, government_lab, research_institute, acquired_business_unit, business_unit, venture_fund, other]
+      parent_organization_id: {type: [string, "null"], id_prefix: org_}
+      predecessor_ids: {type: array, items: {type: string, id_prefix: org_}}
+      successor_ids: {type: array, items: {type: string, id_prefix: org_}}
+      founded_date: {type: [date_value, "null"]}
+      dissolved_date: {type: [date_value, "null"]}
+      status: {type: string, enum: [active, acquired, merged, defunct, historical, unknown]}
+      technologies: {type: array, items: {type: string, taxonomy: technology}}
+      geographies: {type: array, items: geography}
+      website: {type: [string, "null"], format: uri}
+      research_status: {type: string, enum: [seed_unverified, in_research, validated, conflicted]}
+      sources: {type: array, items: source_reference}
+      notes: {type: [string, "null"]}
+
+  person:
+    collection: people
+    required: [id, name, aliases, research_status, sources]
+    fields:
+      id: {type: string, id_prefix: person_}
+      name: {type: string}
+      aliases:
+        type: array
+        items:
+          fields:
+            name: {type: string}
+            language: {type: [string, "null"]}
+            alias_type: {type: string, enum: [native_name, transliteration, alternate_spelling, former_name, common_name]}
+      name_disambiguator: {type: [string, "null"]}
+      current_organization_id: {type: [string, "null"], id_prefix: org_}
+      current_title: {type: [string, "null"]}
+      technologies: {type: array, items: {type: string, taxonomy: technology}}
+      research_status: {type: string, enum: [seed_unverified, in_research, validated, conflicted]}
+      sources: {type: array, items: source_reference}
+      notes: {type: [string, "null"]}
+    normalization: Career and education facts belong in edges, not embedded arrays.
+
+  event:
+    collection: events
+    required: [id, event_type, name, participants, announced_date, effective_date, evidence]
+    fields:
+      id: {type: string, id_prefix: event_}
+      event_type: {type: string, enum: [acquisition, merger, spinout, ip_transfer, team_formation, rebrand, dissolution]}
+      name: {type: string}
+      participants:
+        type: array
+        items:
+          fields:
+            entity_id: {type: string}
+            role: {type: string}
+      announced_date: {type: [date_value, "null"]}
+      effective_date: {type: [date_value, "null"]}
+      value:
+        type: [object, "null"]
+        fields:
+          headline_amount: {type: [number, "null"]}
+          currency: {type: [string, "null"], format: iso_4217}
+          upfront_amount: {type: [number, "null"]}
+          earnout_amount: {type: [number, "null"]}
+          stock_component: {type: [number, string, "null"]}
+      evidence: {type: evidence}
+      notes: {type: [string, "null"]}
+
+  edge:
+    collection: edges
+    required: [id, source_id, target_id, edge_type, start_date, end_date, attributes, evidence, status]
+    fields:
+      id: {type: string, id_prefix: edge_}
+      source_id: {type: string}
+      target_id: {type: string}
+      edge_type: {type: string, foreign_key: edge_types.id}
+      start_date: {type: [date_value, "null"]}
+      end_date: {type: [date_value, "null"]}
+      attributes: {type: object}
+      evidence: {type: evidence}
+      status: {type: string, enum: [asserted, validated, disputed, rejected, inferred]}
+      notes: {type: [string, "null"]}
+    invariants:
+      - Direction and endpoint types must match edge_types.yaml.
+      - One edge represents one atomic relationship over one continuous interval.
+      - Aggregate talent_flow edges are derived outputs and must list contributing person-edge IDs.
+
+  conflict:
+    collection: conflicts
+    required: [id, subject_id, field_or_edge, alternatives, status]
+    fields:
+      id: {type: string, id_prefix: conflict_}
+      subject_id: {type: string}
+      field_or_edge: {type: string}
+      alternatives:
+        type: array
+        items:
+          fields:
+            value: {type: any}
+            evidence: {type: evidence}
+      status: {type: string, enum: [open, resolved, irreconcilable]}
+      resolution: {type: [string, "null"]}
+
+taxonomies:
+  technology:
+    - silicon_photonics
+    - iii_v_silicon_integration
+    - thin_film_lithium_niobate
+    - integrated_lasers
+    - coherent_optics
+    - datacenter_optics
+    - co_packaged_optics
+    - near_packaged_optics
+    - optical_io
+    - optical_engine
+    - optical_serdes
+    - mixed_signal_dsp
+    - photonic_switching
+    - photonic_compute
+    - optical_interposer
+    - microled_interconnect
+    - integrated_lidar
+    - optical_packaging
+    - foundry
+    - fiber_optics
+    - optical_networking
+    - optomechanics
+  photonics_relevance: [direct, enabling, adjacent, historical, unknown]
+  geography_region: [north_america, europe, greater_china, asia_pacific, middle_east, africa, latin_america, global, unknown]
+
+derived_graph:
+  talent_weights:
+    founder: 3.0
+    executive_role: 2.0
+    technical_leadership: 1.0
+    employment: 1.0
+    advisor_default: 0.25
+  default_render_grades: [A, B]
+  optional_render_grades: [C]
+  excluded_render_grades: [D, X]
+  rule: Every aggregate edge must retain contributing person IDs and atomic edge IDs.
