@@ -1,0 +1,575 @@
+schema_version: "0.1-draft"
+as_of: "2026-08-23"
+scope: "Phase-1 acquisition-first research: 10 priority targets"
+evidence_grades:
+  A: "Primary: issuer/acquirer release, SEC filing, university/government source, official company page"
+  B: "Strong secondary or authoritative conference/industry biography"
+  C: "Weak secondary; retained only when clearly labeled"
+notes:
+  - "Null means not publicly disclosed or not established in this pass; it is not zero."
+  - "Announcement value and acquisition-date accounting consideration are kept distinct."
+
+acquisitions:
+  - target: "InfiniLink"
+    acquirer: "GlobalFoundries"
+    announcement_date: "2025-11-25"
+    announcement_date_note: "First dated GF public item found; transaction had already closed."
+    close_date: "2025-11-14"
+    value:
+      amount_usd_millions: 48
+      basis: "completed-acquisition purchase price"
+      structure: "not disclosed in reviewed sources"
+    target_employees: null
+    core_technology:
+      - "high-speed connectivity chips"
+      - "SerDes"
+      - "optical transceiver chipsets"
+      - "monolithic silicon photonics"
+      - "PIC/EIC system design for pluggable and co-packaged optics"
+    people:
+      - name: "Ahmed F. Aboul-Ella"
+        target_role: "co-founder and CEO"
+        upstream_lineage:
+          - organization: "Mixel Egypt"
+            role: "general manager"
+            confidence: medium
+            evidence_grade: C
+      - name: "Botros George"
+        target_role: "co-founder and CTO"
+        upstream_lineage: []
+    integration_status: "Acquired; GF states the engineering talent and IP enhance its in-house design capabilities."
+    team_continuity: "Company/team welcomed into GF; individual post-close roles not established from A-grade sources in this pass."
+    subsequent_founders: []
+    confidence: high
+    unresolved:
+      - "Exact first public announcement date (the dated GF article post-dates close)."
+      - "Consideration structure and acquired employee count."
+      - "A-grade prior-career evidence for both founders."
+    sources:
+      - grade: A
+        title: "GlobalFoundries 2025 Form 20-F"
+        url: "https://www.sec.gov/Archives/edgar/data/1709048/000170904826000022/gfs-20251231.htm"
+        supports: "close date, $48M price, technology"
+      - grade: A
+        title: "GF: Light-speed ambition"
+        url: "https://gf.com/news-and-events/blog/light-speed-ambition-globalfoundries-acquires-amf-and-infinilink-to-power-the-ai-datacenter-revolution/"
+        supports: "public date, technology, integration rationale"
+      - grade: B
+        title: "Sukna Ventures: InfiniLink"
+        url: "https://suknaventures.com/ventures/infinilink"
+        supports: "founders and roles"
+
+  - target: "Hyperlume"
+    acquirer: "Credo Technology Group"
+    announcement_date: "2025-09-29"
+    close_date: "2025-09-29"
+    value:
+      amount_usd_millions: 92.017
+      basis: "acquisition-date accounting consideration"
+      structure: "$88.698M cash plus $3.319M cash settlement of vested share-based awards; net cash payment $82.564M after acquired cash"
+    target_employees: null
+    core_technology:
+      - "ultra-fast microLED optical interconnects"
+      - "ultra-low-power driver/receiver circuitry"
+      - "chip-to-chip communication for AI and HPC"
+    people:
+      - name: "Mohsen Asad"
+        target_role: "co-founder and CEO"
+        upstream_lineage: []
+      - name: "Hossein Fariborzi"
+        target_role: "co-founder"
+        upstream_lineage: []
+    integration_status: "Acquired to add microLED technology to Credo's system-level connectivity portfolio."
+    team_continuity: "Not specifically disclosed."
+    subsequent_founders: []
+    confidence: high
+    unresolved:
+      - "Employee count and named post-close roles."
+      - "A-grade upstream employment/training lineage for founders."
+    sources:
+      - grade: A
+        title: "Credo FY2026 Q3 Form 10-Q"
+        url: "https://www.sec.gov/Archives/edgar/data/1807794/000162828026014017/crdo-20260131.htm"
+        supports: "close date, consideration, technology"
+      - grade: A
+        title: "Credo to Acquire Hyperlume"
+        url: "https://investors.credosemi.com/news-events/news/news-details/2025/Credo-to-Acquire-Hyperlume-Inc-/default.aspx"
+        supports: "same-day close, integration rationale"
+      - grade: A
+        title: "Hyperlume seed announcement"
+        url: "https://www.prnewswire.com/news-releases/hyperlume-raises-12-5-million-seed-round-to-revolutionize-ai-data-center-connectivity-302379669.html"
+        supports: "founders, founding year, technology"
+
+  - target: "Cloud Light Technology"
+    acquirer: "Lumentum"
+    announcement_date: "2023-10-30"
+    close_date: "2023-11-07"
+    value:
+      amount_usd_millions: 750
+      basis: "announced transaction value before adjustments"
+      structure: "cash plus assumption/substitution of outstanding unvested Cloud Light options"
+    target_employees: null
+    core_technology:
+      - "400G and 800G optical transceivers"
+      - "active optical cables"
+      - "chip-scale photonic integration"
+      - "automated packaging, assembly, test and high-volume manufacturing"
+    people:
+      - name: "Dennis Tong"
+        target_role: "founder and CEO"
+        upstream_lineage: []
+    integration_status: "Completed; added products, team, manufacturing operations and more than 100 patents to Lumentum."
+    team_continuity: "Official release welcomed the team; individual retention and roles not disclosed."
+    subsequent_founders: []
+    confidence: high
+    unresolved:
+      - "Acquired employee count and founder's verified upstream career."
+      - "Final purchase-price accounting value after adjustments."
+    sources:
+      - grade: A
+        title: "Lumentum to Acquire Cloud Light"
+        url: "https://investor.lumentum.com/financial-news-releases/news-details/2023/Lumentum-to-Acquire-Cloud-Light-to-Accelerate-Data-Center-Speed-and-Scalability/default.aspx"
+        supports: "announcement date, value/structure, founder, technology"
+      - grade: A
+        title: "Lumentum Completes Cloud Light Acquisition"
+        url: "https://investor.lumentum.com/financial-news-releases/news-details/2023/Lumentum-Announces-Completion-of-Cloud-Light-Acquisition/default.aspx"
+        supports: "close date and completed structure"
+      - grade: A
+        title: "Lumentum 2024 CSR report"
+        url: "https://resource.lumentum.com/s3fs-public/literature-items/csr2024.pdf"
+        supports: "operations and 100+ patents"
+
+  - target: "Advanced Micro Foundry (AMF)"
+    acquirer: "GlobalFoundries"
+    announcement_date: "2025-11-17"
+    close_date: "2025-11-18"
+    value:
+      amount_usd_millions: 453
+      basis: "acquisition-date accounting consideration"
+      structure: "not further disclosed in reviewed sources"
+    target_employees: null
+    core_technology:
+      - "silicon photonics specialty foundry"
+      - "MPW, prototyping and volume manufacturing"
+      - "application-specific silicon photonics platforms and PDKs"
+    people:
+      - name: "Guo-Qiang Lo"
+        target_role: "co-founder and CTO"
+        upstream_lineage:
+          - organization: "A*STAR Institute of Microelectronics (IME)"
+            role: "device R&D manager through deputy executive director for R&D; silicon-photonics program responsibility"
+            confidence: high
+            evidence_grade: A
+          - organization: "Integrated Device Technology (IDT)"
+            role: "CMOS R&D and manufacturing"
+            confidence: medium
+            evidence_grade: B
+    integration_status: "Completed; manufacturing assets, IP and talent integrated to expand GF's Singapore capacity and silicon-photonics roadmap."
+    team_continuity: "Corporate capability continued inside GF; named individual post-close roles unresolved."
+    subsequent_founders: []
+    confidence: high
+    unresolved:
+      - "Full founding team and employee count."
+      - "Cash/stock consideration breakdown."
+    sources:
+      - grade: A
+        title: "GlobalFoundries 2025 Form 20-F"
+        url: "https://investors.gf.com/static-files/ef3116da-5334-46e0-9b6c-56d3e67b1b92"
+        supports: "close date and $453M consideration"
+      - grade: A
+        title: "GlobalFoundries Acquires AMF"
+        url: "https://investors.gf.com/news-releases/news-release-details/globalfoundries-acquires-advanced-micro-foundry-accelerating"
+        supports: "announcement date, technology and integration"
+      - grade: A
+        title: "A*STAR Research: IME spin-offs"
+        url: "https://research.a-star.edu.sg/wp-content/uploads/2023/06/ARP-Issue-35-May-June_FA_online-upload.pdf"
+        supports: "formal IME spin-off lineage"
+      - grade: B
+        title: "SEMICON China speaker bio: Guo-Qiang Lo"
+        url: "https://www.semiconchina.org/en/2372"
+        supports: "co-founder role and prior IME/IDT career"
+
+  - target: "Inphi"
+    acquirer: "Marvell Technology"
+    announcement_date: "2020-10-29"
+    close_date: "2021-04-20"
+    value:
+      amount_usd_millions: 9917.529
+      basis: "acquisition-date total merger consideration"
+      structure: "$66 cash plus 2.323 Marvell shares per Inphi share; accounting total included cash, stock, awards and convertible-debt equity component"
+    target_employees: null
+    core_technology:
+      - "high-speed data movement and electro-optics"
+      - "optical DSP and coherent interconnect"
+      - "high-speed analog/mixed-signal ICs"
+      - "cloud data-center and carrier optical connectivity"
+    people:
+      - name: "Loi Nguyen"
+        target_role: "founder and vice president"
+        upstream_lineage:
+          - organization: "Cornell University / Lester Eastman group"
+            role: "B.S. and Ph.D.; high-speed compound-semiconductor devices"
+            confidence: high
+            evidence_grade: A
+          - organization: "Honeywell Physical Sciences Center"
+            role: "research employment while completing thesis"
+            confidence: high
+            evidence_grade: A
+      - name: "Ford Tamer"
+        target_role: "president and CEO at acquisition"
+        upstream_lineage:
+          - organization: "Broadcom"
+            role: "SVP and GM, Infrastructure Networking Group"
+            confidence: high
+            evidence_grade: A
+          - organization: "Agere Inc. / Lucent / Agere Systems"
+            role: "co-founder/CEO; then VP following acquisition/spinout"
+            confidence: high
+            evidence_grade: A
+    integration_status: "Completed; Inphi became a wholly owned Marvell subsidiary and its optical business/leadership entered the combined company."
+    team_continuity: "Loi Nguyen and other key leaders joined Marvell leadership; Ford Tamer joined Marvell's board."
+    subsequent_founders: []
+    confidence: high
+    unresolved:
+      - "Acquired employee count."
+      - "Comprehensive founder/early technical team beyond Loi Nguyen."
+      - "Subsequent startups founded by former Inphi staff."
+    sources:
+      - grade: A
+        title: "Marvell announces Inphi agreement"
+        url: "https://investor.marvell.com/news-events/press-releases/detail/308/marvell-to-acquire-inphi---accelerating-growth-and-leadership-cloud-5g-infrastructure"
+        supports: "announcement date, terms, technology"
+      - grade: A
+        title: "Marvell completes Inphi acquisition"
+        url: "https://investor.marvell.com/news-events/press-releases/detail/282/marvell-completes-acquisition-of-inphi"
+        supports: "close date"
+      - grade: A
+        title: "Marvell FY2022 Q1 Form 10-Q"
+        url: "https://www.sec.gov/Archives/edgar/data/1835632/000183563221000010/mrvl-20210501.htm"
+        supports: "total consideration and components"
+      - grade: A
+        title: "Marvell 2023 proxy"
+        url: "https://investor.marvell.com/sec-filings/all-sec-filings/content/0001104659-23-055484/tm232045d2_def14a.htm"
+        supports: "Loi Nguyen and Ford Tamer career lineage"
+
+  - target: "Celestial AI"
+    acquirer: "Marvell Technology"
+    announcement_date: "2025-12-02"
+    close_date: "2026-02-02"
+    value:
+      amount_usd_millions: 3250
+      basis: "announced upfront value"
+      structure: "$1.0B cash plus approximately 27.2M Marvell shares valued at $2.25B; up to another approximately 27.2M shares / $2.25B announced earnout tied to FY2029 revenue milestones"
+      close_note: "At close Marvell reported about $1.3B gross cash ($1.0B net of acquired cash) and 24.5M shares; counts differ from announcement due to closing adjustments."
+    target_employees: null
+    core_technology:
+      - "Photonic Fabric optical-interconnect platform"
+      - "package-, system- and rack-level scale-up connectivity"
+      - "high-bandwidth, low-latency optical I/O for AI infrastructure"
+    people:
+      - name: "David Lazovsky"
+        target_role: "co-founder and CEO"
+        upstream_lineage:
+          - organization: "Intermolecular"
+            role: "founder, president and CEO"
+            confidence: high
+            evidence_grade: A
+          - organization: "Khosla Ventures"
+            role: "venture partner"
+            confidence: high
+            evidence_grade: A
+      - name: "Preet Virk"
+        target_role: "co-founder / leadership"
+        upstream_lineage: []
+      - name: "Phil Winterbottom"
+        target_role: "CTO"
+        upstream_lineage: []
+    integration_status: "Completed; technologies and teams became part of Marvell's Data Center Group."
+    team_continuity: "David Lazovsky became Marvell EVP/GM, Data Center Networking Business Group."
+    subsequent_founders: []
+    confidence: high
+    unresolved:
+      - "Employee count at acquisition."
+      - "A-grade detailed upstream lineage for Preet Virk and Phil Winterbottom."
+      - "Final fair value of contingent consideration as milestones evolve."
+    sources:
+      - grade: A
+        title: "Marvell to Acquire Celestial AI"
+        url: "https://investor.marvell.com/news-events/press-releases/detail/1000/marvell-to-acquire-celestial-ai-accelerating-scale-up-connectivity-for-next-generation-data-centers"
+        supports: "announcement, value/earnout, founder and technology"
+      - grade: A
+        title: "Marvell completes Celestial AI acquisition"
+        url: "https://investor.marvell.com/news-events/press-releases/detail/1005/marvell-completes-acquisition-of-celestial-ai"
+        supports: "close and integration"
+      - grade: A
+        title: "Marvell FY2026 Form 10-K"
+        url: "https://investor.marvell.com/sec-filings/all-sec-filings/content/0001835632-26-000011/mrvl-20260131.htm"
+        supports: "closing consideration"
+      - grade: A
+        title: "Marvell leadership: Dave Lazovsky"
+        url: "https://www.marvell.com/company/leadership/dave-lazovsky.html"
+        supports: "post-close role and prior career"
+      - grade: B
+        title: "Engine Ventures: Celestial AI"
+        url: "https://engineventures.com/companies/celestial-ai"
+        supports: "founders/leadership and background organizations"
+
+  - target: "DustPhotonics"
+    acquirer: "Credo Technology Group"
+    announcement_date: "2026-04-13"
+    close_date: "2026-05-28"
+    value:
+      amount_usd_millions: 1200
+      basis: "maximum/total consideration described by seller-investor filing; Credo filing records $770M cash plus approximately 0.8M shares at close"
+      structure: "announced upfront $750M cash plus approximately 0.92M Credo shares; potential incremental consideration up to approximately 3.21M shares; post-close Credo disclosure also mentions up to approximately 2.8M shares and $31.6M cash"
+    target_employees: 70
+    target_employees_note: "approximately, at announcement"
+    core_technology:
+      - "silicon-photonics PICs for optical transceivers"
+      - "400G, 800G and 1.6T portfolio with 3.2T roadmap"
+      - "integrated- and external-laser configurations"
+      - "NPO and CPO optical connectivity"
+    people:
+      - name: "Yoel Chetrit"
+        target_role: "co-founder and chief R&D officer"
+        upstream_lineage: []
+      - name: "Ben Rubovitch"
+        target_role: "co-founder; board member at acquisition"
+        upstream_lineage: []
+      - name: "Avigdor Willenz"
+        target_role: "chairman"
+        upstream_lineage: []
+      - name: "Ronnen Lovinger"
+        target_role: "CEO and board member"
+        upstream_lineage: []
+    integration_status: "Completed; silicon-photonics PIC technology brought in-house to Credo."
+    team_continuity: "Ronnen Lovinger is listed as Credo VP of Silicon Photonics post-close."
+    subsequent_founders: []
+    confidence: high
+    unresolved:
+      - "Reconcile announced versus final share counts and maximum consideration when purchase accounting is final."
+      - "Complete founding-team and upstream lineage from A-grade sources."
+    sources:
+      - grade: A
+        title: "Credo acquisition agreement Form 8-K"
+        url: "https://www.sec.gov/Archives/edgar/data/1807794/000162828026024892/crdo-20260413.htm"
+        supports: "announcement date and terms"
+      - grade: A
+        title: "Credo FY2026 Form 10-K"
+        url: "https://www.sec.gov/Archives/edgar/data/1807794/000162828026043303/crdo-20260502.htm"
+        supports: "close consideration and contingent terms"
+      - grade: A
+        title: "Credo completes DustPhotonics"
+        url: "https://investors.credosemi.com/news-events/news/news-details/2026/Credo-Completes-Acquisition-of-DustPhotonics/default.aspx"
+        supports: "close date and integration"
+      - grade: A
+        title: "DustPhotonics leadership"
+        url: "https://www.dustphotonics.com/company/"
+        supports: "leadership roles"
+      - grade: A
+        title: "Credo leadership"
+        url: "https://credosemi.com/about-credo/leadership/"
+        supports: "Ronnen Lovinger post-close role"
+
+  - target: "Nubis Communications"
+    acquirer: "Ciena"
+    announcement_date: "2025-09-22"
+    close_date: "2025-10-07"
+    value:
+      amount_usd_millions: 270.5
+      basis: "aggregate acquisition-related amount reported by Ciena"
+      structure: "$232.6M cash at close plus $37.9M future employment-linked arrangements; announcement described a $270M all-cash transaction subject to adjustments"
+    target_employees: 50
+    target_employees_note: "more than 50 engineers; over 60% of total employees held PhDs"
+    core_technology:
+      - "CPO/NPO linear optical engines up to 6.4 Tb/s full duplex"
+      - "200 Gb/s-per-lane active copper cable linear redrivers"
+      - "ultra-compact low-power optical and electrical AI interconnects"
+    people:
+      - name: "Peter Winzer"
+        target_role: "founder and CTO"
+        upstream_lineage:
+          - organization: "Bell Labs"
+            role: "led fiber-optic transmission research; approximately 20 years"
+            confidence: high
+            evidence_grade: A
+      - name: "Guilhem de Valicourt"
+        target_role: "founder and VP Engineering"
+        upstream_lineage:
+          - organization: "Bell Labs"
+            role: "approximately 9 years"
+            confidence: high
+            evidence_grade: A
+          - organization: "IPG Photonics / Lumentum"
+            role: "optics lead (wording from Ciena transaction deck)"
+            confidence: high
+            evidence_grade: A
+      - name: "Dan Harding"
+        target_role: "CEO"
+        upstream_lineage:
+          - organization: "Broadcom"
+            role: "vice president; approximately 16 years"
+            confidence: high
+            evidence_grade: A
+    integration_status: "Completed; technology joined Ciena's inside-the-data-center portfolio."
+    team_continuity: "Peter Winzer continued at Ciena as VP Systems Architecture; retention arrangements covered certain employees."
+    subsequent_founders: []
+    confidence: high
+    unresolved:
+      - "Exact employee count and complete retained roster."
+      - "Whether all $37.9M future arrangements should be treated as deal value versus post-combination compensation."
+    sources:
+      - grade: A
+        title: "Ciena to Acquire Nubis"
+        url: "https://www.ciena.com/about/newsroom/press-releases/ciena-to-acquire-nubis-communications-to-expand-its-inside-the-data-center-strategy-and-further-address-growing-ai-workloads"
+        supports: "announcement, terms, employees, technology"
+      - grade: A
+        title: "Ciena FY2025 Form 10-K"
+        url: "https://www.sec.gov/Archives/edgar/data/936395/000162828025056698/cien-20251101.htm"
+        supports: "close date and accounting consideration"
+      - grade: A
+        title: "Ciena Nubis transaction presentation"
+        url: "https://s25.q4cdn.com/550667411/files/doc_events/2025/09/Presentation-Ciena-to-Acquire-Nubis-Communications.pdf"
+        supports: "founders/leaders and upstream careers"
+      - grade: B
+        title: "Optica OFC 2026 Executive Forum bio: Peter Winzer"
+        url: "https://opticaorg-dev-cac7d2csctagc8bm.z01.azurefd.net/%24web/optica/media/files/industry/2026/executive-forum/final_2026_executive_forum_program_book.pdf"
+        supports: "post-close Ciena role and Bell Labs lineage"
+
+  - target: "Enosemi"
+    acquirer: "AMD"
+    announcement_date: "2025-05-28"
+    close_date: null
+    close_date_note: "AMD said on May 28 that it had welcomed the team the prior week; exact legal close date not disclosed."
+    value:
+      amount_usd_millions: null
+      basis: "not disclosed"
+      structure: "not disclosed"
+    target_employees: null
+    core_technology:
+      - "silicon-photonics design IP and design enablement"
+      - "custom photonic/electronic silicon"
+      - "co-packaged optics development"
+    people:
+      - name: "Matt Streshinsky"
+        target_role: "co-founder and CEO"
+        upstream_lineage:
+          - organization: "Luminous Computing"
+            role: "photonics / optical-interconnect work"
+            confidence: high
+            evidence_grade: A
+          - organization: "Elenion Technologies / Nokia"
+            role: "founding engineering team; later led silicon photonics/packaging, photonics and mixed-signal work"
+            confidence: high
+            evidence_grade: A
+          - organization: "University of Washington"
+            role: "Ph.D. in electrical engineering; silicon photonics"
+            confidence: high
+            evidence_grade: A
+          - organization: "A*STAR Institute of Microelectronics"
+            role: "research experience"
+            confidence: high
+            evidence_grade: A
+      - name: "Ari Novack"
+        target_role: "co-founder and CTO"
+        upstream_lineage:
+          - organization: "Elenion Technologies / Nokia"
+            role: "founding team / silicon-photonics product work"
+            confidence: high
+            evidence_grade: A
+      - name: "Shahab Ardalan"
+        target_role: "co-founder and VP Engineering"
+        upstream_lineage:
+          - organization: "Luminous Computing"
+            role: "engineering"
+            confidence: high
+            evidence_grade: A
+          - organization: "Ayar Labs"
+            role: "early employee"
+            confidence: high
+            evidence_grade: A
+          - organization: "Gennum / Semtech"
+            role: "team member before Gennum acquisition"
+            confidence: high
+            evidence_grade: A
+    integration_status: "Completed by announcement; team joined AMD to develop photonics and CPO for next-generation AI systems."
+    team_continuity: "AMD explicitly welcomed the Enosemi team; Matt Streshinsky reports leading optics design at AMD."
+    subsequent_founders: []
+    confidence: high
+    unresolved:
+      - "Exact close date, value/structure and employee count."
+      - "Precise contractual scope of Luminous IP transferred/licensed into AMD."
+    sources:
+      - grade: A
+        title: "AMD Acquires Enosemi"
+        url: "https://www.amd.com/en/blogs/2025/amd-acquires-enosemi-to-accelerate-co-packaged-optics-innovation.html"
+        supports: "announcement, team continuity, technology"
+      - grade: A
+        title: "Enosemi launch and Luminous license"
+        url: "https://www.enosemi.com/news/2023-10-12_enosemi_luminous_press_release/"
+        supports: "founders, Luminous license, Elenion/Nokia/Ayar/Gennum lineage"
+      - grade: A
+        title: "Enosemi team"
+        url: "https://www.enosemi.com/team/"
+        supports: "founder roles"
+      - grade: A
+        title: "Matt Streshinsky biography"
+        url: "https://m.stre.sh/about.html"
+        supports: "post-close role and detailed upstream lineage"
+
+  - target: "Polariton Technologies"
+    acquirer: "Marvell Technology"
+    announcement_date: "2026-04-22"
+    close_date: "2026-04-22"
+    close_date_note: "Marvell announced an already-completed acquisition; exact legal closing time/date was not separately stated."
+    value:
+      amount_usd_millions: null
+      basis: "not disclosed"
+      structure: "not disclosed"
+    target_employees: null
+    core_technology:
+      - "plasmonic electro-optic modulators integrated with silicon photonics"
+      - "high-speed, low-power, compact modulation for coherent optics"
+      - "3.2T-and-beyond ZR/ZR+ and DCI roadmap"
+    people:
+      - name: "Claudia Hoessbacher"
+        target_role: "co-founder"
+        upstream_lineage:
+          - organization: "ETH Zurich, Institute of Electromagnetic Fields (Jürg Leuthold)"
+            role: "researcher / Ph.D. lineage"
+            confidence: high
+            evidence_grade: A
+      - name: "Wolfgang Heni"
+        target_role: "co-founder"
+        upstream_lineage:
+          - organization: "ETH Zurich, Institute of Electromagnetic Fields (Jürg Leuthold)"
+            role: "researcher"
+            confidence: high
+            evidence_grade: A
+      - name: "Benedikt Baeuerle"
+        target_role: "co-founder"
+        upstream_lineage:
+          - organization: "ETH Zurich, Institute of Electromagnetic Fields (Jürg Leuthold)"
+            role: "researcher"
+            confidence: high
+            evidence_grade: A
+    integration_status: "Completed; team and plasmonic modulation technology added to Marvell's optical portfolio."
+    team_continuity: "Marvell says it added the team; named post-close roles were not disclosed."
+    subsequent_founders: []
+    confidence: high
+    unresolved:
+      - "Transaction value/structure, employee count and exact legal close date."
+      - "IP-license terms between ETH Zurich and Polariton."
+    sources:
+      - grade: A
+        title: "Marvell Announces Acquisition of Polariton"
+        url: "https://investor.marvell.com/news-events/press-releases/detail/1020/marvell-announces-acquisition-of-polariton-technologies-advancing-optical-performance-scaling-to-3-2t-and-beyond"
+        supports: "announcement, completed status, technology and integration"
+      - grade: A
+        title: "ETH Zurich: Marvell acquires Polariton"
+        url: "https://ee.ethz.ch/de/news-und-veranstaltungen/d-itet-news-channel/2026/04/marvell-uebernimmt-polariton-um-die-optische-leistung-zu-staerken.html"
+        supports: "founders, 2019 founding and formal ETH/Leuthold spin-off lineage"
+      - grade: A
+        title: "ETH Zurich Foundation: Polariton"
+        url: "https://ethz-foundation.ch/en/pioneer-fellows/polariton-technologies/"
+        supports: "technology and Claudia Hoessbacher fellowship lineage"

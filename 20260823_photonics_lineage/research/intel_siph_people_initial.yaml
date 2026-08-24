@@ -1,0 +1,216 @@
+dataset:
+  title: "Intel Silicon Photonics people: initial evidence-backed seed tranche"
+  version: "0.1"
+  as_of: "2026-08-23"
+  scope: >-
+    Named people with direct evidence of Intel silicon-photonics work, plus selected
+    downstream career edges. This is a seed file, not a complete employment history.
+  evidence_policy:
+    A: "Primary or official: employer/company bio, professional-society page, conference bio, paper affiliation, or official press release."
+    B: "Strong independent secondary source."
+    C: "Self-reported or aggregator evidence; excluded from the default validated graph."
+    X: "Inference; not used for validated edges."
+  default_graph_filter: [A, B]
+  integration_note: >-
+    Person keys and source keys in this isolated workstream file are local staging IDs.
+    Canonical merge must add the schema-required person_, org_, edge_, and src_ prefixes
+    and convert source_urls into claim-level source references.
+
+sources:
+  optica_intel_team:
+    url: "https://www.optica.org/get_involved/awards_and_honors/awards/forman_team_lists/intel_silicon_photonics_solutions_group/"
+    type: "professional_society_team_page"
+    publisher: "Optica"
+    evidence_grade: B
+    note: "Names 16 Intel Silicon Photonics Solutions Group members and their roles."
+  optica_2007_modulator:
+    url: "https://opg.optica.org/abstract.cfm?uri=ipnra-2007-IMD3"
+    type: "conference_paper_affiliation"
+    publisher: "Optica Publishing Group"
+    evidence_grade: A
+    note: "Lists all authors with Intel Corporation affiliations for a 40-Gb/s silicon modulator paper."
+  anello_team:
+    url: "https://www.anellophotonics.com/team"
+    type: "official_company_bio"
+    publisher: "ANELLO Photonics"
+    evidence_grade: A
+  anello_paniccia_profile:
+    url: "https://www.anellophotonics.com/mario-paniccia"
+    type: "official_company_profile"
+    publisher: "ANELLO Photonics"
+    evidence_grade: A
+  xscape_team:
+    url: "https://www.xscapephotonics.com/team"
+    type: "official_company_bio"
+    publisher: "Xscape Photonics"
+    evidence_grade: A
+  xscape_vikram_announcement:
+    url: "https://www.xscapephotonics.com/blog-post/xscape-photonics-inc-has-appointed-vikram-sadagopan-as-its-vp-of-engineering"
+    type: "official_company_announcement"
+    publisher: "Xscape Photonics"
+    evidence_grade: A
+  quintessent_team:
+    url: "https://www.quintessent.com/our-team"
+    type: "official_company_bio"
+    publisher: "Quintessent"
+    evidence_grade: A
+  dust_team:
+    url: "https://www.dustphotonics.com/company/"
+    type: "official_company_bio"
+    publisher: "DustPhotonics"
+    evidence_grade: A
+  semicon_taiwan_sysak:
+    url: "https://www.semicontaiwan.org/en/node/14681"
+    type: "official_conference_bio"
+    publisher: "SEMICON Taiwan"
+    evidence_grade: A
+  lumentum_sysak:
+    url: "https://www.lumentum.com/en/videos/future-ai-and-cloud-connectivity-lumentum"
+    type: "official_company_page"
+    publisher: "Lumentum"
+    evidence_grade: A
+  ofc_cpo_workshop:
+    url: "https://www.ofcconference.org/program/special-events/workshop-is-cpo-integration-ready-for-ai-pipelines/"
+    type: "official_conference_bio"
+    publisher: "OFC"
+    evidence_grade: A
+
+people:
+  - id: mario_paniccia
+    name: "Mario Paniccia"
+    seed_status: "validated_diaspora"
+    photonics_focus: ["silicon photonics", "optical interconnect", "integrated optical gyroscope"]
+  - id: kevin_sullivan
+    name: "Kevin Sullivan"
+    seed_status: "validated_diaspora"
+    photonics_focus: ["silicon photonics commercialization", "fiber optics"]
+  - id: andrew_drew_alduino
+    name: "Andrew (Drew) Alduino"
+    aliases: ["Andrew Alduino", "Drew Alduino"]
+    seed_status: "validated_diaspora"
+    photonics_focus: ["silicon photonics", "hybrid laser", "optical interconnect"]
+  - id: matt_sysak
+    name: "Matthew (Matt) Sysak"
+    aliases: ["Matthew N. Sysak", "Matt Sysak"]
+    seed_status: "validated_diaspora"
+    photonics_focus: ["hybrid silicon lasers", "silicon photonics", "optical I/O"]
+  - id: yoel_chetrit
+    name: "Yoel Chetrit"
+    seed_status: "validated_diaspora"
+    photonics_focus: ["silicon photonics process", "datacenter optical communication"]
+  - id: brian_koch
+    name: "Brian Koch"
+    seed_status: "validated_diaspora"
+    photonics_focus: ["heterogeneous lasers", "silicon photonics", "manufacturing"]
+  - id: vivek_raghunathan
+    name: "Vivek Raghunathan"
+    seed_status: "validated_diaspora"
+    photonics_focus: ["silicon photonics", "CPO", "AI interconnect"]
+  - id: vikram_sadagopan
+    name: "Vikram Sadagopan"
+    seed_status: "validated_diaspora"
+    photonics_focus: ["silicon photonics commercialization", "product engineering"]
+  - id: juthika_basak
+    name: "Juthika Basak"
+    seed_status: "validated_diaspora"
+    photonics_focus: ["silicon photonics", "PIC devices", "optical transceivers"]
+  - id: assia_barkai
+    name: "Assia Barkai"
+    seed_status: "validated_intel_seed"
+    photonics_focus: ["silicon photonics process", "fiber coupling"]
+  - id: rami_cohen
+    name: "Rami Cohen"
+    seed_status: "validated_intel_seed"
+    photonics_focus: ["silicon photonics process", "fiber coupling"]
+  - id: olufemi_dosunmu
+    name: "Olufemi I. Dosunmu"
+    aliases: ["Femi Dosunmu"]
+    seed_status: "validated_intel_seed"
+    photonics_focus: ["silicon photonics components", "photodetectors"]
+  - id: john_heck
+    name: "John Heck"
+    seed_status: "validated_intel_seed"
+    photonics_focus: ["silicon photonics process", "hybrid III-V/Si integration"]
+  - id: richard_jones
+    name: "Richard Jones"
+    seed_status: "validated_intel_seed"
+    photonics_focus: ["silicon photonics architecture", "optical I/O"]
+  - id: yimin_kang
+    name: "Yimin Kang"
+    seed_status: "validated_intel_seed"
+    photonics_focus: ["silicon photonics component design"]
+  - id: ling_liao
+    name: "Ling Liao"
+    seed_status: "validated_intel_seed"
+    photonics_focus: ["silicon modulators", "silicon photonics engineering"]
+  - id: ansheng_liu
+    name: "Ansheng Liu"
+    seed_status: "validated_intel_seed"
+    photonics_focus: ["silicon modulator architecture", "silicon photonics"]
+  - id: hai_feng_liu
+    name: "Hai-Feng Liu"
+    seed_status: "validated_intel_seed"
+    photonics_focus: ["silicon photonics systems", "optical transceivers"]
+  - id: david_nelson
+    name: "David Nelson"
+    seed_status: "validated_intel_seed"
+    photonics_focus: ["integrated-circuit design for silicon photonics"]
+  - id: haisheng_rong
+    name: "Haisheng Rong"
+    seed_status: "validated_intel_seed"
+    photonics_focus: ["silicon photonics", "integrated lasers", "optical amplifiers"]
+
+edges:
+  # Intel team membership. Optica's official team page is intentionally reused:
+  # it is the most compact A-grade source for the commercialization-era group.
+  - {person: mario_paniccia, organization: "Intel Silicon Photonics Solutions Group", edge_type: technical_leadership, role: "Intel Fellow and general manager", evidence_grade: B, source_urls: ["https://www.optica.org/get_involved/awards_and_honors/awards/forman_team_lists/intel_silicon_photonics_solutions_group/"], photonics_relevance: "Led the named silicon-photonics product group.", uncertainty: "Page does not provide tenure dates."}
+  - {person: kevin_sullivan, organization: "Intel Silicon Photonics Solutions Group", edge_type: technical_leadership, role: "director of product development", evidence_grade: B, source_urls: ["https://www.optica.org/get_involved/awards_and_honors/awards/forman_team_lists/intel_silicon_photonics_solutions_group/"], photonics_relevance: "Product-development leadership in the named SiPh group.", uncertainty: "Page does not provide tenure dates."}
+  - {person: andrew_drew_alduino, organization: "Intel Silicon Photonics Solutions Group", edge_type: technical_leadership, role: "optical architect", evidence_grade: B, source_urls: ["https://www.optica.org/get_involved/awards_and_honors/awards/forman_team_lists/intel_silicon_photonics_solutions_group/"], photonics_relevance: "Optical architecture for Intel SiPh.", uncertainty: "Optica uses Andrew; later conference bio uses Drew. Identity match is supported by the distinctive Intel 2010-link history, but exact tenure dates are absent."}
+  - {person: matt_sysak, organization: "Intel Silicon Photonics Solutions Group", edge_type: technical_leadership, role: "product development lead", evidence_grade: B, source_urls: ["https://www.optica.org/get_involved/awards_and_honors/awards/forman_team_lists/intel_silicon_photonics_solutions_group/"], photonics_relevance: "Led SiPh product development.", uncertainty: "Page does not provide tenure dates."}
+  - {person: yoel_chetrit, organization: "Intel Silicon Photonics Solutions Group", edge_type: employment, role: "process engineer", evidence_grade: B, source_urls: ["https://www.optica.org/get_involved/awards_and_honors/awards/forman_team_lists/intel_silicon_photonics_solutions_group/"], photonics_relevance: "SiPh process engineering.", uncertainty: "Page does not provide tenure dates."}
+  - {person: assia_barkai, organization: "Intel Silicon Photonics Solutions Group", edge_type: employment, role: "process engineer", evidence_grade: B, source_urls: ["https://www.optica.org/get_involved/awards_and_honors/awards/forman_team_lists/intel_silicon_photonics_solutions_group/"], photonics_relevance: "SiPh process engineering.", uncertainty: "No downstream organization verified in this tranche."}
+  - {person: rami_cohen, organization: "Intel Silicon Photonics Solutions Group", edge_type: employment, role: "process engineer", evidence_grade: B, source_urls: ["https://www.optica.org/get_involved/awards_and_honors/awards/forman_team_lists/intel_silicon_photonics_solutions_group/"], photonics_relevance: "SiPh process engineering.", uncertainty: "No downstream organization verified in this tranche."}
+  - {person: olufemi_dosunmu, organization: "Intel Silicon Photonics Solutions Group", edge_type: employment, role: "component design engineer", evidence_grade: B, source_urls: ["https://www.optica.org/get_involved/awards_and_honors/awards/forman_team_lists/intel_silicon_photonics_solutions_group/"], photonics_relevance: "SiPh component design.", uncertainty: "No downstream organization verified in this tranche."}
+  - {person: john_heck, organization: "Intel Silicon Photonics Solutions Group", edge_type: employment, role: "process engineer", evidence_grade: B, source_urls: ["https://www.optica.org/get_involved/awards_and_honors/awards/forman_team_lists/intel_silicon_photonics_solutions_group/"], photonics_relevance: "SiPh process engineering.", uncertainty: "A possible later NVIDIA edge is intentionally withheld pending an A/B source."}
+  - {person: richard_jones, organization: "Intel Silicon Photonics Solutions Group", edge_type: technical_leadership, role: "principal engineer and optical architect", evidence_grade: B, source_urls: ["https://www.optica.org/get_involved/awards_and_honors/awards/forman_team_lists/intel_silicon_photonics_solutions_group/"], photonics_relevance: "Principal-level optical architecture.", uncertainty: "No downstream organization verified in this tranche."}
+  - {person: yimin_kang, organization: "Intel Silicon Photonics Solutions Group", edge_type: employment, role: "component design engineer", evidence_grade: B, source_urls: ["https://www.optica.org/get_involved/awards_and_honors/awards/forman_team_lists/intel_silicon_photonics_solutions_group/"], photonics_relevance: "SiPh component design.", uncertainty: "No downstream organization verified in this tranche."}
+  - {person: ling_liao, organization: "Intel Silicon Photonics Solutions Group", edge_type: technical_leadership, role: "engineering manager", evidence_grade: B, source_urls: ["https://www.optica.org/get_involved/awards_and_honors/awards/forman_team_lists/intel_silicon_photonics_solutions_group/"], photonics_relevance: "Engineering management in Intel SiPh.", uncertainty: "No downstream organization verified in this tranche."}
+  - {person: ansheng_liu, organization: "Intel Silicon Photonics Solutions Group", edge_type: technical_leadership, role: "principal engineer and optical architect", evidence_grade: B, source_urls: ["https://www.optica.org/get_involved/awards_and_honors/awards/forman_team_lists/intel_silicon_photonics_solutions_group/"], photonics_relevance: "Principal-level SiPh optical architecture.", uncertainty: "No downstream organization verified in this tranche."}
+  - {person: hai_feng_liu, organization: "Intel Silicon Photonics Solutions Group", edge_type: technical_leadership, role: "system architect", evidence_grade: B, source_urls: ["https://www.optica.org/get_involved/awards_and_honors/awards/forman_team_lists/intel_silicon_photonics_solutions_group/"], photonics_relevance: "System architecture for Intel SiPh.", uncertainty: "No downstream organization verified in this tranche."}
+  - {person: david_nelson, organization: "Intel Silicon Photonics Solutions Group", edge_type: technical_leadership, role: "principal engineer, integrated circuit design", evidence_grade: B, source_urls: ["https://www.optica.org/get_involved/awards_and_honors/awards/forman_team_lists/intel_silicon_photonics_solutions_group/"], photonics_relevance: "Electronic/PIC interface and integrated-circuit design within the SiPh group.", uncertainty: "No downstream organization verified in this tranche."}
+  - {person: haisheng_rong, organization: "Intel Silicon Photonics Solutions Group", edge_type: technical_leadership, role: "manager of photonics lab", evidence_grade: B, source_urls: ["https://www.optica.org/get_involved/awards_and_honors/awards/forman_team_lists/intel_silicon_photonics_solutions_group/"], photonics_relevance: "Managed Intel's photonics lab.", uncertainty: "No downstream organization verified in this tranche."}
+
+  # Additional Intel-centered people evidenced by official bios or papers.
+  - {person: brian_koch, organization: "Intel Photonics Technology Lab", edge_type: employment, role: "technical contributor (exact title unstated)", evidence_grade: A, source_urls: ["https://www.quintessent.com/our-team"], photonics_relevance: "Official bio says he contributed to silicon-photonics breakthroughs in Intel's Photonics Technology Lab.", uncertainty: "Exact Intel title and tenure dates are not stated."}
+  - {person: vivek_raghunathan, organization: "Intel", edge_type: technical_leadership, role: "led GPU-to-HBM interconnect development and first SiPh-transceiver commercialization work", evidence_grade: A, source_urls: ["https://www.xscapephotonics.com/team"], photonics_relevance: "Directly tied to Intel's first SiPh transceiver commercialization.", uncertainty: "Official bio does not state formal title or dates."}
+  - {person: vikram_sadagopan, organization: "Intel", edge_type: technical_leadership, role: "core silicon-photonics commercialization team member", evidence_grade: A, source_urls: ["https://www.xscapephotonics.com/blog-post/xscape-photonics-inc-has-appointed-vikram-sadagopan-as-its-vp-of-engineering"], photonics_relevance: "Commercialization of Intel silicon photonics.", uncertainty: "Formal Intel title and dates are not stated."}
+  - {person: juthika_basak, organization: "Intel", edge_type: publication_affiliation, role: "author, 40-Gb/s silicon-modulator work", evidence_grade: A, source_urls: ["https://opg.optica.org/abstract.cfm?uri=ipnra-2007-IMD3"], photonics_relevance: "Named Intel-affiliated author on a foundational high-speed silicon-modulator paper.", uncertainty: "Paper proves affiliation in 2007, not full employment dates or title."}
+
+  # Verified downstream edges.
+  - {person: mario_paniccia, organization: "ANELLO Photonics", edge_type: founder, role: "co-founder, chairman and CEO", evidence_grade: A, source_urls: ["https://www.anellophotonics.com/mario-paniccia"], photonics_relevance: "Applies silicon photonics to an integrated optical gyroscope.", uncertainty: "Company profile says appointed CEO/chairman in November 2019 and started ANELLO in 2020; formation-year convention needs normalization."}
+  - {person: kevin_sullivan, organization: "ANELLO Photonics", edge_type: executive_role, role: "Chief Operating Officer", evidence_grade: A, source_urls: ["https://www.anellophotonics.com/team"], photonics_relevance: "Executive at a silicon-photonic optical-gyro company after Intel SiPh commercialization work.", uncertainty: "Bio does not state ANELLO start date or founder status."}
+  - {person: andrew_drew_alduino, organization: "Meta Platforms", edge_type: employment, role: "optical engineer focused on integrated optics for AI/ML", evidence_grade: A, source_urls: ["https://www.optica.org/events/industry_events/2025/optica_executive_forum_at_ofc_2025/speakers/drew_alduino/"], photonics_relevance: "Integrated optics for AI/ML compute systems.", uncertainty: "Conference bio is a 2025 snapshot; start date and current status after that date are not established."}
+  - {person: matt_sysak, organization: "Ayar Labs", edge_type: executive_role, role: "VP of Laser and Platform Engineering", evidence_grade: A, source_urls: ["https://www.semicontaiwan.org/en/node/14681"], photonics_relevance: "Laser strategy and backend engineering for optical-I/O chiplets.", uncertainty: "Bio establishes this as the role immediately before Lumentum, but not exact start/end dates."}
+  - {person: matt_sysak, organization: "Lumentum", edge_type: executive_role, role: "CTO, Cloud and Networking Platform", evidence_grade: A, source_urls: ["https://www.semicontaiwan.org/en/node/14681", "https://www.lumentum.com/en/videos/future-ai-and-cloud-connectivity-lumentum"], photonics_relevance: "Technology strategy for cloud/networking optical platforms.", uncertainty: "Exact appointment date is not supplied in these sources."}
+  - {person: yoel_chetrit, organization: "DustPhotonics", edge_type: founder, role: "Chief R&D Officer and co-founder", evidence_grade: A, source_urls: ["https://www.dustphotonics.com/company/"], photonics_relevance: "SiPh products and technology for AI/cloud optical communication.", uncertainty: "Official page does not give founding or role start dates."}
+  - {person: brian_koch, organization: "Aurrion", edge_type: employment, role: "technical contributor (exact title unstated)", evidence_grade: A, source_urls: ["https://www.quintessent.com/our-team"], photonics_relevance: "Laser and silicon-photonics development at a heterogeneous-integration startup.", uncertainty: "Quintessent bio does not explicitly label him an Aurrion founder or give dates; no founder claim is made here."}
+  - {person: brian_koch, organization: "Juniper Networks", edge_type: employment, role: "technical contributor (exact title unstated)", evidence_grade: A, source_urls: ["https://www.quintessent.com/our-team"], photonics_relevance: "Silicon-photonics work after Juniper acquired Aurrion.", uncertainty: "Exact role and dates are unstated."}
+  - {person: brian_koch, organization: "Quintessent", edge_type: founder, role: "VP of Engineering and co-founder", evidence_grade: A, source_urls: ["https://www.quintessent.com/our-team"], photonics_relevance: "Integrated lasers and silicon photonics for scalable optical connectivity.", uncertainty: "Official page does not state founding date."}
+  - {person: vivek_raghunathan, organization: "Rockley Photonics", edge_type: technical_leadership, role: "Principal Engineer; led SiPh product integration for datacom", evidence_grade: A, source_urls: ["https://www.xscapephotonics.com/team"], photonics_relevance: "Datacom silicon-photonics product integration.", uncertainty: "Dates are not stated."}
+  - {person: vivek_raghunathan, organization: "Broadcom", edge_type: technical_leadership, role: "Senior Principal Engineer, Product Architect and Program Leader for Integrated Silicon Photonics", evidence_grade: A, source_urls: ["https://www.xscapephotonics.com/team"], photonics_relevance: "Core CPO technology and 25.6-T switch/SiPh-chiplet demonstration.", uncertainty: "Dates are not stated."}
+  - {person: vivek_raghunathan, organization: "Xscape Photonics", edge_type: founder, role: "co-founder and CEO", evidence_grade: A, source_urls: ["https://www.xscapephotonics.com/team"], photonics_relevance: "Multi-color laser/SiPh platform for AI data-center interconnect.", uncertainty: "Official team page does not state founding date."}
+  - {person: vikram_sadagopan, organization: "Luxtera", edge_type: employment, role: "early technical-team member", evidence_grade: A, source_urls: ["https://www.xscapephotonics.com/blog-post/xscape-photonics-inc-has-appointed-vikram-sadagopan-as-its-vp-of-engineering"], photonics_relevance: "Pioneering silicon-photonics product work.", uncertainty: "Exact role and dates are unstated."}
+  - {person: vikram_sadagopan, organization: "Xscape Photonics", edge_type: executive_role, role: "VP of Engineering", evidence_grade: A, source_urls: ["https://www.xscapephotonics.com/blog-post/xscape-photonics-inc-has-appointed-vikram-sadagopan-as-its-vp-of-engineering"], photonics_relevance: "Engineering leadership for AI-oriented photonic interconnect.", uncertainty: "Announcement dated 2025-04-18; continued tenure should be rechecked for later graph snapshots."}
+  - {person: juthika_basak, organization: "Finisar / Coherent", edge_type: technical_leadership, role: "led optical-transceiver architecture, technology and product development", evidence_grade: A, source_urls: ["https://www.ofcconference.org/program/special-events/workshop-is-cpo-integration-ready-for-ai-pipelines/"], photonics_relevance: "Multiple generations of metro/long-haul optical transceivers and PIC components.", uncertainty: "Conference bio groups Finisar/Coherent and does not specify legal-employer transition, title, or dates."}
+  - {person: juthika_basak, organization: "Nokia", edge_type: technical_leadership, role: "led optical-transceiver architecture, technology and product development", evidence_grade: A, source_urls: ["https://www.ofcconference.org/program/special-events/workshop-is-cpo-integration-ready-for-ai-pipelines/"], photonics_relevance: "Metro/long-haul optical-transceiver and PIC development.", uncertainty: "Title and dates are unstated."}
+  - {person: juthika_basak, organization: "AMD", edge_type: technical_leadership, role: "Fellow specializing in Silicon Photonics Technologies", evidence_grade: A, source_urls: ["https://www.ofcconference.org/program/special-events/workshop-is-cpo-integration-ready-for-ai-pipelines/"], photonics_relevance: "Silicon photonics for interconnect bandwidth and compute density.", uncertainty: "Conference bio is a 2026 snapshot; appointment date is unstated."}
+
+quality_summary:
+  named_people: 20
+  intel_centered_edges: 20
+  downstream_edges: 17
+  edges_by_grade: {A: 21, B: 16, C: 0, D: 0, X: 0}
+  caveat: >-
+    Grade A describes provenance, not completeness. Many official bios omit exact dates,
+    formal titles at older employers, or distinctions between startup employment and
+    founding; those omissions are preserved in uncertainty rather than inferred.

@@ -1,0 +1,268 @@
+schema_version: "0.1.0"
+dataset_id: bell_labs_people_initial
+as_of: "2026-08-23"
+scope: "Bell Labs / Lucent / Alcatel-Lucent / Mintera / Acacia / Nubis coherent-optics lineage"
+depends_on:
+  - organizations_seed.yaml
+  - schema.yaml
+  - edge_types.yaml
+method_notes:
+  - "Every edge is atomic and source-backed; no team_transfer edge is asserted."
+  - "Null dates reflect unsupported precision, not absence of a relationship."
+  - "Bell Labs entities remain time-aware and are not collapsed."
+
+sources:
+  - id: src_acacia_s1_2016
+    url: "https://www.sec.gov/Archives/edgar/data/1651235/000119312516571061/d46988ds1a.htm"
+    canonical_url: "https://www.sec.gov/Archives/edgar/data/1651235/000119312516571061/d46988ds1a.htm"
+    title: "Acacia Communications Amendment No. 2 to Form S-1"
+    publisher: "U.S. Securities and Exchange Commission / Acacia Communications"
+    publication_date: {value: "2016-05-02", precision: day}
+    accessed_date: "2026-08-23"
+    source_type: regulatory_filing
+    evidence_grade: A
+    language: en
+    archive_url: null
+    content_hash: null
+    notes: "Executive biographies directly name Acacia founders and their prior Mintera/Bell Labs roles."
+  - id: src_acacia_faq_2026
+    url: "https://acacia-inc.com/faqs/"
+    canonical_url: "https://acacia-inc.com/faqs/"
+    title: "Frequently Asked Questions"
+    publisher: "Cisco Acacia"
+    publication_date: null
+    accessed_date: "2026-08-23"
+    source_type: official_company_page
+    evidence_grade: A
+    language: en
+    archive_url: null
+    content_hash: null
+    notes: "Mutable page; states Acacia was founded by Givehchi, Mikkelsen, and Rasmussen."
+  - id: src_ecoc_benny_mikkelsen_2025
+    url: "https://ecoc2025.org/wp-content/uploads/2023/07/Benny-Mikkelsen_Bio.pdf"
+    canonical_url: "https://ecoc2025.org/wp-content/uploads/2023/07/Benny-Mikkelsen_Bio.pdf"
+    title: "Benny Mikkelsen Biography"
+    publisher: "ECOC 2025"
+    publication_date: {value: "2025", precision: year}
+    accessed_date: "2026-08-23"
+    source_type: conference_bio
+    evidence_grade: A
+    language: en
+    archive_url: null
+    content_hash: null
+    notes: null
+  - id: src_ciena_nubis_release_2025
+    url: "https://www.ciena.com/about/newsroom/press-releases/ciena-to-acquire-nubis-communications-to-expand-its-inside-the-data-center-strategy-and-further-address-growing-ai-workloads"
+    canonical_url: "https://www.ciena.com/about/newsroom/press-releases/ciena-to-acquire-nubis-communications-to-expand-its-inside-the-data-center-strategy-and-further-address-growing-ai-workloads"
+    title: "Ciena to Acquire Nubis Communications"
+    publisher: "Ciena"
+    publication_date: {value: "2025-09-22", precision: day}
+    accessed_date: "2026-08-23"
+    source_type: official_press_release
+    evidence_grade: A
+    language: en
+    archive_url: null
+    content_hash: null
+    notes: null
+  - id: src_ciena_nubis_deck_2025
+    url: "https://s25.q4cdn.com/550667411/files/doc_events/2025/09/Presentation-Ciena-to-Acquire-Nubis-Communications.pdf"
+    canonical_url: "https://s25.q4cdn.com/550667411/files/doc_events/2025/09/Presentation-Ciena-to-Acquire-Nubis-Communications.pdf"
+    title: "Ciena to Acquire Nubis Communications Presentation"
+    publisher: "Ciena"
+    publication_date: {value: "2025-09-22", precision: day}
+    accessed_date: "2026-08-23"
+    source_type: official_company_page
+    evidence_grade: A
+    language: en
+    archive_url: null
+    content_hash: null
+    notes: "Page 6 identifies leaders and prior employers/durations."
+  - id: src_optica_winzer_2026
+    url: "https://www.optica.org/events/industry_events/2026/optica_executive_forum_at_ofc/speakers/peter_winzer/"
+    canonical_url: "https://www.optica.org/events/industry_events/2026/optica_executive_forum_at_ofc/speakers/peter_winzer/"
+    title: "Peter Winzer"
+    publisher: "Optica"
+    publication_date: {value: "2026-03-16", precision: day}
+    accessed_date: "2026-08-23"
+    source_type: conference_bio
+    evidence_grade: A
+    language: en
+    archive_url: null
+    content_hash: null
+    notes: null
+  - id: src_optica_dan_harding_2024
+    url: "https://www.optica.org/events/industry_events/2024/optica_executive_forum_at_ofc_2024/archive_speakers/meet_the_speakers/dan_harding/"
+    canonical_url: "https://www.optica.org/events/industry_events/2024/optica_executive_forum_at_ofc_2024/archive_speakers/meet_the_speakers/dan_harding/"
+    title: "Dan Harding"
+    publisher: "Optica"
+    publication_date: {value: "2024-03-25", precision: day}
+    accessed_date: "2026-08-23"
+    source_type: conference_bio
+    evidence_grade: A
+    language: en
+    archive_url: null
+    content_hash: null
+    notes: null
+  - id: src_eth_leuthold_bio_2026
+    url: "https://ief.ee.ethz.ch/people/leuthold.html"
+    canonical_url: "https://ief.ee.ethz.ch/people/leuthold.html"
+    title: "Leuthold, Juerg, Prof. Dr."
+    publisher: "ETH Zurich Institute of Electromagnetic Fields"
+    publication_date: null
+    accessed_date: "2026-08-23"
+    source_type: university_bio
+    evidence_grade: A
+    language: en
+    archive_url: null
+    content_hash: null
+    notes: "Mutable biography."
+  - id: src_nokia_essiambre_2021
+    url: "https://www.nokia.com/blog/a-limit-within-a-limit-how-rene-jean-essiambre-shaped-the-direction-of-optical-research/"
+    canonical_url: "https://www.nokia.com/blog/a-limit-within-a-limit-how-rene-jean-essiambre-shaped-the-direction-of-optical-research/"
+    title: "A limit within a limit: How René-Jean Essiambre shaped the direction of optical research"
+    publisher: "Nokia"
+    publication_date: {value: "2021-06-10", precision: day}
+    accessed_date: "2026-08-23"
+    source_type: official_company_bio
+    evidence_grade: A
+    language: en
+    archive_url: null
+    content_hash: null
+    notes: null
+  - id: src_nokia_ryf_bio_2026
+    url: "https://www.nokia.com/people/roland-ryf/"
+    canonical_url: "https://www.nokia.com/people/roland-ryf/"
+    title: "Roland Ryf"
+    publisher: "Nokia"
+    publication_date: null
+    accessed_date: "2026-08-23"
+    source_type: official_company_bio
+    evidence_grade: A
+    language: en
+    archive_url: null
+    content_hash: null
+    notes: "Mutable biography."
+  - id: src_nokia_neilson_bio_2026
+    url: "https://www.nokia.com/people/david-neilson/"
+    canonical_url: "https://www.nokia.com/people/david-neilson/"
+    title: "David Neilson"
+    publisher: "Nokia"
+    publication_date: null
+    accessed_date: "2026-08-23"
+    source_type: official_company_bio
+    evidence_grade: A
+    language: en
+    archive_url: null
+    content_hash: null
+    notes: "Mutable biography."
+  - id: src_nokia_qian_hu_bio_2026
+    url: "https://www.nokia.com/people/qian-hu/"
+    canonical_url: "https://www.nokia.com/people/qian-hu/"
+    title: "Qian Hu"
+    publisher: "Nokia"
+    publication_date: null
+    accessed_date: "2026-08-23"
+    source_type: official_company_bio
+    evidence_grade: A
+    language: en
+    archive_url: null
+    content_hash: null
+    notes: "Mutable biography."
+  - id: src_optica_tkach_bio_2023
+    url: "https://www.optica.org/ja-jp/history/biographies/bios/robert_tkach/?lang=en-US"
+    canonical_url: "https://www.optica.org/history/biographies/bios/robert_tkach/"
+    title: "Robert Tkach"
+    publisher: "Optica"
+    publication_date: {value: "2023-07-26", precision: day}
+    accessed_date: "2026-08-23"
+    source_type: professional_society
+    evidence_grade: B
+    language: en
+    archive_url: null
+    content_hash: null
+    notes: null
+  - id: src_optica_fellows_2012
+    url: "https://www.optica.org/get_involved/awards_and_honors/fellow_members/elected_fellows/2012_fellows/"
+    canonical_url: "https://www.optica.org/get_involved/awards_and_honors/fellow_members/elected_fellows/2012_fellows/"
+    title: "2012 Fellows"
+    publisher: "Optica"
+    publication_date: {value: "2012", precision: year}
+    accessed_date: "2026-08-23"
+    source_type: professional_society
+    evidence_grade: B
+    language: en
+    archive_url: null
+    content_hash: null
+    notes: "Lists Sethumadhavan Chandrasekhar and Peter Winzer with Bell Labs, Alcatel-Lucent affiliation and technical citations."
+  - id: src_engine_celestial_profile_2026
+    url: "https://engineventures.com/companies/celestial-ai"
+    canonical_url: "https://engineventures.com/companies/celestial-ai"
+    title: "Celestial AI"
+    publisher: "Engine Ventures"
+    publication_date: null
+    accessed_date: "2026-08-23"
+    source_type: authoritative_interview
+    evidence_grade: B
+    language: en
+    archive_url: null
+    content_hash: null
+    notes: "Investor portfolio narrative; used only for Phil Winterbottom's stated career sequence."
+
+people:
+  - {id: person_benny_mikkelsen, name: Benny Mikkelsen, aliases: [], name_disambiguator: null, current_organization_id: org_cisco, current_title: "SVP and GM, Coherent Products and Components (Acacia)", technologies: [coherent_optics, mixed_signal_dsp], research_status: validated, sources: [{source_id: src_acacia_s1_2016, supports: "Acacia founder, CTO, Mintera and Bell Labs history", locator: "Management biography: Benny P. Mikkelsen", accessed_date: "2026-08-23"}, {source_id: src_ecoc_benny_mikkelsen_2025, supports: "Current Cisco Acacia role and full sequence", locator: "Biography", accessed_date: "2026-08-23"}], notes: null}
+  - {id: person_christian_rasmussen, name: Christian J. Rasmussen, aliases: [], name_disambiguator: "Acacia coherent-optics founder", current_organization_id: null, current_title: null, technologies: [coherent_optics, mixed_signal_dsp], research_status: validated, sources: [{source_id: src_acacia_s1_2016, supports: "Acacia founder and prior Mintera role", locator: "Management biography: Christian J. Rasmussen", accessed_date: "2026-08-23"}], notes: null}
+  - {id: person_mehrdad_givehchi, name: Mehrdad Givehchi, aliases: [], name_disambiguator: null, current_organization_id: null, current_title: null, technologies: [coherent_optics, optical_networking], research_status: validated, sources: [{source_id: src_acacia_s1_2016, supports: "Acacia founder and prior Mintera/Sycamore/Tektronix roles", locator: "Management biography: Mehrdad Givehchi", accessed_date: "2026-08-23"}], notes: null}
+  - {id: person_murugesan_shanmugaraj, name: "Murugesan Shanmugaraj", aliases: [{name: "Raj Shanmugaraj", language: en, alias_type: common_name}], name_disambiguator: null, current_organization_id: null, current_title: null, technologies: [coherent_optics, optical_networking], research_status: validated, sources: [{source_id: src_acacia_s1_2016, supports: "Acacia president and CEO", locator: "Executive officers / agent for service", accessed_date: "2026-08-23"}], notes: "Business leader rather than claimed founder."}
+  - {id: person_bhupendra_shah, name: Bhupendra C. Shah, aliases: [], name_disambiguator: null, current_organization_id: null, current_title: null, technologies: [coherent_optics, optical_networking], research_status: validated, sources: [{source_id: src_acacia_s1_2016, supports: "Acacia VP Engineering and prior Juniper/Broadcom roles", locator: "Management biography: Bhupendra C. Shah", accessed_date: "2026-08-23"}], notes: null}
+  - {id: person_peter_winzer, name: Peter Winzer, aliases: [{name: Peter J. Winzer, language: en, alias_type: alternate_spelling}], name_disambiguator: null, current_organization_id: org_ciena, current_title: "Vice President, Systems Architecture", technologies: [coherent_optics, optical_networking, optical_engine], research_status: validated, sources: [{source_id: src_optica_winzer_2026, supports: "Bell Labs, Nubis founder, and Ciena sequence", locator: "Speaker biography", accessed_date: "2026-08-23"}, {source_id: src_ciena_nubis_deck_2025, supports: "Nubis founder/CTO and 20 years at Bell Labs", locator: "Page 6", accessed_date: "2026-08-23"}], notes: null}
+  - {id: person_guilhem_de_valicourt, name: Guilhem de Valicourt, aliases: [], name_disambiguator: null, current_organization_id: null, current_title: null, technologies: [coherent_optics, optical_engine], research_status: validated, sources: [{source_id: src_ciena_nubis_deck_2025, supports: "Nubis founder/VP Engineering and prior Bell Labs/IPG-Lumentum roles", locator: "Page 6", accessed_date: "2026-08-23"}], notes: "Post-close role not individually established."}
+  - {id: person_dan_harding, name: Dan Harding, aliases: [], name_disambiguator: "Nubis CEO", current_organization_id: null, current_title: null, technologies: [optical_networking, optical_engine], research_status: validated, sources: [{source_id: src_optica_dan_harding_2024, supports: "Nubis CEO and prior Broadcom/Sandburst roles", locator: "Speaker biography", accessed_date: "2026-08-23"}, {source_id: src_ciena_nubis_release_2025, supports: "Nubis CEO at acquisition announcement", locator: "Quotation attribution", accessed_date: "2026-08-23"}], notes: "Post-close role not individually established."}
+  - {id: person_jurg_leuthold, name: Jürg Leuthold, aliases: [{name: Juerg Leuthold, language: de, alias_type: alternate_spelling}], name_disambiguator: null, current_organization_id: org_eth_leuthold_group, current_title: "Head, Institute of Electromagnetic Fields", technologies: [coherent_optics, silicon_photonics], research_status: validated, sources: [{source_id: src_eth_leuthold_bio_2026, supports: "Bell Labs/Lucent employment and ETH/KIT sequence", locator: "Biography paragraphs 1-2", accessed_date: "2026-08-23"}], notes: null}
+  - {id: person_rene_jean_essiambre, name: René-Jean Essiambre, aliases: [{name: Rene-Jean Essiambre, language: en, alias_type: alternate_spelling}], name_disambiguator: null, current_organization_id: org_nokia_bell_labs, current_title: null, technologies: [coherent_optics, fiber_optics], research_status: validated, sources: [{source_id: src_nokia_essiambre_2021, supports: "1997 Bell Labs start and direct optical research", locator: "Paragraph beginning 'In 1997'", accessed_date: "2026-08-23"}], notes: null}
+  - {id: person_roland_ryf, name: Roland Ryf, aliases: [], name_disambiguator: null, current_organization_id: org_nokia_bell_labs, current_title: "Head, Advanced Photonics Research", technologies: [coherent_optics, photonic_switching, fiber_optics], research_status: validated, sources: [{source_id: src_nokia_ryf_bio_2026, supports: "Bell Labs employment since 2000 and optical research", locator: "Biography", accessed_date: "2026-08-23"}], notes: null}
+  - {id: person_david_neilson, name: David Neilson, aliases: [{name: David T. Neilson, language: en, alias_type: alternate_spelling}], name_disambiguator: null, current_organization_id: org_nokia_bell_labs, current_title: "Group Leader, Optical Transmission Group", technologies: [optical_networking, photonic_switching, optical_io], research_status: validated, sources: [{source_id: src_nokia_neilson_bio_2026, supports: "Bell Labs employment since 1998 and optical research", locator: "Biography", accessed_date: "2026-08-23"}], notes: null}
+  - {id: person_qian_hu, name: Qian Hu, aliases: [], name_disambiguator: "Nokia Bell Labs optical researcher", current_organization_id: org_nokia_bell_labs, current_title: "Optical Transmission Researcher", technologies: [coherent_optics, mixed_signal_dsp, datacenter_optics], research_status: validated, sources: [{source_id: src_nokia_qian_hu_bio_2026, supports: "Nokia Bell Labs employment since 2015 and technical focus", locator: "Biography", accessed_date: "2026-08-23"}], notes: null}
+  - {id: person_robert_tkach, name: Robert Tkach, aliases: [{name: Bob Tkach, language: en, alias_type: common_name}], name_disambiguator: null, current_organization_id: org_nokia_bell_labs, current_title: null, technologies: [coherent_optics, fiber_optics, optical_networking], research_status: validated, sources: [{source_id: src_optica_tkach_bio_2023, supports: "Bell Labs, AT&T Labs, Celion, and Bell Labs return sequence", locator: "Biography paragraph 1", accessed_date: "2026-08-23"}], notes: null}
+  - {id: person_sethumadhavan_chandrasekhar, name: Sethumadhavan Chandrasekhar, aliases: [], name_disambiguator: "Bell Labs optical researcher", current_organization_id: null, current_title: null, technologies: [coherent_optics, optical_networking], research_status: validated, sources: [{source_id: src_optica_fellows_2012, supports: "Bell Labs/Alcatel-Lucent affiliation and coherent-transmission contribution", locator: "2012 Fellow entry", accessed_date: "2026-08-23"}], notes: "Employment interval is not established in this pass."}
+  - {id: person_phil_winterbottom, name: Phil Winterbottom, aliases: [{name: Philip Winterbottom, language: en, alias_type: alternate_spelling}], name_disambiguator: null, current_organization_id: null, current_title: null, technologies: [optical_io, optical_networking], research_status: validated, sources: [{source_id: src_engine_celestial_profile_2026, supports: "10+ years at Bell Labs, startup founder history, and Celestial CTO role", locator: "Leadership narrative", accessed_date: "2026-08-23"}], notes: "Bell Labs role was computing/network systems; photonics relevance becomes direct at Celestial AI. Post-close Marvell role not established by the cited artifact."}
+
+edges:
+  - {id: edge_benny_mikkelsen_employment_bell_labs, source_id: person_benny_mikkelsen, target_id: org_bell_labs, edge_type: employment, start_date: null, end_date: null, attributes: {role: "engineering positions", photonics_relevance: direct, group: null}, evidence: {grade: A, sources: [{source_id: src_acacia_s1_2016, supports: "Prior engineering positions at Bell Laboratories", locator: "Benny P. Mikkelsen biography", accessed_date: "2026-08-23"}], corroboration_count: 2, rationale: null, reviewed_by: null, reviewed_date: "2026-08-23"}, status: validated, notes: "Exact Bell Labs corporate era/dates unresolved."}
+  - {id: edge_benny_mikkelsen_founder_mintera, source_id: person_benny_mikkelsen, target_id: org_mintera, edge_type: founder, start_date: null, end_date: null, attributes: {founder_type: co_founder, title: "Vice President of Technology"}, evidence: {grade: A, sources: [{source_id: src_acacia_s1_2016, supports: "Co-founded Mintera and served as VP Technology", locator: "Benny P. Mikkelsen biography", accessed_date: "2026-08-23"}], corroboration_count: 2, rationale: null, reviewed_by: null, reviewed_date: "2026-08-23"}, status: validated, notes: null}
+  - {id: edge_benny_mikkelsen_founder_acacia, source_id: person_benny_mikkelsen, target_id: org_acacia_communications, edge_type: founder, start_date: {value: "2009-06", precision: month}, end_date: null, attributes: {founder_type: co_founder, title: "Chief Technology Officer"}, evidence: {grade: A, sources: [{source_id: src_acacia_s1_2016, supports: "Founder and CTO since June 2009", locator: "Benny P. Mikkelsen biography", accessed_date: "2026-08-23"}, {source_id: src_acacia_faq_2026, supports: "Named founder", locator: "When was Acacia founded?", accessed_date: "2026-08-23"}], corroboration_count: 2, rationale: null, reviewed_by: null, reviewed_date: "2026-08-23"}, status: validated, notes: null}
+  - {id: edge_christian_rasmussen_employment_mintera, source_id: person_christian_rasmussen, target_id: org_mintera, edge_type: employment, start_date: null, end_date: null, attributes: {role: "Principal Optical Engineer", photonics_relevance: direct, group: null}, evidence: {grade: A, sources: [{source_id: src_acacia_s1_2016, supports: "Principal optical engineer at Mintera", locator: "Christian J. Rasmussen biography", accessed_date: "2026-08-23"}], corroboration_count: 1, rationale: null, reviewed_by: null, reviewed_date: "2026-08-23"}, status: validated, notes: null}
+  - {id: edge_christian_rasmussen_founder_acacia, source_id: person_christian_rasmussen, target_id: org_acacia_communications, edge_type: founder, start_date: {value: "2009-06", precision: month}, end_date: null, attributes: {founder_type: co_founder, title: "Director, later VP, Digital Signal Processing and Optics"}, evidence: {grade: A, sources: [{source_id: src_acacia_s1_2016, supports: "Founder and roles from June 2009", locator: "Christian J. Rasmussen biography", accessed_date: "2026-08-23"}], corroboration_count: 2, rationale: null, reviewed_by: null, reviewed_date: "2026-08-23"}, status: validated, notes: null}
+  - {id: edge_mehrdad_givehchi_employment_mintera, source_id: person_mehrdad_givehchi, target_id: org_mintera, edge_type: employment, start_date: null, end_date: null, attributes: {role: "Consulting Optical Engineer", photonics_relevance: direct, group: null}, evidence: {grade: A, sources: [{source_id: src_acacia_s1_2016, supports: "Consulting optical engineer at Mintera", locator: "Mehrdad Givehchi biography", accessed_date: "2026-08-23"}], corroboration_count: 1, rationale: null, reviewed_by: null, reviewed_date: "2026-08-23"}, status: validated, notes: null}
+  - {id: edge_mehrdad_givehchi_founder_acacia, source_id: person_mehrdad_givehchi, target_id: org_acacia_communications, edge_type: founder, start_date: {value: "2009-06", precision: month}, end_date: null, attributes: {founder_type: co_founder, title: "Director, later VP, Hardware and Software"}, evidence: {grade: A, sources: [{source_id: src_acacia_s1_2016, supports: "Founder and roles from June 2009", locator: "Mehrdad Givehchi biography", accessed_date: "2026-08-23"}], corroboration_count: 2, rationale: null, reviewed_by: null, reviewed_date: "2026-08-23"}, status: validated, notes: null}
+  - {id: edge_raj_shanmugaraj_executive_acacia, source_id: person_murugesan_shanmugaraj, target_id: org_acacia_communications, edge_type: executive_role, start_date: null, end_date: null, attributes: {title: "President and Chief Executive Officer", photonics_relevance: enabling, group: null}, evidence: {grade: A, sources: [{source_id: src_acacia_s1_2016, supports: "President and CEO", locator: "Cover and management section", accessed_date: "2026-08-23"}], corroboration_count: 1, rationale: null, reviewed_by: null, reviewed_date: "2026-08-23"}, status: validated, notes: null}
+  - {id: edge_bhupendra_shah_technical_acacia, source_id: person_bhupendra_shah, target_id: org_acacia_communications, edge_type: technical_leadership, start_date: {value: "2009-06", precision: month}, end_date: null, attributes: {title: "Vice President of Engineering", photonics_relevance: direct, group: null, seniority: "VP"}, evidence: {grade: A, sources: [{source_id: src_acacia_s1_2016, supports: "VP Engineering since June 2009", locator: "Bhupendra C. Shah biography", accessed_date: "2026-08-23"}], corroboration_count: 1, rationale: null, reviewed_by: null, reviewed_date: "2026-08-23"}, status: validated, notes: null}
+  - {id: edge_bhupendra_shah_employment_juniper, source_id: person_bhupendra_shah, target_id: org_juniper_networks, edge_type: employment, start_date: null, end_date: null, attributes: {role: "Director of Engineering", photonics_relevance: enabling, group: null}, evidence: {grade: A, sources: [{source_id: src_acacia_s1_2016, supports: "Prior director role at Juniper", locator: "Bhupendra C. Shah biography", accessed_date: "2026-08-23"}], corroboration_count: 1, rationale: null, reviewed_by: null, reviewed_date: "2026-08-23"}, status: validated, notes: null}
+  - {id: edge_peter_winzer_employment_bell_labs, source_id: person_peter_winzer, target_id: org_alcatel_lucent_bell_labs, edge_type: employment, start_date: {value: "2000", precision: year}, end_date: {value: "2020", precision: year}, attributes: {role: "Researcher; later led fiber-optic transmission research", photonics_relevance: direct, group: "Optical Transmission Systems and Networks Research"}, evidence: {grade: A, sources: [{source_id: src_optica_winzer_2026, supports: "Two decades at Bell Labs before founding Nubis", locator: "Speaker biography", accessed_date: "2026-08-23"}], corroboration_count: 2, rationale: "Organization ID represents the later Bell Labs era; exact time split across Lucent/Alcatel-Lucent/Nokia entities needs a dedicated CV.", reviewed_by: null, reviewed_date: "2026-08-23"}, status: validated, notes: "Dates express the supported 2000-to-2020 span; entity-era allocation remains approximate and is flagged."}
+  - {id: edge_peter_winzer_founder_nubis, source_id: person_peter_winzer, target_id: org_nubis_communications, edge_type: founder, start_date: {value: "2020", precision: year}, end_date: {value: "2025-10-07", precision: day}, attributes: {founder_type: founder, title: "Chief Technology Officer"}, evidence: {grade: A, sources: [{source_id: src_optica_winzer_2026, supports: "Founded Nubis", locator: "Speaker biography", accessed_date: "2026-08-23"}, {source_id: src_ciena_nubis_deck_2025, supports: "CTO and founder", locator: "Page 6", accessed_date: "2026-08-23"}], corroboration_count: 2, rationale: null, reviewed_by: null, reviewed_date: "2026-08-23"}, status: validated, notes: null}
+  - {id: edge_peter_winzer_executive_ciena, source_id: person_peter_winzer, target_id: org_ciena, edge_type: technical_leadership, start_date: {value: "2025-10-07", precision: day}, end_date: null, attributes: {title: "Vice President, Systems Architecture", photonics_relevance: direct, group: "AI interconnects", seniority: "VP"}, evidence: {grade: A, sources: [{source_id: src_optica_winzer_2026, supports: "Post-acquisition Ciena role", locator: "Speaker biography", accessed_date: "2026-08-23"}], corroboration_count: 1, rationale: null, reviewed_by: null, reviewed_date: "2026-08-23"}, status: validated, notes: null}
+  - {id: edge_guilhem_de_valicourt_employment_bell_labs, source_id: person_guilhem_de_valicourt, target_id: org_alcatel_lucent_bell_labs, edge_type: employment, start_date: null, end_date: null, attributes: {role: "Optical communications researcher/engineer", photonics_relevance: direct, group: null}, evidence: {grade: A, sources: [{source_id: src_ciena_nubis_deck_2025, supports: "Nine years at Bell Labs", locator: "Page 6", accessed_date: "2026-08-23"}], corroboration_count: 1, rationale: null, reviewed_by: null, reviewed_date: "2026-08-23"}, status: validated, notes: "Exact dates and Bell Labs corporate-era split unresolved."}
+  - {id: edge_guilhem_de_valicourt_founder_nubis, source_id: person_guilhem_de_valicourt, target_id: org_nubis_communications, edge_type: founder, start_date: {value: "2020", precision: year}, end_date: {value: "2025-10-07", precision: day}, attributes: {founder_type: co_founder, title: "Vice President of Engineering"}, evidence: {grade: A, sources: [{source_id: src_ciena_nubis_deck_2025, supports: "Founder and VP Engineering", locator: "Page 6", accessed_date: "2026-08-23"}], corroboration_count: 1, rationale: null, reviewed_by: null, reviewed_date: "2026-08-23"}, status: validated, notes: null}
+  - {id: edge_dan_harding_executive_nubis, source_id: person_dan_harding, target_id: org_nubis_communications, edge_type: executive_role, start_date: null, end_date: {value: "2025-10-07", precision: day}, attributes: {title: "Chief Executive Officer", photonics_relevance: enabling, group: null}, evidence: {grade: A, sources: [{source_id: src_optica_dan_harding_2024, supports: "Nubis CEO", locator: "Speaker biography", accessed_date: "2026-08-23"}, {source_id: src_ciena_nubis_release_2025, supports: "CEO at transaction announcement", locator: "Quote attribution", accessed_date: "2026-08-23"}], corroboration_count: 2, rationale: null, reviewed_by: null, reviewed_date: "2026-08-23"}, status: validated, notes: null}
+  - {id: edge_jurg_leuthold_employment_lucent_bell_labs, source_id: person_jurg_leuthold, target_id: org_lucent_bell_labs, edge_type: employment, start_date: {value: "1999", precision: year}, end_date: {value: "2004", precision: year}, attributes: {role: "Device and systems researcher", photonics_relevance: direct, group: null}, evidence: {grade: A, sources: [{source_id: src_eth_leuthold_bio_2026, supports: "1999-2004 Bell Labs, Lucent employment and technical scope", locator: "Biography paragraph 2", accessed_date: "2026-08-23"}], corroboration_count: 1, rationale: null, reviewed_by: null, reviewed_date: "2026-08-23"}, status: validated, notes: null}
+  - {id: edge_jurg_leuthold_technical_eth, source_id: person_jurg_leuthold, target_id: org_eth_leuthold_group, edge_type: technical_leadership, start_date: {value: "2013", precision: year}, end_date: null, attributes: {title: "Head, Institute of Electromagnetic Fields; Full Professor", photonics_relevance: direct, group: null, seniority: "Professor and institute head"}, evidence: {grade: A, sources: [{source_id: src_eth_leuthold_bio_2026, supports: "ETH role since 2013", locator: "Function and biography", accessed_date: "2026-08-23"}], corroboration_count: 1, rationale: null, reviewed_by: null, reviewed_date: "2026-08-23"}, status: validated, notes: null}
+  - {id: edge_rene_essiambre_employment_bell_labs, source_id: person_rene_jean_essiambre, target_id: org_bell_labs, edge_type: employment, start_date: {value: "1997", precision: year}, end_date: null, attributes: {role: "Optical researcher", photonics_relevance: direct, group: "Advanced optical systems / nonlinear fiber communications"}, evidence: {grade: A, sources: [{source_id: src_nokia_essiambre_2021, supports: "Joined Bell Labs in 1997", locator: "Paragraph beginning 'In 1997'", accessed_date: "2026-08-23"}], corroboration_count: 1, rationale: "End date not asserted; person later described as Nokia Bell Labs researcher.", reviewed_by: null, reviewed_date: "2026-08-23"}, status: validated, notes: "A future normalization pass should split corporate eras."}
+  - {id: edge_roland_ryf_employment_bell_labs, source_id: person_roland_ryf, target_id: org_bell_labs, edge_type: employment, start_date: {value: "2000", precision: year}, end_date: null, attributes: {role: "Researcher; Head, Advanced Photonics Research", photonics_relevance: direct, group: "Advanced Photonics Research"}, evidence: {grade: A, sources: [{source_id: src_nokia_ryf_bio_2026, supports: "Joined Bell Labs in 2000 and optical work", locator: "Biography", accessed_date: "2026-08-23"}], corroboration_count: 1, rationale: null, reviewed_by: null, reviewed_date: "2026-08-23"}, status: validated, notes: "A future normalization pass should split corporate eras."}
+  - {id: edge_david_neilson_employment_bell_labs, source_id: person_david_neilson, target_id: org_bell_labs, edge_type: employment, start_date: {value: "1998", precision: year}, end_date: null, attributes: {role: "Researcher; Group Leader, Optical Transmission Group", photonics_relevance: direct, group: "Optical Transmission Group"}, evidence: {grade: A, sources: [{source_id: src_nokia_neilson_bio_2026, supports: "At Bell Laboratories since 1998 and optical research scope", locator: "Biography", accessed_date: "2026-08-23"}], corroboration_count: 1, rationale: null, reviewed_by: null, reviewed_date: "2026-08-23"}, status: validated, notes: "A future normalization pass should split corporate eras."}
+  - {id: edge_qian_hu_employment_nokia_bell_labs, source_id: person_qian_hu, target_id: org_nokia_bell_labs, edge_type: employment, start_date: {value: "2015", precision: year}, end_date: null, attributes: {role: "Optical Transmission Researcher", photonics_relevance: direct, group: "IP/Optical Networks", location: "Stuttgart, Germany / Murray Hill, USA"}, evidence: {grade: A, sources: [{source_id: src_nokia_qian_hu_bio_2026, supports: "Joined Nokia Bell Labs in 2015 and research focus", locator: "Biography", accessed_date: "2026-08-23"}], corroboration_count: 1, rationale: null, reviewed_by: null, reviewed_date: "2026-08-23"}, status: validated, notes: null}
+  - {id: edge_robert_tkach_employment_bell_labs_first, source_id: person_robert_tkach, target_id: org_bell_labs, edge_type: employment, start_date: {value: "1984", precision: year}, end_date: {value: "1996", precision: year}, attributes: {role: "Researcher", photonics_relevance: direct, group: null}, evidence: {grade: B, sources: [{source_id: src_optica_tkach_bio_2023, supports: "Joined Bell Labs in 1984 and moved in 1996", locator: "Biography paragraph 1", accessed_date: "2026-08-23"}], corroboration_count: 1, rationale: null, reviewed_by: null, reviewed_date: "2026-08-23"}, status: validated, notes: null}
+  - {id: edge_robert_tkach_employment_bell_labs_return, source_id: person_robert_tkach, target_id: org_alcatel_lucent_bell_labs, edge_type: employment, start_date: {value: "2006", precision: year}, end_date: null, attributes: {role: "Director, Advanced Photonics Research", photonics_relevance: direct, group: "Advanced Photonics Research"}, evidence: {grade: B, sources: [{source_id: src_optica_tkach_bio_2023, supports: "Rejoined Bell Labs in 2006 as director", locator: "Biography paragraph 1", accessed_date: "2026-08-23"}], corroboration_count: 1, rationale: null, reviewed_by: null, reviewed_date: "2026-08-23"}, status: validated, notes: "End date unresolved; corporate-era split after Nokia acquisition not modeled here."}
+  - {id: edge_seth_chandrasekhar_employment_alcatel_lucent_bell_labs, source_id: person_sethumadhavan_chandrasekhar, target_id: org_alcatel_lucent_bell_labs, edge_type: employment, start_date: null, end_date: null, attributes: {role: "Optoelectronic/coherent-transmission researcher", photonics_relevance: direct, group: null}, evidence: {grade: B, sources: [{source_id: src_optica_fellows_2012, supports: "2012 Bell Labs, Alcatel-Lucent affiliation and technical contribution", locator: "Sethumadhavan Chandrasekhar Fellow entry", accessed_date: "2026-08-23"}], corroboration_count: 1, rationale: "Affiliation is direct but interval dates are not available from this artifact.", reviewed_by: null, reviewed_date: "2026-08-23"}, status: validated, notes: null}
+  - {id: edge_phil_winterbottom_employment_bell_labs, source_id: person_phil_winterbottom, target_id: org_bell_labs, edge_type: employment, start_date: null, end_date: null, attributes: {role: "Computing/network systems researcher", photonics_relevance: enabling, group: "Computing Sciences"}, evidence: {grade: B, sources: [{source_id: src_engine_celestial_profile_2026, supports: "More than ten years at Bell Labs", locator: "Leadership narrative", accessed_date: "2026-08-23"}], corroboration_count: 1, rationale: null, reviewed_by: null, reviewed_date: "2026-08-23"}, status: validated, notes: "Not claimed as a Bell Labs coherent-optics researcher."}
+  - {id: edge_phil_winterbottom_technical_celestial, source_id: person_phil_winterbottom, target_id: org_celestial_ai, edge_type: technical_leadership, start_date: null, end_date: {value: "2026-02-02", precision: day}, attributes: {title: "Chief Technology Officer", photonics_relevance: direct, group: "Photonic Fabric", seniority: "CTO"}, evidence: {grade: B, sources: [{source_id: src_engine_celestial_profile_2026, supports: "Celestial AI CTO and photonics expertise", locator: "Leadership narrative", accessed_date: "2026-08-23"}], corroboration_count: 1, rationale: null, reviewed_by: null, reviewed_date: "2026-08-23"}, status: validated, notes: null}
+
+excluded_claims:
+  - claim: "Mintera team transferred to Acacia"
+    status: inferred
+    evidence_grade: X
+    rationale: "Three named people independently have Mintera→Acacia paths, but reviewed sources do not establish a coordinated or legally defined team transfer."
+  - claim: "Bell Labs team transferred to Nubis"
+    status: inferred
+    evidence_grade: X
+    rationale: "Peter Winzer and Guilhem de Valicourt independently have Bell Labs→Nubis founder paths; no reviewed source establishes a Bell Labs team transfer."
+
+conflicts: []

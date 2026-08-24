@@ -1,0 +1,92 @@
+schema_version: "0.1.0"
+events:
+  - id: event_acquisition_infinilink_globalfoundries
+    event_type: acquisition
+    name: "GlobalFoundries acquisition of InfiniLink"
+    participants: [{entity_id: org_infinilink, role: target}, {entity_id: org_globalfoundries, role: acquirer}]
+    announced_date: {value: "2025-11-25", precision: day}
+    effective_date: {value: "2025-11-14", precision: day}
+    value: {headline_amount: 48000000, currency: USD, upfront_amount: null, earnout_amount: null, stock_component: null}
+    evidence: {grade: A, sources: [{source_id: src_gf_2025_20f_sec, supports: "close date, purchase price and technology", locator: null, accessed_date: "2026-08-23"}, {source_id: src_gf_light_speed_ambition, supports: "first dated public item and integration rationale", locator: null, accessed_date: "2026-08-23"}], corroboration_count: 2, rationale: "Regulatory filing and official acquirer page.", reviewed_by: null, reviewed_date: "2026-08-23"}
+    notes: "The first dated public item found post-dates close; this announced_date is a publication proxy, not a verified first announcement. Consideration structure and employee count undisclosed."
+  - id: event_acquisition_hyperlume_credo
+    event_type: acquisition
+    name: "Credo acquisition of Hyperlume"
+    participants: [{entity_id: org_hyperlume, role: target}, {entity_id: org_credo, role: acquirer}]
+    announced_date: {value: "2025-09-29", precision: day}
+    effective_date: {value: "2025-09-29", precision: day}
+    value: {headline_amount: 92017000, currency: USD, upfront_amount: 88698000, earnout_amount: null, stock_component: "Includes $3.319M cash settlement of vested share-based awards; net cash after acquired cash was $82.564M."}
+    evidence: {grade: A, sources: [{source_id: src_credo_fy2026_q3_10q, supports: "close date and accounting consideration", locator: null, accessed_date: "2026-08-23"}, {source_id: src_credo_hyperlume_announcement, supports: "announcement, same-day close and rationale", locator: null, accessed_date: "2026-08-23"}], corroboration_count: 2, rationale: "SEC filing and official acquirer release.", reviewed_by: null, reviewed_date: "2026-08-23"}
+    notes: "Employee count not disclosed."
+  - id: event_acquisition_cloud_light_lumentum
+    event_type: acquisition
+    name: "Lumentum acquisition of Cloud Light Technology"
+    participants: [{entity_id: org_cloud_light, role: target}, {entity_id: org_lumentum, role: acquirer}]
+    announced_date: {value: "2023-10-30", precision: day}
+    effective_date: {value: "2023-11-07", precision: day}
+    value: {headline_amount: 750000000, currency: USD, upfront_amount: null, earnout_amount: null, stock_component: "Cash plus assumption or substitution of outstanding unvested Cloud Light options."}
+    evidence: {grade: A, sources: [{source_id: src_lumentum_cloudlight_announcement, supports: "announcement date, value and terms", locator: null, accessed_date: "2026-08-23"}, {source_id: src_lumentum_cloudlight_close, supports: "close date", locator: null, accessed_date: "2026-08-23"}], corroboration_count: 2, rationale: "Official acquirer releases.", reviewed_by: null, reviewed_date: "2026-08-23"}
+    notes: "$750M is announced transaction value before adjustments; final purchase accounting and employee count were not established."
+  - id: event_acquisition_amf_globalfoundries
+    event_type: acquisition
+    name: "GlobalFoundries acquisition of Advanced Micro Foundry"
+    participants: [{entity_id: org_amf, role: target}, {entity_id: org_globalfoundries, role: acquirer}]
+    announced_date: {value: "2025-11-17", precision: day}
+    effective_date: {value: "2025-11-18", precision: day}
+    value: {headline_amount: 453000000, currency: USD, upfront_amount: null, earnout_amount: null, stock_component: null}
+    evidence: {grade: A, sources: [{source_id: src_gf_2025_20f_investor, supports: "close date and acquisition-date consideration", locator: null, accessed_date: "2026-08-23"}, {source_id: src_gf_amf_announcement, supports: "announcement date, technology and integration", locator: null, accessed_date: "2026-08-23"}], corroboration_count: 2, rationale: "Regulatory filing and official acquirer release.", reviewed_by: null, reviewed_date: "2026-08-23"}
+    notes: "Cash/stock breakdown and employee count undisclosed."
+  - id: event_acquisition_inphi_marvell
+    event_type: acquisition
+    name: "Marvell acquisition of Inphi"
+    participants: [{entity_id: org_inphi, role: target}, {entity_id: org_marvell, role: acquirer}]
+    announced_date: {value: "2020-10-29", precision: day}
+    effective_date: {value: "2021-04-20", precision: day}
+    value: {headline_amount: 9917529000, currency: USD, upfront_amount: null, earnout_amount: null, stock_component: "$66 cash plus 2.323 Marvell shares per Inphi share; accounting total also included awards and a convertible-debt equity component."}
+    evidence: {grade: A, sources: [{source_id: src_marvell_inphi_announcement, supports: "announcement date, terms and technology", locator: null, accessed_date: "2026-08-23"}, {source_id: src_marvell_inphi_close, supports: "close date", locator: null, accessed_date: "2026-08-23"}, {source_id: src_marvell_fy2022_q1_10q, supports: "total consideration and components", locator: null, accessed_date: "2026-08-23"}], corroboration_count: 3, rationale: "Official releases and SEC filing.", reviewed_by: null, reviewed_date: "2026-08-23"}
+    notes: "Employee count and comprehensive founding team remain unresolved."
+  - id: event_acquisition_celestial_ai_marvell
+    event_type: acquisition
+    name: "Marvell acquisition of Celestial AI"
+    participants: [{entity_id: org_celestial_ai, role: target}, {entity_id: org_marvell, role: acquirer}]
+    announced_date: {value: "2025-12-02", precision: day}
+    effective_date: {value: "2026-02-02", precision: day}
+    value: {headline_amount: 3250000000, currency: USD, upfront_amount: 3250000000, earnout_amount: 2250000000, stock_component: "Announced upfront: $1.0B cash plus approximately 27.2M Marvell shares valued at $2.25B; earnout up to approximately 27.2M shares."}
+    evidence: {grade: A, sources: [{source_id: src_marvell_celestial_announcement, supports: "announcement, upfront value and earnout", locator: null, accessed_date: "2026-08-23"}, {source_id: src_marvell_celestial_close, supports: "close and integration", locator: null, accessed_date: "2026-08-23"}, {source_id: src_marvell_fy2026_10k, supports: "closing consideration", locator: null, accessed_date: "2026-08-23"}], corroboration_count: 3, rationale: "Official releases and regulatory filing.", reviewed_by: null, reviewed_date: "2026-08-23"}
+    notes: "Closing used about $1.3B gross cash ($1.0B net of acquired cash) and 24.5M shares; final contingent value remains unresolved. Employee count undisclosed."
+  - id: event_acquisition_dustphotonics_credo
+    event_type: acquisition
+    name: "Credo acquisition of DustPhotonics"
+    participants: [{entity_id: org_dustphotonics, role: target}, {entity_id: org_credo, role: acquirer}]
+    announced_date: {value: "2026-04-13", precision: day}
+    effective_date: {value: "2026-05-28", precision: day}
+    value: {headline_amount: 1200000000, currency: USD, upfront_amount: null, earnout_amount: null, stock_component: "Maximum/total consideration from seller-investor characterization; Credo records $770M cash plus approximately 0.8M shares at close and possible additional shares/cash."}
+    evidence: {grade: A, sources: [{source_id: src_credo_dust_8k, supports: "announcement date and signing terms", locator: null, accessed_date: "2026-08-23"}, {source_id: src_credo_fy2026_10k, supports: "close consideration and contingent terms", locator: null, accessed_date: "2026-08-23"}, {source_id: src_credo_dust_close, supports: "close date and integration", locator: null, accessed_date: "2026-08-23"}], corroboration_count: 3, rationale: "SEC filings and official acquirer release.", reviewed_by: null, reviewed_date: "2026-08-23"}
+    notes: "Approx. 70 employees at announcement. Headline value and share counts vary by signing, close and seller-investor characterization; purchase accounting is not final."
+  - id: event_acquisition_nubis_ciena
+    event_type: acquisition
+    name: "Ciena acquisition of Nubis Communications"
+    participants: [{entity_id: org_nubis, role: target}, {entity_id: org_ciena, role: acquirer}]
+    announced_date: {value: "2025-09-22", precision: day}
+    effective_date: {value: "2025-10-07", precision: day}
+    value: {headline_amount: 270500000, currency: USD, upfront_amount: 232600000, earnout_amount: null, stock_component: "$37.9M of the aggregate relates to future employment-linked arrangements treated as post-combination compensation."}
+    evidence: {grade: A, sources: [{source_id: src_ciena_nubis_announcement, supports: "announcement, terms, employees and technology", locator: null, accessed_date: "2026-08-23"}, {source_id: src_ciena_fy2025_10k, supports: "close date and accounting consideration", locator: null, accessed_date: "2026-08-23"}], corroboration_count: 2, rationale: "Official release and SEC filing.", reviewed_by: null, reviewed_date: "2026-08-23"}
+    notes: "More than 50 engineers; $37.9M should not be treated as purchase price without the compensation caveat."
+  - id: event_acquisition_enosemi_amd
+    event_type: acquisition
+    name: "AMD acquisition of Enosemi"
+    participants: [{entity_id: org_enosemi, role: target}, {entity_id: org_amd, role: acquirer}]
+    announced_date: {value: "2025-05-28", precision: day}
+    effective_date: null
+    value: {headline_amount: null, currency: null, upfront_amount: null, earnout_amount: null, stock_component: null}
+    evidence: {grade: A, sources: [{source_id: src_amd_enosemi_acquisition, supports: "announcement, completed-team language and technology", locator: null, accessed_date: "2026-08-23"}], corroboration_count: 1, rationale: "Official acquirer page directly confirms the acquisition but not legal close date or terms.", reviewed_by: null, reviewed_date: "2026-08-23"}
+    notes: "AMD said it welcomed the team the prior week. Exact legal close date, value, structure and employee count undisclosed; effective_date remains null."
+  - id: event_acquisition_polariton_marvell
+    event_type: acquisition
+    name: "Marvell acquisition of Polariton Technologies"
+    participants: [{entity_id: org_polariton, role: target}, {entity_id: org_marvell, role: acquirer}]
+    announced_date: {value: "2026-04-22", precision: day}
+    effective_date: null
+    value: {headline_amount: null, currency: null, upfront_amount: null, earnout_amount: null, stock_component: null}
+    evidence: {grade: A, sources: [{source_id: src_marvell_polariton_announcement, supports: "announcement, completed status, technology and integration", locator: null, accessed_date: "2026-08-23"}, {source_id: src_eth_polariton_acquisition, supports: "founders, 2019 founding and ETH spinout", locator: null, accessed_date: "2026-08-23"}], corroboration_count: 2, rationale: "Official acquirer and university sources.", reviewed_by: null, reviewed_date: "2026-08-23"}
+    notes: "Announcement says acquisition was completed but does not separately establish exact legal close date; value, structure and employee count undisclosed."

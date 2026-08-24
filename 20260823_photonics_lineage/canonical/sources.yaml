@@ -1,0 +1,653 @@
+schema_version: "0.1.0"
+sources:
+  - {id: src_optica_intel_siph_team, url: "https://www.optica.org/get_involved/awards_and_honors/awards/forman_team_lists/intel_silicon_photonics_solutions_group/", canonical_url: null, title: "Intel Silicon Photonics Solutions Group", publisher: "Optica", publication_date: null, accessed_date: "2026-08-23", source_type: professional_society, evidence_grade: B, language: en, archive_url: null, content_hash: null, notes: "Secondary professional-society team roster."}
+  - {id: src_optica_2007_40g_modulator, url: "https://opg.optica.org/abstract.cfm?uri=ipnra-2007-IMD3", canonical_url: null, title: "High-speed Silicon Modulator for Future VLSI Interconnect", publisher: "Optica Publishing Group", publication_date: {value: "2007", precision: year}, accessed_date: "2026-08-23", source_type: paper, evidence_grade: A, language: en, archive_url: null, content_hash: null, notes: null}
+  - {id: src_optica_drew_alduino_2025, url: "https://www.optica.org/events/industry_events/2025/optica_executive_forum_at_ofc_2025/speakers/drew_alduino/", canonical_url: null, title: "Drew Alduino", publisher: "Optica", publication_date: {value: "2025", precision: year}, accessed_date: "2026-08-23", source_type: conference_bio, evidence_grade: A, language: en, archive_url: null, content_hash: null, notes: "Event biography; affiliation is a 2025 snapshot."}
+  - {id: src_anello_team, url: "https://www.anellophotonics.com/team", canonical_url: null, title: "Our Team", publisher: "ANELLO Photonics", publication_date: null, accessed_date: "2026-08-23", source_type: official_company_bio, evidence_grade: A, language: en, archive_url: null, content_hash: null, notes: "Mutable leadership page."}
+  - {id: src_anello_paniccia_profile, url: "https://www.anellophotonics.com/mario-paniccia", canonical_url: null, title: "Mario Paniccia", publisher: "ANELLO Photonics", publication_date: {value: "2022", precision: year}, accessed_date: "2026-08-23", source_type: official_company_bio, evidence_grade: A, language: en, archive_url: null, content_hash: null, notes: null}
+  - {id: src_xscape_team, url: "https://www.xscapephotonics.com/team", canonical_url: null, title: "Team", publisher: "Xscape Photonics", publication_date: null, accessed_date: "2026-08-23", source_type: official_company_bio, evidence_grade: A, language: en, archive_url: null, content_hash: null, notes: "Mutable leadership page."}
+  - {id: src_xscape_vikram_appointment, url: "https://www.xscapephotonics.com/blog-post/xscape-photonics-inc-has-appointed-vikram-sadagopan-as-its-vp-of-engineering", canonical_url: null, title: "Xscape Photonics appointed Vikram Sadagopan VP of Engineering", publisher: "Xscape Photonics", publication_date: {value: "2025-04-18", precision: day}, accessed_date: "2026-08-23", source_type: official_press_release, evidence_grade: A, language: en, archive_url: null, content_hash: null, notes: null}
+  - {id: src_quintessent_team, url: "https://www.quintessent.com/our-team", canonical_url: null, title: "Our Team", publisher: "Quintessent", publication_date: null, accessed_date: "2026-08-23", source_type: official_company_bio, evidence_grade: A, language: en, archive_url: null, content_hash: null, notes: "Mutable leadership page."}
+  - {id: src_dustphotonics_company, url: "https://www.dustphotonics.com/company/", canonical_url: null, title: "About Us", publisher: "DustPhotonics", publication_date: null, accessed_date: "2026-08-23", source_type: official_company_bio, evidence_grade: A, language: en, archive_url: null, content_hash: null, notes: "Mutable leadership page."}
+  - {id: src_semicon_taiwan_matt_sysak, url: "https://www.semicontaiwan.org/en/node/14681", canonical_url: null, title: "Dr. Matt Sysak", publisher: "SEMICON Taiwan", publication_date: null, accessed_date: "2026-08-23", source_type: conference_bio, evidence_grade: A, language: en, archive_url: null, content_hash: null, notes: null}
+  - {id: src_lumentum_matt_sysak, url: "https://www.lumentum.com/en/videos/future-ai-and-cloud-connectivity-lumentum", canonical_url: null, title: "The Future of AI and Cloud Connectivity with Lumentum", publisher: "Lumentum", publication_date: null, accessed_date: "2026-08-23", source_type: official_company_page, evidence_grade: A, language: en, archive_url: null, content_hash: null, notes: null}
+  - {id: src_ofc_cpo_workshop_2026, url: "https://www.ofcconference.org/program/special-events/workshop-is-cpo-integration-ready-for-ai-pipelines/", canonical_url: null, title: "Is CPO Integration Ready for AI Pipelines?", publisher: "OFC", publication_date: {value: "2026", precision: year}, accessed_date: "2026-08-23", source_type: conference_bio, evidence_grade: A, language: en, archive_url: null, content_hash: null, notes: null}
+
+  - {id: src_gf_2025_20f_sec, url: "https://www.sec.gov/Archives/edgar/data/1709048/000170904826000022/gfs-20251231.htm", canonical_url: null, title: "GlobalFoundries 2025 Form 20-F", publisher: "U.S. Securities and Exchange Commission", publication_date: {value: "2026", precision: year}, accessed_date: "2026-08-23", source_type: regulatory_filing, evidence_grade: A, language: en, archive_url: null, content_hash: null, notes: null}
+  - {id: src_gf_light_speed_ambition, url: "https://gf.com/news-and-events/blog/light-speed-ambition-globalfoundries-acquires-amf-and-infinilink-to-power-the-ai-datacenter-revolution/", canonical_url: null, title: "Light-speed ambition: GlobalFoundries acquires AMF and InfiniLink", publisher: "GlobalFoundries", publication_date: {value: "2025-11-25", precision: day}, accessed_date: "2026-08-23", source_type: official_company_page, evidence_grade: A, language: en, archive_url: null, content_hash: null, notes: "Post-dates the filing-established InfiniLink close."}
+  - {id: src_sukna_infinilink, url: "https://suknaventures.com/ventures/infinilink", canonical_url: null, title: "InfiniLink", publisher: "Sukna Ventures", publication_date: null, accessed_date: "2026-08-23", source_type: startup_database, evidence_grade: C, language: en, archive_url: null, content_hash: null, notes: "Investor portfolio page; downgraded from staging B to policy-consistent C."}
+  - {id: src_credo_fy2026_q3_10q, url: "https://www.sec.gov/Archives/edgar/data/1807794/000162828026014017/crdo-20260131.htm", canonical_url: null, title: "Credo FY2026 Q3 Form 10-Q", publisher: "U.S. Securities and Exchange Commission", publication_date: {value: "2026", precision: year}, accessed_date: "2026-08-23", source_type: regulatory_filing, evidence_grade: A, language: en, archive_url: null, content_hash: null, notes: null}
+  - {id: src_credo_hyperlume_announcement, url: "https://investors.credosemi.com/news-events/news/news-details/2025/Credo-to-Acquire-Hyperlume-Inc-/default.aspx", canonical_url: null, title: "Credo to Acquire Hyperlume", publisher: "Credo Technology Group", publication_date: {value: "2025-09-29", precision: day}, accessed_date: "2026-08-23", source_type: official_press_release, evidence_grade: A, language: en, archive_url: null, content_hash: null, notes: null}
+  - {id: src_hyperlume_seed_announcement, url: "https://www.prnewswire.com/news-releases/hyperlume-raises-12-5-million-seed-round-to-revolutionize-ai-data-center-connectivity-302379669.html", canonical_url: null, title: "Hyperlume Raises $12.5 Million Seed Round", publisher: "Hyperlume via PR Newswire", publication_date: {value: "2025", precision: year}, accessed_date: "2026-08-23", source_type: official_press_release, evidence_grade: A, language: en, archive_url: null, content_hash: null, notes: null}
+  - {id: src_lumentum_cloudlight_announcement, url: "https://investor.lumentum.com/financial-news-releases/news-details/2023/Lumentum-to-Acquire-Cloud-Light-to-Accelerate-Data-Center-Speed-and-Scalability/default.aspx", canonical_url: null, title: "Lumentum to Acquire Cloud Light", publisher: "Lumentum", publication_date: {value: "2023-10-30", precision: day}, accessed_date: "2026-08-23", source_type: official_press_release, evidence_grade: A, language: en, archive_url: null, content_hash: null, notes: null}
+  - {id: src_lumentum_cloudlight_close, url: "https://investor.lumentum.com/financial-news-releases/news-details/2023/Lumentum-Announces-Completion-of-Cloud-Light-Acquisition/default.aspx", canonical_url: null, title: "Lumentum Announces Completion of Cloud Light Acquisition", publisher: "Lumentum", publication_date: {value: "2023-11-07", precision: day}, accessed_date: "2026-08-23", source_type: official_press_release, evidence_grade: A, language: en, archive_url: null, content_hash: null, notes: null}
+  - {id: src_lumentum_csr_2024, url: "https://resource.lumentum.com/s3fs-public/literature-items/csr2024.pdf", canonical_url: null, title: "Lumentum 2024 CSR Report", publisher: "Lumentum", publication_date: {value: "2024", precision: year}, accessed_date: "2026-08-23", source_type: official_company_page, evidence_grade: A, language: en, archive_url: null, content_hash: null, notes: null}
+  - {id: src_gf_2025_20f_investor, url: "https://investors.gf.com/static-files/ef3116da-5334-46e0-9b6c-56d3e67b1b92", canonical_url: null, title: "GlobalFoundries 2025 Form 20-F", publisher: "GlobalFoundries", publication_date: {value: "2026", precision: year}, accessed_date: "2026-08-23", source_type: regulatory_filing, evidence_grade: A, language: en, archive_url: null, content_hash: null, notes: "Potential duplicate artifact of the SEC-hosted 20-F retained because staging cited both URLs for different claims."}
+  - {id: src_gf_amf_announcement, url: "https://investors.gf.com/news-releases/news-release-details/globalfoundries-acquires-advanced-micro-foundry-accelerating", canonical_url: null, title: "GlobalFoundries Acquires Advanced Micro Foundry", publisher: "GlobalFoundries", publication_date: {value: "2025-11-17", precision: day}, accessed_date: "2026-08-23", source_type: official_press_release, evidence_grade: A, language: en, archive_url: null, content_hash: null, notes: null}
+  - {id: src_astar_ime_spinoffs, url: "https://research.a-star.edu.sg/wp-content/uploads/2023/06/ARP-Issue-35-May-June_FA_online-upload.pdf", canonical_url: null, title: "A*STAR Research: IME spin-offs", publisher: "A*STAR", publication_date: {value: "2023-06", precision: month}, accessed_date: "2026-08-23", source_type: other, evidence_grade: A, language: en, archive_url: null, content_hash: null, notes: "Government research-institute publication."}
+  - {id: src_semicon_china_guoqiang_lo, url: "https://www.semiconchina.org/en/2372", canonical_url: null, title: "Guo-Qiang Lo speaker biography", publisher: "SEMICON China", publication_date: null, accessed_date: "2026-08-23", source_type: conference_bio, evidence_grade: B, language: en, archive_url: null, content_hash: null, notes: null}
+  - {id: src_marvell_inphi_announcement, url: "https://investor.marvell.com/news-events/press-releases/detail/308/marvell-to-acquire-inphi---accelerating-growth-and-leadership-cloud-5g-infrastructure", canonical_url: null, title: "Marvell to Acquire Inphi", publisher: "Marvell Technology", publication_date: {value: "2020-10-29", precision: day}, accessed_date: "2026-08-23", source_type: official_press_release, evidence_grade: A, language: en, archive_url: null, content_hash: null, notes: null}
+  - {id: src_marvell_inphi_close, url: "https://investor.marvell.com/news-events/press-releases/detail/282/marvell-completes-acquisition-of-inphi", canonical_url: null, title: "Marvell Completes Acquisition of Inphi", publisher: "Marvell Technology", publication_date: {value: "2021-04-20", precision: day}, accessed_date: "2026-08-23", source_type: official_press_release, evidence_grade: A, language: en, archive_url: null, content_hash: null, notes: null}
+  - {id: src_marvell_fy2022_q1_10q, url: "https://www.sec.gov/Archives/edgar/data/1835632/000183563221000010/mrvl-20210501.htm", canonical_url: null, title: "Marvell FY2022 Q1 Form 10-Q", publisher: "U.S. Securities and Exchange Commission", publication_date: {value: "2021", precision: year}, accessed_date: "2026-08-23", source_type: regulatory_filing, evidence_grade: A, language: en, archive_url: null, content_hash: null, notes: null}
+  - {id: src_marvell_proxy_2023, url: "https://investor.marvell.com/sec-filings/all-sec-filings/content/0001104659-23-055484/tm232045d2_def14a.htm", canonical_url: null, title: "Marvell 2023 Proxy Statement", publisher: "Marvell Technology", publication_date: {value: "2023", precision: year}, accessed_date: "2026-08-23", source_type: regulatory_filing, evidence_grade: A, language: en, archive_url: null, content_hash: null, notes: null}
+  - {id: src_marvell_celestial_announcement, url: "https://investor.marvell.com/news-events/press-releases/detail/1000/marvell-to-acquire-celestial-ai-accelerating-scale-up-connectivity-for-next-generation-data-centers", canonical_url: null, title: "Marvell to Acquire Celestial AI", publisher: "Marvell Technology", publication_date: {value: "2025-12-02", precision: day}, accessed_date: "2026-08-23", source_type: official_press_release, evidence_grade: A, language: en, archive_url: null, content_hash: null, notes: null}
+  - {id: src_marvell_celestial_close, url: "https://investor.marvell.com/news-events/press-releases/detail/1005/marvell-completes-acquisition-of-celestial-ai", canonical_url: null, title: "Marvell Completes Acquisition of Celestial AI", publisher: "Marvell Technology", publication_date: {value: "2026-02-02", precision: day}, accessed_date: "2026-08-23", source_type: official_press_release, evidence_grade: A, language: en, archive_url: null, content_hash: null, notes: null}
+  - {id: src_marvell_fy2026_10k, url: "https://investor.marvell.com/sec-filings/all-sec-filings/content/0001835632-26-000011/mrvl-20260131.htm", canonical_url: null, title: "Marvell FY2026 Form 10-K", publisher: "Marvell Technology", publication_date: {value: "2026", precision: year}, accessed_date: "2026-08-23", source_type: regulatory_filing, evidence_grade: A, language: en, archive_url: null, content_hash: null, notes: null}
+  - {id: src_marvell_dave_lazovsky, url: "https://www.marvell.com/company/leadership/dave-lazovsky.html", canonical_url: null, title: "Dave Lazovsky", publisher: "Marvell Technology", publication_date: null, accessed_date: "2026-08-23", source_type: official_company_bio, evidence_grade: A, language: en, archive_url: null, content_hash: null, notes: "Mutable leadership page."}
+  - {id: src_engine_celestial_ai, url: "https://engineventures.com/companies/celestial-ai", canonical_url: null, title: "Celestial AI", publisher: "Engine Ventures", publication_date: null, accessed_date: "2026-08-23", source_type: startup_database, evidence_grade: C, language: en, archive_url: null, content_hash: null, notes: "Investor portfolio page; downgraded from staging B to policy-consistent C."}
+  - {id: src_credo_dust_8k, url: "https://www.sec.gov/Archives/edgar/data/1807794/000162828026024892/crdo-20260413.htm", canonical_url: null, title: "Credo DustPhotonics Acquisition Agreement Form 8-K", publisher: "U.S. Securities and Exchange Commission", publication_date: {value: "2026-04-13", precision: day}, accessed_date: "2026-08-23", source_type: regulatory_filing, evidence_grade: A, language: en, archive_url: null, content_hash: null, notes: null}
+  - {id: src_credo_fy2026_10k, url: "https://www.sec.gov/Archives/edgar/data/1807794/000162828026043303/crdo-20260502.htm", canonical_url: null, title: "Credo FY2026 Form 10-K", publisher: "U.S. Securities and Exchange Commission", publication_date: {value: "2026", precision: year}, accessed_date: "2026-08-23", source_type: regulatory_filing, evidence_grade: A, language: en, archive_url: null, content_hash: null, notes: null}
+  - {id: src_credo_dust_close, url: "https://investors.credosemi.com/news-events/news/news-details/2026/Credo-Completes-Acquisition-of-DustPhotonics/default.aspx", canonical_url: null, title: "Credo Completes Acquisition of DustPhotonics", publisher: "Credo Technology Group", publication_date: {value: "2026-05-28", precision: day}, accessed_date: "2026-08-23", source_type: official_press_release, evidence_grade: A, language: en, archive_url: null, content_hash: null, notes: null}
+  - {id: src_credo_leadership, url: "https://credosemi.com/about-credo/leadership/", canonical_url: null, title: "Leadership", publisher: "Credo Technology Group", publication_date: null, accessed_date: "2026-08-23", source_type: official_company_bio, evidence_grade: A, language: en, archive_url: null, content_hash: null, notes: "Mutable leadership page."}
+  - {id: src_ciena_nubis_announcement, url: "https://www.ciena.com/about/newsroom/press-releases/ciena-to-acquire-nubis-communications-to-expand-its-inside-the-data-center-strategy-and-further-address-growing-ai-workloads", canonical_url: null, title: "Ciena to Acquire Nubis Communications", publisher: "Ciena", publication_date: {value: "2025-09-22", precision: day}, accessed_date: "2026-08-23", source_type: official_press_release, evidence_grade: A, language: en, archive_url: null, content_hash: null, notes: null}
+  - {id: src_ciena_fy2025_10k, url: "https://www.sec.gov/Archives/edgar/data/936395/000162828025056698/cien-20251101.htm", canonical_url: null, title: "Ciena FY2025 Form 10-K", publisher: "U.S. Securities and Exchange Commission", publication_date: {value: "2025", precision: year}, accessed_date: "2026-08-23", source_type: regulatory_filing, evidence_grade: A, language: en, archive_url: null, content_hash: null, notes: null}
+  - {id: src_ciena_nubis_deck, url: "https://s25.q4cdn.com/550667411/files/doc_events/2025/09/Presentation-Ciena-to-Acquire-Nubis-Communications.pdf", canonical_url: null, title: "Ciena to Acquire Nubis Communications Presentation", publisher: "Ciena", publication_date: {value: "2025-09", precision: month}, accessed_date: "2026-08-23", source_type: acquisition_filing, evidence_grade: A, language: en, archive_url: null, content_hash: null, notes: null}
+  - {id: src_optica_winzer_2026, url: "https://opticaorg-dev-cac7d2csctagc8bm.z01.azurefd.net/%24web/optica/media/files/industry/2026/executive-forum/final_2026_executive_forum_program_book.pdf", canonical_url: null, title: "OFC 2026 Executive Forum Program Book", publisher: "Optica", publication_date: {value: "2026", precision: year}, accessed_date: "2026-08-23", source_type: conference_bio, evidence_grade: B, language: en, archive_url: null, content_hash: null, notes: null}
+  - {id: src_amd_enosemi_acquisition, url: "https://www.amd.com/en/blogs/2025/amd-acquires-enosemi-to-accelerate-co-packaged-optics-innovation.html", canonical_url: null, title: "AMD Acquires Enosemi to Accelerate Co-Packaged Optics Innovation", publisher: "AMD", publication_date: {value: "2025-05-28", precision: day}, accessed_date: "2026-08-23", source_type: official_company_page, evidence_grade: A, language: en, archive_url: null, content_hash: null, notes: "Exact legal close date not stated."}
+  - {id: src_enosemi_launch, url: "https://www.enosemi.com/news/2023-10-12_enosemi_luminous_press_release/", canonical_url: null, title: "Enosemi Launch and Luminous License", publisher: "Enosemi", publication_date: {value: "2023-10-12", precision: day}, accessed_date: "2026-08-23", source_type: official_press_release, evidence_grade: A, language: en, archive_url: null, content_hash: null, notes: null}
+  - {id: src_enosemi_team, url: "https://www.enosemi.com/team/", canonical_url: null, title: "Team", publisher: "Enosemi", publication_date: null, accessed_date: "2026-08-23", source_type: official_company_bio, evidence_grade: A, language: en, archive_url: null, content_hash: null, notes: "Mutable team page."}
+  - {id: src_matt_streshinsky_bio, url: "https://m.stre.sh/about.html", canonical_url: null, title: "Matt Streshinsky Biography", publisher: "Matt Streshinsky", publication_date: null, accessed_date: "2026-08-23", source_type: cv, evidence_grade: A, language: en, archive_url: null, content_hash: null, notes: "First-person professional biography."}
+  - {id: src_marvell_polariton_announcement, url: "https://investor.marvell.com/news-events/press-releases/detail/1020/marvell-announces-acquisition-of-polariton-technologies-advancing-optical-performance-scaling-to-3-2t-and-beyond", canonical_url: null, title: "Marvell Announces Acquisition of Polariton Technologies", publisher: "Marvell Technology", publication_date: {value: "2026-04-22", precision: day}, accessed_date: "2026-08-23", source_type: official_press_release, evidence_grade: A, language: en, archive_url: null, content_hash: null, notes: "Announcement says acquisition was completed; exact legal close date not separately given."}
+  - {id: src_eth_polariton_acquisition, url: "https://ee.ethz.ch/de/news-und-veranstaltungen/d-itet-news-channel/2026/04/marvell-uebernimmt-polariton-um-die-optische-leistung-zu-staerken.html", canonical_url: null, title: "Marvell acquires Polariton", publisher: "ETH Zurich", publication_date: {value: "2026-04", precision: month}, accessed_date: "2026-08-23", source_type: university_bio, evidence_grade: A, language: de, archive_url: null, content_hash: null, notes: null}
+  - {id: src_eth_foundation_polariton, url: "https://ethz-foundation.ch/en/pioneer-fellows/polariton-technologies/", canonical_url: null, title: "Polariton Technologies", publisher: "ETH Zurich Foundation", publication_date: null, accessed_date: "2026-08-23", source_type: university_bio, evidence_grade: A, language: en, archive_url: null, content_hash: null, notes: null}
+  - id: src_acacia_s1_2016
+    url: https://www.sec.gov/Archives/edgar/data/1651235/000119312516571061/d46988ds1a.htm
+    canonical_url: https://www.sec.gov/Archives/edgar/data/1651235/000119312516571061/d46988ds1a.htm
+    title: Acacia Communications Amendment No. 2 to Form S-1
+    publisher: U.S. Securities and Exchange Commission / Acacia Communications
+    publication_date:
+      value: '2016-05-02'
+      precision: day
+    accessed_date: '2026-08-23'
+    source_type: regulatory_filing
+    evidence_grade: A
+    language: en
+    archive_url:
+    content_hash:
+    notes: Executive biographies directly name Acacia founders and their prior Mintera/Bell
+      Labs roles.
+  - id: src_acacia_faq_2026
+    url: https://acacia-inc.com/faqs/
+    canonical_url: https://acacia-inc.com/faqs/
+    title: Frequently Asked Questions
+    publisher: Cisco Acacia
+    publication_date:
+    accessed_date: '2026-08-23'
+    source_type: official_company_page
+    evidence_grade: A
+    language: en
+    archive_url:
+    content_hash:
+    notes: Mutable page; states Acacia was founded by Givehchi, Mikkelsen, and Rasmussen.
+  - id: src_ecoc_benny_mikkelsen_2025
+    url: https://ecoc2025.org/wp-content/uploads/2023/07/Benny-Mikkelsen_Bio.pdf
+    canonical_url: https://ecoc2025.org/wp-content/uploads/2023/07/Benny-Mikkelsen_Bio.pdf
+    title: Benny Mikkelsen Biography
+    publisher: ECOC 2025
+    publication_date:
+      value: '2025'
+      precision: year
+    accessed_date: '2026-08-23'
+    source_type: conference_bio
+    evidence_grade: A
+    language: en
+    archive_url:
+    content_hash:
+    notes:
+  - id: src_optica_winzer_speaker_2026
+    url: https://www.optica.org/events/industry_events/2026/optica_executive_forum_at_ofc/speakers/peter_winzer/
+    canonical_url: https://www.optica.org/events/industry_events/2026/optica_executive_forum_at_ofc/speakers/peter_winzer/
+    title: Peter Winzer
+    publisher: Optica
+    publication_date:
+      value: '2026-03-16'
+      precision: day
+    accessed_date: '2026-08-23'
+    source_type: conference_bio
+    evidence_grade: A
+    language: en
+    archive_url:
+    content_hash:
+    notes:
+  - id: src_optica_dan_harding_2024
+    url: https://www.optica.org/events/industry_events/2024/optica_executive_forum_at_ofc_2024/archive_speakers/meet_the_speakers/dan_harding/
+    canonical_url: https://www.optica.org/events/industry_events/2024/optica_executive_forum_at_ofc_2024/archive_speakers/meet_the_speakers/dan_harding/
+    title: Dan Harding
+    publisher: Optica
+    publication_date:
+      value: '2024-03-25'
+      precision: day
+    accessed_date: '2026-08-23'
+    source_type: conference_bio
+    evidence_grade: A
+    language: en
+    archive_url:
+    content_hash:
+    notes:
+  - id: src_eth_leuthold_bio_2026
+    url: https://ief.ee.ethz.ch/people/leuthold.html
+    canonical_url: https://ief.ee.ethz.ch/people/leuthold.html
+    title: Leuthold, Juerg, Prof. Dr.
+    publisher: ETH Zurich Institute of Electromagnetic Fields
+    publication_date:
+    accessed_date: '2026-08-23'
+    source_type: university_bio
+    evidence_grade: A
+    language: en
+    archive_url:
+    content_hash:
+    notes: Mutable biography.
+  - id: src_nokia_essiambre_2021
+    url: https://www.nokia.com/blog/a-limit-within-a-limit-how-rene-jean-essiambre-shaped-the-direction-of-optical-research/
+    canonical_url: https://www.nokia.com/blog/a-limit-within-a-limit-how-rene-jean-essiambre-shaped-the-direction-of-optical-research/
+    title: 'A limit within a limit: How René-Jean Essiambre shaped the direction of
+      optical research'
+    publisher: Nokia
+    publication_date:
+      value: '2021-06-10'
+      precision: day
+    accessed_date: '2026-08-23'
+    source_type: official_company_bio
+    evidence_grade: A
+    language: en
+    archive_url:
+    content_hash:
+    notes:
+  - id: src_nokia_ryf_bio_2026
+    url: https://www.nokia.com/people/roland-ryf/
+    canonical_url: https://www.nokia.com/people/roland-ryf/
+    title: Roland Ryf
+    publisher: Nokia
+    publication_date:
+    accessed_date: '2026-08-23'
+    source_type: official_company_bio
+    evidence_grade: A
+    language: en
+    archive_url:
+    content_hash:
+    notes: Mutable biography.
+  - id: src_nokia_neilson_bio_2026
+    url: https://www.nokia.com/people/david-neilson/
+    canonical_url: https://www.nokia.com/people/david-neilson/
+    title: David Neilson
+    publisher: Nokia
+    publication_date:
+    accessed_date: '2026-08-23'
+    source_type: official_company_bio
+    evidence_grade: A
+    language: en
+    archive_url:
+    content_hash:
+    notes: Mutable biography.
+  - id: src_nokia_qian_hu_bio_2026
+    url: https://www.nokia.com/people/qian-hu/
+    canonical_url: https://www.nokia.com/people/qian-hu/
+    title: Qian Hu
+    publisher: Nokia
+    publication_date:
+    accessed_date: '2026-08-23'
+    source_type: official_company_bio
+    evidence_grade: A
+    language: en
+    archive_url:
+    content_hash:
+    notes: Mutable biography.
+  - id: src_optica_tkach_bio_2023
+    url: https://www.optica.org/ja-jp/history/biographies/bios/robert_tkach/?lang=en-US
+    canonical_url: https://www.optica.org/history/biographies/bios/robert_tkach/
+    title: Robert Tkach
+    publisher: Optica
+    publication_date:
+      value: '2023-07-26'
+      precision: day
+    accessed_date: '2026-08-23'
+    source_type: professional_society
+    evidence_grade: B
+    language: en
+    archive_url:
+    content_hash:
+    notes:
+  - id: src_optica_fellows_2012
+    url: https://www.optica.org/get_involved/awards_and_honors/fellow_members/elected_fellows/2012_fellows/
+    canonical_url: https://www.optica.org/get_involved/awards_and_honors/fellow_members/elected_fellows/2012_fellows/
+    title: 2012 Fellows
+    publisher: Optica
+    publication_date:
+      value: '2012'
+      precision: year
+    accessed_date: '2026-08-23'
+    source_type: professional_society
+    evidence_grade: B
+    language: en
+    archive_url:
+    content_hash:
+    notes: Lists Sethumadhavan Chandrasekhar and Peter Winzer with Bell Labs, Alcatel-Lucent
+      affiliation and technical citations.
+  - id: src_ucsb_bowers_alumni_roster
+    url: https://optoelectronics.ece.ucsb.edu/alumni
+    canonical_url: https://optoelectronics.ece.ucsb.edu/alumni
+    title: Alumni
+    publisher: UCSB Bowers Optoelectronics Research Group
+    publication_date:
+    accessed_date: '2026-08-23'
+    source_type: university_bio
+    evidence_grade: A
+    language: en
+    archive_url:
+    content_hash:
+    notes: Official lab alumni roster; proves Bowers-group alumni status but not degree,
+      dates, or downstream employment.
+  - id: src_ucsb_bowers_retirement_2025
+    url: https://www.ece.ucsb.edu/news/all/2025/bowers-pioneering-laser-expert-retires
+    canonical_url: https://www.ece.ucsb.edu/news/all/2025/bowers-pioneering-laser-expert-retires
+    title: 'Bowers: Pioneering Laser Expert Retires'
+    publisher: UC Santa Barbara Electrical and Computer Engineering
+    publication_date:
+      value: '2025'
+      precision: year
+    accessed_date: '2026-08-23'
+    source_type: university_bio
+    evidence_grade: A
+    language: en
+    archive_url:
+    content_hash:
+    notes: Names Fang and Park as former graduate students and names Bowers's six co-founded
+      companies.
+  - id: src_ucsb_bowers_profile
+    url: https://optoelectronics.ece.ucsb.edu/node/125
+    canonical_url: https://optoelectronics.ece.ucsb.edu/node/125
+    title: John Bowers
+    publisher: UCSB Bowers Optoelectronics Research Group
+    publication_date:
+    accessed_date: '2026-08-23'
+    source_type: university_bio
+    evidence_grade: A
+    language: en
+    archive_url:
+    content_hash:
+    notes: Official UCSB profile supporting faculty role and co-founder relationships.
+  - id: src_ucsb_bowers_tmp_profile
+    url: https://tmp.ucsb.edu/people/john-bowers
+    canonical_url: https://tmp.ucsb.edu/people/john-bowers
+    title: John Bowers
+    publisher: UCSB Technology Management
+    publication_date:
+    accessed_date: '2026-08-23'
+    source_type: university_bio
+    evidence_grade: A
+    language: en
+    archive_url:
+    content_hash:
+    notes: Supports Bowers as Terabit co-founder/CEO and Aerius/Aurrion co-founder;
+      gives acquisition years.
+  - id: src_ucsb_aurrion_success_story
+    url: https://tia.ucsb.edu/success-stories/aurrion-inc/
+    canonical_url: https://tia.ucsb.edu/success-stories/aurrion-inc/
+    title: Aurrion
+    publisher: UC Santa Barbara Office of Technology & Industry Alliances
+    publication_date:
+    accessed_date: '2026-08-23'
+    source_type: university_bio
+    evidence_grade: A
+    language: en
+    archive_url:
+    content_hash:
+    notes: Supports 2008 founding by Fang and Bowers and Fish joining as CTO in 2009.
+  - id: src_ucsb_aurrion_innovation_award
+    url: https://www.engineering.ucsb.edu/news/innovation-award-director-ucsb-institute-energy-efficiency
+    canonical_url: https://www.engineering.ucsb.edu/news/innovation-award-director-ucsb-institute-energy-efficiency
+    title: Innovation Award for Director of UCSB Institute for Energy Efficiency
+    publisher: UC Santa Barbara College of Engineering
+    publication_date:
+      value: '2017-03-31'
+      precision: day
+    accessed_date: '2026-08-23'
+    source_type: university_bio
+    evidence_grade: A
+    language: en
+    archive_url:
+    content_hash:
+    notes: Independently supports Fang and Bowers as Aurrion founders and Juniper acquisition.
+  - id: src_nexus_team
+    url: https://www.nexusphotonics.com/our-team
+    canonical_url: https://www.nexusphotonics.com/our-team
+    title: About — Meet the Team
+    publisher: Nexus Photonics
+    publication_date:
+    accessed_date: '2026-08-23'
+    source_type: official_company_bio
+    evidence_grade: A
+    language: en
+    archive_url:
+    content_hash:
+    notes: Supports Komljenovic, Zhang, and Bowers founder roles and Tran as a 2019
+      founding employee.
+  - id: src_ucsb_nexus_funding
+    url: https://innovation.ucsb.edu/blog/news/nexus-photonics-closes-first-round-funding
+    canonical_url: https://innovation.ucsb.edu/blog/news/nexus-photonics-closes-first-round-funding
+    title: Nexus Photonics Closes First Round of Funding
+    publisher: UCSB Innovation + Entrepreneurship
+    publication_date:
+      value: '2022'
+      precision: year
+    accessed_date: '2026-08-23'
+    source_type: university_bio
+    evidence_grade: A
+    language: en
+    archive_url:
+    content_hash:
+    notes: Supports 2018 founding by Komljenovic, Zhang, and Bowers and distinguishes
+      UCSB research staff from UCSB PhD.
+  - id: src_ucsb_nexus_spectrum
+    url: https://www.ece.ucsb.edu/news/all/2022/researchers-extending-spectrum
+    canonical_url: https://www.ece.ucsb.edu/news/all/2022/researchers-extending-spectrum
+    title: Researchers Extending the Spectrum
+    publisher: UC Santa Barbara Electrical and Computer Engineering
+    publication_date:
+      value: '2022'
+      precision: year
+    accessed_date: '2026-08-23'
+    source_type: university_bio
+    evidence_grade: A
+    language: en
+    archive_url:
+    content_hash:
+    notes: Supports Nexus co-founder roles for Komljenovic and Zhang and describes Nexus
+      as UCSB-founded.
+  - id: src_sbir_aerius_success
+    url: https://www.sbir.gov/success/sbir-sttr-success-aerius-photonics
+    canonical_url: https://www.sbir.gov/success/sbir-sttr-success-aerius-photonics
+    title: 'SBIR-STTR-Success: Aerius Photonics'
+    publisher: U.S. Small Business Administration SBIR/STTR
+    publication_date:
+      value: '2016-10-16'
+      precision: day
+    accessed_date: '2026-08-23'
+    source_type: other
+    evidence_grade: A
+    language: en
+    archive_url:
+    content_hash:
+    notes: Government case study supporting Geske's Bowers-group training and founding
+      Aerius in late 2003.
+  - id: src_ucsb_alfredo_torres
+    url: https://siliconphotonics.ece.ucsb.edu/profile/alfredo-torres
+    canonical_url: https://siliconphotonics.ece.ucsb.edu/profile/alfredo-torres
+    title: Alfredo Torres
+    publisher: UCSB Bowers Optoelectronics Research Group
+    publication_date:
+    accessed_date: '2026-08-23'
+    source_type: university_bio
+    evidence_grade: A
+    language: en
+    archive_url:
+    content_hash:
+    notes: Supports UCSB degrees, undergraduate work with a Bowers-group doctoral student,
+      Aurrion employment dates/roles, and later Bowers-group engineering role.
+  - id: src_ucsb_mj_kennedy
+    url: https://optoelectronics.ece.ucsb.edu/node/888
+    canonical_url: https://optoelectronics.ece.ucsb.edu/node/888
+    title: Senior Development Engineer
+    publisher: UCSB Bowers Optoelectronics Research Group
+    publication_date:
+    accessed_date: '2026-08-23'
+    source_type: university_bio
+    evidence_grade: A
+    language: en
+    archive_url:
+    content_hash:
+    notes: Supports five years at Aurrion and joining the Bowers group at end-2015.
+  - id: src_aurrion_2014_biographies
+    url: https://optoelectronics.ece.ucsb.edu/sites/default/files/2017-02/Low%20phase%20noise%20hybrid%20silicon%20mode-locked%20lasers.pdf
+    canonical_url: https://optoelectronics.ece.ucsb.edu/sites/default/files/2017-02/Low%20phase%20noise%20hybrid%20silicon%20mode-locked%20lasers.pdf
+    title: Low phase noise hybrid silicon mode-locked lasers
+    publisher: Frontiers of Optoelectronics
+    publication_date:
+      value: '2014'
+      precision: year
+    accessed_date: '2026-08-23'
+    source_type: paper
+    evidence_grade: A
+    language: en
+    archive_url:
+    content_hash:
+    notes: Author biographies support Fish, Hutchinson, Norberg, and Bowers roles at
+      publication time; Norberg's UCSB PhD is not treated as Bowers-group proof.
+  - id: src_juniper_aurrion_annual_report
+    url: https://investor.juniper.net/files/doc_financials/2018/2018JuniperNetworksAnnualReport_Website.pdf
+    canonical_url: https://investor.juniper.net/files/doc_financials/2018/2018JuniperNetworksAnnualReport_Website.pdf
+    title: Juniper Networks 2018 Annual Report
+    publisher: Juniper Networks
+    publication_date:
+      value: '2019'
+      precision: year
+    accessed_date: '2026-08-23'
+    source_type: regulatory_filing
+    evidence_grade: A
+    language: en
+    archive_url:
+    content_hash:
+    notes: Supports August 9, 2016 acquisition and continuing-employee awards; does
+      not name individual retained employees.
+  - id: src_juniper_marcoccia
+    url: https://blogs.juniper.net/author/rmarcoccia
+    canonical_url: https://blogs.juniper.net/author/rmarcoccia
+    title: Roberto Marcoccia — VP, Silicon Photonics
+    publisher: Juniper Networks
+    publication_date:
+    accessed_date: '2026-08-23'
+    source_type: official_company_bio
+    evidence_grade: A
+    language: en
+    archive_url:
+    content_hash:
+    notes: Supports Juniper VP role and responsibility for commercializing acquired
+      Aurrion technology, not Aurrion employment.
+  - id: src_ucsb_shifu_yuan_bio
+    url: https://optoelectronics.ece.ucsb.edu/sites/default/files/2017-06/Ch10_bowers.pdf
+    canonical_url: https://optoelectronics.ece.ucsb.edu/sites/default/files/2017-06/Ch10_bowers.pdf
+    title: Optical Switching Networks — author biographies
+    publisher: UCSB-hosted technical chapter
+    publication_date:
+    accessed_date: '2026-08-23'
+    source_type: paper
+    evidence_grade: A
+    language: en
+    archive_url:
+    content_hash:
+    notes: Supports Yuan joining Calient in 2000 and serving as CTO of Optical Technologies
+      since 2010.
+  - id: src_mit_lightmatter_2024
+    url: https://news.mit.edu/2024/startup-lightmatter-accelerates-progress-toward-light-speed-computing-0301
+    canonical_url: https://news.mit.edu/2024/startup-lightmatter-accelerates-progress-toward-light-speed-computing-0301
+    title: Startup accelerates progress toward light-speed computing
+    publisher: MIT News
+    publication_date:
+      value: '2024-03-01'
+      precision: day
+    accessed_date: '2026-08-23'
+    source_type: official_company_page
+    evidence_grade: A
+    language: en
+    archive_url:
+    content_hash:
+    notes: Names the three founders and explicitly places Harris and Bunandar in Englund's
+      lab.
+  - id: src_mit_lightmatter_competition_2017
+    url: https://mitsloan.mit.edu/press/lightmatter-a-startup-using-light-to-accelerate-artificial-intelligence-wins-2017-mit-100k-entrepreneurship-competition
+    canonical_url: https://mitsloan.mit.edu/press/lightmatter-a-startup-using-light-to-accelerate-artificial-intelligence-wins-2017-mit-100k-entrepreneurship-competition
+    title: Lightmatter wins the 2017 MIT $100K Entrepreneurship Competition
+    publisher: MIT Sloan
+    publication_date:
+      value: '2017-05-18'
+      precision: day
+    accessed_date: '2026-08-23'
+    source_type: official_company_page
+    evidence_grade: A
+    language: en
+    archive_url:
+    content_hash:
+    notes: Contemporaneous team roster; not used alone to assign founder status.
+  - id: src_mit_englund_ai_hardware_2022
+    url: https://aihardware.mit.edu/wp-content/uploads/2022/10/Dirk-Englund.pdf
+    canonical_url: https://aihardware.mit.edu/wp-content/uploads/2022/10/Dirk-Englund.pdf
+    title: Accelerating AI through Photonic Computing and Communication
+    publisher: MIT AI Hardware Program / Dirk Englund
+    publication_date:
+      value: '2022-10-14'
+      precision: day
+    accessed_date: '2026-08-23'
+    source_type: conference_bio
+    evidence_grade: A
+    language: en
+    archive_url:
+    content_hash:
+    notes: Group slide explicitly lists PhD members and Ryan Hamerly in the MIT Quantum
+      Photonics Group.
+  - id: src_mit_ayar_2018
+    url: https://news.mit.edu/2018/startup-ayar-labs-optoelectronic-computer-chips-0406
+    canonical_url: https://news.mit.edu/2018/startup-ayar-labs-optoelectronic-computer-chips-0406
+    title: Photonic communication comes to computer chips
+    publisher: MIT News
+    publication_date:
+      value: '2018-04-05'
+      precision: day
+    accessed_date: '2026-08-23'
+    source_type: official_company_page
+    evidence_grade: A
+    language: en
+    archive_url:
+    content_hash:
+    notes: Names founders, degrees/roles, and the Ram-Stojanovic-Popovic research collaboration.
+  - id: src_ayar_leadership_2026
+    url: https://ayarlabs.com/leadership/
+    canonical_url: https://ayarlabs.com/leadership/
+    title: Ayar Labs Leadership
+    publisher: Ayar Labs
+    publication_date:
+    accessed_date: '2026-08-23'
+    source_type: official_company_bio
+    evidence_grade: A
+    language: en
+    archive_url:
+    content_hash:
+    notes: Mutable page; confirms Wade, Stojanovic, Sun, Popovic, and Ram founder roles.
+  - id: src_berkeley_stojanovic_bio_2026
+    url: https://www2.eecs.berkeley.edu/Faculty/Homepages/vlada.html
+    canonical_url: https://www2.eecs.berkeley.edu/Faculty/Homepages/vlada.html
+    title: Vladimir Stojanovic
+    publisher: UC Berkeley EECS
+    publication_date:
+    accessed_date: '2026-08-23'
+    source_type: university_bio
+    evidence_grade: A
+    language: en
+    archive_url:
+    content_hash:
+    notes: Confirms MIT associate professorship during 2005-2013 and Ayar co-founder
+      status.
+  - id: src_mit_lightelligence_2021
+    url: https://news.mit.edu/2021/lightelligence-accelerating-ai-speed-light-0602
+    canonical_url: https://news.mit.edu/2021/lightelligence-accelerating-ai-speed-light-0602
+    title: Accelerating AI at the speed of light
+    publisher: MIT News / MIT Startup Exchange
+    publication_date:
+      value: '2021-06-02'
+      precision: day
+    accessed_date: '2026-08-23'
+    source_type: official_company_page
+    evidence_grade: A
+    language: en
+    archive_url:
+    content_hash:
+    notes: Explicitly identifies Shen and Meng as co-founders and Shen's Soljacic/Joannopoulos
+      PhD work.
+  - id: src_mit_soljacic_people_2026
+    url: https://www.mit.edu/~soljacic/people.html
+    canonical_url: https://www.mit.edu/~soljacic/people.html
+    title: 'Photonics and Modern Electro-Magnetics Group: Group Members'
+    publisher: MIT Photonics and Modern Electro-Magnetics Group
+    publication_date:
+    accessed_date: '2026-08-23'
+    source_type: official_company_page
+    evidence_grade: A
+    language: en
+    archive_url:
+    content_hash:
+    notes: Mutable lab roster; lists Yichen Shen as former group member and Lightelligence
+      CEO.
+  - id: src_lightelligence_board_2026
+    url: https://application.lightelligence.ai/ir/corporate-governance/board-of-directors
+    canonical_url: https://application.lightelligence.ai/ir/corporate-governance/board-of-directors
+    title: Board of Directors
+    publisher: Lightelligence
+    publication_date:
+    accessed_date: '2026-08-23'
+    source_type: official_company_bio
+    evidence_grade: A
+    language: en
+    archive_url:
+    content_hash:
+    notes: Mutable governance page.
+  - id: src_columbia_xscape_2024
+    url: https://www.engineering.columbia.edu/about/news/xscape-photonics-secures-44-million-transform-ai-data-centers
+    canonical_url: https://www.engineering.columbia.edu/about/news/xscape-photonics-secures-44-million-transform-ai-data-centers
+    title: Xscape Photonics Secures $44 Million to Transform AI Data Centers
+    publisher: Columbia Engineering
+    publication_date:
+      value: '2024-10-31'
+      precision: day
+    accessed_date: '2026-08-23'
+    source_type: university_bio
+    evidence_grade: A
+    language: en
+    archive_url:
+    content_hash:
+    notes: Names all five co-founders and distinguishes faculty collaboration from company
+      roles.
+  - id: src_columbia_xscape_2022
+    url: https://www.ee.columbia.edu/news/ee-profesor-led-xscape-photonics-receives-seed-funding-altair
+    canonical_url: https://www.ee.columbia.edu/news/ee-profesor-led-xscape-photonics-receives-seed-funding-altair
+    title: EE Professor-Led Xscape Photonics Receives Seed Funding from Altair
+    publisher: Columbia Electrical Engineering
+    publication_date:
+      value: '2022'
+      precision: year
+    accessed_date: '2026-08-23'
+    source_type: university_bio
+    evidence_grade: A
+    language: en
+    archive_url:
+    content_hash:
+    notes: Names five founders and their roles/backgrounds.
+  - id: src_gaeta_cv_2025
+    url: https://www.engineering.columbia.edu/sites/default/files/2025-07/gaeta_cv_4_25.pdf
+    canonical_url: https://www.engineering.columbia.edu/sites/default/files/2025-07/gaeta_cv_4_25.pdf
+    title: 'Curriculum Vitae: Alexander L. Gaeta'
+    publisher: Columbia Engineering
+    publication_date:
+      value: 2025-04
+      precision: month
+    accessed_date: '2026-08-23'
+    source_type: cv
+    evidence_grade: A
+    language: en
+    archive_url:
+    content_hash:
+    notes: Lists Xscape co-founders and 2022 founding date.
+  - id: src_columbia_three_groups_2015
+    url: https://magazine.engineering.columbia.edu/fall2015/kerenbergman-michallipson-alexgaeta
+    canonical_url: https://magazine.engineering.columbia.edu/fall2015/kerenbergman-michallipson-alexgaeta
+    title: 'Keren Bergman + Michal Lipson + Alex Gaeta: Combing through Streams of Light'
+    publisher: Columbia Engineering Magazine
+    publication_date:
+      value: '2015-09-07'
+      precision: day
+    accessed_date: '2026-08-23'
+    source_type: university_bio
+    evidence_grade: A
+    language: en
+    archive_url:
+    content_hash:
+    notes: Directly describes the three faculty members and collaboration, not student
+      membership.

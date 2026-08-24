@@ -1,0 +1,552 @@
+schema_version: "0.1.0"
+organizations:
+  - {id: org_intel, name: "Intel Corporation", aliases: [{name: "Intel", language: en, alias_type: short_name}], organization_type: company, parent_organization_id: null, predecessor_ids: [], successor_ids: [], founded_date: null, dissolved_date: null, status: active, technologies: [silicon_photonics, optical_io], geographies: [], website: "https://www.intel.com/", research_status: validated, sources: [{source_id: src_optica_2007_40g_modulator, supports: "Intel affiliation", locator: "author affiliations", accessed_date: "2026-08-23"}], notes: null}
+  - {id: org_intel_silicon_photonics, name: "Intel Silicon Photonics Solutions Group", aliases: [{name: "Intel Photonics Technology Lab", language: en, alias_type: former_name}], organization_type: business_unit, parent_organization_id: org_intel, predecessor_ids: [], successor_ids: [], founded_date: null, dissolved_date: null, status: active, technologies: [silicon_photonics, integrated_lasers, optical_io], geographies: [], website: null, research_status: validated, sources: [{source_id: src_optica_intel_siph_team, supports: "group identity and team", locator: "team list", accessed_date: "2026-08-23"}], notes: "Staging used both Solutions Group and Photonics Technology Lab; represented as one time-evolving Intel photonics node pending organizational-history refinement."}
+  - {id: org_anello, name: "ANELLO Photonics", aliases: [], organization_type: startup, parent_organization_id: null, predecessor_ids: [], successor_ids: [], founded_date: null, dissolved_date: null, status: active, technologies: [silicon_photonics], geographies: [], website: "https://www.anellophotonics.com/", research_status: validated, sources: [{source_id: src_anello_team, supports: "company and leadership", locator: "executive team", accessed_date: "2026-08-23"}], notes: "Integrated silicon-photonic optical gyroscopes."}
+  - {id: org_meta, name: "Meta Platforms", aliases: [{name: "Meta", language: en, alias_type: short_name}], organization_type: company, parent_organization_id: null, predecessor_ids: [], successor_ids: [], founded_date: null, dissolved_date: null, status: active, technologies: [optical_io], geographies: [], website: "https://www.meta.com/", research_status: validated, sources: [{source_id: src_optica_drew_alduino_2025, supports: "Drew Alduino affiliation", locator: "speaker bio", accessed_date: "2026-08-23"}], notes: null}
+  - {id: org_ayar_labs, name: "Ayar Labs", aliases: [], organization_type: startup, parent_organization_id: null, predecessor_ids: [], successor_ids: [], founded_date: null, dissolved_date: null, status: active, technologies: [silicon_photonics, optical_io, integrated_lasers], geographies: [], website: "https://ayarlabs.com/", research_status: validated, sources: [{source_id: src_semicon_taiwan_matt_sysak, supports: "Matt Sysak prior role", locator: "speaker bio", accessed_date: "2026-08-23"}], notes: null}
+  - {id: org_lumentum, name: "Lumentum", aliases: [], organization_type: company, parent_organization_id: null, predecessor_ids: [], successor_ids: [], founded_date: null, dissolved_date: null, status: active, technologies: [datacenter_optics, integrated_lasers, coherent_optics], geographies: [], website: "https://www.lumentum.com/", research_status: validated, sources: [{source_id: src_lumentum_matt_sysak, supports: "company and Matt Sysak role", locator: "page heading", accessed_date: "2026-08-23"}], notes: null}
+  - {id: org_dustphotonics, name: "DustPhotonics", aliases: [{name: "Dust Photonics", language: en, alias_type: common_name}], organization_type: startup, parent_organization_id: org_credo, predecessor_ids: [], successor_ids: [], founded_date: null, dissolved_date: null, status: acquired, technologies: [silicon_photonics, datacenter_optics, co_packaged_optics], geographies: [], website: "https://www.dustphotonics.com/", research_status: validated, sources: [{source_id: src_dustphotonics_company, supports: "company and leadership", locator: "Our Leaders", accessed_date: "2026-08-23"}], notes: "Acquired by Credo in 2026."}
+  - {id: org_aurrion, name: "Aurrion", aliases: [], organization_type: startup, parent_organization_id: org_juniper, predecessor_ids: [], successor_ids: [], founded_date: null, dissolved_date: null, status: acquired, technologies: [silicon_photonics, iii_v_silicon_integration, integrated_lasers], geographies: [], website: null, research_status: validated, sources: [{source_id: src_quintessent_team, supports: "Brian Koch Aurrion experience", locator: "Brian Koch bio", accessed_date: "2026-08-23"}], notes: null}
+  - {id: org_juniper, name: "Juniper Networks", aliases: [], organization_type: company, parent_organization_id: null, predecessor_ids: [], successor_ids: [], founded_date: null, dissolved_date: null, status: active, technologies: [silicon_photonics, optical_networking], geographies: [], website: "https://www.juniper.net/", research_status: validated, sources: [{source_id: src_quintessent_team, supports: "Brian Koch Juniper experience", locator: "Brian Koch bio", accessed_date: "2026-08-23"}], notes: null}
+  - {id: org_quintessent, name: "Quintessent", aliases: [{name: "Quintessent Communications", language: en, alias_type: legal_name}], organization_type: startup, parent_organization_id: null, predecessor_ids: [], successor_ids: [], founded_date: null, dissolved_date: null, status: active, technologies: [silicon_photonics, integrated_lasers, optical_io], geographies: [], website: "https://www.quintessent.com/", research_status: validated, sources: [{source_id: src_quintessent_team, supports: "company and leadership", locator: "team page", accessed_date: "2026-08-23"}], notes: null}
+  - {id: org_rockley, name: "Rockley Photonics", aliases: [], organization_type: company, parent_organization_id: null, predecessor_ids: [], successor_ids: [], founded_date: null, dissolved_date: null, status: unknown, technologies: [silicon_photonics, datacenter_optics], geographies: [], website: null, research_status: validated, sources: [{source_id: src_xscape_team, supports: "Vivek Raghunathan prior role", locator: "Vivek Raghunathan bio", accessed_date: "2026-08-23"}], notes: null}
+  - {id: org_broadcom, name: "Broadcom", aliases: [], organization_type: company, parent_organization_id: null, predecessor_ids: [], successor_ids: [], founded_date: null, dissolved_date: null, status: active, technologies: [silicon_photonics, co_packaged_optics, optical_networking], geographies: [], website: "https://www.broadcom.com/", research_status: validated, sources: [{source_id: src_xscape_team, supports: "Vivek Raghunathan Broadcom role", locator: "Vivek Raghunathan bio", accessed_date: "2026-08-23"}], notes: null}
+  - {id: org_xscape, name: "Xscape Photonics", aliases: [], organization_type: startup, parent_organization_id: null, predecessor_ids: [], successor_ids: [], founded_date: null, dissolved_date: null, status: active, technologies: [silicon_photonics, integrated_lasers, optical_io], geographies: [], website: "https://www.xscapephotonics.com/", research_status: validated, sources: [{source_id: src_xscape_team, supports: "company and leadership", locator: "leadership", accessed_date: "2026-08-23"}], notes: null}
+  - {id: org_luxtera, name: "Luxtera", aliases: [], organization_type: startup, parent_organization_id: null, predecessor_ids: [], successor_ids: [], founded_date: null, dissolved_date: null, status: acquired, technologies: [silicon_photonics, datacenter_optics], geographies: [], website: null, research_status: validated, sources: [{source_id: src_xscape_vikram_appointment, supports: "Vikram Sadagopan prior role", locator: "appointment biography", accessed_date: "2026-08-23"}], notes: null}
+  - {id: org_finisar, name: "Finisar", aliases: [], organization_type: company, parent_organization_id: org_coherent, predecessor_ids: [], successor_ids: [org_coherent], founded_date: null, dissolved_date: null, status: acquired, technologies: [datacenter_optics, coherent_optics], geographies: [], website: null, research_status: seed_unverified, sources: [{source_id: src_ofc_cpo_workshop_2026, supports: "Juthika Basak prior employer grouping", locator: "speaker bio", accessed_date: "2026-08-23"}], notes: "Staging grouped Finisar/Coherent; person edge withheld pending employer-transition disambiguation."}
+  - {id: org_coherent, name: "Coherent Corp.", aliases: [{name: "Coherent", language: en, alias_type: short_name}], organization_type: company, parent_organization_id: null, predecessor_ids: [org_finisar], successor_ids: [], founded_date: null, dissolved_date: null, status: active, technologies: [datacenter_optics, coherent_optics], geographies: [], website: "https://www.coherent.com/", research_status: seed_unverified, sources: [{source_id: src_ofc_cpo_workshop_2026, supports: "Juthika Basak prior employer grouping", locator: "speaker bio", accessed_date: "2026-08-23"}], notes: "Staging grouped Finisar/Coherent; person edge withheld pending employer-transition disambiguation."}
+  - {id: org_nokia, name: "Nokia", aliases: [], organization_type: company, parent_organization_id: null, predecessor_ids: [], successor_ids: [], founded_date: null, dissolved_date: null, status: active, technologies: [coherent_optics, optical_networking, silicon_photonics], geographies: [], website: "https://www.nokia.com/", research_status: validated, sources: [{source_id: src_ofc_cpo_workshop_2026, supports: "Juthika Basak prior role", locator: "speaker bio", accessed_date: "2026-08-23"}], notes: null}
+  - {id: org_amd, name: "AMD", aliases: [{name: "Advanced Micro Devices", language: en, alias_type: legal_name}], organization_type: company, parent_organization_id: null, predecessor_ids: [], successor_ids: [], founded_date: null, dissolved_date: null, status: active, technologies: [silicon_photonics, co_packaged_optics, optical_io], geographies: [], website: "https://www.amd.com/", research_status: validated, sources: [{source_id: src_amd_enosemi_acquisition, supports: "AMD acquisition and photonics program", locator: "announcement", accessed_date: "2026-08-23"}], notes: null}
+  - {id: org_infinilink, name: "InfiniLink", aliases: [], organization_type: startup, parent_organization_id: org_globalfoundries, predecessor_ids: [], successor_ids: [], founded_date: null, dissolved_date: null, status: acquired, technologies: [silicon_photonics, optical_serdes, optical_io], geographies: [], website: null, research_status: validated, sources: [{source_id: src_gf_light_speed_ambition, supports: "company and technology", locator: "InfiniLink section", accessed_date: "2026-08-23"}], notes: null}
+  - {id: org_globalfoundries, name: "GlobalFoundries", aliases: [{name: "GF", language: en, alias_type: short_name}], organization_type: company, parent_organization_id: null, predecessor_ids: [], successor_ids: [], founded_date: null, dissolved_date: null, status: active, technologies: [foundry, silicon_photonics], geographies: [], website: "https://gf.com/", research_status: validated, sources: [{source_id: src_gf_light_speed_ambition, supports: "acquirer identity", locator: "title", accessed_date: "2026-08-23"}], notes: null}
+  - {id: org_mixel_egypt, name: "Mixel Egypt", aliases: [], organization_type: company, parent_organization_id: null, predecessor_ids: [], successor_ids: [], founded_date: null, dissolved_date: null, status: unknown, technologies: [mixed_signal_dsp], geographies: [{country_code: EG, region: null, city: null}], website: null, research_status: seed_unverified, sources: [{source_id: src_sukna_infinilink, supports: "Ahmed Aboul-Ella prior role", locator: null, accessed_date: "2026-08-23"}], notes: "Only C-grade upstream claim in staging; no canonical edge created."}
+  - {id: org_hyperlume, name: "Hyperlume", aliases: [], organization_type: startup, parent_organization_id: org_credo, predecessor_ids: [], successor_ids: [], founded_date: null, dissolved_date: null, status: acquired, technologies: [microled_interconnect, optical_io], geographies: [], website: null, research_status: validated, sources: [{source_id: src_hyperlume_seed_announcement, supports: "company, founders, technology", locator: null, accessed_date: "2026-08-23"}], notes: null}
+  - {id: org_credo, name: "Credo Technology Group", aliases: [{name: "Credo", language: en, alias_type: short_name}], organization_type: company, parent_organization_id: null, predecessor_ids: [], successor_ids: [], founded_date: null, dissolved_date: null, status: active, technologies: [optical_serdes, optical_io], geographies: [], website: "https://credosemi.com/", research_status: validated, sources: [{source_id: src_credo_hyperlume_announcement, supports: "acquirer identity", locator: "title", accessed_date: "2026-08-23"}], notes: null}
+  - {id: org_cloud_light, name: "Cloud Light Technology", aliases: [{name: "Cloud Light", language: en, alias_type: short_name}], organization_type: startup, parent_organization_id: org_lumentum, predecessor_ids: [], successor_ids: [], founded_date: null, dissolved_date: null, status: acquired, technologies: [datacenter_optics, optical_packaging], geographies: [], website: null, research_status: validated, sources: [{source_id: src_lumentum_cloudlight_announcement, supports: "company and technology", locator: null, accessed_date: "2026-08-23"}], notes: null}
+  - {id: org_amf, name: "Advanced Micro Foundry", aliases: [{name: "AMF", language: en, alias_type: short_name}], organization_type: startup, parent_organization_id: org_globalfoundries, predecessor_ids: [], successor_ids: [], founded_date: null, dissolved_date: null, status: acquired, technologies: [silicon_photonics, foundry], geographies: [{country_code: SG, region: null, city: null}], website: null, research_status: validated, sources: [{source_id: src_gf_amf_announcement, supports: "company and technology", locator: null, accessed_date: "2026-08-23"}], notes: null}
+  - {id: org_astar_ime, name: "A*STAR Institute of Microelectronics", aliases: [{name: "IME", language: en, alias_type: short_name}], organization_type: research_institute, parent_organization_id: null, predecessor_ids: [], successor_ids: [], founded_date: null, dissolved_date: null, status: active, technologies: [silicon_photonics, foundry], geographies: [{country_code: SG, region: null, city: null}], website: "https://www.a-star.edu.sg/ime", research_status: validated, sources: [{source_id: src_astar_ime_spinoffs, supports: "institution and AMF spinout", locator: "IME spin-offs", accessed_date: "2026-08-23"}], notes: null}
+  - {id: org_idt, name: "Integrated Device Technology", aliases: [{name: "IDT", language: en, alias_type: short_name}], organization_type: company, parent_organization_id: null, predecessor_ids: [], successor_ids: [], founded_date: null, dissolved_date: null, status: acquired, technologies: [], geographies: [], website: null, research_status: validated, sources: [{source_id: src_semicon_china_guoqiang_lo, supports: "Guo-Qiang Lo prior employment", locator: "speaker bio", accessed_date: "2026-08-23"}], notes: null}
+  - {id: org_inphi, name: "Inphi", aliases: [], organization_type: company, parent_organization_id: org_marvell, predecessor_ids: [], successor_ids: [], founded_date: null, dissolved_date: null, status: acquired, technologies: [coherent_optics, mixed_signal_dsp, optical_serdes], geographies: [], website: null, research_status: validated, sources: [{source_id: src_marvell_inphi_announcement, supports: "company and technology", locator: null, accessed_date: "2026-08-23"}], notes: null}
+  - {id: org_marvell, name: "Marvell Technology", aliases: [{name: "Marvell", language: en, alias_type: short_name}], organization_type: company, parent_organization_id: null, predecessor_ids: [], successor_ids: [], founded_date: null, dissolved_date: null, status: active, technologies: [coherent_optics, optical_serdes, optical_io], geographies: [], website: "https://www.marvell.com/", research_status: validated, sources: [{source_id: src_marvell_inphi_announcement, supports: "acquirer identity", locator: "title", accessed_date: "2026-08-23"}], notes: null}
+  - {id: org_cornell_eastman_group, name: "Cornell University / Lester Eastman group", aliases: [], organization_type: academic_lab, parent_organization_id: null, predecessor_ids: [], successor_ids: [], founded_date: null, dissolved_date: null, status: historical, technologies: [], geographies: [], website: null, research_status: validated, sources: [{source_id: src_marvell_proxy_2023, supports: "Loi Nguyen education and research lineage", locator: "Loi Nguyen biography", accessed_date: "2026-08-23"}], notes: null}
+  - {id: org_honeywell_physical_sciences, name: "Honeywell Physical Sciences Center", aliases: [], organization_type: industrial_lab, parent_organization_id: null, predecessor_ids: [], successor_ids: [], founded_date: null, dissolved_date: null, status: historical, technologies: [], geographies: [], website: null, research_status: validated, sources: [{source_id: src_marvell_proxy_2023, supports: "Loi Nguyen employment", locator: "Loi Nguyen biography", accessed_date: "2026-08-23"}], notes: null}
+  - {id: org_agere, name: "Agere", aliases: [{name: "Agere Inc.", language: en, alias_type: legal_name}, {name: "Agere Systems", language: en, alias_type: common_name}], organization_type: company, parent_organization_id: null, predecessor_ids: [], successor_ids: [], founded_date: null, dissolved_date: null, status: acquired, technologies: [optical_networking], geographies: [], website: null, research_status: validated, sources: [{source_id: src_marvell_proxy_2023, supports: "Ford Tamer prior executive/founder role", locator: "Ford Tamer biography", accessed_date: "2026-08-23"}], notes: "Staging combines Agere Inc., Lucent, and Agere Systems language; canonical person edge is restricted to Agere."}
+  - {id: org_celestial_ai, name: "Celestial AI", aliases: [], organization_type: startup, parent_organization_id: org_marvell, predecessor_ids: [], successor_ids: [], founded_date: null, dissolved_date: null, status: acquired, technologies: [silicon_photonics, optical_io, optical_interposer], geographies: [], website: null, research_status: validated, sources: [{source_id: src_marvell_celestial_announcement, supports: "company and technology", locator: null, accessed_date: "2026-08-23"}], notes: null}
+  - {id: org_intermolecular, name: "Intermolecular", aliases: [], organization_type: company, parent_organization_id: null, predecessor_ids: [], successor_ids: [], founded_date: null, dissolved_date: null, status: acquired, technologies: [], geographies: [], website: null, research_status: validated, sources: [{source_id: src_marvell_dave_lazovsky, supports: "Dave Lazovsky founder/CEO role", locator: "biography", accessed_date: "2026-08-23"}], notes: null}
+  - {id: org_khosla_ventures, name: "Khosla Ventures", aliases: [], organization_type: venture_fund, parent_organization_id: null, predecessor_ids: [], successor_ids: [], founded_date: null, dissolved_date: null, status: active, technologies: [], geographies: [], website: "https://www.khoslaventures.com/", research_status: validated, sources: [{source_id: src_marvell_dave_lazovsky, supports: "Dave Lazovsky venture-partner role", locator: "biography", accessed_date: "2026-08-23"}], notes: null}
+  - {id: org_nubis, name: "Nubis Communications", aliases: [{name: "Nubis", language: en, alias_type: short_name}], organization_type: startup, parent_organization_id: org_ciena, predecessor_ids: [], successor_ids: [], founded_date: null, dissolved_date: null, status: acquired, technologies: [co_packaged_optics, near_packaged_optics, optical_engine, optical_serdes], geographies: [], website: null, research_status: validated, sources: [{source_id: src_ciena_nubis_announcement, supports: "company and technology", locator: null, accessed_date: "2026-08-23"}], notes: null}
+  - {id: org_ciena, name: "Ciena", aliases: [], organization_type: company, parent_organization_id: null, predecessor_ids: [], successor_ids: [], founded_date: null, dissolved_date: null, status: active, technologies: [coherent_optics, optical_networking, optical_io], geographies: [], website: "https://www.ciena.com/", research_status: validated, sources: [{source_id: src_ciena_nubis_announcement, supports: "acquirer identity", locator: "title", accessed_date: "2026-08-23"}], notes: null}
+  - {id: org_bell_labs, name: "Bell Labs", aliases: [], organization_type: industrial_lab, parent_organization_id: null, predecessor_ids: [], successor_ids: [], founded_date: null, dissolved_date: null, status: historical, technologies: [coherent_optics, optical_networking], geographies: [], website: null, research_status: validated, sources: [{source_id: src_ciena_nubis_deck, supports: "Nubis founders' Bell Labs lineage", locator: "leadership biographies", accessed_date: "2026-08-23"}], notes: "Time-aware Lucent/Alcatel-Lucent/Nokia naming remains unresolved; staging says Bell Labs only."}
+  - {id: org_enosemi, name: "Enosemi", aliases: [], organization_type: startup, parent_organization_id: org_amd, predecessor_ids: [], successor_ids: [], founded_date: null, dissolved_date: null, status: acquired, technologies: [silicon_photonics, co_packaged_optics, optical_io], geographies: [], website: "https://www.enosemi.com/", research_status: validated, sources: [{source_id: src_enosemi_team, supports: "company and founders", locator: "team", accessed_date: "2026-08-23"}], notes: null}
+  - {id: org_luminous_computing, name: "Luminous Computing", aliases: [], organization_type: startup, parent_organization_id: null, predecessor_ids: [], successor_ids: [], founded_date: null, dissolved_date: null, status: defunct, technologies: [photonic_compute, optical_io], geographies: [], website: null, research_status: validated, sources: [{source_id: src_enosemi_launch, supports: "Enosemi founders' Luminous lineage and IP license", locator: null, accessed_date: "2026-08-23"}], notes: null}
+  - {id: org_elenion, name: "Elenion Technologies", aliases: [{name: "Elenion", language: en, alias_type: short_name}], organization_type: startup, parent_organization_id: org_nokia, predecessor_ids: [], successor_ids: [], founded_date: null, dissolved_date: null, status: acquired, technologies: [silicon_photonics, coherent_optics], geographies: [], website: null, research_status: validated, sources: [{source_id: src_enosemi_launch, supports: "Enosemi founders' Elenion lineage", locator: null, accessed_date: "2026-08-23"}], notes: "Staging groups Elenion/Nokia; separate nodes retained."}
+  - {id: org_university_washington, name: "University of Washington", aliases: [{name: "UW", language: en, alias_type: short_name}], organization_type: university, parent_organization_id: null, predecessor_ids: [], successor_ids: [], founded_date: null, dissolved_date: null, status: active, technologies: [silicon_photonics], geographies: [], website: "https://www.washington.edu/", research_status: validated, sources: [{source_id: src_matt_streshinsky_bio, supports: "Matt Streshinsky PhD", locator: null, accessed_date: "2026-08-23"}], notes: null}
+  - {id: org_gennum, name: "Gennum", aliases: [], organization_type: company, parent_organization_id: org_semtech, predecessor_ids: [], successor_ids: [org_semtech], founded_date: null, dissolved_date: null, status: acquired, technologies: [mixed_signal_dsp], geographies: [], website: null, research_status: seed_unverified, sources: [{source_id: src_enosemi_launch, supports: "Shahab Ardalan prior team", locator: null, accessed_date: "2026-08-23"}], notes: "Staging groups Gennum/Semtech; edge withheld pending temporal disambiguation."}
+  - {id: org_semtech, name: "Semtech", aliases: [], organization_type: company, parent_organization_id: null, predecessor_ids: [org_gennum], successor_ids: [], founded_date: null, dissolved_date: null, status: active, technologies: [mixed_signal_dsp], geographies: [], website: "https://www.semtech.com/", research_status: seed_unverified, sources: [{source_id: src_enosemi_launch, supports: "Shahab Ardalan prior team", locator: null, accessed_date: "2026-08-23"}], notes: "Staging groups Gennum/Semtech; edge withheld pending temporal disambiguation."}
+  - {id: org_polariton, name: "Polariton Technologies", aliases: [{name: "Polariton", language: en, alias_type: short_name}], organization_type: startup, parent_organization_id: org_marvell, predecessor_ids: [], successor_ids: [], founded_date: {value: "2019", precision: year}, dissolved_date: null, status: acquired, technologies: [silicon_photonics, coherent_optics], geographies: [{country_code: CH, region: null, city: null}], website: null, research_status: validated, sources: [{source_id: src_eth_polariton_acquisition, supports: "company, founders, founding year and spinout", locator: null, accessed_date: "2026-08-23"}], notes: null}
+  - {id: org_eth_ief, name: "ETH Zurich Institute of Electromagnetic Fields", aliases: [{name: "Jürg Leuthold group", language: en, alias_type: common_name}], organization_type: academic_lab, parent_organization_id: null, predecessor_ids: [], successor_ids: [], founded_date: null, dissolved_date: null, status: active, technologies: [silicon_photonics, coherent_optics], geographies: [{country_code: CH, region: null, city: Zurich}], website: null, research_status: validated, sources: [{source_id: src_eth_polariton_acquisition, supports: "institution and founder research lineage", locator: null, accessed_date: "2026-08-23"}], notes: null}
+  - id: org_mintera
+    name: Mintera
+    aliases: []
+    organization_type: startup
+    parent_organization_id:
+    predecessor_ids: []
+    successor_ids: []
+    founded_date:
+    dissolved_date:
+    status: acquired
+    technologies:
+    - coherent_optics
+    - optical_networking
+    geographies: []
+    website:
+    research_status: validated
+    sources:
+    - source_id: src_acacia_s1_2016
+      supports: Mintera roles and lineage
+      locator:
+      accessed_date: '2026-08-23'
+    notes:
+  - id: org_mit
+    name: Massachusetts Institute of Technology
+    aliases:
+    - name: MIT
+      language: en
+      alias_type: short_name
+    organization_type: university
+    parent_organization_id:
+    predecessor_ids: []
+    successor_ids: []
+    founded_date:
+    dissolved_date:
+    status: active
+    technologies:
+    - silicon_photonics
+    - photonic_compute
+    - optical_io
+    geographies: []
+    website:
+    research_status: validated
+    sources:
+    - source_id: src_mit_ayar_2018
+      supports: MIT affiliation and photonics collaboration
+      locator:
+      accessed_date: '2026-08-23'
+    notes:
+  - id: org_mit_englund_group
+    name: MIT Quantum Photonics Group
+    aliases:
+    - name: Dirk Englund group
+      language: en
+      alias_type: common_name
+    organization_type: academic_lab
+    parent_organization_id: org_mit
+    predecessor_ids: []
+    successor_ids: []
+    founded_date:
+    dissolved_date:
+    status: active
+    technologies:
+    - photonic_compute
+    - silicon_photonics
+    geographies: []
+    website:
+    research_status: validated
+    sources:
+    - source_id: src_mit_englund_ai_hardware_2022
+      supports: group identity and roster
+      locator:
+      accessed_date: '2026-08-23'
+    notes:
+  - id: org_mit_ram_group
+    name: MIT Physical Optics and Electronics Group
+    aliases:
+    - name: Rajeev Ram group
+      language: en
+      alias_type: common_name
+    organization_type: academic_lab
+    parent_organization_id: org_mit
+    predecessor_ids: []
+    successor_ids: []
+    founded_date:
+    dissolved_date:
+    status: active
+    technologies:
+    - silicon_photonics
+    - optical_io
+    geographies: []
+    website:
+    research_status: validated
+    sources:
+    - source_id: src_mit_ayar_2018
+      supports: Rajeev Ram PI and group collaboration
+      locator:
+      accessed_date: '2026-08-23'
+    notes:
+  - id: org_mit_soljacic_group
+    name: MIT Photonics and Modern Electro-Magnetics Group
+    aliases:
+    - name: Marin Soljačić group
+      language: en
+      alias_type: common_name
+    organization_type: academic_lab
+    parent_organization_id: org_mit
+    predecessor_ids: []
+    successor_ids: []
+    founded_date:
+    dissolved_date:
+    status: active
+    technologies:
+    - photonic_compute
+    - silicon_photonics
+    geographies: []
+    website:
+    research_status: validated
+    sources:
+    - source_id: src_mit_soljacic_people_2026
+      supports: group identity and roster
+      locator:
+      accessed_date: '2026-08-23'
+    notes:
+  - id: org_lightmatter
+    name: Lightmatter
+    aliases: []
+    organization_type: startup
+    parent_organization_id:
+    predecessor_ids: []
+    successor_ids: []
+    founded_date:
+    dissolved_date:
+    status: active
+    technologies:
+    - photonic_compute
+    - optical_io
+    geographies: []
+    website:
+    research_status: validated
+    sources:
+    - source_id: src_mit_lightmatter_2024
+      supports: company and founders
+      locator:
+      accessed_date: '2026-08-23'
+    notes:
+  - id: org_lightelligence
+    name: Lightelligence
+    aliases: []
+    organization_type: startup
+    parent_organization_id:
+    predecessor_ids: []
+    successor_ids: []
+    founded_date:
+    dissolved_date:
+    status: active
+    technologies:
+    - photonic_compute
+    - silicon_photonics
+    geographies: []
+    website:
+    research_status: validated
+    sources:
+    - source_id: src_mit_lightelligence_2021
+      supports: company and founders
+      locator:
+      accessed_date: '2026-08-23'
+    notes:
+  - id: org_columbia_university
+    name: Columbia University
+    aliases: []
+    organization_type: university
+    parent_organization_id:
+    predecessor_ids: []
+    successor_ids: []
+    founded_date:
+    dissolved_date:
+    status: active
+    technologies:
+    - silicon_photonics
+    - optical_networking
+    - optical_io
+    geographies: []
+    website:
+    research_status: validated
+    sources:
+    - source_id: src_columbia_xscape_2024
+      supports: Columbia faculty collaboration
+      locator:
+      accessed_date: '2026-08-23'
+    notes:
+  - id: org_columbia_lipson_group
+    name: Columbia Lipson Nanophotonics Group
+    aliases:
+    - name: Michal Lipson group
+      language: en
+      alias_type: common_name
+    organization_type: academic_lab
+    parent_organization_id: org_columbia_university
+    predecessor_ids: []
+    successor_ids: []
+    founded_date:
+    dissolved_date:
+    status: active
+    technologies:
+    - silicon_photonics
+    - optical_io
+    geographies: []
+    website:
+    research_status: validated
+    sources:
+    - source_id: src_columbia_three_groups_2015
+      supports: Michal Lipson Columbia group
+      locator:
+      accessed_date: '2026-08-23'
+    notes:
+  - id: org_columbia_bergman_group
+    name: Columbia Lightwave Research Laboratory
+    aliases:
+    - name: Keren Bergman group
+      language: en
+      alias_type: common_name
+    organization_type: academic_lab
+    parent_organization_id: org_columbia_university
+    predecessor_ids: []
+    successor_ids: []
+    founded_date:
+    dissolved_date:
+    status: active
+    technologies:
+    - optical_networking
+    - optical_io
+    geographies: []
+    website:
+    research_status: validated
+    sources:
+    - source_id: src_columbia_three_groups_2015
+      supports: Keren Bergman Columbia group
+      locator:
+      accessed_date: '2026-08-23'
+    notes:
+  - id: org_acacia_communications
+    name: Acacia Communications
+    aliases:
+    - name: Acacia
+      language: en
+      alias_type: short_name
+    organization_type: startup
+    parent_organization_id:
+    predecessor_ids: []
+    successor_ids: []
+    founded_date:
+    dissolved_date:
+    status: acquired
+    technologies:
+    - coherent_optics
+    - mixed_signal_dsp
+    - optical_networking
+    geographies: []
+    website:
+    research_status: validated
+    sources:
+    - source_id: src_acacia_s1_2016
+      supports: Acacia company, founders and executives
+      locator:
+      accessed_date: '2026-08-23'
+    notes:
+  - id: org_cisco
+    name: Cisco Systems
+    aliases:
+    - name: Cisco
+      language: en
+      alias_type: short_name
+    organization_type: company
+    parent_organization_id:
+    predecessor_ids: []
+    successor_ids: []
+    founded_date:
+    dissolved_date:
+    status: active
+    technologies:
+    - silicon_photonics
+    - coherent_optics
+    - optical_networking
+    geographies: []
+    website:
+    research_status: validated
+    sources:
+    - source_id: src_ecoc_benny_mikkelsen_2025
+      supports: Cisco Acacia affiliation
+      locator:
+      accessed_date: '2026-08-23'
+    notes:
+  - id: org_lucent_bell_labs
+    name: Lucent Bell Labs
+    aliases: []
+    organization_type: industrial_lab
+    parent_organization_id:
+    predecessor_ids: []
+    successor_ids: []
+    founded_date:
+    dissolved_date:
+    status: historical
+    technologies:
+    - coherent_optics
+    - optical_networking
+    geographies: []
+    website:
+    research_status: validated
+    sources:
+    - source_id: src_eth_leuthold_bio_2026
+      supports: Jürg Leuthold Lucent Bell Labs role
+      locator:
+      accessed_date: '2026-08-23'
+    notes: Time-aware Bell Labs era node; not collapsed into generic Bell Labs.
+  - id: org_alcatel_lucent_bell_labs
+    name: Alcatel-Lucent Bell Labs
+    aliases: []
+    organization_type: industrial_lab
+    parent_organization_id:
+    predecessor_ids: []
+    successor_ids: []
+    founded_date:
+    dissolved_date:
+    status: historical
+    technologies:
+    - coherent_optics
+    - optical_networking
+    geographies: []
+    website:
+    research_status: validated
+    sources:
+    - source_id: src_optica_winzer_speaker_2026
+      supports: Peter Winzer Bell Labs career
+      locator:
+      accessed_date: '2026-08-23'
+    notes: Time-aware Bell Labs era node; not collapsed into generic Bell Labs.
+  - id: org_nokia_bell_labs
+    name: Nokia Bell Labs
+    aliases:
+    - name: Bell Labs
+      language: en
+      alias_type: brand
+    organization_type: industrial_lab
+    parent_organization_id:
+    predecessor_ids: []
+    successor_ids: []
+    founded_date:
+    dissolved_date:
+    status: active
+    technologies:
+    - coherent_optics
+    - optical_networking
+    - photonic_switching
+    geographies: []
+    website:
+    research_status: validated
+    sources:
+    - source_id: src_nokia_ryf_bio_2026
+      supports: Nokia Bell Labs role and research
+      locator:
+      accessed_date: '2026-08-23'
+    notes:
+  - id: org_ucsb
+    name: University of California, Santa Barbara
+    aliases:
+    - name: UCSB
+      language: en
+      alias_type: short_name
+    organization_type: university
+    parent_organization_id:
+    predecessor_ids: []
+    successor_ids: []
+    founded_date:
+    dissolved_date:
+    status: active
+    technologies:
+    - silicon_photonics
+    - iii_v_silicon_integration
+    - integrated_lasers
+    geographies: []
+    website:
+    research_status: validated
+    sources:
+    - source_id: src_ucsb_bowers_profile
+      supports: John Bowers UCSB faculty affiliation
+      locator:
+      accessed_date: '2026-08-23'
+    notes:
+  - id: org_ucsb_bowers_group
+    name: UCSB Bowers Optoelectronics Research Group
+    aliases:
+    - name: Bowers Group
+      language: en
+      alias_type: short_name
+    organization_type: academic_lab
+    parent_organization_id:
+    predecessor_ids: []
+    successor_ids: []
+    founded_date:
+    dissolved_date:
+    status: active
+    technologies:
+    - silicon_photonics
+    - iii_v_silicon_integration
+    - integrated_lasers
+    - photonic_switching
+    geographies: []
+    website:
+    research_status: validated
+    sources:
+    - source_id: src_ucsb_bowers_profile
+      supports: Bowers group identity and research
+      locator:
+      accessed_date: '2026-08-23'
+    notes:
+  - id: org_nexus_photonics
+    name: Nexus Photonics
+    aliases: []
+    organization_type: startup
+    parent_organization_id:
+    predecessor_ids: []
+    successor_ids: []
+    founded_date:
+    dissolved_date:
+    status: active
+    technologies:
+    - iii_v_silicon_integration
+    - integrated_lasers
+    geographies: []
+    website:
+    research_status: validated
+    sources:
+    - source_id: src_nexus_team
+      supports: company and team
+      locator:
+      accessed_date: '2026-08-23'
+    notes:
+  - id: org_aerius_photonics
+    name: Aerius Photonics
+    aliases: []
+    organization_type: startup
+    parent_organization_id:
+    predecessor_ids: []
+    successor_ids: []
+    founded_date:
+    dissolved_date:
+    status: acquired
+    technologies:
+    - integrated_lasers
+    geographies: []
+    website:
+    research_status: validated
+    sources:
+    - source_id: src_sbir_aerius_success
+      supports: company and founder
+      locator:
+      accessed_date: '2026-08-23'
+    notes:
+  - id: org_terabit_technologies
+    name: Terabit Technologies
+    aliases: []
+    organization_type: startup
+    parent_organization_id:
+    predecessor_ids: []
+    successor_ids: []
+    founded_date:
+    dissolved_date:
+    status: acquired
+    technologies:
+    - optical_io
+    geographies: []
+    website:
+    research_status: validated
+    sources:
+    - source_id: src_ucsb_bowers_tmp_profile
+      supports: company and John Bowers role
+      locator:
+      accessed_date: '2026-08-23'
+    notes:
+  - id: org_calient
+    name: Calient Technologies
+    aliases:
+    - name: Calient
+      language: en
+      alias_type: short_name
+    organization_type: startup
+    parent_organization_id:
+    predecessor_ids: []
+    successor_ids: []
+    founded_date:
+    dissolved_date:
+    status: unknown
+    technologies:
+    - photonic_switching
+    - optical_networking
+    geographies: []
+    website:
+    research_status: validated
+    sources:
+    - source_id: src_ucsb_bowers_profile
+      supports: Calient co-founder relationship
+      locator:
+      accessed_date: '2026-08-23'
+    notes:

@@ -1,0 +1,61 @@
+schema_version: "0.1.0"
+description: Discovery seeds from the planning document. Names and aliases require identity validation before graph use.
+people:
+  # Intel-centered
+  - {id: person_mario_paniccia, name: Mario Paniccia, aliases: [], technologies: [silicon_photonics], research_status: seed_unverified, sources: []}
+  - {id: person_haisheng_rong, name: Haisheng Rong, aliases: [], technologies: [silicon_photonics, integrated_lasers], research_status: seed_unverified, sources: []}
+  - {id: person_richard_jones, name: Richard Jones, aliases: [], name_disambiguator: silicon photonics researcher, technologies: [silicon_photonics], research_status: seed_unverified, sources: []}
+  - {id: person_mario_fiorentino, name: Mario Fiorentino, aliases: [], technologies: [silicon_photonics, optical_io], research_status: seed_unverified, sources: []}
+  - {id: person_ansheng_liu, name: Ansheng Liu, aliases: [], technologies: [silicon_photonics], research_status: seed_unverified, sources: []}
+  - {id: person_drew_alduino, name: Drew Alduino, aliases: [], technologies: [silicon_photonics, datacenter_optics], research_status: seed_unverified, sources: []}
+  - {id: person_robert_blum, name: Robert Blum, aliases: [], name_disambiguator: photonics executive, technologies: [silicon_photonics], research_status: seed_unverified, sources: []}
+  - {id: person_yoel_chetrit, name: Yoel Chetrit, aliases: [], technologies: [silicon_photonics], research_status: seed_unverified, sources: []}
+  - {id: person_jie_sun, name: Jie Sun, aliases: [], name_disambiguator: silicon photonics researcher, technologies: [silicon_photonics], research_status: seed_unverified, sources: []}
+  - {id: person_vivek_raghunathan, name: Vivek Raghunathan, aliases: [], technologies: [silicon_photonics, optical_io], research_status: seed_unverified, sources: []}
+  - {id: person_brian_koch, name: Brian Koch, aliases: [], technologies: [iii_v_silicon_integration, integrated_lasers], research_status: seed_unverified, sources: []}
+  - {id: person_michael_davenport, name: Michael Davenport, aliases: [], name_disambiguator: integrated photonics researcher, technologies: [iii_v_silicon_integration, integrated_lasers], research_status: seed_unverified, sources: []}
+  - {id: person_matt_sysak, name: Matt Sysak, aliases: [], technologies: [iii_v_silicon_integration, datacenter_optics], research_status: seed_unverified, sources: []}
+  - {id: person_marcus_yang, name: Marcus Yang, aliases: [], name_disambiguator: silicon photonics researcher, technologies: [silicon_photonics], research_status: seed_unverified, sources: []}
+  - {id: person_li_ruolin, name: Li Ruolin, aliases: [{name: 李若林, language: zh, alias_type: native_name}, {name: Ruolin Li, language: en, alias_type: alternate_spelling}], technologies: [silicon_photonics], research_status: seed_unverified, sources: []}
+  - {id: person_nie_hui, name: Nie Hui, aliases: [{name: 聂辉, language: zh, alias_type: native_name}, {name: Hui Nie, language: en, alias_type: alternate_spelling}], technologies: [silicon_photonics], research_status: seed_unverified, sources: []}
+  - {id: person_guo_peng, name: Guo Peng, aliases: [{name: 郭鹏, language: zh, alias_type: native_name}, {name: Peng Guo, language: en, alias_type: alternate_spelling}], technologies: [silicon_photonics], research_status: seed_unverified, sources: []}
+
+  # Bell Labs-centered
+  - {id: person_peter_winzer, name: Peter Winzer, aliases: [], technologies: [coherent_optics, optical_networking], research_status: seed_unverified, sources: []}
+  - {id: person_guilhem_de_valicourt, name: Guilhem de Valicourt, aliases: [], technologies: [coherent_optics, optical_networking], research_status: seed_unverified, sources: []}
+  - {id: person_benny_mikkelsen, name: Benny Mikkelsen, aliases: [], technologies: [coherent_optics, optical_networking], research_status: seed_unverified, sources: []}
+  - {id: person_jurg_leuthold, name: Jürg Leuthold, aliases: [{name: Juerg Leuthold, language: de, alias_type: alternate_spelling}], technologies: [silicon_photonics, thin_film_lithium_niobate], research_status: seed_unverified, sources: []}
+  - {id: person_phil_winterbottom, name: Phil Winterbottom, aliases: [], technologies: [optical_networking], research_status: seed_unverified, sources: []}
+
+  # UCSB and UK academic/commercial lineages
+  - {id: person_john_bowers, name: John Bowers, aliases: [], name_disambiguator: UCSB photonics professor, technologies: [iii_v_silicon_integration, integrated_lasers], research_status: seed_unverified, sources: []}
+  - {id: person_alex_fang, name: Alex Fang, aliases: [], name_disambiguator: integrated photonics researcher, technologies: [iii_v_silicon_integration, integrated_lasers], research_status: seed_unverified, sources: []}
+  - {id: person_alan_liu, name: Alan Liu, aliases: [], name_disambiguator: integrated photonics founder, technologies: [iii_v_silicon_integration, integrated_lasers], research_status: seed_unverified, sources: []}
+  - {id: person_graham_reed, name: Graham Reed, aliases: [], technologies: [silicon_photonics], research_status: seed_unverified, sources: []}
+  - {id: person_andrew_rickman, name: Andrew Rickman, aliases: [], technologies: [silicon_photonics], research_status: seed_unverified, sources: []}
+
+  # MIT-centered
+  - {id: person_dirk_englund, name: Dirk Englund, aliases: [], technologies: [photonic_compute], research_status: seed_unverified, sources: []}
+  - {id: person_nicholas_harris, name: Nicholas Harris, aliases: [], name_disambiguator: Lightmatter founder, technologies: [photonic_compute], research_status: seed_unverified, sources: []}
+  - {id: person_darius_bunandar, name: Darius Bunandar, aliases: [], technologies: [photonic_compute], research_status: seed_unverified, sources: []}
+  - {id: person_mark_wade, name: Mark Wade, aliases: [], name_disambiguator: Ayar Labs founder, technologies: [silicon_photonics, optical_io], research_status: seed_unverified, sources: []}
+  - {id: person_chen_sun, name: Chen Sun, aliases: [], name_disambiguator: Ayar Labs founder, technologies: [silicon_photonics, optical_io], research_status: seed_unverified, sources: []}
+  - {id: person_vladimir_stojanovic, name: Vladimir Stojanovic, aliases: [{name: Vladimir Stojanović, language: sr, alias_type: native_name}], technologies: [silicon_photonics, optical_io], research_status: seed_unverified, sources: []}
+  - {id: person_milos_popovic, name: Milos Popovic, aliases: [{name: Miloš Popović, language: sr, alias_type: native_name}], technologies: [silicon_photonics, optical_io], research_status: seed_unverified, sources: []}
+  - {id: person_rajeev_ram, name: Rajeev Ram, aliases: [], technologies: [silicon_photonics, optical_io], research_status: seed_unverified, sources: []}
+  - {id: person_marin_soljacic, name: Marin Soljačić, aliases: [{name: Marin Soljacic, language: en, alias_type: alternate_spelling}], technologies: [photonic_compute], research_status: seed_unverified, sources: []}
+  - {id: person_yichen_shen, name: Yichen Shen, aliases: [], technologies: [photonic_compute], research_status: seed_unverified, sources: []}
+
+  # Columbia and Caltech-centered
+  - {id: person_michal_lipson, name: Michal Lipson, aliases: [], technologies: [silicon_photonics], research_status: seed_unverified, sources: []}
+  - {id: person_keren_bergman, name: Keren Bergman, aliases: [], technologies: [optical_networking, optical_io], research_status: seed_unverified, sources: []}
+  - {id: person_alexander_gaeta, name: Alexander Gaeta, aliases: [], technologies: [silicon_photonics], research_status: seed_unverified, sources: []}
+  - {id: person_yoshi_okawachi, name: Yoshi Okawachi, aliases: [], technologies: [silicon_photonics], research_status: seed_unverified, sources: []}
+  - {id: person_axel_scherer, name: Axel Scherer, aliases: [], technologies: [silicon_photonics], research_status: seed_unverified, sources: []}
+  - {id: person_cary_gunn, name: Cary Gunn, aliases: [], technologies: [silicon_photonics], research_status: seed_unverified, sources: []}
+  - {id: person_alex_dickinson, name: Alex Dickinson, aliases: [], name_disambiguator: Luxtera co-founder, technologies: [silicon_photonics], research_status: seed_unverified, sources: []}
+
+  # ETH / Polariton-centered
+  - {id: person_wolfgang_heni, name: Wolfgang Heni, aliases: [], technologies: [thin_film_lithium_niobate], research_status: seed_unverified, sources: []}
+  - {id: person_claudia_hoessbacher, name: Claudia Hoessbacher, aliases: [{name: Claudia Hössbacher, language: de, alias_type: native_name}], technologies: [thin_film_lithium_niobate], research_status: seed_unverified, sources: []}
+  - {id: person_benedikt_baeuerle, name: Benedikt Bäuerle, aliases: [{name: Benedikt Baeuerle, language: de, alias_type: alternate_spelling}], technologies: [thin_film_lithium_niobate], research_status: seed_unverified, sources: []}

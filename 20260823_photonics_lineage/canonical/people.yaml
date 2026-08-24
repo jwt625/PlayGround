@@ -1,0 +1,899 @@
+schema_version: "0.1.0"
+people:
+  - {id: person_mario_paniccia, name: "Mario Paniccia", aliases: [], name_disambiguator: null, current_organization_id: org_anello, current_title: "CEO", technologies: [silicon_photonics], research_status: validated, sources: [{source_id: src_anello_paniccia_profile, supports: "identity and career", locator: null, accessed_date: "2026-08-23"}], notes: null}
+  - {id: person_kevin_sullivan, name: "Kevin Sullivan", aliases: [], name_disambiguator: null, current_organization_id: org_anello, current_title: "Chief Operating Officer", technologies: [silicon_photonics, fiber_optics], research_status: validated, sources: [{source_id: src_anello_team, supports: "identity and career", locator: "Kevin Sullivan bio", accessed_date: "2026-08-23"}], notes: null}
+  - {id: person_andrew_alduino, name: "Andrew Alduino", aliases: [{name: "Drew Alduino", language: en, alias_type: common_name}], name_disambiguator: null, current_organization_id: null, current_title: null, technologies: [silicon_photonics, optical_io], research_status: validated, sources: [{source_id: src_optica_drew_alduino_2025, supports: "identity, alias and 2025 role", locator: "speaker bio", accessed_date: "2026-08-23"}], notes: "Meta affiliation is a dated 2025 snapshot, not asserted as current in 2026."}
+  - {id: person_matt_sysak, name: "Matthew N. Sysak", aliases: [{name: "Matt Sysak", language: en, alias_type: common_name}], name_disambiguator: null, current_organization_id: org_lumentum, current_title: "CTO, Cloud and Networking Platform", technologies: [silicon_photonics, integrated_lasers, optical_io], research_status: validated, sources: [{source_id: src_semicon_taiwan_matt_sysak, supports: "identity and career", locator: "speaker bio", accessed_date: "2026-08-23"}], notes: null}
+  - {id: person_yoel_chetrit, name: "Yoel Chetrit", aliases: [], name_disambiguator: null, current_organization_id: null, current_title: null, technologies: [silicon_photonics, datacenter_optics], research_status: validated, sources: [{source_id: src_dustphotonics_company, supports: "identity and DustPhotonics roles", locator: "leaders", accessed_date: "2026-08-23"}], notes: "Post-acquisition Credo role not established."}
+  - {id: person_brian_koch, name: "Brian Koch", aliases: [], name_disambiguator: null, current_organization_id: org_quintessent, current_title: "VP of Engineering", technologies: [silicon_photonics, integrated_lasers], research_status: validated, sources: [{source_id: src_quintessent_team, supports: "identity and career", locator: "Brian Koch bio", accessed_date: "2026-08-23"}], notes: null}
+  - {id: person_vivek_raghunathan, name: "Vivek Raghunathan", aliases: [], name_disambiguator: null, current_organization_id: org_xscape, current_title: "Co-Founder and CEO", technologies: [silicon_photonics, co_packaged_optics, optical_io], research_status: validated, sources: [{source_id: src_xscape_team, supports: "identity and career", locator: "Vivek Raghunathan bio", accessed_date: "2026-08-23"}], notes: null}
+  - {id: person_vikram_sadagopan, name: "Vikram Sadagopan", aliases: [], name_disambiguator: null, current_organization_id: org_xscape, current_title: "VP of Engineering", technologies: [silicon_photonics], research_status: validated, sources: [{source_id: src_xscape_vikram_appointment, supports: "identity and career", locator: null, accessed_date: "2026-08-23"}], notes: null}
+  - {id: person_juthika_basak, name: "Juthika Basak", aliases: [], name_disambiguator: null, current_organization_id: org_amd, current_title: "Fellow", technologies: [silicon_photonics, datacenter_optics], research_status: validated, sources: [{source_id: src_ofc_cpo_workshop_2026, supports: "identity and career", locator: "speaker bio", accessed_date: "2026-08-23"}], notes: null}
+  - {id: person_assia_barkai, name: "Assia Barkai", aliases: [], name_disambiguator: null, current_organization_id: null, current_title: null, technologies: [silicon_photonics, optical_packaging], research_status: validated, sources: [{source_id: src_optica_intel_siph_team, supports: "identity and Intel SiPh role", locator: "team list", accessed_date: "2026-08-23"}], notes: null}
+  - {id: person_rami_cohen, name: "Rami Cohen", aliases: [], name_disambiguator: null, current_organization_id: null, current_title: null, technologies: [silicon_photonics], research_status: validated, sources: [{source_id: src_optica_intel_siph_team, supports: "identity and Intel SiPh role", locator: "team list", accessed_date: "2026-08-23"}], notes: null}
+  - {id: person_olufemi_dosunmu, name: "Olufemi I. Dosunmu", aliases: [{name: "Femi Dosunmu", language: en, alias_type: common_name}], name_disambiguator: null, current_organization_id: null, current_title: null, technologies: [silicon_photonics], research_status: validated, sources: [{source_id: src_optica_intel_siph_team, supports: "identity and Intel SiPh role", locator: "team list", accessed_date: "2026-08-23"}], notes: null}
+  - {id: person_john_heck, name: "John Heck", aliases: [], name_disambiguator: "silicon photonics engineer", current_organization_id: null, current_title: null, technologies: [silicon_photonics, iii_v_silicon_integration], research_status: validated, sources: [{source_id: src_optica_intel_siph_team, supports: "identity and Intel SiPh role", locator: "team list", accessed_date: "2026-08-23"}], notes: null}
+  - {id: person_richard_jones, name: "Richard Jones", aliases: [], name_disambiguator: "Intel silicon photonics architect", current_organization_id: null, current_title: null, technologies: [silicon_photonics, optical_io], research_status: validated, sources: [{source_id: src_optica_intel_siph_team, supports: "identity and Intel SiPh role", locator: "team list", accessed_date: "2026-08-23"}], notes: null}
+  - {id: person_yimin_kang, name: "Yimin Kang", aliases: [], name_disambiguator: null, current_organization_id: null, current_title: null, technologies: [silicon_photonics], research_status: validated, sources: [{source_id: src_optica_intel_siph_team, supports: "identity and Intel SiPh role", locator: "team list", accessed_date: "2026-08-23"}], notes: null}
+  - {id: person_ling_liao, name: "Ling Liao", aliases: [], name_disambiguator: null, current_organization_id: null, current_title: null, technologies: [silicon_photonics], research_status: validated, sources: [{source_id: src_optica_intel_siph_team, supports: "identity and Intel SiPh role", locator: "team list", accessed_date: "2026-08-23"}], notes: null}
+  - {id: person_ansheng_liu, name: "Ansheng Liu", aliases: [], name_disambiguator: null, current_organization_id: null, current_title: null, technologies: [silicon_photonics], research_status: validated, sources: [{source_id: src_optica_intel_siph_team, supports: "identity and Intel SiPh role", locator: "team list", accessed_date: "2026-08-23"}], notes: null}
+  - {id: person_hai_feng_liu, name: "Hai-Feng Liu", aliases: [], name_disambiguator: null, current_organization_id: null, current_title: null, technologies: [silicon_photonics, datacenter_optics], research_status: validated, sources: [{source_id: src_optica_intel_siph_team, supports: "identity and Intel SiPh role", locator: "team list", accessed_date: "2026-08-23"}], notes: null}
+  - {id: person_david_nelson, name: "David Nelson", aliases: [], name_disambiguator: "Intel silicon photonics IC designer", current_organization_id: null, current_title: null, technologies: [silicon_photonics, mixed_signal_dsp], research_status: validated, sources: [{source_id: src_optica_intel_siph_team, supports: "identity and Intel SiPh role", locator: "team list", accessed_date: "2026-08-23"}], notes: null}
+  - {id: person_haisheng_rong, name: "Haisheng Rong", aliases: [], name_disambiguator: null, current_organization_id: null, current_title: null, technologies: [silicon_photonics, integrated_lasers], research_status: validated, sources: [{source_id: src_optica_intel_siph_team, supports: "identity and Intel SiPh role", locator: "team list", accessed_date: "2026-08-23"}], notes: null}
+
+  - {id: person_ahmed_aboul_ella, name: "Ahmed F. Aboul-Ella", aliases: [], name_disambiguator: null, current_organization_id: null, current_title: null, technologies: [optical_serdes, silicon_photonics], research_status: in_research, sources: [{source_id: src_sukna_infinilink, supports: "identity and InfiniLink roles", locator: null, accessed_date: "2026-08-23"}], notes: "Only C-grade founder/role evidence in staging."}
+  - {id: person_botros_george, name: "Botros George", aliases: [], name_disambiguator: null, current_organization_id: null, current_title: null, technologies: [optical_serdes, silicon_photonics], research_status: in_research, sources: [{source_id: src_sukna_infinilink, supports: "identity and InfiniLink roles", locator: null, accessed_date: "2026-08-23"}], notes: "Only C-grade founder/role evidence in staging."}
+  - {id: person_mohsen_asad, name: "Mohsen Asad", aliases: [], name_disambiguator: null, current_organization_id: null, current_title: null, technologies: [microled_interconnect], research_status: validated, sources: [{source_id: src_hyperlume_seed_announcement, supports: "identity and Hyperlume roles", locator: null, accessed_date: "2026-08-23"}], notes: null}
+  - {id: person_hossein_fariborzi, name: "Hossein Fariborzi", aliases: [], name_disambiguator: null, current_organization_id: null, current_title: null, technologies: [microled_interconnect], research_status: validated, sources: [{source_id: src_hyperlume_seed_announcement, supports: "identity and Hyperlume founder role", locator: null, accessed_date: "2026-08-23"}], notes: null}
+  - {id: person_dennis_tong, name: "Dennis Tong", aliases: [], name_disambiguator: null, current_organization_id: null, current_title: null, technologies: [datacenter_optics, optical_packaging], research_status: validated, sources: [{source_id: src_lumentum_cloudlight_announcement, supports: "identity and Cloud Light roles", locator: null, accessed_date: "2026-08-23"}], notes: null}
+  - {id: person_guo_qiang_lo, name: "Guo-Qiang Lo", aliases: [], name_disambiguator: null, current_organization_id: null, current_title: null, technologies: [silicon_photonics, foundry], research_status: validated, sources: [{source_id: src_semicon_china_guoqiang_lo, supports: "identity and career", locator: "speaker bio", accessed_date: "2026-08-23"}], notes: null}
+  - {id: person_loi_nguyen, name: "Loi Nguyen", aliases: [], name_disambiguator: null, current_organization_id: org_marvell, current_title: null, technologies: [coherent_optics, mixed_signal_dsp], research_status: validated, sources: [{source_id: src_marvell_proxy_2023, supports: "identity and career", locator: "biography", accessed_date: "2026-08-23"}], notes: null}
+  - {id: person_ford_tamer, name: "Ford Tamer", aliases: [], name_disambiguator: null, current_organization_id: null, current_title: null, technologies: [optical_networking, mixed_signal_dsp], research_status: validated, sources: [{source_id: src_marvell_proxy_2023, supports: "identity and career", locator: "biography", accessed_date: "2026-08-23"}], notes: null}
+  - {id: person_david_lazovsky, name: "David Lazovsky", aliases: [{name: "Dave Lazovsky", language: en, alias_type: common_name}], name_disambiguator: null, current_organization_id: org_marvell, current_title: "EVP and GM, Data Center Networking Business Group", technologies: [silicon_photonics, optical_io], research_status: validated, sources: [{source_id: src_marvell_dave_lazovsky, supports: "identity and career", locator: "biography", accessed_date: "2026-08-23"}], notes: null}
+  - {id: person_preet_virk, name: "Preet Virk", aliases: [], name_disambiguator: null, current_organization_id: null, current_title: null, technologies: [optical_io], research_status: in_research, sources: [{source_id: src_engine_celestial_ai, supports: "identity and Celestial AI co-founder/leadership", locator: null, accessed_date: "2026-08-23"}], notes: "Only C-grade startup-database evidence in staging."}
+  - {id: person_phil_winterbottom, name: "Phil Winterbottom", aliases: [], name_disambiguator: null, current_organization_id: null, current_title: null, technologies: [optical_io, optical_networking], research_status: in_research, sources: [{source_id: src_engine_celestial_ai, supports: "identity and Celestial AI CTO role", locator: null, accessed_date: "2026-08-23"}], notes: "Only C-grade role evidence in staging."}
+  - {id: person_ben_rubovitch, name: "Ben Rubovitch", aliases: [], name_disambiguator: null, current_organization_id: null, current_title: null, technologies: [silicon_photonics], research_status: validated, sources: [{source_id: src_dustphotonics_company, supports: "identity and board role", locator: "board", accessed_date: "2026-08-23"}], notes: "Founder claim is supported by acquisition staging's official-source synthesis but source locator should be re-audited."}
+  - {id: person_avigdor_willenz, name: "Avigdor Willenz", aliases: [], name_disambiguator: null, current_organization_id: null, current_title: null, technologies: [silicon_photonics], research_status: validated, sources: [{source_id: src_dustphotonics_company, supports: "identity and chairman role", locator: "board", accessed_date: "2026-08-23"}], notes: null}
+  - {id: person_ronnen_lovinger, name: "Ronnen Lovinger", aliases: [], name_disambiguator: null, current_organization_id: org_credo, current_title: "VP of Silicon Photonics", technologies: [silicon_photonics, datacenter_optics], research_status: validated, sources: [{source_id: src_credo_leadership, supports: "identity and post-close role", locator: "leadership", accessed_date: "2026-08-23"}], notes: null}
+  - {id: person_peter_winzer, name: "Peter Winzer", aliases: [], name_disambiguator: null, current_organization_id: org_ciena, current_title: "VP Systems Architecture", technologies: [coherent_optics, optical_networking], research_status: validated, sources: [{source_id: src_ciena_nubis_deck, supports: "identity and career", locator: "leadership biography", accessed_date: "2026-08-23"}], notes: null}
+  - {id: person_guilhem_de_valicourt, name: "Guilhem de Valicourt", aliases: [], name_disambiguator: null, current_organization_id: null, current_title: null, technologies: [coherent_optics, optical_engine], research_status: validated, sources: [{source_id: src_ciena_nubis_deck, supports: "identity and career", locator: "leadership biography", accessed_date: "2026-08-23"}], notes: null}
+  - {id: person_dan_harding, name: "Dan Harding", aliases: [], name_disambiguator: null, current_organization_id: null, current_title: null, technologies: [optical_io], research_status: validated, sources: [{source_id: src_ciena_nubis_deck, supports: "identity and career", locator: "leadership biography", accessed_date: "2026-08-23"}], notes: null}
+  - {id: person_matt_streshinsky, name: "Matt Streshinsky", aliases: [], name_disambiguator: null, current_organization_id: org_amd, current_title: "Optics design lead", technologies: [silicon_photonics, co_packaged_optics], research_status: validated, sources: [{source_id: src_matt_streshinsky_bio, supports: "identity and career", locator: null, accessed_date: "2026-08-23"}], notes: null}
+  - {id: person_ari_novack, name: "Ari Novack", aliases: [], name_disambiguator: null, current_organization_id: null, current_title: null, technologies: [silicon_photonics], research_status: validated, sources: [{source_id: src_enosemi_team, supports: "identity and Enosemi roles", locator: "team", accessed_date: "2026-08-23"}], notes: null}
+  - {id: person_shahab_ardalan, name: "Shahab Ardalan", aliases: [], name_disambiguator: null, current_organization_id: null, current_title: null, technologies: [silicon_photonics, mixed_signal_dsp], research_status: validated, sources: [{source_id: src_enosemi_team, supports: "identity and Enosemi roles", locator: "team", accessed_date: "2026-08-23"}], notes: null}
+  - {id: person_claudia_hoessbacher, name: "Claudia Hoessbacher", aliases: [{name: "Claudia Hössbacher", language: de, alias_type: alternate_spelling}], name_disambiguator: null, current_organization_id: null, current_title: null, technologies: [coherent_optics, silicon_photonics], research_status: validated, sources: [{source_id: src_eth_polariton_acquisition, supports: "identity and lineage", locator: null, accessed_date: "2026-08-23"}], notes: null}
+  - {id: person_wolfgang_heni, name: "Wolfgang Heni", aliases: [], name_disambiguator: null, current_organization_id: null, current_title: null, technologies: [coherent_optics, silicon_photonics], research_status: validated, sources: [{source_id: src_eth_polariton_acquisition, supports: "identity and lineage", locator: null, accessed_date: "2026-08-23"}], notes: null}
+  - {id: person_benedikt_baeuerle, name: "Benedikt Baeuerle", aliases: [{name: "Benedikt Bäuerle", language: de, alias_type: alternate_spelling}], name_disambiguator: null, current_organization_id: null, current_title: null, technologies: [coherent_optics, silicon_photonics], research_status: validated, sources: [{source_id: src_eth_polariton_acquisition, supports: "identity and lineage", locator: null, accessed_date: "2026-08-23"}], notes: null}
+  - id: person_benny_mikkelsen
+    name: Benny Mikkelsen
+    aliases: []
+    name_disambiguator:
+    current_organization_id: org_cisco
+    current_title: SVP and GM, Coherent Products and Components (Acacia)
+    technologies:
+    - coherent_optics
+    - mixed_signal_dsp
+    research_status: validated
+    sources:
+    - source_id: src_acacia_s1_2016
+      supports: Acacia founder, CTO, Mintera and Bell Labs history
+      locator: 'Management biography: Benny P. Mikkelsen'
+      accessed_date: '2026-08-23'
+    - source_id: src_ecoc_benny_mikkelsen_2025
+      supports: Current Cisco Acacia role and full sequence
+      locator: Biography
+      accessed_date: '2026-08-23'
+    notes:
+  - id: person_nicholas_harris
+    name: Nicholas Harris
+    aliases:
+    - name: Nick Harris
+      language: en
+      alias_type: common_name
+    name_disambiguator: Lightmatter co-founder
+    current_organization_id: org_lightmatter
+    current_title: Co-founder and CEO
+    technologies:
+    - photonic_compute
+    - optical_io
+    research_status: validated
+    sources:
+    - source_id: src_mit_lightmatter_2024
+      supports: Founder/CEO and Englund lab PhD
+      locator: From idea to $100K
+      accessed_date: '2026-08-23'
+    notes:
+  - id: person_darius_bunandar
+    name: Darius Bunandar
+    aliases: []
+    name_disambiguator:
+    current_organization_id: org_lightmatter
+    current_title: Co-founder and Chief Scientist
+    technologies:
+    - photonic_compute
+    - optical_io
+    research_status: validated
+    sources:
+    - source_id: src_mit_lightmatter_2024
+      supports: Founder and Englund lab
+      locator: From idea to $100K
+      accessed_date: '2026-08-23'
+    notes:
+  - id: person_thomas_graham
+    name: Thomas Graham
+    aliases: []
+    name_disambiguator: Lightmatter co-founder
+    current_organization_id: org_lightmatter
+    current_title:
+    technologies:
+    - photonic_compute
+    research_status: validated
+    sources:
+    - source_id: src_mit_lightmatter_2024
+      supports: Founder and MIT MBA 2018
+      locator: From idea to $100K
+      accessed_date: '2026-08-23'
+    notes:
+  - id: person_dirk_englund
+    name: Dirk Englund
+    aliases: []
+    name_disambiguator:
+    current_organization_id: org_mit_englund_group
+    current_title: Professor / Principal Investigator
+    technologies:
+    - photonic_compute
+    - silicon_photonics
+    research_status: validated
+    sources:
+    - source_id: src_mit_lightmatter_2024
+      supports: Harris PhD advisor and lab affiliation
+      locator: From idea to $100K
+      accessed_date: '2026-08-23'
+    notes:
+  - id: person_saumil_bandyopadhyay
+    name: Saumil Bandyopadhyay
+    aliases: []
+    name_disambiguator:
+    current_organization_id:
+    current_title:
+    technologies:
+    - photonic_compute
+    - silicon_photonics
+    research_status: validated
+    sources:
+    - source_id: src_mit_englund_ai_hardware_2022
+      supports: MIT Quantum Photonics Group PhD roster
+      locator: Group roster slide
+      accessed_date: '2026-08-23'
+    notes:
+  - id: person_ryan_hamerly
+    name: Ryan Hamerly
+    aliases: []
+    name_disambiguator:
+    current_organization_id:
+    current_title:
+    technologies:
+    - photonic_compute
+    research_status: validated
+    sources:
+    - source_id: src_mit_englund_ai_hardware_2022
+      supports: MIT Quantum Photonics Group membership
+      locator: Group roster slide
+      accessed_date: '2026-08-23'
+    notes:
+  - id: person_alexander_sludds
+    name: Alexander Sludds
+    aliases:
+    - name: Alex Sludds
+      language: en
+      alias_type: common_name
+    name_disambiguator:
+    current_organization_id:
+    current_title:
+    technologies:
+    - photonic_compute
+    - optical_io
+    research_status: validated
+    sources:
+    - source_id: src_mit_englund_ai_hardware_2022
+      supports: MIT Quantum Photonics Group PhD roster
+      locator: Group roster slide
+      accessed_date: '2026-08-23'
+    notes:
+  - id: person_chen_sun
+    name: Chen Sun
+    aliases: []
+    name_disambiguator: Ayar Labs co-founder
+    current_organization_id: org_ayar_labs
+    current_title: VP Silicon Engineering and Co-founder
+    technologies:
+    - silicon_photonics
+    - optical_io
+    research_status: validated
+    sources:
+    - source_id: src_mit_ayar_2018
+      supports: Co-founder and MIT PhD 2015
+      locator: Opening and founder caption
+      accessed_date: '2026-08-23'
+    - source_id: src_ayar_leadership_2026
+      supports: Current role
+      locator: Chen Sun
+      accessed_date: '2026-08-23'
+    notes:
+  - id: person_mark_wade
+    name: Mark Wade
+    aliases: []
+    name_disambiguator: Ayar Labs co-founder
+    current_organization_id: org_ayar_labs
+    current_title: CEO and Co-founder
+    technologies:
+    - silicon_photonics
+    - optical_io
+    research_status: validated
+    sources:
+    - source_id: src_mit_ayar_2018
+      supports: Co-founder, Colorado graduate, former MIT researcher
+      locator: Opening
+      accessed_date: '2026-08-23'
+    - source_id: src_ayar_leadership_2026
+      supports: Current role
+      locator: Mark Wade
+      accessed_date: '2026-08-23'
+    notes:
+  - id: person_vladimir_stojanovic
+    name: Vladimir Stojanovic
+    aliases:
+    - name: Vladimir Stojanović
+      language: sr
+      alias_type: native_name
+    name_disambiguator:
+    current_organization_id: org_ayar_labs
+    current_title: CTO and Co-founder
+    technologies:
+    - silicon_photonics
+    - optical_io
+    research_status: validated
+    sources:
+    - source_id: src_berkeley_stojanovic_bio_2026
+      supports: MIT faculty interval and Ayar founder status
+      locator: Biography
+      accessed_date: '2026-08-23'
+    - source_id: src_ayar_leadership_2026
+      supports: Current role
+      locator: Vladimir Stojanovic
+      accessed_date: '2026-08-23'
+    notes:
+  - id: person_rajeev_ram
+    name: Rajeev Ram
+    aliases: []
+    name_disambiguator:
+    current_organization_id: org_mit_ram_group
+    current_title: Professor / Principal Investigator
+    technologies:
+    - silicon_photonics
+    - optical_io
+    research_status: validated
+    sources:
+    - source_id: src_mit_ayar_2018
+      supports: MIT professor, Physical Optics and Electronics PI, POEM collaborator
+      locator: Seeing the light
+      accessed_date: '2026-08-23'
+    - source_id: src_ayar_leadership_2026
+      supports: Ayar Technical Principal and Co-founder
+      locator: Advisors
+      accessed_date: '2026-08-23'
+    notes:
+  - id: person_milos_popovic
+    name: Milos Popovic
+    aliases:
+    - name: Miloš Popović
+      language: sr
+      alias_type: native_name
+    name_disambiguator:
+    current_organization_id:
+    current_title:
+    technologies:
+    - silicon_photonics
+    - optical_io
+    research_status: validated
+    sources:
+    - source_id: src_mit_ayar_2018
+      supports: POEM collaborator and later BU professor
+      locator: Seeing the light
+      accessed_date: '2026-08-23'
+    - source_id: src_ayar_leadership_2026
+      supports: Ayar Technical Principal and Co-founder
+      locator: Advisors
+      accessed_date: '2026-08-23'
+    notes:
+  - id: person_yichen_shen
+    name: Yichen Shen
+    aliases:
+    - name: Shen Yichen
+      language: en
+      alias_type: alternate_spelling
+    name_disambiguator:
+    current_organization_id: org_lightelligence
+    current_title: Founder, Chairman and CEO
+    technologies:
+    - photonic_compute
+    research_status: validated
+    sources:
+    - source_id: src_mit_lightelligence_2021
+      supports: Founder/CEO, MIT PhD and Soljacic/Joannopoulos training
+      locator: Founding and biography paragraphs
+      accessed_date: '2026-08-23'
+    - source_id: src_lightelligence_board_2026
+      supports: Current governance roles
+      locator: Dr. Shen Yichen
+      accessed_date: '2026-08-23'
+    notes: 2017 Lightmatter competition-team participation is documented but founder
+      status is not asserted.
+  - id: person_huaiyu_meng
+    name: Huaiyu Meng
+    aliases:
+    - name: Meng Huaiyu
+      language: en
+      alias_type: alternate_spelling
+    name_disambiguator:
+    current_organization_id: org_lightelligence
+    current_title: Co-founder and CTO
+    technologies:
+    - photonic_compute
+    - silicon_photonics
+    research_status: validated
+    sources:
+    - source_id: src_mit_lightelligence_2021
+      supports: Co-founder/CTO and MIT degree
+      locator: Final paragraph
+      accessed_date: '2026-08-23'
+    - source_id: src_lightelligence_board_2026
+      supports: Current governance roles
+      locator: Dr. Meng Huaiyu
+      accessed_date: '2026-08-23'
+    notes: No PI-group membership asserted from degree evidence alone.
+  - id: person_marin_soljacic
+    name: Marin Soljačić
+    aliases:
+    - name: Marin Soljacic
+      language: en
+      alias_type: alternate_spelling
+    name_disambiguator:
+    current_organization_id: org_mit_soljacic_group
+    current_title: Professor / Principal Investigator
+    technologies:
+    - photonic_compute
+    - silicon_photonics
+    research_status: validated
+    sources:
+    - source_id: src_mit_lightelligence_2021
+      supports: Shen's PhD professor and Lightelligence founding collaborator
+      locator: Founding and biography paragraphs
+      accessed_date: '2026-08-23'
+    - source_id: src_mit_soljacic_people_2026
+      supports: PI and group roster
+      locator: Principal Investigator
+      accessed_date: '2026-08-23'
+    notes: This pass does not assert Lightelligence founder status because the reviewed
+      MIT narrative says Shen teamed with Soljacic but does not call him co-founder.
+  - id: person_alexander_gaeta
+    name: Alexander Gaeta
+    aliases: []
+    name_disambiguator:
+    current_organization_id: org_xscape
+    current_title: President and Co-founder
+    technologies:
+    - silicon_photonics
+    - optical_io
+    research_status: validated
+    sources:
+    - source_id: src_gaeta_cv_2025
+      supports: Co-founder in 2022 and company roles
+      locator: Commercialization
+      accessed_date: '2026-08-23'
+    notes:
+  - id: person_michal_lipson
+    name: Michal Lipson
+    aliases: []
+    name_disambiguator:
+    current_organization_id: org_columbia_lipson_group
+    current_title: Professor / Principal Investigator; Xscape co-founder
+    technologies:
+    - silicon_photonics
+    - optical_io
+    research_status: validated
+    sources:
+    - source_id: src_columbia_xscape_2024
+      supports: Faculty and co-founder role
+      locator: A research collaboration born at Columbia
+      accessed_date: '2026-08-23'
+    notes:
+  - id: person_keren_bergman
+    name: Keren Bergman
+    aliases: []
+    name_disambiguator:
+    current_organization_id: org_columbia_bergman_group
+    current_title: Professor / Principal Investigator; Xscape co-founder
+    technologies:
+    - optical_networking
+    - optical_io
+    research_status: validated
+    sources:
+    - source_id: src_columbia_xscape_2024
+      supports: Faculty and co-founder role
+      locator: A research collaboration born at Columbia
+      accessed_date: '2026-08-23'
+    notes:
+  - id: person_yoshi_okawachi
+    name: Yoshi Okawachi
+    aliases: []
+    name_disambiguator:
+    current_organization_id: org_xscape
+    current_title: Co-founder
+    technologies:
+    - silicon_photonics
+    - optical_io
+    research_status: validated
+    sources:
+    - source_id: src_columbia_xscape_2024
+      supports: Co-founder
+      locator: Founder caption and research collaboration section
+      accessed_date: '2026-08-23'
+    - source_id: src_columbia_xscape_2022
+      supports: Columbia research scientist
+      locator: Leadership list
+      accessed_date: '2026-08-23'
+    notes:
+  - id: person_christian_rasmussen
+    name: Christian J. Rasmussen
+    aliases: []
+    name_disambiguator: Acacia coherent-optics founder
+    current_organization_id:
+    current_title:
+    technologies:
+    - coherent_optics
+    - mixed_signal_dsp
+    research_status: validated
+    sources:
+    - source_id: src_acacia_s1_2016
+      supports: Acacia founder and prior Mintera role
+      locator: 'Management biography: Christian J. Rasmussen'
+      accessed_date: '2026-08-23'
+    notes:
+  - id: person_mehrdad_givehchi
+    name: Mehrdad Givehchi
+    aliases: []
+    name_disambiguator:
+    current_organization_id:
+    current_title:
+    technologies:
+    - coherent_optics
+    - optical_networking
+    research_status: validated
+    sources:
+    - source_id: src_acacia_s1_2016
+      supports: Acacia founder and prior Mintera/Sycamore/Tektronix roles
+      locator: 'Management biography: Mehrdad Givehchi'
+      accessed_date: '2026-08-23'
+    notes:
+  - id: person_murugesan_shanmugaraj
+    name: Murugesan Shanmugaraj
+    aliases:
+    - name: Raj Shanmugaraj
+      language: en
+      alias_type: common_name
+    name_disambiguator:
+    current_organization_id:
+    current_title:
+    technologies:
+    - coherent_optics
+    - optical_networking
+    research_status: validated
+    sources:
+    - source_id: src_acacia_s1_2016
+      supports: Acacia president and CEO
+      locator: Executive officers / agent for service
+      accessed_date: '2026-08-23'
+    notes: Business leader rather than claimed founder.
+  - id: person_bhupendra_shah
+    name: Bhupendra C. Shah
+    aliases: []
+    name_disambiguator:
+    current_organization_id:
+    current_title:
+    technologies:
+    - coherent_optics
+    - optical_networking
+    research_status: validated
+    sources:
+    - source_id: src_acacia_s1_2016
+      supports: Acacia VP Engineering and prior Juniper/Broadcom roles
+      locator: 'Management biography: Bhupendra C. Shah'
+      accessed_date: '2026-08-23'
+    notes:
+  - id: person_jurg_leuthold
+    name: Jürg Leuthold
+    aliases:
+    - name: Juerg Leuthold
+      language: de
+      alias_type: alternate_spelling
+    name_disambiguator:
+    current_organization_id: org_eth_ief
+    current_title: Head, Institute of Electromagnetic Fields
+    technologies:
+    - coherent_optics
+    - silicon_photonics
+    research_status: validated
+    sources:
+    - source_id: src_eth_leuthold_bio_2026
+      supports: Bell Labs/Lucent employment and ETH/KIT sequence
+      locator: Biography paragraphs 1-2
+      accessed_date: '2026-08-23'
+    notes:
+  - id: person_rene_jean_essiambre
+    name: René-Jean Essiambre
+    aliases:
+    - name: Rene-Jean Essiambre
+      language: en
+      alias_type: alternate_spelling
+    name_disambiguator:
+    current_organization_id: org_nokia_bell_labs
+    current_title:
+    technologies:
+    - coherent_optics
+    - fiber_optics
+    research_status: validated
+    sources:
+    - source_id: src_nokia_essiambre_2021
+      supports: 1997 Bell Labs start and direct optical research
+      locator: Paragraph beginning 'In 1997'
+      accessed_date: '2026-08-23'
+    notes:
+  - id: person_roland_ryf
+    name: Roland Ryf
+    aliases: []
+    name_disambiguator:
+    current_organization_id: org_nokia_bell_labs
+    current_title: Head, Advanced Photonics Research
+    technologies:
+    - coherent_optics
+    - photonic_switching
+    - fiber_optics
+    research_status: validated
+    sources:
+    - source_id: src_nokia_ryf_bio_2026
+      supports: Bell Labs employment since 2000 and optical research
+      locator: Biography
+      accessed_date: '2026-08-23'
+    notes:
+  - id: person_david_neilson
+    name: David Neilson
+    aliases:
+    - name: David T. Neilson
+      language: en
+      alias_type: alternate_spelling
+    name_disambiguator:
+    current_organization_id: org_nokia_bell_labs
+    current_title: Group Leader, Optical Transmission Group
+    technologies:
+    - optical_networking
+    - photonic_switching
+    - optical_io
+    research_status: validated
+    sources:
+    - source_id: src_nokia_neilson_bio_2026
+      supports: Bell Labs employment since 1998 and optical research
+      locator: Biography
+      accessed_date: '2026-08-23'
+    notes:
+  - id: person_qian_hu
+    name: Qian Hu
+    aliases: []
+    name_disambiguator: Nokia Bell Labs optical researcher
+    current_organization_id: org_nokia_bell_labs
+    current_title: Optical Transmission Researcher
+    technologies:
+    - coherent_optics
+    - mixed_signal_dsp
+    - datacenter_optics
+    research_status: validated
+    sources:
+    - source_id: src_nokia_qian_hu_bio_2026
+      supports: Nokia Bell Labs employment since 2015 and technical focus
+      locator: Biography
+      accessed_date: '2026-08-23'
+    notes:
+  - id: person_robert_tkach
+    name: Robert Tkach
+    aliases:
+    - name: Bob Tkach
+      language: en
+      alias_type: common_name
+    name_disambiguator:
+    current_organization_id: org_nokia_bell_labs
+    current_title:
+    technologies:
+    - coherent_optics
+    - fiber_optics
+    - optical_networking
+    research_status: validated
+    sources:
+    - source_id: src_optica_tkach_bio_2023
+      supports: Bell Labs, AT&T Labs, Celion, and Bell Labs return sequence
+      locator: Biography paragraph 1
+      accessed_date: '2026-08-23'
+    notes:
+  - id: person_sethumadhavan_chandrasekhar
+    name: Sethumadhavan Chandrasekhar
+    aliases: []
+    name_disambiguator: Bell Labs optical researcher
+    current_organization_id:
+    current_title:
+    technologies:
+    - coherent_optics
+    - optical_networking
+    research_status: validated
+    sources:
+    - source_id: src_optica_fellows_2012
+      supports: Bell Labs/Alcatel-Lucent affiliation and coherent-transmission contribution
+      locator: 2012 Fellow entry
+      accessed_date: '2026-08-23'
+    notes: Employment interval is not established in this pass.
+  - id: person_john_bowers
+    name: John Bowers
+    aliases: []
+    technologies:
+    - iii_v_silicon_integration
+    - integrated_lasers
+    - silicon_photonics
+    - photonic_switching
+    research_status: validated
+    sources:
+    - source_id: src_ucsb_bowers_profile
+      supports: identity_and_ucsb_role
+      locator: biography
+      accessed_date: '2026-08-23'
+    name_disambiguator:
+    current_organization_id:
+    current_title:
+    notes:
+  - id: person_alex_fang
+    name: Alex Fang
+    aliases:
+    - name: Alexander Fang
+      language: en
+      alias_type: alternate_spelling
+    technologies:
+    - iii_v_silicon_integration
+    - integrated_lasers
+    research_status: validated
+    sources:
+    - source_id: src_quintessent_team
+      supports: identity_and_aurrion_history
+      locator: Alex_Fang_biography
+      accessed_date: '2026-08-23'
+    name_disambiguator:
+    current_organization_id:
+    current_title:
+    notes:
+  - id: person_hyundai_park
+    name: Hyundai Park
+    aliases: []
+    technologies:
+    - iii_v_silicon_integration
+    - integrated_lasers
+    research_status: validated
+    sources:
+    - source_id: src_ucsb_bowers_retirement_2025
+      supports: identity_and_training
+      locator: paragraph_on_heterogeneous_bonding
+      accessed_date: '2026-08-23'
+    name_disambiguator:
+    current_organization_id:
+    current_title:
+    notes:
+  - id: person_alan_liu
+    name: Alan Liu
+    aliases: []
+    name_disambiguator: Quintessent co-founder
+    technologies:
+    - iii_v_silicon_integration
+    - integrated_lasers
+    - optical_io
+    research_status: validated
+    sources:
+    - source_id: src_quintessent_team
+      supports: identity_role_and_training
+      locator: Alan_Liu_biography
+      accessed_date: '2026-08-23'
+    current_organization_id:
+    current_title:
+    notes:
+  - id: person_tin_komljenovic
+    name: Tin Komljenovic
+    aliases: []
+    technologies:
+    - iii_v_silicon_integration
+    - integrated_lasers
+    research_status: validated
+    sources:
+    - source_id: src_nexus_team
+      supports: identity_and_nexus_role
+      locator: Tin_Komljenovic_biography
+      accessed_date: '2026-08-23'
+    name_disambiguator:
+    current_organization_id:
+    current_title:
+    notes:
+  - id: person_chong_zhang
+    name: Chong Zhang
+    aliases: []
+    name_disambiguator: Nexus Photonics co-founder
+    technologies:
+    - iii_v_silicon_integration
+    - integrated_lasers
+    research_status: validated
+    sources:
+    - source_id: src_nexus_team
+      supports: identity_and_nexus_role
+      locator: Chong_Zhang_biography
+      accessed_date: '2026-08-23'
+    current_organization_id:
+    current_title:
+    notes:
+  - id: person_minh_tran
+    name: Minh Tran
+    aliases:
+    - name: Minh A. Tran
+      language: en
+      alias_type: alternate_spelling
+    technologies:
+    - iii_v_silicon_integration
+    - integrated_lasers
+    research_status: validated
+    sources:
+    - source_id: src_nexus_team
+      supports: identity_and_nexus_role
+      locator: Minh_Tran_biography
+      accessed_date: '2026-08-23'
+    name_disambiguator:
+    current_organization_id:
+    current_title:
+    notes:
+  - id: person_jon_geske
+    name: Jon Geske
+    aliases: []
+    technologies:
+    - integrated_lasers
+    research_status: validated
+    sources:
+    - source_id: src_sbir_aerius_success
+      supports: identity_training_and_founder_role
+      locator: opening_case_history
+      accessed_date: '2026-08-23'
+    name_disambiguator:
+    current_organization_id:
+    current_title:
+    notes:
+  - id: person_gregory_fish
+    name: Gregory Fish
+    aliases:
+    - name: Greg Fish
+      language: en
+      alias_type: common_name
+    technologies:
+    - iii_v_silicon_integration
+    - silicon_photonics
+    research_status: validated
+    sources:
+    - source_id: src_ucsb_aurrion_success_story
+      supports: identity_ucsb_attendance_and_aurrion_role
+      locator: startup_history
+      accessed_date: '2026-08-23'
+    name_disambiguator:
+    current_organization_id:
+    current_title:
+    notes:
+  - id: person_erik_norberg
+    name: Erik Norberg
+    aliases: []
+    technologies:
+    - silicon_photonics
+    research_status: validated
+    sources:
+    - source_id: src_aurrion_2014_biographies
+      supports: identity_ucsb_degree_and_aurrion_role
+      locator: author_biography
+      accessed_date: '2026-08-23'
+    name_disambiguator:
+    current_organization_id:
+    current_title:
+    notes:
+  - id: person_john_hutchinson
+    name: John Hutchinson
+    aliases: []
+    name_disambiguator: Aurrion process engineer
+    technologies:
+    - silicon_photonics
+    research_status: validated
+    sources:
+    - source_id: src_aurrion_2014_biographies
+      supports: identity_and_aurrion_role
+      locator: author_biography
+      accessed_date: '2026-08-23'
+    current_organization_id:
+    current_title:
+    notes:
+  - id: person_alfredo_torres
+    name: Alfredo Torres
+    aliases: []
+    technologies:
+    - integrated_lasers
+    - silicon_photonics
+    research_status: validated
+    sources:
+    - source_id: src_ucsb_alfredo_torres
+      supports: identity_training_and_career
+      locator: biography
+      accessed_date: '2026-08-23'
+    name_disambiguator:
+    current_organization_id:
+    current_title:
+    notes:
+  - id: person_mj_kennedy
+    name: MJ Kennedy
+    aliases: []
+    technologies:
+    - iii_v_silicon_integration
+    - silicon_photonics
+    research_status: validated
+    sources:
+    - source_id: src_ucsb_mj_kennedy
+      supports: identity_and_career
+      locator: biography
+      accessed_date: '2026-08-23'
+    name_disambiguator:
+    current_organization_id:
+    current_title:
+    notes:
+  - id: person_roberto_marcoccia
+    name: Roberto Marcoccia
+    aliases: []
+    technologies:
+    - silicon_photonics
+    research_status: validated
+    sources:
+    - source_id: src_juniper_marcoccia
+      supports: identity_and_juniper_role
+      locator: author_biography
+      accessed_date: '2026-08-23'
+    name_disambiguator:
+    current_organization_id:
+    current_title:
+    notes:
+  - id: person_shifu_yuan
+    name: Shifu Yuan
+    aliases: []
+    technologies:
+    - photonic_switching
+    - optical_networking
+    research_status: validated
+    sources:
+    - source_id: src_ucsb_shifu_yuan_bio
+      supports: identity_and_calient_role
+      locator: author_biography
+      accessed_date: '2026-08-23'
+    name_disambiguator:
+    current_organization_id:
+    current_title:
+    notes:
+  - id: person_volkan_kaman
+    name: Volkan Kaman
+    aliases: []
+    technologies:
+    - photonic_switching
+    research_status: validated
+    sources:
+    - source_id: src_ucsb_bowers_alumni_roster
+      supports: identity_and_bowers_alumni_status
+      locator: alumni_entry
+      accessed_date: '2026-08-23'
+    name_disambiguator:
+    current_organization_id:
+    current_title:
+    notes:
+  - id: person_anand_ramaswamy
+    name: Anand Ramaswamy
+    aliases: []
+    technologies:
+    - silicon_photonics
+    research_status: validated
+    sources:
+    - source_id: src_ucsb_bowers_alumni_roster
+      supports: identity_and_bowers_alumni_status
+      locator: alumni_entry
+      accessed_date: '2026-08-23'
+    name_disambiguator:
+    current_organization_id:
+    current_title:
+    notes:

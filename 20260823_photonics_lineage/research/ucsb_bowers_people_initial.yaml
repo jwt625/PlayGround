@@ -1,0 +1,449 @@
+schema_version: "0.1.0"
+dataset:
+  title: UCSB / John Bowers lineage — initial evidence-backed tranche
+  as_of: "2026-08-23"
+  scope: Bowers-group alumni and technical leaders across Aurrion, Juniper, Quintessent, Nexus Photonics, Aerius Photonics, Terabit Technology, and Calient.
+  status: initial_research
+  default_graph_filter: [A, B]
+  notes:
+    - Seed inclusion is not evidence; only the atomic edges below are proposed for graph ingestion.
+    - UCSB attendance is distinct from Bowers-group research training.
+    - Aurrion employment is distinct from Aurrion founder status.
+    - Null dates mean the reviewed source did not support a reliable boundary.
+
+sources:
+  - id: src_ucsb_bowers_alumni_roster
+    url: https://optoelectronics.ece.ucsb.edu/alumni
+    canonical_url: https://optoelectronics.ece.ucsb.edu/alumni
+    title: Alumni
+    publisher: UCSB Bowers Optoelectronics Research Group
+    publication_date: null
+    accessed_date: "2026-08-23"
+    source_type: university_bio
+    evidence_grade: A
+    language: en
+    archive_url: null
+    content_hash: null
+    notes: Official lab alumni roster; proves Bowers-group alumni status but not degree, dates, or downstream employment.
+  - id: src_ucsb_bowers_retirement_2025
+    url: https://www.ece.ucsb.edu/news/all/2025/bowers-pioneering-laser-expert-retires
+    canonical_url: https://www.ece.ucsb.edu/news/all/2025/bowers-pioneering-laser-expert-retires
+    title: "Bowers: Pioneering Laser Expert Retires"
+    publisher: UC Santa Barbara Electrical and Computer Engineering
+    publication_date: {value: "2025", precision: year}
+    accessed_date: "2026-08-23"
+    source_type: university_bio
+    evidence_grade: A
+    language: en
+    archive_url: null
+    content_hash: null
+    notes: Names Fang and Park as former graduate students and names Bowers's six co-founded companies.
+  - id: src_ucsb_bowers_profile
+    url: https://optoelectronics.ece.ucsb.edu/node/125
+    canonical_url: https://optoelectronics.ece.ucsb.edu/node/125
+    title: John Bowers
+    publisher: UCSB Bowers Optoelectronics Research Group
+    publication_date: null
+    accessed_date: "2026-08-23"
+    source_type: university_bio
+    evidence_grade: A
+    language: en
+    archive_url: null
+    content_hash: null
+    notes: Official UCSB profile supporting faculty role and co-founder relationships.
+  - id: src_ucsb_bowers_tmp_profile
+    url: https://tmp.ucsb.edu/people/john-bowers
+    canonical_url: https://tmp.ucsb.edu/people/john-bowers
+    title: John Bowers
+    publisher: UCSB Technology Management
+    publication_date: null
+    accessed_date: "2026-08-23"
+    source_type: university_bio
+    evidence_grade: A
+    language: en
+    archive_url: null
+    content_hash: null
+    notes: Supports Bowers as Terabit co-founder/CEO and Aerius/Aurrion co-founder; gives acquisition years.
+  - id: src_ucsb_aurrion_success_story
+    url: https://tia.ucsb.edu/success-stories/aurrion-inc/
+    canonical_url: https://tia.ucsb.edu/success-stories/aurrion-inc/
+    title: Aurrion
+    publisher: UC Santa Barbara Office of Technology & Industry Alliances
+    publication_date: null
+    accessed_date: "2026-08-23"
+    source_type: university_bio
+    evidence_grade: A
+    language: en
+    archive_url: null
+    content_hash: null
+    notes: Supports 2008 founding by Fang and Bowers and Fish joining as CTO in 2009.
+  - id: src_ucsb_aurrion_innovation_award
+    url: https://www.engineering.ucsb.edu/news/innovation-award-director-ucsb-institute-energy-efficiency
+    canonical_url: https://www.engineering.ucsb.edu/news/innovation-award-director-ucsb-institute-energy-efficiency
+    title: Innovation Award for Director of UCSB Institute for Energy Efficiency
+    publisher: UC Santa Barbara College of Engineering
+    publication_date: {value: "2017-03-31", precision: day}
+    accessed_date: "2026-08-23"
+    source_type: university_bio
+    evidence_grade: A
+    language: en
+    archive_url: null
+    content_hash: null
+    notes: Independently supports Fang and Bowers as Aurrion founders and Juniper acquisition.
+  - id: src_quintessent_team
+    url: https://www.quintessent.com/our-team
+    canonical_url: https://www.quintessent.com/our-team
+    title: Our Team
+    publisher: Quintessent
+    publication_date: null
+    accessed_date: "2026-08-23"
+    source_type: official_company_bio
+    evidence_grade: A
+    language: en
+    archive_url: null
+    content_hash: null
+    notes: Supports Liu, Koch, and Bowers founder roles; Liu/Koch training; Koch Aurrion/Juniper work; Fang's Aurrion founder/CEO history.
+  - id: src_nexus_team
+    url: https://www.nexusphotonics.com/our-team
+    canonical_url: https://www.nexusphotonics.com/our-team
+    title: About — Meet the Team
+    publisher: Nexus Photonics
+    publication_date: null
+    accessed_date: "2026-08-23"
+    source_type: official_company_bio
+    evidence_grade: A
+    language: en
+    archive_url: null
+    content_hash: null
+    notes: Supports Komljenovic, Zhang, and Bowers founder roles and Tran as a 2019 founding employee.
+  - id: src_ucsb_nexus_funding
+    url: https://innovation.ucsb.edu/blog/news/nexus-photonics-closes-first-round-funding
+    canonical_url: https://innovation.ucsb.edu/blog/news/nexus-photonics-closes-first-round-funding
+    title: Nexus Photonics Closes First Round of Funding
+    publisher: UCSB Innovation + Entrepreneurship
+    publication_date: {value: "2022", precision: year}
+    accessed_date: "2026-08-23"
+    source_type: university_bio
+    evidence_grade: A
+    language: en
+    archive_url: null
+    content_hash: null
+    notes: Supports 2018 founding by Komljenovic, Zhang, and Bowers and distinguishes UCSB research staff from UCSB PhD.
+  - id: src_ucsb_nexus_spectrum
+    url: https://www.ece.ucsb.edu/news/all/2022/researchers-extending-spectrum
+    canonical_url: https://www.ece.ucsb.edu/news/all/2022/researchers-extending-spectrum
+    title: Researchers Extending the Spectrum
+    publisher: UC Santa Barbara Electrical and Computer Engineering
+    publication_date: {value: "2022", precision: year}
+    accessed_date: "2026-08-23"
+    source_type: university_bio
+    evidence_grade: A
+    language: en
+    archive_url: null
+    content_hash: null
+    notes: Supports Nexus co-founder roles for Komljenovic and Zhang and describes Nexus as UCSB-founded.
+  - id: src_sbir_aerius_success
+    url: https://www.sbir.gov/success/sbir-sttr-success-aerius-photonics
+    canonical_url: https://www.sbir.gov/success/sbir-sttr-success-aerius-photonics
+    title: "SBIR-STTR-Success: Aerius Photonics"
+    publisher: U.S. Small Business Administration SBIR/STTR
+    publication_date: {value: "2016-10-16", precision: day}
+    accessed_date: "2026-08-23"
+    source_type: other
+    evidence_grade: A
+    language: en
+    archive_url: null
+    content_hash: null
+    notes: Government case study supporting Geske's Bowers-group training and founding Aerius in late 2003.
+  - id: src_ucsb_alfredo_torres
+    url: https://siliconphotonics.ece.ucsb.edu/profile/alfredo-torres
+    canonical_url: https://siliconphotonics.ece.ucsb.edu/profile/alfredo-torres
+    title: Alfredo Torres
+    publisher: UCSB Bowers Optoelectronics Research Group
+    publication_date: null
+    accessed_date: "2026-08-23"
+    source_type: university_bio
+    evidence_grade: A
+    language: en
+    archive_url: null
+    content_hash: null
+    notes: Supports UCSB degrees, undergraduate work with a Bowers-group doctoral student, Aurrion employment dates/roles, and later Bowers-group engineering role.
+  - id: src_ucsb_mj_kennedy
+    url: https://optoelectronics.ece.ucsb.edu/node/888
+    canonical_url: https://optoelectronics.ece.ucsb.edu/node/888
+    title: Senior Development Engineer
+    publisher: UCSB Bowers Optoelectronics Research Group
+    publication_date: null
+    accessed_date: "2026-08-23"
+    source_type: university_bio
+    evidence_grade: A
+    language: en
+    archive_url: null
+    content_hash: null
+    notes: Supports five years at Aurrion and joining the Bowers group at end-2015.
+  - id: src_aurrion_2014_biographies
+    url: https://optoelectronics.ece.ucsb.edu/sites/default/files/2017-02/Low%20phase%20noise%20hybrid%20silicon%20mode-locked%20lasers.pdf
+    canonical_url: https://optoelectronics.ece.ucsb.edu/sites/default/files/2017-02/Low%20phase%20noise%20hybrid%20silicon%20mode-locked%20lasers.pdf
+    title: Low phase noise hybrid silicon mode-locked lasers
+    publisher: Frontiers of Optoelectronics
+    publication_date: {value: "2014", precision: year}
+    accessed_date: "2026-08-23"
+    source_type: paper
+    evidence_grade: A
+    language: en
+    archive_url: null
+    content_hash: null
+    notes: Author biographies support Fish, Hutchinson, Norberg, and Bowers roles at publication time; Norberg's UCSB PhD is not treated as Bowers-group proof.
+  - id: src_juniper_aurrion_annual_report
+    url: https://investor.juniper.net/files/doc_financials/2018/2018JuniperNetworksAnnualReport_Website.pdf
+    canonical_url: https://investor.juniper.net/files/doc_financials/2018/2018JuniperNetworksAnnualReport_Website.pdf
+    title: Juniper Networks 2018 Annual Report
+    publisher: Juniper Networks
+    publication_date: {value: "2019", precision: year}
+    accessed_date: "2026-08-23"
+    source_type: regulatory_filing
+    evidence_grade: A
+    language: en
+    archive_url: null
+    content_hash: null
+    notes: Supports August 9, 2016 acquisition and continuing-employee awards; does not name individual retained employees.
+  - id: src_juniper_marcoccia
+    url: https://blogs.juniper.net/author/rmarcoccia
+    canonical_url: https://blogs.juniper.net/author/rmarcoccia
+    title: "Roberto Marcoccia — VP, Silicon Photonics"
+    publisher: Juniper Networks
+    publication_date: null
+    accessed_date: "2026-08-23"
+    source_type: official_company_bio
+    evidence_grade: A
+    language: en
+    archive_url: null
+    content_hash: null
+    notes: Supports Juniper VP role and responsibility for commercializing acquired Aurrion technology, not Aurrion employment.
+  - id: src_ucsb_shifu_yuan_bio
+    url: https://optoelectronics.ece.ucsb.edu/sites/default/files/2017-06/Ch10_bowers.pdf
+    canonical_url: https://optoelectronics.ece.ucsb.edu/sites/default/files/2017-06/Ch10_bowers.pdf
+    title: Optical Switching Networks — author biographies
+    publisher: UCSB-hosted technical chapter
+    publication_date: null
+    accessed_date: "2026-08-23"
+    source_type: paper
+    evidence_grade: A
+    language: en
+    archive_url: null
+    content_hash: null
+    notes: Supports Yuan joining Calient in 2000 and serving as CTO of Optical Technologies since 2010.
+
+people:
+  - {id: person_john_bowers, name: John Bowers, aliases: [], technologies: [iii_v_silicon_integration, integrated_lasers, silicon_photonics, photonic_switching], research_status: in_research, sources: [{source_id: src_ucsb_bowers_profile, supports: identity_and_ucsb_role, locator: biography, accessed_date: "2026-08-23"}]}
+  - {id: person_alex_fang, name: Alex Fang, aliases: [{name: Alexander Fang, language: en, alias_type: alternate_spelling}], technologies: [iii_v_silicon_integration, integrated_lasers], research_status: in_research, sources: [{source_id: src_quintessent_team, supports: identity_and_aurrion_history, locator: Alex_Fang_biography, accessed_date: "2026-08-23"}]}
+  - {id: person_hyundai_park, name: Hyundai Park, aliases: [], technologies: [iii_v_silicon_integration, integrated_lasers], research_status: in_research, sources: [{source_id: src_ucsb_bowers_retirement_2025, supports: identity_and_training, locator: paragraph_on_heterogeneous_bonding, accessed_date: "2026-08-23"}]}
+  - {id: person_alan_liu, name: Alan Liu, aliases: [], name_disambiguator: Quintessent co-founder, technologies: [iii_v_silicon_integration, integrated_lasers, optical_io], research_status: in_research, sources: [{source_id: src_quintessent_team, supports: identity_role_and_training, locator: Alan_Liu_biography, accessed_date: "2026-08-23"}]}
+  - {id: person_brian_koch, name: Brian Koch, aliases: [], technologies: [iii_v_silicon_integration, integrated_lasers, optical_io], research_status: in_research, sources: [{source_id: src_quintessent_team, supports: identity_role_training_and_career, locator: Brian_Koch_biography, accessed_date: "2026-08-23"}]}
+  - {id: person_tin_komljenovic, name: Tin Komljenovic, aliases: [], technologies: [iii_v_silicon_integration, integrated_lasers], research_status: in_research, sources: [{source_id: src_nexus_team, supports: identity_and_nexus_role, locator: Tin_Komljenovic_biography, accessed_date: "2026-08-23"}]}
+  - {id: person_chong_zhang, name: Chong Zhang, aliases: [], name_disambiguator: Nexus Photonics co-founder, technologies: [iii_v_silicon_integration, integrated_lasers], research_status: in_research, sources: [{source_id: src_nexus_team, supports: identity_and_nexus_role, locator: Chong_Zhang_biography, accessed_date: "2026-08-23"}]}
+  - {id: person_minh_tran, name: Minh Tran, aliases: [{name: Minh A. Tran, language: en, alias_type: alternate_spelling}], technologies: [iii_v_silicon_integration, integrated_lasers], research_status: in_research, sources: [{source_id: src_nexus_team, supports: identity_and_nexus_role, locator: Minh_Tran_biography, accessed_date: "2026-08-23"}]}
+  - {id: person_jon_geske, name: Jon Geske, aliases: [], technologies: [integrated_lasers], research_status: in_research, sources: [{source_id: src_sbir_aerius_success, supports: identity_training_and_founder_role, locator: opening_case_history, accessed_date: "2026-08-23"}]}
+  - {id: person_gregory_fish, name: Gregory Fish, aliases: [{name: Greg Fish, language: en, alias_type: common_name}], technologies: [iii_v_silicon_integration, silicon_photonics], research_status: in_research, sources: [{source_id: src_ucsb_aurrion_success_story, supports: identity_ucsb_attendance_and_aurrion_role, locator: startup_history, accessed_date: "2026-08-23"}]}
+  - {id: person_erik_norberg, name: Erik Norberg, aliases: [], technologies: [silicon_photonics], research_status: in_research, sources: [{source_id: src_aurrion_2014_biographies, supports: identity_ucsb_degree_and_aurrion_role, locator: author_biography, accessed_date: "2026-08-23"}]}
+  - {id: person_john_hutchinson, name: John Hutchinson, aliases: [], name_disambiguator: Aurrion process engineer, technologies: [silicon_photonics], research_status: in_research, sources: [{source_id: src_aurrion_2014_biographies, supports: identity_and_aurrion_role, locator: author_biography, accessed_date: "2026-08-23"}]}
+  - {id: person_alfredo_torres, name: Alfredo Torres, aliases: [], technologies: [integrated_lasers, silicon_photonics], research_status: in_research, sources: [{source_id: src_ucsb_alfredo_torres, supports: identity_training_and_career, locator: biography, accessed_date: "2026-08-23"}]}
+  - {id: person_mj_kennedy, name: MJ Kennedy, aliases: [], technologies: [iii_v_silicon_integration, silicon_photonics], research_status: in_research, sources: [{source_id: src_ucsb_mj_kennedy, supports: identity_and_career, locator: biography, accessed_date: "2026-08-23"}]}
+  - {id: person_roberto_marcoccia, name: Roberto Marcoccia, aliases: [], technologies: [silicon_photonics], research_status: in_research, sources: [{source_id: src_juniper_marcoccia, supports: identity_and_juniper_role, locator: author_biography, accessed_date: "2026-08-23"}]}
+  - {id: person_shifu_yuan, name: Shifu Yuan, aliases: [], technologies: [photonic_switching, optical_networking], research_status: in_research, sources: [{source_id: src_ucsb_shifu_yuan_bio, supports: identity_and_calient_role, locator: author_biography, accessed_date: "2026-08-23"}]}
+  - {id: person_volkan_kaman, name: Volkan Kaman, aliases: [], technologies: [photonic_switching], research_status: in_research, sources: [{source_id: src_ucsb_bowers_alumni_roster, supports: identity_and_bowers_alumni_status, locator: alumni_entry, accessed_date: "2026-08-23"}]}
+  - {id: person_anand_ramaswamy, name: Anand Ramaswamy, aliases: [], technologies: [silicon_photonics], research_status: in_research, sources: [{source_id: src_ucsb_bowers_alumni_roster, supports: identity_and_bowers_alumni_status, locator: alumni_entry, accessed_date: "2026-08-23"}]}
+
+edges:
+  - id: edge_bowers_ucsb_faculty
+    source_id: person_john_bowers
+    target_id: org_ucsb
+    edge_type: employment
+    start_date: null
+    end_date: null
+    attributes: {role: Distinguished Professor, group: Electrical and Computer Engineering / Materials, photonics_relevance: direct, uncertainty: low}
+    evidence: {grade: A, sources: [{source_id: src_ucsb_bowers_profile, supports: employment_and_title, locator: biography, accessed_date: "2026-08-23"}], corroboration_count: 1, rationale: Official university profile, reviewed_by: schema_foundation, reviewed_date: "2026-08-23"}
+    status: validated
+    notes: Date boundaries not established in this pass.
+  - id: edge_fang_bowers_training
+    source_id: person_alex_fang
+    target_id: org_ucsb_bowers_group
+    edge_type: research_training
+    start_date: null
+    end_date: null
+    attributes: {training_type: degree, degree: thesis_work, advisor_person_ids: [person_john_bowers], photonics_relevance: direct, uncertainty: low}
+    evidence: {grade: A, sources: [{source_id: src_quintessent_team, supports: thesis_work_with_bowers, locator: Alex_Fang_biography, accessed_date: "2026-08-23"}, {source_id: src_ucsb_bowers_retirement_2025, supports: former_graduate_student_of_bowers, locator: paragraph_on_heterogeneous_bonding, accessed_date: "2026-08-23"}], corroboration_count: 2, rationale: Company and university sources directly identify thesis/graduate-student relationship, reviewed_by: schema_foundation, reviewed_date: "2026-08-23"}
+    status: validated
+    notes: Degree type and dates are not asserted.
+  - id: edge_park_bowers_training
+    source_id: person_hyundai_park
+    target_id: org_ucsb_bowers_group
+    edge_type: research_training
+    start_date: null
+    end_date: null
+    attributes: {training_type: degree, advisor_person_ids: [person_john_bowers], photonics_relevance: direct, uncertainty: low}
+    evidence: {grade: A, sources: [{source_id: src_ucsb_bowers_retirement_2025, supports: former_graduate_student_of_bowers, locator: paragraph_on_heterogeneous_bonding, accessed_date: "2026-08-23"}], corroboration_count: 1, rationale: Official university retrospective explicitly says former graduate student, reviewed_by: schema_foundation, reviewed_date: "2026-08-23"}
+    status: validated
+    notes: No company employment is asserted here.
+  - id: edge_liu_bowers_training
+    source_id: person_alan_liu
+    target_id: org_ucsb_bowers_group
+    edge_type: research_training
+    start_date: null
+    end_date: {value: "2016", precision: year}
+    attributes: {training_type: degree, degree: PhD, advisor_person_ids: [person_john_bowers], photonics_relevance: direct, uncertainty: low}
+    evidence: {grade: A, sources: [{source_id: src_quintessent_team, supports: ucsb_phd_and_bowers_mentorship, locator: Alan_Liu_biography, accessed_date: "2026-08-23"}], corroboration_count: 1, rationale: Official company bio directly identifies mentorship; 2016 degree year corroborated by UCSB-hosted paper bio, reviewed_by: schema_foundation, reviewed_date: "2026-08-23"}
+    status: validated
+    notes: Start date unknown.
+  - id: edge_koch_bowers_training
+    source_id: person_brian_koch
+    target_id: org_ucsb_bowers_group
+    edge_type: research_training
+    start_date: null
+    end_date: null
+    attributes: {training_type: degree, degree: PhD, advisor_person_ids: [person_john_bowers], coadvisor_person_names: [Daniel Blumenthal], photonics_relevance: direct, uncertainty: low}
+    evidence: {grade: A, sources: [{source_id: src_quintessent_team, supports: ucsb_phd_and_bowers_coadvising, locator: Brian_Koch_biography, accessed_date: "2026-08-23"}], corroboration_count: 1, rationale: Official company biography, reviewed_by: schema_foundation, reviewed_date: "2026-08-23"}
+    status: validated
+    notes: Dates unknown.
+  - id: edge_komljenovic_bowers_training
+    source_id: person_tin_komljenovic
+    target_id: org_ucsb_bowers_group
+    edge_type: research_training
+    start_date: null
+    end_date: null
+    attributes: {training_type: research_staff, photonics_relevance: direct, uncertainty: moderate}
+    evidence: {grade: A, sources: [{source_id: src_ucsb_bowers_alumni_roster, supports: bowers_group_alumni_status, locator: Tin_Komljenovic_entry, accessed_date: "2026-08-23"}, {source_id: src_ucsb_nexus_funding, supports: former_ucsb_research_scientist, locator: founder_paragraph, accessed_date: "2026-08-23"}], corroboration_count: 2, rationale: Lab roster proves group affiliation; UCSB story specifies research-scientist status, reviewed_by: schema_foundation, reviewed_date: "2026-08-23"}
+    status: validated
+    notes: Exact interval and whether all UCSB research-staff time was within the Bowers group remain unresolved.
+  - id: edge_zhang_bowers_training
+    source_id: person_chong_zhang
+    target_id: org_ucsb_bowers_group
+    edge_type: research_training
+    start_date: null
+    end_date: null
+    attributes: {training_type: degree, degree: PhD, photonics_relevance: direct, uncertainty: moderate}
+    evidence: {grade: A, sources: [{source_id: src_ucsb_bowers_alumni_roster, supports: bowers_group_alumni_status, locator: Chong_Zhang_entry, accessed_date: "2026-08-23"}, {source_id: src_ucsb_nexus_funding, supports: ucsb_phd, locator: founder_paragraph, accessed_date: "2026-08-23"}], corroboration_count: 2, rationale: Sources jointly support Bowers-group alumnus and UCSB PhD; advisor identity is not separately asserted, reviewed_by: schema_foundation, reviewed_date: "2026-08-23"}
+    status: validated
+    notes: Exact dates and formal advisor are unresolved.
+  - id: edge_tran_bowers_training
+    source_id: person_minh_tran
+    target_id: org_ucsb_bowers_group
+    edge_type: research_training
+    start_date: null
+    end_date: null
+    attributes: {training_type: degree, degree: PhD, photonics_relevance: direct, uncertainty: moderate}
+    evidence: {grade: A, sources: [{source_id: src_ucsb_bowers_alumni_roster, supports: bowers_group_alumni_status, locator: Minh_A_Tran_entry, accessed_date: "2026-08-23"}, {source_id: src_nexus_team, supports: ucsb_phd, locator: Minh_Tran_biography, accessed_date: "2026-08-23"}], corroboration_count: 2, rationale: Sources support lab alumni status and UCSB PhD but not precise interval, reviewed_by: schema_foundation, reviewed_date: "2026-08-23"}
+    status: validated
+    notes: Formal advisor not asserted.
+  - id: edge_geske_bowers_training
+    source_id: person_jon_geske
+    target_id: org_ucsb_bowers_group
+    edge_type: research_training
+    start_date: null
+    end_date: null
+    attributes: {training_type: degree, advisor_person_ids: [person_john_bowers], photonics_relevance: direct, uncertainty: low}
+    evidence: {grade: A, sources: [{source_id: src_sbir_aerius_success, supports: graduate_work_under_bowers, locator: opening_case_history, accessed_date: "2026-08-23"}], corroboration_count: 1, rationale: Government case study explicitly says working under Bowers while in graduate school, reviewed_by: schema_foundation, reviewed_date: "2026-08-23"}
+    status: validated
+    notes: Degree and dates not asserted.
+  - id: edge_torres_bowers_training
+    source_id: person_alfredo_torres
+    target_id: org_ucsb_bowers_group
+    edge_type: research_training
+    start_date: null
+    end_date: {value: "2013", precision: year}
+    attributes: {training_type: other, role: undergraduate_researcher, worked_with_person_name: Jock Bovington, photonics_relevance: direct, uncertainty: moderate}
+    evidence: {grade: A, sources: [{source_id: src_ucsb_alfredo_torres, supports: undergraduate_research_with_bowers_group_candidate, locator: biography, accessed_date: "2026-08-23"}], corroboration_count: 1, rationale: Official profile says he worked with a PhD candidate in the Bowers group; it does not call Torres a formal group member, reviewed_by: schema_foundation, reviewed_date: "2026-08-23"}
+    status: validated
+    notes: This is collaboration/training with a group member, not an assertion of graduate-group membership.
+  - id: edge_torres_bowers_employment
+    source_id: person_alfredo_torres
+    target_id: org_ucsb_bowers_group
+    edge_type: employment
+    start_date: {value: "2016", precision: year}
+    end_date: null
+    attributes: {role: Engineer, group: Bowers Group, photonics_relevance: direct, uncertainty: moderate}
+    evidence: {grade: A, sources: [{source_id: src_ucsb_alfredo_torres, supports: engineer_in_bowers_group_as_of_mid_2016, locator: biography, accessed_date: "2026-08-23"}], corroboration_count: 1, rationale: Official group profile; open-ended current status is not assumed beyond source snapshot, reviewed_by: schema_foundation, reviewed_date: "2026-08-23"}
+    status: validated
+    notes: Start is only supported as mid-2016; no end date established.
+  - id: edge_kennedy_bowers_employment
+    source_id: person_mj_kennedy
+    target_id: org_ucsb_bowers_group
+    edge_type: employment
+    start_date: {value: "2015", precision: year}
+    end_date: null
+    attributes: {role: Senior Development Engineer, group: Bowers Group, photonics_relevance: direct, uncertainty: low}
+    evidence: {grade: A, sources: [{source_id: src_ucsb_mj_kennedy, supports: joined_bowers_group_end_2015, locator: biography, accessed_date: "2026-08-23"}], corroboration_count: 1, rationale: Official group profile, reviewed_by: schema_foundation, reviewed_date: "2026-08-23"}
+    status: validated
+    notes: End date unknown.
+  - id: edge_kaman_bowers_training
+    source_id: person_volkan_kaman
+    target_id: org_ucsb_bowers_group
+    edge_type: research_training
+    start_date: null
+    end_date: null
+    attributes: {training_type: other, photonics_relevance: direct, uncertainty: moderate}
+    evidence: {grade: A, sources: [{source_id: src_ucsb_bowers_alumni_roster, supports: bowers_group_alumni_status, locator: Volkan_Kaman_entry, accessed_date: "2026-08-23"}], corroboration_count: 1, rationale: Official lab alumni roster supports group affiliation only, reviewed_by: schema_foundation, reviewed_date: "2026-08-23"}
+    status: validated
+    notes: Degree, role, dates, and Calient employment are not asserted from the roster email address.
+  - id: edge_ramaswamy_bowers_training
+    source_id: person_anand_ramaswamy
+    target_id: org_ucsb_bowers_group
+    edge_type: research_training
+    start_date: null
+    end_date: null
+    attributes: {training_type: other, photonics_relevance: direct, uncertainty: moderate}
+    evidence: {grade: A, sources: [{source_id: src_ucsb_bowers_alumni_roster, supports: bowers_group_alumni_status, locator: Anand_Ramaswamy_entry, accessed_date: "2026-08-23"}], corroboration_count: 1, rationale: Official lab alumni roster supports group affiliation only, reviewed_by: schema_foundation, reviewed_date: "2026-08-23"}
+    status: validated
+    notes: The juniper.net email shown on the roster is not used as employment evidence.
+
+  # Founder roles; deliberately separate from employment.
+  - {id: edge_bowers_aurrion_founder, source_id: person_john_bowers, target_id: org_aurrion, edge_type: founder, start_date: {value: "2008", precision: year}, end_date: null, attributes: {founder_type: co_founder, technology_scope: silicon_photonics, uncertainty: low}, evidence: {grade: A, sources: [{source_id: src_ucsb_aurrion_success_story, supports: cofounder_and_founding_year, locator: startup_history, accessed_date: "2026-08-23"}], corroboration_count: 2, rationale: Corroborated by UCSB engineering story, reviewed_by: schema_foundation, reviewed_date: "2026-08-23"}, status: validated, notes: null}
+  - {id: edge_fang_aurrion_founder, source_id: person_alex_fang, target_id: org_aurrion, edge_type: founder, start_date: {value: "2008", precision: year}, end_date: null, attributes: {founder_type: co_founder, title: CEO, technology_scope: silicon_photonics, uncertainty: low}, evidence: {grade: A, sources: [{source_id: src_ucsb_aurrion_success_story, supports: cofounder_and_founding_year, locator: startup_history, accessed_date: "2026-08-23"}, {source_id: src_quintessent_team, supports: cofounder_and_ceo, locator: Alex_Fang_biography, accessed_date: "2026-08-23"}], corroboration_count: 2, rationale: Official university and company sources, reviewed_by: schema_foundation, reviewed_date: "2026-08-23"}, status: validated, notes: CEO interval not established; title records role, not dated tenure.}
+  - {id: edge_liu_quintessent_founder, source_id: person_alan_liu, target_id: org_quintessent, edge_type: founder, start_date: null, end_date: null, attributes: {founder_type: co_founder, title: CEO, technology_scope: optical_io, uncertainty: low}, evidence: {grade: A, sources: [{source_id: src_quintessent_team, supports: cofounder_and_ceo, locator: Alan_Liu_biography, accessed_date: "2026-08-23"}], corroboration_count: 1, rationale: Official company team page, reviewed_by: schema_foundation, reviewed_date: "2026-08-23"}, status: validated, notes: Founding date not established in this pass.}
+  - {id: edge_koch_quintessent_founder, source_id: person_brian_koch, target_id: org_quintessent, edge_type: founder, start_date: null, end_date: null, attributes: {founder_type: co_founder, title: VP of Engineering, technology_scope: optical_io, uncertainty: low}, evidence: {grade: A, sources: [{source_id: src_quintessent_team, supports: cofounder_and_vp_engineering, locator: Brian_Koch_biography, accessed_date: "2026-08-23"}], corroboration_count: 1, rationale: Official company team page, reviewed_by: schema_foundation, reviewed_date: "2026-08-23"}, status: validated, notes: Founding and role dates not established.}
+  - {id: edge_bowers_quintessent_founder, source_id: person_john_bowers, target_id: org_quintessent, edge_type: founder, start_date: null, end_date: null, attributes: {founder_type: co_founder, title: Chairman, technology_scope: silicon_photonics, uncertainty: low}, evidence: {grade: A, sources: [{source_id: src_quintessent_team, supports: cofounder_and_chairman, locator: John_Bowers_biography, accessed_date: "2026-08-23"}], corroboration_count: 1, rationale: Official company team page, reviewed_by: schema_foundation, reviewed_date: "2026-08-23"}, status: validated, notes: Founding date not established.}
+  - {id: edge_komljenovic_nexus_founder, source_id: person_tin_komljenovic, target_id: org_nexus_photonics, edge_type: founder, start_date: {value: "2018", precision: year}, end_date: null, attributes: {founder_type: co_founder, title: CEO, technology_scope: heterogeneous_photonics, uncertainty: low}, evidence: {grade: A, sources: [{source_id: src_nexus_team, supports: cofounder_and_ceo, locator: Tin_Komljenovic_biography, accessed_date: "2026-08-23"}, {source_id: src_ucsb_nexus_funding, supports: founder_and_founding_year, locator: founder_paragraph, accessed_date: "2026-08-23"}], corroboration_count: 2, rationale: Official company and university sources, reviewed_by: schema_foundation, reviewed_date: "2026-08-23"}, status: validated, notes: null}
+  - {id: edge_zhang_nexus_founder, source_id: person_chong_zhang, target_id: org_nexus_photonics, edge_type: founder, start_date: {value: "2018", precision: year}, end_date: null, attributes: {founder_type: co_founder, title: CTO, technology_scope: heterogeneous_photonics, uncertainty: low}, evidence: {grade: A, sources: [{source_id: src_nexus_team, supports: cofounder_and_cto, locator: Chong_Zhang_biography, accessed_date: "2026-08-23"}, {source_id: src_ucsb_nexus_funding, supports: founder_and_founding_year, locator: founder_paragraph, accessed_date: "2026-08-23"}], corroboration_count: 2, rationale: Official company and university sources, reviewed_by: schema_foundation, reviewed_date: "2026-08-23"}, status: validated, notes: null}
+  - {id: edge_bowers_nexus_founder, source_id: person_john_bowers, target_id: org_nexus_photonics, edge_type: founder, start_date: {value: "2018", precision: year}, end_date: null, attributes: {founder_type: co_founder, title: Chairman, technology_scope: heterogeneous_photonics, uncertainty: low}, evidence: {grade: A, sources: [{source_id: src_nexus_team, supports: cofounder_and_chairman, locator: John_Bowers_biography, accessed_date: "2026-08-23"}, {source_id: src_ucsb_nexus_funding, supports: founder_and_founding_year, locator: founder_paragraph, accessed_date: "2026-08-23"}], corroboration_count: 2, rationale: Official company and university sources, reviewed_by: schema_foundation, reviewed_date: "2026-08-23"}, status: validated, notes: null}
+  - {id: edge_geske_aerius_founder, source_id: person_jon_geske, target_id: org_aerius_photonics, edge_type: founder, start_date: {value: "2003", precision: year}, end_date: null, attributes: {founder_type: founder, technology_scope: integrated_lasers, uncertainty: low}, evidence: {grade: A, sources: [{source_id: src_sbir_aerius_success, supports: founder_and_late_2003_start, locator: opening_case_history, accessed_date: "2026-08-23"}], corroboration_count: 1, rationale: U.S. government SBIR case study, reviewed_by: schema_foundation, reviewed_date: "2026-08-23"}, status: validated, notes: Source says late 2003; month is not inferred.}
+  - {id: edge_bowers_aerius_founder, source_id: person_john_bowers, target_id: org_aerius_photonics, edge_type: founder, start_date: null, end_date: null, attributes: {founder_type: co_founder, technology_scope: integrated_lasers, uncertainty: low}, evidence: {grade: A, sources: [{source_id: src_ucsb_bowers_profile, supports: cofounder, locator: biography, accessed_date: "2026-08-23"}], corroboration_count: 2, rationale: Corroborated by UCSB retirement and Technology Management profiles, reviewed_by: schema_foundation, reviewed_date: "2026-08-23"}, status: validated, notes: Relationship between Geske's one-person start and Bowers's co-founder designation needs event-level chronology reconciliation.}
+  - {id: edge_bowers_terabit_founder, source_id: person_john_bowers, target_id: org_terabit_technologies, edge_type: founder, start_date: null, end_date: null, attributes: {founder_type: co_founder, title: CEO, technology_scope: optical_receivers, uncertainty: low}, evidence: {grade: A, sources: [{source_id: src_ucsb_bowers_tmp_profile, supports: cofounder_and_ceo, locator: research_biography, accessed_date: "2026-08-23"}], corroboration_count: 1, rationale: Official university biography, reviewed_by: schema_foundation, reviewed_date: "2026-08-23"}, status: validated, notes: Founding year is not asserted because UCSB sources conflict between 1995 and later secondary accounts.}
+  - {id: edge_bowers_calient_founder, source_id: person_john_bowers, target_id: org_calient, edge_type: founder, start_date: null, end_date: null, attributes: {founder_type: co_founder, technology_scope: photonic_switching, uncertainty: low}, evidence: {grade: A, sources: [{source_id: src_ucsb_bowers_profile, supports: cofounder, locator: biography, accessed_date: "2026-08-23"}], corroboration_count: 2, rationale: Corroborated by official UCSB retirement profile, reviewed_by: schema_foundation, reviewed_date: "2026-08-23"}, status: validated, notes: Founding year and CTO interval not asserted in this pass.}
+
+  # Employment and technical leadership; not founder edges.
+  - {id: edge_koch_aurrion_employment, source_id: person_brian_koch, target_id: org_aurrion, edge_type: employment, start_date: null, end_date: null, attributes: {role: engineer_manager_or_technical_leader_unspecified, photonics_relevance: direct, uncertainty: moderate}, evidence: {grade: A, sources: [{source_id: src_quintessent_team, supports: aurrion_work_experience, locator: Brian_Koch_biography, accessed_date: "2026-08-23"}], corroboration_count: 1, rationale: Official biography establishes work but not title/dates, reviewed_by: schema_foundation, reviewed_date: "2026-08-23"}, status: validated, notes: No Aurrion founder status is asserted.}
+  - {id: edge_koch_juniper_employment, source_id: person_brian_koch, target_id: org_juniper_networks, edge_type: employment, start_date: null, end_date: null, attributes: {role: engineer_manager_or_technical_leader_unspecified, photonics_relevance: direct, uncertainty: moderate}, evidence: {grade: A, sources: [{source_id: src_quintessent_team, supports: juniper_work_experience, locator: Brian_Koch_biography, accessed_date: "2026-08-23"}], corroboration_count: 1, rationale: Official biography establishes work but not title/dates, reviewed_by: schema_foundation, reviewed_date: "2026-08-23"}, status: validated, notes: Continuity from the acquired Aurrion team is plausible but not asserted without named retention evidence.}
+  - {id: edge_tran_nexus_employment, source_id: person_minh_tran, target_id: org_nexus_photonics, edge_type: employment, start_date: {value: "2019", precision: year}, end_date: null, attributes: {role: Vice President of Research, seniority: founding_employee, photonics_relevance: direct, uncertainty: low}, evidence: {grade: A, sources: [{source_id: src_nexus_team, supports: role_and_start_year_as_founding_employee, locator: Minh_Tran_biography, accessed_date: "2026-08-23"}], corroboration_count: 1, rationale: Official company biography, reviewed_by: schema_foundation, reviewed_date: "2026-08-23"}, status: validated, notes: Current title and start year are supported; uninterrupted tenure is reported by company.}
+  - {id: edge_fish_aurrion_leadership, source_id: person_gregory_fish, target_id: org_aurrion, edge_type: technical_leadership, start_date: {value: "2009", precision: year}, end_date: null, attributes: {title: CTO, photonics_relevance: direct, uncertainty: low}, evidence: {grade: A, sources: [{source_id: src_ucsb_aurrion_success_story, supports: joined_as_cto_in_2009, locator: startup_history, accessed_date: "2026-08-23"}, {source_id: src_aurrion_2014_biographies, supports: cto_as_of_2014, locator: author_biography, accessed_date: "2026-08-23"}], corroboration_count: 2, rationale: University and publication biographies, reviewed_by: schema_foundation, reviewed_date: "2026-08-23"}, status: validated, notes: End date unknown; UCSB alumnus is asserted, Bowers-group membership is not.}
+  - {id: edge_norberg_aurrion_employment, source_id: person_erik_norberg, target_id: org_aurrion, edge_type: employment, start_date: null, end_date: null, attributes: {role: Optoelectronic Design Engineer, photonics_relevance: direct, uncertainty: low}, evidence: {grade: A, sources: [{source_id: src_aurrion_2014_biographies, supports: aurrion_role_as_of_2014, locator: author_biography, accessed_date: "2026-08-23"}], corroboration_count: 1, rationale: Peer-reviewed paper author biography, reviewed_by: schema_foundation, reviewed_date: "2026-08-23"}, status: validated, notes: UCSB PhD in 2011 is supported; Bowers-group membership is not established.}
+  - {id: edge_hutchinson_aurrion_employment, source_id: person_john_hutchinson, target_id: org_aurrion, edge_type: employment, start_date: null, end_date: null, attributes: {role: Staff Process Engineer, photonics_relevance: direct, uncertainty: low}, evidence: {grade: A, sources: [{source_id: src_aurrion_2014_biographies, supports: aurrion_role_as_of_2014, locator: author_biography, accessed_date: "2026-08-23"}], corroboration_count: 1, rationale: Peer-reviewed paper author biography, reviewed_by: schema_foundation, reviewed_date: "2026-08-23"}, status: validated, notes: Dates not established.}
+  - {id: edge_torres_aurrion_employment, source_id: person_alfredo_torres, target_id: org_aurrion, edge_type: employment, start_date: {value: "2013", precision: year}, end_date: {value: "2016", precision: year}, attributes: {role: R&D Processing Engineer / Failure Analysis Engineer, photonics_relevance: direct, uncertainty: low}, evidence: {grade: A, sources: [{source_id: src_ucsb_alfredo_torres, supports: aurrion_dates_and_roles, locator: biography, accessed_date: "2026-08-23"}], corroboration_count: 1, rationale: Official university biography, reviewed_by: schema_foundation, reviewed_date: "2026-08-23"}, status: validated, notes: Explicitly employment, not founder status.}
+  - {id: edge_kennedy_aurrion_employment, source_id: person_mj_kennedy, target_id: org_aurrion, edge_type: employment, start_date: null, end_date: {value: "2015", precision: year}, attributes: {role: Senior Process Development Technician, photonics_relevance: direct, duration_reported_years: 5, uncertainty: moderate}, evidence: {grade: A, sources: [{source_id: src_ucsb_mj_kennedy, supports: five_year_aurrion_role_before_end_2015, locator: biography, accessed_date: "2026-08-23"}], corroboration_count: 1, rationale: Official university biography; exact start year is not back-calculated, reviewed_by: schema_foundation, reviewed_date: "2026-08-23"}, status: validated, notes: Start date intentionally null rather than inferred as 2010.}
+  - {id: edge_marcoccia_juniper_leadership, source_id: person_roberto_marcoccia, target_id: org_juniper_networks, edge_type: technical_leadership, start_date: null, end_date: null, attributes: {title: VP Silicon Photonics, group: Silicon Photonics, photonics_relevance: direct, uncertainty: low}, evidence: {grade: A, sources: [{source_id: src_juniper_marcoccia, supports: title_and_responsibility, locator: author_biography, accessed_date: "2026-08-23"}], corroboration_count: 1, rationale: Official Juniper biography, reviewed_by: schema_foundation, reviewed_date: "2026-08-23"}, status: validated, notes: Source says he drove commercialization after acquisition; it does not say he worked at Aurrion.}
+  - {id: edge_yuan_calient_leadership, source_id: person_shifu_yuan, target_id: org_calient, edge_type: technical_leadership, start_date: {value: "2010", precision: year}, end_date: null, attributes: {title: CTO of Optical Technologies, photonics_relevance: direct, uncertainty: low}, evidence: {grade: A, sources: [{source_id: src_ucsb_shifu_yuan_bio, supports: cto_role_since_2010, locator: author_biography, accessed_date: "2026-08-23"}], corroboration_count: 1, rationale: Technical publication author biography, reviewed_by: schema_foundation, reviewed_date: "2026-08-23"}, status: validated, notes: Source also reports joining Calient in 2000; earlier role transitions are omitted to preserve atomicity.}
+
+unresolved_claims:
+  - subject: person_gregory_fish
+    claim: Bowers-group membership
+    status: not_established
+    reason: UCSB alumnus and Aurrion CTO are directly supported, but reviewed sources do not identify Bowers as his advisor.
+  - subject: person_erik_norberg
+    claim: Bowers-group membership
+    status: not_established
+    reason: UCSB PhD and Aurrion employment are supported; group/advisor is not.
+  - subject: person_brian_koch
+    claim: Continuous Aurrion-to-Juniper team transfer
+    status: not_established
+    reason: Both employers are named, and Juniper retained some Aurrion employees, but no reviewed source directly identifies Koch as a retained acquisition employee.
+  - subject: person_volkan_kaman
+    claim: Calient employment
+    status: not_established
+    reason: The lab roster shows a calient.net email, which is treated as a discovery lead rather than direct employment evidence.
+  - subject: person_anand_ramaswamy
+    claim: Juniper employment
+    status: not_established
+    reason: The lab roster shows a juniper.net email, which is treated as a discovery lead rather than direct employment evidence.
+  - subject: org_aerius_photonics
+    claim: Founder chronology
+    status: needs_reconciliation
+    reason: Government history describes Geske starting as a one-person company; UCSB biographies describe Bowers as co-founder. Both can be true, but formation chronology needs corporate records.
