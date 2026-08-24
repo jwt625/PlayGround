@@ -186,15 +186,42 @@ class DisplayResolver:
         organizations: dict[str, dict[str, Any]],
         mapping: dict[str, dict[str, Any]],
         *,
+        mode: str,
         allow_person_affiliation_collapse: bool,
     ):
         self.organizations = organizations
         self.mapping = mapping
+        self.mode = mode
         self.allow_person_affiliation_collapse = allow_person_affiliation_collapse
+
+    def aggregation_allowed(self, entry: dict[str, Any]) -> bool:
+        """Return whether a display cluster is appropriate for this Sankey mode.
+
+        ``aggregation_modes`` is the explicit forward-compatible control.  Existing
+        maps predate it, so university-and-named-lab clusters are treated as an
+        institution identity in both talent-flow modes; other legacy clusters retain
+        the old founder/person-affiliation-only behavior.
+        """
+        if not self.allow_person_affiliation_collapse or not entry.get("aggregation_allowed_for_sankey_only", True):
+            return False
+
+        configured_modes = entry.get("aggregation_modes")
+        if configured_modes is not None:
+            if isinstance(configured_modes, str):
+                configured_modes = [configured_modes]
+            if isinstance(configured_modes, list):
+                normalized = {str(item).strip().lower().replace("-", "_") for item in configured_modes}
+                return self.mode in normalized or "all" in normalized or "talent_flow" in normalized
+            return False
+
+        relation_type = str(entry.get("relation_type", ""))
+        if relation_type in {"university_and_named_lab", "university_and_named_labs"}:
+            return self.mode in {"founder", "strict"}
+        return self.mode == "founder"
 
     def id_for(self, organization_id: str) -> str:
         entry = self.mapping.get(organization_id, {})
-        if not self.allow_person_affiliation_collapse or not entry.get("aggregation_allowed_for_sankey_only", True):
+        if not self.aggregation_allowed(entry):
             return organization_id
         return str(entry.get("display_id") or organization_id)
 
@@ -573,12 +600,14 @@ def main() -> int:
     founder_resolver = DisplayResolver(
         organizations,
         display_map,
+        mode="founder",
         allow_person_affiliation_collapse=True,
     )
     strict_resolver = DisplayResolver(
         organizations,
         display_map,
-        allow_person_affiliation_collapse=False,
+        mode="strict",
+        allow_person_affiliation_collapse=True,
     )
 
     eligible = sorted([
@@ -640,7 +669,7 @@ def main() -> int:
         "display_map_path": str(display_path),
         "display_map_sha256": sha256(display_path) if display_path.exists() else None,
         "display_map_missing": not display_path.exists(),
-        "display_policy": "Allowed clusters collapse only in founder/person-affiliation mode; strict chronology and acquisitions keep canonical endpoints.",
+        "display_policy": "University-and-named-lab clusters collapse in both talent-flow modes; other legacy clusters collapse only in founder mode unless aggregation_modes explicitly permits them. Acquisitions keep canonical endpoints.",
         "evidence_filter": {"status": "validated", "grades": ["A", "B"]},
         "role_weights": weights,
         "eligible_atomic_edges": len(eligible),

@@ -66,6 +66,7 @@ Build the actual interactive Sankey with pinned, isolated dependencies:
 uv run \
   --with plotly==6.3.0 \
   --with pyyaml==6.0.2 \
+  --with kaleido==1.1.0 \
   scripts/build_sankey.py
 ```
 
@@ -77,10 +78,11 @@ Alternatively, install `requirements-viz.txt` in a virtual environment and run
 - `generated/photonics_lineage_sankey.png` — static founder-lineage export when Kaleido has a usable Chrome installation;
 - `generated/archive/photonics_lineage_sankey.pre_plotly.html` — the archived pre-Plotly visualization.
 
-The display map collapses selected institution families only for the high-level
-person-affiliation Sankey. Canonical organization IDs, time-aware Bell Labs eras,
-acquisition counterparties, edge IDs, and source URLs remain available in hover
-and evidence details. Non-collapsible audit groups remain separate. Use
+The display map collapses university/internal-lab clusters in both talent-flow
+modes. Corporate families and industrial-lab histories collapse only in founder
+mode when explicitly configured. Canonical organization IDs, time-aware Bell Labs
+eras, acquisition counterparties, edge IDs, and source URLs remain available in
+hover and evidence details. Non-collapsible audit groups remain separate. Use
 `--no-png` when only the HTML is needed and `--no-archive` during deterministic
 reruns.
 

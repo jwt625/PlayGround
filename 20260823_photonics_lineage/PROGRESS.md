@@ -46,10 +46,10 @@ Execute the first major release defined in `photonics_lineage_research_plan.md`:
 | Reproducible release reports | schema_foundation agent | Complete | Validation report and metrics generator |
 | Priority gap closure | acquisition_research agent | Paused for visualization correction | Next 10 uncovered high-value claims |
 | Sankey replacement | intel_diaspora agent | Complete | Python/Plotly Sankey, PNG, interactive HTML |
-| Institution dedup audit | acquisition_research agent | Complete | Manual core-node audit and 11 display clusters |
+| Institution dedup audit | acquisition_research agent | Complete | 18 audited display clusters; 10 school/lab collapses in both modes |
 | China incumbent expansion | intel_diaspora agent | Paused; TODO only | TFC, AFR/光库科技, InnovSemi/易缆微, SUNA/苏纳光电 |
 | Jim Harris diaspora depth pass | acquisition_research agent | Paused; TODO only | Zongjian→Apple, Hong Liu→Google, Yijie Huo→Vertilite, full alumni roster |
-| Visualization optimization | root | Next priority | Interactive graph and Sankey UX/layout |
+| Visualization optimization | root | Compaction reverted; completeness audit active | Original spacing restored, school/lab merges retained, 2250×1500 PNG |
 
 ## Milestones
 
@@ -154,6 +154,12 @@ Execute the first major release defined in `photonics_lineage_research_plan.md`:
 - Recorded four additional China-incumbent targets as TODOs only: TFC Optical, AFR/光库科技, InnovSemi/易缆微, and SUNA/苏纳光电. No records from the interrupted follow-up research were ingested.
 - Recorded a required Jim Harris-group depth correction as TODO only: validate Zongjian at Apple, Hong Liu at Google, Yijie Huo as a Vertilite co-founder, and systematically mine the full alumni roster. The existing two-alumnus sample is explicitly considered incomplete.
 - Stopped all research and ingestion at the user's request. The canonical snapshot remains frozen at 172 organizations, 288 people, 282 sources, 23 events, and 556 edges while visualization optimization becomes the active priority.
+- Completed the compact Sankey pass against the frozen snapshot: node padding is zero, chart height is capped at 800 px, and the static founder view is 2250×960. The display map now has 18 non-overlapping clusters over 51 canonical organization IDs.
+- Collapsed university/internal-lab pairs in both founder and strict talent-flow modes for MIT, Stanford, UCSB, Columbia, Caltech, ETH, Oxford, UPV, Surrey, and Southampton. Caltech and its Scherer Nanofabrication Group now render as `Caltech photonics`; canonical lab and university edges remain distinct in hover and evidence tables.
+- Kept corporate families, Bell Labs eras, Intel/SiPh, and A*STAR/IME founder-only; Ghent–imec–PRG and JDSU–Oclaro–Lumentum remain deliberately uncollapsed. Regenerated output contains 59 founder flows / 101 contributors and 49 strict flows / 57 contributors.
+- Reverted the zero-gutter and shortened-canvas compaction after visual review. Restored Plotly node padding to 18 px, the original 650–1200 px dynamic chart height, and a 2250×1500 PNG while retaining the requested school/lab display merges.
+- Started a visualization-completeness audit. The current Sankey is not a complete career-movement map: founder mode is a founder-destination slice, and strict mode requires conclusive end-before-start dates. The broader evidence browser remains more complete than either flow view.
+- Completed the read-only audit: 516 validated A/B lineage edges cover 282 people and 153 organizations, but founder mode renders 101 contributions from 73 people and strict mode renders 57 contributions from 31 people. Of 296 possible strict-mode person/display-organization pairs, 240 lack conclusive date order; 314 eligible edges lack usable starts, 398 lack usable ends, and 256 lack both. Ordinary non-founder mobility, repeated moves, same-display-cluster moves, advisor/collaboration edges, and organization events are not represented as Sankey flows.
 
 ## Open issues
 

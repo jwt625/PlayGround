@@ -8,6 +8,7 @@ rules:
   - "A cluster with aggregation_allowed_for_sankey_only: true may be used only in a person-affiliation or talent-flow Sankey, never in an acquisition, spinout, legal-entity, or chronology view."
   - "When aggregation is enabled, count a person at most once per display cluster per time slice; parent and child edges for the same person are not additive."
   - "A cluster with aggregation_allowed_for_sankey_only: false is an audit grouping only and must not rewrite display endpoints."
+  - "aggregation_modes is an allow-list: founder is the broad founder-lineage view; strict is the evidence-strict view. University/internal-lab clusters may aggregate in both, while corporate families and industrial-lab histories remain separate in strict."
   - "Member organization IDs are mutually exclusive across this file."
 
 display_clusters:
@@ -20,6 +21,7 @@ display_clusters:
       - org_nokia_bell_labs
     relation_type: time_aware_brand_eras
     aggregation_allowed_for_sankey_only: true
+    aggregation_modes: [founder]
     rationale: "The canonical graph preserves generic, Lucent, Alcatel-Lucent, and Nokia Bell Labs records because biographies support different eras at different precision. A high-level talent Sankey may collapse the research institution's successive brand eras while retaining the underlying person-edge evidence."
     restrictions:
       - "Do not use the collapsed label to backfill an unresolved generic Bell Labs edge into a specific corporate era."
@@ -32,6 +34,7 @@ display_clusters:
       - org_intel_silicon_photonics
     relation_type: parent_and_business_unit
     aggregation_allowed_for_sankey_only: true
+    aggregation_modes: [founder]
     rationale: "Intel is the legal employer while the Silicon Photonics Solutions Group is the specific technical unit. The canonical unit already carries Intel Photonics Technology Lab as a former-name alias, so no second PTL node is needed."
     restrictions:
       - "Prefer the group node when a source explicitly names PTL or the Silicon Photonics Solutions Group."
@@ -46,6 +49,7 @@ display_clusters:
       - org_mit_soljacic_group
     relation_type: university_and_named_labs
     aggregation_allowed_for_sankey_only: true
+    aggregation_modes: [founder, strict]
     rationale: "Degrees and general MIT affiliations target the university, while direct evidence supports separate Englund, Ram, and Soljacic group nodes. A university-level talent Sankey may collapse them without changing lab-training claims."
     restrictions:
       - "Never promote an MIT degree or publication affiliation into membership of a named lab."
@@ -65,6 +69,7 @@ display_clusters:
       - org_stanford_fejer_group
     relation_type: university_and_named_labs
     aggregation_allowed_for_sankey_only: true
+    aggregation_modes: [founder, strict]
     rationale: "The canonical records intentionally distinguish Stanford affiliation from directly evidenced PI-group training across eight photonics branches. A university-level talent Sankey may show one Stanford source node."
     restrictions:
       - "Keep PI-group identities visible in lineage and advisor views."
@@ -77,10 +82,103 @@ display_clusters:
       - org_ucsb_bowers_group
     relation_type: university_and_named_lab
     aggregation_allowed_for_sankey_only: true
+    aggregation_modes: [founder, strict]
     rationale: "UCSB degree or faculty edges and directly evidenced Bowers-group edges are distinct canonical claims but may share a university-level Sankey endpoint."
     restrictions:
       - "Do not infer Bowers-group membership from UCSB attendance."
       - "The canonical Bowers-group record currently lacks parent_organization_id: org_ucsb; this display map does not repair that structural field."
+
+  - id: display_columbia_photonics
+    label: "Columbia photonics"
+    member_org_ids:
+      - org_columbia_university
+      - org_columbia_lipson_group
+      - org_columbia_bergman_group
+    relation_type: university_and_named_labs
+    aggregation_allowed_for_sankey_only: true
+    aggregation_modes: [founder, strict]
+    rationale: "The Lipson Nanophotonics Group and Bergman Lightwave Research Laboratory are internal Columbia academic groups with explicit canonical parent links. University-level Sankeys may collapse them while the underlying evidence continues to distinguish degree, university affiliation, and group membership."
+    restrictions:
+      - "Do not infer Lipson- or Bergman-group membership from Columbia enrollment or employment alone."
+      - "Retain named-group endpoints in advisor, lab-lineage, and evidence views."
+
+  - id: display_caltech_photonics
+    label: "Caltech photonics"
+    member_org_ids:
+      - org_caltech
+      - org_caltech_scherer_nanofab_group
+    relation_type: university_and_named_lab
+    aggregation_allowed_for_sankey_only: true
+    aggregation_modes: [founder, strict]
+    rationale: "The Caltech Nanofabrication Group is an internal Caltech academic group with an explicit canonical parent. University-level Sankeys may collapse it with Caltech without changing the directly evidenced Scherer-group training claim."
+    restrictions:
+      - "Do not infer Scherer-group membership from a Caltech degree or affiliation."
+      - "Keep the group distinct in advisor, lab-lineage, and evidence views."
+
+  - id: display_eth_ief
+    label: "ETH Zurich photonics"
+    member_org_ids:
+      - org_eth_zurich
+      - org_eth_ief
+    relation_type: university_and_named_institute
+    aggregation_allowed_for_sankey_only: true
+    aggregation_modes: [founder, strict]
+    rationale: "The Institute of Electromagnetic Fields is an internal ETH Zurich academic institute with an explicit canonical parent. A university-level Sankey may use one ETH endpoint while canonical claims retain the specific Leuthold-group or institute affiliation."
+    restrictions:
+      - "Do not infer IEF or Leuthold-group membership from an ETH degree."
+      - "Keep IEF visible in technical lineage and advisor views."
+
+  - id: display_oxford_ane
+    label: "Oxford photonics"
+    member_org_ids:
+      - org_oxford
+      - org_oxford_ane
+    relation_type: university_and_named_lab
+    aggregation_allowed_for_sankey_only: true
+    aggregation_modes: [founder, strict]
+    rationale: "The Advanced Nanoscale Engineering Group is an internal University of Oxford academic group with an explicit canonical parent. University-level Sankeys may collapse the pair after per-person deduplication."
+    restrictions:
+      - "Do not promote an Oxford affiliation into ANE-group membership."
+      - "Retain the ANE endpoint in lab-lineage and evidence views."
+
+  - id: display_upv_iteam
+    label: "UPV photonics"
+    member_org_ids:
+      - org_upv
+      - org_upv_iteam
+    relation_type: university_and_named_lab
+    aggregation_allowed_for_sankey_only: true
+    aggregation_modes: [founder, strict]
+    rationale: "UPV iTEAM Photonics Research Labs is an internal Universitat Politècnica de València academic unit with an explicit canonical parent. University-level Sankeys may collapse the pair without weakening the source requirement for laboratory membership."
+    restrictions:
+      - "Do not infer iTEAM membership from a UPV degree or generic affiliation."
+      - "Keep iTEAM distinct in lab-lineage and evidence views."
+
+  - id: display_surrey_silicon_photonics
+    label: "University of Surrey photonics"
+    member_org_ids:
+      - org_university_of_surrey
+      - org_surrey_silicon_photonics_group
+    relation_type: university_and_named_lab
+    aggregation_allowed_for_sankey_only: true
+    aggregation_modes: [founder, strict]
+    rationale: "The Silicon Photonics Research Group is an internal University of Surrey academic group with an explicit canonical parent. University-level Sankeys may collapse the pair while preserving time-aware group evidence."
+    restrictions:
+      - "Do not infer group membership from Surrey enrollment or employment alone."
+      - "Keep the group distinct in lab-lineage and evidence views."
+
+  - id: display_southampton_silicon_photonics
+    label: "University of Southampton photonics"
+    member_org_ids:
+      - org_university_of_southampton
+      - org_southampton_silicon_photonics_group
+    relation_type: university_and_named_lab
+    aggregation_allowed_for_sankey_only: true
+    aggregation_modes: [founder, strict]
+    rationale: "The Silicon Photonics Group is an internal University of Southampton academic group with an explicit canonical parent. University-level Sankeys may collapse the pair while canonical data retains the group-specific affiliation."
+    restrictions:
+      - "Do not infer group membership from Southampton enrollment or employment alone."
+      - "Keep the group distinct in lab-lineage and evidence views."
 
   - id: display_ghent_imec_prg_ecosystem
     label: "Ghent–imec photonics ecosystem"
@@ -90,6 +188,7 @@ display_clusters:
       - org_ghent_photonics_research_group
     relation_type: joint_ecosystem_not_single_identity
     aggregation_allowed_for_sankey_only: false
+    aggregation_modes: []
     rationale: "PRG is a joint Ghent University–imec research group, but Ghent degrees, PRG membership, and imec employment are not interchangeable. A single endpoint would erase evidence boundaries and can create false person movement."
     restrictions:
       - "Render the three nodes separately unless a future visualization explicitly implements an ecosystem super-node outside the ordinary Sankey aggregation path."
@@ -102,6 +201,7 @@ display_clusters:
       - org_astar_ime
     relation_type: umbrella_and_operating_institute
     aggregation_allowed_for_sankey_only: true
+    aggregation_modes: [founder]
     rationale: "A*STAR is the umbrella organization and IME is the operating institute named in technical papers and spinout evidence. An institution-level Sankey may collapse them, while canonical technical claims should target IME when the artifact names IME."
     restrictions:
       - "Do not count a single IME paper affiliation twice at both umbrella and institute levels."
@@ -115,6 +215,7 @@ display_clusters:
       - org_coherent
     relation_type: acquisition_and_corporate_successor
     aggregation_allowed_for_sankey_only: true
+    aggregation_modes: [founder]
     rationale: "Finisar was acquired by II-VI in 2019, and the canonical graph keeps II-VI distinct from its later Coherent Corp. successor identity. A present-family person-affiliation Sankey may collapse the three; transaction history may not."
     restrictions:
       - "Finisar's acquisition counterparty remains org_ii_vi, never retroactively org_coherent."
@@ -128,6 +229,7 @@ display_clusters:
       - org_lumentum
     relation_type: branched_history_and_acquisition
     aggregation_allowed_for_sankey_only: false
+    aggregation_modes: []
     rationale: "Oclaro's 2018 acquisition by Lumentum is canonical, but the canonical snapshot does not encode a complete JDSU-to-Lumentum corporate-successor path. JDSU, Oclaro, and Lumentum therefore remain separate display endpoints until that branch history is explicitly modeled."
     restrictions:
       - "Do not infer Oclaro employment from earlier Bookham or JDSU roles."
@@ -140,6 +242,7 @@ display_clusters:
       - org_nvidia
     relation_type: acquired_company_and_parent
     aggregation_allowed_for_sankey_only: true
+    aggregation_modes: [founder]
     rationale: "Mellanox remains a historical company node and NVIDIA is its 2020 acquirer. A present-family person-affiliation Sankey may collapse them, but the acquisition and pre-close careers remain distinct evidence."
     restrictions:
       - "Do not convert the whole-company acquisition into an optical-subteam transfer."
@@ -152,6 +255,7 @@ display_clusters:
       - org_cisco
     relation_type: acquired_company_and_parent
     aggregation_allowed_for_sankey_only: true
+    aggregation_modes: [founder]
     rationale: "Luxtera remains the pre-2019 silicon-photonics company node and Cisco is the acquirer. A present-family person-affiliation Sankey may collapse them while preserving the acquisition and named person paths underneath."
     restrictions:
       - "Do not infer that every Luxtera employee joined or remained at Cisco."

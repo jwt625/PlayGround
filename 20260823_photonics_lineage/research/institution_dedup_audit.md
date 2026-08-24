@@ -10,7 +10,7 @@ The audited canonical snapshot has **no duplicate organization IDs that should b
 2. **Nested institutions:** a university or umbrella organization and a directly evidenced lab, group, or institute are different claim targets. They may collapse in a high-level person-affiliation Sankey, but must remain separate in evidence and lineage views.
 3. **Time-aware or transaction-aware entities:** Bell Labs eras, acquired companies, and corporate successors remain separate canonically. Selected families may collapse only for a present-family person-affiliation Sankey.
 
-The display map contains **11 non-overlapping clusters and 36 unique canonical organization IDs**. Nine clusters permit Sankey-only aggregation; Ghent–imec–PRG and JDSU–Oclaro–Lumentum are deliberately non-collapsible. Every allowed collapse requires per-person deduplication so parent and child affiliations do not inflate weights.
+The display map contains **18 non-overlapping clusters and 51 unique canonical organization IDs**. Sixteen clusters permit Sankey-only aggregation; Ghent–imec–PRG and JDSU–Oclaro–Lumentum are deliberately non-collapsible. Ten university/internal-lab clusters allow aggregation in both `founder` and `strict` modes. Corporate families, industrial-lab histories, and the A*STAR/IME umbrella pair are not newly collapsed in `strict`. Every allowed collapse requires per-person deduplication so parent and child affiliations do not inflate weights.
 
 ## Audit decisions
 
@@ -21,6 +21,13 @@ The display map contains **11 non-overlapping clusters and 36 unique canonical o
 | MIT and named labs | Keep MIT plus Englund, Ram, and Soljacic groups distinct | Yes | An MIT degree does not prove lab membership. University-level Sankeys may aggregate after person deduplication. |
 | Stanford and named groups | Keep Stanford plus eight group/program nodes distinct | Yes | Advisor and group edges carry information that a university affiliation does not. |
 | UCSB and Bowers group | Keep both | Yes | UCSB attendance and Bowers-group training are not equivalent. |
+| Columbia and named groups | Keep Columbia plus Lipson and Bergman groups distinct | Yes | Both groups have explicit Columbia parent links; group membership still requires direct evidence. |
+| Caltech and Scherer Nanofabrication Group | Keep both | Yes | The group is school-contained and explicitly parented to Caltech; collapse is display-only. |
+| ETH Zurich and IEF | Keep both | Yes | IEF is an internal ETH institute, while an ETH degree alone does not establish Leuthold-group membership. |
+| Oxford and ANE | Keep both | Yes | ANE is an explicitly parented Oxford academic group. |
+| UPV and iTEAM Photonics | Keep both | Yes | iTEAM is an explicitly parented UPV academic unit. |
+| Surrey and Silicon Photonics Research Group | Keep both | Yes | Surrey affiliation and group membership remain different canonical claims. |
+| Southampton and Silicon Photonics Group | Keep both | Yes | Southampton affiliation and group membership remain different canonical claims. |
 | imec / Ghent / PRG | Keep all three and do not aggregate by default | No | PRG is joint, but Ghent degrees, PRG membership, and imec employment are separate claims; a single node would create false equivalence. |
 | A*STAR / IME | Keep umbrella and operating institute distinct | Yes | Technical papers and AMF spinout evidence specifically name IME; high-level institution views may use A*STAR IME. |
 | Finisar / II-VI / Coherent | Keep acquisition target, 2019 acquirer, and later successor identity distinct | Yes | Present-family talent views may aggregate, but the Finisar transaction must continue to target II-VI, not Coherent. |
@@ -43,6 +50,9 @@ The display map contains **11 non-overlapping clusters and 36 unique canonical o
 - MIT degrees and broad affiliations terminate at `org_mit`; direct lab evidence terminates at `org_mit_englund_group`, `org_mit_ram_group`, or `org_mit_soljacic_group`.
 - Stanford university affiliations terminate at `org_stanford_university`; direct evidence supports eight separate group/program nodes. Patent co-inventorship and a Stanford degree do not establish PI-group training.
 - UCSB affiliation and `org_ucsb_bowers_group` membership remain distinct. The UCSB memo specifically excludes Bowers-group inference for several UCSB alumni.
+- Columbia University remains distinct from the Lipson Nanophotonics Group and Bergman Lightwave Research Laboratory.
+- Caltech remains distinct from `org_caltech_scherer_nanofab_group`; the latter requires group-level evidence even though both may display as Caltech photonics.
+- ETH Zurich, Oxford, UPV, Surrey, and Southampton remain distinct from their explicitly parented IEF, ANE, iTEAM, and silicon-photonics group nodes.
 - A*STAR is the umbrella; `org_astar_ime` is the operating institute printed in papers and named in the AMF spinout evidence.
 
 These are nested identities, not duplicate employers. Display aggregation is acceptable only after deduplicating the same person within a cluster.
@@ -65,9 +75,10 @@ These are nested identities, not duplicate employers. Display aggregation is acc
 3. The canonical snapshot records `org_ii_vi → org_coherent` through predecessor/successor fields but has no explicit rebrand/successor event edge. The historical acquisition report already recommends adding one.
 4. The canonical snapshot does not yet encode a sourced JDSU-to-Lumentum separation/successor relationship. This is why the JDSU/Oclaro/Lumentum grouping is audit-only.
 5. The Ghent PRG note says the group is joint with imec, while its single canonical parent is Ghent University. A multi-parent relationship cannot be expressed through the current `parent_organization_id` field; no duplicate node should be introduced to work around that limitation.
+6. `org_cornell_eastman_group` has no separate Cornell University node in the canonical snapshot, and `org_ucf_creol` has no separate University of Central Florida node. They cannot form validated parent/lab display clusters without first adding and sourcing those parent organizations canonically; this audit does not invent them.
 
 ## Safe visualization contract
 
-For an allowed cluster, rewrite only person-affiliation Sankey endpoints to the display label and retain the original organization ID on every contributing atomic edge. Deduplicate by `(person_id, display_cluster_id, time_slice)` before computing weights. Do not apply this map to acquisition, spinout, IP-transfer, legal-employer, advisor, or chronology views. Evidence tables should always show the original canonical organization name and ID.
+For an allowed cluster, rewrite only person-affiliation Sankey endpoints to the display label and retain the original organization ID on every contributing atomic edge. Deduplicate by `(person_id, display_cluster_id, time_slice)` before computing weights. `aggregation_modes` is an allow-list: the ten university/internal-lab clusters are enabled for both `founder` and `strict`; Bell Labs eras, Intel/SiPh, A*STAR/IME, and acquisition/successor families are enabled only for `founder`. Do not apply this map to acquisition, spinout, IP-transfer, legal-employer, advisor, or chronology views. Evidence tables should always show the original canonical organization name and ID.
 
 The non-collapsible families remain useful in the configuration because they make the audit decision executable: a renderer can recognize the family but must leave its endpoints unchanged.
