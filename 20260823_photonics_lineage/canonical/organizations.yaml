@@ -14,8 +14,8 @@ organizations:
   - {id: org_broadcom, name: "Broadcom", aliases: [], organization_type: company, parent_organization_id: null, predecessor_ids: [], successor_ids: [], founded_date: null, dissolved_date: null, status: active, technologies: [silicon_photonics, co_packaged_optics, optical_networking], geographies: [], website: "https://www.broadcom.com/", research_status: validated, sources: [{source_id: src_xscape_team, supports: "Vivek Raghunathan Broadcom role", locator: "Vivek Raghunathan bio", accessed_date: "2026-08-23"}], notes: null}
   - {id: org_xscape, name: "Xscape Photonics", aliases: [], organization_type: startup, parent_organization_id: null, predecessor_ids: [], successor_ids: [], founded_date: null, dissolved_date: null, status: active, technologies: [silicon_photonics, integrated_lasers, optical_io], geographies: [], website: "https://www.xscapephotonics.com/", research_status: validated, sources: [{source_id: src_xscape_team, supports: "company and leadership", locator: "leadership", accessed_date: "2026-08-23"}], notes: null}
   - {id: org_luxtera, name: "Luxtera", aliases: [], organization_type: startup, parent_organization_id: null, predecessor_ids: [], successor_ids: [], founded_date: null, dissolved_date: null, status: acquired, technologies: [silicon_photonics, datacenter_optics], geographies: [], website: null, research_status: validated, sources: [{source_id: src_xscape_vikram_appointment, supports: "Vikram Sadagopan prior role", locator: "appointment biography", accessed_date: "2026-08-23"}], notes: null}
-  - {id: org_finisar, name: "Finisar", aliases: [], organization_type: company, parent_organization_id: org_coherent, predecessor_ids: [], successor_ids: [org_coherent], founded_date: null, dissolved_date: null, status: acquired, technologies: [datacenter_optics, coherent_optics], geographies: [], website: null, research_status: seed_unverified, sources: [{source_id: src_ofc_cpo_workshop_2026, supports: "Juthika Basak prior employer grouping", locator: "speaker bio", accessed_date: "2026-08-23"}], notes: "Staging grouped Finisar/Coherent; person edge withheld pending employer-transition disambiguation."}
-  - {id: org_coherent, name: "Coherent Corp.", aliases: [{name: "Coherent", language: en, alias_type: short_name}], organization_type: company, parent_organization_id: null, predecessor_ids: [org_finisar], successor_ids: [], founded_date: null, dissolved_date: null, status: active, technologies: [datacenter_optics, coherent_optics], geographies: [], website: "https://www.coherent.com/", research_status: seed_unverified, sources: [{source_id: src_ofc_cpo_workshop_2026, supports: "Juthika Basak prior employer grouping", locator: "speaker bio", accessed_date: "2026-08-23"}], notes: "Staging grouped Finisar/Coherent; person edge withheld pending employer-transition disambiguation."}
+  - {id: org_finisar, name: "Finisar", aliases: [], organization_type: company, parent_organization_id: org_ii_vi, predecessor_ids: [], successor_ids: [org_ii_vi], founded_date: null, dissolved_date: null, status: acquired, technologies: [datacenter_optics, coherent_optics], geographies: [], website: null, research_status: validated, sources: [{source_id: src_ofc_cpo_workshop_2026, supports: "Juthika Basak prior employer grouping", locator: "speaker bio", accessed_date: "2026-08-23"}, {source_id: src_iivi_finisar_close_2019_hist, supports: "Finisar acquisition by II-VI", locator: "Opening paragraph", accessed_date: "2026-08-23"}], notes: "II-VI is retained as Finisar's 2019 acquirer; later Coherent naming does not replace the historical transaction counterparty."}
+  - {id: org_coherent, name: "Coherent Corp.", aliases: [{name: "Coherent", language: en, alias_type: short_name}], organization_type: company, parent_organization_id: null, predecessor_ids: [org_ii_vi], successor_ids: [], founded_date: null, dissolved_date: null, status: active, technologies: [datacenter_optics, coherent_optics], geographies: [], website: "https://www.coherent.com/", research_status: validated, sources: [{source_id: src_ofc_cpo_workshop_2026, supports: "Juthika Basak prior employer grouping", locator: "speaker bio", accessed_date: "2026-08-23"}, {source_id: src_iivi_finisar_close_2019_hist, supports: "II-VI historical identity before later Coherent Corp. naming", locator: "Opening paragraph", accessed_date: "2026-08-23"}], notes: "Corporate successor to II-VI Incorporated; not substituted retroactively as Finisar's 2019 acquirer."}
   - {id: org_nokia, name: "Nokia", aliases: [], organization_type: company, parent_organization_id: null, predecessor_ids: [], successor_ids: [], founded_date: null, dissolved_date: null, status: active, technologies: [coherent_optics, optical_networking, silicon_photonics], geographies: [], website: "https://www.nokia.com/", research_status: validated, sources: [{source_id: src_ofc_cpo_workshop_2026, supports: "Juthika Basak prior role", locator: "speaker bio", accessed_date: "2026-08-23"}], notes: null}
   - {id: org_amd, name: "AMD", aliases: [{name: "Advanced Micro Devices", language: en, alias_type: legal_name}], organization_type: company, parent_organization_id: null, predecessor_ids: [], successor_ids: [], founded_date: null, dissolved_date: null, status: active, technologies: [silicon_photonics, co_packaged_optics, optical_io], geographies: [], website: "https://www.amd.com/", research_status: validated, sources: [{source_id: src_amd_enosemi_acquisition, supports: "AMD acquisition and photonics program", locator: "announcement", accessed_date: "2026-08-23"}], notes: null}
   - {id: org_infinilink, name: "InfiniLink", aliases: [], organization_type: startup, parent_organization_id: org_globalfoundries, predecessor_ids: [], successor_ids: [], founded_date: null, dissolved_date: null, status: acquired, technologies: [silicon_photonics, optical_serdes, optical_io], geographies: [], website: null, research_status: validated, sources: [{source_id: src_gf_light_speed_ambition, supports: "company and technology", locator: "InfiniLink section", accessed_date: "2026-08-23"}], notes: null}
@@ -24,8 +24,8 @@ organizations:
   - {id: org_hyperlume, name: "Hyperlume", aliases: [], organization_type: startup, parent_organization_id: org_credo, predecessor_ids: [], successor_ids: [], founded_date: null, dissolved_date: null, status: acquired, technologies: [microled_interconnect, optical_io], geographies: [], website: null, research_status: validated, sources: [{source_id: src_hyperlume_seed_announcement, supports: "company, founders, technology", locator: null, accessed_date: "2026-08-23"}], notes: null}
   - {id: org_credo, name: "Credo Technology Group", aliases: [{name: "Credo", language: en, alias_type: short_name}], organization_type: company, parent_organization_id: null, predecessor_ids: [], successor_ids: [], founded_date: null, dissolved_date: null, status: active, technologies: [optical_serdes, optical_io], geographies: [], website: "https://credosemi.com/", research_status: validated, sources: [{source_id: src_credo_hyperlume_announcement, supports: "acquirer identity", locator: "title", accessed_date: "2026-08-23"}], notes: null}
   - {id: org_cloud_light, name: "Cloud Light Technology", aliases: [{name: "Cloud Light", language: en, alias_type: short_name}], organization_type: startup, parent_organization_id: org_lumentum, predecessor_ids: [], successor_ids: [], founded_date: null, dissolved_date: null, status: acquired, technologies: [datacenter_optics, optical_packaging], geographies: [], website: null, research_status: validated, sources: [{source_id: src_lumentum_cloudlight_announcement, supports: "company and technology", locator: null, accessed_date: "2026-08-23"}], notes: null}
-  - {id: org_amf, name: "Advanced Micro Foundry", aliases: [{name: "AMF", language: en, alias_type: short_name}], organization_type: startup, parent_organization_id: org_globalfoundries, predecessor_ids: [], successor_ids: [], founded_date: null, dissolved_date: null, status: acquired, technologies: [silicon_photonics, foundry], geographies: [{country_code: SG, region: null, city: null}], website: null, research_status: validated, sources: [{source_id: src_gf_amf_announcement, supports: "company and technology", locator: null, accessed_date: "2026-08-23"}], notes: null}
-  - {id: org_astar_ime, name: "A*STAR Institute of Microelectronics", aliases: [{name: "IME", language: en, alias_type: short_name}], organization_type: research_institute, parent_organization_id: null, predecessor_ids: [], successor_ids: [], founded_date: null, dissolved_date: null, status: active, technologies: [silicon_photonics, foundry], geographies: [{country_code: SG, region: null, city: null}], website: "https://www.a-star.edu.sg/ime", research_status: validated, sources: [{source_id: src_astar_ime_spinoffs, supports: "institution and AMF spinout", locator: "IME spin-offs", accessed_date: "2026-08-23"}], notes: null}
+  - {id: org_amf, name: "Advanced Micro Foundry", aliases: [{name: "AMF", language: en, alias_type: short_name}, {name: "Advanced Micro Foundry Pte. Ltd.", language: en, alias_type: legal_name}], organization_type: startup, parent_organization_id: org_globalfoundries, predecessor_ids: [], successor_ids: [], founded_date: {value: "2017", precision: year}, dissolved_date: null, status: acquired, technologies: [silicon_photonics, foundry, optical_engine], geographies: [{country_code: SG, region: null, city: null}], website: "https://www.advmf.com/", research_status: validated, sources: [{source_id: src_gf_amf_announcement, supports: "company and technology", locator: null, accessed_date: "2026-08-23"}, {source_id: src_amf_launch_2018, supports: "company identity, 2017 incorporation, formal spinout, and technology platforms", locator: "About Advanced Micro Foundry", accessed_date: "2026-08-23"}], notes: "Acquired by GlobalFoundries in 2025; acquisition does not establish universal personnel continuity."}
+  - {id: org_astar_ime, name: "A*STAR Institute of Microelectronics", aliases: [{name: "IME", language: en, alias_type: short_name}, {name: "Institute of Microelectronics, A*STAR", language: en, alias_type: common_name}], organization_type: research_institute, parent_organization_id: org_astar, predecessor_ids: [], successor_ids: [], founded_date: null, dissolved_date: null, status: active, technologies: [silicon_photonics, foundry, optical_engine], geographies: [{country_code: SG, region: null, city: null}], website: "https://www.a-star.edu.sg/ime", research_status: validated, sources: [{source_id: src_astar_ime_spinoffs, supports: "institution and AMF spinout", locator: "IME spin-offs", accessed_date: "2026-08-23"}, {source_id: src_optica_ime_oeic_2017, supports: "IME author affiliation and silicon-photonics program", locator: "author affiliations", accessed_date: "2026-08-23"}], notes: null}
   - {id: org_idt, name: "Integrated Device Technology", aliases: [{name: "IDT", language: en, alias_type: short_name}], organization_type: company, parent_organization_id: null, predecessor_ids: [], successor_ids: [], founded_date: null, dissolved_date: null, status: acquired, technologies: [], geographies: [], website: null, research_status: validated, sources: [{source_id: src_semicon_china_guoqiang_lo, supports: "Guo-Qiang Lo prior employment", locator: "speaker bio", accessed_date: "2026-08-23"}], notes: null}
   - {id: org_inphi, name: "Inphi", aliases: [], organization_type: company, parent_organization_id: org_marvell, predecessor_ids: [], successor_ids: [], founded_date: null, dissolved_date: null, status: acquired, technologies: [coherent_optics, mixed_signal_dsp, optical_serdes], geographies: [], website: null, research_status: validated, sources: [{source_id: src_marvell_inphi_announcement, supports: "company and technology", locator: null, accessed_date: "2026-08-23"}], notes: null}
   - {id: org_marvell, name: "Marvell Technology", aliases: [{name: "Marvell", language: en, alias_type: short_name}], organization_type: company, parent_organization_id: null, predecessor_ids: [], successor_ids: [], founded_date: null, dissolved_date: null, status: active, technologies: [coherent_optics, optical_serdes, optical_io], geographies: [], website: "https://www.marvell.com/", research_status: validated, sources: [{source_id: src_marvell_inphi_announcement, supports: "acquirer identity", locator: "title", accessed_date: "2026-08-23"}], notes: null}
@@ -44,8 +44,8 @@ organizations:
   - {id: org_university_washington, name: "University of Washington", aliases: [{name: "UW", language: en, alias_type: short_name}], organization_type: university, parent_organization_id: null, predecessor_ids: [], successor_ids: [], founded_date: null, dissolved_date: null, status: active, technologies: [silicon_photonics], geographies: [], website: "https://www.washington.edu/", research_status: validated, sources: [{source_id: src_matt_streshinsky_bio, supports: "Matt Streshinsky PhD", locator: null, accessed_date: "2026-08-23"}], notes: null}
   - {id: org_gennum, name: "Gennum", aliases: [], organization_type: company, parent_organization_id: org_semtech, predecessor_ids: [], successor_ids: [org_semtech], founded_date: null, dissolved_date: null, status: acquired, technologies: [mixed_signal_dsp], geographies: [], website: null, research_status: seed_unverified, sources: [{source_id: src_enosemi_launch, supports: "Shahab Ardalan prior team", locator: null, accessed_date: "2026-08-23"}], notes: "Staging groups Gennum/Semtech; edge withheld pending temporal disambiguation."}
   - {id: org_semtech, name: "Semtech", aliases: [], organization_type: company, parent_organization_id: null, predecessor_ids: [org_gennum], successor_ids: [], founded_date: null, dissolved_date: null, status: active, technologies: [mixed_signal_dsp], geographies: [], website: "https://www.semtech.com/", research_status: seed_unverified, sources: [{source_id: src_enosemi_launch, supports: "Shahab Ardalan prior team", locator: null, accessed_date: "2026-08-23"}], notes: "Staging groups Gennum/Semtech; edge withheld pending temporal disambiguation."}
-  - {id: org_polariton, name: "Polariton Technologies", aliases: [{name: "Polariton", language: en, alias_type: short_name}], organization_type: startup, parent_organization_id: org_marvell, predecessor_ids: [], successor_ids: [], founded_date: {value: "2019", precision: year}, dissolved_date: null, status: acquired, technologies: [silicon_photonics, coherent_optics], geographies: [{country_code: CH, region: null, city: null}], website: null, research_status: validated, sources: [{source_id: src_eth_polariton_acquisition, supports: "company, founders, founding year and spinout", locator: null, accessed_date: "2026-08-23"}], notes: null}
-  - {id: org_eth_ief, name: "ETH Zurich Institute of Electromagnetic Fields", aliases: [{name: "Jürg Leuthold group", language: en, alias_type: common_name}], organization_type: academic_lab, parent_organization_id: null, predecessor_ids: [], successor_ids: [], founded_date: null, dissolved_date: null, status: active, technologies: [silicon_photonics, coherent_optics], geographies: [{country_code: CH, region: null, city: Zurich}], website: null, research_status: validated, sources: [{source_id: src_eth_polariton_acquisition, supports: "institution and founder research lineage", locator: null, accessed_date: "2026-08-23"}], notes: null}
+  - {id: org_polariton, name: "Polariton Technologies", aliases: [{name: "Polariton", language: en, alias_type: short_name}], organization_type: startup, parent_organization_id: org_marvell, predecessor_ids: [], successor_ids: [], founded_date: {value: "2019", precision: year}, dissolved_date: null, status: acquired, technologies: [silicon_photonics, coherent_optics, optical_io], geographies: [{country_code: CH, region: null, city: Zurich}], website: "https://www.polariton.ch/", research_status: validated, sources: [{source_id: src_eth_polariton_acquisition, supports: "company, founders, founding year and spinout", locator: null, accessed_date: "2026-08-23"}, {source_id: src_marvell_polariton_acquisition_2026, supports: "plasmonic active devices integrated with silicon-photonics platforms", locator: "Opening paragraph", accessed_date: "2026-08-23"}, {source_id: src_eth_polariton_marvell_2026, supports: "plasmonics commercialization and ETH spinout history", locator: "Company-history paragraph", accessed_date: "2026-08-23"}], notes: "Reviewed sources support plasmonic active devices on silicon-photonics platforms, not thin-film lithium niobate. The schema has no plasmonics term; the mechanism is preserved here rather than mislabeled TFLN."}
+  - {id: org_eth_ief, name: "ETH Zurich Institute of Electromagnetic Fields", aliases: [{name: "Jürg Leuthold group", language: en, alias_type: common_name}, {name: "Leuthold Group", language: en, alias_type: common_name}], organization_type: academic_lab, parent_organization_id: org_eth_zurich, predecessor_ids: [], successor_ids: [], founded_date: null, dissolved_date: null, status: active, technologies: [silicon_photonics, coherent_optics], geographies: [{country_code: CH, region: null, city: Zurich}], website: "https://ief.ee.ethz.ch/", research_status: validated, sources: [{source_id: src_eth_polariton_acquisition, supports: "institution and founder research lineage", locator: null, accessed_date: "2026-08-23"}, {source_id: src_eth_leuthold_bio_2026, supports: "Institute identity and Leuthold leadership", locator: "Function", accessed_date: "2026-08-23"}, {source_id: src_ief_people_overview_2026_ethlineage, supports: "IEF group roster", locator: "People overview", accessed_date: "2026-08-23"}], notes: null}
   - id: org_mintera
     name: Mintera
     aliases: []
@@ -66,6 +66,881 @@ organizations:
     - source_id: src_acacia_s1_2016
       supports: Mintera roles and lineage
       locator:
+      accessed_date: '2026-08-23'
+    notes:
+  - id: org_mellanox
+    name: Mellanox Technologies
+    aliases:
+    - name: Mellanox
+      language: en
+      alias_type: short_name
+    organization_type: company
+    parent_organization_id: org_nvidia
+    predecessor_ids: []
+    successor_ids: []
+    founded_date:
+    dissolved_date:
+    status: acquired
+    technologies:
+    - optical_networking
+    - datacenter_optics
+    geographies:
+    - country_code: IL
+      region:
+      city: Yokneam
+    website:
+    research_status: validated
+    sources:
+    - source_id: src_nvidia_mellanox_announce_2019_hist
+      supports: Company identity and transaction counterparty
+      locator: Release heading
+      accessed_date: '2026-08-23'
+    notes: Acquired by NVIDIA in 2020.
+  - id: org_nvidia
+    name: NVIDIA Corporation
+    aliases:
+    - name: NVIDIA
+      language: en
+      alias_type: short_name
+    organization_type: company
+    parent_organization_id:
+    predecessor_ids: []
+    successor_ids: []
+    founded_date:
+    dissolved_date:
+    status: active
+    technologies:
+    - optical_networking
+    - optical_io
+    geographies:
+    - country_code: US
+      region: California
+      city: Santa Clara
+    website:
+    research_status: validated
+    sources:
+    - source_id: src_nvidia_mellanox_close_8k_2020_hist
+      supports: Acquirer identity
+      locator: Form 8-K cover and Item 2.01
+      accessed_date: '2026-08-23'
+    notes:
+  - id: org_ii_vi
+    name: II-VI Incorporated
+    aliases:
+    - name: II-VI
+      language: en
+      alias_type: short_name
+    organization_type: company
+    parent_organization_id:
+    predecessor_ids: []
+    successor_ids:
+    - org_coherent
+    founded_date:
+    dissolved_date:
+    status: historical
+    technologies:
+    - datacenter_optics
+    - integrated_lasers
+    geographies:
+    - country_code: US
+      region: Pennsylvania
+      city: Saxonburg
+    website:
+    research_status: validated
+    sources:
+    - source_id: src_iivi_finisar_close_2019_hist
+      supports: 2019 acquirer identity
+      locator: Opening paragraph
+      accessed_date: '2026-08-23'
+    notes: Later renamed Coherent Corp.; kept distinct as the 2019 transaction counterparty.
+  - id: org_lightwire
+    name: Lightwire
+    aliases:
+    - name: Lightwire, Inc.
+      language: en
+      alias_type: legal_name
+    organization_type: startup
+    parent_organization_id: org_cisco
+    predecessor_ids: []
+    successor_ids: []
+    founded_date:
+    dissolved_date:
+    status: acquired
+    technologies:
+    - silicon_photonics
+    - optical_io
+    - optical_packaging
+    geographies:
+    - country_code: US
+      region: Pennsylvania
+      city: Allentown
+    website:
+    research_status: validated
+    sources:
+    - source_id: src_cisco_lightwire_announce_2012_hist
+      supports: Company identity, location, and CMOS-photonics focus
+      locator: Opening and technology paragraphs
+      accessed_date: '2026-08-23'
+    notes: Acquired by Cisco in 2012.
+  - id: org_openlight
+    name: OpenLight Photonics
+    aliases:
+    - name: OpenLight
+      language: en
+      alias_type: short_name
+    organization_type: startup
+    parent_organization_id:
+    predecessor_ids: []
+    successor_ids: []
+    founded_date:
+      value: '2022'
+      precision: year
+    dissolved_date:
+    status: active
+    technologies:
+    - silicon_photonics
+    - iii_v_silicon_integration
+    - integrated_lasers
+    - foundry
+    geographies:
+    - country_code: US
+      region: north_america
+      city: Santa Clara
+    website: https://openlightphotonics.com/
+    research_status: validated
+    sources:
+    - source_id: src_openlight_leadership
+      supports: organization and leadership
+      locator: leadership page
+      accessed_date: '2026-08-23'
+    notes:
+  - id: org_scintil
+    name: Scintil Photonics
+    aliases:
+    - name: SCINTIL
+      language: en
+      alias_type: short_name
+    organization_type: startup
+    parent_organization_id:
+    predecessor_ids: []
+    successor_ids: []
+    founded_date:
+      value: '2018'
+      precision: year
+    dissolved_date:
+    status: active
+    technologies:
+    - silicon_photonics
+    - iii_v_silicon_integration
+    - integrated_lasers
+    - datacenter_optics
+    geographies:
+    - country_code: FR
+      region: europe
+      city: Grenoble
+    website: https://www.scintil-photonics.com/
+    research_status: validated
+    sources:
+    - source_id: src_scintil_about
+      supports: organization and technology
+      locator: about page
+      accessed_date: '2026-08-23'
+    notes:
+  - id: org_ranovus
+    name: Ranovus
+    aliases:
+    - name: RANOVUS
+      language: en
+      alias_type: brand
+    organization_type: startup
+    parent_organization_id:
+    predecessor_ids: []
+    successor_ids: []
+    founded_date:
+      value: '2012'
+      precision: year
+    dissolved_date:
+    status: active
+    technologies:
+    - silicon_photonics
+    - integrated_lasers
+    - co_packaged_optics
+    - optical_engine
+    geographies:
+    - country_code: CA
+      region: north_america
+      city: Ottawa
+    website: https://ranovus.com/
+    research_status: validated
+    sources:
+    - source_id: src_ranovus_leadership
+      supports: organization and leadership
+      locator: leadership page
+      accessed_date: '2026-08-23'
+    notes:
+  - id: org_avicena
+    name: Avicena
+    aliases:
+    - name: AvicenaTech Corp.
+      language: en
+      alias_type: legal_name
+    organization_type: startup
+    parent_organization_id:
+    predecessor_ids: []
+    successor_ids: []
+    founded_date:
+      value: '2019'
+      precision: year
+    dissolved_date:
+    status: active
+    technologies:
+    - microled_interconnect
+    - optical_io
+    geographies:
+    - country_code: US
+      region: north_america
+      city: Sunnyvale
+    website: https://avicena.tech/
+    research_status: validated
+    sources:
+    - source_id: src_avicena_company
+      supports: organization and leadership
+      locator: executive team
+      accessed_date: '2026-08-23'
+    notes:
+  - id: org_salience_labs
+    name: Salience Labs
+    aliases: []
+    organization_type: startup
+    parent_organization_id:
+    predecessor_ids: []
+    successor_ids: []
+    founded_date:
+      value: '2021'
+      precision: year
+    dissolved_date:
+    status: active
+    technologies:
+    - silicon_photonics
+    - photonic_switching
+    - datacenter_optics
+    geographies:
+    - country_code: GB
+      region: europe
+      city: Oxford
+    website: https://www.saliencelabs.ai/
+    research_status: validated
+    sources:
+    - source_id: src_salience_about
+      supports: organization and leaders
+      locator: leadership
+      accessed_date: '2026-08-23'
+    notes:
+  - id: org_lumai
+    name: Lumai
+    aliases: []
+    organization_type: startup
+    parent_organization_id:
+    predecessor_ids: []
+    successor_ids: []
+    founded_date:
+      value: '2021'
+      precision: year
+    dissolved_date:
+    status: active
+    technologies:
+    - photonic_compute
+    - optical_engine
+    geographies:
+    - country_code: GB
+      region: europe
+      city: Oxford
+    website: https://lumai.ai/
+    research_status: validated
+    sources:
+    - source_id: src_lumai_about
+      supports: organization and leadership
+      locator: leadership
+      accessed_date: '2026-08-23'
+    notes:
+  - id: org_ipronics
+    name: iPronics
+    aliases:
+    - name: iPRONICS
+      language: en
+      alias_type: brand
+    organization_type: startup
+    parent_organization_id:
+    predecessor_ids: []
+    successor_ids: []
+    founded_date:
+      value: '2019'
+      precision: year
+    dissolved_date:
+    status: active
+    technologies:
+    - silicon_photonics
+    - photonic_switching
+    geographies:
+    - country_code: ES
+      region: europe
+      city: Valencia
+    website: https://ipronics.com/
+    research_status: validated
+    sources:
+    - source_id: src_upv_ipronics_company
+      supports: organization, founding year, and spinout status
+      locator: company profile
+      accessed_date: '2026-08-23'
+    notes:
+  - id: org_siphi
+    name: SiPhi Tech
+    aliases:
+    - name: SiPhi
+      language: en
+      alias_type: short_name
+    organization_type: startup
+    parent_organization_id:
+    predecessor_ids: []
+    successor_ids: []
+    founded_date:
+      value: '2025'
+      precision: year
+    dissolved_date:
+    status: active
+    technologies:
+    - silicon_photonics
+    - iii_v_silicon_integration
+    - optical_io
+    geographies:
+    - country_code: US
+      region: north_america
+      city: Santa Clara
+    website: https://www.siphi.tech/
+    research_status: validated
+    sources:
+    - source_id: src_siphi_team
+      supports: organization and disclosed leader
+      locator: Our Leaders
+      accessed_date: '2026-08-23'
+    notes: The company also lists Singapore locations; only the named CEO is modeled.
+  - id: org_infinera
+    name: Infinera
+    aliases: []
+    organization_type: company
+    parent_organization_id:
+    predecessor_ids: []
+    successor_ids: []
+    founded_date:
+    dissolved_date:
+    status: active
+    technologies:
+    - coherent_optics
+    - optical_networking
+    geographies: []
+    website: https://www.infinera.com/
+    research_status: validated
+    sources:
+    - source_id: src_openlight_leadership
+      supports: Chris Barnard prior role
+      locator: Chris Barnard bio
+      accessed_date: '2026-08-23'
+    notes:
+  - id: org_cea_leti
+    name: CEA-Leti
+    aliases:
+    - name: Laboratoire d’électronique des technologies de l’information
+      language: fr
+      alias_type: legal_name
+    organization_type: government_lab
+    parent_organization_id:
+    predecessor_ids: []
+    successor_ids: []
+    founded_date:
+    dissolved_date:
+    status: active
+    technologies:
+    - silicon_photonics
+    - iii_v_silicon_integration
+    - foundry
+    geographies:
+    - country_code: FR
+      region: europe
+      city: Grenoble
+    website: https://www.leti-cea.com/
+    research_status: validated
+    sources:
+    - source_id: src_cea_menezo_2022
+      supports: CEA-Leti identity and Scintil origin
+      locator: feature
+      accessed_date: '2026-08-23'
+    notes:
+  - id: org_tronics
+    name: Tronics Microsystems
+    aliases:
+    - name: Tronics
+      language: en
+      alias_type: short_name
+    organization_type: company
+    parent_organization_id:
+    predecessor_ids: []
+    successor_ids: []
+    founded_date:
+    dissolved_date:
+    status: acquired
+    technologies:
+    - optomechanics
+    geographies:
+    - country_code: FR
+      region: europe
+      city: Grenoble
+    website:
+    research_status: validated
+    sources:
+    - source_id: src_scintil_funding_2019
+      supports: Pascal Langlois former CEO role
+      locator: founder description
+      accessed_date: '2026-08-23'
+    notes:
+  - id: org_texas_instruments
+    name: Texas Instruments
+    aliases:
+    - name: TI
+      language: en
+      alias_type: short_name
+    organization_type: company
+    parent_organization_id:
+    predecessor_ids: []
+    successor_ids: []
+    founded_date:
+    dissolved_date:
+    status: active
+    technologies:
+    - mixed_signal_dsp
+    geographies: []
+    website: https://www.ti.com/
+    research_status: validated
+    sources:
+    - source_id: src_scintil_theodoras_2025
+      supports: Jim Theodoras prior role
+      locator: biography
+      accessed_date: '2026-08-23'
+    notes:
+  - id: org_coreoptics
+    name: CoreOptics
+    aliases:
+    - name: CoreOptics Inc.
+      language: en
+      alias_type: legal_name
+    organization_type: startup
+    parent_organization_id: org_cisco
+    predecessor_ids: []
+    successor_ids:
+    - org_cisco
+    founded_date:
+    dissolved_date:
+    status: acquired
+    technologies:
+    - coherent_optics
+    - mixed_signal_dsp
+    geographies:
+    - country_code: DE
+      region: europe
+      city: Nuremberg
+    website:
+    research_status: validated
+    sources:
+    - source_id: src_ranovus_leadership
+      supports: CoreOptics founder and leadership roles
+      locator: Hamid Arabzadeh, Georg Roell, Christoph Schulien, and Doug Beckett bios
+      accessed_date: '2026-08-23'
+    notes:
+  - id: org_bell_northern_research
+    name: Bell-Northern Research
+    aliases:
+    - name: BNR
+      language: en
+      alias_type: short_name
+    organization_type: industrial_lab
+    parent_organization_id:
+    predecessor_ids: []
+    successor_ids: []
+    founded_date:
+    dissolved_date:
+    status: historical
+    technologies:
+    - integrated_lasers
+    - optical_networking
+    geographies:
+    - country_code: CA
+      region: north_america
+      city: Ottawa
+    website:
+    research_status: validated
+    sources:
+    - source_id: src_ranovus_leadership
+      supports: Doug Beckett early laser-development role
+      locator: Doug Beckett bio
+      accessed_date: '2026-08-23'
+    notes:
+  - id: org_bti_systems
+    name: BTI Systems
+    aliases: []
+    organization_type: company
+    parent_organization_id:
+    predecessor_ids: []
+    successor_ids: []
+    founded_date:
+    dissolved_date:
+    status: acquired
+    technologies:
+    - optical_networking
+    geographies:
+    - country_code: CA
+      region: north_america
+      city: Ottawa
+    website:
+    research_status: validated
+    sources:
+    - source_id: src_ranovus_leadership
+      supports: Duncan Baird prior role
+      locator: Duncan Baird bio
+      accessed_date: '2026-08-23'
+    notes:
+  - id: org_ibm_watson
+    name: IBM Thomas J. Watson Research Center
+    aliases:
+    - name: IBM T. J. Watson Research Center
+      language: en
+      alias_type: common_name
+    organization_type: industrial_lab
+    parent_organization_id:
+    predecessor_ids: []
+    successor_ids: []
+    founded_date:
+    dissolved_date:
+    status: active
+    technologies:
+    - silicon_photonics
+    - integrated_lasers
+    geographies:
+    - country_code: US
+      region: north_america
+      city: Yorktown Heights
+    website:
+    research_status: validated
+    sources:
+    - source_id: src_avicena_bardia
+      supports: Bardia Pezeshki R&D/management role
+      locator: biography
+      accessed_date: '2026-08-23'
+    notes:
+  - id: org_kaiam
+    name: Kaiam
+    aliases:
+    - name: Kaiam Corporation
+      language: en
+      alias_type: legal_name
+    organization_type: startup
+    parent_organization_id:
+    predecessor_ids: []
+    successor_ids: []
+    founded_date:
+    dissolved_date:
+    status: defunct
+    technologies:
+    - datacenter_optics
+    - optical_packaging
+    geographies: []
+    website:
+    research_status: validated
+    sources:
+    - source_id: src_avicena_rob
+      supports: Rob Kalman prior role
+      locator: biography
+      accessed_date: '2026-08-23'
+    - source_id: src_avicena_alex
+      supports: Alex Tselikov prior role
+      locator: biography
+      accessed_date: '2026-08-23'
+    notes:
+  - id: org_samsung_electronics
+    name: Samsung Electronics
+    aliases:
+    - name: Samsung
+      language: en
+      alias_type: short_name
+    organization_type: company
+    parent_organization_id:
+    predecessor_ids: []
+    successor_ids: []
+    founded_date:
+    dissolved_date:
+    status: active
+    technologies:
+    - foundry
+    geographies:
+    - country_code: KR
+      region: asia_pacific
+      city:
+    website: https://www.samsung.com/
+    research_status: validated
+    sources:
+    - source_id: src_avicena_marco_2025
+      supports: Marco Chisari prior foundry leadership
+      locator: announcement
+      accessed_date: '2026-08-23'
+    notes:
+  - id: org_oxford_ane
+    name: University of Oxford Advanced Nanoscale Engineering Group
+    aliases:
+    - name: ANE Group
+      language: en
+      alias_type: short_name
+    organization_type: academic_lab
+    parent_organization_id: org_oxford
+    predecessor_ids: []
+    successor_ids: []
+    founded_date:
+    dissolved_date:
+    status: active
+    technologies:
+    - photonic_compute
+    - silicon_photonics
+    geographies:
+    - country_code: GB
+      region: europe
+      city: Oxford
+    website: https://nanoeng.web.ox.ac.uk/
+    research_status: validated
+    sources:
+    - source_id: src_oxford_ane_team
+      supports: lab identity and Feldmann membership
+      locator: team roster
+      accessed_date: '2026-08-23'
+    notes:
+  - id: org_oxford
+    name: University of Oxford
+    aliases:
+    - name: Oxford
+      language: en
+      alias_type: short_name
+    organization_type: university
+    parent_organization_id:
+    predecessor_ids: []
+    successor_ids: []
+    founded_date:
+    dissolved_date:
+    status: active
+    technologies:
+    - photonic_compute
+    geographies:
+    - country_code: GB
+      region: europe
+      city: Oxford
+    website: https://www.ox.ac.uk/
+    research_status: validated
+    sources:
+    - source_id: src_lumai_about
+      supports: Oxford affiliations and training
+      locator: leadership bios
+      accessed_date: '2026-08-23'
+    notes:
+  - id: org_ose
+    name: Oxford Science Enterprises
+    aliases:
+    - name: OSE
+      language: en
+      alias_type: short_name
+    organization_type: venture_fund
+    parent_organization_id:
+    predecessor_ids: []
+    successor_ids: []
+    founded_date:
+    dissolved_date:
+    status: active
+    technologies: []
+    geographies:
+    - country_code: GB
+      region: europe
+      city: Oxford
+    website: https://www.oxfordscienceenterprises.com/
+    research_status: validated
+    sources:
+    - source_id: src_ose_salience
+      supports: Vaysh Kewada prior EIR role
+      locator: portfolio profile
+      accessed_date: '2026-08-23'
+    notes:
+  - id: org_newcastle
+    name: Newcastle University
+    aliases: []
+    organization_type: university
+    parent_organization_id:
+    predecessor_ids: []
+    successor_ids: []
+    founded_date:
+    dissolved_date:
+    status: active
+    technologies:
+    - mixed_signal_dsp
+    geographies:
+    - country_code: GB
+      region: europe
+      city: Newcastle upon Tyne
+    website: https://www.ncl.ac.uk/
+    research_status: validated
+    sources:
+    - source_id: src_lumai_about
+      supports: Enzo D'Alessandro PhD
+      locator: leadership bio
+      accessed_date: '2026-08-23'
+    notes:
+  - id: org_upv_iteam
+    name: UPV iTEAM Photonics Research Labs
+    aliases:
+    - name: iTEAM PRL
+      language: en
+      alias_type: short_name
+    organization_type: academic_lab
+    parent_organization_id: org_upv
+    predecessor_ids: []
+    successor_ids: []
+    founded_date:
+    dissolved_date:
+    status: active
+    technologies:
+    - silicon_photonics
+    - photonic_switching
+    geographies:
+    - country_code: ES
+      region: europe
+      city: Valencia
+    website: https://www.iteam.upv.es/
+    research_status: validated
+    sources:
+    - source_id: src_upv_ipronics_2019
+      supports: iTEAM identities and roles
+      locator: iPronics section
+      accessed_date: '2026-08-23'
+    notes:
+  - id: org_upv
+    name: Universitat Politècnica de València
+    aliases:
+    - name: UPV
+      language: es
+      alias_type: short_name
+    organization_type: university
+    parent_organization_id:
+    predecessor_ids: []
+    successor_ids: []
+    founded_date:
+    dissolved_date:
+    status: active
+    technologies:
+    - silicon_photonics
+    - photonic_switching
+    geographies:
+    - country_code: ES
+      region: europe
+      city: Valencia
+    website: https://www.upv.es/
+    research_status: validated
+    sources:
+    - source_id: src_upv_ipronics_company
+      supports: UPV identity and iPronics spinout
+      locator: company profile
+      accessed_date: '2026-08-23'
+    notes:
+  - id: org_eth_zurich
+    name: ETH Zurich
+    aliases:
+    - name: Swiss Federal Institute of Technology Zurich
+      language: en
+      alias_type: legal_name
+    organization_type: university
+    parent_organization_id:
+    predecessor_ids: []
+    successor_ids: []
+    founded_date:
+    dissolved_date:
+    status: active
+    technologies:
+    - silicon_photonics
+    - coherent_optics
+    geographies:
+    - country_code: CH
+      region:
+      city: Zurich
+    website: https://ethz.ch/
+    research_status: validated
+    sources:
+    - source_id: src_eth_leuthold_bio_2026
+      supports: ETH Zurich affiliation and institute leadership
+      locator: Function and biography
+      accessed_date: '2026-08-23'
+    notes:
+  - id: org_karlsruhe_institute_of_technology
+    name: Karlsruhe Institute of Technology
+    aliases:
+    - name: KIT
+      language: en
+      alias_type: short_name
+    organization_type: university
+    technologies:
+    - silicon_photonics
+    geographies:
+    - country_code: DE
+      region: Baden-Württemberg
+      city: Karlsruhe
+    status: active
+    research_status: validated
+    sources:
+    - source_id: src_eth_leuthold_bio_2026
+      supports: Leuthold's KIT institute leadership
+      locator: Biography
+      accessed_date: '2026-08-23'
+    notes:
+  - id: org_tu_berlin
+    name: Technische Universität Berlin
+    aliases:
+    - name: TU Berlin
+      language: de
+      alias_type: short_name
+    organization_type: university
+    technologies:
+    - silicon_photonics
+    geographies:
+    - country_code: DE
+      region: Berlin
+      city: Berlin
+    status: active
+    research_status: validated
+    sources:
+    - source_id: src_tu_berlin_burla_2026
+      supports: Institution and chair
+      locator: Biography
+      accessed_date: '2026-08-23'
+    notes:
+  - id: org_ucf_creol
+    name: CREOL, University of Central Florida
+    aliases:
+    - name: UCF CREOL
+      language: en
+      alias_type: short_name
+    organization_type: academic_lab
+    technologies:
+    - silicon_photonics
+    geographies:
+    - country_code: US
+      region: Florida
+      city: Orlando
+    status: active
+    research_status: validated
+    sources:
+    - source_id: src_ucf_salamin_2026
+      supports: CREOL appointment and research
+      locator: Biography
       accessed_date: '2026-08-23'
     notes:
   - id: org_mit
@@ -550,3 +1425,1293 @@ organizations:
       locator:
       accessed_date: '2026-08-23'
     notes:
+  - id: org_bookham
+    name: Bookham
+    aliases: []
+    organization_type: company
+    technologies:
+    - silicon_photonics
+    - fiber_optics
+    geographies: []
+    status: historical
+    research_status: validated
+    sources:
+    - source_id: src_bookham_f4_2003
+      supports: Bookham company and leadership history
+      locator: Company history
+      accessed_date: '2026-08-23'
+    - source_id: src_bookham_avanex_close_2009
+      supports: 2009 Oclaro name-change transition
+      locator: Customer concentration footnote
+      accessed_date: '2026-08-23'
+    parent_organization_id:
+    predecessor_ids: []
+    successor_ids:
+    - org_oclaro
+    founded_date:
+    dissolved_date:
+    website:
+    notes:
+  - id: org_kotura
+    name: Kotura
+    aliases: []
+    organization_type: startup
+    technologies:
+    - silicon_photonics
+    geographies: []
+    status: acquired
+    research_status: seed_unverified
+    sources: []
+    parent_organization_id:
+    predecessor_ids: []
+    successor_ids: []
+    founded_date:
+    dissolved_date:
+    website:
+    notes:
+  - id: org_jdsu
+    name: JDSU
+    aliases:
+    - name: JDS Uniphase
+      language: en
+      alias_type: former_name
+    organization_type: company
+    technologies:
+    - fiber_optics
+    geographies: []
+    status: historical
+    research_status: seed_unverified
+    sources: []
+    parent_organization_id:
+    predecessor_ids: []
+    successor_ids: []
+    founded_date:
+    dissolved_date:
+    website:
+    notes:
+  - id: org_oclaro
+    name: Oclaro
+    aliases: []
+    organization_type: company
+    technologies:
+    - fiber_optics
+    - coherent_optics
+    geographies: []
+    status: acquired
+    research_status: validated
+    sources:
+    - source_id: src_oclaro_release_2013
+      supports: Oclaro identity and leadership continuity
+      locator: Retirement biography
+      accessed_date: '2026-08-23'
+    - source_id: src_bookham_avanex_close_2009
+      supports: Oclaro name-change date
+      locator: Customer concentration footnote
+      accessed_date: '2026-08-23'
+    parent_organization_id:
+    predecessor_ids:
+    - org_bookham
+    - org_avanex
+    successor_ids: []
+    founded_date:
+    dissolved_date:
+    website:
+    notes:
+  - id: org_neophotonics
+    name: NeoPhotonics
+    aliases: []
+    organization_type: company
+    technologies:
+    - coherent_optics
+    - datacenter_optics
+    geographies: []
+    status: acquired
+    research_status: seed_unverified
+    sources: []
+    parent_organization_id:
+    predecessor_ids: []
+    successor_ids: []
+    founded_date:
+    dissolved_date:
+    website:
+    notes:
+  - id: org_lightic
+    name: LightIC
+    aliases:
+    - name: 摩尔芯光
+      language: zh
+      alias_type: native_name
+    organization_type: startup
+    parent_organization_id:
+    predecessor_ids: []
+    successor_ids: []
+    founded_date:
+    dissolved_date:
+    status: active
+    technologies:
+    - silicon_photonics
+    - integrated_lidar
+    geographies:
+    - country_code: CN
+      region: greater_china
+      city:
+    website: https://www.lightic.tech/
+    research_status: validated
+    sources:
+    - source_id: src_china_lightic_cioe_guide
+      supports: organization identity through named-person affiliation
+      locator:
+      accessed_date: '2026-08-23'
+    - source_id: src_china_lightic_usst_visit
+      supports: organization identity through named-person affiliation
+      locator:
+      accessed_date: '2026-08-23'
+    - source_id: src_china_kpmg_autotech_50
+      supports: organization identity through named-person affiliation
+      locator:
+      accessed_date: '2026-08-23'
+    notes:
+  - id: org_inxun
+    name: Inxun
+    aliases:
+    - name: 映讯芯光
+      language: zh
+      alias_type: native_name
+    organization_type: startup
+    parent_organization_id:
+    predecessor_ids: []
+    successor_ids: []
+    founded_date:
+    dissolved_date:
+    status: active
+    technologies:
+    - silicon_photonics
+    - integrated_lidar
+    - datacenter_optics
+    geographies:
+    - country_code: CN
+      region: greater_china
+      city:
+    website:
+    research_status: validated
+    sources:
+    - source_id: src_china_inxun_li_event_bio
+      supports: organization identity through named-person affiliation
+      locator:
+      accessed_date: '2026-08-23'
+    - source_id: src_china_inxun_mems_interview
+      supports: organization identity through named-person affiliation
+      locator:
+      accessed_date: '2026-08-23'
+    notes:
+  - id: org_nvision_technology
+    name: NVISION Technology
+    aliases:
+    - name: 英伟芯
+      language: zh
+      alias_type: native_name
+    organization_type: startup
+    parent_organization_id:
+    predecessor_ids: []
+    successor_ids: []
+    founded_date:
+    dissolved_date:
+    status: active
+    technologies:
+    - datacenter_optics
+    - optical_engine
+    geographies:
+    - country_code: CN
+      region: greater_china
+      city:
+    website: https://www.nvision-tech.cn/
+    research_status: validated
+    sources:
+    - source_id: src_china_nvision_official_about
+      supports: organization identity through named-person affiliation
+      locator:
+      accessed_date: '2026-08-23'
+    notes:
+  - id: org_university_hong_kong
+    name: The University of Hong Kong
+    aliases:
+    - name: 香港大学
+      language: zh
+      alias_type: native_name
+    organization_type: university
+    parent_organization_id:
+    predecessor_ids: []
+    successor_ids: []
+    founded_date:
+    dissolved_date:
+    status: active
+    technologies:
+    - silicon_photonics
+    geographies: []
+    website: https://www.hku.hk/
+    research_status: validated
+    sources:
+    - source_id: src_china_inxun_mems_interview
+      supports: organization identity through named-person affiliation
+      locator:
+      accessed_date: '2026-08-23'
+    notes:
+  - id: org_liangyin_technology
+    name: Liangyin Technology
+    aliases:
+    - name: 量引科技
+      language: zh
+      alias_type: native_name
+    organization_type: startup
+    parent_organization_id:
+    predecessor_ids: []
+    successor_ids: []
+    founded_date:
+    dissolved_date:
+    status: active
+    technologies:
+    - silicon_photonics
+    - optical_engine
+    geographies:
+    - country_code: CN
+      region: greater_china
+      city:
+    website:
+    research_status: validated
+    sources:
+    - source_id: src_china_liangyin_gdlaser
+      supports: organization identity through named-person affiliation
+      locator:
+      accessed_date: '2026-08-23'
+    - source_id: src_china_liangyin_iccsz_interview
+      supports: organization identity through named-person affiliation
+      locator:
+      accessed_date: '2026-08-23'
+    notes:
+  - id: org_cadence
+    name: Cadence Design Systems
+    aliases:
+    - name: Cadence
+      language: zh
+      alias_type: native_name
+    organization_type: company
+    parent_organization_id:
+    predecessor_ids: []
+    successor_ids: []
+    founded_date:
+    dissolved_date:
+    status: active
+    technologies: []
+    geographies: []
+    website: https://www.cadence.com/
+    research_status: validated
+    sources:
+    - source_id: src_china_liangyin_gdlaser
+      supports: organization identity through named-person affiliation
+      locator:
+      accessed_date: '2026-08-23'
+    notes:
+  - id: org_aluksen
+    name: Aluksen
+    aliases:
+    - name: 傲科光电
+      language: zh
+      alias_type: native_name
+    organization_type: startup
+    parent_organization_id:
+    predecessor_ids: []
+    successor_ids: []
+    founded_date:
+    dissolved_date:
+    status: active
+    technologies:
+    - datacenter_optics
+    - optical_serdes
+    - optical_engine
+    geographies:
+    - country_code: CN
+      region: greater_china
+      city:
+    website: https://www.aluksen.com/
+    research_status: validated
+    sources:
+    - source_id: src_china_aluksen_pku_lab
+      supports: organization identity through named-person affiliation
+      locator:
+      accessed_date: '2026-08-23'
+    - source_id: src_china_aluksen_ceo_news
+      supports: organization identity through named-person affiliation
+      locator:
+      accessed_date: '2026-08-23'
+    notes:
+  - id: org_beeplux_semiconductor
+    name: Beeplux Semiconductor
+    aliases:
+    - name: 孛璞半导体
+      language: zh
+      alias_type: native_name
+    organization_type: startup
+    parent_organization_id:
+    predecessor_ids: []
+    successor_ids: []
+    founded_date:
+    dissolved_date:
+    status: active
+    technologies:
+    - silicon_photonics
+    - photonic_switching
+    - integrated_lidar
+    geographies:
+    - country_code: CN
+      region: greater_china
+      city:
+    website: https://www.beepluxsemi.com/
+    research_status: validated
+    sources:
+    - source_id: src_china_beeplux_xing_official
+      supports: organization identity through named-person affiliation
+      locator:
+      accessed_date: '2026-08-23'
+    notes:
+  - id: org_hisilicon_optoelectronics
+    name: HiSilicon Optoelectronics
+    aliases:
+    - name: 海思光电子
+      language: zh
+      alias_type: native_name
+    organization_type: business_unit
+    parent_organization_id: org_huawei
+    predecessor_ids: []
+    successor_ids: []
+    founded_date:
+    dissolved_date:
+    status: active
+    technologies:
+    - silicon_photonics
+    - datacenter_optics
+    - optical_networking
+    geographies:
+    - country_code: CN
+      region: greater_china
+      city:
+    website:
+    research_status: validated
+    sources:
+    - source_id: src_china_cioe_hisilicon_2025
+      supports: organization identity through named-person affiliation
+      locator:
+      accessed_date: '2026-08-23'
+    - source_id: src_china_cioe_opticalchip_2023
+      supports: organization identity through named-person affiliation
+      locator:
+      accessed_date: '2026-08-23'
+    - source_id: src_china_cioe_ipec_2023
+      supports: organization identity through named-person affiliation
+      locator:
+      accessed_date: '2026-08-23'
+    - source_id: src_china_cioe_silicon_webinar
+      supports: organization identity through named-person affiliation
+      locator:
+      accessed_date: '2026-08-23'
+    - source_id: src_china_cioe_global_optoelectronics
+      supports: organization identity through named-person affiliation
+      locator:
+      accessed_date: '2026-08-23'
+    notes: Programs alternate among 海思光电, 海思光电子, and Huawei labels; modeled as a Huawei
+      business unit pending corporate-history sourcing.
+  - id: org_huawei
+    name: Huawei Technologies
+    aliases:
+    - name: 华为技术有限公司
+      language: zh
+      alias_type: native_name
+    organization_type: company
+    parent_organization_id:
+    predecessor_ids: []
+    successor_ids: []
+    founded_date:
+    dissolved_date:
+    status: active
+    technologies:
+    - datacenter_optics
+    - optical_networking
+    - photonic_compute
+    geographies:
+    - country_code: CN
+      region: greater_china
+      city:
+    website: https://www.huawei.com/
+    research_status: validated
+    sources:
+    - source_id: src_china_cioe_hisilicon_2024
+      supports: organization identity through named-person affiliation
+      locator:
+      accessed_date: '2026-08-23'
+    - source_id: src_china_lightic_cioe_guide
+      supports: organization identity through named-person affiliation
+      locator:
+      accessed_date: '2026-08-23'
+    - source_id: src_china_ncsti_fpic_2024
+      supports: organization identity through named-person affiliation
+      locator:
+      accessed_date: '2026-08-23'
+    - source_id: src_china_csoe_goinc_2024
+      supports: organization identity through named-person affiliation
+      locator:
+      accessed_date: '2026-08-23'
+    - source_id: src_china_csoe_photonic_compute
+      supports: organization identity through named-person affiliation
+      locator:
+      accessed_date: '2026-08-23'
+    notes:
+  - id: org_stanford_university
+    name: Stanford University
+    aliases: []
+    organization_type: university
+    parent_organization_id:
+    predecessor_ids: []
+    successor_ids: []
+    founded_date:
+      value: '1885'
+      precision: year
+    dissolved_date:
+    status: active
+    technologies:
+    - silicon_photonics
+    - integrated_lasers
+    - optical_io
+    - photonic_compute
+    - optomechanics
+    geographies:
+    - country_code: US
+      region: California
+      city: Stanford
+    website: https://www.stanford.edu/
+    research_status: validated
+    sources:
+    - source_id: src_stanford_photonics_faculty
+      supports: Stanford photonics program
+      locator: Faculty and emeriti
+      accessed_date: '2026-08-23'
+    notes:
+  - id: org_stanford_fan_group
+    name: Fan Group at Stanford
+    aliases: []
+    organization_type: academic_lab
+    parent_organization_id: org_stanford_university
+    predecessor_ids: []
+    successor_ids: []
+    founded_date:
+    dissolved_date:
+    status: active
+    technologies:
+    - silicon_photonics
+    - photonic_compute
+    - optomechanics
+    geographies:
+    - country_code: US
+      region: California
+      city: Stanford
+    website: https://fangroup.stanford.edu/
+    research_status: validated
+    sources:
+    - source_id: src_fan_group_roster
+      supports: Lab identity and roster
+      locator: People
+      accessed_date: '2026-08-23'
+    notes:
+  - id: org_stanford_vuckovic_lab
+    name: Nanoscale and Quantum Photonics Lab
+    aliases:
+    - name: Vuckovic Lab
+      language: en
+      alias_type: common_name
+    organization_type: academic_lab
+    parent_organization_id: org_stanford_university
+    predecessor_ids: []
+    successor_ids: []
+    founded_date:
+    dissolved_date:
+    status: active
+    technologies:
+    - silicon_photonics
+    - photonic_compute
+    geographies:
+    - country_code: US
+      region: California
+      city: Stanford
+    website: https://nqp.stanford.edu/
+    research_status: validated
+    sources:
+    - source_id: src_vuckovic_lab_news
+      supports: Lab identity and alumni
+      locator: News archive
+      accessed_date: '2026-08-23'
+    notes:
+  - id: org_stanford_solgaard_lab
+    name: Solgaard Lab
+    aliases: []
+    organization_type: academic_lab
+    parent_organization_id: org_stanford_university
+    predecessor_ids: []
+    successor_ids: []
+    founded_date:
+    dissolved_date:
+    status: active
+    technologies:
+    - optomechanics
+    - integrated_lidar
+    geographies:
+    - country_code: US
+      region: California
+      city: Stanford
+    website: https://solgaardlab.stanford.edu/
+    research_status: validated
+    sources:
+    - source_id: src_solgaard_freespace
+      supports: MEMS and beam-steering research
+      locator: Free-space systems
+      accessed_date: '2026-08-23'
+    notes:
+  - id: org_stanford_miller_group
+    name: Miller Group at Stanford
+    aliases: []
+    organization_type: academic_lab
+    parent_organization_id: org_stanford_university
+    predecessor_ids: []
+    successor_ids: []
+    founded_date:
+    dissolved_date:
+    status: historical
+    technologies:
+    - optical_io
+    - optical_interposer
+    - silicon_photonics
+    geographies:
+    - country_code: US
+      region: California
+      city: Stanford
+    website: https://photonics.stanford.edu/people/david-miller
+    research_status: validated
+    sources:
+    - source_id: src_miller_stanford
+      supports: Stanford research program
+      locator: Biography and research
+      accessed_date: '2026-08-23'
+    notes: Local grouping node; active/emeritus lab status is not established.
+  - id: org_stanford_harris_group
+    name: James Harris Group
+    aliases:
+    - name: Harris Group
+      language: en
+      alias_type: common_name
+    organization_type: academic_lab
+    parent_organization_id: org_stanford_university
+    predecessor_ids: []
+    successor_ids: []
+    founded_date:
+    dissolved_date:
+    status: historical
+    technologies:
+    - integrated_lasers
+    - iii_v_silicon_integration
+    - optical_io
+    geographies:
+    - country_code: US
+      region: California
+      city: Stanford
+    website: http://snow.stanford.edu/
+    research_status: validated
+    sources:
+    - source_id: src_harris_former_students
+      supports: Group and former-student roster
+      locator: Former students
+      accessed_date: '2026-08-23'
+    notes:
+  - id: org_stanford_stephen_harris_group
+    name: Stephen E. Harris Research Program
+    aliases: []
+    organization_type: academic_lab
+    parent_organization_id: org_stanford_university
+    predecessor_ids: []
+    successor_ids: []
+    founded_date:
+    dissolved_date:
+    status: historical
+    technologies:
+    - integrated_lasers
+    - optomechanics
+    geographies:
+    - country_code: US
+      region: California
+      city: Stanford
+    website: https://profiles.stanford.edu/stephen-harris
+    research_status: validated
+    sources:
+    - source_id: src_stephen_harris_profile
+      supports: Stanford research domains
+      locator: Bio
+      accessed_date: '2026-08-23'
+    notes: Grouping node for the documented faculty research program; no student lineage
+      is asserted in this tranche.
+  - id: org_stanford_byer_group
+    name: Byer Group at Stanford
+    aliases: []
+    organization_type: academic_lab
+    parent_organization_id: org_stanford_university
+    predecessor_ids: []
+    successor_ids: []
+    founded_date:
+    dissolved_date:
+    status: historical
+    technologies:
+    - integrated_lasers
+    - optomechanics
+    geographies:
+    - country_code: US
+      region: California
+      city: Stanford
+    website: https://web.stanford.edu/~rlbyer/
+    research_status: validated
+    sources:
+    - source_id: src_byer_students
+      supports: Byer PhD student lineage
+      locator: Student list
+      accessed_date: '2026-08-23'
+    notes:
+  - id: org_stanford_fejer_group
+    name: Fejer Group at Stanford
+    aliases: []
+    organization_type: academic_lab
+    parent_organization_id: org_stanford_university
+    predecessor_ids: []
+    successor_ids: []
+    founded_date:
+      value: '1986'
+      precision: year
+    dissolved_date:
+    status: active
+    technologies:
+    - thin_film_lithium_niobate
+    - integrated_lasers
+    - optomechanics
+    geographies:
+    - country_code: US
+      region: California
+      city: Stanford
+    website: https://web.stanford.edu/group/fejer/
+    research_status: validated
+    sources:
+    - source_id: src_fejer_profile
+      supports: Faculty start and research group domains
+      locator: Biography
+      accessed_date: '2026-08-23'
+    notes:
+  - id: org_flexcompute
+    name: Flexcompute
+    aliases: []
+    organization_type: startup
+    parent_organization_id:
+    predecessor_ids: []
+    successor_ids: []
+    founded_date:
+    dissolved_date:
+    status: active
+    technologies:
+    - photonic_compute
+    - optomechanics
+    geographies:
+    - country_code: US
+      region:
+      city:
+    website: https://www.flexcompute.com/
+    research_status: validated
+    sources:
+    - source_id: src_flexcompute_story
+      supports: Company identity and founders
+      locator: Our Story
+      accessed_date: '2026-08-23'
+    notes: Simulation-software company adjacent to photonics hardware lineage.
+  - id: org_skycool_systems
+    name: SkyCool Systems
+    aliases: []
+    organization_type: startup
+    parent_organization_id:
+    predecessor_ids: []
+    successor_ids: []
+    founded_date:
+    dissolved_date:
+    status: active
+    technologies:
+    - optomechanics
+    geographies:
+    - country_code: US
+      region: California
+      city: Sunnyvale
+    website: https://www.skycoolsystems.com/
+    research_status: validated
+    sources:
+    - source_id: src_skycool_about
+      supports: Company identity and founders
+      locator: Team
+      accessed_date: '2026-08-23'
+    notes: Radiative-cooling company; adjacent optical-materials commercialization rather
+      than interconnect hardware.
+  - id: org_silicon_light_machines
+    name: Silicon Light Machines
+    aliases:
+    - name: SLM
+      language: en
+      alias_type: short_name
+    organization_type: startup
+    parent_organization_id:
+    predecessor_ids: []
+    successor_ids: []
+    founded_date:
+      value: '1994'
+      precision: year
+    dissolved_date:
+    status: historical
+    technologies:
+    - optomechanics
+    geographies:
+    - country_code: US
+      region: California
+      city:
+    website:
+    research_status: validated
+    sources:
+    - source_id: src_solgaard_home
+      supports: Company origin and founding year
+      locator: Biography
+      accessed_date: '2026-08-23'
+    notes: Corporate successor/acquisition history is intentionally outside this tranche.
+  - id: org_imec
+    name: imec
+    aliases:
+    - name: IMEC
+      language: en
+      alias_type: former_name
+    organization_type: research_institute
+    parent_organization_id:
+    predecessor_ids: []
+    successor_ids: []
+    founded_date:
+    dissolved_date:
+    status: active
+    technologies:
+    - silicon_photonics
+    - foundry
+    geographies: []
+    website: https://www.imec-int.com/
+    research_status: validated
+    sources:
+    - source_id: src_prg_ecosystem_2026
+      supports: PRG-imec silicon-photonics and foundry collaboration
+      locator: Ecosystem overview
+      accessed_date: '2026-08-23'
+    notes: Canonical imec institute node; person-level PRG and imec relationships remain
+      separate.
+  - id: org_ghent_university
+    name: Ghent University
+    aliases:
+    - name: Universiteit Gent
+      language: nl
+      alias_type: native_name
+    organization_type: university
+    parent_organization_id:
+    predecessor_ids: []
+    successor_ids: []
+    founded_date:
+    dissolved_date:
+    status: active
+    technologies: []
+    geographies: []
+    website: https://www.ugent.be/
+    research_status: validated
+    sources:
+    - source_id: src_prg_people_2026
+      supports: University affiliation of the Photonics Research Group
+      locator: Page identity and roster
+      accessed_date: '2026-08-23'
+    notes: University node; degrees target this node unless specific PRG membership
+      is independently established.
+  - id: org_ghent_photonics_research_group
+    name: Photonics Research Group at Ghent University
+    aliases:
+    - name: PRG
+      language: en
+      alias_type: short_name
+    organization_type: academic_lab
+    parent_organization_id: org_ghent_university
+    predecessor_ids: []
+    successor_ids: []
+    founded_date:
+    dissolved_date:
+    status: active
+    technologies:
+    - silicon_photonics
+    - foundry
+    geographies: []
+    website: https://www.photonics.intec.ugent.be/
+    research_status: validated
+    sources:
+    - source_id: src_prg_people_2026
+      supports: Official professor, staff, and former-staff roster
+      locator: People roster
+      accessed_date: '2026-08-23'
+    notes: Joint Ghent University-imec research group modeled separately from both parent
+      institutions.
+  - id: org_caliopa
+    name: Caliopa
+    aliases: []
+    organization_type: startup
+    parent_organization_id:
+    predecessor_ids: []
+    successor_ids: []
+    founded_date:
+    dissolved_date:
+    status: acquired
+    technologies:
+    - silicon_photonics
+    geographies: []
+    website:
+    research_status: conflicted
+    sources:
+    - source_id: src_prg_spinoffs_2026
+      supports: September 2010 formation and PRG-imec spin-off origin
+      locator: 2010 Caliopa
+      accessed_date: '2026-08-23'
+    - source_id: src_martin_de_prycker_evs_2025
+      supports: Founder and CEO interval beginning in 2009
+      locator: Director biography
+      accessed_date: '2026-08-23'
+    notes: 'Formation date intentionally null: official A-grade sources conflict between
+      a 2009 founder/CEO interval and September 2010 formation. Acquired by Huawei in
+      2013.'
+  - id: org_luceda_photonics
+    name: Luceda Photonics
+    aliases: []
+    organization_type: startup
+    parent_organization_id:
+    predecessor_ids: []
+    successor_ids: []
+    founded_date:
+      value: 2014-06
+      precision: month
+    dissolved_date:
+    status: active
+    technologies:
+    - silicon_photonics
+    geographies: []
+    website: https://www.lucedaphotonics.com/
+    research_status: validated
+    sources:
+    - source_id: src_prg_spinoffs_2026
+      supports: June 2014 formation, formal spin-off origin, and founders
+      locator: 2014 Luceda
+      accessed_date: '2026-08-23'
+    notes: Formal PRG/imec/VUB research commercialization; institutional origin does
+      not imply every founder belonged to every contributing group.
+  - id: org_psiquantum
+    name: PsiQuantum
+    aliases:
+    - name: Psiquantum
+      language: en
+      alias_type: common_name
+    organization_type: startup
+    parent_organization_id:
+    predecessor_ids: []
+    successor_ids: []
+    founded_date:
+    dissolved_date:
+    status: active
+    technologies:
+    - silicon_photonics
+    - foundry
+    geographies: []
+    website: https://www.psiquantum.com/
+    research_status: validated
+    sources:
+    - source_id: src_prg_people_2026
+      supports: Destination label for Koen Alexander
+      locator: Former Staff
+      accessed_date: '2026-08-23'
+    notes: Only the alumni destination relationship is in scope here; broader company
+      facts require separate validation.
+  - id: org_caltech
+    name: California Institute of Technology
+    aliases:
+    - name: Caltech
+      language: en
+      alias_type: short_name
+    organization_type: university
+    parent_organization_id:
+    predecessor_ids: []
+    successor_ids: []
+    founded_date:
+    dissolved_date:
+    status: active
+    technologies:
+    - silicon_photonics
+    - integrated_lasers
+    - photonic_compute
+    - optomechanics
+    geographies:
+    - country_code: US
+      region: California
+      city: Pasadena
+    website: https://www.caltech.edu/
+    research_status: validated
+    sources:
+    - source_id: src_caltech_scherer_profile
+      supports: institution and faculty affiliation
+      locator: profile
+      accessed_date: '2026-08-23'
+    notes:
+  - id: org_caltech_scherer_nanofab_group
+    name: Caltech Nanofabrication Group
+    aliases:
+    - name: Scherer Group
+      language: en
+      alias_type: common_name
+    organization_type: academic_lab
+    parent_organization_id: org_caltech
+    predecessor_ids: []
+    successor_ids: []
+    founded_date:
+    dissolved_date:
+    status: active
+    technologies:
+    - silicon_photonics
+    - integrated_lasers
+    - optomechanics
+    geographies:
+    - country_code: US
+      region: California
+      city: Pasadena
+    website: https://nanofab.caltech.edu/
+    research_status: validated
+    sources:
+    - source_id: src_caltech_nanofab_group
+      supports: group identity and roster
+      locator: Group Members
+      accessed_date: '2026-08-23'
+    notes:
+  - id: org_tesselmax
+    name: Tesselmax
+    aliases: []
+    organization_type: startup
+    parent_organization_id:
+    predecessor_ids: []
+    successor_ids: []
+    founded_date:
+    dissolved_date:
+    status: active
+    technologies:
+    - silicon_photonics
+    geographies: []
+    website: https://www.tesselmax.com/
+    research_status: validated
+    sources:
+    - source_id: src_tesselmax_baehr_jones
+      supports: company and founder identity
+      locator: Leadership
+      accessed_date: '2026-08-23'
+    notes:
+  - id: org_university_of_surrey
+    name: University of Surrey
+    aliases: []
+    organization_type: university
+    parent_organization_id:
+    predecessor_ids: []
+    successor_ids: []
+    founded_date:
+    dissolved_date:
+    status: active
+    technologies:
+    - silicon_photonics
+    geographies: []
+    website:
+    research_status: validated
+    sources:
+    - source_id: src_rickman_surrey_thesis_1994
+      supports: degree-granting institution
+      locator: Thesis front matter
+      accessed_date: '2026-08-23'
+    - source_id: src_southampton_mashanovich_profile
+      supports: Surrey PhD institution
+      locator: Biography
+      accessed_date: '2026-08-23'
+    notes:
+  - id: org_university_of_southampton
+    name: University of Southampton
+    aliases: []
+    organization_type: university
+    parent_organization_id:
+    predecessor_ids: []
+    successor_ids: []
+    founded_date:
+    dissolved_date:
+    status: active
+    technologies:
+    - silicon_photonics
+    - foundry
+    - optical_io
+    geographies: []
+    website:
+    research_status: validated
+    sources:
+    - source_id: src_southampton_reed_profile_2026
+      supports: institution and group identity
+      locator: Profile
+      accessed_date: '2026-08-23'
+    notes:
+  - id: org_avanex
+    name: Avanex
+    aliases: []
+    organization_type: company
+    parent_organization_id:
+    predecessor_ids: []
+    successor_ids:
+    - org_oclaro
+    founded_date:
+    dissolved_date:
+    status: historical
+    technologies:
+    - fiber_optics
+    geographies: []
+    website:
+    research_status: validated
+    sources:
+    - source_id: src_bookham_avanex_proxy_2009
+      supports: Avanex merger-party identity
+      locator: Merger summary
+      accessed_date: '2026-08-23'
+    notes:
+  - id: org_source_photonics
+    name: Source Photonics
+    aliases: []
+    organization_type: company
+    parent_organization_id:
+    predecessor_ids: []
+    successor_ids: []
+    founded_date:
+    dissolved_date:
+    status: active
+    technologies:
+    - datacenter_optics
+    geographies: []
+    website:
+    research_status: validated
+    sources:
+    - source_id: src_rockley_registration_2021
+      supports: Source Photonics company identity through executive biography
+      locator: Amit Nagra biography
+      accessed_date: '2026-08-23'
+    notes:
+  - id: org_surrey_silicon_photonics_group
+    name: Silicon Photonics Research Group at the University of Surrey
+    aliases:
+    - name: Surrey Silicon Photonics Group
+      language: en
+      alias_type: common_name
+    organization_type: academic_lab
+    parent_organization_id: org_university_of_surrey
+    predecessor_ids: []
+    successor_ids: []
+    founded_date:
+      value: '1989'
+      precision: year
+    dissolved_date:
+      value: '2012'
+      precision: year
+    status: historical
+    technologies:
+    - silicon_photonics
+    geographies:
+    - country_code: GB
+      region: Surrey
+      city: Guildford
+    website:
+    research_status: validated
+    sources:
+    - source_id: src_opn_reed_interview_2023
+      supports: Reed started Surrey silicon-photonics activity in 1989 and group moved
+        in 2012
+      locator: Southampton group history
+      accessed_date: '2026-08-23'
+    notes: The 2012 group move is organizational context; only individually named members
+      receive person edges.
+  - id: org_southampton_silicon_photonics_group
+    name: Silicon Photonics Group at the University of Southampton
+    aliases:
+    - name: Southampton Silicon Photonics Group
+      language: en
+      alias_type: common_name
+    organization_type: academic_lab
+    parent_organization_id: org_university_of_southampton
+    predecessor_ids:
+    - org_surrey_silicon_photonics_group
+    successor_ids: []
+    founded_date:
+      value: '2012'
+      precision: year
+    dissolved_date:
+    status: active
+    technologies:
+    - silicon_photonics
+    - foundry
+    - optical_io
+    - integrated_lidar
+    geographies:
+    - country_code: GB
+      region: Hampshire
+      city: Southampton
+    website: https://www.southampton.ac.uk/research/institutes-centres/silicon-photonics
+    research_status: validated
+    sources:
+    - source_id: src_southampton_reed_profile_2026
+      supports: Current group identity
+      locator: Research groups
+      accessed_date: '2026-08-23'
+    - source_id: src_opn_reed_interview_2023
+      supports: 2012 group move
+      locator: Southampton group history
+      accessed_date: '2026-08-23'
+    notes: Predecessor link records program continuity, not a derived team-transfer
+      edge.
+  - id: org_pointcloud
+    name: Pointcloud
+    aliases:
+    - name: Pointcloud Inc.
+      language: en
+      alias_type: legal_name
+    organization_type: startup
+    parent_organization_id:
+    predecessor_ids: []
+    successor_ids: []
+    founded_date:
+    dissolved_date:
+    status: unknown
+    technologies:
+    - integrated_lidar
+    - silicon_photonics
+    geographies:
+    - country_code: US
+      region: California
+      city: San Francisco
+    website:
+    research_status: validated
+    sources:
+    - source_id: src_opn_reed_interview_2023
+      supports: Pointcloud identity and founding story
+      locator: Startup venture section
+      accessed_date: '2026-08-23'
+    notes:
+  - id: org_morelight_technologies
+    name: Morelight Technologies
+    aliases: []
+    organization_type: startup
+    parent_organization_id:
+    predecessor_ids: []
+    successor_ids: []
+    founded_date:
+    dissolved_date:
+    status: historical
+    technologies:
+    - integrated_lidar
+    geographies: []
+    website:
+    research_status: in_research
+    sources:
+    - source_id: src_rockley_investor_deck_2021
+      supports: Ben Ver Steeg co-founder/CTO history
+      locator: Management team slide
+      accessed_date: '2026-08-23'
+    notes: Technology taxonomy is approximate; company history outside the named founder
+      connection is unresolved.
+  - id: org_astar
+    name: Agency for Science, Technology and Research
+    aliases:
+    - name: A*STAR
+      language: en
+      alias_type: short_name
+    organization_type: research_institute
+    parent_organization_id:
+    predecessor_ids: []
+    successor_ids: []
+    founded_date:
+    dissolved_date:
+    status: active
+    technologies:
+    - silicon_photonics
+    - foundry
+    geographies:
+    - country_code: SG
+      region: Singapore
+      city: Singapore
+    website: https://www.a-star.edu.sg/
+    research_status: validated
+    sources:
+    - source_id: src_astar_speed_of_light
+      supports: A*STAR umbrella and IME program context
+      locator: feature
+      accessed_date: '2026-08-23'
+    notes: Umbrella organization; individual IME paper affiliations target the institute
+      node below.
+  - id: org_nstic
+    name: National Semiconductor Translation and Innovation Centre
+    aliases:
+    - name: NSTIC
+      language: en
+      alias_type: short_name
+    organization_type: research_institute
+    parent_organization_id:
+    predecessor_ids: []
+    successor_ids: []
+    founded_date:
+    dissolved_date:
+    status: active
+    technologies:
+    - silicon_photonics
+    - foundry
+    geographies:
+    - country_code: SG
+      region: Singapore
+      city: Singapore
+    website:
+    research_status: validated
+    sources:
+    - source_id: src_ime_innovate_2026
+      supports: NSTIC role for Xianshu Luo
+      locator: speaker bio
+      accessed_date: '2026-08-23'
+    notes:
+  - {"id":"org_innolight","name":"InnoLight Technology Corporation","aliases":[{"name":"中际旭创","language":"zh","alias_type":"native_name"}],"organization_type":"company","parent_organization_id":null,"predecessor_ids":[],"successor_ids":[],"founded_date":null,"dissolved_date":null,"status":"active","technologies":["datacenter_optics","fiber_optics"],"geographies":[],"website":null,"research_status":"validated","sources":[{"source_id":"src_innolight_f1","supports":"organization identity and named-person affiliation","locator":"Corporate History and Structure; Management biographies","accessed_date":"2026-08-23"}],"notes":"Identity normalized from the cited biography or filing; no corporate succession or team transfer is inferred."}
+  - {"id":"org_opnext","name":"Opnext","aliases":[],"organization_type":"company","parent_organization_id":null,"predecessor_ids":[],"successor_ids":[],"founded_date":null,"dissolved_date":null,"status":"acquired","technologies":["datacenter_optics","fiber_optics"],"geographies":[],"website":null,"research_status":"validated","sources":[{"source_id":"src_innolight_f1","supports":"organization identity and named-person affiliation","locator":"Corporate History and Structure; Management biographies","accessed_date":"2026-08-23"}],"notes":"Identity normalized from the cited biography or filing; no corporate succession or team transfer is inferred."}
+  - {"id":"org_pine_photonics","name":"Pine Photonics Communications","aliases":[],"organization_type":"company","parent_organization_id":null,"predecessor_ids":[],"successor_ids":[],"founded_date":null,"dissolved_date":null,"status":"historical","technologies":["datacenter_optics","fiber_optics"],"geographies":[],"website":null,"research_status":"validated","sources":[{"source_id":"src_innolight_f1","supports":"organization identity and named-person affiliation","locator":"Corporate History and Structure; Management biographies","accessed_date":"2026-08-23"}],"notes":"Identity normalized from the cited biography or filing; no corporate succession or team transfer is inferred."}
+  - {"id":"org_sdl","name":"SDL","aliases":[],"organization_type":"company","parent_organization_id":null,"predecessor_ids":[],"successor_ids":[],"founded_date":null,"dissolved_date":null,"status":"acquired","technologies":["datacenter_optics","fiber_optics"],"geographies":[],"website":null,"research_status":"validated","sources":[{"source_id":"src_innolight_f1","supports":"organization identity and named-person affiliation","locator":"Corporate History and Structure; Management biographies","accessed_date":"2026-08-23"}],"notes":"Identity normalized from the cited biography or filing; no corporate succession or team transfer is inferred."}
+  - {"id":"org_oplink","name":"Oplink Communications","aliases":[],"organization_type":"company","parent_organization_id":null,"predecessor_ids":[],"successor_ids":[],"founded_date":null,"dissolved_date":null,"status":"acquired","technologies":["datacenter_optics","fiber_optics"],"geographies":[],"website":null,"research_status":"validated","sources":[{"source_id":"src_innolight_f1","supports":"organization identity and named-person affiliation","locator":"Corporate History and Structure; Management biographies","accessed_date":"2026-08-23"}],"notes":"Identity normalized from the cited biography or filing; no corporate succession or team transfer is inferred."}
+  - {"id":"org_wavesplitter","name":"WaveSplitter Technologies","aliases":[],"organization_type":"company","parent_organization_id":null,"predecessor_ids":[],"successor_ids":[],"founded_date":null,"dissolved_date":null,"status":"historical","technologies":["datacenter_optics","fiber_optics"],"geographies":[],"website":null,"research_status":"validated","sources":[{"source_id":"src_innolight_f1","supports":"organization identity and named-person affiliation","locator":"Corporate History and Structure; Management biographies","accessed_date":"2026-08-23"}],"notes":"Identity normalized from the cited biography or filing; no corporate succession or team transfer is inferred."}
+  - {"id":"org_princeton_photonics_suzhou","name":"Princeton Photonics (Suzhou)","aliases":[],"organization_type":"company","parent_organization_id":null,"predecessor_ids":[],"successor_ids":[],"founded_date":null,"dissolved_date":null,"status":"historical","technologies":["datacenter_optics","fiber_optics"],"geographies":[],"website":null,"research_status":"validated","sources":[{"source_id":"src_innolight_f1","supports":"organization identity and named-person affiliation","locator":"Corporate History and Structure; Management biographies","accessed_date":"2026-08-23"}],"notes":"Identity normalized from the cited biography or filing; no corporate succession or team transfer is inferred."}
+  - {"id":"org_eoptolink","name":"Eoptolink Technology","aliases":[{"name":"新易盛","language":"zh","alias_type":"native_name"}],"organization_type":"company","parent_organization_id":null,"predecessor_ids":[],"successor_ids":[],"founded_date":null,"dissolved_date":null,"status":"active","technologies":["datacenter_optics","fiber_optics"],"geographies":[],"website":null,"research_status":"validated","sources":[{"source_id":"src_eoptolink_2025_report","supports":"organization identity and named-person affiliation","locator":"董事、高级管理人员简历, pp. 31-33","accessed_date":"2026-08-23"}],"notes":"Identity normalized from the cited biography or filing; no corporate succession or team transfer is inferred."}
+  - {"id":"org_leshan_radio_optical_branch","name":"Leshan Radio Factory optical-communications branch","aliases":[],"organization_type":"business_unit","parent_organization_id":null,"predecessor_ids":[],"successor_ids":[],"founded_date":null,"dissolved_date":null,"status":"historical","technologies":["datacenter_optics","fiber_optics"],"geographies":[],"website":null,"research_status":"validated","sources":[{"source_id":"src_eoptolink_2025_report","supports":"organization identity and named-person affiliation","locator":"董事、高级管理人员简历, pp. 31-33","accessed_date":"2026-08-23"}],"notes":"Identity normalized from the cited biography or filing; no corporate succession or team transfer is inferred."}
+  - {"id":"org_fiberxon_chengdu","name":"Fiberxon (Chengdu)","aliases":[],"organization_type":"company","parent_organization_id":null,"predecessor_ids":[],"successor_ids":[],"founded_date":null,"dissolved_date":null,"status":"historical","technologies":["datacenter_optics","fiber_optics"],"geographies":[],"website":null,"research_status":"validated","sources":[{"source_id":"src_eoptolink_2025_report","supports":"organization identity and named-person affiliation","locator":"董事、高级管理人员简历, pp. 31-33","accessed_date":"2026-08-23"}],"notes":"Identity normalized from the cited biography or filing; no corporate succession or team transfer is inferred."}
+  - {"id":"org_insten_technology","name":"Insten Technology","aliases":[{"name":"成都英思腾科技","language":"zh","alias_type":"native_name"}],"organization_type":"company","parent_organization_id":null,"predecessor_ids":[],"successor_ids":[],"founded_date":null,"dissolved_date":null,"status":"historical","technologies":["datacenter_optics","fiber_optics"],"geographies":[],"website":null,"research_status":"validated","sources":[{"source_id":"src_eoptolink_2025_report","supports":"organization identity and named-person affiliation","locator":"董事、高级管理人员简历, pp. 31-33","accessed_date":"2026-08-23"}],"notes":"Identity normalized from the cited biography or filing; no corporate succession or team transfer is inferred."}
+  - {"id":"org_guangsheng_communications","name":"Guangsheng Communications","aliases":[{"name":"光盛通信","language":"zh","alias_type":"native_name"}],"organization_type":"company","parent_organization_id":null,"predecessor_ids":[],"successor_ids":[],"founded_date":null,"dissolved_date":null,"status":"historical","technologies":["datacenter_optics","fiber_optics"],"geographies":[],"website":null,"research_status":"validated","sources":[{"source_id":"src_eoptolink_2025_report","supports":"organization identity and named-person affiliation","locator":"董事、高级管理人员简历, pp. 31-33","accessed_date":"2026-08-23"}],"notes":"Identity normalized from the cited biography or filing; no corporate succession or team transfer is inferred."}
+  - {"id":"org_chengdu_kanghe_optoelectronics","name":"Chengdu Kanghe Optoelectronics","aliases":[],"organization_type":"company","parent_organization_id":null,"predecessor_ids":[],"successor_ids":[],"founded_date":null,"dissolved_date":null,"status":"historical","technologies":["datacenter_optics","fiber_optics"],"geographies":[],"website":null,"research_status":"validated","sources":[{"source_id":"src_eoptolink_2025_report","supports":"organization identity and named-person affiliation","locator":"董事、高级管理人员简历, pp. 31-33","accessed_date":"2026-08-23"}],"notes":"Identity normalized from the cited biography or filing; no corporate succession or team transfer is inferred."}
+  - {"id":"org_sichuan_guangheng","name":"Sichuan Guangheng Communication Technology","aliases":[],"organization_type":"company","parent_organization_id":null,"predecessor_ids":[],"successor_ids":[],"founded_date":null,"dissolved_date":null,"status":"historical","technologies":["datacenter_optics","fiber_optics"],"geographies":[],"website":null,"research_status":"validated","sources":[{"source_id":"src_eoptolink_2025_report","supports":"organization identity and named-person affiliation","locator":"董事、高级管理人员简历, pp. 31-33","accessed_date":"2026-08-23"}],"notes":"Identity normalized from the cited biography or filing; no corporate succession or team transfer is inferred."}
+  - {"id":"org_accelink","name":"Accelink Technologies","aliases":[{"name":"光迅科技","language":"zh","alias_type":"native_name"}],"organization_type":"company","parent_organization_id":null,"predecessor_ids":[],"successor_ids":[],"founded_date":null,"dissolved_date":null,"status":"active","technologies":["datacenter_optics","fiber_optics"],"geographies":[],"website":null,"research_status":"validated","sources":[{"source_id":"src_accelink_2022_report","supports":"organization identity and named-person affiliation","locator":"董事、监事和高级管理人员简历","accessed_date":"2026-08-23"}],"notes":"Identity normalized from the cited biography or filing; no corporate succession or team transfer is inferred."}
+  - {"id":"org_wri_post_telecom_solid_state","name":"Wuhan Research Institute of Posts and Telecommunications, Solid-State Devices Institute","aliases":[],"organization_type":"research_institute","parent_organization_id":null,"predecessor_ids":[],"successor_ids":[],"founded_date":null,"dissolved_date":null,"status":"historical","technologies":["datacenter_optics","fiber_optics"],"geographies":[],"website":null,"research_status":"validated","sources":[{"source_id":"src_accelink_2022_report","supports":"organization identity and named-person affiliation","locator":"董事、监事和高级管理人员简历","accessed_date":"2026-08-23"}],"notes":"Identity normalized from the cited biography or filing; no corporate succession or team transfer is inferred."}
+  - {"id":"org_wuhan_telecommunication_devices","name":"Wuhan Telecommunication Devices Company","aliases":[],"organization_type":"company","parent_organization_id":null,"predecessor_ids":[],"successor_ids":[],"founded_date":null,"dissolved_date":null,"status":"historical","technologies":["datacenter_optics","fiber_optics"],"geographies":[],"website":null,"research_status":"validated","sources":[{"source_id":"src_accelink_2022_report","supports":"organization identity and named-person affiliation","locator":"董事、监事和高级管理人员简历","accessed_date":"2026-08-23"}],"notes":"Identity normalized from the cited biography or filing; no corporate succession or team transfer is inferred."}
+  - {"id":"org_vitesse_semiconductor","name":"Vitesse Semiconductor","aliases":[],"organization_type":"company","parent_organization_id":null,"predecessor_ids":[],"successor_ids":[],"founded_date":null,"dissolved_date":null,"status":"acquired","technologies":["datacenter_optics","fiber_optics"],"geographies":[],"website":null,"research_status":"validated","sources":[{"source_id":"src_source_optica_frank","supports":"organization identity and named-person affiliation","locator":"Speaker biography","accessed_date":"2026-08-23"}],"notes":"Identity normalized from the cited biography or filing; no corporate succession or team transfer is inferred."}
+  - {"id":"org_mrv_optical_division","name":"MRV Communications, Optical Division","aliases":[],"organization_type":"business_unit","parent_organization_id":null,"predecessor_ids":[],"successor_ids":[],"founded_date":null,"dissolved_date":null,"status":"historical","technologies":["datacenter_optics","fiber_optics"],"geographies":[],"website":null,"research_status":"validated","sources":[{"source_id":"src_source_jlt_2018","supports":"organization identity and named-person affiliation","locator":"Author biographies, p. 5510","accessed_date":"2026-08-23"}],"notes":"Identity normalized from the cited biography or filing; no corporate succession or team transfer is inferred."}
+  - {"id":"org_broadex","name":"Broadex Technologies","aliases":[{"name":"博创科技","language":"zh","alias_type":"native_name"}],"organization_type":"company","parent_organization_id":null,"predecessor_ids":[],"successor_ids":[],"founded_date":null,"dissolved_date":null,"status":"active","technologies":["datacenter_optics","fiber_optics"],"geographies":[],"website":null,"research_status":"validated","sources":[{"source_id":"src_broadex_management","supports":"organization identity and named-person affiliation","locator":"Jinkuan Tang (Tom) biography","accessed_date":"2026-08-23"}],"notes":"Identity normalized from the cited biography or filing; no corporate succession or team transfer is inferred."}
+  - {"id":"org_yofc","name":"Yangtze Optical Fibre and Cable","aliases":[{"name":"YOFC","language":"en","alias_type":"acronym"}],"organization_type":"company","parent_organization_id":null,"predecessor_ids":[],"successor_ids":[],"founded_date":null,"dissolved_date":null,"status":"active","technologies":["datacenter_optics","fiber_optics"],"geographies":[],"website":null,"research_status":"validated","sources":[{"source_id":"src_broadex_management","supports":"organization identity and named-person affiliation","locator":"Jinkuan Tang (Tom) biography","accessed_date":"2026-08-23"}],"notes":"Identity normalized from the cited biography or filing; no corporate succession or team transfer is inferred."}
+  - {"id":"org_via_technologies_china","name":"VIA Technologies China","aliases":[],"organization_type":"company","parent_organization_id":null,"predecessor_ids":[],"successor_ids":[],"founded_date":null,"dissolved_date":null,"status":"active","technologies":["datacenter_optics","fiber_optics"],"geographies":[],"website":null,"research_status":"validated","sources":[{"source_id":"src_broadex_management","supports":"organization identity and named-person affiliation","locator":"Jinkuan Tang (Tom) biography","accessed_date":"2026-08-23"}],"notes":"Identity normalized from the cited biography or filing; no corporate succession or team transfer is inferred."}
+  - {"id":"org_hisense_broadband","name":"Hisense Broadband Multimedia Technologies","aliases":[{"name":"海信宽带","language":"zh","alias_type":"native_name"}],"organization_type":"company","parent_organization_id":null,"predecessor_ids":[],"successor_ids":[],"founded_date":null,"dissolved_date":null,"status":"active","technologies":["datacenter_optics","fiber_optics","thin_film_lithium_niobate"],"geographies":[],"website":null,"research_status":"validated","sources":[{"source_id":"src_hisense_schott_david","supports":"organization identity and named-person affiliation","locator":"David Li biography and interview introduction","accessed_date":"2026-08-23"}],"notes":"Identity normalized from the cited biography or filing; no corporate succession or team transfer is inferred."}
+  - {"id":"org_uestc","name":"University of Electronic Science and Technology of China","aliases":[{"name":"UESTC","language":"en","alias_type":"acronym"}],"organization_type":"university","parent_organization_id":null,"predecessor_ids":[],"successor_ids":[],"founded_date":null,"dissolved_date":null,"status":"active","technologies":["datacenter_optics","fiber_optics"],"geographies":[],"website":null,"research_status":"validated","sources":[{"source_id":"src_hisense_schott_david","supports":"organization identity and named-person affiliation","locator":"David Li biography and interview introduction","accessed_date":"2026-08-23"}],"notes":"Identity normalized from the cited biography or filing; no corporate succession or team transfer is inferred."}
+  - {"id":"org_university_houston","name":"University of Houston","aliases":[],"organization_type":"university","parent_organization_id":null,"predecessor_ids":[],"successor_ids":[],"founded_date":null,"dissolved_date":null,"status":"active","technologies":["datacenter_optics","fiber_optics"],"geographies":[],"website":null,"research_status":"validated","sources":[{"source_id":"src_hisense_schott_david","supports":"organization identity and named-person affiliation","locator":"David Li biography and interview introduction","accessed_date":"2026-08-23"}],"notes":"Identity normalized from the cited biography or filing; no corporate succession or team transfer is inferred."}
+  - {"id":"org_uniwave_technology","name":"Uniwave Technology","aliases":[],"organization_type":"company","parent_organization_id":null,"predecessor_ids":[],"successor_ids":[],"founded_date":null,"dissolved_date":null,"status":"historical","technologies":["datacenter_optics","fiber_optics"],"geographies":[],"website":null,"research_status":"validated","sources":[{"source_id":"src_innolight_f1","supports":"organization identity and named-person affiliation","locator":"Corporate History and Structure; Management biographies","accessed_date":"2026-08-23"}],"notes":"Identity normalized from the cited biography or filing; no corporate succession or team transfer is inferred."}
+  - {"id":"org_ligent","name":"Ligent","aliases":[],"organization_type":"company","parent_organization_id":null,"predecessor_ids":[],"successor_ids":[],"founded_date":null,"dissolved_date":null,"status":"historical","technologies":["datacenter_optics","fiber_optics"],"geographies":[],"website":null,"research_status":"validated","sources":[{"source_id":"src_hisense_icmtia_huang","supports":"organization identity and named-person affiliation","locator":"Speaker biography describing Ligent co-founding and Hisense roles","accessed_date":"2026-08-23"}],"notes":"Identity normalized from the cited biography or filing; no corporate succession or team transfer is inferred."}

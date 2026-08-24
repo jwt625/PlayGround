@@ -1,0 +1,2816 @@
+schema_version: 0.1.0
+report_id: coverage_gap_report
+as_of: '2026-08-23'
+scope: Major company/startup/lab seeds in plan sections 8-10 versus canonical YAML.
+canonical_snapshot:
+  files:
+    canonical/organizations.yaml: 94bdc87a618919227adccc178a92183f6aadf9aafd5ec1f02a3127022574415d
+    canonical/people.yaml: 26a9fda90545bddefa406f4179199eb9b9482d42d4b1abd547b1c5ceac9d99ce
+    canonical/edges.yaml: 103e07bea92c6872644edcfab8e94389860c29bc57cfb991352bb14c8ba832ac
+    canonical/events.yaml: 6ceb9d628aa2f8288ae0021e49d369069287127fdce4c6d349c3994f445f7a5b
+    canonical/sources.yaml: 1749aa5bb5ce9d3ea060fe38aab15e7d1ca7aab3ae3611f0abfd827b9711317c
+  entity_counts:
+    organizations: 117
+    people: 240
+    sources: 223
+    events: 13
+    edges: 424
+reproduction:
+  seed_rule: Deduplicated major organization/company/lab bullets from plan sections
+    8.1, 8.2 and 10; broad groups require exact nodes and are parent_only when only
+    a parent exists.
+  founder_rule: Validated A/B founder edges targeting the exact seed.
+  technical_leadership_rule: Validated A/B technical_leadership plus technical-title
+    executive_role edges.
+  upstream_rule: Validated A/B employment/training/publication/patent affiliations
+    of represented founders/leaders, excluding seed.
+  evidence_rule: Validated incident A/B edges; source refs deduplicated by source_id.
+  acquisition_rule: Validated A/B acquisition edge and referenced event; metadata
+    fields counted independently.
+summary:
+  seed_count: 88
+  exact_node_count: 60
+  parent_only_count: 7
+  missing_node_count: 21
+  company_seed_count: 54
+  company_with_founder_count: 26
+  company_with_technical_leadership_count: 12
+  acquisition_seed_count: 20
+  acquisition_present_count: 10
+  acquisition_with_announcement_count: 10
+  acquisition_with_effective_count: 8
+  acquisition_with_headline_value_count: 8
+coverage:
+- seed: Ayar Labs
+  seed_kind: company
+  node_coverage: exact
+  canonical_organization_id: org_ayar_labs
+  parent_organization_id:
+  founders:
+    present: true
+    count: 5
+    people:
+    - Chen Sun
+    - Mark Wade
+    - Milos Popovic
+    - Rajeev Ram
+    - Vladimir Stojanovic
+  cto_or_technical_leadership:
+    present: true
+    count: 1
+    people:
+    - Matthew N. Sysak
+  upstream_affiliations:
+    present: true
+    edge_count: 4
+    organizations:
+    - Massachusetts Institute of Technology
+  acquisition:
+    applicable: false
+  ab_evidence:
+    validated_incident_edges: 6
+    grade_a_edges: 6
+    grade_b_edges: 0
+    unique_source_refs: 3
+  unresolved_gaps: []
+- seed: Lightmatter
+  seed_kind: company
+  node_coverage: exact
+  canonical_organization_id: org_lightmatter
+  parent_organization_id:
+  founders:
+    present: true
+    count: 3
+    people:
+    - Darius Bunandar
+    - Nicholas Harris
+    - Thomas Graham
+  cto_or_technical_leadership:
+    present: false
+    count: 0
+    people: []
+  upstream_affiliations:
+    present: true
+    edge_count: 3
+    organizations:
+    - MIT Quantum Photonics Group
+    - Massachusetts Institute of Technology
+  acquisition:
+    applicable: false
+  ab_evidence:
+    validated_incident_edges: 3
+    grade_a_edges: 3
+    grade_b_edges: 0
+    unique_source_refs: 1
+  unresolved_gaps:
+  - No validated A/B CTO or technical-leadership edge.
+- seed: Xscape Photonics
+  seed_kind: company
+  node_coverage: exact
+  canonical_organization_id: org_xscape
+  parent_organization_id:
+  founders:
+    present: true
+    count: 5
+    people:
+    - Alexander Gaeta
+    - Keren Bergman
+    - Michal Lipson
+    - Vivek Raghunathan
+    - Yoshi Okawachi
+  cto_or_technical_leadership:
+    present: true
+    count: 1
+    people:
+    - Vikram Sadagopan
+  upstream_affiliations:
+    present: true
+    edge_count: 3
+    organizations:
+    - Columbia University
+    - Luxtera
+  acquisition:
+    applicable: false
+  ab_evidence:
+    validated_incident_edges: 7
+    grade_a_edges: 7
+    grade_b_edges: 0
+    unique_source_refs: 4
+  unresolved_gaps: []
+- seed: Celestial AI
+  seed_kind: company
+  node_coverage: exact
+  canonical_organization_id: org_celestial_ai
+  parent_organization_id:
+  founders:
+    present: true
+    count: 1
+    people:
+    - David Lazovsky
+  cto_or_technical_leadership:
+    present: false
+    count: 0
+    people: []
+  upstream_affiliations:
+    present: false
+    edge_count: 0
+    organizations: []
+  acquisition:
+    applicable: true
+    expected_acquirer: Marvell
+    present: true
+    event_id: event_acquisition_celestial_ai_marvell
+    announced_date: '2025-12-02'
+    effective_date: '2026-02-02'
+    headline_value: 3250000000
+    currency: USD
+  ab_evidence:
+    validated_incident_edges: 2
+    grade_a_edges: 2
+    grade_b_edges: 0
+    unique_source_refs: 2
+  unresolved_gaps:
+  - No validated A/B CTO or technical-leadership edge.
+  - No upstream A/B affiliation for represented founders/technical leaders.
+- seed: Nubis Communications
+  seed_kind: company
+  node_coverage: exact
+  canonical_organization_id: org_nubis
+  parent_organization_id:
+  founders:
+    present: true
+    count: 2
+    people:
+    - Guilhem de Valicourt
+    - Peter Winzer
+  cto_or_technical_leadership:
+    present: false
+    count: 0
+    people: []
+  upstream_affiliations:
+    present: true
+    edge_count: 2
+    organizations:
+    - Alcatel-Lucent Bell Labs
+  acquisition:
+    applicable: true
+    expected_acquirer: Ciena
+    present: true
+    event_id: event_acquisition_nubis_ciena
+    announced_date: '2025-09-22'
+    effective_date: '2025-10-07'
+    headline_value: 270500000
+    currency: USD
+  ab_evidence:
+    validated_incident_edges: 5
+    grade_a_edges: 5
+    grade_b_edges: 0
+    unique_source_refs: 3
+  unresolved_gaps:
+  - No validated A/B CTO or technical-leadership edge.
+- seed: DustPhotonics
+  seed_kind: company
+  node_coverage: exact
+  canonical_organization_id: org_dustphotonics
+  parent_organization_id:
+  founders:
+    present: true
+    count: 1
+    people:
+    - Yoel Chetrit
+  cto_or_technical_leadership:
+    present: false
+    count: 0
+    people: []
+  upstream_affiliations:
+    present: true
+    edge_count: 1
+    organizations:
+    - Intel Silicon Photonics Solutions Group
+  acquisition:
+    applicable: true
+    expected_acquirer: Credo
+    present: true
+    event_id: event_acquisition_dustphotonics_credo
+    announced_date: '2026-04-13'
+    effective_date: '2026-05-28'
+    headline_value: 1200000000
+    currency: USD
+  ab_evidence:
+    validated_incident_edges: 3
+    grade_a_edges: 3
+    grade_b_edges: 0
+    unique_source_refs: 2
+  unresolved_gaps:
+  - No validated A/B CTO or technical-leadership edge.
+- seed: Enosemi
+  seed_kind: company
+  node_coverage: exact
+  canonical_organization_id: org_enosemi
+  parent_organization_id:
+  founders:
+    present: true
+    count: 3
+    people:
+    - Ari Novack
+    - Matt Streshinsky
+    - Shahab Ardalan
+  cto_or_technical_leadership:
+    present: false
+    count: 0
+    people: []
+  upstream_affiliations:
+    present: false
+    edge_count: 0
+    organizations: []
+  acquisition:
+    applicable: true
+    expected_acquirer: AMD
+    present: true
+    event_id: event_acquisition_enosemi_amd
+    announced_date: '2025-05-28'
+    effective_date:
+    headline_value:
+    currency:
+  ab_evidence:
+    validated_incident_edges: 4
+    grade_a_edges: 4
+    grade_b_edges: 0
+    unique_source_refs: 2
+  unresolved_gaps:
+  - No validated A/B CTO or technical-leadership edge.
+  - No upstream A/B affiliation for represented founders/technical leaders.
+  - Acquisition effective/close date missing.
+  - Acquisition headline value missing or undisclosed.
+- seed: Quintessent
+  seed_kind: company
+  node_coverage: exact
+  canonical_organization_id: org_quintessent
+  parent_organization_id:
+  founders:
+    present: true
+    count: 3
+    people:
+    - Alan Liu
+    - Brian Koch
+    - John Bowers
+  cto_or_technical_leadership:
+    present: false
+    count: 0
+    people: []
+  upstream_affiliations:
+    present: true
+    edge_count: 6
+    organizations:
+    - Aurrion
+    - Intel Silicon Photonics Solutions Group
+    - Juniper Networks
+    - UCSB Bowers Optoelectronics Research Group
+    - University of California, Santa Barbara
+  acquisition:
+    applicable: false
+  ab_evidence:
+    validated_incident_edges: 3
+    grade_a_edges: 3
+    grade_b_edges: 0
+    unique_source_refs: 1
+  unresolved_gaps:
+  - No validated A/B CTO or technical-leadership edge.
+- seed: OpenLight
+  seed_kind: company
+  node_coverage: missing
+  canonical_organization_id:
+  parent_organization_id:
+  founders:
+    present: false
+    count: 0
+    people: []
+  cto_or_technical_leadership:
+    present: false
+    count: 0
+    people: []
+  upstream_affiliations:
+    present: false
+    edge_count: 0
+    organizations: []
+  acquisition:
+    applicable: false
+  ab_evidence:
+    validated_incident_edges: 0
+    grade_a_edges: 0
+    grade_b_edges: 0
+    unique_source_refs: 0
+  unresolved_gaps:
+  - Organization node missing.
+- seed: Scintil Photonics
+  seed_kind: company
+  node_coverage: missing
+  canonical_organization_id:
+  parent_organization_id:
+  founders:
+    present: false
+    count: 0
+    people: []
+  cto_or_technical_leadership:
+    present: false
+    count: 0
+    people: []
+  upstream_affiliations:
+    present: false
+    edge_count: 0
+    organizations: []
+  acquisition:
+    applicable: false
+  ab_evidence:
+    validated_incident_edges: 0
+    grade_a_edges: 0
+    grade_b_edges: 0
+    unique_source_refs: 0
+  unresolved_gaps:
+  - Organization node missing.
+- seed: Ranovus
+  seed_kind: company
+  node_coverage: missing
+  canonical_organization_id:
+  parent_organization_id:
+  founders:
+    present: false
+    count: 0
+    people: []
+  cto_or_technical_leadership:
+    present: false
+    count: 0
+    people: []
+  upstream_affiliations:
+    present: false
+    edge_count: 0
+    organizations: []
+  acquisition:
+    applicable: false
+  ab_evidence:
+    validated_incident_edges: 0
+    grade_a_edges: 0
+    grade_b_edges: 0
+    unique_source_refs: 0
+  unresolved_gaps:
+  - Organization node missing.
+- seed: Avicena
+  seed_kind: company
+  node_coverage: missing
+  canonical_organization_id:
+  parent_organization_id:
+  founders:
+    present: false
+    count: 0
+    people: []
+  cto_or_technical_leadership:
+    present: false
+    count: 0
+    people: []
+  upstream_affiliations:
+    present: false
+    edge_count: 0
+    organizations: []
+  acquisition:
+    applicable: false
+  ab_evidence:
+    validated_incident_edges: 0
+    grade_a_edges: 0
+    grade_b_edges: 0
+    unique_source_refs: 0
+  unresolved_gaps:
+  - Organization node missing.
+- seed: Hyperlume
+  seed_kind: company
+  node_coverage: exact
+  canonical_organization_id: org_hyperlume
+  parent_organization_id:
+  founders:
+    present: true
+    count: 2
+    people:
+    - Hossein Fariborzi
+    - Mohsen Asad
+  cto_or_technical_leadership:
+    present: false
+    count: 0
+    people: []
+  upstream_affiliations:
+    present: false
+    edge_count: 0
+    organizations: []
+  acquisition:
+    applicable: true
+    expected_acquirer: Credo
+    present: true
+    event_id: event_acquisition_hyperlume_credo
+    announced_date: '2025-09-29'
+    effective_date: '2025-09-29'
+    headline_value: 92017000
+    currency: USD
+  ab_evidence:
+    validated_incident_edges: 3
+    grade_a_edges: 3
+    grade_b_edges: 0
+    unique_source_refs: 2
+  unresolved_gaps:
+  - No validated A/B CTO or technical-leadership edge.
+  - No upstream A/B affiliation for represented founders/technical leaders.
+- seed: Lightelligence
+  seed_kind: company
+  node_coverage: exact
+  canonical_organization_id: org_lightelligence
+  parent_organization_id:
+  founders:
+    present: true
+    count: 2
+    people:
+    - Huaiyu Meng
+    - Yichen Shen
+  cto_or_technical_leadership:
+    present: false
+    count: 0
+    people: []
+  upstream_affiliations:
+    present: true
+    edge_count: 2
+    organizations:
+    - MIT Photonics and Modern Electro-Magnetics Group
+    - Massachusetts Institute of Technology
+  acquisition:
+    applicable: false
+  ab_evidence:
+    validated_incident_edges: 2
+    grade_a_edges: 2
+    grade_b_edges: 0
+    unique_source_refs: 2
+  unresolved_gaps:
+  - No validated A/B CTO or technical-leadership edge.
+- seed: Luminous Computing
+  seed_kind: company
+  node_coverage: exact
+  canonical_organization_id: org_luminous_computing
+  parent_organization_id:
+  founders:
+    present: false
+    count: 0
+    people: []
+  cto_or_technical_leadership:
+    present: false
+    count: 0
+    people: []
+  upstream_affiliations:
+    present: false
+    edge_count: 0
+    organizations: []
+  acquisition:
+    applicable: false
+  ab_evidence:
+    validated_incident_edges: 1
+    grade_a_edges: 1
+    grade_b_edges: 0
+    unique_source_refs: 1
+  unresolved_gaps:
+  - No validated A/B founder edge.
+  - No validated A/B CTO or technical-leadership edge.
+- seed: Polariton Technologies
+  seed_kind: company
+  node_coverage: exact
+  canonical_organization_id: org_polariton
+  parent_organization_id:
+  founders:
+    present: true
+    count: 3
+    people:
+    - Benedikt Baeuerle
+    - Claudia Hoessbacher
+    - Wolfgang Heni
+  cto_or_technical_leadership:
+    present: false
+    count: 0
+    people: []
+  upstream_affiliations:
+    present: true
+    edge_count: 8
+    organizations:
+    - ETH Zurich Institute of Electromagnetic Fields
+    - Karlsruhe Institute of Technology
+  acquisition:
+    applicable: true
+    expected_acquirer: Marvell
+    present: true
+    event_id: event_acquisition_polariton_marvell
+    announced_date: '2026-04-22'
+    effective_date:
+    headline_value:
+    currency:
+  ab_evidence:
+    validated_incident_edges: 8
+    grade_a_edges: 6
+    grade_b_edges: 2
+    unique_source_refs: 5
+  unresolved_gaps:
+  - No validated A/B CTO or technical-leadership edge.
+  - Acquisition effective/close date missing.
+  - Acquisition headline value missing or undisclosed.
+- seed: iPronics
+  seed_kind: company
+  node_coverage: missing
+  canonical_organization_id:
+  parent_organization_id:
+  founders:
+    present: false
+    count: 0
+    people: []
+  cto_or_technical_leadership:
+    present: false
+    count: 0
+    people: []
+  upstream_affiliations:
+    present: false
+    edge_count: 0
+    organizations: []
+  acquisition:
+    applicable: false
+  ab_evidence:
+    validated_incident_edges: 0
+    grade_a_edges: 0
+    grade_b_edges: 0
+    unique_source_refs: 0
+  unresolved_gaps:
+  - Organization node missing.
+- seed: Salience Labs
+  seed_kind: company
+  node_coverage: missing
+  canonical_organization_id:
+  parent_organization_id:
+  founders:
+    present: false
+    count: 0
+    people: []
+  cto_or_technical_leadership:
+    present: false
+    count: 0
+    people: []
+  upstream_affiliations:
+    present: false
+    edge_count: 0
+    organizations: []
+  acquisition:
+    applicable: false
+  ab_evidence:
+    validated_incident_edges: 0
+    grade_a_edges: 0
+    grade_b_edges: 0
+    unique_source_refs: 0
+  unresolved_gaps:
+  - Organization node missing.
+- seed: Lumai
+  seed_kind: company
+  node_coverage: missing
+  canonical_organization_id:
+  parent_organization_id:
+  founders:
+    present: false
+    count: 0
+    people: []
+  cto_or_technical_leadership:
+    present: false
+    count: 0
+    people: []
+  upstream_affiliations:
+    present: false
+    edge_count: 0
+    organizations: []
+  acquisition:
+    applicable: false
+  ab_evidence:
+    validated_incident_edges: 0
+    grade_a_edges: 0
+    grade_b_edges: 0
+    unique_source_refs: 0
+  unresolved_gaps:
+  - Organization node missing.
+- seed: Lumotive
+  seed_kind: company
+  node_coverage: missing
+  canonical_organization_id:
+  parent_organization_id:
+  founders:
+    present: false
+    count: 0
+    people: []
+  cto_or_technical_leadership:
+    present: false
+    count: 0
+    people: []
+  upstream_affiliations:
+    present: false
+    edge_count: 0
+    organizations: []
+  acquisition:
+    applicable: false
+  ab_evidence:
+    validated_incident_edges: 0
+    grade_a_edges: 0
+    grade_b_edges: 0
+    unique_source_refs: 0
+  unresolved_gaps:
+  - Organization node missing.
+- seed: LightIC / 摩尔芯光
+  seed_kind: company
+  node_coverage: exact
+  canonical_organization_id: org_lightic
+  parent_organization_id:
+  founders:
+    present: true
+    count: 2
+    people:
+    - Jie Sun
+    - Tianbo Sun
+  cto_or_technical_leadership:
+    present: false
+    count: 0
+    people: []
+  upstream_affiliations:
+    present: false
+    edge_count: 0
+    organizations: []
+  acquisition:
+    applicable: false
+  ab_evidence:
+    validated_incident_edges: 3
+    grade_a_edges: 2
+    grade_b_edges: 1
+    unique_source_refs: 3
+  unresolved_gaps:
+  - No validated A/B CTO or technical-leadership edge.
+  - No upstream A/B affiliation for represented founders/technical leaders.
+- seed: SiPhi
+  seed_kind: company
+  node_coverage: missing
+  canonical_organization_id:
+  parent_organization_id:
+  founders:
+    present: false
+    count: 0
+    people: []
+  cto_or_technical_leadership:
+    present: false
+    count: 0
+    people: []
+  upstream_affiliations:
+    present: false
+    edge_count: 0
+    organizations: []
+  acquisition:
+    applicable: false
+  ab_evidence:
+    validated_incident_edges: 0
+    grade_a_edges: 0
+    grade_b_edges: 0
+    unique_source_refs: 0
+  unresolved_gaps:
+  - Organization node missing.
+- seed: InfiniLink
+  seed_kind: company
+  node_coverage: exact
+  canonical_organization_id: org_infinilink
+  parent_organization_id:
+  founders:
+    present: false
+    count: 0
+    people: []
+  cto_or_technical_leadership:
+    present: false
+    count: 0
+    people: []
+  upstream_affiliations:
+    present: false
+    edge_count: 0
+    organizations: []
+  acquisition:
+    applicable: true
+    expected_acquirer: GlobalFoundries
+    present: true
+    event_id: event_acquisition_infinilink_globalfoundries
+    announced_date: '2025-11-25'
+    effective_date: '2025-11-14'
+    headline_value: 48000000
+    currency: USD
+  ab_evidence:
+    validated_incident_edges: 1
+    grade_a_edges: 1
+    grade_b_edges: 0
+    unique_source_refs: 1
+  unresolved_gaps:
+  - No validated A/B founder edge.
+  - No validated A/B CTO or technical-leadership edge.
+- seed: Advanced Micro Foundry / AMF
+  seed_kind: company
+  node_coverage: exact
+  canonical_organization_id: org_amf
+  parent_organization_id:
+  founders:
+    present: true
+    count: 2
+    people:
+    - Guo-Qiang Lo
+    - Xianshu Luo
+  cto_or_technical_leadership:
+    present: false
+    count: 0
+    people: []
+  upstream_affiliations:
+    present: true
+    edge_count: 3
+    organizations:
+    - A*STAR Institute of Microelectronics
+  acquisition:
+    applicable: true
+    expected_acquirer: GlobalFoundries
+    present: true
+    event_id: event_acquisition_amf_globalfoundries
+    announced_date: '2025-11-17'
+    effective_date: '2025-11-18'
+    headline_value: 453000000
+    currency: USD
+  ab_evidence:
+    validated_incident_edges: 10
+    grade_a_edges: 10
+    grade_b_edges: 0
+    unique_source_refs: 9
+  unresolved_gaps:
+  - No validated A/B CTO or technical-leadership edge.
+- seed: Cloud Light
+  seed_kind: company
+  node_coverage: exact
+  canonical_organization_id: org_cloud_light
+  parent_organization_id:
+  founders:
+    present: true
+    count: 1
+    people:
+    - Dennis Tong
+  cto_or_technical_leadership:
+    present: false
+    count: 0
+    people: []
+  upstream_affiliations:
+    present: false
+    edge_count: 0
+    organizations: []
+  acquisition:
+    applicable: true
+    expected_acquirer: Lumentum
+    present: true
+    event_id: event_acquisition_cloud_light_lumentum
+    announced_date: '2023-10-30'
+    effective_date: '2023-11-07'
+    headline_value: 750000000
+    currency: USD
+  ab_evidence:
+    validated_incident_edges: 2
+    grade_a_edges: 2
+    grade_b_edges: 0
+    unique_source_refs: 2
+  unresolved_gaps:
+  - No validated A/B CTO or technical-leadership edge.
+  - No upstream A/B affiliation for represented founders/technical leaders.
+- seed: Yingweixin / 英伟芯
+  seed_kind: company
+  node_coverage: missing
+  canonical_organization_id:
+  parent_organization_id:
+  founders:
+    present: false
+    count: 0
+    people: []
+  cto_or_technical_leadership:
+    present: false
+    count: 0
+    people: []
+  upstream_affiliations:
+    present: false
+    edge_count: 0
+    organizations: []
+  acquisition:
+    applicable: false
+  ab_evidence:
+    validated_incident_edges: 0
+    grade_a_edges: 0
+    grade_b_edges: 0
+    unique_source_refs: 0
+  unresolved_gaps:
+  - Organization node missing.
+- seed: Inxun / 映讯芯光
+  seed_kind: company
+  node_coverage: exact
+  canonical_organization_id: org_inxun
+  parent_organization_id:
+  founders:
+    present: true
+    count: 2
+    people:
+    - Guanghua Yang
+    - Ruolin Li
+  cto_or_technical_leadership:
+    present: false
+    count: 0
+    people: []
+  upstream_affiliations:
+    present: true
+    edge_count: 1
+    organizations:
+    - The University of Hong Kong
+  acquisition:
+    applicable: false
+  ab_evidence:
+    validated_incident_edges: 2
+    grade_a_edges: 0
+    grade_b_edges: 2
+    unique_source_refs: 2
+  unresolved_gaps:
+  - No validated A/B CTO or technical-leadership edge.
+- seed: Bopu Semiconductor / 孛璞半导体
+  seed_kind: company
+  node_coverage: missing
+  canonical_organization_id:
+  parent_organization_id:
+  founders:
+    present: false
+    count: 0
+    people: []
+  cto_or_technical_leadership:
+    present: false
+    count: 0
+    people: []
+  upstream_affiliations:
+    present: false
+    edge_count: 0
+    organizations: []
+  acquisition:
+    applicable: false
+  ab_evidence:
+    validated_incident_edges: 0
+    grade_a_edges: 0
+    grade_b_edges: 0
+    unique_source_refs: 0
+  unresolved_gaps:
+  - Organization node missing.
+- seed: Liangyin / 量引科技
+  seed_kind: company
+  node_coverage: exact
+  canonical_organization_id: org_liangyin_technology
+  parent_organization_id:
+  founders:
+    present: true
+    count: 2
+    people:
+    - Jingxiong Zhao
+    - Yaoji Li
+  cto_or_technical_leadership:
+    present: false
+    count: 0
+    people: []
+  upstream_affiliations:
+    present: false
+    edge_count: 0
+    organizations: []
+  acquisition:
+    applicable: false
+  ab_evidence:
+    validated_incident_edges: 2
+    grade_a_edges: 0
+    grade_b_edges: 2
+    unique_source_refs: 2
+  unresolved_gaps:
+  - No validated A/B CTO or technical-leadership edge.
+  - No upstream A/B affiliation for represented founders/technical leaders.
+- seed: Aoke / 傲科光电
+  seed_kind: company
+  node_coverage: missing
+  canonical_organization_id:
+  parent_organization_id:
+  founders:
+    present: false
+    count: 0
+    people: []
+  cto_or_technical_leadership:
+    present: false
+    count: 0
+    people: []
+  upstream_affiliations:
+    present: false
+    edge_count: 0
+    organizations: []
+  acquisition:
+    applicable: false
+  ab_evidence:
+    validated_incident_edges: 0
+    grade_a_edges: 0
+    grade_b_edges: 0
+    unique_source_refs: 0
+  unresolved_gaps:
+  - Organization node missing.
+- seed: Luxtera
+  seed_kind: company
+  node_coverage: exact
+  canonical_organization_id: org_luxtera
+  parent_organization_id:
+  founders:
+    present: true
+    count: 5
+    people:
+    - Alex Dickinson
+    - Axel Scherer
+    - Lawrence Cary Gunn III
+    - Michael Hochberg
+    - Thomas Baehr-Jones
+  cto_or_technical_leadership:
+    present: true
+    count: 1
+    people:
+    - Thierry Pinguet
+  upstream_affiliations:
+    present: true
+    edge_count: 5
+    organizations:
+    - California Institute of Technology
+    - Caltech Nanofabrication Group
+  acquisition:
+    applicable: true
+    expected_acquirer: Cisco
+    present: false
+    event_id:
+    announced_date:
+    effective_date:
+    headline_value:
+    currency:
+  ab_evidence:
+    validated_incident_edges: 9
+    grade_a_edges: 6
+    grade_b_edges: 3
+    unique_source_refs: 8
+  unresolved_gaps:
+  - Expected acquisition edge/event missing.
+- seed: Kotura
+  seed_kind: company
+  node_coverage: exact
+  canonical_organization_id: org_kotura
+  parent_organization_id:
+  founders:
+    present: false
+    count: 0
+    people: []
+  cto_or_technical_leadership:
+    present: false
+    count: 0
+    people: []
+  upstream_affiliations:
+    present: false
+    edge_count: 0
+    organizations: []
+  acquisition:
+    applicable: true
+    expected_acquirer: Mellanox
+    present: false
+    event_id:
+    announced_date:
+    effective_date:
+    headline_value:
+    currency:
+  ab_evidence:
+    validated_incident_edges: 1
+    grade_a_edges: 1
+    grade_b_edges: 0
+    unique_source_refs: 1
+  unresolved_gaps:
+  - No validated A/B founder edge.
+  - No validated A/B CTO or technical-leadership edge.
+  - Expected acquisition edge/event missing.
+- seed: Lightwire
+  seed_kind: company
+  node_coverage: missing
+  canonical_organization_id:
+  parent_organization_id:
+  founders:
+    present: false
+    count: 0
+    people: []
+  cto_or_technical_leadership:
+    present: false
+    count: 0
+    people: []
+  upstream_affiliations:
+    present: false
+    edge_count: 0
+    organizations: []
+  acquisition:
+    applicable: true
+    expected_acquirer: Cisco
+    present: false
+    event_id:
+    announced_date:
+    effective_date:
+    headline_value:
+    currency:
+  ab_evidence:
+    validated_incident_edges: 0
+    grade_a_edges: 0
+    grade_b_edges: 0
+    unique_source_refs: 0
+  unresolved_gaps:
+  - Organization node missing.
+  - Expected acquisition edge/event missing.
+- seed: Aurrion
+  seed_kind: company
+  node_coverage: exact
+  canonical_organization_id: org_aurrion
+  parent_organization_id:
+  founders:
+    present: true
+    count: 2
+    people:
+    - Alex Fang
+    - John Bowers
+  cto_or_technical_leadership:
+    present: true
+    count: 1
+    people:
+    - Gregory Fish
+  upstream_affiliations:
+    present: true
+    edge_count: 2
+    organizations:
+    - UCSB Bowers Optoelectronics Research Group
+    - University of California, Santa Barbara
+  acquisition:
+    applicable: true
+    expected_acquirer: Juniper
+    present: false
+    event_id:
+    announced_date:
+    effective_date:
+    headline_value:
+    currency:
+  ab_evidence:
+    validated_incident_edges: 8
+    grade_a_edges: 8
+    grade_b_edges: 0
+    unique_source_refs: 5
+  unresolved_gaps:
+  - Expected acquisition edge/event missing.
+- seed: Elenion
+  seed_kind: company
+  node_coverage: exact
+  canonical_organization_id: org_elenion
+  parent_organization_id:
+  founders:
+    present: true
+    count: 4
+    people:
+    - Ari Novack
+    - Matt Streshinsky
+    - Michael Hochberg
+    - Thomas Baehr-Jones
+  cto_or_technical_leadership:
+    present: false
+    count: 0
+    people: []
+  upstream_affiliations:
+    present: true
+    edge_count: 3
+    organizations:
+    - California Institute of Technology
+    - Caltech Nanofabrication Group
+  acquisition:
+    applicable: true
+    expected_acquirer: Nokia
+    present: false
+    event_id:
+    announced_date:
+    effective_date:
+    headline_value:
+    currency:
+  ab_evidence:
+    validated_incident_edges: 4
+    grade_a_edges: 4
+    grade_b_edges: 0
+    unique_source_refs: 3
+  unresolved_gaps:
+  - No validated A/B CTO or technical-leadership edge.
+  - Expected acquisition edge/event missing.
+- seed: Rockley Photonics
+  seed_kind: company
+  node_coverage: exact
+  canonical_organization_id: org_rockley
+  parent_organization_id:
+  founders:
+    present: true
+    count: 1
+    people:
+    - Andrew Rickman
+  cto_or_technical_leadership:
+    present: true
+    count: 5
+    people:
+    - Ara Nazarian
+    - Ben Ver Steeg
+    - Cas Wierzynski
+    - Hooman Abediasl
+    - Vivek Raghunathan
+  upstream_affiliations:
+    present: true
+    edge_count: 2
+    organizations:
+    - Intel Corporation
+    - Silicon Photonics Research Group at the University of Surrey
+  acquisition:
+    applicable: false
+  ab_evidence:
+    validated_incident_edges: 9
+    grade_a_edges: 9
+    grade_b_edges: 0
+    unique_source_refs: 6
+  unresolved_gaps: []
+- seed: Acacia Communications
+  seed_kind: company
+  node_coverage: exact
+  canonical_organization_id: org_acacia_communications
+  parent_organization_id:
+  founders:
+    present: true
+    count: 3
+    people:
+    - Benny Mikkelsen
+    - Christian J. Rasmussen
+    - Mehrdad Givehchi
+  cto_or_technical_leadership:
+    present: true
+    count: 1
+    people:
+    - Bhupendra C. Shah
+  upstream_affiliations:
+    present: true
+    edge_count: 4
+    organizations:
+    - Bell Labs
+    - Juniper Networks
+    - Mintera
+  acquisition:
+    applicable: true
+    expected_acquirer: Cisco
+    present: false
+    event_id:
+    announced_date:
+    effective_date:
+    headline_value:
+    currency:
+  ab_evidence:
+    validated_incident_edges: 5
+    grade_a_edges: 5
+    grade_b_edges: 0
+    unique_source_refs: 2
+  unresolved_gaps:
+  - Expected acquisition edge/event missing.
+- seed: Mintera
+  seed_kind: company
+  node_coverage: exact
+  canonical_organization_id: org_mintera
+  parent_organization_id:
+  founders:
+    present: true
+    count: 1
+    people:
+    - Benny Mikkelsen
+  cto_or_technical_leadership:
+    present: false
+    count: 0
+    people: []
+  upstream_affiliations:
+    present: true
+    edge_count: 1
+    organizations:
+    - Bell Labs
+  acquisition:
+    applicable: false
+  ab_evidence:
+    validated_incident_edges: 3
+    grade_a_edges: 3
+    grade_b_edges: 0
+    unique_source_refs: 1
+  unresolved_gaps:
+  - No validated A/B CTO or technical-leadership edge.
+- seed: Inphi
+  seed_kind: company
+  node_coverage: exact
+  canonical_organization_id: org_inphi
+  parent_organization_id:
+  founders:
+    present: true
+    count: 2
+    people:
+    - Gopal Raghavan
+    - Loi Nguyen
+  cto_or_technical_leadership:
+    present: true
+    count: 2
+    people:
+    - Nariman Yousefi
+    - Radha Nagarajan
+  upstream_affiliations:
+    present: false
+    edge_count: 0
+    organizations: []
+  acquisition:
+    applicable: true
+    expected_acquirer: Marvell
+    present: true
+    event_id: event_acquisition_inphi_marvell
+    announced_date: '2020-10-29'
+    effective_date: '2021-04-20'
+    headline_value: 9917529000
+    currency: USD
+  ab_evidence:
+    validated_incident_edges: 7
+    grade_a_edges: 7
+    grade_b_edges: 0
+    unique_source_refs: 6
+  unresolved_gaps:
+  - No upstream A/B affiliation for represented founders/technical leaders.
+- seed: Mellanox optical groups
+  seed_kind: industrial_group
+  node_coverage: missing
+  canonical_organization_id:
+  parent_organization_id:
+  founders:
+    present: false
+    count: 0
+    people: []
+  cto_or_technical_leadership:
+    present: false
+    count: 0
+    people: []
+  upstream_affiliations:
+    present: false
+    edge_count: 0
+    organizations: []
+  acquisition:
+    applicable: true
+    expected_acquirer: NVIDIA
+    present: false
+    event_id:
+    announced_date:
+    effective_date:
+    headline_value:
+    currency:
+  ab_evidence:
+    validated_incident_edges: 0
+    grade_a_edges: 0
+    grade_b_edges: 0
+    unique_source_refs: 0
+  unresolved_gaps:
+  - Organization node missing.
+  - Expected acquisition edge/event missing.
+- seed: Juniper silicon photonics
+  seed_kind: industrial_group
+  node_coverage: parent_only
+  canonical_organization_id:
+  parent_organization_id: org_juniper
+  founders:
+    present: false
+    count: 0
+    people: []
+  cto_or_technical_leadership:
+    present: false
+    count: 0
+    people: []
+  upstream_affiliations:
+    present: false
+    edge_count: 0
+    organizations: []
+  acquisition:
+    applicable: false
+  ab_evidence:
+    validated_incident_edges: 0
+    grade_a_edges: 0
+    grade_b_edges: 0
+    unique_source_refs: 0
+  unresolved_gaps:
+  - Exact group/business-unit node missing; only parent exists.
+- seed: Cisco silicon photonics
+  seed_kind: industrial_group
+  node_coverage: parent_only
+  canonical_organization_id:
+  parent_organization_id: org_cisco
+  founders:
+    present: false
+    count: 0
+    people: []
+  cto_or_technical_leadership:
+    present: false
+    count: 0
+    people: []
+  upstream_affiliations:
+    present: false
+    edge_count: 0
+    organizations: []
+  acquisition:
+    applicable: false
+  ab_evidence:
+    validated_incident_edges: 0
+    grade_a_edges: 0
+    grade_b_edges: 0
+    unique_source_refs: 0
+  unresolved_gaps:
+  - Exact group/business-unit node missing; only parent exists.
+- seed: NeoPhotonics
+  seed_kind: company
+  node_coverage: exact
+  canonical_organization_id: org_neophotonics
+  parent_organization_id:
+  founders:
+    present: false
+    count: 0
+    people: []
+  cto_or_technical_leadership:
+    present: true
+    count: 3
+    people:
+    - Nicolas Herriau
+    - Raymond Cheung
+    - Wupen Yuen
+  upstream_affiliations:
+    present: false
+    edge_count: 0
+    organizations: []
+  acquisition:
+    applicable: true
+    expected_acquirer: Lumentum
+    present: false
+    event_id:
+    announced_date:
+    effective_date:
+    headline_value:
+    currency:
+  ab_evidence:
+    validated_incident_edges: 4
+    grade_a_edges: 4
+    grade_b_edges: 0
+    unique_source_refs: 3
+  unresolved_gaps:
+  - No validated A/B founder edge.
+  - No upstream A/B affiliation for represented founders/technical leaders.
+  - Expected acquisition edge/event missing.
+- seed: Finisar
+  seed_kind: company
+  node_coverage: exact
+  canonical_organization_id: org_finisar
+  parent_organization_id:
+  founders:
+    present: true
+    count: 1
+    people:
+    - Frank Levinson
+  cto_or_technical_leadership:
+    present: true
+    count: 2
+    people:
+    - Anders Olsson
+    - Juthika Basak
+  upstream_affiliations:
+    present: true
+    edge_count: 1
+    organizations:
+    - Intel Corporation
+  acquisition:
+    applicable: true
+    expected_acquirer: II-VI / Coherent
+    present: false
+    event_id:
+    announced_date:
+    effective_date:
+    headline_value:
+    currency:
+  ab_evidence:
+    validated_incident_edges: 4
+    grade_a_edges: 4
+    grade_b_edges: 0
+    unique_source_refs: 2
+  unresolved_gaps:
+  - Expected acquisition edge/event missing.
+- seed: JDSU
+  seed_kind: company
+  node_coverage: exact
+  canonical_organization_id: org_jdsu
+  parent_organization_id:
+  founders:
+    present: true
+    count: 1
+    people:
+    - Jozef Straus
+  cto_or_technical_leadership:
+    present: true
+    count: 2
+    people:
+    - Donald Scifres
+    - Frederick Leonberger
+  upstream_affiliations:
+    present: false
+    edge_count: 0
+    organizations: []
+  acquisition:
+    applicable: false
+  ab_evidence:
+    validated_incident_edges: 5
+    grade_a_edges: 4
+    grade_b_edges: 1
+    unique_source_refs: 4
+  unresolved_gaps:
+  - No upstream A/B affiliation for represented founders/technical leaders.
+- seed: Oclaro
+  seed_kind: company
+  node_coverage: exact
+  canonical_organization_id: org_oclaro
+  parent_organization_id:
+  founders:
+    present: false
+    count: 0
+    people: []
+  cto_or_technical_leadership:
+    present: false
+    count: 0
+    people: []
+  upstream_affiliations:
+    present: false
+    edge_count: 0
+    organizations: []
+  acquisition:
+    applicable: true
+    expected_acquirer: Lumentum
+    present: false
+    event_id:
+    announced_date:
+    effective_date:
+    headline_value:
+    currency:
+  ab_evidence:
+    validated_incident_edges: 2
+    grade_a_edges: 2
+    grade_b_edges: 0
+    unique_source_refs: 2
+  unresolved_gaps:
+  - No validated A/B founder edge.
+  - No validated A/B CTO or technical-leadership edge.
+  - Expected acquisition edge/event missing.
+- seed: Lumentum
+  seed_kind: company
+  node_coverage: exact
+  canonical_organization_id: org_lumentum
+  parent_organization_id:
+  founders:
+    present: false
+    count: 0
+    people: []
+  cto_or_technical_leadership:
+    present: true
+    count: 1
+    people:
+    - Matthew N. Sysak
+  upstream_affiliations:
+    present: false
+    edge_count: 0
+    organizations: []
+  acquisition:
+    applicable: false
+  ab_evidence:
+    validated_incident_edges: 4
+    grade_a_edges: 4
+    grade_b_edges: 0
+    unique_source_refs: 4
+  unresolved_gaps:
+  - No validated A/B founder edge.
+  - No upstream A/B affiliation for represented founders/technical leaders.
+- seed: Bookham
+  seed_kind: company
+  node_coverage: exact
+  canonical_organization_id: org_bookham
+  parent_organization_id:
+  founders:
+    present: true
+    count: 1
+    people:
+    - Andrew Rickman
+  cto_or_technical_leadership:
+    present: true
+    count: 2
+    people:
+    - James Haynes
+    - Michael Scott
+  upstream_affiliations:
+    present: true
+    edge_count: 1
+    organizations:
+    - Silicon Photonics Research Group at the University of Surrey
+  acquisition:
+    applicable: false
+  ab_evidence:
+    validated_incident_edges: 7
+    grade_a_edges: 7
+    grade_b_edges: 0
+    unique_source_refs: 7
+  unresolved_gaps: []
+- seed: Avanex
+  seed_kind: company
+  node_coverage: exact
+  canonical_organization_id: org_avanex
+  parent_organization_id:
+  founders:
+    present: false
+    count: 0
+    people: []
+  cto_or_technical_leadership:
+    present: false
+    count: 0
+    people: []
+  upstream_affiliations:
+    present: false
+    edge_count: 0
+    organizations: []
+  acquisition:
+    applicable: false
+  ab_evidence:
+    validated_incident_edges: 0
+    grade_a_edges: 0
+    grade_b_edges: 0
+    unique_source_refs: 0
+  unresolved_gaps:
+  - No validated A/B founder edge.
+  - No validated A/B CTO or technical-leadership edge.
+- seed: Opnext
+  seed_kind: company
+  node_coverage: missing
+  canonical_organization_id:
+  parent_organization_id:
+  founders:
+    present: false
+    count: 0
+    people: []
+  cto_or_technical_leadership:
+    present: false
+    count: 0
+    people: []
+  upstream_affiliations:
+    present: false
+    edge_count: 0
+    organizations: []
+  acquisition:
+    applicable: false
+  ab_evidence:
+    validated_incident_edges: 0
+    grade_a_edges: 0
+    grade_b_edges: 0
+    unique_source_refs: 0
+  unresolved_gaps:
+  - Organization node missing.
+- seed: Source Photonics
+  seed_kind: company
+  node_coverage: exact
+  canonical_organization_id: org_source_photonics
+  parent_organization_id:
+  founders:
+    present: false
+    count: 0
+    people: []
+  cto_or_technical_leadership:
+    present: false
+    count: 0
+    people: []
+  upstream_affiliations:
+    present: false
+    edge_count: 0
+    organizations: []
+  acquisition:
+    applicable: false
+  ab_evidence:
+    validated_incident_edges: 1
+    grade_a_edges: 1
+    grade_b_edges: 0
+    unique_source_refs: 1
+  unresolved_gaps:
+  - No validated A/B founder edge.
+  - No validated A/B CTO or technical-leadership edge.
+- seed: InnoLight
+  seed_kind: company
+  node_coverage: missing
+  canonical_organization_id:
+  parent_organization_id:
+  founders:
+    present: false
+    count: 0
+    people: []
+  cto_or_technical_leadership:
+    present: false
+    count: 0
+    people: []
+  upstream_affiliations:
+    present: false
+    edge_count: 0
+    organizations: []
+  acquisition:
+    applicable: false
+  ab_evidence:
+    validated_incident_edges: 0
+    grade_a_edges: 0
+    grade_b_edges: 0
+    unique_source_refs: 0
+  unresolved_gaps:
+  - Organization node missing.
+- seed: Eoptolink
+  seed_kind: company
+  node_coverage: missing
+  canonical_organization_id:
+  parent_organization_id:
+  founders:
+    present: false
+    count: 0
+    people: []
+  cto_or_technical_leadership:
+    present: false
+    count: 0
+    people: []
+  upstream_affiliations:
+    present: false
+    edge_count: 0
+    organizations: []
+  acquisition:
+    applicable: false
+  ab_evidence:
+    validated_incident_edges: 0
+    grade_a_edges: 0
+    grade_b_edges: 0
+    unique_source_refs: 0
+  unresolved_gaps:
+  - Organization node missing.
+- seed: Broadex
+  seed_kind: company
+  node_coverage: missing
+  canonical_organization_id:
+  parent_organization_id:
+  founders:
+    present: false
+    count: 0
+    people: []
+  cto_or_technical_leadership:
+    present: false
+    count: 0
+    people: []
+  upstream_affiliations:
+    present: false
+    edge_count: 0
+    organizations: []
+  acquisition:
+    applicable: false
+  ab_evidence:
+    validated_incident_edges: 0
+    grade_a_edges: 0
+    grade_b_edges: 0
+    unique_source_refs: 0
+  unresolved_gaps:
+  - Organization node missing.
+- seed: Accelink
+  seed_kind: company
+  node_coverage: missing
+  canonical_organization_id:
+  parent_organization_id:
+  founders:
+    present: false
+    count: 0
+    people: []
+  cto_or_technical_leadership:
+    present: false
+    count: 0
+    people: []
+  upstream_affiliations:
+    present: false
+    edge_count: 0
+    organizations: []
+  acquisition:
+    applicable: false
+  ab_evidence:
+    validated_incident_edges: 0
+    grade_a_edges: 0
+    grade_b_edges: 0
+    unique_source_refs: 0
+  unresolved_gaps:
+  - Organization node missing.
+- seed: Hisense Broadband
+  seed_kind: company
+  node_coverage: missing
+  canonical_organization_id:
+  parent_organization_id:
+  founders:
+    present: false
+    count: 0
+    people: []
+  cto_or_technical_leadership:
+    present: false
+    count: 0
+    people: []
+  upstream_affiliations:
+    present: false
+    edge_count: 0
+    organizations: []
+  acquisition:
+    applicable: false
+  ab_evidence:
+    validated_incident_edges: 0
+    grade_a_edges: 0
+    grade_b_edges: 0
+    unique_source_refs: 0
+  unresolved_gaps:
+  - Organization node missing.
+- seed: Huawei optical / silicon photonics groups
+  seed_kind: industrial_group
+  node_coverage: parent_only
+  canonical_organization_id:
+  parent_organization_id: org_huawei
+  founders:
+    present: false
+    count: 0
+    people: []
+  cto_or_technical_leadership:
+    present: false
+    count: 0
+    people: []
+  upstream_affiliations:
+    present: false
+    edge_count: 0
+    organizations: []
+  acquisition:
+    applicable: false
+  ab_evidence:
+    validated_incident_edges: 0
+    grade_a_edges: 0
+    grade_b_edges: 0
+    unique_source_refs: 0
+  unresolved_gaps:
+  - Exact group/business-unit node missing; only parent exists.
+- seed: Futurewei
+  seed_kind: company
+  node_coverage: missing
+  canonical_organization_id:
+  parent_organization_id:
+  founders:
+    present: false
+    count: 0
+    people: []
+  cto_or_technical_leadership:
+    present: false
+    count: 0
+    people: []
+  upstream_affiliations:
+    present: false
+    edge_count: 0
+    organizations: []
+  acquisition:
+    applicable: false
+  ab_evidence:
+    validated_incident_edges: 0
+    grade_a_edges: 0
+    grade_b_edges: 0
+    unique_source_refs: 0
+  unresolved_gaps:
+  - Organization node missing.
+- seed: Nokia Bell Labs
+  seed_kind: lab
+  node_coverage: exact
+  canonical_organization_id: org_nokia_bell_labs
+  parent_organization_id:
+  founders:
+    present: false
+    count: 0
+    people: []
+  cto_or_technical_leadership:
+    present: false
+    count: 0
+    people: []
+  upstream_affiliations:
+    present: false
+    edge_count: 0
+    organizations: []
+  acquisition:
+    applicable: false
+  ab_evidence:
+    validated_incident_edges: 1
+    grade_a_edges: 1
+    grade_b_edges: 0
+    unique_source_refs: 1
+  unresolved_gaps: []
+- seed: Alcatel-Lucent Bell Labs
+  seed_kind: lab
+  node_coverage: exact
+  canonical_organization_id: org_alcatel_lucent_bell_labs
+  parent_organization_id:
+  founders:
+    present: false
+    count: 0
+    people: []
+  cto_or_technical_leadership:
+    present: false
+    count: 0
+    people: []
+  upstream_affiliations:
+    present: false
+    edge_count: 0
+    organizations: []
+  acquisition:
+    applicable: false
+  ab_evidence:
+    validated_incident_edges: 4
+    grade_a_edges: 2
+    grade_b_edges: 2
+    unique_source_refs: 6
+  unresolved_gaps: []
+- seed: Broadcom optical groups
+  seed_kind: industrial_group
+  node_coverage: parent_only
+  canonical_organization_id:
+  parent_organization_id: org_broadcom
+  founders:
+    present: false
+    count: 0
+    people: []
+  cto_or_technical_leadership:
+    present: false
+    count: 0
+    people: []
+  upstream_affiliations:
+    present: false
+    edge_count: 0
+    organizations: []
+  acquisition:
+    applicable: false
+  ab_evidence:
+    validated_incident_edges: 0
+    grade_a_edges: 0
+    grade_b_edges: 0
+    unique_source_refs: 0
+  unresolved_gaps:
+  - Exact group/business-unit node missing; only parent exists.
+- seed: Marvell optical groups
+  seed_kind: industrial_group
+  node_coverage: parent_only
+  canonical_organization_id:
+  parent_organization_id: org_marvell
+  founders:
+    present: false
+    count: 0
+    people: []
+  cto_or_technical_leadership:
+    present: false
+    count: 0
+    people: []
+  upstream_affiliations:
+    present: false
+    edge_count: 0
+    organizations: []
+  acquisition:
+    applicable: false
+  ab_evidence:
+    validated_incident_edges: 0
+    grade_a_edges: 0
+    grade_b_edges: 0
+    unique_source_refs: 0
+  unresolved_gaps:
+  - Exact group/business-unit node missing; only parent exists.
+- seed: Intel Silicon Photonics / Photonics Technology Lab
+  seed_kind: lab
+  node_coverage: exact
+  canonical_organization_id: org_intel_silicon_photonics
+  parent_organization_id:
+  founders:
+    present: false
+    count: 0
+    people: []
+  cto_or_technical_leadership:
+    present: true
+    count: 10
+    people:
+    - Andrew Alduino
+    - Ansheng Liu
+    - David Nelson
+    - Hai-Feng Liu
+    - Haisheng Rong
+    - Kevin Sullivan
+    - Ling Liao
+    - Mario Paniccia
+    - Matthew N. Sysak
+    - Richard Jones
+  upstream_affiliations:
+    present: true
+    edge_count: 1
+    organizations:
+    - Meta Platforms
+  acquisition:
+    applicable: false
+  ab_evidence:
+    validated_incident_edges: 17
+    grade_a_edges: 1
+    grade_b_edges: 16
+    unique_source_refs: 3
+  unresolved_gaps: []
+- seed: Bell Labs
+  seed_kind: lab
+  node_coverage: exact
+  canonical_organization_id: org_bell_labs
+  parent_organization_id:
+  founders:
+    present: false
+    count: 0
+    people: []
+  cto_or_technical_leadership:
+    present: false
+    count: 0
+    people: []
+  upstream_affiliations:
+    present: false
+    edge_count: 0
+    organizations: []
+  acquisition:
+    applicable: false
+  ab_evidence:
+    validated_incident_edges: 5
+    grade_a_edges: 4
+    grade_b_edges: 1
+    unique_source_refs: 5
+  unresolved_gaps: []
+- seed: Lucent Bell Labs
+  seed_kind: lab
+  node_coverage: exact
+  canonical_organization_id: org_lucent_bell_labs
+  parent_organization_id:
+  founders:
+    present: false
+    count: 0
+    people: []
+  cto_or_technical_leadership:
+    present: false
+    count: 0
+    people: []
+  upstream_affiliations:
+    present: false
+    edge_count: 0
+    organizations: []
+  acquisition:
+    applicable: false
+  ab_evidence:
+    validated_incident_edges: 2
+    grade_a_edges: 1
+    grade_b_edges: 1
+    unique_source_refs: 2
+  unresolved_gaps: []
+- seed: UCSB Bowers Optoelectronics Research Group
+  seed_kind: lab
+  node_coverage: exact
+  canonical_organization_id: org_ucsb_bowers_group
+  parent_organization_id:
+  founders:
+    present: false
+    count: 0
+    people: []
+  cto_or_technical_leadership:
+    present: false
+    count: 0
+    people: []
+  upstream_affiliations:
+    present: false
+    edge_count: 0
+    organizations: []
+  acquisition:
+    applicable: false
+  ab_evidence:
+    validated_incident_edges: 13
+    grade_a_edges: 13
+    grade_b_edges: 0
+    unique_source_refs: 11
+  unresolved_gaps: []
+- seed: MIT Quantum Photonics Group / Dirk Englund
+  seed_kind: lab
+  node_coverage: exact
+  canonical_organization_id: org_mit_englund_group
+  parent_organization_id:
+  founders:
+    present: false
+    count: 0
+    people: []
+  cto_or_technical_leadership:
+    present: false
+    count: 0
+    people: []
+  upstream_affiliations:
+    present: false
+    edge_count: 0
+    organizations: []
+  acquisition:
+    applicable: false
+  ab_evidence:
+    validated_incident_edges: 5
+    grade_a_edges: 5
+    grade_b_edges: 0
+    unique_source_refs: 2
+  unresolved_gaps: []
+- seed: MIT Physical Optics and Electronics Group / Rajeev Ram
+  seed_kind: lab
+  node_coverage: exact
+  canonical_organization_id: org_mit_ram_group
+  parent_organization_id:
+  founders:
+    present: false
+    count: 0
+    people: []
+  cto_or_technical_leadership:
+    present: true
+    count: 1
+    people:
+    - Rajeev Ram
+  upstream_affiliations:
+    present: false
+    edge_count: 0
+    organizations: []
+  acquisition:
+    applicable: false
+  ab_evidence:
+    validated_incident_edges: 1
+    grade_a_edges: 1
+    grade_b_edges: 0
+    unique_source_refs: 1
+  unresolved_gaps: []
+- seed: MIT Photonics and Modern Electro-Magnetics Group / Marin Soljačić
+  seed_kind: lab
+  node_coverage: exact
+  canonical_organization_id: org_mit_soljacic_group
+  parent_organization_id:
+  founders:
+    present: false
+    count: 0
+    people: []
+  cto_or_technical_leadership:
+    present: true
+    count: 1
+    people:
+    - Marin Soljačić
+  upstream_affiliations:
+    present: false
+    edge_count: 0
+    organizations: []
+  acquisition:
+    applicable: false
+  ab_evidence:
+    validated_incident_edges: 2
+    grade_a_edges: 2
+    grade_b_edges: 0
+    unique_source_refs: 2
+  unresolved_gaps: []
+- seed: Columbia Lipson Nanophotonics Group
+  seed_kind: lab
+  node_coverage: exact
+  canonical_organization_id: org_columbia_lipson_group
+  parent_organization_id:
+  founders:
+    present: false
+    count: 0
+    people: []
+  cto_or_technical_leadership:
+    present: true
+    count: 1
+    people:
+    - Michal Lipson
+  upstream_affiliations:
+    present: false
+    edge_count: 0
+    organizations: []
+  acquisition:
+    applicable: false
+  ab_evidence:
+    validated_incident_edges: 1
+    grade_a_edges: 1
+    grade_b_edges: 0
+    unique_source_refs: 1
+  unresolved_gaps: []
+- seed: Columbia Lightwave Research Laboratory / Keren Bergman
+  seed_kind: lab
+  node_coverage: exact
+  canonical_organization_id: org_columbia_bergman_group
+  parent_organization_id:
+  founders:
+    present: false
+    count: 0
+    people: []
+  cto_or_technical_leadership:
+    present: true
+    count: 1
+    people:
+    - Keren Bergman
+  upstream_affiliations:
+    present: false
+    edge_count: 0
+    organizations: []
+  acquisition:
+    applicable: false
+  ab_evidence:
+    validated_incident_edges: 1
+    grade_a_edges: 1
+    grade_b_edges: 0
+    unique_source_refs: 1
+  unresolved_gaps: []
+- seed: Columbia Alexander Gaeta group
+  seed_kind: lab
+  node_coverage: parent_only
+  canonical_organization_id:
+  parent_organization_id: org_columbia_university
+  founders:
+    present: false
+    count: 0
+    people: []
+  cto_or_technical_leadership:
+    present: false
+    count: 0
+    people: []
+  upstream_affiliations:
+    present: false
+    edge_count: 0
+    organizations: []
+  acquisition:
+    applicable: false
+  ab_evidence:
+    validated_incident_edges: 0
+    grade_a_edges: 0
+    grade_b_edges: 0
+    unique_source_refs: 0
+  unresolved_gaps:
+  - Exact group/business-unit node missing; only parent exists.
+- seed: Columbia Yoshi Okawachi group
+  seed_kind: lab
+  node_coverage: parent_only
+  canonical_organization_id:
+  parent_organization_id: org_columbia_university
+  founders:
+    present: false
+    count: 0
+    people: []
+  cto_or_technical_leadership:
+    present: false
+    count: 0
+    people: []
+  upstream_affiliations:
+    present: false
+    edge_count: 0
+    organizations: []
+  acquisition:
+    applicable: false
+  ab_evidence:
+    validated_incident_edges: 0
+    grade_a_edges: 0
+    grade_b_edges: 0
+    unique_source_refs: 0
+  unresolved_gaps:
+  - Exact group/business-unit node missing; only parent exists.
+- seed: Caltech Scherer Nanofabrication Group
+  seed_kind: lab
+  node_coverage: exact
+  canonical_organization_id: org_caltech_scherer_nanofab_group
+  parent_organization_id:
+  founders:
+    present: false
+    count: 0
+    people: []
+  cto_or_technical_leadership:
+    present: true
+    count: 1
+    people:
+    - Axel Scherer
+  upstream_affiliations:
+    present: false
+    edge_count: 0
+    organizations: []
+  acquisition:
+    applicable: false
+  ab_evidence:
+    validated_incident_edges: 15
+    grade_a_edges: 15
+    grade_b_edges: 0
+    unique_source_refs: 10
+  unresolved_gaps: []
+- seed: Stanford Shanhui Fan Group
+  seed_kind: lab
+  node_coverage: exact
+  canonical_organization_id: org_stanford_fan_group
+  parent_organization_id:
+  founders:
+    present: false
+    count: 0
+    people: []
+  cto_or_technical_leadership:
+    present: true
+    count: 1
+    people:
+    - Shanhui Fan
+  upstream_affiliations:
+    present: false
+    edge_count: 0
+    organizations: []
+  acquisition:
+    applicable: false
+  ab_evidence:
+    validated_incident_edges: 6
+    grade_a_edges: 6
+    grade_b_edges: 0
+    unique_source_refs: 5
+  unresolved_gaps: []
+- seed: Stanford Vučković Lab
+  seed_kind: lab
+  node_coverage: exact
+  canonical_organization_id: org_stanford_vuckovic_lab
+  parent_organization_id:
+  founders:
+    present: false
+    count: 0
+    people: []
+  cto_or_technical_leadership:
+    present: true
+    count: 1
+    people:
+    - Jelena Vuckovic
+  upstream_affiliations:
+    present: true
+    edge_count: 1
+    organizations:
+    - Caltech Nanofabrication Group
+  acquisition:
+    applicable: false
+  ab_evidence:
+    validated_incident_edges: 5
+    grade_a_edges: 5
+    grade_b_edges: 0
+    unique_source_refs: 5
+  unresolved_gaps: []
+- seed: Stanford Solgaard Lab
+  seed_kind: lab
+  node_coverage: exact
+  canonical_organization_id: org_stanford_solgaard_lab
+  parent_organization_id:
+  founders:
+    present: false
+    count: 0
+    people: []
+  cto_or_technical_leadership:
+    present: true
+    count: 1
+    people:
+    - Olav Solgaard
+  upstream_affiliations:
+    present: true
+    edge_count: 1
+    organizations:
+    - Stanford University
+  acquisition:
+    applicable: false
+  ab_evidence:
+    validated_incident_edges: 1
+    grade_a_edges: 1
+    grade_b_edges: 0
+    unique_source_refs: 2
+  unresolved_gaps: []
+- seed: Stanford Miller Group
+  seed_kind: lab
+  node_coverage: exact
+  canonical_organization_id: org_stanford_miller_group
+  parent_organization_id:
+  founders:
+    present: false
+    count: 0
+    people: []
+  cto_or_technical_leadership:
+    present: true
+    count: 1
+    people:
+    - David A. B. Miller
+  upstream_affiliations:
+    present: false
+    edge_count: 0
+    organizations: []
+  acquisition:
+    applicable: false
+  ab_evidence:
+    validated_incident_edges: 1
+    grade_a_edges: 1
+    grade_b_edges: 0
+    unique_source_refs: 1
+  unresolved_gaps: []
+- seed: Stanford James Harris Group
+  seed_kind: lab
+  node_coverage: exact
+  canonical_organization_id: org_stanford_harris_group
+  parent_organization_id:
+  founders:
+    present: false
+    count: 0
+    people: []
+  cto_or_technical_leadership:
+    present: true
+    count: 1
+    people:
+    - James S. Harris Jr.
+  upstream_affiliations:
+    present: false
+    edge_count: 0
+    organizations: []
+  acquisition:
+    applicable: false
+  ab_evidence:
+    validated_incident_edges: 3
+    grade_a_edges: 3
+    grade_b_edges: 0
+    unique_source_refs: 2
+  unresolved_gaps: []
+- seed: Stanford Stephen E. Harris Research Program
+  seed_kind: lab
+  node_coverage: exact
+  canonical_organization_id: org_stanford_stephen_harris_group
+  parent_organization_id:
+  founders:
+    present: false
+    count: 0
+    people: []
+  cto_or_technical_leadership:
+    present: true
+    count: 1
+    people:
+    - Stephen E. Harris
+  upstream_affiliations:
+    present: false
+    edge_count: 0
+    organizations: []
+  acquisition:
+    applicable: false
+  ab_evidence:
+    validated_incident_edges: 1
+    grade_a_edges: 1
+    grade_b_edges: 0
+    unique_source_refs: 1
+  unresolved_gaps: []
+- seed: Stanford Byer Group
+  seed_kind: lab
+  node_coverage: exact
+  canonical_organization_id: org_stanford_byer_group
+  parent_organization_id:
+  founders:
+    present: false
+    count: 0
+    people: []
+  cto_or_technical_leadership:
+    present: true
+    count: 1
+    people:
+    - Robert L. Byer
+  upstream_affiliations:
+    present: false
+    edge_count: 0
+    organizations: []
+  acquisition:
+    applicable: false
+  ab_evidence:
+    validated_incident_edges: 2
+    grade_a_edges: 2
+    grade_b_edges: 0
+    unique_source_refs: 2
+  unresolved_gaps: []
+- seed: Stanford Fejer Group
+  seed_kind: lab
+  node_coverage: exact
+  canonical_organization_id: org_stanford_fejer_group
+  parent_organization_id:
+  founders:
+    present: false
+    count: 0
+    people: []
+  cto_or_technical_leadership:
+    present: true
+    count: 1
+    people:
+    - Martin M. Fejer
+  upstream_affiliations:
+    present: true
+    edge_count: 1
+    organizations:
+    - Byer Group at Stanford
+  acquisition:
+    applicable: false
+  ab_evidence:
+    validated_incident_edges: 1
+    grade_a_edges: 1
+    grade_b_edges: 0
+    unique_source_refs: 1
+  unresolved_gaps: []
+- seed: ETH Zurich Institute of Electromagnetic Fields / Jürg Leuthold
+  seed_kind: lab
+  node_coverage: exact
+  canonical_organization_id: org_eth_ief
+  parent_organization_id:
+  founders:
+    present: false
+    count: 0
+    people: []
+  cto_or_technical_leadership:
+    present: true
+    count: 1
+    people:
+    - Jürg Leuthold
+  upstream_affiliations:
+    present: true
+    edge_count: 2
+    organizations:
+    - ETH Zurich
+    - Lucent Bell Labs
+  acquisition:
+    applicable: false
+  ab_evidence:
+    validated_incident_edges: 20
+    grade_a_edges: 19
+    grade_b_edges: 1
+    unique_source_refs: 11
+  unresolved_gaps: []
+- seed: imec
+  seed_kind: research_institute
+  node_coverage: exact
+  canonical_organization_id: org_imec
+  parent_organization_id:
+  founders:
+    present: false
+    count: 0
+    people: []
+  cto_or_technical_leadership:
+    present: true
+    count: 1
+    people:
+    - Christian Haffner
+  upstream_affiliations:
+    present: true
+    edge_count: 1
+    organizations:
+    - ETH Zurich Institute of Electromagnetic Fields
+  acquisition:
+    applicable: false
+  ab_evidence:
+    validated_incident_edges: 7
+    grade_a_edges: 7
+    grade_b_edges: 0
+    unique_source_refs: 4
+  unresolved_gaps: []
+- seed: Ghent Photonics Research Group
+  seed_kind: lab
+  node_coverage: exact
+  canonical_organization_id: org_ghent_photonics_research_group
+  parent_organization_id:
+  founders:
+    present: false
+    count: 0
+    people: []
+  cto_or_technical_leadership:
+    present: true
+    count: 5
+    people:
+    - Dries Van Thourhout
+    - Gunther Roelkens
+    - Peter Bienstman
+    - Roel Baets
+    - Wim Bogaerts
+  upstream_affiliations:
+    present: true
+    edge_count: 2
+    organizations:
+    - Ghent University
+    - imec
+  acquisition:
+    applicable: false
+  ab_evidence:
+    validated_incident_edges: 23
+    grade_a_edges: 23
+    grade_b_edges: 0
+    unique_source_refs: 4
+  unresolved_gaps: []
+- seed: A*STAR Institute of Microelectronics
+  seed_kind: research_institute
+  node_coverage: exact
+  canonical_organization_id: org_astar_ime
+  parent_organization_id:
+  founders:
+    present: false
+    count: 0
+    people: []
+  cto_or_technical_leadership:
+    present: true
+    count: 3
+    people:
+    - Guo-Qiang Lo
+    - Surya Bhattacharya
+    - Xianshu Luo
+  upstream_affiliations:
+    present: true
+    edge_count: 3
+    organizations:
+    - Advanced Micro Foundry
+  acquisition:
+    applicable: false
+  ab_evidence:
+    validated_incident_edges: 24
+    grade_a_edges: 24
+    grade_b_edges: 0
+    unique_source_refs: 6
+  unresolved_gaps: []
+- seed: Surrey Silicon Photonics Research Group
+  seed_kind: lab
+  node_coverage: exact
+  canonical_organization_id: org_surrey_silicon_photonics_group
+  parent_organization_id:
+  founders:
+    present: false
+    count: 0
+    people: []
+  cto_or_technical_leadership:
+    present: true
+    count: 1
+    people:
+    - Graham T. Reed
+  upstream_affiliations:
+    present: false
+    edge_count: 0
+    organizations: []
+  acquisition:
+    applicable: false
+  ab_evidence:
+    validated_incident_edges: 3
+    grade_a_edges: 2
+    grade_b_edges: 1
+    unique_source_refs: 3
+  unresolved_gaps: []
+- seed: Southampton Silicon Photonics Group
+  seed_kind: lab
+  node_coverage: exact
+  canonical_organization_id: org_southampton_silicon_photonics_group
+  parent_organization_id:
+  founders:
+    present: false
+    count: 0
+    people: []
+  cto_or_technical_leadership:
+    present: true
+    count: 5
+    people:
+    - Callum Littlejohns
+    - David J. Thomson
+    - Frederic Gardes
+    - Goran Mashanovich
+    - Graham T. Reed
+  upstream_affiliations:
+    present: true
+    edge_count: 2
+    organizations:
+    - University of Surrey
+  acquisition:
+    applicable: false
+  ab_evidence:
+    validated_incident_edges: 8
+    grade_a_edges: 8
+    grade_b_edges: 0
+    unique_source_refs: 9
+  unresolved_gaps: []
+next_30_missing_claims:
+- rank: 1
+  seed: Lightwire
+  claim_type: organization_and_acquisition
+  missing_claim: Create node, founders/technical leaders, and Cisco announcement/close/value
+    claim.
+  canonical_gap: Entire acquisition seed absent.
+  recommended_evidence: Cisco filing/release and archived Lightwire bios.
+- rank: 2
+  seed: Mellanox optical groups
+  claim_type: organization_and_acquisition
+  missing_claim: Create time-aware optical-group node and Mellanox to NVIDIA event
+    metadata.
+  canonical_gap: Exact group and event absent.
+  recommended_evidence: NVIDIA/Mellanox merger filings and archived optical-team pages.
+- rank: 3
+  seed: Luxtera
+  claim_type: acquisition
+  missing_claim: Add Luxtera to Cisco dates, value/undisclosed status, and integration
+    disposition.
+  canonical_gap: People exist; acquisition event absent.
+  recommended_evidence: Cisco release and SEC filing.
+- rank: 4
+  seed: Acacia Communications
+  claim_type: acquisition
+  missing_claim: Add Acacia to Cisco dates, consideration, and named post-close technical
+    leaders.
+  canonical_gap: Founders exist; acquisition event absent.
+  recommended_evidence: Cisco/Acacia merger filings.
+- rank: 5
+  seed: Kotura
+  claim_type: acquisition
+  missing_claim: Add Kotura to Mellanox dates, consideration, and named continuation.
+  canonical_gap: People exist; acquisition absent.
+  recommended_evidence: Mellanox release and SEC filing.
+- rank: 6
+  seed: Aurrion
+  claim_type: acquisition
+  missing_claim: Add Aurrion to Juniper date/value and integration disposition.
+  canonical_gap: Founders exist; acquisition absent.
+  recommended_evidence: Juniper release/10-K.
+- rank: 7
+  seed: Elenion
+  claim_type: acquisition
+  missing_claim: Add Elenion to Nokia dates/value and named continuation.
+  canonical_gap: Leadership exists; acquisition absent.
+  recommended_evidence: Nokia release and annual report.
+- rank: 8
+  seed: NeoPhotonics
+  claim_type: acquisition
+  missing_claim: Add NeoPhotonics to Lumentum dates/value and retained technical leaders.
+  canonical_gap: No founders/leaders or acquisition.
+  recommended_evidence: Merger filings and close release.
+- rank: 9
+  seed: Finisar
+  claim_type: acquisition
+  missing_claim: Add Finisar to II-VI/Coherent dates, consideration, and successor
+    mapping.
+  canonical_gap: Founders exist; acquisition absent.
+  recommended_evidence: II-VI proxy and close announcement.
+- rank: 10
+  seed: Oclaro
+  claim_type: acquisition
+  missing_claim: Add Oclaro to Lumentum dates/value; separate succession from migration.
+  canonical_gap: Leaders exist; acquisition absent.
+  recommended_evidence: Lumentum/Oclaro filing.
+- rank: 11
+  seed: OpenLight
+  claim_type: organization
+  missing_claim: Add node, founders, CTO, Synopsys/Juniper lineage, upstream affiliations.
+  canonical_gap: Current priority seed absent.
+  recommended_evidence: Official bios and Synopsys release.
+- rank: 12
+  seed: Scintil Photonics
+  claim_type: organization
+  missing_claim: Add node, founders/CTO, CEA-Leti spinout, III-V/Si lineage.
+  canonical_gap: Current seed absent.
+  recommended_evidence: CEA-Leti/Scintil sources.
+- rank: 13
+  seed: Ranovus
+  claim_type: organization
+  missing_claim: Add node, founders/CTO, technology and upstream affiliations.
+  canonical_gap: Current seed absent.
+  recommended_evidence: Official bios and conference sources.
+- rank: 14
+  seed: Avicena
+  claim_type: organization
+  missing_claim: Add node, founders/leaders and microLED lineage.
+  canonical_gap: Current seed absent.
+  recommended_evidence: Official bios and patents.
+- rank: 15
+  seed: iPronics
+  claim_type: organization
+  missing_claim: Add node, founders/CTO and UPV spinout evidence.
+  canonical_gap: Current seed absent.
+  recommended_evidence: University transfer and company bios.
+- rank: 16
+  seed: Salience Labs
+  claim_type: organization
+  missing_claim: Add node, founders/CTO and Oxford/Münster lineage.
+  canonical_gap: Current seed absent.
+  recommended_evidence: Oxford spinout and company bios.
+- rank: 17
+  seed: Lumai
+  claim_type: organization
+  missing_claim: Add node, founders/CTO and Oxford lineage.
+  canonical_gap: Current seed absent.
+  recommended_evidence: Oxford/Lumai releases.
+- rank: 18
+  seed: Lumotive
+  claim_type: organization
+  missing_claim: Add node and leaders; bound lidar overlap to scope.
+  canonical_gap: Current seed absent.
+  recommended_evidence: Official bios and patents.
+- rank: 19
+  seed: SiPhi
+  claim_type: identity_and_organization
+  missing_claim: Resolve identity; add node, founders, leaders and aliases.
+  canonical_gap: Seed entity ambiguous and absent.
+  recommended_evidence: Legal registry and official artifacts.
+- rank: 20
+  seed: InnoLight
+  claim_type: organization
+  missing_claim: Add node and named founder/technical-leader histories.
+  canonical_gap: Major China seed absent.
+  recommended_evidence: Issuer filings and official bios.
+- rank: 21
+  seed: Eoptolink
+  claim_type: organization
+  missing_claim: Add node and named founder/technical-leader histories.
+  canonical_gap: Major China seed absent.
+  recommended_evidence: Exchange filings and annual reports.
+- rank: 22
+  seed: Broadex
+  claim_type: organization
+  missing_claim: Add node, leaders, and corporate history.
+  canonical_gap: Major China seed absent.
+  recommended_evidence: Exchange filings and reports.
+- rank: 23
+  seed: Accelink
+  claim_type: organization
+  missing_claim: Add node and Wuhan institute/leader lineage.
+  canonical_gap: Major China seed absent.
+  recommended_evidence: Issuer and institute records.
+- rank: 24
+  seed: Futurewei
+  claim_type: organization
+  missing_claim: Add distinct node and named Huawei/Futurewei research affiliations.
+  canonical_gap: Huawei parent exists; Futurewei absent.
+  recommended_evidence: Publications, patents, conference bios.
+- rank: 25
+  seed: Columbia Alexander Gaeta group
+  claim_type: lab_node
+  missing_claim: Create lab node and attach directly evidenced trainees.
+  canonical_gap: Only Columbia parent exists.
+  recommended_evidence: Official roster, theses, profiles.
+- rank: 26
+  seed: Columbia Yoshi Okawachi group
+  claim_type: lab_node
+  missing_claim: Create time-aware group node and direct trainee edges.
+  canonical_gap: Only Columbia parent exists.
+  recommended_evidence: Official pages, CVs, theses.
+- rank: 27
+  seed: A*STAR Institute of Microelectronics
+  claim_type: founder_lineage
+  missing_claim: Add named IME to AMF founder/leader and process-lineage claims.
+  canonical_gap: Exact node exists; person lineage incomplete.
+  recommended_evidence: A*STAR bios, patents, GF releases.
+- rank: 28
+  seed: Intel Silicon Photonics / Photonics Technology Lab
+  claim_type: people_dates
+  missing_claim: Resolve intervals and downstream paths for remaining seed engineers.
+  canonical_gap: Strong coverage but incomplete dates/China paths.
+  recommended_evidence: Intel archives, patents, issuer filings.
+- rank: 29
+  seed: ETH Zurich Institute of Electromagnetic Fields / Jürg Leuthold
+  claim_type: taxonomy
+  missing_claim: Represent plasmonics explicitly; remove unsupported Polariton TFLN
+    classification.
+  canonical_gap: Schema cannot cleanly encode active plasmonics.
+  recommended_evidence: ETH/Polariton/Marvell sources and schema review.
+- rank: 30
+  seed: Polariton Technologies
+  claim_type: acquisition_date
+  missing_claim: Resolve legal close date, value, and named retained people.
+  canonical_gap: Event lacks effective date/value/person retention.
+  recommended_evidence: Marvell filing and purchase agreement.

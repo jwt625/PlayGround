@@ -1,0 +1,207 @@
+---
+schema_version: 0.1.0
+report_version: 0.1.0
+inputs:
+  canonical_sha256:
+    organizations: 86a015c2459568615be61ee20e602be5a4db2e2ae63fe51070f6c7f088af9f12
+    people: 38bf33ceafff3f2da68928277057fc935dd4717fa53dd4178116bc63d24ee628
+    sources: bb9f11f662540a262e702e5b4c68ea4e3959cb7744b997eaa9696323779deba8
+    events: a5e6520ddc2d603e2b6c73831358b300103c0712866308852f024e6ba5a1f88e
+    edges: a031f6561ac2a4230798293ea11a8983d21d877a908610422d87a0848fad3a5c
+  graph_source_sha256_match:
+    organizations: true
+    people: true
+    sources: true
+    events: true
+    edges: true
+  graph_reproducible: true
+collections:
+  organizations: 172
+  people: 288
+  sources: 282
+  events: 23
+  edges: 556
+integrity:
+  duplicate_ids:
+    organizations: []
+    people: []
+    sources: []
+    events: []
+    edges: []
+  duplicate_source_urls: {}
+evidence:
+  source_grades:
+    A: 253
+    B: 27
+    C: 2
+  source_types:
+    acquisition_filing: 2
+    archived_webpage: 3
+    authoritative_interview: 5
+    conference_bio: 22
+    cv: 3
+    news_media: 1
+    official_company_bio: 38
+    official_company_page: 22
+    official_press_release: 33
+    other: 6
+    paper: 10
+    patent: 2
+    professional_society: 10
+    regulatory_filing: 48
+    reputable_technical_media: 3
+    startup_database: 2
+    thesis: 17
+    university_bio: 55
+  edge_grades:
+    A: 491
+    B: 60
+    C: 5
+  edge_statuses:
+    asserted: 5
+    validated: 551
+taxonomy:
+  edge_types:
+    acquisition: 21
+    advisor: 1
+    collaboration: 3
+    employment: 121
+    executive_role: 46
+    founder: 117
+    patent_affiliation: 5
+    publication_affiliation: 23
+    research_training: 83
+    spinout: 10
+    technical_leadership: 126
+  organization_types:
+    academic_lab: 23
+    business_unit: 4
+    company: 60
+    government_lab: 1
+    industrial_lab: 7
+    research_institute: 5
+    startup: 52
+    university: 18
+    venture_fund: 2
+  organization_statuses:
+    acquired: 35
+    active: 100
+    defunct: 2
+    historical: 31
+    unknown: 4
+  research_statuses:
+    organizations:
+      conflicted: 1
+      in_research: 1
+      seed_unverified: 6
+      validated: 164
+    people:
+      in_research: 4
+      validated: 284
+default_ab_graph:
+  evidence_filter:
+    statuses:
+    - validated
+    grades:
+    - A
+    - B
+  canonical_person_organization_edges: 523
+  included_person_organization_edges: 518
+  excluded_by_grade_or_status: 5
+  people: 282
+  organizations: 153
+  canonical_people_covered_percent: 97.9
+  canonical_organizations_covered_percent: 89.0
+  ordered_person_contributions: 60
+  institution_flows: 52
+  sequence_exclusions: 255
+  sequence_exclusions_by_reason:
+    missing_prior_end_or_later_start: 214
+    overlapping_or_nonconclusive_date_precision: 41
+acquisitions:
+  events: 21
+  edges: 21
+  events_with_announced_date: 19
+  events_with_effective_date: 19
+  events_with_disclosed_value: 18
+  events_with_two_or_more_participants: 21
+  events_with_ab_evidence: 21
+  edges_linked_to_event: 21
+  event_ids_without_acquisition_edge: []
+  edge_ids_without_valid_event: []
+  event_ids_missing_announced_date:
+  - event_acquisition_aurrion_juniper_2016
+  - event_caliopa_acquisition_huawei_2013
+  event_ids_missing_effective_date:
+  - event_acquisition_enosemi_amd
+  - event_acquisition_polariton_marvell
+  event_ids_missing_disclosed_value:
+  - event_acquisition_elenion_nokia_2020
+  - event_acquisition_enosemi_amd
+  - event_acquisition_polariton_marvell
+release_disclosures:
+  named_conflicts:
+  - id: conflict_caliopa_formation_year
+    status: open_or_preserved
+    source: canonical/MERGE_NOTES.md
+  - id: conflict_polariton_seed_technology_tfln
+    status: open_or_preserved
+    source: canonical/MERGE_NOTES.md
+  - id: conflict_xiaoguang_tu_ime_inphi_overlap
+    status: open_or_preserved
+    source: canonical/MERGE_NOTES.md
+  chronology_warnings:
+  - id: warning_event_acquisition_infinilink_globalfoundries_announced_after_effective
+    event_id: event_acquisition_infinilink_globalfoundries
+    message: announced_date is after effective_date; inspect event notes for a publication-proxy
+      explanation
+  explicit_non_edge_section_count: 10
+  explicit_non_edge_sections:
+  - "### Explicit non-edges preserved"
+  - "### Explicit China/Huawei non-edges and deferred claims"
+  - "### Patent-affiliation boundary and explicit non-edges"
+  - "### Explicit non-edges"
+  - "### Degree, group-training, and explicit non-edges"
+  - "### Program movement, corporate succession, and explicit non-edges"
+  - "### Formal spinout, chronology conflict, and explicit non-edges"
+  - "### Plasmonic/TFLN taxonomy conflict and explicit non-edges"
+  - "### Institutional origins and eight explicit non-edges"
+  - "### Explicit China-incumbent non-edges"
+  limitations:
+  - The default graph includes only validated grade-A/B person-to-organization edges;
+    lower-grade and asserted claims remain canonical but are excluded.
+  - Institution flows require strict date ordering. Missing or overlapping date precision
+    produces explicit sequence exclusions rather than inferred order.
+  - Canonical conflicts and negative claims are currently narrative in MERGE_NOTES.md;
+    only explicitly named conflict IDs and section counts are machine-surfaced.
+  - Acquisition completeness reports disclosure, not an assumption that unknown effective
+    dates or values are zero.
+definition_of_done:
+- id: canonical_collections_loaded
+  status: pass
+  detail: Five canonical YAML collections parsed with schema 0.1.0.
+- id: canonical_ids_unique
+  status: pass
+  detail: No duplicate canonical IDs found.
+- id: canonical_source_urls_unique
+  status: pass
+  detail: No duplicate canonical source URLs found.
+- id: graph_matches_canonical_inputs
+  status: pass
+  detail: All graph input SHA-256 hashes match.
+- id: default_graph_is_validated_ab
+  status: pass
+  detail: Graph evidence filter is {"statuses"=>["validated"], "grades"=>["A", "B"]}.
+- id: acquisition_events_and_edges_linked
+  status: pass
+  detail: 21 of 21 acquisition edges link to canonical acquisition events.
+- id: open_conflicts_disclosed
+  status: warn
+  detail: 3 explicitly named conflicts remain open or preserved.
+- id: graph_exclusions_disclosed
+  status: pass
+  detail: 255 sequence exclusions are reported by reason.
+- id: deterministic_generation
+  status: pass
+  detail: Reports contain no runtime timestamp and use sorted IDs/count keys plus
+    canonical input hashes.

@@ -1,0 +1,294 @@
+schema_version: "0.1.0"
+patch_id: temporal_edges_patch_2026_08_23
+as_of: "2026-08-23"
+purpose: >-
+  Candidate date-only updates for canonical person-to-organization edges. This file
+  is research staging: it does not modify canonical data and each proposal must be
+  reviewed before merge.
+baseline:
+  graph_file: generated/graph_ab.json
+  sequence_exclusion_count: 79
+  canonical_source_sha256:
+    organizations: 9a2e45709ae0a7234a29a04b404b85e6857835e476949390e75350807c8f6856
+    people: 42c7b760d1a1290d1b97722df5db9ddb4d7f35281d11821c7e1e9d3187b19b10
+    sources: a4433f3e3103fb9e25c9e8f0a97eaf2822543d0dddfdda53803af6c4b7a5a2e8
+    events: d932659d2c07f0670d463ed4623b688c20edd5370c6a784ac2a857f7517175c4
+    edges: 142ac29dc592e6f3bda37f40892a3a001df096104ec2e80d5f7fe83f54bc63aa
+ordering_test: latest_possible_prior_end_before_earliest_possible_later_start
+
+sources:
+  - id: src_temporal_anello_paniccia_interview
+    url: https://www.anellophotonics.com/uncrewed-systems-in-conversation-mario-paniccia-1
+    title: "Uncrewed Systems: In Conversation with Mario Paniccia"
+    publisher: ANELLO Photonics
+    source_type: official_company_interview
+    evidence_grade: A
+    accessed_date: "2026-08-23"
+    locator: "Career narrative: joined Intel in 1995; after Intel joined Versalume in 2016; started ANELLO in 2020"
+  - id: src_temporal_anello_paniccia_profile
+    url: https://www.anellophotonics.com/mario-paniccia
+    title: Mario Paniccia
+    publisher: ANELLO Photonics
+    source_type: official_company_bio
+    evidence_grade: A
+    accessed_date: "2026-08-23"
+    locator: "Biography: appointed CEO and chairman in November 2019 of a company he co-founded"
+  - id: src_temporal_optica_winzer_program
+    url: https://www.teisa.unican.es/ISLiST/images/2017-Slides/CompleteProgram-English-VII-ISLIST-UIMP.pdf
+    title: "VII International School on Light Sciences and Technologies program"
+    publisher: Universidad Internacional Menendez Pelayo / University of Cantabria
+    source_type: conference_bio
+    evidence_grade: B
+    accessed_date: "2026-08-23"
+    locator: "Peter J. Winzer biography: Bell Labs from 2000 through 2019; founded Nubis in 2020"
+  - id: src_temporal_ciena_nubis_deck
+    url: https://s25.q4cdn.com/550667411/files/doc_events/2025/09/Presentation-Ciena-to-Acquire-Nubis-Communications.pdf
+    title: Ciena to Acquire Nubis Communications
+    publisher: Ciena
+    source_type: official_transaction_presentation
+    evidence_grade: A
+    accessed_date: "2026-08-23"
+    locator: "Page 6: founded September 2020; Peter Winzer and Guilhem de Valicourt identified as founders"
+  - id: src_temporal_valicourt_journal_bio
+    url: https://www.tacs.eu/Competences/OC/Coherent_Optical_Transceivers_Scaling_and_Integration_Challenges.pdf
+    title: Coherent Optical Transceivers Scaling and Integration Challenges
+    publisher: Journal of Lightwave Technology / IEEE and Optica
+    source_type: technical_publication_author_bio
+    evidence_grade: B
+    accessed_date: "2026-08-23"
+    locator: "Author biography: joined Alcatel-Lucent in 2011, Bell Labs USA in 2014, and became an IPG principal scientist in 2017"
+  - id: src_temporal_ucsb_zhang_dissertation
+    url: https://escholarship.org/content/qt1wm9x6md/qt1wm9x6md.pdf
+    title: Heterogeneous Integrated Photonic Transceiver on Silicon
+    publisher: University of California, Santa Barbara
+    source_type: dissertation
+    evidence_grade: A
+    accessed_date: "2026-08-23"
+    locator: "Title and approval pages: Chong Zhang; John E. Bowers, chair; March 2017"
+  - id: src_temporal_ucsb_fang_dissertation_roster
+    url: https://optoelectronics.ece.ucsb.edu/dissertations?page=1
+    title: Dissertations
+    publisher: UC Santa Barbara Bowers Group
+    source_type: university_lab_record
+    evidence_grade: A
+    accessed_date: "2026-08-23"
+    locator: "Alexander Fang, Silicon Evanescent Lasers, March 1, 2008"
+  - id: src_temporal_ucsb_tran_dissertation
+    url: https://optoelectronics.ece.ucsb.edu/sites/default/files/2021-07/Minh_Thesis_submitted-compressed.pdf
+    title: "Minh A. Tran doctoral dissertation"
+    publisher: University of California, Santa Barbara
+    source_type: dissertation
+    evidence_grade: A
+    accessed_date: "2026-08-23"
+    locator: "Approval page: John E. Bowers, chair; March 2019"
+  - id: src_temporal_credo_dust_close
+    url: https://investors.credosemi.com/news-events/news/news-details/2026/Credo-Completes-Acquisition-of-DustPhotonics/default.aspx
+    title: Credo Completes Acquisition of DustPhotonics
+    publisher: Credo Technology Group
+    source_type: official_press_release
+    evidence_grade: A
+    accessed_date: "2026-08-23"
+    locator: "May 28, 2026 release; Ronnen Lovinger quoted as VP, Silicon Photonics, Credo"
+
+proposed_updates:
+  - edge_id: edge_mario_paniccia_intel_siph
+    person_id: person_mario_paniccia
+    organization_id: org_intel_silicon_photonics
+    field: end_date
+    current_value: null
+    proposed_value:
+      value: "2016"
+      precision: year
+    evidence_grade: A
+    source_ids:
+      - src_temporal_anello_paniccia_interview
+    direct_support: >-
+      Paniccia says that after Intel he joined Versalume in 2016. This bounds the
+      Intel career endpoint to 2016 at year precision; it does not establish the
+      start of his Intel Silicon Photonics subgroup tenure.
+    uncertainty: moderate
+    unlocks_exclusion_with: edge_mario_paniccia_anello_founder
+
+  - edge_id: edge_mario_paniccia_anello_founder
+    person_id: person_mario_paniccia
+    organization_id: org_anello
+    field: start_date
+    current_value: null
+    proposed_value:
+      value: "2019-11"
+      precision: month
+    evidence_grade: A
+    source_ids:
+      - src_temporal_anello_paniccia_profile
+    direct_support: >-
+      The official profile dates his CEO/chairman appointment at the company he
+      co-founded to November 2019. This is the earliest directly dated observation
+      of the combined founder/executive edge, not a legal-incorporation date.
+    uncertainty: moderate
+    unlocks_exclusion_with: edge_mario_paniccia_intel_siph
+
+  - edge_id: edge_peter_winzer_employment_bell_labs
+    person_id: person_peter_winzer
+    organization_id: org_alcatel_lucent_bell_labs
+    field: end_date
+    current_value:
+      value: "2020"
+      precision: year
+    proposed_value:
+      value: "2019"
+      precision: year
+    evidence_grade: B
+    source_ids:
+      - src_temporal_optica_winzer_program
+    direct_support: "Conference biography states that Winzer worked at Bell Labs from 2000 through 2019."
+    uncertainty: low
+    unlocks_exclusion_with: edge_peter_winzer_nubis_founder
+
+  - edge_id: edge_peter_winzer_nubis_founder
+    person_id: person_peter_winzer
+    organization_id: org_nubis
+    field: start_date
+    current_value: null
+    proposed_value:
+      value: "2020-09"
+      precision: month
+    evidence_grade: A
+    source_ids:
+      - src_temporal_ciena_nubis_deck
+    direct_support: "Ciena's transaction presentation states that Nubis was founded in September 2020 and identifies Winzer as founder."
+    uncertainty: low
+    unlocks_exclusion_with: edge_peter_winzer_employment_bell_labs
+
+  - edge_id: edge_guilhem_de_valicourt_employment_bell_labs
+    person_id: person_guilhem_de_valicourt
+    organization_id: org_alcatel_lucent_bell_labs
+    field: end_date
+    current_value: null
+    proposed_value:
+      value: "2017"
+      precision: year
+    evidence_grade: B
+    source_ids:
+      - src_temporal_valicourt_journal_bio
+    direct_support: >-
+      The author biography dates his Alcatel-Lucent/Bell Labs sequence from 2011
+      until he became a principal scientist at IPG Photonics in 2017.
+    uncertainty: low
+    unlocks_exclusion_with: edge_guilhem_de_valicourt_nubis_founder
+
+  - edge_id: edge_guilhem_de_valicourt_nubis_founder
+    person_id: person_guilhem_de_valicourt
+    organization_id: org_nubis
+    field: start_date
+    current_value: null
+    proposed_value:
+      value: "2020-09"
+      precision: month
+    evidence_grade: A
+    source_ids:
+      - src_temporal_ciena_nubis_deck
+    direct_support: "Ciena's transaction presentation states that Nubis was founded in September 2020 and identifies de Valicourt as founder."
+    uncertainty: low
+    unlocks_exclusion_with: edge_guilhem_de_valicourt_employment_bell_labs
+
+  - edge_id: edge_zhang_bowers_training
+    person_id: person_chong_zhang
+    organization_id: org_ucsb_bowers_group
+    field: end_date
+    current_value: null
+    proposed_value:
+      value: "2017-03"
+      precision: month
+    evidence_grade: A
+    source_ids:
+      - src_temporal_ucsb_zhang_dissertation
+    direct_support: "The UCSB dissertation names John E. Bowers as committee chair and is dated March 2017."
+    uncertainty: low
+    unlocks_exclusion_with: edge_zhang_nexus_founder
+
+  - edge_id: edge_fang_bowers_training
+    person_id: person_alex_fang
+    organization_id: org_ucsb_bowers_group
+    field: end_date
+    current_value: null
+    proposed_value:
+      value: "2008-03-01"
+      precision: day
+    evidence_grade: A
+    source_ids:
+      - src_temporal_ucsb_fang_dissertation_roster
+    direct_support: "The Bowers Group dissertation record dates Fang's dissertation to March 1, 2008."
+    uncertainty: low
+    unlocks_exclusion_with: null
+    ordering_note: "Aurrion is only dated to 2008, so the pair remains nonconclusive."
+
+  - edge_id: edge_tran_bowers_training
+    person_id: person_minh_tran
+    organization_id: org_ucsb_bowers_group
+    field: end_date
+    current_value: null
+    proposed_value:
+      value: "2019-03"
+      precision: month
+    evidence_grade: A
+    source_ids:
+      - src_temporal_ucsb_tran_dissertation
+    direct_support: "The UCSB dissertation approval page names Bowers as chair and dates the dissertation to March 2019."
+    uncertainty: low
+    unlocks_exclusion_with: null
+    ordering_note: "Nexus employment is only dated to 2019, so the pair remains nonconclusive."
+
+  - edge_id: edge_ronnen_lovinger_credo
+    person_id: person_ronnen_lovinger
+    organization_id: org_credo
+    field: start_date
+    current_value: null
+    proposed_value:
+      value: "2026-05-28"
+      precision: day
+    evidence_grade: A
+    source_ids:
+      - src_temporal_credo_dust_close
+    direct_support: "On the acquisition close date, Credo's release identifies Lovinger as its VP of Silicon Photonics."
+    uncertainty: low
+    unlocks_exclusion_with: null
+    ordering_note: >-
+      This dates the post-acquirer role but does not date the end of the DustPhotonics
+      role. Even if the Dust endpoint were set to the close date, equality would fail
+      the graph's strict-before rule.
+
+strict_order_impact:
+  currently_excluded_pairs_unlocked: 4
+  pairs:
+    - person_id: person_mario_paniccia
+      source_organization_id: org_intel_silicon_photonics
+      target_organization_id: org_anello
+      prior_edge_id: edge_mario_paniccia_intel_siph
+      later_edge_id: edge_mario_paniccia_anello_founder
+    - person_id: person_peter_winzer
+      source_organization_id: org_alcatel_lucent_bell_labs
+      target_organization_id: org_nubis
+      prior_edge_id: edge_peter_winzer_employment_bell_labs
+      later_edge_id: edge_peter_winzer_nubis_founder
+    - person_id: person_guilhem_de_valicourt
+      source_organization_id: org_alcatel_lucent_bell_labs
+      target_organization_id: org_nubis
+      prior_edge_id: edge_guilhem_de_valicourt_employment_bell_labs
+      later_edge_id: edge_guilhem_de_valicourt_nubis_founder
+    - person_id: person_chong_zhang
+      source_organization_id: org_ucsb_bowers_group
+      target_organization_id: org_nexus_photonics
+      prior_edge_id: edge_zhang_bowers_training
+      later_edge_id: edge_zhang_nexus_founder
+
+unresolved_conflicts:
+  - subject: person_mario_paniccia
+    issue: >-
+      ANELLO's profile dates the CEO/chairman appointment to November 2019, while
+      its interview says he started ANELLO in 2020. These can describe appointment
+      versus operating launch, but neither is asserted here as a legal incorporation date.
+  - subject: org_aurrion
+    issue: >-
+      UCSB's current technology-transfer page says Aurrion was founded in 2008,
+      while an older CONNECT/San Diego company fact sheet reproduced online reports
+      2007. No A/B artifact found in this pass resolves the month or the year conflict.

@@ -88,5 +88,493 @@ events:
     announced_date: {value: "2026-04-22", precision: day}
     effective_date: null
     value: {headline_amount: null, currency: null, upfront_amount: null, earnout_amount: null, stock_component: null}
-    evidence: {grade: A, sources: [{source_id: src_marvell_polariton_announcement, supports: "announcement, completed status, technology and integration", locator: null, accessed_date: "2026-08-23"}, {source_id: src_eth_polariton_acquisition, supports: "founders, 2019 founding and ETH spinout", locator: null, accessed_date: "2026-08-23"}], corroboration_count: 2, rationale: "Official acquirer and university sources.", reviewed_by: null, reviewed_date: "2026-08-23"}
-    notes: "Announcement says acquisition was completed but does not separately establish exact legal close date; value, structure and employee count undisclosed."
+    evidence: {grade: A, sources: [{source_id: src_marvell_polariton_announcement, supports: "announcement, completed status, technology and integration", locator: null, accessed_date: "2026-08-23"}, {source_id: src_eth_polariton_acquisition, supports: "founders, 2019 founding and ETH spinout", locator: null, accessed_date: "2026-08-23"}, {source_id: src_marvell_polariton_acquisition_2026, supports: "announcement and acquisition", locator: "Release headline and opening paragraph", accessed_date: "2026-08-23"}, {source_id: src_eth_polariton_marvell_2026, supports: "completed acquisition", locator: "Opening paragraph", accessed_date: "2026-08-23"}], corroboration_count: 4, rationale: "Official Marvell and ETH sources establish the acquisition but not a separate legal close date or value.", reviewed_by: null, reviewed_date: "2026-08-23"}
+    notes: "Marvell announced the acquisition on 2026-04-22 while ETH described it as completed on 2026-04-23. Neither supplies a separate effective/closing date; value, structure, employee count, and named-person retention remain undisclosed."
+  - id: event_caliopa_acquisition_huawei_2013
+    event_type: acquisition
+    name: Huawei acquisition of Caliopa
+    participants:
+    - entity_id: org_caliopa
+      role: acquired_company
+    - entity_id: org_huawei
+      role: acquirer_parent
+    announced_date:
+    effective_date:
+      value: '2013-08-06'
+      precision: day
+    value:
+      headline_amount: 7000000
+      currency: EUR
+      upfront_amount:
+      earnout_amount:
+      stock_component:
+    evidence:
+      grade: A
+      sources:
+      - source_id: src_huawei_financials_2013
+        supports: 100% acquisition, effective date, and EUR 7 million consideration
+        locator: Acquisition of subsidiaries, note (c)(i)
+        accessed_date: '2026-08-23'
+      - source_id: src_prg_spinoffs_2026
+        supports: Completed acquisition and full ownership
+        locator: 2010 Caliopa
+        accessed_date: '2026-08-23'
+      corroboration_count: 2
+      rationale: Announcement date is not assigned because the reviewed primary sources
+        establish completion, not a separately dated announcement.
+      reviewed_by:
+      reviewed_date: '2026-08-23'
+    notes: Huawei's filing identifies Huawei Tech Investment as the direct acquiring
+      subsidiary; org_huawei is used as the seeded parent node.
+  - id: event_surrey_group_move_southampton_2012
+    event_type: team_formation
+    name: Surrey silicon-photonics program relocation to Southampton
+    participants:
+    - entity_id: org_surrey_silicon_photonics_group
+      role: predecessor_program
+    - entity_id: org_southampton_silicon_photonics_group
+      role: successor_program
+    announced_date:
+    effective_date:
+      value: '2012'
+      precision: year
+    value:
+    evidence:
+      grade: B
+      sources:
+      - source_id: src_opn_reed_interview_2023
+        supports: Reed says Southampton recruited his entire 13-person Surrey group
+          in 2012
+        locator: Southampton group history
+        accessed_date: '2026-08-23'
+      corroboration_count: 1
+      rationale: The event records program continuity; unnamed participants are not
+        converted into person edges.
+      reviewed_by:
+      reviewed_date: '2026-08-23'
+    notes: Only Graham Reed is individually connected to both institutions in this tranche.
+  - id: event_bookham_avanex_form_oclaro_2009
+    event_type: merger
+    name: Bookham and Avanex combination and Oclaro renaming
+    participants:
+    - entity_id: org_bookham
+      role: parent_and_renamed_company
+    - entity_id: org_avanex
+      role: merged_subsidiary
+    - entity_id: org_oclaro
+      role: resulting_name
+    announced_date:
+      value: '2009-01-27'
+      precision: day
+    effective_date:
+      value: '2009-04-27'
+      precision: day
+    value:
+    evidence:
+      grade: A
+      sources:
+      - source_id: src_bookham_avanex_proxy_2009
+        supports: Merger agreement and announcement date
+        locator: Merger summary and background
+        accessed_date: '2026-08-23'
+      - source_id: src_bookham_avanex_close_2009
+        supports: Effective merger and Oclaro name-change date
+        locator: Customer concentration footnote
+        accessed_date: '2026-08-23'
+      corroboration_count: 2
+      rationale:
+      reviewed_by:
+      reviewed_date: '2026-08-23'
+    notes: Corporate successor context only; no automatic Bookham-person-to-Oclaro edge.
+  - id: event_acquisition_luxtera_cisco_2019
+    event_type: acquisition
+    name: Cisco acquisition of Luxtera
+    participants:
+    - entity_id: org_luxtera
+      role: acquired_company
+    - entity_id: org_cisco
+      role: acquirer
+    announced_date:
+      value: '2018-12-18'
+      precision: day
+    effective_date:
+      value: '2019-02-06'
+      precision: day
+    value:
+      headline_amount: 660000000
+      currency: USD
+      upfront_amount:
+      earnout_amount:
+      stock_component: Assumed equity awards included; cash/award split undisclosed
+    evidence:
+      grade: A
+      sources:
+      - source_id: src_cisco_luxtera_announce_2018_hist
+        supports: announcement, headline terms, planned employee integration
+        locator: Release body
+        accessed_date: '2026-08-23'
+      - source_id: src_cisco_luxtera_10q_2019_hist
+        supports: effective date and consideration
+        locator: Acquisition of Luxtera
+        accessed_date: '2026-08-23'
+      corroboration_count: 3
+      rationale: Cisco's body-date typo is resolved by page metadata and the Form 10-Q.
+      reviewed_by:
+      reviewed_date: '2026-08-23'
+    notes: Cisco explicitly planned for Luxtera employees to join its Optics business;
+      no named-person list provided.
+  - id: event_acquisition_acacia_cisco_2021
+    event_type: acquisition
+    name: Cisco acquisition of Acacia Communications
+    participants:
+    - entity_id: org_acacia_communications
+      role: acquired_company
+    - entity_id: org_cisco
+      role: acquirer
+    announced_date:
+      value: '2019-07-09'
+      precision: day
+    effective_date:
+      value: '2021-03-01'
+      precision: day
+    value:
+      headline_amount: 4500000000
+      currency: USD
+      upfront_amount: 4500000000
+      earnout_amount:
+      stock_component:
+    evidence:
+      grade: A
+      sources:
+      - source_id: src_acacia_cisco_announce_2019_hist
+        supports: original announcement and $2.6B terms
+        locator: Release opening and terms
+        accessed_date: '2026-08-23'
+      - source_id: src_acacia_cisco_amended_2021_hist
+        supports: amended $115/share and $4.5B cash terms; employee plan
+        locator: News Summary
+        accessed_date: '2026-08-23'
+      - source_id: src_acacia_cisco_close_8k_2021_hist
+        supports: effective date and final per-share cash conversion
+        locator: Introductory Note and Item 2.01
+        accessed_date: '2026-08-23'
+      corroboration_count: 3
+      rationale: Headline uses final amended fully diluted value net of cash; original
+        $2.6B terms remain in notes.
+      reviewed_by:
+      reviewed_date: '2026-08-23'
+    notes: Cisco explicitly stated CEO Raj Shanmugaraj and Acacia employees would join
+      Cisco Optics. This is not expanded into unnamed person edges.
+  - id: event_acquisition_kotura_mellanox_2013
+    event_type: acquisition
+    name: Mellanox acquisition of Kotura
+    participants:
+    - entity_id: org_kotura
+      role: acquired_company
+    - entity_id: org_mellanox
+      role: acquirer
+    announced_date:
+      value: '2013-05-15'
+      precision: day
+    effective_date:
+      value: '2013-08-15'
+      precision: day
+    value:
+      headline_amount: 82000000
+      currency: USD
+      upfront_amount: 82000000
+      earnout_amount:
+      stock_component:
+    evidence:
+      grade: A
+      sources:
+      - source_id: src_mellanox_kotura_announce_2013_hist
+        supports: announcement, approximate cash price and workforce plans
+        locator: Release body
+        accessed_date: '2026-08-23'
+      - source_id: src_mellanox_kotura_close_2013_hist
+        supports: effective date and acquired engineering-workforce context
+        locator: Acquisitions note
+        accessed_date: '2026-08-23'
+      corroboration_count: 2
+      rationale: Price was explicitly subject to adjustment; final cash paid not separately
+        located.
+      reviewed_by:
+      reviewed_date: '2026-08-23'
+    notes: Issuer sources support engineering-team addition and a U.S. R&D-center plan,
+      but do not name retained individuals.
+  - id: event_acquisition_mellanox_nvidia_2020
+    event_type: acquisition
+    name: NVIDIA acquisition of Mellanox Technologies
+    participants:
+    - entity_id: org_mellanox
+      role: acquired_company
+    - entity_id: org_nvidia
+      role: acquirer
+    announced_date:
+      value: '2019-03-11'
+      precision: day
+    effective_date:
+      value: '2020-04-27'
+      precision: day
+    value:
+      headline_amount: 6900000000
+      currency: USD
+      upfront_amount: 7049000000
+      earnout_amount:
+      stock_component: USD 85M fair value of assumed awards; closing total purchase
+        consideration USD 7.134B
+    evidence:
+      grade: A
+      sources:
+      - source_id: src_nvidia_mellanox_announce_2019_hist
+        supports: announcement, $125/share cash and $6.9B enterprise value
+        locator: Opening release bullets
+        accessed_date: '2026-08-23'
+      - source_id: src_nvidia_mellanox_close_8k_2020_hist
+        supports: effective date
+        locator: Item 2.01
+        accessed_date: '2026-08-23'
+      - source_id: src_nvidia_mellanox_10q_2020_hist
+        supports: closing accounting consideration
+        locator: Acquisition of Mellanox table
+        accessed_date: '2026-08-23'
+      corroboration_count: 3
+      rationale: Headline is announced enterprise value; upfront and stock_component
+        preserve closing accounting measures instead of equating them.
+      reviewed_by:
+      reviewed_date: '2026-08-23'
+    notes: No reviewed artifact names an optical subteam transfer separately from the
+      whole-company acquisition.
+  - id: event_acquisition_aurrion_juniper_2016
+    event_type: acquisition
+    name: Juniper acquisition of Aurrion
+    participants:
+    - entity_id: org_aurrion
+      role: acquired_company
+    - entity_id: org_juniper
+      role: acquirer
+    announced_date:
+    effective_date:
+      value: '2016-08-09'
+      precision: day
+    value:
+      headline_amount: 101900000
+      currency: USD
+      upfront_amount: 74300000
+      earnout_amount:
+      stock_component: USD 55M assumed awards for continuing employees, excluded from
+        purchase consideration and expensed over future service
+    evidence:
+      grade: A
+      sources:
+      - source_id: src_juniper_aurrion_10k_2016_hist
+        supports: effective date, ownership step-up and consideration breakdown
+        locator: Note 3, Aurrion
+        accessed_date: '2026-08-23'
+      corroboration_count: 1
+      rationale: No separate public announcement date was located; $101.9M is accounting
+        consideration including remeasured pre-existing interests, while $74.3M is cash
+        for the remaining ownership.
+      reviewed_by:
+      reviewed_date: '2026-08-23'
+    notes: Future-service awards explicitly establish that some employees were expected
+      to continue, but do not identify which people.
+  - id: event_acquisition_elenion_nokia_2020
+    event_type: acquisition
+    name: Nokia acquisition of Elenion Technologies
+    participants:
+    - entity_id: org_elenion
+      role: acquired_company
+    - entity_id: org_nokia
+      role: acquirer
+    announced_date:
+      value: '2020-02-19'
+      precision: day
+    effective_date:
+      value: '2020-03-25'
+      precision: day
+    value:
+    evidence:
+      grade: A
+      sources:
+      - source_id: src_nokia_elenion_close_2020_hist
+        supports: announcement reference and completion date
+        locator: Opening paragraph
+        accessed_date: '2026-08-23'
+      - source_id: src_nokia_annual_2020_elenion_hist
+        supports: 100% ownership and operating-segment allocation
+        locator: Acquisitions note
+        accessed_date: '2026-08-23'
+      corroboration_count: 2
+      rationale: No public transaction value found.
+      reviewed_by:
+      reviewed_date: '2026-08-23'
+    notes: No explicit whole-team retention claim in reviewed transaction artifacts.
+  - id: event_acquisition_neophotonics_lumentum_2022
+    event_type: acquisition
+    name: Lumentum acquisition of NeoPhotonics
+    participants:
+    - entity_id: org_neophotonics
+      role: acquired_company
+    - entity_id: org_lumentum
+      role: acquirer
+    announced_date:
+      value: '2021-11-04'
+      precision: day
+    effective_date:
+      value: '2022-08-03'
+      precision: day
+    value:
+      headline_amount: 918000000
+      currency: USD
+      upfront_amount: 867300000
+      earnout_amount:
+      stock_component: USD 50M pre-existing loan settlement plus USD 17.1M stock compensation;
+        closing purchase price USD 934.4M
+    evidence:
+      grade: A
+      sources:
+      - source_id: src_lumentum_neophotonics_announce_2021_hist
+        supports: announcement and $918M equity value
+        locator: Opening terms
+        accessed_date: '2026-08-23'
+      - source_id: src_neophotonics_lumentum_close_8k_2022_hist
+        supports: effective date and award treatment
+        locator: Introductory Note
+        accessed_date: '2026-08-23'
+      - source_id: src_lumentum_neophotonics_10k_2023_hist
+        supports: closing accounting consideration
+        locator: NeoPhotonics Acquisition table
+        accessed_date: '2026-08-23'
+      corroboration_count: 3
+      rationale: Headline is announced equity value; upfront is closing shareholder
+        cash; other accounting components are preserved separately.
+      reviewed_by:
+      reviewed_date: '2026-08-23'
+    notes: Unvested RSUs were assumed on substantially the same vesting terms, but no
+      named-person retention list is provided.
+  - id: event_acquisition_finisar_ii_vi_2019
+    event_type: acquisition
+    name: II-VI acquisition of Finisar
+    participants:
+    - entity_id: org_finisar
+      role: acquired_company
+    - entity_id: org_ii_vi
+      role: acquirer
+    announced_date:
+      value: '2018-11-09'
+      precision: day
+    effective_date:
+      value: '2019-09-24'
+      precision: day
+    value:
+      headline_amount: 3200000000
+      currency: USD
+      upfront_amount: 1879086000
+      earnout_amount:
+      stock_component: USD 987.707M II-VI shares plus USD 41.710M replacement awards
+        at close; total fair-value consideration USD 2.908503B
+    evidence:
+      grade: A
+      sources:
+      - source_id: src_iivi_finisar_announce_2018_hist
+        supports: announcement value and mixed terms
+        locator: Transaction Overview
+        accessed_date: '2026-08-23'
+      - source_id: src_iivi_finisar_close_2019_hist
+        supports: effective date and final mixed consideration
+        locator: Opening and terms paragraphs
+        accessed_date: '2026-08-23'
+      - source_id: src_iivi_finisar_10q_2019_hist
+        supports: closing accounting consideration
+        locator: Finisar acquisition consideration table
+        accessed_date: '2026-08-23'
+      corroboration_count: 3
+      rationale: Announced equity value and closing fair value differ with II-VI share
+        price; both are preserved.
+      reviewed_by:
+      reviewed_date: '2026-08-23'
+    notes: No reviewed source supports a named Finisar photonics team transfer. Coherent
+      is the later II-VI successor, not the 2019 acquirer.
+  - id: event_acquisition_oclaro_lumentum_2018
+    event_type: acquisition
+    name: Lumentum acquisition of Oclaro
+    participants:
+    - entity_id: org_oclaro
+      role: acquired_company
+    - entity_id: org_lumentum
+      role: acquirer
+    announced_date:
+      value: '2018-03-12'
+      precision: day
+    effective_date:
+      value: '2018-12-10'
+      precision: day
+    value:
+      headline_amount: 1800000000
+      currency: USD
+      upfront_amount: 964800000
+      earnout_amount:
+      stock_component: USD 457.4M Lumentum shares plus USD 2.7M replacement awards at
+        close; total fair-value consideration USD 1.4249B
+    evidence:
+      grade: A
+      sources:
+      - source_id: src_lumentum_oclaro_announce_2018_hist
+        supports: announcement value and per-share mixed terms
+        locator: Release opening
+        accessed_date: '2026-08-23'
+      - source_id: src_oclaro_lumentum_close_8k_2018_hist
+        supports: effective date and cash/stock conversion
+        locator: Introductory Note and Item 2.01
+        accessed_date: '2026-08-23'
+      - source_id: src_lumentum_oclaro_10k_2019_hist
+        supports: closing accounting consideration and award conversion
+        locator: Oclaro acquisition note
+        accessed_date: '2026-08-23'
+      corroboration_count: 3
+      rationale: Announced equity value and closing fair value differ with Lumentum
+        share price; both are preserved.
+      reviewed_by:
+      reviewed_date: '2026-08-23'
+    notes: Converted employee awards retained similar terms, but no named-person retention
+      list is provided.
+  - id: event_acquisition_lightwire_cisco_2012
+    event_type: acquisition
+    name: Cisco acquisition of Lightwire
+    participants:
+    - entity_id: org_lightwire
+      role: acquired_company
+    - entity_id: org_cisco
+      role: acquirer
+    announced_date:
+      value: '2012-02-24'
+      precision: day
+    effective_date:
+      value: '2012-03-19'
+      precision: day
+    value:
+      headline_amount: 271000000
+      currency: USD
+      upfront_amount:
+      earnout_amount:
+      stock_component: Cash and retention-based incentives; split undisclosed
+    evidence:
+      grade: A
+      sources:
+      - source_id: src_cisco_lightwire_announce_2012_hist
+        supports: announcement, terms and planned employee integration
+        locator: Release body
+        accessed_date: '2026-08-23'
+      - source_id: src_cisco_lightwire_close_2012_hist
+        supports: effective date, consideration and employee integration
+        locator: Release body
+        accessed_date: '2026-08-23'
+      corroboration_count: 2
+      rationale: Retention-based incentives are not classified as earnout without a
+        disclosed structure.
+      reviewed_by:
+      reviewed_date: '2026-08-23'
+    notes: Cisco explicitly states Lightwire employees were integrated into the Transceiver
+      Modules and Supply Chain Operations groups; individuals are unnamed.

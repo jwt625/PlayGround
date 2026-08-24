@@ -1,0 +1,239 @@
+dataset:
+  title: "China optical-component incumbents: initial named-person tranche"
+  version: "0.1"
+  as_of: "2026-08-23"
+  scope: >-
+    Named founders and technically relevant leaders at InnoLight, Eoptolink, Accelink,
+    Source Photonics, Broadex, and Hisense Broadband, with individually evidenced
+    antecedents. This is a staging file; it does not assert cohort or team transfers.
+  evidence_policy:
+    A: "Primary artifact: regulatory filing, issuer annual report, primary paper, or official company biography."
+    B: "Professional-society biography, authoritative technical interview, or reputable event-host biography."
+    X: "Generic team-origin statement or inference; discovery only and not an edge."
+  integration_note: >-
+    IDs are local staging IDs. Canonical integration must prefix IDs, normalize legal
+    entities, and convert source_urls into claim-level source references.
+
+sources:
+  innolight_f1:
+    url: "https://www.sec.gov/Archives/edgar/data/1450040/000119312515226606/d876175df1.htm"
+    title: "InnoLight Technology Corporation Form F-1"
+    publisher: "U.S. Securities and Exchange Commission"
+    language: en
+    type: regulatory_filing
+    evidence_grade: A
+    locator: "Corporate History and Structure; Management biographies"
+    accessed: "2026-08-23"
+  innolight_leadership:
+    url: "https://www.innolight.com/about"
+    title: "Overview and Leadership"
+    publisher: "InnoLight"
+    language: en
+    type: official_company_bio
+    evidence_grade: A
+    locator: "Leadership section"
+    accessed: "2026-08-23"
+  eoptolink_2025_report:
+    url: "https://disc.static.szse.cn/disc/disk03/finalpage/2026-04-24/e20c68b8-9ce5-4751-acfd-9fb5f4e44645.PDF"
+    title: "成都新易盛通信技术股份有限公司2025年年度报告"
+    publisher: "Shenzhen Stock Exchange / Eoptolink"
+    language: zh
+    type: regulatory_filing
+    evidence_grade: A
+    locator: "董事、高级管理人员简历, pp. 31-33"
+    accessed: "2026-08-23"
+  accelink_2022_report:
+    url: "https://disc.static.szse.cn/disc/disk03/finalpage/2023-04-25/6c8541df-dc97-496d-ac55-049f3f3f9740.PDF"
+    title: "武汉光迅科技股份有限公司2022年年度报告"
+    publisher: "Shenzhen Stock Exchange / Accelink"
+    language: zh
+    type: regulatory_filing
+    evidence_grade: A
+    locator: "董事、监事和高级管理人员简历"
+    accessed: "2026-08-23"
+  source_jlt_2018:
+    url: "https://staff.ee.ncu.edu.tw/jwshi/public_html/downloadfile/i226.pdf"
+    title: "High-Speed In0.52Al0.48As Based Avalanche Photodiode With Top-Illuminated Design for 100 Gb/s ER-4 System"
+    publisher: "Journal of Lightwave Technology / IEEE"
+    language: en
+    type: primary_paper
+    evidence_grade: A
+    locator: "Author biographies, p. 5510"
+    accessed: "2026-08-23"
+  source_optica_frank:
+    url: "https://www.optica.org/events/industry_events/2021/oida_technology_showcase_2021_march-0a8872f5b3d38654371af9eaee2eeaf7/participating_companies/source_photonics/"
+    title: "Source Photonics: Frank Chang speaker biography"
+    publisher: "Optica"
+    language: en
+    type: professional_society_bio
+    evidence_grade: B
+    locator: "Speaker biography"
+    accessed: "2026-08-23"
+  broadex_management:
+    url: "https://en.broadex-tech.com/about/our-management-team"
+    title: "Our Management Team"
+    publisher: "Broadex Technologies"
+    language: en
+    type: official_company_bio
+    evidence_grade: A
+    locator: "Jinkuan Tang (Tom) biography"
+    accessed: "2026-08-23"
+  hisense_schott_david:
+    url: "https://www.schott.com/en-ae/products/transistor-outline-packages-p1000294/how-hisense-is-setting-speed-records-with-optical-module-technology"
+    title: "How Hisense is setting speed records with optical module technology"
+    publisher: "SCHOTT"
+    language: en
+    type: authoritative_partner_interview
+    evidence_grade: B
+    locator: "David Li biography and interview introduction"
+    accessed: "2026-08-23"
+  hisense_afr_zhou:
+    url: "https://www.fiber-resources.com/medias/230.html"
+    title: "TFLN Forum: Dr. Jianying Zhou"
+    publisher: "Advanced Fiber Resources"
+    language: en
+    type: authoritative_event_bio
+    evidence_grade: B
+    locator: "About Jianying Zhou and Hisense Broadband"
+    accessed: "2026-08-23"
+  hisense_hkex_filing:
+    url: "https://www1.hkexnews.hk/app/sehk/2025/107650/a125209/sehk25082502090.pdf"
+    title: "Hisense Broadband group listing application draft"
+    publisher: "Hong Kong Exchanges and Clearing"
+    language: en/zh
+    type: regulatory_filing
+    evidence_grade: A
+    locator: "Directors and senior management biography for Huang Weiping, p. 337"
+    accessed: "2026-08-23"
+  hisense_zte_paper:
+    url: "https://www.zte.com.cn/content/dam/zte-site/res-www-zte-com-cn/mediares/magazine/publication/com_cn/pdf/201804.pdf"
+    title: "中兴通讯技术, 2018年第4期"
+    publisher: "ZTE Communications"
+    language: zh
+    type: primary_technical_paper
+    evidence_grade: A
+    locator: "作者简介: 黄卫平 and 张华, p. 53"
+    accessed: "2026-08-23"
+  hisense_icmtia_huang:
+    url: "https://en.icmtia.com/product/80.html"
+    title: "Invited speaker: Dr. Weiping Huang"
+    publisher: "International Conference on Manufacturing Technology and Intelligent Applications"
+    language: en
+    type: professional_conference_bio
+    evidence_grade: B
+    locator: "Speaker biography describing Ligent co-founding and Hisense roles"
+    accessed: "2026-08-23"
+
+people:
+  - {id: sheng_liu, name: "Sheng Liu", aliases: [{value: "刘圣", language: zh, status: "commonly_used_chinese_name"}], identity_discriminators: ["InnoLight co-founder/CEO", "former Opnext engineering manager", "Georgia Tech PhD"]}
+  - {id: hsing_hsien_kung, name: "Hsing Hsien Kung", aliases: [{value: "Hsing Kung", language: en, status: "official_company_usage"}], identity_discriminators: ["InnoLight co-founder/chairman", "Pine Photonics co-founder", "SDL co-founder"]}
+  - {id: osa_chou_shung_mok, name: "Osa Chou-Shung Mok", aliases: [{value: "Osa Mok", language: en, status: "official_company_usage"}], identity_discriminators: ["InnoLight co-founder/CMO", "Pine Photonics co-founder", "former Intel telecom analyst"]}
+  - {id: weilong_william_lee, name: "Weilong William Lee", aliases: [{value: "Wei-long William Lee", language: en, status: "official_company_usage"}], identity_discriminators: ["InnoLight CTO/chief scientist", "former Oplink OCPU general manager", "former WaveSplitter chief engineer"]}
+  - {id: xiangzhong_wang, name: "Xiangzhong Wang", aliases: [{value: "王祥忠", language: zh, status: "official_filing_usage"}], identity_discriminators: ["InnoLight VP R&D", "former Opnext R&D director", "40G/100G products"]}
+  - {id: hai_ding, name: "Hai Ding", identity_discriminators: ["InnoLight VP 10G operations in 2015 filing", "current InnoLight VP BD", "former Intel packaging manager"]}
+  - {id: gaohong_shi, name: "Gaohong Shi", identity_discriminators: ["InnoLight VP 40G operations in 2015 filing", "former Princeton Photonics Suzhou engineering manager"]}
+  - {id: gao_guangrong, name: "高光荣", aliases: [{value: "Guangrong Gao", language: en, status: "researcher_supplied_pinyin"}], identity_discriminators: ["Eoptolink chairman", "former Leshan optical-communications technician", "born May 1969"]}
+  - {id: huang_xiaolei, name: "黄晓雷", aliases: [{value: "Xiaolei Huang", language: en, status: "researcher_supplied_pinyin"}], identity_discriminators: ["Eoptolink director/general manager", "former Fiberxon Chengdu engineer", "UESTC master's"]}
+  - {id: luo_yuming, name: "罗玉明", aliases: [{value: "Yuming Luo", language: en, status: "researcher_supplied_pinyin"}], identity_discriminators: ["Eoptolink director", "former Sichuan Guangheng chief engineer", "born March 1961"]}
+  - {id: hu_qianggao, name: "胡强高", aliases: [{value: "Qianggao Hu", language: en, status: "researcher_supplied_pinyin"}], identity_discriminators: ["Accelink general manager", "former technical director", "HUST optical-engineering PhD"]}
+  - {id: bu_qinlian, name: "卜勤练", aliases: [{value: "Qinlian Bu", language: en, status: "researcher_supplied_pinyin"}], identity_discriminators: ["Accelink deputy general manager", "former transmission-products BU general manager"]}
+  - {id: zhang_jun_accelink, name: "张军", aliases: [{value: "Jun Zhang", language: en, status: "researcher_supplied_pinyin"}], identity_discriminators: ["Accelink deputy general manager", "former data/access BU general manager", "Xi'an Jiaotong mechanical-electronics master's"]}
+  - {id: liu_jiasheng, name: "刘家胜", aliases: [{value: "Jiasheng Liu", language: en, status: "researcher_supplied_pinyin"}], identity_discriminators: ["Accelink transmission-products leader", "later deputy general manager"]}
+  - {id: frank_chang_source, name: "Frank Chang", identity_discriminators: ["Source Photonics chief engineer/CTO", "former Inphi senior principal engineer", "Optica Fellow"]}
+  - {id: yu_heng_jan, name: "Yu-Heng Jan", identity_discriminators: ["Source Photonics chief device officer", "former MRV Optical Division", "UCSB ECE PhD 1997"]}
+  - {id: jinkuan_tang, name: "Jinkuan Tang", aliases: [{value: "Tom Tang", language: en, status: "official_company_usage"}, {value: "唐金宽", language: zh, status: "researcher_supplied_chinese_rendering"}], identity_discriminators: ["Broadex president/CEO", "former YOFC optical-module product-line GM", "HUST physical-electronics master's"]}
+  - {id: david_li_hisense, name: "David Li", identity_discriminators: ["Hisense Broadband deputy GM/CTO", "joined Hisense in 2003", "UESTC and University of Houston PhD training"]}
+  - {id: jianying_zhou, name: "Jianying Zhou", aliases: [{value: "周建英", language: zh, status: "official_event_page_usage"}], identity_discriminators: ["Hisense Broadband VP Technology", "former Intel R&D director/principal engineer", "TFLN optical-transceiver speaker"]}
+  - {id: huang_weiping, name: "黄卫平", aliases: [{value: "Weiping Huang", language: en, status: "official_filing_usage"}], identity_discriminators: ["Hisense Broadband group founder", "Hisense Broadband chief scientist", "integrated-photonics researcher"]}
+
+edges:
+  - {person: sheng_liu, organization: "InnoLight / 中际旭创", edge_type: founder, role: "co-founder, CEO and director since inception in 2008", evidence_grade: A, source_urls: ["https://www.sec.gov/Archives/edgar/data/1450040/000119312515226606/d876175df1.htm"], photonics_relevance: "Founded and led a high-speed optical-transceiver company.", uncertainty: "F-1 was filed in 2015; current CEO status is separately visible on the official leadership page."}
+  - {person: sheng_liu, organization: "Opnext", edge_type: employment, role: "senior engineering manager, 2003-2008", evidence_grade: A, source_urls: ["https://www.sec.gov/Archives/edgar/data/1450040/000119312515226606/d876175df1.htm"], photonics_relevance: "Direct optical-component engineering-management antecedent.", uncertainty: "Business unit is not stated."}
+  - {person: sheng_liu, organization: "Pine Photonics Communications", edge_type: employment, role: "manager of China R&D center, 2001-2003", evidence_grade: A, source_urls: ["https://www.sec.gov/Archives/edgar/data/1450040/000119312515226606/d876175df1.htm"], photonics_relevance: "Direct optical-transceiver R&D antecedent.", uncertainty: "Legal entity of the China R&D center is not separately named."}
+  - {person: sheng_liu, organization: "Agere Systems", edge_type: employment, role: "technical staff, 2001", evidence_grade: A, source_urls: ["https://www.sec.gov/Archives/edgar/data/1450040/000119312515226606/d876175df1.htm"], photonics_relevance: "Semiconductor/optoelectronics antecedent at the Lucent spinout.", uncertainty: "The filing does not specify the project or division."}
+  - {person: hsing_hsien_kung, organization: "InnoLight / 中际旭创", edge_type: founder, role: "co-founder and chairman from 2008", evidence_grade: A, source_urls: ["https://www.sec.gov/Archives/edgar/data/1450040/000119312515226606/d876175df1.htm"], photonics_relevance: "Company formation and optical-industry leadership.", uncertainty: "Current official page lists strategy advisor rather than chairman."}
+  - {person: hsing_hsien_kung, organization: "Pine Photonics Communications", edge_type: founder, role: "co-founder, chairman and CEO, 2000-2005", evidence_grade: A, source_urls: ["https://www.sec.gov/Archives/edgar/data/1450040/000119312515226606/d876175df1.htm"], photonics_relevance: "Prior optical-communications company formation.", uncertainty: "None material."}
+  - {person: hsing_hsien_kung, organization: "SDL", edge_type: founder, role: "co-founder and VP manufacturing, 1983-1995", evidence_grade: A, source_urls: ["https://www.sec.gov/Archives/edgar/data/1450040/000119312515226606/d876175df1.htm"], photonics_relevance: "Laser/optoelectronics manufacturing lineage.", uncertainty: "None material."}
+  - {person: osa_chou_shung_mok, organization: "InnoLight / 中际旭创", edge_type: founder, role: "co-founder and chief marketing officer from 2008", evidence_grade: A, source_urls: ["https://www.sec.gov/Archives/edgar/data/1450040/000119312515226606/d876175df1.htm"], photonics_relevance: "Commercial co-founder of optical-transceiver supplier.", uncertainty: "Current official page confirms CMO but not tenure dates."}
+  - {person: osa_chou_shung_mok, organization: "Intel", edge_type: employment, role: "telecommunications analyst, 1977-1980", evidence_grade: A, source_urls: ["https://www.sec.gov/Archives/edgar/data/1450040/000119312515226606/d876175df1.htm"], photonics_relevance: "Telecommunications-industry antecedent; not claimed as silicon-photonics work.", uncertainty: "Division and location unstated."}
+  - {person: osa_chou_shung_mok, organization: "Pine Photonics Communications", edge_type: founder, role: "co-founder and VP sales/marketing from 2000", evidence_grade: A, source_urls: ["https://www.sec.gov/Archives/edgar/data/1450040/000119312515226606/d876175df1.htm"], photonics_relevance: "Prior optical-communications startup lineage.", uncertainty: "End date is not explicit."}
+  - {person: osa_chou_shung_mok, organization: "Uniwave Technology", edge_type: founder, role: "co-founder and CEO, 2004-2008", evidence_grade: A, source_urls: ["https://www.sec.gov/Archives/edgar/data/1450040/000119312515226606/d876175df1.htm"], photonics_relevance: "Communications-company operating lineage.", uncertainty: "Specific product scope is not stated in the biography."}
+  - {person: weilong_william_lee, organization: "InnoLight / 中际旭创", edge_type: technical_leadership, role: "CTO from 2009; current chief scientist", evidence_grade: A, source_urls: ["https://www.sec.gov/Archives/edgar/data/1450040/000119312515226606/d876175df1.htm", "https://www.innolight.com/about"], photonics_relevance: "Direct optical-transceiver technical leadership.", uncertainty: "Title evolved from CTO to chief scientist; no continuous-title inference."}
+  - {person: weilong_william_lee, organization: "Oplink Communications", edge_type: technical_leadership, role: "general manager, OCPU, 2008-2009", evidence_grade: A, source_urls: ["https://www.sec.gov/Archives/edgar/data/1450040/000119312515226606/d876175df1.htm"], photonics_relevance: "Optical-component business-unit antecedent.", uncertainty: "OCPU expansion is not provided in the filing."}
+  - {person: weilong_william_lee, organization: "WaveSplitter Technologies", edge_type: employment, role: "chief engineer, 2006-2008", evidence_grade: A, source_urls: ["https://www.sec.gov/Archives/edgar/data/1450040/000119312515226606/d876175df1.htm"], photonics_relevance: "Optical-component engineering antecedent.", uncertainty: "None material."}
+  - {person: weilong_william_lee, organization: "Pine Photonics Communications", edge_type: employment, role: "senior optical engineer, 2000-2002", evidence_grade: A, source_urls: ["https://www.sec.gov/Archives/edgar/data/1450040/000119312515226606/d876175df1.htm"], photonics_relevance: "Direct optical engineering antecedent.", uncertainty: "None material."}
+  - {person: xiangzhong_wang, organization: "InnoLight / 中际旭创", edge_type: technical_leadership, role: "VP R&D from 2012, responsible for 40G/100G products", evidence_grade: A, source_urls: ["https://www.sec.gov/Archives/edgar/data/1450040/000119312515226606/d876175df1.htm"], photonics_relevance: "High-speed optical-transceiver R&D leadership.", uncertainty: "Historical 2015 filing snapshot; current employment is not asserted."}
+  - {person: xiangzhong_wang, organization: "Opnext", edge_type: employment, role: "R&D manager/director, 2003-2012", evidence_grade: A, source_urls: ["https://www.sec.gov/Archives/edgar/data/1450040/000119312515226606/d876175df1.htm"], photonics_relevance: "Optical-component R&D lineage.", uncertainty: "Exact promotion dates are not stated."}
+  - {person: xiangzhong_wang, organization: "Pine Photonics Communications", edge_type: employment, role: "electrical engineer, 2001-2003", evidence_grade: A, source_urls: ["https://www.sec.gov/Archives/edgar/data/1450040/000119312515226606/d876175df1.htm"], photonics_relevance: "Optical-transceiver electrical-engineering antecedent.", uncertainty: "None material."}
+  - {person: hai_ding, organization: "InnoLight / 中际旭创", edge_type: technical_leadership, role: "VP 10G operations from 2008; later VP business development", evidence_grade: A, source_urls: ["https://www.sec.gov/Archives/edgar/data/1450040/000119312515226606/d876175df1.htm", "https://www.innolight.com/about"], photonics_relevance: "Optical-transceiver operations and business-development leadership.", uncertainty: "Role-title evolution is evidenced at two snapshots; continuity between titles is not assumed."}
+  - {person: hai_ding, organization: "Intel", edge_type: employment, role: "core competency manager for flash packaging, 2003-2008", evidence_grade: A, source_urls: ["https://www.sec.gov/Archives/edgar/data/1450040/000119312515226606/d876175df1.htm"], photonics_relevance: "Semiconductor packaging antecedent relevant to optical-module industrialization, but not photonics-specific.", uncertainty: "No optical work is claimed."}
+  - {person: gaohong_shi, organization: "InnoLight / 中际旭创", edge_type: technical_leadership, role: "VP 40G operations from 2008", evidence_grade: A, source_urls: ["https://www.sec.gov/Archives/edgar/data/1450040/000119312515226606/d876175df1.htm"], photonics_relevance: "40G optical-transceiver operations leadership.", uncertainty: "Historical 2015 filing snapshot; current role is not asserted."}
+  - {person: gaohong_shi, organization: "Princeton Photonics (Suzhou)", edge_type: employment, role: "engineering manager, 2002-2008", evidence_grade: A, source_urls: ["https://www.sec.gov/Archives/edgar/data/1450040/000119312515226606/d876175df1.htm"], photonics_relevance: "Direct photonics engineering-management antecedent.", uncertainty: "Legal entity naming follows the F-1 biography."}
+
+  - {person: gao_guangrong, organization: "Eoptolink / 新易盛", edge_type: executive_role, role: "chairman; chairman/CFO of predecessor from 2008", evidence_grade: A, source_urls: ["https://disc.static.szse.cn/disc/disk03/finalpage/2026-04-24/e20c68b8-9ce5-4751-acfd-9fb5f4e44645.PDF"], photonics_relevance: "Long-term leader of an optical-transceiver manufacturer with prior hands-on optical-communications experience.", uncertainty: "The report does not label him founder; no founder edge is asserted."}
+  - {person: gao_guangrong, organization: "Leshan Radio Factory optical-communications branch", edge_type: employment, role: "technician, 1989-1998", evidence_grade: A, source_urls: ["https://disc.static.szse.cn/disc/disk03/finalpage/2026-04-24/e20c68b8-9ce5-4751-acfd-9fb5f4e44645.PDF"], photonics_relevance: "Direct optical-communications technical antecedent.", uncertainty: "English organization rendering is a translation of 乐山无线电厂光通信分厂."}
+  - {person: huang_xiaolei, organization: "Eoptolink / 新易盛", edge_type: technical_leadership, role: "technical director, then director/general manager from 2008", evidence_grade: A, source_urls: ["https://disc.static.szse.cn/disc/disk03/finalpage/2026-04-24/e20c68b8-9ce5-4751-acfd-9fb5f4e44645.PDF"], photonics_relevance: "Core technical and operating leadership at optical-transceiver manufacturer.", uncertainty: "The filing does not label him founder."}
+  - {person: huang_xiaolei, organization: "Fiberxon (Chengdu)", edge_type: employment, role: "technical engineer, 2001-2002", evidence_grade: A, source_urls: ["https://disc.static.szse.cn/disc/disk03/finalpage/2026-04-24/e20c68b8-9ce5-4751-acfd-9fb5f4e44645.PDF"], photonics_relevance: "Direct optical-transceiver engineering antecedent.", uncertainty: "Legal English name normalized from 飞博创（成都）科技有限公司."}
+  - {person: huang_xiaolei, organization: "Insten Technology / 成都英思腾科技", edge_type: technical_leadership, role: "CTO, 2005-2007", evidence_grade: A, source_urls: ["https://disc.static.szse.cn/disc/disk03/finalpage/2026-04-24/e20c68b8-9ce5-4751-acfd-9fb5f4e44645.PDF"], photonics_relevance: "Technical leadership antecedent in communications technology.", uncertainty: "Company product scope is not expanded beyond the filing."}
+  - {person: huang_xiaolei, organization: "Guangsheng Communications / 光盛通信", edge_type: technical_leadership, role: "CTO, 2007-2008", evidence_grade: A, source_urls: ["https://disc.static.szse.cn/disc/disk03/finalpage/2026-04-24/e20c68b8-9ce5-4751-acfd-9fb5f4e44645.PDF"], photonics_relevance: "Immediate technical-leadership antecedent before Eoptolink.", uncertainty: "English rendering is researcher translation."}
+  - {person: luo_yuming, organization: "Eoptolink / 新易盛", edge_type: executive_role, role: "director from December 2020", evidence_grade: A, source_urls: ["https://disc.static.szse.cn/disc/disk03/finalpage/2026-04-24/e20c68b8-9ce5-4751-acfd-9fb5f4e44645.PDF"], photonics_relevance: "Technically experienced board member of optical-transceiver manufacturer.", uncertainty: "Board role alone is not treated as technical leadership; relevance comes from separately evidenced chief-engineer roles."}
+  - {person: luo_yuming, organization: "Leshan Radio Factory optical-communications branch", edge_type: technical_leadership, role: "branch director, 1988-1996", evidence_grade: A, source_urls: ["https://disc.static.szse.cn/disc/disk03/finalpage/2026-04-24/e20c68b8-9ce5-4751-acfd-9fb5f4e44645.PDF"], photonics_relevance: "Optical-communications manufacturing leadership.", uncertainty: "English rendering is a translation."}
+  - {person: luo_yuming, organization: "Chengdu Kanghe Optoelectronics", edge_type: technical_leadership, role: "chief engineer, 1996-1999", evidence_grade: A, source_urls: ["https://disc.static.szse.cn/disc/disk03/finalpage/2026-04-24/e20c68b8-9ce5-4751-acfd-9fb5f4e44645.PDF"], photonics_relevance: "Direct optoelectronics technical leadership.", uncertainty: "None material."}
+  - {person: luo_yuming, organization: "Sichuan Guangheng Communication Technology", edge_type: technical_leadership, role: "chief engineer, 2000-2012", evidence_grade: A, source_urls: ["https://disc.static.szse.cn/disc/disk03/finalpage/2026-04-24/e20c68b8-9ce5-4751-acfd-9fb5f4e44645.PDF"], photonics_relevance: "Direct optical-communications technical leadership.", uncertainty: "None material."}
+
+  - {person: hu_qianggao, organization: "Accelink / 光迅科技", edge_type: technical_leadership, role: "product-development manager, technical director, later general manager", evidence_grade: A, source_urls: ["https://disc.static.szse.cn/disc/disk03/finalpage/2023-04-25/6c8541df-dc97-496d-ac55-049f3f3f9740.PDF"], photonics_relevance: "Product-development and company leadership at optical-component manufacturer.", uncertainty: "The report summarizes sequential roles without all promotion dates."}
+  - {person: hu_qianggao, organization: "Wuhan Research Institute of Posts and Telecommunications, Solid-State Devices Institute", edge_type: technical_leadership, role: "research-section deputy director", evidence_grade: A, source_urls: ["https://disc.static.szse.cn/disc/disk03/finalpage/2023-04-25/6c8541df-dc97-496d-ac55-049f3f3f9740.PDF"], photonics_relevance: "Solid-state optoelectronic-device R&D lineage into Accelink.", uncertainty: "The filing uses historical institute naming; canonical parent relationships require separate sourcing."}
+  - {person: bu_qinlian, organization: "Accelink / 光迅科技", edge_type: technical_leadership, role: "manufacturing and transmission-products BU leadership; later deputy general manager", evidence_grade: A, source_urls: ["https://disc.static.szse.cn/disc/disk03/finalpage/2023-04-25/6c8541df-dc97-496d-ac55-049f3f3f9740.PDF"], photonics_relevance: "Transmission optical-component product and manufacturing leadership.", uncertainty: "Sequential role dates are incomplete."}
+  - {person: bu_qinlian, organization: "Wuhan Research Institute of Posts and Telecommunications, Solid-State Devices Institute", edge_type: employment, role: "engineer", evidence_grade: A, source_urls: ["https://disc.static.szse.cn/disc/disk03/finalpage/2023-04-25/6c8541df-dc97-496d-ac55-049f3f3f9740.PDF"], photonics_relevance: "Solid-state optoelectronic-device engineering antecedent.", uncertainty: "Tenure dates are not stated in the biography."}
+  - {person: zhang_jun_accelink, organization: "Accelink / 光迅科技", edge_type: technical_leadership, role: "FTTH product-line manager, data/access BU leader, later deputy general manager", evidence_grade: A, source_urls: ["https://disc.static.szse.cn/disc/disk03/finalpage/2023-04-25/6c8541df-dc97-496d-ac55-049f3f3f9740.PDF"], photonics_relevance: "Access and datacom optical-product leadership.", uncertainty: "Sequential role dates are incomplete."}
+  - {person: zhang_jun_accelink, organization: "Wuhan Telecommunication Devices Company", edge_type: employment, role: "engineer and product manager", evidence_grade: A, source_urls: ["https://disc.static.szse.cn/disc/disk03/finalpage/2023-04-25/6c8541df-dc97-496d-ac55-049f3f3f9740.PDF"], photonics_relevance: "Optical-device engineering/product antecedent.", uncertainty: "Tenure dates are not stated."}
+  - {person: liu_jiasheng, organization: "Accelink / 光迅科技", edge_type: technical_leadership, role: "transmission-products BU leader; later deputy general manager", evidence_grade: A, source_urls: ["https://disc.static.szse.cn/disc/disk03/finalpage/2023-04-25/6c8541df-dc97-496d-ac55-049f3f3f9740.PDF"], photonics_relevance: "Transmission optical-product leadership.", uncertainty: "Deputy-GM appointment postdates the 2022 report; this edge conservatively centers the report-backed BU role."}
+
+  - {person: frank_chang_source, organization: "Source Photonics", edge_type: technical_leadership, role: "chief engineer for advanced transceivers in 2021; later CTO", evidence_grade: B, source_urls: ["https://www.optica.org/events/industry_events/2021/oida_technology_showcase_2021_march-0a8872f5b3d38654371af9eaee2eeaf7/participating_companies/source_photonics/"], photonics_relevance: "Advanced and next-generation optical-transceiver design leadership.", uncertainty: "Optica biography is grade B under source policy; it is a point-in-time professional-society profile."}
+  - {person: frank_chang_source, organization: "Inphi", edge_type: employment, role: "senior principal engineer, CTO Optics Office, more than five years", evidence_grade: B, source_urls: ["https://www.optica.org/events/industry_events/2021/oida_technology_showcase_2021_march-0a8872f5b3d38654371af9eaee2eeaf7/participating_companies/source_photonics/"], photonics_relevance: "Optical-interconnect and photonic-IC technical antecedent.", uncertainty: "Exact start/end dates are not stated."}
+  - {person: frank_chang_source, organization: "Vitesse Semiconductor", edge_type: employment, role: "technical service exceeding twelve years; exact titles unstated", evidence_grade: B, source_urls: ["https://www.optica.org/events/industry_events/2021/oida_technology_showcase_2021_march-0a8872f5b3d38654371af9eaee2eeaf7/participating_companies/source_photonics/"], photonics_relevance: "Optical-networking and physical-layer semiconductor antecedent.", uncertainty: "Biography does not enumerate titles or dates."}
+  - {person: frank_chang_source, organization: "JDS Uniphase", edge_type: employment, role: "project/management positions in fiber-optic component design and commercialization", evidence_grade: B, source_urls: ["https://www.optica.org/events/industry_events/2021/oida_technology_showcase_2021_march-0a8872f5b3d38654371af9eaee2eeaf7/participating_companies/source_photonics/"], photonics_relevance: "Direct fiber-optic component design antecedent.", uncertainty: "Exact title, entity, and dates are not stated."}
+  - {person: yu_heng_jan, organization: "Source Photonics", edge_type: technical_leadership, role: "COO/general manager from 2007; chief device officer by 2018", evidence_grade: A, source_urls: ["https://staff.ee.ncu.edu.tw/jwshi/public_html/downloadfile/i226.pdf"], photonics_relevance: "Managed R&D/operations and high-speed device development for data-center and PON products.", uncertainty: "Primary-paper biography is a 2018 snapshot."}
+  - {person: yu_heng_jan, organization: "MRV Communications, Optical Division", edge_type: employment, role: "laser design and manufacturing, from 1997", evidence_grade: A, source_urls: ["https://staff.ee.ncu.edu.tw/jwshi/public_html/downloadfile/i226.pdf"], photonics_relevance: "CWDM DFB laser and systems antecedent.", uncertainty: "Biography gives start but not end date."}
+  - {person: yu_heng_jan, organization: "University of California, Santa Barbara", edge_type: research_training, role: "PhD in electrical and computer engineering, 1997", evidence_grade: A, source_urls: ["https://staff.ee.ncu.edu.tw/jwshi/public_html/downloadfile/i226.pdf"], photonics_relevance: "Graduate training preceding semiconductor-laser career.", uncertainty: "Paper biography does not identify advisor or group; no lab lineage is inferred."}
+
+  - {person: jinkuan_tang, organization: "Broadex Technologies / 博创科技", edge_type: executive_role, role: "president from January 2024 and CEO", evidence_grade: A, source_urls: ["https://en.broadex-tech.com/about/our-management-team"], photonics_relevance: "Leads optical-component/transceiver supplier and speaks for high-speed interconnect products.", uncertainty: "Official page does not label him founder or chief technical officer."}
+  - {person: jinkuan_tang, organization: "YOFC", edge_type: technical_leadership, role: "general manager, optical-module product line; deputy GM, diversified BU", evidence_grade: A, source_urls: ["https://en.broadex-tech.com/about/our-management-team"], photonics_relevance: "Direct optical-module product-line leadership antecedent.", uncertainty: "Dates are not stated."}
+  - {person: jinkuan_tang, organization: "VIA Technologies China", edge_type: employment, role: "hardware systems engineer, manager and product-line director", evidence_grade: A, source_urls: ["https://en.broadex-tech.com/about/our-management-team"], photonics_relevance: "Semiconductor hardware/product antecedent; not photonics-specific.", uncertainty: "Dates are not stated."}
+
+  - {person: david_li_hisense, organization: "Hisense Broadband / 海信宽带", edge_type: technical_leadership, role: "deputy general manager and CTO; joined Hisense in 2003", evidence_grade: B, source_urls: ["https://www.schott.com/en-ae/products/transistor-outline-packages-p1000294/how-hisense-is-setting-speed-records-with-optical-module-technology"], photonics_relevance: "Led development and industrialization of Hisense optical-communications technology.", uncertainty: "Partner-hosted interview is grade B; full Chinese name and exact appointment dates are not provided."}
+  - {person: david_li_hisense, organization: "University of Electronic Science and Technology of China", edge_type: research_training, role: "doctoral training; PhD described jointly with University of Houston", evidence_grade: B, source_urls: ["https://www.schott.com/en-ae/products/transistor-outline-packages-p1000294/how-hisense-is-setting-speed-records-with-optical-module-technology"], photonics_relevance: "Technical doctoral training preceding optical-communications industrialization.", uncertainty: "Source wording does not separate degree-granting institution, dates, or field cleanly."}
+  - {person: david_li_hisense, organization: "University of Houston", edge_type: research_training, role: "doctoral training; PhD described jointly with UESTC", evidence_grade: B, source_urls: ["https://www.schott.com/en-ae/products/transistor-outline-packages-p1000294/how-hisense-is-setting-speed-records-with-optical-module-technology"], photonics_relevance: "Technical doctoral training preceding optical-communications industrialization.", uncertainty: "Source wording does not separate degree-granting institution, dates, or field cleanly."}
+  - {person: jianying_zhou, organization: "Hisense Broadband / 海信宽带", edge_type: technical_leadership, role: "VP Technology", evidence_grade: B, source_urls: ["https://www.fiber-resources.com/medias/230.html"], photonics_relevance: "Advanced photonics and TFLN optical-transceiver leadership.", uncertainty: "Event-host biography is grade B and establishes a 2024 snapshot."}
+  - {person: jianying_zhou, organization: "Intel", edge_type: technical_leadership, role: "director of R&D and principal engineer", evidence_grade: B, source_urls: ["https://www.fiber-resources.com/medias/230.html"], photonics_relevance: "Direct advanced-photonics R&D antecedent.", uncertainty: "Exact division and dates are not stated; Intel primary corroboration remains desirable."}
+  - {person: jianying_zhou, organization: "NeoPhotonics", edge_type: technical_leadership, role: "director of design and technology", evidence_grade: B, source_urls: ["https://www.fiber-resources.com/medias/230.html"], photonics_relevance: "Direct photonic-device design antecedent.", uncertainty: "Dates and legal entity are not stated."}
+  - {person: jianying_zhou, organization: "Oclaro", edge_type: employment, role: "professional position; exact title unstated", evidence_grade: B, source_urls: ["https://www.fiber-resources.com/medias/230.html"], photonics_relevance: "Optical-component industry antecedent.", uncertainty: "Source groups Oclaro, Finisar, Nortel and JDS positions and omits titles/dates."}
+  - {person: jianying_zhou, organization: "Finisar", edge_type: employment, role: "professional position; exact title unstated", evidence_grade: B, source_urls: ["https://www.fiber-resources.com/medias/230.html"], photonics_relevance: "Optical-component industry antecedent.", uncertainty: "Source groups Oclaro, Finisar, Nortel and JDS positions and omits titles/dates."}
+  - {person: jianying_zhou, organization: "JDS / JDS Uniphase", edge_type: employment, role: "professional position; exact title unstated", evidence_grade: B, source_urls: ["https://www.fiber-resources.com/medias/230.html"], photonics_relevance: "Optical-component industry antecedent.", uncertainty: "Exact corporate entity, title, and dates are not stated."}
+  - {person: huang_weiping, organization: "Hisense Broadband group / 海信宽带", edge_type: founder, role: "group founder; later chief scientist/chairman", evidence_grade: A, source_urls: ["https://www1.hkexnews.hk/app/sehk/2025/107650/a125209/sehk25082502090.pdf", "https://www.zte.com.cn/content/dam/zte-site/res-www-zte-com-cn/mediares/magazine/publication/com_cn/pdf/201804.pdf"], photonics_relevance: "Technical founder responsible for optical devices, integration, communications R&D and laser-chip localization.", uncertainty: "The listing draft uses a group-level founder label; the technical paper describes him as one of the founders, so no sole-founder claim is made."}
+  - {person: huang_weiping, organization: "Ligent", edge_type: founder, role: "co-founder of joint venture with Hisense for optical transceivers", evidence_grade: B, source_urls: ["https://en.icmtia.com/product/80.html"], photonics_relevance: "Formal corporate vehicle in the Hisense optical-transceiver lineage.", uncertainty: "Professional conference biography is grade B; detailed formation mechanics and later entity succession require regulatory-event sourcing."}
+
+discovery_non_edges:
+  - claim: "InnoLight's broader team came from a common set of U.S. optical-component companies."
+    evidence_grade: X
+    reason: "Only the seven individually named biographies in the SEC filing are represented; no group transfer is inferred."
+  - claim: "Jianying Zhou held the same role across Oclaro, Finisar, Nortel, and JDS."
+    source_url: "https://www.fiber-resources.com/medias/230.html"
+    evidence_grade: X
+    reason: "The biography names the employers collectively but does not provide titles or chronology; each included edge preserves that uncertainty."
+  - claim: "Broadex's current ownership relationship with YOFC means a YOFC team transferred to Broadex."
+    source_url: "https://en.broadex-tech.com/about/our-management-team"
+    evidence_grade: X
+    reason: "Only Jinkuan Tang's individually named YOFC-to-Broadex path is asserted."
+
+quality_summary:
+  named_people: 20
+  target_company_people: {innolight: 7, eoptolink: 3, accelink: 4, source_photonics: 2, broadex: 1, hisense_broadband: 3}
+  atomic_edges: 60
+  edges_by_grade: {A: 46, B: 14, C: 0, D: 0, X: 0}
+  discovery_non_edges: 3
+  caveat: >-
+    This tranche prioritizes verifiable technical lineage over executive completeness.
+    B-grade event and professional-society biographies are not upgraded merely because
+    the named person is prominent. Public-company board roles are included only where
+    the same primary artifact documents relevant technical operating history.

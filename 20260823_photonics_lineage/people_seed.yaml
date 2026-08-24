@@ -55,6 +55,16 @@ people:
   - {id: person_cary_gunn, name: Cary Gunn, aliases: [], technologies: [silicon_photonics], research_status: seed_unverified, sources: []}
   - {id: person_alex_dickinson, name: Alex Dickinson, aliases: [], name_disambiguator: Luxtera co-founder, technologies: [silicon_photonics], research_status: seed_unverified, sources: []}
 
+  # Stanford-centered
+  - {id: person_shanhui_fan, name: Shanhui Fan, aliases: [], technologies: [silicon_photonics, photonic_compute], research_status: seed_unverified, sources: []}
+  - {id: person_jelena_vuckovic, name: Jelena Vučković, aliases: [{name: Jelena Vuckovic, language: en, alias_type: alternate_spelling}], technologies: [silicon_photonics, photonic_compute], research_status: seed_unverified, sources: []}
+  - {id: person_olav_solgaard, name: Olav Solgaard, aliases: [], technologies: [optomechanics, integrated_lidar], research_status: seed_unverified, sources: []}
+  - {id: person_david_ab_miller, name: David A. B. Miller, aliases: [{name: David Miller, language: en, alias_type: common_name}], technologies: [optical_io, photonic_compute, photonic_switching], research_status: seed_unverified, sources: []}
+  - {id: person_james_s_harris_jr, name: James S. Harris Jr., aliases: [{name: Jim Harris, language: en, alias_type: common_name}, {name: James Harris, language: en, alias_type: alternate_spelling}], technologies: [iii_v_silicon_integration, integrated_lasers], research_status: seed_unverified, sources: []}
+  - {id: person_stephen_e_harris, name: Stephen E. Harris, aliases: [{name: Steve Harris, language: en, alias_type: common_name}, {name: Stephen Harris, language: en, alias_type: alternate_spelling}], technologies: [integrated_lasers], research_status: seed_unverified, sources: []}
+  - {id: person_robert_l_byer, name: Robert L. Byer, aliases: [{name: Bob Byer, language: en, alias_type: common_name}, {name: Robert Byer, language: en, alias_type: alternate_spelling}], technologies: [integrated_lasers], research_status: seed_unverified, sources: []}
+  - {id: person_martin_m_fejer, name: Martin M. Fejer, aliases: [{name: Marty Fejer, language: en, alias_type: common_name}, {name: Martin Fejer, language: en, alias_type: alternate_spelling}], technologies: [thin_film_lithium_niobate], research_status: seed_unverified, sources: []}
+
   # ETH / Polariton-centered
   - {id: person_wolfgang_heni, name: Wolfgang Heni, aliases: [], technologies: [thin_film_lithium_niobate], research_status: seed_unverified, sources: []}
   - {id: person_claudia_hoessbacher, name: Claudia Hoessbacher, aliases: [{name: Claudia Hössbacher, language: de, alias_type: native_name}], technologies: [thin_film_lithium_niobate], research_status: seed_unverified, sources: []}

@@ -1,0 +1,402 @@
+dataset:
+  title: "China photonics / Huawei / overseas-returnee ecosystem: initial named-person tranche"
+  version: "0.1"
+  as_of: "2026-08-23"
+  scope: >-
+    Named founders and technical leaders at LightIC, Inxun, NVISION (Yingweixin),
+    Liangyin, Aluksen (Aoke), Beeplux (Bopu), Huawei, and HiSilicon Optoelectronics.
+    This staging file records only atomic claims directly supported by the cited artifact.
+  evidence_policy:
+    A: "Primary: official company/university page, government or IP artifact, official filing, or official conference bio/program."
+    B: "Strong secondary: authoritative interview, professional society, or reputable technical/industry publication."
+    C: "Database or directory; discovery only unless corroborated."
+    D: "Promotional or general-news claim; excluded from validated edges."
+    X: "Inference or generic team-origin claim; never a validated person edge."
+  integration_note: >-
+    IDs are local staging IDs. Canonical integration must add schema prefixes and
+    convert source_urls into claim-level source references. Romanizations marked
+    researcher_supplied must not be used alone for identity merges.
+
+sources:
+  lightic_cioe_guide:
+    url: "https://cdn.cioe.cn/images/Conference-Guide.pdf"
+    title: "CIOE Conference Guide"
+    publisher: "China International Optoelectronic Exposition (CIOE)"
+    language: "zh/en"
+    type: "official_conference_program"
+    evidence_grade: A
+    locator: "speaker listing for Jie Sun / LightIC"
+    accessed: "2026-08-23"
+  lightic_usst_visit:
+    url: "https://www.usst.edu.cn/2025/1110/c1615a65916/page.htm"
+    title: "上海摩尔芯光科技有限公司来校交流访问"
+    publisher: "University of Shanghai for Science and Technology"
+    language: "zh"
+    type: "official_university_news"
+    evidence_grade: A
+    locator: "opening paragraph naming 孙杰 and 王建胜"
+    accessed: "2026-08-23"
+  kpmg_autotech_50:
+    url: "https://assets.kpmg.com/content/dam/kpmg/cn/pdf/zh/2024/11/china-leading-autotech-50-7th.pdf"
+    title: "第七届毕马威中国汽车科技50"
+    publisher: "KPMG China"
+    language: "zh"
+    type: "professional_firm_report"
+    evidence_grade: B
+    locator: "摩尔芯光 company profile; founder/CEO and founder/CTO fields"
+    accessed: "2026-08-23"
+  inxun_mems_interview:
+    url: "https://www.mems.me/mems/micro-interview_202209/11657.html"
+    title: "专访映讯芯光联合创始人兼CTO杨光华"
+    publisher: "MEMS Consulting / 麦姆斯咨询"
+    language: "zh"
+    type: "authoritative_industry_interview"
+    evidence_grade: B
+    locator: "interview introduction and 杨光华 first-person biography"
+    accessed: "2026-08-23"
+  inxun_li_event_bio:
+    url: "https://www.eet-china.com/mp/a344607.html"
+    title: "李若林博士演讲嘉宾介绍"
+    publisher: "EET China"
+    language: "zh"
+    type: "technical_event_biography_republished_by_trade_press"
+    evidence_grade: B
+    locator: "speaker biography naming founder/CEO and prior Intel role"
+    accessed: "2026-08-23"
+  nvision_official_about:
+    url: "https://dev-website.nvision-tech.cn/en/about"
+    title: "About NVISION"
+    publisher: "NVISION Technology"
+    language: "en"
+    type: "official_company_bio"
+    evidence_grade: A
+    locator: "CEO biography for Dr. NIE HUI"
+    accessed: "2026-08-23"
+  nvision_stcn_profile:
+    url: "https://www.stcn.com/article/detail/1835729.html"
+    title: "英伟芯创始人聂辉：打造世界级光电芯片企业"
+    publisher: "证券时报"
+    language: "zh"
+    type: "reputable_business_profile"
+    evidence_grade: B
+    locator: "founder biography describing Lucent Bell Labs and Intel roles"
+    accessed: "2026-08-23"
+  nvision_knowledge:
+    url: "https://www.nvision-tech.cn/en/knowledge"
+    title: "Knowledge"
+    publisher: "NVISION Technology"
+    language: "en"
+    type: "official_company_page"
+    evidence_grade: A
+    locator: "company overview describing unnamed core-team origins"
+    accessed: "2026-08-23"
+  liangyin_gdlaser:
+    url: "https://www.gdlaser.org.cn/index/news/details/id/3773.html"
+    title: "量引科技创始人李耀基相关报道"
+    publisher: "广东省激光行业协会"
+    language: "zh"
+    type: "industry_association_profile"
+    evidence_grade: B
+    locator: "paragraph naming founder 李耀基 and prior Cadence/CUMEC executive experience"
+    accessed: "2026-08-23"
+  liangyin_iccsz_interview:
+    url: "https://www.iccsz.com/site/cn/News/2026/03/30/20260330061354063867.htm"
+    title: "量引科技赵京雄专访"
+    publisher: "讯石光通讯网"
+    language: "zh"
+    type: "authoritative_industry_interview"
+    evidence_grade: B
+    locator: "interview introduction naming co-founder and CTO 赵京雄"
+    accessed: "2026-08-23"
+  aluksen_ceo_news:
+    url: "https://www.aluksen.com/news/79.html"
+    title: "福耀玻璃曹德旺主席莅临深圳傲科指导交流"
+    publisher: "Aluksen / 傲科光电"
+    language: "zh"
+    type: "official_company_news"
+    evidence_grade: A
+    locator: "paragraph naming CEO 商松泉"
+    accessed: "2026-08-23"
+  aluksen_pku_lab:
+    url: "https://www.aluksen.com/news/77.html"
+    title: "北大-傲科光电联合实验室揭牌仪式圆满举行"
+    publisher: "Aluksen / 傲科光电"
+    language: "zh"
+    type: "official_company_news"
+    evidence_grade: A
+    locator: "opening paragraph naming chairman and CEO 商松泉"
+    accessed: "2026-08-23"
+  beeplux_xing_official:
+    url: "https://www.beepluxsemi.com/html/new1118.html"
+    title: "孛璞半导体亮相苏州微纳光学盛会"
+    publisher: "Beeplux Semiconductor / 孛璞半导体"
+    language: "zh"
+    type: "official_company_news"
+    evidence_grade: A
+    locator: "opening section naming deputy general manager 邢宇飞 and his OCS talk"
+    accessed: "2026-08-23"
+  beeplux_join:
+    url: "https://beepluxsemi.com/joinUs.html"
+    title: "加入我们"
+    publisher: "Beeplux Semiconductor / 孛璞半导体"
+    language: "zh"
+    type: "official_company_page"
+    evidence_grade: A
+    locator: "公司团队 section describing unnamed team origins"
+    accessed: "2026-08-23"
+  aluksen_about:
+    url: "https://www.aluksen.com/about/"
+    title: "公司介绍"
+    publisher: "Aluksen / 傲科光电"
+    language: "zh"
+    type: "official_company_page"
+    evidence_grade: A
+    locator: "company history and unnamed silicon-photonics-team description"
+    accessed: "2026-08-23"
+  cioe_hisilicon_2025:
+    url: "https://conference.cioe.cn/HiSiliconforum2025.html"
+    title: "光互联助力AI新时代算力网络演进"
+    publisher: "CIOE"
+    language: "zh"
+    type: "official_conference_program"
+    evidence_grade: A
+    locator: "agenda speaker listing for 侯康"
+    accessed: "2026-08-23"
+  cioe_hisilicon_2024:
+    url: "https://conference.cioe.cn/HiSiliconforum2024.html"
+    title: "迈向800G~1.6T，打造智算中心的超宽光联接"
+    publisher: "CIOE"
+    language: "zh"
+    type: "official_conference_program"
+    evidence_grade: A
+    locator: "agenda speaker listing for 吕东 and 侯康"
+    accessed: "2026-08-23"
+  cioe_opticalchip_2023:
+    url: "https://conference.cioe.cn/C114-opticalchip2023.html"
+    title: "光芯片与高端器件技术研讨会"
+    publisher: "CIOE"
+    language: "zh"
+    type: "official_conference_program"
+    evidence_grade: A
+    locator: "agenda and biography for 庄四祥"
+    accessed: "2026-08-23"
+  cioe_ipec_2023:
+    url: "https://conference.cioe.cn/IPEC2023.HTML"
+    title: "云时代的光电技术及产业标准研讨峰会"
+    publisher: "CIOE"
+    language: "zh"
+    type: "official_conference_program"
+    evidence_grade: A
+    locator: "agenda and biography for 满江伟"
+    accessed: "2026-08-23"
+  cioe_silicon_webinar:
+    url: "https://conference.cioe.cn/Silicon.html"
+    title: "硅光集成与数据中心应用线上研讨会"
+    publisher: "CIOE"
+    language: "zh"
+    type: "official_conference_program"
+    evidence_grade: A
+    locator: "agenda speaker listing for 周立兵"
+    accessed: "2026-08-23"
+  cioe_global_optoelectronics:
+    url: "https://conference.cioe.cn/GlobalOptoelectronic.html"
+    title: "全球光电先进技术及产业发展研讨峰会"
+    publisher: "CIOE"
+    language: "zh"
+    type: "official_conference_program"
+    evidence_grade: A
+    locator: "agenda and biography for 梁亦铂"
+    accessed: "2026-08-23"
+  cioe_2025_guide:
+    url: "https://cdn.cioe.cn/images/Conference-Guide.pdf"
+    title: "CIOE Conference Guide"
+    publisher: "CIOE"
+    language: "zh/en"
+    type: "official_conference_program"
+    evidence_grade: A
+    locator: "speaker listing for 罗军 / Jun Luo"
+    accessed: "2026-08-23"
+  ncsti_fpic_2024:
+    url: "https://www.ncsti.gov.cn/kcfw/hy/202406/P020240619561405283113.pdf"
+    title: "第五届光电子集成芯片立强大会会议指南"
+    publisher: "National Center for Science and Technology Innovation"
+    language: "zh/en"
+    type: "government_hosted_official_conference_program"
+    evidence_grade: A
+    locator: "July 14 Optoelectronic Industrial Forum entry for 张乐伟 / Lewei Zhang"
+    accessed: "2026-08-23"
+  csoe_goinc_2024:
+    url: "https://b2b.csoe.org.cn/meeting/GoInc2024.html"
+    title: "第七届光信息与光网络大会"
+    publisher: "Chinese Society for Optical Engineering"
+    language: "zh"
+    type: "professional_society_conference_program"
+    evidence_grade: B
+    locator: "Topic 3 invited speakers listing for 程远兵"
+    accessed: "2026-08-23"
+  csoe_photonic_compute:
+    url: "https://www.csoe.org.cn/dkekik.html"
+    title: "中国光学工程学会光计算专题"
+    publisher: "Chinese Society for Optical Engineering"
+    language: "zh"
+    type: "professional_society_conference_program"
+    evidence_grade: B
+    locator: "Topic 11 invited report listing for 董晓文"
+    accessed: "2026-08-23"
+
+people:
+  - id: sun_jie
+    name: "孙杰"
+    aliases:
+      - {value: "Jie Sun", language: en, status: "officially_used_in_conference_program"}
+    identity_discriminators: ["LightIC co-founder and CEO", "Shanghai", "FMCW silicon-photonic LiDAR"]
+  - id: sun_tianbo
+    name: "孙天博"
+    aliases:
+      - {value: "Tianbo Sun", language: en, status: "researcher_supplied_pinyin"}
+    identity_discriminators: ["LightIC co-founder and CTO", "FMCW silicon-photonic LiDAR"]
+  - id: wang_jiansheng
+    name: "王建胜"
+    aliases:
+      - {value: "Jiansheng Wang", language: en, status: "researcher_supplied_pinyin"}
+    identity_discriminators: ["LightIC deputy general manager", "2025 USST visit"]
+  - id: li_ruolin
+    name: "李若林"
+    aliases:
+      - {value: "Ruolin Li", language: en, status: "researcher_supplied_pinyin"}
+    identity_discriminators: ["Inxun founder and CEO", "former Intel silicon-photonics lead design engineer", "Nankai alumnus"]
+  - id: yang_guanghua
+    name: "杨光华"
+    aliases:
+      - {value: "Guanghua Yang", language: en, status: "researcher_supplied_pinyin"}
+    identity_discriminators: ["Inxun co-founder and CTO", "University of Hong Kong PhD", "Nankai alumnus"]
+  - id: nie_hui
+    name: "聂辉"
+    aliases:
+      - {value: "Hui Nie", language: en, status: "official_company_usage"}
+      - {value: "NIE HUI", language: en, status: "official_company_styling"}
+    identity_discriminators: ["NVISION founder/CEO", "UT Austin EE PhD", "Lucent Bell Labs and Intel background"]
+  - id: li_yaoji
+    name: "李耀基"
+    aliases:
+      - {value: "Yaoji Li", language: en, status: "researcher_supplied_pinyin"}
+    identity_discriminators: ["Liangyin founder", "former Cadence and CUMEC executive"]
+  - id: zhao_jingxiong
+    name: "赵京雄"
+    aliases:
+      - {value: "Jingxiong Zhao", language: en, status: "researcher_supplied_pinyin"}
+    identity_discriminators: ["Liangyin co-founder and CTO", "silicon-photonic interconnect"]
+  - id: shang_songquan
+    name: "商松泉"
+    aliases:
+      - {value: "Songquan Shang", language: en, status: "researcher_supplied_pinyin"}
+    identity_discriminators: ["Aluksen chairman and CEO", "Peking University-Aluksen joint laboratory deputy director"]
+  - id: xing_yufei
+    name: "邢宇飞"
+    aliases:
+      - {value: "Yufei Xing", language: en, status: "researcher_supplied_pinyin"}
+    identity_discriminators: ["Beeplux deputy general manager", "silicon-photonic OCS speaker"]
+  - id: hou_kang
+    name: "侯康"
+    aliases: [{value: "Kang Hou", language: en, status: "researcher_supplied_pinyin"}]
+    identity_discriminators: ["HiSilicon senior product-planning expert", "AI-cluster optical interconnect"]
+  - id: lv_dong
+    name: "吕东"
+    aliases: [{value: "Dong Lü", language: en, status: "researcher_supplied_pinyin"}]
+    identity_discriminators: ["Huawei data-communications product-line VP and COO", "2024 CIOE optical-interconnect forum"]
+  - id: zhuang_sixiang
+    name: "庄四祥"
+    aliases: [{value: "Sixiang Zhuang", language: en, status: "researcher_supplied_pinyin"}]
+    identity_discriminators: ["HiSilicon senior product-planning manager", "data-center silicon-photonics speaker"]
+  - id: man_jiangwei
+    name: "满江伟"
+    aliases: [{value: "Jiangwei Man", language: en, status: "researcher_supplied_pinyin"}]
+    identity_discriminators: ["HiSilicon Advanced Optoelectronics Laboratory director", "LPO speaker"]
+  - id: zhou_libing
+    name: "周立兵"
+    aliases: [{value: "Libing Zhou", language: en, status: "researcher_supplied_pinyin"}]
+    identity_discriminators: ["HiSilicon chief technology planner", "data-center silicon-photonics speaker"]
+  - id: liang_yibo
+    name: "梁亦铂"
+    aliases: [{value: "Yibo Liang", language: en, status: "researcher_supplied_pinyin"}]
+    identity_discriminators: ["HiSilicon senior product-planning director", "ultra-broadband optoelectronic-device standards"]
+  - id: luo_jun
+    name: "罗军"
+    aliases:
+      - {value: "Jun Luo", language: en, status: "official_conference_usage"}
+    identity_discriminators: ["Huawei Fellow", "chief optical-transport architect"]
+  - id: zhang_lewei
+    name: "张乐伟"
+    aliases:
+      - {value: "Lewei Zhang", language: en, status: "official_conference_usage"}
+    identity_discriminators: ["Huawei Technologies", "datacom optical-interconnect invited speaker"]
+  - id: cheng_yuanbing
+    name: "程远兵"
+    aliases: [{value: "Yuanbing Cheng", language: en, status: "researcher_supplied_pinyin"}]
+    identity_discriminators: ["Huawei Technologies", "PON optical-device invited speaker"]
+  - id: dong_xiaowen
+    name: "董晓文"
+    aliases: [{value: "Xiaowen Dong", language: en, status: "researcher_supplied_pinyin"}]
+    identity_discriminators: ["Huawei Technologies", "optoelectronic hybrid computing invited speaker"]
+
+edges:
+  - {person: sun_jie, organization: "摩尔芯光 / LightIC", edge_type: founder, role: "co-founder and CEO", evidence_grade: A, source_urls: ["https://cdn.cioe.cn/images/Conference-Guide.pdf", "https://www.usst.edu.cn/2025/1110/c1615a65916/page.htm"], photonics_relevance: "Leads a silicon-photonic FMCW LiDAR company.", uncertainty: "Sources establish the role at their event dates but not the exact founding-role start date."}
+  - {person: sun_tianbo, organization: "摩尔芯光 / LightIC", edge_type: founder, role: "co-founder and CTO", evidence_grade: B, source_urls: ["https://assets.kpmg.com/content/dam/kpmg/cn/pdf/zh/2024/11/china-leading-autotech-50-7th.pdf"], photonics_relevance: "Technical founder of a silicon-photonic FMCW LiDAR company.", uncertainty: "KPMG profile is strong secondary evidence; no official individual bio or exact role dates were located."}
+  - {person: wang_jiansheng, organization: "摩尔芯光 / LightIC", edge_type: executive_role, role: "deputy general manager", evidence_grade: A, source_urls: ["https://www.usst.edu.cn/2025/1110/c1615a65916/page.htm"], photonics_relevance: "Executive at a silicon-photonic FMCW LiDAR company.", uncertainty: "University visit notice establishes a 2025 role snapshot, not technical portfolio or tenure dates."}
+  - {person: li_ruolin, organization: "映讯芯光 / Inxun", edge_type: founder, role: "founder and CEO", evidence_grade: B, source_urls: ["https://www.eet-china.com/mp/a344607.html"], photonics_relevance: "Leads a silicon-photonics company developing optical sensing and interconnect products.", uncertainty: "Event biography is republished by trade press; exact founding date is not stated."}
+  - {person: li_ruolin, organization: "Intel", edge_type: technical_leadership, role: "silicon-photonics lead design engineer", evidence_grade: B, source_urls: ["https://www.eet-china.com/mp/a344607.html"], photonics_relevance: "Direct silicon-photonics design leadership antecedent.", uncertainty: "No Intel primary artifact or tenure dates were located in this pass."}
+  - {person: yang_guanghua, organization: "映讯芯光 / Inxun", edge_type: founder, role: "co-founder and CTO", evidence_grade: B, source_urls: ["https://www.mems.me/mems/micro-interview_202209/11657.html"], photonics_relevance: "Technical founder working on silicon-photonic sensing and interconnect products.", uncertainty: "Authoritative interview does not provide exact role dates."}
+  - {person: yang_guanghua, organization: "The University of Hong Kong", edge_type: research_training, role: "PhD in electrical and electronic engineering", evidence_grade: B, source_urls: ["https://www.mems.me/mems/micro-interview_202209/11657.html"], photonics_relevance: "Interview describes optoelectronic research training relevant to later integrated-photonics work.", uncertainty: "Self-described within an edited industry interview; advisor and dates are not stated."}
+  - {person: nie_hui, organization: "英伟芯 / NVISION Technology", edge_type: founder, role: "founder and CEO", evidence_grade: A, source_urls: ["https://dev-website.nvision-tech.cn/en/about"], photonics_relevance: "Leads an optoelectronic-chip company focused on high-speed optical interconnection.", uncertainty: "Official biography gives current role but not exact founding-role start date."}
+  - {person: nie_hui, organization: "Lucent Bell Labs", edge_type: employment, role: "optoelectronics technical role; exact title unstated", evidence_grade: B, source_urls: ["https://www.stcn.com/article/detail/1835729.html"], photonics_relevance: "Profile explicitly places him in optoelectronic work at Bell Labs.", uncertainty: "Secondary profile; exact legal entity, title, and dates require primary corroboration."}
+  - {person: nie_hui, organization: "Intel", edge_type: technical_leadership, role: "optoelectronics/silicon-photonics leadership; exact title summarized by source", evidence_grade: B, source_urls: ["https://www.stcn.com/article/detail/1835729.html"], photonics_relevance: "Profile links his Intel work directly to optoelectronics before founding NVISION.", uncertainty: "Secondary profile; exact business unit, title wording, and tenure dates require an Intel artifact."}
+  - {person: li_yaoji, organization: "量引科技 / Liangyin Technology", edge_type: founder, role: "founder", evidence_grade: B, source_urls: ["https://www.gdlaser.org.cn/index/news/details/id/3773.html"], photonics_relevance: "Founded a company developing high-speed optical-interconnect silicon and optical engines.", uncertainty: "Industry-association profile does not give the exact founding-role start date."}
+  - {person: li_yaoji, organization: "Cadence", edge_type: executive_role, role: "executive; exact title unstated", evidence_grade: B, source_urls: ["https://www.gdlaser.org.cn/index/news/details/id/3773.html"], photonics_relevance: "Semiconductor-design and EDA operating antecedent; enabling rather than direct photonics work.", uncertainty: "The association profile groups prior executive experience and omits dates/title."}
+  - {person: zhao_jingxiong, organization: "量引科技 / Liangyin Technology", edge_type: founder, role: "co-founder and CTO", evidence_grade: B, source_urls: ["https://www.iccsz.com/site/cn/News/2026/03/30/20260330061354063867.htm"], photonics_relevance: "Technical leadership for silicon-photonic optical interconnect.", uncertainty: "Industry interview establishes a 2026 role snapshot; founding and appointment dates are unstated."}
+  - {person: shang_songquan, organization: "傲科光电 / Aluksen", edge_type: executive_role, role: "chairman and CEO", evidence_grade: A, source_urls: ["https://www.aluksen.com/news/77.html", "https://www.aluksen.com/news/79.html"], photonics_relevance: "Leads a high-speed optical-interconnect chip and advanced-packaging company.", uncertainty: "Official pages establish the 2024 role but do not independently prove founder status or earlier employer claims."}
+  - {person: xing_yufei, organization: "孛璞半导体 / Beeplux Semiconductor", edge_type: executive_role, role: "deputy general manager", evidence_grade: A, source_urls: ["https://www.beepluxsemi.com/html/new1118.html"], photonics_relevance: "Presented the company's scalable silicon-photonic optical-circuit-switch chip and system architecture.", uncertainty: "Official company article is a 2025 snapshot and does not state appointment date or earlier employers."}
+  - {person: hou_kang, organization: "海思光电子 / HiSilicon Optoelectronics", edge_type: technical_leadership, role: "senior product-planning expert", evidence_grade: A, source_urls: ["https://conference.cioe.cn/HiSiliconforum2025.html"], photonics_relevance: "Spoke on high-speed optical-interconnect solutions for AI clusters.", uncertainty: "Conference snapshot only; no employment interval is inferred."}
+  - {person: lv_dong, organization: "华为技术有限公司 / Huawei Technologies", edge_type: executive_role, role: "data-communications product-line vice president and COO", evidence_grade: A, source_urls: ["https://conference.cioe.cn/HiSiliconforum2024.html"], photonics_relevance: "Executive speaker in an 800G/1.6T AI data-center optical-interconnect forum; relevance is strategic/product rather than device-design-specific.", uncertainty: "Conference snapshot only; title is as printed by organizer."}
+  - {person: zhuang_sixiang, organization: "海思光电子 / HiSilicon Optoelectronics", edge_type: technical_leadership, role: "senior product-planning manager", evidence_grade: A, source_urls: ["https://conference.cioe.cn/C114-opticalchip2023.html"], photonics_relevance: "Presented specifically on silicon-photonic chips for data centers.", uncertainty: "Conference snapshot only; no employment interval is inferred."}
+  - {person: man_jiangwei, organization: "海思光电子 / HiSilicon Optoelectronics", edge_type: technical_leadership, role: "director, Advanced Optoelectronics Laboratory", evidence_grade: A, source_urls: ["https://conference.cioe.cn/IPEC2023.HTML"], photonics_relevance: "Laboratory leadership and technical presentation on linear-drive pluggable optics/LPO.", uncertainty: "Conference snapshot only; organizer page uses a HiSilicon company label while another program renders Huawei's lab, so corporate-unit normalization remains open."}
+  - {person: zhou_libing, organization: "海思光电 / HiSilicon Optoelectronics", edge_type: technical_leadership, role: "chief technology planner", evidence_grade: A, source_urls: ["https://conference.cioe.cn/Silicon.html"], photonics_relevance: "Presented on data-center optical interconnect evolution and silicon-photonics opportunities.", uncertainty: "Conference snapshot only; no employment interval is inferred."}
+  - {person: liang_yibo, organization: "海思光电子 / HiSilicon Optoelectronics", edge_type: technical_leadership, role: "senior product-planning director", evidence_grade: A, source_urls: ["https://conference.cioe.cn/GlobalOptoelectronic.html"], photonics_relevance: "Addressed ultra-broadband optoelectronic-device challenges and standards.", uncertainty: "Romanized form is researcher-supplied; the Chinese given name must not be conflated with similar 梁亦瑜 listings without another discriminator."}
+  - {person: luo_jun, organization: "华为技术有限公司 / Huawei Technologies", edge_type: technical_leadership, role: "Fellow and chief optical-transport architect", evidence_grade: A, source_urls: ["https://cdn.cioe.cn/images/Conference-Guide.pdf"], photonics_relevance: "Chief architecture responsibility for optical transport.", uncertainty: "Conference-program snapshot; title tenure is not stated."}
+  - {person: zhang_lewei, organization: "华为技术有限公司 / Huawei Technologies", edge_type: technical_leadership, role: "invited optical-interconnect technical speaker; formal title unstated", evidence_grade: A, source_urls: ["https://www.ncsti.gov.cn/kcfw/hy/202406/P020240619561405283113.pdf"], photonics_relevance: "Invited talk addressed optical-interconnect requirements and technology trends in datacom.", uncertainty: "Program proves Huawei affiliation at the event and technical subject, not a formal leadership title or employment interval."}
+  - {person: cheng_yuanbing, organization: "华为技术有限公司 / Huawei Technologies", edge_type: technical_leadership, role: "invited PON optical-device technical speaker; formal title unstated", evidence_grade: B, source_urls: ["https://b2b.csoe.org.cn/meeting/GoInc2024.html"], photonics_relevance: "Invited report on progress and challenges in passive-optical-network components.", uncertainty: "Professional-society program is grade B and does not give formal title or tenure dates."}
+  - {person: dong_xiaowen, organization: "华为技术有限公司 / Huawei Technologies", edge_type: technical_leadership, role: "invited optoelectronic-computing technical speaker; formal title unstated", evidence_grade: B, source_urls: ["https://www.csoe.org.cn/dkekik.html"], photonics_relevance: "Invited report on post-Moore challenges and optoelectronic hybrid computing.", uncertainty: "Professional-society program is grade B and does not give formal title or tenure dates."}
+
+discovery_non_edges:
+  - claim: "The LightIC core team came from MIT, Berkeley, Intel, Apple, and Uber."
+    source_url: "https://assets.kpmg.com/content/dam/kpmg/cn/pdf/zh/2024/11/china-leading-autotech-50-7th.pdf"
+    evidence_grade: X
+    reason: "Generic team provenance is not mapped to named individuals."
+  - claim: "The NVISION core team came from Intel and Bell Labs."
+    source_url: "https://www.nvision-tech.cn/en/knowledge"
+    evidence_grade: X
+    reason: "Generic team provenance; only Hui Nie's individually named antecedents are represented above."
+  - claim: "The Beeplux core team came from Intel, imec, and Xanadu."
+    source_url: "https://beepluxsemi.com/joinUs.html"
+    evidence_grade: X
+    reason: "Official but unnamed team statement; discovery lead only."
+  - claim: "The Aluksen silicon-photonics team included people from Intel, Broadcom, and Huawei/Cisco-related programs."
+    source_url: "https://www.aluksen.com/about/"
+    evidence_grade: X
+    reason: "Company-level team provenance is not a named-person career edge."
+  - claim: "Inxun's other founding team members had Intel/NeoPhotonics backgrounds."
+    source_url: "https://www.mems.me/mems/micro-interview_202209/11657.html"
+    evidence_grade: X
+    reason: "The interview uses partial labels such as Dr. Li/Mr. Liu in the relevant passage; no identity bridge is inferred from context alone."
+
+quality_summary:
+  named_people: 20
+  atomic_edges: 25
+  edges_by_grade: {A: 13, B: 12, C: 0, D: 0, X: 0}
+  discovery_non_edges: 5
+  target_company_people: 10
+  huawei_hisilicon_people: 10
+  caveat: >-
+    This is a high-confidence named-person seed tranche, not a complete China ecosystem
+    map. Conference affiliation is point-in-time evidence. Technical talks without a
+    printed title are preserved as event-linked technical leadership snapshots rather
+    than inferred employment intervals.

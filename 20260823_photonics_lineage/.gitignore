@@ -1,0 +1,3 @@
+# The parent workspace ignores all text files. Keep the visualization dependency
+# lock visible to this project.
+!requirements-viz.txt

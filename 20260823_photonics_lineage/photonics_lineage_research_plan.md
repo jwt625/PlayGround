@@ -43,6 +43,7 @@ The analysis should be bidirectional:
    - Intel Silicon Photonics
    - Bell Labs / Lucent / Alcatel-Lucent
    - UCSB / John Bowers
+   - Stanford photonics groups
    - MIT photonics groups
    - Columbia photonics groups
    - Caltech / Luxtera
@@ -540,7 +541,71 @@ Goal:
 
 ---
 
-## 10.7 ETH Zurich / Jürg Leuthold
+## 10.7 Stanford
+
+Treat Stanford as a multi-group research lineage rather than a single lab. Candidate downstream relationships must be established person by person; do not infer startup lineage from Stanford attendance, coauthorship, or thematic similarity alone.
+
+### Shanhui Fan group
+- nanophotonics and photonic topology
+- nonreciprocal photonics
+- inverse design and AI-enabled photonics
+- trace doctoral students, postdocs, research staff, and later technical founders / leaders
+
+### Jelena Vučković group
+- nanoscale and quantum photonics
+- inverse-designed photonic devices
+- integrated photonic platforms
+- distinguish formal group training from Stanford affiliation or collaboration
+
+### Olav Solgaard group
+- optical MEMS and scanning systems
+- photonic sensing and integrated optical systems
+- identify communications / interconnect-relevant alumni without pulling unrelated optics into scope
+
+### David A. B. Miller ecosystem
+- optical interconnects and switching
+- photonic information processing
+- device-to-system scaling and energy limits
+- trace academic trainees and industry collaborators separately
+
+### James S. (Jim) Harris Jr. group
+- III-V semiconductor materials and epitaxy
+- optoelectronic devices and integrated lasers
+- identify alumni feeding semiconductor, laser, detector, and heterogeneous-integration organizations
+- **TODO — deeper alumni pass (research paused):** validate Harris-group membership and downstream lineage for Zongjian (Apple), Hong Liu (Google), and Yijie Huo (Vertilite co-founder). Resolve full names and same-name ambiguity from primary sources before creating canonical people or edges.
+- **TODO — roster depth:** mine the complete Harris former-student/thesis roster, then validate downstream employment, patents, technical leadership, and company formation person by person. The initial Seth Bank / Vijit Sabnis sample is not adequate coverage of this group.
+
+### Stephen E. (Steve) Harris lineage
+- nonlinear and quantum optics
+- coherent light-matter interactions
+- trace historically relevant students and collaborators into modern integrated photonics only where direct evidence exists
+
+### Robert L. (Bob) Byer lineage
+- lasers, nonlinear optics, and precision photonics
+- technology transfer and industrial translation
+- reconstruct older Stanford laser / photonics alumni paths that may act as upstream roots
+
+### Martin M. (Marty) Fejer group
+- nonlinear optics and quasi-phase matching
+- ferroelectric and integrated nonlinear photonics
+- examine connections to lithium-niobate and nonlinear-photonic companies as research targets, not assumed spinouts
+
+Expand using:
+- official lab rosters and archived group pages
+- Stanford Profiles and faculty CVs
+- dissertations, thesis-advisor records, and paper affiliations
+- Stanford Office of Technology Licensing records
+- patents and named license / spinout documentation
+- downstream official company and conference biographies
+
+Goals:
+- build group-specific alumni lists rather than one undifferentiated Stanford node
+- test which groups produced founders, early technical employees, or major industry leaders
+- identify cross-group and Stanford-to-industry mixing while separating training, employment, collaboration, and licensing evidence
+
+---
+
+## 10.8 ETH Zurich / Jürg Leuthold
 
 Seed:
 - Wolfgang Heni
@@ -555,7 +620,7 @@ Trace:
 
 ---
 
-## 10.8 imec / Ghent
+## 10.9 imec / Ghent
 
 Seed:
 - Caliopa
@@ -571,7 +636,7 @@ Trace:
 
 ---
 
-## 10.9 A*STAR / IME
+## 10.10 A*STAR / IME
 
 Seed:
 - Advanced Micro Foundry
@@ -584,7 +649,7 @@ Goal:
 
 ---
 
-## 10.10 Southampton / Surrey / Bookham / Rockley
+## 10.11 Southampton / Surrey / Bookham / Rockley
 
 Seed:
 - Graham Reed
@@ -611,6 +676,10 @@ Use Chinese-language primary and secondary sources aggressively.
 - 光迅科技 / Accelink
 - 索尔思 / Source Photonics
 - 海信宽带 / Hisense Broadband
+- 天孚通信 / Suzhou TFC Optical Communication (user shorthand: Tian Fu)
+- 光库科技 / Advanced Fiber Resources (Zhuhai) (AFR)
+- 苏州易缆微半导体技术有限公司 / Suzhou InnovSemi (user shorthand: Suzhou Yi Lan Wei)
+- 苏州苏纳光电 / SUNA Optoelectronics (user shorthand: Su Na Guang Dian)
 - 摩尔芯光 / LightIC
 - 映讯芯光 / Inxun
 - 英伟芯
@@ -709,7 +778,20 @@ The first broad roster should target approximately **150–250 people**.
 - Cary Gunn
 - Alex Dickinson
 
-## 12.5 Recent startup leadership seeds
+## 12.5 Stanford-centered seeds
+
+- Shanhui Fan
+- Jelena Vučković
+- Olav Solgaard
+- David A. B. Miller
+- James S. Harris Jr. / Jim Harris
+- Stephen E. Harris / Steve Harris
+- Robert L. Byer / Bob Byer
+- Martin M. Fejer / Marty Fejer
+
+For each person, treat lab membership, advisor relationships, company formation, advisory work, IP licensing, and industry collaboration as separate claims requiring direct evidence.
+
+## 12.6 Recent startup leadership seeds
 
 Add founders / CTOs / photonics VPs from:
 
@@ -879,6 +961,14 @@ Map major research "schools" into industry.
 - Columbia / Bergman
 - Columbia / Gaeta
 - Caltech / Scherer
+- Stanford / Fan
+- Stanford / Vučković
+- Stanford / Solgaard
+- Stanford / Miller
+- Stanford / Jim Harris
+- Stanford / Steve Harris
+- Stanford / Byer
+- Stanford / Fejer
 - ETH / Leuthold
 - imec / Ghent
 - A*STAR / IME
@@ -890,6 +980,7 @@ Map major research "schools" into industry.
 - `lab_alumni.yaml`
 - lab → startup edge set
 - short briefing for each major school
+- Stanford group-by-group alumni map and a candidate-lineage validation queue
 
 ---
 
@@ -977,8 +1068,9 @@ Produce the final visual lineage map.
 4. **Intel-only Sankey**
 5. **Bell Labs-only Sankey**
 6. **academic-lab lineage Sankey**
-7. **China lineage Sankey**
-8. **recent AI-optics startup Sankey**
+7. **Stanford lineage Sankey**
+8. **China lineage Sankey**
+9. **recent AI-optics startup Sankey**
 
 ### Optional visual encodings
 - edge width = talent weight
@@ -1035,6 +1127,7 @@ Output:
 - foreign-company lineage
 - Huawei / Futurewei diaspora
 - confidence grading
+- **TODO — incumbent expansion (research/ingestion paused):** add TFC Optical, Advanced Fiber Resources / 光库科技, InnovSemi / 易缆微, and SUNA Optoelectronics / 苏纳光电. Preserve InnovSemi versus its InnovOpto subsidiary as distinct entities; treat SUNA's 有限公司→股份有限公司 change as legal-form continuity pending source-level canonical review.
 
 ## Workstream G — Legacy company diaspora
 Output:
@@ -1047,6 +1140,14 @@ Output:
 - JDSU
 - Oclaro
 - Inphi
+
+## Workstream H — Stanford photonics lineages
+Output:
+- group-specific alumni rosters for Fan, Vučković, Solgaard, Miller, Jim Harris, Steve Harris, Byer, and Fejer
+- validated training and downstream employment / founder edges
+- candidate IP-license and formal-spinout relationships requiring confirmation
+- explicit separation of Stanford attendance, lab membership, collaboration, and company lineage
+- **TODO — Jim Harris depth correction (research/ingestion paused):** explicitly investigate Zongjian→Apple, Hong Liu→Google, and Yijie Huo→Vertilite, then expand to the full former-student roster. Do not ingest shorthand identities until full-name disambiguation and Harris-group membership are directly sourced.
 
 ---
 
@@ -1061,6 +1162,8 @@ For each person, use multiple query directions.
 "<person>" silicon photonics
 "<person>" Bell Labs
 "<person>" UCSB
+"<person>" Stanford photonics
+"<person>" Stanford thesis advisor
 "<person>" MIT photonics
 "<person>" previous company
 "<person>" biography
@@ -1116,6 +1219,7 @@ High-yield publication corpora:
 - Intel SiPh
 - Bell Labs coherent optics
 - UCSB III-V/Si heterogeneous integration
+- Stanford nanophotonics, optical-interconnect, III-V, nonlinear-optics, and optical-MEMS groups
 - MIT optical I/O
 - Columbia silicon / nonlinear photonics
 - imec SiPh foundry work
@@ -1253,12 +1357,14 @@ The written briefing should contain:
 - surprising cross-company flows
 - strongest Intel diaspora examples
 - strongest Bell Labs diaspora examples
+- strongest validated Stanford group lineages and highest-priority candidate links
 - strongest China lineage examples
 
 ## Institutional lineage sections
 - Intel SiPh
 - Bell Labs
 - UCSB
+- Stanford
 - MIT
 - Columbia
 - Caltech
@@ -1310,18 +1416,20 @@ Examples to test:
 10. `intel_siph_lineage.md`
 11. `bell_labs_lineage.md`
 12. `academic_lab_lineages.md`
-13. `china_photonics_lineage.md`
-14. `recent_acquisitions.md`
-15. `validation_report.md`
+13. `stanford_photonics_lineage.md`
+14. `china_photonics_lineage.md`
+15. `recent_acquisitions.md`
+16. `validation_report.md`
 
 ## Visual outputs
 
-16. `photonics_lineage_sankey.html`
-17. `photonics_lineage_sankey.png`
-18. `intel_siph_sankey.png`
-19. `bell_labs_sankey.png`
-20. `china_photonics_sankey.png`
-21. optional interactive person-level graph
+17. `photonics_lineage_sankey.html`
+18. `photonics_lineage_sankey.png`
+19. `intel_siph_sankey.png`
+20. `bell_labs_sankey.png`
+21. `stanford_photonics_sankey.png`
+22. `china_photonics_sankey.png`
+23. optional interactive person-level graph
 
 ---
 
@@ -1353,7 +1461,7 @@ The first major release is complete when:
 3. Run the acquisition-first reverse genealogy.
 4. Run Intel SiPh alumni mining in parallel.
 5. Run Bell Labs / Acacia / coherent-optics mining in parallel.
-6. Run UCSB / MIT / Columbia lab-lineage mining in parallel.
+6. Run UCSB / Stanford / MIT / Columbia lab-lineage mining in parallel, with Stanford split by group.
 7. Run China / Huawei ecosystem research separately with Chinese-language sources.
 8. Merge all person histories.
 9. Resolve duplicate people / organizations.
