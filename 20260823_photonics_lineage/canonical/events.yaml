@@ -1,4 +1,4 @@
-schema_version: "0.1.0"
+schema_version: "0.2.0"
 events:
   - id: event_acquisition_infinilink_globalfoundries
     event_type: acquisition

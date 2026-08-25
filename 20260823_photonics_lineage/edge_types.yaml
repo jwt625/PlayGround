@@ -1,4 +1,4 @@
-schema_version: "0.1.0"
+schema_version: "0.2.0"
 edge_types:
   - id: employment
     source_types: [person]
@@ -6,7 +6,7 @@ edge_types:
     direction: person_to_organization
     temporal: interval
     required_attributes: [role, photonics_relevance]
-    optional_attributes: [group, seniority, employment_type, location]
+    optional_attributes: [group, seniority, employment_type, location, role_class, ongoing, sequence_hint, profile_order]
     aggregate_weight: 1.0
   - id: research_training
     source_types: [person]
@@ -14,7 +14,7 @@ edge_types:
     direction: trainee_to_lab_or_institution
     temporal: interval
     required_attributes: [training_type, photonics_relevance]
-    optional_attributes: [degree, field, advisor_person_ids]
+    optional_attributes: [degree, field, advisor_person_ids, location, ongoing, sequence_hint, profile_order]
     aggregate_weight: 1.0
   - id: founder
     source_types: [person]
@@ -22,7 +22,7 @@ edge_types:
     direction: person_to_founded_organization
     temporal: point_or_interval
     required_attributes: [founder_type]
-    optional_attributes: [title, founder_sequence]
+    optional_attributes: [title, founder_sequence, role_class, ongoing, sequence_hint, profile_order]
     aggregate_weight: 3.0
   - id: executive_role
     source_types: [person]
@@ -30,7 +30,7 @@ edge_types:
     direction: person_to_organization
     temporal: interval
     required_attributes: [title, photonics_relevance]
-    optional_attributes: [group]
+    optional_attributes: [group, role_class, location, ongoing, sequence_hint, profile_order]
     aggregate_weight: 2.0
   - id: technical_leadership
     source_types: [person]
@@ -38,7 +38,7 @@ edge_types:
     direction: person_to_organization
     temporal: interval
     required_attributes: [title, photonics_relevance]
-    optional_attributes: [group, seniority]
+    optional_attributes: [group, seniority, role_class, location, ongoing, sequence_hint, profile_order]
     aggregate_weight: 1.0
   - id: spinout
     source_types: [organization]
@@ -130,3 +130,5 @@ attribute_enums:
   spinout_basis: [formal_spinout, technology_transfer, lab_origin, team_origin]
   advisor_type: [technical_advisor, scientific_advisor, board_member, board_observer]
   investment_type: [venture, strategic, angel, grant, other]
+  sequence_hint: [explicitly_before, explicitly_after, listed_before, listed_after, unknown]
+  role_class: [founder, executive, technical_leader, engineer, researcher, faculty, student, postdoc, advisor, investor, other]

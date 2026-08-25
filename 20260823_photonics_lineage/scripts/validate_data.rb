@@ -59,6 +59,7 @@ class DataValidator
       required: schema.dig("entities", "person", "required"),
       id_pattern: schema.dig("conventions", "ids", "pattern")
     )
+    validate_person_timeline_research(people, schema)
     validate_technology_membership(organizations + people, schema)
     validate_organization_references(organizations)
     validate_organization_dates(organizations)
@@ -273,12 +274,20 @@ class DataValidator
     )
     allowed_grades = schema.dig("entities", "source", "fields", "evidence_grade", "enum") || []
     allowed_types = schema.dig("entities", "source", "fields", "source_type", "enum") || []
+    allowed_access_scopes = schema.dig("entities", "source", "fields", "access_scope", "enum") || []
+    allowed_retrieval_methods = schema.dig("entities", "source", "fields", "retrieval_method", "enum") || []
     sources.each_with_index do |source, index|
       next unless source.is_a?(Hash)
 
       label = source["id"] || "source[#{index}]"
       error(label, "evidence_grade #{source['evidence_grade'].inspect} is not defined") unless allowed_grades.include?(source["evidence_grade"])
       error(label, "source_type #{source['source_type'].inspect} is not defined") unless allowed_types.include?(source["source_type"])
+      if source["access_scope"] && !allowed_access_scopes.include?(source["access_scope"])
+        error(label, "access_scope #{source['access_scope'].inspect} is not defined")
+      end
+      if source["retrieval_method"] && !allowed_retrieval_methods.include?(source["retrieval_method"])
+        error(label, "retrieval_method #{source['retrieval_method'].inspect} is not defined")
+      end
       publication = date_bounds(source["publication_date"], "#{label}.publication_date")
       validate_iso_day(source["accessed_date"], "#{label}.accessed_date") unless source["accessed_date"].nil?
       begin
@@ -384,6 +393,66 @@ class DataValidator
       start_bounds = date_bounds(edge["start_date"], "#{label}.start_date")
       end_bounds = date_bounds(edge["end_date"], "#{label}.end_date")
       error(label, "end_date is definitively earlier than start_date") if start_bounds && end_bounds && end_bounds.last < start_bounds.first
+      validate_timeline_fields(edge, label, source_ids, schema)
+    end
+  end
+
+  def validate_person_timeline_research(people, schema)
+    allowed_statuses = schema.dig("entities", "person", "fields", "timeline_research", "fields", "status", "enum") || []
+    allowed_source_types = schema.dig("entities", "source", "fields", "source_type", "enum") || []
+    people.each_with_index do |person, index|
+      next unless person.is_a?(Hash) && person.key?("timeline_research")
+
+      label = person["id"] || "person[#{index}]"
+      timeline = person["timeline_research"]
+      next if timeline.nil?
+      unless timeline.is_a?(Hash)
+        error(label, "timeline_research must be a mapping or null")
+        next
+      end
+      status = timeline["status"]
+      error(label, "timeline_research.status #{status.inspect} is not defined") unless allowed_statuses.include?(status)
+      %w[earliest_known_date latest_known_date].each do |field|
+        date_bounds(timeline[field], "#{label}.timeline_research.#{field}") if timeline[field]
+      end
+      source_types = timeline["source_types_checked"]
+      unless source_types.is_a?(Array)
+        error(label, "timeline_research.source_types_checked must be an array")
+        next
+      end
+      source_types.each do |source_type|
+        error(label, "timeline_research contains unknown source type #{source_type.inspect}") unless allowed_source_types.include?(source_type)
+      end
+    end
+  end
+
+  def validate_timeline_fields(edge, label, source_ids, schema)
+    allowed_statuses = schema.dig("entities", "edge", "fields", "timeline_status", "enum") || []
+    status = edge["timeline_status"]
+    error(label, "timeline_status #{status.inspect} is not defined") if status && !allowed_statuses.include?(status)
+    warning(label, "timeline_status is ongoing but end_date is populated") if status == "ongoing" && edge["end_date"]
+
+    return unless edge.key?("timeline_observations")
+    observations = edge["timeline_observations"]
+    unless observations.is_a?(Array)
+      error(label, "timeline_observations must be an array")
+      return
+    end
+    allowed_types = schema.dig("common_types", "timeline_observation", "fields", "observation_type", "enum") || []
+    observations.each_with_index do |observation, index|
+      observation_label = "#{label}.timeline_observations[#{index}]"
+      unless observation.is_a?(Hash)
+        error(observation_label, "must be a mapping")
+        next
+      end
+      %w[observation_type date source_reference].each do |field|
+        error(observation_label, "missing #{field}") unless observation.key?(field)
+      end
+      unless allowed_types.include?(observation["observation_type"])
+        error(observation_label, "observation_type #{observation['observation_type'].inspect} is not defined")
+      end
+      date_bounds(observation["date"], "#{observation_label}.date") if observation["date"]
+      validate_source_references([observation["source_reference"]], observation_label, source_ids) if observation["source_reference"]
     end
   end
 

@@ -1,4 +1,4 @@
-schema_version: "0.1.0"
+schema_version: "0.2.0"
 sources:
   - {id: src_optica_intel_siph_team, url: "https://www.optica.org/get_involved/awards_and_honors/awards/forman_team_lists/intel_silicon_photonics_solutions_group/", canonical_url: null, title: "Intel Silicon Photonics Solutions Group", publisher: "Optica", publication_date: null, accessed_date: "2026-08-23", source_type: professional_society, evidence_grade: B, language: en, archive_url: null, content_hash: null, notes: "Secondary professional-society team roster."}
   - {id: src_optica_2007_40g_modulator, url: "https://opg.optica.org/abstract.cfm?uri=ipnra-2007-IMD3", canonical_url: null, title: "High-speed Silicon Modulator for Future VLSI Interconnect", publisher: "Optica Publishing Group", publication_date: {value: "2007", precision: year}, accessed_date: "2026-08-23", source_type: paper, evidence_grade: A, language: en, archive_url: null, content_hash: null, notes: null}

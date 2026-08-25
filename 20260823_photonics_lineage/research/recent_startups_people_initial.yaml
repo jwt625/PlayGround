@@ -1,4 +1,4 @@
-schema_version: "0.1.0"
+schema_version: "0.2.0"
 dataset_id: recent_startups_people_initial
 as_of: "2026-08-23"
 scope: "Named founder and technical-leadership lineage for OpenLight, Scintil Photonics, Ranovus, Avicena, Salience Labs, Lumai, iPronics, and SiPhi"

@@ -1,4 +1,4 @@
-schema_version: "0.1.0"
+schema_version: "0.2.0"
 dataset_id: imec_ghent_people_initial
 as_of: "2026-08-23"
 scope: "Initial imec / Ghent Photonics Research Group academic-commercial lineage, including Caliopa, Huawei Belgium, Luceda, and foundry/design-ecosystem alumni"

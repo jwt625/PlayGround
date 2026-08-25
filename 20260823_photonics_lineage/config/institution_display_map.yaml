@@ -1,4 +1,4 @@
-schema_version: "0.1.0"
+schema_version: "0.2.0"
 map_id: institution_display_map
 as_of: "2026-08-23"
 purpose: "Display-only normalization of selected institution and corporate-family identities for person-affiliation Sankey views."

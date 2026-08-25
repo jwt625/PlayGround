@@ -31,6 +31,13 @@ The analysis should be bidirectional:
    - reconstruct prior employment and academic history
    - identify the institutional roots behind each company
 
+3. **Timeline completion for every included individual**
+   - reconstruct the fullest publicly documented professional timeline, not only photonics-highlight roles
+   - collect exact or partial start/end dates, concurrent roles, employer business units, titles, locations, education, and current status
+   - inspect LinkedIn or equivalent public professional profiles whenever a credible identity match is available
+   - retain LinkedIn-only facts as grade-C asserted claims pending corroboration instead of discarding the timeline information
+   - record upstream and downstream coverage separately so a diaspora study is not mistaken for a complete institutional labor-flow study
+
 ---
 
 # 2. Research Questions
@@ -190,11 +197,15 @@ Use explicit edge semantics.
 
 ---
 
-# 6. Sankey Aggregation Strategy
+# 6. Visualization and Aggregation Strategy
 
 The research database should remain person-level.
 
-The final Sankey can aggregate people into institution-to-institution flows.
+The primary visualization should be an uncertainty-aware organization exchange network, not a global Sankey. It must show confirmed directed transitions, shared-person relationships with unknown direction, and bidirectional exchange as distinct states. Selecting an organization should reveal the contributing people and their source-backed timelines.
+
+A person-level timeline/storyline view is the primary detail view. Unknown interval endpoints should remain open or fuzzy rather than causing the affiliation to disappear. Acquisition, spinout, and team-transfer events may appear as separate event markers but must not manufacture person movement.
+
+A Sankey may remain as a secondary, explicitly scoped **founder ancestry** view. It must not be described as a complete talent-flow map, and deep ancestry must be distinguished from consecutive career transitions.
 
 Example:
 
@@ -207,7 +218,7 @@ Intel Silicon Photonics
     └── Mario Paniccia ─────> ANELLO
 ```
 
-Possible rendered form:
+Possible founder-ancestry rendering:
 
 ```text
 Intel SiPh ───────> Xscape
@@ -219,7 +230,7 @@ Intel SiPh ───────> Xscape
 
 ## 6.1 Recommended edge weights
 
-Do not use acquisition value as lineage width.
+Use unique named people as the default link width. Do not use acquisition value as lineage width and do not present role-weighted values as headcount.
 
 Suggested talent weights:
 
@@ -229,6 +240,28 @@ Suggested talent weights:
 - advisor / board technical role: `0.25–0.5`
 
 Store the raw people behind every aggregate edge so it can be audited.
+
+Role-weighted influence may be offered as a non-default analytical toggle. It must be labeled as an index, and one person must not be silently multiplied across transitive ancestry paths.
+
+## 6.2 Transition semantics
+
+Derived organization relationships must be classified as:
+
+- `confirmed`: date bounds or an explicit move statement establish direction;
+- `semantic`: founder or biography semantics suggest direction but dates are incomplete;
+- `unknown`: the same validated person is affiliated with both organizations but order is unresolved;
+- `conflicted`: sources support incompatible chronology.
+
+Directness is separate from direction. A confirmed earlier affiliation can still be nonconsecutive ancestry if intermediate organizations are known. Only evidence-supported consecutive moves should be labeled direct talent transitions.
+
+## 6.3 Required interaction
+
+- Search and select any organization or person.
+- Default to a one- or two-hop ego network rather than an unreadable global graph.
+- Filter by time, technology, geography, edge type, evidence grade, chronology confidence, and role class.
+- Toggle parent/business-unit and university/lab display clustering without rewriting canonical endpoints.
+- Show unique-person counts, confirmed inbound, confirmed outbound, bidirectional exchange, and direction-unknown adjacency separately.
+- On selection, expose every contributing person, atomic edge, date observation, evidence grade, and source link.
 
 ---
 

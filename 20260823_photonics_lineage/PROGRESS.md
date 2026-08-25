@@ -15,6 +15,10 @@ Execute the first major release defined in `photonics_lineage_research_plan.md`:
 - Dates use ISO `YYYY-MM-DD` when known and a year-only field when the evidence is not more precise.
 - Unknown values remain explicit nulls; they are never inferred merely to complete a record.
 - Research workstreams write isolated initial datasets before coordinator review and canonical merge.
+- Schema v0.2 adopts timeline-first collection: every included person should have the fullest practical public professional timeline, including grade-C LinkedIn observations when A/B sources are unavailable.
+- Timeline completeness is tracked separately from evidence grade. LinkedIn-only claims remain asserted/C and are visible only in an optional research layer until corroborated.
+- The primary target visualization is an uncertainty-aware organization exchange network plus person timelines. The Sankey is demoted to a scoped founder-ancestry view.
+- Direction-unknown shared-person relationships are retained explicitly rather than dropped from the visualization.
 
 ## Current milestone: M0 — foundation and first evidence tranche
 
@@ -168,10 +172,13 @@ Execute the first major release defined in `photonics_lineage_research_plan.md`:
 - Several 2025–2026 acquisitions may have announced but not closed; status must be verified from current primary sources.
 - Stanford Harris-group coverage is known incomplete; the named Apple/Google/Vertilite leads and full-roster pass remain TODOs and are not canonical claims.
 - The four newly requested China incumbents remain TODOs; preliminary identity resolution was not ingested.
+- Existing canonical people predate the v0.2 timeline-coverage fields and require a migration/backfill pass; the schema additions are backward-compatible but coverage is not yet populated.
+- The current graph and Sankey builders still implement the v0.1 strict/founder projections and must be replaced by the transition and visualization design in `VISUALIZATION_DESIGN.md`.
 
 ## Next coordinator actions
 
-1. Optimize the interactive visualization using the frozen canonical snapshot.
-2. Improve Sankey layout, labeling, filters, hover evidence, and institution-cluster controls based on user feedback.
-3. Keep all research, source ingestion, and canonical-data expansion paused until explicitly resumed.
-4. When research resumes, execute the Jim Harris depth correction and four-company China-incumbent TODOs before lower-priority expansion.
+1. Backfill `timeline_research` and coverage records, beginning with all multi-institution people and major mixing nodes.
+2. Perform bidirectional timeline completion for Intel and other hubs using official bios, CVs, conference bios, papers/patents, LinkedIn, and professional databases.
+3. Build derived transitions with confirmed, semantic, unknown, and conflicted direction plus consecutive/nonconsecutive directness.
+4. Implement the organization ego network and person timeline inspector specified in `VISUALIZATION_DESIGN.md`.
+5. Recast the current Sankey as a secondary founder-ancestry view.

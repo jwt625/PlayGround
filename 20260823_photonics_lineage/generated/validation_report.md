@@ -12,7 +12,7 @@ Generated deterministically from canonical YAML and `generated/graph_ab.json`. T
 | Events | 23 |
 | Edges | 556 |
 
-Schema version: `0.1.0`. Graph input hashes current: **yes**.
+Schema version: `0.2.0`. Graph input hashes current: **yes**.
 Canonical duplicate IDs: **0**. Duplicate source URLs: **0**.
 
 ## Evidence
@@ -92,7 +92,7 @@ MERGE_NOTES contains 10 explicitly labeled non-edge/excluded-claim sections. Neg
 
 ## Definition of done
 
-- [x] **canonical_collections_loaded** (`pass`): Five canonical YAML collections parsed with schema 0.1.0.
+- [x] **canonical_collections_loaded** (`pass`): Five canonical YAML collections parsed with schema 0.2.0.
 - [x] **canonical_ids_unique** (`pass`): No duplicate canonical IDs found.
 - [x] **canonical_source_urls_unique** (`pass`): No duplicate canonical source URLs found.
 - [x] **graph_matches_canonical_inputs** (`pass`): All graph input SHA-256 hashes match.
@@ -106,8 +106,8 @@ MERGE_NOTES contains 10 explicitly labeled non-edge/excluded-claim sections. Neg
 
 | Input | SHA-256 | Matches graph |
 |---|---|---|
-| organizations | `86a015c2459568615be61ee20e602be5a4db2e2ae63fe51070f6c7f088af9f12` | yes |
-| people | `38bf33ceafff3f2da68928277057fc935dd4717fa53dd4178116bc63d24ee628` | yes |
-| sources | `bb9f11f662540a262e702e5b4c68ea4e3959cb7744b997eaa9696323779deba8` | yes |
-| events | `a5e6520ddc2d603e2b6c73831358b300103c0712866308852f024e6ba5a1f88e` | yes |
-| edges | `a031f6561ac2a4230798293ea11a8983d21d877a908610422d87a0848fad3a5c` | yes |
+| organizations | `e23eaa363fe2dcd594c782c9c399e47262508e7588f52e5ec3f4e12eb398d047` | yes |
+| people | `4d3a46684490f15b3099f1a5ad0a4fd5d1f4983ab4402e0a49577e16e3e3dba7` | yes |
+| sources | `ed6a1f95e3a0fc46649aaf8cda148d81fb08a7f07cc176fa33a4c80cfd610234` | yes |
+| events | `cc221cd9f603bbe3dc4a20d1eb18616f0a03e1a302cc58f90c63e780f2d68eef` | yes |
+| edges | `da9dd9b2531beeacf4a1cdd78f0556923758a6076fee4f51862fa8533ca9c54a` | yes |

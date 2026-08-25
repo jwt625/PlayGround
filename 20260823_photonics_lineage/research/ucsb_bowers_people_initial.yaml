@@ -1,4 +1,4 @@
-schema_version: "0.1.0"
+schema_version: "0.2.0"
 dataset:
   title: UCSB / John Bowers lineage — initial evidence-backed tranche
   as_of: "2026-08-23"

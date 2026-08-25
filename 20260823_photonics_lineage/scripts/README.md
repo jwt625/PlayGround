@@ -24,6 +24,7 @@ Canonical validation additionally checks:
 - referenced event IDs;
 - evidence grades versus edge status, including the requirement that A-D evidence cite at least one source;
 - ISO date values and date ordering when the available precision makes ordering conclusive.
+- schema-v0.2 source access metadata, per-person timeline-research metadata, edge timeline status, and source-backed timeline observations when present.
 
 An explicitly documented event publication proxy after closing is reported as a warning, not an error. This preserves the exceptional InfiniLink record while keeping the chronology visible.
 
@@ -43,6 +44,8 @@ ruby scripts/validate_data.rb \
 When canonical files replace rather than partition seed records, pass only the canonical organization/person files to avoid legitimate duplicate-ID failures. Use `--schema` and `--edge-types` to test a future contract version. Run `ruby scripts/validate_data.rb --help` for all options.
 
 ## A/B graph data
+
+The current builder retains the conservative v0.1 projection semantics. Under schema v0.2 it remains useful for regression comparison, but it is not the target ecosystem visualization: it drops direction-unknown relationships and may represent nonconsecutive founder ancestry as institution flow. See `VISUALIZATION_DESIGN.md` for the replacement transition model and interface.
 
 Build the reproducible validated-evidence graph from the canonical snapshot:
 

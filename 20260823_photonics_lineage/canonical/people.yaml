@@ -1,4 +1,4 @@
-schema_version: "0.1.0"
+schema_version: "0.2.0"
 people:
   - {id: person_mario_paniccia, name: "Mario Paniccia", aliases: [], name_disambiguator: null, current_organization_id: org_anello, current_title: "CEO", technologies: [silicon_photonics], research_status: validated, sources: [{source_id: src_anello_paniccia_profile, supports: "identity and career", locator: null, accessed_date: "2026-08-23"}], notes: null}
   - {id: person_kevin_sullivan, name: "Kevin Sullivan", aliases: [], name_disambiguator: null, current_organization_id: org_anello, current_title: "Chief Operating Officer", technologies: [silicon_photonics, fiber_optics], research_status: validated, sources: [{source_id: src_anello_team, supports: "identity and career", locator: "Kevin Sullivan bio", accessed_date: "2026-08-23"}], notes: null}

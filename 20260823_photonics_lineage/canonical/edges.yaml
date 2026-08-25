@@ -1,4 +1,4 @@
-schema_version: "0.1.0"
+schema_version: "0.2.0"
 edges:
   # Acquisition edges. Event records carry transaction dates and value details.
   - {id: edge_acquisition_infinilink_globalfoundries, source_id: org_infinilink, target_id: org_globalfoundries, edge_type: acquisition, start_date: {value: "2025-11-14", precision: day}, end_date: null, attributes: {event_id: event_acquisition_infinilink_globalfoundries, integration_status: "Engineering talent and IP added to GF in-house design capabilities."}, evidence: {grade: A, sources: [{source_id: src_gf_2025_20f_sec, supports: "completed acquisition", locator: null, accessed_date: "2026-08-23"}], corroboration_count: 1, rationale: "Regulatory filing.", reviewed_by: null, reviewed_date: "2026-08-23"}, status: validated, notes: null}

@@ -1,11 +1,13 @@
 # Source and Evidence Policy
 
-Version: 0.1.0  
-Applies from: Phase 0
+Version: 0.2.0
+Applies from: timeline-first revision
 
 ## Core rule
 
 The graph is claim-based. A biography is not accepted wholesale: each employment, role, date, training relationship, acquisition, license, or team transfer is a separate claim with its own source references and grade. Seed-list presence means “research this,” not “this is true.”
+
+For every person admitted to the dataset, collect as complete a publicly documented professional timeline as practical. Do not stop after finding the one affiliation that motivated inclusion. Search upstream and downstream roles, education and research training, concurrent appointments, business units, job titles, locations, start/end dates, founder events, and current status. Timeline completeness and evidence strength are separate dimensions: a useful C-grade LinkedIn interval should be captured as asserted evidence rather than omitted, while the default validated graph remains A/B-only.
 
 ## Evidence grades
 
@@ -44,6 +46,21 @@ For mutable pages—company leadership pages, biographies, LinkedIn, and databas
 6. Keep C/D claims as `asserted`; keep reasoning-only claims as `inferred` with grade X.
 7. Put contradictory dates, titles, identities, or acquisition values into `conflicts` rather than silently choosing one.
 
+## Timeline-first collection procedure
+
+For each included person:
+
+1. Establish identity using name aliases plus at least one discriminator such as employer sequence, education, title, location, publication, patent, or photograph.
+2. Search the person's official biography, university page or CV, conference biographies, papers, patents, archived employer pages, LinkedIn, and relevant professional databases.
+3. Capture every publicly documented professional and research interval that helps reconstruct sequence, including roles outside photonics. Mark each edge's `photonics_relevance` rather than deleting adjacent history.
+4. Record the exact employer label and business unit stated by the source. Link parent and unit entities explicitly; do not silently normalize a specific group into the parent corporation.
+5. Preserve month-level LinkedIn dates when shown. Preserve “present” as `timeline_status: ongoing` plus an `active_on` observation dated to profile access; do not invent a future end date.
+6. Keep concurrent roles concurrent. Do not force non-overlapping intervals merely to produce a clean career path.
+7. If a profile supplies ordered roles but no dates, preserve `profile_order` and `sequence_hint` as low-confidence metadata; never convert page order alone into a confirmed transition.
+8. Create asserted grade-C edges immediately for useful LinkedIn-only claims. Add A/B corroboration later and promote the claim only when the stronger source directly supports it.
+9. Record what was checked and what remains missing in `person.timeline_research` and/or a `coverage_record`. “Complete” means complete to the public sources checked, not objectively complete.
+10. Search both directions around major hubs. For Intel, for example, research where each person came from as well as where they went; a diaspora-only pass is not coverage of Intel's talent exchange.
+
 ## Special cases
 
 ### Employment and technical relevance
@@ -72,7 +89,19 @@ Preserve original Chinese names and company names as aliases with `language: zh`
 
 ### LinkedIn and databases
 
-LinkedIn and commercial databases are C-grade even when first-person maintained, unless the same fact is independently supported by A/B evidence. They are useful for discovery and date-range hypotheses. Record access dates because profiles change.
+LinkedIn and commercial databases are C-grade even when first-person maintained, unless the same fact is independently supported by A/B evidence. They are a required timeline-discovery source when a public or legitimately accessible profile can be resolved, not merely a last-resort source.
+
+For LinkedIn, capture at minimum:
+
+- canonical profile URL and access date;
+- the exact displayed employer, business unit, title, location, and start/end month or year;
+- whether the role is displayed as current;
+- the profile's explicit role order when dates are absent;
+- a locator identifying the relevant Experience or Education entry;
+- an archive URL or content hash when lawful and technically practical;
+- ambiguity caused by merged employer pages, abbreviated dates, overlapping roles, or profile changes.
+
+Do not copy personal contact information, home addresses, family information, or other non-professional sensitive data. Do not bypass access controls or misrepresent inaccessible content as reviewed. Store only the professional facts needed for lineage research and comply with applicable platform terms and access restrictions.
 
 ## Deduplication and identity
 
@@ -85,6 +114,8 @@ LinkedIn and commercial databases are C-grade even when first-person maintained,
 
 ## Publication and visualization gates
 
-The default Sankey includes only validated A/B atomic edges. Grade C may appear in a visually distinct optional layer. D and X are excluded. Every aggregate `talent_flow` edge must retain its contributing person IDs and atomic edge IDs so the rendered width can be audited and regenerated.
+The default confirmed layer includes only validated A/B atomic edges. Grade C appears only in a visibly distinct optional research layer, with dashed or muted styling and direct source disclosure. D and X are excluded from factual flow views. Every aggregate relationship must retain its contributing person IDs and atomic edge IDs so it can be audited and regenerated.
+
+The visualization must not suppress a real shared-person relationship solely because chronology is missing. Such a relationship is rendered as direction unknown. Confirmed transitions, semantic founder ancestry, and undirected co-affiliation are separate relationship classes and must never share the same arrow or legend entry.
 
 Before release, run checks for orphan IDs, invalid edge endpoints, missing required attributes, duplicate canonical names, impossible date ordering, unsupported A-D claims, unresolved high-impact conflicts, and aggregate weights that cannot be reproduced.

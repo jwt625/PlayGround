@@ -1,4 +1,4 @@
-schema_version: "0.1.0"
+schema_version: "0.2.0"
 dataset_id: historical_acquisitions_patch
 as_of: "2026-08-23"
 scope: "Ten historical optical/photonics acquisition events missing from the canonical release audit"

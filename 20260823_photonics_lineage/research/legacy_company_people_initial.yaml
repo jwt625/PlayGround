@@ -1,4 +1,4 @@
-schema_version: "0.1.0"
+schema_version: "0.2.0"
 dataset_id: legacy_company_people_initial
 as_of: "2026-08-23"
 scope: "Legacy commercial-company diaspora centered on Luxtera, Kotura, Rockley, Elenion, NeoPhotonics, Finisar, JDSU, Oclaro, and Inphi"

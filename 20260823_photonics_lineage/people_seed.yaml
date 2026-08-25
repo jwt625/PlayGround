@@ -1,4 +1,4 @@
-schema_version: "0.1.0"
+schema_version: "0.2.0"
 description: Discovery seeds from the planning document. Names and aliases require identity validation before graph use.
 people:
   # Intel-centered

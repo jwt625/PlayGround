@@ -1,4 +1,4 @@
-schema_version: "0.1.0"
+schema_version: "0.2.0"
 dataset_id: stanford_photonics_people_initial
 as_of: "2026-08-23"
 scope: "Initial Stanford photonics academic lineage centered on eight faculty branches and directly evidenced alumni, founders, and technical contributors"

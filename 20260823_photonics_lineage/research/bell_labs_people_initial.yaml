@@ -1,4 +1,4 @@
-schema_version: "0.1.0"
+schema_version: "0.2.0"
 dataset_id: bell_labs_people_initial
 as_of: "2026-08-23"
 scope: "Bell Labs / Lucent / Alcatel-Lucent / Mintera / Acacia / Nubis coherent-optics lineage"

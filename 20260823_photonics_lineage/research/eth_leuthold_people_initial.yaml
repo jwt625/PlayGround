@@ -1,4 +1,4 @@
-schema_version: "0.1.0"
+schema_version: "0.2.0"
 dataset_id: eth_leuthold_people_initial
 as_of: "2026-08-23"
 scope: "Initial ETH Zurich / Jürg Leuthold / Polariton integrated electro-optics lineage"

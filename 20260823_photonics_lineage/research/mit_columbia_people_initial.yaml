@@ -1,4 +1,4 @@
-schema_version: "0.1.0"
+schema_version: "0.2.0"
 dataset_id: mit_columbia_people_initial
 as_of: "2026-08-23"
 scope: "MIT / Columbia photonic-compute and optical-I/O ecosystem: Lightmatter, Ayar Labs, Lightelligence, Xscape Photonics and related lab alumni"
