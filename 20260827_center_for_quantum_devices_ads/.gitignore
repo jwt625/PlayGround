@@ -1,0 +1,9 @@
+# Private source and extraction artifacts. The PDF contains internal lab layouts,
+# safety procedures, chemical inventory, and contact information.
+source/
+extraction/
+
+# Rebuilt with `node scripts/build_static.mjs`; deploy this directory separately.
+dist/
+
+.DS_Store
