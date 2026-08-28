@@ -1,7 +1,7 @@
 import { categories, equipment } from "./data.js";
 
 const ASSET_PATH = "public/assets/equipment/";
-const ISSUE_URL = "https://github.com/jwt625/PlayGround/issues/new";
+const ISSUE_URL = "https://github.com/jwt625/cqd-equipment/issues/new";
 
 const grid = document.querySelector("#equipment-grid");
 const filters = document.querySelector("#category-filters");
@@ -32,11 +32,18 @@ function visibleItems() {
   );
 }
 
+function imageTemplate(item, detail = false) {
+  if (!item.image) {
+    return `<div class="image-placeholder${detail ? " image-placeholder-detail" : ""}"><span>No unambiguous audit photo</span></div>`;
+  }
+  return `<img src="${ASSET_PATH}${escapeHtml(item.image)}" alt="Audit photograph associated with ${escapeHtml(item.name)}"${detail ? "" : ' loading="lazy"'} />`;
+}
+
 function cardTemplate(item) {
   return `
     <article class="equipment-card">
       <div class="card-image">
-        <img src="${ASSET_PATH}${escapeHtml(item.image)}" alt="Source-document photograph of ${escapeHtml(item.name)}" loading="lazy" />
+        ${imageTemplate(item)}
         <span class="category-label">${escapeHtml(item.category)}</span>
       </div>
       <div class="card-body">
@@ -50,7 +57,7 @@ function cardTemplate(item) {
         </dl>
         <div class="card-actions">
           <button class="button" type="button" data-details="${item.id}">View details</button>
-          <a class="button icon-button" href="${commentUrl(item)}" target="_blank" rel="noreferrer" aria-label="Comment or ask about ${escapeHtml(item.name)}" title="Comment or ask">↗</a>
+          <a class="button inquiry-button" href="${commentUrl(item)}" target="_blank" rel="noreferrer" aria-label="Ask a public question about ${escapeHtml(item.name)}">Public question ↗</a>
         </div>
       </div>
     </article>`;
@@ -72,7 +79,7 @@ function renderFilters() {
 function render() {
   const items = visibleItems();
   grid.innerHTML = items.map(cardTemplate).join("");
-  resultCount.textContent = `${items.length} of ${equipment.length} systems`;
+  resultCount.textContent = `${items.length} of ${equipment.length} listings`;
   emptyState.hidden = items.length !== 0;
   grid.hidden = items.length === 0;
 }
@@ -80,7 +87,7 @@ function render() {
 function showDetails(item) {
   dialogContent.innerHTML = `
     <div class="dialog-layout">
-      <div class="dialog-visual"><img src="${ASSET_PATH}${escapeHtml(item.image)}" alt="Source-document photograph of ${escapeHtml(item.name)}" /></div>
+      <div class="dialog-visual">${imageTemplate(item, true)}</div>
       <div class="dialog-copy">
         <p class="eyebrow">${escapeHtml(item.category)} · Source page ${item.page}</p>
         <h2 id="dialog-title">${escapeHtml(item.name)}</h2>
@@ -91,15 +98,37 @@ function showDetails(item) {
           <div><dt>NU tag</dt><dd>${escapeHtml(item.tag)}</dd></div>
           <div><dt>Location</dt><dd>${escapeHtml(item.location)}</dd></div>
           <div><dt>Purchase date</dt><dd>${escapeHtml(item.purchaseDate)}</dd></div>
+          ${item.serial ? `<div><dt>Serial number</dt><dd>${escapeHtml(item.serial)}</dd></div>` : ""}
+          ${item.specification ? `<div><dt>Specification</dt><dd>${escapeHtml(item.specification)}</dd></div>` : ""}
         </dl>
-        <p class="condition"><strong>Audit note:</strong> ${escapeHtml(item.condition)}</p>
+        <p class="condition"><strong>${escapeHtml(item.noteType || "Audit note")}:</strong> ${escapeHtml(item.condition)}</p>
         <div class="dialog-actions">
-          <a class="button button-primary" href="${commentUrl(item)}" target="_blank" rel="noreferrer">Comment / ask</a>
+          <a class="button button-primary" href="${commentUrl(item)}" target="_blank" rel="noreferrer">Ask a public question on GitHub</a>
         </div>
         <p class="source-note">Audit reference: page ${item.page}. Comments open a prefilled GitHub issue. A GitHub account is required; no custom server is needed.</p>
       </div>
     </div>`;
-  dialog.showModal();
+  if (!dialog.open) dialog.showModal();
+}
+
+function itemFromHash() {
+  if (!window.location.hash.startsWith("#item=")) return null;
+  const id = decodeURIComponent(window.location.hash.slice(6));
+  return equipment.find((item) => item.id === id) || null;
+}
+
+function syncDialogToUrl() {
+  const item = itemFromHash();
+  if (item) showDetails(item);
+  else if (dialog.open) dialog.close();
+}
+
+function closeDetails() {
+  if (!dialog.open) return;
+  dialog.close();
+  if (window.location.hash.startsWith("#item=")) {
+    history.replaceState(null, "", `${window.location.pathname}${window.location.search}`);
+  }
 }
 
 filters.addEventListener("click", (event) => {
@@ -114,7 +143,10 @@ grid.addEventListener("click", (event) => {
   const button = event.target.closest("[data-details]");
   if (!button) return;
   const item = equipment.find((candidate) => candidate.id === button.dataset.details);
-  if (item) showDetails(item);
+  if (item) {
+    history.pushState({ item: item.id }, "", `#item=${encodeURIComponent(item.id)}`);
+    showDetails(item);
+  }
 });
 
 search.addEventListener("input", render);
@@ -125,10 +157,13 @@ document.querySelector("#clear-filters").addEventListener("click", () => {
   render();
   search.focus();
 });
-document.querySelector("#dialog-close").addEventListener("click", () => dialog.close());
+document.querySelector("#dialog-close").addEventListener("click", closeDetails);
 dialog.addEventListener("click", (event) => {
-  if (event.target === dialog) dialog.close();
+  if (event.target === dialog) closeDetails();
 });
+window.addEventListener("popstate", syncDialogToUrl);
+window.addEventListener("hashchange", syncDialogToUrl);
 
 renderFilters();
 render();
+syncDialogToUrl();

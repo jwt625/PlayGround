@@ -95,6 +95,9 @@ h2 { margin-bottom: 0; font: 700 clamp(2.1rem, 4vw, 3.8rem)/1 Georgia, serif; le
 .equipment-card { display: flex; flex-direction: column; min-width: 0; background: var(--surface); }
 .card-image { position: relative; aspect-ratio: 4 / 3; overflow: hidden; background: #dedbd2; }
 .card-image img { width: 100%; height: 100%; object-fit: cover; }
+.image-placeholder { display: grid; width: 100%; height: 100%; place-items: center; padding: 24px; color: var(--muted); background: #e4e0d5; text-align: center; }
+.image-placeholder span { max-width: 180px; font-size: .76rem; font-weight: 750; letter-spacing: .06em; text-transform: uppercase; }
+.image-placeholder-detail { min-height: 360px; }
 .category-label { position: absolute; left: 0; bottom: 0; padding: 7px 10px; color: white; background: var(--ink); font-size: .72rem; font-weight: 750; letter-spacing: .05em; text-transform: uppercase; }
 .card-body { display: flex; flex: 1; flex-direction: column; padding: 20px; }
 .card-body h3 { margin-bottom: 9px; font: 700 1.35rem/1.15 Georgia, serif; }
@@ -103,8 +106,8 @@ h2 { margin-bottom: 0; font: 700 clamp(2.1rem, 4vw, 3.8rem)/1 Georgia, serif; le
 .card-meta div { min-width: 0; padding-top: 8px; border-top: 1px solid #e0ddd4; }
 .card-meta dt { color: var(--muted); font-size: .68rem; font-weight: 750; letter-spacing: .07em; text-transform: uppercase; }
 .card-meta dd { overflow: hidden; margin: 2px 0 0; font-size: .82rem; text-overflow: ellipsis; white-space: nowrap; }
-.card-actions { display: grid; grid-template-columns: 1fr 44px; gap: 8px; }
-.icon-button { width: 44px; padding: 0; font-size: 1.15rem; }
+.card-actions { display: grid; grid-template-columns: 1fr auto; gap: 8px; }
+.inquiry-button { padding-inline: 12px; font-size: .78rem; white-space: nowrap; }
 .empty-state { padding: 70px 20px; border: 1px solid var(--line); text-align: center; }
 .empty-state h3 { margin-bottom: 6px; font: 700 1.5rem Georgia, serif; }
 .empty-state p { margin-bottom: 0; color: var(--muted); }
@@ -158,6 +161,7 @@ dialog::backdrop { background: rgba(15, 15, 12, .68); }
   .summary div { padding-top: 10px; }
   .section-heading { align-items: flex-start; flex-direction: column; }
   .equipment-grid { grid-template-columns: 1fr; }
+  .card-actions { grid-template-columns: 1fr; }
   .dialog-copy { padding: 34px 22px 26px; }
   .facts div { grid-template-columns: 96px 1fr; }
   footer { flex-direction: column; }

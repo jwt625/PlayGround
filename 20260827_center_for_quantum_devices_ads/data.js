@@ -31,9 +31,10 @@ export const equipment = [
   },
   {
     id: "legacy-mocvd", name: "Legacy MOCVD system", category: "Epitaxy", location: "Tech M264",
-    manufacturer: "Not recorded", model: "Custom", tag: "54222", purchaseDate: "Before 1991", page: 41,
-    summary: "MOCVD system brought from France when the laboratory was established.",
-    condition: "Operational state not documented; specialist decommissioning required.", image: "p041-02-x284.jpg"
+    manufacturer: "Not recorded", model: "Not recorded", tag: "54222", purchaseDate: "Not recorded", page: 41,
+    summary: "MOCVD system documented as having been brought from France to Northwestern in 1991.",
+    condition: "Operational state is not documented; specialist review is recommended before deinstallation.",
+    noteType: "Catalog safety note", image: "p041-02-x284.jpg"
   },
   {
     id: "guyson-multiblast", name: "Grit blaster", category: "Fabrication", location: "Tech M264",
@@ -45,18 +46,18 @@ export const equipment = [
     id: "bwtek-yag", name: "Nd:YAG laser", category: "Optical test", location: "Tech M277",
     manufacturer: "B&W Tek", model: "BWC-FL", tag: "59274", purchaseDate: "2005-07-18", page: 42,
     summary: "Benchtop solid-state laser source listed in the detector-testing room.",
-    condition: "Condition not stated in the audit.", image: "p043-01-x291.jpg"
+    condition: "The source also assigns tag 59274 to the EMS life-test system; asset identity requires owner verification.", image: "p043-01-x291.jpg"
   },
   {
     id: "ems-life-test", name: "Laser / LED life-test system", category: "Electrical test", location: "Tech M277",
     manufacturer: "EMS", model: "Not recorded", tag: "59274", purchaseDate: "Not recorded", page: 43,
     summary: "Extended device logging at controlled current, voltage, power, and temperature.",
-    condition: "Condition not stated in the audit.", image: "p043-02-x292.jpg"
+    condition: "The source also assigns tag 59274 to the B&W Tek laser; asset identity requires owner verification.", image: "p043-02-x292.jpg"
   },
   {
     id: "janis-cryostat", name: "Optical cryostat", category: "Cryogenic", location: "Tech M277",
-    manufacturer: "Janis Research", model: "STVP-100", tag: "70963", purchaseDate: "2005-05-19", page: 43,
-    summary: "Cryogenic sample environment; associated Newport RS2000 and Leybold pump are also listed.",
+    manufacturer: "Janis Research / Newport / Leybold", model: "STVP-100 / RS2000 / Minitop", tag: "70963, 70607, 76059, 70678, 56085", purchaseDate: "Mixed", page: 43,
+    summary: "Grouped cryogenic test setup; the audit lists a Janis cryostat, Newport RS2000, blackbody source, Leybold Minitop pump, and one unidentified tagged component.",
     condition: "Condition not stated in the audit.", image: "p045-01-x304.jpg"
   },
   {
@@ -79,7 +80,7 @@ export const equipment = [
   },
   {
     id: "rf-test-lot", name: "RF and impedance instrument lot", category: "Electrical test", location: "Tech M277",
-    manufacturer: "Agilent / HP / SRS / Keithley", model: "E4407B; 4192A; SR770; 707A", tag: "80491, 60627, 72884, 70657", purchaseDate: "Mixed", page: 46,
+    manufacturer: "Thorlabs / Agilent / HP / SRS / Keithley / mixed", model: "40 GHz E–O converter; E4407B; 4192A; SR770; 707A; switching matrix", tag: "83471, 80491, 60627, 72884, 70657, 70601", purchaseDate: "Mixed", page: 45,
     summary: "Spectrum, impedance, switching-matrix, and electro-optic test instruments.",
     condition: "Several items were shelf-located; working condition was not verified.", image: "p046-01-x309.jpg"
   },
@@ -87,7 +88,14 @@ export const equipment = [
     id: "hydrogen-purifier", name: "Hydrogen purifier", category: "Facilities", location: "Tech M266",
     manufacturer: "Johnson Matthey", model: "HP-50", tag: "65149", purchaseDate: "Not recorded", page: 46,
     summary: "Hydrogen purification equipment associated with laboratory process utilities.",
-    condition: "Specialist utility isolation and EHS review required.", image: "p046-02-x307.jpg"
+    condition: "Specialist utility isolation and EHS review are recommended before removal.",
+    noteType: "Catalog safety note", image: "p046-02-x307.jpg"
+  },
+  {
+    id: "hecd-laser", name: "He-Cd laser", category: "Optical test", location: "Tech M252",
+    manufacturer: "Not recorded", model: "Not recorded", tag: "65736", purchaseDate: "Not recorded", page: 47,
+    summary: "Helium-cadmium laser documented under the east-side table in room M252.",
+    condition: "Condition not stated in the audit.", image: "p047-01-x313.jpg"
   },
   {
     id: "headway-spinner", name: "Photoresist spinner", category: "Lithography", location: "Tech M252",
@@ -135,8 +143,41 @@ export const equipment = [
     id: "mattson-galaxy", name: "Mattson FTIR", category: "Optical test", location: "Tech M252",
     manufacturer: "Mattson", model: "Galaxy 3000", tag: "53018", purchaseDate: "Not recorded", page: 51,
     summary: "Infrared Fourier-transform spectrometer listed in the cleanroom inventory.",
-    condition: "Condition not stated in the audit.", image: "p050-02-x330.jpg"
+    condition: "Condition not stated in the audit; no unambiguous equipment photograph was identified.", image: null
   },
+  {
+    id: "metallurgical-microscope", name: "Metallurgical microscope", category: "Metrology", location: "Tech M252",
+    manufacturer: "Not recorded", model: "ML7530", tag: "66497", purchaseDate: "Not recorded", page: 51,
+    summary: "Metallurgical microscope listed in the M252 cleanroom inventory.",
+    condition: "Condition not stated in the audit; no unambiguous equipment photograph was identified.", image: null
+  },
+  {
+    id: "m260-pecvd-support", name: "PECVD scrubber and support pumps", category: "Facilities", location: "Tech M260",
+    manufacturer: "CDO / Leybold / mixed", model: "Scrubber / D40DCS", tag: "65999, 78770", purchaseDate: "Mixed", page: 51,
+    summary: "Dedicated scrubber and vacuum-pump support equipment serving the M252 PECVD system.",
+    condition: "Audit reports a scrubber water-supply problem and an air-operated valve requiring replacement.", image: "p051-03-x335.jpg"
+  },
+  {
+    id: "m260-nitrogen-generator", name: "Nitrogen generator", category: "Facilities", location: "Tech M260",
+    manufacturer: "Not recorded", model: "Not recorded", tag: "Not recorded", purchaseDate: "Not recorded", page: 52,
+    summary: "Nitrogen-generation equipment documented with the PECVD support utilities.",
+    condition: "Condition not stated in the audit.", image: "p052-02-x341.jpg"
+  },
+  {
+    id: "ebl-ups", name: "15 kVA EBL UPS", category: "Electrical test", location: "Tech M260",
+    manufacturer: "APC", model: "15 kVA, 208 V", tag: "76770", purchaseDate: "Not recorded", page: 52,
+    summary: "Uninterruptible power supply associated with the M252 electron-beam lithography system.",
+    condition: "Condition not stated in the audit.", image: "p052-02-x341.jpg"
+  },
+
+  /*
+   * NOT FOR SALE — intentionally excluded from the exported inventory.
+   * Preserve these records and their extracted assets for traceability, but do
+   * not move them above this comment without explicit disposition approval.
+   * The exclusion starts with the probe-station microscope and includes every
+   * subsequent listing in the original catalog order.
+   */
+  /*
   {
     id: "karl-suss-prober", name: "Probe-station microscope", category: "Electrical test", location: "Cook 04008",
     manufacturer: "Karl Süss", model: "10577065", tag: "067236", purchaseDate: "2000-12-10", page: 54,
@@ -189,13 +230,13 @@ export const equipment = [
     id: "electrophysics-pv320", name: "Infrared camera", category: "Optical test", location: "Cook 04008",
     manufacturer: "Electrophysics", model: "PV320L2", tag: "71043", purchaseDate: "2005-06-16", page: 58,
     summary: "Infrared camera system for device and optical characterization.",
-    condition: "Condition not stated in the audit.", image: "p058-01-x373.jpg"
+    condition: "Condition not stated in the audit.", image: "p058-03-x372.jpg"
   },
   {
     id: "seir-camera", name: "SE-IR camera system", category: "Optical test", location: "Cook 04008",
-    manufacturer: "SE-IR", model: "4757", tag: "75127", purchaseDate: "2009-05-07", page: 58,
+    manufacturer: "SE-IR", model: "Not recorded", serial: "4757", tag: "75127", purchaseDate: "2009-05-07", page: 58,
     summary: "Infrared camera and test system.",
-    condition: "Condition not stated in the audit.", image: "p058-03-x372.jpg"
+    condition: "Condition not stated in the audit.", image: "p058-01-x373.jpg"
   },
   {
     id: "keithley-2410", name: "SourceMeter", category: "Electrical test", location: "Cook 04008",
@@ -217,8 +258,8 @@ export const equipment = [
   },
   {
     id: "philips-hrxrd", name: "Philips high-resolution XRD", category: "Metrology", location: "Cook 04012",
-    manufacturer: "Philips / PANalytical", model: "2 kW Cu Kα HR-XRD", tag: "30983", purchaseDate: "2011-03-11", page: 61,
-    summary: "Four-bounce Ge monochromator, precision goniometer, and scintillation detector.",
+    manufacturer: "Philips / PANalytical / Spellman", model: "Not recorded", tag: "50589 system; 30983 PANalytical subsystem; 83022 Spellman generator", purchaseDate: "Mixed", page: 61,
+    summary: "2 kW Cu Kα HR-XRD configuration with four-bounce Ge monochromator, precision goniometer, and scintillation detector.",
     condition: "X-ray generator reported faulty and requiring repair.", image: "p061-04-x388.jpg"
   },
   {
@@ -253,7 +294,7 @@ export const equipment = [
   },
   {
     id: "uv-pl", name: "UV photoluminescence system", category: "Optical test", location: "Cook 04014",
-    manufacturer: "CVI Melles Griot / Newport / EG&G", model: "45-LRS-303 / RS1000", tag: "74198, 59215, 60625", purchaseDate: "Mixed", page: 64,
+    manufacturer: "CVI Melles Griot / Newport / EG&G / GAM Laser", model: "45-LRS-303 / RS1000 / EX5/200", tag: "74198, 59215, 60625, 69014", purchaseDate: "Mixed", page: 64,
     summary: "Photoluminescence setup configured for III-nitride materials.",
     condition: "Condition not stated in the audit.", image: "p064-03-x408.jpg"
   },
@@ -303,44 +344,51 @@ export const equipment = [
     id: "set-fc150-4078", name: "High-precision die bonder", category: "Packaging", location: "Cook 04078",
     manufacturer: "SET-Smart", model: "FC150", tag: "74930", purchaseDate: "2009-02-10", page: 75,
     summary: "Flip-chip / die bonder for laser placement accuracy and planarity.",
-    condition: "Condition not stated in the audit.", image: "p075-01-x456.jpg"
+    condition: "Condition not stated in the audit.", image: "p076-02-x459.jpg"
   },
   {
     id: "plasmatherm-ecr", name: "ECR dry-etch system", category: "Etch", location: "Cook 04078",
     manufacturer: "Plasma-Therm", model: "SLR-770ECR", tag: "00064441", purchaseDate: "1996-11-05", page: 76,
     summary: "Electron-cyclotron-resonance plasma etcher for semiconductor device processing.",
-    condition: "Condition not stated; spare and replacement parts are documented nearby.", image: "p076-02-x459.jpg"
+    condition: "Condition not stated; spare and replacement parts are documented nearby.", image: "p076-04-x460.jpg"
   },
   {
     id: "cdo-scrubber", name: "CDO toxic-gas scrubber", category: "Facilities", location: "Cook penthouse",
     manufacturer: "Not recorded", model: "CDO", tag: "Not recorded", purchaseDate: "Not recorded", page: 80,
     summary: "Controlled decomposition oxidation unit serving MBE and MOCVD reactor effluent.",
-    condition: "Facility infrastructure; transfer/disposition requires Northwestern EHS and licensed contractors.", image: "p080-02-x486.jpg"
+    condition: "Facility infrastructure; transfer/disposition requires Northwestern EHS and licensed contractors.", noteType: "Catalog safety note", image: "p080-05-x489.jpg"
   },
   {
     id: "nitrogen-generator", name: "Nitrogen generator", category: "Facilities", location: "Cook penthouse",
     manufacturer: "Not recorded", model: "Not recorded", tag: "Not recorded", purchaseDate: "Not recorded", page: 80,
     summary: "Central nitrogen supply equipment for CQD process systems.",
-    condition: "Facility infrastructure; working condition not verified.", image: "p080-03-x487.jpg"
+    condition: "Facility infrastructure; working condition not verified.", image: "p080-06-x491.jpg"
   },
   {
-    id: "hydrogen-generator", name: "Hydrogen generator", category: "Facilities", location: "Cook penthouse",
-    manufacturer: "Not recorded", model: "200 L/day", tag: "Not recorded", purchaseDate: "Not recorded", page: 80,
-    summary: "Central hydrogen generator supporting MBE and MOCVD reactors.",
-    condition: "Hazardous facility infrastructure; institutional review and licensed removal required.", image: "p080-06-x491.jpg"
-  },
-  {
-    id: "di-water", name: "Deionized-water plant", category: "Facilities", location: "Cook penthouse",
-    manufacturer: "Not recorded", model: "18 MΩ water system", tag: "Not recorded", purchaseDate: "Not recorded", page: 80,
-    summary: "Mixed-bed ion exchange, filtration, and UV sterilization for cleanroom DI water.",
+    id: "penthouse-air-compressor", name: "Air compressor", category: "Facilities", location: "Cook penthouse",
+    manufacturer: "Atlas Copco", model: "Not recorded", tag: "Not recorded", purchaseDate: "Not recorded", page: 80,
+    summary: "Central compressed-air supply for process valves and equipment chambers.",
     condition: "Facility infrastructure; working condition not verified.", image: "p080-07-x493.jpg"
   },
   {
+    id: "hydrogen-generator", name: "Hydrogen generator", category: "Facilities", location: "Cook penthouse",
+    manufacturer: "Proton OnSite", model: "Not recorded", specification: "200 L/day", tag: "Not recorded", purchaseDate: "Not recorded", page: 80,
+    summary: "Central hydrogen generator supporting MBE and MOCVD reactors.",
+    condition: "Hazardous facility infrastructure; institutional review and licensed removal required.", noteType: "Catalog safety note", image: "p080-04-x496.jpg"
+  },
+  {
+    id: "di-water", name: "Deionized-water plant", category: "Facilities", location: "Cook penthouse",
+    manufacturer: "Not recorded", model: "Not recorded", specification: "18 MΩ water system", tag: "Not recorded", purchaseDate: "Not recorded", page: 80,
+    summary: "Mixed-bed ion exchange, filtration, and UV sterilization for cleanroom DI water.",
+    condition: "Facility infrastructure; working condition not verified.", image: "p081-02-x500.jpg"
+  },
+  {
     id: "ln2-tank", name: "3,000-gallon liquid-nitrogen tank", category: "Facilities", location: "Exterior / Cook service lines",
-    manufacturer: "Not recorded", model: "3,000 gallon", tag: "Not recorded", purchaseDate: "Not recorded", page: 84,
+    manufacturer: "Not recorded", model: "Not recorded", specification: "3,000 gallon", tag: "Not recorded", purchaseDate: "Not recorded", page: 84,
     summary: "Bulk LN₂ storage vessel and distribution infrastructure dedicated to CQD.",
-    condition: "Fixed cryogenic infrastructure; institutional ownership and code-compliant disposition must be confirmed.", image: "p084-01-x510.jpg"
+    condition: "Fixed cryogenic infrastructure; institutional ownership and code-compliant disposition must be confirmed.", noteType: "Catalog safety note", image: "p084-01-x510.jpg"
   }
+  */
 ];
 
 export const categories = ["All", ...new Set(equipment.map((item) => item.category))];

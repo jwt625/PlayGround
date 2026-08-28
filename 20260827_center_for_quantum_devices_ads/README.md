@@ -22,7 +22,7 @@ Point GitHub Pages (or a Pages deployment action) at `dist/`. It contains only t
 
 ## Comments and inquiries
 
-The current implementation opens a prefilled issue in `jwt625/PlayGround`, so it works on GitHub Pages without a server. It is public and requires a GitHub account. Change `ISSUE_URL` in `app.js` if the catalog moves to a dedicated repository.
+The current implementation opens a prefilled issue in `jwt625/cqd-equipment`, so it works on GitHub Pages without a server. It is public and requires a GitHub account.
 
 For lower-friction private responses, replace the issue link with Formspree, Basin, or a Google Form. Those services store submissions, so they avoid a custom backend but introduce a third-party data processor.
 
