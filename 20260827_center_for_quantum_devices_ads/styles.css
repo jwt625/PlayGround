@@ -119,6 +119,12 @@ h2 { margin-bottom: 0; font: 700 clamp(2.1rem, 4vw, 3.8rem)/1 Georgia, serif; le
 .process li > span { color: var(--accent-dark); font-family: ui-monospace, monospace; }
 .process p { margin: 3px 0 0; color: var(--muted); }
 
+.revision-history { display: grid; grid-template-columns: .8fr 1.2fr; gap: 60px; padding: 24px 0; border-top: 1px solid var(--ink); }
+.revision-history h2 { font: 750 .78rem/1.4 Inter, ui-sans-serif, sans-serif; letter-spacing: .08em; text-transform: uppercase; }
+.revision-history ol { margin: 0; padding: 0; list-style: none; }
+.revision-history li { display: grid; grid-template-columns: 112px 1fr; gap: 16px; padding: 7px 0; border-bottom: 1px solid var(--line); font-size: .8rem; }
+.revision-history time { color: var(--muted); font-variant-numeric: tabular-nums; }
+
 footer { display: flex; justify-content: space-between; gap: 24px; padding: 24px 0 40px; border-top: 1px solid var(--ink); color: var(--muted); font-size: .82rem; }
 footer p { margin: 0; }
 
@@ -142,7 +148,7 @@ dialog::backdrop { background: rgba(15, 15, 12, .68); }
 
 @media (max-width: 900px) {
   .equipment-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .notice, .context, .process { grid-template-columns: 1fr; gap: 24px; }
+  .notice, .context, .process, .revision-history { grid-template-columns: 1fr; gap: 24px; }
   .dialog-layout { grid-template-columns: 1fr; }
   .dialog-visual { max-height: 420px; }
 }
