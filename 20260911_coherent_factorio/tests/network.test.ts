@@ -1,0 +1,13 @@
+import {test} from 'node:test';import assert from 'node:assert/strict';
+import {c,power,solveLinear} from '../src/sim/complex';
+import {source,hybrid,through,matched,solveNetwork,type WaveLink} from '../src/sim/network';
+const close=(a:number,b:number)=>assert.ok(Math.abs(a-b)<1e-8,`${a} != ${b}`);
+const link=(a:string,ap:number,b:string,bp:number,phase=0,amplitude=1):WaveLink=>({a:{node:a,port:ap},b:{node:b,port:bp},phase,amplitude});
+test('pivoted complex solve handles an initially zero diagonal',()=>{const x=solveLinear([[c(0),c(1)],[c(1),c(0)]],[c(2),c(3)]);close(x[0][0],3);close(x[1][0],2);});
+test('lossy line accounts for transmitted, absorbed and lost power',()=>{const r=solveNetwork([source('s',100),matched('load')],[link('s',0,'load',0,0,.8)]);close(r.absorbed.load,64);close(r.linkLoss,36);close(r.residual,0);});
+test('hybrid interference redistributes all power between useful and reject ports',()=>{for(const phase of [0,Math.PI/2,Math.PI]){const r=solveNetwork([source('a',50,'shared'),source('b',50,'shared'),hybrid('h'),matched('use'),matched('reject')],[link('a',0,'h',0),link('b',0,'h',1,phase),link('h',2,'use',0),link('h',3,'reject',0)]);close(r.absorbed.use,50*(1+Math.cos(phase)));close(r.absorbed.use+r.absorbed.reject,100);close(r.residual,0);}});
+test('independent sources add powers, not amplitudes',()=>{const r=solveNetwork([source('a',50),source('b',50),hybrid('h'),matched('use'),matched('reject')],[link('a',0,'h',0),link('b',0,'h',1),link('h',2,'use',0),link('h',3,'reject',0)]);close(r.absorbed.use,50);close(r.absorbed.reject,50);});
+test('backreflection reaches and is absorbed by a matched source',()=>{const r=solveNetwork([source('s',100),{id:'mirror',s:[[c(.6)]]}],[link('s',0,'mirror',0)]);close(r.absorbed.s,36);close(r.absorbed.mirror,64);close(r.residual,0);});
+test('split-route-recombine responds to phase and conserves power',()=>{const comps=[source('s',100),hybrid('split'),through('tune',Math.PI),hybrid('combine'),matched('use'),matched('reject')];const r=solveNetwork(comps,[link('s',0,'split',0),link('split',2,'tune',0),link('tune',1,'combine',0),link('split',3,'combine',1),link('combine',2,'use',0),link('combine',3,'reject',0)]);close(r.absorbed.use,0);close(r.absorbed.reject,100);close(r.residual,0);});
+test('undamped isolated feedback loop fails explicitly',()=>{assert.throws(()=>solveNetwork([source('s',1),through('loop')],[link('loop',0,'loop',1)]),/Singular/);});
+test('invalid and multiply occupied ports cannot silently corrupt topology',()=>{assert.throws(()=>solveNetwork([source('s',1),matched('a'),matched('b')],[link('s',0,'a',0),link('s',0,'b',0)]),/occupied/);assert.throws(()=>solveNetwork([source('s',1),matched('a')],[link('s',0,'a',0,0,2)]),/gain/);});

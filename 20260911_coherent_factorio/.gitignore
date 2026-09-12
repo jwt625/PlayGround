@@ -1,0 +1,19 @@
+# Keep project deliverables despite broad parent-repository asset exclusions.
+!assets/**/*.png
+!assets/**/*.svg
+!assets/**/*.html
+!assets/index.html
+!assets/**/*.json
+!assets/**/*.css
+
+node_modules/
+dist/
+test-results/
+playwright-report/
+!index.html
+!package.json
+!package-lock.json
+!tsconfig.json
+!src/**/*.ts
+!src/**/*.css
+!tests/**/*.ts

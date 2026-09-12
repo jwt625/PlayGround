@@ -1,0 +1,395 @@
+{
+  "schema_version": 1,
+  "status": "prototype-static-art",
+  "notes": "Footprints are provisional. Anchors, ports, common camera and damage states require renderer validation. Dependencies describe integration, not recipes.",
+  "assets": [
+    {
+      "id": "field-emitter",
+      "title": "Field emitter",
+      "family": "defense",
+      "path": "sprites/field-emitter-v1.png",
+      "dimensions_px": [
+        1254,
+        1254
+      ],
+      "mode": "RGBA",
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "alpha_bbox": [
+        0,
+        19,
+        1199,
+        1230
+      ],
+      "proposed_footprint_tiles": [
+        3,
+        3
+      ],
+      "state": "intact-static",
+      "view_count": 1,
+      "anchor_status": "uncalibrated",
+      "dependencies": [
+        "power",
+        "reference",
+        "target"
+      ]
+    },
+    {
+      "id": "armored-frontier-organism",
+      "title": "Armored frontier organism",
+      "family": "ecology",
+      "path": "sprites/armored-frontier-organism-v1.png",
+      "dimensions_px": [
+        1312,
+        1199
+      ],
+      "mode": "RGBA",
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "alpha_bbox": [
+        0,
+        21,
+        1280,
+        1161
+      ],
+      "proposed_footprint_tiles": [
+        4,
+        4
+      ],
+      "state": "intact-static",
+      "view_count": 1,
+      "anchor_status": "uncalibrated",
+      "dependencies": [
+        "target-response"
+      ]
+    },
+    {
+      "id": "starter-extractor",
+      "title": "Starter extractor",
+      "family": "production",
+      "path": "sprites/starter-extractor-v1.png",
+      "dimensions_px": [
+        1254,
+        1254
+      ],
+      "mode": "RGBA",
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "alpha_bbox": [
+        0,
+        33,
+        1182,
+        1182
+      ],
+      "proposed_footprint_tiles": [
+        3,
+        3
+      ],
+      "state": "intact-static",
+      "view_count": 1,
+      "anchor_status": "uncalibrated",
+      "dependencies": [
+        "deposit",
+        "power",
+        "material-output"
+      ]
+    },
+    {
+      "id": "compact-assembler",
+      "title": "Compact assembler",
+      "family": "production",
+      "path": "sprites/compact-assembler-v1.png",
+      "dimensions_px": [
+        1254,
+        1254
+      ],
+      "mode": "RGBA",
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "alpha_bbox": [
+        49,
+        39,
+        1192,
+        1221
+      ],
+      "proposed_footprint_tiles": [
+        3,
+        3
+      ],
+      "state": "intact-static",
+      "view_count": 1,
+      "anchor_status": "uncalibrated",
+      "dependencies": [
+        "power",
+        "material-input",
+        "material-output"
+      ]
+    },
+    {
+      "id": "power-unit",
+      "title": "Power unit",
+      "family": "power",
+      "path": "sprites/power-unit-v1.png",
+      "dimensions_px": [
+        1254,
+        1254
+      ],
+      "mode": "RGBA",
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "alpha_bbox": [
+        56,
+        39,
+        1200,
+        1198
+      ],
+      "proposed_footprint_tiles": [
+        3,
+        2
+      ],
+      "state": "intact-static",
+      "view_count": 1,
+      "anchor_status": "uncalibrated",
+      "dependencies": [
+        "electrical-output"
+      ]
+    },
+    {
+      "id": "reference-control-station",
+      "title": "Reference / control station",
+      "family": "instrumentation",
+      "path": "sprites/reference-control-station-v1.png",
+      "dimensions_px": [
+        1254,
+        1254
+      ],
+      "mode": "RGBA",
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "alpha_bbox": [
+        0,
+        21,
+        1232,
+        1254
+      ],
+      "proposed_footprint_tiles": [
+        2,
+        2
+      ],
+      "state": "intact-static",
+      "view_count": 1,
+      "anchor_status": "uncalibrated",
+      "dependencies": [
+        "power",
+        "reference-output",
+        "monitor-data",
+        "commissioning-ui"
+      ]
+    },
+    {
+      "id": "four-port-junction",
+      "title": "Four-port junction",
+      "family": "field-network",
+      "path": "sprites/four-port-junction-v1.png",
+      "dimensions_px": [
+        1254,
+        1254
+      ],
+      "mode": "RGBA",
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "alpha_bbox": [
+        0,
+        19,
+        1192,
+        1198
+      ],
+      "proposed_footprint_tiles": [
+        1,
+        1
+      ],
+      "state": "intact-static",
+      "view_count": 1,
+      "anchor_status": "uncalibrated",
+      "dependencies": [
+        "field-port-a",
+        "field-port-b",
+        "field-port-c",
+        "field-port-d"
+      ]
+    },
+    {
+      "id": "phase-tuner",
+      "title": "Phase tuner",
+      "family": "field-network",
+      "path": "sprites/phase-tuner-v1.png",
+      "dimensions_px": [
+        1254,
+        1254
+      ],
+      "mode": "RGBA",
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "alpha_bbox": [
+        57,
+        21,
+        1204,
+        1254
+      ],
+      "proposed_footprint_tiles": [
+        2,
+        1
+      ],
+      "state": "intact-static",
+      "view_count": 1,
+      "anchor_status": "uncalibrated",
+      "dependencies": [
+        "field-input",
+        "field-output",
+        "control-setting"
+      ]
+    },
+    {
+      "id": "cooled-dump",
+      "title": "Cooled dump",
+      "family": "protection",
+      "path": "sprites/cooled-dump-v1.png",
+      "dimensions_px": [
+        1254,
+        1254
+      ],
+      "mode": "RGBA",
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "alpha_bbox": [
+        0,
+        42,
+        1202,
+        1238
+      ],
+      "proposed_footprint_tiles": [
+        2,
+        2
+      ],
+      "state": "intact-static",
+      "view_count": 1,
+      "anchor_status": "uncalibrated",
+      "dependencies": [
+        "rejected-field-input",
+        "thermal-state"
+      ]
+    },
+    {
+      "id": "starter-ore",
+      "title": "Starter ore",
+      "family": "resource",
+      "path": "sprites/starter-ore-v1.png",
+      "dimensions_px": [
+        1254,
+        1254
+      ],
+      "mode": "RGBA",
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "alpha_bbox": [
+        0,
+        21,
+        1222,
+        1166
+      ],
+      "proposed_footprint_tiles": [
+        3,
+        3
+      ],
+      "state": "intact-static",
+      "view_count": 1,
+      "anchor_status": "uncalibrated",
+      "dependencies": [
+        "extraction",
+        "depletion"
+      ]
+    },
+    {
+      "id": "frontier-crystal-ore",
+      "title": "Frontier crystal ore",
+      "family": "resource",
+      "path": "sprites/frontier-crystal-ore-v2.png",
+      "dimensions_px": [
+        1254,
+        1254
+      ],
+      "mode": "RGBA",
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "alpha_bbox": [
+        14,
+        93,
+        1237,
+        1182
+      ],
+      "proposed_footprint_tiles": [
+        3,
+        3
+      ],
+      "state": "intact-static",
+      "view_count": 1,
+      "anchor_status": "uncalibrated",
+      "dependencies": [
+        "frontier-access",
+        "extraction",
+        "depletion"
+      ]
+    }
+  ],
+  "ui": {
+    "preview": "ui/index.html",
+    "stylesheet": "ui/kit.css",
+    "icons": [
+      "ui/icons/blueprint.svg",
+      "ui/icons/build.svg",
+      "ui/icons/ceramic.svg",
+      "ui/icons/check.svg",
+      "ui/icons/component.svg",
+      "ui/icons/cooling.svg",
+      "ui/icons/field.svg",
+      "ui/icons/heat.svg",
+      "ui/icons/inspect.svg",
+      "ui/icons/locked.svg",
+      "ui/icons/metal.svg",
+      "ui/icons/ore.svg",
+      "ui/icons/phase.svg",
+      "ui/icons/play.svg",
+      "ui/icons/power.svg",
+      "ui/icons/precision.svg",
+      "ui/icons/reference.svg",
+      "ui/icons/return.svg",
+      "ui/icons/route.svg",
+      "ui/icons/scrap.svg",
+      "ui/icons/stop.svg",
+      "ui/icons/unlocked.svg",
+      "ui/icons/warning.svg"
+    ]
+  }
+}
