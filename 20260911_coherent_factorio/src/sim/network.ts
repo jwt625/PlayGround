@@ -6,13 +6,13 @@ export interface PortResult {incoming:number;outgoing:number; fields:Record<stri
 export interface NetworkResult {ports:Record<string,PortResult[]>; absorbed:Record<string,number>; sourcePower:number;linkLoss:number;escaped:number;residual:number}
 export const key=(p:Endpoint)=>`${p.node}:${p.port}`;
 export const matched=(id:string,ports=1):Component=>({id,s:Array.from({length:ports},()=>Array.from({length:ports},()=>ZERO))});
-export const source=(id:string,p:number,group=id):Component=>({...matched(id),emission:{group,fields:[c(Math.sqrt(p))]}});
+export function source(id:string,p:number,group=id):Component {if(!Number.isFinite(p)||p<0)throw new Error('Invalid source power');return {...matched(id),emission:{group,fields:[c(Math.sqrt(p))]}};}
 export const through=(id:string,phase=0):Component=>({id,s:[[ZERO,polar(1,phase)],[polar(1,phase),ZERO]]});
 /** Reciprocal, lossless 180-degree hybrid: ports 0/1 on one side, 2/3 on the other. */
 export function hybrid(id:string):Component {const r=c(Math.SQRT1_2),m=c(-Math.SQRT1_2);return {id,s:[[ZERO,ZERO,r,r],[ZERO,ZERO,r,m],[r,r,ZERO,ZERO],[r,m,ZERO,ZERO]]};}
 export function solveNetwork(components:Component[],links:WaveLink[]):NetworkResult {
  const offsets=new Map<string,number>(),indices=new Map<string,number>();let n=0;
- for(const comp of components){if(offsets.has(comp.id))throw new Error('Duplicate component ID');offsets.set(comp.id,n);const k=comp.s.length;if(!k||comp.s.some(r=>r.length!==k||r.some(z=>!z.every(Number.isFinite))))throw new Error('Invalid scattering matrix');for(let j=0;j<k;j++)indices.set(`${comp.id}:${j}`,n++);if(comp.emission && (comp.emission.fields.length!==k || comp.s.some(r=>r.some(z=>power(z)>0))))throw new Error('Sources must be matched with one emission per port');}
+ for(const comp of components){if(offsets.has(comp.id))throw new Error('Duplicate component ID');offsets.set(comp.id,n);const k=comp.s.length;if(!k||comp.s.some(r=>r.length!==k||r.some(z=>!z.every(Number.isFinite))))throw new Error('Invalid scattering matrix');for(let j=0;j<k;j++)indices.set(`${comp.id}:${j}`,n++);if(comp.emission && (comp.emission.fields.length!==k || comp.emission.fields.some(z=>!z.every(Number.isFinite)) || comp.s.some(r=>r.some(z=>power(z)>0))))throw new Error('Sources must be matched with one emission per port');}
  if(n>128)throw new Error('Prototype limit: 128 wave ports');
  const peers=new Map<number,{index:number;gain:Complex;amplitude:number}>();
  for(const link of links){const a=indices.get(key(link.a)),b=indices.get(key(link.b));if(a===undefined||b===undefined||a===b||peers.has(a)||peers.has(b))throw new Error('Invalid or occupied wave port');if(!Number.isFinite(link.phase)||!Number.isFinite(link.amplitude)||link.amplitude<0||link.amplitude>1)throw new Error('Invalid passive link gain');const gain=polar(link.amplitude,link.phase);peers.set(a,{index:b,gain,amplitude:link.amplitude});peers.set(b,{index:a,gain,amplitude:link.amplitude});}

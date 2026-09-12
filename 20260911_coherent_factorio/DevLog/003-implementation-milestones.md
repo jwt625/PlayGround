@@ -6,35 +6,35 @@ Scope: desktop-browser prototype using TypeScript, a canvas world, and DOM UI. I
 
 ## M1 — Foundation and physical model
 
-- [ ] Scaffold development server, TypeScript build, unit tests, browser tests.
-- [ ] Complex arithmetic and pivoted small dense linear solver.
-- [ ] Port-based scattering networks with bidirectional links and propagation loss/phase.
-- [ ] Independent source groups solve separately; powers add between groups.
-- [ ] Explicit source, passive component, link-loss, and terminal power accounting.
-- [ ] Tests: conservation, interference redistribution, reflection, independent sources, singular network handling.
+- [x] Scaffold development server, TypeScript build, unit tests, browser tests.
+- [x] Complex arithmetic and pivoted small dense linear solver.
+- [x] Port-based scattering networks with bidirectional links and propagation loss/phase.
+- [x] Independent source groups solve separately; powers add between groups.
+- [x] Explicit source, passive component, link-loss, and terminal power accounting.
+- [x] Tests: conservation, interference redistribution, reflection, independent sources, singular network handling.
 
 ## M2 — Factory world and persistence
 
-- [ ] Fixed-step world simulation, stable entity IDs, footprints, placement/removal.
-- [ ] Starter scenario, extraction, inventories, recipes, material transport, build costs.
-- [ ] Power supply and availability; no power means no production or field generation.
-- [ ] Save/load with schema validation; reset; pause and speed controls.
-- [ ] Tests for economy, invalid placement, topology changes, and save round-trip.
+- [x] Fixed-step world simulation, stable entity IDs, footprints, placement/removal.
+- [x] Starter scenario, extraction, inventories, recipes, material transport, build costs.
+- [x] Power supply and availability; no power means no production or field generation.
+- [x] Save/load with schema validation; reset; pause and speed controls.
+- [x] Tests for economy, invalid placement, topology changes, and save round-trip.
 
 ## M3 — Field engineering and consequences
 
-- [ ] Connect/disconnect individual field ports; inspect incident/outgoing power.
-- [ ] Tuning, slow thermal drift, field overlay and visible target delivery.
-- [ ] Target damage from useful delivered power; resource frontier unlock.
-- [ ] Dump heating, protection trips, equipment damage and repair/rebuild path.
-- [ ] Tests for phase-sensitive target delivery, damage, protection, and frontier access.
+- [x] Connect/disconnect individual field ports; inspect incident/outgoing power.
+- [x] Tuning, slow thermal drift, field overlay and visible target delivery.
+- [x] Target damage from useful delivered power; resource frontier unlock.
+- [x] Dump heating, protection trips, equipment damage and repair/rebuild path.
+- [x] Tests for phase-sensitive target delivery, damage, protection, and frontier access.
 
 ## M4 — Commissioning and reuse
 
-- [ ] Bounded automatic phase controller with explicit enabled state.
-- [ ] Acceptance test under declared drift, pass/fail/cancel and stored rating.
-- [ ] Blueprint capture/place with internal topology, costs, and local requalification.
-- [ ] Tests for test invalidation, control behavior, blueprint independence.
+- [x] Bounded automatic phase controller with explicit enabled state.
+- [x] Acceptance test under declared drift, pass/fail/cancel and stored rating.
+- [x] Blueprint capture/place with internal topology, costs, and local requalification.
+- [x] Tests for test invalidation, control behavior, blueprint independence.
 
 ## M5 — Playable presentation and validation
 
