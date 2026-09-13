@@ -1,0 +1,54 @@
+{
+  "terrain-basalt-v1": {
+    "file": "world/terrain-basalt-v1.png",
+    "source": "/Users/wentaojiang/.codex/generated_images/01a0963b-da0d-7210-9952-d8bf7bdec352/exec-daafbb22-d139-4408-99f2-d716ad145fca.png"
+  },
+  "starter-extractor-turnaround-v2": {
+    "file": "world/starter-extractor-turnaround-v2.png",
+    "source": "/Users/wentaojiang/.codex/generated_images/01a0963b-da0d-7210-9952-d8bf7bdec352/exec-db3df85c-d9b2-4a4b-90a2-e1be0a8d2dd4.png"
+  },
+  "compact-assembler-turnaround-v2": {
+    "file": "world/compact-assembler-turnaround-v2.png",
+    "source": "/Users/wentaojiang/.codex/generated_images/01a0963b-da0d-7210-9952-d8bf7bdec352/exec-16c337a0-7ddb-4ece-a6c2-7dc98ddb4a9d.png"
+  },
+  "power-unit-turnaround-v2": {
+    "file": "world/power-unit-turnaround-v2.png",
+    "source": "/Users/wentaojiang/.codex/generated_images/01a0963b-da0d-7210-9952-d8bf7bdec352/exec-55e8f307-fe56-4f93-887c-101e191c0f62.png"
+  },
+  "reference-control-station-turnaround-v2": {
+    "file": "world/reference-control-station-turnaround-v2.png",
+    "source": "/Users/wentaojiang/.codex/generated_images/01a0963b-da0d-7210-9952-d8bf7bdec352/exec-97d292e7-8feb-4412-ae14-3ddc3f206943.png"
+  },
+  "four-port-junction-turnaround-v2": {
+    "file": "world/four-port-junction-turnaround-v2.png",
+    "source": "/Users/wentaojiang/.codex/generated_images/01a0963b-da0d-7210-9952-d8bf7bdec352/exec-b8c5b007-eda2-45b9-b969-8decb4cc1996.png"
+  },
+  "phase-tuner-turnaround-v2": {
+    "file": "world/phase-tuner-turnaround-v2.png",
+    "source": "/Users/wentaojiang/.codex/generated_images/01a0963b-da0d-7210-9952-d8bf7bdec352/exec-662e4cdc-ca91-4501-a23e-351f3f8c3641.png"
+  },
+  "field-emitter-turnaround-v2": {
+    "file": "world/field-emitter-turnaround-v2.png",
+    "source": "/Users/wentaojiang/.codex/generated_images/01a0963b-da0d-7210-9952-d8bf7bdec352/exec-446afa09-f00d-4cef-8b75-c8d6583c1f3e.png"
+  },
+  "cooled-dump-turnaround-v2": {
+    "file": "world/cooled-dump-turnaround-v2.png",
+    "source": "/Users/wentaojiang/.codex/generated_images/01a0963b-da0d-7210-9952-d8bf7bdec352/exec-9064424c-2144-4824-9259-954f3f471e5f.png"
+  },
+  "terrain-props-v1": {
+    "file": "world/terrain-props-v1.png",
+    "source": "/Users/wentaojiang/.codex/generated_images/01a0963b-da0d-7210-9952-d8bf7bdec352/exec-50aa9ed3-7db5-4360-a459-8f02ad5f81fa.png"
+  },
+  "investigator-crawler-v1": {
+    "file": "world/investigator-crawler-v1.png",
+    "source": "/Users/wentaojiang/.codex/generated_images/01a0963b-da0d-7210-9952-d8bf7bdec352/exec-34da0b47-80df-4a6d-9a84-61330b4b8ddd.png"
+  },
+  "perimeter-sentry-v1": {
+    "file": "world/perimeter-sentry-v1.png",
+    "source": "/Users/wentaojiang/.codex/generated_images/01a0963b-da0d-7210-9952-d8bf7bdec352/exec-2683bc5c-a993-447a-95ab-adfa0bb22ff4.png"
+  },
+  "terrain-props-v2": {
+    "file": "world/terrain-props-v2.png",
+    "source": "/Users/wentaojiang/.codex/generated_images/01a0963b-da0d-7210-9952-d8bf7bdec352/exec-ce02c5c4-0273-4e66-be57-71f2feae2c6c.png"
+  }
+}

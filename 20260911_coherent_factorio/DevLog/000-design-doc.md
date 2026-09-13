@@ -1,4 +1,4 @@
-# Project Fieldworks
+# Project PHIELDWORKS
 
 > Design status: this document establishes the broad vision. See [001 — Gameplay decisions and frontier experiment](001-gameplay-and-frontier-experiment.md) for the agreed audience, rewards, commissioning loop, initial scope, and clarifications that take precedence where the documents differ.
 
@@ -6,7 +6,7 @@
 
 ### 1.1 High-level premise
 
-**Project Fieldworks** is a factory-building automation game about industrializing a hostile planet whose physical environment is dominated by wave phenomena.
+**Project PHIELDWORKS** is a factory-building automation game about industrializing a hostile planet whose physical environment is dominated by wave phenomena.
 
 At the surface level, the player experiences a familiar progression:
 

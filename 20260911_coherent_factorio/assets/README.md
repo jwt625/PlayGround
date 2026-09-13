@@ -1,4 +1,4 @@
-# Fieldworks asset library
+# PHIELDWORKS asset library
 
 Start with the [asset gallery](index.html), [UI component kit](ui/index.html), and [asset proposal](../DevLog/002-asset-plan.md). The [manifest](manifest.json) records stable IDs, dimensions, alpha information, proposed footprints, and integration dependencies. Footprints and anchors remain provisional.
 
@@ -25,8 +25,13 @@ Oblique top-down industrial art, weathered steel, ceramic and copper, readable s
 
 These are initial artwork, not finished animation sheets. Their camera angles and perceived scale are approximate, not a calibrated common projection. Before production use, standardize camera, ground anchors, tile footprints, sprite scale, and connection locations. Generate consistent directional views and damaged states after deciding how objects rotate. Do not infer physical optical phase or collision boundaries from artwork pixels.
 
-The emitter has a tiny generated indicator marking; replace it with a renderer-controlled status display if legibility matters. Preview small-size readability in the actual game camera before accepting detail density. No engine or gameplay integration exists yet.
+The emitter has a tiny generated indicator marking; replace it with a renderer-controlled status display if legibility matters. Preview small-size readability in the actual game camera before accepting detail density. The current browser prototype integrates these assets; the historical initial-generation notes above describe their original delivery.
 
 ## Preview
 
 Open [index.html](index.html) locally to compare both assets against a dark grid. The displayed grid and scale are illustrative, not physical units.
+
+
+## World and orientation asset pass
+
+The current game adds nine equipment turnaround sheets, textured terrain, decorative props and moving crawler art. See [generation notes and limitations](world-generation-notes.md) for exact prompts and provenance, and [world gallery](world/index.html) for the four-view sheets. Opaque dark-matte sheets are composited in the renderer; production alpha cutouts remain a polish task.
