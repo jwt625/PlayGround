@@ -1,3 +1,4 @@
+import {equipmentState} from './equipment-state';
 import {catalog,categories,requirements} from './ui/catalog';
 import {Tutorial} from './ui/tutorial';
 import {Minimap} from './ui/minimap';
@@ -94,7 +95,7 @@ function renderInspector(force=false){if(objectSelection){renderObjectInspector(
   $('repair').onclick=()=>action(repair(world,e.id));$('recover').onclick=()=>{remove(world,e.id);view.selected=null;action('');};$<HTMLInputElement>('protection').onchange=ev=>{e.protection=(ev.target as HTMLInputElement).checked;invalidate(world,'Protection setting changed');if(!e.protection)toast('Protection bypassed: overheating can destroy equipment');renderUI();};
   $('inspector').querySelectorAll<HTMLButtonElement>('[data-disconnect]').forEach(b=>b.onclick=()=>{disconnect(world,b.dataset.disconnect!);action('');});
  }
- $('equipment-stats').innerHTML=row('State',e.health<=0?'Destroyed':e.tripped?'Tripped':e.powered?'Operating':'No power',e.powered?'green':'amber')+row('Temperature',`${fmt(e.temperature)} °C`,e.temperature>85?'red':'')+row('Integrity',`${Math.ceil(e.health)}%`)+row('Orientation',`${e.rotation*90}°`)+((e.kind==='extractor'||e.kind==='assembler')?row('Ore buffer',`${e.ore} / 20`):'');
+ $('equipment-stats').innerHTML=row('State',equipmentState(world,e).label,e.powered?'green':'amber')+row('Temperature',`${fmt(e.temperature)} °C`,e.temperature>85?'red':'')+row('Integrity',`${Math.ceil(e.health)}%`)+row('Orientation',`${e.rotation*90}°`)+((e.kind==='extractor'||e.kind==='assembler')?row('Ore buffer',`${e.ore} / 20`):'');
  if(e.kind==='tuner'){$('phase-value').textContent=`${fmt(e.phase)}°`;$<HTMLInputElement>('phase').value=String(e.phase);}
  $('port-stats').innerHTML=DEFS[e.kind].ports.map((name,i)=>{const p=world.stats.network.ports[e.id]?.[i];return `<div class="port-readout"><b>${name}</b><span>in ${fmt(p?.incoming??0)}</span><span>out ${fmt(p?.outgoing??0)}</span></div>`;}).join('')+ports(e,'material').map(p=>row(p.id,p.role)).join('')+ports(e,'power').map(p=>row(p.id,p.role)).join('');
 }

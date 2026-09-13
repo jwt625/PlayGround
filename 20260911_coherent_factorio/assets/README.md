@@ -35,3 +35,8 @@ Open [index.html](index.html) locally to compare both assets against a dark grid
 ## World and orientation asset pass
 
 The current game adds nine equipment turnaround sheets, textured terrain, decorative props and moving crawler art. See [generation notes and limitations](world-generation-notes.md) for exact prompts and provenance, and [world gallery](world/index.html) for the four-view sheets. Opaque dark-matte sheets are composited in the renderer; production alpha cutouts remain a polish task.
+
+
+## Map, animation and technology continuation
+
+[The expansion pass](expansion/README.md) adds four terrain variants, depletion/debris art, three four-direction animation atlases, eighteen technology illustrations and eight industrial science packages. Interactive review pages provide motion/frame controls and a proposed technology graph. Research unlock mechanics remain unimplemented. Exact prompts, dimensions, source mappings and source-rectangle corrections are recorded with the pass.

@@ -10,7 +10,7 @@ Started 2026-09-12. User decisions: retain direct camera control; tutorial uses 
 - [x] W4: Categorized build palette, costs/inputs/outputs/service requirements, contextual first-run tutorial with skip/replay.
 - [x] W5: Persistent actionable diagnostics with object focus; clear separation from action history.
 - [x] W6: Moving investigating creatures, obstacle avoidance, explicit defense readiness, leakage-triggered aggression and basic defense.
-- [ ] W7: Save compatibility, simulation/browser validation, screenshot review and playtest instructions.
+- [x] W7: Save compatibility, simulation/browser validation, screenshot review and playtest instructions.
 
 ## Design contracts
 
@@ -58,3 +58,8 @@ Playable characters; complex combat/ecology; physical terrain collision beyond m
 - Obtain production alpha cutouts, improve per-view port/art registration, add walk cycles and machinery damage/operating variants. Current matte-composited art can lose dark details against textured ground.
 - Build segment editing, route selection, splitters/crossing-layer controls and clearer radius previews; stored transport paths and core ports are ready for this.
 - Add optional diagnostics trends/precision/automation as progression without hiding baseline errors. Characters, teams and RTS commands remain deferred under the accepted direct-camera decision.
+
+
+## Final validation
+
+2026-09-12: `npm test` passes 35 tests; `npm run build` passes; `npm run test:browser` passes all eight scenarios (41.2 s). The added full tutorial test covers initial inspection, defense, both branches, diagnostics, controller, interrupted commissioning, repair/retry and blueprint capture. Reviewed terrain, onboarding and four-view atlas screenshots. The development server responds at `http://127.0.0.1:5173`. Asset-generation continuation is tracked in 007.

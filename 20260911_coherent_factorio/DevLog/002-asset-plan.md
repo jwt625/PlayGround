@@ -110,3 +110,8 @@ emitter + target effects → organism destruction → accessible frontier deposi
 ```
 
 UI delivery: scalable SVG icons plus an HTML/CSS component preview containing resource counters, build selection, network inspector, tuning, commissioning, and warning states. The preview uses illustrative data only; no solver or gameplay behavior is implied. Text and numbers remain renderer-owned, not baked into raster panels.
+
+
+## 2026-09-12 continuation
+
+Milestones [006](006-world-interaction-and-onboarding.md) and [007](007-map-animation-and-technology-assets.md) supersede the original single-view/procedural-ground assumptions: terrain variants, decorative/stateful props, dedicated equipment orientations, three motion atlases and a proposed technology-art library are now delivered. The remaining backlog includes transport segment art, distinct machine damage states, precision manufacturing buildings and final registered/alpha animation production. See 007 for exact current scope and review results.

@@ -44,4 +44,11 @@ Resource and creature inspection, categorized construction with explicit require
 
 Generated the terrain/prop/crawler assets and nine equipment turnaround sheets. Dedicated fixed-camera source rectangles supersede the canvas-rotation fallback recorded above. Opaque output from the image tool required dark-matte assets and runtime compositing; final alpha and animation are art-polish follow-ups. Exact prompts, source provenance and the workspace deliverables are linked from `assets/world-generation-notes.md`.
 
-The seven existing/expanded browser scenarios now pass; a further test is exercising the entire eleven-step tutorial, including a powered sentry, through commissioning. See [006](006-world-interaction-and-onboarding.md) for final results and next steps.
+Final validation: all 35 simulation tests, eight browser scenarios (including the full tutorial with defense and recovery), and the production build pass. See [006](006-world-interaction-and-onboarding.md) for final results and next steps.
+
+
+## 2026-09-12 — Repo recheck and asset continuation
+
+Reviewed committed progress at `5c65d26` with a clean working tree. Continued the requested map/animation/technology art pass in [007](007-map-animation-and-technology-assets.md). Eleven generated source files add four terrain variants, depletion/debris, 48 motion frames, eighteen technology illustrations and eight industrial science packages. Runtime animation follows production/movement state; a cached terrain layer and source-frame metadata keep presentation separate from the core. Technology dependency/status review is an asset-design surface, not a research unlock implementation. Exact prompts and source paths are preserved under assets.
+
+Final asset-pass verification: production build and all 11 browser scenarios pass. Source-frame registration corrected clipped mechanisms without modifying generated PNGs. See 007 and the linked review pages for the delivered assets, prototype limitations and next priorities.

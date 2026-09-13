@@ -59,3 +59,8 @@ See [implementation journal](004-implementation-journal.md) for progress, decisi
 ## M6 — World interaction and onboarding (2026-09-12)
 
 Follow [006](006-world-interaction-and-onboarding.md) for the accepted feedback, implementation notes, art limitations and human playtest checklist. Resource selection, moving investigative wildlife, basic defense, textures/dressing, separately redrawn orientations, direct-camera/minimap interactions, categorized construction, contextual tutorials and actionable diagnostics are implemented. Final expanded validation is recorded there.
+
+
+## M7 — Map, animation and technology asset continuation
+
+[007](007-map-animation-and-technology-assets.md) tracks the next art batch after commit `5c65d26`: four map textures, stateful debris/depletion, production and crawler animation, and a proposed technology-art graph. The new art is mapped independently of the simulation; no research economy or unlock gates are implied.

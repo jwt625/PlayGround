@@ -1,0 +1,200 @@
+{
+  "generatedBy": "built-in image_gen",
+  "prompts": "expansion-prompts.json",
+  "assets": [
+    {
+      "id": "dust-basin-v1",
+      "path": "map/dust-basin-v1.png",
+      "source": "/Users/wentaojiang/.codex/generated_images/01a0963b-da0d-7210-9952-d8bf7bdec352/exec-305555ed-dda3-4c1c-952f-9858a9b5159b.png",
+      "review": "prototype accepted after source and browser review",
+      "dimensions_px": [
+        1254,
+        1254
+      ],
+      "mode": "RGB",
+      "alpha": "none; opaque ground texture",
+      "layout": {
+        "columns": 1,
+        "rows": 1,
+        "repeat": "both axes"
+      }
+    },
+    {
+      "id": "fractured-bedrock-v1",
+      "path": "map/fractured-bedrock-v1.png",
+      "source": "/Users/wentaojiang/.codex/generated_images/01a0963b-da0d-7210-9952-d8bf7bdec352/exec-84ab51a0-b7ce-4150-9fee-8f951fd6065a.png",
+      "review": "prototype accepted after source and browser review",
+      "dimensions_px": [
+        1254,
+        1254
+      ],
+      "mode": "RGB",
+      "alpha": "none; opaque ground texture",
+      "layout": {
+        "columns": 1,
+        "rows": 1,
+        "repeat": "both axes"
+      }
+    },
+    {
+      "id": "industrial-paving-v1",
+      "path": "map/industrial-paving-v1.png",
+      "source": "/Users/wentaojiang/.codex/generated_images/01a0963b-da0d-7210-9952-d8bf7bdec352/exec-007a012e-53fc-4036-b2da-161e92a2fab9.png",
+      "review": "prototype accepted after source and browser review",
+      "dimensions_px": [
+        1254,
+        1254
+      ],
+      "mode": "RGB",
+      "alpha": "none; opaque ground texture",
+      "layout": {
+        "columns": 1,
+        "rows": 1,
+        "repeat": "both axes"
+      }
+    },
+    {
+      "id": "crystal-substrate-v1",
+      "path": "map/crystal-substrate-v1.png",
+      "source": "/Users/wentaojiang/.codex/generated_images/01a0963b-da0d-7210-9952-d8bf7bdec352/exec-8f7e17fa-773e-47b7-9b66-da3396faeeb4.png",
+      "review": "prototype accepted after source and browser review",
+      "dimensions_px": [
+        1254,
+        1254
+      ],
+      "mode": "RGB",
+      "alpha": "none; opaque ground texture",
+      "layout": {
+        "columns": 1,
+        "rows": 1,
+        "repeat": "both axes"
+      }
+    },
+    {
+      "id": "depletion-debris-v1",
+      "path": "map/depletion-debris-v1.png",
+      "source": "/Users/wentaojiang/.codex/generated_images/01a0963b-da0d-7210-9952-d8bf7bdec352/exec-30601a00-056a-4626-b67a-f2b3e818ecd4.png",
+      "review": "prototype accepted after source and browser review",
+      "dimensions_px": [
+        1254,
+        1254
+      ],
+      "mode": "RGB",
+      "alpha": "none; intentional dark matte",
+      "layout": {
+        "columns": 2,
+        "rows": 2
+      }
+    },
+    {
+      "id": "extractor-cycle-v1",
+      "path": "animations/extractor-cycle-v1.png",
+      "source": "/Users/wentaojiang/.codex/generated_images/01a0963b-da0d-7210-9952-d8bf7bdec352/exec-d7afc482-cf59-419c-8272-8e10052502f2.png",
+      "review": "prototype accepted after source and browser review",
+      "dimensions_px": [
+        1254,
+        1254
+      ],
+      "mode": "RGB",
+      "alpha": "none; intentional dark matte",
+      "layout": {
+        "columns": 4,
+        "rows": 4,
+        "orientation_axis": "rows",
+        "motion_axis": "columns",
+        "motion_frames": 4,
+        "source_rectangles": "animations/frame-map.json"
+      },
+      "anchor_status": "foundation-tip registration via metadata; residual generated geometry variation"
+    },
+    {
+      "id": "assembler-cycle-v1",
+      "path": "animations/assembler-cycle-v1.png",
+      "source": "/Users/wentaojiang/.codex/generated_images/01a0963b-da0d-7210-9952-d8bf7bdec352/exec-5752e9fb-09c8-4ae0-a3a1-8e7c6df7b55b.png",
+      "review": "prototype accepted after source and browser review",
+      "dimensions_px": [
+        1254,
+        1254
+      ],
+      "mode": "RGB",
+      "alpha": "none; intentional dark matte",
+      "layout": {
+        "columns": 4,
+        "rows": 4,
+        "orientation_axis": "rows",
+        "motion_axis": "columns",
+        "motion_frames": 4,
+        "source_rectangles": "animations/frame-map.json"
+      },
+      "anchor_status": "foundation-tip registration via metadata; residual generated geometry variation"
+    },
+    {
+      "id": "crawler-walk-v2",
+      "path": "animations/crawler-walk-v2.png",
+      "source": "/Users/wentaojiang/.codex/generated_images/01a0963b-da0d-7210-9952-d8bf7bdec352/exec-8e94f502-723a-456f-920c-4f06d184b408.png",
+      "review": "prototype accepted after source and browser review",
+      "dimensions_px": [
+        1254,
+        1254
+      ],
+      "mode": "RGB",
+      "alpha": "none; intentional dark matte",
+      "layout": {
+        "columns": 4,
+        "rows": 4,
+        "orientation_axis": "rows",
+        "motion_axis": "columns",
+        "motion_frames": 4
+      },
+      "anchor_status": "generated; approximate registration"
+    },
+    {
+      "id": "technology-foundations-v1",
+      "path": "technology/technology-foundations-v1.png",
+      "source": "/Users/wentaojiang/.codex/generated_images/01a0963b-da0d-7210-9952-d8bf7bdec352/exec-4febfde2-e50a-4eca-b7f2-42668a78e2ef.png",
+      "review": "prototype accepted after source and browser review",
+      "dimensions_px": [
+        1254,
+        1254
+      ],
+      "mode": "RGB",
+      "alpha": "none; intentional dark matte",
+      "layout": {
+        "columns": 3,
+        "rows": 3
+      }
+    },
+    {
+      "id": "technology-precision-v1",
+      "path": "technology/technology-precision-v1.png",
+      "source": "/Users/wentaojiang/.codex/generated_images/01a0963b-da0d-7210-9952-d8bf7bdec352/exec-ed819204-1778-419b-9421-2e83b4855e03.png",
+      "review": "prototype accepted after source and browser review",
+      "dimensions_px": [
+        1254,
+        1254
+      ],
+      "mode": "RGB",
+      "alpha": "none; intentional dark matte",
+      "layout": {
+        "columns": 3,
+        "rows": 3
+      }
+    },
+    {
+      "id": "industrial-science-packs-v1",
+      "path": "technology/industrial-science-packs-v1.png",
+      "source": "/Users/wentaojiang/.codex/generated_images/01a0963b-da0d-7210-9952-d8bf7bdec352/exec-8015e91a-02dc-4c3f-848c-2c31229cc9ca.png",
+      "review": "prototype accepted after source and browser review",
+      "dimensions_px": [
+        1774,
+        887
+      ],
+      "mode": "RGB",
+      "alpha": "none; intentional dark matte",
+      "layout": {
+        "columns": 4,
+        "rows": 2
+      }
+    }
+  ]
+}

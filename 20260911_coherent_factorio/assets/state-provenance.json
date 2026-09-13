@@ -1,0 +1,66 @@
+{
+  "generator": "built-in image_gen",
+  "prompts": "state-prompts.json",
+  "assets": [
+    {
+      "id": "extractor-condition-v1",
+      "path": "states/extractor-condition-v1.png",
+      "source": "/Users/wentaojiang/.codex/generated_images/01a0963b-da0d-7210-9952-d8bf7bdec352/exec-6ea8ef01-1f53-4b4b-9a47-f9aa0361ffa1.png",
+      "review": "pending"
+    },
+    {
+      "id": "assembler-condition-v1",
+      "path": "states/assembler-condition-v1.png",
+      "source": "/Users/wentaojiang/.codex/generated_images/01a0963b-da0d-7210-9952-d8bf7bdec352/exec-42752b68-8ec2-4a24-b76e-5cf669c288ff.png",
+      "review": "pending"
+    },
+    {
+      "id": "generator-condition-v1",
+      "path": "states/generator-condition-v1.png",
+      "source": "/Users/wentaojiang/.codex/generated_images/01a0963b-da0d-7210-9952-d8bf7bdec352/exec-40265e4f-2136-44c6-a9d7-9e1e4d908ff4.png",
+      "review": "pending"
+    },
+    {
+      "id": "reference-condition-v1",
+      "path": "states/reference-condition-v1.png",
+      "source": "/Users/wentaojiang/.codex/generated_images/01a0963b-da0d-7210-9952-d8bf7bdec352/exec-c08596c9-9353-4f61-b609-965f2c9409df.png",
+      "review": "pending"
+    },
+    {
+      "id": "junction-condition-v1",
+      "path": "states/junction-condition-v1.png",
+      "source": "/Users/wentaojiang/.codex/generated_images/01a0963b-da0d-7210-9952-d8bf7bdec352/exec-d0556a56-0a80-489d-bd9b-6ae408bdc1be.png",
+      "review": "pending"
+    },
+    {
+      "id": "tuner-condition-v1",
+      "path": "states/tuner-condition-v1.png",
+      "source": "/Users/wentaojiang/.codex/generated_images/01a0963b-da0d-7210-9952-d8bf7bdec352/exec-178aa748-7bcb-4035-b27a-4b85b0ad2162.png",
+      "review": "pending"
+    },
+    {
+      "id": "emitter-condition-v1",
+      "path": "states/emitter-condition-v1.png",
+      "source": "/Users/wentaojiang/.codex/generated_images/01a0963b-da0d-7210-9952-d8bf7bdec352/exec-99c61fdf-465c-4be1-8b30-70de0b32bed1.png",
+      "review": "pending"
+    },
+    {
+      "id": "dump-condition-v1",
+      "path": "states/dump-condition-v1.png",
+      "source": "/Users/wentaojiang/.codex/generated_images/01a0963b-da0d-7210-9952-d8bf7bdec352/exec-8ef24967-e072-4f9e-983e-eb6d2e36a956.png",
+      "review": "pending"
+    },
+    {
+      "id": "sentry-condition-v1",
+      "path": "states/sentry-condition-v1.png",
+      "source": "/Users/wentaojiang/.codex/generated_images/01a0963b-da0d-7210-9952-d8bf7bdec352/exec-ac40402c-5710-4dac-a329-7c7b4c65e93d.png",
+      "review": "pending"
+    },
+    {
+      "id": "extractor-light-cycle-v1",
+      "path": "states/extractor-light-cycle-v1.png",
+      "source": "/Users/wentaojiang/.codex/generated_images/01a0963b-da0d-7210-9952-d8bf7bdec352/exec-d634b803-43e3-44d5-ae1d-34fb4bfd517e.png",
+      "review": "pending"
+    }
+  ]
+}

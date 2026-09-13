@@ -11,7 +11,7 @@ npm ci
 npm run dev
 ```
 
-Open **http://127.0.0.1:5173**. No API key, account, backend, or external service is required. The game uses generated assets bundled locally. Click Tutorial for the guided first outpost. The development server binds to localhost.
+Open **http://127.0.0.1:5173**. No API key, account, backend, or external service is required. The game uses generated assets bundled locally, including blended terrain and production/crawler animations. Click Tutorial for the guided first outpost. The development server binds to localhost.
 
 ```sh
 npm test              # simulation and world tests
@@ -54,7 +54,7 @@ Save/Load uses this browser's local storage. New expedition replaces the running
 
 This is a short first-loop prototype, not the balanced 30–45 minute scenario or a full factory game. Electrical wires use generator-to-load routes with 240-unit capacity per generator; fuel, wire resistance, poles, and multi-source buses remain abstracted. Assemblies and mined crystal enter shared stock; ore travels on belts. Paths persist as half-tile segments, but construction costs, individual segment editing, inserters, splitters, and bridges remain future work. Crossings and shared runs represent insulated/separate layers and never create implicit junctions. One source supplies the initial coherent group. Tile phase is a compressed effective model, not literal optical path length. The target model is a normalized mode projection, not a full array-factor/diffraction simulation; visual beams and focus rings are illustrative diagnostics. There is no pulse dispersion, partial coherence, stochastic environmental coupling, ecology growth, or FDTD yet.
 
-The prototype caps builds at 40 machines and 128 field ports. Equipment uses separately redrawn four-view atlas frames, with fixed camera and lighting. Presentation mappings accept dedicated sheets, scale and offsets; canvas rotation is not used. The generator returned opaque RGB sheets, so this pass uses matte art and lighten compositing, which can show terrain through dark details. True alpha cutouts, animation and final port-to-art alignment remain polish tasks. Bend radii are effective parameters on polylines, not exact arc geometry or calibrated material physics; damaged equipment is indicated by opacity/status, not unique wreck sprites. Blueprint capture currently includes the entire outpost. Human playtesting and larger-network performance work remain necessary.
+The prototype caps builds at 40 machines and 128 field ports. Equipment uses separately redrawn four-view atlas frames, with fixed camera and lighting. Presentation mappings accept dedicated sheets, scale and offsets; canvas rotation is not used. The generator returned opaque RGB sheets, so this pass uses matte art and lighten compositing, which can show terrain through dark details. Extractor/assembler loops and crawler gait use dedicated frame atlases; source rectangles correct uneven generated row spacing. True alpha cutouts, smoother registered motion and final port-to-art alignment remain polish tasks. Bend radii are effective parameters on polylines, not exact arc geometry or calibrated material physics; damaged equipment is indicated by opacity/status, not unique wreck sprites. Blueprint capture currently includes the entire outpost. Human playtesting and larger-network performance work remain necessary.
 
 ## Project map
 
@@ -71,6 +71,7 @@ The prototype caps builds at 40 machines and 128 field ports. Equipment uses sep
 - [Milestones and TODOs](DevLog/003-implementation-milestones.md)
 - [Ports/routing architecture and next TODOs](DevLog/005-ports-routing-and-presentation.md)
 - [World interaction/onboarding milestone and playtest checklist](DevLog/006-world-interaction-and-onboarding.md)
+- [Map/animation/technology assets and review links](assets/expansion/README.md)
 - [Generated world art and exact prompt set](assets/world-generation-notes.md), [turnaround gallery](assets/world/index.html)
 - [Implementation journal](DevLog/004-implementation-journal.md)
 - [Asset proposal](DevLog/002-asset-plan.md), [asset gallery](assets/index.html)
