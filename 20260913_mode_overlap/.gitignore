@@ -1,0 +1,21 @@
+node_modules/
+.svelte-kit/
+build/
+*.tmp
+.DS_Store
+
+# The PlayGround root .gitignore excludes *.json, *cache* and *.html. This
+# project needs those files, so re-include them here (deeper rules win).
+!package.json
+!package-lock.json
+!tsconfig.json
+!src/app.html
+!data/
+!data/**
+!static/
+!static/cache/
+!static/cache/**
+!src/storage/cache.mjs
+!scripts/build-cache.mjs
+!scripts/audit-cache.mjs
+!tests/cache-and-rng.test.mjs
