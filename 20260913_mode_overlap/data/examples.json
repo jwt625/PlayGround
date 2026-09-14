@@ -1,0 +1,236 @@
+{
+  "schemaVersion": "examples-1",
+  "examples": [
+    {
+      "id": "01",
+      "title": "Identical Gaussians",
+      "kind": "analytic",
+      "a": {
+        "mfdXUm": 4,
+        "mfdYUm": 4
+      },
+      "b": {
+        "mfdXUm": 4,
+        "mfdYUm": 4
+      },
+      "transform": {},
+      "wavelengthUm": 1.55
+    },
+    {
+      "id": "02",
+      "title": "Circular 2x waist ratio",
+      "kind": "analytic",
+      "a": {
+        "mfdXUm": 4,
+        "mfdYUm": 4
+      },
+      "b": {
+        "mfdXUm": 8,
+        "mfdYUm": 8
+      },
+      "transform": {},
+      "wavelengthUm": 1.55
+    },
+    {
+      "id": "03",
+      "title": "Gaussian lateral offset",
+      "kind": "analytic",
+      "a": {
+        "mfdXUm": 4,
+        "mfdYUm": 4
+      },
+      "b": {
+        "mfdXUm": 4,
+        "mfdYUm": 4
+      },
+      "transform": {
+        "dxUm": 1
+      },
+      "wavelengthUm": 1.55
+    },
+    {
+      "id": "04",
+      "title": "Gaussian angular tilt",
+      "kind": "analytic",
+      "a": {
+        "mfdXUm": 10.4,
+        "mfdYUm": 10.4
+      },
+      "b": {
+        "mfdXUm": 10.4,
+        "mfdYUm": 10.4
+      },
+      "transform": {
+        "thetaXRad": 0.017453292519943295
+      },
+      "wavelengthUm": 1.55
+    },
+    {
+      "id": "05",
+      "title": "Orthogonal linear polarizations",
+      "kind": "analytic",
+      "a": {
+        "mfdXUm": 4,
+        "mfdYUm": 4
+      },
+      "b": {
+        "mfdXUm": 4,
+        "mfdYUm": 4
+      },
+      "transform": {
+        "polarizationRad": 1.5707963267948966
+      },
+      "wavelengthUm": 1.55
+    },
+    {
+      "id": "06",
+      "title": "Si 450 nm to 500 nm",
+      "kind": "numerical-recipe",
+      "presetA": "soi-strip",
+      "presetB": "soi-strip",
+      "wavelengthUm": 1.55,
+      "overrideB": {
+        "width_um": 0.5
+      }
+    },
+    {
+      "id": "07",
+      "title": "Si lateral offset",
+      "kind": "numerical-recipe",
+      "presetA": "soi-strip",
+      "presetB": "soi-strip",
+      "wavelengthUm": 1.55,
+      "transform": {
+        "dxUm": 0.15
+      }
+    },
+    {
+      "id": "08",
+      "title": "Si strip to wider strip",
+      "kind": "numerical-recipe",
+      "presetA": "soi-strip",
+      "presetB": "soi-wide",
+      "wavelengthUm": 1.55
+    },
+    {
+      "id": "09",
+      "title": "SMF-like Gaussian to raw Si",
+      "kind": "numerical-recipe",
+      "presetA": "smf28-c",
+      "presetB": "soi-strip",
+      "wavelengthUm": 1.55
+    },
+    {
+      "id": "10",
+      "title": "SMF to expanded SSC endpoint",
+      "kind": "numerical-recipe",
+      "presetA": "smf28-c",
+      "presetB": "si-ssc-endpoint",
+      "wavelengthUm": 1.55
+    },
+    {
+      "id": "11",
+      "title": "HNA to SSC endpoint",
+      "kind": "numerical-recipe",
+      "presetA": "hna-generic",
+      "presetB": "si-ssc-endpoint",
+      "wavelengthUm": 1.55
+    },
+    {
+      "id": "12",
+      "title": "HNA to oversized SSC candidate",
+      "kind": "numerical-recipe",
+      "presetA": "hna-generic",
+      "presetB": "si-ssc-endpoint",
+      "wavelengthUm": 1.55,
+      "overrideB": {
+        "outer_width_um": 7,
+        "outer_height_um": 6
+      },
+      "postSolveRequirement": "Confirm actual endpoint mode larger than HNA; geometry alone is insufficient."
+    },
+    {
+      "id": "13",
+      "title": "SMF to thin wide SiN",
+      "kind": "numerical-recipe",
+      "presetA": "smf28-c",
+      "presetB": "sin-thin-wide",
+      "wavelengthUm": 1.55
+    },
+    {
+      "id": "14",
+      "title": "Thick to thin wide SiN",
+      "kind": "numerical-recipe",
+      "presetA": "sin-thick",
+      "presetB": "sin-thin-wide",
+      "wavelengthUm": 1.55
+    },
+    {
+      "id": "15",
+      "title": "SOI to SiN",
+      "kind": "numerical-recipe",
+      "presetA": "soi-strip",
+      "presetB": "sin-thick",
+      "wavelengthUm": 1.55
+    },
+    {
+      "id": "16",
+      "title": "SiN to TFLN",
+      "kind": "numerical-recipe",
+      "presetA": "sin-medium",
+      "presetB": "tfln-ridge",
+      "wavelengthUm": 1.55
+    },
+    {
+      "id": "17",
+      "title": "Same guide TE0 to TE1",
+      "kind": "numerical-recipe",
+      "presetA": "soi-wide",
+      "presetB": "soi-wide",
+      "wavelengthUm": 1.55,
+      "modeA": "quasi-TE0",
+      "modeB": "quasi-TE1"
+    },
+    {
+      "id": "18",
+      "title": "Same intensity lobes, opposite relative phase",
+      "kind": "complex-field-fixture",
+      "recipe": "Construct normalized disjoint equal-power lobes L/R; (L+R)/sqrt(2) versus (L-R)/sqrt(2). Analytic expected eta=0; not claimed eigenmodes.",
+      "expectedEta": 0
+    },
+    {
+      "id": "19",
+      "title": "TE0 and TE1 selected-mode projections",
+      "kind": "numerical-recipe",
+      "presetA": "soi-wide",
+      "presetB": "soi-wide",
+      "wavelengthUm": 1.55,
+      "transform": {
+        "dxUm": 0.2
+      },
+      "modesB": [
+        "quasi-TE0",
+        "quasi-TE1"
+      ],
+      "postSolveRequirement": "Use translated input profile in same-guide forward orthonormal basis; qualify selected-mode remainder."
+    },
+    {
+      "id": "20",
+      "title": "Offset plus elliptical size mismatch",
+      "kind": "analytic",
+      "a": {
+        "mfdXUm": 4,
+        "mfdYUm": 3
+      },
+      "b": {
+        "mfdXUm": 6,
+        "mfdYUm": 4
+      },
+      "transform": {
+        "dxUm": 1,
+        "dyUm": 0.5
+      },
+      "wavelengthUm": 1.55
+    }
+  ]
+}

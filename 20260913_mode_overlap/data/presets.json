@@ -1,0 +1,577 @@
+{
+  "schemaVersion": "presets-1",
+  "units": "um except explicitly named degrees/index",
+  "sourcesChecked": "2026-09-13",
+  "sources": {
+    "corning-smf28": {
+      "url": "https://www.corning.com/content/dam/corning/media/worldwide/coc/documents/Fiber/product-information-sheets/PI-1424-AEN.pdf",
+      "fact": "MFD 9.2 \u00b1 0.4 um at 1310 nm; 10.4 \u00b1 0.5 um at 1550 nm. Gaussian use is an approximation."
+    },
+    "coherent-uhna": {
+      "url": "https://www.coherent.com/resources/datasheet/components-and-accessories/specialty-optical-fibers/uhna4_spec_202011122126.pdf",
+      "fact": "At 1550 nm UHNA1/3/4/7 MFD are 4.8/4.1/4.0/3.2 um, each \u00b10.3 um; not a universal HNA specification."
+    },
+    "imec-soi": {
+      "url": "https://www.imec-int.com/drupal/sites/default/files/2019-03/IC-link%20integrated%20si-photonics%20platform_web.pdf",
+      "fact": "Historical platform strip C-band width 450 nm, O-band 380 nm. Educational anchor, not current PDK rules."
+    },
+    "soi-220": {
+      "url": "https://arxiv.org/abs/2312.13329",
+      "fact": "Research describes established 220 nm SOI platform."
+    },
+    "ligentec-sin": {
+      "url": "https://www.ligentec.com/technology/",
+      "fact": "AN800/AN350/AN150 have 800/350/150 nm SiN thicknesses. Chosen game widths are independent educational assumptions."
+    },
+    "ln-film": {
+      "url": "https://www.nature.com/articles/s41467-024-46512-4",
+      "fact": "600 nm x-cut film, target 300 nm etch; paper notes actual effective etch 360 nm. Game uses idealized nominal geometry, not this exact device."
+    },
+    "thorlabs-lensed": {
+      "url": "https://media.thorlabs.com/globalassets/family-pages/SharedAssets/s/si/single_mode_lensed_fibers_app_note.pdf",
+      "fact": "Lensed-fiber spot size and working distance must be specified at the measurement plane. Game range is generic, not vendor specifications."
+    }
+  },
+  "presets": [
+    {
+      "id": "smf28-c",
+      "category": "fiber",
+      "model": "scalar-gaussian",
+      "wavelength_um": 1.55,
+      "nominal": {
+        "mfd_um": 10.4
+      },
+      "ranges": {
+        "mfd_um": [
+          9.9,
+          10.9
+        ]
+      },
+      "source_ids": [
+        "corning-smf28"
+      ],
+      "range_basis": "educational-design-envelope-not-process-tolerance",
+      "range_note": "Published MFD envelope; sampled triangularly, not a claimed manufacturing probability density."
+    },
+    {
+      "id": "smf28-o",
+      "category": "fiber",
+      "model": "scalar-gaussian",
+      "wavelength_um": 1.31,
+      "nominal": {
+        "mfd_um": 9.2
+      },
+      "ranges": {
+        "mfd_um": [
+          8.8,
+          9.6
+        ]
+      },
+      "source_ids": [
+        "corning-smf28"
+      ],
+      "range_basis": "educational-design-envelope-not-process-tolerance"
+    },
+    {
+      "id": "uhna1-like",
+      "category": "fiber",
+      "model": "scalar-gaussian",
+      "wavelength_um": 1.55,
+      "nominal": {
+        "mfd_um": 4.8
+      },
+      "ranges": {
+        "mfd_um": [
+          4.5,
+          5.1
+        ]
+      },
+      "source_ids": [
+        "coherent-uhna"
+      ],
+      "range_basis": "educational-design-envelope-not-process-tolerance"
+    },
+    {
+      "id": "uhna4-like",
+      "category": "fiber",
+      "model": "scalar-gaussian",
+      "wavelength_um": 1.55,
+      "nominal": {
+        "mfd_um": 4.0
+      },
+      "ranges": {
+        "mfd_um": [
+          3.7,
+          4.3
+        ]
+      },
+      "source_ids": [
+        "coherent-uhna"
+      ],
+      "range_basis": "educational-design-envelope-not-process-tolerance"
+    },
+    {
+      "id": "uhna7-like",
+      "category": "fiber",
+      "model": "scalar-gaussian",
+      "wavelength_um": 1.55,
+      "nominal": {
+        "mfd_um": 3.2
+      },
+      "ranges": {
+        "mfd_um": [
+          2.9000000000000004,
+          3.5
+        ]
+      },
+      "source_ids": [
+        "coherent-uhna"
+      ],
+      "range_basis": "educational-design-envelope-not-process-tolerance"
+    },
+    {
+      "id": "hna-generic",
+      "category": "fiber",
+      "model": "scalar-gaussian",
+      "wavelength_um": 1.55,
+      "nominal": {
+        "mfd_um": 4.0
+      },
+      "ranges": {
+        "mfd_um": [
+          3,
+          6
+        ]
+      },
+      "source_ids": [
+        "coherent-uhna"
+      ],
+      "range_basis": "educational-design-envelope-not-process-tolerance",
+      "range_note": "Broad teaching family, not a single product tolerance."
+    },
+    {
+      "id": "lensed-generic",
+      "category": "fiber",
+      "model": "scalar-gaussian",
+      "wavelength_um": 1.55,
+      "nominal": {
+        "mfd_um": 2.5
+      },
+      "ranges": {
+        "mfd_um": [
+          2,
+          5
+        ]
+      },
+      "source_ids": [
+        "thorlabs-lensed"
+      ],
+      "range_basis": "educational-design-envelope-not-process-tolerance",
+      "plane": "at-focus",
+      "range_note": "Air-side waist only; NA and working distance not independently sampled."
+    },
+    {
+      "id": "gaussian-elliptical",
+      "category": "analytic",
+      "model": "scalar-gaussian",
+      "wavelength_um": 1.55,
+      "nominal": {
+        "mfd_x_um": 4,
+        "mfd_y_um": 3
+      },
+      "ranges": {
+        "mfd_x_um": [
+          1,
+          12
+        ],
+        "mfd_y_um": [
+          1,
+          12
+        ]
+      },
+      "source_ids": [],
+      "range_basis": "educational-design-envelope-not-process-tolerance"
+    },
+    {
+      "id": "soi-strip",
+      "category": "silicon",
+      "model": "vector-required",
+      "wavelength_um": 1.55,
+      "nominal": {
+        "width_um": 0.45,
+        "height_um": 0.22
+      },
+      "ranges": {
+        "width_um": [
+          0.35,
+          0.65
+        ],
+        "height_um": [
+          0.21,
+          0.23
+        ]
+      },
+      "source_ids": [
+        "imec-soi",
+        "soi-220"
+      ],
+      "range_basis": "educational-design-envelope-not-process-tolerance",
+      "materials": [
+        "Si",
+        "SiO2"
+      ],
+      "cladding": "SiO2",
+      "substrate_model": "semi-infinite-SiO2",
+      "mode": "quasi-TE0",
+      "advanced_ranges": {
+        "width_um": [
+          0.3,
+          0.9
+        ],
+        "height_um": [
+          0.18,
+          0.3
+        ]
+      }
+    },
+    {
+      "id": "soi-wide",
+      "category": "silicon",
+      "model": "vector-required",
+      "wavelength_um": 1.55,
+      "nominal": {
+        "width_um": 0.9,
+        "height_um": 0.22
+      },
+      "ranges": {
+        "width_um": [
+          0.7,
+          1.5
+        ],
+        "height_um": [
+          0.21,
+          0.23
+        ]
+      },
+      "source_ids": [
+        "soi-220"
+      ],
+      "range_basis": "educational-design-envelope-not-process-tolerance",
+      "materials": [
+        "Si",
+        "SiO2"
+      ],
+      "cladding": "SiO2",
+      "substrate_model": "semi-infinite-SiO2",
+      "mode": "quasi-TE0",
+      "multimode_expected": true
+    },
+    {
+      "id": "soi-rib",
+      "category": "silicon",
+      "model": "vector-required",
+      "wavelength_um": 1.55,
+      "nominal": {
+        "width_um": 0.65,
+        "height_um": 0.22,
+        "slab_um": 0.09
+      },
+      "ranges": {
+        "width_um": [
+          0.5,
+          0.9
+        ],
+        "height_um": [
+          0.21,
+          0.23
+        ],
+        "slab_um": [
+          0.06,
+          0.15
+        ]
+      },
+      "source_ids": [
+        "imec-soi",
+        "soi-220"
+      ],
+      "range_basis": "educational-design-envelope-not-process-tolerance",
+      "materials": [
+        "Si",
+        "SiO2"
+      ],
+      "cladding": "SiO2",
+      "substrate_model": "semi-infinite-SiO2",
+      "mode": "quasi-TE0"
+    },
+    {
+      "id": "sin-thick",
+      "category": "silicon-nitride",
+      "model": "vector-required",
+      "wavelength_um": 1.55,
+      "nominal": {
+        "width_um": 1.5,
+        "height_um": 0.8
+      },
+      "ranges": {
+        "width_um": [
+          1,
+          2
+        ],
+        "height_um": [
+          0.7,
+          0.9
+        ]
+      },
+      "source_ids": [
+        "ligentec-sin"
+      ],
+      "range_basis": "educational-design-envelope-not-process-tolerance",
+      "materials": [
+        "Si3N4",
+        "SiO2"
+      ],
+      "cladding": "SiO2",
+      "substrate_model": "semi-infinite-SiO2",
+      "mode": "quasi-TE0",
+      "multimode_possible": true
+    },
+    {
+      "id": "sin-medium",
+      "category": "silicon-nitride",
+      "model": "vector-required",
+      "wavelength_um": 1.55,
+      "nominal": {
+        "width_um": 1.2,
+        "height_um": 0.35
+      },
+      "ranges": {
+        "width_um": [
+          0.7,
+          2
+        ],
+        "height_um": [
+          0.3,
+          0.4
+        ]
+      },
+      "source_ids": [
+        "ligentec-sin"
+      ],
+      "range_basis": "educational-design-envelope-not-process-tolerance",
+      "materials": [
+        "Si3N4",
+        "SiO2"
+      ],
+      "cladding": "SiO2",
+      "substrate_model": "semi-infinite-SiO2",
+      "mode": "quasi-TE0",
+      "multimode_possible": true
+    },
+    {
+      "id": "sin-thin-wide",
+      "category": "silicon-nitride",
+      "model": "vector-required",
+      "wavelength_um": 1.55,
+      "nominal": {
+        "width_um": 3,
+        "height_um": 0.15
+      },
+      "ranges": {
+        "width_um": [
+          2,
+          5
+        ],
+        "height_um": [
+          0.1,
+          0.25
+        ]
+      },
+      "source_ids": [
+        "ligentec-sin"
+      ],
+      "range_basis": "educational-design-envelope-not-process-tolerance",
+      "materials": [
+        "Si3N4",
+        "SiO2"
+      ],
+      "cladding": "SiO2",
+      "substrate_model": "semi-infinite-SiO2",
+      "mode": "quasi-TE0",
+      "multimode_possible": true
+    },
+    {
+      "id": "si-ssc-endpoint",
+      "category": "ssc",
+      "model": "vector-required",
+      "wavelength_um": 1.55,
+      "nominal": {
+        "tip_width_um": 0.1,
+        "height_um": 0.22,
+        "outer_width_um": 4,
+        "outer_height_um": 3,
+        "outer_index": 1.46
+      },
+      "ranges": {
+        "tip_width_um": [
+          0.06,
+          0.18
+        ],
+        "height_um": [
+          0.21,
+          0.23
+        ],
+        "outer_width_um": [
+          2,
+          7
+        ],
+        "outer_height_um": [
+          2,
+          6
+        ],
+        "outer_index": [
+          1.45,
+          1.5
+        ]
+      },
+      "source_ids": [
+        "soi-220"
+      ],
+      "range_basis": "educational-design-envelope-not-process-tolerance",
+      "materials": [
+        "Si",
+        "SiO2",
+        "generic-low-index"
+      ],
+      "cladding": "SiO2",
+      "substrate_model": "semi-infinite-SiO2",
+      "core_alignment": "centered-in-outer-guide",
+      "mode": "quasi-TE0",
+      "range_note": "Hypothetical compound endpoint; solve full geometry. No claimed endpoint MFD or taper efficiency."
+    },
+    {
+      "id": "sin-taper-endpoint",
+      "category": "ssc",
+      "model": "vector-required",
+      "wavelength_um": 1.55,
+      "nominal": {
+        "width_um": 0.2,
+        "height_um": 0.35
+      },
+      "ranges": {
+        "width_um": [
+          0.1,
+          0.4
+        ],
+        "height_um": [
+          0.15,
+          0.4
+        ]
+      },
+      "source_ids": [
+        "ligentec-sin"
+      ],
+      "range_basis": "educational-design-envelope-not-process-tolerance",
+      "materials": [
+        "Si3N4",
+        "SiO2"
+      ],
+      "cladding": "SiO2",
+      "substrate_model": "semi-infinite-SiO2",
+      "mode": "quasi-TE0",
+      "range_note": "Weak confinement requires expanded-domain and guidance checks; finite BOX effects excluded by this idealization."
+    },
+    {
+      "id": "tfln-ridge",
+      "category": "lithium-niobate",
+      "model": "vector-required",
+      "wavelength_um": 1.55,
+      "nominal": {
+        "top_width_um": 1.2,
+        "film_um": 0.6,
+        "etch_um": 0.3,
+        "sidewall_deg_from_horizontal": 70
+      },
+      "ranges": {
+        "top_width_um": [
+          0.8,
+          1.8
+        ],
+        "film_um": [
+          0.4,
+          0.7
+        ],
+        "etch_um": [
+          0.2,
+          0.4
+        ],
+        "sidewall_deg_from_horizontal": [
+          60,
+          80
+        ]
+      },
+      "source_ids": [
+        "ln-film"
+      ],
+      "range_basis": "educational-design-envelope-not-process-tolerance",
+      "materials": [
+        "LiNbO3-tensor",
+        "SiO2",
+        "air"
+      ],
+      "cladding": "air",
+      "substrate_model": "semi-infinite-SiO2",
+      "cut": "x-cut",
+      "propagation_crystal_axis": "Y",
+      "vertical_crystal_axis": "X",
+      "mode": "quasi-TE0",
+      "range_note": "Require etch < film; width defined at top, bottom=top+2*etch/tan(sidewall angle)."
+    },
+    {
+      "id": "sin-ln-stack",
+      "category": "hybrid",
+      "model": "vector-required",
+      "wavelength_um": 1.55,
+      "nominal": {
+        "sin_width_um": 1.2,
+        "sin_height_um": 0.35,
+        "ln_film_um": 0.6,
+        "oxide_gap_um": 0.2
+      },
+      "ranges": {
+        "sin_width_um": [
+          0.8,
+          1.8
+        ],
+        "sin_height_um": [
+          0.3,
+          0.4
+        ],
+        "ln_film_um": [
+          0.4,
+          0.7
+        ],
+        "oxide_gap_um": [
+          0.1,
+          0.5
+        ]
+      },
+      "source_ids": [
+        "ligentec-sin",
+        "ln-film"
+      ],
+      "range_basis": "educational-design-envelope-not-process-tolerance",
+      "materials": [
+        "Si3N4",
+        "LiNbO3-tensor",
+        "SiO2"
+      ],
+      "cladding": "SiO2",
+      "substrate_model": "semi-infinite-SiO2",
+      "cut": "x-cut",
+      "propagation_crystal_axis": "Y",
+      "vertical_crystal_axis": "X",
+      "mode": "hybrid-fundamental",
+      "range_note": "SiN below unetched LN film; oxide gap edge-to-edge. Reject slab-like delocalized modes."
+    }
+  ]
+}
