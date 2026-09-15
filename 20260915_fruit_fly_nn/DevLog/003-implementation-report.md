@@ -129,3 +129,112 @@ Validation:
 - Still open: checkpoint-matched **training timelapse**, and an muxed
   mp4/polished final cut. The current clip is a single continuous capture, not a
   curriculum timelapse.
+
+---
+
+## Update 3 (2026-09-15): inspector discoverability, fly roles, section span
+
+User-reported issues fixed:
+
+1. **"Inspect 3D neurons" did nothing unless a run was already loaded.** The
+   button only moved the camera; with no `NeuralActivityView` it focused empty
+   space. It now self-loads the saved MaleCNS run (and its mapped somata) before
+   focusing, so it works as a standalone entry point. Regression test:
+   `Inspect 3D neurons loads the run standalone and focuses the mapped somata`.
+2. **Both flies flapped and the target looked stationary.** `FlyActors` gave an
+   animation mixer to both instances. Now only the **target** carries the
+   illustrative wing clip; the learner (neural controller) keeps the GLB rest
+   pose and stays fixed beside the console. The target is repositioned on the
+   displayed target plane using the same transverse scale as the beam envelopes
+   (`DISPLAY.scale`) instead of the previous tiny angular offset, and yaws to
+   face its direction of travel. Regression test: `target fly moves across the
+   scene while the learner stays fixed`.
+3. **Intensity section span increased 10× in both in-plane directions** (3 mm →
+   30 mm, `samples` 72 → 160). Mesh opacity dropped to 0.55 so the enlarged
+   measured plane does not occlude the array/flies; the `Section` layer toggle
+   still hides it.
+
+Validation: `npx tsc --noEmit` clean; `npm test` 33 passed; browser tests 8 passed
+(`CBC_INSPECTOR_URL=http://127.0.0.1:5173 npx playwright test`) against the
+existing dev server. Screenshots: `test-results/fix2-fly-b.png`,
+`test-results/fix-neurons.png`, `test-results/inspect-initial.png`.
+
+---
+
+## Update 4 (2026-09-15): always-on neurons, label, and beam/plane alignment
+
+1. **3D neuron cloud is always on.** The saved MaleCNS run auto-loads at startup
+   (`autoLoadRealRun`), builds `NeuralActivityView`, and drives the scene with
+   the trained ("after") policy in connectome mode. The reservoir is also stepped
+   every frame outside connectome mode, so the cloud stays active in
+   analytic/manual/SPGD too. Default target is now the moving **fly**. The
+   Before/After buttons and the manual "Load real training run" button still work;
+   reloading removes any previous neural group first.
+2. **Simplified the 3D label.** Removed the "Activity from the controller · lines
+   are sampled graph edges" line; the sprite now reads only
+   `MaleCNS · N mapped somata`.
+3. **Beam / measurement-plane alignment fixed.** The section plane's display
+   center used a single uniform scale (`n * targetDistance * range`) while the
+   beam envelopes in `bench.ts` use anisotropic scaling (transverse
+   `DISPLAY.scale`, axial `DISPLAY.targetDistance`); that ~60× mismatch put the
+   plane off the beam intersection. The section center now uses the same mapping.
+   The residual visible offset came from a coarse (~7 mrad) centroid scan, so
+   `Environment.scanBeam` now does a second fine stage around the coarse centroid;
+   pointing error dropped from ~2,900 µrad to ~7–60 µrad and the plane centering
+   is sub-mrad. Locked by `tests/sectionAlignment.test.ts`.
+
+Validation: `npx tsc --noEmit` clean; `npm test` 34 passed; browser tests 8 passed
+(`CBC_INSPECTOR_URL=http://127.0.0.1:5173 npx playwright test`). Screenshots:
+`test-results/align2-target-analytic.png`, `test-results/align-overview.png`.
+
+---
+
+## Update 5 (2026-09-15): measurement plane fixed; hardware scene H0 + H1/H2 first pass
+
+- **Measurement plane fixed at boresight.** `main.ts` now passes the nominal
+  `+Z` direction to `MeasurementSection` instead of the moving beam centroid, so
+  the intensity plot no longer sweeps around. Sparsely, the fine centroid
+  refinement from Update 4 remains for telemetry and the dome/peak markers.
+- **H0 done.** Typed hardware registry (`src/renderer/hardware/registry.ts`) from
+  the generated manifest + wiring plan, with validation
+  (`tests/hardwareRegistry.test.ts`): nine components, 19 unique channel
+  mappings, CH01 optical path, connector-kind compatibility, no vendor-STEP
+  import, display/solver separation.
+- **H1/H2 first pass.** `src/renderer/hardware/hardwareScene.ts` loads the nine
+  hardware-v2 GLBs via `import.meta.glob` (so builds emit them), places one
+  instance per registry node (100 modules incl. placeholders), and routes 195
+  sampled cables from `wiring-plan.json`; opt-in **Hardware bench (v2)** toggle.
+  Browser test `hardware bench loads on demand and routes cables` passes.
+- **Still open:** H1 mated connectors/labels/clearances, H2 tube cables + bend
+  checks + per-channel tracing gate, H3 console binding, H4 foreleg gestures,
+  H5 mechanical tip/tilt + focus stage, H6 evidence. The current hardware layer
+  is an illustrative first pass, not the H1/H2 acceptance result.
+
+---
+
+## Update 6 (2026-09-15): all hardware-v2 assets incorporated
+
+The previous hardware pass loaded the assets but placed them small and off to
+the side, and one component name was wrong (`splitter` vs `splitter-19`), so only
+placeholders were obvious. Fixed and expanded:
+
+- All nine GLBs are instantiated and visible by default: splitter-19,
+  fly-console, phase-cassette x19, optical-amplifier x19, phase-driver x19,
+  tiptilt-collimator x19, plus fc-apc-plug, sma-plug, fc-bulkhead connectors.
+  Metrics: **78 asset modules, 172 mated connectors, 9/9 asset kinds, 0 failures,
+  215 routed cables**.
+- Connectors are mated as children of the GLB port nodes (plugs extend outward
+  along the declared port normal; bulkhead feedthroughs on splitter outputs), so
+  they follow tip/tilt motion.
+- Bench lowered into the default camera view; a `hardware` camera preset frames
+  the exploded rack. Channel-ID sprite labels mark the aperture collimators.
+- Nested tip/tilt pivots are driven from actual pointing (display gain 25,
+  documented as presentation scaling).
+- Browser test now asserts 9 component kinds, >70 modules, >100 connectors, and
+  zero load failures.
+
+Validation: `npx tsc --noEmit` clean; `npm test` 39 passed; browser 9 passed.
+Screenshots: `test-results/hardware-default.png`, `test-results/hardware-bench2.png`.
+Remaining: H1 connector closeups/clearances, H2 tube cables + bend checks +
+CH01/CH10/CH19 tracing gate, H3 console binding, H4 foreleg gestures, H5 focus
+stage, H6 evidence.

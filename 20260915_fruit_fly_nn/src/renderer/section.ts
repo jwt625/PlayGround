@@ -41,7 +41,7 @@ export class MeasurementSection {
       map: this.texture,
       side: THREE.DoubleSide,
       transparent: true,
-      opacity: 0.95,
+      opacity: 0.55,
       depthWrite: false,
     });
     this.mesh = new THREE.Mesh(geom, mat);
@@ -59,6 +59,11 @@ export class MeasurementSection {
     this.group.add(this.centroidMarker);
   }
 
+  /** Display-space center of the measured plane (for tests/telemetry). */
+  get displayCenter(): THREE.Vector3 {
+    return this.mesh.position;
+  }
+
   update(
     config: ArrayConfig,
     actual: readonly ChannelActual[],
@@ -73,7 +78,15 @@ export class MeasurementSection {
     const v = new THREE.Vector3().crossVectors(n, u).normalize();
 
     this.center.copy(n).multiplyScalar(range_m);
-    this.mesh.position.copy(n).multiplyScalar(DISPLAY.targetDistance * range_m);
+    // Display placement must match bench.ts beam envelopes exactly: transverse
+    // axes use DISPLAY.scale, the propagation (axial) axis uses
+    // DISPLAY.targetDistance. Using a single uniform scale here was the source
+    // of the beam/measurement-plane offset.
+    this.mesh.position.set(
+      n.x * range_m * DISPLAY.scale,
+      n.y * range_m * DISPLAY.scale,
+      n.z * range_m * DISPLAY.targetDistance,
+    );
     const basisMatrix = new THREE.Matrix4().makeBasis(u, v, n);
     this.mesh.quaternion.setFromRotationMatrix(basisMatrix);
     this.targetMarker.quaternion.copy(this.mesh.quaternion);

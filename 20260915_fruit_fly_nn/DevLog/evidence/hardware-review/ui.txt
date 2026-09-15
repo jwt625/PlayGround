@@ -1,0 +1,113 @@
+19-channel CBC · scene inspector
+Drag to orbit · scroll to zoom · right-drag to pan
+episode / step
+47
+mode
+connectome
+reward
+1.1753
+PIB
+0.7735
+normalized peak
+0.9837
+pointing (urad)
+221.9
+raw phase RMS (rad)
+2.0752
+connectome activity
+0.018 / max 1.02
+target / beam x
+-8.22 / -8.05 mrad
+target / beam y
+3.38 / 3.24 mrad
+hardware bench: 78 asset modules, 172 mated connectors, 215 routed cables (display scale, not solver coords)
+Saved MaleCNS training · before / after
+Load real training run + 3D neurons
+Before training
+After training
+
+Live MaleCNS controller (after training). Use Before/After to replay the fixed evaluation episode.
+
+Before: not played
+After: not played
+Inspect 3D neurons
+Single step
+Replay speed
+¼ speed · inspect activity
+½ speed
+1× simulation time
+
+Cyan: positive activation · amber: negative · brightness: magnitude. Click a soma for its body ID.
+
+Anatomical source: MaleCNS collaboration · CC BY 4.0
+
+Objective and training scope
+INSPECT SCENE
+overview
+array
+target
+wiring
+hardware
+Pause simulation
+ Beams
+ Dome
+ Section
+ Flies
+ Hardware bench (v2)
+
+Hardware bench is an opt-in illustrative display layer (separate display scale; not solver coordinates). Fly is enlarged for display.
+
+Section range 1.00 m 
+
+Dome: coarse angular overview. Section: sampled complex-field intensity. Translucent envelopes show individual beam width; they do not encode interference. Axial distances are compressed for display.
+
+OPTICAL SCHEMATIC
+CONTROLLER
+analytic
+manual
+spgd
+connectome
+TARGET
+static
+lissajous
+circle
+fly
+SELECTED CHANNEL
+Choose channel
+CH01
+CH02
+CH03
+CH04
+CH05
+CH06
+CH07
+CH08
+CH09
+CH10
+CH11
+CH12
+CH13
+CH14
+CH15
+CH16
+CH17
+CH18
+CH19
+piston
+0.00
+amplitude
+1.00
+tilt x
+0.00
+tilt y
+0.00
+curvature
+0.00
+
+Edits enable manual offsets for all channels. Analytic target steering remains active.
+
+RESERVOIR
+Train demo 15 gen
+Reset episode
+Active graph: MaleCNS v1.0 · 5,000 neurons / 23,447 connections. 3D shows 4,268 mapped somata.
+Latest headless training run

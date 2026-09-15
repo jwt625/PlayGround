@@ -120,6 +120,7 @@ export function buildRun(spec: RunSpec, target: TargetMotion = targetForTask(spe
 
 export interface TrainingOutcome {
   result: TrainResult;
+  graphInfo: { source: string; nodes: number; edges: number; note: string };
   spec: RunSpec;
   array: ReturnType<typeof createArrayConfig>;
 }
@@ -130,7 +131,7 @@ export function runTraining(
 ): TrainingOutcome {
   const built = buildRun(spec);
   const result = trainReadout(built.env, built.controller, spec.train, onGeneration);
-  return { result, spec, array: built.array };
+  return { result, spec, array: built.array, graphInfo: { source: built.graph.source, nodes: built.graph.n, edges: built.graph.edges.pre.length, note: built.graph.note } };
 }
 
 export interface EvaluationOutcome {

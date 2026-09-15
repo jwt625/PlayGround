@@ -201,9 +201,6 @@ export class Environment {
     let wsum = 0;
     let wx = 0;
     let wy = 0;
-    let peak = 0;
-    let peakSx = 0;
-    let peakSy = 0;
 
     for (let iy = 0; iy < n; iy++) {
       const sy = -half + iy * step;
@@ -214,23 +211,50 @@ export class Environment {
         wsum += intensity;
         wx += sx * intensity;
         wy += sy * intensity;
-        if (intensity > peak) {
-          peak = intensity;
-          peakSx = sx;
-          peakSy = sy;
-        }
       }
     }
     // Intensity exactly at the target direction (analytic, not on the scan grid).
     const targetSample = farFieldAngular(this.array, this.actual, target.sx, target.sy);
     const atTarget = targetSample.re * targetSample.re + targetSample.im * targetSample.im;
 
+    // Second, fine stage. The coarse grid step is ~7 mrad, far larger than the
+    // diffraction spot, so a single-pass centroid is biased by up to half a
+    // step and visibly offsets the measurement plane from the beam. Refine
+    // around the coarse centroid to sub-mrad resolution.
+    const coarseSx = wsum > 0 ? wx / wsum : 0;
+    const coarseSy = wsum > 0 ? wy / wsum : 0;
+    const fineHalf = step > 0 ? step : this.array.steeringLimit * 0.05;
+    const nf = 17;
+    const fstep = nf > 1 ? (2 * fineHalf) / (nf - 1) : 0;
+    let fw = 0;
+    let fwx = 0;
+    let fwy = 0;
+    let fPeak = 0;
+    let fPeakSx = coarseSx;
+    let fPeakSy = coarseSy;
+    for (let iy = 0; iy < nf; iy++) {
+      const sy = coarseSy - fineHalf + iy * fstep;
+      for (let ix = 0; ix < nf; ix++) {
+        const sx = coarseSx - fineHalf + ix * fstep;
+        const u = farFieldAngular(this.array, this.actual, sx, sy);
+        const intensity = u.re * u.re + u.im * u.im;
+        fw += intensity;
+        fwx += sx * intensity;
+        fwy += sy * intensity;
+        if (intensity > fPeak) {
+          fPeak = intensity;
+          fPeakSx = sx;
+          fPeakSy = sy;
+        }
+      }
+    }
+
     return {
-      beamSx: wsum > 0 ? wx / wsum : 0,
-      beamSy: wsum > 0 ? wy / wsum : 0,
-      peak,
-      peakSx,
-      peakSy,
+      beamSx: fw > 0 ? fwx / fw : coarseSx,
+      beamSy: fw > 0 ? fwy / fw : coarseSy,
+      peak: fPeak,
+      peakSx: fPeakSx,
+      peakSy: fPeakSy,
       pib: this.pibBucket(target, this.config.bucketHalfAngle_rad),
       intensityAtTarget: atTarget,
     };

@@ -5,7 +5,7 @@ import { idealSteeringPistons, phaseRmsRad } from "./optics/metrics";
 import { analyticSteeringCommands } from "./controllers/analytic";
 import { runSpgd } from "./controllers/spgd";
 import { makeDirectionObjective } from "./controllers/objective";
-import { Environment, defaultEnvironmentConfig, type Observation } from "./sim/environment";
+import { Environment, defaultEnvironmentConfig, observationToVector, type Observation } from "./sim/environment";
 import { ConnectomeController } from "./sim/connectomeController";
 import { staticTarget, lissajousTarget, flyTarget, circleTarget, type TargetMotion } from "./sim/target";
 import { generateSyntheticGraph } from "./connectome/graph";
@@ -19,6 +19,10 @@ import { MeasurementSection } from "./renderer/section";
 import { Schematic } from "./renderer/schematic";
 import { FlyActors } from "./renderer/flyActors";
 import type { ChannelCommand } from "./optics/types";
+import { NeuralActivityView, type NeuronLocation } from "./renderer/neuralActivity";
+import { graphFromBrowserRun, type BrowserRun } from "./sim/browserRun";
+import { buildHardwareRegistry } from "./renderer/hardware/registry";
+import { HardwareScene } from "./renderer/hardware/hardwareScene";
 
 type Mode = "analytic" | "manual" | "spgd" | "connectome";
 
@@ -55,9 +59,10 @@ class App {
   private readonly scene = createScene($("view") as HTMLCanvasElement, (dt) => this.frame(dt));
   private bench = new OpticalBench(array);
   private dome = new FarFieldDome();
-  private section = new MeasurementSection({ size_m: 3e-3, samples: 72, range_m: 1 });
+  private section = new MeasurementSection({ size_m: 30e-3, samples: 160, range_m: 1 });
   private schematic = new Schematic($("schematic") as HTMLCanvasElement, array);
   private flies = new FlyActors();
+  private hardware = new HardwareScene(buildHardwareRegistry());
   private env: Environment;
   private mode: Mode = "analytic";
   private selected = -1;
@@ -77,18 +82,27 @@ class App {
   private spgdPistons = new Array<number>(array.channelIds.length).fill(0);
   private observation: Observation;
   private lastReward = 0;
-  private targetKind = "static";
+  private targetKind = "fly";
   private note = "";
   private spgdSeed = 1;
   private paused = false;
   private showBeams = true;
   private sectionRange = 1;
+  private savedRun: BrowserRun | null = null;
+  private neuralView: NeuralActivityView | null = null;
+  private replayPolicy: "before" | "after" | null = null;
+  private replayRewardSum = 0;
+  private replayIntensitySum = 0;
+  private replayFinished = false;
+  private replayAccumulator = 0;
+  private singleStep = false;
 
   constructor() {
     this.scene.scene.add(this.bench.group);
     this.scene.scene.add(this.dome.group);
     this.scene.scene.add(this.section.group);
     this.scene.scene.add(this.flies.group);
+    this.scene.scene.add(this.hardware.group);
 
     this.env = new Environment(defaultEnvironmentConfig(array, { target: targetMotionFor(this.targetKind), scanSamples: 15 }));
     this.observation = this.env.observeWithCommands(analyticSteeringCommands(array, this.env.targetDirection()));
@@ -99,7 +113,12 @@ class App {
     this.buildChannelControls();
     this.buildInspectionControls();
     this.setMode("analytic");
-    document.querySelector(`[data-target="static"]`)?.classList.add("active");
+    document.querySelector(`[data-target="fly"]`)?.classList.add("active");
+    // The 3D neuron cloud is always on: load the saved MaleCNS run at startup
+    // and drive the scene with its trained controller.
+    void this.autoLoadRealRun();
+    // Hardware bench is loaded and shown at startup; the checkbox can hide it.
+    void this.enableHardware();
 
     // Expose a small hook for browser tests.
     (window as unknown as { __cbc?: unknown }).__cbc = {
@@ -115,8 +134,24 @@ class App {
         step: this.env.stepIndex,
         sectionRange: this.sectionRange,
         graphSource: this.graph.source,
+        replayPolicy: this.replayPolicy,
+        replayFinished: this.replayFinished,
+        replayMeanIntensity: this.env.stepIndex ? this.replayIntensitySum / this.env.stepIndex : 0,
+        neural3dNodes: this.neuralView?.renderedNodes ?? 0,
+        neural3dEdges: this.neuralView?.renderedEdges ?? 0,
         flyLoaded: this.flies.loaded,
         flyError: this.flies.error,
+        targetDisplay: this.flies.targetDisplayPosition.toArray(),
+        hardwareLoaded: this.hardware.loaded,
+        hardwareVisible: this.hardware.group.visible,
+        hardwareNodes: this.hardware.nodeCount,
+        hardwareCables: this.hardware.cableCount,
+        hardwareAssetInstances: this.hardware.assetInstances,
+        hardwareConnectorInstances: this.hardware.connectorInstances,
+        hardwareComponentKinds: this.hardware.componentKindCount,
+        hardwareFailures: this.hardware.failures.length,
+        hardwareFailureSample: this.hardware.failures[0] ?? null,
+        hardwareError: this.hardware.error,
       }),
       setMode: (m: Mode) => this.setMode(m),
       target: (kind: string) => this.setTarget(kind),
@@ -151,6 +186,116 @@ class App {
       this.spgdPistons.fill(0);
     });
     $("train-btn").addEventListener("click", () => this.trainConnectome());
+    $("load-real-run").addEventListener("click", () => { void this.loadSavedRun(); });
+    $("replay-before").addEventListener("click", () => this.startReplay("before"));
+    $("replay-after").addEventListener("click", () => this.startReplay("after"));
+    $("replay-step").addEventListener("click", () => {this.paused=true;this.singleStep=true;$("pause-btn").textContent="Resume simulation";});
+    $("neural-camera").addEventListener("click", () => { void this.inspectNeurons(); });
+    $("view").addEventListener("pointerup", (event) => {
+      if(!this.neuralView) return;
+      const ray=new THREE.Raycaster(); const box=$("view").getBoundingClientRect();
+      ray.setFromCamera(new THREE.Vector2((event.clientX-box.left)/box.width*2-1,-(event.clientY-box.top)/box.height*2+1),this.scene.camera);
+      const n=this.neuralView.pick(ray); if(n) $("neuron-detail").textContent=`Body ${n.bodyId} · ${n.type ?? "untyped"} · ${n.superclass ?? "unclassified"}`;
+    });
+  }
+
+  private async enableHardware(): Promise<void> {
+    if (!this.hardware.loaded && !this.hardware.error) {
+      this.note = "loading hardware bench…";
+      await this.hardware.load();
+    }
+    this.hardware.setVisible(!this.hardware.error);
+    this.hardware.setSelectedChannel(this.selected >= 0 ? array.channelIds[this.selected] : null);
+    this.note = this.hardware.error
+      ? `hardware bench failed: ${this.hardware.error}`
+      : `hardware bench: ${this.hardware.assetInstances} asset modules, ${this.hardware.connectorInstances} mated connectors, ${this.hardware.cableCount} routed cables (display scale, not solver coords)`;
+  }
+
+  private async loadSavedRun(): Promise<void> {
+    const button=$("load-real-run") as HTMLButtonElement;button.disabled=true;
+    $("replay-status").textContent="Loading saved graph, policies, and soma annotations…";
+    try {
+      const get=async(url:string)=>{const r=await fetch(url);if(!r.ok)throw new Error(`${url}: ${r.status}`);return r.json();};
+      const [run,locations]=await Promise.all([get("/training/scene-run.json"),get("/training/neuron-locations.json")]);
+      this.savedRun=run as BrowserRun;this.graph=graphFromBrowserRun(this.savedRun);
+      if(this.neuralView){this.scene.scene.remove(this.neuralView.group);this.neuralView=null;}
+      this.neuralView=new NeuralActivityView(this.graph,locations.neurons as NeuronLocation[]);this.scene.scene.add(this.neuralView.group);
+      ($("replay-before") as HTMLButtonElement).disabled=false;($("replay-after") as HTMLButtonElement).disabled=false;
+      ($("train-btn") as HTMLButtonElement).disabled=true;
+      $("graph-provenance").textContent=`Active graph: MaleCNS v1.0 · ${this.graph.n.toLocaleString()} neurons / ${this.graph.edges.pre.length.toLocaleString()} connections. Provisional positive signs; generic sensory/readout mapping. 3D shows ${this.neuralView.renderedNodes.toLocaleString()} mapped somata and ${this.neuralView.renderedEdges.toLocaleString()} sampled edges, not neuron skeletons.`;
+      this.startReplay("before");
+    } catch(error) {$("replay-status").textContent=`Run load failed: ${String(error)}`;button.disabled=false;}
+  }
+
+  /**
+   * Load the saved MaleCNS run at startup so the 3D neuron cloud is always on.
+   * Uses the trained ("after") policy live and does not start the auto-pausing
+   * before/after replay; those buttons remain available for comparison.
+   */
+  private async autoLoadRealRun(): Promise<void> {
+    try {
+      const get = async (url: string) => {
+        const r = await fetch(url);
+        if (!r.ok) throw new Error(`${url}: ${r.status}`);
+        return r.json();
+      };
+      const [run, locations] = await Promise.all([
+        get("/training/scene-run.json"),
+        get("/training/neuron-locations.json"),
+      ]);
+      if (this.savedRun) return; // a manual load won the race
+      this.savedRun = run as BrowserRun;
+      this.graph = graphFromBrowserRun(this.savedRun);
+      this.reservoir = new RateReservoir(this.graph, 8, run.reservoir);
+      this.readout = new LinearReadout(array.channelIds.length, this.reservoir.outputCount, run.reservoir.seed);
+      this.readout.setParams(Float64Array.from(run.readouts.after));
+      this.connectome = new ConnectomeController(array, this.reservoir, this.readout);
+      this.neuralView = new NeuralActivityView(this.graph, locations.neurons as NeuronLocation[]);
+      this.scene.scene.add(this.neuralView.group);
+      ($("replay-before") as HTMLButtonElement).disabled = false;
+      ($("replay-after") as HTMLButtonElement).disabled = false;
+      ($("train-btn") as HTMLButtonElement).disabled = true;
+      $("graph-provenance").textContent = `Active graph: MaleCNS v1.0 · ${this.graph.n.toLocaleString()} neurons / ${this.graph.edges.pre.length.toLocaleString()} connections. 3D shows ${this.neuralView.renderedNodes.toLocaleString()} mapped somata.`;
+      $("replay-status").textContent = "Live MaleCNS controller (after training). Use Before/After to replay the fixed evaluation episode.";
+      this.setMode("connectome");
+    } catch (error) {
+      this.note = `saved MaleCNS run unavailable: ${String(error)}`;
+    }
+  }
+
+  /**
+   * Inspect 3D neurons works standalone: if the saved run has not been loaded
+   * yet it loads it first, then focuses the camera on the mapped somata. This
+   * avoids the previous behavior where the camera moved to empty space when no
+   * run was loaded.
+   */
+  private async inspectNeurons(): Promise<void> {
+    if (!this.neuralView) {
+      await this.loadSavedRun();
+    }
+    if (!this.neuralView) return;
+    this.neuralView.group.visible = true;
+    this.scene.camera.position.set(-42, 28, 80);
+    this.scene.controls.target.set(-42, 16, 15);
+    this.scene.controls.update();
+  }
+
+  private startReplay(policy:"before"|"after"):void {
+    if(!this.savedRun)return;
+    const run=this.savedRun;this.replayPolicy=policy;
+    // Recreate reservoir to reset the noise stream, not just neural activities.
+    this.reservoir=new RateReservoir(this.graph,8,run.reservoir);
+    this.readout=new LinearReadout(array.channelIds.length,this.reservoir.outputCount,run.reservoir.seed);
+    this.readout.setParams(Float64Array.from(run.readouts[policy]));
+    this.connectome=new ConnectomeController(array,this.reservoir,this.readout);
+    this.env=new Environment(defaultEnvironmentConfig(array,{...run.spec.environment,target:staticTarget(0,0,1),seed:1}));
+    this.observation=this.env.observeWithCommands(analyticSteeringCommands(array,this.env.targetDirection()));
+    this.replayRewardSum=0;this.replayIntensitySum=0;this.replayFinished=false;this.paused=false;this.replayAccumulator=0;
+    $("pause-btn").textContent="Pause simulation";this.setMode("connectome");
+    $("replay-status").textContent=`${policy === "before" ? "Before training" : "After 40 generations"} · replaying the same 120-step phase-lock episode`;
+    $("replay-before").classList.toggle("active",policy==="before");$("replay-after").classList.toggle("active",policy==="after");
+    this.targetKind="static";
+    document.querySelectorAll<HTMLButtonElement>("#targets button").forEach(b=>b.classList.toggle("active",b.dataset.target==="static"));
   }
 
   private buildInspectionControls(): void {
@@ -161,16 +306,24 @@ class App {
       array: [[20, 16, 32], [0, 0, -5]],
       target: [[30, 20, 135], [0, 0, 95]],
       wiring: [[35, 24, -38], [0, 0, -10]],
+      hardware: [[0, 170, 235], [0, 28, -38]],
     };
     Object.entries(presets).forEach(([name, [position, target]]) => {
       const button = document.createElement("button"); button.textContent = name;
-      button.addEventListener("click", () => { this.scene.camera.position.set(position[0], position[1], position[2]); this.scene.controls.target.set(target[0], target[1], target[2]); this.scene.controls.update(); });
+      button.addEventListener("click", () => {
+        this.scene.camera.position.set(position[0], position[1], position[2]); this.scene.controls.target.set(target[0], target[1], target[2]); this.scene.controls.update();
+        if (name === "array" || name === "wiring") {
+          this.showBeams = false; this.dome.group.visible = false;
+          ($("show-beams") as HTMLInputElement).checked = false;
+          ($("show-dome") as HTMLInputElement).checked = false;
+        }
+      });
       $("cameras").append(button);
     });
     const channelSelect = $("channel-select") as HTMLSelectElement;
     channelSelect.add(new Option("Choose channel", "-1"));
     array.channelIds.forEach((id, i) => channelSelect.add(new Option(id, String(i))));
-    channelSelect.addEventListener("change", () => { this.selected = Number(channelSelect.value); this.bench.setPathHighlight(this.selected); this.syncChannelControls(); });
+    channelSelect.addEventListener("change", () => { this.selected = Number(channelSelect.value); this.bench.setPathHighlight(this.selected); this.hardware.setSelectedChannel(this.selected >= 0 ? array.channelIds[this.selected] : null); this.syncChannelControls(); });
     const toggle = (id: string, change: (checked: boolean) => void) => {
       const input = $(id) as HTMLInputElement; input.addEventListener("change", () => change(input.checked));
     };
@@ -178,6 +331,8 @@ class App {
     toggle("show-section", value => this.section.group.visible = value);
     toggle("show-flies", value => this.flies.group.visible = value);
     toggle("show-beams", value => this.showBeams = value);
+    toggle("show-hardware", value => { if (value) { void this.enableHardware(); } else { this.hardware.setVisible(false); } });
+    this.syncChannelControls();
     const range = $("section-range") as HTMLInputElement;
     range.addEventListener("input", () => { this.sectionRange = Number(range.value); $("section-range-value").textContent = `${this.sectionRange.toFixed(2)} m`; });
     void fetch("/training/latest.json").then(r => { if (!r.ok) throw new Error("No published training result"); return r.json(); }).then(run => {
@@ -240,6 +395,7 @@ class App {
     this.selected = this.selected === index ? -1 : index;
     this.bench.setPathHighlight(this.selected);
     ($( "channel-select") as HTMLSelectElement).value = String(this.selected);
+    this.hardware.setSelectedChannel(this.selected >= 0 ? array.channelIds[this.selected] : null);
     this.syncChannelControls();
   }
 
@@ -251,6 +407,8 @@ class App {
   }
 
   private setTarget(kind: string): void {
+    this.replayPolicy=null;
+    $("replay-status").textContent="Custom target exploration; use Before/After to return to the fixed evaluation episode.";
     this.targetKind = kind;
     this.env = new Environment(defaultEnvironmentConfig(array, { target: targetMotionFor(kind), scanSamples: 15 }));
     this.observation = this.env.observeWithCommands(analyticSteeringCommands(array, this.env.targetDirection()));
@@ -316,12 +474,36 @@ class App {
   }
 
   private frame(dt: number): void {
-    if (this.paused) return;
+    if (this.paused && !this.singleStep) return;
+    if(this.replayPolicy && !this.singleStep){
+      const speed=Number(($("replay-speed") as HTMLSelectElement).value);
+      this.replayAccumulator+=Math.min(dt,.1)*speed;
+      if(this.replayAccumulator<this.env.config.dt_s)return;
+      this.replayAccumulator-=this.env.config.dt_s;
+    }
+    this.singleStep=false;
     const commands = this.currentCommands();
     const result = this.env.step(commands);
     this.observation = result.observation;
     this.lastReward = result.reward;
+    // Keep the always-on neuron cloud alive in every mode. In connectome mode
+    // the controller already steps the reservoir with this observation.
+    if (this.mode !== "connectome") {
+      this.reservoir.step(observationToVector(this.observation));
+    }
+    this.neuralView?.update(this.reservoir.x);
+    if(this.replayPolicy && this.mode === "connectome"){
+      this.replayRewardSum+=result.reward;this.replayIntensitySum+=result.metrics.targetIntensity;
+      const steps=this.env.config.episodeSteps;
+      const mean=this.replayIntensitySum/this.env.stepIndex;
+      $("replay-status").textContent=`${this.replayPolicy} · step ${this.env.stepIndex}/${steps} · mean target intensity ${mean.toFixed(3)}`;
+      if(this.env.stepIndex>=steps){this.replayFinished=true;this.paused=true;$("pause-btn").textContent="Resume simulation";
+        $(this.replayPolicy==="before"?"before-score":"after-score").textContent=`${mean.toFixed(3)} target intensity · mean reward ${(this.replayRewardSum/steps).toFixed(3)}`;
+        $("replay-status").textContent+=" · complete — select the other policy to compare";
+      }
+    }
     this.flies.update(this.env.targetDirection(), Math.min(dt, 0.05));
+    this.hardware.updateMotion(result.actual);
 
     const scan = this.env.scanBeam();
     const centroid = new THREE.Vector3(scan.beamSx, scan.beamSy, Math.sqrt(Math.max(0, 1 - scan.beamSx ** 2 - scan.beamSy ** 2)));
@@ -333,9 +515,12 @@ class App {
       selectedIndex: this.selected,
       beamTarget: centroid.clone().multiplyScalar(DISPLAY.targetDistance),
       showBeams: this.showBeams,
+      beamRange_m: this.sectionRange,
     });
     this.dome.update(array, result.actual, { sx: centroid.x, sy: centroid.y, sz: centroid.z }, { sx: peak.x, sy: peak.y, sz: peak.z });
-    this.section.update(array, result.actual, { sx: centroid.x, sy: centroid.y, sz: centroid.z }, this.sectionRange, targetPos);
+    // The measurement plane is fixed at the nominal boresight, not swept with
+    // the beam centroid: the steering range fits within the 30 mm span.
+    this.section.update(array, result.actual, { sx: 0, sy: 0, sz: 1 }, this.sectionRange, targetPos);
     this.schematic.update(result.actual, this.selected, this.mode);
     this.drawNeural();
     this.updateHud(result.metrics, result.reward);

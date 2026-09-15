@@ -120,6 +120,9 @@
       #training-curve {width:100%;} summary {cursor:pointer;margin-top:12px;color:#79c0ff;}
       button:hover {border-color:#79c0ff;} #panel {width:300px;}
       @media(max-width:750px){#hud{max-width:180px;min-width:0;font-size:10px;}#panel{width:230px;top:auto;bottom:8px;max-height:48vh;}}
+      #run-comparison {position:fixed;left:12px;bottom:12px;width:325px;padding:12px;background:rgba(13,17,23,.94);border:1px solid #35596a;border-radius:8px;font-size:12px;max-height:42vh;overflow:auto;}
+      #run-comparison h2 {font-size:13px;margin:0 0 8px;color:#80e8de;} #run-comparison p{line-height:1.5;} #load-real-run{width:100%;background:#17554f;} button:disabled{opacity:.5;cursor:default;}
+      @media(max-width:750px){#run-comparison{width:200px;max-height:30vh;bottom:auto;top:255px;}}
     </style>
   </head>
   <body>
@@ -133,12 +136,24 @@
       <div class="metric"><span>PIB</span><span id="m-pib">0</span></div>
       <div class="metric"><span>normalized peak</span><span id="m-peak">0</span></div>
       <div class="metric"><span>pointing (urad)</span><span id="m-point">0</span></div>
-      <div class="metric"><span>phase RMS (rad)</span><span id="m-phirms">0</span></div>
+      <div class="metric"><span>raw phase RMS (rad)</span><span id="m-phirms">0</span></div>
       <div class="metric"><span>connectome activity</span><span id="m-neural">0</span></div>
       <div class="metric"><span>target / beam x</span><span id="m-tx">0</span></div>
       <div class="metric"><span>target / beam y</span><span id="m-ty">0</span></div>
       <div class="hint" id="m-note"></div>
     </div>
+    <section id="run-comparison">
+      <h2>Saved MaleCNS training · before / after</h2>
+      <button id="load-real-run">Load real training run + 3D neurons</button>
+      <div class="mode-buttons" style="margin-top:8px"><button id="replay-before" disabled>Before training</button><button id="replay-after" disabled>After training</button></div>
+      <p id="replay-status">The live scene starts in analytic mode. Load the saved run to see its actual controller and neuron activity.</p>
+      <div class="hint">Before: <span id="before-score">not played</span><br>After: <span id="after-score">not played</span></div>
+      <div class="mode-buttons"><button id="neural-camera">Inspect 3D neurons</button><button id="replay-step">Single step</button></div>
+      <label class="hint" for="replay-speed">Replay speed</label><select id="replay-speed"><option value="0.25">¼ speed · inspect activity</option><option value="0.5">½ speed</option><option value="1">1× simulation time</option></select>
+      <p class="hint" id="neuron-detail">Cyan: positive activation · amber: negative · brightness: magnitude. Click a soma for its body ID.</p>
+      <p class="hint">Anatomical source: <a style="color:#80e8de" href="https://male-cns.janelia.org/download/" target="_blank" rel="noreferrer">MaleCNS collaboration · CC BY 4.0</a></p>
+      <details><summary>Objective and training scope</summary><p class="hint">Mean over 120 steps: normalized target intensity + 0.25 × PIB − 0.1 × pointing error (rad) − 0.001 × mean squared piston change. PIB bucket: 1 mrad. Evolution strategies train 1,235 readout parameters; connectivity is fixed. Analytic steering assistance. Initial/final policies only; intermediate policies were not saved.</p></details>
+    </section>
     <div id="panel">
       <h2>Inspect scene</h2>
       <div class="mode-buttons" id="cameras"></div>
@@ -148,9 +163,12 @@
         <label><input id="show-dome" type="checkbox" checked> Dome</label>
         <label><input id="show-section" type="checkbox" checked> Section</label>
         <label><input id="show-flies" type="checkbox" checked> Flies</label>
+        <label><input id="show-hardware" type="checkbox" checked> Hardware bench (v2)</label>
       </div>
+      <p class="hint">Hardware bench is an opt-in illustrative display layer (separate display scale; not solver coordinates). Fly is enlarged for display.</p>
       <label for="section-range">Section range <span id="section-range-value">1.00 m</span></label>
       <input id="section-range" aria-label="Section range" type="range" min="0.2" max="2" value="1" step="0.05">
+      <p class="hint">Dome: coarse angular overview. Section: sampled complex-field intensity. Translucent envelopes show individual beam width; they do not encode interference. Axial distances are compressed for display.</p>
       <h2>Optical schematic</h2>
       <canvas id="schematic"></canvas>
       <h2>Controller</h2>
@@ -167,7 +185,7 @@
         <button id="train-btn">Train demo 15 gen</button>
         <button id="reset-btn">Reset episode</button>
       </div>
-      <div class="hint" style="margin-top: 6px">
+      <div class="hint" id="graph-provenance" style="margin-top: 6px">
         Browser neural mode uses a synthetic 240-neuron reservoir. Headless MaleCNS training results below are separate; they are not loaded into this scene.
       </div>
       <details><summary>Latest headless training run</summary>

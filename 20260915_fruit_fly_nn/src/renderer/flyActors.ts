@@ -1,32 +1,41 @@
 import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { clone as skeletonClone } from "three/examples/jsm/utils/SkeletonUtils.js";
+import { DISPLAY } from "./scene";
 
 /**
  * Learner and target fly instances using the converted articulated FlyBody GLB
- * (assets/generated/flybody/flybody-articulated.glb, meters, Y-up). The wing
- * clip is an illustrative display loop, not measured flight kinematics.
+ * (assets/generated/flybody/flybody-articulated.glb, meters, Y-up).
  *
- * Loading is non-blocking; a procedural placeholder is shown until the GLB is
- * ready so the simulation never depends on asset availability.
+ * - The learner (neural controller) sits fixed beside the console in its rest
+ *   pose and does NOT flap: it is not an animated locomotion demo.
+ * - The target fly carries the illustrative wing clip and moves across the
+ *   displayed target plane as the commanded target changes.
+ *
+ * The target plane is axially compressed for presentation while its transverse
+ * extent uses DISPLAY.scale, matching the beam envelopes in bench.ts. Target
+ * motion therefore stays where the beams converge.
  */
 const FLY_URL = new URL("../../assets/generated/flybody/flybody-articulated.glb", import.meta.url).href;
-const TARGET_DISTANCE = 70;
+const TARGET_RANGE_M = 1; // fixed-distance training plane
+const FLY_DISPLAY_LENGTH = 16;
+const LEARNER_POSITION = new THREE.Vector3(-30, -18, -6);
 
 export class FlyActors {
   readonly group = new THREE.Group();
   private learner: THREE.Object3D;
   private target: THREE.Object3D;
-  private mixers: THREE.AnimationMixer[] = [];
+  private targetMixer: THREE.AnimationMixer | null = null;
   private clips: THREE.AnimationClip[] = [];
+  private previousTarget = new THREE.Vector3();
   loaded = false;
   error: string | null = null;
 
   constructor() {
     this.learner = makePlaceholder(0x79c0ff);
     this.target = makePlaceholder(0xffa657);
-    this.learner.position.set(-26, -16, -6);
-    this.target.position.set(0, 0, TARGET_DISTANCE);
+    this.learner.position.copy(LEARNER_POSITION);
+    this.target.position.set(0, 0, DISPLAY.targetDistance);
     this.group.add(this.learner, this.target);
     void this.load();
   }
@@ -41,8 +50,7 @@ export class FlyActors {
       const size = new THREE.Vector3();
       box.getSize(size);
       const longest = Math.max(size.x, size.y, size.z) || 1;
-      const desired = 28; // display units
-      const scale = desired / longest;
+      const scale = FLY_DISPLAY_LENGTH / longest;
       this.clips = gltf.animations;
 
       const build = (): THREE.Object3D => {
@@ -54,16 +62,16 @@ export class FlyActors {
       this.group.remove(this.learner, this.target);
       this.learner = build();
       this.target = build();
-      this.learner.position.set(-26, -16, -6);
-      this.target.position.set(0, 0, TARGET_DISTANCE);
+      this.learner.position.copy(LEARNER_POSITION);
+      this.learner.rotation.y = Math.PI / 2; // face the array/console
+      this.target.position.set(0, 0, DISPLAY.targetDistance);
+      this.previousTarget.copy(this.target.position);
       this.group.add(this.learner, this.target);
 
-      for (const obj of [this.learner, this.target]) {
-        if (this.clips.length > 0) {
-          const mixer = new THREE.AnimationMixer(obj);
-          this.clips.forEach((clip) => mixer.clipAction(clip).play());
-          this.mixers.push(mixer);
-        }
+      // Only the target flaps. The learner keeps the GLB rest pose.
+      if (this.clips.length > 0) {
+        this.targetMixer = new THREE.AnimationMixer(this.target);
+        this.clips.forEach((clip) => this.targetMixer!.clipAction(clip).play());
       }
       this.loaded = true;
     } catch (err) {
@@ -72,13 +80,25 @@ export class FlyActors {
   }
 
   update(targetDir: { sx: number; sy: number; sz: number }, dt_s: number): void {
-    this.target.position
-      .set(targetDir.sx, targetDir.sy, targetDir.sz)
-      .multiplyScalar(TARGET_DISTANCE);
-    // Gentle time-scaled wing motion; not tied to physics.
-    for (let i = 0; i < this.mixers.length; i++) {
-      this.mixers[i].update(dt_s * (i === 1 ? 1.35 : 1));
+    const tx = targetDir.sx * TARGET_RANGE_M * DISPLAY.scale;
+    const ty = targetDir.sy * TARGET_RANGE_M * DISPLAY.scale;
+    const tz = DISPLAY.targetDistance * TARGET_RANGE_M;
+    this.target.position.set(tx, ty, tz);
+
+    // Face the direction of travel (model forward treated as +Z).
+    const dx = tx - this.previousTarget.x;
+    const dz = tz - this.previousTarget.z;
+    if (dx * dx + dz * dz > 1e-6) {
+      this.target.rotation.y = Math.atan2(dx, dz);
     }
+    this.previousTarget.set(tx, ty, tz);
+
+    this.targetMixer?.update(dt_s);
+  }
+
+  /** Display-space position of the moving target fly (for tests/telemetry). */
+  get targetDisplayPosition(): THREE.Vector3 {
+    return this.target.position;
   }
 }
 

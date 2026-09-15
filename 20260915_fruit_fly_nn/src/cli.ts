@@ -122,7 +122,7 @@ function commandTrain(args: Record<string, string>): void {
   writeJson(join(outDir, "run-spec.json"), spec);
   const progress: unknown[] = [];
   console.log(`[train] task=${spec.task} out=${outDir}`);
-  console.log(`[train] reservoir n=${spec.reservoir.n} degree=${spec.reservoir.avgDegree}`);
+  console.log(`[train] reservoir n=${spec.malecns?.maxNeurons ?? spec.reservoir.n} source=${spec.malecns ? "malecns subset" : "configured reservoir"}`);
   console.log(`[train] generations=${spec.train.generations ?? "default"}`);
 
   const outcome = runTraining(spec, (stats) => {
@@ -165,6 +165,9 @@ function commandTrain(args: Record<string, string>): void {
     join(outDir, "manifest.json"),
     JSON.stringify(
       {
+        graph: outcome.graphInfo,
+        initialFitness: result.initialFitness,
+        finalFitness: result.finalFitness,
         task: spec.task,
         createdAt: new Date().toISOString(),
         node: process.version,
