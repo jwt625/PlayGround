@@ -1,0 +1,14 @@
+{
+  "sameArray": {
+    "meanReward": 0.8882139563301422,
+    "meanStrehl": 0.7295526751919991,
+    "meanPointing_rad": 0.0021767240148380124
+  },
+  "transferToNewArrays": {
+    "meanReward": 0.7419240411678789,
+    "meanStrehl": 0.5978806007226423,
+    "meanPointing_rad": 0.0021314613491229826
+  },
+  "randomStrehlBaseline": 0.05539912012328583,
+  "note": "sameArray is the training hidden-error realization; transfer uses unseen realizations. A large gap means per-array memorization, not a general policy."
+}

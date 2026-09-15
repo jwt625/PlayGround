@@ -1,0 +1,17 @@
+{
+  "array": "default-19ch",
+  "grid": "256x256 dx=0.00002",
+  "fastFieldSamplesPerSecond": 1285391.9934647733,
+  "closedLoopStepsPerSecond": 3798.538147787976,
+  "meanReward": 0.25853592384392526,
+  "reservoir": "synthetic-random",
+  "malecns": {
+    "nodes": 5000,
+    "edges": 22427,
+    "loadMs": 162.51808299999993,
+    "reservoirStepsPerSecond": 6960.980882953786,
+    "rssMB": 693
+  },
+  "node": "v23.7.0",
+  "hardware": "darwin arm64"
+}

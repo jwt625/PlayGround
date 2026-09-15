@@ -1,0 +1,33 @@
+{
+  "task": "phase_lock",
+  "createdAt": "2026-09-15T17:26:24.829Z",
+  "node": "v23.7.0",
+  "array": {
+    "id": "default-19ch"
+  },
+  "reservoir": {
+    "n": 600,
+    "avgDegree": 10,
+    "outputCount": 64,
+    "seed": 12345,
+    "noise": 0.01
+  },
+  "environment": {
+    "episodeSteps": 80,
+    "hiddenPistonScale_rad": 1,
+    "hiddenGainScale": 0.1,
+    "scanSamples": 13,
+    "dt_s": 0.016666666666666666
+  },
+  "train": {
+    "generations": 20,
+    "population": 12
+  },
+  "connectomeSource": "malecns-v1.0-cache-subset",
+  "malecns": {
+    "maxNeurons": 3000,
+    "seed": 12345,
+    "maxEdges": 200000
+  },
+  "note": "Synthetic reservoir unless a connectome JSON or --malecns cache was supplied. MaleCNS subset uses all-positive placeholder signs; transmitter signs TODO."
+}
