@@ -1,0 +1,727 @@
+{
+  "upstream": "https://github.com/TuragaLab/flybody",
+  "revision": "d015e9bfe441bd90ae431bac24c55cb74bdbce26",
+  "status": "source collected; browser conversion and visual validation pending",
+  "files": [
+    {
+      "path": "assets/vendor/flybody/LICENSE",
+      "bytes": 11357,
+      "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4"
+    },
+    {
+      "path": "assets/vendor/flybody/UPSTREAM_README.md",
+      "bytes": 6615,
+      "sha256": "de77eb75185842f298e6dad6f26dd372ff1555465dd16f759d8b20e8a0a516f0"
+    },
+    {
+      "path": "assets/vendor/flybody/UPSTREAM_make_fruitfly.py",
+      "bytes": 52899,
+      "sha256": "6d9fe6ba01219c52c0b484415b5f589742e1b13aee90858f28bf134eb5e9cf05"
+    },
+    {
+      "path": "assets/vendor/flybody/assets/abdomen_1_body.obj",
+      "bytes": 787312,
+      "sha256": "b2abf8b9b30827e7d9c685a71e1f9a75c6141cf91a62fff925ce5d4e2265d77f",
+      "vertices": 4374,
+      "faces": 1458,
+      "triangles_if_fan_triangulated": 1458
+    },
+    {
+      "path": "assets/vendor/flybody/assets/abdomen_1_lower.obj",
+      "bytes": 257805,
+      "sha256": "6ef6434b53b205a11afa6a7ddf308a82271f2b37eda2a0294e9002d4c9b1480d",
+      "vertices": 1440,
+      "faces": 480,
+      "triangles_if_fan_triangulated": 480
+    },
+    {
+      "path": "assets/vendor/flybody/assets/abdomen_2_body.obj",
+      "bytes": 331650,
+      "sha256": "36f8551badf82699818f53f941eb3600b2d79b35f149f7e65b533942a31a6370",
+      "vertices": 1860,
+      "faces": 620,
+      "triangles_if_fan_triangulated": 620
+    },
+    {
+      "path": "assets/vendor/flybody/assets/abdomen_2_lower.obj",
+      "bytes": 274657,
+      "sha256": "669ecb6d178583084119c77928806b688080d5e1e674f634407819335f06c2af",
+      "vertices": 1536,
+      "faces": 512,
+      "triangles_if_fan_triangulated": 512
+    },
+    {
+      "path": "assets/vendor/flybody/assets/abdomen_3_body.obj",
+      "bytes": 398902,
+      "sha256": "4b1f96ca00c052c616ade8ddba493698a603169d7c23fba2045cd5fe087d2368",
+      "vertices": 2244,
+      "faces": 748,
+      "triangles_if_fan_triangulated": 748
+    },
+    {
+      "path": "assets/vendor/flybody/assets/abdomen_3_lower.obj",
+      "bytes": 324270,
+      "sha256": "8d673599ab4fe00e29520f4a9645bb71aac13395c596ed6efdff756673c92d3d",
+      "vertices": 1824,
+      "faces": 608,
+      "triangles_if_fan_triangulated": 608
+    },
+    {
+      "path": "assets/vendor/flybody/assets/abdomen_4_body.obj",
+      "bytes": 397790,
+      "sha256": "4e4d7303cb9ee3b50bccf760372991de11b38c36745f2f48a1ca6bf68d2721e4",
+      "vertices": 2244,
+      "faces": 748,
+      "triangles_if_fan_triangulated": 748
+    },
+    {
+      "path": "assets/vendor/flybody/assets/abdomen_4_lower.obj",
+      "bytes": 323970,
+      "sha256": "1564d59e1e0da9e5c6aba3f641dff3b4be20a50a67bcedcab32e0ca17380a0b9",
+      "vertices": 1824,
+      "faces": 608,
+      "triangles_if_fan_triangulated": 608
+    },
+    {
+      "path": "assets/vendor/flybody/assets/abdomen_5_body.obj",
+      "bytes": 388232,
+      "sha256": "a6e44333d3af208b4048ce607ff844616a96edb4b393cecc7078374f71888de0",
+      "vertices": 2196,
+      "faces": 732,
+      "triangles_if_fan_triangulated": 732
+    },
+    {
+      "path": "assets/vendor/flybody/assets/abdomen_5_lower.obj",
+      "bytes": 349771,
+      "sha256": "166b42d02c2b134814ceec44651fed6c2a371e9deb90c6df5c970bf38a874419",
+      "vertices": 1968,
+      "faces": 656,
+      "triangles_if_fan_triangulated": 656
+    },
+    {
+      "path": "assets/vendor/flybody/assets/abdomen_6_body.obj",
+      "bytes": 397553,
+      "sha256": "47a1634715d18bbe774db0f67b41a5fca5a586ec5ac0d9e1e3bb7ffd734c4565",
+      "vertices": 2244,
+      "faces": 748,
+      "triangles_if_fan_triangulated": 748
+    },
+    {
+      "path": "assets/vendor/flybody/assets/abdomen_6_lower.obj",
+      "bytes": 323874,
+      "sha256": "9abd1b7fefefbb500cf8fcb9f0d03366929d681c9381b3da0f8a0160cbc91415",
+      "vertices": 1824,
+      "faces": 608,
+      "triangles_if_fan_triangulated": 608
+    },
+    {
+      "path": "assets/vendor/flybody/assets/abdomen_7_body.obj",
+      "bytes": 397608,
+      "sha256": "d11f701e20cfb2481fe9afead4f3dc0fc9cd4571529f287847c70509a31762bd",
+      "vertices": 2244,
+      "faces": 748,
+      "triangles_if_fan_triangulated": 748
+    },
+    {
+      "path": "assets/vendor/flybody/assets/abdomen_7_lower.obj",
+      "bytes": 323778,
+      "sha256": "70d46067d1a7ad757fcb8487c6830ef6fa98de7b6549d5ae6675b33380021de6",
+      "vertices": 1824,
+      "faces": 608,
+      "triangles_if_fan_triangulated": 608
+    },
+    {
+      "path": "assets/vendor/flybody/assets/abdomen_8_body.obj",
+      "bytes": 902381,
+      "sha256": "6ca5cd83a307f066db7b9ac1c976ad0526b87ada9f630e67356682a962386408",
+      "vertices": 5058,
+      "faces": 1686,
+      "triangles_if_fan_triangulated": 1686
+    },
+    {
+      "path": "assets/vendor/flybody/assets/antenna_left_black.obj",
+      "bytes": 853134,
+      "sha256": "685ef74b39ef6c8374f1ed49f3f845fbe66e169cbb572d2958809b6223a8b6e2",
+      "vertices": 5160,
+      "faces": 1720,
+      "triangles_if_fan_triangulated": 1720
+    },
+    {
+      "path": "assets/vendor/flybody/assets/antenna_left_body.obj",
+      "bytes": 2058111,
+      "sha256": "39105bc670a8a39e03c15a67fb441b833daa00cf5ed6d55d30dbcd3043b3120c",
+      "vertices": 12384,
+      "faces": 4128,
+      "triangles_if_fan_triangulated": 4128
+    },
+    {
+      "path": "assets/vendor/flybody/assets/antenna_right_black.obj",
+      "bytes": 848016,
+      "sha256": "528b092ffa5c27670408172d79752d5a63f74812a7210ce59cbf6e1214ab3f67",
+      "vertices": 5160,
+      "faces": 1720,
+      "triangles_if_fan_triangulated": 1720
+    },
+    {
+      "path": "assets/vendor/flybody/assets/antenna_right_body.obj",
+      "bytes": 2045592,
+      "sha256": "d70e06616ac82bd64573073f92bf4b6ed838865a1041ddea4b2cdf8e1d9194c8",
+      "vertices": 12384,
+      "faces": 4128,
+      "triangles_if_fan_triangulated": 4128
+    },
+    {
+      "path": "assets/vendor/flybody/assets/blender_model/drosophila.blend",
+      "bytes": 20751800,
+      "sha256": "88c13449572924557ee77e3da2a318643b8a987ac1c7a60b77ed164faa29bead"
+    },
+    {
+      "path": "assets/vendor/flybody/assets/coxa_T1_left_body.obj",
+      "bytes": 1105100,
+      "sha256": "30c1ff292e34e2b20421f023976f132d5eac26d01216bd8fd97e289d89aa1b75",
+      "vertices": 6696,
+      "faces": 2232,
+      "triangles_if_fan_triangulated": 2232
+    },
+    {
+      "path": "assets/vendor/flybody/assets/coxa_T1_right_body.obj",
+      "bytes": 1102424,
+      "sha256": "4b63ad8ed672c08b1ec6faeb27b0b693af4c96b808a8892285aa86e58469c592",
+      "vertices": 6696,
+      "faces": 2232,
+      "triangles_if_fan_triangulated": 2232
+    },
+    {
+      "path": "assets/vendor/flybody/assets/coxa_T2_left_body.obj",
+      "bytes": 1250039,
+      "sha256": "51e7c30d788783c79bde8ba7afdc2c14040ce66fb6bb08d45e784273ea0c3937",
+      "vertices": 7644,
+      "faces": 2548,
+      "triangles_if_fan_triangulated": 2548
+    },
+    {
+      "path": "assets/vendor/flybody/assets/coxa_T2_right_body.obj",
+      "bytes": 1244997,
+      "sha256": "965687d9a0bce1511c0d9af1e3f928eb41f904c44aeef38a6b334f42edefee41",
+      "vertices": 7644,
+      "faces": 2548,
+      "triangles_if_fan_triangulated": 2548
+    },
+    {
+      "path": "assets/vendor/flybody/assets/coxa_T3_left_body.obj",
+      "bytes": 865841,
+      "sha256": "ccfd14f407ab665047251f1b88010b96c997797e05c4e1bf51dec125ed2a0e03",
+      "vertices": 5796,
+      "faces": 1932,
+      "triangles_if_fan_triangulated": 1932
+    },
+    {
+      "path": "assets/vendor/flybody/assets/coxa_T3_right_body.obj",
+      "bytes": 859909,
+      "sha256": "013557a9fda80ee50dd530cf90fa42a3840c620b5b884c690a1f6eb6bafd1a86",
+      "vertices": 5796,
+      "faces": 1932,
+      "triangles_if_fan_triangulated": 1932
+    },
+    {
+      "path": "assets/vendor/flybody/assets/femur_T1_left_body.obj",
+      "bytes": 1154869,
+      "sha256": "88dd01b942a309e85329dc968862d6d6bb3db4ff08a5ec3ab0be7579841b9561",
+      "vertices": 6444,
+      "faces": 2148,
+      "triangles_if_fan_triangulated": 2148
+    },
+    {
+      "path": "assets/vendor/flybody/assets/femur_T1_right_body.obj",
+      "bytes": 1140432,
+      "sha256": "45d3a2175bfd449058bfef74efd4e0eeba785c3bf2ce2979f4598a388aeb1c4a",
+      "vertices": 6444,
+      "faces": 2148,
+      "triangles_if_fan_triangulated": 2148
+    },
+    {
+      "path": "assets/vendor/flybody/assets/femur_T2_left_body.obj",
+      "bytes": 1614762,
+      "sha256": "fae05c5dde22b6ade379196659e39908f6f6dfae37e1f734f89daa7291fbad6e",
+      "vertices": 8928,
+      "faces": 2976,
+      "triangles_if_fan_triangulated": 2976
+    },
+    {
+      "path": "assets/vendor/flybody/assets/femur_T2_right_body.obj",
+      "bytes": 1605906,
+      "sha256": "bac7f1c059d638095d365cc0217eb59c7d8d55745435bff3f1b3b8fb1b877e4e",
+      "vertices": 8928,
+      "faces": 2976,
+      "triangles_if_fan_triangulated": 2976
+    },
+    {
+      "path": "assets/vendor/flybody/assets/femur_T3_left_body.obj",
+      "bytes": 1652601,
+      "sha256": "6f808fdd62673962a4f32cfa37f893e277bd22c91f42592670115d58d3784c73",
+      "vertices": 9216,
+      "faces": 3072,
+      "triangles_if_fan_triangulated": 3072
+    },
+    {
+      "path": "assets/vendor/flybody/assets/femur_T3_right_body.obj",
+      "bytes": 1640717,
+      "sha256": "cb156e6bc4920163ebb52b7a45a2e56173f98bb2eb6a1e67b08677305f5ababe",
+      "vertices": 9216,
+      "faces": 3072,
+      "triangles_if_fan_triangulated": 3072
+    },
+    {
+      "path": "assets/vendor/flybody/assets/floor.xml",
+      "bytes": 572,
+      "sha256": "1490751ff170d089b8882aa4972778b64bcf56f6d39b0e87029156dcf0452019"
+    },
+    {
+      "path": "assets/vendor/flybody/assets/fruitfly.xml",
+      "bytes": 65787,
+      "sha256": "d14946fd0311025ecca70c8eeb5de80e1fe18700d3072be37ecbb18d33d80fd8"
+    },
+    {
+      "path": "assets/vendor/flybody/assets/haltere_left_body.obj",
+      "bytes": 653095,
+      "sha256": "728aa62e18e089692c39dae8d45bda45680bd8c6ce2c6c6aef6abb282b9691fc",
+      "vertices": 3744,
+      "faces": 1248,
+      "triangles_if_fan_triangulated": 1248
+    },
+    {
+      "path": "assets/vendor/flybody/assets/haltere_right_body.obj",
+      "bytes": 649901,
+      "sha256": "a7d7ab9b1462f5295e5212ff3f30ccee2c96fed1836319cebe095b0c71af0941",
+      "vertices": 3744,
+      "faces": 1248,
+      "triangles_if_fan_triangulated": 1248
+    },
+    {
+      "path": "assets/vendor/flybody/assets/haustellum_black.obj",
+      "bytes": 1324760,
+      "sha256": "ba122d45bfbc09dc18bfab42f8fda8d5056e05ee719e199c5a32b8aa6bd8fe6c",
+      "vertices": 7920,
+      "faces": 2640,
+      "triangles_if_fan_triangulated": 2640
+    },
+    {
+      "path": "assets/vendor/flybody/assets/haustellum_body.obj",
+      "bytes": 1869810,
+      "sha256": "33a7c2f675418396461b1b21a4e1d2471a4a3b9ead58eb58cfe1c0863f24cfee",
+      "vertices": 10992,
+      "faces": 3664,
+      "triangles_if_fan_triangulated": 3664
+    },
+    {
+      "path": "assets/vendor/flybody/assets/head_black.obj",
+      "bytes": 12364825,
+      "sha256": "3ee34824c8d9427bf6b55a68aa655ce9ac767ef083ca224740ca8c34f2722f3a",
+      "vertices": 71940,
+      "faces": 23980,
+      "triangles_if_fan_triangulated": 23980
+    },
+    {
+      "path": "assets/vendor/flybody/assets/head_body.obj",
+      "bytes": 6161382,
+      "sha256": "d11ad6a8e1956251e1326118a88323909833022f7a99c17e5b6534f3b06fc0f6",
+      "vertices": 35880,
+      "faces": 11960,
+      "triangles_if_fan_triangulated": 11960
+    },
+    {
+      "path": "assets/vendor/flybody/assets/head_ocelli.obj",
+      "bytes": 6158153,
+      "sha256": "848e452df8102c3d8efe0774d7653678ac26e1ca158b43db0a1c6451226f9870",
+      "vertices": 35712,
+      "faces": 11904,
+      "triangles_if_fan_triangulated": 11904
+    },
+    {
+      "path": "assets/vendor/flybody/assets/head_red.obj",
+      "bytes": 31095839,
+      "sha256": "d5e71663e2e94d16cb0941ebc86717ac67b6758fbec5c34be6fa6e221dbdc649",
+      "vertices": 177912,
+      "faces": 59304,
+      "triangles_if_fan_triangulated": 59304
+    },
+    {
+      "path": "assets/vendor/flybody/assets/labrum_left_lower.obj",
+      "bytes": 501599,
+      "sha256": "f74a0c1ebbc87f331c1489696f91ef2a30e759491bfa89fb75d2ae805a92faef",
+      "vertices": 2880,
+      "faces": 960,
+      "triangles_if_fan_triangulated": 960
+    },
+    {
+      "path": "assets/vendor/flybody/assets/labrum_right_lower.obj",
+      "bytes": 515939,
+      "sha256": "52b9580c79ba48c6a76c8d749d26dd5128e605b65c4f4a7e6e48d93b8ef565c8",
+      "vertices": 2880,
+      "faces": 960,
+      "triangles_if_fan_triangulated": 960
+    },
+    {
+      "path": "assets/vendor/flybody/assets/rostrum_body.obj",
+      "bytes": 2118298,
+      "sha256": "fee573751b7287681fbf8feb752b4c8b94860cf39fb66cd970740385f7c8e52b",
+      "vertices": 12684,
+      "faces": 4228,
+      "triangles_if_fan_triangulated": 4228
+    },
+    {
+      "path": "assets/vendor/flybody/assets/rostrum_bristle-brown.obj",
+      "bytes": 1549365,
+      "sha256": "87da480fa50150977f1058725b87d91faf8e38441ed6508be8fe9803f88f7413",
+      "vertices": 9240,
+      "faces": 3080,
+      "triangles_if_fan_triangulated": 3080
+    },
+    {
+      "path": "assets/vendor/flybody/assets/tarsal_claw_T1_left_brown.obj",
+      "bytes": 798635,
+      "sha256": "ea38ac4fbee2184ad0a4f35fd542df5ded7e6dd6ff1c344b02438ddc506b2ae0",
+      "vertices": 4728,
+      "faces": 1576,
+      "triangles_if_fan_triangulated": 1576
+    },
+    {
+      "path": "assets/vendor/flybody/assets/tarsal_claw_T1_right_brown.obj",
+      "bytes": 822582,
+      "sha256": "62af3faf65ebd70ab8bcdba2b2c34bef402cce056dc0fbdbbacac4a4c1a88c44",
+      "vertices": 4728,
+      "faces": 1576,
+      "triangles_if_fan_triangulated": 1576
+    },
+    {
+      "path": "assets/vendor/flybody/assets/tarsal_claw_T2_left_brown.obj",
+      "bytes": 842537,
+      "sha256": "603c6a11072643b366535a3ed1b831735cdb128df25fd3467b20440a96f296d3",
+      "vertices": 4968,
+      "faces": 1656,
+      "triangles_if_fan_triangulated": 1656
+    },
+    {
+      "path": "assets/vendor/flybody/assets/tarsal_claw_T2_right_brown.obj",
+      "bytes": 868092,
+      "sha256": "b568c7f9c67959b3f3d6fc832ad735b6626530b7e136f027cde1a4855a4977ca",
+      "vertices": 4968,
+      "faces": 1656,
+      "triangles_if_fan_triangulated": 1656
+    },
+    {
+      "path": "assets/vendor/flybody/assets/tarsal_claw_T3_left_brown.obj",
+      "bytes": 910050,
+      "sha256": "2d44246c00c36d6320f7add8552fa0a7bd6e55bf9250a1f5792d4c3125278ed2",
+      "vertices": 5448,
+      "faces": 1816,
+      "triangles_if_fan_triangulated": 1816
+    },
+    {
+      "path": "assets/vendor/flybody/assets/tarsal_claw_T3_right_brown.obj",
+      "bytes": 947595,
+      "sha256": "aec466c50c5f52943c6d72416e4af323a92d778a25c621cec48214c70e089f4b",
+      "vertices": 5448,
+      "faces": 1816,
+      "triangles_if_fan_triangulated": 1816
+    },
+    {
+      "path": "assets/vendor/flybody/assets/tarsus_T1_1_left_body.obj",
+      "bytes": 345465,
+      "sha256": "0ca608bb4de12a51b7e69b92244f3ccc1c37ca562fedf1a6a1ad48c3c3c62013",
+      "vertices": 1968,
+      "faces": 656,
+      "triangles_if_fan_triangulated": 656
+    },
+    {
+      "path": "assets/vendor/flybody/assets/tarsus_T1_1_right_body.obj",
+      "bytes": 349162,
+      "sha256": "ed1020232748ec3741157af4a9d49a4ee1073f2818a37c4d097ae9a99f3dd1dc",
+      "vertices": 1968,
+      "faces": 656,
+      "triangles_if_fan_triangulated": 656
+    },
+    {
+      "path": "assets/vendor/flybody/assets/tarsus_T1_2_left_body.obj",
+      "bytes": 312982,
+      "sha256": "84d42548a63c20cc83ab751e605633b710af4bae04c29d32e9d851a1c67e889f",
+      "vertices": 1776,
+      "faces": 592,
+      "triangles_if_fan_triangulated": 592
+    },
+    {
+      "path": "assets/vendor/flybody/assets/tarsus_T1_2_right_body.obj",
+      "bytes": 316628,
+      "sha256": "e17d74c8c4ea3bb2f4142855f6b90c263e327141dde64941b0d6bb128874d002",
+      "vertices": 1776,
+      "faces": 592,
+      "triangles_if_fan_triangulated": 592
+    },
+    {
+      "path": "assets/vendor/flybody/assets/tarsus_T1_3_left_body.obj",
+      "bytes": 313430,
+      "sha256": "98b9fb8059491b075d832cbc593df9b12d12e1ccffca350001c679146ce0dc4b",
+      "vertices": 1776,
+      "faces": 592,
+      "triangles_if_fan_triangulated": 592
+    },
+    {
+      "path": "assets/vendor/flybody/assets/tarsus_T1_3_right_body.obj",
+      "bytes": 317108,
+      "sha256": "9be16f63f33ffb1a2f693236fbb80178b90a4b21ba3b3d1d0898edf5a5ec8f75",
+      "vertices": 1776,
+      "faces": 592,
+      "triangles_if_fan_triangulated": 592
+    },
+    {
+      "path": "assets/vendor/flybody/assets/tarsus_T1_4_left_body.obj",
+      "bytes": 314245,
+      "sha256": "c7ccf8d3f3258aeb8eb33935f8f1d766a344b591490094abace8ee283425ac78",
+      "vertices": 1776,
+      "faces": 592,
+      "triangles_if_fan_triangulated": 592
+    },
+    {
+      "path": "assets/vendor/flybody/assets/tarsus_T1_4_right_body.obj",
+      "bytes": 318044,
+      "sha256": "04d252037202891d2ecd7b786165afc79820e4da2f0d3dd7a1a50720dfea3893",
+      "vertices": 1776,
+      "faces": 592,
+      "triangles_if_fan_triangulated": 592
+    },
+    {
+      "path": "assets/vendor/flybody/assets/tarsus_T2_1_left_body.obj",
+      "bytes": 592366,
+      "sha256": "b73af79b7b16daeefa003d02cbd249e305e5e305bfd365ea495b5da959b5bf47",
+      "vertices": 3360,
+      "faces": 1120,
+      "triangles_if_fan_triangulated": 1120
+    },
+    {
+      "path": "assets/vendor/flybody/assets/tarsus_T2_1_right_body.obj",
+      "bytes": 605394,
+      "sha256": "8001e338bc91061f44ba00c37612d50a63c369d1910a011235892b97a299df35",
+      "vertices": 3360,
+      "faces": 1120,
+      "triangles_if_fan_triangulated": 1120
+    },
+    {
+      "path": "assets/vendor/flybody/assets/tarsus_T2_2_left_body.obj",
+      "bytes": 416307,
+      "sha256": "b83c5ff6d9d0c376a0c57638ff456bb13bce7779558a19b59fc33544c485b76a",
+      "vertices": 2352,
+      "faces": 784,
+      "triangles_if_fan_triangulated": 784
+    },
+    {
+      "path": "assets/vendor/flybody/assets/tarsus_T2_2_right_body.obj",
+      "bytes": 421543,
+      "sha256": "85306a72a46c0b2b581cfaa383f82af1d73e282b9bbdf0aea60d1690cddc6b36",
+      "vertices": 2352,
+      "faces": 784,
+      "triangles_if_fan_triangulated": 784
+    },
+    {
+      "path": "assets/vendor/flybody/assets/tarsus_T2_3_left_body.obj",
+      "bytes": 347736,
+      "sha256": "6aeb61bf2f0c566a22a340dcbb533c6018703cfce0fe81431abf6b2c93134832",
+      "vertices": 1968,
+      "faces": 656,
+      "triangles_if_fan_triangulated": 656
+    },
+    {
+      "path": "assets/vendor/flybody/assets/tarsus_T2_3_right_body.obj",
+      "bytes": 352255,
+      "sha256": "afff461a7b84d4cdbbad46ba7f04d3267a5815a54cb5e1342f7c8103af993051",
+      "vertices": 1968,
+      "faces": 656,
+      "triangles_if_fan_triangulated": 656
+    },
+    {
+      "path": "assets/vendor/flybody/assets/tarsus_T2_4_left_body.obj",
+      "bytes": 315831,
+      "sha256": "03f2121ae2419672a5cc764a430b88c0d94f31b3a152a7764ecdec4ecbc1f41c",
+      "vertices": 1776,
+      "faces": 592,
+      "triangles_if_fan_triangulated": 592
+    },
+    {
+      "path": "assets/vendor/flybody/assets/tarsus_T2_4_right_body.obj",
+      "bytes": 319508,
+      "sha256": "749277fac68e413badea0a76ed204ad81ebbca1a1c9f72f3e7dc00b7582d520f",
+      "vertices": 1776,
+      "faces": 592,
+      "triangles_if_fan_triangulated": 592
+    },
+    {
+      "path": "assets/vendor/flybody/assets/tarsus_T3_1_left_body.obj",
+      "bytes": 831974,
+      "sha256": "50e42d7f3aba2a42313a7804ae5dd8f9d2b52006fb449bd92df3088e8d9f0d24",
+      "vertices": 4740,
+      "faces": 1580,
+      "triangles_if_fan_triangulated": 1580
+    },
+    {
+      "path": "assets/vendor/flybody/assets/tarsus_T3_1_right_body.obj",
+      "bytes": 846729,
+      "sha256": "eff29a60c5f741e339d2dea5ac27143fb1009ecb7d3a7bd07b35d1804ab7e65a",
+      "vertices": 4740,
+      "faces": 1580,
+      "triangles_if_fan_triangulated": 1580
+    },
+    {
+      "path": "assets/vendor/flybody/assets/tarsus_T3_2_left_body.obj",
+      "bytes": 478593,
+      "sha256": "a6e504636518cd984acaad4254ea7e967cfb2ec60522cd6c32856829db5e271f",
+      "vertices": 2736,
+      "faces": 912,
+      "triangles_if_fan_triangulated": 912
+    },
+    {
+      "path": "assets/vendor/flybody/assets/tarsus_T3_2_right_body.obj",
+      "bytes": 486458,
+      "sha256": "01ca78ac975d9371470a78402c901434d92d2e200f6fb4685a1228ad3462723f",
+      "vertices": 2736,
+      "faces": 912,
+      "triangles_if_fan_triangulated": 912
+    },
+    {
+      "path": "assets/vendor/flybody/assets/tarsus_T3_3_left_body.obj",
+      "bytes": 344280,
+      "sha256": "fd367fbdbf7133da991fe9cfb2f9b48437bb2aa3c475eac1b1fa214020c3117f",
+      "vertices": 1968,
+      "faces": 656,
+      "triangles_if_fan_triangulated": 656
+    },
+    {
+      "path": "assets/vendor/flybody/assets/tarsus_T3_3_right_body.obj",
+      "bytes": 348822,
+      "sha256": "59e9c489621f2f225d256fac116945282b3b6994980b3c042ef662e879585a32",
+      "vertices": 1968,
+      "faces": 656,
+      "triangles_if_fan_triangulated": 656
+    },
+    {
+      "path": "assets/vendor/flybody/assets/tarsus_T3_4_left_body.obj",
+      "bytes": 350442,
+      "sha256": "f60138bef74a9bc35aeaec3df67872dbda7f990c52bd5702bf901ae874dee751",
+      "vertices": 1968,
+      "faces": 656,
+      "triangles_if_fan_triangulated": 656
+    },
+    {
+      "path": "assets/vendor/flybody/assets/tarsus_T3_4_right_body.obj",
+      "bytes": 350447,
+      "sha256": "a2d849312ecb9ed9d5bd1ab6a8bfd5f3fa25db016abaf3339968dc79463fe1cd",
+      "vertices": 1968,
+      "faces": 656,
+      "triangles_if_fan_triangulated": 656
+    },
+    {
+      "path": "assets/vendor/flybody/assets/thorax_black.obj",
+      "bytes": 12653964,
+      "sha256": "99e5244ef12728410550ce9db87c0955fad4203de9a3385c9a47686abc49a05c",
+      "vertices": 73974,
+      "faces": 24658,
+      "triangles_if_fan_triangulated": 24658
+    },
+    {
+      "path": "assets/vendor/flybody/assets/thorax_body.obj",
+      "bytes": 9431470,
+      "sha256": "ca9b148939cb1eee4c9545a745ca8a91ca6ca7c92086ffdc1fcb3d8d0f6853d3",
+      "vertices": 54936,
+      "faces": 18312,
+      "triangles_if_fan_triangulated": 18312
+    },
+    {
+      "path": "assets/vendor/flybody/assets/tibia_T1_left_body.obj",
+      "bytes": 516940,
+      "sha256": "8df1760f6d1577db63c22a44224660349ce488d788b96c4caa8226d8ce976855",
+      "vertices": 2970,
+      "faces": 990,
+      "triangles_if_fan_triangulated": 990
+    },
+    {
+      "path": "assets/vendor/flybody/assets/tibia_T1_right_body.obj",
+      "bytes": 515517,
+      "sha256": "320c29dbddb1eb8610282dc72df5e4208d9cb241c282b709daf400e4ce7c12a8",
+      "vertices": 2970,
+      "faces": 990,
+      "triangles_if_fan_triangulated": 990
+    },
+    {
+      "path": "assets/vendor/flybody/assets/tibia_T2_left_body.obj",
+      "bytes": 660368,
+      "sha256": "5d31bc233c9efc7fbd51f34bbff10d9b3dca819fd27d89e19f96613bdda3da40",
+      "vertices": 3750,
+      "faces": 1250,
+      "triangles_if_fan_triangulated": 1250
+    },
+    {
+      "path": "assets/vendor/flybody/assets/tibia_T2_right_body.obj",
+      "bytes": 669281,
+      "sha256": "fe175d7e0366ce105544ada99591a53da1da3030cdc1a6aff66ae30619877d4b",
+      "vertices": 3750,
+      "faces": 1250,
+      "triangles_if_fan_triangulated": 1250
+    },
+    {
+      "path": "assets/vendor/flybody/assets/tibia_T3_left_body.obj",
+      "bytes": 1180232,
+      "sha256": "0c8ec3402ef0701f37964a1322bd732ae9e70170b5979c5e55baf63429dd704f",
+      "vertices": 6774,
+      "faces": 2258,
+      "triangles_if_fan_triangulated": 2258
+    },
+    {
+      "path": "assets/vendor/flybody/assets/tibia_T3_right_body.obj",
+      "bytes": 1140937,
+      "sha256": "55dd96ec2e882fe4255c2a538c6ed01d7b474b0e51bf0b9736e64992852078c3",
+      "vertices": 6774,
+      "faces": 2258,
+      "triangles_if_fan_triangulated": 2258
+    },
+    {
+      "path": "assets/vendor/flybody/assets/wing_left_brown.obj",
+      "bytes": 2824706,
+      "sha256": "27ec3ae2ea4adb8ade08f34c8da90057cf9913047aa0662e85ab4ba353a30771",
+      "vertices": 18684,
+      "faces": 6228,
+      "triangles_if_fan_triangulated": 6228
+    },
+    {
+      "path": "assets/vendor/flybody/assets/wing_left_membrane.obj",
+      "bytes": 221433,
+      "sha256": "b88bf2167a5ddadedd963114cb0f367e1b89c5cdb99f7325875235c46fd4b9b2",
+      "vertices": 1500,
+      "faces": 500,
+      "triangles_if_fan_triangulated": 500
+    },
+    {
+      "path": "assets/vendor/flybody/assets/wing_right_brown.obj",
+      "bytes": 2805048,
+      "sha256": "27cd3b9a608b8b17f3a63d4aba774806d55deda8750edf08c8f86e2a79dad64d",
+      "vertices": 18684,
+      "faces": 6228,
+      "triangles_if_fan_triangulated": 6228
+    },
+    {
+      "path": "assets/vendor/flybody/assets/wing_right_membrane.obj",
+      "bytes": 219913,
+      "sha256": "b4df8b8c4331dfa2ca2078ac852188809142935c766c547c17d213e867fa8ead",
+      "vertices": 1500,
+      "faces": 500,
+      "triangles_if_fan_triangulated": 500
+    }
+  ],
+  "summary": {
+    "files": 91,
+    "bytes": 161099048,
+    "meshes": 85,
+    "vertices": 817650,
+    "triangles_if_fan_triangulated": 272550,
+    "bodies": 67,
+    "joints": 180,
+    "missing_direct_asset_references": []
+  }
+}

@@ -1,0 +1,1959 @@
+[
+  {
+    "name": "free",
+    "bodyNode": 1,
+    "axis": [
+      0.0,
+      0.0,
+      1.0
+    ],
+    "position_cm": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "range": [
+      0.0,
+      0.0
+    ],
+    "type": 0
+  },
+  {
+    "name": "head_abduct",
+    "bodyNode": 2,
+    "axis": [
+      0.0,
+      0.0,
+      1.0
+    ],
+    "position_cm": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "range": [
+      -0.2,
+      0.2
+    ],
+    "type": 3
+  },
+  {
+    "name": "head_twist",
+    "bodyNode": 2,
+    "axis": [
+      0.0,
+      1.0,
+      0.0
+    ],
+    "position_cm": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "range": [
+      -3.0,
+      3.0
+    ],
+    "type": 3
+  },
+  {
+    "name": "head",
+    "bodyNode": 2,
+    "axis": [
+      1.0,
+      0.0,
+      0.0
+    ],
+    "position_cm": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "range": [
+      -0.5,
+      0.3
+    ],
+    "type": 3
+  },
+  {
+    "name": "rostrum",
+    "bodyNode": 3,
+    "axis": [
+      1.0,
+      0.0,
+      0.0
+    ],
+    "position_cm": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "range": [
+      -1.24,
+      0.183
+    ],
+    "type": 3
+  },
+  {
+    "name": "haustellum_abduct",
+    "bodyNode": 4,
+    "axis": [
+      0.0,
+      0.0,
+      1.0
+    ],
+    "position_cm": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "range": [
+      -0.0873,
+      0.0873
+    ],
+    "type": 3
+  },
+  {
+    "name": "haustellum",
+    "bodyNode": 4,
+    "axis": [
+      1.0,
+      0.0,
+      0.0
+    ],
+    "position_cm": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "range": [
+      -1.59,
+      0.7
+    ],
+    "type": 3
+  },
+  {
+    "name": "labrum_left",
+    "bodyNode": 5,
+    "axis": [
+      1.0,
+      0.0,
+      0.0
+    ],
+    "position_cm": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "range": [
+      -0.00524,
+      1.05
+    ],
+    "type": 3
+  },
+  {
+    "name": "labrum_right",
+    "bodyNode": 6,
+    "axis": [
+      1.0,
+      0.0,
+      0.0
+    ],
+    "position_cm": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "range": [
+      -0.00524,
+      1.05
+    ],
+    "type": 3
+  },
+  {
+    "name": "antenna_abduct_left",
+    "bodyNode": 7,
+    "axis": [
+      0.0,
+      0.0,
+      1.0
+    ],
+    "position_cm": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "range": [
+      -0.4,
+      0.8
+    ],
+    "type": 3
+  },
+  {
+    "name": "antenna_twist_left",
+    "bodyNode": 7,
+    "axis": [
+      0.0,
+      1.0,
+      0.0
+    ],
+    "position_cm": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "range": [
+      -0.1,
+      0.09
+    ],
+    "type": 3
+  },
+  {
+    "name": "antenna_left",
+    "bodyNode": 7,
+    "axis": [
+      1.0,
+      0.0,
+      0.0
+    ],
+    "position_cm": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "range": [
+      -0.2,
+      0.5
+    ],
+    "type": 3
+  },
+  {
+    "name": "antenna_abduct_right",
+    "bodyNode": 8,
+    "axis": [
+      0.0,
+      0.0,
+      1.0
+    ],
+    "position_cm": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "range": [
+      -0.4,
+      0.8
+    ],
+    "type": 3
+  },
+  {
+    "name": "antenna_twist_right",
+    "bodyNode": 8,
+    "axis": [
+      0.0,
+      1.0,
+      0.0
+    ],
+    "position_cm": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "range": [
+      -0.1,
+      0.09
+    ],
+    "type": 3
+  },
+  {
+    "name": "antenna_right",
+    "bodyNode": 8,
+    "axis": [
+      1.0,
+      0.0,
+      0.0
+    ],
+    "position_cm": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "range": [
+      -0.2,
+      0.5
+    ],
+    "type": 3
+  },
+  {
+    "name": "wing_yaw_left",
+    "bodyNode": 9,
+    "axis": [
+      0.0,
+      0.0,
+      1.0
+    ],
+    "position_cm": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "range": [
+      -1.5,
+      1.5
+    ],
+    "type": 3
+  },
+  {
+    "name": "wing_roll_left",
+    "bodyNode": 9,
+    "axis": [
+      1.0,
+      0.0,
+      0.0
+    ],
+    "position_cm": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "range": [
+      -1.0,
+      1.5
+    ],
+    "type": 3
+  },
+  {
+    "name": "wing_pitch_left",
+    "bodyNode": 9,
+    "axis": [
+      0.0,
+      1.0,
+      0.0
+    ],
+    "position_cm": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "range": [
+      -1.27,
+      2.92
+    ],
+    "type": 3
+  },
+  {
+    "name": "wing_yaw_right",
+    "bodyNode": 10,
+    "axis": [
+      0.0,
+      0.0,
+      1.0
+    ],
+    "position_cm": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "range": [
+      -1.5,
+      1.5
+    ],
+    "type": 3
+  },
+  {
+    "name": "wing_roll_right",
+    "bodyNode": 10,
+    "axis": [
+      1.0,
+      0.0,
+      0.0
+    ],
+    "position_cm": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "range": [
+      -1.0,
+      1.5
+    ],
+    "type": 3
+  },
+  {
+    "name": "wing_pitch_right",
+    "bodyNode": 10,
+    "axis": [
+      0.0,
+      1.0,
+      0.0
+    ],
+    "position_cm": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "range": [
+      -1.27,
+      2.92
+    ],
+    "type": 3
+  },
+  {
+    "name": "abdomen_abduct",
+    "bodyNode": 11,
+    "axis": [
+      0.0,
+      0.0,
+      1.0
+    ],
+    "position_cm": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "range": [
+      -0.1,
+      0.1
+    ],
+    "type": 3
+  },
+  {
+    "name": "abdomen",
+    "bodyNode": 11,
+    "axis": [
+      1.0,
+      0.0,
+      0.0
+    ],
+    "position_cm": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "range": [
+      -0.15,
+      0.1
+    ],
+    "type": 3
+  },
+  {
+    "name": "abdomen_abduct_2",
+    "bodyNode": 12,
+    "axis": [
+      0.0,
+      0.0,
+      1.0
+    ],
+    "position_cm": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "range": [
+      -0.1,
+      0.1
+    ],
+    "type": 3
+  },
+  {
+    "name": "abdomen_2",
+    "bodyNode": 12,
+    "axis": [
+      1.0,
+      0.0,
+      0.0
+    ],
+    "position_cm": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "range": [
+      -0.15,
+      0.1
+    ],
+    "type": 3
+  },
+  {
+    "name": "abdomen_abduct_3",
+    "bodyNode": 13,
+    "axis": [
+      0.0,
+      0.0,
+      1.0
+    ],
+    "position_cm": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "range": [
+      -0.1,
+      0.1
+    ],
+    "type": 3
+  },
+  {
+    "name": "abdomen_3",
+    "bodyNode": 13,
+    "axis": [
+      1.0,
+      0.0,
+      0.0
+    ],
+    "position_cm": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "range": [
+      -0.15,
+      0.1
+    ],
+    "type": 3
+  },
+  {
+    "name": "abdomen_abduct_4",
+    "bodyNode": 14,
+    "axis": [
+      0.0,
+      0.0,
+      1.0
+    ],
+    "position_cm": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "range": [
+      -0.1,
+      0.1
+    ],
+    "type": 3
+  },
+  {
+    "name": "abdomen_4",
+    "bodyNode": 14,
+    "axis": [
+      1.0,
+      0.0,
+      0.0
+    ],
+    "position_cm": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "range": [
+      -0.15,
+      0.1
+    ],
+    "type": 3
+  },
+  {
+    "name": "abdomen_abduct_5",
+    "bodyNode": 15,
+    "axis": [
+      0.0,
+      0.0,
+      1.0
+    ],
+    "position_cm": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "range": [
+      -0.1,
+      0.1
+    ],
+    "type": 3
+  },
+  {
+    "name": "abdomen_5",
+    "bodyNode": 15,
+    "axis": [
+      1.0,
+      0.0,
+      0.0
+    ],
+    "position_cm": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "range": [
+      -0.15,
+      0.1
+    ],
+    "type": 3
+  },
+  {
+    "name": "abdomen_abduct_6",
+    "bodyNode": 16,
+    "axis": [
+      0.0,
+      0.0,
+      1.0
+    ],
+    "position_cm": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "range": [
+      -0.1,
+      0.1
+    ],
+    "type": 3
+  },
+  {
+    "name": "abdomen_6",
+    "bodyNode": 16,
+    "axis": [
+      1.0,
+      0.0,
+      0.0
+    ],
+    "position_cm": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "range": [
+      -0.15,
+      0.1
+    ],
+    "type": 3
+  },
+  {
+    "name": "abdomen_abduct_7",
+    "bodyNode": 17,
+    "axis": [
+      0.0,
+      0.0,
+      1.0
+    ],
+    "position_cm": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "range": [
+      -0.1,
+      0.1
+    ],
+    "type": 3
+  },
+  {
+    "name": "abdomen_7",
+    "bodyNode": 17,
+    "axis": [
+      1.0,
+      0.0,
+      0.0
+    ],
+    "position_cm": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "range": [
+      -0.15,
+      0.1
+    ],
+    "type": 3
+  },
+  {
+    "name": "haltere_left",
+    "bodyNode": 18,
+    "axis": [
+      1.0,
+      0.0,
+      0.0
+    ],
+    "position_cm": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "range": [
+      -0.2,
+      0.2
+    ],
+    "type": 3
+  },
+  {
+    "name": "haltere_right",
+    "bodyNode": 19,
+    "axis": [
+      1.0,
+      0.0,
+      0.0
+    ],
+    "position_cm": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "range": [
+      -0.2,
+      0.2
+    ],
+    "type": 3
+  },
+  {
+    "name": "coxa_abduct_T1_left",
+    "bodyNode": 20,
+    "axis": [
+      0.0,
+      0.0,
+      1.0
+    ],
+    "position_cm": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "range": [
+      -1.0,
+      0.7
+    ],
+    "type": 3
+  },
+  {
+    "name": "coxa_twist_T1_left",
+    "bodyNode": 20,
+    "axis": [
+      0.0,
+      1.0,
+      0.0
+    ],
+    "position_cm": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "range": [
+      -0.8,
+      0.8
+    ],
+    "type": 3
+  },
+  {
+    "name": "coxa_T1_left",
+    "bodyNode": 20,
+    "axis": [
+      1.0,
+      0.0,
+      0.0
+    ],
+    "position_cm": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "range": [
+      -0.2,
+      1.7
+    ],
+    "type": 3
+  },
+  {
+    "name": "femur_twist_T1_left",
+    "bodyNode": 21,
+    "axis": [
+      0.0,
+      1.0,
+      0.0
+    ],
+    "position_cm": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "range": [
+      -1.0,
+      1.0
+    ],
+    "type": 3
+  },
+  {
+    "name": "femur_T1_left",
+    "bodyNode": 21,
+    "axis": [
+      1.0,
+      0.0,
+      0.0
+    ],
+    "position_cm": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "range": [
+      -0.15,
+      2.0
+    ],
+    "type": 3
+  },
+  {
+    "name": "tibia_T1_left",
+    "bodyNode": 22,
+    "axis": [
+      1.0,
+      0.0,
+      0.0
+    ],
+    "position_cm": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "range": [
+      -1.35,
+      1.3
+    ],
+    "type": 3
+  },
+  {
+    "name": "tarsus_T1_left",
+    "bodyNode": 23,
+    "axis": [
+      1.0,
+      0.0,
+      0.0
+    ],
+    "position_cm": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "range": [
+      -0.7,
+      1.2
+    ],
+    "type": 3
+  },
+  {
+    "name": "tarsus2_T1_left",
+    "bodyNode": 24,
+    "axis": [
+      1.0,
+      0.0,
+      0.0
+    ],
+    "position_cm": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "range": [
+      -0.36,
+      0.36
+    ],
+    "type": 3
+  },
+  {
+    "name": "tarsus3_T1_left",
+    "bodyNode": 25,
+    "axis": [
+      1.0,
+      0.0,
+      0.0
+    ],
+    "position_cm": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "range": [
+      -0.36,
+      0.36
+    ],
+    "type": 3
+  },
+  {
+    "name": "tarsus4_T1_left",
+    "bodyNode": 26,
+    "axis": [
+      1.0,
+      0.0,
+      0.0
+    ],
+    "position_cm": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "range": [
+      -0.36,
+      0.36
+    ],
+    "type": 3
+  },
+  {
+    "name": "tarsus5_T1_left",
+    "bodyNode": 27,
+    "axis": [
+      1.0,
+      0.0,
+      0.0
+    ],
+    "position_cm": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "range": [
+      -0.36,
+      0.36
+    ],
+    "type": 3
+  },
+  {
+    "name": "coxa_abduct_T1_right",
+    "bodyNode": 28,
+    "axis": [
+      0.0,
+      0.0,
+      1.0
+    ],
+    "position_cm": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "range": [
+      -1.0,
+      0.7
+    ],
+    "type": 3
+  },
+  {
+    "name": "coxa_twist_T1_right",
+    "bodyNode": 28,
+    "axis": [
+      0.0,
+      1.0,
+      0.0
+    ],
+    "position_cm": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "range": [
+      -0.8,
+      0.8
+    ],
+    "type": 3
+  },
+  {
+    "name": "coxa_T1_right",
+    "bodyNode": 28,
+    "axis": [
+      1.0,
+      0.0,
+      0.0
+    ],
+    "position_cm": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "range": [
+      -0.2,
+      1.7
+    ],
+    "type": 3
+  },
+  {
+    "name": "femur_twist_T1_right",
+    "bodyNode": 29,
+    "axis": [
+      0.0,
+      1.0,
+      0.0
+    ],
+    "position_cm": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "range": [
+      -1.0,
+      1.0
+    ],
+    "type": 3
+  },
+  {
+    "name": "femur_T1_right",
+    "bodyNode": 29,
+    "axis": [
+      1.0,
+      0.0,
+      0.0
+    ],
+    "position_cm": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "range": [
+      -0.15,
+      2.0
+    ],
+    "type": 3
+  },
+  {
+    "name": "tibia_T1_right",
+    "bodyNode": 30,
+    "axis": [
+      1.0,
+      0.0,
+      0.0
+    ],
+    "position_cm": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "range": [
+      -1.35,
+      1.3
+    ],
+    "type": 3
+  },
+  {
+    "name": "tarsus_T1_right",
+    "bodyNode": 31,
+    "axis": [
+      1.0,
+      0.0,
+      0.0
+    ],
+    "position_cm": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "range": [
+      -0.7,
+      1.2
+    ],
+    "type": 3
+  },
+  {
+    "name": "tarsus2_T1_right",
+    "bodyNode": 32,
+    "axis": [
+      1.0,
+      0.0,
+      0.0
+    ],
+    "position_cm": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "range": [
+      -0.36,
+      0.36
+    ],
+    "type": 3
+  },
+  {
+    "name": "tarsus3_T1_right",
+    "bodyNode": 33,
+    "axis": [
+      1.0,
+      0.0,
+      0.0
+    ],
+    "position_cm": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "range": [
+      -0.36,
+      0.36
+    ],
+    "type": 3
+  },
+  {
+    "name": "tarsus4_T1_right",
+    "bodyNode": 34,
+    "axis": [
+      1.0,
+      0.0,
+      0.0
+    ],
+    "position_cm": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "range": [
+      -0.36,
+      0.36
+    ],
+    "type": 3
+  },
+  {
+    "name": "tarsus5_T1_right",
+    "bodyNode": 35,
+    "axis": [
+      1.0,
+      0.0,
+      0.0
+    ],
+    "position_cm": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "range": [
+      -0.36,
+      0.36
+    ],
+    "type": 3
+  },
+  {
+    "name": "coxa_abduct_T2_left",
+    "bodyNode": 36,
+    "axis": [
+      0.0,
+      0.0,
+      1.0
+    ],
+    "position_cm": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "range": [
+      -0.5,
+      0.3
+    ],
+    "type": 3
+  },
+  {
+    "name": "coxa_twist_T2_left",
+    "bodyNode": 36,
+    "axis": [
+      0.0,
+      1.0,
+      0.0
+    ],
+    "position_cm": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "range": [
+      -0.75,
+      0.8
+    ],
+    "type": 3
+  },
+  {
+    "name": "coxa_T2_left",
+    "bodyNode": 36,
+    "axis": [
+      1.0,
+      0.0,
+      0.0
+    ],
+    "position_cm": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "range": [
+      -0.2,
+      0.9
+    ],
+    "type": 3
+  },
+  {
+    "name": "femur_twist_T2_left",
+    "bodyNode": 37,
+    "axis": [
+      0.0,
+      1.0,
+      0.0
+    ],
+    "position_cm": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "range": [
+      -1.0,
+      1.0
+    ],
+    "type": 3
+  },
+  {
+    "name": "femur_T2_left",
+    "bodyNode": 37,
+    "axis": [
+      1.0,
+      0.0,
+      0.0
+    ],
+    "position_cm": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "range": [
+      -0.15,
+      2.0
+    ],
+    "type": 3
+  },
+  {
+    "name": "tibia_T2_left",
+    "bodyNode": 38,
+    "axis": [
+      1.0,
+      0.0,
+      0.0
+    ],
+    "position_cm": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "range": [
+      -1.35,
+      1.3
+    ],
+    "type": 3
+  },
+  {
+    "name": "tarsus_T2_left",
+    "bodyNode": 39,
+    "axis": [
+      1.0,
+      0.0,
+      0.0
+    ],
+    "position_cm": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "range": [
+      -1.0,
+      1.8
+    ],
+    "type": 3
+  },
+  {
+    "name": "tarsus2_T2_left",
+    "bodyNode": 40,
+    "axis": [
+      1.0,
+      0.0,
+      0.0
+    ],
+    "position_cm": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "range": [
+      -0.36,
+      0.36
+    ],
+    "type": 3
+  },
+  {
+    "name": "tarsus3_T2_left",
+    "bodyNode": 41,
+    "axis": [
+      1.0,
+      0.0,
+      0.0
+    ],
+    "position_cm": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "range": [
+      -0.36,
+      0.36
+    ],
+    "type": 3
+  },
+  {
+    "name": "tarsus4_T2_left",
+    "bodyNode": 42,
+    "axis": [
+      1.0,
+      0.0,
+      0.0
+    ],
+    "position_cm": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "range": [
+      -0.36,
+      0.36
+    ],
+    "type": 3
+  },
+  {
+    "name": "tarsus5_T2_left",
+    "bodyNode": 43,
+    "axis": [
+      1.0,
+      0.0,
+      0.0
+    ],
+    "position_cm": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "range": [
+      -0.36,
+      0.36
+    ],
+    "type": 3
+  },
+  {
+    "name": "coxa_abduct_T2_right",
+    "bodyNode": 44,
+    "axis": [
+      0.0,
+      0.0,
+      1.0
+    ],
+    "position_cm": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "range": [
+      -0.5,
+      0.3
+    ],
+    "type": 3
+  },
+  {
+    "name": "coxa_twist_T2_right",
+    "bodyNode": 44,
+    "axis": [
+      0.0,
+      1.0,
+      0.0
+    ],
+    "position_cm": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "range": [
+      -0.75,
+      0.8
+    ],
+    "type": 3
+  },
+  {
+    "name": "coxa_T2_right",
+    "bodyNode": 44,
+    "axis": [
+      1.0,
+      0.0,
+      0.0
+    ],
+    "position_cm": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "range": [
+      -0.2,
+      0.9
+    ],
+    "type": 3
+  },
+  {
+    "name": "femur_twist_T2_right",
+    "bodyNode": 45,
+    "axis": [
+      0.0,
+      1.0,
+      0.0
+    ],
+    "position_cm": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "range": [
+      -1.0,
+      1.0
+    ],
+    "type": 3
+  },
+  {
+    "name": "femur_T2_right",
+    "bodyNode": 45,
+    "axis": [
+      1.0,
+      0.0,
+      0.0
+    ],
+    "position_cm": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "range": [
+      -0.15,
+      2.0
+    ],
+    "type": 3
+  },
+  {
+    "name": "tibia_T2_right",
+    "bodyNode": 46,
+    "axis": [
+      1.0,
+      0.0,
+      0.0
+    ],
+    "position_cm": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "range": [
+      -1.35,
+      1.3
+    ],
+    "type": 3
+  },
+  {
+    "name": "tarsus_T2_right",
+    "bodyNode": 47,
+    "axis": [
+      1.0,
+      0.0,
+      0.0
+    ],
+    "position_cm": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "range": [
+      -1.0,
+      1.8
+    ],
+    "type": 3
+  },
+  {
+    "name": "tarsus2_T2_right",
+    "bodyNode": 48,
+    "axis": [
+      1.0,
+      0.0,
+      0.0
+    ],
+    "position_cm": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "range": [
+      -0.36,
+      0.36
+    ],
+    "type": 3
+  },
+  {
+    "name": "tarsus3_T2_right",
+    "bodyNode": 49,
+    "axis": [
+      1.0,
+      0.0,
+      0.0
+    ],
+    "position_cm": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "range": [
+      -0.36,
+      0.36
+    ],
+    "type": 3
+  },
+  {
+    "name": "tarsus4_T2_right",
+    "bodyNode": 50,
+    "axis": [
+      1.0,
+      0.0,
+      0.0
+    ],
+    "position_cm": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "range": [
+      -0.36,
+      0.36
+    ],
+    "type": 3
+  },
+  {
+    "name": "tarsus5_T2_right",
+    "bodyNode": 51,
+    "axis": [
+      1.0,
+      0.0,
+      0.0
+    ],
+    "position_cm": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "range": [
+      -0.36,
+      0.36
+    ],
+    "type": 3
+  },
+  {
+    "name": "coxa_abduct_T3_left",
+    "bodyNode": 52,
+    "axis": [
+      0.0,
+      0.0,
+      1.0
+    ],
+    "position_cm": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "range": [
+      -0.9,
+      0.25
+    ],
+    "type": 3
+  },
+  {
+    "name": "coxa_twist_T3_left",
+    "bodyNode": 52,
+    "axis": [
+      0.0,
+      1.0,
+      0.0
+    ],
+    "position_cm": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "range": [
+      -0.15,
+      0.8
+    ],
+    "type": 3
+  },
+  {
+    "name": "coxa_T3_left",
+    "bodyNode": 52,
+    "axis": [
+      1.0,
+      0.0,
+      0.0
+    ],
+    "position_cm": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "range": [
+      -0.3,
+      1.3
+    ],
+    "type": 3
+  },
+  {
+    "name": "femur_twist_T3_left",
+    "bodyNode": 53,
+    "axis": [
+      0.0,
+      1.0,
+      0.0
+    ],
+    "position_cm": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "range": [
+      -1.0,
+      1.0
+    ],
+    "type": 3
+  },
+  {
+    "name": "femur_T3_left",
+    "bodyNode": 53,
+    "axis": [
+      1.0,
+      0.0,
+      0.0
+    ],
+    "position_cm": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "range": [
+      -0.7,
+      1.5
+    ],
+    "type": 3
+  },
+  {
+    "name": "tibia_T3_left",
+    "bodyNode": 54,
+    "axis": [
+      1.0,
+      0.0,
+      0.0
+    ],
+    "position_cm": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "range": [
+      -1.35,
+      1.3
+    ],
+    "type": 3
+  },
+  {
+    "name": "tarsus_T3_left",
+    "bodyNode": 55,
+    "axis": [
+      1.0,
+      0.0,
+      0.0
+    ],
+    "position_cm": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "range": [
+      -0.8,
+      1.2
+    ],
+    "type": 3
+  },
+  {
+    "name": "tarsus2_T3_left",
+    "bodyNode": 56,
+    "axis": [
+      1.0,
+      0.0,
+      0.0
+    ],
+    "position_cm": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "range": [
+      -0.36,
+      0.36
+    ],
+    "type": 3
+  },
+  {
+    "name": "tarsus3_T3_left",
+    "bodyNode": 57,
+    "axis": [
+      1.0,
+      0.0,
+      0.0
+    ],
+    "position_cm": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "range": [
+      -0.36,
+      0.36
+    ],
+    "type": 3
+  },
+  {
+    "name": "tarsus4_T3_left",
+    "bodyNode": 58,
+    "axis": [
+      1.0,
+      0.0,
+      0.0
+    ],
+    "position_cm": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "range": [
+      -0.36,
+      0.36
+    ],
+    "type": 3
+  },
+  {
+    "name": "tarsus5_T3_left",
+    "bodyNode": 59,
+    "axis": [
+      1.0,
+      0.0,
+      0.0
+    ],
+    "position_cm": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "range": [
+      -0.36,
+      0.36
+    ],
+    "type": 3
+  },
+  {
+    "name": "coxa_abduct_T3_right",
+    "bodyNode": 60,
+    "axis": [
+      0.0,
+      0.0,
+      1.0
+    ],
+    "position_cm": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "range": [
+      -0.9,
+      0.25
+    ],
+    "type": 3
+  },
+  {
+    "name": "coxa_twist_T3_right",
+    "bodyNode": 60,
+    "axis": [
+      0.0,
+      1.0,
+      0.0
+    ],
+    "position_cm": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "range": [
+      -0.15,
+      0.8
+    ],
+    "type": 3
+  },
+  {
+    "name": "coxa_T3_right",
+    "bodyNode": 60,
+    "axis": [
+      1.0,
+      0.0,
+      0.0
+    ],
+    "position_cm": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "range": [
+      -0.3,
+      1.3
+    ],
+    "type": 3
+  },
+  {
+    "name": "femur_twist_T3_right",
+    "bodyNode": 61,
+    "axis": [
+      0.0,
+      1.0,
+      0.0
+    ],
+    "position_cm": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "range": [
+      -1.0,
+      1.0
+    ],
+    "type": 3
+  },
+  {
+    "name": "femur_T3_right",
+    "bodyNode": 61,
+    "axis": [
+      1.0,
+      0.0,
+      0.0
+    ],
+    "position_cm": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "range": [
+      -0.7,
+      1.5
+    ],
+    "type": 3
+  },
+  {
+    "name": "tibia_T3_right",
+    "bodyNode": 62,
+    "axis": [
+      1.0,
+      0.0,
+      0.0
+    ],
+    "position_cm": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "range": [
+      -1.35,
+      1.3
+    ],
+    "type": 3
+  },
+  {
+    "name": "tarsus_T3_right",
+    "bodyNode": 63,
+    "axis": [
+      1.0,
+      0.0,
+      0.0
+    ],
+    "position_cm": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "range": [
+      -0.8,
+      1.2
+    ],
+    "type": 3
+  },
+  {
+    "name": "tarsus2_T3_right",
+    "bodyNode": 64,
+    "axis": [
+      1.0,
+      0.0,
+      0.0
+    ],
+    "position_cm": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "range": [
+      -0.36,
+      0.36
+    ],
+    "type": 3
+  },
+  {
+    "name": "tarsus3_T3_right",
+    "bodyNode": 65,
+    "axis": [
+      1.0,
+      0.0,
+      0.0
+    ],
+    "position_cm": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "range": [
+      -0.36,
+      0.36
+    ],
+    "type": 3
+  },
+  {
+    "name": "tarsus4_T3_right",
+    "bodyNode": 66,
+    "axis": [
+      1.0,
+      0.0,
+      0.0
+    ],
+    "position_cm": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "range": [
+      -0.36,
+      0.36
+    ],
+    "type": 3
+  },
+  {
+    "name": "tarsus5_T3_right",
+    "bodyNode": 67,
+    "axis": [
+      1.0,
+      0.0,
+      0.0
+    ],
+    "position_cm": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "range": [
+      -0.36,
+      0.36
+    ],
+    "type": 3
+  }
+]

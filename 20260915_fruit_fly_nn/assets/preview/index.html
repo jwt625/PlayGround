@@ -1,0 +1,15 @@
+<!doctype html><meta charset="utf-8"><title>CBC asset inspection</title>
+<style>body{margin:0;background:#101925;color:#e5eef8;font:14px system-ui}header{position:absolute;padding:18px;pointer-events:none}button,select{pointer-events:auto;padding:8px;margin:5px}canvas{display:block}small{display:block;max-width:640px}</style>
+<script type="importmap">{"imports":{"three":"/node_modules/three/build/three.module.js","three/addons/":"/node_modules/three/examples/jsm/"}}</script>
+<header><h2>FlyBody asset inspection</h2><small>Actual upstream visual meshes • centimeters converted to meters • display enlarged 300× • illustrative 1 Hz wing motion</small><button id="animate">Animate wings</button><button id="side">Side</button><button id="top">Top</button><button id="front">Front</button><p id="status">Loading GLB…</p></header>
+<script type="module">
+import * as THREE from 'three';import{GLTFLoader}from'three/addons/loaders/GLTFLoader.js';import{OrbitControls}from'three/addons/controls/OrbitControls.js';
+const scene=new THREE.Scene();scene.background=new THREE.Color('#101925');const camera=new THREE.PerspectiveCamera(38,innerWidth/innerHeight,.01,100);camera.position.set(2,1.5,3);
+const renderer=new THREE.WebGLRenderer({antialias:true});renderer.setSize(innerWidth,innerHeight);renderer.setPixelRatio(devicePixelRatio);document.body.append(renderer.domElement);renderer.outputColorSpace=THREE.SRGBColorSpace;
+scene.add(new THREE.HemisphereLight(0xcfeaff,0x44402c,3));const light=new THREE.DirectionalLight(0xffffff,3);light.position.set(2,4,5);scene.add(light);const controls=new OrbitControls(camera,renderer.domElement);controls.target.set(-.1,-.1,0);
+const gltf=await new GLTFLoader().loadAsync('../generated/flybody/flybody-articulated.glb');const fly=gltf.scene;fly.scale.setScalar(300);scene.add(fly);let meshes=0;fly.traverse(n=>{if(n.isMesh)meshes++});
+const mixer=new THREE.AnimationMixer(fly);const action=mixer.clipAction(gltf.animations[0]);let playing=false;document.querySelector('#animate').onclick=()=>{playing=!playing;if(playing)action.play();else{action.stop();mixer.update(0)}};
+for(const [id,pos]of Object.entries({side:[0,0,3],top:[0,3,0.001],front:[3,0,0]}))document.querySelector('#'+id).onclick=()=>{camera.position.set(...pos);controls.update()};
+document.querySelector('#status').textContent=`Loaded ${meshes} meshes • ${gltf.animations.length} animation • orbit/zoom to inspect`;window.assetReady=true;window.assetInfo={meshes,animations:gltf.animations.map(a=>a.name)};
+const clock=new THREE.Clock();renderer.setAnimationLoop(()=>{const dt=clock.getDelta();if(playing)mixer.update(dt);controls.update();renderer.render(scene,camera)});onresize=()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight)};
+</script>

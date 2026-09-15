@@ -1,0 +1,2198 @@
+{
+  "note": "Raw MJCF attributes; defaults, compiler transforms and mesh alignment still require evaluation.",
+  "bodies": [
+    {
+      "attributes": {
+        "name": "thorax",
+        "childclass": "body"
+      },
+      "joints": [],
+      "geoms": [
+        {
+          "name": "thorax",
+          "mass": "0.00034",
+          "pos": "-0.00791 0 -0.123",
+          "quat": "0 0 0 -1",
+          "mesh": "thorax"
+        },
+        {
+          "name": "thorax_collision",
+          "class": "collision",
+          "type": "ellipsoid",
+          "size": "0.0437 0.0437 0.0551",
+          "pos": "0.00168 0 -0.00262",
+          "quat": "0 -0.479 0 -0.878"
+        },
+        {
+          "name": "thorax_collision2",
+          "class": "collision",
+          "type": "ellipsoid",
+          "size": "0.0499 0.028 0.0114",
+          "pos": "-0.00445 0 0.0219",
+          "quat": "0 -0.199 0 -0.98"
+        },
+        {
+          "name": "thorax_black",
+          "material": "black",
+          "mass": "0",
+          "pos": "-0.00791 0 -0.123",
+          "quat": "0 0 0 -1",
+          "mesh": "thorax_black"
+        }
+      ]
+    },
+    {
+      "attributes": {
+        "name": "head",
+        "childclass": "head",
+        "pos": "0.0567 3.81e-07 -0.00305",
+        "quat": "0.702 -0.087 0.087 -0.702"
+      },
+      "joints": [
+        {
+          "name": "head_abduct",
+          "axis": "0 0 1",
+          "range": "-0.2 0.2"
+        },
+        {
+          "name": "head_twist",
+          "axis": "0 1 0",
+          "range": "-3 3"
+        },
+        {
+          "name": "head",
+          "axis": "1 0 0",
+          "range": "-0.5 0.3"
+        }
+      ],
+      "geoms": [
+        {
+          "name": "head_collision",
+          "class": "collision",
+          "type": "ellipsoid",
+          "size": "0.0455 0.0262 0.0324",
+          "pos": "0 0.0149 0.000875",
+          "euler": "0.3 0 0"
+        },
+        {
+          "name": "head",
+          "pos": "4.11e-07 -0.0334 -0.132",
+          "quat": "0.702 0.087 0.087 -0.702",
+          "mesh": "head"
+        },
+        {
+          "name": "head_red",
+          "material": "red",
+          "pos": "4.11e-07 -0.0334 -0.132",
+          "quat": "0.702 0.087 0.087 -0.702",
+          "mesh": "head_red"
+        },
+        {
+          "name": "head_ocelli",
+          "material": "ocelli",
+          "pos": "4.11e-07 -0.0334 -0.132",
+          "quat": "0.702 0.087 0.087 -0.702",
+          "mesh": "head_ocelli"
+        },
+        {
+          "name": "head_black",
+          "material": "black",
+          "mass": "0",
+          "pos": "4.11e-07 -0.0334 -0.132",
+          "quat": "0.702 0.087 0.087 -0.702",
+          "mesh": "head_black"
+        }
+      ]
+    },
+    {
+      "attributes": {
+        "name": "rostrum",
+        "pos": "0 0.0368 -0.0235",
+        "quat": "2.2e-07 -1.21e-07 0.192 -0.981"
+      },
+      "joints": [
+        {
+          "name": "rostrum",
+          "axis": "1 0 0",
+          "range": "-1.24 0.183",
+          "springref": "0.8"
+        }
+      ],
+      "geoms": [
+        {
+          "name": "rostrum",
+          "pos": "-4e-07 0.106 -0.0742",
+          "quat": "0.705 0.0494 -0.0494 0.705",
+          "mesh": "rostrum"
+        },
+        {
+          "name": "rostrum_collision_right",
+          "class": "collision",
+          "size": "0.0035",
+          "fromto": "0.00613 0.0324 0 0.0114 0.0245 -0.0236"
+        },
+        {
+          "name": "rostrum_collision_left",
+          "class": "collision",
+          "size": "0.0035",
+          "fromto": "-0.00613 0.0324 0 -0.0114 0.0245 -0.0236"
+        },
+        {
+          "name": "rostrum_collision",
+          "class": "collision",
+          "type": "ellipsoid",
+          "size": "0.0131 0.0219 0.0131",
+          "pos": "0 0.0175 0.00263",
+          "euler": "0.1 0 0"
+        },
+        {
+          "name": "rostrum_bristle-brown",
+          "material": "bristle-brown",
+          "pos": "-4e-07 0.106 -0.0742",
+          "quat": "0.705 0.0494 -0.0494 0.705",
+          "mesh": "rostrum_bristle-brown"
+        }
+      ]
+    },
+    {
+      "attributes": {
+        "name": "haustellum",
+        "pos": "0 0.0377 0",
+        "quat": "2.33e-07 -1.56e-07 -0.347 0.938"
+      },
+      "joints": [
+        {
+          "name": "haustellum_abduct",
+          "axis": "0 0 1",
+          "range": "-0.0873 0.0873"
+        },
+        {
+          "name": "haustellum",
+          "axis": "1 0 0",
+          "range": "-1.59 0.7",
+          "springref": "0.8"
+        }
+      ],
+      "geoms": [
+        {
+          "name": "haustellum",
+          "pos": "4.24e-07 -0.00352 -0.101",
+          "quat": "0.679 0.198 0.198 -0.679",
+          "mesh": "haustellum"
+        },
+        {
+          "name": "haustellum_collision",
+          "class": "collision",
+          "type": "capsule",
+          "size": "0.00788 0.00788",
+          "pos": "0 0.0123 -0.000948",
+          "quat": "0.633 0.774 0 0"
+        },
+        {
+          "name": "haustellum_black",
+          "material": "black",
+          "mass": "0",
+          "pos": "4.24e-07 -0.00352 -0.101",
+          "quat": "0.679 0.198 0.198 -0.679",
+          "mesh": "haustellum_black"
+        }
+      ]
+    },
+    {
+      "attributes": {
+        "name": "labrum_left",
+        "childclass": "labrum",
+        "pos": "-0.00263 0.0182 0",
+        "quat": "0.741 -0.0142 -0.591 0.319"
+      },
+      "joints": [
+        {
+          "name": "labrum_left",
+          "axis": "1 0 0",
+          "range": "-0.00524 1.05"
+        }
+      ],
+      "geoms": [
+        {
+          "name": "labrum_left_lower",
+          "material": "lower",
+          "pos": "-0.0977 0.0216 -0.0249",
+          "quat": "-0.166 0.181 -0.494 0.834",
+          "mesh": "labrum_left_lower"
+        },
+        {
+          "name": "labrum_left_lower_collision",
+          "class": "adhesion-collision",
+          "type": "ellipsoid",
+          "size": "0.0035 0.00875 0.0131",
+          "pos": "-0.000603 0.0106 -0.00438",
+          "quat": "-0.174 -0.715 0.0876 0.672"
+        }
+      ]
+    },
+    {
+      "attributes": {
+        "name": "labrum_right",
+        "childclass": "labrum",
+        "pos": "0.00263 0.0182 0",
+        "quat": "0.699 0.00274 0.642 -0.316"
+      },
+      "joints": [
+        {
+          "name": "labrum_right",
+          "axis": "1 0 0",
+          "range": "-0.00524 1.05"
+        }
+      ],
+      "geoms": [
+        {
+          "name": "labrum_right_lower",
+          "material": "lower",
+          "pos": "0.1 0.022 -0.0113",
+          "quat": "-0.817 -0.509 0.236 0.133",
+          "mesh": "labrum_right_lower"
+        },
+        {
+          "name": "labrum_right_lower_collision",
+          "class": "adhesion-collision",
+          "type": "ellipsoid",
+          "size": "0.0035 0.00875 0.0131",
+          "pos": "0.00116 0.0106 -0.00414",
+          "quat": "-0.175 -0.668 -0.0724 -0.719"
+        }
+      ]
+    },
+    {
+      "attributes": {
+        "name": "antenna_left",
+        "pos": "-0.00795 0.0378 0.0129",
+        "quat": "0.785 -0.59 -0.0128 0.192"
+      },
+      "joints": [
+        {
+          "name": "antenna_abduct_left",
+          "class": "antenna_abduct"
+        },
+        {
+          "name": "antenna_twist_left",
+          "class": "antenna_twist"
+        },
+        {
+          "name": "antenna_left",
+          "class": "antenna_extend"
+        }
+      ],
+      "geoms": [
+        {
+          "name": "antenna_left",
+          "pos": "0.0148 0.116 -0.112",
+          "quat": "0.364 0.49 0.474 -0.635",
+          "mesh": "antenna_left"
+        },
+        {
+          "name": "antenna_left_collision",
+          "class": "collision",
+          "type": "capsule",
+          "size": "0.00481 0.00875",
+          "pos": "0 0.0114 0.00263",
+          "quat": "0.634 -0.773 0 0"
+        },
+        {
+          "name": "antenna_left_black",
+          "material": "black",
+          "mass": "0",
+          "pos": "0.0148 0.116 -0.112",
+          "quat": "0.364 0.49 0.474 -0.635",
+          "mesh": "antenna_left_black"
+        }
+      ]
+    },
+    {
+      "attributes": {
+        "name": "antenna_right",
+        "pos": "0.00861 0.038 0.0129",
+        "quat": "0.59 0.785 -0.192 -0.0128"
+      },
+      "joints": [
+        {
+          "name": "antenna_abduct_right",
+          "class": "antenna_abduct"
+        },
+        {
+          "name": "antenna_twist_right",
+          "class": "antenna_twist"
+        },
+        {
+          "name": "antenna_right",
+          "class": "antenna_extend"
+        }
+      ],
+      "geoms": [
+        {
+          "name": "antenna_right",
+          "pos": "-0.0153 -0.116 0.112",
+          "quat": "-0.474 0.635 0.364 0.49",
+          "mesh": "antenna_right"
+        },
+        {
+          "name": "antenna_right_collision",
+          "class": "collision",
+          "type": "capsule",
+          "size": "0.00481 0.00875",
+          "pos": "-0.000616 -0.0114 -0.00231",
+          "quat": "0.782 0.623 -0.0258 -0.0164"
+        },
+        {
+          "name": "antenna_right_black",
+          "material": "black",
+          "mass": "0",
+          "pos": "-0.0153 -0.116 0.112",
+          "quat": "-0.474 0.635 0.364 0.49",
+          "mesh": "antenna_right_black"
+        }
+      ]
+    },
+    {
+      "attributes": {
+        "name": "wing_left",
+        "childclass": "wing",
+        "pos": "-0.00694 0.0432 0.0091",
+        "quat": "0 -0.403 0 -0.915"
+      },
+      "joints": [
+        {
+          "name": "wing_yaw_left",
+          "class": "yaw"
+        },
+        {
+          "name": "wing_roll_left",
+          "class": "roll"
+        },
+        {
+          "name": "wing_pitch_left",
+          "class": "pitch"
+        }
+      ],
+      "geoms": [
+        {
+          "name": "wing_left_brown",
+          "material": "brown",
+          "mass": "0",
+          "pos": "-0.0968 0.0432 -0.09",
+          "quat": "-0.915 0 -0.403 0",
+          "mesh": "wing_left_brown"
+        },
+        {
+          "name": "wing_left_brown_collision",
+          "class": "collision",
+          "type": "ellipsoid",
+          "size": "0.00219 0.0175 0.114",
+          "pos": "0.00186 -0.11 -0.00166",
+          "quat": "-0.673 -0.647 0.26 -0.248"
+        },
+        {
+          "name": "wing_left_membrane",
+          "material": "membrane",
+          "mass": "0",
+          "pos": "-0.0968 0.0432 -0.09",
+          "quat": "-0.915 0 -0.403 0",
+          "mesh": "wing_left_membrane"
+        },
+        {
+          "name": "wing_left_membrane_collision",
+          "class": "collision-membrane",
+          "type": "ellipsoid",
+          "size": "0.00306 0.0551 0.114",
+          "pos": "0.0263 -0.148 -0.0289",
+          "quat": "-0.685 -0.634 0.265 -0.243"
+        },
+        {
+          "name": "wing_left_fluid",
+          "class": "wing-fluid",
+          "size": "0.0005 0.0551 0.114",
+          "pos": "0.0263 -0.148 -0.0289",
+          "quat": "-0.685 -0.634 0.265 -0.243"
+        },
+        {
+          "name": "wing_left_inertial",
+          "class": "wing-inertial",
+          "size": "0.0005 0.0551 0.114",
+          "pos": "0.0263 -0.148 -0.0289",
+          "quat": "-0.685 -0.634 0.265 -0.243"
+        }
+      ]
+    },
+    {
+      "attributes": {
+        "name": "wing_right",
+        "childclass": "wing",
+        "pos": "-0.00694 -0.0432 0.0091",
+        "quat": "0 0.915 0 -0.403"
+      },
+      "joints": [
+        {
+          "name": "wing_yaw_right",
+          "class": "yaw"
+        },
+        {
+          "name": "wing_roll_right",
+          "class": "roll"
+        },
+        {
+          "name": "wing_pitch_right",
+          "class": "pitch"
+        }
+      ],
+      "geoms": [
+        {
+          "name": "wing_right_brown",
+          "material": "brown",
+          "mass": "0",
+          "pos": "0.0968 -0.0432 0.09",
+          "quat": "-0.403 0 0.915 0",
+          "mesh": "wing_right_brown"
+        },
+        {
+          "name": "wing_right_brown_collision",
+          "class": "collision",
+          "type": "ellipsoid",
+          "size": "0.00219 0.0175 0.114",
+          "pos": "-0.00186 0.11 0.00166",
+          "quat": "0.248 0.26 0.647 -0.673"
+        },
+        {
+          "name": "wing_right_membrane",
+          "material": "membrane",
+          "mass": "0",
+          "pos": "0.0968 -0.0432 0.09",
+          "quat": "-0.403 0 0.915 0",
+          "mesh": "wing_right_membrane"
+        },
+        {
+          "name": "wing_right_membrane_collision",
+          "class": "collision-membrane",
+          "type": "ellipsoid",
+          "size": "0.00306 0.0551 0.114",
+          "pos": "-0.0263 0.148 0.0289",
+          "quat": "0.243 0.265 0.634 -0.685"
+        },
+        {
+          "name": "wing_right_fluid",
+          "class": "wing-fluid",
+          "size": "0.0005 0.0551 0.114",
+          "pos": "-0.0263 0.148 0.0289",
+          "quat": "0.243 0.265 0.634 -0.685"
+        },
+        {
+          "name": "wing_right_inertial",
+          "class": "wing-inertial",
+          "size": "0.0005 0.0551 0.114",
+          "pos": "-0.0263 0.148 0.0289",
+          "quat": "0.243 0.265 0.634 -0.685"
+        }
+      ]
+    },
+    {
+      "attributes": {
+        "name": "abdomen",
+        "childclass": "abdomen",
+        "pos": "-0.0447 -0.000555 0.00428",
+        "quat": "-0.704 -0.0859 -0.0853 -0.7"
+      },
+      "joints": [
+        {
+          "name": "abdomen_abduct",
+          "class": "abduct_abdomen"
+        },
+        {
+          "name": "abdomen",
+          "class": "extend_abdomen"
+        }
+      ],
+      "geoms": [
+        {
+          "name": "abdomen",
+          "pos": "0.000758 -0.0663 -0.115",
+          "quat": "0.7 -0.0853 0.0859 0.704",
+          "mesh": "abdomen_1"
+        },
+        {
+          "name": "abdomen_lower",
+          "material": "lower",
+          "pos": "0.000758 -0.0663 -0.115",
+          "quat": "0.7 -0.0853 0.0859 0.704",
+          "mesh": "abdomen_1_lower"
+        },
+        {
+          "name": "abdomen_collision",
+          "class": "collision",
+          "type": "cylinder",
+          "size": "0.0281 0.0102 0",
+          "pos": "-0.000187 0.00646 -0.0146",
+          "quat": "0.0104 -0.0205 0.824 0.566"
+        }
+      ]
+    },
+    {
+      "attributes": {
+        "name": "abdomen_2",
+        "pos": "0 0.0119 0",
+        "quat": "0.981 -0.192 -0.000269 0.00144"
+      },
+      "joints": [
+        {
+          "name": "abdomen_abduct_2",
+          "class": "abduct_abdomen"
+        },
+        {
+          "name": "abdomen_2",
+          "class": "extend_abdomen"
+        }
+      ],
+      "geoms": [
+        {
+          "name": "abdomen_2",
+          "pos": "0.000532 -0.0293 -0.136",
+          "quat": "0.704 0.0507 -0.0503 0.706",
+          "mesh": "abdomen_2"
+        },
+        {
+          "name": "abdomen_2_lower",
+          "material": "lower",
+          "pos": "0.000532 -0.0293 -0.136",
+          "quat": "0.704 0.0507 -0.0503 0.706",
+          "mesh": "abdomen_2_lower"
+        },
+        {
+          "name": "abdomen_2_collision",
+          "class": "collision",
+          "type": "cylinder",
+          "size": "0.0367 0.0142 0",
+          "pos": "-0.000182 0.0166 -0.0177",
+          "quat": "-0.0111 0.0103 0.695 0.719"
+        }
+      ]
+    },
+    {
+      "attributes": {
+        "name": "abdomen_3",
+        "pos": "0 0.0212 0",
+        "quat": "0.996 -0.0909 6.69e-05 0.000525"
+      },
+      "joints": [
+        {
+          "name": "abdomen_abduct_3",
+          "class": "abduct_abdomen"
+        },
+        {
+          "name": "abdomen_3",
+          "class": "extend_abdomen"
+        }
+      ],
+      "geoms": [
+        {
+          "name": "abdomen_3",
+          "pos": "0.000511 -0.0251 -0.143",
+          "quat": "0.697 0.114 -0.114 0.699",
+          "mesh": "abdomen_3"
+        },
+        {
+          "name": "abdomen_3_lower",
+          "material": "lower",
+          "pos": "0.000511 -0.0251 -0.143",
+          "quat": "0.697 0.114 -0.114 0.699",
+          "mesh": "abdomen_3_lower"
+        },
+        {
+          "name": "abdomen_3_collision",
+          "class": "collision",
+          "type": "cylinder",
+          "size": "0.0389 0.0194 0",
+          "pos": "3.29e-05 0.0198 -0.0174",
+          "quat": "0.71 -0.591 0.239 0.3"
+        }
+      ]
+    },
+    {
+      "attributes": {
+        "name": "abdomen_4",
+        "pos": "0 0.0313 0",
+        "quat": "0.999 -0.0332 0.000147 -0.000229"
+      },
+      "joints": [
+        {
+          "name": "abdomen_abduct_4",
+          "class": "abduct_abdomen"
+        },
+        {
+          "name": "abdomen_4",
+          "class": "extend_abdomen"
+        }
+      ],
+      "geoms": [
+        {
+          "name": "abdomen_4",
+          "pos": "0.000577 -0.0468 -0.146",
+          "quat": "0.693 0.137 -0.138 0.695",
+          "mesh": "abdomen_4"
+        },
+        {
+          "name": "abdomen_4_lower",
+          "material": "lower",
+          "pos": "0.000577 -0.0468 -0.146",
+          "quat": "0.693 0.137 -0.138 0.695",
+          "mesh": "abdomen_4_lower"
+        },
+        {
+          "name": "abdomen_4_collision",
+          "class": "collision",
+          "type": "cylinder",
+          "size": "0.0396 0.0176 0",
+          "pos": "9.67e-05 0.015 -0.0192",
+          "quat": "0.0186 -0.0235 0.637 0.77"
+        }
+      ]
+    },
+    {
+      "attributes": {
+        "name": "abdomen_5",
+        "pos": "0 0.0262 0",
+        "quat": "0.999 -0.0368 -4.72e-05 -0.000327"
+      },
+      "joints": [
+        {
+          "name": "abdomen_abduct_5",
+          "class": "abduct_abdomen"
+        },
+        {
+          "name": "abdomen_5",
+          "class": "extend_abdomen"
+        }
+      ],
+      "geoms": [
+        {
+          "name": "abdomen_5",
+          "pos": "0.000607 -0.062 -0.151",
+          "quat": "0.687 0.163 -0.163 0.689",
+          "mesh": "abdomen_5"
+        },
+        {
+          "name": "abdomen_5_lower",
+          "material": "lower",
+          "pos": "0.000607 -0.062 -0.151",
+          "quat": "0.687 0.163 -0.163 0.689",
+          "mesh": "abdomen_5_lower"
+        },
+        {
+          "name": "abdomen_5_collision",
+          "class": "collision",
+          "type": "cylinder",
+          "size": "0.0371 0.016 0",
+          "pos": "0.000282 0.0105 -0.0187",
+          "quat": "0.0262 -0.0206 0.624 0.781"
+        }
+      ]
+    },
+    {
+      "attributes": {
+        "name": "abdomen_6",
+        "pos": "0 0.0213 0",
+        "quat": "0.998 -0.0662 0.000156 -0.000351"
+      },
+      "joints": [
+        {
+          "name": "abdomen_abduct_6",
+          "class": "abduct_abdomen"
+        },
+        {
+          "name": "abdomen_6",
+          "class": "extend_abdomen"
+        }
+      ],
+      "geoms": [
+        {
+          "name": "abdomen_6",
+          "pos": "0.000707 -0.0626 -0.161",
+          "quat": "0.674 0.208 -0.208 0.677",
+          "mesh": "abdomen_6"
+        },
+        {
+          "name": "abdomen_6_lower",
+          "material": "lower",
+          "pos": "0.000707 -0.0626 -0.161",
+          "quat": "0.674 0.208 -0.208 0.677",
+          "mesh": "abdomen_6_lower"
+        },
+        {
+          "name": "abdomen_6_collision",
+          "class": "collision",
+          "type": "cylinder",
+          "size": "0.0334 0.0141 0",
+          "pos": "-0.000157 0.00942 -0.017",
+          "quat": "-0.00292 0.00201 0.592 0.806"
+        }
+      ]
+    },
+    {
+      "attributes": {
+        "name": "abdomen_7",
+        "pos": "0 0.0182 0",
+        "quat": "0.995 -0.102 -1.79e-06 -0.000187"
+      },
+      "joints": [
+        {
+          "name": "abdomen_abduct_7",
+          "class": "abduct_abdomen"
+        },
+        {
+          "name": "abdomen_7",
+          "class": "extend_abdomen"
+        }
+      ],
+      "geoms": [
+        {
+          "name": "abdomen_8",
+          "pos": "0.000731 -0.0464 -0.174",
+          "quat": "0.649 0.276 -0.276 0.653",
+          "mesh": "abdomen_8"
+        },
+        {
+          "name": "abdomen_7",
+          "pos": "0.000731 -0.0464 -0.174",
+          "quat": "0.649 0.276 -0.276 0.653",
+          "mesh": "abdomen_7"
+        },
+        {
+          "name": "abdomen_7_collision",
+          "class": "collision",
+          "type": "sphere",
+          "size": "0.0262",
+          "pos": "-3.83e-05 0.0134 -0.0108"
+        },
+        {
+          "name": "abdomen_7_lower",
+          "material": "lower",
+          "pos": "0.000731 -0.0464 -0.174",
+          "quat": "0.649 0.276 -0.276 0.653",
+          "mesh": "abdomen_7_lower"
+        }
+      ]
+    },
+    {
+      "attributes": {
+        "name": "haltere_left",
+        "childclass": "haltere",
+        "pos": "-0.0386 0.0247 -0.00866",
+        "quat": "0.291 -0.204 0.826 0.439"
+      },
+      "joints": [
+        {
+          "name": "haltere_left"
+        }
+      ],
+      "geoms": [
+        {
+          "name": "haltere_left",
+          "pos": "0.0545 -0.101 0.0395",
+          "quat": "-0.439 0.826 0.204 -0.291",
+          "mesh": "haltere_left"
+        }
+      ]
+    },
+    {
+      "attributes": {
+        "name": "haltere_right",
+        "childclass": "haltere",
+        "pos": "-0.0386 -0.0247 -0.00866",
+        "quat": "-0.438 -0.829 0.206 -0.28"
+      },
+      "joints": [
+        {
+          "name": "haltere_right"
+        }
+      ],
+      "geoms": [
+        {
+          "name": "haltere_right",
+          "pos": "-0.0528 -0.101 0.0405",
+          "quat": "0.28 0.206 0.829 0.438",
+          "mesh": "haltere_right"
+        }
+      ]
+    },
+    {
+      "attributes": {
+        "name": "coxa_T1_left",
+        "childclass": "leg",
+        "pos": "0.0317 0.0209 -0.0272",
+        "quat": "-0.532 0.787 -0.311 -0.0229"
+      },
+      "joints": [
+        {
+          "name": "coxa_abduct_T1_left",
+          "class": "abduct_coxa_T1"
+        },
+        {
+          "name": "coxa_twist_T1_left",
+          "class": "twist_coxa_T1"
+        },
+        {
+          "name": "coxa_T1_left",
+          "class": "extend_coxa_T1"
+        }
+      ],
+      "geoms": [
+        {
+          "name": "coxa_T1_left",
+          "pos": "0.0131 0.104 0.0119",
+          "quat": "0.0229 -0.311 -0.787 0.532",
+          "mesh": "coxa_T1_left"
+        },
+        {
+          "name": "coxa_T1_left_collision",
+          "class": "collision",
+          "type": "ellipsoid",
+          "size": "0.00679 0.00752 0.0208",
+          "pos": "-2.04e-05 0.0261 -0.000454",
+          "quat": "-0.417 -0.383 -0.532 0.63"
+        }
+      ]
+    },
+    {
+      "attributes": {
+        "name": "femur_T1_left",
+        "pos": "0 0.0437 0",
+        "quat": "0 0 0.252 0.968"
+      },
+      "joints": [
+        {
+          "name": "femur_twist_T1_left",
+          "class": "twist_femur"
+        },
+        {
+          "name": "femur_T1_left",
+          "class": "extend_femur_T1"
+        }
+      ],
+      "geoms": [
+        {
+          "name": "femur_T1_left",
+          "pos": "-0.0131 -0.0472 0.04",
+          "quat": "0.316 -0.896 0.295 -0.101",
+          "mesh": "femur_T1_left"
+        },
+        {
+          "name": "femur_T1_left_collision",
+          "class": "collision",
+          "size": "0.005",
+          "fromto": "0.00263 0.00263 0.00438 0 0.0662 0"
+        }
+      ]
+    },
+    {
+      "attributes": {
+        "name": "tibia_T1_left",
+        "pos": "0 0.0697 0",
+        "quat": "0.186 0.162 0.677 -0.694"
+      },
+      "joints": [
+        {
+          "name": "tibia_T1_left",
+          "class": "extend_tibia"
+        }
+      ],
+      "geoms": [
+        {
+          "name": "tibia_T1_left",
+          "pos": "-0.00315 -0.0396 0.118",
+          "quat": "-0.183 0.354 0.797 0.453",
+          "mesh": "tibia_T1_left"
+        },
+        {
+          "name": "tibia_T1_left_collision",
+          "class": "collision",
+          "size": "0.00362",
+          "fromto": "0 0 0 0 -0.051 0.00175"
+        }
+      ]
+    },
+    {
+      "attributes": {
+        "name": "tarsus_T1_left",
+        "pos": "0 -0.051 0.00175",
+        "quat": "0.039 0.998 0.00674 0.0474"
+      },
+      "joints": [
+        {
+          "name": "tarsus_T1_left",
+          "class": "extend_tarsus_T1"
+        }
+      ],
+      "geoms": [
+        {
+          "name": "tarsus_T1_left",
+          "pos": "0.00797 -0.00233 -0.116",
+          "quat": "-0.373 -0.231 -0.468 0.767",
+          "mesh": "tarsus_T1_1_left"
+        },
+        {
+          "name": "tarsus_T1_left_collision",
+          "class": "collision",
+          "size": "0.00204",
+          "fromto": "0 0 0 -0.000165 0.0235 0.00174"
+        }
+      ]
+    },
+    {
+      "attributes": {
+        "name": "tarsus2_T1_left",
+        "pos": "-0.000165 0.0235 0.00174"
+      },
+      "joints": [
+        {
+          "name": "tarsus2_T1_left",
+          "class": "extend_tarsus"
+        }
+      ],
+      "geoms": [
+        {
+          "name": "tarsus2_T1_left",
+          "pos": "0.00813 -0.0258 -0.118",
+          "quat": "0.373 0.231 0.468 -0.767",
+          "mesh": "tarsus_T1_2_left"
+        },
+        {
+          "name": "tarsus2_T1_left_collision",
+          "class": "collision",
+          "size": "0.00159",
+          "fromto": "0 0 0 0.000113 0.0136 0.000556"
+        }
+      ]
+    },
+    {
+      "attributes": {
+        "name": "tarsus3_T1_left",
+        "pos": "0.000113 0.0136 0.000556"
+      },
+      "joints": [
+        {
+          "name": "tarsus3_T1_left",
+          "class": "extend_tarsus"
+        }
+      ],
+      "geoms": [
+        {
+          "name": "tarsus3_T1_left",
+          "pos": "0.00802 -0.0394 -0.119",
+          "quat": "-0.373 -0.231 -0.468 0.767",
+          "mesh": "tarsus_T1_3_left"
+        },
+        {
+          "name": "tarsus3_T1_left_collision",
+          "class": "collision",
+          "size": "0.00149",
+          "fromto": "0 0 0 -0.000255 0.00909 0.0002"
+        }
+      ]
+    },
+    {
+      "attributes": {
+        "name": "tarsus4_T1_left",
+        "pos": "-0.000255 0.00909 0.0002"
+      },
+      "joints": [
+        {
+          "name": "tarsus4_T1_left",
+          "class": "extend_tarsus"
+        }
+      ],
+      "geoms": [
+        {
+          "name": "tarsus4_T1_left",
+          "pos": "0.00827 -0.0485 -0.119",
+          "quat": "0.373 0.231 0.468 -0.767",
+          "mesh": "tarsus_T1_4_left"
+        },
+        {
+          "name": "tarsus4_T1_left_collision",
+          "class": "collision",
+          "size": "0.00148",
+          "fromto": "0 0 0 -7.12e-05 0.00906 -0.00081"
+        }
+      ]
+    },
+    {
+      "attributes": {
+        "name": "claw_T1_left",
+        "pos": "-7.12e-05 0.00906 -0.00081"
+      },
+      "joints": [
+        {
+          "name": "tarsus5_T1_left",
+          "class": "extend_tarsus"
+        }
+      ],
+      "geoms": [
+        {
+          "name": "tarsal_claw_T1_left",
+          "material": "brown",
+          "pos": "0.00835 -0.0575 -0.118",
+          "quat": "-0.373 -0.231 -0.468 0.767",
+          "mesh": "tarsal_claw_T1_left_brown"
+        },
+        {
+          "name": "tarsal_claw_T1_left_collision",
+          "class": "adhesion-collision",
+          "type": "capsule",
+          "size": "0.00199",
+          "fromto": "0 0 0 -7.12e-05 0.00906 -0.00081"
+        }
+      ]
+    },
+    {
+      "attributes": {
+        "name": "coxa_T1_right",
+        "childclass": "leg",
+        "pos": "0.0317 -0.0209 -0.0272",
+        "quat": "0.319 0.011 -0.543 -0.777"
+      },
+      "joints": [
+        {
+          "name": "coxa_abduct_T1_right",
+          "class": "abduct_coxa_T1"
+        },
+        {
+          "name": "coxa_twist_T1_right",
+          "class": "twist_coxa_T1"
+        },
+        {
+          "name": "coxa_T1_right",
+          "class": "extend_coxa_T1"
+        }
+      ],
+      "geoms": [
+        {
+          "name": "coxa_T1_right",
+          "pos": "-0.0104 -0.105 -0.00761",
+          "quat": "-0.777 0.543 0.011 0.319",
+          "mesh": "coxa_T1_right"
+        },
+        {
+          "name": "coxa_T1_right_collision",
+          "class": "collision",
+          "type": "ellipsoid",
+          "size": "0.00679 0.00752 0.0208",
+          "pos": "0.00061 -0.026 0.00153",
+          "quat": "-0.508 0.628 0.447 0.385"
+        }
+      ]
+    },
+    {
+      "attributes": {
+        "name": "femur_T1_right",
+        "pos": "0 -0.0436 0",
+        "quat": "0 0 0.261 0.965"
+      },
+      "joints": [
+        {
+          "name": "femur_twist_T1_right",
+          "class": "twist_femur"
+        },
+        {
+          "name": "femur_T1_right",
+          "class": "extend_femur_T1"
+        }
+      ],
+      "geoms": [
+        {
+          "name": "femur_T1_right",
+          "pos": "0.0104 0.0492 -0.0376",
+          "quat": "-0.31 0.0726 0.321 -0.892",
+          "mesh": "femur_T1_right"
+        },
+        {
+          "name": "femur_T1_right_collision",
+          "class": "collision",
+          "size": "0.005",
+          "fromto": "-0.00263 -0.00263 -0.00438 0 -0.0663 0"
+        }
+      ]
+    },
+    {
+      "attributes": {
+        "name": "tibia_T1_right",
+        "pos": "0 -0.0698 0",
+        "quat": "0.163 0.148 0.688 -0.692"
+      },
+      "joints": [
+        {
+          "name": "tibia_T1_right",
+          "class": "extend_tibia"
+        }
+      ],
+      "geoms": [
+        {
+          "name": "tibia_T1_right",
+          "pos": "0.00407 0.0384 -0.119",
+          "quat": "-0.798 -0.45 -0.184 0.357",
+          "mesh": "tibia_T1_right"
+        },
+        {
+          "name": "tibia_T1_right_collision",
+          "class": "collision",
+          "size": "0.00362",
+          "fromto": "0 0 0 0 0.0515 -0.00175"
+        }
+      ]
+    },
+    {
+      "attributes": {
+        "name": "tarsus_T1_right",
+        "pos": "0 0.0515 -0.00175",
+        "quat": "-0.0745 -0.995 0.0133 0.0704"
+      },
+      "joints": [
+        {
+          "name": "tarsus_T1_right",
+          "class": "extend_tarsus_T1"
+        }
+      ],
+      "geoms": [
+        {
+          "name": "tarsus_T1_right",
+          "pos": "0.0207 -0.00479 0.116",
+          "quat": "-0.529 0.778 0.299 0.16",
+          "mesh": "tarsus_T1_1_right"
+        },
+        {
+          "name": "tarsus_T1_right_collision",
+          "class": "collision",
+          "size": "0.00204",
+          "fromto": "0 0 0 -0.000965 -0.0227 -0.00161"
+        }
+      ]
+    },
+    {
+      "attributes": {
+        "name": "tarsus2_T1_right",
+        "pos": "-0.000965 -0.0227 -0.00161"
+      },
+      "joints": [
+        {
+          "name": "tarsus2_T1_right",
+          "class": "extend_tarsus"
+        }
+      ],
+      "geoms": [
+        {
+          "name": "tarsus2_T1_right",
+          "pos": "0.0217 0.0179 0.118",
+          "quat": "0.529 -0.778 -0.299 -0.16",
+          "mesh": "tarsus_T1_2_right"
+        },
+        {
+          "name": "tarsus2_T1_right_collision",
+          "class": "collision",
+          "size": "0.00159",
+          "fromto": "0 0 0 0.000143 -0.0136 -0.00168"
+        }
+      ]
+    },
+    {
+      "attributes": {
+        "name": "tarsus3_T1_right",
+        "pos": "0.000143 -0.0136 -0.00168"
+      },
+      "joints": [
+        {
+          "name": "tarsus3_T1_right",
+          "class": "extend_tarsus"
+        }
+      ],
+      "geoms": [
+        {
+          "name": "tarsus3_T1_right",
+          "pos": "0.0215 0.0316 0.12",
+          "quat": "-0.529 0.778 0.299 0.16",
+          "mesh": "tarsus_T1_3_right"
+        },
+        {
+          "name": "tarsus3_T1_right_collision",
+          "class": "collision",
+          "size": "0.00149",
+          "fromto": "0 0 0 0.000437 -0.00899 -0.00063"
+        }
+      ]
+    },
+    {
+      "attributes": {
+        "name": "tarsus4_T1_right",
+        "pos": "0.000437 -0.00899 -0.00063"
+      },
+      "joints": [
+        {
+          "name": "tarsus4_T1_right",
+          "class": "extend_tarsus"
+        }
+      ],
+      "geoms": [
+        {
+          "name": "tarsus4_T1_right",
+          "pos": "0.0211 0.0405 0.12",
+          "quat": "0.529 -0.778 -0.299 -0.16",
+          "mesh": "tarsus_T1_4_right"
+        },
+        {
+          "name": "tarsus4_T1_right_collision",
+          "class": "collision",
+          "size": "0.00148",
+          "fromto": "0 0 0 0.000765 -0.00899 0.000134"
+        }
+      ]
+    },
+    {
+      "attributes": {
+        "name": "claw_T1_right",
+        "pos": "0.000765 -0.00899 0.000134"
+      },
+      "joints": [
+        {
+          "name": "tarsus5_T1_right",
+          "class": "extend_tarsus"
+        }
+      ],
+      "geoms": [
+        {
+          "name": "tarsal_claw_T1_right",
+          "material": "brown",
+          "pos": "0.0203 0.0495 0.12",
+          "quat": "-0.529 0.778 0.299 0.16",
+          "mesh": "tarsal_claw_T1_right_brown"
+        },
+        {
+          "name": "tarsal_claw_T1_right_collision",
+          "class": "adhesion-collision",
+          "type": "capsule",
+          "size": "0.00199",
+          "fromto": "0 0 0 0.000765 -0.00899 0.000134"
+        }
+      ]
+    },
+    {
+      "attributes": {
+        "name": "coxa_T2_left",
+        "childclass": "leg",
+        "pos": "-0.0144 0.0241 -0.0425",
+        "quat": "-0.371 0.917 -0.126 -0.0722"
+      },
+      "joints": [
+        {
+          "name": "coxa_abduct_T2_left",
+          "class": "abduct_coxa_T2"
+        },
+        {
+          "name": "coxa_twist_T2_left",
+          "class": "twist_coxa_T2"
+        },
+        {
+          "name": "coxa_T2_left",
+          "class": "extend_coxa_T2"
+        }
+      ],
+      "geoms": [
+        {
+          "name": "coxa_T2_left",
+          "pos": "0.0287 0.0682 0.0404",
+          "quat": "0.0722 -0.126 -0.917 0.371",
+          "mesh": "coxa_T2_left"
+        },
+        {
+          "name": "coxa_T2_left_collision",
+          "class": "collision",
+          "type": "ellipsoid",
+          "size": "0.00788 0.007 0.0149",
+          "pos": "0.000349 0.0143 -0.00216",
+          "quat": "0.707 -0.707 0 0"
+        }
+      ]
+    },
+    {
+      "attributes": {
+        "name": "femur_T2_left",
+        "pos": "0 0.0281 0",
+        "quat": "0 0 0.128 0.992"
+      },
+      "joints": [
+        {
+          "name": "femur_twist_T2_left",
+          "class": "twist_femur_T2"
+        },
+        {
+          "name": "femur_T2_left",
+          "class": "extend_femur_T2"
+        }
+      ],
+      "geoms": [
+        {
+          "name": "femur_T2_left",
+          "pos": "-0.0287 -0.0285 0.0493",
+          "quat": "0.251 -0.957 0.116 -0.0879",
+          "mesh": "femur_T2_left"
+        },
+        {
+          "name": "femur_T2_left_collision",
+          "class": "collision",
+          "size": "0.00469",
+          "fromto": "0 0.00263 0.00438 0 0.0789 0"
+        }
+      ]
+    },
+    {
+      "attributes": {
+        "name": "tibia_T2_left",
+        "pos": "0 0.083 0",
+        "quat": "0.107 0.0834 0.656 -0.742"
+      },
+      "joints": [
+        {
+          "name": "tibia_T2_left",
+          "class": "extend_tibia_T2"
+        }
+      ],
+      "geoms": [
+        {
+          "name": "tibia_T2_left",
+          "pos": "0.0202 -0.0418 0.116",
+          "quat": "-0.0884 0.152 0.87 0.461",
+          "mesh": "tibia_T2_left"
+        },
+        {
+          "name": "tibia_T2_left_collision",
+          "class": "collision",
+          "size": "0.00352",
+          "fromto": "0 0 0 0 -0.0668 0.00175"
+        }
+      ]
+    },
+    {
+      "attributes": {
+        "name": "tarsus_T2_left",
+        "pos": "0 -0.0668 0.00175",
+        "quat": "-0.148 0.978 -0.0216 -0.143"
+      },
+      "joints": [
+        {
+          "name": "tarsus_T2_left",
+          "class": "extend_tarsus_T2"
+        }
+      ],
+      "geoms": [
+        {
+          "name": "tarsus_T2_left",
+          "pos": "-0.0134 -0.0581 -0.103",
+          "quat": "-0.0774 0.0502 -0.342 0.935",
+          "mesh": "tarsus_T2_1_left"
+        },
+        {
+          "name": "tarsus_T2_left_collision",
+          "class": "collision",
+          "size": "0.00208",
+          "fromto": "0 0 0 0.000471 0.0342 0.00136"
+        }
+      ]
+    },
+    {
+      "attributes": {
+        "name": "tarsus2_T2_left",
+        "pos": "0.000471 0.0342 0.00136"
+      },
+      "joints": [
+        {
+          "name": "tarsus2_T2_left",
+          "class": "extend_tarsus"
+        }
+      ],
+      "geoms": [
+        {
+          "name": "tarsus2_T2_left",
+          "pos": "-0.0138 -0.0923 -0.104",
+          "quat": "0.0774 -0.0502 0.342 -0.935",
+          "mesh": "tarsus_T2_2_left"
+        },
+        {
+          "name": "tarsus2_T2_left_collision",
+          "class": "collision",
+          "size": "0.00162",
+          "fromto": "0 0 0 2.42e-05 0.0178 0.000203"
+        }
+      ]
+    },
+    {
+      "attributes": {
+        "name": "tarsus3_T2_left",
+        "pos": "2.42e-05 0.0178 0.000203"
+      },
+      "joints": [
+        {
+          "name": "tarsus3_T2_left",
+          "class": "extend_tarsus"
+        }
+      ],
+      "geoms": [
+        {
+          "name": "tarsus3_T2_left",
+          "pos": "-0.0139 -0.11 -0.105",
+          "quat": "-0.0774 0.0502 -0.342 0.935",
+          "mesh": "tarsus_T2_3_left"
+        },
+        {
+          "name": "tarsus3_T2_left_collision",
+          "class": "collision",
+          "size": "0.00149",
+          "fromto": "0 0 0 -3.11e-05 0.00991 0.000292"
+        }
+      ]
+    },
+    {
+      "attributes": {
+        "name": "tarsus4_T2_left",
+        "pos": "-3.11e-05 0.00991 0.000292"
+      },
+      "joints": [
+        {
+          "name": "tarsus4_T2_left",
+          "class": "extend_tarsus"
+        }
+      ],
+      "geoms": [
+        {
+          "name": "tarsus4_T2_left",
+          "pos": "-0.0138 -0.12 -0.105",
+          "quat": "0.0774 -0.0502 0.342 -0.935",
+          "mesh": "tarsus_T2_4_left"
+        },
+        {
+          "name": "tarsus4_T2_left_collision",
+          "class": "collision",
+          "size": "0.00146",
+          "fromto": "0 0 0 3.6e-05 0.00991 -0.000254"
+        }
+      ]
+    },
+    {
+      "attributes": {
+        "name": "claw_T2_left",
+        "pos": "3.6e-05 0.00991 -0.000254"
+      },
+      "joints": [
+        {
+          "name": "tarsus5_T2_left",
+          "class": "extend_tarsus"
+        }
+      ],
+      "geoms": [
+        {
+          "name": "tarsal_claw_T2_left",
+          "material": "brown",
+          "pos": "-0.0139 -0.13 -0.105",
+          "quat": "-0.0774 0.0502 -0.342 0.935",
+          "mesh": "tarsal_claw_T2_left_brown"
+        },
+        {
+          "name": "tarsal_claw_T2_left_collision",
+          "class": "adhesion-collision",
+          "type": "capsule",
+          "size": "0.002",
+          "fromto": "0 0 0 3.6e-05 0.00991 -0.000254"
+        }
+      ]
+    },
+    {
+      "attributes": {
+        "name": "coxa_T2_right",
+        "childclass": "leg",
+        "pos": "-0.0144 -0.0241 -0.0425",
+        "quat": "0.126 -0.0709 -0.374 -0.916"
+      },
+      "joints": [
+        {
+          "name": "coxa_abduct_T2_right",
+          "class": "abduct_coxa_T2"
+        },
+        {
+          "name": "coxa_twist_T2_right",
+          "class": "twist_coxa_T2"
+        },
+        {
+          "name": "coxa_T2_right",
+          "class": "extend_coxa_T2"
+        }
+      ],
+      "geoms": [
+        {
+          "name": "coxa_T2_right",
+          "pos": "-0.0285 -0.0685 -0.0403",
+          "quat": "-0.916 0.374 -0.0709 0.126",
+          "mesh": "coxa_T2_right"
+        },
+        {
+          "name": "coxa_T2_right_collision",
+          "class": "collision",
+          "type": "ellipsoid",
+          "size": "0.00788 0.007 0.0149",
+          "pos": "-0.000335 -0.0143 0.00206",
+          "quat": "0.707 0.707 0 0"
+        }
+      ]
+    },
+    {
+      "attributes": {
+        "name": "femur_T2_right",
+        "pos": "0 -0.0282 0",
+        "quat": "0 0 0.134 0.991"
+      },
+      "joints": [
+        {
+          "name": "femur_twist_T2_right",
+          "class": "twist_femur_T2"
+        },
+        {
+          "name": "femur_T2_right",
+          "class": "extend_femur_T2"
+        }
+      ],
+      "geoms": [
+        {
+          "name": "femur_T2_right",
+          "pos": "0.0285 0.0282 -0.0496",
+          "quat": "-0.115 0.0871 0.247 -0.958",
+          "mesh": "femur_T2_right"
+        },
+        {
+          "name": "femur_T2_right_collision",
+          "class": "collision",
+          "size": "0.00469",
+          "fromto": "0 -0.00263 -0.00438 0 -0.0798 0"
+        }
+      ]
+    },
+    {
+      "attributes": {
+        "name": "tibia_T2_right",
+        "pos": "0 -0.084 0",
+        "quat": "0.0902 0.103 0.659 -0.739"
+      },
+      "joints": [
+        {
+          "name": "tibia_T2_right",
+          "class": "extend_tibia_T2"
+        }
+      ],
+      "geoms": [
+        {
+          "name": "tibia_T2_right",
+          "pos": "-0.0138 0.0423 -0.118",
+          "quat": "-0.87 -0.469 -0.064 0.139",
+          "mesh": "tibia_T2_right"
+        },
+        {
+          "name": "tibia_T2_right_collision",
+          "class": "collision",
+          "size": "0.00353",
+          "fromto": "0 0 0 0 0.0665 -0.00175"
+        }
+      ]
+    },
+    {
+      "attributes": {
+        "name": "tarsus_T2_right",
+        "pos": "0 0.0665 -0.00175",
+        "quat": "0.15 -0.982 0.0172 0.113"
+      },
+      "joints": [
+        {
+          "name": "tarsus_T2_right",
+          "class": "extend_tarsus_T2"
+        }
+      ],
+      "geoms": [
+        {
+          "name": "tarsus_T2_right",
+          "pos": "0.0128 0.0578 0.104",
+          "quat": "-0.344 0.934 0.0789 -0.0479",
+          "mesh": "tarsus_T2_1_right"
+        },
+        {
+          "name": "tarsus_T2_right_collision",
+          "class": "collision",
+          "size": "0.00208",
+          "fromto": "0 0 0 -0.000367 -0.0339 -0.00103"
+        }
+      ]
+    },
+    {
+      "attributes": {
+        "name": "tarsus2_T2_right",
+        "pos": "-0.000367 -0.0339 -0.00103"
+      },
+      "joints": [
+        {
+          "name": "tarsus2_T2_right",
+          "class": "extend_tarsus"
+        }
+      ],
+      "geoms": [
+        {
+          "name": "tarsus2_T2_right",
+          "pos": "0.0132 0.0917 0.105",
+          "quat": "0.344 -0.934 -0.0788 0.0479",
+          "mesh": "tarsus_T2_2_right"
+        },
+        {
+          "name": "tarsus2_T2_right_collision",
+          "class": "collision",
+          "size": "0.00162",
+          "fromto": "0 0 0 1.72e-05 -0.0177 -0.000553"
+        }
+      ]
+    },
+    {
+      "attributes": {
+        "name": "tarsus3_T2_right",
+        "pos": "1.72e-05 -0.0177 -0.000553"
+      },
+      "joints": [
+        {
+          "name": "tarsus3_T2_right",
+          "class": "extend_tarsus"
+        }
+      ],
+      "geoms": [
+        {
+          "name": "tarsus3_T2_right",
+          "pos": "0.0132 0.109 0.105",
+          "quat": "-0.344 0.934 0.0788 -0.0479",
+          "mesh": "tarsus_T2_3_right"
+        },
+        {
+          "name": "tarsus3_T2_right_collision",
+          "class": "collision",
+          "size": "0.00149",
+          "fromto": "0 0 0 5.07e-05 -0.00988 -0.000293"
+        }
+      ]
+    },
+    {
+      "attributes": {
+        "name": "tarsus4_T2_right",
+        "pos": "5.07e-05 -0.00988 -0.000293"
+      },
+      "joints": [
+        {
+          "name": "tarsus4_T2_right",
+          "class": "extend_tarsus"
+        }
+      ],
+      "geoms": [
+        {
+          "name": "tarsus4_T2_right",
+          "pos": "0.0132 0.119 0.106",
+          "quat": "0.344 -0.934 -0.0788 0.0479",
+          "mesh": "tarsus_T2_4_right"
+        },
+        {
+          "name": "tarsus4_T2_right_collision",
+          "class": "collision",
+          "size": "0.00146",
+          "fromto": "0 0 0 -9.66e-05 -0.00988 0.000252"
+        }
+      ]
+    },
+    {
+      "attributes": {
+        "name": "claw_T2_right",
+        "pos": "-9.66e-05 -0.00988 0.000252"
+      },
+      "joints": [
+        {
+          "name": "tarsus5_T2_right",
+          "class": "extend_tarsus"
+        }
+      ],
+      "geoms": [
+        {
+          "name": "tarsal_claw_T2_right",
+          "material": "brown",
+          "pos": "0.0133 0.129 0.105",
+          "quat": "-0.344 0.934 0.0788 -0.0479",
+          "mesh": "tarsal_claw_T2_right_brown"
+        },
+        {
+          "name": "tarsal_claw_T2_right_collision",
+          "class": "adhesion-collision",
+          "type": "capsule",
+          "size": "0.002",
+          "fromto": "0 0 0 -9.66e-05 -0.00988 0.000252"
+        }
+      ]
+    },
+    {
+      "attributes": {
+        "name": "coxa_T3_left",
+        "childclass": "leg",
+        "pos": "-0.0377 0.0192 -0.0402",
+        "quat": "0.681 -0.529 -0.0882 0.498"
+      },
+      "joints": [
+        {
+          "name": "coxa_abduct_T3_left",
+          "class": "abduct_coxa_T3"
+        },
+        {
+          "name": "coxa_twist_T3_left",
+          "class": "twist_coxa_T3"
+        },
+        {
+          "name": "coxa_T3_left",
+          "class": "extend_coxa_T3"
+        }
+      ],
+      "geoms": [
+        {
+          "name": "coxa_T3_left",
+          "pos": "0.0335 0.0507 -0.0666",
+          "quat": "-0.498 -0.0882 0.529 -0.681",
+          "mesh": "coxa_T3_left"
+        },
+        {
+          "name": "coxa_T3_left_collision",
+          "class": "collision",
+          "type": "ellipsoid",
+          "size": "0.007 0.00875 0.0166",
+          "pos": "-0.00348 0.0116 -0.00687",
+          "quat": "0.603 -0.786 -0.135 0"
+        }
+      ]
+    },
+    {
+      "attributes": {
+        "name": "femur_T3_left",
+        "pos": "-0.00398 0.0232 -0.00668",
+        "quat": "0 0 -0.668 -0.744"
+      },
+      "joints": [
+        {
+          "name": "femur_twist_T3_left",
+          "class": "twist_femur_T3"
+        },
+        {
+          "name": "femur_T3_left",
+          "class": "extend_femur_T3"
+        }
+      ],
+      "geoms": [
+        {
+          "name": "femur_T3_left",
+          "pos": "-0.0375 -0.0625 0.0209",
+          "quat": "0.153 -0.849 -0.398 -0.312",
+          "mesh": "femur_T3_left"
+        },
+        {
+          "name": "femur_T3_left_collision",
+          "class": "collision",
+          "size": "0.00544",
+          "fromto": "-0.00263 0.00263 0.00438 -0.00263 0.0766 1.52e-07"
+        }
+      ]
+    },
+    {
+      "attributes": {
+        "name": "tibia_T3_left",
+        "pos": "0 0.0779 1.6e-07",
+        "quat": "-0.117 -0.104 -0.711 0.685"
+      },
+      "joints": [
+        {
+          "name": "tibia_T3_left",
+          "class": "extend_tibia_T3"
+        }
+      ],
+      "geoms": [
+        {
+          "name": "tibia_T3_left",
+          "pos": "0.0309 -0.0369 0.139",
+          "quat": "-0.14 0.379 -0.77 -0.494",
+          "mesh": "tibia_T3_left"
+        },
+        {
+          "name": "tibia_T3_left_collision",
+          "class": "collision",
+          "size": "0.00365",
+          "fromto": "0 -0.003 -0.005 0 -0.0715 0.00175"
+        }
+      ]
+    },
+    {
+      "attributes": {
+        "name": "tarsus_T3_left",
+        "pos": "0 -0.0715 0.00175",
+        "quat": "-0.23 0.963 -0.033 -0.138"
+      },
+      "joints": [
+        {
+          "name": "tarsus_T3_left",
+          "class": "extend_tarsus_T3"
+        }
+      ],
+      "geoms": [
+        {
+          "name": "tarsus_T3_left",
+          "pos": "-0.00888 -0.0941 -0.109",
+          "quat": "-0.49 -0.138 0.251 -0.823",
+          "mesh": "tarsus_T3_1_left"
+        },
+        {
+          "name": "tarsus_T3_left_collision",
+          "class": "collision",
+          "size": "0.00234",
+          "fromto": "0 0 0 0.00027 0.0337 0.00102"
+        }
+      ]
+    },
+    {
+      "attributes": {
+        "name": "tarsus2_T3_left",
+        "pos": "0.00027 0.0337 0.00102"
+      },
+      "joints": [
+        {
+          "name": "tarsus2_T3_left",
+          "class": "extend_tarsus"
+        }
+      ],
+      "geoms": [
+        {
+          "name": "tarsus2_T3_left",
+          "pos": "-0.00915 -0.128 -0.11",
+          "quat": "0.49 0.138 -0.251 0.823",
+          "mesh": "tarsus_T3_2_left"
+        },
+        {
+          "name": "tarsus2_T3_left_collision",
+          "class": "collision",
+          "size": "0.00168",
+          "fromto": "0 0 0 -7.97e-05 0.0197 0.00158"
+        }
+      ]
+    },
+    {
+      "attributes": {
+        "name": "tarsus3_T3_left",
+        "pos": "-7.97e-05 0.0197 0.00158"
+      },
+      "joints": [
+        {
+          "name": "tarsus3_T3_left",
+          "class": "extend_tarsus"
+        }
+      ],
+      "geoms": [
+        {
+          "name": "tarsus3_T3_left",
+          "pos": "-0.00907 -0.148 -0.112",
+          "quat": "-0.49 -0.138 0.251 -0.823",
+          "mesh": "tarsus_T3_3_left"
+        },
+        {
+          "name": "tarsus3_T3_left_collision",
+          "class": "collision",
+          "size": "0.00145",
+          "fromto": "0 0 0 8e-05 0.0111 -2.78e-05"
+        }
+      ]
+    },
+    {
+      "attributes": {
+        "name": "tarsus4_T3_left",
+        "pos": "8e-05 0.0111 -2.78e-05"
+      },
+      "joints": [
+        {
+          "name": "tarsus4_T3_left",
+          "class": "extend_tarsus"
+        }
+      ],
+      "geoms": [
+        {
+          "name": "tarsus4_T3_left",
+          "pos": "-0.00915 -0.159 -0.112",
+          "quat": "0.49 0.138 -0.251 0.823",
+          "mesh": "tarsus_T3_4_left"
+        },
+        {
+          "name": "tarsus4_T3_left_collision",
+          "class": "collision",
+          "size": "0.00145",
+          "fromto": "0 0 0 0.000222 0.0111 -0.00108"
+        }
+      ]
+    },
+    {
+      "attributes": {
+        "name": "claw_T3_left",
+        "pos": "0.000222 0.0111 -0.00108"
+      },
+      "joints": [
+        {
+          "name": "tarsus5_T3_left",
+          "class": "extend_tarsus"
+        }
+      ],
+      "geoms": [
+        {
+          "name": "tarsal_claw_T3_left",
+          "material": "brown",
+          "pos": "-0.00937 -0.17 -0.111",
+          "quat": "-0.49 -0.138 0.251 -0.823",
+          "mesh": "tarsal_claw_T3_left_brown"
+        },
+        {
+          "name": "tarsal_claw_T3_left_collision",
+          "class": "adhesion-collision",
+          "type": "capsule",
+          "size": "0.0019",
+          "fromto": "0 0 0 0.000222 0.0111 -0.00108"
+        }
+      ]
+    },
+    {
+      "attributes": {
+        "name": "coxa_T3_right",
+        "childclass": "leg",
+        "pos": "-0.0377 -0.0192 -0.0402",
+        "quat": "-0.0854 -0.505 -0.673 -0.534"
+      },
+      "joints": [
+        {
+          "name": "coxa_abduct_T3_right",
+          "class": "abduct_coxa_T3"
+        },
+        {
+          "name": "coxa_twist_T3_right",
+          "class": "twist_coxa_T3"
+        },
+        {
+          "name": "coxa_T3_right",
+          "class": "extend_coxa_T3"
+        }
+      ],
+      "geoms": [
+        {
+          "name": "coxa_T3_right",
+          "pos": "-0.0344 -0.0507 0.0661",
+          "quat": "0.534 -0.673 0.505 0.0854",
+          "mesh": "coxa_T3_right"
+        },
+        {
+          "name": "coxa_T3_right_collision",
+          "class": "collision",
+          "type": "ellipsoid",
+          "size": "0.007 0.00875 0.0166",
+          "pos": "0.00338 -0.0117 0.00678",
+          "quat": "0.797 0.596 0.0983 0"
+        }
+      ]
+    },
+    {
+      "attributes": {
+        "name": "femur_T3_right",
+        "pos": "0.00383 -0.0232 0.0066",
+        "quat": "0 0 0.661 0.751"
+      },
+      "joints": [
+        {
+          "name": "femur_twist_T3_right",
+          "class": "twist_femur_T3"
+        },
+        {
+          "name": "femur_T3_right",
+          "class": "extend_femur_T3"
+        }
+      ],
+      "geoms": [
+        {
+          "name": "femur_T3_right",
+          "pos": "0.0382 0.0625 -0.0196",
+          "quat": "-0.398 -0.322 -0.152 0.846",
+          "mesh": "femur_T3_right"
+        },
+        {
+          "name": "femur_T3_right_collision",
+          "class": "collision",
+          "size": "0.00544",
+          "fromto": "0.00263 -0.00263 -0.00438 0.00263 -0.0758 1.87e-07"
+        }
+      ]
+    },
+    {
+      "attributes": {
+        "name": "tibia_T3_right",
+        "pos": "0 -0.077 1.96e-07",
+        "quat": "-0.121 -0.111 -0.708 0.686"
+      },
+      "joints": [
+        {
+          "name": "tibia_T3_right",
+          "class": "extend_tibia_T3"
+        }
+      ],
+      "geoms": [
+        {
+          "name": "tibia_T3_right",
+          "pos": "-0.0309 0.0355 -0.138",
+          "quat": "-0.772 -0.489 0.136 -0.382",
+          "mesh": "tibia_T3_right"
+        },
+        {
+          "name": "tibia_T3_right_collision",
+          "class": "collision",
+          "size": "0.00365",
+          "fromto": "0 0.003 0.005 0 0.0721 -0.00175"
+        }
+      ]
+    },
+    {
+      "attributes": {
+        "name": "tarsus_T3_right",
+        "pos": "0 0.0721 -0.00175",
+        "quat": "0.223 -0.965 0.0313 0.136"
+      },
+      "joints": [
+        {
+          "name": "tarsus_T3_right",
+          "class": "extend_tarsus_T3"
+        }
+      ],
+      "geoms": [
+        {
+          "name": "tarsus_T3_right",
+          "pos": "0.00797 0.0941 0.109",
+          "quat": "-0.252 0.823 -0.49 -0.136",
+          "mesh": "tarsus_T3_1_right"
+        },
+        {
+          "name": "tarsus_T3_right_collision",
+          "class": "collision",
+          "size": "0.00234",
+          "fromto": "0 0 0 -0.00073 -0.0338 -0.00122"
+        }
+      ]
+    },
+    {
+      "attributes": {
+        "name": "tarsus2_T3_right",
+        "pos": "-0.00073 -0.0338 -0.00122"
+      },
+      "joints": [
+        {
+          "name": "tarsus2_T3_right",
+          "class": "extend_tarsus"
+        }
+      ],
+      "geoms": [
+        {
+          "name": "tarsus2_T3_right",
+          "pos": "0.0087 0.128 0.111",
+          "quat": "0.252 -0.823 0.49 0.136",
+          "mesh": "tarsus_T3_2_right"
+        },
+        {
+          "name": "tarsus2_T3_right_collision",
+          "class": "collision",
+          "size": "0.00168",
+          "fromto": "0 0 0 0.000185 -0.0197 -0.00157"
+        }
+      ]
+    },
+    {
+      "attributes": {
+        "name": "tarsus3_T3_right",
+        "pos": "0.000185 -0.0197 -0.00157"
+      },
+      "joints": [
+        {
+          "name": "tarsus3_T3_right",
+          "class": "extend_tarsus"
+        }
+      ],
+      "geoms": [
+        {
+          "name": "tarsus3_T3_right",
+          "pos": "0.00851 0.148 0.112",
+          "quat": "-0.252 0.823 -0.49 -0.136",
+          "mesh": "tarsus_T3_3_right"
+        },
+        {
+          "name": "tarsus3_T3_right_collision",
+          "class": "collision",
+          "size": "0.00145",
+          "fromto": "0 0 0 1.98e-05 -0.011 1.95e-05"
+        }
+      ]
+    },
+    {
+      "attributes": {
+        "name": "tarsus4_T3_right",
+        "pos": "1.98e-05 -0.011 1.95e-05"
+      },
+      "joints": [
+        {
+          "name": "tarsus4_T3_right",
+          "class": "extend_tarsus"
+        }
+      ],
+      "geoms": [
+        {
+          "name": "tarsus4_T3_right",
+          "pos": "0.00849 0.159 0.112",
+          "quat": "0.252 -0.823 0.49 0.136",
+          "mesh": "tarsus_T3_4_right"
+        },
+        {
+          "name": "tarsus4_T3_right_collision",
+          "class": "collision",
+          "size": "0.00145",
+          "fromto": "0 0 0 4.3e-05 -0.011 0.00125"
+        }
+      ]
+    },
+    {
+      "attributes": {
+        "name": "claw_T3_right",
+        "pos": "4.3e-05 -0.011 0.00125"
+      },
+      "joints": [
+        {
+          "name": "tarsus5_T3_right",
+          "class": "extend_tarsus"
+        }
+      ],
+      "geoms": [
+        {
+          "name": "tarsal_claw_T3_right",
+          "material": "brown",
+          "pos": "0.00845 0.17 0.111",
+          "quat": "-0.252 0.823 -0.49 -0.136",
+          "mesh": "tarsal_claw_T3_right_brown"
+        },
+        {
+          "name": "tarsal_claw_T3_right_collision",
+          "class": "adhesion-collision",
+          "type": "capsule",
+          "size": "0.0019",
+          "fromto": "0 0 0 4.3e-05 -0.011 0.00125"
+        }
+      ]
+    }
+  ]
+}

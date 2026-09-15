@@ -1,0 +1,11 @@
+<!doctype html><meta charset="utf-8"><title>MaleCNS anatomy asset inspection</title>
+<style>body{margin:0;background:#101925;color:#e5eef8;font:14px system-ui}header{position:absolute;padding:20px;pointer-events:none}a{color:#45ded0;pointer-events:auto}</style>
+<script type="importmap">{"imports":{"three":"/node_modules/three/build/three.module.js","three/addons/":"/node_modules/three/examples/jsm/"}}</script>
+<header><h2>Actual MaleCNS neuron morphology</h2><p>DNge104: 12781 and 556329 • two neurons, not the full connectome</p><p>Source coordinates preserved under one shared display transform • static anatomy</p><p>MaleCNS collaboration · CC BY 4.0 · <a href="https://male-cns.janelia.org/download/">Source</a></p><p id="status">Loading…</p></header>
+<script type="module">
+import * as THREE from 'three';import{OrbitControls}from'three/addons/controls/OrbitControls.js';
+const asset=await fetch('../generated/connectome/DNge104-skeletons.json').then(r=>r.json());const scene=new THREE.Scene();scene.background=new THREE.Color('#101925');const camera=new THREE.PerspectiveCamera(40,innerWidth/innerHeight,.001,100);camera.position.set(.6,.4,1.5);
+const renderer=new THREE.WebGLRenderer({antialias:true});renderer.setSize(innerWidth,innerHeight);renderer.setPixelRatio(devicePixelRatio);document.body.append(renderer.domElement);const controls=new OrbitControls(camera,renderer.domElement);const colors=[0x45ded0,0xffba67];let segments=0;
+asset.neurons.forEach((n,i)=>{const positions=[];for(const pair of n.segments)for(const id of pair)for(let k=0;k<3;k++)positions.push((n.positions_m[id][k]-asset.display_transform.center_m[k])*asset.display_transform.scale_to_unit_extent);const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute(positions,3));scene.add(new THREE.LineSegments(g,new THREE.LineBasicMaterial({color:colors[i]})));segments+=n.segments.length});
+document.querySelector('#status').textContent=`${segments.toLocaleString()} source skeleton segments • orbit to inspect`;window.assetReady=true;window.assetInfo={neurons:asset.neurons.map(n=>n.bodyId),segments};renderer.setAnimationLoop(()=>{controls.update();renderer.render(scene,camera)});
+</script>

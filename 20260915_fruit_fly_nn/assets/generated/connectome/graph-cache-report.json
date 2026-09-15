@@ -1,0 +1,22 @@
+{
+  "release": "v1.0",
+  "annotation_rows": 211577,
+  "annotation_status_counts": {
+    "Traced": 165122,
+    "Unimportant": 10751,
+    "Glia": 11864,
+    "None": 5472,
+    "Orphan": 15925,
+    "Anchor": 611,
+    "Assign": 1832
+  },
+  "selection": "status == 'Traced' AND superclass is not null; both endpoints must belong to selected bodies",
+  "selected_nodes": 164606,
+  "raw_segment_edge_rows": 151856684,
+  "selected_edge_rows": 25558671,
+  "selected_synapse_weight_sum": 124009893,
+  "edge_format": "little-endian uint32 triples: pre_index, post_index, raw_synapse_count; nodes indexed by ascending bodyId in body-ids.npy / nodes.feather",
+  "weight_policy": "unsigned raw counts; transmitter-to-sign and normalization are modeling decisions not applied here",
+  "source_sha256": "e35da783d1c686b2b58b3b87cd6a403ae43bfcfba8bff28e08ef752c1a56afc1",
+  "edge_sha256": "4e529b83702ed04a5fb5e433656dd355092aaa2aa3845d1f77e576c7f9d9ddbc"
+}

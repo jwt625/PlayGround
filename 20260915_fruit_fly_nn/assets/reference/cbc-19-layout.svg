@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="620" viewBox="0 0 1100 620">
+<rect width="1100" height="620" fill="#101925"/>
+<g font-family="sans-serif" fill="#e5eef8">
+<text x="40" y="45" font-size="24">CBC: 19-channel layout and signal paths</text>
+<text x="40" y="75" font-size="14">Editable design reference • geometry schematic • not a simulated intensity image</text>
+<rect x="40" y="140" width="160" height="70" rx="10" fill="#203044" stroke="#7793ad"/>
+<text x="120.0" y="180.0" text-anchor="middle" font-size="17">Common seed</text>
+<rect x="260" y="140" width="160" height="70" rx="10" fill="#203044" stroke="#7793ad"/>
+<text x="340.0" y="180.0" text-anchor="middle" font-size="17">1 → 19 splitter</text>
+<rect x="480" y="140" width="210" height="70" rx="10" fill="#203044" stroke="#7793ad"/>
+<text x="585.0" y="180.0" text-anchor="middle" font-size="17">Phase + amplitude</text>
+<rect x="480" y="260" width="210" height="70" rx="10" fill="#203044" stroke="#7793ad"/>
+<text x="585.0" y="300.0" text-anchor="middle" font-size="17">Tip / tilt + focus</text>
+<rect x="40" y="400" width="200" height="80" rx="10" fill="#203044" stroke="#7793ad"/>
+<text x="140.0" y="445.0" text-anchor="middle" font-size="17">Fly / neural readout</text>
+<rect x="300" y="400" width="200" height="80" rx="10" fill="#203044" stroke="#7793ad"/>
+<text x="400.0" y="445.0" text-anchor="middle" font-size="17">Control board</text>
+<path d="M200 175H260 M420 175H480 M585 210V260 M690 295H755" fill="none" stroke="#45ded0" stroke-width="4"/>
+<path d="M240 440H300 M500 440H720V240H660V210 M720 340H640V330" fill="none" stroke="#ffba67" stroke-width="3" stroke-dasharray="9 5"/>
+<circle cx="842.0" cy="178.20130719884952" r="22" fill="#24485b" stroke="#45ded0" stroke-width="2"/><text x="842.0" y="183.20130719884952" text-anchor="middle" font-size="13">01</text>
+<circle cx="895.0" cy="178.20130719884952" r="22" fill="#24485b" stroke="#45ded0" stroke-width="2"/><text x="895.0" y="183.20130719884952" text-anchor="middle" font-size="13">02</text>
+<circle cx="948.0" cy="178.20130719884952" r="22" fill="#24485b" stroke="#45ded0" stroke-width="2"/><text x="948.0" y="183.20130719884952" text-anchor="middle" font-size="13">03</text>
+<circle cx="815.5" cy="224.10065359942476" r="22" fill="#24485b" stroke="#45ded0" stroke-width="2"/><text x="815.5" y="229.10065359942476" text-anchor="middle" font-size="13">04</text>
+<circle cx="868.5" cy="224.10065359942476" r="22" fill="#24485b" stroke="#45ded0" stroke-width="2"/><text x="868.5" y="229.10065359942476" text-anchor="middle" font-size="13">05</text>
+<circle cx="921.5" cy="224.10065359942476" r="22" fill="#24485b" stroke="#45ded0" stroke-width="2"/><text x="921.5" y="229.10065359942476" text-anchor="middle" font-size="13">06</text>
+<circle cx="974.5" cy="224.10065359942476" r="22" fill="#24485b" stroke="#45ded0" stroke-width="2"/><text x="974.5" y="229.10065359942476" text-anchor="middle" font-size="13">07</text>
+<circle cx="789.0" cy="270.0" r="22" fill="#24485b" stroke="#45ded0" stroke-width="2"/><text x="789.0" y="275.0" text-anchor="middle" font-size="13">08</text>
+<circle cx="842.0" cy="270.0" r="22" fill="#24485b" stroke="#45ded0" stroke-width="2"/><text x="842.0" y="275.0" text-anchor="middle" font-size="13">09</text>
+<circle cx="895.0" cy="270.0" r="22" fill="#24485b" stroke="#45ded0" stroke-width="2"/><text x="895.0" y="275.0" text-anchor="middle" font-size="13">10</text>
+<circle cx="948.0" cy="270.0" r="22" fill="#24485b" stroke="#45ded0" stroke-width="2"/><text x="948.0" y="275.0" text-anchor="middle" font-size="13">11</text>
+<circle cx="1001.0" cy="270.0" r="22" fill="#24485b" stroke="#45ded0" stroke-width="2"/><text x="1001.0" y="275.0" text-anchor="middle" font-size="13">12</text>
+<circle cx="815.5" cy="315.89934640057527" r="22" fill="#24485b" stroke="#45ded0" stroke-width="2"/><text x="815.5" y="320.89934640057527" text-anchor="middle" font-size="13">13</text>
+<circle cx="868.5" cy="315.89934640057527" r="22" fill="#24485b" stroke="#45ded0" stroke-width="2"/><text x="868.5" y="320.89934640057527" text-anchor="middle" font-size="13">14</text>
+<circle cx="921.5" cy="315.89934640057527" r="22" fill="#24485b" stroke="#45ded0" stroke-width="2"/><text x="921.5" y="320.89934640057527" text-anchor="middle" font-size="13">15</text>
+<circle cx="974.5" cy="315.89934640057527" r="22" fill="#24485b" stroke="#45ded0" stroke-width="2"/><text x="974.5" y="320.89934640057527" text-anchor="middle" font-size="13">16</text>
+<circle cx="842.0" cy="361.7986928011505" r="22" fill="#24485b" stroke="#45ded0" stroke-width="2"/><text x="842.0" y="366.7986928011505" text-anchor="middle" font-size="13">17</text>
+<circle cx="895.0" cy="361.7986928011505" r="22" fill="#24485b" stroke="#45ded0" stroke-width="2"/><text x="895.0" y="366.7986928011505" text-anchor="middle" font-size="13">18</text>
+<circle cx="948.0" cy="361.7986928011505" r="22" fill="#24485b" stroke="#45ded0" stroke-width="2"/><text x="948.0" y="366.7986928011505" text-anchor="middle" font-size="13">19</text>
+<text x="895" y="425" text-anchor="middle" font-size="17">XY aperture • propagation +Z</text>
+<text x="40" y="545" font-size="16" fill="#45ded0">Solid teal: optical path (19 branches collapsed)</text>
+<text x="40" y="575" font-size="16" fill="#ffba67">Dashed amber: electrical commands • add detector/data return in implementation</text>
+</g></svg>

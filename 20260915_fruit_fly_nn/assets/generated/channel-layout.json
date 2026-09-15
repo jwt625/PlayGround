@@ -1,0 +1,195 @@
+{
+  "coordinates": "XY aperture; forward +Z; positions multiplied by physical pitch",
+  "channels": [
+    {
+      "id": "CH01",
+      "q": -2,
+      "r": 2,
+      "position_pitch_units": [
+        -1.0,
+        1.7320508075688772,
+        0
+      ]
+    },
+    {
+      "id": "CH02",
+      "q": -1,
+      "r": 2,
+      "position_pitch_units": [
+        0.0,
+        1.7320508075688772,
+        0
+      ]
+    },
+    {
+      "id": "CH03",
+      "q": 0,
+      "r": 2,
+      "position_pitch_units": [
+        1.0,
+        1.7320508075688772,
+        0
+      ]
+    },
+    {
+      "id": "CH04",
+      "q": -2,
+      "r": 1,
+      "position_pitch_units": [
+        -1.5,
+        0.8660254037844386,
+        0
+      ]
+    },
+    {
+      "id": "CH05",
+      "q": -1,
+      "r": 1,
+      "position_pitch_units": [
+        -0.5,
+        0.8660254037844386,
+        0
+      ]
+    },
+    {
+      "id": "CH06",
+      "q": 0,
+      "r": 1,
+      "position_pitch_units": [
+        0.5,
+        0.8660254037844386,
+        0
+      ]
+    },
+    {
+      "id": "CH07",
+      "q": 1,
+      "r": 1,
+      "position_pitch_units": [
+        1.5,
+        0.8660254037844386,
+        0
+      ]
+    },
+    {
+      "id": "CH08",
+      "q": -2,
+      "r": 0,
+      "position_pitch_units": [
+        -2.0,
+        0.0,
+        0
+      ]
+    },
+    {
+      "id": "CH09",
+      "q": -1,
+      "r": 0,
+      "position_pitch_units": [
+        -1.0,
+        0.0,
+        0
+      ]
+    },
+    {
+      "id": "CH10",
+      "q": 0,
+      "r": 0,
+      "position_pitch_units": [
+        0.0,
+        0.0,
+        0
+      ]
+    },
+    {
+      "id": "CH11",
+      "q": 1,
+      "r": 0,
+      "position_pitch_units": [
+        1.0,
+        0.0,
+        0
+      ]
+    },
+    {
+      "id": "CH12",
+      "q": 2,
+      "r": 0,
+      "position_pitch_units": [
+        2.0,
+        0.0,
+        0
+      ]
+    },
+    {
+      "id": "CH13",
+      "q": -1,
+      "r": -1,
+      "position_pitch_units": [
+        -1.5,
+        -0.8660254037844386,
+        0
+      ]
+    },
+    {
+      "id": "CH14",
+      "q": 0,
+      "r": -1,
+      "position_pitch_units": [
+        -0.5,
+        -0.8660254037844386,
+        0
+      ]
+    },
+    {
+      "id": "CH15",
+      "q": 1,
+      "r": -1,
+      "position_pitch_units": [
+        0.5,
+        -0.8660254037844386,
+        0
+      ]
+    },
+    {
+      "id": "CH16",
+      "q": 2,
+      "r": -1,
+      "position_pitch_units": [
+        1.5,
+        -0.8660254037844386,
+        0
+      ]
+    },
+    {
+      "id": "CH17",
+      "q": 0,
+      "r": -2,
+      "position_pitch_units": [
+        -1.0,
+        -1.7320508075688772,
+        0
+      ]
+    },
+    {
+      "id": "CH18",
+      "q": 1,
+      "r": -2,
+      "position_pitch_units": [
+        0.0,
+        -1.7320508075688772,
+        0
+      ]
+    },
+    {
+      "id": "CH19",
+      "q": 2,
+      "r": -2,
+      "position_pitch_units": [
+        1.0,
+        -1.7320508075688772,
+        0
+      ]
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "colors": {
+    "background": "#101925",
+    "panel": "#203044",
+    "optical": "#45ded0",
+    "electrical": "#ffba67",
+    "observation": "#bca7ff",
+    "label": "#e5eef8"
+  },
+  "pathStyles": {
+    "optical": "solid",
+    "electrical": "dashed",
+    "observation": "dotted"
+  },
+  "materials": {
+    "housing": {
+      "metalness": 0.75,
+      "roughness": 0.32
+    },
+    "bench": {
+      "metalness": 0.65,
+      "roughness": 0.48
+    },
+    "lens": {
+      "transmission": 0.85,
+      "roughness": 0.05
+    }
+  },
+  "notes": "Art defaults only. Phase and measured intensity require separate calibrated legends."
+}

@@ -1,0 +1,192 @@
+{
+  "provenance": "Original project procedural geometry",
+  "units": "display meters; authored Z-up; emitters emit +Z; not SI simulation aperture layout",
+  "limitations": "Prototype PBR prefabs; pointing/focus anchors require runtime control wiring. No vendor dimensions implied.",
+  "components": [
+    {
+      "name": "emitter",
+      "file": "emitter.glb",
+      "bounds": [
+        [
+          -0.028,
+          -0.028,
+          -0.0375
+        ],
+        [
+          0.028,
+          0.028,
+          0.04
+        ]
+      ],
+      "ports": [
+        {
+          "name": "fiber_in",
+          "position": [
+            0,
+            0,
+            -0.04
+          ],
+          "kind": "optical"
+        },
+        {
+          "name": "actuator_command",
+          "position": [
+            0.028,
+            0,
+            0
+          ],
+          "kind": "electrical"
+        }
+      ],
+      "bytes": 6728
+    },
+    {
+      "name": "seed",
+      "file": "seed.glb",
+      "bounds": [
+        [
+          -0.09,
+          -0.05,
+          -0.05
+        ],
+        [
+          0.09,
+          0.05,
+          0.05
+        ]
+      ],
+      "ports": [
+        {
+          "name": "input",
+          "position": [
+            -0.09,
+            0,
+            0
+          ],
+          "kind": "optical"
+        },
+        {
+          "name": "output",
+          "position": [
+            0.09,
+            0,
+            0
+          ],
+          "kind": "optical"
+        }
+      ],
+      "bytes": 1448
+    },
+    {
+      "name": "splitter",
+      "file": "splitter.glb",
+      "bounds": [
+        [
+          -0.065,
+          -0.045,
+          -0.03
+        ],
+        [
+          0.065,
+          0.045,
+          0.03
+        ]
+      ],
+      "ports": [
+        {
+          "name": "input",
+          "position": [
+            -0.065,
+            0,
+            0
+          ],
+          "kind": "optical"
+        },
+        {
+          "name": "output",
+          "position": [
+            0.065,
+            0,
+            0
+          ],
+          "kind": "optical"
+        }
+      ],
+      "bytes": 1460
+    },
+    {
+      "name": "phase-amplifier",
+      "file": "phase-amplifier.glb",
+      "bounds": [
+        [
+          -0.06,
+          -0.03,
+          -0.0225
+        ],
+        [
+          0.06,
+          0.03,
+          0.0225
+        ]
+      ],
+      "ports": [
+        {
+          "name": "input",
+          "position": [
+            -0.06,
+            0,
+            0
+          ],
+          "kind": "optical"
+        },
+        {
+          "name": "output",
+          "position": [
+            0.06,
+            0,
+            0
+          ],
+          "kind": "optical"
+        }
+      ],
+      "bytes": 1464
+    },
+    {
+      "name": "console",
+      "file": "console.glb",
+      "bounds": [
+        [
+          -0.15,
+          -0.09,
+          -0.0275
+        ],
+        [
+          0.15,
+          0.09,
+          0.032
+        ]
+      ],
+      "ports": [
+        {
+          "name": "input",
+          "position": [
+            -0.15,
+            0,
+            0
+          ],
+          "kind": "electrical"
+        },
+        {
+          "name": "output",
+          "position": [
+            0.15,
+            0,
+            0
+          ],
+          "kind": "electrical"
+        }
+      ],
+      "bytes": 23528
+    }
+  ]
+}

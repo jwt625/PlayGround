@@ -1,0 +1,96 @@
+{
+  "dataset": "MaleCNS",
+  "release": "v1.0",
+  "license": "CC-BY-4.0",
+  "source": "https://male-cns.janelia.org/download/",
+  "retrieved_utc": "2026-09-15T17:04:08.578635+00:00",
+  "files": [
+    {
+      "path": "data/cache/malecns-v1.0/annotations.feather",
+      "url": "https://storage.googleapis.com/flyem-male-cns/v1.0/connectome-data/flat-connectome/body-annotations-male-cns-v1.0-minconf-0.5.feather",
+      "bytes": 14483314,
+      "sha256": "2177e246113e4cfbf1e7772ec37c6da1955ff22e8063d0b1f833101f99a9a3b2",
+      "http_metadata": {
+        "last-modified": "Wed, 03 Jun 2026 13:54:38 GMT",
+        "etag": "\"50a7718770c57220f160ba4f431ab89e\"",
+        "x-goog-generation": "1780494878811468",
+        "x-goog-hash": "md5=UKdxh3DFciDxYLpPQxq4ng==",
+        "content-length": "14483314"
+      }
+    },
+    {
+      "path": "data/cache/malecns-v1.0/neurotransmitters.feather",
+      "url": "https://storage.googleapis.com/flyem-male-cns/v1.0/connectome-data/flat-connectome/body-neurotransmitters-male-cns-v1.0.feather",
+      "bytes": 43282834,
+      "sha256": "95c9289220663abeb3409f3ad9e5a7f8a53f8093f5139d15502cd08da8879621",
+      "http_metadata": {
+        "last-modified": "Mon, 08 Jun 2026 05:01:39 GMT",
+        "etag": "\"3d842b12fe5c49eefade528d7dd24a1f\"",
+        "x-goog-generation": "1780894899156750",
+        "x-goog-hash": "md5=PYQrEv5cSe763lKNfdJKHw==",
+        "content-length": "43282834"
+      }
+    },
+    {
+      "path": "data/cache/malecns-v1.0/connectome-weights.feather",
+      "url": "https://storage.googleapis.com/flyem-male-cns/v1.0/connectome-data/flat-connectome/connectome-weights-male-cns-v1.0-minconf-0.5.feather",
+      "bytes": 1051241946,
+      "sha256": "e35da783d1c686b2b58b3b87cd6a403ae43bfcfba8bff28e08ef752c1a56afc1",
+      "http_metadata": {
+        "last-modified": "Wed, 03 Jun 2026 13:54:47 GMT",
+        "etag": "\"f30e9dcca25cfd021bf1e7b3d975599e\"",
+        "x-goog-generation": "1780494887545976",
+        "x-goog-hash": "md5=8w6dzKJc/QIb8eez2XVZng==",
+        "content-length": "1051241946"
+      }
+    },
+    {
+      "path": "data/cache/malecns-v1.0/skeletons/12781.swc",
+      "url": "https://storage.googleapis.com/flyem-male-cns/v1.0/segmentation/skeletons-malecns/skeletons-swc/12781.swc",
+      "bytes": 552929,
+      "sha256": "84f14c2f8b98da664db2c322c6f3f47f83b61c412207bddfa67e2315b86fc699",
+      "http_metadata": {
+        "x-goog-generation": "1777993123308257",
+        "x-goog-hash": "md5=N8uJ6xvGOEWgmpDjSvYZPw==",
+        "content-length": "552929",
+        "last-modified": "Tue, 05 May 2026 14:58:43 GMT",
+        "etag": "\"37cb89eb1bc63845a09a90e34af6193f\""
+      }
+    },
+    {
+      "path": "data/cache/malecns-v1.0/skeletons/556329.swc",
+      "url": "https://storage.googleapis.com/flyem-male-cns/v1.0/segmentation/skeletons-malecns/skeletons-swc/556329.swc",
+      "bytes": 602377,
+      "sha256": "af862b1065dd08bd16956e108ed785361342d584eb357f16fdc116bc26a2f7ad",
+      "http_metadata": {
+        "x-goog-generation": "1777993410878309",
+        "x-goog-hash": "md5=MX1czHgYOQpQ+MpobUDEfw==",
+        "content-length": "602377",
+        "last-modified": "Tue, 05 May 2026 15:03:30 GMT",
+        "etag": "\"317d5ccc7818390a50f8ca686d40c47f\""
+      }
+    },
+    {
+      "path": "data/cache/malecns-v1.0/sources/download.html",
+      "url": "https://male-cns.janelia.org/download/",
+      "bytes": 44208,
+      "sha256": "51144922891ccdc5cda2490d55b39ef69222134ed6944bbff2766379e403ad3c",
+      "http_metadata": {}
+    },
+    {
+      "path": "data/cache/malecns-v1.0/sources/release-notes.html",
+      "url": "https://male-cns.janelia.org/release/",
+      "bytes": 21431,
+      "sha256": "b2a4d40f0ae376f8c887cfbdbbc3dd10a6a165380b658fce8a20fd153a0a16aa",
+      "http_metadata": {}
+    },
+    {
+      "path": "data/cache/malecns-v1.0/sources/license.html",
+      "url": "https://creativecommons.org/licenses/by/4.0/",
+      "bytes": 32178,
+      "sha256": "231a5dac65bbf135ba27145969a63cd289faadc172f1512c4810a6c60ba91036",
+      "http_metadata": {}
+    }
+  ],
+  "scope": "Full published segment connection table; body annotations and predicted transmitters; two illustrative DNge104 skeletons. EM, complete skeleton collection and individual synapse locations not downloaded."
+}

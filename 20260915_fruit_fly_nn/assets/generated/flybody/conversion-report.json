@@ -1,0 +1,37 @@
+{
+  "source_revision": "d015e9bfe441bd90ae431bac24c55cb74bdbce26",
+  "mujoco": "3.13.0",
+  "trimesh": "5.1.0",
+  "numpy": "2.5.3",
+  "units": "meters; Y up; X forward; source centimeter -> meter root scale .01",
+  "body_nodes": 67,
+  "actual_joints": 103,
+  "visual_meshes": 85,
+  "triangles": 272550,
+  "bytes": 23005492,
+  "sha256": "f876b01f7b125676168a6580dc26fd74303cd7577eeb125375236035dcacb986",
+  "max_transform_error_source_cm": 4.440892098500626e-16,
+  "roundtrip_bounds_error_m": 1.734723475976807e-18,
+  "bounds_m": [
+    [
+      -0.001926785657900054,
+      -0.0013187505279655901,
+      -0.003058134559620269
+    ],
+    [
+      0.0010853551732413224,
+      0.000536920687101483,
+      0.0030581271298698942
+    ]
+  ],
+  "animations": [
+    "illustrative_wing_cycle_1Hz"
+  ],
+  "limitations": [
+    "PBR materials approximate MuJoCo shading",
+    "Matched-camera source front/top comparison, runtime integration and final animation review pending",
+    "Neutral pose is qpos0; no optimized LOD or resting pose yet",
+    "Wing clip is illustrative 1 Hz, not biological flight timing"
+  ],
+  "validation_update": "Three.js 0.169.0 loaded 85 meshes and illustrative animation without page errors; side silhouette inspected alongside native MuJoCo render. Front/top browser captures saved; matched source front/top comparison remains pending."
+}

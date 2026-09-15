@@ -1,0 +1,30 @@
+node_modules/
+dist/
+test-results/
+playwright-report/
+coverage/
+outputs/
+*.log
+.DS_Store
+
+# Reproducible external resource cache / asset tooling
+.asset-venv/
+data/cache/
+*.part
+__pycache__/
+
+# The enclosing PlayGround .gitignore ignores these extensions globally. This
+# project tracks its own source, configs, manifests, evidence, and docs, so
+# re-include them here. Bulk cache and build artifacts stay excluded above.
+!*.json
+!*.txt
+!*.png
+!*.html
+!*.svg
+
+# Re-include files whose names contain "cache" or are covered by broad rules,
+# but never the data/cache directory (excluded above).
+!DevLog/002-assets-and-resource-cache-progress.md
+!scripts/cache_external_resources.py
+!scripts/prepare_connectome_cache.py
+!assets/generated/connectome/graph-cache-report.json
