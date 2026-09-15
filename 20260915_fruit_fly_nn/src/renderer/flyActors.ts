@@ -20,6 +20,9 @@ const FLY_URL = new URL("../../assets/generated/flybody/flybody-articulated.glb"
 const TARGET_RANGE_M = 1; // fixed-distance training plane
 const FLY_DISPLAY_LENGTH = 16;
 const LEARNER_POSITION = new THREE.Vector3(-30, -18, -6);
+// Console-front operator stance (mechanical mm registered like hardwareScene).
+const HW_S = 3 / 65;
+const OPERATOR_POSITION = new THREE.Vector3(-1220 * HW_S, (20 - 300) * HW_S, -180 * HW_S);
 
 export class FlyActors {
   readonly group = new THREE.Group();
@@ -28,6 +31,9 @@ export class FlyActors {
   private targetMixer: THREE.AnimationMixer | null = null;
   private clips: THREE.AnimationClip[] = [];
   private previousTarget = new THREE.Vector3();
+  private forelegJoints: { object: THREE.Object3D; rest: THREE.Euler; role: "femur" | "tibia" | "tarsus"; side: "left" | "right" }[] = [];
+  private operatorMode = false;
+  private gesturePhase = -1;
   loaded = false;
   error: string | null = null;
 
@@ -68,6 +74,9 @@ export class FlyActors {
       this.previousTarget.copy(this.target.position);
       this.group.add(this.learner, this.target);
 
+      this.collectForelegJoints();
+      if (this.operatorMode) this.applyOperatorPlacement();
+
       // Only the target flaps. The learner keeps the GLB rest pose.
       if (this.clips.length > 0) {
         this.targetMixer = new THREE.AnimationMixer(this.target);
@@ -77,6 +86,69 @@ export class FlyActors {
     } catch (err) {
       this.error = String(err);
     }
+  }
+
+  private collectForelegJoints(): void {
+    this.forelegJoints = [];
+    this.learner.traverse((o) => {
+      const m = /^(femur|tibia|tarsus)_T1_(left|right)$/.exec(o.name);
+      if (!m) return;
+      this.forelegJoints.push({
+        object: o,
+        rest: o.rotation.clone(),
+        role: m[1] as "femur" | "tibia" | "tarsus",
+        side: m[2] as "left" | "right",
+      });
+    });
+  }
+
+  private applyOperatorPlacement(): void {
+    this.learner.position.copy(OPERATOR_POSITION);
+    this.learner.rotation.set(0, Math.PI / 2, 0); // native +X forward -> world -Z
+  }
+
+  /** Place the learner as the console operator (Pass 3 / R5). */
+  setOperatorMode(on: boolean): void {
+    this.operatorMode = on;
+    if (this.loaded && on) this.applyOperatorPlacement();
+  }
+
+  /** Start a staged foreleg reach/contact/retract gesture. */
+  startGesture(): void {
+    this.gesturePhase = 0;
+  }
+
+  private applyGesture(phase: number): void {
+    // Timeline (spec §8.3): lift, reach, contact, turn, retract.
+    const seg = (a: number, b: number) => Math.max(0, Math.min(1, (phase - a) / (b - a)));
+    const lift = seg(0, 0.12);
+    const reach = seg(0.12, 0.36);
+    const contact = seg(0.36, 0.45);
+    const turn = seg(0.45, 0.75);
+    const retract = seg(0.75, 1);
+    const amount = Math.min(lift + reach, 1) * (contact > 0 ? 1 : 1) * (1 - retract);
+    const turnArc = Math.sin(turn * Math.PI) * 0.25;
+    for (const joint of this.forelegJoints) {
+      const sign = joint.side === "left" ? 1 : -0.5; // left leg operates, right assists
+      const factor = joint.role === "femur" ? 0.9 : joint.role === "tibia" ? 1.1 : 0.6;
+      joint.object.rotation.set(
+        joint.rest.x + sign * amount * factor * 0.9,
+        joint.rest.y + sign * turnArc * factor,
+        joint.rest.z + sign * amount * factor * 0.3,
+      );
+    }
+  }
+
+  private resetGesture(): void {
+    for (const joint of this.forelegJoints) joint.object.rotation.copy(joint.rest);
+  }
+
+  get forelegJointCount(): number {
+    return this.forelegJoints.length;
+  }
+
+  get gestureActive(): boolean {
+    return this.gesturePhase >= 0;
   }
 
   update(targetDir: { sx: number; sy: number; sz: number }, dt_s: number): void {
@@ -94,6 +166,16 @@ export class FlyActors {
     this.previousTarget.set(tx, ty, tz);
 
     this.targetMixer?.update(dt_s);
+
+    if (this.gesturePhase >= 0) {
+      this.gesturePhase += dt_s / 1.65;
+      if (this.gesturePhase >= 1) {
+        this.gesturePhase = -1;
+        this.resetGesture();
+      } else {
+        this.applyGesture(this.gesturePhase);
+      }
+    }
   }
 
   /** Display-space position of the moving target fly (for tests/telemetry). */

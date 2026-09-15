@@ -103,6 +103,7 @@ class App {
     this.scene.scene.add(this.section.group);
     this.scene.scene.add(this.flies.group);
     this.scene.scene.add(this.hardware.group);
+    this.flies.setOperatorMode(true);
 
     this.env = new Environment(defaultEnvironmentConfig(array, { target: targetMotionFor(this.targetKind), scanSamples: 15 }));
     this.observation = this.env.observeWithCommands(analyticSteeringCommands(array, this.env.targetDirection()));
@@ -141,6 +142,8 @@ class App {
         neural3dEdges: this.neuralView?.renderedEdges ?? 0,
         flyLoaded: this.flies.loaded,
         flyError: this.flies.error,
+        flyForelegJoints: this.flies.forelegJointCount,
+        flyGestureActive: this.flies.gestureActive,
         targetDisplay: this.flies.targetDisplayPosition.toArray(),
         hardwareLoaded: this.hardware.loaded,
         hardwareVisible: this.hardware.group.visible,
@@ -149,6 +152,10 @@ class App {
         hardwareAssetInstances: this.hardware.assetInstances,
         hardwareConnectorInstances: this.hardware.connectorInstances,
         hardwareComponentKinds: this.hardware.componentKindCount,
+        hardwareKnobs: this.hardware.knobCount,
+        hardwareSelectors: this.hardware.selectorCount,
+        hardwareMinRadiusMm: this.hardware.routingAudit.minRadius_mm,
+        hardwareClearanceViolations: this.hardware.routingAudit.violations,
         hardwareFailures: this.hardware.failures.length,
         hardwareFailureSample: this.hardware.failures[0] ?? null,
         hardwareError: this.hardware.error,
@@ -306,7 +313,8 @@ class App {
       array: [[20, 16, 32], [0, 0, -5]],
       target: [[30, 20, 135], [0, 0, 95]],
       wiring: [[35, 24, -38], [0, 0, -10]],
-      hardware: [[0, 170, 235], [0, 28, -38]],
+      hardware: [[0, 75, 95], [0, -4, -18]],
+      console: [[-56, 14, 34], [-56, -10, -16]],
     };
     Object.entries(presets).forEach(([name, [position, target]]) => {
       const button = document.createElement("button"); button.textContent = name;
@@ -323,7 +331,7 @@ class App {
     const channelSelect = $("channel-select") as HTMLSelectElement;
     channelSelect.add(new Option("Choose channel", "-1"));
     array.channelIds.forEach((id, i) => channelSelect.add(new Option(id, String(i))));
-    channelSelect.addEventListener("change", () => { this.selected = Number(channelSelect.value); this.bench.setPathHighlight(this.selected); this.hardware.setSelectedChannel(this.selected >= 0 ? array.channelIds[this.selected] : null); this.syncChannelControls(); });
+    channelSelect.addEventListener("change", () => { this.selected = Number(channelSelect.value); this.bench.setPathHighlight(this.selected); this.hardware.setSelectedChannel(this.selected >= 0 ? array.channelIds[this.selected] : null); if (this.selected >= 0) this.flies.startGesture(); this.syncChannelControls(); });
     const toggle = (id: string, change: (checked: boolean) => void) => {
       const input = $(id) as HTMLInputElement; input.addEventListener("change", () => change(input.checked));
     };
@@ -396,6 +404,7 @@ class App {
     this.bench.setPathHighlight(this.selected);
     ($( "channel-select") as HTMLSelectElement).value = String(this.selected);
     this.hardware.setSelectedChannel(this.selected >= 0 ? array.channelIds[this.selected] : null);
+    if (this.selected >= 0) this.flies.startGesture();
     this.syncChannelControls();
   }
 
@@ -504,6 +513,7 @@ class App {
     }
     this.flies.update(this.env.targetDirection(), Math.min(dt, 0.05));
     this.hardware.updateMotion(result.actual);
+    this.hardware.updateConsole(result.actual, this.selected);
 
     const scan = this.env.scanBeam();
     const centroid = new THREE.Vector3(scan.beamSx, scan.beamSy, Math.sqrt(Math.max(0, 1 - scan.beamSx ** 2 - scan.beamSy ** 2)));

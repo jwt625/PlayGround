@@ -238,3 +238,90 @@ Screenshots: `test-results/hardware-default.png`, `test-results/hardware-bench2.
 Remaining: H1 connector closeups/clearances, H2 tube cables + bend checks +
 CH01/CH10/CH19 tracing gate, H3 console binding, H4 foreleg gestures, H5 focus
 stage, H6 evidence.
+
+---
+
+## Update 7 (2026-09-15): CBC assembly spec Pass 1 + first half of Pass 2
+
+Implemented the concrete assembly from `docs/CBC_ASSEMBLY_SPEC.md` (replacing
+the old approximate rack):
+
+- `src/renderer/hardware/assemblySpec.ts` is the typed implementation artifact:
+  mechanical-mm placements for TABLE, RACK-L/R, SEED, SPLIT (orientation B), PSU,
+  PDU-M/S/R1-4, IO, MC, CON, OP-PLATFORM, AP-FRAME; 19 cell assignments;
+  canonical 3+4+5+4+3 aperture sites from `channel-layout.json` x 65 mm; port
+  schedules with socket / pigtail / free-space typing; and the full cable
+  schedule: **241 internal runs** (58 optical + 19 RF + 40 command + 48 DC +
+  76 motor) plus one external supply cord.
+- `hardwareScene.ts` rebuilt to the spec: one uniform mm->scene conversion that
+  **registers the aperture emission center to the optical array origin**, so the
+  solver beams leave the real hex aperture; horizontal table/racks/trays,
+  vertical aperture frame with mount ledges; phase cassettes/drivers/amplifiers/
+  splitter/collimators/console reuse the GLBs with A/B/C/world transforms; other
+  instruments and supports are procedural boxes with named port anchors.
+  Cables route with straight terminal leads plus family lanes (F-L, E-R,
+  AP-MOTOR) instead of a universal midpoint arch. GLB socket ports receive one
+  mating plug; pigtail and free-space ports are not given sockets.
+- Runtime: 112 placed equipment, 78 asset instances, 115 connectors, 8 GLB kinds,
+  242 cables, 0 failures.
+- Tests: `tests/assemblySpec.test.ts` audits the 241-run inventory, canonical
+  3+4+5+4+3 aperture with CH10 at (0,300,100), 78 FC sockets/plugs, endpoint
+  resolution, and pigtail/free-space typing. `npm test` 44 passed; browser 9
+  passed.
+
+Still open per `docs/CODING_AGENT_NEXT_PASS.md`: Pass 1 orientation-arrow
+evidence and fly-in-front composition; Pass 2 CH10 closeups, tube geometry with
+sampled-curvature/clearance checks, service loops, and the CH01/CH10/CH19
+tracing gate; Pass 3 the 43-knob console and articulated foreleg gestures
+(H4/H5). Counts are implemented and audited; visual/geometric acceptance is not
+claimed.
+
+---
+
+## Update 8 (2026-09-15): Pass 2 cables + Pass 3 console/fly (partial gates)
+
+Pass 2 — terminal-aware cabling:
+- Plugs now belong to cable assemblies (`terminal()` in `hardwareScene.ts`): a
+  male FC/APC or SMA plug is added only at socket ends and the cable starts at
+  its downstream `port_cable_exit`; captive PM pigtails start at the pigtail exit
+  with no plug. 116 plugs total (78 FC + 38 SMA), matching §2.3.
+- Family lanes (F-L, E-R, AP-MOTOR) plus an Ω service loop behind each moving
+  collimator; selected channel re-renders as tube geometry (6 radial segments),
+  other channels stay as lines.
+- `auditRouting()` reports sampled curvature radius and inflated clearance.
+  **Result: min sampled radius 2.67 mm and ~13.9k sphere-clearance hits — the R3
+  gate (30 mm optical, clean clearance) is NOT met.** The routing is
+  terminal-tangent and lane-based but still turns too sharply; this is reported,
+  not claimed as passing. Exposed as `hardwareMinRadiusMm`/`hardwareClearanceViolations`.
+
+Pass 3 — console and operator fly:
+- `consolePanel.ts` builds the §8.2 panel: 19 phase/amplitude pairs + five larger
+  selected-channel knobs = **43 knobs**, a 19-button canonical hex selector, and
+  a status display, bound every frame to the actual per-channel command state
+  (`updateConsole`). Verified 43/19 in the browser.
+- The controlling fly is placed as the console operator
+  (`FlyActors.setOperatorMode`, registered to the console front, native +X
+  forward → world -Z) and drives a staged foreleg reach/contact/retract on the
+  six `femur/tibia/tarsus_T1_left/right` joints; wings remain at rest. A
+  `console` camera preset was added.
+
+Validation: `npx tsc --noEmit` clean; `npm test` 44 passed; browser 9 passed
+(`hardwareKnobs=43`, `hardwareSelectors=19`, `flyForelegJoints=6`). Screenshots:
+`test-results/assembly-pass1.png`, `test-results/pass3-console2.png`.
+
+Not met / still open: R3 routing radius+clearance gate; Pass 1 orientation-arrow
+evidence and a clean three-quarter bench with the fly in front; Pass 2 CH10
+IN/OUT/channel labels and the CH01/CH10/CH19 attachment-under-motion gate; Pass 3
+foreleg contact accuracy against actual `touch_*` targets and a recorded gesture
+clip; H6 evidence bundle.
+
+### Update 8a — routing-audit correction
+
+After removing a hairpin detour in `laneFor` (lane points now use the cable's
+start/end depths instead of a shared midpoint), the sampled minimum radius
+measured **1.02 mm** (previously 2.67 mm) and sphere-clearance hits ~12.1k. The
+curvature estimate uses a nonuniform finite-difference formula and the routing is
+a display approximation, so neither number is a calibrated mechanical result —
+but both confirm the R3 radius/clearance gate is still unmet. Kept as a reported
+diagnostic (`hardwareMinRadiusMm`, `hardwareClearanceViolations`); not claimed as
+passing.

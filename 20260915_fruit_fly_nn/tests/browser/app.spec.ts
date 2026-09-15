@@ -148,11 +148,17 @@ test('hardware bench loads on demand and routes cables', async ({ page }) => {
   expect(metrics.hardwareError).toBeNull();
   expect(metrics.hardwareVisible).toBe(true);
   expect(metrics.hardwareNodes).toBeGreaterThan(20);
-  expect(metrics.hardwareCables).toBeGreaterThan(0);
-  // All nine generated asset kinds are instantiated (including bulkheads).
-  expect(metrics.hardwareComponentKinds).toBe(9);
+  expect(metrics.hardwareCables).toBeGreaterThan(200);
+  // Eight GLB kinds are used; fc-bulkhead is intentionally unused because the
+  // splitter already models its own sockets (spec: no extra mating sleeves).
+  expect(metrics.hardwareComponentKinds).toBe(8);
   expect(metrics.hardwareAssetInstances).toBeGreaterThan(70);
   expect(metrics.hardwareConnectorInstances).toBeGreaterThan(100);
+  expect(metrics.hardwareKnobs).toBe(43);
+  expect(metrics.hardwareSelectors).toBe(19);
+  expect(Number.isFinite(metrics.hardwareMinRadiusMm)).toBe(true);
+  expect(metrics.hardwareMinRadiusMm).toBeGreaterThan(0);
+  expect(Number.isFinite(metrics.hardwareClearanceViolations)).toBe(true);
   expect(metrics.hardwareFailures).toBe(0);
   await page.screenshot({ path: 'test-results/hardware-bench.png' });
 });
