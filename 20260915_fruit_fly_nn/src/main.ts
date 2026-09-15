@@ -80,6 +80,9 @@ class App {
   private targetKind = "static";
   private note = "";
   private spgdSeed = 1;
+  private paused = false;
+  private showBeams = true;
+  private sectionRange = 1;
 
   constructor() {
     this.scene.scene.add(this.bench.group);
@@ -94,6 +97,9 @@ class App {
     this.buildControls();
     this.scene.start();
     this.buildChannelControls();
+    this.buildInspectionControls();
+    this.setMode("analytic");
+    document.querySelector(`[data-target="static"]`)?.classList.add("active");
 
     // Expose a small hook for browser tests.
     (window as unknown as { __cbc?: unknown }).__cbc = {
@@ -105,6 +111,10 @@ class App {
         phaseRms: this.currentPhaseRms(),
         selected: this.selected,
         connectome: this.reservoir.activityStats(),
+        paused: this.paused,
+        step: this.env.stepIndex,
+        sectionRange: this.sectionRange,
+        graphSource: this.graph.source,
         flyLoaded: this.flies.loaded,
         flyError: this.flies.error,
       }),
@@ -143,6 +153,40 @@ class App {
     $("train-btn").addEventListener("click", () => this.trainConnectome());
   }
 
+  private buildInspectionControls(): void {
+    const pause = $("pause-btn");
+    pause.addEventListener("click", () => { this.paused = !this.paused; pause.textContent = this.paused ? "Resume simulation" : "Pause simulation"; });
+    const presets: Record<string, [number[], number[]]> = {
+      overview: [[90, 60, 145], [0, 0, 40]],
+      array: [[20, 16, 32], [0, 0, -5]],
+      target: [[30, 20, 135], [0, 0, 95]],
+      wiring: [[35, 24, -38], [0, 0, -10]],
+    };
+    Object.entries(presets).forEach(([name, [position, target]]) => {
+      const button = document.createElement("button"); button.textContent = name;
+      button.addEventListener("click", () => { this.scene.camera.position.set(position[0], position[1], position[2]); this.scene.controls.target.set(target[0], target[1], target[2]); this.scene.controls.update(); });
+      $("cameras").append(button);
+    });
+    const channelSelect = $("channel-select") as HTMLSelectElement;
+    channelSelect.add(new Option("Choose channel", "-1"));
+    array.channelIds.forEach((id, i) => channelSelect.add(new Option(id, String(i))));
+    channelSelect.addEventListener("change", () => { this.selected = Number(channelSelect.value); this.bench.setPathHighlight(this.selected); this.syncChannelControls(); });
+    const toggle = (id: string, change: (checked: boolean) => void) => {
+      const input = $(id) as HTMLInputElement; input.addEventListener("change", () => change(input.checked));
+    };
+    toggle("show-dome", value => this.dome.group.visible = value);
+    toggle("show-section", value => this.section.group.visible = value);
+    toggle("show-flies", value => this.flies.group.visible = value);
+    toggle("show-beams", value => this.showBeams = value);
+    const range = $("section-range") as HTMLInputElement;
+    range.addEventListener("input", () => { this.sectionRange = Number(range.value); $("section-range-value").textContent = `${this.sectionRange.toFixed(2)} m`; });
+    void fetch("/training/latest.json").then(r => { if (!r.ok) throw new Error("No published training result"); return r.json(); }).then(run => {
+      $("training-summary").textContent = `${run.nodes.toLocaleString()} MaleCNS nodes · ${run.generations} generations · reward ${run.initial.toFixed(3)} → ${run.final.toFixed(3)}. Held-out mean normalized target intensity: ${run.transfer.toFixed(3)}. Provisional positive signs; analytic steering assistance.`;
+      ($("training-curve") as HTMLImageElement).src = "/training/learning-curve.svg";
+      $("training-curve").hidden = false;
+    }).catch(() => { $("training-summary").textContent = "Headless training results will appear here after publication. This scene uses its own synthetic demo controller."; });
+  }
+
   private buildChannelControls(): void {
     const host = $("channel");
     host.innerHTML = "";
@@ -164,6 +208,7 @@ class App {
       input.max = String(spec.max);
       input.step = String(spec.step);
       input.dataset.key = spec.key;
+      input.setAttribute("aria-label", spec.label);
       input.value = String(spec.key === "amplitude" ? 1 : 0);
       const readout = document.createElement("span");
       readout.dataset.readout = spec.key;
@@ -171,6 +216,7 @@ class App {
       input.addEventListener("input", () => {
         if (this.selected < 0) return;
         this.overrides[this.selected][spec.key] = Number(input.value);
+        this.setMode("manual");
         readout.textContent = Number(input.value).toPrecision(3);
       });
       row.append(label, input, readout);
@@ -183,6 +229,7 @@ class App {
     const o = this.selected >= 0 ? this.overrides[this.selected] : { piston: 0, amplitude: 1, tiltX: 0, tiltY: 0, curvature: 0 };
     host.querySelectorAll<HTMLInputElement>("input[type=range]").forEach((input) => {
       const key = input.dataset.key as keyof ChannelOverride;
+      input.disabled = this.selected < 0;
       input.value = String(o[key]);
       const readout = host.querySelector<HTMLElement>(`[data-readout="${key}"]`);
       if (readout) readout.textContent = Number(o[key]).toPrecision(3);
@@ -192,6 +239,7 @@ class App {
   private select(index: number): void {
     this.selected = this.selected === index ? -1 : index;
     this.bench.setPathHighlight(this.selected);
+    ($( "channel-select") as HTMLSelectElement).value = String(this.selected);
     this.syncChannelControls();
   }
 
@@ -236,20 +284,11 @@ class App {
     switch (this.mode) {
       case "manual": {
         const base = analyticSteeringCommands(array, targetDir);
-        if (this.selected < 0) return base;
-        const o = this.overrides[this.selected];
-        return base.map((cmd, i) =>
-          i === this.selected
-            ? {
-                ...cmd,
-                piston_rad: cmd.piston_rad + o.piston,
-                amplitude: o.amplitude,
-                tiltX: cmd.tiltX + o.tiltX,
-                tiltY: cmd.tiltY + o.tiltY,
-                curvature_per_m: o.curvature,
-              }
-            : cmd,
-        );
+        return base.map((cmd, i) => {
+          const o = this.overrides[i];
+          return { ...cmd, piston_rad: cmd.piston_rad + o.piston, amplitude: o.amplitude,
+            tiltX: cmd.tiltX + o.tiltX, tiltY: cmd.tiltY + o.tiltY, curvature_per_m: o.curvature };
+        });
       }
       case "spgd": {
         const objective = makeDirectionObjective(array, this.env.hiddenErrors(), targetDir);
@@ -277,6 +316,7 @@ class App {
   }
 
   private frame(dt: number): void {
+    if (this.paused) return;
     const commands = this.currentCommands();
     const result = this.env.step(commands);
     this.observation = result.observation;
@@ -292,10 +332,10 @@ class App {
       actual: result.actual,
       selectedIndex: this.selected,
       beamTarget: centroid.clone().multiplyScalar(DISPLAY.targetDistance),
-      showBeams: true,
+      showBeams: this.showBeams,
     });
     this.dome.update(array, result.actual, { sx: centroid.x, sy: centroid.y, sz: centroid.z }, { sx: peak.x, sy: peak.y, sz: peak.z });
-    this.section.update(array, result.actual, { sx: centroid.x, sy: centroid.y, sz: centroid.z }, 1.0, targetPos);
+    this.section.update(array, result.actual, { sx: centroid.x, sy: centroid.y, sz: centroid.z }, this.sectionRange, targetPos);
     this.schematic.update(result.actual, this.selected, this.mode);
     this.drawNeural();
     this.updateHud(result.metrics, result.reward);

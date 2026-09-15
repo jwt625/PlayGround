@@ -115,12 +115,18 @@
         font-size: 10px;
         line-height: 1.4;
       }
+      select { width:100%; background:#161b22; color:#e6edf3; padding:7px; border:1px solid #30363d; border-radius:4px; }
+      .layers {display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:12px 0;}
+      #training-curve {width:100%;} summary {cursor:pointer;margin-top:12px;color:#79c0ff;}
+      button:hover {border-color:#79c0ff;} #panel {width:300px;}
+      @media(max-width:750px){#hud{max-width:180px;min-width:0;font-size:10px;}#panel{width:230px;top:auto;bottom:8px;max-height:48vh;}}
     </style>
   </head>
   <body>
     <canvas id="view"></canvas>
     <div id="hud">
-      <h1>Fruit-Fly CBC controller</h1>
+      <h1>19-channel CBC · scene inspector</h1>
+      <div class="hint">Drag to orbit · scroll to zoom · right-drag to pan</div>
       <div class="metric"><span>episode / step</span><span id="m-step">0</span></div>
       <div class="metric"><span>mode</span><span id="m-mode">-</span></div>
       <div class="metric"><span>reward</span><span id="m-reward">0</span></div>
@@ -134,6 +140,17 @@
       <div class="hint" id="m-note"></div>
     </div>
     <div id="panel">
+      <h2>Inspect scene</h2>
+      <div class="mode-buttons" id="cameras"></div>
+      <button id="pause-btn" style="width:100%;margin-top:6px">Pause simulation</button>
+      <div class="layers">
+        <label><input id="show-beams" type="checkbox" checked> Beams</label>
+        <label><input id="show-dome" type="checkbox" checked> Dome</label>
+        <label><input id="show-section" type="checkbox" checked> Section</label>
+        <label><input id="show-flies" type="checkbox" checked> Flies</label>
+      </div>
+      <label for="section-range">Section range <span id="section-range-value">1.00 m</span></label>
+      <input id="section-range" aria-label="Section range" type="range" min="0.2" max="2" value="1" step="0.05">
       <h2>Optical schematic</h2>
       <canvas id="schematic"></canvas>
       <h2>Controller</h2>
@@ -141,17 +158,22 @@
       <h2>Target</h2>
       <div class="mode-buttons" id="targets"></div>
       <h2>Selected channel</h2>
+      <select id="channel-select" aria-label="Selected channel"></select>
       <div id="channel"></div>
+      <p class="hint">Edits enable manual offsets for all channels. Analytic target steering remains active.</p>
       <h2>Reservoir</h2>
       <canvas id="neural"></canvas>
       <div class="mode-buttons" style="margin-top: 6px">
-        <button id="train-btn">Train 15 gen</button>
+        <button id="train-btn">Train demo 15 gen</button>
         <button id="reset-btn">Reset episode</button>
       </div>
       <div class="hint" style="margin-top: 6px">
-        Simulation only. No physical laser interface. Reservoir data are synthetic unless a
-        connectome JSON is supplied.
+        Browser neural mode uses a synthetic 240-neuron reservoir. Headless MaleCNS training results below are separate; they are not loaded into this scene.
       </div>
+      <details><summary>Latest headless training run</summary>
+        <p class="hint" id="training-summary">Checking results…</p>
+        <img id="training-curve" alt="Headless training fitness by generation" hidden>
+      </details>
     </div>
     <script type="module" src="/src/main.ts"></script>
   </body>

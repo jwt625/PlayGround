@@ -73,7 +73,7 @@ export class MeasurementSection {
     const v = new THREE.Vector3().crossVectors(n, u).normalize();
 
     this.center.copy(n).multiplyScalar(range_m);
-    this.mesh.position.copy(n).multiplyScalar(DISPLAY.targetDistance);
+    this.mesh.position.copy(n).multiplyScalar(DISPLAY.targetDistance * range_m);
     const basisMatrix = new THREE.Matrix4().makeBasis(u, v, n);
     this.mesh.quaternion.setFromRotationMatrix(basisMatrix);
     this.targetMarker.quaternion.copy(this.mesh.quaternion);
