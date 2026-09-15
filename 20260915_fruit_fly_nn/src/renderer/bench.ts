@@ -2,6 +2,7 @@ import * as THREE from "three";
 import type { ArrayConfig } from "../optics/geometry";
 import type { ChannelActual } from "../optics/types";
 import { phaseColor } from "./color";
+import { launchQ } from "../optics/gaussian";
 import { DISPLAY } from "./scene";
 
 export interface BenchState {
@@ -10,9 +11,10 @@ export interface BenchState {
   /** Beam endpoint in render coordinates (section centroid). */
   beamTarget: THREE.Vector3;
   showBeams: boolean;
+  beamRange_m?: number;
 }
 
-const UP = new THREE.Vector3(0, 1, 0);
+
 
 function renderPosition(config: ArrayConfig, index: number): THREE.Vector3 {
   return new THREE.Vector3(
@@ -33,6 +35,7 @@ export class OpticalBench {
   private readonly config: ArrayConfig;
   private phaseRings: THREE.Mesh[] = [];
   private beamMeshes: THREE.Mesh[] = [];
+  private beamTemplate!: Float32Array;
   private fibers: THREE.Line[] = [];
   private electrical: THREE.Line[] = [];
   private emitters: THREE.Mesh[] = [];
@@ -135,7 +138,8 @@ export class OpticalBench {
 
   private buildBeams(): void {
     const n = this.config.channelIds.length;
-    const geometry = new THREE.CylinderGeometry(1, 1, 1, 6, 1, true);
+    const geometry = new THREE.CylinderGeometry(1, 1, 1, 12, 32, true);
+    this.beamTemplate = Float32Array.from(geometry.attributes.position.array);
     for (let i = 0; i < n; i++) {
       const mat = new THREE.MeshBasicMaterial({
         color: 0x39c5cf,
@@ -144,7 +148,7 @@ export class OpticalBench {
         depthWrite: false,
         side: THREE.DoubleSide,
       });
-      const mesh = new THREE.Mesh(geometry, mat);
+      const mesh = new THREE.Mesh(geometry.clone(), mat);
       this.group.add(mesh);
       this.beamMeshes.push(mesh);
     }
@@ -168,24 +172,33 @@ export class OpticalBench {
         : new THREE.Color(0x000000);
     }
 
-    // Beams: from each emitter to the section/beam endpoint.
-    const start = new THREE.Vector3();
-    const dir = new THREE.Vector3();
+    // Gaussian 1/e² envelopes from actual channel direction/curvature. Axial
+    // distance is compressed for presentation; transverse scale follows DISPLAY.
+    // Envelope transparency is illustrative, not a volume interference integral.
+    const axis = new THREE.Vector3(), u = new THREE.Vector3(), v = new THREE.Vector3();
+    const range = state.beamRange_m ?? 1;
     for (let i = 0; i < n; i++) {
-      const mesh = this.beamMeshes[i];
-      const s = state.actual[i];
-      mesh.visible = state.showBeams && s.enabled && s.amplitude > 0;
+      const mesh = this.beamMeshes[i], channel = state.actual[i];
+      mesh.visible = state.showBeams && channel.enabled && channel.amplitude > 0;
       if (!mesh.visible) continue;
-      start.copy(renderPosition(this.config, i));
-      dir.copy(state.beamTarget).sub(start);
-      const len = dir.length();
-      mesh.position.copy(start).addScaledVector(dir, 0.5);
-      mesh.scale.set(0.32, len, 0.32);
-      mesh.quaternion.setFromUnitVectors(UP, dir.normalize());
-      const color = new THREE.Color(...phaseColor(s.piston_rad));
+      axis.set(channel.tiltX, channel.tiltY, Math.sqrt(Math.max(0, 1-channel.tiltX**2-channel.tiltY**2)));
+      u.crossVectors(new THREE.Vector3(1, 0, 0), axis).normalize();
+      v.crossVectors(axis, u).normalize();
+      const q = launchQ(this.config, channel.curvature_per_m);
+      const positions = mesh.geometry.attributes.position;
+      for (let j = 0; j < positions.count; j++) {
+        const t = (this.beamTemplate[j*3+1] + 0.5) * range;
+        const width = Math.sqrt(this.config.wavelength_m * ((q.re+t)**2+q.im**2)/(Math.PI*q.im));
+        const a = this.beamTemplate[j*3]*width, b = this.beamTemplate[j*3+2]*width;
+        positions.setXYZ(j,
+          (this.config.x_m[i] + t*axis.x + a*u.x + b*v.x)*DISPLAY.scale,
+          (this.config.y_m[i] + t*axis.y + a*u.y + b*v.y)*DISPLAY.scale,
+          (this.config.z_m[i] + t*axis.z + a*u.z + b*v.z)*DISPLAY.targetDistance);
+      }
+      positions.needsUpdate = true; mesh.geometry.computeBoundingSphere();
       const mat = mesh.material as THREE.MeshBasicMaterial;
-      mat.color.copy(color).lerp(new THREE.Color(0xffffff), 0.35);
-      mat.opacity = 0.1 + 0.08 * (state.selectedIndex === i ? 3 : 1);
+      mat.color.set(0x45ded0);
+      mat.opacity = state.selectedIndex === i ? 0.2 : state.selectedIndex < 0 ? 0.025 : 0.008;
     }
   }
 

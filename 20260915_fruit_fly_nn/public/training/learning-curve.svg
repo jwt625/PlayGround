@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="420" viewBox="0 0 720 420">
+<rect width="720" height="420" fill="#0d1117"/>
+<text x="360" y="24" fill="#e6edf3" font-family="monospace" font-size="15" text-anchor="middle">Learning curve (ES readout)</text>
+<line x1="60" y1="44" x2="60" y2="376" stroke="#30363d"/>
+<line x1="60" y1="376" x2="580" y2="376" stroke="#30363d"/>
+<line x1="60" y1="44" x2="580" y2="44" stroke="#21262d"/>
+<text x="52" y="48" fill="#8b949e" font-family="monospace" font-size="11" text-anchor="end">1.042</text>
+<line x1="60" y1="127" x2="580" y2="127" stroke="#21262d"/>
+<text x="52" y="131" fill="#8b949e" font-family="monospace" font-size="11" text-anchor="end">0.8085</text>
+<line x1="60" y1="210" x2="580" y2="210" stroke="#21262d"/>
+<text x="52" y="214" fill="#8b949e" font-family="monospace" font-size="11" text-anchor="end">0.5746</text>
+<line x1="60" y1="293" x2="580" y2="293" stroke="#21262d"/>
+<text x="52" y="297" fill="#8b949e" font-family="monospace" font-size="11" text-anchor="end">0.3406</text>
+<line x1="60" y1="376" x2="580" y2="376" stroke="#21262d"/>
+<text x="52" y="380" fill="#8b949e" font-family="monospace" font-size="11" text-anchor="end">0.1066</text>
+<text x="320" y="410" fill="#8b949e" font-family="monospace" font-size="12" text-anchor="middle">generation</text>
+<text x="14" y="210" fill="#8b949e" font-family="monospace" font-size="12" text-anchor="middle" transform="rotate(-90 14 210)">fitness</text>
+<path d="M60.00,351.86 L73.33,186.66 L86.67,162.31 L100.00,119.88 L113.33,109.09 L126.67,88.86 L140.00,73.03 L153.33,51.48 L166.67,50.39 L180.00,59.43 L193.33,44.00 L206.67,52.17 L220.00,63.68 L233.33,55.73 L246.67,50.99 L260.00,52.12 L273.33,49.21 L286.67,63.48 L300.00,52.78 L313.33,47.98 L326.67,55.70 L340.00,62.45 L353.33,68.60 L366.67,68.67 L380.00,65.85 L393.33,63.20 L406.67,64.09 L420.00,57.77 L433.33,54.43 L446.67,66.46 L460.00,57.64 L473.33,72.32 L486.67,68.55 L500.00,64.76 L513.33,67.80 L526.67,68.49 L540.00,66.88 L553.33,66.21 L566.67,68.58 L580.00,67.48" fill="none" stroke="#3fb950" stroke-width="2"/>
+<line x1="592" y1="44" x2="614" y2="44" stroke="#3fb950" stroke-width="2"/>
+<text x="620" y="48" fill="#c9d1d9" font-family="monospace" font-size="11">best</text>
+<path d="M60.00,376.00 L73.33,301.56 L86.67,233.87 L100.00,185.77 L113.33,168.06 L126.67,136.27 L140.00,125.10 L153.33,114.82 L166.67,93.40 L180.00,66.01 L193.33,65.27 L206.67,76.80 L220.00,84.37 L233.33,65.57 L246.67,64.51 L260.00,129.95 L273.33,90.29 L286.67,79.31 L300.00,69.29 L313.33,85.51 L326.67,84.72 L340.00,93.40 L353.33,93.32 L366.67,76.78 L380.00,70.40 L393.33,87.52 L406.67,68.11 L420.00,66.83 L433.33,73.26 L446.67,70.69 L460.00,65.97 L473.33,85.27 L486.67,71.96 L500.00,76.47 L513.33,70.29 L526.67,70.30 L540.00,70.26 L553.33,78.38 L566.67,68.98 L580.00,69.77" fill="none" stroke="#58a6ff" stroke-width="2"/>
+<line x1="592" y1="58" x2="614" y2="58" stroke="#58a6ff" stroke-width="2"/>
+<text x="620" y="62" fill="#c9d1d9" font-family="monospace" font-size="11">mean</text>
+</svg>

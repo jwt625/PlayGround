@@ -303,3 +303,11 @@ T07 now has actual MaleCNS v1.0 resources cached locally; use [data/README.md](.
 T09 has a browser-loadable articulated GLB, joint metadata, illustrative animation, and browser/source-render evidence. See [asset task update](ASSET_TASKS.md). T04 may use the five prototype bench GLBs or their generator; runtime actuation and wiring still need integration. These deliveries do not mark the containing implementation phases complete.
 
 Progress snapshot and evidence: [DevLog 002 — assets and resource cache](../DevLog/002-assets-and-resource-cache-progress.md).
+
+## Training/scene review update — 2026-09-15
+
+See [DevLog 004](../DevLog/004-training-review-and-live-neural-inspector.md): completed 5,000-node MaleCNS training run, saved-spec evaluation repair, real before/after browser playback, and soma-position 3D activation driven by the active controller. Prior statements that the scene only supports synthetic activity are historical. Biological signs/mapping, true intermediate-checkpoint timelapse, and remaining optics/rendering acceptance checks are still TODO. Always inspect port ownership before starting a server; reuse the existing project server when available.
+
+## Hardware realism and controlling-fly implementation supplement
+
+The [hardware scene handoff](HARDWARE_SCENE_TASKS.md) specifies phases H0–H6 with TODOs and gates for enclosed modules, FC/RF connectors, routed 19-channel wiring, compact console, motorized aperture and staged fly foreleg gestures. Use its named-port asset manifest and wiring plan. It supplements existing optics/training acceptance checks; the assets' existence does not mark those checks or scene integration complete. See [DevLog 005](../DevLog/005-hardware-assets-and-coding-handoff.md) for collection/generation status.

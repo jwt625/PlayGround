@@ -116,3 +116,10 @@ baseline.
 Project code is original to this repository. Third-party assets are not yet
 bundled; any future FlyBody import must retain its license, revision, and
 attribution per `docs/RENDERING_REFERENCES.md`.
+
+
+## Inspect the actual saved training run
+
+Check port ownership first (`lsof -nP -iTCP:5173 -sTCP:LISTEN`). Reuse an existing server for this project; `npm run dev` checks the requested port and will not start another process on an occupied port.
+
+In the frontend choose **Load real training run + 3D neurons**, then **Before training / After training**. This loads the 5,000-neuron MaleCNS subset and actual saved readout. The adjacent 3D view colors mapped soma positions using the same reservoir activity that drives the optical controller. Quarter-speed and single-step playback are available. See [DevLog 004](DevLog/004-training-review-and-live-neural-inspector.md) for exact objective, evidence, and limitations; endpoint replay is not ongoing training or an intermediate-generation timelapse.

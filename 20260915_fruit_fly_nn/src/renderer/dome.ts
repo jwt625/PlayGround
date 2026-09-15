@@ -27,12 +27,14 @@ export class FarFieldDome {
     const mat = new THREE.MeshBasicMaterial({
       vertexColors: true,
       transparent: true,
-      opacity: 0.9,
+      opacity: 0.12,
       side: THREE.DoubleSide,
       depthWrite: false,
     });
     this.mesh = new THREE.Mesh(geom, mat);
     this.group.add(this.mesh);
+    this.group.add(new THREE.LineSegments(new THREE.WireframeGeometry(geom),
+      new THREE.LineBasicMaterial({ color: 0x406075, transparent: true, opacity: 0.08, depthWrite: false })));
 
     const pos = geom.attributes.position;
     for (let i = 0; i < pos.count; i++) {
@@ -68,7 +70,9 @@ export class FarFieldDome {
       max = Math.max(max, intensity);
     }
     for (let i = 0; i < this.positions.length; i++) {
-      const [r, g, b] = intensityColor(logNormalize(values[i], max, 5));
+      const d = this.positions[i];
+      const valid = Math.hypot(d.x, d.y) <= config.steeringLimit && d.z > 0;
+      const [r, g, b] = valid && max > 0 ? intensityColor(logNormalize(values[i], max, 5)) : [0, 0, 0];
       this.colors[i * 3] = r;
       this.colors[i * 3 + 1] = g;
       this.colors[i * 3 + 2] = b;

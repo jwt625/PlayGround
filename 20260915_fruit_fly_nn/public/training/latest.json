@@ -1,0 +1,12 @@
+{
+  "runDir": "outputs/review-malecns-phase-lock-20260915",
+  "nodes": 5000,
+  "edges": 23447,
+  "generations": 40,
+  "initial": 0.13626454506273392,
+  "final": 0.9725129375912636,
+  "transfer": 0.7249596238651497,
+  "sameArray": 0.7994755365582565,
+  "graphSource": "malecns",
+  "notes": "MaleCNS v1.0 derived subset: 5000/164606 nodes, raw synapse magnitudes, all-positive placeholder signs (transmitter signs TODO)"
+}

@@ -5,7 +5,7 @@
   "type": "module",
   "description": "Fruit-fly connectome controller for a simulated coherent beam combining (CBC) phased array. Simulation/art project only; no physical laser interface.",
   "scripts": {
-    "dev": "vite",
+    "dev": "node scripts/dev-server.mjs",
     "build": "tsc --noEmit && vite build",
     "preview": "vite preview",
     "typecheck": "tsc --noEmit",
