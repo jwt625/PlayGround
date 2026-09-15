@@ -1,5 +1,9 @@
 # Coding-agent handoff and task tracker
 
+> **Latest rendering review:** [corrective tasks R1–R5](HARDWARE_RENDERING_REVIEW.md) take priority for orientation, packing, terminal-aware spline routing, a 43-knob console, and the fly directly in front. The previous five-knob-only console recommendation is superseded.
+
+> **Concrete assembly instructions:** [CBC_ASSEMBLY_SPEC.md](CBC_ASSEMBLY_SPEC.md) defines the counted equipment list, shared/19-channel placement tables, orientations, ports, individual distributor assignments, cable families, stacking, and console control coordinates. This is the hardware implementation source of truth.
+
 Updated: 2026-09-15
 
 ## Assignment

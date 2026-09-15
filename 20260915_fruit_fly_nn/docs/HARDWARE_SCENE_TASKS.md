@@ -1,5 +1,9 @@
 # CBC hardware scene: coding-agent handoff
 
+**Assembly source of truth:** [equipment, placement, ports and cable schedule](CBC_ASSEMBLY_SPEC.md). Its explicit distribution topology replaces the older 215-edge wiring proposal; implement 241 internal runs plus the external supply-entry cord. Older phase descriptions remain workflow guidance only.
+
+> **Latest rendering review:** [corrective tasks R1–R5](HARDWARE_RENDERING_REVIEW.md) take priority for orientation, packing, terminal-aware spline routing, a 43-knob console, and the fly directly in front. The previous five-knob-only console recommendation is superseded.
+
 Status: **specification and standalone assets ready; integration not performed.** Updated 2026-09-15.
 
 ## Goal and scope

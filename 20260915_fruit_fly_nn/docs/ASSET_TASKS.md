@@ -159,3 +159,12 @@ See [DevLog 004](../DevLog/004-training-review-and-live-neural-inspector.md): co
 - [ ] Coding agent integrates routing, actual controller-driven controls, and staged fly foreleg choreography.
 
 Start with [hardware coding handoff](HARDWARE_SCENE_TASKS.md), [cache inventory](../assets/reference/hardware/README.md), and [DevLog 005](../DevLog/005-hardware-assets-and-coding-handoff.md). Asset production is complete for the listed nine prefabs; application integration remains TODO.
+
+## A8 — corrections from live hardware review
+
+- [ ] Rebuild the tip/tilt mount with a horizontal optical axis above a supported base.
+- [ ] Generate a 43-knob console (19 phase + 19 amplitude + five selected-channel controls), with front-center fly stance and foreleg targets.
+- [ ] Add table/trays/operator platform, real placeholder sockets and cable breakout assets.
+- [ ] Refine pigtail terminals and remove duplicate bulkhead/socket geometry during integration.
+
+Follow [live rendering review R1–R5](HARDWARE_RENDERING_REVIEW.md); the previous small console is a baseline asset, not the final specification.
