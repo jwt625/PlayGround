@@ -144,3 +144,18 @@ Python tooling versions are pinned in `scripts/requirements-assets.lock.txt`. Lo
 - Source inventory refreshed after caching the pinned FlyBody build script; initial A1 counts above describe the earlier 90-file snapshot.
 
 Progress snapshot and evidence: [DevLog 002 — assets and resource cache](../DevLog/002-assets-and-resource-cache-progress.md).
+
+## Training/scene review update — 2026-09-15
+
+See [DevLog 004](../DevLog/004-training-review-and-live-neural-inspector.md): completed 5,000-node MaleCNS training run, saved-spec evaluation repair, real before/after browser playback, and soma-position 3D activation driven by the active controller. Prior statements that the scene only supports synthetic activity are historical. Biological signs/mapping, true intermediate-checkpoint timelapse, and remaining optics/rendering acceptance checks are still TODO. Always inspect port ownership before starting a server; reuse the existing project server when available.
+
+## A7 — realistic hardware, console and operating-fly handoff (2026-09-15)
+
+- [x] Research/cache manufacturer connector, adapter, collimator, phase modulator, optical amplifier and enclosure references with hashes and rights notes.
+- [x] Generate nine original hardware GLBs with named ports/pivots, including compact console and foreleg contact targets.
+- [x] Prepare explicit 19-channel wiring registry and phased coding-agent instructions.
+- [x] Reload/validate assets and generate an offline browser contact sheet.
+- [ ] Complete remaining seed/supply/junction/tray/focus-stage assets and mechanical closeup refinement.
+- [ ] Coding agent integrates routing, actual controller-driven controls, and staged fly foreleg choreography.
+
+Start with [hardware coding handoff](HARDWARE_SCENE_TASKS.md), [cache inventory](../assets/reference/hardware/README.md), and [DevLog 005](../DevLog/005-hardware-assets-and-coding-handoff.md). Asset production is complete for the listed nine prefabs; application integration remains TODO.

@@ -138,3 +138,7 @@ node scripts/inspect_asset_browser.mjs
 - [ ] A5: integrate real morphology with attribution and explicit selection labels; whole-CNS morphology/registration is not delivered here.
 
 Application source appeared during this workstream. This devlog records asset/data evidence only; the earlier specification-only baseline is historical, and application implementation status must be assessed from its own tests and review.
+
+## Hardware packaging follow-up
+
+See [DevLog 005](005-hardware-assets-and-coding-handoff.md) for the manufacturer CAD/PDF cache, nine original hardware assets, compact fly console, wiring registry and phased coding handoff. Scene integration and staged foreleg choreography remain coding-agent tasks.

@@ -28,3 +28,10 @@ __pycache__/
 !scripts/cache_external_resources.py
 !scripts/prepare_connectome_cache.py
 !assets/generated/connectome/graph-cache-report.json
+
+!scripts/cache_hardware_references.mjs
+
+# Manufacturer CAD/PDF reference cache has unresolved redistribution rights and
+# is not needed at runtime. Keep the bulk out of the repository; manifest.json
+# and the hardware README retain hashes, sizes, and source URLs.
+assets/reference/hardware/vendor/

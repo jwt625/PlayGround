@@ -18,3 +18,7 @@ FlyBody attribution: TuragaLab/flybody; model developed by Google DeepMind and H
 - `preview/index.html`: standalone fly inspection view; serve repository root locally, then open `/assets/preview/`.
 
 Real neuron morphology preview: serve repository root and open `/assets/preview/neurons.html`. See the saved screenshot and browser report under `generated/connectome/`.
+
+## Hardware v2
+
+[Original hardware assets](generated/hardware-v2/manifest.json), [contact sheet](generated/hardware-v2/contact-sheet.png), and [wiring plan](generated/hardware-v2/wiring-plan.json) are available for coding-agent integration. [Manufacturer CAD/PDF cache](reference/hardware/README.md) remains separate reference material. Follow [hardware scene tasks](../docs/HARDWARE_SCENE_TASKS.md); these prefabs do not implement the scene or fly gestures.

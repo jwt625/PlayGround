@@ -41,3 +41,7 @@ For every imported/derived asset record source URL, pinned revision, original fi
 - FlyBody pinned build script `assets/vendor/flybody/UPSTREAM_make_fruitfly.py` explicitly rescales mm to cm; exporter applies cm to m separately.
 
 Progress snapshot and evidence: [DevLog 002 — assets and resource cache](../DevLog/002-assets-and-resource-cache-progress.md).
+
+## Hardware packaging references — 2026-09-15
+
+Five manufacturer STEP models and three PDFs are now locally cached. See the [hardware reference inventory](../assets/reference/hardware/README.md) for exact source links, compatibility notes, file hashes and reference-only rights status. Separate original GLBs and [phased integration tasks](HARDWARE_SCENE_TASKS.md) cover component enclosures, FC-style and RF connectors, aperture mechanics, wired compact console and staged fly operating gestures.

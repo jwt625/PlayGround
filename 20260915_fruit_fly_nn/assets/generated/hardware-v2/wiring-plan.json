@@ -1,0 +1,2223 @@
+{
+  "schema_version": 1,
+  "status": "Specification only; not integrated",
+  "channels": 19,
+  "notes": [
+    "Edges are logical connections. Shared outputs require physical junctions/distribution connectors, not multiple plugs occupying one socket.",
+    "Control command junction carries phase/amplitude commands; separate RF driver outputs feed phase cassettes.",
+    "Optical connector assemblies/pigtail termination are expanded by cable builder; do not attach an FC plug directly to a pigtail exit.",
+    "Focus/supply/seed/junction assets are pending. A focus actuator receives command and power through the aperture driver assembly."
+  ],
+  "nodes": [
+    {
+      "id": "seed",
+      "asset": null,
+      "placeholder_ports": [
+        "optical_out",
+        "dc_power"
+      ],
+      "status": "asset-needed"
+    },
+    {
+      "id": "supply",
+      "asset": null,
+      "placeholder_ports": [
+        "dc_out"
+      ],
+      "status": "asset-needed"
+    },
+    {
+      "id": "console",
+      "asset": "fly-console",
+      "placeholder_ports": [],
+      "status": "asset-ready"
+    },
+    {
+      "id": "splitter",
+      "asset": "splitter-19",
+      "placeholder_ports": [],
+      "status": "asset-ready"
+    },
+    {
+      "id": "phase-command-junction",
+      "asset": null,
+      "placeholder_ports": [
+        "in",
+        "out"
+      ],
+      "status": "asset-needed"
+    },
+    {
+      "id": "motor-driver-junction",
+      "asset": null,
+      "placeholder_ports": [
+        "command_in",
+        "motor_out",
+        "focus_out",
+        "dc_power"
+      ],
+      "status": "asset-needed"
+    },
+    {
+      "id": "CH01-phase",
+      "asset": "phase-cassette",
+      "placeholder_ports": [],
+      "status": "asset-ready"
+    },
+    {
+      "id": "CH01-driver",
+      "asset": "phase-driver",
+      "placeholder_ports": [],
+      "status": "asset-ready"
+    },
+    {
+      "id": "CH01-amplifier",
+      "asset": "optical-amplifier",
+      "placeholder_ports": [],
+      "status": "asset-ready"
+    },
+    {
+      "id": "CH01-mount",
+      "asset": "tiptilt-collimator",
+      "placeholder_ports": [],
+      "status": "asset-ready"
+    },
+    {
+      "id": "CH01-focus",
+      "asset": null,
+      "placeholder_ports": [
+        "command_in",
+        "dc_power"
+      ],
+      "status": "asset-needed"
+    },
+    {
+      "id": "CH02-phase",
+      "asset": "phase-cassette",
+      "placeholder_ports": [],
+      "status": "asset-ready"
+    },
+    {
+      "id": "CH02-driver",
+      "asset": "phase-driver",
+      "placeholder_ports": [],
+      "status": "asset-ready"
+    },
+    {
+      "id": "CH02-amplifier",
+      "asset": "optical-amplifier",
+      "placeholder_ports": [],
+      "status": "asset-ready"
+    },
+    {
+      "id": "CH02-mount",
+      "asset": "tiptilt-collimator",
+      "placeholder_ports": [],
+      "status": "asset-ready"
+    },
+    {
+      "id": "CH02-focus",
+      "asset": null,
+      "placeholder_ports": [
+        "command_in",
+        "dc_power"
+      ],
+      "status": "asset-needed"
+    },
+    {
+      "id": "CH03-phase",
+      "asset": "phase-cassette",
+      "placeholder_ports": [],
+      "status": "asset-ready"
+    },
+    {
+      "id": "CH03-driver",
+      "asset": "phase-driver",
+      "placeholder_ports": [],
+      "status": "asset-ready"
+    },
+    {
+      "id": "CH03-amplifier",
+      "asset": "optical-amplifier",
+      "placeholder_ports": [],
+      "status": "asset-ready"
+    },
+    {
+      "id": "CH03-mount",
+      "asset": "tiptilt-collimator",
+      "placeholder_ports": [],
+      "status": "asset-ready"
+    },
+    {
+      "id": "CH03-focus",
+      "asset": null,
+      "placeholder_ports": [
+        "command_in",
+        "dc_power"
+      ],
+      "status": "asset-needed"
+    },
+    {
+      "id": "CH04-phase",
+      "asset": "phase-cassette",
+      "placeholder_ports": [],
+      "status": "asset-ready"
+    },
+    {
+      "id": "CH04-driver",
+      "asset": "phase-driver",
+      "placeholder_ports": [],
+      "status": "asset-ready"
+    },
+    {
+      "id": "CH04-amplifier",
+      "asset": "optical-amplifier",
+      "placeholder_ports": [],
+      "status": "asset-ready"
+    },
+    {
+      "id": "CH04-mount",
+      "asset": "tiptilt-collimator",
+      "placeholder_ports": [],
+      "status": "asset-ready"
+    },
+    {
+      "id": "CH04-focus",
+      "asset": null,
+      "placeholder_ports": [
+        "command_in",
+        "dc_power"
+      ],
+      "status": "asset-needed"
+    },
+    {
+      "id": "CH05-phase",
+      "asset": "phase-cassette",
+      "placeholder_ports": [],
+      "status": "asset-ready"
+    },
+    {
+      "id": "CH05-driver",
+      "asset": "phase-driver",
+      "placeholder_ports": [],
+      "status": "asset-ready"
+    },
+    {
+      "id": "CH05-amplifier",
+      "asset": "optical-amplifier",
+      "placeholder_ports": [],
+      "status": "asset-ready"
+    },
+    {
+      "id": "CH05-mount",
+      "asset": "tiptilt-collimator",
+      "placeholder_ports": [],
+      "status": "asset-ready"
+    },
+    {
+      "id": "CH05-focus",
+      "asset": null,
+      "placeholder_ports": [
+        "command_in",
+        "dc_power"
+      ],
+      "status": "asset-needed"
+    },
+    {
+      "id": "CH06-phase",
+      "asset": "phase-cassette",
+      "placeholder_ports": [],
+      "status": "asset-ready"
+    },
+    {
+      "id": "CH06-driver",
+      "asset": "phase-driver",
+      "placeholder_ports": [],
+      "status": "asset-ready"
+    },
+    {
+      "id": "CH06-amplifier",
+      "asset": "optical-amplifier",
+      "placeholder_ports": [],
+      "status": "asset-ready"
+    },
+    {
+      "id": "CH06-mount",
+      "asset": "tiptilt-collimator",
+      "placeholder_ports": [],
+      "status": "asset-ready"
+    },
+    {
+      "id": "CH06-focus",
+      "asset": null,
+      "placeholder_ports": [
+        "command_in",
+        "dc_power"
+      ],
+      "status": "asset-needed"
+    },
+    {
+      "id": "CH07-phase",
+      "asset": "phase-cassette",
+      "placeholder_ports": [],
+      "status": "asset-ready"
+    },
+    {
+      "id": "CH07-driver",
+      "asset": "phase-driver",
+      "placeholder_ports": [],
+      "status": "asset-ready"
+    },
+    {
+      "id": "CH07-amplifier",
+      "asset": "optical-amplifier",
+      "placeholder_ports": [],
+      "status": "asset-ready"
+    },
+    {
+      "id": "CH07-mount",
+      "asset": "tiptilt-collimator",
+      "placeholder_ports": [],
+      "status": "asset-ready"
+    },
+    {
+      "id": "CH07-focus",
+      "asset": null,
+      "placeholder_ports": [
+        "command_in",
+        "dc_power"
+      ],
+      "status": "asset-needed"
+    },
+    {
+      "id": "CH08-phase",
+      "asset": "phase-cassette",
+      "placeholder_ports": [],
+      "status": "asset-ready"
+    },
+    {
+      "id": "CH08-driver",
+      "asset": "phase-driver",
+      "placeholder_ports": [],
+      "status": "asset-ready"
+    },
+    {
+      "id": "CH08-amplifier",
+      "asset": "optical-amplifier",
+      "placeholder_ports": [],
+      "status": "asset-ready"
+    },
+    {
+      "id": "CH08-mount",
+      "asset": "tiptilt-collimator",
+      "placeholder_ports": [],
+      "status": "asset-ready"
+    },
+    {
+      "id": "CH08-focus",
+      "asset": null,
+      "placeholder_ports": [
+        "command_in",
+        "dc_power"
+      ],
+      "status": "asset-needed"
+    },
+    {
+      "id": "CH09-phase",
+      "asset": "phase-cassette",
+      "placeholder_ports": [],
+      "status": "asset-ready"
+    },
+    {
+      "id": "CH09-driver",
+      "asset": "phase-driver",
+      "placeholder_ports": [],
+      "status": "asset-ready"
+    },
+    {
+      "id": "CH09-amplifier",
+      "asset": "optical-amplifier",
+      "placeholder_ports": [],
+      "status": "asset-ready"
+    },
+    {
+      "id": "CH09-mount",
+      "asset": "tiptilt-collimator",
+      "placeholder_ports": [],
+      "status": "asset-ready"
+    },
+    {
+      "id": "CH09-focus",
+      "asset": null,
+      "placeholder_ports": [
+        "command_in",
+        "dc_power"
+      ],
+      "status": "asset-needed"
+    },
+    {
+      "id": "CH10-phase",
+      "asset": "phase-cassette",
+      "placeholder_ports": [],
+      "status": "asset-ready"
+    },
+    {
+      "id": "CH10-driver",
+      "asset": "phase-driver",
+      "placeholder_ports": [],
+      "status": "asset-ready"
+    },
+    {
+      "id": "CH10-amplifier",
+      "asset": "optical-amplifier",
+      "placeholder_ports": [],
+      "status": "asset-ready"
+    },
+    {
+      "id": "CH10-mount",
+      "asset": "tiptilt-collimator",
+      "placeholder_ports": [],
+      "status": "asset-ready"
+    },
+    {
+      "id": "CH10-focus",
+      "asset": null,
+      "placeholder_ports": [
+        "command_in",
+        "dc_power"
+      ],
+      "status": "asset-needed"
+    },
+    {
+      "id": "CH11-phase",
+      "asset": "phase-cassette",
+      "placeholder_ports": [],
+      "status": "asset-ready"
+    },
+    {
+      "id": "CH11-driver",
+      "asset": "phase-driver",
+      "placeholder_ports": [],
+      "status": "asset-ready"
+    },
+    {
+      "id": "CH11-amplifier",
+      "asset": "optical-amplifier",
+      "placeholder_ports": [],
+      "status": "asset-ready"
+    },
+    {
+      "id": "CH11-mount",
+      "asset": "tiptilt-collimator",
+      "placeholder_ports": [],
+      "status": "asset-ready"
+    },
+    {
+      "id": "CH11-focus",
+      "asset": null,
+      "placeholder_ports": [
+        "command_in",
+        "dc_power"
+      ],
+      "status": "asset-needed"
+    },
+    {
+      "id": "CH12-phase",
+      "asset": "phase-cassette",
+      "placeholder_ports": [],
+      "status": "asset-ready"
+    },
+    {
+      "id": "CH12-driver",
+      "asset": "phase-driver",
+      "placeholder_ports": [],
+      "status": "asset-ready"
+    },
+    {
+      "id": "CH12-amplifier",
+      "asset": "optical-amplifier",
+      "placeholder_ports": [],
+      "status": "asset-ready"
+    },
+    {
+      "id": "CH12-mount",
+      "asset": "tiptilt-collimator",
+      "placeholder_ports": [],
+      "status": "asset-ready"
+    },
+    {
+      "id": "CH12-focus",
+      "asset": null,
+      "placeholder_ports": [
+        "command_in",
+        "dc_power"
+      ],
+      "status": "asset-needed"
+    },
+    {
+      "id": "CH13-phase",
+      "asset": "phase-cassette",
+      "placeholder_ports": [],
+      "status": "asset-ready"
+    },
+    {
+      "id": "CH13-driver",
+      "asset": "phase-driver",
+      "placeholder_ports": [],
+      "status": "asset-ready"
+    },
+    {
+      "id": "CH13-amplifier",
+      "asset": "optical-amplifier",
+      "placeholder_ports": [],
+      "status": "asset-ready"
+    },
+    {
+      "id": "CH13-mount",
+      "asset": "tiptilt-collimator",
+      "placeholder_ports": [],
+      "status": "asset-ready"
+    },
+    {
+      "id": "CH13-focus",
+      "asset": null,
+      "placeholder_ports": [
+        "command_in",
+        "dc_power"
+      ],
+      "status": "asset-needed"
+    },
+    {
+      "id": "CH14-phase",
+      "asset": "phase-cassette",
+      "placeholder_ports": [],
+      "status": "asset-ready"
+    },
+    {
+      "id": "CH14-driver",
+      "asset": "phase-driver",
+      "placeholder_ports": [],
+      "status": "asset-ready"
+    },
+    {
+      "id": "CH14-amplifier",
+      "asset": "optical-amplifier",
+      "placeholder_ports": [],
+      "status": "asset-ready"
+    },
+    {
+      "id": "CH14-mount",
+      "asset": "tiptilt-collimator",
+      "placeholder_ports": [],
+      "status": "asset-ready"
+    },
+    {
+      "id": "CH14-focus",
+      "asset": null,
+      "placeholder_ports": [
+        "command_in",
+        "dc_power"
+      ],
+      "status": "asset-needed"
+    },
+    {
+      "id": "CH15-phase",
+      "asset": "phase-cassette",
+      "placeholder_ports": [],
+      "status": "asset-ready"
+    },
+    {
+      "id": "CH15-driver",
+      "asset": "phase-driver",
+      "placeholder_ports": [],
+      "status": "asset-ready"
+    },
+    {
+      "id": "CH15-amplifier",
+      "asset": "optical-amplifier",
+      "placeholder_ports": [],
+      "status": "asset-ready"
+    },
+    {
+      "id": "CH15-mount",
+      "asset": "tiptilt-collimator",
+      "placeholder_ports": [],
+      "status": "asset-ready"
+    },
+    {
+      "id": "CH15-focus",
+      "asset": null,
+      "placeholder_ports": [
+        "command_in",
+        "dc_power"
+      ],
+      "status": "asset-needed"
+    },
+    {
+      "id": "CH16-phase",
+      "asset": "phase-cassette",
+      "placeholder_ports": [],
+      "status": "asset-ready"
+    },
+    {
+      "id": "CH16-driver",
+      "asset": "phase-driver",
+      "placeholder_ports": [],
+      "status": "asset-ready"
+    },
+    {
+      "id": "CH16-amplifier",
+      "asset": "optical-amplifier",
+      "placeholder_ports": [],
+      "status": "asset-ready"
+    },
+    {
+      "id": "CH16-mount",
+      "asset": "tiptilt-collimator",
+      "placeholder_ports": [],
+      "status": "asset-ready"
+    },
+    {
+      "id": "CH16-focus",
+      "asset": null,
+      "placeholder_ports": [
+        "command_in",
+        "dc_power"
+      ],
+      "status": "asset-needed"
+    },
+    {
+      "id": "CH17-phase",
+      "asset": "phase-cassette",
+      "placeholder_ports": [],
+      "status": "asset-ready"
+    },
+    {
+      "id": "CH17-driver",
+      "asset": "phase-driver",
+      "placeholder_ports": [],
+      "status": "asset-ready"
+    },
+    {
+      "id": "CH17-amplifier",
+      "asset": "optical-amplifier",
+      "placeholder_ports": [],
+      "status": "asset-ready"
+    },
+    {
+      "id": "CH17-mount",
+      "asset": "tiptilt-collimator",
+      "placeholder_ports": [],
+      "status": "asset-ready"
+    },
+    {
+      "id": "CH17-focus",
+      "asset": null,
+      "placeholder_ports": [
+        "command_in",
+        "dc_power"
+      ],
+      "status": "asset-needed"
+    },
+    {
+      "id": "CH18-phase",
+      "asset": "phase-cassette",
+      "placeholder_ports": [],
+      "status": "asset-ready"
+    },
+    {
+      "id": "CH18-driver",
+      "asset": "phase-driver",
+      "placeholder_ports": [],
+      "status": "asset-ready"
+    },
+    {
+      "id": "CH18-amplifier",
+      "asset": "optical-amplifier",
+      "placeholder_ports": [],
+      "status": "asset-ready"
+    },
+    {
+      "id": "CH18-mount",
+      "asset": "tiptilt-collimator",
+      "placeholder_ports": [],
+      "status": "asset-ready"
+    },
+    {
+      "id": "CH18-focus",
+      "asset": null,
+      "placeholder_ports": [
+        "command_in",
+        "dc_power"
+      ],
+      "status": "asset-needed"
+    },
+    {
+      "id": "CH19-phase",
+      "asset": "phase-cassette",
+      "placeholder_ports": [],
+      "status": "asset-ready"
+    },
+    {
+      "id": "CH19-driver",
+      "asset": "phase-driver",
+      "placeholder_ports": [],
+      "status": "asset-ready"
+    },
+    {
+      "id": "CH19-amplifier",
+      "asset": "optical-amplifier",
+      "placeholder_ports": [],
+      "status": "asset-ready"
+    },
+    {
+      "id": "CH19-mount",
+      "asset": "tiptilt-collimator",
+      "placeholder_ports": [],
+      "status": "asset-ready"
+    },
+    {
+      "id": "CH19-focus",
+      "asset": null,
+      "placeholder_ports": [
+        "command_in",
+        "dc_power"
+      ],
+      "status": "asset-needed"
+    }
+  ],
+  "edges": [
+    {
+      "id": "W001",
+      "source": "seed.optical_out",
+      "target": "splitter.input",
+      "kind": "optical",
+      "channel": null
+    },
+    {
+      "id": "W002",
+      "source": "supply.dc_out",
+      "target": "seed.dc_power",
+      "kind": "power",
+      "channel": null
+    },
+    {
+      "id": "W003",
+      "source": "supply.dc_out",
+      "target": "console.dc_power",
+      "kind": "power",
+      "channel": null
+    },
+    {
+      "id": "W004",
+      "source": "supply.dc_out",
+      "target": "motor-driver-junction.dc_power",
+      "kind": "power",
+      "channel": null
+    },
+    {
+      "id": "W005",
+      "source": "console.phase_bus",
+      "target": "phase-command-junction.in",
+      "kind": "control",
+      "channel": null
+    },
+    {
+      "id": "W006",
+      "source": "console.motor_bus",
+      "target": "motor-driver-junction.command_in",
+      "kind": "control",
+      "channel": null
+    },
+    {
+      "id": "W007",
+      "source": "splitter.CH01",
+      "target": "CH01-phase.optical_in",
+      "kind": "optical",
+      "channel": "CH01"
+    },
+    {
+      "id": "W008",
+      "source": "CH01-phase.optical_out",
+      "target": "CH01-amplifier.optical_in",
+      "kind": "optical",
+      "channel": "CH01"
+    },
+    {
+      "id": "W009",
+      "source": "CH01-amplifier.optical_out",
+      "target": "CH01-mount.fiber_in",
+      "kind": "optical",
+      "channel": "CH01"
+    },
+    {
+      "id": "W010",
+      "source": "phase-command-junction.out",
+      "target": "CH01-driver.command",
+      "kind": "control",
+      "channel": "CH01"
+    },
+    {
+      "id": "W011",
+      "source": "CH01-driver.rf_out",
+      "target": "CH01-phase.rf",
+      "kind": "rf",
+      "channel": "CH01"
+    },
+    {
+      "id": "W012",
+      "source": "phase-command-junction.out",
+      "target": "CH01-amplifier.command",
+      "kind": "control",
+      "channel": "CH01"
+    },
+    {
+      "id": "W013",
+      "source": "motor-driver-junction.motor_out",
+      "target": "CH01-mount.motor_bus",
+      "kind": "control",
+      "channel": "CH01"
+    },
+    {
+      "id": "W014",
+      "source": "motor-driver-junction.focus_out",
+      "target": "CH01-focus.command_in",
+      "kind": "control",
+      "channel": "CH01"
+    },
+    {
+      "id": "W015",
+      "source": "supply.dc_out",
+      "target": "CH01-driver.dc_power",
+      "kind": "power",
+      "channel": "CH01"
+    },
+    {
+      "id": "W016",
+      "source": "supply.dc_out",
+      "target": "CH01-amplifier.dc_power",
+      "kind": "power",
+      "channel": "CH01"
+    },
+    {
+      "id": "W017",
+      "source": "supply.dc_out",
+      "target": "CH01-focus.dc_power",
+      "kind": "power",
+      "channel": "CH01"
+    },
+    {
+      "id": "W018",
+      "source": "splitter.CH02",
+      "target": "CH02-phase.optical_in",
+      "kind": "optical",
+      "channel": "CH02"
+    },
+    {
+      "id": "W019",
+      "source": "CH02-phase.optical_out",
+      "target": "CH02-amplifier.optical_in",
+      "kind": "optical",
+      "channel": "CH02"
+    },
+    {
+      "id": "W020",
+      "source": "CH02-amplifier.optical_out",
+      "target": "CH02-mount.fiber_in",
+      "kind": "optical",
+      "channel": "CH02"
+    },
+    {
+      "id": "W021",
+      "source": "phase-command-junction.out",
+      "target": "CH02-driver.command",
+      "kind": "control",
+      "channel": "CH02"
+    },
+    {
+      "id": "W022",
+      "source": "CH02-driver.rf_out",
+      "target": "CH02-phase.rf",
+      "kind": "rf",
+      "channel": "CH02"
+    },
+    {
+      "id": "W023",
+      "source": "phase-command-junction.out",
+      "target": "CH02-amplifier.command",
+      "kind": "control",
+      "channel": "CH02"
+    },
+    {
+      "id": "W024",
+      "source": "motor-driver-junction.motor_out",
+      "target": "CH02-mount.motor_bus",
+      "kind": "control",
+      "channel": "CH02"
+    },
+    {
+      "id": "W025",
+      "source": "motor-driver-junction.focus_out",
+      "target": "CH02-focus.command_in",
+      "kind": "control",
+      "channel": "CH02"
+    },
+    {
+      "id": "W026",
+      "source": "supply.dc_out",
+      "target": "CH02-driver.dc_power",
+      "kind": "power",
+      "channel": "CH02"
+    },
+    {
+      "id": "W027",
+      "source": "supply.dc_out",
+      "target": "CH02-amplifier.dc_power",
+      "kind": "power",
+      "channel": "CH02"
+    },
+    {
+      "id": "W028",
+      "source": "supply.dc_out",
+      "target": "CH02-focus.dc_power",
+      "kind": "power",
+      "channel": "CH02"
+    },
+    {
+      "id": "W029",
+      "source": "splitter.CH03",
+      "target": "CH03-phase.optical_in",
+      "kind": "optical",
+      "channel": "CH03"
+    },
+    {
+      "id": "W030",
+      "source": "CH03-phase.optical_out",
+      "target": "CH03-amplifier.optical_in",
+      "kind": "optical",
+      "channel": "CH03"
+    },
+    {
+      "id": "W031",
+      "source": "CH03-amplifier.optical_out",
+      "target": "CH03-mount.fiber_in",
+      "kind": "optical",
+      "channel": "CH03"
+    },
+    {
+      "id": "W032",
+      "source": "phase-command-junction.out",
+      "target": "CH03-driver.command",
+      "kind": "control",
+      "channel": "CH03"
+    },
+    {
+      "id": "W033",
+      "source": "CH03-driver.rf_out",
+      "target": "CH03-phase.rf",
+      "kind": "rf",
+      "channel": "CH03"
+    },
+    {
+      "id": "W034",
+      "source": "phase-command-junction.out",
+      "target": "CH03-amplifier.command",
+      "kind": "control",
+      "channel": "CH03"
+    },
+    {
+      "id": "W035",
+      "source": "motor-driver-junction.motor_out",
+      "target": "CH03-mount.motor_bus",
+      "kind": "control",
+      "channel": "CH03"
+    },
+    {
+      "id": "W036",
+      "source": "motor-driver-junction.focus_out",
+      "target": "CH03-focus.command_in",
+      "kind": "control",
+      "channel": "CH03"
+    },
+    {
+      "id": "W037",
+      "source": "supply.dc_out",
+      "target": "CH03-driver.dc_power",
+      "kind": "power",
+      "channel": "CH03"
+    },
+    {
+      "id": "W038",
+      "source": "supply.dc_out",
+      "target": "CH03-amplifier.dc_power",
+      "kind": "power",
+      "channel": "CH03"
+    },
+    {
+      "id": "W039",
+      "source": "supply.dc_out",
+      "target": "CH03-focus.dc_power",
+      "kind": "power",
+      "channel": "CH03"
+    },
+    {
+      "id": "W040",
+      "source": "splitter.CH04",
+      "target": "CH04-phase.optical_in",
+      "kind": "optical",
+      "channel": "CH04"
+    },
+    {
+      "id": "W041",
+      "source": "CH04-phase.optical_out",
+      "target": "CH04-amplifier.optical_in",
+      "kind": "optical",
+      "channel": "CH04"
+    },
+    {
+      "id": "W042",
+      "source": "CH04-amplifier.optical_out",
+      "target": "CH04-mount.fiber_in",
+      "kind": "optical",
+      "channel": "CH04"
+    },
+    {
+      "id": "W043",
+      "source": "phase-command-junction.out",
+      "target": "CH04-driver.command",
+      "kind": "control",
+      "channel": "CH04"
+    },
+    {
+      "id": "W044",
+      "source": "CH04-driver.rf_out",
+      "target": "CH04-phase.rf",
+      "kind": "rf",
+      "channel": "CH04"
+    },
+    {
+      "id": "W045",
+      "source": "phase-command-junction.out",
+      "target": "CH04-amplifier.command",
+      "kind": "control",
+      "channel": "CH04"
+    },
+    {
+      "id": "W046",
+      "source": "motor-driver-junction.motor_out",
+      "target": "CH04-mount.motor_bus",
+      "kind": "control",
+      "channel": "CH04"
+    },
+    {
+      "id": "W047",
+      "source": "motor-driver-junction.focus_out",
+      "target": "CH04-focus.command_in",
+      "kind": "control",
+      "channel": "CH04"
+    },
+    {
+      "id": "W048",
+      "source": "supply.dc_out",
+      "target": "CH04-driver.dc_power",
+      "kind": "power",
+      "channel": "CH04"
+    },
+    {
+      "id": "W049",
+      "source": "supply.dc_out",
+      "target": "CH04-amplifier.dc_power",
+      "kind": "power",
+      "channel": "CH04"
+    },
+    {
+      "id": "W050",
+      "source": "supply.dc_out",
+      "target": "CH04-focus.dc_power",
+      "kind": "power",
+      "channel": "CH04"
+    },
+    {
+      "id": "W051",
+      "source": "splitter.CH05",
+      "target": "CH05-phase.optical_in",
+      "kind": "optical",
+      "channel": "CH05"
+    },
+    {
+      "id": "W052",
+      "source": "CH05-phase.optical_out",
+      "target": "CH05-amplifier.optical_in",
+      "kind": "optical",
+      "channel": "CH05"
+    },
+    {
+      "id": "W053",
+      "source": "CH05-amplifier.optical_out",
+      "target": "CH05-mount.fiber_in",
+      "kind": "optical",
+      "channel": "CH05"
+    },
+    {
+      "id": "W054",
+      "source": "phase-command-junction.out",
+      "target": "CH05-driver.command",
+      "kind": "control",
+      "channel": "CH05"
+    },
+    {
+      "id": "W055",
+      "source": "CH05-driver.rf_out",
+      "target": "CH05-phase.rf",
+      "kind": "rf",
+      "channel": "CH05"
+    },
+    {
+      "id": "W056",
+      "source": "phase-command-junction.out",
+      "target": "CH05-amplifier.command",
+      "kind": "control",
+      "channel": "CH05"
+    },
+    {
+      "id": "W057",
+      "source": "motor-driver-junction.motor_out",
+      "target": "CH05-mount.motor_bus",
+      "kind": "control",
+      "channel": "CH05"
+    },
+    {
+      "id": "W058",
+      "source": "motor-driver-junction.focus_out",
+      "target": "CH05-focus.command_in",
+      "kind": "control",
+      "channel": "CH05"
+    },
+    {
+      "id": "W059",
+      "source": "supply.dc_out",
+      "target": "CH05-driver.dc_power",
+      "kind": "power",
+      "channel": "CH05"
+    },
+    {
+      "id": "W060",
+      "source": "supply.dc_out",
+      "target": "CH05-amplifier.dc_power",
+      "kind": "power",
+      "channel": "CH05"
+    },
+    {
+      "id": "W061",
+      "source": "supply.dc_out",
+      "target": "CH05-focus.dc_power",
+      "kind": "power",
+      "channel": "CH05"
+    },
+    {
+      "id": "W062",
+      "source": "splitter.CH06",
+      "target": "CH06-phase.optical_in",
+      "kind": "optical",
+      "channel": "CH06"
+    },
+    {
+      "id": "W063",
+      "source": "CH06-phase.optical_out",
+      "target": "CH06-amplifier.optical_in",
+      "kind": "optical",
+      "channel": "CH06"
+    },
+    {
+      "id": "W064",
+      "source": "CH06-amplifier.optical_out",
+      "target": "CH06-mount.fiber_in",
+      "kind": "optical",
+      "channel": "CH06"
+    },
+    {
+      "id": "W065",
+      "source": "phase-command-junction.out",
+      "target": "CH06-driver.command",
+      "kind": "control",
+      "channel": "CH06"
+    },
+    {
+      "id": "W066",
+      "source": "CH06-driver.rf_out",
+      "target": "CH06-phase.rf",
+      "kind": "rf",
+      "channel": "CH06"
+    },
+    {
+      "id": "W067",
+      "source": "phase-command-junction.out",
+      "target": "CH06-amplifier.command",
+      "kind": "control",
+      "channel": "CH06"
+    },
+    {
+      "id": "W068",
+      "source": "motor-driver-junction.motor_out",
+      "target": "CH06-mount.motor_bus",
+      "kind": "control",
+      "channel": "CH06"
+    },
+    {
+      "id": "W069",
+      "source": "motor-driver-junction.focus_out",
+      "target": "CH06-focus.command_in",
+      "kind": "control",
+      "channel": "CH06"
+    },
+    {
+      "id": "W070",
+      "source": "supply.dc_out",
+      "target": "CH06-driver.dc_power",
+      "kind": "power",
+      "channel": "CH06"
+    },
+    {
+      "id": "W071",
+      "source": "supply.dc_out",
+      "target": "CH06-amplifier.dc_power",
+      "kind": "power",
+      "channel": "CH06"
+    },
+    {
+      "id": "W072",
+      "source": "supply.dc_out",
+      "target": "CH06-focus.dc_power",
+      "kind": "power",
+      "channel": "CH06"
+    },
+    {
+      "id": "W073",
+      "source": "splitter.CH07",
+      "target": "CH07-phase.optical_in",
+      "kind": "optical",
+      "channel": "CH07"
+    },
+    {
+      "id": "W074",
+      "source": "CH07-phase.optical_out",
+      "target": "CH07-amplifier.optical_in",
+      "kind": "optical",
+      "channel": "CH07"
+    },
+    {
+      "id": "W075",
+      "source": "CH07-amplifier.optical_out",
+      "target": "CH07-mount.fiber_in",
+      "kind": "optical",
+      "channel": "CH07"
+    },
+    {
+      "id": "W076",
+      "source": "phase-command-junction.out",
+      "target": "CH07-driver.command",
+      "kind": "control",
+      "channel": "CH07"
+    },
+    {
+      "id": "W077",
+      "source": "CH07-driver.rf_out",
+      "target": "CH07-phase.rf",
+      "kind": "rf",
+      "channel": "CH07"
+    },
+    {
+      "id": "W078",
+      "source": "phase-command-junction.out",
+      "target": "CH07-amplifier.command",
+      "kind": "control",
+      "channel": "CH07"
+    },
+    {
+      "id": "W079",
+      "source": "motor-driver-junction.motor_out",
+      "target": "CH07-mount.motor_bus",
+      "kind": "control",
+      "channel": "CH07"
+    },
+    {
+      "id": "W080",
+      "source": "motor-driver-junction.focus_out",
+      "target": "CH07-focus.command_in",
+      "kind": "control",
+      "channel": "CH07"
+    },
+    {
+      "id": "W081",
+      "source": "supply.dc_out",
+      "target": "CH07-driver.dc_power",
+      "kind": "power",
+      "channel": "CH07"
+    },
+    {
+      "id": "W082",
+      "source": "supply.dc_out",
+      "target": "CH07-amplifier.dc_power",
+      "kind": "power",
+      "channel": "CH07"
+    },
+    {
+      "id": "W083",
+      "source": "supply.dc_out",
+      "target": "CH07-focus.dc_power",
+      "kind": "power",
+      "channel": "CH07"
+    },
+    {
+      "id": "W084",
+      "source": "splitter.CH08",
+      "target": "CH08-phase.optical_in",
+      "kind": "optical",
+      "channel": "CH08"
+    },
+    {
+      "id": "W085",
+      "source": "CH08-phase.optical_out",
+      "target": "CH08-amplifier.optical_in",
+      "kind": "optical",
+      "channel": "CH08"
+    },
+    {
+      "id": "W086",
+      "source": "CH08-amplifier.optical_out",
+      "target": "CH08-mount.fiber_in",
+      "kind": "optical",
+      "channel": "CH08"
+    },
+    {
+      "id": "W087",
+      "source": "phase-command-junction.out",
+      "target": "CH08-driver.command",
+      "kind": "control",
+      "channel": "CH08"
+    },
+    {
+      "id": "W088",
+      "source": "CH08-driver.rf_out",
+      "target": "CH08-phase.rf",
+      "kind": "rf",
+      "channel": "CH08"
+    },
+    {
+      "id": "W089",
+      "source": "phase-command-junction.out",
+      "target": "CH08-amplifier.command",
+      "kind": "control",
+      "channel": "CH08"
+    },
+    {
+      "id": "W090",
+      "source": "motor-driver-junction.motor_out",
+      "target": "CH08-mount.motor_bus",
+      "kind": "control",
+      "channel": "CH08"
+    },
+    {
+      "id": "W091",
+      "source": "motor-driver-junction.focus_out",
+      "target": "CH08-focus.command_in",
+      "kind": "control",
+      "channel": "CH08"
+    },
+    {
+      "id": "W092",
+      "source": "supply.dc_out",
+      "target": "CH08-driver.dc_power",
+      "kind": "power",
+      "channel": "CH08"
+    },
+    {
+      "id": "W093",
+      "source": "supply.dc_out",
+      "target": "CH08-amplifier.dc_power",
+      "kind": "power",
+      "channel": "CH08"
+    },
+    {
+      "id": "W094",
+      "source": "supply.dc_out",
+      "target": "CH08-focus.dc_power",
+      "kind": "power",
+      "channel": "CH08"
+    },
+    {
+      "id": "W095",
+      "source": "splitter.CH09",
+      "target": "CH09-phase.optical_in",
+      "kind": "optical",
+      "channel": "CH09"
+    },
+    {
+      "id": "W096",
+      "source": "CH09-phase.optical_out",
+      "target": "CH09-amplifier.optical_in",
+      "kind": "optical",
+      "channel": "CH09"
+    },
+    {
+      "id": "W097",
+      "source": "CH09-amplifier.optical_out",
+      "target": "CH09-mount.fiber_in",
+      "kind": "optical",
+      "channel": "CH09"
+    },
+    {
+      "id": "W098",
+      "source": "phase-command-junction.out",
+      "target": "CH09-driver.command",
+      "kind": "control",
+      "channel": "CH09"
+    },
+    {
+      "id": "W099",
+      "source": "CH09-driver.rf_out",
+      "target": "CH09-phase.rf",
+      "kind": "rf",
+      "channel": "CH09"
+    },
+    {
+      "id": "W100",
+      "source": "phase-command-junction.out",
+      "target": "CH09-amplifier.command",
+      "kind": "control",
+      "channel": "CH09"
+    },
+    {
+      "id": "W101",
+      "source": "motor-driver-junction.motor_out",
+      "target": "CH09-mount.motor_bus",
+      "kind": "control",
+      "channel": "CH09"
+    },
+    {
+      "id": "W102",
+      "source": "motor-driver-junction.focus_out",
+      "target": "CH09-focus.command_in",
+      "kind": "control",
+      "channel": "CH09"
+    },
+    {
+      "id": "W103",
+      "source": "supply.dc_out",
+      "target": "CH09-driver.dc_power",
+      "kind": "power",
+      "channel": "CH09"
+    },
+    {
+      "id": "W104",
+      "source": "supply.dc_out",
+      "target": "CH09-amplifier.dc_power",
+      "kind": "power",
+      "channel": "CH09"
+    },
+    {
+      "id": "W105",
+      "source": "supply.dc_out",
+      "target": "CH09-focus.dc_power",
+      "kind": "power",
+      "channel": "CH09"
+    },
+    {
+      "id": "W106",
+      "source": "splitter.CH10",
+      "target": "CH10-phase.optical_in",
+      "kind": "optical",
+      "channel": "CH10"
+    },
+    {
+      "id": "W107",
+      "source": "CH10-phase.optical_out",
+      "target": "CH10-amplifier.optical_in",
+      "kind": "optical",
+      "channel": "CH10"
+    },
+    {
+      "id": "W108",
+      "source": "CH10-amplifier.optical_out",
+      "target": "CH10-mount.fiber_in",
+      "kind": "optical",
+      "channel": "CH10"
+    },
+    {
+      "id": "W109",
+      "source": "phase-command-junction.out",
+      "target": "CH10-driver.command",
+      "kind": "control",
+      "channel": "CH10"
+    },
+    {
+      "id": "W110",
+      "source": "CH10-driver.rf_out",
+      "target": "CH10-phase.rf",
+      "kind": "rf",
+      "channel": "CH10"
+    },
+    {
+      "id": "W111",
+      "source": "phase-command-junction.out",
+      "target": "CH10-amplifier.command",
+      "kind": "control",
+      "channel": "CH10"
+    },
+    {
+      "id": "W112",
+      "source": "motor-driver-junction.motor_out",
+      "target": "CH10-mount.motor_bus",
+      "kind": "control",
+      "channel": "CH10"
+    },
+    {
+      "id": "W113",
+      "source": "motor-driver-junction.focus_out",
+      "target": "CH10-focus.command_in",
+      "kind": "control",
+      "channel": "CH10"
+    },
+    {
+      "id": "W114",
+      "source": "supply.dc_out",
+      "target": "CH10-driver.dc_power",
+      "kind": "power",
+      "channel": "CH10"
+    },
+    {
+      "id": "W115",
+      "source": "supply.dc_out",
+      "target": "CH10-amplifier.dc_power",
+      "kind": "power",
+      "channel": "CH10"
+    },
+    {
+      "id": "W116",
+      "source": "supply.dc_out",
+      "target": "CH10-focus.dc_power",
+      "kind": "power",
+      "channel": "CH10"
+    },
+    {
+      "id": "W117",
+      "source": "splitter.CH11",
+      "target": "CH11-phase.optical_in",
+      "kind": "optical",
+      "channel": "CH11"
+    },
+    {
+      "id": "W118",
+      "source": "CH11-phase.optical_out",
+      "target": "CH11-amplifier.optical_in",
+      "kind": "optical",
+      "channel": "CH11"
+    },
+    {
+      "id": "W119",
+      "source": "CH11-amplifier.optical_out",
+      "target": "CH11-mount.fiber_in",
+      "kind": "optical",
+      "channel": "CH11"
+    },
+    {
+      "id": "W120",
+      "source": "phase-command-junction.out",
+      "target": "CH11-driver.command",
+      "kind": "control",
+      "channel": "CH11"
+    },
+    {
+      "id": "W121",
+      "source": "CH11-driver.rf_out",
+      "target": "CH11-phase.rf",
+      "kind": "rf",
+      "channel": "CH11"
+    },
+    {
+      "id": "W122",
+      "source": "phase-command-junction.out",
+      "target": "CH11-amplifier.command",
+      "kind": "control",
+      "channel": "CH11"
+    },
+    {
+      "id": "W123",
+      "source": "motor-driver-junction.motor_out",
+      "target": "CH11-mount.motor_bus",
+      "kind": "control",
+      "channel": "CH11"
+    },
+    {
+      "id": "W124",
+      "source": "motor-driver-junction.focus_out",
+      "target": "CH11-focus.command_in",
+      "kind": "control",
+      "channel": "CH11"
+    },
+    {
+      "id": "W125",
+      "source": "supply.dc_out",
+      "target": "CH11-driver.dc_power",
+      "kind": "power",
+      "channel": "CH11"
+    },
+    {
+      "id": "W126",
+      "source": "supply.dc_out",
+      "target": "CH11-amplifier.dc_power",
+      "kind": "power",
+      "channel": "CH11"
+    },
+    {
+      "id": "W127",
+      "source": "supply.dc_out",
+      "target": "CH11-focus.dc_power",
+      "kind": "power",
+      "channel": "CH11"
+    },
+    {
+      "id": "W128",
+      "source": "splitter.CH12",
+      "target": "CH12-phase.optical_in",
+      "kind": "optical",
+      "channel": "CH12"
+    },
+    {
+      "id": "W129",
+      "source": "CH12-phase.optical_out",
+      "target": "CH12-amplifier.optical_in",
+      "kind": "optical",
+      "channel": "CH12"
+    },
+    {
+      "id": "W130",
+      "source": "CH12-amplifier.optical_out",
+      "target": "CH12-mount.fiber_in",
+      "kind": "optical",
+      "channel": "CH12"
+    },
+    {
+      "id": "W131",
+      "source": "phase-command-junction.out",
+      "target": "CH12-driver.command",
+      "kind": "control",
+      "channel": "CH12"
+    },
+    {
+      "id": "W132",
+      "source": "CH12-driver.rf_out",
+      "target": "CH12-phase.rf",
+      "kind": "rf",
+      "channel": "CH12"
+    },
+    {
+      "id": "W133",
+      "source": "phase-command-junction.out",
+      "target": "CH12-amplifier.command",
+      "kind": "control",
+      "channel": "CH12"
+    },
+    {
+      "id": "W134",
+      "source": "motor-driver-junction.motor_out",
+      "target": "CH12-mount.motor_bus",
+      "kind": "control",
+      "channel": "CH12"
+    },
+    {
+      "id": "W135",
+      "source": "motor-driver-junction.focus_out",
+      "target": "CH12-focus.command_in",
+      "kind": "control",
+      "channel": "CH12"
+    },
+    {
+      "id": "W136",
+      "source": "supply.dc_out",
+      "target": "CH12-driver.dc_power",
+      "kind": "power",
+      "channel": "CH12"
+    },
+    {
+      "id": "W137",
+      "source": "supply.dc_out",
+      "target": "CH12-amplifier.dc_power",
+      "kind": "power",
+      "channel": "CH12"
+    },
+    {
+      "id": "W138",
+      "source": "supply.dc_out",
+      "target": "CH12-focus.dc_power",
+      "kind": "power",
+      "channel": "CH12"
+    },
+    {
+      "id": "W139",
+      "source": "splitter.CH13",
+      "target": "CH13-phase.optical_in",
+      "kind": "optical",
+      "channel": "CH13"
+    },
+    {
+      "id": "W140",
+      "source": "CH13-phase.optical_out",
+      "target": "CH13-amplifier.optical_in",
+      "kind": "optical",
+      "channel": "CH13"
+    },
+    {
+      "id": "W141",
+      "source": "CH13-amplifier.optical_out",
+      "target": "CH13-mount.fiber_in",
+      "kind": "optical",
+      "channel": "CH13"
+    },
+    {
+      "id": "W142",
+      "source": "phase-command-junction.out",
+      "target": "CH13-driver.command",
+      "kind": "control",
+      "channel": "CH13"
+    },
+    {
+      "id": "W143",
+      "source": "CH13-driver.rf_out",
+      "target": "CH13-phase.rf",
+      "kind": "rf",
+      "channel": "CH13"
+    },
+    {
+      "id": "W144",
+      "source": "phase-command-junction.out",
+      "target": "CH13-amplifier.command",
+      "kind": "control",
+      "channel": "CH13"
+    },
+    {
+      "id": "W145",
+      "source": "motor-driver-junction.motor_out",
+      "target": "CH13-mount.motor_bus",
+      "kind": "control",
+      "channel": "CH13"
+    },
+    {
+      "id": "W146",
+      "source": "motor-driver-junction.focus_out",
+      "target": "CH13-focus.command_in",
+      "kind": "control",
+      "channel": "CH13"
+    },
+    {
+      "id": "W147",
+      "source": "supply.dc_out",
+      "target": "CH13-driver.dc_power",
+      "kind": "power",
+      "channel": "CH13"
+    },
+    {
+      "id": "W148",
+      "source": "supply.dc_out",
+      "target": "CH13-amplifier.dc_power",
+      "kind": "power",
+      "channel": "CH13"
+    },
+    {
+      "id": "W149",
+      "source": "supply.dc_out",
+      "target": "CH13-focus.dc_power",
+      "kind": "power",
+      "channel": "CH13"
+    },
+    {
+      "id": "W150",
+      "source": "splitter.CH14",
+      "target": "CH14-phase.optical_in",
+      "kind": "optical",
+      "channel": "CH14"
+    },
+    {
+      "id": "W151",
+      "source": "CH14-phase.optical_out",
+      "target": "CH14-amplifier.optical_in",
+      "kind": "optical",
+      "channel": "CH14"
+    },
+    {
+      "id": "W152",
+      "source": "CH14-amplifier.optical_out",
+      "target": "CH14-mount.fiber_in",
+      "kind": "optical",
+      "channel": "CH14"
+    },
+    {
+      "id": "W153",
+      "source": "phase-command-junction.out",
+      "target": "CH14-driver.command",
+      "kind": "control",
+      "channel": "CH14"
+    },
+    {
+      "id": "W154",
+      "source": "CH14-driver.rf_out",
+      "target": "CH14-phase.rf",
+      "kind": "rf",
+      "channel": "CH14"
+    },
+    {
+      "id": "W155",
+      "source": "phase-command-junction.out",
+      "target": "CH14-amplifier.command",
+      "kind": "control",
+      "channel": "CH14"
+    },
+    {
+      "id": "W156",
+      "source": "motor-driver-junction.motor_out",
+      "target": "CH14-mount.motor_bus",
+      "kind": "control",
+      "channel": "CH14"
+    },
+    {
+      "id": "W157",
+      "source": "motor-driver-junction.focus_out",
+      "target": "CH14-focus.command_in",
+      "kind": "control",
+      "channel": "CH14"
+    },
+    {
+      "id": "W158",
+      "source": "supply.dc_out",
+      "target": "CH14-driver.dc_power",
+      "kind": "power",
+      "channel": "CH14"
+    },
+    {
+      "id": "W159",
+      "source": "supply.dc_out",
+      "target": "CH14-amplifier.dc_power",
+      "kind": "power",
+      "channel": "CH14"
+    },
+    {
+      "id": "W160",
+      "source": "supply.dc_out",
+      "target": "CH14-focus.dc_power",
+      "kind": "power",
+      "channel": "CH14"
+    },
+    {
+      "id": "W161",
+      "source": "splitter.CH15",
+      "target": "CH15-phase.optical_in",
+      "kind": "optical",
+      "channel": "CH15"
+    },
+    {
+      "id": "W162",
+      "source": "CH15-phase.optical_out",
+      "target": "CH15-amplifier.optical_in",
+      "kind": "optical",
+      "channel": "CH15"
+    },
+    {
+      "id": "W163",
+      "source": "CH15-amplifier.optical_out",
+      "target": "CH15-mount.fiber_in",
+      "kind": "optical",
+      "channel": "CH15"
+    },
+    {
+      "id": "W164",
+      "source": "phase-command-junction.out",
+      "target": "CH15-driver.command",
+      "kind": "control",
+      "channel": "CH15"
+    },
+    {
+      "id": "W165",
+      "source": "CH15-driver.rf_out",
+      "target": "CH15-phase.rf",
+      "kind": "rf",
+      "channel": "CH15"
+    },
+    {
+      "id": "W166",
+      "source": "phase-command-junction.out",
+      "target": "CH15-amplifier.command",
+      "kind": "control",
+      "channel": "CH15"
+    },
+    {
+      "id": "W167",
+      "source": "motor-driver-junction.motor_out",
+      "target": "CH15-mount.motor_bus",
+      "kind": "control",
+      "channel": "CH15"
+    },
+    {
+      "id": "W168",
+      "source": "motor-driver-junction.focus_out",
+      "target": "CH15-focus.command_in",
+      "kind": "control",
+      "channel": "CH15"
+    },
+    {
+      "id": "W169",
+      "source": "supply.dc_out",
+      "target": "CH15-driver.dc_power",
+      "kind": "power",
+      "channel": "CH15"
+    },
+    {
+      "id": "W170",
+      "source": "supply.dc_out",
+      "target": "CH15-amplifier.dc_power",
+      "kind": "power",
+      "channel": "CH15"
+    },
+    {
+      "id": "W171",
+      "source": "supply.dc_out",
+      "target": "CH15-focus.dc_power",
+      "kind": "power",
+      "channel": "CH15"
+    },
+    {
+      "id": "W172",
+      "source": "splitter.CH16",
+      "target": "CH16-phase.optical_in",
+      "kind": "optical",
+      "channel": "CH16"
+    },
+    {
+      "id": "W173",
+      "source": "CH16-phase.optical_out",
+      "target": "CH16-amplifier.optical_in",
+      "kind": "optical",
+      "channel": "CH16"
+    },
+    {
+      "id": "W174",
+      "source": "CH16-amplifier.optical_out",
+      "target": "CH16-mount.fiber_in",
+      "kind": "optical",
+      "channel": "CH16"
+    },
+    {
+      "id": "W175",
+      "source": "phase-command-junction.out",
+      "target": "CH16-driver.command",
+      "kind": "control",
+      "channel": "CH16"
+    },
+    {
+      "id": "W176",
+      "source": "CH16-driver.rf_out",
+      "target": "CH16-phase.rf",
+      "kind": "rf",
+      "channel": "CH16"
+    },
+    {
+      "id": "W177",
+      "source": "phase-command-junction.out",
+      "target": "CH16-amplifier.command",
+      "kind": "control",
+      "channel": "CH16"
+    },
+    {
+      "id": "W178",
+      "source": "motor-driver-junction.motor_out",
+      "target": "CH16-mount.motor_bus",
+      "kind": "control",
+      "channel": "CH16"
+    },
+    {
+      "id": "W179",
+      "source": "motor-driver-junction.focus_out",
+      "target": "CH16-focus.command_in",
+      "kind": "control",
+      "channel": "CH16"
+    },
+    {
+      "id": "W180",
+      "source": "supply.dc_out",
+      "target": "CH16-driver.dc_power",
+      "kind": "power",
+      "channel": "CH16"
+    },
+    {
+      "id": "W181",
+      "source": "supply.dc_out",
+      "target": "CH16-amplifier.dc_power",
+      "kind": "power",
+      "channel": "CH16"
+    },
+    {
+      "id": "W182",
+      "source": "supply.dc_out",
+      "target": "CH16-focus.dc_power",
+      "kind": "power",
+      "channel": "CH16"
+    },
+    {
+      "id": "W183",
+      "source": "splitter.CH17",
+      "target": "CH17-phase.optical_in",
+      "kind": "optical",
+      "channel": "CH17"
+    },
+    {
+      "id": "W184",
+      "source": "CH17-phase.optical_out",
+      "target": "CH17-amplifier.optical_in",
+      "kind": "optical",
+      "channel": "CH17"
+    },
+    {
+      "id": "W185",
+      "source": "CH17-amplifier.optical_out",
+      "target": "CH17-mount.fiber_in",
+      "kind": "optical",
+      "channel": "CH17"
+    },
+    {
+      "id": "W186",
+      "source": "phase-command-junction.out",
+      "target": "CH17-driver.command",
+      "kind": "control",
+      "channel": "CH17"
+    },
+    {
+      "id": "W187",
+      "source": "CH17-driver.rf_out",
+      "target": "CH17-phase.rf",
+      "kind": "rf",
+      "channel": "CH17"
+    },
+    {
+      "id": "W188",
+      "source": "phase-command-junction.out",
+      "target": "CH17-amplifier.command",
+      "kind": "control",
+      "channel": "CH17"
+    },
+    {
+      "id": "W189",
+      "source": "motor-driver-junction.motor_out",
+      "target": "CH17-mount.motor_bus",
+      "kind": "control",
+      "channel": "CH17"
+    },
+    {
+      "id": "W190",
+      "source": "motor-driver-junction.focus_out",
+      "target": "CH17-focus.command_in",
+      "kind": "control",
+      "channel": "CH17"
+    },
+    {
+      "id": "W191",
+      "source": "supply.dc_out",
+      "target": "CH17-driver.dc_power",
+      "kind": "power",
+      "channel": "CH17"
+    },
+    {
+      "id": "W192",
+      "source": "supply.dc_out",
+      "target": "CH17-amplifier.dc_power",
+      "kind": "power",
+      "channel": "CH17"
+    },
+    {
+      "id": "W193",
+      "source": "supply.dc_out",
+      "target": "CH17-focus.dc_power",
+      "kind": "power",
+      "channel": "CH17"
+    },
+    {
+      "id": "W194",
+      "source": "splitter.CH18",
+      "target": "CH18-phase.optical_in",
+      "kind": "optical",
+      "channel": "CH18"
+    },
+    {
+      "id": "W195",
+      "source": "CH18-phase.optical_out",
+      "target": "CH18-amplifier.optical_in",
+      "kind": "optical",
+      "channel": "CH18"
+    },
+    {
+      "id": "W196",
+      "source": "CH18-amplifier.optical_out",
+      "target": "CH18-mount.fiber_in",
+      "kind": "optical",
+      "channel": "CH18"
+    },
+    {
+      "id": "W197",
+      "source": "phase-command-junction.out",
+      "target": "CH18-driver.command",
+      "kind": "control",
+      "channel": "CH18"
+    },
+    {
+      "id": "W198",
+      "source": "CH18-driver.rf_out",
+      "target": "CH18-phase.rf",
+      "kind": "rf",
+      "channel": "CH18"
+    },
+    {
+      "id": "W199",
+      "source": "phase-command-junction.out",
+      "target": "CH18-amplifier.command",
+      "kind": "control",
+      "channel": "CH18"
+    },
+    {
+      "id": "W200",
+      "source": "motor-driver-junction.motor_out",
+      "target": "CH18-mount.motor_bus",
+      "kind": "control",
+      "channel": "CH18"
+    },
+    {
+      "id": "W201",
+      "source": "motor-driver-junction.focus_out",
+      "target": "CH18-focus.command_in",
+      "kind": "control",
+      "channel": "CH18"
+    },
+    {
+      "id": "W202",
+      "source": "supply.dc_out",
+      "target": "CH18-driver.dc_power",
+      "kind": "power",
+      "channel": "CH18"
+    },
+    {
+      "id": "W203",
+      "source": "supply.dc_out",
+      "target": "CH18-amplifier.dc_power",
+      "kind": "power",
+      "channel": "CH18"
+    },
+    {
+      "id": "W204",
+      "source": "supply.dc_out",
+      "target": "CH18-focus.dc_power",
+      "kind": "power",
+      "channel": "CH18"
+    },
+    {
+      "id": "W205",
+      "source": "splitter.CH19",
+      "target": "CH19-phase.optical_in",
+      "kind": "optical",
+      "channel": "CH19"
+    },
+    {
+      "id": "W206",
+      "source": "CH19-phase.optical_out",
+      "target": "CH19-amplifier.optical_in",
+      "kind": "optical",
+      "channel": "CH19"
+    },
+    {
+      "id": "W207",
+      "source": "CH19-amplifier.optical_out",
+      "target": "CH19-mount.fiber_in",
+      "kind": "optical",
+      "channel": "CH19"
+    },
+    {
+      "id": "W208",
+      "source": "phase-command-junction.out",
+      "target": "CH19-driver.command",
+      "kind": "control",
+      "channel": "CH19"
+    },
+    {
+      "id": "W209",
+      "source": "CH19-driver.rf_out",
+      "target": "CH19-phase.rf",
+      "kind": "rf",
+      "channel": "CH19"
+    },
+    {
+      "id": "W210",
+      "source": "phase-command-junction.out",
+      "target": "CH19-amplifier.command",
+      "kind": "control",
+      "channel": "CH19"
+    },
+    {
+      "id": "W211",
+      "source": "motor-driver-junction.motor_out",
+      "target": "CH19-mount.motor_bus",
+      "kind": "control",
+      "channel": "CH19"
+    },
+    {
+      "id": "W212",
+      "source": "motor-driver-junction.focus_out",
+      "target": "CH19-focus.command_in",
+      "kind": "control",
+      "channel": "CH19"
+    },
+    {
+      "id": "W213",
+      "source": "supply.dc_out",
+      "target": "CH19-driver.dc_power",
+      "kind": "power",
+      "channel": "CH19"
+    },
+    {
+      "id": "W214",
+      "source": "supply.dc_out",
+      "target": "CH19-amplifier.dc_power",
+      "kind": "power",
+      "channel": "CH19"
+    },
+    {
+      "id": "W215",
+      "source": "supply.dc_out",
+      "target": "CH19-focus.dc_power",
+      "kind": "power",
+      "channel": "CH19"
+    }
+  ],
+  "cable_profiles": {
+    "optical": {
+      "color": "#40baa4",
+      "label": "PM fiber",
+      "jacket_diameter_m": 0.002,
+      "visual_bend_radius_m": 0.03
+    },
+    "rf": {
+      "color": "#8f79c6",
+      "label": "RF coax",
+      "jacket_diameter_m": 0.003,
+      "visual_bend_radius_m": 0.02
+    },
+    "control": {
+      "color": "#e7ab45",
+      "label": "command/motor harness",
+      "jacket_diameter_m": 0.004,
+      "visual_bend_radius_m": 0.025
+    },
+    "power": {
+      "color": "#626b78",
+      "label": "DC power",
+      "jacket_diameter_m": 0.004,
+      "visual_bend_radius_m": 0.025
+    }
+  },
+  "radius_note": "Illustrative routing defaults only; manufacturer bend limits and connector clearance must be verified for a buildable design"
+}

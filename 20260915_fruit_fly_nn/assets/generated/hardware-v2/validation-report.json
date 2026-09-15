@@ -1,0 +1,24 @@
+{
+  "reference_files": {
+    ".txt": 5,
+    ".step": 5,
+    ".pdf": 3
+  },
+  "reference_bytes": 70224880,
+  "generated_glbs": 9,
+  "generated_glb_bytes": 248804,
+  "generated_triangles": 14608,
+  "wiring_nodes": 101,
+  "wiring_edges": 215,
+  "checks": [
+    "reference hashes/byte lengths",
+    "STEP exchange-file headers/terminators",
+    "PDF magic",
+    "wiring endpoint membership"
+  ],
+  "limitations": [
+    "STEP geometry not tessellated or dimensionally inspected",
+    "PDF magic check is not complete document validation",
+    "Scene integration and foreleg animation not implemented"
+  ]
+}

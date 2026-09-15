@@ -1,0 +1,1252 @@
+{
+  "schema_version": 1,
+  "provenance": "Original project procedural geometry, no vendor CAD conversion",
+  "units": "meters",
+  "up_axis": "+Z",
+  "port_convention": "port node local +Z is outward cable tangent; mates have opposed normals; positions are parent-local",
+  "limitations": [
+    "Display assets only; keep optical simulation coordinates separate",
+    "FC/APC ferrule end angle and internal threads simplified",
+    "Module dimensions and port layouts illustrative",
+    "Motor internals and collision-clearance not validated",
+    "No vendor logos or implied manufacturer product matching"
+  ],
+  "components": [
+    {
+      "name": "fc-apc-plug",
+      "file": "fc-apc-plug.glb",
+      "bytes": 33376,
+      "sha256": "68ad69b40e71ca4b011b38c18c43cfe09ee4b3a128d860ca6821a196f701ebf8",
+      "bounds_m": [
+        [
+          -0.00525,
+          -0.00521650635094611,
+          -0.0305
+        ],
+        [
+          0.00525,
+          0.00521650635094611,
+          0.001
+        ]
+      ],
+      "triangles": 1548,
+      "ports": [
+        {
+          "name": "mating",
+          "node": "port_mating",
+          "position_m": [
+            0,
+            0,
+            0
+          ],
+          "outward_normal": [
+            0,
+            0,
+            1
+          ],
+          "kind": "optical",
+          "connector": "FC/APC",
+          "channel": null,
+          "parent": "world",
+          "key_reference_local": [
+            0,
+            1,
+            0
+          ]
+        },
+        {
+          "name": "cable_exit",
+          "node": "port_cable_exit",
+          "position_m": [
+            0,
+            0,
+            -0.032
+          ],
+          "outward_normal": [
+            0,
+            0,
+            -1
+          ],
+          "kind": "optical",
+          "connector": "jacket-2mm",
+          "channel": null,
+          "parent": "world",
+          "key_reference_local": [
+            0,
+            1,
+            0
+          ]
+        }
+      ],
+      "controls": [],
+      "dimension_status": "Original illustrative dimensions; not vendor-exact or fabrication-ready"
+    },
+    {
+      "name": "fc-bulkhead",
+      "file": "fc-bulkhead.glb",
+      "bytes": 11360,
+      "sha256": "9f55b05f582fc8caff5818d647e4d469b35fd22de43adc464790da57c5b5e926",
+      "bounds_m": [
+        [
+          -0.007,
+          -0.007,
+          -0.007
+        ],
+        [
+          0.007,
+          0.007,
+          0.007
+        ]
+      ],
+      "triangles": 600,
+      "ports": [
+        {
+          "name": "front",
+          "node": "port_front",
+          "position_m": [
+            0,
+            0,
+            0.007
+          ],
+          "outward_normal": [
+            0,
+            0,
+            1
+          ],
+          "kind": "optical",
+          "connector": "FC/APC",
+          "channel": null,
+          "parent": "world",
+          "key_reference_local": [
+            0,
+            1,
+            0
+          ]
+        },
+        {
+          "name": "rear",
+          "node": "port_rear",
+          "position_m": [
+            0,
+            0,
+            -0.007
+          ],
+          "outward_normal": [
+            0,
+            0,
+            -1
+          ],
+          "kind": "optical",
+          "connector": "FC/APC",
+          "channel": null,
+          "parent": "world",
+          "key_reference_local": [
+            0,
+            1,
+            0
+          ]
+        }
+      ],
+      "controls": [],
+      "dimension_status": "Original illustrative dimensions; not vendor-exact or fabrication-ready"
+    },
+    {
+      "name": "sma-plug",
+      "file": "sma-plug.glb",
+      "bytes": 7560,
+      "sha256": "d346adf30e7a1bd91800544a3198891e9053244f3bb5109bd3f010d23fab2b88",
+      "bounds_m": [
+        [
+          -0.004,
+          -0.003464101615137756,
+          -0.019
+        ],
+        [
+          0.004,
+          0.0034641016151377548,
+          0.002
+        ]
+      ],
+      "triangles": 408,
+      "ports": [
+        {
+          "name": "mating",
+          "node": "port_mating",
+          "position_m": [
+            0,
+            0,
+            0
+          ],
+          "outward_normal": [
+            0,
+            0,
+            1
+          ],
+          "kind": "rf",
+          "connector": "SMA",
+          "channel": null,
+          "parent": "world",
+          "key_reference_local": [
+            0,
+            1,
+            0
+          ]
+        },
+        {
+          "name": "cable_exit",
+          "node": "port_cable_exit",
+          "position_m": [
+            0,
+            0,
+            -0.019
+          ],
+          "outward_normal": [
+            0,
+            0,
+            -1
+          ],
+          "kind": "rf",
+          "connector": "coax",
+          "channel": null,
+          "parent": "world",
+          "key_reference_local": [
+            0,
+            1,
+            0
+          ]
+        }
+      ],
+      "controls": [],
+      "dimension_status": "Original illustrative dimensions; not vendor-exact or fabrication-ready"
+    },
+    {
+      "name": "phase-cassette",
+      "file": "phase-cassette.glb",
+      "bytes": 16740,
+      "sha256": "488d570e9b41091e33f6a36e434daeeb094a6fe23d056b0b70b193f0bcaba5ad",
+      "bounds_m": [
+        [
+          -0.057,
+          -0.023,
+          -0.004
+        ],
+        [
+          0.057,
+          0.0152,
+          0.0167
+        ]
+      ],
+      "triangles": 804,
+      "ports": [
+        {
+          "name": "optical_in",
+          "node": "port_optical_in",
+          "position_m": [
+            -0.057,
+            0,
+            0.008
+          ],
+          "outward_normal": [
+            -1,
+            0,
+            0
+          ],
+          "kind": "optical",
+          "connector": "PM-pigtail",
+          "channel": null,
+          "parent": "world",
+          "key_reference_local": [
+            0,
+            1,
+            0
+          ]
+        },
+        {
+          "name": "optical_out",
+          "node": "port_optical_out",
+          "position_m": [
+            0.057,
+            0,
+            0.008
+          ],
+          "outward_normal": [
+            1,
+            0,
+            0
+          ],
+          "kind": "optical",
+          "connector": "PM-pigtail",
+          "channel": null,
+          "parent": "world",
+          "key_reference_local": [
+            0,
+            1,
+            0
+          ]
+        },
+        {
+          "name": "rf",
+          "node": "port_rf",
+          "position_m": [
+            0,
+            -0.023,
+            0.008
+          ],
+          "outward_normal": [
+            0,
+            -1,
+            0
+          ],
+          "kind": "rf",
+          "connector": "SMA",
+          "channel": null,
+          "parent": "world",
+          "key_reference_local": [
+            0,
+            1,
+            0
+          ]
+        }
+      ],
+      "controls": [],
+      "dimension_status": "Original illustrative dimensions; not vendor-exact or fabrication-ready"
+    },
+    {
+      "name": "phase-driver",
+      "file": "phase-driver.glb",
+      "bytes": 21012,
+      "sha256": "7d9fd36c707e82da013b60c183229ff7b8670142a6a486a8320e4a8dfbe5f49c",
+      "bounds_m": [
+        [
+          -0.0527,
+          -0.048,
+          -0.004
+        ],
+        [
+          0.0527,
+          0.044500000000000005,
+          0.045000000000000005
+        ]
+      ],
+      "triangles": 756,
+      "ports": [
+        {
+          "name": "rf_out",
+          "node": "port_rf_out",
+          "position_m": [
+            0,
+            -0.048,
+            0.019
+          ],
+          "outward_normal": [
+            0,
+            -1,
+            0
+          ],
+          "kind": "rf",
+          "connector": "SMA",
+          "channel": null,
+          "parent": "world",
+          "key_reference_local": [
+            0,
+            1,
+            0
+          ]
+        },
+        {
+          "name": "dc_power",
+          "node": "port_dc_power",
+          "position_m": [
+            -0.025,
+            0.045,
+            0.019
+          ],
+          "outward_normal": [
+            0,
+            1,
+            0
+          ],
+          "kind": "power",
+          "connector": "DC",
+          "channel": null,
+          "parent": "world",
+          "key_reference_local": [
+            0,
+            1,
+            0
+          ]
+        },
+        {
+          "name": "command",
+          "node": "port_command",
+          "position_m": [
+            0.025,
+            0.045,
+            0.019
+          ],
+          "outward_normal": [
+            0,
+            1,
+            0
+          ],
+          "kind": "control",
+          "connector": "multipin",
+          "channel": null,
+          "parent": "world",
+          "key_reference_local": [
+            0,
+            1,
+            0
+          ]
+        }
+      ],
+      "controls": [],
+      "dimension_status": "Original illustrative dimensions; not vendor-exact or fabrication-ready"
+    },
+    {
+      "name": "optical-amplifier",
+      "file": "optical-amplifier.glb",
+      "bytes": 29152,
+      "sha256": "c3a9f9b54744b09fec1a721701d2237303610b061b4a825c53f1d393633b3253",
+      "bounds_m": [
+        [
+          -0.08020000000000001,
+          -0.07200000000000001,
+          -0.004
+        ],
+        [
+          0.08020000000000001,
+          0.0695,
+          0.062000000000000006
+        ]
+      ],
+      "triangles": 1260,
+      "ports": [
+        {
+          "name": "optical_in",
+          "node": "port_optical_in",
+          "position_m": [
+            -0.042,
+            -0.07200000000000001,
+            0.0275
+          ],
+          "outward_normal": [
+            0,
+            -1,
+            0
+          ],
+          "kind": "optical",
+          "connector": "FC/APC",
+          "channel": null,
+          "parent": "world",
+          "key_reference_local": [
+            0,
+            1,
+            0
+          ]
+        },
+        {
+          "name": "optical_out",
+          "node": "port_optical_out",
+          "position_m": [
+            0.042,
+            -0.07200000000000001,
+            0.0275
+          ],
+          "outward_normal": [
+            0,
+            -1,
+            0
+          ],
+          "kind": "optical",
+          "connector": "FC/APC",
+          "channel": null,
+          "parent": "world",
+          "key_reference_local": [
+            0,
+            1,
+            0
+          ]
+        },
+        {
+          "name": "dc_power",
+          "node": "port_dc_power",
+          "position_m": [
+            -0.025,
+            0.07,
+            0.0275
+          ],
+          "outward_normal": [
+            0,
+            1,
+            0
+          ],
+          "kind": "power",
+          "connector": "DC",
+          "channel": null,
+          "parent": "world",
+          "key_reference_local": [
+            0,
+            1,
+            0
+          ]
+        },
+        {
+          "name": "command",
+          "node": "port_command",
+          "position_m": [
+            0.025,
+            0.07,
+            0.0275
+          ],
+          "outward_normal": [
+            0,
+            1,
+            0
+          ],
+          "kind": "control",
+          "connector": "multipin",
+          "channel": null,
+          "parent": "world",
+          "key_reference_local": [
+            0,
+            1,
+            0
+          ]
+        }
+      ],
+      "controls": [],
+      "dimension_status": "Original illustrative dimensions; not vendor-exact or fabrication-ready"
+    },
+    {
+      "name": "splitter-19",
+      "file": "splitter-19.glb",
+      "bytes": 83188,
+      "sha256": "b5478ae935cabe57f131ee48f06b4a8f97d47613dc0f1a37eefe6dc7ab40128e",
+      "bounds_m": [
+        [
+          -0.1052,
+          -0.067,
+          -0.004
+        ],
+        [
+          0.1052,
+          0.067,
+          0.03270000000000001
+        ]
+      ],
+      "triangles": 6516,
+      "ports": [
+        {
+          "name": "input",
+          "node": "port_input",
+          "position_m": [
+            0,
+            -0.067,
+            0.016
+          ],
+          "outward_normal": [
+            0,
+            -1,
+            0
+          ],
+          "kind": "optical",
+          "connector": "FC/APC",
+          "channel": null,
+          "parent": "world",
+          "key_reference_local": [
+            0,
+            1,
+            0
+          ]
+        },
+        {
+          "name": "CH01",
+          "node": "port_CH01",
+          "position_m": [
+            -0.08549999999999999,
+            0.067,
+            0.01
+          ],
+          "outward_normal": [
+            0,
+            1,
+            0
+          ],
+          "kind": "optical",
+          "connector": "FC/APC",
+          "channel": "CH01",
+          "parent": "world",
+          "key_reference_local": [
+            0,
+            1,
+            0
+          ]
+        },
+        {
+          "name": "CH02",
+          "node": "port_CH02",
+          "position_m": [
+            -0.0665,
+            0.067,
+            0.01
+          ],
+          "outward_normal": [
+            0,
+            1,
+            0
+          ],
+          "kind": "optical",
+          "connector": "FC/APC",
+          "channel": "CH02",
+          "parent": "world",
+          "key_reference_local": [
+            0,
+            1,
+            0
+          ]
+        },
+        {
+          "name": "CH03",
+          "node": "port_CH03",
+          "position_m": [
+            -0.0475,
+            0.067,
+            0.01
+          ],
+          "outward_normal": [
+            0,
+            1,
+            0
+          ],
+          "kind": "optical",
+          "connector": "FC/APC",
+          "channel": "CH03",
+          "parent": "world",
+          "key_reference_local": [
+            0,
+            1,
+            0
+          ]
+        },
+        {
+          "name": "CH04",
+          "node": "port_CH04",
+          "position_m": [
+            -0.028499999999999998,
+            0.067,
+            0.01
+          ],
+          "outward_normal": [
+            0,
+            1,
+            0
+          ],
+          "kind": "optical",
+          "connector": "FC/APC",
+          "channel": "CH04",
+          "parent": "world",
+          "key_reference_local": [
+            0,
+            1,
+            0
+          ]
+        },
+        {
+          "name": "CH05",
+          "node": "port_CH05",
+          "position_m": [
+            -0.0095,
+            0.067,
+            0.01
+          ],
+          "outward_normal": [
+            0,
+            1,
+            0
+          ],
+          "kind": "optical",
+          "connector": "FC/APC",
+          "channel": "CH05",
+          "parent": "world",
+          "key_reference_local": [
+            0,
+            1,
+            0
+          ]
+        },
+        {
+          "name": "CH06",
+          "node": "port_CH06",
+          "position_m": [
+            0.0095,
+            0.067,
+            0.01
+          ],
+          "outward_normal": [
+            0,
+            1,
+            0
+          ],
+          "kind": "optical",
+          "connector": "FC/APC",
+          "channel": "CH06",
+          "parent": "world",
+          "key_reference_local": [
+            0,
+            1,
+            0
+          ]
+        },
+        {
+          "name": "CH07",
+          "node": "port_CH07",
+          "position_m": [
+            0.028499999999999998,
+            0.067,
+            0.01
+          ],
+          "outward_normal": [
+            0,
+            1,
+            0
+          ],
+          "kind": "optical",
+          "connector": "FC/APC",
+          "channel": "CH07",
+          "parent": "world",
+          "key_reference_local": [
+            0,
+            1,
+            0
+          ]
+        },
+        {
+          "name": "CH08",
+          "node": "port_CH08",
+          "position_m": [
+            0.0475,
+            0.067,
+            0.01
+          ],
+          "outward_normal": [
+            0,
+            1,
+            0
+          ],
+          "kind": "optical",
+          "connector": "FC/APC",
+          "channel": "CH08",
+          "parent": "world",
+          "key_reference_local": [
+            0,
+            1,
+            0
+          ]
+        },
+        {
+          "name": "CH09",
+          "node": "port_CH09",
+          "position_m": [
+            0.0665,
+            0.067,
+            0.01
+          ],
+          "outward_normal": [
+            0,
+            1,
+            0
+          ],
+          "kind": "optical",
+          "connector": "FC/APC",
+          "channel": "CH09",
+          "parent": "world",
+          "key_reference_local": [
+            0,
+            1,
+            0
+          ]
+        },
+        {
+          "name": "CH10",
+          "node": "port_CH10",
+          "position_m": [
+            0.08549999999999999,
+            0.067,
+            0.01
+          ],
+          "outward_normal": [
+            0,
+            1,
+            0
+          ],
+          "kind": "optical",
+          "connector": "FC/APC",
+          "channel": "CH10",
+          "parent": "world",
+          "key_reference_local": [
+            0,
+            1,
+            0
+          ]
+        },
+        {
+          "name": "CH11",
+          "node": "port_CH11",
+          "position_m": [
+            -0.08549999999999999,
+            0.067,
+            0.024
+          ],
+          "outward_normal": [
+            0,
+            1,
+            0
+          ],
+          "kind": "optical",
+          "connector": "FC/APC",
+          "channel": "CH11",
+          "parent": "world",
+          "key_reference_local": [
+            0,
+            1,
+            0
+          ]
+        },
+        {
+          "name": "CH12",
+          "node": "port_CH12",
+          "position_m": [
+            -0.0665,
+            0.067,
+            0.024
+          ],
+          "outward_normal": [
+            0,
+            1,
+            0
+          ],
+          "kind": "optical",
+          "connector": "FC/APC",
+          "channel": "CH12",
+          "parent": "world",
+          "key_reference_local": [
+            0,
+            1,
+            0
+          ]
+        },
+        {
+          "name": "CH13",
+          "node": "port_CH13",
+          "position_m": [
+            -0.0475,
+            0.067,
+            0.024
+          ],
+          "outward_normal": [
+            0,
+            1,
+            0
+          ],
+          "kind": "optical",
+          "connector": "FC/APC",
+          "channel": "CH13",
+          "parent": "world",
+          "key_reference_local": [
+            0,
+            1,
+            0
+          ]
+        },
+        {
+          "name": "CH14",
+          "node": "port_CH14",
+          "position_m": [
+            -0.028499999999999998,
+            0.067,
+            0.024
+          ],
+          "outward_normal": [
+            0,
+            1,
+            0
+          ],
+          "kind": "optical",
+          "connector": "FC/APC",
+          "channel": "CH14",
+          "parent": "world",
+          "key_reference_local": [
+            0,
+            1,
+            0
+          ]
+        },
+        {
+          "name": "CH15",
+          "node": "port_CH15",
+          "position_m": [
+            -0.0095,
+            0.067,
+            0.024
+          ],
+          "outward_normal": [
+            0,
+            1,
+            0
+          ],
+          "kind": "optical",
+          "connector": "FC/APC",
+          "channel": "CH15",
+          "parent": "world",
+          "key_reference_local": [
+            0,
+            1,
+            0
+          ]
+        },
+        {
+          "name": "CH16",
+          "node": "port_CH16",
+          "position_m": [
+            0.0095,
+            0.067,
+            0.024
+          ],
+          "outward_normal": [
+            0,
+            1,
+            0
+          ],
+          "kind": "optical",
+          "connector": "FC/APC",
+          "channel": "CH16",
+          "parent": "world",
+          "key_reference_local": [
+            0,
+            1,
+            0
+          ]
+        },
+        {
+          "name": "CH17",
+          "node": "port_CH17",
+          "position_m": [
+            0.028499999999999998,
+            0.067,
+            0.024
+          ],
+          "outward_normal": [
+            0,
+            1,
+            0
+          ],
+          "kind": "optical",
+          "connector": "FC/APC",
+          "channel": "CH17",
+          "parent": "world",
+          "key_reference_local": [
+            0,
+            1,
+            0
+          ]
+        },
+        {
+          "name": "CH18",
+          "node": "port_CH18",
+          "position_m": [
+            0.0475,
+            0.067,
+            0.024
+          ],
+          "outward_normal": [
+            0,
+            1,
+            0
+          ],
+          "kind": "optical",
+          "connector": "FC/APC",
+          "channel": "CH18",
+          "parent": "world",
+          "key_reference_local": [
+            0,
+            1,
+            0
+          ]
+        },
+        {
+          "name": "CH19",
+          "node": "port_CH19",
+          "position_m": [
+            0.0665,
+            0.067,
+            0.024
+          ],
+          "outward_normal": [
+            0,
+            1,
+            0
+          ],
+          "kind": "optical",
+          "connector": "FC/APC",
+          "channel": "CH19",
+          "parent": "world",
+          "key_reference_local": [
+            0,
+            1,
+            0
+          ]
+        }
+      ],
+      "controls": [],
+      "dimension_status": "Original illustrative dimensions; not vendor-exact or fabrication-ready"
+    },
+    {
+      "name": "tiptilt-collimator",
+      "file": "tiptilt-collimator.glb",
+      "bytes": 8500,
+      "sha256": "24eb50d6355585a4055340a886eb74429e1d1ef3d2d0af08cba0909f72938b7b",
+      "bounds_m": [
+        [
+          -0.0245,
+          -0.021,
+          0.0
+        ],
+        [
+          0.0225,
+          0.0235,
+          0.05
+        ]
+      ],
+      "triangles": 408,
+      "ports": [
+        {
+          "name": "fiber_in",
+          "node": "port_fiber_in",
+          "position_m": [
+            0,
+            0,
+            -0.018
+          ],
+          "outward_normal": [
+            0,
+            0,
+            -1
+          ],
+          "kind": "optical",
+          "connector": "FC/APC",
+          "channel": null,
+          "parent": "tilt_pivot",
+          "key_reference_local": [
+            0,
+            1,
+            0
+          ]
+        },
+        {
+          "name": "emission",
+          "node": "port_emission",
+          "position_m": [
+            0,
+            0,
+            0.015
+          ],
+          "outward_normal": [
+            0,
+            0,
+            1
+          ],
+          "kind": "beam",
+          "connector": "free-space",
+          "channel": null,
+          "parent": "tilt_pivot",
+          "key_reference_local": [
+            0,
+            1,
+            0
+          ]
+        },
+        {
+          "name": "motor_bus",
+          "node": "port_motor_bus",
+          "position_m": [
+            0.022,
+            0,
+            0.007
+          ],
+          "outward_normal": [
+            1,
+            0,
+            0
+          ],
+          "kind": "control",
+          "connector": "multipin",
+          "channel": null,
+          "parent": "world",
+          "key_reference_local": [
+            0,
+            1,
+            0
+          ]
+        }
+      ],
+      "controls": [
+        {
+          "node": "tip_pivot",
+          "axis": [
+            1,
+            0,
+            0
+          ]
+        },
+        {
+          "node": "tilt_pivot",
+          "axis": [
+            0,
+            1,
+            0
+          ]
+        }
+      ],
+      "dimension_status": "Original illustrative dimensions; not vendor-exact or fabrication-ready"
+    },
+    {
+      "name": "fly-console",
+      "file": "fly-console.glb",
+      "bytes": 37916,
+      "sha256": "9be5bbc04cd33b1eeaf767c5b9ae9b499927111cbe801b49fbf4318e2c786790",
+      "bounds_m": [
+        [
+          -0.08020000000000001,
+          -0.0552,
+          -0.004
+        ],
+        [
+          0.08020000000000001,
+          0.061000000000000006,
+          0.030199999999999998
+        ]
+      ],
+      "triangles": 2308,
+      "ports": [
+        {
+          "name": "phase_bus",
+          "node": "port_phase_bus",
+          "position_m": [
+            -0.05,
+            0.062,
+            0.01
+          ],
+          "outward_normal": [
+            0,
+            1,
+            0
+          ],
+          "kind": "control",
+          "connector": "multipin",
+          "channel": null,
+          "parent": "world",
+          "key_reference_local": [
+            0,
+            1,
+            0
+          ]
+        },
+        {
+          "name": "motor_bus",
+          "node": "port_motor_bus",
+          "position_m": [
+            0,
+            0.062,
+            0.01
+          ],
+          "outward_normal": [
+            0,
+            1,
+            0
+          ],
+          "kind": "control",
+          "connector": "multipin",
+          "channel": null,
+          "parent": "world",
+          "key_reference_local": [
+            0,
+            1,
+            0
+          ]
+        },
+        {
+          "name": "dc_power",
+          "node": "port_dc_power",
+          "position_m": [
+            0.05,
+            0.062,
+            0.01
+          ],
+          "outward_normal": [
+            0,
+            1,
+            0
+          ],
+          "kind": "power",
+          "connector": "multipin",
+          "channel": null,
+          "parent": "world",
+          "key_reference_local": [
+            0,
+            1,
+            0
+          ]
+        }
+      ],
+      "controls": [
+        {
+          "node": "knob_phase",
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "contact_node": "touch_phase"
+        },
+        {
+          "node": "knob_amplitude",
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "contact_node": "touch_amplitude"
+        },
+        {
+          "node": "knob_tip",
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "contact_node": "touch_tip"
+        },
+        {
+          "node": "knob_tilt",
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "contact_node": "touch_tilt"
+        },
+        {
+          "node": "knob_focus",
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "contact_node": "touch_focus"
+        }
+      ],
+      "dimension_status": "Original illustrative dimensions; not vendor-exact or fabrication-ready"
+    }
+  ]
+}

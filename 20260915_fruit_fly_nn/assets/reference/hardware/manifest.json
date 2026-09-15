@@ -1,0 +1,127 @@
+{
+  "purpose": "Local design reference cache; original generic runtime assets are separate",
+  "records": [
+    {
+      "file": "vendor/ADAFCPM2.txt",
+      "url": "https://www.thorlabs.com/item/ADAFCPM2",
+      "kind": "rendered manufacturer page",
+      "bytes": 2461,
+      "sha256": "e8f11b648e61dad7ed55b849dba323bb898c84767d5fb317373ebe3d3b8eab4b",
+      "rights": "Manufacturer reference only; redistribution license not established",
+      "retrieved": "2026-09-15T18:04:21.665Z"
+    },
+    {
+      "file": "vendor/ADAFCPM2-ADAFCPM2-Step.step",
+      "url": "https://www.thorlabs.com/item/ADAFCPM2",
+      "kind": "manufacturer downloadable CAD",
+      "bytes": 2593909,
+      "sha256": "d9afbd33c37c5af8ac8e391c084b130fb080609385b02114054f3f2734c8a1bb",
+      "rights": "Manufacturer reference only; redistribution license not established",
+      "retrieved": "2026-09-15T18:04:27.412Z",
+      "retrieval_method": "Product page Step download button; original download used an ephemeral blob URL"
+    },
+    {
+      "file": "vendor/EDFA100P.txt",
+      "url": "https://www.thorlabs.com/item/EDFA100P",
+      "kind": "rendered manufacturer page",
+      "bytes": 2435,
+      "sha256": "a610eaa8d074d7e36ff066da8b74523da57f19197f9ecff91eb2cf36f933fd36",
+      "rights": "Manufacturer reference only; redistribution license not established",
+      "retrieved": "2026-09-15T18:04:32.833Z"
+    },
+    {
+      "file": "vendor/EDFA100P-EDFA100P-Step.step",
+      "url": "https://www.thorlabs.com/item/EDFA100P",
+      "kind": "manufacturer downloadable CAD",
+      "bytes": 60420256,
+      "sha256": "2ead79af3033ec188ef1da5b31991135723f4ec8b5f0f7f7415594ac6054ee08",
+      "rights": "Manufacturer reference only; redistribution license not established",
+      "retrieved": "2026-09-15T18:04:42.464Z",
+      "retrieval_method": "Product page Step download button; original download used an ephemeral blob URL"
+    },
+    {
+      "file": "vendor/F220APC-1550.txt",
+      "url": "https://www.thorlabs.com/item/F220APC-1550",
+      "kind": "rendered manufacturer page",
+      "bytes": 2487,
+      "sha256": "b7a1db5b255cf8973a4d15d091977edf58d554f706f58b8f426cf69359778343",
+      "rights": "Manufacturer reference only; redistribution license not established",
+      "retrieved": "2026-09-15T18:04:51.747Z"
+    },
+    {
+      "file": "vendor/F220APC-1550-F220APC-1550-Step.step",
+      "url": "https://www.thorlabs.com/item/F220APC-1550",
+      "kind": "manufacturer downloadable CAD",
+      "bytes": 756466,
+      "sha256": "86bd71c3212a4a356d9e8d5f661c178face84fa53d4a14ad2d28419da50db55f",
+      "rights": "Manufacturer reference only; redistribution license not established",
+      "retrieved": "2026-09-15T18:04:57.312Z",
+      "retrieval_method": "Product page Step download button; original download used an ephemeral blob URL"
+    },
+    {
+      "file": "vendor/30126C3.txt",
+      "url": "https://www.thorlabs.com/item/30126C3",
+      "kind": "rendered manufacturer page",
+      "bytes": 2539,
+      "sha256": "41e8332c7ea9175fe019d9adc4dd5e8eddcf76cb6f3c2d1ed810d99013f31c6c",
+      "rights": "Manufacturer reference only; redistribution license not established",
+      "retrieved": "2026-09-15T18:05:00.753Z"
+    },
+    {
+      "file": "vendor/30126C3-30126C3-Step.step",
+      "url": "https://www.thorlabs.com/item/30126C3",
+      "kind": "manufacturer downloadable CAD",
+      "bytes": 1174591,
+      "sha256": "b4e5defba2db18b422777e073ce08dd3b1476a08f29f2fb7a11906990908289c",
+      "rights": "Manufacturer reference only; redistribution license not established",
+      "retrieved": "2026-09-15T18:05:06.459Z",
+      "retrieval_method": "Product page Step download button; original download used an ephemeral blob URL"
+    },
+    {
+      "file": "vendor/LN65S-FC.txt",
+      "url": "https://www.thorlabs.com/item/LN65S-FC",
+      "kind": "rendered manufacturer page",
+      "bytes": 2522,
+      "sha256": "3b310fc17c474021c6acf884a270af313e1824e79c82c3f18dea671b6fada289",
+      "rights": "Manufacturer reference only; redistribution license not established",
+      "retrieved": "2026-09-15T18:05:09.526Z"
+    },
+    {
+      "file": "vendor/LN65S-FC-LN65S-FC-Step.step",
+      "url": "https://www.thorlabs.com/item/LN65S-FC",
+      "kind": "manufacturer downloadable CAD",
+      "bytes": 3353217,
+      "sha256": "ce5f7f33894ac254c2445132be70de3896ae658790e4ee38355b557870512d9c",
+      "rights": "Manufacturer reference only; redistribution license not established",
+      "retrieved": "2026-09-15T18:05:15.369Z",
+      "retrieval_method": "Product page Step download button; original download used an ephemeral blob URL"
+    },
+    {
+      "file": "vendor/phase-modulator-lab-fact.pdf",
+      "url": "https://media.thorlabs.com/contentassets/5924f547c0be4d98a41aee67e7a83d0c/fiber_eo_phase_modulator_lab_fact.pdf?v=1116113902",
+      "kind": "manufacturer PDF",
+      "bytes": 1225074,
+      "sha256": "867a3faa78b5c0d215b4e11e5ff89a7f8b521f503875105972866eb1a37b26a7",
+      "rights": "Manufacturer reference only; redistribution license not established",
+      "retrieved": "2026-09-15T18:07:15.037Z"
+    },
+    {
+      "file": "vendor/hammond-1455N1601.pdf",
+      "url": "https://www.hammfg.com/files/parts/pdf/1455N1601.pdf",
+      "kind": "manufacturer PDF",
+      "bytes": 446338,
+      "sha256": "d8ef7ced1f09ad40f69a29f5f7be7bc9100b182273cf1d4f7f23de5d643b3c30",
+      "rights": "Manufacturer reference only; redistribution license not established",
+      "retrieved": "2026-09-15T18:07:15.439Z"
+    },
+    {
+      "file": "vendor/hammond-1455NHD1601.pdf",
+      "url": "https://www.hammfg.com/files/parts/pdf/1455NHD1601.pdf",
+      "kind": "manufacturer PDF",
+      "bytes": 242585,
+      "sha256": "6b8f434975ed1da74fff80578d14e90335641630d098cc6eaba064e3666d988d",
+      "rights": "Manufacturer reference only; redistribution license not established",
+      "retrieved": "2026-09-15T18:07:15.515Z"
+    }
+  ]
+}
