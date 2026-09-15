@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Fruit-Fly CBC — neural controller for a coherent beam array</title>
+    <style>
+      :root {
+        color-scheme: dark;
+      }
+      html,
+      body {
+        margin: 0;
+        height: 100%;
+        background: #05070c;
+        color: #e6edf3;
+        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+        overflow: hidden;
+      }
+      #view {
+        position: fixed;
+        inset: 0;
+        display: block;
+      }
+      #hud {
+        position: fixed;
+        top: 12px;
+        left: 12px;
+        padding: 10px 12px;
+        background: rgba(13, 17, 23, 0.82);
+        border: 1px solid #21262d;
+        border-radius: 8px;
+        font-size: 12px;
+        line-height: 1.5;
+        min-width: 220px;
+      }
+      #hud h1 {
+        font-size: 12px;
+        margin: 0 0 6px;
+        color: #7ee787;
+        font-weight: 600;
+      }
+      .metric {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+      }
+      .metric span:last-child {
+        color: #79c0ff;
+      }
+      #panel {
+        position: fixed;
+        top: 12px;
+        right: 12px;
+        width: 280px;
+        max-height: calc(100% - 24px);
+        overflow-y: auto;
+        padding: 10px;
+        background: rgba(13, 17, 23, 0.9);
+        border: 1px solid #21262d;
+        border-radius: 8px;
+        font-size: 12px;
+      }
+      #panel h2 {
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: #8b949e;
+        margin: 10px 0 6px;
+      }
+      #schematic {
+        width: 100%;
+        background: #0d1117;
+        border: 1px solid #21262d;
+        border-radius: 4px;
+      }
+      .mode-buttons {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 4px;
+      }
+      button {
+        background: #161b22;
+        color: #c9d1d9;
+        border: 1px solid #30363d;
+        border-radius: 4px;
+        padding: 5px 6px;
+        font: inherit;
+        cursor: pointer;
+      }
+      button.active {
+        background: #1f6feb;
+        border-color: #1f6feb;
+        color: #fff;
+      }
+      .row {
+        display: grid;
+        grid-template-columns: 92px 1fr 44px;
+        align-items: center;
+        gap: 6px;
+        margin: 4px 0;
+      }
+      input[type="range"] {
+        width: 100%;
+      }
+      #neural {
+        width: 100%;
+        height: 60px;
+        background: #05070c;
+        border: 1px solid #21262d;
+        border-radius: 4px;
+      }
+      .hint {
+        color: #8b949e;
+        font-size: 10px;
+        line-height: 1.4;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="view"></canvas>
+    <div id="hud">
+      <h1>Fruit-Fly CBC controller</h1>
+      <div class="metric"><span>episode / step</span><span id="m-step">0</span></div>
+      <div class="metric"><span>mode</span><span id="m-mode">-</span></div>
+      <div class="metric"><span>reward</span><span id="m-reward">0</span></div>
+      <div class="metric"><span>PIB</span><span id="m-pib">0</span></div>
+      <div class="metric"><span>normalized peak</span><span id="m-peak">0</span></div>
+      <div class="metric"><span>pointing (urad)</span><span id="m-point">0</span></div>
+      <div class="metric"><span>phase RMS (rad)</span><span id="m-phirms">0</span></div>
+      <div class="metric"><span>connectome activity</span><span id="m-neural">0</span></div>
+      <div class="metric"><span>target / beam x</span><span id="m-tx">0</span></div>
+      <div class="metric"><span>target / beam y</span><span id="m-ty">0</span></div>
+      <div class="hint" id="m-note"></div>
+    </div>
+    <div id="panel">
+      <h2>Optical schematic</h2>
+      <canvas id="schematic"></canvas>
+      <h2>Controller</h2>
+      <div class="mode-buttons" id="modes"></div>
+      <h2>Target</h2>
+      <div class="mode-buttons" id="targets"></div>
+      <h2>Selected channel</h2>
+      <div id="channel"></div>
+      <h2>Reservoir</h2>
+      <canvas id="neural"></canvas>
+      <div class="mode-buttons" style="margin-top: 6px">
+        <button id="train-btn">Train 15 gen</button>
+        <button id="reset-btn">Reset episode</button>
+      </div>
+      <div class="hint" style="margin-top: 6px">
+        Simulation only. No physical laser interface. Reservoir data are synthetic unless a
+        connectome JSON is supplied.
+      </div>
+    </div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

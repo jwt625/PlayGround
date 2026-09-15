@@ -1,0 +1,33 @@
+{
+  "name": "fruit-fly-cbc",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Fruit-fly connectome controller for a simulated coherent beam combining (CBC) phased array. Simulation/art project only; no physical laser interface.",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:browser": "playwright test",
+    "train": "tsx src/cli.ts train",
+    "evaluate": "tsx src/cli.ts evaluate",
+    "benchmark": "tsx src/cli.ts benchmark",
+    "make-video": "node scripts/make-video.mjs",
+    "bench:optics": "tsx src/cli.ts benchmark"
+  },
+  "dependencies": {
+    "three": "0.169.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.48.0",
+    "@types/node": "22.7.4",
+    "@types/three": "0.169.0",
+    "tsx": "4.19.1",
+    "typescript": "5.6.2",
+    "vite": "5.4.8",
+    "vitest": "2.1.2"
+  }
+}
