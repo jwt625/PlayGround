@@ -14,7 +14,14 @@ describe('individual beam envelope geometry',()=>{
   it('uses the field evaluator Gaussian radius instead of converging every tube on the centroid',()=>{
     const bench=new OpticalBench(array),actual=states();actual[0].curvature_per_m=3;update(bench,actual);
     const p=beams(bench)[0].geometry.attributes.position;
-    const x=p.getX(0)/DISPLAY.scale,y=p.getY(0)/DISPLAY.scale,z=p.getZ(0)/DISPLAY.targetDistance;
+    // Invert the declared presentation-only transverse tightening to recover the
+    // physical sample point the displayed envelope edge corresponds to. Vertex 0
+    // is the +Y rim (template y=+0.5) at beamRange_m=1, so its axial parameter
+    // is t=1 and (with no tilt) axis.z=1.
+    const t=1;
+    const inv=(v:number,origin:number)=>origin+(v/DISPLAY.scale-origin)/DISPLAY.beamTighten;
+    const x=inv(p.getX(0),array.x_m[0]),y=inv(p.getY(0),array.y_m[0]);
+    const z=t+(p.getZ(0)/DISPLAY.targetDistance-t)/DISPLAY.beamTighten;
     const edge=channelFieldFast(array,0,actual[0],x,y,z);
     const center=channelFieldFast(array,0,actual[0],array.x_m[0],array.y_m[0],z);
     expect((edge.re**2+edge.im**2)/(center.re**2+center.im**2)).toBeCloseTo(Math.exp(-2),5);

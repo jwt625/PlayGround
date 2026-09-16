@@ -34,6 +34,92 @@ interface ChannelOverride {
   curvature: number;
 }
 
+interface CameraKey {
+  pos: [number, number, number];
+  target: [number, number, number];
+  fov?: number;
+  dur: number;
+}
+
+interface CameraTrajectory {
+  name: string;
+  keys: CameraKey[];
+  /** Cubic Catmull-Rom through the keys (C1) instead of eased segments. */
+  cubic?: boolean;
+  /** Total duration in seconds for a cubic trajectory. */
+  duration?: number;
+}
+
+/**
+ * Canned replayable camera trajectories. Keyframes use the same pose the HUD
+ * reports (world position, orbit target, optional fov) so a copied pose can be
+ * pasted straight in.
+ */
+const CAMERA_TRAJECTORIES: CameraTrajectory[] = [
+  {
+    name: "overview pan",
+    keys: [
+      { pos: [140, 70, 150], target: [0, 0, 40], dur: 3 },
+      { pos: [0, 82, 165], target: [0, 0, 30], dur: 3 },
+      { pos: [-140, 70, 150], target: [0, 0, 40], dur: 3 },
+    ],
+  },
+  {
+    name: "console orbit",
+    keys: [
+      { pos: [-30, 9, 18], target: [-56, -10, -14], dur: 2.5 },
+      { pos: [-56, 17, 24], target: [-56, -10, -14], dur: 2.5 },
+      { pos: [-82, 9, 18], target: [-56, -10, -14], dur: 2.5 },
+      { pos: [-56, 2, 6], target: [-56, -10, -14], dur: 2.5 },
+    ],
+  },
+  {
+    name: "array dive",
+    keys: [
+      { pos: [40, 34, 80], target: [0, 0, 20], dur: 2.5 },
+      { pos: [16, 12, 34], target: [0, 0, 6], dur: 2.5 },
+      { pos: [4, 4, 8], target: [0, 0, -2], dur: 2.5 },
+    ],
+  },
+  {
+    name: "target sweep",
+    keys: [
+      { pos: [-40, 20, 120], target: [-10, 0, 95], dur: 3 },
+      { pos: [0, 24, 130], target: [10, 0, 95], dur: 3 },
+      { pos: [40, 20, 120], target: [0, 0, 95], dur: 3 },
+    ],
+  },
+  {
+    // Authored 5-key fly-in. Cubic Catmull-Rom through all five poses with a
+    // global smootherstep so velocity is zero at the first and last frame.
+    name: "authored 5-key fly-in",
+    cubic: true,
+    duration: 12,
+    keys: [
+      { pos: [-56.097, 17.169, -7.702], target: [-56.041, 0.896, -13.477], fov: 50, dur: 1 },
+      { pos: [-60.603, 19.029, 37.084], target: [-58.909, 4.206, -15.11], fov: 50, dur: 1 },
+      { pos: [-92.564, 47.045, 30.749], target: [-49.867, 10.774, -14.969], fov: 50, dur: 1 },
+      { pos: [-117.041, 42.691, -27.19], target: [-52.986, 9.524, -32.265], fov: 50, dur: 1 },
+      { pos: [-77.992, 21.694, -133.973], target: [-32.685, 6.824, -47.588], fov: 50, dur: 1 },
+    ],
+  },
+  {
+    // Second authored tour: same first two keys and last key as the 5-key
+    // fly-in, with three added orbit keys in between.
+    name: "authored 6-key orbit",
+    cubic: true,
+    duration: 16,
+    keys: [
+      { pos: [-56.097, 17.169, -7.702], target: [-56.041, 0.896, -13.477], fov: 50, dur: 1 },
+      { pos: [-60.603, 19.029, 37.084], target: [-58.909, 4.206, -15.11], fov: 50, dur: 1 },
+      { pos: [3.884, 5.947, 44.054], target: [-32.685, 6.824, -47.588], fov: 50, dur: 1 },
+      { pos: [55.033, 3.563, -2.519], target: [-32.685, 6.824, -47.588], fov: 50, dur: 1 },
+      { pos: [61.291, 24.214, -109.107], target: [-9.458, -4.377, -28.772], fov: 50, dur: 1 },
+      { pos: [-77.992, 21.694, -133.973], target: [-32.685, 6.824, -47.588], fov: 50, dur: 1 },
+    ],
+  },
+];
+
 const array = createArrayConfig();
 
 function $(id: string): HTMLElement {
@@ -96,6 +182,15 @@ class App {
   private replayFinished = false;
   private replayAccumulator = 0;
   private singleStep = false;
+  private camPlay: {
+    name: string;
+    keys: CameraKey[];
+    t: number;
+    cubic: boolean;
+    duration: number;
+    posCurve?: THREE.CatmullRomCurve3;
+    targetCurve?: THREE.CatmullRomCurve3;
+  } | null = null;
 
   constructor() {
     this.scene.scene.add(this.bench.group);
@@ -103,7 +198,10 @@ class App {
     this.scene.scene.add(this.section.group);
     this.scene.scene.add(this.flies.group);
     this.scene.scene.add(this.hardware.group);
+    // Dome is an inspection layer and starts hidden; the checkbox re-enables it.
+    this.dome.group.visible = false;
     this.flies.setOperatorMode(true);
+    this.flies.setTrailsVisible(true);
 
     this.env = new Environment(defaultEnvironmentConfig(array, { target: targetMotionFor(this.targetKind), scanSamples: 15 }));
     this.observation = this.env.observeWithCommands(analyticSteeringCommands(array, this.env.targetDirection()));
@@ -113,6 +211,7 @@ class App {
     this.scene.start();
     this.buildChannelControls();
     this.buildInspectionControls();
+    this.buildCameraControls();
     this.setMode("analytic");
     document.querySelector(`[data-target="fly"]`)?.classList.add("active");
     // The 3D neuron cloud is always on: load the saved MaleCNS run at startup
@@ -144,7 +243,12 @@ class App {
         flyError: this.flies.error,
         flyForelegJoints: this.flies.forelegJointCount,
         flyGestureActive: this.flies.gestureActive,
+        flyForelegMotion: this.flies.forelegMotion,
+        activeKnobs: this.hardware.allKnobTargets().map((k) => k.channel),
+        camera: this.currentCameraPose(),
+        forelegDiagnostics: this.flies.forelegDiagnostics,
         targetDisplay: this.flies.targetDisplayPosition.toArray(),
+        operatorDisplay: this.flies.operatorDisplayPosition.toArray(),
         hardwareLoaded: this.hardware.loaded,
         hardwareVisible: this.hardware.group.visible,
         hardwareNodes: this.hardware.nodeCount,
@@ -282,8 +386,9 @@ class App {
     }
     if (!this.neuralView) return;
     this.neuralView.group.visible = true;
-    this.scene.camera.position.set(-42, 28, 80);
-    this.scene.controls.target.set(-42, 16, 15);
+    const c = this.neuralView.center;
+    this.scene.camera.position.set(c.x + 10, c.y + 14, c.z + 40);
+    this.scene.controls.target.copy(c);
     this.scene.controls.update();
   }
 
@@ -305,6 +410,178 @@ class App {
     document.querySelectorAll<HTMLButtonElement>("#targets button").forEach(b=>b.classList.toggle("active",b.dataset.target==="static"));
   }
 
+  /** Camera pose readout, copy-to-clipboard and canned trajectory playback. */
+  private buildCameraControls(): void {
+    const select = $("cam-trajectory") as HTMLSelectElement;
+    CAMERA_TRAJECTORIES.forEach((traj, i) => select.add(new Option(traj.name, String(i))));
+    $("copy-camera").addEventListener("click", () => void this.copyCameraPose());
+    $("play-camera").addEventListener("click", () => {
+      const traj = CAMERA_TRAJECTORIES[Number(select.value)] ?? CAMERA_TRAJECTORIES[0];
+      this.startCameraPlayback(traj);
+    });
+    $("stop-camera").addEventListener("click", () => this.stopCameraPlayback());
+    this.buildCollapseToggles();
+  }
+
+  /** Collapse/expand the viewer panels toward their anchored edge. */
+  private buildCollapseToggles(): void {
+    document.querySelectorAll<HTMLButtonElement>(".collapse-toggle").forEach((btn) => {
+      const panel = document.getElementById(btn.dataset.collapse ?? "");
+      if (!panel) return;
+      btn.addEventListener("click", () => {
+        const collapsed = panel.classList.toggle("panel-collapsed");
+        btn.textContent = collapsed ? "▸" : "▾";
+      });
+    });
+  }
+
+  private currentCameraPose(): {
+    position: number[];
+    target: number[];
+    fov: number;
+    yaw_deg: number;
+    pitch_deg: number;
+  } {
+    const cam = this.scene.camera;
+    const target = this.scene.controls.target;
+    const dir = cam.getWorldDirection(new THREE.Vector3());
+    const r3 = (v: number) => Number(v.toFixed(3));
+    return {
+      position: cam.position.toArray().map(r3),
+      target: target.toArray().map(r3),
+      fov: Number(cam.fov.toFixed(2)),
+      yaw_deg: Number((Math.atan2(-dir.x, -dir.z) * (180 / Math.PI)).toFixed(2)),
+      pitch_deg: Number((Math.asin(Math.max(-1, Math.min(1, dir.y))) * (180 / Math.PI)).toFixed(2)),
+    };
+  }
+
+  private updateCameraPose(): void {
+    const p = this.currentCameraPose();
+    $("camera-pose").textContent =
+      `pos    ${p.position[0]}, ${p.position[1]}, ${p.position[2]}\n` +
+      `target ${p.target[0]}, ${p.target[1]}, ${p.target[2]}\n` +
+      `fov ${p.fov}   yaw ${p.yaw_deg}°   pitch ${p.pitch_deg}°`;
+  }
+
+  private async copyCameraPose(): Promise<void> {
+    const json = JSON.stringify(this.currentCameraPose(), null, 2);
+    try {
+      await navigator.clipboard.writeText(json);
+      $("camera-note").textContent = "Camera pose copied to clipboard.";
+    } catch {
+      const area = document.createElement("textarea");
+      area.value = json;
+      document.body.appendChild(area);
+      area.select();
+      try {
+        document.execCommand("copy");
+        $("camera-note").textContent = "Camera pose copied.";
+      } catch {
+        $("camera-note").textContent = json;
+      }
+      area.remove();
+    }
+  }
+
+  private startCameraPlayback(traj: CameraTrajectory): void {
+    const total = traj.keys.reduce((a, k) => a + k.dur, 0);
+    const cubic = !!traj.cubic && traj.keys.length >= 2;
+    const posCurve = cubic
+      ? new THREE.CatmullRomCurve3(traj.keys.map((k) => new THREE.Vector3(...k.pos)), false, "centripetal")
+      : undefined;
+    const targetCurve = cubic
+      ? new THREE.CatmullRomCurve3(traj.keys.map((k) => new THREE.Vector3(...k.target)), false, "centripetal")
+      : undefined;
+    this.camPlay = {
+      name: traj.name,
+      keys: traj.keys,
+      t: 0,
+      cubic,
+      duration: traj.duration ?? total,
+      posCurve,
+      targetCurve,
+    };
+    this.scene.controls.enabled = false;
+    $("camera-note").textContent = `Playing "${traj.name}"…`;
+  }
+
+  private stopCameraPlayback(): void {
+    this.camPlay = null;
+    this.scene.controls.enabled = true;
+    $("camera-note").textContent = "Stopped. Read/copy the pose or play a preset.";
+  }
+
+  private advanceCamera(dt: number): void {
+    const play = this.camPlay;
+    if (!play) return;
+    const cam = this.scene.camera;
+
+    if (play.cubic && play.posCurve && play.targetCurve) {
+      // Cubic path with a global smootherstep: zero velocity at both ends, C1
+      // through every keyframe.
+      play.t += dt;
+      const u = Math.max(0, Math.min(1, play.t / Math.max(1e-3, play.duration)));
+      if (u >= 1) {
+        cam.position.copy(play.posCurve.getPointAt(1));
+        this.scene.controls.target.copy(play.targetCurve.getPointAt(1));
+        this.applyFov(play.keys, 1);
+        cam.lookAt(this.scene.controls.target);
+        this.stopCameraPlayback();
+        return;
+      }
+      const e = u * u * u * (u * (u * 6 - 15) + 10); // smootherstep
+      cam.position.copy(play.posCurve.getPointAt(e));
+      this.scene.controls.target.copy(play.targetCurve.getPointAt(e));
+      this.applyFov(play.keys, e);
+      cam.lookAt(this.scene.controls.target);
+      return;
+    }
+
+    play.t += dt;
+    const total = play.keys.reduce((a, k) => a + k.dur, 0);
+    if (play.t >= total) {
+      this.stopCameraPlayback();
+      return;
+    }
+    let acc = 0;
+    let i = 0;
+    for (; i < play.keys.length - 1; i++) {
+      if (play.t < acc + play.keys[i].dur) break;
+      acc += play.keys[i].dur;
+    }
+    const a = play.keys[i];
+    const b = play.keys[Math.min(i + 1, play.keys.length - 1)];
+    const local = Math.min(1, (play.t - acc) / Math.max(1e-3, a.dur));
+    const e = local * local * (3 - 2 * local);
+    const lerp = (x: number, y: number) => x + (y - x) * e;
+    cam.position.set(lerp(a.pos[0], b.pos[0]), lerp(a.pos[1], b.pos[1]), lerp(a.pos[2], b.pos[2]));
+    this.scene.controls.target.set(
+      lerp(a.target[0], b.target[0]),
+      lerp(a.target[1], b.target[1]),
+      lerp(a.target[2], b.target[2]),
+    );
+    if (a.fov !== undefined || b.fov !== undefined) {
+      const af = a.fov ?? cam.fov;
+      const bf = b.fov ?? cam.fov;
+      cam.fov = af + (bf - af) * e;
+      cam.updateProjectionMatrix();
+    }
+    cam.lookAt(this.scene.controls.target);
+  }
+
+  /** Interpolate fov across a trajectory's keys at normalized parameter e. */
+  private applyFov(keys: CameraKey[], e: number): void {
+    const cam = this.scene.camera;
+    if (keys.length === 0) return;
+    const scaled = e * (keys.length - 1);
+    const i = Math.min(keys.length - 2, Math.floor(scaled));
+    const f = scaled - i;
+    const a = keys[i]?.fov ?? keys[0].fov ?? cam.fov;
+    const b = keys[i + 1]?.fov ?? a;
+    cam.fov = a + (b - a) * f;
+    cam.updateProjectionMatrix();
+  }
+
   private buildInspectionControls(): void {
     const pause = $("pause-btn");
     pause.addEventListener("click", () => { this.paused = !this.paused; pause.textContent = this.paused ? "Resume simulation" : "Pause simulation"; });
@@ -314,11 +591,12 @@ class App {
       target: [[30, 20, 135], [0, 0, 95]],
       wiring: [[35, 24, -38], [0, 0, -10]],
       hardware: [[0, 75, 95], [0, -4, -18]],
-      console: [[-56, 14, 34], [-56, -10, -16]],
+      console: [[-38, 13, 20], [-56, -11, -15]],
     };
     Object.entries(presets).forEach(([name, [position, target]]) => {
       const button = document.createElement("button"); button.textContent = name;
       button.addEventListener("click", () => {
+        this.stopCameraPlayback();
         this.scene.camera.position.set(position[0], position[1], position[2]); this.scene.controls.target.set(target[0], target[1], target[2]); this.scene.controls.update();
         if (name === "array" || name === "wiring") {
           this.showBeams = false; this.dome.group.visible = false;
@@ -340,6 +618,7 @@ class App {
     toggle("show-flies", value => this.flies.group.visible = value);
     toggle("show-beams", value => this.showBeams = value);
     toggle("show-hardware", value => { if (value) { void this.enableHardware(); } else { this.hardware.setVisible(false); } });
+    toggle("show-motionblur", value => this.flies.setTrailsVisible(value));
     this.syncChannelControls();
     const range = $("section-range") as HTMLInputElement;
     range.addEventListener("input", () => { this.sectionRange = Number(range.value); $("section-range-value").textContent = `${this.sectionRange.toFixed(2)} m`; });
@@ -483,6 +762,9 @@ class App {
   }
 
   private frame(dt: number): void {
+    // Camera playback and the pose readout run even while the simulation pauses.
+    if (this.camPlay) this.advanceCamera(dt);
+    this.updateCameraPose();
     if (this.paused && !this.singleStep) return;
     if(this.replayPolicy && !this.singleStep){
       const speed=Number(($("replay-speed") as HTMLSelectElement).value);
@@ -511,9 +793,10 @@ class App {
         $("replay-status").textContent+=" · complete — select the other policy to compare";
       }
     }
-    this.flies.update(this.env.targetDirection(), Math.min(dt, 0.05));
     this.hardware.updateMotion(result.actual);
     this.hardware.updateConsole(result.actual, this.selected);
+    this.flies.setForelegTargets(this.hardware.allKnobTargets());
+    this.flies.update(this.env.targetDirection(), Math.min(dt, 0.05));
 
     const scan = this.env.scanBeam();
     const centroid = new THREE.Vector3(scan.beamSx, scan.beamSy, Math.sqrt(Math.max(0, 1 - scan.beamSx ** 2 - scan.beamSy ** 2)));

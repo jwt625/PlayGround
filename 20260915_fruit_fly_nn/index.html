@@ -33,6 +33,8 @@
         font-size: 12px;
         line-height: 1.5;
         min-width: 220px;
+        max-width: 320px;
+        overflow-wrap: anywhere;
       }
       #hud h1 {
         font-size: 12px;
@@ -123,12 +125,20 @@
       #run-comparison {position:fixed;left:12px;bottom:12px;width:325px;padding:12px;background:rgba(13,17,23,.94);border:1px solid #35596a;border-radius:8px;font-size:12px;max-height:42vh;overflow:auto;}
       #run-comparison h2 {font-size:13px;margin:0 0 8px;color:#80e8de;} #run-comparison p{line-height:1.5;} #load-real-run{width:100%;background:#17554f;} button:disabled{opacity:.5;cursor:default;}
       @media(max-width:750px){#run-comparison{width:200px;max-height:30vh;bottom:auto;top:255px;}}
+      .collapse-toggle{position:absolute;top:6px;right:6px;width:20px;height:20px;padding:0;line-height:1;font-size:11px;border-radius:4px;z-index:5;}
+      .panel-collapsed > *:not(.collapse-toggle):not(.panel-keep){display:none !important;}
+      #camera-panel{position:fixed;right:12px;bottom:12px;width:280px;padding:10px;background:rgba(13,17,23,.92);border:1px solid #21262d;border-radius:8px;font-size:12px;max-height:60vh;overflow:auto;}
+      #camera-panel h2{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:#8b949e;margin:0 0 4px;}
+      .camera-pose{color:#8b949e;font-size:10px;line-height:1.5;white-space:pre-wrap;word-break:break-word;margin:4px 0;}
+      #cam-trajectory{width:100%;background:#161b22;color:#e6edf3;padding:6px;border:1px solid #30363d;border-radius:4px;margin:4px 0;}
+      @media(max-width:750px){#camera-panel{display:none;}}
     </style>
   </head>
   <body>
     <canvas id="view"></canvas>
     <div id="hud">
-      <h1>19-channel CBC · scene inspector</h1>
+      <button class="collapse-toggle" data-collapse="hud" aria-label="Collapse metrics panel">▾</button>
+      <h1 class="panel-keep">19-channel CBC · scene inspector</h1>
       <div class="hint">Drag to orbit · scroll to zoom · right-drag to pan</div>
       <div class="metric"><span>episode / step</span><span id="m-step">0</span></div>
       <div class="metric"><span>mode</span><span id="m-mode">-</span></div>
@@ -143,7 +153,8 @@
       <div class="hint" id="m-note"></div>
     </div>
     <section id="run-comparison">
-      <h2>Saved MaleCNS training · before / after</h2>
+      <button class="collapse-toggle" data-collapse="run-comparison" aria-label="Collapse training panel">▾</button>
+      <h2 class="panel-keep">Saved MaleCNS training · before / after</h2>
       <button id="load-real-run">Load real training run + 3D neurons</button>
       <div class="mode-buttons" style="margin-top:8px"><button id="replay-before" disabled>Before training</button><button id="replay-after" disabled>After training</button></div>
       <p id="replay-status">The live scene starts in analytic mode. Load the saved run to see its actual controller and neuron activity.</p>
@@ -155,14 +166,16 @@
       <details><summary>Objective and training scope</summary><p class="hint">Mean over 120 steps: normalized target intensity + 0.25 × PIB − 0.1 × pointing error (rad) − 0.001 × mean squared piston change. PIB bucket: 1 mrad. Evolution strategies train 1,235 readout parameters; connectivity is fixed. Analytic steering assistance. Initial/final policies only; intermediate policies were not saved.</p></details>
     </section>
     <div id="panel">
-      <h2>Inspect scene</h2>
+      <button class="collapse-toggle" data-collapse="panel" aria-label="Collapse scene panel">▾</button>
+      <h2 class="panel-keep">Inspect scene</h2>
       <div class="mode-buttons" id="cameras"></div>
       <button id="pause-btn" style="width:100%;margin-top:6px">Pause simulation</button>
       <div class="layers">
         <label><input id="show-beams" type="checkbox" checked> Beams</label>
-        <label><input id="show-dome" type="checkbox" checked> Dome</label>
+        <label><input id="show-dome" type="checkbox"> Dome</label>
         <label><input id="show-section" type="checkbox" checked> Section</label>
         <label><input id="show-flies" type="checkbox" checked> Flies</label>
+        <label><input id="show-motionblur" type="checkbox" checked> Arm trails</label>
         <label><input id="show-hardware" type="checkbox" checked> Hardware bench (v2)</label>
       </div>
       <p class="hint">Hardware bench is an opt-in illustrative display layer (separate display scale; not solver coordinates). Fly is enlarged for display.</p>
@@ -192,6 +205,20 @@
         <p class="hint" id="training-summary">Checking results…</p>
         <img id="training-curve" alt="Headless training fitness by generation" hidden>
       </details>
+    </div>
+    <div id="camera-panel">
+      <button class="collapse-toggle" data-collapse="camera-panel" aria-label="Collapse camera panel">▾</button>
+      <h2 class="panel-keep">Camera</h2>
+      <div class="camera-body">
+        <div id="camera-pose" class="camera-pose">pos — · target — · fov —</div>
+        <div class="mode-buttons">
+          <button id="copy-camera">Copy pose</button>
+          <button id="play-camera">Play</button>
+        </div>
+        <select id="cam-trajectory" aria-label="Camera trajectory"></select>
+        <button id="stop-camera" style="width:100%;margin-top:4px">Stop</button>
+        <div class="hint" id="camera-note">Read the pose, copy it, and author replayable keyframes. Presets play a canned trajectory.</div>
+      </div>
     </div>
     <script type="module" src="/src/main.ts"></script>
   </body>

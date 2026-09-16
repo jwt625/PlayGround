@@ -7,6 +7,14 @@ import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
  */
 export const DISPLAY = {
   scale: 6000,
+  /*
+   * Presentation-only transverse tightening of the beam/intensity subsystem.
+   * The solver keeps launchRadius_m = 0.18 mm; this factor only draws the
+   * envelope cones and the measured section with a 2x tighter transverse
+   * mapping so they read as a collimated beam. It never feeds the solver, and
+   * the cones and section use the same factor so they stay consistent.
+   */
+  beamTighten: 0.5,
   targetDistance: 100,
   domeRadius: 22,
   sectionSize: 44,
@@ -68,7 +76,7 @@ export function createScene(canvas: HTMLCanvasElement, onFrame: (dt: number) => 
         const now = performance.now();
         const dt = (now - last) / 1000;
         last = now;
-        controls.update();
+        if (controls.enabled) controls.update();
         onFrame(dt);
         renderer.render(scene, camera);
         requestAnimationFrame(loop);

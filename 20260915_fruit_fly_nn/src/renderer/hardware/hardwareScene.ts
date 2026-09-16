@@ -1,6 +1,7 @@
 import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import type { ChannelActual } from "../../optics/types";
+import { wrapAngleDiff } from "../../optics/channels";
 import {
   APERTURE_CENTER_MM,
   APERTURE_SITES,
@@ -32,7 +33,30 @@ import { buildConsolePanel, updateConsolePanel, CONSOLE_LAYOUT, type ConsolePane
 const APERTURE_PITCH_MM = 65;
 // Optical array display pitch: 0.5 mm pitch * DISPLAY.scale(6000) = 3 units.
 const SCENE_UNITS_PER_MM = 3 / APERTURE_PITCH_MM;
+// Generated GLBs are authored in metres (up +Z); mechanical placement is in mm.
+const ASSET_SCALE = 1000 * SCENE_UNITS_PER_MM;
 const FOOT_LIFT_MM = 4;
+
+// Enclosure palette (render-style: dark restrained lab hardware).
+const ENCLOSURE_COLOR = {
+  instrument: 0x2b3139,
+  channel: 0x2a313a,
+  console: 0x232a32,
+  support: 0x1b2129,
+  tray: 0x2f3742,
+  rack: 0x191f26,
+  boot: 0x2ea043,
+};
+
+/** Deterministic +/- nuance so repeated enclosures do not read as one slab. */
+function enclosureTint(base: number, key: string): number {
+  let hash = 0;
+  for (let i = 0; i < key.length; i++) hash = (hash * 31 + key.charCodeAt(i)) & 0xff;
+  const shift = ((hash % 12) - 6) * 0.004;
+  const c = new THREE.Color(base);
+  c.offsetHSL(0, 0, shift);
+  return c.getHex();
+}
 
 const GLB_URLS = import.meta.glob("../../../assets/generated/hardware-v2/*.glb", {
   eager: true,
@@ -55,16 +79,25 @@ export function scenePos(x: number, y: number, z: number): THREE.Vector3 {
   );
 }
 
-function orientationRotation(o: Orientation): THREE.Euler {
+/**
+ * Enclosure orientation. A is the -90 deg X rotation that lifts asset +Z to
+ * world +Y (lids up). B and C are A followed by a world-Y yaw (spec §2), which
+ * keeps lids up. Building them as a single Euler(-90, yaw, 0) is wrong: with
+ * XYZ order that also flips the asset upside down.
+ */
+const ORIENTATION_A = new THREE.Quaternion().setFromEuler(new THREE.Euler(-Math.PI / 2, 0, 0));
+const AXIS_Y = new THREE.Vector3(0, 1, 0);
+
+function orientationQuaternion(o: Orientation): THREE.Quaternion {
   switch (o) {
     case "A":
-      return new THREE.Euler(-Math.PI / 2, 0, 0);
+      return ORIENTATION_A.clone();
     case "B":
-      return new THREE.Euler(-Math.PI / 2, Math.PI, 0);
+      return new THREE.Quaternion().setFromAxisAngle(AXIS_Y, Math.PI).multiply(ORIENTATION_A);
     case "C":
-      return new THREE.Euler(-Math.PI / 2, Math.PI / 2, 0);
+      return new THREE.Quaternion().setFromAxisAngle(AXIS_Y, Math.PI / 2).multiply(ORIENTATION_A);
     default:
-      return new THREE.Euler(0, 0, 0);
+      return new THREE.Quaternion();
   }
 }
 
@@ -94,7 +127,7 @@ export class HardwareScene {
   private readonly options: HardwareSceneOptions;
   private templates = new Map<string, THREE.Object3D>();
   private placed = new Map<string, PlacedEquipment>();
-  private cables: { def: CableDef; line: THREE.Line; material: THREE.LineBasicMaterial; curve: THREE.CatmullRomCurve3 }[] = [];
+  private cables: { def: CableDef; mesh: THREE.Mesh; material: THREE.MeshStandardMaterial; curve: THREE.CatmullRomCurve3 }[] = [];
   private readonly highlight = new THREE.Group();
   private readonly instantiatedKinds = new Set<string>();
   private failureLog: string[] = [];
@@ -106,6 +139,10 @@ export class HardwareScene {
   connectorInstances = 0;
   private consolePanel: ConsolePanel | null = null;
   private readonly channelIds: string[] = CHANNEL_EQUIPMENT.filter((e) => e.glb === "phase-cassette").map((e) => e.channel!).sort();
+  private readonly lastPiston = new Map<string, number>();
+  private knobRates: { channel: string; rate: number }[] = [];
+  private hotChannel: string | null = null;
+  private hotRate = 0;
 
   constructor(registry: HardwareRegistry, options: HardwareSceneOptions = {}) {
     this.registry = registry;
@@ -135,6 +172,7 @@ export class HardwareScene {
       for (const def of CHANNEL_EQUIPMENT) this.build(def);
       this.buildSupports();
       this.buildConsole();
+      this.buildLabels();
       this.buildCables();
       this.routingReport = this.auditRouting();
       this.loaded = true;
@@ -148,30 +186,24 @@ export class HardwareScene {
     // Table top + legs, racks and shelves, channel baseplates, aperture frame
     // and ledges, operator platform. Supports are illustrative boxes (the
     // support-hardware assets are still outstanding per the spec).
-    const s = SCENE_UNITS_PER_MM;
     this.proceduralBox(0, -30, -775, 3200, 60, 2150, 0x233040, "TABLE");
     for (const [lx, lz] of [[-1500, 200], [1500, 200], [-1500, -1750], [1500, -1750]] as const) {
       this.proceduralBox(lx, -340, lz, 60, 560, 60, 0x1b2530, "table leg");
     }
-    this.proceduralBox(-1220, -70, -1380, 560, 140, 700, 0x1b2530, "RACK-L");
-    this.proceduralBox(-1220, 20, -1380, 560, 8, 700, 0x2a3646, "RACK-L shelf");
-    this.proceduralBox(-1220, 180, -1380, 560, 8, 700, 0x2a3646, "RACK-L shelf");
-    this.proceduralBox(1200, -90, -1400, 640, 180, 760, 0x1b2530, "RACK-R");
-    this.proceduralBox(1200, 20, -1400, 640, 8, 760, 0x2a3646, "RACK-R shelf");
-    this.proceduralBox(1200, 180, -1400, 640, 8, 760, 0x2a3646, "RACK-R shelf");
-    this.proceduralBox(1200, 340, -1400, 640, 8, 760, 0x2a3646, "RACK-R shelf");
+    this.proceduralBox(1200, -90, -1400, 640, 180, 760, ENCLOSURE_COLOR.rack, "RACK-R");
+    this.proceduralBox(1200, 20, -1400, 640, 8, 760, ENCLOSURE_COLOR.tray, "RACK-R shelf");
+    this.proceduralBox(1200, 180, -1400, 640, 8, 760, ENCLOSURE_COLOR.tray, "RACK-R shelf");
+    this.proceduralBox(1200, 340, -1400, 640, 8, 760, ENCLOSURE_COLOR.tray, "RACK-R shelf");
     // Per-channel baseplates.
     for (const a of CELL_ASSIGNMENTS) {
-      this.proceduralBox(a.xc, 24, a.zr, 260, 4, 320, 0x2a3646, `PLATE-${a.channel}`);
+      this.proceduralBox(a.xc, 24, a.zr, 260, 4, 320, ENCLOSURE_COLOR.tray, `PLATE-${a.channel}`);
     }
     // Vertical aperture frame + mount ledges.
-    this.proceduralBox(0, 300, 80, 400, 400, 10, 0x2a3646, "AP-FRAME");
+    this.proceduralBox(0, 300, 80, 400, 400, 10, ENCLOSURE_COLOR.tray, "AP-FRAME");
     for (const site of APERTURE_SITES) {
       this.proceduralBox(site.x_mm, site.y_mm - 35, site.z_mm - 5, 60, 6, 50, 0x33455c, `LEDGE-${site.id}`);
     }
-    this.proceduralBox(-1220, 10, 85, 560, 20, 330, 0x2a3646, "OP-PLATFORM");
-    this.proceduralBox(-1220, -10, -250, 560, 60, 320, 0x1b2530, "CON base");
-    void s;
+    this.proceduralBox(-1220, 10, 85, 560, 20, 330, ENCLOSURE_COLOR.tray, "OP-PLATFORM");
   }
 
   private proceduralBox(x: number, y: number, z: number, w: number, h: number, d: number, color: number, label: string): void {
@@ -186,6 +218,106 @@ export class HardwareScene {
     this.proceduralInstances++;
   }
 
+  /**
+   * Console enclosure with a top face parallel to the 15 deg sloped panel, so
+   * the body never rises in front of the panel. Front edge is lower, rear edge
+   * higher.
+   */
+  private consoleBodyGeometry(w: number, d: number): THREE.BufferGeometry {
+    const s = SCENE_UNITS_PER_MM;
+    const tilt = THREE.MathUtils.degToRad(CONSOLE_LAYOUT.surface_mm.tiltDeg);
+    const centerY = (CONSOLE_LAYOUT.surface_mm.centerY - 24) * s;
+    const halfThickness = 4 * s;
+    const clearance = 2 * s;
+    const halfD = d / 2;
+    const topAt = (z: number) => centerY - z * Math.sin(tilt) - halfThickness - clearance;
+    const hRear = topAt(-halfD);
+    const hFront = topAt(halfD);
+    const g = new THREE.BoxGeometry(w, 1, d);
+    const pos = g.attributes.position as THREE.BufferAttribute;
+    for (let i = 0; i < pos.count; i++) {
+      const z = pos.getZ(i);
+      if (pos.getY(i) > 0) {
+        const t = (z + halfD) / d; // 0 at rear, 1 at front
+        pos.setY(i, hRear + (hFront - hRear) * t);
+      } else {
+        pos.setY(i, 0);
+      }
+    }
+    pos.needsUpdate = true;
+    g.computeVertexNormals();
+    return g;
+  }
+
+  private enclosureColor(def: EquipmentDef): number {
+    switch (def.kind) {
+      case "console":
+        return ENCLOSURE_COLOR.console;
+      case "channel":
+      case "aperture":
+        return ENCLOSURE_COLOR.channel;
+      case "support":
+        return ENCLOSURE_COLOR.support;
+      default:
+        return ENCLOSURE_COLOR.instrument;
+    }
+  }
+
+  private readonly labelTextures = new Map<string, THREE.CanvasTexture>();
+
+  private labelTexture(text: string): THREE.CanvasTexture {
+    const cached = this.labelTextures.get(text);
+    if (cached) return cached;
+    const font = "bold 34px ui-monospace, Menlo, monospace";
+    const measure = document.createElement("canvas").getContext("2d");
+    let textWidth = 256;
+    if (measure) {
+      measure.font = font;
+      textWidth = Math.ceil(measure.measureText(text).width);
+    }
+    const canvas = document.createElement("canvas");
+    canvas.width = Math.max(128, textWidth + 40);
+    canvas.height = 64;
+    const ctx = canvas.getContext("2d");
+    if (ctx) {
+      ctx.fillStyle = "rgba(8,12,18,0.72)";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.font = font;
+      ctx.fillStyle = "#dfe9f3";
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.fillText(text, canvas.width / 2, canvas.height / 2 + 1);
+    }
+    const tex = new THREE.CanvasTexture(canvas);
+    tex.colorSpace = THREE.SRGBColorSpace;
+    this.labelTextures.set(text, tex);
+    return tex;
+  }
+
+  /** Minimal readable nameplate above a shared instrument (Render H1). */
+  private addLabel(object: THREE.Object3D, text: string, yUnits: number): void {
+    const tex = this.labelTexture(text);
+    const image = tex.image as HTMLCanvasElement;
+    const aspect = image.width / image.height;
+    const sprite = new THREE.Sprite(new THREE.SpriteMaterial({ map: tex, transparent: true, depthWrite: false }));
+    const h = 1.6;
+    sprite.scale.set(h * aspect, h, 1);
+    sprite.position.set(0, yUnits, 0);
+    sprite.name = `label_${text}`;
+    object.add(sprite);
+  }
+
+  private buildLabels(): void {
+    for (const def of [...SHARED_EQUIPMENT, ...ROW_PDUS]) {
+      if (def.kind === "support" || def.kind === "boundary") continue;
+      const placed = this.placed.get(def.id);
+      if (!placed) continue;
+      const top = (def.size_mm[1] + 24) * SCENE_UNITS_PER_MM;
+      const extra = def.kind === "console" ? 110 * SCENE_UNITS_PER_MM : 0;
+      this.addLabel(placed.object, def.label, top + extra);
+    }
+  }
+
   private build(def: EquipmentDef): void {
     try {
       const s = SCENE_UNITS_PER_MM;
@@ -198,20 +330,29 @@ export class HardwareScene {
         if (!template) throw new Error(`template ${def.glb} not loaded`);
         this.instantiatedKinds.add(def.glb);
         const clone = template.clone(true);
-        clone.rotation.copy(orientationRotation(def.orientation));
-        clone.scale.setScalar(s);
+        clone.quaternion.copy(orientationQuaternion(def.orientation));
+        if (def.yawRad) clone.quaternion.premultiply(new THREE.Quaternion().setFromAxisAngle(AXIS_Y, def.yawRad));
+        clone.scale.setScalar(ASSET_SCALE);
         object.add(clone);
         this.assetInstances++;
       } else {
         const [w, h, d] = def.size_mm;
+        const geometry =
+          def.kind === "console"
+            ? this.consoleBodyGeometry(w * s, d * s)
+            : new THREE.BoxGeometry(w * s, h * s, d * s);
         const mesh = new THREE.Mesh(
-          new THREE.BoxGeometry(w * s, h * s, d * s),
+          geometry,
           new THREE.MeshStandardMaterial({
-            color: def.kind === "support" ? 0x233040 : def.kind === "instrument" ? 0x2f4054 : 0x3a4a5e,
-            metalness: 0.4,
-            roughness: 0.6,
+            color: enclosureTint(this.enclosureColor(def), def.id),
+            metalness: 0.45,
+            roughness: 0.55,
           }),
         );
+        // `position_mm[1]` is the support Y: put the enclosure bottom on it.
+        // The console body is already built with its bottom at local y=0.
+        if (def.kind !== "console") mesh.position.y = (h / 2) * s;
+        if (def.yawRad) mesh.rotation.y = def.yawRad;
         object.add(mesh);
         this.proceduralInstances++;
       }
@@ -255,6 +396,7 @@ export class HardwareScene {
     const port = def.ports.find((x) => x.name === portName);
     const isMaleEnd = !!port && !port.pigtail && !port.freeSpace && (port.connector === "FC/APC" || port.connector === "SMA");
     if (!isMaleEnd) {
+      if (port?.pigtail) this.addPigtailBoot(anchor, normal);
       return { p: anchor.getWorldPosition(new THREE.Vector3()), n: normal };
     }
     const name = port!.connector === "SMA" ? "sma-plug" : "fc-apc-plug";
@@ -262,7 +404,7 @@ export class HardwareScene {
     if (!template) return { p: anchor.getWorldPosition(new THREE.Vector3()), n: normal };
     this.instantiatedKinds.add(name);
     const plug = template.clone(true);
-    plug.scale.setScalar(SCENE_UNITS_PER_MM);
+    plug.scale.setScalar(ASSET_SCALE);
     // Plug mating face (+Z) opposes the socket's outward normal; cable exits outward.
     plug.quaternion.setFromUnitVectors(new THREE.Vector3(0, 0, 1), normal.clone().negate());
     anchor.add(plug);
@@ -273,6 +415,31 @@ export class HardwareScene {
     });
     const p = (exit ? (exit as THREE.Object3D).getWorldPosition(new THREE.Vector3()) : plug.getWorldPosition(new THREE.Vector3()));
     return { p, n: normal };
+  }
+
+  /**
+   * Captive PM pigtails leave the cassette through a strain-relief boot. A
+   * pigtail exit is not a mating socket (spec §2.3), so it gets a boot and
+   * ferrule rather than an FC plug.
+   */
+  private addPigtailBoot(anchor: THREE.Object3D, normal: THREE.Vector3): void {
+    const s = SCENE_UNITS_PER_MM;
+    const boot = new THREE.Group();
+    boot.name = "pigtail_boot";
+    const body = new THREE.Mesh(
+      new THREE.CylinderGeometry(2.4 * s, 3.2 * s, 9 * s, 10),
+      new THREE.MeshStandardMaterial({ color: ENCLOSURE_COLOR.boot, metalness: 0.35, roughness: 0.5 }),
+    );
+    body.position.y = 4.5 * s;
+    const ferrule = new THREE.Mesh(
+      new THREE.CylinderGeometry(1.1 * s, 1.1 * s, 3 * s, 8),
+      new THREE.MeshStandardMaterial({ color: 0xc9d3dc, metalness: 0.7, roughness: 0.3 }),
+    );
+    ferrule.position.y = 10 * s;
+    boot.add(body, ferrule);
+    boot.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), normal);
+    anchor.add(boot);
+    this.connectorInstances++;
   }
 
   private laneFor(cable: CableDef, p0: THREE.Vector3, p1: THREE.Vector3): THREE.Vector3[] {
@@ -333,7 +500,38 @@ export class HardwareScene {
   /** Bind the console knobs/selector to the actual controller state (R4). */
   updateConsole(actual: readonly ChannelActual[], selected: number): void {
     if (!this.consolePanel) return;
-    updateConsolePanel(this.consolePanel, { selected, channelIds: this.channelIds, actual });
+    // Per-frame piston change drives the fly's foreleg targeting. Amplitude is
+    // constant in the current action space, so its knobs correctly stay put.
+    this.knobRates = [];
+    for (let i = 0; i < actual.length; i++) {
+      const ch = this.channelIds[i];
+      const prev = this.lastPiston.get(ch) ?? actual[i].piston_rad;
+      this.knobRates.push({ channel: ch, rate: Math.abs(wrapAngleDiff(actual[i].piston_rad, prev)) });
+      this.lastPiston.set(ch, actual[i].piston_rad);
+    }
+    this.hotChannel = [...this.knobRates].sort((a, b) => b.rate - a.rate)[0]?.channel ?? null;
+    this.hotRate = this.hotChannel ? this.knobRates.find((r) => r.channel === this.hotChannel)!.rate : 0;
+    updateConsolePanel(this.consolePanel, {
+      selected,
+      channelIds: this.channelIds,
+      actual,
+      fallbackChannel: this.hotChannel,
+    });
+  }
+
+  /**
+   * Every console knob with its world position, so the operator fly can work
+   * the whole panel (spec §8 console). Rate is the current hottest-channel turn
+   * rate; it drives the operating scrub speed.
+   */
+  allKnobTargets(): { channel: string; rate: number; position: THREE.Vector3 }[] {
+    if (!this.consolePanel) return [];
+    const rate = Math.max(this.hotRate, 0.02);
+    return [...this.consolePanel.knobs.values()].map((knob) => ({
+      channel: knob.name,
+      rate,
+      position: knob.mesh.getWorldPosition(new THREE.Vector3()),
+    }));
   }
 
   get knobCount(): number {
@@ -356,24 +554,30 @@ export class HardwareScene {
       const p0 = a.p.clone().addScaledVector(a.n, lead);
       const p1 = b.p.clone().addScaledVector(b.n, lead);
       const curve = new THREE.CatmullRomCurve3([a.p, p0, ...this.laneFor(cable, p0, p1), p1, b.p], false, "centripetal");
-      const material = new THREE.LineBasicMaterial({
+      const material = new THREE.MeshStandardMaterial({
         color: FAMILY_COLOR[cable.family] ?? 0x8b949e,
         transparent: true,
-        opacity: cable.family === "optical" ? 0.5 : 0.35,
+        opacity: cable.family === "optical" ? 0.5 : 0.4,
+        metalness: 0.2,
+        roughness: 0.6,
       });
-      const line = new THREE.Line(new THREE.BufferGeometry().setFromPoints(curve.getPoints(24)), material);
-      this.group.add(line);
-      this.cables.push({ def: cable, line, material, curve });
+      // Real tubes, not 1px lines: WebGL ignores LineBasicMaterial.linewidth.
+      const radius = (HardwareScene.WIRE_RADIUS_MM[cable.family] ?? 4) * SCENE_UNITS_PER_MM;
+      const mesh = new THREE.Mesh(new THREE.TubeGeometry(curve, 24, radius, 6, false), material);
+      this.group.add(mesh);
+      this.cables.push({ def: cable, mesh, material, curve });
     }
   }
 
-  private static readonly TUBE_RADIUS_MM: Record<string, number> = {
-    optical: 1,
-    rf: 1.5,
-    command: 2,
-    dc: 2,
-    motor: 1.25,
-    external: 4,
+  // Wire jacket radii in mechanical mm. Wire gauge follows the cable family;
+  // these are the 3x-thicker display values requested for readability.
+  private static readonly WIRE_RADIUS_MM: Record<string, number> = {
+    optical: 3,
+    rf: 4.5,
+    command: 6,
+    dc: 6,
+    motor: 3.75,
+    external: 12,
   };
 
   private rebuildHighlight(): void {
@@ -386,7 +590,7 @@ export class HardwareScene {
     if (!channel) return;
     for (const rec of this.cables) {
       if (rec.def.channel !== channel) continue;
-      const radius = (HardwareScene.TUBE_RADIUS_MM[rec.def.family] ?? 2) * SCENE_UNITS_PER_MM;
+      const radius = (HardwareScene.WIRE_RADIUS_MM[rec.def.family] ?? 4) * 1.7 * SCENE_UNITS_PER_MM;
       const tube = new THREE.Mesh(
         new THREE.TubeGeometry(rec.curve, 48, radius, 6, false),
         new THREE.MeshStandardMaterial({ color: FAMILY_COLOR[rec.def.family] ?? 0x8b949e, metalness: 0.2, roughness: 0.6 }),
@@ -404,7 +608,7 @@ export class HardwareScene {
     let samples = 0;
     for (const rec of this.cables) {
       const pts = rec.curve.getPoints(samplesPerCable);
-      const cableRadius = HardwareScene.TUBE_RADIUS_MM[rec.def.family] ?? 2;
+      const cableRadius = HardwareScene.WIRE_RADIUS_MM[rec.def.family] ?? 4;
       for (let i = 1; i < pts.length - 1; i++) {
         const p0 = pts[i - 1];
         const p1 = pts[i];

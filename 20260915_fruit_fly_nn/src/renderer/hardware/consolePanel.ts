@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import { phaseColor } from "../color";
 
 /**
  * Console panel from docs/CBC_ASSEMBLY_SPEC.md §8 (Pass 3).
@@ -40,21 +41,25 @@ export interface ConsoleBuildOptions {
   panelDepthMm?: number;
 }
 
+// Panel controls are dimensioned in mechanical millimetres (spec §8.2):
+// channel knobs 12 mm diameter / 8 mm high, selected knobs 18 mm diameter,
+// hex selector buttons 7 mm diameter. Geometry must be converted with the same
+// `unitsPerMm` as the panel so the controls never render oversized.
 const KNOB_R = 6;
 const KNOB_H = 8;
 const BIG_KNOB_R = 9;
 
-function knobMesh(radius: number, height: number, color: number): THREE.Mesh {
+function knobMesh(radiusMm: number, heightMm: number, color: number, unitsPerMm: number): THREE.Mesh {
   const mesh = new THREE.Mesh(
-    new THREE.CylinderGeometry(radius, radius, height, 14),
+    new THREE.CylinderGeometry(radiusMm * unitsPerMm, radiusMm * unitsPerMm, heightMm * unitsPerMm, 14),
     new THREE.MeshStandardMaterial({ color, metalness: 0.6, roughness: 0.35 }),
   );
   return mesh;
 }
 
-function pointerMesh(radius: number, height: number, color: number): THREE.Mesh {
+function pointerMesh(radiusMm: number, heightMm: number, color: number, unitsPerMm: number): THREE.Mesh {
   const mesh = new THREE.Mesh(
-    new THREE.BoxGeometry(radius * 0.25, height * 0.2, radius),
+    new THREE.BoxGeometry(radiusMm * 0.25 * unitsPerMm, heightMm * 0.2 * unitsPerMm, radiusMm * unitsPerMm),
     new THREE.MeshStandardMaterial({ color, emissive: color, emissiveIntensity: 0.6 }),
   );
   return mesh;
@@ -91,9 +96,9 @@ export function buildConsolePanel(options: ConsoleBuildOptions): ConsolePanel {
     ["selected_focus", 80],
   ];
   for (const [name, u] of selected) {
-    const body = knobMesh(BIG_KNOB_R, KNOB_H, 0x3fb0c8);
+    const body = knobMesh(BIG_KNOB_R, KNOB_H, 0x3fb0c8, s);
     body.position.copy(place(u, -110, 4));
-    const pointer = pointerMesh(BIG_KNOB_R, KNOB_H, 0xe6edf3);
+    const pointer = pointerMesh(BIG_KNOB_R, KNOB_H, 0xe6edf3, s);
     pointer.position.set(0, KNOB_H * 0.55 * s, BIG_KNOB_R * 0.55 * s);
     body.add(pointer);
     surface.add(body);
@@ -107,9 +112,9 @@ export function buildConsolePanel(options: ConsoleBuildOptions): ConsolePanel {
     const vPhase = i <= 10 ? 100 : 25;
     const vAmp = i <= 10 ? 70 : -5;
     for (const [kind, v] of [["phase", vPhase], ["amplitude", vAmp]] as const) {
-      const body = knobMesh(KNOB_R, KNOB_H, kind === "phase" ? 0xffb44d : 0x79c0ff);
+      const body = knobMesh(KNOB_R, KNOB_H, kind === "phase" ? 0xffb44d : 0x79c0ff, s);
       body.position.copy(place(u, v, 4));
-      const pointer = pointerMesh(KNOB_R, KNOB_H, 0x0b1016);
+      const pointer = pointerMesh(KNOB_R, KNOB_H, 0x0b1016, s);
       pointer.position.set(0, KNOB_H * 0.55 * s, KNOB_R * 0.55 * s);
       body.add(pointer);
       surface.add(body);
@@ -153,6 +158,8 @@ export interface ConsoleBinding {
   /** selected channel index -1 when none. */
   selected: number;
   channelIds: readonly string[];
+  /** channel whose values the shared front-row knobs mirror when none is selected. */
+  fallbackChannel?: string | null;
   /** actual per-channel command state. */
   actual: readonly { piston_rad: number; amplitude: number; tiltX: number; tiltY: number; curvature_per_m: number }[];
 }
@@ -166,11 +173,23 @@ function setKnobAngle(knob: ConsoleKnob, angle: number): void {
 export function updateConsolePanel(panel: ConsolePanel, binding: ConsoleBinding): void {
   const ampToAngle = (a: number) => (Math.max(0, Math.min(2, a)) - 1) * (Math.PI / 3);
   const selectedCh = binding.selected >= 0 ? binding.channelIds[binding.selected] : null;
+  // The 19-button hex selector is the array status indicator: each button is
+  // colored by that channel's actual phase and brightened by its amplitude.
   for (const [ch, mesh] of panel.selectorMeshes) {
-    (mesh.material as THREE.MeshStandardMaterial).emissive.setHex(ch === selectedCh ? 0x1f6feb : 0x101820);
+    const idx = binding.channelIds.indexOf(ch);
+    const state = idx >= 0 ? binding.actual[idx] : undefined;
+    const material = mesh.material as THREE.MeshStandardMaterial;
+    if (state) {
+      const [r, g, b] = phaseColor(state.piston_rad);
+      material.color.setRGB(r, g, b);
+      material.emissive.setRGB(r, g, b);
+      material.emissiveIntensity = 0.35 + 0.9 * Math.max(0, Math.min(1, state.amplitude / 2));
+    }
+    // The selected channel stays visibly picked out above its phase color.
+    if (ch === selectedCh) material.emissiveIntensity = 1.9;
   }
   for (const knob of panel.knobs.values()) {
-    const ch = knob.channel ?? selectedCh;
+    const ch = knob.channel ?? selectedCh ?? binding.fallbackChannel ?? null;
     const idx = ch ? binding.channelIds.indexOf(ch) : -1;
     const state = idx >= 0 ? binding.actual[idx] : undefined;
     if (!state) continue;

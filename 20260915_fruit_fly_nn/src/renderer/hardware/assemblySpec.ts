@@ -45,6 +45,8 @@ export interface EquipmentDef {
   position_mm: readonly [number, number, number];
   size_mm: readonly [number, number, number];
   orientation: Orientation;
+  /** Extra yaw about world Y after `orientation`, radians (presentation). */
+  yawRad?: number;
   channel: string | null;
   ports: readonly PortDef[];
   parent?: string;
@@ -173,14 +175,17 @@ function channelEquipment(): EquipmentDef[] {
 function sharedPorts(id: string): PortDef[] {
   switch (id) {
     case "SEED":
-      return [opt("optical_out", [0, 30, 70], [0, 0, 1], "FC/APC"), { name: "dc_power", offset_mm: [0, 25, -70], normal: [0, 0, -1], kind: "power", connector: "DC" }];
+      // Rotated 180 deg so the optical OUT faces -Z toward the splitter input.
+      return [opt("optical_out", [0, 30, -70], [0, 0, -1], "FC/APC"), { name: "dc_power", offset_mm: [0, 25, 70], normal: [0, 0, 1], kind: "power", connector: "DC" }];
     case "SPLIT": {
-      const ports: PortDef[] = [opt("input", [0, 16, -67], [0, 0, -1], "FC/APC")];
+      // Rotated 180 deg about Y: input faces +Z (toward the seed) and the 19
+      // outputs face -Z toward the channel rows, for a natural fiber flow.
+      const ports: PortDef[] = [opt("input", [0, 16, 67], [0, 0, 1], "FC/APC")];
       const xs = [-85.5, -66.5, -47.5, -28.5, -9.5, 9.5, 28.5, 47.5, 66.5, 85.5];
       for (let i = 1; i <= 19; i++) {
         const col = i <= 10 ? xs[i - 1] : xs[i - 11];
         const y = i <= 10 ? 10 : 24;
-        ports.push(opt(`CH${String(i).padStart(2, "0")}`, [-col, y, 67], [0, 0, 1], "FC/APC"));
+        ports.push(opt(`CH${String(i).padStart(2, "0")}`, [col, y, -67], [0, 0, -1], "FC/APC"));
       }
       return ports;
     }
@@ -239,14 +244,14 @@ export const SHARED_EQUIPMENT: readonly EquipmentDef[] = [
   { id: "TABLE", label: "Optical table", kind: "support", glb: null, position_mm: [0, 0, -775], size_mm: [3200, 60, 2150], orientation: "world", channel: null, ports: [] },
   { id: "RACK-L", label: "Left rack", kind: "support", glb: null, position_mm: [-1220, 0, -1380], size_mm: [560, 200, 700], orientation: "world", channel: null, ports: [] },
   { id: "RACK-R", label: "Right rack", kind: "support", glb: null, position_mm: [1200, 0, -1400], size_mm: [640, 360, 760], orientation: "world", channel: null, ports: [] },
-  { id: "SEED", label: "Seed laser", kind: "instrument", glb: null, position_mm: [-1330, 20, -1490], size_mm: [200, 60, 140], orientation: "world", channel: null, ports: sharedPorts("SEED") },
-  { id: "SPLIT", label: "1x19 splitter", kind: "instrument", glb: "splitter-19", position_mm: [-1100, 20, -1320], size_mm: [210, 32, 120], orientation: "B", channel: null, ports: sharedPorts("SPLIT") },
-  { id: "PSU", label: "Bench supply", kind: "instrument", glb: null, position_mm: [-1220, 180, -1490], size_mm: [240, 100, 220], orientation: "world", channel: null, ports: sharedPorts("PSU") },
-  { id: "PDU-S", label: "Shared PDU", kind: "instrument", glb: null, position_mm: [-1350, 20, -1150], size_mm: [120, 35, 80], orientation: "world", channel: null, ports: sharedPorts("PDU-S") },
+  { id: "SEED", label: "Seed laser", kind: "instrument", glb: null, position_mm: [-780, 20, 150], size_mm: [200, 60, 140], orientation: "world", channel: null, ports: sharedPorts("SEED") },
+  { id: "SPLIT", label: "1x19 splitter", kind: "instrument", glb: "splitter-19", position_mm: [-780, 20, -60], size_mm: [210, 32, 120], orientation: "A", channel: null, ports: sharedPorts("SPLIT") },
+  { id: "PSU", label: "Bench supply", kind: "instrument", glb: null, position_mm: [-1220, 0, -1490], size_mm: [240, 100, 220], orientation: "world", channel: null, ports: sharedPorts("PSU") },
+  { id: "PDU-S", label: "Shared PDU", kind: "instrument", glb: null, position_mm: [-1350, 0, -1150], size_mm: [120, 35, 80], orientation: "world", channel: null, ports: sharedPorts("PDU-S") },
   { id: "PDU-M", label: "Main PDU", kind: "instrument", glb: null, position_mm: [1200, 20, -1500], size_mm: [240, 45, 100], orientation: "world", channel: null, ports: sharedPorts("PDU-M") },
   { id: "IO", label: "Command chassis", kind: "instrument", glb: null, position_mm: [1200, 180, -1440], size_mm: [560, 90, 180], orientation: "world", channel: null, ports: sharedPorts("IO") },
   { id: "MC", label: "Motor controller", kind: "instrument", glb: null, position_mm: [1200, 340, -1360], size_mm: [320, 90, 180], orientation: "world", channel: null, ports: sharedPorts("MC") },
-  { id: "CON", label: "Console", kind: "console", glb: "fly-console", position_mm: [-1220, 20, -250], size_mm: [520, 120, 300], orientation: "world", channel: null, ports: sharedPorts("CON") },
+  { id: "CON", label: "Console", kind: "console", glb: null, position_mm: [-1220, 20, -250], size_mm: [520, 55, 300], orientation: "world", channel: null, ports: sharedPorts("CON") },
   { id: "OP-PLATFORM", label: "Operator platform", kind: "support", glb: null, position_mm: [-1220, 0, 85], size_mm: [560, 20, 330], orientation: "world", channel: null, ports: [] },
   { id: "AP-FRAME", label: "Aperture frame", kind: "support", glb: null, position_mm: [0, 300, 100], size_mm: [400, 400, 40], orientation: "world", channel: null, ports: [] },
   { id: "BOUNDARY", label: "Power entry", kind: "boundary", glb: null, position_mm: [-1550, 40, -1810], size_mm: [60, 60, 60], orientation: "world", channel: null, ports: sharedPorts("BOUNDARY") },

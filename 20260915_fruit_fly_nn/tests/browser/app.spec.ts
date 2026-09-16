@@ -125,6 +125,102 @@ test('Inspect 3D neurons loads the run standalone and focuses the mapped somata'
   expect(metrics.neural3dNodes).toBeGreaterThan(1000);
 });
 
+test('console operator fly works the panel', async ({ page }) => {
+  await page.goto('/');
+  await page.waitForFunction(() => (window as any).__cbc?.getMetrics().flyLoaded);
+  await page.waitForTimeout(600);
+  const metrics = await page.evaluate(() => (window as any).__cbc.getMetrics());
+  const [x, y, z] = metrics.operatorDisplay as number[];
+  // The fly now hovers over the console to work every knob, so assert it stays
+  // within the panel/console region rather than at one fixed spot.
+  expect(x).toBeGreaterThan(-70);
+  expect(x).toBeLessThan(-46);
+  expect(z).toBeGreaterThan(-24);
+  expect(z).toBeLessThan(8);
+  expect(y).toBeGreaterThan(-13.5);
+  expect(y).toBeLessThan(-5);
+});
+
+test('operator forelegs work all 43 console knobs', async ({ page }) => {
+  await page.goto('/');
+  await page.waitForFunction(() => (window as any).__cbc?.getMetrics().flyLoaded);
+  await page.waitForFunction(() => {
+    const m = (window as any).__cbc.getMetrics();
+    return (m.activeKnobs as string[]).length >= 43 && (m.flyForelegMotion as number) > 0.002;
+  }, undefined, { timeout: 20_000 });
+  const metrics = await page.evaluate(() => (window as any).__cbc.getMetrics());
+  expect((metrics.activeKnobs as string[]).length).toBe(43);
+  expect(metrics.flyForelegMotion).toBeGreaterThan(0);
+  // Over a short window the claws must actually land on console knobs.
+  await expect.poll(async () => {
+    const m = await page.evaluate(() => (window as any).__cbc.getMetrics());
+    const tips = m.forelegDiagnostics.tips as number[][];
+    const targets = m.forelegDiagnostics.targets as number[][];
+    return Math.min(...tips.map((tip) =>
+      Math.min(...targets.map((t) => Math.hypot(tip[0] - t[0], tip[1] - t[1], tip[2] - t[2]))),
+    ));
+  }, { timeout: 10_000 }).toBeLessThan(0.9);
+});
+
+test('camera pose readout, copy and trajectory playback', async ({ page, context }) => {
+  await context.grantPermissions(['clipboard-read', 'clipboard-write']);
+  await page.goto('/');
+  await page.waitForTimeout(1000);
+  await expect(page.locator('#camera-pose')).toContainText('pos');
+  const options = await page.locator('#cam-trajectory option').allTextContents();
+  expect(options).toContain('authored 5-key fly-in');
+  expect(options).toContain('authored 6-key orbit');
+  await page.getByRole('button', { name: 'Copy pose' }).click();
+  const clip = await page.evaluate(() => navigator.clipboard.readText());
+  expect(clip).toContain('"position"');
+  expect(clip).toContain('"yaw_deg"');
+
+  const before = await page.evaluate(() => (window as any).__cbc.getMetrics().camera.position as number[]);
+  await page.locator('#cam-trajectory').selectOption('1');
+  await page.getByRole('button', { name: 'Play' }).click();
+  await page.waitForTimeout(1500);
+  const mid = await page.evaluate(() => (window as any).__cbc.getMetrics().camera.position as number[]);
+  expect(Math.hypot(mid[0] - before[0], mid[1] - before[1], mid[2] - before[2])).toBeGreaterThan(2);
+  await page.getByRole('button', { name: 'Stop' }).click();
+});
+
+test('authored cubic trajectory eases in and out', async ({ page }) => {
+  await page.goto('/');
+  await page.waitForTimeout(500);
+  await page.locator('#cam-trajectory').selectOption({ label: 'authored 5-key fly-in' });
+  await page.getByRole('button', { name: 'Play' }).click();
+  const pos = () =>
+    page.evaluate(() => (window as any).__cbc.getMetrics().camera.position as number[]);
+  const p0 = await pos();
+  const yaw0 = await page.evaluate(() => (window as any).__cbc.getMetrics().camera.yaw_deg as number);
+  await page.waitForTimeout(250);
+  const p1 = await pos();
+  const startSpeed = Math.hypot(p1[0] - p0[0], p1[1] - p0[1], p1[2] - p0[2]);
+  expect(startSpeed).toBeLessThan(6);
+
+  // The curve passes through the authored first and last keyframes.
+  expect(Math.hypot(p0[0] + 56.097, p0[1] - 17.169, p0[2] + 7.702)).toBeLessThan(0.5);
+
+  await page.waitForTimeout(11800);
+  const pA = await pos();
+  await page.waitForTimeout(250);
+  const pB = await pos();
+  const endSpeed = Math.hypot(pB[0] - pA[0], pB[1] - pA[1], pB[2] - pA[2]);
+  expect(endSpeed).toBeLessThan(6);
+  expect(Math.hypot(pB[0] + 77.992, pB[1] - 21.694, pB[2] + 133.973)).toBeLessThan(1.5);
+  // Orientation must be re-aimed during playback, not frozen.
+  const yaw1 = await page.evaluate(() => (window as any).__cbc.getMetrics().camera.yaw_deg as number);
+  expect(Math.abs(yaw1 - yaw0)).toBeGreaterThan(30);
+});
+
+test('viewer panels collapse toward their anchored edge', async ({ page }) => {
+  await page.goto('/');
+  for (const id of ['panel', 'hud', 'run-comparison']) {
+    await page.locator(`[data-collapse="${id}"]`).click();
+    await expect(page.locator(`#${id}`)).toHaveClass(/panel-collapsed/);
+  }
+});
+
 test('target fly moves across the scene while the learner stays fixed', async ({ page }) => {
   await page.goto('/');
   await page.getByRole('button', { name: 'fly' }).click();
@@ -149,9 +245,10 @@ test('hardware bench loads on demand and routes cables', async ({ page }) => {
   expect(metrics.hardwareVisible).toBe(true);
   expect(metrics.hardwareNodes).toBeGreaterThan(20);
   expect(metrics.hardwareCables).toBeGreaterThan(200);
-  // Eight GLB kinds are used; fc-bulkhead is intentionally unused because the
-  // splitter already models its own sockets (spec: no extra mating sleeves).
-  expect(metrics.hardwareComponentKinds).toBe(8);
+  // Seven GLB kinds are used. fc-bulkhead is intentionally unused because the
+  // splitter already models its own sockets, and the superseded five-knob
+  // fly-console prefab is retired in favor of the procedural 43-knob console.
+  expect(metrics.hardwareComponentKinds).toBe(7);
   expect(metrics.hardwareAssetInstances).toBeGreaterThan(70);
   expect(metrics.hardwareConnectorInstances).toBeGreaterThan(100);
   expect(metrics.hardwareKnobs).toBe(43);

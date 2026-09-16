@@ -92,15 +92,18 @@ export class MeasurementSection {
     this.targetMarker.quaternion.copy(this.mesh.quaternion);
     this.centroidMarker.quaternion.copy(this.mesh.quaternion);
 
-    // Sample the physical field on the section plane.
+    // Sample the physical field on the section plane. The window is widened by
+    // 1/beamTighten and drawn across the same display plane, giving the same
+    // transverse display scale as the envelope cones (presentation only).
     const m = this.options.samples;
-    const half = this.options.size_m / 2;
+    const physicalSize = this.options.size_m / DISPLAY.beamTighten;
+    const half = physicalSize / 2;
     const intensities = new Float32Array(m * m);
     let max = 0;
     for (let j = 0; j < m; j++) {
-      const b = -half + (this.options.size_m * j) / (m - 1);
+      const b = -half + (physicalSize * j) / (m - 1);
       for (let i = 0; i < m; i++) {
-        const a = -half + (this.options.size_m * i) / (m - 1);
+        const a = -half + (physicalSize * i) / (m - 1);
         const x = this.center.x + u.x * a + v.x * b;
         const y = this.center.y + u.y * a + v.y * b;
         const z = this.center.z + u.z * a + v.z * b;
@@ -137,7 +140,8 @@ export class MeasurementSection {
     const offset = new THREE.Vector3(world.x, world.y, world.z).sub(this.center);
     const a = offset.dot(u);
     const b = offset.dot(v);
-    marker.position.copy(this.mesh.position).addScaledVector(u, a * DISPLAY.scale).addScaledVector(v, b * DISPLAY.scale);
+    const displayScale = DISPLAY.scale * DISPLAY.beamTighten;
+    marker.position.copy(this.mesh.position).addScaledVector(u, a * displayScale).addScaledVector(v, b * displayScale);
     const inPlane = Math.hypot(a, b) <= this.options.size_m * 1.5;
     marker.visible = inPlane;
   }

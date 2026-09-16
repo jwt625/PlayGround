@@ -65,7 +65,7 @@ export class NeuralActivityView {
     const valid=locations.filter(n=>n.soma);const box=new THREE.Box3();
     valid.forEach(n=>box.expandByPoint(new THREE.Vector3(...n.soma! as [number,number,number])));
     const center=box.getCenter(new THREE.Vector3()),extent=box.getSize(new THREE.Vector3());
-    const scale=42/Math.max(extent.x,extent.y,extent.z,1); // rescaled for visibility
+    const scale=21/Math.max(extent.x,extent.y,extent.z,1); // 2x smaller, near the operator fly
     const positions:number[]=[];const byIndex=new Map<number,THREE.Vector3>();
     locations.forEach((n,i)=>{if(!n.soma)return;
       const p=new THREE.Vector3((n.soma[0]-center.x)*scale,-(n.soma[2]-center.z)*scale,(n.soma[1]-center.y)*scale);
@@ -89,12 +89,15 @@ export class NeuralActivityView {
     this.edgeColors=new Float32Array(edgePositions.length);
     this.lineGeometry=new THREE.BufferGeometry();this.lineGeometry.setAttribute('position',new THREE.Float32BufferAttribute(edgePositions,3));this.lineGeometry.setAttribute('color',new THREE.BufferAttribute(this.edgeColors,3));
     this.group.add(new THREE.LineSegments(this.lineGeometry,new THREE.LineBasicMaterial({vertexColors:true,transparent:true,opacity:.2,depthWrite:false})));
-    this.group.position.set(-42,16,15);
+    this.group.position.set(-56, 6, 4);
     this.renderedNodes=this.pointIndices.length;this.renderedEdges=this.edgeSources.length;
     const canvas=document.createElement('canvas');canvas.width=768;canvas.height=64;const ctx=canvas.getContext('2d')!;
     ctx.fillStyle='#101925';ctx.fillRect(0,0,768,64);ctx.font='26px sans-serif';ctx.fillStyle='#d8f8ff';ctx.fillText(`MaleCNS · ${this.renderedNodes.toLocaleString()} mapped somata`,18,41);
-    const title=new THREE.Sprite(new THREE.SpriteMaterial({map:new THREE.CanvasTexture(canvas),depthTest:false}));title.position.set(0,21,0);title.scale.set(40,3.4,1);this.group.add(title);
+    const title=new THREE.Sprite(new THREE.SpriteMaterial({map:new THREE.CanvasTexture(canvas),depthTest:false}));title.position.set(0,11,0);title.scale.set(20,1.7,1);this.group.add(title);
   }
+
+  /** Display-space center of the neural cloud (for camera targeting). */
+  get center(): THREE.Vector3 { return this.group.position; }
 
   update(activity:Float64Array):void{
     // Robust, slowly adapting reference from the observed peak so a handful of
