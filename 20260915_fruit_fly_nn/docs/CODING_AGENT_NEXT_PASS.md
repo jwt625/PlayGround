@@ -96,3 +96,21 @@ the CH01/CH10/CH19 motion-attachment gate; routing-radius/clearance compliance;
 foreleg contact measured against real `touch_*` targets and a gesture clip; H6
 evidence bundle. Counts and audits are implemented; visual/geometric acceptance
 is not claimed.
+
+## User-feedback pass (2026-09-15)
+
+Addressed live-review feedback (details and evidence in
+[DevLog 008](../DevLog/008-hardware-feedback-fixes.md)):
+
+- Target fly now takes full orientation from its trajectory tangent (head) plus
+  world up (dorsal), replacing the previous off-axis yaw-only heading.
+- Control fly is placed in front of the console panel on the operator platform
+  at a dedicated display scale, with a browser assertion for the stance.
+- Fixed panel-control scaling: knobs/pointers were authored in raw mm and are
+  now converted with the panel's `unitsPerMm` (12/18 mm knobs, 7 mm buttons).
+- Fixed a metre-vs-mm asset scale defect that rendered hardware GLBs and plugs
+  ~1000× too small; added equipment nameplates, dark enclosure colors and
+  pigtail connector boots.
+- Retired the code-native placeholder bench boxes and the superseded five-knob
+  `fly-console` prefab; the scene now contains only schematic equipment plus the
+  field-derived beam envelopes.

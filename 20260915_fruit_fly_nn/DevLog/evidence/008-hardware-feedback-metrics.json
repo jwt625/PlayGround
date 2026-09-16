@@ -1,0 +1,49 @@
+{
+  "mode": "connectome",
+  "reward": 0.9489840192385756,
+  "pib": 0.5916645565206781,
+  "phaseRms": 1.468709654999262,
+  "selected": -1,
+  "connectome": {
+    "mean": 0.019418065377295575,
+    "max": 1.0243653039254526,
+    "fractionActive": 0.9942
+  },
+  "paused": false,
+  "step": 163,
+  "sectionRange": 1,
+  "graphSource": "malecns",
+  "replayPolicy": null,
+  "replayFinished": false,
+  "replayMeanIntensity": 0,
+  "neural3dNodes": 4268,
+  "neural3dEdges": 1781,
+  "flyLoaded": true,
+  "flyError": null,
+  "flyForelegJoints": 6,
+  "flyGestureActive": false,
+  "targetDisplay": [
+    26.26957362440958,
+    -30.090015429745737,
+    100
+  ],
+  "operatorDisplay": [
+    -56.307692307692314,
+    -11.204334540370663,
+    -3.230769230769231
+  ],
+  "hardwareLoaded": true,
+  "hardwareVisible": true,
+  "hardwareNodes": 112,
+  "hardwareCables": 242,
+  "hardwareAssetInstances": 77,
+  "hardwareConnectorInstances": 154,
+  "hardwareComponentKinds": 7,
+  "hardwareKnobs": 43,
+  "hardwareSelectors": 19,
+  "hardwareMinRadiusMm": 0.9082958496725769,
+  "hardwareClearanceViolations": 12168,
+  "hardwareFailures": 0,
+  "hardwareFailureSample": null,
+  "hardwareError": null
+}
