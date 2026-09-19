@@ -1,0 +1,44 @@
+# Paper target tables (T02)
+# Source: Elshehaby et al., arXiv:2609.20686v1, Tables 1-3, printed pages 3-5.
+# Reported values only; do not alter. Curve digitization lives elsewhere.
+provenance:
+  source: "Elshehaby et al., arXiv:2609.20686v1"
+  pages: {table1: 3, table2: 4, table3: 4}
+  note: "reported values; precision preserved as printed"
+
+table1_optimum:
+  source_position_y_um: 11.0
+  waveguide_angle_deg: 53.50
+  waveguide_thickness_nm: 262.0
+  lambda_max_nm: 1550.0
+  T_max_dB: -0.56
+  T_max_linear_reported: 0.88
+
+table2_bandwidth_1dB:
+  lambda_left_nm: 1507.23
+  lambda_right_nm: 1593.68
+  bandwidth_nm: 86.45
+  note: "Table 2 heading is ambiguous: relative-to-peak vs absolute -1 dB; PAPER_REVIEW s6 item 5"
+
+table3_tolerances_1dB:
+  waveguide_angle:
+    nominal_deg: 53.50
+    tolerance_deg: 0.4
+  thickness:
+    nominal_nm: 262.0
+    tolerance_nm: 7.0
+  source_position:
+    nominal_um: 11.0
+    tolerance_um: 2.0
+  source_tilt:
+    nominal_deg: 0.0
+    tolerance_deg: 0.8
+  transverse:
+    note: "weak degradation through 5 um; no numerical 1-dB limit reported"
+
+derived:
+  # computed from the reported peak; evidence label = Derived
+  T_peak_linear: 0.88
+  T_peak_dB: -0.5551732784983137
+  relative_1dB_linear: 0.6990088465573677
+  absolute_1dB_linear: 0.7943282347242815
