@@ -104,37 +104,53 @@ def make_plan(cfg: CouplerConfig) -> Plan:
     cos_beta = math.cos(beta)
 
     def q_sub(s):
-        """Substrate/oxide boundary offset along n (isolated-output-port-v1)."""
+        """Substrate/oxide boundary offset along n (isolated-output-port-v1).
+
+        C1 Hermite blend from q_sub=0 (sidewall) at the splice to the line
+        parallel to the guide at normal clearance D.  Downstream this equals
+        ``g(s) - D/cos(beta)``, which has the same slope as ``g(s)``.
+        """
         if not g.isolated_port:
             return 0.0
         s0 = g.port_start_s_um
         s1 = s0 + g.port_transition_um
-        end = g.gap_at(s1) - g.oxide_clearance_um / cos_beta
         if s <= s0:
             return 0.0
         if s >= s1:
-            return float(end)
-        t = (s - s0) / (s1 - s0)
-        return float(t * t * (3.0 - 2.0 * t) * end)
+            return g.gap_at(s) - g.oxide_clearance_um / cos_beta
+        L = s1 - s0
+        q1 = g.gap_at(s1) - g.oxide_clearance_um / cos_beta
+        m1 = math.tan(beta)
+        t = (s - s0) / L
+        h01 = -2 * t**3 + 3 * t**2
+        h11 = t**3 - t**2
+        return float(h01 * q1 + h11 * L * m1)
 
     def b_sub(s):
         return r_of(s) + q_sub(s) * n
 
     s_lo = g.stack_start_um - g.guide_ext_up_um
     s_hi = g.stack_start_um + g.stack_length_um + g.guide_ext_down_um
-    # continuation that reaches the absorbing PML; excluded from domain sizing
-    s_absorb = s_hi + g.guide_absorb_um
+    if g.isolated_port:
+        s_port_end = g.port_start_s_um + g.port_transition_um + g.port_length_um
+    else:
+        s_port_end = s_hi
+    # uniform materials extend through the PML; domain is sized only to s_port_end
+    s_absorb = s_port_end + g.guide_absorb_um
     oxide_lo = g.stack_start_um
 
-    oxide_poly = np.array([b_sub(oxide_lo), b_sub(s_absorb), p_lo(s_absorb), p_lo(oxide_lo)])
-    guide_poly = np.array(
-        [p_lo(s_lo), p_lo(s_absorb), p_lo(s_absorb) + twg * m, p_lo(s_lo) + twg * m]
-    )
-    # clipped copies used only to size the physical domain
-    oxide_poly_dom = np.array([b_sub(oxide_lo), b_sub(s_hi), p_lo(s_hi), p_lo(oxide_lo)])
-    guide_poly_dom = np.array(
-        [p_lo(s_lo), p_lo(s_hi), p_lo(s_hi) + twg * m, p_lo(s_lo) + twg * m]
-    )
+    def band_polys(s_end):
+        s_ox = np.linspace(oxide_lo, s_end, 400)
+        Bnd = np.array([b_sub(s) for s in s_ox])
+        P = np.array([p_lo(s) for s in s_ox])
+        oxide = np.vstack([Bnd, P[::-1]])
+        guide = np.array(
+            [p_lo(s_lo), p_lo(s_end), p_lo(s_end) + twg * m, p_lo(s_lo) + twg * m]
+        )
+        return oxide, guide
+
+    oxide_poly, guide_poly = band_polys(s_absorb)
+    oxide_poly_dom, guide_poly_dom = band_polys(s_port_end)
 
     # substrate: half-space q < q_sub(s); a polygon when the port is active
     B = 120.0
@@ -146,9 +162,9 @@ def make_plan(cfg: CouplerConfig) -> Plan:
         "poly": None,
     }
     if g.isolated_port:
-        s_sub = np.linspace(-80.0, 90.0, 400)
+        s_sub = np.linspace(-80.0, s_absorb + 20.0, 600)
         bnd = np.array([b_sub(s) for s in s_sub])
-        substrate["poly"] = np.vstack([bnd, bnd[-1] - 150.0 * n, bnd[0] - 150.0 * n])
+        substrate["poly"] = np.vstack([bnd, bnd[-1] - 200.0 * n, bnd[0] - 200.0 * n])
 
     y_src = cfg.source.y_source_um
     x_src = cfg.source.x_source_um
@@ -169,11 +185,8 @@ def make_plan(cfg: CouplerConfig) -> Plan:
     ext_pts = np.array(
         [r_ext + cfg.monitor.aperture_um * m, r_ext, r_ext + m]
     )
-    if g.isolated_port:
-        port_pts = np.array([b_sub(s_absorb), p_lo(s_absorb), p_lo(s_absorb) + twg * m])
-        feature_pts = np.vstack([oxide_poly, guide_poly, refl_pts, ext_pts, port_pts])
-    else:
-        feature_pts = np.vstack([oxide_poly_dom, guide_poly_dom, refl_pts, ext_pts])
+    # domain sized from the port end (materials continue past it into the PML)
+    feature_pts = np.vstack([oxide_poly_dom, guide_poly_dom, refl_pts, ext_pts])
     src_span = 4.0 * w0
     # physical region must contain features, the beam, and its reflected ray
     x_lo = min(feature_pts[:, 0].min(), x_src - src_span, x_imp - 2 * w0)

@@ -17,10 +17,11 @@ geometry:
   stack_length_um: 16.0
   guide_ext_down_um: 8.0
   guide_ext_up_um: 0.0
-  guide_absorb_um: 25.0
+  guide_absorb_um: 12.0
   isolated_port: true
   port_start_s_um: 33.0
   port_transition_um: 8.0
+  port_length_um: 17.0
   oxide_clearance_um: 3.0
   provenance: assumed
 source:

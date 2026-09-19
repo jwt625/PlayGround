@@ -68,6 +68,7 @@ class GeometryConfig:
     isolated_port: bool = False
     port_start_s_um: float = 33.0
     port_transition_um: float = 8.0
+    port_length_um: float = 17.0     # uniform section downstream of the transition
     oxide_clearance_um: float = 3.0
     provenance: str = "assumed"
 

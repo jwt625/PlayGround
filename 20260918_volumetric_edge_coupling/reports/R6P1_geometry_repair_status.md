@@ -1,0 +1,41 @@
+# R6-P1 geometry repair status
+
+G1-G4 repaired in `src/geometry.py` / `configs/isolated_port.yaml`.
+
+| defect | repair |
+|---|---|
+| G1 oxide chord corrupted the interaction | oxide and substrate now share the same sampled boundary `B(s)`; no 4-vertex chord. D0 check: 0 real material mismatches through s=33 (only q=0 boundary-point ambiguities). |
+| G2 downstream boundary parallel to sidewall | `q_sub(s) = g(s) - D/cos(beta)` downstream (same slope as the guide), C1 Hermite blend from q_sub=0 over the 8 um transition. Normal clearance is analytically constant D=3 um. |
+| G3 guide ended before PML | materials now extend to s_absorb = s_port_end + guide_absorb into the PML; the domain is sized only to s_port_end. |
+| G4 aperture straddled the transition | monitor aperture must use half-span ~2.52 um (|q|<=1.5 um) or be placed farther downstream. |
+
+## Coarse multiprobe (D2), Hz, single 1550 nm
+
+`scripts/port_multiprobe.py`, res 25, until 60, probes s=31/34/38/41/44/50,
+half-span 4 um:
+
+| s (um) | native | band1 neff | band1 fwd |
+|---|---|---|---|
+| 31 | 0.110 | 3.452 | 0.008 |
+| 34 | 0.075 | 3.364 | 0.002 |
+| 38 | 0.013 | 2.611 | 0.042 |
+| 41 | 0.001 | 2.621 | 0.003 |
+| 44 | 0.000 | 2.635 | 0.000 |
+| 50 | 0.000 | 2.531 | 0.000 |
+
+**The guide channel was not read.** With the 4 um aperture the solver's band
+ordering puts a substrate mode at band 1 (neff 3.45) at s=31, so these are
+not the receiving-guide coefficients. Band assignment moves with aperture and
+domain, exactly the mode-identity gate. The native flux also mixed
+frequencies (the same-aperture flux monitor stored 51 frequencies while the
+mode monitor stored one), so `get_fluxes(...)[0]` was not 1550 nm.
+
+## Next (no policy decision needed)
+
+1. Fix the same-aperture flux to the same single frequency as the mode monitor.
+2. Identify the guide band per probe by n_eff/localization over bands 1..8
+   (and a matched isolated reference), not band number; then report the guide
+   forward/backward and native flux.
+3. Only then interpret any downstream power decrease as splice loss.
+4. Defer 50/75 production; profile memory with the corrected single-frequency
+   line monitors first.
