@@ -39,3 +39,28 @@ mode monitor stored one), so `get_fluxes(...)[0]` was not 1550 nm.
 3. Only then interpret any downstream power decrease as splice loss.
 4. Defer 50/75 production; profile memory with the corrected single-frequency
    line monitors first.
+
+## Second multiprobe (single-frequency flux fixed, bands 1-8, half-span 6)
+
+| s | native | guide-like bands (neff>1.45) |
+|---|---|---|
+| 31 | 2.057 | no band near the guide (all 2.77-3.47 substrate) |
+| 38 | 0.166 | b2 2.611 fwd 0.042 |
+| 44 | 0.067 | b2 2.635 fwd 0.000 |
+| 50 | 0.043 | b2 2.531 fwd 0.000 |
+
+Two problems beyond band identity:
+
+1. **The port variant's forward power at s=31 is ~2.06 versus ~104 for the
+   nominal cell at the same settings** (res 25, until 60, 1550 nm, half-span 6,
+   same interaction materials per D0). A ~50x drop cannot come from the
+   downstream continuation and is not explained by the D0 sampling check.
+   This must be resolved before any splice interpretation.
+2. **No guide band appears at s=31** (all bands 1-8 are substrate, neff
+   2.77-3.47), and downstream the closest band is neff ~2.53-2.64, not the
+   isolated 2.286. Band identity/ordering remains unresolved even at the
+   port.
+
+The handoff's caution stands: the current numbers do not establish splice
+loss. The immediate blocker is the unexplained forward-power change between
+the nominal and port configurations plus the missing guide branch.
