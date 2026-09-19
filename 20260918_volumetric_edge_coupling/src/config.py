@@ -64,6 +64,11 @@ class GeometryConfig:
     guide_ext_down_um: float = 12.0   # straight inclined guide past the stack
     guide_ext_up_um: float = 0.0      # extension above the stack
     guide_absorb_um: float = 12.0     # continuation into the absorbing PML
+    # isolated-output-port-v1 (named numerical continuation; R6 handoff s4)
+    isolated_port: bool = False
+    port_start_s_um: float = 33.0
+    port_transition_um: float = 8.0
+    oxide_clearance_um: float = 3.0
     provenance: str = "assumed"
 
     # derived

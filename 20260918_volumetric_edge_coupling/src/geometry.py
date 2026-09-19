@@ -100,30 +100,55 @@ def make_plan(cfg: CouplerConfig) -> Plan:
     def p_lo(s):
         return r_of(s) + g.gap_at(s) * n
 
+    beta = a - th
+    cos_beta = math.cos(beta)
+
+    def q_sub(s):
+        """Substrate/oxide boundary offset along n (isolated-output-port-v1)."""
+        if not g.isolated_port:
+            return 0.0
+        s0 = g.port_start_s_um
+        s1 = s0 + g.port_transition_um
+        end = g.gap_at(s1) - g.oxide_clearance_um / cos_beta
+        if s <= s0:
+            return 0.0
+        if s >= s1:
+            return float(end)
+        t = (s - s0) / (s1 - s0)
+        return float(t * t * (3.0 - 2.0 * t) * end)
+
+    def b_sub(s):
+        return r_of(s) + q_sub(s) * n
+
     s_lo = g.stack_start_um - g.guide_ext_up_um
     s_hi = g.stack_start_um + g.stack_length_um + g.guide_ext_down_um
     # continuation that reaches the absorbing PML; excluded from domain sizing
     s_absorb = s_hi + g.guide_absorb_um
     oxide_lo = g.stack_start_um
 
-    oxide_poly = np.array([r_of(oxide_lo), r_of(s_absorb), p_lo(s_absorb), p_lo(oxide_lo)])
+    oxide_poly = np.array([b_sub(oxide_lo), b_sub(s_absorb), p_lo(s_absorb), p_lo(oxide_lo)])
     guide_poly = np.array(
         [p_lo(s_lo), p_lo(s_absorb), p_lo(s_absorb) + twg * m, p_lo(s_lo) + twg * m]
     )
     # clipped copies used only to size the physical domain
-    oxide_poly_dom = np.array([r_of(oxide_lo), r_of(s_hi), p_lo(s_hi), p_lo(oxide_lo)])
+    oxide_poly_dom = np.array([b_sub(oxide_lo), b_sub(s_hi), p_lo(s_hi), p_lo(oxide_lo)])
     guide_poly_dom = np.array(
         [p_lo(s_lo), p_lo(s_hi), p_lo(s_hi) + twg * m, p_lo(s_lo) + twg * m]
     )
 
-    # substrate half-space block (half-plane q < 0)
+    # substrate: half-space q < q_sub(s); a polygon when the port is active
     B = 120.0
     substrate = {
         "center": (r_top - 0.5 * B * n).tolist(),
         "size": [2.0 * B, B, float("inf")],
         "e1": u.tolist(),
         "e2": n.tolist(),
+        "poly": None,
     }
+    if g.isolated_port:
+        s_sub = np.linspace(-80.0, 90.0, 400)
+        bnd = np.array([b_sub(s) for s in s_sub])
+        substrate["poly"] = np.vstack([bnd, bnd[-1] - 150.0 * n, bnd[0] - 150.0 * n])
 
     y_src = cfg.source.y_source_um
     x_src = cfg.source.x_source_um
@@ -144,7 +169,11 @@ def make_plan(cfg: CouplerConfig) -> Plan:
     ext_pts = np.array(
         [r_ext + cfg.monitor.aperture_um * m, r_ext, r_ext + m]
     )
-    feature_pts = np.vstack([oxide_poly_dom, guide_poly_dom, refl_pts, ext_pts])
+    if g.isolated_port:
+        port_pts = np.array([b_sub(s_absorb), p_lo(s_absorb), p_lo(s_absorb) + twg * m])
+        feature_pts = np.vstack([oxide_poly, guide_poly, refl_pts, ext_pts, port_pts])
+    else:
+        feature_pts = np.vstack([oxide_poly_dom, guide_poly_dom, refl_pts, ext_pts])
     src_span = 4.0 * w0
     # physical region must contain features, the beam, and its reflected ray
     x_lo = min(feature_pts[:, 0].min(), x_src - src_span, x_imp - 2 * w0)
@@ -211,14 +240,22 @@ def build_geometry(cfg: CouplerConfig) -> tuple[list, Plan, IndexSet]:
     clad = indices.medium("clad")
 
     sub_center = plan.substrate["center"]
-    geom = [
-        mp.Block(
+    if plan.substrate.get("poly") is not None:
+        substrate_obj = mp.Prism(
+            vertices=[plan.meep_xy(x, y) for x, y in plan.substrate["poly"]],
+            height=mp.inf,
+            material=si,
+        )
+    else:
+        substrate_obj = mp.Block(
             center=plan.meep_xy(sub_center[0], sub_center[1]),
             size=mp.Vector3(*plan.substrate["size"]),
             e1=mp.Vector3(*plan.substrate["e1"]),
             e2=mp.Vector3(*plan.substrate["e2"]),
             material=si,
-        ),
+        )
+    geom = [
+        substrate_obj,
         mp.Prism(
             vertices=[plan.meep_xy(x, y) for x, y in plan.oxide_poly],
             height=mp.inf,
