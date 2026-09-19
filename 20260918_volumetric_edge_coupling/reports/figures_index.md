@@ -1,6 +1,6 @@
 # Figure and artifact index + multimodal validation requests
 
-> **Review status (2026-09-18):** [Visual validation and R6 decision](V1_V4_validation_and_R6_plan.md) supersedes the acceptance claims below. Geometry is partially validated, with impact gap 63.77 nm. Loaded-mode identity is open; the two power measurements use different apertures; the isolated-profile plot needs repair. The Poynting figure lacks branch/run provenance (the current default command uses Ez). Treat the loaded-index table and calibration range below as reported exploratory results, not established phase matching or a validated coupling ceiling. Proceed with port validation and reciprocal R6, Hz first. T02 digitization can proceed now.
+> **Review status (2026-09-19):** [Visual validation and R6 decision](V1_V4_validation_and_R6_plan.md) supersedes the acceptance claims below. Geometry is partially validated, with impact gap 63.77 nm. Loaded-mode identity is open; the two power measurements use different apertures; the isolated-profile plot needs repair. The Poynting figure lacks branch/run provenance (the current default command uses Ez). Treat the loaded-index table and calibration range below as reported exploratory results, not established phase matching or a validated coupling ceiling. Proceed with port validation and reciprocal R6, Hz first. T02 digitization can proceed now.
 
 All figures are generated from the current config and are under `reports/figs/`.
 Regenerate static figures with:
@@ -14,7 +14,9 @@ PYTHONPATH=. python scripts/make_figures.py --poynting --res 25 --until 60
 | `fig_geometry.png` | full device frame + wedge zoom; source, beam envelope, TIR impact, guide (262 nm), oxide gap, sidewall, cell/PML | `fig_geometry` |
 | `fig_gap_profile.png` | g(s) in nm vs sidewall coordinate, beam amplitude footprint, interaction window, impact location | `fig_gap_profile` |
 | `fig_mode_profiles.png` | isolated receiving-guide Ez/Hz mode profiles with Si core shading and n_eff | `fig_mode_profiles` |
-| `fig_nominal_poynting.png` | time-averaged Poynting vector at 1550 nm with quiver flow, guide/oxide outlines, net output flux | `fig_poynting` |
+| `fig_nominal_poynting_hz.png` | time-averaged Poynting vector at 1550 nm (Hz branch), quiver flow, guide/oxide outlines, net output flux | `fig_poynting` |
+| `fig_r6_reverse_hz.png` | R6 reverse Hz launch: Sx map with the Si reference plane; shows the broad emitted fan | `scripts/r6_reciprocal.py` |
+| `provenance.md` | config hash / branch / mesh / runtime / solver per figure generation | `write_provenance` |
 | `reports/nominal_fields_cw.png` | (older) instantaneous \|Ez\| CW snapshot | `scripts/field_maps.py` |
 | `reports/T03_phase_matching_note.md`, `reports/R1_R4_diagnostics.md`, `reports/R5_R6_branch_priority.md` | analysis notes | — |
 

@@ -1,6 +1,6 @@
 # Figure validation and next-step decision
 
-Review date: 2026-09-18. Scope: the four `reports/figs/fig_*.png` images, cached paper Fig. 2, their plotting/geometry/port/mode implementations, current nominal configuration, and available result records. This is a visual, analytic and source-code review; no new FDTD runs or implementation changes were made.
+Review completed: 2026-09-19. Scope: the four `reports/figs/fig_*.png` images, cached paper Fig. 2, their plotting/geometry/port/mode implementations, current nominal configuration, and available result records. This is a visual, analytic and source-code review; no new FDTD runs or implementation changes were made.
 
 **Decision: choose (c), reciprocal R6 first, with a short port-validation prerequisite. Prioritize Hz and retain one matched Ez control.** Keep 262 nm, 53.5°, the nominal wedge and source fixed for this diagnostic. A complete complex-beta solver is not a prerequisite for R6 if an effectively isolated receiving-guide port can be validated. The low-coupling result and the claimed loaded-mode phase match remain provisional. Do not start a broad geometry search or describe the existing scan as a validated sub-1% ceiling.
 
@@ -140,3 +140,14 @@ All numerical tolerances below are proposed review criteria, not paper claims. K
 Reciprocity by itself is a consistency check, not independent proof of geometry fidelity; the emitted field and overlap decomposition provide the mechanism information. No geometry fitting is authorized solely to reach 88%. Keep nominal and alternative-family results distinct and retain the original reported thickness/angles.
 
 **T02 digitization should proceed now.** It depends on the cached paper, not on accepting a nominal observable. Defer claims of reproduced Fig. 3/4/5 curves until the simulation gates pass; there is no reason to defer assembling and validating the target dataset.
+
+## Reviewed image snapshot
+
+SHA-256 hashes identify the inspected PNGs; they do not supply missing simulation provenance.
+
+| File under `reports/figs/` | SHA-256 |
+|---|---|
+| `fig_geometry.png` | `322d6b03a4032e064773d291ba934d2c0a6fd6e21d33a16339e7e01173c003c1` |
+| `fig_gap_profile.png` | `ba2f91df261ab2e5c5a74ac7adc3046d5516a3ad3052ff02d06aa89cb16ea7a8` |
+| `fig_mode_profiles.png` | `c21e6efe39d82d7c97d762fa7fc3d8d183ba04ea86efc5850647aa837fcec355` |
+| `fig_nominal_poynting.png` | `20fa175c85f0da74bd59db928a740e5e5ba8a14759e6cdd26db44af9fcd2391a` |
