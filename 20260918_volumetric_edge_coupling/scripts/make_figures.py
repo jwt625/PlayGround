@@ -74,17 +74,22 @@ def fig_geometry(cfg: CouplerConfig, out: Path) -> None:
 def fig_gap_profile(cfg: CouplerConfig, out: Path) -> None:
     plan = make_plan(cfg)
     g = cfg.geometry
-    s = np.linspace(g.stack_start_um - g.guide_ext_up_um,
-                    g.stack_start_um + g.stack_length_um + g.guide_ext_down_um, 400)
+    s_lo = g.stack_start_um - g.guide_ext_up_um
+    s_hi = g.stack_start_um + g.stack_length_um + g.guide_ext_down_um
+    # guide region: gap only defined here (do not extrapolate into negative gap)
+    s = np.linspace(s_lo, s_hi, 400)
     gap = np.array([g.gap_at(v) * 1000 for v in s])
-    # beam amplitude along the sidewall (transverse coordinate is y)
-    ys = plan.r_top[1] - s * math.sin(g.alpha_rad)
+    # full beam footprint along the sidewall, including the no-guide region
+    s_all = np.linspace(min(-8.0, s_lo - 4), max(34.0, s_hi + 4), 800)
+    ys = plan.r_top[1] - s_all * math.sin(g.alpha_rad)
     amp = np.exp(-((ys - cfg.source.y_source_um) / cfg.source.w0_um) ** 2)
     s_imp = g.s_impact(cfg.source.y_source_um)
     fig, ax = plt.subplots(figsize=(10, 6))
+    ax.axvspan(s_all[0], s_lo, color="0.85", label="no guide (beam still illuminates)")
+    ax.axvspan(s_hi, s_all[-1], color="0.85")
     ax.plot(s, gap, "b-", label="oxide gap g(s)")
     ax.axvline(s_imp, color="k", ls="--", lw=1, label=f"beam impact s={s_imp:.2f} um")
-    ax.plot(s, amp * gap.max(), color="0.5", ls=":", label="beam amplitude along sidewall (a.u.)")
+    ax.plot(s_all, amp * gap.max(), color="0.5", ls=":", label="beam amplitude along sidewall (a.u.)")
     ax.axvspan(g.stack_start_um, g.stack_start_um + g.stack_length_um, color="orange", alpha=0.12,
                label="interaction stack")
     ax.set_xlabel("sidewall coordinate s (um)")
