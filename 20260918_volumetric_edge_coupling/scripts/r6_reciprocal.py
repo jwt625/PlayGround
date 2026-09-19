@@ -88,8 +88,13 @@ def run(cfg: CouplerConfig, res: float, until: float, out: str) -> None:
     num = np.sum(np.conj(gauss[mask]) * prof[mask]) * dy
     den = np.sqrt(np.sum(np.abs(gauss) ** 2) * dy * np.sum(np.abs(prof[mask]) ** 2) * dy) if mask.any() else 0
     overlap = abs(num / den) if den > 0 else 0.0
+    m_pow = overlap**2
+    p_target = p_emit * m_pow
     print(f"R6 emitted -x power at x={xpaper[ix_ref]:.2f} um = {p_emit:.3f} "
-          f"(fraction of launched {p_emit/max(p_inc_native,1e-12):.4f}); overlap={overlap:.4f}")
+          f"(f_collection={p_emit/max(p_inc_native,1e-12):.4f}); "
+          f"mode_overlap_amp={overlap:.4f} M={m_pow:.4f} P_target={p_target:.4f}")
+    print(f"R6 eta_reverse(native)={p_target/max(p_inc_native,1e-12):.5f} "
+          f"eta_reverse(guide band)={p_target/max(p_inc,1e-12):.5f}")
 
     fig, ax = plt.subplots(figsize=(12, 8))
     v = np.percentile(np.abs(Sx), 99.5)

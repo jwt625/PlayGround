@@ -88,3 +88,52 @@ disprove the paper.
    illumination (phase curvature included), and close the energy budget.
 2. R6b: two finer meshes (50, 75/um) and termination/aperture convergence.
 3. Then select compact mismatch study vs a narrowly targeted calibration.
+
+## R6a update — reciprocal pair and Ez control (res 25, until 80)
+
+Forward guide channel (from the forward run, same aperture): Hz band-1
+forward 60.32 / Pinc 8573 = **0.70 %**; Ez band-1 forward 49.56 / 8573 = 0.58 %.
+
+Reverse launch (EigenModeSource, band 1, toward -d):
+
+| quantity | Hz | Ez |
+|---|---|---|
+| launched band-1 modal power | 33.94 | 0.40 |
+| launched native same-aperture flux | 99.83 | 98.91 |
+| guide reflection | 0.50 % | 10.3 % |
+| emitted -x power at x=-12 um | 18.59 | 34.22 |
+| f_collection | 0.186 | 0.346 |
+| mode-overlap amplitude wrt 5 um Gaussian | 0.275 | 0.293 |
+| M = overlap^2 | 0.0758 | 0.0860 |
+| P_target = P_collection * M | 1.409 | 2.942 |
+| eta_reverse (native input) | 1.41 % | 2.98 % |
+| eta_reverse (guide-band input) | 4.15 % | 7.36 (invalid, tiny divisor) |
+
+Reciprocity ratio eta_reverse / eta_forward: Hz ~2.0, Ez ~5.1. The plan's
+acceptance is agreement within max(1e-4, 5 %); both branches **fail**. The
+Ez launched band-1 modal power is only 0.40, i.e. `eig_band=1` is **not the
+guide mode** at that location for Ez, so the port identity is not established
+and the reverse numbers are not yet a trustworthy reciprocal pair.
+
+## Interpretation and blocker
+
+- The reverse emission is broad: only ~8 % of the collected power is in the
+  5 um Gaussian channel (M ~ 0.08). This is the mechanism information and is
+  consistent with the visually broad fan in `fig_r6_reverse_ez/hz.png`.
+- But the forward/reverse pair does not satisfy reciprocity, and the launched
+  guide channel is not reliably identified (band number vs field overlap
+  differs across branch and position). Per the V1/R6 plan this means
+  **repair source/port/normalization before any physical calibration or
+  ceiling claim**.
+- No validated sub-1 % limit has been established; the paper is not disproved.
+
+## Requested direction
+
+1. Define and validate the receiving-guide channel by field localization
+   (fraction of energy in the Si strip within a fixed window) rather than band
+   number, with a transverse-domain convergence check.
+2. Decide whether R6 should launch from an effectively isolated port (uniform
+   thick-oxide section) or continue on the loaded wedge port.
+3. Only after identity/reciprocity pass, run R6b meshes (50, 75/um) and the
+   forward/reverse comparison; then choose compact-mismatch vs targeted
+   calibration.
