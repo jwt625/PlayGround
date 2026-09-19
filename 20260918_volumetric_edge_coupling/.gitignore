@@ -1,0 +1,27 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+.pytest_cache/
+
+# simulation outputs (immutable but large; keep local)
+results/**
+!results/.gitkeep
+
+# editor / OS
+.DS_Store
+.vscode/
+.idea/
+
+# scratch
+/tmp/
+*.log
+
+# keep review figures despite the parent repository's global *.png ignore
+!reports/*.png
+!reports/figs/*.png
+
+# keep the environment lock despite the parent repository's global *.txt ignore
+!environment.lock.txt
+!environment.packages.txt
