@@ -173,17 +173,23 @@ def add_oblique_mode_monitor(
     center_paper = guide_centerline(cfg, plan, s_mon)
     center = plan.meep_xy(center_paper[0], center_paper[1])
     fcen = freq_from_wavelength_nm(cfg.source.wavelength_nm)
+    size = mp.Vector3(0, 2 * half_span_um, 0)
     if single_freq:
-        mon = sim.add_mode_monitor(
-            fcen, 0, 1,
-            mp.ModeRegion(center=center, size=mp.Vector3(0, 2 * half_span_um, 0)),
-        )
+        mon = sim.add_mode_monitor(fcen, 0, 1, mp.ModeRegion(center=center, size=size))
     else:
         mon = sim.add_mode_monitor(
-            fcen, DF_FREQ_WIDTH, DF_NFREQ,
-            mp.ModeRegion(center=center, size=mp.Vector3(0, 2 * half_span_um, 0)),
+            fcen, DF_FREQ_WIDTH, DF_NFREQ, mp.ModeRegion(center=center, size=size)
         )
-    return mon, center
+    return mon, center, size
+
+
+def add_same_aperture_flux(sim: mp.Simulation, cfg: CouplerConfig, center, size):
+    """Signed flux through the identical aperture as the mode monitor."""
+    fcen = freq_from_wavelength_nm(cfg.source.wavelength_nm)
+    return sim.add_flux(
+        fcen, DF_FREQ_WIDTH, DF_NFREQ,
+        mp.FluxRegion(center=center, size=size, direction=mp.X),
+    )
 
 
 def oblique_modal_powers(

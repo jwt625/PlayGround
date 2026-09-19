@@ -131,7 +131,8 @@ def slab_profile(
         state = np.array([1.0, q_t / cladding_top**2], dtype=complex)
         mat = lambda k, n, t: _layer_matrix_tm(k, n, t)
         comp = lambda s, k, yp: s[0] * np.cos(k * yp) + s[1] / (k / core_index**2) * np.sin(k * yp)
-    yt = np.linspace(d / 2, d / 2 + clad_span_um, n_clad_points)
+    # order top -> bottom monotonically decreasing so plotted lines do not jump
+    yt = np.linspace(d / 2 + clad_span_um, d / 2, n_clad_points)
     top = state[0] * np.exp(-q_t * (yt - d / 2))
     yc = np.linspace(d / 2, -d / 2, n_core_points)
     yp = d / 2 - yc

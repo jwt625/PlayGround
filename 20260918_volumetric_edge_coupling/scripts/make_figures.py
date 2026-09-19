@@ -105,19 +105,22 @@ def fig_mode_profiles(cfg: CouplerConfig, out: Path) -> None:
     n_clad = idx.n("clad")
     t = cfg.geometry.twg_nm / 1000.0
     fig, axes = plt.subplots(1, 2, figsize=(12, 5), sharey=True)
-    for ax, pol, label in [(axes[0], "ez", "Ez (TE-like)"), (axes[1], "hz", "Hz (TM-like)")]:
+    for ax, pol, label in [(axes[0], "ez", "|Ez|"), (axes[1], "hz", "|Hz|")]:
         roots = analytic_slab_modes(cfg.materials.n_si, t, n_clad,
                                     cfg.materials.n_oxide, cfg.source.wavelength_nm / 1000.0, pol)
         y, f, m = slab_profile(cfg.materials.n_si, t, n_clad,
                                cfg.materials.n_oxide, cfg.source.wavelength_nm / 1000.0, pol, roots[0])
-        ax.axvspan(y[m == 1].min(), y[m == 1].max(), color="orange", alpha=0.2, label="Si core")
-        ax.plot(np.abs(f), y, "b-", label=f"{label} n_eff={roots[0]:.4f}")
-        ax.set_xlabel("|field| (norm.)")
-        ax.set_title(f"{label}, t={cfg.geometry.twg_nm:.0f} nm")
+        # horizontal band for the core: position is on the vertical axis
+        ax.axhspan(-t / 2, t / 2, color="orange", alpha=0.2)
+        ax.axhline(t / 2, color="0.4", lw=0.6)
+        ax.axhline(-t / 2, color="0.4", lw=0.6)
+        ax.plot(np.abs(f), y, "b-", label=f"{label}, n_eff={roots[0]:.4f}")
+        ax.set_xlabel(f"{label} (normalised)")
+        ax.set_title(f"{label} branch, t={cfg.geometry.twg_nm:.0f} nm")
         ax.grid(True, alpha=0.25)
         ax.legend(fontsize=8)
-    axes[0].set_ylabel("y (um)")
-    fig.suptitle("isolated receiving-guide modes at 1550 nm")
+    axes[0].set_ylabel("y (um)  [Si core shaded]")
+    fig.suptitle(f"isolated receiving-guide modes at 1550 nm (cfg {cfg.config_hash()})")
     fig.tight_layout()
     fig.savefig(out, dpi=140)
     plt.close(fig)
@@ -177,7 +180,10 @@ def fig_poynting(cfg: CouplerConfig, out: Path, res: float = 25.0, until: float 
     ax.set_ylabel("y (um)")
     pinc = run_incident_reference(cfg, plan)["flux"][DF_NFREQ // 2]
     pout = line_flux(sim, fmon, fc, fs, line, DF_NFREQ // 2).real
-    ax.set_title(f"time-averaged Poynting |S| (Meep units), 1550 nm; net output line flux/Pinc={pout/pinc*100:.2f}%")
+    ax.set_title(
+        f"time-averaged Poynting |S|, 1550 nm, branch={cfg.source.branch} "
+        f"(cfg {cfg.config_hash()}); net output line flux/Pinc={pout/pinc*100:.2f}%"
+    )
     fig.colorbar(pcm, ax=ax, fraction=0.04, label="|S|")
     fig.tight_layout()
     fig.savefig(out, dpi=140)
@@ -185,22 +191,50 @@ def fig_poynting(cfg: CouplerConfig, out: Path, res: float = 25.0, until: float 
     print("saved", out, f"eta_net={pout/pinc*100:.3f}%")
 
 
+def write_provenance(cfg: CouplerConfig, outdir: Path, branch: str, args) -> None:
+    import time
+    try:
+        import meep as mp
+        solver = f"meep={mp.__version__}"
+    except Exception:  # noqa: BLE001
+        solver = "meep=unknown"
+    path = outdir / "provenance.md"
+    if not path.exists():
+        path.write_text(
+            "# Figure provenance\n\n"
+            "Each row records the configuration hash, effective branch, mesh, "
+            "run time and solver build for the figure set.\n\n"
+            "| timestamp | config | branch | resolution | until | solver |\n"
+            "|---|---|---|---|---|---|\n"
+        )
+    path.write_text(
+        path.read_text()
+        + f"| {time.strftime('%Y-%m-%dT%H:%M:%S%z')} | {cfg.config_hash()} | {branch} | "
+        f"{args.res}/{args.until} | {solver} |\n"
+    )
+    print("saved", path)
+
+
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--config", default="configs/nominal.yaml")
     ap.add_argument("--outdir", default="reports/figs")
     ap.add_argument("--poynting", action="store_true")
+    ap.add_argument("--branch", default=None, help="override source branch for the field figure")
     ap.add_argument("--res", type=float, default=25.0)
     ap.add_argument("--until", type=float, default=60.0)
     args = ap.parse_args()
     cfg = CouplerConfig.load(args.config)
+    branch = args.branch or cfg.source.branch
+    cfg.source.branch = branch
     outdir = Path(args.outdir)
     outdir.mkdir(parents=True, exist_ok=True)
     fig_geometry(cfg, outdir / "fig_geometry.png")
     fig_gap_profile(cfg, outdir / "fig_gap_profile.png")
     fig_mode_profiles(cfg, outdir / "fig_mode_profiles.png")
     if args.poynting:
-        fig_poynting(cfg, outdir / "fig_nominal_poynting.png", args.res, args.until)
+        fig_poynting(cfg, outdir / f"fig_nominal_poynting_{branch}.png", args.res, args.until)
+    write_provenance(cfg, outdir, branch, args)
 
 
 if __name__ == "__main__":

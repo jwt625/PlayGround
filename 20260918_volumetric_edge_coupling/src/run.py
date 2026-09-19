@@ -60,7 +60,7 @@ def run_coupler(cfg: CouplerConfig, *, verbose: bool = False, compute_reference:
     s_mon = g.stack_start_um + g.stack_length_um + min(
         cfg.monitor.output_offset_um, g.guide_ext_down_um
     )
-    mmon, mcenter = add_oblique_mode_monitor(sim, cfg, plan, s_mon)
+    mmon, mcenter, msize = add_oblique_mode_monitor(sim, cfg, plan, s_mon)
     line = extraction_line(cfg, plan)
     fmon, fcenter, fsize = add_output_dft(sim, cfg, line)
     freqs = _freq_grid(cfg)
