@@ -1,0 +1,819 @@
+
+                                                                                                                                                                                            1
+
+
+
+                                                           1,†                             1, †                                         1
+                        HAMDY ELSHEHABY,                       OMAR BAKHEET,                     MOHAMED A. SWILLAM                      , AND MOHAMED
+
+                                                                                                      2,3,*
+                                                                                  ELKABBASH
+
+
+                     Volumetric Evanescent Edge Coupling for
+
+
+
+                                                  Fiber-to-Chip Optical I/O
+
+
+
+                       1
+                        Department of Physics, School of Sciences and Engineering, The American University in Cairo, New Cairo 11835, Egypt
+                                         2
+                                          James C. Wyant College of Optical Sciences, University of Arizona, Tucson, Arizona, USA
+                                                      3
+                                                      Department of Physics, University of Arizona, Tucson, Arizona, USA
+
+
+                                                                          †
+                                                                          These authors contributed equally.
+
+                                                                          Email: *melkabbash@arizona.edu
+
+
+Abstract                                                                                             Semiconductor           laser    emission       is   temperature        dependent,
+
+Scaling optical input/output for co-packaged optics is limited by
+                                                                                                     with wavelength shifts on the order of 0.1 nm/°C reported for
+
+the fiber-to-chip interface. Conventional edge coupling offers
+                                                                                                     typical       devices[3].         This      sensitivity        can      complicate
+
+low loss and broad bandwidth but confines channels to a single
+                                                                                                     wavelength stabilization in wavelength-division-multiplexed
+row along the chip facet. On the other hand, surface couplers
+                                                                                                     systems when the laser source is exposed to the thermal
+are either narrowband or difficult to fabricate with high yield
+                                                                                                     environment           of     the      switch       package.         External-laser
+and, importantly, compete with back-end metal routing. In this
+                                                                                                     architectures therefore retain an optical connection between
+work, we introduce volumetric edge coupling, in which the chip
+
+edge is structured in three dimensions so that optical coupling                                      the light source and the photonic integrated circuit, making
+
+can occur over a two-dimensional region rather than along a                                          efficient and scalable fiber-to-chip coupling an important
+
+single    line,   providing      a   route     toward      interfacing      multiple                 component of CPO packaging.
+
+waveguides       with     multiple     cores    of   a multicore        fiber   while
+                                                                                                         Conventional fiber-to-chip interfaces commonly rely on
+
+preserving       optical     access     from      the    chip     perimeter.       We
+                                                                                                     edge coupling, in which light is injected through the chip
+investigate a single-channel realization based on total-internal-
+                                                                                                     facet and an inverse taper or other mode-conversion structure
+reflection     (TIR)-mediated          evanescent       coupling      through      the
+                                                                                                     is used to improve the overlap between the fiber mode and
+54.7° sidewall of a KOH-etched silicon cavity, with the coupling
+                                                                                                     the on-chip waveguide mode[4]. Edge couplers can provide
+profile    shaped       by    a   wedged       buried-oxide         ridge.     Finite-
+
+                                                                                                     low coupling loss and broad optical bandwidth; however,
+difference time-domain simulations predict a peak coupling
+
+                                                                                                     their scaling is geometrically constrained because the fibers
+efficiency of 88% (−0.56 dB) at 1550 nm and a 1-dB bandwidth
+
+of 86.45 nm spanning the C-band. The design further exhibits a                                       are    typically      arranged       along     a   single     row     at   the    chip
+
+vertical alignment tolerance of approximately ±2 µm, weak                                            perimeter.        Standard        V-groove         fiber     arrays      commonly
+
+sensitivity to transverse offsets up to 5 µm, and a ±0.8° 1-dB
+                                                                                                     employ center-to-center fiber pitches of 127 or 250 µm,
+
+angular tolerance. The reflected optical field also provides a
+                                                                                                     corresponding to only several optical channels per millimeter
+potential     alignment       signal,   offering     a   path    toward     reduced
+                                                                                                     of chip edge. As optical I/O requirements increase toward
+active       alignment           overhead           in      future        multicore
+                                                                                                     hundreds or potentially thousands of channels per package,
+implementations.
+                                                                                                     this one-dimensional arrangement becomes an increasingly
+
+                                                                                                     important limitation on edge-coupled optical connectivity
+                                INTRODUCTION
+
+                                                                                                     [5].
+Modern        AI    data     centers      increasingly         rely    on     optical
+
+
+interconnects        to   support      the    rapidly     growing       bandwidth
+                                                                                                         Surface coupling provides an alternative route in which
+
+requirements         of    data    movement          between        switches       and
+                                                                                                     optical access is provided through the top surface of the chip
+
+computing          resources.         In     conventional           architectures,
+                                                                                                     rather than through its perimeter. This allows coupling sites
+
+pluggable optical transceivers are located at the front panel
+                                                                                                     to be distributed over the two-dimensional chip area rather
+
+of the switch, requiring high-speed electrical signals to travel
+                                                                                                     than     along     a   single     edge.     Surface-coupling            approaches
+
+several centimeters between the switch application-specific
+                                                                                                     include      grating     couplers       [6],   elephant      couplers       [7],   and
+
+integrated       circuit    (ASIC)        and    the    optical     modules.        At
+                                                                                                     integrated         micro-mirror            couplers[8].          Among           these
+
+aggregate switch bandwidths approaching tens of terabits per
+                                                                                                     approaches,         grating      couplers       are    particularly        attractive
+
+second, these electrical links contribute appreciable energy
+                                                                                                     because they can be fabricated using planar lithographic
+
+consumption          and    are    increasingly        susceptible       to   signal-
+                                                                                                     processes and have therefore been widely adopted in silicon-
+
+integrity limitations, including electromagnetic crosstalk [1].
+                                                                                                     photonics research and packaging. Their periodic nature,
+
+Co-packaged optics (CPO) addresses these limitations by
+                                                                                                     however,          introduces          wavelength-dependent                  coupling
+
+placing the optical engines within the same package as the
+                                                                                                     conditions that can limit the usable optical bandwidth unless
+
+switch ASIC, thereby reducing the length of the high-speed
+                                                                                                     broadband         designs       are    specifically        engineered        [9].    In
+
+electrical interconnects from centimeters to millimeters[2].
+                                                                                                     addition, surface coupling requires optical access to the chip
+
+                                                                                                     surface       and     therefore       competes         with     back-end-of-line
+   Many proposed CPO architectures employ external laser
+                                                                                                     metallization, electrical routing, thermal-control structures,
+sources to reduce the thermal and integration challenges
+                                                                                                     and     other     functional       elements       for    available       chip    area.
+associated       with     placing       semiconductor           lasers     in   close
+                                                                                                     Dedicated        optical-access         windows        through      the    back-end
+proximity           to      high-power             switching           electronics.
+
+                                                                                                                                                                      2
+
+
+
+
+stack may therefore be required. Edge coupling, in contrast,                             propagation characteristics of the interacting fields and their
+
+confines    the   optical   access    region    primarily     to   the chip              spatial overlap along the coupling region.
+
+
+perimeter     and    can   leave    the   top    surface    available     for
+
+electrical and thermal integration.
+
+   The    resulting    question      is whether      a   perimeter-based
+
+optical    interface     can    overcome       the   geometric       scaling
+
+limitation of conventional edge coupling while preserving
+
+the broadband and low-loss characteristics that make edge
+                                                                                         Figure 2  Proposed fiber-to-chip coupler based on volumetric edge coupling.
+
+access    attractive.    Here,     we    introduce     volumetric       edge             (a) Schematic of the coupling structure, showing the anisotropically etched
+
+                                                                                         silicon cavity   with   its 54.7°   sidewall, the   incident Gaussian    beam
+coupling, an architecture that extends the optical coupling
+
+                                                                                         undergoing    total internal reflection   at the sidewall,   and   the silicon
+region from a one-dimensional arrangement along the chip
+                                                                                         waveguide    patterned   on the   wedged   buried oxide    that picks up    the
+facet into a two-dimensional region formed within a three-
+                                                                                         evanescent field. (b) Apodization mechanism produced by the angled BOX
+
+dimensionally structured chip edge, as illustrated in Figure                             ridge: because    the silicon–sidewall   gap varies   along   the propagation
+
+                                                                                         direction, the local coupling strength is shaped along the interaction length
+1. In conventional edge coupling, shown in Figure 1(a), the
+                                                                                         so that, in the time-reversed picture, the outcoupled field builds a Gaussian
+optical channels are arranged along a single line at the chip
+                                                                                         envelope matched to the fiber mode.
+facet, so the achievable channel density is constrained by the
+
+
+fiber pitch along the perimeter. In volumetric edge coupling,
+
+                                                                                             Efficient transfer into the waveguide requires control over
+shown in Figure 1(b), the chip edge is instead structured in
+
+                                                                                         both the guided-mode properties and the spatial distribution
+three dimensions, creating a coupling region within which
+
+                                                                                         of   the   coupling     strength.    The    waveguide      thickness     (twg)
+coupling     sites   could     be   distributed     both    laterally    and
+
+                                                                                         determines the confinement and spatial extent of the guided
+vertically.    This     architecture      provides     a   route     toward
+
+                                                                                         mode      and    therefore    influences      its interaction      with    the
+interfacing multiple waveguides with multiple cores of a
+
+                                                                                         evanescent       field.    In   the    present     implementation,         the
+multicore fiber while retaining optical access from the chip
+                                                                                         waveguide is assumed to be silicon; however, the volumetric
+perimeter. In this work, we establish the operating principle
+
+                                                                                         coupling       concept      is   not    fundamentally        restricted     to
+through the design and numerical demonstration of a single
+                                                                                         crystalline-silicon       waveguides,       and   deposited      waveguide
+coupling channel, which serves as the building block for
+
+                                                                                         materials could be considered in future implementations.
+future multichannel implementations.
+
+
+                                                                                             The second geometric degree of freedom is the dielectric
+
+                                                                                         separation between the waveguide and the TIR interface.
+
+                                                                                         Here, the dielectric spacer is assumed to be the buried oxide
+
+                                                                                         (BOX)      layer.    A   BOX      ridge    is introduced       beneath     the
+
+                                                                                         coupling region and oriented at an angle relative to the KOH-
+
+                                                                                         etched      sidewall,     causing     the    perpendicular       separation
+
+
+Figure 1 Concept of volumetric edge coupling. (a) In a conventional edge                 between the waveguide and the sidewall to vary continuously
+
+coupler, optical channels are arranged along a single line at the chip facet,
+                                                                                         along the propagation direction, as shown in Figure 2(b).
+constraining the channel count by the one-dimensional fiber pitch along the
+                                                                                         Because the evanescent field decays with distance from the
+perimeter. (b) Volumetric edge coupling structures the chip edge in three
+                                                                                         TIR interface, this varying separation produces a spatially
+dimensions, creating   a two-dimensional     coupling region   within which
+
+multiple coupling sites can be distributed. The illustrated multicore-fiber              varying interaction strength between the incident field and
+
+interface represents the envisioned multichannel extension of the single-
+                                                                                         the waveguide. The BOX geometry therefore provides a
+channel coupling mechanism demonstrated in this work.
+                                                                                         means of shaping the coupling profile along the interaction
+
+                                                                                         length, analogous to the spatial apodization employed in
+                        OPERATION PRINCIPLE:
+                                                                                         grating couplers[10].
+
+The proposed coupler operates through evanescent coupling
+
+
+mediated       by    total    internal     reflection      (TIR)     at    an
+                                                                                             The    role   of   this   spatially    varying     coupling      can    be
+
+anisotropically etched silicon sidewall. Anisotropic KOH
+                                                                                         understood       intuitively    by    considering      the   time-reversed
+
+etching of a (100) silicon substrate exposes slow-etching
+                                                                                         process, in which the guided mode is progressively coupled
+                                                             ∘
+{111} facets inclined by approximately 54.74                  with respect
+                                                                                         out of the waveguide toward the incident optical mode. Near
+
+to the     wafer    surface.     A   TE-polarized        Gaussian      beam
+                                                                                         the beginning of the interaction region, the relatively large
+
+launched toward the etched cavity is incident on the silicon–
+                                                                                         waveguide–sidewall separation produces weak coupling, so
+
+oxide interface at an angle exceeding the critical angle for
+                                                                                         only a small fraction of the guided power is extracted. As the
+
+TIR and is consequently reflected into the silicon substrate,
+                                                                                         separation decreases along with the propagation direction,
+
+as illustrated in Figure 2(a). Although the incident field
+                                                                                         the interaction becomes stronger and a larger fraction of the
+
+undergoes      TIR,   an   evanescent      field   extends     beyond     the
+                                                                                         remaining guided power is transferred from the waveguide.
+
+interface    into the    dielectric    region.   A   silicon    waveguide
+                                                                                         Toward the end of the coupling region, the interaction is
+
+positioned within this evanescent field interacts with the
+                                                                                         strongest,     but   less   guided     power     remains     available     for
+
+incident optical field, enabling power to be transferred into
+                                                                                         extraction. The resulting longitudinal coupling profile can
+
+its guided mode. The coupling efficiency is governed by the
+                                                                                         therefore be engineered through the BOX geometry to shape
+
+                                                                                         the outcoupled field toward the Gaussian spatial envelope of
+
+                                                                                                                                                                      3
+
+
+
+
+the fiber mode, thereby improving the mode overlap between                               summarized in Table 1, this configuration yields a maximum
+
+the two fields.                                                                          normalized          guided-mode            transmission         of      0.88,
+
+
+                                                                                         corresponding to a coupling loss of 0.56 dB, at a center
+   The continuously wedged BOX considered here provides
+                                                                                         wavelength of 1550 nm. The coupling efficiency is evaluated
+
+a   convenient       model     for    demonstrating        this   coupling
+                                                                                         in   the    angled     section     of   the   waveguide        immediately
+principle, although realizing such a geometry may present
+                                                                                         following the coupling region and before the subsequent
+
+fabrication       challenges.        More       fabrication-compatible
+                                                                                         waveguide bend. Therefore, the reported coupling efficiency
+implementations could reproduce a similar spatial variation
+                                                                                         characterizes       the   proposed      fiber-to-waveguide         coupling
+
+in coupling strength by engineering the effective refractive
+                                                                                         mechanism and does not include additional scattering loss
+index     of    the    dielectric     spacer,     for    example       using
+                                                                                         that may arise from the transition between the angled and
+
+compositionally graded silicon oxynitride [11] or through
+                                                                                         straight waveguide sections
+nanostructing the waveguide layer to spatially control the
+
+
+mode confinement and, subsequently, the spatially varying
+
+evanescent coupling [12].
+
+
+GEOMETRIC OPTIMIZATION AND PERFORMANCE ANALYSIS
+
+To optimize the proposed coupler, two-dimensional finite-
+
+difference      time-domain        (2D-FDTD)          simulations      were
+
+performed using Ansys Lumerical®. Perfectly matched layer
+
+(PML) boundary conditions were applied on all sides of the
+
+simulation      domain       to   suppress      reflections      from     the
+
+simulation boundaries. The input source was modeled as a
+
+Gaussian beam with a waist radius of 5 µm, representing the
+
+mode profile of a single-mode fiber. In the 2D coordinate
+
+system, the source propagates along the x-axis, with its field
+
+profile   distributed     along    the y-axis.     The    vertical   source
+
+position (y) was referenced to the bottom of the etched
+
+silicon cavity and included as an optimization parameter to
+
+determine the position providing maximum coupling to the
+
+guided     waveguide        mode.     A    frequency-domain           power
+                                                                                         Figure 3 Normalized transmission spectra for 2D simulation and different
+monitor     and    a mode-expansion           monitor      were    used    to            waveguide widths in 3D simulation.
+
+evaluate the optical power transmitted into the waveguide
+
+and determine the coupling efficiency.
+
+
+                                                                                            TABLE 1. OPTIMIZED GEOMETRIC PARAMETERS AND PEAK COUPLING
+   The geometrical optimization was initially performed in
+                                                                                                                         PERFORMANCE
+2D   by    sweeping      the   waveguide       thickness     (twg), source
+                                                                                                                 Parameter                               Value
+position (y), and waveguide angle (θwg). Following the 2D
+                                                                                             Source Position (y)                                         11 µm
+optimization,      three-dimensional        FDTD       simulations     were
+                                                                                             Waveguide Angle (θwg)                                       53.50°
+performed for different waveguide widths to evaluate the
+                                                                                             Waveguide Thickness (twg)                                  262 nm
+influence of the finite lateral dimension neglected in the 2D
+                                                                                             𝜆                                                          1550 nm
+model. As the waveguide width increased, both the coupling                                    "#$
+
+loss and spectral bandwidth approached the corresponding                                     𝑇                                                          -0.56 dB
+                                                                                              "#$
+
+2D results. This behavior is expected because increasing the
+
+width reduces the influence of the lateral boundaries, causing
+
+the 3D structure to progressively approximate the laterally
+                                                                                                     SPECTRAL BANDWIDTH AND ROBUSTNESS
+invariant geometry represented by the 2D model. Beyond
+
+                                                                                         The    spectral    performance        of the    optimized      structure     is
+this regime,      further    increases     in   the   waveguide       width
+                                                                                         summarized        in   Table     2. The     coupler     exhibits     a 1-dB
+produced only minor changes in the coupling performance.
+
+The    computationally         less   demanding        2D     model      was             bandwidth       of 86.45     nm,    extending     from    1507.23     nm    to
+
+                                                                                         1593.68      nm    and   covering     the   entire   C-band.     The   broad
+therefore used for the subsequent optimization and tolerance
+
+analyses    involving      parameters      contained      within    the   2D             spectral response observed in Figure 3 can be understood
+
+                                                                                         from two main characteristics of the coupling mechanism.
+simulation      plane,      while     the    effect     of    out-of-plane
+
+displacement was evaluated using the full 3D model.                                          First, the proposed structure does not rely on a resonant
+
+                                                                                         cavity or a periodic perturbation to mediate power transfer.
+
+   Figure      3    compares       the     normalized        guided-mode                 In   conventional       grating    couplers,     the   periodic    structure
+
+transmission spectra obtained from the 2D simulation with                                introduces an additional momentum component determined
+
+those    obtained     from     the   3D    simulations       for   different             by the grating period, resulting in a wavelength-dependent
+
+waveguide widths. The optimized geometry has a waveguide                                 phase-matching condition. In the proposed coupler, power
+
+thickness twg = 262 nm, a waveguide angle θwg = 53.50°, and                              transfer    instead    arises   from     the interaction      between      the
+
+a source position y = 11 µm relative to the cavity base. As                              evanescent field generated by total internal reflection at the
+
+                                                                                                                                                                      4
+
+
+
+KOH-etched        sidewall    and    the   nearby    guided     waveguide                coupling efficiency. The optimized waveguide thickness of
+
+mode. The absence of a periodic perturbation eliminates the                              262    nm    exhibits     a tolerance      of   approximately       ±7    nm.
+
+wavelength      dependence        associated     with    a fixed     grating             Changes in thickness modify the confinement and spatial
+
+momentum,        contributing      to the    broad    spectral    response               extent of the guided mode, thereby changing its overlap with
+
+observed in the simulations.                                                             the    evanescent       field   generated      at   the    TIR     interface.
+
+   The bandwidth is nevertheless limited by the wavelength                               Thickness       variations     can    also   modify      the   propagation
+
+dependence of the interaction between the evanescent field                               characteristics      of the    guided    mode,     further    affecting    the
+
+and the guided waveguide mode. The penetration depth of                                  interaction between the two fields. The observed tolerances
+
+the evanescent field generated at the TIR interface varies                               therefore reflect the combined sensitivity of the coupler to
+
+with wavelength, modifying the field available for coupling                              the spatial coupling profile and the modal properties of the
+
+at a given waveguide–sidewall separation. At the same time,                              silicon waveguide.
+
+the confinement and spatial extent of the guided mode also
+
+vary    with    wavelength.       Consequently,         the   longitudinal
+
+coupling     profile    produced      by    the   varying     waveguide–
+
+sidewall     separation,     which     is optimized        at the    design
+
+wavelength      of   1550    nm,    changes     as   the   wavelength       is
+
+detuned. In the time-reversed picture illustrated in Figure
+
+2(b), these variations correspond to a wavelength-dependent
+
+change in the spatial distribution of the outcoupled field and
+
+consequently      its overlap      with   the   Gaussian      fiber   mode.
+                                                                                         Figure 4 Fabrication tolerance analysis of the proposed on-chip coupler. (a)
+These wavelength-dependent changes in coupling strength
+                                                                                         Effect of   waveguide    angle (𝜃!")   variations. (b) Effect   of waveguide
+and spatial mode overlap ultimately limit the bandwidth of
+                                                                                         thickness (𝑡   ) variations.
+                                                                                                      !"
+the device.
+                                                                                             In addition to fabrication variations, the sensitivity of the
+TABLE 2. CALCULATED SPECTRAL BANDWIDTH PERFORMANCE FOR THE
+                                                                                         proposed coupler to source misalignment was investigated to
+                            OPTIMIZED COUPLER
+                                                                                         evaluate its suitability for practical fiber-to-chip packaging.
+                        Parameter                  -1 dB
+                                                                                         The    coupling      efficiency    was    analyzed      as a   function     of
+               𝜆      (nm)                       1507.23
+                 %&'
+                                                                                         vertical source displacement, source tilt angle, and transverse
+               𝜆       (nm)                      1593.68                                 source displacement, as shown in Figure 5. The vertical-
+                 ()*(
+
+               Bandwidth (nm)                      86.45                                 displacement and tilt-angle analyses were performed using
+
+                                                                                         the    2D    model,     since   both    variations     occur    within     the
+
+                                                                                         simulation plane. In contrast, transverse displacement occurs
+                                                                                         along the out-of-plane direction and therefore requires the
+
+                                                                                         full 3D model.
+   FABRICATION AND ALIGNMENT SENSITIVITY ANALYSIS
+                                                                                             As shown in Figure 5(a), the coupler exhibits a 1-dB
+
+To evaluate the practical viability of the proposed fiber-to-                            vertical displacement tolerance of approximately ±2 µm at
+
+chip coupler, we performed tolerance analysis considering                                1550 nm. Vertical displacement changes the position of the
+
+both fabrication variations and source misalignment during
+                                                                                         incident Gaussian beam relative to the coupling region and
+packaging. The fabrication and alignment tolerances were                                 therefore     modifies     its spatial    overlap     with    the coupling
+
+quantified     in terms     of   the   allowable      variation    in   each             profile.    As    the   source    moves      away     from    its optimum
+
+parameter     that   results   in a   maximum        1-dB    reduction     in            position,    this   overlap    deteriorates,     resulting    in a   gradual
+
+coupling efficiency relative to the optimized value at 1550                              reduction      in coupling       efficiency.     The    obtained     ±2   µm
+
+nm. The parameter values and their corresponding 1-dB                                    tolerance is larger than that of many conventional inverse-
+
+tolerances are summarized in Table 3.                                                    taper    edge-coupling       interfaces,    which     commonly        require
+
+   To evaluate the robustness of the proposed coupler against                            sub-micrometer         to approximately         micrometer-scale         fiber
+
+fabrication variations, a fabrication tolerance analysis was                             positioning,      and   is   comparable       to the    more     alignment-
+
+performed for the two main geometric parameters of the                                   tolerant edge-coupler architectures reported in the literature
+
+coupling     structure:    the   waveguide        angle    (θwg)   and    the            [13].
+
+waveguide thickness (twg). The sensitivity of the coupling                                   The    effect   of transverse      displacement       is presented      in
+
+efficiency    to variations      in these    parameters      is shown      in
+                                                                                         Figure 5(b). Since transverse displacement occurs along the
+Figure 4. The optimized waveguide angle of 53.5° exhibits a                              out-of-plane direction, this analysis was performed using the
+
+tolerance     of    approximately        ±0.4°.     Variations      in    the            full 3D model. Transverse offsets of up to 5 µm produce only
+
+waveguide angle modify the rate at which the separation                                  a     small      variation      in     transmission,        demonstrating
+
+between      the   waveguide       and    the   KOH-etched         sidewall              substantially weaker sensitivity to lateral misalignment than
+
+changes     along    the propagation        direction.    This   alters   the            is typical of many conventional fiber-to-chip edge-coupling
+
+spatial distribution of the evanescent coupling strength and,                            interfaces. This robustness arises from the comparatively
+
+consequently,      the   effective     apodization      of the    coupling               large lateral extent of the coupling region, which allows
+
+region. As the angle deviates from its optimum value, the                                strong spatial overlap between the incident field and the
+
+resulting coupling profile becomes less well matched to the                              supported waveguide mode to be maintained as the source is
+
+incident Gaussian field, leading to a gradual reduction in
+                                                                                         displaced transversely. The simulated response is symmetric
+
+                                                                                                                                                                                                   5
+
+
+
+
+with      respect        to      positive        and       negative         transverse                   increases. In the proposed architecture, the quality of the
+
+displacement;          therefore,       only     the    positive       displacement                      optical alignment could instead be inferred directly from the
+
+range     is   shown.        The     transverse        alignment        tolerance       is               externally accessible reflected field, potentially eliminating
+
+superior to that of edge couplers [13].                                                                  the need for a dedicated on-chip alignment monitor for each
+
+   The sensitivity to angular misalignment is shown in Figure                                            input channel. Thus, although the intrinsic 1-dB angular
+
+5(c).     The      source       exhibits       a    1-dB       tilt    tolerance        of               tolerance remains approximately ±0.8°, reflection-assisted
+
+approximately ±0.8°, making tilt the most sensitive of the                                               feedback        provides       a   potential       means       of   mitigating        the
+
+investigated alignment parameters. Tilting the incident beam                                             practical packaging challenge associated with this relatively
+
+changes both its propagation direction at the TIR interface                                              tight tolerance by enabling the optimum angular orientation
+
+and     its   spatial      trajectory       across       the    coupling        region.                  to be identified directly during assembly.
+
+Consequently, the distribution of the evanescent field along
+
+the sidewall and its interaction with the guided mode are
+                                                                                                            This approach could become particularly advantageous in
+modified, leading to a reduction in coupling efficiency as the
+                                                                                                         the envisioned multicore-fiber implementation. Since tilt is a
+tilt deviates from its nominal value. The obtained angular
+                                                                                                         global alignment parameter for the multicore fiber, reflected
+
+tolerance is comparable to values reported for practical fiber-
+                                                                                                         signals from multiple cores could potentially be monitored
+to-chip interfaces. For example, an arrayed Silicon Nitride
+                                                                                                         simultaneously using an external camera or detector array.
+
+grating     coupler       interface      demonstrated          a   measured        1-dB
+                                                                                                         The orientation of the complete fiber assembly could then be
+angular tolerance of approximately ±1°[14]. Other micro-
+                                                                                                         optimized        using     the    reflected-power           distribution       without
+optical     coupling       architectures        have     demonstrated           angular
+                                                                                                         requiring       an   independent          on-chip       monitoring         circuit     for
+tolerances on the order of a few degrees [15], emphasizing
+                                                                                                         every optical channel.
+that angular sensitivity depends strongly on the coupling
+
+geometry, beam size, and rotational degree of freedom being
+
+considered.
+
+   Although           angular        alignment          represents         the      most
+
+restrictive degree of freedom in the present design, its impact
+
+on the envisioned multichannel implementation is mitigated
+
+by the architecture of a multicore fiber. Since the individual
+
+cores share a common fiber axis, fiber tilt constitutes a global
+
+alignment degree of freedom rather than an independent
+
+parameter for each optical channel. The angular orientation
+
+can therefore be optimized for the complete multicore-fiber
+
+assembly rather than independently for every core.
+
+   The      relatively      tight    angular       tolerance       can     be    further
+
+addressed at the packaging level by exploiting the reflected
+
+optical field as an alignment signal. The evanescent coupling
+
+mechanism inherently links the power transferred to the
+
+guided mode to the optical power remaining in the reflected
+
+field. In the absence of efficient coupling, a large fraction of
+                                                                                                         Figure 5 Alignment sensitivity analysis of the proposed on-chip coupler. (a)
+
+the incident power remains in the reflected beam following                                               Sensitivity    to vertical    source    displacement      and   (b) Fiber     Transverse
+                                                                                                         Variation. (c) Effect of source tilt angle (𝜙) relative to the x-axis and the
+total internal reflection at the coupling interface. As the
+                                                                                                         corresponding      normalized     reflection   that   shows    an off-chip     alignment
+source approaches its optimum alignment, increased power
+                                                                                                         method compatible with the proposed chip coupling method (d).
+transfer to the guided mode is accompanied by a reduction in
+
+reflected power. This behavior is demonstrated in Figure
+
+5(d),    where      the    normalized          reflected      power       reaches      its                  TABLE 3. SUMMARY OF FABRICATION AND ALIGNMENT TOLERANCES
+                                                 ∘
+minimum         near     the    nominal       0   source      tilt, corresponding                                  Parameter                              Nominal                 1 dB Tolerance
+
+closely to the orientation at which the maximum waveguide                                       Waveguide Angle (θ          )                               53.50°                       ±0.4°
+                                                                                                                         wg
+
+transmission          is   obtained         in    Figure       5(c).     Conversely,            Thickness (twg)                                            262 nm                       ±7 nm
+
+increasing         angular        misalignment            results       in     reduced
+                                                                                                Source Position (y)                                         11 µm                       ±2 µm
+
+waveguide          coupling        and     a    corresponding            increase       in
+                                                                                                Source Tilt Angle (θsource)                                   0°                         ±0.8°
+reflected power. The reflected field therefore provides a
+
+directly accessible optical observable that could be used as
+
+feedback during angular alignment.
+                                                                                                                                CONCLUSION AND OUTLOOK:
+   This capability is particularly attractive for active photonic
+                                                                                                         We introduced volumetric edge coupling as an architecture
+packaging.         Conventional           active-alignment            schemes         can
+                                                                                                         for   extending         edge     based      optical      I/O    beyond       the    one-
+employ additional on-chip monitoring structures, such as
+                                                                                                         dimensional arrangement of conventional edge couplers. By
+directional couplers and photodetectors, to determine the
+                                                                                                         structuring the chip edge in three dimensions, the proposed
+optical     power      coupled       into    the   input     waveguides          during
+                                                                                                         approach        creates      a   coupling        region      in    which      multiple
+assembly[5]. Such structures introduce additional device,
+                                                                                                         coupling sites could ultimately be distributed across the edge
+routing,       and     chip-area        overhead,         which        can     become
+                                                                                                         while      leaving      the    chip      surface      available       for    electrical
+increasingly significant as the number of optical channels
+
+                                                                                                                                                                                                                                         6
+
+
+
+                                                                                                                             [6]              D. Taillaert, P. Bienstman, and R. Baets, "Compact efficient
+interconnects while retaining its low-loss and broadband
+                                                                                                                                              broadband grating coupler for silicon-on-insulator waveguides,"
+character. In the proposed silicon implementation, a KOH-
+                                                                                                                                              Optics letters, vol. 29, no. 23, pp. 2749-2751, 2004.
+                     ∘
+etched 54.7            sidewall generates the evanescent field, while a
+                                                                                                                             [7]              T. Yoshida et al., "Vertically curved Si waveguide coupler with
+
+shaped dielectric spacer controls the local coupling strength                                                                                 low loss and flat wavelength window," Journal of Lightwave
+                                                                                                                                              technology, vol. 34, no. 7, pp. 1567-1571, 2016.
+and mode matching. The optimized design reaches 88%
+                                                                                                                             [8]              A.    Noriki     et   al.,   "Broadband          and     polarization-independent
+coupling efficiency (-0.56 dB) at 1550 nm with a 1-dB
+                                                                                                                                              efficient vertical optical coupling with 45° mirror for optical I/O
+bandwidth of 86.45 nm. The design also shows practical
+                                                                                                                                              of Si photonics," Journal of Lightwave Technology, vol. 34, no.
+alignment            robustness,             including           approximately                 ±2      µm                                     3, pp. 978-984, 2015.
+
+                                                                                                                             [9]              D. Taillaert et al., "Grating couplers for coupling between optical
+vertical displacement tolerance and only modest degradation
+                                                                                                                                              fibers    and     nanophotonic         waveguides,"          Japanese        Journal      of
+for     transverse           offsets       up      to    5    µm.       The       most       sensitive
+                                                                                                                                              Applied Physics, vol. 45, no. 8R, p. 6071, 2006.
+alignment parameter is fiber tilt, with a ±0.8° 1-dB tolerance,
+                                                                                                                             [10]             A.   Bozzola,       L.   Carroll,      D.   Gerace,      I.   Cristiani,     and    L.    C.
+but this angle can be controlled globally for a multicore fiber                                                                               Andreani, "Optimising apodized grating couplers in a pure SOI
+
+                                                                                                                                              platform to− 0.5 dB coupling efficiency," Optics express, vol.
+or    rigid      fiber      array       rather       than      independently               for     every
+                                                                                                                                              23, no. 12, pp. 16289-16304, 2015.
+optical channel. Together with reflection-based monitoring
+                                                                                                                             [11]             T.   Bååk,     "Silicon      oxynitride;       a   material      for   GRIN       optics,"
+enabled           by        the       FTIR           coupling            mechanism,                 these
+                                                                                                                                              Applied optics, vol. 21, no. 6, pp. 1069-1072, 1982.
+
+characteristics suggest a path toward reducing the active-                                                                   [12]             D. Benedikovic et al., "High‐efficiency single etch step apodized
+                                                                                                                                              surface grating coupler using subwavelength structure," Laser &
+alignment complexity and assembly time associated with
+                                                                                                                                              Photonics Reviews, vol. 8, no. 6, pp. L93-L97, 2014.
+conventional fiber-to-chip packaging.
+                                                                                                                             [13]             X. Mu, S. Wu, L. Cheng, and H. Fu, "Edge couplers in silicon
+
+                                                                                                                                              photonic integrated circuits: A review," Applied sciences, vol.
+                                                                                                                                              10, no. 4, p. 1538, 2020.
+    The present work is intended as a first proof of principle
+                                                                                                                             [14]             V. R. Shrestha, H.-S. Lee, and S.-S. Lee, "Si3N4 waveguide-
+and        evaluation             step        for       volumetric              edge         coupling
+                                                                                                                                              based parallel optical interconnect incorporating an interface
+architecture. Future works will extend the single-channel
+                                                                                                                                              comprising         arrayed      grating      couplers       combined         with     fiber
+concept to simultaneous coupling from multiple cores of a                                                                                     arrays," Applied optics, vol. 51, no. 36, pp. 8587-8593, 2012.
+
+                                                                                                                             [15]             S. Yu et al., "Free‐form micro‐optics enabling ultra‐broadband
+multicore fiber into multiple waveguides. This extension will
+                                                                                                                                              low‐loss off‐chip coupling," Laser & photonics reviews, vol. 17,
+require variation in the effective waveguide angle, or the
+                                                                                                                                              no. 6, p. 2200025, 2023.
+corresponding                index        gradient,           or     through          varying           the
+
+effective modal index/modal area of the waveguide layer
+
+through          introducing             a    spatially          varying          subwavelength
+
+features         in     the      waveguide.              Silicon          Nitride         and       other
+
+deposited waveguide materials will be investigated in place
+
+of crystalline silicon so that the waveguide layer can be
+
+conformally deposited over the etched sidewall, avoiding the
+
+need       for      crystalline-silicon                 transfer         or      bonding           while
+
+preserving the volumetric evanescent-coupling mechanism.
+
+Because the coupling efficiency reported here is evaluated in
+
+the inclined waveguide immediately after the evanescent-
+
+coupling          region.         The       coupling          efficiency           reported          here
+
+therefore represents the power transferred to the inclined
+
+receiving waveguide and does not account for the subsequent
+
+transition          to    the      planar        photonic           layer,       which         will      be
+
+addressed in future work.
+
+
+                                           REFERENCES
+
+
+[1]             F. D. Mbairi, W. P. Siebert, and H. Hesselbom, "High-frequency
+                transmission lines crosstalk reduction using spacing rules," IEEE
+
+                transactions on components and packaging technologies, vol.
+                31, no. 3, pp. 601-610, 2008.
+[2]             C. Minkenberg, R. Krishnaswamy, A. Zilkie, and D. Nelson,
+                "Co‐packaged datacenter optics: Opportunities and challenges,"
+                IET optoelectronics, vol. 15, no. 2, pp. 77-91, 2021.
+
+[3]             B. Buscaino, E. Chen, J. W. Stewart, T. Pham, and J. M. Kahn,
+                "External vs. integrated light sources for intra-data center co-
+                packaged optical interfaces," Journal of Lightwave Technology,
+                vol. 39, no. 7, pp. 1984-1996, 2021.
+[4]             V. R. Almeida, R. R. Panepucci, and M. Lipson, "Nanotaper for
+
+                compact mode conversion," Optics letters, vol. 28, no. 15, pp.
+                1302-1304, 2003.
+[5]             D. Weninger, S. Serna, L. Ranno, L. Kimerling, and A. Agarwal,
+                "Advances         in    waveguide         to    waveguide          couplers       for    3D
+                integrated photonic packaging," Light: Science & Applications,
+
+                vol. 15, no. 1, p. 17, 2026.
+

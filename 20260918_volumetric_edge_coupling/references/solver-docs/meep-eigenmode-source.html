@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="author" content="MEEP Developers" />
+      <link rel="shortcut icon" href="../../img/favicon.ico" />
+    <title>Tutorial/Eigenmode Source - MEEP Documentation</title>
+    <link rel="stylesheet" href="../../css/theme.css" />
+    <link rel="stylesheet" href="../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../../css/extra.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Tutorial/Eigenmode Source";
+        var mkdocs_page_input_path = "Python_Tutorials/Eigenmode_Source.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+<script async type="text/javascript" src="/_/static/javascript/readthedocs-addons.js"></script><meta name="readthedocs-project-slug" content="meep" /><meta name="readthedocs-version-slug" content="latest" /><meta name="readthedocs-resolver-filename" content="/Python_Tutorials/Eigenmode_Source/" /><meta name="readthedocs-http-status" content="200" /></head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../.." class="icon icon-home"> MEEP Documentation
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../..">Manual</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../Introduction/">Introduction</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../Download/">Download</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../FAQ/">FAQ</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../Installation/">Installation</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../Build_From_Source/">Build From Source</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../Acknowledgements/">Acknowledgements</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../License_and_Copyright/">License and Copyright</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Features</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../Materials/">Materials</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../Subpixel_Smoothing/">Subpixel Smoothing</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../Exploiting_Symmetry/">Exploiting Symmetry</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../Perfectly_Matched_Layer/">Perfectly Matched Layers</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../Parallel_Meep/">Parallel Meep</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../Synchronizing_the_Magnetic_and_Electric_Fields/">Synchronizing the Magnetic and Electric Fields</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../Mode_Decomposition/">Mode Decomposition</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../Field_Functions/">Field Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../The_Run_Function_Is_Not_A_Loop/">The Run Function is Not a Loop</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../Yee_Lattice/">Yee Lattice</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../Units_and_Nonlinearity/">Units and Nonlinearity</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../2d_Cell_Special_kz/">2d Cell with Out-of-Plane Wavevector</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../Eigensolver_Math/">Frequency-Domain Eigensolver</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Python Interface</span></p>
+              <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" href="../../Python_User_Interface/">User Interface</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../Python_Developer_Information/">Developer Information</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../Basics/">Tutorial/Basics</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../Cylindrical_Coordinates/">Tutorial/Cylindrical Coordinates</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../Resonant_Modes_and_Transmission_in_a_Waveguide_Cavity/">Tutorial/Resonant Modes and Transmission in a Waveguide Cavity</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../Material_Dispersion/">Tutorial/Material Dispersion</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../Third_Harmonic_Generation/">Tutorial/Third Harmonic Generation</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../Near_to_Far_Field_Spectra/">Tutorial/Near-to-Far Field Spectra</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../Local_Density_of_States/">Tutorial/Local Density of States</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../Optical_Forces/">Tutorial/Optical Forces</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../Gyrotropic_Media/">Tutorial/Gyrotropic Media</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../Multilevel_Atomic_Susceptibility/">Tutorial/Multilevel Atomic Susceptibility</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../Frequency_Domain_Solver/">Tutorial/Frequency-Domain Solver</a>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">Tutorial/Eigenmode Source</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#index-guided-modes-in-a-ridge-waveguide">Index-Guided Modes in a Ridge Waveguide</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#what-happens-when-the-source-time-profile-is-a-pulse">What Happens When the Source Time Profile is a Pulse?</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#oblique-waveguides">Oblique Waveguides</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#planewaves-in-homogeneous-media">Planewaves in Homogeneous Media</a>
+    </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../Custom_Source/">Tutorial/Custom Source</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../Mode_Decomposition/">Tutorial/Mode Decomposition</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../GDS_Import/">Tutorial/GDS Import</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../Adjoint_Solver/">Tutorial/Adjoint Solver</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Scheme Interface</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../Scheme_User_Interface/">User Interface</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../Scheme_Tutorials/Basics/">Tutorial/Basics</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../Scheme_Tutorials/Cylindrical_Coordinates/">Tutorial/Cylindrical Coordinates</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../Scheme_Tutorials/Resonant_Modes_and_Transmission_in_a_Waveguide_Cavity/">Tutorial/Resonant Modes and Transmission in a Waveguide Cavity</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../Scheme_Tutorials/Material_Dispersion/">Tutorial/Material Dispersion</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../Scheme_Tutorials/Third_Harmonic_Generation/">Tutorial/Third Harmonic Generation</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../Scheme_Tutorials/Near_to_Far_Field_Spectra/">Tutorial/Near-to-Far Field Spectra</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../Scheme_Tutorials/Local_Density_of_States/">Tutorial/Local Density of States</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../Scheme_Tutorials/Optical_Forces/">Tutorial/Optical Forces</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../Scheme_Tutorials/Gyrotropic_Media/">Tutorial/Gyrotropic Media</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../Scheme_Tutorials/Multilevel_Atomic_Susceptibility/">Tutorial/Multilevel Atomic Susceptibility</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../Scheme_Tutorials/Frequency_Domain_Solver/">Tutorial/Frequency-Domain Solver</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../Scheme_Tutorials/Eigenmode_Source/">Tutorial/Eigenmode Source</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../Scheme_Tutorials/Custom_Source/">Tutorial/Custom Source</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../Scheme_Tutorials/Mode_Decomposition/">Tutorial/Mode Decomposition</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../Scheme_Tutorials/Casimir_Forces/">Tutorial/Casimir Forces</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../Guile_and_Scheme_Information/">Guile and Scheme Information</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">C++ Interface</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../C%2B%2B_Developer_Information/">Developer Information</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../Chunks_and_Symmetry/">Chunks and Symmetry</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../C%2B%2B_Tutorial/">Tutorial/Basics</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../..">MEEP Documentation</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../.." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">Python Interface</li>
+      <li class="breadcrumb-item active">Tutorial/Eigenmode Source</li>
+    <li class="wy-breadcrumbs-aside">
+          <a href="https://github.com/NanoComp/meep/edit/master/doc/docs/Python_Tutorials/Eigenmode_Source.md" class="icon icon-github"> Edit on GitHub</a>
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <hr />
+<h1 id="eigenmode-source">Eigenmode Source<a class="headerlink" href="#eigenmode-source" title="Permanent link">#</a></h1>
+<hr />
+<p>This tutorial demonstrates using the <a href="../../Python_User_Interface/#eigenmodesource"><code>EigenModeSource</code></a> to launch a single eigenmode propagating in a single direction. Examples are provided for two kinds of eigenmodes in lossless, dielectric media: (1) localized (i.e., guided) and (2) non-localized (i.e., radiative planewave).</p>
+<div class="toc"><span class="toctitle">Table of Contents</span><ul>
+<li><a href="#eigenmode-source">Eigenmode Source</a><ul>
+<li><a href="#index-guided-modes-in-a-ridge-waveguide">Index-Guided Modes in a Ridge Waveguide</a><ul>
+<li><a href="#what-happens-when-the-source-time-profile-is-a-pulse">What Happens When the Source Time Profile is a Pulse?</a></li>
+<li><a href="#oblique-waveguides">Oblique Waveguides</a></li>
+</ul>
+</li>
+<li><a href="#planewaves-in-homogeneous-media">Planewaves in Homogeneous Media</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<h2 id="index-guided-modes-in-a-ridge-waveguide">Index-Guided Modes in a Ridge Waveguide<a class="headerlink" href="#index-guided-modes-in-a-ridge-waveguide" title="Permanent link">#</a></h2>
+<p>The first structure, shown in the schematic below, is a 2d ridge waveguide with ε=12, width <span class="arithmatex">\(a\)</span>=1 μm, and out-of-plane electric field E<sub>z</sub>. The dispersion relation ω(k) for index-guided modes with <em>even</em> mirror symmetry in the <span class="arithmatex">\(y\)</span>-direction is computed using <a href="https://mpb.readthedocs.io/en/latest/">MPB</a> and shown as blue lines. The light cone which denotes radiative modes is the section in solid green. Using this waveguide configuration, we will investigate two different frequency regimes: (1) single mode (normalized frequency of 0.15) and (2) multi mode (normalized frequency of 0.35), both shown as dotted horizontal lines in the figures. We will use the eigenmode source to excite a specific mode in each case &mdash; labeled <strong>A</strong> and <strong>B</strong> in the band diagram &mdash; and compare the results to using a constant-amplitude source for straight and rotated waveguides. Finally, we will demonstrate that a single monitor plane in the <span class="arithmatex">\(y\)</span>-direction is sufficient for computing the total Poynting flux in a waveguide with any arbitrary orientation.</p>
+<p><img alt="" src="../../images/eigenmode_source.png#center" /></p>
+<p>The simulation script is in <a href="https://github.com/NanoComp/meep/blob/master/python/examples/oblique-source.py">examples/oblique-source.py</a>. The notebook is <a href="https://nbviewer.jupyter.org/github/NanoComp/meep/blob/master/python/examples/oblique-source.ipynb">examples/oblique-source.ipynb</a>.</p>
+<p>The simulation consists of two separate parts: (1) computing the Poynting flux and (2) plotting the field profile. The field profile is generated by setting the flag <code>compute_flux=False</code>. For the single-mode case, a constant-amplitude current source (<code>eig_src=False</code>) excites both the waveguide mode and radiating fields in <em>both</em> directions (i.e., forwards and backwards). This is shown in the main inset of the first of two figures above. The <code>EigenModeSource</code> excites only the <em>forward-going</em> waveguide mode <strong>A</strong> as shown in the smaller inset. Launching this mode requires setting <code>eig_src=True</code>, <code>fsrc=0.15</code>, and <code>bnum=1</code>. Note that the length of the <code>EigenModeSource</code> must be large enough that it captures the entire guided mode (i.e., the fields should decay to roughly zero at the edges). The line source does <em>not</em> need to span the entire length of the cell but should be slightly larger than the waveguide width. The parameter <code>rot_angle</code> specifies the rotation angle of the waveguide axis and is initially 0° (i.e., straight or horizontal orientation). This enables <code>eig_parity</code> to include <code>EVEN_Y</code> in addition to <code>ODD_Z</code> and the simulation to include an overall mirror symmetry plane in the <span class="arithmatex">\(y\)</span>-direction.</p>
+<p>For the multi-mode case, a constant-amplitude current source excites a superposition of the two waveguide modes in addition to the radiating field. This is shown in the main inset of the second figure above. The <code>EigenModeSource</code> excites only a given mode: <strong>A</strong> (<code>fsrc=0.35</code>, <code>bnum=2</code>) or <strong>B</strong> (<code>fsrc=0.35</code>, <code>bnum=1</code>) as shown in the smaller insets.</p>
+<pre><code class="language-py">import meep as mp
+import numpy as np
+import matplotlib.pyplot as plt
+
+resolution = 50 # pixels/μm
+
+cell_size = mp.Vector3(14,14)
+
+pml_layers = [mp.PML(thickness=2)]
+
+# rotation angle (in degrees) of waveguide, counter clockwise (CCW) around z-axis
+rot_angle = np.radians(20)
+
+w = 1.0 # width of waveguide
+
+geometry = [mp.Block(center=mp.Vector3(),
+                     size=mp.Vector3(mp.inf,w,mp.inf),
+                     e1=mp.Vector3(x=1).rotate(mp.Vector3(z=1), rot_angle),
+                     e2=mp.Vector3(y=1).rotate(mp.Vector3(z=1), rot_angle),
+                     material=mp.Medium(epsilon=12))]
+
+fsrc = 0.15 # frequency of eigenmode or constant-amplitude source
+bnum = 1    # band number of eigenmode
+
+kpoint = mp.Vector3(x=1).rotate(mp.Vector3(z=1), rot_angle)
+
+compute_flux = True # compute flux (True) or plot the field profile (False)
+
+eig_src = True # eigenmode (True) or constant-amplitude (False) source
+
+if eig_src:
+    sources = [mp.EigenModeSource(src=mp.GaussianSource(fsrc,fwidth=0.2*fsrc) if compute_flux else mp.ContinuousSource(fsrc),
+                                  center=mp.Vector3(),
+                                  size=mp.Vector3(y=3*w),
+                                  direction=mp.NO_DIRECTION,
+                                  eig_kpoint=kpoint,
+                                  eig_band=bnum,
+                                  eig_parity=mp.EVEN_Y+mp.ODD_Z if rot_angle == 0 else mp.ODD_Z,
+                                  eig_match_freq=True)]
+else:
+    sources = [mp.Source(src=mp.GaussianSource(fsrc,fwidth=0.2*fsrc) if compute_flux else mp.ContinuousSource(fsrc),
+                         center=mp.Vector3(),
+                         size=mp.Vector3(y=3*w),
+                         component=mp.Ez)]
+
+sim = mp.Simulation(cell_size=cell_size,
+                    resolution=resolution,
+                    boundary_layers=pml_layers,
+                    sources=sources,
+                    geometry=geometry,
+                    symmetries=[mp.Mirror(mp.Y)] if rot_angle == 0 else [])
+
+if compute_flux:
+    tran = sim.add_flux(fsrc, 0, 1, mp.FluxRegion(center=mp.Vector3(x=5), size=mp.Vector3(y=14)))
+    sim.run(until_after_sources=50)
+    res = sim.get_eigenmode_coefficients(tran,
+                                         [1],
+                                         eig_parity=mp.EVEN_Y+mp.ODD_Z if rot_angle == 0 else mp.ODD_Z,
+                                         direction=mp.NO_DIRECTION,
+                                         kpoint_func=lambda f,n: kpoint)
+    print(&quot;flux:, {:.6f}, {:.6f}&quot;.format(mp.get_fluxes(tran)[0],abs(res.alpha[0,0,0])**2))
+else:
+    sim.run(until=100)
+    sim.plot2D(output_plane=mp.Volume(center=mp.Vector3(), size=mp.Vector3(10,10)),
+               fields=mp.Ez,
+               field_parameters={'alpha':0.9})
+    plt.show()
+</code></pre>
+<p>Note that in <code>EigenModeSource</code> as well as <code>get_eigenmode_coefficients</code>, the <code>direction</code> property must be set to <code>NO_DIRECTION</code> whenever <code>eig_kpoint</code> specifies the waveguide axis.</p>
+<h3 id="what-happens-when-the-source-time-profile-is-a-pulse">What Happens When the Source Time Profile is a Pulse?<a class="headerlink" href="#what-happens-when-the-source-time-profile-is-a-pulse" title="Permanent link">#</a></h3>
+<p>The eigenmode source launches a fixed spatial mode profile specified by either its frequency (<code>eig_match_freq=True</code>) or wavevector (<code>eig_match_freq=False</code>) multiplied by the time profile.  When the time profile of the source has a finite bandwidth, e.g. a <a href="../../Python_User_Interface/#gaussiansource">Gaussian pulse</a> (which is typical for calculations involving <a href="../../FAQ/#for-calculations-involving-fourier-transformed-fields-why-should-the-source-be-a-pulse-rather-than-a-continuous-wave">Fourier-transformed fields</a> such as <a href="../GDS_Import/#s-parameters-of-a-directional-coupler">mode coefficients or S-parameters</a>), then the frequency-dependence (dispersion) of the true modal pattern means that the eigenmode source does not match the desired mode exactly over the whole bandwidth. This is described in Section 4.2.2 of the review article <a href="https://arxiv.org/abs/1301.5366">Electromagnetic Wave Source Conditions</a>. A more accurate mode profile may be obtained by adding multiple narrow-band eigenmode sources at the same position at several frequencies across the bandwidth, but this has the disadvantage that the runtime increases as you add more frequency points due to the narrower source bandwidths. However, a <em>single</em> broadband eigenmode source is often sufficient for most practical applications (excepting cases with extreme modal dispersion, e.g. near a cutoff frequency).</p>
+<p>This can be demonstrated by computing the error in a broadband eigenmode source via the backward-propagating and scattered power (i.e., any fields which are not forward-propagating waveguide modes) for the single and multi mode ridge waveguide.</p>
+<pre><code class="language-py">import meep as mp
+import numpy as np
+import matplotlib.pyplot as plt
+
+resolution = 50 # pixels/μm
+
+sxy = 10
+cell_size = mp.Vector3(sxy,sxy)
+
+dpml = 1
+pml_layers = [mp.PML(thickness=dpml)]
+
+w = 1.0 # width of waveguide
+
+geometry = [mp.Block(center=mp.Vector3(),
+                     size=mp.Vector3(mp.inf,w,mp.inf),
+                     material=mp.Medium(epsilon=12))]
+
+fsrc = 0.35 # frequency of eigenmode source
+bnum = 1    # band number of eigenmode
+
+df = 0.1    # frequency width
+nfreq = 51  # number of frequencies
+
+sources = [mp.EigenModeSource(src=mp.GaussianSource(fsrc,fwidth=df),
+                              center=mp.Vector3(0,0),
+                              size=mp.Vector3(0,sxy),
+                              eig_parity=mp.EVEN_Y+mp.ODD_Z,
+                              eig_band=bnum,
+                              eig_match_freq=True)]
+
+symmetries = [mp.Mirror(mp.Y)]
+
+sim = mp.Simulation(cell_size=cell_size,
+                    resolution=resolution,
+                    boundary_layers=pml_layers,
+                    sources=sources,
+                    geometry=geometry,
+                    symmetries=symmetries)
+
+flux_mon_tp = sim.add_flux(fsrc,df,nfreq,mp.FluxRegion(center=mp.Vector3(0,+0.5*sxy-dpml),size=mp.Vector3(sxy-2*dpml,0),weight=+1))
+flux_mon_bt = sim.add_flux(fsrc,df,nfreq,mp.FluxRegion(center=mp.Vector3(0,-0.5*sxy+dpml),size=mp.Vector3(sxy-2*dpml,0),weight=-1))
+flux_mon_rt = sim.add_flux(fsrc,df,nfreq,mp.FluxRegion(center=mp.Vector3(+0.5*sxy-dpml,0),size=mp.Vector3(0,sxy-2*dpml),weight=+1))
+flux_mon_lt = sim.add_flux(fsrc,df,nfreq,mp.FluxRegion(center=mp.Vector3(-0.5*sxy+dpml,0),size=mp.Vector3(0,sxy-2*dpml),weight=-1))
+
+sim.run(until_after_sources=50)
+
+freqs = mp.get_flux_freqs(flux_mon_tp)
+flux_tp = np.asarray(mp.get_fluxes(flux_mon_tp))
+flux_bt = np.asarray(mp.get_fluxes(flux_mon_bt))
+flux_rt = np.asarray(mp.get_fluxes(flux_mon_rt))
+flux_lt = np.asarray(mp.get_fluxes(flux_mon_lt))
+
+res = sim.get_eigenmode_coefficients(flux_mon_rt,[bnum],eig_parity=mp.EVEN_Y+mp.ODD_Z)
+coeffs = res.alpha[0,:,0]
+guided = np.power(np.abs(coeffs),2)
+
+flux_total = flux_tp + flux_bt + flux_rt + flux_lt
+back = flux_lt / flux_total
+scat = (flux_total - guided) / flux_total
+
+if mp.am_master():
+    fig = plt.figure()
+    plt.subplot(1,2,1)
+    plt.plot(freqs,back,'bo-')
+    plt.xlabel('frequency')
+    plt.ylabel('backward power (fraction of total power)')
+    plt.subplot(1,2,2)
+    plt.plot(freqs,scat,'ro-')
+    plt.xlabel('frequency')
+    plt.ylabel('scattered power (fraction of total power)')
+    fig.subplots_adjust(wspace=0.5, hspace=0)
+    fig.suptitle(&quot;multi mode waveguide with pulsed eigenmode source\n center frequency = {}, band = {} (mode B)&quot;.format(fsrc,bnum))
+    plt.savefig('multi_mode_eigsource_B.png',dpi=150,bbox_inches='tight')
+</code></pre>
+<p>Results are shown for the single mode waveguide with one eigenmode <strong>A</strong> (band 1) using a center frequency of <code>0.15</code> and multi mode waveguide with two eigenmodes <strong>A</strong> (higher-order mode, band 2) and <strong>B</strong> (fundamental mode, band 1), all with a center frequency of <code>0.35</code>.</p>
+<p><img alt="" src="../../images/single_mode_eigsource_pulse.png#center" /></p>
+<p><img alt="" src="../../images/multi_mode_eigsource_pulse_A.png#center" /></p>
+<p><img alt="" src="../../images/multi_mode_eigsource_pulse_B.png#center" /></p>
+<p>These results demonstrate that in all cases the error is nearly 0 at the center frequency and increases roughly quadratically away from the center frequency. The error tends to be smallest for single-mode waveguides because a localized source excitation couples most strongly into guided modes. Note that in this case the maximum error is ~1% for a source bandwidth that is 67% of its center frequency.  For the multi-mode waveguide, a much larger scattering loss is obtained for the higher-order mode <strong>A</strong> at frequencies below the center frequency, but this is simply because that mode ceases to be guided around a frequency <code>≈ 0.3</code>, and the mode pattern changes dramatically as this cutoff is approached.</p>
+<p>Another thing to keep in mind is that, even if the modes are imperfectly launched (some power leaks into radiation or into the backward direction), the correct result involving the Poynting flux can still be obtained by the standard procedure of normalizing against a separate straight-waveguide run (and subtracting off fields before computing reflected fluxes), as explained in <a href="../../Introduction/#transmittancereflectance-spectra">Introduction</a>. More accurate mode launching may be required for multi-mode waveguide systems, however, as power coupled into an undesired <em>guided</em> mode will not typically decay away.</p>
+<h3 id="oblique-waveguides">Oblique Waveguides<a class="headerlink" href="#oblique-waveguides" title="Permanent link">#</a></h3>
+<p>The eigenmode source can also be used to launch modes in an oblique/rotated waveguide. The results are shown in the two figures below for the single- and multi-mode case. There is one subtlety: for mode <strong>A</strong> in the multi-mode case, the <code>bnum</code> parameter is set to 3 rather than 2. This is because a non-zero rotation angle breaks the symmetry in the <span class="arithmatex">\(y\)</span>-direction which therefore precludes the use of <code>EVEN_Y</code> in <code>eig_parity</code>. Without any parity specified for the <span class="arithmatex">\(y\)</span>-direction, the second band corresponds to <em>odd</em> modes. This is why we must select the third band which contains even modes.</p>
+<p>Note that an oblique waveguide leads to a breakdown in the <a href="../../Perfectly_Matched_Layer/#breakdown-of-pml-in-inhomogeneous-media">PML</a>. A simple workaround for mitigating the PML reflection artifacts in this case is to double the <code>thickness</code> from 1 to 2.</p>
+<p><img alt="" src="../../images/oblique_source_singlemode.png#center" /></p>
+<p>There are numerical dispersion artifacts due to the FDTD spatial and temporal discretizations which create negligible backward-propagating waves by the eigenmode current source, carrying approximately 10<sup>-5</sup> of the power of the desired forward-propagating mode. These artifacts can be seen as residues in the field profiles.</p>
+<p><img alt="" src="../../images/oblique_source_multimode.png#center" /></p>
+<p>We can demonstrate that the total power in a waveguide with <em>arbitrary</em> orientation — computed using two equivalent methods via <code>get_fluxes</code> and <a href="../../Mode_Decomposition/">mode decomposition</a> — can be computed by a single flux plane oriented along the <span class="arithmatex">\(y\)</span> direction: thanks to <a href="https://en.wikipedia.org/wiki/Poynting%27s_theorem">Poynting's theorem</a>, the flux through any plane crossing a lossless waveguide is the same, regardless of whether the plane is oriented perpendicular to the waveguide. Furthermore, the eigenmode source is normalized in such a way as to produce the same power regardless of the waveguide orientation — in consequence, the flux values for mode <strong>A</strong> of the single-mode case for rotation angles of 0°, 20°, and 40° are 1111.280794, 1109.565028, and 1108.759159, within 0.2% (discretization error) of one another. Note that the Poynting flux could have been normalized to unity by setting the <code>EigenModeSource</code>/<code>Source</code> object parameter <code>amplitude=1/src.fourier_transform(fsrc)</code> where <code>fsrc=0.15</code> and <code>src=mp.GaussianSource(fsrc,fwidth=0.2*fsrc)</code>.</p>
+<p>Finally, we demonstrate that as long as the line source intersects the waveguide <em>and</em> <code>eig_kpoint</code> is not nearly parallel to the direction of the line source, the mode can be properly launched. As shown in the field profiles below for the single-mode waveguide, there does not seem to be any noticeable distortion in the launched mode as the waveguide approaches glancing incidence to the source plane up to 80°, where the total power in the forward-propagating mode is 97%. Note that the line source spans the entire length of the cell extending into the PML region (not shown). In this example where the cell length is 10 μm (or 10X the width of the waveguide), the maximum rotation angle is ~84°, where the power drops to 59% and backward-propagating fields are clearly visible.</p>
+<p><img alt="" src="../../images/waveguide_rotation_glancing_small.png#center" /></p>
+<p>Increasing the size of the cell improves results at the expense of a larger simulation. The field profiles shown below are for a cell where the length has been doubled to 20 μm. The waveguide power at 84° increases from 59% to 80%. However, as the waveguide mode approaches glancing incidence, sensitivity to discretization errors increases because the mode varies rapidly with frequency on a glancing-angle cross-section, and you will eventually need to increase the resolution as well as the cell size. For waveguide angles much beyond 45° you probably want to simply change the orientation of the line source by 90°.</p>
+<p><img alt="" src="../../images/waveguide_rotation_glancing.png#center" /></p>
+<h2 id="planewaves-in-homogeneous-media">Planewaves in Homogeneous Media<a class="headerlink" href="#planewaves-in-homogeneous-media" title="Permanent link">#</a></h2>
+<p>The eigenmode source can also be used to launch <a href="https://en.wikipedia.org/wiki/Plane_wave">planewaves</a> in homogeneous media. The dispersion relation for a planewave is <span class="arithmatex">\(\omega=|\vec{k}|/n\)</span> where <span class="arithmatex">\(\omega\)</span> is the angular frequency of the planewave and <span class="arithmatex">\(\vec{k}\)</span> its wavevector; <span class="arithmatex">\(n\)</span> is the refractive index of the homogeneous medium (<span class="arithmatex">\(c=1\)</span> in Meep units). This example demonstrates launching planewaves in a uniform medium with <span class="arithmatex">\(n=1.5\)</span> at four incident angles: 0°, 40°, 120°, and 210°.</p>
+<p>The simulation script is in <a href="https://github.com/NanoComp/meep/blob/master/python/examples/oblique-planewave.py">examples/oblique-planewave.py</a>. The notebook is in <a href="https://nbviewer.jupyter.org/github/NanoComp/meep/blob/master/python/examples/oblique-planewave.ipynb">examples/oblique-planewave.ipynb</a>.</p>
+<pre><code class="language-py">import matplotlib.pyplot as plt
+import meep as mp
+import numpy as np
+
+
+mp.verbosity(2)
+
+resolution_um = 50
+pml_um = 2.0
+size_um = 10.0
+cell_size = mp.Vector3(size_um + 2 * pml_um, size_um, 0)
+pml_layers = [mp.PML(thickness=pml_um, direction=mp.X)]
+
+# Incident angle of planewave. 0 is +x with rotation in
+# counter clockwise (CCW) direction around z axis.
+incident_angle = np.radians(40.0)
+
+wavelength_um = 1.0
+frequency = 1 / wavelength_um
+
+n_mat = 1.5  # refractive index of homogeneous material
+default_material = mp.Medium(index=n_mat)
+
+k_point = mp.Vector3(n_mat * frequency, 0, 0).rotate(
+    mp.Vector3(0, 0, 1),
+    incident_angle
+)
+
+if incident_angle == 0:
+    direction = mp.AUTOMATIC
+    eig_parity = mp.EVEN_Y + mp.ODD_Z
+    symmetries = [mp.Mirror(mp.Y)]
+    eig_vol = None
+else:
+    direction = mp.NO_DIRECTION
+    eig_parity = mp.ODD_Z
+    symmetries = []
+    eig_vol = mp.Volume(
+        center=mp.Vector3(),
+        size=mp.Vector3(0, 1 / resolution_um, 0)
+    )
+
+sources = [
+    mp.EigenModeSource(
+        src=mp.ContinuousSource(frequency),
+        center=mp.Vector3(),
+        size=mp.Vector3(0, size_um, 0),
+        direction=direction,
+        eig_kpoint=k_point,
+        eig_band=1,
+        eig_parity=eig_parity,
+        eig_vol=eig_vol
+    )
+]
+
+sim = mp.Simulation(
+    cell_size=cell_size,
+    resolution=resolution_um,
+    boundary_layers=pml_layers,
+    sources=sources,
+    k_point=k_point,
+    default_material=default_material,
+    symmetries=symmetries
+)
+
+sim.run(until=23.56)
+
+output_plane = mp.Volume(
+    center=mp.Vector3(),
+    size=mp.Vector3(size_um, size_um, 0)
+)
+
+fig, ax = plt.subplots()
+sim.plot2D(fields=mp.Ez, output_plane=output_plane, ax=ax)
+fig.savefig(&quot;planewave_source.png&quot;, bbox_inches=&quot;tight&quot;)
+</code></pre>
+<p>There are several items to note in this script.</p>
+<ol>
+<li>The line source spans the <em>entire</em> length of the cell. Planewave sources extending into the PML region must include <code>is_integrated=True</code> in the source definition.</li>
+<li>The wavevector of the planewave <span class="arithmatex">\(\vec{k}\)</span> is defined using the <code>k_point</code> which specifies Bloch-periodic boundaries. PML boundaries are used only along the <span class="arithmatex">\(x\)</span> direction.</li>
+<li>The <code>eig_vol</code> parameter of the <code>EigenModeSource</code> defines a volume that is one-pixel thick in the direction of the line monitor. This is necessary to ensure that the<code>eig_kpoint</code> is interpreted by MPB as the wavevector of a planewave — that is, so it is the wavevector as defined for a homogeneous material (continuous translational symmetry) rather than as a Bloch wavevector for a system with discrete translational symmetry.</li>
+<li>Based on the convention used to define the incident angle whereby 0° is the <span class="arithmatex">\(x\)</span> direction with rotation counter clockwise around the <span class="arithmatex">\(z\)</span> axis, a planewave with an incident angle of 120° is propagating towards the (-x, +y) direction and 210° is propagating towards the (-x, -y) direction.</li>
+</ol>
+<p>This example involves a continuous-wave (CW) time profile. For a pulse profile, the oblique planewave is incident at a given angle for only a <em>single</em> frequency component of the source as described in <a href="../Basics/#angular-reflectance-spectrum-of-a-planar-interface">Tutorial/Basics/Angular Reflectance Spectrum of a Planar Interface</a>. This is a fundamental feature of FDTD simulations and not of Meep per se. To simulate an incident planewave at multiple angles for a given frequency <span class="arithmatex">\(\omega\)</span>, you will need to perform separate simulations involving different values of <span class="arithmatex">\(\vec{k}\)</span> (<code>k_point</code>) since each set of <span class="arithmatex">\((\vec{k},\omega)\)</span> specifying the Bloch-periodic boundaries and the frequency of the source will produce a different angle of the planewave. For more details, refer to Section 4.5 ("Efficient Frequency-Angle Coverage") in <a href="https://arxiv.org/abs/1301.5366">Chapter 4</a> ("Electromagnetic Wave Source Conditions") of <a href="https://www.amazon.com/Advances-FDTD-Computational-Electrodynamics-Nanotechnology/dp/1608071707">Advances in FDTD Computational Electrodynamics: Photonics and Nanotechnology</a>.</p>
+<p>Shown below are the steady-state field profiles generated by the planewave for the four incident angles. Residues of the backward-propagating waves due to the discretization are slightly visible.</p>
+<p><img alt="" src="../../images/eigenmode_planewave.png#center" /></p>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../Frequency_Domain_Solver/" class="btn btn-neutral float-left" title="Tutorial/Frequency-Domain Solver"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../Custom_Source/" class="btn btn-neutral float-right" title="Tutorial/Custom Source">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  
+    <script src="../../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "../..";</script>
+    <script src="../../js/theme_extra.js"></script>
+    <script src="../../js/theme.js"></script>
+      <script src="../../javascripts/mathjax.js"></script>
+      <script src="https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js"></script>
+      <script src="../../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

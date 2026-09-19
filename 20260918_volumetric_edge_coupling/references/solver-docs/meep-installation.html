@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="author" content="MEEP Developers" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>Installation - MEEP Documentation</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../css/extra.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Installation";
+        var mkdocs_page_input_path = "Installation.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+<script async type="text/javascript" src="/_/static/javascript/readthedocs-addons.js"></script><meta name="readthedocs-project-slug" content="meep" /><meta name="readthedocs-version-slug" content="latest" /><meta name="readthedocs-resolver-filename" content="/Installation/" /><meta name="readthedocs-http-status" content="200" /></head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> MEEP Documentation
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="..">Manual</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../Introduction/">Introduction</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../Download/">Download</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../FAQ/">FAQ</a>
+                </li>
+              </ul>
+              <ul class="current">
+                <li class="toctree-l1 current"><a class="reference internal current" href="#">Installation</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#building-from-source">Building from Source</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#conda-packages">Conda Packages</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#official-releases">Official Releases</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#older-releases">Older Releases</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#version-number">Version Number</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#non-networked-systems">Non-Networked Systems</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#installation-on-linux">Installation on Linux</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#installation-from-source-on-macos">Installation from source on macOS</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#installation-on-windows">Installation on Windows</a>
+    </li>
+    </ul>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../Build_From_Source/">Build From Source</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../Acknowledgements/">Acknowledgements</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../License_and_Copyright/">License and Copyright</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Features</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../Materials/">Materials</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../Subpixel_Smoothing/">Subpixel Smoothing</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../Exploiting_Symmetry/">Exploiting Symmetry</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../Perfectly_Matched_Layer/">Perfectly Matched Layers</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../Parallel_Meep/">Parallel Meep</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../Synchronizing_the_Magnetic_and_Electric_Fields/">Synchronizing the Magnetic and Electric Fields</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../Mode_Decomposition/">Mode Decomposition</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../Field_Functions/">Field Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../The_Run_Function_Is_Not_A_Loop/">The Run Function is Not a Loop</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../Yee_Lattice/">Yee Lattice</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../Units_and_Nonlinearity/">Units and Nonlinearity</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../2d_Cell_Special_kz/">2d Cell with Out-of-Plane Wavevector</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../Eigensolver_Math/">Frequency-Domain Eigensolver</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Python Interface</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../Python_User_Interface/">User Interface</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../Python_Developer_Information/">Developer Information</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../Python_Tutorials/Basics/">Tutorial/Basics</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../Python_Tutorials/Cylindrical_Coordinates/">Tutorial/Cylindrical Coordinates</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../Python_Tutorials/Resonant_Modes_and_Transmission_in_a_Waveguide_Cavity/">Tutorial/Resonant Modes and Transmission in a Waveguide Cavity</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../Python_Tutorials/Material_Dispersion/">Tutorial/Material Dispersion</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../Python_Tutorials/Third_Harmonic_Generation/">Tutorial/Third Harmonic Generation</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../Python_Tutorials/Near_to_Far_Field_Spectra/">Tutorial/Near-to-Far Field Spectra</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../Python_Tutorials/Local_Density_of_States/">Tutorial/Local Density of States</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../Python_Tutorials/Optical_Forces/">Tutorial/Optical Forces</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../Python_Tutorials/Gyrotropic_Media/">Tutorial/Gyrotropic Media</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../Python_Tutorials/Multilevel_Atomic_Susceptibility/">Tutorial/Multilevel Atomic Susceptibility</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../Python_Tutorials/Frequency_Domain_Solver/">Tutorial/Frequency-Domain Solver</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../Python_Tutorials/Eigenmode_Source/">Tutorial/Eigenmode Source</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../Python_Tutorials/Custom_Source/">Tutorial/Custom Source</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../Python_Tutorials/Mode_Decomposition/">Tutorial/Mode Decomposition</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../Python_Tutorials/GDS_Import/">Tutorial/GDS Import</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../Python_Tutorials/Adjoint_Solver/">Tutorial/Adjoint Solver</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Scheme Interface</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../Scheme_User_Interface/">User Interface</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../Scheme_Tutorials/Basics/">Tutorial/Basics</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../Scheme_Tutorials/Cylindrical_Coordinates/">Tutorial/Cylindrical Coordinates</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../Scheme_Tutorials/Resonant_Modes_and_Transmission_in_a_Waveguide_Cavity/">Tutorial/Resonant Modes and Transmission in a Waveguide Cavity</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../Scheme_Tutorials/Material_Dispersion/">Tutorial/Material Dispersion</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../Scheme_Tutorials/Third_Harmonic_Generation/">Tutorial/Third Harmonic Generation</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../Scheme_Tutorials/Near_to_Far_Field_Spectra/">Tutorial/Near-to-Far Field Spectra</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../Scheme_Tutorials/Local_Density_of_States/">Tutorial/Local Density of States</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../Scheme_Tutorials/Optical_Forces/">Tutorial/Optical Forces</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../Scheme_Tutorials/Gyrotropic_Media/">Tutorial/Gyrotropic Media</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../Scheme_Tutorials/Multilevel_Atomic_Susceptibility/">Tutorial/Multilevel Atomic Susceptibility</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../Scheme_Tutorials/Frequency_Domain_Solver/">Tutorial/Frequency-Domain Solver</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../Scheme_Tutorials/Eigenmode_Source/">Tutorial/Eigenmode Source</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../Scheme_Tutorials/Custom_Source/">Tutorial/Custom Source</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../Scheme_Tutorials/Mode_Decomposition/">Tutorial/Mode Decomposition</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../Scheme_Tutorials/Casimir_Forces/">Tutorial/Casimir Forces</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../Guile_and_Scheme_Information/">Guile and Scheme Information</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">C++ Interface</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../C%2B%2B_Developer_Information/">Developer Information</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../Chunks_and_Symmetry/">Chunks and Symmetry</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../C%2B%2B_Tutorial/">Tutorial/Basics</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">MEEP Documentation</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
+      <li class="breadcrumb-item active">Installation</li>
+    <li class="wy-breadcrumbs-aside">
+          <a href="https://github.com/NanoComp/meep/edit/master/doc/docs/Installation.md" class="icon icon-github"> Edit on GitHub</a>
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <hr />
+<h1 id="installation">Installation<a class="headerlink" href="#installation" title="Permanent link">#</a></h1>
+<hr />
+<div class="toc"><span class="toctitle">Table of Contents</span><ul>
+<li><a href="#installation">Installation</a><ul>
+<li><a href="#building-from-source">Building from Source</a></li>
+<li><a href="#conda-packages">Conda Packages</a><ul>
+<li><a href="#official-releases">Official Releases</a><ul>
+<li><a href="#older-releases">Older Releases</a></li>
+</ul>
+</li>
+<li><a href="#version-number">Version Number</a></li>
+<li><a href="#non-networked-systems">Non-Networked Systems</a></li>
+</ul>
+</li>
+<li><a href="#installation-on-linux">Installation on Linux</a></li>
+<li><a href="#installation-from-source-on-macos">Installation from source on macOS</a></li>
+<li><a href="#installation-on-windows">Installation on Windows</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<h2 id="building-from-source">Building from Source<a class="headerlink" href="#building-from-source" title="Permanent link">#</a></h2>
+<p>Building Meep directly from the source code can be challenging for users unfamiliar with building Unix software. This is mainly because of the numerous prerequisites that must be installed as well as the need to specify in the build scripts where these packages are to be found.</p>
+<p>Meep's build systems uses the standard <a href="https://en.wikipedia.org/wiki/GNU_Build_System">GNU Autotools</a> <code>./configure &amp;&amp; make &amp;&amp; make install</code> machinery, but requires a number of prerequisites in order to obtain a full-featured Meep installation: <a href="http://mpb.readthedocs.io/en/latest/">MPB</a>, <a href="https://github.com/NanoComp/libctl">Libctl</a>, <a href="https://github.com/NanoComp/harminv">Harminv</a>, <a href="https://github.com/HomerReid/libGDSII">libGDSII</a>, <a href="https://en.wikipedia.org/wiki/Message_Passing_Interface">MPI</a>, <a href="https://en.wikipedia.org/wiki/OpenMP">OpenMP</a>, <a href="https://support.hdfgroup.org/HDF5/">HDF5</a>, <a href="https://www.python.org/">Python</a>, and <a href="https://www.gnu.org/software/guile/">Guile</a>. MPB and Harminv, in turn, require <a href="http://www.netlib.org/lapack/lug/node11.html">LAPACK and BLAS</a> and <a href="http://fftw.org/">FFTW</a> to be installed.</p>
+<p><strong>Note:</strong> libGDSII is deprecated and support for it will be removed in a future release of Meep because the library is no longer maintained. We recommend using the <a href="https://github.com/heitzmann/gdstk">gdstk</a> Python package to read and manipulate GDS files instead.</p>
+<p>Gzipped tarballs of stable versions of the source are available on the <a href="https://github.com/NanoComp/meep/releases">releases page</a>, and you can also do a <code>git clone</code> of the master branch of the <a href="https://github.com/NanoComp/meep">Meep repository on Github</a> if you have Autotools installed. For more information, see <a href="../Build_From_Source/">Build From Source</a>.</p>
+<h2 id="conda-packages">Conda Packages<a class="headerlink" href="#conda-packages" title="Permanent link">#</a></h2>
+<h3 id="official-releases">Official Releases<a class="headerlink" href="#official-releases" title="Permanent link">#</a></h3>
+<p>The <strong>recommended</strong> way to install PyMeep is using the <a href="https://conda.io/docs/">Conda</a> package manager. The <a href="https://anaconda.org/conda-forge/pymeep">precompiled binaries</a> run as <em>fast or faster</em> than the typical build from source, are simple to install, can be upgraded easily, and take advantage of newer compilers and dependencies than those available in typical systems. Obviously, building from source can still provide advantages if you have access to special hardware or performance libraries that require specific compiler flags (e.g., <a href="https://en.wikipedia.org/wiki/Intel_C%2B%2B_Compiler">icc</a>); building from source is also required if you are interested in working on the Meep <a href="https://github.com/NanoComp/meep">source code</a>, are performing system-wide installations on a server, or are using systems unsupported by Conda (e.g., supercomputers with Cray MPI).</p>
+<p>Binary packages for serial and parallel PyMeep on Linux and macOS (x86 and ARM) are currently available (64 bit architectures only), and are <a href="https://github.com/conda-forge/pymeep-feedstock">updated with each new Meep release</a>. Note: the Conda packages will <em>not</em> work on native <a href="#installation-on-windows">Windows</a> (unless you install the Ubuntu terminal app) and do <em>not</em> include the Scheme interface which must be <a href="../Build_From_Source/">built from source</a>. The easiest way to get started is to install <a href="https://conda.io/miniconda.html">Miniconda</a>, which comes with everything necessary to create Python environments with Conda. For example, to install Miniconda with Python 3 on Linux:</p>
+<pre><code class="language-bash">wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh
+bash miniconda.sh -b -p &lt;desired_prefix&gt;
+export PATH=&lt;desired_prefix&gt;/bin:$PATH
+</code></pre>
+<p>Next, we create a Conda environment for PyMeep (serial version) to isolate it from other Python libraries that may be installed.</p>
+<pre><code class="language-bash">conda create -n mp -c conda-forge pymeep
+</code></pre>
+<p>This creates an environment called "mp" (you can name this anything you like) with PyMeep and all its dependencies. This will default to the version of Python in your Miniconda installation. The tutorial examples require three additional packages which are not included as part of PyMeep and must be installed separately: (1) <a href="https://anaconda.org/conda-forge/autograd">autograd</a>, (2) <a href="https://anaconda.org/conda-forge/ffmpeg">ffmpeg</a>, and (3) <a href="https://anaconda.org/conda-forge/h5utils">h5utils</a>.</p>
+<p>Next, we need to activate the environment before we can start using it.</p>
+<pre><code class="language-bash">conda activate mp
+</code></pre>
+<p>Now, <code>python -c 'import meep'</code> (or <code>python3 -c 'import meep'</code>) should work, and you can try running some of the examples in <a href="https://github.com/NanoComp/meep/tree/master/python/examples">meep/python/examples</a>.</p>
+<p><strong>Note:</strong> There is currently an issue with openblas 0.3.5 that causes segmentation faults on newer Skylake X-series cpus. If <code>import meep</code> results in an "illegal instruction" error, downgrade openblas to version <code>0.3.4</code> as follows:</p>
+<pre><code class="language-bash">conda install -c conda-forge openblas=0.3.4
+</code></pre>
+<p>Warning: The <code>pymeep</code> package is built to work with OpenBLAS, which means numpy should also use OpenBLAS. Since the default numpy is built with MKL, installing other packages into the environment may cause conda to switch to an MKL-based numpy. This can cause segmentation faults when calling MPB. To work around this, you can make sure the <code>no-mkl</code> conda package is installed, make sure you're getting packages from the <code>conda-forge</code> channel (they use OpenBLAS for everything), or as a last resort, run <code>import meep</code> before importing any other library that is linked to MKL. When installing additional packages into the <code>meep</code> environment, you should always try to install using the <code>-c conda-forge</code> flag. <code>conda</code> can occasionally be too eager in updating packages to new versions which can leave the environment unstable. If running <code>conda install -c conda-forge &lt;some-package&gt;</code> attempts to replace <code>conda-forge</code> packages with equivalent versions from the <code>defaults</code> channel, you can force it to only use channels you specify (i.e., arguments to the <code>-c</code> flag) with the <code>--override-channels</code> flag.</p>
+<p>Installing parallel PyMeep follows the same pattern, but the package "build string" must be specified to bring in the MPI variant:</p>
+<pre><code class="language-bash">conda create -n pmp -c conda-forge pymeep=*=mpi_mpich_*
+conda activate pmp
+</code></pre>
+<p>The first <code>*</code> requests the latest version of Pymeep, and the <code>mpi_mpich_*</code> says to get a version that includes "mpi_mpich" in the build string (the packages are currently built with the MPICH implementation of MPI).</p>
+<p>The environment includes <code>mpi4py</code>, so you can run an MPI job with 4 processes like this:</p>
+<pre><code class="language-bash">mpirun -np 4 python &lt;script_name&gt;.py
+</code></pre>
+<p>If you run into issues, make sure your <code>PYTHONPATH</code> environment variable is unset.</p>
+<p><strong>Note:</strong> If you experience crashes when using <code>matplotlib</code> on macOS, try importing <code>meep</code> before importing <code>matplotlib</code>. In addition add the following line to your <code>~/.matplotlib/matplotlibrc</code> file to force the <code>TkAgg</code> backend:</p>
+<pre><code>backend: TkAgg
+</code></pre>
+<p><strong>Note:</strong> For pymeep-parallel on macOS, a <a href="https://github.com/open-mpi/ompi/issues/2956">bug</a> in openmpi requires that the environment variable <code>TMPDIR</code> be set to a short path like <code>/tmp</code>. Without this workaround, you may see errors similar to this:</p>
+<pre><code class="language-bash">[laptop:68818] [[53415,0],0] ORTE_ERROR_LOG: Bad
+parameter in file ../../orte/orted/pmix/pmix_server.c at line 264
+
+[laptop:68818] [[53415,0],0] ORTE_ERROR_LOG: Bad
+parameter in file ../../../../../orte/mca/ess/hnp/ess_hnp_module.c at line
+666
+</code></pre>
+<p><strong>Note:</strong> To update, <code>pymeep</code>, you can do <code>conda update -c conda-forge pymeep</code>.  If you run into problems (e.g. some other update has interfered with your environment), you can instead create a new environment from scratch each time.</p>
+<h4 id="older-releases">Older Releases<a class="headerlink" href="#older-releases" title="Permanent link">#</a></h4>
+<p>Older releases of PyMeep are available on the <code>conda-forge</code> channel. The full list of available versions is <a href="https://anaconda.org/conda-forge/pymeep/files">here</a>. Examples:</p>
+<pre><code class="language-bash"># Create an environment with the serial version of pymeep 1.8.0
+conda create -n mp1.8 -c conda-forge pymeep=1.8.0
+# Create an environment with the parallel version of pymeep 1.9.0
+conda create -n pmp1.9 -c conda-forge pymeep=1.9.0=mpi_mpich_*
+</code></pre>
+<p>Note that parallel (MPI) versions are only available with <code>pymeep &gt;= 1.8.0</code>.</p>
+<h3 id="version-number">Version Number<a class="headerlink" href="#version-number" title="Permanent link">#</a></h3>
+<p>You can determine the version number as well as the most recent commit of the Meep module via:</p>
+<pre><code class="language-py">import meep as mp
+print(mp.__version__)
+</code></pre>
+<p>This will show something like <code>1.11.0-1-g415bc8eb</code> where the first three digits (<code>1.11.0</code>) refer to a stable tarball release, the following digit is the number of commits after this stable release, and the eight characters following the <code>g</code> in the final string refer to the commit hash.</p>
+<h3 id="non-networked-systems">Non-Networked Systems<a class="headerlink" href="#non-networked-systems" title="Permanent link">#</a></h3>
+<p>To install the PyMeep Conda package on a <a href="https://docs.anaconda.com/anaconda/user-guide/tasks/install-packages/#installing-packages-on-a-non-networked-air-gapped-computer">non-networked system</a>, using the bz2 tarball of the <a href="https://anaconda.org/conda-forge/pymeep/files">official release</a> will <em>not</em> work without the dependencies. A possible workaround is <a href="https://github.com/conda/conda-pack">Conda-Pack</a>.</p>
+<h2 id="installation-on-linux">Installation on Linux<a class="headerlink" href="#installation-on-linux" title="Permanent link">#</a></h2>
+<p>For most <a href="https://en.wikipedia.org/wiki/Linux_distribution">Linux distributions</a>, there should be precompiled packages for most of Meep's prerequisites below, and we <em>highly</em> recommend installing those prerequisites using the available packages for your system whenever possible. Using precompiled packages means that you don't have to worry about how to install things manually. You are using packages which have already been tweaked to work well with your system, and usually your packages will be automatically upgraded when you upgrade the rest of your system.</p>
+<p>There are upcoming packages for <a href="https://github.com/NanoComp/meep/releases/tag/v1.17.1">Meep version 1.17.1</a> with Python interface for Ubuntu 21.04 ("Hirsute Hippo") (<a href="https://packages.ubuntu.com/hirsute/python3-meep">serial</a> and <a href="https://packages.ubuntu.com/hirsute/python3-meep-openmpi">parallel</a>) and Debian 11 ("Bullseye") (<a href="https://packages.debian.org/bullseye/python3-meep">serial</a> and <a href="https://packages.debian.org/bullseye/python3-meep-openmpi">parallel</a>) which will be released in April 2021.</p>
+<p>In the meantime, the following dependencies are already available as precompiled packages: BLAS and LAPACK possibly as part of a package for <a href="https://en.wikipedia.org/wiki/Automatically_Tuned_Linear_Algebra_Software">Atlas BLAS</a>, Guile, MPI, and HDF5. One thing to be careful of is that many distributions split packages into two parts: one main package for the libraries and programs, and a <strong>devel</strong> package for <a href="https://en.wikipedia.org/wiki/Header_file">header files</a> and other things needed to compile software using those libraries. You will need to install <strong>both</strong>. So, for example, you will probably need both a <code>guile</code> package (probably installed by default) and a <code>guile-dev</code> or <code>guile-devel</code> package (probably <em>not</em> installed by default), and similarly for HDF5 etcetera. You will probably also want to install a <code>libpng-dev</code> or <code>libpng-devel</code> package in order to compile the <code>h5topng</code> utility in <a href="https://github.com/NanoComp/h5utils/blob/master/README.md">h5utils</a>.</p>
+<h2 id="installation-from-source-on-macos">Installation from source on macOS<a class="headerlink" href="#installation-from-source-on-macos" title="Permanent link">#</a></h2>
+<p>Most macOS users will probably want to install via the Conda packages as described above.  It is also possible to compile Meep from source, however.</p>
+<p>Since <a href="https://en.wikipedia.org/wiki/macOS">macOS</a> is, at its heart, a Unix system, one can, in principle compile and install Meep and all its prerequisites just as on any other Unix system. However, this process is much easier using the <a href="https://en.wikipedia.org/wiki/Homebrew_(package_management_software)">Homebrew</a> package to install most of the prerequisites, since it will handle dependencies and other details for you. You will need <a href="http://support.apple.com/kb/PH3920">administrator privileges</a> on your Mac.</p>
+<p>The first steps are:</p>
+<ul>
+<li>Install <a href="https://en.wikipedia.org/wiki/Xcode">Xcode</a>, the development/compiler package from Apple: type <code>xcode-select --install</code> in the <a href="https://en.wikipedia.org/wiki/Terminal_(macOS)">Terminal</a>.</li>
+<li>Install Homebrew: download from the <a href="http://brew.sh/">Homebrew site</a> and follow the instructions there.</li>
+<li>Run the following commands in the terminal to compile and install the prerequisites. This may take a while to complete because it will install lots of other stuff first</li>
+</ul>
+<pre><code class="language-sh">brew doctor
+brew install hdf5 guile fftw gsl libpng autoconf automake libtool swig
+</code></pre>
+<p>If you don't have your own Python installation (e.g. via <a href="https://github.com/conda-forge/miniforge">miniforge</a>), you should install <code>numpy</code> and <code>matplotlib</code> and other packages used by Meep and its tests:</p>
+<pre><code class="language-sh">HDF5_DIR=&quot;$(brew --prefix hdf5)&quot; pip3 install numpy matplotlib scipy autograd jax parameterized h5py
+</code></pre>
+<p>Now, install the Harminv, libctl, MPB, and Meep packages from source. Download <a href="https://github.com/NanoComp/harminv/blob/master/README.md">Harminv</a> and, in the <code>harminv</code> directory, do:</p>
+<pre><code class="language-sh">./configure CPPFLAGS=&quot;-I$(brew --prefix)/include&quot; LDFLAGS=&quot;-L$(brew --prefix)/lib&quot; PYTHON=python3 &amp;&amp; make &amp;&amp; sudo make install
+</code></pre>
+<p>Use the same commands for <a href="https://libctl.readthedocs.io">libctl</a>, <a href="https://mpb.readthedocs.io">MPB</a>, (optionally) <a href="https://github.com/NanoComp/h5utils">h5utils</a>, (optionally) <a href="https://github.com/HomerReid/libGDSII">libGDSII</a>, and Meep. For more detailed information, see <a href="../Build_From_Source/">Build From Source</a>.  Note that if you are installing from a <code>git clone</code> rather than from a release <code>.tar.gz</code> file, you will need to first run <code>sh autogen.sh</code>, and you should add <code>--enable-maintainer-mode</code> to the <code>configure</code> arguments.</p>
+<p>You are done, and can now run Meep (Scheme interface) just by typing <code>meep</code>. You can run <code>make check</code> in the meep directory if you want to perform a self-test.</p>
+<p>To build the latest version of Meep from source on macOS Sierra, follow these <a href="https://www.mail-archive.com/meep-discuss@ab-initio.mit.edu/msg05811.html">instructions</a>.</p>
+<h2 id="installation-on-windows">Installation on Windows<a class="headerlink" href="#installation-on-windows" title="Permanent link">#</a></h2>
+<p>Native Windows installation is currently unsupported. The recommended procedure is to install Ubuntu using the <a href="https://docs.microsoft.com/en-us/windows/wsl/install-win10">Windows Subsystem for Linux</a>. This gives you access to a bash terminal running Ubuntu from within Windows. From there you can install the Conda packages as described above. The drawback is that you can't see plots from matplotlib (though saving them to disk and opening them from Windows works fine). The easiest way around this is to add the <code>jupyter</code> package to the <code>conda create ...</code> command. This will allow you to run a <a href="https://jupyter.readthedocs.io/en/latest/">Jupyter notebook</a> in the browser, and from there you can visualize plots interactively.</p>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../FAQ/" class="btn btn-neutral float-left" title="FAQ"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../Build_From_Source/" class="btn btn-neutral float-right" title="Build From Source">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  
+    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "..";</script>
+    <script src="../js/theme_extra.js"></script>
+    <script src="../js/theme.js"></script>
+      <script src="../javascripts/mathjax.js"></script>
+      <script src="https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js"></script>
+      <script src="../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

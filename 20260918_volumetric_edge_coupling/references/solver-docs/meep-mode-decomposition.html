@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="author" content="MEEP Developers" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>Mode Decomposition - MEEP Documentation</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../css/extra.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Mode Decomposition";
+        var mkdocs_page_input_path = "Mode_Decomposition.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+<script async type="text/javascript" src="/_/static/javascript/readthedocs-addons.js"></script><meta name="readthedocs-project-slug" content="meep" /><meta name="readthedocs-version-slug" content="latest" /><meta name="readthedocs-resolver-filename" content="/Mode_Decomposition/" /><meta name="readthedocs-http-status" content="200" /></head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> MEEP Documentation
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="..">Manual</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../Introduction/">Introduction</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../Download/">Download</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../FAQ/">FAQ</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../Installation/">Installation</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../Build_From_Source/">Build From Source</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../Acknowledgements/">Acknowledgements</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../License_and_Copyright/">License and Copyright</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Features</span></p>
+              <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" href="../Materials/">Materials</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../Subpixel_Smoothing/">Subpixel Smoothing</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../Exploiting_Symmetry/">Exploiting Symmetry</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../Perfectly_Matched_Layer/">Perfectly Matched Layers</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../Parallel_Meep/">Parallel Meep</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../Synchronizing_the_Magnetic_and_Electric_Fields/">Synchronizing the Magnetic and Electric Fields</a>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">Mode Decomposition</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#theoretical-background">Theoretical Background</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#function-description">Function Description</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#normalization">Normalization</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#related-functions">Related Functions</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#computing-mpb-eigenmodes">Computing MPB Eigenmodes</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#working-with-mpb-eigenmodes">Working with MPB Eigenmodes</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#exporting-frequency-domain-fields">Exporting Frequency-Domain Fields</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#computing-overlap-integrals">Computing Overlap Integrals</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#how-mode-decomposition-works">How Mode Decomposition Works</a>
+    </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../Field_Functions/">Field Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../The_Run_Function_Is_Not_A_Loop/">The Run Function is Not a Loop</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../Yee_Lattice/">Yee Lattice</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../Units_and_Nonlinearity/">Units and Nonlinearity</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../2d_Cell_Special_kz/">2d Cell with Out-of-Plane Wavevector</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../Eigensolver_Math/">Frequency-Domain Eigensolver</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Python Interface</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../Python_User_Interface/">User Interface</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../Python_Developer_Information/">Developer Information</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../Python_Tutorials/Basics/">Tutorial/Basics</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../Python_Tutorials/Cylindrical_Coordinates/">Tutorial/Cylindrical Coordinates</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../Python_Tutorials/Resonant_Modes_and_Transmission_in_a_Waveguide_Cavity/">Tutorial/Resonant Modes and Transmission in a Waveguide Cavity</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../Python_Tutorials/Material_Dispersion/">Tutorial/Material Dispersion</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../Python_Tutorials/Third_Harmonic_Generation/">Tutorial/Third Harmonic Generation</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../Python_Tutorials/Near_to_Far_Field_Spectra/">Tutorial/Near-to-Far Field Spectra</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../Python_Tutorials/Local_Density_of_States/">Tutorial/Local Density of States</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../Python_Tutorials/Optical_Forces/">Tutorial/Optical Forces</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../Python_Tutorials/Gyrotropic_Media/">Tutorial/Gyrotropic Media</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../Python_Tutorials/Multilevel_Atomic_Susceptibility/">Tutorial/Multilevel Atomic Susceptibility</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../Python_Tutorials/Frequency_Domain_Solver/">Tutorial/Frequency-Domain Solver</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../Python_Tutorials/Eigenmode_Source/">Tutorial/Eigenmode Source</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../Python_Tutorials/Custom_Source/">Tutorial/Custom Source</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../Python_Tutorials/Mode_Decomposition/">Tutorial/Mode Decomposition</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../Python_Tutorials/GDS_Import/">Tutorial/GDS Import</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../Python_Tutorials/Adjoint_Solver/">Tutorial/Adjoint Solver</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Scheme Interface</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../Scheme_User_Interface/">User Interface</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../Scheme_Tutorials/Basics/">Tutorial/Basics</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../Scheme_Tutorials/Cylindrical_Coordinates/">Tutorial/Cylindrical Coordinates</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../Scheme_Tutorials/Resonant_Modes_and_Transmission_in_a_Waveguide_Cavity/">Tutorial/Resonant Modes and Transmission in a Waveguide Cavity</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../Scheme_Tutorials/Material_Dispersion/">Tutorial/Material Dispersion</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../Scheme_Tutorials/Third_Harmonic_Generation/">Tutorial/Third Harmonic Generation</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../Scheme_Tutorials/Near_to_Far_Field_Spectra/">Tutorial/Near-to-Far Field Spectra</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../Scheme_Tutorials/Local_Density_of_States/">Tutorial/Local Density of States</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../Scheme_Tutorials/Optical_Forces/">Tutorial/Optical Forces</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../Scheme_Tutorials/Gyrotropic_Media/">Tutorial/Gyrotropic Media</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../Scheme_Tutorials/Multilevel_Atomic_Susceptibility/">Tutorial/Multilevel Atomic Susceptibility</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../Scheme_Tutorials/Frequency_Domain_Solver/">Tutorial/Frequency-Domain Solver</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../Scheme_Tutorials/Eigenmode_Source/">Tutorial/Eigenmode Source</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../Scheme_Tutorials/Custom_Source/">Tutorial/Custom Source</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../Scheme_Tutorials/Mode_Decomposition/">Tutorial/Mode Decomposition</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../Scheme_Tutorials/Casimir_Forces/">Tutorial/Casimir Forces</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../Guile_and_Scheme_Information/">Guile and Scheme Information</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">C++ Interface</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../C%2B%2B_Developer_Information/">Developer Information</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../Chunks_and_Symmetry/">Chunks and Symmetry</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../C%2B%2B_Tutorial/">Tutorial/Basics</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">MEEP Documentation</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">Features</li>
+      <li class="breadcrumb-item active">Mode Decomposition</li>
+    <li class="wy-breadcrumbs-aside">
+          <a href="https://github.com/NanoComp/meep/edit/master/doc/docs/Mode_Decomposition.md" class="icon icon-github"> Edit on GitHub</a>
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="mode-decomposition">Mode Decomposition<a class="headerlink" href="#mode-decomposition" title="Permanent link">#</a></h1>
+<p>Meep contains a feature to decompose arbitrary fields into a superposition of the harmonic modes of a given structure via its integration with the eigenmode solver <a href="https://mpb.readthedocs.io">MPB</a>. Only dielectric structures with lossless, wavelength-independent, anisotropic <span class="arithmatex">\(\varepsilon\)</span> are supported by MPB. If dispersive materials are defined in Meep, only the real part of <span class="arithmatex">\(\varepsilon\)</span> is used. This section provides an overview of the theory and implementation of this feature. For examples, see <a href="../Python_Tutorials/Mode_Decomposition/">Tutorial/Mode Decomposition</a>.</p>
+<div class="toc"><span class="toctitle">Table of Contents</span><ul>
+<li><a href="#mode-decomposition">Mode Decomposition</a><ul>
+<li><a href="#theoretical-background">Theoretical Background</a></li>
+<li><a href="#function-description">Function Description</a></li>
+<li><a href="#normalization">Normalization</a></li>
+<li><a href="#related-functions">Related Functions</a><ul>
+<li><a href="#computing-mpb-eigenmodes">Computing MPB Eigenmodes</a></li>
+<li><a href="#working-with-mpb-eigenmodes">Working with MPB Eigenmodes</a></li>
+<li><a href="#exporting-frequency-domain-fields">Exporting Frequency-Domain Fields</a></li>
+<li><a href="#computing-overlap-integrals">Computing Overlap Integrals</a></li>
+</ul>
+</li>
+<li><a href="#how-mode-decomposition-works">How Mode Decomposition Works</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<h2 id="theoretical-background">Theoretical Background<a class="headerlink" href="#theoretical-background" title="Permanent link">#</a></h2>
+<p>The theory underlying mode decomposition is described in Chapter 31 ("Modal methods for Maxwell's equations") of <a href="http://www.springer.com/us/book/9780412099502">Optical Waveguide Theory</a> by Snyder and Love.</p>
+<p>Consider a waveguide with propagation axis along the <span class="arithmatex">\(x\)</span> direction and constant cross section in the transverse directions <span class="arithmatex">\((y,z)\)</span>.   Let <span class="arithmatex">\(\psi = (E_y,E_z,H_y,H_z)\)</span> denote the transverse components of the electric and magnetic fields.  For a given angular frequency <span class="arithmatex">\(\omega\)</span> we can solve for the eigenmodes of the structure: solutions of the form <span class="arithmatex">\(\psi^\pm_n(y,z) e^{\pm i \beta_n x - i\omega t}\)</span>, where <span class="arithmatex">\(\beta_n\)</span> are the propagation constants of the right (<span class="arithmatex">\(+\)</span>) and left (<span class="arithmatex">\(-\)</span>) traveling modes.   (There are also evanescent modes with complex <span class="arithmatex">\(\beta_n\)</span> values, but we will focus mainly here on the propagating modes with real <span class="arithmatex">\(\beta_n\)</span>.)</p>
+<p>Any <em>arbitrary</em> fields <span class="arithmatex">\(\psi\)</span>, Fourier-transformed to a particular <span class="arithmatex">\(\omega\)</span>, can be expressed in the basis of these eigenmodes:</p>
+<div class="arithmatex">\[
+\psi(x,y,z) = \begin{pmatrix} E_y \\ E_z \\ H_y \\ H_z \end{pmatrix} =
+ \sum_{n} \left\{   \alpha^+_n \mathbf \psi^+_n(\vec \rho)e^{+i\beta_n x}
+                    + \alpha^-_n \mathbf \psi^-_n(\vec \rho)e^{-i\beta_n x}
+            \right\}
+\]</div>
+<p><span class="arithmatex">\(\alpha^{\pm}_n\)</span> are the expansion coefficients (the amplitudes of each mode present in the fields). Mode decomposition involves solving for these amplitudes. The following steps are involved in the computation:</p>
+<ol>
+<li>
+<p>In Meep, compute the Fourier-transformed transverse fields <span class="arithmatex">\(\psi\)</span> on a surface that is transverse to the waveguide, stored in a <code>dft_flux</code> object.</p>
+</li>
+<li>
+<p>In MPB, compute the eigenmodes <span class="arithmatex">\(\psi^\pm_n\)</span> as well as the propagation constants <span class="arithmatex">\(\beta_n\)</span> for the same cross-sectional structure.</p>
+</li>
+<li>
+<p>Compute the coefficients <span class="arithmatex">\(\alpha_n^\pm\)</span> for any number of eigenmodes <span class="arithmatex">\(n=1,2,...\)</span>.</p>
+</li>
+</ol>
+<p>This is all done automatically in Meep using the <code>get_eigenmode_coefficients</code> routine.
+Meep normalizes the modes <span class="arithmatex">\(\psi^\pm_n\)</span> to unit power <span class="arithmatex">\(\Re \int \mathbf{E}^*\times\mathbf{H} = 1\)</span>, so that <span class="arithmatex">\(|\alpha^{\pm}_n|^2\)</span> is equal to the <strong>power</strong>
+(Poynting flux) carried by that mode in the Fourier-transformed field <span class="arithmatex">\(\psi\)</span>.</p>
+<h2 id="function-description">Function Description<a class="headerlink" href="#function-description" title="Permanent link">#</a></h2>
+<p>The mode-decomposition feature is available via the <code>meep::fields::get_eigenmode_coefficients</code> function callable from Python or C++. This function makes use of several lower-level functions which are described in more detail below. The C++ header for this function is:</p>
+<pre><code class="language-c++">void fields::get_eigenmode_coefficients(dft_flux flux,
+                                        const volume &amp;eig_vol,
+                                        int *bands,
+                                        int num_bands,
+                                        int parity,
+                                        double eig_resolution,
+                                        double eigensolver_tol,
+                                        std::complex&lt;double&gt; *coeffs,
+                                        double *vgrp,
+                                        kpoint_func user_kpoint_func,
+                                        void *user_kpoint_data,
+                                        vec *kpoint_list,
+                                        vec *kdom_list,
+                                        double *cscale,
+                                        direction d,
+                                        diffractedplanewave *dp)
+</code></pre>
+<p>The following are the parameters:</p>
+<ul>
+<li>
+<p><code>flux</code> is a <code>dft_flux</code> object containing the frequency-domain fields on a cross-sectional slice perpendicular to the waveguide axis.</p>
+</li>
+<li>
+<p><code>eig_vol</code> is the <code>volume</code> passed to <a href="https://mpb.readthedocs.io">MPB</a> for the eigenmode calculation. In most cases this will simply be the volume over which the frequency-domain fields are tabulated (i.e. <code>flux.where</code>).</p>
+</li>
+<li>
+<p><code>bands</code> is an array of integers corresponding to the mode indices (equivalent to <span class="arithmatex">\(n\)</span> in the two formulas above).</p>
+</li>
+<li>
+<p><code>num_bands</code> is the length of the <code>bands</code> array.</p>
+</li>
+<li>
+<p><code>parity</code> is the parity of the mode to calculate, assuming the structure has <span class="arithmatex">\(z\)</span> and/or <span class="arithmatex">\(y\)</span> mirror symmetry in the source region. If the structure has both <span class="arithmatex">\(y\)</span> and <span class="arithmatex">\(z\)</span> mirror symmetry, you can combine more than one of these, e.g. <code>ODD_Z+EVEN_Y</code>. This is especially useful in 2d simulations to restrict yourself to a desired polarization.</p>
+</li>
+<li>
+<p><code>eig_resolution</code> is the spatial resolution to use in MPB for the eigenmode calculations.</p>
+</li>
+<li>
+<p><code>eigensolver_tol</code> is the tolerance to use in the MPB eigensolver. MPB terminates when the eigenvalues stop changing by less than this fractional tolerance.</p>
+</li>
+<li>
+<p><code>coeffs</code> is a user-allocated array of type <code>std::complex&lt;double&gt;</code> (shortened hereafter to <code>cdouble</code>) of length <code>2*num_freqs*num_bands</code> where <code>num_freqs</code> is the number of frequencies stored in the <code>flux</code> object (equivalent to <code>flux-&gt;Nfreq</code>) and <code>num_bands</code> is the length of the <code>bands</code> input array. The expansion coefficients for the mode with frequency <code>nf</code> and band index <code>nb</code>  are stored sequentially as <span class="arithmatex">\(\alpha^+\)</span>, <span class="arithmatex">\(\alpha^-\)</span> starting at slot <code>2*nb*num_freqs+nf</code> of this array</p>
+</li>
+<li>
+<p><code>vgrp</code> is an optional user-allocated <code>double</code> array of length <code>num_freqs*num_bands</code>. On return, <code>vgrp[nb*num_freqs + nf]</code> is the group velocity of the mode with frequency <code>nf</code> and band index <code>nb.</code> If you do not need this information, simply pass <code>NULL</code> for this parameter.</p>
+</li>
+<li>
+<p><code>user_kpoint_func</code> is an optional function you supply to provide an initial guess of the wavevector of a mode with given frequency and band index having the following prototype:</p>
+</li>
+</ul>
+<pre><code class="language-c++">vec (*kpoint_func)(double freq, int mode, void *user_data);
+</code></pre>
+<ul>
+<li>
+<p><code>user_kpoint_data</code> is the user data passed to the <code>user_kpoint_func</code>.</p>
+</li>
+<li>
+<p><code>kpoint_list</code> is a user allocated array of <code>meep::vec</code> objects of length (<code>num_bands*num_freqs</code>). If non-null, this array is filled in with the wavevectors of the eigenmode for each band from 1 to <code>num_bands*num_freqs</code>.</p>
+</li>
+<li>
+<p><code>kdom_list</code> is a user allocated array of <code>meep::vec</code> objects of length (<code>num_bands*num_freqs</code>). If non-null, this array is filled in with the wavevectors of the dominant planewave in the Fourier series expansion for each band from 1 to <code>num_bands*num_freqs</code>. <code>kdom_list[nb*num_freqs + nf]</code> is the dominant planewave of the mode with frequency <code>nf</code> and band index <code>nb</code> which defaults to <code>NULL</code>.  This is especially useful for interpreting the modes computed in a uniform medium, because those modes are exactly planewaves proportional to <span class="arithmatex">\(\exp(2\pi i \vec{k}_{dom}\cdot \vec{x})\)</span> where <span class="arithmatex">\(\vec{k}_{dom}\)</span> (<code>kdom</code>) is the wavevector.</p>
+</li>
+<li>
+<p><code>cscale</code> is a user allocated array of <code>double</code> objects of length (<code>num_bands*num_freqs</code>). If non-null, this array is filled in with scalar coefficients used for adjoint calculations.</p>
+</li>
+<li>
+<p><code>d</code> is the direction normal to the monitor plane.</p>
+</li>
+<li>
+<p><code>dp</code> is a user allocated <code>diffractedplanewave</code> used to specify a diffracted planewave in homogeneous media.</p>
+</li>
+</ul>
+<p>The following is a demonstration of typical usage:</p>
+<pre><code class="language-c++"> int num_bands = bands.size();
+ int num_freqs = Flux-&gt;Nfreq;
+
+ std::vector&lt;cdouble&gt; coeffs(2*num_bands*num_freqs);
+ f.get_eigenmode_coefficients(...);
+
+ for(int nb=0; nb&lt;num_bands; nb++)
+  for(int nf=0; nf&lt;num_freqs++; nf++)
+   {
+     // get coefficients of forward- and backward-traveling
+     // waves in eigenmode bands[nb] at frequency nf
+     cdouble AlphaPlus = coeffs[2*nb*num_freqs+nf+0];
+     cdouble AlphaMinus = coeffs[2*nb*num_freqs+nf+1];
+     ...
+</code></pre>
+<h2 id="normalization">Normalization<a class="headerlink" href="#normalization" title="Permanent link">#</a></h2>
+<p>The <span class="arithmatex">\(\alpha\)</span> coefficients computed by <code>get_eigenmode_coefficients</code> are normalized such that their squared magnitude equals the power carried by the corresponding eigenmode:</p>
+<div class="arithmatex">\[|\alpha_n^\pm|^2 = P_n^\pm\]</div>
+<p>where <span class="arithmatex">\(P_n^\pm\)</span> is the power carried by the traveling eigenmode <span class="arithmatex">\(n\)</span> in the forward (+) or backward (-) direction. This is discussed in more detail below.</p>
+<h2 id="related-functions">Related Functions<a class="headerlink" href="#related-functions" title="Permanent link">#</a></h2>
+<p>Besides <code>get_eigenmode_coefficients</code>, there are a few computational routines in <code>libmeep</code> that you may find useful for problems like those considered above.</p>
+<h3 id="computing-mpb-eigenmodes">Computing MPB Eigenmodes<a class="headerlink" href="#computing-mpb-eigenmodes" title="Permanent link">#</a></h3>
+<pre><code>  void *fields::get_eigenmode(double frequency,
+                              direction d,
+                              const volume where,
+                              const volume eig_vol,
+                              int band_num,
+                              const vec kpoint,
+                              bool match_frequency,
+                              int parity,
+                              double resolution,
+                              double eigensolver_tol,
+                              double *kdom,
+                              void **user_mdata,
+                              diffractedplanewave *dp);
+</code></pre>
+<p>Calls MPB to compute the <code>band_num</code>th eigenmode at frequency <code>frequency</code> for the portion of your geometry lying in <code>where</code> which is typically a cross-sectional slice of a waveguide. <code>kpoint</code> is an initial starting guess for what the propagation vector of the waveguide mode will be. <code>kdom</code>, if non-NULL and length 3, is filled in with the dominant planewave for the current band (see above). This is implemented in <a href="https://github.com/NanoComp/meep/blob/master/src/mpb.cpp">src/mpb.cpp</a>.</p>
+<h3 id="working-with-mpb-eigenmodes">Working with MPB Eigenmodes<a class="headerlink" href="#working-with-mpb-eigenmodes" title="Permanent link">#</a></h3>
+<p>The return value of <code>get_eigenmode</code> is an <a href="https://en.wikipedia.org/wiki/Opaque_pointer">opaque pointer</a> to a data structure storing information about the computed eigenmode, which may be passed to the following routines:</p>
+<pre><code>// get a single component of the eigenmode field at a given point in space
+std::complex&lt;double&gt; eigenmode_amplitude(const vec &amp;p, void *vedata, component c);
+
+// get the group velocity of the eigenmode
+double get_group_velocity(void *vedata);
+
+// free all memory associated with the eigenmode
+void destroy_eigenmode_data(void *vedata);
+</code></pre>
+<p>These functions are implemented in <a href="https://github.com/NanoComp/meep/blob/master/src/mpb.cpp">src/mpb.cpp</a>.</p>
+<h3 id="exporting-frequency-domain-fields">Exporting Frequency-Domain Fields<a class="headerlink" href="#exporting-frequency-domain-fields" title="Permanent link">#</a></h3>
+<pre><code>  void output_dft(dft_flux flux, const char *HDF5FileName);
+
+</code></pre>
+<p><code>output_dft</code> exports the components of the frequency-domain fields stored in <code>flux</code> to an HDF5 file with the given filename In general, <code>flux</code> will store data for fields at multiple frequencies.</p>
+<p>This function is implemented in <a href="https://github.com/NanoComp/meep/blob/master/src/dft.cpp#L1184-L1196">src/dft.cpp</a>.</p>
+<h3 id="computing-overlap-integrals">Computing Overlap Integrals<a class="headerlink" href="#computing-overlap-integrals" title="Permanent link">#</a></h3>
+<pre><code>  std::complex&lt;double&gt; get_mode_flux_overlap(void *mode_data,
+                                             dft_flux *flux,
+                                             int num_freq,
+                                             std::complex&lt;double&gt;overlap[2]);
+
+  std::complex&lt;double&gt; get_mode_mode_overlap(void *mode1_data,
+                                             void *mode2_data,
+                                             dft_flux *flux,
+                                             std::complex&lt;double&gt;overlap[2]);
+</code></pre>
+<p><code>get_mode_flux_overlap</code> computes the overlap integral between the eigenmode described by <code>mode_data</code> and the fields stored in <code>flux</code> for the <code>num_freq</code>th stored frequency, where <code>num_freq</code> ranges from 0 to <code>flux-&gt;Nfreq-1</code>. <code>mode_data</code> should be the return value of a previous call to <code>get_eigenmode.</code></p>
+<p><code>get_mode_mode_overlap</code> is similar, but computes the overlap integral between two eigenmodes. <code>mode1_data</code> and <code>mode2_data</code> may be identical, in which case you get the inner product of the mode with itself. This should equal the group velocity of the mode based on the MPB's normalization convention.</p>
+<p>These functions are implemented in <a href="https://github.com/NanoComp/meep/blob/master/src/dft.cpp">src/dft.cpp</a>.</p>
+<h2 id="how-mode-decomposition-works">How Mode Decomposition Works<a class="headerlink" href="#how-mode-decomposition-works" title="Permanent link">#</a></h2>
+<p>The theoretical basis of the mode-decomposition algorithm is an orthogonality relation satisfied by the eigenmodes:</p>
+<div class="arithmatex">\[
+\left\langle \psi_m^{\sigma}, \psi_n^{\tau} \right\rangle
+=C_{m}\delta_{mn}\delta_{\sigma\tau}
+   \qquad \{\sigma,\tau\}\in\{+,-\}
+\]</div>
+<p>where the (indefinite) inner product between two vectors of the transverse field components, e.g. <span class="arithmatex">\(\psi=(E_y,E_z,H_y,H_z)\)</span> and <span class="arithmatex">\(\psi'=(E_y',E_z',H_y',H_z')\)</span> for propagation in the <span class="arithmatex">\(x\)</span> direction, involves an integration over transverse coordinates:</p>
+<div class="arithmatex">\[ \left\langle \psi , \psi' \right\rangle
+   \equiv
+   \int_{S}
+    \Big[ \mathbf{E}^*(\vec \rho) \times \mathbf{H}'(\vec \rho) + \mathbf{E}'(\vec \rho) \times \mathbf{H}^*(\vec \rho)\Big]
+    \cdot \hat{\mathbf{n}} \, dA
+  \tag{5}
+\]</div>
+<p>where <span class="arithmatex">\(S\)</span> is a cross-section transverse to the direction of propagation and <span class="arithmatex">\(\hat{\mathbf{n}}\)</span> is the unit normal vector to <span class="arithmatex">\(S\)</span> (i.e. <span class="arithmatex">\(\hat{\mathbf{x}}\)</span> in the case considered above).  The normalization constant <span class="arithmatex">\(C_{m}\)</span> is a matter of convention, but for MPB-computed modes (which normalizes proportional to unit energy) it is effectively the group velocity of the mode, <span class="arithmatex">\(v_m\)</span>, times the area <span class="arithmatex">\(A_S\)</span> of the cross-sectional surface <span class="arithmatex">\(S\)</span>:</p>
+<div class="arithmatex">\[C_m = 2 v_m A_S\]</div>
+<p>However, we can divide the MPB modes by <span class="arithmatex">\(\sqrt{\int_S \Re[\mathbf{E}^* \times \mathbf{H}]\cdot \hat{\mathbf{n}}}\)</span> to renormalize them to <span class="arithmatex">\(C_m = 2\)</span>, which is equivalent to normalizing the MPB modes to unit power.</p>
+<p>(There is some subtlety about the use of complex conjugation for orthogonality in the inner product above that arises for evanescent modes, which we don't consider here because Meep only computes coefficients of propagating modes.  The above definition has the nice property that <span class="arithmatex">\(\langle \psi, \psi \rangle = 2 \int_S \Re[\mathbf{E}^* \times \mathbf{H}]\cdot \hat{\mathbf{n}} = 2P\)</span> where <span class="arithmatex">\(P\)</span> is the Poynting flux.)</p>
+<p>Now consider a Meep calculation in which we have accumulated transverse frequency-domain fields <span class="arithmatex">\(\psi^{\text{meep}} = (\mathbf E^{\text{meep}}_\parallel, \mathbf H^{\text{meep}}_\parallel)\)</span> on a <code>dft_flux</code> object located on a cross-sectional surface <span class="arithmatex">\(S\)</span>. Invoking the eigenmode expansion and choosing the origin of the <span class="arithmatex">\(x\)</span> axis to be the position of the cross-sectional plane means that
+Meep fields take the form:</p>
+<div class="arithmatex">\[
+\psi^{\text{meep}} =
+ \sum_{n} \left\{   \alpha^+_n \mathbf \psi^+_n(\vec \rho)e^{+i\beta_n x}
+                    + \alpha^-_n \mathbf \psi^-_n(\vec \rho)e^{-i\beta_n x}
+            \right\}
+\]</div>
+<p>Taking the inner product of this equation with the <span class="arithmatex">\(\psi_m^\pm\)</span> modes computed
+from MPB (renormalized to unit power), we obtain the mode coefficients:</p>
+<div class="arithmatex">\[
+\alpha^\pm_n = \left\langle \psi_m^\pm, \psi^{\text{meep}} \right\rangle \, .
+\]</div>
+<p>Some simplifications arise from the fact that, in a constant cross-section waveguide, the tangential components of the forward- and backward-traveling propagating modes are related by a mirror reflection in <span class="arithmatex">\(x\)</span>:
+<span class="arithmatex">\(\mathbf{E}^+_{n\parallel} =+\mathbf{E}^-_{n\parallel}\)</span>
+and <span class="arithmatex">\(\mathbf{H}^+_{n\parallel} =-\mathbf{H}^-_{n\parallel}\)</span>.  This means that we only need to compute the MPB modes once for the forward (+) direction.  Also, the <span class="arithmatex">\(\langle \psi_m^\pm, \psi^{\text{meep}} \rangle\)</span> inner
+product involves four integrals (of terms like <span class="arithmatex">\(E_y H_z\)</span> etc.) that are computed
+once each and then combined with the correct signs to obtain <span class="arithmatex">\(\alpha^\pm_n\)</span>.
+These integrals are computed numerically by a trapezoidal-type rule on Meep's
+Yee grid, interpolating the MPB-computed eigenmode fields as needed. This calculation is carried out by the routine <code>fields::get_mode_flux_overlap</code>. Although simple in principle, the implementation is complicated by the fact that, in multi-processor calculations, the Meep fields needed to evaluate the integrals are generally not all present on any one processor, but are instead distributed over multiple processors, requiring some interprocess communication to evaluate the full integral.</p>
+<p>As mentioned above, the Poynting flux <span class="arithmatex">\(P\)</span> carried by the Meep fields may be expressed in the form:</p>
+<div class="arithmatex">\[
+P = \frac{1}{2} \langle \psi, \psi \rangle = \sum_n \left( |a_n^+|^2 - |a_n^-|^2) \right)
+\]</div>
+<p>where the right-hand-side is obtained by substituting the modal expansion and
+using the mode orthogonality and the normalization <span class="arithmatex">\(C_n = 2\)</span> chosen above.
+Thus, the power carried by a given forward- or backward-traveling eigenmode is given by:</p>
+<div class="arithmatex">\[ |\textit{power}_n^\pm| = |\alpha_n^\pm|^2 \]</div>
+<p>The <span class="arithmatex">\(\alpha_n^\pm\)</span> are the eigenmode coefficients returned by <code>get_eigenmode_coefficients</code>.</p>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../Synchronizing_the_Magnetic_and_Electric_Fields/" class="btn btn-neutral float-left" title="Synchronizing the Magnetic and Electric Fields"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../Field_Functions/" class="btn btn-neutral float-right" title="Field Functions">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  
+    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "..";</script>
+    <script src="../js/theme_extra.js"></script>
+    <script src="../js/theme.js"></script>
+      <script src="../javascripts/mathjax.js"></script>
+      <script src="https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js"></script>
+      <script src="../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

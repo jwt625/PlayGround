@@ -1,0 +1,5 @@
+# Keep the reviewed source cache visible despite parent repository file-type ignores.
+!*.pdf
+!*.txt
+!*.png
+!*.html

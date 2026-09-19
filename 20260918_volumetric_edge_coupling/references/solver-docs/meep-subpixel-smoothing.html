@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="author" content="MEEP Developers" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>Subpixel Smoothing - MEEP Documentation</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../css/extra.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Subpixel Smoothing";
+        var mkdocs_page_input_path = "Subpixel_Smoothing.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+<script async type="text/javascript" src="/_/static/javascript/readthedocs-addons.js"></script><meta name="readthedocs-project-slug" content="meep" /><meta name="readthedocs-version-slug" content="latest" /><meta name="readthedocs-resolver-filename" content="/Subpixel_Smoothing/" /><meta name="readthedocs-http-status" content="200" /></head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> MEEP Documentation
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="..">Manual</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../Introduction/">Introduction</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../Download/">Download</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../FAQ/">FAQ</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../Installation/">Installation</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../Build_From_Source/">Build From Source</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../Acknowledgements/">Acknowledgements</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../License_and_Copyright/">License and Copyright</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Features</span></p>
+              <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" href="../Materials/">Materials</a>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">Subpixel Smoothing</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#smoothed-permittivity-tensor-via-perturbation-theory">Smoothed Permittivity Tensor via Perturbation Theory</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#impact-on-runtime-performance">Impact on Runtime Performance</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#continuously-varying-shapes-and-results">Continuously Varying Shapes and Results</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#enabling-averaging-for-material-function">Enabling Averaging for Material Function</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#what-about-dispersive-materials">What about Dispersive Materials?</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#what-happens-when-subpixel-smoothing-is-disabled">What Happens When Subpixel Smoothing is Disabled?</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#subpixel-smoothing-vs-bilinear-interpolation">Subpixel Smoothing vs. Bilinear Interpolation</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#interpolation-techniques-for-material-function">Interpolation Techniques for Material Function</a>
+    </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../Exploiting_Symmetry/">Exploiting Symmetry</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../Perfectly_Matched_Layer/">Perfectly Matched Layers</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../Parallel_Meep/">Parallel Meep</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../Synchronizing_the_Magnetic_and_Electric_Fields/">Synchronizing the Magnetic and Electric Fields</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../Mode_Decomposition/">Mode Decomposition</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../Field_Functions/">Field Functions</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../The_Run_Function_Is_Not_A_Loop/">The Run Function is Not a Loop</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../Yee_Lattice/">Yee Lattice</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../Units_and_Nonlinearity/">Units and Nonlinearity</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../2d_Cell_Special_kz/">2d Cell with Out-of-Plane Wavevector</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../Eigensolver_Math/">Frequency-Domain Eigensolver</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Python Interface</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../Python_User_Interface/">User Interface</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../Python_Developer_Information/">Developer Information</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../Python_Tutorials/Basics/">Tutorial/Basics</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../Python_Tutorials/Cylindrical_Coordinates/">Tutorial/Cylindrical Coordinates</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../Python_Tutorials/Resonant_Modes_and_Transmission_in_a_Waveguide_Cavity/">Tutorial/Resonant Modes and Transmission in a Waveguide Cavity</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../Python_Tutorials/Material_Dispersion/">Tutorial/Material Dispersion</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../Python_Tutorials/Third_Harmonic_Generation/">Tutorial/Third Harmonic Generation</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../Python_Tutorials/Near_to_Far_Field_Spectra/">Tutorial/Near-to-Far Field Spectra</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../Python_Tutorials/Local_Density_of_States/">Tutorial/Local Density of States</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../Python_Tutorials/Optical_Forces/">Tutorial/Optical Forces</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../Python_Tutorials/Gyrotropic_Media/">Tutorial/Gyrotropic Media</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../Python_Tutorials/Multilevel_Atomic_Susceptibility/">Tutorial/Multilevel Atomic Susceptibility</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../Python_Tutorials/Frequency_Domain_Solver/">Tutorial/Frequency-Domain Solver</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../Python_Tutorials/Eigenmode_Source/">Tutorial/Eigenmode Source</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../Python_Tutorials/Custom_Source/">Tutorial/Custom Source</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../Python_Tutorials/Mode_Decomposition/">Tutorial/Mode Decomposition</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../Python_Tutorials/GDS_Import/">Tutorial/GDS Import</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../Python_Tutorials/Adjoint_Solver/">Tutorial/Adjoint Solver</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Scheme Interface</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../Scheme_User_Interface/">User Interface</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../Scheme_Tutorials/Basics/">Tutorial/Basics</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../Scheme_Tutorials/Cylindrical_Coordinates/">Tutorial/Cylindrical Coordinates</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../Scheme_Tutorials/Resonant_Modes_and_Transmission_in_a_Waveguide_Cavity/">Tutorial/Resonant Modes and Transmission in a Waveguide Cavity</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../Scheme_Tutorials/Material_Dispersion/">Tutorial/Material Dispersion</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../Scheme_Tutorials/Third_Harmonic_Generation/">Tutorial/Third Harmonic Generation</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../Scheme_Tutorials/Near_to_Far_Field_Spectra/">Tutorial/Near-to-Far Field Spectra</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../Scheme_Tutorials/Local_Density_of_States/">Tutorial/Local Density of States</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../Scheme_Tutorials/Optical_Forces/">Tutorial/Optical Forces</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../Scheme_Tutorials/Gyrotropic_Media/">Tutorial/Gyrotropic Media</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../Scheme_Tutorials/Multilevel_Atomic_Susceptibility/">Tutorial/Multilevel Atomic Susceptibility</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../Scheme_Tutorials/Frequency_Domain_Solver/">Tutorial/Frequency-Domain Solver</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../Scheme_Tutorials/Eigenmode_Source/">Tutorial/Eigenmode Source</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../Scheme_Tutorials/Custom_Source/">Tutorial/Custom Source</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../Scheme_Tutorials/Mode_Decomposition/">Tutorial/Mode Decomposition</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../Scheme_Tutorials/Casimir_Forces/">Tutorial/Casimir Forces</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../Guile_and_Scheme_Information/">Guile and Scheme Information</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">C++ Interface</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../C%2B%2B_Developer_Information/">Developer Information</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../Chunks_and_Symmetry/">Chunks and Symmetry</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../C%2B%2B_Tutorial/">Tutorial/Basics</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">MEEP Documentation</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">Features</li>
+      <li class="breadcrumb-item active">Subpixel Smoothing</li>
+    <li class="wy-breadcrumbs-aside">
+          <a href="https://github.com/NanoComp/meep/edit/master/doc/docs/Subpixel_Smoothing.md" class="icon icon-github"> Edit on GitHub</a>
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <hr />
+<h1 id="subpixel-smoothing">Subpixel Smoothing<a class="headerlink" href="#subpixel-smoothing" title="Permanent link">#</a></h1>
+<hr />
+<p>Meep uses a <a href="https://en.wikipedia.org/wiki/Finite_difference_method#Accuracy_and_order">second-order accurate finite-difference scheme</a> for discretizing <a href="../Introduction/#maxwells-equations">Maxwell's equations</a>. This means that the results from Meep converge to the "exact" result from the non-discretized (i.e., continuous) system quadratically with the grid resolution <span class="arithmatex">\(\Delta x\)</span>. However, this second-order error <span class="arithmatex">\(\mathcal{O}(\Delta x^2)\)</span> is generally spoiled to first-order error <span class="arithmatex">\(\mathcal{O}(\Delta x)\)</span> if the discretization involves a <em>discontinuous</em> material boundary. Moreover, directly discretizing a discontinuity in <span class="arithmatex">\(\varepsilon\)</span> or <span class="arithmatex">\(\mu\)</span> leads to "stairstepped" interfaces that can only be varied in discrete jumps of one voxel. Meep solves both of these problems by smoothing <span class="arithmatex">\(\varepsilon\)</span> and <span class="arithmatex">\(\mu\)</span>: before discretizing, discontinuities are smoothed into continuous transitions over a distance of one voxel <span class="arithmatex">\(\Delta x\)</span>, using a second-order accurate averaging procedure summarized <a href="#smoothed-permittivity-tensor-via-perturbation-theory">below</a>. Subpixel smoothing, illustrated in the following schematic, enables the discretized solution to converge as quickly as possible to the exact solution as the <code>resolution</code> increases.</p>
+<p><img alt="" src="../images/subpixel_smoothing.png#center" /></p>
+<p>However, subpixel smoothing has five limitations:</p>
+<ol>
+<li>
+<p>It only applies to frequency-independent, lossless dielectrics (i.e., silicon at <span class="arithmatex">\(\lambda=1.55\)</span> μm); dispersive materials are not supported. For materials with a complex-refractive index, the imaginary part is simply ignored. For materials with a frequency-dependent <span class="arithmatex">\(\varepsilon\)</span>, only <span class="arithmatex">\(\varepsilon_\infty\)</span> (i.e., the infinite frequency or instantaneous response) is used. Anisotropic materials are supported.</p>
+</li>
+<li>
+<p>It can be efficiently applied to <a href="../Python_User_Interface/#geometricobject"><code>GeometricObject</code></a>s (i.e. <code>Block</code>, <code>Prism</code>, <code>Sphere</code>, etc.) which are based on a <a href="https://en.wikipedia.org/wiki/Level-set_method">level-set function</a> but <a href="../FAQ/#can-subpixel-averaging-be-applied-to-a-user-defined-material-function"><em>not</em> to a user-defined <code>material function</code></a> which is <a href="#enabling-averaging-for-material-function">disabled by default</a>.</p>
+</li>
+<li>
+<p>Objects with sharp corners or edges are associated with field singularities which introduce an unavoidable error intermediate between first and second order.</p>
+</li>
+<li>
+<p>The fields directly on the interface are still at best first-order accurate. The improved accuracy from smoothing is therefore obtained for fields evaluated off of the interface as in the <a href="../Python_Tutorials/Basics/#transmittance-spectrum-of-a-waveguide-bend">scattered Poynting flux</a> integrated over a surface away from the interface, for nonlocal properties such as <a href="../Python_Tutorials/Resonant_Modes_and_Transmission_in_a_Waveguide_Cavity/#resonant-modes">resonant frequencies</a>, and for overall integrals of fields and energies to which the interface contributes only <span class="arithmatex">\(\mathcal{O}(\Delta x)\)</span> of the integration domain.</p>
+</li>
+<li>
+<p>It is only valid when the <code>resolution</code> is fine enough such that the dielectric interfaces are locally flat within most of the voxels (i.e., the radius of curvature is much larger than the resolution Δx). At <code>resolution</code>s which are coarser than the geometric dimensions, the analytic theory breaks down and subpixel smoothing is no longer guaranteed to improve accuracy.</p>
+</li>
+</ol>
+<div class="toc"><span class="toctitle">Table of Contents</span><ul>
+<li><a href="#subpixel-smoothing">Subpixel Smoothing</a><ul>
+<li><a href="#smoothed-permittivity-tensor-via-perturbation-theory">Smoothed Permittivity Tensor via Perturbation Theory</a></li>
+<li><a href="#impact-on-runtime-performance">Impact on Runtime Performance</a></li>
+<li><a href="#continuously-varying-shapes-and-results">Continuously Varying Shapes and Results</a></li>
+<li><a href="#enabling-averaging-for-material-function">Enabling Averaging for Material Function</a></li>
+<li><a href="#what-about-dispersive-materials">What about Dispersive Materials?</a></li>
+<li><a href="#what-happens-when-subpixel-smoothing-is-disabled">What Happens When Subpixel Smoothing is Disabled?</a></li>
+<li><a href="#subpixel-smoothing-vs-bilinear-interpolation">Subpixel Smoothing vs. Bilinear Interpolation</a></li>
+<li><a href="#interpolation-techniques-for-material-function">Interpolation Techniques for Material Function</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<h2 id="smoothed-permittivity-tensor-via-perturbation-theory">Smoothed Permittivity Tensor via Perturbation Theory<a class="headerlink" href="#smoothed-permittivity-tensor-via-perturbation-theory" title="Permanent link">#</a></h2>
+<p>Any scheme for smoothing the interface perturbs the problem you are solving, as shown in the schematic above, and a second-order accurate smoothing scheme must mean that the perturbation's effect is zero to first order in the smoothing diameter (the grid resolution). This turns out to require that the smoothing scheme be anisotropic. The smoothing scheme is based on formulating an effective tensor <span class="arithmatex">\(\tilde{\varepsilon}\)</span> (or <span class="arithmatex">\(\tilde{\mu}\)</span>) which uses the mean <span class="arithmatex">\(\varepsilon\)</span> for fields parallel to the interface and the harmonic mean (inverse of mean of <span class="arithmatex">\(\varepsilon^{-1}\)</span>) for fields perpendicular to the interface:</p>
+<div class="arithmatex">\[ \tilde{\varepsilon}^{-1} = \textbf{P}\langle\varepsilon^{-1}\rangle + \big(1-\textbf{P}\big)\langle\varepsilon\rangle^{-1} \]</div>
+<p>where <span class="arithmatex">\(\textbf{P}\)</span> is the projection matrix <span class="arithmatex">\(P_{ij}=n_{i}n_{j}\)</span> onto the normal <span class="arithmatex">\(\vec{n}\)</span>. The <span class="arithmatex">\(\langle\cdots\rangle\)</span> denotes an average over the voxel <span class="arithmatex">\(sΔx\times sΔy\times sΔz\)</span> surrounding the grid point in question where <span class="arithmatex">\(s\)</span> is a smoothing diameter in grid units equal to 1/<code>resolution</code>. (This analysis assumes that the interface is approximately planar throughout the voxel, which will hold in the regime where the voxels are small compared to the geometric feature sizes.) If the initial materials are anisotropic (via <code>epsilon_diag</code> and <code>epsilon_offdiag</code>), a more complicated formula is used. The key point is that, even if the structure consists entirely of isotropic materials, the discretized structure will use anisotropic materials. Also, the smoothing will transform a discontinuous interface separating <span class="arithmatex">\(\varepsilon_1\)</span> and <span class="arithmatex">\(\varepsilon_2\)</span> into a continuously varying interface in the range [<span class="arithmatex">\(\varepsilon_1\)</span>, <span class="arithmatex">\(\varepsilon_2\)</span>]. For interface voxels, Meep computes the effective permittivity tensor automatically at the start of the simulation prior to time stepping via analytic expressions for the filling fraction and local normal vector. For details involving derivation of the effective permittivity tensor and its implementation in Meep/FDTD, see <a href="https://www.osapublishing.org/ol/abstract.cfm?uri=ol-31-20-2972">Optics Letters, Vol. 36, pp. 2972-4 (2006)</a> and <a href="https://www.osapublishing.org/abstract.cfm?uri=ol-34-18-2778">Optics Letters, Vol. 35, pp. 2778-80 (2009)</a>.</p>
+<h2 id="impact-on-runtime-performance">Impact on Runtime Performance<a class="headerlink" href="#impact-on-runtime-performance" title="Permanent link">#</a></h2>
+<p>Simulations involving subpixel smoothing consume more memory <em>at the same resolution</em> than no smoothing because of the additional storage of an anisotropic tensor at boundary voxels.  (In fact, to enable efficient runtime processing, the additional tensor storage is required for every voxel in the enclosing rectangular "chunk" of voxels for that processor.) Each anisotropic tensor is comprised of six floating point numbers (from the symmetric 3<span class="arithmatex">\(\times\)</span>3 matrix). By comparison, no smoothing involves storing only three floating point numbers at all grid points corresponding to the diagonal entries of <span class="arithmatex">\(\varepsilon\)</span> or <span class="arithmatex">\(\mu\)</span>. Also, anisotropic tensors will tend to slow down the time-stepping rate due to the additional off-diagonal field components that need to be fetched and included when updating each field component.  On the other hand, anisotropic smoothing often allows one to use lower resolution than would be required for the same accuracy without smoothing.</p>
+<p>In <a href="../Parallel_Meep/">parallel simulations</a>, each <a href="../Chunks_and_Symmetry/">chunk</a> computes the effective permittivity separately for its owned voxels. This means that the time required for the grid initialization (<code>set_epsilon</code> in the output) should typically scale <a href="../FAQ/#should-i-expect-linear-speedup-from-the-parallel-meep">linearly with the number of processors</a>. The same is true even when subpixel smoothing is disabled.</p>
+<h2 id="continuously-varying-shapes-and-results">Continuously Varying Shapes and Results<a class="headerlink" href="#continuously-varying-shapes-and-results" title="Permanent link">#</a></h2>
+<p>A key feature of Meep's subpixel smoothing, particularly relevant for shape optimization (i.e., <a href="https://aip.scitation.org/doi/abs/10.1063/1.4867892">Applied Physics Letters, Vol. 104, 091121 (2014)</a> (<a href="http://ab-initio.mit.edu/~oskooi/papers/Oskooi14_tandem.pdf">pdf</a>)), is that continuously varying the <code>geometry</code> yields continuously varying results. This is demonstrated for a ring resonator: as the radius increases, the frequency of a resonant <span class="arithmatex">\(H_z\)</span>-polarized mode decreases. Note: unlike the example in <a href="../Python_Tutorials/Basics/#modes-of-a-ring-resonator">Tutorial/Basics/Modes of a Ring Resonator</a> involving <span class="arithmatex">\(E_z\)</span>-polarized modes where the electric fields are always continuous (i.e., parallel to the interface), this example involves discontinuous fields. Also, the ring geometry contains no sharp corners/edges which tend to produce field singularities that degrade the error. The simulation script is shown below. The inner ring radius is varied from 1.8 to 2.0 μm in gradations of 0.005 μm. The ring width is constant (1 μm). The resolution is 10 voxels/μm. The gradations are therefore well below voxel dimensions.</p>
+<pre><code class="language-py">import meep as mp
+import numpy as np
+
+resolution = 10         # voxels/μm
+
+n = 3.4                 # index of waveguide
+w = 1                   # width of waveguide
+pad = 4                 # padding between waveguide and edge of PML
+dpml = 2                # thickness of PML
+
+for rad in np.arange(1.800,2.001,0.005):
+    sxy = 2*(rad+w+pad+dpml)  # cell size
+
+    # pulse center frequency (from third-order polynomial fit)
+    fcen = -0.018765*rad**3 + 0.137685*rad**2 -0.393918*rad + 0.636202
+    # pulse frequency width
+    df = 0.02*fcen
+
+    src = [mp.Source(mp.GaussianSource(fcen, fwidth=df),
+                     component=mp.Hz,
+                     center=mp.Vector3(rad+0.1*w)),
+           mp.Source(mp.GaussianSource(fcen, fwidth=df),
+                     component=mp.Hz,
+                     center=mp.Vector3(-(rad+0.1*w)),
+                     amplitude=-1)]
+
+    symmetries = [mp.Mirror(mp.X,phase=+1),
+                  mp.Mirror(mp.Y,phase=-1)]
+
+    geometry = [mp.Cylinder(material=mp.Medium(index=n),
+                            radius=rad+w,
+                            height=mp.inf,
+                            center=mp.Vector3()),
+                mp.Cylinder(material=mp.vacuum,
+                            radius=rad,
+                            height=mp.inf,
+                            center=mp.Vector3())]
+
+    sim = mp.Simulation(cell_size=mp.Vector3(sxy,sxy),
+                        geometry=geometry,
+                        eps_averaging=True,
+                        sources=src,
+                        resolution=resolution,
+                        symmetries=symmetries,
+                        boundary_layers=[mp.PML(dpml)])
+
+    sim.run(mp.after_sources(mp.Harminv(mp.Hz, mp.Vector3(rad+0.1), fcen, df)),
+            until_after_sources=300)
+
+    sim.reset_meep()
+</code></pre>
+<p>A plot of the resonant frequency versus the ring radius is shown below for subpixel smoothing (red) and no smoothing (blue). Included for reference is the "exact" result (black) computed using <em>no smoothing</em> at a resolution of 60 voxels/μm. The no-smoothing result shows "staircasing" effects which are artifacts of the discretization. The subpixel-smoothing result varies continuously with the ring radius similar to the high-resolution result which is at a resolution six times larger. The inset shows the scalar <span class="arithmatex">\(H_z\)</span> field profile of the resonant mode for a structure with inner radius of 1.9 μm.</p>
+<p>This particular resonant mode has a <a href="https://en.wikipedia.org/wiki/Q_factor">quality (Q) factor</a> of ~10<sup>7</sup> at a frequency of 0.25 and radius of 2.0 μm. This means that roughly 4x10<sup>7</sup> optical periods are required to accurately resolve the field decay due to the Fourier uncertainty relation. Instead, <a href="../Python_User_Interface/#harminv"><code>Harminv</code></a> can resolve the <span class="arithmatex">\(Q\)</span> using just ~1000 periods. This is nearly a four orders of magnitude reduction in the run time.</p>
+<p><img alt="" src="../images/ring_vary_radius.png#center" /></p>
+<p>To compare the convergence rate of the discretization error, the following plot shows the error in the resonant frequency (relative to the "exact" result at a resolution of 300 voxels/μm) as a function of the grid resolution for a ring geometry with a fixed inner radius of 2.0 μm. The no-smoothing results have a linear error due to the stairstepped interface discontinuities. The subpixel-smoothing results have roughly second-order convergence.</p>
+<p><img alt="" src="../images/ring_subpixel_smoothing_rate.png#center" /></p>
+<h2 id="enabling-averaging-for-material-function">Enabling Averaging for Material Function<a class="headerlink" href="#enabling-averaging-for-material-function" title="Permanent link">#</a></h2>
+<p>By default, subpixel smoothing is automatically applied to any <code>GeometricObject</code> in the cell as <code>eps_averaging=True</code> in the <a href="../Python_User_Interface/#the-simulation-class"><code>Simulation</code></a> constructor. For a <code>material_function</code> however, subpixel smoothing <a href="../FAQ/#why-does-subpixel-averaging-take-so-long">tends to be slow</a> due to an adaptive numerical integration method that involves callbacks from the low-level C++ routines and the Python-defined material functions. Because of this poor performance, subpixel smoothing is disabled by default for material functions (even though subpixel smoothing is still applied to other <code>GeometricObjects</code> which do not contain a <code>material_function</code>).</p>
+<p>Subpixel smoothing can be enabled for a <code>material_function</code> by setting its <code>do_averaging</code> property to <code>True</code> as demonstrated in the following example.</p>
+<pre><code class="language-py">
+def ring_resonator(p):
+    rr = (p.x**2+p.y**2)**0.5
+    if (rr &gt; rad) and (rr &lt; rad+w):
+        return mp.Medium(index=n)
+    return mp.air
+
+ring_resonator.do_averaging = True
+
+geometry = [mp.Block(center=mp.Vector3(),
+                     size=mp.Vector3(sxy,sxy),
+                     material=ring_resonator)]
+
+sim = mp.Simulation(cell_size=mp.Vector3(sxy,sxy),
+                    geometry=geometry,
+                    subpixel_tol=1e-4,
+                    subpixel_maxeval=1000,
+                    sources=src,
+                    resolution=resolution,
+                    symmetries=symmetries,
+                    boundary_layers=[mp.PML(dpml)])
+</code></pre>
+<p>The adaptive numerical integration used for subpixel smoothing of material functions tends to be significantly slower than the analytic approach. To speed this up at the expense of reduced accuracy, the values for its two convergence parameters <code>subpixel_tol</code> (tolerance) and <code>subpixel_maxeval</code> (maximum number of function evaluations) can be increased/lowered.</p>
+<h2 id="what-about-dispersive-materials">What about Dispersive Materials?<a class="headerlink" href="#what-about-dispersive-materials" title="Permanent link">#</a></h2>
+<p>Meep only does <a href="./">subpixel averaging</a> of the <em>instantaneous</em> (i.e., infinite frequency) part of <span class="arithmatex">\(\varepsilon\)</span> and <span class="arithmatex">\(\mu\)</span>. The dispersive part is not averaged at all (i.e., any frequency dependence of <span class="arithmatex">\(\varepsilon\)</span> and <span class="arithmatex">\(\mu\)</span> is ignored). This means that any discontinuous interfaces between dispersive materials will dominate the error, and you will probably get only first-order convergence, the same as if you do no subpixel averaging at all. Unfortunately, applying anisotropic subpixel smoothing to dispersive materials would result in a material with higher-degree frequency dependence, greatly complicating the implementation in the time domain.</p>
+<p>It is possible that the subpixel averaging may still improve the constant factor in the convergence if not the asymptotic convergence rate, if you also have a lot of interfaces between non-dispersive materials or if the dispersion is small (i.e., if <span class="arithmatex">\(\varepsilon\)</span> is close to <span class="arithmatex">\(\varepsilon_{\infty}\)</span> over your bandwidth). On the other hand, if the dispersion is large and most of your interfaces are between large-dispersion materials, then subpixel averaging may not help at all and you might as well turn it off (which may improve <a href="../FAQ/#why-are-the-fields-blowing-up-in-my-simulation">stability</a>). Generally, the subpixel averaging will not degrade accuracy though it will affect performance. See <a href="https://github.com/NanoComp/meep/issues/1064">Issue #1064</a>.</p>
+<h2 id="what-happens-when-subpixel-smoothing-is-disabled">What Happens When Subpixel Smoothing is Disabled?<a class="headerlink" href="#what-happens-when-subpixel-smoothing-is-disabled" title="Permanent link">#</a></h2>
+<p>When subpixel smoothing is disabled by either (1) setting <code>eps_averaging=False</code> in the <a href="../Python_User_Interface/#the-simulation-class"><code>Simulation</code></a> constructor or (2) using a <a href="./#enabling-averaging-for-material-function">material function</a>, each electric-field component <span class="arithmatex">\((E_x, E_y, E_z)\)</span> in a given voxel is individually assigned a scalar permittivity (for isotropic materials) based on whatever the value of the permittivity is at that position in the <a href="../Yee_Lattice/">Yee grid</a>. This results in <a href="./">staircasing artifacts</a> due to the discontinuous material interfaces as well as the staggered nature of the Yee grid points. Any change in the resolution which shifts the location of the Yee grid points relative to the material interfaces will result in unpredictable changes to any computed quantities. (The coordinates of the Yee grid points can be obtained using a <a href="../Field_Functions/#coordinates-of-the-yee-grid">field function</a> which can be useful for debugging.)</p>
+<h2 id="subpixel-smoothing-vs-bilinear-interpolation">Subpixel Smoothing vs. Bilinear Interpolation<a class="headerlink" href="#subpixel-smoothing-vs-bilinear-interpolation" title="Permanent link">#</a></h2>
+<p>In certain cases, using subpixel smoothing may be impractical given the poor runtime performance of the adaptive numerical integration method as discussed previously. A partial workaround, to ensure that Meep responds continuously to changes in the simulation parameters (even if absolute accuracy is not improved) is to <em>interpolate</em> any discontinuous structure onto the Yee grid. Otherwise, tiny changes in Meep's <a href="../Yee_Lattice/">Yee grid</a> due to e.g. small changes in the resolution could cause discontinuous jumps in <span class="arithmatex">\(\varepsilon\)</span>.</p>
+<p>As a demonstration of this effect, consider a ring resonator (inner radius: 2 μm, width: 1 μm; same structure as <a href="#continuously-varying-shapes-and-results">above</a>) in which the ring geometry can be represented using five different methods:</p>
+<ol>
+<li>two overlapping <a href="../Python_User_Interface/#cylinder"><code>Cylinder</code></a> objects (anisotropic subpixel smoothing).</li>
+<li>two overlapping <a href="../Python_User_Interface/#prism"><code>Prism</code></a> objects (anisotropic subpixel smoothing).</li>
+<li><a href="../Python_User_Interface/#medium">material function</a> (no smoothing).</li>
+<li>pixel grid via <a href="../Python_User_Interface/#the-simulation-class"><code>epsilon_input_file</code></a> (bilinear interpolation onto Yee grid).</li>
+<li>pixel grid via <code>epsilon_input_file</code> (no smoothing).</li>
+</ol>
+<p>Of these five methods, (3) and (5) produce discontinuous structures.</p>
+<p>The pixel grid imported from the HDF5 <code>epsilon_input_file</code> in (4) and (5) is generated by the function <code>output_epsilon</code> when using the material function from (3) at a resolution of 80.</p>
+<p>The <code>Prism</code> objects in (2) are generated using a fixed number of 40 vertices:</p>
+<pre><code class="language-py">N = 40
+phis = np.linspace(0,2*np.pi,N+1)
+vertices_outer = []
+vertices_inner = []
+for phi in phis[:-1]:
+    vertices_outer.append((rad+w)*mp.Vector3(np.cos(phi),np.sin(phi),0))
+    vertices_inner.append(rad*mp.Vector3(np.cos(phi),np.sin(phi),0))
+geometry = [mp.Prism(vertices_outer, height=mp.inf, material=mp.Medium(index=n)),
+            mp.Prism(vertices_inner, height=mp.inf, material=mp.vacuum)]
+</code></pre>
+<p>The following convergence plot shows the frequency for the resonant mode with <span class="arithmatex">\(H_z\)</span> polarization and <span class="arithmatex">\(Q\)</span> of ~10<sup>7</sup> as a function of resolution.</p>
+<p><img alt="" src="../images/ring_freq_vs_resolution.png#center" /></p>
+<p>There are three important items to note. (1) The pixel grid and prism representations are each converging to a different frequency than the material function and cylinder. This is because in the limit of infinite resolution, they are <em>different</em> structures than the cylinders. (2) The material function is the same structure as the cylinder with no smoothing. In the limit of infinite resolution, the material function and cylinder converge to the same frequency. The only difference is the <em>rate</em> of convergence: the cylinder is second order (due to subpixel smoothing) whereas the material function is first order. See the convergence plot above (third figure from the top). (3) The non-interpolated pixel grid shows irregular convergence compared with the interpolated grid. This is expected because the non-interpolated grid is discontinuous but the interpolated grid is not. Also, because these are different structures the two pixel grids converge to different frequencies. To see this trend clearly requires reducing the "jumpiness" of the non-interpolated grid: the Meep resolution needs to be increased beyond 200 which is already ~3X the grid resolution.</p>
+<p>Since the interpolated pixel grid has already been smoothed to a continuous <span class="arithmatex">\(\varepsilon(x,y)\)</span> function, subpixel smoothing (which is not supported for <code>epsilon_input_file</code>) is not really necessary once the Yee grid resolution exceeds the input image resolution. This can be seen in the above plot: for Meep Yee grid resolutions of 80 (equal to the pixel grid resolution of the HDF5 file) and above, the changes in the results are much smaller than those at lower resolutions. Also, higher-order interpolation schemes are not necessary because the Yee discretization is already essentially equivalent to linear interpolation.</p>
+<p>As a practical matter, increasing the Meep resolution beyond the resolution of a non-interpolated pixel grid is not physically meaningful because this is trying to resolve the individual pixels of an imported image. In the case of a pixel grid imported via <code>epsilon_input_file</code>, this is not an issue because the bilinear interpolation is performed automatically by default. However, no built-in interpolation is provided for a material function; it must be provided by the user (i.e., convolving the discontinuous material function with a smoothing kernel as demonstrated <a href="#interpolation-techniques-for-material-function">below</a>). As a corollary, when designing structures using a pixel grid (e.g., as in the <a href="../Python_Tutorials/Adjoint_Solver/">adjoint solver</a>), the pixel density of the degrees of freedom should typically be at least as big as the Meep resolution if not greater.</p>
+<p>In terms of runtime performance, for structures based on a frequency-independent permittivity, anisotropic subpixel smoothing will generally consume more memory (due to the additional off-diagonal elements of the permittivity tensor) and have a slower time-stepping rate (again due to the anisotropic permittivity tensor which couples different field components during the field updates) than a simple scalar interpolation technique. The gains in accuracy from the anisotropic smoothing though should far outweigh this small performance penalty.</p>
+<p>In general, by making a discontinuous structure continuous, via subpixel smoothing or some other form of interpolation, the convergence becomes more regular (the results change more continuously to changes in resolution or other parameters), although it does not necessarily become more accurate compared to the desired infinite-resolution structure unless the full anisotropic smoothing is performed. If the initial structure is already continuous, no additional preprocessing is necessary.</p>
+<h2 id="interpolation-techniques-for-material-function">Interpolation Techniques for Material Function<a class="headerlink" href="#interpolation-techniques-for-material-function" title="Permanent link">#</a></h2>
+<p>There are an arbitrary number of ways that a discontinuous material function can be made continuous in preprocessing. As an example, two different types of interpolation techniques (discrete vs. analytical) are demonstrated for the ring resonator: (1) image processing based on a <a href="https://en.wikipedia.org/wiki/Gaussian_blur">Gaussian blur</a> and (2) using a <a href="https://en.wikipedia.org/wiki/Sigmoid_function">Sigmoid function</a> to smooth the step function boundaries.</p>
+<p>In the first approach, the <a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.ndimage.gaussian_filter.html"><code>scipy.ndimage.gaussian_filter</code></a> is applied to a subpixel permittivity grid generated from the material function. The subpixel grid consists of a 5x5 array of points and the smoothing radius is equal to the size of the pixel (i.e., it is resolution dependent).</p>
+<pre><code class="language-py">import numpy as np
+from scipy.ndimage import gaussian_filter
+
+dxy = 1/resolution        # smoothing kernel radius
+Nxy = 5                   # smoothing grid pixel density
+
+def smooth_ring_resonator(p):
+    cx = np.linspace(p.x-0.5*dxy,p.x+0.5*dxy,Nxy)
+    cy = np.linspace(p.y-0.5*dxy,p.y+0.5*dxy,Nxy)
+    n_local = np.zeros((Nxy,Nxy))
+    for i in range(Nxy):
+        for j in range(Nxy):
+            n_local[i,j] = ring_resonator(mp.Vector3(cx[i],cy[j]))
+    if np.sum(n_local) == Nxy**2:
+        return mp.air
+    elif np.sum(n_local) == n*Nxy**2:
+        return mp.Medium(index=n)
+    else:
+        return mp.Medium(index=np.mean(gaussian_filter(n_local, sigma=1, mode='nearest')))
+
+geometry = [mp.Block(center=mp.Vector3(),
+                     size=mp.Vector3(sxy,sxy),
+                     material=smooth_ring_resonator)]
+</code></pre>
+<p>In the second approach, the step function boundaries (inner and outer radius of the ring resonator) are analytically smoothed using a Sigmoid function. This method tends to be faster than the discrete approach since it requires fewer function evaluations. The smoothing width <code>dr</code> can be either resolution dependent or a fixed constant; both types will be demonstrated.</p>
+<pre><code class="language-py">import numpy as np
+
+dr = 1/resolution         # smoothing kernel width
+b = 5                     # turn on/off strength
+
+def ring_resonator(p):
+    rr = (p.x**2+p.y**2)**0.5
+    if (rr &gt; rad-0.5*dr) and (rr &lt; rad+0.5*dr):
+        return mp.Medium(index=1+(n-1)/(1+np.exp(-b*(rad-rr))))
+    elif (rr &gt; rad+w-0.5*dr) and (rr &lt; rad+w+0.5*dr):
+        return mp.Medium(index=1+(n-1)/(1+np.exp(b*(rad+w-rr))))
+    elif (rr &gt;= rad+0.5*dr) and (rr &lt;= rad+w-0.5*dr):
+        return mp.Medium(index=n)
+    else:
+        return mp.air
+
+geometry = [mp.Block(center=mp.Vector3(),
+                     size=mp.Vector3(sxy,sxy),
+                     material=ring_resonator)]
+</code></pre>
+<p>The plot of the resonant mode frequency with resolution is shown in the figure below. There are two items to note: (1) three structures — "no smoothing", "Gaussian blur", and Sigmoid smoothed with pixel-sized smoothing width (<code>dr = 1/resolution</code>) labeled "Sigmoid boundaries (width=1/resolution)" — are converging to the same frequency. This is expected because the smoothing radius/width is going to zero as the resolution approaches infinity and thus the two smoothed structures are converging to the same discontinuous structure. The effect of the smoothing has been to make the convergence more regular compared with no smoothing. The Sigmoid-smoothed structure has the slowest convergence rate of the three. (2) The Sigmoid-smoothed structure with constant smoothing width (<code>dr = 0.05</code>) labeled "Sigmoid boundaries (width=constant)" is converging to a different frequency than the other three structures because it is a different structure.</p>
+<p><img alt="" src="../images/ring_matfunc_freq_vs_resolution.png#center" /></p>
+<p>Finally, it is worth mentioning that a Gaussian blur (which provides only first-order accuracy) would probably be slower than doing the second-order accurate anisotropic smoothing using a <a href="https://en.wikipedia.org/wiki/Level_set">level set</a> since the smoothing (e.g., via a Sigmoid function) as well as the normal vector can be computed analytically for the level set (see <a href="https://github.com/NanoComp/meep/issues/1229">#1229</a>).</p>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../Materials/" class="btn btn-neutral float-left" title="Materials"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../Exploiting_Symmetry/" class="btn btn-neutral float-right" title="Exploiting Symmetry">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  
+    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "..";</script>
+    <script src="../js/theme_extra.js"></script>
+    <script src="../js/theme.js"></script>
+      <script src="../javascripts/mathjax.js"></script>
+      <script src="https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js"></script>
+      <script src="../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>
