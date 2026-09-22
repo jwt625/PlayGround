@@ -1,5 +1,7 @@
 # R6-P1 status: isolated-output-port-v1 built; port transfer unresolved
 
+> **Review correction (2026-09-19):** [Geometry repair and compute plan](R6P1_geometry_repair_and_compute_plan.md) identifies defects that supersede the physical interpretation below. The four-vertex oxide polygon overrides upstream substrate, so the nominal interaction is not preserved in the composed geometry. The downstream substrate boundary is not parallel to the guide, the guide terminates before PML, and the s=44/half-span=5 aperture intersects the transition. Repair these before a single coarse multiprobe diagnosis; do not interpret 60→0.006 as splice loss. At the quoted dimensions, resolution 50 has ~13M cells; ~29M corresponds to 75. Full-domain convergence is deferred, not waived.
+
 ## Implemented (geometry)
 
 `configs/isolated_port.yaml` + `src/geometry.py` implement the named

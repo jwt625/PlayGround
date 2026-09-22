@@ -1,5 +1,7 @@
 # V0 / V1 / R6a results
 
+> **Orchestration review, 2026-09-19:** [R6 port/channel/overlap decision](R6_port_and_overlap_decision.md) answers the requested direction. Build an effectively isolated output port and rerun both directions; T02 proceeds independently. The current Gaussian M is a scalar-profile statistic with a local-flux-sign mask, not a validated power overlap. Native net flux is not incident guide power, and the reverse input monitor is 4 µm into the changing wedge. The small Ez coefficient therefore does not prove source-band misidentification by itself. Statements below interpreting M≈0.08 or asserting the source's band identity remain provisional and are superseded by that review.
+
 All numbers at 1550 nm, constant indices, nominal 262 nm / 53.50 deg, res 25/um
 unless stated. No thickness or angle was changed.
 
