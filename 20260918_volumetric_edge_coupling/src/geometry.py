@@ -139,8 +139,12 @@ def make_plan(cfg: CouplerConfig) -> Plan:
     s_absorb = s_port_end + g.guide_absorb_um
     oxide_lo = g.stack_start_um
 
-    def band_polys(s_end):
-        s_ox = np.linspace(oxide_lo, s_end, 400)
+    # single master vertex sequence so oxide and substrate share identical
+    # vertices on their common boundary (no overlap/air slivers)
+    s_shared = np.linspace(oxide_lo, s_absorb, 400)
+
+    def band_polys(s_end, s_ox=None):
+        s_ox = s_shared if s_ox is None else s_ox
         Bnd = np.array([b_sub(s) for s in s_ox])
         P = np.array([p_lo(s) for s in s_ox])
         oxide = np.vstack([Bnd, P[::-1]])
@@ -149,8 +153,9 @@ def make_plan(cfg: CouplerConfig) -> Plan:
         )
         return oxide, guide
 
+    s_ox_dom = np.linspace(oxide_lo, s_port_end, 300)
     oxide_poly, guide_poly = band_polys(s_absorb)
-    oxide_poly_dom, guide_poly_dom = band_polys(s_port_end)
+    oxide_poly_dom, guide_poly_dom = band_polys(s_port_end, s_ox_dom)
 
     # substrate: half-space q < q_sub(s); a polygon when the port is active
     B = 120.0
@@ -162,7 +167,12 @@ def make_plan(cfg: CouplerConfig) -> Plan:
         "poly": None,
     }
     if g.isolated_port:
-        s_sub = np.linspace(-80.0, s_absorb + 20.0, 600)
+        # include the oxide's shared vertices exactly, plus extensions both ends
+        s_sub = np.unique(
+            np.concatenate(
+                [np.linspace(-80.0, oxide_lo, 100), s_shared, np.linspace(s_absorb, s_absorb + 20.0, 50)]
+            )
+        )
         bnd = np.array([b_sub(s) for s in s_sub])
         substrate["poly"] = np.vstack([bnd, bnd[-1] - 200.0 * n, bnd[0] - 200.0 * n])
 
