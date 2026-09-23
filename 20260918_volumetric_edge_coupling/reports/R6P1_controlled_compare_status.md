@@ -1,5 +1,7 @@
 # C0/C1 controlled comparison: infrastructure and status
 
+> **Reviewer checkpoint (2026-09-22):** The physical pair remains unrun. [NEXT_SESSION.md](../NEXT_SESSION.md) is the restart handoff. Inspection found that the nominal material endpoint is not extended by the common-cell override, incident calibration is imported but unused, probe results are only printed, epsilon lacks its own saved coordinates, and the regional DFT map excludes the downstream port. Repair these before the pair. “Until after sources = 1” is not one source period; the existing run remains a non-acceptance smoke artifact.
+
 ## Implemented
 
 - Common cell/grid override in `NumericsConfig`
