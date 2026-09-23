@@ -231,6 +231,17 @@ def make_plan(cfg: CouplerConfig) -> Plan:
         "focus_xy": focus.tolist(),
     }
 
+    # optional common cell/grid override for controlled comparisons
+    nc = cfg.numerics
+    if nc.cell_sx_um and nc.cell_sy_um:
+        cx = nc.cell_center_x_um if nc.cell_center_x_um is not None else 0.5 * (domain["x_lo"] + domain["x_hi"])
+        cy = nc.cell_center_y_um if nc.cell_center_y_um is not None else 0.5 * (domain["y_lo"] + domain["y_hi"])
+        domain["sx"], domain["sy"] = float(nc.cell_sx_um), float(nc.cell_sy_um)
+        domain["cell_center"] = [float(cx), float(cy)]
+        domain["x_lo"], domain["x_hi"] = cx - nc.cell_sx_um / 2, cx + nc.cell_sx_um / 2
+        domain["y_lo"], domain["y_hi"] = cy - nc.cell_sy_um / 2, cy + nc.cell_sy_um / 2
+        domain["cell_size"] = [float(nc.cell_sx_um), float(nc.cell_sy_um)]
+
     shift = -np.array(domain["cell_center"], dtype=float)
     return Plan(
         cfg=cfg,

@@ -143,6 +143,11 @@ class NumericsConfig:
     decay: float = 1e-7
     stop_on_decay: bool = False
     cour: float = 0.5
+    # optional common cell/grid override (controlled comparison)
+    cell_sx_um: float | None = None
+    cell_sy_um: float | None = None
+    cell_center_x_um: float | None = None
+    cell_center_y_um: float | None = None
     provenance: str = "proposed"
 
 
