@@ -1,5 +1,36 @@
 # R6-P1: controlled comparison and mode export
 
+## Execution update — 2026-09-21, after fb00885
+
+**Proceed with the two coarse Hz C0/C1 runs after the common-domain initialization checks. Do not wait for a complete localization-based band selector.** C0/C1's primary diagnostic is calibrated fields and net aperture flux, which does not depend on accepting a guide-band identity. Complete the identity metric alongside this work, before labeling any modal coefficient as accepted receiving-guide power or starting reciprocal launch acceptance.
+
+The shared master vertex sequence now addresses the earlier oxide/substrate tessellation mismatch. Still include the exact splice joins in that sequence and verify the initialized dielectric on the common grid; shared vertices remove the interface-sliver problem but do not by themselves certify every sampled geometry detail.
+
+### Interpretation of the new compact mode figures
+
+The inspected Hz and Ez plots show coincident localized profiles in the compact reference and port-stack tests. Accept this as **matched compact-test agreement**. It supports the proposed isolated-port construction, but does not finish identity validation in the full coupler:
+
+- `mode_export_port.py` builds independent rotated blocks centered at the origin. Matching orientation and mesh between these two tests does not automatically match the actual coupler's subcell registration, sampled dielectric, aperture or port position.
+- Its reported overlap is the modulus of a scalar complex inner product of propagated Hz or Ez DFT slices. It is not the prescribed squared full-E/H identity metric, a confinement measurement or a power overlap. Index proximity still chooses the port candidate and isolated band 1 is assumed as the reference.
+- The narrow local eigensolver apertures see matching air/strip/oxide sections and exclude the distant substrate. Equal computed indices are expected for identical local dielectric inputs; by themselves they do not measure loading/leakage of the complete substrate-containing propagation problem. The finite-run profile agreement is useful additional evidence, not a convergence bound.
+- The 60/µm residuals from the analytic indices are consistent with numerical error, but one resolution does not establish their cause or convergence. The next propagation pair uses 25/µm, so numerical reference identity must be checked at that resolution and registration too.
+
+Do not require another full-domain run to resolve these qualifications. Use local actual-port eigenmode export and the fields saved by C0/C1.
+
+### Immediate implementation and acceptance
+
+1. Add the small explicit common-domain override, including common origin/grid registration and a recorded transform from paper coordinates. Apply it consistently to geometry, sources, monitors and homogeneous reference. Extend **both** variants' uniform output materials through the common PML; a larger empty cell around a short nominal guide would create a new facet.
+2. Initialize both and save sampled-material comparisons at the source, beam path, preserved interaction and complete upstream apertures. Include exact join vertices in the shared tessellation. Confirm source frequency/branch, aperture coordinates and timestep from effective settings.
+3. Run C0/C1 at 25/µm, Hz, 1550 nm, with broad s=28/half-span=6, narrow s=31/half-span=2.4, and the narrow downstream port. Keep the old broad s=31 aperture only as a separately labeled diagnostic if useful.
+4. Save complex **Ex, Ey and Hz**, native signed flux, time traces, DFT convergence and actual sampled port dielectric. Preserve raw complex candidate modal coefficients, wavevectors and eigenmode fields where available. Use each run's calibrated incident reference, or one shared reference only when all source/domain/discretization settings match. Put all effective settings and overrides in immutable records.
+5. In the actual uniform-port frame at 25/µm, add the fixed-window strip/substrate participation and full complex-field similarity to a matched isolated reference. Use the prior window/aperture checks and identity criteria; keep index proximity only as a search seed. This step can follow field acquisition, but must precede a guided-power or reciprocity claim.
+
+**C0/C1 is done when:** the comparison identifies whether the discrepancy first appears in illumination, initialized geometry, upstream fields, returning fields, or extraction; incomplete temporal convergence is reported explicitly. A missing modal identity need not prevent finishing this net-flux diagnostic. Record modal quantities as candidates until the separate identity gate passes.
+
+The bounded allocation remains two coarse runs plus the shared incident reference/local initialization and eigenmode checks, sequentially on the local host. No 50/75 full-domain ladder, dense polarization scan or geometry optimization is needed. T02 continues independently.
+
+---
+
 Review date: 2026-09-19. Inspected commits f2364bd/20f161d, `port_multiprobe.py`, current geometry/source/port implementations and the geometry-repair report. No implementation changes or simulations were made by this review.
 
 **Direction:** pursue measurement/comparison isolation first, with initialized-dielectric verification as its first cheap check. Implement complex mode-field export now, initially at a genuinely isolated downstream port. Do not expand the blind band scan or change the transition to recover efficiency. Continue the existing coarse-compute policy and independent T02 work.

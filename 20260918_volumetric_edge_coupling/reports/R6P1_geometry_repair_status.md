@@ -1,5 +1,7 @@
 # R6-P1 geometry repair status
 
+> **Latest direction (2026-09-21, after fb00885):** Shared master tessellation is now present and the compact scalar mode-profile comparisons agree. [Proceed with C0/C1](R6P1_controlled_comparison_and_mode_export.md) after common-domain initialization checks; finish actual-port full-E/H identity alongside it. The compact res-60 reference does not yet establish the actual coupler's res-25 guide-channel identity. Historical net-flux and mode claims below remain provisional.
+
 > **Review update (2026-09-19):** [Controlled comparison and mode export](R6P1_controlled_comparison_and_mode_export.md) supersedes the interpretation below. The 2.057/~104 readings are net signed flux, not forward guide power; the s=31/half-span-6 aperture spans s≈26.10–35.90 and samples changed downstream material. Downstream reflection can also change upstream fields. Export the narrow isolated-port modes at s=50 and compare both structures in a common cell/grid. Current oxide/substrate boundaries share an analytic function but still use different sampled vertex lists. The earlier large construction defects are addressed; complete sampled-material/port verification remains open.
 
 G1-G4 repaired in `src/geometry.py` / `configs/isolated_port.yaml`.
