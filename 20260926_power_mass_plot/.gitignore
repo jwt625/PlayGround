@@ -1,2 +1,5 @@
 .venv/
 __pycache__/
+!power_mass_data*.json
+!power_mass_plot*.png
+!requirements.txt

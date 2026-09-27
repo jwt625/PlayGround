@@ -1,0 +1,1557 @@
+{
+  "metadata": {
+    "title": "Power vs mass v2: animals, computing, spacecraft, and transportation",
+    "units": {
+      "mass": "kg",
+      "power": "W"
+    },
+    "semantics": {
+      "idle": "Original v1 baseline meanings retained. New road: powered-on ready; air: ground idle; rockets: illustrative 70% of full fuel flow.",
+      "peak": "Original v1 peak meanings retained. New road: estimated electrical peak; air: takeoff or maximum afterburner; rockets: modeled full-flow booster chemical input.",
+      "estimated": "if true, connector is dashed because one or both endpoints are estimated/derived rather than directly published"
+    },
+    "version": 2,
+    "transport_research_date": "2026-09-26",
+    "inherited_data": "All 32 v1 point records and their provenance retained verbatim; known v1 data-quality issues remain.",
+    "transport_power_basis": "Battery-terminal electrical input for road vehicles; fuel mass flow times lower heating value (LHV) for aircraft and launch vehicles. Not shaft power or thrust times vehicle speed. Excludes upstream electricity/fuel production.",
+    "transport_mass_basis": "RC includes batteries; scooter and car include a 75 kg rider/driver; aircraft use MTOW; rockets use full fueled reference stack mass. Fixed reference mass at both endpoints, not instantaneous mass during flight.",
+    "rocket_endpoint_caveat": "Open marker is an illustrative powered state at 70% of full-flow chemical input, not idle, minimum throttle, or a claim about liftoff feasibility. Filled marker is modeled full booster flow at sea level. Upper-stage engines are not added to booster liftoff power.",
+    "source_scope": "Source notes distinguish published inputs from assumptions. Derived values are engineering comparisons, not exact measurements of a complete operating vehicle.",
+    "reference_guide_semantics": {
+      "mass_boundary": "Cell mass only, excluding pack/stack auxiliaries, external reactant stores, and thermal-management hardware. Lines are not whole-system envelopes.",
+      "power_boundary": "Peak electrical output, using reported power divided by cell mass or directly published specific power. No assumed energy-discharge duration conversion.",
+      "duration": "Battery manufacturer specifies a 2 s pulse; SOFC reports a peak on measured V-I curves without a specified peak-hold duration.",
+      "sota_scope": "Named contemporary high-performance benchmarks; not a universal world-record claim across all technologies and test conditions.",
+      "fuel_guides": "Two dashed 5-minute (300 s) guides for ideal stoichiometric fuel-plus-carried-oxidizer mixtures: H2+O2 at 44.4 kW/kg and CH4+O2 at 33.3 kW/kg, from mixture specific energy divided by 300 s. These are chemical input per total propellant mass and exclude tanks, engines and hardware; they are not whole-system envelopes and use ideal ratios unlike fuel-rich rocket operation. See power_mass_peak_duration_survey.md."
+    }
+  },
+  "sources": {
+    "mammal_bmr_scaling": {
+      "url": "https://www.pnas.org/doi/10.1073/pnas.0436428100",
+      "note": "General mammalian BMR scaling reference; some working idle values were derived/rounded."
+    },
+    "mammal_mmr_scaling": {
+      "url": "https://journals.biologists.com/jeb/article/208/9/1611/9373/Allometric-scaling-of-mammalian-metabolism",
+      "note": "Exercise-induced MMR scaling reference; equation reported as MMR_e = 16.7 M_b^0.87 with M_b in g and MMR in mL O2/h."
+    },
+    "rabbit_vo2max": {
+      "url": "https://pubmed.ncbi.nlm.nih.gov/19923995/",
+      "note": "Rabbit VO2max ~35.1-35.8 mL/kg/min."
+    },
+    "sled_dog_vo2max": {
+      "url": "https://journals.physiology.org/doi/full/10.1152/japplphysiol.00588.2014",
+      "note": "Alaskan Husky VO2max ~198.7 mL/kg/min after training."
+    },
+    "atlantic_salmon": {
+      "url": "https://onlinelibrary.wiley.com/doi/10.1111/jfb.14087",
+      "note": "Atlantic salmon MMR ~511 mg O2/kg/h; SMR work cross-checked against related literature."
+    },
+    "atlantic_salmon_smr": {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC11200746/",
+      "note": "Atlantic salmon SMR near ~168 mg O2/kg/h under one steady-flow condition."
+    },
+    "dolphin_vo2": {
+      "url": "https://pubmed.ncbi.nlm.nih.gov/8340731/",
+      "note": "Bottlenose dolphin VO2max 19.8-29.4 mL O2/kg/min."
+    },
+    "dolphin_rest": {
+      "url": "https://link.springer.com/article/10.1007/s002270050575",
+      "note": "Resting bottlenose dolphin metabolic rate ~2.15 W/kg."
+    },
+    "killer_whale_bmr": {
+      "url": "https://sciences.ucf.edu/biology/PEBL/wp-content/uploads/sites/18/2013/12/2013-Worthy-et-al-MMS.pdf",
+      "note": "Measured adult male killer-whale resting metabolism ~2275 W at mass 5318 kg."
+    },
+    "killer_whale_behavior": {
+      "url": "https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0302758",
+      "note": "Adult male killer-whale oxygen-consumption estimates up to 59.8 L O2/min across behaviors; used to derive representative high activity power."
+    },
+    "blue_whale_fmr": {
+      "url": "https://link.springer.com/article/10.1007/s00360-025-01640-1",
+      "note": "Estimated blue-whale field metabolic rate 2679.1 MJ/day (~31 kW)."
+    },
+    "blue_whale_lunge": {
+      "url": "https://journals.biologists.com/jeb/article/214/1/131/10226/Mechanics-hydrodynamics-and-energetics-of-blue",
+      "note": "Lunge-feeding mechanics / energetics used as basis for ~0.6 MW transient upper-end working value."
+    },
+    "iphone_2007": {
+      "url": "https://www.apple.com/newsroom/2007/06/18iPhone-Delivers-Up-to-Eight-Hours-of-Talk-Time/",
+      "note": "Apple states up to 250 h standby; working plot uses ~5.18 Wh battery / 250 h = 20.7 mW standby. Peak is an estimate."
+    },
+    "macintosh_128k": {
+      "url": "https://support.apple.com/en-ca/112190",
+      "note": "Macintosh 128K: weight 16.5 lb, max watts 60 W."
+    },
+    "ibm_pc_5150": {
+      "url": "https://www.ibm.com/history/personal-computer",
+      "note": "Mass/power values are representative historical system values; current plot treats them as estimates."
+    },
+    "cray_1": {
+      "url": "https://en.wikipedia.org/wiki/Cray-1",
+      "note": "Working values: ~5.5 t and 115 kW."
+    },
+    "cray_2": {
+      "url": "https://en.wikipedia.org/wiki/Cray-2",
+      "note": "Working values: ~2494 kg and 150-200 kW; plot uses 200 kW peak."
+    },
+    "eniac": {
+      "url": "https://www.britannica.com/technology/ENIAC",
+      "note": "Historical mass/power values are approximate; plot uses ~27.2 t and ~140 kW peak."
+    },
+    "dgx_b300": {
+      "url": "https://docs.nvidia.com/dgx/dgxb300-user-guide/introduction-to-dgxb300.html",
+      "note": "8x B300 GPUs. Busbar system mass 123 kg. Published power consumption 14.5 kW / max ~15 kW. Plot uses 19 kW as earlier working peak estimate; revise to 15 kW if strict-to-source."
+    },
+    "gb300_nvl72": {
+      "url": "https://www.hpe.com/ca/fr/collaterals/collateral.a50009244enw.html",
+      "note": "Fully loaded weight ~3300 lb (~1497 kg), 132 kW nominal TDP, ~155 kW electrical design peak."
+    },
+    "frontier": {
+      "url": "https://www.olcf.ornl.gov/olcf-resources/compute-systems/frontier/",
+      "note": "Frontier system reference; plot uses ~24.6 MW peak and ~268.6 t estimated system mass from rack count × cabinet mass."
+    },
+    "frontier_mass": {
+      "url": "https://www.datacenterdynamics.com/en/news/oak-ridge-upgrades-data-center-set-to-be-home-to-the-worlds-first-exascale-supercomputer-frontier/",
+      "note": "Frontier cabinets ~8000 lb each; used with ~74 cabinets for mass estimate."
+    },
+    "summit": {
+      "url": "https://www.hpcwire.com/2018/06/08/ornl-summit-supercomputer-is-officially-here/",
+      "note": "Summit ~13 MW power footprint; mass estimate based on cabinet count × ~2500 lb/cabinet."
+    },
+    "iss": {
+      "url": "https://www.nasa.gov/international-space-station/space-station-facts-and-figures/",
+      "note": "ISS mass 419,725 kg; solar generation 75-90 kW. Plot baseline ~60 kW is estimated."
+    },
+    "hubble": {
+      "url": "https://science.nasa.gov/mission/hubble/overview/hubble-by-the-numbers/",
+      "note": "Hubble weight 12,200 kg; typical use ~2100 W; arrays >5200 W."
+    },
+    "jwst": {
+      "url": "https://science.nasa.gov/mission/webb/fact-sheet/",
+      "note": "JWST total payload mass ~6200 kg. Plot uses ~2 kW available and ~1.2 kW baseline estimate."
+    },
+    "voyager_1": {
+      "url": "https://science.nasa.gov/mission/voyager/voyager-1/",
+      "note": "Voyager 1 mass 721.9 kg; 3 RTGs at ~158 W each at launch (~474 W). Plot current ~225 W baseline is a recent-era working value."
+    },
+    "starlink_v1": {
+      "url": "https://discovery.ucl.ac.uk/10198161/1/SECESA_2024.pdf",
+      "note": "Starlink V1 mass 260 kg; solar-array-based estimate ~3540 W. Baseline 1500 W is estimated."
+    },
+    "starlink_v2mini": {
+      "url": "https://spaceflightnow.com/2023/04/19/falcon-9-starlink-6-2-coverage/",
+      "note": "V2 Mini mass ~800 kg; ~116 m^2 total surface area. Plot 10/28 kW values are engineering estimates."
+    },
+    "starlink_v3": {
+      "url": "https://starlink.com/ls/updates/starlink-version-3-satellites",
+      "note": "SpaceX says V3 arrays generate approximately 2x V2 power. Plot uses 2,000 kg and 22/56 kW working estimates."
+    },
+    "marco": {
+      "url": "https://www.jpl.nasa.gov/news/press_kits/insight/launch/appendix/mars-cube-one/",
+      "note": "MarCO: 13.5 kg each; solar panels ~35 W near Earth, ~17 W near Mars. Baseline 10 W is estimated."
+    },
+    "planet_dove": {
+      "url": "https://www.usgs.gov/centers/eros/science/planet-dove",
+      "note": "Dove mass is ~5 kg class; plot 5/15 W values are representative estimates and should be treated as such."
+    },
+    "traxxas_xmaxx_mass": {
+      "url": "https://traxxas.com/articles/maxx-vs-xmaxx",
+      "note": "Manufacturer comparison dated 2021-07-06 lists X-Maxx mass 19.1 lb (about 8.66 kg). Plot assumes 10.1 kg with batteries; battery allowance is an estimate.",
+      "accessed": "2026-09-26"
+    },
+    "traxxas_xmaxx_8s": {
+      "url": "https://traxxas.com/articles/xmaxx-monster-truck-thrill-ride",
+      "note": "Manufacturer identifies 8S battery architecture and 30+ V. Plot uses 29.6 V nominal and assumes 100 A transient draw and 5 W ready power; neither input-power endpoint is a manufacturer measurement.",
+      "accessed": "2026-09-26"
+    },
+    "segway_max_g2_d": {
+      "url": "https://se-en.segway.com/products/max-g2-d",
+      "note": "MAX G2 D: net mass 24.25 kg, nominal voltage 36 V, motor nominal/max rating 450/900 W, front light 2.1 W. Electrical peak is modeled separately as 36 V x assumed 30 A = 1080 W; vendor motor rating is not asserted to be battery-terminal power.",
+      "accessed": "2026-09-26"
+    },
+    "tesla_model3_mass": {
+      "url": "https://www.tesla.com/model3-performance",
+      "note": "Model 3 Performance curb mass 4054 lb. Plot adds an assumed 75 kg driver. Published charging power is not used as propulsion power.",
+      "accessed": "2026-09-26"
+    },
+    "tesla_model3_power": {
+      "url": "https://www.youtube.com/watch?v=krQKnhMwxn4",
+      "note": "Tesla official 2024-04-23 Model 3 Performance launch video description specifies 510 hp. Assumed 90% battery-to-shaft efficiency converts mechanical horsepower to electrical input. Ready draw 300 W is assumed, with HVAC off; variant is 2024 US Performance.",
+      "accessed": "2026-09-26"
+    },
+    "boeing_737_800_mass": {
+      "url": "https://www.boeing.com/commercial/737ng",
+      "note": "Manufacturer lists 737-800 maximum takeoff mass 79010 kg and two CFM56-7B engines; the plot selects the CFM56-7B26 rating.",
+      "accessed": "2026-09-26"
+    },
+    "airbus_a380_mass": {
+      "url": "https://www.airbus.com/sites/g/files/jlcbta136/files/2021-12/EN-Airbus-A380-Facts-and-Figures-December-2021_0.pdf",
+      "note": "Manufacturer fact sheet gives 575 t maximum takeoff mass. The plot models four Trent 972-84 engines; configuration is representative, not a particular airline tail number.",
+      "accessed": "2026-09-26"
+    },
+    "icao_edb_2026": {
+      "url": "https://www.easa.europa.eu/en/domains/environment/icao-aircraft-engine-emissions-databank",
+      "note": "March 2026 workbook, sheet Gaseous Emissions and Smoke. Columns BZ and CC are takeoff and idle fuel flow in kg/s per engine. Selected rows below are not superseded in this release. Whole-aircraft power multiplies by engine count and assumed 43 MJ/kg LHV; APU omitted.",
+      "accessed": "2026-09-26",
+      "download_url": "https://www.easa.europa.eu/en/downloads/131424/en",
+      "extracted_rows": [
+        {
+          "uid": "8CM051",
+          "engine": "CFM56-7B26",
+          "row": 137,
+          "idle_cell": "CC137",
+          "idle_kg_s": 0.113,
+          "takeoff_cell": "BZ137",
+          "takeoff_kg_s": 1.221
+        },
+        {
+          "uid": "01P18RR104",
+          "engine": "Trent 972-84",
+          "row": 777,
+          "idle_cell": "CC777",
+          "idle_kg_s": 0.258,
+          "takeoff_cell": "BZ777",
+          "takeoff_kg_s": 2.672
+        }
+      ]
+    },
+    "f16_mass": {
+      "url": "https://www.af.mil/About-Us/Fact-Sheets/Display/Article/104505/f-16-fighting-falcon/",
+      "note": "USAF lists maximum takeoff weight 37500 lb. Its paired 16875 kg value uses a rough conversion; the plot explicitly converts pounds with 0.45359237 kg/lb to 17009.7 kg. This is a family reference mass, not a verified tail-specific F100-PW-220 loading.",
+      "accessed": "2026-09-26"
+    },
+    "f16_f100_220_flow": {
+      "url": "https://www.luke.af.mil/News/Photos/igphoto/2000836396/",
+      "note": "Luke AFB caption states F-16 F100-220 maximum fuel flow 49964 lb/h. Plot converts that maximum to chemical input. Ground idle fuel flow 0.15 kg/s is an explicit engineering assumption, not a value stated by this source.",
+      "accessed": "2026-09-26"
+    },
+    "kerosene_lhv": {
+      "url": "https://ntrs.nasa.gov/api/citations/20060021979/downloads/20060021979.pdf",
+      "note": "NASA/TM-2006-214328 describes JP-8 LHV as about 43 MJ/kg. Plot applies 43 MJ/kg as a representative kerosene-class assumption for Jet A, JP-8, and RP-1, not a batch-specific certified value.",
+      "accessed": "2026-09-26"
+    },
+    "falcon9_overview": {
+      "url": "https://new.spacex.com/vehicles/falcon-9",
+      "note": "SpaceX lists whole-vehicle mass 549054 kg and first-stage sea-level thrust 7607 kN with nine Merlin engines. Plot uses that published mass as its fueled reference boundary, without adding a separate maximum payload.",
+      "accessed": "2026-09-26"
+    },
+    "rocket_model_reference": {
+      "url": "https://ntrs.nasa.gov/api/citations/20250003113/downloads/2024_JSR_LaunchVehicleAmbiguityRemediation.pdf",
+      "note": "Research model uses Falcon 9 oxygen/RP-1 mass ratio 2.56. Plot adopts that ratio as a modeling assumption and assumes Merlin sea-level Isp 282 s; these are not new SpaceX-certified performance values.",
+      "accessed": "2026-09-26"
+    },
+    "starship_overview": {
+      "url": "https://new.spacex.com/vehicles/starship",
+      "note": "SpaceX page snapshot lists upper-stage propellant 1600 t, booster propellant 3650 t, booster thrust 8240 metric ton-force, and 33 booster engines. Plot uses this stated configuration without claiming it describes every flight or future version. Adds assumed 550 t for combined dry hardware and payload to get a 5800 t fueled stack.",
+      "accessed": "2026-09-26"
+    },
+    "starship_mixture": {
+      "url": "https://www.faa.gov/sites/faa.gov/files/2022-06/PEA_for_SpaceX_Starship_Super_Heavy_at_Boca_Chica_FINAL.pdf",
+      "note": "2022 FAA Starship/Super Heavy assessment, launch-vehicle description, gives 3.6:1 LOX/methane mass ratio. Reused as an explicit assumption for the modeled configuration; Isp 330 s is assumed. Current engine-specific mixture/flow can differ.",
+      "accessed": "2026-09-26"
+    },
+    "methane_lhv": {
+      "url": "https://docs.cascade.boeing.com/docs/energy/methane.html",
+      "note": "Boeing Cascade energy model uses methane lower heating value 50 MJ/kg.",
+      "accessed": "2026-09-26"
+    },
+    "molicel_p60c_peak": {
+      "url": "https://www.molicel.com/cn/inr-21700-p60c/",
+      "accessed": "2026-09-26",
+      "note": "Manufacturer claims 660 W peak for 2 seconds. This is a distinct pulse claim, not the 100 A discharge rating or a continuous-power guarantee. Pulse SOC/temperature/cutoff details are not given in the public feature statement."
+    },
+    "molicel_p60c_mass": {
+      "url": "https://www.molicel.com/wp-content/uploads/Product-Data-Sheet-of-INR-21700-P60C.pdf",
+      "accessed": "2026-09-26",
+      "note": "Tentative manufacturer datasheet v0.1 dated 2025-10-23: 75 g maximum cell mass."
+    },
+    "sofc_metal_foam_2026": {
+      "url": "https://advanced.onlinelibrary.wiley.com/doi/10.1002/advs.202517694",
+      "accessed": "2026-09-26",
+      "note": "Ma et al., Advanced Science 2026, DOI 10.1002/advs.202517694: 6.56 kW/kg peak electrical specific power for metal-foam-supported SOFC at 650 C under humidified hydrogen. Laboratory cell boundary excludes stack interconnects, enclosure, insulation, balance of plant, fuel and oxidizer supply."
+    },
+    "hydrogen_lhv": {
+      "url": "https://ntrs.nasa.gov/api/citations/20060021979/downloads/20060021979.pdf",
+      "accessed": "2026-09-26",
+      "note": "NASA/TM-2006-214328 gives hydrogen lower heating value about 120 MJ/kg. Combined with the ideal stoichiometric 8:1 oxygen-to-fuel mass ratio for 2 H2 + O2 -> 2 H2O, the H2+O2 mixture specific energy is about 13.33 MJ/kg of total propellant."
+    },
+    "stoichiometric_fuel_oxygen_mixture": {
+      "note": "Ideal stoichiometric fuel-plus-carried-oxidizer mixture specific energy = fuel LHV / (1 + oxygen-to-fuel mass ratio), using rounded atomic masses. H2+O2: 120 MJ/kg / (1 + 8) = 13.33 MJ/kg. CH4+O2: 50 MJ/kg / (1 + 4) = 10.00 MJ/kg. Average chemical input per total mixture mass over a duration t is mixture specific energy / t. See power_mass_peak_duration_survey.md. These ideal ratios differ from the fuel-rich operating mixtures that inform the plotted rocket input power."
+    },
+    "explosive_yields": {
+      "url": "https://en.wikipedia.org/wiki/Nuclear_weapon_yield",
+      "accessed": "2026-09-26",
+      "note": "Public yield and mass figures for illustrative off-scale explosive reference points. Little Boy (4,400 kg, 13-16 kt = 54-67 TJ) and Fat Man (4,670 kg, 18-23 kt = 75-96 TJ) from Wikipedia: Little Boy / Fat Man / Nuclear weapon yield. Tsar Bomba (27,000 kg, 50-58 Mt = 210-240 PJ) from Wikipedia: Tsar Bomba. MOAB (9,850 kg, 11 tons TNT = 46 GJ) from Wikipedia: GBU-43/B MOAB. Peak power is not a published specification; these use yield divided by an assumed energy-release time: about 1 microsecond for the nuclear prompt chain reaction (the Little Boy article states the chain reaction lasted less than 1 microsecond) and about 1 millisecond for the MOAB high-explosive detonation. Peak-power values are order-of-magnitude estimates, not measurements."
+    },
+    "hawking_radiation": {
+      "url": "https://en.wikipedia.org/wiki/Hawking_radiation",
+      "accessed": "2026-09-26",
+      "note": "Hawking radiation power P = hbar * c^6 / (15360 * pi * G^2 * M^2). For M = 1 kg this gives about 3.56e32 W. Using the Planck-scale evaporation time t = 5120 * pi * G^2 * M^3 / (hbar * c^4) about 8.4e-17 s, so a 1 kg black hole releases its entire 9.0e16 J rest energy almost instantly. This is a theoretical (semiclassical) value."
+    }
+  },
+  "points": [
+    {
+      "name": "House mouse",
+      "category": "land",
+      "mass_kg": 0.025,
+      "idle_W": 0.21,
+      "peak_W": 1.53,
+      "estimated": false,
+      "source_keys": [
+        "mammal_bmr_scaling",
+        "mammal_mmr_scaling"
+      ]
+    },
+    {
+      "name": "Rabbit",
+      "category": "land",
+      "mass_kg": 4.0,
+      "idle_W": 9.586,
+      "peak_W": 47.57,
+      "estimated": false,
+      "source_keys": [
+        "mammal_bmr_scaling",
+        "rabbit_vo2max"
+      ]
+    },
+    {
+      "name": "Atlantic salmon",
+      "category": "sea",
+      "mass_kg": 5.0,
+      "idle_W": 3.29,
+      "peak_W": 10.01,
+      "estimated": false,
+      "source_keys": [
+        "atlantic_salmon_smr",
+        "atlantic_salmon"
+      ]
+    },
+    {
+      "name": "Dog (husky)",
+      "category": "land",
+      "mass_kg": 25.0,
+      "idle_W": 37.52,
+      "peak_W": 1664.6,
+      "estimated": false,
+      "source_keys": [
+        "mammal_bmr_scaling",
+        "sled_dog_vo2max"
+      ]
+    },
+    {
+      "name": "Harbor seal",
+      "category": "sea",
+      "mass_kg": 40.0,
+      "idle_W": 61.67,
+      "peak_W": 555.0,
+      "estimated": false,
+      "source_keys": [],
+      "note": "Working values from marine-mammal VO2 literature used earlier in the workstream."
+    },
+    {
+      "name": "Human",
+      "category": "land",
+      "mass_kg": 75.0,
+      "idle_W": 100.0,
+      "peak_W": 2200.0,
+      "estimated": true,
+      "source_keys": [],
+      "note": "Representative adult resting and elite/explosive whole-body metabolic power."
+    },
+    {
+      "name": "Bottlenose dolphin",
+      "category": "sea",
+      "mass_kg": 200.0,
+      "idle_W": 430.0,
+      "peak_W": 1650.0,
+      "estimated": false,
+      "source_keys": [
+        "dolphin_rest",
+        "dolphin_vo2"
+      ]
+    },
+    {
+      "name": "Thoroughbred horse",
+      "category": "land",
+      "mass_kg": 500.0,
+      "idle_W": 360.0,
+      "peak_W": 25100.0,
+      "estimated": true,
+      "source_keys": [],
+      "note": "Representative 500 kg racehorse; peak derived from ~150 mL/kg/min VO2max."
+    },
+    {
+      "name": "African elephant",
+      "category": "land",
+      "mass_kg": 5000.0,
+      "idle_W": 2020.0,
+      "peak_W": 62800.0,
+      "estimated": true,
+      "source_keys": [
+        "mammal_bmr_scaling",
+        "mammal_mmr_scaling"
+      ]
+    },
+    {
+      "name": "Killer whale",
+      "category": "sea",
+      "mass_kg": 5318.0,
+      "idle_W": 2275.0,
+      "peak_W": 20033.0,
+      "estimated": false,
+      "source_keys": [
+        "killer_whale_bmr",
+        "killer_whale_behavior"
+      ]
+    },
+    {
+      "name": "Blue whale",
+      "category": "sea",
+      "mass_kg": 100000.0,
+      "idle_W": 31000.0,
+      "peak_W": 600000.0,
+      "estimated": true,
+      "source_keys": [
+        "blue_whale_fmr",
+        "blue_whale_lunge"
+      ]
+    },
+    {
+      "name": "iPhone (2007)",
+      "category": "compute",
+      "mass_kg": 0.135,
+      "idle_W": 0.02072,
+      "peak_W": 2.0,
+      "estimated": true,
+      "source_keys": [
+        "iphone_2007"
+      ]
+    },
+    {
+      "name": "iPhone 17 Pro Max",
+      "category": "compute",
+      "mass_kg": 0.233,
+      "idle_W": 0.1,
+      "peak_W": 11.5,
+      "estimated": true,
+      "source_keys": [],
+      "note": "Working values from Notebookcheck measurements used earlier; re-verify exact current model before publication."
+    },
+    {
+      "name": "Apple II (1977)",
+      "category": "compute",
+      "mass_kg": 5.21,
+      "idle_W": 20.0,
+      "peak_W": 38.0,
+      "estimated": true,
+      "source_keys": [],
+      "note": "Representative system-level historical estimate."
+    },
+    {
+      "name": "Macintosh 128K",
+      "category": "compute",
+      "mass_kg": 7.48,
+      "idle_W": 40.0,
+      "peak_W": 60.0,
+      "estimated": true,
+      "source_keys": [
+        "macintosh_128k"
+      ]
+    },
+    {
+      "name": "IBM PC 5150",
+      "category": "compute",
+      "mass_kg": 12.7,
+      "idle_W": 40.0,
+      "peak_W": 63.5,
+      "estimated": true,
+      "source_keys": [
+        "ibm_pc_5150"
+      ]
+    },
+    {
+      "name": "DGX B300",
+      "category": "compute",
+      "mass_kg": 123.0,
+      "idle_W": 2000.0,
+      "peak_W": 19000.0,
+      "estimated": true,
+      "source_keys": [
+        "dgx_b300"
+      ],
+      "note": "Mass is published. Idle is estimated. Published DGX B300 system power is 14.5 kW and max ~15 kW; 19 kW was the workstream's previous engineering peak estimate."
+    },
+    {
+      "name": "GB300 NVL72",
+      "category": "compute",
+      "mass_kg": 1500.0,
+      "idle_W": 30000.0,
+      "peak_W": 155000.0,
+      "estimated": true,
+      "source_keys": [
+        "gb300_nvl72"
+      ]
+    },
+    {
+      "name": "Cray-2",
+      "category": "compute",
+      "mass_kg": 2494.0,
+      "idle_W": 80000.0,
+      "peak_W": 200000.0,
+      "estimated": true,
+      "source_keys": [
+        "cray_2"
+      ]
+    },
+    {
+      "name": "Cray-1",
+      "category": "compute",
+      "mass_kg": 5500.0,
+      "idle_W": 50000.0,
+      "peak_W": 115000.0,
+      "estimated": true,
+      "source_keys": [
+        "cray_1"
+      ]
+    },
+    {
+      "name": "ENIAC",
+      "category": "compute",
+      "mass_kg": 27200.0,
+      "idle_W": 130000.0,
+      "peak_W": 140000.0,
+      "estimated": true,
+      "source_keys": [
+        "eniac"
+      ]
+    },
+    {
+      "name": "Frontier",
+      "category": "compute",
+      "mass_kg": 268620.0,
+      "idle_W": 8000000.0,
+      "peak_W": 24600000.0,
+      "estimated": false,
+      "source_keys": [
+        "frontier",
+        "frontier_mass"
+      ],
+      "note": "Mass is derived from rack count × cabinet mass; idle is a working lower-load value."
+    },
+    {
+      "name": "Summit",
+      "category": "compute",
+      "mass_kg": 359000.0,
+      "idle_W": 3300000.0,
+      "peak_W": 13000000.0,
+      "estimated": true,
+      "source_keys": [
+        "summit"
+      ]
+    },
+    {
+      "name": "Planet Dove",
+      "category": "space",
+      "mass_kg": 5.0,
+      "idle_W": 5.0,
+      "peak_W": 15.0,
+      "estimated": true,
+      "source_keys": [
+        "planet_dove"
+      ]
+    },
+    {
+      "name": "MarCO",
+      "category": "space",
+      "mass_kg": 13.5,
+      "idle_W": 10.0,
+      "peak_W": 35.0,
+      "estimated": true,
+      "source_keys": [
+        "marco"
+      ]
+    },
+    {
+      "name": "Voyager 1",
+      "category": "space",
+      "mass_kg": 721.9,
+      "idle_W": 225.0,
+      "peak_W": 474.0,
+      "estimated": false,
+      "source_keys": [
+        "voyager_1"
+      ]
+    },
+    {
+      "name": "Starlink V1",
+      "category": "space",
+      "mass_kg": 260.0,
+      "idle_W": 1500.0,
+      "peak_W": 3540.0,
+      "estimated": true,
+      "source_keys": [
+        "starlink_v1"
+      ]
+    },
+    {
+      "name": "Starlink V2 Mini",
+      "category": "space",
+      "mass_kg": 800.0,
+      "idle_W": 10000.0,
+      "peak_W": 28000.0,
+      "estimated": true,
+      "source_keys": [
+        "starlink_v2mini"
+      ]
+    },
+    {
+      "name": "Starlink V3",
+      "category": "space",
+      "mass_kg": 2000.0,
+      "idle_W": 22000.0,
+      "peak_W": 56000.0,
+      "estimated": true,
+      "source_keys": [
+        "starlink_v3"
+      ]
+    },
+    {
+      "name": "JWST",
+      "category": "space",
+      "mass_kg": 6200.0,
+      "idle_W": 1200.0,
+      "peak_W": 2000.0,
+      "estimated": true,
+      "source_keys": [
+        "jwst"
+      ]
+    },
+    {
+      "name": "Hubble",
+      "category": "space",
+      "mass_kg": 12200.0,
+      "idle_W": 2100.0,
+      "peak_W": 5200.0,
+      "estimated": false,
+      "source_keys": [
+        "hubble"
+      ]
+    },
+    {
+      "name": "ISS",
+      "category": "space",
+      "mass_kg": 419725.0,
+      "idle_W": 60000.0,
+      "peak_W": 90000.0,
+      "estimated": true,
+      "source_keys": [
+        "iss"
+      ]
+    },
+    {
+      "name": "RC car (X-Maxx)",
+      "category": "road",
+      "mass_kg": 10.1,
+      "idle_W": 5,
+      "peak_W": 2960,
+      "estimated": true,
+      "source_keys": [
+        "traxxas_xmaxx_mass",
+        "traxxas_xmaxx_8s"
+      ],
+      "mass_basis": "Estimated vehicle plus two batteries; no driver or transmitter.",
+      "endpoint_states": {
+        "idle": "Powered on, stationary, steering unloaded",
+        "peak": "Illustrative transient acceleration draw"
+      },
+      "derivation": {
+        "inputs": {
+          "nominal_battery_V": 29.6,
+          "assumed_peak_A": 100,
+          "assumed_ready_W": 5,
+          "assumed_loaded_mass_kg": 10.1
+        },
+        "formulas": {
+          "idle_W": "assumed_ready_W",
+          "peak_W": "nominal_battery_V * assumed_peak_A"
+        }
+      },
+      "note": "Both powers are estimates; the 100 A assumption is neither a measured peak nor an ESC/battery nameplate limit."
+    },
+    {
+      "name": "E-scooter (MAX G2 D)",
+      "category": "road",
+      "mass_kg": 99.25,
+      "idle_W": 5,
+      "peak_W": 1080,
+      "estimated": true,
+      "source_keys": [
+        "segway_max_g2_d"
+      ],
+      "mass_basis": "24.25 kg scooter plus assumed 75 kg rider.",
+      "endpoint_states": {
+        "idle": "Powered on with lights/display, stationary",
+        "peak": "Illustrative short-duration battery draw"
+      },
+      "derivation": {
+        "inputs": {
+          "vehicle_mass_kg": 24.25,
+          "rider_mass_kg": 75,
+          "nominal_battery_V": 36,
+          "assumed_peak_A": 30,
+          "assumed_ready_W": 5
+        },
+        "formulas": {
+          "mass_kg": "vehicle_mass_kg + rider_mass_kg",
+          "idle_W": "assumed_ready_W",
+          "peak_W": "nominal_battery_V * assumed_peak_A"
+        }
+      },
+      "note": "30 A and 5 W are assumptions. 900 W manufacturer motor maximum has an unspecified electrical/mechanical boundary; it is only a scale check. Rider metabolic power omitted."
+    },
+    {
+      "name": "Tesla Model 3 Perf.",
+      "category": "road",
+      "mass_kg": 1913.86346798,
+      "idle_W": 300,
+      "peak_W": 422563.2608,
+      "estimated": true,
+      "source_keys": [
+        "tesla_model3_mass",
+        "tesla_model3_power"
+      ],
+      "mass_basis": "Published curb mass including battery, plus assumed 75 kg driver.",
+      "endpoint_states": {
+        "idle": "Ready, parked, HVAC off",
+        "peak": "Modeled full propulsion input"
+      },
+      "derivation": {
+        "inputs": {
+          "curb_mass_lb": 4054,
+          "kg_per_lb": 0.45359237,
+          "driver_mass_kg": 75,
+          "mechanical_hp": 510,
+          "W_per_hp": 745.699872,
+          "assumed_efficiency": 0.9,
+          "assumed_ready_W": 300
+        },
+        "formulas": {
+          "mass_kg": "curb_mass_lb * kg_per_lb + driver_mass_kg",
+          "idle_W": "assumed_ready_W",
+          "peak_W": "mechanical_hp * W_per_hp / assumed_efficiency"
+        }
+      },
+      "note": "2024 US Performance reference; no extra cabin load added to peak. Actual electrical peak varies with state of charge, temperature, losses and control limits."
+    },
+    {
+      "name": "Boeing 737-800",
+      "category": "air",
+      "mass_kg": 79010,
+      "idle_W": 9718000.0,
+      "peak_W": 105006000.0,
+      "estimated": true,
+      "source_keys": [
+        "boeing_737_800_mass",
+        "icao_edb_2026",
+        "kerosene_lhv"
+      ],
+      "mass_basis": "Maximum takeoff mass including fuel and payload; fixed reference for both powers.",
+      "endpoint_states": {
+        "idle": "All engines at certification ground idle",
+        "peak": "All engines at certification takeoff fuel flow"
+      },
+      "derivation": {
+        "inputs": {
+          "engines": 2,
+          "per_engine_idle_kg_s": 0.113,
+          "per_engine_takeoff_kg_s": 1.221,
+          "fuel_LHV_J_kg": 43000000.0,
+          "engine_databank_uid": "8CM051"
+        },
+        "formulas": {
+          "idle_W": "engines * per_engine_idle_kg_s * fuel_LHV_J_kg",
+          "peak_W": "engines * per_engine_takeoff_kg_s * fuel_LHV_J_kg"
+        }
+      },
+      "note": "Derived thermal input, not mechanical output. ICAO static certification points do not represent cruise; APU fuel omitted. Marked estimated because of LHV and whole-vehicle/configuration assumptions."
+    },
+    {
+      "name": "Airbus A380",
+      "category": "air",
+      "mass_kg": 575000,
+      "idle_W": 44376000.0,
+      "peak_W": 459584000.0,
+      "estimated": true,
+      "source_keys": [
+        "airbus_a380_mass",
+        "icao_edb_2026",
+        "kerosene_lhv"
+      ],
+      "mass_basis": "Maximum takeoff mass including fuel and payload; fixed reference for both powers.",
+      "endpoint_states": {
+        "idle": "All engines at certification ground idle",
+        "peak": "All engines at certification takeoff fuel flow"
+      },
+      "derivation": {
+        "inputs": {
+          "engines": 4,
+          "per_engine_idle_kg_s": 0.258,
+          "per_engine_takeoff_kg_s": 2.672,
+          "fuel_LHV_J_kg": 43000000.0,
+          "engine_databank_uid": "01P18RR104"
+        },
+        "formulas": {
+          "idle_W": "engines * per_engine_idle_kg_s * fuel_LHV_J_kg",
+          "peak_W": "engines * per_engine_takeoff_kg_s * fuel_LHV_J_kg"
+        }
+      },
+      "note": "Derived thermal input, not mechanical output. ICAO static certification points do not represent cruise; APU fuel omitted. Marked estimated because of LHV and whole-vehicle/configuration assumptions."
+    },
+    {
+      "name": "F-16 (F100-PW-220)",
+      "category": "air",
+      "mass_kg": 17009.713875,
+      "idle_W": 6450000.0,
+      "peak_W": 270700398.4753444,
+      "estimated": true,
+      "source_keys": [
+        "f16_mass",
+        "f16_f100_220_flow",
+        "kerosene_lhv"
+      ],
+      "mass_basis": "F-16 family reference maximum takeoff mass converted from 37500 lb.",
+      "endpoint_states": {
+        "idle": "Assumed ground idle fuel flow",
+        "peak": "Published F100-220 maximum fuel flow, afterburning"
+      },
+      "derivation": {
+        "inputs": {
+          "maximum_takeoff_lb": 37500,
+          "kg_per_lb": 0.45359237,
+          "assumed_idle_kg_s": 0.15,
+          "maximum_fuel_lb_h": 49964,
+          "seconds_per_hour": 3600,
+          "fuel_LHV_J_kg": 43000000.0
+        },
+        "formulas": {
+          "mass_kg": "maximum_takeoff_lb * kg_per_lb",
+          "idle_W": "assumed_idle_kg_s * fuel_LHV_J_kg",
+          "peak_W": "maximum_fuel_lb_h * kg_per_lb / seconds_per_hour * fuel_LHV_J_kg"
+        }
+      },
+      "note": "Maximum engine fuel flow from USAF caption, not a measured whole-aircraft flight envelope. Idle is assumed; loaded mass and power come from different reference descriptions."
+    },
+    {
+      "name": "Falcon 9",
+      "category": "rocket",
+      "mass_kg": 549054,
+      "idle_W": 23257344717.39833,
+      "peak_W": 33224778167.711903,
+      "estimated": true,
+      "source_keys": [
+        "falcon9_overview",
+        "rocket_model_reference",
+        "kerosene_lhv"
+      ],
+      "mass_basis": "Published fueled whole-vehicle reference mass; not dry stage mass.",
+      "endpoint_states": {
+        "idle": "Illustrative powered state at 70% full fuel flow; not idle or a minimum-throttle claim",
+        "peak": "Modeled full booster fuel flow at sea level"
+      },
+      "derivation": {
+        "inputs": {
+          "booster_sea_level_thrust_N": 7607000,
+          "assumed_Isp_s": 282,
+          "g0_m_s2": 9.80665,
+          "assumed_oxidizer_fuel_mass_ratio": 2.56,
+          "fuel_LHV_J_kg": 43000000.0,
+          "assumed_lower_flow_fraction": 0.7
+        },
+        "formulas": {
+          "peak_W": "booster_sea_level_thrust_N / (assumed_Isp_s * g0_m_s2 * (1 + assumed_oxidizer_fuel_mass_ratio)) * fuel_LHV_J_kg",
+          "idle_W": "assumed_lower_flow_fraction * peak_W"
+        }
+      },
+      "note": "Fuel LHV applies only to fuel flow, not fuel plus oxygen. Fuel-rich exhaust retains some chemical energy. These are chemical input estimates, not net released chamber heat or exhaust kinetic power. Upper-stage propulsion is off for the full-flow booster reference. Fixed launch mass does not track propellant depletion."
+    },
+    {
+      "name": "Starship + Super Heavy",
+      "category": "rocket",
+      "mass_kg": 5800000,
+      "idle_W": 189986824769.4335,
+      "peak_W": 271409749670.6193,
+      "estimated": true,
+      "source_keys": [
+        "starship_overview",
+        "starship_mixture",
+        "methane_lhv"
+      ],
+      "mass_basis": "Full fueled stack: 5250 t published propellant capacity plus 550 t assumed dry hardware/payload.",
+      "endpoint_states": {
+        "idle": "Illustrative powered state at 70% full fuel flow; not idle or a minimum-throttle claim",
+        "peak": "Modeled full booster fuel flow at sea level"
+      },
+      "derivation": {
+        "inputs": {
+          "booster_sea_level_thrust_N": 80806796.0,
+          "assumed_Isp_s": 330,
+          "g0_m_s2": 9.80665,
+          "assumed_oxidizer_fuel_mass_ratio": 3.6,
+          "fuel_LHV_J_kg": 50000000.0,
+          "assumed_lower_flow_fraction": 0.7
+        },
+        "formulas": {
+          "peak_W": "booster_sea_level_thrust_N / (assumed_Isp_s * g0_m_s2 * (1 + assumed_oxidizer_fuel_mass_ratio)) * fuel_LHV_J_kg",
+          "idle_W": "assumed_lower_flow_fraction * peak_W"
+        }
+      },
+      "note": "Fuel LHV applies only to fuel flow, not fuel plus oxygen. Fuel-rich exhaust retains some chemical energy. These are chemical input estimates, not net released chamber heat or exhaust kinetic power. Upper-stage propulsion is off for the full-flow booster reference. Fixed launch mass does not track propellant depletion."
+    }
+  ],
+  "plot_config": {
+    "figsize_in": [
+      8.4,
+      13.0
+    ],
+    "dpi": 220,
+    "xscale": "log",
+    "yscale": "log",
+    "xlim": [
+      0.015,
+      20000000.0
+    ],
+    "ylim": [
+      0.012,
+      1000000000000.0
+    ],
+    "xlabel": "Weight (kg)",
+    "ylabel": "Whole-body / system power (W)",
+    "font_sizes": {
+      "axis": 18,
+      "ticks": 13,
+      "labels": 10.4,
+      "dense_labels": 9.6,
+      "legend": 9.4,
+      "guide_labels": 10.2
+    },
+    "category_markers": {
+      "land": "o",
+      "sea": "s",
+      "compute": "D",
+      "space": "^",
+      "road": "h",
+      "air": "v",
+      "rocket": "P"
+    },
+    "idle_marker": "open",
+    "peak_marker": "filled",
+    "hidden_endpoints": {
+      "rocket": [
+        "idle"
+      ]
+    },
+    "offscale_arrow_style": {
+      "color": "#b00020",
+      "linewidth": 1.8,
+      "arrowstyle": "-|>",
+      "mutation_scale": 16,
+      "y_tail": 180000000000.0,
+      "y_head": 950000000000.0,
+      "fontsize": 8.8,
+      "label_zorder": 6,
+      "bbox": {
+        "facecolor": "white",
+        "edgecolor": "none",
+        "alpha": 0.86,
+        "pad": 0.5
+      }
+    },
+    "connector_linewidth": 1.7,
+    "estimated_connector_linestyle": "--",
+    "specific_power_guides_W_per_kg": [
+      1,
+      10,
+      100
+    ],
+    "specific_power_guide_color": "0.75",
+    "specific_power_guide_linewidth": 1.1,
+    "specific_power_guide_linestyle": "--",
+    "fit_line": false,
+    "grid_major_alpha": 0.35,
+    "grid_minor_alpha": 0.18,
+    "label_positions": {
+      "House mouse": [
+        0.018,
+        0.73,
+        "left"
+      ],
+      "iPhone (2007)": [
+        0.115,
+        0.035,
+        "right"
+      ],
+      "iPhone 17 Pro Max": [
+        0.27,
+        0.42,
+        "left"
+      ],
+      "Planet Dove": [
+        3.4,
+        5.7,
+        "right"
+      ],
+      "Apple II (1977)": [
+        3.0,
+        21,
+        "right"
+      ],
+      "Rabbit": [
+        2.5,
+        10.7,
+        "right"
+      ],
+      "Atlantic salmon": [
+        6.7,
+        2.6,
+        "left"
+      ],
+      "Macintosh 128K": [
+        40,
+        30,
+        "left"
+      ],
+      "MarCO": [
+        20,
+        13,
+        "left"
+      ],
+      "IBM PC 5150": [
+        10,
+        110,
+        "right"
+      ],
+      "Dog (husky)": [
+        21.0,
+        215.0,
+        "right"
+      ],
+      "Harbor seal": [
+        52,
+        160,
+        "left"
+      ],
+      "Human": [
+        65,
+        900,
+        "right"
+      ],
+      "DGX B300": [
+        105.0,
+        12000.0,
+        "right"
+      ],
+      "Bottlenose dolphin": [
+        225.0,
+        780.0,
+        "left"
+      ],
+      "Thoroughbred horse": [
+        430.0,
+        6900.0,
+        "right"
+      ],
+      "Starlink V1": [
+        205.0,
+        4100.0,
+        "right"
+      ],
+      "Voyager 1": [
+        1200,
+        170,
+        "left"
+      ],
+      "Starlink V2 Mini": [
+        500,
+        39000,
+        "right"
+      ],
+      "Starlink V3": [
+        1300,
+        62000,
+        "right"
+      ],
+      "GB300 NVL72": [
+        950,
+        145000,
+        "right"
+      ],
+      "Cray-2": [
+        3000,
+        320000,
+        "left"
+      ],
+      "Cray-1": [
+        8500,
+        85000,
+        "left"
+      ],
+      "African elephant": [
+        8000,
+        52000,
+        "left"
+      ],
+      "Killer whale": [
+        7000,
+        9000,
+        "left"
+      ],
+      "JWST": [
+        7600.0,
+        1250.0,
+        "left"
+      ],
+      "Hubble": [
+        14500.0,
+        3300.0,
+        "left"
+      ],
+      "ENIAC": [
+        42000,
+        170000,
+        "left"
+      ],
+      "Blue whale": [
+        150000,
+        450000,
+        "left"
+      ],
+      "ISS": [
+        650000,
+        90000,
+        "left"
+      ],
+      "Frontier": [
+        180000,
+        50000000.0,
+        "right"
+      ],
+      "Summit": [
+        200000,
+        3300000.0,
+        "right"
+      ],
+      "RC car (X-Maxx)": [
+        8.0,
+        1000,
+        "right"
+      ],
+      "E-scooter (MAX G2 D)": [
+        160,
+        5.5,
+        "left"
+      ],
+      "Tesla Model 3 Perf.": [
+        1600,
+        800000,
+        "right"
+      ],
+      "Boeing 737-800": [
+        100000,
+        210000000.0,
+        "left"
+      ],
+      "Airbus A380": [
+        450000,
+        700000000.0,
+        "right"
+      ],
+      "F-16 (F100-PW-220)": [
+        13000,
+        400000000.0,
+        "right"
+      ],
+      "Falcon 9": [
+        410000,
+        48000000000.0,
+        "right"
+      ],
+      "Starship + Super Heavy": [
+        4400000,
+        420000000000.0,
+        "right"
+      ]
+    },
+    "dense_labels": [
+      "Planet Dove",
+      "Apple II (1977)",
+      "Rabbit",
+      "Atlantic salmon",
+      "Macintosh 128K",
+      "MarCO",
+      "IBM PC 5150"
+    ],
+    "category_color_indices": {
+      "land": 0,
+      "sea": 1,
+      "compute": 2,
+      "space": 4,
+      "road": 3,
+      "air": 5,
+      "rocket": 6
+    },
+    "category_legend_labels": {
+      "land": "Land",
+      "sea": "Sea",
+      "compute": "Compute",
+      "space": "Space",
+      "road": "Road",
+      "air": "Air",
+      "rocket": "Rocket"
+    },
+    "sourced_connector_linestyle": "-",
+    "marker_style": {
+      "sizes": {
+        "land": {
+          "idle": 90,
+          "peak": 100
+        },
+        "sea": {
+          "idle": 90,
+          "peak": 100
+        },
+        "compute": {
+          "idle": 90,
+          "peak": 100
+        },
+        "space": {
+          "idle": 100,
+          "peak": 110
+        },
+        "road": {
+          "idle": 90,
+          "peak": 100
+        },
+        "air": {
+          "idle": 90,
+          "peak": 100
+        },
+        "rocket": {
+          "idle": 90,
+          "peak": 100
+        }
+      },
+      "linewidths": {
+        "idle": 2,
+        "peak": 1
+      },
+      "zorder": 4
+    },
+    "category_label_font_caps": {
+      "space": 10.9
+    },
+    "label_va": "center",
+    "label_zorder": 5,
+    "guide_samples": 400,
+    "guide_zorder": 1,
+    "guide_label_style": {
+      "x": 0.22,
+      "y_factor": 1.06,
+      "format": "{specific_power} W/kg",
+      "color": "0.45",
+      "ha": "left",
+      "va": "bottom"
+    },
+    "grid_major_linewidth": 0.8,
+    "grid_minor_linewidth": 0.35,
+    "legend_style": {
+      "markersize": 9,
+      "markeredgewidths": {
+        "idle": 2,
+        "peak": 1
+      },
+      "estimated_color_category": "compute",
+      "estimated_label": "Estimated",
+      "loc": "upper left",
+      "frameon": true
+    },
+    "save_bbox_inches": "tight",
+    "category_endpoint_labels": {
+      "road": {
+        "idle": "ready",
+        "peak": "peak"
+      },
+      "air": {
+        "idle": "ground idle",
+        "peak": "takeoff / AB"
+      },
+      "rocket": {
+        "idle": "70% flow",
+        "peak": "full flow"
+      }
+    },
+    "layout_rect": [
+      0,
+      0.075,
+      1,
+      1
+    ],
+    "figure_notes": [
+      {
+        "x": 0.12,
+        "y": 0.019,
+        "s": "Transport: battery electrical input or fuel chemical input (LHV); aircraft masses at MTOW.\nRoad masses include batteries and rider/driver; rockets use fueled full-stack mass.\nRocket markers = full booster flow only; the modeled 70% flow state is hidden (data retained). Dashed = estimated / derived.\nOriginal spacecraft retain electrical consumption / generation endpoints. See v2 notes for assumptions.\nBattery/SOFC guides: peak electrical output per cell mass; exclude pack/stack auxiliaries.\nFuel guides: ideal stoichiometric H2+O2 / CH4+O2 chemical input per total propellant mass over 5 min.",
+        "fontsize": 7.8,
+        "ha": "left",
+        "va": "bottom",
+        "color": "0.3"
+      }
+    ]
+  },
+  "reference_guides": [
+    {
+      "id": "battery_p60c_pulse",
+      "label": "Battery cell: 8.8 kW/kg (P60C, 2 s)",
+      "specific_power_W_per_kg": 8800.0,
+      "kind": "battery_electrical_output",
+      "source_keys": [
+        "molicel_p60c_peak",
+        "molicel_p60c_mass"
+      ],
+      "derivation": {
+        "inputs": {
+          "claimed_pulse_W": 660,
+          "cell_mass_kg": 0.075,
+          "pulse_duration_s": 2
+        },
+        "formula": "claimed_pulse_W / cell_mass_kg"
+      },
+      "boundary": "Manufacturer-claimed 2-second peak electrical output per cell mass; excludes pack hardware and cooling.",
+      "line_style": {
+        "color": "#427a88",
+        "linewidth": 1.05,
+        "linestyle": "--",
+        "alpha": 0.65,
+        "zorder": 1.1
+      },
+      "label_style": {
+        "x": 0.18,
+        "y_factor": 1.15,
+        "text_kwargs": {
+          "fontsize": 8.8,
+          "color": "#427a88",
+          "ha": "left",
+          "va": "bottom",
+          "rotation": 45,
+          "rotation_mode": "anchor",
+          "zorder": 5,
+          "bbox": {
+            "facecolor": "white",
+            "edgecolor": "none",
+            "alpha": 0.86,
+            "pad": 0.5
+          }
+        }
+      }
+    },
+    {
+      "id": "sofc_metal_foam_cell",
+      "label": "SOFC cell peak: 6.56 kW/kg (650°C)",
+      "specific_power_W_per_kg": 6560,
+      "kind": "sofc_electrical_output",
+      "source_keys": [
+        "sofc_metal_foam_2026"
+      ],
+      "derivation": {
+        "inputs": {
+          "published_specific_power_kW_per_kg": 6.56,
+          "W_per_kW": 1000
+        },
+        "formula": "published_specific_power_kW_per_kg * W_per_kW"
+      },
+      "boundary": "Peak electrical output per laboratory cell mass at 650 C; excludes stack, fuel, oxidizer supply and balance of plant.",
+      "line_style": {
+        "color": "#746686",
+        "linewidth": 1.05,
+        "linestyle": "--",
+        "alpha": 0.65,
+        "zorder": 1.1
+      },
+      "label_style": {
+        "x": 0.18,
+        "y_factor": 0.62,
+        "text_kwargs": {
+          "fontsize": 8.8,
+          "color": "#746686",
+          "ha": "left",
+          "va": "bottom",
+          "rotation": 45,
+          "rotation_mode": "anchor",
+          "zorder": 5,
+          "bbox": {
+            "facecolor": "white",
+            "edgecolor": "none",
+            "alpha": 0.86,
+            "pad": 0.5
+          }
+        }
+      }
+    },
+    {
+      "id": "h2_o2_stoich_300s",
+      "label": "H2 + O2 stoich, 5 min: 44.4 kW/kg",
+      "specific_power_W_per_kg": 44444.0,
+      "kind": "fuel_chemical_input",
+      "source_keys": [
+        "hydrogen_lhv",
+        "stoichiometric_fuel_oxygen_mixture"
+      ],
+      "derivation": {
+        "inputs": {
+          "fuel_lhv_J_per_kg": 120000000,
+          "oxygen_to_fuel_mass_ratio": 8,
+          "duration_s": 300
+        },
+        "formula": "(fuel_lhv_J_per_kg / (1 + oxygen_to_fuel_mass_ratio)) / duration_s"
+      },
+      "boundary": "Average chemical input per total stoichiometric H2+O2 mass burned over 5 minutes; excludes tanks, engines and hardware. Fuel-rich operating mixtures differ.",
+      "line_style": {
+        "color": "#1b7f79",
+        "linewidth": 1.05,
+        "linestyle": "--",
+        "alpha": 0.65,
+        "zorder": 1.1
+      },
+      "label_style": {
+        "x": 0.03,
+        "y_factor": 1.12,
+        "text_kwargs": {
+          "fontsize": 8.8,
+          "color": "#1b7f79",
+          "ha": "left",
+          "va": "bottom",
+          "rotation": 45,
+          "rotation_mode": "anchor",
+          "zorder": 5,
+          "bbox": {
+            "facecolor": "white",
+            "edgecolor": "none",
+            "alpha": 0.86,
+            "pad": 0.5
+          }
+        }
+      }
+    },
+    {
+      "id": "ch4_o2_stoich_300s",
+      "label": "CH4 + O2 stoich, 5 min: 33.3 kW/kg",
+      "specific_power_W_per_kg": 33333.0,
+      "kind": "fuel_chemical_input",
+      "source_keys": [
+        "methane_lhv",
+        "stoichiometric_fuel_oxygen_mixture"
+      ],
+      "derivation": {
+        "inputs": {
+          "fuel_lhv_J_per_kg": 50000000,
+          "oxygen_to_fuel_mass_ratio": 4,
+          "duration_s": 300
+        },
+        "formula": "(fuel_lhv_J_per_kg / (1 + oxygen_to_fuel_mass_ratio)) / duration_s"
+      },
+      "boundary": "Average chemical input per total stoichiometric CH4+O2 mass burned over 5 minutes; excludes tanks, engines and hardware. Fuel-rich operating mixtures differ.",
+      "line_style": {
+        "color": "#b5651d",
+        "linewidth": 1.05,
+        "linestyle": "--",
+        "alpha": 0.65,
+        "zorder": 1.1
+      },
+      "label_style": {
+        "x": 8.0,
+        "y_factor": 1.12,
+        "text_kwargs": {
+          "fontsize": 8.8,
+          "color": "#b5651d",
+          "ha": "left",
+          "va": "bottom",
+          "rotation": 45,
+          "rotation_mode": "anchor",
+          "zorder": 5,
+          "bbox": {
+            "facecolor": "white",
+            "edgecolor": "none",
+            "alpha": 0.86,
+            "pad": 0.5
+          }
+        }
+      }
+    }
+  ],
+  "offscale_arrows": [
+    {
+      "id": "little_boy_fat_man",
+      "label": "Little Boy / Fat Man\nest. peak 6\u20139\u00d710\u00b9\u2079 W",
+      "mass_kg": 4500.0,
+      "estimated_peak_W": [
+        6.3e19,
+        8.8e19
+      ],
+      "release_time_s": 1e-06,
+      "basis": "Nuclear prompt chain reaction, yield over about 1 microsecond; both WW2 fission bombs shown as one off-scale arrow.",
+      "label_style": {
+        "x": 4000.0,
+        "y": 300000000000.0,
+        "ha": "right",
+        "va": "bottom"
+      }
+    },
+    {
+      "id": "moab",
+      "label": "MOAB\nest. peak ~5\u00d710\u00b9\u00b3 W",
+      "mass_kg": 9850.0,
+      "estimated_peak_W": [
+        46000000000000.0
+      ],
+      "release_time_s": 0.001,
+      "basis": "Conventional H-6 detonation, 46 GJ over about 1 millisecond; peak power is an order-of-magnitude estimate.",
+      "label_style": {
+        "x": 8000.0,
+        "y": 75000000000.0,
+        "ha": "left",
+        "va": "bottom"
+      }
+    },
+    {
+      "id": "tsar_bomba",
+      "label": "Tsar Bomba\nest. peak ~2\u00d710\u00b2\u00b3 W",
+      "mass_kg": 27000.0,
+      "estimated_peak_W": [
+        210000000000000000000000.0
+      ],
+      "release_time_s": 1e-06,
+      "basis": "Thermonuclear prompt chain reaction, 210 PJ over about 1 microsecond.",
+      "label_style": {
+        "x": 33000.0,
+        "y": 120000000000.0,
+        "ha": "left",
+        "va": "bottom"
+      }
+    },
+    {
+      "id": "black_hole_1kg",
+      "label": "1 kg black hole\nHawking power ~3.6\u00d710\u00b3\u00b2 W",
+      "mass_kg": 1.0,
+      "estimated_peak_W": [
+        356160000000000000000000000000000.0
+      ],
+      "release_time_s": 8.4e-17,
+      "basis": "Hawking radiation P = hbar c^6 / (15360 pi G^2 M^2) at M = 1 kg; semiclassical theoretical value. Evaporates in ~8.4e-17 s.",
+      "label_style": {
+        "x": 1.3,
+        "y": 120000000000.0,
+        "ha": "left",
+        "va": "bottom"
+      }
+    }
+  ]
+}

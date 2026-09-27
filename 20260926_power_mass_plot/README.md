@@ -20,6 +20,43 @@ bounding-box export is preserved, producing a 1548 × 2398 pixel PNG in this
 environment. Set `plot_config.save_bbox_inches` to `null` for an uncropped
 1584 × 2420 pixel canvas; this changes the original output margins.
 
+## V2: transportation
+
+`power_mass_data_v2.json` adds eight transportation examples to the original 32
+records. Render it with the same script:
+
+```sh
+.venv/bin/python plot_power_mass.py --data power_mass_data_v2.json
+```
+
+This writes `power_mass_plot_v2.png`, preserving the v1 dataset and image.
+`--output path.png` overrides the destination. V2 keeps the visual grammar,
+extends the mass/power limits for rockets, and uses an 8.4 × 13 inch portrait
+figure with manually revised labels above the markers. New road, air, and rocket
+categories use distinct markers and default-cycle colors.
+
+New transport values use battery electrical input or fuel chemical-energy input.
+Read [the v2 methods and source notes](power_mass_v2_notes.md) for operating
+states, loaded mass boundaries, calculations, and assumptions. The original
+spacecraft still use their existing electrical consumption/generation endpoints.
+
+The [peak-duration survey](power_mass_peak_duration_survey.md) compares operating
+intervals, rated limits, and energy-budget estimates before selecting fuel
+reference guides. The provisional 180-second guides are not in the active v2.
+V2 includes peak electrical-output guides for the Molicel P60C battery cell
+(8.8 kW/kg, 2 s pulse) and a metal-foam SOFC cell (6.56 kW/kg at 650°C), with
+source data, calculations, and cell-mass boundaries stored in the JSON.
+Two additional dashed fuel guides cover 5 minutes (300 s) of ideal
+stoichiometric fuel-plus-oxygen combustion: H2 + O2 at 44.4 kW/kg and
+CH4 + O2 at 33.3 kW/kg of total propellant mass. These are chemical input,
+not electrical output, and exclude tanks, engines, and hardware.
+
+Three red off-scale arrows add explosive references whose estimated peak
+power exceeds the 10^12 W axis top: Little Boy / Fat Man (~6–9×10^19 W),
+MOAB (~5×10^13 W), and Tsar Bomba (~2×10^23 W). Masses are to scale; the
+arrows are schematic in power and use yield divided by an assumed
+energy-release time (see the v2 notes).
+
 ## Verification
 
 The initial refactor produced pixels identical to the supplied renderer in
