@@ -1,0 +1,16 @@
+{
+  "name": "20260925_gta4_meme",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "render": "node render.mjs --output output/v3/ai-industry.mp4",
+    "render:clean": "node render.mjs --clean --output output/v3/ai-industry-clean.mp4",
+    "preview": "python3 -m http.server 8765 --bind 127.0.0.1"
+  },
+  "keywords": [],
+  "author": "",
+  "description": "Editable GTA IV inspired AI-industry loading-screen parody",
+  "dependencies": {
+    "@napi-rs/canvas": "^1.0.9"
+  }
+}

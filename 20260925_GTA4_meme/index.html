@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Grand Theft Alignment — meme template</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#101112;color:#e5e3dc;font:14px system-ui,sans-serif}header{padding:24px 32px;border-bottom:1px solid #333;display:flex;justify-content:space-between;align-items:center}h1{font-size:18px;margin:0}header span{font:12px monospace;color:#a2a397}.layout{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:24px;padding:24px 32px}canvas{width:100%;aspect-ratio:8/5;background:#000;display:block}aside{background:#191b1b;padding:20px}label{display:block;color:#a5a69d;font-size:12px;margin:18px 0 7px}input,select,textarea,button{background:#242726;color:#eee;border:1px solid #41463f;border-radius:3px;padding:10px;width:100%;font:inherit}textarea{height:90px;resize:vertical}button{cursor:pointer}button:hover{background:#363c32}button.primary{background:#d7e8ac;color:#151910;font-weight:700;border-color:#d7e8ac}.transport{display:flex;gap:10px;align-items:center;margin-top:15px}.transport button{width:auto;white-space:nowrap}.transport input{padding:0;flex:1}.time{font:12px monospace;white-space:nowrap}.muted{font-size:12px;color:#959a91;line-height:1.6}.check{display:flex;align-items:center;gap:8px}.check input{width:auto}a{color:#d7e8ac}.actions{display:flex;gap:8px;margin-top:20px}.actions button{font-size:12px}#error{color:#ff9f8e}input[type=file]{font-size:11px}footer{padding-top:16px}.small{font-size:11px;color:#858a82}@media(max-width:900px){.layout{grid-template-columns:1fr;padding:16px}header{padding:20px}header span{display:none}}
+</style>
+<header><h1>grand theft alignment <span>IV</span></h1><span>AI INDUSTRY CAST · LOADING SCREEN TEMPLATE</span></header>
+<main class="layout"><section><canvas id="screen" width="1440" height="900"></canvas>
+<div class="transport"><button class="primary" id="play">Play + music</button><button id="restart">↺</button><input aria-label="Timeline" id="seek" type="range" min="0" max="54" step="0.033" value="0"><span class="time" id="time">0:00 / 0:54</span></div>
+<p id="error" role="alert"></p>
+<footer class="muted">Six AI-industry caricatures, separate foreground and background motion, and the soundtrack from your cached reference. All dialogue is invented for the meme. Character pairings borrow selected narrative traits.</footer>
+<div class="actions"><button id="saveFrame">Save frame PNG</button><button id="saveConfig">Save template JSON</button></div>
+<label>Load a saved template <input type="file" id="loadConfig" accept="application/json,.json"></label>
+<p class="small">For MP4 export: save the JSON here, then run <code>node render.mjs --config your-template.json</code>. PNG replacements are embedded in saved templates.</p>
+</section><aside>
+<label for="card">CAST / SCENE</label><select id="card"></select>
+<label for="name">Name</label><input id="name">
+<label for="role">GTA IV counterpart</label><input id="role">
+<label for="tag">Character tagline</label><input id="tag">
+<label for="caption">Meme dialogue</label><textarea id="caption"></textarea>
+<label for="portrait">Replace portrait (transparent PNG preferred)</label><input type="file" id="portrait" accept="image/*">
+<label for="side">Composition</label><select id="side"><option value="1">Portrait right</option><option value="-1">Portrait left</option></select>
+<label for="background">Background setting</label><select id="background"></select>
+<label for="motion">Scene motion</label><select id="motion"></select>
+<label for="hold">Seconds per portrait</label><input type="number" id="hold" min="3" max="30" step="0.5">
+<label class="check"><input type="checkbox" id="labels" checked>Show names and meme dialogue</label>
+<label for="audioStart">Soundtrack start (seconds)</label><input type="number" id="audioStart" min="0" step="0.1">
+<label class="check"><input type="checkbox" id="music" checked>Play reference soundtrack</label>
+<div class="actions"><button id="prev">← Previous</button><button id="next">Next →</button></div>
+<p class="muted">Hide labels for the original's sparse composition. Each scene has its own slow zoom and diagonal drift. Figures stay rigid; foreground and background move independently.</p>
+</aside></main>
+<script src="config.js"></script><script src="draw.js"></script><script>
+const $=id=>document.getElementById(id),R=MemeRenderer,canvas=$('screen'),ctx=canvas.getContext('2d');
+let config=structuredClone(DEFAULT_MEME),images={},t=0,playing=false,last=0,selected=0,ready=false;
+const audio=new Audio();audio.preload='auto';let audioURL;
+async function prepareAudio(){
+  if(audioURL)URL.revokeObjectURL(audioURL);
+  // A Blob supports reliable seeking even on simple servers without HTTP Range.
+  if(location.protocol==='http:'||location.protocol==='https:'){
+    const response=await fetch(config.audio);if(!response.ok)throw new Error('Could not load soundtrack');
+    audioURL=URL.createObjectURL(await response.blob());audio.src=audioURL;
+  }else audio.src=config.audio;
+  await new Promise((resolve,reject)=>{audio.addEventListener('loadedmetadata',resolve,{once:true});audio.addEventListener('error',()=>reject(new Error('Could not decode soundtrack')),{once:true});audio.load();});
+}
+const error=e=>$('error').textContent=e.message||String(e);
+const loadImage=src=>new Promise((resolve,reject)=>{const im=new Image();im.onload=()=>resolve(im);im.onerror=()=>reject(new Error('Could not load '+src.slice(0,90)));im.src=src;});
+async function loadAssets(){ready=false;const next={};await Promise.all(R.assetPaths(config).map(async p=>next[p]=await loadImage(p)));images=next;ready=true;}
+function refresh(){
+  const c=config.cards[selected];$('card').replaceChildren(...config.cards.map((c,i)=>new Option(c.name,i)));$('card').value=selected;
+  for(const key of ['name','role','tag','caption','side'])$(key).value=c[key];
+  const backgrounds=new Map((config.backgrounds||[]).map(b=>[b.image,b.name]));
+  for(const src of [config.background,...config.cards.map(c=>c.background)].filter(Boolean))if(!backgrounds.has(src))backgrounds.set(src,src.startsWith('data:')?'Custom background':src);
+  $('background').replaceChildren(...[...backgrounds].map(([src,name])=>new Option(name,src)));$('background').value=c.background||config.background;
+  $('motion').replaceChildren(new Option('Original motion',''),...Object.entries(config.motionProfiles||{}).map(([id,m])=>new Option(m.name||id,id)));
+  if(typeof c.motion==='object')$('motion').add(new Option('Custom motion from template','custom'));
+  $('motion').value=typeof c.motion==='object'?'custom':c.motion||'';
+  $('audioStart').value=config.audioStart??0;$('hold').value=config.hold;$('labels').checked=config.labels;$('seek').max=R.duration(config);
+}
+function pause(){playing=false;audio.pause();$('play').textContent='Play + music';}
+function seek(v){t=Math.max(0,Math.min(v,R.duration(config)));audio.currentTime=t+(config.audioStart??0);}
+function choose(i){selected=(i+config.cards.length)%config.cards.length;refresh();seek(config.intro+selected*config.hold+config.fade+.1);}
+function fmt(s){return Math.floor(s/60)+':'+String(Math.floor(s%60)).padStart(2,'0');}
+function download(data,name){const url=URL.createObjectURL(data),a=document.createElement('a');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),3000);}
+$('play').onclick=async()=>{if(playing){pause();return;}if(!ready)return;if(t>=R.duration(config)-.05)seek(0);playing=true;last=performance.now();$('play').textContent='Pause';if($('music').checked){audio.currentTime=t+(config.audioStart??0);try{await audio.play();}catch(e){error(e);}}};
+$('restart').onclick=()=>seek(0);$('seek').oninput=e=>seek(+e.target.value);
+$('card').onchange=e=>choose(+e.target.value);$('prev').onclick=()=>choose(selected-1);$('next').onclick=()=>choose(selected+1);
+for(const key of ['name','role','tag','caption','side'])$(key).oninput=e=>{config.cards[selected][key]=key==='side'?+e.target.value:e.target.value;if(key==='name')$('card').options[selected].text=e.target.value;};
+$('hold').onchange=e=>{config.hold=Math.min(30,Math.max(3,+e.target.value||9));choose(selected);};
+$('audioStart').onchange=e=>{config.audioStart=Math.max(0,+e.target.value||0);$('audioStart').value=config.audioStart;seek(t);};
+$('labels').onchange=e=>config.labels=e.target.checked;
+$('background').onchange=e=>config.cards[selected].background=e.target.value;
+$('motion').onchange=e=>{if(e.target.value!=='custom')config.cards[selected].motion=e.target.value;};
+$('music').onchange=async e=>{if(!e.target.checked)audio.pause();else if(playing){audio.currentTime=t+(config.audioStart??0);try{await audio.play();}catch(e){error(e);}}};
+$('portrait').onchange=async e=>{const file=e.target.files[0];if(!file)return;const reader=new FileReader();reader.onload=async()=>{try{const im=await loadImage(reader.result);config.cards[selected].image=reader.result;images[reader.result]=im;}catch(e){error(e);}};reader.readAsDataURL(file);};
+$('saveFrame').onclick=()=>{try{canvas.toBlob(blob=>download(blob,'compute-city.png'));}catch(e){error(new Error('PNG export needs localhost. Run python3 -m http.server 8765 in this folder.'));}};
+$('saveConfig').onclick=()=>download(new Blob([JSON.stringify(config,null,2)],{type:'application/json'}),'my-template.json');
+$('loadConfig').onchange=async e=>{const f=e.target.files[0];if(!f)return;pause();const previous=config;try{const c=JSON.parse(await f.text());if(!Array.isArray(c.cards)||!c.cards.length||!(c.hold>0)||!(c.fade>0)||!Number.isFinite(c.audioStart??0)||(c.audioStart??0)<0)throw new Error('Invalid template');config=c;await loadAssets();await prepareAudio();selected=0;seek(0);refresh();}catch(e){config=previous;ready=true;error(e);}};
+function tick(now){if(playing){const dt=(now-last)/1000;t=$('music').checked&&!audio.paused?Math.max(0,audio.currentTime-(config.audioStart??0)):t+dt;if(t>=R.duration(config)){t=R.duration(config);pause();}}last=now;if(ready)R.draw(ctx,config,images,t);$('seek').value=t;$('time').textContent=fmt(t)+' / '+fmt(R.duration(config));requestAnimationFrame(tick);}
+window.meme={get config(){return config},get images(){return images},seek,choose,draw:()=>R.draw(ctx,config,images,t)};
+Promise.all([loadAssets(),prepareAudio()]).then(()=>{seek(0);refresh();requestAnimationFrame(tick);}).catch(error);
+</script></html>

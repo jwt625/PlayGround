@@ -1,0 +1,22 @@
+# Keep project metadata, browser editor, and artwork visible under root ignore rules.
+!*.json
+!*.html
+!*.png
+!*.PNG
+!*.jpg
+!*.JPG
+!*.jpeg
+!*.gif
+!*.webp
+!*.tiff
+!*.bmp
+
+# Dependencies and video files remain local.
+node_modules/
+*.[mM][pP]4
+*.[mM][oO][vV]
+*.[mM][kK][vV]
+*.[wW][eE][bB][mM]
+*.[aA][vV][iI]
+*.[mM]4[vV]
+*.[wW][mM][vV]
