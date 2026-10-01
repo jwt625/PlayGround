@@ -1,0 +1,847 @@
+{
+ "status": "ok",
+ "message-type": "work",
+ "message-version": "1.0.0",
+ "message": {
+  "indexed": {
+   "date-parts": [
+    [
+     2026,
+     9,
+     29
+    ]
+   ],
+   "date-time": "2026-09-29T14:54:18Z",
+   "timestamp": 1790693658928,
+   "version": "4.1.0"
+  },
+  "reference-count": 58,
+  "publisher": "Wiley",
+  "issue": "19",
+  "license": [
+   {
+    "start": {
+     "date-parts": [
+      [
+       2025,
+       5,
+       27
+      ]
+     ],
+     "date-time": "2025-05-27T00:00:00Z",
+     "timestamp": 1748304000000
+    },
+    "content-version": "vor",
+    "delay-in-days": 0,
+    "URL": "http://onlinelibrary.wiley.com/termsAndConditions#vor"
+   }
+  ],
+  "funder": [
+   {
+    "DOI": "10.13039/501100001809",
+    "name": "National Natural Science Foundation of China",
+    "doi-asserted-by": "publisher",
+    "award": [
+     "62405271"
+    ],
+    "award-info": [
+     {
+      "award-number": [
+       "62405271"
+      ]
+     }
+    ],
+    "id": [
+     {
+      "id": "10.13039/501100001809",
+      "id-type": "DOI",
+      "asserted-by": "publisher"
+     }
+    ]
+   },
+   {
+    "DOI": "10.13039/501100001809",
+    "name": "National Natural Science Foundation of China",
+    "doi-asserted-by": "publisher",
+    "award": [
+     "62205286"
+    ],
+    "award-info": [
+     {
+      "award-number": [
+       "62205286"
+      ]
+     }
+    ],
+    "id": [
+     {
+      "id": "10.13039/501100001809",
+      "id-type": "DOI",
+      "asserted-by": "publisher"
+     }
+    ]
+   },
+   {
+    "DOI": "10.13039/501100001809",
+    "name": "National Natural Science Foundation of China",
+    "doi-asserted-by": "publisher",
+    "award": [
+     "92150302"
+    ],
+    "award-info": [
+     {
+      "award-number": [
+       "92150302"
+      ]
+     }
+    ],
+    "id": [
+     {
+      "id": "10.13039/501100001809",
+      "id-type": "DOI",
+      "asserted-by": "publisher"
+     }
+    ]
+   },
+   {
+    "DOI": "10.13039/501100001809",
+    "name": "National Natural Science Foundation of China",
+    "doi-asserted-by": "publisher",
+    "award": [
+     "U23B2047"
+    ],
+    "award-info": [
+     {
+      "award-number": [
+       "U23B2047"
+      ]
+     }
+    ],
+    "id": [
+     {
+      "id": "10.13039/501100001809",
+      "id-type": "DOI",
+      "asserted-by": "publisher"
+     }
+    ]
+   },
+   {
+    "DOI": "10.13039/501100001809",
+    "name": "National Natural Science Foundation of China",
+    "doi-asserted-by": "publisher",
+    "award": [
+     "62321166651"
+    ],
+    "award-info": [
+     {
+      "award-number": [
+       "62321166651"
+      ]
+     }
+    ],
+    "id": [
+     {
+      "id": "10.13039/501100001809",
+      "id-type": "DOI",
+      "asserted-by": "publisher"
+     }
+    ]
+   },
+   {
+    "DOI": "10.13039/501100002858",
+    "name": "China Postdoctoral Science Foundation",
+    "doi-asserted-by": "publisher",
+    "award": [
+     "2023M733039"
+    ],
+    "award-info": [
+     {
+      "award-number": [
+       "2023M733039"
+      ]
+     }
+    ],
+    "id": [
+     {
+      "id": "10.13039/501100002858",
+      "id-type": "DOI",
+      "asserted-by": "publisher"
+     }
+    ]
+   },
+   {
+    "DOI": "10.13039/501100004731",
+    "name": "Natural Science Foundation of Zhejiang Province",
+    "doi-asserted-by": "publisher",
+    "award": [
+     "LQ21F050006"
+    ],
+    "award-info": [
+     {
+      "award-number": [
+       "LQ21F050006"
+      ]
+     }
+    ],
+    "id": [
+     {
+      "id": "10.13039/501100004731",
+      "id-type": "DOI",
+      "asserted-by": "publisher"
+     }
+    ]
+   }
+  ],
+  "content-domain": {
+   "domain": [
+    "onlinelibrary.wiley.com"
+   ],
+   "crossmark-restriction": true
+  },
+  "short-container-title": [
+   "Laser &amp; Photonics Reviews"
+  ],
+  "published-print": {
+   "date-parts": [
+    [
+     2025,
+     10
+    ]
+   ]
+  },
+  "abstract": "<jats:title>Abstract</jats:title><jats:p>Electro\u2010optic modulators for next\u2010generation optical interconnects require low loss\u2010efficiency products (\u03b1<jats:italic>V</jats:italic><jats:sub>\u03c0</jats:sub>L), compact footprints, high modulation efficiency and broad bandwidths. Here it is proposed and demonstrated a low\u2010loss high\u2010efficiency thin\u2010film lithium niobate Mach\u2013Zehnder modulator enabled by a novel ultralow\u2010loss slow\u2010light structure based on apodized gratings in cascade. The present loss\u2010engineered slow\u2010light structure achieves excess losses as low as 0.6\u00a0dB\u00a0mm<jats:sup>\u22121</jats:sup> experimentally, which is tens of times lower than conventional slow\u2010light structures, and a high modulation bandwidth up to 320\u00a0GHz in theory is achieved with optimally\u2010designed capacitively\u2010loaded traveling\u2010wave electrodes. Experimentally, the fabricated slow\u2010light modulator with a 2.8\u2010mm\u2010long modulation region has an ultra\u2010low loss\u2010efficiency product \u03b1V<jats:sub>\u03c0</jats:sub>L of 7.4\u00a0V\u00a0dB and a flat electro\u2010optic response up to 67\u00a0GHz, enabling 100\u2010Gbps on\u2010off keying with high ERs of 4.5\u00a0dB at a low driving voltage of 2<jats:italic>V</jats:italic><jats:sub>pp</jats:sub>, while 200\u2010Gbps PAM4 and 150\u2010Gbps PAM8 signals are also generated to show great promise for advanced modulation formats. In particular, it has also achieved the highest figure\u2010of\u2010merit (FOM = BR\u00d7(ER/<jats:italic>V</jats:italic><jats:sub>pp</jats:sub>)/(<jats:italic>V</jats:italic><jats:sub>\u03c0</jats:sub><jats:italic>L</jats:italic>)) of \u2248182\u00a0Gbps\u2219(dB/V)/(V\u2219cm) for high\u2010speed optical modulation. The outstanding performance of the present slow\u2010light modulator shows great potential and paves the way for developing high\u2010speed optical interconnects for both data\u2010centers and high\u2010performance computing systems.</jats:p>",
+  "DOI": "10.1002/lpor.202401998",
+  "type": "journal-article",
+  "created": {
+   "date-parts": [
+    [
+     2025,
+     5,
+     27
+    ]
+   ],
+   "date-time": "2025-05-27T22:03:52Z",
+   "timestamp": 1748383432000
+  },
+  "update-policy": "https://doi.org/10.1002/crossmark_policy",
+  "source": "Crossref",
+  "is-referenced-by-count": 14,
+  "title": [
+   "Ultra\u2010Low\u2010Loss Slow\u2010Light Thin\u2010Film Lithium Niobate Optical Modulator"
+  ],
+  "prefix": "10.1002",
+  "volume": "19",
+  "author": [
+   {
+    "given": "Chenlei",
+    "family": "Li",
+    "sequence": "first",
+    "affiliation": [
+     {
+      "name": "State Key Laboratory for Extreme Photonics and Instrumentation, College of Optical Science and Engineering, International Research Center for Advanced Photonics Zhejiang University  Zijingang Campus Hangzhou 310058 China"
+     }
+    ],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Jianghao",
+    "family": "He",
+    "sequence": "additional",
+    "affiliation": [
+     {
+      "name": "State Key Laboratory for Extreme Photonics and Instrumentation, College of Optical Science and Engineering, International Research Center for Advanced Photonics Zhejiang University  Zijingang Campus Hangzhou 310058 China"
+     }
+    ],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Ming",
+    "family": "Zhang",
+    "sequence": "additional",
+    "affiliation": [
+     {
+      "name": "State Key Laboratory for Extreme Photonics and Instrumentation, College of Optical Science and Engineering, International Research Center for Advanced Photonics Zhejiang University  Zijingang Campus Hangzhou 310058 China"
+     }
+    ],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Yeyu",
+    "family": "Tong",
+    "sequence": "additional",
+    "affiliation": [
+     {
+      "name": "Microelectronics Thrust The Hong Kong University of Science and Technology  Guangzhou 510000 China"
+     }
+    ],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Weixi",
+    "family": "Liu",
+    "sequence": "additional",
+    "affiliation": [
+     {
+      "name": "State Key Laboratory for Extreme Photonics and Instrumentation, College of Optical Science and Engineering, International Research Center for Advanced Photonics Zhejiang University  Zijingang Campus Hangzhou 310058 China"
+     }
+    ],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Siyuan",
+    "family": "Wang",
+    "sequence": "additional",
+    "affiliation": [
+     {
+      "name": "State Key Laboratory for Extreme Photonics and Instrumentation, College of Optical Science and Engineering, International Research Center for Advanced Photonics Zhejiang University  Zijingang Campus Hangzhou 310058 China"
+     }
+    ],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Lijia",
+    "family": "Song",
+    "sequence": "additional",
+    "affiliation": [
+     {
+      "name": "State Key Laboratory for Extreme Photonics and Instrumentation, College of Optical Science and Engineering, International Research Center for Advanced Photonics Zhejiang University  Zijingang Campus Hangzhou 310058 China"
+     }
+    ],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Hongxuan",
+    "family": "Liu",
+    "sequence": "additional",
+    "affiliation": [
+     {
+      "name": "State Key Laboratory for Extreme Photonics and Instrumentation, College of Optical Science and Engineering, International Research Center for Advanced Photonics Zhejiang University  Zijingang Campus Hangzhou 310058 China"
+     }
+    ],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Hengzhen",
+    "family": "Cao",
+    "sequence": "additional",
+    "affiliation": [
+     {
+      "name": "State Key Laboratory for Extreme Photonics and Instrumentation, College of Optical Science and Engineering, International Research Center for Advanced Photonics Zhejiang University  Zijingang Campus Hangzhou 310058 China"
+     }
+    ],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Liu",
+    "family": "Liu",
+    "sequence": "additional",
+    "affiliation": [
+     {
+      "name": "State Key Laboratory for Extreme Photonics and Instrumentation, College of Optical Science and Engineering, International Research Center for Advanced Photonics Zhejiang University  Zijingang Campus Hangzhou 310058 China"
+     }
+    ],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Yaocheng",
+    "family": "Shi",
+    "sequence": "additional",
+    "affiliation": [
+     {
+      "name": "State Key Laboratory for Extreme Photonics and Instrumentation, College of Optical Science and Engineering, International Research Center for Advanced Photonics Zhejiang University  Zijingang Campus Hangzhou 310058 China"
+     }
+    ],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "ORCID": "https://orcid.org/0000-0002-2769-3009",
+    "authenticated-orcid": false,
+    "given": "Daoxin",
+    "family": "Dai",
+    "sequence": "additional",
+    "affiliation": [
+     {
+      "name": "State Key Laboratory for Extreme Photonics and Instrumentation, College of Optical Science and Engineering, International Research Center for Advanced Photonics Zhejiang University  Zijingang Campus Hangzhou 310058 China"
+     },
+     {
+      "name": "Jiaxing Key Laboratory of Photonic Sensing &amp; Intelligent Imaging, Intelligent Optics &amp; Photonics Research Center, Jiaxing Research Institute Zhejiang University  Jiaxing 314000 China"
+     }
+    ],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   }
+  ],
+  "member": "311",
+  "published-online": {
+   "date-parts": [
+    [
+     2025,
+     5,
+     27
+    ]
+   ]
+  },
+  "reference": [
+   {
+    "key": "e_1_2_7_1_1",
+    "doi-asserted-by": "publisher",
+    "DOI": "10.1364/OPTICA.5.001354"
+   },
+   {
+    "key": "e_1_2_7_2_1",
+    "doi-asserted-by": "publisher",
+    "DOI": "10.1038/s41467-024-44750-0"
+   },
+   {
+    "key": "e_1_2_7_3_1",
+    "doi-asserted-by": "publisher",
+    "DOI": "10.1126/sciadv.1700007"
+   },
+   {
+    "key": "e_1_2_7_4_1",
+    "doi-asserted-by": "publisher",
+    "DOI": "10.1038/s41566-023-01244-7"
+   },
+   {
+    "key": "e_1_2_7_5_1",
+    "unstructured": "S.Fathololoumi C.Malouin D.Hui K.Al\u2010Hemyari K.Nguyen P.Seddighian Y.\u2010J.Chen Y.Wang A.Yan R.Defrees 2022 IEEE Symposium on High\u2010Performance Interconnects (HOTI) 2022."
+   },
+   {
+    "key": "e_1_2_7_6_1",
+    "doi-asserted-by": "publisher",
+    "DOI": "10.1515/nanoph-2022-0141"
+   },
+   {
+    "key": "e_1_2_7_7_1",
+    "doi-asserted-by": "publisher",
+    "DOI": "10.1109/JLT.2018.2878327"
+   },
+   {
+    "key": "e_1_2_7_8_1",
+    "doi-asserted-by": "publisher",
+    "DOI": "10.1038/s41566-023-01161-9"
+   },
+   {
+    "key": "e_1_2_7_9_1",
+    "doi-asserted-by": "publisher",
+    "DOI": "10.1109/JPHOT.2022.3158255"
+   },
+   {
+    "key": "e_1_2_7_10_1",
+    "doi-asserted-by": "publisher",
+    "DOI": "10.1126/science.aan5953"
+   },
+   {
+    "key": "e_1_2_7_11_1",
+    "doi-asserted-by": "publisher",
+    "DOI": "10.1038/nature02310"
+   },
+   {
+    "key": "e_1_2_7_12_1",
+    "doi-asserted-by": "publisher",
+    "DOI": "10.1038/nphoton.2008.99"
+   },
+   {
+    "key": "e_1_2_7_13_1",
+    "doi-asserted-by": "publisher",
+    "DOI": "10.1126/science.1077446"
+   },
+   {
+    "key": "e_1_2_7_14_1",
+    "doi-asserted-by": "publisher",
+    "DOI": "10.1038/s41586-018-0031-4"
+   },
+   {
+    "key": "e_1_2_7_15_1",
+    "doi-asserted-by": "publisher",
+    "DOI": "10.1038/s41586-018-0551-y"
+   },
+   {
+    "key": "e_1_2_7_16_1",
+    "doi-asserted-by": "publisher",
+    "DOI": "10.1364/OPTICA.449691"
+   },
+   {
+    "key": "e_1_2_7_17_1",
+    "doi-asserted-by": "publisher",
+    "DOI": "10.1364/OPTICA.470596"
+   },
+   {
+    "key": "e_1_2_7_18_1",
+    "doi-asserted-by": "publisher",
+    "DOI": "10.1016/j.chip.2022.100029"
+   },
+   {
+    "key": "e_1_2_7_19_1",
+    "doi-asserted-by": "publisher",
+    "DOI": "10.1364/OPTICA.416155"
+   },
+   {
+    "key": "e_1_2_7_20_1",
+    "doi-asserted-by": "publisher",
+    "DOI": "10.1364/OE.26.001547"
+   },
+   {
+    "key": "e_1_2_7_21_1",
+    "doi-asserted-by": "publisher",
+    "DOI": "10.1038/s41467-020-17950-7"
+   },
+   {
+    "key": "e_1_2_7_22_1",
+    "doi-asserted-by": "publisher",
+    "DOI": "10.1364/PRJ.449172"
+   },
+   {
+    "key": "e_1_2_7_23_1",
+    "doi-asserted-by": "publisher",
+    "DOI": "10.1515/nanoph-2023-0306"
+   },
+   {
+    "key": "e_1_2_7_24_1",
+    "doi-asserted-by": "publisher",
+    "DOI": "10.1126/science.abj4396"
+   },
+   {
+    "key": "e_1_2_7_25_1",
+    "doi-asserted-by": "publisher",
+    "DOI": "10.1038/s41566-019-0378-6"
+   },
+   {
+    "key": "e_1_2_7_26_1",
+    "doi-asserted-by": "publisher",
+    "DOI": "10.1063/1.5115136"
+   },
+   {
+    "key": "e_1_2_7_27_1",
+    "doi-asserted-by": "publisher",
+    "DOI": "10.1021/acsphotonics.2c00263"
+   },
+   {
+    "key": "e_1_2_7_28_1",
+    "volume": "16",
+    "author": "Yu Z.",
+    "year": "2024",
+    "journal-title": "IEEE Photonics J."
+   },
+   {
+    "key": "e_1_2_7_29_1",
+    "doi-asserted-by": "publisher",
+    "DOI": "10.1364/OPTICA.484549"
+   },
+   {
+    "key": "e_1_2_7_30_1",
+    "doi-asserted-by": "publisher",
+    "DOI": "10.1038/nphoton.2007.25"
+   },
+   {
+    "key": "e_1_2_7_31_1",
+    "doi-asserted-by": "publisher",
+    "DOI": "10.1038/s41377-023-01251-x"
+   },
+   {
+    "key": "e_1_2_7_32_1",
+    "doi-asserted-by": "publisher",
+    "DOI": "10.1126/sciadv.adi5339"
+   },
+   {
+    "key": "e_1_2_7_33_1",
+    "doi-asserted-by": "publisher",
+    "DOI": "10.1016/j.optlastec.2022.108769"
+   },
+   {
+    "key": "e_1_2_7_34_1",
+    "doi-asserted-by": "publisher",
+    "DOI": "10.1109/LPT.2020.2978793"
+   },
+   {
+    "key": "e_1_2_7_35_1",
+    "doi-asserted-by": "publisher",
+    "DOI": "10.1109/LPT.2021.3106642"
+   },
+   {
+    "key": "e_1_2_7_36_1",
+    "volume": "13",
+    "author": "Huang X.",
+    "year": "2021",
+    "journal-title": "IEEE Photonics J."
+   },
+   {
+    "key": "e_1_2_7_37_1",
+    "doi-asserted-by": "publisher",
+    "DOI": "10.1126/science.1170885"
+   },
+   {
+    "key": "e_1_2_7_38_1",
+    "doi-asserted-by": "publisher",
+    "DOI": "10.1126/science.1087097"
+   },
+   {
+    "key": "e_1_2_7_39_1",
+    "doi-asserted-by": "publisher",
+    "DOI": "10.1038/nphoton.2008.139"
+   },
+   {
+    "key": "e_1_2_7_40_1",
+    "doi-asserted-by": "publisher",
+    "DOI": "10.1038/nature04210"
+   },
+   {
+    "key": "e_1_2_7_41_1",
+    "doi-asserted-by": "publisher",
+    "DOI": "10.1038/nphoton.2008.146"
+   },
+   {
+    "key": "e_1_2_7_42_1",
+    "author": "Shen J.",
+    "year": "2024",
+    "journal-title": "Laser Photo. Rev."
+   },
+   {
+    "key": "e_1_2_7_43_1",
+    "doi-asserted-by": "publisher",
+    "DOI": "10.1364/OL.24.000711"
+   },
+   {
+    "key": "e_1_2_7_44_1",
+    "doi-asserted-by": "publisher",
+    "DOI": "10.1364/JOSAB.21.001665"
+   },
+   {
+    "key": "e_1_2_7_45_1",
+    "doi-asserted-by": "publisher",
+    "DOI": "10.1103/PhysRevLett.94.033903"
+   },
+   {
+    "key": "e_1_2_7_46_1",
+    "doi-asserted-by": "publisher",
+    "DOI": "10.1103/PhysRevLett.94.033903"
+   },
+   {
+    "key": "e_1_2_7_47_1",
+    "doi-asserted-by": "publisher",
+    "DOI": "10.1103/PhysRevB.72.161318"
+   },
+   {
+    "key": "e_1_2_7_48_1",
+    "doi-asserted-by": "publisher",
+    "DOI": "10.1038/ncomms3725"
+   },
+   {
+    "key": "e_1_2_7_49_1",
+    "doi-asserted-by": "publisher",
+    "DOI": "10.1364/OE.18.027627"
+   },
+   {
+    "key": "e_1_2_7_50_1",
+    "doi-asserted-by": "publisher",
+    "DOI": "10.1038/nphoton.2008.226"
+   },
+   {
+    "key": "e_1_2_7_51_1",
+    "doi-asserted-by": "publisher",
+    "DOI": "10.1364/OE.468721"
+   },
+   {
+    "key": "e_1_2_7_52_1",
+    "unstructured": "B.Gul F.Ahmad IoT and Analytics for Sensor Networks: Proceedings of ICWSNUCA2021."
+   },
+   {
+    "key": "e_1_2_7_53_1",
+    "doi-asserted-by": "publisher",
+    "DOI": "10.1038/s41565-020-0773-7"
+   },
+   {
+    "key": "e_1_2_7_54_1",
+    "doi-asserted-by": "publisher",
+    "DOI": "10.1364/PRJ.387816"
+   },
+   {
+    "key": "e_1_2_7_55_1",
+    "doi-asserted-by": "publisher",
+    "DOI": "10.1109/JSTQE.2019.2908790"
+   },
+   {
+    "key": "e_1_2_7_56_1",
+    "doi-asserted-by": "publisher",
+    "DOI": "10.1364/OE.27.005610"
+   },
+   {
+    "key": "e_1_2_7_57_1",
+    "doi-asserted-by": "publisher",
+    "DOI": "10.1364/PRJ.6.000109"
+   },
+   {
+    "key": "e_1_2_7_58_1",
+    "doi-asserted-by": "publisher",
+    "DOI": "10.1109/JLT.2019.2944762"
+   }
+  ],
+  "container-title": [
+   "Laser &amp; Photonics Reviews"
+  ],
+  "original-title": [],
+  "language": "en",
+  "link": [
+   {
+    "URL": "https://onlinelibrary.wiley.com/doi/pdf/10.1002/lpor.202401998",
+    "content-type": "unspecified",
+    "content-version": "vor",
+    "intended-application": "similarity-checking"
+   }
+  ],
+  "deposited": {
+   "date-parts": [
+    [
+     2025,
+     10,
+     7
+    ]
+   ],
+   "date-time": "2025-10-07T02:35:06Z",
+   "timestamp": 1759804506000
+  },
+  "score": 1,
+  "resource": {
+   "primary": {
+    "URL": "https://onlinelibrary.wiley.com/doi/10.1002/lpor.202401998"
+   }
+  },
+  "subtitle": [],
+  "short-title": [],
+  "issued": {
+   "date-parts": [
+    [
+     2025,
+     5,
+     27
+    ]
+   ]
+  },
+  "references-count": 58,
+  "journal-issue": {
+   "issue": "19",
+   "published-print": {
+    "date-parts": [
+     [
+      2025,
+      10
+     ]
+    ]
+   }
+  },
+  "alternative-id": [
+   "10.1002/lpor.202401998"
+  ],
+  "URL": "https://doi.org/10.1002/lpor.202401998",
+  "archive": [
+   "Portico"
+  ],
+  "relation": {},
+  "ISSN": [
+   "1863-8880",
+   "1863-8899"
+  ],
+  "issn-type": [
+   {
+    "value": "1863-8880",
+    "type": "print"
+   },
+   {
+    "value": "1863-8899",
+    "type": "electronic"
+   }
+  ],
+  "subject": [],
+  "published": {
+   "date-parts": [
+    [
+     2025,
+     5,
+     27
+    ]
+   ]
+  },
+  "assertion": [
+   {
+    "value": "2024-11-22",
+    "order": 0,
+    "name": "received",
+    "label": "Received",
+    "group": {
+     "name": "publication_history",
+     "label": "Publication History"
+    }
+   },
+   {
+    "value": "2025-05-27",
+    "order": 3,
+    "name": "published",
+    "label": "Published",
+    "group": {
+     "name": "publication_history",
+     "label": "Publication History"
+    }
+   }
+  ],
+  "article-number": "e01998"
+ }
+}

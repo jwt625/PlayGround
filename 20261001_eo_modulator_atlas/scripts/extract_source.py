@@ -72,12 +72,14 @@ def extract(pdf: Path, out: Path, meta: dict[str, Any]) -> dict[str, Any]:
                 pm = fitz.Pixmap(doc, xref)
                 if pm.width < 150 or pm.height < 150:
                     continue
-                if pm.n - pm.alpha >= 4:
+                if pm.alpha:  # PNG writer rejects some alpha/gray/CMYK combinations; flatten to opaque
+                    pm = fitz.Pixmap(pm, 0)
+                if pm.colorspace is None or pm.colorspace.n not in (1, 3):
                     pm = fitz.Pixmap(fitz.csRGB, pm)
                 name = f"img_p{pno:02d}_{n}.png"
                 pm.save(out / "figures" / name)
                 figures.append({"kind": "embedded", "file": name, "page": pno, "width": pm.width, "height": pm.height})
-            except (RuntimeError, ValueError) as exc:  # unsupported colorspace etc.
+            except Exception as exc:  # noqa: BLE001  pymupdf raises its own error types for unsupported images
                 figures.append({"kind": "embedded_failed", "page": pno, "xref": xref, "error": str(exc)})
     (out / "text.md").write_text("".join(parts))
     (out / "figures" / "figures.json").write_text(json.dumps(figures, indent=1))

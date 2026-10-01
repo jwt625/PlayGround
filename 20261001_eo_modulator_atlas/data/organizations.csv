@@ -1,9 +1,20 @@
 org_name,org_type,country,region,parent_org,notes
+1FINITY Inc.,company,JP,east_asia,,"Kawasaki, Kanagawa"
 Binnig and Rohrer Nanotechnology Center,facility,CH,europe,,"Cleanroom named in acknowledgements; host institution and address not stated in the paper, country entered from outside the paper"
+Ciena Corporation,company,CA,north_america,,Quebec City and Ottawa addresses in the paper
 ETH Zurich,university,CH,europe,,Institute of Electromagnetic Fields; name as in affiliation
+"Institute of Physics, Chinese Academy of Sciences",research_institute,CN,east_asia,,Beijing National Laboratory for Condensed Matter Physics; affiliation 6
+Institute of Science Tokyo,university,JP,east_asia,,"Meguro-ku, Tokyo; Department of Electrical and Electronic Engineering"
 Ligentec SA,foundry,CH,europe,,Ecublens; SiN photonic foundry; named as fabricating the SiN wafers
 Lumiphase AG,company,CH,europe,,Stafa; BTO growth and integration
+McGill University,university,CA,north_america,,"Montreal, QC; Department of Electrical and Computer Engineering"
+NTT Innovative Devices Corporation,company,JP,east_asia,,"Atsugi City, Kanagawa; paper writes the affiliation as given; separate legal entity from Nippon Telegraph and Telephone Corporation, parent relation not stated in the paper"
 Nippon Telegraph and Telephone Corporation,company,JP,east_asia,,"Paper writes the affiliation as 'NTT Corporation' (NTT Device Innovation Center; NTT Device Technology Laboratories), Atsugi-shi, Kanagawa"
+Nokia Corporation,company,US,north_america,,"Sunnyvale, CA"
+Photonics Electronics Technology Research Association,consortium,JP,east_asia,,"Bunkyo-ku, Tokyo; paper abbreviation PETRA"
 South China Normal University,university,CN,east_asia,,Guangzhou; affiliations 2 and 3 (South China Academy of Advanced Optoelectronics; National Center for International Research on Green Optoelectronics)
-The Hong Kong Polytechnic University,university,CN,east_asia,,"Affiliation address reads ""Hong Kong, China""; Photonics Research Center, Departments of Electronic and Information Engineering and of Electrical Engineering"
+"Sumitomo Electric Industries, Ltd.",company,JP,east_asia,,"Yokohama, Kanagawa"
+The Hong Kong Polytechnic University,university,HK,east_asia,,"Affiliation address reads ""Hong Kong, China""; Photonics Research Center, Departments of Electronic and Information Engineering and of Electrical Engineering"
+The University of Tokyo,university,JP,east_asia,,"Bunkyo-ku, Tokyo; School of Engineering"
+Tsinghua University,university,CN,east_asia,,"Beijing; affiliations 1 (State Key Laboratory of New Ceramic Materials) and 2 (BNRist, Department of Electronic Engineering)"
 Zhejiang University,university,CN,east_asia,,"Hangzhou; affiliations 1 (State Key Laboratory for Modern Optical Instrumentation, Centre for Optical and Electromagnetic Research, International Research Center for Advanced Photonics)"

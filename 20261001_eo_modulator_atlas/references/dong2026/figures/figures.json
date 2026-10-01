@@ -1,0 +1,42 @@
+[
+ {
+  "kind": "page_render",
+  "file": "page_02.png",
+  "page": 2,
+  "captions": [
+   "Fig. 2(a) shows the block diagram of the transceiver prototype. Fig. 2(b) presents a photograph of the packaged",
+   "Fig. 1. Measured s-parameter of the Si MZM used in this paper.",
+   "Fig. 2. 400G/lane transceiver prototype with Si MZMs. (a) Block diagram of the packaged device; (b) Photo",
+   "Figure 3 summarizes the measured results. At 300 Gb/s, the transmitter achieved a modulation extinction ratio of"
+  ]
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p02_1.png",
+  "page": 2,
+  "width": 492,
+  "height": 219
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p02_2.png",
+  "page": 2,
+  "width": 1361,
+  "height": 571
+ },
+ {
+  "kind": "page_render",
+  "file": "page_03.png",
+  "page": 3,
+  "captions": [
+   "Fig. 3. Back-to-back optical transmitter performance at 300\u2013420 Gb/s showing ER, RLM, Link BER, and"
+  ]
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p03_1.png",
+  "page": 3,
+  "width": 892,
+  "height": 292
+ }
+]

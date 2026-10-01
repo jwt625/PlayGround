@@ -1,0 +1,86 @@
+---
+paper_id: qiu2026
+source_url: https://doi.org/10.1364/ofc.2026.th4b.3
+doi: 10.1364/ofc.2026.th4b.3
+license: 
+extracted_on: 2026-10-01
+extraction_method: pre-extracted text copied from a local corpus; no PDF and no figure images available; figures and tables must be treated as unavailable
+---
+
+# Barium Titanate Enabling Net 1.6T (4x448 Gbps PAM4) On a Silicon Photonics Platform
+
+Benton Qiu1,\*,† , Charles St-Arnault1,† , Jonathan Cauchon<sup>2</sup> , Cyriel Minkenberg,<sup>3</sup> , Thomas Kornher<sup>3</sup> , Charles Laperle<sup>4</sup> , Wouter Diels<sup>3</sup> , Stefan Abel<sup>3</sup> , Naim Ben-Hamida <sup>4</sup> , Bruce Beggs<sup>4</sup> , Franc¸ois Pelletier<sup>2</sup> , Lukas Czornomaz<sup>3</sup> , Xiangfeng Chen<sup>3</sup> , Felix Eltes<sup>3</sup> and David V. Plant<sup>1</sup>
+
+*Dept. of Electrical and Computer Engineering, McGill University, Montreal, QC H3A 0G4, Canada Ciena Corporation, Quebec City, QC G1P 4S9, Canada ´ Lumiphase AG, Laubisrutistrasse 44, 8712 St ¨ afa, Switzerland ¨ Ciena Corporation, Ottawa, ON K2K 0L1, Canada* † *Co-first author \*benton.qiu@mail.mcgill.ca*
+
+Abstract: We present a thin-film barium titanate DR4 chip operating in the O-band monolithically integrated on a commercial silicon photonics platform enabling net 1.6T (4x448 Gbps PAM4) using a 3 nm CMOS SerDes.
+
+# 1. Introduction
+
+Increases in data center traffic driven by artificial intelligence are quickly pushing the need for 400 Gbps lanes. Last year, net 400 Gbps PAM4 was demonstrated for the first time on the TFLN platform [\[1\]](#page-2-0). While TFLN has demonstrated impressive device bandwidth and *V*<sup>π</sup> , there are practical considerations to keep in mind. These include alignment with standard differential RF interfaces, phase shifter length and heterogeneous integration with silicon. Similarly, InP has demonstrated high bandwidth devices operating at 172 GBaud PAM6 [\[2\]](#page-2-1), however, the small wafer size (3-6") reduces cost-efficiency. An ideal material can offer high-bandwidth, low drive voltage and compact device lengths while leveraging CMOS compatibility. Despite rapid progress across material platforms, a net 400 Gbps PAM4 demonstration on a silicon photonics platform has not yet been reported.
+
+Thin-film barium titanate (BTO) is an emerging photonic technology and a promising candidate for nextgeneration high-speed data center links. BTO's attractive material properties include low optical loss, one of the largest known DC Pockels coefficient on silicon and compatibility with standard silicon photonics processes [\[3–](#page-2-2)[5\]](#page-2-3). BTO has also been monolithically integrated in GlobalFoundries 300 mm silicon photonics process with a 95% functional yield, indicating its potential for mass manufacturing [\[6\]](#page-2-4). Current state-of-the-art IMDD demonstrations on BTO include MZMs [\[7\]](#page-2-5), coupling modulated rings [\[8\]](#page-2-6) and plasmonics [\[9\]](#page-2-7), however, none of these devices have enabled data rates past net 256 Gbps PAM4. Table [1](#page-0-0) shows a comparison of state-of-the-art system demonstrations on silicon photonics platforms (not restricted to BTO). In this work, we demonstrate for the first time, a BTO chip fabricated in a silicon photonics platform enabling 448 Gbps PAM4 under the HD-FEC threshold. This work paves a path forward for dense and high-speed optical interconnects on a monolithic silicon photonics platform enabled by BTO as the active material.
+
+| Modulator Type | Wavelength                   | Symbol Rate                                              | Modulation                                                                 | Fiber Span                                   | Net Data Rate                               |
+|----------------|------------------------------|----------------------------------------------------------|----------------------------------------------------------------------------|----------------------------------------------|---------------------------------------------|
+| BTO            | O-band                       | 225 GBaud                                                | PAM4                                                                       | 2 km                                         | 422 Gbps                                    |
+|                |                              |                                                          |                                                                            |                                              | 506 Gbps                                    |
+|                |                              |                                                          |                                                                            |                                              | 540 Gbps                                    |
+| Plasmonic BTO  |                              |                                                          |                                                                            |                                              | 256 Gbps                                    |
+|                |                              |                                                          |                                                                            |                                              | 232 Gbps                                    |
+| Organic Hybrid |                              |                                                          |                                                                            |                                              | 360 Gbps                                    |
+|                |                              |                                                          |                                                                            |                                              | 328 Gbps                                    |
+| SiGe EAM       | C-band                       | 224 GBaud                                                | PAM4                                                                       | B2B                                          | 358 Gbps                                    |
+|                | BTO<br>BTO<br>BTO<br>Silicon | O-band<br>O-band<br>O-band<br>O-band<br>C-band<br>C-band | 225 GBaud<br>225 GBaud<br>160 GBaud<br>124 GBaud<br>192 GBaud<br>175 GBaud | PAM6<br>PAM8<br>PAM4<br>PAM4<br>PAM4<br>PAM4 | 2 km<br>2 km<br>B2B<br>2 km<br>B2B<br>100 m |
+
+<span id="page-0-0"></span>Table 1. State-of-the-art PAM4 system demonstrations on silicon photonics platforms
+
+# 2. Device Design and Manufacturing
+
+The DR4 BTO chip shown in Fig[.1a](#page-1-0)) with 1.75 mm phase shifters was fabricated using a 200 mm commercial silicon photonics fab. Thin-film BTO is grown on silicon wafers using molecular beam epitaxy. The BTO layers are transferred onto processed silicon photonic wafers, which include slab and rib Si waveguides, germanium epitaxy for photodiodes (PD), doped Si for resistors and thermal phase shifters (TPS), and several silicon nitride (SiN) layers. The high-speed phase shifters are defined in a BEOL process which includes additional oxide, nitride, and metallization layers. Light was coupled from SMF to silicon nitride edge couplers through direct butt-coupling of a fiber array unit to the PIC's edge. The SSMF pig-tailed driver-PIC assembly had fibers with 80µm cladding which needed to be spliced to fibers with 125µm cladding in order to be connectorized. The splicing on the input and output fibers introduced an extra total loss of 1-2.5dB depending on the channel. The resulting connectorized fiber to fiber IL was ranging from 12.5 to 14 dB across all 4 channels, of which the PIC contributed 11.5 dB (comprising 6 dB for 1x4 laser power splitter, 1.25 dB per fiber edge coupler, and 3 dB on-chip IL). Mode couplers couple light into the BTO waveguide to and from the Si and SiN layers. All passives on the chip are in the Si or SiN layers while the active material for EO modulation is BTO. 50  $\Omega$  differential terminations and thermal phase shifters are integrated on-chip. The high-speed phase shifter has a DC extinction ratio >35 dB indicating strong uniformity of the SiN/BTO mode couplers and interferometer structures. The thermal phase shifters have a  $P_{\pi}$  of 13 mW. Germanium monitor PDs are monolithically integrated on chip to monitor the output power of each channel. The BTO bare die has a differential  $V_{\pi}$  of 6 V and a 3/6 dB EO S21 of 55/105 GHz. Of note is that previous non-plasmonic BTO modulators have not demonstrated 6 dB EO BWs past 50 GHz [7,8]. This device demonstrates a significant bandwidth improvement from the previous state-of-the-art BTO modulators. The BTO bare die is packaged alongside differential RF drivers with up to 30 dB gain at 100 GHz in an OIF compatible coherent driver modulator (CDM) package adapted for IMDD systems. The RF drivers are wire-bonded to BTOs differential RF interface. The finished die size is 5.1.x 3.5 mm<sup>2</sup>.
+
+![](_page_1_Figure_3.jpeg)
+
+<span id="page-1-0"></span>Fig. 1. a) Micrograph of the SiP/BTO chip. The optical I/O is shown on the right, the MZMs and PDs at the bottom left and the DC interface for biasing at the top left. b) EO S21 of the bare BTO die normalized to 1 GHz. A 6 dB EO bandwidth of 105 GHz is realized. c) A schematic (not to scale) of the BTO/SiP fabrication process cross-section including BTO, germanium for photodiodes, Si and SiN for passive devices.
+
+## 3. Experimental Setup
+
+To verify the functionality of our DR4 BTO chip at 225 GBaud, a 113 GHz + IMDD system was built shown in Fig. 2a). A 20 dBm quantum dot distributed feedback (QD DFB) laser acts as the carrier and is evenly split on-chip into each of the 4 channels. A thermo-electric cooler (TEC) is used to heat the BTO chip + drivers up to 85 °C. The electrical signals are generated by a 225 GBaud serializer/deserializer (SerDes) fabricated in a 3 nm CMOS process. The electrical signals are delivered to the chip through a RF PCB and flex ribbon, both with bandwidths exceeding 113 GHz. The crosstalk of the chip was measured by monitoring the output of one of the channels on the OSA and electrically driving its neighboring channel. The crosstalk was negligible, therefore, we expect there to be no difference in the performance of each of the individual lanes when either all channels or just one channel is driven. In our experiment, one channel is driven at a time. The output of the Tx with an average power of 2 dBm is then amplified by a praseodymium doped fiber amplifier (PDFA) before traversing a 2 km fiber spool. The PDFA is used to compensate for the absence of a trans-impedance amplifier. The output of the PDFA is input to a 100 GHz O-band PD before being sampled by a 113 GHz RTO. The Tx and Rx DSP is applied offline. On the Tx, re-sampling and pre-emphasis up to 100 GHz is applied to compensate for the frequency response of the SerDes shown in [1]. On the receiver we apply DFE and 1-tap MLSE. The non-linear equalizers are needed for this system as the drivers have a large roll-off past 100 GHz shown in Fig. 2b). This meant that the received signal from 100 - 113 GHz was near the noise floor of the RTO.
+
+![](_page_1_Figure_7.jpeg)
+
+<span id="page-1-1"></span>Fig. 2. a) Experimental IMDD transmission system setup. The BTO chip is packaged with 100 GHz differential RF drivers. The electrical signal is generated by a 3 nm SerDes. An optical amplifier is used to compensate large splice losses and the lack of a TIA. b) Received spectrum of a 225 GBaud PAM4 signal at the RTO. The 15 dB roll-off past 105 GHz originates from the RF drivers.
+
+### 4. Experimental Results
+
+Fig. 3 shows the transmission results. All 4 channels achieve 225 GBaud PAM4 under the HDFEC threshold over a 2 km fiber span, enabling net 1.6 T. Using PAM6 and PAM8 signaling at 225 GBaud achieves net rates of net 2.02T (4 x 506 Gbps) and net 2.16T (4 x 540 Gbps) as shown in Fig. 3a-c) respectively. For 112 GBaud implementations, PAM4 signaling achieves BER <1e-6 (DFE only), the measurement limit of the RTO. We measured an improved
+
+![](_page_2_Figure_2.jpeg)
+
+<span id="page-2-11"></span>Fig. 3. Transmission results for all MZMs on the DR4 chip. a) PAM4 BER vs baud rate. Net 422 Gbps is achieved. b) PAM6 BER vs baud rate. Net 506 Gbps is achieved. c) PAM8 BER vs baud rate. Net 540 Gbps is achieved. d) PAM4 BER vs baud rate over temperature. e) 225 GBaud PAM4 BER vs ROP. The temperature sweeps for ROP and baud rate are done on the worst performing MZM. The temperature performance drop is marginal and is attributed to the decreased gain of the drivers at higher temperatures. f) Received optical 225 GBaud PAM 4 eye with 8 RTO averages, DFE and a BER of 2.7e-3.
+
+error margin using channels 3 compared to channels 1, 2 and 4 as it had 1 dB lower IL. This is not attributed to yield concerns or non-uniformity on chip, rather the inconsistent splicing of the different fiber cladding diameters. We show performance stability of BTO over temperatures up to 85 °C, the limit of our TEC. Although bulk BTO has a Curie temperature of only 120 °C, thin-film BTO devices have demonstrated penalty-free performance up to 250 °C [13]. This indicates that the Curie temperature is significantly higher in thin-film BTO than bulk BTO. When measuring BTO performance variation over temperature, MZM2 was used. Slight performance degradations are observed at temperatures > 50 °C shown in Fig. 3d). We attribute this to the decreased gain of the RF drivers at temperatures higher than room temperature. Fig. 3e) shows the sensitivity of the system to received optical power (ROP) for a 225 GBaud PAM4 signal. The maximum ROP input to the receiver is 10.5 dBm. To sweep the ROP, a variable optical attenuator (VOA) replaces the SMF span. The VOA exhibits an intrinsic 3 dB IL, explaining the jump from 10.5 dBm to 7.5 dBm. BER under HD-FEC is achieved at all temperatures with the MZM2 and 3 dB added IL. Based on this ROP sweep, only 5 dB gain is required from the PDFA to achieve BER under HDFEC threshold. Fig. 3f) shows a received optical eye diagram of a 225 GBaud PAM4 signal. The eye is captured using an RTO with 8 waveform averages. The BER for the eye shown with DFE is 2.7e-3.
+
+### 5. Conclusion
+
+We present a 105 GHz DR4 chip manufactured in a 200 mm BTO-on-SiPh platform using commercial foundry processes. The 5.1 x 3.5 mm<sup>2</sup> chip features 4 high-speed differential-drive MZMs, integrated MPDs, efficient thermal tuners and edge couplers with integrated spot size converters. We demonstrate net 1.6T (4x448 Gbps) in the O-band for the first time on a silicon photonics platform.
+
+The authors would like to thank the team at Professor David V. Plant's group at McGill University, Ciena, Lumiphase and the individual contributors who are not shown on the author list but made this project possible.
+
+- <span id="page-2-0"></span>1. C. St-Arnault, et al., "Net 3.2 Tbps 225 Gbaud PAM4 O-Band IM/DD 2 km transmission using FR8 and DR8 with a CMOS 3 nm SerDes and TFLN modulators," OFC 2025.
+- <span id="page-2-1"></span>2. Y. Ogiso, et al., "Uncooled O-band InP MZ modulator PIC for 3.2 Tb/s (400 Gb/s/lane) pluggable transceiver," OFC 2025.
+- <span id="page-2-2"></span>S. Abel, et al., "Large Pockels effect in micro- and nanostructured barium titanate integrated on silicon" Nature Materials, 18, 42-47 (2018).
+- 4. F. Eltes, et al., "A BaTiO3-Based Electro-Optic Pockels Modulator Mor lithically Integrated on an Advanced Silicon Photonics Platform." II T.37
+- <span id="page-2-3"></span>5 (2019).
+
+  5. D. Chelladurai, *et al.*, "Barium titanate and lithium niobate permittivity and Pockels coefficients from megahertz to sub-terahertz frequencies Nature Materials, 24, 868-875 (2025).
+- <span id="page-2-4"></span>6. PsiQuantum, "A manufacturable platform for photonic quantum computing", Nature,641,876-883 (2025).
+
+- <span id="page-2-6"></span>
+- <span id="page-2-5"></span>W. Li, et al., "Thin-Film BTO-Based MZMs for Next-Generation IMDD Transceivers Beyond 200 Gbps," JLT 42, 3 (2023).
+   B. Qiu, et al., "112 GBaud PAM4 Barium Titanate Coupling Modulated Ring Modulator Monolithically Integrated on a Silicon Substrate," OFC,
+- <span id="page-2-7"></span>Kohil, et al., "The plasmonic BTO-on-SiN platform – beyond 200 GBd modulation for optical communications," Light: Science and Applications, 14, 399 (2025).
+- <span id="page-2-8"></span>A.Schwarzenberger, et al., "Silicon-Organic Hybrid (SOH) Mach-Zehnder Modulator (MZM) for Single-Carrier IMDD Line Rates of 500 Gbit/s and Beyond" OFC 2025.
+- <span id="page-2-9"></span>A.Ostrovskis, et al., "Traveling-Wave Silicon Photonics Mach-Zehnder Modulator for Beyond 350 Gb/s Transmission in C-band" OFC 2025. C.Bruynsteen, *et al.*, "110 GHz GeSi Electroabsorption Modulator on a
+- <span id="page-2-10"></span>300mm SiPh Platform Enabling High-Density 400G/lane IM/DD Links"
+- <span id="page-2-12"></span>A. Messner *et al.*, "Plasmonic Ferroelectric Modulators," JLT, 37, 2, 2019.

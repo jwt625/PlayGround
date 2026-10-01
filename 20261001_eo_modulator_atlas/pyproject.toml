@@ -19,11 +19,18 @@ target-version = "py312"
 
 [tool.ruff.lint]
 select = ["B", "E", "F", "I", "UP"]
+ignore = ["E501"]  # docstrings and data literals may exceed 120; the formatter wraps code
 
 [tool.mypy]
 python_version = "3.12"
 strict = true
 files = ["scripts"]
+
+[[tool.mypy.overrides]]
+module = ["pymupdf", "pymupdf.*"]
+follow_imports = "skip"
+ignore_missing_imports = true
+disallow_any_unimported = false
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

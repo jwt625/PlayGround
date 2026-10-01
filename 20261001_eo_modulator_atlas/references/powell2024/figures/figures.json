@@ -1,0 +1,47 @@
+[
+ {
+  "kind": "page_render",
+  "file": "page_03.png",
+  "page": 3,
+  "captions": [
+   "FIG. 1. Near-IR thin-film lithium tantalate Mach-Zehnder electro-optic modulator (a) Optical micrograph of the fabricated modulator. Crystal",
+   "FIG. 2. Measured electro-optic relaxation of a thin-film lithium tantalate Mach-Zehnder modulator using (a) an applied 0.1 Hz square wave"
+  ]
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p03_1.png",
+  "page": 3,
+  "width": 1872,
+  "height": 211
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p03_2.png",
+  "page": 3,
+  "width": 836,
+  "height": 362
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p03_3.png",
+  "page": 3,
+  "width": 879,
+  "height": 863
+ },
+ {
+  "kind": "page_render",
+  "file": "page_04.png",
+  "page": 4,
+  "captions": [
+   "FIG. 3. (a) Measured transmission spectrum of a thin-film lithium tantalate micro-ring resonator at wavelengths around 638 nm. (b) Resonance"
+  ]
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p04_1.png",
+  "page": 4,
+  "width": 330,
+  "height": 228
+ }
+]

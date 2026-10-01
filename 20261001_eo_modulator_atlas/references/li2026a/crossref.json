@@ -1,0 +1,247 @@
+{
+ "status": "ok",
+ "message-type": "work",
+ "message-version": "1.0.0",
+ "message": {
+  "indexed": {
+   "date-parts": [
+    [
+     2026,
+     8,
+     17
+    ]
+   ],
+   "date-time": "2026-08-17T18:25:04Z",
+   "timestamp": 1786991104175,
+   "version": "build-2736575974"
+  },
+  "publisher-location": "Washington, D.C.",
+  "reference-count": 6,
+  "publisher": "Optica Publishing Group",
+  "content-domain": {
+   "domain": [],
+   "crossmark-restriction": false
+  },
+  "short-container-title": [],
+  "published-print": {
+   "date-parts": [
+    [
+     2026
+    ]
+   ]
+  },
+  "abstract": "<jats:p>We demonstrate the lithium-tantalate-on-fused silica (LT-on-FS) Mach-Zehnder modulator manufactured in 4-inch wafer-scale. The modulator features a 3 dB electro-optic bandwidth of 67 GHz and a modulation efficiency of 1.6 V. We achieve net data rates of 437 Gbit/s with PAM8 signaling.</jats:p>",
+  "DOI": "10.1364/ofc.2026.w1a.5",
+  "type": "proceedings-article",
+  "created": {
+   "date-parts": [
+    [
+     2026,
+     6,
+     2
+    ]
+   ],
+   "date-time": "2026-06-02T19:28:53Z",
+   "timestamp": 1780428533000
+  },
+  "page": "W1A.5",
+  "source": "Crossref",
+  "is-referenced-by-count": 0,
+  "title": [
+   "Lithium-Tantalate-on-Fused Silica Mach-Zehnder Modulators"
+  ],
+  "prefix": "10.1364",
+  "author": [
+   {
+    "given": "Zihan",
+    "family": "Li",
+    "sequence": "first",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Alexander",
+    "family": "Kotz",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Adrian",
+    "family": "Schwarzenberger",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Christian",
+    "family": "Koos",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Tobias",
+    "family": "Kippenberg",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   }
+  ],
+  "member": "285",
+  "reference": [
+   {
+    "key": "OFC-2026-W1A.5-R1",
+    "first-page": "1",
+    "type": "journal-article",
+    "author": "Wang",
+    "year": "2024",
+    "journal-title": "Nature"
+   },
+   {
+    "key": "OFC-2026-W1A.5-R3",
+    "doi-asserted-by": "publisher",
+    "first-page": "1614",
+    "DOI": "10.1364/OPTICA.537730",
+    "type": "journal-article",
+    "volume": "11",
+    "author": "Wang",
+    "year": "2024",
+    "journal-title": "Optica"
+   },
+   {
+    "key": "OFC-2026-W1A.5-R5",
+    "doi-asserted-by": "publisher",
+    "first-page": "357",
+    "DOI": "10.1364/OPTICA.416155",
+    "type": "journal-article",
+    "volume": "8",
+    "author": "Kharel",
+    "year": "2021",
+    "journal-title": "Optica"
+   },
+   {
+    "key": "OFC-2026-W1A.5-R7",
+    "doi-asserted-by": "publisher",
+    "first-page": "3011",
+    "DOI": "10.1109/TIT.2016.2543740",
+    "type": "journal-article",
+    "volume": "62",
+    "author": "Ivanov",
+    "year": "2020",
+    "journal-title": "IEEE Trans. on Info. Theory"
+   },
+   {
+    "key": "OFC-2026-W1A.5-R8",
+    "doi-asserted-by": "publisher",
+    "first-page": "3338",
+    "DOI": "10.1109/JLT.2022.3172246",
+    "type": "journal-article",
+    "volume": "40",
+    "author": "Hu",
+    "year": "2022",
+    "journal-title": "J. Light. Technol"
+   },
+   {
+    "key": "OFC-2026-W1A.5-R9",
+    "doi-asserted-by": "publisher",
+    "first-page": "850",
+    "DOI": "10.1109/LPT.2023.3285881",
+    "type": "journal-article",
+    "volume": "35",
+    "author": "Berikaa",
+    "year": "2023",
+    "journal-title": "IEEE Photon. Technol. Lett"
+   }
+  ],
+  "event": {
+   "name": "Optical Fiber Communication Conference",
+   "location": "Los Angeles, California",
+   "acronym": "OFC",
+   "sponsor": [
+    "The Optical Society"
+   ],
+   "start": {
+    "date-parts": [
+     [
+      2026
+     ]
+    ]
+   }
+  },
+  "container-title": [
+   "Optical Fiber Communication Conference (OFC) 2026"
+  ],
+  "original-title": [],
+  "link": [
+   {
+    "URL": "https://opg.optica.org/viewmedia.cfm?URI=OFC-2026-W1A.5&seq=0",
+    "content-type": "unspecified",
+    "content-version": "vor",
+    "intended-application": "similarity-checking"
+   }
+  ],
+  "deposited": {
+   "date-parts": [
+    [
+     2026,
+     8,
+     17
+    ]
+   ],
+   "date-time": "2026-08-17T17:27:29Z",
+   "timestamp": 1786987649000
+  },
+  "score": 1,
+  "resource": {
+   "primary": {
+    "URL": "https://opg.optica.org/abstract.cfm?URI=OFC-2026-W1A.5"
+   }
+  },
+  "subtitle": [],
+  "short-title": [],
+  "issued": {
+   "date-parts": [
+    [
+     2026
+    ]
+   ]
+  },
+  "references-count": 6,
+  "URL": "https://doi.org/10.1364/ofc.2026.w1a.5",
+  "relation": {},
+  "subject": [],
+  "published": {
+   "date-parts": [
+    [
+     2026
+    ]
+   ]
+  }
+ }
+}

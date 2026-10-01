@@ -1,0 +1,616 @@
+{
+ "status": "ok",
+ "message-type": "work",
+ "message-version": "1.0.0",
+ "message": {
+  "indexed": {
+   "date-parts": [
+    [
+     2026,
+     9,
+     25
+    ]
+   ],
+   "date-time": "2026-09-25T09:00:33Z",
+   "timestamp": 1790326833714,
+   "version": "4.1.0"
+  },
+  "reference-count": 12,
+  "publisher": "Optica Publishing Group",
+  "issue": "1",
+  "license": [
+   {
+    "start": {
+     "date-parts": [
+      [
+       2022,
+       1,
+       10
+      ]
+     ],
+     "date-time": "2022-01-10T00:00:00Z",
+     "timestamp": 1641772800000
+    },
+    "content-version": "vor",
+    "delay-in-days": 0,
+    "URL": "https://doi.org/10.1364/OA_License_v2#VOR-OA"
+   },
+   {
+    "start": {
+     "date-parts": [
+      [
+       2022,
+       1,
+       10
+      ]
+     ],
+     "date-time": "2022-01-10T00:00:00Z",
+     "timestamp": 1641772800000
+    },
+    "content-version": "tdm",
+    "delay-in-days": 0,
+    "URL": "https://opg.optica.org/policies/opg-tdm-policy.json"
+   }
+  ],
+  "funder": [
+   {
+    "DOI": "10.13039/501100012166",
+    "name": "National Key Research and Development Program of China",
+    "doi-asserted-by": "publisher",
+    "award": [
+     "2019YFB1803900"
+    ],
+    "award-info": [
+     {
+      "award-number": [
+       "2019YFB1803900"
+      ]
+     }
+    ],
+    "id": [
+     {
+      "id": "10.13039/501100012166",
+      "id-type": "DOI",
+      "asserted-by": "publisher"
+     }
+    ]
+   },
+   {
+    "DOI": "10.13039/501100001809",
+    "name": "National Natural Science Foundation of China",
+    "doi-asserted-by": "publisher",
+    "award": [
+     "11690031"
+    ],
+    "award-info": [
+     {
+      "award-number": [
+       "11690031"
+      ]
+     }
+    ],
+    "id": [
+     {
+      "id": "10.13039/501100001809",
+      "id-type": "DOI",
+      "asserted-by": "publisher"
+     }
+    ]
+   }
+  ],
+  "content-domain": {
+   "domain": [
+    "opg.optica.org"
+   ],
+   "crossmark-restriction": false
+  },
+  "short-container-title": [
+   "Optica"
+  ],
+  "published-print": {
+   "date-parts": [
+    [
+     2022,
+     1,
+     20
+    ]
+   ]
+  },
+  "abstract": "<jats:p>We report, to our knowledge, the first dual-polarization thin-film lithium niobate coherent modulator for next-generation optical links with sub-1-V driving voltage and 110-GHz bandwidth, enabling a record single-wavelength 1.96-Tb/s net data rate with ultrahigh energy efficiency.</jats:p>",
+  "DOI": "10.1364/optica.449691",
+  "type": "journal-article",
+  "created": {
+   "date-parts": [
+    [
+     2021,
+     12,
+     21
+    ]
+   ],
+   "date-time": "2021-12-21T16:32:24Z",
+   "timestamp": 1640104344000
+  },
+  "page": "61",
+  "update-policy": "https://doi.org/10.1364/crossmark_policy",
+  "source": "Crossref",
+  "is-referenced-by-count": 358,
+  "title": [
+   "Dual-polarization thin-film lithium niobate in-phase quadrature modulators for terabit-per-second transmission"
+  ],
+  "prefix": "10.1364",
+  "volume": "9",
+  "author": [
+   {
+    "ORCID": "https://orcid.org/0000-0001-6261-0347",
+    "authenticated-orcid": true,
+    "given": "Mengyue",
+    "family": "Xu",
+    "sequence": "first",
+    "affiliation": [
+     {
+      "name": "Sun Yat-Sen University"
+     }
+    ],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Yuntao",
+    "family": "Zhu",
+    "sequence": "additional",
+    "affiliation": [
+     {
+      "name": "Sun Yat-Sen University"
+     }
+    ],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Fabio",
+    "family": "Pittal\u00e0",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Jin",
+    "family": "Tang",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Mingbo",
+    "family": "He",
+    "sequence": "additional",
+    "affiliation": [
+     {
+      "name": "Sun Yat-Sen University"
+     }
+    ],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Wing Chau",
+    "family": "Ng",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Jingyi",
+    "family": "Wang",
+    "sequence": "additional",
+    "affiliation": [
+     {
+      "name": "Sun Yat-Sen University"
+     }
+    ],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Ziliang",
+    "family": "Ruan",
+    "sequence": "additional",
+    "affiliation": [
+     {
+      "name": "Zhejiang University"
+     }
+    ],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Xuefeng",
+    "family": "Tang",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Maxim",
+    "family": "Kuschnerov",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Liu",
+    "family": "Liu",
+    "sequence": "additional",
+    "affiliation": [
+     {
+      "name": "Zhejiang University"
+     }
+    ],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Siyuan",
+    "family": "Yu",
+    "sequence": "additional",
+    "affiliation": [
+     {
+      "name": "Sun Yat-Sen University"
+     }
+    ],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Bofang",
+    "family": "Zheng",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Xinlun",
+    "family": "Cai",
+    "sequence": "additional",
+    "affiliation": [
+     {
+      "name": "Sun Yat-Sen University"
+     }
+    ],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   }
+  ],
+  "member": "285",
+  "published-online": {
+   "date-parts": [
+    [
+     2022,
+     1,
+     10
+    ]
+   ]
+  },
+  "reference": [
+   {
+    "key": "optica-9-1-61-R1",
+    "doi-asserted-by": "publisher",
+    "first-page": "24190",
+    "DOI": "10.1364/OE.26.024190",
+    "volume": "26",
+    "author": "Winzer",
+    "year": "2018",
+    "journal-title": "Opt. Express"
+   },
+   {
+    "key": "optica-9-1-61-R2",
+    "doi-asserted-by": "publisher",
+    "first-page": "256",
+    "DOI": "10.1109/JLT.2019.2961646",
+    "volume": "38",
+    "author": "Zhalehpour",
+    "year": "2020",
+    "journal-title": "J. Lightwave Technol."
+   },
+   {
+    "key": "optica-9-1-61-R3",
+    "doi-asserted-by": "publisher",
+    "first-page": "5086",
+    "DOI": "10.1109/JLT.2020.2998466",
+    "volume": "38",
+    "author": "Ozaki",
+    "year": "2020",
+    "journal-title": "J. Lightwave Technol."
+   },
+   {
+    "key": "optica-9-1-61-R4",
+    "first-page": "F3",
+    "volume-title": "Optical Fiber Communication Conference (OFC)",
+    "author": "Chen",
+    "year": "2021"
+   },
+   {
+    "key": "optica-9-1-61-R5",
+    "doi-asserted-by": "publisher",
+    "first-page": "3911",
+    "DOI": "10.1038/s41467-020-17806-0",
+    "volume": "11",
+    "author": "Xu",
+    "year": "2020",
+    "journal-title": "Nat. Commun."
+   },
+   {
+    "key": "optica-9-1-61-R6",
+    "doi-asserted-by": "publisher",
+    "first-page": "357",
+    "DOI": "10.1364/OPTICA.416155",
+    "volume": "8",
+    "author": "Kharel",
+    "year": "2021",
+    "journal-title": "Optica"
+   },
+   {
+    "key": "optica-9-1-61-R7",
+    "doi-asserted-by": "publisher",
+    "first-page": "101",
+    "DOI": "10.1038/s41586-018-0551-y",
+    "volume": "562",
+    "author": "Wang",
+    "year": "2018",
+    "journal-title": "Nature"
+   },
+   {
+    "key": "optica-9-1-61-R8",
+    "doi-asserted-by": "publisher",
+    "first-page": "652",
+    "DOI": "10.1364/OPTICA.415762",
+    "volume": "8",
+    "author": "Zhang",
+    "year": "2021",
+    "journal-title": "Optica"
+   },
+   {
+    "key": "optica-9-1-61-R10",
+    "first-page": "Th2C1.1",
+    "volume-title": "European Conference on Optical Communication (ECOC)",
+    "author": "Pittal\u00e0",
+    "year": "2021"
+   },
+   {
+    "key": "optica-9-1-61-R11",
+    "doi-asserted-by": "publisher",
+    "first-page": "1479",
+    "DOI": "10.1109/JLT.2015.2399174",
+    "volume": "33",
+    "author": "Ghazisaeidi",
+    "year": "2015",
+    "journal-title": "J. Lightwave Technol."
+   },
+   {
+    "key": "optica-9-1-61-R12",
+    "first-page": "Th4C.2",
+    "volume-title": "ECOC",
+    "author": "Bajaj",
+    "year": "2020"
+   },
+   {
+    "key": "optica-9-1-61-R13",
+    "doi-asserted-by": "crossref",
+    "first-page": "Th4C.2",
+    "DOI": "10.1364/OFC.2020.Th4C.2",
+    "volume-title": "OFC",
+    "author": "Buchali",
+    "year": "2020"
+   }
+  ],
+  "container-title": [
+   "Optica"
+  ],
+  "original-title": [],
+  "language": "en",
+  "link": [
+   {
+    "URL": "https://opg.optica.org/viewmedia.cfm?URI=optica-9-1-61&seq=0",
+    "content-type": "unspecified",
+    "content-version": "vor",
+    "intended-application": "similarity-checking"
+   }
+  ],
+  "deposited": {
+   "date-parts": [
+    [
+     2024,
+     8,
+     6
+    ]
+   ],
+   "date-time": "2024-08-06T19:27:58Z",
+   "timestamp": 1722972478000
+  },
+  "score": 1,
+  "resource": {
+   "primary": {
+    "URL": "https://opg.optica.org/abstract.cfm?URI=optica-9-1-61"
+   }
+  },
+  "subtitle": [],
+  "short-title": [],
+  "issued": {
+   "date-parts": [
+    [
+     2022,
+     1,
+     10
+    ]
+   ]
+  },
+  "references-count": 12,
+  "journal-issue": {
+   "issue": "1",
+   "published-online": {
+    "date-parts": [
+     [
+      2022
+     ]
+    ]
+   },
+   "published-print": {
+    "date-parts": [
+     [
+      2022
+     ]
+    ]
+   }
+  },
+  "URL": "https://doi.org/10.1364/optica.449691",
+  "relation": {},
+  "ISSN": [
+   "2334-2536"
+  ],
+  "issn-type": [
+   {
+    "value": "2334-2536",
+    "type": "electronic"
+   }
+  ],
+  "subject": [],
+  "published": {
+   "date-parts": [
+    [
+     2022,
+     1,
+     10
+    ]
+   ]
+  },
+  "assertion": [
+   {
+    "value": "Optica Publishing Group",
+    "name": "publisher",
+    "label": "This article is maintained by"
+   },
+   {
+    "value": "https://doi.org/10.1364/OPTICA.449691",
+    "name": "articlelink",
+    "label": "Crossref DOI link to publisher maintained version"
+   },
+   {
+    "value": "memorandum",
+    "name": "content_type",
+    "label": "Article type"
+   },
+   {
+    "value": "Screened by Similarity Check",
+    "name": "cross_check",
+    "label": "Similarity check"
+   },
+   {
+    "value": "No",
+    "order": 0,
+    "name": "peer_reviewed",
+    "label": "Peer reviewed",
+    "group": {
+     "name": "peer_review",
+     "label": "Peer review"
+    }
+   },
+   {
+    "value": "1 December 2021",
+    "order": 0,
+    "name": "received",
+    "label": "Received",
+    "group": {
+     "name": "publication_history",
+     "label": "Publication History"
+    }
+   },
+   {
+    "value": "17 December 2021",
+    "order": 1,
+    "name": "accepted",
+    "label": "Accepted",
+    "group": {
+     "name": "publication_history",
+     "label": "Publication History"
+    }
+   },
+   {
+    "value": "10 January 2022",
+    "order": 2,
+    "name": "published",
+    "label": "Published",
+    "group": {
+     "name": "publication_history",
+     "label": "Publication History"
+    }
+   },
+   {
+    "value": "\u00a9 2022 Optica Publishing Group under the terms of the Optica Open Access Publishing Agreement",
+    "name": "copyright",
+    "label": "Copyright"
+   }
+  ]
+ }
+}

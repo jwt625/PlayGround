@@ -1,0 +1,401 @@
+{
+ "status": "ok",
+ "message-type": "work",
+ "message-version": "1.0.0",
+ "message": {
+  "indexed": {
+   "date-parts": [
+    [
+     2026,
+     9,
+     17
+    ]
+   ],
+   "date-time": "2026-09-17T18:11:57Z",
+   "timestamp": 1789668717100,
+   "version": "4.0.1"
+  },
+  "reference-count": 0,
+  "publisher": "Springer Science and Business Media LLC",
+  "license": [
+   {
+    "start": {
+     "date-parts": [
+      [
+       2026,
+       9,
+       17
+      ]
+     ],
+     "date-time": "2026-09-17T00:00:00Z",
+     "timestamp": 1789603200000
+    },
+    "content-version": "tdm",
+    "delay-in-days": 0,
+    "URL": "https://creativecommons.org/licenses/by/4.0"
+   },
+   {
+    "start": {
+     "date-parts": [
+      [
+       2026,
+       9,
+       17
+      ]
+     ],
+     "date-time": "2026-09-17T00:00:00Z",
+     "timestamp": 1789603200000
+    },
+    "content-version": "am",
+    "delay-in-days": 0,
+    "URL": "https://creativecommons.org/licenses/by/4.0"
+   }
+  ],
+  "content-domain": {
+   "domain": [
+    "link.springer.com"
+   ],
+   "crossmark-restriction": false
+  },
+  "short-container-title": [
+   "Nat Commun"
+  ],
+  "abstract": "<jats:title>Abstract</jats:title>\n                  <jats:p>\n                    The mid-infrared (MIR) spectral regime is central to applications including remote sensing, precision spectroscopy, higher harmonic generation, and free-space optical communication. However, coherent and broadband MIR modulation remains challenging owing to high optical loss, limited bandwidth, and large drive voltages in existing platforms. Here, we overcome the challenges by deploying a suspended thin-film lithium-niobate (TFLN) based electro-optic (EO) platform co-designed with high-performance traveling-wave microwave (MW) electrodes. We demonstrate a record-low\n                    <jats:italic>V</jats:italic>\n                    <jats:sub>\n                      <jats:italic>\u03c0</jats:italic>\n                      ,\n                      <jats:italic>D</jats:italic>\n                      <jats:italic>C</jats:italic>\n                    </jats:sub>\n                    of 2.3 to 4.3 V over a broadband MIR bandwidth from 2.4 to 3.6 \u03bcm, and a 2.3-dB EO bandwidth of 40 GHz (extracted 3-dB bandwidth of 52 GHz), yielding a figure-of-merit of 19.3 GHz/V\u2013more than an order of magnitude higher than the state-of-the-art. We demonstrate, for the first time, high-frequency\n                    <jats:italic>V</jats:italic>\n                    <jats:sub>\n                      <jats:italic>\u03c0</jats:italic>\n                      ,\n                      <jats:italic>M</jats:italic>\n                      <jats:italic>W</jats:italic>\n                    </jats:sub>\n                    of 4.5-6.5 V in the 27-34 GHz range, and frequency-agile MIR EO frequency comb generation with a 10-dB optical bandwidth over 0.8 THz using a suspended phase modulator of 4-cm active modulation length. We further validate the platform in a free-space optical communication link. Our results establish a monolithic MIR photonic platform capable of powerful EO modulation and spectral synthesis, and present a significant step towards reconfigurable MIR sensing and communication systems on chip.\n                  </jats:p>",
+  "DOI": "10.1038/s41467-026-77674-y",
+  "type": "journal-article",
+  "created": {
+   "date-parts": [
+    [
+     2026,
+     9,
+     17
+    ]
+   ],
+   "date-time": "2026-09-17T17:55:07Z",
+   "timestamp": 1789667707000
+  },
+  "update-policy": "https://doi.org/10.1007/springer_crossmark_policy",
+  "source": "Crossref",
+  "is-referenced-by-count": 0,
+  "title": [
+   "Suspended thin-film lithium niobate modulator for broadband mid-infrared light modulation and frequency comb generation"
+  ],
+  "prefix": "10.1038",
+  "author": [
+   {
+    "ORCID": "https://orcid.org/0000-0003-1985-9109",
+    "authenticated-orcid": false,
+    "given": "Chun-Ho",
+    "family": "Lee",
+    "sequence": "first",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Xinyi",
+    "family": "Ren",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "ORCID": "https://orcid.org/0000-0003-2520-4475",
+    "authenticated-orcid": false,
+    "given": "Xinzhou",
+    "family": "Su",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "ORCID": "https://orcid.org/0000-0001-8159-9067",
+    "authenticated-orcid": false,
+    "given": "Wonho",
+    "family": "Lee",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Zile",
+    "family": "Jiang",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Yue",
+    "family": "Yu",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "ORCID": "https://orcid.org/0000-0001-5570-0950",
+    "authenticated-orcid": false,
+    "given": "Huibin",
+    "family": "Zhou",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "ORCID": "https://orcid.org/0009-0007-2104-3711",
+    "authenticated-orcid": false,
+    "given": "Yue",
+    "family": "Zuo",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Shaoyuan",
+    "family": "Ou",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Reshma",
+    "family": "Kopparapu",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "ORCID": "https://orcid.org/0000-0003-0964-3048",
+    "authenticated-orcid": false,
+    "given": "Adam T.",
+    "family": "Heiniger",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Moshe",
+    "family": "Tur",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "ORCID": "https://orcid.org/0000-0002-7339-4376",
+    "authenticated-orcid": false,
+    "given": "Alan E.",
+    "family": "Willner",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Zaijun",
+    "family": "Chen",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "ORCID": "https://orcid.org/0000-0002-7815-4195",
+    "authenticated-orcid": false,
+    "given": "Mengjie",
+    "family": "Yu",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   }
+  ],
+  "member": "297",
+  "published-online": {
+   "date-parts": [
+    [
+     2026,
+     9,
+     17
+    ]
+   ]
+  },
+  "container-title": [
+   "Nature Communications"
+  ],
+  "original-title": [],
+  "language": "en",
+  "link": [
+   {
+    "URL": "https://www.nature.com/articles/s41467-026-77674-y",
+    "content-type": "text/html",
+    "content-version": "vor",
+    "intended-application": "text-mining"
+   }
+  ],
+  "deposited": {
+   "date-parts": [
+    [
+     2026,
+     9,
+     17
+    ]
+   ],
+   "date-time": "2026-09-17T17:55:07Z",
+   "timestamp": 1789667707000
+  },
+  "score": 1,
+  "resource": {
+   "primary": {
+    "URL": "https://www.nature.com/articles/s41467-026-77674-y"
+   }
+  },
+  "subtitle": [],
+  "short-title": [],
+  "issued": {
+   "date-parts": [
+    [
+     2026,
+     9,
+     17
+    ]
+   ]
+  },
+  "references-count": 0,
+  "alternative-id": [
+   "77674"
+  ],
+  "URL": "https://doi.org/10.1038/s41467-026-77674-y",
+  "relation": {},
+  "ISSN": [
+   "2041-1723"
+  ],
+  "issn-type": [
+   {
+    "value": "2041-1723",
+    "type": "electronic"
+   }
+  ],
+  "subject": [],
+  "published": {
+   "date-parts": [
+    [
+     2026,
+     9,
+     17
+    ]
+   ]
+  },
+  "assertion": [
+   {
+    "value": "16 December 2025",
+    "order": 1,
+    "name": "received",
+    "label": "Received",
+    "group": {
+     "name": "ArticleHistory",
+     "label": "Article History"
+    }
+   },
+   {
+    "value": "31 August 2026",
+    "order": 2,
+    "name": "accepted",
+    "label": "Accepted",
+    "group": {
+     "name": "ArticleHistory",
+     "label": "Article History"
+    }
+   },
+   {
+    "value": "17 September 2026",
+    "order": 3,
+    "name": "first_online",
+    "label": "First Online",
+    "group": {
+     "name": "ArticleHistory",
+     "label": "Article History"
+    }
+   },
+   {
+    "value": "The authors declare the following competing interests: C.-H.L. is an employee of and holds equity in Opticore Inc. Z.C. and M.Y. are co-founders of and hold equity in Opticore Inc., a company developing lithium-niobate technologies related to this work. Opticore Inc. provided no funding, equipment, materials, or other support for this study and had no role in the study design, data collection, data analysis, preparation of the manuscript, or decision to publish. The remaining authors declare no competing interests.",
+    "order": 1,
+    "name": "Ethics",
+    "label": "Competing interests",
+    "group": {
+     "name": "EthicsHeading",
+     "label": "Ethics"
+    }
+   }
+  ]
+ }
+}

@@ -1,0 +1,151 @@
+[
+ {
+  "kind": "page_render",
+  "file": "page_02.png",
+  "page": 2,
+  "captions": [
+   "FIG. 1: Low voltage and high bandwidth thin film lithium tantalate modulators on a fused silica substrate. (a) Microscope picture of"
+  ]
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p02_1.png",
+  "page": 2,
+  "width": 7500,
+  "height": 879
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p02_2.png",
+  "page": 2,
+  "width": 1216,
+  "height": 1138
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p02_3.png",
+  "page": 2,
+  "width": 1025,
+  "height": 689
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p02_4.png",
+  "page": 2,
+  "width": 1025,
+  "height": 691
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p02_5.png",
+  "page": 2,
+  "width": 1025,
+  "height": 692
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p02_6.png",
+  "page": 2,
+  "width": 1025,
+  "height": 692
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p02_8.png",
+  "page": 2,
+  "width": 1207,
+  "height": 437
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p02_9.png",
+  "page": 2,
+  "width": 1207,
+  "height": 378
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p02_10.png",
+  "page": 2,
+  "width": 1024,
+  "height": 768
+ },
+ {
+  "kind": "page_render",
+  "file": "page_03.png",
+  "page": 3,
+  "captions": [
+   "Figure 1 (a) shows a fabricated 3 mm\u00d720 mm chip con-"
+  ]
+ },
+ {
+  "kind": "page_render",
+  "file": "page_04.png",
+  "page": 4,
+  "captions": [
+   "Fig. 3 (c). We also extract the frequency-dependent effective",
+   "Fig. 3 (d) shows the electro-optic frequency response of"
+  ]
+ },
+ {
+  "kind": "page_render",
+  "file": "page_05.png",
+  "page": 5,
+  "captions": [
+   "FIG. 2: Modulation efficiency characterization of LT-on-FS Mach-Zehnder modulators in the C- and O-band. Measurements at wave-"
+  ]
+ },
+ {
+  "kind": "page_render",
+  "file": "page_06.png",
+  "page": 6,
+  "captions": [
+   "FIG. 3: Characterization of the modulator frequency response. (a) Optical micrograph of the slow-wave electrodes of the Mach-Zehnder",
+   "Figure 4 (b) shows the bit error ratio (BER) as a function of the",
+   "Fig. 4 (c), where the highest AIR of 468.1 Gbit/s is achieved"
+  ]
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p06_1.png",
+  "page": 6,
+  "width": 1933,
+  "height": 1464
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p06_2.png",
+  "page": 6,
+  "width": 1207,
+  "height": 794
+ },
+ {
+  "kind": "page_render",
+  "file": "page_07.png",
+  "page": 7,
+  "captions": [
+   "FIG. 4: Intensity-modulation and direct-detection (IMDD) signaling experiment using our lithium-tantalate-on-fused-silica (LT-on-FS)"
+  ]
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p07_1.png",
+  "page": 7,
+  "width": 2329,
+  "height": 1249
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p07_2.png",
+  "page": 7,
+  "width": 2329,
+  "height": 1249
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p07_3.png",
+  "page": 7,
+  "width": 2329,
+  "height": 1249
+ }
+]

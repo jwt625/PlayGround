@@ -1,0 +1,165 @@
+schema: eo-atlas.sim/v1
+id: liu2021-a
+paper_id: liu2021
+device_id: liu2021-a
+title: Liu 2021, 5 mm periodic T-rail CL-TWE TFLN MZM on quartz with silica-buffer hybrid waveguide (G-S-G, push-pull arms)
+repro_grade: B
+validation_status: unvalidated
+chain: [electrostatics, optical_mode, eo_overlap, rf_line, loaded_line, eo_response]
+
+# Conventions follow sims/chen2022/config.yaml.
+# Coordinate frame: x lateral, y film normal up, z propagation. y = 0 at the BOX top / LN bottom.
+# Origin: optical axis of the RIGHT-hand waveguide in x. Signal electrode centre (mirror plane) at x = -32.5 um; LEFT waveguide at x = -65 um.
+# Both arms are in the electrostatic domain (symmetry none); the optical mode is solved on the right arm.
+# Per gap: [main conductor] -3 um slot- [T-rail, width W_T = 3 um] -G1 = 3 um- [waveguide] -G1- [T-rail] -slot- [main conductor]; unloaded spacing G2 = 15 um.
+# Signal-side rails are tied to the signal conductor, ground-side rails to ground, by stems that this 2D cut does not contain.
+optics:
+  wavelength_nm: 1550              # paper_exact (p.3 testing paragraph)
+  polarization: TE
+  mode_index: 0
+  group_index_from: finite_difference_wavelength
+  ng_fixed: null
+  eo_axis: auto
+
+materials:
+  lithium_niobate:
+    crystal: {cut: x, propagation: y}
+    n_o: 2.211
+    n_e: 2.138
+    eps_r: {perp: 43.0, par: 28.0}
+    r_pm_per_v: {r13: 8.6, r22: 3.4, r33: 30.8, r51: 28.0}
+  silicon_dioxide: {n: 1.444, eps_r: 3.9}
+  quartz: {n: 1.53, eps_r: 4.5}
+  gold: {conductor: true, sigma_Sm: 4.1e7, n_complex: null}
+  air: {n: 1.0, eps_r: 1.0}
+
+geometry:                          # LOADED cross-section: T-rails present (rail thickness assumed equal to the main electrode, see provenance)
+  symmetry: none
+  domain: {x_um: [-232.5, 167.5], y_um: [-250, 120]}
+  regions:
+    - {name: ambient, material: air, rect: {x_um: [-232.5, 167.5], y_um: [-250, 120]}}
+    - {name: substrate, material: quartz, rect: {x_um: [-232.5, 167.5], y_um: [-502, -2]}}
+    - {name: box, material: silicon_dioxide, rect: {x_um: [-232.5, 167.5], y_um: [-2, 0]}}
+    - {name: ln_slab, material: lithium_niobate, rect: {x_um: [-232.5, 167.5], y_um: [0, 0.3]}}
+    - {name: silica_buffer, material: silicon_dioxide, rect: {x_um: [-232.5, 167.5], y_um: [0.3, 0.4]}}
+    - {name: silica_cap_r, material: silicon_dioxide, polygon_um: [[-0.7291, 0.3], [0.7291, 0.3], [0.5675, 0.7], [-0.5675, 0.7]]}
+    - {name: silica_cap_l, material: silicon_dioxide, polygon_um: [[-64.2709, 0.3], [-65.7291, 0.3], [-65.5675, 0.7], [-64.4325, 0.7]]}
+    - {name: ln_rib_r, material: lithium_niobate, polygon_um: [[-0.6212, 0.3], [0.6212, 0.3], [0.5, 0.6], [-0.5, 0.6]]}
+    - {name: ln_rib_l, material: lithium_niobate, polygon_um: [[-64.3788, 0.3], [-65.6212, 0.3], [-65.5, 0.6], [-64.5, 0.6]]}
+  electrodes:
+    - {name: signal, role: signal, weight: 1.0, rect: {x_um: [-57.5, -7.5], y_um: [0.4, 1.8]}, material: gold}
+    - {name: ground_r, role: ground, weight: 0.0, rect: {x_um: [7.5, 57.5], y_um: [0.4, 1.8]}, material: gold}
+    - {name: ground_l, role: ground, weight: 0.0, rect: {x_um: [-122.5, -72.5], y_um: [0.4, 1.8]}, material: gold}
+    - {name: rail_r_signal_side, role: signal, weight: 1.0, rect: {x_um: [-4.5, -1.5], y_um: [0.4, 1.8]}, material: gold}
+    - {name: rail_r_ground_side, role: ground, weight: 0.0, rect: {x_um: [1.5, 4.5], y_um: [0.4, 1.8]}, material: gold}
+    - {name: rail_l_signal_side, role: signal, weight: 1.0, rect: {x_um: [-63.5, -60.5], y_um: [0.4, 1.8]}, material: gold}
+    - {name: rail_l_ground_side, role: ground, weight: 0.0, rect: {x_um: [-69.5, -66.5], y_um: [0.4, 1.8]}, material: gold}
+  optical_window: {x_um: [-1.4, 1.4], y_um: [-1.5, 1.5]}
+  mesh: {max_edge_um: 2.0, electrode_edge_um: 0.05}
+line:
+  length_mm: 5
+  conductor_loss_model: skin_effect_wheeler
+  rf_loss_table: null
+  source_ohm: 50
+  load_ohm: 50
+  differential: false              # single-ended G-S-G probe on the centre line; push-pull arises from the arm placement (see SPEC_PROPOSALS)
+  loading:
+    type: periodic_t_rail
+    period_um: 50                  # Lp, Table S1 (paper_exact)
+    loaded_length_um: 40           # rail length Lact 45 minus stem width LT 5 (Table S1); stem assumed centred (Fig. 3(a) inset, SEM)
+    unloaded_cross_section: unloaded
+    loaded_cross_section: null     # null = top-level `geometry`
+sweep: {f_start_ghz: 0.1, f_stop_ghz: 110, n_points: 220}
+
+alt_geometries:
+  unloaded:                        # cut through the gap between rails (5 um): no rails, main conductors 15 um apart
+    symmetry: none
+    domain: {x_um: [-232.5, 167.5], y_um: [-250, 120]}
+    regions:
+      - {name: ambient, material: air, rect: {x_um: [-232.5, 167.5], y_um: [-250, 120]}}
+      - {name: substrate, material: quartz, rect: {x_um: [-232.5, 167.5], y_um: [-502, -2]}}
+      - {name: box, material: silicon_dioxide, rect: {x_um: [-232.5, 167.5], y_um: [-2, 0]}}
+      - {name: ln_slab, material: lithium_niobate, rect: {x_um: [-232.5, 167.5], y_um: [0, 0.3]}}
+      - {name: silica_buffer, material: silicon_dioxide, rect: {x_um: [-232.5, 167.5], y_um: [0.3, 0.4]}}
+      - {name: silica_cap_r, material: silicon_dioxide, polygon_um: [[-0.7291, 0.3], [0.7291, 0.3], [0.5675, 0.7], [-0.5675, 0.7]]}
+      - {name: silica_cap_l, material: silicon_dioxide, polygon_um: [[-64.2709, 0.3], [-65.7291, 0.3], [-65.5675, 0.7], [-64.4325, 0.7]]}
+      - {name: ln_rib_r, material: lithium_niobate, polygon_um: [[-0.6212, 0.3], [0.6212, 0.3], [0.5, 0.6], [-0.5, 0.6]]}
+      - {name: ln_rib_l, material: lithium_niobate, polygon_um: [[-64.3788, 0.3], [-65.6212, 0.3], [-65.5, 0.6], [-64.5, 0.6]]}
+    electrodes:
+      - {name: signal, role: signal, weight: 1.0, rect: {x_um: [-57.5, -7.5], y_um: [0.4, 1.8]}, material: gold}
+      - {name: ground_r, role: ground, weight: 0.0, rect: {x_um: [7.5, 57.5], y_um: [0.4, 1.8]}, material: gold}
+      - {name: ground_l, role: ground, weight: 0.0, rect: {x_um: [-122.5, -72.5], y_um: [0.4, 1.8]}, material: gold}
+    optical_window: {x_um: [-1.4, 1.4], y_um: [-1.5, 1.5]}
+    mesh: {max_edge_um: 2.0, electrode_edge_um: 0.05}
+
+targets:
+  # Measured, 5 mm device (devices.csv row liu2021-a)
+  - {metric: vpi_l_dc_vcm, value: 1.7, tol_rel: 0.15, source: {device_id: liu2021-a, field: vpil_dc_vcm}}
+  - {metric: n_rf, value: 2.3, tol_abs: 0.1, source: {device_id: liu2021-a, field: n_rf}}
+  - {metric: ng_opt, value: 2.25, tol_abs: 0.05, source: {device_id: liu2021-a, field: ng_opt}}
+  - {metric: eo_rolloff_db, at_ghz: 67, value: -1.3, tol_abs: 0.5, source: {device_id: liu2021-a, field: eo_rolloff_db}}
+  # Not targets: 3 dB EO bandwidth over 110 GHz is a prediction (bound-type, see SPEC_PROPOSALS); no Z0 or RF loss number is stated
+reported_curves: []
+
+provenance:
+  optics.wavelength_nm: {class: paper_exact, locator: "p.3 testing paragraph (TE polarized light at 1550 nm)"}
+  optics.polarization: {class: paper_exact, locator: "p.3 testing paragraph (TE polarized incident light)"}
+  optics.group_index_from: {class: project_inference, note: "paper quotes ng about 2.25 (Fig. 4(e)); engine derives it by finite difference and compares as a target"}
+  materials.lithium_niobate.crystal: {class: paper_exact, locator: "p.3 fabrication paragraph (X-cut TFLN); propagation along y is a project_inference from the standard x-cut convention"}
+  materials.lithium_niobate.n_o: {class: standard_reference, citation: "Zelmon, Small, Jundt, J. Opt. Soc. Am. B 14, 3319 (1997)", note: "value copied from the chen2022 config / SPEC example; NOT verified against the source in this offline batch"}
+  materials.lithium_niobate.n_e: {class: standard_reference, citation: "Zelmon, Small, Jundt, J. Opt. Soc. Am. B 14, 3319 (1997)", note: "value copied from the chen2022 config / SPEC example; NOT verified against the source in this offline batch"}
+  materials.lithium_niobate.eps_r: {class: standard_reference, citation: "Weis and Gaylord, Appl. Phys. A 37, 191 (1985)", note: "SPEC example values 43/28, NOT verified; paper does not state RF permittivity"}
+  materials.lithium_niobate.r_pm_per_v: {class: standard_reference, citation: "Weis and Gaylord, Appl. Phys. A 37, 191 (1985)", note: "SPEC example values, NOT verified; the paper quotes r33 = 31 pm/V (p.1) only"}
+  materials.silicon_dioxide: {class: standard_reference, citation: "standard handbook values (n = 1.444 at 1550 nm, eps_r = 3.9), NOT verified; paper states neither for the bonding oxide or the PECVD buffer"}
+  materials.quartz: {class: standard_reference, citation: "crystalline quartz n about 1.53, eps_r about 4.5, recalled, NOT verified; eps about 4.5 is quoted for quartz in kharel2021 p.3", note: "paper gives no quartz constants; the quartz layer lies outside the optical window"}
+  materials.gold.sigma_Sm: {class: standard_reference, citation: "bulk gold 4.1e7 S/m as in sims/chen2022/config.yaml, NOT verified", note: "film conductivity not stated (electroplated main electrodes, lift-off rails)"}
+  line.length_mm: {class: paper_exact, locator: "p.4; abstract (5-mm-long modulation region)"}
+  line.source_ohm: {class: paper_exact, locator: "p.4 (50 ohm probe termination used for the EO measurement)"}
+  line.load_ohm: {class: paper_exact, locator: "p.4 (another microwave probe provides a 50 ohm termination)"}
+  line.differential: {class: project_inference, note: "G-S-G with one arm per gap (Fig. 3(a)); drive single-ended, arms push-pull by geometry; the paper never states push-pull"}
+  line.conductor_loss_model: {class: project_inference, note: "no RF loss coefficient is stated; model choice left to the engine"}
+  line.loading.period_um: {class: paper_exact, locator: "p.3; p.6 Table S1 (Lp = 50 um)"}
+  line.loading.loaded_length_um: {class: project_inference, locator: "p.6 Table S1 (Lact = 45, LT = 5 um); Fig. 3(a) inset; SEM inset Fig. 4(a)", note: "symbol meanings read from Fig. S3(a) and the SEM (LT = stem width, rail length 44.5 um measured against the 20 um scale bar); 45 - 5 = 40 um of rail-plus-slot per period; stem centred on the rail"}
+  geometry.regions.ambient: {class: project_inference, note: "air above the modulation region; the BCB layer is removed there (p.3 fabrication paragraph; Supp. p.5)"}
+  geometry.regions.substrate: {class: paper_exact, locator: "p.3 fabrication paragraph (500 um quartz; region clipped to the domain)"}
+  geometry.regions.box: {class: paper_exact, locator: "p.3 fabrication paragraph (2 um SiO2 bonding layer)"}
+  geometry.regions.ln_slab: {class: paper_exact, locator: "p.3 fabrication paragraph (600 nm film, 300 nm partial etch)", note: "slab 300 nm = 600 - 300"}
+  geometry.regions.silica_buffer: {class: paper_exact, locator: "p.2; p.3 (100 nm PECVD SiO2)", note: "conformal over slab and ridge; electrodes sit on it (Fig. 1(b))"}
+  geometry.regions.silica_cap_r: {class: project_inference, locator: "p.2 Fig. 1(b)", note: "100 nm conformal layer approximated by an outward offset of the ridge sidewalls and top"}
+  geometry.regions.silica_cap_l: {class: project_inference, note: "mirror of the right-hand cap"}
+  geometry.regions.ln_rib_r: {class: project_inference, locator: "p.2 (1-um-wide, 300-nm-thick ridge in the Fig. 1(c) simulation); Fig. 1(a,b) sketch", note: "1 um taken as the top width; the fabricated width and sidewall angle are not stated; 68 deg from the sketch trapezoid ratio (about 0.64 top/bottom), low confidence"}
+  geometry.regions.ln_rib_l: {class: project_inference, note: "mirror image of the right-hand ridge about the signal centre"}
+  geometry.electrodes.signal: {class: paper_exact, locator: "p.3 Fig. 3(a); Table S1 (Ws = 50 um); p.3 fabrication paragraph (1.4 um electroplated)", note: "50 um wide, 1.4 um thick; bottom surface on the silica buffer (Fig. 1(b))"}
+  geometry.electrodes.ground_r: {class: project_inference, locator: "Fig. 3(a)", note: "ground width not stated; taken equal to the signal width (Fig. 3(a) draws it about 1.1x); inner edge at G2/2 = 7.5 um from the waveguide axis (G2 = 15 um, Table S1, waveguide assumed centred)"}
+  geometry.electrodes.ground_l: {class: project_inference, note: "mirror of ground_r"}
+  geometry.electrodes.rail_r_signal_side: {class: project_inference, locator: "p.6 Table S1 (WT = 3, G1 = 3 um); SEM inset Fig. 4(a)", note: "rail width 3 um and gap 3 um verified against the SEM (about 3.1 and 2.5 um); rail THICKNESS not stated (lift-off rails, main electrodes thickened to 1.4 um by electroplating): 1.4 um assumed as an upper bound"}
+  geometry.electrodes.rail_r_ground_side: {class: project_inference, note: "see rail_r_signal_side"}
+  geometry.electrodes.rail_l_signal_side: {class: project_inference, note: "mirror of the right-hand rails"}
+  geometry.electrodes.rail_l_ground_side: {class: project_inference, note: "mirror of the right-hand rails"}
+  geometry.optical_window: {class: project_inference, note: "crop |x| < 1.4 um, just inside the rail edge at 1.5 um (a conductor in the window is unsupported); the Dirichlet boundary at 1.4 um truncates the mode tail"}
+  geometry.domain: {class: project_inference, note: "lateral +-200 um about the signal centre, vertical -250..120 um; open-boundary treatment is an engine choice"}
+  geometry.mesh: {class: project_inference}
+  alt_geometries.unloaded: {class: project_inference, locator: "Fig. 3(a) inset", note: "cut through the 5 um gap between rails: rails and stems absent, main conductors 15 um apart; the 5 um stem section (regular 3 um gap) is lumped into this cut"}
+
+missing:
+  - rail (T-rail) thickness (not stated; 1.4 um upper-bound assumption)
+  - ridge width of the fabricated device and sidewall angle (1 um is stated only for the Fig. 1(c) simulation)
+  - ground electrode width (not stated; taken equal to the signal width)
+  - waveguide position inside the 15 um electrode spacing (assumed centred)
+  - gold film conductivity (not stated)
+  - RF permittivity and loss tangent of LN, SiO2 and quartz (not stated; literature values flagged unverified)
+  - quartz optical index (outside the optical window, not needed for the solve)
+  - waveguide orientation relative to the crystal axes (x-cut only; propagation along y assumed)
+  - characteristic impedance and RF loss coefficient of the fabricated electrodes (S11 and S21 plots only)
+  - temperature (not stated)
+limitations:
+  - scalar_optical_not_full_vector
+  - quasi_static_2d_rf
+  - rectangular_or_polygon_sidewalls_only
+  - no_3d_launch_pad_effects
+  - "Stems (5 um wide metal bridges tying each rail to its main conductor) are not representable in 2D; rails are given electrode potentials directly"
+  - "Three sections per period (rail-plus-slot 40 um, stem 5 um with a regular 3 um gap, gap 5 um with a 15 um opening) do not fit the two-cut loading form; the stem and gap are lumped into the unloaded cut"
+  - "Optical window cropped to |x| < 1.4 um; metal-induced optical absorption (the paper's main design point, Fig. 1(c)) cannot be modelled by the scalar solver"
+  - "Rail thickness is an upper-bound assumption and affects the loaded capacitance"
+  - "The feedline bends on BCB cladding and the CPW tapers outside the modulation region are not modelled; the fabricated 4 um T-rail gap variant has no config"
+  - "Vpi*L 1.7 V*cm is quoted as in agreement with the authors' FEM simulations; no separate simulated number is stated"

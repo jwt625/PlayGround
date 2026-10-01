@@ -1,0 +1,1062 @@
+{
+ "status": "ok",
+ "message-type": "work",
+ "message-version": "1.0.0",
+ "message": {
+  "indexed": {
+   "date-parts": [
+    [
+     2026,
+     9,
+     30
+    ]
+   ],
+   "date-time": "2026-09-30T17:36:53Z",
+   "timestamp": 1790789813175,
+   "version": "4.1.0"
+  },
+  "reference-count": 58,
+  "publisher": "Springer Science and Business Media LLC",
+  "issue": "1",
+  "license": [
+   {
+    "start": {
+     "date-parts": [
+      [
+       2022,
+       11,
+       3
+      ]
+     ],
+     "date-time": "2022-11-03T00:00:00Z",
+     "timestamp": 1667433600000
+    },
+    "content-version": "tdm",
+    "delay-in-days": 0,
+    "URL": "https://creativecommons.org/licenses/by/4.0"
+   },
+   {
+    "start": {
+     "date-parts": [
+      [
+       2022,
+       11,
+       3
+      ]
+     ],
+     "date-time": "2022-11-03T00:00:00Z",
+     "timestamp": 1667433600000
+    },
+    "content-version": "vor",
+    "delay-in-days": 0,
+    "URL": "https://creativecommons.org/licenses/by/4.0"
+   }
+  ],
+  "funder": [
+   {
+    "DOI": "10.13039/100000005",
+    "name": "U.S. Department of Defense",
+    "doi-asserted-by": "publisher",
+    "award": [
+     "HR001120S0008"
+    ],
+    "award-info": [
+     {
+      "award-number": [
+       "HR001120S0008"
+      ]
+     }
+    ],
+    "id": [
+     {
+      "id": "10.13039/100000005",
+      "id-type": "DOI",
+      "asserted-by": "publisher"
+     }
+    ]
+   },
+   {
+    "DOI": "10.13039/100000006",
+    "name": "Office of Naval Research",
+    "doi-asserted-by": "publisher",
+    "award": [
+     "N00014-21-1-2805"
+    ],
+    "award-info": [
+     {
+      "award-number": [
+       "N00014-21-1-2805"
+      ]
+     }
+    ],
+    "id": [
+     {
+      "id": "10.13039/100000006",
+      "id-type": "DOI",
+      "asserted-by": "publisher"
+     }
+    ]
+   },
+   {
+    "DOI": "10.13039/100000104",
+    "name": "National Aeronautics and Space Administration",
+    "doi-asserted-by": "publisher",
+    "award": [
+     "80NSSC17K0166"
+    ],
+    "award-info": [
+     {
+      "award-number": [
+       "80NSSC17K0166"
+      ]
+     }
+    ],
+    "id": [
+     {
+      "id": "10.13039/100000104",
+      "id-type": "DOI",
+      "asserted-by": "publisher"
+     }
+    ]
+   }
+  ],
+  "content-domain": {
+   "domain": [
+    "link.springer.com"
+   ],
+   "crossmark-restriction": false
+  },
+  "short-container-title": [
+   "Sci Rep"
+  ],
+  "abstract": "<jats:title>Abstract</jats:title>\n                  <jats:p>\n                    High bandwidth, low voltage electro-optic modulators with high optical power handling capability are important for improving the performance of analog optical communications and RF photonic links. Here we designed and fabricated a thin-film lithium niobate (LN) Mach-Zehnder modulator (MZM) which can handle high optical power of 110 mW, while having 3-dB bandwidth greater than 110 GHz at 1550 nm. The design does not require etching of thin-film LN, and uses hybrid optical modes formed by bonding LN to planarized silicon photonic waveguide circuits. A high optical power handling capability in the MZM was achieved by carefully tapering the underlying Si waveguide to reduce the impact of optically-generated carriers, while retaining a high modulation efficiency. The MZM has a\n                    <jats:inline-formula>\n                      <jats:alternatives>\n                        <jats:tex-math>$$V_\\pi L$$</jats:tex-math>\n                        <mml:math xmlns:mml=\"http://www.w3.org/1998/Math/MathML\">\n                          <mml:mrow>\n                            <mml:msub>\n                              <mml:mi>V</mml:mi>\n                              <mml:mi>\u03c0</mml:mi>\n                            </mml:msub>\n                            <mml:mi>L</mml:mi>\n                          </mml:mrow>\n                        </mml:math>\n                      </jats:alternatives>\n                    </jats:inline-formula>\n                    product of 3.1 V.cm and an on-chip optical insertion loss of 1.8 dB.\n                  </jats:p>",
+  "DOI": "10.1038/s41598-022-23403-6",
+  "type": "journal-article",
+  "created": {
+   "date-parts": [
+    [
+     2022,
+     11,
+     3
+    ]
+   ],
+   "date-time": "2022-11-03T12:03:23Z",
+   "timestamp": 1667477003000
+  },
+  "update-policy": "https://doi.org/10.1007/springer_crossmark_policy",
+  "source": "Crossref",
+  "is-referenced-by-count": 87,
+  "title": [
+   "110 GHz, 110 mW hybrid silicon-lithium niobate Mach-Zehnder modulator"
+  ],
+  "prefix": "10.1038",
+  "volume": "12",
+  "author": [
+   {
+    "given": "Forrest",
+    "family": "Valdez",
+    "sequence": "first",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Viphretuo",
+    "family": "Mere",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Xiaoxi",
+    "family": "Wang",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Nicholas",
+    "family": "Boynton",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Thomas A.",
+    "family": "Friedmann",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Shawn",
+    "family": "Arterburn",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Christina",
+    "family": "Dallo",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Andrew T.",
+    "family": "Pomerene",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Andrew L.",
+    "family": "Starbuck",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Douglas C.",
+    "family": "Trotter",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Anthony L.",
+    "family": "Lentine",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Shayan",
+    "family": "Mookherjea",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   }
+  ],
+  "member": "297",
+  "published-online": {
+   "date-parts": [
+    [
+     2022,
+     11,
+     3
+    ]
+   ]
+  },
+  "reference": [
+   {
+    "key": "23403_CR1",
+    "doi-asserted-by": "publisher",
+    "first-page": "101",
+    "DOI": "10.1038/s41586-018-0551-y",
+    "volume": "562",
+    "author": "C Wang",
+    "year": "2018",
+    "unstructured": "Wang, C. et al. Integrated lithium niobate electro-optic modulators operating at CMOS-compatible voltages. Nature 562, 101\u2013104 (2018).",
+    "journal-title": "Nature"
+   },
+   {
+    "key": "23403_CR2",
+    "doi-asserted-by": "publisher",
+    "first-page": "5",
+    "DOI": "10.1063/1.5115243",
+    "volume": "4",
+    "author": "X Wang",
+    "year": "2019",
+    "unstructured": "Wang, X., Weigel, P. O., Zhao, J., Ruesing, M. & Mookherjea, S. Achieving beyond-100-GHz large-signal modulation bandwidth in hybrid silicon photonics Mach Zehnder modulators using thin film lithium niobate. APL Photon. 4, 5 (2019).",
+    "journal-title": "APL Photon."
+   },
+   {
+    "key": "23403_CR3",
+    "doi-asserted-by": "publisher",
+    "DOI": "10.3788/COL202220.022502",
+    "volume": "20",
+    "author": "F Yang",
+    "year": "2022",
+    "unstructured": "Yang, F. et al. Monolithic thin film lithium niobate electro-optic modulator with over 110 GHz bandwidth. Chin. Opt. Lett. 20, 022502 (2022).",
+    "journal-title": "Chin. Opt. Lett."
+   },
+   {
+    "key": "23403_CR4",
+    "doi-asserted-by": "publisher",
+    "first-page": "61",
+    "DOI": "10.1364/OPTICA.449691",
+    "volume": "9",
+    "author": "M Xu",
+    "year": "2022",
+    "unstructured": "Xu, M. et al. Dual-polarization thin-film lithium niobate in-phase quadrature modulators for terabit-per-second transmission. Optica 9, 61\u201362 (2022).",
+    "journal-title": "Optica"
+   },
+   {
+    "issue": "2005",
+    "key": "23403_CR5",
+    "first-page": "325",
+    "volume": "2005",
+    "author": "E Ackerman",
+    "year": "2005",
+    "unstructured": "Ackerman, E. et al. Low noise figure, wide bandwidth analog optical link. Int. Top. Meet. Microwave Photon. MWP 2005(2005), 325\u2013328 (2005).",
+    "journal-title": "Int. Top. Meet. Microwave Photon. MWP"
+   },
+   {
+    "key": "23403_CR6",
+    "doi-asserted-by": "publisher",
+    "first-page": "906",
+    "DOI": "10.1109/TMTT.2005.863818",
+    "volume": "54",
+    "author": "CH Cox",
+    "year": "2006",
+    "unstructured": "Cox, C. H., Ackerman, E. I., Betts, G. E. & Prince, J. L. Limits on the performance of RF-over-fiber links and their impact on device design. IEEE Trans. Microwave Theory Tech. 54, 906\u2013920 (2006).",
+    "journal-title": "IEEE Trans. Microwave Theory Tech."
+   },
+   {
+    "key": "23403_CR7",
+    "doi-asserted-by": "publisher",
+    "first-page": "1145",
+    "DOI": "10.1109/JLT.2008.923627",
+    "volume": "26",
+    "author": "RC Williamson",
+    "year": "2008",
+    "unstructured": "Williamson, R. C. & Esman, R. D. RF photonics. J. Lightwave Technol. 26, 1145\u20131153 (2008).",
+    "journal-title": "J. Lightwave Technol."
+   },
+   {
+    "key": "23403_CR8",
+    "doi-asserted-by": "publisher",
+    "first-page": "408",
+    "DOI": "10.1364/OPTICA.448617",
+    "volume": "9",
+    "author": "A Shams-Ansari",
+    "year": "2022",
+    "unstructured": "Shams-Ansari, A. et al. Electrically pumped laser transmitter integrated on thin-film lithium niobate. Optica 9, 408\u2013411 (2022).",
+    "journal-title": "Optica"
+   },
+   {
+    "key": "23403_CR9",
+    "doi-asserted-by": "publisher",
+    "DOI": "10.1063/1.1906311",
+    "volume": "86",
+    "author": "P Rabiei",
+    "year": "2005",
+    "unstructured": "Rabiei, P. & Steier, W. H. Lithium niobate ridge waveguides and modulators fabricated using smart guide. Appl. Phys. Lett. 86, 161115 (2005).",
+    "journal-title": "Appl. Phys. Lett."
+   },
+   {
+    "key": "23403_CR10",
+    "doi-asserted-by": "publisher",
+    "first-page": "417",
+    "DOI": "10.1109/LPT.2007.892886",
+    "volume": "19",
+    "author": "H Hu",
+    "year": "2007",
+    "unstructured": "Hu, H., Ricken, R., Sohler, W. & Wehrspohn, R. Lithium niobate ridge waveguides fabricated by wet etching. IEEE Photon. Technol. Lett. 19, 417\u2013419 (2007).",
+    "journal-title": "IEEE Photon. Technol. Lett."
+   },
+   {
+    "key": "23403_CR11",
+    "doi-asserted-by": "publisher",
+    "first-page": "19669",
+    "DOI": "10.1364/OE.395545",
+    "volume": "28",
+    "author": "J Zhao",
+    "year": "2020",
+    "unstructured": "Zhao, J. et al. Shallow-etched thin-film lithium niobate waveguides for highly-efficient second-harmonic generation. Opt. Express 28, 19669\u201319682 (2020).",
+    "journal-title": "Opt. Express"
+   },
+   {
+    "key": "23403_CR12",
+    "doi-asserted-by": "publisher",
+    "DOI": "10.1088/0022-3727/44/30/305101",
+    "volume": "44",
+    "author": "N Courjal",
+    "year": "2011",
+    "unstructured": "Courjal, N. et al. High aspect ratio lithium niobate ridge waveguides fabricated by optical grade dicing. J. Phys. D Appl. Phys. 44, 305101 (2011).",
+    "journal-title": "J. Phys. D Appl. Phys."
+   },
+   {
+    "key": "23403_CR13",
+    "doi-asserted-by": "publisher",
+    "first-page": "910",
+    "DOI": "10.3390/nano8110910",
+    "volume": "8",
+    "author": "R Wu",
+    "year": "2018",
+    "unstructured": "Wu, R. et al. Long low-loss-litium niobate on insulator waveguides with sub-nanometer surface roughness. Nanomaterials 8, 910 (2018).",
+    "journal-title": "Nanomaterials"
+   },
+   {
+    "key": "23403_CR14",
+    "doi-asserted-by": "publisher",
+    "DOI": "10.1088/2515-7647/ac0cc0",
+    "volume": "3",
+    "author": "Y Liang",
+    "year": "2021",
+    "unstructured": "Liang, Y. et al. Monolithically integrated electro-optic modulator fabricated on lithium niobate on insulator by photolithography assisted chemo-mechanical etching. J. Phys. Photon. 3, 034019 (2021).",
+    "journal-title": "J. Phys. Photon."
+   },
+   {
+    "key": "23403_CR15",
+    "doi-asserted-by": "publisher",
+    "first-page": "359",
+    "DOI": "10.1038/s41566-019-0378-6",
+    "volume": "13",
+    "author": "M He",
+    "year": "2019",
+    "unstructured": "He, M. et al. High-performance hybrid silicon and lithium niobate Mach-Zehnder modulators for 100 Gbit $$\\text{ s}^{-1}$$ and beyond. Nat. Photon. 13, 359\u2013364 (2019).",
+    "journal-title": "Nat. Photon."
+   },
+   {
+    "key": "23403_CR16",
+    "doi-asserted-by": "publisher",
+    "first-page": "22746",
+    "DOI": "10.1364/OE.23.022746",
+    "volume": "23",
+    "author": "A Rao",
+    "year": "2015",
+    "unstructured": "Rao, A. et al. Heterogeneous microring and mach-zehnder modulators based on lithium niobate and chalcogenide glasses on silicon. Opt. Express 23, 22746\u201322752 (2015).",
+    "journal-title": "Opt. Express"
+   },
+   {
+    "key": "23403_CR17",
+    "doi-asserted-by": "publisher",
+    "first-page": "23728",
+    "DOI": "10.1364/OE.26.023728",
+    "volume": "26",
+    "author": "PO Weigel",
+    "year": "2018",
+    "unstructured": "Weigel, P. O. et al. Bonded thin film lithium niobate modulator on a silicon photonics platform exceeding 100 GHz 3-dB electrical modulation bandwidth. Opt. Express 26, 23728 (2018).",
+    "journal-title": "Opt. Express"
+   },
+   {
+    "key": "23403_CR18",
+    "doi-asserted-by": "publisher",
+    "first-page": "1112",
+    "DOI": "10.1364/OL.381892",
+    "volume": "45",
+    "author": "ANR Ahmed",
+    "year": "2020",
+    "unstructured": "Ahmed, A. N. R. et al. Subvolt electro-optical modulator on thin-film lithium niobate and silicon nitride hybrid platform. Opt. Lett. 45, 1112 (2020).",
+    "journal-title": "Opt. Lett."
+   },
+   {
+    "key": "23403_CR19",
+    "doi-asserted-by": "publisher",
+    "DOI": "10.1088/2515-7647/ac5e0b",
+    "volume": "4",
+    "author": "V Mere",
+    "year": "2022",
+    "unstructured": "Mere, V., Valdez, F., Wang, X. & Mookherjea, S. A modular fabrication process for thin-film lithium niobate modulators with silicon photonics. J. Phys. Photon. 4, 024001 (2022).",
+    "journal-title": "J. Phys. Photon."
+   },
+   {
+    "key": "23403_CR20",
+    "doi-asserted-by": "publisher",
+    "first-page": "1",
+    "DOI": "10.1038/srep22301",
+    "volume": "6",
+    "author": "PO Weigel",
+    "year": "2016",
+    "unstructured": "Weigel, P. O. et al. Lightwave circuits in lithium niobate through hybrid waveguides with silicon photonics. Sci. Rep. 6, 1\u20139 (2016).",
+    "journal-title": "Sci. Rep."
+   },
+   {
+    "key": "23403_CR21",
+    "doi-asserted-by": "publisher",
+    "first-page": "416",
+    "DOI": "10.1063/1.1435801",
+    "volume": "80",
+    "author": "HK Tsang",
+    "year": "2002",
+    "unstructured": "Tsang, H. K. et al. Optical dispersion, two-photon absorption and self-phase modulation in silicon waveguides at 1.5 $$\\mu$$m wavelength. Appl. Phys. Lett. 80, 416\u2013418 (2002).",
+    "journal-title": "Appl. Phys. Lett."
+   },
+   {
+    "key": "23403_CR22",
+    "doi-asserted-by": "publisher",
+    "DOI": "10.1063/1.2737359",
+    "volume": "90",
+    "author": "AD Bristow",
+    "year": "2007",
+    "unstructured": "Bristow, A. D., Rotenberg, N. & Van Driel, H. M. Two-photon absorption and kerr coefficients of silicon for 850\u20132200 nm. Appl. Phys. Lett. 90, 191104 (2007).",
+    "journal-title": "Appl. Phys. Lett."
+   },
+   {
+    "key": "23403_CR23",
+    "doi-asserted-by": "publisher",
+    "first-page": "16604",
+    "DOI": "10.1364/OE.15.016604",
+    "volume": "15",
+    "author": "Q Lin",
+    "year": "2007",
+    "unstructured": "Lin, Q., Painter, O. J. & Agrawal, G. P. Nonlinear optical phenomena in silicon waveguides: Modeling and applications. Opt. Express 15, 16604\u201316644 (2007).",
+    "journal-title": "Opt. Express"
+   },
+   {
+    "key": "23403_CR24",
+    "doi-asserted-by": "publisher",
+    "first-page": "535",
+    "DOI": "10.1038/nphoton.2010.185",
+    "volume": "4",
+    "author": "J Leuthold",
+    "year": "2010",
+    "unstructured": "Leuthold, J., Koos, C. & Freude, W. Nonlinear silicon photonics. Nat. Photon. 4, 535\u2013544 (2010).",
+    "journal-title": "Nat. Photon."
+   },
+   {
+    "key": "23403_CR25",
+    "doi-asserted-by": "publisher",
+    "first-page": "22730",
+    "DOI": "10.1364/OE.22.022730",
+    "volume": "22",
+    "author": "JJ Wathen",
+    "year": "2014",
+    "unstructured": "Wathen, J. J. et al. Non-instantaneous optical nonlinearity of an a-Si: H nanowire waveguide. Opt. Express 22, 22730\u201322742 (2014).",
+    "journal-title": "Opt. Express"
+   },
+   {
+    "key": "23403_CR26",
+    "doi-asserted-by": "publisher",
+    "first-page": "17761",
+    "DOI": "10.1364/OE.15.017761",
+    "volume": "15",
+    "author": "K Ikeda",
+    "year": "2007",
+    "unstructured": "Ikeda, K., Shen, Y. & Fainman, Y. Enhanced optical nonlinearity in amorphous silicon and its application to waveguide devices. Opt. Express 15, 17761\u201317771 (2007).",
+    "journal-title": "Opt. Express"
+   },
+   {
+    "key": "23403_CR27",
+    "doi-asserted-by": "publisher",
+    "first-page": "40",
+    "DOI": "10.1016/j.optcom.2014.05.021",
+    "volume": "330",
+    "author": "L Cao",
+    "year": "2014",
+    "unstructured": "Cao, L., Aboketaf, A., Wang, Z. & Preble, S. Hybrid amorphous silicon (a-Si:H)-LiNbO3 electro-optic modulator. Opt. Commun. 330, 40\u201344 (2014).",
+    "journal-title": "Opt. Commun."
+   },
+   {
+    "key": "23403_CR28",
+    "doi-asserted-by": "publisher",
+    "first-page": "4018",
+    "DOI": "10.1364/OME.7.004018",
+    "volume": "7",
+    "author": "Y Wang",
+    "year": "2017",
+    "unstructured": "Wang, Y. et al. Amorphous silicon-lithium niobate thin film strip-loaded waveguides. Opt. Mater. Express 7, 4018\u20134028 (2017).",
+    "journal-title": "Opt. Mater. Express"
+   },
+   {
+    "key": "23403_CR29",
+    "doi-asserted-by": "publisher",
+    "first-page": "2158",
+    "DOI": "10.1109/JPROC.2018.2877636",
+    "volume": "106",
+    "author": "J Witzens",
+    "year": "2018",
+    "unstructured": "Witzens, J. High-speed silicon photonics modulators. Proc. IEEE 106, 2158\u20132182 (2018).",
+    "journal-title": "Proc. IEEE"
+   },
+   {
+    "key": "23403_CR30",
+    "doi-asserted-by": "publisher",
+    "DOI": "10.1017/CBO9780511635595",
+    "volume-title": "Semiconductor Devices for High-Speed Optoelectronics",
+    "author": "G Ghione",
+    "year": "2009",
+    "unstructured": "Ghione, G. Semiconductor Devices for High-Speed Optoelectronics Vol. 116 (Cambridge University Press Cambridge, Uk, 2009)."
+   },
+   {
+    "key": "23403_CR31",
+    "doi-asserted-by": "publisher",
+    "first-page": "1164",
+    "DOI": "10.1109/50.390234",
+    "volume": "13",
+    "author": "K Noguchi",
+    "year": "1995",
+    "unstructured": "Noguchi, K., Mitomi, O., Miyazawa, H. & Seki, S. A broadband Ti:LiNbO3 optical modulator with a ridge structure. J. Lightwave Technol. 13, 1164\u20131168 (1995).",
+    "journal-title": "J. Lightwave Technol."
+   },
+   {
+    "key": "23403_CR32",
+    "doi-asserted-by": "publisher",
+    "first-page": "1375",
+    "DOI": "10.1109/22.618439",
+    "volume": "45",
+    "author": "C Cox",
+    "year": "1997",
+    "unstructured": "Cox, C. Techniques and performance of intensity-modulation direct-detection analog optical links. IEEE Trans. Microw. Theory Tech. 45, 1375\u20131383 (1997).",
+    "journal-title": "IEEE Trans. Microw. Theory Tech."
+   },
+   {
+    "key": "23403_CR33",
+    "doi-asserted-by": "publisher",
+    "first-page": "5893",
+    "DOI": "10.1109/JLT.2018.2879830",
+    "volume": "36",
+    "author": "A Honardoost",
+    "year": "2018",
+    "unstructured": "Honardoost, A., Safian, R., Rao, A. & Fathpour, S. High-speed modeling of ultracompact electrooptic modulators. J. Lightwave Technol. 36, 5893\u20135902 (2018).",
+    "journal-title": "J. Lightwave Technol."
+   },
+   {
+    "key": "23403_CR34",
+    "doi-asserted-by": "publisher",
+    "first-page": "928",
+    "DOI": "10.1063/1.1597988",
+    "volume": "83",
+    "author": "T Kuwayama",
+    "year": "2003",
+    "unstructured": "Kuwayama, T., Ichimura, M. & Arai, E. Interface recombination velocity of silicon-on-insulator wafers measured by microwave reflectance photoconductivity decay method with electric field. Appl. Phys. Lett. 83, 928\u2013930 (2003).",
+    "journal-title": "Appl. Phys. Lett."
+   },
+   {
+    "key": "23403_CR35",
+    "doi-asserted-by": "publisher",
+    "first-page": "2774",
+    "DOI": "10.1364/OPEX.12.002774",
+    "volume": "12",
+    "author": "R Claps",
+    "year": "2004",
+    "unstructured": "Claps, R., Raghunathan, V., Dimitropoulos, D. & Jalali, B. Influence of nonlinear absorption on Raman amplification in Silicon waveguides. Opt. Express 12, 2774\u20132780 (2004).",
+    "journal-title": "Opt. Express"
+   },
+   {
+    "key": "23403_CR36",
+    "doi-asserted-by": "publisher",
+    "first-page": "123",
+    "DOI": "10.1109/JQE.1987.1073206",
+    "volume": "23",
+    "author": "R Soref",
+    "year": "1987",
+    "unstructured": "Soref, R. & Bennett, B. Electrooptical effects in silicon. IEEE J. Quant. Electron. 23, 123\u2013129 (1987).",
+    "journal-title": "IEEE J. Quant. Electron."
+   },
+   {
+    "key": "23403_CR37",
+    "doi-asserted-by": "publisher",
+    "first-page": "A41",
+    "DOI": "10.1364/PRJ.2.000A41",
+    "volume": "2",
+    "author": "Y Fu",
+    "year": "2014",
+    "unstructured": "Fu, Y., Ye, T., Tang, W. & Chu, T. Efficient adiabatic silicon-on-insulator waveguide taper. Photon. Res. 2, A41\u2013A44 (2014).",
+    "journal-title": "Photon. Res."
+   },
+   {
+    "key": "23403_CR38",
+    "doi-asserted-by": "publisher",
+    "first-page": "1048",
+    "DOI": "10.1049/el:20030703",
+    "volume": "39",
+    "author": "J-P Ruske",
+    "year": "2003",
+    "unstructured": "Ruske, J.-P., Zeitner, B., Tunnermann, A. & Rasch, A. Photorefractive effect and high power transmission in $$\\text{ LiNbO}_3$$channel waveguides. Electron. Lett. 39, 1048\u20131050 (2003).",
+    "journal-title": "Electron. Lett."
+   },
+   {
+    "key": "23403_CR39",
+    "doi-asserted-by": "publisher",
+    "first-page": "3267",
+    "DOI": "10.1364/OL.42.003267",
+    "volume": "42",
+    "author": "H Jiang",
+    "year": "2017",
+    "unstructured": "Jiang, H. et al. Fast response of photorefraction in lithium niobate microresonators. Opt. Lett. 42, 3267\u20133270 (2017).",
+    "journal-title": "Opt. Lett."
+   },
+   {
+    "key": "23403_CR40",
+    "doi-asserted-by": "publisher",
+    "first-page": "1054",
+    "DOI": "10.1016/j.optmat.2007.12.019",
+    "volume": "31",
+    "author": "G Poberaj",
+    "year": "2009",
+    "unstructured": "Poberaj, G. et al. Ion-sliced lithium niobate thin films for active photonic devices. Opt. Mater. 31, 1054\u20131058 (2009).",
+    "journal-title": "Opt. Mater."
+   },
+   {
+    "key": "23403_CR41",
+    "doi-asserted-by": "publisher",
+    "first-page": "774",
+    "DOI": "10.1049/el:19930518",
+    "volume": "29",
+    "author": "R Spickermann",
+    "year": "1993",
+    "unstructured": "Spickermann, R. & Dagli, N. Millimetre wave coplanar slow wave structure on GaAs suitable for use in electro-optic modulators. Electron. Lett. 29, 774\u2013775 (1993).",
+    "journal-title": "Electron. Lett."
+   },
+   {
+    "key": "23403_CR42",
+    "doi-asserted-by": "publisher",
+    "first-page": "5995",
+    "DOI": "10.1063/1.359183",
+    "volume": "77",
+    "author": "Y Sakashita",
+    "year": "1995",
+    "unstructured": "Sakashita, Y. & Segawa, H. Preparation and characterization of LiNbO3 thin films produced by chemical-vapor deposition. J. Appl. Phys. 77, 5995\u20135999 (1995).",
+    "journal-title": "J. Appl. Phys."
+   },
+   {
+    "key": "23403_CR43",
+    "doi-asserted-by": "publisher",
+    "first-page": "48",
+    "DOI": "10.1109/JLT.2010.2091624",
+    "volume": "29",
+    "author": "J Shin",
+    "year": "2010",
+    "unstructured": "Shin, J., Sakamoto, S. R. & Dagli, N. Conductor loss of capacitively loaded slow wave electrodes for high-speed photonic devices. J. Lightwave Technol. 29, 48\u201352 (2010).",
+    "journal-title": "J. Lightwave Technol."
+   },
+   {
+    "key": "23403_CR44",
+    "doi-asserted-by": "publisher",
+    "first-page": "1",
+    "DOI": "10.1038/s41598-018-24030-w",
+    "volume": "8",
+    "author": "\u00c1 Rosa",
+    "year": "2018",
+    "unstructured": "Rosa, \u00c1., Verstuyft, S., Brimont, A., Thourhout, D. V. & Sanchis, P. Microwave index engineering for slow-wave coplanar waveguides. Sci. Rep. 8, 1\u20138 (2018).",
+    "journal-title": "Sci. Rep."
+   },
+   {
+    "key": "23403_CR45",
+    "doi-asserted-by": "publisher",
+    "first-page": "357",
+    "DOI": "10.1364/OPTICA.416155",
+    "volume": "8",
+    "author": "P Kharel",
+    "year": "2021",
+    "unstructured": "Kharel, P., Reimer, C., Luke, K., He, L. & Zhang, M. Breaking voltage-bandwidth limits in integrated lithium niobate modulators using micro-structured electrodes. Optica 8, 357\u2013363 (2021).",
+    "journal-title": "Optica"
+   },
+   {
+    "key": "23403_CR46",
+    "doi-asserted-by": "publisher",
+    "first-page": "2668",
+    "DOI": "10.1021/acsphotonics.2c00263",
+    "volume": "9",
+    "author": "Z Wang",
+    "year": "2022",
+    "unstructured": "Wang, Z. et al. Silicon-lithium niobate hybrid intensity and coherent modulators using a periodic capacitively loaded traveling-wave electrode. ACS Photon. 9, 2668\u20132675 (2022).",
+    "journal-title": "ACS Photon."
+   },
+   {
+    "key": "23403_CR47",
+    "doi-asserted-by": "publisher",
+    "first-page": "2358",
+    "DOI": "10.1109/JLT.2003.818162",
+    "volume": "21",
+    "author": "Y Shi",
+    "year": "2003",
+    "unstructured": "Shi, Y., Yan, L., Willner, A. E. & Member, S. High-Speed Electrooptic Modulator Characterization. J. Lightwave Technol. 21, 2358\u20132367 (2003).",
+    "journal-title": "J. Lightwave Technol."
+   },
+   {
+    "key": "23403_CR48",
+    "doi-asserted-by": "publisher",
+    "DOI": "10.3788/COL202119.060016",
+    "volume": "19",
+    "author": "X Liu",
+    "year": "2021",
+    "unstructured": "Liu, X. et al. Wideband thin-film lithium niobate modulator with low half-wave-voltage length product. Chin. Opt. Lett. 19, 060016 (2021).",
+    "journal-title": "Chin. Opt. Lett."
+   },
+   {
+    "key": "23403_CR49",
+    "doi-asserted-by": "publisher",
+    "first-page": "159",
+    "DOI": "10.1109/JSTQE.2009.2035059",
+    "volume": "16",
+    "author": "MR Watts",
+    "year": "2010",
+    "unstructured": "Watts, M. R., Zortman, W. A., Trotter, D. C., Young, R. W. & Lentine, A. L. Low-voltage, compact, depletion-mode, silicon mach-zehnder modulator. IEEE J. Sel. Top. Quant. Electron. 16, 159\u2013164 (2010).",
+    "journal-title": "IEEE J. Sel. Top. Quant. Electron."
+   },
+   {
+    "key": "23403_CR50",
+    "doi-asserted-by": "publisher",
+    "first-page": "6163",
+    "DOI": "10.1364/OE.20.006163",
+    "volume": "20",
+    "author": "P Dong",
+    "year": "2012",
+    "unstructured": "Dong, P., Chen, L. & Chen, Y.-K. High-speed low-voltage single-drive push-pull silicon Mach-zehnder modulators. Opt. Express 20, 6163\u20136169 (2012).",
+    "journal-title": "Opt. Express"
+   },
+   {
+    "key": "23403_CR51",
+    "doi-asserted-by": "crossref",
+    "unstructured": "DeRose, C.\u00a0T., Trotter, D.\u00a0C., Zortman, W.\u00a0A. & Watts, M.\u00a0R. High speed travelling wave carrier depletion silicon mach-zehnder modulator. In 2012 Optical Interconnects Conference 135\u2013136 (IEEE, 2012).",
+    "DOI": "10.1109/OIC.2012.6224486"
+   },
+   {
+    "key": "23403_CR52",
+    "doi-asserted-by": "publisher",
+    "first-page": "4116",
+    "DOI": "10.1364/OE.21.004116",
+    "volume": "21",
+    "author": "X Xiao",
+    "year": "2013",
+    "unstructured": "Xiao, X. et al. High-speed, low-loss silicon Mach-Zehnder modulators with doping optimization. Opt. Express 21, 4116\u20134125 (2013).",
+    "journal-title": "Opt. Express"
+   },
+   {
+    "key": "23403_CR53",
+    "doi-asserted-by": "publisher",
+    "first-page": "109",
+    "DOI": "10.1364/PRJ.6.000109",
+    "volume": "6",
+    "author": "M Li",
+    "year": "2018",
+    "unstructured": "Li, M., Wang, L., Li, X., Xiao, X. & Yu, S. Silicon intensity Mach-Zehnder modulator for single lane 100 gb/s applications. Photon. Res. 6, 109\u2013116 (2018).",
+    "journal-title": "Photon. Res."
+   },
+   {
+    "key": "23403_CR54",
+    "doi-asserted-by": "publisher",
+    "DOI": "10.1063/5.0077232",
+    "volume": "7",
+    "author": "G Chen",
+    "year": "2022",
+    "unstructured": "Chen, G. et al. High performance thin-film lithium niobate modulator on a silicon substrate using periodic capacitively loaded traveling-wave electrode. APL Photon. 7, 026103 (2022).",
+    "journal-title": "APL Photon."
+   },
+   {
+    "key": "23403_CR55",
+    "doi-asserted-by": "publisher",
+    "first-page": "378",
+    "DOI": "10.3390/mi13030378",
+    "volume": "13",
+    "author": "R Wu",
+    "year": "2022",
+    "unstructured": "Wu, R. et al. High-production-rate fabrication of low-loss lithium niobate electro-optic modulators using photolithography assisted chemo-mechanical etching (place). Micromachines 13, 378 (2022).",
+    "journal-title": "Micromachines"
+   },
+   {
+    "key": "23403_CR56",
+    "doi-asserted-by": "publisher",
+    "first-page": "1868",
+    "DOI": "10.1364/OE.28.001868",
+    "volume": "28",
+    "author": "N Boynton",
+    "year": "2020",
+    "unstructured": "Boynton, N. et al. A heterogeneously integrated silicon photonic/lithium niobate travelling wave electro-optic modulator. Opt. Express 28, 1868\u20131884 (2020).",
+    "journal-title": "Opt. Express"
+   },
+   {
+    "key": "23403_CR57",
+    "doi-asserted-by": "publisher",
+    "first-page": "2233",
+    "DOI": "10.1364/OPTCON.473761",
+    "volume": "1",
+    "author": "X Wang",
+    "year": "2022",
+    "unstructured": "Wang, X., Valdez, F., Mere, V. & Mookherjea, S. Integrated thin-silicon passive components for hybrid silicon-lithium niobate photonics. Opt. Continuum 1, 2233\u20132244 (2022).",
+    "journal-title": "Opt. Continuum"
+   },
+   {
+    "key": "23403_CR58",
+    "volume-title": "High-Speed Hybrid Silicon-Lithium Niobate Electro-Optic Modulators & Related Technologies",
+    "author": "PO Weigel",
+    "year": "2018",
+    "unstructured": "Weigel, P. O. High-Speed Hybrid Silicon-Lithium Niobate Electro-Optic Modulators & Related Technologies (University of California, San Diego, 2018)."
+   }
+  ],
+  "container-title": [
+   "Scientific Reports"
+  ],
+  "original-title": [],
+  "language": "en",
+  "link": [
+   {
+    "URL": "https://www.nature.com/articles/s41598-022-23403-6.pdf",
+    "content-type": "application/pdf",
+    "content-version": "vor",
+    "intended-application": "text-mining"
+   },
+   {
+    "URL": "https://www.nature.com/articles/s41598-022-23403-6",
+    "content-type": "text/html",
+    "content-version": "vor",
+    "intended-application": "text-mining"
+   },
+   {
+    "URL": "https://www.nature.com/articles/s41598-022-23403-6.pdf",
+    "content-type": "application/pdf",
+    "content-version": "vor",
+    "intended-application": "similarity-checking"
+   }
+  ],
+  "deposited": {
+   "date-parts": [
+    [
+     2022,
+     11,
+     5
+    ]
+   ],
+   "date-time": "2022-11-05T14:15:37Z",
+   "timestamp": 1667657737000
+  },
+  "score": 1,
+  "resource": {
+   "primary": {
+    "URL": "https://www.nature.com/articles/s41598-022-23403-6"
+   }
+  },
+  "subtitle": [],
+  "short-title": [],
+  "issued": {
+   "date-parts": [
+    [
+     2022,
+     11,
+     3
+    ]
+   ]
+  },
+  "references-count": 58,
+  "journal-issue": {
+   "issue": "1",
+   "published-online": {
+    "date-parts": [
+     [
+      2022,
+      12
+     ]
+    ]
+   }
+  },
+  "alternative-id": [
+   "23403"
+  ],
+  "URL": "https://doi.org/10.1038/s41598-022-23403-6",
+  "relation": {},
+  "ISSN": [
+   "2045-2322"
+  ],
+  "issn-type": [
+   {
+    "value": "2045-2322",
+    "type": "electronic"
+   }
+  ],
+  "subject": [],
+  "published": {
+   "date-parts": [
+    [
+     2022,
+     11,
+     3
+    ]
+   ]
+  },
+  "assertion": [
+   {
+    "value": "6 August 2022",
+    "order": 1,
+    "name": "received",
+    "label": "Received",
+    "group": {
+     "name": "ArticleHistory",
+     "label": "Article History"
+    }
+   },
+   {
+    "value": "31 October 2022",
+    "order": 2,
+    "name": "accepted",
+    "label": "Accepted",
+    "group": {
+     "name": "ArticleHistory",
+     "label": "Article History"
+    }
+   },
+   {
+    "value": "3 November 2022",
+    "order": 3,
+    "name": "first_online",
+    "label": "First Online",
+    "group": {
+     "name": "ArticleHistory",
+     "label": "Article History"
+    }
+   },
+   {
+    "value": "The authors declare no competing interests.",
+    "order": 1,
+    "name": "Ethics",
+    "group": {
+     "name": "EthicsHeading",
+     "label": "Competing interests"
+    }
+   }
+  ],
+  "article-number": "18611"
+ }
+}

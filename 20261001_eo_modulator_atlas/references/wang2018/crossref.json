@@ -1,0 +1,776 @@
+{
+ "status": "ok",
+ "message-type": "work",
+ "message-version": "1.0.0",
+ "message": {
+  "indexed": {
+   "date-parts": [
+    [
+     2026,
+     10,
+     1
+    ]
+   ],
+   "date-time": "2026-10-01T11:54:20Z",
+   "timestamp": 1790855660831,
+   "version": "4.1.0"
+  },
+  "reference-count": 36,
+  "publisher": "Optica Publishing Group",
+  "issue": "2",
+  "license": [
+   {
+    "start": {
+     "date-parts": [
+      [
+       2018,
+       1,
+       16
+      ]
+     ],
+     "date-time": "2018-01-16T00:00:00Z",
+     "timestamp": 1516060800000
+    },
+    "content-version": "vor",
+    "delay-in-days": 0,
+    "URL": "https://doi.org/10.1364/OA_License_v1#VOR-OA"
+   },
+   {
+    "start": {
+     "date-parts": [
+      [
+       2018,
+       1,
+       16
+      ]
+     ],
+     "date-time": "2018-01-16T00:00:00Z",
+     "timestamp": 1516060800000
+    },
+    "content-version": "tdm",
+    "delay-in-days": 0,
+    "URL": "https://opg.optica.org/policies/opg-tdm-policy.json"
+   }
+  ],
+  "funder": [
+   {
+    "DOI": "10.13039/100006754",
+    "name": "Army Research Laboratory (ARL)",
+    "doi-asserted-by": "publisher",
+    "award": [
+     "W911NF1520067"
+    ],
+    "award-info": [
+     {
+      "award-number": [
+       "W911NF1520067"
+      ]
+     }
+    ],
+    "id": [
+     {
+      "id": "10.13039/100006754",
+      "id-type": "DOI",
+      "asserted-by": "publisher"
+     }
+    ]
+   },
+   {
+    "name": "CIAN ERC",
+    "award": [
+     "EEC-0812072"
+    ],
+    "award-info": [
+     {
+      "award-number": [
+       "EEC-0812072"
+      ]
+     }
+    ]
+   },
+   {
+    "DOI": "10.13039/100000001",
+    "name": "National Science Foundation (NSF)",
+    "doi-asserted-by": "publisher",
+    "award": [
+     "ECCS-1609549"
+    ],
+    "award-info": [
+     {
+      "award-number": [
+       "ECCS-1609549"
+      ]
+     }
+    ],
+    "id": [
+     {
+      "id": "10.13039/100000001",
+      "id-type": "DOI",
+      "asserted-by": "publisher"
+     }
+    ]
+   },
+   {
+    "DOI": "10.13039/100000006",
+    "name": "Office of Naval Research (ONR)",
+    "doi-asserted-by": "publisher",
+    "award": [
+     "N00014-15-1-2761"
+    ],
+    "award-info": [
+     {
+      "award-number": [
+       "N00014-15-1-2761"
+      ]
+     }
+    ],
+    "id": [
+     {
+      "id": "10.13039/100000006",
+      "id-type": "DOI",
+      "asserted-by": "publisher"
+     }
+    ]
+   }
+  ],
+  "content-domain": {
+   "domain": [
+    "www.osapublishing.org"
+   ],
+   "crossmark-restriction": true
+  },
+  "short-container-title": [
+   "Opt. Express"
+  ],
+  "published-print": {
+   "date-parts": [
+    [
+     2018,
+     1,
+     22
+    ]
+   ]
+  },
+  "DOI": "10.1364/oe.26.001547",
+  "type": "journal-article",
+  "created": {
+   "date-parts": [
+    [
+     2018,
+     1,
+     16
+    ]
+   ],
+   "date-time": "2018-01-16T22:33:00Z",
+   "timestamp": 1516141980000
+  },
+  "page": "1547",
+  "update-policy": "https://doi.org/10.1364/osa_crossmark_policy",
+  "source": "Crossref",
+  "is-referenced-by-count": 618,
+  "title": [
+   "Nanophotonic lithium niobate electro-optic modulators"
+  ],
+  "prefix": "10.1364",
+  "volume": "26",
+  "author": [
+   {
+    "ORCID": "https://orcid.org/0000-0002-1939-1422",
+    "authenticated-orcid": true,
+    "given": "Cheng",
+    "family": "Wang",
+    "sequence": "first",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Mian",
+    "family": "Zhang",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Brian",
+    "family": "Stern",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Michal",
+    "family": "Lipson",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Marko",
+    "family": "Lon\u010dar",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   }
+  ],
+  "member": "285",
+  "published-online": {
+   "date-parts": [
+    [
+     2018,
+     1,
+     16
+    ]
+   ]
+  },
+  "reference": [
+   {
+    "key": "oe-26-2-1547-R1",
+    "doi-asserted-by": "crossref",
+    "first-page": "69",
+    "DOI": "10.1109/2944.826874",
+    "volume": "6",
+    "author": "Wooten",
+    "year": "2000",
+    "journal-title": "IEEE J. Sel. Top. Quantum Electron."
+   },
+   {
+    "key": "oe-26-2-1547-R2",
+    "doi-asserted-by": "crossref",
+    "first-page": "301",
+    "DOI": "10.1002/lpor.200810073",
+    "volume": "3",
+    "author": "Janner",
+    "year": "2009",
+    "journal-title": "Laser Photonics Rev."
+   },
+   {
+    "key": "oe-26-2-1547-R3",
+    "doi-asserted-by": "crossref",
+    "first-page": "24531",
+    "DOI": "10.1364/OE.25.024531",
+    "volume": "25",
+    "author": "Luo",
+    "year": "2017",
+    "journal-title": "Opt. Express"
+   },
+   {
+    "key": "oe-26-2-1547-R5",
+    "doi-asserted-by": "crossref",
+    "first-page": "325",
+    "DOI": "10.1038/nature03569",
+    "volume": "435",
+    "author": "Xu",
+    "year": "2005",
+    "journal-title": "Nature"
+   },
+   {
+    "key": "oe-26-2-1547-R6",
+    "doi-asserted-by": "crossref",
+    "first-page": "4008",
+    "DOI": "10.1038/ncomms5008",
+    "volume": "5",
+    "author": "Timurdogan",
+    "year": "2014",
+    "journal-title": "Nat. Commun."
+   },
+   {
+    "key": "oe-26-2-1547-R7",
+    "doi-asserted-by": "crossref",
+    "first-page": "534",
+    "DOI": "10.1038/nature16454",
+    "volume": "528",
+    "author": "Sun",
+    "year": "2015",
+    "journal-title": "Nature"
+   },
+   {
+    "key": "oe-26-2-1547-R8",
+    "doi-asserted-by": "crossref",
+    "first-page": "1483",
+    "DOI": "10.1364/OPTICA.3.001483",
+    "volume": "3",
+    "author": "Zhang",
+    "year": "2016",
+    "journal-title": "Optica"
+   },
+   {
+    "key": "oe-26-2-1547-R9",
+    "doi-asserted-by": "crossref",
+    "first-page": "2088",
+    "DOI": "10.1109/3.234473",
+    "volume": "29",
+    "author": "Aoki",
+    "year": "1993",
+    "journal-title": "IEEE J. Quantum Electron."
+   },
+   {
+    "key": "oe-26-2-1547-R10",
+    "doi-asserted-by": "crossref",
+    "first-page": "471",
+    "DOI": "10.1049/el:19930315",
+    "volume": "29",
+    "author": "Rolland",
+    "year": "1993",
+    "journal-title": "Electron. Lett."
+   },
+   {
+    "key": "oe-26-2-1547-R11",
+    "doi-asserted-by": "crossref",
+    "first-page": "1",
+    "DOI": "10.1109/CSICS.2012.6340090",
+    "article-title": "High-Speed InP-Based Mach-Zehnder Modulator for Advanced Modulation Formats",
+    "volume-title": "2012 IEEE Compound Semiconductor Integrated Circuit Symposium",
+    "author": "Kikuchi",
+    "year": "2012"
+   },
+   {
+    "key": "oe-26-2-1547-R12",
+    "doi-asserted-by": "crossref",
+    "first-page": "095014",
+    "DOI": "10.1088/1367-2630/14/9/095014",
+    "volume": "14",
+    "author": "Xiong",
+    "year": "2012",
+    "journal-title": "New J. Phys."
+   },
+   {
+    "key": "oe-26-2-1547-R13",
+    "doi-asserted-by": "crossref",
+    "first-page": "525",
+    "DOI": "10.1038/nphoton.2015.127",
+    "volume": "9",
+    "author": "Haffner",
+    "year": "2015",
+    "journal-title": "Nat. Photonics"
+   },
+   {
+    "key": "oe-26-2-1547-R14",
+    "doi-asserted-by": "crossref",
+    "first-page": "64",
+    "DOI": "10.1038/nature10067",
+    "volume": "474",
+    "author": "Liu",
+    "year": "2011",
+    "journal-title": "Nature"
+   },
+   {
+    "key": "oe-26-2-1547-R15",
+    "doi-asserted-by": "crossref",
+    "first-page": "192",
+    "DOI": "10.1038/nature11458",
+    "volume": "490",
+    "author": "Novoselov",
+    "year": "2012",
+    "journal-title": "Nature"
+   },
+   {
+    "key": "oe-26-2-1547-R16",
+    "doi-asserted-by": "crossref",
+    "first-page": "511",
+    "DOI": "10.1038/nphoton.2015.122",
+    "volume": "9",
+    "author": "Phare",
+    "year": "2015",
+    "journal-title": "Nat. Photonics"
+   },
+   {
+    "key": "oe-26-2-1547-R17",
+    "doi-asserted-by": "crossref",
+    "first-page": "1401",
+    "DOI": "10.1126/science.1077446",
+    "volume": "298",
+    "author": "Lee",
+    "year": "2002",
+    "journal-title": "Science"
+   },
+   {
+    "key": "oe-26-2-1547-R18",
+    "doi-asserted-by": "crossref",
+    "first-page": "438",
+    "DOI": "10.1038/nphoton.2010.160",
+    "volume": "4",
+    "author": "Clark",
+    "year": "2010",
+    "journal-title": "Nat. Photonics"
+   },
+   {
+    "key": "oe-26-2-1547-R19",
+    "doi-asserted-by": "crossref",
+    "first-page": "458",
+    "DOI": "10.1063/1.1655547",
+    "volume": "25",
+    "author": "Schmidt",
+    "year": "1974",
+    "journal-title": "Appl. Phys. Lett."
+   },
+   {
+    "key": "oe-26-2-1547-R20",
+    "doi-asserted-by": "crossref",
+    "first-page": "488",
+    "DOI": "10.1002/lpor.201100035",
+    "volume": "6",
+    "author": "Poberaj",
+    "year": "2012",
+    "journal-title": "Laser Photonics Rev."
+   },
+   {
+    "key": "oe-26-2-1547-R21",
+    "doi-asserted-by": "crossref",
+    "first-page": "407",
+    "DOI": "10.1038/nphoton.2007.93",
+    "volume": "1",
+    "author": "Guarino",
+    "year": "2007",
+    "journal-title": "Nat. Photonics"
+   },
+   {
+    "key": "oe-26-2-1547-R22",
+    "doi-asserted-by": "crossref",
+    "first-page": "27003",
+    "DOI": "10.1364/OE.21.027003",
+    "volume": "21",
+    "author": "Chen",
+    "year": "2013",
+    "journal-title": "Opt. Express"
+   },
+   {
+    "key": "oe-26-2-1547-R23",
+    "doi-asserted-by": "crossref",
+    "first-page": "112",
+    "DOI": "10.1364/OPTICA.1.000112",
+    "volume": "1",
+    "author": "Chen",
+    "year": "2014",
+    "journal-title": "Optica"
+   },
+   {
+    "key": "oe-26-2-1547-R24",
+    "doi-asserted-by": "crossref",
+    "first-page": "22746",
+    "DOI": "10.1364/OE.23.022746",
+    "volume": "23",
+    "author": "Rao",
+    "year": "2015",
+    "journal-title": "Opt. Express"
+   },
+   {
+    "key": "oe-26-2-1547-R25",
+    "doi-asserted-by": "crossref",
+    "first-page": "736",
+    "DOI": "10.1109/LPT.2015.2507136",
+    "volume": "28",
+    "author": "Jin",
+    "year": "2016",
+    "journal-title": "IEEE Photonics Technol. Lett."
+   },
+   {
+    "key": "oe-26-2-1547-R26",
+    "doi-asserted-by": "crossref",
+    "first-page": "5700",
+    "DOI": "10.1364/OL.41.005700",
+    "volume": "41",
+    "author": "Rao",
+    "year": "2016",
+    "journal-title": "Opt. Lett."
+   },
+   {
+    "key": "oe-26-2-1547-R27",
+    "doi-asserted-by": "crossref",
+    "first-page": "23072",
+    "DOI": "10.1364/OE.23.023072",
+    "volume": "23",
+    "author": "Wang",
+    "year": "2015",
+    "journal-title": "Opt. Express"
+   },
+   {
+    "key": "oe-26-2-1547-R28",
+    "doi-asserted-by": "crossref",
+    "first-page": "4640",
+    "DOI": "10.1364/OE.24.004640",
+    "volume": "24",
+    "author": "Cai",
+    "year": "2016",
+    "journal-title": "Opt. Express"
+   },
+   {
+    "key": "oe-26-2-1547-R29",
+    "doi-asserted-by": "crossref",
+    "first-page": "124",
+    "DOI": "10.1364/OE.25.000124",
+    "volume": "25",
+    "author": "Wang",
+    "year": "2017",
+    "journal-title": "Opt. Express"
+   },
+   {
+    "key": "oe-26-2-1547-R30",
+    "doi-asserted-by": "crossref",
+    "first-page": "30924",
+    "DOI": "10.1364/OE.22.030924",
+    "volume": "22",
+    "author": "Wang",
+    "year": "2014",
+    "journal-title": "Opt. Express"
+   },
+   {
+    "key": "oe-26-2-1547-R31",
+    "doi-asserted-by": "crossref",
+    "first-page": "531",
+    "DOI": "10.1364/OPTICA.3.000531",
+    "volume": "3",
+    "author": "Chang",
+    "year": "2016",
+    "journal-title": "Optica"
+   },
+   {
+    "key": "oe-26-2-1547-R32",
+    "doi-asserted-by": "crossref",
+    "first-page": "803",
+    "DOI": "10.1364/OL.42.000803",
+    "volume": "42",
+    "author": "Chang",
+    "year": "2017",
+    "journal-title": "Opt. Lett."
+   },
+   {
+    "key": "oe-26-2-1547-R33",
+    "doi-asserted-by": "crossref",
+    "first-page": "6963",
+    "DOI": "10.1364/OE.25.006963",
+    "volume": "25",
+    "author": "Wang",
+    "year": "2017",
+    "journal-title": "Opt. Express"
+   },
+   {
+    "key": "oe-26-2-1547-R34",
+    "doi-asserted-by": "crossref",
+    "first-page": "1536",
+    "DOI": "10.1364/OPTICA.4.001536",
+    "volume": "4",
+    "author": "Zhang",
+    "year": "2017",
+    "journal-title": "Optica"
+   },
+   {
+    "key": "oe-26-2-1547-R35",
+    "doi-asserted-by": "crossref",
+    "first-page": "043903",
+    "DOI": "10.1103/PhysRevLett.92.043903",
+    "volume": "92",
+    "author": "Ilchenko",
+    "year": "2004",
+    "journal-title": "Phys. Rev. Lett."
+   },
+   {
+    "key": "oe-26-2-1547-R36",
+    "doi-asserted-by": "crossref",
+    "first-page": "518",
+    "DOI": "10.1038/nphoton.2010.179",
+    "volume": "4",
+    "author": "Reed",
+    "year": "2010",
+    "journal-title": "Nat. Photonics"
+   },
+   {
+    "key": "oe-26-2-1547-R37",
+    "doi-asserted-by": "crossref",
+    "first-page": "15590",
+    "DOI": "10.1364/OE.24.015590",
+    "volume": "24",
+    "author": "Mercante",
+    "year": "2016",
+    "journal-title": "Opt. Express"
+   }
+  ],
+  "container-title": [
+   "Optics Express"
+  ],
+  "original-title": [],
+  "language": "en",
+  "link": [
+   {
+    "URL": "https://www.osapublishing.org/viewmedia.cfm?URI=oe-26-2-1547",
+    "content-type": "application/pdf",
+    "content-version": "vor",
+    "intended-application": "syndication"
+   },
+   {
+    "URL": "https://www.osapublishing.org/viewmedia.cfm?URI=oe-26-2-1547&seq=0",
+    "content-type": "unspecified",
+    "content-version": "vor",
+    "intended-application": "similarity-checking"
+   }
+  ],
+  "deposited": {
+   "date-parts": [
+    [
+     2024,
+     8,
+     2
+    ]
+   ],
+   "date-time": "2024-08-02T20:12:46Z",
+   "timestamp": 1722629566000
+  },
+  "score": 1,
+  "resource": {
+   "primary": {
+    "URL": "https://opg.optica.org/abstract.cfm?URI=oe-26-2-1547"
+   }
+  },
+  "subtitle": [],
+  "short-title": [],
+  "issued": {
+   "date-parts": [
+    [
+     2018,
+     1,
+     16
+    ]
+   ]
+  },
+  "references-count": 36,
+  "journal-issue": {
+   "issue": "2",
+   "published-online": {
+    "date-parts": [
+     [
+      2018
+     ]
+    ]
+   },
+   "published-print": {
+    "date-parts": [
+     [
+      2018
+     ]
+    ]
+   }
+  },
+  "URL": "https://doi.org/10.1364/oe.26.001547",
+  "relation": {},
+  "ISSN": [
+   "1094-4087"
+  ],
+  "issn-type": [
+   {
+    "value": "1094-4087",
+    "type": "electronic"
+   }
+  ],
+  "subject": [],
+  "published": {
+   "date-parts": [
+    [
+     2018,
+     1,
+     16
+    ]
+   ]
+  },
+  "assertion": [
+   {
+    "value": "OSA - The Optical Society",
+    "name": "publisher",
+    "label": "This article is maintained by"
+   },
+   {
+    "value": "https://doi.org/10.1364/OE.26.001547",
+    "name": "articlelink",
+    "label": "Crossref DOI link to publisher maintained version"
+   },
+   {
+    "value": "research-article",
+    "name": "content_type",
+    "label": "Article type"
+   },
+   {
+    "value": "Screened by Similarity Check",
+    "name": "cross_check",
+    "label": "Similarity check"
+   },
+   {
+    "value": "Yes",
+    "order": 0,
+    "name": "peer_reviewed",
+    "label": "Peer reviewed",
+    "group": {
+     "name": "peer_review",
+     "label": "Peer review"
+    }
+   },
+   {
+    "value": "Single blind",
+    "order": 1,
+    "name": "review_process",
+    "label": "Review process",
+    "group": {
+     "name": "peer_review",
+     "label": "Peer review"
+    }
+   },
+   {
+    "value": "13 November 2017",
+    "order": 0,
+    "name": "received",
+    "label": "Received",
+    "group": {
+     "name": "publication_history",
+     "label": "Publication History"
+    }
+   },
+   {
+    "value": "11 January 2018",
+    "order": 1,
+    "name": "accepted",
+    "label": "Accepted",
+    "group": {
+     "name": "publication_history",
+     "label": "Publication History"
+    }
+   },
+   {
+    "value": "16 January 2018",
+    "order": 2,
+    "name": "published",
+    "label": "Published",
+    "group": {
+     "name": "publication_history",
+     "label": "Publication History"
+    }
+   },
+   {
+    "value": "\u00a9 2018 Optical Society of America under the terms of the OSA Open Access Publishing Agreement",
+    "name": "copyright",
+    "label": "Copyright"
+   }
+  ]
+ }
+}

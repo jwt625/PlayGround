@@ -1,0 +1,235 @@
+{
+ "status": "ok",
+ "message-type": "work",
+ "message-version": "1.0.0",
+ "message": {
+  "indexed": {
+   "date-parts": [
+    [
+     2026,
+     8,
+     17
+    ]
+   ],
+   "date-time": "2026-08-17T18:25:16Z",
+   "timestamp": 1786991116878,
+   "version": "build-2736575974"
+  },
+  "publisher-location": "Washington, D.C.",
+  "reference-count": 5,
+  "publisher": "Optica Publishing Group",
+  "content-domain": {
+   "domain": [],
+   "crossmark-restriction": false
+  },
+  "short-container-title": [],
+  "published-print": {
+   "date-parts": [
+    [
+     2026
+    ]
+   ]
+  },
+  "abstract": "<jats:p>\n                    We demonstrate a C-band thin-film lithium tantalate (TFLT) Mach\u2013Zehnder modulator with\n                    <jats:italic>V</jats:italic>\n                    <jats:italic>\n                      <jats:sub>\u03c0</jats:sub>\n                    </jats:italic>\n                    of 1.35 V and &gt;110 GHz electro-optic bandwidth, enabling record-high line (net) data rate of 768 (536) Gbit/s on the TFLT platform.\n                  </jats:p>",
+  "DOI": "10.1364/ofc.2026.th4a.2",
+  "type": "proceedings-article",
+  "created": {
+   "date-parts": [
+    [
+     2026,
+     6,
+     2
+    ]
+   ],
+   "date-time": "2026-06-02T19:28:13Z",
+   "timestamp": 1780428493000
+  },
+  "page": "Th4A.2",
+  "source": "Crossref",
+  "is-referenced-by-count": 0,
+  "title": [
+   "C-band 110-GHz-Bandwidth Thin-Film Lithium Tantalate Modulator Enabling 768 (536) Gbit/s Line (Net) Data Rates"
+  ],
+  "prefix": "10.1364",
+  "author": [
+   {
+    "given": "Mengyue",
+    "family": "Xu",
+    "sequence": "first",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Yang",
+    "family": "Lan",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Di",
+    "family": "Che",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Jinze",
+    "family": "Shi",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Di",
+    "family": "Liang",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   }
+  ],
+  "member": "285",
+  "reference": [
+   {
+    "key": "OFC-2026-Th4A.2-R1",
+    "doi-asserted-by": "publisher",
+    "first-page": "5345",
+    "DOI": "10.1021/acsphotonics.5c00159",
+    "type": "journal-article",
+    "volume": "12",
+    "author": "Wang",
+    "year": "2025",
+    "journal-title": "ACS Photonics"
+   },
+   {
+    "key": "OFC-2026-Th4A.2-R2",
+    "doi-asserted-by": "publisher",
+    "first-page": "1614",
+    "DOI": "10.1364/OPTICA.537730",
+    "type": "journal-article",
+    "volume": "11",
+    "author": "Wang",
+    "year": "2024",
+    "journal-title": "Optica"
+   },
+   {
+    "key": "OFC-2026-Th4A.2-R4",
+    "doi-asserted-by": "publisher",
+    "DOI": "10.1038/s41566-025-01832-9",
+    "type": "journal-article",
+    "volume": "20",
+    "author": "Niels",
+    "year": "2026",
+    "journal-title": "Nat. Photonics"
+   },
+   {
+    "key": "OFC-2026-Th4A.2-R5",
+    "doi-asserted-by": "publisher",
+    "author": "Lu",
+    "year": "2026",
+    "DOI": "10.21203/rs.3.rs-8004021/v1",
+    "type": "journal-article"
+   },
+   {
+    "key": "OFC-2026-Th4A.2-R10",
+    "doi-asserted-by": "publisher",
+    "first-page": "4222",
+    "DOI": "10.1109/JLT.2024.3399032",
+    "type": "journal-article",
+    "volume": "42",
+    "author": "Nagarajan",
+    "year": "2024",
+    "journal-title": "J. Light. Technol."
+   }
+  ],
+  "event": {
+   "name": "Optical Fiber Communication Conference",
+   "location": "Los Angeles, California",
+   "acronym": "OFC",
+   "sponsor": [
+    "The Optical Society"
+   ],
+   "start": {
+    "date-parts": [
+     [
+      2026
+     ]
+    ]
+   }
+  },
+  "container-title": [
+   "Optical Fiber Communication Conference (OFC) 2026"
+  ],
+  "original-title": [],
+  "link": [
+   {
+    "URL": "https://opg.optica.org/viewmedia.cfm?URI=OFC-2026-Th4A.2&seq=0",
+    "content-type": "unspecified",
+    "content-version": "vor",
+    "intended-application": "similarity-checking"
+   }
+  ],
+  "deposited": {
+   "date-parts": [
+    [
+     2026,
+     8,
+     17
+    ]
+   ],
+   "date-time": "2026-08-17T17:27:57Z",
+   "timestamp": 1786987677000
+  },
+  "score": 1,
+  "resource": {
+   "primary": {
+    "URL": "https://opg.optica.org/abstract.cfm?URI=OFC-2026-Th4A.2"
+   }
+  },
+  "subtitle": [],
+  "short-title": [],
+  "issued": {
+   "date-parts": [
+    [
+     2026
+    ]
+   ]
+  },
+  "references-count": 5,
+  "URL": "https://doi.org/10.1364/ofc.2026.th4a.2",
+  "relation": {},
+  "subject": [],
+  "published": {
+   "date-parts": [
+    [
+     2026
+    ]
+   ]
+  }
+ }
+}

@@ -1,0 +1,96 @@
+[
+ {
+  "kind": "embedded",
+  "file": "img_p01_1.png",
+  "page": 1,
+  "width": 871,
+  "height": 530
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p01_2.png",
+  "page": 1,
+  "width": 299,
+  "height": 397
+ },
+ {
+  "kind": "page_render",
+  "file": "page_02.png",
+  "page": 2,
+  "captions": [
+   "Figure 1. Proposed TFLT-based EO modulator on a Si substrate using CLTW electrodes with backside holes: (a) Detailed top-view schematic of"
+  ]
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p02_1.png",
+  "page": 2,
+  "width": 2092,
+  "height": 503
+ },
+ {
+  "kind": "page_render",
+  "file": "page_03.png",
+  "page": 3,
+  "captions": [
+   "Figure 4a,b. The 35 dBm optical power was generated using a",
+   "Figure 4c. The 3 dB EO bandwidth was around 55 GHz for",
+   "Figure 4h\u2212k. The eye diagrams remained clear and well-",
+   "Figure 2. (a) Simulated TE optical mode profile and static electrical"
+  ]
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p03_1.png",
+  "page": 3,
+  "width": 992,
+  "height": 1781
+ },
+ {
+  "kind": "page_render",
+  "file": "page_04.png",
+  "page": 4,
+  "captions": [
+   "Figure 3. Backside view of the fabricated modulator, with a microscope-focused view of (a) the electrode and (b) the chip\u2019s backside surface. (c)",
+   "Figure 4. Measured EO response of the fabricated modulator using a 100 kHz sawtooth wave with a peak-to-peak voltage of 20 V at (a) 0 dBm and"
+  ]
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p04_1.png",
+  "page": 4,
+  "width": 1853,
+  "height": 876
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p04_2.png",
+  "page": 4,
+  "width": 1708,
+  "height": 1064
+ },
+ {
+  "kind": "page_render",
+  "file": "page_05.png",
+  "page": 5,
+  "captions": [
+   "Figure 6b), accompanied by a noticeable rise in BER. This",
+   "Figure 5. Dynamic ER and SNR values at various optical power levels",
+   "Figure 6. (a) Measured BER as a function of received optical power"
+  ]
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p05_1.png",
+  "page": 5,
+  "width": 992,
+  "height": 766
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p05_2.png",
+  "page": 5,
+  "width": 923,
+  "height": 910
+ }
+]

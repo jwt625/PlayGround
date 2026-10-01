@@ -1,0 +1,144 @@
+paper_id: niels2026
+verified_on: '2026-10-01'
+source_files:
+- references/niels2026/text.md
+- references/niels2026/figures/page_01.png
+- references/niels2026/figures/page_04.png
+- references/niels2026/figures/page_05.png
+- references/niels2026/crossref.json
+entries:
+- device_id: niels2026-a
+  field: drive
+  value: differential
+  unit: ''
+  basis: derived
+  locator: p.3, Design and fabrication; p.4, Data transmission
+  note: GSSG differential feed with oppositely poled arms; authors call it a push-pull configuration
+- device_id: niels2026-a
+  field: wavelength_nm
+  value: 1310
+  unit: nm
+  basis: measured
+  locator: p.3-4, Performances of the modulator
+  note: ER at 1310 nm; quasi-DC Vpi measured at 1309.26 nm (quadrature)
+- device_id: niels2026-a
+  field: length_mm
+  value: 6.6
+  unit: mm
+  basis: measured
+  locator: p.3, Design and fabrication
+  note: effective EO length per arm; membrane 7 mm minus 200 um transitions
+- device_id: niels2026-a
+  field: vpi_dc_v
+  value: 7.0
+  unit: V
+  basis: measured
+  locator: p.4, Fig. 5(b)
+  note: single phase shifter (one arm), 100 kHz triangular wave
+- device_id: niels2026-a
+  field: vpi_mzm_pushpull_dc_v
+  value: 3.5
+  unit: V
+  basis: derived
+  locator: p.4; p.1 abstract
+  note: 'authors: 7.0 V per arm corresponds to 3.5 V in push-pull'
+- device_id: niels2026-a
+  field: bw3db_ghz
+  value: 70
+  unit: GHz
+  basis: measured
+  locator: p.4, Fig. 4(d)
+  note: no 3 dB crossing observed on the high-resistivity substrate; limited by VNA and photodetector
+- device_id: niels2026-a
+  field: bw_measured_to_ghz
+  value: 70
+  unit: GHz
+  basis: measured
+  locator: p.4, Fig. 4(d)
+- device_id: niels2026-a
+  field: il_onchip_db
+  value: 2.9
+  unit: dB
+  basis: derived
+  locator: p.3; p.8, Suppl. Table II
+  note: sum of transitions 0.6, SiN/LiTaO3 propagation 0.7 and metal misalignment 1.6 dB; the 1.6 dB term comes from a COMSOL simulation
+- device_id: niels2026-a
+  field: prop_loss_db_per_cm
+  value: 1.0
+  unit: dB/cm
+  basis: measured
+  locator: p.8, Loss characterisation
+  note: hybrid SiN/LiTaO3 waveguide, +-0.5 dB/cm; transition loss 0.3 +-0.1 dB each
+- device_id: niels2026-a
+  field: extinction_ratio_db
+  value: 28
+  unit: dB
+  basis: measured
+  locator: p.3; Fig. 5(a)
+  note: wavelength sweep of the unbalanced MZM at 1310 nm, FSR 4 nm
+- device_id: niels2026-a
+  field: eo_film_thickness_nm
+  value: 300
+  unit: nm
+  basis: measured
+  locator: p.3, Design and fabrication
+  note: LiTaO3 membrane 30 um x 7 mm, micro-transfer printed on 50 nm BCB
+- device_id: niels2026-a
+  field: electrode_gap_um
+  value: 5.5
+  unit: um
+  basis: design_target
+  locator: p.5, Discussion; p.9, Suppl. Table III
+  note: electrode gap G of the simulated hybrid section
+- device_id: niels2026-a
+  field: electrode_thickness_um
+  value: 1.0
+  unit: um
+  basis: measured
+  locator: p.3, Design and fabrication
+  note: plus 20 nm Ti; lift-off
+- device_id: niels2026-a
+  field: electrode_metal
+  value: Ti/Au (20 nm / 1 um)
+  unit: ''
+  basis: measured
+  locator: p.3, Design and fabrication
+- device_id: niels2026-a
+  field: substrate
+  value: imec iSiPP200 Si-PIC (200 mm SOI); high-resistivity and standard Si substrates compared
+  unit: ''
+  basis: measured
+  locator: p.3-4
+- device_id: niels2026-a
+  field: crystal_cut
+  value: x-cut
+  unit: ''
+  basis: measured
+  locator: p.3, Design and fabrication
+- device_id: niels2026-a
+  field: epitaxy_or_stack
+  value: Si 220 nm / oxide / SiN 300 nm x 900 nm waveguide / BCB 50 nm / LiTaO3 300 nm membrane (30 um wide) / Ti-Au electrodes
+  unit: ''
+  basis: measured
+  locator: p.3; p.8, Adiabatic coupling
+- device_id: niels2026-a
+  field: max_baud_gbd
+  value: 190
+  unit: GBd
+  basis: measured
+  locator: p.5, Conclusions; Fig. 6(b)
+  note: NRZ at 190 GBd; 200 GBd NRZ tested, above the 15% overhead FEC threshold
+- device_id: niels2026-a
+  field: modulation_format
+  value: NRZ up to 190 GBd; PAM4 up to 160 GBd (BER below the 15% overhead FEC threshold)
+  unit: ''
+  basis: measured
+  locator: p.5, Fig. 6(b)
+- device_id: niels2026-a
+  field: max_line_rate_gbps
+  value: 320
+  unit: Gb/s
+  basis: derived
+  locator: p.5, Conclusions; Fig. 6(b)
+  note: 'authors: more than 320 Gbit/s with PAM4; 160 GBd x 2 bit/symbol'
+derived: []

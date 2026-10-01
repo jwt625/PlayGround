@@ -1,0 +1,245 @@
+{
+ "status": "ok",
+ "message-type": "work",
+ "message-version": "1.0.0",
+ "message": {
+  "indexed": {
+   "date-parts": [
+    [
+     2026,
+     8,
+     17
+    ]
+   ],
+   "date-time": "2026-08-17T18:26:00Z",
+   "timestamp": 1786991160654,
+   "version": "build-2736575974"
+  },
+  "publisher-location": "Washington, D.C.",
+  "reference-count": 7,
+  "publisher": "Optica Publishing Group",
+  "content-domain": {
+   "domain": [],
+   "crossmark-restriction": false
+  },
+  "short-container-title": [],
+  "published-print": {
+   "date-parts": [
+    [
+     2026
+    ]
+   ]
+  },
+  "abstract": "<jats:p>We demonstrate a hybrid calcium titanate and thin film lithium niobate electro-optical modulator with 1.3 V\u00b7cm efficiency, &gt; 110 GHz bandwidth and 0.86 dB insertion loss.</jats:p>",
+  "DOI": "10.1364/ofc.2026.th1h.4",
+  "type": "proceedings-article",
+  "created": {
+   "date-parts": [
+    [
+     2026,
+     6,
+     2
+    ]
+   ],
+   "date-time": "2026-06-02T19:27:15Z",
+   "timestamp": 1780428435000
+  },
+  "page": "Th1H.4",
+  "source": "Crossref",
+  "is-referenced-by-count": 0,
+  "title": [
+   "High Efficiency and High Speed Electro-Optical Modulator Based on Hybrid Calcium Titanate and Lithium Niobate"
+  ],
+  "prefix": "10.1364",
+  "author": [
+   {
+    "given": "Wenqu",
+    "family": "Su",
+    "sequence": "first",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Guanyu",
+    "family": "Chen",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Tao",
+    "family": "Zhu",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Hua",
+    "family": "Yu",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   }
+  ],
+  "member": "285",
+  "reference": [
+   {
+    "key": "OFC-2026-Th1H.4-R1",
+    "doi-asserted-by": "publisher",
+    "first-page": "101",
+    "DOI": "10.1038/s41586-018-0551-y",
+    "type": "journal-article",
+    "volume": "562",
+    "author": "Wang",
+    "year": "2018",
+    "journal-title": "Nature"
+   },
+   {
+    "key": "OFC-2026-Th1H.4-R2",
+    "first-page": "034003",
+    "type": "journal-article",
+    "volume": "4",
+    "author": "Chen",
+    "year": "2022",
+    "journal-title": "Adv. Photon"
+   },
+   {
+    "key": "OFC-2026-Th1H.4-R3",
+    "doi-asserted-by": "publisher",
+    "first-page": "80",
+    "DOI": "10.1038/s41586-024-07078-9",
+    "type": "journal-article",
+    "volume": "627",
+    "author": "Feng",
+    "year": "2024",
+    "journal-title": "Nature"
+   },
+   {
+    "key": "OFC-2026-Th1H.4-R4",
+    "doi-asserted-by": "publisher",
+    "first-page": "3911",
+    "DOI": "10.1038/s41467-020-17806-0",
+    "type": "journal-article",
+    "volume": "11",
+    "author": "Xu",
+    "year": "2020",
+    "journal-title": "Nat. Commun."
+   },
+   {
+    "key": "OFC-2026-Th1H.4-R5",
+    "first-page": "1",
+    "type": "journal-article",
+    "volume": "4",
+    "author": "Liu",
+    "year": "2023",
+    "journal-title": "Light: Advanced Manufacturing"
+   },
+   {
+    "key": "OFC-2026-Th1H.4-R6",
+    "doi-asserted-by": "publisher",
+    "first-page": "2200927",
+    "DOI": "10.1002/lpor.202200927",
+    "type": "journal-article",
+    "volume": "17",
+    "author": "Chen",
+    "year": "2023",
+    "journal-title": "Laser  Photonics Rev."
+   },
+   {
+    "key": "OFC-2026-Th1H.4-R7",
+    "doi-asserted-by": "publisher",
+    "first-page": "3603",
+    "DOI": "10.1515/nanoph-2023-0306",
+    "type": "journal-article",
+    "volume": "12",
+    "author": "Chen",
+    "year": "2023",
+    "journal-title": "Nanophotonics"
+   }
+  ],
+  "event": {
+   "name": "Optical Fiber Communication Conference",
+   "location": "Los Angeles, California",
+   "acronym": "OFC",
+   "sponsor": [
+    "The Optical Society"
+   ],
+   "start": {
+    "date-parts": [
+     [
+      2026
+     ]
+    ]
+   }
+  },
+  "container-title": [
+   "Optical Fiber Communication Conference (OFC) 2026"
+  ],
+  "original-title": [],
+  "link": [
+   {
+    "URL": "https://opg.optica.org/viewmedia.cfm?URI=OFC-2026-Th1H.4&seq=0",
+    "content-type": "unspecified",
+    "content-version": "vor",
+    "intended-application": "similarity-checking"
+   }
+  ],
+  "deposited": {
+   "date-parts": [
+    [
+     2026,
+     8,
+     17
+    ]
+   ],
+   "date-time": "2026-08-17T17:26:30Z",
+   "timestamp": 1786987590000
+  },
+  "score": 1,
+  "resource": {
+   "primary": {
+    "URL": "https://opg.optica.org/abstract.cfm?URI=OFC-2026-Th1H.4"
+   }
+  },
+  "subtitle": [],
+  "short-title": [],
+  "issued": {
+   "date-parts": [
+    [
+     2026
+    ]
+   ]
+  },
+  "references-count": 7,
+  "URL": "https://doi.org/10.1364/ofc.2026.th1h.4",
+  "relation": {},
+  "subject": [],
+  "published": {
+   "date-parts": [
+    [
+     2026
+    ]
+   ]
+  }
+ }
+}

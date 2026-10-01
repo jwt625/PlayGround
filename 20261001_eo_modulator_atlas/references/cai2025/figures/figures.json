@@ -1,0 +1,604 @@
+[
+ {
+  "kind": "page_render",
+  "file": "page_02.png",
+  "page": 2,
+  "captions": [
+   "Figure 1(b) shows a photograph of a \ufb01nalized 100-mm"
+  ]
+ },
+ {
+  "kind": "page_render",
+  "file": "page_03.png",
+  "page": 3,
+  "captions": [
+   "Figure 1. Wafer-scale manufacturing of Si3N4-LiTaO3 photonic integrated circuits. (a) Schematic diagram of the"
+  ]
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p03_1.png",
+  "page": 3,
+  "width": 816,
+  "height": 762
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p03_2.png",
+  "page": 3,
+  "width": 1078,
+  "height": 937
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p03_3.png",
+  "page": 3,
+  "width": 1078,
+  "height": 937
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p03_5.png",
+  "page": 3,
+  "width": 1078,
+  "height": 937
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p03_6.png",
+  "page": 3,
+  "width": 1078,
+  "height": 937
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p03_8.png",
+  "page": 3,
+  "width": 1078,
+  "height": 937
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p03_9.png",
+  "page": 3,
+  "width": 1078,
+  "height": 937
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p03_11.png",
+  "page": 3,
+  "width": 1078,
+  "height": 937
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p03_12.png",
+  "page": 3,
+  "width": 1078,
+  "height": 937
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p03_14.png",
+  "page": 3,
+  "width": 816,
+  "height": 762
+ },
+ {
+  "kind": "page_render",
+  "file": "page_04.png",
+  "page": 4,
+  "captions": [
+   "Figure 2. Hybrid Si3N4-LiTaO3 electro-optic modulators. (a) Optical micrograph of a fabricated 6.8 mm-long hybrid"
+  ]
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p04_1.png",
+  "page": 4,
+  "width": 335,
+  "height": 224
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p04_2.png",
+  "page": 4,
+  "width": 1117,
+  "height": 211
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p04_3.png",
+  "page": 4,
+  "width": 1117,
+  "height": 211
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p04_4.png",
+  "page": 4,
+  "width": 476,
+  "height": 323
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p04_5.png",
+  "page": 4,
+  "width": 473,
+  "height": 319
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p04_6.png",
+  "page": 4,
+  "width": 335,
+  "height": 224
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p04_7.png",
+  "page": 4,
+  "width": 335,
+  "height": 224
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p04_8.png",
+  "page": 4,
+  "width": 707,
+  "height": 632
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p04_9.png",
+  "page": 4,
+  "width": 707,
+  "height": 632
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p04_10.png",
+  "page": 4,
+  "width": 707,
+  "height": 632
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p04_11.png",
+  "page": 4,
+  "width": 707,
+  "height": 632
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p04_12.png",
+  "page": 4,
+  "width": 707,
+  "height": 632
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p04_13.png",
+  "page": 4,
+  "width": 707,
+  "height": 632
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p04_14.png",
+  "page": 4,
+  "width": 707,
+  "height": 632
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p04_15.png",
+  "page": 4,
+  "width": 707,
+  "height": 632
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p04_16.png",
+  "page": 4,
+  "width": 335,
+  "height": 224
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p04_17.png",
+  "page": 4,
+  "width": 1117,
+  "height": 211
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p04_18.png",
+  "page": 4,
+  "width": 1117,
+  "height": 211
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p04_19.png",
+  "page": 4,
+  "width": 476,
+  "height": 323
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p04_20.png",
+  "page": 4,
+  "width": 473,
+  "height": 319
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p04_21.png",
+  "page": 4,
+  "width": 335,
+  "height": 224
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p04_22.png",
+  "page": 4,
+  "width": 335,
+  "height": 224
+ },
+ {
+  "kind": "page_render",
+  "file": "page_05.png",
+  "page": 5,
+  "captions": [
+   "Figure 3.",
+   "Figure 3(b) provides the resulting bit"
+  ]
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p05_1.png",
+  "page": 5,
+  "width": 1324,
+  "height": 1046
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p05_2.png",
+  "page": 5,
+  "width": 476,
+  "height": 1046
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p05_3.png",
+  "page": 5,
+  "width": 1324,
+  "height": 154
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p05_4.png",
+  "page": 5,
+  "width": 476,
+  "height": 154
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p05_5.png",
+  "page": 5,
+  "width": 1324,
+  "height": 1046
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p05_6.png",
+  "page": 5,
+  "width": 476,
+  "height": 1046
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p05_7.png",
+  "page": 5,
+  "width": 1324,
+  "height": 154
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p05_8.png",
+  "page": 5,
+  "width": 1324,
+  "height": 1046
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p05_9.png",
+  "page": 5,
+  "width": 476,
+  "height": 1046
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p05_10.png",
+  "page": 5,
+  "width": 1324,
+  "height": 154
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p05_11.png",
+  "page": 5,
+  "width": 476,
+  "height": 154
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p05_12.png",
+  "page": 5,
+  "width": 1324,
+  "height": 1046
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p05_13.png",
+  "page": 5,
+  "width": 476,
+  "height": 1046
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p05_14.png",
+  "page": 5,
+  "width": 1324,
+  "height": 154
+ },
+ {
+  "kind": "page_render",
+  "file": "page_06.png",
+  "page": 6,
+  "captions": [
+   "Fig. 2(a), synthesizes the output signal with two modu-",
+   "Figure 4(c) shows the measured BER along with the",
+   "Figure 4(d) provides the cor-"
+  ]
+ },
+ {
+  "kind": "page_render",
+  "file": "page_07.png",
+  "page": 7,
+  "captions": [
+   "Figure 4. Hybrid Si3N4-LiTaO3 IQ modulator for coherent data transmission. (a) Optical micrograph of a 13.5 mm-"
+  ]
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p07_1.png",
+  "page": 7,
+  "width": 1061,
+  "height": 171
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p07_2.png",
+  "page": 7,
+  "width": 1061,
+  "height": 171
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p07_3.png",
+  "page": 7,
+  "width": 178,
+  "height": 178
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p07_4.png",
+  "page": 7,
+  "width": 178,
+  "height": 178
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p07_5.png",
+  "page": 7,
+  "width": 178,
+  "height": 178
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p07_6.png",
+  "page": 7,
+  "width": 1061,
+  "height": 171
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p07_7.png",
+  "page": 7,
+  "width": 1061,
+  "height": 171
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p07_8.png",
+  "page": 7,
+  "width": 178,
+  "height": 178
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p07_9.png",
+  "page": 7,
+  "width": 178,
+  "height": 178
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p07_10.png",
+  "page": 7,
+  "width": 178,
+  "height": 178
+ },
+ {
+  "kind": "page_render",
+  "file": "page_13.png",
+  "page": 13,
+  "captions": [
+   "Figure S1. Wafer-scale photonic Damascene process for low-loss Si3N4 photonic integrated circuits. The process"
+  ]
+ },
+ {
+  "kind": "page_render",
+  "file": "page_14.png",
+  "page": 14,
+  "captions": [
+   "Figure S2. Static \ufb01eld simulation of silicon nitride-lithium tantalate Mach-Zehnder modulators. (a) Simulated"
+  ]
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p14_1.png",
+  "page": 14,
+  "width": 450,
+  "height": 242
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p14_2.png",
+  "page": 14,
+  "width": 4504,
+  "height": 381
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p14_3.png",
+  "page": 14,
+  "width": 450,
+  "height": 242
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p14_4.png",
+  "page": 14,
+  "width": 4504,
+  "height": 381
+ },
+ {
+  "kind": "page_render",
+  "file": "page_15.png",
+  "page": 15,
+  "captions": [
+   "Figure S3. Velocity mismatch between microwave and lightwave. Simulated optical group index and microwave e\ufb00ective",
+   "Figure S4. Simulated transmission of silicon nitride-lithium tantalate waveguide transitions. (a) Schematic dia-"
+  ]
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p15_1.png",
+  "page": 15,
+  "width": 679,
+  "height": 362
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p15_2.png",
+  "page": 15,
+  "width": 679,
+  "height": 362
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p15_3.png",
+  "page": 15,
+  "width": 407,
+  "height": 158
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p15_4.png",
+  "page": 15,
+  "width": 407,
+  "height": 158
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p15_7.png",
+  "page": 15,
+  "width": 473,
+  "height": 473
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p15_8.png",
+  "page": 15,
+  "width": 473,
+  "height": 473
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p15_9.png",
+  "page": 15,
+  "width": 473,
+  "height": 473
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p15_10.png",
+  "page": 15,
+  "width": 679,
+  "height": 362
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p15_11.png",
+  "page": 15,
+  "width": 679,
+  "height": 362
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p15_12.png",
+  "page": 15,
+  "width": 407,
+  "height": 158
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p15_13.png",
+  "page": 15,
+  "width": 407,
+  "height": 158
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p15_16.png",
+  "page": 15,
+  "width": 473,
+  "height": 473
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p15_17.png",
+  "page": 15,
+  "width": 473,
+  "height": 473
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p15_18.png",
+  "page": 15,
+  "width": 473,
+  "height": 473
+ },
+ {
+  "kind": "page_render",
+  "file": "page_16.png",
+  "page": 16,
+  "captions": [
+   "Figure S5. Modulator microwave transmission and modulation e\ufb03ciency. (a) Measured co-planar waveguide mi-"
+  ]
+ }
+]

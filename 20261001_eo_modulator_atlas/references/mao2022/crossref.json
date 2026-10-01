@@ -1,0 +1,678 @@
+{
+ "status": "ok",
+ "message-type": "work",
+ "message-version": "1.0.0",
+ "message": {
+  "indexed": {
+   "date-parts": [
+    [
+     2026,
+     7,
+     22
+    ]
+   ],
+   "date-time": "2026-07-22T17:31:07Z",
+   "timestamp": 1784741467995,
+   "version": "3.55.0"
+  },
+  "reference-count": 30,
+  "publisher": "AIP Publishing",
+  "issue": "12",
+  "license": [
+   {
+    "start": {
+     "date-parts": [
+      [
+       2022,
+       12,
+       2
+      ]
+     ],
+     "date-time": "2022-12-02T00:00:00Z",
+     "timestamp": 1669939200000
+    },
+    "content-version": "vor",
+    "delay-in-days": 1,
+    "URL": "https://creativecommons.org/licenses/by/4.0/"
+   },
+   {
+    "start": {
+     "date-parts": [
+      [
+       2022,
+       12,
+       2
+      ]
+     ],
+     "date-time": "2022-12-02T00:00:00Z",
+     "timestamp": 1669939200000
+    },
+    "content-version": "tdm",
+    "delay-in-days": 1,
+    "URL": "https://creativecommons.org/licenses/by/4.0/"
+   }
+  ],
+  "funder": [
+   {
+    "DOI": "10.13039/501100001691",
+    "name": "Japan Society for the Promotion of Science",
+    "doi-asserted-by": "publisher",
+    "award": [
+     "JP19H0077"
+    ],
+    "award-info": [
+     {
+      "award-number": [
+       "JP19H0077"
+      ]
+     }
+    ],
+    "id": [
+     {
+      "id": "10.13039/501100001691",
+      "id-type": "DOI",
+      "asserted-by": "publisher"
+     }
+    ]
+   },
+   {
+    "DOI": "10.13039/501100009036",
+    "name": "Strategic International Collaborative Research Program",
+    "doi-asserted-by": "publisher",
+    "award": [
+     "JPMJSC1807"
+    ],
+    "award-info": [
+     {
+      "award-number": [
+       "JPMJSC1807"
+      ]
+     }
+    ],
+    "id": [
+     {
+      "id": "10.13039/501100009036",
+      "id-type": "DOI",
+      "asserted-by": "publisher"
+     }
+    ]
+   },
+   {
+    "DOI": "10.13039/501100020963",
+    "name": "Moonshot Research and Development Program",
+    "doi-asserted-by": "publisher",
+    "award": [
+     "JPMJMS2063"
+    ],
+    "award-info": [
+     {
+      "award-number": [
+       "JPMJMS2063"
+      ]
+     }
+    ],
+    "id": [
+     {
+      "id": "10.13039/501100020963",
+      "id-type": "DOI",
+      "asserted-by": "publisher"
+     }
+    ]
+   },
+   {
+    "DOI": "10.13039/501100012389",
+    "name": "National Institute of Information and Communications Technology",
+    "doi-asserted-by": "publisher",
+    "award": [
+     "02101"
+    ],
+    "award-info": [
+     {
+      "award-number": [
+       "02101"
+      ]
+     }
+    ],
+    "id": [
+     {
+      "id": "10.13039/501100012389",
+      "id-type": "DOI",
+      "asserted-by": "publisher"
+     }
+    ]
+   }
+  ],
+  "content-domain": {
+   "domain": [
+    "pubs.aip.org"
+   ],
+   "crossmark-restriction": true
+  },
+  "short-container-title": [],
+  "published-print": {
+   "date-parts": [
+    [
+     2022,
+     12,
+     1
+    ]
+   ]
+  },
+  "abstract": "<jats:p>Integrated lithium niobate (LN) electro-optic (EO) modulators are emerging for applications in next-generation optical fiber communication networks. To date, LN crystal waveguides have led the technology for high-speed modulators. On the other hand, on-chip LN modulators are expected to realize scalable signaling devices with mature complementary metal\u2013oxide\u2013semiconductor technology. In this study, a silicon-loaded LN modulator on the insulator substrate featuring a small footprint, a low driving voltage, and high-speed EO modulation is designed and fabricated. No etching or patterning of the LN is required. The measured halfwave-voltage length product is 1.9\u00a0V\u00a0cm with a static modulation extinction ratio of 17.9 dB. The fabricated LN modulator has a modulation bandwidth of 60\u00a0GHz and supports high-speed signaling at a data rate up to 200 Gbit/s.</jats:p>",
+  "DOI": "10.1063/5.0109251",
+  "type": "journal-article",
+  "created": {
+   "date-parts": [
+    [
+     2022,
+     11,
+     9
+    ]
+   ],
+   "date-time": "2022-11-09T02:04:24Z",
+   "timestamp": 1667959464000
+  },
+  "update-policy": "https://doi.org/10.1063/aip-crossmark-policy-page",
+  "source": "Crossref",
+  "is-referenced-by-count": 19,
+  "title": [
+   "Heterogeneous silicon-on-lithium niobate electro-optic modulator for 100-Gbaud modulation"
+  ],
+  "prefix": "10.1063",
+  "volume": "7",
+  "author": [
+   {
+    "ORCID": "https://orcid.org/0000-0003-0320-2268",
+    "authenticated-orcid": false,
+    "given": "Jiawei",
+    "family": "Mao",
+    "sequence": "first",
+    "affiliation": [
+     {
+      "name": "Interdisciplinary Graduate School of Engineering Sciences, Kyushu University 1 , Kasuga, Fukuoka 816-8580, Japan"
+     }
+    ],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "ORCID": "https://orcid.org/0000-0002-0443-9497",
+    "authenticated-orcid": false,
+    "given": "Hiromu",
+    "family": "Sato",
+    "sequence": "additional",
+    "affiliation": [
+     {
+      "name": "Institute for Materials Chemistry and Engineering, Kyushu University 2 , Kasuga, Fukuoka 816-8580, Japan"
+     }
+    ],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "ORCID": "https://orcid.org/0000-0002-0739-1556",
+    "authenticated-orcid": false,
+    "given": "Guo-Wei",
+    "family": "Lu",
+    "sequence": "additional",
+    "affiliation": [
+     {
+      "name": "Institute for Materials Chemistry and Engineering, Kyushu University 2 , Kasuga, Fukuoka 816-8580, Japan"
+     },
+     {
+      "name": "Division of Computer Engineering, The University of Aizu 3 , Fukushima 965-8580, Japan"
+     }
+    ],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "ORCID": "https://orcid.org/0000-0002-0434-9950",
+    "authenticated-orcid": false,
+    "given": "Shiyoshi",
+    "family": "Yokoyama",
+    "sequence": "additional",
+    "affiliation": [
+     {
+      "name": "Interdisciplinary Graduate School of Engineering Sciences, Kyushu University 1 , Kasuga, Fukuoka 816-8580, Japan"
+     },
+     {
+      "name": "Institute for Materials Chemistry and Engineering, Kyushu University 2 , Kasuga, Fukuoka 816-8580, Japan"
+     }
+    ],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   }
+  ],
+  "member": "317",
+  "published-online": {
+   "date-parts": [
+    [
+     2022,
+     12,
+     2
+    ]
+   ]
+  },
+  "reference": [
+   {
+    "key": "2023081005502757600_c1",
+    "doi-asserted-by": "publisher",
+    "first-page": "3911",
+    "DOI": "10.1038/s41467-020-17806-0",
+    "article-title": "High-performance coherent optical modulators based on thin-film lithium niobate platform",
+    "volume": "11",
+    "year": "2020",
+    "journal-title": "Nat. Commun."
+   },
+   {
+    "key": "2023081005502757600_c2",
+    "doi-asserted-by": "publisher",
+    "first-page": "4224",
+    "DOI": "10.1038/s41467-020-18005-7",
+    "article-title": "High-temperature-resistant silicon-polymer hybrid modulator operating at up to 200 Gbit s\u22121 for energy-efficient datacentres and harsh-environment applications",
+    "volume": "11",
+    "year": "2020",
+    "journal-title": "Nat. Commun."
+   },
+   {
+    "key": "2023081005502757600_c3",
+    "doi-asserted-by": "publisher",
+    "first-page": "101",
+    "DOI": "10.1038/s41586-018-0551-y",
+    "article-title": "Integrated lithium niobate electro-optic modulators operating at CMOS-compatible voltages",
+    "volume": "562",
+    "year": "2018",
+    "journal-title": "Nature"
+   },
+   {
+    "issue": "6",
+    "key": "2023081005502757600_c4",
+    "doi-asserted-by": "publisher",
+    "first-page": "1287",
+    "DOI": "10.1515/nanoph-2020-001",
+    "article-title": "Integrated lithium niobate photonics",
+    "volume": "9",
+    "year": "2018",
+    "journal-title": "Nanophotonics"
+   },
+   {
+    "key": "2023081005502757600_c5",
+    "doi-asserted-by": "publisher",
+    "first-page": "191",
+    "DOI": "10.1007/bf00614817",
+    "article-title": "Lithium niobate: Summary of physical properties and crystal structure",
+    "volume": "37",
+    "year": "2018",
+    "journal-title": "Appl. Phys. A: Solids Surf."
+   },
+   {
+    "issue": "2",
+    "key": "2023081005502757600_c6",
+    "doi-asserted-by": "publisher",
+    "first-page": "1547",
+    "DOI": "10.1364/oe.26.001547",
+    "article-title": "Nanophotonic lithium niobate electro-optic modulators",
+    "volume": "26",
+    "year": "2018",
+    "journal-title": "Opt. Express"
+   },
+   {
+    "key": "2023081005502757600_c7",
+    "doi-asserted-by": "publisher",
+    "first-page": "135",
+    "DOI": "10.1080/01468039608202265",
+    "article-title": "Simulation of refractive index profiles for titanium indiffused lithium niobate channel waveguides",
+    "volume": "15",
+    "year": "1996",
+    "journal-title": "Fiber Integr. Opt."
+   },
+   {
+    "issue": "5",
+    "key": "2023081005502757600_c8",
+    "doi-asserted-by": "publisher",
+    "first-page": "652",
+    "DOI": "10.1364/optica.415762",
+    "article-title": "Integrated lithium niobate electro-optic modulators: When performance meets scalability",
+    "volume": "8",
+    "year": "2021",
+    "journal-title": "Optica"
+   },
+   {
+    "key": "2023081005502757600_c9",
+    "doi-asserted-by": "publisher",
+    "first-page": "1700256",
+    "DOI": "10.1002/lpor.201700256",
+    "article-title": "Status and potential of lithium niobate on insulator (LNOI) for photonic integrated circuits",
+    "volume": "12",
+    "year": "2018",
+    "journal-title": "Laser Photonics Rev."
+   },
+   {
+    "issue": "2",
+    "key": "2023081005502757600_c10",
+    "doi-asserted-by": "publisher",
+    "first-page": "242",
+    "DOI": "10.1364/aop.411024",
+    "article-title": "Integrated photonics on thin-film lithium niobate",
+    "volume": "13",
+    "year": "2021",
+    "journal-title": "Adv. Opt. Photonics"
+   },
+   {
+    "issue": "4",
+    "key": "2023081005502757600_c11",
+    "doi-asserted-by": "publisher",
+    "first-page": "803",
+    "DOI": "10.1364/ol.42.000803",
+    "article-title": "Heterogeneous integration of lithium niobate and silicon nitride waveguides for wafer-scale photonic integrated circuits on silicon",
+    "volume": "42",
+    "year": "2017",
+    "journal-title": "Opt. Lett."
+   },
+   {
+    "issue": "11",
+    "key": "2023081005502757600_c12",
+    "doi-asserted-by": "publisher",
+    "first-page": "4018",
+    "DOI": "10.1364/ome.7.004018",
+    "article-title": "Amorphous silicon-lithium niobate thin film strip-loaded waveguides",
+    "volume": "7",
+    "year": "2017",
+    "journal-title": "Opt. Mater. Express"
+   },
+   {
+    "key": "2023081005502757600_c13",
+    "doi-asserted-by": "publisher",
+    "first-page": "40",
+    "DOI": "10.1016/j.optcom.2014.05.021",
+    "article-title": "Hybrid amorphous silicon (a-Si:H)\u2013LiNbO3 electro-optic modulator",
+    "volume": "330",
+    "year": "2014",
+    "journal-title": "Opt. Commun."
+   },
+   {
+    "issue": "4",
+    "key": "2023081005502757600_c14",
+    "doi-asserted-by": "publisher",
+    "first-page": "3400114",
+    "DOI": "10.1109/jstqe.2017.2779869",
+    "article-title": "Compact lithium niobate electrooptic modulators",
+    "volume": "24",
+    "year": "2018",
+    "journal-title": "IEEE J. Sel. Top. Quantum Electron."
+   },
+   {
+    "issue": "21",
+    "key": "2023081005502757600_c15",
+    "doi-asserted-by": "publisher",
+    "first-page": "25573",
+    "DOI": "10.1364/oe.21.025573",
+    "article-title": "Heterogeneous lithium niobate photonics on silicon substrates",
+    "volume": "21",
+    "year": "2013",
+    "journal-title": "Opt. Express"
+   },
+   {
+    "issue": "17",
+    "key": "2023081005502757600_c16",
+    "doi-asserted-by": "publisher",
+    "first-page": "22746",
+    "DOI": "10.1364/oe.23.022746",
+    "article-title": "Heterogeneous microring and Mach-Zehnder modulators based on lithium niobate and chalcogenide glasses on silicon",
+    "volume": "23",
+    "year": "2015",
+    "journal-title": "Opt. Express"
+   },
+   {
+    "issue": "5",
+    "key": "2023081005502757600_c17",
+    "doi-asserted-by": "publisher",
+    "first-page": "1112",
+    "DOI": "10.1364/ol.381892",
+    "article-title": "Subvolt electro-optical modulator on thin-film lithium niobate and silicon nitride hybrid platform",
+    "volume": "45",
+    "year": "2020",
+    "journal-title": "Opt. Lett."
+   },
+   {
+    "issue": "11",
+    "key": "2023081005502757600_c18",
+    "doi-asserted-by": "publisher",
+    "first-page": "8696",
+    "DOI": "10.1143/jjap.45.8696",
+    "article-title": "Velocity-matching conditions for ultrahigh-speed optical LiNbO3 modulators with traveling-wave electrode",
+    "volume": "45",
+    "year": "2006",
+    "journal-title": "Jpn. J. Appl. Phys."
+   },
+   {
+    "issue": "21",
+    "key": "2023081005502757600_c19",
+    "doi-asserted-by": "publisher",
+    "first-page": "23623",
+    "DOI": "10.1364/oe.20.023623",
+    "article-title": "Full spectrum millimeter-wave modulation",
+    "volume": "20",
+    "year": "2012",
+    "journal-title": "Opt. Express"
+   },
+   {
+    "issue": "4",
+    "key": "2023081005502757600_c20",
+    "doi-asserted-by": "publisher",
+    "first-page": "287",
+    "DOI": "10.1109/jqe.1977.1069310",
+    "article-title": "Broad-band traveling-wave modulator using a LiNbO3 optical waveguide",
+    "volume": "13",
+    "year": "1977",
+    "journal-title": "IEEE J. Quantum Electron."
+   },
+   {
+    "issue": "2",
+    "key": "2023081005502757600_c21",
+    "doi-asserted-by": "publisher",
+    "first-page": "201",
+    "DOI": "10.1364/prj.7.000201",
+    "article-title": "Coupling strategies for silicon photonics integrated chips",
+    "volume": "7",
+    "year": "2019",
+    "journal-title": "Photonics Res."
+   },
+   {
+    "issue": "1",
+    "key": "2023081005502757600_c22",
+    "doi-asserted-by": "publisher",
+    "first-page": "69",
+    "DOI": "10.1109/2944.826874",
+    "article-title": "A review of lithium niobate modulators for fiber-optic communications systems",
+    "volume": "6",
+    "year": "2019",
+    "journal-title": "IEEE J. Sel. Top. Quantum Electron."
+   },
+   {
+    "issue": "23",
+    "key": "2023081005502757600_c23",
+    "doi-asserted-by": "publisher",
+    "first-page": "5986",
+    "DOI": "10.1364/ol.446222",
+    "article-title": "High-speed electro-optic modulator based on silicon nitride loaded lithium niobate on an insulator platform",
+    "volume": "46",
+    "year": "2021",
+    "journal-title": "Opt. Lett."
+   },
+   {
+    "issue": "15",
+    "key": "2023081005502757600_c24",
+    "doi-asserted-by": "publisher",
+    "first-page": "2449",
+    "DOI": "10.1109/jlt.2008.927160",
+    "article-title": "Impact of nonlinear transfer function and imperfect splitting ratio of MZM on optical up-conversion employing double sideband with carrier suppression modulation",
+    "volume": "26",
+    "year": "2008",
+    "journal-title": "J. Lightwave Technol."
+   },
+   {
+    "issue": "10",
+    "key": "2023081005502757600_c25",
+    "doi-asserted-by": "publisher",
+    "first-page": "1060",
+    "DOI": "10.1364/optica.3.001060",
+    "article-title": "Monolithic 56 Gb/s silicon photonic pulse-amplitude modulation transmitter",
+    "volume": "3",
+    "year": "2016",
+    "journal-title": "Optica"
+   },
+   {
+    "issue": "18",
+    "key": "2023081005502757600_c26",
+    "doi-asserted-by": "publisher",
+    "first-page": "23728",
+    "DOI": "10.1364/oe.26.023728",
+    "article-title": "Bonded thin film lithium niobate modulator on a silicon photonics platform exceeding 100\u00a0GHz 3-dB electrical modulation bandwidth",
+    "volume": "26",
+    "year": "2018",
+    "journal-title": "Opt. Express"
+   },
+   {
+    "key": "2023081005502757600_c27",
+    "doi-asserted-by": "publisher",
+    "first-page": "359",
+    "DOI": "10.1038/s41566-019-0378-6",
+    "article-title": "High-performance hybrid silicon and lithium niobate Mach\u2013Zehnder modulators for 100 Gbit s\u22121 and beyond",
+    "volume": "13",
+    "year": "2019",
+    "journal-title": "Nat. Photonics"
+   },
+   {
+    "issue": "2",
+    "key": "2023081005502757600_c28",
+    "doi-asserted-by": "publisher",
+    "first-page": "026103",
+    "DOI": "10.1063/5.0077232",
+    "article-title": "High performance thin-film lithium niobate modulator on a silicon substrate using periodic capacitively loaded traveling-wave electrode",
+    "volume": "7",
+    "year": "2022",
+    "journal-title": "APL Photonics"
+   },
+   {
+    "key": "2023081005502757600_c29"
+   },
+   {
+    "key": "2023081005502757600_c30"
+   }
+  ],
+  "container-title": [
+   "APL Photonics"
+  ],
+  "original-title": [],
+  "language": "en",
+  "link": [
+   {
+    "URL": "https://pubs.aip.org/aip/app/article-pdf/doi/10.1063/5.0109251/16493252/126103_1_online.pdf",
+    "content-type": "application/pdf",
+    "content-version": "vor",
+    "intended-application": "text-mining"
+   },
+   {
+    "URL": "https://pubs.aip.org/aip/app/article-pdf/doi/10.1063/5.0109251/16493252/126103_1_online.pdf",
+    "content-type": "application/pdf",
+    "content-version": "vor",
+    "intended-application": "syndication"
+   },
+   {
+    "URL": "https://pubs.aip.org/aip/app/article-pdf/doi/10.1063/5.0109251/16493252/126103_1_online.pdf",
+    "content-type": "unspecified",
+    "content-version": "vor",
+    "intended-application": "similarity-checking"
+   }
+  ],
+  "deposited": {
+   "date-parts": [
+    [
+     2025,
+     5,
+     28
+    ]
+   ],
+   "date-time": "2025-05-28T16:30:54Z",
+   "timestamp": 1748449854000
+  },
+  "score": 1,
+  "resource": {
+   "primary": {
+    "URL": "https://pubs.aip.org/app/article/7/12/126103/2835229/Heterogeneous-silicon-on-lithium-niobate-electro"
+   }
+  },
+  "subtitle": [],
+  "short-title": [],
+  "issued": {
+   "date-parts": [
+    [
+     2022,
+     12,
+     1
+    ]
+   ]
+  },
+  "references-count": 30,
+  "journal-issue": {
+   "issue": "12",
+   "published-print": {
+    "date-parts": [
+     [
+      2022,
+      12,
+      1
+     ]
+    ]
+   }
+  },
+  "URL": "https://doi.org/10.1063/5.0109251",
+  "relation": {},
+  "ISSN": [
+   "2378-0967"
+  ],
+  "issn-type": [
+   {
+    "value": "2378-0967",
+    "type": "electronic"
+   }
+  ],
+  "subject": [],
+  "published-other": {
+   "date-parts": [
+    [
+     2022,
+     12
+    ]
+   ]
+  },
+  "published": {
+   "date-parts": [
+    [
+     2022,
+     12,
+     1
+    ]
+   ]
+  },
+  "article-number": "126103"
+ }
+}

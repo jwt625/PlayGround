@@ -1,0 +1,196 @@
+paper_id: weigel2018
+verified_on: '2026-10-01'
+source_files:
+- references/weigel2018/text.md
+- references/weigel2018/crossref.json
+- references/weigel2018/figures/page_17.png
+- references/weigel2018/figures/page_18.png
+- references/weigel2018/figures/page_19.png
+entries:
+- device_id: weigel2018-a
+  field: wavelength_nm
+  value: 1560
+  unit: nm
+  basis: measured
+  locator: p.9, Sec. text; p.18, Fig. 3a caption
+  note: Sideband method and DC transmission at 1560 nm
+- device_id: weigel2018-a
+  field: length_mm
+  value: 5
+  unit: mm
+  basis: measured
+  locator: p.7, Sec. text; Fig. 1d
+  note: L = 0.5 cm; 5 mm hybrid region in Fig. 1d
+- device_id: weigel2018-a
+  field: vpil_dc_vcm
+  value: 6.7
+  unit: V*cm
+  basis: measured
+  locator: p.7, Sec. text; p.18, Fig. 3a caption
+  note: '''VL = 6.7 V.cm at DC for an L = 0.5 cm device''; fitted'
+- device_id: weigel2018-a
+  field: bw3db_ghz
+  value: 106
+  unit: GHz
+  basis: measured
+  locator: p.9-10, Sec. text; Fig. 4
+  note: '''well beyond 106 GHz, the limit of our measurement capabilities'''
+- device_id: weigel2018-a
+  field: bw_measured_to_ghz
+  value: 106
+  unit: GHz
+  basis: measured
+  locator: p.10, Sec. text; Fig. 4
+  note: Upper limit of sideband measurement with multipliers
+- device_id: weigel2018-a
+  field: bw3db_reference
+  value: unspecified
+  unit: ''
+  basis: measured
+  locator: p.9, Sec. text; Fig. 4
+  note: Reference frequency of the 0 dB level not stated
+- device_id: weigel2018-a
+  field: il_onchip_db
+  value: 7.6
+  unit: dB
+  basis: derived
+  locator: p.6, Sec. text
+  note: '''actual insertion loss was around -7.6 dB'' = 13.6 minus about 3 dB per edge twice'
+- device_id: weigel2018-a
+  field: il_fiber_to_fiber_db
+  value: 13.6
+  unit: dB
+  basis: measured
+  locator: p.6, Sec. text
+  note: Lightly polished, unpackaged chip edges
+- device_id: weigel2018-a
+  field: prop_loss_db_per_cm
+  value: 0.6
+  unit: dB/cm
+  basis: measured
+  locator: p.6, Sec. text
+  note: Hybrid LN-Si region, from test structures; Si-only about 1.3 dB/cm
+- device_id: weigel2018-a
+  field: extinction_ratio_db
+  value: 20
+  unit: dB
+  basis: measured
+  locator: p.7, Sec. text; Fig. 3a
+  note: '''high extinction ratio (> 20 dB)'' at low speed'
+- device_id: weigel2018-a
+  field: rf_loss_db_per_cm
+  value: 7.7
+  unit: dB/cm
+  basis: derived
+  locator: p.9, Sec. text; Fig. 3c
+  note: alpha_m(100 GHz) = 7.7 dB/cm from measured S-parameters
+- device_id: weigel2018-a
+  field: rf_loss_freq_ghz
+  value: 100
+  unit: GHz
+  basis: derived
+  locator: p.9, Sec. text
+  note: Frequency at which alpha_m = 7.7 dB/cm is quoted
+- device_id: weigel2018-a
+  field: n_rf
+  value: 2.25
+  unit: '1'
+  basis: derived
+  locator: p.7, Sec. text; Fig. 3c
+  note: Fitted microwave index n_m = 2.25 from S-parameters
+- device_id: weigel2018-a
+  field: electrode_thickness_um
+  value: 1.6
+  unit: um
+  basis: measured
+  locator: p.4, Sec. text
+  note: Total aluminum electrode thickness 1.6 um
+- device_id: weigel2018-a
+  field: electrode_metal
+  value: aluminum
+  unit: ''
+  basis: measured
+  locator: p.4, Sec. text
+  note: Aluminum coplanar waveguide electrodes
+- device_id: weigel2018-a
+  field: buffer_oxide_um
+  value: 0.05
+  unit: um
+  basis: measured
+  locator: p.17, Fig. 1 caption
+  note: Aluminum electrodes on a 50 nm SiO2 layer over the LN film
+- device_id: weigel2018-a
+  field: substrate
+  value: high-resistivity silicon handle (about 6e3 ohm cm measured after HF); SOI with 3 um oxide, Si thinned to 150 nm
+  unit: ''
+  basis: measured
+  locator: p.3-4, Sec. text
+  note: Resistivity about 6x10^3 ohm cm measured; SOI 220 nm Si thinned to 150 nm, 3 um oxide
+- device_id: weigel2018-a
+  field: crystal_cut
+  value: x-cut
+  unit: ''
+  basis: measured
+  locator: p.3, Sec. text
+  note: Commercially procured x-cut thin-film LN on insulator
+- device_id: weigel2018-a
+  field: epitaxy_or_stack
+  value: unpatterned x-cut LN film (thickness not stated) bonded over Si rib waveguides (150 nm thick; 320 nm wide in the phase-shifter, 650 nm elsewhere) in planarized SOI (3 um oxide); 50 nm SiO2 between
+    LN and Al electrodes
+  unit: ''
+  basis: measured
+  locator: p.3, p.5, p.17-18, Fig. 1b, Fig. 2a
+  note: Si width 650 nm in Modes A and B, 320 nm in Mode C
+- device_id: weigel2018-a
+  field: drive
+  value: push_pull
+  unit: ''
+  basis: derived
+  locator: p.17, Fig. 1 caption
+  note: Test electrodes for push-pull; whether Fig. 3a was taken push-pull is not stated
+- device_id: weigel2018-a
+  field: vpi_convention
+  value: mzm_push_pull
+  unit: ''
+  basis: derived
+  locator: p.7, Sec. text; p.17, Fig. 1 caption
+  note: Authors do not define; MZM-level VpiL from DC fit; push-pull electrodes
+- device_id: weigel2018-a
+  field: electrode_type
+  value: tw_cpw
+  unit: ''
+  basis: measured
+  locator: p.4, Sec. text; p.17, Fig. 1d
+  note: Coplanar waveguide electrodes, GSG probes for launch and termination
+derived: []
+context_values:
+- item: z_c_range
+  value: 53.4 to 55.1
+  unit: ohm
+  locator: p.7, Sec. text; Fig. 3c
+  note: Fitted first-order polynomial, dc to 110 GHz
+- item: calculated_intrinsic_loss
+  value: 2.9
+  unit: dB
+  locator: p.6, Sec. text
+  note: Excluding edge couplers; calculated from measured propagation loss and 0.1 dB per transition
+- item: rf_drive_peak_to_peak_for_eo_measurement
+  value: about 1
+  unit: V
+  locator: p.9, Sec. text
+  note: Sideband method at quadrature
+- item: vpi_implied_by_vpil_and_length
+  value: 13.4
+  unit: V
+  locator: arithmetic
+  note: 6.7 V*cm / 0.5 cm; not entered, Vpi not stated
+- item: electrode_length_bandwidth_product
+  value: 428
+  unit: GHz*cm
+  locator: p.9, Sec. text
+  note: LB = c/delta_n with delta_n = 0.07, as stated
+- item: license_and_rights_basis
+  value: Crossref lists OA_License_v1#VOR-OA and the OPG TDM policy for the version of record
+  unit: ''
+  locator: references/weigel2018/crossref.json
+  note: Cached file is an author manuscript with no rights notice; prefetch metadata says Optica-OA-License-v2, Crossref v1 used

@@ -20,7 +20,16 @@ import yaml
 
 ROOT = Path(__file__).resolve().parent.parent
 ORG_COLUMNS = ["org_name", "org_type", "country", "region", "parent_org", "notes"]
-ORG_TYPES = {"university", "company", "national_lab", "research_institute", "foundry", "facility", "consortium", "other"}
+ORG_TYPES = {
+    "university",
+    "company",
+    "national_lab",
+    "research_institute",
+    "foundry",
+    "facility",
+    "consortium",
+    "other",
+}
 REGIONS = {"north_america", "europe", "east_asia", "south_asia", "southeast_asia", "oceania", "middle_east", "other"}
 
 

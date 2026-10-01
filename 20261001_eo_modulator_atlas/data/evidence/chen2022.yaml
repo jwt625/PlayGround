@@ -40,7 +40,7 @@ entries:
   field: il_onchip_db
   value: 0.2
   unit: dB
-  basis: measured
+  basis: extracted_from_figure
   locator: Fig. 4(a) inset; p.7 Sec. III
   note: inset label -0.2 dB; text deduces ~0.2 dB for the 10 mm device
 - device_id: chen2022-a
@@ -50,20 +50,6 @@ entries:
   basis: measured
   locator: p.7 Sec. III; Fig. 4(a) inset
   note: reported as lower bound (>)
-- device_id: chen2022-a
-  field: z0_ohm
-  value: 50.5
-  unit: ohm
-  basis: extracted_from_figure
-  locator: Fig. 5(d)
-  note: approx. 50 ohm at low frequency rising to ~52 ohm at 67 GHz; band-average reading
-- device_id: chen2022-a
-  field: n_rf
-  value: 2.35
-  unit: '1'
-  basis: extracted_from_figure
-  locator: Fig. 5(f); p.7 text
-  note: flat 10-67 GHz; text states mismatch ~0.15 versus ng
 - device_id: chen2022-a
   field: ng_opt
   value: 2.2
@@ -184,7 +170,7 @@ entries:
   field: il_onchip_db
   value: 0.2
   unit: dB
-  basis: measured
+  basis: extracted_from_figure
   locator: Fig. 4(b) inset; p.7 Sec. III
   note: inset label -0.2 dB; text deduces ~0.2 dB for the 10 mm device
 - device_id: chen2022-b
@@ -194,20 +180,6 @@ entries:
   basis: measured
   locator: p.7 Sec. III; Fig. 4(b) inset
   note: reported as lower bound (>)
-- device_id: chen2022-b
-  field: z0_ohm
-  value: 50.5
-  unit: ohm
-  basis: extracted_from_figure
-  locator: Fig. 5(d)
-  note: approx. 50 ohm at low frequency rising to ~52 ohm at 67 GHz; band-average reading
-- device_id: chen2022-b
-  field: n_rf
-  value: 2.35
-  unit: '1'
-  basis: extracted_from_figure
-  locator: Fig. 5(f); p.7 text
-  note: flat 10-67 GHz; text states mismatch ~0.15 versus ng
 - device_id: chen2022-b
   field: ng_opt
   value: 2.2
@@ -328,7 +300,7 @@ entries:
   field: il_onchip_db
   value: 0.2
   unit: dB
-  basis: measured
+  basis: derived
   locator: Fig. 4(c) inset; p.7 Sec. III
   note: inset label -0.2 dB; text deduces ~0.2 dB for the 10 mm device
 - device_id: chen2022-c
@@ -468,20 +440,6 @@ entries:
   basis: measured
   locator: p.6-7 Fig. 6
   note: OOK up to 100 Gb/s, PAM-4 up to 112 Gb/s
-- device_id: chen2022-a
-  field: rf_loss_freq_ghz
-  value: 67
-  unit: GHz
-  basis: derived
-  locator: p.7 Sec. III; Fig. 5(e)
-  note: evaluation frequency chosen at the measurement limit for the fitted alpha0 sqrt(f) law
-- device_id: chen2022-b
-  field: rf_loss_freq_ghz
-  value: 67
-  unit: GHz
-  basis: derived
-  locator: p.7 Sec. III; Fig. 5(e)
-  note: evaluation frequency chosen at the measurement limit for the fitted alpha0 sqrt(f) law
 - device_id: chen2022-c
   field: rf_loss_freq_ghz
   value: 67
@@ -489,21 +447,105 @@ entries:
   basis: derived
   locator: p.7 Sec. III; Fig. 5(e)
   note: evaluation frequency chosen at the measurement limit for the fitted alpha0 sqrt(f) law
-derived:
 - device_id: chen2022-a
-  field: rf_loss_db_per_cm
-  value: 2.947
-  formula: alpha_m(f) = alpha0*sqrt(f) with alpha0 = 0.36 dB/cm/GHz^0.5 (fit, Fig. 5(e), p.7), evaluated at f = 67 GHz
-  inputs:
-  - alpha0=0.36 dB/cm/GHz^0.5
-  - rf_loss_freq_ghz=67
+  field: bw3db_ghz
+  value: 67
+  unit: GHz
+  basis: measured
+  locator: p.7 Sec. III
+  note: 'lower bound (qualifier gt): 3 dB point not reached within the network-analyzer range of 67 GHz'
+- device_id: chen2022-a
+  field: drive
+  value: push_pull
+  unit: ''
+  basis: derived
+  locator: Fig. 1(c,d)
+  note: not stated by the authors; inferred from one waveguide in each gap of the single GSG electrode
+- device_id: chen2022-a
+  field: vpi_convention
+  value: mzm_push_pull
+  unit: ''
+  basis: derived
+  locator: Fig. 1(c,d); Fig. 4
+  note: not stated by the authors; Vpi read as the full-transmission swing of the MZM
+- device_id: chen2022-a
+  field: er_type
+  value: static
+  unit: ''
+  basis: measured
+  locator: p.7 Sec. III
+  note: static voltage sweep
 - device_id: chen2022-b
-  field: rf_loss_db_per_cm
-  value: 2.947
-  formula: alpha_m(f) = alpha0*sqrt(f) with alpha0 = 0.36 dB/cm/GHz^0.5 (fit, Fig. 5(e), p.7), evaluated at f = 67 GHz
-  inputs:
-  - alpha0=0.36 dB/cm/GHz^0.5
-  - rf_loss_freq_ghz=67
+  field: bw3db_ghz
+  value: 67
+  unit: GHz
+  basis: measured
+  locator: p.7 Sec. III
+  note: 'lower bound (qualifier gt): 3 dB point not reached within the network-analyzer range of 67 GHz'
+- device_id: chen2022-b
+  field: drive
+  value: push_pull
+  unit: ''
+  basis: derived
+  locator: Fig. 1(c,d)
+  note: not stated by the authors; inferred from one waveguide in each gap of the single GSG electrode
+- device_id: chen2022-b
+  field: vpi_convention
+  value: mzm_push_pull
+  unit: ''
+  basis: derived
+  locator: Fig. 1(c,d); Fig. 4
+  note: not stated by the authors; Vpi read as the full-transmission swing of the MZM
+- device_id: chen2022-b
+  field: er_type
+  value: static
+  unit: ''
+  basis: measured
+  locator: p.7 Sec. III
+  note: static voltage sweep
+- device_id: chen2022-c
+  field: bw3db_ghz
+  value: 67
+  unit: GHz
+  basis: measured
+  locator: p.7 Sec. III
+  note: 'lower bound (qualifier gt): 3 dB point not reached within the network-analyzer range of 67 GHz'
+- device_id: chen2022-c
+  field: drive
+  value: push_pull
+  unit: ''
+  basis: derived
+  locator: Fig. 1(c,d)
+  note: not stated by the authors; inferred from one waveguide in each gap of the single GSG electrode
+- device_id: chen2022-c
+  field: vpi_convention
+  value: mzm_push_pull
+  unit: ''
+  basis: derived
+  locator: Fig. 1(c,d); Fig. 4
+  note: not stated by the authors; Vpi read as the full-transmission swing of the MZM
+- device_id: chen2022-c
+  field: er_type
+  value: static
+  unit: ''
+  basis: measured
+  locator: p.7 Sec. III
+  note: static voltage sweep
+- device_id: chen2022-c
+  field: eo_rolloff_db
+  value: 1.4
+  unit: dB
+  basis: measured
+  locator: Abstract; p.7; Table I
+  note: roll-off at 67 GHz for the 10 mm device; reference frequency not stated in the paper; 0.76 dB at 50 GHz in notes
+- device_id: chen2022-c
+  field: eo_rolloff_freq_ghz
+  value: 67
+  unit: GHz
+  basis: measured
+  locator: Abstract; p.7; Table I
+  note: ''
+derived:
 - device_id: chen2022-c
   field: rf_loss_db_per_cm
   value: 2.947

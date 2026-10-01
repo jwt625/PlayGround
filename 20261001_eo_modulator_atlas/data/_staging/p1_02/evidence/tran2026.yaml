@@ -1,0 +1,167 @@
+paper_id: tran2026
+verified_on: '2026-10-01'
+source_files:
+- references/tran2026/text.md
+- references/tran2026/crossref.json
+- references/tran2026/figures/page_02.png
+- references/tran2026/figures/page_03.png
+entries:
+- device_id: tran2026-a
+  field: wavelength_nm
+  value: 1310
+  unit: nm
+  basis: measured
+  locator: p.2, Sec. 3 (system setup)
+  note: 1310 nm carrier in the system measurement; EO chip test wavelength not stated
+- device_id: tran2026-a
+  field: vpi_dc_v
+  value: 3.1
+  unit: V
+  basis: measured
+  locator: p.2, Sec. 3; p.3, Conclusion; Fig. 1 center
+  note: Static transfer at 5 V bias; Fig. 1 center label reads 3.4 V, text and conclusion 3.1 V
+- device_id: tran2026-a
+  field: vpil_dc_vcm
+  value: 0.62
+  unit: V*cm
+  basis: derived
+  locator: p.1, Sec. 1
+  note: Product stated without length or formula; method not given
+- device_id: tran2026-a
+  field: bias_for_vpi_v
+  value: 5
+  unit: V
+  basis: measured
+  locator: p.2, Sec. 3; Fig. 1 center
+  note: Bias polarity not stated
+- device_id: tran2026-a
+  field: bw3db_ghz
+  value: 76
+  unit: GHz
+  basis: author_estimate
+  locator: p.2, Sec. 3; Fig. 1 left
+  note: Estimated after normalizing at 10 GHz beyond the 85 vs 50 ohm mismatch dip
+- device_id: tran2026-a
+  field: bw3db_reference
+  value: 10ghz
+  unit: ''
+  basis: author_estimate
+  locator: p.2, Sec. 3; Fig. 1 left
+  note: Measured trace normalized at 10 GHz
+- device_id: tran2026-a
+  field: extinction_ratio_db
+  value: 18
+  unit: dB
+  basis: measured
+  locator: p.2, Sec. 3; Fig. 1 center
+  note: DC ER at 5 V bias
+- device_id: tran2026-a
+  field: optical_input_power_dbm
+  value: 15
+  unit: dBm
+  basis: measured
+  locator: p.2, Sec. 3 (system)
+  note: Input power of the optical carrier; fiber or chip plane not stated
+- device_id: tran2026-a
+  field: epitaxy_or_stack
+  value: p-i-n heterostructure on InP (layer details not given)
+  unit: ''
+  basis: measured
+  locator: p.1, Sec. 2
+  note: Only 'p-i-n heterostructure' is stated
+- device_id: tran2026-a
+  field: max_baud_gbd
+  value: 180
+  unit: GBd
+  basis: measured
+  locator: p.3, Sec. 3 text, Fig. 3; Conclusion
+  note: BER below 20% HD-FEC threshold at 180 GBd, back-to-back
+- device_id: tran2026-a
+  field: modulation_format
+  value: PAM4, 150-200 GBd measured; BER below 20% HD-FEC (1.4e-2) at 180 GBd, 0.4 Vppd driver input
+  unit: ''
+  basis: measured
+  locator: p.3, Fig. 3 left and text
+  note: 200 GBd curve in Fig. 3 left stays above the threshold
+- device_id: tran2026-a
+  field: max_line_rate_gbps
+  value: 360
+  unit: Gb/s
+  basis: derived
+  locator: p.1, Tab. 1
+  note: Table lists 360 GBps for this work; equals 2 bits x 180 GBd
+- device_id: tran2026-a
+  field: energy_per_bit_fj
+  value: 1450
+  unit: fJ/bit
+  basis: author_estimate
+  locator: p.3, Sec. 3 text and Conclusion
+  note: 1.45 pJ/bit; driver, MZM and RF signal only; DSP, laser and TEC excluded
+- device_id: tran2026-a
+  field: drive
+  value: differential
+  unit: ''
+  basis: measured
+  locator: p.1, Sec. 2; p.1, Sec. 1
+  note: TWE and terminations optimized for differential operation; arm topology not stated
+- device_id: tran2026-a
+  field: vpi_convention
+  value: unspecified
+  unit: ''
+  basis: derived
+  locator: p.2, Sec. 3
+  note: Authors do not define whether Vpi is a differential or per-arm voltage
+- device_id: tran2026-a
+  field: driver
+  value: MACOM 20 dB-gain linear differential EML driver (224 GBd class), co-packaged on ceramic
+  unit: ''
+  basis: measured
+  locator: p.1, Sec. 2; p.2 Fig. 1 right
+  note: Driver chip simulated S21 shown; 85 ohm differential output impedance
+derived: []
+context_values:
+- item: vpi_label_in_fig1_center
+  value: 3.4
+  unit: V
+  locator: p.2, Fig. 1 center
+  note: Inconsistent with 3.1 V in text and conclusion
+- item: implied_length_from_vpil_over_vpi
+  value: 2.0
+  unit: mm
+  locator: arithmetic
+  note: 0.62 V*cm / 3.1 V; not entered (length not reported); 3.4 V would give 1.8 mm
+- item: engine_power_consumption
+  value: 525
+  unit: mW
+  locator: p.3, Sec. 3
+  note: Driver, MZM and RF signal; excludes DSP, external laser, TEC
+- item: driver_max_power_and_output
+  value: 0.42 W max; > 2 Vppd output; 3.5 V DC bias
+  unit: ''
+  locator: p.2, Fig. 1 right
+  note: Annotation on simulated driver S21 plot
+- item: extra_bandwidth_reduction_in_setup
+  value: about 3 dB at 80 GHz
+  unit: ''
+  locator: p.3, Sec. 3
+  note: RF loss in probe and cable assembly; system, not device
+- item: mzm_termination
+  value: 85
+  unit: ohm
+  locator: p.1, Sec. 2
+  note: On-chip monolithic termination matched to the 85 ohm differential driver output; not a transmission-line Z0
+- item: dsp
+  value: RRC 1% roll-off both ends, 2048-tap FFE at receiver, DAC 260 GSa/s 80 GHz analog BW, 100 GHz PD
+  unit: ''
+  locator: p.2, Sec. 3
+  note: Setup description
+- item: measurement_temperature
+  value: 40
+  unit: degC
+  locator: p.2, Sec. 3
+  note: System measurement under TEC control
+- item: license_and_rights_basis
+  value: 'paper footer: (c) 2026 Optica Publishing Group; Crossref lists no license'
+  unit: ''
+  locator: p.1-3 footer
+  note: publisher-copyright, restricted_local_only

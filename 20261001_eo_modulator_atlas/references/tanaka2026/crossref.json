@@ -1,0 +1,389 @@
+{
+ "status": "ok",
+ "message-type": "work",
+ "message-version": "1.0.0",
+ "message": {
+  "indexed": {
+   "date-parts": [
+    [
+     2026,
+     8,
+     17
+    ]
+   ],
+   "date-time": "2026-08-17T18:25:29Z",
+   "timestamp": 1786991129019,
+   "version": "build-2736575974"
+  },
+  "publisher-location": "Washington, D.C.",
+  "reference-count": 9,
+  "publisher": "Optica Publishing Group",
+  "content-domain": {
+   "domain": [],
+   "crossmark-restriction": false
+  },
+  "short-container-title": [],
+  "published-print": {
+   "date-parts": [
+    [
+     2026
+    ]
+   ]
+  },
+  "abstract": "<jats:p>We fabricated IQ modulators consisting of two segments using InP/Si chip-on-wafer bonding. Electrical/optical 3-dB bandwidth is approximately 60 GHz (V\u03c0: 5.4 V). The symbol rate up to 64 GBaud is demonstrated in 16QAM operation using optical DAC.</jats:p>",
+  "DOI": "10.1364/ofc.2026.m4d.2",
+  "type": "proceedings-article",
+  "created": {
+   "date-parts": [
+    [
+     2026,
+     6,
+     2
+    ]
+   ],
+   "date-time": "2026-06-02T19:26:53Z",
+   "timestamp": 1780428413000
+  },
+  "page": "M4D.2",
+  "source": "Crossref",
+  "is-referenced-by-count": 0,
+  "title": [
+   "IQ Modulators with Two Segments using InP/SOI Chip-on-Wafer Bonding Process for Optical DAC"
+  ],
+  "prefix": "10.1364",
+  "author": [
+   {
+    "given": "Hajime",
+    "family": "Tanaka",
+    "sequence": "first",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Naotaka",
+    "family": "Kasuya",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Taichi",
+    "family": "Misawa",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Yohei",
+    "family": "Sobu",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Shuntaro",
+    "family": "Maeda",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Kento",
+    "family": "Komatsu",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Naoko",
+    "family": "Inoue",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Takehiko",
+    "family": "Kikuchi",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Takuya",
+    "family": "Mitarai",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Shun",
+    "family": "Kimura",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Naoki",
+    "family": "Fujiwara",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Nobuhiko",
+    "family": "Nishiyama",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Takuo",
+    "family": "Tanemura",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Shinsuke",
+    "family": "Tanaka",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Hideki",
+    "family": "Yagi",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   }
+  ],
+  "member": "285",
+  "reference": [
+   {
+    "key": "OFC-2026-M4D.2-R1",
+    "first-page": "Tu2D.7",
+    "type": "journal-article",
+    "author": "Ogiso",
+    "year": "2024",
+    "journal-title": "Proc. OFC2024"
+   },
+   {
+    "key": "OFC-2026-M4D.2-R2",
+    "doi-asserted-by": "publisher",
+    "first-page": "107376",
+    "DOI": "10.1016/j.optlastec.2021.107376",
+    "type": "journal-article",
+    "volume": "144",
+    "author": "Dourado",
+    "year": "2021",
+    "journal-title": "Optics  Laser Technology"
+   },
+   {
+    "key": "OFC-2026-M4D.2-R3",
+    "doi-asserted-by": "publisher",
+    "first-page": "1507",
+    "DOI": "10.1109/LPT.2021.3126945",
+    "type": "journal-article",
+    "volume": "33",
+    "author": "Sato",
+    "year": "2021",
+    "journal-title": "IEEE Photonics Technol. Lett."
+   },
+   {
+    "key": "OFC-2026-M4D.2-R4",
+    "doi-asserted-by": "publisher",
+    "DOI": "10.1109/SiPhotonics60897.2024.10544046",
+    "type": "journal-article",
+    "article-title": "Hybrid Integration of Thin-film Lithium Niobate and Silicon Photonics",
+    "volume-title": "Proc. of 2024 IEEE Silicon Photonics Conference",
+    "author": "Mookherjea"
+   },
+   {
+    "key": "OFC-2026-M4D.2-R5",
+    "doi-asserted-by": "publisher",
+    "article-title": "Monolithic integration of various-type III-V epitaxial structures on silicon-photonics platform using chip-on-wafer hydrophilic bonding process",
+    "author": "Kikuchi",
+    "DOI": "10.1109/SiPhotonics60897.2024.10543539",
+    "type": "journal-article"
+   },
+   {
+    "key": "OFC-2026-M4D.2-R6",
+    "doi-asserted-by": "publisher",
+    "first-page": "052002\u20131",
+    "DOI": "10.35848/1347-4065/ac56fd",
+    "type": "journal-article",
+    "volume": "61",
+    "author": "Kikuchi",
+    "year": "2022",
+    "journal-title": "Jpn. J. Appl. Phys."
+   },
+   {
+    "key": "OFC-2026-M4D.2-R7",
+    "doi-asserted-by": "publisher",
+    "first-page": "1708",
+    "DOI": "10.1109/JLT.2024.3450093",
+    "type": "journal-article",
+    "volume": "43",
+    "author": "Hiratani",
+    "year": "2025",
+    "journal-title": "J. Light. Technol."
+   },
+   {
+    "key": "OFC-2026-M4D.2-R8",
+    "first-page": "WE3-4",
+    "type": "journal-article",
+    "author": "Tanaka",
+    "year": "2025",
+    "journal-title": "Proc. OECC2025"
+   },
+   {
+    "key": "OFC-2026-M4D.2-R9",
+    "first-page": "Th2A.11",
+    "type": "journal-article",
+    "author": "Sobu",
+    "year": "2024",
+    "journal-title": "Proc. Opt. Fiber Commun. Conf. (OFC)"
+   }
+  ],
+  "event": {
+   "name": "Optical Fiber Communication Conference",
+   "location": "Los Angeles, California",
+   "acronym": "OFC",
+   "sponsor": [
+    "The Optical Society"
+   ],
+   "start": {
+    "date-parts": [
+     [
+      2026
+     ]
+    ]
+   }
+  },
+  "container-title": [
+   "Optical Fiber Communication Conference (OFC) 2026"
+  ],
+  "original-title": [],
+  "link": [
+   {
+    "URL": "https://opg.optica.org/viewmedia.cfm?URI=OFC-2026-M4D.2&seq=0",
+    "content-type": "unspecified",
+    "content-version": "vor",
+    "intended-application": "similarity-checking"
+   }
+  ],
+  "deposited": {
+   "date-parts": [
+    [
+     2026,
+     8,
+     17
+    ]
+   ],
+   "date-time": "2026-08-17T17:26:47Z",
+   "timestamp": 1786987607000
+  },
+  "score": 1,
+  "resource": {
+   "primary": {
+    "URL": "https://opg.optica.org/abstract.cfm?URI=OFC-2026-M4D.2"
+   }
+  },
+  "subtitle": [],
+  "short-title": [],
+  "issued": {
+   "date-parts": [
+    [
+     2026
+    ]
+   ]
+  },
+  "references-count": 9,
+  "URL": "https://doi.org/10.1364/ofc.2026.m4d.2",
+  "relation": {},
+  "subject": [],
+  "published": {
+   "date-parts": [
+    [
+     2026
+    ]
+   ]
+  }
+ }
+}

@@ -1,0 +1,107 @@
+[
+ {
+  "kind": "page_render",
+  "file": "page_03.png",
+  "page": 3,
+  "captions": [
+   "Figure 1. (a) 3D Schematic diagram of the proposed TFLN modulator. (b) The cross-sectional view of the modulation area. (c)",
+   "Figure 1 shows the schematic of the proposed TFLN modulator employing CL-TWEs with low-k",
+   "Figure 2. Simulated (a) metal induced optical loss and (b) modulation efficiency with and without 100-nm-thick SiO2 buffer layer"
+  ]
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p03_1.png",
+  "page": 3,
+  "width": 1262,
+  "height": 795
+ },
+ {
+  "kind": "page_render",
+  "file": "page_04.png",
+  "page": 4,
+  "captions": [
+   "Figure 3(d). A narrow T-rail gap corresponds to increased electrode capacitance, which indicates"
+  ]
+ },
+ {
+  "kind": "page_render",
+  "file": "page_05.png",
+  "page": 5,
+  "captions": [
+   "Figure 3. The influences of electrode gap GT on (a) microwave loss, (b) microwave index, (c) characteristic impedance, (d)",
+   "Figure 4(a) shows the simulated microwave loss of CL-TWEs on quartz substrate with different"
+  ]
+ },
+ {
+  "kind": "page_render",
+  "file": "page_06.png",
+  "page": 6,
+  "captions": [
+   "Figure 4. (a) Microwave losses and (b) effective microwave indices of different CL-TWEs. (c) The simulated loss of CL-TWEs"
+  ]
+ },
+ {
+  "kind": "page_render",
+  "file": "page_07.png",
+  "page": 7,
+  "captions": [
+   "Figure 5. (a) Simulated microwave transmission and reflection. (b) Extracted microwave effective index and optical group index."
+  ]
+ },
+ {
+  "kind": "page_render",
+  "file": "page_08.png",
+  "page": 8,
+  "captions": [
+   "Figure 6. Optical microscope images of the (a) fabricated modulator with 7 mm modulation length; (b) modulation area and (c)",
+   "Figure 7(a) shows the S-parameters of a 7-mm-long CL-TWEs measured by a 110 GHz vector"
+  ]
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p08_2.png",
+  "page": 8,
+  "width": 296,
+  "height": 181
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p08_3.png",
+  "page": 8,
+  "width": 299,
+  "height": 182
+ },
+ {
+  "kind": "page_render",
+  "file": "page_09.png",
+  "page": 9,
+  "captions": [
+   "Figure 7. (a) Measured S-parameters of a modulator with 7 mm modulation length. Extracted (b) microwave refractive index and"
+  ]
+ },
+ {
+  "kind": "page_render",
+  "file": "page_10.png",
+  "page": 10,
+  "captions": [
+   "Figure 8. (a) Extinction behavior of a 7-mm-long modulator. (b) Measured electro-optic response and electrical reflection up to",
+   "Figure 8(a) plots the modulation curves recorded at 1 MHz, indicating a V\u03c0 of 1.9 V at the C band,"
+  ]
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p11_3.png",
+  "page": 11,
+  "width": 389,
+  "height": 171
+ },
+ {
+  "kind": "page_render",
+  "file": "page_12.png",
+  "page": 12,
+  "captions": [
+   "Figure 9. (a) Schematic of the setup for high-speed eye diagram measurements of the TFLN modulator. Measured eye"
+  ]
+ }
+]

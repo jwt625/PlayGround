@@ -1,0 +1,166 @@
+[
+ {
+  "kind": "page_render",
+  "file": "page_02.png",
+  "page": 2,
+  "captions": [
+   "FIG. 1. Device design. a. Schematics of a traditional ion-di\ufb00used LN waveguide (left) and our etched LN waveguide embedded",
+   "FIG. 2. Fabricated optical devices and electrical contacts a-b. False-color scanning electron microscope (SEM) images"
+  ]
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p02_1.png",
+  "page": 2,
+  "width": 1920,
+  "height": 1080
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p02_2.png",
+  "page": 2,
+  "width": 1920,
+  "height": 1080
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p02_3.png",
+  "page": 2,
+  "width": 529,
+  "height": 298
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p02_4.png",
+  "page": 2,
+  "width": 1417,
+  "height": 1063
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p02_5.png",
+  "page": 2,
+  "width": 1236,
+  "height": 944
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p02_6.png",
+  "page": 2,
+  "width": 1235,
+  "height": 1159
+ },
+ {
+  "kind": "embedded_failed",
+  "page": 2,
+  "xref": 137,
+  "error": "code=4: pixmap must be grayscale or rgb to write as png"
+ },
+ {
+  "kind": "page_render",
+  "file": "page_03.png",
+  "page": 3,
+  "captions": [
+   "FIG. 3. DC electrical and optical characterization a. Measured transmission spectra of a high Q (\u223c50,000) racetrack"
+  ]
+ },
+ {
+  "kind": "page_render",
+  "file": "page_04.png",
+  "page": 4,
+  "captions": [
+   "FIG. 4. Bandwidth and high speed data operation a. Simpli\ufb01ed experimental setup for testing eye diagrams. Dashed"
+  ]
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p04_2.png",
+  "page": 4,
+  "width": 492,
+  "height": 210
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p04_3.png",
+  "page": 4,
+  "width": 494,
+  "height": 166
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p04_4.png",
+  "page": 4,
+  "width": 576,
+  "height": 384
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p04_5.png",
+  "page": 4,
+  "width": 576,
+  "height": 384
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p04_6.png",
+  "page": 4,
+  "width": 576,
+  "height": 384
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p04_7.png",
+  "page": 4,
+  "width": 492,
+  "height": 221
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p04_8.png",
+  "page": 4,
+  "width": 432,
+  "height": 288
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p04_9.png",
+  "page": 4,
+  "width": 576,
+  "height": 384
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p04_10.png",
+  "page": 4,
+  "width": 400,
+  "height": 254
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p04_11.png",
+  "page": 4,
+  "width": 386,
+  "height": 272
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p04_12.png",
+  "page": 4,
+  "width": 309,
+  "height": 203
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p04_13.png",
+  "page": 4,
+  "width": 302,
+  "height": 235
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p04_14.png",
+  "page": 4,
+  "width": 188,
+  "height": 172
+ }
+]

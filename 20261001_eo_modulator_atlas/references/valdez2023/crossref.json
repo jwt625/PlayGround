@@ -1,0 +1,904 @@
+{
+ "status": "ok",
+ "message-type": "work",
+ "message-version": "1.0.0",
+ "message": {
+  "indexed": {
+   "date-parts": [
+    [
+     2026,
+     9,
+     5
+    ]
+   ],
+   "date-time": "2026-09-05T02:47:15Z",
+   "timestamp": 1788576435629,
+   "version": "build-2803163510"
+  },
+  "reference-count": 49,
+  "publisher": "Optica Publishing Group",
+  "issue": "4",
+  "license": [
+   {
+    "start": {
+     "date-parts": [
+      [
+       2023,
+       1,
+       30
+      ]
+     ],
+     "date-time": "2023-01-30T00:00:00Z",
+     "timestamp": 1675036800000
+    },
+    "content-version": "vor",
+    "delay-in-days": 0,
+    "URL": "https://doi.org/10.1364/OA_License_v2#VOR-OA"
+   },
+   {
+    "start": {
+     "date-parts": [
+      [
+       2023,
+       1,
+       30
+      ]
+     ],
+     "date-time": "2023-01-30T00:00:00Z",
+     "timestamp": 1675036800000
+    },
+    "content-version": "tdm",
+    "delay-in-days": 0,
+    "URL": "https://opg.optica.org/policies/opg-tdm-policy.json"
+   }
+  ],
+  "funder": [
+   {
+    "DOI": "10.13039/100000104",
+    "name": "National Aeronautics and Space Administration",
+    "doi-asserted-by": "publisher",
+    "award": [
+     "80NSSC17K0166"
+    ],
+    "award-info": [
+     {
+      "award-number": [
+       "80NSSC17K0166"
+      ]
+     }
+    ],
+    "id": [
+     {
+      "id": "10.13039/100000104",
+      "id-type": "DOI",
+      "asserted-by": "publisher"
+     }
+    ]
+   },
+   {
+    "DOI": "10.13039/100000006",
+    "name": "Office of Naval Research",
+    "doi-asserted-by": "publisher",
+    "award": [
+     "N00014-21-1-2805"
+    ],
+    "award-info": [
+     {
+      "award-number": [
+       "N00014-21-1-2805"
+      ]
+     }
+    ],
+    "id": [
+     {
+      "id": "10.13039/100000006",
+      "id-type": "DOI",
+      "asserted-by": "publisher"
+     }
+    ]
+   },
+   {
+    "DOI": "10.13039/100000005",
+    "name": "U.S. Department of Defense",
+    "doi-asserted-by": "publisher",
+    "award": [
+     "HR001120S0008"
+    ],
+    "award-info": [
+     {
+      "award-number": [
+       "HR001120S0008"
+      ]
+     }
+    ],
+    "id": [
+     {
+      "id": "10.13039/100000005",
+      "id-type": "DOI",
+      "asserted-by": "publisher"
+     }
+    ]
+   }
+  ],
+  "content-domain": {
+   "domain": [
+    "opg.optica.org"
+   ],
+   "crossmark-restriction": false
+  },
+  "short-container-title": [
+   "Opt. Express"
+  ],
+  "published-print": {
+   "date-parts": [
+    [
+     2023,
+     2,
+     13
+    ]
+   ]
+  },
+  "abstract": "<jats:p>\n                    Broadband integrated thin-film lithium niobate (TFLN) electro-optic modulators (EOM) are desirable for optical communications and signal processing in both the O-band (1310 nm) and C-band (1550 nm). To address these needs, we design and demonstrate Mach-Zehnder (MZ) EOM devices in a hybrid platform based on TFLN bonded to foundry-fabricated silicon photonic waveguides. Using a single silicon lithography step and a single bonding step, we realize MZ EOM devices which cover both wavelength ranges on the same chip. The EOM devices achieve 100 GHz EO bandwidth (referenced to 1 GHz) and about 2-3 V.cm figure-of-merit (\n                    <jats:inline-formula>\n                      <mml:math xmlns:mml=\"http://www.w3.org/1998/Math/MathML\" display=\"inline\">\n                        <mml:msub>\n                          <mml:mi>V</mml:mi>\n                          <mml:mi>\n                            \u03c0\n                            \n                          </mml:mi>\n                        </mml:msub>\n                        <mml:mi>L</mml:mi>\n                      </mml:math>\n                    </jats:inline-formula>\n                    ) with low on-chip optical loss in both the O-band and C-band.\n                  </jats:p>",
+  "DOI": "10.1364/oe.480519",
+  "type": "journal-article",
+  "created": {
+   "date-parts": [
+    [
+     2023,
+     1,
+     23
+    ]
+   ],
+   "date-time": "2023-01-23T02:00:10Z",
+   "timestamp": 1674439210000
+  },
+  "page": "5273",
+  "update-policy": "https://doi.org/10.1364/crossmark_policy",
+  "source": "Crossref",
+  "is-referenced-by-count": 50,
+  "title": [
+   "Integrated O- and C-band silicon-lithium niobate Mach-Zehnder modulators with 100 GHz bandwidth, low voltage, and low loss"
+  ],
+  "prefix": "10.1364",
+  "volume": "31",
+  "author": [
+   {
+    "ORCID": "https://orcid.org/0000-0001-8224-4380",
+    "authenticated-orcid": true,
+    "given": "Forrest",
+    "family": "Valdez",
+    "sequence": "first",
+    "affiliation": [
+     {
+      "id": [
+       {
+        "id": "https://ror.org/0168r3w48",
+        "id-type": "ROR",
+        "asserted-by": "publisher"
+       }
+      ]
+     }
+    ],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Viphretuo",
+    "family": "Mere",
+    "sequence": "additional",
+    "affiliation": [
+     {
+      "id": [
+       {
+        "id": "https://ror.org/0168r3w48",
+        "id-type": "ROR",
+        "asserted-by": "publisher"
+       }
+      ]
+     }
+    ],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Xiaoxi",
+    "family": "Wang",
+    "sequence": "additional",
+    "affiliation": [
+     {
+      "id": [
+       {
+        "id": "https://ror.org/0168r3w48",
+        "id-type": "ROR",
+        "asserted-by": "publisher"
+       }
+      ]
+     }
+    ],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "ORCID": "https://orcid.org/0000-0001-9864-2367",
+    "authenticated-orcid": true,
+    "given": "Shayan",
+    "family": "Mookherjea",
+    "sequence": "additional",
+    "affiliation": [
+     {
+      "id": [
+       {
+        "id": "https://ror.org/0168r3w48",
+        "id-type": "ROR",
+        "asserted-by": "publisher"
+       }
+      ]
+     }
+    ],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   }
+  ],
+  "member": "285",
+  "published-online": {
+   "date-parts": [
+    [
+     2023,
+     1,
+     30
+    ]
+   ]
+  },
+  "reference": [
+   {
+    "key": "oe-31-4-5273-R1",
+    "doi-asserted-by": "publisher",
+    "first-page": "24",
+    "DOI": "10.1364/OPN.19.1.000024",
+    "volume": "19",
+    "author": "Sohler",
+    "year": "2008",
+    "journal-title": "Opt. Photonics News"
+   },
+   {
+    "key": "oe-31-4-5273-R2",
+    "doi-asserted-by": "publisher",
+    "first-page": "1700256",
+    "DOI": "10.1002/lpor.201700256",
+    "volume": "12",
+    "author": "Boes",
+    "year": "2018",
+    "journal-title": "Laser Photonics Rev."
+   },
+   {
+    "key": "oe-31-4-5273-R3",
+    "doi-asserted-by": "publisher",
+    "first-page": "101",
+    "DOI": "10.1038/s41586-018-0551-y",
+    "volume": "562",
+    "author": "Wang",
+    "year": "2018",
+    "journal-title": "Nature"
+   },
+   {
+    "key": "oe-31-4-5273-R4",
+    "doi-asserted-by": "publisher",
+    "first-page": "359",
+    "DOI": "10.1038/s41566-019-0378-6",
+    "volume": "13",
+    "author": "He",
+    "year": "2019",
+    "journal-title": "Nat. Photonics"
+   },
+   {
+    "key": "oe-31-4-5273-R5",
+    "doi-asserted-by": "publisher",
+    "first-page": "242",
+    "DOI": "10.1364/AOP.411024",
+    "volume": "13",
+    "author": "Zhu",
+    "year": "2021",
+    "journal-title": "Adv. Opt. Photonics"
+   },
+   {
+    "key": "oe-31-4-5273-R9",
+    "author": "Piels",
+    "year": "2016"
+   },
+   {
+    "key": "oe-31-4-5273-R10",
+    "doi-asserted-by": "publisher",
+    "first-page": "9203",
+    "DOI": "10.1364/OE.14.009203",
+    "volume": "14",
+    "author": "Fang",
+    "year": "2006",
+    "journal-title": "Opt. Express"
+   },
+   {
+    "key": "oe-31-4-5273-R11",
+    "doi-asserted-by": "publisher",
+    "first-page": "158",
+    "DOI": "10.1109/JSTQE.2013.2296752",
+    "volume": "20",
+    "author": "Duan",
+    "year": "2014",
+    "journal-title": "IEEE J. Sel. Top. Quantum Electron."
+   },
+   {
+    "key": "oe-31-4-5273-R12",
+    "doi-asserted-by": "publisher",
+    "first-page": "1",
+    "DOI": "10.3389/fmats.2015.00028",
+    "volume": "2",
+    "author": "Luo",
+    "year": "2015",
+    "journal-title": "Front. Mater."
+   },
+   {
+    "key": "oe-31-4-5273-R13",
+    "doi-asserted-by": "publisher",
+    "first-page": "14768",
+    "DOI": "10.1364/OE.26.014768",
+    "volume": "26",
+    "author": "Shin",
+    "year": "2018",
+    "journal-title": "Opt. Express"
+   },
+   {
+    "key": "oe-31-4-5273-R14",
+    "doi-asserted-by": "publisher",
+    "first-page": "56",
+    "DOI": "10.1016/j.jcrysgro.2019.01.016",
+    "volume": "511",
+    "author": "Li",
+    "year": "2019",
+    "journal-title": "J. Cryst. Growth"
+   },
+   {
+    "key": "oe-31-4-5273-R15",
+    "doi-asserted-by": "publisher",
+    "first-page": "13510",
+    "DOI": "10.1364/OE.454795",
+    "volume": "30",
+    "author": "Colucci",
+    "year": "2022",
+    "journal-title": "Opt. Express"
+   },
+   {
+    "key": "oe-31-4-5273-R16",
+    "doi-asserted-by": "publisher",
+    "first-page": "909",
+    "DOI": "10.1038/s41467-022-28502-6",
+    "volume": "13",
+    "author": "Wen",
+    "year": "2022",
+    "journal-title": "Nat. Commun."
+   },
+   {
+    "key": "oe-31-4-5273-R17",
+    "doi-asserted-by": "publisher",
+    "first-page": "024001",
+    "DOI": "10.1088/2515-7647/ac5e0b",
+    "volume": "4",
+    "author": "Mere",
+    "year": "2022",
+    "journal-title": "JPhys Photonics"
+   },
+   {
+    "key": "oe-31-4-5273-R18",
+    "doi-asserted-by": "publisher",
+    "first-page": "18611",
+    "DOI": "10.1038/s41598-022-23403-6",
+    "volume": "12",
+    "author": "Valdez",
+    "year": "2022",
+    "journal-title": "Sci. Rep."
+   },
+   {
+    "key": "oe-31-4-5273-R19",
+    "doi-asserted-by": "publisher",
+    "first-page": "2158",
+    "DOI": "10.1109/JPROC.2018.2877636",
+    "volume": "106",
+    "author": "Witzens",
+    "year": "2018",
+    "journal-title": "Proc. IEEE"
+   },
+   {
+    "key": "oe-31-4-5273-R21",
+    "doi-asserted-by": "publisher",
+    "first-page": "2233",
+    "DOI": "10.1364/OPTCON.473761",
+    "volume": "1",
+    "author": "Wang",
+    "year": "2022",
+    "journal-title": "Opt. Continuum"
+   },
+   {
+    "key": "oe-31-4-5273-R22",
+    "doi-asserted-by": "publisher",
+    "first-page": "18",
+    "DOI": "10.1109/MNANO.2019.2916115",
+    "volume": "13",
+    "author": "Rusing",
+    "year": "2019",
+    "journal-title": "IEEE Nanotechnol. Mag."
+   },
+   {
+    "key": "oe-31-4-5273-R23",
+    "doi-asserted-by": "publisher",
+    "first-page": "1868",
+    "DOI": "10.1364/OE.28.001868",
+    "volume": "28",
+    "author": "Boynton",
+    "year": "2020",
+    "journal-title": "Opt. Express"
+   },
+   {
+    "key": "oe-31-4-5273-R24",
+    "doi-asserted-by": "publisher",
+    "first-page": "22301",
+    "DOI": "10.1038/srep22301",
+    "volume": "6",
+    "author": "Weigel",
+    "year": "2016",
+    "journal-title": "Sci. Rep."
+   },
+   {
+    "key": "oe-31-4-5273-R25",
+    "doi-asserted-by": "publisher",
+    "first-page": "23728",
+    "DOI": "10.1364/OE.26.023728",
+    "volume": "26",
+    "author": "Weigel",
+    "year": "2018",
+    "journal-title": "Opt. Express"
+   },
+   {
+    "key": "oe-31-4-5273-R26",
+    "doi-asserted-by": "publisher",
+    "first-page": "5748",
+    "DOI": "10.1109/JLT.2020.3004424",
+    "volume": "38",
+    "author": "Zhang",
+    "year": "2020",
+    "journal-title": "J. Lightwave Technol."
+   },
+   {
+    "key": "oe-31-4-5273-R27",
+    "doi-asserted-by": "publisher",
+    "first-page": "1778",
+    "DOI": "10.1109/3.142575",
+    "volume": "28",
+    "author": "Jaeger",
+    "year": "1992",
+    "journal-title": "IEEE J. Quantum Electron."
+   },
+   {
+    "key": "oe-31-4-5273-R28",
+    "doi-asserted-by": "publisher",
+    "first-page": "1183",
+    "DOI": "10.1049/el:19950779",
+    "volume": "31",
+    "author": "Sakamoto",
+    "year": "1995",
+    "journal-title": "Electron. Lett."
+   },
+   {
+    "key": "oe-31-4-5273-R29",
+    "doi-asserted-by": "publisher",
+    "first-page": "357",
+    "DOI": "10.1364/OPTICA.416155",
+    "volume": "8",
+    "author": "Kharel",
+    "year": "2021",
+    "journal-title": "Optica"
+   },
+   {
+    "key": "oe-31-4-5273-R30",
+    "doi-asserted-by": "publisher",
+    "first-page": "060016",
+    "DOI": "10.3788/COL202119.060016",
+    "volume": "19",
+    "author": "Liu",
+    "year": "2021",
+    "journal-title": "Chin. Opt. Lett."
+   },
+   {
+    "key": "oe-31-4-5273-R31",
+    "doi-asserted-by": "publisher",
+    "first-page": "026103",
+    "DOI": "10.1063/5.0077232",
+    "volume": "7",
+    "author": "Chen",
+    "year": "2022",
+    "journal-title": "APL Photonics"
+   },
+   {
+    "key": "oe-31-4-5273-R32",
+    "doi-asserted-by": "publisher",
+    "first-page": "774",
+    "DOI": "10.1049/el:19930518",
+    "volume": "29",
+    "author": "Spickermann",
+    "year": "1993",
+    "journal-title": "Electron. Lett."
+   },
+   {
+    "key": "oe-31-4-5273-R33",
+    "doi-asserted-by": "publisher",
+    "first-page": "5672",
+    "DOI": "10.1038/s41598-018-24030-w",
+    "volume": "8",
+    "author": "Rosa",
+    "year": "2018",
+    "journal-title": "Sci. Rep."
+   },
+   {
+    "key": "oe-31-4-5273-R34",
+    "author": "Pozar",
+    "year": "2011"
+   },
+   {
+    "key": "oe-31-4-5273-R35",
+    "doi-asserted-by": "publisher",
+    "first-page": "854",
+    "DOI": "10.1109/LPT.2022.3178214",
+    "volume": "34",
+    "author": "Liu",
+    "year": "2022",
+    "journal-title": "IEEE Photonics Technol. Lett."
+   },
+   {
+    "key": "oe-31-4-5273-R36",
+    "doi-asserted-by": "publisher",
+    "first-page": "2668",
+    "DOI": "10.1021/acsphotonics.2c00263",
+    "volume": "9",
+    "author": "Wang",
+    "year": "2022",
+    "journal-title": "ACS Photonics"
+   },
+   {
+    "key": "oe-31-4-5273-R38",
+    "doi-asserted-by": "publisher",
+    "first-page": "239",
+    "DOI": "10.1109/JLT.2017.2779863",
+    "volume": "36",
+    "author": "Jia",
+    "year": "2018",
+    "journal-title": "J. Lightwave Technol."
+   },
+   {
+    "key": "oe-31-4-5273-R39",
+    "doi-asserted-by": "publisher",
+    "first-page": "349",
+    "DOI": "10.1109/LPT.2019.2895095",
+    "volume": "31",
+    "author": "Wang",
+    "year": "2019",
+    "journal-title": "IEEE Photonics Technol. Lett."
+   },
+   {
+    "key": "oe-31-4-5273-R40",
+    "doi-asserted-by": "publisher",
+    "first-page": "1538",
+    "DOI": "10.3390/app10041538",
+    "volume": "10",
+    "author": "Mu",
+    "year": "2020",
+    "journal-title": "Appl. Sci."
+   },
+   {
+    "key": "oe-31-4-5273-R41",
+    "author": "Ghione",
+    "year": "2009"
+   },
+   {
+    "key": "oe-31-4-5273-R42",
+    "doi-asserted-by": "publisher",
+    "first-page": "1807",
+    "DOI": "10.1109/50.337494",
+    "volume": "12",
+    "author": "Gopalakrishnan",
+    "year": "1994",
+    "journal-title": "J. Lightwave Technol."
+   },
+   {
+    "key": "oe-31-4-5273-R43",
+    "author": "Howerton",
+    "year": "2002"
+   },
+   {
+    "key": "oe-31-4-5273-R44",
+    "doi-asserted-by": "publisher",
+    "first-page": "3360",
+    "DOI": "10.1109/JLT.2022.3172875",
+    "volume": "40",
+    "author": "Sambo",
+    "year": "2022",
+    "journal-title": "J. Lightwave Technol."
+   },
+   {
+    "key": "oe-31-4-5273-R45",
+    "doi-asserted-by": "publisher",
+    "first-page": "3470",
+    "DOI": "10.1109/JLT.2022.3154888",
+    "volume": "40",
+    "author": "Di Rosa",
+    "year": "2022",
+    "journal-title": "J. Lightwave Technol."
+   },
+   {
+    "key": "oe-31-4-5273-R46",
+    "doi-asserted-by": "publisher",
+    "first-page": "1360",
+    "DOI": "10.1109/JLT.2021.3123430",
+    "volume": "40",
+    "author": "Emmerich",
+    "year": "2022",
+    "journal-title": "J. Lightwave Technol."
+   },
+   {
+    "key": "oe-31-4-5273-R47",
+    "doi-asserted-by": "publisher",
+    "first-page": "5893",
+    "DOI": "10.1109/JLT.2018.2879830",
+    "volume": "36",
+    "author": "Honardoost",
+    "year": "2018",
+    "journal-title": "J. Lightwave Technol."
+   },
+   {
+    "key": "oe-31-4-5273-R48",
+    "doi-asserted-by": "publisher",
+    "first-page": "116102",
+    "DOI": "10.1063/5.0065437",
+    "volume": "6",
+    "author": "Huang",
+    "year": "2021",
+    "journal-title": "APL Photonics"
+   },
+   {
+    "key": "oe-31-4-5273-R49",
+    "doi-asserted-by": "publisher",
+    "first-page": "733",
+    "DOI": "10.1143/JJAP.20.733",
+    "volume": "20",
+    "author": "Yamada",
+    "year": "1981",
+    "journal-title": "Jpn. J. Appl. Phys."
+   },
+   {
+    "key": "oe-31-4-5273-R50",
+    "doi-asserted-by": "publisher",
+    "first-page": "211",
+    "DOI": "10.1063/1.96220",
+    "volume": "47",
+    "author": "Gee",
+    "year": "1985",
+    "journal-title": "Appl. Phys. Lett."
+   },
+   {
+    "key": "oe-31-4-5273-R51",
+    "doi-asserted-by": "publisher",
+    "first-page": "4162",
+    "DOI": "10.1063/1.352849",
+    "volume": "73",
+    "author": "Nagata",
+    "year": "1993",
+    "journal-title": "J. Appl. Phys."
+   },
+   {
+    "key": "oe-31-4-5273-R52",
+    "doi-asserted-by": "publisher",
+    "first-page": "1522",
+    "DOI": "10.1109/JLT.2011.2136322",
+    "volume": "29",
+    "author": "Salvestrini",
+    "year": "2011",
+    "journal-title": "J. Lightwave Technol."
+   },
+   {
+    "key": "oe-31-4-5273-R53",
+    "doi-asserted-by": "publisher",
+    "first-page": "981",
+    "DOI": "10.1109/LPT.2022.3197085",
+    "volume": "34",
+    "author": "Nelan",
+    "year": "2022",
+    "journal-title": "IEEE Photonics Technol. Lett."
+   },
+   {
+    "key": "oe-31-4-5273-R54",
+    "doi-asserted-by": "publisher",
+    "first-page": "1003",
+    "DOI": "10.1109/LPT.2022.3198322",
+    "volume": "34",
+    "author": "Alam",
+    "year": "2022",
+    "journal-title": "IEEE Photonics Technol. Lett."
+   }
+  ],
+  "container-title": [
+   "Optics Express"
+  ],
+  "original-title": [],
+  "language": "en",
+  "link": [
+   {
+    "URL": "https://opg.optica.org/viewmedia.cfm?URI=oe-31-4-5273",
+    "content-type": "application/pdf",
+    "content-version": "vor",
+    "intended-application": "syndication"
+   },
+   {
+    "URL": "https://opg.optica.org/viewmedia.cfm?URI=oe-31-4-5273&seq=0",
+    "content-type": "unspecified",
+    "content-version": "vor",
+    "intended-application": "similarity-checking"
+   }
+  ],
+  "deposited": {
+   "date-parts": [
+    [
+     2024,
+     8,
+     6
+    ]
+   ],
+   "date-time": "2024-08-06T15:30:30Z",
+   "timestamp": 1722958230000
+  },
+  "score": 1,
+  "resource": {
+   "primary": {
+    "URL": "https://opg.optica.org/abstract.cfm?URI=oe-31-4-5273"
+   }
+  },
+  "subtitle": [],
+  "short-title": [],
+  "issued": {
+   "date-parts": [
+    [
+     2023,
+     1,
+     30
+    ]
+   ]
+  },
+  "references-count": 49,
+  "journal-issue": {
+   "issue": "4",
+   "published-online": {
+    "date-parts": [
+     [
+      2023
+     ]
+    ]
+   },
+   "published-print": {
+    "date-parts": [
+     [
+      2023
+     ]
+    ]
+   }
+  },
+  "URL": "https://doi.org/10.1364/oe.480519",
+  "relation": {},
+  "ISSN": [
+   "1094-4087"
+  ],
+  "issn-type": [
+   {
+    "value": "1094-4087",
+    "type": "electronic"
+   }
+  ],
+  "subject": [],
+  "published": {
+   "date-parts": [
+    [
+     2023,
+     1,
+     30
+    ]
+   ]
+  },
+  "assertion": [
+   {
+    "value": "Optica Publishing Group",
+    "name": "publisher",
+    "label": "This article is maintained by"
+   },
+   {
+    "value": "https://doi.org/10.1364/OE.480519",
+    "name": "articlelink",
+    "label": "Crossref DOI link to publisher maintained version"
+   },
+   {
+    "value": "research-article",
+    "name": "content_type",
+    "label": "Article type"
+   },
+   {
+    "value": "Screened by Similarity Check",
+    "name": "cross_check",
+    "label": "Similarity check"
+   },
+   {
+    "value": "Yes",
+    "order": 0,
+    "name": "peer_reviewed",
+    "label": "Peer reviewed",
+    "group": {
+     "name": "peer_review",
+     "label": "Peer review"
+    }
+   },
+   {
+    "value": "Single blind",
+    "order": 1,
+    "name": "review_process",
+    "label": "Review process",
+    "group": {
+     "name": "peer_review",
+     "label": "Peer review"
+    }
+   },
+   {
+    "value": "10 November 2022",
+    "order": 0,
+    "name": "received",
+    "label": "Received",
+    "group": {
+     "name": "publication_history",
+     "label": "Publication History"
+    }
+   },
+   {
+    "value": "19 January 2023",
+    "order": 1,
+    "name": "accepted",
+    "label": "Accepted",
+    "group": {
+     "name": "publication_history",
+     "label": "Publication History"
+    }
+   },
+   {
+    "value": "30 January 2023",
+    "order": 2,
+    "name": "published",
+    "label": "Published",
+    "group": {
+     "name": "publication_history",
+     "label": "Publication History"
+    }
+   },
+   {
+    "value": "\u00a9 2023 Optica Publishing Group under the terms of the Optica Open Access Publishing Agreement",
+    "name": "copyright",
+    "label": "Copyright"
+   }
+  ]
+ }
+}

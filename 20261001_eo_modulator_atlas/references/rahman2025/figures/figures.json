@@ -1,0 +1,207 @@
+[
+ {
+  "kind": "page_render",
+  "file": "page_02.png",
+  "page": 2,
+  "captions": [
+   "Figure 1. (a) Photograph of the fabricated wafer (100 mm diameter). (b) Magnified photograph of the electro-optic modulator",
+   "Fig. 1(a) and the three EOM devices discussed in this re-"
+  ]
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p02_1.png",
+  "page": 2,
+  "width": 1628,
+  "height": 1545
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p02_2.png",
+  "page": 2,
+  "width": 4396,
+  "height": 1066
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p02_3.png",
+  "page": 2,
+  "width": 347,
+  "height": 233
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p02_4.png",
+  "page": 2,
+  "width": 347,
+  "height": 233
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p02_5.png",
+  "page": 2,
+  "width": 347,
+  "height": 233
+ },
+ {
+  "kind": "page_render",
+  "file": "page_03.png",
+  "page": 3,
+  "captions": [
+   "Figure 2 describes the fabrication process, which starts"
+  ]
+ },
+ {
+  "kind": "page_render",
+  "file": "page_04.png",
+  "page": 4,
+  "captions": [
+   "Figure 2. Process flow diagram showing the main steps, (a) - (f), in the fabrication of the hybrid TFLN-SiN modulators.",
+   "Figure 3 describes the half-wave voltage (V\u03c0) measure-"
+  ]
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p04_1.png",
+  "page": 4,
+  "width": 705,
+  "height": 540
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p04_2.png",
+  "page": 4,
+  "width": 551,
+  "height": 428
+ },
+ {
+  "kind": "page_render",
+  "file": "page_05.png",
+  "page": 5,
+  "captions": [
+   "Figure 3. (a) Schematic for the measurement of the half-wave voltage, V\u03c0. (b) Example of the (overdriven) optical response"
+  ]
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p05_1.png",
+  "page": 5,
+  "width": 1305,
+  "height": 979
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p05_2.png",
+  "page": 5,
+  "width": 1331,
+  "height": 998
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p05_3.png",
+  "page": 5,
+  "width": 720,
+  "height": 229
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p05_6.png",
+  "page": 5,
+  "width": 2183,
+  "height": 1415
+ },
+ {
+  "kind": "page_render",
+  "file": "page_06.png",
+  "page": 6,
+  "captions": [
+   "Figure 4(b) compares the EOR curves for the three",
+   "Figure 4(c) shows the EOR for the high-bandwidth",
+   "Fig. 4(c) as visual guides."
+  ]
+ },
+ {
+  "kind": "page_render",
+  "file": "page_07.png",
+  "page": 7,
+  "captions": [
+   "Figure 4. (a) Schematic for the measurement of the electro-optic response (EOR). (b) EOR measurement data between 1 GHz"
+  ]
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p07_1.png",
+  "page": 7,
+  "width": 1734,
+  "height": 858
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p07_2.png",
+  "page": 7,
+  "width": 1756,
+  "height": 975
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p07_6.png",
+  "page": 7,
+  "width": 595,
+  "height": 210
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p07_7.png",
+  "page": 7,
+  "width": 808,
+  "height": 150
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p07_12.png",
+  "page": 7,
+  "width": 1766,
+  "height": 975
+ },
+ {
+  "kind": "page_render",
+  "file": "page_11.png",
+  "page": 11,
+  "captions": [
+   "Figure S1 shows tilted-angle scanning-electron micro-",
+   "Figure S2 shows the optical transmission spectrum be-",
+   "Figure S3 shows the EOR data measured for EOMs"
+  ]
+ },
+ {
+  "kind": "page_render",
+  "file": "page_12.png",
+  "page": 12,
+  "captions": [
+   "Figure S1. (a) Cross-sectional scanning-electron microscope (SEM) image showing the trenches etched into the Si substrate to"
+  ]
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p12_1.png",
+  "page": 12,
+  "width": 1024,
+  "height": 653
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p12_2.png",
+  "page": 12,
+  "width": 1024,
+  "height": 690
+ },
+ {
+  "kind": "page_render",
+  "file": "page_13.png",
+  "page": 13,
+  "captions": [
+   "Figure S2. The optical transmission of the asymmetric Mach-Zehnder interferometer structure that forms part of the EOM",
+   "Figure S3. The electro-optic response (EOR) for Design 1 (red), Design 2 (blue), and Design 3 (black) on three different chips."
+  ]
+ }
+]

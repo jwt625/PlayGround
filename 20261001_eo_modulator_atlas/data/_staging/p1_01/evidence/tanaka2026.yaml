@@ -1,0 +1,174 @@
+paper_id: tanaka2026
+verified_on: '2026-10-01'
+source_files:
+- references/tanaka2026/text.md
+- references/tanaka2026/figures/page_02.png
+- references/tanaka2026/figures/page_03.png
+entries:
+- device_id: tanaka2026-a
+  field: length_mm
+  value: 2
+  unit: mm
+  basis: measured
+  locator: p.3 Fig. 5 caption
+  note: electrode length, FF 60%
+- device_id: tanaka2026-a
+  field: vpi_dc_v
+  value: 3.6
+  unit: V
+  basis: extracted_from_figure
+  locator: p.3 Fig. 5
+  note: max-to-null span of the differential arm voltage, read from the plot; not stated in the text
+- device_id: tanaka2026-a
+  field: vpil_dc_vcm
+  value: 0.43
+  unit: V*cm
+  basis: derived
+  locator: p.2 Sec. 2; p.3 Fig. 5, Conclusion
+  note: stated Vpi x L; 3.6 V x 0.6 x 2 mm = 0.43, so the length used is likely FF x length (inference)
+- device_id: tanaka2026-a
+  field: bias_for_vpi_v
+  value: -8
+  unit: V
+  basis: measured
+  locator: p.2 Sec. 2; p.3 Fig. 5 caption
+  note: centre bias
+- device_id: tanaka2026-a
+  field: extinction_ratio_db
+  value: 30
+  unit: dB
+  basis: measured
+  locator: p.2 Sec. 2; p.3 Fig. 4; Conclusion
+  note: '''exceeding 30 dB''; lower bound; heater sweep'
+- device_id: tanaka2026-a
+  field: epitaxy_or_stack
+  value: p-InP / InGaAsP MQW / n-InP ridge on SiO2 over Si waveguide layer on Si substrate (chip-on-wafer bonded InP on SOI); layer thicknesses and doping not stated
+  unit: ''
+  basis: extracted_from_figure
+  locator: p.2 Fig. 3(c) labels; p.2 Sec. 2
+  note: 'text: InP ridge, MQW core, Si waveguide through taper; thicknesses not stated'
+- device_id: tanaka2026-a
+  field: substrate
+  value: Si substrate (SOI wafer, SiO2 BOX)
+  unit: ''
+  basis: extracted_from_figure
+  locator: p.2 Fig. 3(c) labels
+- device_id: tanaka2026-a
+  field: electrode_metal
+  value: Au
+  unit: ''
+  basis: extracted_from_figure
+  locator: p.2 Fig. 3(c) labels
+- device_id: tanaka2026-a
+  field: drive
+  value: push_pull
+  unit: ''
+  basis: measured
+  locator: p.3 Fig. 5 caption
+  note: 'caption: under push-pull operation; x axis Vp_arm - Vn_arm'
+- device_id: tanaka2026-a
+  field: vpi_convention
+  value: mzm_differential
+  unit: ''
+  basis: derived
+  locator: p.3 Fig. 5
+  note: inferred from the x-axis label Vp_arm - Vn_arm; authors do not name the convention
+- device_id: tanaka2026-b
+  field: length_mm
+  value: 1.0
+  unit: mm
+  basis: measured
+  locator: p.3 Fig. 6 caption
+  note: electrode length, FF 80%
+- device_id: tanaka2026-b
+  field: vpi_dc_v
+  value: 5.4
+  unit: V
+  basis: measured
+  locator: abstract; p.3 Fig. 6 caption
+  note: '''EO response at Vpi of 5.4 V''; convention, frequency and bias not stated'
+- device_id: tanaka2026-b
+  field: bw3db_ghz
+  value: 60
+  unit: GHz
+  basis: measured
+  locator: abstract; p.2 Sec. 2; p.3 Fig. 6(a), Conclusion
+  note: '''approximately 60 GHz'' for both LSB and MSB sections of the chip'
+- device_id: tanaka2026-b
+  field: eo_rolloff_db
+  value: 11
+  unit: dB
+  basis: extracted_from_figure
+  locator: p.3 Fig. 6(a)
+  note: four sections between -10.8 and -11.8 dB at 110 GHz, relative to 0 dB at low frequency
+- device_id: tanaka2026-b
+  field: eo_rolloff_freq_ghz
+  value: 110
+  unit: GHz
+  basis: extracted_from_figure
+  locator: p.3 Fig. 6(a)
+  note: last plotted frequency
+- device_id: tanaka2026-b
+  field: max_baud_gbd
+  value: 64
+  unit: GBd
+  basis: measured
+  locator: abstract; p.3 Fig. 7, Conclusion
+  note: 16QAM with optical DAC
+- device_id: tanaka2026-b
+  field: modulation_format
+  value: '16QAM (optical DAC: QPSK on MSB and LSB segments) at 64 GBd'
+  unit: ''
+  basis: measured
+  locator: p.2 Sec. 2; p.3 Fig. 7
+- device_id: tanaka2026-b
+  field: epitaxy_or_stack
+  value: p-InP / InGaAsP MQW / n-InP ridge on SiO2 over Si waveguide layer on Si substrate (chip-on-wafer bonded InP on SOI); layer thicknesses and doping not stated
+  unit: ''
+  basis: extracted_from_figure
+  locator: p.2 Fig. 3(c) labels; p.2 Sec. 2
+  note: 'text: InP ridge, MQW core, Si waveguide through taper; thicknesses not stated'
+- device_id: tanaka2026-b
+  field: substrate
+  value: Si substrate (SOI wafer, SiO2 BOX)
+  unit: ''
+  basis: extracted_from_figure
+  locator: p.2 Fig. 3(c) labels
+- device_id: tanaka2026-b
+  field: electrode_metal
+  value: Au
+  unit: ''
+  basis: extracted_from_figure
+  locator: p.2 Fig. 3(c) labels
+derived: []
+context_values:
+- item: heater_P_pi
+  value: 20
+  unit: mW
+  locator: p.2 Sec. 2; p.3 Fig. 4
+- item: filling_factor
+  value: 60
+  unit: '%'
+  locator: p.3 Fig. 5 caption
+- item: chip_size
+  value: 3.8 x 3.3
+  unit: mm2
+  locator: p.2 Fig. 3(a)
+- item: filling_factor
+  value: 80
+  unit: '%'
+  locator: p.3 Fig. 6 caption
+- item: EO_peaking_with_driver
+  value: '>3'
+  unit: dB
+  locator: p.2 Sec. 2; p.3 Fig. 6(b)
+  note: between 40 and 50 GHz
+- item: license_and_rights_basis
+  value: 'paper notice p.1 header: ''Optical Fiber Communication Conference (OFC) (c) 2026 Optica Publishing Group''; Crossref lists no license'
+  unit: ''
+  locator: p.1 header
+- item: line_rate_equivalent_16QAM_64GBd
+  value: 256
+  unit: Gb/s
+  locator: arithmetic from p.3 Fig. 7
+  note: 64 GBd x 4 bits/symbol; not in the paper, not entered in the CSV

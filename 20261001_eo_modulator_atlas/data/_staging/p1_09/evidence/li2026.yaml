@@ -1,0 +1,180 @@
+paper_id: li2026
+verified_on: '2026-10-01'
+source_files:
+- references/li2026/text.md
+- references/li2026/figures/page_03.png
+- references/li2026/figures/page_04.png
+entries:
+- device_id: li2026-a
+  field: drive
+  value: push_pull
+  unit: ''
+  basis: design_target
+  locator: p.2, Device Design
+  note: authors describe two suspended phase shifters forming a push-pull MZM
+- device_id: li2026-a
+  field: vpi_convention
+  value: mzm_push_pull
+  unit: ''
+  basis: derived
+  locator: p.2, Electro-optic Modulation Efficiency
+  note: MZM-level Vpi of the push-pull MZM; authors do not name the convention explicitly
+- device_id: li2026-a
+  field: wavelength_nm
+  value: 1550
+  unit: nm
+  basis: measured
+  locator: p.2, Electro-optic Modulation Efficiency; Fig. 2(a)
+- device_id: li2026-a
+  field: length_mm
+  value: 8
+  unit: mm
+  basis: measured
+  locator: p.2, Device Design; Fig. 1(a)
+  note: modulation section length
+- device_id: li2026-a
+  field: vpi_dc_v
+  value: 5.1
+  unit: V
+  basis: measured
+  locator: p.2, Fig. 2(a)
+  note: 100 Hz sawtooth, 20 V peak-to-peak; fit of EO response
+- device_id: li2026-a
+  field: vpil_dc_vcm
+  value: 4
+  unit: V*cm
+  basis: derived
+  locator: p.1 abstract; p.2
+  note: authors state VpiL = 4 V cm for the 8 mm device (5.1 V x 0.8 cm = 4.08)
+- device_id: li2026-a
+  field: bw3db_ghz
+  value: 110
+  unit: GHz
+  basis: measured
+  locator: p.3, Fig. 2(f) as captioned (rendered panel e on p.4)
+  note: smoothed fit of noisy raw data; normalized to 1 GHz; no probe or VNA limit stated as the cause
+- device_id: li2026-a
+  field: rf_loss_db_per_cm
+  value: 5.0
+  unit: dB/cm
+  basis: extracted_from_figure
+  locator: p.4, Fig. 2(e) as captioned (rendered panel d)
+  note: microwave attenuation of the 8 mm CPW at the right end of a noisy curve; text gives S21 = -4.3 dB at 120 GHz
+- device_id: li2026-a
+  field: rf_loss_freq_ghz
+  value: 120
+  unit: GHz
+  basis: extracted_from_figure
+  locator: p.4, Fig. 2(e) as captioned
+- device_id: li2026-a
+  field: n_rf
+  value: 2.24
+  unit: '1'
+  basis: extracted_from_figure
+  locator: p.4, Fig. 2(e) as captioned
+  note: microwave index plateau at high frequency, 2.23-2.25
+- device_id: li2026-a
+  field: ng_opt
+  value: 2.24
+  unit: '1'
+  basis: extracted_from_figure
+  locator: p.4, Fig. 2(e) as captioned
+  note: simulated optical group index at 1550 nm (dashed line)
+- device_id: li2026-a
+  field: eo_film_thickness_nm
+  value: 600
+  unit: nm
+  basis: measured
+  locator: p.2, Device Design
+  note: commercial X-cut LTOI wafer (NANOLN)
+- device_id: li2026-a
+  field: etch_depth_nm
+  value: 400
+  unit: nm
+  basis: measured
+  locator: p.2, Device Design
+- device_id: li2026-a
+  field: slab_thickness_nm
+  value: 200
+  unit: nm
+  basis: measured
+  locator: p.2, Device Design
+- device_id: li2026-a
+  field: electrode_gap_um
+  value: 6
+  unit: um
+  basis: design_target
+  locator: p.2, Device Design; Fig. 1(e)
+  note: parameter G of the T-segment CPW, gap between facing T-bars where the waveguide sits (reading of the Fig. 1(e) schematic, consistent with the SEM in li2026ba)
+- device_id: li2026-a
+  field: signal_width_um
+  value: 70
+  unit: um
+  basis: design_target
+  locator: p.2, Device Design
+  note: Wsig
+- device_id: li2026-a
+  field: electrode_thickness_um
+  value: 0.8
+  unit: um
+  basis: measured
+  locator: p.2, Device Design
+  note: plus 15 nm Ti
+- device_id: li2026-a
+  field: electrode_metal
+  value: Ti/Au (15 nm / 800 nm)
+  unit: ''
+  basis: measured
+  locator: p.2, Device Design
+- device_id: li2026-a
+  field: buffer_oxide_um
+  value: 4.7
+  unit: um
+  basis: measured
+  locator: p.2, Device Design
+  note: buried oxide of the starting wafer; the oxide under the signal electrode stays continuous after undercut
+- device_id: li2026-a
+  field: substrate
+  value: 525 um high-resistivity silicon, locally undercut (isotropic release below the ground electrodes)
+  unit: ''
+  basis: measured
+  locator: p.2, Device Design; Fig. 1(b)-(d)
+- device_id: li2026-a
+  field: cladding
+  value: SiO2 1.5 um (ICP CVD)
+  unit: ''
+  basis: measured
+  locator: p.2, Device Design
+- device_id: li2026-a
+  field: crystal_cut
+  value: x-cut
+  unit: ''
+  basis: measured
+  locator: p.2, Device Design
+- device_id: li2026-a
+  field: max_baud_gbd
+  value: 208
+  unit: GBd
+  basis: measured
+  locator: p.4, IMDD results
+  note: PAM4 at 208 GBd below the 25% SD-FEC limit; 144-208 GBd tested
+- device_id: li2026-a
+  field: modulation_format
+  value: PAM4 (up to 208 GBd), PAM6 (up to 192 GBd), PAM8 (up to 188 GBd), all below 25% SD-FEC BER limit; PAM4 below KP4 up to 176 GBd
+  unit: ''
+  basis: measured
+  locator: p.4, IMDD results; Fig. 3(b)
+- device_id: li2026-a
+  field: max_net_rate_gbps
+  value: 460
+  unit: Gb/s
+  basis: derived
+  locator: p.1 abstract; p.4, Fig. 3(c)
+  note: net rate from GMI and FEC code selection, PAM8 at 180 GBd; highest AIR 485 Gbit/s
+derived:
+- device_id: li2026-a
+  field: max_line_rate_gbps
+  value: 564
+  formula: 188 GBd x log2(8) bit/symbol (PAM8 at the highest rate below the 25% SD-FEC limit)
+  inputs:
+  - max_baud_gbd

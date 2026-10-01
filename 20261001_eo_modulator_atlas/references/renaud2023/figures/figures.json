@@ -1,0 +1,49 @@
+[
+ {
+  "kind": "page_render",
+  "file": "page_02.png",
+  "page": 2,
+  "captions": [
+   "Figure 1c illustrates the design of our TFLN VNIR modulators. We",
+   "Fig. 1 | Ultra-low V\u03c0 modulators operating at visible-to-near-infrared"
+  ]
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p02_16.png",
+  "page": 2,
+  "width": 286,
+  "height": 160
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p02_17.png",
+  "page": 2,
+  "width": 1618,
+  "height": 272
+ },
+ {
+  "kind": "page_render",
+  "file": "page_03.png",
+  "page": 3,
+  "captions": [
+   "Fig. 2 | Ultra-low V\u03c0 visible-to-near-infrared wavelength Mach-Zehnder mod-"
+  ]
+ },
+ {
+  "kind": "page_render",
+  "file": "page_04.png",
+  "page": 4,
+  "captions": [
+   "Fig. 3 | Integrated visible-to-near-infrared electro-optic frequency combs."
+  ]
+ },
+ {
+  "kind": "page_render",
+  "file": "page_05.png",
+  "page": 5,
+  "captions": [
+   "Fig. 4 | Visible spectral shearing. a Principle of spectral shearing, where the rising"
+  ]
+ }
+]

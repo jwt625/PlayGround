@@ -1,0 +1,78 @@
+paper_id: porto2026
+verified_on: '2026-10-01'
+source_files:
+- references/porto2026/text.md
+- references/porto2026/figures/page_01.png
+- references/porto2026/figures/page_03.png
+entries:
+- device_id: porto2026-a
+  field: vpi_rf_v
+  value: 1.5
+  unit: V
+  basis: design_target
+  locator: abstract; p.2 Sec. 4 RF Characterization
+  note: 'p.2 says ''less than 1.5 V'' (abstract: up to 1.5 V); entered with lt; convention and frequency not stated'
+- device_id: porto2026-a
+  field: extinction_ratio_db
+  value: 25
+  unit: dB
+  basis: design_target
+  locator: p.2 Sec. 4
+  note: '''over 25 dB of extinction'' design statement; static/dynamic not stated'
+- device_id: porto2026-a
+  field: max_baud_gbd
+  value: 106.25
+  unit: GBd
+  basis: measured
+  locator: p.2 Sec. 4; Fig. 3
+  note: differential 106.25 GBd SSPRQ pattern; one channel
+- device_id: porto2026-a
+  field: modulation_format
+  value: PAM4 at 106.25 GBd (212 Gb/s), direct linear drive with SiGe driver, FFE 15 taps at Tx and Rx
+  unit: ''
+  basis: measured
+  locator: p.2 Sec. 4; p.3 Fig. 3
+  note: 60 degC; fiber-coupled output +3 to +5 dBm
+- device_id: porto2026-a
+  field: max_line_rate_gbps
+  value: 212
+  unit: Gb/s
+  basis: derived
+  locator: abstract; p.1 Introduction
+  note: stated as 212 Gbps for 106.25 GBd PAM4; 2 bits/symbol, rounded by the authors
+- device_id: porto2026-a
+  field: temperature_class
+  value: elevated
+  unit: ''
+  basis: measured
+  locator: p.2 Sec. 3; p.3 Conclusion
+  note: DC and RF characterisation at 60 degC
+derived: []
+context_values:
+- item: design_bandwidth_statement
+  value: 53
+  unit: GHz
+  locator: p.2 Sec. 4
+  note: '''53 GHz of bandwidth'' design statement; type of bandwidth not defined'
+- item: outer_ER_PAM4
+  value: 3.53 / 3.48
+  unit: dB
+  locator: p.3 Fig. 3 table
+  note: SOA 60 / 160 mA
+- item: TDECQ
+  value: 2.98 / 3.01
+  unit: dB
+  locator: p.3 Fig. 3 table
+- item: fiber_coupled_output_power
+  value: 5
+  unit: dBm
+  locator: abstract; p.2 Sec. 3
+  note: SOA currents 57-95 mA
+- item: load_resistors
+  value: 30
+  unit: ohm
+  locator: p.1 Sec. 2
+- item: license_and_rights_basis
+  value: 'paper notice p.1 header: ''Optical Fiber Communication Conference (OFC) (c) 2026 Optica Publishing Group''; abstract adds ''(c) 2025 Nokia Corporation''; Crossref lists no license'
+  unit: ''
+  locator: p.1 header

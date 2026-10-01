@@ -1,0 +1,161 @@
+[
+ {
+  "kind": "page_render",
+  "file": "page_05.png",
+  "page": 5,
+  "captions": [
+   "Fig. 1. (a) Top view of the modulator. (b) SEM image of combined electrodes and waveguides. (c)",
+   "Fig. 2 provides a depiction of the optical mode and electrical mode in one arm of the MZM (a"
+  ]
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p05_1.png",
+  "page": 5,
+  "width": 1730,
+  "height": 423
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p05_2.png",
+  "page": 5,
+  "width": 1730,
+  "height": 423
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p05_3.png",
+  "page": 5,
+  "width": 1730,
+  "height": 422
+ },
+ {
+  "kind": "page_render",
+  "file": "page_06.png",
+  "page": 6,
+  "captions": [
+   "Fig. 2. (a) Cross section of the phase modulator. (b) Optical mode in LNOI waveguides with"
+  ]
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p06_1.png",
+  "page": 6,
+  "width": 1742,
+  "height": 572
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p06_2.png",
+  "page": 6,
+  "width": 1742,
+  "height": 571
+ },
+ {
+  "kind": "page_render",
+  "file": "page_08.png",
+  "page": 8,
+  "captions": [
+   "Figure 3. (a) AFM image of the ITO film. (b) The transmittance spectra of ITO film with thickness",
+   "Figure 4. (a) Overview of modulator under microscope; (b) Grating coupler; (c) Input MMI; (d)",
+   "Fig. 4(d) shows the terminal electrode pads. During the test, a 23 \u03a9 terminal resistor is connected"
+  ]
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p08_1.png",
+  "page": 8,
+  "width": 1729,
+  "height": 463
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p08_2.png",
+  "page": 8,
+  "width": 1737,
+  "height": 310
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p08_3.png",
+  "page": 8,
+  "width": 1737,
+  "height": 309
+ },
+ {
+  "kind": "page_render",
+  "file": "page_09.png",
+  "page": 9,
+  "captions": [
+   "Fig. 5. (a) Normalized optical transmission of the 5-mm modulator with 3-\uf06dm TCO gap as a"
+  ]
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p09_1.png",
+  "page": 9,
+  "width": 1731,
+  "height": 529
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p09_2.png",
+  "page": 9,
+  "width": 1731,
+  "height": 529
+ },
+ {
+  "kind": "page_render",
+  "file": "page_10.png",
+  "page": 10,
+  "captions": [
+   "Fig. 6. Electro-optic performance of the 5 mm long LN modulators.",
+   "Figure 7(d)-(e). In further measurements of the back-to-back (B2B) bit-error rates (BERs), we"
+  ]
+ },
+ {
+  "kind": "page_render",
+  "file": "page_11.png",
+  "page": 11,
+  "captions": [
+   "Figure 7(f), we conducted bit error rate tests on the 112 Gbit/s OOK and PAM4 signals, as well as",
+   "Fig. 7. High-speed eye diagram and bit error test results of 5mm devices. OOK format (a) 56"
+  ]
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p11_1.png",
+  "page": 11,
+  "width": 1731,
+  "height": 470
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p11_2.png",
+  "page": 11,
+  "width": 1731,
+  "height": 470
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p11_3.png",
+  "page": 11,
+  "width": 1731,
+  "height": 469
+ },
+ {
+  "kind": "page_render",
+  "file": "page_12.png",
+  "page": 12,
+  "captions": [
+   "Fig. 8. 56 Gbit/s rate eye diagram test of 8mm device (a) without TCO loaded, (b) with TCO"
+  ]
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p12_1.png",
+  "page": 12,
+  "width": 1731,
+  "height": 237
+ }
+]

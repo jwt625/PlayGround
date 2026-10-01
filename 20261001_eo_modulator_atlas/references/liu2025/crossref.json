@@ -1,0 +1,318 @@
+{
+ "status": "ok",
+ "message-type": "work",
+ "message-version": "1.0.0",
+ "message": {
+  "indexed": {
+   "date-parts": [
+    [
+     2026,
+     6,
+     3
+    ]
+   ],
+   "date-time": "2026-06-03T09:40:08Z",
+   "timestamp": 1780479608325,
+   "version": "3.54.1"
+  },
+  "reference-count": 0,
+  "publisher": "Wiley",
+  "issue": "14",
+  "license": [
+   {
+    "start": {
+     "date-parts": [
+      [
+       2025,
+       7,
+       21
+      ]
+     ],
+     "date-time": "2025-07-21T00:00:00Z",
+     "timestamp": 1753056000000
+    },
+    "content-version": "vor",
+    "delay-in-days": 20,
+    "URL": "http://onlinelibrary.wiley.com/termsAndConditions#vor"
+   }
+  ],
+  "content-domain": {
+   "domain": [
+    "onlinelibrary.wiley.com"
+   ],
+   "crossmark-restriction": true
+  },
+  "short-container-title": [
+   "Laser &amp;amp; Photonics Reviews"
+  ],
+  "published-print": {
+   "date-parts": [
+    [
+     2025,
+     7
+    ]
+   ]
+  },
+  "DOI": "10.1002/lpor.202570057",
+  "type": "journal-article",
+  "created": {
+   "date-parts": [
+    [
+     2025,
+     7,
+     21
+    ]
+   ],
+   "date-time": "2025-07-21T09:07:37Z",
+   "timestamp": 1753088857000
+  },
+  "update-policy": "https://doi.org/10.1002/crossmark_policy",
+  "source": "Crossref",
+  "is-referenced-by-count": 3,
+  "title": [
+   "Ultrahigh\u2010Efficiency Dual\u2010Band Thin\u2010Film Lithium Niobate Modulator Incorporating Low\u2010k Underfill for 390 Gbit s<sup>\u22121</sup> PAM8 Transmission (Laser Photonics Rev. 19(14)/2025)"
+  ],
+  "prefix": "10.1002",
+  "volume": "19",
+  "author": [
+   {
+    "given": "Hao",
+    "family": "Liu",
+    "sequence": "first",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Yutong",
+    "family": "He",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Bing",
+    "family": "Xiong",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Changzheng",
+    "family": "Sun",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Zhibiao",
+    "family": "Hao",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Lai",
+    "family": "Wang",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Jian",
+    "family": "Wang",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Yanjun",
+    "family": "Han",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Hongtao",
+    "family": "Li",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Lin",
+    "family": "Gan",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Yi",
+    "family": "Luo",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   }
+  ],
+  "member": "311",
+  "published-online": {
+   "date-parts": [
+    [
+     2025,
+     7,
+     21
+    ]
+   ]
+  },
+  "container-title": [
+   "Laser &amp; Photonics Reviews"
+  ],
+  "original-title": [],
+  "language": "en",
+  "link": [
+   {
+    "URL": "https://onlinelibrary.wiley.com/doi/pdf/10.1002/lpor.202570057",
+    "content-type": "unspecified",
+    "content-version": "vor",
+    "intended-application": "similarity-checking"
+   }
+  ],
+  "deposited": {
+   "date-parts": [
+    [
+     2025,
+     7,
+     21
+    ]
+   ],
+   "date-time": "2025-07-21T09:07:50Z",
+   "timestamp": 1753088870000
+  },
+  "score": 1,
+  "resource": {
+   "primary": {
+    "URL": "https://onlinelibrary.wiley.com/doi/10.1002/lpor.202570057"
+   }
+  },
+  "subtitle": [],
+  "short-title": [],
+  "issued": {
+   "date-parts": [
+    [
+     2025,
+     7
+    ]
+   ]
+  },
+  "references-count": 0,
+  "journal-issue": {
+   "issue": "14",
+   "published-print": {
+    "date-parts": [
+     [
+      2025,
+      7
+     ]
+    ]
+   }
+  },
+  "alternative-id": [
+   "10.1002/lpor.202570057"
+  ],
+  "URL": "https://doi.org/10.1002/lpor.202570057",
+  "archive": [
+   "Portico"
+  ],
+  "relation": {},
+  "ISSN": [
+   "1863-8880",
+   "1863-8899"
+  ],
+  "issn-type": [
+   {
+    "value": "1863-8880",
+    "type": "print"
+   },
+   {
+    "value": "1863-8899",
+    "type": "electronic"
+   }
+  ],
+  "subject": [],
+  "published": {
+   "date-parts": [
+    [
+     2025,
+     7
+    ]
+   ]
+  },
+  "assertion": [
+   {
+    "value": "2025-07-21",
+    "order": 3,
+    "name": "published",
+    "label": "Published",
+    "group": {
+     "name": "publication_history",
+     "label": "Publication History"
+    }
+   }
+  ],
+  "article-number": "2570057"
+ }
+}

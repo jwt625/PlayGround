@@ -1,0 +1,326 @@
+paper_id: kharel2021
+verified_on: '2026-10-01'
+source_files:
+- references/kharel2021/text.md
+- references/kharel2021/crossref.json
+- references/kharel2021/figures/page_02.png
+- references/kharel2021/figures/page_03.png
+- references/kharel2021/figures/page_04.png
+- references/kharel2021/figures/page_05.png
+entries:
+- device_id: kharel2021-a
+  field: wavelength_nm
+  value: 1560
+  unit: nm
+  basis: measured
+  locator: p.4 Sec. III
+  note: tunable laser used for the EO measurements; device not distinguished
+- device_id: kharel2021-a
+  field: vpi_rf_freq_ghz
+  value: 1
+  unit: GHz
+  basis: measured
+  locator: p.4 Sec. III; Fig. 3(b)
+  note: Vpi,1GHz reference frequency
+- device_id: kharel2021-a
+  field: bw_measured_to_ghz
+  value: 50
+  unit: GHz
+  basis: extracted_from_figure
+  locator: Fig. 3(b)
+  note: x axis ends at 50 GHz; instrument limit not stated in text
+- device_id: kharel2021-a
+  field: eo_rolloff_freq_ghz
+  value: 50
+  unit: GHz
+  basis: measured
+  locator: p.4 Sec. III; Fig. 3(b)
+- device_id: kharel2021-a
+  field: eo_film_thickness_nm
+  value: 600
+  unit: nm
+  basis: measured
+  locator: p.3 Sec. III
+  note: x-cut LN film on quartz handle, NanoLN wafer
+- device_id: kharel2021-a
+  field: etch_depth_nm
+  value: 350
+  unit: nm
+  basis: measured
+  locator: p.3 Sec. III
+  note: partial etch of the LN film
+- device_id: kharel2021-a
+  field: electrode_gap_um
+  value: 5
+  unit: um
+  basis: measured
+  locator: p.2 Fig. 1 caption; p.4 text
+  note: g = 5 um between facing segment edges per Fig. 1(e)
+- device_id: kharel2021-a
+  field: electrode_thickness_um
+  value: 0.8
+  unit: um
+  basis: measured
+  locator: p.3 Sec. III
+  note: gold, lift-off
+- device_id: kharel2021-a
+  field: electrode_metal
+  value: gold
+  unit: ''
+  basis: measured
+  locator: p.3 Sec. III
+- device_id: kharel2021-a
+  field: substrate
+  value: quartz 500 um
+  unit: ''
+  basis: measured
+  locator: p.3 Sec. III
+  note: 500 um thick quartz handle
+- device_id: kharel2021-a
+  field: cladding
+  value: SiO2 1 um (CVD)
+  unit: ''
+  basis: measured
+  locator: p.3-4 Sec. III
+  note: chemical vapor deposition; profile not stated
+- device_id: kharel2021-a
+  field: crystal_cut
+  value: x-cut
+  unit: ''
+  basis: measured
+  locator: p.2; p.3 Sec. III
+- device_id: kharel2021-a
+  field: drive
+  value: push_pull
+  unit: ''
+  basis: measured
+  locator: p.2 text
+  note: push-pull stated for the traveling-wave MZI; single-drive electrode
+- device_id: kharel2021-a
+  field: vpi_convention
+  value: mzm_push_pull
+  unit: ''
+  basis: measured
+  locator: p.1 text; p.2 text
+  note: Vpi defined as max-to-nearest-minimum transmission voltage of the MZM
+- device_id: kharel2021-a
+  field: length_mm
+  value: 10
+  unit: mm
+  basis: measured
+  locator: p.4 Sec. III; Fig. 3(b) legend
+  note: 10-mm modulator with segmented electrode
+- device_id: kharel2021-a
+  field: vpi_rf_v
+  value: 2.3
+  unit: V
+  basis: measured
+  locator: p.4 Sec. III; Fig. 3(b)
+  note: Vpi at 1 GHz by Bessel-function method
+- device_id: kharel2021-a
+  field: eo_rolloff_db
+  value: 0.8
+  unit: dB
+  basis: measured
+  locator: p.4 Sec. III
+  note: relative to Vpi at 1 GHz; at 50 GHz
+- device_id: kharel2021-a
+  field: rf_loss_db_per_cm
+  value: 2
+  unit: dB/cm
+  basis: measured
+  locator: p.4 Sec. III; Fig. 2(a)
+  note: segmented electrode at 50 GHz; Fig. 2 caption states 10-mm electrode; fit 0.26 dB/cm/GHz^0.5 gives 1.84
+- device_id: kharel2021-a
+  field: rf_loss_freq_ghz
+  value: 50
+  unit: GHz
+  basis: measured
+  locator: p.4 Sec. III; Fig. 2(a)
+- device_id: kharel2021-b
+  field: wavelength_nm
+  value: 1560
+  unit: nm
+  basis: measured
+  locator: p.4 Sec. III
+  note: tunable laser used for the EO measurements; device not distinguished
+- device_id: kharel2021-b
+  field: vpi_rf_freq_ghz
+  value: 1
+  unit: GHz
+  basis: measured
+  locator: p.4 Sec. III; Fig. 3(b)
+  note: Vpi,1GHz reference frequency
+- device_id: kharel2021-b
+  field: bw_measured_to_ghz
+  value: 50
+  unit: GHz
+  basis: extracted_from_figure
+  locator: Fig. 3(b)
+  note: x axis ends at 50 GHz; instrument limit not stated in text
+- device_id: kharel2021-b
+  field: eo_rolloff_freq_ghz
+  value: 50
+  unit: GHz
+  basis: measured
+  locator: p.4 Sec. III; Fig. 3(b)
+- device_id: kharel2021-b
+  field: eo_film_thickness_nm
+  value: 600
+  unit: nm
+  basis: measured
+  locator: p.3 Sec. III
+  note: x-cut LN film on quartz handle, NanoLN wafer
+- device_id: kharel2021-b
+  field: etch_depth_nm
+  value: 350
+  unit: nm
+  basis: measured
+  locator: p.3 Sec. III
+  note: partial etch of the LN film
+- device_id: kharel2021-b
+  field: electrode_gap_um
+  value: 5
+  unit: um
+  basis: measured
+  locator: p.2 Fig. 1 caption; p.4 text
+  note: g = 5 um between facing segment edges per Fig. 1(e)
+- device_id: kharel2021-b
+  field: electrode_thickness_um
+  value: 0.8
+  unit: um
+  basis: measured
+  locator: p.3 Sec. III
+  note: gold, lift-off
+- device_id: kharel2021-b
+  field: electrode_metal
+  value: gold
+  unit: ''
+  basis: measured
+  locator: p.3 Sec. III
+- device_id: kharel2021-b
+  field: substrate
+  value: quartz 500 um
+  unit: ''
+  basis: measured
+  locator: p.3 Sec. III
+  note: 500 um thick quartz handle
+- device_id: kharel2021-b
+  field: cladding
+  value: SiO2 1 um (CVD)
+  unit: ''
+  basis: measured
+  locator: p.3-4 Sec. III
+  note: chemical vapor deposition; profile not stated
+- device_id: kharel2021-b
+  field: crystal_cut
+  value: x-cut
+  unit: ''
+  basis: measured
+  locator: p.2; p.3 Sec. III
+- device_id: kharel2021-b
+  field: drive
+  value: push_pull
+  unit: ''
+  basis: measured
+  locator: p.2 text
+  note: push-pull stated for the traveling-wave MZI; single-drive electrode
+- device_id: kharel2021-b
+  field: vpi_convention
+  value: mzm_push_pull
+  unit: ''
+  basis: measured
+  locator: p.1 text; p.2 text
+  note: Vpi defined as max-to-nearest-minimum transmission voltage of the MZM
+- device_id: kharel2021-b
+  field: length_mm
+  value: 20
+  unit: mm
+  basis: measured
+  locator: p.4 Sec. III; Fig. 3(a)
+  note: 20-mm long modulator
+- device_id: kharel2021-b
+  field: vpi_dc_v
+  value: 1.35
+  unit: V
+  basis: measured
+  locator: p.4 Sec. III; Fig. 3(a)
+  note: oscilloscope sweep; Fig. 3(a) label says 1 MHz, text says DC
+- device_id: kharel2021-b
+  field: vpi_rf_v
+  value: 1.3
+  unit: V
+  basis: measured
+  locator: p.1 abstract; p.4 Sec. III; Fig. 3(b)
+  note: Vpi at 1 GHz by Bessel-function method
+- device_id: kharel2021-b
+  field: eo_rolloff_db
+  value: 1.8
+  unit: dB
+  basis: measured
+  locator: p.1 abstract; p.4 Sec. III
+  note: relative to Vpi at 1 GHz; at 50 GHz
+- device_id: kharel2021-b
+  field: il_onchip_db
+  value: 1
+  unit: dB
+  basis: author_estimate
+  locator: p.2 Intro; p.4 Sec. III
+  note: below 1 dB, estimated by comparing a grating-coupler pair with and without the modulator; device not named
+- device_id: kharel2021-b
+  field: il_fiber_to_fiber_db
+  value: 13
+  unit: dB
+  basis: measured
+  locator: p.4 Sec. III
+  note: total insertion loss through a pair of grating couplers; device not named
+- device_id: kharel2021-b
+  field: extinction_ratio_db
+  value: 20
+  unit: dB
+  basis: measured
+  locator: p.4 Sec. III; Fig. 3(a)
+  note: about 20 dB, DC voltage sweep
+derived:
+- device_id: kharel2021-a
+  field: slab_thickness_nm
+  value: 250
+  formula: eo_film_thickness_nm - etch_depth_nm = 600 - 350
+  inputs:
+  - eo_film_thickness_nm=600
+  - etch_depth_nm=350
+- device_id: kharel2021-b
+  field: slab_thickness_nm
+  value: 250
+  formula: eo_film_thickness_nm - etch_depth_nm = 600 - 350
+  inputs:
+  - eo_film_thickness_nm=600
+  - etch_depth_nm=350
+context_values:
+  rf_phase_index_measured:
+    value: 2.23
+    locator: p.4 Sec. III
+    note: device not named; not entered on any row
+  rf_loss_fit_segmented_db_per_cm_per_sqrtghz:
+    value: 0.26
+    locator: p.4; Fig. 2(b)
+  rf_loss_fit_regular_db_per_cm_per_sqrtghz:
+    value: 0.69
+    locator: p.4; Fig. 2(b)
+    note: regular electrode on LN-on-silicon
+  vpi_50ghz_20mm_v:
+    value: 1.6
+    locator: p.2 Intro; p.4
+    note: stated by authors from 1.3 V and 1.8 dB roll-off; not entered (single-point column)
+  simulated_table_I_segmented_quartz:
+    vpi_l_vcm: 2.1
+    z_ohm: 42
+    rf_loss_db_per_cm_per_sqrtghz: 0.21
+    est_bw3db_ghz_for_vpi_dc_1v: 228
+    locator: p.3 Table I
+    note: HFSS simulation, signal width 100 um, gap 5 um
+  predicted_bw3db_20mm_ghz:
+    value: 180
+    locator: p.5 Discussion; Fig. 4(a)
+    note: authors extrapolation of measured loss; prediction
+  license_and_rights_basis: 'Crossref record: content-version vor, URL doi.org/10.1364/OA_License_v1#VOR-OA, start 2021-03-09; published-online 2021-03-09; arXiv v1 date from page-1 stamp 26 Nov 2020'

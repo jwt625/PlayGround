@@ -1,0 +1,533 @@
+{
+ "status": "ok",
+ "message-type": "work",
+ "message-version": "1.0.0",
+ "message": {
+  "indexed": {
+   "date-parts": [
+    [
+     2026,
+     9,
+     5
+    ]
+   ],
+   "date-time": "2026-09-05T02:47:16Z",
+   "timestamp": 1788576436267,
+   "version": "build-2803163510"
+  },
+  "reference-count": 29,
+  "publisher": "Wiley",
+  "issue": "1",
+  "license": [
+   {
+    "start": {
+     "date-parts": [
+      [
+       2022,
+       10,
+       26
+      ]
+     ],
+     "date-time": "2022-10-26T00:00:00Z",
+     "timestamp": 1666742400000
+    },
+    "content-version": "am",
+    "delay-in-days": 0,
+    "URL": "http://creativecommons.org/licenses/by/4.0/"
+   },
+   {
+    "start": {
+     "date-parts": [
+      [
+       2022,
+       10,
+       26
+      ]
+     ],
+     "date-time": "2022-10-26T00:00:00Z",
+     "timestamp": 1666742400000
+    },
+    "content-version": "vor",
+    "delay-in-days": 0,
+    "URL": "http://creativecommons.org/licenses/by/4.0/"
+   }
+  ],
+  "funder": [
+   {
+    "DOI": "10.13039/100000001",
+    "name": "National Science Foundation",
+    "doi-asserted-by": "publisher",
+    "id": [
+     {
+      "id": "10.13039/100000001",
+      "id-type": "DOI",
+      "asserted-by": "publisher"
+     }
+    ]
+   },
+   {
+    "DOI": "10.13039/100016280",
+    "name": "L3Harris Technologies",
+    "doi-asserted-by": "publisher",
+    "id": [
+     {
+      "id": "10.13039/100016280",
+      "id-type": "DOI",
+      "asserted-by": "publisher"
+     }
+    ]
+   }
+  ],
+  "content-domain": {
+   "domain": [],
+   "crossmark-restriction": false
+  },
+  "short-container-title": [
+   "Advanced Photonics Research"
+  ],
+  "published-print": {
+   "date-parts": [
+    [
+     2023,
+     1
+    ]
+   ]
+  },
+  "abstract": "<jats:sec><jats:label/><jats:p>High\u2010speed modulators with low driving voltage, low loss, and compact size are essential for future optical communication systems. Thin\u2010film lithium niobate modulators have met each of these criteria separately, but simultaneous achievement of all of them has been challenging on this platform. Low driving voltage electro\u2010optic modulators necessitate either a narrow gap between the electrodes or an elongated Mach\u2013Zehnder arms, both of which adversely affect the microwave loss, hence the bandwidth. Herein, this trade\u2010off is alleviated by placing the optical waveguides nonsymmetrically with respect to the electrodes and by including a dielectric buffer layer beneath the electrodes. Exploiting this novel design yields a modulator with a measured roll\u2010off of only 2\u2009dB from low frequencies up to 100\u2009GHz, and with an extrapolated 3\u2009dB bandwidth of 170\u2009GHz. The measured voltage\u2013length product of this subterahertz device is 3.3\u2009V\u2009cm. Another device, optimized for a lower voltage\u2013length product of 2.2\u2009V\u2009cm, exhibits a 3\u2009dB electro\u2010optic bandwidth of 84\u2009GHz. The devices are also tested for eight\u2010level pulse\u2010amplitude modulation (PAM\u20108) and demonstrate data rates of up to 240\u2009Gb\u2009s<jats:sup>\u22121</jats:sup> at 80\u2009Gbaud, validating that the modulators are a propitious candidate for next\u2010generation optical communication systems.</jats:p></jats:sec>",
+  "DOI": "10.1002/adpr.202200216",
+  "type": "journal-article",
+  "created": {
+   "date-parts": [
+    [
+     2022,
+     10,
+     26
+    ]
+   ],
+   "date-time": "2022-10-26T07:05:57Z",
+   "timestamp": 1666767957000
+  },
+  "source": "Crossref",
+  "is-referenced-by-count": 59,
+  "title": [
+   "Thin\u2010Film Lithium Niobate Optical Modulators with an Extrapolated Bandwidth of 170\u2009GHz"
+  ],
+  "prefix": "10.1002",
+  "volume": "4",
+  "author": [
+   {
+    "given": "Farzaneh",
+    "family": "Arab Juneghani",
+    "sequence": "first",
+    "affiliation": [
+     {
+      "name": "CREOL, The College of Optics and Photonics University of Central Florida  Orlando FL 32816 USA"
+     }
+    ],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Milad",
+    "family": "Gholipour Vazimali",
+    "sequence": "additional",
+    "affiliation": [
+     {
+      "name": "CREOL, The College of Optics and Photonics University of Central Florida  Orlando FL 32816 USA"
+     }
+    ],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Jie",
+    "family": "Zhao",
+    "sequence": "additional",
+    "affiliation": [
+     {
+      "name": "Nokia Bell Labs  600 Mountain Avenue Murray Hill NJ 07974 USA"
+     }
+    ],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Xi",
+    "family": "Chen",
+    "sequence": "additional",
+    "affiliation": [
+     {
+      "name": "Nokia Bell Labs  600 Mountain Avenue Murray Hill NJ 07974 USA"
+     }
+    ],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Son Thai",
+    "family": "Le",
+    "sequence": "additional",
+    "affiliation": [
+     {
+      "name": "Nokia Bell Labs  600 Mountain Avenue Murray Hill NJ 07974 USA"
+     }
+    ],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Haoshuo",
+    "family": "Chen",
+    "sequence": "additional",
+    "affiliation": [
+     {
+      "name": "Nokia Bell Labs  600 Mountain Avenue Murray Hill NJ 07974 USA"
+     }
+    ],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Ehsan",
+    "family": "Ordouie",
+    "sequence": "additional",
+    "affiliation": [
+     {
+      "name": "CREOL, The College of Optics and Photonics University of Central Florida  Orlando FL 32816 USA"
+     }
+    ],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Nicolas K",
+    "family": "Fontaine",
+    "sequence": "additional",
+    "affiliation": [
+     {
+      "name": "Nokia Bell Labs  600 Mountain Avenue Murray Hill NJ 07974 USA"
+     }
+    ],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "ORCID": "https://orcid.org/0000-0002-8395-9094",
+    "authenticated-orcid": false,
+    "given": "Sasan",
+    "family": "Fathpour",
+    "sequence": "additional",
+    "affiliation": [
+     {
+      "name": "CREOL, The College of Optics and Photonics University of Central Florida  Orlando FL 32816 USA"
+     },
+     {
+      "name": "Department of Electrical and Computer Engineering University of Central Florida  Orlando FL 32816 USA"
+     }
+    ],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   }
+  ],
+  "member": "311",
+  "published-online": {
+   "date-parts": [
+    [
+     2022,
+     10,
+     26
+    ]
+   ]
+  },
+  "reference": [
+   {
+    "key": "e_1_2_8_2_1",
+    "doi-asserted-by": "publisher",
+    "DOI": "10.1038/nphoton.2010.179"
+   },
+   {
+    "key": "e_1_2_8_3_1",
+    "doi-asserted-by": "publisher",
+    "DOI": "10.1002/bltj.20400"
+   },
+   {
+    "key": "e_1_2_8_4_1",
+    "doi-asserted-by": "publisher",
+    "DOI": "10.1038/nature03569"
+   },
+   {
+    "key": "e_1_2_8_5_1",
+    "doi-asserted-by": "publisher",
+    "DOI": "10.1038/nature16454"
+   },
+   {
+    "key": "e_1_2_8_6_1",
+    "doi-asserted-by": "publisher",
+    "DOI": "10.1364/OE.27.014447"
+   },
+   {
+    "key": "e_1_2_8_7_1",
+    "doi-asserted-by": "publisher",
+    "DOI": "10.1109/3.234473"
+   },
+   {
+    "key": "e_1_2_8_8_1",
+    "doi-asserted-by": "publisher",
+    "DOI": "10.1109/JLT.2016.2639542"
+   },
+   {
+    "key": "e_1_2_8_9_1",
+    "doi-asserted-by": "crossref",
+    "unstructured": "Y.Ogiso J.Ozaki Y.Ueda H.Wakita M.Nagatani H.Yamazaki M.Nakamura T.Kobayashi S.Kanazawa T.Fujii Y.Hashizume H.Tanobe N.Nunoya M.Ida Y.Miyamoto M.Ishikawa inOptical Fiber Communication Conf. Optical Society of America 2019 pp.M2F\u20132.",
+    "DOI": "10.1364/OFC.2019.M2F.2"
+   },
+   {
+    "key": "e_1_2_8_10_1",
+    "doi-asserted-by": "publisher",
+    "DOI": "10.1109/2944.826874"
+   },
+   {
+    "key": "e_1_2_8_11_1",
+    "doi-asserted-by": "publisher",
+    "DOI": "10.1364/OL.41.005700"
+   },
+   {
+    "key": "e_1_2_8_12_1",
+    "doi-asserted-by": "publisher",
+    "DOI": "10.1364/OE.26.023728"
+   },
+   {
+    "key": "e_1_2_8_13_1",
+    "doi-asserted-by": "publisher",
+    "DOI": "10.1038/s41586-018-0551-y"
+   },
+   {
+    "key": "e_1_2_8_14_1",
+    "unstructured": "S.Sun M.He M.Xu X.Zhang Z.Ruan L.Liu X.Cai in2020 Optical Fiber Communications Conf. and Exhibition (OFC) IEEE Piscataway NJ2020 pp.1\u20133."
+   },
+   {
+    "key": "e_1_2_8_15_1",
+    "doi-asserted-by": "publisher",
+    "DOI": "10.1038/s41566-019-0378-6"
+   },
+   {
+    "key": "e_1_2_8_16_1",
+    "doi-asserted-by": "publisher",
+    "DOI": "10.1002/lpor.202000088"
+   },
+   {
+    "key": "e_1_2_8_17_1",
+    "doi-asserted-by": "publisher",
+    "DOI": "10.1364/OE.21.025573"
+   },
+   {
+    "key": "e_1_2_8_18_1",
+    "doi-asserted-by": "publisher",
+    "DOI": "10.1364/OPTICA.416155"
+   },
+   {
+    "key": "e_1_2_8_19_1",
+    "doi-asserted-by": "publisher",
+    "DOI": "10.1038/s41467-019-13993-7"
+   },
+   {
+    "key": "e_1_2_8_20_1",
+    "doi-asserted-by": "crossref",
+    "unstructured": "X.Chen G.Raybon D.Che J.Cho K.Kim in2021 Optical Fiber Communications Conf. and Exhibition (OFC) IEEE Piscataway NJ2021 pp.1\u20133.",
+    "DOI": "10.1364/OFC.2021.F3C.5"
+   },
+   {
+    "key": "e_1_2_8_21_1",
+    "doi-asserted-by": "publisher",
+    "DOI": "10.1109/JSTQE.2016.2635020"
+   },
+   {
+    "key": "e_1_2_8_22_1",
+    "doi-asserted-by": "publisher",
+    "DOI": "10.1364/OE.27.006495"
+   },
+   {
+    "key": "e_1_2_8_23_1",
+    "doi-asserted-by": "publisher",
+    "DOI": "10.1364/PRJ.468518"
+   },
+   {
+    "key": "e_1_2_8_24_1",
+    "doi-asserted-by": "publisher",
+    "DOI": "10.1021/acsphotonics.2c00263"
+   },
+   {
+    "key": "e_1_2_8_25_1",
+    "volume-title": "Microwave Engineering",
+    "author": "Pozar D. M.",
+    "year": "2011"
+   },
+   {
+    "key": "e_1_2_8_26_1",
+    "doi-asserted-by": "publisher",
+    "DOI": "10.1109/33.159877"
+   },
+   {
+    "key": "e_1_2_8_27_1",
+    "volume-title": "Photonic Devices",
+    "author": "Liu J.-M.",
+    "year": "2009"
+   },
+   {
+    "key": "e_1_2_8_28_1",
+    "doi-asserted-by": "crossref",
+    "unstructured": "D. D.Jones Semiconductor devices for high-speed optoelectronics by giovanni ghione: Scope: monograph and review. level: undergraduate postgraduate and early career researcher 2011.",
+    "DOI": "10.1080/00107514.2010.537780"
+   },
+   {
+    "key": "e_1_2_8_29_1",
+    "unstructured": "D. F.Williams S.Schwarz In1984 IEEE MTT-S Int. Microwave Symp. Digest. IEEE Piscataway NJ1984 pp.453\u2013454."
+   },
+   {
+    "key": "e_1_2_8_30_1",
+    "doi-asserted-by": "publisher",
+    "DOI": "10.1364/OPTICA.449691"
+   }
+  ],
+  "container-title": [
+   "Advanced Photonics Research"
+  ],
+  "original-title": [],
+  "language": "en",
+  "link": [
+   {
+    "URL": "https://onlinelibrary.wiley.com/doi/pdf/10.1002/adpr.202200216",
+    "content-type": "application/pdf",
+    "content-version": "vor",
+    "intended-application": "text-mining"
+   },
+   {
+    "URL": "https://onlinelibrary.wiley.com/doi/full-xml/10.1002/adpr.202200216",
+    "content-type": "application/xml",
+    "content-version": "vor",
+    "intended-application": "text-mining"
+   },
+   {
+    "URL": "https://advanced.onlinelibrary.wiley.com/doi/pdf/10.1002/adpr.202200216",
+    "content-type": "application/pdf",
+    "content-version": "vor",
+    "intended-application": "syndication"
+   },
+   {
+    "URL": "https://advanced.onlinelibrary.wiley.com/doi/pdf/10.1002/adpr.202200216",
+    "content-type": "unspecified",
+    "content-version": "vor",
+    "intended-application": "similarity-checking"
+   }
+  ],
+  "deposited": {
+   "date-parts": [
+    [
+     2025,
+     10,
+     6
+    ]
+   ],
+   "date-time": "2025-10-06T11:39:51Z",
+   "timestamp": 1759750791000
+  },
+  "score": 1,
+  "resource": {
+   "primary": {
+    "URL": "https://advanced.onlinelibrary.wiley.com/doi/10.1002/adpr.202200216"
+   }
+  },
+  "subtitle": [],
+  "short-title": [],
+  "issued": {
+   "date-parts": [
+    [
+     2022,
+     10,
+     26
+    ]
+   ]
+  },
+  "references-count": 29,
+  "journal-issue": {
+   "issue": "1",
+   "published-print": {
+    "date-parts": [
+     [
+      2023,
+      1
+     ]
+    ]
+   }
+  },
+  "alternative-id": [
+   "10.1002/adpr.202200216"
+  ],
+  "URL": "https://doi.org/10.1002/adpr.202200216",
+  "archive": [
+   "Portico"
+  ],
+  "relation": {},
+  "ISSN": [
+   "2699-9293",
+   "2699-9293"
+  ],
+  "issn-type": [
+   {
+    "value": "2699-9293",
+    "type": "print"
+   },
+   {
+    "value": "2699-9293",
+    "type": "electronic"
+   }
+  ],
+  "subject": [],
+  "published": {
+   "date-parts": [
+    [
+     2022,
+     10,
+     26
+    ]
+   ]
+  },
+  "article-number": "2200216"
+ }
+}

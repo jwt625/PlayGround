@@ -1,0 +1,255 @@
+[
+ {
+  "kind": "page_render",
+  "file": "page_03.png",
+  "page": 3,
+  "captions": [
+   "Figure 1 Structure of the hybrid Si/LN MZM. (a) Schematic of the structure of the whole"
+  ]
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p03_1.png",
+  "page": 3,
+  "width": 355,
+  "height": 492
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p03_2.png",
+  "page": 3,
+  "width": 306,
+  "height": 243
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p03_8.png",
+  "page": 3,
+  "width": 453,
+  "height": 322
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p03_10.png",
+  "page": 3,
+  "width": 275,
+  "height": 196
+ },
+ {
+  "kind": "page_render",
+  "file": "page_04.png",
+  "page": 4,
+  "captions": [
+   "Figure 2 Static EO Performance. (a) Normalized optical transmission of the 3-mm and 5-"
+  ]
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p04_1.png",
+  "page": 4,
+  "width": 569,
+  "height": 501
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p04_2.png",
+  "page": 4,
+  "width": 494,
+  "height": 363
+ },
+ {
+  "kind": "page_render",
+  "file": "page_05.png",
+  "page": 5,
+  "captions": [
+   "Figure 3 EO Bandwidth and Linearity. (a) Experimental setup for measuring the EO"
+  ]
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p05_1.png",
+  "page": 5,
+  "width": 479,
+  "height": 223
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p05_2.png",
+  "page": 5,
+  "width": 484,
+  "height": 223
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p05_3.png",
+  "page": 5,
+  "width": 475,
+  "height": 479
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p05_4.png",
+  "page": 5,
+  "width": 527,
+  "height": 478
+ },
+ {
+  "kind": "page_render",
+  "file": "page_06.png",
+  "page": 6,
+  "captions": [
+   "Figure 4 Data Transmission Testing. (a) Experimental setup for measuring the eye diagram."
+  ]
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p06_7.png",
+  "page": 6,
+  "width": 496,
+  "height": 352
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p06_8.png",
+  "page": 6,
+  "width": 935,
+  "height": 308
+ },
+ {
+  "kind": "page_render",
+  "file": "page_07.png",
+  "page": 7,
+  "captions": [
+   "Fig.4, the energy consumption of the present device of 3 mm length is estimated about 700"
+  ]
+ },
+ {
+  "kind": "page_render",
+  "file": "page_12.png",
+  "page": 12,
+  "captions": [
+   "Fig. S1 (a). Then, we calculate the change of LN refractive index"
+  ]
+ },
+ {
+  "kind": "page_render",
+  "file": "page_13.png",
+  "page": 13,
+  "captions": [
+   "Figure S1. (a) A cross-sectional view of the simulated optical TE mode profile and the"
+  ]
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p13_5.png",
+  "page": 13,
+  "width": 934,
+  "height": 630
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p13_6.png",
+  "page": 13,
+  "width": 436,
+  "height": 241
+ },
+ {
+  "kind": "page_render",
+  "file": "page_14.png",
+  "page": 14,
+  "captions": [
+   "Figure S2. Schematic structure of the coplanar line waveguide in the arms of the"
+  ]
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p14_4.png",
+  "page": 14,
+  "width": 846,
+  "height": 418
+ },
+ {
+  "kind": "page_render",
+  "file": "page_15.png",
+  "page": 15,
+  "captions": [
+   "Figure S3. (a) Signal electrode width ws, (b) RF attenuation \uf061m, and (c) RF effective"
+  ]
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p15_1.png",
+  "page": 15,
+  "width": 1147,
+  "height": 761
+ },
+ {
+  "kind": "page_render",
+  "file": "page_17.png",
+  "page": 17,
+  "captions": [
+   "Figure S4. (a) Characteristic impedance Z0, (b) RF attenuation \uf061m, (c) RF effective"
+  ]
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p17_1.png",
+  "page": 17,
+  "width": 1202,
+  "height": 793
+ },
+ {
+  "kind": "page_render",
+  "file": "page_18.png",
+  "page": 18,
+  "captions": [
+   "Figure S5. (a) Schematic diagram for measuring the insertion loss of LN waveguide"
+  ]
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p18_1.png",
+  "page": 18,
+  "width": 894,
+  "height": 571
+ },
+ {
+  "kind": "page_render",
+  "file": "page_19.png",
+  "page": 19,
+  "captions": [
+   "Figure S6. Measured insertion losses of LN waveguides with different lengths. The coupling",
+   "Figure S7. (a) Simulated coupling efficiency of VACs against the width of the silicon"
+  ]
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p19_1.png",
+  "page": 19,
+  "width": 781,
+  "height": 544
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p19_2.png",
+  "page": 19,
+  "width": 1112,
+  "height": 385
+ },
+ {
+  "kind": "page_render",
+  "file": "page_20.png",
+  "page": 20,
+  "captions": [
+   "Figure S8. DSP block diagram for the received signals. sps: samples per symbol.",
+   "Figure S9. BER as a function of the number of taps used for LMS equalization."
+  ]
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p20_1.png",
+  "page": 20,
+  "width": 1128,
+  "height": 717
+ }
+]

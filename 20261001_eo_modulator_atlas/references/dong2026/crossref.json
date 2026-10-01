@@ -1,0 +1,291 @@
+{
+ "status": "ok",
+ "message-type": "work",
+ "message-version": "1.0.0",
+ "message": {
+  "indexed": {
+   "date-parts": [
+    [
+     2026,
+     8,
+     17
+    ]
+   ],
+   "date-time": "2026-08-17T18:26:23Z",
+   "timestamp": 1786991183167,
+   "version": "build-2736575974"
+  },
+  "publisher-location": "Washington, D.C.",
+  "reference-count": 1,
+  "publisher": "Optica Publishing Group",
+  "content-domain": {
+   "domain": [],
+   "crossmark-restriction": false
+  },
+  "short-container-title": [],
+  "published-print": {
+   "date-parts": [
+    [
+     2026
+    ]
+   ]
+  },
+  "abstract": "<jats:p>Silicon Mach\u2013Zehnder modulators (MZMs) are widely used for 100G/200G PAM4, but their scalability to IMDD 400G/lane is uncertain. We demonstrate a silicon MZM with a commercial SiGe driver enabling 400G/lane PAM4 transmission.</jats:p>",
+  "DOI": "10.1364/ofc.2026.th4a.4",
+  "type": "proceedings-article",
+  "created": {
+   "date-parts": [
+    [
+     2026,
+     6,
+     2
+    ]
+   ],
+   "date-time": "2026-06-02T19:28:45Z",
+   "timestamp": 1780428525000
+  },
+  "page": "Th4A.4",
+  "source": "Crossref",
+  "is-referenced-by-count": 0,
+  "title": [
+   "400G/lane PAM4 Modulation Using Silicon Mach-Zehnder Modulators"
+  ],
+  "prefix": "10.1364",
+  "author": [
+   {
+    "given": "Po",
+    "family": "Dong",
+    "sequence": "first",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Venkatesh",
+    "family": "Doddapaneni",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Michael",
+    "family": "Kossey",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Craig",
+    "family": "Schulz",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Andrei",
+    "family": "Kaikkonen",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Roberto",
+    "family": "Rodes",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Dun",
+    "family": "Mao",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Jaime",
+    "family": "Kwan",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Taylor",
+    "family": "Fryett",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Bo",
+    "family": "Feng",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Argishti",
+    "family": "Melikyan",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Chengpin",
+    "family": "Yu",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Jack",
+    "family": "Xu",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   }
+  ],
+  "member": "285",
+  "reference": [
+   {
+    "key": "OFC-2026-Th4A.4-R7",
+    "doi-asserted-by": "publisher",
+    "first-page": "6547",
+    "DOI": "10.1038/s41467-025-61933-5",
+    "type": "journal-article",
+    "volume": "16",
+    "author": "Han",
+    "year": "2025",
+    "journal-title": "Nat Commun."
+   }
+  ],
+  "event": {
+   "name": "Optical Fiber Communication Conference",
+   "location": "Los Angeles, California",
+   "acronym": "OFC",
+   "sponsor": [
+    "The Optical Society"
+   ],
+   "start": {
+    "date-parts": [
+     [
+      2026
+     ]
+    ]
+   }
+  },
+  "container-title": [
+   "Optical Fiber Communication Conference (OFC) 2026"
+  ],
+  "original-title": [],
+  "link": [
+   {
+    "URL": "https://opg.optica.org/viewmedia.cfm?URI=OFC-2026-Th4A.4&seq=0",
+    "content-type": "unspecified",
+    "content-version": "vor",
+    "intended-application": "similarity-checking"
+   }
+  ],
+  "deposited": {
+   "date-parts": [
+    [
+     2026,
+     8,
+     17
+    ]
+   ],
+   "date-time": "2026-08-17T17:27:34Z",
+   "timestamp": 1786987654000
+  },
+  "score": 1,
+  "resource": {
+   "primary": {
+    "URL": "https://opg.optica.org/abstract.cfm?URI=OFC-2026-Th4A.4"
+   }
+  },
+  "subtitle": [],
+  "short-title": [],
+  "issued": {
+   "date-parts": [
+    [
+     2026
+    ]
+   ]
+  },
+  "references-count": 1,
+  "URL": "https://doi.org/10.1364/ofc.2026.th4a.4",
+  "relation": {},
+  "subject": [],
+  "published": {
+   "date-parts": [
+    [
+     2026
+    ]
+   ]
+  }
+ }
+}

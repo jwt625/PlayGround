@@ -1,0 +1,222 @@
+{
+ "status": "ok",
+ "message-type": "work",
+ "message-version": "1.0.0",
+ "message": {
+  "indexed": {
+   "date-parts": [
+    [
+     2026,
+     8,
+     18
+    ]
+   ],
+   "date-time": "2026-08-18T02:54:28Z",
+   "timestamp": 1787021668577,
+   "version": "build-2736575974"
+  },
+  "publisher-location": "Washington, D.C.",
+  "reference-count": 4,
+  "publisher": "Optica Publishing Group",
+  "content-domain": {
+   "domain": [],
+   "crossmark-restriction": false
+  },
+  "short-container-title": [],
+  "published-print": {
+   "date-parts": [
+    [
+     2024
+    ]
+   ]
+  },
+  "abstract": "<jats:p>We developed a next-generation InP twin-IQ modulator PIC for beyond 200-Gbaud operations. A 3-dB electro-optic bandwidth of the modulator exceeds 100 GHz while maintaining a half-wave voltage of 1.5 V and total on-chip optical insertion loss of less than 3.5 dB.</jats:p>",
+  "DOI": "10.1364/ofc.2024.tu2d.7",
+  "type": "proceedings-article",
+  "created": {
+   "date-parts": [
+    [
+     2024,
+     5,
+     14
+    ]
+   ],
+   "date-time": "2024-05-14T08:44:03Z",
+   "timestamp": 1715676243000
+  },
+  "page": "Tu2D.7",
+  "source": "Crossref",
+  "is-referenced-by-count": 7,
+  "title": [
+   "High Speed InP Modulator for Beyond 200 Gbaud"
+  ],
+  "prefix": "10.1364",
+  "author": [
+   {
+    "given": "Yoshihiro",
+    "family": "Ogiso",
+    "sequence": "first",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Josuke",
+    "family": "Ozaki",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Kenta",
+    "family": "Sugiura",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Yusuke",
+    "family": "Saito",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Mitsuteru",
+    "family": "Ishikawa",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   }
+  ],
+  "member": "285",
+  "reference": [
+   {
+    "key": "OFC-2024-Tu2D.7-R1",
+    "doi-asserted-by": "publisher",
+    "first-page": "3290",
+    "DOI": "10.1109/JLT.2023.3236962",
+    "volume": "41",
+    "author": "Ozaki",
+    "year": "2023",
+    "journal-title": "J. Lightw. Technol."
+   },
+   {
+    "key": "OFC-2024-Tu2D.7-R2",
+    "doi-asserted-by": "publisher",
+    "first-page": "1450",
+    "DOI": "10.1109/JLT.2016.2639542",
+    "volume": "35",
+    "author": "Ogiso",
+    "year": "2017",
+    "journal-title": "J. Lightw. Technol."
+   },
+   {
+    "key": "OFC-2024-Tu2D.7-R3",
+    "doi-asserted-by": "publisher",
+    "first-page": "249",
+    "DOI": "10.1109/JLT.2019.2924671",
+    "volume": "38",
+    "author": "Ogiso",
+    "year": "2020",
+    "journal-title": "J. Lightw. Technol."
+   },
+   {
+    "key": "OFC-2024-Tu2D.7-R5",
+    "first-page": "854",
+    "volume": "34",
+    "author": "Liu",
+    "year": "2022",
+    "journal-title": "Lett."
+   }
+  ],
+  "event": {
+   "name": "Optical Fiber Communication Conference",
+   "location": "San Diego California",
+   "acronym": "OFC",
+   "sponsor": [
+    "The Optical Society"
+   ],
+   "start": {
+    "date-parts": [
+     [
+      2024
+     ]
+    ]
+   }
+  },
+  "container-title": [
+   "Optical Fiber Communication Conference (OFC) 2024"
+  ],
+  "original-title": [],
+  "link": [
+   {
+    "URL": "https://opg.optica.org/viewmedia.cfm?URI=OFC-2024-Tu2D.7&seq=0",
+    "content-type": "unspecified",
+    "content-version": "vor",
+    "intended-application": "similarity-checking"
+   }
+  ],
+  "deposited": {
+   "date-parts": [
+    [
+     2024,
+     10,
+     9
+    ]
+   ],
+   "date-time": "2024-10-09T12:08:56Z",
+   "timestamp": 1728475736000
+  },
+  "score": 1,
+  "resource": {
+   "primary": {
+    "URL": "https://opg.optica.org/abstract.cfm?URI=OFC-2024-Tu2D.7"
+   }
+  },
+  "subtitle": [],
+  "short-title": [],
+  "issued": {
+   "date-parts": [
+    [
+     2024
+    ]
+   ]
+  },
+  "references-count": 4,
+  "URL": "https://doi.org/10.1364/ofc.2024.tu2d.7",
+  "relation": {},
+  "subject": [],
+  "published": {
+   "date-parts": [
+    [
+     2024
+    ]
+   ]
+  }
+ }
+}

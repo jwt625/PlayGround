@@ -12,9 +12,9 @@ All other tasks below are **unassigned**, not implicitly delegated.
 | ID | Tranche | State | Owner | Dependency / handoff |
 |---|---|---|---|---|
 | C0 | Work plan, claims, current-state record | complete | codex-main | This board + detailed plan + claim file |
-| D0 | Ingestion tooling and policy alignment | ready | unassigned | Serialize fetching until locking is tested |
-| D1.01–D1.11 | Priority-1 paper batches, one claim per batch | ready, source access varies | unassigned | Existing batch manifests; see cached papers in plan |
-| D2 | Canonical data integration and view refresh | waiting for staged batches | unassigned | D1 report + independent evidence review |
+| D0 | Ingestion tooling and policy alignment | in progress | claude-data-lane | Serialize fetching until locking is tested |
+| D1.01–D1.11 | Priority-1 paper batches, one claim per batch | claimed (starts after D0 fetch locking; max 3 concurrent) | claude-data-lane | Existing batch manifests; see cached papers in plan |
+| D2 | Canonical data integration and view refresh | waiting for staged batches | claude-data-lane | D1 report + independent evidence review |
 | E1 | Cross-section runner, config boundary, analytic baseline | in progress | codex-main | Freeze input/result contracts; finish current checks |
 | E2 | Optical model limits, EO tensor overlap and voltage conventions | waiting for E1 handoff | unassigned | May research/design now; runtime edits after release |
 | E3 | Uniform RF line, conductor/dielectric loss | design ready; integration waits | unassigned | E1 section outputs; explicit model contract |
@@ -23,7 +23,7 @@ All other tasks below are **unassigned**, not implicitly delegated.
 | U1 | Browser cross-section simulator and current app baseline | in progress | codex-main | E1; route, worker, docs and smoke checks |
 | U2 | Table/explore correctness and usability | ready in owned files | unassigned | Avoid U1-owned scorecard and app config |
 | U3 | Full-chain results and reproduction scorecard | waiting | unassigned | E4/E5 contract + U1 release |
-| Q1 | Independent pilot/batch evidence audit | ready | unassigned | Read-only inputs; write audit report only |
+| Q1 | Independent pilot/batch evidence audit | claimed (fresh-context auditors, read-only) | claude-data-lane | Read-only inputs; write audit report only |
 | Q2 | Independent numerical review | review ready; final gate waits | unassigned | E1 diff; later E2–E5; separate audit files |
 | R1 | Release integration, second audit, public packaging | waiting | unassigned | Accepted D/E/U tranches; rights policy review |
 

@@ -1,0 +1,51 @@
+[
+ {
+  "kind": "page_render",
+  "file": "page_01.png",
+  "page": 1,
+  "captions": [
+   "Fig. 1. (a) Schematic of the serpentine segmented MZM. (b) Cross-sectional view of the serpentine segmented MZM."
+  ]
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p01_1.png",
+  "page": 1,
+  "width": 1259,
+  "height": 439
+ },
+ {
+  "kind": "page_render",
+  "file": "page_02.png",
+  "page": 2,
+  "captions": [
+   "Fig. 1(a) illustrates the schematic of the proposed serpentine segmented MZM structure. The device consists of",
+   "Fig. 1(b). The phase shifters employ laterally structured PN junctions with three-level doping concentrations in 220",
+   "Fig. 2. (a) Measured transmission spectra of the modulator at 0 V and -4 V. (b) EO responses of the three segments at 0 V and -2 V.",
+   "Fig. 2(a) shows the static transmission spectra of the modulator when all segments are driven simultaneously,"
+  ]
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p02_1.png",
+  "page": 2,
+  "width": 1289,
+  "height": 652
+ },
+ {
+  "kind": "page_render",
+  "file": "page_03.png",
+  "page": 3,
+  "captions": [
+   "Fig. 3. (a) Experimental setup for the MZM eye diagram measurement. (b)-(g) Measured optical eye diagrams at 64, 96, 112, 128, 160, and 192",
+   "Fig. 3(a) illustrates the schematic of the large signal experimental setup for the serpentine segmented MZM. RF"
+  ]
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p03_1.png",
+  "page": 3,
+  "width": 1154,
+  "height": 731
+ }
+]

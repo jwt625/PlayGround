@@ -464,8 +464,7 @@ def compute_derived(d: dict[str, Any]) -> dict[str, Any]:
             "value": fom,
             "unit": "GHz/V",
             "formula": (
-                "bw3db_ghz / (Vpi_eff * 10^(il_onchip_db/10)); "
-                "Vpi_eff = Vpi * 10^(il_rf_total_db/20) if known else Vpi"
+                "bw3db_ghz / (Vpi_eff * 10^(il_onchip_db/10)); Vpi_eff = Vpi * 10^(il_rf_total_db/20) if known else Vpi"
             ),
             "inputs": used,
             "rf_corrected": rf_total is not None,

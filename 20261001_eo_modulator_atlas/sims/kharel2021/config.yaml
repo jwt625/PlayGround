@@ -1,0 +1,164 @@
+schema: eo-atlas.sim/v1
+id: kharel2021-b
+paper_id: kharel2021
+device_id: kharel2021-b
+title: Kharel 2021, 20 mm segmented-electrode TFLN MZM on quartz (G-S-G, push-pull arms, finger-and-stem segments)
+repro_grade: B
+validation_status: unvalidated
+chain: [electrostatics, optical_mode, eo_overlap, rf_line, loaded_line, eo_response]
+
+# Conventions follow sims/chen2022/config.yaml.
+# Coordinate frame: x lateral, y film normal up, z propagation. y = 0 at the LN bottom / quartz top.
+# Origin: optical axis of the RIGHT-hand waveguide in x. Signal electrode centre (mirror plane) at x = -60.5 um; LEFT waveguide at x = -121 um.
+# Both arms are in the electrostatic domain (symmetry none); the optical mode is solved on the right arm.
+# Cross-section as drawn in Fig. 1(e): per gap, [main conductor] -h- [segment finger, width s] -g- [waveguide] -g- [finger] -h- [main conductor].
+# Fingers on the signal side are tied to the signal conductor and fingers on the ground side to ground by stems that this 2D cut does not contain.
+optics:
+  wavelength_nm: 1560              # paper_exact for the EO measurements (p.4); Vpi/RF-line statements do not name a wavelength
+  polarization: TE
+  mode_index: 0
+  group_index_from: finite_difference_wavelength
+  ng_fixed: null
+  eo_axis: auto
+
+materials:
+  lithium_niobate:
+    crystal: {cut: x, propagation: y}
+    n_o: 2.211
+    n_e: 2.138
+    eps_r: {perp: 43.0, par: 28.0}
+    r_pm_per_v: {r13: 8.6, r22: 3.4, r33: 30.8, r51: 28.0}
+  silicon_dioxide: {n: 1.444, eps_r: 3.9}
+  quartz: {n: 1.53, eps_r: 4.5}
+  gold: {conductor: true, sigma_Sm: 4.1e7, n_complex: null}
+  air: {n: 1.0, eps_r: 1.0}
+
+geometry:                          # LOADED cross-section: segment fingers present, slot h between finger and main conductor
+  symmetry: none
+  domain: {x_um: [-300.5, 179.5], y_um: [-250, 120]}
+  regions:
+    - {name: ambient, material: air, rect: {x_um: [-300.5, 179.5], y_um: [-250, 120]}}
+    - {name: substrate, material: quartz, rect: {x_um: [-300.5, 179.5], y_um: [-500, 0]}}
+    - {name: ln_slab, material: lithium_niobate, rect: {x_um: [-300.5, 179.5], y_um: [0, 0.25]}}
+    - {name: sio2_cladding, material: silicon_dioxide, rect: {x_um: [-300.5, 179.5], y_um: [0.25, 2.05]}}
+    - {name: ln_rib_r, material: lithium_niobate, polygon_um: [[-0.5, 0.25], [0.5, 0.25], [0.5, 0.6], [-0.5, 0.6]]}
+    - {name: ln_rib_l, material: lithium_niobate, polygon_um: [[-121.5, 0.25], [-120.5, 0.25], [-120.5, 0.6], [-121.5, 0.6]]}
+  electrodes:
+    - {name: signal, role: signal, weight: 1.0, rect: {x_um: [-110.5, -10.5], y_um: [0.25, 1.05]}, material: gold}
+    - {name: ground_r, role: ground, weight: 0.0, rect: {x_um: [10.5, 110.5], y_um: [0.25, 1.05]}, material: gold}
+    - {name: ground_l, role: ground, weight: 0.0, rect: {x_um: [-231.5, -131.5], y_um: [0.25, 1.05]}, material: gold}
+    - {name: finger_r_signal_side, role: signal, weight: 1.0, rect: {x_um: [-4.5, -2.5], y_um: [0.25, 1.05]}, material: gold}
+    - {name: finger_r_ground_side, role: ground, weight: 0.0, rect: {x_um: [2.5, 4.5], y_um: [0.25, 1.05]}, material: gold}
+    - {name: finger_l_signal_side, role: signal, weight: 1.0, rect: {x_um: [-118.5, -116.5], y_um: [0.25, 1.05]}, material: gold}
+    - {name: finger_l_ground_side, role: ground, weight: 0.0, rect: {x_um: [-125.5, -123.5], y_um: [0.25, 1.05]}, material: gold}
+  optical_window: {x_um: [-2.4, 2.4], y_um: [-1.5, 1.8]}
+  mesh: {max_edge_um: 2.0, electrode_edge_um: 0.05}
+line:
+  length_mm: 20
+  conductor_loss_model: skin_effect_wheeler
+  rf_loss_table: null
+  source_ohm: 50
+  load_ohm: 50
+  differential: false              # single-drive G-S-G probe on the centre line; push-pull arises from the arm placement (see SPEC_PROPOSALS)
+  loading:
+    type: periodic_t_rail          # closest valid value for the finger-and-stem segments
+    period_um: 50                  # r + c = 45 + 5; project_inference (period not named in the paper)
+    loaded_length_um: 39           # finger length r minus the stem width t (45 - 6); the stem is assumed centred on the finger
+    unloaded_cross_section: unloaded
+    loaded_cross_section: null     # null = top-level `geometry`
+sweep: {f_start_ghz: 0.1, f_stop_ghz: 200, n_points: 400}
+
+alt_geometries:
+  unloaded:                        # cut through the gap c between fingers: no fingers, main conductors 21 um apart
+    symmetry: none
+    domain: {x_um: [-300.5, 179.5], y_um: [-250, 120]}
+    regions:
+      - {name: ambient, material: air, rect: {x_um: [-300.5, 179.5], y_um: [-250, 120]}}
+      - {name: substrate, material: quartz, rect: {x_um: [-300.5, 179.5], y_um: [-500, 0]}}
+      - {name: ln_slab, material: lithium_niobate, rect: {x_um: [-300.5, 179.5], y_um: [0, 0.25]}}
+      - {name: sio2_cladding, material: silicon_dioxide, rect: {x_um: [-300.5, 179.5], y_um: [0.25, 2.05]}}
+      - {name: ln_rib_r, material: lithium_niobate, polygon_um: [[-0.5, 0.25], [0.5, 0.25], [0.5, 0.6], [-0.5, 0.6]]}
+      - {name: ln_rib_l, material: lithium_niobate, polygon_um: [[-121.5, 0.25], [-120.5, 0.25], [-120.5, 0.6], [-121.5, 0.6]]}
+    electrodes:
+      - {name: signal, role: signal, weight: 1.0, rect: {x_um: [-110.5, -10.5], y_um: [0.25, 1.05]}, material: gold}
+      - {name: ground_r, role: ground, weight: 0.0, rect: {x_um: [10.5, 110.5], y_um: [0.25, 1.05]}, material: gold}
+      - {name: ground_l, role: ground, weight: 0.0, rect: {x_um: [-231.5, -131.5], y_um: [0.25, 1.05]}, material: gold}
+    optical_window: {x_um: [-2.4, 2.4], y_um: [-1.5, 1.8]}
+    mesh: {max_edge_um: 2.0, electrode_edge_um: 0.05}
+
+targets:
+  # Measured, 20 mm device (devices.csv row kharel2021-b)
+  - {metric: vpi_dc_v, value: 1.35, tol_rel: 0.15, source: {device_id: kharel2021-b, field: vpi_dc_v}}
+  - {metric: eo_rolloff_db, at_ghz: 50, value: -1.8, tol_abs: 0.5, source: {device_id: kharel2021-b, field: eo_rolloff_db}}
+  # Measured RF line (Fig. 2 caption names a 10-mm electrode; the 2.23 index is not attributed to a device in the text)
+  - {metric: rf_loss_db_per_cm, at_ghz: 50, value: 2.0, tol_rel: 0.2, source: {device_id: kharel2021-a, field: rf_loss_db_per_cm}}
+  - {metric: n_rf, value: 2.23, tol_abs: 0.1, source: {paper_id: kharel2021, locator: "p.4 Sec. III", basis: measured, note: "device not named in the text; no devices.csv row carries it"}}
+  # Paper's own HFSS simulation of the design (Table I, Segmented (Q), signal width 100 um, gap 5 um; no oxide cladding listed); cross-solver reference, not measurement
+  - {metric: vpi_l_dc_vcm, value: 2.1, tol_rel: 0.1, source: {paper_id: kharel2021, locator: "p.3 Table I", basis: simulated}}
+  - {metric: z0_ohm, value: 42, tol_abs: 3.0, source: {paper_id: kharel2021, locator: "p.3 Table I", basis: simulated}}
+  - {metric: rf_loss_db_per_cm, at_ghz: 50, value: 1.485, tol_rel: 0.2, source: {paper_id: kharel2021, locator: "p.3 Table I: 0.21 dB/cm/GHz^0.5 times sqrt(50 GHz)", basis: derived}}
+  # Authors' prediction for the 20 mm device (extrapolated from measured loss; not a measurement)
+  - {metric: bw3db_ghz, value: 180, tol_rel: 0.15, source: {paper_id: kharel2021, locator: "p.5 Discussion; Fig. 4(a)", basis: predicted, note: "conductor-loss-limited 3 dB bandwidth relative to 1 GHz, 20 mm electrode"}}
+reported_curves: []
+
+provenance:
+  optics.wavelength_nm: {class: paper_exact, locator: "p.4 Sec. III (tunable laser at 1560 nm for the EO measurements)"}
+  optics.polarization: {class: project_inference, note: "polarization not stated; TE assumed for an x-cut film with propagation along y (r33 axis along the in-plane electrode field)"}
+  optics.group_index_from: {class: project_inference, note: "paper gives only 'typical optical group index of about 2.2' (p.3); engine derives it by finite difference"}
+  materials.lithium_niobate.crystal: {class: paper_exact, locator: "p.2; p.3 Sec. III (x-cut LN film); propagation along y is a project_inference from the standard x-cut convention"}
+  materials.lithium_niobate.n_o: {class: standard_reference, citation: "Zelmon, Small, Jundt, J. Opt. Soc. Am. B 14, 3319 (1997)", note: "value copied from the chen2022 config / SPEC example; NOT verified against the source in this offline batch"}
+  materials.lithium_niobate.n_e: {class: standard_reference, citation: "Zelmon, Small, Jundt, J. Opt. Soc. Am. B 14, 3319 (1997)", note: "value copied from the chen2022 config / SPEC example; NOT verified against the source in this offline batch"}
+  materials.lithium_niobate.eps_r: {class: standard_reference, citation: "Weis and Gaylord, Appl. Phys. A 37, 191 (1985)", note: "SPEC example values 43/28, NOT verified; the paper only says eps_LN about 30 (p.3)"}
+  materials.lithium_niobate.r_pm_per_v: {class: standard_reference, citation: "Weis and Gaylord, Appl. Phys. A 37, 191 (1985)", note: "SPEC example values, NOT verified; paper does not state Pockels coefficients"}
+  materials.silicon_dioxide: {class: standard_reference, citation: "standard handbook values (n = 1.444 at 1550 nm, eps_r = 3.9), NOT verified; paper states neither for the CVD oxide"}
+  materials.quartz.eps_r: {class: paper_exact, locator: "p.3 text (eps_Qz about 4.5)", note: "paper gives an approximate value; microwave absorption tangent below 1e-4 (p.3) is not representable and is left out"}
+  materials.quartz.n: {class: standard_reference, citation: "crystalline quartz ordinary index about 1.53 at 1550 nm, recalled, NOT verified", note: "paper gives no optical index; fused silica (eps 3.8) is listed as a separate option on p.5, so this quartz (eps about 4.5) is read as crystalline: an inference"}
+  materials.gold.sigma_Sm: {class: standard_reference, citation: "bulk gold 4.1e7 S/m as in sims/chen2022/config.yaml, NOT verified", note: "film conductivity not stated; measured loss coefficient 0.26 dB/cm/GHz^0.5 (p.4) is not used as an input"}
+  line.length_mm: {class: paper_exact, locator: "p.4 Sec. III; Fig. 3(a) (20-mm long modulator)"}
+  line.source_ohm: {class: project_inference, note: "50 ohm VNA; paper states a 50-ohm VNA for the loss measurement (p.4) but no termination for the EO measurement"}
+  line.load_ohm: {class: project_inference, note: "50 ohm termination assumed; not stated"}
+  line.differential: {class: project_inference, note: "single-drive G-S-G with one arm per gap (Fig. 1(a)); paper states push-pull operation (p.2)"}
+  line.conductor_loss_model: {class: project_inference, note: "paper fits alpha = 0.26 dB/cm/GHz^0.5 (p.4); model choice left to the engine"}
+  line.loading.period_um: {class: project_inference, locator: "p.2 Fig. 1 caption (r = 45, c = 5 um)", note: "period = finger length r + gap c = 50 um; the word period is not used in the paper"}
+  line.loading.loaded_length_um: {class: project_inference, locator: "Fig. 1(a) top view; p.2 caption (r = 45, t = 6)", note: "stem width t = 6 um read as the stem (Fig. 1(a) arrows); 45 - 6 = 39 um of finger-plus-slot per period; stem centred on the finger is a figure reading"}
+  geometry.regions.ambient: {class: project_inference, note: "air above the cladding; no top cladding other than the 1 um oxide is described"}
+  geometry.regions.substrate: {class: paper_exact, locator: "p.3 Sec. III (500 um quartz handle; region clipped to the domain)"}
+  geometry.regions.ln_slab: {class: paper_exact, locator: "p.3 Sec. III (600 nm film, 350 nm etch)", note: "slab 250 nm = 600 - 350"}
+  geometry.regions.sio2_cladding: {class: project_inference, locator: "p.3-4 Sec. III (1 um SiO2, CVD)", note: "thickness 1 um stated; profile and reference surface not stated; flat top 1 um above the gold top assumed. Table I simulation lists no cladding"}
+  geometry.regions.ln_rib_r: {class: project_inference, locator: "p.3 Sec. III (350 nm etch); Fig. 1(e) sketch", note: "ridge width NOT disclosed and the Fig. 1(e) sketch is not to scale; a rectangular 1.0 um wide placeholder is used with no source; optical and EO-overlap results are not meaningful until resolved"}
+  geometry.regions.ln_rib_l: {class: project_inference, note: "mirror image of the right-hand ridge about the signal centre"}
+  geometry.electrodes.signal: {class: project_inference, locator: "p.3 Table I (simulated signal width 100 um); p.3 Sec. III (800 nm Au)", note: "width of the fabricated signal electrode not stated; the 100 um is the Table I simulation value; thickness 0.8 um paper_exact"}
+  geometry.electrodes.ground_r: {class: project_inference, note: "ground width not stated; taken equal to the signal width; inner edge at g/2 + s + h = 10.5 um from the waveguide axis"}
+  geometry.electrodes.ground_l: {class: project_inference, note: "mirror of ground_r"}
+  geometry.electrodes.finger_r_signal_side: {class: paper_exact, locator: "p.2 Fig. 1 caption; Fig. 1(e) (g = 5, h = 6, s = 2 um)", note: "finger width s = 2 um, facing-edge gap g = 5 um, slot h = 6 um; which side is tied to which conductor follows the stem layout of Fig. 1(a)"}
+  geometry.electrodes.finger_r_ground_side: {class: paper_exact, locator: "p.2 Fig. 1 caption; Fig. 1(e)", note: "see finger_r_signal_side"}
+  geometry.electrodes.finger_l_signal_side: {class: paper_exact, locator: "p.2 Fig. 1 caption; Fig. 1(a)", note: "mirror of the right-hand fingers"}
+  geometry.electrodes.finger_l_ground_side: {class: paper_exact, locator: "p.2 Fig. 1 caption; Fig. 1(a)", note: "mirror of the right-hand fingers"}
+  geometry.optical_window: {class: project_inference, note: "crop |x| < 2.4 um around the ridge, just inside the finger edge at 2.5 um (a conductor in the window is unsupported)"}
+  geometry.domain: {class: project_inference, note: "lateral +-240 um about the signal centre, vertical -250..120 um; open-boundary treatment is an engine choice"}
+  geometry.mesh: {class: project_inference}
+  alt_geometries.unloaded: {class: project_inference, locator: "Fig. 1(a)", note: "cut through the gap c between fingers: fingers and stems absent, main conductors 21 um apart; the 6 um stem section (regular 5 um gap) is lumped into this cut"}
+
+missing:
+  - ridge (waveguide) width and sidewall angle (not stated; Fig. 1(e) not to scale; 1.0 um rectangular placeholder with no source)
+  - width of the fabricated signal and ground electrodes (only the Table I simulation lists a 100 um signal width)
+  - SiO2 cladding profile and reference surface (1 um CVD oxide)
+  - stem position along the finger and whether t = 6 um is the stem width (read from Fig. 1(a) arrows)
+  - gold film conductivity (not stated)
+  - LN RF permittivity tensor and loss (paper: eps_LN about 30, tan delta 0.004 used in its simulation, p.3-4)
+  - quartz optical index and RF loss tangent (only an upper bound below 1e-4 is given)
+  - which device the RF phase index 2.23 belongs to (not named in the text)
+  - measurement termination and probe de-embedding details for the EO response
+  - temperature (not stated)
+limitations:
+  - scalar_optical_not_full_vector
+  - quasi_static_2d_rf
+  - rectangular_or_polygon_sidewalls_only
+  - no_3d_launch_pad_effects
+  - "Stems (6 um wide metal bridges tying each finger to its main conductor) are not representable in 2D; fingers are given electrode potentials directly"
+  - "Three distinct sections per period (finger-plus-slot 39 um, stem 6 um with a regular 5 um gap, gap c 5 um with a 21 um opening) do not fit the two-cut loading form; the stem and gap are lumped into the unloaded cut"
+  - "Ridge width is a placeholder; the optical overlap and Vpi*L cannot be compared to the paper until it is resolved"
+  - "The 10 mm device (kharel2021-a) shares this cross-section; no variants mechanism in SPEC yet"
+  - "A rough SEM scale reading of Fig. 1(b) suggests a slot height near 10 um against h = 6 um in the caption; the caption parameter set is used, the SEM reading is low confidence"
+  - "Paper's HFSS Table I stack has no oxide cladding and a 500 um quartz handle; the fabricated device has 1 um SiO2, so the Table I numbers are a comparison, not a replica"
+  - "The paper's simulation used an LN loss tangent of 0.004 (p.4); the config carries no RF loss tangents"

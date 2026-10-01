@@ -1,0 +1,73 @@
+[
+ {
+  "kind": "page_render",
+  "file": "page_02.png",
+  "page": 2,
+  "captions": [
+   "Fig. 1c. A thermo-optic phase shifter (TOPS) is included on one arm of"
+  ]
+ },
+ {
+  "kind": "page_render",
+  "file": "page_03.png",
+  "page": 3,
+  "captions": [
+   "Figure 2 illustrates the experimental setup used for modulator char-",
+   "Fig. 1 | LNOS Mach-Zehnder modulator. a Schematic of the Mach-Zehnder optical"
+  ]
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p03_1.png",
+  "page": 3,
+  "width": 2049,
+  "height": 864
+ },
+ {
+  "kind": "page_render",
+  "file": "page_04.png",
+  "page": 4,
+  "captions": [
+   "Fig. 4a. The observed increase in noise around 12.5 GHz was attrib-",
+   "Fig. 2 | Schematic of the characterization setup for the MIR integrated MZM."
+  ]
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p04_1.png",
+  "page": 4,
+  "width": 1642,
+  "height": 667
+ },
+ {
+  "kind": "page_render",
+  "file": "page_05.png",
+  "page": 5,
+  "captions": [
+   "Fig. 4c. The total transmitted bit sequence comprised approximately",
+   "Fig. 3 | Static electro-optic performance. a Normalized optical transmission of the"
+  ]
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p05_1.png",
+  "page": 5,
+  "width": 575,
+  "height": 284
+ },
+ {
+  "kind": "page_render",
+  "file": "page_06.png",
+  "page": 6,
+  "captions": [
+   "Fig. 4 | High-speed electro-optic characterization of the MIR MZM. a Measured"
+  ]
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p06_1.png",
+  "page": 6,
+  "width": 644,
+  "height": 381
+ }
+]

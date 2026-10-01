@@ -1,0 +1,213 @@
+paper_id: li2026a
+verified_on: '2026-10-01'
+source_files:
+- references/li2026a/text.md
+- references/li2026a/crossref.json
+entries:
+- device_id: li2026a-a
+  field: drive
+  value: push_pull
+  unit: ''
+  basis: design_target
+  locator: Sec. 2
+  note: authors state the T-segment CPW serves as push-pull configuration electrodes
+- device_id: li2026a-a
+  field: vpi_convention
+  value: mzm_push_pull
+  unit: ''
+  basis: derived
+  locator: Sec. 2
+  note: MZM-level half-wave voltage of the push-pull MZM; convention not named by the authors
+- device_id: li2026a-a
+  field: wavelength_nm
+  value: 1550
+  unit: nm
+  basis: measured
+  locator: Sec. 2, VpiL measurement (Fig. 2(a))
+- device_id: li2026a-a
+  field: length_mm
+  value: 18
+  unit: mm
+  basis: measured
+  locator: Sec. 2
+  note: 18-mm long modulator
+- device_id: li2026a-a
+  field: vpi_dc_v
+  value: 1.56
+  unit: V
+  basis: derived
+  locator: Sec. 2; Sec. 4
+  note: 'authors: VpiL corresponds to this half-wave voltage for the 18 mm modulator; 100 Hz drive'
+- device_id: li2026a-a
+  field: vpil_dc_vcm
+  value: 2.8
+  unit: V*cm
+  basis: measured
+  locator: Sec. 2
+  note: around 2.8 V cm at 1550 nm
+- device_id: li2026a-a
+  field: eo_film_thickness_nm
+  value: 600
+  unit: nm
+  basis: measured
+  locator: Sec. 2
+  note: commercial X-cut LTOI wafer
+- device_id: li2026a-a
+  field: etch_depth_nm
+  value: 400
+  unit: nm
+  basis: measured
+  locator: Sec. 2
+  note: waveguide 'height' with 200 nm slab; the later arXiv version (li2026ba) states 440 nm etch / 160 nm slab
+- device_id: li2026a-a
+  field: slab_thickness_nm
+  value: 200
+  unit: nm
+  basis: measured
+  locator: Sec. 2
+- device_id: li2026a-a
+  field: rib_width_nm
+  value: 2000
+  unit: nm
+  basis: measured
+  locator: Sec. 2
+  note: 2 um wide waveguide
+- device_id: li2026a-a
+  field: crystal_cut
+  value: x-cut
+  unit: ''
+  basis: measured
+  locator: Sec. 2
+- device_id: li2026a-a
+  field: substrate
+  value: fused silica (4-inch wafer; LT film transferred by direct bonding)
+  unit: ''
+  basis: measured
+  locator: Sec. 2
+- device_id: li2026a-a
+  field: bw3db_ghz
+  value: 67
+  unit: GHz
+  basis: measured
+  locator: Sec. 2; Fig. 2(d) not available
+  note: 18 mm device; normalization reference not stated in the text
+- device_id: li2026a-a
+  field: max_baud_gbd
+  value: 208
+  unit: GBd
+  basis: measured
+  locator: Sec. 3; Sec. 4
+  note: PAM4 at 208 GBd below the 25% SD-FEC limit
+- device_id: li2026a-a
+  field: modulation_format
+  value: PAM4 (up to 208 GBd), PAM6 (up to 192 GBd), PAM8 (up to 184 GBd), all below 25% SD-FEC BER limit
+  unit: ''
+  basis: measured
+  locator: Sec. 3; Sec. 4
+- device_id: li2026a-a
+  field: max_line_rate_gbps
+  value: 552
+  unit: Gb/s
+  basis: measured
+  locator: Sec. 4
+  note: 184 GBd PAM8 line rate as stated in the summary
+- device_id: li2026a-a
+  field: max_net_rate_gbps
+  value: 437
+  unit: Gb/s
+  basis: derived
+  locator: Abstract; Sec. 3
+  note: PAM8 at 180 GBd with SD-FEC; highest AIR 466 Gbit/s
+- device_id: li2026a-b
+  field: drive
+  value: push_pull
+  unit: ''
+  basis: design_target
+  locator: Sec. 2
+  note: authors state the T-segment CPW serves as push-pull configuration electrodes
+- device_id: li2026a-b
+  field: vpi_convention
+  value: mzm_push_pull
+  unit: ''
+  basis: derived
+  locator: Sec. 2
+  note: MZM-level half-wave voltage of the push-pull MZM; convention not named by the authors
+- device_id: li2026a-b
+  field: wavelength_nm
+  value: 1300
+  unit: nm
+  basis: measured
+  locator: Sec. 2, VpiL measurement (Fig. 2(a))
+- device_id: li2026a-b
+  field: length_mm
+  value: 18
+  unit: mm
+  basis: measured
+  locator: Sec. 2
+  note: 18-mm long modulator
+- device_id: li2026a-b
+  field: vpi_dc_v
+  value: 1.28
+  unit: V
+  basis: derived
+  locator: Sec. 2; Sec. 4
+  note: 'authors: VpiL corresponds to this half-wave voltage for the 18 mm modulator; 100 Hz drive'
+- device_id: li2026a-b
+  field: vpil_dc_vcm
+  value: 2.3
+  unit: V*cm
+  basis: measured
+  locator: Sec. 2
+  note: 2.3 V cm at 1300 nm
+- device_id: li2026a-b
+  field: eo_film_thickness_nm
+  value: 600
+  unit: nm
+  basis: measured
+  locator: Sec. 2
+  note: commercial X-cut LTOI wafer
+- device_id: li2026a-b
+  field: etch_depth_nm
+  value: 400
+  unit: nm
+  basis: measured
+  locator: Sec. 2
+  note: waveguide 'height' with 200 nm slab; the later arXiv version (li2026ba) states 440 nm etch / 160 nm slab
+- device_id: li2026a-b
+  field: slab_thickness_nm
+  value: 200
+  unit: nm
+  basis: measured
+  locator: Sec. 2
+- device_id: li2026a-b
+  field: rib_width_nm
+  value: 2000
+  unit: nm
+  basis: measured
+  locator: Sec. 2
+  note: 2 um wide waveguide
+- device_id: li2026a-b
+  field: crystal_cut
+  value: x-cut
+  unit: ''
+  basis: measured
+  locator: Sec. 2
+- device_id: li2026a-b
+  field: substrate
+  value: fused silica (4-inch wafer; LT film transferred by direct bonding)
+  unit: ''
+  basis: measured
+  locator: Sec. 2
+derived:
+- device_id: li2026a-a
+  field: electrode_gap_um
+  value: 5
+  formula: 2 x 1.5 um metal-to-waveguide spacing + 2 um waveguide width (tip-to-tip gap of facing T-segments)
+  inputs:
+  - rib_width_nm
+- device_id: li2026a-b
+  field: electrode_gap_um
+  value: 5
+  formula: 2 x 1.5 um metal-to-waveguide spacing + 2 um waveguide width (tip-to-tip gap of facing T-segments)
+  inputs:
+  - rib_width_nm

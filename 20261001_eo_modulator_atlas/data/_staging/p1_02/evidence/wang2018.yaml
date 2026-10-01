@@ -1,0 +1,290 @@
+paper_id: wang2018
+verified_on: '2026-10-01'
+source_files:
+- references/wang2018/text.md
+- references/wang2018/crossref.json
+- references/wang2018/figures/page_02.png
+- references/wang2018/figures/page_03.png
+- references/wang2018/figures/page_04.png
+entries:
+- device_id: wang2018-mzi
+  field: length_mm
+  value: 2
+  unit: mm
+  basis: measured
+  locator: p.3, Sec. text; Fig. 3c caption
+  note: Fig. 2b SEM annotation reads 1 mm per section
+- device_id: wang2018-mzi
+  field: vpi_dc_v
+  value: 9
+  unit: V
+  basis: measured
+  locator: p.3, Sec. text; Fig. 3c
+  note: Measured on 2 mm MZI; DC sweep
+- device_id: wang2018-mzi
+  field: vpil_dc_vcm
+  value: 1.8
+  unit: V*cm
+  basis: derived
+  locator: p.3, Sec. text; Fig. 3c caption
+  note: '''translates to'' 1.8 V*cm: 9 V x 0.2 cm'
+- device_id: wang2018-mzi
+  field: bw3db_ghz
+  value: 15
+  unit: GHz
+  basis: measured
+  locator: p.4, Sec. text; Fig. 4c and caption
+  note: Text says ~15 GHz; limited by RC; curve reference frequency not stated
+- device_id: wang2018-mzi
+  field: il_onchip_db
+  value: 2
+  unit: dB
+  basis: author_estimate
+  locator: p.3, Sec. text
+  note: '''low on-chip insertion loss of ~2 dB''; method not stated'
+- device_id: wang2018-mzi
+  field: prop_loss_db_per_cm
+  value: 3
+  unit: dB/cm
+  basis: author_estimate
+  locator: p.3, Sec. text
+  note: '''typical propagation loss of these structures ~3 dB/cm''; platform-typical, not MZI-specific'
+- device_id: wang2018-mzi
+  field: extinction_ratio_db
+  value: 10
+  unit: dB
+  basis: measured
+  locator: p.3, Sec. text; Fig. 3c
+  note: DC transmission; 'with 10 dB extinction ratio'
+- device_id: wang2018-mzi
+  field: etch_depth_nm
+  value: 400
+  unit: nm
+  basis: measured
+  locator: p.3, Sec. text; Fig. 2c
+  note: Rib height h = 400 nm taken as etch depth
+- device_id: wang2018-mzi
+  field: rib_width_nm
+  value: 900
+  unit: nm
+  basis: measured
+  locator: p.3, Sec. text; Fig. 2c
+  note: Top width w
+- device_id: wang2018-mzi
+  field: slab_thickness_nm
+  value: 300
+  unit: nm
+  basis: measured
+  locator: p.3, Sec. text; Fig. 2c
+  note: Slab thickness s
+- device_id: wang2018-mzi
+  field: electrode_gap_um
+  value: 3.5
+  unit: um
+  basis: measured
+  locator: p.3, Sec. text; Fig. 2c
+  note: Metal electrode gap g
+- device_id: wang2018-mzi
+  field: electrode_metal
+  value: gold
+  unit: ''
+  basis: measured
+  locator: p.3, Sec. text
+  note: '''gold micro-RF electrodes'''
+- device_id: wang2018-mzi
+  field: cladding
+  value: SiO2
+  unit: ''
+  basis: measured
+  locator: p.3, Sec. text
+  note: SiO2 cladding layer; thickness not stated
+- device_id: wang2018-mzi
+  field: crystal_cut
+  value: x-cut
+  unit: ''
+  basis: measured
+  locator: p.3, Sec. text
+  note: x-cut LN, TE mode, r33
+- device_id: wang2018-mzi
+  field: drive
+  value: push_pull
+  unit: ''
+  basis: measured
+  locator: p.3, Sec. text
+  note: '''phase delay on one arm and a phase advance on the other'''
+- device_id: wang2018-mzi
+  field: vpi_convention
+  value: mzm_push_pull
+  unit: ''
+  basis: derived
+  locator: p.3, Sec. text
+  note: Vpi is the MZI on-off voltage under push-pull action; not labelled by the authors
+- device_id: wang2018-mzi
+  field: electrode_type
+  value: lumped
+  unit: ''
+  basis: derived
+  locator: p.4, Sec. text
+  note: '''direct capacitive modulation'' limited by RC (about 0.2 pF); lumped inferred'
+- device_id: wang2018-mzi
+  field: drive_vpp_v
+  value: 5.66
+  unit: V
+  basis: measured
+  locator: p.4, Fig. 4 caption
+  note: 5.66 Vpp electrical drive for all eye diagrams
+- device_id: wang2018-mzi
+  field: max_line_rate_gbps
+  value: 22
+  unit: Gb/s
+  basis: measured
+  locator: p.5, Sec. text; Fig. 4d
+  note: 22 Gbps MZI
+- device_id: wang2018-mzi
+  field: modulation_format
+  value: NRZ OOK, 2^7-1 PRBS; eye diagrams at 5, 12.5 and 22 Gb/s
+  unit: ''
+  basis: measured
+  locator: p.4, Fig. 4 caption
+  note: Non-return-to-zero, 2^7-1 PRBS
+- device_id: wang2018-mzi
+  field: energy_per_bit_fj
+  value: 1600
+  unit: fJ/bit
+  basis: derived
+  locator: p.5, Sec. text
+  note: 'CV^2/4 stated by authors: 1.6 pJ/bit'
+- device_id: wang2018-mzi
+  field: capacitance_ff
+  value: 200
+  unit: fF
+  basis: author_estimate
+  locator: p.4, Sec. text
+  note: About 0.2 pF from the longer RF electrode
+- device_id: wang2018-rt-q50k
+  field: wavelength_nm
+  value: 1576
+  unit: nm
+  basis: extracted_from_figure
+  locator: p.3, Fig. 3a axis
+  note: Resonance dips lie between 1575.9 and 1576.1 nm
+- device_id: wang2018-rt-q50k
+  field: tuning_nm_per_v
+  value: 0.007
+  unit: nm/V
+  basis: measured
+  locator: p.3, Sec. text; Fig. 3b
+  note: 7.0 pm/V converted to nm/V
+- device_id: wang2018-rt-q50k
+  field: q_loaded
+  value: 50000
+  unit: '1'
+  basis: measured
+  locator: p.3, Sec. text; Fig. 3 caption
+  note: '''loaded quality (Q) factor ~50,000'''
+- device_id: wang2018-rt-q8k
+  field: q_loaded
+  value: 8000
+  unit: '1'
+  basis: measured
+  locator: p.4, Sec. text; Fig. 4 caption
+  note: Text 'Q factor of 8,000'; caption 'Q ~8,000'
+- device_id: wang2018-rt-q8k
+  field: bw3db_ghz
+  value: 30
+  unit: GHz
+  basis: measured
+  locator: p.4, Sec. text; Fig. 4b
+  note: Limited by photon lifetime of about 6 ps
+- device_id: wang2018-rt-q5p7k
+  field: q_loaded
+  value: 5700
+  unit: '1'
+  basis: measured
+  locator: p.4, Sec. text
+  note: '''Qs of 5,700 and 18,000''; ''Q factor'' not stated as loaded'
+- device_id: wang2018-rt-q5p7k
+  field: bw3db_ghz
+  value: 40
+  unit: GHz
+  basis: measured
+  locator: p.4, Sec. text
+  note: Paired with Q 5,700 in order of mention
+- device_id: wang2018-rt-q18k
+  field: q_loaded
+  value: 18000
+  unit: '1'
+  basis: measured
+  locator: p.4, Sec. text
+  note: '''Qs of 5,700 and 18,000''; ''Q factor'' not stated as loaded'
+- device_id: wang2018-rt-q18k
+  field: bw3db_ghz
+  value: 11
+  unit: GHz
+  basis: measured
+  locator: p.4, Sec. text
+  note: Paired with Q 18,000 in order of mention
+- device_id: wang2018-rt-eye
+  field: drive_vpp_v
+  value: 5.66
+  unit: V
+  basis: measured
+  locator: p.4, Fig. 4 caption
+  note: 5.66 Vpp for all eye diagrams
+- device_id: wang2018-rt-eye
+  field: modulation_format
+  value: NRZ OOK, 2^7-1 PRBS; eye diagrams at 22, 30 and 40 Gb/s
+  unit: ''
+  basis: measured
+  locator: p.4, Fig. 4 caption and 4d
+  note: Non-return-to-zero, 2^7-1 PRBS
+- device_id: wang2018-rt-eye
+  field: max_line_rate_gbps
+  value: 40
+  unit: Gb/s
+  basis: measured
+  locator: p.5, Sec. text; Fig. 4d
+  note: 40 Gbps racetrack
+- device_id: wang2018-rt-eye
+  field: extinction_ratio_db
+  value: 3
+  unit: dB
+  basis: measured
+  locator: p.5, Sec. text; Fig. 4 caption
+  note: Extinction ratio of the eye diagrams, 3 dB racetrack
+- device_id: wang2018-rt-eye
+  field: energy_per_bit_fj
+  value: 240
+  unit: fJ/bit
+  basis: derived
+  locator: p.5, Sec. text
+  note: 'CV^2/4 stated by authors: 240 fJ/bit'
+derived:
+- device_id: wang2018-mzi
+  field: max_baud_gbd
+  value: 22
+  formula: max_line_rate_gbps / 1 (NRZ OOK, 1 bit per symbol)
+  inputs:
+  - max_line_rate_gbps
+- device_id: wang2018-rt-eye
+  field: max_baud_gbd
+  value: 40
+  formula: max_line_rate_gbps / 1 (NRZ OOK, 1 bit per symbol)
+  inputs:
+  - max_line_rate_gbps
+context_values:
+- item: dynamic_extinction_ratio_mzi
+  value: 8
+  unit: dB
+  locator: p.4, Fig. 4 caption; p.5
+  note: Eye diagrams at 12.5 and 22 Gb/s
+- item: mzi_thermal_test
+  value: open eye at 22 Gb/s with delta T = 20 degC
+  unit: ''
+  locator: p.5, Fig. 4e
+  note: Open loop
+- item: series_resistance_onchip
+  value: < 10
+  unit: ohm
+  locator: p.4, Sec. text
+  note: Bandwidth limited by 50 ohm network analyzer drive

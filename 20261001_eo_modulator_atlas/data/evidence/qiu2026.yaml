@@ -1,0 +1,145 @@
+paper_id: qiu2026
+verified_on: '2026-10-01'
+source_files:
+- references/qiu2026/text.md
+entries:
+- device_id: qiu2026-a
+  field: length_mm
+  value: 1.75
+  unit: mm
+  basis: measured
+  locator: Sec. 2 Device Design and Manufacturing (text-only source, no page markers)
+  note: phase shifter length
+- device_id: qiu2026-a
+  field: vpi_dc_v
+  value: 6
+  unit: V
+  basis: measured
+  locator: Sec. 2
+  note: '''differential Vpi of 6 V'' for the bare die; DC or low-frequency not stated; bias not stated'
+- device_id: qiu2026-a
+  field: bw3db_ghz
+  value: 55
+  unit: GHz
+  basis: measured
+  locator: Sec. 2 text
+  note: '''3/6 dB EO S21 of 55/105 GHz''; reference 1 GHz per Fig. 1b caption; figure not available'
+- device_id: qiu2026-a
+  field: bw6db_ghz
+  value: 105
+  unit: GHz
+  basis: measured
+  locator: Sec. 2 text; Fig. 1b caption; Sec. 5
+  note: EO S21 of the bare BTO die normalised to 1 GHz
+- device_id: qiu2026-a
+  field: il_onchip_db
+  value: 3
+  unit: dB
+  basis: measured
+  locator: Sec. 2
+  note: stated as one item of an itemised 11.5 dB PIC budget (6 + 2 x 1.25 + 3); no derivation given
+- device_id: qiu2026-a
+  field: extinction_ratio_db
+  value: 35
+  unit: dB
+  basis: measured
+  locator: Sec. 2
+  note: '''DC extinction ratio >35 dB'' of the high-speed phase shifter (lower bound)'
+- device_id: qiu2026-a
+  field: er_type
+  value: static
+  unit: ''
+  basis: measured
+  locator: Sec. 2
+  note: DC extinction ratio
+- device_id: qiu2026-a
+  field: max_baud_gbd
+  value: 225
+  unit: GBd
+  basis: measured
+  locator: Sec. 3; Sec. 4; Fig. 3
+  note: 225 GBd PAM4 on all four channels
+- device_id: qiu2026-a
+  field: modulation_format
+  value: PAM4 at 225 GBd (net 422 Gb/s per lane, BER under HD-FEC, 2 km SSMF); PAM6 at 225 GBd (net 506 Gb/s); PAM8 at 225 GBd (net 540 Gb/s); PAM4 at 112 GBd BER below 1e-6 (DFE only)
+  unit: ''
+  basis: measured
+  locator: Sec. 4; Fig. 3a-c captions
+  note: Tx pre-emphasis; Rx DFE and 1-tap MLSE
+- device_id: qiu2026-a
+  field: max_net_rate_gbps
+  value: 540
+  unit: Gb/s
+  basis: derived
+  locator: Sec. 4; Fig. 3c caption
+  note: per lane, PAM8 at 225 GBd, 2 km; computed net rate after FEC, derivation not shown
+- device_id: qiu2026-a
+  field: substrate
+  value: 200 mm silicon photonics wafer (processed; BTO transferred onto it)
+  unit: ''
+  basis: measured
+  locator: Sec. 2
+  note: commercial 200 mm silicon photonics fab, not named
+- device_id: qiu2026-a
+  field: epitaxy_or_stack
+  value: BTO grown on silicon wafers by molecular beam epitaxy and transferred onto processed silicon photonic wafers (Si slab/rib waveguides, Ge photodiodes, doped Si resistors and thermal phase shifters,
+    several SiN layers); Si/SiN-to-BTO mode couplers; BEOL high-speed phase shifters with additional oxide, nitride and metal layers
+  unit: ''
+  basis: measured
+  locator: Sec. 2; Fig. 1c caption (schematic not available)
+  note: BTO thickness, orientation and electrode geometry not stated in the text
+- device_id: qiu2026-a
+  field: drive
+  value: differential
+  unit: ''
+  basis: measured
+  locator: Sec. 2; Sec. 5 Conclusion
+  note: differential RF interface, 50 ohm differential terminations
+- device_id: qiu2026-a
+  field: vpi_convention
+  value: mzm_differential
+  unit: ''
+  basis: measured
+  locator: Sec. 2
+  note: '''differential Vpi of 6 V'''
+- device_id: qiu2026-a
+  field: bw3db_reference
+  value: 1ghz
+  unit: ''
+  basis: measured
+  locator: Fig. 1b caption
+  note: EO S21 normalised to 1 GHz
+derived: []
+context_values:
+- item: fiber_to_fiber_IL_connectorised
+  value: 12.5 to 14
+  unit: dB
+  locator: Sec. 2
+  note: range across 4 channels; includes 1-2.5 dB splice loss
+- item: PIC_IL_budget
+  value: 11.5 (6 splitter + 2 x 1.25 edge couplers + 3 on-chip)
+  unit: dB
+  locator: Sec. 2
+- item: thermal_phase_shifter_P_pi
+  value: 13
+  unit: mW
+  locator: Sec. 2
+- item: max_operating_temperature_tested
+  value: 85
+  unit: degC
+  locator: Sec. 4
+  note: TEC limit; Fig. 3d
+- item: BER_225GBd_PAM4_eye
+  value: 0.0027
+  unit: '1'
+  locator: Fig. 3f caption
+  note: with DFE
+- item: title_net_rate
+  value: net 1.6T (4x448 Gbps PAM4)
+  unit: ''
+  locator: title
+  note: results text gives net 422 Gb/s per lane for PAM4
+- item: license_and_rights_basis
+  value: no rights notice in the text-only source and no Crossref license; license left empty
+  unit: ''
+  locator: references/qiu2026/crossref.json

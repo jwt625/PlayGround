@@ -1,0 +1,833 @@
+{
+ "status": "ok",
+ "message-type": "work",
+ "message-version": "1.0.0",
+ "message": {
+  "indexed": {
+   "date-parts": [
+    [
+     2026,
+     10,
+     1
+    ]
+   ],
+   "date-time": "2026-10-01T00:15:03Z",
+   "timestamp": 1790813703368,
+   "version": "4.1.0"
+  },
+  "reference-count": 24,
+  "publisher": "AIP Publishing",
+  "issue": "2",
+  "license": [
+   {
+    "start": {
+     "date-parts": [
+      [
+       2022,
+       2,
+       2
+      ]
+     ],
+     "date-time": "2022-02-02T00:00:00Z",
+     "timestamp": 1643760000000
+    },
+    "content-version": "vor",
+    "delay-in-days": 1,
+    "URL": "https://creativecommons.org/licenses/by/4.0/"
+   },
+   {
+    "start": {
+     "date-parts": [
+      [
+       2022,
+       2,
+       2
+      ]
+     ],
+     "date-time": "2022-02-02T00:00:00Z",
+     "timestamp": 1643760000000
+    },
+    "content-version": "tdm",
+    "delay-in-days": 1,
+    "URL": "https://creativecommons.org/licenses/by/4.0/"
+   }
+  ],
+  "funder": [
+   {
+    "DOI": "10.13039/501100012166",
+    "name": "National Key Research and Development Program of China",
+    "doi-asserted-by": "publisher",
+    "award": [
+     "2019YFB2203200"
+    ],
+    "award-info": [
+     {
+      "award-number": [
+       "2019YFB2203200"
+      ]
+     }
+    ],
+    "id": [
+     {
+      "id": "10.13039/501100012166",
+      "id-type": "DOI",
+      "asserted-by": "publisher"
+     }
+    ]
+   },
+   {
+    "DOI": "10.13039/501100001809",
+    "name": "National Natural Science Foundation of China",
+    "doi-asserted-by": "publisher",
+    "award": [
+     "62135012"
+    ],
+    "award-info": [
+     {
+      "award-number": [
+       "62135012"
+      ]
+     }
+    ],
+    "id": [
+     {
+      "id": "10.13039/501100001809",
+      "id-type": "DOI",
+      "asserted-by": "publisher"
+     }
+    ]
+   },
+   {
+    "DOI": "10.13039/501100001809",
+    "name": "National Natural Science Foundation of China",
+    "doi-asserted-by": "publisher",
+    "award": [
+     "62105107"
+    ],
+    "award-info": [
+     {
+      "award-number": [
+       "62105107"
+      ]
+     }
+    ],
+    "id": [
+     {
+      "id": "10.13039/501100001809",
+      "id-type": "DOI",
+      "asserted-by": "publisher"
+     }
+    ]
+   },
+   {
+    "DOI": "10.13039/501100001809",
+    "name": "National Natural Science Foundation of China",
+    "doi-asserted-by": "publisher",
+    "award": [
+     "91950205"
+    ],
+    "award-info": [
+     {
+      "award-number": [
+       "91950205"
+      ]
+     }
+    ],
+    "id": [
+     {
+      "id": "10.13039/501100001809",
+      "id-type": "DOI",
+      "asserted-by": "publisher"
+     }
+    ]
+   },
+   {
+    "DOI": "10.13039/501100001809",
+    "name": "National Natural Science Foundation of China",
+    "doi-asserted-by": "publisher",
+    "award": [
+     "61961146003"
+    ],
+    "award-info": [
+     {
+      "award-number": [
+       "61961146003"
+      ]
+     }
+    ],
+    "id": [
+     {
+      "id": "10.13039/501100001809",
+      "id-type": "DOI",
+      "asserted-by": "publisher"
+     }
+    ]
+   },
+   {
+    "DOI": "10.13039/501100001809",
+    "name": "National Natural Science Foundation of China",
+    "doi-asserted-by": "publisher",
+    "award": [
+     "92150302"
+    ],
+    "award-info": [
+     {
+      "award-number": [
+       "92150302"
+      ]
+     }
+    ],
+    "id": [
+     {
+      "id": "10.13039/501100001809",
+      "id-type": "DOI",
+      "asserted-by": "publisher"
+     }
+    ]
+   },
+   {
+    "DOI": "10.13039/501100021171",
+    "name": "Guangdong Basic and Applied Basic Research Foundation",
+    "doi-asserted-by": "crossref",
+    "award": [
+     "2021A1515012215"
+    ],
+    "award-info": [
+     {
+      "award-number": [
+       "2021A1515012215"
+      ]
+     }
+    ],
+    "id": [
+     {
+      "id": "10.13039/501100021171",
+      "id-type": "DOI",
+      "asserted-by": "crossref"
+     }
+    ]
+   },
+   {
+    "DOI": "10.13039/501100012245",
+    "name": "Science and Technology Planning Project of Guangdong Province",
+    "doi-asserted-by": "crossref",
+    "award": [
+     "2019A050510039"
+    ],
+    "award-info": [
+     {
+      "award-number": [
+       "2019A050510039"
+      ]
+     }
+    ],
+    "id": [
+     {
+      "id": "10.13039/501100012245",
+      "id-type": "DOI",
+      "asserted-by": "crossref"
+     }
+    ]
+   },
+   {
+    "DOI": "10.13039/501100012226",
+    "name": "Fundamental Research Funds for the Central Universities",
+    "doi-asserted-by": "publisher",
+    "award": [
+     "2021QNA5001"
+    ],
+    "award-info": [
+     {
+      "award-number": [
+       "2021QNA5001"
+      ]
+     }
+    ],
+    "id": [
+     {
+      "id": "10.13039/501100012226",
+      "id-type": "DOI",
+      "asserted-by": "publisher"
+     }
+    ]
+   }
+  ],
+  "content-domain": {
+   "domain": [
+    "pubs.aip.org"
+   ],
+   "crossmark-restriction": true
+  },
+  "short-container-title": [],
+  "published-print": {
+   "date-parts": [
+    [
+     2022,
+     2,
+     1
+    ]
+   ]
+  },
+  "abstract": "<jats:p>Thin-film lithium niobate (TFLN) based traveling-wave modulators maintain simultaneously excellent performances, including large modulation bandwidth, high extinction ratio, low optical loss, and high modulation efficiency. Nevertheless, there still exists a balance between the driving voltage and modulation bandwidth. Here, we demonstrate an ultra-large bandwidth electro-optic modulator without compromising the driving voltage based on the TFLN platform on a silicon substrate, using a periodic capacitively loaded traveling-wave electrode. In order to compensate the slow-wave effect, an undercut etching technique for the silicon substrate is introduced to decrease the microwave refractive index. Our demonstrated devices represent both low optical and low microwave losses, which leads to a negligible optical insertion loss of 0.2 dB and a large electro-optic bandwidth with a roll-off of 1.4 dB at 67\u00a0GHz for a 10 mm-long device. A low half-wave voltage of 2.2\u00a0V is also achieved. Data rates up to 112 Gb s\u22121 with PAM-4 modulation are demonstrated. The compatibility of the proposed modulator to silicon photonics facilitates its integration with matured silicon photonic components using, e.g., hybrid integration technologies.</jats:p>",
+  "DOI": "10.1063/5.0077232",
+  "type": "journal-article",
+  "created": {
+   "date-parts": [
+    [
+     2022,
+     2,
+     2
+    ]
+   ],
+   "date-time": "2022-02-02T19:00:15Z",
+   "timestamp": 1643828415000
+  },
+  "update-policy": "https://doi.org/10.1063/aip-crossmark-policy-page",
+  "source": "Crossref",
+  "is-referenced-by-count": 145,
+  "title": [
+   "High performance thin-film lithium niobate modulator on a silicon substrate using periodic capacitively loaded traveling-wave electrode"
+  ],
+  "prefix": "10.1063",
+  "volume": "7",
+  "author": [
+   {
+    "given": "Gengxin",
+    "family": "Chen",
+    "sequence": "first",
+    "affiliation": [
+     {
+      "name": "State Key Laboratory for Modern Optical Instrumentation, Centre for Optical and Electromagnetic Research, International Research Center for Advanced Photonics, East Building No. 5, Zijingang Campus, Zhejiang University 1 , Hangzhou 310058, China"
+     }
+    ],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Kaixuan",
+    "family": "Chen",
+    "sequence": "additional",
+    "affiliation": [
+     {
+      "name": "Guangdong Provincial Key Laboratory of Optical Information Materials and Technology, South China Academy of Advanced Optoelectronics, Sci. Bldg. No. 5, South China Normal University, Higher-Education Mega-Center 2 , Guangzhou 510006, China"
+     },
+     {
+      "name": "National Center for International Research on Green Optoelectronics, South China Normal University 3 , Guangzhou 510006, China"
+     }
+    ],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Ranfeng",
+    "family": "Gan",
+    "sequence": "additional",
+    "affiliation": [
+     {
+      "name": "Guangdong Provincial Key Laboratory of Optical Information Materials and Technology, South China Academy of Advanced Optoelectronics, Sci. Bldg. No. 5, South China Normal University, Higher-Education Mega-Center 2 , Guangzhou 510006, China"
+     }
+    ],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Ziliang",
+    "family": "Ruan",
+    "sequence": "additional",
+    "affiliation": [
+     {
+      "name": "State Key Laboratory for Modern Optical Instrumentation, Centre for Optical and Electromagnetic Research, International Research Center for Advanced Photonics, East Building No. 5, Zijingang Campus, Zhejiang University 1 , Hangzhou 310058, China"
+     }
+    ],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Zong",
+    "family": "Wang",
+    "sequence": "additional",
+    "affiliation": [
+     {
+      "name": "Guangdong Provincial Key Laboratory of Optical Information Materials and Technology, South China Academy of Advanced Optoelectronics, Sci. Bldg. No. 5, South China Normal University, Higher-Education Mega-Center 2 , Guangzhou 510006, China"
+     }
+    ],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Pucheng",
+    "family": "Huang",
+    "sequence": "additional",
+    "affiliation": [
+     {
+      "name": "Guangdong Provincial Key Laboratory of Optical Information Materials and Technology, South China Academy of Advanced Optoelectronics, Sci. Bldg. No. 5, South China Normal University, Higher-Education Mega-Center 2 , Guangzhou 510006, China"
+     }
+    ],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Chao",
+    "family": "Lu",
+    "sequence": "additional",
+    "affiliation": [
+     {
+      "name": "Photonics Research Center, Department of Electronic and Information Engineering, The Hong Kong Polytechnic University 4 , Hong Kong, China"
+     }
+    ],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Alan Pak Tao",
+    "family": "Lau",
+    "sequence": "additional",
+    "affiliation": [
+     {
+      "name": "Photonics Research Center, Department of Electrical Engineering, The Hong Kong Polytechnic University 5 , Hong Kong, China"
+     }
+    ],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "ORCID": "https://orcid.org/0000-0002-2769-3009",
+    "authenticated-orcid": false,
+    "given": "Daoxin",
+    "family": "Dai",
+    "sequence": "additional",
+    "affiliation": [
+     {
+      "name": "State Key Laboratory for Modern Optical Instrumentation, Centre for Optical and Electromagnetic Research, International Research Center for Advanced Photonics, East Building No. 5, Zijingang Campus, Zhejiang University 1 , Hangzhou 310058, China"
+     }
+    ],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Changjian",
+    "family": "Guo",
+    "sequence": "additional",
+    "affiliation": [
+     {
+      "name": "Guangdong Provincial Key Laboratory of Optical Information Materials and Technology, South China Academy of Advanced Optoelectronics, Sci. Bldg. No. 5, South China Normal University, Higher-Education Mega-Center 2 , Guangzhou 510006, China"
+     },
+     {
+      "name": "National Center for International Research on Green Optoelectronics, South China Normal University 3 , Guangzhou 510006, China"
+     },
+     {
+      "name": "Photonics Research Center, Department of Electronic and Information Engineering, The Hong Kong Polytechnic University 4 , Hong Kong, China"
+     }
+    ],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "ORCID": "https://orcid.org/0000-0002-3651-544X",
+    "authenticated-orcid": false,
+    "given": "Liu",
+    "family": "Liu",
+    "sequence": "additional",
+    "affiliation": [
+     {
+      "name": "State Key Laboratory for Modern Optical Instrumentation, Centre for Optical and Electromagnetic Research, International Research Center for Advanced Photonics, East Building No. 5, Zijingang Campus, Zhejiang University 1 , Hangzhou 310058, China"
+     }
+    ],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   }
+  ],
+  "member": "317",
+  "published-online": {
+   "date-parts": [
+    [
+     2022,
+     2,
+     2
+    ]
+   ]
+  },
+  "reference": [
+   {
+    "key": "2024031600345663700_c1",
+    "doi-asserted-by": "publisher",
+    "first-page": "69",
+    "DOI": "10.1109/2944.826874",
+    "article-title": "A review of lithium niobate modulators for fiberoptic communications systems",
+    "volume": "6",
+    "year": "2000",
+    "journal-title": "IEEE J. Sel. Top. Quantum Electron."
+   },
+   {
+    "key": "2024031600345663700_c2",
+    "doi-asserted-by": "publisher",
+    "first-page": "218",
+    "DOI": "10.1038/nphoton.2010.30",
+    "article-title": "Towards high-speed optical quantum memories",
+    "volume": "4",
+    "year": "2010",
+    "journal-title": "Nat. Photonics"
+   },
+   {
+    "key": "2024031600345663700_c3",
+    "doi-asserted-by": "publisher",
+    "first-page": "978",
+    "DOI": "10.1038/s41467-019-08969-6",
+    "article-title": "Monolithic lithium niobate photonic circuits for Kerr frequency comb generation and modulation",
+    "volume": "10",
+    "year": "2019",
+    "journal-title": "Nat. Commun."
+   },
+   {
+    "key": "2024031600345663700_c4",
+    "doi-asserted-by": "publisher",
+    "first-page": "1354",
+    "DOI": "10.1364/optica.5.001354",
+    "article-title": "Recent advances in optical technologies for data centers: A review",
+    "volume": "5",
+    "year": "2018",
+    "journal-title": "Optica"
+   },
+   {
+    "key": "2024031600345663700_c5",
+    "doi-asserted-by": "publisher",
+    "first-page": "2052",
+    "DOI": "10.1109/50.536973",
+    "article-title": "Direct modulation of long-cavity semiconductor lasers",
+    "volume": "14",
+    "year": "1996",
+    "journal-title": "J. Lightwave Technol."
+   },
+   {
+    "key": "2024031600345663700_c6",
+    "doi-asserted-by": "publisher",
+    "first-page": "109",
+    "DOI": "10.1364/prj.6.000109",
+    "article-title": "Silicon intensity Mach\u2013Zehnder modulator for single lane 100 Gb/s applications",
+    "volume": "6",
+    "year": "2018",
+    "journal-title": "Photonics Res."
+   },
+   {
+    "key": "2024031600345663700_c7",
+    "doi-asserted-by": "publisher",
+    "first-page": "739",
+    "DOI": "10.1364/optica.5.000739",
+    "article-title": "Ultra-high electro-optic activity demonstrated in a silicon-organic hybrid (SOH) modulator",
+    "volume": "5",
+    "year": "2018",
+    "journal-title": "Optica"
+   },
+   {
+    "key": "2024031600345663700_c8",
+    "doi-asserted-by": "publisher",
+    "first-page": "511",
+    "DOI": "10.1364/optica.411161",
+    "article-title": "Hybrid electro-optic modulator combining silicon photonic slot waveguides with high-k radio-frequency slotlines",
+    "volume": "8",
+    "year": "2021",
+    "journal-title": "Optica"
+   },
+   {
+    "key": "2024031600345663700_c9",
+    "doi-asserted-by": "publisher",
+    "first-page": "256",
+    "DOI": "10.1109/jlt.2015.2499763",
+    "article-title": "Silicon-organic hybrid (SOH) and plasmonic-organic hybrid (POH) integration",
+    "volume": "34",
+    "year": "2016",
+    "journal-title": "J. Lightwave Technol."
+   },
+   {
+    "key": "2024031600345663700_c10",
+    "doi-asserted-by": "publisher",
+    "first-page": "9938",
+    "DOI": "10.1364/oe.23.009938",
+    "article-title": "Plasmonic-organic hybrid (POH) modulators for OOK and BPSK signaling at 40 Gbit/s",
+    "volume": "23",
+    "year": "2015",
+    "journal-title": "Opt. Express"
+   },
+   {
+    "key": "2024031600345663700_c11",
+    "doi-asserted-by": "publisher",
+    "first-page": "249",
+    "DOI": "10.1109/jlt.2019.2924671",
+    "article-title": "80-GHz bandwidth and 1.5-V V\u03c0 InP-based IQ modulator",
+    "volume": "38",
+    "year": "2020",
+    "journal-title": "J. Lightwave Technol."
+   },
+   {
+    "key": "2024031600345663700_c12",
+    "doi-asserted-by": "publisher",
+    "first-page": "363",
+    "DOI": "10.1088/0034-4885/56/3/001",
+    "article-title": "Lithium niobate integrated optics",
+    "volume": "56",
+    "year": "1993",
+    "journal-title": "Rep. Prog. Phys."
+   },
+   {
+    "key": "2024031600345663700_c13",
+    "doi-asserted-by": "publisher",
+    "first-page": "101",
+    "DOI": "10.1016/0030-4018(82)90374-1",
+    "article-title": "Fabrication and characterization of titanium indiffused proton exchanged (TIPE) waveguides in lithium niobate",
+    "volume": "42",
+    "year": "1982",
+    "journal-title": "Opt. Commun."
+   },
+   {
+    "key": "2024031600345663700_c14",
+    "doi-asserted-by": "publisher",
+    "first-page": "2110",
+    "DOI": "10.1109/jlt.2002.806766",
+    "article-title": "40-Gb/s X-cut LiNbO3 optical modulator with two-step back-slot structure",
+    "volume": "20",
+    "year": "2002",
+    "journal-title": "J. Lightwave Technol."
+   },
+   {
+    "key": "2024031600345663700_c15",
+    "doi-asserted-by": "publisher",
+    "first-page": "101",
+    "DOI": "10.1038/s41586-018-0551-y",
+    "article-title": "Integrated lithium niobate electro-optic modulators operating at CMOS-compatible voltages",
+    "volume": "562",
+    "year": "2018",
+    "journal-title": "Nature"
+   },
+   {
+    "key": "2024031600345663700_c16",
+    "doi-asserted-by": "publisher",
+    "first-page": "359",
+    "DOI": "10.1038/s41566-019-0378-6",
+    "article-title": "High-performance hybrid silicon and lithium niobate Mach\u2013Zehnder modulators for 100 Gbit s\u22121 and beyond",
+    "volume": "13",
+    "year": "2019",
+    "journal-title": "Nat. Photonics"
+   },
+   {
+    "key": "2024031600345663700_c17",
+    "doi-asserted-by": "publisher",
+    "first-page": "357",
+    "DOI": "10.1364/optica.416155",
+    "article-title": "Breaking voltage-bandwidth limits in integrated lithium niobate modulators using micro-structured electrodes",
+    "volume": "8",
+    "year": "2021",
+    "journal-title": "Optica"
+   },
+   {
+    "key": "2024031600345663700_c18",
+    "doi-asserted-by": "publisher",
+    "first-page": "35615",
+    "DOI": "10.1364/oe.411284",
+    "article-title": "Metal based grating coupler on a thin-film lithium niobate waveguide",
+    "volume": "28",
+    "year": "2020",
+    "journal-title": "Opt. Express"
+   },
+   {
+    "key": "2024031600345663700_c19",
+    "doi-asserted-by": "publisher",
+    "first-page": "2200206",
+    "DOI": "10.1109/jphot.2021.3090768",
+    "article-title": "Design optimization of silicon and lithium niobate hybrid integrated traveling-wave Mach-Zehnder modulator",
+    "volume": "13",
+    "year": "2021",
+    "journal-title": "IEEE Photonics J."
+   },
+   {
+    "key": "2024031600345663700_c20",
+    "doi-asserted-by": "publisher",
+    "first-page": "060016",
+    "DOI": "10.3788/col202119.060016",
+    "article-title": "Wideband thin-film lithium niobate modulator with low half-wave-voltage length product",
+    "volume": "19",
+    "year": "2021",
+    "journal-title": "Chin. Opt. Lett."
+   },
+   {
+    "key": "2024031600345663700_c21",
+    "doi-asserted-by": "publisher",
+    "first-page": "23728",
+    "DOI": "10.1364/oe.26.023728",
+    "article-title": "Bonded thin film lithium niobate modulator on a silicon photonics platform exceeding 100\u00a0GHz 3-dB electrical modulation bandwidth",
+    "volume": "26",
+    "year": "2018",
+    "journal-title": "Opt. Express"
+   },
+   {
+    "key": "2024031600345663700_c22",
+    "doi-asserted-by": "publisher",
+    "first-page": "5700",
+    "DOI": "10.1364/ol.41.005700",
+    "article-title": "High-performance and linear thin-film lithium niobate Mach\u2013Zehnder modulators on silicon up to 50 GHz",
+    "volume": "41",
+    "year": "2016",
+    "journal-title": "Opt. Lett."
+   },
+   {
+    "key": "2024031600345663700_c23",
+    "doi-asserted-by": "publisher",
+    "first-page": "2940",
+    "DOI": "10.1364/ol.426083",
+    "article-title": "Folded thin-film lithium niobate modulator based on a poled Mach\u2013Zehnder interferometer structure",
+    "volume": "46",
+    "year": "2021",
+    "journal-title": "Opt. Lett."
+   },
+   {
+    "key": "2024031600345663700_c24",
+    "doi-asserted-by": "publisher",
+    "first-page": "823",
+    "DOI": "10.3390/mi12070823",
+    "article-title": "Folded heterogeneous silicon and lithium niobate Mach\u2013Zehnder modulators with low drive voltage",
+    "volume": "12",
+    "year": "2021",
+    "journal-title": "Micromachines"
+   }
+  ],
+  "container-title": [
+   "APL Photonics"
+  ],
+  "original-title": [],
+  "language": "en",
+  "link": [
+   {
+    "URL": "https://pubs.aip.org/aip/app/article-pdf/doi/10.1063/5.0077232/19803110/026103_1_online.pdf",
+    "content-type": "application/pdf",
+    "content-version": "vor",
+    "intended-application": "text-mining"
+   },
+   {
+    "URL": "https://pubs.aip.org/aip/app/article-pdf/doi/10.1063/5.0077232/19803110/026103_1_online.pdf",
+    "content-type": "application/pdf",
+    "content-version": "vor",
+    "intended-application": "syndication"
+   },
+   {
+    "URL": "https://pubs.aip.org/aip/app/article-pdf/doi/10.1063/5.0077232/19803110/026103_1_online.pdf",
+    "content-type": "unspecified",
+    "content-version": "vor",
+    "intended-application": "similarity-checking"
+   }
+  ],
+  "deposited": {
+   "date-parts": [
+    [
+     2025,
+     5,
+     28
+    ]
+   ],
+   "date-time": "2025-05-28T16:30:53Z",
+   "timestamp": 1748449853000
+  },
+  "score": 1,
+  "resource": {
+   "primary": {
+    "URL": "https://pubs.aip.org/app/article/7/2/026103/2835108/High-performance-thin-film-lithium-niobate"
+   }
+  },
+  "subtitle": [],
+  "short-title": [],
+  "issued": {
+   "date-parts": [
+    [
+     2022,
+     2,
+     1
+    ]
+   ]
+  },
+  "references-count": 24,
+  "journal-issue": {
+   "issue": "2",
+   "published-print": {
+    "date-parts": [
+     [
+      2022,
+      2,
+      1
+     ]
+    ]
+   }
+  },
+  "URL": "https://doi.org/10.1063/5.0077232",
+  "relation": {},
+  "ISSN": [
+   "2378-0967"
+  ],
+  "issn-type": [
+   {
+    "value": "2378-0967",
+    "type": "electronic"
+   }
+  ],
+  "subject": [],
+  "published-other": {
+   "date-parts": [
+    [
+     2022,
+     2
+    ]
+   ]
+  },
+  "published": {
+   "date-parts": [
+    [
+     2022,
+     2,
+     1
+    ]
+   ]
+  },
+  "article-number": "026103"
+ }
+}

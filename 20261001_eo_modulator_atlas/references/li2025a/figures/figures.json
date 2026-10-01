@@ -1,0 +1,95 @@
+[
+ {
+  "kind": "page_render",
+  "file": "page_04.png",
+  "page": 4,
+  "captions": [
+   "Fig. 1 (a), Schematic configuration of the proposed slow-light modulator. inset: left, simulated mode profile in the"
+  ]
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p04_1.png",
+  "page": 4,
+  "width": 1791,
+  "height": 1234
+ },
+ {
+  "kind": "page_render",
+  "file": "page_05.png",
+  "page": 5,
+  "captions": [
+   "Fig. 1(a-d). For the present slow-light waveguide, two adjacent apodized gratings are separated by"
+  ]
+ },
+ {
+  "kind": "page_render",
+  "file": "page_06.png",
+  "page": 6,
+  "captions": [
+   "Fig. 1(a) (right).",
+   "Fig. 2 Calculated results of the apodized-grating slow-light waveguide: (a), group index ng. (b), transmission spectral"
+  ]
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p06_1.png",
+  "page": 6,
+  "width": 1424,
+  "height": 933
+ },
+ {
+  "kind": "page_render",
+  "file": "page_08.png",
+  "page": 8,
+  "captions": [
+   "Fig. 3(a-d) shows the fabricated TFLN slow-light modulators (see more details about the",
+   "Fig. 3 (a), Optical microscope images of fabricated slow-light MZMs. Scanning electron microscopy pictures of the"
+  ]
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p08_1.png",
+  "page": 8,
+  "width": 1665,
+  "height": 705
+ },
+ {
+  "kind": "page_render",
+  "file": "page_09.png",
+  "page": 9,
+  "captions": [
+   "Fig. 4(a) shows the measured EO responses S21 of the fabricated MZM when operating at"
+  ]
+ },
+ {
+  "kind": "page_render",
+  "file": "page_10.png",
+  "page": 10,
+  "captions": [
+   "Fig. 4 (a) Measured EO responses for the fabricated slow-light modulator under different working wavelengths spanning"
+  ]
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p10_1.png",
+  "page": 10,
+  "width": 1450,
+  "height": 744
+ },
+ {
+  "kind": "page_render",
+  "file": "page_13.png",
+  "page": 13,
+  "captions": [
+   "Fig. 5 The FOM for TFLN and silicon MZMs reported. Here FOM=BR\u00d7(ER/Vpp) /(V\u03c0L)"
+  ]
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p13_1.png",
+  "page": 13,
+  "width": 2640,
+  "height": 2018
+ }
+]

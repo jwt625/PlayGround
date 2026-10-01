@@ -1,0 +1,123 @@
+schema: eo-atlas.sim/v1
+id: deng2026-a
+paper_id: deng2026
+device_id: deng2026-a
+title: Deng 2026, 1 mm BTO-on-LSAT Si3N4 strip-loaded MZM, RF-driven GSG arm cross-section (single-arm drive)
+repro_grade: B
+validation_status: unvalidated
+chain: [electrostatics, optical_mode, eo_overlap, rf_line, eo_response]
+
+# STATUS: record of disclosed geometry and provenance. NOT RUNNABLE as written: the paper states no RF permittivity for BTO, LSAT
+# or Si3N4 and no Si3N4 refractive index, and the engine rejects a dielectric without eps_r ("unknown is not vacuum").
+# The values are therefore omitted on purpose (listed under `missing`) until a reviewer supplies sourced numbers.
+#
+# Coordinate frame: x lateral, y film normal up, z propagation. Origin: optical axis of the Si3N4 strip in x; y = 0 at the
+# LSAT top / BTO bottom. Only the RF-driven GSG arm is modelled (one gap, one signal and one ground). The signal electrode is
+# placed on +x and the ground on -x; the micrograph does not identify which side is signal (symmetric electrostatics).
+optics:
+  wavelength_nm: 1550
+  polarization: TE
+  mode_index: 0
+  group_index_from: finite_difference_wavelength
+  ng_fixed: null
+  eo_axis: auto                      # engine derives the Pockels contraction from crystal + cut; BTO in-plane <110> field is not a supported contraction (see SPEC_PROPOSALS)
+
+materials:
+  barium_titanate:
+    crystal: {cut: z, propagation: "[1-10]"}   # (001) film; electrode field along [110]; propagation direction read from Fig. 4a axes
+    n: 2.26                                    # paper-quoted BTO index at 1550 nm (isotropic value; BTO is birefringent)
+    r_pm_per_v: {r42: 358}                     # film-level r42 (paper); other tensor components not reported
+    # eps_r: not reported (omitted, see missing)
+  lsat:
+    n: 1.99
+    # eps_r: not reported (omitted, see missing)
+  silicon_nitride: {}                          # n and eps_r not reported (omitted, see missing)
+  gold: {conductor: true, sigma_Sm: 4.1e7, n_complex: null}
+  air: {n: 1.0, eps_r: 1.0}
+
+geometry:
+  symmetry: none
+  domain: {x_um: [-60, 60], y_um: [-40, 20]}
+  regions:
+    - {name: ambient, material: air, rect: {x_um: [-60, 60], y_um: [-40, 20]}}
+    - {name: lsat_substrate, material: lsat, rect: {x_um: [-60, 60], y_um: [-40, 0]}}
+    - {name: bto_film, material: barium_titanate, rect: {x_um: [-60, 60], y_um: [0, 0.3]}}
+    - {name: sin_strip, material: silicon_nitride, rect: {x_um: [-0.8, 0.8], y_um: [0.3, 0.56]}}
+  electrodes:
+    - {name: signal, role: signal, weight: 1.0, rect: {x_um: [2.75, 22.75], y_um: [0.3, 0.8]}, material: gold}
+    - {name: ground, role: ground, weight: 0.0, rect: {x_um: [-22.75, -2.75], y_um: [0.3, 0.8]}, material: gold}
+  optical_window: {x_um: [-2.5, 2.5], y_um: [-1.0, 1.5]}
+  mesh: {max_edge_um: 1.0, electrode_edge_um: 0.05}
+
+line:
+  length_mm: 1
+  conductor_loss_model: skin_effect_wheeler
+  rf_loss_table: null
+  source_ohm: 50
+  load_ohm: 50
+  differential: false                          # RF applied to one arm only (single-arm drive)
+  loading:
+    type: none
+sweep: {f_start_ghz: 0.1, f_stop_ghz: 40, n_points: 160}
+
+alt_geometries: {}
+
+targets:
+  # Measured (devices.csv row deng2026-a); single-arm convention, engine push-pull factor not defined
+  - {metric: vpi_l_dc_vcm, value: 0.7, tol_rel: 0.15, source: {device_id: deng2026-a, field: vpil_dc_vcm}}
+  - {metric: bw3db_ghz, value: 12, tol_abs: 3.0, source: {device_id: deng2026-a, field: bw3db_ghz}}
+  - {metric: bw6db_ghz, value: 28, tol_rel: 0.15, source: {device_id: deng2026-a, field: bw6db_ghz}}
+  # Paper's own finite-element result; compare as cross-solver reference, not as measurement
+  - {metric: vpi_l_dc_vcm, value: 0.73, tol_rel: 0.1, source: {paper_id: deng2026, locator: "p.7 Sec. On-chip EO modulator (EO overlap 45%)", basis: simulated}}
+reported_curves: []
+
+provenance:
+  optics.wavelength_nm: {class: paper_exact, locator: "p.7; Fig. 4d (Vpi at 1550 nm)"}
+  optics.polarization: {class: paper_exact, locator: "p.7 (single TE mode; only TE modulated for field along <110>)"}
+  optics.group_index_from: {class: project_inference, note: "paper reports no group index; engine derives it"}
+  materials.barium_titanate.crystal: {class: paper_exact, locator: "p.9 Methods ((001) LSAT); p.7 text (field along <110>); p.8 Fig. 4a axes", note: "propagation [1-10] read from the micrograph axes (figure reading)"}
+  materials.barium_titanate.n: {class: paper_exact, locator: "p.2 (n = 2.26 at 1550 nm)", note: "single isotropic value as quoted in the introduction"}
+  materials.barium_titanate.r_pm_per_v: {class: project_inference, locator: "abstract; p.5 (r42 calculated 358 pm/V); Supplementary Note 4 not available", note: "paper states a bound (exceeding 358 pm/V, calculated from an effective coefficient on a separate 180 nm film; Fig. 3c: 253 pm/V along <110>); 358 is used as that bound, not as a device value; effective device coefficient along <110> and the tensor projection are in the unavailable Supplementary"}
+  materials.lsat.n: {class: paper_exact, locator: "p.2 (n = 1.99 at 1550 nm)"}
+  materials.gold.sigma_Sm: {class: project_inference, note: "typical bulk gold conductivity 4.1e7 S/m (same value as sims/chen2022/config.yaml); no citation verified in this task; paper gives no film conductivity"}
+  line.length_mm: {class: paper_exact, locator: "p.7 (1-mm-long phase-shifting arms)"}
+  line.source_ohm: {class: project_inference, note: "VNA probe system assumed 50 ohm; paper states only the 50 ohm termination at the output"}
+  line.load_ohm: {class: paper_exact, locator: "p.9 Methods (output terminated with a 50 ohm load)"}
+  line.differential: {class: paper_exact, locator: "p.7 (RF on one arm GSG; other arm GS capacitive electrode with DC bias only)"}
+  line.conductor_loss_model: {class: project_inference, note: "no RF loss reported"}
+  geometry.regions.bto_film: {class: paper_exact, locator: "p.7 (300-nm-thick BTO film in the modulator)"}
+  geometry.regions.sin_strip: {class: figure_digitized, locator: "p.9 Methods (260 nm Si3N4); Fig. 4(b) SEM; Fig. 4(c)", note: "thickness 0.26 um from text; width 1.6 um taken as the middle of the 1.4-1.7 um range: about 1.65 um from the Fig. 4(b) SEM top width against its 1 um scale bar (tilted view), about 1.6 um from Fig. 4(c) with the 5.5 um gap as scale; the 300 nm BTO layer as scale gives 1.4-1.6 um; rectangular cross-section assumed (walls slightly slanted)"}
+  geometry.regions.lsat_substrate: {class: paper_exact, locator: "p.9 Methods ((001) LSAT)", note: "material and orientation stated; substrate thickness not stated, region clipped to the domain"}
+  geometry.regions.ambient: {class: figure_digitized, locator: "Fig. 4c labels (Air)", note: "no top cladding drawn in the simulation cross-section; the >2 um patterned BCB isolation layer of the Methods is not shown and is not modelled"}
+  geometry.electrodes.signal: {class: paper_exact, locator: "p.7 (5.5 um spacing); p.9 Methods (10 nm Ti + 500 nm Au)", note: "text values preferred over the Fig. 4(c) bar (2 um bar is about 65 px against a 250 px gap, which would imply about 7.7 um, and 0.8 um electrode thickness); inner edge at +2.75 um from the 5.5 um gap centred on the strip (centering from Fig. 4c); thickness 0.5 um; the 10 nm Ti adhesion layer is not modelled; electrodes sit on the BTO surface per Fig. 4c"}
+  geometry.electrodes.ground: {class: paper_exact, locator: "p.7 (5.5 um spacing); p.9 Methods", note: "mirror of the signal electrode inner edge"}
+  geometry.electrodes.signal.width: {class: project_inference, locator: "Fig. 4a (200 um scale bar); not stated in the text", note: "width 20 um assumed; Fig. 4a gives about 18-45 um depending on whether the 200 um bar or the 5.5 um gap is used as scale, which disagree"}
+  geometry.electrodes.ground.width: {class: project_inference, locator: "Fig. 4a", note: "same assumption as the signal width; the second ground of the GSG line is not modelled"}
+  geometry.optical_window: {class: project_inference, note: "crop around the strip, inside the electrode gap"}
+  geometry.domain: {class: project_inference, note: "lateral +-60 um, vertical -40..20 um; open-boundary treatment is an engine choice"}
+  geometry.mesh: {class: project_inference}
+
+missing:
+  - barium_titanate eps_r (RF permittivity, anisotropic and film-dependent; not stated in the paper or in the cached text; Supplementary not available)
+  - lsat eps_r (not stated)
+  - silicon_nitride eps_r and refractive index (not stated; PECVD film)
+  - BTO birefringence at 1550 nm (only an isotropic n = 2.26 quoted) and the other Pockels coefficients (r13, r33, r51)
+  - Si3N4 strip width (about 1.4-1.7 um from the Fig. 4(b) SEM and Fig. 4(c) sketch; 1.6 um used) and sidewall angle
+  - signal and ground electrode widths and the second ground gap of the GSG line (Fig. 4a micrograph only, scale-inconsistent)
+  - which side of the waveguide carries the signal electrode
+  - LSAT substrate thickness
+  - position and extent of the >2 um BCB isolation layer relative to the electrodes
+  - RF loss, Z0, n_rf, ng, optical loss (not reported)
+  - DC bias applied during the Vpi measurement
+  - temperature (not stated)
+limitations:
+  - scalar_optical_not_full_vector
+  - quasi_static_2d_rf
+  - rectangular_or_polygon_sidewalls_only
+  - no_3d_launch_pad_effects
+  - "Config is not runnable until eps_r (BTO, LSAT, Si3N4) and the Si3N4 index are supplied from a verified source; the engine rejects dielectrics without eps_r by design"
+  - "Only the RF-driven arm is modelled; the second MZI arm (GS capacitive electrode) and the Y-branches are outside the cross-section"
+  - "Single-arm drive: the measured Vpi*L refers to the RF-driven arm only; the engine's optical arm/push-pull factor is not yet defined (SPEC states this)"
+  - "The in-plane [110] field contraction of the tetragonal BTO Pockels tensor (r42 projection, 45 degrees from the film axes) is not expressible with the current crystal/cut notation"
+  - "The paper's EO S21 (Fig. 4e) shows a 6 dB step at 12 GHz and a flat plateau to 28 GHz; the paper attributes the roll-off to group-velocity mismatch, which a smooth velocity-mismatch model may not reproduce"
+  - "BTO permittivity is strongly frequency-dependent (poled, film-dependent); a single quasi-static eps_r is an approximation"

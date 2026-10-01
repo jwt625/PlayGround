@@ -1,0 +1,219 @@
+paper_id: liu2021
+verified_on: '2026-10-01'
+source_files:
+- references/liu2021/text.md
+- references/liu2021/figures/page_02.png
+- references/liu2021/figures/page_03.png
+- references/liu2021/figures/page_04.png
+- references/liu2021/figures/page_07.png
+- references/liu2021/figures/img_p03_1.png
+- references/liu2021/figures/img_p03_2.png
+entries:
+- device_id: liu2021-a
+  field: wavelength_nm
+  value: 1550
+  unit: nm
+  basis: measured
+  locator: p.3 testing paragraph
+  note: TE polarized incident light at 1550 nm
+- device_id: liu2021-a
+  field: length_mm
+  value: 5
+  unit: mm
+  basis: measured
+  locator: p.4; abstract p.1
+  note: 5-mm-long modulation region
+- device_id: liu2021-a
+  field: vpi_dc_v
+  value: 3.4
+  unit: V
+  basis: measured
+  locator: p.4 text; Fig. 4(c) on p.3
+  note: 100 kHz triangular sweep
+- device_id: liu2021-a
+  field: vpil_dc_vcm
+  value: 1.7
+  unit: V*cm
+  basis: derived
+  locator: p.4; p.7 Supp. Sec. 3
+  note: authors product of Vpi 3.4 V and 5 mm; formula implicit
+- device_id: liu2021-a
+  field: bw3db_ghz
+  value: 67
+  unit: GHz
+  basis: measured
+  locator: p.4 text; Fig. 4(d) on p.3
+  note: no 3 dB crossing; 1.3 dB roll-off at 67 GHz, limited by test system
+- device_id: liu2021-a
+  field: bw_measured_to_ghz
+  value: 67
+  unit: GHz
+  basis: measured
+  locator: p.4
+  note: measurement system limit 67 GHz
+- device_id: liu2021-a
+  field: eo_rolloff_db
+  value: 1.3
+  unit: dB
+  basis: measured
+  locator: p.1 abstract; p.4 text; Fig. 4(d) on p.3
+  note: reference frequency not stated; curve starts near 0 dB at low frequency
+- device_id: liu2021-a
+  field: eo_rolloff_freq_ghz
+  value: 67
+  unit: GHz
+  basis: measured
+  locator: p.4 text; Fig. 4(d) on p.3
+- device_id: liu2021-a
+  field: il_fiber_to_fiber_db
+  value: 17
+  unit: dB
+  basis: measured
+  locator: p.4 text; Fig. 4(b) on p.3
+  note: total insertion loss with end-butt tapered fibers; mostly coupling loss
+- device_id: liu2021-a
+  field: extinction_ratio_db
+  value: 17
+  unit: dB
+  basis: measured
+  locator: p.4; p.7 Supp. Sec. 3
+  note: text says beyond 17 dB; Supp. gives 17 dB from DC voltage scan
+- device_id: liu2021-a
+  field: n_rf
+  value: 2.3
+  unit: unitless
+  basis: extracted_from_figure
+  locator: p.3 Fig. 4(e)
+  note: plateau about 2.3 from 10 to 67 GHz; text only says close to ng about 2.25
+- device_id: liu2021-a
+  field: ng_opt
+  value: 2.25
+  unit: unitless
+  basis: author_estimate
+  locator: p.3 Fig. 4(e) caption; p.4
+  note: red line labelled optical mode; origin of the value not stated
+- device_id: liu2021-a
+  field: eo_film_thickness_nm
+  value: 600
+  unit: nm
+  basis: measured
+  locator: p.3 fabrication paragraph
+  note: X-cut TFLN, NanoLN wafer
+- device_id: liu2021-a
+  field: etch_depth_nm
+  value: 300
+  unit: nm
+  basis: measured
+  locator: p.3 fabrication paragraph
+  note: partial etch
+- device_id: liu2021-a
+  field: rib_width_nm
+  value: 1000
+  unit: nm
+  basis: design_target
+  locator: p.2 Fig. 1(c) discussion
+  note: 1-um-wide ridge stated for the simulated waveguide; fabricated width not stated
+- device_id: liu2021-a
+  field: electrode_gap_um
+  value: 3
+  unit: um
+  basis: measured
+  locator: p.3 Fig. 3(a); Table S1 G1; Fig. 4(a) caption
+  note: 3 um T-rail gap
+- device_id: liu2021-a
+  field: signal_width_um
+  value: 50
+  unit: um
+  basis: measured
+  locator: p.3 Fig. 3(a); p.3 text; Table S1 Ws
+  note: unloaded signal electrode width
+- device_id: liu2021-a
+  field: electrode_thickness_um
+  value: 1.4
+  unit: um
+  basis: measured
+  locator: p.3 fabrication paragraph
+  note: main electrodes electroplated to 1.4 um; T-rail thickness not stated
+- device_id: liu2021-a
+  field: electrode_metal
+  value: gold
+  unit: ''
+  basis: measured
+  locator: p.2 Fig. 1; Fig. 3(a) labels
+- device_id: liu2021-a
+  field: buffer_oxide_um
+  value: 2
+  unit: um
+  basis: measured
+  locator: p.3 fabrication paragraph
+  note: SiO2 bonding layer between TFLN and quartz
+- device_id: liu2021-a
+  field: substrate
+  value: quartz 500 um
+  unit: ''
+  basis: measured
+  locator: p.3 fabrication paragraph
+- device_id: liu2021-a
+  field: cladding
+  value: SiO2 100 nm (PECVD) buffer over ridge and slab; BCB 1 um under the feedline bends only, removed in the modulation region
+  unit: ''
+  basis: measured
+  locator: p.3 fabrication paragraph; p.5 Supp. Sec. 1
+  note: metal-silica-LN hybrid waveguide
+- device_id: liu2021-a
+  field: crystal_cut
+  value: x-cut
+  unit: ''
+  basis: measured
+  locator: p.3 fabrication paragraph
+- device_id: liu2021-a
+  field: drive
+  value: push_pull
+  unit: ''
+  basis: derived
+  locator: p.3 Fig. 3(a)
+  note: authors do not state it; one arm in each gap of a G-S-G line on x-cut LN
+- device_id: liu2021-a
+  field: vpi_convention
+  value: mzm_push_pull
+  unit: ''
+  basis: derived
+  locator: p.3 Fig. 3(a); p.2 Fig. 2(b)
+  note: not stated; Fig. 2(b) per-arm index change 2.4e-5/V gives about 1.6 V*cm push-pull vs 1.7 reported
+derived:
+- device_id: liu2021-a
+  field: slab_thickness_nm
+  value: 300
+  formula: eo_film_thickness_nm - etch_depth_nm = 600 - 300
+  inputs:
+  - eo_film_thickness_nm=600
+  - etch_depth_nm=300
+context_values:
+  predicted_bw3db_ghz:
+    value: over 110
+    locator: p.1 abstract; p.8 Fig. S7
+    note: from measured S-parameters via transmission-line model; prediction, not entered
+  microwave_s21_electrode_rolloff:
+    value: below 2 dB to 67 GHz; 3.7 dB at 104 GHz
+    locator: p.4; p.7 Supp. Sec. 3
+    note: electrical S21 of the electrodes, not EO
+  microwave_6db_bandwidth_ghz:
+    value: over 110
+    locator: p.4; p.7 Supp. Sec. 3
+    note: electrical, limited by the 110 GHz VNA
+  s11_db:
+    value: below -18
+    locator: p.4; Fig. 4(d)
+  simulated_electrode_optical_loss_db_per_cm:
+    value: below 0.1 at 3 um gap with 100 nm silica
+    locator: p.2; Fig. 1(c)
+    note: FEM simulation, electrode-induced absorption only
+  t_rail_parameters_um:
+    period: 50
+    rail_length: 45
+    stem: 5
+    rail_width: 3
+    unloaded_spacing: 15
+    locator: p.6 Table S1; Fig. S3(a); SEM inset Fig. 4(a)
+    note: symbol meanings read from Fig. S3(a) and the SEM inset
+  license_and_rights_basis: No Crossref record and no license notice in the PDF; arXiv-nonexclusive appears only in the prefetch metadata; redistribution set restricted_local_only

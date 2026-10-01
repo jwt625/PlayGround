@@ -1,0 +1,141 @@
+schema: eo-atlas.sim/v1
+id: he2019-a
+paper_id: he2019
+device_id: he2019-a
+title: He 2019, 3 mm hybrid Si/LN MZM phase-shifter cross-section (BCB-bonded etched x-cut LN rib, Au GSG, push-pull by geometry)
+repro_grade: B
+validation_status: unvalidated
+chain: [electrostatics, optical_mode, eo_overlap, rf_line, eo_response]
+
+# STATUS: record of disclosed geometry and provenance. NOT RUNNABLE as written: the paper states no refractive index, RF permittivity
+# or Pockels coefficient for LN, BCB, SiO2 or Si (and no conductivity for the gold), and the engine rejects a dielectric without eps_r.
+# These constants are omitted on purpose and listed under `missing`; none was filled from memory. A reviewer must supply sourced values.
+#
+# Coordinate frame: x lateral, y film normal (up), z propagation (assumed along crystal y of x-cut LN, project_inference).
+# Origin: x = 0 at the centre of the signal electrode (mirror plane of the structure); y = 0 at the BCB top / LN slab bottom.
+# Right waveguide at x = +13.0 um, left waveguide at x = -13.0 um; one waveguide in each G-S gap, so the field in the two
+# waveguides is opposite by geometry (push-pull, stated on p.4). The optical mode is solved on the right waveguide only.
+# Devices he2019-a (3 mm) and he2019-b (5 mm) share this cross-section; only length_mm differs (see limitations).
+optics:
+  wavelength_nm: 1550              # wavelength of the paper's own design simulation (Supp. I); EO measurement wavelength not stated
+  polarization: TE
+  mode_index: 0
+  group_index_from: finite_difference_wavelength
+  ng_fixed: null
+  eo_axis: auto
+
+materials:
+  lithium_niobate:
+    crystal: {cut: x, propagation: y}
+    # n_o, n_e, eps_r, r33 and other Pockels components: not given in the paper (omitted, see missing)
+  bcb: {}                          # n, eps_r not given (omitted, see missing)
+  silicon_dioxide: {}              # n, eps_r not given (omitted, see missing)
+  silicon: {}                      # n, eps_r, resistivity not given (omitted, see missing)
+  gold: {conductor: true}          # Au per the Fig. 1(b) legend; conductivity not given (omitted, see missing)
+  air: {n: 1.0, eps_r: 1.0}        # vacuum by definition; no top cladding is drawn in Fig. 1(b)
+
+geometry:
+  symmetry: none
+  domain: {x_um: [-80, 80], y_um: [-53.3, 30]}
+  regions:
+    - {name: ambient, material: air, rect: {x_um: [-80, 80], y_um: [-53.3, 30]}}
+    - {name: substrate, material: silicon, rect: {x_um: [-80, 80], y_um: [-53.3, -3.3]}}
+    - {name: box, material: silicon_dioxide, rect: {x_um: [-80, 80], y_um: [-3.3, -0.3]}}
+    - {name: bcb, material: bcb, rect: {x_um: [-80, 80], y_um: [-0.3, 0]}}
+    - {name: ln_slab, material: lithium_niobate, rect: {x_um: [-80, 80], y_um: [0, 0.42]}}
+    - {name: ln_rib_r, material: lithium_niobate, polygon_um: [[12.396, 0.42], [13.604, 0.42], [13.5, 0.60], [12.5, 0.60]]}
+    - {name: ln_rib_l, material: lithium_niobate, polygon_um: [[-13.604, 0.42], [-12.396, 0.42], [-12.5, 0.60], [-13.5, 0.60]]}
+  electrodes:
+    - {name: signal, role: signal, weight: 1.0, rect: {x_um: [-9.75, 9.75], y_um: [0.42, 1.02]}, material: gold}
+    - {name: ground_r, role: ground, weight: 0.0, rect: {x_um: [16.25, 46.25], y_um: [0.42, 1.02]}, material: gold}
+    - {name: ground_l, role: ground, weight: 0.0, rect: {x_um: [-46.25, -16.25], y_um: [0.42, 1.02]}, material: gold}
+  optical_window: {x_um: [10, 16], y_um: [-1.0, 1.6]}
+  mesh: {max_edge_um: 2.0, electrode_edge_um: 0.05}
+
+line:
+  length_mm: 3
+  conductor_loss_model: none        # gold conductivity not given; the paper's simulated alpha_m(f) is kept only as a target
+  rf_loss_table: null
+  source_ohm: 50
+  load_ohm: 50
+  differential: false               # single GSG feed on the centre signal line; push-pull comes from one waveguide in each gap
+  loading:
+    type: none
+    period_um: null
+    loaded_length_um: null
+    unloaded_cross_section: null
+    loaded_cross_section: null
+sweep: {f_start_ghz: 0.1, f_stop_ghz: 120, n_points: 240}
+
+alt_geometries: {}
+
+targets:
+  # Measured, 3 mm device (devices.csv row he2019-a; Vpi and VpiL are MZM-level push-pull values from a 100 kHz sweep)
+  - {metric: vpi_l_dc_vcm, value: 2.2, tol_rel: 0.15, source: {device_id: he2019-a, field: vpil_dc_vcm}}
+  - {metric: vpi_dc_v, value: 7.4, tol_rel: 0.15, source: {device_id: he2019-a, field: vpi_dc_v}}
+  # The paper's own simulations of the same structure (Supplementary Information); compare as cross-solver references, not as measurements
+  - {metric: vpi_l_dc_vcm, value: 2.46, tol_rel: 0.10, source: {paper_id: he2019, locator: "p.16, Supp. II ('simulated Vpi.L = 2.46 V.cm')", basis: simulated}}
+  - {metric: ng_opt, value: 2.21, tol_abs: 0.05, source: {device_id: he2019-a, field: ng_opt}}
+  - {metric: n_rf, value: 2.16, tol_abs: 0.03, source: {paper_id: he2019, locator: "p.17, Fig. S4(c) dashed curve (t = 0.6 um, ws = 19.5 um), plateau 60-120 GHz", basis: extracted_from_figure, note: "paper's simulated n_m; read from the figure"}}
+  - {metric: z0_ohm, value: 48.0, tol_abs: 1.5, source: {paper_id: he2019, locator: "p.17, Fig. S4(a) dashed curve, about 48.2 to 47.8 ohm at 40-60 GHz", basis: extracted_from_figure, note: "paper's simulated Re(Z0); frequency dependent"}}
+  - {metric: rf_loss_db_per_cm, at_ghz: 100, value: 7.3, tol_abs: 0.6, source: {paper_id: he2019, locator: "p.17, Fig. S4(b) dashed curve at 100 GHz", basis: extracted_from_figure, note: "paper's simulated alpha_m; read from the figure"}}
+  # Not a target: EO 3 dB bandwidth is a bound (> 70 GHz, VNA limit); the paper's simulated bandwidth (well beyond 100 GHz) is not a measurement
+reported_curves: []
+
+provenance:
+  optics.wavelength_nm: {class: paper_exact, locator: "p.12, Supp. I (fundamental TE mode at 1550 nm in the design simulations)", note: "EO measurement wavelength is not stated; Fig. 2(b) spectra span 1530-1570 nm"}
+  optics.polarization: {class: paper_exact, locator: "p.9, Methods (polarization controller to ensure TE input); p.12, Supp. I"}
+  optics.group_index_from: {class: project_inference, note: "paper quotes n_o about 2.21 (Supp. II); engine derives it by finite difference and compares as a target"}
+  materials.lithium_niobate.crystal: {class: paper_exact, locator: "p.2, Results (x-cut LN membrane)", note: "propagation along crystal y is not stated; assumed (standard x-cut y-propagating TE/r33 geometry), project_inference"}
+  materials.gold: {class: project_inference, locator: "p.3, Fig. 1(b) legend (Au)", note: "text says only 'metal'; conductivity not given and left out"}
+  materials.air: {class: project_inference, note: "no top cladding is drawn in Fig. 1(b) and none is described; air as vacuum (n = 1, eps_r = 1 by definition)"}
+  materials.bcb: {class: unknown, note: "BCB refractive index and permittivity not given; omitted"}
+  materials.silicon_dioxide: {class: unknown, note: "SiO2 refractive index and permittivity not given; omitted"}
+  materials.silicon: {class: unknown, note: "Si refractive index, permittivity and resistivity not given; omitted"}
+  line.length_mm: {class: paper_exact, locator: "p.4, Sec. Static EO Performance; Fig. 2a (3 mm arm length); p.16 Supp. II (L = 3 mm)"}
+  line.source_ohm: {class: paper_exact, locator: "p.16, Supp. II (source and load assumed 50 ohm)"}
+  line.load_ohm: {class: paper_exact, locator: "p.8, Methods (second RF probe with a 50 ohm termination)"}
+  line.differential: {class: project_inference, locator: "p.3, Fig. 1(a)/(b); p.4 (GSG, one waveguide in each gap)", note: "drive described as push-pull (p.4); topology (one signal line, one waveguide per gap) read from Fig. 1(a,b); the paper does not say whether the source is single-ended"}
+  line.conductor_loss_model: {class: project_inference, note: "gold conductivity not given; loss model none; paper's simulated alpha_m(f) only as a target"}
+  geometry.regions.ln_slab: {class: paper_exact, locator: "p.3, Sec. Design (s = 420 nm); p.15 Supp. II (hLN = 420 nm)"}
+  geometry.regions.ln_rib_r: {class: paper_exact, locator: "p.3, Sec. Design (top width 1 um, rib height 180 nm, sidewall angle 60 degrees)", note: "60 degrees taken as measured from the horizontal slab surface (Fig. 1(c) drawing); bottom width 1 + 2 x 0.18/tan(60 deg) = 1.208 um is derived. Centre x = 13.0 um follows from signal edge 9.75 + g 2.75 + w/2 0.5"}
+  geometry.regions.ln_rib_l: {class: project_inference, locator: "p.3, Fig. 1(a)", note: "mirror image of the right rib about the signal-electrode centre; one waveguide per gap"}
+  geometry.regions.bcb: {class: paper_exact, locator: "p.4, Sec. Design (about 300 nm); p.15 Supp. II (hBCB = 300 nm)"}
+  geometry.regions.box: {class: paper_exact, locator: "p.15, Supp. II (hSiO = 3 um)", note: "Fig. 1(b) legend marks SiO2 between BCB and Si"}
+  geometry.regions.substrate: {class: project_inference, locator: "p.3, Fig. 1(b) legend (Si)", note: "Si substrate thickness not given; 50 um modelled as a truncated slab"}
+  geometry.regions.ambient: {class: project_inference, note: "see materials.air"}
+  geometry.electrodes.signal: {class: paper_exact, locator: "p.4, Sec. Design (signal width 19.5 um, thickness 600 nm)", note: "electrode sits on the LN slab top (Fig. 1(b), Fig. S1(a)); centred at x = 0"}
+  geometry.electrodes.ground_r: {class: paper_exact, locator: "p.4, Sec. Design (ground width 30 um); p.15 Supp. II (w + 2g = 6.5 um, g = 2.75 um)", note: "inner edge at 9.75 + 6.5 = 16.25 um; ground outer extent 46.25 um from the 30 um width"}
+  geometry.electrodes.ground_l: {class: project_inference, locator: "p.3, Fig. 1(a)", note: "mirror of the right ground"}
+  geometry.optical_window: {class: project_inference, note: "crop around the right rib; excludes both electrodes (inner edges at x = 9.75 and 16.25 um)"}
+  geometry.domain: {class: project_inference, note: "lateral +-80 um, vertical -53.3 to +30 um; truncation, not stated in the paper"}
+  geometry.mesh: {class: project_inference}
+  sweep: {class: project_inference, note: "frequency range to 120 GHz matches the paper's simulated curves (Fig. S4)"}
+
+missing:
+  - LN ordinary and extraordinary refractive indices (not given; the paper only mentions n_e and r33 symbolically in Supp. I)
+  - LN RF permittivity tensor (not given)
+  - LN Pockels coefficients r33 (and r13, r22, r51) (not given)
+  - BCB refractive index and RF permittivity (not given)
+  - SiO2 refractive index and RF permittivity (not given)
+  - Si refractive index, RF permittivity and resistivity (not given)
+  - gold conductivity / film quality (not given; only 'metal' in the text, Au in the Fig. 1(b) legend)
+  - dielectric loss tangents (not given)
+  - Si substrate thickness (not given; 50 um assumed for truncation)
+  - total LN film thickness (slab 420 nm and rib 180 nm are given separately; their sum is not stated by the authors)
+  - whether the Si inverse-taper tips (500 nm to 80 nm taper in the vertical adiabatic couplers) remain beneath the LN in the phase-shifter section (Fig. 1(b) draws small Si rectangles under each rib; omitted here)
+  - top cladding (none described; air assumed)
+  - EO measurement wavelength (design simulations at 1550 nm)
+  - propagation direction relative to the LN crystal axes (assumed along y)
+  - electrode edge and sidewall profile (rectangular assumed)
+  - EO roll-off (the 3 dB bandwidth was not crossed; > 70 GHz)
+limitations:
+  - scalar_optical_not_full_vector
+  - quasi_static_2d_rf
+  - rectangular_or_polygon_sidewalls_only
+  - no_3d_launch_pad_effects
+  - "Config cannot run: material constants are omitted on purpose (see missing); the engine rejects dielectrics without eps_r."
+  - "Vpi and VpiL targets are MZM-level push-pull values; the engine does not yet define the optical arm/push-pull factor (SPEC, EO overlap stage)."
+  - "he2019-b (5 mm) has the same cross-section; no variants mechanism in SPEC, so length_mm 3 is the he2019-a value."
+  - "Si taper tips under the LN, if present in the phase-shifter section, are not modelled and would perturb the optical mode."
+  - "RF targets from Fig. S4 are the paper's own 3D/EM simulation of the experimental structure read from a figure (about +-0.02 on n_m, +-0.5 ohm on Z0, +-0.3 dB/cm on alpha_m); the quasi-static 2D solve has no frequency dependence."

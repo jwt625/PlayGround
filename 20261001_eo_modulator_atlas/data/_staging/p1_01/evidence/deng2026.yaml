@@ -1,0 +1,186 @@
+paper_id: deng2026
+verified_on: '2026-10-01'
+source_files:
+- references/deng2026/text.md
+- references/deng2026/figures/page_08.png
+- references/deng2026/figures/img_p08_1.png
+entries:
+- device_id: deng2026-a
+  field: wavelength_nm
+  value: 1550
+  unit: nm
+  basis: measured
+  locator: p.7 Sec. On-chip EO modulator; Fig. 4d; abstract
+  note: C-band tunable laser (Methods p.9)
+- device_id: deng2026-a
+  field: length_mm
+  value: 1
+  unit: mm
+  basis: measured
+  locator: p.7 Sec. On-chip EO modulator
+  note: length of each phase-shifting arm; GSG TWE on one arm
+- device_id: deng2026-a
+  field: vpi_dc_v
+  value: 7
+  unit: V
+  basis: measured
+  locator: p.7; Fig. 4d; p.9 Methods
+  note: Vpi at 1550 nm from a 100 kHz triangular sweep (p.9); which arm is driven and the DC bias are not stated
+- device_id: deng2026-a
+  field: vpil_dc_vcm
+  value: 0.7
+  unit: V*cm
+  basis: derived
+  locator: abstract; p.7; Fig. 4d
+  note: authors compute Vpi x L = 7 V x 0.1 cm; simulated value is 0.73 V*cm
+- device_id: deng2026-a
+  field: eo_rolloff_db
+  value: 9
+  unit: dB
+  basis: extracted_from_figure
+  locator: p.8 Fig. 4(e)
+  note: response near -9 dB at 30 GHz, plot end; 0 dB reference not stated
+- device_id: deng2026-a
+  field: eo_rolloff_freq_ghz
+  value: 30
+  unit: GHz
+  basis: extracted_from_figure
+  locator: p.8 Fig. 4(e)
+  note: last plotted frequency
+- device_id: deng2026-a
+  field: bw3db_ghz
+  value: 12
+  unit: GHz
+  basis: measured
+  locator: p.7 text; Fig. 4e
+  note: '''approximately 12 GHz''; roll-off attributed to group-velocity mismatch'
+- device_id: deng2026-a
+  field: bw6db_ghz
+  value: 28
+  unit: GHz
+  basis: measured
+  locator: abstract; p.8 text; Fig. 4e
+  note: flat response 15-28 GHz
+- device_id: deng2026-a
+  field: eo_film_thickness_nm
+  value: 300
+  unit: nm
+  basis: measured
+  locator: p.7 Sec. On-chip EO modulator
+  note: BTO film in the modulator; Figs. 1-3 films are 180 nm
+- device_id: deng2026-a
+  field: electrode_gap_um
+  value: 5.5
+  unit: um
+  basis: measured
+  locator: p.7 Sec. On-chip EO modulator; Fig. 4c
+  note: electrode spacing
+- device_id: deng2026-a
+  field: electrode_thickness_um
+  value: 0.5
+  unit: um
+  basis: measured
+  locator: p.9 Methods, Fabrication
+  note: 500 nm Au over 10 nm Ti
+- device_id: deng2026-a
+  field: electrode_metal
+  value: Au (10 nm Ti adhesion layer)
+  unit: ''
+  basis: measured
+  locator: p.9 Methods, Fabrication
+- device_id: deng2026-a
+  field: substrate
+  value: LSAT (001)
+  unit: ''
+  basis: measured
+  locator: p.9 Methods, Sample preparation
+- device_id: deng2026-a
+  field: cladding
+  value: air above strip and electrodes (Fig. 4c); patterned BCB optical isolation layer >2 um (Methods)
+  unit: ''
+  basis: extracted_from_figure
+  locator: Fig. 4c labels; p.9 Methods
+  note: BCB position relative to the electrodes not shown in the cross-section
+- device_id: deng2026-a
+  field: crystal_cut
+  value: (001) BTO film on (001) LSAT
+  unit: ''
+  basis: measured
+  locator: p.9 Methods, Sample preparation
+- device_id: deng2026-a
+  field: waveguide_orientation
+  value: electrode field along <110>; propagation along <1-10> read from Fig. 4a axes
+  unit: ''
+  basis: extracted_from_figure
+  locator: p.7 text; Fig. 4a axes
+  note: field direction stated in text, propagation direction read from the micrograph axes
+- device_id: deng2026-a
+  field: epitaxy_or_stack
+  value: LSAT (001) substrate / BTO 300 nm (PLD; approx 40 nm self-buffer layer at the interface, observed in the 180 nm characterisation film and presumed for the device film) / Si3N4 260 nm PECVD strip-loaded
+    waveguide / >2 um BCB isolation / 10 nm Ti + 500 nm Au electrodes
+  unit: ''
+  basis: measured
+  locator: p.4 text; p.5 Fig. 2(a); p.7; p.9 Methods
+  note: Si3N4 strip width not stated (about 1.4-1.7 um from Fig. 4b/4c, not entered); 40 nm buffer from the 180 nm film
+- device_id: deng2026-a
+  field: drive
+  value: single_ended
+  unit: ''
+  basis: derived
+  locator: p.7 Sec. On-chip EO modulator
+  note: 'text: RF and DC on the GSG arm, DC tuning only on the other; authors do not say which arm the Vpi sweep drives'
+- device_id: deng2026-a
+  field: vpi_convention
+  value: mzm_single_arm
+  unit: ''
+  basis: derived
+  locator: p.7; Fig. 4d; p.9 Methods
+  note: 'inferred: authors do not say which arm the Vpi sweep drives or name the convention'
+derived: []
+context_values:
+- item: Pockels_coefficient_r42_film
+  value: '>358'
+  unit: pm/V
+  locator: abstract; p.5; Supplementary Note 4
+  note: calculated from the effective coefficient along <110>
+- item: effective_EO_coefficient_rc
+  value: 253 (E along <110>); 34 (E along <100>)
+  unit: pm/V
+  locator: p.5 Fig. 3c
+  note: Sénarmont measurement on a 180 nm film
+- item: Curie_temperature_film
+  value: 200
+  unit: degC
+  locator: abstract; p.7
+- item: Vpi_L_simulated
+  value: 0.73
+  unit: V*cm
+  locator: p.7
+  note: finite-element, EO overlap factor 45%
+- item: EO_overlap_factor
+  value: 0.45
+  unit: '1'
+  locator: p.7
+- item: S11
+  value: about -15
+  unit: dB
+  locator: p.8 Fig. 4e
+  note: fluctuates around -15 dB
+- item: Si3N4_core_thickness
+  value: 260
+  unit: nm
+  locator: p.9 Methods
+- item: refractive_index_BTO_LSAT
+  value: 2.26 / 1.99
+  unit: '1'
+  locator: p.2
+  note: at 1550 nm, as stated in the introduction
+- item: measurement_frequency_limit_bias_T
+  value: 40
+  unit: GHz
+  locator: p.9 Methods
+  note: 67 GHz VNA with bias-T; plot in Fig. 4e ends at 30 GHz
+- item: license_and_rights_basis
+  value: Crossref license records (vor and tdm, https://creativecommons.org/licenses/by/4.0, start 2026-01-02); article notice p.1 'Open Access ... Creative Commons Attribution 4.0'
+  unit: ''
+  locator: references/deng2026/crossref.json; p.1

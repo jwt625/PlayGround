@@ -1,0 +1,420 @@
+paper_id: he2019
+verified_on: '2026-10-01'
+source_files:
+- references/he2019/text.md
+- references/he2019/crossref.json
+- references/he2019/figures/page_03.png
+- references/he2019/figures/page_04.png
+- references/he2019/figures/page_05.png
+- references/he2019/figures/page_06.png
+- references/he2019/figures/page_13.png
+- references/he2019/figures/page_15.png
+- references/he2019/figures/page_17.png
+entries:
+- device_id: he2019-a
+  field: length_mm
+  value: 3
+  unit: mm
+  basis: measured
+  locator: p.4, Sec. Static EO Performance; Fig. 2a
+  note: Arm length 3 mm; electrode length 3 mm in Supp. II
+- device_id: he2019-a
+  field: vpi_dc_v
+  value: 7.4
+  unit: V
+  basis: measured
+  locator: p.4, Fig. 2a; Sec. text
+  note: 100 kHz triangular sweep; caption says 4.5 V, figure and text 7.4 V
+- device_id: he2019-a
+  field: vpil_dc_vcm
+  value: 2.2
+  unit: V*cm
+  basis: derived
+  locator: p.4, Sec. text
+  note: '''corresponding to'' 2.2 V*cm: 7.4 V x 0.3 cm'
+- device_id: he2019-a
+  field: bw3db_ghz
+  value: 70
+  unit: GHz
+  basis: measured
+  locator: p.5, Sec. EO Bandwidth; Fig. 3b
+  note: '''> 70 GHz'', beyond the VNA limit; no crossing'
+- device_id: he2019-a
+  field: bw_measured_to_ghz
+  value: 70
+  unit: GHz
+  basis: measured
+  locator: p.5, Sec. EO Bandwidth; Fig. 3b
+  note: VNA limit 70 GHz
+- device_id: he2019-a
+  field: bw3db_reference
+  value: unspecified
+  unit: ''
+  basis: measured
+  locator: p.5, Fig. 3b
+  note: 0 dB level at low frequency not stated; trace starts near 10 GHz
+- device_id: he2019-a
+  field: il_onchip_db
+  value: 2.5
+  unit: dB
+  basis: author_estimate
+  locator: p.1, abstract; p.8, Tab. 1
+  note: Method and excluded items not stated; length not specified (Tab. 1 lists 5 mm)
+- device_id: he2019-a
+  field: prop_loss_db_per_cm
+  value: 0.98
+  unit: dB/cm
+  basis: measured
+  locator: p.3, Sec. Design; p.18, Supp. III
+  note: Cut-back on LN waveguide test structures, same cross-section
+- device_id: he2019-a
+  field: extinction_ratio_db
+  value: 40
+  unit: dB
+  basis: measured
+  locator: p.4, Sec. Static EO Performance; Fig. 2a inset
+  note: '''ER of > 40 dB for the 3-mm device'', static'
+- device_id: he2019-a
+  field: ng_opt
+  value: 2.21
+  unit: '1'
+  basis: simulated
+  locator: p.15-16, Supp. II; Fig. S3c, S4c
+  note: '''group index no of the hybrid LN waveguide is about 2.21'''
+- device_id: he2019-a
+  field: drive_vpp_v
+  value: 4
+  unit: V
+  basis: author_estimate
+  locator: p.9, Methods; p.16, Supp. II
+  note: Amplifier saturated output 4 Vpp; Supp. says 4 V obtained after the amplifier
+- device_id: he2019-a
+  field: max_baud_gbd
+  value: 100
+  unit: GBd
+  basis: derived
+  locator: p.6, Fig. 4; p.7
+  note: '100 Gb/s OOK is NRZ: one bit per symbol'
+- device_id: he2019-a
+  field: modulation_format
+  value: OOK 56, 72, 84 and 100 Gb/s (dynamic ER 11.8, 6.0, 5.5, 5.0 dB); PAM-4 28 and 56 GBd (56 and 112 Gb/s)
+  unit: ''
+  basis: measured
+  locator: p.6, Fig. 4 caption and text
+  note: Dynamic ERs from the eye diagrams
+- device_id: he2019-a
+  field: max_line_rate_gbps
+  value: 112
+  unit: Gb/s
+  basis: measured
+  locator: p.6-7, Fig. 4; abstract
+  note: 112 Gb/s PAM-4 at 56 GBd
+- device_id: he2019-a
+  field: energy_per_bit_fj
+  value: 714
+  unit: fJ/bit
+  basis: derived
+  locator: p.16, Supp. II
+  note: '(Vpp/2)^2/(B x 50): 4 Vpp, 112 Gb/s; main text ''about 700 fJ/bit'''
+- device_id: he2019-a
+  field: etch_depth_nm
+  value: 180
+  unit: nm
+  basis: measured
+  locator: p.3, Sec. Design; p.14, Supp. I
+  note: Rib height h = etching depth 180 nm
+- device_id: he2019-a
+  field: rib_width_nm
+  value: 1000
+  unit: nm
+  basis: measured
+  locator: p.3, Sec. Design; Fig. 1
+  note: Top width w = 1 um
+- device_id: he2019-a
+  field: slab_thickness_nm
+  value: 420
+  unit: nm
+  basis: measured
+  locator: p.3, Sec. Design; p.15, Supp. II
+  note: Slab thickness s = 420 nm (hLN in Supp. II)
+- device_id: he2019-a
+  field: sidewall_angle_deg
+  value: 60
+  unit: deg
+  basis: measured
+  locator: p.3, Sec. Design; Fig. 1c; p.8 Methods
+  note: 60 degrees (about 60 in Methods)
+- device_id: he2019-a
+  field: electrode_gap_um
+  value: 6.5
+  unit: um
+  basis: design_target
+  locator: p.15, Supp. II
+  note: w + 2g = 6.5 um edge-to-edge; g = 2.75 um from waveguide to electrode
+- device_id: he2019-a
+  field: signal_width_um
+  value: 19.5
+  unit: um
+  basis: design_target
+  locator: p.4, Sec. Design; Fig. 1d
+  note: Signal 19.5 um, ground 30 um 'designed to'
+- device_id: he2019-a
+  field: electrode_thickness_um
+  value: 0.6
+  unit: um
+  basis: design_target
+  locator: p.4, Sec. Design
+  note: '''The thickness of electrode was set to 600 nm'''
+- device_id: he2019-a
+  field: electrode_metal
+  value: gold
+  unit: ''
+  basis: measured
+  locator: p.3, Fig. 1b legend
+  note: Au in the Fig. 1b legend; text says only 'metal'
+- device_id: he2019-a
+  field: substrate
+  value: SOI (3 um SiO2 on silicon)
+  unit: ''
+  basis: measured
+  locator: p.15, Supp. II; Fig. 1b
+  note: hSiO = 3 um; LNOI handle removed
+- device_id: he2019-a
+  field: crystal_cut
+  value: x-cut
+  unit: ''
+  basis: measured
+  locator: p.2, Sec. Results
+  note: X-cut LN membrane
+- device_id: he2019-a
+  field: epitaxy_or_stack
+  value: x-cut LN membrane (slab 420 nm, rib 180 nm) on about 300 nm BCB on SOI (3 um SiO2 on Si); Si inverse tapers 500 nm to 80 nm over 150 um in the vertical adiabatic couplers
+  unit: ''
+  basis: measured
+  locator: p.3-4, Sec. Design; p.15, Supp. II
+  note: BCB about 300 nm; hBCB = 300 nm in Supp. II
+- device_id: he2019-a
+  field: driver
+  value: SHF 807 50 GHz broadband amplifier (4 Vpp saturated output), AWG 100 GS/s
+  unit: ''
+  basis: measured
+  locator: p.9, Methods
+  note: Output saturation 4 Vpp; AWG Micram 100 GS/s
+- device_id: he2019-a
+  field: drive
+  value: push_pull
+  unit: ''
+  basis: measured
+  locator: p.4, Sec. Static EO Performance
+  note: '''driven in a push-pull configuration''; GSG with one waveguide per gap'
+- device_id: he2019-a
+  field: vpi_convention
+  value: mzm_push_pull
+  unit: ''
+  basis: derived
+  locator: p.4, Fig. 2a; p.13, Supp. I
+  note: Vpi = max-to-min span of the MZM transmission with push-pull drive; not labelled by authors
+- device_id: he2019-a
+  field: electrode_type
+  value: tw_gsg
+  unit: ''
+  basis: measured
+  locator: p.4, Sec. Design
+  note: GSG, traveling-wave operation
+- device_id: he2019-b
+  field: length_mm
+  value: 5
+  unit: mm
+  basis: measured
+  locator: p.4, Sec. Static EO Performance; Fig. 2a
+  note: Arm length 5 mm
+- device_id: he2019-b
+  field: vpi_dc_v
+  value: 5.1
+  unit: V
+  basis: measured
+  locator: p.4, Fig. 2a; Sec. text
+  note: 100 kHz triangular sweep
+- device_id: he2019-b
+  field: vpil_dc_vcm
+  value: 2.5
+  unit: V*cm
+  basis: derived
+  locator: p.4, Sec. text
+  note: Stated 2.5 V*cm; 5.1 V x 0.5 cm = 2.55
+- device_id: he2019-b
+  field: bw3db_ghz
+  value: 70
+  unit: GHz
+  basis: measured
+  locator: p.5, Sec. EO Bandwidth; Fig. 3b
+  note: '''> 70 GHz'', beyond the VNA limit; no crossing'
+- device_id: he2019-b
+  field: bw_measured_to_ghz
+  value: 70
+  unit: GHz
+  basis: measured
+  locator: p.5, Sec. EO Bandwidth; Fig. 3b
+  note: VNA limit 70 GHz
+- device_id: he2019-b
+  field: bw3db_reference
+  value: unspecified
+  unit: ''
+  basis: measured
+  locator: p.5, Fig. 3b
+  note: 0 dB level at low frequency not stated; trace starts near 10 GHz
+- device_id: he2019-b
+  field: prop_loss_db_per_cm
+  value: 0.98
+  unit: dB/cm
+  basis: measured
+  locator: p.3, Sec. Design; p.18, Supp. III
+  note: Cut-back on LN waveguide test structures, same cross-section
+- device_id: he2019-b
+  field: ng_opt
+  value: 2.21
+  unit: '1'
+  basis: simulated
+  locator: p.15-16, Supp. II; Fig. S3c, S4c
+  note: '''group index no of the hybrid LN waveguide is about 2.21'''
+- device_id: he2019-b
+  field: etch_depth_nm
+  value: 180
+  unit: nm
+  basis: measured
+  locator: p.3, Sec. Design; p.14, Supp. I
+  note: Rib height h = etching depth 180 nm
+- device_id: he2019-b
+  field: rib_width_nm
+  value: 1000
+  unit: nm
+  basis: measured
+  locator: p.3, Sec. Design; Fig. 1
+  note: Top width w = 1 um
+- device_id: he2019-b
+  field: slab_thickness_nm
+  value: 420
+  unit: nm
+  basis: measured
+  locator: p.3, Sec. Design; p.15, Supp. II
+  note: Slab thickness s = 420 nm (hLN in Supp. II)
+- device_id: he2019-b
+  field: sidewall_angle_deg
+  value: 60
+  unit: deg
+  basis: measured
+  locator: p.3, Sec. Design; Fig. 1c; p.8 Methods
+  note: 60 degrees (about 60 in Methods)
+- device_id: he2019-b
+  field: electrode_gap_um
+  value: 6.5
+  unit: um
+  basis: design_target
+  locator: p.15, Supp. II
+  note: w + 2g = 6.5 um edge-to-edge; g = 2.75 um from waveguide to electrode
+- device_id: he2019-b
+  field: signal_width_um
+  value: 19.5
+  unit: um
+  basis: design_target
+  locator: p.4, Sec. Design; Fig. 1d
+  note: Signal 19.5 um, ground 30 um 'designed to'
+- device_id: he2019-b
+  field: electrode_thickness_um
+  value: 0.6
+  unit: um
+  basis: design_target
+  locator: p.4, Sec. Design
+  note: '''The thickness of electrode was set to 600 nm'''
+- device_id: he2019-b
+  field: electrode_metal
+  value: gold
+  unit: ''
+  basis: measured
+  locator: p.3, Fig. 1b legend
+  note: Au in the Fig. 1b legend; text says only 'metal'
+- device_id: he2019-b
+  field: substrate
+  value: SOI (3 um SiO2 on silicon)
+  unit: ''
+  basis: measured
+  locator: p.15, Supp. II; Fig. 1b
+  note: hSiO = 3 um; LNOI handle removed
+- device_id: he2019-b
+  field: crystal_cut
+  value: x-cut
+  unit: ''
+  basis: measured
+  locator: p.2, Sec. Results
+  note: X-cut LN membrane
+- device_id: he2019-b
+  field: epitaxy_or_stack
+  value: x-cut LN membrane (slab 420 nm, rib 180 nm) on about 300 nm BCB on SOI (3 um SiO2 on Si); Si inverse tapers 500 nm to 80 nm over 150 um in the vertical adiabatic couplers
+  unit: ''
+  basis: measured
+  locator: p.3-4, Sec. Design; p.15, Supp. II
+  note: BCB about 300 nm; hBCB = 300 nm in Supp. II
+- device_id: he2019-b
+  field: drive
+  value: push_pull
+  unit: ''
+  basis: measured
+  locator: p.4, Sec. Static EO Performance
+  note: '''driven in a push-pull configuration''; GSG with one waveguide per gap'
+- device_id: he2019-b
+  field: vpi_convention
+  value: mzm_push_pull
+  unit: ''
+  basis: derived
+  locator: p.4, Fig. 2a; p.13, Supp. I
+  note: Vpi = max-to-min span of the MZM transmission with push-pull drive; not labelled by authors
+- device_id: he2019-b
+  field: electrode_type
+  value: tw_gsg
+  unit: ''
+  basis: measured
+  locator: p.4, Sec. Design
+  note: GSG, traveling-wave operation
+derived:
+- device_id: he2019-a
+  field: max_baud_gbd
+  value: 100
+  formula: 'max_line_rate_gbps_ook / 1: 100 Gb/s NRZ OOK, 1 bit per symbol'
+  inputs:
+  - 100 Gb/s OOK
+context_values:
+- item: pam4_ber_below_hard_fec
+  value: 0.0038
+  unit: ''
+  locator: p.7, Sec. Data Transmission; Fig. 4h
+  note: Hard-FEC limit; both PAM-4 rates below it; 3 mm device
+- item: vac_loss
+  value: 0.19 (main text, measured coupling efficiency > 97%) / 0.13 (Supp. III intercept 8.02/62)
+  unit: dB per VAC
+  locator: p.4; p.18
+  note: Two values in the manuscript
+- item: imd3_sfdr_3mm
+  value: 99.6 at 1 GHz; 95.2 at 10 GHz
+  unit: dB Hz^(2/3)
+  locator: p.6, Sec. EO Bandwidth and Linearity
+  note: Quadrature; commercial LN MZM 94.9 at 1 GHz
+- item: simulated_vpil_experimental_structure
+  value: 2.46
+  unit: V*cm
+  locator: p.16, Supp. II
+  note: Paper's own simulation; 13 mm arms would give Vpi 1.9 V
+- item: simulated_rf_line_adopted_structure
+  value: n_m about 2.16 (60-120 GHz), Re(Z0) about 48 ohm at 40-60 GHz, alpha_m about 7.3 dB/cm at 100 GHz
+  unit: ''
+  locator: p.17, Fig. S4 (dashed, t = 0.6 um, ws = 19.5 um)
+  note: Read from the figure; simulation, not measurement; entered only as sim targets
+- item: simulated_bandwidth_3mm
+  value: 3 dB bandwidth well beyond 100 GHz (simulation)
+  unit: ''
+  locator: p.16, Supp. II
+  note: 'Not entered: simulated'
+- item: license_and_rights_basis
+  value: Crossref lists only the Springer TDM link; cached manuscript has no license notice; prefetch metadata says arXiv-nonexclusive
+  unit: ''
+  locator: references/he2019/crossref.json
+  note: publisher-copyright recorded; restricted_local_only

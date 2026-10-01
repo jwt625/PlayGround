@@ -1,0 +1,181 @@
+[
+ {
+  "kind": "page_render",
+  "file": "page_02.png",
+  "page": 2,
+  "captions": [
+   "Fig. 1 | LTOI substrates and optical waveguides. a, Schematic of the LTOI"
+  ]
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p02_1.png",
+  "page": 2,
+  "width": 684,
+  "height": 496
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p02_2.png",
+  "page": 2,
+  "width": 605,
+  "height": 502
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p02_3.png",
+  "page": 2,
+  "width": 358,
+  "height": 169
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p02_4.png",
+  "page": 2,
+  "width": 542,
+  "height": 532
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p02_6.png",
+  "page": 2,
+  "width": 572,
+  "height": 447
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p02_7.png",
+  "page": 2,
+  "width": 642,
+  "height": 445
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p02_12.png",
+  "page": 2,
+  "width": 485,
+  "height": 487
+ },
+ {
+  "kind": "page_render",
+  "file": "page_03.png",
+  "page": 3,
+  "captions": [
+   "Fig. 2 | Optical characterization of LTOI PICs. a, Wafer-scale map of mean"
+  ]
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p03_1.png",
+  "page": 3,
+  "width": 996,
+  "height": 702
+ },
+ {
+  "kind": "page_render",
+  "file": "page_04.png",
+  "page": 4,
+  "captions": [
+   "Fig. 3 | Electro-optical tuning and switching in LTOI. a, Colourized SEM of"
+  ]
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p04_1.png",
+  "page": 4,
+  "width": 830,
+  "height": 601
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p04_2.png",
+  "page": 4,
+  "width": 771,
+  "height": 600
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p04_3.png",
+  "page": 4,
+  "width": 630,
+  "height": 684
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p04_4.png",
+  "page": 4,
+  "width": 2179,
+  "height": 305
+ },
+ {
+  "kind": "page_render",
+  "file": "page_05.png",
+  "page": 5,
+  "captions": [
+   "Fig. 4 | DKS generation in LTOI microresonators. a, Optical spectrum of a"
+  ]
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p10_1.png",
+  "page": 10,
+  "width": 327,
+  "height": 461
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p11_1.png",
+  "page": 11,
+  "width": 410,
+  "height": 251
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p11_2.png",
+  "page": 11,
+  "width": 409,
+  "height": 230
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p11_3.png",
+  "page": 11,
+  "width": 924,
+  "height": 272
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p11_4.png",
+  "page": 11,
+  "width": 924,
+  "height": 227
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p11_5.png",
+  "page": 11,
+  "width": 976,
+  "height": 287
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p14_1.png",
+  "page": 14,
+  "width": 1024,
+  "height": 690
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p14_2.png",
+  "page": 14,
+  "width": 514,
+  "height": 345
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p15_1.png",
+  "page": 15,
+  "width": 3232,
+  "height": 1570
+ }
+]

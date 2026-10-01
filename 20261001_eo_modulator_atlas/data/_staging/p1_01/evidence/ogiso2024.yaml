@@ -1,0 +1,403 @@
+paper_id: ogiso2024
+verified_on: '2026-10-01'
+source_files:
+- references/ogiso2024/text.md
+- references/ogiso2024/figures/page_01.png
+- references/ogiso2024/figures/page_02.png
+- references/ogiso2024/figures/page_03.png
+entries:
+- device_id: ogiso2024-a
+  field: wavelength_nm
+  value: 1550
+  unit: nm
+  basis: measured
+  locator: p.1 Fig. 1(b),(c); p.2 Fig. 2(c)
+  note: one of 1527/1550/1565 nm curves; Vpi 1.5 V over the C band
+- device_id: ogiso2024-a
+  field: length_mm
+  value: 3.6
+  unit: mm
+  basis: measured
+  locator: p.2 Sec. 3; p.3 Table 1
+  note: CL-TWE length
+- device_id: ogiso2024-a
+  field: vpi_dc_v
+  value: 1.5
+  unit: V
+  basis: measured
+  locator: abstract; p.2 Sec. 2; p.3 Table 1; Fig. 2(c)
+  note: 'Table: RF electrode half-wave voltage, DC measurement'
+- device_id: ogiso2024-a
+  field: vpil_dc_vcm
+  value: 0.54
+  unit: V*cm
+  basis: derived
+  locator: p.3 Table 1
+  note: authors compute Vpi x L = 1.5 V x 0.36 cm (TWE 3.6 mm)
+- device_id: ogiso2024-a
+  field: bias_for_vpi_v
+  value: -10
+  unit: V
+  basis: measured
+  locator: p.2 Sec. 2
+  note: '''applied voltage was around -10 V in the entire C band'''
+- device_id: ogiso2024-a
+  field: bw3db_ghz
+  value: 100
+  unit: GHz
+  basis: measured
+  locator: abstract; p.2-3 Sec. 3; p.3 Fig. 4(c); Table 1
+  note: '''exceeds 100 GHz'' (lower bound)'
+- device_id: ogiso2024-a
+  field: bw6db_ghz
+  value: 110
+  unit: GHz
+  basis: measured
+  locator: p.2-3 Sec. 3; p.3 Fig. 4(c); Table 1
+  note: '''exceeded ... 110 GHz'' (lower bound)'
+- device_id: ogiso2024-a
+  field: bw_measured_to_ghz
+  value: 110
+  unit: GHz
+  basis: extracted_from_figure
+  locator: p.3 Fig. 4 x axis
+  note: plot ends at 110 GHz; instrument limit not stated; stated 3 dB bound is 100 GHz
+- device_id: ogiso2024-a
+  field: eo_rolloff_db
+  value: 2
+  unit: dB
+  basis: extracted_from_figure
+  locator: p.3 Fig. 4(c)
+  note: trace near -2 dB at 100 GHz, relative to 0 dB at low frequency; noisy
+- device_id: ogiso2024-a
+  field: eo_rolloff_freq_ghz
+  value: 100
+  unit: GHz
+  basis: extracted_from_figure
+  locator: p.3 Fig. 4(c)
+- device_id: ogiso2024-a
+  field: il_onchip_db
+  value: 3.5
+  unit: dB
+  basis: measured
+  locator: abstract; p.3 Table 1 (typ.)
+  note: 'abstract: less than 3.5 dB; Table: typical 3.5 dB excluding coupling loss; no derivation described'
+- device_id: ogiso2024-a
+  field: il_fiber_to_fiber_db
+  value: 11.5
+  unit: dB
+  basis: measured
+  locator: p.2 Sec. 2 DC characteristics; Fig. 2(a)
+  note: each single polarization below 11.5 dB incl. bias absorption and 2.3 dB/facet coupling
+- device_id: ogiso2024-a
+  field: extinction_ratio_db
+  value: 25
+  unit: dB
+  basis: measured
+  locator: p.2 Fig. 2(b); p.3 Table 1
+  note: over 25 dB across the C band, parent and child MZIs
+- device_id: ogiso2024-a
+  field: z0_ohm
+  value: 60
+  unit: ohm
+  basis: design_target
+  locator: p.2 Sec. 3; p.3 Table 1
+  note: '''designed to be around 60 ohm''; Table value is a design/typical value'
+- device_id: ogiso2024-a
+  field: epitaxy_or_stack
+  value: n-i-p-n heterostructure (layer thicknesses, doping and MQW composition not stated in this paper); inverted-trapezoidal ridge waveguide; capacitance-loaded traveling-wave electrode
+  unit: ''
+  basis: measured
+  locator: p.1 Sec. 2
+  note: inverted-trapezoidal ridge with n-i-p-n heterostructure and CL-TWE
+- device_id: ogiso2024-a
+  field: drive
+  value: series_push_pull
+  unit: ''
+  basis: measured
+  locator: p.3 Table 1 (Impedance row note)
+  note: '''Differential input / series push-pull drive'''
+- device_id: ogiso2024-a
+  field: vpi_convention
+  value: mzm_series_push_pull
+  unit: ''
+  basis: measured
+  locator: p.3 Table 1; p.2 Fig. 2(c) axis
+  note: 'Table: RF-electrode half-wave voltage, DC measurement; Fig. 2(c) axis is applied differential voltage'
+- device_id: ogiso2024-b
+  field: length_mm
+  value: 3.6
+  unit: mm
+  basis: measured
+  locator: p.2 Sec. 3; p.3 Table 1
+  note: CL-TWE length
+- device_id: ogiso2024-b
+  field: vpi_dc_v
+  value: 2.0
+  unit: V
+  basis: measured
+  locator: p.3 Table 1; p.2 Sec. 2 DC characteristics
+  note: '''2.0-V Vpi condition''; DC measurement per Table'
+- device_id: ogiso2024-b
+  field: vpil_dc_vcm
+  value: 0.72
+  unit: V*cm
+  basis: derived
+  locator: p.3 Table 1
+  note: authors compute Vpi x L = 2.0 V x 0.36 cm (TWE 3.6 mm)
+- device_id: ogiso2024-b
+  field: bw3db_ghz
+  value: 100
+  unit: GHz
+  basis: measured
+  locator: p.3 Table 1
+  note: '''>100'' lower bound; Table column for the >200 GBd C+L version'
+- device_id: ogiso2024-b
+  field: bw6db_ghz
+  value: 110
+  unit: GHz
+  basis: measured
+  locator: p.3 Table 1
+  note: '''>110'' lower bound'
+- device_id: ogiso2024-b
+  field: il_onchip_db
+  value: 4.0
+  unit: dB
+  basis: measured
+  locator: p.3 Table 1 (typ.)
+  note: typical value, excludes 2.3 dB/facet coupling; no derivation described
+- device_id: ogiso2024-b
+  field: extinction_ratio_db
+  value: 25
+  unit: dB
+  basis: measured
+  locator: p.2 Fig. 3(b); p.3 Table 1
+  note: over 25 dB across C+L for MMI-type cross waveguide
+- device_id: ogiso2024-b
+  field: z0_ohm
+  value: 60
+  unit: ohm
+  basis: design_target
+  locator: p.2 Sec. 3; p.3 Table 1
+  note: '''designed to be around 60 ohm''; Table value is a design/typical value'
+- device_id: ogiso2024-b
+  field: epitaxy_or_stack
+  value: n-i-p-n heterostructure (layer thicknesses, doping and MQW composition not stated in this paper); inverted-trapezoidal ridge waveguide; capacitance-loaded traveling-wave electrode
+  unit: ''
+  basis: measured
+  locator: p.1 Sec. 2
+  note: inverted-trapezoidal ridge with n-i-p-n heterostructure and CL-TWE
+- device_id: ogiso2024-b
+  field: drive
+  value: series_push_pull
+  unit: ''
+  basis: measured
+  locator: p.3 Table 1 (Impedance row note)
+  note: '''Differential input / series push-pull drive'''
+- device_id: ogiso2024-b
+  field: vpi_convention
+  value: mzm_series_push_pull
+  unit: ''
+  basis: measured
+  locator: p.3 Table 1; p.2 Fig. 2(c) axis
+  note: 'Table: RF-electrode half-wave voltage, DC measurement; Fig. 2(c) axis is applied differential voltage'
+- device_id: ogiso2024-c
+  field: length_mm
+  value: 3.6
+  unit: mm
+  basis: measured
+  locator: p.2 Sec. 3; p.3 Table 1
+  note: CL-TWE length
+- device_id: ogiso2024-c
+  field: bw3db_ghz
+  value: 90
+  unit: GHz
+  basis: measured
+  locator: p.2 Sec. 3; p.3 Fig. 4(b)
+  note: '''the 3-dB bandwidth reached 90 GHz'''
+- device_id: ogiso2024-c
+  field: eo_rolloff_db
+  value: 6.5
+  unit: dB
+  basis: extracted_from_figure
+  locator: p.3 Fig. 4(b)
+  note: trace between -6 and -7 dB at 100 GHz (6 dB crossing near 99 GHz), relative to 0 dB at low frequency
+- device_id: ogiso2024-c
+  field: eo_rolloff_freq_ghz
+  value: 100
+  unit: GHz
+  basis: extracted_from_figure
+  locator: p.3 Fig. 4(b)
+- device_id: ogiso2024-c
+  field: z0_ohm
+  value: 60
+  unit: ohm
+  basis: design_target
+  locator: p.2 Sec. 3; p.3 Table 1
+  note: '''designed to be around 60 ohm''; Table value is a design/typical value'
+- device_id: ogiso2024-c
+  field: epitaxy_or_stack
+  value: n-i-p-n heterostructure (layer thicknesses, doping and MQW composition not stated in this paper); inverted-trapezoidal ridge waveguide; capacitance-loaded traveling-wave electrode
+  unit: ''
+  basis: measured
+  locator: p.1 Sec. 2
+  note: inverted-trapezoidal ridge with n-i-p-n heterostructure and CL-TWE
+- device_id: ogiso2024-c
+  field: drive
+  value: series_push_pull
+  unit: ''
+  basis: measured
+  locator: p.3 Table 1 (Impedance row note)
+  note: '''Differential input / series push-pull drive'''
+- device_id: ogiso2024-c
+  field: vpi_convention
+  value: mzm_series_push_pull
+  unit: ''
+  basis: measured
+  locator: p.3 Table 1; p.2 Fig. 2(c) axis
+  note: 'Table: RF-electrode half-wave voltage, DC measurement; Fig. 2(c) axis is applied differential voltage'
+- device_id: ogiso2024-d
+  field: length_mm
+  value: 3.6
+  unit: mm
+  basis: measured
+  locator: p.2 Sec. 3; p.3 Table 1
+  note: CL-TWE length
+- device_id: ogiso2024-d
+  field: vpi_dc_v
+  value: 2.0
+  unit: V
+  basis: measured
+  locator: p.3 Table 1
+  note: DC measurement per Table
+- device_id: ogiso2024-d
+  field: vpil_dc_vcm
+  value: 0.72
+  unit: V*cm
+  basis: derived
+  locator: p.3 Table 1
+  note: authors compute Vpi x L = 2.0 V x 0.36 cm (TWE 3.6 mm)
+- device_id: ogiso2024-d
+  field: bw3db_ghz
+  value: 70
+  unit: GHz
+  basis: measured
+  locator: p.2 Sec. 3; p.3 Fig. 4(a)
+  note: '''around 70 GHz'' in text; Table 1 lists >67'
+- device_id: ogiso2024-d
+  field: bw6db_ghz
+  value: 80
+  unit: GHz
+  basis: measured
+  locator: p.3 Table 1
+  note: '''>80'' lower bound'
+- device_id: ogiso2024-d
+  field: il_onchip_db
+  value: 3.5
+  unit: dB
+  basis: measured
+  locator: p.3 Table 1 (typ.)
+  note: typical value, excludes 2.3 dB/facet coupling; no derivation described
+- device_id: ogiso2024-d
+  field: extinction_ratio_db
+  value: 25
+  unit: dB
+  basis: measured
+  locator: p.3 Table 1
+  note: '''>25'' for parent and child MZI'
+- device_id: ogiso2024-d
+  field: eo_rolloff_db
+  value: 14
+  unit: dB
+  basis: extracted_from_figure
+  locator: p.3 Fig. 4(a)
+  note: trace near -14 dB at 100 GHz, relative to 0 dB at low frequency
+- device_id: ogiso2024-d
+  field: eo_rolloff_freq_ghz
+  value: 100
+  unit: GHz
+  basis: extracted_from_figure
+  locator: p.3 Fig. 4(a)
+- device_id: ogiso2024-d
+  field: z0_ohm
+  value: 60
+  unit: ohm
+  basis: design_target
+  locator: p.2 Sec. 3; p.3 Table 1
+  note: '''designed to be around 60 ohm''; Table value is a design/typical value'
+- device_id: ogiso2024-d
+  field: epitaxy_or_stack
+  value: n-i-p-n heterostructure (layer thicknesses, doping and MQW composition not stated in this paper); inverted-trapezoidal ridge waveguide; capacitance-loaded traveling-wave electrode
+  unit: ''
+  basis: measured
+  locator: p.1 Sec. 2
+  note: inverted-trapezoidal ridge with n-i-p-n heterostructure and CL-TWE
+- device_id: ogiso2024-d
+  field: drive
+  value: series_push_pull
+  unit: ''
+  basis: measured
+  locator: p.3 Table 1 (Impedance row note)
+  note: '''Differential input / series push-pull drive'''
+- device_id: ogiso2024-d
+  field: vpi_convention
+  value: mzm_series_push_pull
+  unit: ''
+  basis: measured
+  locator: p.3 Table 1; p.2 Fig. 2(c) axis
+  note: 'Table: RF-electrode half-wave voltage, DC measurement; Fig. 2(c) axis is applied differential voltage'
+derived: []
+context_values:
+- item: il_onchip_includes
+  value: bias absorption loss for the stated Vpi; X+Y polarization combined
+  unit: ''
+  locator: p.3 Table 1 notes
+- item: il_onchip_excludes
+  value: optical coupling loss (2.3 dB/facet)
+  unit: ''
+  locator: p.3 Table 1 notes
+- item: Vpi_1.4V_extra_loss
+  value: up to 1.0
+  unit: dB
+  locator: p.1 Fig. 1(c); p.1 Sec. 2
+- item: thermo_optic_phase_adjuster_P_pi
+  value: <20
+  unit: mW
+  locator: p.1 Sec. 2; Table 1
+- item: die_size
+  value: 5.0 x 2.5
+  unit: mm2
+  locator: p.1 Fig. 1(a); Table 1
+- item: il_onchip_includes
+  value: bias absorption loss for the stated Vpi; X+Y polarization combined
+  unit: ''
+  locator: p.3 Table 1 notes
+- item: il_onchip_excludes
+  value: optical coupling loss (2.3 dB/facet)
+  unit: ''
+  locator: p.3 Table 1 notes
+- item: cross_waveguide_variants
+  value: MMI cross and wavelength-insensitive taper cross
+  unit: ''
+  locator: p.2 Sec. 2; Fig. 3(a)
+- item: cl_twe_period
+  value: 120
+  unit: um
+  locator: p.2 Sec. 3
+  note: shortened from 150 um
+- item: il_onchip_includes
+  value: bias absorption loss for the stated Vpi; X+Y polarization combined
+  unit: ''
+  locator: p.3 Table 1 notes
+- item: il_onchip_excludes
+  value: optical coupling loss (2.3 dB/facet)
+  unit: ''
+  locator: p.3 Table 1 notes
+- item: cl_twe_period
+  value: 150
+  unit: um
+  locator: p.2 Sec. 3
+- item: license_and_rights_basis
+  value: 'paper notice p.1 footer: ''OFC 2024 (c) Optica Publishing Group 2024''; Crossref lists no license'
+  unit: ''
+  locator: p.1 footer

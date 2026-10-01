@@ -1,34 +1,208 @@
 paper_id: ogiso2016
 verified_on: 2026-10-01
-source_files: [references/ogiso2016/text.md, references/ogiso2016/figures/page_01.png, references/ogiso2016/figures/page_02.png]
+source_files:
+- references/ogiso2016/text.md
+- references/ogiso2016/figures/page_01.png
+- references/ogiso2016/figures/page_02.png
 entries:
-  - {device_id: ogiso2016-a, field: drive, value: series_push_pull, unit: "", basis: measured, locator: "p.1, Device structure", note: "'conventional series push-pull drive (single-ended 50 ohm design)'; single RF feed"}
-  - {device_id: ogiso2016-a, field: vpi_convention, value: mzm_series_push_pull, unit: "", basis: measured, locator: "p.1, Device structure; Experimental results; Fig. 2 axis", note: "Vpi quoted as differential voltage across the electrode of the series push-pull MZM"}
-  - {device_id: ogiso2016-a, field: wavelength_nm, value: 1550, unit: nm, basis: measured, locator: "p.1, Fig. 2; p.1 dynamic-characteristics paragraph", note: "Vpi 2.0 V shown at 1530/1540/1550/1560 nm; demo at 1550 nm; EO-BW wavelength not stated"}
-  - {device_id: ogiso2016-a, field: length_mm, value: 3, unit: mm, basis: measured, locator: "p.1, Device structure", note: "total travelling-wave electrode length; capacitive-loaded electrode"}
-  - {device_id: ogiso2016-a, field: vpi_dc_v, value: 2.0, unit: V, basis: measured, locator: "p.1, Experimental results; Fig. 2", note: "differential voltage; set to 2.0 V at all four wavelengths by adjusting DC bias; bias value not stated"}
-  - {device_id: ogiso2016-a, field: bw_measured_to_ghz, value: 67, unit: GHz, basis: measured, locator: "p.1, Fig. 4; Experimental results text", note: "qualifier gt: EO response 'over 67 GHz', 3 dB not crossed; measured at -5 V reverse bias"}
-  - {device_id: ogiso2016-a, field: bw3db_reference, value: other, unit: "", basis: measured, locator: "p.1, Experimental results", note: "'3 dB EO-BW (1.5 GHz reference)'"}
-  - {device_id: ogiso2016-a, field: bw3db_reference_freq_ghz, value: 1.5, unit: GHz, basis: measured, locator: "p.1, Experimental results; Fig. 4", note: "reference frequency of the EO response"}
-  - {device_id: ogiso2016-a, field: il_onchip_db, value: 2, unit: dB, basis: author_estimate, locator: "p.1, Experimental results", note: "authors' estimate: 10 dB total minus lensed-fibre coupling 4 dB/facet"}
-  - {device_id: ogiso2016-a, field: il_fiber_to_fiber_db, value: 10, unit: dB, basis: measured, locator: "p.1, Experimental results", note: "'entire insertion loss'; includes 4 dB/facet lensed-fibre coupling"}
-  - {device_id: ogiso2016-a, field: er_type, value: static, unit: "", basis: measured, locator: "p.1, Experimental results; Fig. 2", note: "DC ER; dynamic ER is reported separately in the 100 Gb/s demo"}
-  - {device_id: ogiso2016-a, field: optical_input_power_dbm, value: 13, unit: dBm, basis: measured, locator: "p.1, dynamic characteristics", note: "input optical power in the 50/100 Gb/s demo at 1550 nm"}
-  - {device_id: ogiso2016-a, field: drive_vpp_v, value: 2.3, unit: V, basis: measured, locator: "p.1, dynamic characteristics", note: "driving voltage in the demo, Vpp"}
-  - {device_id: ogiso2016-a, field: waveguide_orientation, value: "[011]", unit: "", basis: measured, locator: "p.1, Device structure; Fig. 1", note: "waveguides along [011] stripe direction"}
-  - {device_id: ogiso2016-a, field: epitaxy_or_stack, value: "n-contact / n-InP cladding / undoped InGaAlAs-InAlAs MQW core / p-InAlAs electron-blocking layer / n-InP cladding / n-contact, grown top to bottom on SI InP substrate by horizontal low-pressure MOVPE", unit: "", basis: measured, locator: "p.1, Device structure; Fig. 1", note: "layer thicknesses and doping not stated"}
-  - {device_id: ogiso2016-a, field: extinction_ratio_db, value: 22, unit: dB, basis: measured, locator: "p.1, Experimental results; Fig. 2", note: "qualifier gt: 'exceeded 22 dB for the entire C-band'; 27 dB at 1560 nm"}
-  - {device_id: ogiso2016-a, field: substrate, value: "semi-insulating InP", unit: "", basis: measured, locator: "p.1, Device structure", note: "SI-InP substrate; orientation not stated in text"}
-  - {device_id: ogiso2016-a, field: cladding, value: "n-InP", unit: "", basis: measured, locator: "p.1, Device structure; Fig. 1", note: "n-InP cladding above and below the MQW core; BCB under plated electrode"}
-  - {device_id: ogiso2016-a, field: modulation_format, value: "NRZ-OOK", unit: "", basis: measured, locator: "p.1, abstract; Fig. 5", note: "PRBS 2^31-1"}
-  - {device_id: ogiso2016-a, field: max_line_rate_gbps, value: 100, unit: "Gb/s", basis: measured, locator: "p.1 abstract; p.2 Fig. 5c", note: "dynamic ER over 10 dB"}
+- device_id: ogiso2016-a
+  field: drive
+  value: series_push_pull
+  unit: ''
+  basis: measured
+  locator: p.1, Device structure
+  note: '''conventional series push-pull drive (single-ended 50 ohm design)''; single RF feed'
+- device_id: ogiso2016-a
+  field: vpi_convention
+  value: mzm_series_push_pull
+  unit: ''
+  basis: measured
+  locator: p.1, Device structure; Experimental results; Fig. 2 axis
+  note: Vpi quoted as differential voltage across the electrode of the series push-pull MZM
+- device_id: ogiso2016-a
+  field: wavelength_nm
+  value: 1550
+  unit: nm
+  basis: measured
+  locator: p.1, Fig. 2; p.1 dynamic-characteristics paragraph
+  note: Vpi 2.0 V shown at 1530/1540/1550/1560 nm; demo at 1550 nm; EO-BW wavelength not stated
+- device_id: ogiso2016-a
+  field: length_mm
+  value: 3
+  unit: mm
+  basis: measured
+  locator: p.1, Device structure
+  note: total travelling-wave electrode length; capacitive-loaded electrode
+- device_id: ogiso2016-a
+  field: vpi_dc_v
+  value: 2.0
+  unit: V
+  basis: measured
+  locator: p.1, Experimental results; Fig. 2
+  note: differential voltage; set to 2.0 V at all four wavelengths by adjusting DC bias; bias value not stated
+- device_id: ogiso2016-a
+  field: bw_measured_to_ghz
+  value: 67
+  unit: GHz
+  basis: measured
+  locator: p.1, Fig. 4; Experimental results text
+  note: measurement limit of the S-parameter/EO measurement; no 3 dB crossing observed (bound carried by bw3db_ghz)
+- device_id: ogiso2016-a
+  field: bw3db_reference
+  value: other
+  unit: ''
+  basis: measured
+  locator: p.1, Experimental results
+  note: '''3 dB EO-BW (1.5 GHz reference)'''
+- device_id: ogiso2016-a
+  field: bw3db_reference_freq_ghz
+  value: 1.5
+  unit: GHz
+  basis: measured
+  locator: p.1, Experimental results; Fig. 4
+  note: reference frequency of the EO response
+- device_id: ogiso2016-a
+  field: il_onchip_db
+  value: 2
+  unit: dB
+  basis: author_estimate
+  locator: p.1, Experimental results
+  note: 'authors'' estimate: 10 dB total minus lensed-fibre coupling 4 dB/facet'
+- device_id: ogiso2016-a
+  field: il_fiber_to_fiber_db
+  value: 10
+  unit: dB
+  basis: measured
+  locator: p.1, Experimental results
+  note: '''entire insertion loss''; includes 4 dB/facet lensed-fibre coupling'
+- device_id: ogiso2016-a
+  field: er_type
+  value: static
+  unit: ''
+  basis: measured
+  locator: p.1, Experimental results; Fig. 2
+  note: DC ER; dynamic ER is reported separately in the 100 Gb/s demo
+- device_id: ogiso2016-a
+  field: optical_input_power_dbm
+  value: 13
+  unit: dBm
+  basis: measured
+  locator: p.1, dynamic characteristics
+  note: input optical power in the 50/100 Gb/s demo at 1550 nm
+- device_id: ogiso2016-a
+  field: drive_vpp_v
+  value: 2.3
+  unit: V
+  basis: measured
+  locator: p.1, dynamic characteristics
+  note: driving voltage in the demo, Vpp
+- device_id: ogiso2016-a
+  field: waveguide_orientation
+  value: '[011]'
+  unit: ''
+  basis: measured
+  locator: p.1, Device structure; Fig. 1
+  note: waveguides along [011] stripe direction
+- device_id: ogiso2016-a
+  field: epitaxy_or_stack
+  value: n-contact / n-InP cladding / undoped InGaAlAs-InAlAs MQW core / p-InAlAs electron-blocking layer / n-InP cladding / n-contact, grown top to bottom on SI InP substrate by horizontal low-pressure
+    MOVPE
+  unit: ''
+  basis: measured
+  locator: p.1, Device structure; Fig. 1
+  note: layer thicknesses and doping not stated
+- device_id: ogiso2016-a
+  field: extinction_ratio_db
+  value: 22
+  unit: dB
+  basis: measured
+  locator: p.1, Experimental results; Fig. 2
+  note: 'qualifier gt: ''exceeded 22 dB for the entire C-band''; 27 dB at 1560 nm'
+- device_id: ogiso2016-a
+  field: substrate
+  value: semi-insulating InP
+  unit: ''
+  basis: measured
+  locator: p.1, Device structure
+  note: SI-InP substrate; orientation not stated in text
+- device_id: ogiso2016-a
+  field: cladding
+  value: n-InP
+  unit: ''
+  basis: measured
+  locator: p.1, Device structure; Fig. 1
+  note: n-InP cladding above and below the MQW core; BCB under plated electrode
+- device_id: ogiso2016-a
+  field: modulation_format
+  value: NRZ-OOK
+  unit: ''
+  basis: measured
+  locator: p.1, abstract; Fig. 5
+  note: PRBS 2^31-1
+- device_id: ogiso2016-a
+  field: max_line_rate_gbps
+  value: 100
+  unit: Gb/s
+  basis: measured
+  locator: p.1 abstract; p.2 Fig. 5c
+  note: dynamic ER over 10 dB
+- device_id: ogiso2016-a
+  field: bw3db_ghz
+  value: 67
+  unit: GHz
+  basis: measured
+  locator: p.1 Abstract; Fig. 4
+  note: 'lower bound (qualifier gt): ''over 67 GHz'', 3 dB point not reached; reference 1.5 GHz; -5 V reverse bias'
+- device_id: ogiso2016-a
+  field: eo_rolloff_db
+  value: 2.7
+  unit: dB
+  basis: extracted_from_figure
+  locator: Fig. 4
+  note: EO response at the 67 GHz end of the trace, about -2.7 dB relative to 1.5 GHz
+- device_id: ogiso2016-a
+  field: eo_rolloff_freq_ghz
+  value: 67
+  unit: GHz
+  basis: extracted_from_figure
+  locator: Fig. 4
+  note: ''
 derived:
-  - {device_id: ogiso2016-a, field: max_baud_gbd, value: 100, formula: "baud = line_rate_gbps / bits_per_symbol, NRZ bits_per_symbol = 1", inputs: [max_line_rate_gbps, modulation_format]}
-# Values reported in the paper that have no schema column (kept here, not in the CSV):
+- device_id: ogiso2016-a
+  field: max_baud_gbd
+  value: 100
+  formula: baud = line_rate_gbps / bits_per_symbol, NRZ bits_per_symbol = 1
+  inputs:
+  - max_line_rate_gbps
+  - modulation_format
 context_values:
-  - {item: reverse_bias_for_RF_EO_measurement, value: -5, unit: V, locator: "p.1, Fig. 3", note: "EO-BW 1.5 GHz reference"}
-  - {item: excess_absorption_loss, value: "<0.5", unit: dB, locator: "p.1, abstract; Experimental results", note: "at Vpi = 2.0 V bias"}
-  - {item: static_ER_at_1560nm, value: 27, unit: dB, locator: "p.1, Experimental results", note: "C-band minimum over 22 dB"}
-  - {item: S21_electrical_6dB_bw, value: ">67", unit: GHz, locator: "p.1, Fig. 3", note: "S11 below -10 dB; electrical, not EO"}
-  - {item: dynamic_ER_50G_100G, value: ">18 / >10", unit: dB, locator: "p.1, p.2 Fig. 5", note: "NRZ-OOK"}
-  - {item: eo_response_at_end_of_trace, value: "approx -2.7 (read from plot)", unit: dB, locator: "p.1, Fig. 4", note: "visual read only, not entered in CSV"}
+- item: reverse_bias_for_RF_EO_measurement
+  value: -5
+  unit: V
+  locator: p.1, Fig. 3
+  note: EO-BW 1.5 GHz reference
+- item: excess_absorption_loss
+  value: <0.5
+  unit: dB
+  locator: p.1, abstract; Experimental results
+  note: at Vpi = 2.0 V bias
+- item: static_ER_at_1560nm
+  value: 27
+  unit: dB
+  locator: p.1, Experimental results
+  note: C-band minimum over 22 dB
+- item: S21_electrical_6dB_bw
+  value: '>67'
+  unit: GHz
+  locator: p.1, Fig. 3
+  note: S11 below -10 dB; electrical, not EO
+- item: dynamic_ER_50G_100G
+  value: '>18 / >10'
+  unit: dB
+  locator: p.1, p.2 Fig. 5
+  note: NRZ-OOK
+- item: eo_response_at_end_of_trace
+  value: approx -2.7 (read from plot)
+  unit: dB
+  locator: p.1, Fig. 4
+  note: visual read only, not entered in CSV

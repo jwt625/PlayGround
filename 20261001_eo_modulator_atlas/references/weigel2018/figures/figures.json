@@ -1,0 +1,55 @@
+[
+ {
+  "kind": "page_render",
+  "file": "page_17.png",
+  "page": 17,
+  "captions": [
+   "Fig. 1a, Thin film x-cut lithium-niobate (LN) on insulator dies were bonded at room temperature to segmented"
+  ]
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p17_1.png",
+  "page": 17,
+  "width": 648,
+  "height": 337
+ },
+ {
+  "kind": "page_render",
+  "file": "page_18.png",
+  "page": 18,
+  "captions": [
+   "Fig. 2a, Schematic of the EOM (not to scale, not showing electrodes), including two 3-dB directional couplers",
+   "Fig. 3a, Normalized optical transmission of the Mach-Zehnder interferometric electro-optic Modulator"
+  ]
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p18_1.png",
+  "page": 18,
+  "width": 648,
+  "height": 276
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p18_2.png",
+  "page": 18,
+  "width": 648,
+  "height": 167
+ },
+ {
+  "kind": "page_render",
+  "file": "page_19.png",
+  "page": 19,
+  "captions": [
+   "Fig. 4 Electro-optic response of the EOM for both sidebands (a and b) from the optical spectrum analyzer."
+  ]
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p19_1.png",
+  "page": 19,
+  "width": 648,
+  "height": 301
+ }
+]

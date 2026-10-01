@@ -1,0 +1,75 @@
+[
+ {
+  "kind": "page_render",
+  "file": "page_01.png",
+  "page": 1,
+  "captions": [
+   "Fig. 1. (a) 3D schematic of the designed Si MZM. (b) 200 mm SOI wafer fabricated at AMF using LPCVD platform. (c) Microscope image"
+  ]
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p01_1.png",
+  "page": 1,
+  "width": 377,
+  "height": 265
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p01_2.png",
+  "page": 1,
+  "width": 566,
+  "height": 481
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p01_3.png",
+  "page": 1,
+  "width": 378,
+  "height": 247
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p01_4.png",
+  "page": 1,
+  "width": 827,
+  "height": 802
+ },
+ {
+  "kind": "page_render",
+  "file": "page_02.png",
+  "page": 2,
+  "captions": [
+   "Fig. 2. (d-e). A preliminary 8-channel circuit was also developed for co-evaluation for data center networks [Fig.",
+   "Fig. 2. (a) The optical transmission spectrum. (b) The measured bandwidth. (c-e) The eye diagram of PAM-4 at 100 Gbaud, PAM-8 at"
+  ]
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p02_1.png",
+  "page": 2,
+  "width": 417,
+  "height": 452
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p02_2.png",
+  "page": 2,
+  "width": 465,
+  "height": 356
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p02_3.png",
+  "page": 2,
+  "width": 370,
+  "height": 260
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p02_4.png",
+  "page": 2,
+  "width": 346,
+  "height": 561
+ }
+]

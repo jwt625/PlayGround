@@ -1,0 +1,304 @@
+{
+ "status": "ok",
+ "message-type": "work",
+ "message-version": "1.0.0",
+ "message": {
+  "indexed": {
+   "date-parts": [
+    [
+     2025,
+     9,
+     30
+    ]
+   ],
+   "date-time": "2025-09-30T11:05:06Z",
+   "timestamp": 1759230306061,
+   "version": "3.28.0"
+  },
+  "publisher-location": "Washington, D.C.",
+  "reference-count": 10,
+  "publisher": "Optica Publishing Group",
+  "content-domain": {
+   "domain": [],
+   "crossmark-restriction": false
+  },
+  "short-container-title": [],
+  "published-print": {
+   "date-parts": [
+    [
+     2024
+    ]
+   ]
+  },
+  "abstract": "<jats:p>We demonstrate an integrated electro-optic Mach-Zehnder modulator in thin-film lithium tantalate at 737 nm with record low V<jats:italic>\n      <jats:sub>\u03c0</jats:sub>\n    </jats:italic> L of 0.65 Vcm. An extinction ratio of 30 dB and a detector-limited operating bandwidth of 20 GHz was measured.</jats:p>",
+  "DOI": "10.1364/cleo_si.2024.sm2d.2",
+  "type": "proceedings-article",
+  "created": {
+   "date-parts": [
+    [
+     2024,
+     9,
+     5
+    ]
+   ],
+   "date-time": "2024-09-05T18:44:37Z",
+   "timestamp": 1725561877000
+  },
+  "page": "SM2D.2",
+  "source": "Crossref",
+  "is-referenced-by-count": 1,
+  "title": [
+   "A sub-volt near-IR lithium tantalate electro-optic modulator"
+  ],
+  "prefix": "10.1364",
+  "author": [
+   {
+    "given": "Keith",
+    "family": "Powell",
+    "sequence": "first",
+    "affiliation": [],
+    "role": [
+     {
+      "role": "author",
+      "vocabulary": "crossref"
+     }
+    ]
+   },
+   {
+    "given": "Dylan",
+    "family": "Renaud",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "role": "author",
+      "vocabulary": "crossref"
+     }
+    ]
+   },
+   {
+    "given": "Xudong",
+    "family": "Li",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "role": "author",
+      "vocabulary": "crossref"
+     }
+    ]
+   },
+   {
+    "given": "Daniel",
+    "family": "Assumpcao",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "role": "author",
+      "vocabulary": "crossref"
+     }
+    ]
+   },
+   {
+    "given": "C. J.",
+    "family": "Xin",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "role": "author",
+      "vocabulary": "crossref"
+     }
+    ]
+   },
+   {
+    "given": "Neil",
+    "family": "Sinclair",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "role": "author",
+      "vocabulary": "crossref"
+     }
+    ]
+   },
+   {
+    "given": "Marko",
+    "family": "Lon\u010dar",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "role": "author",
+      "vocabulary": "crossref"
+     }
+    ]
+   }
+  ],
+  "member": "285",
+  "reference": [
+   {
+    "key": "CLEO_SI-2024-SM2D.2-R1",
+    "doi-asserted-by": "publisher",
+    "DOI": "10.1126/science.abj4396",
+    "volume": "379",
+    "author": "Boes",
+    "year": "2023",
+    "journal-title": "Science"
+   },
+   {
+    "key": "CLEO_SI-2024-SM2D.2-R2",
+    "doi-asserted-by": "publisher",
+    "first-page": "242",
+    "DOI": "10.1364/AOP.411024",
+    "volume": "13",
+    "author": "Zhu",
+    "year": "2021",
+    "journal-title": "Adv. Opt. Photonics"
+   },
+   {
+    "key": "CLEO_SI-2024-SM2D.2-R3",
+    "doi-asserted-by": "publisher",
+    "first-page": "3911",
+    "DOI": "10.1038/s41467-020-17806-0",
+    "volume": "11",
+    "author": "Xu",
+    "year": "2020",
+    "journal-title": "Nat. communications"
+   },
+   {
+    "key": "CLEO_SI-2024-SM2D.2-R4",
+    "doi-asserted-by": "publisher",
+    "first-page": "380",
+    "DOI": "10.1364/OPTICA.6.000380",
+    "volume": "6",
+    "author": "Desiatov",
+    "year": "2019",
+    "journal-title": "Optica"
+   },
+   {
+    "key": "CLEO_SI-2024-SM2D.2-R5",
+    "doi-asserted-by": "publisher",
+    "first-page": "1496",
+    "DOI": "10.1038/s41467-023-36870-w",
+    "volume": "14",
+    "author": "Renaud",
+    "year": "2023",
+    "journal-title": "Nat. Commun."
+   },
+   {
+    "key": "CLEO_SI-2024-SM2D.2-R6",
+    "first-page": "121",
+    "author": "Huband",
+    "year": "2017",
+    "journal-title": "J. Appl. Phys."
+   },
+   {
+    "key": "CLEO_SI-2024-SM2D.2-R7",
+    "doi-asserted-by": "publisher",
+    "first-page": "1305",
+    "DOI": "10.1107/S0021889810033868",
+    "volume": "43",
+    "author": "Glazer",
+    "year": "2010",
+    "journal-title": "J. Appl. Crystallogr."
+   },
+   {
+    "key": "CLEO_SI-2024-SM2D.2-R8",
+    "doi-asserted-by": "publisher",
+    "first-page": "21690",
+    "DOI": "10.1364/OE.23.021690",
+    "volume": "23",
+    "author": "Leidinger",
+    "year": "2015",
+    "journal-title": "Opt. express"
+   },
+   {
+    "key": "CLEO_SI-2024-SM2D.2-R9",
+    "doi-asserted-by": "publisher",
+    "first-page": "15058",
+    "DOI": "10.1364/OE.25.015058",
+    "volume": "25",
+    "author": "McCracken",
+    "year": "2017",
+    "journal-title": "Opt. express"
+   },
+   {
+    "key": "CLEO_SI-2024-SM2D.2-R10",
+    "doi-asserted-by": "publisher",
+    "first-page": "5625",
+    "DOI": "10.1038/s41467-019-13332-w",
+    "volume": "10",
+    "author": "Bradac",
+    "year": "2019",
+    "journal-title": "Nat. communications"
+   }
+  ],
+  "event": {
+   "name": "CLEO: Science and Innovations",
+   "start": {
+    "date-parts": [
+     [
+      2024
+     ]
+    ]
+   },
+   "sponsor": [
+    "The Optical Society"
+   ],
+   "location": "Charlotte, North Carolina",
+   "acronym": "CLEO_SI"
+  },
+  "container-title": [
+   "CLEO 2024"
+  ],
+  "original-title": [],
+  "link": [
+   {
+    "URL": "https://opg.optica.org/viewmedia.cfm?URI=CLEO_SI-2024-SM2D.2&seq=0",
+    "content-type": "unspecified",
+    "content-version": "vor",
+    "intended-application": "similarity-checking"
+   }
+  ],
+  "deposited": {
+   "date-parts": [
+    [
+     2024,
+     9,
+     5
+    ]
+   ],
+   "date-time": "2024-09-05T18:44:38Z",
+   "timestamp": 1725561878000
+  },
+  "score": 1,
+  "resource": {
+   "primary": {
+    "URL": "https://opg.optica.org/abstract.cfm?URI=CLEO_SI-2024-SM2D.2"
+   }
+  },
+  "subtitle": [],
+  "short-title": [],
+  "issued": {
+   "date-parts": [
+    [
+     2024
+    ]
+   ]
+  },
+  "references-count": 10,
+  "URL": "https://doi.org/10.1364/cleo_si.2024.sm2d.2",
+  "relation": {},
+  "subject": [],
+  "published": {
+   "date-parts": [
+    [
+     2024
+    ]
+   ]
+  }
+ }
+}

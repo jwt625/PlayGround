@@ -1,0 +1,170 @@
+[
+ {
+  "kind": "page_render",
+  "file": "page_03.png",
+  "page": 3,
+  "captions": [
+   "Figure 1: (a) A perspective-view schematic (not to scale) of the hybrid bonded Si/LN",
+   "Figure 1(c) shows a top-view dark\ufb01eld optical microscope image of a fabricated"
+  ]
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p03_1.png",
+  "page": 3,
+  "width": 4505,
+  "height": 2510
+ },
+ {
+  "kind": "page_render",
+  "file": "page_05.png",
+  "page": 5,
+  "captions": [
+   "Figure 2: (a) An SEM image of a T-rail SWE design used in this work with the SWE"
+  ]
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p05_1.png",
+  "page": 5,
+  "width": 2850,
+  "height": 2161
+ },
+ {
+  "kind": "page_render",
+  "file": "page_06.png",
+  "page": 6,
+  "captions": [
+   "Figure 3: Figure 3. The measured S-parameters of the 1.0 cm and 0.54 cm SWE with"
+  ]
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p06_1.png",
+  "page": 6,
+  "width": 4400,
+  "height": 1145
+ },
+ {
+  "kind": "page_render",
+  "file": "page_07.png",
+  "page": 7,
+  "captions": [
+   "Figure 4: The extracted RF characteristics of each of the SWE devices from the mea-"
+  ]
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p07_1.png",
+  "page": 7,
+  "width": 4420,
+  "height": 2340
+ },
+ {
+  "kind": "page_render",
+  "file": "page_08.png",
+  "page": 8,
+  "captions": [
+   "Figure 5: The measured (blue) and modelled (red) EO responses of the hybrid bonded"
+  ]
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p08_1.png",
+  "page": 8,
+  "width": 3419,
+  "height": 2364
+ },
+ {
+  "kind": "page_render",
+  "file": "page_09.png",
+  "page": 9,
+  "captions": [
+   "Figure 6: The measured (blue) and modelled (red) EO responses of the hybrid bonded"
+  ]
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p09_1.png",
+  "page": 9,
+  "width": 3421,
+  "height": 2359
+ },
+ {
+  "kind": "page_render",
+  "file": "page_11.png",
+  "page": 11,
+  "captions": [
+   "Figure 7: The measured normalized optical power as a function of applied voltage to the"
+  ]
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p11_1.png",
+  "page": 11,
+  "width": 3533,
+  "height": 2491
+ },
+ {
+  "kind": "page_render",
+  "file": "page_12.png",
+  "page": 12,
+  "captions": [
+   "Figure 8: The calculated RF V\u03c0 as a function of driving frequency using Eq. (3) for"
+  ]
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p12_1.png",
+  "page": 12,
+  "width": 3289,
+  "height": 2420
+ },
+ {
+  "kind": "page_render",
+  "file": "page_13.png",
+  "page": 13,
+  "captions": [
+   "Figure 9(d) summarizes the combined \ufb01gure-of-merit, 3-dB bandwidth-to-V\u03c0",
+   "Figure 9: Summary bar graphs of the measured (a) V\u03c0L, (b) 3-dB bandwidth (BW), (c)"
+  ]
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p13_1.png",
+  "page": 13,
+  "width": 3072,
+  "height": 2341
+ },
+ {
+  "kind": "page_render",
+  "file": "page_14.png",
+  "page": 14,
+  "captions": [
+   "Figure 10: The measured (blue) EO responses of the hybrid bonded Si/LN MZMs",
+   "Figure 10 is similar to the traces shown in Figs. 5 and 6, with the addition of a yellow"
+  ]
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p14_1.png",
+  "page": 14,
+  "width": 3512,
+  "height": 2364
+ },
+ {
+  "kind": "page_render",
+  "file": "page_16.png",
+  "page": 16,
+  "captions": [
+   "Figure 11: The measured (solid) and modelled (dashed) EO response normalized to 0.1"
+  ]
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p16_1.png",
+  "page": 16,
+  "width": 3053,
+  "height": 1714
+ }
+]

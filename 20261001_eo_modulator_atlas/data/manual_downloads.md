@@ -66,3 +66,91 @@ Drop each file into references/_inbox/ using the exact save_as filename.
   drop_folder: references/_inbox/
   priority: 1
   why_needed: reports Vpi/bandwidth/loss metrics per abstract (not yet read)
+- paper_id: boynton2020
+  title: A heterogeneously integrated silicon photonic/lithium niobate travelling wave electro-optic modulator
+  doi: 10.1364/oe.28.001868
+  publisher_url: https://doi.org/10.1364/oe.28.001868
+  save_as: boynton2020.pdf
+  drop_folder: references/_inbox/
+  priority: 1
+  why_needed: open-access publisher PDF blocked to scripted download (anti-bot); metrics per abstract, not yet read
+- paper_id: pan2021
+  title: Demonstration of high-speed thin-film lithium-niobate-on-insulator optical modulators at the 2-µm wavelength
+  doi: 10.1364/oe.416908
+  publisher_url: https://doi.org/10.1364/oe.416908
+  save_as: pan2021.pdf
+  drop_folder: references/_inbox/
+  priority: 1
+  why_needed: open-access publisher PDF blocked to scripted download (anti-bot); metrics per abstract, not yet read
+- paper_id: arabjuneghani2022
+  title: Thin‐Film Lithium Niobate Optical Modulators with an Extrapolated Bandwidth of 170 GHz
+  doi: 10.1002/adpr.202200216
+  publisher_url: https://doi.org/10.1002/adpr.202200216
+  save_as: arabjuneghani2022.pdf
+  drop_folder: references/_inbox/
+  priority: 1
+  why_needed: open-access publisher PDF blocked to scripted download (anti-bot); metrics per abstract, not yet read
+- paper_id: mao2022
+  title: Heterogeneous silicon-on-lithium niobate electro-optic modulator for 100-Gbaud modulation
+  doi: 10.1063/5.0109251
+  publisher_url: https://doi.org/10.1063/5.0109251
+  save_as: mao2022.pdf
+  drop_folder: references/_inbox/
+  priority: 1
+  why_needed: open-access publisher PDF blocked to scripted download (anti-bot); metrics per abstract, not yet read
+- paper_id: xu2022
+  title: Dual-polarization thin-film lithium niobate in-phase quadrature modulators for terabit-per-second transmission
+  doi: 10.1364/optica.449691
+  publisher_url: https://doi.org/10.1364/optica.449691
+  save_as: xu2022.pdf
+  drop_folder: references/_inbox/
+  priority: 1
+  why_needed: open-access publisher PDF blocked to scripted download (anti-bot); metrics per abstract, not yet read
+- paper_id: valdez2023a
+  title: 100 GHz bandwidth, 1 volt integrated electro-optic Mach–Zehnder modulator at near-IR wavelengths
+  doi: 10.1364/optica.484549
+  publisher_url: https://doi.org/10.1364/optica.484549
+  save_as: valdez2023a.pdf
+  drop_folder: references/_inbox/
+  priority: 1
+  why_needed: open-access publisher PDF blocked to scripted download (anti-bot); metrics per abstract, not yet read
+- paper_id: murai2025
+  title: 1.1-cm-long thin-film lithium niobate Mach-Zehnder modulator with low driving voltage integrated by micro-transfer printing
+  doi: 10.1364/oe.568498
+  publisher_url: https://doi.org/10.1364/oe.568498
+  save_as: murai2025.pdf
+  drop_folder: references/_inbox/
+  priority: 1
+  why_needed: open-access publisher PDF blocked to scripted download (anti-bot); metrics per abstract, not yet read
+- paper_id: zhang2025
+  title: 512 Gbps/λ dual‐polarization thin‐film lithium niobate modulators based on an electro‐optic equalizer
+  doi: 10.1515/nanoph-2025-0472
+  publisher_url: https://doi.org/10.1515/nanoph-2025-0472
+  save_as: zhang2025.pdf
+  drop_folder: references/_inbox/
+  priority: 1
+  why_needed: open-access publisher PDF blocked to scripted download (anti-bot); metrics per abstract, not yet read
+- paper_id: xue2026
+  title: High-performance thin-film lithium niobate electro-optic modulator on a thick silica buffering layer
+  doi: 10.1364/oe.588103
+  publisher_url: https://doi.org/10.1364/oe.588103
+  save_as: xue2026.pdf
+  drop_folder: references/_inbox/
+  priority: 1
+  why_needed: open-access publisher PDF blocked to scripted download (anti-bot); metrics per abstract, not yet read
+- paper_id: chen2026
+  title: Thin-film lithium tantalate electro-optic modulator with balanced bandwidth-voltage and low DC drift
+  doi: 10.1364/oe.595937
+  publisher_url: https://doi.org/10.1364/oe.595937
+  save_as: chen2026.pdf
+  drop_folder: references/_inbox/
+  priority: 1
+  why_needed: open-access publisher PDF blocked to scripted download (anti-bot); metrics per abstract, not yet read
+- paper_id: yue2025
+  title: Silicon modulator exceeding 110 GHz using tunable time-frequency equalization
+  doi: 10.1364/optica.545011
+  publisher_url: https://doi.org/10.1364/optica.545011
+  save_as: yue2025.pdf
+  drop_folder: references/_inbox/
+  priority: 1
+  why_needed: open-access publisher PDF blocked to scripted download (anti-bot); metrics per abstract, not yet read

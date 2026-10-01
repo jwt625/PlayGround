@@ -1,0 +1,1049 @@
+{
+ "status": "ok",
+ "message-type": "work",
+ "message-version": "1.0.0",
+ "message": {
+  "indexed": {
+   "date-parts": [
+    [
+     2026,
+     9,
+     18
+    ]
+   ],
+   "date-time": "2026-09-18T12:09:35Z",
+   "timestamp": 1789733375859,
+   "version": "4.0.1"
+  },
+  "reference-count": 39,
+  "publisher": "Springer Science and Business Media LLC",
+  "issue": "2",
+  "license": [
+   {
+    "start": {
+     "date-parts": [
+      [
+       2026,
+       1,
+       13
+      ]
+     ],
+     "date-time": "2026-01-13T00:00:00Z",
+     "timestamp": 1768262400000
+    },
+    "content-version": "tdm",
+    "delay-in-days": 0,
+    "URL": "https://www.springernature.com/gp/researchers/text-and-data-mining"
+   },
+   {
+    "start": {
+     "date-parts": [
+      [
+       2026,
+       1,
+       13
+      ]
+     ],
+     "date-time": "2026-01-13T00:00:00Z",
+     "timestamp": 1768262400000
+    },
+    "content-version": "vor",
+    "delay-in-days": 0,
+    "URL": "https://www.springernature.com/gp/researchers/text-and-data-mining"
+   }
+  ],
+  "funder": [
+   {
+    "DOI": "10.13039/501100003130",
+    "name": "Fonds Wetenschappelijk Onderzoek",
+    "doi-asserted-by": "publisher",
+    "award": [
+     "3G035722"
+    ],
+    "award-info": [
+     {
+      "award-number": [
+       "3G035722"
+      ]
+     }
+    ],
+    "id": [
+     {
+      "id": "10.13039/501100003130",
+      "id-type": "DOI",
+      "asserted-by": "publisher"
+     }
+    ]
+   },
+   {
+    "DOI": "10.13039/501100003130",
+    "name": "Fonds Wetenschappelijk Onderzoek",
+    "doi-asserted-by": "publisher",
+    "award": [
+     "3F025420"
+    ],
+    "award-info": [
+     {
+      "award-number": [
+       "3F025420"
+      ]
+     }
+    ],
+    "id": [
+     {
+      "id": "10.13039/501100003130",
+      "id-type": "DOI",
+      "asserted-by": "publisher"
+     }
+    ]
+   },
+   {
+    "DOI": "10.13039/501100000844",
+    "name": "European Space Agency",
+    "doi-asserted-by": "publisher",
+    "award": [
+     "E/0365-70"
+    ],
+    "award-info": [
+     {
+      "award-number": [
+       "E/0365-70"
+      ]
+     }
+    ],
+    "id": [
+     {
+      "id": "10.13039/501100000844",
+      "id-type": "DOI",
+      "asserted-by": "publisher"
+     }
+    ]
+   },
+   {
+    "DOI": "10.13039/501100000844",
+    "name": "European Space Agency",
+    "doi-asserted-by": "publisher",
+    "award": [
+     "E/0365-70"
+    ],
+    "award-info": [
+     {
+      "award-number": [
+       "E/0365-70"
+      ]
+     }
+    ],
+    "id": [
+     {
+      "id": "10.13039/501100000844",
+      "id-type": "DOI",
+      "asserted-by": "publisher"
+     }
+    ]
+   },
+   {
+    "name": "F.R.S-F.N.R.S. Excellence of Science (EOS) program"
+   }
+  ],
+  "content-domain": {
+   "domain": [
+    "link.springer.com"
+   ],
+   "crossmark-restriction": false
+  },
+  "short-container-title": [
+   "Nat. Photon."
+  ],
+  "published-print": {
+   "date-parts": [
+    [
+     2026,
+     2
+    ]
+   ]
+  },
+  "DOI": "10.1038/s41566-025-01832-9",
+  "type": "journal-article",
+  "created": {
+   "date-parts": [
+    [
+     2026,
+     1,
+     13
+    ]
+   ],
+   "date-time": "2026-01-13T10:01:34Z",
+   "timestamp": 1768298494000
+  },
+  "page": "225-231",
+  "update-policy": "https://doi.org/10.1007/springer_crossmark_policy",
+  "source": "Crossref",
+  "is-referenced-by-count": 23,
+  "title": [
+   "A high-speed heterogeneous lithium tantalate silicon photonics platform"
+  ],
+  "prefix": "10.1038",
+  "volume": "20",
+  "author": [
+   {
+    "ORCID": "https://orcid.org/0009-0003-9297-2156",
+    "authenticated-orcid": false,
+    "given": "Margot",
+    "family": "Niels",
+    "sequence": "first",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "ORCID": "https://orcid.org/0000-0003-4692-9467",
+    "authenticated-orcid": false,
+    "given": "Tom",
+    "family": "Vanackere",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "ORCID": "https://orcid.org/0000-0002-5765-0552",
+    "authenticated-orcid": false,
+    "given": "Ewoud",
+    "family": "Vissers",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "ORCID": "https://orcid.org/0009-0005-8862-7434",
+    "authenticated-orcid": false,
+    "given": "Tingting",
+    "family": "Zhai",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "ORCID": "https://orcid.org/0009-0004-4823-5500",
+    "authenticated-orcid": false,
+    "given": "Patrick",
+    "family": "Nenezic",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "ORCID": "https://orcid.org/0000-0003-1972-6218",
+    "authenticated-orcid": false,
+    "given": "Jakob",
+    "family": "Declercq",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "C\u00e9dric",
+    "family": "Bruynsteen",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Shengpu",
+    "family": "Niu",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "ORCID": "https://orcid.org/0000-0003-0945-2786",
+    "authenticated-orcid": false,
+    "given": "Arno",
+    "family": "Moerman",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "ORCID": "https://orcid.org/0000-0002-1524-971X",
+    "authenticated-orcid": false,
+    "given": "Olivier",
+    "family": "Caytan",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "ORCID": "https://orcid.org/0000-0003-0609-1145",
+    "authenticated-orcid": false,
+    "given": "Nishant",
+    "family": "Singh",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "ORCID": "https://orcid.org/0000-0003-1366-2604",
+    "authenticated-orcid": false,
+    "given": "Sam",
+    "family": "Lemey",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "ORCID": "https://orcid.org/0000-0002-9672-6652",
+    "authenticated-orcid": false,
+    "given": "Xin",
+    "family": "Yin",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Sofie",
+    "family": "Janssen",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Peter",
+    "family": "Verheyen",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Neha",
+    "family": "Singh",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Dieter",
+    "family": "Bode",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Martin",
+    "family": "Davi",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Filippo",
+    "family": "Ferraro",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Philippe",
+    "family": "Absil",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Sadhishkumar",
+    "family": "Balakrishnan",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "ORCID": "https://orcid.org/0000-0003-0778-2669",
+    "authenticated-orcid": false,
+    "given": "Joris",
+    "family": "Van Campenhout",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "ORCID": "https://orcid.org/0000-0002-4667-5092",
+    "authenticated-orcid": false,
+    "given": "G\u00fcnther",
+    "family": "Roelkens",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "ORCID": "https://orcid.org/0000-0002-8745-7833",
+    "authenticated-orcid": false,
+    "given": "Bart",
+    "family": "Kuyken",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "ORCID": "https://orcid.org/0000-0002-5784-5050",
+    "authenticated-orcid": false,
+    "given": "Maximilien",
+    "family": "Billet",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   }
+  ],
+  "member": "297",
+  "published-online": {
+   "date-parts": [
+    [
+     2026,
+     1,
+     13
+    ]
+   ]
+  },
+  "reference": [
+   {
+    "key": "1832_CR1",
+    "unstructured": "Sneh, A. & Doerr, C. R. in Integrated Optical Circuits and Components (CRC Press, 1999)."
+   },
+   {
+    "key": "1832_CR2",
+    "doi-asserted-by": "publisher",
+    "first-page": "1",
+    "DOI": "10.1038/s44310-024-00024-7",
+    "volume": "1",
+    "author": "X Zhou",
+    "year": "2024",
+    "unstructured": "Zhou, X., Yi, D., Chan, D. W. U. & Tsang, H. K. Silicon photonics for high-speed communications and photonic signal processing. npj Nanophoton. 1, 1\u201314 (2024).",
+    "journal-title": "npj Nanophoton."
+   },
+   {
+    "key": "1832_CR3",
+    "doi-asserted-by": "publisher",
+    "first-page": "925",
+    "DOI": "10.1038/s41566-021-00893-w",
+    "volume": "15",
+    "author": "S Lischke",
+    "year": "2021",
+    "unstructured": "Lischke, S. et al. Ultra-fast germanium photodiode with 3-dB bandwidth of 265 GHz. Nat. Photon. 15, 925\u2013931 (2021).",
+    "journal-title": "Nat. Photon."
+   },
+   {
+    "key": "1832_CR4",
+    "unstructured": "Gass, K. OIF adds a short-reach design to its 1600zr/ zr+ portfolio. Gazettabyte https://gazettabyte.com/oif-adds-a-short-reach-design-to-its-1600zr-zr-portfolio/ (2025)."
+   },
+   {
+    "key": "1832_CR5",
+    "doi-asserted-by": "publisher",
+    "first-page": "868",
+    "DOI": "10.1038/s41563-025-02158-1",
+    "volume": "24",
+    "author": "D Chelladurai",
+    "year": "2025",
+    "unstructured": "Chelladurai, D. et al. Barium titanate and lithium niobate permittivity and Pockels coefficients from megahertz to sub-terahertz frequencies. Nat. Materials 24, 868\u2013875 (2025).",
+    "journal-title": "Nat. Materials"
+   },
+   {
+    "key": "1832_CR6",
+    "doi-asserted-by": "publisher",
+    "DOI": "10.1038/s41598-017-19061-8",
+    "volume": "8",
+    "author": "S Wolf",
+    "year": "2018",
+    "unstructured": "Wolf, S. et al. Silicon-organic hybrid (SOH) Mach-Zehnder modulators for 100 Gbit/s on-off keying. Sci. Rep. 8, 2598 (2018).",
+    "journal-title": "Sci. Rep."
+   },
+   {
+    "key": "1832_CR7",
+    "doi-asserted-by": "publisher",
+    "first-page": "525",
+    "DOI": "10.1038/nphoton.2015.127",
+    "volume": "9",
+    "author": "C Haffner",
+    "year": "2015",
+    "unstructured": "Haffner, C. et al. All-plasmonic Mach\u2013Zehnder modulator enabling optical high-speed communication at the microscale. Nat. Photon. 9, 525\u2013528 (2015).",
+    "journal-title": "Nat. Photon."
+   },
+   {
+    "key": "1832_CR8",
+    "doi-asserted-by": "publisher",
+    "first-page": "056106",
+    "DOI": "10.1063/1.5086868",
+    "volume": "4",
+    "author": "M Burla",
+    "year": "2019",
+    "unstructured": "Burla, M. et al. 500 GHz plasmonic Mach-Zehnder modulator enabling sub-THz microwave photonics. APL Photon. 4, 056106 (2019).",
+    "journal-title": "APL Photon."
+   },
+   {
+    "key": "1832_CR9",
+    "doi-asserted-by": "publisher",
+    "first-page": "16823",
+    "DOI": "10.1364/OE.27.016823",
+    "volume": "27",
+    "author": "B Baeuerle",
+    "year": "2019",
+    "unstructured": "Baeuerle, B. et al. 120 GBd plasmonic Mach-Zehnder modulator with a novel differential electrode design operated at a peak-to-peak drive voltage of 178 mV. Opt. Express 27, 16823\u201316832 (2019).",
+    "journal-title": "Opt. Express"
+   },
+   {
+    "key": "1832_CR10",
+    "doi-asserted-by": "publisher",
+    "first-page": "360",
+    "DOI": "10.1038/s41566-023-01161-9",
+    "volume": "17",
+    "author": "M Eppenberger",
+    "year": "2023",
+    "unstructured": "Eppenberger, M. et al. Resonant plasmonic micro-racetrack modulators with high bandwidth and high temperature tolerance. Nat. Photon. 17, 360\u2013367 (2023).",
+    "journal-title": "Nat. Photon."
+   },
+   {
+    "key": "1832_CR11",
+    "doi-asserted-by": "publisher",
+    "first-page": "1772",
+    "DOI": "10.1109/JLT.2019.2898675",
+    "volume": "37",
+    "author": "H Yamazaki",
+    "year": "2019",
+    "unstructured": "Yamazaki, H. et al. IMDD transmission at net data rate of 333 Gb/s using over-100-GHz-bandwidth analog multiplexer and Mach-Zehnder modulator. J. Light. Technol. 37, 1772\u20131778 (2019).",
+    "journal-title": "J. Light. Technol."
+   },
+   {
+    "key": "1832_CR12",
+    "doi-asserted-by": "publisher",
+    "first-page": "178",
+    "DOI": "10.1109/JLT.2018.2876732",
+    "volume": "37",
+    "author": "JM Estar\u00e1n",
+    "year": "2019",
+    "unstructured": "Estar\u00e1n, J. M. et al. 140/180/204-Gbaud OOK transceiver for inter- and intra-data center connectivity. J. Light. Technol. 37, 178\u2013187 (2019).",
+    "journal-title": "J. Light. Technol."
+   },
+   {
+    "key": "1832_CR13",
+    "doi-asserted-by": "publisher",
+    "first-page": "392",
+    "DOI": "10.1038/s41578-018-0040-9",
+    "volume": "3",
+    "author": "M Romagnoli",
+    "year": "2018",
+    "unstructured": "Romagnoli, M. et al. Graphene-based integrated photonics for next-generation datacom and telecom. Nat. Rev. Mater. 3, 392\u2013414 (2018).",
+    "journal-title": "Nat. Rev. Mater."
+   },
+   {
+    "key": "1832_CR14",
+    "doi-asserted-by": "publisher",
+    "first-page": "64",
+    "DOI": "10.1038/nature10067",
+    "volume": "474",
+    "author": "M Liu",
+    "year": "2011",
+    "unstructured": "Liu, M. et al. A graphene-based broadband optical modulator. Nature 474, 64\u201367 (2011).",
+    "journal-title": "Nature"
+   },
+   {
+    "key": "1832_CR15",
+    "doi-asserted-by": "publisher",
+    "first-page": "511",
+    "DOI": "10.1038/nphoton.2015.122",
+    "volume": "9",
+    "author": "CT Phare",
+    "year": "2015",
+    "unstructured": "Phare, C. T., Daniel Lee, Y.-H., Cardenas, J. & Lipson, M. Graphene electro-optic modulator with 30 GHz bandwidth. Nat. Photon. 9, 511\u2013514 (2015).",
+    "journal-title": "Nat. Photon."
+   },
+   {
+    "key": "1832_CR16",
+    "doi-asserted-by": "publisher",
+    "first-page": "1",
+    "DOI": "10.1109/JSTQE.2024.3411058",
+    "volume": "30",
+    "author": "C Wu",
+    "year": "2024",
+    "unstructured": "Wu, C. et al. Graphene-based silicon photonic electro-absorption modulators and phase modulators. IEEE J. Sel. Top. Quantum Electron. 30, 1\u201311 (2024).",
+    "journal-title": "IEEE J. Sel. Top. Quantum Electron."
+   },
+   {
+    "key": "1832_CR17",
+    "doi-asserted-by": "publisher",
+    "first-page": "101",
+    "DOI": "10.1038/s41586-018-0551-y",
+    "volume": "562",
+    "author": "C Wang",
+    "year": "2018",
+    "unstructured": "Wang, C. et al. Integrated lithium niobate electro-optic modulators operating at CMOS-compatible voltages. Nature 562, 101\u2013104 (2018).",
+    "journal-title": "Nature"
+   },
+   {
+    "key": "1832_CR18",
+    "doi-asserted-by": "publisher",
+    "first-page": "242",
+    "DOI": "10.1364/AOP.411024",
+    "volume": "13",
+    "author": "D Zhu",
+    "year": "2021",
+    "unstructured": "Zhu, D. et al. Integrated photonics on thin-film lithium niobate. Adv. Opt. Photon. 13, 242\u2013352 (2021).",
+    "journal-title": "Adv. Opt. Photon."
+   },
+   {
+    "key": "1832_CR19",
+    "doi-asserted-by": "publisher",
+    "first-page": "1614",
+    "DOI": "10.1364/OPTICA.537730",
+    "volume": "11",
+    "author": "C Wang",
+    "year": "2024",
+    "unstructured": "Wang, C. et al. Ultrabroadband thin-film lithium tantalate modulator for high-speed communications. Optica 11, 1614\u20131620 (2024).",
+    "journal-title": "Optica"
+   },
+   {
+    "key": "1832_CR20",
+    "doi-asserted-by": "publisher",
+    "first-page": "5019",
+    "DOI": "10.1364/OL.531263",
+    "volume": "49",
+    "author": "H Wang",
+    "year": "2024",
+    "unstructured": "Wang, H. et al. Optical switch with an ultralow DC drift based on thin-film lithium tantalate. Opt. Lett. 49, 5019\u20135022 (2024).",
+    "journal-title": "Opt. Lett."
+   },
+   {
+    "key": "1832_CR21",
+    "doi-asserted-by": "publisher",
+    "first-page": "784",
+    "DOI": "10.1038/s41586-024-07369-1",
+    "volume": "629",
+    "author": "C Wang",
+    "year": "2024",
+    "unstructured": "Wang, C. et al. Lithium tantalate photonic integrated circuits for volume manufacturing. Nature 629, 784\u2013790 (2024).",
+    "journal-title": "Nature"
+   },
+   {
+    "key": "1832_CR22",
+    "doi-asserted-by": "publisher",
+    "first-page": "1096",
+    "DOI": "10.1038/s41586-024-08354-4",
+    "volume": "637",
+    "author": "J Zhang",
+    "year": "2025",
+    "unstructured": "Zhang, J. et al. Ultrabroadband integrated electro-optic frequency comb in lithium tantalate. Nature 637, 1096\u20131103 (2025).",
+    "journal-title": "Nature"
+   },
+   {
+    "key": "1832_CR23",
+    "doi-asserted-by": "publisher",
+    "first-page": "44115",
+    "DOI": "10.1364/OE.538870",
+    "volume": "32",
+    "author": "K Powell",
+    "year": "2024",
+    "unstructured": "Powell, K. et al. DC-stable electro-optic modulators using thin-film lithium tantalate. Opt. Express 32, 44115\u201344122 (2024).",
+    "journal-title": "Opt. Express"
+   },
+   {
+    "key": "1832_CR24",
+    "doi-asserted-by": "crossref",
+    "unstructured": "Yu, J. et al. Tunable and stable micro-ring resonator based on thin-film lithium tantalate. APL Photon. 9, (2024).",
+    "DOI": "10.1063/5.0187996"
+   },
+   {
+    "key": "1832_CR25",
+    "doi-asserted-by": "publisher",
+    "first-page": "2400396",
+    "DOI": "10.1002/adem.202400396",
+    "volume": "26",
+    "author": "AF Wandesleben",
+    "year": "2024",
+    "unstructured": "Wandesleben, A. F. et al. Influences and diffusion effects of lithium contamination during the thermal oxidation process of silicon. Adv. Eng. Mater. 26, 2400396 (2024).",
+    "journal-title": "Adv. Eng. Mater."
+   },
+   {
+    "key": "1832_CR26",
+    "unstructured": "X-Celeprint. Micro transfer printing is photonics heterogeneous integration made easy. www.x-celeprint.com (2025)."
+   },
+   {
+    "key": "1832_CR27",
+    "doi-asserted-by": "publisher",
+    "first-page": "010901",
+    "DOI": "10.1063/5.0181099",
+    "volume": "9",
+    "author": "G Roelkens",
+    "year": "2024",
+    "unstructured": "Roelkens, G. et al. Present and future of micro-transfer printing for heterogeneous photonic integrated circuits. APL Photon. 9, 010901 (2024).",
+    "journal-title": "APL Photon."
+   },
+   {
+    "key": "1832_CR28",
+    "doi-asserted-by": "publisher",
+    "DOI": "10.1038/s41467-023-39047-7",
+    "volume": "14",
+    "author": "M Churaev",
+    "year": "2023",
+    "unstructured": "Churaev, M. et al. A heterogeneously integrated lithium niobate-on-silicon nitride photonic platform. Nat. Commun. 14, 3499 (2023).",
+    "journal-title": "Nat. Commun."
+   },
+   {
+    "key": "1832_CR29",
+    "doi-asserted-by": "publisher",
+    "first-page": "2200327",
+    "DOI": "10.1002/lpor.202200327",
+    "volume": "17",
+    "author": "Z Ruan",
+    "year": "2023",
+    "unstructured": "Ruan, Z. et al. High-performance electro-optic modulator on silicon nitride platform with heterogeneous integration of lithium niobate. Laser Photon. Rev. 17, 2200327 (2023).",
+    "journal-title": "Laser Photon. Rev."
+   },
+   {
+    "key": "1832_CR30",
+    "doi-asserted-by": "publisher",
+    "first-page": "803",
+    "DOI": "10.1364/OL.42.000803",
+    "volume": "42",
+    "author": "L Chang",
+    "year": "2017",
+    "unstructured": "Chang, L. et al. Heterogeneous integration of lithium niobate and silicon nitride waveguides for wafer-scale photonic integrated circuits on silicon. Opt. Lett. 42, 803\u2013806 (2017).",
+    "journal-title": "Opt. Lett."
+   },
+   {
+    "key": "1832_CR31",
+    "doi-asserted-by": "publisher",
+    "DOI": "10.1038/srep22301",
+    "volume": "6",
+    "author": "PO Weigel",
+    "year": "2016",
+    "unstructured": "Weigel, P. O. et al. Lightwave circuits in lithium niobate through hybrid waveguides with silicon photonics. Sci. Rep. 6, 22301 (2016).",
+    "journal-title": "Sci. Rep."
+   },
+   {
+    "key": "1832_CR32",
+    "doi-asserted-by": "publisher",
+    "first-page": "086102",
+    "DOI": "10.1063/5.0150878",
+    "volume": "8",
+    "author": "T Vanackere",
+    "year": "2023",
+    "unstructured": "Vanackere, T. et al. Heterogeneous integration of a high-speed lithium niobate modulator on silicon nitride using micro-transfer printing. APL Photon. 8, 086102 (2023).",
+    "journal-title": "APL Photon."
+   },
+   {
+    "key": "1832_CR33",
+    "doi-asserted-by": "publisher",
+    "first-page": "4375",
+    "DOI": "10.1364/OME.474200",
+    "volume": "12",
+    "author": "Z Li",
+    "year": "2022",
+    "unstructured": "Li, Z. et al. Photonic integration of lithium niobate micro-ring resonators onto silicon nitride waveguide chips by transfer-printing. Opt. Mater. Express 12, 4375\u20134383 (2022).",
+    "journal-title": "Opt. Mater. Express"
+   },
+   {
+    "key": "1832_CR34",
+    "doi-asserted-by": "publisher",
+    "DOI": "10.1038/s41598-025-95397-w",
+    "volume": "15",
+    "author": "SH Badri",
+    "year": "2025",
+    "unstructured": "Badri, S. H. et al. Compact modulators on silicon nitride waveguide platform via micro-transfer printing of thin-film lithium niobate. Sci. Rep. 15, 11681 (2025).",
+    "journal-title": "Sci. Rep."
+   },
+   {
+    "key": "1832_CR35",
+    "doi-asserted-by": "crossref",
+    "unstructured": "Vandekerckhove, T. et al. High-efficiency second harmonic generation in heterogeneously-integrated periodically-poled lithium niobate on silicon nitride. In The European Conference on Lasers and Electro-Optics cd_3_2 (Optica Publishing Group, 2023).",
+    "DOI": "10.1109/CLEO/Europe-EQEC57999.2023.10232423"
+   },
+   {
+    "key": "1832_CR36",
+    "doi-asserted-by": "publisher",
+    "first-page": "1",
+    "DOI": "10.1109/JSTQE.2022.3222686",
+    "volume": "29",
+    "author": "G Roelkens",
+    "year": "2023",
+    "unstructured": "Roelkens, G. et al. Micro-transfer printing for heterogeneous Si photonic integrated circuits. IEEE J. Sel. Top. Quantum Electron. 29, 1\u201314 (2023).",
+    "journal-title": "IEEE J. Sel. Top. Quantum Electron."
+   },
+   {
+    "key": "1832_CR37",
+    "unstructured": "Razavi, B. Design of Analog CMOS Integrated Circuits (McGraw-Hill, 2001)."
+   },
+   {
+    "key": "1832_CR38",
+    "doi-asserted-by": "crossref",
+    "unstructured": "Ponchak, G. Rf transmission lines on silicon substrates. In European Microwave Conference 1 (IEEE, 1999).",
+    "DOI": "10.1109/EUMA.1999.338297"
+   },
+   {
+    "key": "1832_CR39",
+    "doi-asserted-by": "publisher",
+    "first-page": "2158",
+    "DOI": "10.1109/JPROC.2018.2877636",
+    "volume": "106",
+    "author": "J Witzens",
+    "year": "2018",
+    "unstructured": "Witzens, J. High-speed silicon photonics modulators. Proc. IEEE 106, 2158\u20132182 (2018).",
+    "journal-title": "Proc. IEEE"
+   }
+  ],
+  "container-title": [
+   "Nature Photonics"
+  ],
+  "original-title": [],
+  "language": "en",
+  "link": [
+   {
+    "URL": "https://www.nature.com/articles/s41566-025-01832-9.pdf",
+    "content-type": "application/pdf",
+    "content-version": "vor",
+    "intended-application": "text-mining"
+   },
+   {
+    "URL": "https://www.nature.com/articles/s41566-025-01832-9",
+    "content-type": "text/html",
+    "content-version": "vor",
+    "intended-application": "text-mining"
+   },
+   {
+    "URL": "https://www.nature.com/articles/s41566-025-01832-9.pdf",
+    "content-type": "application/pdf",
+    "content-version": "vor",
+    "intended-application": "similarity-checking"
+   }
+  ],
+  "deposited": {
+   "date-parts": [
+    [
+     2026,
+     2,
+     5
+    ]
+   ],
+   "date-time": "2026-02-05T16:04:15Z",
+   "timestamp": 1770307455000
+  },
+  "score": 1,
+  "resource": {
+   "primary": {
+    "URL": "https://www.nature.com/articles/s41566-025-01832-9"
+   }
+  },
+  "subtitle": [],
+  "short-title": [],
+  "issued": {
+   "date-parts": [
+    [
+     2026,
+     1,
+     13
+    ]
+   ]
+  },
+  "references-count": 39,
+  "journal-issue": {
+   "issue": "2",
+   "published-print": {
+    "date-parts": [
+     [
+      2026,
+      2
+     ]
+    ]
+   }
+  },
+  "alternative-id": [
+   "1832"
+  ],
+  "URL": "https://doi.org/10.1038/s41566-025-01832-9",
+  "relation": {},
+  "ISSN": [
+   "1749-4885",
+   "1749-4893"
+  ],
+  "issn-type": [
+   {
+    "value": "1749-4885",
+    "type": "print"
+   },
+   {
+    "value": "1749-4893",
+    "type": "electronic"
+   }
+  ],
+  "subject": [],
+  "published": {
+   "date-parts": [
+    [
+     2026,
+     1,
+     13
+    ]
+   ]
+  },
+  "assertion": [
+   {
+    "value": "13 February 2025",
+    "order": 1,
+    "name": "received",
+    "label": "Received",
+    "group": {
+     "name": "ArticleHistory",
+     "label": "Article History"
+    }
+   },
+   {
+    "value": "6 December 2025",
+    "order": 2,
+    "name": "accepted",
+    "label": "Accepted",
+    "group": {
+     "name": "ArticleHistory",
+     "label": "Article History"
+    }
+   },
+   {
+    "value": "13 January 2026",
+    "order": 3,
+    "name": "first_online",
+    "label": "First Online",
+    "group": {
+     "name": "ArticleHistory",
+     "label": "Article History"
+    }
+   },
+   {
+    "value": "The authors declare no competing interests.",
+    "order": 1,
+    "name": "Ethics",
+    "group": {
+     "name": "EthicsHeading",
+     "label": "Competing interests"
+    }
+   }
+  ]
+ }
+}

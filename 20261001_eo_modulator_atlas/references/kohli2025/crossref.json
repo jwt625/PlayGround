@@ -1,0 +1,1080 @@
+{
+ "status": "ok",
+ "message-type": "work",
+ "message-version": "1.0.0",
+ "message": {
+  "indexed": {
+   "date-parts": [
+    [
+     2026,
+     9,
+     23
+    ]
+   ],
+   "date-time": "2026-09-23T06:16:05Z",
+   "timestamp": 1790144165025,
+   "version": "4.0.1"
+  },
+  "reference-count": 64,
+  "publisher": "Springer Science and Business Media LLC",
+  "issue": "1",
+  "license": [
+   {
+    "start": {
+     "date-parts": [
+      [
+       2025,
+       12,
+       16
+      ]
+     ],
+     "date-time": "2025-12-16T00:00:00Z",
+     "timestamp": 1765843200000
+    },
+    "content-version": "tdm",
+    "delay-in-days": 0,
+    "URL": "https://creativecommons.org/licenses/by/4.0"
+   },
+   {
+    "start": {
+     "date-parts": [
+      [
+       2025,
+       12,
+       16
+      ]
+     ],
+     "date-time": "2025-12-16T00:00:00Z",
+     "timestamp": 1765843200000
+    },
+    "content-version": "vor",
+    "delay-in-days": 0,
+    "URL": "https://creativecommons.org/licenses/by/4.0"
+   }
+  ],
+  "content-domain": {
+   "domain": [
+    "link.springer.com"
+   ],
+   "crossmark-restriction": false
+  },
+  "short-container-title": [
+   "Light Sci Appl"
+  ],
+  "abstract": "<jats:title>Abstract</jats:title>\n                  <jats:p>An integrated photonics platform that offers high-speed modulators in addition to low-loss and versatile passive components is highly sought after for different applications ranging from AI to next-generation Tbit/s links in optical fiber communication. For this purpose, we introduce the plasmonic BTO-on-SiN platform for high-speed electro-optic modulators. This platform combines the advantages provided by low-loss silicon nitride (SiN) photonics with the highly nonlinear barium titanate (BTO) as the active material. Nanoscale plasmonics enables high-speed modulators operating at electro-optical bandwidths up to 110\u2009GHz with active lengths as short as 5\u2009\u00b5m. Here, we demonstrate three different modulators: a 256\u2009GBd C-band Mach-Zehnder (MZ) modulator, a 224 GBd C-band IQ modulator \u2013 being both the first BTO IQ and the first IQ modulator on SiN for data communication \u2013 and finally, a 200\u2009GBd O-band racetrack (RT) modulator. With this approach we show record data rates of 448\u2009Gbit/s with the IQ modulator and 340\u2009Gbit/s with the MZ modulator. Furthermore, we demonstrate the first plasmonic RT modulator with BTO and how it is ideally suited for low complexity communication in the O-band with low device loss of 2\u2009dB. This work leverages the SiN platform and shows the potential of this technology to serve as a solution to combat the ever-increasing demand for fast modulators.</jats:p>",
+  "DOI": "10.1038/s41377-025-02116-1",
+  "type": "journal-article",
+  "created": {
+   "date-parts": [
+    [
+     2025,
+     12,
+     16
+    ]
+   ],
+   "date-time": "2025-12-16T02:44:32Z",
+   "timestamp": 1765853072000
+  },
+  "update-policy": "https://doi.org/10.1007/springer_crossmark_policy",
+  "source": "Crossref",
+  "is-referenced-by-count": 12,
+  "title": [
+   "The plasmonic BTO-on-SiN platform \u2013 beyond 200 GBd modulation for optical communications"
+  ],
+  "prefix": "10.1038",
+  "volume": "14",
+  "author": [
+   {
+    "ORCID": "https://orcid.org/0000-0002-5528-5352",
+    "authenticated-orcid": false,
+    "given": "Manuel",
+    "family": "Kohli",
+    "sequence": "first",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "ORCID": "https://orcid.org/0000-0003-3877-600X",
+    "authenticated-orcid": false,
+    "given": "Daniel",
+    "family": "Chelladurai",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Laurenz",
+    "family": "Kulmer",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Tobias",
+    "family": "Blatter",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Yannik",
+    "family": "Horst",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "ORCID": "https://orcid.org/0000-0003-3180-8400",
+    "authenticated-orcid": false,
+    "given": "Killian",
+    "family": "Keller",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Michael",
+    "family": "Doderer",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Joel",
+    "family": "Winiger",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "ORCID": "https://orcid.org/0000-0002-0930-4604",
+    "authenticated-orcid": false,
+    "given": "David",
+    "family": "Moor",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Andreas",
+    "family": "Messner",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Tatiana",
+    "family": "Buriakova",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Clarissa",
+    "family": "Convertino",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Felix",
+    "family": "Eltes",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Yuriy",
+    "family": "Fedoryshyn",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "ORCID": "https://orcid.org/0000-0001-8796-2146",
+    "authenticated-orcid": false,
+    "given": "Ueli",
+    "family": "Koch",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "ORCID": "https://orcid.org/0000-0003-0111-8169",
+    "authenticated-orcid": false,
+    "given": "Juerg",
+    "family": "Leuthold",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   }
+  ],
+  "member": "297",
+  "published-online": {
+   "date-parts": [
+    [
+     2025,
+     12,
+     16
+    ]
+   ]
+  },
+  "reference": [
+   {
+    "key": "2116_CR1",
+    "doi-asserted-by": "publisher",
+    "first-page": "1099",
+    "DOI": "10.1109/JLT.2017.2662082",
+    "volume": "35",
+    "author": "PJ Winzer",
+    "year": "2017",
+    "unstructured": "Winzer, P. J. & Neilson, D. T. From scaling disparities to integrated parallelism: a decathlon for a decade. J. Lightwave Technol. 35, 1099\u20131115 (2017).",
+    "journal-title": "J. Lightwave Technol."
+   },
+   {
+    "key": "2116_CR2",
+    "doi-asserted-by": "publisher",
+    "first-page": "876",
+    "DOI": "10.1038/s41586-025-08820-7",
+    "volume": "641",
+    "author": "PsiQuantum Team",
+    "year": "2025",
+    "unstructured": "PsiQuantum Team A manufacturable platform for photonic quantum computing. Nature 641, 876\u2013883 (2025).",
+    "journal-title": "Nature"
+   },
+   {
+    "key": "2116_CR3",
+    "doi-asserted-by": "publisher",
+    "first-page": "1164",
+    "DOI": "10.1038/s41563-020-0725-5",
+    "volume": "19",
+    "author": "F Eltes",
+    "year": "2020",
+    "unstructured": "Eltes, F. et al. An integrated optical modulator operating at cryogenic temperatures. Nat. Mater. 19, 1164\u20131168 (2020).",
+    "journal-title": "Nat. Mater."
+   },
+   {
+    "key": "2116_CR4",
+    "doi-asserted-by": "publisher",
+    "first-page": "575",
+    "DOI": "10.1038/s41586-021-03268-x",
+    "volume": "591",
+    "author": "F Lecocq",
+    "year": "2021",
+    "unstructured": "Lecocq, F. et al. Control and readout of a superconducting qubit using a photonic link. Nature 591, 575\u2013579 (2021).",
+    "journal-title": "Nature"
+   },
+   {
+    "key": "2116_CR5",
+    "doi-asserted-by": "publisher",
+    "first-page": "326",
+    "DOI": "10.1038/s41928-021-00570-4",
+    "volume": "4",
+    "author": "A Youssefi",
+    "year": "2021",
+    "unstructured": "Youssefi, A. et al. A cryogenic electro-optic interconnect for superconducting devices. Nat. Electron. 4, 326\u2013332 (2021).",
+    "journal-title": "Nat. Electron."
+   },
+   {
+    "key": "2116_CR6",
+    "doi-asserted-by": "publisher",
+    "first-page": "2691",
+    "DOI": "10.1021/acsphotonics.4c00507",
+    "volume": "11",
+    "author": "D Bisang",
+    "year": "2024",
+    "unstructured": "Bisang, D. et al. Plasmonic modulators in cryogenic environment featuring bandwidths in excess of 100 GHz and reduced plasmonic losses. ACS Photonics 11, 2691\u20132699, https://doi.org/10.1021/acsphotonics.4c00507 (2024).",
+    "journal-title": "ACS Photonics"
+   },
+   {
+    "key": "2116_CR7",
+    "doi-asserted-by": "publisher",
+    "first-page": "1152",
+    "DOI": "10.1109/JLT.2022.3219379",
+    "volume": "41",
+    "author": "BG Lee",
+    "year": "2023",
+    "unstructured": "Lee, B. G. et al. Beyond CPO: a motivation and approach for bringing optics onto the silicon interposer. J. Lightwave Technol. 41, 1152\u20131162 (2023).",
+    "journal-title": "J. Lightwave Technol."
+   },
+   {
+    "key": "2116_CR8",
+    "doi-asserted-by": "publisher",
+    "first-page": "80",
+    "DOI": "10.1038/s41566-018-0310-5",
+    "volume": "13",
+    "author": "D Marpaung",
+    "year": "2019",
+    "unstructured": "Marpaung, D., Yao, J. P. & Capmany, J. Integrated microwave photonics. Nat. Photonics 13, 80\u201390 (2019).",
+    "journal-title": "Nat. Photonics"
+   },
+   {
+    "key": "2116_CR9",
+    "doi-asserted-by": "publisher",
+    "DOI": "10.1063/1.5086868",
+    "volume": "4",
+    "author": "M Burla",
+    "year": "2019",
+    "unstructured": "Burla, M. et al. 500 GHz plasmonic Mach-Zehnder modulator enabling sub-THz microwave photonics. APL Photonics 4, 056106 (2019).",
+    "journal-title": "APL Photonics"
+   },
+   {
+    "key": "2116_CR10",
+    "doi-asserted-by": "publisher",
+    "DOI": "10.1038/s41467-020-16057-3",
+    "volume": "11",
+    "author": "ZF Ying",
+    "year": "2020",
+    "unstructured": "Ying, Z. F. et al. Electronic-photonic arithmetic logic unit for high-speed computing. Nat. Commun. 11, 2154 (2020).",
+    "journal-title": "Nat. Commun."
+   },
+   {
+    "key": "2116_CR11",
+    "doi-asserted-by": "publisher",
+    "first-page": "534",
+    "DOI": "10.1038/nature16454",
+    "volume": "528",
+    "author": "C Sun",
+    "year": "2015",
+    "unstructured": "Sun, C. et al. Single-chip microprocessor that communicates directly using light. Nature 528, 534\u2013538 (2015).",
+    "journal-title": "Nature"
+   },
+   {
+    "key": "2116_CR12",
+    "doi-asserted-by": "publisher",
+    "first-page": "3825",
+    "DOI": "10.1109/JLT.2023.3260064",
+    "volume": "41",
+    "author": "M Kohli",
+    "year": "2023",
+    "unstructured": "Kohli, M. et al. Plasmonic ferroelectric modulator monolithically integrated on SiN for 216 GBd data transmission. J. Lightwave Technol. 41, 3825\u20133831, https://doi.org/10.1109/JLT.2023.3260064 (2023).",
+    "journal-title": "J. Lightwave Technol."
+   },
+   {
+    "key": "2116_CR13",
+    "doi-asserted-by": "crossref",
+    "unstructured": "Kulmer, L. et al. Single carrier net 400 Gbit/s IM/DD over 400 m fiber enabled by plasmonic Mach-zehnder modulator. In Proceedings of the 2024 Optical Fiber Communications Conference and Exhibition (OFC), 1\u20133 (IEEE, 2024).",
+    "DOI": "10.1364/OFC.2024.W4H.5"
+   },
+   {
+    "key": "2116_CR14",
+    "unstructured": "Mardoyan, H. et al. First 260-GBd single-carrier coherent transmission over 100 km distance based on novel arbitrary waveform generator and thin-film lithium niobate I/Q modulator. In Proceedings of the 2022 European Conference on Optical Communication (ECOC), 1\u20134 (IEEE, 2022)."
+   },
+   {
+    "key": "2116_CR15",
+    "doi-asserted-by": "crossref",
+    "unstructured": "Kulmer, L. et al. 256 GBd single-carrier transmission over 100km SSMF by a plasmonic IQ modulator. In Proceedings of the 49th European Conference on Optical Communications (ECOC 2023), 1449\u20131452 (IEEE, 2023).",
+    "DOI": "10.1049/icp.2023.2587"
+   },
+   {
+    "key": "2116_CR16",
+    "doi-asserted-by": "publisher",
+    "first-page": "1192",
+    "DOI": "10.1109/JLT.2022.3191244",
+    "volume": "41",
+    "author": "E Berikaa",
+    "year": "2023",
+    "unstructured": "Berikaa, E. et al. Silicon photonic single-segment IQ modulator for net 1 Tbps/\u03bb transmission using all-electronic equalization. J. Lightwave Technol. 41, 1192\u20131199 (2023).",
+    "journal-title": "J. Lightwave Technol."
+   },
+   {
+    "key": "2116_CR17",
+    "doi-asserted-by": "publisher",
+    "first-page": "61",
+    "DOI": "10.1364/OPTICA.449691",
+    "volume": "9",
+    "author": "MY Xu",
+    "year": "2022",
+    "unstructured": "Xu, M. Y. et al. Dual-polarization thin-film lithium niobate in-phase quadrature modulators for terabit-per-second transmission. Optica 9, 61\u201362 (2022).",
+    "journal-title": "Optica"
+   },
+   {
+    "key": "2116_CR18",
+    "doi-asserted-by": "crossref",
+    "unstructured": "Wakita, H. et al. 100-GHz-bandwidth InP-based on-board coherent Tx front-end enabling 2-Tb/s/\u03bb optical transmission. In Proceedings of the 2024 Optical Fiber Communications Conference and Exhibition (OFC), 1\u20133 (IEEE, 2024).",
+    "DOI": "10.1364/OFC.2024.Th4C.2"
+   },
+   {
+    "key": "2116_CR19",
+    "doi-asserted-by": "publisher",
+    "first-page": "475",
+    "DOI": "10.1109/JLT.2019.2956779",
+    "volume": "38",
+    "author": "X Zhou",
+    "year": "2020",
+    "unstructured": "Zhou, X., Urata, R. & Liu, H. Beyond 1 Tb/s intra-data center interconnect technology: IM-DD OR coherent?. J. Lightwave Technol. 38, 475\u2013484 (2020).",
+    "journal-title": "J. Lightwave Technol."
+   },
+   {
+    "key": "2116_CR20",
+    "doi-asserted-by": "publisher",
+    "unstructured": "Ozolins, O. et al. Optical amplification-free 310/256 gbaud OOK, 197/145 gbaud PAM4, and 160/116 gbaud PAM6 EML/DML-based data center links. In Proceedings of the Optical Fiber Communication Conference (OFC) 2023. (Optica Publishing Group, 2023) https://doi.org/10.1364/OFC.2023.Th4B.2.",
+    "DOI": "10.1364/OFC.2023.Th4B.2"
+   },
+   {
+    "key": "2116_CR21",
+    "doi-asserted-by": "publisher",
+    "first-page": "850",
+    "DOI": "10.1109/LPT.2023.3285881",
+    "volume": "35",
+    "author": "E Berikaa",
+    "year": "2023",
+    "unstructured": "Berikaa, E. et al. TFLN MZMs and next-gen DACs: enabling beyond 400 Gbps IMDD O-band and C-band transmission. IEEE Photonics Technol. Lett. 35, 850\u2013853 (2023).",
+    "journal-title": "IEEE Photonics Technol. Lett."
+   },
+   {
+    "key": "2116_CR22",
+    "doi-asserted-by": "crossref",
+    "unstructured": "St-Arnault, C. et al. Net 1.6 Tbps (4\u00d7400Gbps/\u03bb) O-band IM/DD transmission over 2 km using uncooled DFB lasers on the LAN-WDM grid and Sub-1V drive TFLN modulators. In Proceedings of the 2024 Optical Fiber Communications Conference and Exhibition (OFC), 1\u20133 (IEEE, 2024).",
+    "DOI": "10.1364/OFC.2024.Th4C.6"
+   },
+   {
+    "key": "2116_CR23",
+    "doi-asserted-by": "crossref",
+    "unstructured": "Ostrovskis, A. et al. Heterogenous InP electro-absorption modulator with Si waveguides for beyond 200 Gbps/\u03bb optical interconnects. In Proceedings of the 2024 Optical Fiber Communications Conference and Exhibition (OFC), 1\u20133 (IEEE, 2024), 1-3.",
+    "DOI": "10.1364/OFC.2024.Th4C.8"
+   },
+   {
+    "key": "2116_CR24",
+    "doi-asserted-by": "publisher",
+    "DOI": "10.1038/s41467-021-21205-4",
+    "volume": "12",
+    "author": "MW Puckett",
+    "year": "2021",
+    "unstructured": "Puckett, M. W. et al. 422 million intrinsic quality factor planar integrated all-waveguide resonator with sub-MHz linewidth. Nat. Commun. 12, 934 (2021).",
+    "journal-title": "Nat. Commun."
+   },
+   {
+    "key": "2116_CR25",
+    "doi-asserted-by": "publisher",
+    "DOI": "10.1038/s41467-021-21973-z",
+    "volume": "12",
+    "author": "JQ Liu",
+    "year": "2021",
+    "unstructured": "Liu, J. Q. et al. High-yield, wafer-scale fabrication of ultralow-loss, dispersion-engineered silicon nitride photonic circuits. Nat. Commun. 12, 2236 (2021).",
+    "journal-title": "Nat. Commun."
+   },
+   {
+    "key": "2116_CR26",
+    "doi-asserted-by": "publisher",
+    "first-page": "255",
+    "DOI": "10.3390/app9020255",
+    "volume": "9",
+    "author": "Q Wilmart",
+    "year": "2019",
+    "unstructured": "Wilmart, Q. et al. A versatile silicon-silicon nitride photonics platform for enhanced functionalities and applications. Appl. Sci. 9, 255 (2019).",
+    "journal-title": "Appl. Sci."
+   },
+   {
+    "key": "2116_CR27",
+    "doi-asserted-by": "crossref",
+    "unstructured": "Heideman, R. et al. Large-scale integrated optics using TriPleX waveguide technology: from UV to IR. In Proceedings of SPIE 7221, Photonics Packaging, Integration, and Interconnects IX (SPIE, 2009).",
+    "DOI": "10.1117/12.808409"
+   },
+   {
+    "key": "2116_CR28",
+    "doi-asserted-by": "publisher",
+    "DOI": "10.1103/PhysRevLett.124.013902",
+    "volume": "124",
+    "author": "F Gyger",
+    "year": "2020",
+    "unstructured": "Gyger, F. et al. Observation of stimulated Brillouin scattering in silicon nitride integrated waveguides. Phys. Rev. Lett. 124, 013902 (2020).",
+    "journal-title": "Phys. Rev. Lett."
+   },
+   {
+    "key": "2116_CR29",
+    "doi-asserted-by": "publisher",
+    "DOI": "10.1038/s41467-017-00491-x",
+    "volume": "8",
+    "author": "S Kim",
+    "year": "2017",
+    "unstructured": "Kim, S. et al. Dispersion engineering and frequency comb generation in thin silicon nitride concentric microresonators. Nat. Commun. 8, 372 (2017).",
+    "journal-title": "Nat. Commun."
+   },
+   {
+    "key": "2116_CR30",
+    "doi-asserted-by": "publisher",
+    "DOI": "10.1038/s41467-019-08498-2",
+    "volume": "10",
+    "author": "AS Raja",
+    "year": "2019",
+    "unstructured": "Raja, A. S. et al. Electrically pumped photonic integrated soliton microcomb. Nat. Commun. 10, 680 (2019).",
+    "journal-title": "Nat. Commun."
+   },
+   {
+    "key": "2116_CR31",
+    "doi-asserted-by": "publisher",
+    "first-page": "1309",
+    "DOI": "10.1126/science.abo2631",
+    "volume": "376",
+    "author": "Y Liu",
+    "year": "2022",
+    "unstructured": "Liu, Y. et al. A photonic integrated circuit\u2013based erbium-doped amplifier. Science 376, 1309\u20131313 (2022).",
+    "journal-title": "Science"
+   },
+   {
+    "key": "2116_CR32",
+    "doi-asserted-by": "publisher",
+    "first-page": "518",
+    "DOI": "10.1038/s41566-023-01193-1",
+    "volume": "17",
+    "author": "H Mahmudlu",
+    "year": "2023",
+    "unstructured": "Mahmudlu, H. et al. Fully on-chip photonic turnkey quantum source for entangled qubit/qudit state generation. Nat. Photonics 17, 518\u2013524 (2023).",
+    "journal-title": "Nat. Photonics"
+   },
+   {
+    "key": "2116_CR33",
+    "doi-asserted-by": "publisher",
+    "first-page": "60",
+    "DOI": "10.1038/s41566-018-0313-2",
+    "volume": "13",
+    "author": "S Gundavarapu",
+    "year": "2019",
+    "unstructured": "Gundavarapu, S. et al. Sub-hertz fundamental linewidth photonic integrated Brillouin laser. Nat. Photonics 13, 60\u201367 (2019).",
+    "journal-title": "Nat. Photonics"
+   },
+   {
+    "key": "2116_CR34",
+    "doi-asserted-by": "publisher",
+    "first-page": "346",
+    "DOI": "10.1038/s41566-021-00761-7",
+    "volume": "15",
+    "author": "W Jin",
+    "year": "2021",
+    "unstructured": "Jin, W. et al. Hertz-linewidth semiconductor lasers using CMOS-ready ultra-high-Q microresonators. Nat. Photonics 15, 346\u2013353 (2021).",
+    "journal-title": "Nat. Photonics"
+   },
+   {
+    "key": "2116_CR35",
+    "doi-asserted-by": "publisher",
+    "first-page": "021311",
+    "DOI": "10.1063/5.0083083",
+    "volume": "9",
+    "author": "M Thomaschewski",
+    "year": "2022",
+    "unstructured": "Thomaschewski, M. & Bozhevolnyi, S. I. Pockels modulation in integrated nanophotonics. Appl. Phys. Rev. 9, 021311 (2022).",
+    "journal-title": "Appl. Phys. Rev."
+   },
+   {
+    "key": "2116_CR36",
+    "doi-asserted-by": "publisher",
+    "first-page": "A63",
+    "DOI": "10.1364/PRJ.521172",
+    "volume": "12",
+    "author": "XR Zhu",
+    "year": "2024",
+    "unstructured": "Zhu, X. R. et al. Twenty-nine million intrinsic Q-factor monolithic microresonators on thin-film lithium niobate. Photonics Res. 12, A63\u2013A68 (2024).",
+    "journal-title": "Photonics Res."
+   },
+   {
+    "key": "2116_CR37",
+    "doi-asserted-by": "publisher",
+    "first-page": "411",
+    "DOI": "10.1038/s41586-023-05724-2",
+    "volume": "615",
+    "author": "V Snigirev",
+    "year": "2023",
+    "unstructured": "Snigirev, V. et al. Ultrafast tunable lasers using lithium niobate integrated photonics. Nature 615, 411\u2013417 (2023).",
+    "journal-title": "Nature"
+   },
+   {
+    "key": "2116_CR38",
+    "doi-asserted-by": "publisher",
+    "first-page": "373",
+    "DOI": "10.1038/s41586-019-1008-7",
+    "volume": "568",
+    "author": "M Zhang",
+    "year": "2019",
+    "unstructured": "Zhang, M. et al. Broadband electro-optic frequency comb generation in a lithium niobate microring resonator. Nature 568, 373\u2013377 (2019).",
+    "journal-title": "Nature"
+   },
+   {
+    "key": "2116_CR39",
+    "doi-asserted-by": "publisher",
+    "DOI": "10.1038/s41467-018-05846-6",
+    "volume": "9",
+    "author": "K Alexander",
+    "year": "2018",
+    "unstructured": "Alexander, K. et al. Nanophotonic Pockels modulators on a silicon nitride platform. Nat. Commun. 9, 3444 (2018).",
+    "journal-title": "Nat. Commun."
+   },
+   {
+    "key": "2116_CR40",
+    "doi-asserted-by": "publisher",
+    "first-page": "5986",
+    "DOI": "10.1364/OL.446222",
+    "volume": "46",
+    "author": "P Zhang",
+    "year": "2021",
+    "unstructured": "Zhang, P. et al. High-speed electro-optic modulator based on silicon nitride loaded lithium niobate on an insulator platform. Opt. Lett. 46, 5986\u20135989 (2021).",
+    "journal-title": "Opt. Lett."
+   },
+   {
+    "key": "2116_CR41",
+    "doi-asserted-by": "publisher",
+    "DOI": "10.1002/adpr.202200121",
+    "volume": "3",
+    "author": "YH Jiang",
+    "year": "2022",
+    "unstructured": "Jiang, Y. H. et al. Monolithic photonic integrated circuit based on silicon nitride and lithium niobate on insulator hybrid platform. Adv. Photonics Res. 3, 2200121 (2022).",
+    "journal-title": "Adv. Photonics Res."
+   },
+   {
+    "key": "2116_CR42",
+    "doi-asserted-by": "publisher",
+    "first-page": "2200327",
+    "DOI": "10.1002/lpor.202200327",
+    "volume": "17",
+    "author": "ZL Ruan",
+    "year": "2023",
+    "unstructured": "Ruan, Z. L. et al. High-performance electro-optic modulator on silicon nitride platform with heterogeneous integration of lithium niobate. Laser Photonics Rev. 17, 2200327 (2023).",
+    "journal-title": "Laser Photonics Rev."
+   },
+   {
+    "key": "2116_CR43",
+    "doi-asserted-by": "publisher",
+    "DOI": "10.1063/5.0150878",
+    "volume": "8",
+    "author": "T Vanackere",
+    "year": "2023",
+    "unstructured": "Vanackere, T. et al. Heterogeneous integration of a high-speed lithium niobate modulator on silicon nitride using micro-transfer printing. APL Photonics 8, 086102 (2023).",
+    "journal-title": "APL Photonics"
+   },
+   {
+    "key": "2116_CR44",
+    "doi-asserted-by": "publisher",
+    "first-page": "578",
+    "DOI": "10.1364/OPTICA.484549",
+    "volume": "10",
+    "author": "F Valdez",
+    "year": "2023",
+    "unstructured": "Valdez, F., Mere, V. & Mookherjea, S. 100 GHz bandwidth, 1 volt integrated electro-optic Mach\u2013Zehnder modulator at near-IR wavelengths. Optica 10, 578 (2023).",
+    "journal-title": "Optica"
+   },
+   {
+    "key": "2116_CR45",
+    "doi-asserted-by": "publisher",
+    "DOI": "10.1038/s41467-023-39047-7",
+    "volume": "14",
+    "author": "M Churaev",
+    "year": "2023",
+    "unstructured": "Churaev, M. et al. A heterogeneously integrated lithium niobate-on-silicon nitride photonic platform. Nat. Commun. 14, 3499 (2023).",
+    "journal-title": "Nat. Commun."
+   },
+   {
+    "key": "2116_CR46",
+    "doi-asserted-by": "publisher",
+    "first-page": "2677",
+    "DOI": "10.1021/acsphotonics.9b00558",
+    "volume": "6",
+    "author": "JE Ortmann",
+    "year": "2019",
+    "unstructured": "Ortmann, J. E. et al. Ultra-low-power tuning in hybrid barium Titanate\u2013silicon nitride electro-optic devices on silicon. ACS Photonics 6, 2677\u20132684 (2019).",
+    "journal-title": "ACS Photonics"
+   },
+   {
+    "key": "2116_CR47",
+    "doi-asserted-by": "publisher",
+    "first-page": "42",
+    "DOI": "10.1038/s41563-018-0208-0",
+    "volume": "18",
+    "author": "S Abel",
+    "year": "2019",
+    "unstructured": "Abel, S. et al. Large Pockels effect in micro- and nanostructured barium titanate integrated on silicon. Nat. Mater. 18, 42\u201347 (2019).",
+    "journal-title": "Nat. Mater."
+   },
+   {
+    "key": "2116_CR48",
+    "doi-asserted-by": "publisher",
+    "DOI": "10.1002/admi.202300665",
+    "volume": "11",
+    "author": "J Winiger",
+    "year": "2024",
+    "unstructured": "Winiger, J. et al. PLD epitaxial thin-film BaTiO3 on MgO \u2212 dielectric and electro-optic properties. Adv. Mater. Interfaces 11, 2300665 (2024).",
+    "journal-title": "Adv. Mater. Interfaces"
+   },
+   {
+    "key": "2116_CR49",
+    "doi-asserted-by": "publisher",
+    "first-page": "4367",
+    "DOI": "10.1021/acsphotonics.3c01144",
+    "volume": "10",
+    "author": "ZM Dong",
+    "year": "2023",
+    "unstructured": "Dong, Z. M. et al. Monolithic barium Titanate modulators on silicon-on-insulator substrates. ACS Photonics 10, 4367\u20134376 (2023).",
+    "journal-title": "ACS Photonics"
+   },
+   {
+    "key": "2116_CR50",
+    "doi-asserted-by": "publisher",
+    "DOI": "10.1063/5.0160186",
+    "volume": "134",
+    "author": "AB Posadas",
+    "year": "2023",
+    "unstructured": "Posadas, A. B. et al. RF-sputtered Z-cut electro-optic barium Titanate modulator on silicon photonic platform. J. Appl. Phys. 134, 073101 (2023).",
+    "journal-title": "J. Appl. Phys."
+   },
+   {
+    "key": "2116_CR51",
+    "doi-asserted-by": "publisher",
+    "first-page": "5941",
+    "DOI": "10.1103/PhysRevB.50.5941",
+    "volume": "50",
+    "author": "M Zgonik",
+    "year": "1994",
+    "unstructured": "Zgonik, M. et al. Dielectric, elastic, piezoelectric, electro-optic, and elasto-optic tensors of BaTiO3 crystals. Phys. Rev. B 50, 5941\u20135949 (1994).",
+    "journal-title": "Phys. Rev. B"
+   },
+   {
+    "key": "2116_CR52",
+    "doi-asserted-by": "publisher",
+    "first-page": "1456",
+    "DOI": "10.1109/JLT.2019.2893500",
+    "volume": "37",
+    "author": "F Eltes",
+    "year": "2019",
+    "unstructured": "Eltes, F. et al. A BaTiO3-based electro-optic pockels modulator monolithically integrated on an advanced silicon photonics platform. J. Lightwave Technol. 37, 1456\u20131462 (2019).",
+    "journal-title": "J. Lightwave Technol."
+   },
+   {
+    "key": "2116_CR53",
+    "doi-asserted-by": "publisher",
+    "first-page": "281",
+    "DOI": "10.1109/JLT.2018.2881332",
+    "volume": "37",
+    "author": "A Messner",
+    "year": "2019",
+    "unstructured": "Messner, A. et al. Plasmonic ferroelectric modulators. J. Lightwave Technol. 37, 281\u2013290 (2019).",
+    "journal-title": "J. Lightwave Technol."
+   },
+   {
+    "key": "2116_CR54",
+    "doi-asserted-by": "crossref",
+    "unstructured": "Kohli, M. et al. 256 GBd barium-titanate-on-SiN mach-zehnder modulator. In Proceedings of the 2024 Optical Fiber Communications Conference and Exhibition (OFC), 1\u20133 (IEEE, 2024).",
+    "DOI": "10.1364/OFC.2024.M3K.5"
+   },
+   {
+    "key": "2116_CR55",
+    "doi-asserted-by": "crossref",
+    "unstructured": "Kohli, M. et al. Barium Titanate racetrack modulator on silicon nitride for 200 GBd data communication in the O-band. In Proceedings of the 2024 Conference on Lasers and Electro-Optics (CLEO), 1\u20133 (IEEE, 2024).",
+    "DOI": "10.1364/CLEO_SI.2024.SW4R.4"
+   },
+   {
+    "key": "2116_CR56",
+    "doi-asserted-by": "publisher",
+    "first-page": "3366",
+    "DOI": "10.1021/acsphotonics.3c00834",
+    "volume": "10",
+    "author": "M Kohli",
+    "year": "2023",
+    "unstructured": "Kohli, M. et al. C- and O-band dual-polarization fiber-to-chip grating couplers for silicon nitride photonics. ACS Photonics 10, 3366\u20133373 (2023).",
+    "journal-title": "ACS Photonics"
+   },
+   {
+    "key": "2116_CR57",
+    "doi-asserted-by": "publisher",
+    "first-page": "20298",
+    "DOI": "10.1364/OE.18.020298",
+    "volume": "18",
+    "author": "P Dong",
+    "year": "2010",
+    "unstructured": "Dong, P. et al. Thermally tunable silicon racetrack resonators with ultralow tuning power. Opt. Express 18, 20298\u201320304 (2010).",
+    "journal-title": "Opt. Express"
+   },
+   {
+    "key": "2116_CR58",
+    "doi-asserted-by": "publisher",
+    "first-page": "15359",
+    "DOI": "10.1364/OE.20.015359",
+    "volume": "20",
+    "author": "J Pfeifle",
+    "year": "2012",
+    "unstructured": "Pfeifle, J. et al. Silicon-organic hybrid phase shifter based on a slot waveguide with a liquid-crystal cladding. Opt. Express 20, 15359\u201315376 (2012).",
+    "journal-title": "Opt. Express"
+   },
+   {
+    "key": "2116_CR59",
+    "doi-asserted-by": "publisher",
+    "first-page": "1794",
+    "DOI": "10.1364/OL.509747",
+    "volume": "49",
+    "author": "A Hattori",
+    "year": "2024",
+    "unstructured": "Hattori, A. et al. Integrated visible-light polarization rotators and splitters for atomic quantum systems. Opt. Lett. 49, 1794\u20131797 (2024).",
+    "journal-title": "Opt. Lett."
+   },
+   {
+    "key": "2116_CR60",
+    "doi-asserted-by": "publisher",
+    "first-page": "2181",
+    "DOI": "10.1364/OME.457589",
+    "volume": "12",
+    "author": "L van Iseghem",
+    "year": "2022",
+    "unstructured": "van Iseghem, L. et al. Low power optical phase shifter using liquid crystal actuation on a silicon photonics platform. Optical Mater. Express 12, 2181\u20132198 (2022).",
+    "journal-title": "Optical Mater. Express"
+   },
+   {
+    "key": "2116_CR61",
+    "doi-asserted-by": "publisher",
+    "first-page": "360",
+    "DOI": "10.1038/s41566-023-01161-9",
+    "volume": "17",
+    "author": "M Eppenberger",
+    "year": "2023",
+    "unstructured": "Eppenberger, M. et al. Resonant plasmonic micro-racetrack modulators with high bandwidth and high temperature tolerance. Nat. Photonics 17, 360\u2013367 (2023).",
+    "journal-title": "Nat. Photonics"
+   },
+   {
+    "key": "2116_CR62",
+    "doi-asserted-by": "crossref",
+    "unstructured": "Schuh, K. et al. Single carrier 1.2 Tbit/s transmission over 300 km with PM-64 QAM at 100 GBaud. In Proceedings of the 2017 Optical Fiber Communications Conference and Exhibition (OFC), 1\u20133 (IEEE, 2017).",
+    "DOI": "10.1364/OFC.2017.Th5B.5"
+   },
+   {
+    "key": "2116_CR63",
+    "doi-asserted-by": "publisher",
+    "first-page": "19742",
+    "DOI": "10.1364/OE.26.019742",
+    "volume": "26",
+    "author": "E El-Fiky",
+    "year": "2018",
+    "unstructured": "El-Fiky, E. et al. First demonstration of a 400 Gb/s 4\u03bb CWDM TOSA for datacenter optical interconnects. Opt. Express 26, 19742\u201319749 (2018).",
+    "journal-title": "Opt. Express"
+   },
+   {
+    "key": "2116_CR64",
+    "doi-asserted-by": "publisher",
+    "first-page": "655",
+    "DOI": "10.3390/app7070655",
+    "volume": "7",
+    "author": "A Josten",
+    "year": "2017",
+    "unstructured": "Josten, A. et al. Modified Godard timing recovery for Non Integer oversampling receivers. Appl. Sci. 7, 655 (2017).",
+    "journal-title": "Appl. Sci."
+   }
+  ],
+  "container-title": [
+   "Light: Science &amp; Applications"
+  ],
+  "original-title": [],
+  "language": "en",
+  "link": [
+   {
+    "URL": "https://www.nature.com/articles/s41377-025-02116-1.pdf",
+    "content-type": "application/pdf",
+    "content-version": "vor",
+    "intended-application": "text-mining"
+   },
+   {
+    "URL": "https://www.nature.com/articles/s41377-025-02116-1",
+    "content-type": "text/html",
+    "content-version": "vor",
+    "intended-application": "text-mining"
+   },
+   {
+    "URL": "https://www.nature.com/articles/s41377-025-02116-1.pdf",
+    "content-type": "application/pdf",
+    "content-version": "vor",
+    "intended-application": "similarity-checking"
+   }
+  ],
+  "deposited": {
+   "date-parts": [
+    [
+     2025,
+     12,
+     18
+    ]
+   ],
+   "date-time": "2025-12-18T14:05:05Z",
+   "timestamp": 1766066705000
+  },
+  "score": 1,
+  "resource": {
+   "primary": {
+    "URL": "https://www.nature.com/articles/s41377-025-02116-1"
+   }
+  },
+  "subtitle": [],
+  "short-title": [],
+  "issued": {
+   "date-parts": [
+    [
+     2025,
+     12,
+     16
+    ]
+   ]
+  },
+  "references-count": 64,
+  "journal-issue": {
+   "issue": "1",
+   "published-online": {
+    "date-parts": [
+     [
+      2025,
+      12
+     ]
+    ]
+   }
+  },
+  "alternative-id": [
+   "2116"
+  ],
+  "URL": "https://doi.org/10.1038/s41377-025-02116-1",
+  "relation": {},
+  "ISSN": [
+   "2047-7538"
+  ],
+  "issn-type": [
+   {
+    "value": "2047-7538",
+    "type": "electronic"
+   }
+  ],
+  "subject": [],
+  "published": {
+   "date-parts": [
+    [
+     2025,
+     12,
+     16
+    ]
+   ]
+  },
+  "assertion": [
+   {
+    "value": "14 August 2024",
+    "order": 1,
+    "name": "received",
+    "label": "Received",
+    "group": {
+     "name": "ArticleHistory",
+     "label": "Article History"
+    }
+   },
+   {
+    "value": "14 October 2025",
+    "order": 2,
+    "name": "revised",
+    "label": "Revised",
+    "group": {
+     "name": "ArticleHistory",
+     "label": "Article History"
+    }
+   },
+   {
+    "value": "2 November 2025",
+    "order": 3,
+    "name": "accepted",
+    "label": "Accepted",
+    "group": {
+     "name": "ArticleHistory",
+     "label": "Article History"
+    }
+   },
+   {
+    "value": "16 December 2025",
+    "order": 4,
+    "name": "first_online",
+    "label": "First Online",
+    "group": {
+     "name": "ArticleHistory",
+     "label": "Article History"
+    }
+   },
+   {
+    "value": "F.E. and C.C. are involved in commercializing the barium titanate photonic technologies at Lumiphase AG.",
+    "order": 1,
+    "name": "Ethics",
+    "group": {
+     "name": "EthicsHeading",
+     "label": "Conflict of interest"
+    }
+   }
+  ],
+  "article-number": "399"
+ }
+}

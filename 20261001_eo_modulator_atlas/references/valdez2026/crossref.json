@@ -1,0 +1,305 @@
+{
+ "status": "ok",
+ "message-type": "work",
+ "message-version": "1.0.0",
+ "message": {
+  "indexed": {
+   "date-parts": [
+    [
+     2026,
+     8,
+     17
+    ]
+   ],
+   "date-time": "2026-08-17T18:25:39Z",
+   "timestamp": 1786991139324,
+   "version": "build-2736575974"
+  },
+  "publisher-location": "Washington, D.C.",
+  "reference-count": 7,
+  "publisher": "Optica Publishing Group",
+  "content-domain": {
+   "domain": [],
+   "crossmark-restriction": false
+  },
+  "short-container-title": [],
+  "published-print": {
+   "date-parts": [
+    [
+     2026
+    ]
+   ]
+  },
+  "abstract": "<jats:p>We present a heterogeneously integrated SiN/LTO ring-assisted Mach\u2013Zehnder modulator with a modulation efficiency of 1.36 Vcm, insertion loss of 1.75 dB in the C-band, and 3-dB electro-optic bandwidth over 50 GHz on a wafer-scale platform.</jats:p>",
+  "DOI": "10.1364/ofc.2026.w1a.6",
+  "type": "proceedings-article",
+  "created": {
+   "date-parts": [
+    [
+     2026,
+     6,
+     2
+    ]
+   ],
+   "date-time": "2026-06-02T19:29:20Z",
+   "timestamp": 1780428560000
+  },
+  "page": "W1A.6",
+  "source": "Crossref",
+  "is-referenced-by-count": 0,
+  "title": [
+   "High-Efficiency Ring-Assisted Mach-Zehnder Modulator on a Lithium Tantalate-on-Silicon Nitride Platform"
+  ],
+  "prefix": "10.1364",
+  "author": [
+   {
+    "given": "Forrest",
+    "family": "Valdez",
+    "sequence": "first",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Boris",
+    "family": "Zabelich",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Viphretuo",
+    "family": "Mere",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Pragati",
+    "family": "Aashna",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Radha",
+    "family": "Krishnan",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Camiel Op",
+    "family": "de Beeck",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Arif",
+    "family": "Rahman",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Shayan",
+    "family": "Mookherjea",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Pieter",
+    "family": "Wuytens",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   }
+  ],
+  "member": "285",
+  "reference": [
+   {
+    "key": "OFC-2026-W1A.6-R2",
+    "first-page": "18611",
+    "type": "journal-article",
+    "volume": "12",
+    "author": "Valdez",
+    "year": "2022",
+    "journal-title": "Sci. reports"
+   },
+   {
+    "key": "OFC-2026-W1A.6-R3",
+    "doi-asserted-by": "publisher",
+    "first-page": "784",
+    "DOI": "10.1038/s41586-024-07369-1",
+    "type": "journal-article",
+    "volume": "629",
+    "author": "Wang",
+    "year": "2024",
+    "journal-title": "Nature"
+   },
+   {
+    "key": "OFC-2026-W1A.6-R4",
+    "doi-asserted-by": "publisher",
+    "first-page": "4100",
+    "DOI": "10.1364/OL.394171",
+    "type": "journal-article",
+    "volume": "45",
+    "author": "Yan",
+    "year": "2020",
+    "journal-title": "Opt. Lett."
+   },
+   {
+    "key": "OFC-2026-W1A.6-R5",
+    "doi-asserted-by": "publisher",
+    "first-page": "44115",
+    "DOI": "10.1364/OE.538870",
+    "type": "journal-article",
+    "volume": "32",
+    "author": "Powell",
+    "year": "2024",
+    "journal-title": "Opt. Express"
+   },
+   {
+    "key": "OFC-2026-W1A.6-R8",
+    "doi-asserted-by": "publisher",
+    "first-page": "15741",
+    "DOI": "10.1364/OE.16.015741",
+    "type": "journal-article",
+    "volume": "16",
+    "author": "Sacher",
+    "year": "2008",
+    "journal-title": "Opt. express"
+   },
+   {
+    "key": "OFC-2026-W1A.6-R9",
+    "doi-asserted-by": "publisher",
+    "first-page": "1131",
+    "DOI": "10.1364/OPTICA.470596",
+    "type": "journal-article",
+    "volume": "9",
+    "author": "Xue",
+    "year": "2022",
+    "journal-title": "Optica"
+   },
+   {
+    "key": "OFC-2026-W1A.6-R10",
+    "doi-asserted-by": "publisher",
+    "DOI": "10.1017/CBO9780511635595",
+    "volume-title": "Semiconductor devices for high-speed optoelectronics",
+    "volume": "116",
+    "author": "Ghione",
+    "year": "2009"
+   }
+  ],
+  "event": {
+   "name": "Optical Fiber Communication Conference",
+   "location": "Los Angeles, California",
+   "acronym": "OFC",
+   "sponsor": [
+    "The Optical Society"
+   ],
+   "start": {
+    "date-parts": [
+     [
+      2026
+     ]
+    ]
+   }
+  },
+  "container-title": [
+   "Optical Fiber Communication Conference (OFC) 2026"
+  ],
+  "original-title": [],
+  "link": [
+   {
+    "URL": "https://opg.optica.org/viewmedia.cfm?URI=OFC-2026-W1A.6&seq=0",
+    "content-type": "unspecified",
+    "content-version": "vor",
+    "intended-application": "similarity-checking"
+   }
+  ],
+  "deposited": {
+   "date-parts": [
+    [
+     2026,
+     8,
+     17
+    ]
+   ],
+   "date-time": "2026-08-17T17:27:39Z",
+   "timestamp": 1786987659000
+  },
+  "score": 1,
+  "resource": {
+   "primary": {
+    "URL": "https://opg.optica.org/abstract.cfm?URI=OFC-2026-W1A.6"
+   }
+  },
+  "subtitle": [],
+  "short-title": [],
+  "issued": {
+   "date-parts": [
+    [
+     2026
+    ]
+   ]
+  },
+  "references-count": 7,
+  "URL": "https://doi.org/10.1364/ofc.2026.w1a.6",
+  "relation": {},
+  "subject": [],
+  "published": {
+   "date-parts": [
+    [
+     2026
+    ]
+   ]
+  }
+ }
+}

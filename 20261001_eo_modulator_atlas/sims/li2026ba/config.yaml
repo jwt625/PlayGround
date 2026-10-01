@@ -1,0 +1,150 @@
+schema: eo-atlas.sim/v1
+id: li2026ba-a
+paper_id: li2026ba
+device_id: li2026ba-a
+title: Li 2026 (arXiv), 18 mm T-segment capacitively loaded CPW TFLT MZM on fused silica (push-pull arms), C-band
+repro_grade: B
+validation_status: unvalidated
+chain: [electrostatics, optical_mode, eo_overlap, rf_line, loaded_line, eo_response]
+
+# Coordinate frame: x lateral, y film normal up (LT bottom / fused-silica top at y = 0), z propagation.
+# Origin: optical axis of the RIGHT-hand waveguide in x. The signal electrode (x = -109 .. -9 um, centre -59 um) is the mirror plane;
+# the LEFT-hand waveguide sits at x = -118 um. Both arms are in the electrostatic domain (symmetry none); the optical mode is solved on the right arm.
+# T-segment layout per side (Fig. 3(a)): electrode body | stem LS = 5 um | T-bar WT = 1.5 um | gap G = 5 um (waveguide) | T-bar | stem | electrode body.
+optics:
+  wavelength_nm: 1550
+  polarization: TE
+  mode_index: 0
+  group_index_from: finite_difference_wavelength
+  ng_fixed: null
+  eo_axis: auto
+
+materials:
+  lithium_tantalate:
+    crystal: {cut: x, propagation: y}
+    eps_r: {perp: 41.0, par: 43.0}
+    r_pm_per_v: {r13: 8.4, r33: 30.5}
+  silicon_dioxide: {n: 1.444, eps_r: 3.9}
+  gold: {conductor: true, sigma_Sm: 4.1e7, n_complex: null}
+  air: {n: 1.0, eps_r: 1.0}
+
+geometry:                          # LOADED cut: through the T-bars (stems are out of plane); bars carry the potential of the electrode they are stemmed to
+  symmetry: none
+  domain: {x_um: [-260, 140], y_um: [-100, 80]}
+  regions:
+    - {name: ambient, material: air, rect: {x_um: [-260, 140], y_um: [-100, 80]}}
+    - {name: substrate, material: silicon_dioxide, rect: {x_um: [-260, 140], y_um: [-500, 0]}}
+    - {name: lt_slab, material: lithium_tantalate, rect: {x_um: [-260, 140], y_um: [0, 0.16]}}
+    - {name: sio2_cladding, material: silicon_dioxide, rect: {x_um: [-260, 140], y_um: [0.16, 1.86]}}
+    - {name: lt_rib_r, material: lithium_tantalate, polygon_um: [[-1.1, 0.16], [1.1, 0.16], [0.9, 0.6], [-0.9, 0.6]]}
+    - {name: lt_rib_l, material: lithium_tantalate, polygon_um: [[-119.1, 0.16], [-116.9, 0.16], [-117.1, 0.6], [-118.9, 0.6]]}
+  electrodes:
+    - {name: signal, role: signal, weight: 1.0, rect: {x_um: [-109, -9], y_um: [0.16, 0.96]}, material: gold}
+    - {name: ground_r, role: ground, weight: 0.0, rect: {x_um: [9, 109], y_um: [0.16, 0.96]}, material: gold}
+    - {name: ground_l, role: ground, weight: 0.0, rect: {x_um: [-227, -127], y_um: [0.16, 0.96]}, material: gold}
+    - {name: bar_r_signal_side, role: signal, weight: 1.0, rect: {x_um: [-4, -2.5], y_um: [0.16, 0.96]}, material: gold}
+    - {name: bar_r_ground_side, role: ground, weight: 0.0, rect: {x_um: [2.5, 4], y_um: [0.16, 0.96]}, material: gold}
+    - {name: bar_l_signal_side, role: signal, weight: 1.0, rect: {x_um: [-115.5, -114], y_um: [0.16, 0.96]}, material: gold}
+    - {name: bar_l_ground_side, role: ground, weight: 0.0, rect: {x_um: [-122, -120.5], y_um: [0.16, 0.96]}, material: gold}
+  optical_window: {x_um: [-2.4, 2.4], y_um: [-1.5, 1.8]}
+  mesh: {max_edge_um: 2.0, electrode_edge_um: 0.05}
+
+line:
+  length_mm: 18
+  conductor_loss_model: skin_effect_wheeler
+  rf_loss_table: null
+  source_ohm: 50
+  load_ohm: 50
+  differential: false              # single GSG probe on the centre signal line; push-pull arises from the arm placement in the two gaps
+  loading:
+    type: periodic_t_rail
+    period_um: 35
+    loaded_length_um: 32           # T-bar length LT; 3 um bar-to-bar gap along z modelled with the unloaded cut
+    unloaded_cross_section: unloaded
+    loaded_cross_section: null     # null = top-level `geometry`
+sweep: {f_start_ghz: 0.1, f_stop_ghz: 120, n_points: 240}
+
+alt_geometries:
+  unloaded:                        # cut between two T-bars along z: electrode bodies only, no bars and no stems
+    symmetry: none
+    domain: {x_um: [-260, 140], y_um: [-100, 80]}
+    regions:
+      - {name: ambient, material: air, rect: {x_um: [-260, 140], y_um: [-100, 80]}}
+      - {name: substrate, material: silicon_dioxide, rect: {x_um: [-260, 140], y_um: [-500, 0]}}
+      - {name: lt_slab, material: lithium_tantalate, rect: {x_um: [-260, 140], y_um: [0, 0.16]}}
+      - {name: sio2_cladding, material: silicon_dioxide, rect: {x_um: [-260, 140], y_um: [0.16, 1.86]}}
+      - {name: lt_rib_r, material: lithium_tantalate, polygon_um: [[-1.1, 0.16], [1.1, 0.16], [0.9, 0.6], [-0.9, 0.6]]}
+      - {name: lt_rib_l, material: lithium_tantalate, polygon_um: [[-119.1, 0.16], [-116.9, 0.16], [-117.1, 0.6], [-118.9, 0.6]]}
+    electrodes:
+      - {name: signal, role: signal, weight: 1.0, rect: {x_um: [-109, -9], y_um: [0.16, 0.96]}, material: gold}
+      - {name: ground_r, role: ground, weight: 0.0, rect: {x_um: [9, 109], y_um: [0.16, 0.96]}, material: gold}
+      - {name: ground_l, role: ground, weight: 0.0, rect: {x_um: [-227, -127], y_um: [0.16, 0.96]}, material: gold}
+    optical_window: {x_um: [-4, 4], y_um: [-1.5, 1.8]}
+    mesh: {max_edge_um: 2.0, electrode_edge_um: 0.05}
+
+targets:
+  # Measured, 18 mm device, C-band (devices.csv row li2026ba-a)
+  - {metric: vpi_l_dc_vcm, value: 2.76, tol_rel: 0.15, source: {device_id: li2026ba-a, field: vpil_dc_vcm}}
+  - {metric: n_rf, value: 2.24, tol_abs: 0.10, source: {device_id: li2026ba-a, field: n_rf}}
+  - {metric: z0_ohm, value: 42, tol_abs: 5.0, source: {device_id: li2026ba-a, field: z0_ohm}}
+  - {metric: rf_loss_db_per_cm, at_ghz: 120, value: 4.6, tol_rel: 0.2, source: {device_id: li2026ba-a, field: rf_loss_db_per_cm}}
+  # Authors' simulated optical group index at 1550 nm (cross-solver reference, not a measurement)
+  - {metric: ng_opt, value: 2.24, tol_abs: 0.05, source: {device_id: li2026ba-a, field: ng_opt}}
+  # Not a target: 3 dB EO bandwidth 64 GHz is limited by an inadvertent optical-path imbalance (authors' impedance-matched, imbalance-free prediction is 100 GHz)
+reported_curves: []
+
+provenance:
+  optics.wavelength_nm: {class: paper_exact, locator: "p.4 Electro-optic Modulation; Fig. 2(a)"}
+  optics.polarization: {class: paper_exact, locator: "p.5, quasi-TE mode excited with the polarization controller"}
+  optics.group_index_from: {class: project_inference, note: "paper quotes a simulated group index (Fig. 3(c), p.6); the engine derives it and compares it as a target"}
+  materials.lithium_tantalate.crystal: {class: project_inference, locator: "p.3 (X-cut LTOI wafer)", note: "propagation direction is not stated; y propagation (TE field along crystal z) is the usual choice for x-cut and is assumed"}
+  materials.lithium_tantalate.eps_r: {class: standard_reference, citation: "Weis and Gaylord, Appl. Phys. A 37, 191 (1985)", note: "perp 41 / par 43 are recalled literature values (clamped, low frequency); NOT verified against the cited source in this offline batch; the paper does not state RF permittivity. Verify before any validation claim."}
+  materials.lithium_tantalate.r_pm_per_v.r33: {class: standard_reference, citation: "r33 = 30.5 pm/V as used for LiTaO3 in niels2026 (references/niels2026 text.md p.9, Half wave voltage calculation)", note: "not stated in li2026ba"}
+  materials.lithium_tantalate.r_pm_per_v.r13: {class: standard_reference, citation: "Weis and Gaylord, Appl. Phys. A 37, 191 (1985)", note: "8.4 pm/V is a recalled value, NOT verified in this offline batch"}
+  materials.silicon_dioxide: {class: standard_reference, citation: "standard handbook values (n = 1.444 at 1550 nm, eps_r = 3.9); used for both the fused-silica substrate and the HD-PECVD cladding; paper states neither"}
+  materials.gold.sigma_Sm: {class: standard_reference, citation: "bulk gold 4.1e7 S/m; paper does not state film conductivity"}
+  line.length_mm: {class: paper_exact, locator: "p.3 Design and fabrication, 18 mm modulation arms"}
+  line.source_ohm: {class: paper_exact, locator: "p.4, 50 ohm calibration reference; p.5 50 ohm termination"}
+  line.load_ohm: {class: paper_exact, locator: "p.5, termination with a 50 ohm resistor"}
+  line.differential: {class: project_inference, note: "single GSG probe on the centre signal line, one waveguide in each gap; push-pull by geometry (OFC version li2026a states push-pull)"}
+  line.conductor_loss_model: {class: project_inference, note: "paper reports 4.6 dB/cm at 120 GHz from S21; loss model left to the engine"}
+  line.loading.period_um: {class: paper_exact, locator: "p.4 electrode parameters, P = 35 um; Fig. 3(a)"}
+  line.loading.loaded_length_um: {class: project_inference, locator: "p.4 (LT = 32 um); Fig. 3(a)", note: "bar length LT used; the 2 um stem (metal bridge from body to bar) is not representable and is lumped into the loaded cut"}
+  geometry.regions.substrate: {class: paper_exact, locator: "p.3, 500 um fused silica (clipped to the domain)"}
+  geometry.regions.lt_slab: {class: paper_exact, locator: "p.3, 600 nm film, 440 nm etch, 160 nm slab"}
+  geometry.regions.sio2_cladding: {class: project_inference, locator: "p.3 (1.5 um HD-PECVD cladding plus 200 nm cap); Fig. 1(e)", note: "flat top 1.86 um above y = 0 = slab 0.16 + 1.5 + 0.2 um cap, assuming the 1.5 um is measured from the slab top; SEM shows a flat top about 1.8 um above the slab"}
+  geometry.regions.lt_rib_r: {class: figure_digitized, locator: "p.2 Fig. 1(e) SEM, 3 um scale bar (104 px/um in a 4x crop)", note: "height 0.44 um from the 440 nm etch; base width 2.2 um and top width 1.8 um measured on the SEM; waveguide width not given in the text (OFC version: 2 um)"}
+  geometry.regions.lt_rib_l: {class: figure_digitized, locator: "p.2 Fig. 1(e)", note: "same rib at x = -118 um (mirror about the signal centre x = -59 um)"}
+  geometry.electrodes.signal: {class: paper_exact, locator: "p.4 Wsig = 100 um; Au thickness 800 nm p.3", note: "x-position from the layout rule below"}
+  geometry.electrodes.bar_r_signal_side: {class: paper_exact, locator: "p.4 (WT, LT, WS, LS, G, Wsig, P) = (1.5, 32, 2, 5, 5, 100, 35) um; Fig. 3(a) schematic", note: "bar WT = 1.5 um thick, tip-to-tip gap G = 5 um centred on the waveguide (SEM Fig. 1(e): 4.9 um), stem LS = 5 um to the electrode body; role of G from the schematic, cross-checked by the SEM"}
+  geometry.electrodes.bar_r_ground_side: {class: paper_exact, locator: "p.4; Fig. 3(a)", note: "see bar_r_signal_side"}
+  geometry.electrodes.bar_l_signal_side: {class: paper_exact, locator: "p.4; Fig. 3(a)", note: "mirror of the right-hand bars about x = -59 um"}
+  geometry.electrodes.bar_l_ground_side: {class: paper_exact, locator: "p.4; Fig. 3(a)", note: "mirror of the right-hand bars about x = -59 um"}
+  geometry.electrodes.ground_r: {class: project_inference, locator: "p.4; Fig. 3(a)", note: "ground width is not stated; 100 um assumed (same as the signal) with the inner edge at 9 um from the waveguide axis (5 + 1.5 + 2.5 um)"}
+  geometry.electrodes.ground_l: {class: project_inference, locator: "p.4; Fig. 3(a)", note: "mirror of ground_r"}
+  geometry.optical_window: {class: project_inference, note: "crop between the inner bar edges (|x| < 2.5 um) so that no conductor lies inside the optical mesh; the mode tail near the bars is truncated by the zero-field boundary"}
+  geometry.domain: {class: project_inference, note: "lateral -260..140 um, vertical -100..80 um; open-boundary treatment is an engine choice"}
+  geometry.mesh: {class: project_inference}
+  alt_geometries.unloaded: {class: project_inference, locator: "p.4; Fig. 3(a)", note: "bar-free cut between two T-bars along z (P - LT = 3 um); electrode bodies only"}
+
+missing:
+  - rib width and sidewall angle (not in text; SEM digitized, OFC version says 2 um wide waveguide)
+  - propagation direction on the x-cut film (assumed y)
+  - ground electrode width (not stated; 100 um assumed)
+  - RF permittivity and loss tangent of LT and SiO2 (not stated; literature values flagged unverified)
+  - Pockels coefficients r22 and r51 of LiTaO3 (not in config; the engine treats missing keys as 0)
+  - gold film conductivity (not stated)
+  - stem width WS = 2 um and the stem cut (metal bridge) are not modelled
+  - thickness profile of the SiO2 cladding over the waveguide and whether the 1.5 um is from the slab or the rib top
+limitations:
+  - scalar_optical_not_full_vector
+  - quasi_static_2d_rf
+  - rectangular_or_polygon_sidewalls_only
+  - no_3d_launch_pad_effects
+  - "T-bar stems (WS = 2 um, LS = 5 um) are out of plane; bars are given electrode potentials directly, stem inductance and bridge capacitance are neglected"
+  - "Loaded/unloaded two-cut cascade: the stem cut (2 um of each 35 um period) is lumped into the loaded cut"
+  - "Fused silica and PECVD oxide share one material (n 1.444, eps_r 3.9)"
+  - "LT RF permittivity and r13 are recalled literature values flagged unverified; r22 and r51 omitted"
+  - "Optical window ends at the inner bar edges, so the mode is slightly over-confined by the zero-field boundary"
+  - "The 64 GHz EO bandwidth includes an optical-imbalance filter that a 2D electrode model cannot reproduce"
+  - "Only the C-band row li2026ba-a is configured; the O-band row li2026ba-b shares the cross-section"

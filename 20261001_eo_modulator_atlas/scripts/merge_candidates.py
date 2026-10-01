@@ -39,7 +39,11 @@ def main(paths: list[str]) -> None:
                 if h not in header:
                     header.append(h)
             for row in r:
-                key_doi, key_ax, key_t = norm_doi(row.get("doi", "")), row.get("arxiv_id", "").strip(), norm_title(row["title"])
+                key_doi, key_ax, key_t = (
+                    norm_doi(row.get("doi", "")),
+                    row.get("arxiv_id", "").strip(),
+                    norm_title(row["title"]),
+                )
                 match = None
                 for ex in rows:
                     if (
@@ -50,7 +54,9 @@ def main(paths: list[str]) -> None:
                         match = ex
                         break
                 if match is not None:
-                    tags = sorted(set(filter(None, match["discovered_via"].split(";") + row["discovered_via"].split(";"))))
+                    tags = sorted(
+                        set(filter(None, match["discovered_via"].split(";") + row["discovered_via"].split(";")))
+                    )
                     match["discovered_via"] = ";".join(tags)
                     for k in ("doi", "arxiv_id", "license", "published_on"):
                         if not match.get(k) and row.get(k):

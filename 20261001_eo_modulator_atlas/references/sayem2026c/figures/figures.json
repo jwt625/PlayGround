@@ -1,0 +1,75 @@
+[
+ {
+  "kind": "page_render",
+  "file": "page_01.png",
+  "page": 1,
+  "captions": [
+   "Fig.1(b) shows the cross-section of different sections"
+  ]
+ },
+ {
+  "kind": "page_render",
+  "file": "page_02.png",
+  "page": 2,
+  "captions": [
+   "FIG. 1. (a) Schematic of the modulator device. G: ground, S: signal (b) Cross-section of the modulator in three different",
+   "Fig.1(d) shows the extinction ratio of the modulator as",
+   "Fig.1(e) shows the"
+  ]
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p02_1.png",
+  "page": 2,
+  "width": 4857,
+  "height": 4243
+ },
+ {
+  "kind": "page_render",
+  "file": "page_03.png",
+  "page": 3,
+  "captions": [
+   "FIG. 2. Transmission as a function of applied voltage for four different wavelengths of operation, \u03bb = 984 nm, \u03bb = 1071 nm,",
+   "Fig.3(b), we show the calculated microwave phase index",
+   "Fig.3(c), we plot the simulated optical phase index,"
+  ]
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p03_1.png",
+  "page": 3,
+  "width": 4269,
+  "height": 2882
+ },
+ {
+  "kind": "page_render",
+  "file": "page_04.png",
+  "page": 4,
+  "captions": [
+   "FIG. 3. (a) Experimental S11 of the TFLT modulator. (b) Extracted RF phase index as a function of RF frequency. (c)",
+   "Fig.4(b)\u2013(d) show the applied voltage and corresponding"
+  ]
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p04_1.png",
+  "page": 4,
+  "width": 3921,
+  "height": 3241
+ },
+ {
+  "kind": "page_render",
+  "file": "page_05.png",
+  "page": 5,
+  "captions": [
+   "FIG. 4. (a) Normalized Transmission (NT) of the MZI modulator as a function of time when the modulator is biased at the"
+  ]
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p05_1.png",
+  "page": 5,
+  "width": 4509,
+  "height": 1686
+ }
+]

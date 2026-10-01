@@ -1,0 +1,343 @@
+paper_id: li2026ba
+verified_on: '2026-10-01'
+source_files:
+- references/li2026ba/text.md
+- references/li2026ba/figures/page_02.png
+- references/li2026ba/figures/page_05.png
+- references/li2026ba/figures/page_06.png
+- references/li2026ba/figures/img_p02_4.png
+entries:
+- device_id: li2026ba-a
+  field: drive
+  value: push_pull
+  unit: ''
+  basis: derived
+  locator: p.3, Design and fabrication
+  note: authors do not state push-pull in this version (pair of modulation arms in an unbalanced MZM); the OFC version li2026a states it
+- device_id: li2026ba-a
+  field: vpi_convention
+  value: mzm_push_pull
+  unit: ''
+  basis: derived
+  locator: p.4, Electro-optic Modulation
+  note: MZM-level Vpi of the two-arm MZM; convention not named by the authors
+- device_id: li2026ba-a
+  field: wavelength_nm
+  value: 1550
+  unit: nm
+  basis: measured
+  locator: p.4, Electro-optic Modulation; Fig. 2(a)
+- device_id: li2026ba-a
+  field: length_mm
+  value: 18
+  unit: mm
+  basis: measured
+  locator: p.3, Design and fabrication; Fig. 1(a)
+  note: modulation arm length
+- device_id: li2026ba-a
+  field: eo_film_thickness_nm
+  value: 600
+  unit: nm
+  basis: measured
+  locator: p.3, Design and fabrication
+  note: commercial X-cut LTOI wafer (NANOLN), film transferred to fused silica by direct bonding
+- device_id: li2026ba-a
+  field: etch_depth_nm
+  value: 440
+  unit: nm
+  basis: measured
+  locator: p.3, Design and fabrication
+- device_id: li2026ba-a
+  field: slab_thickness_nm
+  value: 160
+  unit: nm
+  basis: measured
+  locator: p.3, Design and fabrication
+- device_id: li2026ba-a
+  field: rib_width_nm
+  value: 2000
+  unit: nm
+  basis: extracted_from_figure
+  locator: p.2, Fig. 1(e) SEM, scale bar 3 um
+  note: mid-height width; SEM top ~1.8 um, base ~2.2 um; OFC version (li2026a) states 2 um
+- device_id: li2026ba-a
+  field: electrode_gap_um
+  value: 5
+  unit: um
+  basis: design_target
+  locator: p.4, electrode parameters; Fig. 3(a)
+  note: parameter G, tip-to-tip gap of facing T-segments around the waveguide (SEM Fig. 1(e) gives ~4.9 um)
+- device_id: li2026ba-a
+  field: signal_width_um
+  value: 100
+  unit: um
+  basis: design_target
+  locator: p.4, electrode parameters
+  note: Wsig
+- device_id: li2026ba-a
+  field: electrode_thickness_um
+  value: 0.8
+  unit: um
+  basis: measured
+  locator: p.3, Design and fabrication
+  note: plus 15 nm Ti; 200 nm SiO2 cap
+- device_id: li2026ba-a
+  field: electrode_metal
+  value: Ti/Au (15 nm / 800 nm)
+  unit: ''
+  basis: measured
+  locator: p.3, Design and fabrication
+- device_id: li2026ba-a
+  field: substrate
+  value: fused silica 500 um (4-inch wafer)
+  unit: ''
+  basis: measured
+  locator: p.3, Design and fabrication
+- device_id: li2026ba-a
+  field: cladding
+  value: SiO2 1.5 um (HD-PECVD) plus 200 nm SiO2 cap
+  unit: ''
+  basis: measured
+  locator: p.3, Design and fabrication
+- device_id: li2026ba-a
+  field: crystal_cut
+  value: x-cut
+  unit: ''
+  basis: measured
+  locator: p.3, Design and fabrication
+- device_id: li2026ba-a
+  field: vpi_dc_v
+  value: 1.53
+  unit: V
+  basis: measured
+  locator: p.4, Fig. 2(a)
+  note: 100 Hz sawtooth, 10 V peak-to-peak; representative device C1 F11 1.02
+- device_id: li2026ba-a
+  field: vpil_dc_vcm
+  value: 2.76
+  unit: V*cm
+  basis: extracted_from_figure
+  locator: p.5, Fig. 2(c)
+  note: field F11 value (same device as Vpi 1.53 V); wafer average 2.86 V cm (2.76-3.20)
+- device_id: li2026ba-a
+  field: bw3db_ghz
+  value: 64
+  unit: GHz
+  basis: measured
+  locator: p.4, Fig. 3(d)
+  note: smoothed (5 GHz moving average), normalized to 1 GHz; authors attribute the roll-off above 60 GHz to an inadvertent optical path imbalance used as spectral bias
+- device_id: li2026ba-a
+  field: bw6db_ghz
+  value: 100
+  unit: GHz
+  basis: measured
+  locator: p.4, Fig. 3(d)
+  note: 'authors: 6 dB bandwidth exceeds 100 GHz'
+- device_id: li2026ba-a
+  field: bw_measured_to_ghz
+  value: 110
+  unit: GHz
+  basis: extracted_from_figure
+  locator: p.6, Fig. 3(d)
+  note: EO curves end near 110 GHz; 110 GHz GSG probes
+- device_id: li2026ba-a
+  field: eo_rolloff_db
+  value: 7
+  unit: dB
+  basis: extracted_from_figure
+  locator: p.6, Fig. 3(d)
+  note: drop of the smoothed C-band curve near 110 GHz relative to 1 GHz
+- device_id: li2026ba-a
+  field: eo_rolloff_freq_ghz
+  value: 110
+  unit: GHz
+  basis: extracted_from_figure
+  locator: p.6, Fig. 3(d)
+- device_id: li2026ba-a
+  field: extinction_ratio_db
+  value: 12
+  unit: dB
+  basis: measured
+  locator: p.4, Electro-optic Modulation; Fig. 2(a)
+  note: approximately 12 dB, 100 Hz sawtooth
+- device_id: li2026ba-a
+  field: rf_loss_db_per_cm
+  value: 4.6
+  unit: dB/cm
+  basis: derived
+  locator: p.4, Fig. 3(b)-(c)
+  note: 'authors: approximately 4.6 dB/cm at 120 GHz, from S21 = -8.2 dB over 18 mm'
+- device_id: li2026ba-a
+  field: rf_loss_freq_ghz
+  value: 120
+  unit: GHz
+  basis: derived
+  locator: p.4, Fig. 3(b)-(c)
+- device_id: li2026ba-a
+  field: z0_ohm
+  value: 42
+  unit: ohm
+  basis: derived
+  locator: p.5, EO response discussion
+  note: approximately 42 ohm characteristic impedance from S-parameters; mismatch to 50 ohm
+- device_id: li2026ba-a
+  field: n_rf
+  value: 2.24
+  unit: '1'
+  basis: extracted_from_figure
+  locator: p.6, Fig. 3(c)
+  note: RF phase index plateau at high frequency
+- device_id: li2026ba-a
+  field: ng_opt
+  value: 2.24
+  unit: '1'
+  basis: extracted_from_figure
+  locator: p.6, Fig. 3(c)
+  note: simulated optical group index at 1550 nm (dashed line)
+- device_id: li2026ba-a
+  field: max_baud_gbd
+  value: 208
+  unit: GBd
+  basis: measured
+  locator: p.6, IMDD results
+  note: PAM4 at 208 GBd below the 25% SD-FEC limit; 144-208 GBd tested
+- device_id: li2026ba-a
+  field: modulation_format
+  value: PAM4 (up to 208 GBd), PAM6 (up to 192 GBd), PAM8 (up to 184 GBd), all below 25% SD-FEC BER limit; PAM4 below KP4 up to 176 GBd
+  unit: ''
+  basis: measured
+  locator: p.6, IMDD results; Fig. 4(b)
+- device_id: li2026ba-a
+  field: max_net_rate_gbps
+  value: 440.6
+  unit: Gb/s
+  basis: derived
+  locator: p.1 abstract; p.7, Fig. 4(c)
+  note: PAM8 at 176 GBd with SD-FEC at 18.7% overhead; highest AIR 468.1 Gbit/s at 180 GBd
+- device_id: li2026ba-b
+  field: drive
+  value: push_pull
+  unit: ''
+  basis: derived
+  locator: p.3, Design and fabrication
+  note: authors do not state push-pull in this version (pair of modulation arms); the OFC version li2026a states it
+- device_id: li2026ba-b
+  field: vpi_convention
+  value: mzm_push_pull
+  unit: ''
+  basis: derived
+  locator: p.4, Electro-optic Modulation
+  note: MZM-level Vpi of the two-arm MZM; convention not named by the authors
+- device_id: li2026ba-b
+  field: wavelength_nm
+  value: 1300
+  unit: nm
+  basis: measured
+  locator: p.4, Electro-optic Modulation; Fig. 2(a)
+  note: EO response in Fig. 3(d) is at 1310 nm
+- device_id: li2026ba-b
+  field: length_mm
+  value: 18
+  unit: mm
+  basis: measured
+  locator: p.3, Design and fabrication; Fig. 1(a)
+  note: modulation arm length
+- device_id: li2026ba-b
+  field: eo_film_thickness_nm
+  value: 600
+  unit: nm
+  basis: measured
+  locator: p.3, Design and fabrication
+  note: commercial X-cut LTOI wafer (NANOLN), film transferred to fused silica by direct bonding
+- device_id: li2026ba-b
+  field: etch_depth_nm
+  value: 440
+  unit: nm
+  basis: measured
+  locator: p.3, Design and fabrication
+- device_id: li2026ba-b
+  field: slab_thickness_nm
+  value: 160
+  unit: nm
+  basis: measured
+  locator: p.3, Design and fabrication
+- device_id: li2026ba-b
+  field: rib_width_nm
+  value: 2000
+  unit: nm
+  basis: extracted_from_figure
+  locator: p.2, Fig. 1(e) SEM, scale bar 3 um
+  note: mid-height width; SEM top ~1.8 um, base ~2.2 um; OFC version (li2026a) states 2 um
+- device_id: li2026ba-b
+  field: electrode_gap_um
+  value: 5
+  unit: um
+  basis: design_target
+  locator: p.4, electrode parameters; Fig. 3(a)
+  note: parameter G, tip-to-tip gap of facing T-segments around the waveguide (SEM Fig. 1(e) gives ~4.9 um)
+- device_id: li2026ba-b
+  field: signal_width_um
+  value: 100
+  unit: um
+  basis: design_target
+  locator: p.4, electrode parameters
+  note: Wsig
+- device_id: li2026ba-b
+  field: electrode_thickness_um
+  value: 0.8
+  unit: um
+  basis: measured
+  locator: p.3, Design and fabrication
+  note: plus 15 nm Ti; 200 nm SiO2 cap
+- device_id: li2026ba-b
+  field: electrode_metal
+  value: Ti/Au (15 nm / 800 nm)
+  unit: ''
+  basis: measured
+  locator: p.3, Design and fabrication
+- device_id: li2026ba-b
+  field: substrate
+  value: fused silica 500 um (4-inch wafer)
+  unit: ''
+  basis: measured
+  locator: p.3, Design and fabrication
+- device_id: li2026ba-b
+  field: cladding
+  value: SiO2 1.5 um (HD-PECVD) plus 200 nm SiO2 cap
+  unit: ''
+  basis: measured
+  locator: p.3, Design and fabrication
+- device_id: li2026ba-b
+  field: crystal_cut
+  value: x-cut
+  unit: ''
+  basis: measured
+  locator: p.3, Design and fabrication
+- device_id: li2026ba-b
+  field: vpi_dc_v
+  value: 1.21
+  unit: V
+  basis: measured
+  locator: p.4, Fig. 2(a)
+  note: same device as the C-band row
+- device_id: li2026ba-b
+  field: vpil_dc_vcm
+  value: 2.19
+  unit: V*cm
+  basis: extracted_from_figure
+  locator: p.5, Fig. 2(c)
+  note: field F11 value; wafer average O-band 2.42 V cm (2.19-3.65)
+- device_id: li2026ba-b
+  field: extinction_ratio_db
+  value: 10
+  unit: dB
+  basis: measured
+  locator: p.4, Electro-optic Modulation
+  note: approximately 10 dB
+derived:
+- device_id: li2026ba-a
+  field: max_line_rate_gbps
+  value: 552
+  formula: 184 GBd x log2(8) bit/symbol (PAM8 at the highest rate below the 25% SD-FEC limit)
+  inputs:
+  - max_baud_gbd

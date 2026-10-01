@@ -1,0 +1,156 @@
+[
+ {
+  "kind": "page_render",
+  "file": "page_01.png",
+  "page": 1,
+  "captions": [
+   "Figure 1(a) depicts the ridge waveguide structure commonly"
+  ]
+ },
+ {
+  "kind": "page_render",
+  "file": "page_02.png",
+  "page": 2,
+  "captions": [
+   "Fig. 1. (a) Conventional TFLN waveguide with wide-gap electrodes. (b)",
+   "Fig. 2. (a) Minimum allowable electrode spacing and electro-optic"
+  ]
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p02_1.png",
+  "page": 2,
+  "width": 1006,
+  "height": 889
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p02_2.png",
+  "page": 2,
+  "width": 1006,
+  "height": 417
+ },
+ {
+  "kind": "page_render",
+  "file": "page_03.png",
+  "page": 3,
+  "captions": [
+   "Fig. 3. (a) Top view of the CL-TWEs. (b) Duty cycle of T-rails for different",
+   "Fig. 4. (a) 3D schematic of the demonstrated modulator. The unloaded"
+  ]
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p03_1.png",
+  "page": 3,
+  "width": 1005,
+  "height": 766
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p03_2.png",
+  "page": 3,
+  "width": 1006,
+  "height": 680
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p03_3.png",
+  "page": 3,
+  "width": 1006,
+  "height": 680
+ },
+ {
+  "kind": "page_render",
+  "file": "page_04.png",
+  "page": 4,
+  "captions": [
+   "Fig. 1(c). The total insertion loss is measured to be 17 dB for a 5-"
+  ]
+ },
+ {
+  "kind": "page_render",
+  "file": "page_05.png",
+  "page": 5,
+  "captions": [
+   "Fig. S1.  (a) The suppression effect of LiNbO3-Silica hybrid waveguide on optical absorption"
+  ]
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p05_1.png",
+  "page": 5,
+  "width": 1418,
+  "height": 553
+ },
+ {
+  "kind": "page_render",
+  "file": "page_06.png",
+  "page": 6,
+  "captions": [
+   "Fig. S2.  (a) Optical absorption loss due to bended CPW electrodes varies with BCB layer",
+   "Fig. S4. It is seen that both the microwave refractive index and microwave loss increases"
+  ]
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p06_1.png",
+  "page": 6,
+  "width": 1418,
+  "height": 375
+ },
+ {
+  "kind": "page_render",
+  "file": "page_07.png",
+  "page": 7,
+  "captions": [
+   "Fig. S3. (a) Structure of the CL-TWEs. (b) Simulated S11 and S21 of 5-mm-long CL-TWEs.",
+   "Fig. S4.  The influence of cut-off frequency on (a) microwave refractive index and (b)"
+  ]
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p07_1.png",
+  "page": 7,
+  "width": 1183,
+  "height": 443
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p07_2.png",
+  "page": 7,
+  "width": 1183,
+  "height": 487
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p07_3.png",
+  "page": 7,
+  "width": 1183,
+  "height": 501
+ },
+ {
+  "kind": "page_render",
+  "file": "page_08.png",
+  "page": 8,
+  "captions": [
+   "Fig. S5.  (a) Simulated and (b) measured microwave S parameters of the CL-TWEs with bended CPW feedlines.",
+   "Fig. S6.  (a) Microwave transmission (S21) of CL-TWE with different substrates. (b)",
+   "Fig. S7.  Measured and calculated modulation response."
+  ]
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p08_1.png",
+  "page": 8,
+  "width": 1419,
+  "height": 390
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p08_2.png",
+  "page": 8,
+  "width": 710,
+  "height": 533
+ }
+]

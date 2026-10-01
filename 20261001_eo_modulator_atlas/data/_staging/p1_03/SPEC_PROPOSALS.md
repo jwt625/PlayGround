@@ -1,0 +1,12 @@
+# SPEC proposals from batch p1_03 (not applied)
+
+Items below extend the chen2022 pilot proposals (`data/_staging/pilot_chen2022/SPEC_PROPOSALS.md`, numbers 1-14). Configs: `sims/kharel2021/config.yaml`, `sims/liu2021/config.yaml`.
+
+1. Three-section periodic cell (extends pilot item 3). Both finger-and-stem electrodes have three distinct cuts per period: (A) finger/rail plus slot, (B) stem bridge where the metal ties the finger to its main conductor (a regular narrow-gap line), (C) gap between fingers (wide opening, no fingers). kharel2021: A 39 um, B 6 um, C 5 um. liu2021: A 40 um, B 5 um, C 5 um. Used: loaded = A, unloaded = C with B lumped in. Propose `loading.cells: [{cross_section, length_um}]`.
+2. `loading.type: periodic_t_rail` is the only periodic value; Kharel calls the structure "segmented / micro-structured" (finger on each side of the waveguide, stems to the main conductor). Used `periodic_t_rail`. Propose a neutral name such as `periodic_loaded`.
+3. Unverified standard values. Offline batches cannot check literature constants (LN indices, eps tensor, Pockels coefficients, SiO2, quartz, gold sigma). `standard_reference` is used with the note "NOT verified"; propose an explicit class `standard_reference_unverified` so the app can flag it (pilot audit S2).
+4. Bound-type and prediction targets (extends pilot item 8). Both papers headline a predicted 3 dB bandwidth (kharel2021 about 180 GHz for 20 mm, p.5; liu2021 over 110 GHz, Fig. S7). kharel2021 target uses `bw3db_ghz` with `source.basis: predicted`; liu2021 omits it because it is a bound. Propose `bound: lower` and a `basis` field on targets.
+5. Two lengths sharing one cross-section (pilot item 10). kharel2021-a (10 mm) and -b (20 mm) share the cut; the config targets -b only and uses -a for the RF-loss target source.
+6. Material RF loss tangents. Kharel's own simulation used LN tan delta 0.004 and quartz below 1e-4 (p.3-4); the E1 material schema has no loss field, so they are in `limitations` only.
+7. Attribution of line-level numbers to a device. kharel2021 gives an RF phase index 2.23 without naming the device; the target source is an inline `{paper_id, locator, basis, note}` form (as in the chen2022 config) rather than a devices.csv field.
+8. Optical window versus nearby metal. The window must exclude conductors, but the rails/fingers sit about 1.5 um (liu2021) and 2.5 um (kharel2021) from the waveguide axis, so the Dirichlet window truncates the mode tail. Propose an absorbing or open optical boundary option or document the truncation.

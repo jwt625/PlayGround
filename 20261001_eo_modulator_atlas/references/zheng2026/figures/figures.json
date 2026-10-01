@@ -1,0 +1,141 @@
+[
+ {
+  "kind": "page_render",
+  "file": "page_03.png",
+  "page": 3,
+  "captions": [
+   "FIG. 1: Comparison between previously reported designs and the optimised design presented in"
+  ]
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p03_1.png",
+  "page": 3,
+  "width": 4274,
+  "height": 1685
+ },
+ {
+  "kind": "page_render",
+  "file": "page_05.png",
+  "page": 5,
+  "captions": [
+   "FIG. 2: Overview of the integration of TFLN on a 200-mm SiPho wafer using MTP. a)"
+  ]
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p05_1.png",
+  "page": 5,
+  "width": 3979,
+  "height": 2364
+ },
+ {
+  "kind": "page_render",
+  "file": "page_06.png",
+  "page": 6,
+  "captions": [
+   "Fig.2 a). The used approach enables accurate and repeatable wafer-scale transfer of TFLN from"
+  ]
+ },
+ {
+  "kind": "page_render",
+  "file": "page_08.png",
+  "page": 8,
+  "captions": [
+   "FIG. 3: a) Characterisation setup for 200-mm wafers, based on an automated wafer prober. b)"
+  ]
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p08_1.png",
+  "page": 8,
+  "width": 639,
+  "height": 520
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p08_2.png",
+  "page": 8,
+  "width": 727,
+  "height": 1000
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p08_3.png",
+  "page": 8,
+  "width": 1008,
+  "height": 756
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p08_4.png",
+  "page": 8,
+  "width": 285,
+  "height": 152
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p08_5.png",
+  "page": 8,
+  "width": 400,
+  "height": 300
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p08_6.png",
+  "page": 8,
+  "width": 811,
+  "height": 627
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p08_7.png",
+  "page": 8,
+  "width": 604,
+  "height": 457
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p08_8.png",
+  "page": 8,
+  "width": 2522,
+  "height": 1973
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p08_9.png",
+  "page": 8,
+  "width": 2522,
+  "height": 1973
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p08_10.png",
+  "page": 8,
+  "width": 1000,
+  "height": 826
+ },
+ {
+  "kind": "page_render",
+  "file": "page_09.png",
+  "page": 9,
+  "captions": [
+   "FIG. 4: Electro-optics characterisation. a) Picture of a 200-mm wafer after RDL back-end"
+  ]
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p09_1.png",
+  "page": 9,
+  "width": 4987,
+  "height": 3371
+ },
+ {
+  "kind": "page_render",
+  "file": "page_10.png",
+  "page": 10,
+  "captions": [
+   "Fig. 4 g-h), the bandwidth is limited to 20-30 GHz using a thin 500 nm thick RDL, while the BW"
+  ]
+ }
+]

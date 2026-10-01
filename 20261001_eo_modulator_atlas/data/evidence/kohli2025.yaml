@@ -283,7 +283,7 @@ entries:
   unit: V
   basis: measured
   locator: p.4 text; p.8 Discussion
-  note: MZ push-pull configuration, DC; paper headline convention
+  note: MZ push-pull configuration, DC; the paper's Discussion headlines this value; the row's vpi_dc_v keeps the per-phase-shifter value
 - device_id: kohli2025-mzm
   field: drive_vpp_v
   value: 1.13
@@ -332,7 +332,7 @@ entries:
   unit: V
   basis: measured
   locator: p.5 text
-  note: MZ push-pull configuration, DC; paper headline convention
+  note: MZ push-pull configuration, DC; the paper's Discussion headlines this value; the row's vpi_dc_v keeps the per-phase-shifter value
 - device_id: kohli2025-iq
   field: drive_vpp_v
   value: 1.13

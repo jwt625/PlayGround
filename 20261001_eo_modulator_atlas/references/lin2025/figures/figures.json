@@ -1,0 +1,106 @@
+[
+ {
+  "kind": "page_render",
+  "file": "page_07.png",
+  "page": 7,
+  "captions": [
+   "Figure 2 (c) compares the measured resistivity of thin-film gold and copper and its evolution with"
+  ]
+ },
+ {
+  "kind": "page_render",
+  "file": "page_21.png",
+  "page": 21,
+  "captions": [
+   "Figure 1: Copper Damascene process-based thin-film lithium tantalate Mach-Zehnder modulators. a, Cross-",
+   "Figure 2: Electrical characterization of copper thin-film lithium tantalate modulators. a, A photograph of copper",
+   "Figure 1(a). Side panels: Corresponding percent loss, microwave index, and characteristic impedance (Z0) variations",
+   "Figure 3: Electro-optic characterization of copper Damascene thin-film lithium tantalate Mach-Zehnder mod-"
+  ]
+ },
+ {
+  "kind": "page_render",
+  "file": "page_22.png",
+  "page": 22,
+  "captions": [
+   "Figure 4: Data transmission experiment using intensity-modulation direct detection with a copper Damascene"
+  ]
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p23_2.png",
+  "page": 23,
+  "width": 364,
+  "height": 183
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p23_3.png",
+  "page": 23,
+  "width": 370,
+  "height": 278
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p23_4.png",
+  "page": 23,
+  "width": 498,
+  "height": 373
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p23_6.png",
+  "page": 23,
+  "width": 1088,
+  "height": 748
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p23_7.png",
+  "page": 23,
+  "width": 2490,
+  "height": 358
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p23_8.png",
+  "page": 23,
+  "width": 447,
+  "height": 374
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p23_12.png",
+  "page": 23,
+  "width": 497,
+  "height": 373
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p25_1.png",
+  "page": 25,
+  "width": 487,
+  "height": 417
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p25_6.png",
+  "page": 25,
+  "width": 630,
+  "height": 475
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p26_1.png",
+  "page": 26,
+  "width": 788,
+  "height": 566
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p26_2.png",
+  "page": 26,
+  "width": 787,
+  "height": 563
+ }
+]

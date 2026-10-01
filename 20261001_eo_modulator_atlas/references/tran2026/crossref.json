@@ -1,0 +1,372 @@
+{
+ "status": "ok",
+ "message-type": "work",
+ "message-version": "1.0.0",
+ "message": {
+  "indexed": {
+   "date-parts": [
+    [
+     2026,
+     8,
+     17
+    ]
+   ],
+   "date-time": "2026-08-17T18:25:48Z",
+   "timestamp": 1786991148007,
+   "version": "build-2736575974"
+  },
+  "publisher-location": "Washington, D.C.",
+  "reference-count": 10,
+  "publisher": "Optica Publishing Group",
+  "content-domain": {
+   "domain": [],
+   "crossmark-restriction": false
+  },
+  "short-container-title": [],
+  "published-print": {
+   "date-parts": [
+    [
+     2026
+    ]
+   ]
+  },
+  "abstract": "<jats:p>A co-packaged 76 GHz InP-based Mach-Zehnder modulator and a 224 GBaud-class linear differential EML driver was demonstrated, achieving 180 GBaud PAM4 back-to-back in an IM/DD transmission for O-Band operation.</jats:p>",
+  "DOI": "10.1364/ofc.2026.w3e.6",
+  "type": "proceedings-article",
+  "created": {
+   "date-parts": [
+    [
+     2026,
+     6,
+     2
+    ]
+   ],
+   "date-time": "2026-06-02T19:29:50Z",
+   "timestamp": 1780428590000
+  },
+  "page": "W3E.6",
+  "source": "Crossref",
+  "is-referenced-by-count": 0,
+  "title": [
+   "180 GBaud PAM4 Driver-Modulator Engine for IM/DD Transmissions in the O-Band"
+  ],
+  "prefix": "10.1364",
+  "author": [
+   {
+    "given": "Son",
+    "family": "Tran",
+    "sequence": "first",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Sebastian",
+    "family": "Lauck",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Gerrit",
+    "family": "Fiol",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Jonathan",
+    "family": "Andree",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Felix",
+    "family": "Ganzer",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Robert",
+    "family": "Emmerich",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Colja",
+    "family": "Schubert",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Patrick",
+    "family": "Runge",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Martin",
+    "family": "Schell",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Ronald",
+    "family": "Freund",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Shawn",
+    "family": "Parker",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Trong",
+    "family": "Phan",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Billy",
+    "family": "Allen",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   }
+  ],
+  "member": "285",
+  "reference": [
+   {
+    "key": "OFC-2026-W3E.6-R1",
+    "doi-asserted-by": "publisher",
+    "first-page": "M4",
+    "DOI": "10.1364/OFC.2025.M4K.6",
+    "type": "journal-article",
+    "article-title": "226 Gbps PAM4 Operation Using Differential Drive EA-DFB Laser with 2.0-Vppd Swing over 10-km SSMF Transmission for 1.6TbE Transceivers",
+    "author": "Ohno"
+   },
+   {
+    "key": "OFC-2026-W3E.6-R2",
+    "doi-asserted-by": "publisher",
+    "first-page": "Th4D.1",
+    "DOI": "10.1364/OFC.2025.Th4D.1",
+    "type": "journal-article",
+    "article-title": "Uncooled O-band InP MZ Modulator PIC for 3.2 Tb/s (400 Gb/s/lane) Pluggable Transceiver",
+    "author": "Ogiso"
+   },
+   {
+    "key": "OFC-2026-W3E.6-R4",
+    "doi-asserted-by": "publisher",
+    "first-page": "TUA7",
+    "DOI": "10.1109/SiPhotonics64386.2025.10985400",
+    "type": "journal-article",
+    "article-title": "Silicon Photonic Traveling Wave Mach-Zehnder Modulators for 400G/Lane Transmitters",
+    "author": "Li"
+   },
+   {
+    "key": "OFC-2026-W3E.6-R5",
+    "doi-asserted-by": "publisher",
+    "first-page": "Th4B.1",
+    "DOI": "10.1364/OFC.2025.Th4B.1",
+    "type": "journal-article",
+    "article-title": "Net 3.2 Tbps 225 Gbaud PAM4 O-Band IM/DD 2 km Transmission Using FR8 and DR8 with a CMOS 3 nm SerDes and TFLN Modulators",
+    "author": "St-Arnault"
+   },
+   {
+    "key": "OFC-2026-W3E.6-R6",
+    "doi-asserted-by": "publisher",
+    "first-page": "Th1E.5",
+    "DOI": "10.1364/ECEOC.2022.Th1E.5",
+    "type": "journal-article",
+    "article-title": "200 Gb/s Uncooled EML with Single MQW Layer Stack Design",
+    "author": "Theurer",
+    "year": "2022"
+   },
+   {
+    "key": "OFC-2026-W3E.6-R7",
+    "doi-asserted-by": "publisher",
+    "DOI": "10.1002/lpor.202570057",
+    "type": "journal-article",
+    "volume": "19",
+    "author": "Liu",
+    "year": "2025",
+    "journal-title": "Laser  Photonics Reviews."
+   },
+   {
+    "key": "OFC-2026-W3E.6-R8",
+    "doi-asserted-by": "publisher",
+    "DOI": "10.1002/lpor.202500018",
+    "type": "journal-article",
+    "volume": "19",
+    "author": "Chen",
+    "journal-title": "2025 Laser Photonics Rev"
+   },
+   {
+    "key": "OFC-2026-W3E.6-R9",
+    "doi-asserted-by": "publisher",
+    "first-page": "1380602",
+    "DOI": "10.1117/12.3087753",
+    "type": "journal-article",
+    "author": "Guanbao",
+    "journal-title": "Proc. SPIE13806, International Conference on Optoelectronic Information and Computer Engineering (OICE 2025)"
+   },
+   {
+    "key": "OFC-2026-W3E.6-R10",
+    "doi-asserted-by": "publisher",
+    "article-title": "A performance comparison of single-ended- and differential driving scheme at 64 Gbit/s QPSK modulation for InP-based IQ-Mach-Zehnder modulators in serial-push-pull configuration",
+    "author": "Rausch",
+    "DOI": "10.1109/ECOC.2015.7341728",
+    "type": "journal-article"
+   },
+   {
+    "key": "OFC-2026-W3E.6-R11",
+    "doi-asserted-by": "publisher",
+    "first-page": "8",
+    "DOI": "10.1109/BCICTS.2018.8550947",
+    "type": "journal-article",
+    "article-title": "Indium Phosphide Photonic Integrated Circuits: Technology and Applications",
+    "volume": "201",
+    "author": "Klamkin"
+   }
+  ],
+  "event": {
+   "name": "Optical Fiber Communication Conference",
+   "location": "Los Angeles, California",
+   "acronym": "OFC",
+   "sponsor": [
+    "The Optical Society"
+   ],
+   "start": {
+    "date-parts": [
+     [
+      2026
+     ]
+    ]
+   }
+  },
+  "container-title": [
+   "Optical Fiber Communication Conference (OFC) 2026"
+  ],
+  "original-title": [],
+  "link": [
+   {
+    "URL": "https://opg.optica.org/viewmedia.cfm?URI=OFC-2026-W3E.6&seq=0",
+    "content-type": "unspecified",
+    "content-version": "vor",
+    "intended-application": "similarity-checking"
+   }
+  ],
+  "deposited": {
+   "date-parts": [
+    [
+     2026,
+     8,
+     17
+    ]
+   ],
+   "date-time": "2026-08-17T17:28:25Z",
+   "timestamp": 1786987705000
+  },
+  "score": 1,
+  "resource": {
+   "primary": {
+    "URL": "https://opg.optica.org/abstract.cfm?URI=OFC-2026-W3E.6"
+   }
+  },
+  "subtitle": [],
+  "short-title": [],
+  "issued": {
+   "date-parts": [
+    [
+     2026
+    ]
+   ]
+  },
+  "references-count": 10,
+  "URL": "https://doi.org/10.1364/ofc.2026.w3e.6",
+  "relation": {},
+  "subject": [],
+  "published": {
+   "date-parts": [
+    [
+     2026
+    ]
+   ]
+  }
+ }
+}

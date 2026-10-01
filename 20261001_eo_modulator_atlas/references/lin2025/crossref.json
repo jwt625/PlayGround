@@ -1,0 +1,842 @@
+{
+ "status": "ok",
+ "message-type": "work",
+ "message-version": "1.0.0",
+ "message": {
+  "indexed": {
+   "date-parts": [
+    [
+     2026,
+     7,
+     22
+    ]
+   ],
+   "date-time": "2026-07-22T17:30:29Z",
+   "timestamp": 1784741429529,
+   "version": "3.55.0"
+  },
+  "reference-count": 42,
+  "publisher": "Springer Science and Business Media LLC",
+  "issue": "1",
+  "license": [
+   {
+    "start": {
+     "date-parts": [
+      [
+       2026,
+       2,
+       26
+      ]
+     ],
+     "date-time": "2026-02-26T00:00:00Z",
+     "timestamp": 1772064000000
+    },
+    "content-version": "tdm",
+    "delay-in-days": 0,
+    "URL": "https://creativecommons.org/licenses/by-nc-nd/4.0"
+   },
+   {
+    "start": {
+     "date-parts": [
+      [
+       2026,
+       4,
+       7
+      ]
+     ],
+     "date-time": "2026-04-07T00:00:00Z",
+     "timestamp": 1775520000000
+    },
+    "content-version": "vor",
+    "delay-in-days": 40,
+    "URL": "https://creativecommons.org/licenses/by-nc-nd/4.0"
+   }
+  ],
+  "funder": [
+   {
+    "DOI": "10.13039/100000181",
+    "name": "United States Department of Defense | United States Air Force | AFMC | Air Force Office of Scientific Research",
+    "doi-asserted-by": "publisher",
+    "award": [
+     "FA8655-24-1-7007"
+    ],
+    "award-info": [
+     {
+      "award-number": [
+       "FA8655-24-1-7007"
+      ]
+     }
+    ],
+    "id": [
+     {
+      "id": "10.13039/100000181",
+      "id-type": "DOI",
+      "asserted-by": "publisher"
+     }
+    ]
+   }
+  ],
+  "content-domain": {
+   "domain": [
+    "link.springer.com"
+   ],
+   "crossmark-restriction": false
+  },
+  "short-container-title": [
+   "Nat Commun"
+  ],
+  "DOI": "10.1038/s41467-026-69588-6",
+  "type": "journal-article",
+  "created": {
+   "date-parts": [
+    [
+     2026,
+     2,
+     26
+    ]
+   ],
+   "date-time": "2026-02-26T07:34:20Z",
+   "timestamp": 1772091260000
+  },
+  "update-policy": "https://doi.org/10.1007/springer_crossmark_policy",
+  "source": "Crossref",
+  "is-referenced-by-count": 2,
+  "title": [
+   "Copper damascene process-based high-performance thin-film lithium tantalate modulators"
+  ],
+  "prefix": "10.1038",
+  "volume": "17",
+  "author": [
+   {
+    "ORCID": "https://orcid.org/0009-0002-4288-824X",
+    "authenticated-orcid": false,
+    "given": "Mengxin",
+    "family": "Lin",
+    "sequence": "first",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Zihan",
+    "family": "Li",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "ORCID": "https://orcid.org/0000-0002-0459-6759",
+    "authenticated-orcid": false,
+    "given": "Alexander",
+    "family": "Kotz",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "ORCID": "https://orcid.org/0009-0009-5849-780X",
+    "authenticated-orcid": false,
+    "given": "Hugo",
+    "family": "Larocque",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "ORCID": "https://orcid.org/0000-0002-5609-5331",
+    "authenticated-orcid": false,
+    "given": "Nikolai",
+    "family": "Kuznetsov",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Jiale",
+    "family": "Sun",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Yichi",
+    "family": "Zhang",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Shuhang",
+    "family": "Zheng",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "ORCID": "https://orcid.org/0000-0002-3468-6501",
+    "authenticated-orcid": false,
+    "given": "Johann",
+    "family": "Riemensberger",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "ORCID": "https://orcid.org/0000-0003-2690-0691",
+    "authenticated-orcid": false,
+    "given": "Christian",
+    "family": "Koos",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "ORCID": "https://orcid.org/0000-0002-3408-886X",
+    "authenticated-orcid": false,
+    "given": "Tobias J.",
+    "family": "Kippenberg",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   }
+  ],
+  "member": "297",
+  "published-online": {
+   "date-parts": [
+    [
+     2026,
+     2,
+     26
+    ]
+   ]
+  },
+  "reference": [
+   {
+    "key": "69588_CR1",
+    "doi-asserted-by": "publisher",
+    "first-page": "977",
+    "DOI": "10.1038/nphoton.2013.275",
+    "volume": "7",
+    "author": "S Koenig",
+    "year": "2013",
+    "unstructured": "Koenig, S. et al. Wireless sub-THz communication system with high data rate. Nat. Photonics 7, 977\u2013981 (2013).",
+    "journal-title": "Nat. Photonics"
+   },
+   {
+    "key": "69588_CR2",
+    "doi-asserted-by": "publisher",
+    "first-page": "274",
+    "DOI": "10.1038/nature22387",
+    "volume": "546",
+    "author": "P Marin-Palomo",
+    "year": "2017",
+    "unstructured": "Marin-Palomo, P. et al. Microresonator-based solitons for massively parallel coherent optical communications. Nature 546, 274\u2013279 (2017).",
+    "journal-title": "Nature"
+   },
+   {
+    "key": "69588_CR3",
+    "doi-asserted-by": "publisher",
+    "first-page": "781",
+    "DOI": "10.1038/s41566-023-01244-7",
+    "volume": "17",
+    "author": "A Rizzo",
+    "year": "2023",
+    "unstructured": "Rizzo, A. et al. Massively scalable Kerr comb-driven silicon photonic link. Nat. Photonics 17, 781\u2013790 (2023).",
+    "journal-title": "Nat. Photonics"
+   },
+   {
+    "key": "69588_CR4",
+    "doi-asserted-by": "publisher",
+    "first-page": "534",
+    "DOI": "10.1038/nature16454",
+    "volume": "528",
+    "author": "C Sun",
+    "year": "2015",
+    "unstructured": "Sun, C. et al. Single-chip microprocessor that communicates directly using light. Nature 528, 534\u2013538 (2015).",
+    "journal-title": "Nature"
+   },
+   {
+    "key": "69588_CR5",
+    "doi-asserted-by": "publisher",
+    "first-page": "349",
+    "DOI": "10.1038/s41586-018-0028-z",
+    "volume": "556",
+    "author": "AH Atabaki",
+    "year": "2018",
+    "unstructured": "Atabaki, A. H. et al. Integrating photonics with silicon nanoelectronics for the next generation of systems on a chip. Nature 556, 349\u2013354 (2018).",
+    "journal-title": "Nature"
+   },
+   {
+    "key": "69588_CR6",
+    "doi-asserted-by": "publisher",
+    "first-page": "101",
+    "DOI": "10.1038/s41586-018-0551-y",
+    "volume": "562",
+    "author": "C Wang",
+    "year": "2018",
+    "unstructured": "Wang, C. et al. Integrated lithium niobate electro-optic modulators operating at CMOS-compatible voltages. Nature 562, 101\u2013104 (2018).",
+    "journal-title": "Nature"
+   },
+   {
+    "key": "69588_CR7",
+    "doi-asserted-by": "publisher",
+    "first-page": "359",
+    "DOI": "10.1038/s41566-019-0378-6",
+    "volume": "13",
+    "author": "M He",
+    "year": "2019",
+    "unstructured": "He, M. et al. High-performance hybrid silicon and lithium niobate Mach-Zehnder modulators for 100\u2009Gbit s-1 and beyond. Nat. Photonics 13, 359\u2013364 (2019).",
+    "journal-title": "Nat. Photonics"
+   },
+   {
+    "key": "69588_CR8",
+    "doi-asserted-by": "publisher",
+    "DOI": "10.1038/s41467-023-40502-8",
+    "volume": "14",
+    "author": "Z Li",
+    "year": "2023",
+    "unstructured": "Li, Z. et al. High density lithium niobate photonic integrated circuits. Nat. Commun. 14, 4856 (2023).",
+    "journal-title": "Nat. Commun."
+   },
+   {
+    "key": "69588_CR9",
+    "doi-asserted-by": "publisher",
+    "first-page": "437",
+    "DOI": "10.1109/TVLSI.2004.825863",
+    "volume": "12",
+    "author": "S Mei",
+    "year": "2004",
+    "unstructured": "Mei, S. & Ismail, Y. I. Modeling skin and proximity effects with reduced realizable rl circuits. IEEE Trans. Very Large Scale Integr. (VLSI) Syst. 12, 437\u2013447 (2004).",
+    "journal-title": "IEEE Trans. Very Large Scale Integr. (VLSI) Syst."
+   },
+   {
+    "key": "69588_CR10",
+    "doi-asserted-by": "publisher",
+    "first-page": "47",
+    "DOI": "10.1088/2058-7058/3/3/26",
+    "volume": "3",
+    "author": "I Bennion",
+    "year": "1990",
+    "unstructured": "Bennion, I. & Walker, T. Guided-wave devices and circuits. Phys. World 3, 47 (1990).",
+    "journal-title": "Phys. World"
+   },
+   {
+    "key": "69588_CR11",
+    "doi-asserted-by": "publisher",
+    "first-page": "1918",
+    "DOI": "10.1109/22.320774",
+    "volume": "42",
+    "author": "R Spickermann",
+    "year": "1994",
+    "unstructured": "Spickermann, R. & Dagli, N. Experimental analysis of millimeter wave coplanar waveguide slow wave structures on GaAs. IEEE Trans. Microw. Theory Techn. 42, 1918\u20131924 (1994).",
+    "journal-title": "IEEE Trans. Microw. Theory Techn."
+   },
+   {
+    "key": "69588_CR12",
+    "doi-asserted-by": "publisher",
+    "first-page": "357",
+    "DOI": "10.1364/OPTICA.416155",
+    "volume": "8",
+    "author": "P Kharel",
+    "year": "2021",
+    "unstructured": "Kharel, P., Reimer, C., Luke, K., He, L. & Zhang, M. Breaking voltage\u2013bandwidth limits in integrated lithium niobate modulators using micro-structured electrodes. Optica 8, 357\u2013363 (2021).",
+    "journal-title": "Optica"
+   },
+   {
+    "key": "69588_CR13",
+    "doi-asserted-by": "publisher",
+    "first-page": "026103",
+    "DOI": "10.1063/5.0077232",
+    "volume": "7",
+    "author": "G Chen",
+    "year": "2022",
+    "unstructured": "Chen, G. et al. High-performance thin-film lithium niobate modulator on a silicon substrate using a periodic capacitively loaded traveling-wave electrode. APL photonics 7, 026103 (2022).",
+    "journal-title": "APL photonics"
+   },
+   {
+    "key": "69588_CR14",
+    "doi-asserted-by": "publisher",
+    "first-page": "2380",
+    "DOI": "10.1364/PRJ.468518",
+    "volume": "10",
+    "author": "Y Zhang",
+    "year": "2022",
+    "unstructured": "Zhang, Y. et al. Systematic investigation of millimeter-wave optic modulation performance in thin-film lithium niobate. Photon. Res. 10, 2380\u20132387 (2022).",
+    "journal-title": "Photon. Res."
+   },
+   {
+    "key": "69588_CR15",
+    "doi-asserted-by": "publisher",
+    "first-page": "61",
+    "DOI": "10.1364/OPTICA.449691",
+    "volume": "9",
+    "author": "M Xu",
+    "year": "2022",
+    "unstructured": "Xu, M. et al. Dual-polarization thin-film lithium niobate in-phase quadrature modulators for terabit-per-second transmission. Optica 9, 61\u201362 (2022).",
+    "journal-title": "Optica"
+   },
+   {
+    "key": "69588_CR16",
+    "doi-asserted-by": "publisher",
+    "first-page": "066104",
+    "DOI": "10.1063/5.0146987",
+    "volume": "8",
+    "author": "M Xu",
+    "year": "2023",
+    "unstructured": "Xu, M. et al. Attojoule/bit folded thin film lithium niobate coherent modulators using air-bridge structures. Apl Photonics 8, 066104 (2023).",
+    "journal-title": "Apl Photonics"
+   },
+   {
+    "key": "69588_CR17",
+    "doi-asserted-by": "publisher",
+    "first-page": "139",
+    "DOI": "10.1145/3422622",
+    "volume": "63",
+    "author": "I Goodfellow",
+    "year": "2020",
+    "unstructured": "Goodfellow, I. et al. Generative adversarial networks. Commun. ACM 63, 139\u2013144 (2020).",
+    "journal-title": "Commun. ACM"
+   },
+   {
+    "key": "69588_CR18",
+    "unstructured": "Huang, J. Gtc 2025 keynote address. NVIDIA. (2025)."
+   },
+   {
+    "key": "69588_CR19",
+    "doi-asserted-by": "publisher",
+    "first-page": "422",
+    "DOI": "10.1038/s41928-024-01187-z",
+    "volume": "7",
+    "author": "C Xiang",
+    "year": "2024",
+    "unstructured": "Xiang, C. & Bowers, J. E. Building 3d integrated circuits with electronics and photonics. Nat. Electron. 7, 422\u2013424 (2024).",
+    "journal-title": "Nat. Electron."
+   },
+   {
+    "key": "69588_CR20",
+    "doi-asserted-by": "publisher",
+    "first-page": "502",
+    "DOI": "10.1038/s41566-025-01633-0",
+    "volume": "19",
+    "author": "S Daudlin",
+    "year": "2025",
+    "unstructured": "Daudlin, S. et al. Three-dimensional photonic integration for ultra-low-energy, high-bandwidth interchip data links. Nat. Photonics 19, 502\u2013509 (2025).",
+    "journal-title": "Nat. Photonics"
+   },
+   {
+    "key": "69588_CR21",
+    "doi-asserted-by": "publisher",
+    "first-page": "34",
+    "DOI": "10.1109/MSPEC.2024.10669241",
+    "volume": "61",
+    "author": "SK Moore",
+    "year": "2024",
+    "unstructured": "Moore, S. K. The copper connection: Hybrid bonding is the 3D-chip tech that\u2019s saving Moore\u2019s law. IEEE Spectr. 61, 34\u201339 (2024).",
+    "journal-title": "IEEE Spectr."
+   },
+   {
+    "key": "69588_CR22",
+    "doi-asserted-by": "publisher",
+    "first-page": "567",
+    "DOI": "10.1147/rd.425.0567",
+    "volume": "42",
+    "author": "PC Andricacos",
+    "year": "1998",
+    "unstructured": "Andricacos, P. C., Uzoh, C., Dukovic, J. O., Horkans, J. & Deligianni, H. Damascene copper electroplating for chip interconnections. IBM J. Res. Dev. 42, 567\u2013574 (1998).",
+    "journal-title": "IBM J. Res. Dev."
+   },
+   {
+    "key": "69588_CR23",
+    "doi-asserted-by": "publisher",
+    "first-page": "1",
+    "DOI": "10.1109/JSTQE.2019.2935698",
+    "volume": "25",
+    "author": "NM Fahrenkopf",
+    "year": "2019",
+    "unstructured": "Fahrenkopf, N. M. et al. The aim of photonics MPW: a highly accessible cutting-edge technology for rapid prototyping of photonic integrated circuits. IEEE J. Sel. Top. Quantum Electron. 25, 1\u20136 (2019).",
+    "journal-title": "IEEE J. Sel. Top. Quantum Electron."
+   },
+   {
+    "key": "69588_CR24",
+    "doi-asserted-by": "publisher",
+    "first-page": "784",
+    "DOI": "10.1038/s41586-024-07369-1",
+    "volume": "629",
+    "author": "C Wang",
+    "year": "2024",
+    "unstructured": "Wang, C. et al. Lithium tantalate photonic integrated circuits for volume manufacturing. Nature 629, 784\u2013790 (2024).",
+    "journal-title": "Nature"
+   },
+   {
+    "key": "69588_CR25",
+    "doi-asserted-by": "publisher",
+    "first-page": "884",
+    "DOI": "10.1364/OPTICA.5.000884",
+    "volume": "5",
+    "author": "MHP Pfeiffer",
+    "year": "2018",
+    "unstructured": "Pfeiffer, M. H. P. et al. Ultra-smooth silicon nitride waveguides based on the damascene reflow process: fabrication and loss origins. Optica 5, 884\u2013892 (2018).",
+    "journal-title": "Optica"
+   },
+   {
+    "key": "69588_CR26",
+    "doi-asserted-by": "publisher",
+    "first-page": "2314",
+    "DOI": "10.1364/OL.44.002314",
+    "volume": "44",
+    "author": "L He",
+    "year": "2019",
+    "unstructured": "He, L. et al. Low-loss fiber-to-chip interface for lithium niobate photonic integrated circuits. Opt. Lett. 44, 2314\u20132317 (2019).",
+    "journal-title": "Opt. Lett."
+   },
+   {
+    "key": "69588_CR27",
+    "doi-asserted-by": "publisher",
+    "first-page": "085101",
+    "DOI": "10.1063/1.4942216",
+    "volume": "119",
+    "author": "D Gall",
+    "year": "2016",
+    "unstructured": "Gall, D. et al. Electron mean free path in elemental metals. J. Appl. Phys. 119, 085101 (2016).",
+    "journal-title": "J. Appl. Phys."
+   },
+   {
+    "key": "69588_CR28",
+    "doi-asserted-by": "publisher",
+    "first-page": "2516",
+    "DOI": "10.1063/1.371086",
+    "volume": "86",
+    "author": "JME Harper",
+    "year": "1999",
+    "unstructured": "Harper, J. M. E. et al. Mechanisms for microstructure evolution in electroplated copper thin films near room temperature. J. Appl. Phys. 86, 2516\u20132525 (1999).",
+    "journal-title": "J. Appl. Phys."
+   },
+   {
+    "key": "69588_CR29",
+    "doi-asserted-by": "publisher",
+    "first-page": "8107",
+    "DOI": "10.1143/JJAP.44.8107",
+    "volume": "44",
+    "author": "MS Kang",
+    "year": "2005",
+    "unstructured": "Kang, M. S., Kim, S.-K. & Kim, J. J. A novel process to control the surface roughness and resistivity of electroplated cu using thiourea. Jpn. J. Appl. Phys. 44, 8107 (2005).",
+    "journal-title": "Jpn. J. Appl. Phys."
+   },
+   {
+    "key": "69588_CR30",
+    "doi-asserted-by": "publisher",
+    "DOI": "10.1038/s41467-020-17806-0",
+    "volume": "11",
+    "author": "M Xu",
+    "year": "2020",
+    "unstructured": "Xu, M. et al. High-performance coherent optical modulators based on thin-film lithium niobate platform. Nat. Commun. 11, 3911 (2020).",
+    "journal-title": "Nat. Commun."
+   },
+   {
+    "key": "69588_CR31",
+    "doi-asserted-by": "publisher",
+    "first-page": "3619",
+    "DOI": "10.1364/OE.507536",
+    "volume": "32",
+    "author": "J Holzgrafe",
+    "year": "2024",
+    "unstructured": "Holzgrafe, J. et al. Relaxation of the electro-optic response in thin-film lithium niobate modulators. Opt. Express 32, 3619\u20133631 (2024).",
+    "journal-title": "Opt. Express"
+   },
+   {
+    "key": "69588_CR32",
+    "doi-asserted-by": "publisher",
+    "first-page": "3011",
+    "DOI": "10.1109/TIT.2016.2543740",
+    "volume": "62",
+    "author": "M Ivanov",
+    "year": "2016",
+    "unstructured": "Ivanov, M. et al. On the information loss of the max-log approximation in BICM systems. IEEE Trans. Inf. Theory 62, 3011\u20133025 (2016).",
+    "journal-title": "IEEE Trans. Inf. Theory"
+   },
+   {
+    "key": "69588_CR33",
+    "doi-asserted-by": "publisher",
+    "first-page": "3338",
+    "DOI": "10.1109/JLT.2022.3172246",
+    "volume": "40",
+    "author": "Q Hu",
+    "year": "2022",
+    "unstructured": "Hu, Q. et al. Ultrahigh-net-bitrate 363 gbit/s PAM-8 and 279 gbit/s polybinary optical transmission using plasmonic Mach-Zehnder modulator. J. Light. Technol. 40, 3338\u20133346 (2022).",
+    "journal-title": "J. Light. Technol."
+   },
+   {
+    "key": "69588_CR34",
+    "doi-asserted-by": "publisher",
+    "first-page": "850",
+    "DOI": "10.1109/LPT.2023.3285881",
+    "volume": "35",
+    "author": "E Berikaa",
+    "year": "2023",
+    "unstructured": "Berikaa, E. et al. Tfln mzms and next-gen dacs: Enabling beyond 400\u2009gbps imdd o-band and c-band transmission. IEEE Photonics Technol. Lett. 35, 850\u2013853 (2023).",
+    "journal-title": "IEEE Photonics Technol. Lett."
+   },
+   {
+    "key": "69588_CR35",
+    "doi-asserted-by": "publisher",
+    "first-page": "69",
+    "DOI": "10.1109/2944.826874",
+    "volume": "6",
+    "author": "EL Wooten",
+    "year": "2000",
+    "unstructured": "Wooten, E. L. et al. A review of lithium niobate modulators for fiber-optic communications systems. IEEE J. Sel. Top. Quantum Electron. 6, 69\u201382 (2000).",
+    "journal-title": "IEEE J. Sel. Top. Quantum Electron."
+   },
+   {
+    "key": "69588_CR36",
+    "doi-asserted-by": "publisher",
+    "first-page": "615",
+    "DOI": "10.1109/50.664072",
+    "volume": "16",
+    "author": "K Noguchi",
+    "year": "1998",
+    "unstructured": "Noguchi, K., Mitomi, O. & Miyazawa, H. Millimeter-wave ti: Linbo3 optical modulators. J. Lightwave Technol. 16, 615 (1998).",
+    "journal-title": "J. Lightwave Technol."
+   },
+   {
+    "key": "69588_CR37",
+    "doi-asserted-by": "publisher",
+    "first-page": "52",
+    "DOI": "10.1063/1.123130",
+    "volume": "74",
+    "author": "Y Wang",
+    "year": "1999",
+    "unstructured": "Wang, Y. & Alford, T. Formation of aluminum oxynitride diffusion barriers for Ag metallization. Appl. Phys. Lett. 74, 52\u201354 (1999).",
+    "journal-title": "Appl. Phys. Lett."
+   },
+   {
+    "key": "69588_CR38",
+    "doi-asserted-by": "publisher",
+    "first-page": "76",
+    "DOI": "10.1016/j.mee.2004.07.020",
+    "volume": "76",
+    "author": "L Gao",
+    "year": "2004",
+    "unstructured": "Gao, L. et al. Thermal stability of titanium nitride diffusion barrier films for advanced silver interconnects. Microelectron. Eng. 76, 76\u201381 (2004).",
+    "journal-title": "Microelectron. Eng."
+   },
+   {
+    "key": "69588_CR39",
+    "doi-asserted-by": "publisher",
+    "first-page": "20334",
+    "DOI": "10.1364/OE.560548",
+    "volume": "33",
+    "author": "Y Tang",
+    "year": "2025",
+    "unstructured": "Tang, Y. et al. High-performance thin-film lithium niobate modulator on silicon substrate with a thick silica buffer layer. Opt. Express 33, 20334\u201320344 (2025).",
+    "journal-title": "Opt. Express"
+   },
+   {
+    "key": "69588_CR40",
+    "doi-asserted-by": "publisher",
+    "first-page": "134",
+    "DOI": "10.1016/j.microrel.2015.12.033",
+    "volume": "59",
+    "author": "M Ohyama",
+    "year": "2016",
+    "unstructured": "Ohyama, M. et al. Evaluation of hybrid bonding technology of single-micron pitch with planar structure for 3d interconnection. Microelectron. Reliab. 59, 134\u2013139 (2016).",
+    "journal-title": "Microelectron. Reliab."
+   },
+   {
+    "key": "69588_CR41",
+    "doi-asserted-by": "crossref",
+    "unstructured": "Edelstein, D. et al. A high-performance liner for copper damascene interconnects. In Proceedings of the IEEE 2001 International Interconnect Technology Conference. (Cat. No.01EX461), 9\u201311 (2001).",
+    "DOI": "10.1109/IITC.2001.930001"
+   },
+   {
+    "key": "69588_CR42",
+    "unstructured": "IEEE standard for Ethernet - Amendment 10: Media Access Control Parameters, Physical Layers, and Management Parameters for 200\u2009gb/s and 400 \u2009gb/s operation. IEEE Std 802.3bs-201 (2017)."
+   }
+  ],
+  "container-title": [
+   "Nature Communications"
+  ],
+  "original-title": [],
+  "language": "en",
+  "link": [
+   {
+    "URL": "https://www.nature.com/articles/s41467-026-69588-6",
+    "content-type": "text/html",
+    "content-version": "vor",
+    "intended-application": "text-mining"
+   },
+   {
+    "URL": "https://www.nature.com/articles/s41467-026-69588-6.pdf",
+    "content-type": "application/pdf",
+    "content-version": "vor",
+    "intended-application": "text-mining"
+   },
+   {
+    "URL": "https://www.nature.com/articles/s41467-026-69588-6.pdf",
+    "content-type": "application/pdf",
+    "content-version": "vor",
+    "intended-application": "similarity-checking"
+   }
+  ],
+  "deposited": {
+   "date-parts": [
+    [
+     2026,
+     4,
+     8
+    ]
+   ],
+   "date-time": "2026-04-08T04:21:04Z",
+   "timestamp": 1775622064000
+  },
+  "score": 1,
+  "resource": {
+   "primary": {
+    "URL": "https://www.nature.com/articles/s41467-026-69588-6"
+   }
+  },
+  "subtitle": [],
+  "short-title": [],
+  "issued": {
+   "date-parts": [
+    [
+     2026,
+     2,
+     26
+    ]
+   ]
+  },
+  "references-count": 42,
+  "journal-issue": {
+   "issue": "1",
+   "published-online": {
+    "date-parts": [
+     [
+      2026,
+      12
+     ]
+    ]
+   }
+  },
+  "alternative-id": [
+   "69588"
+  ],
+  "URL": "https://doi.org/10.1038/s41467-026-69588-6",
+  "relation": {},
+  "ISSN": [
+   "2041-1723"
+  ],
+  "issn-type": [
+   {
+    "value": "2041-1723",
+    "type": "electronic"
+   }
+  ],
+  "subject": [],
+  "published": {
+   "date-parts": [
+    [
+     2026,
+     2,
+     26
+    ]
+   ]
+  },
+  "assertion": [
+   {
+    "value": "26 August 2025",
+    "order": 1,
+    "name": "received",
+    "label": "Received",
+    "group": {
+     "name": "ArticleHistory",
+     "label": "Article History"
+    }
+   },
+   {
+    "value": "29 January 2026",
+    "order": 2,
+    "name": "accepted",
+    "label": "Accepted",
+    "group": {
+     "name": "ArticleHistory",
+     "label": "Article History"
+    }
+   },
+   {
+    "value": "26 February 2026",
+    "order": 3,
+    "name": "first_online",
+    "label": "First Online",
+    "group": {
+     "name": "ArticleHistory",
+     "label": "Article History"
+    }
+   },
+   {
+    "value": "TJK is the co-founder of LUXTELLIGENCE SA, offering electro-optical photonic integrated circuits. The other authors declare no competing interests.",
+    "order": 1,
+    "name": "Ethics",
+    "group": {
+     "name": "EthicsHeading",
+     "label": "Competing interests"
+    }
+   }
+  ],
+  "article-number": "3211"
+ }
+}

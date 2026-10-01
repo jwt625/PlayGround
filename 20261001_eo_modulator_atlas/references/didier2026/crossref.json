@@ -1,0 +1,928 @@
+{
+ "status": "ok",
+ "message-type": "work",
+ "message-version": "1.0.0",
+ "message": {
+  "indexed": {
+   "date-parts": [
+    [
+     2026,
+     8,
+     14
+    ]
+   ],
+   "date-time": "2026-08-14T16:03:16Z",
+   "timestamp": 1786723396005,
+   "version": "build-2736575974"
+  },
+  "reference-count": 57,
+  "publisher": "Springer Science and Business Media LLC",
+  "issue": "1",
+  "license": [
+   {
+    "start": {
+     "date-parts": [
+      [
+       2026,
+       2,
+       21
+      ]
+     ],
+     "date-time": "2026-02-21T00:00:00Z",
+     "timestamp": 1771632000000
+    },
+    "content-version": "tdm",
+    "delay-in-days": 0,
+    "URL": "https://creativecommons.org/licenses/by/4.0"
+   },
+   {
+    "start": {
+     "date-parts": [
+      [
+       2026,
+       3,
+       31
+      ]
+     ],
+     "date-time": "2026-03-31T00:00:00Z",
+     "timestamp": 1774915200000
+    },
+    "content-version": "vor",
+    "delay-in-days": 38,
+    "URL": "https://creativecommons.org/licenses/by/4.0"
+   }
+  ],
+  "content-domain": {
+   "domain": [
+    "link.springer.com"
+   ],
+   "crossmark-restriction": false
+  },
+  "short-container-title": [
+   "Nat Commun"
+  ],
+  "abstract": "<jats:title>Abstract</jats:title>\n                  <jats:p>\n                    The mid-infrared spectrum, spanning from 3 to 14 \u00b5m, holds great promise for molecular spectroscopy and free space optical communication, benefiting from strong molecular absorption and reduced atmospheric attenuation. While progress in MIR photonics has accelerated due to improved sources and detectors, integrated low-loss, high -performance modulators remain limited. In order to address this gap, we demonstrate a broadband, high speed lithium niobate on sapphire Mach Zehnder electro optic modulator operating from 3.95 to 4.5 \u00b5m. The device shows a 3 dB bandwidth above 20 GHz, 17 dB extinction ratio, and\n                    <jats:italic>V</jats:italic>\n                    <jats:sub>\n                      <jats:italic>\u03c0</jats:italic>\n                      \u2009\n                    </jats:sub>\n                    <jats:italic>L</jats:italic>\n                    \u00a0=\u00a022 V\u00a0\u22c5\u00a0cm, with optical output power at the half milliwatt level. We demonstrate 10 Gbit s\n                    <jats:sup>\u22121</jats:sup>\n                    data transmission and a 70 GHz broad\u00a0frequency comb, uniquely combining integration, low propagation loss, extinction ratio and high-speed operation.\n                  </jats:p>",
+  "DOI": "10.1038/s41467-026-69880-5",
+  "type": "journal-article",
+  "created": {
+   "date-parts": [
+    [
+     2026,
+     2,
+     21
+    ]
+   ],
+   "date-time": "2026-02-21T17:15:34Z",
+   "timestamp": 1771694134000
+  },
+  "update-policy": "https://doi.org/10.1007/springer_crossmark_policy",
+  "source": "Crossref",
+  "is-referenced-by-count": 6,
+  "title": [
+   "Thin film lithium niobate on sapphire for integrated mid-infrared modulator"
+  ],
+  "prefix": "10.1038",
+  "volume": "17",
+  "author": [
+   {
+    "ORCID": "https://orcid.org/0000-0001-5503-998X",
+    "authenticated-orcid": false,
+    "given": "Pierre",
+    "family": "Didier",
+    "sequence": "first",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Prakhar",
+    "family": "Jain",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "ORCID": "https://orcid.org/0000-0001-9016-8103",
+    "authenticated-orcid": false,
+    "given": "Mathieu",
+    "family": "Bertrand",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Jost",
+    "family": "Kellner",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "ORCID": "https://orcid.org/0009-0007-5746-8244",
+    "authenticated-orcid": false,
+    "given": "Oliver",
+    "family": "Pitz",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Zhecheng",
+    "family": "Dai",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "ORCID": "https://orcid.org/0009-0002-2609-4271",
+    "authenticated-orcid": false,
+    "given": "Tristan",
+    "family": "Kuttner",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "ORCID": "https://orcid.org/0000-0002-0260-5797",
+    "authenticated-orcid": false,
+    "given": "Mattias",
+    "family": "Beck",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "ORCID": "https://orcid.org/0000-0002-3265-5787",
+    "authenticated-orcid": false,
+    "given": "Baile",
+    "family": "Chen",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "ORCID": "https://orcid.org/0000-0003-4429-7988",
+    "authenticated-orcid": false,
+    "given": "J\u00e9r\u00f4me",
+    "family": "Faist",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "ORCID": "https://orcid.org/0000-0001-7469-9756",
+    "authenticated-orcid": false,
+    "given": "Rachel",
+    "family": "Grange",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   }
+  ],
+  "member": "297",
+  "published-online": {
+   "date-parts": [
+    [
+     2026,
+     2,
+     21
+    ]
+   ]
+  },
+  "reference": [
+   {
+    "key": "69880_CR1",
+    "first-page": "1113302",
+    "volume": "11133",
+    "author": "JJ Liu",
+    "year": "2019",
+    "unstructured": "Liu, J. J., Stann, B. L., Klett, K. K., Cho, P. S. & Pellegrino, P. M. Mid and long-wave infrared free-space optical communication. Laser Commun. Propag. Atmos Oceans VIII 11133, 1113302 (2019).",
+    "journal-title": "Laser Commun. Propag. Atmos Oceans VIII"
+   },
+   {
+    "key": "69880_CR2",
+    "doi-asserted-by": "publisher",
+    "first-page": "1",
+    "DOI": "10.1109/JSTQE.2021.3096316",
+    "volume": "28",
+    "author": "O Spitz",
+    "year": "2021",
+    "unstructured": "Spitz, O. et al. Free-space communication with directly modulated mid-infrared quantum cascade devices. IEEE J. Sel. Top. Quantum Electron. 28, 1\u20139 (2021).",
+    "journal-title": "IEEE J. Sel. Top. Quantum Electron."
+   },
+   {
+    "key": "69880_CR3",
+    "doi-asserted-by": "publisher",
+    "first-page": "4355",
+    "DOI": "10.1364/OE.17.004355",
+    "volume": "17",
+    "author": "P Corrigan",
+    "year": "2009",
+    "unstructured": "Corrigan, P., Martini, R., Whittaker, E. A. & Bethea, C. Quantum cascade lasers and the Kruse model in free space optical communication. Opt. Express 17, 4355\u20134359 (2009).",
+    "journal-title": "Opt. Express"
+   },
+   {
+    "key": "69880_CR4",
+    "doi-asserted-by": "crossref",
+    "unstructured": "Liu, J. J., Stann, B. L., Klett, K. K., Cho, P. S. & Pellegrino, P. M. Mid and long-wave infrared free-space optical communication. In Proc. Laser Communication and Propagation Through the Atmosphere and Oceans VIII 1113302 (2019).",
+    "DOI": "10.1117/12.2530969"
+   },
+   {
+    "key": "69880_CR5",
+    "doi-asserted-by": "crossref",
+    "unstructured": "Esmail, M. A., Ragheb, A., Fathallah, H. & Alouini, M. S. Investigation and demonstration of high speed full-optical hybrid FSO/fiber communication system under light sand storm condition. IEEE Photonics J. 9, 1\u201312 (2017).",
+    "DOI": "10.1109/JPHOT.2016.2641741"
+   },
+   {
+    "key": "69880_CR6",
+    "doi-asserted-by": "publisher",
+    "first-page": "45",
+    "DOI": "10.1146/annurev-anchem-071015-041507",
+    "volume": "9",
+    "author": "J Haas",
+    "year": "2016",
+    "unstructured": "Haas, J. & Mizaikoff, B. Advances in mid-infrared spectroscopy for chemical analysis. Annu. Rev. Anal. Chem. 9, 45\u201368 (2016).",
+    "journal-title": "Annu. Rev. Anal. Chem."
+   },
+   {
+    "key": "69880_CR7",
+    "doi-asserted-by": "publisher",
+    "first-page": "1095",
+    "DOI": "10.1366/14-00001",
+    "volume": "68",
+    "author": "L Zhang",
+    "year": "2014",
+    "unstructured": "Zhang, L., Tian, G., Li, J. & Yu, B. Applications of absorption spectroscopy using quantum cascade lasers. Appl. Spectrosc. 68, 1095\u20131107 (2014).",
+    "journal-title": "Appl. Spectrosc."
+   },
+   {
+    "key": "69880_CR8",
+    "doi-asserted-by": "publisher",
+    "first-page": "184",
+    "DOI": "10.1364/JOSAB.399168",
+    "volume": "37",
+    "author": "A Trichili",
+    "year": "2020",
+    "unstructured": "Trichili, A., Cox, M. A., Ooi, B. S. & Alouini, M.-S. Roadmap to free space optics. JOSA B 37, 184\u2013201 (2020).",
+    "journal-title": "JOSA B"
+   },
+   {
+    "key": "69880_CR9",
+    "doi-asserted-by": "publisher",
+    "first-page": "6728",
+    "DOI": "10.1364/AO.42.006728",
+    "volume": "42",
+    "author": "S Schilt",
+    "year": "2003",
+    "unstructured": "Schilt, S., Thevenaz, L. & Robert, P. Wavelength modulation spectroscopy: combined frequency and intensity laser modulation. Appl. Opt. 42, 6728\u20136738 (2003).",
+    "journal-title": "Appl. Opt."
+   },
+   {
+    "key": "69880_CR10",
+    "doi-asserted-by": "publisher",
+    "first-page": "738",
+    "DOI": "10.1038/s41566-024-01423-0",
+    "volume": "18",
+    "author": "M Tamamitsu",
+    "year": "2024",
+    "unstructured": "Tamamitsu, M. et al. Mid-infrared wide-field nanoscopy. Nat. Photonics 18, 738\u2013743 (2024).",
+    "journal-title": "Nat. Photonics"
+   },
+   {
+    "key": "69880_CR11",
+    "doi-asserted-by": "publisher",
+    "first-page": "666",
+    "DOI": "10.1016/j.saa.2017.01.010",
+    "volume": "188",
+    "author": "B-J Schultz",
+    "year": "2018",
+    "unstructured": "Schultz, B.-J., Mohrmann, H., Lorenz-Fonfria, V. A. & Heberle, J. Protein dynamics observed by tunable mid-ir quantum cascade lasers across the time range from 10 ns to 1 s. Spectrochim. Acta Part A Mol. Biomol. Spectrosc. 188, 666\u2013674 (2018).",
+    "journal-title": "Spectrochim. Acta Part A Mol. Biomol. Spectrosc."
+   },
+   {
+    "key": "69880_CR12",
+    "doi-asserted-by": "publisher",
+    "first-page": "26499",
+    "DOI": "10.1364/OE.27.026499",
+    "volume": "27",
+    "author": "M Stuhr",
+    "year": "2019",
+    "unstructured": "Stuhr, M., Fa\u00dfheber, N. & Friedrichs, G. Single-tone mid-infrared frequency modulation spectroscopy for sensitive detection of transient species. Opt. Express 27, 26499\u201326512 (2019).",
+    "journal-title": "Opt. Express"
+   },
+   {
+    "key": "69880_CR13",
+    "doi-asserted-by": "publisher",
+    "first-page": "146",
+    "DOI": "10.1038/s41566-018-0347-5",
+    "volume": "13",
+    "author": "N Picqu\u00e9",
+    "year": "2019",
+    "unstructured": "Picqu\u00e9, N. & H\u00e4nsch, T. W. Frequency comb spectroscopy. Nat. Photonics 13, 146\u2013157 (2019).",
+    "journal-title": "Nat. Photonics"
+   },
+   {
+    "key": "69880_CR14",
+    "doi-asserted-by": "publisher",
+    "first-page": "553",
+    "DOI": "10.1126/science.264.5158.553",
+    "volume": "264",
+    "author": "J Faist",
+    "year": "1994",
+    "unstructured": "Faist, J. et al. Quantum cascade laser. Science 264, 553\u2013556 (1994).",
+    "journal-title": "Science"
+   },
+   {
+    "key": "69880_CR15",
+    "doi-asserted-by": "publisher",
+    "first-page": "757",
+    "DOI": "10.1063/1.115216",
+    "volume": "67",
+    "author": "J Meyer",
+    "year": "1995",
+    "unstructured": "Meyer, J., Hoffman, C., Bartoli, F. & Ram-Mohan, L. Type-II quantum-well lasers for the mid-wavelength infrared. Appl. Phys. Lett. 67, 757\u2013759 (1995).",
+    "journal-title": "Appl. Phys. Lett."
+   },
+   {
+    "key": "69880_CR16",
+    "doi-asserted-by": "publisher",
+    "first-page": "2409",
+    "DOI": "10.1063/1.120076",
+    "volume": "71",
+    "author": "RQ Yang",
+    "year": "1997",
+    "unstructured": "Yang, R. Q. et al. High power mid-infrared interband cascade lasers based on type-II quantum wells. Appl. Phys. Lett. 71, 2409\u20132411 (1997).",
+    "journal-title": "Appl. Phys. Lett."
+   },
+   {
+    "key": "69880_CR17",
+    "doi-asserted-by": "publisher",
+    "DOI": "10.1038/s41467-024-52053-7",
+    "volume": "15",
+    "author": "H Dely",
+    "year": "2024",
+    "unstructured": "Dely, H. et al. Unipolar quantum optoelectronics for high speed direct modulation and transmission in 8\u201314 \u03bcm atmospheric window. Nat. Commun. 15, 8040 (2024).",
+    "journal-title": "Nat. Commun."
+   },
+   {
+    "key": "69880_CR18",
+    "doi-asserted-by": "publisher",
+    "first-page": "3294",
+    "DOI": "10.1364/OE.24.003294",
+    "volume": "24",
+    "author": "B Hinkov",
+    "year": "2016",
+    "unstructured": "Hinkov, B., Hugi, A., Beck, M. & Faist, J. Rf-modulation of mid-infrared distributed feedback quantum cascade lasers. Opt. Express 24, 3294\u20133312 (2016).",
+    "journal-title": "Opt. Express"
+   },
+   {
+    "key": "69880_CR19",
+    "doi-asserted-by": "publisher",
+    "first-page": "582",
+    "DOI": "10.1364/PRJ.478776",
+    "volume": "11",
+    "author": "P Didier",
+    "year": "2023",
+    "unstructured": "Didier, P. et al. Interband cascade technology for energy-efficient mid-infrared free-space communication. Photonics Res. 11, 582\u2013590 (2023).",
+    "journal-title": "Photonics Res."
+   },
+   {
+    "key": "69880_CR20",
+    "doi-asserted-by": "crossref",
+    "unstructured": "Bonazzi, T. et al. Metamaterial unipolar quantum optoelectronics for mid-infrared free-space optics. APL Photonics 9, 110801 (2024).",
+    "DOI": "10.1063/5.0225920"
+   },
+   {
+    "key": "69880_CR21",
+    "doi-asserted-by": "publisher",
+    "first-page": "1",
+    "DOI": "10.1038/s41467-020-20710-2",
+    "volume": "12",
+    "author": "S Pirotta",
+    "year": "2021",
+    "unstructured": "Pirotta, S. et al. Fast amplitude modulation up to 1.5 GHz of mid-IR free-space beams at room-temperature. Nat. Commun. 12, 1\u20136 (2021).",
+    "journal-title": "Nat. Commun."
+   },
+   {
+    "key": "69880_CR22",
+    "doi-asserted-by": "crossref",
+    "unstructured": "Dely, H. et al. 10 Gbit\u22c5 s-1 free space data transmission at 9 \u03bcm wavelength with unipolar quantum optoelectronics. Laser Photonics Rev. 16.2, 14 (2022)",
+    "DOI": "10.1002/lpor.202100414"
+   },
+   {
+    "key": "69880_CR23",
+    "doi-asserted-by": "publisher",
+    "first-page": "056004",
+    "DOI": "10.1117/1.AP.4.5.056004",
+    "volume": "4",
+    "author": "P Didier",
+    "year": "2022",
+    "unstructured": "Didier, P. et al. High-capacity free-space optical link in the midinfrared thermal atmospheric windows using unipolar quantum devices. Adv. Photonics 4, 056004\u2013056004 (2022).",
+    "journal-title": "Adv. Photonics"
+   },
+   {
+    "key": "69880_CR24",
+    "doi-asserted-by": "publisher",
+    "first-page": "828",
+    "DOI": "10.1364/PRJ.7.000828",
+    "volume": "7",
+    "author": "T Li",
+    "year": "2019",
+    "unstructured": "Li, T. et al. Ge-on-si modulators operating at mid-infrared wavelengths up to 8 \u03bcm. Photonics Res. 7, 828\u2013836 (2019).",
+    "journal-title": "Photonics Res."
+   },
+   {
+    "key": "69880_CR25",
+    "doi-asserted-by": "publisher",
+    "first-page": "915",
+    "DOI": "10.1364/OL.44.000915",
+    "volume": "44",
+    "author": "M Nedeljkovic",
+    "year": "2019",
+    "unstructured": "Nedeljkovic, M. et al. Silicon-on-insulator free-carrier injection modulators for the mid-infrared. Opt. Lett. 44, 915\u2013918 (2019).",
+    "journal-title": "Opt. Lett."
+   },
+   {
+    "key": "69880_CR26",
+    "doi-asserted-by": "publisher",
+    "first-page": "249",
+    "DOI": "10.1021/acsphotonics.1c01449",
+    "volume": "9",
+    "author": "M Montesinos-Ballester",
+    "year": "2022",
+    "unstructured": "Montesinos-Ballester, M. et al. Mid-infrared integrated electro-optic modulator operating up to 225 mhz between 6.4 and 10.7 \u03bcm wavelength. ACS Photonics 9, 249\u2013255 (2022).",
+    "journal-title": "ACS Photonics"
+   },
+   {
+    "key": "69880_CR27",
+    "doi-asserted-by": "publisher",
+    "first-page": "350",
+    "DOI": "10.1364/OPTICA.1.000350",
+    "volume": "1",
+    "author": "J Chiles",
+    "year": "2014",
+    "unstructured": "Chiles, J. & Fathpour, S. Mid-infrared integrated waveguide modulators based on silicon-on-lithium-niobate photonics. Optica 1, 350\u2013355 (2014).",
+    "journal-title": "Optica"
+   },
+   {
+    "key": "69880_CR28",
+    "doi-asserted-by": "publisher",
+    "first-page": "2202228",
+    "DOI": "10.1002/adom.202202228",
+    "volume": "11",
+    "author": "S Xu",
+    "year": "2023",
+    "unstructured": "Xu, S. et al. Mid-infrared silicon-on-lithium-niobate electro-optic modulators toward integrated spectroscopic sensing systems. Adv. Optical Mater. 11, 2202228 (2023).",
+    "journal-title": "Adv. Optical Mater."
+   },
+   {
+    "key": "69880_CR29",
+    "doi-asserted-by": "crossref",
+    "unstructured": "Hwang, H. et al. A wide-spectrum mid-infrared electro-optic intensity modulator employing a two-point coupled lithium niobate racetrack resonator. APL Photonics 10, 016116 (2025).",
+    "DOI": "10.1063/5.0235751"
+   },
+   {
+    "key": "69880_CR30",
+    "doi-asserted-by": "publisher",
+    "first-page": "840",
+    "DOI": "10.1088/1464-4258/8/10/004",
+    "volume": "8",
+    "author": "RA Soref",
+    "year": "2006",
+    "unstructured": "Soref, R. A., Emelett, S. J. & Buchwald, W. R. Silicon waveguided components for the long-wave infrared region. J. Opt. A Pure Appl. Opt. 8, 840 (2006).",
+    "journal-title": "J. Opt. A Pure Appl. Opt."
+   },
+   {
+    "key": "69880_CR31",
+    "doi-asserted-by": "publisher",
+    "DOI": "10.1038/s41467-022-35327-w",
+    "volume": "13",
+    "author": "K Zou",
+    "year": "2022",
+    "unstructured": "Zou, K. et al. High-capacity free-space optical communications using wavelength-and mode-division-multiplexing in the mid-infrared region. Nat. Commun. 13, 7662 (2022).",
+    "journal-title": "Nat. Commun."
+   },
+   {
+    "key": "69880_CR32",
+    "doi-asserted-by": "crossref",
+    "unstructured": "Zhou, H. et al. Demonstration of an optical parametric oscillator (OPO)-based high-power data transmitter for a 10-Gbit/s QPSK mid-IR coherent free-space link through fog. J. Lightwave Technol. 42, 3989\u20133996 (2024).",
+    "DOI": "10.1109/JLT.2024.3388932"
+   },
+   {
+    "key": "69880_CR33",
+    "doi-asserted-by": "publisher",
+    "first-page": "30876",
+    "DOI": "10.1364/OE.493162",
+    "volume": "31",
+    "author": "H Dely",
+    "year": "2023",
+    "unstructured": "Dely, H. et al. Heterodyne coherent detection of phase modulation in a mid-infrared unipolar device. Opt. Express 31, 30876\u201330883 (2023).",
+    "journal-title": "Opt. Express"
+   },
+   {
+    "key": "69880_CR34",
+    "doi-asserted-by": "crossref",
+    "unstructured": "Chung, H. et al. Electrical phase modulation based on mid-infrared intersubband polaritonic metasurfaces. Adv. Sci. 10, 2207520 (2023).",
+    "DOI": "10.1002/advs.202207520"
+   },
+   {
+    "key": "69880_CR35",
+    "doi-asserted-by": "publisher",
+    "first-page": "3027",
+    "DOI": "10.1021/acs.nanolett.7b00359",
+    "volume": "17",
+    "author": "MC Sherrott",
+    "year": "2017",
+    "unstructured": "Sherrott, M. C. et al. Experimental demonstration of> 230 phase modulation in gate-tunable graphene\u2013gold reconfigurable mid-infrared metasurfaces. Nano Lett. 17, 3027\u20133034 (2017).",
+    "journal-title": "Nano Lett."
+   },
+   {
+    "key": "69880_CR36",
+    "doi-asserted-by": "crossref",
+    "unstructured": "Boyd, R.W., Gaeta, A.L. & Giese, E. Nonlinear optics. In Proc. Springer Handbook of Atomic, Molecular, and Optical Physics 1097\u20131110 (Springer, 2008).",
+    "DOI": "10.1007/978-3-030-73893-8_76"
+   },
+   {
+    "key": "69880_CR37",
+    "doi-asserted-by": "publisher",
+    "first-page": "030502",
+    "DOI": "10.1117/1.AP.4.3.030502",
+    "volume": "4",
+    "author": "Z Xie",
+    "year": "2022",
+    "unstructured": "Xie, Z. & Zhu, S. Linbo3 crystals: from bulk to film. Adv. Photonics 4, 030502\u2013030502 (2022).",
+    "journal-title": "Adv. Photonics"
+   },
+   {
+    "key": "69880_CR38",
+    "doi-asserted-by": "publisher",
+    "first-page": "101",
+    "DOI": "10.1038/s41586-018-0551-y",
+    "volume": "562",
+    "author": "C Wang",
+    "year": "2018",
+    "unstructured": "Wang, C. et al. Integrated lithium niobate electro-optic modulators operating at CMOS-compatible voltages. Nature 562, 101\u2013104 (2018).",
+    "journal-title": "Nature"
+   },
+   {
+    "key": "69880_CR39",
+    "doi-asserted-by": "publisher",
+    "DOI": "10.1038/s41467-020-17806-0",
+    "volume": "11",
+    "author": "M Xu",
+    "year": "2020",
+    "unstructured": "Xu, M. et al. High-performance coherent optical modulators based on thin-film lithium niobate platform. Nat. Commun. 11, 3911 (2020).",
+    "journal-title": "Nat. Commun."
+   },
+   {
+    "key": "69880_CR40",
+    "doi-asserted-by": "publisher",
+    "first-page": "921",
+    "DOI": "10.1364/OPTICA.427428",
+    "volume": "8",
+    "author": "J Mishra",
+    "year": "2021",
+    "unstructured": "Mishra, J. et al. Mid-infrared nonlinear optics in thin-film lithium niobate on sapphire. Optica 8, 921\u2013924 (2021).",
+    "journal-title": "Optica"
+   },
+   {
+    "key": "69880_CR41",
+    "doi-asserted-by": "crossref",
+    "unstructured": "Dobrovinskaya, E. R., Lytvynov, L. A. & Pishchik, V. Properties of sapphire. Sapphire: Material, Manufacturing, Applications, 55\u2013176 (2009).",
+    "DOI": "10.1007/978-0-387-85695-7_2"
+   },
+   {
+    "key": "69880_CR42",
+    "doi-asserted-by": "publisher",
+    "first-page": "3683",
+    "DOI": "10.1515/nanoph-2023-0286",
+    "volume": "12",
+    "author": "T Xu",
+    "year": "2023",
+    "unstructured": "Xu, T. et al. Mid-infrared integrated electro-optic modulators: a review. Nanophotonics 12, 3683\u20133706 (2023).",
+    "journal-title": "Nanophotonics"
+   },
+   {
+    "key": "69880_CR43",
+    "doi-asserted-by": "publisher",
+    "first-page": "1601",
+    "DOI": "10.1515/nanoph-2022-0676",
+    "volume": "12",
+    "author": "F Kaufmann",
+    "year": "2023",
+    "unstructured": "Kaufmann, F., Finco, G., Maeder, A. & Grange, R. Redeposition-free inductively-coupled plasma etching of lithium niobate for integrated photonics. Nanophotonics 12, 1601\u20131611 (2023).",
+    "journal-title": "Nanophotonics"
+   },
+   {
+    "key": "69880_CR44",
+    "doi-asserted-by": "publisher",
+    "first-page": "1836",
+    "DOI": "10.1109/LPT.2014.2337055",
+    "volume": "26",
+    "author": "SM Lindecrantz",
+    "year": "2014",
+    "unstructured": "Lindecrantz, S. M. & Helles\u00f8, O. G. Estimation of propagation losses for narrow strip and rib waveguides. IEEE Photonics Technol. Lett. 26, 1836\u20131839 (2014).",
+    "journal-title": "IEEE Photonics Technol. Lett."
+   },
+   {
+    "key": "69880_CR45",
+    "doi-asserted-by": "crossref",
+    "unstructured": "Khalatpour, A., Qi, L., Fejer, M. M. & Safavi-Naeini, A. H. Roughness-limited performance in ultra-low-loss lithium niobate cavities. Adv. Optic. Mater. e02355 (2025).",
+    "DOI": "10.1002/adom.202502355"
+   },
+   {
+    "key": "69880_CR46",
+    "doi-asserted-by": "publisher",
+    "first-page": "1536",
+    "DOI": "10.1364/OPTICA.4.001536",
+    "volume": "4",
+    "author": "M Zhang",
+    "year": "2017",
+    "unstructured": "Zhang, M., Wang, C., Cheng, R., Shams-Ansari, A. & Lon\u010dar, M. Monolithic ultra-high-q lithium niobate microring resonator. Optica 4, 1536\u20131537 (2017).",
+    "journal-title": "Optica"
+   },
+   {
+    "key": "69880_CR47",
+    "doi-asserted-by": "crossref",
+    "unstructured": "Suhara, T. & Fujimura, M. Waveguide Nonlinear-Optic Devices. 1st edn (Springer Nature, 2003).",
+    "DOI": "10.1007/978-3-662-10872-7_1"
+   },
+   {
+    "key": "69880_CR48",
+    "unstructured": "Sauter, E. G. Nonlinear optics. John Wiley & Sons, 20\u201326 (1996)."
+   },
+   {
+    "key": "69880_CR49",
+    "doi-asserted-by": "publisher",
+    "first-page": "125",
+    "DOI": "10.1364/OPTICA.482667",
+    "volume": "10",
+    "author": "S Xue",
+    "year": "2023",
+    "unstructured": "Xue, S. et al. Full-spectrum visible electro-optic modulator. Optica 10, 125\u2013126 (2023).",
+    "journal-title": "Optica"
+   },
+   {
+    "key": "69880_CR50",
+    "doi-asserted-by": "publisher",
+    "first-page": "229",
+    "DOI": "10.1038/nature11620",
+    "volume": "492",
+    "author": "A Hugi",
+    "year": "2012",
+    "unstructured": "Hugi, A., Villares, G., Blaser, S., Liu, H. & Faist, J. Mid-infrared frequency comb based on a quantum cascade laser. Nature 492, 229\u2013233 (2012).",
+    "journal-title": "Nature"
+   },
+   {
+    "key": "69880_CR51",
+    "doi-asserted-by": "publisher",
+    "first-page": "434",
+    "DOI": "10.1126/science.adj3858",
+    "volume": "382",
+    "author": "I Heckelmann",
+    "year": "2023",
+    "unstructured": "Heckelmann, I. et al. Quantum walk comb in a fast gain laser. Science 382, 434\u2013438 (2023).",
+    "journal-title": "Science"
+   },
+   {
+    "key": "69880_CR52",
+    "doi-asserted-by": "publisher",
+    "first-page": "721",
+    "DOI": "10.1038/nphoton.2015.179",
+    "volume": "9",
+    "author": "I Pupeza",
+    "year": "2015",
+    "unstructured": "Pupeza, I. et al. High-power sub-two-cycle mid-infrared pulses at 100 mhz repetition rate. Nat. Photonics 9, 721\u2013724 (2015).",
+    "journal-title": "Nat. Photonics"
+   },
+   {
+    "key": "69880_CR53",
+    "doi-asserted-by": "publisher",
+    "first-page": "2063",
+    "DOI": "10.3390/mi13122063",
+    "volume": "13",
+    "author": "F Wang",
+    "year": "2022",
+    "unstructured": "Wang, F., Qi, X., Chen, Z., Razeghi, M. & Dhillon, S. Ultrafast pulse generation from quantum cascade lasers. Micromachines 13, 2063 (2022).",
+    "journal-title": "Micromachines"
+   },
+   {
+    "key": "69880_CR54",
+    "doi-asserted-by": "publisher",
+    "first-page": "919",
+    "DOI": "10.1038/s41566-021-00894-9",
+    "volume": "15",
+    "author": "P T\u00e4schler",
+    "year": "2021",
+    "unstructured": "T\u00e4schler, P. et al. Femtosecond pulses from a mid-infrared quantum cascade laser. Nat. Photonics 15, 919\u2013924 (2021).",
+    "journal-title": "Nat. Photonics"
+   },
+   {
+    "key": "69880_CR55",
+    "unstructured": "Kazakov, D. et al. Driven bright solitons on a mid-infrared laser chip. Nature 64, 1\u20137 (2025)."
+   },
+   {
+    "key": "69880_CR56",
+    "doi-asserted-by": "publisher",
+    "first-page": "745",
+    "DOI": "10.1109/LED.2022.3163660",
+    "volume": "43",
+    "author": "J Huang",
+    "year": "2022",
+    "unstructured": "Huang, J. et al. High-speed mid-wave infrared uni-traveling carrier photodetector based on InAs/InAsSb type-II superlattice. IEEE Electron Dev. Lett. 43, 745\u2013748 (2022).",
+    "journal-title": "IEEE Electron Dev. Lett."
+   },
+   {
+    "key": "69880_CR57",
+    "doi-asserted-by": "crossref",
+    "unstructured": "Dai, Z., Huang, J. & Chen, B. Mwir inas/inassb type-II superlattice photodetector for high-speed operation. In Proc. IEEE Photonics Conference (IPC) 1\u20132 (IEEE, 2022).",
+    "DOI": "10.1109/IPC53466.2022.9975627"
+   }
+  ],
+  "container-title": [
+   "Nature Communications"
+  ],
+  "original-title": [],
+  "language": "en",
+  "link": [
+   {
+    "URL": "https://www.nature.com/articles/s41467-026-69880-5",
+    "content-type": "text/html",
+    "content-version": "vor",
+    "intended-application": "text-mining"
+   },
+   {
+    "URL": "https://www.nature.com/articles/s41467-026-69880-5.pdf",
+    "content-type": "application/pdf",
+    "content-version": "vor",
+    "intended-application": "text-mining"
+   },
+   {
+    "URL": "https://www.nature.com/articles/s41467-026-69880-5.pdf",
+    "content-type": "application/pdf",
+    "content-version": "vor",
+    "intended-application": "similarity-checking"
+   }
+  ],
+  "deposited": {
+   "date-parts": [
+    [
+     2026,
+     3,
+     31
+    ]
+   ],
+   "date-time": "2026-03-31T19:13:03Z",
+   "timestamp": 1774984383000
+  },
+  "score": 1,
+  "resource": {
+   "primary": {
+    "URL": "https://www.nature.com/articles/s41467-026-69880-5"
+   }
+  },
+  "subtitle": [],
+  "short-title": [],
+  "issued": {
+   "date-parts": [
+    [
+     2026,
+     2,
+     21
+    ]
+   ]
+  },
+  "references-count": 57,
+  "journal-issue": {
+   "issue": "1",
+   "published-online": {
+    "date-parts": [
+     [
+      2026,
+      12
+     ]
+    ]
+   }
+  },
+  "alternative-id": [
+   "69880"
+  ],
+  "URL": "https://doi.org/10.1038/s41467-026-69880-5",
+  "relation": {},
+  "ISSN": [
+   "2041-1723"
+  ],
+  "issn-type": [
+   {
+    "value": "2041-1723",
+    "type": "electronic"
+   }
+  ],
+  "subject": [],
+  "published": {
+   "date-parts": [
+    [
+     2026,
+     2,
+     21
+    ]
+   ]
+  },
+  "assertion": [
+   {
+    "value": "11 July 2025",
+    "order": 1,
+    "name": "received",
+    "label": "Received",
+    "group": {
+     "name": "ArticleHistory",
+     "label": "Article History"
+    }
+   },
+   {
+    "value": "12 February 2026",
+    "order": 2,
+    "name": "accepted",
+    "label": "Accepted",
+    "group": {
+     "name": "ArticleHistory",
+     "label": "Article History"
+    }
+   },
+   {
+    "value": "21 February 2026",
+    "order": 3,
+    "name": "first_online",
+    "label": "First Online",
+    "group": {
+     "name": "ArticleHistory",
+     "label": "Article History"
+    }
+   },
+   {
+    "value": "The authors declare no competing interests.",
+    "order": 1,
+    "name": "Ethics",
+    "group": {
+     "name": "EthicsHeading",
+     "label": "Competing interests"
+    }
+   }
+  ],
+  "article-number": "3050"
+ }
+}

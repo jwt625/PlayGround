@@ -1,0 +1,11 @@
+org_name,org_type,country,region,parent_org,notes
+Fraunhofer Heinrich-Hertz-Institute,research_institute,DE,europe,,Berlin; name as written in the affiliation; fabricated the InP MZM on its InP platform
+Technical University Berlin,university,DE,europe,,Berlin; affiliation 2 (name as written in the paper)
+MACOM Technology Solutions,company,US,north_america,,"Santa Clara, CA; EML driver"
+Harvard University,university,US,north_america,,"Cambridge, MA; John A. Paulson School of Engineering and Applied Sciences"
+Cornell University,university,US,north_america,,"Ithaca, NY; School of Electrical and Computer Engineering"
+Columbia University,university,US,north_america,,"New York, NY; Department of Electrical Engineering"
+Center for Nanoscale Systems,facility,US,north_america,Harvard University,Acknowledgements: device fabrication performed at the center for nanoscale systems (CNS) at Harvard University; country from host institution
+"University of California, San Diego",university,US,north_america,,"La Jolla, CA; Electrical & Computer Engineering"
+Sandia National Laboratories,national_lab,US,north_america,,"Albuquerque, NM; Applied Microphotonic Systems; Si photonics foundry process (ref. 4 of the paper)"
+Sun Yat-sen University,university,CN,east_asia,,Guangzhou; State Key Laboratory of Optoelectronic Materials and Technologies and School of Physics and Engineering

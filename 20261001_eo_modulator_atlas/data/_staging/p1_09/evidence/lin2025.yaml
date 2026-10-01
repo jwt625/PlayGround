@@ -1,0 +1,295 @@
+paper_id: lin2025
+verified_on: '2026-10-01'
+source_files:
+- references/lin2025/text.md
+- references/lin2025/source.pdf (pages 23-26 rendered for figures)
+- references/lin2025/crossref.json
+entries:
+- device_id: lin2025-a
+  field: drive
+  value: push_pull
+  unit: ''
+  basis: design_target
+  locator: p.6, Fabrication
+  note: 'authors: EO phase shifters operating in a push-pull configuration'
+- device_id: lin2025-a
+  field: vpi_convention
+  value: mzm_push_pull
+  unit: ''
+  basis: derived
+  locator: p.8, Electro-optic Modulation
+  note: MZM-level Vpi of the push-pull MZM; convention not named by the authors
+- device_id: lin2025-a
+  field: length_mm
+  value: 16
+  unit: mm
+  basis: measured
+  locator: p.8; Fig. 3(a) caption
+  note: modulation region
+- device_id: lin2025-a
+  field: vpi_dc_v
+  value: 1.7
+  unit: V
+  basis: measured
+  locator: p.8; Fig. 3(a)
+  note: 100 Hz triangular sweep; stable from 1 Hz to 1 MHz (Fig. 3(b))
+- device_id: lin2025-a
+  field: vpil_dc_vcm
+  value: 2.7
+  unit: V*cm
+  basis: derived
+  locator: p.8; Fig. 3(d)
+  note: 'authors: Vpi 1.7 V x 16 mm = 2.7 V cm; simulated 2.64 V cm'
+- device_id: lin2025-a
+  field: bw3db_ghz
+  value: 40
+  unit: GHz
+  basis: measured
+  locator: p.9; Fig. 3(d)
+  note: small-signal EO response up to 110 GHz; normalization reference not stated
+- device_id: lin2025-a
+  field: bw_measured_to_ghz
+  value: 110
+  unit: GHz
+  basis: measured
+  locator: p.9; Fig. 3(d)
+- device_id: lin2025-a
+  field: eo_rolloff_db
+  value: 6.2
+  unit: dB
+  basis: extracted_from_figure
+  locator: p.24, Fig. 3(d)
+  note: drop of the measured 16 mm curve at 110 GHz
+- device_id: lin2025-a
+  field: eo_rolloff_freq_ghz
+  value: 110
+  unit: GHz
+  basis: extracted_from_figure
+  locator: p.24, Fig. 3(d)
+- device_id: lin2025-a
+  field: extinction_ratio_db
+  value: 20
+  unit: dB
+  basis: measured
+  locator: p.8; Fig. 3(a) inset
+  note: 100 Hz sweep
+- device_id: lin2025-a
+  field: ng_opt
+  value: 2.22
+  unit: '1'
+  basis: author_estimate
+  locator: p.11
+  note: optical group index quoted in the wafer-uniformity discussion; method not stated; microwave group indices within +-0.03 of it
+- device_id: lin2025-a
+  field: eo_film_thickness_nm
+  value: 600
+  unit: nm
+  basis: measured
+  locator: p.5, Fabrication
+  note: commercial X-cut TFLT wafer (NANOLN)
+- device_id: lin2025-a
+  field: etch_depth_nm
+  value: 320
+  unit: nm
+  basis: measured
+  locator: p.5, Fabrication
+- device_id: lin2025-a
+  field: slab_thickness_nm
+  value: 280
+  unit: nm
+  basis: measured
+  locator: p.5, Fabrication
+- device_id: lin2025-a
+  field: rib_width_nm
+  value: 4000
+  unit: nm
+  basis: design_target
+  locator: p.7, Electro-optic Modulation; Fig. 3(a)
+  note: waveguide width 4 um; top or base width not specified
+- device_id: lin2025-a
+  field: electrode_gap_um
+  value: 6
+  unit: um
+  basis: design_target
+  locator: p.7, Electro-optic Modulation; Fig. 3(a)
+- device_id: lin2025-a
+  field: electrode_thickness_um
+  value: 1.8
+  unit: um
+  basis: measured
+  locator: p.13, Methods (Cu thickness after CMP)
+  note: plus 10 nm Ti barrier
+- device_id: lin2025-a
+  field: electrode_metal
+  value: copper (Damascene, electroplated; 10 nm Ti barrier)
+  unit: ''
+  basis: measured
+  locator: p.12, Methods
+- device_id: lin2025-a
+  field: buffer_oxide_um
+  value: 4.7
+  unit: um
+  basis: measured
+  locator: p.5, Fabrication
+- device_id: lin2025-a
+  field: substrate
+  value: 525 um high-resistivity silicon
+  unit: ''
+  basis: measured
+  locator: p.5, Fabrication
+- device_id: lin2025-a
+  field: cladding
+  value: SiO2 2.5 um (PECVD, embeds the Cu) with 100 nm Si3N4 passivation
+  unit: ''
+  basis: measured
+  locator: p.12-13, Methods
+- device_id: lin2025-a
+  field: crystal_cut
+  value: x-cut
+  unit: ''
+  basis: measured
+  locator: p.5, Fabrication
+- device_id: lin2025-b
+  field: drive
+  value: push_pull
+  unit: ''
+  basis: design_target
+  locator: p.6, Fabrication
+  note: 'authors: EO phase shifters operating in a push-pull configuration'
+- device_id: lin2025-b
+  field: length_mm
+  value: 6
+  unit: mm
+  basis: measured
+  locator: p.6; Fig. 1(c)
+  note: effective modulation length
+- device_id: lin2025-b
+  field: bw3db_ghz
+  value: 100
+  unit: GHz
+  basis: measured
+  locator: p.9; Fig. 3(d)
+  note: crossing near 100 GHz; measured to 110 GHz; normalization reference not stated
+- device_id: lin2025-b
+  field: bw_measured_to_ghz
+  value: 110
+  unit: GHz
+  basis: measured
+  locator: p.9; Fig. 3(d)
+- device_id: lin2025-b
+  field: eo_rolloff_db
+  value: 3.8
+  unit: dB
+  basis: extracted_from_figure
+  locator: p.24, Fig. 3(d)
+  note: drop of the measured 6 mm curve at 110 GHz
+- device_id: lin2025-b
+  field: eo_rolloff_freq_ghz
+  value: 110
+  unit: GHz
+  basis: extracted_from_figure
+  locator: p.24, Fig. 3(d)
+- device_id: lin2025-b
+  field: eo_film_thickness_nm
+  value: 600
+  unit: nm
+  basis: measured
+  locator: p.5, Fabrication
+  note: commercial X-cut TFLT wafer (NANOLN)
+- device_id: lin2025-b
+  field: etch_depth_nm
+  value: 320
+  unit: nm
+  basis: measured
+  locator: p.5, Fabrication
+- device_id: lin2025-b
+  field: slab_thickness_nm
+  value: 280
+  unit: nm
+  basis: measured
+  locator: p.5, Fabrication
+- device_id: lin2025-b
+  field: rib_width_nm
+  value: 4000
+  unit: nm
+  basis: design_target
+  locator: p.7, Electro-optic Modulation; Fig. 3(a)
+  note: waveguide width 4 um; top or base width not specified
+- device_id: lin2025-b
+  field: electrode_gap_um
+  value: 6
+  unit: um
+  basis: design_target
+  locator: p.7, Electro-optic Modulation; Fig. 3(a)
+- device_id: lin2025-b
+  field: electrode_thickness_um
+  value: 1.8
+  unit: um
+  basis: measured
+  locator: p.13, Methods (Cu thickness after CMP)
+  note: plus 10 nm Ti barrier
+- device_id: lin2025-b
+  field: electrode_metal
+  value: copper (Damascene, electroplated; 10 nm Ti barrier)
+  unit: ''
+  basis: measured
+  locator: p.12, Methods
+- device_id: lin2025-b
+  field: buffer_oxide_um
+  value: 4.7
+  unit: um
+  basis: measured
+  locator: p.5, Fabrication
+- device_id: lin2025-b
+  field: substrate
+  value: 525 um high-resistivity silicon
+  unit: ''
+  basis: measured
+  locator: p.5, Fabrication
+- device_id: lin2025-b
+  field: cladding
+  value: SiO2 2.5 um (PECVD, embeds the Cu) with 100 nm Si3N4 passivation
+  unit: ''
+  basis: measured
+  locator: p.12-13, Methods
+- device_id: lin2025-b
+  field: crystal_cut
+  value: x-cut
+  unit: ''
+  basis: measured
+  locator: p.5, Fabrication
+- device_id: lin2025-c
+  field: wavelength_nm
+  value: 1550
+  unit: nm
+  basis: measured
+  locator: p.13, Methods (data transmission apparatus)
+  note: external-cavity laser 17.8 dBm at 1550 nm
+- device_id: lin2025-c
+  field: max_baud_gbd
+  value: 208
+  unit: GBd
+  basis: measured
+  locator: p.9; Fig. 4(b)
+  note: PAM4 at 208 GBd below the 25% SD-FEC limit
+- device_id: lin2025-c
+  field: modulation_format
+  value: PAM4 (up to 208 GBd, 416 Gbit/s); PAM8 (up to 180 GBd, 540 Gbit/s); BER below 25% SD-FEC
+  unit: ''
+  basis: measured
+  locator: p.9; Fig. 4(b),(d),(e)
+- device_id: lin2025-c
+  field: max_line_rate_gbps
+  value: 540
+  unit: Gb/s
+  basis: measured
+  locator: p.3 abstract; Fig. 4(e)
+  note: PAM8 at 180 GBd
+- device_id: lin2025-c
+  field: max_net_rate_gbps
+  value: 423
+  unit: Gb/s
+  basis: derived
+  locator: p.10; Fig. 4(c)
+  note: PAM8 at 176 GBd; highest AIR 449 Gbit/s
+derived: []

@@ -1,0 +1,65 @@
+[
+ {
+  "kind": "page_render",
+  "file": "page_03.png",
+  "page": 3,
+  "captions": [
+   "Fig. 1 | Full-spectrum optical modulator. a Concept of extended full spectrum"
+  ]
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p03_6.png",
+  "page": 3,
+  "width": 1727,
+  "height": 1378
+ },
+ {
+  "kind": "page_render",
+  "file": "page_04.png",
+  "page": 4,
+  "captions": [
+   "Fig. 2 | Design of the thin-\ufb01lm lithium niobate (TFLN) modulator. a Schematic"
+  ]
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p04_1.png",
+  "page": 4,
+  "width": 1273,
+  "height": 557
+ },
+ {
+  "kind": "page_render",
+  "file": "page_05.png",
+  "page": 5,
+  "captions": [
+   "Figure 3b illustrates the half-wave voltage V\u03c0 measurements with a",
+   "Fig. 3 | Measured performance of the thin-\ufb01lm lithium niobate (TFLN) mod-"
+  ]
+ },
+ {
+  "kind": "page_render",
+  "file": "page_06.png",
+  "page": 6,
+  "captions": [
+   "Fig. 4 | Data transmission results. a Experimental setup for measuring the eye"
+  ]
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p06_661.png",
+  "page": 6,
+  "width": 2050,
+  "height": 1193
+ },
+ {
+  "kind": "page_render",
+  "file": "page_07.png",
+  "page": 7,
+  "captions": [
+   "Figure 5 compares the 3-dB EO bandwidths of integrated modulators",
+   "Fig. 5 | Comparisons of integrated modulators. Comparison of 3-dB bandwidth of"
+  ]
+ }
+]

@@ -1,9 +1,11 @@
 """Split data/candidates.csv into distillation batches and a manual-download list.
 
 Usage: uv run python scripts/make_batches.py --max-priority 1 [--size 5] [--tag p1]
-Writes data/_staging/batches/<tag>_NN.csv (git-ignored; includes resolved absolute local paths from the private mapping)
-and appends/updates data/manual_downloads.md (tracked) with paywalled papers that have no local copy.
-Skips paper_ids already in data/papers.csv or already in an existing batch file.
+Writes data/_staging/batches/<tag>_NN.csv (tracked; contains only candidate metadata and the `@corpus_*` alias placeholders,
+never absolute local paths; scripts/prefetch_batch.py resolves aliases through the git-ignored private mapping) and
+appends to data/manual_downloads.md (tracked) with paywalled papers that have no local copy and are not cached.
+Adds a `source_state` column: cached (references/<id>/source.pdf exists) | local_alias | open_fetch.
+Skips paper_ids already in data/papers.csv or already in an existing batch file, unless --rebuild (rewrites all <tag>_* files).
 """
 
 from __future__ import annotations
@@ -21,28 +23,34 @@ def main() -> None:
     ap.add_argument("--max-priority", type=int, default=1)
     ap.add_argument("--size", type=int, default=5)
     ap.add_argument("--tag", default="p1")
+    ap.add_argument("--rebuild", action="store_true", help="delete and regenerate all <tag>_NN.csv batch files")
     a = ap.parse_args()
     cands = list(csv.DictReader((ROOT / "data/candidates.csv").open(newline="")))
     done = {r["paper_id"] for r in csv.DictReader((ROOT / "data/papers.csv").open(newline=""))}
     bdir = STAGING / "batches"
     bdir.mkdir(exist_ok=True)
     queued: set[str] = set()
-    for f in bdir.glob("*.csv"):
-        queued |= {r["paper_id"] for r in csv.DictReader(f.open(newline=""))}
-    private: dict[str, str] = {}
+    if a.rebuild:
+        for old in bdir.glob(f"{a.tag}_*.csv"):
+            old.unlink()
+    for batch_file in bdir.glob("*.csv"):
+        queued |= {r["paper_id"] for r in csv.DictReader(batch_file.open(newline=""))}
+    private_ids: set[str] = set()
     pp = STAGING / "candidates_seed_local_paths_private.csv"
     if pp.exists():
-        private = {r["paper_id"]: r["absolute_local_path"] for r in csv.DictReader(pp.open(newline=""))}
+        private_ids = {r["paper_id"] for r in csv.DictReader(pp.open(newline=""))}
     accessible: list[dict[str, str]] = []
     manual: list[dict[str, str]] = []
     for r in cands:
         if int(r["priority"] or 9) > a.max_priority or r["paper_id"] in done or r["paper_id"] in queued:
             continue
-        lp = r["local_source_path"]
-        if lp.startswith("@corpus"):
-            lp = private.get(r["paper_id"], "")
-        r["local_source_abs"] = lp
-        if lp or r["access_guess"] in ("open_access", "arxiv"):
+        cached = (ROOT / "references" / r["paper_id"] / "source.pdf").exists()
+        alias = r["local_source_path"].startswith("@") and r["paper_id"] in private_ids
+        # absolute paths from any producer must never reach tracked batch files
+        if r["local_source_path"].startswith("/"):
+            r["local_source_path"] = "@local_corpus" if r["paper_id"] in private_ids else ""
+        r["source_state"] = "cached" if cached else ("local_alias" if alias else "open_fetch")
+        if cached or alias or r["access_guess"] in ("open_access", "arxiv"):
             accessible.append(r)
         else:
             manual.append(r)
@@ -56,7 +64,11 @@ def main() -> None:
             w.writeheader()
             w.writerows(chunk)
     md = ROOT / "data" / "manual_downloads.md"
-    existing = md.read_text() if md.exists() else "# Manual downloads (paywalled or not accessible)\n\nDrop each file into references/_inbox/ using the exact save_as filename.\n\n"
+    existing = (
+        md.read_text()
+        if md.exists()
+        else "# Manual downloads (paywalled or not accessible)\n\nDrop each file into references/_inbox/ using the exact save_as filename.\n\n"
+    )
     add = ""
     for r in manual:
         if f"paper_id: {r['paper_id']}\n" in existing:
@@ -67,7 +79,7 @@ def main() -> None:
             f"  why_needed: reports Vpi/bandwidth/loss metrics per abstract (not yet read)\n"
         )
     md.write_text(existing + add)
-    print(f"accessible={len(accessible)} in {-(-len(accessible)//a.size)} batches; manual_added={len(manual)}")
+    print(f"accessible={len(accessible)} in {-(-len(accessible) // a.size)} batches; manual_added={len(manual)}")
 
 
 if __name__ == "__main__":

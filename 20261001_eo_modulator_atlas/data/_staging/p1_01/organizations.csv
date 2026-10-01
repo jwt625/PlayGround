@@ -1,0 +1,12 @@
+org_name,org_type,country,region,parent_org,notes
+Tsinghua University,university,CN,east_asia,,"Beijing; affiliations 1 (State Key Laboratory of New Ceramic Materials) and 2 (BNRist, Department of Electronic Engineering)"
+"Institute of Physics, Chinese Academy of Sciences",research_institute,CN,east_asia,,Beijing National Laboratory for Condensed Matter Physics; affiliation 6
+McGill University,university,CA,north_america,,"Montreal, QC; Department of Electrical and Computer Engineering"
+Ciena Corporation,company,CA,north_america,,Quebec City and Ottawa addresses in the paper
+NTT Innovative Devices Corporation,company,JP,east_asia,,"Atsugi City, Kanagawa; paper writes the affiliation as given; separate legal entity from Nippon Telegraph and Telephone Corporation, parent relation not stated in the paper"
+Nokia Corporation,company,US,north_america,,"Sunnyvale, CA"
+Photonics Electronics Technology Research Association,consortium,JP,east_asia,,"Bunkyo-ku, Tokyo; paper abbreviation PETRA"
+"Sumitomo Electric Industries, Ltd.",company,JP,east_asia,,"Yokohama, Kanagawa"
+Institute of Science Tokyo,university,JP,east_asia,,"Meguro-ku, Tokyo; Department of Electrical and Electronic Engineering"
+1FINITY Inc.,company,JP,east_asia,,"Kawasaki, Kanagawa"
+The University of Tokyo,university,JP,east_asia,,"Bunkyo-ku, Tokyo; School of Engineering"

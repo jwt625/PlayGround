@@ -1,0 +1,90 @@
+[
+ {
+  "kind": "page_render",
+  "file": "page_02.png",
+  "page": 2,
+  "captions": [
+   "FIG. 1. Thin-film Lithium Tantalate electro-optic Mach-Zender modulator. (a) Microscope image of a fabricated LiTaO3 modulator.",
+   "Fig. 1(a) shows a fabricated LiTaO3 MZM composed of"
+  ]
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p02_1.png",
+  "page": 2,
+  "width": 1063,
+  "height": 899
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p02_2.png",
+  "page": 2,
+  "width": 467,
+  "height": 483
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p02_3.png",
+  "page": 2,
+  "width": 1833,
+  "height": 211
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p02_4.png",
+  "page": 2,
+  "width": 1610,
+  "height": 1407
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p02_5.png",
+  "page": 2,
+  "width": 850,
+  "height": 992
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p02_6.png",
+  "page": 2,
+  "width": 1166,
+  "height": 979
+ },
+ {
+  "kind": "page_render",
+  "file": "page_03.png",
+  "page": 3,
+  "captions": [
+   "FIG. 2. Electro-optic performance of the LiTaO3 Mach-Zender modulator. (a) Measured DC and extinction for a 6 mm long modulator."
+  ]
+ },
+ {
+  "kind": "page_render",
+  "file": "page_05.png",
+  "page": 5,
+  "captions": [
+   "FIG. 3. Schematic and results of the intensity-modulation direct detection (IMDD) experiment employing the thin-film LiTaO3 Mach-"
+  ]
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p05_1.png",
+  "page": 5,
+  "width": 781,
+  "height": 389
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p05_2.png",
+  "page": 5,
+  "width": 782,
+  "height": 368
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p05_3.png",
+  "page": 5,
+  "width": 786,
+  "height": 397
+ }
+]

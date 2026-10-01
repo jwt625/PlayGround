@@ -1,0 +1,120 @@
+schema: eo-atlas.sim/v1
+id: lin2025-a
+paper_id: lin2025
+device_id: lin2025-a
+title: Lin 2025, 16 mm copper-Damascene plain CPW TFLT MZM on silicon (6 um gap, 4 um waveguide, push-pull arms)
+repro_grade: B
+validation_status: unvalidated
+chain: [electrostatics, optical_mode, eo_overlap, rf_line, eo_response]
+
+# Coordinate frame: x lateral, y film normal up (BOX top / LT bottom at y = 0), z propagation.
+# Origin: optical axis of the RIGHT-hand waveguide in x. Signal electrode x = -30 .. -3 um (centre -16.5 um) is the mirror plane;
+# the LEFT-hand waveguide is at x = -33 um. Waveguides are assumed centred in their 6 um gaps (1 um spacing to each Cu edge).
+# Both arms are in the electrostatic domain (symmetry none); the optical mode is solved on the right arm.
+optics:
+  wavelength_nm: 1550              # NOT stated for the Vpi / EO measurements; the IMDD laser is 1550 nm (p.13). See provenance and missing.
+  polarization: TE
+  mode_index: 0
+  group_index_from: finite_difference_wavelength
+  ng_fixed: null
+  eo_axis: auto
+
+materials:
+  lithium_tantalate:
+    crystal: {cut: x, propagation: y}
+    eps_r: {perp: 41.0, par: 43.0}
+    r_pm_per_v: {r13: 8.4, r33: 30.5}
+  silicon_dioxide: {n: 1.444, eps_r: 3.9}
+  silicon: {n: 3.476, eps_r: 11.7}
+  copper: {conductor: true, sigma_Sm: 4.9e7, n_complex: null}
+  air: {n: 1.0, eps_r: 1.0}
+
+geometry:
+  symmetry: none
+  domain: {x_um: [-200, 170], y_um: [-60, 60]}
+  regions:
+    - {name: ambient, material: air, rect: {x_um: [-200, 170], y_um: [-60, 60]}}
+    - {name: substrate, material: silicon, rect: {x_um: [-200, 170], y_um: [-529.7, -4.7]}}
+    - {name: box, material: silicon_dioxide, rect: {x_um: [-200, 170], y_um: [-4.7, 0]}}
+    - {name: lt_slab, material: lithium_tantalate, rect: {x_um: [-200, 170], y_um: [0, 0.28]}}
+    - {name: sio2_cladding, material: silicon_dioxide, rect: {x_um: [-200, 170], y_um: [0.28, 2.08]}}
+    - {name: lt_rib_r, material: lithium_tantalate, rect: {x_um: [-2, 2], y_um: [0.28, 0.6]}}
+    - {name: lt_rib_l, material: lithium_tantalate, rect: {x_um: [-35, -31], y_um: [0.28, 0.6]}}
+  electrodes:
+    - {name: signal, role: signal, weight: 1.0, rect: {x_um: [-30, -3], y_um: [0.28, 2.08]}, material: copper}
+    - {name: ground_r, role: ground, weight: 0.0, rect: {x_um: [3, 103], y_um: [0.28, 2.08]}, material: copper}
+    - {name: ground_l, role: ground, weight: 0.0, rect: {x_um: [-136, -36], y_um: [0.28, 2.08]}, material: copper}
+  optical_window: {x_um: [-2.9, 2.9], y_um: [-1.5, 2.0]}
+  mesh: {max_edge_um: 2.0, electrode_edge_um: 0.05}
+
+line:
+  length_mm: 16
+  conductor_loss_model: skin_effect_wheeler
+  rf_loss_table: null
+  source_ohm: 50
+  load_ohm: 50
+  differential: false              # single GSG probe on the centre signal line; push-pull from the arm placement
+  loading: {type: none}
+sweep: {f_start_ghz: 0.1, f_stop_ghz: 110, n_points: 220}
+
+alt_geometries: {}
+
+targets:
+  # Measured, 16 mm device (devices.csv row lin2025-a)
+  - {metric: vpi_l_dc_vcm, value: 2.7, tol_rel: 0.15, source: {device_id: lin2025-a, field: vpil_dc_vcm}}
+  - {metric: ng_opt, value: 2.22, tol_abs: 0.05, source: {device_id: lin2025-a, field: ng_opt}}
+  # Paper's own COMSOL simulation (cross-solver reference, not a measurement)
+  - {metric: vpi_l_dc_vcm, value: 2.64, tol_rel: 0.10, source: {paper_id: lin2025, locator: "p.8", basis: simulated, note: "simulated VpiL for the 6 um gap / 4 um waveguide design"}}
+  # Test CPW (no waveguide, 16 mm, 6 um gap, 27 um signal, Cu 2.04 uOhm cm), simulation and measurement agree
+  - {metric: rf_loss_db_per_cm, at_ghz: 67, value: 5.3, tol_rel: 0.2, source: {paper_id: lin2025, locator: "p.25 Fig. 2(d)", basis: extracted_from_figure, note: "test CPW structure, not the MZM; 2.04 uOhm cm Cu"}}
+  # Not evaluated by the static cross-section: 3 dB EO bandwidth 40 GHz (16 mm), 100 GHz (6 mm device)
+reported_curves: []
+
+provenance:
+  optics.wavelength_nm: {class: project_inference, locator: "p.13 Methods (ECL 17.8 dBm at 1550 nm for the IMDD experiment)", note: "wavelength of the Vpi and EO-response measurements is not stated in the main text; C-band 1550 nm assumed"}
+  optics.polarization: {class: project_inference, note: "TE assumed for the x-cut film; polarization is not stated for the Vpi measurement (an FPC is used in Fig. 4(a))"}
+  optics.group_index_from: {class: project_inference, note: "paper quotes an optical group index of 2.22 (p.11); the engine derives it and compares it as a target"}
+  materials.lithium_tantalate.crystal: {class: project_inference, locator: "p.5 (X-cut TFLT wafer)", note: "propagation direction is not stated; y propagation assumed"}
+  materials.lithium_tantalate.eps_r: {class: standard_reference, citation: "Weis and Gaylord, Appl. Phys. A 37, 191 (1985)", note: "perp 41 / par 43 are recalled literature values; NOT verified against the cited source in this offline batch; the paper does not state RF permittivity. Verify before any validation claim."}
+  materials.lithium_tantalate.r_pm_per_v.r33: {class: standard_reference, citation: "r33 = 30.5 pm/V as used for LiTaO3 in niels2026 (references/niels2026 text.md p.9)", note: "not stated in lin2025"}
+  materials.lithium_tantalate.r_pm_per_v.r13: {class: standard_reference, citation: "Weis and Gaylord, Appl. Phys. A 37, 191 (1985)", note: "8.4 pm/V is a recalled value, NOT verified in this offline batch"}
+  materials.silicon_dioxide: {class: standard_reference, citation: "standard handbook values (n = 1.444 at 1550 nm, eps_r = 3.9) for BOX and PECVD cladding; paper states neither"}
+  materials.silicon: {class: standard_reference, citation: "standard handbook values (n = 3.476, eps_r = 11.7); resistivity 'high-resistivity' not quantified, modelled lossless"}
+  materials.copper.sigma_Sm: {class: paper_exact, locator: "p.7 and Fig. 2(c); p.12 Methods", note: "electroplated Cu resistivity 2.04 uOhm cm after self-annealing -> 1/2.04e-8 = 4.9e7 S/m"}
+  line.length_mm: {class: paper_exact, locator: "p.8; Fig. 3(a) caption (16 mm modulation region)"}
+  line.source_ohm: {class: paper_exact, locator: "p.13 Methods, 50 ohm termination via second probe; Fig. 3(d) inset"}
+  line.load_ohm: {class: paper_exact, locator: "p.13 Methods"}
+  line.differential: {class: project_inference, note: "single GSG probe on the signal line, one waveguide in each 6 um gap; push-pull stated on p.6, arm placement inferred"}
+  line.conductor_loss_model: {class: project_inference, note: "loss model left to the engine; measured test-CPW loss ~5.3 dB/cm at 67 GHz"}
+  geometry.regions.substrate: {class: paper_exact, locator: "p.5, 525 um high-resistivity silicon (clipped to the domain)"}
+  geometry.regions.box: {class: paper_exact, locator: "p.5, 4.7 um SiO2; Fig. 2(d) inset"}
+  geometry.regions.lt_slab: {class: paper_exact, locator: "p.5, 600 nm film, 320 nm etch, 280 nm slab; Fig. 2(d) inset"}
+  geometry.regions.sio2_cladding: {class: project_inference, locator: "p.12-13 Methods (2.5 um PECVD cladding embeds the Cu; Cu final thickness 1.8 um after CMP, shared flat top)", note: "flat top at the Cu top, 1.8 um above the slab top; 100 nm Si3N4 passivation and 10 nm Ti barrier omitted"}
+  geometry.regions.lt_rib_r: {class: project_inference, locator: "p.7 (4 um wide waveguide, 6 um gap); p.5 (320 nm rib height)", note: "vertical sidewalls assumed; top/base width and sidewall angle not stated (Fig. 1(f) SEM and Fig. 1(h) sketch do not scale cleanly to 4 um)"}
+  geometry.regions.lt_rib_l: {class: project_inference, note: "same rib at x = -33 um (centre of the left 6 um gap)"}
+  geometry.electrodes.signal: {class: project_inference, locator: "p.7 (6 um gap); Fig. 2(d) inset 6 / 27 / 6 um", note: "27 um signal width is read from the test-CPW inset (16 mm test structure); the MZM signal width is not stated; Cu thickness 1.8 um paper_exact (p.13)"}
+  geometry.electrodes.ground_r: {class: project_inference, note: "ground width not stated; 100 um assumed, inner edge 3 um from the waveguide axis (gap 6 um centred on the 4 um waveguide)"}
+  geometry.electrodes.ground_l: {class: project_inference, note: "mirror of ground_r about x = -16.5 um (signal centre)"}
+  geometry.optical_window: {class: project_inference, note: "crop between the Cu edges (|x| < 3 um) so no conductor lies inside the optical mesh"}
+  geometry.domain: {class: project_inference, note: "lateral -200..170 um, vertical -60..60 um; open-boundary treatment is an engine choice"}
+  geometry.mesh: {class: project_inference}
+
+missing:
+  - wavelength of the Vpi and EO-response measurements (1550 assumed)
+  - waveguide propagation direction on the x-cut film (y assumed)
+  - rib sidewall angle and whether 4 um is the top or base width (vertical walls assumed)
+  - ground electrode width (100 um assumed) and MZM signal width (27 um taken from the test CPW)
+  - waveguide lateral position in the 6 um gap (centred assumed)
+  - RF permittivity and loss tangent of LT, SiO2, Si (literature values flagged unverified; Si resistivity not quantified)
+  - Pockels coefficients r22 and r51 of LiTaO3 (not in config; the engine treats missing keys as 0)
+  - polarization of the measurement
+limitations:
+  - scalar_optical_not_full_vector
+  - quasi_static_2d_rf
+  - rectangular_or_polygon_sidewalls_only
+  - no_3d_launch_pad_effects
+  - "10 nm Ti barrier and 100 nm Si3N4 passivation omitted"
+  - "Silicon substrate modelled lossless (resistivity not given), so substrate RF loss is absent"
+  - "LT RF permittivity and r13 are recalled literature values flagged unverified; r22 and r51 omitted"
+  - "6 mm variant lin2025-b and the system row lin2025-c share this cross-section; no variants mechanism in SPEC yet"
+  - "Fig. 1(h) of the paper (a simulation sketch) and Fig. 1(f) (SEM) are not consistent with the stated 4 um / 6 um dimensions at their scale bars; text values are used"

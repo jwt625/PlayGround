@@ -24,14 +24,29 @@ def make_db(tmp: Path) -> Path:
     d_cols = [c["name"] for c in schema["devices_columns"]]
     paper = dict.fromkeys(p_cols, "")
     paper.update(
-        paper_id="test2026", title="T", authors="A;B", year="2026", url="https://doi.org/10.0/x", source_type="journal",
-        access="open_access", redistribution="restricted_local_only", discovered_via="web", cache_status="full_extract",
-        verified_on="2026-10-01", universities="Test University", countries="US",
+        paper_id="test2026",
+        title="T",
+        authors="A;B",
+        year="2026",
+        url="https://doi.org/10.0/x",
+        source_type="journal",
+        access="open_access",
+        redistribution="restricted_local_only",
+        discovered_via="web",
+        cache_status="full_extract",
+        verified_on="2026-10-01",
+        universities="Test University",
+        countries="US",
     )
     dev = dict.fromkeys(d_cols, "")
     dev.update(
-        device_id="test2026-a", paper_id="test2026", device_label="a", device_class="mzm", eo_material="lithium_niobate",
-        vpi_dc_v="2.5", evidence_ref="data/evidence/test2026.yaml",
+        device_id="test2026-a",
+        paper_id="test2026",
+        device_label="a",
+        device_class="mzm",
+        eo_material="lithium_niobate",
+        vpi_dc_v="2.5",
+        evidence_ref="data/evidence/test2026.yaml",
     )
     for name, cols, rows in (("papers.csv", p_cols, [paper]), ("devices.csv", d_cols, [dev])):
         with (data / name).open("w", newline="") as f:
@@ -41,10 +56,21 @@ def make_db(tmp: Path) -> Path:
     with (data / "organizations.csv").open("w", newline="") as f:
         w = csv.DictWriter(f, fieldnames=ORG_COLUMNS)
         w.writeheader()
-        w.writerow(dict(org_name="Test University", org_type="university", country="US", region="north_america", parent_org="", notes=""))
+        w.writerow(
+            dict(
+                org_name="Test University",
+                org_type="university",
+                country="US",
+                region="north_america",
+                parent_org="",
+                notes="",
+            )
+        )
     ev = {
         "paper_id": "test2026",
-        "entries": [{"device_id": "test2026-a", "field": "vpi_dc_v", "value": 2.5, "basis": "measured", "locator": "p.1"}],
+        "entries": [
+            {"device_id": "test2026-a", "field": "vpi_dc_v", "value": 2.5, "basis": "measured", "locator": "p.1"}
+        ],
     }
     (data / "evidence/test2026.yaml").write_text(yaml.safe_dump(ev))
     return data

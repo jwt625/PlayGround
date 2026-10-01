@@ -1,0 +1,270 @@
+{
+ "status": "ok",
+ "message-type": "work",
+ "message-version": "1.0.0",
+ "message": {
+  "indexed": {
+   "date-parts": [
+    [
+     2026,
+     8,
+     17
+    ]
+   ],
+   "date-time": "2026-08-17T18:25:38Z",
+   "timestamp": 1786991138921,
+   "version": "build-2736575974"
+  },
+  "publisher-location": "Washington, D.C.",
+  "reference-count": 7,
+  "publisher": "Optica Publishing Group",
+  "content-domain": {
+   "domain": [],
+   "crossmark-restriction": false
+  },
+  "short-container-title": [],
+  "published-print": {
+   "date-parts": [
+    [
+     2026
+    ]
+   ]
+  },
+  "abstract": "<jats:p>We demonstrate a serpentine segmented silicon Mach-Zehnder modulator with a 1 dB bandwidth &gt;67 GHz at 0 V bias and a modulation efficiency of 1.14 V\u2219cm, supporting 192 Gbaud transmission.</jats:p>",
+  "DOI": "10.1364/ofc.2026.w2a.14",
+  "type": "proceedings-article",
+  "created": {
+   "date-parts": [
+    [
+     2026,
+     6,
+     2
+    ]
+   ],
+   "date-time": "2026-06-02T19:29:39Z",
+   "timestamp": 1780428579000
+  },
+  "page": "W2A.14",
+  "source": "Crossref",
+  "is-referenced-by-count": 0,
+  "title": [
+   "High-Bandwidth Serpentine Segmented Silicon Photonic Mach-Zehnder Modulator for 192 Gbaud Transmission"
+  ],
+  "prefix": "10.1364",
+  "author": [
+   {
+    "given": "Qian",
+    "family": "Liu",
+    "sequence": "first",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Chao",
+    "family": "Cheng",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Yangming",
+    "family": "Ren",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Xinyu",
+    "family": "Li",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Wenfu",
+    "family": "Zhang",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Binhao",
+    "family": "Wang",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   }
+  ],
+  "member": "285",
+  "reference": [
+   {
+    "key": "OFC-2026-W2A.14-R1",
+    "doi-asserted-by": "publisher",
+    "first-page": "A106",
+    "DOI": "10.1364/PRJ.456772",
+    "type": "journal-article",
+    "volume": "10",
+    "author": "Shi",
+    "year": "2022",
+    "journal-title": "Photonics Research."
+   },
+   {
+    "key": "OFC-2026-W2A.14-R2",
+    "doi-asserted-by": "publisher",
+    "first-page": "518",
+    "DOI": "10.1038/nphoton.2010.179",
+    "type": "journal-article",
+    "volume": "4",
+    "author": "Reed",
+    "year": "2010",
+    "journal-title": "Nat. Photonics"
+   },
+   {
+    "key": "OFC-2026-W2A.14-R3",
+    "doi-asserted-by": "publisher",
+    "first-page": "1354",
+    "DOI": "10.1364/OPTICA.5.001354",
+    "type": "journal-article",
+    "volume": "5",
+    "author": "Cheng",
+    "year": "2018",
+    "journal-title": "Optica"
+   },
+   {
+    "key": "OFC-2026-W2A.14-R4",
+    "doi-asserted-by": "publisher",
+    "first-page": "123",
+    "DOI": "10.1109/JQE.1987.1073206",
+    "type": "journal-article",
+    "volume": "23",
+    "author": "Soref",
+    "year": "1987",
+    "journal-title": "IEEE J. Quantum Electron."
+   },
+   {
+    "key": "OFC-2026-W2A.14-R5",
+    "doi-asserted-by": "publisher",
+    "first-page": "eadi5339",
+    "DOI": "10.1126/sciadv.adi5339",
+    "type": "journal-article",
+    "volume": "9",
+    "author": "Han",
+    "year": "2023",
+    "journal-title": "Sci. Adv."
+   },
+   {
+    "key": "OFC-2026-W2A.14-R6",
+    "first-page": "1",
+    "type": "journal-article",
+    "author": "Mohammadi",
+    "year": "2023",
+    "journal-title": "Journal of Lightwave Technology."
+   },
+   {
+    "key": "OFC-2026-W2A.14-R7",
+    "doi-asserted-by": "publisher",
+    "first-page": "203",
+    "DOI": "10.1364/OPTICA.545011",
+    "type": "journal-article",
+    "volume": "12",
+    "author": "Yue",
+    "year": "2025",
+    "journal-title": "Optica"
+   }
+  ],
+  "event": {
+   "name": "Optical Fiber Communication Conference",
+   "location": "Los Angeles, California",
+   "acronym": "OFC",
+   "sponsor": [
+    "The Optical Society"
+   ],
+   "start": {
+    "date-parts": [
+     [
+      2026
+     ]
+    ]
+   }
+  },
+  "container-title": [
+   "Optical Fiber Communication Conference (OFC) 2026"
+  ],
+  "original-title": [],
+  "link": [
+   {
+    "URL": "https://opg.optica.org/viewmedia.cfm?URI=OFC-2026-W2A.14&seq=0",
+    "content-type": "unspecified",
+    "content-version": "vor",
+    "intended-application": "similarity-checking"
+   }
+  ],
+  "deposited": {
+   "date-parts": [
+    [
+     2026,
+     8,
+     17
+    ]
+   ],
+   "date-time": "2026-08-17T17:28:41Z",
+   "timestamp": 1786987721000
+  },
+  "score": 1,
+  "resource": {
+   "primary": {
+    "URL": "https://opg.optica.org/abstract.cfm?URI=OFC-2026-W2A.14"
+   }
+  },
+  "subtitle": [],
+  "short-title": [],
+  "issued": {
+   "date-parts": [
+    [
+     2026
+    ]
+   ]
+  },
+  "references-count": 7,
+  "URL": "https://doi.org/10.1364/ofc.2026.w2a.14",
+  "relation": {},
+  "subject": [],
+  "published": {
+   "date-parts": [
+    [
+     2026
+    ]
+   ]
+  }
+ }
+}

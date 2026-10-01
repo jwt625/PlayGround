@@ -1,0 +1,56 @@
+[
+ {
+  "kind": "page_render",
+  "file": "page_03.png",
+  "page": 3,
+  "captions": [
+   "FIG. 1: Suspended thin-film lithium tantalate Mach-Zehnder modulator fabricated via silicon substrate undercut. (a) Optical micro-",
+   "Figure 2 (d) shows the electrical S-parameters of the sus-"
+  ]
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p03_1.png",
+  "page": 3,
+  "width": 2336,
+  "height": 332
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p03_2.png",
+  "page": 3,
+  "width": 1028,
+  "height": 771
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p03_3.png",
+  "page": 3,
+  "width": 1024,
+  "height": 768
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p03_4.png",
+  "page": 3,
+  "width": 1024,
+  "height": 768
+ },
+ {
+  "kind": "page_render",
+  "file": "page_04.png",
+  "page": 4,
+  "captions": [
+   "FIG. 2: Modulation performance characterization of the suspended LiTaO3 Mach-Zehnder modulator. (a) Normalized optical transmis-",
+   "Fig. 3 (c). The highest AIR of 485 Gbit s\u22121 is obtained for"
+  ]
+ },
+ {
+  "kind": "page_render",
+  "file": "page_05.png",
+  "page": 5,
+  "captions": [
+   "FIG. 3: Intensity-modulation and direct-detection (IMDD) signaling experiment using the suspended lithium-tantalate-on-insulator"
+  ]
+ }
+]

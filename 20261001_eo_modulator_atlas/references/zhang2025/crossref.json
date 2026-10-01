@@ -1,0 +1,585 @@
+{
+ "status": "ok",
+ "message-type": "work",
+ "message-version": "1.0.0",
+ "message": {
+  "indexed": {
+   "date-parts": [
+    [
+     2026,
+     9,
+     12
+    ]
+   ],
+   "date-time": "2026-09-12T14:05:16Z",
+   "timestamp": 1789221916717,
+   "version": "build-2803163510"
+  },
+  "reference-count": 34,
+  "publisher": "Wiley",
+  "issue": "26",
+  "license": [
+   {
+    "start": {
+     "date-parts": [
+      [
+       2025,
+       11,
+       25
+      ]
+     ],
+     "date-time": "2025-11-25T00:00:00Z",
+     "timestamp": 1764028800000
+    },
+    "content-version": "vor",
+    "delay-in-days": 0,
+    "URL": "http://creativecommons.org/licenses/by/4.0/"
+   },
+   {
+    "start": {
+     "date-parts": [
+      [
+       2025,
+       11,
+       25
+      ]
+     ],
+     "date-time": "2025-11-25T00:00:00Z",
+     "timestamp": 1764028800000
+    },
+    "content-version": "tdm",
+    "delay-in-days": 0,
+    "URL": "http://doi.wiley.com/10.1002/tdm_license_1.1"
+   }
+  ],
+  "funder": [
+   {
+    "DOI": "10.13039/501100001809",
+    "name": "National Natural Science Foundation of China",
+    "doi-asserted-by": "publisher",
+    "award": [
+     "2474180"
+    ],
+    "award-info": [
+     {
+      "award-number": [
+       "2474180"
+      ]
+     }
+    ],
+    "id": [
+     {
+      "id": "10.13039/501100001809",
+      "id-type": "DOI",
+      "asserted-by": "publisher"
+     }
+    ]
+   },
+   {
+    "DOI": "10.13039/501100001809",
+    "name": "National Natural Science Foundation of China",
+    "doi-asserted-by": "publisher",
+    "award": [
+     "62204250"
+    ],
+    "award-info": [
+     {
+      "award-number": [
+       "62204250"
+      ]
+     }
+    ],
+    "id": [
+     {
+      "id": "10.13039/501100001809",
+      "id-type": "DOI",
+      "asserted-by": "publisher"
+     }
+    ]
+   },
+   {
+    "DOI": "10.13039/501100001809",
+    "name": "National Natural Science Foundation of China",
+    "doi-asserted-by": "publisher",
+    "award": [
+     "62405348"
+    ],
+    "award-info": [
+     {
+      "award-number": [
+       "62405348"
+      ]
+     }
+    ],
+    "id": [
+     {
+      "id": "10.13039/501100001809",
+      "id-type": "DOI",
+      "asserted-by": "publisher"
+     }
+    ]
+   },
+   {
+    "DOI": "10.13039/501100001809",
+    "name": "National Natural Science Foundation of China",
+    "doi-asserted-by": "publisher",
+    "award": [
+     "92473104"
+    ],
+    "award-info": [
+     {
+      "award-number": [
+       "92473104"
+      ]
+     }
+    ],
+    "id": [
+     {
+      "id": "10.13039/501100001809",
+      "id-type": "DOI",
+      "asserted-by": "publisher"
+     }
+    ]
+   }
+  ],
+  "content-domain": {
+   "domain": [],
+   "crossmark-restriction": false
+  },
+  "short-container-title": [
+   "Nanophotonics"
+  ],
+  "published-print": {
+   "date-parts": [
+    [
+     2025,
+     12
+    ]
+   ]
+  },
+  "abstract": "<jats:title>Abstract</jats:title>\n                  <jats:p>\n                    Driven by the development of AI applications, optical communication systems experience an exponential surge in the demand for high data rates. Thin\u2010film lithium niobate (TFLN) electro\u2010optic (EO) modulators have been extensively studied and show potential for application in next\u2010generation optical communication systems. In this paper, we present a dual\u2010polarization (DP) TFLN EO modulator integrated based on an EO equalizer, fabricated on the lithium\u2010niobate\u2010on\u2010insulator (LNOI) platform. The device consists of an 11\u2010mm\u2010long forward modulation section and a 4.5\u2010mm\u2010long reverse modulation section. It achieves a half\u2010wave voltage (V\n                    <jats:sub>\u03c0</jats:sub>\n                    ) of 4 V for both Y\u2010polarization (Y\u2010pol) and X\u2010polarization (X\u2010pol), and exhibits an on\u2010chip insertion loss of 2.5\u00a0dB for Y\u2010pol and 2.8\u00a0dB for X\u2010pol at a wavelength of 1,550\u00a0nm. A 3\u2010dB EO bandwidth exceeding 110\u00a0GHz with low EO roll\u2010off is achieved for both TE and TM modes. Furthermore, the modulator supports a data transmission rate of 512\u00a0Gbit/s in 4\u2010level pulse amplitude modulation (PAM4) format, corresponding to 256\u00a0Gbit/s per polarization. This work demonstrates a beyond 400 G/\u03bb solution for implementing a high\u2010speed, and large\u2010bandwidth modulator on a conventional LNOI platform.\n                  </jats:p>",
+  "DOI": "10.1515/nanoph-2025-0472",
+  "type": "journal-article",
+  "created": {
+   "date-parts": [
+    [
+     2025,
+     11,
+     25
+    ]
+   ],
+   "date-time": "2025-11-25T01:55:40Z",
+   "timestamp": 1764035740000
+  },
+  "page": "4783-4792",
+  "source": "Crossref",
+  "is-referenced-by-count": 5,
+  "title": [
+   "512\u00a0Gbps/\u03bb dual\u2010polarization thin\u2010film lithium niobate modulators based on an electro\u2010optic equalizer"
+  ],
+  "prefix": "10.1002",
+  "volume": "14",
+  "author": [
+   {
+    "ORCID": "https://orcid.org/0009-0002-4502-4391",
+    "authenticated-orcid": false,
+    "given": "Jianmin",
+    "family": "Zhang",
+    "sequence": "first",
+    "affiliation": [
+     {
+      "name": "State Key Laboratory of Materials for Integrated Circuits Shanghai Institute of Microsystem and Information Technology Chinese Academy of Sciences Shanghai 200050 China"
+     },
+     {
+      "name": "University of the Chinese Academy of Sciences Beijing 100000 China"
+     }
+    ],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Jian",
+    "family": "Shen",
+    "sequence": "additional",
+    "affiliation": [
+     {
+      "name": "State Key Laboratory of Materials for Integrated Circuits Shanghai Institute of Microsystem and Information Technology Chinese Academy of Sciences Shanghai 200050 China"
+     }
+    ],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Shuxiao",
+    "family": "Wang",
+    "sequence": "additional",
+    "affiliation": [
+     {
+      "name": "State Key Laboratory of Materials for Integrated Circuits Shanghai Institute of Microsystem and Information Technology Chinese Academy of Sciences Shanghai 200050 China"
+     }
+    ],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Zhuoyun",
+    "family": "Li",
+    "sequence": "additional",
+    "affiliation": [
+     {
+      "name": "State Key Laboratory of Materials for Integrated Circuits Shanghai Institute of Microsystem and Information Technology Chinese Academy of Sciences Shanghai 200050 China"
+     },
+     {
+      "name": "University of the Chinese Academy of Sciences Beijing 100000 China"
+     }
+    ],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Wencheng",
+    "family": "Yue",
+    "sequence": "additional",
+    "affiliation": [
+     {
+      "name": "State Key Laboratory of Materials for Integrated Circuits Shanghai Institute of Microsystem and Information Technology Chinese Academy of Sciences Shanghai 200050 China"
+     }
+    ],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Xin",
+    "family": "Ou",
+    "sequence": "additional",
+    "affiliation": [
+     {
+      "name": "State Key Laboratory of Materials for Integrated Circuits Shanghai Institute of Microsystem and Information Technology Chinese Academy of Sciences Shanghai 200050 China"
+     }
+    ],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Yan",
+    "family": "Cai",
+    "sequence": "additional",
+    "affiliation": [
+     {
+      "name": "State Key Laboratory of Materials for Integrated Circuits Shanghai Institute of Microsystem and Information Technology Chinese Academy of Sciences Shanghai 200050 China"
+     }
+    ],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   }
+  ],
+  "member": "311",
+  "published-online": {
+   "date-parts": [
+    [
+     2025,
+     11,
+     25
+    ]
+   ]
+  },
+  "reference": [
+   {
+    "key": "e_1_2_11_2_2",
+    "doi-asserted-by": "publisher",
+    "DOI": "10.1002/lpor.201100017"
+   },
+   {
+    "key": "e_1_2_11_3_2",
+    "doi-asserted-by": "publisher",
+    "DOI": "10.1109/jlt.2017.2647779"
+   },
+   {
+    "key": "e_1_2_11_4_2",
+    "doi-asserted-by": "publisher",
+    "DOI": "10.1109/jlt.2011.2136322"
+   },
+   {
+    "key": "e_1_2_11_5_2",
+    "doi-asserted-by": "publisher",
+    "DOI": "10.1109/jlt.2010.2101052"
+   },
+   {
+    "key": "e_1_2_11_6_2",
+    "doi-asserted-by": "publisher",
+    "DOI": "10.1364/ol.40.001406"
+   },
+   {
+    "key": "e_1_2_11_7_2",
+    "doi-asserted-by": "publisher",
+    "DOI": "10.1109/jlt.2021.3121284"
+   },
+   {
+    "key": "e_1_2_11_8_2",
+    "doi-asserted-by": "publisher",
+    "DOI": "10.1109/jlt.2023.3236962"
+   },
+   {
+    "key": "e_1_2_11_9_2",
+    "doi-asserted-by": "publisher",
+    "DOI": "10.1364/optica.545011"
+   },
+   {
+    "key": "e_1_2_11_10_2",
+    "doi-asserted-by": "publisher",
+    "DOI": "10.1038/s41586\u2010018\u20100551\u2010y"
+   },
+   {
+    "key": "e_1_2_11_11_2",
+    "doi-asserted-by": "publisher",
+    "DOI": "10.1364/oe.26.023728"
+   },
+   {
+    "key": "e_1_2_11_12_2",
+    "doi-asserted-by": "publisher",
+    "DOI": "10.1038/s41467\u2010020\u201017806\u20100"
+   },
+   {
+    "key": "e_1_2_11_13_2",
+    "doi-asserted-by": "publisher",
+    "DOI": "10.1063/5.0192018"
+   },
+   {
+    "key": "e_1_2_11_14_2",
+    "doi-asserted-by": "publisher",
+    "DOI": "10.1021/acsphotonics.2c00263"
+   },
+   {
+    "key": "e_1_2_11_15_2",
+    "doi-asserted-by": "publisher",
+    "DOI": "10.1364/optica.449691"
+   },
+   {
+    "key": "e_1_2_11_16_2",
+    "doi-asserted-by": "publisher",
+    "DOI": "10.1364/optica.470596"
+   },
+   {
+    "key": "e_1_2_11_17_2",
+    "doi-asserted-by": "publisher",
+    "DOI": "10.1063/5.0146987"
+   },
+   {
+    "key": "e_1_2_11_18_2",
+    "doi-asserted-by": "publisher",
+    "DOI": "10.1364/oe.524932"
+   },
+   {
+    "key": "e_1_2_11_19_2",
+    "doi-asserted-by": "publisher",
+    "DOI": "10.1002/lpor.202402053"
+   },
+   {
+    "key": "e_1_2_11_20_2",
+    "doi-asserted-by": "crossref",
+    "unstructured": "Y.Yamaguchi et al. \u201cFully packaged 100\u2010GHz\u2010bandwidth EO\u2010equalizer\u2010integrated TFLN modulator with record\u2010high slope efficiency enabling 200\u2010GBaud signaling\u201d San Francisco CA USA 2025 Optical Fiber Communications Conference and Exhibition (OFC) 2025 pp.1\u20133.",
+    "DOI": "10.1364/OFC.2025.Th4D.4"
+   },
+   {
+    "key": "e_1_2_11_21_2",
+    "doi-asserted-by": "publisher",
+    "DOI": "10.1109/jlt.2023.3266988"
+   },
+   {
+    "key": "e_1_2_11_22_2",
+    "doi-asserted-by": "publisher",
+    "DOI": "10.1109/jlt.2022.3195542"
+   },
+   {
+    "key": "e_1_2_11_23_2",
+    "doi-asserted-by": "publisher",
+    "DOI": "10.1002/lpor.202100529"
+   },
+   {
+    "key": "e_1_2_11_24_2",
+    "doi-asserted-by": "publisher",
+    "DOI": "10.1364/aop.411024"
+   },
+   {
+    "key": "e_1_2_11_25_2",
+    "doi-asserted-by": "publisher",
+    "DOI": "10.1364/oe.487843"
+   },
+   {
+    "key": "e_1_2_11_26_2",
+    "doi-asserted-by": "publisher",
+    "DOI": "10.1038/s41377\u2010022\u201000779\u20108"
+   },
+   {
+    "key": "e_1_2_11_27_2",
+    "doi-asserted-by": "publisher",
+    "DOI": "10.1017/CBO9780511635595"
+   },
+   {
+    "key": "e_1_2_11_28_2",
+    "doi-asserted-by": "publisher",
+    "DOI": "10.3390/mi12070823"
+   },
+   {
+    "key": "e_1_2_11_29_2",
+    "doi-asserted-by": "publisher",
+    "DOI": "10.1364/prj.468518"
+   },
+   {
+    "key": "e_1_2_11_30_2",
+    "doi-asserted-by": "publisher",
+    "DOI": "10.1109/lpt.2022.3178214"
+   },
+   {
+    "key": "e_1_2_11_31_2",
+    "doi-asserted-by": "publisher",
+    "DOI": "10.1364/josab.564510"
+   },
+   {
+    "key": "e_1_2_11_32_2",
+    "doi-asserted-by": "publisher",
+    "DOI": "10.1109/lpt.2022.3164794"
+   },
+   {
+    "key": "e_1_2_11_33_2",
+    "doi-asserted-by": "publisher",
+    "DOI": "10.1038/s41566\u2010019\u20100378\u20106"
+   },
+   {
+    "key": "e_1_2_11_34_2",
+    "doi-asserted-by": "publisher",
+    "DOI": "10.3788/col202119.060016"
+   },
+   {
+    "key": "e_1_2_11_35_2",
+    "doi-asserted-by": "publisher",
+    "DOI": "10.3788/col202422.050601"
+   }
+  ],
+  "container-title": [
+   "Nanophotonics"
+  ],
+  "original-title": [],
+  "language": "en",
+  "link": [
+   {
+    "URL": "https://onlinelibrary.wiley.com/doi/full-xml/10.1515/nanoph-2025-0472",
+    "content-type": "application/xml",
+    "content-version": "vor",
+    "intended-application": "text-mining"
+   },
+   {
+    "URL": "https://onlinelibrary.wiley.com/doi/pdf/10.1515/nanoph-2025-0472",
+    "content-type": "application/pdf",
+    "content-version": "vor",
+    "intended-application": "text-mining"
+   },
+   {
+    "URL": "https://onlinelibrary.wiley.com/doi/pdf/10.1515/nanoph-2025-0472",
+    "content-type": "unspecified",
+    "content-version": "vor",
+    "intended-application": "similarity-checking"
+   }
+  ],
+  "deposited": {
+   "date-parts": [
+    [
+     2026,
+     3,
+     24
+    ]
+   ],
+   "date-time": "2026-03-24T09:33:18Z",
+   "timestamp": 1774344798000
+  },
+  "score": 1,
+  "resource": {
+   "primary": {
+    "URL": "https://onlinelibrary.wiley.com/doi/10.1515/nanoph-2025-0472"
+   }
+  },
+  "subtitle": [],
+  "short-title": [],
+  "issued": {
+   "date-parts": [
+    [
+     2025,
+     11,
+     25
+    ]
+   ]
+  },
+  "references-count": 34,
+  "journal-issue": {
+   "issue": "26",
+   "published-print": {
+    "date-parts": [
+     [
+      2025,
+      12
+     ]
+    ]
+   }
+  },
+  "alternative-id": [
+   "10.1515/nanoph-2025-0472"
+  ],
+  "URL": "https://doi.org/10.1515/nanoph-2025-0472",
+  "archive": [
+   "Portico"
+  ],
+  "relation": {},
+  "ISSN": [
+   "2192-8614",
+   "2192-8614"
+  ],
+  "issn-type": [
+   {
+    "value": "2192-8614",
+    "type": "print"
+   },
+   {
+    "value": "2192-8614",
+    "type": "electronic"
+   }
+  ],
+  "subject": [],
+  "published": {
+   "date-parts": [
+    [
+     2025,
+     11,
+     25
+    ]
+   ]
+  }
+ }
+}

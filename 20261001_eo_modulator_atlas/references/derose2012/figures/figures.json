@@ -1,0 +1,39 @@
+[
+ {
+  "kind": "page_render",
+  "file": "page_01.png",
+  "page": 1,
+  "captions": [
+   "Fig. 1 a) Schematic of the capacitively loaded slot line b) push-pull carrier depletion MZM with no applied RF signal, the depletion region is"
+  ]
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p01_1.png",
+  "page": 1,
+  "width": 658,
+  "height": 688
+ },
+ {
+  "kind": "page_render",
+  "file": "page_02.png",
+  "page": 2,
+  "captions": [
+   "Fig. 2 a) measured bandwidth of 1.5 and 0.5 mm capacitively loaded MZM b) electrical S11 of same modulators showing better thand 20 dB"
+  ]
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p02_1.png",
+  "page": 2,
+  "width": 464,
+  "height": 346
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p02_2.png",
+  "page": 2,
+  "width": 443,
+  "height": 330
+ }
+]

@@ -1,0 +1,923 @@
+{
+ "status": "ok",
+ "message-type": "work",
+ "message-version": "1.0.0",
+ "message": {
+  "indexed": {
+   "date-parts": [
+    [
+     2026,
+     9,
+     30
+    ]
+   ],
+   "date-time": "2026-09-30T19:08:22Z",
+   "timestamp": 1790795302444,
+   "version": "4.1.0"
+  },
+  "reference-count": 50,
+  "publisher": "Springer Science and Business Media LLC",
+  "issue": "8013",
+  "license": [
+   {
+    "start": {
+     "date-parts": [
+      [
+       2024,
+       5,
+       8
+      ]
+     ],
+     "date-time": "2024-05-08T00:00:00Z",
+     "timestamp": 1715126400000
+    },
+    "content-version": "tdm",
+    "delay-in-days": 0,
+    "URL": "https://creativecommons.org/licenses/by/4.0"
+   },
+   {
+    "start": {
+     "date-parts": [
+      [
+       2024,
+       5,
+       8
+      ]
+     ],
+     "date-time": "2024-05-08T00:00:00Z",
+     "timestamp": 1715126400000
+    },
+    "content-version": "vor",
+    "delay-in-days": 0,
+    "URL": "https://creativecommons.org/licenses/by/4.0"
+   }
+  ],
+  "content-domain": {
+   "domain": [
+    "link.springer.com"
+   ],
+   "crossmark-restriction": false
+  },
+  "short-container-title": [
+   "Nature"
+  ],
+  "published-print": {
+   "date-parts": [
+    [
+     2024,
+     5,
+     23
+    ]
+   ]
+  },
+  "abstract": "<jats:title>Abstract</jats:title>\n                  <jats:p>\n                    Electro-optical photonic integrated circuits (PICs) based on lithium niobate (LiNbO\n                    <jats:sub>3</jats:sub>\n                    ) have demonstrated the vast capabilities of materials with a high Pockels coefficient\n                    <jats:sup>1,2</jats:sup>\n                    . They enable linear and high-speed modulators operating at complementary metal\u2013oxide\u2013semiconductor voltage levels\n                    <jats:sup>3</jats:sup>\n                    to be used in applications including data-centre communications\n                    <jats:sup>4</jats:sup>\n                    , high-performance computing and photonic accelerators for AI\n                    <jats:sup>5</jats:sup>\n                    . However, industrial use of this technology is hindered by the high cost per wafer and the limited wafer size. The high cost results from the lack of existing high-volume applications in other domains of the sort that accelerated the adoption of silicon-on-insulator (SOI) photonics, which was driven by vast investment in microelectronics. Here we report low-loss PICs made of lithium tantalate (LiTaO\n                    <jats:sub>3</jats:sub>\n                    ), a material that has already been adopted commercially for 5G radiofrequency filters\n                    <jats:sup>6</jats:sup>\n                    and therefore enables scalable manufacturing at low cost, and it has equal, and in some cases superior, properties to LiNbO\n                    <jats:sub>3</jats:sub>\n                    . We show that LiTaO\n                    <jats:sub>3</jats:sub>\n                    can be etched to create low-loss (5.6\u2009dB\u2009m\n                    <jats:sup>\u22121</jats:sup>\n                    ) PICs using a deep ultraviolet (DUV)\u00a0stepper-based manufacturing process\n                    <jats:sup>7</jats:sup>\n                    . We demonstrate a LiTaO\n                    <jats:sub>3</jats:sub>\n                    Mach\u2013Zehnder modulator (MZM) with a half-wave voltage\u2013length product of 1.9\u2009V\u00a0cm and an electro-optic bandwidth of up to 40\u2009GHz. In comparison with LiNbO\n                    <jats:sub>3</jats:sub>\n                    ,\u2009LiTaO\n                    <jats:sub>3</jats:sub>\n                    exhibits a much lower birefringence, enabling high-density circuits and broadband operation over all telecommunication bands. Moreover, the platform supports the generation of soliton microcombs. Our work paves the way for the scalable manufacture of low-cost and large-volume next-generation electro-optical PICs.\n                  </jats:p>",
+  "DOI": "10.1038/s41586-024-07369-1",
+  "type": "journal-article",
+  "created": {
+   "date-parts": [
+    [
+     2024,
+     5,
+     8
+    ]
+   ],
+   "date-time": "2024-05-08T12:02:58Z",
+   "timestamp": 1715169778000
+  },
+  "page": "784-790",
+  "update-policy": "https://doi.org/10.1007/springer_crossmark_policy",
+  "source": "Crossref",
+  "is-referenced-by-count": 241,
+  "title": [
+   "Lithium tantalate photonic integrated circuits for volume manufacturing"
+  ],
+  "prefix": "10.1038",
+  "volume": "629",
+  "author": [
+   {
+    "given": "Chengli",
+    "family": "Wang",
+    "sequence": "first",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Zihan",
+    "family": "Li",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "ORCID": "https://orcid.org/0000-0002-3468-6501",
+    "authenticated-orcid": false,
+    "given": "Johann",
+    "family": "Riemensberger",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Grigory",
+    "family": "Lihachev",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Mikhail",
+    "family": "Churaev",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Wil",
+    "family": "Kao",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Xinru",
+    "family": "Ji",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Junyin",
+    "family": "Zhang",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "ORCID": "https://orcid.org/0000-0003-3468-5493",
+    "authenticated-orcid": false,
+    "given": "Terence",
+    "family": "Blesin",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Alisa",
+    "family": "Davydova",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Yang",
+    "family": "Chen",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Kai",
+    "family": "Huang",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Xi",
+    "family": "Wang",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "ORCID": "https://orcid.org/0000-0002-0316-9958",
+    "authenticated-orcid": false,
+    "given": "Xin",
+    "family": "Ou",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "ORCID": "https://orcid.org/0000-0002-3408-886X",
+    "authenticated-orcid": false,
+    "given": "Tobias J.",
+    "family": "Kippenberg",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   }
+  ],
+  "member": "297",
+  "published-online": {
+   "date-parts": [
+    [
+     2024,
+     5,
+     8
+    ]
+   ]
+  },
+  "reference": [
+   {
+    "key": "7369_CR1",
+    "doi-asserted-by": "publisher",
+    "first-page": "242",
+    "DOI": "10.1364/AOP.411024",
+    "volume": "13",
+    "author": "D Zhu",
+    "year": "2021",
+    "unstructured": "Zhu, D. et al. Integrated photonics on thin-film lithium niobate. Adv. Opt. Photonics 13, 242\u2013352 (2021).",
+    "journal-title": "Adv. Opt. Photonics"
+   },
+   {
+    "key": "7369_CR2",
+    "doi-asserted-by": "publisher",
+    "first-page": "eabj4396",
+    "DOI": "10.1126/science.abj4396",
+    "volume": "379",
+    "author": "A Boes",
+    "year": "2023",
+    "unstructured": "Boes, A. et al. Lithium niobate photonics: unlocking the electromagnetic spectrum. Science 379, eabj4396 (2023).",
+    "journal-title": "Science"
+   },
+   {
+    "key": "7369_CR3",
+    "doi-asserted-by": "publisher",
+    "first-page": "101",
+    "DOI": "10.1038/s41586-018-0551-y",
+    "volume": "562",
+    "author": "C Wang",
+    "year": "2018",
+    "unstructured": "Wang, C. et al. Integrated lithium niobate electro-optic modulators operating at CMOS-compatible voltages. Nature 562, 101\u2013104 (2018).",
+    "journal-title": "Nature"
+   },
+   {
+    "key": "7369_CR4",
+    "doi-asserted-by": "publisher",
+    "first-page": "61",
+    "DOI": "10.1364/OPTICA.449691",
+    "volume": "9",
+    "author": "M Xu",
+    "year": "2022",
+    "unstructured": "Xu, M. et al. Dual-polarization thin-film lithium niobate in-phase quadrature modulators for terabit-per-second transmission. Optica 9, 61\u201362 (2022).",
+    "journal-title": "Optica"
+   },
+   {
+    "key": "7369_CR5",
+    "doi-asserted-by": "crossref",
+    "unstructured": "Shen, Y. et al. Deep learning with coherent nanophotonic circuits. Nat. Photon.\u00a011, 441\u2013446 (2017).",
+    "DOI": "10.1038/nphoton.2017.93"
+   },
+   {
+    "key": "7369_CR6",
+    "doi-asserted-by": "crossref",
+    "unstructured": "Butaud, E. et al. Innovative Smart Cut piezo on insulator (POI) substrates for 5G acoustic filters. In 2020 IEEE International Electron Devices Meeting (IEDM) (ed. Datta, S.) 34.6.1\u201334.6.4 (IEEE, 2020).",
+    "DOI": "10.1109/IEDM13553.2020.9372020"
+   },
+   {
+    "key": "7369_CR7",
+    "doi-asserted-by": "publisher",
+    "DOI": "10.1038/s41467-023-40502-8",
+    "volume": "14",
+    "author": "Z Li",
+    "year": "2023",
+    "unstructured": "Li, Z. et al. High density lithium niobate photonic integrated circuits. Nat. Commun. 14, 4856 (2023).",
+    "journal-title": "Nat. Commun."
+   },
+   {
+    "key": "7369_CR8",
+    "doi-asserted-by": "publisher",
+    "first-page": "073003",
+    "DOI": "10.1088/2040-8978/18/7/073003",
+    "volume": "18",
+    "author": "D Thomson",
+    "year": "2016",
+    "unstructured": "Thomson, D. et al. Roadmap on silicon photonics. J. Opt. 18, 073003 (2016).",
+    "journal-title": "J. Opt."
+   },
+   {
+    "key": "7369_CR9",
+    "doi-asserted-by": "publisher",
+    "first-page": "220501",
+    "DOI": "10.1063/5.0050117",
+    "volume": "118",
+    "author": "N Margalit",
+    "year": "2021",
+    "unstructured": "Margalit, N. et al. Perspective on the future of silicon photonics and electronics. Appl. Phys. Lett. 118, 220501 (2021).",
+    "journal-title": "Appl. Phys. Lett."
+   },
+   {
+    "key": "7369_CR10",
+    "doi-asserted-by": "publisher",
+    "first-page": "1636",
+    "DOI": "10.1143/JJAP.36.1636",
+    "volume": "36",
+    "author": "M Bruel",
+    "year": "1997",
+    "unstructured": "Bruel, M. & Auberton-Herv\u00e9, B. A. Smart-Cut: a new silicon on insulator material technology based on hydrogen implantation and wafer bonding. Jpn. J. Appl. Phys. 36, 1636 (1997).",
+    "journal-title": "Jpn. J. Appl. Phys."
+   },
+   {
+    "key": "7369_CR11",
+    "doi-asserted-by": "crossref",
+    "unstructured": "He, M. et al. High-performance hybrid silicon and lithium niobate Mach\u2013Zehnder modulators for 100 Gbit s\u20131 and beyond. Nat. Photon.\u00a013, 359\u2013364 (2019).",
+    "DOI": "10.1038/s41566-019-0378-6"
+   },
+   {
+    "key": "7369_CR12",
+    "doi-asserted-by": "publisher",
+    "first-page": "373",
+    "DOI": "10.1038/s41586-019-1008-7",
+    "volume": "568",
+    "author": "M Zhang",
+    "year": "2019",
+    "unstructured": "Zhang, M. et al. Broadband electro-optic frequency comb generation in a lithium niobate microring resonator. Nature 568, 373\u2013377 (2019).",
+    "journal-title": "Nature"
+   },
+   {
+    "key": "7369_CR13",
+    "doi-asserted-by": "crossref",
+    "unstructured": "Ballandras, S. et al. New generation of SAW devices on advanced engineered substrates combining piezoelectric single crystals and silicon. In 2019 Joint Conference of the IEEE International Frequency Control Symposium and European Frequency and Time Forum (EFTF/IFC) 1\u20136 (IEEE, 2019).",
+    "DOI": "10.1109/FCS.2019.8855991"
+   },
+   {
+    "key": "7369_CR14",
+    "doi-asserted-by": "publisher",
+    "first-page": "1660",
+    "DOI": "10.1021/acsaelm.9b00351",
+    "volume": "1",
+    "author": "Y Yan",
+    "year": "2019",
+    "unstructured": "Yan, Y. et al. Wafer-scale fabrication of 42\u00b0 rotated y-cut LiTaO3-on-insulator (LTOI) substrate for a SAW resonator. ACS Appl. Electron. Mater. 1, 1660\u20131666 (2019).",
+    "journal-title": "ACS Appl. Electron. Mater."
+   },
+   {
+    "key": "7369_CR15",
+    "unstructured": "SOITEC. Capital markets day 2021. https://www.soitec.com/en/capital-markets-day-2021 (2021)."
+   },
+   {
+    "key": "7369_CR16",
+    "doi-asserted-by": "publisher",
+    "first-page": "373",
+    "DOI": "10.1016/j.actamat.2018.03.020",
+    "volume": "150",
+    "author": "M Gruber",
+    "year": "2018",
+    "unstructured": "Gruber, M. et al. Atomistic origins of the differences in anisotropic fracture behaviour of LiTaO3 and LiNbO3 single crystals. Acta Mater. 150, 373\u2013380 (2018).",
+    "journal-title": "Acta Mater."
+   },
+   {
+    "key": "7369_CR17",
+    "doi-asserted-by": "publisher",
+    "first-page": "105736",
+    "DOI": "10.1016/j.rinp.2022.105736",
+    "volume": "39",
+    "author": "AR Zanatta",
+    "year": "2022",
+    "unstructured": "Zanatta, A. R. The optical bandgap of lithium niobate (LiNbO3) and its dependence with temperature. Results Phys. 39, 105736 (2022).",
+    "journal-title": "Results Phys."
+   },
+   {
+    "key": "7369_CR18",
+    "doi-asserted-by": "publisher",
+    "first-page": "5804",
+    "DOI": "10.1063/1.346951",
+    "volume": "68",
+    "author": "A Dhar",
+    "year": "1990",
+    "unstructured": "Dhar, A. & Mansingh, A. Optical properties of reduced lithium niobate single crystals. J. Appl. Phys. 68, 5804\u20135809 (1990).",
+    "journal-title": "J. Appl. Phys."
+   },
+   {
+    "key": "7369_CR19",
+    "doi-asserted-by": "publisher",
+    "first-page": "424",
+    "DOI": "10.1088/1464-4258/1/3/313",
+    "volume": "1",
+    "author": "S \u00c7abuk",
+    "year": "1999",
+    "unstructured": "\u00c7abuk, S. & Mamedov, A. Urbach rule and optical properties of the LiNbO3 and LitTaO3. J. Opt. A: Pure Appl. Opt. 1, 424 (1999).",
+    "journal-title": "J. Opt. A: Pure Appl. Opt."
+   },
+   {
+    "key": "7369_CR20",
+    "doi-asserted-by": "publisher",
+    "first-page": "1214",
+    "DOI": "10.1364/OL.22.001214",
+    "volume": "22",
+    "author": "J-P Meyn",
+    "year": "1997",
+    "unstructured": "Meyn, J.-P. & Fejer, M. M. Tunable ultraviolet radiation by second-harmonic generation in periodically poled lithium tantalate. Opt. Lett. 22, 1214\u20131216 (1997).",
+    "journal-title": "Opt. Lett."
+   },
+   {
+    "key": "7369_CR21",
+    "doi-asserted-by": "publisher",
+    "first-page": "053815",
+    "DOI": "10.1103/PhysRevA.94.053815",
+    "volume": "94",
+    "author": "C Javerzac-Galy",
+    "year": "2016",
+    "unstructured": "Javerzac-Galy, C. et al. On-chip microwave-to-optical quantum coherent converter based on a superconducting resonator coupled to an electro-optic microresonator. Phys. Rev. A 94, 053815 (2016).",
+    "journal-title": "Phys. Rev. A"
+   },
+   {
+    "key": "7369_CR22",
+    "doi-asserted-by": "publisher",
+    "first-page": "1050",
+    "DOI": "10.1364/OPTICA.425414",
+    "volume": "8",
+    "author": "X Han",
+    "year": "2021",
+    "unstructured": "Han, X., Fu, W., Zou, C.-L., Jiang, L. & Tang, H. X. Microwave-optical quantum frequency conversion. Optica 8, 1050\u20131064 (2021).",
+    "journal-title": "Optica"
+   },
+   {
+    "key": "7369_CR23",
+    "doi-asserted-by": "publisher",
+    "first-page": "536",
+    "DOI": "10.1109/TMTT.2003.821911",
+    "volume": "52",
+    "author": "MV Jacob",
+    "year": "2004",
+    "unstructured": "Jacob, M. V. et al. Temperature dependence of permittivity and loss tangent of lithium tantalate at microwave frequencies. IEEE Trans. Microw. Theory Tech. 52, 536\u2013541 (2004).",
+    "journal-title": "IEEE Trans. Microw. Theory Tech."
+   },
+   {
+    "key": "7369_CR24",
+    "doi-asserted-by": "publisher",
+    "first-page": "014101",
+    "DOI": "10.1063/1.2402978",
+    "volume": "101",
+    "author": "R-Y Yang",
+    "year": "2007",
+    "unstructured": "Yang, R.-Y., Su, Y.-K., Weng, M.-H., Hung, C.-Y. & Wu, H.-W. Characteristics of coplanar waveguide on lithium niobate crystals as a microwave substrate. J. Appl. Phys. 101, 014101 (2007).",
+    "journal-title": "J. Appl. Phys."
+   },
+   {
+    "key": "7369_CR25",
+    "doi-asserted-by": "publisher",
+    "first-page": "8696",
+    "DOI": "10.1364/OE.27.008696",
+    "volume": "27",
+    "author": "V Tormo-Marquez",
+    "year": "2019",
+    "unstructured": "Tormo-Marquez, V., D\u00edaz-Hijar, M., Carrascosa, M., Shur, V. Y. & Olivares, J. Low loss optical waveguides fabricated in LiTaO3 by swift heavy ion irradiation. Opt. Express 27, 8696\u20138708 (2019).",
+    "journal-title": "Opt. Express"
+   },
+   {
+    "key": "7369_CR26",
+    "doi-asserted-by": "publisher",
+    "first-page": "4375",
+    "DOI": "10.1364/OL.41.004375",
+    "volume": "41",
+    "author": "M Soltani",
+    "year": "2016",
+    "unstructured": "Soltani, M. et al. Ultrahigh Q whispering gallery mode electro-optic resonators on a silicon photonic chip. Opt. Lett. 41, 4375\u20134378 (2016).",
+    "journal-title": "Opt. Lett."
+   },
+   {
+    "key": "7369_CR27",
+    "doi-asserted-by": "publisher",
+    "first-page": "3925",
+    "DOI": "10.3390/molecules25173925",
+    "volume": "25",
+    "author": "Y Lu",
+    "year": "2020",
+    "unstructured": "Lu, Y., Johnston, B., Dekker, P., Withford, M. J. & Dawes, J. M. Channel waveguides in lithium niobate and lithium tantalate. Molecules 25, 3925 (2020).",
+    "journal-title": "Molecules"
+   },
+   {
+    "key": "7369_CR28",
+    "doi-asserted-by": "publisher",
+    "first-page": "4100",
+    "DOI": "10.1364/OL.394171",
+    "volume": "45",
+    "author": "X Yan",
+    "year": "2020",
+    "unstructured": "Yan, X. et al. High optical damage threshold on-chip lithium tantalate microdisk resonator. Opt. Lett. 45, 4100\u20134103 (2020).",
+    "journal-title": "Opt. Lett."
+   },
+   {
+    "key": "7369_CR29",
+    "doi-asserted-by": "publisher",
+    "first-page": "011307",
+    "DOI": "10.1063/5.0037771",
+    "volume": "8",
+    "author": "Y Jia",
+    "year": "2021",
+    "unstructured": "Jia, Y., Wang, L. & Chen, F. Ion-cut lithium niobate on insulator technology: recent advances and perspectives. Appl. Phys. Rev. 8, 011307 (2021).",
+    "journal-title": "Appl. Phys. Rev."
+   },
+   {
+    "key": "7369_CR30",
+    "doi-asserted-by": "crossref",
+    "unstructured": "Del\u2019Haye, P., Arcizet, O., Gorodetsky, M. L., Holzwarth, R. & Kippenberg, T. J. Frequency comb assisted diode laser spectroscopy for measurement of microcavity dispersion. Nat. Photon.\u00a03, 529\u2013533 (2009).",
+    "DOI": "10.1038/nphoton.2009.138"
+   },
+   {
+    "key": "7369_CR31",
+    "doi-asserted-by": "publisher",
+    "first-page": "1233",
+    "DOI": "10.3390/cryst13081233",
+    "volume": "13",
+    "author": "X Xiao",
+    "year": "2023",
+    "unstructured": "Xiao, X. et al. Performance of LiTaO3 crystals and thin films and their application. Crystals 13, 1233 (2023).",
+    "journal-title": "Crystals"
+   },
+   {
+    "key": "7369_CR32",
+    "doi-asserted-by": "publisher",
+    "first-page": "24452",
+    "DOI": "10.1364/OE.401959",
+    "volume": "28",
+    "author": "K Luke",
+    "year": "2020",
+    "unstructured": "Luke, K. et al. Wafer-scale low-loss lithium niobate photonic integrated circuits. Opt. Express 28, 24452\u201324458 (2020).",
+    "journal-title": "Opt. Express"
+   },
+   {
+    "key": "7369_CR33",
+    "doi-asserted-by": "publisher",
+    "DOI": "10.1038/s41467-021-21973-z",
+    "volume": "12",
+    "author": "J Liu",
+    "year": "2021",
+    "unstructured": "Liu, J. et al. High-yield, wafer-scale fabrication of ultralow-loss, dispersion-engineered silicon nitride photonic circuits. Nat. Commun. 12, 2236 (2021).",
+    "journal-title": "Nat. Commun."
+   },
+   {
+    "key": "7369_CR34",
+    "doi-asserted-by": "publisher",
+    "first-page": "081301",
+    "DOI": "10.1063/5.0095146",
+    "volume": "7",
+    "author": "A Shams-Ansari",
+    "year": "2022",
+    "unstructured": "Shams-Ansari, A. et al. Reduced material loss in thin-film lithium niobate waveguides. APL Photonics 7, 081301 (2022).",
+    "journal-title": "APL Photonics"
+   },
+   {
+    "key": "7369_CR35",
+    "doi-asserted-by": "publisher",
+    "first-page": "35659",
+    "DOI": "10.1364/OE.27.035659",
+    "volume": "27",
+    "author": "A Pan",
+    "year": "2019",
+    "unstructured": "Pan, A., Hu, C., Zeng, C. & Xia, J. Fundamental mode hybridization in a thin film lithium niobate ridge waveguide. Opt. Express 27, 35659\u201335669 (2019).",
+    "journal-title": "Opt. Express"
+   },
+   {
+    "key": "7369_CR36",
+    "doi-asserted-by": "publisher",
+    "first-page": "1081",
+    "DOI": "10.1364/OL.449634",
+    "volume": "47",
+    "author": "C Lu",
+    "year": "2022",
+    "unstructured": "Lu, C. et al. Highly tunable birefringent phase-matched second-harmonic generation in an angle-cut lithium niobate-on-insulator ridge waveguide. Opt. Lett. 47, 1081\u20131084 (2022).",
+    "journal-title": "Opt. Lett."
+   },
+   {
+    "key": "7369_CR37",
+    "first-page": "2200310",
+    "volume": "12",
+    "author": "J Wang",
+    "year": "2020",
+    "unstructured": "Wang, J., Chen, P., Dai, D. & Liu, L. Polarization coupling of X-cut thin film lithium niobate based waveguides. IEEE Photonics J.12, 2200310 (2020).",
+    "journal-title": "IEEE Photonics J."
+   },
+   {
+    "key": "7369_CR38",
+    "doi-asserted-by": "publisher",
+    "first-page": "3389",
+    "DOI": "10.1063/1.1658195",
+    "volume": "40",
+    "author": "F Chen",
+    "year": "1969",
+    "unstructured": "Chen, F. S. Optically induced change of refractive indices in LiNbO3 and LiTaO3. J. Appl. Phys. 40, 3389\u20133396 (1969).",
+    "journal-title": "J. Appl. Phys."
+   },
+   {
+    "key": "7369_CR39",
+    "doi-asserted-by": "crossref",
+    "unstructured": "Herr, T. et al. Temporal solitons in optical microresonators. Nat. Photon.\u00a08, 145\u2013152 (2014).",
+    "DOI": "10.1038/nphoton.2013.343"
+   },
+   {
+    "key": "7369_CR40",
+    "doi-asserted-by": "publisher",
+    "first-page": "eaan8083",
+    "DOI": "10.1126/science.aan8083",
+    "volume": "361",
+    "author": "TJ Kippenberg",
+    "year": "2018",
+    "unstructured": "Kippenberg, T. J., Gaeta, A. L., Lipson, M. & Gorodetsky, M. L. Dissipative Kerr solitons in optical microresonators. Science 361, eaan8083 (2018).",
+    "journal-title": "Science"
+   },
+   {
+    "key": "7369_CR41",
+    "doi-asserted-by": "publisher",
+    "first-page": "819",
+    "DOI": "10.1016/S0022-3697(98)00333-3",
+    "volume": "60",
+    "author": "Y Repelin",
+    "year": "1999",
+    "unstructured": "Repelin, Y., Husson, E., Bennani, F. & Proust, C. Raman spectroscopy of lithium niobate and lithium tantalate. Force field calculations. J. Phys. Chem. Solids 60, 819\u2013825 (1999).",
+    "journal-title": "J. Phys. Chem. Solids"
+   },
+   {
+    "key": "7369_CR42",
+    "doi-asserted-by": "publisher",
+    "DOI": "10.1038/s41467-023-39229-3",
+    "volume": "14",
+    "author": "Y He",
+    "year": "2023",
+    "unstructured": "He, Y. et al. High-speed tunable microwave-rate soliton microcomb. Nat. Commun. 14, 3467 (2023).",
+    "journal-title": "Nat. Commun."
+   },
+   {
+    "key": "7369_CR43",
+    "doi-asserted-by": "publisher",
+    "first-page": "063902",
+    "DOI": "10.1103/PhysRevLett.121.063902",
+    "volume": "121",
+    "author": "JR Stone",
+    "year": "2018",
+    "unstructured": "Stone, J. R. et al. Thermal and nonlinear dissipative-soliton dynamics in Kerr-microresonator frequency combs. Phys. Rev. Lett. 121, 063902 (2018).",
+    "journal-title": "Phys. Rev. Lett."
+   },
+   {
+    "key": "7369_CR44",
+    "doi-asserted-by": "crossref",
+    "unstructured": "Liu, J. et al. Photonic microwave generation in the X- and K-band using integrated soliton microcombs. Nat. Photon.\u00a014, 486\u2013491 (2020).",
+    "DOI": "10.1038/s41566-020-0617-x"
+   },
+   {
+    "key": "7369_CR45",
+    "doi-asserted-by": "publisher",
+    "first-page": "163603",
+    "DOI": "10.1103/PhysRevLett.124.163603",
+    "volume": "124",
+    "author": "J Zhao",
+    "year": "2020",
+    "unstructured": "Zhao, J., Ma, C., R\u00fcsing, M. & Mookherjea, S. High quality entangled photon pair generation in periodically poled thin-film lithium niobate waveguides. Phys. Rev. Lett. 124, 163603 (2020).",
+    "journal-title": "Phys. Rev. Lett."
+   },
+   {
+    "key": "7369_CR46",
+    "doi-asserted-by": "publisher",
+    "first-page": "1333",
+    "DOI": "10.1126/science.abo6213",
+    "volume": "377",
+    "author": "R Nehra",
+    "year": "2022",
+    "unstructured": "Nehra, R. et al. Few-cycle vacuum squeezing in nanophotonics. Science 377, 1333\u20131337 (2022).",
+    "journal-title": "Science"
+   },
+   {
+    "key": "7369_CR47",
+    "doi-asserted-by": "publisher",
+    "first-page": "1060",
+    "DOI": "10.1364/OPTICA.462055",
+    "volume": "9",
+    "author": "Z Gong",
+    "year": "2022",
+    "unstructured": "Gong, Z., Shen, M., Lu, J., Surya, J. B. & Tang, H. X. Monolithic Kerr and electro-optic hybrid microcombs. Optica 9, 1060\u20131065 (2022).",
+    "journal-title": "Optica"
+   },
+   {
+    "key": "7369_CR48",
+    "doi-asserted-by": "crossref",
+    "unstructured": "Hu, Y. et al. High-efficiency and broadband on-chip electro-optic frequency comb generators. Nat. Photon.\u00a016, 679\u2013685 (2022).",
+    "DOI": "10.1038/s41566-022-01059-y"
+   },
+   {
+    "key": "7369_CR49",
+    "doi-asserted-by": "crossref",
+    "unstructured": "Youssefi, A. et al. A cryogenic electro-optic interconnect for superconducting devices. Nat. Electron. 4, 326\u2013332 (2021).",
+    "DOI": "10.1038/s41928-021-00570-4"
+   },
+   {
+    "key": "7369_CR50",
+    "doi-asserted-by": "publisher",
+    "unstructured": "Wang, C., & Kippenberg, T. J. Lithium tantalate photonic integrated circuits for volume manufacturing. Zenodo https://doi.org/10.5281/zenodo.10215426 (2023).",
+    "DOI": "10.5281/zenodo.10215426"
+   }
+  ],
+  "container-title": [
+   "Nature"
+  ],
+  "original-title": [],
+  "language": "en",
+  "link": [
+   {
+    "URL": "https://www.nature.com/articles/s41586-024-07369-1.pdf",
+    "content-type": "application/pdf",
+    "content-version": "vor",
+    "intended-application": "text-mining"
+   },
+   {
+    "URL": "https://www.nature.com/articles/s41586-024-07369-1",
+    "content-type": "text/html",
+    "content-version": "vor",
+    "intended-application": "text-mining"
+   },
+   {
+    "URL": "https://www.nature.com/articles/s41586-024-07369-1.pdf",
+    "content-type": "application/pdf",
+    "content-version": "vor",
+    "intended-application": "similarity-checking"
+   }
+  ],
+  "deposited": {
+   "date-parts": [
+    [
+     2024,
+     8,
+     14
+    ]
+   ],
+   "date-time": "2024-08-14T08:10:01Z",
+   "timestamp": 1723623001000
+  },
+  "score": 1,
+  "resource": {
+   "primary": {
+    "URL": "https://www.nature.com/articles/s41586-024-07369-1"
+   }
+  },
+  "subtitle": [],
+  "short-title": [],
+  "issued": {
+   "date-parts": [
+    [
+     2024,
+     5,
+     8
+    ]
+   ]
+  },
+  "references-count": 50,
+  "journal-issue": {
+   "issue": "8013",
+   "published-print": {
+    "date-parts": [
+     [
+      2024,
+      5,
+      23
+     ]
+    ]
+   }
+  },
+  "alternative-id": [
+   "7369"
+  ],
+  "URL": "https://doi.org/10.1038/s41586-024-07369-1",
+  "relation": {},
+  "ISSN": [
+   "0028-0836",
+   "1476-4687"
+  ],
+  "issn-type": [
+   {
+    "value": "0028-0836",
+    "type": "print"
+   },
+   {
+    "value": "1476-4687",
+    "type": "electronic"
+   }
+  ],
+  "subject": [],
+  "published": {
+   "date-parts": [
+    [
+     2024,
+     5,
+     8
+    ]
+   ]
+  },
+  "assertion": [
+   {
+    "value": "26 June 2023",
+    "order": 1,
+    "name": "received",
+    "label": "Received",
+    "group": {
+     "name": "ArticleHistory",
+     "label": "Article History"
+    }
+   },
+   {
+    "value": "2 April 2024",
+    "order": 2,
+    "name": "accepted",
+    "label": "Accepted",
+    "group": {
+     "name": "ArticleHistory",
+     "label": "Article History"
+    }
+   },
+   {
+    "value": "8 May 2024",
+    "order": 3,
+    "name": "first_online",
+    "label": "First Online",
+    "group": {
+     "name": "ArticleHistory",
+     "label": "Article History"
+    }
+   },
+   {
+    "value": "T.J.K. is a co-founder and shareholder of Luxtelligence SA, a foundry commercializing LiNbO<sub>3</sub> PICs, as well as DEEPLIGHT SA, a start-up commercializing PIC-based frequency-agile low-noise lasers.",
+    "order": 1,
+    "name": "Ethics",
+    "group": {
+     "name": "EthicsHeading",
+     "label": "Competing interests"
+    }
+   }
+  ]
+ }
+}

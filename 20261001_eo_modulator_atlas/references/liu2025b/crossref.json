@@ -1,0 +1,341 @@
+{
+ "status": "ok",
+ "message-type": "work",
+ "message-version": "1.0.0",
+ "message": {
+  "indexed": {
+   "date-parts": [
+    [
+     2026,
+     9,
+     27
+    ]
+   ],
+   "date-time": "2026-09-27T21:08:26Z",
+   "timestamp": 1790543306283,
+   "version": "4.1.0"
+  },
+  "reference-count": 16,
+  "publisher": "Changchun Institute of Optics, Fine Mechanics and Physics, Chinese Academy of Sciences",
+  "issue": "3",
+  "content-domain": {
+   "domain": [],
+   "crossmark-restriction": false
+  },
+  "short-container-title": [
+   "gxjzz"
+  ],
+  "published-print": {
+   "date-parts": [
+    [
+     2025
+    ]
+   ]
+  },
+  "DOI": "10.37188/lam.2025.047",
+  "type": "journal-article",
+  "created": {
+   "date-parts": [
+    [
+     2025,
+     5,
+     23
+    ]
+   ],
+   "date-time": "2025-05-23T08:41:09Z",
+   "timestamp": 1747989669000
+  },
+  "page": "1",
+  "source": "Crossref",
+  "is-referenced-by-count": 12,
+  "title": [
+   "Volume manufacturing of thin-film lithium niobate modulators with bandwidth &lt;i&gt;&amp;gt;&lt;/i&gt; 110 GHz based on 4-inch wafer with a quartz handle"
+  ],
+  "prefix": "10.37188",
+  "volume": "6",
+  "author": [
+   {
+    "given": "Yang",
+    "family": "Liu",
+    "sequence": "first",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Zihan",
+    "family": "Zhou",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Peiqi",
+    "family": "Zhou",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Changqing",
+    "family": "Wang",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Qiansheng",
+    "family": "Wang",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Ye",
+    "family": "Liu",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Dong",
+    "family": "Wang",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Daigao",
+    "family": "Chen",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Lei",
+    "family": "Wang",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Xi",
+    "family": "Xiao",
+    "sequence": "additional",
+    "affiliation": [],
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   }
+  ],
+  "member": "23217",
+  "reference": [
+   {
+    "key": "key-10.37188/lam.2025.047-1",
+    "doi-asserted-by": "crossref",
+    "unstructured": "Schmidtke, K. &amp; Schmidtke, H. J. Moore\u2019s law redefined for AI/HPC. Proceedings of 2024 Optical Fiber Communications Conference and Exhibition (OFC). San Diego, CA, USA: IEEE, 2024, 1-3.",
+    "DOI": "10.1364/OFC.2024.Tu2F.2"
+   },
+   {
+    "key": "key-10.37188/lam.2025.047-2",
+    "doi-asserted-by": "crossref",
+    "unstructured": "C. St-Arnault, et al. Net 3.2 Tbps 225 Gbaud PAM4 O-Band IM/DD 2 km Transmission Using FR8 and DR8 with a CMOS 3 nm SerDes and TFLN Modulators, Proceedings of the Optical Fiber Communications Conference and Exhibition (OFC) 2025. San Diego, CA, USA: Optica Publishing Group, 2025, Th4B.1, doi: 10.1364/OFC.2025.Th4B.1",
+    "DOI": "10.1364/OFC.2025.Th4B.1"
+   },
+   {
+    "key": "key-10.37188/lam.2025.047-3",
+    "doi-asserted-by": "publisher",
+    "unstructured": "Berikaa, E. et al. TFLN MZMs and next-gen DACs: enabling beyond 400 Gbps IMDD O-band and C-band transmission. <i>IEEE Photonics Technology Letters</i> <b>35</b>, 850-853 (2023).",
+    "DOI": "10.1109/LPT.2023.3285881"
+   },
+   {
+    "key": "key-10.37188/lam.2025.047-4",
+    "doi-asserted-by": "crossref",
+    "unstructured": "Kulmer, L. et al. Single carrier net 400 Gbit/s IM/DD over 400 m fiber enabled by Plasmonic Mach-zehnder modulator. Proceedings of 2024 Optical Fiber Communications Conference and Exhibition (OFC). San Diego, CA, USA: IEEE, 2024, 1-3.",
+    "DOI": "10.1364/OFC.2024.W4H.5"
+   },
+   {
+    "key": "key-10.37188/lam.2025.047-5",
+    "doi-asserted-by": "crossref",
+    "unstructured": "Uchiyama, A. et al. Demonstration of 155 Gbaud PAM4 and PAM6 EML with narrow high-mesa EA modulator for 400 Gbps per lane transmission. Proceedings of 2024 Optical Fiber Communications Conference and Exhibition (OFC). San Diego, CA, USA: IEEE, 2024, 1-3.",
+    "DOI": "10.1364/OFC.2024.Tu2D.1"
+   },
+   {
+    "key": "key-10.37188/lam.2025.047-6",
+    "doi-asserted-by": "crossref",
+    "unstructured": "Liu, H. X. et al. Ultra-compact lithium niobate photonic chip for high-capacity and energy-efficient wavelength-division-multiplexing transmitters. <i>Light: Advanced Manufacturing</i> <b>4</b>, 133-142 (2023).",
+    "DOI": "10.37188/lam.2023.013"
+   },
+   {
+    "key": "key-10.37188/lam.2025.047-7",
+    "doi-asserted-by": "publisher",
+    "unstructured": "Zhu, D. et al. Integrated photonics on thin-film lithium niobate. <i>Advances in Optics and Photonics</i> <b>13</b>, 242-352 (2021).",
+    "DOI": "10.1364/AOP.411024"
+   },
+   {
+    "key": "key-10.37188/lam.2025.047-8",
+    "doi-asserted-by": "publisher",
+    "unstructured": "Wang, C. et al. Integrated lithium niobate electro-optic modulators operating at CMOS-compatible voltages. <i>Nature</i> <b>562</b>, 101-104 (2018).",
+    "DOI": "10.1038/s41586-018-0551-y"
+   },
+   {
+    "key": "key-10.37188/lam.2025.047-9",
+    "doi-asserted-by": "publisher",
+    "unstructured": "Kharel, P. et al. Breaking voltage\u2013bandwidth limits in integrated lithium niobate modulators using micro-structured electrodes: erratum. <i>Optica</i> <b>8</b>, 1218-1218 (2021).",
+    "DOI": "10.1364/OPTICA.440484"
+   },
+   {
+    "key": "key-10.37188/lam.2025.047-10",
+    "doi-asserted-by": "publisher",
+    "unstructured": "Juneghani, F. A. et al. Thin-film lithium niobate optical modulators with an extrapolated bandwidth of 170 GHz. <i>Advanced Photonics Research</i> <b>4</b>, 2200216 (2023).",
+    "DOI": "10.1002/adpr.202200216"
+   },
+   {
+    "key": "key-10.37188/lam.2025.047-11",
+    "doi-asserted-by": "publisher",
+    "unstructured": "Liu, Y. et al. Low V\u03c0 thin-film lithium niobate modulator fabricated with photolithography. <i>Optics Express</i> <b>29</b>, 6320-6329 (2021).",
+    "DOI": "10.1364/OE.414250"
+   },
+   {
+    "key": "key-10.37188/lam.2025.047-12",
+    "doi-asserted-by": "crossref",
+    "unstructured": "Zhou, J. J. et al. High-performance thin-film lithium niobate mach-zehnder modulator on 8-inch silicon substrate. Proceedings of the Optical Fiber Communication Conference (OFC) 2024. San Diego, CA, USA: Optica Publishing Group, 2024, M3K. 2, doi: 10.1364/OFC.2024.M3K.2",
+    "DOI": "10.1364/OFC.2024.M3K.2"
+   },
+   {
+    "key": "key-10.37188/lam.2025.047-13",
+    "doi-asserted-by": "publisher",
+    "unstructured": "Xu, M. Y. et al. Dual-polarization thin-film lithium niobate in-phase quadrature modulators for terabit-per-second transmission. <i>Optica</i> <b>9</b>, 61-62 (2022).",
+    "DOI": "10.1364/OPTICA.449691"
+   },
+   {
+    "key": "key-10.37188/lam.2025.047-14",
+    "doi-asserted-by": "publisher",
+    "unstructured": "Liu, X. C. et al. Wideband thin-film lithium niobate modulator with low half-wave-voltage length product. <i>Chinese Optics Letters</i> <b>19</b>, 060016 (2021).",
+    "DOI": "10.3788/COL202119.060016"
+   },
+   {
+    "key": "key-10.37188/lam.2025.047-15",
+    "doi-asserted-by": "publisher",
+    "unstructured": "Chen, G. X. et al. High performance thin-film lithium niobate modulator on a silicon substrate using periodic capacitively loaded traveling-wave electrode. <i>APL Photonics</i> <b>7</b>, 026103 (2022).",
+    "DOI": "10.1063/5.0077232"
+   },
+   {
+    "key": "key-10.37188/lam.2025.047-16",
+    "doi-asserted-by": "publisher",
+    "unstructured": "Tang, Y. Q. et al. High performance thin-film lithium niobate modulator with suppressed slot-line mode on quartz substrate fabricated by photolithography. <i>Journal of Lightwave Technology</i> <b>42</b>, 636-647 (2025).",
+    "DOI": "10.1109/JLT.2024.3453032"
+   }
+  ],
+  "container-title": [
+   "Light: Advanced Manufacturing"
+  ],
+  "original-title": [],
+  "deposited": {
+   "date-parts": [
+    [
+     2025,
+     10,
+     10
+    ]
+   ],
+   "date-time": "2025-10-10T10:09:07Z",
+   "timestamp": 1760090947000
+  },
+  "score": 1,
+  "resource": {
+   "primary": {
+    "URL": "https://www.light-am.com/article/doi/10.37188/lam.2025.047"
+   }
+  },
+  "subtitle": [],
+  "short-title": [],
+  "issued": {
+   "date-parts": [
+    [
+     2025
+    ]
+   ]
+  },
+  "references-count": 16,
+  "journal-issue": {
+   "issue": "3",
+   "published-print": {
+    "date-parts": [
+     [
+      2025
+     ]
+    ]
+   }
+  },
+  "alternative-id": [
+   "LAM2024100112"
+  ],
+  "URL": "https://doi.org/10.37188/lam.2025.047",
+  "relation": {},
+  "ISSN": [
+   "2831-4093"
+  ],
+  "issn-type": [
+   {
+    "value": "2831-4093",
+    "type": "print"
+   }
+  ],
+  "subject": [],
+  "published": {
+   "date-parts": [
+    [
+     2025
+    ]
+   ]
+  }
+ }
+}

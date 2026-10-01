@@ -1,0 +1,107 @@
+[
+ {
+  "kind": "page_render",
+  "file": "page_01.png",
+  "page": 1,
+  "captions": [
+   "FIG. 1. Next generation high-speed silicon photonic platform. (a) Generic view of a state-of-the-art Si-PIC platform with its"
+  ]
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p01_1.png",
+  "page": 1,
+  "width": 1066,
+  "height": 688
+ },
+ {
+  "kind": "page_render",
+  "file": "page_02.png",
+  "page": 2,
+  "captions": [
+   "FIG. 2. Integration \ue002ow of LiTaO3 on a Si-PIC. (a) Architecture of the passive Si and SiN circuitry and corresponding optical"
+  ]
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p02_1.png",
+  "page": 2,
+  "width": 1066,
+  "height": 747
+ },
+ {
+  "kind": "page_render",
+  "file": "page_03.png",
+  "page": 3,
+  "captions": [
+   "FIG. 3. Transition from the Si waveguide to the hybrid mod-"
+  ]
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p03_1.png",
+  "page": 3,
+  "width": 514,
+  "height": 524
+ },
+ {
+  "kind": "page_render",
+  "file": "page_04.png",
+  "page": 4,
+  "captions": [
+   "FIG. 4. High-speed characterisation of the modulator. (a) Measurement setup (EE system) for the RF line frequency response",
+   "Fig. 5.b. More information on the simulation of V\u03c0 is",
+   "FIG. 5."
+  ]
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p04_1.png",
+  "page": 4,
+  "width": 1066,
+  "height": 435
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p04_2.png",
+  "page": 4,
+  "width": 514,
+  "height": 432
+ },
+ {
+  "kind": "page_render",
+  "file": "page_05.png",
+  "page": 5,
+  "captions": [
+   "FIG. 6. Data transmission experiment. (a) Measurement setup for eye-diagram measurements. (b) Bit error rate (BER) in the"
+  ]
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p05_1.png",
+  "page": 5,
+  "width": 1066,
+  "height": 606
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p07_1.png",
+  "page": 7,
+  "width": 1066,
+  "height": 818
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p08_1.png",
+  "page": 8,
+  "width": 1066,
+  "height": 275
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p09_1.png",
+  "page": 9,
+  "width": 959,
+  "height": 238
+ }
+]
