@@ -6,6 +6,7 @@
 !*.pdf
 !*.png
 !*.svg
+!*.html
 
 # Local-only: private path mapping, generated caches, build output, logs.
 # (kept after the negations above so they win)
