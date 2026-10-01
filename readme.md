@@ -82,7 +82,7 @@ Projects that have spun off:
 
 <img src="assets/photonics-lineage.png" alt="Photonics Lineage" width="50%">
 
-- Sep 2026: [PHIELDWORKS (Coherent Factorio)](https://github.com/jwt625/PlayGround/tree/main/20260911_coherent_factorio): desktop-browser factory game about turning an industrial network into a controlled wave system. Wire emitters and phase tuners, hold field on target, defend the outpost, and commission a reusable blueprint. Runs fully client-side (Vite + TypeScript).
+- Sep 2026: [PHIELDWORKS (Coherent Factorio)](https://github.com/jwt625/phieldworks): desktop-browser factory game about turning an industrial network into a controlled wave system. Wire emitters and phase tuners, hold field on target, defend the outpost, and commission a reusable blueprint. Runs fully client-side (Vite + TypeScript).
 
 <img src="assets/coherent-factorio.png" alt="PHIELDWORKS" width="50%">
 
@@ -90,7 +90,8 @@ Projects that have spun off:
 
 <img src="assets/fruit-fly-cbc.png" alt="Fruit-Fly CBC" width="50%">
 
-- Sep 2026: [Mode Overlap](https://github.com/jwt625/PlayGround/tree/main/20260913_mode_overlap): intuition trainer for photonic mode matching in the style of SLM Guessr. Estimate overlap and mismatch loss for Gaussian mode pairs, with a gallery, a 20-question speedrun and practice mode. Waveguide modes are solved in-browser (experimental scalar quasi-TE); the full-vector 2D backend is still pending.
+- Sep 2026: [Mode Overlap](https://github.com/jwt625/mode-guessr): intuition trainer for photonic mode matching in the style of SLM Guessr. Estimate overlap and mismatch loss for Gaussian mode pairs, with a gallery, a 20-question speedrun and practice mode. Waveguide modes are solved in-browser (experimental scalar quasi-TE); the full-vector 2D backend is still pending.
+  - Try it: [outside5sigma.com/mode-guessr](https://outside5sigma.com/mode-guessr/).
 
 <img src="assets/mode-overlap.png" alt="Mode Overlap" width="50%">
 
