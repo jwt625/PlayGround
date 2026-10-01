@@ -1,0 +1,166 @@
+:root {
+	color-scheme: dark;
+	--bg: #0d0d0d;
+	--surface: #1a1a19;
+	--surface-2: #222220;
+	--hover: rgba(255, 255, 255, 0.06);
+	--ink: #f2f1ec;
+	--ink-2: #c3c2b7;
+	--ink-3: #898781;
+	--grid: #2c2c2a;
+	--line: #383835;
+	--border: rgba(255, 255, 255, 0.12);
+	--accent: #3987e5;
+	--accent-ink: #ffffff;
+	--good: #0ca30c;
+	--warn: #fab219;
+	--crit: #d03b3b;
+	--sel: rgba(57, 135, 229, 0.22);
+	--mono: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+	--sans: system-ui, -apple-system, 'Segoe UI', sans-serif;
+	--hdr: 36px;
+}
+
+:root[data-theme='light'] {
+	color-scheme: light;
+	--bg: #f1f0ec;
+	--surface: #fcfcfb;
+	--surface-2: #f4f3ef;
+	--hover: rgba(11, 11, 11, 0.05);
+	--ink: #0b0b0b;
+	--ink-2: #52514e;
+	--ink-3: #6f6d68;
+	--grid: #e1e0d9;
+	--line: #c3c2b7;
+	--border: rgba(11, 11, 11, 0.14);
+	--accent: #2a78d6;
+	--accent-ink: #ffffff;
+	--sel: rgba(42, 120, 214, 0.16);
+}
+
+*,
+*::before,
+*::after {
+	box-sizing: border-box;
+}
+
+*:not(.spinner) {
+	border-radius: 0 !important;
+}
+
+html,
+body {
+	height: 100%;
+	margin: 0;
+	background: var(--bg);
+	color: var(--ink);
+	font: 12px/1.35 var(--sans);
+	overflow: hidden;
+}
+
+a {
+	color: var(--accent);
+	text-decoration: none;
+}
+a:hover {
+	text-decoration: underline;
+}
+
+button,
+input,
+select {
+	font: inherit;
+	color: inherit;
+}
+
+button {
+	background: var(--surface-2);
+	border: 1px solid var(--border);
+	padding: 2px 8px;
+	height: 24px;
+	cursor: pointer;
+}
+button:hover {
+	background: var(--hover);
+	border-color: var(--ink-3);
+}
+button.on {
+	background: var(--accent);
+	border-color: var(--accent);
+	color: var(--accent-ink);
+}
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+a:focus-visible,
+[tabindex]:focus-visible {
+	outline: 1px solid var(--accent);
+	outline-offset: 1px;
+}
+
+input[type='text'],
+input[type='number'],
+input[type='search'],
+select {
+	background: var(--bg);
+	border: 1px solid var(--border);
+	height: 24px;
+	padding: 0 6px;
+	min-width: 0;
+}
+
+input[type='checkbox'] {
+	accent-color: var(--accent);
+	margin: 0;
+}
+
+.num {
+	font-variant-numeric: tabular-nums;
+}
+.muted {
+	color: var(--ink-3);
+}
+.mono {
+	font-family: var(--mono);
+}
+
+.spinner {
+	width: 14px;
+	height: 14px;
+	border: 2px solid var(--line);
+	border-top-color: var(--accent);
+	border-radius: 50%;
+	animation: spin 0.8s linear infinite;
+}
+@keyframes spin {
+	to {
+		transform: rotate(360deg);
+	}
+}
+
+::-webkit-scrollbar {
+	width: 10px;
+	height: 10px;
+}
+::-webkit-scrollbar-track {
+	background: var(--bg);
+}
+::-webkit-scrollbar-thumb {
+	background: var(--line);
+	border: 2px solid var(--bg);
+}
+::-webkit-scrollbar-corner {
+	background: var(--bg);
+}
+
+/* Plotly chrome: sharp corners */
+.js-plotly-plot .modebar,
+.js-plotly-plot .modebar-btn,
+.js-plotly-plot .modebar-group,
+.js-plotly-plot .hoverlayer *,
+.js-plotly-plot rect {
+	border-radius: 0 !important;
+}
+.js-plotly-plot .modebar {
+	background: transparent !important;
+}
