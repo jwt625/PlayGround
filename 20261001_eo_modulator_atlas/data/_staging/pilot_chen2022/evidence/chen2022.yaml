@@ -1,0 +1,519 @@
+paper_id: chen2022
+verified_on: '2026-10-01'
+source_files:
+- references/chen2022/text.md
+- references/chen2022/figures/page_03.png
+- references/chen2022/figures/img_p04_1.png
+- references/chen2022/figures/img_p06_1.png
+- references/chen2022/figures/img_p06_2.png
+- references/chen2022/figures/page_08.png
+entries:
+- device_id: chen2022-a
+  field: length_mm
+  value: 5
+  unit: mm
+  basis: measured
+  locator: p.7 Sec. III; Fig. 4(a)
+  note: modulation section length
+- device_id: chen2022-a
+  field: vpi_dc_v
+  value: 4.45
+  unit: V
+  basis: measured
+  locator: p.7 Sec. III; Fig. 4(a)
+  note: 100 kHz triangular voltage sweep
+- device_id: chen2022-a
+  field: vpil_dc_vcm
+  value: 2.22
+  unit: V*cm
+  basis: measured
+  locator: p.7 Sec. III
+  note: reported in text
+- device_id: chen2022-a
+  field: bw_measured_to_ghz
+  value: 67
+  unit: GHz
+  basis: measured
+  locator: p.7 Sec. III; Fig. 5
+  note: 3 dB EO bandwidth greater than 67 GHz, beyond network analyzer limit
+- device_id: chen2022-a
+  field: il_onchip_db
+  value: 0.2
+  unit: dB
+  basis: measured
+  locator: Fig. 4(a) inset; p.7 Sec. III
+  note: inset label -0.2 dB; text deduces ~0.2 dB for the 10 mm device
+- device_id: chen2022-a
+  field: extinction_ratio_db
+  value: 30
+  unit: dB
+  basis: measured
+  locator: p.7 Sec. III; Fig. 4(a) inset
+  note: reported as lower bound (>)
+- device_id: chen2022-a
+  field: z0_ohm
+  value: 50.5
+  unit: ohm
+  basis: extracted_from_figure
+  locator: Fig. 5(d)
+  note: approx. 50 ohm at low frequency rising to ~52 ohm at 67 GHz; band-average reading
+- device_id: chen2022-a
+  field: n_rf
+  value: 2.35
+  unit: '1'
+  basis: extracted_from_figure
+  locator: Fig. 5(f); p.7 text
+  note: flat 10-67 GHz; text states mismatch ~0.15 versus ng
+- device_id: chen2022-a
+  field: ng_opt
+  value: 2.2
+  unit: '1'
+  basis: simulated
+  locator: Fig. 2(d)
+  note: label n_g = 2.2 on dashed line; also used in Fig. 5(f)
+- device_id: chen2022-a
+  field: eo_film_thickness_nm
+  value: 400
+  unit: nm
+  basis: measured
+  locator: p.5 Sec. II
+  note: commercial x-cut LNOI
+- device_id: chen2022-a
+  field: etch_depth_nm
+  value: 200
+  unit: nm
+  basis: measured
+  locator: p.5 Sec. II
+  note: ridge height half of film thickness
+- device_id: chen2022-a
+  field: rib_width_nm
+  value: 1500
+  unit: nm
+  basis: measured
+  locator: p.5 Sec. II
+  note: ridge width as stated; digitized simulation sketch shows ~1.5 um top
+- device_id: chen2022-a
+  field: slab_thickness_nm
+  value: 200
+  unit: nm
+  basis: measured
+  locator: p.5 Sec. II; p.6
+  note: residual 200 nm LN stated for the hole etch step; film 400 nm minus 200 nm ridge
+- device_id: chen2022-a
+  field: electrode_gap_um
+  value: 1.8
+  unit: um
+  basis: measured
+  locator: p.5 Sec. II; Fig. 1(c)
+  note: gap g between CLTW (T-segment) electrodes
+- device_id: chen2022-a
+  field: signal_width_um
+  value: 75
+  unit: um
+  basis: measured
+  locator: p.5 Sec. II
+  note: unloaded signal electrode width ws
+- device_id: chen2022-a
+  field: electrode_thickness_um
+  value: 1.1
+  unit: um
+  basis: measured
+  locator: p.5 Sec. II
+  note: unloaded electrodes; T-segments are 0.2 um
+- device_id: chen2022-a
+  field: electrode_metal
+  value: gold
+  unit: ''
+  basis: measured
+  locator: p.6 Sec. II
+- device_id: chen2022-a
+  field: buffer_oxide_um
+  value: 3
+  unit: um
+  basis: measured
+  locator: p.5 Sec. II
+  note: buried oxide (BOX) under the LN film
+- device_id: chen2022-a
+  field: substrate
+  value: silicon 725 um with 35 um isotropic undercut beneath the modulation section
+  unit: ''
+  basis: measured
+  locator: p.6 Sec. II; p.5
+  note: 725 um Si; 35 um undercut stated optimal
+- device_id: chen2022-a
+  field: cladding
+  value: SiO2 900 nm (PECVD)
+  unit: ''
+  basis: measured
+  locator: p.5-6 Sec. II
+- device_id: chen2022-a
+  field: crystal_cut
+  value: x-cut
+  unit: ''
+  basis: measured
+  locator: p.5 Sec. II
+- device_id: chen2022-b
+  field: length_mm
+  value: 7
+  unit: mm
+  basis: measured
+  locator: p.7 Sec. III; Fig. 4(b)
+  note: modulation section length
+- device_id: chen2022-b
+  field: vpi_dc_v
+  value: 3.22
+  unit: V
+  basis: measured
+  locator: p.7 Sec. III; Fig. 4(b)
+  note: 100 kHz triangular voltage sweep
+- device_id: chen2022-b
+  field: vpil_dc_vcm
+  value: 2.25
+  unit: V*cm
+  basis: measured
+  locator: p.7 Sec. III
+  note: reported in text
+- device_id: chen2022-b
+  field: bw_measured_to_ghz
+  value: 67
+  unit: GHz
+  basis: measured
+  locator: p.7 Sec. III; Fig. 5
+  note: 3 dB EO bandwidth greater than 67 GHz, beyond network analyzer limit
+- device_id: chen2022-b
+  field: il_onchip_db
+  value: 0.2
+  unit: dB
+  basis: measured
+  locator: Fig. 4(b) inset; p.7 Sec. III
+  note: inset label -0.2 dB; text deduces ~0.2 dB for the 10 mm device
+- device_id: chen2022-b
+  field: extinction_ratio_db
+  value: 25
+  unit: dB
+  basis: measured
+  locator: p.7 Sec. III; Fig. 4(b) inset
+  note: reported as lower bound (>)
+- device_id: chen2022-b
+  field: z0_ohm
+  value: 50.5
+  unit: ohm
+  basis: extracted_from_figure
+  locator: Fig. 5(d)
+  note: approx. 50 ohm at low frequency rising to ~52 ohm at 67 GHz; band-average reading
+- device_id: chen2022-b
+  field: n_rf
+  value: 2.35
+  unit: '1'
+  basis: extracted_from_figure
+  locator: Fig. 5(f); p.7 text
+  note: flat 10-67 GHz; text states mismatch ~0.15 versus ng
+- device_id: chen2022-b
+  field: ng_opt
+  value: 2.2
+  unit: '1'
+  basis: simulated
+  locator: Fig. 2(d)
+  note: label n_g = 2.2 on dashed line; also used in Fig. 5(f)
+- device_id: chen2022-b
+  field: eo_film_thickness_nm
+  value: 400
+  unit: nm
+  basis: measured
+  locator: p.5 Sec. II
+  note: commercial x-cut LNOI
+- device_id: chen2022-b
+  field: etch_depth_nm
+  value: 200
+  unit: nm
+  basis: measured
+  locator: p.5 Sec. II
+  note: ridge height half of film thickness
+- device_id: chen2022-b
+  field: rib_width_nm
+  value: 1500
+  unit: nm
+  basis: measured
+  locator: p.5 Sec. II
+  note: ridge width as stated; digitized simulation sketch shows ~1.5 um top
+- device_id: chen2022-b
+  field: slab_thickness_nm
+  value: 200
+  unit: nm
+  basis: measured
+  locator: p.5 Sec. II; p.6
+  note: residual 200 nm LN stated for the hole etch step; film 400 nm minus 200 nm ridge
+- device_id: chen2022-b
+  field: electrode_gap_um
+  value: 1.8
+  unit: um
+  basis: measured
+  locator: p.5 Sec. II; Fig. 1(c)
+  note: gap g between CLTW (T-segment) electrodes
+- device_id: chen2022-b
+  field: signal_width_um
+  value: 75
+  unit: um
+  basis: measured
+  locator: p.5 Sec. II
+  note: unloaded signal electrode width ws
+- device_id: chen2022-b
+  field: electrode_thickness_um
+  value: 1.1
+  unit: um
+  basis: measured
+  locator: p.5 Sec. II
+  note: unloaded electrodes; T-segments are 0.2 um
+- device_id: chen2022-b
+  field: electrode_metal
+  value: gold
+  unit: ''
+  basis: measured
+  locator: p.6 Sec. II
+- device_id: chen2022-b
+  field: buffer_oxide_um
+  value: 3
+  unit: um
+  basis: measured
+  locator: p.5 Sec. II
+  note: buried oxide (BOX) under the LN film
+- device_id: chen2022-b
+  field: substrate
+  value: silicon 725 um with 35 um isotropic undercut beneath the modulation section
+  unit: ''
+  basis: measured
+  locator: p.6 Sec. II; p.5
+  note: 725 um Si; 35 um undercut stated optimal
+- device_id: chen2022-b
+  field: cladding
+  value: SiO2 900 nm (PECVD)
+  unit: ''
+  basis: measured
+  locator: p.5-6 Sec. II
+- device_id: chen2022-b
+  field: crystal_cut
+  value: x-cut
+  unit: ''
+  basis: measured
+  locator: p.5 Sec. II
+- device_id: chen2022-c
+  field: length_mm
+  value: 10
+  unit: mm
+  basis: measured
+  locator: p.7 Sec. III; Fig. 4(c)
+  note: modulation section length
+- device_id: chen2022-c
+  field: vpi_dc_v
+  value: 2.2
+  unit: V
+  basis: measured
+  locator: p.7 Sec. III; Fig. 4(c)
+  note: 100 kHz triangular voltage sweep
+- device_id: chen2022-c
+  field: vpil_dc_vcm
+  value: 2.2
+  unit: V*cm
+  basis: measured
+  locator: p.7 Sec. III
+  note: reported in text
+- device_id: chen2022-c
+  field: bw_measured_to_ghz
+  value: 67
+  unit: GHz
+  basis: measured
+  locator: p.7 Sec. III; Fig. 5
+  note: 3 dB EO bandwidth greater than 67 GHz, beyond network analyzer limit
+- device_id: chen2022-c
+  field: il_onchip_db
+  value: 0.2
+  unit: dB
+  basis: measured
+  locator: Fig. 4(c) inset; p.7 Sec. III
+  note: inset label -0.2 dB; text deduces ~0.2 dB for the 10 mm device
+- device_id: chen2022-c
+  field: extinction_ratio_db
+  value: 20
+  unit: dB
+  basis: measured
+  locator: p.7 Sec. III; Fig. 4(c) inset
+  note: reported as lower bound (>)
+- device_id: chen2022-c
+  field: z0_ohm
+  value: 50.5
+  unit: ohm
+  basis: extracted_from_figure
+  locator: Fig. 5(d)
+  note: approx. 50 ohm at low frequency rising to ~52 ohm at 67 GHz; band-average reading
+- device_id: chen2022-c
+  field: n_rf
+  value: 2.35
+  unit: '1'
+  basis: extracted_from_figure
+  locator: Fig. 5(f); p.7 text
+  note: flat 10-67 GHz; text states mismatch ~0.15 versus ng
+- device_id: chen2022-c
+  field: ng_opt
+  value: 2.2
+  unit: '1'
+  basis: simulated
+  locator: Fig. 2(d)
+  note: label n_g = 2.2 on dashed line; also used in Fig. 5(f)
+- device_id: chen2022-c
+  field: eo_film_thickness_nm
+  value: 400
+  unit: nm
+  basis: measured
+  locator: p.5 Sec. II
+  note: commercial x-cut LNOI
+- device_id: chen2022-c
+  field: etch_depth_nm
+  value: 200
+  unit: nm
+  basis: measured
+  locator: p.5 Sec. II
+  note: ridge height half of film thickness
+- device_id: chen2022-c
+  field: rib_width_nm
+  value: 1500
+  unit: nm
+  basis: measured
+  locator: p.5 Sec. II
+  note: ridge width as stated; digitized simulation sketch shows ~1.5 um top
+- device_id: chen2022-c
+  field: slab_thickness_nm
+  value: 200
+  unit: nm
+  basis: measured
+  locator: p.5 Sec. II; p.6
+  note: residual 200 nm LN stated for the hole etch step; film 400 nm minus 200 nm ridge
+- device_id: chen2022-c
+  field: electrode_gap_um
+  value: 1.8
+  unit: um
+  basis: measured
+  locator: p.5 Sec. II; Fig. 1(c)
+  note: gap g between CLTW (T-segment) electrodes
+- device_id: chen2022-c
+  field: signal_width_um
+  value: 75
+  unit: um
+  basis: measured
+  locator: p.5 Sec. II
+  note: unloaded signal electrode width ws
+- device_id: chen2022-c
+  field: electrode_thickness_um
+  value: 1.1
+  unit: um
+  basis: measured
+  locator: p.5 Sec. II
+  note: unloaded electrodes; T-segments are 0.2 um
+- device_id: chen2022-c
+  field: electrode_metal
+  value: gold
+  unit: ''
+  basis: measured
+  locator: p.6 Sec. II
+- device_id: chen2022-c
+  field: buffer_oxide_um
+  value: 3
+  unit: um
+  basis: measured
+  locator: p.5 Sec. II
+  note: buried oxide (BOX) under the LN film
+- device_id: chen2022-c
+  field: substrate
+  value: silicon 725 um with 35 um isotropic undercut beneath the modulation section
+  unit: ''
+  basis: measured
+  locator: p.6 Sec. II; p.5
+  note: 725 um Si; 35 um undercut stated optimal
+- device_id: chen2022-c
+  field: cladding
+  value: SiO2 900 nm (PECVD)
+  unit: ''
+  basis: measured
+  locator: p.5-6 Sec. II
+- device_id: chen2022-c
+  field: crystal_cut
+  value: x-cut
+  unit: ''
+  basis: measured
+  locator: p.5 Sec. II
+- device_id: chen2022-c
+  field: il_fiber_to_fiber_db
+  value: 8.2
+  unit: dB
+  basis: measured
+  locator: p.7 Sec. III
+  note: total insertion loss including device and both grating couplers at peak coupling wavelength
+- device_id: chen2022-c
+  field: prop_loss_db_per_cm
+  value: 0.15
+  unit: dB/cm
+  basis: measured
+  locator: p.7 Sec. III
+  note: TFLN waveguide propagation loss, about
+- device_id: chen2022-c
+  field: max_line_rate_gbps
+  value: 112
+  unit: Gb/s
+  basis: measured
+  locator: p.6-7 Fig. 6(d); abstract
+  note: 56 GBd PAM-4
+- device_id: chen2022-c
+  field: modulation_format
+  value: OOK; PAM-4
+  unit: ''
+  basis: measured
+  locator: p.6-7 Fig. 6
+  note: OOK up to 100 Gb/s, PAM-4 up to 112 Gb/s
+- device_id: chen2022-a
+  field: rf_loss_freq_ghz
+  value: 67
+  unit: GHz
+  basis: derived
+  locator: p.7 Sec. III; Fig. 5(e)
+  note: evaluation frequency chosen at the measurement limit for the fitted alpha0 sqrt(f) law
+- device_id: chen2022-b
+  field: rf_loss_freq_ghz
+  value: 67
+  unit: GHz
+  basis: derived
+  locator: p.7 Sec. III; Fig. 5(e)
+  note: evaluation frequency chosen at the measurement limit for the fitted alpha0 sqrt(f) law
+- device_id: chen2022-c
+  field: rf_loss_freq_ghz
+  value: 67
+  unit: GHz
+  basis: derived
+  locator: p.7 Sec. III; Fig. 5(e)
+  note: evaluation frequency chosen at the measurement limit for the fitted alpha0 sqrt(f) law
+derived:
+- device_id: chen2022-a
+  field: rf_loss_db_per_cm
+  value: 2.947
+  formula: alpha_m(f) = alpha0*sqrt(f) with alpha0 = 0.36 dB/cm/GHz^0.5 (fit, Fig. 5(e), p.7), evaluated at f = 67 GHz
+  inputs:
+  - alpha0=0.36 dB/cm/GHz^0.5
+  - rf_loss_freq_ghz=67
+- device_id: chen2022-b
+  field: rf_loss_db_per_cm
+  value: 2.947
+  formula: alpha_m(f) = alpha0*sqrt(f) with alpha0 = 0.36 dB/cm/GHz^0.5 (fit, Fig. 5(e), p.7), evaluated at f = 67 GHz
+  inputs:
+  - alpha0=0.36 dB/cm/GHz^0.5
+  - rf_loss_freq_ghz=67
+- device_id: chen2022-c
+  field: rf_loss_db_per_cm
+  value: 2.947
+  formula: alpha_m(f) = alpha0*sqrt(f) with alpha0 = 0.36 dB/cm/GHz^0.5 (fit, Fig. 5(e), p.7), evaluated at f = 67 GHz
+  inputs:
+  - alpha0=0.36 dB/cm/GHz^0.5
+  - rf_loss_freq_ghz=67
+- device_id: chen2022-c
+  field: max_baud_gbd
+  value: 100
+  formula: 'OOK carries 1 bit per symbol: 100 Gb/s OOK (Fig. 6(b)) = 100 GBd'
+  inputs:
+  - 100 Gb/s OOK

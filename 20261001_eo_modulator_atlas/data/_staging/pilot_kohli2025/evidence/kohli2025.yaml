@@ -1,0 +1,506 @@
+paper_id: kohli2025
+verified_on: '2026-10-01'
+source_files:
+- references/kohli2025/text.md
+- references/kohli2025/figures/page_03.png
+- references/kohli2025/figures/page_04.png
+- references/kohli2025/figures/page_05.png
+- references/kohli2025/figures/page_06.png
+- references/kohli2025/figures/page_07.png
+- references/kohli2025/figures/page_08.png
+- references/kohli2025/figures/page_09.png
+entries:
+- device_id: kohli2025-mzm
+  field: wavelength_nm
+  value: 1550
+  unit: nm
+  basis: measured
+  locator: p.4 text; p.9 Methods; Fig. 2c
+  note: IL and data experiments at 1550 nm
+- device_id: kohli2025-mzm
+  field: length_mm
+  value: 0.015
+  unit: mm
+  basis: measured
+  locator: p.4, C-Band MZ modulator; Fig. 2
+  note: 15 um plasmonic phase-shifter section; separate 15 um photonic-to-plasmonic converter excluded
+- device_id: kohli2025-mzm
+  field: vpi_dc_v
+  value: 3.6
+  unit: V
+  basis: measured
+  locator: p.4 text
+  note: Phase-shifter Vpi at DC; MZ push-pull Vpi 1.8 V also stated (p.4, p.8)
+- device_id: kohli2025-mzm
+  field: vpi_rf_v
+  value: 6.4
+  unit: V
+  basis: measured
+  locator: p.4 text; Fig. 2d
+  note: At 40 GHz; stated in context of phase shifters; MZ-level value not given
+- device_id: kohli2025-mzm
+  field: vpi_rf_freq_ghz
+  value: 40
+  unit: GHz
+  basis: measured
+  locator: p.4 text
+- device_id: kohli2025-mzm
+  field: bw3db_ghz
+  value: 110
+  unit: GHz
+  basis: measured
+  locator: p.4 text; Fig. 2d caption
+  note: 3 dB drop between 10 and 110 GHz; reference 10 GHz not DC; at measurement limit
+- device_id: kohli2025-mzm
+  field: bw_measured_to_ghz
+  value: 110
+  unit: GHz
+  basis: measured
+  locator: p.4 text; Fig. 2d
+  note: Frequency response measured 10 MHz to 110 GHz
+- device_id: kohli2025-mzm
+  field: il_fiber_to_fiber_db
+  value: 20.3
+  unit: dB
+  basis: measured
+  locator: p.4 text; Fig. 2c
+  note: Fiber-to-fiber incl. two grating couplers at 1550 nm; no on-chip value given
+- device_id: kohli2025-mzm
+  field: prop_loss_db_per_cm
+  value: 5000
+  unit: dB/cm
+  basis: measured
+  locator: p.4 text
+  note: Plasmonic section, stated 0.5 dB/um (cutback), 150 nm slot
+- device_id: kohli2025-mzm
+  field: eo_film_thickness_nm
+  value: 200
+  unit: nm
+  basis: measured
+  locator: p.3 text
+  note: Stated as ~200 nm for BTO waveguide at SiN-BTO coupler; plasmonic-section value not separately given
+- device_id: kohli2025-mzm
+  field: electrode_gap_um
+  value: 0.15
+  unit: um
+  basis: measured
+  locator: p.4 text
+  note: Plasmonic slot (BTO between gold plates) 150 nm wide
+- device_id: kohli2025-mzm
+  field: electrode_metal
+  value: gold
+  unit: ''
+  basis: measured
+  locator: p.3 text; Fig. 1c
+- device_id: kohli2025-mzm
+  field: cladding
+  value: silicon dioxide
+  unit: ''
+  basis: measured
+  locator: p.3 text; p.8-9 Methods
+  note: SiN embedded in SiO2; PECVD SiO2 cladding after metallization
+- device_id: kohli2025-mzm
+  field: max_baud_gbd
+  value: 256
+  unit: GBd
+  basis: measured
+  locator: p.6 text; Fig. 5a
+  note: 2PAM, BER 2.67e-2 below SD-FEC 4.0e-2, full DSP
+- device_id: kohli2025-mzm
+  field: modulation_format
+  value: 2PAM at 256 GBd; 4PAM at 170 GBd; 8PAM at 96 GBd
+  unit: ''
+  basis: measured
+  locator: p.6-7 text; Fig. 5a
+  note: IM/DD, full DSP; BER 2.67e-2, 3.75e-2, 3.98e-2 respectively
+- device_id: kohli2025-mzm
+  field: max_line_rate_gbps
+  value: 340
+  unit: Gb/s
+  basis: measured
+  locator: p.7 text; abstract
+  note: 4PAM at 170 GBd; stated as maximum line rate of MZ
+- device_id: kohli2025-iq
+  field: wavelength_nm
+  value: 1550
+  unit: nm
+  basis: measured
+  locator: p.5 text; p.10 Methods
+  note: Carrier 1550 nm; IL also 22.5 dB at 1530 nm
+- device_id: kohli2025-iq
+  field: length_mm
+  value: 0.0175
+  unit: mm
+  basis: measured
+  locator: p.5 text
+  note: 17.5 um plasmonic sections; converters excluded
+- device_id: kohli2025-iq
+  field: vpi_dc_v
+  value: 4
+  unit: V
+  basis: measured
+  locator: p.5 text
+  note: Phase-shifter Vpi at DC; MZ push-pull Vpi 2 V also stated
+- device_id: kohli2025-iq
+  field: bw3db_ghz
+  value: 70
+  unit: GHz
+  basis: measured
+  locator: p.5 Fig. 3b caption
+  note: 3 dB drop between 10 and 70 GHz; caption also states cutoff around 80 GHz; reference 10 GHz
+- device_id: kohli2025-iq
+  field: il_fiber_to_fiber_db
+  value: 23.9
+  unit: dB
+  basis: measured
+  locator: p.5 text; Fig. 3f
+  note: Fiber-to-fiber at 1550 nm incl. gratings; no on-chip value given
+- device_id: kohli2025-iq
+  field: prop_loss_db_per_cm
+  value: 7000
+  unit: dB/cm
+  basis: measured
+  locator: p.5 text
+  note: Plasmonic section, stated approx 0.7 dB/um (cutback), 100 nm slot
+- device_id: kohli2025-iq
+  field: eo_film_thickness_nm
+  value: 200
+  unit: nm
+  basis: measured
+  locator: p.3 text
+  note: Stated as ~200 nm for BTO waveguide at SiN-BTO coupler; same chip
+- device_id: kohli2025-iq
+  field: electrode_gap_um
+  value: 0.1
+  unit: um
+  basis: measured
+  locator: p.5 text
+  note: Plasmonic slot 100 nm wide
+- device_id: kohli2025-iq
+  field: electrode_metal
+  value: gold
+  unit: ''
+  basis: measured
+  locator: p.3 text; Fig. 1c
+- device_id: kohli2025-iq
+  field: cladding
+  value: silicon dioxide
+  unit: ''
+  basis: measured
+  locator: p.3 text; p.8-9 Methods
+- device_id: kohli2025-iq
+  field: max_baud_gbd
+  value: 224
+  unit: GBd
+  basis: measured
+  locator: p.7 text; Fig. 6a
+  note: 4QAM, BER 3.79e-2 below SD-FEC; coherent
+- device_id: kohli2025-iq
+  field: modulation_format
+  value: 4QAM
+  unit: ''
+  basis: measured
+  locator: p.7 text; Fig. 6a
+  note: Coherent; single or dual polarization not stated
+- device_id: kohli2025-iq
+  field: max_line_rate_gbps
+  value: 448
+  unit: Gb/s
+  basis: measured
+  locator: p.7 text; abstract
+  note: 224 GBd 4QAM
+- device_id: kohli2025-rt
+  field: wavelength_nm
+  value: 1315.7
+  unit: nm
+  basis: measured
+  locator: p.10 Methods
+  note: Data-experiment carrier; Fig. 4b resonances span 1313-1316 nm
+- device_id: kohli2025-rt
+  field: length_mm
+  value: 0.005
+  unit: mm
+  basis: measured
+  locator: p.6 Fig. 4 caption; p.8 text
+  note: 5 um plasmonic phase shifter in racetrack
+- device_id: kohli2025-rt
+  field: vpi_dc_v
+  value: 3
+  unit: V
+  basis: derived
+  locator: p.6 text
+  note: Paper states 0.3 nm/V tuning efficiency corresponds to Vpi 3 V at DC after poling
+- device_id: kohli2025-rt
+  field: bw_measured_to_ghz
+  value: 70
+  unit: GHz
+  basis: extracted_from_figure
+  locator: p.6 Fig. 4d; p.9 Methods
+  note: Axis spans +/-70 GHz, flat response; no 3 dB crossing and no bandwidth number stated
+- device_id: kohli2025-rt
+  field: il_fiber_to_fiber_db
+  value: 9.4
+  unit: dB
+  basis: measured
+  locator: p.6 text
+  note: Fiber-to-fiber at 1310-1315 nm; spectral position relative to resonance not stated
+- device_id: kohli2025-rt
+  field: eo_film_thickness_nm
+  value: 200
+  unit: nm
+  basis: measured
+  locator: p.3 text
+  note: Stated as ~200 nm for BTO waveguide at SiN-BTO coupler; same chip
+- device_id: kohli2025-rt
+  field: electrode_metal
+  value: gold
+  unit: ''
+  basis: measured
+  locator: p.3 text; Fig. 1c
+- device_id: kohli2025-rt
+  field: cladding
+  value: silicon dioxide
+  unit: ''
+  basis: measured
+  locator: p.3 text; p.8-9 Methods
+- device_id: kohli2025-rt
+  field: max_baud_gbd
+  value: 200
+  unit: GBd
+  basis: measured
+  locator: p.7 text; Fig. 6b
+  note: 2PAM, BER 3.10e-2 below SD-FEC, full DSP
+- device_id: kohli2025-rt
+  field: modulation_format
+  value: 2PAM
+  unit: ''
+  basis: measured
+  locator: p.7 text; Fig. 6b
+  note: IM/DD
+- device_id: kohli2025-mzm
+  field: vpi_mzm_pushpull_dc_v
+  value: 1.8
+  unit: V
+  basis: measured
+  locator: p.4 text; p.8 Discussion
+  note: MZ push-pull configuration, DC; paper headline convention
+- device_id: kohli2025-mzm
+  field: drive_vpp_v
+  value: 1.13
+  unit: V
+  basis: measured
+  locator: p.10 Methods; p.2 text
+  note: Approx; measured at 200 GBd electrical back-to-back, path losses at 50 GHz subtracted
+- device_id: kohli2025-mzm
+  field: vpi_convention
+  value: per_arm_phase_shifter
+  unit: ''
+  basis: measured
+  locator: p.4-5 text
+  note: Vpi quoted per phase shifter; push-pull MZ value stated separately
+- device_id: kohli2025-mzm
+  field: drive
+  value: push_pull
+  unit: ''
+  basis: measured
+  locator: p.4-5 text; p.10 Methods
+  note: Push-pull stated for MZ and IQ
+- device_id: kohli2025-mzm
+  field: bw3db_reference
+  value: 10ghz
+  unit: ''
+  basis: measured
+  locator: p.4 text; Fig. 2d / Fig. 3b captions
+  note: Drop stated between 10 GHz and upper frequency
+- device_id: kohli2025-mzm
+  field: electrode_type
+  value: plasmonic_lumped
+  unit: ''
+  basis: measured
+  locator: p.4 text
+  note: Bandwidth explained as RC limit; metal-insulator-metal plasmonic slot
+- device_id: kohli2025-mzm
+  field: waveguide_platform
+  value: bto_on_sin
+  unit: ''
+  basis: measured
+  locator: p.2-3 text
+  note: Paper platform name
+- device_id: kohli2025-iq
+  field: vpi_mzm_pushpull_dc_v
+  value: 2
+  unit: V
+  basis: measured
+  locator: p.5 text
+  note: MZ push-pull configuration, DC; paper headline convention
+- device_id: kohli2025-iq
+  field: drive_vpp_v
+  value: 1.13
+  unit: V
+  basis: measured
+  locator: p.10 Methods; p.2 text
+  note: Approx; measured at 200 GBd electrical back-to-back, path losses at 50 GHz subtracted
+- device_id: kohli2025-iq
+  field: vpi_convention
+  value: per_arm_phase_shifter
+  unit: ''
+  basis: measured
+  locator: p.4-5 text
+  note: Vpi quoted per phase shifter; push-pull MZ value stated separately
+- device_id: kohli2025-iq
+  field: drive
+  value: push_pull
+  unit: ''
+  basis: measured
+  locator: p.4-5 text; p.10 Methods
+  note: Push-pull stated for MZ and IQ
+- device_id: kohli2025-iq
+  field: bw3db_reference
+  value: 10ghz
+  unit: ''
+  basis: measured
+  locator: p.4 text; Fig. 2d / Fig. 3b captions
+  note: Drop stated between 10 GHz and upper frequency
+- device_id: kohli2025-iq
+  field: electrode_type
+  value: plasmonic_lumped
+  unit: ''
+  basis: measured
+  locator: p.4 text
+  note: Bandwidth explained as RC limit; metal-insulator-metal plasmonic slot
+- device_id: kohli2025-iq
+  field: waveguide_platform
+  value: bto_on_sin
+  unit: ''
+  basis: measured
+  locator: p.2-3 text
+  note: Paper platform name
+- device_id: kohli2025-mzm
+  field: optical_input_power_dbm
+  value: 20.3
+  unit: dBm
+  basis: measured
+  locator: p.9 Methods
+  note: Approx; stated as input power coupled to chip
+- device_id: kohli2025-iq
+  field: optical_input_power_dbm
+  value: 21
+  unit: dBm
+  basis: measured
+  locator: p.10 Methods
+  note: Approx; input power to chip
+- device_id: kohli2025-rt
+  field: optical_input_power_dbm
+  value: 13
+  unit: dBm
+  basis: measured
+  locator: p.10 Methods
+  note: Approx; power in fiber before device
+- device_id: kohli2025-mzm
+  field: capacitance_ff
+  value: 30
+  unit: fF
+  basis: author_estimate
+  locator: p.7 text
+  note: Approx; estimated from frequency response
+- device_id: kohli2025-mzm
+  field: energy_per_bit_fj
+  value: 10
+  unit: fJ/bit
+  basis: author_estimate
+  locator: p.7 text
+  note: Approx; paper estimate from capacitance
+- device_id: kohli2025-mzm
+  field: epitaxy_or_stack
+  value: SiN 800 x 800 nm2 in SiO2; BTO approx 200 nm thick, approx 100 nm above SiN (spacer not stated); vertical directional coupler 80 um; gold plates form plasmonic slot
+  unit: ''
+  basis: measured
+  locator: p.3 text; Fig. 1b-c
+- device_id: kohli2025-iq
+  field: epitaxy_or_stack
+  value: SiN 800 x 800 nm2 in SiO2; BTO approx 200 nm thick, approx 100 nm above SiN (spacer not stated); vertical directional coupler 80 um; gold plates form plasmonic slot
+  unit: ''
+  basis: measured
+  locator: p.3 text; Fig. 1b-c
+- device_id: kohli2025-rt
+  field: epitaxy_or_stack
+  value: SiN 600 x 800 nm2 in SiO2; BTO approx 200 nm thick, approx 100 nm above SiN (spacer not stated); vertical directional coupler 40 um; gold plates form plasmonic slot
+  unit: ''
+  basis: measured
+  locator: p.3 text; Fig. 1b-c
+- device_id: kohli2025-rt
+  field: q_loaded
+  value: 1931
+  unit: '1'
+  basis: measured
+  locator: p.6 text; Fig. 4b
+  note: Quality factor of racetrack modulator
+- device_id: kohli2025-rt
+  field: fsr_nm
+  value: 1.79
+  unit: nm
+  basis: measured
+  locator: p.6 text
+- device_id: kohli2025-rt
+  field: tuning_nm_per_v
+  value: 0.3
+  unit: nm/V
+  basis: measured
+  locator: p.6 text; Fig. 4b
+  note: After fully poling the BTO
+- device_id: kohli2025-rt
+  field: il_onchip_db
+  value: 2
+  unit: dB
+  basis: measured
+  locator: p.6 text; Fig. 4b; abstract
+  note: 'Bound: stated ''less than 2 dB'' from reference waveguides; lt'
+- device_id: kohli2025-rt
+  field: extinction_ratio_db
+  value: 6
+  unit: dB
+  basis: measured
+  locator: p.6 text; Fig. 4b
+  note: 'Bound: stated ''more than 6 dB''; resonance dip in on-chip spectrum; gt'
+- device_id: kohli2025-rt
+  field: er_type
+  value: static
+  unit: ''
+  basis: measured
+  locator: p.6 Fig. 4b
+  note: Read from transmission spectrum, not a dynamic measurement
+- device_id: kohli2025-rt
+  field: vpi_convention
+  value: resonance_tuning_derived
+  unit: ''
+  basis: derived
+  locator: p.6 text
+  note: Vpi derived by paper from tuning efficiency
+- device_id: kohli2025-rt
+  field: electrode_type
+  value: plasmonic_lumped
+  unit: ''
+  basis: measured
+  locator: p.3 Fig. 1c; p.6 Fig. 4a
+  note: Plasmonic phase shifter in racetrack
+- device_id: kohli2025-rt
+  field: waveguide_platform
+  value: bto_on_sin
+  unit: ''
+  basis: measured
+  locator: p.2-3 text
+- device_id: kohli2025-rt
+  field: drive_vpp_v
+  value: 1.13
+  unit: V
+  basis: measured
+  locator: p.10 Methods
+  note: Approx; stated as applied to all modulators
+derived:
+- device_id: kohli2025-rt
+  field: max_line_rate_gbps
+  value: 200
+  formula: symbol_rate_gbd * bits_per_symbol = 200 * 1 (2PAM)
+  inputs:
+  - max_baud_gbd
+  - modulation_format
