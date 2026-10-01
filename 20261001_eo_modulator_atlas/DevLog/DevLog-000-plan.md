@@ -8,6 +8,11 @@ authors: Claude (at Wentao Jiang's request)
 
 # DevLog-000: EO modulator atlas
 
+Current detailed execution plan and task ownership:
+[DevLog-002](DevLog-002-work-plan-and-ownership.md),
+[WORKBOARD](../WORKBOARD.md), and `coordination/claims/`.
+These supersede the coarse TODO ordering below; DevLog-001 remains historical.
+
 ## Goal
 
 A tracked library of academic EO modulator demonstrations with (1) a core-metrics database, (2) a skill that distills a reference into DB rows and a simulation config, (3) browser-runnable simulation configs (configs only, no stored solver output), (4) data visualization.
@@ -56,7 +61,7 @@ Integrity rule enforced by `scripts/validate_db.py`: every non-empty value in `d
 
 - [x] P0a Scaffold folder, decisions, plan
 - [x] P0b Schema + validator + skill v1 (scripts/validate_db.py, merge_staging.py, extract_source.py, fetch_source.py; 4 pytest pass)
-- [ ] P0c Candidate list from: Drive doc, tmp EO md, blog scan, private literature cache (re-sourced), OFC 2026 list, landmark expansion by platform
+- [x] P0c Initial candidate compilation and deduplication (198 candidates; verification continues in D1)
 - [ ] P1 Pilot distillation of 3 diverse papers with the skill; audit; fix skill
 - [ ] P1b Batch distillation (parallel subagents, rate-limited downloads); paywalled download list
 - [ ] P2 Sim engine in browser (analytic gates first), configs for dielectric TWE papers
@@ -78,4 +83,5 @@ Integrity rule enforced by `scripts/validate_db.py`: every non-empty value in `d
 
 ## Audit corrections
 
-(none yet)
+- 2026-10-01 coordination inspection: `fetch_source.py` shares a timestamp but does not lock concurrent requests. Cross-agent serialization remains unverified; D0 owns the fix. Use one fetch owner until its concurrency gate passes.
+- 2026-10-01 continuation: E1/U1 engine and sim-UI drafts are in progress under `codex-main`; analytic gates pass but paper reproduction is not established. Detailed implementation state, pending checks, tranche ownership and handoff rules are recorded in DevLog-002.

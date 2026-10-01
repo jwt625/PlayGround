@@ -15,6 +15,7 @@ data/_staging/candidates_seed_local_paths_private.csv
 node_modules/
 app/build/
 app/.svelte-kit/
+app/static/sims/
 logs/
 .request-tmp/
 __pycache__/

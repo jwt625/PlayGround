@@ -1,0 +1,27 @@
+# Analytic test input, not a literature device. C' = eps0 * 4 * 2 / 1.8.
+schema: eo-atlas.sim/v1
+id: analytic-plates
+chain: [electrostatics, optical_mode]
+materials:
+  dielectric: {eps_r: 4, n: 2}
+  metal: {conductor: true}
+geometry:
+  domain: {x_um: [-1, 1], y_um: [-1, 1]}
+  regions:
+    - {name: background, material: dielectric, rect: {x_um: [-1, 1], y_um: [-1, 1]}}
+  electrodes:
+    - {name: left, material: metal, weight: 0, rect: {x_um: [-1, -0.9], y_um: [-1, 1]}}
+    - {name: right, material: metal, weight: 1, rect: {x_um: [0.9, 1], y_um: [-1, 1]}}
+  optical_window: {x_um: [-0.8, 0.8], y_um: [-0.8, 0.8]}
+  mesh: {max_edge_um: 0.25, electrode_edge_um: 0.1, electrode_face_um: 0.25, window_edge_um: 0.2}
+line:
+  loading: {type: none}
+optics:
+  wavelength_nm: 1550
+  polarization: TE
+  mode_index: 0
+  group_index_from: fixed
+  ng_fixed: 2
+targets:
+  - {metric: n_rf, value: 2, tol_abs: 0.000001, source: {locator: 'uniform dielectric: sqrt(eps_r)'}}
+  - {metric: ng_opt, value: 2, tol_abs: 0.01, source: {locator: 'test of configured-input exclusion; not a prediction'}}

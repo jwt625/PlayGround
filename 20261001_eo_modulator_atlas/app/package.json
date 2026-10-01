@@ -4,11 +4,14 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "predev": "node scripts/sync-sims.mjs",
     "dev": "vite dev",
+    "prebuild": "node scripts/sync-sims.mjs",
     "build": "vite build",
     "preview": "vite preview",
     "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
-    "test": "vitest",
+    "test": "vitest run",
+    "smoke": "node scripts/smoke.mjs",
     "data": "cd .. && uv run python scripts/build_views.py"
   },
   "devDependencies": {

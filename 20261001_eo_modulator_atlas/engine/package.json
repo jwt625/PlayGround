@@ -6,7 +6,7 @@
   "type": "module",
   "license": "GPL-3.0-or-later",
   "scripts": {
-    "test": "node --test tests/",
+    "test": "node --test tests/*.test.mjs",
     "cli": "node cli.mjs"
   },
   "dependencies": {

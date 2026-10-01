@@ -1,0 +1,633 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://eo-atlas.local/schema/sim.schema.json",
+  "title": "EO atlas simulation inputs v1",
+  "description": "Cross-section input structure. Runtime validation additionally checks positive material tensors, geometry coverage, references, voltage normalization and numerical limits. Future chain settings are retained but are not implemented by the cross-section runner.",
+  "type": "object",
+  "required": [
+    "schema",
+    "id",
+    "materials",
+    "geometry"
+  ],
+  "properties": {
+    "schema": {
+      "const": "eo-atlas.sim/v1"
+    },
+    "id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "paper_id": {
+      "type": "string"
+    },
+    "device_id": {
+      "type": "string"
+    },
+    "title": {
+      "type": "string"
+    },
+    "repro_grade": {
+      "enum": [
+        "A",
+        "B"
+      ]
+    },
+    "validation_status": {
+      "enum": [
+        "unvalidated",
+        "analytic_gates_pass",
+        "literature_regression",
+        "cross_solver"
+      ]
+    },
+    "chain": {
+      "type": "array",
+      "items": {
+        "enum": [
+          "electrostatics",
+          "optical_mode",
+          "eo_overlap",
+          "rf_line",
+          "loaded_line",
+          "eo_response"
+        ]
+      }
+    },
+    "materials": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": {
+        "$ref": "#/$defs/material"
+      }
+    },
+    "geometry": {
+      "$ref": "#/$defs/geometry"
+    },
+    "alt_geometries": {
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "#/$defs/geometry"
+      }
+    },
+    "optics": {
+      "type": "object",
+      "properties": {
+        "wavelength_nm": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "polarization": {
+          "enum": [
+            "TE",
+            "TM",
+            "quasi-TE",
+            "quasi-TM"
+          ]
+        },
+        "mode_index": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4
+        },
+        "group_index_from": {
+          "enum": [
+            "fixed",
+            "finite_difference_wavelength"
+          ]
+        },
+        "ng_fixed": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "exclusiveMinimum": 0
+        }
+      },
+      "required": [
+        "wavelength_nm",
+        "polarization",
+        "group_index_from"
+      ],
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "group_index_from": {
+                "const": "fixed"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "ng_fixed"
+            ],
+            "properties": {
+              "ng_fixed": {
+                "type": "number",
+                "exclusiveMinimum": 0
+              }
+            }
+          }
+        }
+      ]
+    },
+    "targets": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/target"
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "required": [
+          "class"
+        ],
+        "properties": {
+          "class": {
+            "enum": [
+              "paper_exact",
+              "figure_digitized",
+              "project_inference",
+              "standard_reference",
+              "unknown"
+            ]
+          },
+          "locator": {
+            "type": "string"
+          },
+          "citation": {
+            "type": "string"
+          },
+          "note": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "missing": {
+      "type": "array"
+    },
+    "limitations": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "line": {
+      "type": "object",
+      "properties": {
+        "differential": {
+          "type": "boolean"
+        },
+        "loading": {
+          "type": "object",
+          "required": [
+            "type"
+          ],
+          "properties": {
+            "type": {
+              "enum": [
+                "none",
+                "periodic_t_rail"
+              ]
+            },
+            "period_um": {
+              "type": [
+                "number",
+                "null"
+              ],
+              "exclusiveMinimum": 0
+            },
+            "loaded_length_um": {
+              "type": [
+                "number",
+                "null"
+              ],
+              "exclusiveMinimum": 0
+            },
+            "loaded_cross_section": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "unloaded_cross_section": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          },
+          "allOf": [
+            {
+              "if": {
+                "properties": {
+                  "type": {
+                    "const": "periodic_t_rail"
+                  }
+                }
+              },
+              "then": {
+                "required": [
+                  "period_um",
+                  "loaded_length_um",
+                  "unloaded_cross_section"
+                ],
+                "properties": {
+                  "period_um": {
+                    "type": "number",
+                    "exclusiveMinimum": 0
+                  },
+                  "loaded_length_um": {
+                    "type": "number",
+                    "exclusiveMinimum": 0
+                  },
+                  "unloaded_cross_section": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          ]
+        }
+      }
+    }
+  },
+  "$defs": {
+    "interval": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 2,
+      "items": {
+        "type": "number"
+      }
+    },
+    "window": {
+      "type": "object",
+      "required": [
+        "x_um",
+        "y_um"
+      ],
+      "properties": {
+        "x_um": {
+          "$ref": "#/$defs/interval"
+        },
+        "y_um": {
+          "$ref": "#/$defs/interval"
+        }
+      },
+      "additionalProperties": false
+    },
+    "shape": {
+      "type": "object",
+      "required": [
+        "name",
+        "material"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "material": {
+          "type": "string",
+          "minLength": 1
+        },
+        "rect": {
+          "$ref": "#/$defs/window"
+        },
+        "polygon_um": {
+          "type": "array",
+          "minItems": 3,
+          "items": {
+            "$ref": "#/$defs/interval"
+          }
+        }
+      },
+      "oneOf": [
+        {
+          "required": [
+            "rect"
+          ],
+          "not": {
+            "required": [
+              "polygon_um"
+            ]
+          }
+        },
+        {
+          "required": [
+            "polygon_um"
+          ],
+          "not": {
+            "required": [
+              "rect"
+            ]
+          }
+        }
+      ]
+    },
+    "geometry": {
+      "type": "object",
+      "required": [
+        "domain",
+        "regions",
+        "electrodes"
+      ],
+      "properties": {
+        "domain": {
+          "$ref": "#/$defs/window"
+        },
+        "symmetry": {
+          "enum": [
+            "none",
+            "x_mirror_even",
+            "x_mirror_odd"
+          ]
+        },
+        "mirror_x_um": {
+          "type": "number"
+        },
+        "regions": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/shape"
+          }
+        },
+        "electrodes": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "allOf": [
+              {
+                "$ref": "#/$defs/shape"
+              },
+              {
+                "required": [
+                  "weight"
+                ],
+                "properties": {
+                  "weight": {
+                    "type": "number"
+                  }
+                }
+              }
+            ]
+          }
+        },
+        "optical_window": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/window"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "mesh": {
+          "$ref": "#/$defs/mesh"
+        },
+        "boundary": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "left": {
+              "enum": [
+                "neumann",
+                "dirichlet"
+              ]
+            },
+            "right": {
+              "enum": [
+                "neumann",
+                "dirichlet"
+              ]
+            },
+            "top": {
+              "enum": [
+                "neumann",
+                "dirichlet"
+              ]
+            },
+            "bottom": {
+              "enum": [
+                "neumann",
+                "dirichlet"
+              ]
+            }
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "material": {
+      "type": "object",
+      "properties": {
+        "conductor": {
+          "type": "boolean"
+        },
+        "eps_r": {
+          "oneOf": [
+            {
+              "type": "number",
+              "exclusiveMinimum": 0
+            },
+            {
+              "type": "object",
+              "required": [
+                "perp",
+                "par"
+              ],
+              "additionalProperties": false,
+              "properties": {
+                "perp": {
+                  "type": "number",
+                  "exclusiveMinimum": 0
+                },
+                "par": {
+                  "type": "number",
+                  "exclusiveMinimum": 0
+                }
+              }
+            },
+            {
+              "type": "object",
+              "required": [
+                "xx",
+                "yy",
+                "zz"
+              ],
+              "additionalProperties": false,
+              "properties": {
+                "xx": {
+                  "type": "number",
+                  "exclusiveMinimum": 0
+                },
+                "yy": {
+                  "type": "number",
+                  "exclusiveMinimum": 0
+                },
+                "zz": {
+                  "type": "number",
+                  "exclusiveMinimum": 0
+                }
+              }
+            }
+          ]
+        },
+        "n": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "n_o": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "n_e": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "sigma_Sm": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        }
+      },
+      "if": {
+        "required": [
+          "conductor"
+        ],
+        "properties": {
+          "conductor": {
+            "const": true
+          }
+        }
+      },
+      "else": {
+        "required": [
+          "eps_r"
+        ]
+      }
+    },
+    "target": {
+      "type": "object",
+      "required": [
+        "metric",
+        "value"
+      ],
+      "properties": {
+        "metric": {
+          "enum": [
+            "vpi_l_dc_vcm",
+            "vpi_dc_v",
+            "n_eff",
+            "ng_opt",
+            "n_rf",
+            "z0_ohm",
+            "c_pul_pf_per_m",
+            "c0_pul_pf_per_m",
+            "l_pul_nh_per_m",
+            "rf_loss_db_per_cm",
+            "eo_rolloff_db",
+            "bw3db_ghz",
+            "bw6db_ghz",
+            "optical_confinement_in_region"
+          ]
+        },
+        "value": {
+          "type": "number"
+        },
+        "tol_abs": {
+          "type": "number",
+          "minimum": 0
+        },
+        "tol_rel": {
+          "type": "number",
+          "minimum": 0
+        },
+        "at_ghz": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "source": {
+          "type": "object"
+        }
+      },
+      "anyOf": [
+        {
+          "required": [
+            "tol_abs"
+          ]
+        },
+        {
+          "required": [
+            "tol_rel"
+          ]
+        }
+      ]
+    },
+    "mesh": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "max_edge_um": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "electrode_edge_um": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "electrode_face_um": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "window_edge_um": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "far_edge_um": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "min_edge_um": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "grade": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "grade_far": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "grade_corner": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "min_angle_bound": {
+          "type": "number",
+          "minimum": 1
+        },
+        "max_vertices": {
+          "type": "integer",
+          "minimum": 4,
+          "maximum": 80000,
+          "default": 80000
+        },
+        "regions": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "number",
+            "exclusiveMinimum": 0
+          }
+        }
+      }
+    }
+  }
+}

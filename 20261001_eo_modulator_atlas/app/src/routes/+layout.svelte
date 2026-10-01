@@ -77,9 +77,11 @@
 	.app {
 		height: 100vh;
 		display: grid;
+		grid-template-columns: minmax(0, 1fr);
 		grid-template-rows: var(--hdr) minmax(0, 1fr);
 	}
 	header {
+		min-width: 0;
 		display: flex;
 		align-items: center;
 		gap: 14px;
@@ -122,5 +124,13 @@
 		min-height: 0;
 		min-width: 0;
 		overflow: hidden;
+	}
+	@media (max-width: 700px) {
+		.app { grid-template-rows: auto minmax(0, 1fr); }
+		header { flex-wrap: wrap; gap: 6px 10px; padding: 6px 10px; }
+		.brand { white-space: nowrap; }
+		header > .muted { display: none; }
+		nav { order: 3; width: 100%; height: 30px; overflow-x: auto; }
+		nav a { flex-shrink: 0; padding: 0 8px; }
 	}
 </style>

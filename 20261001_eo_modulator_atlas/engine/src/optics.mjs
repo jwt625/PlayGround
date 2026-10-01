@@ -4,20 +4,20 @@
 // Two scalar weak forms are available (both exact in their slab limits and tested against the slab
 // dispersion relations):
 //   form 'E'  (quasi-TE, psi = E_x):    -lap psi - k0^2 n^2 psi = -beta^2 psi
-//   form 'H'  (quasi-TM, psi = H_x):    -div(n^-2 grad psi) + k0^2 psi = beta^2 n^-2 psi
+//   form 'H'  (quasi-TM, psi = H_x):     div(n^-2 grad psi) + k0^2 psi = beta^2 n^-2 psi
 // Quasi-TE uses the lab-frame n_xx component of each material, quasi-TM uses n_yy.
 // License: GPL-3.0-or-later.
 
 import { assemble, restrictMatrix, triangleGeometry } from './fem.mjs';
 import { buildPattern, ndOrder, SparseCholesky, jacobiEigen, matVec } from './sparse.mjs';
 import { CrossSection } from './section.mjs';
-import { epsOptLab } from './materials.mjs';
+import { epsOptLab, opticalIndexAt } from './materials.mjs';
 
 export const OPTICAL_LABELS = ['scalar_optical_not_full_vector'];
 
 /**
  * Build the optical sub-model (window mesh) of a cross-section.
- * Electrodes inside the window are painted over the regions with their material (needs a real index).
+ * Electrode regions are retained so that a metal intersecting the window is rejected.
  */
 export function buildOpticalModel(section, mats, opts) {
   const { window: win, polarization, lambda0Um } = opts;
@@ -54,6 +54,7 @@ export function buildOpticalModel(section, mats, opts) {
   regions.forEach((r, i) => {
     if (inWin(r) && regionN0[i] !== null) nMax = Math.max(nMax, regionN0[i]);
   });
+  if (!(nMax > 0) || !Number.isFinite(nMax)) throw new Error('optical: no finite positive index in the optical window');
   const core = [];
   regions.forEach((r, i) => {
     if (inWin(r) && regionN0[i] !== null && regionN0[i] >= nMax - 0.02 * nMax) core.push(r);
@@ -65,7 +66,7 @@ export function buildOpticalModel(section, mats, opts) {
   const maxEdge = (hints.max_edge_um ?? lam / 8) * scale;
   const grade = hints.grade ?? 0.25;
   const sources = core.map((r) => ({ poly: r.poly, filled: true, h0: coreEdge, grade }));
-  const mesh = os.buildMesh({ sourcesOnly: true, hints: { max_edge_um: maxEdge, grade }, extraSources: sources, scale: 1, minAngleBound: 1.35 });
+  const mesh = os.buildMesh({ sourcesOnly: true, hints: { max_edge_um: maxEdge, grade, max_vertices: g.mesh?.max_vertices ?? 80000 }, extraSources: sources, scale: 1, minAngleBound: 1.35 });
   mesh.rect = os.rect;
   const geo = triangleGeometry(mesh);
   const pat = buildPattern(mesh.nNodes, mesh.tri);
@@ -75,10 +76,18 @@ export function buildOpticalModel(section, mats, opts) {
 /** Per-triangle n^2 for a wavelength. */
 export function n2Triangles(model, lambdaUm) {
   const comp = model.polarization === 'TM' ? 4 : 0;
-  const per = model.regions.map((r) => {
+  const used = new Set(model.mesh.triRegion);
+  const per = model.regions.map((r, i) => {
+    // Off-window electrodes need no optical index. A metal actually present in
+    // the window still fails explicitly: this scalar solver cannot model it.
+    if (!used.has(i)) return null;
     const m = model.mats[r.material];
+    if (m.conductor) throw new Error(`optical: conductor ${r.material} intersects the optical window; metal optical modes are unsupported`);
+    const index = opticalIndexAt(m, lambdaUm, model.lambda0Um);
+    if (index && !index.inRange) throw new Error(`optical: material ${r.material} dispersion is out of range at ${lambdaUm} um`);
     const e = epsOptLab(m, lambdaUm, model.lambda0Um);
-    if (!e) throw new Error(`material ${r.material} has no optical index (conductor without n)`);
+    if (!e) throw new Error(`material ${r.material} has no optical index`);
+    if (!Number.isFinite(e[comp]) || e[comp] <= 0) throw new Error(`material ${r.material} has no finite positive optical permittivity`);
     return e[comp];
   });
   const out = new Float64Array(model.mesh.nTris);
