@@ -1,0 +1,9 @@
+org_name,org_type,country,region,parent_org,notes
+Binnig and Rohrer Nanotechnology Center,facility,CH,europe,,"Cleanroom named in acknowledgements; host institution and address not stated in the paper, country entered from outside the paper"
+ETH Zurich,university,CH,europe,,Institute of Electromagnetic Fields; name as in affiliation
+Ligentec SA,foundry,CH,europe,,Ecublens; SiN photonic foundry; named as fabricating the SiN wafers
+Lumiphase AG,company,CH,europe,,Stafa; BTO growth and integration
+Nippon Telegraph and Telephone Corporation,company,JP,east_asia,,"Paper writes the affiliation as 'NTT Corporation' (NTT Device Innovation Center; NTT Device Technology Laboratories), Atsugi-shi, Kanagawa"
+South China Normal University,university,CN,east_asia,,Guangzhou; affiliations 2 and 3 (South China Academy of Advanced Optoelectronics; National Center for International Research on Green Optoelectronics)
+The Hong Kong Polytechnic University,university,CN,east_asia,,"Affiliation address reads ""Hong Kong, China""; Photonics Research Center, Departments of Electronic and Information Engineering and of Electrical Engineering"
+Zhejiang University,university,CN,east_asia,,"Hangzhou; affiliations 1 (State Key Laboratory for Modern Optical Instrumentation, Centre for Optical and Electromagnetic Research, International Research Center for Advanced Photonics)"
