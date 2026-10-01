@@ -1,0 +1,192 @@
+schema: eo-atlas.sim/v1
+id: chen2022-c
+paper_id: chen2022
+device_id: chen2022-c
+title: Chen 2022, 10 mm periodic T-rail CLTW TFLN MZM on undercut silicon (G-S-G, push-pull arms)
+repro_grade: B
+validation_status: unvalidated
+chain: [electrostatics, optical_mode, eo_overlap, rf_line, loaded_line, eo_response]
+
+# Coordinate frame: x lateral (paper Z), y film normal up (paper X), z propagation (paper Y).
+# Origin: optical axis of the RIGHT-hand waveguide in x; y = 0 at the BOX top / LN bottom.
+# Signal electrode centre at x = -55.4 um (mirror plane of the structure); LEFT waveguide at x = -110.8 um.
+# The optical mode is solved on the right waveguide (optical_window); both arms are modelled in the electrostatics
+# (full domain, symmetry none) so that the push-pull field in the two gaps is produced by the geometry.
+optics:
+  wavelength_nm: 1550              # NOT reported by the paper; see provenance and missing
+  polarization: TE
+  mode_index: 0
+  group_index_from: finite_difference_wavelength
+  ng_fixed: null
+  eo_axis: auto
+
+materials:
+  lithium_niobate:
+    crystal: {cut: x, propagation: y}
+    n_o: 2.211
+    n_e: 2.138
+    eps_r: {perp: 43.0, par: 28.0}
+    r_pm_per_v: {r13: 8.6, r22: 3.4, r33: 30.8, r51: 28.0}
+  silicon_dioxide: {n: 1.444, eps_r: 3.9}
+  silicon: {n: 3.476, eps_r: 11.7}
+  gold: {conductor: true, sigma_Sm: 4.1e7, n_complex: null}
+  air: {n: 1.0, eps_r: 1.0}
+
+geometry:                          # LOADED cross-section: slots + undercut + T-bar pads (the cross-section drawn in Fig. 2(a),(b))
+  symmetry: none
+  domain: {x_um: [-300, 190], y_um: [-250, 120]}
+  regions:
+    - {name: ambient, material: air, rect: {x_um: [-300, 190], y_um: [-250, 120]}}
+    - {name: substrate, material: silicon, rect: {x_um: [-300, 190], y_um: [-728, -3]}}
+    - {name: box, material: silicon_dioxide, rect: {x_um: [-300, 190], y_um: [-3, 0]}}
+    - {name: ln_slab, material: lithium_niobate, rect: {x_um: [-300, 190], y_um: [0, 0.2]}}
+    - {name: sio2_cladding, material: silicon_dioxide, rect: {x_um: [-300, 190], y_um: [0.2, 1.1]}}
+    - {name: ln_rib_r, material: lithium_niobate, polygon_um: [[-0.84,0.2],[0.84,0.2],[0.75,0.4],[-0.75,0.4]]}
+    - {name: ln_rib_l, material: lithium_niobate, polygon_um: [[-111.64,0.2],[-109.96,0.2],[-110.05,0.4],[-111.55,0.4]]}
+    - {name: slot_r_inner, material: air, rect: {x_um: [-14.9, -5.9], y_um: [-3, 1.1]}}
+    - {name: slot_r_outer, material: air, rect: {x_um: [5.9, 14.9], y_um: [-3, 1.1]}}
+    - {name: slot_l_inner, material: air, rect: {x_um: [-104.9, -95.9], y_um: [-3, 1.1]}}
+    - {name: slot_l_outer, material: air, rect: {x_um: [-125.7, -116.7], y_um: [-3, 1.1]}}
+    - {name: undercut_r_inner, material: air, polygon_um: [[-45.4, -3.0], [-44.87, -9.08], [-43.29, -14.97], [-40.71, -20.5], [-37.21, -25.5], [-32.9, -29.81], [-27.9, -33.31], [-22.37, -35.89], [-16.48, -37.47], [-10.4, -38.0], [-4.32, -37.47], [1.57, -35.89], [7.1, -33.31], [12.1, -29.81], [16.41, -25.5], [19.91, -20.5], [22.49, -14.97], [24.07, -9.08], [24.6, -3.0]]}
+    - {name: undercut_r_outer, material: air, polygon_um: [[-24.6, -3.0], [-24.07, -9.08], [-22.49, -14.97], [-19.91, -20.5], [-16.41, -25.5], [-12.1, -29.81], [-7.1, -33.31], [-1.57, -35.89], [4.32, -37.47], [10.4, -38.0], [16.48, -37.47], [22.37, -35.89], [27.9, -33.31], [32.9, -29.81], [37.21, -25.5], [40.71, -20.5], [43.29, -14.97], [44.87, -9.08], [45.4, -3.0]]}
+    - {name: undercut_l_inner, material: air, polygon_um: [[-135.4, -3.0], [-134.87, -9.08], [-133.29, -14.97], [-130.71, -20.5], [-127.21, -25.5], [-122.9, -29.81], [-117.9, -33.31], [-112.37, -35.89], [-106.48, -37.47], [-100.4, -38.0], [-94.32, -37.47], [-88.43, -35.89], [-82.9, -33.31], [-77.9, -29.81], [-73.59, -25.5], [-70.09, -20.5], [-67.51, -14.97], [-65.93, -9.08], [-65.4, -3.0]]}
+    - {name: undercut_l_outer, material: air, polygon_um: [[-156.2, -3.0], [-155.67, -9.08], [-154.09, -14.97], [-151.51, -20.5], [-148.01, -25.5], [-143.7, -29.81], [-138.7, -33.31], [-133.17, -35.89], [-127.28, -37.47], [-121.2, -38.0], [-115.12, -37.47], [-109.23, -35.89], [-103.7, -33.31], [-98.7, -29.81], [-94.39, -25.5], [-90.89, -20.5], [-88.31, -14.97], [-86.73, -9.08], [-86.2, -3.0]]}
+  electrodes:
+    - {name: signal, role: signal, weight: 1.0, rect: {x_um: [-92.9, -17.9], y_um: [1.1, 2.2]}, material: gold}
+    - {name: ground_r, role: ground, weight: 0.0, rect: {x_um: [17.9, 92.9], y_um: [1.1, 2.2]}, material: gold}
+    - {name: ground_l, role: ground, weight: 0.0, rect: {x_um: [-203.7, -128.7], y_um: [1.1, 2.2]}, material: gold}
+    - {name: pad_r_signal_side, role: signal, weight: 1.0, rect: {x_um: [-2.9, -0.9], y_um: [1.1, 1.3]}, material: gold}
+    - {name: pad_r_ground_side, role: ground, weight: 0.0, rect: {x_um: [0.9, 2.9], y_um: [1.1, 1.3]}, material: gold}
+    - {name: pad_l_signal_side, role: signal, weight: 1.0, rect: {x_um: [-109.9, -107.9], y_um: [1.1, 1.3]}, material: gold}
+    - {name: pad_l_ground_side, role: ground, weight: 0.0, rect: {x_um: [-113.7, -111.7], y_um: [1.1, 1.3]}, material: gold}
+  optical_window: {x_um: [-4, 4], y_um: [-1.5, 1.5]}
+  mesh: {max_edge_um: 2.0, electrode_edge_um: 0.05}
+line:
+  length_mm: 10
+  conductor_loss_model: skin_effect_wheeler
+  rf_loss_table: null
+  source_ohm: 50
+  load_ohm: 50
+  differential: false              # single-ended probe on the centre signal line; push-pull is produced by the arm placement (see SPEC_PROPOSALS)
+  loading:
+    type: periodic_t_rail
+    period_um: 50                  # r + c = 47 + 3; project_inference, see provenance
+    loaded_length_um: 36           # hole-and-bar section (see provenance); remaining 14 um modelled with the unloaded cut
+    unloaded_cross_section: unloaded
+    loaded_cross_section: null     # null = top-level `geometry` (SPEC ambiguity, see SPEC_PROPOSALS)
+sweep: {f_start_ghz: 0.1, f_stop_ghz: 110, n_points: 220}
+
+alt_geometries:
+  unloaded:                        # UNLOADED cut: same slots + undercut, T-bar pads absent (gap c between T-segments)
+    symmetry: none
+    domain: {x_um: [-300, 190], y_um: [-250, 120]}
+    regions:
+      - {name: ambient, material: air, rect: {x_um: [-300, 190], y_um: [-250, 120]}}
+      - {name: substrate, material: silicon, rect: {x_um: [-300, 190], y_um: [-728, -3]}}
+      - {name: box, material: silicon_dioxide, rect: {x_um: [-300, 190], y_um: [-3, 0]}}
+      - {name: ln_slab, material: lithium_niobate, rect: {x_um: [-300, 190], y_um: [0, 0.2]}}
+      - {name: sio2_cladding, material: silicon_dioxide, rect: {x_um: [-300, 190], y_um: [0.2, 1.1]}}
+      - {name: ln_rib_r, material: lithium_niobate, polygon_um: [[-0.84,0.2],[0.84,0.2],[0.75,0.4],[-0.75,0.4]]}
+      - {name: ln_rib_l, material: lithium_niobate, polygon_um: [[-111.64,0.2],[-109.96,0.2],[-110.05,0.4],[-111.55,0.4]]}
+      - {name: slot_r_inner, material: air, rect: {x_um: [-14.9, -5.9], y_um: [-3, 1.1]}}
+      - {name: slot_r_outer, material: air, rect: {x_um: [5.9, 14.9], y_um: [-3, 1.1]}}
+      - {name: slot_l_inner, material: air, rect: {x_um: [-104.9, -95.9], y_um: [-3, 1.1]}}
+      - {name: slot_l_outer, material: air, rect: {x_um: [-125.7, -116.7], y_um: [-3, 1.1]}}
+      - {name: undercut_r_inner, material: air, polygon_um: [[-45.4, -3.0], [-44.87, -9.08], [-43.29, -14.97], [-40.71, -20.5], [-37.21, -25.5], [-32.9, -29.81], [-27.9, -33.31], [-22.37, -35.89], [-16.48, -37.47], [-10.4, -38.0], [-4.32, -37.47], [1.57, -35.89], [7.1, -33.31], [12.1, -29.81], [16.41, -25.5], [19.91, -20.5], [22.49, -14.97], [24.07, -9.08], [24.6, -3.0]]}
+      - {name: undercut_r_outer, material: air, polygon_um: [[-24.6, -3.0], [-24.07, -9.08], [-22.49, -14.97], [-19.91, -20.5], [-16.41, -25.5], [-12.1, -29.81], [-7.1, -33.31], [-1.57, -35.89], [4.32, -37.47], [10.4, -38.0], [16.48, -37.47], [22.37, -35.89], [27.9, -33.31], [32.9, -29.81], [37.21, -25.5], [40.71, -20.5], [43.29, -14.97], [44.87, -9.08], [45.4, -3.0]]}
+      - {name: undercut_l_inner, material: air, polygon_um: [[-135.4, -3.0], [-134.87, -9.08], [-133.29, -14.97], [-130.71, -20.5], [-127.21, -25.5], [-122.9, -29.81], [-117.9, -33.31], [-112.37, -35.89], [-106.48, -37.47], [-100.4, -38.0], [-94.32, -37.47], [-88.43, -35.89], [-82.9, -33.31], [-77.9, -29.81], [-73.59, -25.5], [-70.09, -20.5], [-67.51, -14.97], [-65.93, -9.08], [-65.4, -3.0]]}
+      - {name: undercut_l_outer, material: air, polygon_um: [[-156.2, -3.0], [-155.67, -9.08], [-154.09, -14.97], [-151.51, -20.5], [-148.01, -25.5], [-143.7, -29.81], [-138.7, -33.31], [-133.17, -35.89], [-127.28, -37.47], [-121.2, -38.0], [-115.12, -37.47], [-109.23, -35.89], [-103.7, -33.31], [-98.7, -29.81], [-94.39, -25.5], [-90.89, -20.5], [-88.31, -14.97], [-86.73, -9.08], [-86.2, -3.0]]}
+    electrodes:
+      - {name: signal, role: signal, weight: 1.0, rect: {x_um: [-92.9, -17.9], y_um: [1.1, 2.2]}, material: gold}
+      - {name: ground_r, role: ground, weight: 0.0, rect: {x_um: [17.9, 92.9], y_um: [1.1, 2.2]}, material: gold}
+      - {name: ground_l, role: ground, weight: 0.0, rect: {x_um: [-203.7, -128.7], y_um: [1.1, 2.2]}, material: gold}
+    optical_window: {x_um: [-4, 4], y_um: [-1.5, 1.5]}
+    mesh: {max_edge_um: 2.0, electrode_edge_um: 0.05}
+targets:
+  # Measured, 10 mm device (devices.csv row chen2022-c)
+  - {metric: vpi_l_dc_vcm, value: 2.20, tol_rel: 0.15, source: {device_id: chen2022-c, field: vpil_dc_vcm}}
+  - {metric: n_rf, value: 2.35, tol_abs: 0.10, source: {device_id: chen2022-c, field: n_rf}}
+  - {metric: z0_ohm, value: 50.5, tol_abs: 2.0, source: {device_id: chen2022-c, field: z0_ohm}}
+  - {metric: rf_loss_db_per_cm, at_ghz: 67, value: 2.947, tol_rel: 0.2, source: {device_id: chen2022-c, field: rf_loss_db_per_cm}}
+  - {metric: eo_rolloff_db, at_ghz: 67, value: -1.4, tol_abs: 0.5, source: {paper_id: chen2022, locator: "abstract; p.7 Sec. III; Table I", basis: measured, note: "10 mm device; no devices.csv column"}}
+  - {metric: eo_rolloff_db, at_ghz: 50, value: -0.76, tol_abs: 0.4, source: {paper_id: chen2022, locator: "Table I", basis: measured, note: "10 mm device; no devices.csv column"}}
+  # Paper's own simulation of the design geometry (Fig. 2); compare as cross-solver reference, not as measurement
+  - {metric: vpi_l_dc_vcm, value: 2.10, tol_rel: 0.10, source: {paper_id: chen2022, locator: "Fig. 2(a); p.5 Sec. II", basis: simulated}}
+  - {metric: ng_opt, value: 2.2, tol_abs: 0.05, source: {device_id: chen2022-c, field: ng_opt}}
+  - {metric: n_rf, value: 2.16, tol_abs: 0.05, source: {paper_id: chen2022, locator: "Fig. 2(d), 20-60 GHz plateau 2.15-2.17", basis: extracted_from_figure}}
+  - {metric: z0_ohm, value: 52.3, tol_abs: 1.5, source: {paper_id: chen2022, locator: "Fig. 2(c), 20-100 GHz plateau", basis: extracted_from_figure}}
+  - {metric: rf_loss_db_per_cm, at_ghz: 67, value: 1.555, tol_rel: 0.2, source: {paper_id: chen2022, locator: "p.6 Sec. II alpha0 = 0.19 dB/cm/GHz^0.5 from Fig. 2(e); 0.19*sqrt(67)", basis: derived}}
+  # Not a target: 3 dB EO bandwidth was not observed (> 67 GHz, VNA limit); see SPEC_PROPOSALS (bound-type target)
+reported_curves: []
+
+provenance:
+  optics.wavelength_nm: {class: project_inference, locator: "not stated; p.5-7 (grating couplers, EDFA receiver)", note: "C-band 1550 nm assumed; paper gives only 'peak coupling wavelength' of the GCs"}
+  optics.polarization: {class: paper_exact, locator: "p.5 Sec. II, fundamental TE mode"}
+  optics.group_index_from: {class: project_inference, note: "paper quotes ng = 2.2 (Fig. 2(d)); engine derives it by finite difference and compares as a target"}
+  materials.lithium_niobate.crystal: {class: paper_exact, locator: "p.5 Sec. II, x-cut LNOI; propagation along crystal y inferred from Fig. 1 axes (Y propagation)"}
+  materials.lithium_niobate.n_o: {class: standard_reference, citation: "Zelmon, Small, Jundt, J. Opt. Soc. Am. B 14, 3319 (1997)", note: "value taken from SPEC.md example; not verified against the source in this pilot"}
+  materials.lithium_niobate.n_e: {class: standard_reference, citation: "Zelmon, Small, Jundt, J. Opt. Soc. Am. B 14, 3319 (1997)", note: "value taken from SPEC.md example; not verified against the source in this pilot"}
+  materials.lithium_niobate.eps_r: {class: standard_reference, citation: "Weis and Gaylord, Appl. Phys. A 37, 191 (1985)", note: "SPEC.md example values 43/28; paper does not state RF permittivity; citation values not verified in this pilot"}
+  materials.lithium_niobate.r_pm_per_v: {class: standard_reference, citation: "Weis and Gaylord, Appl. Phys. A 37, 191 (1985)", note: "SPEC.md example values; paper does not state Pockels coefficients"}
+  materials.silicon_dioxide: {class: standard_reference, citation: "standard handbook values (n = 1.444 at 1550 nm, eps_r = 3.9); paper does not state them"}
+  materials.silicon.eps_r: {class: standard_reference, citation: "standard handbook value 11.7; paper does not state it"}
+  materials.gold.sigma_Sm: {class: standard_reference, citation: "bulk gold 4.1e7 S/m; paper does not state film conductivity (p.7 says gold film quality may add RF loss)"}
+  line.length_mm: {class: paper_exact, locator: "p.7 Sec. III, 10 mm device"}
+  line.source_ohm: {class: paper_exact, locator: "p.7 Sec. III (50 ohm termination, one RF probe)"}
+  line.load_ohm: {class: paper_exact, locator: "p.7 Sec. III (50 ohm termination)"}
+  line.differential: {class: project_inference, note: "G-S-G with the signal on the centre line and one waveguide in each gap (Fig. 1(d)); drive single-ended, arms push-pull by geometry; paper never uses the words push-pull"}
+  line.conductor_loss_model: {class: project_inference, note: "paper reports alpha0 simulated 0.19 and measured 0.36 dB/cm/GHz^0.5; loss model left to the engine"}
+  line.loading.period_um: {class: project_inference, locator: "Fig. 1(d) inset; p.5 Sec. II (r = 47, c = 3 um)", note: "period = T-bar length r + gap c = 50 um; each T-segment has one centred stem; period is not stated in the paper"}
+  line.loading.loaded_length_um: {class: project_inference, locator: "Fig. 1(d) inset; p.5 Sec. II (hl = 39, c = 3, r = 47)", note: "slots (length hl = 39) centred on the gap c; slot (5.5..44.5 um from the stem centre) overlaps the bar (|y| < 23.5 um) over 2 x 18 = 36 um per period; the 11 um stem bridge (no slot, metal stem width t = 5) is not representable and is lumped into the unloaded cut"}
+  geometry.regions.ln_slab: {class: paper_exact, locator: "p.5 Sec. II (400 nm film, 200 nm ridge) and p.6 (residual 200 nm)"}
+  geometry.regions.box: {class: paper_exact, locator: "p.5 Sec. II, 3 um BOX"}
+  geometry.regions.substrate: {class: paper_exact, locator: "p.6 Sec. II, 725 um silicon (region clipped to the domain)"}
+  geometry.regions.sio2_cladding: {class: figure_digitized, locator: "Fig. 2(a)", note: "text: 900 nm SiO2 over-cladding; sketch shows flat top 0.86 um above the slab top (rib top 0.66 um below it), measured with 267 px/um scale from the 1.8 um gap; flat top assumed"}
+  geometry.regions.ln_rib_r: {class: figure_digitized, locator: "Fig. 2(a)", note: "height 0.2 um and top width 1.5 um from text; bottom width 1.69 um (sidewall ~68 deg from horizontal) measured on the simulation sketch, not stated in the text"}
+  geometry.regions.ln_rib_l: {class: figure_digitized, locator: "Fig. 2(a)", note: "mirror image of the right rib about x = -55.4 um (centre of the signal electrode)"}
+  geometry.regions.slot_r_inner: {class: figure_digitized, locator: "p.5 Sec. II (hw = 9 um); Fig. 2(b)", note: "slot width hw = 9 um from text; slot position and the 3 um island margins from Fig. 2(b) (islands 11.9 um wide, slot 9.07 um, measured with 75 um Au span); cut through SiO2, LN and BOX to the Si"}
+  geometry.regions.slot_r_outer: {class: figure_digitized, locator: "p.5 Sec. II (hw = 9 um); Fig. 2(b)", note: "see slot_r_inner; position fixed by h = 15 um = 3 + 9 + 3 um from the electrode edge"}
+  geometry.regions.slot_l_inner: {class: figure_digitized, locator: "Fig. 2(b)", note: "mirror of the right-hand slots about the signal centre"}
+  geometry.regions.slot_l_outer: {class: figure_digitized, locator: "Fig. 2(b)", note: "mirror of the right-hand slots about the signal centre"}
+  geometry.regions.undercut_r_inner: {class: figure_digitized, locator: "Fig. 2(b), Fig. 3(h); p.5 Sec. II (35 um undercut optimal)", note: "modelled as a 35 um radius half-disc centred on each slot centre at the Si top surface; the arcs on Fig. 2(b) give radius ~36 um and depth ~33 um; true etch shape unreported"}
+  geometry.regions.undercut_r_outer: {class: figure_digitized, locator: "Fig. 2(b), Fig. 3(h)", note: "see undercut_r_inner"}
+  geometry.regions.undercut_l_inner: {class: figure_digitized, locator: "Fig. 2(b), Fig. 3(h)", note: "see undercut_r_inner"}
+  geometry.regions.undercut_l_outer: {class: figure_digitized, locator: "Fig. 2(b), Fig. 3(h)", note: "see undercut_r_inner"}
+  geometry.electrodes.signal: {class: paper_exact, locator: "p.5 Sec. II (ws = 75 um, 1.1 um Au)", note: "edge-to-edge 75 um centred at x = -55.4 um; Au edge sits 3.1 um inside the island edge per Fig. 2(b)"}
+  geometry.electrodes.ground_r: {class: figure_digitized, locator: "Fig. 1(d) top view; Fig. 3(j)", note: "ground width not stated; the three strips are drawn with similar width, taken as 75 um (+-10%); inner edge at 15 um (= h) beyond the near bar edge, i.e. 35.8 um from the signal edge"}
+  geometry.electrodes.ground_l: {class: figure_digitized, locator: "Fig. 1(d); Fig. 3(j)", note: "mirror of ground_r"}
+  geometry.electrodes.pad_r_signal_side: {class: figure_digitized, locator: "p.5 Sec. II (200 nm T-segments, g = 1.8 um); Fig. 1(d) inset (s = 2 um)", note: "T-bar width s = 2 um is read from the inset arrows (not described in text); pad connected to the signal electrode by a stem not modelled in 2D, so it is given signal potential"}
+  geometry.electrodes.pad_r_ground_side: {class: figure_digitized, locator: "p.5 Sec. II; Fig. 1(d) inset", note: "ground-connected T-bar, see pad_r_signal_side"}
+  geometry.electrodes.pad_l_signal_side: {class: figure_digitized, locator: "p.5 Sec. II; Fig. 1(d) inset", note: "mirror of the right-hand pads"}
+  geometry.electrodes.pad_l_ground_side: {class: figure_digitized, locator: "p.5 Sec. II; Fig. 1(d) inset", note: "mirror of the right-hand pads"}
+  geometry.optical_window: {class: project_inference, note: "crop around the rib for the mode solve"}
+  geometry.domain: {class: project_inference, note: "lateral +-245 um about the signal centre; vertical -250..120 um; open-boundary treatment is an engine choice (Fig. 2(b) domain not stated)"}
+  geometry.mesh: {class: project_inference}
+  alt_geometries.unloaded: {class: project_inference, locator: "Fig. 1(d) inset", note: "identical to geometry without the four T-bar pads; slots and undercut retained because the slot (hl = 39 um) is centred on the 3 um gap c"}
+
+missing:
+  - wavelength_nm (not stated; 1550 assumed, project_inference)
+  - temperature (not stated)
+  - silicon substrate resistivity / conductivity (not stated; undercut leaves residual Si; loss in Si not representable without it)
+  - RF loss tangents of LN, SiO2 (not stated)
+  - gold film conductivity (not stated; measured alpha0 is ~2x the simulated value, paper attributes it to residual silicon or gold film quality)
+  - ground electrode width (not stated; ~75 um digitized from Fig. 1(d))
+  - T-segment period (not stated; 50 um inferred)
+  - rib sidewall angle / bottom width of the fabricated device (only the Fig. 2(a) sketch)
+  - SiO2 cladding profile (flat top vs conformal) and which surface the 900 nm refers to
+  - exact undercut profile (only a 35 um scale and Fig. 2(b)/3(h) sketches)
+  - 3D vs 2D formulation of the paper's RF simulation (COMSOL, not specified)
+  - EO roll-off at 67 GHz for the 5 mm and 7 mm devices (not reported)
+  - EO 3 dB bandwidth (not observed; > 67 GHz)
+limitations:
+  - scalar_optical_not_full_vector
+  - quasi_static_2d_rf
+  - rectangular_or_polygon_sidewalls_only
+  - no_3d_launch_pad_effects
+  - "T-bar stems (200 nm metal bridging each bar to its electrode) and the 11 um slot-free bridge are not representable in a two-cross-section 2D cascade; pads are given electrode potentials directly"
+  - "Floating/connected topology of the pads is imposed by weights, not by a circuit; stem inductance and the shunt capacitance of the bridge section are neglected"
+  - "Optical overlap is computed on the loaded cross-section only; the paper's Vpi*L = 2.10 (simulated) is also quoted from the pad cross-section, but the bars cover 47 of 50 um of each period so the whole-cell overlap is slightly lower"
+  - "Loaded-length split (36 / 14 um) and 50 um period are inferred from a schematic inset (project_inference)"
+  - "Undercut modelled as two overlapping 35 um half-discs per island; real isotropic etch front is unreported"
+  - "Silicon is lossless in the model (conductivity unknown), so substrate loss that the paper blames for excess RF loss is absent"
+  - "5 mm and 7 mm variants (devices chen2022-a, -b) share this cross-section; no variants mechanism in SPEC yet"

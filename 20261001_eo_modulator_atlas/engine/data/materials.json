@@ -1,0 +1,99 @@
+{
+  "schema": "eo-atlas.materials/v1",
+  "note": "Optical dispersion library only. Every entry carries a citation and a validity range. RF permittivity, loss tangent and Pockels coefficients are intentionally NOT built in: they are device inputs that carry provenance in the sim config. Entries for which no verified coefficients are available are listed under `missing`.",
+  "verified_on": "2026-10-01",
+  "verification": "Coefficients compared against the refractiveindex.info database entries (CC0) cited in `source` for each item; n(1550 nm) cross-check is in engine/tests/materials.test.mjs.",
+  "formulas": {
+    "sellmeier_c_squared": "n^2 = 1 + sum_i B_i lambda^2 / (lambda^2 - C_i^2), lambda in um; array `C` stores C_i (not squared)",
+    "sellmeier_c": "n^2 = 1 + sum_i B_i lambda^2 / (lambda^2 - C_i), lambda in um; array `C` stores C_i (as used)",
+    "table": "tabulated n(lambda); evaluated by 3-point Lagrange interpolation"
+  },
+  "materials": {
+    "silicon_dioxide": {
+      "description": "fused silica",
+      "optical": {
+        "n": {
+          "model": "sellmeier_c_squared",
+          "B": [0.6961663, 0.4079426, 0.8974794],
+          "C": [0.0684043, 0.1162414, 9.896161],
+          "range_um": [0.21, 6.7],
+          "citation": "I. H. Malitson, J. Opt. Soc. Am. 55, 1205-1208 (1965)",
+          "source": "https://github.com/polyanskiy/refractiveindex.info-database/blob/main/database/data/main/SiO2/nk/Malitson.yml"
+        }
+      }
+    },
+    "silicon": {
+      "description": "crystalline silicon, room temperature",
+      "optical": {
+        "n": {
+          "model": "sellmeier_c_squared",
+          "B": [10.6684293, 0.0030434748, 1.54133408],
+          "C": [0.301516485, 1.13475115, 1104.0],
+          "range_um": [1.357, 11.04],
+          "citation": "Salzberg and Villa, J. Opt. Soc. Am. 47, 244-246 (1957); fit form by Tatian, Appl. Opt. 23, 4477-4485 (1984)",
+          "source": "https://github.com/polyanskiy/refractiveindex.info-database/blob/main/database/data/main/Si/nk/Salzberg.yml"
+        }
+      }
+    },
+    "silicon_nitride": {
+      "description": "Si3N4 (as deposited film, Luke et al.)",
+      "optical": {
+        "n": {
+          "model": "sellmeier_c_squared",
+          "B": [3.0249, 40314],
+          "C": [0.1353406, 1239.842],
+          "range_um": [0.31, 5.504],
+          "citation": "K. Luke, Y. Okawachi, M. R. E. Lamont, A. L. Gaeta, M. Lipson, Opt. Lett. 40, 4823-4826 (2015)",
+          "source": "https://github.com/polyanskiy/refractiveindex.info-database/blob/main/database/data/main/Si3N4/nk/Luke.yml"
+        }
+      }
+    },
+    "lithium_niobate": {
+      "description": "congruent LiNbO3, room temperature; axes: a (ordinary, two axes), c (extraordinary)",
+      "optical": {
+        "n_o": {
+          "model": "sellmeier_c",
+          "B": [2.6734, 1.229, 12.614],
+          "C": [0.01764, 0.05914, 474.6],
+          "range_um": [0.4, 5.0],
+          "citation": "D. E. Zelmon, D. L. Small, D. Jundt, J. Opt. Soc. Am. B 14, 3319-3322 (1997), congruent LN, ordinary",
+          "source": "https://github.com/polyanskiy/refractiveindex.info-database/blob/main/database/data/main/LiNbO3/nk/Zelmon-o.yml"
+        },
+        "n_e": {
+          "model": "sellmeier_c",
+          "B": [2.9804, 0.5981, 8.9543],
+          "C": [0.02047, 0.0666, 416.08],
+          "range_um": [0.4, 5.0],
+          "citation": "D. E. Zelmon, D. L. Small, D. Jundt, J. Opt. Soc. Am. B 14, 3319-3322 (1997), congruent LN, extraordinary",
+          "source": "https://github.com/polyanskiy/refractiveindex.info-database/blob/main/database/data/main/LiNbO3/nk/Zelmon-e.yml"
+        }
+      }
+    },
+    "lithium_tantalate": {
+      "description": "LiTaO3, room temperature; tabulated data (no Sellmeier fit built in); dn/dlambda from 3-point interpolation of a 0.2 um grid, so group index carries an interpolation error",
+      "optical": {
+        "n_o": {
+          "model": "table",
+          "lambda_um": [0.45, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.2, 1.4, 1.6, 1.8, 2.0, 2.2, 2.4, 2.6, 2.8, 3.0, 3.2, 3.4, 3.6, 3.8, 4.0],
+          "n": [2.242, 2.216, 2.1834, 2.1652, 2.1538, 2.1454, 2.1391, 2.1305, 2.1236, 2.1174, 2.112, 2.1066, 2.1009, 2.0951, 2.0891, 2.0825, 2.0755, 2.068, 2.0601, 2.0513, 2.0424, 2.0335],
+          "range_um": [0.45, 4.0],
+          "citation": "W. L. Bond, J. Appl. Phys. 36, 1674-1677 (1965), ordinary ray",
+          "source": "https://github.com/polyanskiy/refractiveindex.info-database/blob/main/database/data/main/LiTaO3/nk/Bond-o.yml"
+        },
+        "n_e": {
+          "model": "table",
+          "lambda_um": [0.45, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.2, 1.4, 1.6, 1.8, 2.0, 2.2, 2.4, 2.6, 2.8, 3.0, 3.2, 3.4, 3.6, 3.8, 4.0],
+          "n": [2.2468, 2.2205, 2.1878, 2.1696, 2.1578, 2.1493, 2.1432, 2.1341, 2.1273, 2.1213, 2.117, 2.1115, 2.1053, 2.0993, 2.0936, 2.0871, 2.0799, 2.0727, 2.0649, 2.0561, 2.0473, 2.0377],
+          "range_um": [0.45, 4.0],
+          "citation": "W. L. Bond, J. Appl. Phys. 36, 1674-1677 (1965), extraordinary ray",
+          "source": "https://github.com/polyanskiy/refractiveindex.info-database/blob/main/database/data/main/LiTaO3/nk/Bond-e.yml"
+        }
+      }
+    }
+  },
+  "missing": {
+    "barium_titanate": "Only Wemple-DiDomenico-Camlibel single-term fits (valid 0.4-0.7 um) found; not valid at 1550 nm; BTO thin-film indices depend on growth. Provide n in the sim config with provenance.",
+    "lithium_tantalate_sellmeier": "No verified Sellmeier fit in hand; tabulated Bond data used instead.",
+    "rf_and_eo_coefficients": "Not built in (device inputs with provenance in the config)."
+  }
+}

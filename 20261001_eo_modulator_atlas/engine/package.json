@@ -1,0 +1,16 @@
+{
+  "name": "eo-atlas-engine",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Browser-runnable 2D quasi-static EO modulator simulation chain (electrostatics, scalar optical mode, EO overlap, RF line, loaded line, EO response)",
+  "type": "module",
+  "license": "GPL-3.0-or-later",
+  "scripts": {
+    "test": "node --test tests/",
+    "cli": "node cli.mjs"
+  },
+  "dependencies": {
+    "robust-predicates": "^3.0.3",
+    "yaml": "^2.9.1"
+  }
+}
