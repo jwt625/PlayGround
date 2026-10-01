@@ -51,6 +51,10 @@ Projects that have spun off:
 
 <img src="assets/webspice.png" alt="WebSpice" width="50%">
 
+- Mar 2026: [Multipole Cow](https://github.com/jwt625/PlayGround/tree/main/20260327_multipole_cow): reproduction of the spherical-harmonic surface expansion from *Higher multipoles of the cow* (Section III.1). The libigl benchmark cow is flowed to a near star-shaped shell along the signed-distance gradient, fitted with spherical harmonics up to l = 24, and reconstructed as one OBJ mesh per order. Includes a Three.js viewer to orbit each order or compare all in a grid.
+
+<img src="assets/multipole-cow.png" alt="Multipole Cow" width="50%">
+
 - Apr 2026: [USGS Minerals And Infrastructure Atlas](https://github.com/jwt625/USGS_Minerals_Infra_Atlas): a static interactive atlas for exploring USGS National Minerals Information Center regional GIS releases across Africa, China, Indo-Pacific, Latin America & Caribbean, and Southwest Asia.
   - Try it: [jwt625.github.io/USGS_Minerals_Infra_Atlas](https://jwt625.github.io/USGS_Minerals_Infra_Atlas/).
 
@@ -69,3 +73,27 @@ Projects that have spun off:
 - Jun 2026: [2D EO Cross-Section Solver Prototype](https://github.com/jwt625/PlayGround/tree/main/20260614_2d_eo_fem_solver): browser-first electro-optic modulator cross-section solver with YAML-configured geometry, 2D electrostatic extraction, tensor-permittivity RF assembly, optical mode solving, field visualization, and Python reference tests.
 
 <img src="assets/2d-eo-fem-solver.png" alt="2D EO Cross-Section Solver Prototype" width="50%">
+
+- Aug 2026: [Nonuniform Thermally Chirped FBG](https://github.com/jwt625/PlayGround/tree/main/20260802_nonuniform_FBG): coupled-mode / transfer-matrix reconstruction of the heated-spectrum figure (Fig. 5a) from an all-fiber microheater paper in Optics Express (2026), with a semi-analytic cylindrical-fin temperature model. The hot-spot temperature profile is recovered by inverting six digitized heated spectral envelopes; identifiability limits are documented in the model notes.
+
+<img src="assets/nonuniform-fbg.png" alt="Nonuniform Thermally Chirped FBG" width="50%">
+
+- Aug 2026: [Photonics Lineage](https://github.com/jwt625/PlayGround/tree/main/20260823_photonics_lineage): evidence-graded, regenerable person-level genealogy of the photonics industry (172 organizations, 288 people, 556 edges, 282 sources in the current canonical set), with a founder-lineage Sankey view. Each claim carries a source URL and an evidence grade; only A/B-grade evidence enters the default graph.
+
+<img src="assets/photonics-lineage.png" alt="Photonics Lineage" width="50%">
+
+- Sep 2026: [PHIELDWORKS (Coherent Factorio)](https://github.com/jwt625/PlayGround/tree/main/20260911_coherent_factorio): desktop-browser factory game about turning an industrial network into a controlled wave system. Wire emitters and phase tuners, hold field on target, defend the outpost, and commission a reusable blueprint. Runs fully client-side (Vite + TypeScript).
+
+<img src="assets/coherent-factorio.png" alt="PHIELDWORKS" width="50%">
+
+- Sep 2026: [Fruit-Fly CBC](https://github.com/jwt625/PlayGround/tree/main/20260915_fruit_fly_nn): a sparse recurrent reservoir built on the MaleCNS fruit-fly connectome that learns to phase-lock and steer a simulated coherent-beam-combining laser array, then tracks a second virtual fly as a moving target. Three.js bench with a far-field view; simulation and art only, no physical laser interface.
+
+<img src="assets/fruit-fly-cbc.png" alt="Fruit-Fly CBC" width="50%">
+
+- Sep 2026: [Mode Overlap](https://github.com/jwt625/PlayGround/tree/main/20260913_mode_overlap): intuition trainer for photonic mode matching in the style of SLM Guessr. Estimate overlap and mismatch loss for Gaussian mode pairs, with a gallery, a 20-question speedrun and practice mode. Waveguide modes are solved in-browser (experimental scalar quasi-TE); the full-vector 2D backend is still pending.
+
+<img src="assets/mode-overlap.png" alt="Mode Overlap" width="50%">
+
+- Sep 2026: [Power versus Mass](https://github.com/jwt625/PlayGround/tree/main/20260926_power_mass_plot): log-log comparison of whole-body or system power against mass for 40 animals, compute systems, spacecraft and transportation, with idle and peak endpoints, battery / SOFC / propellant specific-power guides and off-scale arrows. Data, provenance and estimate flags live in one JSON file that drives the plot.
+
+<img src="assets/power-mass-plot.png" alt="Power versus Mass" width="50%">
