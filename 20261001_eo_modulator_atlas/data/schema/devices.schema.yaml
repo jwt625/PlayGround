@@ -1,0 +1,155 @@
+# Schema for data/devices.csv and data/papers.csv. Single source of truth for scripts/validate_db.py.
+# Rules
+#   - Empty cell = not reported in the source ("N/A"). Never estimate, never carry numbers from tweets/blogs/secondary reviews.
+#   - Every non-empty cell with evidence: true needs an entry in data/evidence/<paper_id>.yaml (device_id, field, value, locator, basis).
+#   - Conventions: (a) vpi_dc_v / vpi_rf_v / vpil_* hold the paper's headline convention named in vpi_convention; a separately reported push-pull MZM value goes in vpi_mzm_pushpull_dc_v; never convert between conventions yourself.
+#     (b) bounds and approximate values use the `qualifiers` column; (c) a claimed 3 dB crossing at the instrument limit is entered in bw3db_ghz AND bw_measured_to_ghz and flagged in notes; no crossing observed: only bw_measured_to_ghz;
+#     (d) system-demo points (several baud/format combinations) stay in modulation_format text with the extreme in max_* columns; a new row is for a different physical device or a different measured operating point of Vpi/IL/bandwidth (length, wavelength, band, temperature);
+#     (e) org names: the institution's own official English name as in the paper ("ETH Zurich" is fine); expand pure acronyms (MIT -> Massachusetts Institute of Technology); org_type foundry = primary business is contract fabrication, facility = shared cleanroom/centre; country of a facility from its host institution with a note.
+#   - Units are in the column name. Dates are ISO (YYYY-MM-DD). Lists are ';'-separated.
+#   - Full organization names, no abbreviations (e.g. "International Business Machines Corporation Research Zurich" not "IBM").
+version: 1
+
+enums:
+  device_class: [mzm, iq_mzm, phase_shifter, ring, eam, plasmonic_mzm, other]
+  eo_material: [lithium_niobate, lithium_tantalate, barium_titanate, eo_polymer, ferroelectric_nematic_lc, pzt, plzt, strontium_titanate, ktn, inp_mqw, algaas_gaas, silicon_plasma_dispersion, germanium_silicon_eam, graphene_2d, other]
+  waveguide_platform: [lnoi_rib, lnoi_loaded_sin, lnoi_loaded_si, ltoi_rib, ltoi_loaded_sin, bto_on_si, bto_on_sin, bto_on_oxide_substrate, soi_slot, soi_rib, sin, inp, algaas, plasmonic_mim, suspended_lnoi, other]
+  integration: [monolithic, bonded_heterogeneous, micro_transfer_printed, epitaxial_on_silicon, polymer_backfill, wafer_bonded_iii_v, foundry_native, other]
+  electrode_type: [lumped, tw_cpw, tw_cps, tw_gsg, cl_twe, segmented, slow_wave, plasmonic_lumped, folded, coaxial, other]
+  drive: [single_ended, push_pull, series_push_pull, differential, dual_drive, unspecified]
+  vpi_convention: [per_arm_phase_shifter, mzm_push_pull, mzm_series_push_pull, mzm_differential, mzm_single_arm, resonance_tuning_derived, unspecified]
+  bw_reference: [dc, 1ghz, 10ghz, other, unspecified]
+  basis: [measured, simulated, predicted, extracted_from_figure, derived, author_estimate, design_target]
+  er_type: [static, dynamic, unspecified]
+  qualifier_ops: [lt, gt, approx]
+  band: [o_band, c_band, l_band, cl_band, one_um, visible_nir, mid_ir, other]
+  temperature_class: [room, elevated, cryogenic, unspecified]
+  source_type: [journal, arxiv_preprint, conference, datasheet, thesis, review]
+  access: [open_access, paywalled, arxiv, unknown]
+  cache_status: [full_extract, metadata_only, needs_download]
+  repro_grade: [A, B, C]
+  redistribution: [open_license_ok, restricted_local_only, unknown]
+
+papers_columns:
+  - {name: paper_id, type: str, required: true, desc: "FirstAuthorYear lowercase ascii, suffix a/b if needed (kohli2025)"}
+  - {name: title, type: str, required: true}
+  - {name: authors, type: list, required: true, desc: "full author list as in the source, ';'-separated"}
+  - {name: year, type: int, required: true}
+  - {name: published_on, type: date, required: false, desc: "ISO date of first public version if known"}
+  - {name: venue, type: str, required: false}
+  - {name: doi, type: str, required: false}
+  - {name: arxiv_id, type: str, required: false}
+  - {name: url, type: str, required: true, desc: "primary-source URL (publisher or arXiv), never a tweet"}
+  - {name: source_type, type: enum, enum: source_type, required: true}
+  - {name: access, type: enum, enum: access, required: true}
+  - {name: license, type: str, required: false, desc: "e.g. CC-BY-4.0, arXiv-nonexclusive, publisher-copyright"}
+  - {name: redistribution, type: enum, enum: redistribution, required: true}
+  - {name: research_groups, type: list, required: false, desc: "PI / lab names as stated in the paper"}
+  - {name: universities, type: list, required: false, desc: "institutions of type university from author affiliations; must exist in organizations.csv"}
+  - {name: companies, type: list, required: false, desc: "company / non-university org affiliations; must exist in organizations.csv"}
+  - {name: foundry_or_fab, type: list, required: false, desc: "who fabricated the device as stated in the paper (foundry, cleanroom, MPW service)"}
+  - {name: wafer_supplier, type: str, required: false}
+  - {name: process_name, type: str, required: false}
+  - {name: countries, type: list, required: false, desc: "countries of the author affiliations (ISO 3166 alpha-2 codes), derived from affiliations"}
+  - {name: discovered_via, type: list, required: true, desc: "tokens: drive_doc | tmp_eo_md | blog:<post-id> | local_corpus | ofc2026 | landmark | web | assigned"}
+  - {name: cache_status, type: enum, enum: cache_status, required: true}
+  - {name: repro_grade, type: enum, enum: repro_grade, required: false, desc: "A geometry+materials fully disclosed; B needs figure digitization; C metrics only"}
+  - {name: sim_config, type: str, required: false, desc: "relative path sims/<paper_id>/config.yaml if one exists"}
+  - {name: verified_on, type: date, required: true, desc: "ISO date the row was checked against the primary source"}
+  - {name: notes, type: str, required: false}
+
+devices_columns:
+  # identity
+  - {name: device_id, type: str, required: true, desc: "<paper_id>-<label>, label a,b,c or short slug"}
+  - {name: paper_id, type: str, required: true}
+  - {name: device_label, type: str, required: true, desc: "short human label, e.g. '6 mm O-band' or 'DR4 chip'"}
+  - {name: device_class, type: enum, enum: device_class, required: true}
+  - {name: tags, type: list, desc: "free vocabulary, ';'-separated: plasmonic, slow_light, folded, suspended, segmented, coaxial, poled, ..."}
+  - {name: eo_material, type: enum, enum: eo_material, required: true}
+  - {name: waveguide_platform, type: enum, enum: waveguide_platform, required: false}
+  - {name: integration, type: enum, enum: integration, required: false}
+  - {name: electrode_type, type: enum, enum: electrode_type, required: false}
+  - {name: drive, type: enum, enum: drive, required: false}
+  - {name: vpi_convention, type: enum, enum: vpi_convention, required: false, desc: "how Vpi in this row is defined; critical for factor-of-2 comparisons"}
+  - {name: temperature_class, type: enum, enum: temperature_class, required: false}
+  - {name: band, type: enum, enum: band, required: false}
+  # operating point and size
+  - {name: wavelength_nm, type: float, unit: nm, evidence: true}
+  - {name: length_mm, type: float, unit: mm, evidence: true, desc: "active electrode / phase-shifter length"}
+  # drive efficiency
+  - {name: vpi_dc_v, type: float, unit: V, evidence: true}
+  - {name: vpi_rf_v, type: float, unit: V, evidence: true}
+  - {name: vpi_rf_freq_ghz, type: float, unit: GHz, evidence: true}
+  - {name: vpil_dc_vcm, type: float, unit: "V*cm", evidence: true, desc: "as reported; if absent and vpi_dc_v and length_mm known, build_views derives it into vpil_dc_vcm_derived"}
+  - {name: vpil_rf_vcm, type: float, unit: "V*cm", evidence: true}
+  - {name: vpi_mzm_pushpull_dc_v, type: float, unit: V, evidence: true, desc: "push-pull MZM Vpi when the paper reports it separately from a per-phase-shifter headline (convention of vpi_dc_v stays in vpi_convention)"}
+  - {name: bias_for_vpi_v, type: float, unit: V, evidence: true, desc: "DC bias at which Vpi was measured (reverse bias, poling bias)"}
+  - {name: drive_vpp_v, type: float, unit: V, evidence: true, desc: "RF drive amplitude used in the system demo"}
+  - {name: vpi_basis, type: enum, enum: basis, required: false, desc: "basis of the headline Vpi; per-field basis in the evidence file wins when they disagree"}
+  # bandwidth
+  - {name: bw3db_ghz, type: float, unit: GHz, evidence: true}
+  - {name: bw3db_reference, type: enum, enum: bw_reference, required: false, desc: "frequency the 3 dB drop is referenced to"}
+  - {name: bw3db_reference_freq_ghz, type: float, unit: GHz, evidence: true, desc: "numeric reference frequency when bw3db_reference is other"}
+  - {name: bw6db_ghz, type: float, unit: GHz, evidence: true}
+  - {name: bw_measured_to_ghz, type: float, unit: GHz, evidence: true, desc: "instrument / measurement limit; use when no crossing was observed"}
+  - {name: eo_rolloff_db, type: float, unit: dB, evidence: true, desc: "measured EO response drop at eo_rolloff_freq_ghz relative to the stated reference (positive number = drop)"}
+  - {name: eo_rolloff_freq_ghz, type: float, unit: GHz, evidence: true}
+  - {name: bw_basis, type: enum, enum: basis, required: false}
+  # optical loss
+  - {name: il_onchip_db, type: float, unit: dB, evidence: true}
+  - {name: il_onchip_includes, type: str, desc: "what the on-chip number includes (phase shifter, MMI, bends, ...)"}
+  - {name: il_onchip_excludes, type: str, desc: "what the on-chip number excludes (couplers, splitters, ...)"}
+  - {name: il_fiber_to_fiber_db, type: float, unit: dB, evidence: true}
+  - {name: prop_loss_db_per_cm, type: float, unit: "dB/cm", evidence: true}
+  - {name: extinction_ratio_db, type: float, unit: dB, evidence: true}
+  - {name: er_type, type: enum, enum: er_type, required: false}
+  - {name: optical_input_power_dbm, type: float, unit: dBm, evidence: true, desc: "launch/on-chip optical power used in the measurement (not the handling limit)"}
+  - {name: il_basis, type: enum, enum: basis, required: false}
+  # RF
+  - {name: rf_loss_db_per_cm, type: float, unit: "dB/cm", evidence: true}
+  - {name: rf_loss_freq_ghz, type: float, unit: GHz, evidence: true}
+  - {name: z0_ohm, type: float, unit: ohm, evidence: true}
+  - {name: n_rf, type: float, unit: "1", evidence: true}
+  - {name: ng_opt, type: float, unit: "1", evidence: true}
+  - {name: optical_power_handling_dbm, type: float, unit: dBm, evidence: true}
+  # geometry
+  - {name: eo_film_thickness_nm, type: float, unit: nm, evidence: true}
+  - {name: etch_depth_nm, type: float, unit: nm, evidence: true}
+  - {name: rib_width_nm, type: float, unit: nm, evidence: true}
+  - {name: slab_thickness_nm, type: float, unit: nm, evidence: true}
+  - {name: sidewall_angle_deg, type: float, unit: deg, evidence: true}
+  - {name: electrode_gap_um, type: float, unit: um, evidence: true}
+  - {name: signal_width_um, type: float, unit: um, evidence: true}
+  - {name: electrode_thickness_um, type: float, unit: um, evidence: true}
+  - {name: electrode_metal, type: str, evidence: true}
+  - {name: buffer_oxide_um, type: float, unit: um, evidence: true}
+  - {name: substrate, type: str, evidence: true}
+  - {name: cladding, type: str, evidence: true}
+  - {name: crystal_cut, type: str, evidence: true, desc: "e.g. x-cut, z-cut"}
+  - {name: waveguide_orientation, type: str, evidence: true, desc: "propagation direction / stripe orientation, e.g. [011]"}
+  - {name: epitaxy_or_stack, type: str, evidence: true, desc: "free text for layer stacks (n-i-p-n epitaxy, MQW, polymer cladding) that have no dedicated column"}
+  # system demonstration
+  - {name: max_baud_gbd, type: float, unit: GBd, evidence: true}
+  - {name: modulation_format, type: str, evidence: true}
+  - {name: max_line_rate_gbps, type: float, unit: "Gb/s", evidence: true}
+  - {name: max_net_rate_gbps, type: float, unit: "Gb/s", evidence: true}
+  - {name: energy_per_bit_fj, type: float, unit: "fJ/bit", evidence: true}
+  - {name: capacitance_ff, type: float, unit: fF, evidence: true, desc: "device capacitance behind a lumped energy-per-bit figure"}
+  - {name: q_loaded, type: float, unit: "1", evidence: true, desc: "resonant devices"}
+  - {name: fsr_nm, type: float, unit: nm, evidence: true, desc: "resonant devices"}
+  - {name: tuning_nm_per_v, type: float, unit: "nm/V", evidence: true, desc: "resonant devices"}
+  - {name: driver, type: str, desc: "driver used in the demo (linear drive, SiGe, InP-HBT, none)"}
+  # bookkeeping
+  - {name: qualifiers, type: list, desc: "';'-separated field:op with op in lt|gt|approx, e.g. il_onchip_db:lt;extinction_ratio_db:gt. A bound ('over 67 GHz', 'below 2 dB') is entered as its number plus the qualifier; plots draw it as a bound."}
+  - {name: evidence_ref, type: str, required: true, desc: "data/evidence/<paper_id>.yaml"}
+  - {name: notes, type: str}
+
+# evidence file format: data/evidence/<paper_id>.yaml
+evidence_format:
+  paper_id: str
+  verified_on: date
+  source_files: [list of references/<paper_id>/... paths or URLs consulted]
+  entries:
+    - {device_id: str, field: str, value: "as in CSV", unit: str, basis: "enum basis", locator: "p.3, Fig. 2b / Table 1 / abstract", note: "optional <=25 word factual remark"}
+  derived:
+    - {device_id: str, field: str, value: float, formula: str, inputs: [fields]}

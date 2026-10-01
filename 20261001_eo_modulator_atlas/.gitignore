@@ -1,0 +1,22 @@
+# Override the aggressive PlayGround root .gitignore for this project's tracked artifacts.
+# This project tracks its database (CSV), reference cache (PDF/text/figures) and staging outputs.
+!*.json
+!*.csv
+!*.txt
+!*.pdf
+!*.png
+!*.svg
+
+# Local-only: private path mapping, generated caches, build output, logs.
+# (kept after the negations above so they win)
+data/_staging/candidates_seed_local_paths_private.csv
+.venv/
+node_modules/
+app/build/
+app/.svelte-kit/
+logs/
+.request-tmp/
+__pycache__/
+.ruff_cache/
+.mypy_cache/
+.pytest_cache/

@@ -1,0 +1,29 @@
+[project]
+name = "eo-modulator-atlas"
+version = "0.1.0"
+description = "Database, distillation tooling and simulation configs for academic EO modulator demonstrations"
+requires-python = ">=3.12"
+dependencies = [
+  "pydantic>=2.7",
+  "pyyaml>=6.0",
+  "requests>=2.31",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8", "ruff>=0.5", "mypy>=1.10", "types-pyyaml", "types-requests"]
+extract = ["pymupdf>=1.24"]
+
+[tool.ruff]
+line-length = 120
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["B", "E", "F", "I", "UP"]
+
+[tool.mypy]
+python_version = "3.12"
+strict = true
+files = ["scripts"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
