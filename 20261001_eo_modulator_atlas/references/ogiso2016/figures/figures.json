@@ -1,0 +1,51 @@
+[
+ {
+  "kind": "page_render",
+  "file": "page_01.png",
+  "page": 1,
+  "captions": [
+   "Fig. 1 Schematic illustration and cross-sectional diagram of MZ modulation",
+   "Fig. 2. A differential voltage was applied across the electrode as with",
+   "Fig. 2 ER characteristics",
+   "Fig. 3 Small-signal RF responses",
+   "Fig. 4 Small-signal EO response",
+   "Fig. 5 shows generated 50 and 100 Gb/s NRZ-OOK eye diagrams. Clear"
+  ]
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p01_1.png",
+  "page": 1,
+  "width": 327,
+  "height": 190
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p01_3.png",
+  "page": 1,
+  "width": 332,
+  "height": 223
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p01_4.png",
+  "page": 1,
+  "width": 315,
+  "height": 230
+ },
+ {
+  "kind": "page_render",
+  "file": "page_02.png",
+  "page": 2,
+  "captions": [
+   "Fig. 5 Measured eye diagrams"
+  ]
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p02_1.png",
+  "page": 2,
+  "width": 393,
+  "height": 287
+ }
+]

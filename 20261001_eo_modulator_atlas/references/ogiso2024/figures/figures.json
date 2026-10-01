@@ -1,0 +1,65 @@
+[
+ {
+  "kind": "page_render",
+  "file": "page_01.png",
+  "page": 1,
+  "captions": [
+   "Figure 1(a) shows a schematic diagram and images of a fabricated twin-IQ modulator PIC. The overall layout is",
+   "Fig. 1. (a) Modulator PIC outline, (b) extinction characteristics (single-arm drive), and (c) optical absorption loss due to applied bias for"
+  ]
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p01_1.png",
+  "page": 1,
+  "width": 1126,
+  "height": 350
+ },
+ {
+  "kind": "page_render",
+  "file": "page_02.png",
+  "page": 2,
+  "captions": [
+   "Fig. 2(b), the extinction ratio was over 25 dB in the entire C band for all child- and parent-Mach-Zehnder",
+   "Fig. 2.  DC characteristics under 1.5-V V\u03c0 condition (a) insertion loss, (b) extinction ratio, and (c) extinction curve (push-pull drive)",
+   "Fig. 3.  DC characteristics under 2.0-V V\u03c0 condition (a) insertion losses of MMI- and taper-type cross waveguides, and (b) extinction ratio of",
+   "Figure 4 shows the EO responses of three different modulator PICs which had the same length of CL- traveling-"
+  ]
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p02_1.png",
+  "page": 2,
+  "width": 982,
+  "height": 314
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p02_2.png",
+  "page": 2,
+  "width": 792,
+  "height": 286
+ },
+ {
+  "kind": "page_render",
+  "file": "page_03.png",
+  "page": 3,
+  "captions": [
+   "Fig. 4.  EO responses of three variant PICs: (a) 130-GBaud-class product (reference),"
+  ]
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p03_1.png",
+  "page": 3,
+  "width": 757,
+  "height": 384
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p03_2.png",
+  "page": 3,
+  "width": 445,
+  "height": 279
+ }
+]

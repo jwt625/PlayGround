@@ -1,0 +1,233 @@
+[
+ {
+  "kind": "page_render",
+  "file": "page_03.png",
+  "page": 3,
+  "captions": [
+   "Fig. 1a. The modulator can be divided into two main",
+   "Fig. 1 Schematic of the BTO-on-SiN platform. a Overview of the high-speed BTO-on-SiN modulator featuring the combined advantages of low-"
+  ]
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p03_1.png",
+  "page": 3,
+  "width": 426,
+  "height": 448
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p03_2.png",
+  "page": 3,
+  "width": 426,
+  "height": 448
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p03_3.png",
+  "page": 3,
+  "width": 426,
+  "height": 448
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p03_4.png",
+  "page": 3,
+  "width": 426,
+  "height": 448
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p03_5.png",
+  "page": 3,
+  "width": 426,
+  "height": 448
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p03_6.png",
+  "page": 3,
+  "width": 426,
+  "height": 448
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p03_7.png",
+  "page": 3,
+  "width": 571,
+  "height": 884
+ },
+ {
+  "kind": "page_render",
+  "file": "page_04.png",
+  "page": 4,
+  "captions": [
+   "Fig. 2c. In the current fabrication run, we found insertion",
+   "Fig. 2 Characterization of C-band MZ modulator. a Schematic of the MZ modulator with phase shifters in each arm and a platinum heater to set"
+  ]
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p04_1.png",
+  "page": 4,
+  "width": 672,
+  "height": 280
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p04_2.png",
+  "page": 4,
+  "width": 606,
+  "height": 290
+ },
+ {
+  "kind": "page_render",
+  "file": "page_05.png",
+  "page": 5,
+  "captions": [
+   "Fig. 3 Characterization of C-band IQ modulator. a Schematic of the IQ modulator consisting of two MZ modulators. b Frequency response of the"
+  ]
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p05_1.png",
+  "page": 5,
+  "width": 811,
+  "height": 298
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p05_2.png",
+  "page": 5,
+  "width": 406,
+  "height": 428
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p05_5.png",
+  "page": 5,
+  "width": 401,
+  "height": 424
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p05_6.png",
+  "page": 5,
+  "width": 268,
+  "height": 565
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p05_8.png",
+  "page": 5,
+  "width": 443,
+  "height": 426
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p05_13.png",
+  "page": 5,
+  "width": 225,
+  "height": 480
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p05_16.png",
+  "page": 5,
+  "width": 244,
+  "height": 487
+ },
+ {
+  "kind": "page_render",
+  "file": "page_06.png",
+  "page": 6,
+  "captions": [
+   "Fig. 4a. Light is coupled from the bus waveguide into the",
+   "Fig. 4 Characterization of O-band RT modulator. a Schematic of the O-band RT modulator with a 5 \u00b5m long plasmonic phase shifter. b On-chip"
+  ]
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p06_1.png",
+  "page": 6,
+  "width": 733,
+  "height": 368
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p06_2.png",
+  "page": 6,
+  "width": 440,
+  "height": 374
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p06_3.png",
+  "page": 6,
+  "width": 293,
+  "height": 374
+ },
+ {
+  "kind": "page_render",
+  "file": "page_07.png",
+  "page": 7,
+  "captions": [
+   "Fig. 5b. With an FFE of less than 10 taps, the MZ mod-",
+   "Fig. 6b. The modulator reaches 200 GBd using 2PAM with",
+   "Fig. 5 Data experiment of MZ modulator a Data experiment results of the MZ modulator. It reaches 256 GBd using 2PAM, 170 GBd using 4PAM,"
+  ]
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p07_3.png",
+  "page": 7,
+  "width": 625,
+  "height": 688
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p07_4.png",
+  "page": 7,
+  "width": 772,
+  "height": 684
+ },
+ {
+  "kind": "page_render",
+  "file": "page_08.png",
+  "page": 8,
+  "captions": [
+   "Fig. 6 Data experiment of IQ and RT modulator. a Data experiment results of the IQ modulator reaching 224 GBd below the SD-FEC, 192 GBd"
+  ]
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p08_1.png",
+  "page": 8,
+  "width": 847,
+  "height": 725
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p08_2.png",
+  "page": 8,
+  "width": 564,
+  "height": 746
+ },
+ {
+  "kind": "page_render",
+  "file": "page_09.png",
+  "page": 9,
+  "captions": [
+   "Fig. 7 Measurement setup for data experiments. a, b IM/DD measurement setup for the C-band MZ modulator transmission experiment. c, d IM/"
+  ]
+ },
+ {
+  "kind": "page_render",
+  "file": "page_10.png",
+  "page": 10,
+  "captions": [
+   "Fig. 7e, f is optimized for coherent communication. The",
+   "Fig. 7c, is similar to the C-band MZ modulator. The laser"
+  ]
+ }
+]

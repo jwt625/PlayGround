@@ -1,0 +1,123 @@
+[
+ {
+  "kind": "embedded",
+  "file": "img_p01_6.png",
+  "page": 1,
+  "width": 496,
+  "height": 496
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p01_8.png",
+  "page": 1,
+  "width": 450,
+  "height": 3300
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p01_9.png",
+  "page": 1,
+  "width": 1640,
+  "height": 440
+ },
+ {
+  "kind": "page_render",
+  "file": "page_03.png",
+  "page": 3,
+  "captions": [
+   "FIG. 1. Proposed EO modulator on a"
+  ]
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p03_1.png",
+  "page": 3,
+  "width": 1305,
+  "height": 1052
+ },
+ {
+  "kind": "page_render",
+  "file": "page_04.png",
+  "page": 4,
+  "captions": [
+   "FIG. 2. (a) Simulated TE optical mode profile and static electrical field distribution. V\u03c0L = 2.10 V cm can be extracted here. (b) Simulated RF mode profile at a RF frequency"
+  ]
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p04_1.png",
+  "page": 4,
+  "width": 2105,
+  "height": 1967
+ },
+ {
+  "kind": "page_render",
+  "file": "page_05.png",
+  "page": 5,
+  "captions": [
+   "Figure 1(a) shows a three-dimensional (3D) view of the pro-",
+   "FIG. 3. Process flow of the proposed"
+  ]
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p05_1.png",
+  "page": 5,
+  "width": 1294,
+  "height": 1149
+ },
+ {
+  "kind": "page_render",
+  "file": "page_06.png",
+  "page": 6,
+  "captions": [
+   "FIG. 4. Normalized optical transmissions of the fabricated modulators as a function",
+   "FIG. 5. Measured EE reflection S11, EE transmission S12, measured EO S21, and"
+  ]
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p06_1.png",
+  "page": 6,
+  "width": 999,
+  "height": 1613
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p06_2.png",
+  "page": 6,
+  "width": 1006,
+  "height": 1683
+ },
+ {
+  "kind": "page_render",
+  "file": "page_07.png",
+  "page": 7,
+  "captions": [
+   "Figure 5(f) shows the deduced RF index nm, where one can find",
+   "FIG. 6. High-speed data transmission"
+  ]
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p07_1.png",
+  "page": 7,
+  "width": 1295,
+  "height": 1178
+ },
+ {
+  "kind": "page_render",
+  "file": "page_08.png",
+  "page": 8,
+  "captions": [
+   "FIG. 7. Predicted EO modulation bandwidth of the proposed device corresponding"
+  ]
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p08_1.png",
+  "page": 8,
+  "width": 752,
+  "height": 566
+ }
+]

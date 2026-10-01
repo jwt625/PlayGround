@@ -1,0 +1,98 @@
+[
+ {
+  "kind": "page_render",
+  "file": "page_02.png",
+  "page": 2,
+  "captions": [
+   "FIG. 1. Low-voltage high bandwidth traveling-wave integrated lithium niobate (LN) modulator with segmented electrodes. (a)"
+  ]
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p02_1.png",
+  "page": 2,
+  "width": 1681,
+  "height": 1554
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p02_2.png",
+  "page": 2,
+  "width": 1280,
+  "height": 884
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p02_3.png",
+  "page": 2,
+  "width": 1655,
+  "height": 525
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p02_4.png",
+  "page": 2,
+  "width": 1680,
+  "height": 539
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p02_5.png",
+  "page": 2,
+  "width": 1682,
+  "height": 448
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p02_6.png",
+  "page": 2,
+  "width": 338,
+  "height": 327
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p02_7.png",
+  "page": 2,
+  "width": 339,
+  "height": 327
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p02_8.png",
+  "page": 2,
+  "width": 338,
+  "height": 327
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p02_9.png",
+  "page": 2,
+  "width": 337,
+  "height": 326
+ },
+ {
+  "kind": "page_render",
+  "file": "page_03.png",
+  "page": 3,
+  "captions": [
+   "Fig. 1. It is clear from Table 1. that using segmented"
+  ]
+ },
+ {
+  "kind": "page_render",
+  "file": "page_04.png",
+  "page": 4,
+  "captions": [
+   "FIG. 2. Measured RF loss of a 10-mm long regular electrode on LN-on-silicon and segmented electrode on LN-on-quartz with"
+  ]
+ },
+ {
+  "kind": "page_render",
+  "file": "page_05.png",
+  "page": 5,
+  "captions": [
+   "FIG. 3. Electro-optic performance of segmented LN modulators (a) Measured DC V\u03c0 and extinction for a 20-mm long modulator.",
+   "FIG. 4."
+  ]
+ }
+]

@@ -1,0 +1,54 @@
+[
+ {
+  "kind": "page_render",
+  "file": "page_02.png",
+  "page": 2,
+  "captions": [
+   "Fig. 1: Measured and simulated EO-response of MZM chip. The dip at low frequencies is due to the impedance mismatch of the 85 \u2126 terminated",
+   "Fig. 2: Schematic of the system measurement setup (left). A picture of the driver-modulator assembly (right)."
+  ]
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p02_1.png",
+  "page": 2,
+  "width": 551,
+  "height": 221
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p02_2.png",
+  "page": 2,
+  "width": 552,
+  "height": 221
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p02_3.png",
+  "page": 2,
+  "width": 774,
+  "height": 445
+ },
+ {
+  "kind": "page_render",
+  "file": "page_03.png",
+  "page": 3,
+  "captions": [
+   "Fig. 3: BER measurement results of the PAM4 modulation scheme at different symbol rates (left). Eye diagram at 150 GBaud (center) and"
+  ]
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p03_1.png",
+  "page": 3,
+  "width": 473,
+  "height": 535
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p03_2.png",
+  "page": 3,
+  "width": 506,
+  "height": 537
+ }
+]

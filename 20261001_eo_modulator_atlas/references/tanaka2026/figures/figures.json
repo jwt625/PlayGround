@@ -1,0 +1,36 @@
+[
+ {
+  "kind": "page_render",
+  "file": "page_02.png",
+  "page": 2,
+  "captions": [
+   "Fig. 1: Transmitter with (a)",
+   "Fig. 3: (a) Photomicrograph of IQ modulator"
+  ]
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p02_3.png",
+  "page": 2,
+  "width": 289,
+  "height": 245
+ },
+ {
+  "kind": "page_render",
+  "file": "page_03.png",
+  "page": 3,
+  "captions": [
+   "Fig. 4: Measured normalized optical power as a function of",
+   "Fig. 5: Optical power versus voltage in the RF modulation",
+   "Fig. 6: Measurement result of EO response at V\uf070 of 5.4 V (Electrode length: 1.0 mm, FF:",
+   "Fig. 7 16QAM constellation"
+  ]
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p03_2.png",
+  "page": 3,
+  "width": 209,
+  "height": 232
+ }
+]

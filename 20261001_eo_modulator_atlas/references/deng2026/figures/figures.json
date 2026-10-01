@@ -1,0 +1,163 @@
+[
+ {
+  "kind": "page_render",
+  "file": "page_03.png",
+  "page": 3,
+  "captions": [
+   "Fig. 1 Process-guided structural engineering of BaTiO3 (BTO) thin \ufb01lms for enhanced electro-optic performance via periodic in-plane"
+  ]
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p03_1.png",
+  "page": 3,
+  "width": 393,
+  "height": 619
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p03_3.png",
+  "page": 3,
+  "width": 880,
+  "height": 256
+ },
+ {
+  "kind": "page_render",
+  "file": "page_04.png",
+  "page": 4,
+  "captions": [
+   "Fig. S5."
+  ]
+ },
+ {
+  "kind": "page_render",
+  "file": "page_05.png",
+  "page": 5,
+  "captions": [
+   "Fig. 2 Microscopic analysis of the strain and polarization states in self-buffered BTO thin \ufb01lms. a Cross-sectional low-magni\ufb01cation STEM"
+  ]
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p05_1.png",
+  "page": 5,
+  "width": 591,
+  "height": 289
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p05_2.png",
+  "page": 5,
+  "width": 366,
+  "height": 289
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p05_3.png",
+  "page": 5,
+  "width": 327,
+  "height": 435
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p05_4.png",
+  "page": 5,
+  "width": 208,
+  "height": 341
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p05_5.png",
+  "page": 5,
+  "width": 262,
+  "height": 575
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p05_7.png",
+  "page": 5,
+  "width": 395,
+  "height": 520
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p05_8.png",
+  "page": 5,
+  "width": 193,
+  "height": 261
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p05_10.png",
+  "page": 5,
+  "width": 1200,
+  "height": 493
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p05_11.png",
+  "page": 5,
+  "width": 530,
+  "height": 464
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p05_12.png",
+  "page": 5,
+  "width": 593,
+  "height": 582
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p05_13.png",
+  "page": 5,
+  "width": 354,
+  "height": 682
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p05_14.png",
+  "page": 5,
+  "width": 460,
+  "height": 442
+ },
+ {
+  "kind": "page_render",
+  "file": "page_06.png",
+  "page": 6,
+  "captions": [
+   "Fig. 3 Enhanced electro-optic response in self-buffered BTO \ufb01lms via polymorphic phase nanoregions. a Schematic illustration of the optical"
+  ]
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p06_1.png",
+  "page": 6,
+  "width": 818,
+  "height": 404
+ },
+ {
+  "kind": "page_render",
+  "file": "page_07.png",
+  "page": 7,
+  "captions": [
+   "Figure 4b shows the cross-sectional view of the mod-",
+   "Figure 4e further illustrates the electro-optic bandwidth"
+  ]
+ },
+ {
+  "kind": "page_render",
+  "file": "page_08.png",
+  "page": 8,
+  "captions": [
+   "Fig. 4 BTO on LSAT as an oxide platform for integrated high-performance electro-optic modulation. a Optical micrograph of the fabricated"
+  ]
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p08_1.png",
+  "page": 8,
+  "width": 1837,
+  "height": 301
+ }
+]

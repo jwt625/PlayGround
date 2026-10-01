@@ -1,0 +1,110 @@
+[
+ {
+  "kind": "page_render",
+  "file": "page_02.png",
+  "page": 2,
+  "captions": [
+   "Figure 1. (a) Top-view schematic (not to scale) of the Si/LN MZM. The transition region consists of the transition"
+  ]
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p02_1.png",
+  "page": 2,
+  "width": 4561,
+  "height": 2379
+ },
+ {
+  "kind": "page_render",
+  "file": "page_03.png",
+  "page": 3,
+  "captions": [
+   "Figure 2(a) shows the calculated change in IL due to nonlinear effects (TPA and FCA) by numerically solving Eq. (3) for"
+  ]
+ },
+ {
+  "kind": "page_render",
+  "file": "page_04.png",
+  "page": 4,
+  "captions": [
+   "Figure 2. (a) The calculated insertion loss (IL) due to TPA as a function of peak optical power in the hybrid waveguide"
+  ]
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p04_1.png",
+  "page": 4,
+  "width": 3322,
+  "height": 2397
+ },
+ {
+  "kind": "page_render",
+  "file": "page_05.png",
+  "page": 5,
+  "captions": [
+   "Figure 2(b) shows the change in refractive index. Changes in the refractive index will effect the index matching condition",
+   "Figure 2(b) and 2(c) show the additional index change and IL as the Si width changes for a hybrid waveguide length of 0.5",
+   "Figure 3(a) illustrates the direct bonding hybrid Si/LN modulator fabrication process. Before bonding, the surfaces of the"
+  ]
+ },
+ {
+  "kind": "page_render",
+  "file": "page_06.png",
+  "page": 6,
+  "captions": [
+   "Figure 3. (a) Fabrication process \ufb02ow of the hybrid bonded Si/LN MZM. (b) Optical microscope image of hybrid bonded"
+  ]
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p06_1.png",
+  "page": 6,
+  "width": 2657,
+  "height": 2391
+ },
+ {
+  "kind": "page_render",
+  "file": "page_07.png",
+  "page": 7,
+  "captions": [
+   "Figure 4. (a) The measured optical transmission of the asymmetric hybrid-bonded Si/LN MZM with no modulation signal"
+  ]
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p07_1.png",
+  "page": 7,
+  "width": 4274,
+  "height": 1890
+ },
+ {
+  "kind": "page_render",
+  "file": "page_08.png",
+  "page": 8,
+  "captions": [
+   "Figure 5. The OSA-measured (blue points) EOR of the hybrid bonded Si/LN MZM with Lps = 0.5 cm using no RF"
+  ]
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p08_1.png",
+  "page": 8,
+  "width": 4778,
+  "height": 2449
+ },
+ {
+  "kind": "page_render",
+  "file": "page_10.png",
+  "page": 10,
+  "captions": [
+   "Figure 6. A (not to scale) schematic of the hybrid bonded Si/LN MZM showing the total measured insertion loss and the"
+  ]
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p10_1.png",
+  "page": 10,
+  "width": 4472,
+  "height": 2197
+ }
+]

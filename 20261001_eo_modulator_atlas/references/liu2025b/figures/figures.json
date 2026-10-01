@@ -1,0 +1,97 @@
+[
+ {
+  "kind": "page_render",
+  "file": "page_02.png",
+  "page": 2,
+  "captions": [
+   "Fig.\u00a01\u00a0 shows \u00a0the \u00a0schematic \u00a0of \u00a0the \u00a0proposed \u00a0modulator",
+   "Fig.\u00a01\u00a0Layout\u00a0schematic\u00a0of\u00a0the\u00a0TFLN\u00a0modulator\u00a0and\u00a0parameters\u00a0extracted\u00a0by\u00a0simulation.\u00a0a\u00a0The\u00a0schematic\u00a0of\u00a0the\u00a0\u2018T-shaped\u2019\u00a0modulator,\u00a0where"
+  ]
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p02_1.png",
+  "page": 2,
+  "width": 571,
+  "height": 336
+ },
+ {
+  "kind": "page_render",
+  "file": "page_03.png",
+  "page": 3,
+  "captions": [
+   "Fig.\u00a02b\u00a0 shows \u00a0the \u00a0fabricated \u00a0TFLN \u00a0wafer \u00a0subjected \u00a0to",
+   "Fig.\u00a03b\u00a0 offers \u00a0a \u00a0microscope \u00a0image \u00a0of \u00a0the \u00a0spiral \u00a0TFLN",
+   "Fig.\u00a03c.\u00a0This\u00a0was\u00a0performed\u00a0by\u00a0measuring\u00a0the\u00a0transmission",
+   "Fig.\u00a02\u00a0Wafer-scale\u00a0TFLN\u00a0process\u00a0flow\u00a0and\u00a0photos\u00a0of\u00a0a\u00a0wafer.\u00a0a\u00a0Process\u00a0flow\u00a0of\u00a0TFLN\u00a0wafer.\u00a0b\u00a0Wafer\u00a0under\u00a0wafer-scale\u00a0test.\u00a0c\u00a0Single\u00a0block"
+  ]
+ },
+ {
+  "kind": "page_render",
+  "file": "page_04.png",
+  "page": 4,
+  "captions": [
+   "Fig.\u00a03\u00a0Wafer-scale\u00a0characterization\u00a0of\u00a0the\u00a0optical\u00a0propagation.\u00a0a\u00a0DUV\u00a0stepper\u00a0exposure\u00a0Layout\u00a0and\u00a01\u00a0\u00b5m\u00a0waveguide\u00a0propagation\u00a0loss\u00a0test\u00a0results"
+  ]
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p04_1.png",
+  "page": 4,
+  "width": 150,
+  "height": 223
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p04_3.png",
+  "page": 4,
+  "width": 208,
+  "height": 209
+ },
+ {
+  "kind": "page_render",
+  "file": "page_05.png",
+  "page": 5,
+  "captions": [
+   "Fig.\u00a04\u00a0TFLN\u00a0modulator.\u00a0a\u00a0Micrograph\u00a0of\u00a0a\u00a0Mach-\u00a0Zehnder\u00a0modulator.\u00a0b\u00a03\u00a0dB\u00a0EO\u00a0response\u00a0beyond\u00a0110\u00a0GHz.\u00a0c\u00a0Half-wave\u00a0voltage\u00a0at\u00a01\u00a0GHz,",
+   "Fig.\u00a05\u00a0a\u00a0Wafer-scale\u00a0map\u00a0of\u00a0modulators\u00a0EO\u00a0bandwidth.\u00a0b\u00a0Wafer-scale\u00a0map\u00a0of\u00a0V\u03c0."
+  ]
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p05_1.png",
+  "page": 5,
+  "width": 163,
+  "height": 163
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p05_2.png",
+  "page": 5,
+  "width": 163,
+  "height": 163
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p05_3.png",
+  "page": 5,
+  "width": 476,
+  "height": 439
+ },
+ {
+  "kind": "page_render",
+  "file": "page_06.png",
+  "page": 6,
+  "captions": [
+   "Fig.\u00a06c. \u00a0A \u00a0sinx/x \u00a0function \u00a0built \u00a0into \u00a0an \u00a0oscilloscope",
+   "Fig.\u00a06\u00a0The \u00a0packaged \u00a0high-bandwidth \u00a0EO \u00a0modulator.\u00a0 a\u00a0 High-"
+  ]
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p06_1.png",
+  "page": 6,
+  "width": 266,
+  "height": 448
+ }
+]

@@ -1,0 +1,47 @@
+[
+ {
+  "kind": "page_render",
+  "file": "page_01.png",
+  "page": 1,
+  "captions": [
+   "Fig. 1.  Monolithic PIC Architecture comprises 4 DFBs, 8 MZMs, 8 SOAs, and 8 taps with power monitors."
+  ]
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p01_1.png",
+  "page": 1,
+  "width": 1284,
+  "height": 301
+ },
+ {
+  "kind": "page_render",
+  "file": "page_02.png",
+  "page": 2,
+  "captions": [
+   "Fig. 2. (a) SOA DC gain vs. input power and SOA current, with 1 dB and 3 dB compression points labelled.  (b) SOA output power vs. bias"
+  ]
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p02_1.png",
+  "page": 2,
+  "width": 1340,
+  "height": 513
+ },
+ {
+  "kind": "page_render",
+  "file": "page_03.png",
+  "page": 3,
+  "captions": [
+   "Fig. 3.  Inset on left summarizes RF performances of (a) eye diagram at SOA current = 60 mA and (b) eye diagram at SOA current = 160mA."
+  ]
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p03_1.png",
+  "page": 3,
+  "width": 1302,
+  "height": 245
+ }
+]

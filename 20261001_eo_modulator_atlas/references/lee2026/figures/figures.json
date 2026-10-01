@@ -1,0 +1,93 @@
+[
+ {
+  "kind": "page_render",
+  "file": "page_02.png",
+  "page": 2,
+  "captions": [
+   "Figure 1d presents an optical microscope image of the integrated MIR modulator chip with a footprint of",
+   "Fig. 2c. This work presents the lowest V\u03c0 ever reported in the MIR, reaching CMOS-compatible voltages, and the"
+  ]
+ },
+ {
+  "kind": "page_render",
+  "file": "page_04.png",
+  "page": 4,
+  "captions": [
+   "Figure 1:"
+  ]
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p04_1.png",
+  "page": 4,
+  "width": 4266,
+  "height": 2101
+ },
+ {
+  "kind": "page_render",
+  "file": "page_05.png",
+  "page": 5,
+  "captions": [
+   "Figure 2:"
+  ]
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p05_1.png",
+  "page": 5,
+  "width": 2899,
+  "height": 1958
+ },
+ {
+  "kind": "page_render",
+  "file": "page_06.png",
+  "page": 6,
+  "captions": [
+   "Figure 3: Characterization of the MIR modulator up to 40-GHz microwave frequencies. (a) Measured"
+  ]
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p06_1.png",
+  "page": 6,
+  "width": 4286,
+  "height": 2158
+ },
+ {
+  "kind": "page_render",
+  "file": "page_07.png",
+  "page": 7,
+  "captions": [
+   "Figure 4: Frequency-agile MIR electro-optic frequency combs based on an integrated recycled phase",
+   "Figure 5: Experimental MIR communication link using an air-suspended TFLN intensity modulator."
+  ]
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p07_1.png",
+  "page": 7,
+  "width": 4148,
+  "height": 1959
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p07_2.png",
+  "page": 7,
+  "width": 4133,
+  "height": 2128
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p09_1.png",
+  "page": 9,
+  "width": 4231,
+  "height": 1631
+ },
+ {
+  "kind": "embedded",
+  "file": "img_p10_1.png",
+  "page": 10,
+  "width": 1890,
+  "height": 1417
+ }
+]
