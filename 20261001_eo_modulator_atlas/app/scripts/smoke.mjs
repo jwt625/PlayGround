@@ -70,6 +70,43 @@ try {
   }
   console.log('PASS dashboard/table/explore/about render');
 
+  await page.goto(url('table'));
+  const tableRows = page.locator('main tbody tr');
+  await until(async () => await tableRows.count() > 0, 'table records loaded');
+  const collapsedCount = await tableRows.count();
+  await page.getByRole('button', { name: 'Expand all', exact: true }).click();
+  await page.getByRole('button', { name: 'Collapse all', exact: true }).waitFor();
+  assert.ok(await tableRows.count() > collapsedCount);
+  await page.getByRole('button', { name: 'Collapse all', exact: true }).click();
+  assert.equal(await tableRows.count(), collapsedCount);
+  await page.getByPlaceholder('Search', { exact: true }).fill('chen2022');
+  await until(async () => await tableRows.count() === 1, 'paper search applied');
+  assert.ok((await tableRows.innerText()).includes('>67'), 'audited bandwidth bound is visible');
+  await page.getByRole('button', { name: 'Columns', exact: true }).click();
+  await page.getByLabel('FOM (GHz/V)', { exact: true }).check();
+  await tableRows.getByText(/\(nominal\)/).waitFor();
+  const downloading = page.waitForEvent('download');
+  await page.getByRole('button', { name: 'Export CSV', exact: true }).click();
+  const download = await downloading;
+  const stream = await download.createReadStream();
+  const chunks = [];
+  for await (const chunk of stream) chunks.push(chunk);
+  const csv = Buffer.concat(chunks).toString('utf8');
+  assert.match(csv, /paper_id,device_id,matches_filters,vpi_convention/);
+  assert.match(csv, /3 dB BW qualifier,3 dB BW basis,3 dB BW context/);
+  assert.match(csv, /,67,gt,measured,/);
+  assert.match(csv, /indeterminate,derived,/);
+  await download.delete();
+  await screenshot('table-qualified');
+  await page.getByPlaceholder('Search', { exact: true }).fill('no-paper-matches-this');
+  await page.getByText('No rows match the filters.', { exact: true }).waitFor();
+  await page.goto(url('explore'));
+  const materialChart = page.locator('[aria-label="Chart c"] .js-plotly-plot');
+  await until(() => materialChart.evaluate(el => (el.data ?? []).some(t => t.customdata?.length)), 'material summary has real points');
+  assert.ok(await page.locator('[aria-label="Chart c"] .badge').innerText() !== '0/0');
+  await screenshot('explore-comparisons');
+  console.log('PASS table expansion/search/empty state, qualified CSV and restored material chart');
+
   await page.goto(url('sim?id=deng2026-a'));
   await page.getByRole('alert').filter({ hasText: 'Preview only. Solve blocked: materials.barium_titanate.eps_r' }).waitFor();
   await page.getByRole('img', { name: 'Configured cross-section geometry' }).waitFor();

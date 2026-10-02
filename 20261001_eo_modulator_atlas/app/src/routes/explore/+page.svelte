@@ -40,12 +40,12 @@
 	let central = $state<'median' | 'mean'>('median');
 	let orgKind = $state<'affil' | 'fab'>('affil');
 
-	const A = $derived(buildPoints(devs, papers, gBw, gVpil, 0, true));
-	const B = $derived(buildPoints(devs, papers, gVpil, gIl, 0, true));
-	const D = $derived(buildPoints(devs, papers, yearOf, gBw, 0, true));
-	const Ebaud = $derived(buildPoints(devs, papers, yearOf, gBaud, 0, true));
-	const Erate = $derived(buildPoints(devs, papers, yearOf, gRate, 1, true));
-	const F = $derived(buildPoints(devs, papers, gLen, gBw, 0, true));
+	const A = $derived(buildPoints(devs, papers, gBw, gVpil, 0, { xLog: aX, yLog: aY }));
+	const B = $derived(buildPoints(devs, papers, gVpil, gIl, 0, { xLog: bX, yLog: bY }));
+	const D = $derived(buildPoints(devs, papers, yearOf, gBw, 0, { yLog: dY }));
+	const Ebaud = $derived(buildPoints(devs, papers, yearOf, gBaud, 0, { yLog: eY }));
+	const Erate = $derived(buildPoints(devs, papers, yearOf, gRate, 1, { yLog: eY }));
+	const F = $derived(buildPoints(devs, papers, gLen, gBw, 0, { xLog: fX, yLog: fY }));
 
 	const years = $derived.by(() => {
 		const ys = [...D.pts, ...Ebaud.pts, ...Erate.pts].map((p) => p.x);
@@ -57,7 +57,7 @@
 	});
 
 	const C = $derived.by(() => {
-		const base = buildPoints(devs, papers, () => ({ v: 0, qual: null, derived: false, basis: null, field: null }), gVpiIl, 0, true);
+		const base = buildPoints(devs, papers, () => ({ v: 0, qual: null, derived: false, basis: null, field: null }), gVpiIl, 0, { yLog: cY });
 		const stats = groupStats(base.pts);
 		const pos = new Map(stats.map((s) => [s.group, s.index]));
 		const pts = base.pts.map((p) => ({ ...p, x: (pos.get(p.group) ?? 0) + 0.2 * jitter(p.id) }));
@@ -74,6 +74,7 @@
 	const cExtra = $derived.by(() => {
 		const out: any[] = [];
 		for (const s of C.stats) {
+			if (!s.n) continue;
 			const col = groupColor(s.group, ui.theme);
 			out.push({
 				type: 'scatter',
@@ -106,7 +107,7 @@
 				<span class="it" title={groupLabel(g)}><i class="sw" style="background:{groupColor(g, ui.theme)}"></i>{groupLabel(g)}</span>
 			{/each}
 			<span class="sep"></span>
-			<span class="it" title="Measured"><svg viewBox="0 0 10 10" width="10" height="10"><circle cx="5" cy="5" r="4" fill="currentColor" /></svg>measured</span>
+			<span class="it" title="Reported or derived; inspect each metric's basis"><svg viewBox="0 0 10 10" width="10" height="10"><circle cx="5" cy="5" r="4" fill="currentColor" /></svg>reported / derived</span>
 			<span class="it" title="Simulated, predicted or design target"><svg viewBox="0 0 10 10" width="10" height="10"><path d="M5 0 L10 5 L5 10 L0 5 Z" fill="currentColor" /></svg>simulated / predicted</span>
 			<span class="it" title="Upper / lower bound drawn as a bar-arrow in the bound direction"><svg viewBox="0 0 10 10" width="10" height="10"><path d="M1 1 L1 9 M1 5 L9 5 M5 2 L1 5 L5 8" fill="none" stroke="currentColor" stroke-width="1.4" /></svg>bound</span>
 			<span class="muted" title="Hover for details; click a point to pin its card, click empty space to unpin all. Values not reported are omitted, never drawn at 0.">
@@ -114,13 +115,14 @@
 			</span>
 		</div>
 		<div class="scroll">
+			<p class="comparison-note">Bounds remain visible as arrows. Dashed frontiers exclude bounds, approximations and modelled axes, and separate voltage conventions and DC/RF sources. Material summaries use unqualified, non-modelled values only when one known voltage context is present; labels show summary/total counts. Wavelength and measurement methods may still differ—inspect the evidence before comparing devices.</p>
 			{#if store.error}
 				<div class="msg">Failed to load data: {store.error}</div>
 			{:else if !view}
 				<div class="msg"><span class="spinner"></span></div>
 			{:else}
 				<div class="grid">
-					<ScatterChart letter="a" desc="Vpi*L against 3 dB bandwidth; dashed line is the Pareto frontier (lower Vpi*L, higher bandwidth)" panels={[{ pts: A.pts, yTitle: 'Vpi*L (V*cm)' }]} xTitle="3 dB bandwidth (GHz)" bind:xLog={aX} bind:yLog={aY} omitted={A.omitted} frontier />
+					<ScatterChart letter="a" desc="Vpi*L against 3 dB bandwidth; dashed nominal frontiers exclude qualified/modelled axes and separate voltage contexts" panels={[{ pts: A.pts, yTitle: 'Vpi*L (V*cm)' }]} xTitle="3 dB bandwidth (GHz)" bind:xLog={aX} bind:yLog={aY} omitted={A.omitted} frontier />
 					<ScatterChart letter="b" desc="On-chip insertion loss against Vpi*L" panels={[{ pts: B.pts, yTitle: 'On-chip insertion loss (dB)' }]} xTitle="Vpi*L (V*cm)" bind:xLog={bX} bind:yLog={bY} omitted={B.omitted} />
 					<ScatterChart
 						letter="c"
@@ -131,7 +133,7 @@
 						bind:yLog={cY}
 						omitted={C.omitted}
 						xTickvals={C.stats.map((s) => s.index)}
-						xTicktext={C.stats.map((s) => `${groupLabel(s.group)} (${s.n})`)}
+						xTicktext={C.stats.map((s) => `${groupLabel(s.group)} (${s.n}/${s.total})`)}
 						xRange={C.stats.length ? [-0.6, C.stats.length - 0.4] : undefined}
 						extraTraces={cExtra}
 					>
@@ -152,7 +154,7 @@
 						xTitle="Publication year"
 						allowX={false}
 						bind:yLog={eY}
-						omitted={{ total: Ebaud.omitted.total + Erate.omitted.total, plotted: Ebaud.omitted.plotted + Erate.omitted.plotted, missingX: 0, missingY: Ebaud.omitted.missingY + Erate.omitted.missingY, missingBoth: 0 }}
+						omitted={{ total: Ebaud.omitted.total + Erate.omitted.total, plotted: Ebaud.omitted.plotted + Erate.omitted.plotted, missingX: Ebaud.omitted.missingX + Erate.omitted.missingX, missingY: Ebaud.omitted.missingY + Erate.omitted.missingY, missingBoth: Ebaud.omitted.missingBoth + Erate.omitted.missingBoth, invalid: Ebaud.omitted.invalid + Erate.omitted.invalid, nonpositive: Ebaud.omitted.nonpositive + Erate.omitted.nonpositive, uncertain: Ebaud.omitted.uncertain + Erate.omitted.uncertain }}
 						xDtick={years.dtick}
 					/>
 					<ScatterChart letter="f" desc="3 dB bandwidth against active length" panels={[{ pts: F.pts, yTitle: '3 dB bandwidth (GHz)' }]} xTitle="Active length (mm)" bind:xLog={fX} bind:yLog={fY} omitted={F.omitted} />
@@ -176,6 +178,7 @@
 </div>
 
 <style>
+	.comparison-note { color: var(--ink-2); font-size: 11px; line-height: 1.5; margin: 0 0 8px; }
 	.page {
 		display: grid;
 		grid-template-columns: 220px minmax(0, 1fr);

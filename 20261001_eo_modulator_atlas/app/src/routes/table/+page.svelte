@@ -2,8 +2,8 @@
 <script lang="ts">
 	import { link } from '../../lib/paths';
 	import { filters, store, tableState, ui } from '../../lib/state.svelte';
-	import { applyFilters, cycleSort, sortRows, toCsv, BASIS_MARK, BASIS_TIP } from '../../lib/logic';
-	import { COLS, cellFor, sortValue, type Cell } from '../../lib/columns';
+	import { applyFilters, cycleSort, sortRows, BASIS_MARK, BASIS_TIP } from '../../lib/logic';
+	import { COLS, cellFor, sortValue, tableCsv, type Cell } from '../../lib/columns';
 	import FilterPanel from '../../lib/FilterPanel.svelte';
 	import Drawer from '../../lib/Drawer.svelte';
 	import type { Device, Paper } from '../../lib/types';
@@ -43,14 +43,15 @@
 
 	const visible = $derived(COLS.filter((c) => tableState.columns.includes(c.id)));
 	const tableWidth = $derived(visible.reduce((s, c) => s + c.width, 0) + 24);
-	const allOpen = $derived(!!view && view.papers.length > 0 && view.papers.every((p) => tableState.expanded.includes(p.paper_id)));
+	const expandable = $derived(view?.papers.filter(p => p.n_devices > 1) ?? []);
+	const allOpen = $derived(expandable.length > 0 && expandable.every((p) => tableState.expanded.includes(p.paper_id)));
 
 	function toggleExpand(id: string) {
 		tableState.expanded = tableState.expanded.includes(id) ? tableState.expanded.filter((x) => x !== id) : [...tableState.expanded, id];
 	}
 	function toggleAll() {
 		if (!view) return;
-		tableState.expanded = allOpen ? [] : view.papers.filter((p) => p.n_devices > 1).map((p) => p.paper_id);
+		tableState.expanded = allOpen ? [] : expandable.map((p) => p.paper_id);
 	}
 
 	function sortState(id: string): 'asc' | 'desc' | null {
@@ -100,26 +101,7 @@
 	// export
 	function exportCsv() {
 		if (!a) return;
-		const header: string[] = [];
-		for (const c of visible) {
-			header.push(c.unit ? `${c.label} (${c.unit})` : c.label);
-			if (c.num && c.unit) header.push(`${c.label} qualifier`);
-		}
-		header.unshift('Row');
-		const lines = rows.map((r) => {
-			const out: string[] = [r.kind === 'paper' ? 'paper (representative)' : r.isRep ? 'device (representative)' : 'device'];
-			for (const c of visible) {
-				const x = cell(c.id, r);
-				if (c.num && c.unit) {
-					out.push(x.num !== null && x.num !== undefined ? String(x.num) : '');
-					out.push(x.qual ?? '');
-				} else {
-					out.push(x.text === '—' ? '' : x.text);
-				}
-			}
-			return out;
-		});
-		const blob = new Blob([toCsv(header, lines)], { type: 'text/csv' });
+		const blob = new Blob([tableCsv(a, visible, rows)], { type: 'text/csv' });
 		const url = URL.createObjectURL(blob);
 		const link = document.createElement('a');
 		link.href = url;

@@ -12,6 +12,7 @@ import {
 	type Metric,
 	countBy
 } from './logic';
+import { paretoFront } from './logic';
 import type { Device, Paper, Qual } from './types';
 import type { View } from './logic';
 
@@ -24,6 +25,8 @@ export interface Pt {
 	qx: Qual | null;
 	qy: Qual | null;
 	panel: number;
+	/** Voltage convention and DC/RF context; null means comparison is unspecified. */
+	comparison: string | null;
 }
 
 export interface Omitted {
@@ -32,30 +35,50 @@ export interface Omitted {
 	missingX: number;
 	missingY: number;
 	missingBoth: number;
+	invalid: number;
+	nonpositive: number;
+	uncertain: number;
 }
 
 export type Getter = (d: Device, p: Paper) => Metric;
 
-const NO_FILTER = (v: number) => Number.isFinite(v);
+const MODEL_BASES = new Set(['simulated', 'predicted', 'design_target']);
 
 /** Build plotted points; values that are not reported are omitted (never plotted at 0) and counted. */
-export function buildPoints(devices: Device[], papers: Map<string, Paper>, gx: Getter, gy: Getter, panel = 0, positiveOnly = false): { pts: Pt[]; omitted: Omitted } {
+export function buildPoints(devices: Device[], papers: Map<string, Paper>, gx: Getter, gy: Getter, panel = 0, axes: { xLog?: boolean; yLog?: boolean } = {}): { pts: Pt[]; omitted: Omitted } {
 	const pts: Pt[] = [];
-	const om: Omitted = { total: devices.length, plotted: 0, missingX: 0, missingY: 0, missingBoth: 0 };
+	const om: Omitted = { total: devices.length, plotted: 0, missingX: 0, missingY: 0, missingBoth: 0, invalid: 0, nonpositive: 0, uncertain: 0 };
 	for (const d of devices) {
 		const p = papers.get(d.paper_id);
-		if (!p) continue;
+		if (!p) { om.invalid++; continue; }
 		const x = gx(d, p);
 		const y = gy(d, p);
 		if (x.v === null && y.v === null) om.missingBoth++;
 		else if (x.v === null) om.missingX++;
 		else if (y.v === null) om.missingY++;
-		if (x.v === null || y.v === null || !NO_FILTER(x.v) || !NO_FILTER(y.v)) continue;
-		if (positiveOnly && (x.v <= 0 || y.v <= 0)) continue;
-		pts.push({ id: d.device_id, x: x.v, y: y.v, group: materialGroup(d.eo_material), sim: d.is_sim, qx: x.qual, qy: y.qual, panel });
+		if (x.v === null || y.v === null) continue;
+		if (!Number.isFinite(x.v) || !Number.isFinite(y.v)) { om.invalid++; continue; }
+		if (x.boundUnresolved || y.boundUnresolved) { om.uncertain++; continue; }
+		if ((axes.xLog && x.v <= 0) || (axes.yLog && y.v <= 0)) { om.nonpositive++; continue; }
+		let voltage = [x.field, y.field].find(f => f?.startsWith('vpi'));
+		if (voltage === 'vpi_il_vdb') voltage = d.derived.vpi_il_vdb?.inputs.find(f => f.startsWith('vpi'));
+		const rf = voltage?.includes('_rf_');
+		const comparison = voltage && d.vpi_convention && d.vpi_convention !== 'unspecified' && (!rf || typeof d.vpi_rf_freq_ghz === 'number')
+			? `${d.vpi_convention} / ${rf ? `RF ${d.vpi_rf_freq_ghz} GHz` : 'DC'}` : null;
+		pts.push({ id: d.device_id, x: x.v, y: y.v, group: materialGroup(d.eo_material), sim: !!x.modelled || !!y.modelled || MODEL_BASES.has(x.basis ?? '') || MODEL_BASES.has(y.basis ?? ''), qx: x.qual, qy: y.qual, panel, comparison });
 		om.plotted++;
 	}
 	return { pts, omitted: om };
+}
+
+/** Nominal frontiers never use bound thresholds or mix voltage conventions. */
+export function nominalFrontiers(pts: Pt[]): Pt[][] {
+	const by = new Map<string, Pt[]>();
+	for (const p of pts) {
+		if (p.qx || p.qy || p.sim || !p.comparison) continue;
+		by.set(p.comparison, [...(by.get(p.comparison) ?? []), p]);
+	}
+	return [...by.values()].map(group => paretoFront(group, true, true));
 }
 
 export const yearOf: Getter = (_d, p) => ({ v: p.year, qual: null, derived: false, basis: null, field: 'year' });
@@ -71,20 +94,25 @@ export interface GroupStat {
 	group: string;
 	index: number;
 	n: number;
-	min: number;
-	max: number;
-	median: number;
-	mean: number;
+	total: number;
+	min: number | null;
+	max: number | null;
+	median: number | null;
+	mean: number | null;
 }
 
 /** Per-material range, median and mean of y; `index` is the category position (order of GROUP_ORDER present). */
 export function groupStats(pts: Pt[]): GroupStat[] {
 	const by = new Map<string, number[]>();
-	for (const p of pts) by.set(p.group, [...(by.get(p.group) ?? []), p.y]);
+	for (const p of pts) {
+		if (!by.has(p.group)) by.set(p.group, []);
+		if (!p.qx && !p.qy && !p.sim) by.get(p.group)!.push(p.y);
+	}
 	const present = GROUP_ORDER.filter((g) => by.has(g));
 	return present.map((g, i) => {
-		const ys = by.get(g) as number[];
-		return { group: g, index: i, n: ys.length, min: Math.min(...ys), max: Math.max(...ys), median: median(ys) as number, mean: mean(ys) as number };
+		const contexts = new Set(pts.filter(p => p.group === g && !p.qx && !p.qy && !p.sim).map(p => p.comparison));
+		const ys = contexts.size === 1 && !contexts.has(null) ? by.get(g) as number[] : [];
+		return { group: g, index: i, n: ys.length, total: pts.filter(p => p.group === g).length, min: ys.length ? Math.min(...ys) : null, max: ys.length ? Math.max(...ys) : null, median: median(ys), mean: mean(ys) };
 	});
 }
 

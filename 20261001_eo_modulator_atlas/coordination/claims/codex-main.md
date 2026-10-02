@@ -1,8 +1,8 @@
 # Claim: codex-main
 
 - Agent: Codex in the conversation that inspected the repository on 2026-10-01
-- Task IDs: C0, E1, U1
-- Status: E1/U1 ready_for_review; C0 coordination and shared E1 contract maintenance retained
+- Task IDs: C0, E1, U1, U2a
+- Status: U2a in_progress; E1/U1 ready_for_review; C0 and shared E1 contract maintenance retained
 - Updated: 2026-10-01
 - Progress/handoff: `DevLog/DevLog-003-cross-section-progress.md`
 
@@ -53,7 +53,7 @@ Generated local verification outputs: `app/build/`, `app/.svelte-kit/`,
 - No claim on downloader/merge/extraction scripts or distillation skill policy work (D0).
 - No claim on EO overlap, RF loss, loaded-line/EO response implementation (E2–E4).
 - No claim on full-vector/metal optical modelling after E1's baseline handoff (E2).
-- No claim on table/explore feature work beyond the scorecard link (U2).
+- U2 work is limited to the U2a scope below; broader representatives/filter semantics remain a later tranche.
 - No independent audit claim. The implementation author cannot satisfy Q1/Q2 by self-review.
 
 ## Current work
@@ -61,7 +61,23 @@ Generated local verification outputs: `app/build/`, `app/.svelte-kit/`,
 E1/U1 implementation and author checks are finished; see DevLog-003 for exact
 commands, 20 engine / 5 app / 28 Python passing tests, both browser deployment
 paths and the cross-agent follow-up register. Q2 remains unassigned and must
-independently review the numerical baseline. No new tranche claimed.
+independently review the numerical baseline. U2a claimed for the user's next
+approximately 20-minute work block; plan and live notes in DevLog-005.
+
+## U2a claim: comparison correctness (2026-10-01)
+
+Own `app/src/lib/logic.ts`, `charts.ts`, `columns.ts`, `ScatterChart.svelte`,
+`DeviceTip.svelte`, `app/src/routes/explore/+page.svelte`,
+`app/src/routes/table/+page.svelte`, new `app/src/lib/comparisons.test.ts`,
+`app/scripts/smoke.mjs`, `DevLog/DevLog-005-comparison-correctness.md` and
+coordination/README updates. The existing app integration test is reclaimed
+for compatibility checks if needed. No change to the generated-data schema or
+shared `types.ts`, `build_views.py`, canonical data, engine or paper inputs.
+
+Scope: axis-specific plot validity, qualified derived values, bound-safe nominal
+frontiers/statistics, export context and targeted interaction regression checks.
+Record cross-language representative/derived-view drift for a coordinated D2
+interface follow-up instead of overwriting that lane's generated view.
 
 ## Released for successor claims (2026-10-01)
 

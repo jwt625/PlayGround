@@ -39,12 +39,13 @@
 	<div class="tip">
 		<div class="tt">{paper.title}</div>
 		<div class="sub">{paper.label} / {dev.device_label}</div>
-		<div class="sub">{enumLabel(a, 'eo_material', dev.eo_material)}; {enumLabel(a, 'device_class', dev.device_class)}; {dev.is_sim ? 'simulated / predicted' : 'measured'}</div>
+		<div class="sub">{enumLabel(a, 'eo_material', dev.eo_material)}; {enumLabel(a, 'device_class', dev.device_class)}</div>
+		<div class="sub">Vpi convention: {enumLabel(a, 'vpi_convention', dev.vpi_convention)}</div>
 		<div class="org">{paper.orgs_affil.map((o) => o.org_name).join('; ') || EM_DASH}</div>
 		<table>
 			<tbody>
 				{#each rows as r (r.l)}
-					<tr>
+					<tr title={r.c.tip}>
 						<td class="l">{r.l}</td>
 						<td class="v num"><span class:ital={r.c.derived}>{r.c.text}</span>{#if r.c.basis && BASIS_MARK[r.c.basis]}<sup>{BASIS_MARK[r.c.basis]}</sup>{/if}</td>
 						<td class="u">{r.u}</td>

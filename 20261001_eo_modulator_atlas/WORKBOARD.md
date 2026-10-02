@@ -3,7 +3,7 @@
 Updated 2026-10-01. Detailed scope, dependencies and acceptance checks:
 [DevLog-002](DevLog/DevLog-002-work-plan-and-ownership.md).
 
-**Current claims:** `codex-main` holds C0 and the E1 contract; E1/U1 are
+**Current claims:** `codex-main` holds C0, the E1 contract and U2a comparison correctness; E1/U1 are
 `ready_for_review` with successor file releases recorded in its claim.
 `claude-data-lane` owns D0,
 D1.01–D1.11, D2 and Q1. Progress: [E1/U1](DevLog/DevLog-003-cross-section-progress.md)
@@ -23,7 +23,8 @@ unassigned. No implicit delegation.
 | E4 | Periodic loaded line and traveling-wave EO response | waiting | unassigned | E2 + E3; loading/reference-plane contract |
 | E5 | Paper regressions and convergence studies | waiting | unassigned | E2–E4 + reviewed paper inputs |
 | U1 | Browser cross-section simulator and current app baseline | ready_for_review | codex-main | Root/base-path Chrome and narrow viewport pass; incomplete drafts preview safely |
-| U2 | Table/explore correctness and usability | ready to claim | unassigned | Follow up audited bounds/representatives; logic.test.ts and header scope released |
+| U2a | Comparison correctness: bounds, plot validity, export context | in progress | codex-main | Approximately 20-minute block; DevLog-005 plan and exact file claim |
+| U2b | Remaining representative/filter/navigation and usability audit | waiting for U2a file release | unassigned | Coordinate generated-view contracts with D2; no overlapping app writes |
 | U3 | Full-chain results and reproduction scorecard | waiting | unassigned | U1 files released; still needs E4/E5 contract |
 | Q1 | Independent pilot/batch evidence audit | claimed (fresh-context auditors, read-only) | claude-data-lane | Read-only inputs; write audit report only |
 | Q2 | Independent numerical review | review ready; final gate waits | unassigned | E1 diff; later E2–E5; separate audit files |

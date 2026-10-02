@@ -103,13 +103,17 @@ export interface Metric {
 	derived: boolean;
 	basis: string | null;
 	field: string | null;
+	/** Conflicting or approximate input bounds have no defensible single direction. */
+	boundUnresolved?: boolean;
+	note?: string;
+	modelled?: boolean;
 }
 
 const NONE: Metric = { v: null, qual: null, derived: false, basis: null, field: null };
 
 function raw(d: Device, field: string, basisKey: string | null): Metric {
 	const v = d[field];
-	if (typeof v !== 'number') return NONE;
+	if (typeof v !== 'number' || !Number.isFinite(v)) return NONE;
 	const ev = d.evidence[field];
 	return {
 		v,
@@ -124,7 +128,7 @@ export function vpil(d: Device): Metric {
 	const b = d.vpil_best;
 	if (!b) return NONE;
 	const field = b.source === 'reported_dc' ? 'vpil_dc_vcm' : b.source === 'reported_rf' ? 'vpil_rf_vcm' : 'vpil_dc_vcm_derived';
-	if (b.source === 'derived_dc') return { v: b.value, qual: b.qualifier ?? null, derived: true, basis: 'derived', field };
+	if (b.source === 'derived_dc') return derivedMetric(d, 'vpil_dc_vcm_derived');
 	return { ...raw(d, field, 'vpil'), qual: b.qualifier ?? null };
 }
 export function vpi(d: Device): Metric {
@@ -138,12 +142,24 @@ export const lengthMm = (d: Device): Metric => raw(d, 'length_mm', null);
 export const maxBaud = (d: Device): Metric => raw(d, 'max_baud_gbd', 'rate');
 export const maxRate = (d: Device): Metric => raw(d, 'max_line_rate_gbps', 'rate');
 
-export function derivedMetric(d: Device, key: 'vpi_il_vdb' | 'fom' | 'il_rf_total_db'): Metric {
+export function derivedMetric(d: Device, key: 'vpil_dc_vcm_derived' | 'vpi_il_vdb' | 'fom' | 'il_rf_total_db'): Metric {
 	const x = d.derived[key];
-	if (!x) return NONE;
-	const qs = key === 'fom' ? (x.qualifiers ?? []) : x.qualifier ? [`x:${x.qualifier}`] : [];
-	const q = qs.length ? ((qs[0].split(':')[1] as Qual) ?? null) : null;
-	return { v: x.value, qual: q, derived: true, basis: 'derived', field: key };
+	if (!x || !Number.isFinite(x.value)) return NONE;
+	const inputs = x.inputs.map(field => ({ field, q: d.qualifiers[field] })).filter(i => i.q);
+	const directions = inputs.filter(i => i.q !== 'approx').map(({ field, q }) =>
+		key === 'fom' && field !== 'bw3db_ghz' ? (q === 'lt' ? 'gt' : 'lt') : q);
+	const approx = inputs.some(i => i.q === 'approx');
+	// Monotonic propagation here applies to the documented positive-input products
+	// and FOM. A zero/negative factor or opposing directions cannot give one bound.
+	const positive = x.inputs.every(field => typeof d[field] === 'number' && (d[field] as number) > 0);
+	const boundUnresolved = directions.length > 0 && (!positive || approx || new Set(directions).size > 1);
+	const qual = boundUnresolved ? null : (directions[0] ?? (approx ? 'approx' : null));
+	const note = inputs.length ? `Input qualifiers: ${inputs.map(i => `${i.field}:${i.q}`).join(', ')}.${boundUnresolved ? ' Nominal calculation only; these inputs do not determine a single bound.' : ''}` : undefined;
+	const modelled = x.inputs.some(field => {
+		const rowBasis = field.startsWith('vpi') ? d.vpi_basis : field.startsWith('bw') ? d.bw_basis : field.startsWith('il_') ? d.il_basis : null;
+		return ['simulated', 'predicted', 'design_target'].includes(String(d.evidence[field]?.basis ?? rowBasis ?? ''));
+	});
+	return { v: x.value, qual, derived: true, basis: 'derived', field: key, boundUnresolved, note, modelled };
 }
 
 export function metricValue(d: Device, key: string): number | null {

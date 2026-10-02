@@ -5,7 +5,7 @@
 	import DeviceTip from './DeviceTip.svelte';
 	import { ui } from './state.svelte';
 	import { groupColor, plotTheme, GROUP_ORDER } from './colors';
-	import { paretoFront } from './logic';
+	import { nominalFrontiers } from './charts';
 	import type { Omitted, Pt } from './charts';
 
 	interface PanelSpec {
@@ -88,9 +88,8 @@
 		panels.forEach((panel, pi) => {
 			const ax = { xaxis: 'x', yaxis: yRef(pi) };
 			if (frontier && pi === 0) {
-				const f = paretoFront(panel.pts, true, true);
-				if (f.length > 1) {
-					out.push({ type: 'scatter', mode: 'lines', x: f.map((p) => p.x), y: f.map((p) => p.y), line: { color: th.muted, width: 1, dash: 'dash' }, hoverinfo: 'skip', showlegend: false, ...ax });
+				for (const f of nominalFrontiers(panel.pts)) {
+					if (f.length > 1) out.push({ type: 'scatter', name: `Nominal frontier: ${f[0].comparison}`, mode: 'lines', x: f.map((p) => p.x), y: f.map((p) => p.y), line: { color: th.muted, width: 1, dash: 'dash' }, hoverinfo: 'skip', showlegend: false, ...ax });
 				}
 			}
 			for (const g of GROUP_ORDER) {
@@ -235,10 +234,10 @@
 	}
 </script>
 
-<section class="panel">
+<section class="panel" aria-label={`Chart ${letter}`}>
 	<header>
 		<span class="letter" title={desc}>{letter}</span>
-		<span class="badge num" title="{omitted.plotted} of {omitted.total} devices plotted. Not reported (omitted, never drawn at 0): x {omitted.missingX}, y {omitted.missingY}, both {omitted.missingBoth}.">
+		<span class="badge num" title="{omitted.plotted} of {omitted.total} records plotted. Missing: x {omitted.missingX}, y {omitted.missingY}, both {omitted.missingBoth}. Nonpositive on log axes: {omitted.nonpositive}. Indeterminate bounds: {omitted.uncertain}. Invalid values or paper: {omitted.invalid}.">
 			{omitted.plotted}/{omitted.total}
 		</span>
 		<div class="grow"></div>

@@ -13,6 +13,7 @@ import {
 	qualPrefix,
 	qualWord,
 	rfLoss,
+	toCsv,
 	vpi,
 	vpil,
 	type Metric,
@@ -52,7 +53,7 @@ export const COLS: ColDef[] = [
 	{ id: 'platform', label: 'Platform', tip: 'Waveguide platform', width: 130, level: 'device', defaultOn: true },
 	{ id: 'vpil', label: 'Vpi*L', unit: 'V*cm', tip: 'Vpi times length (DC). Italic = derived from Vpi and length; the Vpi convention of the device is inherited.', width: 76, num: true, level: 'device', defaultOn: true },
 	{ id: 'vpi', label: 'Vpi', unit: 'V', tip: 'Half-wave voltage as reported (DC; RF if DC not reported). Convention in the device drawer.', width: 60, num: true, level: 'device', defaultOn: true },
-	{ id: 'bw3db', label: '3 dB BW', unit: 'GHz', tip: 'Electro-optic 3 dB bandwidth. Empty when no 3 dB crossing is reported.', width: 72, num: true, level: 'device', defaultOn: true },
+	{ id: 'bw3db', label: '3 dB BW', unit: 'GHz', tip: 'Electro-optic 3 dB bandwidth; > marks a reported lower bound when no crossing is observed.', width: 72, num: true, level: 'device', defaultOn: true },
 	{ id: 'il_onchip', label: 'IL on-chip', unit: 'dB', tip: 'On-chip insertion loss as reported by the paper', width: 72, num: true, level: 'device', defaultOn: true },
 	{ id: 'il_f2f', label: 'IL fiber-fiber', unit: 'dB', tip: 'Fiber-to-fiber insertion loss', width: 76, num: true, level: 'device', defaultOn: true },
 	{ id: 'rf_loss', label: 'RF loss', unit: 'dB/cm', tip: 'RF electrode loss per length', width: 66, num: true, level: 'device', defaultOn: true },
@@ -88,6 +89,8 @@ export const NUMERIC_METRIC: Record<string, (d: Device) => Metric> = {
 
 function metricTip(a: Atlas, id: string, d: Device, m: Metric): string {
 	const parts: string[] = [];
+	if (m.note) parts.push(m.note);
+	if (m.modelled) parts.push('includes simulated, predicted or design-target inputs');
 	if (m.qual) parts.push(qualWord(m.qual));
 	if (m.basis) parts.push(`basis: ${BASIS_TIP[m.basis] ?? m.basis}`);
 	const ev = m.field ? d.evidence[m.field] : undefined;
@@ -119,6 +122,7 @@ function metricTip(a: Atlas, id: string, d: Device, m: Metric): string {
 		if (d.il_onchip_excludes) parts.push(`excludes: ${d.il_onchip_excludes}`);
 	}
 	if (id === 'rf_loss' && typeof d.rf_loss_freq_ghz === 'number') parts.push(`at ${fmt(d.rf_loss_freq_ghz)} GHz`);
+	if (id === 'fom' && d.derived.fom?.rf_corrected) parts.push(typeof d.rf_loss_freq_ghz === 'number' ? `RF correction uses loss at ${fmt(d.rf_loss_freq_ghz)} GHz` : 'RF correction uses loss with unspecified frequency');
 	if (id === 'rate') {
 		if (d.modulation_format) parts.push(`format: ${d.modulation_format}`);
 		if (typeof d.max_baud_gbd === 'number') parts.push(`${fmt(d.max_baud_gbd)} GBd`);
@@ -140,9 +144,9 @@ export function metricCell(a: Atlas, id: string, d: Device): Cell {
 	}
 	const prefix = qualPrefix(m.qual);
 	return {
-		text: `${prefix}${fmt(m.v)}`,
+		text: `${prefix}${fmt(m.v)}${m.boundUnresolved ? ' (nominal)' : ''}`,
 		num: m.v,
-		qual: m.qual ?? undefined,
+		qual: m.boundUnresolved ? 'indeterminate' : m.qual ?? undefined,
 		derived: m.derived,
 		basis: m.basis,
 		tip: metricTip(a, id, d, m)
@@ -221,4 +225,24 @@ export function sortValue(a: Atlas, id: string, p: Paper, d: Device): SortVal {
 
 export function defaultColumns(): string[] {
 	return COLS.filter((c) => c.defaultOn).map((c) => c.id);
+}
+
+/** Visible rows, with stable identity and the provenance needed to interpret numbers. */
+export function tableCsv(a: Atlas, columns: ColDef[], rows: { kind: 'paper' | 'device'; paper: Paper; dev: Device; dim: boolean; isRep: boolean }[]): string {
+	const header = ['Row', 'paper_id', 'device_id', 'matches_filters', 'vpi_convention'];
+	for (const c of columns) {
+		header.push(c.unit ? `${c.label} (${c.unit})` : c.label);
+		if (c.num && c.unit) header.push(`${c.label} qualifier`, `${c.label} basis`, `${c.label} context`);
+	}
+	const lines = rows.map(r => {
+		const out = [r.kind === 'paper' ? 'paper (representative)' : r.isRep ? 'device (representative)' : 'device', r.paper.paper_id, r.dev.device_id, String(!r.dim), r.dev.vpi_convention ?? ''];
+		for (const c of columns) {
+			const x: Cell = r.kind === 'device' && c.id === 'paper' ? { text: r.dev.device_label }
+				: r.kind === 'device' && c.level === 'paper' ? { text: '' } : cellFor(a, c.id, r.paper, r.dev);
+			if (c.num && c.unit) out.push(x.num == null ? '' : String(x.num), x.qual ?? '', x.basis ?? '', x.tip ?? '');
+			else out.push(x.text === EM_DASH ? '' : x.text);
+		}
+		return out;
+	});
+	return toCsv(header, lines);
 }
