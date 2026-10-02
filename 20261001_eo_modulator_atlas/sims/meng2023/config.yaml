@@ -1,0 +1,148 @@
+# STATUS: record of disclosed geometry and provenance. NOT RUNNABLE as written (material constants, BOX and cladding thickness,
+# electrode widths missing; see `missing`). Coordinate frame: x lateral, y film normal up, z propagation; x = 0 at the ridge
+# centre; y = 0 at the BOX top / LN slab bottom. Signal electrodes on +x, ground on -x. The preprint is arXiv only (version not shown).
+
+schema: eo-atlas.sim/v1
+id: meng2023-a
+paper_id: meng2023
+device_id: meng2023-a
+title: Meng 2023, 5 mm O-band LN MZM with ITO/Au composite electrode, one arm cross-section (ITO gap 3 um, Au gap 5 um)
+repro_grade: B
+validation_status: unvalidated
+chain: [electrostatics, optical_mode, eo_overlap, rf_line, eo_response]
+optics: {wavelength_nm: 1310, polarization: TE, mode_index: 0, group_index_from: finite_difference_wavelength, ng_fixed: null, eo_axis: auto}
+materials:
+  lithium_niobate:
+    crystal: {cut: x, propagation: y}
+    r_pm_per_v: {r33: 31}
+  silicon_dioxide: {}
+  silicon: {}
+  ito: {conductor: true, sigma_Sm: 400, n: 1.5}
+  gold: {conductor: true, n_complex: null}
+  air: {n: 1.0, eps_r: 1.0}
+geometry:
+  symmetry: none
+  domain:
+    x_um: [-150, 150]
+    y_um: [-60, 12]
+  regions:
+  - name: ambient
+    material: air
+    rect:
+      x_um: [-150, 150]
+      y_um: [-60, 12]
+  - name: substrate
+    material: silicon
+    rect:
+      x_um: [-150, 150]
+      y_um: [-60, -2.0]
+  - name: box
+    material: silicon_dioxide
+    rect:
+      x_um: [-150, 150]
+      y_um: [-2.0, 0]
+  - name: ln_slab
+    material: lithium_niobate
+    rect:
+      x_um: [-150, 150]
+      y_um: [0, 0.24]
+  - name: sio2_cladding
+    material: silicon_dioxide
+    rect:
+      x_um: [-150, 150]
+      y_um: [0.24, 3.0]
+  - name: ln_ridge
+    material: lithium_niobate
+    rect:
+      x_um: [-1.0, 1.0]
+      y_um: [0.24, 0.5]
+  electrodes:
+  - name: signal_au
+    role: signal
+    weight: 1.0
+    rect:
+      x_um: [2.5, 52.5]
+      y_um: [0.34, 1.74]
+    material: gold
+  - name: signal_ito
+    role: signal
+    weight: 1.0
+    rect:
+      x_um: [1.5, 2.5]
+      y_um: [0.34, 0.52]
+    material: ito
+  - name: ground_au
+    role: ground
+    weight: 0.0
+    rect:
+      x_um: [-52.5, -2.5]
+      y_um: [0.34, 1.74]
+    material: gold
+  - name: ground_ito
+    role: ground
+    weight: 0.0
+    rect:
+      x_um: [-2.5, -1.5]
+      y_um: [0.34, 0.52]
+    material: ito
+  optical_window:
+    x_um: [-3, 3]
+    y_um: [-0.8, 1.2]
+  mesh: {max_edge_um: 2.0, electrode_edge_um: 0.03}
+line:
+  length_mm: 5
+  conductor_loss_model: from_paper_alpha
+  rf_loss_table: null
+  source_ohm: 50
+  load_ohm: 23
+  differential: false
+  loading: {type: none}
+sweep: {f_start_ghz: 0.1, f_stop_ghz: 110, n_points: 220}
+alt_geometries: {}
+targets:
+- metric: vpi_l_dc_vcm
+  value: 1.02
+  tol_rel: 0.1
+  source: {device_id: meng2023-a, field: vpil_dc_vcm}
+- metric: ng_opt
+  value: 2.29
+  tol_abs: 0.05
+  source: {device_id: meng2023-a, field: ng_opt}
+- metric: bw3db_ghz
+  value: 108
+  tol_rel: 0.2
+  source: {device_id: meng2023-a, field: bw3db_ghz}
+reported_curves: []
+provenance:
+  optics.wavelength_nm: {class: paper_exact, locator: p.9 (IL at 1310 nm); p.5 (ITO index at 1310 nm)}
+  optics.polarization: {class: project_inference, locator: p.10 (TE0 launched into the grating coupler); p.3 Eq. (1) (gamma33)}
+  optics.group_index_from: {class: project_inference, note: paper simulates ng ~ 2.29 (Fig. 2(b)); engine derives it}
+  materials.lithium_niobate.crystal: {class: paper_exact, locator: p.3 Sec. 2.1 (X-cut LN), note: propagation along y assumed (standard for x-cut TE/r33)}
+  materials.lithium_niobate.r_pm_per_v.r33: {class: paper_exact, locator: p.2 Sec. 1 (about 31 pm/V), note: '"approximately 31 pm/V" stated in the introduction'}
+  materials.ito.sigma_Sm: {class: paper_exact, locator: p.5 Sec. 2.2 (400 S/m assumed in simulation), note: measured film conductivity 477 S/m on p.8}
+  materials.ito.n: {class: paper_exact, locator: p.5 Sec. 2.2 (1.5 measured at 1310 nm), note: extinction coefficient 0.001 not modelled}
+  geometry.regions.ln_slab: {class: paper_exact, locator: p.5 Sec. 2.2 (slab s = 240 nm)}
+  geometry.regions.ln_ridge: {class: paper_exact, locator: 'p.5 Sec. 2.2 (ridge height 260 nm, width 2 um)', note: rectangular approximation of the ridge; sidewall angle and top/bottom width not stated; ridge drawn to 0.5 um (slab 0.24 + 260 nm)}
+  geometry.regions.box: {class: project_inference, note: 'BOX thickness not stated; 2 um placeholder borrowed from renaud2023 p.2 (a different paper), not a meng2023 value'}
+  geometry.regions.substrate: {class: project_inference, locator: p.6 Fig. 2(a) (Si), note: 'thickness not stated, clipped'}
+  geometry.regions.sio2_cladding: {class: project_inference, locator: p.6 Fig. 2(a), note: 'SiO2 around the electrodes per the figure; thickness not stated, 3 um domain-limited placeholder; the 100 nm buffer is modelled as the layer between the slab and
+      the electrodes (y 0.24-0.34 um)'}
+  geometry.electrodes.signal_ito: {class: paper_exact, locator: p.6 (ITO thickness 180 nm; ITO gap 3 um); p.5 (100 nm buffer), note: inner edge at 1.5 um (3 um gap centred on the ridge); ITO beneath the Au is inside the Au footprint at the same potential
+      and is not drawn separately; thickness 180 nm on top of the 100 nm buffer}
+  geometry.electrodes.ground_ito: {class: paper_exact, locator: p.6, note: mirror of the signal ITO}
+  geometry.electrodes.signal_au: {class: paper_exact, locator: 'p.6 (gold gap 5 um, thickness 1.4 um)', note: inner edge at 2.5 um; width 50 um assumed (not stated)}
+  geometry.electrodes.ground_au: {class: paper_exact, locator: p.6, note: mirror of the signal Au}
+  line.length_mm: {class: paper_exact, locator: p.9 Sec. 3.1 (5 mm modulation region)}
+  line.load_ohm: {class: paper_exact, locator: p.8 Sec. 3 (23 ohm terminal resistor)}
+  line.source_ohm: {class: project_inference, note: VNA/probe 50 ohm assumed}
+  line.differential: {class: project_inference, locator: p.4 Sec. 2.2, note: GSG push-pull by arm placement; this config models one gap}
+  line.conductor_loss_model: {class: project_inference, note: no RF loss figure reported; left to the engine}
+  geometry.optical_window: {class: project_inference, note: crop around the ridge}
+  geometry.domain: {class: project_inference, note: open-boundary treatment is an engine choice}
+  geometry.mesh: {class: project_inference}
+missing: ['lithium_niobate n_o, n_e at 1310 nm, RF permittivity (anisotropic) and the other Pockels coefficients', silicon_dioxide refractive index and RF permittivity; silicon properties, ITO RF permittivity; gold conductivity, BOX thickness and cladding
+    thickness (Fig. 2(a) schematic has no scale), sidewall angle of the ridge and top/bottom width, signal and ground widths of Au; ITO extent under the Au (not stated), whether the 100 nm buffer also covers the ridge top, 'Z0, RF index and RF loss of
+    the line (not reported)', temperature and optical input power]
+limitations: [scalar_optical_not_full_vector, quasi_static_2d_rf, rectangular_or_polygon_sidewalls_only, no_3d_launch_pad_effects, 'Config is not runnable until material constants, the BOX/cladding thicknesses and electrode widths are supplied from verified
+    sources', ITO is modelled as a lossy conductor with the simulation conductivity; the engine does not yet treat finite-conductivity conductors in the quasi-static RF solve (see SPEC_PROPOSALS), 'One arm of the GSG push-pull MZM only; the eye-diagram
+    comparison devices (meng2023-b,c) are not configured', The paper shows a CST-simulated S21 (Fig. 6) that is not stored]

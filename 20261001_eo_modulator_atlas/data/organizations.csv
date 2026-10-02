@@ -2,11 +2,17 @@ org_name,org_type,country,region,parent_org,notes
 1FINITY Inc.,company,JP,east_asia,,"Kawasaki, Kanagawa"
 Binnig and Rohrer Nanotechnology Center,facility,CH,europe,,"Cleanroom named in acknowledgements; host institution and address not stated in the paper, country entered from outside the paper"
 Ciena Corporation,company,CA,north_america,,Quebec City and Ottawa addresses in the paper
+EPFL Center of MicroNano Technology,facility,CH,europe,Swiss Federal Institute of Technology Lausanne,Cleanroom named in acknowledgements; country from host institution
+EPFL Institute of Physics cleanroom,facility,CH,europe,Swiss Federal Institute of Technology Lausanne,Paper writes the Institute of Physics (IPHYS) cleanroom; the EPFL prefix and host are inferred from the affiliation; country from host institution
 ETH Zurich,university,CH,europe,,Institute of Electromagnetic Fields; name as in affiliation
+Ghent University,university,BE,europe,,"Department of Information Technology (INTEC), Photonics Research Group and IDLab, Ghent University-imec"
+HyperLight,company,US,north_america,,"501 Massachusetts Avenue, Cambridge, Massachusetts; name as written in the affiliation"
 "Institute of Physics, Chinese Academy of Sciences",research_institute,CN,east_asia,,Beijing National Laboratory for Condensed Matter Physics; affiliation 6
 Institute of Science Tokyo,university,JP,east_asia,,"Meguro-ku, Tokyo; Department of Electrical and Electronic Engineering"
+Karlsruhe Institute of Technology,university,DE,europe,,"Institute of Photonics and Quantum Electronics (IPQ) and Institute of Microstructure Technology (IMT), Karlsruhe"
 Ligentec SA,foundry,CH,europe,,Ecublens; SiN photonic foundry; named as fabricating the SiN wafers
 Lumiphase AG,company,CH,europe,,Stafa; BTO growth and integration
+Luxtelligence SA,company,CH,europe,,Saint-Sulpice; affiliation 5 in the OFC paper (li2026a); written LUXTELLIGENCE SA there
 McGill University,university,CA,north_america,,"Montreal, QC; Department of Electrical and Computer Engineering"
 NTT Innovative Devices Corporation,company,JP,east_asia,,"Atsugi City, Kanagawa; paper writes the affiliation as given; separate legal entity from Nippon Telegraph and Telephone Corporation, parent relation not stated in the paper"
 Nippon Telegraph and Telephone Corporation,company,JP,east_asia,,"Paper writes the affiliation as 'NTT Corporation' (NTT Device Innovation Center; NTT Device Technology Laboratories), Atsugi-shi, Kanagawa"
@@ -14,7 +20,9 @@ Nokia Corporation,company,US,north_america,,"Sunnyvale, CA"
 Photonics Electronics Technology Research Association,consortium,JP,east_asia,,"Bunkyo-ku, Tokyo; paper abbreviation PETRA"
 South China Normal University,university,CN,east_asia,,Guangzhou; affiliations 2 and 3 (South China Academy of Advanced Optoelectronics; National Center for International Research on Green Optoelectronics)
 "Sumitomo Electric Industries, Ltd.",company,JP,east_asia,,"Yokohama, Kanagawa"
+Swiss Federal Institute of Technology Lausanne,university,CH,europe,,"Institutes of Physics and of Electrical and Micro Engineering, Lausanne; name as written in the affiliation (EPFL)"
 The Hong Kong Polytechnic University,university,HK,east_asia,,"Affiliation address reads ""Hong Kong, China""; Photonics Research Center, Departments of Electronic and Information Engineering and of Electrical Engineering"
 The University of Tokyo,university,JP,east_asia,,"Bunkyo-ku, Tokyo; School of Engineering"
 Tsinghua University,university,CN,east_asia,,"Beijing; affiliations 1 (State Key Laboratory of New Ceramic Materials) and 2 (BNRist, Department of Electronic Engineering)"
 Zhejiang University,university,CN,east_asia,,"Hangzhou; affiliations 1 (State Key Laboratory for Modern Optical Instrumentation, Centre for Optical and Electromagnetic Research, International Research Center for Advanced Photonics)"
+imec,research_institute,BE,europe,,"Leuven, Kapeldreef 75; paper writes 'imec'; named as fabricating the Si-PIC wafers on its 200 mm pilot line"

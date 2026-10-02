@@ -1,0 +1,942 @@
+paper_id: renaud2023
+verified_on: '2026-10-01'
+source_files:
+- references/renaud2023/text.md
+- references/renaud2023/figures/page_02.png
+- references/renaud2023/figures/page_03.png
+- references/renaud2023/crossref.json
+entries:
+- device_id: renaud2023-3um-532
+  field: wavelength_nm
+  value: 532
+  unit: nm
+  basis: measured
+  locator: p.2 Sec. Visible-to-near-infrared Mach Zehnder modulators; Fig. 2(a)
+- device_id: renaud2023-3um-532
+  field: length_mm
+  value: 10
+  unit: mm
+  basis: measured
+  locator: p.2; Fig. 2 caption
+  note: 1 cm MZM
+- device_id: renaud2023-3um-532
+  field: electrode_gap_um
+  value: 3
+  unit: um
+  basis: measured
+  locator: p.2; Fig. 2(b)
+- device_id: renaud2023-3um-532
+  field: eo_film_thickness_nm
+  value: 300
+  unit: nm
+  basis: measured
+  locator: p.2 Sec. Design and fabrication; Fig. 1(c)
+- device_id: renaud2023-3um-532
+  field: etch_depth_nm
+  value: 180
+  unit: nm
+  basis: measured
+  locator: p.5 Methods; Fig. 1(c)
+- device_id: renaud2023-3um-532
+  field: rib_width_nm
+  value: 600
+  unit: nm
+  basis: measured
+  locator: p.2; Fig. 1(c)
+  note: top width in the electrode region; 300 nm elsewhere
+- device_id: renaud2023-3um-532
+  field: slab_thickness_nm
+  value: 120
+  unit: nm
+  basis: measured
+  locator: p.2 Fig. 1(c)
+  note: 300 nm film minus 180 nm etch
+- device_id: renaud2023-3um-532
+  field: electrode_thickness_um
+  value: 0.8
+  unit: um
+  basis: measured
+  locator: p.2 Fig. 1(c); p.5 Methods
+  note: 10/800 nm Ti/Au
+- device_id: renaud2023-3um-532
+  field: electrode_metal
+  value: Au (10 nm Ti adhesion layer)
+  unit: ''
+  basis: measured
+  locator: p.5 Methods
+- device_id: renaud2023-3um-532
+  field: substrate
+  value: Si with 2 um thermal SiO2 (NanoLN)
+  unit: ''
+  basis: measured
+  locator: p.2
+- device_id: renaud2023-3um-532
+  field: cladding
+  value: PECVD SiO2 about 1 um (Fig. 1(c))
+  unit: ''
+  basis: measured
+  locator: p.2 Fig. 1(c); p.5 Methods
+  note: Fig. 1(c) label SiO2 (1 um); Methods say about 1 um
+- device_id: renaud2023-3um-532
+  field: crystal_cut
+  value: x-cut
+  unit: ''
+  basis: measured
+  locator: p.2
+- device_id: renaud2023-3um-532
+  field: drive
+  value: push_pull
+  unit: ''
+  basis: measured
+  locator: p.2
+  note: push-pull CPW travelling-wave electrodes stated
+- device_id: renaud2023-3um-532
+  field: vpi_convention
+  value: mzm_push_pull
+  unit: ''
+  basis: derived
+  locator: p.2
+  note: push-pull stated; Vpi convention itself not defined by authors
+- device_id: renaud2023-3um-532
+  field: vpi_dc_v
+  value: 0.42
+  unit: V
+  basis: measured
+  locator: p.2 text; Fig. 2(a)
+  note: text value
+- device_id: renaud2023-3um-638
+  field: wavelength_nm
+  value: 638
+  unit: nm
+  basis: measured
+  locator: p.2 Sec. Visible-to-near-infrared Mach Zehnder modulators; Fig. 2(a)
+- device_id: renaud2023-3um-638
+  field: length_mm
+  value: 10
+  unit: mm
+  basis: measured
+  locator: p.2; Fig. 2 caption
+  note: 1 cm MZM
+- device_id: renaud2023-3um-638
+  field: electrode_gap_um
+  value: 3
+  unit: um
+  basis: measured
+  locator: p.2; Fig. 2(b)
+- device_id: renaud2023-3um-638
+  field: eo_film_thickness_nm
+  value: 300
+  unit: nm
+  basis: measured
+  locator: p.2 Sec. Design and fabrication; Fig. 1(c)
+- device_id: renaud2023-3um-638
+  field: etch_depth_nm
+  value: 180
+  unit: nm
+  basis: measured
+  locator: p.5 Methods; Fig. 1(c)
+- device_id: renaud2023-3um-638
+  field: rib_width_nm
+  value: 600
+  unit: nm
+  basis: measured
+  locator: p.2; Fig. 1(c)
+  note: top width in the electrode region; 300 nm elsewhere
+- device_id: renaud2023-3um-638
+  field: slab_thickness_nm
+  value: 120
+  unit: nm
+  basis: measured
+  locator: p.2 Fig. 1(c)
+  note: 300 nm film minus 180 nm etch
+- device_id: renaud2023-3um-638
+  field: electrode_thickness_um
+  value: 0.8
+  unit: um
+  basis: measured
+  locator: p.2 Fig. 1(c); p.5 Methods
+  note: 10/800 nm Ti/Au
+- device_id: renaud2023-3um-638
+  field: electrode_metal
+  value: Au (10 nm Ti adhesion layer)
+  unit: ''
+  basis: measured
+  locator: p.5 Methods
+- device_id: renaud2023-3um-638
+  field: substrate
+  value: Si with 2 um thermal SiO2 (NanoLN)
+  unit: ''
+  basis: measured
+  locator: p.2
+- device_id: renaud2023-3um-638
+  field: cladding
+  value: PECVD SiO2 about 1 um (Fig. 1(c))
+  unit: ''
+  basis: measured
+  locator: p.2 Fig. 1(c); p.5 Methods
+  note: Fig. 1(c) label SiO2 (1 um); Methods say about 1 um
+- device_id: renaud2023-3um-638
+  field: crystal_cut
+  value: x-cut
+  unit: ''
+  basis: measured
+  locator: p.2
+- device_id: renaud2023-3um-638
+  field: drive
+  value: push_pull
+  unit: ''
+  basis: measured
+  locator: p.2
+  note: push-pull CPW travelling-wave electrodes stated
+- device_id: renaud2023-3um-638
+  field: vpi_convention
+  value: mzm_push_pull
+  unit: ''
+  basis: derived
+  locator: p.2
+  note: push-pull stated; Vpi convention itself not defined by authors
+- device_id: renaud2023-3um-638
+  field: vpi_dc_v
+  value: 0.45
+  unit: V
+  basis: measured
+  locator: p.2 text; Fig. 2(a)
+  note: text value
+- device_id: renaud2023-3um-738
+  field: vpil_dc_vcm
+  value: 0.55
+  unit: V*cm
+  basis: measured
+  locator: p.1 abstract
+  note: 1 cm device, 1 MHz
+- device_id: renaud2023-3um-738
+  field: bw3db_ghz
+  value: 35
+  unit: GHz
+  basis: extracted_from_figure
+  locator: p.3 Sec. MZM bandwidth; Fig. 2(c)
+  note: 'text: approximately 35 GHz w.r.t. 3 GHz'
+- device_id: renaud2023-3um-738
+  field: bw3db_reference
+  value: other
+  unit: ''
+  basis: measured
+  locator: p.3; Fig. 2(c) caption
+  note: low-frequency reference taken as 3 GHz
+- device_id: renaud2023-3um-738
+  field: bw3db_reference_freq_ghz
+  value: 3
+  unit: GHz
+  basis: measured
+  locator: p.3; Fig. 2(c) caption
+- device_id: renaud2023-3um-738
+  field: bw_measured_to_ghz
+  value: 40
+  unit: GHz
+  basis: extracted_from_figure
+  locator: p.3 Fig. 2(c)
+  note: x-axis end; not stated in text
+- device_id: renaud2023-3um-738
+  field: il_fiber_to_fiber_db
+  value: 15
+  unit: dB
+  basis: measured
+  locator: p.2 Sec. MZM
+  note: total device IL including about 7 dB/facet coupling
+- device_id: renaud2023-3um-738
+  field: prop_loss_db_per_cm
+  value: 0.7
+  unit: dB/cm
+  basis: measured
+  locator: p.2 Sec. MZM; p.1 abstract
+  note: 0.7 +- 0.2 dB/cm, supplementary Fig. 1 not available
+- device_id: renaud2023-3um-738
+  field: extinction_ratio_db
+  value: 21
+  unit: dB
+  basis: extracted_from_figure
+  locator: p.3 Fig. 2(b) inset; p.3 text
+  note: 'text: about 21 dB for 3 um gap'
+- device_id: renaud2023-3um-738
+  field: rf_loss_db_per_cm
+  value: 7.99
+  unit: dB/cm
+  basis: derived
+  locator: p.3
+  note: 1.35 dB/cm/GHz^0.5 coefficient stated; value at 35 GHz computed here
+- device_id: renaud2023-3um-738
+  field: rf_loss_freq_ghz
+  value: 35
+  unit: GHz
+  basis: derived
+  locator: p.3
+  note: evaluated at the 3 dB bandwidth
+- device_id: renaud2023-3um-738
+  field: n_rf
+  value: 2.22
+  unit: '1'
+  basis: simulated
+  locator: p.2
+  note: COMSOL microwave phase index at 50 GHz
+- device_id: renaud2023-3um-738
+  field: ng_opt
+  value: 2.38
+  unit: '1'
+  basis: simulated
+  locator: p.2
+  note: VNIR optical group index; wavelength and method not stated
+- device_id: renaud2023-3um-738
+  field: z0_ohm
+  value: 50
+  unit: ohm
+  basis: design_target
+  locator: p.2
+  note: electrodes designed for impedance close to 50 ohm
+- device_id: renaud2023-3um-738
+  field: wavelength_nm
+  value: 738
+  unit: nm
+  basis: measured
+  locator: p.2 Sec. Visible-to-near-infrared Mach Zehnder modulators; Fig. 2(a)
+- device_id: renaud2023-3um-738
+  field: length_mm
+  value: 10
+  unit: mm
+  basis: measured
+  locator: p.2; Fig. 2 caption
+  note: 1 cm MZM
+- device_id: renaud2023-3um-738
+  field: electrode_gap_um
+  value: 3
+  unit: um
+  basis: measured
+  locator: p.2; Fig. 2(b)
+- device_id: renaud2023-3um-738
+  field: eo_film_thickness_nm
+  value: 300
+  unit: nm
+  basis: measured
+  locator: p.2 Sec. Design and fabrication; Fig. 1(c)
+- device_id: renaud2023-3um-738
+  field: etch_depth_nm
+  value: 180
+  unit: nm
+  basis: measured
+  locator: p.5 Methods; Fig. 1(c)
+- device_id: renaud2023-3um-738
+  field: rib_width_nm
+  value: 600
+  unit: nm
+  basis: measured
+  locator: p.2; Fig. 1(c)
+  note: top width in the electrode region; 300 nm elsewhere
+- device_id: renaud2023-3um-738
+  field: slab_thickness_nm
+  value: 120
+  unit: nm
+  basis: measured
+  locator: p.2 Fig. 1(c)
+  note: 300 nm film minus 180 nm etch
+- device_id: renaud2023-3um-738
+  field: electrode_thickness_um
+  value: 0.8
+  unit: um
+  basis: measured
+  locator: p.2 Fig. 1(c); p.5 Methods
+  note: 10/800 nm Ti/Au
+- device_id: renaud2023-3um-738
+  field: electrode_metal
+  value: Au (10 nm Ti adhesion layer)
+  unit: ''
+  basis: measured
+  locator: p.5 Methods
+- device_id: renaud2023-3um-738
+  field: substrate
+  value: Si with 2 um thermal SiO2 (NanoLN)
+  unit: ''
+  basis: measured
+  locator: p.2
+- device_id: renaud2023-3um-738
+  field: cladding
+  value: PECVD SiO2 about 1 um (Fig. 1(c))
+  unit: ''
+  basis: measured
+  locator: p.2 Fig. 1(c); p.5 Methods
+  note: Fig. 1(c) label SiO2 (1 um); Methods say about 1 um
+- device_id: renaud2023-3um-738
+  field: crystal_cut
+  value: x-cut
+  unit: ''
+  basis: measured
+  locator: p.2
+- device_id: renaud2023-3um-738
+  field: drive
+  value: push_pull
+  unit: ''
+  basis: measured
+  locator: p.2
+  note: push-pull CPW travelling-wave electrodes stated
+- device_id: renaud2023-3um-738
+  field: vpi_convention
+  value: mzm_push_pull
+  unit: ''
+  basis: derived
+  locator: p.2
+  note: push-pull stated; Vpi convention itself not defined by authors
+- device_id: renaud2023-3um-738
+  field: vpi_dc_v
+  value: 0.55
+  unit: V
+  basis: measured
+  locator: p.1 abstract; p.2 text; Fig. 1(b)
+  note: text value
+- device_id: renaud2023-3um-838
+  field: wavelength_nm
+  value: 838
+  unit: nm
+  basis: measured
+  locator: p.2 Sec. Visible-to-near-infrared Mach Zehnder modulators; Fig. 2(a)
+- device_id: renaud2023-3um-838
+  field: length_mm
+  value: 10
+  unit: mm
+  basis: measured
+  locator: p.2; Fig. 2 caption
+  note: 1 cm MZM
+- device_id: renaud2023-3um-838
+  field: electrode_gap_um
+  value: 3
+  unit: um
+  basis: measured
+  locator: p.2; Fig. 2(b)
+- device_id: renaud2023-3um-838
+  field: eo_film_thickness_nm
+  value: 300
+  unit: nm
+  basis: measured
+  locator: p.2 Sec. Design and fabrication; Fig. 1(c)
+- device_id: renaud2023-3um-838
+  field: etch_depth_nm
+  value: 180
+  unit: nm
+  basis: measured
+  locator: p.5 Methods; Fig. 1(c)
+- device_id: renaud2023-3um-838
+  field: rib_width_nm
+  value: 600
+  unit: nm
+  basis: measured
+  locator: p.2; Fig. 1(c)
+  note: top width in the electrode region; 300 nm elsewhere
+- device_id: renaud2023-3um-838
+  field: slab_thickness_nm
+  value: 120
+  unit: nm
+  basis: measured
+  locator: p.2 Fig. 1(c)
+  note: 300 nm film minus 180 nm etch
+- device_id: renaud2023-3um-838
+  field: electrode_thickness_um
+  value: 0.8
+  unit: um
+  basis: measured
+  locator: p.2 Fig. 1(c); p.5 Methods
+  note: 10/800 nm Ti/Au
+- device_id: renaud2023-3um-838
+  field: electrode_metal
+  value: Au (10 nm Ti adhesion layer)
+  unit: ''
+  basis: measured
+  locator: p.5 Methods
+- device_id: renaud2023-3um-838
+  field: substrate
+  value: Si with 2 um thermal SiO2 (NanoLN)
+  unit: ''
+  basis: measured
+  locator: p.2
+- device_id: renaud2023-3um-838
+  field: cladding
+  value: PECVD SiO2 about 1 um (Fig. 1(c))
+  unit: ''
+  basis: measured
+  locator: p.2 Fig. 1(c); p.5 Methods
+  note: Fig. 1(c) label SiO2 (1 um); Methods say about 1 um
+- device_id: renaud2023-3um-838
+  field: crystal_cut
+  value: x-cut
+  unit: ''
+  basis: measured
+  locator: p.2
+- device_id: renaud2023-3um-838
+  field: drive
+  value: push_pull
+  unit: ''
+  basis: measured
+  locator: p.2
+  note: push-pull CPW travelling-wave electrodes stated
+- device_id: renaud2023-3um-838
+  field: vpi_convention
+  value: mzm_push_pull
+  unit: ''
+  basis: derived
+  locator: p.2
+  note: push-pull stated; Vpi convention itself not defined by authors
+- device_id: renaud2023-3um-838
+  field: vpi_dc_v
+  value: 0.85
+  unit: V
+  basis: measured
+  locator: p.2 text; Fig. 2(a)
+  note: text value
+- device_id: renaud2023-3um-938
+  field: wavelength_nm
+  value: 938
+  unit: nm
+  basis: measured
+  locator: p.2 Sec. Visible-to-near-infrared Mach Zehnder modulators; Fig. 2(a)
+- device_id: renaud2023-3um-938
+  field: length_mm
+  value: 10
+  unit: mm
+  basis: measured
+  locator: p.2; Fig. 2 caption
+  note: 1 cm MZM
+- device_id: renaud2023-3um-938
+  field: electrode_gap_um
+  value: 3
+  unit: um
+  basis: measured
+  locator: p.2; Fig. 2(b)
+- device_id: renaud2023-3um-938
+  field: eo_film_thickness_nm
+  value: 300
+  unit: nm
+  basis: measured
+  locator: p.2 Sec. Design and fabrication; Fig. 1(c)
+- device_id: renaud2023-3um-938
+  field: etch_depth_nm
+  value: 180
+  unit: nm
+  basis: measured
+  locator: p.5 Methods; Fig. 1(c)
+- device_id: renaud2023-3um-938
+  field: rib_width_nm
+  value: 600
+  unit: nm
+  basis: measured
+  locator: p.2; Fig. 1(c)
+  note: top width in the electrode region; 300 nm elsewhere
+- device_id: renaud2023-3um-938
+  field: slab_thickness_nm
+  value: 120
+  unit: nm
+  basis: measured
+  locator: p.2 Fig. 1(c)
+  note: 300 nm film minus 180 nm etch
+- device_id: renaud2023-3um-938
+  field: electrode_thickness_um
+  value: 0.8
+  unit: um
+  basis: measured
+  locator: p.2 Fig. 1(c); p.5 Methods
+  note: 10/800 nm Ti/Au
+- device_id: renaud2023-3um-938
+  field: electrode_metal
+  value: Au (10 nm Ti adhesion layer)
+  unit: ''
+  basis: measured
+  locator: p.5 Methods
+- device_id: renaud2023-3um-938
+  field: substrate
+  value: Si with 2 um thermal SiO2 (NanoLN)
+  unit: ''
+  basis: measured
+  locator: p.2
+- device_id: renaud2023-3um-938
+  field: cladding
+  value: PECVD SiO2 about 1 um (Fig. 1(c))
+  unit: ''
+  basis: measured
+  locator: p.2 Fig. 1(c); p.5 Methods
+  note: Fig. 1(c) label SiO2 (1 um); Methods say about 1 um
+- device_id: renaud2023-3um-938
+  field: crystal_cut
+  value: x-cut
+  unit: ''
+  basis: measured
+  locator: p.2
+- device_id: renaud2023-3um-938
+  field: drive
+  value: push_pull
+  unit: ''
+  basis: measured
+  locator: p.2
+  note: push-pull CPW travelling-wave electrodes stated
+- device_id: renaud2023-3um-938
+  field: vpi_convention
+  value: mzm_push_pull
+  unit: ''
+  basis: derived
+  locator: p.2
+  note: push-pull stated; Vpi convention itself not defined by authors
+- device_id: renaud2023-3um-938
+  field: vpi_dc_v
+  value: 0.8
+  unit: V
+  basis: extracted_from_figure
+  locator: p.3 Fig. 2(a)
+  note: no text value; read from plot (y-axis 0.4-0.8 V)
+- device_id: renaud2023-2p5um-738
+  field: wavelength_nm
+  value: 738
+  unit: nm
+  basis: measured
+  locator: p.2 Sec. Visible-to-near-infrared Mach Zehnder modulators; Fig. 2(a)
+- device_id: renaud2023-2p5um-738
+  field: length_mm
+  value: 10
+  unit: mm
+  basis: measured
+  locator: p.2; Fig. 2 caption
+  note: 1 cm MZM
+- device_id: renaud2023-2p5um-738
+  field: electrode_gap_um
+  value: 2.5
+  unit: um
+  basis: measured
+  locator: p.2; Fig. 2(b)
+- device_id: renaud2023-2p5um-738
+  field: eo_film_thickness_nm
+  value: 300
+  unit: nm
+  basis: measured
+  locator: p.2 Sec. Design and fabrication; Fig. 1(c)
+- device_id: renaud2023-2p5um-738
+  field: etch_depth_nm
+  value: 180
+  unit: nm
+  basis: measured
+  locator: p.5 Methods; Fig. 1(c)
+- device_id: renaud2023-2p5um-738
+  field: rib_width_nm
+  value: 600
+  unit: nm
+  basis: measured
+  locator: p.2; Fig. 1(c)
+  note: top width in the electrode region; 300 nm elsewhere
+- device_id: renaud2023-2p5um-738
+  field: slab_thickness_nm
+  value: 120
+  unit: nm
+  basis: measured
+  locator: p.2 Fig. 1(c)
+  note: 300 nm film minus 180 nm etch
+- device_id: renaud2023-2p5um-738
+  field: electrode_thickness_um
+  value: 0.8
+  unit: um
+  basis: measured
+  locator: p.2 Fig. 1(c); p.5 Methods
+  note: 10/800 nm Ti/Au
+- device_id: renaud2023-2p5um-738
+  field: electrode_metal
+  value: Au (10 nm Ti adhesion layer)
+  unit: ''
+  basis: measured
+  locator: p.5 Methods
+- device_id: renaud2023-2p5um-738
+  field: substrate
+  value: Si with 2 um thermal SiO2 (NanoLN)
+  unit: ''
+  basis: measured
+  locator: p.2
+- device_id: renaud2023-2p5um-738
+  field: cladding
+  value: PECVD SiO2 about 1 um (Fig. 1(c))
+  unit: ''
+  basis: measured
+  locator: p.2 Fig. 1(c); p.5 Methods
+  note: Fig. 1(c) label SiO2 (1 um); Methods say about 1 um
+- device_id: renaud2023-2p5um-738
+  field: crystal_cut
+  value: x-cut
+  unit: ''
+  basis: measured
+  locator: p.2
+- device_id: renaud2023-2p5um-738
+  field: drive
+  value: push_pull
+  unit: ''
+  basis: measured
+  locator: p.2
+  note: push-pull CPW travelling-wave electrodes stated
+- device_id: renaud2023-2p5um-738
+  field: vpi_convention
+  value: mzm_push_pull
+  unit: ''
+  basis: derived
+  locator: p.2
+  note: push-pull stated; Vpi convention itself not defined by authors
+- device_id: renaud2023-2p5um-738
+  field: vpi_dc_v
+  value: 0.47
+  unit: V
+  basis: extracted_from_figure
+  locator: p.3 Fig. 2(b)
+  note: measured data point read from plot; 1 MHz
+- device_id: renaud2023-4um-738
+  field: wavelength_nm
+  value: 738
+  unit: nm
+  basis: measured
+  locator: p.2 Sec. Visible-to-near-infrared Mach Zehnder modulators; Fig. 2(a)
+- device_id: renaud2023-4um-738
+  field: length_mm
+  value: 10
+  unit: mm
+  basis: measured
+  locator: p.2; Fig. 2 caption
+  note: 1 cm MZM
+- device_id: renaud2023-4um-738
+  field: electrode_gap_um
+  value: 4
+  unit: um
+  basis: measured
+  locator: p.2; Fig. 2(b)
+- device_id: renaud2023-4um-738
+  field: eo_film_thickness_nm
+  value: 300
+  unit: nm
+  basis: measured
+  locator: p.2 Sec. Design and fabrication; Fig. 1(c)
+- device_id: renaud2023-4um-738
+  field: etch_depth_nm
+  value: 180
+  unit: nm
+  basis: measured
+  locator: p.5 Methods; Fig. 1(c)
+- device_id: renaud2023-4um-738
+  field: rib_width_nm
+  value: 600
+  unit: nm
+  basis: measured
+  locator: p.2; Fig. 1(c)
+  note: top width in the electrode region; 300 nm elsewhere
+- device_id: renaud2023-4um-738
+  field: slab_thickness_nm
+  value: 120
+  unit: nm
+  basis: measured
+  locator: p.2 Fig. 1(c)
+  note: 300 nm film minus 180 nm etch
+- device_id: renaud2023-4um-738
+  field: electrode_thickness_um
+  value: 0.8
+  unit: um
+  basis: measured
+  locator: p.2 Fig. 1(c); p.5 Methods
+  note: 10/800 nm Ti/Au
+- device_id: renaud2023-4um-738
+  field: electrode_metal
+  value: Au (10 nm Ti adhesion layer)
+  unit: ''
+  basis: measured
+  locator: p.5 Methods
+- device_id: renaud2023-4um-738
+  field: substrate
+  value: Si with 2 um thermal SiO2 (NanoLN)
+  unit: ''
+  basis: measured
+  locator: p.2
+- device_id: renaud2023-4um-738
+  field: cladding
+  value: PECVD SiO2 about 1 um (Fig. 1(c))
+  unit: ''
+  basis: measured
+  locator: p.2 Fig. 1(c); p.5 Methods
+  note: Fig. 1(c) label SiO2 (1 um); Methods say about 1 um
+- device_id: renaud2023-4um-738
+  field: crystal_cut
+  value: x-cut
+  unit: ''
+  basis: measured
+  locator: p.2
+- device_id: renaud2023-4um-738
+  field: drive
+  value: push_pull
+  unit: ''
+  basis: measured
+  locator: p.2
+  note: push-pull CPW travelling-wave electrodes stated
+- device_id: renaud2023-4um-738
+  field: vpi_convention
+  value: mzm_push_pull
+  unit: ''
+  basis: derived
+  locator: p.2
+  note: push-pull stated; Vpi convention itself not defined by authors
+- device_id: renaud2023-4um-738
+  field: vpi_dc_v
+  value: 0.79
+  unit: V
+  basis: extracted_from_figure
+  locator: p.3 Fig. 2(b)
+  note: measured data point read from plot; 1 MHz
+- device_id: renaud2023-5um-738
+  field: extinction_ratio_db
+  value: 25
+  unit: dB
+  basis: measured
+  locator: p.3 text
+  note: over 25 dB for 5 um gap devices; static, curve not shown
+- device_id: renaud2023-5um-738
+  field: wavelength_nm
+  value: 738
+  unit: nm
+  basis: measured
+  locator: p.2 Sec. Visible-to-near-infrared Mach Zehnder modulators; Fig. 2(a)
+- device_id: renaud2023-5um-738
+  field: length_mm
+  value: 10
+  unit: mm
+  basis: measured
+  locator: p.2; Fig. 2 caption
+  note: 1 cm MZM
+- device_id: renaud2023-5um-738
+  field: electrode_gap_um
+  value: 5
+  unit: um
+  basis: measured
+  locator: p.2; Fig. 2(b)
+- device_id: renaud2023-5um-738
+  field: eo_film_thickness_nm
+  value: 300
+  unit: nm
+  basis: measured
+  locator: p.2 Sec. Design and fabrication; Fig. 1(c)
+- device_id: renaud2023-5um-738
+  field: etch_depth_nm
+  value: 180
+  unit: nm
+  basis: measured
+  locator: p.5 Methods; Fig. 1(c)
+- device_id: renaud2023-5um-738
+  field: rib_width_nm
+  value: 600
+  unit: nm
+  basis: measured
+  locator: p.2; Fig. 1(c)
+  note: top width in the electrode region; 300 nm elsewhere
+- device_id: renaud2023-5um-738
+  field: slab_thickness_nm
+  value: 120
+  unit: nm
+  basis: measured
+  locator: p.2 Fig. 1(c)
+  note: 300 nm film minus 180 nm etch
+- device_id: renaud2023-5um-738
+  field: electrode_thickness_um
+  value: 0.8
+  unit: um
+  basis: measured
+  locator: p.2 Fig. 1(c); p.5 Methods
+  note: 10/800 nm Ti/Au
+- device_id: renaud2023-5um-738
+  field: electrode_metal
+  value: Au (10 nm Ti adhesion layer)
+  unit: ''
+  basis: measured
+  locator: p.5 Methods
+- device_id: renaud2023-5um-738
+  field: substrate
+  value: Si with 2 um thermal SiO2 (NanoLN)
+  unit: ''
+  basis: measured
+  locator: p.2
+- device_id: renaud2023-5um-738
+  field: cladding
+  value: PECVD SiO2 about 1 um (Fig. 1(c))
+  unit: ''
+  basis: measured
+  locator: p.2 Fig. 1(c); p.5 Methods
+  note: Fig. 1(c) label SiO2 (1 um); Methods say about 1 um
+- device_id: renaud2023-5um-738
+  field: crystal_cut
+  value: x-cut
+  unit: ''
+  basis: measured
+  locator: p.2
+- device_id: renaud2023-5um-738
+  field: drive
+  value: push_pull
+  unit: ''
+  basis: measured
+  locator: p.2
+  note: push-pull CPW travelling-wave electrodes stated
+- device_id: renaud2023-5um-738
+  field: vpi_convention
+  value: mzm_push_pull
+  unit: ''
+  basis: derived
+  locator: p.2
+  note: push-pull stated; Vpi convention itself not defined by authors
+- device_id: renaud2023-5um-738
+  field: vpi_dc_v
+  value: 0.93
+  unit: V
+  basis: extracted_from_figure
+  locator: p.3 Fig. 2(b)
+  note: measured data point read from plot; 1 MHz
+- device_id: renaud2023-pm
+  field: wavelength_nm
+  value: 737
+  unit: nm
+  basis: measured
+  locator: p.4 Sec. Visible spectral shearing
+- device_id: renaud2023-pm
+  field: length_mm
+  value: 10
+  unit: mm
+  basis: measured
+  locator: p.4
+  note: 1 cm long, 3 um gap phase modulator
+- device_id: renaud2023-pm
+  field: electrode_gap_um
+  value: 3
+  unit: um
+  basis: measured
+  locator: p.4
+- device_id: renaud2023-pm
+  field: vpi_rf_v
+  value: 1
+  unit: V
+  basis: measured
+  locator: p.4
+  note: about 1 V at 100 MHz
+- device_id: renaud2023-pm
+  field: vpi_rf_freq_ghz
+  value: 0.1
+  unit: GHz
+  basis: measured
+  locator: p.4
+- device_id: renaud2023-pm
+  field: drive
+  value: single_ended
+  unit: ''
+  basis: derived
+  locator: p.4
+  note: single phase modulator; authors do not state drive
+- device_id: renaud2023-pm
+  field: vpi_convention
+  value: per_arm_phase_shifter
+  unit: ''
+  basis: derived
+  locator: p.4
+  note: phase modulator; authors do not state the convention
+derived:
+- device_id: renaud2023-3um-738
+  field: rf_loss_db_per_cm
+  value: 7.99
+  formula: 1.35 * sqrt(35)
+  inputs:
+  - rf_loss_freq_ghz

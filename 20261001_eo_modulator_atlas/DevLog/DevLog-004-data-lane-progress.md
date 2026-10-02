@@ -1,7 +1,7 @@
 ---
 title: EO modulator atlas - data lane (D0/D1/D2/Q1) progress
 date: 2026-10-01
-status: active
+status: paused_by_user_for_review
 claim: coordination/claims/claude-data-lane.md
 authors: Claude (at Wentao Jiang's request)
 ---
@@ -59,9 +59,42 @@ From the audit of `sims/chen2022/config.yaml` (all low severity): S1 `sio2_cladd
 |---|---|---|---|---|
 | pilots (chen2022, kohli2025, ogiso2016) | 2026-10-01 | 3 / 7 / 8 | Q1 fresh audit, corrections applied after merge (verification pending in the pre-release pass) | backup of pre-correction data kept outside the repo |
 | p1_01 | 2026-10-01 | 5 / 9 / 11 | Q1 fresh audit, author corrections applied before merge | deng2026 sim config not runnable (no sourced RF permittivities); qiu2026 text-only source |
+| p1_09 | 2026-10-01 | 5 / 9 / 7 | Q1 fresh audit (2 high, 6 medium, 29 low), author corrections applied before merge | LiTaO3 constants: unverified placeholders removed or flagged unknown; li2026a/li2026ba overlap (OFC vs arXiv versions of one device family) kept as separate papers; niels2026 numbers from arXiv v1 |
 
-After each integration: `scripts/validate_db.py` 0 errors, `uv run pytest -q` 28 passed, `scripts/build_views.py` regenerated `app/static/data/atlas.json` (currently 8 papers, 16 devices, 19 organizations, 0 warnings).
+After each integration: `scripts/validate_db.py` 0 errors, `uv run pytest -q` 28 passed, `scripts/build_views.py` regenerated `app/static/data/atlas.json` (currently 13 papers, 25 devices, 26 organizations, 0 warnings).
 
 Clarification added to convention (c): when a paper states a bandwidth bound below the plotted range (exceeds 100 GHz on a trace measured to 110 GHz), `bw3db_ghz` carries the paper's bound with `gt` and `bw_measured_to_ghz` the actual measured range.
 
 Open for the integrator: org-name spellings across batches (EPFL, imec) must be unified when later batches merge; the merge only compares type/country/region. Sim configs written by batches may contain unverified constants (flagged in provenance); none has been run.
+
+## Pause for review (2026-10-01 ~20:50 local, at the user's request)
+
+Ingestion stopped: no data-lane agents are running. The p1_02 audit was stopped before it wrote a report.
+
+### State at pause
+
+| Item | State |
+|---|---|
+| Canonical database (`data/`) | 15 papers / 28 devices / 27 organizations; validator 0 errors; 28 Python tests pass; `app/static/data/atlas.json` regenerated (0 warnings) |
+| Integrated | pilots (chen2022, kohli2025, ogiso2016), p1_01, p1_09, p1_03 (each audited and corrected before merge, except the pilots whose corrections are not yet re-verified) |
+| Distilled, staged, NOT integrated | p1_02 (tran2026, wang2018, weigel2018, he2019; no audit report), p1_04 (valdez2022, meng2023, renaud2023, valdez2023; unaudited) |
+| Prefetched sources, not distilled | p1_05, p1_06, p1_07, p1_08, p1_10, p1_11 (`references/<id>/`, ~26 papers) |
+| Not retrievable by script | 20 papers on `data/manual_downloads.md` plus xu2022; each needs a PDF dropped into `references/_inbox/` with the listed filename |
+| Sim configs | chen2022, deng2026, he2019, kharel2021, li2026ba, lin2025, liu2021, valdez2022 (staged), meng2023 (staged), renaud2023 (staged), valdez2023 (staged). None validated or run; several omit material constants (listed under `missing`) and cannot run until sourced values exist |
+
+### TODO (data lane)
+
+- [ ] Apply the `p1_02` Q1 audit (needs a fresh run), then correct and merge p1_02
+- [ ] Q1 audit, corrections and merge for p1_04
+- [ ] Distill p1_05, p1_06, p1_07, p1_08, p1_10, p1_11 (sources prefetched; max 3 concurrent agents); audit and merge each, one at a time
+- [ ] Ingest the manually downloaded papers after the user drops them in `references/_inbox/` (run `prefetch_batch.py`-style extraction, then distill)
+- [ ] Priority-2 tranche (116 candidates) after priority 1; decision needed on scope
+- [ ] Re-audit the corrected pilots (verification of the post-merge corrections) and run a second fresh-context pass before any release
+- [ ] Unify org-name spellings across batches at merge (EPFL-type names, imec) and re-check duplicates
+- [ ] Interface follow-ups for the schema/SPEC owners (not applied here): `comparable` flag on sim targets and a placeholder/unverified provenance class (several configs already use them); eo_rolloff and `bw3db_reference` for plots normalized at an unstated low frequency; an `integration` value for epitaxy-then-transfer BTO; a place for paper-level RF numbers not tied to a device; sim target schema requires `eps_r` for every dielectric, so configs with honestly omitted constants fail schema validation
+- [ ] Sourcing the missing material constants (LN, LT, SiO2, Si, BTO, LSAT, Au) from cited primary references so sim configs can run
+- [ ] R1: confirm the tracked-PDF reference-cache policy before any public spin-off (publisher-copyright PDFs are in `references/`)
+
+### How to review
+
+App (dev server started by this lane for review, loopback only): http://127.0.0.1:47213/ . Stop it with `lsof -ti tcp:47213 | xargs kill` (it was started by the agent; nothing else uses that port). Routes: `/` dashboard, `/table`, `/explore`, `/sim`, `/about`. The app is owned by `codex-main` (U1/U2a); this lane did not change it.

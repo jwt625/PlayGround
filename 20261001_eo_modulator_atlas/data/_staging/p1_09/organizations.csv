@@ -2,7 +2,7 @@ org_name,org_type,country,region,parent_org,notes
 Swiss Federal Institute of Technology Lausanne,university,CH,europe,,"Institutes of Physics and of Electrical and Micro Engineering, Lausanne; name as written in the affiliation (EPFL)"
 Karlsruhe Institute of Technology,university,DE,europe,,"Institute of Photonics and Quantum Electronics (IPQ) and Institute of Microstructure Technology (IMT), Karlsruhe"
 EPFL Center of MicroNano Technology,facility,CH,europe,Swiss Federal Institute of Technology Lausanne,Cleanroom named in acknowledgements; country from host institution
-EPFL Institute of Physics cleanroom,facility,CH,europe,Swiss Federal Institute of Technology Lausanne,IPHYS cleanroom named in acknowledgements; country from host institution
+EPFL Institute of Physics cleanroom,facility,CH,europe,Swiss Federal Institute of Technology Lausanne,Paper writes the Institute of Physics (IPHYS) cleanroom; the EPFL prefix and host are inferred from the affiliation; country from host institution
 Luxtelligence SA,company,CH,europe,,Saint-Sulpice; affiliation 5 in the OFC paper (li2026a); written LUXTELLIGENCE SA there
 Ghent University,university,BE,europe,,"Department of Information Technology (INTEC), Photonics Research Group and IDLab, Ghent University-imec"
 imec,research_institute,BE,europe,,"Leuven, Kapeldreef 75; paper writes 'imec'; named as fabricating the Si-PIC wafers on its 200 mm pilot line"

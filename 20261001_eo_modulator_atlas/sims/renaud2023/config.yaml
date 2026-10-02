@@ -1,0 +1,135 @@
+# STATUS: record of disclosed geometry and provenance. NOT RUNNABLE as written (material constants missing; see `missing`).
+# Coordinate frame: x lateral, y film normal up, z propagation; x = 0 at the rib centre; y = 0 at the BOX top / LN slab bottom.
+# Signal electrode on +x, ground on -x. Source: published article (Nature Communications 14, 1496).
+
+schema: eo-atlas.sim/v1
+id: renaud2023-3um-738
+paper_id: renaud2023
+device_id: renaud2023-3um-738
+title: Renaud 2023, 1 cm visible-NIR TFLN MZM, 3 um gap, 738 nm, one arm cross-section
+repro_grade: B
+validation_status: unvalidated
+chain: [electrostatics, optical_mode, eo_overlap, rf_line, eo_response]
+optics: {wavelength_nm: 738, polarization: TE, mode_index: 0, group_index_from: finite_difference_wavelength, ng_fixed: null, eo_axis: auto}
+materials:
+  lithium_niobate:
+    crystal: {cut: x, propagation: y}
+  silicon_dioxide: {}
+  silicon: {}
+  gold: {conductor: true, n_complex: null}
+  air: {n: 1.0, eps_r: 1.0}
+geometry:
+  symmetry: none
+  domain:
+    x_um: [-100, 100]
+    y_um: [-60, 6]
+  regions:
+  - name: ambient
+    material: air
+    rect:
+      x_um: [-100, 100]
+      y_um: [-60, 6]
+  - name: substrate
+    material: silicon
+    rect:
+      x_um: [-100, 100]
+      y_um: [-60, -2]
+  - name: box
+    material: silicon_dioxide
+    rect:
+      x_um: [-100, 100]
+      y_um: [-2, 0]
+  - name: ln_slab
+    material: lithium_niobate
+    rect:
+      x_um: [-100, 100]
+      y_um: [0, 0.12]
+  - name: sio2_cladding
+    material: silicon_dioxide
+    rect:
+      x_um: [-100, 100]
+      y_um: [0.12, 1.3]
+  - name: ln_rib
+    material: lithium_niobate
+    rect:
+      x_um: [-0.3, 0.3]
+      y_um: [0.12, 0.3]
+  electrodes:
+  - name: signal
+    role: signal
+    weight: 1.0
+    rect:
+      x_um: [1.5, 51.5]
+      y_um: [0.12, 0.92]
+    material: gold
+  - name: ground
+    role: ground
+    weight: 0.0
+    rect:
+      x_um: [-51.5, -1.5]
+      y_um: [0.12, 0.92]
+    material: gold
+  optical_window:
+    x_um: [-2, 2]
+    y_um: [-0.6, 1.0]
+  mesh: {max_edge_um: 2.0, electrode_edge_um: 0.04}
+line:
+  length_mm: 10
+  conductor_loss_model: from_paper_alpha
+  rf_loss_table: null
+  source_ohm: 50
+  load_ohm: 50
+  differential: false
+  loading: {type: none}
+sweep: {f_start_ghz: 0.1, f_stop_ghz: 50, n_points: 100}
+alt_geometries: {}
+targets:
+- metric: vpi_l_dc_vcm
+  value: 0.55
+  tol_rel: 0.1
+  source: {device_id: renaud2023-3um-738, field: vpil_dc_vcm}
+- metric: n_rf
+  at_ghz: 50
+  value: 2.22
+  tol_abs: 0.05
+  source: {device_id: renaud2023-3um-738, field: n_rf}
+- metric: ng_opt
+  value: 2.38
+  tol_abs: 0.05
+  source: {device_id: renaud2023-3um-738, field: ng_opt}
+- metric: z0_ohm
+  value: 50
+  tol_abs: 5.0
+  source: {device_id: renaud2023-3um-738, field: z0_ohm}
+- metric: bw3db_ghz
+  value: 35
+  tol_rel: 0.15
+  source: {device_id: renaud2023-3um-738, field: bw3db_ghz}
+reported_curves: []
+provenance:
+  optics.wavelength_nm: {class: paper_exact, locator: p.1 abstract; p.2}
+  optics.polarization: {class: project_inference, locator: p.2 (TE00 and TM00 supported at 740 nm), note: TE assumed for the x-cut r33 interaction; polarization of the modulator measurement not stated}
+  optics.group_index_from: {class: project_inference, note: paper quotes nvis about 2.38 for VNIR (wavelength not specified); engine derives it}
+  materials.lithium_niobate.crystal: {class: paper_exact, locator: p.2 (X-cut TFLN), note: propagation along y assumed}
+  geometry.regions.ln_slab: {class: paper_exact, locator: 'p.2 Fig. 1(c) (300 nm film, 180 nm etch, 120 nm slab)'}
+  geometry.regions.ln_rib: {class: paper_exact, locator: p.2 Fig. 1(c) (600 nm top width in the electrode region), note: rectangular approximation; sidewall angle not stated}
+  geometry.regions.box: {class: paper_exact, locator: p.2 (2 um thermally grown SiO2)}
+  geometry.regions.substrate: {class: paper_exact, locator: p.2 (Si), note: 'thickness not stated, region clipped'}
+  geometry.regions.sio2_cladding: {class: paper_exact, locator: p.2 Fig. 1(c); p.5 Methods (about 1 um PECVD), note: measured from the slab top here; whether the 1 um is above the slab or above the rib top is not stated}
+  geometry.electrodes.signal: {class: figure_digitized, locator: 'p.2 Fig. 1(c); p.5 Methods (800 nm Au, 3 um gap)', note: electrode resting on the slab with its inner edge 1.5 um from the rib centre; electrode width 50 um assumed (not stated); Ti 10 nm
+      not modelled}
+  geometry.electrodes.ground: {class: figure_digitized, locator: p.2 Fig. 1(c), note: mirror of the signal electrode}
+  line.length_mm: {class: paper_exact, locator: p.2 (1 cm long MZMs)}
+  line.load_ohm: {class: paper_exact, locator: p.3 Fig. 2(a) setup (50 ohm termination)}
+  line.source_ohm: {class: paper_exact, locator: p.5 Methods (50 ohm GSG probes)}
+  line.differential: {class: project_inference, locator: p.2, note: 'push-pull stated; single-ended GSG feed, one gap modelled'}
+  line.conductor_loss_model: {class: project_inference, locator: p.3, note: paper gives only the fitted coefficient 1.35 dB/cm/GHz^0.5; loss model left to the engine}
+  geometry.optical_window: {class: project_inference, note: crop around the rib}
+  geometry.domain: {class: project_inference, note: open-boundary treatment is an engine choice}
+  geometry.mesh: {class: project_inference}
+missing: ['lithium_niobate n_o, n_e at 738 nm, RF permittivity (anisotropic) and Pockels tensor (not stated)', silicon_dioxide refractive index and RF permittivity; silicon properties, gold conductivity (the paper gives only the fitted RF loss coefficient),
+  signal and ground electrode widths; waveguide position relative to the gap centre, rib sidewall angle, 'whether the electrodes contact the LN slab through an opening in the cladding (Methods: RIE before evaporation) or sit on the cladding', which wavelength
+    the 0.7 dB/cm optical loss and the 15 dB total insertion loss refer to, temperature]
+limitations: [scalar_optical_not_full_vector, quasi_static_2d_rf, rectangular_or_polygon_sidewalls_only, no_3d_launch_pad_effects, Config is not runnable until material constants are supplied from verified sources, 'Only the 3 um gap, 738 nm device is
+    configured; the other gaps and wavelengths of the series (renaud2023-* rows) share the cross-section family', 'One arm of the push-pull MZM only; the 50 GHz RF index target is a paper simulation (COMSOL), not a measurement', 'The 3 dB bandwidth is
+    referenced to 3 GHz, not to DC; the engine reference convention is not defined for this', Higher-order optical modes at shorter wavelengths (noted by the authors) are outside the scalar single-mode model]

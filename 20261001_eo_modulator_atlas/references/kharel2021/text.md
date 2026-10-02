@@ -2,7 +2,7 @@
 paper_id: kharel2021
 source_url: https://doi.org/10.1364/optica.416155
 doi: 10.1364/optica.416155
-license: Optica OA License v1 (journal VOR); arXiv CC-BY-NC-ND-4.0 (v1)
+license: Optica OA License v1 (journal VOR, per Crossref); cached PDF is arXiv v1 and its license is not shown in the PDF (unverified)
 sha256: 9296fea00a56a010598f7e919016d7e11916ae66455228db271e92830b26fcd7
 pages: 7
 extracted_on: 2026-10-01

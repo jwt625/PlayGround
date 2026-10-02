@@ -87,18 +87,19 @@ alt_geometries:
     mesh: {max_edge_um: 2.0, electrode_edge_um: 0.05}
 
 targets:
+  # Targets whose prediction depends on the placeholder ridge width (1.0 um, no source) or on UNVERIFIED material constants carry comparable: false in `source`.
   # Measured, 20 mm device (devices.csv row kharel2021-b)
-  - {metric: vpi_dc_v, value: 1.35, tol_rel: 0.15, source: {device_id: kharel2021-b, field: vpi_dc_v}}
-  - {metric: eo_rolloff_db, at_ghz: 50, value: -1.8, tol_abs: 0.5, source: {device_id: kharel2021-b, field: eo_rolloff_db}}
+  - {metric: vpi_dc_v, value: 1.35, tol_rel: 0.15, source: {device_id: kharel2021-b, field: vpi_dc_v, comparable: false, note: "NON-COMPARABLE until the ridge width is known: the solve uses a 1.0 um placeholder ridge and UNVERIFIED LN constants"}}
+  - {metric: eo_rolloff_db, at_ghz: 50, value: -1.8, tol_abs: 0.5, source: {device_id: kharel2021-b, field: eo_rolloff_db, comparable: false, note: "depends on the placeholder ridge width and UNVERIFIED gold sigma and eps_r"}}
   # Measured RF line (Fig. 2 caption names a 10-mm electrode; the 2.23 index is not attributed to a device in the text)
-  - {metric: rf_loss_db_per_cm, at_ghz: 50, value: 2.0, tol_rel: 0.2, source: {device_id: kharel2021-a, field: rf_loss_db_per_cm}}
-  - {metric: n_rf, value: 2.23, tol_abs: 0.1, source: {paper_id: kharel2021, locator: "p.4 Sec. III", basis: measured, note: "device not named in the text; no devices.csv row carries it"}}
+  - {metric: rf_loss_db_per_cm, at_ghz: 50, value: 2.0, tol_rel: 0.2, source: {device_id: kharel2021-a, field: rf_loss_db_per_cm, note: "depends on UNVERIFIED gold sigma and eps_r placeholders"}}
+  - {metric: n_rf, value: 2.23, tol_abs: 0.1, source: {paper_id: kharel2021, locator: "p.4 Sec. III", basis: measured, note: "device not named in the text; no devices.csv row carries it; depends on UNVERIFIED eps_r placeholders"}}
   # Paper's own HFSS simulation of the design (Table I, Segmented (Q), signal width 100 um, gap 5 um; no oxide cladding listed); cross-solver reference, not measurement
-  - {metric: vpi_l_dc_vcm, value: 2.1, tol_rel: 0.1, source: {paper_id: kharel2021, locator: "p.3 Table I", basis: simulated}}
-  - {metric: z0_ohm, value: 42, tol_abs: 3.0, source: {paper_id: kharel2021, locator: "p.3 Table I", basis: simulated}}
-  - {metric: rf_loss_db_per_cm, at_ghz: 50, value: 1.485, tol_rel: 0.2, source: {paper_id: kharel2021, locator: "p.3 Table I: 0.21 dB/cm/GHz^0.5 times sqrt(50 GHz)", basis: derived}}
+  - {metric: vpi_l_dc_vcm, value: 2.1, tol_rel: 0.1, source: {paper_id: kharel2021, locator: "p.3 Table I", basis: simulated, comparable: false, note: "NON-COMPARABLE until the ridge width is known: the solve uses a 1.0 um placeholder ridge and UNVERIFIED LN constants"}}
+  - {metric: z0_ohm, value: 42, tol_abs: 3.0, source: {paper_id: kharel2021, locator: "p.3 Table I", basis: simulated, note: "depends on UNVERIFIED eps_r placeholders and on the assumed signal width"}}
+  - {metric: rf_loss_db_per_cm, at_ghz: 50, value: 1.485, tol_rel: 0.2, source: {paper_id: kharel2021, locator: "p.3 Table I: 0.21 dB/cm/GHz^0.5 times sqrt(50 GHz)", basis: derived, note: "depends on UNVERIFIED gold sigma and eps_r placeholders"}}
   # Authors' prediction for the 20 mm device (extrapolated from measured loss; not a measurement)
-  - {metric: bw3db_ghz, value: 180, tol_rel: 0.15, source: {paper_id: kharel2021, locator: "p.5 Discussion; Fig. 4(a)", basis: predicted, note: "conductor-loss-limited 3 dB bandwidth relative to 1 GHz, 20 mm electrode"}}
+  - {metric: bw3db_ghz, value: 180, tol_rel: 0.15, source: {paper_id: kharel2021, locator: "p.5 Discussion; Fig. 4(a)", basis: predicted, comparable: false, note: "conductor-loss-limited 3 dB bandwidth relative to 1 GHz, 20 mm electrode; depends on placeholders"}}
 reported_curves: []
 
 provenance:
@@ -106,14 +107,14 @@ provenance:
   optics.polarization: {class: project_inference, note: "polarization not stated; TE assumed for an x-cut film with propagation along y (r33 axis along the in-plane electrode field)"}
   optics.group_index_from: {class: project_inference, note: "paper gives only 'typical optical group index of about 2.2' (p.3); engine derives it by finite difference"}
   materials.lithium_niobate.crystal: {class: paper_exact, locator: "p.2; p.3 Sec. III (x-cut LN film); propagation along y is a project_inference from the standard x-cut convention"}
-  materials.lithium_niobate.n_o: {class: standard_reference, citation: "Zelmon, Small, Jundt, J. Opt. Soc. Am. B 14, 3319 (1997)", note: "value copied from the chen2022 config / SPEC example; NOT verified against the source in this offline batch"}
-  materials.lithium_niobate.n_e: {class: standard_reference, citation: "Zelmon, Small, Jundt, J. Opt. Soc. Am. B 14, 3319 (1997)", note: "value copied from the chen2022 config / SPEC example; NOT verified against the source in this offline batch"}
-  materials.lithium_niobate.eps_r: {class: standard_reference, citation: "Weis and Gaylord, Appl. Phys. A 37, 191 (1985)", note: "SPEC example values 43/28, NOT verified; the paper only says eps_LN about 30 (p.3)"}
-  materials.lithium_niobate.r_pm_per_v: {class: standard_reference, citation: "Weis and Gaylord, Appl. Phys. A 37, 191 (1985)", note: "SPEC example values, NOT verified; paper does not state Pockels coefficients"}
-  materials.silicon_dioxide: {class: standard_reference, citation: "standard handbook values (n = 1.444 at 1550 nm, eps_r = 3.9), NOT verified; paper states neither for the CVD oxide"}
-  materials.quartz.eps_r: {class: paper_exact, locator: "p.3 text (eps_Qz about 4.5)", note: "paper gives an approximate value; microwave absorption tangent below 1e-4 (p.3) is not representable and is left out"}
-  materials.quartz.n: {class: standard_reference, citation: "crystalline quartz ordinary index about 1.53 at 1550 nm, recalled, NOT verified", note: "paper gives no optical index; fused silica (eps 3.8) is listed as a separate option on p.5, so this quartz (eps about 4.5) is read as crystalline: an inference"}
-  materials.gold.sigma_Sm: {class: standard_reference, citation: "bulk gold 4.1e7 S/m as in sims/chen2022/config.yaml, NOT verified", note: "film conductivity not stated; measured loss coefficient 0.26 dB/cm/GHz^0.5 (p.4) is not used as an input"}
+  materials.lithium_niobate.n_o: {class: unknown, note: "UNVERIFIED placeholder 2.211, copied from the chen2022 config; not given in the paper or a cached source; kept only so the cross-section can be solved"}
+  materials.lithium_niobate.n_e: {class: unknown, note: "UNVERIFIED placeholder 2.138, copied from the chen2022 config; not given in the paper or a cached source"}
+  materials.lithium_niobate.eps_r: {class: unknown, note: "UNVERIFIED placeholder 43/28 (SPEC.md example values); the paper only says eps_LN is about 30 (p.3) and gives no tensor"}
+  materials.lithium_niobate.r_pm_per_v: {class: unknown, note: "UNVERIFIED placeholder (SPEC.md example values); the paper states no Pockels coefficients"}
+  materials.silicon_dioxide: {class: unknown, note: "UNVERIFIED placeholder n = 1.444, eps_r = 3.9; the paper states neither for the CVD oxide"}
+  materials.quartz.eps_r: {class: paper_exact, locator: "p.3 text (eps_Qz about 4.5)", note: "approximate value (the paper writes a tilde); microwave absorption tangent below 1e-4 (p.3) is an upper bound and is left out"}
+  materials.quartz.n: {class: unknown, note: "UNVERIFIED placeholder 1.53 (crystalline-quartz-like index); the paper gives no optical index; fused silica (eps 3.8) is a separate option on p.5, so this quartz (eps about 4.5) is read as crystalline: an inference"}
+  materials.gold.sigma_Sm: {class: unknown, note: "UNVERIFIED placeholder 4.1e7 S/m (bulk-gold value used in the chen2022 config); film conductivity not stated; measured loss coefficient 0.26 dB/cm/GHz^0.5 (p.4) is not used as an input"}
   line.length_mm: {class: paper_exact, locator: "p.4 Sec. III; Fig. 3(a) (20-mm long modulator)"}
   line.source_ohm: {class: project_inference, note: "50 ohm VNA; paper states a 50-ohm VNA for the loss measurement (p.4) but no termination for the EO measurement"}
   line.load_ohm: {class: project_inference, note: "50 ohm termination assumed; not stated"}
@@ -140,6 +141,9 @@ provenance:
   alt_geometries.unloaded: {class: project_inference, locator: "Fig. 1(a)", note: "cut through the gap c between fingers: fingers and stems absent, main conductors 21 um apart; the 6 um stem section (regular 5 um gap) is lumped into this cut"}
 
 missing:
+  - LN refractive indices, RF permittivity tensor and Pockels coefficients (UNVERIFIED placeholders in the file; only eps_LN about 30 is in the paper)
+  - SiO2 refractive index and RF permittivity (UNVERIFIED placeholders)
+  - quartz optical index (UNVERIFIED placeholder)
   - ridge (waveguide) width and sidewall angle (not stated; Fig. 1(e) not to scale; 1.0 um rectangular placeholder with no source)
   - width of the fabricated signal and ground electrodes (only the Table I simulation lists a 100 um signal width)
   - SiO2 cladding profile and reference surface (1 um CVD oxide)

@@ -14,7 +14,7 @@ Staging outputs: `papers.csv` (2), `devices.csv` (3), `organizations.csv` (1 new
   - 1.35 V is called DC in the text but labelled 1 MHz in Fig. 3(a); entered in `vpi_dc_v` with that note. 1.3 V (1 GHz, Bessel method) in `vpi_rf_v`; 1.6 V at 50 GHz is author-stated and kept in notes (single-point column).
   - RF-line numbers assigned to one device only: loss 2 dB/cm at 50 GHz on the 10 mm row (Fig. 2 caption names a 10-mm electrode). The measured RF phase index 2.23 is not tied to a device in the text, so it is on no row (evidence `context_values`, sim target with inline source).
   - IL (<1 dB on-chip, 13 dB total) and ER: ER is explicitly for the 20 mm device; the IL statements name no device and are entered on the 20 mm headline row with a note. On-chip IL basis author_estimate (estimated from a coupler pair with and without the modulator), ER `approx`.
-  - Electrode type `segmented` (authors' term); the structure is T-rail-like (fingers tied by stems), and Liu cites it as a CL-TWE. Integrator may switch to `cl_twe`. drive push_pull and vpi_convention mzm_push_pull are author-stated (p.1-2), not inferred. integration monolithic (commercial wafer), as in the chen2022 pilot.
+  - Electrode type was `segmented` (authors' term); changed to `cl_twe` after the audit (see Audit corrections). drive push_pull and vpi_convention mzm_push_pull are author-stated (p.1-2), not inferred. integration monolithic (commercial wafer), as in the chen2022 pilot.
   - slab 250 nm is derived (600 - 350) in `derived`.
 - CSV hints wrong or changed: license hint "Optica-OA-License-v2" disagrees with Crossref (v1); access hint `arxiv` changed to `open_access` (Crossref license class VOR-OA); published_on kept at 2020-11-26 (arXiv).
 - Sim config notes: ridge width is NOT disclosed and the Fig. 1(e) sketch is not to scale (gold drawn as tall as the ridge), so a 1.0 um rectangular placeholder with no source is used and flagged in `provenance`, `missing`, `limitations`; Vpi*L from the optical stage is not comparable until resolved. Signal width 100 um is the Table I simulation value, ground width assumed equal. Cell has three sections (finger-plus-slot 39 um, stem 6 um, gap 5 um); stem and gap lumped into the unloaded cut. A rough SEM scale reading suggests a slot height near 10 um against h = 6 um in the caption (low confidence, caption used). Segment symbols read from the Fig. 1(a)/(e) arrows: g = gap between facing finger edges, h = slot, s = finger width, t = stem width, r = finger length, c = finger gap.
@@ -28,10 +28,10 @@ Staging outputs: `papers.csv` (2), `devices.csv` (3), `organizations.csv` (1 new
 - Judgment calls:
   - Vpi convention and drive are not stated by the authors; entered as push_pull / mzm_push_pull with basis derived (evidence notes say so). Support: one arm in each gap of the G-S-G line (Fig. 3(a)), x-cut, and Fig. 2(b) per-arm index change 2.4e-5 per V gives about 1.6 V*cm push-pull against 1.7 reported.
   - Vpi*L 1.7 V*cm entered with basis derived (authors' product of 3.4 V and 5 mm).
-  - Convention (c) applied: no 3 dB crossing, "1.3 dB roll off ... limited by the bandwidth of the test system" (p.4), so bw3db 67 with `gt`, bw_measured_to 67, roll-off 1.3 dB at 67 GHz (reference frequency not stated, bw3db_reference unspecified). The authors' prediction "3 dB bandwidth over 110 GHz" (transmission-line model from S-parameters, Fig. S7) and the electrical 6 dB bandwidth over 110 GHz are in notes only (bw6db is not used for an electrical measurement).
+  - Convention (c) applied: no 3 dB crossing, "1.3 dB roll off ... limited by the bandwidth of the test system" (p.4), so bw3db 67 with `gt` (basis derived after the audit; see Audit corrections), bw_measured_to 67, roll-off 1.3 dB at 67 GHz (reference frequency not stated, bw3db_reference unspecified). The authors' prediction "3 dB bandwidth over 110 GHz" (transmission-line model from S-parameters, Fig. S7) and the electrical 6 dB bandwidth over 110 GHz are in notes only (bw6db is not used for an electrical measurement).
   - ER: main text "beyond 17 dB" (qualifier gt); supplement says 17 dB from a DC scan; Fig. 4(c) normalised minimum reads about 0.03 (about 15 dB); noted.
   - n_rf 2.3 read from the Fig. 4(e) plateau (extracted_from_figure, approx; text only says "close to ng about 2.25"); ng 2.25 basis author_estimate (origin of the value not stated; red line "optical mode").
-  - Ridge width 1 um is entered with basis design_target because the text states it for the Fig. 1(c) simulation, not the fabricated device.
+  - Ridge width 1 um (stated only for the Fig. 1(c) simulation) is no longer entered in rib_width_nm after the audit; it is in context_values.
   - A 4 um T-rail-gap device appears in Fig. 4(b) (loss only, about 18 dB read from the plot): no row.
 - CSV hints wrong: published_on 2021-02-04 is not in the source and conflicts with the arXiv identifier 2103 (March 2021): left empty. venue arXiv, source_type arxiv_preprint, discovered_via local_corpus kept as in the batch CSV (its source_state tag `local_alias` is not a discovered_via token).
 - Sim config notes: rail thickness is not stated (lift-off rails; main electrodes electroplated to 1.4 um); 1.4 um assumed as an upper bound and listed in `missing`. Ground width assumed equal to the 50 um signal. Silica buffer modelled as a 100 nm slab layer plus an outward-offset cap over the ridge, electrodes on the buffer. Optical window |x| < 1.4 um (rails at 1.5 um; scalar solver cannot model metal-induced loss, the paper's central point). Sidewall angle 68 deg is a low-confidence reading of the Fig. 1 sketch.
@@ -48,3 +48,36 @@ Staging outputs: `papers.csv` (2), `devices.csv` (3), `organizations.csv` (1 new
 - Author products (Vpi*L) are entered as basis derived per convention (h); entry-level basis wins over the row-level vpi_basis (measured, headline Vpi).
 - Sim contract gaps: see `SPEC_PROPOSALS.md` (three-section cell, neutral loading type name, unverified standard-value class, bound/prediction targets, material loss tangents, device attribution, optical window versus nearby metal).
 - Cleanup: the scratch builders and cropped figure crops are in the session scratchpad only; nothing temporary was left in the repo.
+
+## Audit corrections (Q1 fresh-context audit `data/_staging/audits/p1_03-q1-fresh.md`)
+
+Re-validated after the corrections: merge dry run papers 2, devices 3, orgs 1, evidence 2; conflicts 0; validation errors 0. Both configs re-checked against the engine JSON schema (only the known `4.1e7` YAML-1.1 string artifact). Findings are verified against the sources before acting.
+
+kharel2021
+- K1: changed. electrode_type `cl_twe` on both rows (liu2021 p.2 cites Kharel as a CL-TWE for TFLN; same finger-and-stem structure as chen2022); `segmented_electrode` stays in tags.
+- K2: changed. Crossref `updated-by` confirmed (type correction, DOI 10.1364/optica.440484, 2021-09-14). Recorded in papers.csv notes: numbers are from arXiv v1, the correction was not read.
+- K3: changed. 2.3 V*cm from the Fig. 4 caption added to `context_values` and to the -a row note (unattributed, equals 2.3 V x 1 cm); not put in vpil.
+- K4: partly disagreed. n_rf 2.23 still on no row: the Fig. 2 caption names a 10-mm electrode for the loss, whereas the index sentence says "also measured" with no electrode named. The reason is now stated in the -a note; the value stays in `context_values` and the sim target.
+- K5: changed. Evidence note and locator now cite the text, the caption (DC) and the plot label (1 MHz); Fig. 3(a) page is p.5.
+- K6: kept B (disagree with downgrading), reason stated in papers.csv notes: RF-line geometry is disclosed, but ridge width, sidewall angle and fabricated electrode widths are not; C would also be defensible.
+- K7: changed. Cache header license strings in `references/kharel2021/text.md` and `source.json` now say the cached PDF is arXiv v1 with an unverified license (the unverified CC-BY-NC-ND string was dropped).
+- K8: no change (bw3db_reference with empty bw3db_ghz is legal under (g)).
+- KC1: changed. LN n_o/n_e/eps_r/Pockels, SiO2, quartz n and gold sigma are now provenance class `unknown` with an UNVERIFIED note and listed in `missing`; no recalled value is labelled `standard_reference`. quartz eps_r 4.5 stays paper_exact with an "approximate" note.
+- KC2: changed. The Vpi (vpi_dc_v, Table I vpi_l) and 180 GHz targets carry `comparable: false` and a NON-COMPARABLE note in `source` (ridge width placeholder 1.0 um, UNVERIFIED LN constants); the roll-off, RF-line and Z0 targets carry notes naming the placeholders they depend on.
+- KC3, KC4: no change needed.
+
+liu2021
+- L1: changed. bw3db_ghz 67:gt kept but evidence basis is now `derived` with the note that the authors state no bound at 67 GHz; the "over 110 GHz, predicted (Fig. S7)" claim stays in `context_values` and the row notes (a predicted bound is not entered in bw3db_ghz). Row notes say it is a preparer inference. A1 left to the coordinator.
+- L2: changed. Evidence note and row notes say 100 kHz, not DC.
+- L3: changed. rib_width_nm emptied (value only in `context_values` as the Fig. 1(c) simulation width); the config keeps the 1 um as a flagged placeholder.
+- L4: disagreed, kept `author_estimate` with the origin-unstated note: no better basis value exists (A11 for the coordinator).
+- L5: disagreed, kept `gt`: the main text wording is "beyond 17 dB" (convention (b)); the 17 dB DC-scan statement and the Fig. 4(c) 15 dB reading are in the notes.
+- L6: changed. papers.csv notes say the arXiv id comes from prefetch metadata and the version consulted is unknown.
+- L7: disagreed, kept (affiliation units as stated, same practice as chen2022). L8: no change.
+- LC1: changed, as KC1. Quartz eps_r 4.5 is now cited to the cached kharel2021 text p.3 (class standard_reference with that citation); quartz n, LN, SiO2 and gold sigma are `unknown` placeholders.
+- LC2: changed. source_ohm is project_inference; load_ohm stays paper_exact.
+- LC3: changed. Wording is now "assumed equal to the 1.4 um main electrode" (no "upper bound").
+- LC4: changed. The Vpi*L and ng targets carry `comparable: false` with a NON-COMPARABLE note (ridge width and sidewall angle placeholders, truncated optical window); n_rf and roll-off targets carry placeholder-dependency notes.
+
+Other
+- A2 (segmented vs cl_twe) resolved by K1. A1, A3-A11 and the needs_download section 3 note are coordinator-level and unchanged. SPEC_PROPOSALS item 3 updated to the placeholder approach.

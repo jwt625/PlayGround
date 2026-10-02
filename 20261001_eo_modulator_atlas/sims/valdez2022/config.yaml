@@ -1,0 +1,218 @@
+# STATUS: record of disclosed geometry and provenance. NOT RUNNABLE as written: the paper states no refractive index or RF
+# permittivity for LN, SiO2 or Si and no gold conductivity; they are omitted on purpose (see `missing`).
+# Coordinate frame: x lateral, y film normal up, z propagation. x = 0 at the signal electrode centre; y = 0 at BOX top / Si strip bottom.
+# Top-level `geometry` = slotted section (electrode edges recessed by the 4 um slot depth); `alt_geometries.protrusion` = section through the
+# 20 um electrode protrusions (gap 9 um). Numbers come from the cached arXiv v1 manuscript.
+
+schema: eo-atlas.sim/v1
+id: valdez2022-a
+paper_id: valdez2022
+device_id: valdez2022-a
+title: Valdez 2022, 5 mm hybrid Si/LN MZM, inductively loaded slow-wave GSG electrode (gap 9 um), push-pull arms by geometry
+repro_grade: B
+validation_status: unvalidated
+chain: [electrostatics, optical_mode, eo_overlap, rf_line, loaded_line, eo_response]
+optics: {wavelength_nm: 1550, polarization: TE, mode_index: 0, group_index_from: finite_difference_wavelength, ng_fixed: null, eo_axis: auto}
+materials:
+  lithium_niobate:
+    crystal: {cut: x, propagation: y}
+  silicon_dioxide: {}
+  silicon: {}
+  gold: {conductor: true, n_complex: null}
+  air: {n: 1.0, eps_r: 1.0}
+geometry:
+  symmetry: none
+  domain:
+    x_um: [-250, 250]
+    y_um: [-100, 60]
+  regions:
+  - name: ambient
+    material: air
+    rect:
+      x_um: [-250, 250]
+      y_um: [-100, 60]
+  - name: substrate
+    material: silicon
+    rect:
+      x_um: [-250, 250]
+      y_um: [-728, -3]
+  - name: box
+    material: silicon_dioxide
+    rect:
+      x_um: [-250, 250]
+      y_um: [-3, 0]
+  - name: cmp_oxide
+    material: silicon_dioxide
+    rect:
+      x_um: [-250, 250]
+      y_um: [0, 0.19]
+  - name: si_wg_r
+    material: silicon
+    rect:
+      x_um: [31.8625, 32.1375]
+      y_um: [0, 0.15]
+  - name: si_wg_l
+    material: silicon
+    rect:
+      x_um: [-32.1375, -31.8625]
+      y_um: [0, 0.15]
+  - name: ln_film
+    material: lithium_niobate
+    rect:
+      x_um: [-250, 250]
+      y_um: [0.19, 0.79]
+  electrodes:
+  - name: signal
+    role: signal
+    weight: 1.0
+    rect:
+      x_um: [-23.5, 23.5]
+      y_um: [0.79, 1.54]
+    material: gold
+  - name: ground_r
+    role: ground
+    weight: 0.0
+    rect:
+      x_um: [40.5, 140.5]
+      y_um: [0.79, 1.54]
+    material: gold
+  - name: ground_l
+    role: ground
+    weight: 0.0
+    rect:
+      x_um: [-140.5, -40.5]
+      y_um: [0.79, 1.54]
+    material: gold
+  optical_window:
+    x_um: [28, 36]
+    y_um: [-1.0, 1.6]
+  mesh: {max_edge_um: 2.0, electrode_edge_um: 0.05}
+line:
+  length_mm: 5
+  conductor_loss_model: skin_effect_wheeler
+  rf_loss_table: null
+  source_ohm: 50
+  load_ohm: 50
+  differential: false
+  loading: {type: periodic_t_rail, period_um: 25, loaded_length_um: 5, unloaded_cross_section: protrusion, loaded_cross_section: null}
+sweep: {f_start_ghz: 0.1, f_stop_ghz: 110, n_points: 220}
+alt_geometries:
+  protrusion:
+    symmetry: none
+    domain:
+      x_um: [-250, 250]
+      y_um: [-100, 60]
+    regions:
+    - name: ambient
+      material: air
+      rect:
+        x_um: [-250, 250]
+        y_um: [-100, 60]
+    - name: substrate
+      material: silicon
+      rect:
+        x_um: [-250, 250]
+        y_um: [-728, -3]
+    - name: box
+      material: silicon_dioxide
+      rect:
+        x_um: [-250, 250]
+        y_um: [-3, 0]
+    - name: cmp_oxide
+      material: silicon_dioxide
+      rect:
+        x_um: [-250, 250]
+        y_um: [0, 0.19]
+    - name: si_wg_r
+      material: silicon
+      rect:
+        x_um: [31.8625, 32.1375]
+        y_um: [0, 0.15]
+    - name: si_wg_l
+      material: silicon
+      rect:
+        x_um: [-32.1375, -31.8625]
+        y_um: [0, 0.15]
+    - name: ln_film
+      material: lithium_niobate
+      rect:
+        x_um: [-250, 250]
+        y_um: [0.19, 0.79]
+    electrodes:
+    - name: signal
+      role: signal
+      weight: 1.0
+      rect:
+        x_um: [-27.5, 27.5]
+        y_um: [0.79, 1.54]
+      material: gold
+    - name: ground_r
+      role: ground
+      weight: 0.0
+      rect:
+        x_um: [36.5, 136.5]
+        y_um: [0.79, 1.54]
+      material: gold
+    - name: ground_l
+      role: ground
+      weight: 0.0
+      rect:
+        x_um: [-136.5, -36.5]
+        y_um: [0.79, 1.54]
+      material: gold
+    optical_window:
+      x_um: [28, 36]
+      y_um: [-1.0, 1.6]
+    mesh: {max_edge_um: 2.0, electrode_edge_um: 0.05}
+targets:
+- metric: vpi_l_dc_vcm
+  value: 3.1
+  tol_rel: 0.15
+  source: {device_id: valdez2022-a, field: vpil_dc_vcm}
+- metric: ng_opt
+  value: 2.32
+  tol_abs: 0.05
+  source: {device_id: valdez2022-a, field: ng_opt}
+- metric: n_rf
+  at_ghz: 110
+  value: 2.34
+  tol_abs: 0.05
+  source: {device_id: valdez2022-a, field: n_rf}
+- metric: z0_ohm
+  value: 42
+  tol_abs: 3.0
+  source: {paper_id: valdez2022, locator: p.8 Sec. High-Speed Measurements, basis: unspecified, note: paper does not say whether simulated or measured}
+reported_curves: []
+provenance:
+  optics.wavelength_nm: {class: paper_exact, locator: p.1 abstract}
+  optics.polarization: {class: paper_exact, locator: p.2 Sec. Theory and Design (TE-polarized hybrid mode)}
+  optics.group_index_from: {class: project_inference, note: paper simulates ng = 2.32 (p.6); engine derives it by finite difference and compares as a target}
+  materials.lithium_niobate.crystal: {class: paper_exact, locator: p.5 (x-cut LNOI); p.2 Fig. 1(a) axes, note: propagation along y per Fig. 1(a) axes (figure reading)}
+  geometry.regions.ln_film: {class: paper_exact, locator: 'p.5 (600 nm x-cut LN, unetched)'}
+  geometry.regions.box: {class: paper_exact, locator: p.5 (3 um SiO2 of the SOI)}
+  geometry.regions.substrate: {class: paper_exact, locator: p.5 (725 um high-resistivity Si handle), note: region clipped to the domain; resistivity not stated}
+  geometry.regions.si_wg_r: {class: paper_exact, locator: 'p.2 Sec. Theory and Design (275 nm wide, 150 nm tall)'}
+  geometry.regions.si_wg_l: {class: paper_exact, locator: 'p.2 Sec. Theory and Design (275 nm wide, 150 nm tall)'}
+  geometry.regions.cmp_oxide: {class: paper_exact, locator: p.6 (about 40 nm CMP SiO2); p.5 (below 50 nm), note: 40 nm between the Si top and the LN; Si assumed to sit directly on the BOX}
+  geometry.regions.ambient: {class: paper_exact, locator: 'p.2 Fig. 1(c,d) (Air above TFLN)', note: no top cladding on the LN}
+  geometry.electrodes.signal: {class: paper_exact, locator: p.6 (signal width 55 um); p.5 (750 nm Au over 20 nm Ti), note: 'width 55 um at the protrusion plane; slotted section recessed by 4 um per edge (slot depth h = 4 um, p.6); Ti adhesion layer not
+      modelled'}
+  geometry.electrodes.ground_r: {class: project_inference, locator: p.6 (gap 9 um); Fig. 3(c), note: 'inner edge 9 um from the protrusion plane (4 um further in the slotted section); width 100 um assumed, not stated'}
+  geometry.electrodes.ground_l: {class: project_inference, locator: p.6 (gap 9 um); Fig. 3(c), note: mirror of ground_r}
+  geometry.regions.si_wg_r.x_um: {class: project_inference, locator: p.7 Sec. High-Speed Measurements (waveguide separation fixes the gap), note: 'waveguides centred in the two gaps: x = +-(55/2 + 9/2) = +-32 um; lateral position within the gap not stated'}
+  line.length_mm: {class: paper_exact, locator: p.7 (Lps = 0.5 cm); p.6 Fig. 3(c) (5 mm SWE)}
+  line.load_ohm: {class: project_inference, locator: p.8; p.4 Eq. (4), note: 50 ohm load implied by the discussion of impedance mismatch to a 50 ohm load}
+  line.source_ohm: {class: project_inference, note: 50 ohm instrument source assumed}
+  line.differential: {class: project_inference, locator: p.2 Fig. 1(a); p.6 Fig. 3(c), note: 'GSG with one waveguide per gap: single-ended feed, push-pull arms by geometry; authors do not state it'}
+  line.loading.period_um: {class: paper_exact, locator: p.6 (period of 25 um)}
+  line.loading.loaded_length_um: {class: paper_exact, locator: 'p.6 (slot 5 um wide, w)', note: 'treated as the length of the slotted (recessed-electrode) section along propagation; periodic_t_rail used as the closest valid form, see SPEC_PROPOSALS'}
+  geometry.optical_window: {class: project_inference, note: crop around the right-hand Si waveguide}
+  geometry.domain: {class: project_inference, note: +-250 um lateral; open-boundary treatment is an engine choice}
+  geometry.mesh: {class: project_inference}
+missing: ['lithium_niobate n_o, n_e at 1550 nm, RF permittivity (anisotropic) and Pockels tensor (not stated; eq. 5 uses r33 and ne symbolically)', silicon_dioxide refractive index and RF permittivity (not stated), 'silicon refractive index, RF permittivity
+    and handle-wafer resistivity (high-resistivity only; not stated)', gold conductivity / film quality (not stated), ground electrode width (Fig. 3(c) micrograph only; scale of the micrograph is inconsistent with the stated 55 um signal / 9 um gap; 100
+    um assumed), lateral position of the waveguides inside the 9 um gaps, 'exact slot/protrusion layout on the signal and ground edges (Fig. 1(a), 3(d): recess assumed on all four gap-facing edges)', sidewall angle of the Au electrodes and electrode edge
+    profile, RF loss of the line (not reported; no fit given), whether Z0 = 42 ohm is simulated or measured (stated only for the 9 um gap line), DC bias and temperature (not stated)]
+limitations: [scalar_optical_not_full_vector, quasi_static_2d_rf, rectangular_or_polygon_sidewalls_only, no_3d_launch_pad_effects, Config is not runnable until material constants are supplied from a verified source; the engine rejects dielectrics without
+    eps_r by design, Slot loading is represented as a two-section periodic cascade (protrusion/slotted) using the periodic_t_rail form; this is an inductive-loading structure with no T-rail bars, Z0 target of 42 ohm has unspecified provenance in the paper;
+    treat with care, Only the right-hand optical arm is solved; both arms are in the electrostatic domain so the push-pull field comes from the geometry, The 3 dB bandwidth (110 GHz) is a lower-bound-type claim at the measurement limit and is not a target]

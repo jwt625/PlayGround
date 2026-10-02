@@ -1,0 +1,240 @@
+paper_id: meng2023
+verified_on: '2026-10-01'
+source_files:
+- references/meng2023/text.md
+- references/meng2023/figures/page_06.png
+- references/meng2023/figures/page_09.png
+- references/meng2023/figures/page_10.png
+- references/meng2023/figures/page_11.png
+entries:
+- device_id: meng2023-a
+  field: wavelength_nm
+  value: 1310
+  unit: nm
+  basis: measured
+  locator: p.9 Sec. 3 (IL at 1310 nm); p.5 (ITO index at 1310 nm)
+  note: Vpi measurement uses an O-band laser (Fig. 5(a) schematic)
+- device_id: meng2023-a
+  field: length_mm
+  value: 5
+  unit: mm
+  basis: measured
+  locator: p.9 Sec. 3.1; p.10 Sec. 3.2
+- device_id: meng2023-a
+  field: vpi_dc_v
+  value: 2.04
+  unit: V
+  basis: measured
+  locator: p.9 Sec. 3.1; Fig. 5(a)
+  note: 100 kHz sawtooth sweep
+- device_id: meng2023-a
+  field: vpil_dc_vcm
+  value: 1.02
+  unit: V*cm
+  basis: measured
+  locator: p.1 abstract; p.9 Sec. 3.1
+  note: Sec. 1 and Table 1 give 1.024
+- device_id: meng2023-a
+  field: bw3db_ghz
+  value: 108
+  unit: GHz
+  basis: measured
+  locator: p.10 Sec. 3.2; Fig. 6
+  note: EO S21 rolled down to -3 dB at 108 GHz
+- device_id: meng2023-a
+  field: bw_measured_to_ghz
+  value: 110
+  unit: GHz
+  basis: extracted_from_figure
+  locator: p.10 Fig. 6
+  note: x-axis end of the measured trace; instrument limit not stated
+- device_id: meng2023-a
+  field: bw3db_reference
+  value: unspecified
+  unit: ''
+  basis: measured
+  locator: p.10 Fig. 6
+  note: no reference frequency stated
+- device_id: meng2023-a
+  field: extinction_ratio_db
+  value: 1.98
+  unit: dB
+  basis: measured
+  locator: p.11 Sec. 3.2; Fig. 7(e)
+  note: dynamic ER of the 224 Gb/s PAM4 eye
+- device_id: meng2023-a
+  field: ng_opt
+  value: 2.29
+  unit: '1'
+  basis: simulated
+  locator: p.6 Fig. 2(b)
+  note: TE0 mode label ng ~ 2.29
+- device_id: meng2023-a
+  field: eo_film_thickness_nm
+  value: 500
+  unit: nm
+  basis: derived
+  locator: p.5
+  note: film = ridge 260 nm + slab 240 nm
+- device_id: meng2023-a
+  field: etch_depth_nm
+  value: 260
+  unit: nm
+  basis: measured
+  locator: p.5 Sec. 2.2
+  note: ridge height h; taken as etch depth
+- device_id: meng2023-a
+  field: rib_width_nm
+  value: 2000
+  unit: nm
+  basis: measured
+  locator: p.5 Sec. 2.2
+  note: ridge width w; top or bottom not stated
+- device_id: meng2023-a
+  field: slab_thickness_nm
+  value: 240
+  unit: nm
+  basis: measured
+  locator: p.5 Sec. 2.2
+- device_id: meng2023-a
+  field: electrode_gap_um
+  value: 3
+  unit: um
+  basis: measured
+  locator: p.6; p.9 Sec. 3.1
+  note: ITO electrode gap; gold electrode gap is 5 um
+- device_id: meng2023-a
+  field: electrode_thickness_um
+  value: 1.4
+  unit: um
+  basis: measured
+  locator: p.6
+  note: gold; ITO 180 nm
+- device_id: meng2023-a
+  field: electrode_metal
+  value: Au (1.4 um); inner ITO electrodes 180 nm
+  unit: ''
+  basis: measured
+  locator: p.6; Fig. 2(a)
+- device_id: meng2023-a
+  field: buffer_oxide_um
+  value: 0.1
+  unit: um
+  basis: measured
+  locator: p.5 Sec. 2.2
+  note: 100 nm silicon oxide buffer
+- device_id: meng2023-a
+  field: substrate
+  value: Si (Fig. 2(a)); BOX thickness not stated
+  unit: ''
+  basis: extracted_from_figure
+  locator: p.6 Fig. 2(a)
+- device_id: meng2023-a
+  field: cladding
+  value: SiO2 (Fig. 2(a)); thickness not stated
+  unit: ''
+  basis: extracted_from_figure
+  locator: p.6 Fig. 2(a)
+- device_id: meng2023-a
+  field: crystal_cut
+  value: x-cut
+  unit: ''
+  basis: measured
+  locator: p.3 Sec. 2.1
+- device_id: meng2023-a
+  field: max_baud_gbd
+  value: 112
+  unit: GBd
+  basis: measured
+  locator: p.11 Fig. 7
+  note: 224 Gb/s PAM4 at 112 GBd
+- device_id: meng2023-a
+  field: modulation_format
+  value: OOK 56/80/112 Gb/s; PAM4 112 Gb/s (56 GBd) and 224 Gb/s (112 GBd)
+  unit: ''
+  basis: measured
+  locator: p.10-11 Fig. 7
+- device_id: meng2023-a
+  field: max_line_rate_gbps
+  value: 224
+  unit: Gb/s
+  basis: measured
+  locator: p.1 abstract; p.11 Fig. 7(e)
+- device_id: meng2023-a
+  field: driver
+  value: SHF S804B driver (22 dB gain), Keysight M8199A 70 GHz AWG
+  unit: ''
+  basis: measured
+  locator: p.10 Sec. 3.2
+- device_id: meng2023-a
+  field: drive
+  value: push_pull
+  unit: ''
+  basis: measured
+  locator: p.4 Sec. 2.2
+  note: GSG electrode structure used for push-pull modulation
+- device_id: meng2023-a
+  field: vpi_convention
+  value: mzm_push_pull
+  unit: ''
+  basis: derived
+  locator: p.4 Sec. 2.2; p.9 Sec. 3.1
+  note: authors state push-pull drive but do not define the Vpi convention
+- device_id: meng2023-b
+  field: length_mm
+  value: 8
+  unit: mm
+  basis: measured
+  locator: p.12 Sec. 3.2; Fig. 8
+- device_id: meng2023-b
+  field: extinction_ratio_db
+  value: 6.0
+  unit: dB
+  basis: measured
+  locator: p.12 Sec. 3.2; Fig. 8(b)
+  note: dynamic ER, 56 Gb/s OOK, with TCO
+- device_id: meng2023-b
+  field: modulation_format
+  value: OOK 56 Gb/s
+  unit: ''
+  basis: measured
+  locator: p.12 Fig. 8
+- device_id: meng2023-b
+  field: max_line_rate_gbps
+  value: 56
+  unit: Gb/s
+  basis: measured
+  locator: p.12 Fig. 8
+- device_id: meng2023-c
+  field: length_mm
+  value: 8
+  unit: mm
+  basis: measured
+  locator: p.12 Sec. 3.2; Fig. 8
+- device_id: meng2023-c
+  field: extinction_ratio_db
+  value: 1.3
+  unit: dB
+  basis: measured
+  locator: p.12 Sec. 3.2; Fig. 8(a)
+  note: dynamic ER, 56 Gb/s OOK, without TCO
+- device_id: meng2023-c
+  field: modulation_format
+  value: OOK 56 Gb/s
+  unit: ''
+  basis: measured
+  locator: p.12 Fig. 8
+- device_id: meng2023-c
+  field: max_line_rate_gbps
+  value: 56
+  unit: Gb/s
+  basis: measured
+  locator: p.12 Fig. 8
+derived:
+- device_id: meng2023-a
+  field: eo_film_thickness_nm
+  value: 500
+  formula: h + s = 260 nm + 240 nm
+  inputs:
+  - etch_depth_nm
+  - slab_thickness_nm

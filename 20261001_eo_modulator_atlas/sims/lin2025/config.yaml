@@ -23,10 +23,10 @@ materials:
   lithium_tantalate:
     crystal: {cut: x, propagation: y}
     eps_r: {perp: 41.0, par: 43.0}
-    r_pm_per_v: {r13: 8.4, r33: 30.5}
+    r_pm_per_v: {r33: 30.5}
   silicon_dioxide: {n: 1.444, eps_r: 3.9}
   silicon: {n: 3.476, eps_r: 11.7}
-  copper: {conductor: true, sigma_Sm: 4.9e7, n_complex: null}
+  copper: {conductor: true, sigma_Sm: 4.9e+7, n_complex: null}
   air: {n: 1.0, eps_r: 1.0}
 
 geometry:
@@ -75,11 +75,12 @@ provenance:
   optics.polarization: {class: project_inference, note: "TE assumed for the x-cut film; polarization is not stated for the Vpi measurement (an FPC is used in Fig. 4(a))"}
   optics.group_index_from: {class: project_inference, note: "paper quotes an optical group index of 2.22 (p.11); the engine derives it and compares it as a target"}
   materials.lithium_tantalate.crystal: {class: project_inference, locator: "p.5 (X-cut TFLT wafer)", note: "propagation direction is not stated; y propagation assumed"}
-  materials.lithium_tantalate.eps_r: {class: standard_reference, citation: "Weis and Gaylord, Appl. Phys. A 37, 191 (1985)", note: "perp 41 / par 43 are recalled literature values; NOT verified against the cited source in this offline batch; the paper does not state RF permittivity. Verify before any validation claim."}
-  materials.lithium_tantalate.r_pm_per_v.r33: {class: standard_reference, citation: "r33 = 30.5 pm/V as used for LiTaO3 in niels2026 (references/niels2026 text.md p.9)", note: "not stated in lin2025"}
-  materials.lithium_tantalate.r_pm_per_v.r13: {class: standard_reference, citation: "Weis and Gaylord, Appl. Phys. A 37, 191 (1985)", note: "8.4 pm/V is a recalled value, NOT verified in this offline batch"}
-  materials.silicon_dioxide: {class: standard_reference, citation: "standard handbook values (n = 1.444 at 1550 nm, eps_r = 3.9) for BOX and PECVD cladding; paper states neither"}
-  materials.silicon: {class: standard_reference, citation: "standard handbook values (n = 3.476, eps_r = 11.7); resistivity 'high-resistivity' not quantified, modelled lossless"}
+  materials.lithium_tantalate.eps_r: {class: unknown, note: "UNVERIFIED: 41 / 43 are recalled values with no opened source (no LT permittivity in any cached paper); the paper does not state RF permittivity. Kept only so the config is runnable; replace after a LiTaO3 reference is opened. Any result depending on it must not be quoted as reproduction."}
+  materials.lithium_tantalate.r_pm_per_v.r33: {class: standard_reference, citation: "r33 = 30.5 pm/V is the EO coefficient of LiTaO3 as stated in references/niels2026 text.md p.9", note: "value used in another paper's model; not stated in lin2025"}
+  materials.silicon_dioxide.n: {class: standard_reference, citation: "Malitson, J. Opt. Soc. Am. 55, 1205 (1965), as in engine/data/materials.json (n = 1.444 at 1550 nm)", note: "BOX and PECVD cladding"}
+  materials.silicon_dioxide.eps_r: {class: project_inference, note: "3.9 is a typical handbook value; no source was opened; paper states none; UNVERIFIED"}
+  materials.silicon.eps_r: {class: standard_reference, citation: "eps_r = 11.7 as stated in references/li2026 text.md p.1 (same group, different paper)", note: "resistivity 'high-resistivity' not quantified, modelled lossless"}
+  materials.silicon.n: {class: standard_reference, citation: "Salzberg and Villa, J. Opt. Soc. Am. 47, 244 (1957), as in engine/data/materials.json (n = 3.476 at 1550 nm)"}
   materials.copper.sigma_Sm: {class: paper_exact, locator: "p.7 and Fig. 2(c); p.12 Methods", note: "electroplated Cu resistivity 2.04 uOhm cm after self-annealing -> 1/2.04e-8 = 4.9e7 S/m"}
   line.length_mm: {class: paper_exact, locator: "p.8; Fig. 3(a) caption (16 mm modulation region)"}
   line.source_ohm: {class: paper_exact, locator: "p.13 Methods, 50 ohm termination via second probe; Fig. 3(d) inset"}
@@ -105,8 +106,8 @@ missing:
   - rib sidewall angle and whether 4 um is the top or base width (vertical walls assumed)
   - ground electrode width (100 um assumed) and MZM signal width (27 um taken from the test CPW)
   - waveguide lateral position in the 6 um gap (centred assumed)
-  - RF permittivity and loss tangent of LT, SiO2, Si (literature values flagged unverified; Si resistivity not quantified)
-  - Pockels coefficients r22 and r51 of LiTaO3 (not in config; the engine treats missing keys as 0)
+  - RF permittivity of LT (UNVERIFIED placeholder 41 / 43 kept with provenance class unknown) and SiO2 (3.9, unverified), loss tangents of all; Si resistivity not quantified
+  - Pockels coefficients r13, r22 and r51 of LiTaO3 (not in config; the engine treats missing keys as 0; r13 acts on the TM-like response and is expected to be small for this TE geometry, not verified)
   - polarization of the measurement
 limitations:
   - scalar_optical_not_full_vector
@@ -115,6 +116,6 @@ limitations:
   - no_3d_launch_pad_effects
   - "10 nm Ti barrier and 100 nm Si3N4 passivation omitted"
   - "Silicon substrate modelled lossless (resistivity not given), so substrate RF loss is absent"
-  - "LT RF permittivity and r13 are recalled literature values flagged unverified; r22 and r51 omitted"
+  - "LT RF permittivity (41 / 43) is an UNVERIFIED recalled placeholder; only r33 is given (cross-checked against niels2026); r13, r22, r51 omitted"
   - "6 mm variant lin2025-b and the system row lin2025-c share this cross-section; no variants mechanism in SPEC yet"
   - "Fig. 1(h) of the paper (a simulation sketch) and Fig. 1(f) (SEM) are not consistent with the stated 4 um / 6 um dimensions at their scale bars; text values are used"

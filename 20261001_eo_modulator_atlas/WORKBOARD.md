@@ -15,8 +15,8 @@ unassigned. No implicit delegation.
 |---|---|---|---|---|
 | C0 | Work plan, claims, current-state record | complete | codex-main | This board + detailed plan + claim file |
 | D0 | Ingestion tooling and policy alignment | implementation reported complete | claude-data-lane | DevLog-004 records lock/breaker tests; single prefetch owner retained |
-| D1.01–D1.11 | Priority-1 paper batches, one claim per batch | in progress; p1_01 integrated, p1_02/03/09 reports present | claude-data-lane | Max 3 concurrent; batch-specific Q1 corrections before D2 |
-| D2 | Canonical data integration and view refresh | in progress; p1_01 integrated | claude-data-lane | Serial merges; p1_09 audit corrections remain outstanding |
+| D1.01–D1.11 | Priority-1 paper batches, one claim per batch | paused by user 2026-10-01 ~20:50; p1_01/03/09 integrated; p1_02/04 distilled, unaudited; p1_05..08/10/11 prefetched | claude-data-lane | See DevLog-004 TODO; max 3 concurrent; Q1 corrections before D2 |
+| D2 | Canonical data integration and view refresh | paused; canonical = 15 papers / 28 devices / 27 orgs | claude-data-lane | Serial merges; p1_02 and p1_04 await Q1 |
 | E1 | Cross-section runner, config boundary, analytic baseline | ready_for_review | codex-main | Author gates pass; Q2 independent audit pending; DevLog-003 handoff |
 | E2 | Optical model limits, EO tensor overlap and voltage conventions | ready to claim | unassigned | E1 handoff available; optics.mjs released; coordinate shared interfaces |
 | E3 | Uniform RF line, conductor/dielectric loss | design ready; integration waits | unassigned | E1 section outputs; explicit model contract |

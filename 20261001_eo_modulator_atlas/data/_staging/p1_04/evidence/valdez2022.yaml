@@ -1,0 +1,172 @@
+paper_id: valdez2022
+verified_on: '2026-10-01'
+source_files:
+- references/valdez2022/text.md
+- references/valdez2022/figures/page_07.png
+- references/valdez2022/figures/page_08.png
+- references/valdez2022/figures/page_10.png
+- references/valdez2022/figures/page_06.png
+- references/valdez2022/crossref.json
+entries:
+- device_id: valdez2022-a
+  field: wavelength_nm
+  value: 1550
+  unit: nm
+  basis: measured
+  locator: p.1 abstract
+  note: 3 dB bandwidth stated at 1550 nm
+- device_id: valdez2022-a
+  field: length_mm
+  value: 5
+  unit: mm
+  basis: measured
+  locator: p.7 Sec. High-Speed Measurements; Fig. 4(b)
+  note: Lps = 0.5 cm; electrode also 5 mm in Fig. 3(c)
+- device_id: valdez2022-a
+  field: vpil_dc_vcm
+  value: 3.1
+  unit: V*cm
+  basis: measured
+  locator: p.7; Fig. 4(b)
+  note: average over 0.1-10 MHz, trapezoid overdrive; low-frequency value
+- device_id: valdez2022-a
+  field: bw3db_ghz
+  value: 110
+  unit: GHz
+  basis: measured
+  locator: p.1 abstract; p.8 Fig. 5; p.9 Table 1
+  note: 'abstract: greater than 110 GHz; body: 110 GHz'
+- device_id: valdez2022-a
+  field: bw_measured_to_ghz
+  value: 110
+  unit: GHz
+  basis: measured
+  locator: p.7 (bands 1-50, 47-78, 72-110 GHz); Fig. 5 x-axis
+- device_id: valdez2022-a
+  field: il_fiber_to_fiber_db
+  value: 12.2
+  unit: dB
+  basis: measured
+  locator: p.7 Fig. 4(a); p.10 Fig. 6
+  note: low power 1 mW, wavelength not stated
+- device_id: valdez2022-a
+  field: il_onchip_db
+  value: 1.8
+  unit: dB
+  basis: derived
+  locator: p.10 Methods; Fig. 6
+  note: 12.2 dB total minus 2 x 5.2 dB edge coupling; component losses subtracted by authors
+- device_id: valdez2022-a
+  field: extinction_ratio_db
+  value: 28
+  unit: dB
+  basis: measured
+  locator: p.7 Fig. 4(a)
+  note: mean over 50 nm, no modulation applied; max 31 dB at 1560 nm
+- device_id: valdez2022-a
+  field: optical_power_handling_dbm
+  value: 20.4
+  unit: dBm
+  basis: measured
+  locator: p.1 abstract (110 mW); p.10 Conclusion (20.4 dBm)
+  note: maximum on-chip peak power tested, quasi-CW 1 us pulses; not a damage limit
+- device_id: valdez2022-a
+  field: ng_opt
+  value: 2.32
+  unit: '1'
+  basis: simulated
+  locator: p.6
+  note: hybrid group index simulated; stated as 2.32 without approximation word
+- device_id: valdez2022-a
+  field: n_rf
+  value: 2.34
+  unit: '1'
+  basis: simulated
+  locator: p.6
+  note: slow-wave RF index at 110 GHz, simulated
+- device_id: valdez2022-a
+  field: eo_film_thickness_nm
+  value: 600
+  unit: nm
+  basis: measured
+  locator: p.5 Sec. Hybrid Si/LN Chip Fabrication
+  note: x-cut LNOI, 600 nm film
+- device_id: valdez2022-a
+  field: electrode_gap_um
+  value: 9
+  unit: um
+  basis: measured
+  locator: p.6
+  note: signal-to-ground gap
+- device_id: valdez2022-a
+  field: signal_width_um
+  value: 55
+  unit: um
+  basis: measured
+  locator: p.6
+- device_id: valdez2022-a
+  field: electrode_thickness_um
+  value: 0.75
+  unit: um
+  basis: measured
+  locator: p.5
+  note: 750 nm Au over 20 nm Ti
+- device_id: valdez2022-a
+  field: electrode_metal
+  value: Au (20 nm Ti adhesion layer)
+  unit: ''
+  basis: measured
+  locator: p.5
+- device_id: valdez2022-a
+  field: substrate
+  value: 'SOI: 150 nm Si on 3 um SiO2 on 725 um high-resistivity Si; LN film bonded on top, LNOI handle removed'
+  unit: ''
+  basis: measured
+  locator: p.5
+- device_id: valdez2022-a
+  field: cladding
+  value: air above LN and electrodes (Fig. 1(c,d)); CMP SiO2 about 40 nm between Si waveguide and LN
+  unit: ''
+  basis: measured
+  locator: p.2 Fig. 1(c,d); p.6
+  note: 40 nm for the fabricated structures; text elsewhere says below 50 nm
+- device_id: valdez2022-a
+  field: crystal_cut
+  value: x-cut
+  unit: ''
+  basis: measured
+  locator: p.5
+- device_id: valdez2022-a
+  field: epitaxy_or_stack
+  value: Si handle / 3 um SiO2 / 150 nm Si strip (275 nm wide in hybrid section, 650 nm in transition) / CMP SiO2 about 40 nm / 600 nm x-cut LN (unetched) / Au electrodes directly on LN
+  unit: ''
+  basis: measured
+  locator: p.2; p.5; p.6
+- device_id: valdez2022-a
+  field: modulation_format
+  value: none (small-signal EO S21 and Vpi characterization only)
+  unit: ''
+  basis: measured
+  locator: p.7-8
+- device_id: valdez2022-a
+  field: drive
+  value: push_pull
+  unit: ''
+  basis: derived
+  locator: p.2 Fig. 1(a); p.6 Fig. 3(b,c)
+  note: authors do not state it; GSG line with one waveguide in each gap
+- device_id: valdez2022-a
+  field: vpi_convention
+  value: mzm_push_pull
+  unit: ''
+  basis: derived
+  locator: p.2 Fig. 1(a); p.7
+  note: authors do not state it; inferred from drive geometry
+- device_id: valdez2022-a
+  field: bw3db_reference
+  value: unspecified
+  unit: ''
+  basis: measured
+  locator: p.8 Fig. 5
+  note: curve starts at 0 dB near 1 GHz; reference not stated
+derived: []

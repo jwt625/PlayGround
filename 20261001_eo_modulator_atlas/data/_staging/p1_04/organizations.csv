@@ -1,0 +1,10 @@
+org_name,org_type,country,region,parent_org,notes
+"University of California, San Diego",university,US,north_america,,"La Jolla, CA; Electrical & Computer Engineering"
+Sandia National Laboratories,national_lab,US,north_america,,"Albuquerque, NM; Applied Microphotonic Systems; Si photonics foundry process (ref. 4 of the paper)"
+San Diego Nanotechnology Infrastructure,facility,US,north_america,"University of California, San Diego",Acknowledged for part of the work (valdez2023); country from host institution
+Huazhong University of Science and Technology,university,CN,east_asia,,"Wuhan; Wuhan National Laboratory for Optoelectronics, School of Optical and Electronic Information"
+Huawei Technologies,company,CN,east_asia,,Shenzhen; B & P Laboratory; name as written in the affiliation
+Harvard University,university,US,north_america,,"Cambridge, MA; John A. Paulson School of Engineering and Applied Sciences"
+Center for Nanoscale Systems,facility,US,north_america,Harvard University,Acknowledgements: device fabrication performed at the center for nanoscale systems (CNS) at Harvard University; country from host institution
+California Institute of Technology,university,US,north_america,,"Pasadena, CA; Division of Physics, Mathematics and Astronomy and Alliance for Quantum Technologies (affiliation 4); name as in the affiliation (PDF text extraction spacing garbled)"
+"Agency for Science, Technology and Research",research_institute,SG,southeast_asia,,Singapore; affiliation 2 is the Institute of Materials Research and Engineering of A*STAR

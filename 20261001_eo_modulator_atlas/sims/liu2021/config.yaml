@@ -93,11 +93,12 @@ alt_geometries:
     mesh: {max_edge_um: 2.0, electrode_edge_um: 0.05}
 
 targets:
+  # Targets that depend on the placeholder ridge width/sidewall angle or on UNVERIFIED material constants carry comparable: false in `source`.
   # Measured, 5 mm device (devices.csv row liu2021-a)
-  - {metric: vpi_l_dc_vcm, value: 1.7, tol_rel: 0.15, source: {device_id: liu2021-a, field: vpil_dc_vcm}}
-  - {metric: n_rf, value: 2.3, tol_abs: 0.1, source: {device_id: liu2021-a, field: n_rf}}
-  - {metric: ng_opt, value: 2.25, tol_abs: 0.05, source: {device_id: liu2021-a, field: ng_opt}}
-  - {metric: eo_rolloff_db, at_ghz: 67, value: -1.3, tol_abs: 0.5, source: {device_id: liu2021-a, field: eo_rolloff_db}}
+  - {metric: vpi_l_dc_vcm, value: 1.7, tol_rel: 0.15, source: {device_id: liu2021-a, field: vpil_dc_vcm, comparable: false, note: "NON-COMPARABLE until the fabricated ridge width and sidewall angle are known (1 um top width, 68 deg are placeholders) and with UNVERIFIED LN constants"}}
+  - {metric: n_rf, value: 2.3, tol_abs: 0.1, source: {device_id: liu2021-a, field: n_rf, note: "depends on UNVERIFIED eps_r placeholders and the assumed rail thickness and ground width"}}
+  - {metric: ng_opt, value: 2.25, tol_abs: 0.05, source: {device_id: liu2021-a, field: ng_opt, comparable: false, note: "NON-COMPARABLE: depends on the placeholder ridge width/sidewall angle, the truncated optical window and UNVERIFIED indices"}}
+  - {metric: eo_rolloff_db, at_ghz: 67, value: -1.3, tol_abs: 0.5, source: {device_id: liu2021-a, field: eo_rolloff_db, comparable: false, note: "depends on placeholders (rail thickness, ridge, UNVERIFIED constants)"}}
   # Not targets: 3 dB EO bandwidth over 110 GHz is a prediction (bound-type, see SPEC_PROPOSALS); no Z0 or RF loss number is stated
 reported_curves: []
 
@@ -106,15 +107,16 @@ provenance:
   optics.polarization: {class: paper_exact, locator: "p.3 testing paragraph (TE polarized incident light)"}
   optics.group_index_from: {class: project_inference, note: "paper quotes ng about 2.25 (Fig. 4(e)); engine derives it by finite difference and compares as a target"}
   materials.lithium_niobate.crystal: {class: paper_exact, locator: "p.3 fabrication paragraph (X-cut TFLN); propagation along y is a project_inference from the standard x-cut convention"}
-  materials.lithium_niobate.n_o: {class: standard_reference, citation: "Zelmon, Small, Jundt, J. Opt. Soc. Am. B 14, 3319 (1997)", note: "value copied from the chen2022 config / SPEC example; NOT verified against the source in this offline batch"}
-  materials.lithium_niobate.n_e: {class: standard_reference, citation: "Zelmon, Small, Jundt, J. Opt. Soc. Am. B 14, 3319 (1997)", note: "value copied from the chen2022 config / SPEC example; NOT verified against the source in this offline batch"}
-  materials.lithium_niobate.eps_r: {class: standard_reference, citation: "Weis and Gaylord, Appl. Phys. A 37, 191 (1985)", note: "SPEC example values 43/28, NOT verified; paper does not state RF permittivity"}
-  materials.lithium_niobate.r_pm_per_v: {class: standard_reference, citation: "Weis and Gaylord, Appl. Phys. A 37, 191 (1985)", note: "SPEC example values, NOT verified; the paper quotes r33 = 31 pm/V (p.1) only"}
-  materials.silicon_dioxide: {class: standard_reference, citation: "standard handbook values (n = 1.444 at 1550 nm, eps_r = 3.9), NOT verified; paper states neither for the bonding oxide or the PECVD buffer"}
-  materials.quartz: {class: standard_reference, citation: "crystalline quartz n about 1.53, eps_r about 4.5, recalled, NOT verified; eps about 4.5 is quoted for quartz in kharel2021 p.3", note: "paper gives no quartz constants; the quartz layer lies outside the optical window"}
-  materials.gold.sigma_Sm: {class: standard_reference, citation: "bulk gold 4.1e7 S/m as in sims/chen2022/config.yaml, NOT verified", note: "film conductivity not stated (electroplated main electrodes, lift-off rails)"}
+  materials.lithium_niobate.n_o: {class: unknown, note: "UNVERIFIED placeholder 2.211, copied from the chen2022 config; not given in the paper or a cached source; kept only so the cross-section can be solved"}
+  materials.lithium_niobate.n_e: {class: unknown, note: "UNVERIFIED placeholder 2.138, copied from the chen2022 config; not given in the paper or a cached source"}
+  materials.lithium_niobate.eps_r: {class: unknown, note: "UNVERIFIED placeholder 43/28 (SPEC.md example values); the paper states no RF permittivity"}
+  materials.lithium_niobate.r_pm_per_v: {class: unknown, note: "UNVERIFIED placeholder (SPEC.md example values); the paper quotes only r33 = 31 pm/V (p.1), and the other coefficients are not given"}
+  materials.silicon_dioxide: {class: unknown, note: "UNVERIFIED placeholder n = 1.444, eps_r = 3.9; the paper states neither for the bonding oxide or the PECVD buffer"}
+  materials.quartz.eps_r: {class: standard_reference, citation: "references/kharel2021/text.md p.3 (eps_Qz about 4.5 for the quartz handle of a NanoLN wafer)", note: "approximate value quoted by another paper for the same wafer type; liu2021 gives no quartz constants"}
+  materials.quartz.n: {class: unknown, note: "UNVERIFIED placeholder 1.53; not given in the paper; the quartz layer lies outside the optical window"}
+  materials.gold.sigma_Sm: {class: unknown, note: "UNVERIFIED placeholder 4.1e7 S/m (bulk-gold value used in the chen2022 config); film conductivity not stated (electroplated main electrodes, lift-off rails)"}
   line.length_mm: {class: paper_exact, locator: "p.4; abstract (5-mm-long modulation region)"}
-  line.source_ohm: {class: paper_exact, locator: "p.4 (50 ohm probe termination used for the EO measurement)"}
+  line.source_ohm: {class: project_inference, note: "source impedance not stated; 50 ohm VNA port assumed (p.4 names a VNA and a 50 ohm probe termination)"}
   line.load_ohm: {class: paper_exact, locator: "p.4 (another microwave probe provides a 50 ohm termination)"}
   line.differential: {class: project_inference, note: "G-S-G with one arm per gap (Fig. 3(a)); drive single-ended, arms push-pull by geometry; the paper never states push-pull"}
   line.conductor_loss_model: {class: project_inference, note: "no RF loss coefficient is stated; model choice left to the engine"}
@@ -132,7 +134,7 @@ provenance:
   geometry.electrodes.signal: {class: paper_exact, locator: "p.3 Fig. 3(a); Table S1 (Ws = 50 um); p.3 fabrication paragraph (1.4 um electroplated)", note: "50 um wide, 1.4 um thick; bottom surface on the silica buffer (Fig. 1(b))"}
   geometry.electrodes.ground_r: {class: project_inference, locator: "Fig. 3(a)", note: "ground width not stated; taken equal to the signal width (Fig. 3(a) draws it about 1.1x); inner edge at G2/2 = 7.5 um from the waveguide axis (G2 = 15 um, Table S1, waveguide assumed centred)"}
   geometry.electrodes.ground_l: {class: project_inference, note: "mirror of ground_r"}
-  geometry.electrodes.rail_r_signal_side: {class: project_inference, locator: "p.6 Table S1 (WT = 3, G1 = 3 um); SEM inset Fig. 4(a)", note: "rail width 3 um and gap 3 um verified against the SEM (about 3.1 and 2.5 um); rail THICKNESS not stated (lift-off rails, main electrodes thickened to 1.4 um by electroplating): 1.4 um assumed as an upper bound"}
+  geometry.electrodes.rail_r_signal_side: {class: project_inference, locator: "p.6 Table S1 (WT = 3, G1 = 3 um); SEM inset Fig. 4(a)", note: "rail width 3 um and gap 3 um verified against the SEM (about 3.1 and 2.5 um); rail THICKNESS not stated (lift-off rails, main electrodes thickened to 1.4 um by electroplating): assumed equal to the 1.4 um main electrode"}
   geometry.electrodes.rail_r_ground_side: {class: project_inference, note: "see rail_r_signal_side"}
   geometry.electrodes.rail_l_signal_side: {class: project_inference, note: "mirror of the right-hand rails"}
   geometry.electrodes.rail_l_ground_side: {class: project_inference, note: "mirror of the right-hand rails"}
@@ -142,12 +144,12 @@ provenance:
   alt_geometries.unloaded: {class: project_inference, locator: "Fig. 3(a) inset", note: "cut through the 5 um gap between rails: rails and stems absent, main conductors 15 um apart; the 5 um stem section (regular 3 um gap) is lumped into this cut"}
 
 missing:
-  - rail (T-rail) thickness (not stated; 1.4 um upper-bound assumption)
+  - rail (T-rail) thickness (not stated; assumed equal to the 1.4 um main electrode)
   - ridge width of the fabricated device and sidewall angle (1 um is stated only for the Fig. 1(c) simulation)
   - ground electrode width (not stated; taken equal to the signal width)
   - waveguide position inside the 15 um electrode spacing (assumed centred)
   - gold film conductivity (not stated)
-  - RF permittivity and loss tangent of LN, SiO2 and quartz (not stated; literature values flagged unverified)
+  - LN refractive indices, RF permittivity and Pockels coefficients, SiO2 constants, quartz optical index, gold conductivity (not given; UNVERIFIED placeholders in the file)
   - quartz optical index (outside the optical window, not needed for the solve)
   - waveguide orientation relative to the crystal axes (x-cut only; propagation along y assumed)
   - characteristic impedance and RF loss coefficient of the fabricated electrodes (S11 and S21 plots only)
@@ -160,6 +162,6 @@ limitations:
   - "Stems (5 um wide metal bridges tying each rail to its main conductor) are not representable in 2D; rails are given electrode potentials directly"
   - "Three sections per period (rail-plus-slot 40 um, stem 5 um with a regular 3 um gap, gap 5 um with a 15 um opening) do not fit the two-cut loading form; the stem and gap are lumped into the unloaded cut"
   - "Optical window cropped to |x| < 1.4 um; metal-induced optical absorption (the paper's main design point, Fig. 1(c)) cannot be modelled by the scalar solver"
-  - "Rail thickness is an upper-bound assumption and affects the loaded capacitance"
+  - "Rail thickness is an assumption (equal to the main electrode) and affects the loaded capacitance"
   - "The feedline bends on BCB cladding and the CPW tapers outside the modulation region are not modelled; the fabricated 4 um T-rail gap variant has no config"
   - "Vpi*L 1.7 V*cm is quoted as in agreement with the authors' FEM simulations; no separate simulated number is stated"

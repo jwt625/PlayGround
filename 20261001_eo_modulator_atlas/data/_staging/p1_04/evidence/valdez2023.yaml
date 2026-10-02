@@ -1,0 +1,1218 @@
+paper_id: valdez2023
+verified_on: '2026-10-01'
+source_files:
+- references/valdez2023/text.md
+- references/valdez2023/figures/page_03.png
+- references/valdez2023/figures/page_05.png
+- references/valdez2023/figures/page_07.png
+- references/valdez2023/figures/page_08.png
+- references/valdez2023/figures/page_09.png
+- references/valdez2023/figures/page_11.png
+- references/valdez2023/figures/page_13.png
+- references/valdez2023/crossref.json
+entries:
+- device_id: valdez2023-cw1
+  field: wavelength_nm
+  value: 1550
+  unit: nm
+  basis: measured
+  locator: p.1 abstract; p.4
+  note: nominal band wavelength; ng simulated at 1550 and 1310 nm
+- device_id: valdez2023-cw1
+  field: length_mm
+  value: 10.0
+  unit: mm
+  basis: measured
+  locator: p.6 Sec. 3.1; p.10 Sec. 3.3
+  note: device lengths 0.54 cm and 1.0 cm
+- device_id: valdez2023-cw1
+  field: vpi_dc_v
+  value: 2.93
+  unit: V
+  basis: measured
+  locator: p.11 Fig. 7; p.10 (OW values in text)
+  note: 1 kHz cosine-squared fit
+- device_id: valdez2023-cw1
+  field: bw3db_ghz
+  value: 54
+  unit: GHz
+  basis: extracted_from_figure
+  locator: p.13 Fig. 9(b)
+  note: bar height measured on the rendered page; reference 1 GHz
+- device_id: valdez2023-cw1
+  field: bw_measured_to_ghz
+  value: 110
+  unit: GHz
+  basis: measured
+  locator: p.7 Sec. 3.2; p.15 Sec. 4.3
+  note: LCA range 100 MHz to 110 GHz
+- device_id: valdez2023-cw1
+  field: bw3db_reference
+  value: 1ghz
+  unit: ''
+  basis: measured
+  locator: p.1 abstract; p.7
+  note: EO S21 normalized to 1 GHz
+- device_id: valdez2023-cw1
+  field: optical_input_power_dbm
+  value: 9
+  unit: dBm
+  basis: measured
+  locator: p.6 Sec. 3.2
+  note: laser power +9 dBm (C) / +12 dBm (O); no amplifier; not on-chip
+- device_id: valdez2023-cw1
+  field: rf_loss_db_per_cm
+  value: 9
+  unit: dB/cm
+  basis: measured
+  locator: p.6 Sec. 3.1; p.7 Fig. 4(b,e)
+  note: less than 9 dB/cm at 110 GHz for all structures
+- device_id: valdez2023-cw1
+  field: rf_loss_freq_ghz
+  value: 110
+  unit: GHz
+  basis: measured
+  locator: p.6 Sec. 3.1
+- device_id: valdez2023-cw1
+  field: z0_ohm
+  value: 40
+  unit: ohm
+  basis: measured
+  locator: p.6 Sec. 3.1; p.7 Fig. 4(c,f)
+  note: about 40 ohm across the measured band, all devices
+- device_id: valdez2023-cw1
+  field: ng_opt
+  value: 2.38
+  unit: '1'
+  basis: simulated
+  locator: p.4
+  note: simulated hybrid-mode group index for this design at 40 nm CMP oxide
+- device_id: valdez2023-cw1
+  field: eo_film_thickness_nm
+  value: 580
+  unit: nm
+  basis: measured
+  locator: p.3
+  note: TFLN thickness stated as about 580 nm
+- device_id: valdez2023-cw1
+  field: electrode_gap_um
+  value: 7
+  unit: um
+  basis: measured
+  locator: p.5 Fig. 2(b-d); p.6 Fig. 3; p.12 Sec. 4.1
+- device_id: valdez2023-cw1
+  field: electrode_thickness_um
+  value: 0.75
+  unit: um
+  basis: measured
+  locator: p.6 Sec. 3.1
+- device_id: valdez2023-cw1
+  field: electrode_metal
+  value: Au
+  unit: ''
+  basis: measured
+  locator: p.15 Sec. 4.2
+- device_id: valdez2023-cw1
+  field: buffer_oxide_um
+  value: 0
+  unit: um
+  basis: measured
+  locator: p.15 Sec. 4.2
+  note: no oxide between Au electrodes and LN
+- device_id: valdez2023-cw1
+  field: substrate
+  value: HR Si; BOX thickness not stated; CMP SiO2 about 40 nm between Si waveguide and LN
+  unit: ''
+  basis: measured
+  locator: p.3 Fig. 1(b); p.2
+- device_id: valdez2023-cw1
+  field: cladding
+  value: none above LN (Au electrodes patterned directly on LN)
+  unit: ''
+  basis: measured
+  locator: p.3 Fig. 1(b); p.15
+- device_id: valdez2023-cw1
+  field: epitaxy_or_stack
+  value: HR Si / SiO2 (BOX, thickness not stated) / 150 nm Si strip (300 nm wide in phase shifter) / CMP SiO2 about 40 nm / about 580 nm LN (unetched) / 0.75 um Au electrodes directly on LN
+  unit: ''
+  basis: measured
+  locator: p.2-4; p.3 Fig. 1(b)
+  note: Si thickness 150 nm, widths 300/275/250/225 nm
+- device_id: valdez2023-cw1
+  field: modulation_format
+  value: none (small-signal EO S21 and Vpi characterization only)
+  unit: ''
+  basis: measured
+  locator: p.7-9
+- device_id: valdez2023-cw1
+  field: drive
+  value: push_pull
+  unit: ''
+  basis: measured
+  locator: p.10 Eq. (2)
+  note: authors state push-pull configuration
+- device_id: valdez2023-cw1
+  field: vpi_convention
+  value: mzm_push_pull
+  unit: ''
+  basis: derived
+  locator: p.10 Eq. (2)
+  note: push-pull stated for VpiL equation; MZM-level Vpi from transmission fit
+- device_id: valdez2023-cw2
+  field: wavelength_nm
+  value: 1550
+  unit: nm
+  basis: measured
+  locator: p.1 abstract; p.4
+  note: nominal band wavelength; ng simulated at 1550 and 1310 nm
+- device_id: valdez2023-cw2
+  field: length_mm
+  value: 5.4
+  unit: mm
+  basis: measured
+  locator: p.6 Sec. 3.1; p.10 Sec. 3.3
+  note: device lengths 0.54 cm and 1.0 cm
+- device_id: valdez2023-cw2
+  field: vpi_dc_v
+  value: 5.59
+  unit: V
+  basis: measured
+  locator: p.11 Fig. 7; p.10 (OW values in text)
+  note: 1 kHz cosine-squared fit
+- device_id: valdez2023-cw2
+  field: bw3db_ghz
+  value: 79
+  unit: GHz
+  basis: extracted_from_figure
+  locator: p.13 Fig. 9(b)
+  note: bar height measured on the rendered page; reference 1 GHz
+- device_id: valdez2023-cw2
+  field: bw_measured_to_ghz
+  value: 110
+  unit: GHz
+  basis: measured
+  locator: p.7 Sec. 3.2; p.15 Sec. 4.3
+  note: LCA range 100 MHz to 110 GHz
+- device_id: valdez2023-cw2
+  field: bw3db_reference
+  value: 1ghz
+  unit: ''
+  basis: measured
+  locator: p.1 abstract; p.7
+  note: EO S21 normalized to 1 GHz
+- device_id: valdez2023-cw2
+  field: optical_input_power_dbm
+  value: 9
+  unit: dBm
+  basis: measured
+  locator: p.6 Sec. 3.2
+  note: laser power +9 dBm (C) / +12 dBm (O); no amplifier; not on-chip
+- device_id: valdez2023-cw2
+  field: rf_loss_db_per_cm
+  value: 9
+  unit: dB/cm
+  basis: measured
+  locator: p.6 Sec. 3.1; p.7 Fig. 4(b,e)
+  note: less than 9 dB/cm at 110 GHz for all structures
+- device_id: valdez2023-cw2
+  field: rf_loss_freq_ghz
+  value: 110
+  unit: GHz
+  basis: measured
+  locator: p.6 Sec. 3.1
+- device_id: valdez2023-cw2
+  field: z0_ohm
+  value: 40
+  unit: ohm
+  basis: measured
+  locator: p.6 Sec. 3.1; p.7 Fig. 4(c,f)
+  note: about 40 ohm across the measured band, all devices
+- device_id: valdez2023-cw2
+  field: ng_opt
+  value: 2.38
+  unit: '1'
+  basis: simulated
+  locator: p.4
+  note: simulated hybrid-mode group index for this design at 40 nm CMP oxide
+- device_id: valdez2023-cw2
+  field: eo_film_thickness_nm
+  value: 580
+  unit: nm
+  basis: measured
+  locator: p.3
+  note: TFLN thickness stated as about 580 nm
+- device_id: valdez2023-cw2
+  field: electrode_gap_um
+  value: 7
+  unit: um
+  basis: measured
+  locator: p.5 Fig. 2(b-d); p.6 Fig. 3; p.12 Sec. 4.1
+- device_id: valdez2023-cw2
+  field: electrode_thickness_um
+  value: 0.75
+  unit: um
+  basis: measured
+  locator: p.6 Sec. 3.1
+- device_id: valdez2023-cw2
+  field: electrode_metal
+  value: Au
+  unit: ''
+  basis: measured
+  locator: p.15 Sec. 4.2
+- device_id: valdez2023-cw2
+  field: buffer_oxide_um
+  value: 0
+  unit: um
+  basis: measured
+  locator: p.15 Sec. 4.2
+  note: no oxide between Au electrodes and LN
+- device_id: valdez2023-cw2
+  field: substrate
+  value: HR Si; BOX thickness not stated; CMP SiO2 about 40 nm between Si waveguide and LN
+  unit: ''
+  basis: measured
+  locator: p.3 Fig. 1(b); p.2
+- device_id: valdez2023-cw2
+  field: cladding
+  value: none above LN (Au electrodes patterned directly on LN)
+  unit: ''
+  basis: measured
+  locator: p.3 Fig. 1(b); p.15
+- device_id: valdez2023-cw2
+  field: epitaxy_or_stack
+  value: HR Si / SiO2 (BOX, thickness not stated) / 150 nm Si strip (300 nm wide in phase shifter) / CMP SiO2 about 40 nm / about 580 nm LN (unetched) / 0.75 um Au electrodes directly on LN
+  unit: ''
+  basis: measured
+  locator: p.2-4; p.3 Fig. 1(b)
+  note: Si thickness 150 nm, widths 300/275/250/225 nm
+- device_id: valdez2023-cw2
+  field: modulation_format
+  value: none (small-signal EO S21 and Vpi characterization only)
+  unit: ''
+  basis: measured
+  locator: p.7-9
+- device_id: valdez2023-cw2
+  field: drive
+  value: push_pull
+  unit: ''
+  basis: measured
+  locator: p.10 Eq. (2)
+  note: authors state push-pull configuration
+- device_id: valdez2023-cw2
+  field: vpi_convention
+  value: mzm_push_pull
+  unit: ''
+  basis: derived
+  locator: p.10 Eq. (2)
+  note: push-pull stated for VpiL equation; MZM-level Vpi from transmission fit
+- device_id: valdez2023-cn1
+  field: wavelength_nm
+  value: 1550
+  unit: nm
+  basis: measured
+  locator: p.1 abstract; p.4
+  note: nominal band wavelength; ng simulated at 1550 and 1310 nm
+- device_id: valdez2023-cn1
+  field: length_mm
+  value: 10.0
+  unit: mm
+  basis: measured
+  locator: p.6 Sec. 3.1; p.10 Sec. 3.3
+  note: device lengths 0.54 cm and 1.0 cm
+- device_id: valdez2023-cn1
+  field: vpi_dc_v
+  value: 3.11
+  unit: V
+  basis: measured
+  locator: p.11 Fig. 7; p.10 (OW values in text)
+  note: 1 kHz cosine-squared fit
+- device_id: valdez2023-cn1
+  field: bw3db_ghz
+  value: 69
+  unit: GHz
+  basis: extracted_from_figure
+  locator: p.13 Fig. 9(b)
+  note: bar height measured on the rendered page; reference 1 GHz
+- device_id: valdez2023-cn1
+  field: bw_measured_to_ghz
+  value: 110
+  unit: GHz
+  basis: measured
+  locator: p.7 Sec. 3.2; p.15 Sec. 4.3
+  note: LCA range 100 MHz to 110 GHz
+- device_id: valdez2023-cn1
+  field: bw3db_reference
+  value: 1ghz
+  unit: ''
+  basis: measured
+  locator: p.1 abstract; p.7
+  note: EO S21 normalized to 1 GHz
+- device_id: valdez2023-cn1
+  field: optical_input_power_dbm
+  value: 9
+  unit: dBm
+  basis: measured
+  locator: p.6 Sec. 3.2
+  note: laser power +9 dBm (C) / +12 dBm (O); no amplifier; not on-chip
+- device_id: valdez2023-cn1
+  field: rf_loss_db_per_cm
+  value: 9
+  unit: dB/cm
+  basis: measured
+  locator: p.6 Sec. 3.1; p.7 Fig. 4(b,e)
+  note: less than 9 dB/cm at 110 GHz for all structures
+- device_id: valdez2023-cn1
+  field: rf_loss_freq_ghz
+  value: 110
+  unit: GHz
+  basis: measured
+  locator: p.6 Sec. 3.1
+- device_id: valdez2023-cn1
+  field: z0_ohm
+  value: 40
+  unit: ohm
+  basis: measured
+  locator: p.6 Sec. 3.1; p.7 Fig. 4(c,f)
+  note: about 40 ohm across the measured band, all devices
+- device_id: valdez2023-cn1
+  field: ng_opt
+  value: 2.31
+  unit: '1'
+  basis: simulated
+  locator: p.4
+  note: simulated hybrid-mode group index for this design at 40 nm CMP oxide
+- device_id: valdez2023-cn1
+  field: eo_film_thickness_nm
+  value: 580
+  unit: nm
+  basis: measured
+  locator: p.3
+  note: TFLN thickness stated as about 580 nm
+- device_id: valdez2023-cn1
+  field: electrode_gap_um
+  value: 8
+  unit: um
+  basis: measured
+  locator: p.5 Fig. 2(b-d); p.6 Fig. 3; p.12 Sec. 4.1
+- device_id: valdez2023-cn1
+  field: electrode_thickness_um
+  value: 0.75
+  unit: um
+  basis: measured
+  locator: p.6 Sec. 3.1
+- device_id: valdez2023-cn1
+  field: electrode_metal
+  value: Au
+  unit: ''
+  basis: measured
+  locator: p.15 Sec. 4.2
+- device_id: valdez2023-cn1
+  field: buffer_oxide_um
+  value: 0
+  unit: um
+  basis: measured
+  locator: p.15 Sec. 4.2
+  note: no oxide between Au electrodes and LN
+- device_id: valdez2023-cn1
+  field: substrate
+  value: HR Si; BOX thickness not stated; CMP SiO2 about 40 nm between Si waveguide and LN
+  unit: ''
+  basis: measured
+  locator: p.3 Fig. 1(b); p.2
+- device_id: valdez2023-cn1
+  field: cladding
+  value: none above LN (Au electrodes patterned directly on LN)
+  unit: ''
+  basis: measured
+  locator: p.3 Fig. 1(b); p.15
+- device_id: valdez2023-cn1
+  field: epitaxy_or_stack
+  value: HR Si / SiO2 (BOX, thickness not stated) / 150 nm Si strip (275 nm wide in phase shifter) / CMP SiO2 about 40 nm / about 580 nm LN (unetched) / 0.75 um Au electrodes directly on LN
+  unit: ''
+  basis: measured
+  locator: p.2-4; p.3 Fig. 1(b)
+  note: Si thickness 150 nm, widths 300/275/250/225 nm
+- device_id: valdez2023-cn1
+  field: modulation_format
+  value: none (small-signal EO S21 and Vpi characterization only)
+  unit: ''
+  basis: measured
+  locator: p.7-9
+- device_id: valdez2023-cn1
+  field: drive
+  value: push_pull
+  unit: ''
+  basis: measured
+  locator: p.10 Eq. (2)
+  note: authors state push-pull configuration
+- device_id: valdez2023-cn1
+  field: vpi_convention
+  value: mzm_push_pull
+  unit: ''
+  basis: derived
+  locator: p.10 Eq. (2)
+  note: push-pull stated for VpiL equation; MZM-level Vpi from transmission fit
+- device_id: valdez2023-cn1
+  field: il_onchip_db
+  value: 2.1
+  unit: dB
+  basis: derived
+  locator: p.7 Sec. 3.2
+  note: calculated by authors from edge-coupling estimates; example device pair CN1/CN2
+- device_id: valdez2023-cn1
+  field: prop_loss_db_per_cm
+  value: 1.5
+  unit: dB/cm
+  basis: derived
+  locator: p.7 Sec. 3.2
+  note: phase-shifter loss from CN1 vs CN2, assuming other losses common
+- device_id: valdez2023-cn2
+  field: wavelength_nm
+  value: 1550
+  unit: nm
+  basis: measured
+  locator: p.1 abstract; p.4
+  note: nominal band wavelength; ng simulated at 1550 and 1310 nm
+- device_id: valdez2023-cn2
+  field: length_mm
+  value: 5.4
+  unit: mm
+  basis: measured
+  locator: p.6 Sec. 3.1; p.10 Sec. 3.3
+  note: device lengths 0.54 cm and 1.0 cm
+- device_id: valdez2023-cn2
+  field: vpi_dc_v
+  value: 5.78
+  unit: V
+  basis: measured
+  locator: p.11 Fig. 7; p.10 (OW values in text)
+  note: 1 kHz cosine-squared fit
+- device_id: valdez2023-cn2
+  field: bw3db_ghz
+  value: 109
+  unit: GHz
+  basis: extracted_from_figure
+  locator: p.13 Fig. 9(b)
+  note: bar height measured on the rendered page; reference 1 GHz
+- device_id: valdez2023-cn2
+  field: bw_measured_to_ghz
+  value: 110
+  unit: GHz
+  basis: measured
+  locator: p.7 Sec. 3.2; p.15 Sec. 4.3
+  note: LCA range 100 MHz to 110 GHz
+- device_id: valdez2023-cn2
+  field: bw3db_reference
+  value: 1ghz
+  unit: ''
+  basis: measured
+  locator: p.1 abstract; p.7
+  note: EO S21 normalized to 1 GHz
+- device_id: valdez2023-cn2
+  field: optical_input_power_dbm
+  value: 9
+  unit: dBm
+  basis: measured
+  locator: p.6 Sec. 3.2
+  note: laser power +9 dBm (C) / +12 dBm (O); no amplifier; not on-chip
+- device_id: valdez2023-cn2
+  field: rf_loss_db_per_cm
+  value: 9
+  unit: dB/cm
+  basis: measured
+  locator: p.6 Sec. 3.1; p.7 Fig. 4(b,e)
+  note: less than 9 dB/cm at 110 GHz for all structures
+- device_id: valdez2023-cn2
+  field: rf_loss_freq_ghz
+  value: 110
+  unit: GHz
+  basis: measured
+  locator: p.6 Sec. 3.1
+- device_id: valdez2023-cn2
+  field: z0_ohm
+  value: 40
+  unit: ohm
+  basis: measured
+  locator: p.6 Sec. 3.1; p.7 Fig. 4(c,f)
+  note: about 40 ohm across the measured band, all devices
+- device_id: valdez2023-cn2
+  field: ng_opt
+  value: 2.31
+  unit: '1'
+  basis: simulated
+  locator: p.4
+  note: simulated hybrid-mode group index for this design at 40 nm CMP oxide
+- device_id: valdez2023-cn2
+  field: eo_film_thickness_nm
+  value: 580
+  unit: nm
+  basis: measured
+  locator: p.3
+  note: TFLN thickness stated as about 580 nm
+- device_id: valdez2023-cn2
+  field: electrode_gap_um
+  value: 8
+  unit: um
+  basis: measured
+  locator: p.5 Fig. 2(b-d); p.6 Fig. 3; p.12 Sec. 4.1
+- device_id: valdez2023-cn2
+  field: electrode_thickness_um
+  value: 0.75
+  unit: um
+  basis: measured
+  locator: p.6 Sec. 3.1
+- device_id: valdez2023-cn2
+  field: electrode_metal
+  value: Au
+  unit: ''
+  basis: measured
+  locator: p.15 Sec. 4.2
+- device_id: valdez2023-cn2
+  field: buffer_oxide_um
+  value: 0
+  unit: um
+  basis: measured
+  locator: p.15 Sec. 4.2
+  note: no oxide between Au electrodes and LN
+- device_id: valdez2023-cn2
+  field: substrate
+  value: HR Si; BOX thickness not stated; CMP SiO2 about 40 nm between Si waveguide and LN
+  unit: ''
+  basis: measured
+  locator: p.3 Fig. 1(b); p.2
+- device_id: valdez2023-cn2
+  field: cladding
+  value: none above LN (Au electrodes patterned directly on LN)
+  unit: ''
+  basis: measured
+  locator: p.3 Fig. 1(b); p.15
+- device_id: valdez2023-cn2
+  field: epitaxy_or_stack
+  value: HR Si / SiO2 (BOX, thickness not stated) / 150 nm Si strip (275 nm wide in phase shifter) / CMP SiO2 about 40 nm / about 580 nm LN (unetched) / 0.75 um Au electrodes directly on LN
+  unit: ''
+  basis: measured
+  locator: p.2-4; p.3 Fig. 1(b)
+  note: Si thickness 150 nm, widths 300/275/250/225 nm
+- device_id: valdez2023-cn2
+  field: modulation_format
+  value: none (small-signal EO S21 and Vpi characterization only)
+  unit: ''
+  basis: measured
+  locator: p.7-9
+- device_id: valdez2023-cn2
+  field: drive
+  value: push_pull
+  unit: ''
+  basis: measured
+  locator: p.10 Eq. (2)
+  note: authors state push-pull configuration
+- device_id: valdez2023-cn2
+  field: vpi_convention
+  value: mzm_push_pull
+  unit: ''
+  basis: derived
+  locator: p.10 Eq. (2)
+  note: push-pull stated for VpiL equation; MZM-level Vpi from transmission fit
+- device_id: valdez2023-cn2
+  field: il_onchip_db
+  value: 1.6
+  unit: dB
+  basis: derived
+  locator: p.7 Sec. 3.2
+  note: calculated by authors from edge-coupling estimates; example device pair CN1/CN2
+- device_id: valdez2023-cn2
+  field: prop_loss_db_per_cm
+  value: 1.5
+  unit: dB/cm
+  basis: derived
+  locator: p.7 Sec. 3.2
+  note: phase-shifter loss from CN1 vs CN2, assuming other losses common
+- device_id: valdez2023-ow1
+  field: wavelength_nm
+  value: 1310
+  unit: nm
+  basis: measured
+  locator: p.1 abstract; p.4
+  note: nominal band wavelength; ng simulated at 1550 and 1310 nm
+- device_id: valdez2023-ow1
+  field: length_mm
+  value: 5.4
+  unit: mm
+  basis: measured
+  locator: p.6 Sec. 3.1; p.10 Sec. 3.3
+  note: device lengths 0.54 cm and 1.0 cm
+- device_id: valdez2023-ow1
+  field: vpi_dc_v
+  value: 3.78
+  unit: V
+  basis: measured
+  locator: p.11 Fig. 7; p.10 (OW values in text)
+  note: 1 kHz cosine-squared fit
+- device_id: valdez2023-ow1
+  field: bw3db_ghz
+  value: 94
+  unit: GHz
+  basis: extracted_from_figure
+  locator: p.13 Fig. 9(b)
+  note: bar height measured on the rendered page; reference 1 GHz
+- device_id: valdez2023-ow1
+  field: bw_measured_to_ghz
+  value: 110
+  unit: GHz
+  basis: measured
+  locator: p.7 Sec. 3.2; p.15 Sec. 4.3
+  note: LCA range 100 MHz to 110 GHz
+- device_id: valdez2023-ow1
+  field: bw3db_reference
+  value: 1ghz
+  unit: ''
+  basis: measured
+  locator: p.1 abstract; p.7
+  note: EO S21 normalized to 1 GHz
+- device_id: valdez2023-ow1
+  field: optical_input_power_dbm
+  value: 12
+  unit: dBm
+  basis: measured
+  locator: p.6 Sec. 3.2
+  note: laser power +9 dBm (C) / +12 dBm (O); no amplifier; not on-chip
+- device_id: valdez2023-ow1
+  field: rf_loss_db_per_cm
+  value: 9
+  unit: dB/cm
+  basis: measured
+  locator: p.6 Sec. 3.1; p.7 Fig. 4(b,e)
+  note: less than 9 dB/cm at 110 GHz for all structures
+- device_id: valdez2023-ow1
+  field: rf_loss_freq_ghz
+  value: 110
+  unit: GHz
+  basis: measured
+  locator: p.6 Sec. 3.1
+- device_id: valdez2023-ow1
+  field: z0_ohm
+  value: 40
+  unit: ohm
+  basis: measured
+  locator: p.6 Sec. 3.1; p.7 Fig. 4(c,f)
+  note: about 40 ohm across the measured band, all devices
+- device_id: valdez2023-ow1
+  field: ng_opt
+  value: 2.43
+  unit: '1'
+  basis: simulated
+  locator: p.4
+  note: simulated hybrid-mode group index for this design at 40 nm CMP oxide
+- device_id: valdez2023-ow1
+  field: eo_film_thickness_nm
+  value: 580
+  unit: nm
+  basis: measured
+  locator: p.3
+  note: TFLN thickness stated as about 580 nm
+- device_id: valdez2023-ow1
+  field: electrode_gap_um
+  value: 6
+  unit: um
+  basis: measured
+  locator: p.5 Fig. 2(b-d); p.6 Fig. 3; p.12 Sec. 4.1
+- device_id: valdez2023-ow1
+  field: electrode_thickness_um
+  value: 0.75
+  unit: um
+  basis: measured
+  locator: p.6 Sec. 3.1
+- device_id: valdez2023-ow1
+  field: electrode_metal
+  value: Au
+  unit: ''
+  basis: measured
+  locator: p.15 Sec. 4.2
+- device_id: valdez2023-ow1
+  field: buffer_oxide_um
+  value: 0
+  unit: um
+  basis: measured
+  locator: p.15 Sec. 4.2
+  note: no oxide between Au electrodes and LN
+- device_id: valdez2023-ow1
+  field: substrate
+  value: HR Si; BOX thickness not stated; CMP SiO2 about 40 nm between Si waveguide and LN
+  unit: ''
+  basis: measured
+  locator: p.3 Fig. 1(b); p.2
+- device_id: valdez2023-ow1
+  field: cladding
+  value: none above LN (Au electrodes patterned directly on LN)
+  unit: ''
+  basis: measured
+  locator: p.3 Fig. 1(b); p.15
+- device_id: valdez2023-ow1
+  field: epitaxy_or_stack
+  value: HR Si / SiO2 (BOX, thickness not stated) / 150 nm Si strip (250 nm wide in phase shifter) / CMP SiO2 about 40 nm / about 580 nm LN (unetched) / 0.75 um Au electrodes directly on LN
+  unit: ''
+  basis: measured
+  locator: p.2-4; p.3 Fig. 1(b)
+  note: Si thickness 150 nm, widths 300/275/250/225 nm
+- device_id: valdez2023-ow1
+  field: modulation_format
+  value: none (small-signal EO S21 and Vpi characterization only)
+  unit: ''
+  basis: measured
+  locator: p.7-9
+- device_id: valdez2023-ow1
+  field: drive
+  value: push_pull
+  unit: ''
+  basis: measured
+  locator: p.10 Eq. (2)
+  note: authors state push-pull configuration
+- device_id: valdez2023-ow1
+  field: vpi_convention
+  value: mzm_push_pull
+  unit: ''
+  basis: derived
+  locator: p.10 Eq. (2)
+  note: push-pull stated for VpiL equation; MZM-level Vpi from transmission fit
+- device_id: valdez2023-ow2
+  field: wavelength_nm
+  value: 1310
+  unit: nm
+  basis: measured
+  locator: p.1 abstract; p.4
+  note: nominal band wavelength; ng simulated at 1550 and 1310 nm
+- device_id: valdez2023-ow2
+  field: length_mm
+  value: 10.0
+  unit: mm
+  basis: measured
+  locator: p.6 Sec. 3.1; p.10 Sec. 3.3
+  note: device lengths 0.54 cm and 1.0 cm
+- device_id: valdez2023-ow2
+  field: vpi_dc_v
+  value: 2.01
+  unit: V
+  basis: measured
+  locator: p.11 Fig. 7; p.10 (OW values in text)
+  note: 1 kHz cosine-squared fit
+- device_id: valdez2023-ow2
+  field: bw3db_ghz
+  value: 54
+  unit: GHz
+  basis: extracted_from_figure
+  locator: p.13 Fig. 9(b)
+  note: bar height measured on the rendered page; reference 1 GHz
+- device_id: valdez2023-ow2
+  field: bw_measured_to_ghz
+  value: 110
+  unit: GHz
+  basis: measured
+  locator: p.7 Sec. 3.2; p.15 Sec. 4.3
+  note: LCA range 100 MHz to 110 GHz
+- device_id: valdez2023-ow2
+  field: bw3db_reference
+  value: 1ghz
+  unit: ''
+  basis: measured
+  locator: p.1 abstract; p.7
+  note: EO S21 normalized to 1 GHz
+- device_id: valdez2023-ow2
+  field: optical_input_power_dbm
+  value: 12
+  unit: dBm
+  basis: measured
+  locator: p.6 Sec. 3.2
+  note: laser power +9 dBm (C) / +12 dBm (O); no amplifier; not on-chip
+- device_id: valdez2023-ow2
+  field: rf_loss_db_per_cm
+  value: 9
+  unit: dB/cm
+  basis: measured
+  locator: p.6 Sec. 3.1; p.7 Fig. 4(b,e)
+  note: less than 9 dB/cm at 110 GHz for all structures
+- device_id: valdez2023-ow2
+  field: rf_loss_freq_ghz
+  value: 110
+  unit: GHz
+  basis: measured
+  locator: p.6 Sec. 3.1
+- device_id: valdez2023-ow2
+  field: z0_ohm
+  value: 40
+  unit: ohm
+  basis: measured
+  locator: p.6 Sec. 3.1; p.7 Fig. 4(c,f)
+  note: about 40 ohm across the measured band, all devices
+- device_id: valdez2023-ow2
+  field: ng_opt
+  value: 2.43
+  unit: '1'
+  basis: simulated
+  locator: p.4
+  note: simulated hybrid-mode group index for this design at 40 nm CMP oxide
+- device_id: valdez2023-ow2
+  field: eo_film_thickness_nm
+  value: 580
+  unit: nm
+  basis: measured
+  locator: p.3
+  note: TFLN thickness stated as about 580 nm
+- device_id: valdez2023-ow2
+  field: electrode_gap_um
+  value: 6
+  unit: um
+  basis: measured
+  locator: p.5 Fig. 2(b-d); p.6 Fig. 3; p.12 Sec. 4.1
+- device_id: valdez2023-ow2
+  field: electrode_thickness_um
+  value: 0.75
+  unit: um
+  basis: measured
+  locator: p.6 Sec. 3.1
+- device_id: valdez2023-ow2
+  field: electrode_metal
+  value: Au
+  unit: ''
+  basis: measured
+  locator: p.15 Sec. 4.2
+- device_id: valdez2023-ow2
+  field: buffer_oxide_um
+  value: 0
+  unit: um
+  basis: measured
+  locator: p.15 Sec. 4.2
+  note: no oxide between Au electrodes and LN
+- device_id: valdez2023-ow2
+  field: substrate
+  value: HR Si; BOX thickness not stated; CMP SiO2 about 40 nm between Si waveguide and LN
+  unit: ''
+  basis: measured
+  locator: p.3 Fig. 1(b); p.2
+- device_id: valdez2023-ow2
+  field: cladding
+  value: none above LN (Au electrodes patterned directly on LN)
+  unit: ''
+  basis: measured
+  locator: p.3 Fig. 1(b); p.15
+- device_id: valdez2023-ow2
+  field: epitaxy_or_stack
+  value: HR Si / SiO2 (BOX, thickness not stated) / 150 nm Si strip (250 nm wide in phase shifter) / CMP SiO2 about 40 nm / about 580 nm LN (unetched) / 0.75 um Au electrodes directly on LN
+  unit: ''
+  basis: measured
+  locator: p.2-4; p.3 Fig. 1(b)
+  note: Si thickness 150 nm, widths 300/275/250/225 nm
+- device_id: valdez2023-ow2
+  field: modulation_format
+  value: none (small-signal EO S21 and Vpi characterization only)
+  unit: ''
+  basis: measured
+  locator: p.7-9
+- device_id: valdez2023-ow2
+  field: drive
+  value: push_pull
+  unit: ''
+  basis: measured
+  locator: p.10 Eq. (2)
+  note: authors state push-pull configuration
+- device_id: valdez2023-ow2
+  field: vpi_convention
+  value: mzm_push_pull
+  unit: ''
+  basis: derived
+  locator: p.10 Eq. (2)
+  note: push-pull stated for VpiL equation; MZM-level Vpi from transmission fit
+- device_id: valdez2023-on1
+  field: wavelength_nm
+  value: 1310
+  unit: nm
+  basis: measured
+  locator: p.1 abstract; p.4
+  note: nominal band wavelength; ng simulated at 1550 and 1310 nm
+- device_id: valdez2023-on1
+  field: length_mm
+  value: 10.0
+  unit: mm
+  basis: measured
+  locator: p.6 Sec. 3.1; p.10 Sec. 3.3
+  note: device lengths 0.54 cm and 1.0 cm
+- device_id: valdez2023-on1
+  field: vpi_dc_v
+  value: 2.6
+  unit: V
+  basis: measured
+  locator: p.11 Fig. 7; p.10 (OW values in text)
+  note: 1 kHz cosine-squared fit
+- device_id: valdez2023-on1
+  field: bw3db_ghz
+  value: 66
+  unit: GHz
+  basis: extracted_from_figure
+  locator: p.13 Fig. 9(b)
+  note: bar height measured on the rendered page; reference 1 GHz
+- device_id: valdez2023-on1
+  field: bw_measured_to_ghz
+  value: 110
+  unit: GHz
+  basis: measured
+  locator: p.7 Sec. 3.2; p.15 Sec. 4.3
+  note: LCA range 100 MHz to 110 GHz
+- device_id: valdez2023-on1
+  field: bw3db_reference
+  value: 1ghz
+  unit: ''
+  basis: measured
+  locator: p.1 abstract; p.7
+  note: EO S21 normalized to 1 GHz
+- device_id: valdez2023-on1
+  field: optical_input_power_dbm
+  value: 12
+  unit: dBm
+  basis: measured
+  locator: p.6 Sec. 3.2
+  note: laser power +9 dBm (C) / +12 dBm (O); no amplifier; not on-chip
+- device_id: valdez2023-on1
+  field: rf_loss_db_per_cm
+  value: 9
+  unit: dB/cm
+  basis: measured
+  locator: p.6 Sec. 3.1; p.7 Fig. 4(b,e)
+  note: less than 9 dB/cm at 110 GHz for all structures
+- device_id: valdez2023-on1
+  field: rf_loss_freq_ghz
+  value: 110
+  unit: GHz
+  basis: measured
+  locator: p.6 Sec. 3.1
+- device_id: valdez2023-on1
+  field: z0_ohm
+  value: 40
+  unit: ohm
+  basis: measured
+  locator: p.6 Sec. 3.1; p.7 Fig. 4(c,f)
+  note: about 40 ohm across the measured band, all devices
+- device_id: valdez2023-on1
+  field: ng_opt
+  value: 2.3
+  unit: '1'
+  basis: simulated
+  locator: p.4
+  note: simulated hybrid-mode group index for this design at 40 nm CMP oxide
+- device_id: valdez2023-on1
+  field: eo_film_thickness_nm
+  value: 580
+  unit: nm
+  basis: measured
+  locator: p.3
+  note: TFLN thickness stated as about 580 nm
+- device_id: valdez2023-on1
+  field: electrode_gap_um
+  value: 8
+  unit: um
+  basis: measured
+  locator: p.5 Fig. 2(b-d); p.6 Fig. 3; p.12 Sec. 4.1
+- device_id: valdez2023-on1
+  field: electrode_thickness_um
+  value: 0.75
+  unit: um
+  basis: measured
+  locator: p.6 Sec. 3.1
+- device_id: valdez2023-on1
+  field: electrode_metal
+  value: Au
+  unit: ''
+  basis: measured
+  locator: p.15 Sec. 4.2
+- device_id: valdez2023-on1
+  field: buffer_oxide_um
+  value: 0
+  unit: um
+  basis: measured
+  locator: p.15 Sec. 4.2
+  note: no oxide between Au electrodes and LN
+- device_id: valdez2023-on1
+  field: substrate
+  value: HR Si; BOX thickness not stated; CMP SiO2 about 40 nm between Si waveguide and LN
+  unit: ''
+  basis: measured
+  locator: p.3 Fig. 1(b); p.2
+- device_id: valdez2023-on1
+  field: cladding
+  value: none above LN (Au electrodes patterned directly on LN)
+  unit: ''
+  basis: measured
+  locator: p.3 Fig. 1(b); p.15
+- device_id: valdez2023-on1
+  field: epitaxy_or_stack
+  value: HR Si / SiO2 (BOX, thickness not stated) / 150 nm Si strip (225 nm wide in phase shifter) / CMP SiO2 about 40 nm / about 580 nm LN (unetched) / 0.75 um Au electrodes directly on LN
+  unit: ''
+  basis: measured
+  locator: p.2-4; p.3 Fig. 1(b)
+  note: Si thickness 150 nm, widths 300/275/250/225 nm
+- device_id: valdez2023-on1
+  field: modulation_format
+  value: none (small-signal EO S21 and Vpi characterization only)
+  unit: ''
+  basis: measured
+  locator: p.7-9
+- device_id: valdez2023-on1
+  field: drive
+  value: push_pull
+  unit: ''
+  basis: measured
+  locator: p.10 Eq. (2)
+  note: authors state push-pull configuration
+- device_id: valdez2023-on1
+  field: vpi_convention
+  value: mzm_push_pull
+  unit: ''
+  basis: derived
+  locator: p.10 Eq. (2)
+  note: push-pull stated for VpiL equation; MZM-level Vpi from transmission fit
+- device_id: valdez2023-on2
+  field: wavelength_nm
+  value: 1310
+  unit: nm
+  basis: measured
+  locator: p.1 abstract; p.4
+  note: nominal band wavelength; ng simulated at 1550 and 1310 nm
+- device_id: valdez2023-on2
+  field: length_mm
+  value: 5.4
+  unit: mm
+  basis: measured
+  locator: p.6 Sec. 3.1; p.10 Sec. 3.3
+  note: device lengths 0.54 cm and 1.0 cm
+- device_id: valdez2023-on2
+  field: vpi_dc_v
+  value: 4.37
+  unit: V
+  basis: measured
+  locator: p.11 Fig. 7; p.10 (OW values in text)
+  note: 1 kHz cosine-squared fit
+- device_id: valdez2023-on2
+  field: bw3db_ghz
+  value: 102
+  unit: GHz
+  basis: extracted_from_figure
+  locator: p.13 Fig. 9(b)
+  note: bar height measured on the rendered page; reference 1 GHz
+- device_id: valdez2023-on2
+  field: bw_measured_to_ghz
+  value: 110
+  unit: GHz
+  basis: measured
+  locator: p.7 Sec. 3.2; p.15 Sec. 4.3
+  note: LCA range 100 MHz to 110 GHz
+- device_id: valdez2023-on2
+  field: bw3db_reference
+  value: 1ghz
+  unit: ''
+  basis: measured
+  locator: p.1 abstract; p.7
+  note: EO S21 normalized to 1 GHz
+- device_id: valdez2023-on2
+  field: optical_input_power_dbm
+  value: 12
+  unit: dBm
+  basis: measured
+  locator: p.6 Sec. 3.2
+  note: laser power +9 dBm (C) / +12 dBm (O); no amplifier; not on-chip
+- device_id: valdez2023-on2
+  field: rf_loss_db_per_cm
+  value: 9
+  unit: dB/cm
+  basis: measured
+  locator: p.6 Sec. 3.1; p.7 Fig. 4(b,e)
+  note: less than 9 dB/cm at 110 GHz for all structures
+- device_id: valdez2023-on2
+  field: rf_loss_freq_ghz
+  value: 110
+  unit: GHz
+  basis: measured
+  locator: p.6 Sec. 3.1
+- device_id: valdez2023-on2
+  field: z0_ohm
+  value: 40
+  unit: ohm
+  basis: measured
+  locator: p.6 Sec. 3.1; p.7 Fig. 4(c,f)
+  note: about 40 ohm across the measured band, all devices
+- device_id: valdez2023-on2
+  field: ng_opt
+  value: 2.3
+  unit: '1'
+  basis: simulated
+  locator: p.4
+  note: simulated hybrid-mode group index for this design at 40 nm CMP oxide
+- device_id: valdez2023-on2
+  field: eo_film_thickness_nm
+  value: 580
+  unit: nm
+  basis: measured
+  locator: p.3
+  note: TFLN thickness stated as about 580 nm
+- device_id: valdez2023-on2
+  field: electrode_gap_um
+  value: 8
+  unit: um
+  basis: measured
+  locator: p.5 Fig. 2(b-d); p.6 Fig. 3; p.12 Sec. 4.1
+- device_id: valdez2023-on2
+  field: electrode_thickness_um
+  value: 0.75
+  unit: um
+  basis: measured
+  locator: p.6 Sec. 3.1
+- device_id: valdez2023-on2
+  field: electrode_metal
+  value: Au
+  unit: ''
+  basis: measured
+  locator: p.15 Sec. 4.2
+- device_id: valdez2023-on2
+  field: buffer_oxide_um
+  value: 0
+  unit: um
+  basis: measured
+  locator: p.15 Sec. 4.2
+  note: no oxide between Au electrodes and LN
+- device_id: valdez2023-on2
+  field: substrate
+  value: HR Si; BOX thickness not stated; CMP SiO2 about 40 nm between Si waveguide and LN
+  unit: ''
+  basis: measured
+  locator: p.3 Fig. 1(b); p.2
+- device_id: valdez2023-on2
+  field: cladding
+  value: none above LN (Au electrodes patterned directly on LN)
+  unit: ''
+  basis: measured
+  locator: p.3 Fig. 1(b); p.15
+- device_id: valdez2023-on2
+  field: epitaxy_or_stack
+  value: HR Si / SiO2 (BOX, thickness not stated) / 150 nm Si strip (225 nm wide in phase shifter) / CMP SiO2 about 40 nm / about 580 nm LN (unetched) / 0.75 um Au electrodes directly on LN
+  unit: ''
+  basis: measured
+  locator: p.2-4; p.3 Fig. 1(b)
+  note: Si thickness 150 nm, widths 300/275/250/225 nm
+- device_id: valdez2023-on2
+  field: modulation_format
+  value: none (small-signal EO S21 and Vpi characterization only)
+  unit: ''
+  basis: measured
+  locator: p.7-9
+- device_id: valdez2023-on2
+  field: drive
+  value: push_pull
+  unit: ''
+  basis: measured
+  locator: p.10 Eq. (2)
+  note: authors state push-pull configuration
+- device_id: valdez2023-on2
+  field: vpi_convention
+  value: mzm_push_pull
+  unit: ''
+  basis: derived
+  locator: p.10 Eq. (2)
+  note: push-pull stated for VpiL equation; MZM-level Vpi from transmission fit
+derived: []
