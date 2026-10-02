@@ -99,17 +99,22 @@ export function normalizeGeometry(raw, materials, path = 'geometry') {
   return { domain, symmetry, mirror_x_um: mirror, regions, electrodes, optical_window, mesh, boundary };
 }
 
-export function parseConfig(text) {
+function readDocument(text) {
   if (typeof text !== 'string' || text.length > 1000000) fail('config', 'expected YAML text of at most 1,000,000 characters');
   const doc = parseDocument(text, { uniqueKeys: true });
   if (doc.errors.length) throw new Error(`YAML: ${doc.errors.map((e) => e.message).join('; ')}`);
-  return normalizeConfig(doc.toJS({ maxAliasCount: 100 }));
+  return doc.toJS({ maxAliasCount: 100 });
 }
 
-export function normalizeConfig(raw) {
+export function parseConfig(text) {
+  return normalizeConfig(readDocument(text));
+}
+
+function validateMetadata(raw) {
   object(raw, 'config');
   if (raw.schema !== 'eo-atlas.sim/v1') fail('schema', 'expected eo-atlas.sim/v1');
   if (typeof raw.id !== 'string' || !raw.id) fail('id', 'expected a non-empty string');
+  for (const key of ['title', 'paper_id', 'device_id']) if (raw[key] != null && typeof raw[key] !== 'string') fail(key, 'expected a string');
   if (raw.chain != null) array(raw.chain, 'chain').forEach((s, i) => oneOf(s, STAGES, `chain[${i}]`));
   if (raw.repro_grade != null) oneOf(raw.repro_grade, ['A', 'B'], 'repro_grade');
   if (raw.validation_status != null) oneOf(raw.validation_status, ['unvalidated', 'analytic_gates_pass', 'literature_regression', 'cross_solver'], 'validation_status');
@@ -119,11 +124,46 @@ export function normalizeConfig(raw) {
     object(p, `provenance.${key}`);
     oneOf(p.class, ['paper_exact', 'figure_digitized', 'project_inference', 'standard_reference', 'unknown'], `provenance.${key}.class`);
   }
-  const materials = Object.create(null);
-  for (const [name, m] of Object.entries(object(raw.materials, 'materials'))) {
+}
+
+function materialDeclarations(raw) {
+  const materials = object(raw.materials, 'materials');
+  for (const [name, m] of Object.entries(materials)) {
     const p = `materials.${name}`;
     object(m, p);
     if (m.conductor != null && typeof m.conductor !== 'boolean') fail(`${p}.conductor`, 'expected a boolean');
+  }
+  return materials;
+}
+
+function normalizeGeometries(raw, materials) {
+  const geometries = Object.create(null);
+  geometries.geometry = normalizeGeometry(raw.geometry, materials);
+  for (const [name, g] of Object.entries(object(raw.alt_geometries ?? {}, 'alt_geometries'))) {
+    if (name === 'geometry' || name === '__proto__') fail('alt_geometries', 'reserved geometry name');
+    geometries[name] = normalizeGeometry(g, materials, `alt_geometries.${name}`);
+  }
+  return geometries;
+}
+
+// A geometric preview is not a solver input. It supplies no material constants,
+// resolves no library materials and never changes the raw document or its status.
+// Invalid metadata/geometry still throws; physics errors are returned separately.
+export function inspectConfig(text) {
+  const raw = readDocument(text);
+  validateMetadata(raw);
+  const preview = { raw, geometries: normalizeGeometries(raw, materialDeclarations(raw)) };
+  let solveError = '';
+  try { normalizeConfig(raw); }
+  catch (e) { solveError = e instanceof Error ? e.message : String(e); }
+  return { preview, solveError };
+}
+
+export function normalizeConfig(raw) {
+  validateMetadata(raw);
+  const materials = Object.create(null);
+  for (const [name, m] of Object.entries(materialDeclarations(raw))) {
+    const p = `materials.${name}`;
     if (!m.conductor) {
       const e = m.eps_r;
       if (typeof e === 'number') number(e, `${p}.eps_r`, true);
@@ -136,12 +176,7 @@ export function normalizeConfig(raw) {
     if (m.n != null && m.n_o != null) fail(p, 'provide either n or n_o/n_e, not both');
     materials[name] = resolveMaterial(name, m);
   }
-  const geometries = Object.create(null);
-  geometries.geometry = normalizeGeometry(raw.geometry, materials);
-  for (const [name, g] of Object.entries(object(raw.alt_geometries ?? {}, 'alt_geometries'))) {
-    if (name === 'geometry' || name === '__proto__') fail('alt_geometries', 'reserved geometry name');
-    geometries[name] = normalizeGeometry(g, materials, `alt_geometries.${name}`);
-  }
+  const geometries = normalizeGeometries(raw, materials);
   if (raw.optics != null) opticalOptions(raw);
   if (raw.line != null) {
     object(raw.line, 'line');

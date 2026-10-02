@@ -13,6 +13,12 @@ decisions; DevLog-001 is historical. [WORKBOARD.md](../WORKBOARD.md) summarizes
 current assignments; individual files under `coordination/claims/` define write
 ownership. No new agents have been launched by this continuation.
 
+**Progress update, 2026-10-01:** E1/U1 are ready for review; final checks and file
+releases are in [DevLog-003](DevLog-003-cross-section-progress.md). The data lane
+has claimed D0/D1/D2/Q1 and integrated p1_01 (8 papers / 16 devices / 19 orgs);
+see [DevLog-004](DevLog-004-data-lane-progress.md). The starting snapshot and
+dispatch-cache map below are historical, not current source availability.
+
 ## 1. Verified starting state
 
 | Area | Observed state on 2026-10-01 | Implication |
@@ -48,7 +54,10 @@ dependencies and write boundaries without reconstructing the chat.
 
 ### D — Evidence, sources and database
 
-**D0: Ingestion tooling and instruction alignment — unassigned; ready now.**
+**D0: Ingestion tooling and instruction alignment — claude-data-lane; implementation reported complete.**
+
+The list below records the original defects/acceptance scope. DevLog-004 reports
+their fixes and tests; they are not outstanding fetch defects after `8029881`.
 
 - Reconcile outdated instructions with the user's revised tracked-reference
   policy. Skill rule 8, early DevLog-000 text and batch-generation comments still
@@ -76,7 +85,10 @@ Acceptance: policy text agrees; two simultaneous fetch attempts cannot violate
 the intended serialization; blocked downloads produce actionable records; no
 private path leaks; ingestion/merge tests and existing Python tests pass.
 
-**D1.01–D1.11: Priority-1 distillation — each batch separately claimable.**
+**D1.01–D1.11: Priority-1 distillation — claimed by claude-data-lane.**
+
+Batch allocation is now coordinated under that claim (at most three concurrent
+roles); do not claim these paper batches independently of its owner.
 
 One batch owner reads primary sources, inspects numerical figures/tables, writes
 paper/device/organization rows and evidence, and drafts eligible dielectric-TWE
@@ -104,7 +116,7 @@ Acceptance per batch:
 6. Q1 reviews the batch before D2 integration. A structurally valid row is not
    necessarily a correctly extracted value.
 
-**D2: Canonical integration and data-view refresh — unassigned; serial writer.**
+**D2: Canonical integration and data-view refresh — claude-data-lane; serial writer.**
 
 Accept reviewed staging artifacts, resolve organization/ID conflicts, integrate
 with `merge_staging.py --apply`, update the manual-download list, validate the
@@ -122,7 +134,7 @@ no solver outputs or private source paths are included. Apply one batch at a tim
 
 ### E — Numerical engine
 
-**E1: Runnable cross-section baseline — claimed by codex-main.**
+**E1: Runnable cross-section baseline — codex-main; ready_for_review.**
 
 Deliver shared YAML parsing/validation, browser/Node runner, CLI, typed result
 boundary, scalar optical material fix, input schema and documentation. Test
@@ -141,7 +153,7 @@ CLI exit semantics distinguish execution from target agreement, numerical caps
 and cancellation are documented. Q2 reviews the voltage normalization and limits.
 E1 does not claim full mesh convergence or Chen device reproduction.
 
-**E2: Optical limits and EO overlap — unassigned; E1 handoff required.**
+**E2: Optical limits and EO overlap — unassigned; E1 handoff available.**
 
 - Review metal intersections, domain truncation, optical boundary conditions,
   scalar/vector validity and material dispersion ranges. Resolve Chen's optical
@@ -196,7 +208,7 @@ specific level actually demonstrated and independently reviewed.
 
 ### U — Browser application
 
-**U1: Cross-section simulator and baseline app — claimed by codex-main.**
+**U1: Cross-section simulator and baseline app — codex-main; ready_for_review.**
 
 Deliver config selection, safe local static asset lookup, editable YAML, geometry
 preview, section/resolution controls, cancellable worker, target status and
@@ -220,9 +232,10 @@ substituting another FOM. Add targeted tests for incorrect scientific comparison
 
 Write ownership: `app/src/routes/table/`, `app/src/routes/explore/`, the relevant
 chart/filter/drawer components, `logic.ts`, `charts.ts`, and new dedicated tests.
-Do not edit U1's `logic.test.ts`, scorecard, worker, sim/about routes or package
-manifest. Coordinate shared `types.ts`, global layout/CSS and `build_views.py`
-changes with the integrator before touching them.
+`logic.test.ts` and U1's narrow header layout scope are released for a U2 claim.
+Scorecard, worker and sim route are released for U3 after its physics dependencies;
+About and the package manifest remain shared maintenance files. Coordinate shared
+`types.ts`, other global layout/CSS and `build_views.py` changes with their owners.
 
 Acceptance: materially comparable values retain conventions, bounds and source
 basis; missing values are not plotted as zero; filter/sort/URL/CSV regression tests
@@ -239,7 +252,7 @@ states as well as reviewed paper configs.
 
 ### Q/R — Independent review and release
 
-**Q1: Evidence audit — unassigned; pilots ready now, each batch after staging.**
+**Q1: Evidence audit — claude-data-lane via fresh-context auditors.**
 Read primary sources independently. Recheck identity/version, headline numbers,
 units, conventions, bounds, organization names and numerical figure locators.
 Write `data/_staging/audits/<scope>-<agent-id>.md`; do not edit the author's data
@@ -358,26 +371,29 @@ Implementation was paused for planning and resumed at the user's request on
 [DevLog-003](DevLog-003-cross-section-progress.md). No other task is assigned to
 this agent by implication.
 
-Already drafted in the working tree:
+Delivered implementation (initial commit `ef32d46`, data integration `8029881`,
+and the documented follow-up):
 
 - Shared YAML parser, config guards, runner, CLI, input schema and type declarations.
-- Eleven engine tests; the off-window optical-material lookup fix.
+- Twenty engine tests; optical material/resource guards and analytic baseline.
 - Sim UI/worker, geometry preview, static config copying, About and scorecard link.
 - Five app logic tests, README and engine documentation/license text.
+- Incomplete-draft geometry/disclosure inspection with strict solve blocking.
 
-Outstanding before E1/U1 can be called review-ready:
+Author acceptance checks completed; exact commands/results are in DevLog-003:
 
-1. Reconcile `sims/SPEC.md`, the new schema and runtime, including stage support,
-   resource ceilings, fixed-index target semantics and unsupported-input errors.
-2. Review input validation and unsupported optical behavior; verify that controls
-   and result labels match the actual calculation.
-3. Rerun the corrected app test and all relevant checks on the final working tree.
-4. Finish worker cancellation/error/stale-result, unknown-config, base-path and
-   narrow-viewport smoke checks; desktop happy-path alone is insufficient.
-5. Package a clear handoff for Q2 and release the optical implementation file to E2.
-   Do not mark Chen as reproduced; its metal-intersecting optical window and
-   complete periodic-line physics remain unresolved.
+1. Runtime/SPEC/schema reconcile the E1 subset, resource ceilings and honest
+   target eligibility; all seven available paper drafts were checked at the boundary.
+2. Engine 20/20, app 5/5, Python 28/28, validator 0 errors, Svelte 0 errors/warnings.
+3. Root and `/eo-atlas` production builds and Chrome interaction suites pass,
+   including actual worker/Node agreement, cancellation and incomplete drafts.
+4. Narrow-viewport layout verified automatically and visually.
+5. Review handoff delivered; optics released to E2, U1 integration files to U3,
+   app data tests/header scope to U2. Shared interfaces still need coordination.
 
-Other agents can immediately claim D0, one D1 batch, Q1/Q2 or U2 within their
-disjoint files. No further user permission is required for ordinary local work
-already within the project scope; file/interface conflicts require agent coordination.
+E1/U1 await independent review rather than being marked complete. Chen remains
+unvalidated; its metal-intersecting optical window and periodic physics remain
+unresolved. Other agents can claim E2, E3, Q2 or U2 within the recorded file
+boundaries. D0/D1/D2/Q1 are already owned by the data lane. No further user
+permission is required for ordinary local work already within project scope;
+file/interface conflicts require agent coordination.

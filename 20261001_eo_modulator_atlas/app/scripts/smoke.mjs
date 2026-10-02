@@ -70,6 +70,17 @@ try {
   }
   console.log('PASS dashboard/table/explore/about render');
 
+  await page.goto(url('sim?id=deng2026-a'));
+  await page.getByRole('alert').filter({ hasText: 'Preview only. Solve blocked: materials.barium_titanate.eps_r' }).waitFor();
+  await page.getByRole('img', { name: 'Configured cross-section geometry' }).waitFor();
+  await page.getByRole('heading', { name: 'Missing or inferred inputs' }).waitFor();
+  await page.getByText('Config validation status: unvalidated', { exact: true }).waitFor();
+  assert.equal(await runButton.isEnabled(), false, 'incomplete physical inputs must not reach the worker');
+  assert.equal(await page.locator('[data-metric]').count(), 0);
+  assert.equal(page.workers().length, 0);
+  await screenshot('sim-incomplete');
+  console.log('PASS incomplete paper config previews geometry and disclosures with solve disabled');
+
   await loadSim();
   const published = await page.request.get(url('sims/chen2022/config.yaml'));
   assert.equal(await published.text(), chen, 'published config must equal the tracked input');
@@ -134,6 +145,10 @@ try {
   console.log('PASS unknown config, legacy config URL and navigation cleanup');
 
   await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto(url('sim?id=deng2026-a'));
+  await page.getByRole('alert').filter({ hasText: 'Preview only. Solve blocked:' }).waitFor();
+  assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1), 'incomplete draft overflows narrow viewport');
+  assert.ok(await page.locator('.sim-page').evaluate(el => el.scrollWidth <= el.clientWidth + 1), 'incomplete draft content overflows narrow viewport');
   await loadSim();
   assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1), 'app shell overflows narrow viewport');
   assert.ok(await page.locator('.sim-page').evaluate(el => el.scrollWidth <= el.clientWidth + 1), 'sim content overflows narrow viewport');

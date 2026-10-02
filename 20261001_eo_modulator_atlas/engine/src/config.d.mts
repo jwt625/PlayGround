@@ -14,3 +14,5 @@ export interface ParsedConfig {
   geometries: Record<string, Geometry>;
 }
 export function parseConfig(text: string): ParsedConfig;
+/** Geometry and disclosures only; never use preview as solver input. */
+export function inspectConfig(text: string): { preview: ParsedConfig; solveError: string };

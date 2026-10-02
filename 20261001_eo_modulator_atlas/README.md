@@ -1,8 +1,9 @@
 # EO Modulator Atlas
 
 A traceable literature database and static browser explorer for electro-optic
-modulators. The verified pilot contains **3 papers, 7 devices and 8 organizations**;
-198 candidates await further distillation. Each reported metric has an evidence
+modulators. The integrated atlas contains **8 papers, 16 devices and 19 organizations**
+after p1_01 (2026-10-01); the candidate index contains 198 records and distillation
+is continuing. Each reported metric has an evidence
 locator and basis. Missing values stay empty.
 
 ## Run the app
@@ -36,7 +37,7 @@ website. Install the engine dependencies before building the app.
 With Python 3.12+ and uv:
 
 ```sh
-uv sync --extra dev
+uv sync --extra dev --extra extract
 uv run python scripts/validate_db.py
 uv run pytest -q
 uv run python scripts/build_views.py
@@ -46,7 +47,7 @@ Without uv, create a virtual environment and install the script dependencies:
 
 ```sh
 python3.12 -m venv .venv
-.venv/bin/python -m pip install pydantic pyyaml requests pytest
+.venv/bin/python -m pip install pydantic pyyaml requests pytest pymupdf
 .venv/bin/python scripts/validate_db.py
 .venv/bin/python -m pytest -q
 .venv/bin/python scripts/build_views.py
@@ -94,6 +95,11 @@ The Chen config remains `unvalidated`. Its optical window intersects gold, so
 not substitute an invented optical index. Tests of the optical solver use
 dielectric slab fixtures.
 
+Incomplete drafts such as Deng 2026 can display their geometry, missing inputs
+and provenance while Run stays disabled. Previewing a draft does not supply
+physical constants or validate the device. New configs and their audit findings
+are tracked in [DevLog-004](DevLog/DevLog-004-data-lane-progress.md).
+
 CLI exit codes: 0 = requested stages completed (not a literature pass), 1 = input
 or solver error, 2 = an evaluated target missed its tolerance. Mesh scale changes
 numerical resolution only. Results need mesh/domain convergence checks before
@@ -109,7 +115,7 @@ fixed group index are excluded from prediction comparisons. Each mesh has an
 
 1. Add metal-aware/vector optical handling and explicit EO drive/arm conventions.
 2. Implement EO overlap, RF loss and periodic-cell/EO-response stages with analytic gates.
-3. Resume batches `p1_01`–`p1_11`, merging only verified rows.
+3. Continue the remaining priority-1 batches, merging only reviewed rows.
 4. Complete literature regressions and independent evidence audits.
 
 Current work and remaining phases are recorded in [DevLog-000](DevLog/DevLog-000-plan.md)

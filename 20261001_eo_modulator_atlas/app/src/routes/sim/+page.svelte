@@ -2,7 +2,7 @@
   import { onDestroy } from 'svelte';
   import { page } from '$app/state';
   import { goto } from '$app/navigation';
-  import { parseConfig } from '../../../../engine/src/config.mjs';
+  import { inspectConfig } from '../../../../engine/src/config.mjs';
   import type { SimulationResult } from '../../../../engine/src/run.mjs';
   import { store } from '../../lib/state.svelte';
   import { staticUrl, link } from '../../lib/paths';
@@ -25,7 +25,7 @@
   const chosen = $derived(requested ? sims.find(s => s.id === requested || s.path === requested) : sims[0]);
   const parsed = $derived.by(() => {
     if (!text) return { config: null, error: '' };
-    try { return { config: parseConfig(text), error: '' }; }
+    try { const { preview, solveError } = inspectConfig(text); return { config: preview, error: solveError }; }
     catch (e) { return { config: null, error: e instanceof Error ? e.message : String(e) }; }
   });
   const geometry = $derived(parsed.config?.geometries[section]);
@@ -110,7 +110,7 @@
         {#if geometry}<CrossSection {geometry} />{/if}
         <label class="editor-label" for="config-yaml">Input YAML · edits apply to this session</label>
         <textarea id="config-yaml" bind:value={text} spellcheck="false" disabled={busy || loading}></textarea>
-        {#if parsed.error}<p class="error" role="alert">{parsed.error}</p>{/if}
+        {#if parsed.error}<p class="error" role="alert">{`${parsed.config ? 'Preview only. Solve blocked: ' : ''}${parsed.error}`}</p>{/if}
         <div class="toolbar actions">
           <button class="on" onclick={run} disabled={busy || loading || !geometry || !!parsed.error}>Run cross-section</button>
           {#if busy}<button onclick={cancel}>Cancel</button>{/if}
@@ -161,7 +161,7 @@
   textarea { width: 100%; height: 250px; resize: vertical; color: var(--ink); background: var(--bg); border: 1px solid var(--border); font: 11px/1.5 var(--mono); padding: 10px; white-space: pre; }
   .editor-label { margin: 10px 0 6px; } .actions button { height: 32px; }
   button:disabled { opacity: 0.5; cursor: default; }
-  .error, .failed { color: var(--crit); } .notice { color: var(--warn); }
+  .error, .failed { color: var(--crit); } .error { overflow-wrap: anywhere; } .notice { color: var(--warn); }
   .metrics { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
   .metrics div { background: var(--bg); padding: 10px; } .metrics span { display: block; color: var(--ink-3); }
   .metrics strong { display: block; font-size: 22px; font-weight: 500; margin-top: 4px; }

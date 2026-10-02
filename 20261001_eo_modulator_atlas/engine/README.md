@@ -43,6 +43,12 @@ the run; there is no partially successful serialized result. Each mesh inherits
 the configured vertex budget (default/maximum 80,000) and fails rather than
 silently reducing resolution. Browser cancellation terminates the worker.
 
+`inspectConfig` provides a geometry/disclosure preview for incomplete drafts,
+including those missing RF permittivity. It returns the strict validation error
+and no resolved solver materials. The UI disables Run while that error is present;
+the CLI and worker always use `parseConfig`, which still requires physical inputs.
+The preview never supplies constants or promotes a config's validation status.
+
 `tests/fixtures/parallel-plates.yaml` is a synthetic analytic test input, not a
 literature config. Tests create transient CLI files under the OS temporary
 directory and remove them. `../app/scripts/smoke.mjs` runs the same input in Chrome

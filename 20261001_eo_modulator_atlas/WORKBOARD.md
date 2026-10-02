@@ -3,26 +3,28 @@
 Updated 2026-10-01. Detailed scope, dependencies and acceptance checks:
 [DevLog-002](DevLog/DevLog-002-work-plan-and-ownership.md).
 
-**Current claim:** `codex-main` (this conversation) owns C0, E1 and U1.
-Implementation resumed at the user's request on 2026-10-01. The existing uncommitted
-engine/simulator changes belong to that claim and are work in progress. Live notes:
-[E1/U1 progress](DevLog/DevLog-003-cross-section-progress.md).
-All other tasks below are **unassigned**, not implicitly delegated.
+**Current claims:** `codex-main` holds C0 and the E1 contract; E1/U1 are
+`ready_for_review` with successor file releases recorded in its claim.
+`claude-data-lane` owns D0,
+D1.01–D1.11, D2 and Q1. Progress: [E1/U1](DevLog/DevLog-003-cross-section-progress.md)
+and [data lane](DevLog/DevLog-004-data-lane-progress.md). Current canonical snapshot:
+8 papers / 16 devices / 19 organizations after p1_01. Other tranches remain
+unassigned. No implicit delegation.
 
 | ID | Tranche | State | Owner | Dependency / handoff |
 |---|---|---|---|---|
 | C0 | Work plan, claims, current-state record | complete | codex-main | This board + detailed plan + claim file |
-| D0 | Ingestion tooling and policy alignment | in progress | claude-data-lane | Serialize fetching until locking is tested |
-| D1.01–D1.11 | Priority-1 paper batches, one claim per batch | claimed (starts after D0 fetch locking; max 3 concurrent) | claude-data-lane | Existing batch manifests; see cached papers in plan |
-| D2 | Canonical data integration and view refresh | waiting for staged batches | claude-data-lane | D1 report + independent evidence review |
-| E1 | Cross-section runner, config boundary, analytic baseline | in progress | codex-main | Freeze input/result contracts; finish current checks |
-| E2 | Optical model limits, EO tensor overlap and voltage conventions | waiting for E1 handoff | unassigned | May research/design now; runtime edits after release |
+| D0 | Ingestion tooling and policy alignment | implementation reported complete | claude-data-lane | DevLog-004 records lock/breaker tests; single prefetch owner retained |
+| D1.01–D1.11 | Priority-1 paper batches, one claim per batch | in progress; p1_01 integrated, p1_02/03/09 reports present | claude-data-lane | Max 3 concurrent; batch-specific Q1 corrections before D2 |
+| D2 | Canonical data integration and view refresh | in progress; p1_01 integrated | claude-data-lane | Serial merges; p1_09 audit corrections remain outstanding |
+| E1 | Cross-section runner, config boundary, analytic baseline | ready_for_review | codex-main | Author gates pass; Q2 independent audit pending; DevLog-003 handoff |
+| E2 | Optical model limits, EO tensor overlap and voltage conventions | ready to claim | unassigned | E1 handoff available; optics.mjs released; coordinate shared interfaces |
 | E3 | Uniform RF line, conductor/dielectric loss | design ready; integration waits | unassigned | E1 section outputs; explicit model contract |
 | E4 | Periodic loaded line and traveling-wave EO response | waiting | unassigned | E2 + E3; loading/reference-plane contract |
 | E5 | Paper regressions and convergence studies | waiting | unassigned | E2–E4 + reviewed paper inputs |
-| U1 | Browser cross-section simulator and current app baseline | in progress | codex-main | E1; route, worker, docs and smoke checks |
-| U2 | Table/explore correctness and usability | ready in owned files | unassigned | Avoid U1-owned scorecard and app config |
-| U3 | Full-chain results and reproduction scorecard | waiting | unassigned | E4/E5 contract + U1 release |
+| U1 | Browser cross-section simulator and current app baseline | ready_for_review | codex-main | Root/base-path Chrome and narrow viewport pass; incomplete drafts preview safely |
+| U2 | Table/explore correctness and usability | ready to claim | unassigned | Follow up audited bounds/representatives; logic.test.ts and header scope released |
+| U3 | Full-chain results and reproduction scorecard | waiting | unassigned | U1 files released; still needs E4/E5 contract |
 | Q1 | Independent pilot/batch evidence audit | claimed (fresh-context auditors, read-only) | claude-data-lane | Read-only inputs; write audit report only |
 | Q2 | Independent numerical review | review ready; final gate waits | unassigned | E1 diff; later E2–E5; separate audit files |
 | R1 | Release integration, second audit, public packaging | waiting | unassigned | Accepted D/E/U tranches; rights policy review |
@@ -46,3 +48,5 @@ All other tasks below are **unassigned**, not implicitly delegated.
 
 No agents have been spawned by this continuation. The user may assign the
 unclaimed tranches to other conversations without overlapping this claim.
+The [E1/U1 follow-up register](DevLog/DevLog-003-cross-section-progress.md#cross-agent-review-and-follow-up)
+records outstanding p1_09 provenance corrections and batch interface proposals.

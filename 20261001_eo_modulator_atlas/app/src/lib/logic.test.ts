@@ -6,9 +6,9 @@ import { applyFilters, buildIndex, defaultFilters, fromHash, toHash, pickRep, so
 const atlas = atlasJson as unknown as Atlas;
 const index = buildIndex(atlas);
 
-describe('verified pilot data in the app', () => {
+describe('integrated atlas data in the app', () => {
   it('selects a representative only from matching variants', () => {
-    const f = { ...defaultFilters(), q: 'kohli2025', materials: ['barium_titanate'], classes: ['plasmonic_mzm'] };
+    const f = { ...defaultFilters(), q: 'kohli2025', materials: ['barium_titanate'], classes: ['mzm'] };
     const view = applyFilters(atlas, f, index);
     expect(view.papers.map(p => p.paper_id)).toEqual(['kohli2025']);
     expect(view.reps.get('kohli2025')?.device_id).toBe('kohli2025-mzm');

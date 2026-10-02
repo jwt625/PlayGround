@@ -105,6 +105,18 @@ Node CLI and browser worker. It always solves electrostatics. `optical: true`
 additionally requests the scalar optical stage; `chain` records the intended
 device pipeline and does not cause the unimplemented stages to execute.
 
+`inspectConfig(yaml)` is a separate, display-only path returning `{preview,
+solveError}`. It validates YAML, metadata, material declarations and geometry,
+then reports the strict input validator's first error without hiding the geometry
+or disclosures. The preview contains only `raw` and `geometries`; no resolved
+solver materials or default physical constants. Malformed metadata/geometry still
+throws. A nonempty `solveError` disables Run. An empty one means the input boundary
+passed, not that meshing, an optional optical stage or literature validation will
+succeed. The worker and CLI always reparse through the strict solver boundary.
+This allows geometry records with omitted `eps_r` to be inspected without making
+them valid solver inputs or changing the JSON input schema. No `unknown` sentinel
+or additional validation-status enum is introduced.
+
 Inputs and numerical controls:
 
 - Required: `schema`, non-empty `id`, material definitions, and a covered domain
@@ -189,3 +201,6 @@ Result and target semantics:
 - 2026-10-01 draft 1 (E1/U1): documented the implemented cross-section subset,
   validation/resource controls, loading semantics and honest target eligibility;
   added C₀′ diagnostic metric. Full-chain roadmap and paper inputs remain unchanged.
+- 2026-10-01 draft 1 follow-up: documented the separate geometry/disclosure preview
+  for incomplete drafts from p1_01/p1_02; strict input schema and physical-input
+  requirements unchanged. YAML 1.2 remains required for schema checks.

@@ -2,11 +2,14 @@
 
 - Agent: Codex in the conversation that inspected the repository on 2026-10-01
 - Task IDs: C0, E1, U1
-- Status: active; E1/U1 implementation resumed at the user's request
+- Status: E1/U1 ready_for_review; C0 coordination and shared E1 contract maintenance retained
 - Updated: 2026-10-01
 - Progress/handoff: `DevLog/DevLog-003-cross-section-progress.md`
 
-## Owned write paths
+## Implementation write paths
+
+These describe the delivered scope. The explicit release list below takes
+precedence for successor claims; do not assume all files remain reserved.
 
 Coordination/documentation:
 
@@ -55,7 +58,20 @@ Generated local verification outputs: `app/build/`, `app/.svelte-kit/`,
 
 ## Current work
 
-Finish the E1/U1 acceptance checks listed in DevLog-002, reconcile the runtime
-contract with SPEC/schema, and report a reviewable handoff. No expansion into
-other tranches without updating this claim. Release `engine/src/optics.mjs` to E2
-and the scorecard/worker integration to U3 explicitly at handoff.
+E1/U1 implementation and author checks are finished; see DevLog-003 for exact
+commands, 20 engine / 5 app / 28 Python passing tests, both browser deployment
+paths and the cross-agent follow-up register. Q2 remains unassigned and must
+independently review the numerical baseline. No new tranche claimed.
+
+## Released for successor claims (2026-10-01)
+
+- E2: `engine/src/optics.mjs`.
+- U3 after its physics dependencies: `app/src/routes/sim/+page.svelte`,
+  `app/src/lib/sim.worker.ts`, `CrossSection.svelte`, `ScoreCard.svelte`.
+- U2: `app/src/lib/logic.test.ts` and the narrow header changes in
+  `app/src/routes/+layout.svelte`.
+
+Release does not assign a successor or assert independent acceptance. Retain
+existing tests and coordinate review fixes if a new owner has claimed a file.
+Shared config/runner/schema/SPEC maintenance and coordination docs remain with
+codex-main until a specific interface handoff is recorded.

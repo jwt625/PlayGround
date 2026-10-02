@@ -5,7 +5,7 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
-import { parseConfig, normalizeConfig, STAGES, TARGET_METRICS, MAX_VERTICES } from '../src/config.mjs';
+import { parseConfig, inspectConfig, normalizeConfig, STAGES, TARGET_METRICS, MAX_VERTICES } from '../src/config.mjs';
 import { compareTargets, runCrossSection } from '../src/run.mjs';
 
 const text = readFileSync(new URL('../../sims/chen2022/config.yaml', import.meta.url), 'utf8');
@@ -17,6 +17,34 @@ test('Chen config resolves regions, materials and both cross-sections', () => {
   assert.deepEqual(Object.keys(c.geometries), ['geometry', 'unloaded']);
   assert.equal(c.geometries.geometry.electrodes.length, 7);
   assert.equal(c.raw.validation_status, 'unvalidated');
+});
+
+test('incomplete material records retain geometry and disclosure without becoming runnable', () => {
+  const incomplete = raw();
+  delete incomplete.materials.air.eps_r;
+  incomplete.missing = ['Air RF permittivity withheld for this test'];
+  const input = JSON.stringify(incomplete);
+  const { preview, solveError } = inspectConfig(input);
+  assert.equal(preview.geometries.geometry.electrodes.length, 7);
+  assert.deepEqual(preview.raw, incomplete, 'inspection must not fill physical inputs or promote validation status');
+  assert.match(solveError, /materials.air.eps_r: RF permittivity/);
+  assert.equal(Object.hasOwn(preview, 'materials'), false, 'preview has no resolved solver materials');
+  assert.throws(() => parseConfig(input), /RF permittivity/);
+  assert.throws(() => runCrossSection(input), /RF permittivity/);
+  assert.equal(inspectConfig(text).solveError, '');
+});
+
+test('preview still rejects malformed geometry, metadata and material declarations', () => {
+  const cases = [
+    [c => c.geometry.regions[0].material = 'absent', /unknown material/],
+    [c => c.geometry.domain.x_um = [0, 0], /max must exceed/],
+    [c => c.materials.air = null, /expected an object/],
+    [c => c.materials.gold.conductor = 'true', /boolean/],
+    [c => c.missing = 'not a list', /expected an array/],
+    [c => c.title = {}, /expected a string/],
+  ];
+  for (const [change, message] of cases) { const c = raw(); change(c); assert.throws(() => inspectConfig(JSON.stringify(c)), message); }
+  assert.throws(() => inspectConfig('schema: a\nschema: b'), /YAML/);
 });
 
 test('input boundary rejects unknown schema, duplicate YAML keys, missing physics and bad geometry', () => {
