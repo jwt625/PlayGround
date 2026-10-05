@@ -1,0 +1,38 @@
+{
+ "name": "pcb_trim_0_top",
+ "surface": {
+  "type": "quad",
+  "corners_mm": [
+   [
+    12.899999999999999,
+    46.1,
+    13.6
+   ],
+   [
+    19.9,
+    46.1,
+    13.6
+   ],
+   [
+    19.9,
+    39.1,
+    13.6
+   ],
+   [
+    12.899999999999999,
+    39.1,
+    13.6
+   ]
+  ]
+ },
+ "px_per_mm": 16,
+ "views": "auto",
+ "occlusion_run": "outputs/runs/pcb_bake_id3",
+ "occlusion_object": [
+  "pcb.trim_0",
+  "pcb.label_trim_0_top"
+ ],
+ "n_best": 3,
+ "erode_px": 1,
+ "fill": "median"
+}

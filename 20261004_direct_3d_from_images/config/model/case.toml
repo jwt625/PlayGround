@@ -1,0 +1,120 @@
+# Case (black plastic housing) parameters, millimeters. Positions are case-local (x along the case, origin at the
+# footprint center) and then placed by [frame]. Provenance and measurements: DevLog/parts/DevLog-002-case.md.
+
+[frame]
+cx = -1.475        # case footprint center (world mm); fit case_dims2 (2026-10-05); sparse wall points -102 / 98.5
+cy = 0.0          # rim points symmetric (|y| 51.19 near, 51.27 far); case_flare fit 0.53 not used
+yaw_deg = -0.8     # rotation about Z; fit case_dims1
+
+[body]
+length = 201.4    # outer length along X; fit case_dims2; case_dims1 202.4
+width = 100.0     # outer width at the base; case_dims2 100.0 (case_flare 98.9); sparse dark points z 3-10: |y| 50.7 (n 8)
+wall = 2.5
+floor = 2.5
+flare = 1.2       # sparse dark points z 30-37: |y| median 51.2 both sides (n 179 near, 104 far); case_flare fit 0.68. Outer walls lean out: top rim outer edge this much wider per side at flare_ref_z. Top views
+flare_ref_z = 35.75 # (IMG_1560 overlay: rim outer edges at |y| ~50.5-52 at z 35.75; IMG_1638/1571 cyan bands outside
+                  # the rim) vs low side views fitting the bottom edges at |y| ~49.75
+corner_r = 6.0    # vertical outer corners at the base (top = corner_r + flare); IMG_1571 overlay: rim corners ~8 vs 4.7
+edge_bevel = 0.6  # small bevel on rim edges
+
+[screen]          # -X section holding the window insert
+length = 106.8    # -X end to where the full-height long walls end (world x 4.6, IMG_1513 near-wall ray pick)
+height = 35.75    # fit case_dims1; rim z: IMG_1543 overlay, sparse points 34.5-35, DevLog-001 34.4-36.3
+
+[cuts]            # openings in the screen-section walls
+slot_y = [-38.8, -30.3]   # -X end face through-slot (mat visible through it): IMG_1555 rays on plane x = -102.2
+slot_z = [6.0, 9.0]       # (u 1880-1925, v 885-905): y -38.9..-30.2, z 5.7..10.7
+notch_x = [-66.1, -54.3]  # local; near-wall bottom notch (IMG_1513 rays on plane y = -49.75: world x -67.6..-55.8)
+notch_h = 3.0             # z 0..3 (ray z 1.2-3.6)
+
+[ramp]            # long-wall step from the screen rim down to the tray rim (IMG_1513: z 35.1 at world x 4.6 ->
+x1 = 12.5         # z 25.3 at world x 10.9); local x where the ramp reaches the tray rim
+
+[lugs]            # blocks on the outer long walls at the junction (bracket mounts), both sides
+x = [-4.5, 10.5]  # local (world -6..9): IMG_1513 rays on plane y = -52.5 (block u 975-1060, v 615-655 ->
+y_out = 52.8      # x -6..7.4, z 30.5-35); sparse points world x 4.5-13, |y| 51.3-53.2, z 30.7-36 both sides
+z = [30.5, 35.5]
+
+[tray]            # +X section with the electronics
+near_height = 25.0  # -Y long wall: overlays IMG_1512 / IMG_1513 (dark wall top between z 24 and 26), ray picks 24.3-25.3
+far_height = 27.7   # +Y long wall; tri2 on the +X+Y rim corner (outer rim edge), train views only: IMG_1587 + IMG_1594
+                    # + IMG_1586 -> (99.64, 49.84, 27.63), err 0.9-1.4 px (2026-10-05; replaces a pick that used holdout IMG_1595)
+end_height = 27.7   # +X end wall: same corner
+
+[bracket]         # black bar across the case at the junction (top view IMG_1560: rays at z 37.5 give x -5.3..6.7)
+x = 2.3           # local center x (world 0.7)
+width = 12.0      # along X
+length = 99.5     # along Y
+z_top = 37.3      # sparse points world x -11..7: median z 37.1-37.8
+thick = 3.0
+tab_y0 = 41.0     # screw pads at the bar ends (IMG_1560): |y| 41..49.75, slightly lower than the bar
+tab_z_top = 36.8
+screw_x = 3.7     # local (world 2.1); screws tri2 IMG_1518/IMG_1571 (1.7, -47.9, 37.1), (2.9, 47.9, 37.6);
+screw_y = 47.9    # rays IMG_1560 at z 37.5: (1.8, -48.2), (2.4, 47.7)
+screw_r = 2.6
+screw_h = 0.8
+hole_x = -0.5     # local (world -2.1); two holes on the -Y half (IMG_1560 rays: y -41.7 and -23.2), dia ~3
+hole_y = [-41.7, -23.2]
+hole_r = 1.5
+
+[window]          # clear acrylic tray insert in the screen section (open top, sloped walls)
+x0 = -97.75       # local -X outer edge of the top flange
+x1 = -14.0        # local +X outer edge (IMG_1518 ray: inner edge world x -16.5)
+half_w = 46.5
+z_top = 35.8
+flange = 2.5      # flange width at the top
+inset = 5.0       # bottom inset relative to the top outline
+z_bot_mx = 25.9   # bottom z at the -X end: parallel to the card plane, 1.5 mm below it (case_027: the old
+z_bot_px = 9.5    # 24.5 / 13.0 bottom cut through the card's +X half once the window became opaque)
+thick = 1.5
+nseg = 6          # long walls split along X (the bottom is tilted, so a single wall quad is twisted)
+
+[window_edge]     # dark band between the window flange and the bracket bar (IMG_1560 / IMG_1518 overlays: world
+x0 = -13.9        # x -15.5..-6.5; sparse points median z 36.7-37.3)
+x1 = -4.9
+half_w = 47.0
+z_top = 37.0
+thick = 3.0
+
+[clips]           # black tabs on the window flange; rays at z 36 in IMG_1543 / IMG_1555 (low views, +-3 mm)
+end_x = -99.6     # local x of the two clips on the -X flange (world -101.2), at y +-33, 10 long along Y
+end_y = 33.0
+side_x = -77.4    # only the +Y clip is seen (IMG_1555, IMG_1638); the -Y one was absent in IMG_1527 (case_014)    # local x of the clips on the long-side flanges (world -79), at y +-47.5, 10 long along X
+side_y = 47.5
+length = 10.0
+width = 3.0
+height = 1.5
+z0 = 35.8
+
+[rod]             # thin rod across the case under the window's +X flange (IMG_1527, pick.py tri, train views):
+x = -14.6         # (-15.06, 5.26, 14.07) 6 inliers, (-16.82, -14.6, 14.12) 3 inliers -> local x ~-14.4
+z = 14.1          # possibly the window's +X bottom edge seen through the plastic; kept as a separate part
+half_len = 44.0
+r = 0.8
+
+[card]            # white card on the window bottom, tilted about Y (higher at -X)
+# tilt: tri IMG_1527 far corners (-32.4, 39.8, 14.3) and (-91.0, 40.5, 25.75) world; extents: rays of corner
+# picks in IMG_1518 / IMG_1638 onto that plane (+X edge spans world y -38..41, -X edge at world x -90..-96)
+x0 = -91.4        # local x of the -X edge (world -93.0); -95.0 tried in case_020: card edge 6.76 -> 6.98 px, pts 0.77 -> 0.90, reverted
+x1 = -30.65       # local x of the +X edge (world -32.25)
+y0 = -37.0
+y1 = 41.5
+z_mx = 26.2
+z_px = 14.3
+thick = 0.8
+
+[material]
+black_spec = 0.02  # Specular IOR Level of the black plastic (white eval world). case_011 with 0.12, base 0.01:
+                   # wall median 46-114 render vs 1-58 photo (outputs/scratch/case/bright.py); 0.06: 27-96
+black_rgb = [0.005, 0.007, 0.010]  # slight blue: photo walls are B > G > R (mat reflections)
+black_rough = 0.3
+glass_rgb = [0.02, 0.022, 0.022]
+glass_alpha = 0.15   # 0.35 with rgb 0.3 (case_026): window 12.2 dB, worse
+glass_rough = 0.05
+glass_spec = 0.5   # the white eval world turns a normal-specular glass into a white veil (case_024: window 13.4 dB)
+tex_rough = 0.6    # photo-textured panels (assets/textures/case_<panel>.png, scripts/model/case/bake_case.py)
+tex_spec = 0.0     # photo texels already hold the reflections; 0.2 (case_028) rendered walls 10-25 levels too bright
+panel_tol = 2.5
+window_tex = true  # photo-texture the window shell faces (inner walls in segments, flange, bottom) as opaque
+window_top = false # opaque photo quad over the window (case_023): window_top 10.0 dB, total 13.89 -> 12.65 dB fit
+                   # (parallax: card 10-20 mm below, lamp reflections); disabled, card textured instead    # face-to-panel-plane distance (mm) for panel assignment

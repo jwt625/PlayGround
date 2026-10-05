@@ -1,0 +1,392 @@
+# pcb group parameters (mm, world frame). Phase 1A rough block-out.
+# Provenance: DevLog/parts/DevLog-002-pcb.md. Sparse-point clusters (COLMAP points in world frame), pick.py tri,
+# and IMG_1560 orthophotos at z = 6 / 17 / 27 (pixel rays intersected with a plane).
+
+[board]               # tan/brown main PCB; top surface from tri on 3 board points (5.6-6.4) + brown sparse pts (5.9)
+x0 = 1.5
+x1 = 96.3
+y0 = -48.0
+y1 = 47.0
+top = 6.0
+thick = 1.6
+
+[flyback]             # boxed HV transformer; top from sparse points (z median 26.8) and coordinator tri (26.7-27.1)
+x0 = 56.9
+x1 = 87.2
+y0 = -49.2
+y1 = -28.3
+top = 26.9
+end_t = 0.0           # (was 0.8 black end faces; whole body now dark)
+body_mat = "fly_dark" # sides are dark grey core/bobbin: IMG_1613 band below the -Y top edge sRGB 72,71,67;
+                      # top and +Y sticker are textured quads; -Y face is hidden by the case wall except z > 24
+base_h = 3.0          # black base strip at the bottom (z = board top .. +base_h)
+
+[flyback_label]       # textured quad on the flyback top. Corners TL, TR, BR, BL (coordinator)
+corners = [[86.07, -47.55, 26.9], [57.11, -48.99, 26.9], [56.88, -28.58, 26.9], [85.92, -28.28, 26.9]]
+
+[plate]               # vertical aluminium heat-sink plate along the +Y wall; top edge tri (28.0-28.7) at y 48-49
+chamfer_dx = 2.0      # -X top corner cut (IMG_1626 / IMG_1560 ortho z 28: plate starts at x 12.5 with a cut corner)
+chamfer_dz = 2.0
+flange_y0 = 46.0      # top flange (L-bracket) toward -Y: sparse pts z 26-30 concentrate at y 46-48.5; IMG_1626 lit band
+flange_t = 1.2
+x0 = 12.5
+x1 = 95.0
+y0 = 46.8
+y1 = 48.3
+top = 28.4
+
+# Rectangular parts: [x0, x1, y0, y1] and top z, bottom on the board top. mat: key into the mats table.
+[[block]]
+name = "black_block"  # black plastic block "8XSZ" in front of the plate, +X end
+xy = [64.0, 91.6, 38.2, 46.8]
+top = 21.0
+mat = "black"
+
+[[block]]
+name = "reg_a"        # black TO-220 body near the plate, sparse z median 13
+xy = [29.0, 37.0, 41.0, 46.5]
+top = 13.5
+mat = "black"
+
+[[block]]
+name = "reg_b"        # TO-220 with metal tab and screw
+xy = [21.8, 28.0, 41.0, 46.5]
+top = 11.5
+mat = "metal"
+
+[[block]]
+name = "conn_a"       # white vertical 4-pin JST header at the +X end
+xy = [86.5, 93.7, 24.2, 36.5]
+top = 15.5
+mat = "white"
+
+[[block]]
+name = "conn_b"       # white 5-pin JST header along the -Y wall
+xy = [10.5, 24.9, -47.9, -40.5]
+top = 15.0
+mat = "white"
+
+[[block]]
+name = "conn_c"       # white header under the wire bundle near the blue cap
+xy = [47.0, 60.0, 33.5, 37.5]
+top = 13.0
+mat = "white"
+
+[[block]]
+name = "film_a"       # green film caps
+xy = [41.9, 46.4, 30.6, 33.6]
+top = 17.0            # green sparse pts z 15.7-17.7
+mat = "green"
+
+[[block]]
+name = "film_b"       # fit_params dx +1.4 dy +1.25 (pcb_film_b)
+xy = [43.4, 47.9, 26.25, 29.25]
+top = 16.5
+mat = "green"
+
+[[block]]
+name = "film_y"       # yellow box capacitor
+xy = [80.5, 86.0, 23.0, 27.0]
+top = 19.0
+mat = "yellow"
+
+[[block]]
+name = "white_part"   # white round part near the flyback (under the white cable); orphan cluster (45.3,-32.5,13.8)
+xy = [42.25, 48.25, -34.05, -27.05]
+top = 15.0
+mat = "white"
+
+[[block]]
+name = "cer_a"        # blue ceramic disc caps (standing, faces along X)
+xy = [49.5, 51.5, -35.5, -29.0]
+top = 13.0
+mat = "ceramic_blue"
+
+[[block]]
+name = "cer_b"
+xy = [52.5, 54.5, -36.0, -29.5]
+top = 13.0
+mat = "ceramic_blue"
+
+[[block]]
+name = "cer_c"        # blue sparse pts (65.6-67.5, -19.4, z 12.7-15); fit's dx -3.75 rejected (contradicts points)
+xy = [62.0, 68.5, -20.0, -17.0]
+top = 15.0
+mat = "ceramic_blue"
+
+[[block]]
+name = "dark_small"   # unlabeled dark part, sparse cluster (67-71, -15..-13, z 8-12.6)
+xy = [66.5, 71.5, -15.5, -12.5]
+top = 12.0
+mat = "black"
+
+[[slab]]
+name = "reg_tab"      # inclined metal heat tab in front of the regulators: tri IMG_1626 (23.5,36.5,21.8) 5 inliers,
+center = [28.5, 36.3, 20.0]   # (33.1,34.7,19.2); sparse y-z profile rises z 17 -> 24 over y 33.5 -> 38
+size = [14.0, 8.0, 1.5]
+rot_x_deg = 50.0
+mat = "metal"
+
+[fit]                 # per-part offsets for fit_params (scalar keys); accepted values get folded into the lists, then reset to 0
+cer_c_dx = 0.0
+cer_c_dy = 0.0
+film_a_dx = 0.0
+film_a_dy = 0.0
+film_b_dx = 0.0
+film_b_dy = 0.0
+white_part_dx = 0.0
+white_part_dy = 0.0
+capB_i_dx = 0.0
+capB_i_dy = 0.0
+trim_6_dx = 0.0
+trim_6_dy = 0.0
+ic_a_dx = 0.0
+ic_a_dy = 0.0
+hv_boot_dx = 0.0
+hv_boot_dy = 0.0
+hv_boot_dz = 0.0
+
+# Phase 1C small parts (IMG_1560 ortho z 8 at 14 px/mm + sparse-point boxes; DevLog-002-pcb)
+[[block]]
+name = "ic_a"         # DIP-8 under the green film caps: tri IMG_1626 (39.6,21.1,8.9); sparse x 37-43.6, y 20-24.2
+xy = [36.5, 44.5, 20.0, 24.4]
+top = 9.3
+mat = "black"
+
+[[cap]]
+name = "q_a"          # small black standing part (TO-92 / small cap), sparse (60.5-63.1, -21.8..-21.1), z to 14.2
+x = 62.0
+y = -22.3
+d = 3.8
+top = 13.5
+mat = "black"
+vent = false
+
+[[cap]]
+name = "capK_n"       # black cap with silver top between choke_a and choke_b (orphan cluster (75.6,20.9,19.7) n 20 in pcb_010);
+x = 76.0              # sparse x 72-79, y 19-24, z90 21
+y = 21.3
+d = 6.3
+top = 21.0
+mat = "black"
+
+# Axial parts lying on the board / horizontal parts: center (mm), axis x|y, body radius/length, total lead length.
+[[axial]]
+name = "hv_boot"      # black rubber boot of the HV cable leaving the flyback -X face; sparse x 50-58, y -48.7..-42.2, z med 22.6
+center = [55.2, -45.5, 22.6]   # fit dx +1.7 accepted; fit dy -2.25 rejected (sparse y median -44.7)
+axis = "x"
+r = 2.8
+len = 7.0
+lead_len = 0.0
+mat = "black"
+
+[[axial]]
+name = "diode_a"      # black glass diode, sparse x 53-58.8, y -24.4..-25.7, z 7-10
+center = [56.0, -24.9, 7.8]
+axis = "x"
+r = 1.1
+len = 4.2
+lead_len = 9.0
+mat = "black"
+
+[[axial]]
+name = "res_green"    # green banded axial part, ortho z 8 (23.6-26.8, -30..-35.4); sparse z 7-12
+center = [25.2, -32.6, 8.5]
+axis = "y"
+r = 1.7
+len = 5.5
+lead_len = 9.0
+mat = "green"
+
+# Trimmer pots: [x, y] center; blue square base, white rotor
+[trimmer]
+side = 7.0
+top = 12.3            # blue base top; white rotor up to rotor_top (sparse z90 13.1-14.3)
+rotor_d = 5.6
+rotor_top = 13.6
+xy = [[16.4, 42.6], [10.8, 27.3], [17.6, 27.3], [31.4, 28.6], [31.6, -33.5], [31.2, -43.0], [64.15, 25.0]]
+
+# Cylinders (electrolytic caps, chokes): center x, y, diameter d, top z. Top heights = sparse cluster z90.
+[[cap]]
+name = "capB_a"
+x = 48.9
+y = 42.0
+d = 7.5
+top = 21.0
+mat = "blue"
+
+[[cap]]
+name = "capK_b"
+x = 57.0
+y = 42.5
+d = 7.0
+top = 20.0
+mat = "black"
+
+[[cap]]
+name = "capK_c"
+x = 8.5
+y = 34.5
+d = 5.0
+top = 17.0
+mat = "black"
+
+[[cap]]
+name = "capK_d"
+x = 14.7
+y = 34.5
+d = 5.0
+top = 17.0
+mat = "black"
+
+[[cap]]
+name = "capK_e"
+x = 24.9
+y = 31.8
+d = 5.0
+top = 17.0
+mat = "black"
+
+[[cap]]
+name = "capK_f"
+x = 24.6
+y = 24.4
+d = 5.0
+top = 17.0
+mat = "black"
+
+[[cap]]
+name = "capK_g"
+x = 29.6
+y = 22.5
+d = 5.0
+top = 17.0
+mat = "black"
+
+[[cap]]
+name = "capB_i"       # fit_params dx -0.56 dy -1.0
+x = 57.95
+y = 22.3
+d = 5.0
+top = 17.0
+mat = "blue"
+
+[[cap]]
+name = "capK_j"
+x = 31.9
+y = -23.5
+d = 5.0
+top = 17.2
+mat = "black"
+
+[[cap]]
+name = "capK_k"
+x = 39.8
+y = -43.0
+d = 8.0
+top = 18.1
+mat = "black"
+
+[[cap]]
+name = "capK_l"
+x = 91.2
+y = -23.3
+d = 10.0
+top = 21.2
+mat = "black"
+
+[[cap]]
+name = "capK_m"
+x = 72.7
+y = -21.2
+d = 5.5
+top = 18.8
+mat = "black"
+
+[[cap]]
+name = "choke_a"
+x = 74.5
+y = 30.5
+d = 9.0
+top = 25.5
+mat = "ferrite"
+
+[[cap]]
+name = "choke_b"
+x = 85.7
+y = 20.0
+d = 9.0
+top = 21.7
+mat = "ferrite"
+
+[[cap]]
+name = "choke_c"
+x = 78.2
+y = -23.0
+d = 9.0
+top = 19.4
+mat = "ferrite"
+
+[mats]                # linear RGB, roughness. Base colors ~ photo colors of lit surfaces (sample.py on IMG_1560/1613,
+board = [0.22, 0.12, 0.02, 0.6]          # sRGB 128,98,13 lit board (IMG_1560); top is textured anyway
+beige = [0.86, 0.78, 0.62, 0.75]         # flyback paper, sRGB 240,229,205
+black = [0.02, 0.02, 0.02, 0.55]         # black sleeves / plastic (rougher: less white sheen)
+ferrite = [0.07, 0.08, 0.09, 0.8]        # choke tops sRGB 76,83,89
+blue = [0.03, 0.13, 0.46, 0.35]          # blue sleeves
+ceramic_blue = [0.03, 0.16, 0.51, 0.45]
+metal = [0.72, 0.74, 0.74, 0.35]         # plate top sRGB 220,224,223
+cap_top = [0.40, 0.42, 0.42, 0.45]     # vent tops read mid-grey silver in photos
+white = [0.65, 0.62, 0.52, 0.5]          # JST nylon
+green = [0.03, 0.10, 0.04, 0.4]
+yellow = [0.45, 0.28, 0.02, 0.5]
+trim_base = [0.02, 0.08, 0.40, 0.5]
+trim_rotor = [0.70, 0.70, 0.65, 0.5]
+leg = [0.70, 0.70, 0.72, 0.3]
+fly_dark = [0.065, 0.063, 0.056, 0.6]
+
+[metal_keys]
+keys = ["metal", "cap_top", "leg"]
+dielectric_specular = 0.25   # Specular IOR Level for non-metal photo-sampled materials (coordinator rig)
+
+[textures]            # image textures (assets/textures), applied as quads; specs in outputs/scratch/pcb/tex_*.json
+board_top = "assets/textures/pcb_board_top.png"       # z 6 plane, per-texel top-3 median, model-occlusion masked
+flyback_top = "assets/textures/pcb_flyback_top.png"   # WARNING label, n_best 5 (IMG_1613,1622,1632,1562,1561)
+flyback_side = "assets/textures/pcb_flyback_side_py.png"  # "SY-F100C NO." sticker on the +Y face, z 17..26.9
+
+[flyback_side_label]  # +Y face (y = flyback.y1), TL TR BR BL seen from +Y
+corners = [[87.2, -28.3, 26.9], [56.9, -28.3, 26.9], [56.9, -28.3, 17.0], [87.2, -28.3, 17.0]]
+
+[cap_vent]            # silver top disc on electrolytics (not on chokes)
+inset = 0.5           # radius inset
+h = 0.3
+
+[[legs]]              # TO-220 leads of reg_a, bent toward +X (IMG_1560 ortho z 17: leads at y 40.2, 43.1, x 37..40)
+y = [40.2, 41.65, 43.1]
+x = [36.5, 40.5]
+z = 12.0
+w = 0.8
+t = 0.5
+
+# Photo-textured quads on procedural parts (bake: scripts/tools/bake_id_owned.py, specs outputs/scratch/pcb/tex/*.json,
+# train views only, ID run outputs/runs/pcb_bake_id2). Corners TL TR BR BL as seen from outside the face.
+[[tex_quad]]
+name = "plate_top"
+texture = "assets/textures/pcb_plate_top.png"
+corners = [[14.5, 48.3, 28.4], [95.0, 48.3, 28.4], [95.0, 46.0, 28.4], [14.5, 46.0, 28.4]]
+
+[[tex_quad]]
+name = "plate_face"
+texture = "assets/textures/pcb_plate_face.png"
+corners = [[14.5, 46.0, 28.4], [95.0, 46.0, 28.4], [95.0, 46.0, 6.0], [14.5, 46.0, 6.0]]
+
+[[tex_quad]]
+name = "black_block_top"
+texture = "assets/textures/pcb_black_block_top.png"
+corners = [[64.0, 46.8, 21.0], [91.6, 46.8, 21.0], [91.6, 38.2, 21.0], [64.0, 38.2, 21.0]]
+
+[[tex_quad]]
+name = "conn_a_top"
+texture = "assets/textures/pcb_conn_a_top.png"
+corners = [[86.5, 36.5, 15.5], [93.7, 36.5, 15.5], [93.7, 24.2, 15.5], [86.5, 24.2, 15.5]]
+# Trimmers 0-4 use assets/textures/pcb_trim_<i>_top.png automatically (build.py); 5, 6 stay procedural
+# (their bakes were dominated by wires).

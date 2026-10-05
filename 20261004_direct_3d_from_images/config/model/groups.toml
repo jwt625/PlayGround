@@ -1,0 +1,3 @@
+# Build order of model groups (each owns scripts/model/<group>/ and config/model/<group>.toml).
+# env (coordinator): photo-textured mat plane, helper only (RGB renders), not scored as model geometry.
+groups = ["env", "case", "crt", "pcb", "wires"]

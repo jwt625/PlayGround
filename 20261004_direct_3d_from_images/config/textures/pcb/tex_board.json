@@ -1,0 +1,49 @@
+{
+ "name": "pcb_board_top",
+ "surface": {
+  "type": "quad",
+  "corners_mm": [
+   [
+    1.5,
+    47.0,
+    6.0
+   ],
+   [
+    96.3,
+    47.0,
+    6.0
+   ],
+   [
+    96.3,
+    -48.0,
+    6.0
+   ],
+   [
+    1.5,
+    -48.0,
+    6.0
+   ]
+  ]
+ },
+ "px_per_mm": 8,
+ "views": [
+  "IMG_1560",
+  "IMG_1561",
+  "IMG_1559",
+  "IMG_1588",
+  "IMG_1589",
+  "IMG_1622",
+  "IMG_1629",
+  "IMG_1558",
+  "IMG_1562",
+  "IMG_1631"
+ ],
+ "occlusion_run": "outputs/runs/pcb_bake_id",
+ "occlusion_object": [
+  "pcb.board",
+  "pcb.label_board_top"
+ ],
+ "n_best": 3,
+ "erode_px": 2,
+ "fill": "median"
+}

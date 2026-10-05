@@ -1,0 +1,129 @@
+# CRT tube assembly (yoke, neck, clamp, socket) parameters, millimeters, world frame.
+# Axis runs along X. Provenance: DevLog/parts/DevLog-002-crt.md (sparse-point profiles along X, IMG_1560 silhouette
+# rays via pick.py ray). Phase 1A rough block-out values.
+
+[axis]
+y = 0.0           # yoke silhouette y-extents symmetric about 0 (IMG_1560 rays)
+z = 23.0          # fit crt_neck1 (2026-10-05) from 22.5; compromise: yoke top 43 mm, neck/cap/clamp tops 31.5/32.5/36 with measured half-widths
+
+# Yoke: loft of elliptical rings [x, ry (half-width, Y), rz (half-height, Z)].
+[yoke]
+rings = [[9.0, 24.6, 20.1], [20.0, 24.0, 20.2], [32.0, 22.0, 19.9], [45.0, 20.4, 19.5], [49.5, 19.5, 18.5]]  # rz keeps top z ~43 (points); last ring x 51 -> 49.5 (1D: holder block visible from x 49, tri IMG_1560)
+scale_y = 0.96    # fit crt_yoke3 (2026-10-05, 15 views); 1C value 0.99 (crt_yoke2)
+scale_z = 0.965   # fit crt_yoke3; 1C 0.97
+dy = -0.25        # fit crt_yoke3; 1C 0.25
+dz = 0.06
+texture = "assets/textures/crt_yoke.png"   # scripts/model/crt/texture_yoke.py (train views, ID visibility)
+s2 = 1.0          # per-ring scale knobs for rings 2..4 (waist toward the holder)
+s3 = 0.99      # fit crt_waist1
+s4 = 1.055     # fit crt_yoke3; crt_waist1 1.041
+
+
+[copper]          # exposed winding at the -X (screen) end of the yoke (flares past the tape: IMG_1560, IMG_1624)
+x0 = 6.5
+x1 = 10.0
+ry = 25.0
+rz = 20.6
+texture = "assets/textures/crt_copper.png"
+
+[label]           # yoke label: curved patch; extents = texture extents (scripts/model/crt/label_spec.json:
+                  # cylinder R 20.5 about the axis, angle -36.0..28.1 deg -> y -12.05..9.65, x 22.1..37.3)
+x0 = 22.1
+x1 = 37.3
+y0 = -12.05
+y1 = 9.65
+offset = 0.3
+texture = "assets/textures/crt_label_1560.png"  # texture_yoke.py --surfaces label --views IMG_1560 (exact patch geometry); 1B used crt_yoke_label.png
+
+[holder]          # white plastic rear holder ring of the yoke; x0 51 -> 49.5 (1D: tri (49.1, 16.2, 29.6), (51.3, 7.1, 39.5), (55.1, 16.5, 27.4))
+x0 = 49.5
+x1 = 56.0
+r = 18.95
+
+[black_ring]      # notched dark ring behind the holder (gear profile)
+x0 = 56.0
+x1 = 59.5
+r = 17.75
+r_root = 16.8
+teeth = 40
+
+[tabs]            # white clip tabs on the yoke at the holder; [x, y, z] tab centers from pick.py tri (IMG_1560)
+size = [6.0, 3.0, 5.0]   # along x, radial, tangential
+centers = [[49.0, -19.5, 32.5], [49.5, 18.0, 30.0]]
+
+[clamp]           # metal neck clamp band
+x0 = 60.0
+x1 = 65.5
+r = 12.8
+
+[white_ring]      # thin white ring between clamp and cream ring
+x0 = 65.5
+x1 = 66.8
+r = 12.2
+
+[clamp_ear]       # clamp ear on the +Y side, vertical screw; head center tri2 IMG_1560+IMG_1590: (62.5, 14.4, 25.2), 1.4 px
+x0 = 60.5
+x1 = 65.0
+y0 = 12.0
+y1 = 16.8
+z0 = 20.0
+z1 = 24.4
+screw_r = 2.3
+screw_h = 1.6
+
+[cream_ring]      # cream ring on the neck
+x0 = 66.8
+x1 = 72.0
+r = 10.9
+
+[neck]            # glass neck (starts inside the yoke)
+x0 = 48.0
+x1 = 85.0
+r = 9.0
+alpha = 0.6
+
+[gun]             # electrode structure visible through the glass neck
+x0 = 70.0
+x1 = 81.5
+r = 4.5
+pin_r = 0.45
+pin_ring = 6.5
+pins = 8
+pin_x0 = 76.0
+pin_x1 = 82.0
+
+[cap]             # light blue socket cap
+x0 = 81.0          # body; flange below (fit crt_cap1 put the cap start at 79.75)
+x1 = 89.6
+r = 9.5
+flange_x0 = 79.8  # dark-blue rim toward the glass (IMG_1560 crop u 1045-1060)
+flange_r = 10.0
+step_x1 = 91.0    # narrower step at the board end (IMG_1560, IMG_1590)
+step_r = 8.8
+dy = 0.0
+dz = 0.0
+
+[board]           # small neck (socket) board, plate in the Y-Z plane
+x0 = 91.0
+x1 = 93.0
+y0 = -12.6
+y1 = 12.6
+z0 = 9.0
+z1 = 34.0
+
+[colors]          # sRGB medians of each part's pixels in IMG_1560 (s4), crt_010 (world-only rig); glass/gun tuned
+tape = [229, 168, 23]
+copper = [105, 46, 18]
+white = [187, 181, 158]
+dark_ring = [77, 65, 54]
+clamp = [128, 126, 114]
+screw = [88, 84, 71]
+cream = [210, 201, 146]
+cap = [96, 168, 185]
+cap_rim = [60, 110, 130]
+board = [161, 110, 74]
+glass = [40, 36, 33]
+gun = [95, 92, 88]
+
+[textures]
+round_parts = true   # photo textures assets/textures/crt_<part>.png on holder, clamp, rings, cap, neck

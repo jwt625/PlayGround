@@ -1,0 +1,38 @@
+{
+ "name": "pcb_plate_top",
+ "surface": {
+  "type": "quad",
+  "corners_mm": [
+   [
+    14.5,
+    48.3,
+    28.4
+   ],
+   [
+    95.0,
+    48.3,
+    28.4
+   ],
+   [
+    95.0,
+    46.0,
+    28.4
+   ],
+   [
+    14.5,
+    46.0,
+    28.4
+   ]
+  ]
+ },
+ "px_per_mm": 10,
+ "views": "auto",
+ "occlusion_run": "outputs/runs/pcb_bake_id2",
+ "occlusion_object": [
+  "pcb.heatsink_plate",
+  "pcb.label_plate_top"
+ ],
+ "n_best": 3,
+ "erode_px": 1,
+ "fill": "median"
+}

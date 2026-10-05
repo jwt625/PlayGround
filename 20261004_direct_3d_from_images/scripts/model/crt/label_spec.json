@@ -1,0 +1,4 @@
+{"name": "crt_yoke_label",
+ "surface": {"type": "cylinder", "base_mm": [0, 0, 23], "axis": [-1, 0, 0], "radius_mm": 20.5,
+             "ref_dir": [0, 0, 1], "angle_deg": [-36.0, 28.1], "length_mm": [-37.3, -22.1]},
+ "px_per_mm": 20, "views": ["IMG_1560"], "n_best": 1}

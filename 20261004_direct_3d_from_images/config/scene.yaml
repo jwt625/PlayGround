@@ -1,0 +1,7 @@
+# Scene configuration (assumptions and paths; no logic here).
+source_dir: ~/Documents/3DGS/20251004_CRT_display   # read-only capture (images/, sparse/0/)
+sparse_model: sparse/0
+case_width_mm: 120.0          # Wentao, 2026-10-04: case shorter edge "about 12 cm"
+work_scales: [4, 2]           # undistorted copies at 1/4 and 1/2 resolution (data/undistorted_s4, _s2)
+holdout_fraction: 0.10        # views held out from modeling, used for eval only
+holdout_seed: 0

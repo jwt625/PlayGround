@@ -1,0 +1,12 @@
+# Manual pixel picks (pixel-index coords in the 1/2-scale undistorted images, data/undistorted_s2).
+# Picked by visual inspection of labeled grid crops, 2026-10-04.
+ruler_seed:              # two points along the mat's molded mm ruler (near edge of the mat)
+  view: IMG_1518
+  uv_a: [800, 1690]
+  uv_b: [1400, 1765]
+case_rim_corners:        # outer top-rim corners of the case
+  view: IMG_1518
+  uv:
+    near_left: [368, 1050]
+    far_left: [712, 580]
+    far_right: [2135, 750]

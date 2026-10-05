@@ -1,0 +1,38 @@
+{
+ "name": "pcb_black_block_top",
+ "surface": {
+  "type": "quad",
+  "corners_mm": [
+   [
+    64.0,
+    46.8,
+    21.0
+   ],
+   [
+    91.6,
+    46.8,
+    21.0
+   ],
+   [
+    91.6,
+    38.2,
+    21.0
+   ],
+   [
+    64.0,
+    38.2,
+    21.0
+   ]
+  ]
+ },
+ "px_per_mm": 10,
+ "views": "auto",
+ "occlusion_run": "outputs/runs/pcb_bake_id2",
+ "occlusion_object": [
+  "pcb.black_block",
+  "pcb.label_black_block_top"
+ ],
+ "n_best": 3,
+ "erode_px": 1,
+ "fill": "median"
+}

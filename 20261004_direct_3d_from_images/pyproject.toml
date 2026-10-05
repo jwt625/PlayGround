@@ -1,0 +1,19 @@
+[project]
+name = "direct-3d-from-images"
+version = "0.1.0"
+requires-python = ">=3.12,<3.13"
+dependencies = [
+    "numpy",
+ "opencv-python-headless",
+ "scipy",
+ "pillow",
+ "pyyaml",
+ "numba>=0.68.0",
+]
+
+[tool.ruff]
+line-length = 120
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["B", "E", "F", "I", "UP"]
