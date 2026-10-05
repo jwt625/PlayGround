@@ -35,7 +35,7 @@ HALF = NF // 2               # clip frames 0..14 = end of scene N, 15..29 = star
 SCREEN_C = (-0.062, -0.079, 0.134)
 SCREEN_W, SCREEN_H = 0.256, 0.160
 LENS, SENSOR = 50.0, 36.0    # camera: vertical sensor fit, so frame height at distance d is SENSOR * d / LENS
-D_FULL = LENS * SCREEN_H / SENSOR * 0.996   # camera distance at which the picture rectangle fills the frame (0.4 percent inset)
+D_FULL = LENS * SCREEN_H / SENSOR * float(os.environ.get("TRANS_INSET", "1.0"))   # camera distance at which the picture rectangle exactly fills the frame (TRANS_INSET env < 1 zooms in slightly)
 
 # ============================================================================== per-boundary specification
 # sweep1 / sweep2: (u0, u1) time window (u = i / 29) of the trace sweep that wipes picture N out / picture N+1 in
@@ -50,7 +50,7 @@ SPEC = {
             rolls=[(0.08, 0.16, 0.4)], glitch=[4, 22], dmax=0.78, lat=-0.10, elev=0.10, roll=0.22, shake=0.0008),
     5: dict(tag="s5_s6_dips_to_fibers", world="fibers", tint=(0.30, 0.95, 0.95), sweep1=(0.12, 0.36), sweep2=(0.60, 0.84),
             rolls=[(0.30, 0.42, 0.6), (0.48, 0.56, 0.3)], glitch=[6, 7, 8, 14, 20], dmax=0.74, lat=0.30, elev=0.04, roll=-0.10, shake=0.0015),
-    6: dict(tag="s6_s7_flatline", world="flat", tint=(0.35, 1.0, 0.40), sweep1=(0.0, 0.0), sweep2=(0.60, 0.88),
+    6: dict(tag="s6_s7_flatline", world="flat", tint=(0.35, 1.0, 0.40), sweep1=(0.0, 0.0), sweep2=(0.52, 0.78),
             rolls=[], glitch=[], dmax=0.95, lat=0.0, elev=0.05, roll=0.0, shake=0.0005),
 }
 
@@ -522,17 +522,17 @@ def make_frame(k, i, pic1, pic2, Wt, Ht, grat):
     if k == 6:
         # CRT power-off: picture squashes to a bright horizontal line, the line shrinks to a dot, the dot fades, black, card sweeps in
         sy = 1.0 - float(smootherstep((u - 0.04) / 0.22)) ** 1.5
-        sx = 1.0 - float(smootherstep((u - 0.30) / 0.14))
-        fade = 1.0 - float(smoothstep(0.44, 0.60, u))
+        sx = 1.0 - float(smootherstep((u - 0.28) / 0.12))
+        fade = 1.0 - float(smoothstep(0.38, 0.50, u))
         img[:] = 0.0
         if sy > 0.012 and u < 0.34:
             ys = (np.arange(Ht) + 0.5 - Ht / 2) / sy + Ht / 2
             ok = (ys >= 0) & (ys < Ht - 1)
             yi = np.clip(ys.astype(int), 0, Ht - 1)
             band = pic1[yi] * ok[:, None, None]
-            heat_gain = 1.0 + 1.6 * (1 - sy)
-            img[:, x0:x0 + Wp] = np.clip(band * heat_gain, 0, 1.5)
-            bst[:, x0:x0 + Wp] = (1 - sy) * 0.8 * ok[:, None]
+            heat_gain = 1.0 + 0.6 * (1 - sy)
+            img[:, x0:x0 + Wp] = np.clip(band * heat_gain, 0, 1.2)
+            bst[:, x0:x0 + Wp] = (1 - sy) * 0.35 * ok[:, None]
         if u >= 0.18:
             half = 0.5 * Wp * max(sx, 0.0) + 2 * S
             thick = (2.0 + 5.0 * (1 - sy)) * S
@@ -547,10 +547,10 @@ def make_frame(k, i, pic1, pic2, Wt, Ht, grat):
             col = np.array([0.8, 1.0, 0.85], np.float32)
             img += (ln[..., None] * col) * (1.0 if sy < 0.05 else 0.0)
             bst += np.clip(ln, 0, 1) * (1.0 if sy < 0.05 else 0.0)
-        if u > 0.45 and u < 0.60:   # dark phase: faint 'no signal' text on the blank phosphor
+        if u > 0.40 and u < 0.52:   # dark phase: faint 'no signal' text on the blank phosphor
             cv = Canvas(Wt, Ht)
             cv.text(0.80 - 0.30, 0.52, "NO SIGNAL", 0.05, (0.4, 1.0, 0.5), gain=1.0)
-            tr = tone(cv.render()) * float(smoothstep(0.45, 0.50, u) * (1 - smoothstep(0.56, 0.60, u)))
+            tr = tone(cv.render()) * float(smoothstep(0.40, 0.44, u) * (1 - smoothstep(0.48, 0.52, u)))
             img += tr
             bst += tr.max(axis=2) * 0.6
         # picture N+1 wiped in by the sweep
@@ -711,7 +711,7 @@ def build_blend(out_blend):
     scn.frame_start, scn.frame_end = 1, NF * 6
     scn.render.use_motion_blur = True
     scn.render.motion_blur_shutter = 0.4
-    scn.render.filter_size = 0.8
+    scn.render.filter_size = 0.5
     # --- oscilloscope asset
     path = os.path.join(PROJ, "assets", "components", "lab_office", "bench_oscilloscope.blend")
     with bpy.data.libraries.load(path, link=False) as (src, dst):
@@ -736,6 +736,11 @@ def build_blend(out_blend):
     nt.links.new(img_node.outputs["Alpha"], ma.inputs[0])
     nt.links.new(ma.outputs[0], emis.inputs["Strength"])
     nt.nodes["SCREEN_GLASS"].inputs["Roughness"].default_value = 0.12
+    # glass reflection is keyed 0 at the clip ends (the picture must match the scene frame exactly) and 0.5 at the apex
+    sp = nt.nodes["SCREEN_GLASS"].inputs["Specular IOR Level"]
+    for f in range(1, NF * 6 + 1):
+        sp.default_value = 0.5 * bump(((f - 1) % NF) / (NF - 1.0))
+        sp.keyframe_insert("default_value", frame=f)
     # --- backdrop: bench mat and a dark wall
     def plane(name, loc, rot, size, col, rough=0.8):
         bpy.ops.mesh.primitive_plane_add(size=size, location=loc, rotation=rot)
@@ -748,7 +753,7 @@ def build_blend(out_blend):
         b.inputs["Roughness"].default_value = rough
         o.data.materials.append(m)
         return o
-    plane("BENCH", (0, -0.3, 0.0), (0, 0, 0), 4.0, (0.05, 0.16, 0.11, 1.0))
+    plane("BENCH", (0, -0.3, 0.0), (0, 0, 0), 4.0, (0.018, 0.06, 0.05, 1.0))
     plane("WALL", (0, 0.55, 1.0), (math.pi / 2, 0, 0), 4.0, (0.045, 0.055, 0.075, 1.0))
     # --- lights
     def area(name, loc, energy, size, col=(1, 1, 1)):
@@ -760,9 +765,9 @@ def build_blend(out_blend):
         d = Vector(SCREEN_C) - Vector(loc)
         o.rotation_euler = d.to_track_quat("-Z", "Y").to_euler()
         return o
-    area("KEY", (-0.45, -0.75, 0.75), 70, 0.6, (1.0, 0.96, 0.9))
-    area("FILL", (0.6, -0.8, 0.25), 25, 0.8, (0.8, 0.9, 1.0))
-    area("RIM", (0.25, 0.45, 0.65), 45, 0.5, (0.6, 0.8, 1.0))
+    area("KEY", (-0.45, -0.75, 0.75), 28, 0.6, (1.0, 0.96, 0.9))
+    area("FILL", (0.6, -0.8, 0.25), 8, 0.8, (0.8, 0.9, 1.0))
+    area("RIM", (0.25, 0.45, 0.65), 25, 0.5, (0.6, 0.8, 1.0))
     w = bpy.data.worlds.new("W")
     w.use_nodes = True
     w.node_tree.nodes["Background"].inputs["Color"].default_value = (0.012, 0.016, 0.022, 1)
@@ -775,7 +780,7 @@ def build_blend(out_blend):
         cd = bpy.data.cameras.new("CAM_T%d" % k)
         cd.lens, cd.sensor_fit, cd.sensor_height = LENS, "VERTICAL", SENSOR
         cd.clip_start, cd.clip_end = 0.01, 20
-        cd.dof.use_dof = True
+        cd.dof.use_dof = False   # DOF made the screen soft; focus object is kept for experiments
         cd.dof.focus_object = aim
         cd.dof.aperture_fstop = 5.6
         cam = bpy.data.objects.new("CAM_T%d" % k, cd)
@@ -784,7 +789,7 @@ def build_blend(out_blend):
         for i in range(NF):
             d, lat, ele, roll, b = cam_state(k, i)
             pos = Vector((SCREEN_C[0] + lat, SCREEN_C[1] - d, SCREEN_C[2] + ele))
-            tgt = Vector(SCREEN_C) + Vector((0, 0, -0.03 * b))
+            tgt = Vector(SCREEN_C)
             q = (tgt - pos).to_track_quat("-Z", "Y")
             from mathutils import Quaternion
             q = q @ Quaternion((0, 0, 1), roll)
@@ -809,8 +814,8 @@ def build_blend(out_blend):
         return tuple(vv)
     kn_s = obs["bench_oscilloscope_horizontal_scale_knob"]
     kn_p = obs["bench_oscilloscope_horizontal_position_knob"]
-    # T1: horizontal scale knob clicks three times with the retimer steps (u = 0.19, 0.47, 0.75 of the clip)
-    for (f_u, a) in ((0.0, 0.0), (0.40, 0.0), (0.44, 0.6), (0.62, 0.6), (0.66, 1.2), (0.84, 1.2), (0.88, 1.8), (1.0, 1.8)):
+    # T1: horizontal scale knob clicks three times with the retimer steps (eye steps at u = 0.32, 0.46, 0.61)
+    for (f_u, a) in ((0.0, 0.0), (0.29, 0.0), (0.34, 0.6), (0.43, 0.6), (0.48, 1.2), (0.57, 1.2), (0.62, 1.8), (1.0, 1.8)):
         key(kn_s, "rotation_euler", 1, 1 + int(round(f_u * 29)), a)
     key(kn_s, "rotation_euler", 1, NF + 1, 0.0)
     # T4: horizontal position knob tunes the window (two turns)
@@ -884,6 +889,18 @@ def render(tex_dir, out_dir, W, H, ks):
     node = mat.node_tree.nodes["SCREEN_IMAGE"]
     os.makedirs(out_dir, exist_ok=True)
     import time
+    only = [int(x) for x in os.environ["TRANS_FRAMES"].split(",")] if os.environ.get("TRANS_FRAMES") else list(range(1, NF + 1))
+    if "TRANS_INTERP" in os.environ:
+        node.interpolation = os.environ["TRANS_INTERP"]
+    if "TRANS_SPEC" in os.environ:
+        mat.node_tree.nodes["SCREEN_GLASS"].inputs["Specular IOR Level"].default_value = float(os.environ["TRANS_SPEC"])
+    if "TRANS_FILTER" in os.environ:
+        scn.render.filter_size = float(os.environ["TRANS_FILTER"])
+    if "TRANS_MB" in os.environ:
+        scn.render.use_motion_blur = os.environ["TRANS_MB"] == "1"
+    if "TRANS_DOF" in os.environ:
+        for c in bpy.data.cameras:
+            c.dof.use_dof = os.environ["TRANS_DOF"] == "1"
     for k in ks:
         first = os.path.join(tex_dir, "t%d_0001.png" % k)
         img = bpy.data.images.load(first, check_existing=False)
@@ -896,11 +913,11 @@ def render(tex_dir, out_dir, W, H, ks):
         node.image_user.frame_offset = 0
         node.image_user.use_auto_refresh = True
         t0 = time.time()
-        for i in range(NF):
-            scn.frame_set((k - 1) * NF + i + 1)
-            scn.render.filepath = os.path.join(out_dir, "t%d_%04d" % (k, i + 1))
+        for i in only:
+            scn.frame_set((k - 1) * NF + i)
+            scn.render.filepath = os.path.join(out_dir, "t%d_%04d" % (k, i))
             bpy.ops.render.render(write_still=True)
-        print("RENDERED boundary %d in %.1f s (%.2f s/frame) at %dx%d" % (k, time.time() - t0, (time.time() - t0) / NF, W, H), flush=True)
+        print("RENDERED boundary %d: %d frames in %.1f s (%.2f s/frame) at %dx%d" % (k, len(only), time.time() - t0, (time.time() - t0) / len(only), W, H), flush=True)
         bpy.data.images.remove(img)
 
 

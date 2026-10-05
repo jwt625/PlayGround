@@ -13,7 +13,7 @@ import sys
 import time
 
 PROJ = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-BLENDER = "/Applications/Blender.app/Contents/MacOS/Blender"
+BLENDER = os.path.join(os.path.dirname(os.path.abspath(__file__)), "bslot.sh")  # Blender behind the 3-process cap
 SCENES = {1: "s01_copper", 2: "s02_retimers", 3: "s03_npo", 4: "s04_cpo", 5: "s05_wafer_test", 6: "s06_fiber", 7: "s07_disclaimer"}
 
 scratch = sys.argv[1]

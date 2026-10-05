@@ -17,6 +17,7 @@ import chars_body as B
 import chars_outfit as O
 import chars_actions as A
 import common as C
+import meta_v2 as MV
 
 ARGS = C.argv_after_dashes()
 OUT = ARGS[0]
@@ -24,17 +25,24 @@ NO_ACTIONS = "no_actions" in ARGS
 
 HR = 0.045
 GARY_HOLES = [
-    dict(name="hole_1", prop="p_hole_1_radius", bone="chest", pos=(0.07, 0.0, 1.24), axis="Y", radius=HR, half_len=0.20),
-    dict(name="hole_2", prop="p_hole_2_radius", bone="spine_2", pos=(-0.08, 0.0, 1.12), axis="Y", radius=HR, half_len=0.20),
-    dict(name="hole_3", prop="p_hole_3_radius", bone="spine_1", pos=(0.10, 0.0, 1.05), axis="Y", radius=HR, half_len=0.20),
-    dict(name="hole_4", prop="p_hole_4_radius", bone="chest", pos=(-0.05, 0.0, 1.32), axis="Y", radius=HR, half_len=0.20),
-    dict(name="hole_5", prop="p_hole_5_radius", bone="spine_1", pos=(-0.12, 0.0, 1.04), axis="Y", radius=HR, half_len=0.20),
-    dict(name="headhole", prop="p_head_hole_radius", bone="head", pos=(0.0, 0.017, 1.650), axis="X", radius=0.036, half_len=0.22),
+    dict(name="hole_1", prop="p_hole_1_radius", bone="chest", pos=(0.07, 0.0, 1.24), axis="Y", radius=HR, half_len=0.30),
+    dict(name="hole_2", prop="p_hole_2_radius", bone="spine_2", pos=(-0.08, 0.0, 1.12), axis="Y", radius=HR, half_len=0.30),
+    dict(name="hole_3", prop="p_hole_3_radius", bone="spine_1", pos=(0.10, 0.0, 1.05), axis="Y", radius=HR, half_len=0.30),
+    dict(name="hole_4", prop="p_hole_4_radius", bone="chest", pos=(-0.05, 0.0, 1.32), axis="Y", radius=HR, half_len=0.30),
+    dict(name="hole_5", prop="p_hole_5_radius", bone="spine_1", pos=(-0.12, 0.0, 1.04), axis="Y", radius=HR, half_len=0.30),
+    dict(name="headhole", prop="p_head_hole_radius", bone="head", pos=(0.0, 0.017, 1.650), axis="X", radius=0.036, half_len=0.26),
 ]
 
-ZB_HAT = 1.668      # hat base height (baseline m)
-HAT_TOP = 1.815
-HAT_R = 0.138       # dome base radius (x)
+ZB_HAT = 1.652      # hat base height (baseline m)
+HAT_TOP = 1.799
+HAT_R = 0.148       # dome base radius (x)
+
+
+def z_at_x(spec, x, off):
+    zs = np.linspace(1.30, 1.47, 400)
+    rx, ry, cy = B.torso_at(spec, zs, off)
+    k = int(np.argmin(np.abs(rx - abs(x))))
+    return float(zs[k])
 
 
 def head_part(ch, part, name, mats, **kw):
@@ -48,6 +56,7 @@ def build(cid, hole_default):
     spec["H"] = 1.69
     spec["build"] = 1.0
     spec["belly"] = 0.45
+    spec["wide"] = 1.06
     spec["extra_bones"] = [dict(name="hat", head=(0.0, 0.0, 1.66), tail=(0.0, 0.0, 1.80), parent="head")]
     ch = B.Character(cid, spec)
     K = ch.K
@@ -58,7 +67,7 @@ def build(cid, hole_default):
     hg = ch.setup_holes(GARY_HOLES)
     pre = "MAT_characters_%s_" % cid
     O.face_mats(ch, "#e2a57a", brow_hex="#3a2412", hole_group=hg, lip_hex="#c9705f")
-    FOLD_PANTS = [(0.50, 0.12, 22.0, 0.9), (0.93, 0.10, 20.0, 0.8), (0.17, 0.08, 30.0, 0.6), (1.10, 0.09, 24.0, 0.5)]
+    FOLD_PANTS = [(0.50, 0.10, 17.0, 0.5), (0.93, 0.08, 15.0, 0.4), (0.22, 0.07, 24.0, 0.4)]
     ch.mat("hat", M.clay(pre + "hardhat", "#ff7a12", rough=0.42, bump=0.16, holes=hg))
     ch.mat("overalls", M.clay(pre + "overalls", "#2c5db5", rough=0.72, bump=0.28, holes=hg, sheen=0.2, folds=FOLD_PANTS))
     ch.mat("shirt", M.clay(pre + "shirt", "#d9d1bd", rough=0.74, bump=0.28, holes=hg, sheen=0.2,
@@ -80,7 +89,7 @@ def build(cid, hole_default):
     ch.build_face()
 
     # ---------------------------------------------------------------- t-shirt: torso + short sleeves with hems + neck band
-    tp = ch.torso_part(off=0.010, z0=0.90, z1=1.47, cap1=None, taper=(0.80, 0.98, 0.6))
+    tp = ch.torso_part(off=0.010, z0=1.00, z1=1.385, cap1=None)
     parts = [tp]
     for side, sn in ((1, "L"), (-1, "R")):
         sx = np.array([side, 1, 1])
@@ -95,8 +104,8 @@ def build(cid, hole_default):
         hem = O.ring_tube(e2, d, rr[1] * 0.99, rr[1] * 0.99, 0.0105, u_hint=(0, 1, 0))
         hem.set_w("upper_arm_" + sn, 1.0)
         parts.append(hem)
-    rx_, ry_, cy_ = B.torso_at(spec, np.array([1.462]), 0.010)
-    nb = O.ring_tube((0, cy_[0], 1.462), (0, 0, 1), rx_[0] * 1.01, ry_[0] * 1.01, 0.0125)
+    rx_, ry_, cy_ = B.torso_at(spec, np.array([1.385]), 0.010)
+    nb = O.ring_tube((0, cy_[0], 1.385), (0, 0, 1), rx_[0] * 1.0, ry_[0] * 1.0, 0.0125)
     nb.set_w("neck", 1.0)
     parts.append(nb)
     shirt = G.merge(parts)
@@ -109,26 +118,23 @@ def build(cid, hole_default):
     parts = [band]
     creases = []
     for side, sn in ((1, "L"), (-1, "R")):
-        lt, end = O.leg_tubes(ch, sn, side, 0.015, ztop_shin=0.19, cuff=0.0, flare=0.006)
+        lt, end = O.leg_tubes(ch, sn, side, 0.015, ztop_shin=0.215, cuff=0.0, flare=0.022)
         parts += lt
-        # rolled cuff
-        c, rx0, ry0, bone = O.leg_point(ch, sn, side, 0.19, 0.015 + 0.006)
-        cuff = O.ring_tube(c + np.array([0, 0, 0.0]), (0, 0, 1), ry0 + 0.004, rx0 + 0.004, 0.0165, u_hint=(1, 0, 0), n=32, ns=10)
+        # rolled cuff sits on the open hem
+        c, rx0, ry0, bone = O.leg_point(ch, sn, side, 0.215, 0.015)
+        cuff = O.ring_tube(c, (0, 0, 1), ry0 + 0.022, rx0 + 0.022, 0.0165, u_hint=(1, 0, 0), n=32, ns=10)
         cuff.set_w("shin_" + sn, 1.0)
         parts.append(cuff)
-        # knee creases (front arcs) and hip/behind-knee creases
-        for z, sag, r_, a in ((0.545, 0.010, 0.0085, 1.75), (0.505, 0.016, 0.0095, 2.0), (0.46, 0.012, 0.0085, 1.8), (0.575, 0.006, 0.0065, 1.4)):
-            creases.append(O.fold_arc(ch, sn, side, z, 0.0165, -a, a, r=r_, sag=sag))
-        for z, sag, r_, a in ((0.36, 0.008, 0.0065, 1.3), (0.30, 0.010, 0.0075, 1.5)):
-            creases.append(O.fold_arc(ch, sn, side, z, 0.0165, -a, a, r=r_, sag=sag))
-        # crotch / hip creases on the thigh front
-        for z, sag, r_, a in ((0.87, 0.012, 0.0085, 1.3), (0.83, 0.016, 0.0095, 1.5)):
-            creases.append(O.fold_arc(ch, sn, side, z, 0.0165, -a, a, r=r_, sag=sag))
+        # knee creases (front arcs), two chunky folds
+        for z, sag, r_, a, tl in ((0.545, 0.010, 0.0080, 1.15, 0.010), (0.490, 0.015, 0.0092, 1.30, -0.012)):
+            creases.append(O.fold_arc(ch, sn, side, z, 0.0165, -a, a, r=r_, sag=sag, tilt=tl))
     ov = G.merge(parts)
     ov.closed = False
     ch.add(ov, "overalls", ["overalls"], jig=True, solid=0.0)
+    for z, a, tl, sg in ((1.050, 1.05, 0.008, 0.008), (1.082, 0.85, -0.010, 0.010), (1.112, 0.60, 0.006, 0.008)):
+        creases.append(O.torso_arc(ch, z, 0.0165, -a, a, r=0.0085, sag=sg, tilt=tl))
     cr = G.merge(creases)
-    ch.add(cr, "creases", ["overalls"], jig=False)
+    ch.add(cr, "creases", ["overalls"], jig=True)
 
     # bib: structured patch on the torso front, slightly proud, thickness inward
     def bib_pt(i, j, nz=16, nx=21, z0=1.17, z1=1.355):
@@ -160,9 +166,10 @@ def build(cid, hole_default):
             rv = G.ellipsoid(pp, (0.0075, 0.0045, 0.0075), nseg=10, nrings=6)
             bt.append(rv)
         # strap: bib top corner over the shoulder to the back
-        pts = [surf(spec, side * 0.088, 1.33, True, 0.026), surf(spec, side * 0.090, 1.40, True, 0.030),
-               np.array([side * 0.092, 0.002, 1.488]), surf(spec, side * 0.092, 1.40, False, 0.030),
-               surf(spec, side * 0.088, 1.30, False, 0.026), surf(spec, side * 0.085, 1.23, False, 0.024)]
+        zt = z_at_x(spec, side * 0.126, 0.030)
+        pts = [surf(spec, side * 0.088, 1.33, True, 0.026), surf(spec, side * 0.108, 1.385, True, 0.030),
+               np.array([side * 0.126, 0.0 + 0.0, zt + 0.0]), surf(spec, side * 0.116, 1.385, False, 0.030),
+               surf(spec, side * 0.098, 1.30, False, 0.026), surf(spec, side * 0.090, 1.23, False, 0.024)]
         stp = G.tube(np.array(pts), 0.022, 0.0065, u=(1, 0, 0), nseg=10, cap0="flat", cap1="flat")
         stp.set_w("chest", 1.0)
         st_.append(stp)
@@ -221,17 +228,9 @@ def build(cid, hole_default):
         ch.add(bt_[1], "sole_" + sn, ["sole"], bevel=0.002)
 
     # ---------------------------------------------------------------- hair (v1 head units, then T) and hard hat
-    hr = O.hair_band(ch, 1.575, 1.70, 0.007, back_only=True, front_cut=-0.045)
+    hr = O.hair_band(ch, 1.575, 1.70, 0.007, back_only=True, front_cut=0.028)
     head_part(ch, hr, "hair", ["hair"])
-    # side tufts (sideburns)
-    tufts = []
-    for side in (1, -1):
-        sb = G.ellipsoid(np.array([side * 0.076, -0.015, 1.600]), (0.012, 0.020, 0.036), nseg=12, nrings=8)
-        sb.set_w("head", 1.0)
-        tufts.append(sb)
-    head_part(ch, G.merge(tufts), "sideburns", ["hair"])
-
-    cy0 = 0.012
+    cy0 = -0.006
     ZT = HAT_TOP
     Hh = ZT - ZB_HAT
     prof = [(HAT_R + 0.0, ZB_HAT - 0.014)]
@@ -243,22 +242,18 @@ def build(cid, hole_default):
     prof[-1] = (0.0, ZT)
     dome = G.lathe(prof, center=(0, cy0, 0), axis=(0, 0, 1), nseg=44)
     dome.v[:, 1] = cy0 + (dome.v[:, 1] - cy0) * 1.10
-    brim_prof = [(HAT_R - 0.006, ZB_HAT - 0.008), (HAT_R + 0.030, ZB_HAT - 0.014), (HAT_R + 0.040, ZB_HAT - 0.006),
-                 (HAT_R + 0.034, ZB_HAT + 0.005), (HAT_R + 0.006, ZB_HAT + 0.010)]
+    brim_prof = [(HAT_R - 0.006, ZB_HAT - 0.010), (HAT_R + 0.024, ZB_HAT - 0.016), (HAT_R + 0.032, ZB_HAT - 0.007),
+                 (HAT_R + 0.026, ZB_HAT + 0.006), (HAT_R + 0.006, ZB_HAT + 0.012)]
     brim = G.lathe(brim_prof, center=(0, cy0, 0), axis=(0, 0, 1), nseg=44)
     d = brim.v[:, 1] - cy0
-    brim.v[:, 1] = cy0 + np.where(d < 0, d * 1.55, d * 1.12)
+    brim.v[:, 1] = cy0 + np.where(d < 0, d * 1.50, d * 1.10)
     ang = np.linspace(-1.38, 1.38, 22)
-    ridge_path = np.stack([np.zeros_like(ang), cy0 + 1.10 * (HAT_R * 0.15) * 0 + (0.0) + 0 * ang, np.zeros_like(ang)], axis=1)
-    ridge_path[:, 1] = cy0 + 1.10 * HAT_R * np.sin(ang) * 0.93 * np.abs(np.cos(ang * 0.0)) * 1.0
-    ridge_path[:, 2] = ZB_HAT + Hh * np.cos(ang) ** (2 / 2.35) * 1.0 + 0.004
-    # keep the ridge on the dome surface: z follows the dome profile at the y position
-    yy = (ridge_path[:, 1] - cy0) / 1.10
+    yy = HAT_R * 0.985 * np.sin(ang)
     rr = np.minimum(np.abs(yy) / HAT_R, 0.999)
-    ridge_path[:, 2] = ZB_HAT + Hh * (1 - rr ** 2.35) ** (1 / 2.35 * 2.35 / 2.35) + 0.006
+    ridge_path = np.stack([np.zeros_like(ang), cy0 + 1.10 * yy, ZB_HAT + Hh * (1 - rr ** 2.35) ** (1 / 2.35) + 0.006], axis=1)
     ridge = G.tube(ridge_path, 0.0165, 0.0115, u=(1, 0, 0), nseg=10)
     hat = G.merge([dome, brim, ridge])
-    R_tilt = G.rot_about((1, 0, 0), -0.10)
+    R_tilt = G.rot_about((1, 0, 0), -0.07)
     c_t = np.array([0.0, cy0, 1.70])
     hat.v = (hat.v - c_t) @ R_tilt.T + c_t
     hat.set_w("hat", 1.0)
@@ -273,6 +268,8 @@ def build(cid, hole_default):
     ch.build_rims(ch.m["rim"])
     ch.root["p_stature_m"] = 1.75
     ch.root["p_scale"] = 1.0
+    ch.root["pv_face_z"] = float(K * (spec["chin_post"] + 0.45 * 0.233 * spec["headS"][2]))
+    ch.root["pv_face_dist"] = float(3.0 * K * 0.233 * spec["headS"][2])
     return ch
 
 
@@ -289,7 +286,10 @@ def meta(ch):
 if __name__ == "__main__":
     for cid, hd in (("gary_v2", 0.0), ("gary_v2_holes30", 0.3)):
         ch = build(cid, hd)
-        m = meta(ch)
+        m = MV.extend(meta(ch), ch, "gary", [
+            "Gary extras: bone 'hat' (child of head) carries the hard hat (jiggle via p_jiggle_hat); the hat is tilted back 4 degrees and its top is at 1.753 m (HOOK_head_top).",
+            "gary_v2_holes30 is the same asset with all hole properties defaulting to 0.3 (as gary_holes30 in v1). Hole k is created in scene k (see SCENE_BRIEF); schedule r = max(0.3, 0.9 ** ((T_now - T_shot) / 1.5)).",
+            "HOOK_muzzle_self is at the same place as v1 (0.21 m to the character's right of the head axis at head-hole height); the bigger head leaves about 0.06 m between the head side and the hook."])
         if not NO_ACTIONS:
             names = A.make_all(ch.arm, ch.K, ch.J, ch.hand_frames, cid)
             m["actions"] = A.describe(names)

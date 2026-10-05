@@ -73,3 +73,59 @@ Build unchanged: `Blender -b --python scripts/film_v1/s02_retimers.py -- scenes/
 - Gary is partly in the right edge of the t=8 frame; the lab floor reads blown-out white at the far horizon (unchanged).
 - No fresh-context audit. Compositor bloom still not set up in this blend (render_scene.py applies NG_comp_post).
 - Known framework issues (unchanged): asm.show/asm.fx on Collection.hide_render (own show/fx copies), duplicate materials on repeated append.
+
+---
+
+# v1.2 pass (2026-10-03, PHASE2_BRIEF, critique DevLog-005-critique-v1_1 S2 table)
+
+Backup of the v1.1 script, blend and devlog: session scratchpad `p2_s02/backup/` (not in the repo).
+
+## Plan
+- One continuous world: the S2 lab sits in the S1 data-hall shell (`datacenter/datahall_environment`, racks/containment/overhead hidden, as S1), whiteboard on the hall wall, bench + scope, and the stylised tray stack itself standing next to the bench as the lab rack (uniform scale RACK_S = 0.42, 2.22 m tall), so the rack ride happens inside the rack that is seen outside: no hard cut at 5.4 (critique C10), the exit is a crane up out of the open rack top and a pull-back to the bench wide.
+- Camera: one baked path for the whole scene (Hermite segments, C1-continuous): calm opening over Gary's shoulder with the scope screen large (T1 pull-out match, first 0.5 s slow drift), swoop along the cables into tray 0 (0.55-1.15), continuous eased rise through the 8 trays (knots at the v1.1 tray arrival times, slow at each tray, no hops), crane out 5.4-6.4, push-in to the whiteboard + Manager 6.4-8.6, settle on a two-shot (Manager left, Gary right facing camera, hole visible) 8.6-9.1, hold with slow drift to 10.0 (calm last 0.5 s).
+- Rack interior light: static soft area light in front of the rack (no moving headlamp, which made the 1-frame flashes on the pan fronts); darker pan material; chip glow capped (settled strength about 1.2, peak about 3, smaller halo), beads dimmed, no dithered alpha fade on chips (speckle), chips scale in while sliding.
+- Characters: gary_v2, manager_v2 with motion_v2 (idle_breathe_tense, walk, startle, shot_hit_fall; thinking, whiteboard_write, anger_outburst, gun_raise_aim_fire). Faces keyed on the roots where they must hit SFX times.
+- Subtitles asm.narr_vo(2); HUD via asm.fxn/asm.timecode (FILM_HUD=0 for builds). Thicker whiteboard curves (own generator, same curve shapes as tex_gen._curves), larger curve labels.
+- SFX times kept: chip clicks (T_ARR and row times unchanged), steam 8.1, angry pop 8.2, curve draw 6.4-8.6, shot 9.2, hole pop 9.45.
+
+## Progress log (v1.2)
+- 2026-10-03: read brief, critique, feedback, transitions, character/motion docs; backup done; plan written.
+- 2026-10-03: milestone 1: script rewritten (hall shell, scaled stack as the lab rack, one baked camera path, v2 characters + motion_v2, narr_vo, thicker graph `graph_s2_v12`, capped chip glow, static rack lights); builds in about 6 s; stills checked (opening, rise trays 0/3/5/7, wide, push-in, two-shot, fall). Fixes from stills: light energies cut about 8x (first build blown out), chips 9x -> 7x with column pairs at +-0.075 m, slot lights moved over the retimer rows, chip mold lightened, hole 2 drawn at 1.3-1.75 x base radius at the hit, BANG caption shortened to 0.23 s, NLA idles start before frame 1 (motion blur at frame 1).
+- 2026-10-03: milestone 2: draft renders checked (luma per frame, 12-still sheet, strips at 0-0.5, 0.5-1.2, rise, crane 5.3-6.4, anger 8.0-8.5, shot 9.1-9.6). Fixes: swoop waypoint in front of the bench (it clipped the bench corner), dwell factor 0.35 -> 0.15 and camera 0.4-0.5 m in front of the pan lips with lens 38 (pan lips filled the frame), cable ports moved to the rack's left front corner (cables crossed the rising camera), crane gets a waypoint above the stack top (it brushed the rack side), rack status LEDs dimmed, curve labels moved 0.25 m off the board (billboards cut into the board), Manager anger beat = idle_breathe_tense + shout_rant_upper (anger_outburst's bent knees read as a squat from the front).
+- 2026-10-03: final draft `outputs/v1/s02_retimers_v1_2_draft_p50.mp4` (300 frames, 287 s render incl. Blender start = 0.96 s/frame at draft 50 percent, motion blur on).
+
+## v1.2 results
+Build: `FILM_HUD=0 scripts/film_v1/bslot.sh -b --python scripts/film_v1/s02_retimers.py -- scenes/v1/s02_retimers.blend` (about 6 s). New texture folder `assets/generated_textures/v1/s02/graph_s2_v12` (300 PNG, thick strokes; `graph_s2` of v1.1 kept, no longer referenced).
+
+| Critique item (film t) | v1.2 |
+|---|---|
+| 10.0-10.7 location contradicts S1, A-pose | data-hall shell of S1 (tiles, walls, ceiling); Gary in idle_breathe_tense from frame 1 |
+| 10.0-10.5 Gary face black mask in profile | opening is over Gary's right shoulder (3/4 back: hat, ear, cheek), no profile face; Gary faces the camera only in 3/4 front later |
+| 10.75-12.0 chips tiny | chips 7x with column pairs (+-0.075 m) per connector, lighter slate mold, orange settled halo; trays 5-7 read as 2 x 3 grids per connector; trays 0-1 (1 row at the connector line) still small |
+| 12.4-15.4 glare blobs, 1-frame flashes | glow peak strength 14 -> 2.7, settled 5 -> 1.5, halo 2.3x -> 1.8x peak; beads 18 -> 3; no moving headlamp (static lights); pans darkened; dithered chip fade removed. Largest frame-to-frame luma step in the rise now 5-6 (YAVG), no single-frame flash |
+| 12.4-14.7 hops | continuous monotone Hermite rise, slow (not stopped) at each tray arrival |
+| 14.0-15.4 glare at top | no glare; tray 7 seen from above before the exit |
+| 15.4 hard cut | no cut: the stack is the lab rack (scale 0.42), crane up over its top and pull back to bench + rack + cables + scope |
+| 15.4-16.4 tiny people, checker floor | hall tile floor; wide at 6.4 then push-in |
+| 16.4 cut, thin curves | no cut; strokes 8 px (was 3) at 640 px, labels 0.16 m, board 60-80 percent of frame width |
+| 17.0-18.5 frozen Manager | thinking -> whiteboard_write -> turn to camera, shout, steam -> gun_raise_aim_fire; Gary walks to the board, startles |
+| 18.5-19.5 line crossing | one continuous camera, no cuts in the scene after 0.55 s |
+| 19.2-19.9 fall, stars on hole | shot_hit_fall (4-frame hit-stop inside), hole 2 at 1.3-1.75 x radius at the hit, stars and dust offset toward the Manager |
+| X1 subtitles | asm.narr_vo(2) |
+| X2 HUD | asm.fxn / asm.timecode / asm.card only (FILM_HUD=0) |
+
+Humans at the shot (9.2-9.4): Gary about 45 percent, Manager about 34 percent of frame height (draft stills). First 0.5 s: slow linear drift; last 0.5 s: hold with 0.08 m drift (Gary completing the fall, ground hit at 9.79).
+
+## SFX retime
+None. Kept: chip-click row times (T_ARR and row offsets unchanged), steam 8.1, red pop 8.2, curve draw 6.4-8.6 (linear), crane 5.4-6.4, shot 9.2 (gun strip shot frame lands on frame 277 = 9.2 s), hole pop 9.45 (radius pop keyed 9.47, within 1 frame). The 7 hop whooshes (12.0-14.65) now fall on the faster part of the continuous rise between trays. New motion without a cue: swoop from the scope to the rack, film 10.55-11.15 (request: optional whoosh, gain like the hop whooshes).
+
+## Framework requests
+- asm.show/asm.fx still key Collection.hide_render (own copies used, unchanged from v1.0).
+- motion_v2: gun_raise_aim_fire and anger_outburst have deep knee bends that read as squats in a front view; a straighter-leg variant would help.
+
+## Remaining problems
+- Retimer rows in trays 0-4 sit at the back (connector line) and are small in frame; the rise is in motion most of the time, so with motion blur they read best near each arrival.
+- Gary is not visible during the rack ride (1.15-5.7) by design (inside the rack); hole 1 (radius 0.53-0.9) is small and only visible through his back in the opening.
+- Opening scope is about 20 percent of frame width (Gary's shoulder takes the left third).
+- Rack status LEDs still bloom slightly in the crane shot; luma rises 85 -> 107 over 4 frames at 5.83 s (gradual, leaving the dark rack).
+- No fresh-context audit run.

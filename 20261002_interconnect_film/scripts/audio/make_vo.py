@@ -6,6 +6,7 @@ Segments follow DevLog-001 Section 5 and the asm.narr windows of each scene (fil
 Each segment is synthesised, trimmed of silence, fitted into its window (sped up with atempo when too long, never slowed), and mixed.
 The S7 disclaimer is read at the hard speed-up of a fast-talking ad disclaimer.
 """
+import json
 import os
 import subprocess
 import sys
@@ -21,31 +22,9 @@ SR = 24000
 BASE_SPEED = 1.15  # fast, crisp read (style bible: fast confident young male voice)
 
 # (film start s, film end s, text, max speed-up allowed)
-SEGS = [
-    # S1: copper; boss walks to the scope (6.6), goes red, grabs the shotgun, bang at 9.2
-    (0.2, 2.2, "Gary wants faster data over copper!"), (2.2, 4.2, "But faster means a shorter wire."),
-    (4.2, 6.4, "So Gary tries stretching it one more meter."), (6.4, 7.1, "Bad idea."),
-    (7.1, 9.1, "The boss goes red. Shotgun time."), (9.3, 10.0, "Poor Gary."),
-    # S2: retimers; whiteboard, boss angry (17.5-18.1), bang at 19.2
-    (10.2, 12.1, "Gary just wants to fix the signal."), (12.1, 14.3, "So he puts a re-timer on every connector."),
-    (14.3, 16.9, "Now it's slow, and the power bill is huge."), (16.9, 19.1, "The boss is furious. Out comes the shotgun."),
-    (19.3, 20.0, "Hole number two."),
-    # S3: NPO vendor brawl, +3 months at 25.4-27, head shot at 28.95
-    (20.2, 23.2, "Gary dumps the pluggables and moves optics onto the board."), (23.2, 25.6, "But every vendor has different sized balls."),
-    (25.6, 28.6, "Three months later, his yearly bonus pays the R and D bill."), (29.1, 30.0, "Right in the head."),
-    # S4: CPO; heat pulses 33.5-34.5, eggs on the optical engines 36-38, bang at 38.9
-    (30.1, 32.2, "Gary glues the optics onto the chip."), (32.2, 34.7, "The chip's heat swings wildly, but optics need it steady."),
-    (34.7, 37.2, "So Gary keeps them scorching hot. Perfect for frying eggs."),
-    (37.2, 40.0, "The boss does not like Gary cooking breakfast on his chips."),
-    # S5: factory line, wafer tester, bang at 49.1
-    (40.2, 42.8, "Gary tests every optical chip at the factory."), (42.8, 45.2, "The tiny rings all come out slightly different."),
-    (45.2, 47.4, "Only one out of ten rings works."), (47.3, 48.9, "Gary breaks the news."), (49.2, 50.0, "Hole number five."),
-    # S6: fibers; whip crack at 58.07, hits at 58.3, customers appear at 58.6
-    (50.2, 53.3, "Gary is finally pulling the fibers together. One thousand per tray."),
-    (53.3, 56.8, "Manager wants it done yesterday, but the right fiber length arrives next Tuesday."),
-    (56.9, 58.2, "Gary's ass gets whipped."), (58.25, 60.0, "And boss's ass gets kicked by the customer."),
-]
-DISC = (60.0, 61.95, "Gary is fictional. Results not typical. Figures vary by standard, vendor and mood. Void where copper is cheaper.")
+NARR = json.load(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "narration.json")))
+SEGS = [(d["t0"], d["t1"], d["say"]) for d in NARR["lines"]]
+DISC = (NARR["disclaimer"]["t0"], NARR["disclaimer"]["t1"], NARR["disclaimer"]["say"])
 TOTAL = 62.0
 
 os.makedirs(out_dir, exist_ok=True)

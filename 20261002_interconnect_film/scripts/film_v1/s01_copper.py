@@ -1,6 +1,6 @@
-"""Scene S1 'Copper: the stretch' (film 0-10 s), assembled from the v1 asset library.
+"""Scene S1 'Copper: the stretch' (film 0-10 s), assembled from the v1 asset library (v1.2: v2 characters, motion_v2).
 
-Run: /Applications/Blender.app/Contents/MacOS/Blender -b --python scripts/film_v1/s01_copper.py -- scenes/v1/s01_copper.blend
+Run: FILM_HUD=0 /Applications/Blender.app/Contents/MacOS/Blender -b --python scripts/film_v1/s01_copper.py -- scenes/v1/s01_copper.blend
 Optional extra args after the output path: --no-eye (skip regenerating the eye PNG sequence if it already exists).
 
 World frame (1 unit = 1 m, real size): x along the hall (rack pair on the left, bench on the right), +y away from the
@@ -19,6 +19,9 @@ from mathutils import Matrix, Vector  # noqa: E402
 
 import tex_gen as T  # noqa: E402  (scripts/ is on sys.path via asm)
 import s01_cam_fx as FX  # noqa: E402
+
+sys.path.insert(0, os.path.join(os.path.dirname(HERE), "assets", "characters", "motion_v2"))
+import motion_v2 as M2  # noqa: E402
 
 PI = math.pi
 TAU = 2.0 * math.pi
@@ -104,15 +107,6 @@ def clone_objs(objs, name):
     return coll, top
 
 
-def _show_objects(asset_or_coll, t0, t1):
-    """Framework workaround: Collection.hide_render is not animatable in Blender 4.2, so key the objects instead."""
-    c = asset_or_coll.coll if isinstance(asset_or_coll, asm.Asset) else asset_or_coll
-    for o in asm._all_objs(c):
-        asm.L._VIS.setdefault(o, []).append((F(t0), F(t1)))
-
-
-asm.show = _show_objects     # asm.fx() resolves show() through the module namespace
-
 # ------------------------------------------------------------------ scene
 scn = asm.new_scene(preset="standard", world="WORLD_data_hall")
 asm.timecode(1)
@@ -139,7 +133,7 @@ for nm, loc, size, watt in (("fill_wall", (4.0, -1.5, 3.4), (22.0, 3.0), 400.0),
     ld.shape = "RECTANGLE"
     ld.size, ld.size_y = size
     ld.energy = watt
-    ld.color = (0.95, 0.97, 1.0)
+    ld.color = (1.0, 0.94, 0.86)      # v1.2: warm clay key (was cool white)
     lo = bpy.data.objects.new(nm, ld)
     bpy.context.scene.collection.objects.link(lo)
     lo.location = loc
@@ -177,45 +171,74 @@ for row, z in enumerate((0.4, 1.0, 1.4, 2.2, 3.0)):
 PULSE_Z = 1.4
 PULSE_Y = Y_WALL - 0.22
 
-# ---- rack pair (A fixed at X_A, B at X_A + gap), p_gap constant-keyed
+# ---- rack pair (A fixed at X_A, B at X_A + gap). v1.2: p_gap baked per frame: constant jumps at the storyboard cuts, then
+# the heave-by-heave stretch 4.4-6.0 driven by Gary's hands on a grip bar (see haul())
 racks = asm.append("datacenter/rack_pair_for_cable_gag")
 asm.show(racks, 0.0, 10.0)
-
-
-def key_gap(t, gap, interp="CONSTANT", lin_from=None):
-    racks.root["p_gap"] = float(gap)
-    racks.root.update_tag()
-    racks.root.keyframe_insert('["p_gap"]', frame=F(t))
-    racks.root.location = (X_A + gap / 2.0, Y_ACT, 0)
-    racks.root.keyframe_insert("location", frame=F(t))
-
-
-for t, g in GAP_KEYS:
-    key_gap(t, g)
+CUTS = [2.2, 3.0, 3.6, 4.2, 6.0, 6.4]          # hard cuts (camera and the gap jumps); motion-blur shutter 0 on these frames
+CUT_FRAMES = [F(t) for t in CUTS]
 STRETCH_T0, STRETCH_T1 = 4.4, 6.0
-key_gap(STRETCH_T0, 1.0)
-key_gap(STRETCH_T1, 2.0)
-set_interp(racks.root, '["p_gap"]', "CONSTANT")
-set_interp(racks.root, "location", "CONSTANT")
-# the stretch (4.4-6.0) is a continuous pull: linear keys on the last segment
-for path in ('["p_gap"]', "location"):
-    ad = racks.root.animation_data
-    for fc in ad.action.fcurves:
-        if fc.data_path == path and (path != "location" or fc.array_index == 0):
-            kps = sorted(fc.keyframe_points, key=lambda k: k.co[0])
-            kps[-2].interpolation = "LINEAR"
-update()
+N_HEAVE = 3
+P_CYC = (STRETCH_T1 - STRETCH_T0) / (N_HEAVE - 0.5)       # 0.64 s per pull_cable cycle (heave + reach)
+K_G = 0.9657                    # gary_v2 motion_v2 K (manifest)
+H0, DH = 0.52 * K_G, 0.36 * K_G  # pull_cable: hands 0.52 K ahead at the reach, stroke 0.36 K (m2_acts.b_pull_cable)
+HANDLE_DX = 0.33                # grip bar beyond rack B's centre (rack half width 0.30 + 0.03 stand-off)
+HANDLE_Z = 1.0 * K_G            # pull_cable hand height
+GAP0 = 1.0
+R0 = GAP0 + HANDLE_DX + H0      # Gary root x at the first reach
+
+
+def haul(t):
+    """(gap, gary_root_x, a, hop) of the stretch. Heave: Gary's root is planted and rack B follows his hands; reach: the
+    rack stays and Gary scoots back with a small hop. a = pull_cable phase (0 reach, 1 heave peak)."""
+    if t >= STRETCH_T1:
+        g = GAP0 + N_HEAVE * DH
+        return g, g + HANDLE_DX + H0 - DH, 1.0, 0.0
+    u = max(0.0, (t - STRETCH_T0) / P_CYC)
+    k = int(math.floor(u))
+    ph = u - k
+    a = 0.5 - 0.5 * math.cos(TAU * ph)
+    if ph < 0.5:
+        return GAP0 + k * DH + DH * a, R0 + k * DH, a, 0.0
+    return GAP0 + (k + 1) * DH, R0 + (k + 1) * DH - DH * a, a, 0.05 * math.sin(math.pi * (ph - 0.5) / 0.5)
 
 
 def gap_at(t):
     g = 5.0
     for tk, gv in GAP_KEYS:
-        if t >= tk:
+        if t >= tk - 1e-6:
             g = gv
-    if t >= STRETCH_T0:
-        g = ramp(t, STRETCH_T0, STRETCH_T1, 1.0, 2.0)
+    if t >= STRETCH_T0 - 1e-6:
+        g = haul(t)[0]
     return g
 
+
+for _f in range(1, 301):
+    racks.root["p_gap"] = float(gap_at((_f - 1) / 30.0))
+    racks.root.keyframe_insert('["p_gap"]', frame=_f)
+FX.bake_obj(racks.root, lambda t: (X_A + gap_at(t) / 2.0, Y_ACT, 0.0, 0.0), jumps=CUT_FRAMES, rot=False)
+for fc in racks.root.animation_data.action.fcurves:
+    if fc.data_path == '["p_gap"]':
+        for kp in fc.keyframe_points:
+            kp.interpolation = "CONSTANT" if int(round(kp.co[0])) + 1 in CUT_FRAMES else "LINEAR"
+racks.root.update_tag()
+update()
+
+# grip bar on rack B's outer face (Gary hauls on it); keyed with the rack
+_hm = lib_mats(["MAT_vfx_clay_shirt_yellow"])
+bpy.ops.mesh.primitive_cylinder_add(vertices=12, radius=0.02, depth=0.36, location=(0, 0, 0), rotation=(PI / 2, 0, 0))
+handle = bpy.context.object
+handle.name = "s01_rack_grip_bar"
+handle.data.materials.append(list(_hm.values())[0] if _hm else bpy.data.materials.new("grip"))
+for _sy in (-0.16, 0.16):
+    bpy.ops.mesh.primitive_cylinder_add(vertices=8, radius=0.012, depth=0.05, location=(-0.025, _sy, 0), rotation=(0, PI / 2, 0))
+    _po = bpy.context.object
+    _po.name = "s01_rack_grip_post"
+    _po.data.materials.append(handle.data.materials[0])
+    _po.parent = handle
+for _o in [handle] + list(handle.children):
+    for _p in _o.data.polygons:
+        _p.use_smooth = True
 
 # ---- bundle end hooks follow the rack port hooks (world-space drivers; hook rotation is ignored by the bundle)
 for nm, port in (("HOOK_bundle_a", "HOOK_port_A"), ("HOOK_bundle_b", "HOOK_port_B")):
@@ -235,8 +258,12 @@ for nm, port in (("HOOK_bundle_a", "HOOK_port_A"), ("HOOK_bundle_b", "HOOK_port_
 bundle_coll = [c for c in wall.coll.children if c.name.startswith("VARIANT_bundle_14")][0]
 asm.show(bundle_coll, 0.0, 10.0)
 # sag: loose at 5 / 2 / 1 m, pulled taut by the stretch
-for t, s in ((0.0, 0.25), (2.2, 0.25), (3.0, 0.16), (3.6, 0.16), (4.4, 0.16), (6.0, 0.0)):
-    asm.key_prop(wall.root, "p_sag_m", t, s, "CONSTANT" if t < 4.4 else "LINEAR")
+for t, s in ((0.0, 0.25), (2.2, 0.25), (3.0, 0.16), (3.6, 0.16), (4.4, 0.16)):
+    asm.key_prop(wall.root, "p_sag_m", t, s, "CONSTANT")
+for _f in range(F(4.4) + 1, F(6.0) + 1):          # v1.2: pulled taut heave by heave, with a creaking tremble
+    _t = (_f - 1) / 30.0
+    wall.root["p_sag_m"] = max(0.0, 0.16 * (1.0 - (haul(_t)[0] - GAP0) / (N_HEAVE * DH)) + 0.010 * math.sin(TAU * 9.0 * _t))
+    wall.root.keyframe_insert('["p_sag_m"]', frame=_f)
 
 # ---- v1.1: fan the 14 cables out (asset: all cables converge to one point and read as a single thin wire)
 import re  # noqa: E402
@@ -346,45 +373,111 @@ for fr in range(F(6.0) + 1, F(6.0) + 22):
     wall.root["p_sag_m"] = 0.05 * math.exp(-dt / 0.18) * (0.5 + 0.5 * math.cos(TAU * 5.0 * dt))
     wall.root.keyframe_insert('["p_sag_m"]', frame=fr)
 set_interp(wall.root, '["p_sag_m"]', "LINEAR")
+for fc in wall.root.animation_data.action.fcurves:
+    if fc.data_path == '["p_sag_m"]':
+        for kp in fc.keyframe_points:
+            if kp.co[0] < F(4.4):
+                kp.interpolation = "CONSTANT"
 cable0 = cables[0]
 cable0.data.materials.clear()
 cable0.data.materials.append(tunnel_material("s01_cable00_tunnel", 2.0, 2.3))
 
-# ---- Gary
-gary = asm.append("characters/gary", actions=True)
-GARY_DX = 0.8     # stands this far to the right of rack B's centre line (hands reach the side of rack B)
+# ---- Gary (v2 asset, motion_v2 strips; root baked per frame)
+gary = asm.append("characters/gary_v2")
+GARY_DX = 0.8     # stands this far to the right of rack B's centre line before the stretch
 GARY_Y = Y_ACT - 0.35
+GARY_SPOT = (6.3, 2.3)            # left of the bench end: two-shot Gary | scope | Manager
+GARY_YAW_SPOT = PI / 2 - 0.55     # faces the Manager, turned 3/4 to the camera so hole 1 (left chest) reads
+T_TURN = 3.62
+T_RUN0 = 6.1
+RUN_MPS = 2.2
+GARY_HAUL_END = haul(STRETCH_T1)[1]
+T_RUN1 = T_RUN0 + math.dist((GARY_HAUL_END, GARY_Y), GARY_SPOT) / RUN_MPS
+T_STARTLE = 8.12
+GARY_FALL_SPEED = 1.35            # shot_hit_fall: tip at about 9.5 s, ground hit at about 9.74 s
+
+M2.apply(gary, "idle_breathe", 0.0, hold=True, repeat=4)
+st_turn = M2.apply(gary, "turn_right_90", T_TURN, speed=1.25, hold=False, key_root_yaw=False)
+F_TURN_END = int(math.floor(st_turn.frame_end))
+M2.apply(gary, "pull_cable", STRETCH_T0, speed=36.0 / (P_CYC * 30.0), repeat=N_HEAVE - 0.5, hold=False, face=False, blend_in=3)
+_run = M2.ensure_action(gary, "run")
+_run_sp = RUN_MPS / float(_run["root_speed_mps"])
+_run_cyc = (_run.frame_range[1] - _run.frame_range[0]) / _run_sp
+M2.apply(gary, "run", T_RUN0, speed=_run_sp, repeat=(T_RUN1 - T_RUN0) * 30.0 / _run_cyc, hold=False, blend_in=3)
+M2.apply(gary, "idle_breathe", T_RUN1, hold=True, repeat=2, blend_in=5)
+M2.apply(gary, "startle", T_STARTLE, hold=False, blend_in=2)
+M2.apply(gary, "shot_hit_fall", T_BANG, speed=GARY_FALL_SPEED, hold=True)
+_run_yaw = asm.yaw_to((GARY_HAUL_END, GARY_Y), GARY_SPOT)
 
 
-def gary_x(t):
-    return X_A + gap_at(t) + GARY_DX
+def gary_state(t):
+    f = F(t)
+    if t < STRETCH_T0 - 1e-6:
+        x = X_A + gap_at(t) + GARY_DX
+        if t >= 4.25:
+            x = ramp(t, 4.25, STRETCH_T0, x, R0)          # settles onto the grip bar
+        return x, GARY_Y, 0.0, (0.0 if f <= F_TURN_END else -PI / 2)
+    if t <= STRETCH_T1 + 1e-6:
+        _g, x, _a, hop = haul(t)
+        return x, GARY_Y, hop, -PI / 2
+    if t < T_RUN0:                                         # lets go and turns round (off camera)
+        return GARY_HAUL_END, GARY_Y, 0.0, -PI / 2 + (PI / 2 + _run_yaw) * FX.smooth3((t - STRETCH_T1) / (T_RUN0 - STRETCH_T1))
+    if t < T_RUN1:
+        k = (t - T_RUN0) / (T_RUN1 - T_RUN0)
+        return GARY_HAUL_END + (GARY_SPOT[0] - GARY_HAUL_END) * k, GARY_Y + (GARY_SPOT[1] - GARY_Y) * k, 0.0, _run_yaw
+    return GARY_SPOT[0], GARY_SPOT[1], 0.0, _run_yaw + (GARY_YAW_SPOT - _run_yaw) * FX.smooth3((t - T_RUN1 + 0.1) / 0.4)
 
 
-asm.place(gary.root, (gary_x(0.0), GARY_Y, 0), yaw=0)
-asm.play(gary, "idle", 0.0, hold=True, repeat=3)
-act_pull = bpy.data.actions["ACT_gary_pull_cable"]
-n_pull = int(math.ceil((STRETCH_T1 - 4.2) * 30 / (act_pull.frame_range[1] - act_pull.frame_range[0])))
-asm.play(gary, "pull_cable", 4.2, hold=True, repeat=n_pull)
-asm.play(gary, "idle", STRETCH_T1, hold=True, repeat=3)
-asm.play(gary, "topple_back", T_BANG + HIT_STOP / 30.0, hold=True)   # hit-stop: the fall starts 3 frames after the bang
-# root keys: constant jumps with the rack, a linear drag during the stretch, then stand
-for t, gx in ((0.0, gary_x(0.0)), (2.2, gary_x(2.2)), (3.0, gary_x(3.0)), (3.6, gary_x(3.6))):
-    asm.key_loc(gary.root, t, (gx, GARY_Y, 0), yaw=0.0, interp="CONSTANT")
-asm.key_loc(gary.root, 4.2, (gary_x(3.6), GARY_Y, 0), yaw=-PI / 2, interp="CONSTANT")
-asm.key_loc(gary.root, STRETCH_T0, (gary_x(3.6), GARY_Y, 0), yaw=-PI / 2, interp="LINEAR")
-asm.key_loc(gary.root, STRETCH_T1, (gary_x(STRETCH_T1), GARY_Y, 0), yaw=-PI / 2, interp="CONSTANT")
-# after the pull Gary walks 1.6 m clear of the racks (so he does not topple into rack B), then stands facing the Manager
-GARY_END_X = gary_x(STRETCH_T1) + 1.6
-asm.walk(gary, 6.2, [(gary_x(STRETCH_T1), GARY_Y, 0), (GARY_END_X, GARY_Y, 0)])
-# expressions
-for t, v in ((0.0, 0.0), (4.2, 0.0), (6.0, 1.0)):
-    asm.key_prop(gary.root, "p_expr_sweating", t, v)
-for t, v in ((0.0, 0.0), (6.6, 0.0), (7.4, 1.0), (8.5, 0.0)):
-    asm.key_prop(gary.root, "p_expr_dread", t, v)
-for t, v in ((0.0, 0.0), (8.5, 0.0), (8.9, 1.0), (T_BANG, 1.0), (T_BANG + 0.1, 0.0)):
+FX.bake_obj(gary.root, gary_state, jumps=CUT_FRAMES + [F_TURN_END + 1])
+FX.bake_obj(handle, lambda t: (X_A + gap_at(t) + HANDLE_DX, GARY_Y, HANDLE_Z, 0.0), jumps=CUT_FRAMES)
+# faces: strain while hauling (gritted, sweating, red pulses on each heave), hopeful at the scope, scared at the gun
+asm.key_prop(gary.root, "p_expr_sweating", 0.0, 0.0)
+asm.key_prop(gary.root, "p_expr_sweating", 4.3, 0.0)
+asm.key_prop(gary.root, "p_expr_sweating", 4.55, 1.0)
+for t, v in ((0.0, 0.0), (4.3, 0.0), (4.5, 0.55), (6.0, 0.55), (6.3, 0.0)):
+    asm.key_prop(gary.root, "p_expr_angry", t, v)
+asm.key_prop(gary.root, "p_flush", 0.0, 0.0)
+for _f in range(F(4.4), F(6.0) + 1, 2):
+    asm.key_prop(gary.root, "p_flush", (_f - 1) / 30.0, 0.2 + 0.5 * haul((_f - 1) / 30.0)[2])
+asm.key_prop(gary.root, "p_flush", 6.4, 0.0)
+for t, v in ((0.0, 0.0), (T_RUN1 - 0.1, 0.0), (T_RUN1 + 0.15, 0.7), (T_STARTLE, 0.7), (T_STARTLE + 0.05, 0.0)):
+    asm.key_prop(gary.root, "p_expr_happy", t, v)
+for t, v in ((0.0, 0.0), (T_STARTLE, 0.0), (T_STARTLE + 0.12, 1.0), (T_BANG, 1.0), (T_BANG + 0.1, 0.0)):
     asm.key_prop(gary.root, "p_expr_scared", t, v)
+# hole 1: opens at the bang, over-sized cartoon pop peaking at the hole_pop cue (9.45) so it reads at phone size, settles
+# at the storyboard radius 1.0 by 9.75 (S2 continuity unchanged). A pale disc at the hole centre (inside the cut cylinder,
+# so only seen through the hole) gives the dark-wall background contrast: the classic see-through gag.
 asm.key_prop(gary.root, "p_hole_1_radius", 0.0, 0.0, "CONSTANT")
-asm.key_prop(gary.root, "p_hole_1_radius", T_BANG, 1.0, "CONSTANT")
+for t, v in ((T_BANG, 1.0), (T_BANG + 0.07, 1.6), (9.42, 1.6), (9.47, 1.9), (9.75, 1.0)):
+    asm.key_prop(gary.root, "p_hole_1_radius", t, v)
+_he = bpy.data.objects["HOLE_hole_1"] if "HOLE_hole_1" in bpy.data.objects else [o for o in gary.objs if o.name.startswith("HOLE_hole_1")][0]
+_dm = bpy.data.meshes.new("s01_hole_light")
+import bmesh  # noqa: E402
+_bm = bmesh.new()
+bmesh.ops.create_circle(_bm, cap_ends=True, segments=24, radius=0.0435 * 0.85)
+_bm.to_mesh(_dm)
+_bm.free()
+hole_light = bpy.data.objects.new("s01_hole_light", _dm)
+bpy.context.scene.collection.objects.link(hole_light)
+_hlm = bpy.data.materials.new("s01_hole_light")
+_hlm.use_nodes = True
+_hb = _hlm.node_tree.nodes["Principled BSDF"]
+_hb.inputs["Base Color"].default_value = (0.95, 0.88, 0.78, 1.0)
+_hb.inputs["Emission Color"].default_value = (0.95, 0.88, 0.78, 1.0)
+_hb.inputs["Emission Strength"].default_value = 1.1
+_dm.materials.append(_hlm)
+hole_light.parent = _he
+hole_light.matrix_parent_inverse.identity()
+hole_light.visible_shadow = False
+for _i in range(3):
+    _fc = hole_light.driver_add("scale", _i)
+    _v = _fc.driver.variables.new()
+    _v.name = "v"
+    _v.targets[0].id = gary.root
+    _v.targets[0].data_path = '["p_hole_1_radius"]'
+    _fc.driver.expression = "max(v,0.0001)" if _i < 2 else "1.0"
+asm.L.V(hole_light, 0, T_BANG, 10.0)
+update()
 
 # ---- Pulse (clay courier): hook run on the wall conduit, then three runs along the bundle
 R0 = 0.14
@@ -489,104 +582,118 @@ iu.frame_offset = 0
 iu.use_auto_refresh = True
 smat.node_tree.nodes["SCREEN_FAC"].outputs[0].default_value = 1.0
 
-# ---- Manager: walks all the way to the bench and reads the scope from beside it (v1.1)
-mgr = asm.append("characters/manager", actions=True)
-MGR_Y = Y_ACT - 0.85
+# ---- Manager (v2): stomps in from the hall end, stops right of the scope, slow burn facing the screen, shotgun pops into
+# his hands ("Shotgun time"), raise, aim with an anger tremor, bang at T_BANG (3-frame hit-stop). He stands 1.46 m right
+# of the screen so the raised gun stays right of / above the scope in every camera (v1.1 gun crossed the scope).
+mgr = asm.append("characters/manager_v2")
 update()
 _sc_obj = [o for o in scope.objs if o.name == "bench_oscilloscope_screen"][0]
 _bb = [_sc_obj.matrix_world @ Vector(c) for c in _sc_obj.bound_box]
 scr = sum(_bb, Vector()) / 8.0        # true centre of the screen mesh (the asset hook is offset from it)
-STAND = (X_MGR_STARE, MGR_Y, 0)
-t_arr = asm.walk(mgr, 4.1, [(X_MGR_START, MGR_Y, 0), STAND])
-asm.place(mgr.root, (X_MGR_START, MGR_Y, 0), yaw=-PI / 2)
-t_aim0 = T_BANG - 36 / 30.0
-asm.play(mgr, "idle", t_arr, hold=True, repeat=max(1.0, (t_aim0 - t_arr) / 2.0))
-yaw_scope = asm.yaw_to(STAND, (scr.x, scr.y, 0))
-aim_yaw = asm.yaw_to(STAND, (GARY_END_X, GARY_Y, 0))
-asm.key_loc(mgr.root, t_arr, STAND, yaw=-PI / 2, interp="LINEAR")
-asm.key_loc(mgr.root, t_arr + 0.5, STAND, yaw=yaw_scope, interp="LINEAR")
-asm.key_loc(mgr.root, 7.7, STAND, yaw=yaw_scope, interp="LINEAR")
-asm.key_loc(mgr.root, 8.35, STAND, yaw=aim_yaw, interp="LINEAR")
-asm.key_loc(mgr.root, T_BANG, STAND, yaw=aim_yaw, interp="LINEAR")
-for t, v in ((0.0, 0.0), (7.0, 0.0), (8.2, 1.0)):
-    asm.key_prop(mgr.root, "p_anger", t, v)
-for t, v in ((0.0, 0.0), (7.2, 0.0), (8.2, 1.0)):
-    asm.key_prop(mgr.root, "p_flush", t, v)
-# aim_gun: frames 0..36 up to the shot pose (bang at T_BANG), 3-frame hit-stop, then frames 36..end
-act_aim = bpy.data.actions["ACT_manager_aim_gun"]
-ad_m = mgr.armature.animation_data
-tr_a = ad_m.nla_tracks.new()
-st_a = tr_a.strips.new("aim_to_shot", F(t_aim0), act_aim)
-st_a.action_frame_end = 36.0
-st_a.extrapolation = "HOLD_FORWARD"
-tr_b = ad_m.nla_tracks.new()
-st_b = tr_b.strips.new("aim_after_shot", F(T_BANG) + HIT_STOP, act_aim)
-st_b.action_frame_start = 36.0
-st_b.action_frame_end = act_aim.frame_range[1]
-st_b.frame_start = F(T_BANG) + HIT_STOP
-st_b.extrapolation = "HOLD_FORWARD"
-print("AIM strips", st_a.frame_start, st_a.frame_end, st_b.frame_start, st_b.frame_end)
-# recoil: damped pitch of the whole body about the feet (springy), baked per frame
-for fr in range(F(T_BANG), F(T_BANG) + 22):
-    dt = (fr - F(T_BANG)) / 30.0
-    mgr.root.rotation_euler = (FX.spring(dt, -0.05, 6.5, 0.16), 0.0, aim_yaw)
-    mgr.root.keyframe_insert("rotation_euler", frame=fr)
-set_interp(mgr.root, "rotation_euler", "LINEAR")
+MGR_Y = 1.95
+X_MGR_START, X_MGR_STAND = 11.4, 9.1
+MGR_MPS = 1.0                          # stomp_walk strip sped up from its baked 0.749 m/s (feet stay locked)
+T_M_ARR = 7.15
+T_M0 = T_M_ARR - (X_MGR_START - X_MGR_STAND) / MGR_MPS
+T_R1 = T_BANG - 24 / 30.0              # gun_raise_aim_fire aim_start (action frame 20); shot = frame 44 at T_BANG
+T_R0 = T_R1 - 10 / 30.0               # frames 0-20 (port arms to aim) played at 2x
+STAND = (X_MGR_STAND, MGR_Y)
+YAW_READ = -PI / 2 - 0.2      # faces the scope side (screen 25 deg to his right), 3/4 face to the camera
+YAW_AIM = asm.yaw_to(STAND, GARY_SPOT)
+M2.apply(mgr, "idle_breathe_tense", 0.0, hold=True, repeat=5)
+_st = M2.ensure_action(mgr, "stomp_walk")
+_st_sp = MGR_MPS / float(_st["root_speed_mps"])
+M2.apply(mgr, "stomp_walk", T_M0, speed=_st_sp, repeat=(T_M_ARR - T_M0) * 30.0 / (36.0 / _st_sp), hold=False)
+M2.apply(mgr, "manager_slow_burn", T_M_ARR, speed=1.8, start_frame=76, end_frame=128, hold=True, blend_in=5, face=False)
+M2.apply(mgr, "gun_raise_aim_fire", T_R0, speed=2.0, start_frame=0, end_frame=20, hold=True, blend_in=3, face=False)
+M2.apply(mgr, "gun_raise_aim_fire", T_R1, start_frame=20, end_frame=44, hold=True, face=False)
+M2.apply(mgr, "gun_raise_aim_fire", T_BANG + HIT_STOP / 30.0, start_frame=44, hold=True, face=False)
 
-# ---- shotgun on the Manager's right hand, mounted like S2/S4 (rot z = pi on the grip hook)
+
+def mgr_state(t):
+    if t < T_M0:
+        return X_MGR_START, MGR_Y, 0.0, -PI / 2
+    if t < T_M_ARR:
+        return X_MGR_START - MGR_MPS * (t - T_M0), MGR_Y, 0.0, -PI / 2
+    y = -PI / 2 + (YAW_READ + PI / 2) * FX.smooth3((t - T_M_ARR) / 0.35)
+    y = y + (YAW_AIM - YAW_READ) * FX.smooth3((t - (T_R0 - 0.1)) / 0.4)
+    return X_MGR_STAND, MGR_Y, 0.0, y
+
+
+FX.bake_obj(mgr.root, mgr_state, jumps=CUT_FRAMES)
+for t, v in ((0.0, 0.0), (7.2, 0.0), (8.15, 1.0)):
+    asm.key_prop(mgr.root, "p_anger", t, v)
+for t, v in ((0.0, 0.0), (7.3, 0.0), (8.2, 1.0)):
+    asm.key_prop(mgr.root, "p_flush", t, v)
+
+# ---- shotgun on the Manager's right hand (rot z = pi on the grip hook); hammerspace pop-in at T_R0
 gun = asm.append("props/shotgun")
 gun.variant("clay", True)
-ghook = mgr.hook("gun_grip_R")
-asm.attach(gun.root, ghook, rot=(0, 0, PI))
-for fr in range(F(T_BANG), F(T_BANG) + 20):     # recoil: slides back along the barrel axis and muzzle flips up, damped
-    dt = (fr - F(T_BANG)) / 30.0
-    back = max(0.0, 0.07 * math.exp(-dt / 0.10) * math.cos(TAU * 7.0 * dt))
-    flip = FX.spring(dt, -0.12, 6.0, 0.14)
-    gun.root.location = (0, -back, 0)
-    gun.root.rotation_euler = (flip, 0, PI)
-    gun.root.keyframe_insert("location", frame=fr)
+asm.attach(gun.root, mgr.hook("gun_grip_R"), rot=(0, 0, PI))
+asm.show(gun, T_R0 - 1 / 30.0, 10.0)
+_f0 = F(T_R0)
+for df, sc in ((-1, 0.05), (0, 0.3), (2, 1.25), (4, 0.92), (6, 1.0)):
+    gun.root.scale = (sc, sc, sc)
+    gun.root.keyframe_insert("scale", frame=_f0 + df)
+_tn = FX.Noise(13, channels=2)
+for fr in range(F(T_R1), F(T_BANG) + 1):        # anger tremor while aiming (6-8 Hz plus slow wander), zero at the shot
+    _t = (fr - 1) / 30.0
+    w = FX.smooth3((_t - T_R1) / 0.2) * (1.0 - FX.smooth3((_t - (T_BANG - 0.12)) / 0.12))
+    gun.root.rotation_euler = (w * (0.014 * math.sin(TAU * 7.0 * _t) + 0.008 * _tn(_t, 0)), w * 0.010 * math.sin(TAU * 5.3 * _t + 1.0), PI)
     gun.root.keyframe_insert("rotation_euler", frame=fr)
-set_interp(gun.root, "location", "LINEAR")
+set_interp(gun.root, "scale", "LINEAR")
 set_interp(gun.root, "rotation_euler", "LINEAR")
+# darker clay gun so it reads against the pale wall (scene copies of the materials; asset file untouched)
+for o in gun.objs:
+    if o.type != "MESH":
+        continue
+    for sl in o.material_slots:
+        m = sl.material
+        if m and m.use_nodes and not m.get("s01_dark"):
+            for n in m.node_tree.nodes:
+                if n.type == "BSDF_PRINCIPLED" and not n.inputs["Base Color"].is_linked:
+                    c = n.inputs["Base Color"].default_value
+                    if 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2] > 0.25:
+                        n.inputs["Base Color"].default_value = (c[0] * 0.35, c[1] * 0.35, c[2] * 0.35, 1.0)
+            m["s01_dark"] = 1
+asm.fx("dust_cloud", T_R0, parent=mgr.hook("gun_grip_R"), scale=0.22, dur=0.5)
 
-# ---- effects: ear steam at the Manager's ear hooks, muzzle flash + smoke ring at the muzzles
-steam = asm.fx("ear_steam", 7.5, dur=2.2)
+# ---- effects: ear steam (puffs from about 7.55 s, steam_hiss cue), muzzle flash + smoke ring at the muzzles
+steam = asm.fx("ear_steam", 7.35, dur=2.2)
 for side in ("L", "R"):
     eh = steam.hook("ear_" + side)
     eh.parent = mgr.hook("steam_" + side)
     eh.matrix_parent_inverse.identity()
     eh.location = (0, 0, 0)
     eh.rotation_euler = (0, 0, 0)
+    eh.scale = (0.6, 0.6, 0.6)       # smaller puffs (v1.1 popcorn covered his head)
 steam.root.parent = None
 for side in ("L", "R"):
-    asm.fx("muzzle_flash", T_BANG, rot=(-PI / 2, 0, 0), parent=gun.hook("muzzle_" + side), dur=0.15)
-    asm.fx("smoke_ring", T_BANG + 0.02, rot=(-PI / 2, 0, 0), parent=gun.hook("muzzle_" + side), dur=0.9)
+    asm.fx("muzzle_flash", T_BANG - 1 / 30.0, rot=(-PI / 2, 0, 0), parent=gun.hook("muzzle_" + side), dur=0.15)   # flash grows from 0: visible ON the bang frame
+    asm.fx("smoke_ring", T_BANG + 0.07, rot=(-PI / 2, 0, 0), parent=gun.hook("muzzle_" + side), dur=0.35)   # gone before the push (it drifted across the lens)
 asm.key_prop(gun.root, "p_trigger", T_BANG - 0.05, 0.0)
 asm.key_prop(gun.root, "p_trigger", T_BANG, 1.0)
 asm.key_prop(gun.root, "p_trigger", T_BANG + 0.3, 0.0)
 
-# ---- hit effects on Gary's chest at the bang: squash/stretch spring, clay crumbs, dust puff
-scn.frame_set(F(T_BANG))
+# ---- hit effects at Gary's chest: clay crumbs blown out of his BACK (no star puff: it covered the hole in v1.1)
+scn.frame_set(F(T_BANG) + 1)
 update()
 garm = gary.armature
 chest_w = garm.matrix_world @ garm.pose.bones["chest"].head
-hit_pt = Vector((chest_w.x + 0.10, chest_w.y, chest_w.z + 0.05))
+back = Vector((-math.sin(GARY_YAW_SPOT), math.cos(GARY_YAW_SPOT), 0.0))
+hit_pt = chest_w + back * 0.18
 print("HIT point", tuple(round(c, 3) for c in hit_pt))
-for fr in range(F(T_BANG), F(T_BANG) + 20):
-    dt = (fr - F(T_BANG)) / 30.0
-    sz = 1.0 + FX.spring(dt, -0.07, 7.0, 0.14)
-    sxy = 1.0 / math.sqrt(sz)
-    gary.root.scale = (sxy, sxy, sz)
-    gary.root.keyframe_insert("scale", frame=fr)
-set_interp(gary.root, "scale", "LINEAR")
 crumb_mat = mats["MAT_vfx_clay_shirt_yellow"]
-FX.add_crumbs(tuple(hit_pt), (-1.0, 0.0, 0.0), T_BANG, crumb_mat, n=16, seed=5)
-asm.fx("dust_cloud", T_BANG, loc=tuple(hit_pt), scale=0.5, dur=1.2)
-asm.fx("impact_stars", T_BANG, loc=tuple(hit_pt), scale=0.3, dur=0.5)
+FX.add_crumbs(tuple(hit_pt), tuple(back), T_BANG, crumb_mat, n=16, seed=5)
 scn.frame_set(1)
 update()
 
-# ------------------------------------------------------------------ camera director (baked, eased, handheld, impact shake)
+# ---- popped copper strands at the strand_pop cues (sfx_cues.json 4.95, 5.35, 5.65, 5.95), sparks on each
+for i, (tp, ci, off) in enumerate(((4.95, 3, 0.42), (5.35, 8, 0.56), (5.65, 11, 0.47), (5.95, 5, 0.62))):
+    anc, _ = FX.add_strand_pop(cables[ci], off, tp, mats["MAT_vfx_copper"], t_end=6.0 + 1 / 30.0, seed=21 + i, n=5, length=(0.10, 0.18), radius=0.006)
+    asm.fx("impact_stars", tp, parent=anc, scale=0.14, dur=0.25)
+
+# ------------------------------------------------------------------ camera director (baked, eased, handheld, impact shakes)
 # electron pockets: sample the evaluated centreline of cable 00 (frame 1: gap 5 m, sag 0.25 m)
 scn.frame_set(1)
 update()
@@ -606,7 +713,9 @@ line = FX.Polyline(CPTS)
 print("CABLE00 length %.3f m, start %s end %s" % (line.length, tuple(round(c, 3) for c in CPTS[0]), tuple(round(c, 3) for c in CPTS[-1])))
 
 CY = -4.0
-D = FX.Director(T_BANG, seed=7)
+D = FX.Director(T_BANG, seed=7, shake_win=0.45)
+for tp, amp in ((4.95, 0.22), (5.35, 0.28), (5.65, 0.28), (5.95, 0.32)):
+    D.add_hit(tp, amp, 0.3)
 S0 = 0.46 * line.length
 P0, T0 = line.at(S0)
 P0 = tuple(P0)
@@ -631,24 +740,37 @@ D.add(0.0, 2.2, shot_zoom_out, hh=1.0)
 D.simple(2.2, 3.0, (2.9, CY + 0.1, 1.9), (2.9, Y_ACT, 1.4), (2.9, CY + 0.6, 1.9), (2.9, Y_ACT, 1.4), lens=21)
 D.simple(3.0, 3.6, (2.0, -2.2, 1.7), (1.4, Y_ACT, 1.4), (1.4, -1.6, 1.7), (1.4, Y_ACT, 1.4), lens=26)
 D.simple(3.6, 4.2, (0.5, -0.4, 1.6), (0.9, Y_ACT, 1.4), (0.6, 0.4, 1.5), (0.9, Y_ACT, 1.4), lens=20)
-D.simple(4.2, 6.0, (1.9, -0.6, 1.4), (1.6, Y_ACT, 1.3), (2.9, -0.2, 1.3), (2.6, Y_ACT, 1.2), lens=26)
-D.simple(6.0, 6.8, (scr.x + 0.06, scr.y - 0.6, scr.z + 0.04), tuple(scr), (scr.x + 0.04, scr.y - 0.42, scr.z + 0.03), tuple(scr), lens=28, hh=0.6)
-# reading + turning angry: scope screen and the Manager together in frame
-D.simple(6.8, 8.5, (7.1, 0.35, 1.3), (7.95, 2.3, 1.3), (7.4, 0.9, 1.3), (8.2, 2.3, 1.4), lens=36, lens1=42)
-D.simple(8.5, 9.2, (6.9, 0.4, 1.45), (7.75, 1.9, 1.4), (7.2, 0.75, 1.45), (7.65, 1.9, 1.4), lens=28)
-# bang: wide hold (Gary and scope both in frame) then a fast eased zoom onto the scope screen
-W_P, W_A = (6.4, -2.0, 1.5), (6.5, Y_ACT, 1.2)
-Z_P, Z_A = (scr.x + 0.05, scr.y - 0.8, scr.z + 0.03), tuple(scr)
-T_ZOOM0 = 9.45
+# the stretch: 3/4 front on the cable gap, rack B and Gary (face visible), tracking the rack as it is hauled out
+D.simple(4.2, 6.0, (1.45, -0.8, 1.3), (1.5, Y_ACT - 0.2, 1.05), (1.55, -0.7, 1.3), (1.6, Y_ACT - 0.2, 1.05), lens=32)   # near-static: rack B visibly slides away
+D.simple(6.0, 6.4, (scr.x + 0.06, scr.y - 0.6, scr.z + 0.04), tuple(scr), (scr.x + 0.05, scr.y - 0.5, scr.z + 0.035), tuple(scr), lens=28, hh=0.6)
+# 6.4-10.0 one continuous shot: Manager stomps in and burns beside the scope (E), eases back to the two-shot
+# Gary | scope | Manager (F), holds through the bang, hit and tip, then an eased-out push onto the scope screen (G)
+E_P0, E_A0, E_P1, E_A1 = (8.15, -0.75, 1.35), (8.9, 2.1, 1.2), (8.05, -0.4, 1.35), (8.75, 2.1, 1.25)
+F_P0, F_A0, F_P1, F_A1 = (7.8, -0.75, 1.3), (7.8, 2.2, 1.0), (7.78, -0.63, 1.28), (7.76, 2.2, 1.0)
+Z_P, Z_A = (scr.x + 0.03, scr.y - 0.8, scr.z + 0.03), tuple(scr)
+T_EF0, T_EF1, T_PUSH = 7.95, 8.45, 9.55
+T_LAST = 10.0 - 1.0 / 30.0
 
 
-def shot_final(u, t):
-    k = FX.smooth5((t - T_ZOOM0) / (10.0 - 1.0 / 30.0 - T_ZOOM0))
-    return FX.lerp3(W_P, Z_P, k), FX.lerp3(W_A, Z_A, k), 24.0 + (34.0 - 24.0) * k
+def shot_tail(u, t):
+    if t < T_EF0:
+        k = FX.smooth3((t - 6.4) / (T_EF0 - 6.4))
+        return FX.lerp3(E_P0, E_P1, k), FX.lerp3(E_A0, E_A1, k), 28.0
+    if t < T_EF1:
+        k = FX.smooth5((t - T_EF0) / (T_EF1 - T_EF0))
+        return FX.lerp3(E_P1, F_P0, k), FX.lerp3(E_A1, F_A0, k), 28.0 + (26.0 - 28.0) * k
+    if t < T_PUSH:
+        k = FX.smooth3((t - T_EF1) / (T_PUSH - T_EF1))
+        return FX.lerp3(F_P0, F_P1, k), FX.lerp3(F_A0, F_A1, k), 26.0
+    k = FX.ease_out3((t - T_PUSH) / (T_LAST - T_PUSH))
+    k = FX.smooth3(min(1.0, k * 1.0)) * 0.25 + k * 0.75        # soft start, decelerating to rest on the last frame
+    return FX.lerp3(F_P1, Z_P, k), FX.lerp3(F_A1, Z_A, k), 26.0 + (34.0 - 26.0) * k, 1.0 - k
 
 
-D.add(9.2, 10.0, shot_final, hh=1.0)
-D.bake()
+D.add(6.4, 10.0, shot_tail, hh=1.0)
+D.bake(cuts=set(CUT_FRAMES))
+FX.shutter_cuts(scn, CUT_FRAMES, 0.5)
+
 
 # electron pockets in the cable (cyan: moving right, amber: moving left), baked from the camera distance
 def glow(name, col, strength):
@@ -667,31 +789,49 @@ def glow(name, col, strength):
 
 FX.add_electrons(D, line, glow("s01_electron_fwd", (0.25, 0.85, 1.0), 2.5), glow("s01_electron_bwd", (1.0, 0.62, 0.15), 2.5), t_end=2.2, n=22, seed=3, center=S0)
 
-asm.narr([(0.2, 2.2, "Gary wants faster data over copper."), (2.2, 4.2, "But faster means a shorter wire."),
-          (4.2, 6.4, "So Gary tries stretching it one more meter."), (6.5, 7.5, "Bad idea.")])
+
+def big_at(t0, t1, text, loc, size):
+    """BIG overlay at a custom frame position (blender_lib OVL is shared; restored after the call)."""
+    d = asm.L.OVL["BIG"]
+    old = (d["loc"], d["size"], d.get("outline", 0.0))
+    d["loc"], d["size"], d["outline"] = loc, size, old[2] * size / old[1]
+    try:
+        asm.big(t0, t1, text)
+    finally:
+        d["loc"], d["size"], d["outline"] = old
+
+
+# ---- captions: subtitles from narration.json (same source as the VO); one source card per shot; HUD gated by FILM_HUD
+asm.narr_vo(1)
 asm.big(0.2, 1.0, "COPPER")
 asm.big(2.2, 3.0, "5 m")
 asm.big(3.0, 3.6, "2 m")
 asm.big(3.6, 4.2, "1 m")
-asm.big(4.4, 5.4, "STRETCH")
-asm.big(T_BANG, T_BANG + 0.6, "BANG")
+big_at(4.4, 5.2, "STRETCH", (0.0, 1.85), 0.5)        # top band, off Gary's head (critique S1 4.4-6.0)
+big_at(T_BANG, T_PUSH, "BANG", (0.0, 1.8), 0.55)      # top band, off Gary and the hole
 asm.card(0.0, 2.2, "NVL72 backplane: ~5,000 copper cables, 2 miles (SemiAnalysis)")
 asm.card(2.2, 3.0, "4x25G passive twinax: >= 5 m (IEEE 802.3bj)")
 asm.card(3.0, 3.6, "100G/lane passive twinax: >= 2 m (IEEE 802.3ck)")
 asm.card(3.6, 4.2, "200G/lane passive twinax: >= 1 m, objective (IEEE 802.3dj)")
-asm.card(6.0, 8.5, "BER = 0.5 erfc(Q/sqrt2), Q from simulated trace samples (illustrative eye model)")
-asm.lab(6.0, 7.4, "EYE NEARLY CLOSED   BER RISING")
-asm.lab(7.4, 8.5, "MANAGER READS THE SCOPE")
+asm.card(6.0, 8.0, "BER = 0.5 erfc(Q/sqrt2), Q from simulated trace samples (illustrative eye model)")
 asm.fxn(0.0, 2.2, "[FX: fast fly-along, clay cable bundles, Pulse sprint trail]")
 asm.fxn(2.2, 4.2, "[FX: Pulse fades as it travels (illustrative exp. decay)]")
 asm.fxn(4.4, 6.0, "[FX: cables creak, strands pop, glow dims]")
 asm.fxn(7.4, 8.5, "[FX: face turns red, vein pops, steam blast]")
 asm.fxn(T_BANG, 9.8, "[FX: muzzle flash, smoke ring, hole decal]")
 asm.wl("NVL72 BACKPLANE\nCOPPER CARTRIDGES", (-4.5, Y_WALL - 0.6, 3.5), 0.0, 2.2, size=0.4)
-asm.wl("PULSE DECAYS", (X_A + 2.5, Y_ACT - 0.2, 2.9), 2.2, 4.2, size=0.3)
-asm.wl("SCOPE", (slot.x - 0.1, slot.y - 0.2, 1.65), 6.0, 6.8, size=0.2)
+asm.wl("PULSE DECAYS", (X_A + 1.2, Y_ACT - 1.1, 2.45), 3.0, 4.2, size=0.24)    # not in the 5 m shot (hidden under "5 m")
 
-# motion blur ready (the coordinator render preset decides whether it is on: draft off, hero on)
+# ---- look: tame blown-out emitters (LED strips 12 -> 3, bench light panel 6 -> 2), keep the warm clay grade
+EMIT_CAP = {"MAT_datacenter_led_strip": 3.0, "MAT_lab_office_light_panel": 2.0, "MAT_datacenter_sign_exit_emit": 2.0,
+            "MAT_datacenter_sign_text_emit": 1.5}
+for m in bpy.data.materials:
+    base = m.name.split(".")[0]
+    if base in EMIT_CAP and m.use_nodes:
+        for n in m.node_tree.nodes:
+            if n.type == "BSDF_PRINCIPLED" and "Emission Strength" in n.inputs:
+                n.inputs["Emission Strength"].default_value = min(n.inputs["Emission Strength"].default_value, EMIT_CAP[base])
+
+# motion blur on (shutter 0.5, animated to 0 on hard-cut frames); render_scene.py keeps the scene's own blur through presets
 scn.render.use_motion_blur = True
-scn.render.motion_blur_shutter = 0.5
 asm.finalize(OUT)

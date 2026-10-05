@@ -78,3 +78,23 @@ def bake(shots, events, total_t=10.0, pos_amp=0.010, ang_amp=0.0016, shake_ang=0
             for fc in ad.action.fcurves:
                 for kp in fc.keyframe_points:
                     kp.interpolation = "LINEAR"
+    # v1.2 cut-aware motion blur: at every hard cut (a shot whose start differs from the previous shot's end) add a sub-frame key
+    # 0.2 frame before the cut holding the new shot and make the last key of the old shot CONSTANT, so the shutter interval
+    # (0.35 frame, centred) never blends the two camera positions (v1.1 smeared the first frame of each cut).
+    for i in range(1, len(shots)):
+        a0, b0 = shots[i - 1], shots[i]
+        if max(abs(x - y) for x, y in zip(a0["p1"], b0["p0"])) < 1e-6 and max(abs(x - y) for x, y in zip(a0["a1"], b0["a0"])) < 1e-6:
+            continue
+        f = 1 + int(round(b0["t0"] * FPS))
+        for ob in (cam, tgt, hold, cam.data):
+            ad = ob.animation_data
+            if not (ad and ad.action):
+                continue
+            for fc in ad.action.fcurves:
+                v = fc.evaluate(f)
+                kp = fc.keyframe_points.insert(f - 0.2, v, options={"FAST"})
+                kp.interpolation = "LINEAR"
+                for k in fc.keyframe_points:
+                    if abs(k.co[0] - (f - 1)) < 1e-3:
+                        k.interpolation = "CONSTANT"
+                fc.update()

@@ -26,6 +26,10 @@ import render_presets as RP  # noqa: E402
 
 PI = math.pi
 FPS = 30
+HUD = os.environ.get("FILM_HUD", "1") != "0"  # draft HUD (FX notes, timecode, source footnotes) rendered in Blender
+# With FILM_HUD=0 the render is clean: FX notes, timecodes and source footnote cards are not rendered but recorded in
+# OVERLAYS and written next to the blend as <blend>.overlays.json, for burning in during post (post_overlays.py).
+OVERLAYS = []
 
 
 def F(t):
@@ -316,13 +320,41 @@ def _finalize_collections(total):
 def cap(t0, t1, s): L.ovt("CAP", s, 0, t0, t1)
 def big(t0, t1, s): L.ovt("BIG", s, 0, t0, t1)
 def lab(t0, t1, s): L.ovt("LAB", s, 0, t0, t1)
-def card(t0, t1, s): L.ovt("CARD", s, 0, t0, t1)
-def fxn(t0, t1, s): L.ovt("FX", s, 0, t0, t1)
+def _post(kind, t0, t1, s):
+    OVERLAYS.append({"kind": kind, "t0": round(t0, 3), "t1": round(t1, 3), "text": s})
+
+
+def card(t0, t1, s):
+    _post("CARD", t0, t1, s)
+    if HUD:
+        L.ovt("CARD", s, 0, t0, t1)
+
+
+def fxn(t0, t1, s):
+    _post("FX", t0, t1, s)
+    if HUD:
+        L.ovt("FX", s, 0, t0, t1)
+
+
 def narr(segs): L.narr(0, segs)
 def wl(body, pos, t0, t1, size=0.3, color=(1.0, 1.0, 1.0)): return L.wl(body, pos, 0, t0, t1, size=size, color=color)
 
 
+def narr_vo(scene_no):
+    """Subtitles for scene `scene_no` from scripts/audio/narration.json (same source as the voice track)."""
+    import json
+    d = json.load(open(os.path.join(SCRIPTS, "audio", "narration.json")))
+    off = 10.0 * (scene_no - 1)
+    segs = [(round(x["t0"] - off, 3), round(x["t1"] - off, 3), x["show"]) for x in d["lines"] if off <= x["t0"] < off + 10.0]
+    narr(segs)
+    return segs
+
+
 def timecode(scene_no, seconds=10):
+    for s in range(seconds):
+        _post("TC", s, s + 1, "S%d  0:%02d" % (scene_no, s))
+    if not HUD:
+        return
     for s in range(seconds):
         L.ovt("TC", "S%d  0:%02d" % (scene_no, s), 0, s, s + 1)
 
@@ -337,5 +369,8 @@ def finalize(out_blend, frames=300):
     scn = bpy.context.scene
     scn.frame_end = frames
     os.makedirs(os.path.dirname(out_blend), exist_ok=True)
+    import json
+    with open(out_blend + ".overlays.json", "w") as fh:
+        json.dump({"fps": FPS, "frames": frames, "hud_rendered": HUD, "overlays": OVERLAYS}, fh, indent=1)
     bpy.ops.wm.save_as_mainfile(filepath=out_blend)
     print("SAVED", out_blend)

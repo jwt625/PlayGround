@@ -34,7 +34,11 @@ PI = math.pi
 # ------------------------------------------------------------------ layout and scale constants
 HERO_S = 90.0          # hero die and engine scale-up (die 7 x 9 mm -> 0.63 x 0.81 m)
 WAFER_LIFT = 0.075     # wafer shown raised above the platen during probing (real wafer sits 43 mm below the platen top and is hidden)
-PROBE_CARD_S = 0.15    # probe card shown sub-scale (real card 410 mm would cover the whole wafer from above)
+PROBE_CARD_S = 0.22    # probe card shown sub-scale (real card 410 mm would cover the whole wafer from above); v1.2 0.15 -> 0.22
+MOTION_V2 = os.path.join(os.path.dirname(HERE), "assets", "characters", "motion_v2")
+sys.path.insert(0, MOTION_V2)
+import motion_v2 as M2  # noqa: E402
+import s05_tex  # noqa: E402
 # v1.1 layout: stations side by side (gaps 0.35-0.5 m), fronts aligned at about y = -0.75; per-station y offsets align the fronts
 X_ENG = -4.6                                  # engine with the hero die (start of the shot)
 X_OVEN, X_FAU, X_BOND, X_SAW, X_CM = 0.0, 4.0, 5.55, 7.8, 9.6
@@ -42,7 +46,7 @@ Y_OVEN, Y_FAU, Y_BOND, Y_SAW, Y_CM = -0.05, -0.40, -0.23, 0.0, -0.10
 DIE_Y, DIE_Z = -1.15, 1.30                    # hero die path: in front of the machines
 T_END = 10.0
 MOTION_SHUTTER = 0.5
-HERO_LINE_S = 50.0     # hero die scale while it dwells at the line stations
+HERO_LINE_S = 36.0     # hero die scale while it dwells at the line stations
 
 CLAY = {"white": (0.95, 0.95, 0.95), "blue": (0.15, 0.3, 0.8), "yellow": (0.95, 0.8, 0.15), "red": (0.85, 0.15, 0.12)}
 
@@ -169,43 +173,82 @@ def add_noise(obj, strength, scale_frames=9.0, seed=1, paths=("location",)):
 
 
 # ------------------------------------------------------------------ environment: fab bay
+def floor_material(fl):
+    """v1.2: tiled floor (0.6 m raised-floor tiles, darker than the walls) so the floor reads as a floor under the fallen Gary."""
+    m = bpy.data.materials.new("MAT_s05_floor_tiles")
+    m.use_nodes = True
+    nt = m.node_tree
+    bsdf = nt.nodes["Principled BSDF"]
+    bsdf.inputs["Roughness"].default_value = 0.45
+    geo = nt.nodes.new("ShaderNodeNewGeometry")
+    br = nt.nodes.new("ShaderNodeTexBrick")
+    br.offset = 0.0
+    br.squash_frequency = 1
+    br.inputs["Scale"].default_value = 1.0
+    br.inputs["Brick Width"].default_value = 0.6
+    br.inputs["Row Height"].default_value = 0.6
+    br.inputs["Mortar Size"].default_value = 0.008
+    br.inputs["Mortar Smooth"].default_value = 0.3
+    br.inputs["Color1"].default_value = (0.40, 0.42, 0.44, 1.0)
+    br.inputs["Color2"].default_value = (0.45, 0.47, 0.49, 1.0)
+    br.inputs["Mortar"].default_value = (0.22, 0.23, 0.25, 1.0)
+    nt.links.new(geo.outputs["Position"], br.inputs["Vector"])
+    nt.links.new(br.outputs["Color"], bsdf.inputs["Base Color"])
+    fl.data.materials.clear()
+    fl.data.materials.append(m)
+
+
 def build_env():
-    # cleanroom floor (light grey-blue epoxy), long enough for the whole line
-    L.box("floor", (3.0, 0, -0.05), (40.0, 30.0, 0.1), (0.62, 0.66, 0.70), rough=0.30)
+    # cleanroom floor (grey tiles, darker than the walls), long enough for the whole line
+    fl = L.box("floor", (3.0, 0, -0.05), (40.0, 30.0, 0.1), (0.45, 0.47, 0.49), rough=0.45)
+    floor_material(fl)
     # aisle markings (yellow) along the line, 1.9 m in front of the machine fronts
     for y in (-2.6, -2.75):
-        L.box("aisle_line", (3.0, y, 0.002), (40.0, 0.05, 0.004), (0.9, 0.75, 0.1), rough=0.6)
+        L.box("aisle_line", (3.0, y, 0.002), (40.0, 0.05, 0.004), (0.55, 0.45, 0.06), rough=0.6)
     # back wall of the fab bay (white wall panels) and wall base strip
-    L.box("fab_wall", (3.0, 4.0, 3.0), (40.0, 0.2, 6.0), (0.86, 0.89, 0.92), rough=0.8)
+    L.box("fab_wall", (3.0, 4.0, 3.0), (40.0, 0.2, 6.0), (0.70, 0.72, 0.75), rough=0.8)
     L.box("fab_wall_base", (3.0, 3.88, 0.15), (40.0, 0.05, 0.3), (0.30, 0.40, 0.55), rough=0.5)
-    # ceiling light panels (emissive; v1.1: emission 6 -> 1.5 to stop the bloom over-glow at draft)
+    # ceiling light panels (emissive; v1.1: emission 6 -> 1.5; v1.2: 0.8, below the bloom trigger at draft)
     for ix in range(-3, 6):
         for y in (-1.5, 1.5):
-            L.box("ceil_panel", (ix * 3.2, y, 4.7), (2.4, 0.5, 0.06), (1.0, 1.0, 1.0), emit=1.5)
+            L.box("ceil_panel", (ix * 3.2, y, 4.7), (2.4, 0.5, 0.06), (1.0, 0.97, 0.92), emit=0.8)
 
 
 def lighting():
     """Lab lighting rig (ASSET_light_lab) scaled 1.6, one per zone; visible only in its window (windows overlap to avoid pops)."""
     zones = [  # (x, y, windows)
         (-3.0, -0.5, [(0.0, 0.9)]), (1.0, -0.5, [(0.3, 1.5)]),
-        (X_FAU, -0.5, [(1.0, 2.0)]), (X_BOND, -0.5, [(1.6, 2.7)]), (X_SAW, -0.5, [(2.3, 3.5)]),
-        (X_CM, -0.8, [(3.0, 10.0)]),
+        (X_FAU, -0.5, [(1.0, 2.0)]), (X_BOND, -0.5, [(1.6, 2.7)]), (X_SAW, -0.5, [(2.3, 3.2)]),
+        (X_CM - 1.2, -2.6, [(3.0, 10.0)]),
     ]
     rigs = []
     # broad soft fill from the aisle side (camera side) so the machine fronts are not in shadow
     ld = bpy.data.lights.new("s05_fill", "AREA")
-    ld.energy = 250.0
+    ld.energy = 180.0
     ld.size = 9.0
     ld.size_y = 3.0
     fo = bpy.data.objects.new("s05_fill", ld)
     bpy.context.scene.collection.objects.link(fo)
     fo.location = (4.5, -4.5, 3.4)
     fo.rotation_euler = (math.radians(65), 0, 0)
+    # v1.2: warm soft key on the human set at the prober (contact shadows under the characters, warm clay look)
+    kd = bpy.data.lights.new("s05_key_people", "AREA")
+    kd.energy = 240.0
+    kd.size = 1.8
+    kd.color = (1.0, 0.88, 0.74)
+    ko = bpy.data.objects.new("s05_key_people", kd)
+    bpy.context.scene.collection.objects.link(ko)
+    ko.location = (8.6, -3.4, 3.6)
+    d = Vector((10.2, -0.6, 0.8)) - ko.location
+    ko.rotation_euler = d.to_track_quat("-Z", "Y").to_euler()
+    L.V(ko, 0, 6.6, 10.0)
     for x, y, wins in zones:
         r = asm.rig("lab", scale=1.6, loc=(x, y, 0.0))
         for o in r.objs:
             if o.type == "LIGHT" and o.data.type == "SPOT":
                 o.data.energy = 0.0
+        if x == X_CM - 1.2 and "p_energy" in r.root.keys():
+            r.root["p_energy"] = 0.6          # v1.2: prober zone was blown out (deck, paper, wall) under the compositor bloom
         for w in wins:
             asm.show(r, w[0], w[1])
         rigs.append(r)
@@ -241,15 +284,15 @@ def build_hero():
 # station dwell definitions: (name, x_station, y_station, work point, camera offset from the work point, lens, die offset)
 def dwell_table():
     return {
-        "oven": dict(w=(X_OVEN + 0.75, Y_OVEN, 0.95), cam=(0.05, -1.75, 0.80), lens=32.0, die=(-0.12, -0.95, -0.30)),
-        "fau": dict(w=(X_FAU + 0.0, Y_FAU, 0.95), cam=(0.10, -1.45, 0.65), lens=34.0, die=(-0.12, -0.65, -0.30)),
-        "bond": dict(w=(X_BOND + 0.15, Y_BOND, 1.08), cam=(0.10, -1.55, 0.50), lens=34.0, die=(-0.12, -0.70, -0.40)),
-        "saw": dict(w=(X_SAW, Y_SAW + 0.08, 1.08), cam=(0.10, -1.60, 0.50), lens=34.0, die=(-0.12, -0.80, -0.40)),
+        "oven": dict(w=(X_OVEN + 0.75, Y_OVEN, 0.95), cam=(0.05, -1.75, 0.80), lens=32.0, die=(-0.22, -0.60, -0.06)),
+        "fau": dict(w=(X_FAU + 0.0, Y_FAU, 0.95), cam=(0.10, -1.45, 0.65), lens=34.0, die=(-0.22, -0.45, -0.06)),
+        "bond": dict(w=(X_BOND + 0.15, Y_BOND, 1.08), cam=(0.10, -1.55, 0.50), lens=34.0, die=(-0.22, -0.50, -0.08)),
+        "saw": dict(w=(X_SAW, Y_SAW + 0.08, 1.08), cam=(0.10, -1.60, 0.50), lens=34.0, die=(-0.22, -0.55, -0.08)),
     }
 
 
 # dwell timings (arrive, leave) in scene seconds
-DW = {"oven": (0.75, 1.15), "fau": (1.45, 1.80), "bond": (2.10, 2.45), "saw": (2.75, 3.05)}
+DW = {"oven": (0.95, 1.20), "fau": (1.45, 1.80), "bond": (2.10, 2.45), "saw": (2.75, 3.05)}
 
 
 def hero_stops(z_rest):
@@ -294,7 +337,7 @@ def animate_hero(grp, pic, eic):
     for k, v in (("p_length", 0.014), ("p_width", 0.004)):
         if k in tr.root.keys():
             tr.root[k] = v
-    tr.root.scale = (0.35,) * 3
+    tr.root.scale = (0.12,) * 3          # v1.2: smaller trail (bloomed cyan blob under the subtitles)
     asm.show(tr, 0.3, 3.3)
     return grp
 
@@ -362,8 +405,8 @@ def build_line(hero_grp):
             if o.name.startswith("reflow_oven_line_zone_%02d_" % z):
                 st["cut_objs"].append(o)
     # heater elements visible in the trench: two emissive bars along X at the back wall and below the belt
-    L.box("oven_heater_back", (X_OVEN + 0.75, Y_OVEN + 0.36, 0.99), (1.12, 0.02, 0.05), (1.0, 0.4, 0.1), emit=3.0)
-    L.box("oven_heater_floor", (X_OVEN + 0.75, Y_OVEN - 0.02, 0.83), (1.12, 0.05, 0.015), (1.0, 0.4, 0.1), emit=2.5)
+    L.box("oven_heater_back", (X_OVEN + 0.75, Y_OVEN + 0.36, 0.99), (1.12, 0.02, 0.05), (1.0, 0.4, 0.1), emit=1.3)
+    L.box("oven_heater_floor", (X_OVEN + 0.75, Y_OVEN - 0.02, 0.83), (1.12, 0.05, 0.015), (1.0, 0.4, 0.1), emit=1.1)
 
     # ---- reverse-order motion (we run the line backwards), timed to the dwell windows
     asm.key_prop(oven.root, "p_board_x", 0.3, 5000.0)
@@ -411,21 +454,32 @@ def finish_cutaway(st):
         L._VIS[o] = [(10 ** 6, 10 ** 6 + 1)]
 
 
-# ------------------------------------------------------------------ CM300-style station: wafer-level test
-def bake_flight(obj, f0, f1, p0, p1, r0, r1, g=9.81):
-    """Ballistic flight in the parent (slot) frame from frame f0 to f1: x/y linear, z with gravity; the spin decays (drag) to the final angle."""
-    n = max(f1 - f0, 1)
-    T = n / 30.0
-    vz = (p1[2] - p0[2] + 0.5 * g * T * T) / T
+# ------------------------------------------------------------------ CM300-style station: wafer-level test (v1.2)
+# Per wafer w (t0 = 3.3 + 0.5 w, the wafer_slide SFX cues): slides in over the deck from the front-right (t0-0.08 .. t0+0.12),
+# lands on the (lifted) chuck, 8 stage hops one per frame from t0+0.17 (probe_tick cues), stage returns at t0+0.437
+# (stage_clunk cue), slides out to the front-left (t0+0.44 .. t0+0.62) while the next wafer comes in. The drawer stays closed.
+W_PERIOD = 0.5
+HOPS = 8
+W_IN = (0.56, -0.40, WAFER_LIFT + 0.03)        # slot frame (m): entry point, front-right above the deck
+W_OUT = (-0.56, -0.42, WAFER_LIFT + 0.04)      # exit point, front-left
+DIE_STATE = {"idle": (0.30, 0.32, 0.36, 0.0), "probe": (0.85, 0.85, 0.75, 0.12),
+             "pass": (0.10, 0.90, 0.25, 0.35), "fail": (0.80, 0.08, 0.08, 0.12)}   # 4th = glow (library values 0.6-1.0 bloomed)
+
+
+def wafer_times(w):
+    t0 = 3.3 + W_PERIOD * w
+    return dict(t0=t0, in0=t0 - 0.08, in1=t0 + 0.12, p0=t0 + 0.17, p1=t0 + 0.17 + HOPS / 30.0, out0=t0 + 0.44, out1=t0 + 0.62)
+
+
+def bake_slide(obj, t_a, t_b, p_a, p_b, rz_a, rz_b, ease_out):
+    fa, fb = F(t_a), F(t_b)
+    n = max(fb - fa, 1)
     for i in range(n + 1):
-        t = i / 30.0
         u = i / n
-        pos = (p0[0] + (p1[0] - p0[0]) * u, p0[1] + (p1[1] - p0[1]) * u, p0[2] + vz * t - 0.5 * g * t * t)
-        k = (1.0 - u) ** 2
-        wob = 0.06 * math.sin(2 * PI * 1.5 * u) * (1.0 - u)
-        rot = (r1[0] + (r0[0] - r1[0]) * k + wob, r1[1] + wob * 0.5, r1[2] + (r0[2] - r1[2]) * k)
-        kframe(obj, f0 + i, loc=pos, rot=rot)
-    linear_all(obj)
+        e = 1.0 - (1.0 - u) ** 3 if ease_out else u ** 2.2
+        pos = lerp3(p_a, p_b, e)
+        tilt = 0.12 * (1.0 - e) if ease_out else 0.12 * e
+        kframe(obj, fa + i, loc=pos, rot=(tilt, 0.0, rz_a + (rz_b - rz_a) * e))
 
 
 def build_cm(st):
@@ -433,7 +487,10 @@ def build_cm(st):
     asm.place(cm.root, (X_CM, Y_CM, 0))
     asm.show(cm, 2.2, 10.0)
     st["cm"] = cm
-    # probe card, sub-scale, tips at the probe point (HOOK_probe_center of the card on the station's hook)
+    # v1.2: the four positioners and the microscope barrel sit in the plane of the lifted wafer: hidden (see devlog)
+    st["cm_hidden"] = [o for o in cm.objs if any(k in o.name for k in ("_pos1_", "_pos2_", "_pos3_", "_pos4_", "scope_barrel", "scope_lens",
+                                                                       "scope_ring_light", "scope_flange"))]
+    asm.key_prop(cm.root, "p_drawer", 0.0, 0.0, "CONSTANT")
     pc = asm.append("fab_test/probe_card")
     try:
         pc.variant("full_needles", False)
@@ -441,7 +498,7 @@ def build_cm(st):
         pass
     bpy.context.view_layer.update()
     probe = world_of(cm.hook("probe_center")).translation + Vector((0, 0, WAFER_LIFT))
-    pc.root.location = probe
+    pc.root.location = probe + Vector((0, 0, 0.02))
     pc.root.scale = (PROBE_CARD_S,) * 3
     asm.show(pc, 3.0, 5.0)
     st["pc"] = pc
@@ -449,45 +506,22 @@ def build_cm(st):
     base = asm.append("fab_test/wafer_300mm_siph")
     wafers = [base, asm.clone(base, "wafer_siph_2"), asm.clone(base, "wafer_siph_3")]
     slot = cm.hook("wafer_slot")
-    idle = (0.50, 0.52, 0.56, 0.0)
-    gl = D.STATES["probing_glow"]
-    states = {"pass": D.STATES["pass"], "fail": D.STATES["fail"]}
-
-    P = 0.5
-    HOPS = 8
     hop_frames = []
     for w, a in enumerate(wafers):
+        tt = wafer_times(w)
         a.root.parent = slot
         a.root.matrix_parent_inverse.identity()
-        t0 = 3.3 + w * P
-        t_land = t0 + 0.10
-        t_close0, t_close1 = t0 + 0.07, t0 + 0.17
-        t_probe0 = t0 + 0.17
-        t_probe1 = t_probe0 + HOPS / 30.0
-        t_open0, t_open1 = t_probe1, t_probe1 + 0.10
-        t_out1 = t_open1 + 0.13
-        asm.show(a, t0 - 0.05, min(t_out1 + 0.05, 4.8))
-        spin0 = 5.0 * (-1) ** w          # rad: decaying spin on the way in (drag), flat at landing
-        bake_flight(a.root, F(t0), F(t_land), (0.45, -0.95, 0.38), (0.0, 0.0, 0.0), (0.25, 0.0, spin0), (0.0, 0.0, 0.0))
-        asm.key_loc(a.root, t_close0, (0.0, 0.0, 0.0), rot=(0.0, 0.0, 0.0), interp="LINEAR")
-        asm.key_loc(a.root, t_close1, (0.0, 0.0, WAFER_LIFT), rot=(0.0, 0.0, 0.0), interp="LINEAR")
-        asm.key_loc(a.root, t_open0, (0.0, 0.0, WAFER_LIFT), rot=(0.0, 0.0, 0.0), interp="LINEAR")
-        asm.key_loc(a.root, t_open1, (0.0, 0.0, 0.0), rot=(0.0, 0.0, 0.0), interp="LINEAR")
-        bake_flight(a.root, F(t_open1), F(t_out1), (0.0, 0.0, 0.0), (-0.55, -0.95, 0.42), (0.0, 0.0, 0.0), (-0.25, 0.0, -spin0))
-        # drawer: open before the first wafer, closes after landing, opens after probing
-        if w == 0:
-            asm.key_prop(cm.root, "p_drawer", 2.9, 1.0, "LINEAR")
-        asm.key_prop(cm.root, "p_drawer", t_close0, 1.0, "LINEAR")
-        asm.key_prop(cm.root, "p_drawer", t_close1, 0.0, "LINEAR")
-        asm.key_prop(cm.root, "p_drawer", t_open0, 0.0, "LINEAR")
-        asm.key_prop(cm.root, "p_drawer", t_open1, 1.0, "LINEAR")
-
-        # die map: serpentine bands, hops in stage mm
+        asm.show(a, tt["in0"] - 0.04, tt["out1"] + 0.04)
+        spin = 1.4 * (-1) ** w
+        bake_slide(a.root, tt["in0"], tt["in1"], W_IN, (0.0, 0.0, WAFER_LIFT), spin, 0.0, True)
+        kframe(a.root, F(tt["out0"]), loc=(0.0, 0.0, WAFER_LIFT), rot=(0.0, 0.0, 0.0))
+        bake_slide(a.root, tt["out0"], tt["out1"], (0.0, 0.0, WAFER_LIFT), W_OUT, 0.0, -spin, False)
+        linear_all(a.root)
+        # die map: serpentine bands coloured as the stage steps; exactly 1 in 10 dies pass per wafer
         dies = sorted([o for o in a.objs if "die_probe_order" in o], key=lambda o: o["die_probe_order"])
-        n = len(dies)
         green = D.pass_set_exact_tenth(dies, seed=7 + 13 * w)
         is_green = {o.name: (i in green) for i, o in enumerate(dies)}
-        print('WAFER', w, 'dies', n, 'green', len(green), 'fraction %.4f' % (len(green) / n))
+        print("WAFER", w, "dies", len(dies), "green", len(green))
         rows = sorted({o["die_row"] for o in dies})
         nb = HOPS // 2
         band = {r: min(nb - 1, int(nb * i / len(rows))) for i, r in enumerate(rows)}
@@ -498,35 +532,34 @@ def build_cm(st):
             first = left if b % 2 == 0 else (not left)
             groups[2 * b + (0 if first else 1)].append(o)
         for o in dies:
-            o.color = idle
-            o.keyframe_insert("color", frame=F(t0 - 0.05))
-        stage_xy = [(0.0, 0.0)]
+            o.color = DIE_STATE["idle"]
+            o.keyframe_insert("color", frame=F(tt["in0"] - 0.05))
+        stage_xy = []
         for g, grp_dies in enumerate(groups):
-            f = F(t_probe0) + g
+            f = F(tt["p0"]) + g
             hop_frames.append(f)
             cx = sum(o["die_x_mm"] for o in grp_dies) / max(len(grp_dies), 1)
             cy = sum(o["die_y_mm"] for o in grp_dies) / max(len(grp_dies), 1)
             stage_xy.append((-0.7 * cx, -0.7 * cy))
             for o in grp_dies:
-                o.color = gl
+                o.color = DIE_STATE["probe"]
                 o.keyframe_insert("color", frame=f)
-                o.color = states["pass"] if is_green[o.name] else states["fail"]
+                o.color = DIE_STATE["pass"] if is_green[o.name] else DIE_STATE["fail"]
                 o.keyframe_insert("color", frame=f + 1)
         constant_fcurves_for(dies)
-        asm.key_prop(cm.root, "p_stage_x", t_land, 0.0, "CONSTANT")
-        asm.key_prop(cm.root, "p_stage_y", t_land, 0.0, "CONSTANT")
+        asm.key_prop(cm.root, "p_stage_x", tt["in0"], 0.0, "CONSTANT")
+        asm.key_prop(cm.root, "p_stage_y", tt["in0"], 0.0, "CONSTANT")
         for g in range(HOPS):
-            t = t_probe0 + g / 30.0
-            asm.key_prop(cm.root, "p_stage_x", t, max(-100.0, min(100.0, stage_xy[g + 1][0])), "CONSTANT")
-            asm.key_prop(cm.root, "p_stage_y", t, max(-120.0, min(120.0, stage_xy[g + 1][1])), "CONSTANT")
-        asm.key_prop(cm.root, "p_stage_x", t_open0, 0.0, "CONSTANT")
-        asm.key_prop(cm.root, "p_stage_y", t_open0, 0.0, "CONSTANT")
-        for g in range(HOPS):
-            t = t_probe0 + g / 30.0
-            asm.key_loc(pc.root, t, tuple(Vector(probe)), interp="CONSTANT")
-            asm.key_loc(pc.root, t + 0.5 / 30.0, tuple(Vector(probe) + Vector((0, 0, 0.006))), interp="CONSTANT")
-        asm.key_loc(pc.root, t_probe1 + 0.02, tuple(Vector(probe) + Vector((0, 0, 0.012))), interp="CONSTANT")
-    asm.key_loc(pc.root, 2.9, tuple(Vector(probe) + Vector((0, 0, 0.012))), interp="CONSTANT")
+            t = tt["p0"] + g / 30.0
+            asm.key_prop(cm.root, "p_stage_x", t, max(-100.0, min(100.0, stage_xy[g][0])), "CONSTANT")
+            asm.key_prop(cm.root, "p_stage_y", t, max(-120.0, min(120.0, stage_xy[g][1])), "CONSTANT")
+        asm.key_prop(cm.root, "p_stage_x", tt["p1"], 0.0, "CONSTANT")
+        asm.key_prop(cm.root, "p_stage_y", tt["p1"], 0.0, "CONSTANT")
+        # probe card: touches down for the hops, lifts 20 mm while wafers are exchanged
+        asm.key_loc(pc.root, tt["p0"] - 2 / 30.0, tuple(probe + Vector((0, 0, 0.02))), interp="LINEAR")
+        asm.key_loc(pc.root, tt["p0"], tuple(probe), interp="LINEAR")
+        asm.key_loc(pc.root, tt["p1"], tuple(probe), interp="LINEAR")
+        asm.key_loc(pc.root, tt["p1"] + 2 / 30.0, tuple(probe + Vector((0, 0, 0.02))), interp="LINEAR")
     st["wafers"] = wafers
     st["hop_frames"] = hop_frames
     return cm, probe
@@ -537,13 +570,16 @@ def constant_fcurves_for(objs):
         constant_fcurves(o)
 
 
-# ------------------------------------------------------------------ screen with the ring spectrum
+# ------------------------------------------------------------------ monitor: 10 rings measured one per 0.2 s, die strip with 1 green
+MON_T0, MON_T1 = 4.8, 8.2
+
+
 def build_spectrum(cm):
-    f0, f1 = F(4.8), F(7.0)
-    nsp = f1 - f0
-    sdir = os.path.join(TEX, "spec_s5")
-    T.spectrum_sequence(sdir, "spec_s5", nsp, n_traces=30, hold_from=0.9, seed=5)
-    first = os.path.join(sdir, "spec_s5_0001.png")
+    f0 = F(MON_T0)
+    nsp = F(MON_T1) - f0
+    sdir = os.path.join(TEX, "mon_s5")
+    s05_tex.monitor_sequence(sdir, "mon_s5", nsp)
+    first = os.path.join(sdir, "mon_s5_0001.png")
     scr = [o for o in cm.objs if o.name == "probe_station_cm300_style_screen"][0]
     m = scr.material_slots[0].material
     nt = m.node_tree
@@ -556,8 +592,7 @@ def build_spectrum(cm):
     n.image_user.frame_offset = 0
     n.image_user.use_auto_refresh = True
     n.interpolation = "Closest"
-    # v1.1 fix: the screen mesh UV has u along local +Z and v along local -X (image was shown rotated 90 deg CCW).
-    # Image coordinates u' = 1 - v (along +X, to the right), v' = u (along +Z, up).
+    # v1.1 fix kept: the screen mesh UV has u along local +Z and v along local -X; image u' = 1 - v, v' = u (dips point down)
     tc = nt.nodes["Texture Coordinate"]
     sep = nt.nodes.new("ShaderNodeSeparateXYZ")
     inv = nt.nodes.new("ShaderNodeMath")
@@ -575,92 +610,132 @@ def build_spectrum(cm):
     mix.default_value = 1.0
     mix.keyframe_insert("default_value", frame=f0)
     constant_fcurves(nt)
-    # screen emission: the library emission is bright; keep it moderate against the bloom
-    for nm in ("Emission",):
-        if nm in nt.nodes:
-            nt.nodes[nm].inputs["Strength"].default_value = 1.2
+    if "Emission" in nt.nodes:
+        nt.nodes["Emission"].inputs["Strength"].default_value = 1.1
     return scr
 
 
-# ------------------------------------------------------------------ human scale: Gary works at the prober, Manager at its left
-GARY_POS = (X_CM + 0.70, -1.25)
-MGR_POS = (X_CM - 1.45, -1.25)
-GARY_FACE0 = PI                     # facing +Y (toward the prober), back to the camera
-GARY_FACE1 = 2 * PI - 0.93          # facing (-0.8, -0.6): toward the Manager and the camera (bullet-hole axis seen obliquely)
+# ------------------------------------------------------------------ human scale: Gary breaks the news at the prober, Manager shoots
+GARY_POS = (X_CM + 1.35, -1.00)      # right of the prober (clear of the shelf and cabinet when he falls back)
+MGR_POS = (X_CM - 0.45, -1.35)
+GARY_FACE_WORK = PI                  # facing +Y (keyboard), back to the camera
+GARY_FACE_NEWS = 2 * PI - 0.20       # facing the camera, 11 deg toward the Manager (hole 5 axis within ~15 deg of the view: see-through)
+T_SHOT = 9.1                         # shotgun SFX cue 49.1 film
+GUN_SPEED = 1.25                     # gun_raise_aim_fire: shot at action frame 44 -> start = T_SHOT - 44/30/GUN_SPEED
+FALL_SPEED = 1.5                     # shot_hit_fall after the 4-frame hit-stop (ground contact at about 9.63 s)
 
 
 def build_cast():
-    g = asm.append("characters/gary", actions=True)
-    m = asm.append("characters/manager", actions=True)
-    asm.place(g.root, (GARY_POS[0], GARY_POS[1], 0.0), yaw=GARY_FACE0)
-    asm.place(m.root, (MGR_POS[0], MGR_POS[1], 0.0), yaw=PI / 2)           # faces +X, right side toward the camera
+    g = asm.append("characters/gary_v2", actions=True)
+    m = asm.append("characters/manager_v2", actions=True)
+    asm.place(g.root, (GARY_POS[0], GARY_POS[1], 0.0), yaw=GARY_FACE_WORK)
+    yaw_m = asm.yaw_to((MGR_POS[0], MGR_POS[1], 0), (GARY_POS[0], GARY_POS[1], 0))
+    asm.place(m.root, (MGR_POS[0], MGR_POS[1], 0.0), yaw=yaw_m)
     for a in (g, m):
         asm.show(a, 6.6, 10.0)
-    asm.play(g, "thinking", 6.6, hold=False, repeat=2)
-    asm.play(g, "topple_back", 9.1, speed=60.0 / 27.0)
-    asm.play(m, "hold_printout", 6.6, hold=False, repeat=2)
-    asm.play(m, "aim_gun", 8.4, speed=36.0 / 21.0)
-    # Gary turns from the prober to the Manager when the Manager raises the gun
-    asm.key_loc(g.root, 0.0, (GARY_POS[0], GARY_POS[1], 0.0), rot=(0, 0, GARY_FACE0), interp="LINEAR")
-    asm.key_loc(g.root, 8.25, (GARY_POS[0], GARY_POS[1], 0.0), rot=(0, 0, GARY_FACE0), interp="BEZIER")
-    asm.key_loc(g.root, 8.85, (GARY_POS[0], GARY_POS[1], 0.0), rot=(0, 0, GARY_FACE1), interp="BEZIER")
+    gp = (GARY_POS[0], GARY_POS[1], 0.0)
+    # Gary: thinks at the monitor, turns left 180 to face the Manager and the camera (motion_v2 turn with yaw hand-off),
+    # holds the printout up, is shot
+    asm.key_loc(g.root, 0.0, gp, yaw=GARY_FACE_WORK, interp="LINEAR")
+    M2.apply(g, "thinking", 6.6, hold=False, repeat=1.0, face=False)
+    st_turn = M2.apply(g, "turn_left_180", 7.2, speed=1.4, hold=False, face=False)
+    fe = int(round(st_turn.frame_end))
+    # settle 11 deg back toward the Manager (eased object yaw after the hand-off)
+    g.root.rotation_euler = (0, 0, 2.0 * PI)
+    g.root.keyframe_insert("rotation_euler", frame=fe + 2, index=2)
+    g.root.rotation_euler = (0, 0, GARY_FACE_NEWS)
+    g.root.keyframe_insert("rotation_euler", frame=fe + 13, index=2)
+    st_hp = asm.play(g, "hold_printout", (fe + 1 - 1) / 30.0, hold=True)
+    st_hp.blend_in = 3
+    M2.apply(g, "shot_hit_fall", T_SHOT, hold=False, end_frame=4, face=False, layer="fallA")
+    M2.apply(g, "shot_hit_fall", T_SHOT + 4 / 30.0, speed=FALL_SPEED, start_frame=4, hold=True, face=False, layer="fallB")
+    # Manager: low-ready with the gun while Gary talks, then raise, aim, fire at T_SHOT (action frame 44)
+    M2.apply(m, "gun_ready", 6.6, hold=False, repeat=2.0, face=False)
+    M2.apply(m, "gun_raise_aim_fire", T_SHOT - 44 / 30.0 / GUN_SPEED, speed=GUN_SPEED, hold=True, face=False)
     return g, m
 
 
-def printout_drop(pr, m):
-    """At 8.4 s the Manager lets go of the printout: a linked copy falls from the hand pose to the floor."""
+def ramp(root, prop, keys):
+    """keys: [(t, value, interp)]"""
+    for t, v, it in keys:
+        asm.key_prop(root, prop, t, v, it)
+
+
+def drop_copy(pr, t0, land, name):
+    """At t0 a linked copy of the printout leaves the hand pose and flutters to the floor at `land` (scene s)."""
     scn = bpy.context.scene
-    scn.frame_set(F(8.4))
+    scn.frame_set(F(t0))
     bpy.context.view_layer.update()
     W = pr.root.matrix_world.copy()
     scn.frame_set(1)
-    cp = asm.clone(pr, "wafer_map_printout_dropped")
+    cp = asm.clone(pr, name)
     cp.root.parent = None
+    cp.root.constraints.clear()
+    cp.root.matrix_parent_inverse.identity()
     t = L._text("1 / 10", 0.05, (0.1, 0.1, 0.1), (0, -0.118, 0.001), cp.root, "CENTER", "CENTER")
-    loc = W.translation
-    eul = W.to_euler()
-    asm.key_loc(cp.root, 8.4, (loc.x, loc.y, loc.z), rot=tuple(eul), interp="BEZIER")
-    asm.key_loc(cp.root, 8.7, (loc.x - 0.15, loc.y - 0.3, 0.004), rot=(0.0, 0.0, 0.5), interp="CONSTANT")
-    asm.show(cp, 8.4, 10.0)
-    L.V(t, 0, 8.4, 10.0)
+    loc, eul = W.translation, W.to_euler()
+    asm.key_loc(cp.root, t0, (loc.x, loc.y, loc.z), rot=tuple(eul), interp="BEZIER")
+    asm.key_loc(cp.root, t0 + 0.2, (loc.x - 0.25, loc.y - 0.2, loc.z * 0.6), rot=(eul.x + 0.6, eul.y, eul.z + 0.8), interp="BEZIER")
+    asm.key_loc(cp.root, land, (loc.x - 0.45, loc.y - 0.35, 0.004), rot=(0.0, 0.0, 0.9), interp="CONSTANT")
+    asm.show(cp, t0, 10.0)
+    L.V(t, 0, t0, 10.0)
 
 
 def build_props_and_fx(g, m):
     pr = asm.append("props/office_gags", only=["ASSET_wafer_map_printout"])
     rot_pr = Matrix(((0, 0, 1), (0, 1, 0), (-1, 0, 0))).to_euler()
-    asm.attach(pr.root, m.hook("paper_R"), offset=(0, 0.2, 0), rot=tuple(rot_pr))
+    # v1.2: the sheet follows Gary's right hand and turns its face (local +Z, text below the map) to the camera
+    pr.root.parent = None
+    pr.root.location = (0.0, 0.0, 0.10)
+    pr.root.rotation_euler = rot_pr
+    c = pr.root.constraints.new("COPY_LOCATION")
+    c.target = g.hook("hand_R")
+    c.use_offset = True
+    c = pr.root.constraints.new("TRACK_TO")
+    c.target = L.CAM
+    c.track_axis = "TRACK_Z"
+    c.up_axis = "UP_Y"
     txt = L._text("1 / 10", 0.05, (0.1, 0.1, 0.1), (0, -0.118, 0.001), pr.root, "CENTER", "CENTER")
-    asm.show(pr, 6.6, 8.4)
-    L.V(txt, 0, 6.6, 8.4)
-    printout_drop(pr, m)
+    for o in pr.objs:   # v1.2: paper white 1.0 bloomed under the key light; scene copy of the material toned to 0.8
+        for sl in getattr(o, "material_slots", []):
+            mt = sl.material
+            if mt and mt.use_nodes and "Principled BSDF" in mt.node_tree.nodes:
+                bc = mt.node_tree.nodes["Principled BSDF"].inputs["Base Color"]
+                if not bc.is_linked and min(bc.default_value[:3]) > 0.85:
+                    bc.default_value = tuple(v * 0.8 for v in bc.default_value[:3]) + (1.0,)
+    asm.show(pr, 6.6, T_SHOT)
+    L.V(txt, 0, 6.6, T_SHOT)
+    drop_copy(pr, T_SHOT, T_SHOT + 0.45, "wafer_map_printout_dropped")
     sg = asm.append("props/shotgun")
-    rot_gun = Matrix(((0, 0, 1), (0, -1, 0), (1, 0, 0))).to_euler()
-    asm.attach(sg.root, m.hook("gun_grip_R"), offset=(0, 0, 0), rot=tuple(rot_gun))
-    asm.show(sg, 8.35, 10.0)
-    # holes: earlier holes at their healed radii, hole 5 at 9.1 s (schedule unchanged from v1.0)
+    for v, on in (("clay", True), ("wood", False)):
+        try:
+            sg.variant(v, on)
+        except KeyError:
+            pass
+    asm.attach(sg.root, m.hook("gun_grip_R"), offset=(0, 0, 0), rot=(0, 0, PI))   # motion_v2 convention (S1/S2)
+    asm.show(sg, 6.6, 10.0)
+    # holes: earlier holes at their healed radii, hole 5 opens at the bang
     key_hole(g.root, "p_hole_1_radius", 9.2)
     key_hole(g.root, "p_hole_2_radius", 19.2)
     key_hole(g.root, "p_head_hole_radius", 28.95)
     key_hole(g.root, "p_hole_4_radius", 38.9)
     asm.key_prop(g.root, "p_hole_5_radius", 0.0, 0.0, "CONSTANT")
-    asm.key_prop(g.root, "p_hole_5_radius", 9.1, 1.0, "CONSTANT")
-    asm.key_prop(g.root, "p_expr_sweating", 6.6, 0.0)
-    asm.key_prop(g.root, "p_expr_sweating", 7.6, 1.0)
-    asm.key_prop(g.root, "p_expr_sweating", 8.4, 1.0)
-    asm.key_prop(g.root, "p_expr_dread", 8.4, 0.0)
-    asm.key_prop(g.root, "p_expr_dread", 8.9, 1.0)
-    asm.key_prop(g.root, "p_expr_dead_eyed", 9.1, 0.0, "CONSTANT")
-    asm.key_prop(g.root, "p_expr_dead_eyed", 9.2, 1.0, "CONSTANT")
-    asm.key_prop(m.root, "p_anger", 6.6, 0.2)
-    asm.key_prop(m.root, "p_anger", 8.4, 0.7)
-    asm.key_prop(m.root, "p_anger", 9.1, 1.0)
+    asm.key_prop(g.root, "p_hole_5_radius", T_SHOT, 1.0, "CONSTANT")
+    # faces (face actions off; keyed here)
+    ramp(g.root, "p_expr_worried", [(0.0, 0.0, "LINEAR"), (7.3, 0.0, "LINEAR"), (7.7, 1.0, "LINEAR"), (T_SHOT - 1 / 30, 1.0, "CONSTANT"), (T_SHOT, 0.0, "CONSTANT")])
+    ramp(g.root, "p_expr_sweating", [(0.0, 0.0, "LINEAR"), (7.6, 0.0, "LINEAR"), (8.2, 1.0, "LINEAR"), (T_SHOT - 1 / 30, 1.0, "CONSTANT"), (T_SHOT, 0.0, "CONSTANT")])
+    ramp(g.root, "p_expr_dread", [(0.0, 0.0, "LINEAR"), (8.35, 0.0, "LINEAR"), (8.75, 1.0, "LINEAR"), (T_SHOT - 1 / 30, 1.0, "CONSTANT"), (T_SHOT, 0.0, "CONSTANT")])
+    ramp(g.root, "p_expr_shock", [(0.0, 0.0, "CONSTANT"), (T_SHOT, 1.0, "LINEAR"), (9.4, 1.0, "LINEAR"), (9.55, 0.0, "LINEAR")])
+    ramp(g.root, "p_expr_dead_eyed", [(0.0, 0.0, "CONSTANT"), (9.4, 0.0, "LINEAR"), (9.55, 1.0, "LINEAR")])
+    ramp(m.root, "p_anger", [(6.6, 0.25, "LINEAR"), (7.9, 0.4, "LINEAR"), (8.5, 0.9, "LINEAR"), (T_SHOT, 1.0, "LINEAR")])
+    ramp(m.root, "p_flush", [(0.0, 0.0, "LINEAR"), (7.9, 0.0, "LINEAR"), (8.6, 0.8, "LINEAR")])
     for side in ("L", "R"):
-        asm.fx("muzzle_flash", 9.1, parent=sg.hook("muzzle_" + side), rot=(-PI / 2, 0, 0), scale=1.0, dur=0.12)
-    asm.fx("smoke_ring", 9.15, parent=sg.hook("muzzle_R"), rot=(-PI / 2, 0, 0), scale=0.5, dur=0.9)
-    return sg
+        asm.fx("muzzle_flash", T_SHOT, parent=sg.hook("muzzle_" + side), rot=(-PI / 2, 0, 0), scale=0.8, dur=0.12)
+    asm.fx("smoke_ring", T_SHOT + 0.05, parent=sg.hook("muzzle_R"), rot=(-PI / 2, 0, 0), scale=0.5, dur=0.9)
+    return sg, pr
 
 
-# ------------------------------------------------------------------ effects: dust motes, shimmer, sparks, optical test beams, probe glow
+# ------------------------------------------------------------------ effects: dust motes, shimmer, sparks, optical test beams, probe tip
 def rod(name, p0, p1, radius, color, emit):
     a, b = Vector(p0), Vector(p1)
     d = b - a
@@ -674,14 +749,13 @@ def rod(name, p0, p1, radius, color, emit):
 
 
 def build_effects(st, probe):
-    # clean-room dust motes: tiny emissive specks drifting slowly through the line volume (deterministic seed, linear drift)
     rnd = random.Random(55)
     bpy.ops.mesh.primitive_ico_sphere_add(subdivisions=1, radius=0.0045, location=(0, 0, -50))
     proto = bpy.context.active_object
-    proto.data.materials.append(L.mat((0.95, 0.97, 1.0), emit=1.2))
+    proto.data.materials.append(L.mat((0.95, 0.97, 1.0), emit=0.5))   # v1.2: 1.2 -> 0.5, 90 -> 45 motes (speckle)
     mesh = proto.data
     bpy.data.objects.remove(proto)
-    for i in range(90):
+    for i in range(45):
         o = bpy.data.objects.new("mote_%02d" % i, mesh)
         bpy.context.scene.collection.objects.link(o)
         p0 = Vector((rnd.uniform(-4.0, 11.5), rnd.uniform(-2.4, 0.2), rnd.uniform(0.5, 2.4)))
@@ -690,69 +764,68 @@ def build_effects(st, probe):
             w = 0.03 * math.sin(t * 1.3 + i)
             kframe(o, F(t), loc=tuple(p0 + v * t + Vector((w, 0, w * 0.5))))
         linear_all(o)
-    # heat shimmer over the oven cutaway (plane faces -Y, between camera and the trench)
+        L.V(o, 0, 0.0, 6.9)
     asm.fx("heat_shimmer", 0.6, loc=(X_OVEN + 0.75, Y_OVEN - 0.85, 1.12), rot=(0, 0, 0), scale=0.8, dur=0.9)
-    # sparks: bonder head contact and the dicing blade
-    asm.fx("sparks_burst", 2.12, loc=(X_BOND + 0.15, Y_BOND, 1.08), scale=0.3, dur=0.5, intensity=0.8)
-    asm.fx("sparks_burst", 2.78, loc=(X_SAW, Y_SAW + 0.06, 1.09), scale=0.3, dur=0.5, intensity=0.8)
-    asm.fx("sparks_burst", 3.0, loc=(X_SAW, Y_SAW + 0.06, 1.09), scale=0.3, dur=0.5, intensity=0.8)
-    # optical test: two fibers (positioner arms) to the probe point, cyan beam; pulsing probe-tip glow on every stage hop
+    # sparks at the bonder contact and the dicing blade (SFX cues 42.12, 42.78, 43.0 kept)
+    asm.fx("sparks_burst", 2.12, loc=(X_BOND + 0.15, Y_BOND, 1.08), scale=0.25, dur=0.5, intensity=0.5)
+    asm.fx("sparks_burst", 2.78, loc=(X_SAW, Y_SAW + 0.06, 1.09), scale=0.25, dur=0.5, intensity=0.5)
+    asm.fx("sparks_burst", 3.0, loc=(X_SAW, Y_SAW + 0.06, 1.09), scale=0.25, dur=0.5, intensity=0.5)
+    # optical test: two cyan fibers from above to the probe point (laser_zap cue 43.4); small tip flash on every stage hop
     px, py, pz = probe
-    cx, cy = X_CM, Y_CM
-    beams = []
     for sx in (-1, 1):
-        beams.append(rod("test_fiber_%d" % sx, (cx + 0.2 * sx, cy - 0.05, 1.10), (px + 0.004 * sx, py, pz + 0.006), 0.0012, (0.2, 0.9, 1.0), emit=4.0))
-    for o in beams:
+        o = rod("test_fiber_%d" % sx, (px + 0.16 * sx, py + 0.05, pz + 0.22), (px + 0.004 * sx, py, pz + 0.008), 0.0012, (0.2, 0.9, 1.0), emit=1.6)
         L.V(o, 0, 3.4, 4.8)
-    bpy.ops.mesh.primitive_ico_sphere_add(subdivisions=2, radius=0.012, location=(px, py, pz + 0.003))
+    bpy.ops.mesh.primitive_ico_sphere_add(subdivisions=2, radius=0.005, location=(px, py, pz + 0.003))
     tip = bpy.context.active_object
-    tip.name = "probe_tip_glow"
-    tip.data.materials.append(L.mat((1.0, 0.85, 0.3), emit=6.0))
+    tip.name = "probe_tip_flash"
+    tip.data.materials.append(L.mat((1.0, 0.95, 0.8), emit=2.0))
     L.V(tip, 0, 3.4, 4.8)
     kframe(tip, 1, scale=(0.0, 0.0, 0.0))
     for f in st["hop_frames"]:
         kframe(tip, f, scale=(1.0, 1.0, 1.0))
-        kframe(tip, f + 1, scale=(0.35, 0.35, 0.35))
-        kframe(tip, f + 2, scale=(0.0, 0.0, 0.0))
-    linear_all(tip)
+        kframe(tip, f + 1, scale=(0.0, 0.0, 0.0))
+    constant_fcurves(tip)
 
 
 # ------------------------------------------------------------------ cameras, labels, captions
 def camera_stops(probe, scr):
     tab = dwell_table()
-    z_rest = 0.62 + 3.3e-3 * HERO_S + 0.004
     stops = []  # (t, cam, tgt, lens)
+    # 0.0-0.5 calm (transition T4 window): engine shot with a slow push; the die is yanked out of frame at 0.3
     stops.append((0.0, (X_ENG, -4.6, 1.5), (X_ENG, 0.0, 0.85), 28.0))
-    stops.append((0.3, (X_ENG, -4.6, 1.5), (X_ENG, 0.0, 0.85), 28.0))
+    stops.append((0.5, (X_ENG + 0.05, -4.35, 1.47), (X_ENG + 0.05, 0.0, 0.85), 28.0))
     for k in ("oven", "fau", "bond", "saw"):
         d = tab[k]
         w = Vector(d["w"])
         c = w + Vector(d["cam"])
-        c2 = w + Vector(d["cam"]) * 0.9 + Vector((0.07, 0.0, -0.02))      # slow push-in and drift during the dwell
+        c2 = w + Vector(d["cam"]) * 0.9 + Vector((0.07, 0.0, -0.02))
         ta, tl = DW[k]
         stops.append((ta, tuple(c), tuple(w), d["lens"]))
         stops.append((tl, tuple(c2), tuple(w), d["lens"]))
-    px, py, pz = probe
-    stops.append((3.5, (px, py - 1.5, pz + 1.05), (px, py - 0.3, pz), 50.0))
-    stops.append((4.8, (px + 0.05, py - 1.4, pz + 1.0), (px, py - 0.3, pz), 50.0))
+    P = Vector(probe)
+    # prober: front-above, wafers enter from the front-right and leave front-left
+    stops.append((3.4, tuple(P + Vector((0.08, -0.80, 1.10))), tuple(P + Vector((0.0, -0.24, 0.0))), 32.0))
+    stops.append((4.8, tuple(P + Vector((0.06, -0.74, 1.02))), tuple(P + Vector((0.0, -0.24, 0.0))), 32.0))
     bpy.context.view_layer.update()
     vs = [scr.matrix_world @ v.co for v in scr.data.vertices]
     sc = sum(vs, Vector((0, 0, 0))) / len(vs)
-    stops.append((5.4, (sc.x + 0.50, sc.y - 0.75, sc.z + 0.10), (sc.x, sc.y, sc.z), 40.0))
-    stops.append((7.0, (sc.x + 0.42, sc.y - 0.65, sc.z + 0.08), (sc.x, sc.y, sc.z), 40.0))
-    # pull back to the wide shot with Gary at the prober and the Manager at the left
-    mid = ((MGR_POS[0] + GARY_POS[0]) / 2.0, -1.2, 1.35)
-    stops.append((7.9, (mid[0] + 0.1, -4.5, 1.45), (mid[0] + 0.1, -1.2, 1.35), 28.0))
-    stops.append((8.5, (mid[0] + 0.2, -4.3, 1.45), (mid[0] + 0.2, -1.2, 1.35), 28.0))
-    # medium shot at the hit (9.1 s): Gary's torso and the muzzle at the left edge, holes large enough to read
-    stops.append((9.0, (GARY_POS[0] - 0.7, -3.0, 1.35), (GARY_POS[0] - 0.5, -1.25, 1.25), 34.0))
-    stops.append((9.35, (GARY_POS[0] - 0.65, -2.95, 1.4), (GARY_POS[0] - 0.4, -1.2, 1.2), 34.0))
-    # final: rise to look down at the body (hole 5 through the belly reads against the floor)
-    stops.append((10.0, (GARY_POS[0] + 0.5, -1.25, 2.1), (GARY_POS[0] + 0.7, -0.75, 0.1), 32.0))
+    stops.append((5.4, tuple(sc + Vector((0.22, -0.295, 0.02))), tuple(sc + Vector((0.0, 0.0, -0.035))), 22.0))
+    stops.append((7.0, tuple(sc + Vector((0.20, -0.27, 0.02))), tuple(sc + Vector((0.0, 0.0, -0.035))), 22.0))
+    stops.append((7.35, (sc.x - 0.05, sc.y - 0.95, sc.z + 0.55), (sc.x - 0.10, sc.y - 0.4, sc.z - 0.2), 24.0))
+    # two-shot: Manager left, Gary right, about 45 percent of frame height, feet and floor in frame
+    mx = (MGR_POS[0] + GARY_POS[0]) / 2.0
+    stops.append((7.9, (mx + 0.10, -4.35, 1.45), (mx + 0.10, -1.0, 1.02), 30.0))
+    stops.append((9.08, (mx + 0.15, -4.10, 1.45), (mx + 0.15, -1.0, 1.02), 30.0))
+    # after the hit-stop: crane up and right onto Gary on the floor (hole 5 seen from above), calm from 9.55
+    stops.append((9.16, (mx + 0.15, -4.10, 1.45), (mx + 0.15, -1.0, 1.02), 30.0))
+    gx, gy = GARY_POS
+    # near-overhead on the lying body: hole 5 axis is vertical, the floor shows through it (no floating body)
+    stops.append((9.55, (gx + 0.16, gy + 1.28, 2.62), (gx + 0.26, gy + 1.84, 0.13), 30.0))
+    stops.append((10.0, (gx + 0.17, gy + 1.33, 2.55), (gx + 0.26, gy + 1.84, 0.13), 30.0))
     return stops, sc
 
 
-def build_cameras_and_text(probe, scr):
+def build_cameras_and_text(probe, scr, sg):
     stops, sc = camera_stops(probe, scr)
     cam, tgt = L.CAM, L.TGT
     k = 0.4
@@ -770,46 +843,53 @@ def build_cameras_and_text(probe, scr):
         L.HOLD.keyframe_insert("scale", frame=f)
     linear_all(cam, ("location",))
     linear_all(tgt, ("location",))
-    for obj, data_path in ((cam.data, "lens"), (L.HOLD, "scale")):
-        ad = obj.animation_data
-        for fc in ad.action.fcurves:
+    for obj in (cam.data, L.HOLD):
+        for fc in obj.animation_data.action.fcurves:
             for kp in fc.keyframe_points:
                 kp.interpolation = "LINEAR"
-    # handheld noise on camera and target (additive)
-    add_noise(cam, 0.010, 11.0, seed=1)
-    add_noise(tgt, 0.008, 13.0, seed=2)
-    print('SCREEN_WORLD', tuple(round(v, 3) for v in sc), 'PROBE', tuple(round(v, 3) for v in probe))
+    add_noise(cam, 0.006, 11.0, seed=1)
+    add_noise(tgt, 0.005, 13.0, seed=2)
+    print("SCREEN_WORLD", tuple(round(v, 3) for v in sc), "PROBE", tuple(round(v, 3) for v in probe))
 
-    # world labels: nameplates on the cabinet fronts, below each work point (stay inside the frame at the dwell cameras)
-    asm.wl("REFLOW ON SUBSTRATE", (X_OVEN + 0.75, Y_OVEN - 0.80, 1.32), 0.8, 1.2, size=0.07)
-    asm.wl("FAU ATTACH", (X_FAU, Y_FAU - 0.25, 1.50), 1.5, 1.85, size=0.06)
-    asm.wl("EIC / PIC BONDING", (X_BOND + 0.1, Y_BOND - 0.30, 1.62), 2.15, 2.5, size=0.06)
-    asm.wl("DICING + TAPE", (X_SAW + 0.18, Y_SAW - 0.80, 1.55), 2.8, 3.1, size=0.05)
-    asm.wl("CM300-STYLE WAFER PROBE STATION", (X_CM - 0.15, Y_CM - 0.15, 1.9), 3.5, 4.8, size=0.05)
-    asm.wl("WAFERS IN / OUT, STAGE STEPS", (X_CM + 0.02, Y_CM - 0.36, 1.08), 3.5, 4.8, size=0.028)
-    asm.wl("RING TRANSMISSION (LORENTZIAN DIPS)", (sc.x + 0.1, sc.y - 0.1, sc.z + 0.19), 5.2, 7.0, size=0.024)
-    asm.wl("SPEC WINDOW", (sc.x, sc.y - 0.1, sc.z - 0.18), 5.2, 7.0, size=0.025, color=(0.4, 1.0, 0.5))
-    # captions, narration, cards, fx notes (unchanged from v1.0)
-    asm.narr([(0.2, 3.0, "Gary tests every optical chip at the factory."), (3.2, 5.6, "The rings all come out slightly different."),
-              (5.8, 8.2, "Only one out of ten rings works.")])
+    # world labels: one per station, above the work point (upper third, clear of the subtitles); v1.2 sizes about 0.7x
+    tab = dwell_table()
+    for key, body, t0, t1 in (("oven", "REFLOW ON SUBSTRATE", 0.95, 1.25), ("fau", "FAU ATTACH", 1.5, 1.85),
+                              ("bond", "EIC / PIC BONDING", 2.15, 2.5), ("saw", "DICING + TAPE", 2.8, 3.1)):
+        w = Vector(tab[key]["w"])
+        asm.wl(body, tuple(w + Vector((0.0, 0.05, 0.42))), t0, t1, size=0.045)
+    P = Vector(probe)
+    asm.wl("RING TRANSMISSION (LORENTZIAN DIPS)", (sc.x - 0.04, sc.y - 0.02, sc.z + 0.17), 5.3, 7.0, size=0.015)
+    # captions, narration (narration.json), cards, fx notes
+    asm.narr_vo(5)
     asm.lab(0.3, 3.3, "BACK THROUGH THE LINE")
-    asm.lab(3.3, 4.8, "WAFER-LEVEL TEST")
+    asm.lab(3.3, 4.8, "WAFER-LEVEL TEST (CM300-STYLE PROBER)")
     asm.lab(4.8, 7.0, "RING RESONANCES vs SPEC")
-    asm.big(7.2, 8.4, "1 IN 10")
-    asm.big(9.1, 9.7, "BANG")
-    asm.card(4.8, 7.0, "Illustrative Lorentzian ring transmission; 1 in 10 traces inside the spec window (by construction)")
-    asm.fxn(0.3, 3.3, "[FX: heavy motion-blur shuffle back through the line, speed ramp]")
-    asm.fxn(3.3, 4.8, "[FX: wafers fly in and out; stage steps; probe taps; die map glows]")
-    asm.fxn(4.8, 7.0, "[FX: new trace flashes white as it is measured]")
-    asm.fxn(9.1, 9.7, "[FX: muzzle flash, smoke ring, hole decal]")
+    asm.big(7.2, 7.85, "1 IN 10")
+    # BANG as a world label above the muzzle (the BIG overlay sat on Gary's torso and hid hole 5)
+    scn = bpy.context.scene
+    scn.frame_set(F(T_SHOT))
+    bpy.context.view_layer.update()
+    mz = sg.hook("muzzle_R").matrix_world.translation.copy()
+    scn.frame_set(1)
+    asm.wl("BANG", (mz.x + 0.15, mz.y, mz.z + 0.42), T_SHOT, T_SHOT + 0.2, size=0.30, color=(1.0, 0.9, 0.25))   # gone before the crane (9.16)
+    asm.card(4.8, 7.0, "Illustrative Lorentzian ring transmission; 1 of 10 rings inside the spec window (by construction)")
+    asm.fxn(0.3, 3.3, "[FX: motion-blur shuffle back through the line, eased dwell at each tool]")
+    asm.fxn(3.3, 4.8, "[FX: wafers slide in and out; stage steps; probe touchdown; die map]")
+    asm.fxn(4.8, 7.0, "[FX: 10 rings measured, 1 passes, ping]")
+    asm.fxn(T_SHOT, 9.7, "[FX: muzzle flash, smoke ring, hole 5]")
     asm.timecode(5)
+
+
+def finish_hidden(st):
+    for o in st.get("cm_hidden", []):
+        L._VIS[o] = [(10 ** 6, 10 ** 6 + 1)]
 
 
 def main():
     scn = asm.new_scene(preset="standard", world="WORLD_lab")
     L.CAM.data.clip_start = 0.1   # dies sit 20 um above the wafer: keep the depth range tight
     L.CAM.data.clip_end = 300.0
-    scn.render.use_motion_blur = True            # v1.1: motion blur on (shutter 0.5 frames); note render_scene.py with RENDER_PRESET=draft resets it
+    scn.render.use_motion_blur = True            # motion blur on (shutter 0.5 frames); render_scene.py keeps the scene value
     scn.render.motion_blur_shutter = MOTION_SHUTTER
     build_env()
     lighting()
@@ -819,11 +899,12 @@ def main():
     cm, probe = build_cm(st)
     scr = build_spectrum(cm)
     g, m = build_cast()
-    build_props_and_fx(g, m)
+    sg, pr = build_props_and_fx(g, m)
     build_effects(st, probe)
-    build_cameras_and_text(probe, scr)
+    build_cameras_and_text(probe, scr, sg)
     collection_windows_to_objects()
     finish_cutaway(st)
+    finish_hidden(st)
     asm.finalize(OUT)
 
 

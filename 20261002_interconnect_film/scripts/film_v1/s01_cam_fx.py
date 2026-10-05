@@ -1,5 +1,6 @@
-"""S1 helpers (v1.1): baked camera director (eased moves, handheld noise, impact shake) and deterministic effect bakes
-(electron pockets along a cable centreline, ballistic clay crumbs). Pure python + bpy; every random number is seeded.
+"""S1 helpers (v1.1, v1.2): baked camera director (eased moves, handheld noise, impact shakes, cut-safe motion blur) and
+deterministic effect bakes (electron pockets along a cable centreline, ballistic clay crumbs, popped copper strands,
+per-frame root baking). Pure python + bpy; every random number is seeded.
 """
 import math
 import random
@@ -28,6 +29,11 @@ def smooth5(u):
 def ease_out(u):
     u = min(1.0, max(0.0, u))
     return 1.0 - (1.0 - u) ** 2.6
+
+
+def ease_out3(u):
+    u = min(1.0, max(0.0, u))
+    return 1.0 - (1.0 - u) ** 3
 
 
 def ease_in(u):
@@ -64,11 +70,16 @@ class Noise:
 class Director:
     """Per-frame baked camera. A shot is fn(u, t) -> (pos, tgt, lens) with u in 0..1 over the shot."""
 
-    def __init__(self, t_hit, seed=7):
+    def __init__(self, t_hit, seed=7, shake_win=0.9):
         self.shots = []
         self.noise = Noise(seed)
         self.shake_ph = [random.Random(seed + 1).uniform(0, TAU) for _ in range(12)]
         self.t_hit = t_hit
+        # (t, amplitude, window s, lens punch): the main hit plus optional small jolts (v1.2: strand pops)
+        self.hits = [(t_hit, 1.0, shake_win, True)]
+
+    def add_hit(self, t, amp=0.25, win=0.35, punch=False):
+        self.hits.append((t, amp, win, punch))
 
     def add(self, t0, t1, fn, hh=1.0, ease="io"):
         self.shots.append((t0, t1, fn, hh, ease))
@@ -93,7 +104,10 @@ class Director:
         t0, t1, fn, hh, _ = self._shot(t)
         span = max(t1 - t0 - 1.0 / FPS, 1.0 / FPS)
         u = min(1.0, max(0.0, (t - t0) / span))
-        pos, tgt, lens = fn(u, t)
+        res = fn(u, t)
+        pos, tgt, lens = res[:3]
+        if len(res) > 3:      # per-time handheld multiplier from the shot function (v1.2)
+            hh = hh * res[3]
         if not noise:
             return pos, tgt, lens
         ls = max(dist3(pos, tgt), 0.02)
@@ -103,10 +117,12 @@ class Director:
         n = self.noise
         pos = (pos[0] + ap * n(t, 0), pos[1] + ap * n(t, 1), pos[2] + ap * n(t, 2))
         tgt = (tgt[0] + aa * n(t, 3), tgt[1] + aa * n(t, 4), tgt[2] + aa * n(t, 5))
-        # impact shake (decaying, 11-17 Hz) + lens punch
-        dt = t - self.t_hit
-        if dt >= 0.0:
-            d = math.exp(-dt / 0.17) * (1.0 if dt < 0.9 else 0.0)
+        # impact shakes (decaying, 11-17 Hz, faded to exactly 0 at the end of each window) + lens punch on the main hit
+        for th, amp, win, punch in self.hits:
+            dt = t - th
+            if dt < 0.0 or dt >= win:
+                continue
+            d = amp * math.exp(-dt / 0.17) * (1.0 - smooth3((dt - 0.6 * win) / (0.4 * win)))
             ph = self.shake_ph
             sp = 0.006 * ls
             sa = 0.012 * ls
@@ -114,10 +130,11 @@ class Director:
                    pos[2] + sp * d * math.sin(TAU * 17.0 * dt + ph[2]))
             tgt = (tgt[0] + sa * d * math.sin(TAU * 14.0 * dt + ph[3]), tgt[1] + sa * d * math.sin(TAU * 12.0 * dt + ph[4]),
                    tgt[2] + sa * d * math.sin(TAU * 16.0 * dt + ph[5]))
-            lens = lens * (1.0 + 0.035 * math.exp(-dt / 0.09))
+            if punch:
+                lens = lens * (1.0 + 0.035 * math.exp(-dt / 0.09))
         return pos, tgt, lens
 
-    def bake(self, frames=300):
+    def bake(self, frames=300, cuts=()):
         cam, tgt_o, hold = L.CAM, L.TGT, L.HOLD
         cam.data.clip_start = 0.002
         cam.data.clip_end = 400.0
@@ -137,7 +154,7 @@ class Director:
             if ad and ad.action:
                 for fc in ad.action.fcurves:
                     for kp in fc.keyframe_points:
-                        kp.interpolation = "LINEAR"
+                        kp.interpolation = "CONSTANT" if int(round(kp.co[0])) + 1 in cuts else "LINEAR"
 
 
 # ------------------------------------------------------------------ polyline helper (cable centreline)
@@ -299,3 +316,79 @@ def spring(t, amp, freq, tau):
     if t < 0.0:
         return 0.0
     return amp * math.exp(-t / tau) * math.cos(TAU * freq * t)
+
+
+# ------------------------------------------------------------------ v1.2: per-frame baking with cut-safe jumps
+def bake_obj(obj, fn, frames=300, jumps=(), rot=True):
+    """Key obj location (and z yaw) on every frame from fn(t) -> (x, y, z, yaw). LINEAR in between; at every frame in
+    `jumps` the previous key is CONSTANT so the motion-blur samples before a jump never interpolate across it."""
+    for f in range(1, frames + 1):
+        x, y, z, yaw = fn((f - 1) / FPS)
+        obj.location = (x, y, z)
+        obj.keyframe_insert("location", frame=f)
+        if rot:
+            obj.rotation_euler = (0.0, 0.0, yaw)
+            obj.keyframe_insert("rotation_euler", frame=f)
+    jset = {int(j) - 1 for j in jumps}
+    for fc in obj.animation_data.action.fcurves:
+        if fc.data_path not in ("location", "rotation_euler"):
+            continue
+        for kp in fc.keyframe_points:
+            kp.interpolation = "CONSTANT" if int(round(kp.co[0])) in jset else "LINEAR"
+
+
+def shutter_cuts(scn, cut_frames, shutter=0.5):
+    """Animated motion-blur shutter: 0 on the first frame of every hard cut (no double exposure of the two shots)."""
+    scn.render.motion_blur_shutter = shutter
+    scn.render.keyframe_insert("motion_blur_shutter", frame=1)
+    for f in sorted(set(cut_frames)):
+        for ff, v in ((f - 1, shutter), (f, 0.0), (f + 1, shutter)):
+            scn.render.motion_blur_shutter = v
+            scn.render.keyframe_insert("motion_blur_shutter", frame=ff)
+    for fc in scn.animation_data.action.fcurves:
+        if fc.data_path == "render.motion_blur_shutter":
+            for kp in fc.keyframe_points:
+                kp.interpolation = "CONSTANT"
+    scn.render.motion_blur_shutter = shutter
+
+
+# ------------------------------------------------------------------ v1.2: popped copper strands on a cable (strand_pop SFX)
+def add_strand_pop(cable, offset, t_pop, mat, t_end, seed=1, n=4, length=(0.05, 0.10), radius=0.0035):
+    """A few thin copper strands spring out of `cable` at path fraction `offset` at t_pop (overshoot then settle) and
+    stay frayed until t_end. The anchor rides the (driver-animated) cable with a Follow Path constraint."""
+    rng = random.Random(seed)
+    cable.data.use_path = True
+    anc = bpy.data.objects.new("strand_pop_%d" % seed, None)
+    bpy.context.scene.collection.objects.link(anc)
+    con = anc.constraints.new("FOLLOW_PATH")
+    con.target = cable
+    con.use_curve_follow = False
+    con.use_fixed_location = True
+    con.offset_factor = offset
+    import bmesh
+    objs = []
+    for i in range(n):
+        ln = rng.uniform(*length)
+        me = bpy.data.meshes.new("strand_%d_%d" % (seed, i))
+        bm = bmesh.new()
+        bmesh.ops.create_cone(bm, cap_ends=True, segments=6, radius1=radius, radius2=radius * 0.4, depth=ln)
+        bmesh.ops.translate(bm, verts=bm.verts, vec=(0, 0, ln / 2.0))      # base at the origin
+        bm.to_mesh(me)
+        bm.free()
+        ob = bpy.data.objects.new("strand_%d_%d" % (seed, i), me)
+        bpy.context.scene.collection.objects.link(ob)
+        ob.data.materials.append(mat)
+        ob.parent = anc
+        ob.rotation_euler = (rng.uniform(-2.2, 2.2), rng.uniform(-2.2, 2.2), rng.uniform(0, TAU))
+        f0 = F(t_pop)
+        for k in range(0, 9):
+            u = k / 8.0
+            sc = 0.0 if k == 0 else 1.0 + 0.45 * math.exp(-4.0 * u) * math.cos(TAU * 1.6 * u)
+            ob.scale = (sc, sc, sc)
+            ob.keyframe_insert("scale", frame=f0 + k)
+        for fc in ob.animation_data.action.fcurves:
+            for kp in fc.keyframe_points:
+                kp.interpolation = "LINEAR"
+        L.VA(ob, f0, F(t_end))
+        objs.append(ob)
+    return anc, objs

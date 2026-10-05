@@ -7,6 +7,7 @@ import math
 import os
 import sys
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import bpy
 import numpy as np
 from mathutils import Vector
@@ -94,38 +95,99 @@ stature = float(root.get("p_stature_m", 1.75))
 zmid = stature * 0.5
 tmp = os.path.join(os.environ.get("PV_TMP", "/tmp"), "pv_" + AID)
 os.makedirs(tmp, exist_ok=True)
-headz = stature - 0.11 * stature / 1.75
+headz = float(root.get("pv_face_z", stature - 0.11 * stature / 1.75))
+FD = float(root.get("pv_face_dist", 0.78 * stature / 1.75))
 
 if "views" in MODES:
     d = stature * 2.15
-    for name, v in (("front", (0, -1, 0.1)), ("three_quarter", (0.75, -0.9, 0.25)), ("back", (0, 1, 0.1)), ("side", (1, 0, 0.1))):
+    for name, v in (("front", (0, -1, 0.1)), ("three_quarter", (0.75, -0.9, 0.25)), ("back", (0, 1, 0.1))):
         v = Vector(v).normalized()
         shot(os.path.join(OUT, "%s_%s.png" % (AID, name)), (v.x * d, v.y * d, zmid + v.z * d), (0, 0, zmid), 50)
     # head and shoulders close-up (three-quarter)
     v = Vector((0.5, -1, 0.15)).normalized()
-    shot(os.path.join(OUT, "%s_closeup_head.png" % AID), (v.x * 1.1, v.y * 1.1, headz + 0.05), (0, 0, headz - 0.02), 70)
+    shot(os.path.join(OUT, "%s_closeup_head.png" % AID), (v.x * 1.3 * FD, v.y * 1.3 * FD, headz + 0.05), (0, 0, headz - 0.02), 62)
 
 if "faces" in MODES:
-    exprs = ["shock", "shouting", "smug", "dread", "sobbing", "dead_eyed"]
+    import chars_head_keys  # noqa: F401  (list of expression names)
     tiles = []
-    for e in exprs:
-        root["p_expr_" + e] = 1.0
-        scn.frame_set(1)
-        p = os.path.join(tmp, "f_%s.png" % e)
-        shot(p, (0.12, -0.78 * stature / 1.75, headz), (0, 0, headz - 0.01), 62, (300, 337))
-        tiles.append(p)
-        root["p_expr_" + e] = 0.0
-    compose(tiles, 3, 2, 300, 337, os.path.join(OUT, "%s_faces_a.png" % AID))
-    if True:
-        exprs2 = ["worried", "sweating", "flat", "angry", "scared", "happy"]
-        tiles = []
-        for e in exprs2:
+    names = chars_head_keys.KEYS
+    for e in names:
+        if e != "neutral":
             root["p_expr_" + e] = 1.0
-            p = os.path.join(tmp, "f_%s.png" % e)
-            shot(p, (0.12, -0.78 * stature / 1.75, headz), (0, 0, headz - 0.01), 62, (300, 337))
-            tiles.append(p)
+        p = os.path.join(tmp, "f_%s.png" % e)
+        shot(p, (0.12, -FD, headz), (0, 0, headz - 0.01), 62, (300, 337))
+        tiles.append(p)
+        if e != "neutral":
             root["p_expr_" + e] = 0.0
-        compose(tiles, 3, 2, 300, 337, os.path.join(OUT, "%s_faces_b.png" % AID))
+    root["p_anger"] = 1.0
+    root["p_flush"] = 1.0
+    p = os.path.join(tmp, "f_anger_flush.png")
+    shot(p, (0.12, -FD, headz), (0, 0, headz - 0.01), 62, (300, 337))
+    tiles.append(p)
+    root["p_anger"] = 0.0
+    root["p_flush"] = 0.0
+    compose(tiles, 5, 3, 300, 337, os.path.join(OUT, "%s_faces.png" % AID))
+
+if "hand" in MODES:
+    hk = bpy.data.objects["HOOK_hand_R"]
+    pbs = arm.pose.bones
+    tiles = []
+    for tag, cur in (("open", dict(index=0.12, middle=0.12, ring=0.12, pinky=0.12, thumb=0.12)),
+                     ("fist", dict(index=1.0, middle=1.0, ring=1.0, pinky=1.0, thumb=0.8)),
+                     ("point", dict(index=0.0, middle=1.0, ring=1.0, pinky=1.0, thumb=0.6)),
+                     ("grip", dict(index=0.55, middle=0.8, ring=0.8, pinky=0.8, thumb=0.5))):
+        for f, v in cur.items():
+            pbs["ctl_hand_R"]["curl_" + f] = v
+        bpy.context.view_layer.update()
+        t = hk.matrix_world.translation
+        p = os.path.join(tmp, "h_%s.png" % tag)
+        shot(p, (t.x - 0.28, t.y - 0.42, t.z + 0.12), (t.x, t.y, t.z), 70, (450, 450))
+        tiles.append(p)
+    compose(tiles, 4, 1, 450, 450, os.path.join(OUT, "%s_hand_closeup.png" % AID))
+    for f in ("index", "middle", "ring", "pinky", "thumb"):
+        pbs["ctl_hand_R"]["curl_" + f] = 0.12
+
+if "squash" in MODES:
+    tiles = []
+    cfgs = [dict(), dict(p_squash=-0.35), dict(p_squash=0.35), dict(p_squash_head=0.45), dict(p_squash_head=-0.3, p_jiggle_belly=0.04, p_jiggle_hat=0.35, p_tie_swing=0.7)]
+    for i, c in enumerate(cfgs):
+        for k in ("p_squash", "p_squash_head", "p_jiggle_belly", "p_jiggle_hat", "p_tie_swing"):
+            if k in root.keys():
+                root[k] = c.get(k, 0.0)
+        bpy.context.view_layer.update()
+        p = os.path.join(tmp, "s_%d.png" % i)
+        d = stature * 1.95
+        shot(p, (0.55 * d, -0.85 * d, stature * 0.55), (0, 0, stature * 0.5), 50, (300, 337))
+        tiles.append(p)
+    for k in ("p_squash", "p_squash_head", "p_jiggle_belly", "p_jiggle_hat", "p_tie_swing"):
+        if k in root.keys():
+            root[k] = 0.0
+    compose(tiles, 5, 1, 300, 337, os.path.join(OUT, "%s_squash_jiggle.png" % AID))
+
+if "poseboard" in MODES:
+    BOARD = [("idle", 15), ("walk", 8), ("run", 5), ("point", 16), ("aim_gun", 36), ("shout_loop", 8), ("punch_loop", 6), ("topple_back", 32),
+             ("stagger", 9), ("pull_cable", 18), ("hug_leg", 18), ("jolt_hit", 10)]
+    SIDEV = {"topple_back": (1, -0.25, 0.15), "walk": (1, -0.5, 0.2), "run": (1, -0.5, 0.2), "aim_gun": (0.8, -0.8, 0.2), "pull_cable": (1, -0.5, 0.2)}
+    tiles = []
+    for nm, fr in BOARD:
+        act = bpy.data.actions.get("ACT_%s_%s" % (AID.replace("_holes30", ""), nm)) or bpy.data.actions.get("ACT_%s_%s" % (AID, nm))
+        arm.animation_data.action = act
+        scn.frame_set(fr)
+        v = Vector(SIDEV.get(nm, (0.65, -1, 0.15))).normalized()
+        d = stature * 1.85
+        p = os.path.join(tmp, "b_%s.png" % nm)
+        if nm == "topple_back":
+            shot(p, (stature * 1.9, stature * 0.55, 0.9), (0, stature * 0.55, 0.2), 50, (300, 337))
+        else:
+            shot(p, (v.x * d, v.y * d, stature * 0.52 + v.z * d), (0, 0, stature * 0.5), 50, (300, 337))
+        tiles.append(p)
+    compose(tiles, 4, 3, 300, 337, os.path.join(OUT, "%s_poseboard.png" % AID))
+    arm.animation_data.action = None
+    for pb in arm.pose.bones:
+        pb.location = (0, 0, 0)
+        pb.rotation_quaternion = (1, 0, 0, 0)
+        pb.rotation_euler = (0, 0, 0)
+    scn.frame_set(1)
 
 if "holes" in MODES:
     props = [k for k in root.keys() if k.startswith("p_hole_") or k == "p_head_hole_radius"]
@@ -190,12 +252,12 @@ if "anger" in MODES:
         root["p_anger"] = a
         root["p_flush"] = fl
         p = os.path.join(tmp, "a_%.1f.png" % a)
-        shot(p, (0.12, -0.78 * stature / 1.75, headz), (0, 0, headz - 0.01), 62, (300, 337))
+        shot(p, (0.12, -FD, headz), (0, 0, headz - 0.01), 62, (300, 337))
         tiles.append(p)
     root["p_anger"] = 1.0
     root["p_flush"] = 1.0
     p = os.path.join(tmp, "a_side.png")
-    shot(p, (0.5, -0.7 * stature / 1.75, headz), (0, 0, headz - 0.01), 62, (300, 337))
+    shot(p, (0.5, -0.9 * FD, headz), (0, 0, headz - 0.01), 62, (300, 337))
     tiles.append(p)
     shot(os.path.join(tmp, "a_full.png"), (0.4, -3.2, stature * 0.55), (0, 0, stature * 0.52), 50, (300, 337))
     tiles.append(os.path.join(tmp, "a_full.png"))

@@ -12,6 +12,11 @@ Scale decision (unchanged from v1.0):
   * Optical engines are scaled 0.5 (carrier 24 x 20 -> 12 x 10 mm hardware units = 72 x 60 mm world).
   * Eggs and all motion are computed in WORLD metres (not parented to HW_GROUP).
   * Humans stay at real size in the lab zone at x = +30 m.
+
+v1.2 changes (DevLog/v1/DevLog-003-scene-s04.md, section v1.2): v2 characters (gary_v2, manager_v2) with motion_v2 actions
+(gun_raise_aim_fire, shot_hit_fall, flinch), lab finale rebuilt as a two-shot (people at 35-50 percent of frame height, warm wall
+and low-contrast floor), smoke beside the package, PIC framed on 8 rings with per-ring heat colour and wobble, warmer OE heat ramp,
+lower-third BREAKFAST, whip pan into the lab, subtitles from narration.json (asm.narr_vo), scene motion blur on.
 """
 import math
 import os
@@ -24,6 +29,9 @@ from mathutils import Euler, Quaternion, Vector
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import asm  # noqa: E402
 import tex_gen as T  # noqa: E402
+
+sys.path.insert(0, os.path.join(asm.SCRIPTS, "assets", "characters", "motion_v2"))
+import motion_v2 as M2  # noqa: E402
 
 L = asm.L
 F = asm.F
@@ -41,9 +49,11 @@ KC = 0.0659                   # crude unit -> metres
 OE_SCALE = 0.5
 HX = 30.0                     # lab zone origin (x)
 EGG_OE = 0.5                  # fried egg scale on the OEs (the 'spread' shape key widens the 51 mm prop to about 100 mm; lid is 55 x 48 mm)
-FLY_EXAG = 3.5                # eggs thrown in the lab grow to 3.5x so they read from 4.5 m (cartoon exaggeration)
+FLY_EXAG = 2.8                # eggs thrown in the lab grow to 2.4x so they read from 5 m (cartoon exaggeration; v1.1 3.5x at 11 m)
 T_BANG = 8.9
-OVERCOOK_BROWN = 0.72         # Brown Extent: at p_cook 1 only a small crescent of white stays next to the yolk (default 0.42)
+T_WHIP0 = 8.05                # whip pan out of the OE macro starts (lab from 8.2)
+BREAKFAST_Y = 1.55            # overlay y of BREAKFAST: upper third over the XPU lid (the OE row with the eggs runs through the lower half)
+OVERCOOK_BROWN = 0.77         # Brown Extent: at p_cook 1 only a tiny crescent of white stays next to the yolk (default 0.42; v1.1 0.72; 0.85 read as brown cookies)
 
 rnd = random.Random(21)
 
@@ -145,7 +155,8 @@ def floor(name, center, size, tile, z, color1, color2):
     return o, m
 
 
-fl_hw, _ = floor("floor_hw", (0, 0), (60, 60), 1.0, -0.09, (0.52, 0.54, 0.46), (0.46, 0.49, 0.41))
+# v1.2: dark warm slate under the board (v1.1 pale green-grey read as haze and gave the board no separation)
+fl_hw, _ = floor("floor_hw", (0, 0), (60, 60), 1.0, -0.09, (0.105, 0.085, 0.075), (0.095, 0.078, 0.07))
 L.V(fl_hw, 0, 0, 8.2)
 
 rig_hw = asm.rig("macro_studio", scale=5.0)
@@ -219,6 +230,15 @@ def lid_of(asset):
     return next(o for o in asset.objs if o.name.startswith("oe_module_cpo_lid_body"))
 
 
+# v1.2 OE heat colour: the library NG_heat_glow ramp ends at saturated red (1, 0.04, 0.02) which the view transform renders hot
+# pink at the lid's strength; the S4 copy ends at deep orange-red and the lids peak below the bloom threshold (eggs stay readable)
+NG_OE = group_node(MATS["MAT_vfx_heat_glow"]).node_tree.copy()
+NG_OE.name = "NG_heat_glow_s04_oe"
+_ramp = next(n for n in NG_OE.nodes if n.bl_idname == "ShaderNodeValToRGB").color_ramp
+for _e, _c in zip(_ramp.elements, ((0.10, 0.75, 1.0, 1), (1.0, 0.48, 0.03, 1), (0.92, 0.24, 0.015, 1))):
+    _e.color = _c
+OE_STRENGTH = 1.0
+
 hooks_oe = {}
 for side, sname in ((-1, "L"), (1, "R")):
     for r in range(8):
@@ -242,10 +262,11 @@ for n, ((side, r), hook) in enumerate(sorted(hooks_oe.items(), key=lambda kv: (k
     m = MATS["MAT_vfx_heat_glow"].copy()
     m.name = "MAT_oe_heat_%02d" % n
     gn = group_node(m)
-    gn.inputs["Base Color"].default_value = (0.35, 0.37, 0.42, 1)
-    gn.inputs["Metallic"].default_value = 0.85
-    gn.inputs["Strength Max"].default_value = 1.5      # v1.0: 1.3 (OE heat faint); at 2.0+ the comp bloom washes the eggs on the lid
-    gn.inputs["Roughness"].default_value = 0.3
+    gn.node_tree = NG_OE
+    gn.inputs["Base Color"].default_value = (0.07, 0.07, 0.08, 1)
+    gn.inputs["Metallic"].default_value = 0.25    # v1.1 0.85: the metallic lid mirrored the pale sky -> salmon/pink lids
+    gn.inputs["Strength Max"].default_value = OE_STRENGTH   # v1.1 1.5; v1.2 lower so the comp bloom never washes the eggs
+    gn.inputs["Roughness"].default_value = 0.55
     driver_multi(m.node_tree, 'nodes["%s"].inputs["p_heat"].default_value' % gn.name, {"p": (a.root, "p_heat")}, "p")
     lid.data = lid.data.copy()
     lid.data.materials.clear()
@@ -314,12 +335,21 @@ for q, h in enumerate(bars_h):
     L.K(tb, f, loc=cw((0.8, -7.0, h / 2)), scale=(KC * 0.5, KC * 0.5, KC * h), interp="LINEAR")
     hr = max(h - 1.6, 0.02)
     L.K(tr, f, loc=cw((0.8, -7.0, hr / 2)), scale=(KC * 0.52, KC * 0.52, KC * hr), interp="LINEAR")
-asm.wl("XPU POWER", cw((-0.8, -7.0, 3.4)), 1.4, 2.6, size=0.28 * KC)
-asm.wl("TEMPERATURE", cw((0.8, -7.0, 3.8)), 1.4, 2.6, size=0.28 * KC)
-asm.wl("XPU: 4 GPU DIES + 16 HBM", cw((0, 0, 1.4)), 1.0, 3.0, size=0.5 * KC)
+asm.wl("XPU: 4 GPU DIES + 16 HBM", cw((0, 0, 1.4)), 1.0, 2.15, size=0.4 * KC)
 
-for q, (dx, dy) in enumerate([(-0.15, 0.05), (0.12, -0.04), (0.0, 0.0), (-0.3, -0.1), (0.3, 0.08)]):
-    asm.fx("smoke_puff", 1.5 + 0.1 * q, loc=(dx, dy, 0.03), rot=(0, 0, 0), scale=0.5, intensity=1.0, dur=1.0)
+# v1.2 smoke: thin, low, fast-dissipating wisps BESIDE the package (left/right of the OE columns), not over the dies. Times
+# 1.5 + 0.1 q are the steam_hiss SFX cues (31.5-31.9 film). GN inputs overridden per copy (library defaults: Count 16, Life 2.4,
+# Scale End 0.34, Speed 0.5, Fade 0.4).
+SMOKE_SET = {"Count": 7, "Life": 0.75, "Speed": 0.32, "Speed Var": 0.3, "Scale Start": 0.04, "Scale End": 0.16, "Fade": 0.85,
+             "Spread": 0.25, "Emit Radius": 0.05, "Gravity": (0.0, 0.0, 0.10)}
+for q, (dx, dy) in enumerate([(-0.60, -0.22), (0.60, -0.18), (-0.62, 0.05), (0.62, -0.30), (-0.58, -0.36)]):
+    sp_ = asm.fx("smoke_puff", 1.5 + 0.1 * q, loc=(dx, dy, 0.07), rot=(0, 0, 0), scale=0.6, intensity=0.8, dur=0.9)
+    for _o in sp_.objs:
+        for _md in _o.modifiers:
+            if _md.type == "NODES":
+                for _it in _md.node_group.interface.items_tree:
+                    if _it.item_type == "SOCKET" and _it.in_out == "INPUT" and _it.name in SMOKE_SET:
+                        _md[_it.identifier] = SMOKE_SET[_it.name]
 asm.fx("heat_shimmer", 1.4, loc=(0, -0.28, 0.0), rot=(0, 0, 0), scale=1.4, dur=1.3)
 
 # ----------------------------------------------------------------------------- PIC close-up: camera-attached rig, cross-dissolved
@@ -327,7 +357,8 @@ asm.fx("heat_shimmer", 1.4, loc=(0, -0.28, 0.0), rot=(0, 0, 0), scale=1.4, dur=1
 # drift and the heat-shimmer wobble; the chip, its floor and its macro_studio lights live under it. Every PIC material is wrapped in
 # Mix(Transparent, original) driven by PIC_RIG["p_alpha"] (keyed): a true alpha cross-dissolve against the OE zoom behind it.
 PIC_D = 0.12                  # rig distance in front of the camera (m); lens 85 -> field width 0.051 m
-PIC_S = 0.0062                # chip scale: 7.5 asset units -> 0.046 m
+PIC_S = 0.0170                # v1.2: chip scale 0.0062 -> 0.020: the 0.051 m field shows about 170 um of the 500 um chip (8 rings)
+PIC_HALF = 1.30               # half width of the framed ring window in asset units (1 um = 0.015 asset m): about 87 um
 LENS_PIC = 85.0
 PIC_E = 0.012                 # PIC key-light energy factor (p_energy), calibrated by test renders
 rig_root = L.empty("PIC_RIG", (0, 0, -PIC_D))
@@ -346,6 +377,23 @@ pic.root.matrix_parent_inverse.identity()
 pic.root.location = (0, 0, 0)
 pic.root.scale = (PIC_S,) * 3
 asm.show(pic, 3.0, 5.0)
+bpy.context.view_layer.update()
+# ring and slab positions in the asset's own units (root-local); frame window = two bus rows (y = 0 and the next row), centred
+_rinv = pic.root.matrix_world.inverted()
+RINGS = sorted([o for o in collect_tree(pic.coll) if o.name.startswith("microring_array_closeup_ring_") and o.name.endswith("_x15000")],
+               key=lambda o: o.name)
+SLABS = sorted([o for o in collect_tree(pic.coll) if o.name.startswith("microring_array_closeup_slab_") and o.name.endswith("_x15000")],
+               key=lambda o: o.name)
+ring_loc = {o: (_rinv @ o.matrix_world).translation.copy() for o in RINGS}
+slab_loc = {o: (_rinv @ o.matrix_world).translation.copy() for o in SLABS}
+_rows = sorted({round(v.y, 1) for v in ring_loc.values()})
+print("PIC ring rows (asset units, y):", _rows, "n rings", len(RINGS), "n slabs", len(SLABS))
+_sel = [v for v in ring_loc.values() if abs(v.y - 0.0) < 0.6 or abs(v.y - 2.25) < 0.6]
+_xs = sorted(v.x for v in _sel)
+PIC_CX = 0.5 * (_xs[len(_xs) // 2 - 1] + _xs[len(_xs) // 2])
+PIC_CY = sum(v.y for v in _sel) / len(_sel)
+pic.root.location = (-PIC_CX * PIC_S, -PIC_CY * PIC_S, 0.0)
+print("PIC window centre (asset units):", round(PIC_CX, 3), round(PIC_CY, 3))
 
 pic_floor, pic_floor_mat = floor("floor_pic", (0, 0), (4.0, 4.0), 0.05, -0.0004, (0.52, 0.54, 0.46), (0.46, 0.49, 0.41))
 pic_floor.parent = orbit
@@ -405,15 +453,93 @@ for t, a_ in ((0.0, 0.0), (3.15, 0.0), (3.5, 1.0), (4.52, 1.0), (4.9, 0.0)):
     asm.key_prop(rig_root, "p_alpha", t, a_, "BEZIER")
     asm.key_prop(rig_pic.root, "p_energy", t, PIC_E * a_ * a_ + 1e-6, "BEZIER")
 
-# three heat pulses (3.52-3.78, 3.88-4.14, 4.24-4.50): the wave sweeps across rings and substrate slabs left to right, a flat gap
-# follows each one. Distortion: the rig wobbles (rotation + scale ripple) while a front crosses; no global light change.
+# three heat pulses (3.52-3.78, 3.88-4.14, 4.24-4.50; SFX hum cues 33.37 / 33.73 / 34.09 swell into them): a front crosses the
+# framed window left to right; each ring it passes shifts cyan -> orange-red (equal luminance, so no lighting sweep or flash) and
+# wobbles (thermal scale ripple), the substrate slabs under it take a warm tint, then everything cools in the flat gap. The asset's
+# p_wave_pos emission drivers (white-hot band) are removed and the colours are keyed per frame instead.
 PULSES = [(3.52, 3.78), (3.88, 4.14), (4.24, 4.50)]
-asm.key_prop(pic.root, "p_wave_pos", 0.0, -0.3)
-for (ta, tb_) in PULSES:
-    asm.key_prop(pic.root, "p_wave_pos", ta - 0.05, -0.3, "LINEAR")
-    asm.key_prop(pic.root, "p_wave_pos", ta, -0.3, "LINEAR")
-    asm.key_prop(pic.root, "p_wave_pos", tb_, 1.3, "LINEAR")
-asm.key_prop(pic.root, "p_wave_pos", 4.55, -0.3, "LINEAR")
+RING_COLD, RING_HOT = (0.12, 0.80, 1.0), (1.0, 0.15, 0.01)
+RING_E_COLD, RING_E_HOT = 0.95, 1.35         # hot green kept low (green above about 0.3 turned the clipped red peach/pink); luminance 0.66 -> 0.43
+SLAB_HOT, SLAB_E = (1.0, 0.30, 0.06), 1.2
+
+
+def heat_at(xn, t, tau=0.13, rise=0.035):
+    """Heat 0..1 at normalised window position xn (0 left, 1 right) and time t: fast rise when the front passes, then decay."""
+    h = 0.0
+    for (ta, tb_) in PULSES:
+        tp = ta + (tb_ - ta) * (xn + 0.3) / 1.6
+        if t >= tp - rise:
+            u = t - tp
+            h = max(h, smooth(-rise, 0.0, u) if u < 0 else math.exp(-u / tau))
+    return h
+
+
+def _strip_drivers(m):
+    ad = m.node_tree.animation_data
+    if ad:
+        for d_ in list(ad.drivers):
+            if "Emission Strength" in d_.data_path:
+                ad.drivers.remove(d_)
+
+
+def _key_socket(sock, val, f):
+    sock.default_value = val
+    sock.keyframe_insert("default_value", frame=f)
+
+
+def _lerp3(a, b, k):
+    return tuple(a[i] + (b[i] - a[i]) * k for i in range(3))
+
+
+# contrast: the translucent BOX oxide and cladding layers (pale blue) washed the chip out; darker tints keep the layers but let the
+# dark substrate, the glowing rings and the heat tint read
+for _mn, _col in (("MAT_photonics_box_oxide", (0.10, 0.14, 0.20)), ("MAT_photonics_cladding", (0.18, 0.26, 0.34))):
+    _m = bpy.data.materials.get(_mn)
+    if _m is not None:
+        next(n for n in _m.node_tree.nodes if n.bl_idname == "ShaderNodeBsdfPrincipled").inputs["Base Color"].default_value = (*_col, 1)
+# the glossy oxide/cladding (roughness 0.05-0.1) mirrored the pale sky over the whole chip (the v1.1 haze); matte them and cut the
+# specular of every PIC material so colours (cyan / orange-red rings, warm substrate) stay saturated
+_pic_mats = {m for o in collect_tree(pic.coll) if o.type == "MESH" for m in o.data.materials if m is not None and m.use_nodes}
+for _m in _pic_mats:
+    for _n in _m.node_tree.nodes:
+        if _n.bl_idname == "ShaderNodeBsdfPrincipled":
+            _n.inputs["Specular IOR Level"].default_value = 0.12
+            _n.inputs["Roughness"].default_value = max(_n.inputs["Roughness"].default_value, 0.55)
+_wg = bpy.data.materials.get("MAT_photonics_waveguide_si")     # bus waveguides: faint cyan glow so the 0.5 um lines read
+if _wg is not None:
+    _b = next(n for n in _wg.node_tree.nodes if n.bl_idname == "ShaderNodeBsdfPrincipled")
+    _b.inputs["Emission Color"].default_value = (0.10, 0.70, 1.0, 1)
+    _b.inputs["Emission Strength"].default_value = 0.8
+for o in RINGS + SLABS:
+    for m in o.data.materials:
+        if m is not None:
+            _strip_drivers(m)
+F_PIC0, F_PIC1 = F(3.0), F(5.0)
+for ri, o in enumerate(RINGS):
+    v = ring_loc[o]
+    xn = (v.x - (PIC_CX - PIC_HALF)) / (2 * PIC_HALF)
+    m = o.data.materials[0]
+    bs = next(n for n in m.node_tree.nodes if n.bl_idname == "ShaderNodeBsdfPrincipled")
+    bs.inputs["Base Color"].default_value = (0.02, 0.05, 0.08, 1)   # dark core: the emission colour alone (blue base tinted hot rings pink)
+    ph = 1.7 * (ri % 7)
+    base_s = o.scale.copy()
+    for f in range(F_PIC0, F_PIC1 + 1):
+        t = T_of(f)
+        h = heat_at(xn, t)
+        _key_socket(bs.inputs["Emission Color"], (*_lerp3(RING_COLD, RING_HOT, h), 1.0), f)
+        _key_socket(bs.inputs["Emission Strength"], RING_E_COLD + (RING_E_HOT - RING_E_COLD) * h, f)
+        w = 1.0 + 0.045 * h * math.sin(2 * PI * 11.0 * t + ph)
+        o.scale = (base_s.x * w, base_s.y * w, base_s.z)
+        o.keyframe_insert("scale", frame=f)
+    key_fc_interp(o, "scale", "LINEAR")
+for o in SLABS:
+    v = slab_loc[o]
+    xn = (v.x - (PIC_CX - PIC_HALF)) / (2 * PIC_HALF)
+    m = o.data.materials[0]
+    bs = next(n for n in m.node_tree.nodes if n.bl_idname == "ShaderNodeBsdfPrincipled")
+    bs.inputs["Emission Color"].default_value = (*SLAB_HOT, 1.0)
+    for f in range(F_PIC0, F_PIC1 + 1):
+        _key_socket(bs.inputs["Emission Strength"], SLAB_E * heat_at(xn, T_of(f), tau=0.14, rise=0.05), f)
 
 orbit.rotation_mode = "XYZ"
 for f in frames_between(3.0, 5.0):
@@ -435,9 +561,8 @@ for f in frames_between(3.0, 5.0):
 for dp in ("rotation_euler", "scale"):
     key_fc_interp(orbit, dp, "LINEAR")
 
-pl1 = asm.wl("PIC: MICRORING MODULATORS", (0, 0, 0), 3.5, 4.5, size=0.0016)
 pl2 = asm.wl("HEAT WAVE ->", (0, 0, 0), 3.5, 4.5, size=0.0016, color=(1.0, 0.6, 0.3))
-for _o, yy in ((pl1, 0.0235), (pl2, -0.0235)):
+for _o, yy in ((pl2, 0.0205),):
     _o.parent = orbit
     _o.matrix_parent_inverse.identity()
     _o.location = (0, yy, 0.004)
@@ -582,7 +707,7 @@ for n, (side, r, a, pos, yaw) in enumerate(oes):
     ps = L0 + vh * th
     root.location = (ps.x, ps.y, top.z + 0.001)
     root.rotation_euler = (0, 0, rnd.uniform(0, 2 * PI))
-    key_splat(root, t_splat, cook_dur=0.6)
+    key_splat(root, t_splat, cook_dur=0.45)
     L.V(mesh, 0, t_splat, 8.2)
     # sizzle steam: one puff per egg and a second on every 2nd egg (stateless GN particles, 1.4 s each; render cost)
     asm.fx("steam", t_splat + 0.35, loc=(ps.x, ps.y, top.z + 0.012), scale=0.06, dur=1.4)
@@ -591,15 +716,70 @@ for n, (side, r, a, pos, yaw) in enumerate(oes):
     egg_oe.append((root, mesh, t_splat))
 
 # ----------------------------------------------------------------------------- lab zone (8.2-10 s): bench, scope, whiteboard, Gary, Manager
-BX, BY = HX + 2.7, -0.8
-WBX, WBY, WB_Z0 = HX + 1.4, 1.5, 0.9
-G_POS = (HX + 1.3, -1.5, 0.0)
-M_POS = (HX - 0.4, 0.8, 0.0)
+# v1.2 staging (critique S4 38.2-40.0, VO 37.2-40.0 "The boss does not like Gary cooking breakfast on his chips"): one two-shot,
+# Gary right and nearer with the plate of 16 eggs, turned three-quarter to the camera (no profile mask), the Manager left facing
+# Gary; both at about 40 percent of the frame height with the floor in frame; whiteboard (graph dropping) on a warm wall behind.
+# The Manager raises the gun as the scene opens (he has seen the breakfast), fires at 8.9 (SFX 38.9), Gary's shot_hit_fall flings
+# the plate up at 9.144 (SFX whoosh 39.144), eggs hit the Manager's head 9.56, near shoulder 9.64, chest 9.72 (SFX), 13 land on the
+# floor 9.60-9.90; the Manager flinches at the head hit, face shock -> anger, ear steam; the camera holds still from 9.5.
+WBX, WBY, WB_Z0 = HX - 0.15, 1.5, 0.9
+BX, BY = HX + 2.75, 0.75
+G_POS = (HX + 0.30, -0.85, 0.0)
+M_POS = (HX - 1.20, -0.15, 0.0)
+LCAM0 = Vector((HX - 0.15, -5.45, 1.20))
+LCAM1 = Vector((HX - 0.15, -5.20, 1.18))
+LTGT = Vector((HX - 0.15, -0.45, 1.00))
+LENS_LAB = 50.0
 
-fl_lab, _ = floor("floor_lab", (HX + 1.0, 0.0), (40, 40), 1.0, 0.0, (0.72, 0.74, 0.78), (0.55, 0.58, 0.64))
+fl_lab, _ = floor("floor_lab", (HX + 1.0, 0.0), (40, 40), 1.0, 0.0, (0.34, 0.31, 0.28), (0.31, 0.285, 0.26))
 L.V(fl_lab, 0, 8.2, 10)
+bpy.ops.mesh.primitive_plane_add(size=1, location=(HX, WBY + 0.06, 2.5))
+wall = bpy.context.active_object
+wall.name = "lab_wall"
+wall.scale = (40.0, 5.0, 1.0)
+wall.rotation_euler = (PI / 2, 0, 0)
+_wm = bpy.data.materials.new("MAT_s04_lab_wall")
+_wm.use_nodes = True
+_wb = _wm.node_tree.nodes["Principled BSDF"]
+_wb.inputs["Base Color"].default_value = (0.56, 0.42, 0.31, 1)
+_wb.inputs["Roughness"].default_value = 0.9
+wall.data.materials.append(_wm)
+L.V(wall, 0, 8.2, 10)
 rig_lab = asm.rig("daylight", scale=1.6, loc=(HX + 1.5, 0.0, 0.0))
 asm.show(rig_lab, 8.2, 10.0)
+# v1.2: the walled lab with the daylight rig at full power blew out (floor and wall above the bloom threshold); rig at 0.45
+LAB_RIG_GAIN = 0.45
+if "p_energy" in rig_lab.root.keys():
+    rig_lab.root["p_energy"] = float(rig_lab.root["p_energy"]) * LAB_RIG_GAIN
+else:
+    for _o in rig_lab.objs:
+        if _o.type == "LIGHT":
+            _o.data.energy *= LAB_RIG_GAIN
+print("lab rig:", [(o.name, round(o.data.energy, 2)) for o in rig_lab.objs if o.type == "LIGHT"], dict(rig_lab.root.items()).get("p_energy"))
+
+
+def area_light(name, loc, target, energy, size, color, spot=None):
+    """Area light, or a soft spot (spot = cone angle in degrees) when the wall and whiteboard must stay out of the beam."""
+    if spot:
+        ld = bpy.data.lights.new(name, "SPOT")
+        ld.energy, ld.color, ld.shadow_soft_size = energy, color, size
+        ld.spot_size, ld.spot_blend = math.radians(spot), 0.7
+    else:
+        ld = bpy.data.lights.new(name, "AREA")
+        ld.energy, ld.size, ld.color = energy, size, color
+    o = bpy.data.objects.new(name, ld)
+    scn.collection.objects.link(o)
+    o.location = loc
+    d = Vector(target) - Vector(loc)
+    o.rotation_euler = d.to_track_quat("-Z", "Y").to_euler()
+    L.V(o, 0, 8.2, 10)
+    return o
+
+
+# key and rim are soft spots aimed at the two characters (a wide area key lit the wall in a hard trapezoid and blew out the board)
+area_light("lab_key_warm", (HX + 1.6, -4.8, 3.1), (HX - 0.4, -0.5, 1.0), 450.0, 0.6, (1.0, 0.88, 0.74), spot=40)
+area_light("lab_rim_cool", (HX + 2.2, 0.9, 2.6), (HX - 0.1, -0.5, 1.2), 450.0, 0.4, (0.75, 0.86, 1.0), spot=30)
+area_light("lab_face_fill", (HX + 0.6, -3.6, 1.6), (HX + 0.3, -0.6, 1.5), 50.0, 1.5, (1.0, 0.92, 0.82))
 
 bench = asm.append("lab_office/lab_bench")
 asm.place(bench.root, (BX, BY, 0.0), yaw=0.0)
@@ -635,7 +815,8 @@ def plug_image(mat, fac_node, first_png, n=1, start=1, sequence=True):
 scr = next(o for o in scope.objs if o.name == "bench_oscilloscope_screen")
 plug_image(scr.material_slots[0].material, "SCREEN_FAC", os.path.join(S2TEX, "eye_s2", "eye_s2_0300.png"), sequence=False)
 
-# whiteboard graph: starts at the S2 end state (p = 1) and runs back DOWN along the same curves (tips retreat to p = 0.2)
+# whiteboard graph: starts at the S2 end state (p = 1) and runs back DOWN along the same curves (tips retreat to p = 0.2);
+# the drop starts at 8.45 (SFX curve_fall 38.45)
 G_F0 = F(8.2)
 GN = 300 - G_F0 + 1
 
@@ -650,26 +831,49 @@ if not os.path.exists(os.path.join(gdir, "graph_s4_%04d.png" % GN)):
 wbs = next(o for o in wb.objs if o.name == "whiteboard_big_screen")
 plug_image(wbs.material_slots[0].material, "BOARD_FAC", os.path.join(gdir, "graph_s4_0001.png"), n=GN, start=G_F0)
 
-gary = asm.append("characters/gary", actions=True)
-mgr = asm.append("characters/manager", actions=True)
+gary = asm.append("characters/gary_v2", actions=True)
+mgr = asm.append("characters/manager_v2", actions=True)
 asm.show(gary, 8.2, 10)
 asm.show(mgr, 8.2, 10)
-gy = asm.yaw_to(G_POS, M_POS)
-my = asm.yaw_to(M_POS, G_POS)
+
+
+def _ang_lerp(a, b, k):
+    d = (b - a + PI) % (2 * PI) - PI
+    return a + d * k
+
+
+my = asm.yaw_to(M_POS, G_POS)                                         # exact: the barrel points at Gary
+gy = _ang_lerp(asm.yaw_to(G_POS, M_POS), asm.yaw_to(G_POS, tuple(LCAM0)), 0.78)   # cheated half way to the camera
 asm.place(gary.root, G_POS, yaw=gy)
 asm.place(mgr.root, M_POS, yaw=my)
 
-T_REL = T_BANG + 11.0 / 30.0 / 1.5
-asm.play(gary, "hold_plate", 7.0, hold=True, repeat=1)
-asm.play(gary, "throw_up", T_BANG, speed=1.5, blend_in=2)
-asm.play(gary, "topple_back", T_BANG + 0.3, speed=2.2, blend_in=3)
-ASPEED = 0.9
-asm.play(mgr, "aim_gun", T_BANG - 36.0 / 30.0 / ASPEED, speed=ASPEED)
-asm.key_prop(mgr.root, "p_anger", 0.0, 0.2)
-asm.key_prop(mgr.root, "p_anger", 8.2, 0.4)
-asm.key_prop(mgr.root, "p_anger", T_BANG, 1.0)
-asm.key_prop(gary.root, "p_expr_scared", 0.0, 0.0)
-asm.key_prop(gary.root, "p_expr_scared", T_BANG, 1.0)
+T_REL = T_BANG + 11.0 / 30.0 / 1.5            # 9.144: plate flung up (SFX whoosh 39.144); shot_hit_fall hit_fling is frame 7
+# Gary: proud plate hold, then the v2 shot_hit_fall (frame 0 = blast frame, hit-stop frames 0-4 inside the action)
+asm.play(gary, "hold_plate", 7.0, hold=True, repeat=4)
+M2.apply(gary, "shot_hit_fall", T_BANG, hold=True, face=False)
+# Manager: v2 gun_raise_aim_fire trimmed to start at raise_start (frame 6) and played 1.6x so the shot event (frame 44) is at 8.9;
+# flinch at the head hit (9.56); the strips hold their last pose
+RAISE_SPEED = 1.6
+M2.apply(mgr, "gun_raise_aim_fire", T_BANG - (44 - 6) / 30.0 / RAISE_SPEED, speed=RAISE_SPEED, start_frame=6, hold=True, face=False)
+M2.apply(mgr, "flinch", 9.56, hold=True, face=False)
+
+# faces (root custom properties, keyed directly; face actions off)
+for prop, keys in {
+        "p_expr_happy": [(0.0, 0.0), (8.2, 1.0), (8.42, 1.0), (8.6, 0.0)],
+        "p_expr_dread": [(0.0, 0.0), (8.42, 0.0), (8.62, 1.0), (T_BANG, 0.0)],
+        "p_expr_shock": [(0.0, 0.0), (T_BANG, 1.0), (9.5, 1.0), (9.75, 0.0)],
+        "p_expr_dead_eyed": [(0.0, 0.0), (9.5, 0.0), (9.75, 1.0)]}.items():
+    for t_, v_ in keys:
+        asm.key_prop(gary.root, prop, t_, v_, "BEZIER")
+for prop, keys in {
+        "p_expr_angry": [(0.0, 0.6), (8.2, 0.8), (8.6, 1.0), (9.56, 1.0), (9.6, 0.0), (9.8, 1.0)],
+        "p_expr_shock": [(0.0, 0.0), (9.56, 0.0), (9.6, 1.0), (9.75, 1.0), (9.85, 0.0)],
+        "p_anger": [(0.0, 0.5), (8.2, 0.6), (8.7, 1.0)],
+        "p_flush": [(0.0, 0.2), (8.2, 0.3), (8.8, 0.7), (9.6, 0.7), (9.9, 1.0)]}.items():
+    for t_, v_ in keys:
+        asm.key_prop(mgr.root, prop, t_, v_, "BEZIER")
+for side_ in ("L", "R"):
+    asm.fx("ear_steam", 9.62, loc=(0, 0, 0), scale=0.6, parent=next(o for o in mgr.objs if o.name.startswith("HOOK_steam_" + side_)), dur=0.7)
 
 # holes: schedule from the brief, r = max(0.3, 0.9 ** ((T_now - T_shot) / 1.5)), stepped every 1.5 s; hole 4 at the bang
 HOLE_FILM = {"p_hole_1_radius": 9.2, "p_hole_2_radius": 19.2, "p_head_hole_radius": 28.95}
@@ -690,26 +894,31 @@ gun = asm.append("props/shotgun")
 asm.show(gun, 8.2, 10)
 grip = next(o for o in mgr.objs if o.name.startswith("HOOK_gun_grip_R"))
 asm.attach(gun.root, grip, rot=(0, 0, PI))
+gun.root.scale = (0.8, 0.8, 0.8)      # critique 38.3-38.9: the full-length barrel reached past Gary's face in the two-shot
 asm.fx("muzzle_flash", T_BANG, loc=(0, 0, 0), rot=(-PI / 2, 0, 0), scale=1.0, parent=next(o for o in gun.objs if o.name.startswith("HOOK_muzzle_L")), dur=0.12)
 asm.fx("smoke_ring", T_BANG + 0.05, loc=(0, 0, 0), rot=(-PI / 2, 0, 0), scale=1.0, parent=next(o for o in gun.objs if o.name.startswith("HOOK_muzzle_R")), dur=0.9)
 
-# plate carried at the midpoint of Gary's two hand hooks, with a stack of 16 overcooked fried eggs
+# plate carried at the midpoint of Gary's two hand hooks, with a stack of 16 fried eggs that leave it at T_REL
 plate = asm.append("props/eggs_plate", only=["ASSET_plate_with_eggs"])
 asm.show(plate, 8.2, 10)
 for o in [o for o in plate.objs if o.name.startswith("plate_with_eggs_egg_")]:
     bpy.data.objects.remove(o, do_unlink=True)
 mid = L.empty("plate_mount", (0, 0, 0))
+mid.rotation_mode = "XYZ"
+pcons = []
 for tgt_name, infl in (("HOOK_hand_L", 1.0), ("HOOK_hand_R", 0.5)):
     tgt = next(o for o in gary.objs if o.name.startswith(tgt_name))
     c = mid.constraints.new("COPY_LOCATION")
     c.target = tgt
     c.influence = infl
+    pcons.append((c, infl))
 mid.rotation_euler = (0, 0, gy)
 plate.root.parent = mid
 plate.root.matrix_parent_inverse.identity()
 plate.root.location = (0, 0, 0)
 plate.root.rotation_euler = (0, 0, 0)
 
+FRY_THROWN = 0.20           # Brown Extent of the plate/thrown eggs: fried but white and yolk read (v1.1 0.5 read as brown coins)
 N_EGG = 16
 stack = []
 for k in range(N_EGG):
@@ -717,7 +926,7 @@ for k in range(N_EGG):
     ang = 2 * PI * idx / 3 + 0.9 * layer
     rr = 0.045 if layer < 5 else 0.0
     lp = Vector((rr * math.cos(ang) + rnd.uniform(-0.006, 0.006), rr * math.sin(ang) + rnd.uniform(-0.006, 0.006), 0.014 + 0.013 * layer))
-    root, mesh = make_egg("plate_egg_%02d" % k, cook=1.0, splat=1.0, parent=plate.root, brown=0.5)
+    root, mesh = make_egg("plate_egg_%02d" % k, cook=1.0, splat=1.0, parent=plate.root, brown=FRY_THROWN)
     root.location = lp
     root.rotation_euler = (0, 0, rnd.uniform(0, 2 * PI))
     L.V(mesh, 0, 8.2, T_REL + 0.012 * k)
@@ -726,7 +935,7 @@ for k in range(N_EGG):
 # Manager target points (head, near shoulder, chest), evaluated from the rig at the frame set before the call
 arm = mgr.armature
 head_hook = next(o for o in mgr.objs if o.name.startswith("HOOK_head_top"))
-CAMPOS = Vector((HX - 2.45, -2.50, 1.45))      # lab camera (side view: Gary near/right, Manager far/left)
+CAMPOS = LCAM0
 FACE = Vector((G_POS[0] - M_POS[0], G_POS[1] - M_POS[1], 0.0)).normalized()
 
 
@@ -738,15 +947,16 @@ def mgr_points():
         return mw @ ae.pose.bones[name].head
     sh_l, sh_r = pbw("upper_arm_L"), pbw("upper_arm_R")
     near = sh_l if (sh_l - CAMPOS).length < (sh_r - CAMPOS).length else sh_r
-    return {"head": head_hook.matrix_world.translation.copy(),
-            "shoulder": near + Vector((0, 0, 0.07)),
-            "chest": pbw("chest") + FACE * 0.15 + Vector((0, 0, 0.12))}
+    return {"head": head_hook.matrix_world.translation.copy() + Vector((0, 0, -0.02)),
+            "shoulder": near + Vector((0, 0, 0.08)),
+            "chest": pbw("chest") + FACE * 0.17 + Vector((0, 0, 0.10))}
 
 
 T_HIT = {"head": 9.56, "shoulder": 9.64, "chest": 9.72}
 scn.frame_set(F(T_REL))
 plate_m = plate.root.matrix_world.copy()
 launch = [plate_m @ lp for lp in stack]
+P_REL = mid.matrix_world.translation.copy()
 pts_hit = {}
 for kind, th_ in T_HIT.items():
     scn.frame_set(F(th_))
@@ -754,29 +964,41 @@ for kind, th_ in T_HIT.items():
 scn.frame_set(1)
 print("Manager hit points:", {k: tuple(round(x, 2) for x in v) for k, v in pts_hit.items()})
 
+# the empty plate stays in Gary's hands through the fall (a released, spinning plate read as a white ball)
+
+# floor targets: 13 eggs around the Manager, biased to the camera side so they read (radius 0.35-1.0 m)
 floor_targets = []
 n_floor = N_EGG - 3
 for i in range(n_floor):
-    ang = 2 * PI * (i + rnd.uniform(-0.2, 0.2)) / n_floor + 0.3
-    rad = 0.45 + 0.55 * ((i * 5) % 7) / 6.0 + rnd.uniform(0, 0.15)
-    floor_targets.append(Vector((M_POS[0] + rad * math.cos(ang), M_POS[1] + 0.8 * rad * math.sin(ang), 0.0)))
+    ang = -0.35 * PI + 1.55 * PI * (i + rnd.uniform(-0.2, 0.2)) / n_floor
+    rad = 0.38 + 0.55 * ((i * 5) % 7) / 6.0 + rnd.uniform(0, 0.08)
+    floor_targets.append(Vector((M_POS[0] + rad * math.cos(ang), M_POS[1] - 0.75 * rad * abs(math.sin(ang)) + 0.15 * math.sin(ang), 0.0)))
 
 order = list(range(N_EGG))
 rnd.shuffle(order)
 kinds = ["head", "shoulder", "chest"] + ["floor"] * n_floor
 assign = {order[i]: kinds[i] for i in range(N_EGG)}
+CAMDIR = (LCAM0 - Vector((HX - 0.1, -0.3, 1.0))).normalized()
+Q_FACE = Vector((0, 0, 1)).rotation_difference(CAMDIR)        # egg top (+z) towards the camera: white + yolk read in flight
 fi = 0
 for k in range(N_EGG):
     kind = assign[k]
     t_rel = T_REL + 0.012 * k
     P0 = launch[k]
-    root, mesh = make_egg("fly_egg_%02d" % k, cook=1.0, splat=1.0, brown=0.5)
-    spin = Vector((rnd.uniform(-9, 9), rnd.uniform(-9, 9), rnd.uniform(-9, 9)))
-    q0 = Euler((rnd.uniform(0, 6), rnd.uniform(0, 6), rnd.uniform(0, 6))).to_quaternion()
+    root, mesh = make_egg("fly_egg_%02d" % k, cook=1.0, splat=1.0, brown=FRY_THROWN)
+    spin_rate = rnd.uniform(4.0, 8.0) * (1 if k % 2 else -1)     # rad/s about the camera axis (keeps the face to camera)
+    tilt_amp = rnd.uniform(0.25, 0.5)
+    q_rand = Euler((0, 0, rnd.uniform(0, 2 * PI))).to_quaternion()
     root.rotation_mode = "QUATERNION"
 
     def scale_f(t, t_rel=t_rel):
         return 1.0 + (FLY_EXAG - 1.0) * smooth(t_rel, t_rel + 0.16, t)
+
+    def fly_q(t, t_rel=t_rel, spin_rate=spin_rate, tilt_amp=tilt_amp, q_rand=q_rand):
+        u = t - t_rel
+        q_spin = Quaternion(CAMDIR, spin_rate * u)
+        q_tilt = Quaternion(Vector((1, 0, 0)), tilt_amp * math.sin(2 * PI * 2.2 * u))
+        return q_spin @ Q_FACE @ q_tilt @ q_rand
 
     if kind == "floor":
         Lg = floor_targets[fi]
@@ -807,8 +1029,7 @@ for k in range(N_EGG):
             if t > t_land:
                 p.z += 0.003 * sc
             root.location = p
-            qspin = Quaternion(spin.normalized(), spin.length * (t - t_rel) * (1.0 - 0.85 * smooth(0, 1, u)))
-            root.rotation_quaternion = (qspin @ q0).slerp(q_flat, smooth(0.0, 1.0, u))
+            root.rotation_quaternion = fly_q(min(t, t_land)).slerp(q_flat, smooth(0.0, 1.0, u))
             root.scale = (sc, sc, sc)
             for dp in ("location", "rotation_quaternion", "scale"):
                 root.keyframe_insert(dp, frame=f)
@@ -818,15 +1039,14 @@ for k in range(N_EGG):
         Lg = pts_hit[kind]
         Tfl = t_hit - t_rel
         v0 = (Lg - P0) / Tfl + Vector((0, 0, 0.5 * GACC * Tfl))
-        base_q = Euler((rnd.uniform(-0.35, 0.35), rnd.uniform(-0.35, 0.35), rnd.uniform(0, 6))).to_quaternion()
+        base_q = (Q_FACE if kind != "head" else Quaternion()) @ Euler((rnd.uniform(-0.25, 0.25), rnd.uniform(-0.25, 0.25), rnd.uniform(0, 6))).to_quaternion()
         for f in range(F(t_rel), 301):
             t = T_of(f)
             sc = scale_f(t)
             if t <= t_hit:
                 p = ballistic(P0, v0, t - t_rel)
                 u = clamp01((t - t_rel) / Tfl)
-                qspin = Quaternion(spin.normalized(), spin.length * (t - t_rel) * (1.0 - u))
-                q = (qspin @ q0).slerp(base_q, smooth(0.5, 1.0, u))
+                q = fly_q(t).slerp(base_q, smooth(0.6, 1.0, u))
             else:
                 scn.frame_set(f)
                 p = mgr_points()[kind].copy()
@@ -845,6 +1065,7 @@ for k in range(N_EGG):
         key_fc_interp(root, dp, "LINEAR")
     L.V(mesh, 0, t_rel, 10.0)
 
+
 # ----------------------------------------------------------------------------- cameras
 col = {-1: [], 1: []}
 for (side, r, a, pos, yaw) in oes:
@@ -856,7 +1077,8 @@ DIR = 1.0 if COLY[7] > COLY[0] else -1.0
 print("OE columns x L %.3f R %.3f, y %s, direction %+.0f" % (CXL, CXR, [round(y, 3) for y in COLY], DIR))
 
 # A: eased oblique push-in over the board while the OEs fly in (oblique so the lift/arc is visible)
-asm.shot(0.0, 1.4, (0.0, -0.95, 1.20), (0.0, -0.02, 0.0), (0.0, -0.72, 1.08), (0.0, -0.02, 0.0), lens=28.0, ease="BEZIER")
+# v1.2: lower and tighter (critique: board in the top half only, OEs tiny); the OEs now fly in from the frame edges
+asm.shot(0.0, 1.4, (0.0, -0.86, 0.92), (0.0, -0.06, 0.0), (0.0, -0.70, 0.80), (0.0, -0.06, 0.0), lens=25.0, ease="BEZIER")
 # B: dolly-zoom onto the XPU (bars lurch)
 asm.shot(1.4, 2.6, cw((0, -16, 7.0)), (0, 0, 0.5 * KC), cw((0, -9.0, 3.0)), (0, 0, 0.5 * KC), lens=20, lens1=55, ease="BEZIER")
 tgt_oe = oe_top[(1, 4)].copy()
@@ -874,13 +1096,45 @@ yM = 0.5 * (yS + yN)
 asm.shot(6.85, 7.65, (CXR + 0.17, yS - DIR * 0.16, 0.25), (CXR, yS + DIR * 0.03, 0.05),
          (CXR + 0.17, yN - DIR * 0.16, 0.26), (CXR, yN - DIR * 0.03, 0.05), lens=38.0, ease="BEZIER")
 # pull back along the column so the first (fully overcooked) eggs and the last ones are in frame together
-asm.shot(7.65, 8.2, (CXR + 0.17, yN - DIR * 0.16, 0.26), (CXR, yN - DIR * 0.03, 0.05),
-         (CXR + 0.24, yM - DIR * 0.20, 0.32), (CXR, yM, 0.04), lens=38.0, lens1=32.0, ease="BEZIER")
-# lab finale: one wide, stable position (no jumps), slow push
-LC0 = (HX - 2.45, -2.50, 1.45)
-LC1 = (HX - 2.20, -2.30, 1.45)
-LT = (HX + 0.40, -0.30, 1.35)
-asm.shot(8.2, 10.0, LC0, LT, LC1, LT, lens=30.0, ease="BEZIER")
+PB_CAM, PB_TGT = Vector((CXR + 0.24, yM - DIR * 0.20, 0.32)), Vector((CXR, yM, 0.04))
+asm.shot(7.65, T_WHIP0, (CXR + 0.17, yN - DIR * 0.16, 0.26), (CXR, yN - DIR * 0.03, 0.05),
+         tuple(PB_CAM), tuple(PB_TGT), lens=38.0, lens1=32.0, ease="BEZIER")
+
+
+def key_cam(f, cam, tgt, lens):
+    L.CAM.location = cam
+    L.CAM.keyframe_insert("location", frame=f)
+    L.TGT.location = tgt
+    L.TGT.keyframe_insert("location", frame=f)
+    L.CAM.data.lens = lens
+    L.CAM.data.keyframe_insert("lens", frame=f)
+
+
+# whip pan out of the OE macro (8.05-8.2, accelerating to the right) and into the lab (8.2-8.5, decelerating from the left):
+# motivated transition instead of the v1.1 hard cut; motion blur (scene shutter 0.5) smears the fast frames
+_fwd = (PB_TGT - PB_CAM).normalized()
+_right = _fwd.cross(Vector((0, 0, 1))).normalized()
+_dist = (PB_TGT - PB_CAM).length
+for f in range(F(T_WHIP0), F(8.2)):
+    u = (T_of(f) - T_WHIP0) / (8.2 - T_WHIP0)
+    key_cam(f, PB_CAM, PB_TGT + _right * _dist * 1.6 * u * u, 32.0)
+# lab: whip-in, then one stable two-shot with a slow push; still from 9.5 (calm last 0.5 s for transition T4)
+_lfwd = (LTGT - LCAM0).normalized()
+_lright = _lfwd.cross(Vector((0, 0, 1))).normalized()
+_ldist = (LTGT - LCAM0).length
+for f in range(F(8.2), 301):
+    t = T_of(f)
+    w = 1.0 - smooth(8.2, 8.5, t)
+    k = smooth(8.2, 9.5, t)
+    cam = LCAM0.lerp(LCAM1, k)
+    key_cam(f, cam, LTGT - _lright * _ldist * 0.6 * w ** 2, LENS_LAB)
+for o_, dp in ((L.CAM, "location"), (L.TGT, "location"), (L.CAM.data, "lens")):
+    ad = o_.animation_data
+    for fc in ad.action.fcurves:
+        if fc.data_path == dp:
+            for kp in fc.keyframe_points:
+                if kp.co[0] >= F(T_WHIP0):
+                    kp.interpolation = "LINEAR"
 
 
 def add_noise(fc, f0, f1, strength, scale=14.0, phase=0.0, blend=4):
@@ -901,13 +1155,21 @@ SHAKE = [((0.0, 1.4), 0.006, 26.0),
          ((1.4, 2.6), 0.060, 6.0),          # dolly-zoom spikes: strong and fast
          ((2.6, 3.25), 0.003, 12.0),
          ((4.5, 5.4), 0.004, 14.0),
-         ((5.4, 8.2), 0.0035, 14.0),
-         ((8.2, 10.0), 0.010, 20.0)]
+         ((5.4, 8.0), 0.0035, 14.0),
+         ((8.5, 9.45), 0.004, 20.0)]
 for obj, tag in ((L.CAM, 0.0), (L.TGT, 100.0)):
     fcs = [fc for fc in obj.animation_data.action.fcurves if fc.data_path == "location"]
     for (ta, tb_), amp, sc in SHAKE:
         for fc in fcs:
             add_noise(fc, F(ta), F(tb_), amp * (0.6 if obj is L.TGT else 1.0), scale=sc, phase=tag + fc.array_index * 17.3 + ta * 3.1)
+# bang: short decaying camera kick at T_BANG (on the target only, so the framing returns; over by 9.25)
+for fc in [fc for fc in L.TGT.animation_data.action.fcurves if fc.data_path == "location"]:
+    m_ = fc.modifiers.new("NOISE")
+    m_.blend_type = "ADD"
+    m_.scale, m_.strength, m_.phase, m_.depth = 2.5, 0.06, 40.0 + 9.1 * fc.array_index, 0
+    m_.use_restricted_range = True
+    m_.frame_start, m_.frame_end = F(T_BANG), F(T_BANG + 0.33)
+    m_.blend_in, m_.blend_out = 0, 8
 
 # overlay holder and PIC rig follow the lens exactly (blender_lib keys the HOLD scale linearly between shot ends, wrong while the
 # lens eases): re-key per frame. The PIC rig keeps a constant apparent size while the lens pulls back during the dissolve-out.
@@ -924,24 +1186,27 @@ for f in range(1, 301):
     rig_root.scale = (s2, s2, s2)
     rig_root.keyframe_insert("scale", frame=f)
 for o_ in (L.HOLD, rig_root):
-    key_fc_interp(o_, "scale", "LINEAR")
+    key_fc_interp(o_, "scale", "CONSTANT")    # v1.2: per-frame values held: no sub-frame scale change, so motion blur never smears captions
 
 # ----------------------------------------------------------------------------- captions (unchanged from v1.0 except the FX notes)
-asm.narr([(0.2, 2.4, "Gary glues the optics onto the chip."),
-          (2.4, 5.2, "The chip's heat swings wildly, but optics need it steady."),
-          (5.4, 8.0, "So: scorching hot, always.")])
+asm.narr_vo(4)                  # subtitles from scripts/audio/narration.json (same source as the voice track)
 asm.lab(0.0, 1.4, "NPO -> CPO   (8 + 8 OEs)")
 asm.lab(1.4, 2.6, "XPU POWER   TEMPERATURE")
 asm.lab(2.6, 3.4, "ZOOM ON AN OE")
-asm.lab(3.5, 4.6, "RING RESONANCES: HEAT WAVE")
+asm.lab(3.5, 4.6, "PIC: MICRORING MODULATORS")
 asm.lab(4.6, 5.4, "HEATERS ON")
-asm.big(6.2, 8.0, "BREAKFAST")
-asm.big(T_BANG, T_BANG + 0.6, "BANG")
+# BREAKFAST off the OE row (critique: it hid the first eggs): own overlay layer, same style as BIG
+L.OVL["BIG_LOW"] = dict(L.OVL["BIG"], loc=(0, BREAKFAST_Y), size=0.5)
+L.WRAP["BIG_LOW"] = 10
+L.ovt("BIG_LOW", "BREAKFAST", 0, 6.2, 8.0)
+L.OVL["BIG_HIGH"] = dict(L.OVL["BIG"], loc=(0, 1.75))     # BANG above the heads (centre BIG covered Gary's torso)
+L.WRAP["BIG_HIGH"] = 10
+L.ovt("BIG_HIGH", "BANG", 0, T_BANG, T_BANG + 0.6)
 asm.fxn(1.4, 2.6, "[FX: dolly-zoom, shake on spikes, smoke + heat shimmer]")
 asm.fxn(2.6, 3.4, "[FX: continuous zoom, then cross-dissolve to the PIC]")
 asm.fxn(3.5, 4.6, "[FX: three heat pulses over rings and substrate, left to right; shimmer wobble]")
-asm.fxn(4.6, 5.4, "[FX: dissolve back to the board; engines glow red]")
-asm.fxn(5.4, 8.2, "[FX: eggs tossed onto the OEs: bounce, splat, yolk wobble, overcook, sizzle steam]")
+asm.fxn(4.6, 5.4, "[FX: dissolve back to the board; engines glow orange-red]")
+asm.fxn(5.4, 8.05, "[FX: eggs tossed onto the OEs: bounce, splat, yolk wobble, overcook, sizzle steam]")
 asm.fxn(8.9, 9.8, "[FX: 16 eggs tossed up: head, shoulder, chest, floor; smoke ring, muzzle flash]")
 asm.timecode(4)
 
@@ -970,4 +1235,7 @@ while t <= 10.0001:
 for o_ in (le, ll):
     key_fc_interp(o_, "location", "LINEAR")
 
+scn.render.use_motion_blur = True          # kept by render_scene.py through the render presets
+scn.render.motion_blur_shutter = 0.5
+scn.render.motion_blur_position = "START"     # shutter [f, f + 0.5]: no smear across camera cuts or caption/visibility switches
 asm.finalize(OUT)

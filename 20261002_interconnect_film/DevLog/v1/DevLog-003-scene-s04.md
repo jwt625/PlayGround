@@ -1,5 +1,51 @@
 # DevLog-003-scene-s04: S4 "CPO: keep it scorching hot" (film 30-40 s)
 
+## v1.2 pass (2026-10-03): v2 characters, motion_v2, critique fixes (DevLog-005)
+
+Build: `FILM_HUD=0 /Applications/Blender.app/Contents/MacOS/Blender -b --python scripts/film_v1/s04_cpo.py -- scenes/v1/s04_cpo.blend`. v1.1 script, devlog and blend backed up to the session scratchpad (`p2_s04/backup/`).
+
+### Plan / checklist
+- [x] Characters: `characters/gary_v2`, `characters/manager_v2`; Gary `hold_plate` (v1 action on the v2 rig) then motion_v2 `shot_hit_fall` at the bang (frame 0 = blast, hit-stop 0-4 inside); Manager motion_v2 `gun_raise_aim_fire` trimmed to raise_start (frame 6) at 1.6x so the shot event (frame 44) lands at 8.9, then `flinch` at the head-egg hit 9.56; faces keyed on the roots (face actions off)
+- [x] Subtitles: `asm.narr_vo(4)`; HUD built with `FILM_HUD=0`
+- [x] 31.8-32.8 smoke: 5 small, low, short-lived puffs beside the package (x +-0.6 m world, z 0.07, GN overrides Count 7, Life 0.75 s, Scale End 0.16, Fade 0.85, intensity 0.8); times 1.5 + 0.1 q unchanged (steam_hiss cues)
+- [x] 33.4-34.5 PIC: chip scale 0.0062 -> 0.017 and the rig centred between bus rows 0 and 1 (about 140 um of the 500 um chip in frame, 8-10 rings); the asset's white-band emission drivers removed; per ring a heat value (fast rise when the front passes, 85 ms decay) keys emission colour cyan -> orange-red at equal luminance (no lighting sweep), ring scale wobble 4.5 percent at 11 Hz while hot, substrate slabs take a warm tint; bus waveguides faint cyan emission; pulse times unchanged (hum cues 33.37 / 33.73 / 34.09)
+- [x] 30.0-31.3 haze: dark warm slate floor under the board
+- [x] 31.4-32.0 cropped 3D bar labels removed (the LAB line names the bars); "XPU: 4 GPU DIES + 16 HBM" smaller, shown 1.0-2.15
+- [x] 34.5-35.5 OE heat colour: S4 copy of NG_heat_glow (ramp cyan -> orange -> deep orange-red), lid metallic 0.85 -> 0.25, base near black, Strength Max 1.0 (was pink: the metallic lid mirrored the pale sky)
+- [x] 35.5-38.0 BREAKFAST moved off the OE row (own overlay layer BIG_LOW at y +1.55, over the XPU lid); overcook Brown Extent 0.77, cook ramp 0.45 s
+- [x] 38.2 hard cut -> whip pan: 8.05-8.2 accelerating pan right out of the OE macro, 8.2-8.5 decelerating pan into the lab; scene motion blur on (shutter 0.5)
+- [x] 38.3-40.0 lab rebuilt: warm wall behind the whiteboard, low-contrast floor, daylight rig at 0.45, warm key spot and cool rim spot on the two characters; two-shot (lens 50, about 40 percent frame height), Gary three-quarter to the camera (yaw cheated 78 percent towards the camera) so his face is never in profile, his fall stays in frame; Manager faces Gary exactly (barrel on Gary); 16 eggs leave the plate at 9.144, flight orientation keeps the egg top to the camera (fried egg reads, no brown coins), FRY 0.20, exaggeration 2.8x; head / near shoulder / chest hits at 9.56 / 9.64 / 9.72, 13 on the floor around the Manager 9.60-9.90; Manager flinch + shock -> anger, flush, small ear steam; camera still from 9.5
+- [x] Motion blur: scene shutter 0.5 with `motion_blur_position = START` (shutter [f, f+0.5]); the caption holder and PIC rig scale keys are CONSTANT per frame. With the default CENTER position every camera cut and caption switch smeared one frame (seen at 1.37 s in the first draft)
+- [x] PIC look: oxide/cladding were near-mirrors (roughness 0.05-0.1) reflecting the pale sky = the v1.1 haze; all PIC materials matte (roughness >= 0.55, specular 0.12), darker oxide tint, ring cores dark, hot ring colour (1, 0.15, 0.01) x 1.35 (green above about 0.3 clipped to peach/pink)
+- [x] Shot A lower and tighter (lens 25 from 0.86 m): board fills the upper two thirds, OEs fly in from the frame edges; first 0.5 s slow (T3)
+- [x] Shotgun scaled 0.8 (critique: barrel reached past Gary's face)
+- [x] Draft render `outputs/v1/s04_cpo_v1_2_draft_p50.mp4` (540x674, 300 frames) reviewed: 0.25 s sheets, 0.1 s strips at 1.5-2.0, 3.5-4.0, 8.0-8.5, 8.8-9.3, 9.5-10.0, single frames, per-frame YAVG
+
+### Measured
+- Draft p50 (render_all, 8 spp, comp cartoon, motion blur on): 232-255 s for 300 frames = 0.77-0.85 s/frame including process start; stills 0.7-1.9 s (lab with 16 eggs 1.3-1.9 s, 9.95 s 3.3 s once), first frame of a process about 5.5 s.
+- Blend 134 MB. Per-frame mean luma 92-160 (8-bit); frame-to-frame jumps above 8 only at camera cuts (1.4: +17, 2.4-2.5 dolly: +15/-13, 5.4 board -> OE egg shot: +48, 8.1-8.2 whip: -11..+14). No periodic flicker. First 15 frames 92-94, last 15 frames 135-138 (calm for T3/T4).
+
+### SFX retime
+None. Kept: OE touchdowns 1.20-1.46, smoke 1.5-1.9, pulses 3.52 / 3.88 / 4.24, OE egg splats 5.84-7.77 (t_splat formula unchanged), curve_fall 8.45, bang 8.9, eggs leave the plate 9.144 (Gary's shot_hit_fall hit_fling is frame 7 = 9.133), head / shoulder / chest 9.56 / 9.64 / 9.72, floor landings t_rel + 0.46 + 0.04 (k mod 4) = 9.60-9.89 (which egg goes where changed with the random sequence; the range is the same). Suggested new cues (not added, audio owner): Gary ground hit 39.63 (shot_hit_fall ground_hit frame 22) clay_thud; Manager ear steam 39.62 steam_hiss; Manager flinch 39.56 is under the head splat.
+
+### Framework requests
+1. `asm.big` / overlay layers with a position argument (S4 defines `BIG_LOW` / `BIG_HIGH` by adding entries to `L.OVL` at runtime).
+2. `blender_lib.shot` / HOLD scale: key CONSTANT per frame (or document `motion_blur_position = START`) so motion blur never smears captions at cuts; other scenes with motion blur on will show one ghosted caption frame per cut/caption change with the default CENTER position.
+3. `render_all.py` concatenates a full film whenever every scene mp4 of the version exists; my S4 run therefore wrote `outputs/film_v1_2_draft_p50_20261003.mp4` mixing whatever v1_2 drafts existed at 09:29 (not reviewed by me).
+
+### Remaining problems
+- 5.4 s cut from the dark board pull-back to the bright OE egg shot (+48 luma in one frame; pre-existing cut C21, not a flicker).
+- OE fly-in (0-1.4): the OEs are still small light squares (OE scale bound by the hook pitch); readable as parts flying in, not as OEs in detail.
+- Fried eggs on the OEs: the cooked ones read as dark brown discs with a light crescent at draft; the last right-column eggs are still fresh when the whip starts (8.05).
+- The whiteboard curve labels are small at this distance; the graph drop itself reads.
+- Lab set (wall, floor, light) differs from the v1.1 S2 lab (blue checker sky); S2 should adopt the same wall/floor for continuity (cross-scene request).
+- Manager's flinch keeps the gun raised; his face at 9.6-10 is partly covered by the head egg and arm.
+- Not done: fresh-context audit.
+
+### Progress log (v1.2)
+- 2026-10-03: read briefs, critique, feedback, transitions, character/motion docs; backups; script edits; first build OK. Lab overexposed at first (extra area lights + full daylight rig: bloom over the whole frame) -> rig at 0.45, spots instead of a wide area key (the area key lit the wall in a hard trapezoid and blew out the whiteboard). Lab framing iterated three times (Gary's fall left the frame on the right). OE lids pink -> orange. Plate release flight removed (a spinning plate read as a white ball): the empty plate stays in Gary's hands.
+- 2026-10-03: first draft render reviewed: caption ghost at cuts (motion blur CENTER) -> START + constant overlay keys; PIC haze traced to glossy oxide/cladding -> matte; hot rings pink -> deep red; shot A tightened; BANG moved above the heads (own layer BIG_HIGH); gun 0.8. Final draft rendered and checked. All Blender runs after 09:05 through `scripts/film_v1/bslot.sh`.
+
 ## v1.1 pass (2026-10-02): feedback rows 0:31, 0:33, 0:34, 0:36, 0:38, 0:39 plus the known v1.0 issues
 
 Files: `scripts/film_v1/s04_cpo.py` (rewritten, no monkeypatch, no `L._VIS.clear()`; asm.py already contains the object-wise visibility, `clone` animation clear and `new_scene(hold_z=...)` fixes, so the v1.0 rebuild hazard is gone), `scenes/v1/s04_cpo.blend` (132 MB), `assets/generated_textures/v1/s04/graph_s4/` (whiteboard graph sequence), `assets/generated_textures/v1/s04/s04_contact_sheet.png` (12 stills at t = 0.6 1.2 2.0 3.2 3.6 4.0 4.7 6.0 7.9 8.6 9.5 9.95 s, 540x675 each, tiled 4x3 at 360 wide). Previous blend and script were backed up to the session scratchpad.

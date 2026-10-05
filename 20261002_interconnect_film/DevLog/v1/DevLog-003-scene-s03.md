@@ -116,3 +116,45 @@ Render cost (draft 8 spp, 50 percent, 540x675, this machine, includes compositor
 Needed framework changes (not made): (1) `asm.shot` should support dense/eased shots with noise and shake (done locally in `s03_cam.py`); (2) NLA strip blend_out is set in the scene script, `asm.play` has no parameter; (3) a cut-aware motion blur (camera visibility between consecutive frames).
 
 Known remaining problems: fighters interpenetrate slightly in clinches (IK reach, no collision); TERAHOP's cap clips the long hair slightly; one timeline nudge warning (TERAHOP 6.56 s, 1 frame); chest/hit timing was checked in stills only (no video review); at 4:5 the finale people are about 13 percent of frame height; the bottom of the finale frame shows a flat grey-blue ground colour; the dotted pattern inside the sun/ceiling-light glow comes from the compositor grain.
+
+## v1.2 scene pass (2026-10-03, S3 agent)
+
+Build: `FILM_HUD=0 scripts/film_v1/bslot.sh -b --python scripts/film_v1/s03_npo.py -- scenes/v1/s03_npo.blend` (about 13 s). Backup of the v1.1 scripts, blend and devlog: scratchpad only.
+
+Plan / TODO:
+- [x] v2 cast: `npc_<x>_v2` (VEND_ASSET, p_accessory 0), `gary_v2`, `manager_v2`
+- [x] Brawl rebuilt on the motion_v2 fight set (`s03_brawl.py` rewritten; `s03_fight.py` no longer imported); attack strips start so the manifest contact frame lands on the v1.1 impact times (SFX cues unchanged); receivers start their reaction on the same frame; pair distances = manifest root_to_root_m x K (1.07)
+- [x] Subtitles `asm.narr_vo(3)`; HUD via asm.card/fxn/timecode only
+- [x] 0.0-1.8 eased snap push-in (calm 0-0.5 s, push 0.5-1.05 s, slow drift after)
+- [x] 5.4-7.0 day/night softened (roof stays on, glass hidden, lamps through the windows only, lifted night sky, warm sunset glow, cool moon, soft sun disc)
+- [x] 7.0-10.0 one stable high 3/4 framing (slow push 33 -> 34 mm until 9.4 s, then still)
+- [x] Lighting: softer ceiling areas, panel emission 0.55, warm key + cool rim, lamps x0.85, in-package laser emission 3.0 -> 1.2, Gary hard hat base R 1.0 -> 0.78 (scene copy) so it no longer blooms
+- [x] Draft render p50 and frame check; strips over the key beats; devlog final numbers
+
+Progress:
+- 2026-10-03 first v1.2 build; contact sheets in the scratchpad (sheet1-3, fight1-2, sky1-2, fin1-3); fixes from them: Gary's opening mark, finale staging (near tier Manager/Gary, far tier vendors), NUBISS gun visible from t=0 (window bug) fixed, calendar toned down and centred, window glass hidden, camera shake halved (motion blur smeared shaken frames), finale camera raised so Gary/Manager heads sit below the vendors' chests.
+- 2026-10-03 09:35 day/night: interior still strobed (YAVG 136 -> 99) through world ambient; fixed with a Light Path split in `s03_sky.build_world` (camera rays see the animated sky, lighting sees a constant day gradient), exterior skyline/trees self-lit by the keyed day factor, day factor over a wider sun-elevation band. Measured on the draft mp4: 5.2-7.0 s frame luma 129-136 (v1.1: 90-155); no frame-to-frame luma jump above 6 except the motivated cut at 1.8 s (9.7).
+- 2026-10-03 09:45 head shot: `p_head_hole_radius` is clamped to 1.0 by the asset's property range, so the head-hole empty is scaled 1.6x across its axis in this scene (radius 0.035 -> 0.056 m); the blast spins Gary (8.96-9.06 s) so the hole axis points at the finale camera during the 4-frame hit-stop (9.06-9.19 s).
+- 2026-10-03 09:50 cut-aware motion blur (s03_cam: sub-frame keys 0.2 frame before each hard cut, CONSTANT on the old shot's last key) and Gary's teleport at the 7.0 cut (sub-frame keys, envelope strip 0.25 frame early): first frames of the cuts are sharp now.
+- 2026-10-03 09:54 final draft `outputs/v1/s03_npo_v1_2_draft_p50.mp4` (render 324 s for 300 frames incl. startup = 1.08 s per frame at 540x675 draft; earlier runs 1.4-1.7 s with other agents rendering).
+
+### v1.2 result per critique item (DevLog-005-critique-v1_1.md section 3)
+
+| t (film) | Item | v1.2 |
+|---|---|---|
+| 20.0-21.6 | locked wide | eased snap push-in: calm 20.0-20.5 (linear 5 cm drift), push 20.5-21.05 (smoothstep, 24 -> 30 mm, camera down to 1.7 m), slow drift to 21.8; Gary on idle_breathe at about 48 percent height at the push end; NPO label moved onto the table in front of the module |
+| 21.9-23.0 | small fighters, floating labels, laser smear | fighters about 30 percent height (both pairs, 28 mm); laser labels on the table; in-package laser emission 3.0 -> 1.2 |
+| 23.0-24.2 | packages hard to read | labels moved to the table under the packages; packages NOT enlarged (open) |
+| 24.2-25.2 | flapping fight | motion_v2 fight set (chest_bump, shove, collar_grab_shake_L/collar_shaken, hook_L, uppercut_L, whiff_overbalance_L, duck, head_butt, flail_windmill, slap_L, react_* and fall_back_brawl/shot_hit_fall); manifest hit-stop at contact; puffs, crumbs and camera shake keyed on the impact frames |
+| 25.3-27.0 | day/night strobe | 3 cycles kept; frame luma 129-136 (was 90-155); sky, sun disc (soft), moon, stars and self-lit skyline carry the change in the windows; warm sunset glow, cool moon |
+| 25.3-27.0 | +3 MONTHS cropped, calendar | calendar centre frame between the pairs (scale 1.3, paper toned down), label above it |
+| 27.0-28.0 | people 8-19 percent | finale camera high 3/4 over the table from (0, -5.15, 2.65), 33 -> 34 mm until 9.4 s then still: Manager about 39 percent, Gary about 40 percent, vendors about 24 percent (all seven in frame) |
+| 28.3-29.1 | gag unreadable | muzzle flashes x2.2 (vendors) / x3.0 (Manager) / x1.6 (Gary) starting 1 frame before each cue; victims fall visibly above the table (fall_back_brawl 1.2x, shot_hit_fall 1.05x); BANG BANG / BANG at 0.40 size above the heads (overlay y 1.62) |
+| 29.5-29.9 | Gary out of frame | Gary falls toward -X into the frame centre and lies fully in frame; gun drops to the floor |
+| 20.0-30.0 | lighting | ceiling areas 2 m soft, panel emission 0.55, warm key and cool rim, lamps x0.85; Gary hard hat R 1.0 -> 0.78 (scene copy) so it does not bloom |
+
+SFX retime: none. Impact contact frames land on the cue times (2.52, 2.72, 3.18, 3.46, 4.18/4.35/4.52 windmill hits (phase approximate), 4.84, 4.90, 5.36, 5.40-5.88, 5.98, 6.22, 6.82 whiff); envelope release 7.513 (cue 7.514), catch 8.0; shots 8.3, 8.5, 8.95; body-fall ground_hit frames at 9.244 (TERAHOP), 9.444 (AYARR), 9.65 (NUBISS) = the clay_thud cues; Gary's ground hit 9.79 (no cue; was about 10.0). Flash effects start 1 frame early so the flash peak sits on the cue.
+
+Requested framework changes (not made): (1) `render_presets.apply_render_preset` resets view exposure to 0, so a scene cannot trade lamp power for exposure to stay under the compositor bloom threshold (1.0 scene-linear); (2) cut-aware motion blur in `asm.shot`/camera helpers (done locally in `s03_cam.py`); (3) `p_head_hole_radius` range is clamped to 1.0 (head hole only about 7 cm wide); (4) gary_v2 hard hat base colour R = 1.0 blooms under any key light; (5) `render_all.py` also concatenates the whole film when all scene mp4s exist (it wrote `outputs/film_v1_2_draft_p50_20261003.mp4` as a side effect of my S3 render).
+
+Remaining problems: vendors are about 24 percent of frame height in the stable finale (six people plus 1.15 m shotguns do not fit at 35 percent in 4:5 from one position; the near tier is about 40 percent); the BGA/LGA packages are not enlarged; fast falls smear with motion blur (shutter 0.35); windmill hit phase matches the cue spacing only approximately; clinch spacing follows the manifest distances but interpenetration was checked by eye only; calendar page backs are blank; NUBISS's gun vanishes at his hit instead of dropping.

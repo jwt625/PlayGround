@@ -117,8 +117,8 @@ def neutral():
     P["sq_c"][:] = P["sq_h"][:] = P["sq_s"][:] = P["sq_b"][:] = P["sq_n"][:] = 1.0
     P["curl_L"][:] = P["curl_R"][:] = 0.18
     P["hfol_L"][:] = P["hfol_R"][:] = 0.0
-    P["hand_L"] = np.concatenate([V(0.296, -0.08, 0.84), nrm(V(0.04, -0.22, -0.97)), nrm(V(-1, 0, 0))])
-    P["hand_R"] = np.concatenate([V(-0.296, -0.08, 0.84), nrm(V(-0.04, -0.22, -0.97)), nrm(V(1, 0, 0))])
+    P["hand_L"] = np.concatenate([V(0.285, -0.08, 0.86), nrm(V(0.04, -0.22, -0.97)), nrm(V(-1, 0, 0))])
+    P["hand_R"] = np.concatenate([V(-0.285, -0.08, 0.86), nrm(V(-0.04, -0.22, -0.97)), nrm(V(1, 0, 0))])
     P["elbow_L"] = V(0.16, 0.38, -0.31)
     P["elbow_R"] = V(0.16, 0.38, -0.31)
     P["foot_L"] = V(0.095, 0.0, 0.0707, 0.0, 0.0)
@@ -131,6 +131,18 @@ def neutral():
 
 def copy_pose(P):
     return {k: np.array(v, float) for k, v in P.items()}
+
+
+def fix_pose(P):
+    """Broadcast scalars / size-1 arrays to the key's size (authoring convenience)."""
+    for k, n in KEYSPEC.items():
+        v = np.asarray(P[k], float).ravel()
+        if v.size != n:
+            if v.size != 1:
+                raise ValueError("pose key %s has size %d, expected %d" % (k, v.size, n))
+            v = np.full(n, v[0])
+        P[k] = v
+    return P
 
 
 def lerp_pose(A, B, e):
@@ -167,7 +179,7 @@ def hand(pos, f=(0, -1, 0.1), n=(-1, 0, 0), side=1):
 
 # ---------------------------------------------------------------------------------------------------- foot model (baseline m)
 FOOT_HEEL = 0.10      # ankle -> back of sole (measured on the v1 boot mesh: 0.096)
-FOOT_BALL = 0.19      # ankle -> pivot ahead (toe tip 0.233; pivot slightly behind to limit toe dip)
+FOOT_BALL = 0.215     # ankle -> pivot ahead (toe tip 0.233; pivot slightly behind to limit toe dip)
 FOOT_TOE = 0.23
 AZ = 0.0707           # ankle height above the sole
 
@@ -350,7 +362,7 @@ class Rig2:
             dv = pos - hip
             dist = np.linalg.norm(dv)
             if dist > Lmax:
-                self.warn.append(("reach_foot_" + sn, float(dist - Lmax)))
+                self.warn.append(("reach_foot_" + sn, float(dist - Lmax), getattr(self, "cur", -1)))
                 pos = hip + dv / dist * Lmax
             self.set_world("ik_foot_" + sn, pos, R)
             kn = P["knee_" + sn]
@@ -359,7 +371,7 @@ class Rig2:
         hm = self.delta_matrix("head")
         fwd = np.array((hm.to_3x3() @ Vector((0, -1, 0))))
         gz = P["gaze"]
-        fwd = rz(-gz[0]) @ rx(gz[1]) @ fwd if (abs(gz[0]) + abs(gz[1])) > 1e-9 else fwd
+        fwd = rz(gz[0]) @ rx(gz[1]) @ fwd if (abs(gz[0]) + abs(gz[1])) > 1e-9 else fwd
         hpos = np.array(pb["head"].head) / K + V(0, 0, 0.05)
         auto = hpos + nrm(fwd) * 0.9
         mix = float(P["look_mix"][0])
@@ -382,7 +394,7 @@ class Rig2:
             dv = pos - sh
             dist = np.linalg.norm(dv)
             if dist > Lmax:
-                self.warn.append(("reach_hand_" + sn, float(dist - Lmax)))
+                self.warn.append(("reach_hand_" + sn, float(dist - Lmax), getattr(self, "cur", -1)))
                 pos = sh + dv / dist * Lmax
             R = self.hand_R_world(sn, f, n)
             self.set_world("ik_hand_" + sn, pos, R)
@@ -403,7 +415,7 @@ class Rig2:
         # boots: sole contact approximated by ankle - az (feet may be lifted)
         for sn in ("L", "R"):
             b = self.pb["foot_" + sn]
-            zs.append(min(b.head[2], b.tail[2]) / K - self.az)
+            zs.append(min(b.head[2], b.tail[2]) / K - 0.04)
         return min(zs)
 
 
@@ -452,8 +464,9 @@ class Timeline:
                     if es != "cut":
                         P["foot_" + sn] = a + (b - a) * es_
                         dist = float(np.linalg.norm((b - a)[:3]))
-                        if dist > 0.03 and lf != 0.0:
-                            h = lf if lf is not None else min(0.06 + 0.25 * dist, 0.16)
+                        moved = dist > 0.03 or abs(b[4] - a[4]) > 0.35
+                        if moved and lf != 0.0:
+                            h = lf if lf is not None else min(0.04 + 0.25 * dist, 0.16)
                             P["foot_" + sn][2] += h * math.sin(math.pi * u)
                 return P
         return ks[-1][1]
@@ -485,7 +498,7 @@ def sample_poses(fn, n_frames, loop, overlap=None, mirror=False):
         fr = list(range(-n_frames, 2 * n_frames + 1))
     else:
         fr = list(range(0, n_frames + 1))
-    poses = [fn(float(f)) for f in fr]
+    poses = [fix_pose(dict(fn(float(f)))) for f in fr]
     S = stack(poses)
     S = apply_overlap(S, overlap)
     if loop:
@@ -501,12 +514,14 @@ def sample_poses(fn, n_frames, loop, overlap=None, mirror=False):
 def solve_frames(rig, poses, attach=None, ground_pad=0.0):
     """Solve every pose with the rig; returns (N, nch) channel array. 'ground' poses are clamped above the floor."""
     out = []
-    for P in poses:
+    for ii, P in enumerate(poses):
+        rig.cur = ii
         rig.pose(P, attach)
-        if P["ground"][0] > 0.5:
+        g = float(P["ground"][0])
+        if g > 0.25:
             lz = rig.lowest_z()
             dz = ground_pad - lz
-            if abs(dz) > 1e-4:
+            if (g > 0.75 and abs(dz) > 1e-4) or (g <= 0.75 and dz > 1e-4):
                 Q = copy_pose(P)
                 Q["root_loc"] = Q["root_loc"] + V(0, 0, dz)
                 rig.pose(Q, attach)
@@ -526,7 +541,41 @@ GROUPS = dict(
 )
 
 
-def write_action(rig, name, data, n_frames, loop, group="full", meta=None, quat_fix=True, eps=1e-5):
+
+def rdp_keep(x, y, eps):
+    """Indices kept by Ramer-Douglas-Peucker on a polyline (frames, values); endpoints always kept."""
+    n = len(x)
+    keep = np.zeros(n, bool)
+    keep[0] = keep[-1] = True
+    stack = [(0, n - 1)]
+    while stack:
+        a, b = stack.pop()
+        if b <= a + 1:
+            continue
+        t = (x[a + 1:b] - x[a]) / (x[b] - x[a])
+        d = np.abs(y[a + 1:b] - (y[a] + t * (y[b] - y[a])))
+        k = int(np.argmax(d))
+        if d[k] > eps:
+            m = a + 1 + k
+            keep[m] = True
+            stack.append((a, m))
+            stack.append((m, b))
+    return np.where(keep)[0]
+
+
+def chan_eps(attr, K):
+    if attr == "location":
+        return 3e-4 * K
+    if attr == "rotation_euler":
+        return 2e-4
+    if attr == "rotation_quaternion":
+        return 2e-4
+    if attr == "scale":
+        return 2e-4
+    return 2e-3   # finger curl custom props
+
+
+def write_action(rig, name, data, n_frames, loop, group="full", meta=None, quat_fix=True, eps=1e-5, reduce=True):
     """data: (N, nch). Creates ACT_<aid>_v2_<name> with direct fcurves (LINEAR). Constant channels get a single key."""
     arm = rig.arm
     full = "ACT_%s_v2_%s" % (rig.aid, name)
@@ -566,11 +615,12 @@ def write_action(rig, name, data, n_frames, loop, group="full", meta=None, quat_
             fc.keyframe_points[0].interpolation = "LINEAR"
             nkeys += 1
         else:
-            m = len(col)
+            idx = rdp_keep(frames, col, chan_eps(attr, rig.K) if not attr.startswith("[") else 2e-3) if reduce else np.arange(len(col))
+            m = len(idx)
             fc.keyframe_points.add(m)
             co = np.empty(2 * m)
-            co[0::2] = frames
-            co[1::2] = col
+            co[0::2] = frames[idx]
+            co[1::2] = col[idx]
             fc.keyframe_points.foreach_set("co", co)
             for kp in fc.keyframe_points:
                 kp.interpolation = "LINEAR"

@@ -39,11 +39,11 @@ def default_spec():
     return dict(
         H=1.75, build=1.0, belly=0.0, shoulders=1.0, arm_r=1.0, leg_r=1.0, arm_len=1.0, leg_len=1.0,
         # head model in v1 head units (pre-transform); the affine transform headS / chin_post maps it to the v2 head
-        head=dict(z_chin=1.517, hh=0.233, w0=0.080, b_front=0.092, b_back=0.100, eye_z=0.117, eye_sep=0.0405, eye_r=0.0235,
-                  eye_sink=0.0135, pupil_r=0.0112, lid_up_lat=0.50, lid_lo_lat=0.42, brow_dz=0.046, nose_z=0.078,
-                  nose_len=0.030, nose_s=1.45, ear_z=0.100, ear_s=0.85, jaw=0.10, chin=0.05, lid_shell=1.10, lid_bead=0.0042,
-                  brow_w=1.12, brow_t=0.0072, brow_h=0.0092, teeth_w=0.024, lip_r=0.0072, lip_f=0.0062, glint_r=0.0055),
-        headS=(1.50, 1.32, 1.52), chin_post=1.395,
+        head=dict(z_chin=1.517, hh=0.233, w0=0.080, b_front=0.092, b_back=0.100, eye_z=0.125, eye_sep=0.0420, eye_r=0.0235,
+                  eye_sink=0.008, pupil_r=0.0112, lid_up_lat=0.62, lid_lo_lat=0.95, brow_dz=0.040, nose_z=0.092,
+                  nose_len=0.026, nose_s=1.15, ear_z=0.100, ear_s=0.85, jaw=0.10, chin=0.05, lid_shell=1.06, lid_bead=0.003,
+                  brow_w=1.12, brow_t=0.0072, brow_h=0.0092, teeth_w=0.024, lip_r=0.0088, lip_f=0.0074, glint_r=0.0055, glint_dir=(0.16, -1.0, 0.26)),
+        headS=(1.90, 1.42, 1.68), chin_post=1.358, head_dy=-0.020,
         wide=1.0, jiggle=[],
     )
 
@@ -52,8 +52,8 @@ def torso_table(spec):
     # v2: chunkier trunk, wider hips and shoulders, shorter neck zone (the head sits low between the shoulders)
     z = np.array([0.80, 0.86, 0.92, 1.00, 1.08, 1.16, 1.25, 1.33, 1.385, 1.43, 1.47])
     rx = np.array([.150, .182, .192, .190, .184, .184, .198, .205, .172, .118, .080]) * spec["wide"] * (0.92 + 0.08 * spec["build"])
-    ry = np.array([.095, .120, .132, .134, .132, .126, .124, .114, .100, .086, .074]) * (0.7 + 0.3 * spec["build"])
-    cy = np.array([0.012, 0.004, 0.0, -0.002, -0.004, -0.006, -0.006, -0.002, 0.004, 0.006, 0.006])
+    ry = np.array([.095, .120, .132, .134, .132, .126, .118, .100, .078, .064, .058]) * (0.7 + 0.3 * spec["build"])
+    cy = np.array([0.012, 0.004, 0.0, -0.002, -0.004, -0.006, -0.004, 0.0, 0.008, 0.012, 0.012])
     b = spec["belly"]
     bump = np.exp(-((z - 1.05) / 0.10) ** 2)
     ry = ry * (1 + b * bump)
@@ -136,7 +136,7 @@ class Character:
         cy = hs.get("cy", 0.005)
         V = np.array(V, float)
         V[..., 0] = V[..., 0] * Sx
-        V[..., 1] = cy + (V[..., 1] - cy) * Sy
+        V[..., 1] = cy + (V[..., 1] - cy) * Sy + self.spec.get("head_dy", 0.0)
         V[..., 2] = self.spec["chin_post"] + (V[..., 2] - hs["z_chin"]) * Sz
         return V
 
@@ -253,8 +253,8 @@ class Character:
         mk("spine_1", (0, 0, 1.0), (0, 0, 1.12), "hips", X)
         mk("spine_2", (0, 0, 1.12), (0, 0, 1.25), "spine_1", X)
         mk("chest", (0, 0, 1.25), (0, 0, 1.41), "spine_2", X)
-        mk("neck", (0, 0.005, 1.41), (0, 0.005, 1.50), "chest", X)
-        mk("head", (0, 0.005, 1.50), (0, 0.005, 1.75), "neck", X)
+        mk("neck", (0, 0.005, 1.41), (0, 0.005, 1.47), "chest", X)
+        mk("head", (0, 0.005, 1.47), (0, 0.005, 1.75), "neck", X)
         mk("jaw", self.T((0, 0.015, 1.60)), self.T((0, -0.075, 1.56)), "head", X)
         # eyes and lids: bones at the eyeball centres
         head = HD.Head(hs)
@@ -381,6 +381,7 @@ class Character:
             for f in FINGERS + ["thumb"]:
                 for k_ in range(3):
                     b = pb["%s_%d_%s" % (f, k_ + 1, sn)]
+                    b.rotation_mode = "XYZ"  # v2: v1 left these in quaternion mode, so the euler curl drivers had no effect
                     ang = CURL_ANGLES[f][k_]
                     drv(b, "rotation_euler", "ctl_hand_" + sn, "curl_" + f, "v*%.4f" % ang, 0)
         # bone collections
@@ -397,13 +398,13 @@ class Character:
         pb = self.arm.pose.bones
         r = self.root
         sq = "max(1+v,0.25)"
-        for i, ex in ((0, "1/sqrt(%s)" % sq), (1, "1/sqrt(%s)" % sq), (2, sq)):
+        for i, ex in ((0, "1/sqrt(%s)" % sq), (1, sq), (2, "1/sqrt(%s)" % sq)):  # bone local Y runs along the bone (world Z at rest)
             M._driver(pb["root"], "scale", r, "p_squash", ex, i)
             M._driver(pb["head"], "scale", r, "p_squash_head", ex, i)
         M._driver(pb["belly"], "location", r, "p_jiggle_belly", "v", 1)
         if "hat" in pb:
             M._driver(pb["hat"], "rotation_euler", r, "p_jiggle_hat", "v", 0)
-        for k_, f_ in ((1, 0.35), (2, 0.65), (3, 1.0)):
+        for k_, f_ in ((1, 0.20), (2, 0.30), (3, 0.50)):
             if "tie_%d" % k_ in pb:
                 M._driver(pb["tie_%d" % k_], "rotation_euler", r, "p_tie_swing", "v*%.3f" % f_, 0)
 
@@ -472,15 +473,15 @@ class Character:
     # limb radius tables (v2, baseline m): (rx along y, ry along x) per path point
     ARM_UA = (np.array([0.066, 0.062, 0.054]), np.array([0.066, 0.062, 0.054]))
     ARM_FA = (np.array([0.056, 0.052, 0.040]), np.array([0.056, 0.052, 0.040]))
-    LEG_TH = (np.array([0.112, 0.094, 0.074]), np.array([0.102, 0.090, 0.072]))
-    LEG_SH = (np.array([0.074, 0.080, 0.050]), np.array([0.072, 0.076, 0.050]))
+    LEG_TH = (np.array([0.120, 0.103, 0.082]), np.array([0.110, 0.099, 0.080]))
+    LEG_SH = (np.array([0.082, 0.088, 0.052]), np.array([0.080, 0.084, 0.052]))
 
     def skin_parts(self):
         """Nude body: torso, neck, arms, legs, hands. Returns a merged Part (skin material index 0)."""
         spec, J = self.spec, self.J
         ar, lr = spec["arm_r"], spec["leg_r"]
-        parts = [self.torso_part()]
-        neck_path = np.array([[0, 0.003, 1.36], [0, 0.005, 1.45], [0, 0.005, 1.54]])
+        parts = [self.torso_part(taper=(0.80, 1.0, 0.42))]
+        neck_path = np.array([[0, 0.003, 1.30], [0, 0.005, 1.345], [0, 0.005, 1.388]])
         nk = G.tube(neck_path, [0.074, 0.071, 0.068], [0.078, 0.075, 0.072], nseg=24, cap0="flat", cap1="flat", ncap=2)
         nk.set_w("neck", 1.0)
         parts.append(nk)
@@ -501,7 +502,7 @@ class Character:
         return G.merge(parts)
 
     # v2 mitten hand: fat palm, thumb, index, a merged middle+ring block, pinky (same bones as v1)
-    HAND_R = dict(index=0.0145, mr_x=0.0215, mr_y=0.0165, pinky=0.0122, thumb=0.0172)
+    HAND_R = dict(index=0.0165, mr_x=0.0245, mr_y=0.0188, pinky=0.0140, thumb=0.0195)
 
     def hand_part(self, sn, side):
         J = self.J
@@ -509,7 +510,7 @@ class Character:
         sx = np.array([side, 1, 1])
         wr = J["wr"] * sx
         A = np.stack([c, n, f], axis=1)  # columns: x=c, y=n, z=f
-        palm = G.ellipsoid(wr + 0.056 * f, (0.056, 0.0235, 0.062), axes=A, nseg=18, nrings=10)
+        palm = G.ellipsoid(wr + 0.056 * f, (0.062, 0.0265, 0.066), axes=A, nseg=18, nrings=10)
         palm.set_w("hand_" + sn, 1.0)
         pad = G.ellipsoid(wr + 0.040 * f - c * 0.034 - n * 0.004, (0.024, 0.020, 0.036), axes=A, nseg=12, nrings=8)
         pad.set_w("hand_" + sn, 1.0)
@@ -679,7 +680,7 @@ class Character:
                                 ("p_squash_head", 0.0, -0.6, 1.0, "extra squash/stretch of the head about the neck pivot, volume kept"),
                                 ("p_jiggle_belly", 0.0, -0.1, 0.1, "vertical offset (m) of the belly jiggle bone"),
                                 ("p_jiggle_hat", 0.0, -0.5, 0.5, "hat bone rotation about X (rad)"),
-                                ("p_tie_swing", 0.0, -1.5, 1.5, "tie chain swing about X (rad at the tip); Manager only")):
+                                ("p_tie_swing", 0.0, -1.5, 1.5, "tie chain swing about X (rad; the three tie bones carry 0.2, 0.3 and 0.5 of it so the tip turns by about this angle); Manager only")):
             if k not in r.keys():
                 r[k] = v
                 r.id_properties_ui(k).update(min=lo, max=hi, description=d)

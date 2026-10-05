@@ -13,7 +13,7 @@ from mathutils.bvhtree import BVHTree
 import chars_geo as G
 
 # ---------------------------------------------------------------------------------------------- expressions
-DEFAULT = dict(brow_in=0.0, brow_out=0.0, brow_x=0.0, lid_up=0.0, lid_lo=0.0, lid_tilt=0.0, gap=0.002, width=1.0,
+DEFAULT = dict(brow_in=0.0, brow_out=0.0, brow_x=0.0, lid_up=0.0, lid_lo=0.0, lid_tilt=0.0, gap=0.007, width=1.0,
                corner=0.0, smirk=0.0, snarl=0.0, pupil=1.0, cheek=0.0, flare=0.0, sweat=0.0, tears=0.0)
 
 EXPR = {
@@ -54,8 +54,8 @@ class Head:
 
     NR = 40       # rings (poles excluded: rings 1..NR-1)
     NS = 56       # columns
-    IM = 12       # mouth centre ring
-    HOLE_ROWS = {10: 2, 11: 4, 12: 4, 13: 2}  # lower ring of the quad row -> half-width in quads
+    IM = 14       # mouth centre ring (v2: two rings higher than v1 for a longer chin)
+    HOLE_ROWS = {12: 2, 13: 4, 14: 4, 15: 2}  # lower ring of the quad row -> half-width in quads
 
     def __init__(self, hs):
         self.hs = hs
@@ -528,17 +528,35 @@ def make_nose(head, hs):
 
 
 def make_lips(head, hs):
-    """Thick clay lips: a closed tube following the mouth rim loop (deformed per expression, weighted like the rim)."""
+    """Thick clay lips: a closed tube following the mouth rim loop (deformed per expression, weighted like the rim).
+    The rim loop is upsampled (periodic Catmull-Rom) so the lips are smooth."""
     rim = head.rim_idx
-    nl = len(rim)
-    ns = 8
+    nl0 = len(rim)
+    UP = 3
+    nl = nl0 * UP
+    ns = 10
     rl_r = hs.get("lip_r", 0.0072)
     rl_f = hs.get("lip_f", 0.0062)
     th = 2 * math.pi * np.arange(ns) / ns
-    # loop order may run either way; the cross-section is symmetric so only the outward direction matters
+    tt = np.arange(UP) / UP
+
+    def upsample(P):
+        out = []
+        for m in range(nl0):
+            p0, p1, p2, p3 = P[(m - 1) % nl0], P[m], P[(m + 1) % nl0], P[(m + 2) % nl0]
+            for t in tt:
+                t2, t3 = t * t, t * t * t
+                out.append(0.5 * ((2 * p1) + (-p0 + p2) * t + (2 * p0 - 5 * p1 + 4 * p2 - p3) * t2 + (-p0 + 3 * p1 - 3 * p2 + p3) * t3))
+        return np.array(out)
+
+    def smooth(P, n=2):
+        for _ in range(n):
+            P = 0.25 * np.roll(P, 1, axis=0) + 0.5 * P + 0.25 * np.roll(P, -1, axis=0)
+        return P
 
     def build(V):
-        P = V[rim]
+        P = upsample(smooth(V[rim], 1))
+        P = smooth(P, 2)
         c = P.mean(axis=0)
         rad = P - c
         rad[:, 1] = 0.0
@@ -548,7 +566,7 @@ def make_lips(head, hs):
         for m in range(nl):
             ring = []
             for t in th:
-                ring.append(P[m] + rad[m] * (rl_r * (0.55 + math.cos(t))) + front * (rl_f * (0.2 + math.sin(t))))
+                ring.append(P[m] + rad[m] * (rl_r * (0.45 + math.cos(t))) + front * (rl_f * (0.15 + math.sin(t))))
             out.append(ring)
         return np.array(out).reshape(-1, 3)
     V0 = head.deformed(E("neutral"))
@@ -561,7 +579,8 @@ def make_lips(head, hs):
             faces.append((m * ns + k, m1 * ns + k, m1 * ns + k1, m * ns + k1))
     p = G.Part(base, faces, 0, closed=True)
     jw = head.jaw_weights()[rim]
-    wj = np.repeat(jw, ns)
+    jwu = upsample(np.stack([jw, jw, jw], axis=1))[:, 0]
+    wj = np.repeat(np.clip(jwu, 0.0, 1.0), ns)
     p.only_w({"head": 1.0 - wj, "jaw": wj})
 
     def fn(e):
@@ -601,8 +620,8 @@ def make_teeth_tongue(head, hs):
     """Upper teeth, lower teeth, tongue as one part each; they follow the mouth rim through deform functions."""
     tw = hs.get("teeth_w", 0.016)
     xs = np.linspace(-tw, tw, 9)
-    ymouth = head.surface_y(0.0, hs["z_chin"] + 0.05)
-    zc = hs["z_chin"] + 0.05
+    zc = float(head.V0[head.vid(head.IM, head.j0), 2])
+    ymouth = head.surface_y(0.0, zc)
 
     def teeth_path(z):
         return np.array([(x, ymouth + 0.004 + 0.9 * (x / 0.03) ** 2 * 0.006 * -1 * -1, z) for x in xs])

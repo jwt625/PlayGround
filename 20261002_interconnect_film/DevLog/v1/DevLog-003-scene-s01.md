@@ -88,3 +88,46 @@ Files added: `scripts/film_v1/s01_cam_fx.py` (camera director, electron pockets,
 - Gun and the Manager's gun-arm cross the scope in the 8.2-9.0 s frames (gun hangs low then is raised); aim close-up 8.5-9.2 is side-on.
 - Needed asm.py changes (not made): per-object `show` windows; an eased/noisy `shot()` variant (s01_cam_fx.Director does this locally); `asm.fx` clip of effect scale.
 - Not run: fresh-context audit.
+
+## v1.2 pass (2026-10-03, PHASE2_BRIEF)
+Backup of the v1.1 blend, scripts and devlog: scratchpad `p2_s01/bak/`.
+
+### Plan
+- Characters: `gary_v2`, `manager_v2`; motion_v2 strips (idle_breathe, turn_right_90, pull_cable, run, startle, shot_hit_fall; stomp_walk, manager_slow_burn slice, gun_raise_aim_fire split for a 3-frame hit-stop). Roots baked per frame (`FX.bake_obj`) with CONSTANT keys before jumps.
+- Stretch 4.4-6.0: three heave cycles (pull_cable at speed 1.875, 2.5 cycles); rack B follows Gary's hands during each heave (handle on rack B's outer face), Gary scoots back with a small hop during each reach; gap 1.0 -> 2.04 m. Popped copper strands + sparks at the strand_pop cues 4.95/5.35/5.65/5.95 with small camera jolts; bundle tremble. Camera 3/4 front on gap + rack B + Gary (Gary about 45-50 percent of frame height). STRETCH caption moved to the top band, 4.4-5.2.
+- 6.0-6.4 scope close-up; 6.4-7.95 Manager stomp_walk into frame, stops right of the scope (x 9.1), slow burn facing the screen (profile, traces in frame), steam, red face; 7.95-8.45 camera eases back to a two-shot Gary | scope | Manager; shotgun pops into his hands at 8.07 ("Shotgun time"), raise, aim with tremor, bang at 9.2 (unchanged). Manager stands 1.46 m right of the screen so the raised gun stays right of / above the scope (fixes the v1.1 gun-crosses-scope).
+- Gary runs to the scope after the stretch (6.1-7.8), stands 3/4 to camera so hole 1 on the chest reads; startle at the gun; shot_hit_fall (speed 1.35) at 9.2; hole pops open at the hole_pop cue 9.45; dust exits his back (hole not covered).
+- 9.2-9.55 two-shot hold (hit, fling, tip), 9.55-10.0 eased-out push onto the scope screen (centred, slow at the end, handheld and shake faded to 0).
+- narr_vo(1); HUD gated; one LAB/CARD per shot (LAB lines dropped, cards kept); world label PULSE DECAYS moved into the safe area.
+- Look: LED strip emission 12 -> 3, bench light panel 6 -> 2, warmer fills; animated motion-blur shutter 0 on hard-cut frames (removes the 3.6 s ghost frame).
+
+### Progress
+- 2026-10-03: helper module extended (`s01_cam_fx.py`: multi-hit shakes, per-time handheld multiplier, `bake_obj` per-frame roots with CONSTANT keys before jumps, `shutter_cuts`, `add_strand_pop`, camera keys CONSTANT before cuts).
+- 2026-10-03: scene script switched to v2 characters and motion_v2; built (FILM_HUD=0), three still passes checked. Fixes from the stills: stretch camera pulled back and near-static so rack B visibly slides away; Manager reading yaw changed to face -x (3/4 face to camera, screen 25 deg to his right; facing the screen showed only the back of his head); two-shot re-centred (x 7.8); smoke ring 0.35 s (it drifted across the lens in the push); dust_cloud star puff at the hit removed (stars covered the hole); hole 1 too small to read at the two-shot distance (about 14 px at 1080): radius pops 1.0 -> 1.6 -> 1.9 (hole_pop cue 9.45) -> 1.0 by 9.75 plus a pale disc at the hole centre (seen only through the cut) for contrast.
+- 2026-10-03: draft p50 render started.
+- 2026-10-03: first draft p50 (516 s, machine shared) reviewed from mp4 frames: stretch, Manager, bang and push strips; cut frames 2.97-3.03, 3.53-3.63, 5.97-6.03, 6.37-6.43 clean (no ghost); YAVG per frame: no 1-frame flashes outside the opening tunnel exit (0.70-0.83, unchanged, liked). Fixes: PULSE DECAYS label 3.0-4.2 only (hidden under "5 m" in the 5 m shot); muzzle flash started 1 frame early so it shows ON the bang frame 9.2 (it grows from 0); smoke ring start 9.27 (its show padding put a white blob on 9.167).
+- 2026-10-03: framework updates applied: all Blender runs through `scripts/film_v1/bslot.sh`; FILM_HUD=0 build writes cards/FX/TC to `scenes/v1/s01_copper.blend.overlays.json` (20 entries; not rendered).
+- 2026-10-03: final draft `outputs/v1/s01_copper_v1_2_draft_p50.mp4`: 354 s for 300 frames = 1.18 s/frame including process start (draft, 50 percent). Blend 49 MB.
+
+### Critique items (S1 table) and requirements: status
+| Item | Status |
+|---|---|
+| 4.4-6.0 stretch gag (high) | done: Gary grips a bar on rack B and hauls in three heaves (pull_cable), rack slides 1.0 -> 2.04 m with each heave, Gary scoots back between heaves; red strain face; bundle taut with tremble; copper strands spring out with sparks at 4.95/5.35/5.65/5.95 plus small camera jolts; STRETCH at the top band 4.4-5.2 |
+| 9.2-9.5 bang readability (high) | done: two-shot Gary - scope - Manager held 8.45-9.55 (Gary about 38 percent of frame height, faces 3/4 to camera); hole 1 pops oversize (1.6/1.9) with a pale see-through disc, settles 1.0 by 9.75; shot_hit_fall x1.35 (tip 9.5, ground 9.74); push onto the scope 9.55-10.0, ease-out, handheld and shake faded to 0 |
+| 7.8-9.1 gun clipping / straight arm (medium) | done: Manager stands 1.46 m right of the screen, gun raise stays right of / above the scope; tremor on the gun while aiming; Gary in the same shot (startle at the gun pop) |
+| 6.7-7.5 Manager walk-in / pale gun (medium) | done: stomp_walk into frame from 6.4 to 7.15; gun pops in at 8.07 with a puff and is darkened (scene material copies) |
+| 4.2-4.3 Gary pop (medium) | done: turn_right_90 3.62-4.31, then pull_cable with blend-in |
+| 3.0 / 3.6 ghost frame (low) | done: motion-blur shutter keyed 0 on cut frames, camera/rack/Gary keys CONSTANT before jumps |
+| 2.25-4.3 PULSE DECAYS cropped (medium) | done (moved in front of the racks, 3.0-4.2) |
+| 2.0-2.5 lamps (medium) | done: LED strips 12 -> 3, bench panel 6 -> 2, signs capped; fills warmed |
+| 7.5-8.7 ear steam popcorn (low) | partial: steam emitters at 0.6 scale, start 7.35 (puffs visible about 7.55, steam_hiss cue) |
+| 0.0-2.2 opening | unchanged (liked) |
+| X1 subtitles / X2 HUD | done: `asm.narr_vo(1)`; LAB lines dropped; cards/FX/TC via asm only |
+
+SFX retime: none (bang 9.2, strand pops, steam, hole pop all at their cue times).
+
+### Remaining / requests
+- Hole 1 at base radius 1.0 is about 14 px tall at 1080 in a two-shot; the S1 oversize pop is a workaround. Later scenes may need closer framing or a larger base radius.
+- Steam is still a cluster of balls (asset look); a smaller/fewer-ball variant of `ear_steam` would help (asset owner).
+- Character materials use DITHERED alpha (hole system); no speckle seen at draft in S1.
+- Not run: fresh-context audit.

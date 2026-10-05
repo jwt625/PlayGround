@@ -10,7 +10,7 @@ REG = {}   # name -> dict(builder, acting, group, ...)
 ORDER = []
 
 
-def action(name, group="full", acting=None, use="", note="", mirror_name=None):
+def action(name, group="full", acting=None, use="", note="", mirror_name=None, also_mirror=None):
     """Register a builder b(rig) -> spec dict(fn|timeline, n, loop, overlap, events, attach, meta, face).
     acting='R' means the builder is authored with the LEFT hand/side as the acting one (left coordinates) and the exported action is
     its mirror (right hand acts); '<name>_L' is registered as the unmirrored variant."""
@@ -21,6 +21,9 @@ def action(name, group="full", acting=None, use="", note="", mirror_name=None):
             nm = mirror_name or name + "_L"
             REG[nm] = dict(builder=b, group=group, mirror=False, use=use, note=note + " (left-hand variant)", variant_of=name)
             ORDER.append(nm)
+        if also_mirror:
+            REG[also_mirror] = dict(builder=b, group=group, mirror=True, use=use, note=note + " (mirrored)", variant_of=name)
+            ORDER.append(also_mirror)
         return b
     return deco
 
@@ -62,3 +65,15 @@ def finalize_spec(spec):
     spec.setdefault("attach", None)
     spec.setdefault("group", None)
     return spec
+
+
+def add_upper_variants(names, suffix="_upper"):
+    """Register upper-body-only (layerable) copies of existing actions: same poses, only upper-body channels are keyed."""
+    for n in names:
+        if n in REG and n + suffix not in REG:
+            e = dict(REG[n])
+            e["group"] = "upper"
+            e["note"] = e["note"] + " [upper-body layer: legs, hips and root are not keyed]"
+            e["variant_of"] = n
+            REG[n + suffix] = e
+            ORDER.append(n + suffix)

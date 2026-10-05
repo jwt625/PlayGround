@@ -19,7 +19,7 @@ def face_mats(ch, skin_hex, brow_hex="#2a1a10", vein=None, hole_group=None, flus
     else:
         sk = M.skin(pre + "skin", skin_hex, ch.root, "p_flush", None, flush_color, holes=hg, flush_zmin=zmin)
     ch.mat("skin", sk)
-    ch.mat("mouth", M.clay(pre + "mouth", "#5a1418", rough=0.5, bump=0.0))
+    ch.mat("mouth", M.clay(pre + "mouth", "#34080c", rough=0.5, bump=0.0))
     ch.mat("eye_white", M.gloss(pre + "eye_white", "#f4f1e6", rough=0.18, spec=0.5))
     ch.mat("pupil", M.gloss(pre + "pupil", "#08080a", rough=0.08, spec=0.8))
     ch.mat("brow", M.clay(pre + "brow", brow_hex, rough=0.7, bump=0.2, holes=hg))
@@ -58,9 +58,13 @@ def leg_tubes(ch, sn, side, off, ztop_shin=None, cuff=0.0, mat=0, top_lift=0.07,
         end = kn + (an - kn) * t
     mid = kn + (end - kn) * 0.35
     rxs, rys = ch.LEG_SH[0] * lr + off, ch.LEG_SH[1] * lr + off
-    last = 0.056 if ztop_shin else rxs[2]
-    sh = G.tube(np.array([kn, mid, end]), np.array([rxs[0], rxs[1], last + flare]), np.array([rys[0], rys[1], last + flare]),
-                u=(0, 1, 0), nseg=28, cap1="flat" if ztop_shin else "round", mat=mat)
+    if ztop_shin:
+        _c, lrx, lry, _b = leg_point(ch, sn, side, ztop_shin, off)
+    else:
+        lrx, lry = rxs[2], rys[2]
+    last = lrx
+    sh = G.tube(np.array([kn, mid, end]), np.array([rxs[0], rxs[1], lrx + flare]), np.array([rys[0], rys[1], lry + flare]),
+                u=(0, 1, 0), nseg=28, cap1=None if ztop_shin else "round", mat=mat)
     sh.set_w("shin_" + sn, 1.0)
     parts = [th, sh]
     if cuff:
@@ -92,14 +96,14 @@ def leg_point(ch, sn, side, z, off=0.0):
     return c, rx, ry, "shin_" + sn
 
 
-def fold_arc(ch, sn, side, z, off, a0=-1.9, a1=1.9, r=0.0075, sag=0.012, bulge=0.0, front=True, nseg=8):
+def fold_arc(ch, sn, side, z, off, a0=-1.9, a1=1.9, r=0.0075, sag=0.012, bulge=0.0, front=True, nseg=8, tilt=0.0):
     """Crease: a partial ring tube around the leg at height z. Angle 0 = front (-y); sag lowers the middle."""
     c, rx, ry, bone = leg_point(ch, sn, side, z, off)
     ang = np.linspace(a0, a1, 15)
     pts = []
     for a in ang:
         p = c + np.array([ry * math.sin(a), -rx * math.cos(a), 0.0])
-        p[2] += -sag * math.cos(a * 0.8) + bulge
+        p[2] += -sag * math.cos(a * 0.8) + bulge + tilt * a
         pts.append(p)
     pts = np.array(pts)
     tb = G.tube(pts, np.linspace(r * 0.35, r, 15) ** 1.0 * 0 + r * np.sin(np.linspace(0.15, math.pi - 0.15, 15)) + 0.0015,
@@ -108,7 +112,19 @@ def fold_arc(ch, sn, side, z, off, a0=-1.9, a1=1.9, r=0.0075, sag=0.012, bulge=0
     return tb
 
 
-def boot(ch, sn, side, shaft_h=0.13, sole_mat=1, mat=0, scale=1.0, toe_len=0.235):
+def torso_arc(ch, z, off, a0=-1.1, a1=1.1, r=0.0075, sag=0.010, tilt=0.0, bones=("spine_1", "spine_2")):
+    """Crease on the torso front: partial ring tube following the torso ellipse at height z (angle 0 = front)."""
+    rx, ry, cy = B.torso_at(ch.spec, np.array([z]), off)
+    rx, ry, cy = float(rx[0]), float(ry[0]), float(cy[0])
+    ang = np.linspace(a0, a1, 17)
+    pts = np.array([[rx * math.sin(a), cy - ry * math.cos(a), z - sag * math.cos(a * 0.9) + tilt * a] for a in ang])
+    rad = r * np.sin(np.linspace(0.12, math.pi - 0.12, 17)) + 0.0015
+    tb = G.tube(pts, rad, None, u=(0, 0, 1), nseg=8, cap0="round", cap1="round", ncap=2)
+    ch.torso_weights(tb)
+    return tb
+
+
+def boot(ch, sn, side, shaft_h=0.16, sole_mat=1, mat=0, scale=1.12, toe_len=0.245):
     """v2 chunky boot: wide toe box, thick sole with heel block, tall shaft with a rolled collar."""
     J = ch.J
     sx = np.array([side, 1, 1])
@@ -124,11 +140,11 @@ def boot(ch, sn, side, shaft_h=0.13, sole_mat=1, mat=0, scale=1.0, toe_len=0.235
     path2 = np.stack([np.full(5, ax), ys - np.array([0.0, 0.0, 0.0, 0.006, 0.010]), np.full(5, 0.017)], axis=1)
     sole = G.tube(path2, hw + 0.008, np.full(5, 0.019), u=(1, 0, 0), nseg=24, mat=sole_mat)
     sole.set_w("foot_" + sn, 1.0)
-    shaft = G.tube(np.array([[ax, ay + 0.012, 0.05], [ax, ay + 0.012, 0.05 + shaft_h]]), [0.071 * scale, 0.068 * scale],
-                   [0.069 * scale, 0.066 * scale], u=(1, 0, 0), nseg=24, cap0="flat", cap1="flat", mat=mat)
+    shaft = G.tube(np.array([[ax, ay + 0.012, 0.05], [ax, ay + 0.012, 0.05 + shaft_h]]), [0.078 * scale, 0.075 * scale],
+                   [0.076 * scale, 0.073 * scale], u=(1, 0, 0), nseg=24, cap0="flat", cap1="flat", mat=mat)
     shaft.set_w("foot_" + sn, 1.0)
-    cuff = G.tube(np.array([[ax, ay + 0.012, 0.05 + shaft_h - 0.016], [ax, ay + 0.012, 0.05 + shaft_h + 0.012]]), [0.077 * scale] * 2,
-                  [0.075 * scale] * 2, u=(1, 0, 0), nseg=24, cap0="round", cap1="round", ncap=2, mat=mat)
+    cuff = G.tube(np.array([[ax, ay + 0.012, 0.05 + shaft_h - 0.016], [ax, ay + 0.012, 0.05 + shaft_h + 0.012]]), [0.085 * scale] * 2,
+                  [0.083 * scale] * 2, u=(1, 0, 0), nseg=24, cap0="round", cap1="round", ncap=2, mat=mat)
     cuff.set_w("foot_" + sn, 1.0)
     return [toe, sole, shaft, cuff]
 
@@ -141,6 +157,38 @@ def ring_tube(center, axis, rx, ry, tube_r, u_hint=(0, 0, 1), n=28, ns=8):
         t = 2 * math.pi * k / n
         pts.append(np.asarray(center, float) + A[:, 0] * rx * math.cos(t) + A[:, 1] * ry * math.sin(t))
     return G.tube(np.array(pts), tube_r, tube_r, u=A[:, 2], nseg=ns, closed_path=True)
+
+
+def jacket_shell(ch, off, z0, z1, hw, n=56, dz=0.02, flare=None, mat=0):
+    """Open-front torso shell (suit jacket). hw(z) = half-width of the front opening at height z (0 = closed).
+
+    Each ring runs from the left opening edge around the back to the right opening edge, so the V edge is a clean
+    quad boundary (no jagged face removal). Coincident front vertices are welded.
+    """
+    spec = ch.spec
+    zs = np.arange(z0, z1 + 1e-6, dz)
+    if zs[-1] < z1 - 1e-6:
+        zs = np.append(zs, z1)
+    rows = []
+    for z in zs:
+        rx, ry, cy = B.torso_at(spec, np.array([z]), off)
+        rx, ry, cy = float(rx[0]), float(ry[0]), float(cy[0])
+        if flare is not None:
+            rx += flare(z)
+            ry += flare(z)
+        h = float(hw(z))
+        phi0 = math.asin(min(h / rx, 0.98)) if h > 1e-6 else 0.0
+        phis = phi0 + np.linspace(0, 1, n) * (2 * math.pi - 2 * phi0)
+        rows.append([(rx * math.sin(p_), cy - ry * math.cos(p_), z) for p_ in phis])
+    V = np.array([pt for r in rows for pt in r])
+    F = []
+    for i in range(len(rows) - 1):
+        for j in range(n - 1):
+            F.append((i * n + j, i * n + j + 1, (i + 1) * n + j + 1, (i + 1) * n + j))
+    p = G.Part(V, F, mat, closed=False)
+    ch.torso_weights(p)
+    p.weld(1e-5)
+    return p
 
 
 def grid_patch(fx, nu, nv, mat=0, flip=False):

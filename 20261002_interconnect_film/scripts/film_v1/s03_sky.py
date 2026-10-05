@@ -14,6 +14,8 @@ from mathutils import Vector
 import blender_lib as L
 from asm import F
 
+SUN_E, MOON_E = 1.2, 0.35   # v1.2: lamps through the windows only (roof stays on); interior luma swing under about 25 percent
+EXT_MATS = []   # exterior materials whose emission follows the day factor
 PHASE_HOLD = 0.25   # noon-ish morning (sun elevation about 27 degrees, azimuth toward the windows)
 
 
@@ -31,7 +33,7 @@ def sky_state(t, t0, t1, cycles=3.0):
     sun = sun / np.linalg.norm(sun)
     moon = np.array([-0.9 * math.cos(phi), 1.0, -0.5 * math.sin(phi)])
     moon = moon / np.linalg.norm(moon)
-    day = smoothstep(-0.06, 0.28, sun[2])
+    day = smoothstep(-0.30, 0.40, sun[2])   # v1.2: wide band, smooth dusk/dawn ramps (was -0.06..0.28)
     glow = math.exp(-((sun[2] - 0.02) / 0.14) ** 2) * (1.0 if sun[2] > -0.25 else 0.0)
     stars = 1.0 - smoothstep(-0.12, 0.10, sun[2])
     return dict(sun=sun, moon=moon, day=day, glow=glow, stars=stars, phase=ph)
@@ -129,9 +131,9 @@ def build_world(scn):
     zpos.inputs[1].default_value = 0.0
     links.new(zpos.outputs[0], zc.inputs[0])
     day_col = mix(zc.outputs[0], rgb((0.80, 0.90, 1.0)), rgb((0.28, 0.52, 0.95)))
-    night_col = mix(zc.outputs[0], rgb((0.05, 0.07, 0.16)), rgb((0.008, 0.012, 0.05)))
+    night_col = mix(zc.outputs[0], rgb((0.16, 0.15, 0.32)), rgb((0.05, 0.06, 0.16)))   # v1.2: lifted night (window luma swing about 2:1, not 6:1)
     base = mix(V["DAY"].outputs[0], night_col, day_col)
-    ground_col = mix(V["DAY"].outputs[0], rgb((0.02, 0.025, 0.04)), rgb((0.22, 0.27, 0.45)))
+    ground_col = mix(V["DAY"].outputs[0], rgb((0.08, 0.08, 0.14)), rgb((0.22, 0.27, 0.45)))
     base = mix(maprange(sep.outputs["Z"], 0.0, -0.02), base, ground_col)
     # dusk / dawn glow
     gl = _math(nodes, "POWER", None, 3.0)
@@ -141,23 +143,23 @@ def build_world(scn):
     links.new(V["GLOW"].outputs[0], gmul.inputs[1])
     gmul2 = _math(nodes, "MULTIPLY", None, 1.6)
     links.new(gmul.outputs[0], gmul2.inputs[0])
-    glow_col = scale_col(rgb((1.0, 0.50, 0.22)), gmul2.outputs[0])
+    glow_col = scale_col(rgb((1.0, 0.46, 0.20)), gmul2.outputs[0])   # warm sunset / sunrise band
     col = mix(1.0, base, glow_col, "ADD")
     # discs
     above = maprange(sep.outputs["Z"], -0.03, 0.0)
-    sd = _math(nodes, "MULTIPLY", None, 7.0)
-    links.new(maprange(ds, 0.9925, 0.9955), sd.inputs[0])
+    sd = _math(nodes, "MULTIPLY", None, 2.2)   # v1.2: soft sun disc (was 7.0: blown with speckle)
+    links.new(maprange(ds, 0.990, 0.9965), sd.inputs[0])
     sdd = _math(nodes, "MULTIPLY")
     links.new(sd.outputs[0], sdd.inputs[0])
     links.new(V["DISC"].outputs[0], sdd.inputs[1])
     sun_col = scale_col(rgb((1.0, 0.90, 0.62)), sdd.outputs[0])
     col = mix(1.0, col, sun_col, "ADD")
-    md = _math(nodes, "MULTIPLY", None, 3.5)
+    md = _math(nodes, "MULTIPLY", None, 1.8)
     links.new(maprange(dm, 0.9965, 0.9980), md.inputs[0])
     mdd = _math(nodes, "MULTIPLY")
     links.new(md.outputs[0], mdd.inputs[0])
     links.new(V["DISC"].outputs[0], mdd.inputs[1])
-    moon_col = scale_col(rgb((0.85, 0.90, 1.0)), mdd.outputs[0])
+    moon_col = scale_col(rgb((0.80, 0.86, 1.0)), mdd.outputs[0])
     col = mix(1.0, col, moon_col, "ADD")
     # stars
     vor = nodes.new("ShaderNodeTexVoronoi")
@@ -183,6 +185,11 @@ def build_world(scn):
     links.new(above, s5.inputs[1])
     star_col = scale_col(rgb((1.0, 1.0, 0.92)), s5.outputs[0])
     col = mix(1.0, col, star_col, "ADD")
+    # v1.2: camera rays see the animated sky; lighting (probe/ambient) rays see the constant day gradient, so the interior does not
+    # strobe with the cycle (v1.1 measured frame luma 155 -> 90); only the window lamps vary the interior light.
+    amb = mix(maprange(sep.outputs["Z"], 0.0, -0.02), day_col, rgb((0.22, 0.27, 0.45)))
+    lp = nodes.new("ShaderNodeLightPath")
+    col = mix(lp.outputs["Is Camera Ray"], amb, col)
     links.new(col, bg.inputs["Color"])
     bg.inputs["Strength"].default_value = 1.0
     links.new(bg.outputs[0], out.inputs[0])
@@ -216,16 +223,20 @@ def key_cycle(world_nodes, sun_l, moon_l, t0, t1, cycles=3.0, pre=0.0):
             n = w[k]
             n.outputs[0].default_value = vals[k]
             n.outputs[0].keyframe_insert("default_value", frame=f)
-        for lo, d, up_energy, col in ((sun_l, st["sun"], 4.0 * st["day"], None), (moon_l, st["moon"], 0.45 * (1 - st["day"]), None)):
+        for lo, d, up_energy, col in ((sun_l, st["sun"], SUN_E * st["day"], None), (moon_l, st["moon"], MOON_E * (1 - st["day"]), None)):
             q = Vector(-d).to_track_quat("-Z", "Y")
             lo.rotation_euler = q.to_euler()
             lo.keyframe_insert("rotation_euler", frame=f)
             lo.data.energy = up_energy * (1.0 if d[2] > -0.02 else 0.0)
             lo.data.keyframe_insert("energy", frame=f)
+        for m in EXT_MATS:    # exterior brightness follows the cycle (the interior ambient is constant, see build_world)
+            es = m.node_tree.nodes["Principled BSDF"].inputs["Emission Strength"]
+            es.default_value = 0.10 + 0.75 * st["day"] + 0.25 * st["glow"]
+            es.keyframe_insert("default_value", frame=f)
         warm = st["glow"]
-        sun_l.data.color = (1.0, 0.92 - 0.35 * warm, 0.80 - 0.5 * warm)
+        sun_l.data.color = (1.0, 0.90 - 0.40 * warm, 0.78 - 0.50 * warm)   # warm sunset tint
         sun_l.data.keyframe_insert("color", frame=f)
-        moon_l.data.color = (0.65, 0.75, 1.0)
+        moon_l.data.color = (0.62, 0.72, 1.0)   # cool moon tint
         moon_l.data.keyframe_insert("color", frame=f)
     for ob in (sun_l, moon_l, sun_l.data, moon_l.data):
         ad = ob.animation_data
@@ -260,8 +271,12 @@ def exterior(seed=7):
     def mat(name, col, rough=0.9):
         m = bpy.data.materials.new(name)
         m.use_nodes = True
-        m.node_tree.nodes["Principled BSDF"].inputs["Base Color"].default_value = (*col, 1)
-        m.node_tree.nodes["Principled BSDF"].inputs["Roughness"].default_value = rough
+        b = m.node_tree.nodes["Principled BSDF"]
+        b.inputs["Base Color"].default_value = (*(c * 0.35 for c in col), 1)
+        b.inputs["Roughness"].default_value = rough
+        b.inputs["Emission Color"].default_value = (*col, 1)    # v1.2: self-lit by the keyed day factor (key_cycle)
+        b.inputs["Emission Strength"].default_value = 0.8
+        EXT_MATS.append(m)
         return m
     grass = mat("MAT_s03_grass", (0.30, 0.50, 0.25))
     g = box("ext_ground", 0, 40, 80, 40, 0.01, grass)

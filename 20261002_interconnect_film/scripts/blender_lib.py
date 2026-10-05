@@ -311,10 +311,10 @@ def shot(idx, t0, t1, p0, a0, p1=None, a1=None, lens=LENS0, lens1=None, ease="LI
 # ---------------------------------------------------------------- text
 WHITE = (1, 1, 1)
 OVL = {
-    "CAP": dict(size=0.27, color=WHITE, loc=(0, -1.5), ax="CENTER", ay="CENTER", shadow=True),
-    "BIG": dict(size=0.62, color=(1.0, 0.9, 0.25), loc=(0, 0.3), ax="CENTER", ay="CENTER", shadow=True),
-    "LAB": dict(size=0.17, color=(0.35, 0.95, 1.0), loc=(-1.85, 1.9), ax="LEFT", ay="TOP", shadow=True),
-    "CARD": dict(size=0.1, color=(0.85, 0.85, 0.85), loc=(-1.85, -2.37), ax="LEFT", ay="BOTTOM", shadow=True),
+    "CAP": dict(size=0.27, color=WHITE, loc=(0, -1.5), ax="CENTER", ay="CENTER", shadow=True, font="Arial Black", outline=0.022),
+    "BIG": dict(size=0.62, color=(1.0, 0.9, 0.25), loc=(0, 0.3), ax="CENTER", ay="CENTER", shadow=True, font="Arial Black", outline=0.04),
+    "LAB": dict(size=0.17, color=(0.35, 0.95, 1.0), loc=(-1.85, 1.9), ax="LEFT", ay="TOP", shadow=True, font="Arial Bold", outline=0.014),
+    "CARD": dict(size=0.1, color=(0.85, 0.85, 0.85), loc=(-1.85, -2.37), ax="LEFT", ay="BOTTOM", shadow=True, font="Arial Bold", outline=0.009),
     "FX": dict(size=0.115, color=(1.0, 0.85, 0.2), loc=(-1.85, 2.35), ax="LEFT", ay="TOP", shadow=True),
     "TC": dict(size=0.1, color=(0.6, 0.6, 0.6), loc=(1.85, -2.37), ax="RIGHT", ay="BOTTOM", shadow=False),
     "DISC": dict(size=0.19, color=WHITE, loc=(-1.8, 1.9), ax="LEFT", ay="TOP", shadow=False),
@@ -323,10 +323,27 @@ OVL = {
 WRAP = {"CAP": 24, "BIG": 10, "LAB": 32, "CARD": 62, "FX": 48, "TC": 20, "SRC": 100, "DISC": 40}
 
 
-def _text(body, size, color, loc, parent, ax, ay, billboard=False, rot=None):
+_FONTS = {}
+
+
+def font(name):
+    """System font loaded once and packed into the blend (no external file dependency at render time)."""
+    if name not in _FONTS:
+        f = bpy.data.fonts.load("/System/Library/Fonts/Supplemental/%s.ttf" % name, check_existing=True)
+        if f.packed_file is None:
+            f.pack()
+        _FONTS[name] = f
+    return _FONTS[name]
+
+
+def _text(body, size, color, loc, parent, ax, ay, billboard=False, rot=None, fnt=None, offset=0.0):
     cu = bpy.data.curves.new("t", "FONT")
     cu.body = body
     cu.size = size
+    if fnt:
+        cu.font = font(fnt)
+    if offset:
+        cu.offset = offset
     cu.align_x = ax
     cu.align_y = ay
     o = bpy.data.objects.new("txt", cu)
@@ -354,10 +371,13 @@ def ov(kind, body, f0, f1):
         lines += textwrap.wrap(ln, WRAP[kind]) or [""]
     body = "\n".join(lines)
     objs = []
+    fn, ol = d.get("font"), d.get("outline", 0.0)
+    if ol:  # black outline: same text grown by `ol`, just behind the fill
+        objs.append(_text(body, d["size"], (0, 0, 0), (d["loc"][0], d["loc"][1], -0.005), HOLD, d["ax"], d["ay"], fnt=fn, offset=ol))
     if d["shadow"]:
-        sh = _text(body, d["size"], (0, 0, 0), (d["loc"][0] + 0.02, d["loc"][1] - 0.02, -0.01), HOLD, d["ax"], d["ay"])
+        sh = _text(body, d["size"], (0, 0, 0), (d["loc"][0] + 0.02, d["loc"][1] - 0.02, -0.01), HOLD, d["ax"], d["ay"], fnt=fn, offset=ol)
         objs.append(sh)
-    o = _text(body, d["size"], d["color"], (d["loc"][0], d["loc"][1], 0), HOLD, d["ax"], d["ay"])
+    o = _text(body, d["size"], d["color"], (d["loc"][0], d["loc"][1], 0), HOLD, d["ax"], d["ay"], fnt=fn)
     objs.append(o)
     for x in objs:
         VA(x, f0, f1)

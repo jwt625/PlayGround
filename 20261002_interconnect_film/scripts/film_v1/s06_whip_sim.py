@@ -28,9 +28,10 @@ DRAG = 0.55                   # quadratic drag coefficient (1/m) scaled by 1/mas
 FLOOR_Z = 0.03
 R_CABLE = 0.03                # collision radius of the (thickened) bundle
 BEND_K = 0.9                  # bending constraint strength at the handle end
-GARY_R = {"hips": 0.20, "spine_1": 0.21, "spine_2": 0.21, "chest": 0.21, "neck": 0.08, "head": 0.13, "thigh_L": 0.11, "thigh_R": 0.11,
+GARY_R = {"hips": 0.22, "spine_1": 0.22, "spine_2": 0.22, "chest": 0.22, "neck": 0.08, "head": 0.19, "thigh_L": 0.11, "thigh_R": 0.11,
           "shin_L": 0.075, "shin_R": 0.075, "upper_arm_L": 0.06, "upper_arm_R": 0.06}
 TORSO = ("hips", "spine_1", "spine_2", "chest")
+BACKSIDE = ("hips", "thigh_L", "thigh_R")   # v1.2: contacts recorded on all capsules (capsule index in the record); the backside set is used for the hit
 
 
 def masses():
@@ -124,8 +125,8 @@ def simulate(handle_pts, caps, hold=None):
                             dd = np.linalg.norm(Dv)
                             nrm = Dv / dd if dd > 1e-9 else np.array([0.0, 0.0, 1.0])
                             xn[i] = Q[ni, ci] + nrm * (CR[ci] + R_CABLE)
-                            if record is not None and CT[ci]:
-                                record.append((f_idx, i, float(np.linalg.norm(xn[i] - x[i]) / dt)))
+                            if record is not None:
+                                record.append((f_idx, i, float(np.linalg.norm(xn[i] - x[i]) / dt), int(ci)))
             # floor and collider friction: damp tangential velocity of touching points
             for i in range(PINNED, N_PT):
                 if xn[i, 2] <= FLOOR_Z + 1e-6:
