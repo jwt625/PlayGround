@@ -1,0 +1,147 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Build montage</title>
+<style>html, body { margin: 0; background: #000; overflow: hidden; } canvas { display: block; }</style>
+<script type="importmap">
+{ "imports": {
+  "three": "./three/build/three.module.js",
+  "three/addons/": "./three/examples/jsm/",
+  "@sparkjsdev/spark": "./spark/dist/spark.module.js"
+} }
+</script>
+</head>
+<body>
+<canvas id="comp"></canvas>
+<script type="module">
+// Montage: top = glb viewer revealing the model group by group (flat, then photo textures) interleaved with the
+// agents' artifact cards; bottom = Spark viewer showing interpolated 3DGS "training" stages (illustration).
+import * as THREE from "three";
+import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
+import { SplatMesh } from "@sparkjsdev/spark";
+
+const plan = await (await fetch("montage/plan.json")).json();
+const S = plan.w || plan.size, H = plan.h || plan.size;
+const VFOV = 2 * Math.atan(Math.tan(plan.fov_deg * Math.PI / 360) * H / S) * 180 / Math.PI;  // keep horizontal FOV
+const comp = document.getElementById("comp");
+comp.width = S; comp.height = 2 * H;
+const ctx = comp.getContext("2d");
+
+const r1 = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true });
+r1.setPixelRatio(1); r1.setSize(S, H);
+r1.outputColorSpace = THREE.SRGBColorSpace; r1.toneMapping = THREE.NoToneMapping;
+const s1 = new THREE.Scene(); s1.background = new THREE.Color(0xffffff);
+s1.add(new THREE.AmbientLight(0xffffff, 3.0));
+const c1 = new THREE.PerspectiveCamera(VFOV, S / H, 0.005, 20);
+const root = (await new GLTFLoader().loadAsync("model.glb")).scene;
+s1.add(root);
+
+// groups by object-name prefix (GLTFLoader drops the "." of "case.screen_box")
+const order = ["case", "crt", "pcb", "wires"];
+function meanColor(tex) {
+  try {
+    const c = document.createElement("canvas"); c.width = c.height = 8;
+    const g = c.getContext("2d"); g.drawImage(tex.image, 0, 0, 8, 8);
+    const d = g.getImageData(0, 0, 8, 8).data; let r = 0, gg = 0, b = 0;
+    for (let i = 0; i < d.length; i += 4) { r += d[i]; gg += d[i + 1]; b += d[i + 2]; }
+    const n = d.length / 4;
+    return new THREE.Color().setRGB(r / n / 255, gg / n / 255, b / n / 255, THREE.SRGBColorSpace);
+  } catch (e) { return new THREE.Color(0xb8b8b8); }
+}
+const meshes = [];
+root.traverse((o) => {
+  if (!o.isMesh) return;
+  let n = o.name; let p = o.parent;
+  while (p && p !== root && !/^(case|crt|pcb|wires|_env)/.test(n)) { n = p.name; p = p.parent; }
+  const g = order.find((k) => n.startsWith(k)) || (n.startsWith("_env") ? "env" : "other");
+  const full = o.material;
+  const gray = new THREE.MeshStandardMaterial({ color: 0xb8b8b8, roughness: 0.7 });
+  const base = full.map ? new THREE.MeshStandardMaterial({ color: meanColor(full.map), roughness: 0.6 }) : full;
+  const isLabel = /label/i.test(n) || /label/i.test(o.name);
+  const clear = full.transparent || full.opacity < 1;  // glass/window: keep as is in every step (never an opaque lid)
+  meshes.push({ o, g, full, gray, base, isLabel, clear, hasTex: !!full.map });
+});
+for (const g of order) {
+  const ms = meshes.filter((m) => m.g === g);
+  ms.forEach((m, i) => (m.rank = (i + 1) / ms.length));
+}
+// build steps over t in [0,1]:
+//   1 block-out    0.00-0.36  groups appear in order, flat gray
+//   2 materials    0.36-0.48  per-part base colors (mean of the photo texture)
+//   3 labels       0.48-0.58  label textures from photos
+//   4 textures     0.58-0.86  photo textures switch on group by group (case, crt, pcb, wires)
+//   5 final        0.86-1.00
+const STEPS = [[0.0, "1 block-out by part group"], [0.36, "2 materials"], [0.48, "3 labels from photos"],
+               [0.58, "4 photo textures (train views)"], [0.86, "5 final model"]];
+function stepName(t) { let s = STEPS[0][1]; for (const [t0, n] of STEPS) if (t >= t0) s = n; return s; }
+function applyBuild(t) {
+  for (const m of meshes) {
+    if (m.g === "env" || m.g === "other") { m.o.visible = true; continue; }
+    const gi = order.indexOf(m.g);
+    m.o.visible = t >= gi * 0.09 + m.rank * 0.09 * 0.999;
+    // the case's textured panels carry the photographed see-through look of the open window/tray; drawn flat they
+    // become opaque lids, so the case keeps its final materials and the steps apply to the parts inside it
+    if (m.clear || m.g === "case") { m.o.material = m.full; continue; }
+    let mat = m.gray;
+    if (t >= 0.36) mat = m.base;
+    if (t >= 0.48 && m.isLabel) mat = m.full;
+    if (t >= 0.58 + gi * 0.07) mat = m.full;
+    m.o.material = mat;
+  }
+}
+
+const r2 = new THREE.WebGLRenderer({ antialias: false, preserveDrawingBuffer: true });
+r2.setPixelRatio(1); r2.setSize(S, H); r2.setClearColor(0x000000, 1);
+const s2 = new THREE.Scene();
+const c2 = new THREE.PerspectiveCamera(VFOV, S / H, 0.005, 50);
+let splat = null, splatStage = -1;
+async function loadStage(k) {
+  if (k === splatStage) return;
+  const m = new SplatMesh({ url: "montage/" + plan.stages[k].file });
+  const x = plan.splat_xform;
+  m.position.set(...x.position); m.quaternion.set(...x.rotation); m.scale.set(...x.scale);
+  await m.initialized;
+  s2.add(m);
+  if (splat) { s2.remove(splat); splat.dispose?.(); }
+  splat = m; splatStage = k;
+}
+
+const imgs = {};
+async function img(src) {
+  if (!imgs[src]) { const im = new Image(); im.src = "montage/" + src; await im.decode(); imgs[src] = im; }
+  return imgs[src];
+}
+function place(cam, f) {
+  cam.position.set(...f.C); cam.up.set(0, 1, 0); cam.lookAt(new THREE.Vector3(...f.T)); cam.updateMatrixWorld(true);
+}
+function label(t, y, size = 30) {
+  ctx.font = `600 ${size}px Helvetica, Arial, sans-serif`; ctx.lineWidth = 5;
+  ctx.strokeStyle = "#000"; ctx.fillStyle = "#fff"; ctx.strokeText(t, 24, y); ctx.fillText(t, 24, y);
+}
+const raf = () => new Promise((r) => requestAnimationFrame(r));
+
+window.setFrame = async (i) => {
+  const f = plan.frames[i];
+  place(c1, f); place(c2, f);
+  if (f.top_img) {
+    ctx.drawImage(await img(f.top_img), 0, 0, S, H);
+  } else {
+    applyBuild(f.build);
+    r1.render(s1, c1);
+    ctx.drawImage(r1.domElement, 0, 0);
+  }
+  label("Explicit model: agents build it from the photos", 48);
+  if (!f.top_img) label(stepName(f.build), H - 28, 26);
+  await loadStage(f.stage);
+  for (let k = 0; k < 3; k++) { r2.render(s2, c2); await raf(); }
+  ctx.drawImage(r2.domElement, 0, H);
+  const st = plan.stages[f.stage];
+  label("3DGS training (illustration)", H + 48);
+  label(`iter ${st.iter.toLocaleString("en-US")}   ${st.count.toLocaleString("en-US")} Gaussians`, H + 90, 26);
+};
+window.nFrames = plan.frames.length;
+window.ready = true;
+</script>
+</body>
+</html>

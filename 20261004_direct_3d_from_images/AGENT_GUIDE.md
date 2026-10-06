@@ -1,5 +1,10 @@
 # Agent guide: direct 3D modeling of the CRT capture
 
+Part agents read this first. The coordinator's playbook is `PLAYBOOK.md` (sections 5-8: what each metric is good
+for, proven techniques with measured effect, negative results, pitfalls). For a new capture the coordinator
+rewrites the CRT-specific parts: Goal, World frame, the view counts (14 holdout / 123 train / 12 probe), image sizes
+(1/2 scale: cam 1 2856x2142, cam 2 2016x1512) and the disk figure; the rest applies as is.
+
 Goal: an explicit, editable Blender model of the CRT display unit in `~/Documents/3DGS/20251004_CRT_display`
 (137 photos), built from the photos and checked by rendering at the COLMAP cameras. Labels and printed text
 are as important as structure (image textures from the photos). Work rough first, then iterate on details.
@@ -16,7 +21,8 @@ are as important as structure (image textures from the photos). Work rough first
 - Your devlog `DevLog/parts/DevLog-002-<group>.md` (TODO checklist + timestamped progress + measurements).
 - Never edit other groups' files, shared scripts, `data/`, or `config/world*.yaml`. Need a shared change? Write
   it in your devlog under "Requests to coordinator" and work around it. No git. No emoji anywhere.
-- Keep your build always runnable (a broken group is skipped by `build_all.py`, but others lose your occluders).
+- Keep your build always runnable: a broken build or TOML makes `build_all.py` fall back to your last-known-good
+  copy (`outputs/lkg/<group>/`), so others keep your occluders but your new work is invisible until it builds.
 
 ## Loop (about 12 s per iteration for 12 views)
 1. `scripts/iterate.sh <group>_NNN probe <group>. geom` builds all groups, renders the 12 probe views, evaluates,
@@ -63,6 +69,40 @@ Use with `lib.mat_image` + `lib.label_quad` (or UV-mapped curved meshes).
 Crowded planar surfaces (board tops under parts/wires): `scripts/tools/bake_id_owned.py` bakes only from pixels the
 object owns in an ID render of the current model (see its docstring; re-run after occluders change). This tool is new: verify its output
 visually the first time and report bugs in your devlog.
+
+## Render rig and materials (calibrated, do not change per part)
+- RGB renders: uniform white world of strength 1, no lights, EEVEE screen-space ray tracing on. A diffuse
+  surface renders at about its base color, so photo textures reproduce photo values.
+- Photo-textured materials: `lib.mat_image` (Specular IOR Level 0; the photo already holds the highlights).
+  Photo-sampled flat materials: base color = median of a well-lit photo patch, Specular IOR Level 0.2-0.3; metal
+  stays metallic. Truly glossy plastic: low specular (the case uses 0.02) since the white world would gray it.
+- Glass/clear parts: a textured shell scored better than refracting glass (14.3 vs 12.6 dB on the window).
+
+## Texturing recipe that worked (pcb, crt, case agents)
+1. Give each part UVs that follow its real surfaces (box faces, cylinder side and top; one atlas per part, or one
+   panel per flat face). Bake on the real mesh, not an idealized shape (removes parallax ghosting).
+2. ID-render all train views with the current model (about 7 s):
+   `scripts/bslot.sh -b --factory-startup --python scripts/blender/render_views.py -- --out outputs/runs/<g>_idtrain
+   --build scripts/model/build_all.py --views train --passes id`
+3. Each texel = median of its best K = 5 train views where the texel faces the camera and the ID pass says the part
+   owns the pixel (`scripts/tools/bake_id_owned.py`, `scripts/model/pcb/bake_parts.py`,
+   `scripts/model/crt/texture_yoke.py`, `scripts/model/case/bake_case.py` are working examples).
+4. Glossy surfaces: a darker percentile (25th over 8 views) instead of the median drops moving highlights.
+5. Re-bake after occluders change (wires over a board); the coordinator sequences these.
+Diagnose with a self-texture test: texture a part from one view and render that view. A high score there and a
+low multi-view score means view-dependent shine, not geometry.
+
+## Reports and devlogs
+- Final report (under 250 words): what changed, how it was measured, before/after per part (`error_budget.py`
+  and `parts.json` on probe runs), sheet paths, tool problems, next steps.
+- Compare per part, not totals: other agents edit at the same time, and group shares redistribute.
+- Runs you delete may be referenced elsewhere: copy anything meant to last (figures, cards) out of `outputs/runs`.
+
+## Pitfalls
+- zsh: `$var` does not word-split (use `${=var}`); argparse needs `--` before negative numbers.
+- Blender's Python has no PyYAML: parameters are TOML. Keep TOML valid at every save (the builder falls back to
+  your last-known-good copy, but your new work is then invisible to everyone).
+- Label quads: corners TL, TR, BR, BL; normal = (down) x (right).
 
 ## Machine rules
 - Blender only through `scripts/bslot.sh` (at most 2 Blender processes machine-wide; it queues). Never kill

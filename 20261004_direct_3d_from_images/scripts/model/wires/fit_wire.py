@@ -180,8 +180,23 @@ def main():
         write_pts(a.wire, P)
 
 
+def thin_pts(P: np.ndarray, min_mm: float = 2.5) -> np.ndarray:
+    """Drop interior control points closer than min_mm to the previous kept point (fits and Viterbi can stack
+    points, which makes Bezier kinks). End points are always kept."""
+    keep = [0]
+    for i in range(1, len(P) - 1):
+        if np.linalg.norm(P[i] - P[keep[-1]]) >= min_mm:
+            keep.append(i)
+    if len(P) > 1:
+        if len(keep) > 1 and np.linalg.norm(P[-1] - P[keep[-1]]) < min_mm:
+            keep.pop()
+        keep.append(len(P) - 1)
+    return P[keep]
+
+
 def write_pts(name: str, P: np.ndarray) -> None:
-    """Replace (or add) the pts = [...] entry of [wire.<name>] / [bundle.wires.<color>] in the TOML."""
+    """Replace (or add) the pts = [...] entry of [wire.<name>] / [bundle.wires.<color>] in the TOML (thinned)."""
+    P = thin_pts(np.asarray(P, float))
     txt = TOML.read_text()
     sec = f"[bundle.wires.{name[len('bundle_'):]}]" if name.startswith("bundle_") else f"[wire.{name}]"
     i = txt.index(sec)
@@ -189,8 +204,8 @@ def write_pts(name: str, P: np.ndarray) -> None:
     j = len(txt) if j < 0 else j
     body = txt[i:j]
     pts = "pts = [" + ", ".join(f"[{p[0]:.1f}, {p[1]:.1f}, {p[2]:.1f}]" for p in P) + "]"
-    if re.search(r"^pts = \[.*?\]\]\s*$", body, flags=re.M | re.S):
-        body = re.sub(r"^pts = \[.*?\]\]", pts, body, count=1, flags=re.M | re.S)
+    if re.search(r"^pts = \[\[", body, flags=re.M):  # pts are always a single line (trailing comment dropped)
+        body = re.sub(r"^pts = \[\[.*$", lambda _m: pts, body, count=1, flags=re.M)
     else:
         lines = body.rstrip("\n").split("\n")
         k = len(lines)

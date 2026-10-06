@@ -51,14 +51,14 @@ def build_group(group: str, overrides: dict | None = None, use_lkg: bool = True)
     half-saved edit by one agent does not remove that group from everyone else's renders."""
     coll = lib.group_collection(group)
     lib.clear_collection(coll)
-    P = lib.load_params(group)
-    for k, v in (overrides or {}).items():
-        d = P
-        keys = k.split(".")
-        for kk in keys[:-1]:
-            d = d.setdefault(kk, {})
-        d[keys[-1]] = v
     try:
+        P = lib.load_params(group)  # inside try: a half-saved TOML also falls back to the last-known-good copy
+        for k, v in (overrides or {}).items():
+            d = P
+            keys = k.split(".")
+            for kk in keys[:-1]:
+                d = d.setdefault(kk, {})
+            d[keys[-1]] = v
         load_group_module(group).build(P, coll)
         if not overrides:
             _save_lkg(group)

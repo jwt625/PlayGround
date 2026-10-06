@@ -16,6 +16,8 @@ spec.json:
    "partial": false,                              # optional: accept views that see only part of the patch
    "exclude_object_mask": false,                  # optional (background surfaces like the mat): drop texels
                                                   #   where the photo mask says object or unknown
+   "exclude_model_run": "outputs/runs/<id run>",  # optional (background surfaces): drop texels the model covers in
+                                                  #   that run's ID pass (all train views), keep cast shadows
    "per_texel": false                             # optional (large surfaces): every texel takes the median of
   }                                               #   its own best n_best views by local px/mm x cos(angle);
                                                   #   never-seen texels are inpainted
@@ -105,7 +107,16 @@ def per_texel(spec, X, N, V, intr, img_dir, names):
         dist = np.linalg.norm(d, axis=2)
         cosang = (d * N).sum(2) / dist
         sc = (cosang * intr[v.camera_id][0] / (dist * 1e3)).astype(np.float32)  # px per mm x cos
-        if spec.get("exclude_object_mask"):
+        if spec.get("exclude_model_run"):
+            # model-owned pixels (any object in that run's ID pass, dilated) hide the surface; shadows stay valid
+            idm = cv2.imread(str(ROOT / spec["exclude_model_run"] / "id" / f"{nm}.png"), cv2.IMREAD_UNCHANGED)
+            pm = cv2.imread(str(DATA / "masks_s4" / f"{nm}.png"), cv2.IMREAD_GRAYSCALE)
+            bad = cv2.dilate((idm[..., 3] > 0).astype(np.uint8), np.ones((7, 7), np.uint8)) | (pm == 128)
+            uv, _ = v.project(X.reshape(-1, 3))
+            uu = np.clip(np.round(uv[:, 0]).astype(int), 0, pm.shape[1] - 1)
+            vv = np.clip(np.round(uv[:, 1]).astype(int), 0, pm.shape[0] - 1)
+            inb &= (bad[vv, uu] == 0).reshape(inb.shape)
+        elif spec.get("exclude_object_mask"):
             pm = cv2.imread(str(DATA / "masks_s4" / f"{nm}.png"), cv2.IMREAD_GRAYSCALE)
             bad = cv2.dilate((pm != 0).astype(np.uint8), np.ones((7, 7), np.uint8))
             uv, _ = v.project(X.reshape(-1, 3))

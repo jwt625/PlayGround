@@ -7,7 +7,7 @@
 | Files | `scripts/model/case/build.py`, `config/model/case.toml` |
 | Started | 2026-10-05 |
 | Phase | 1A done; 1B (details, materials) done 2026-10-05 |
-| Last run | `outputs/runs/case_030` (probe, full; Phase 2 photo textures) |
+| Last run | `outputs/runs/case_034` (probe, full; Phase 3) |
 
 ## TODO
 - [x] Read AGENT_GUIDE.md, DevLog-001 sections 2 and 4
@@ -72,6 +72,14 @@
 - 05:25 case_024 card texture: 14.06. case_025 glass spec 0.05: 13.96; case_026 light glass (0.3, alpha 0.35): 13.71. Reverted to dark glass.
 - 05:40 case_027 window shell textured (opaque): 14.21. case_028 window bottom made parallel to and 1.5 mm below the card (old bottom cut the card's +X half): 14.29. case_029 tex_spec 0.2 -> 0.0 (walls were 10-25 levels too bright): 14.53 / blur4 16.53. case_030 n_best 3 -> 5: 14.58 / 16.59.
 - Holdout check once (not tuned on): case_031h psnr_fit 14.09, blur4 16.19 (3DGS 22.1); case 53.7 percent (window 19.2, tray 10.2, card 8.5). Run deleted.
+
+## Phase 3 (2026-10-05, probe only)
+- Card re-measured with pick.py tri on train views (IMG_1524 / IMG_1571 corner picks, 4-9 inliers): world (-91.3, 40.5, 25.0), (-33.0, 40.3, 12.5), (-33.0, -39.1, 12.6), (-90.7, -36.7, 26.8) -> local x -89.6..-31.5, y -38.7..39.7, z 25.9 / 12.55 (was -91.4..-30.65, -37..41.5, 26.2 / 14.3). Window bottom kept parallel 1.5 mm below (26.3 / 7.0). Rebaked card + window: card 17.4 -> 18.5 dB (case_031).
+- Ray-traced transmissive glass (`glass_mode = "transmission"`, screen-space refraction) instead of the textured shell: window 12.6 dB vs 14.3 (case_032). Kept the textured shell.
+- Panels added: ramp outer faces, lug faces + tops, screw heads (case_033): screw_far 9.0 -> 16.4 dB, screw_near 20.9.
+- bake_case.py now bakes in-process with a per-texel luminance percentile (`--pct`, default 50 = median). Outer walls (scr_*, tray_*) baked at pct 25 over 8 views (glossy walls carry view-dependent mat/lamp reflections): screen_box 19.8 -> 20.0, card 19.0 (case_034). Window panels at pct 30: 14.3 -> 14.2 (case_035), reverted to median.
+- Remaining window error is the ring-lamp reflection (white concentric rings) on the glass and card: view-dependent, needs the lamp in the render rig (shared), not case geometry. Tray error (16.8 dB) concentrates in IMG_1587/1604/1560/1624 (bright glossy rim edges, unmodeled objects inside the tray in the tray's ID pixels).
+- Per part, probe (v3_probe -> case_034, dB): window 14.5 -> 14.3, card 17.4 -> 19.0, tray 16.8 -> 16.8, screen_box ~19.8 -> 20.0, window_edge_px 16.5 -> 16.5, bracket 19.3 -> 18.9, screw_far 9.1 -> 16.4. Totals are confounded by other agents' concurrent changes (case_034 psnr_fit 14.88, blur4 16.97).
 
 ## Final metrics Phase 1B (case_018, probe, full, all groups built)
 - Global: IoU mean 0.940 (min 0.869), edge mean 3.06 px, color residual 37.3, sparse median 0.44 mm.

@@ -158,6 +158,26 @@ def _disc_label(name, center_mm, eu, ev, n, r_mm, coll, mat, offset_mm=0.05, seg
     return lib._obj_from_bm(name, bm, coll, mat)
 
 
+def _label_up(name, corners_mm, coll, mat, offset_mm=0.08):
+    """Like lib.label_quad (corners TL, TR, BR, BL of the image, full-image UVs) but the face always points up (+z)
+    and is offset upward: label_quad's winding faces away from a viewer above, which hid/darkened the label."""
+    c = [Vector(lib.mm(*p)) for p in corners_mm]
+    uvs = [(0, 1), (1, 1), (1, 0), (0, 0)]
+    n = (c[3] - c[0]).cross(c[1] - c[0])
+    order = [0, 1, 2, 3] if n.z < 0 else [0, 3, 2, 1]
+    up = Vector((0, 0, 1))
+    bm = bmesh.new()
+    uvl = bm.loops.layers.uv.new("UVMap")
+    vs = [bm.verts.new(c[k] + up * offset_mm * lib.MM) for k in order]
+    f = bm.faces.new(vs)
+    for loop, k in zip(f.loops, order):
+        loop[uvl].uv = uvs[k]
+    f.normal_update()
+    if f.normal.z < 0:
+        f.normal_flip()
+    return lib._obj_from_bm(name, bm, coll, mat)
+
+
 def _tex_mat(name, tex, fallback):
     p = lib.ROOT / tex
     return lib.mat_image(name, tex, roughness=0.6) if p.exists() else fallback
@@ -188,8 +208,8 @@ def build(P: dict, coll) -> None:
     eb = P["ext_board"]
     _, n = _board("wires.ext_board", eb["corners"], eb["thick"], coll, M["board"])
     C = [Vector(p) for p in eb["corners"]]
-    lib.label_quad("wires.label_ext_board", eb["corners"], coll,
-                   _tex_mat("wires_tex_ext_board", eb.get("texture", ""), M["board"]), offset_mm=0.05)
+    _label_up("wires.label_ext_board", eb["corners"], coll,
+              _tex_mat("wires_tex_ext_board", eb.get("texture", ""), M["board"]), offset_mm=0.08)
     e1 = (C[1] - C[0]).normalized()
     for p in P.get("ext_pot", []):
         _cyl_on(f"wires.{p['name']}", p["c"], n, p["d"], p["h"], coll, M["pot"])

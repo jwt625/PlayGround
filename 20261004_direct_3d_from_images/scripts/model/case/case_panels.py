@@ -114,6 +114,26 @@ def panels(P: dict) -> list[dict]:
              c=[(E["x0"], E["half_w"], E["z_top"]), (E["x1"], E["half_w"], E["z_top"]),
                 (E["x1"], -E["half_w"], E["z_top"]), (E["x0"], -E["half_w"], E["z_top"])]),
     ]
+    # junction ramps (outer faces), lugs (outer faces + tops), screw heads
+    rp, lg = P["ramp"], P["lugs"]
+    for k, sy, hz in (("near", -1, hn), ("far", 1, hf)):
+        fo = fs * (hz + H) / 2
+        y = sy * (hw + fo)
+        xa, xb = (xj, rp["x1"]) if sy < 0 else (rp["x1"], xj)
+        out.append(dict(name=f"ramp_{k}", obj=f"case.ramp_{k}", n=(0, sy, 0),
+                        c=[(xa, y, H), (xb, y, H), (xb, y, hz - 1), (xa, y, hz - 1)]))
+        yo = sy * lg["y_out"]
+        (za, zb_), (la, lb) = lg["z"], (lg["x"] if sy < 0 else lg["x"][::-1])
+        out.append(dict(name=f"lug_{k}", obj=f"case.lug_{k}", n=(0, sy, 0),
+                        c=[(la, yo, zb_), (lb, yo, zb_), (lb, yo, za), (la, yo, za)]))
+        yi = sy * (hw - 0.5)
+        y_hi, y_lo = (max(yo, yi), min(yo, yi))
+        out.append(dict(name=f"lug_{k}_top", obj=f"case.lug_{k}", n=(0, 0, 1),
+                        c=[(lg["x"][0], y_hi, zb_), (lg["x"][1], y_hi, zb_), (lg["x"][1], y_lo, zb_), (lg["x"][0], y_lo, zb_)]))
+        r, zs = br["screw_r"], br["tab_z_top"] + br["screw_h"]
+        cx, cy = br["screw_x"], sy * br["screw_y"]
+        out.append(dict(name=f"screw_{k}", obj=f"case.screw_{k}", n=(0, 0, 1),
+                        c=[(cx - r, cy + r, zs), (cx + r, cy + r, zs), (cx + r, cy - r, zs), (cx - r, cy - r, zs)]))
     # white card top (tilted plane, higher at -X)
     C = P["card"]
     out.append(dict(name="card_top", obj="case.card", n=(C["z_mx"] - C["z_px"], 0, C["x1"] - C["x0"]),

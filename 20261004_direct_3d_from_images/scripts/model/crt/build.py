@@ -39,7 +39,13 @@ def _prism_loft(name, profiles, ay, az, coll, mat):
     return lib._obj_from_bm(name, bm, coll, mat)
 
 
-def _uv_loft(name, rings, ay, az, coll, mat, cap_mat, seg=96, t0=-math.pi / 2):
+def _ell(ry, rz, t, asym=(1.0, 1.0)):
+    """Point on an asymmetric ellipse: half-width ry * asym[0] on the -Y side, half-height rz * asym[1] below."""
+    c, s_ = math.cos(t), math.sin(t)
+    return ry * c * (asym[0] if c < 0 else 1.0), rz * s_ * (asym[1] if s_ < 0 else 1.0)
+
+
+def _uv_loft(name, rings, ay, az, coll, mat, cap_mat, seg=96, t0=-math.pi / 2, asym=(1.0, 1.0)):
     """Loft along X through elliptical rings with UVs matching texture_yoke.py: u = (t - t0) / 2pi (seam at the
     bottom), v = 1 at the first ring (-X end). Side faces smooth; end caps use separate vertices and cap_mat."""
     bm = bmesh.new()
@@ -47,8 +53,8 @@ def _uv_loft(name, rings, ay, az, coll, mat, cap_mat, seg=96, t0=-math.pi / 2):
     x0, x1 = rings[0][0], rings[-1][0]
     loops = []
     for x, ry, rz in rings:
-        loops.append([bm.verts.new(lib.mm(x, ay + ry * math.cos(t0 + 2 * math.pi * i / seg),
-                                          az + rz * math.sin(t0 + 2 * math.pi * i / seg))) for i in range(seg + 1)])
+        pts = [_ell(ry, rz, t0 + 2 * math.pi * i / seg, asym) for i in range(seg + 1)]
+        loops.append([bm.verts.new(lib.mm(x, ay + dy, az + dz)) for dy, dz in pts])
     vs = [1 - (r[0] - x0) / (x1 - x0) for r in rings]
     for k in range(len(rings) - 1):
         a_, b_ = loops[k], loops[k + 1]
@@ -60,8 +66,8 @@ def _uv_loft(name, rings, ay, az, coll, mat, cap_mat, seg=96, t0=-math.pi / 2):
                 lp[uv_layer].uv = (u, v)
     for k in (0, len(rings) - 1):
         x, ry, rz = rings[k]
-        cv = [bm.verts.new(lib.mm(x, ay + ry * math.cos(t0 + 2 * math.pi * i / seg),
-                                  az + rz * math.sin(t0 + 2 * math.pi * i / seg))) for i in range(seg)]
+        cv = [bm.verts.new(lib.mm(x, ay + dy, az + dz))
+              for dy, dz in (_ell(ry, rz, t0 + 2 * math.pi * i / seg, asym) for i in range(seg))]
         f = bm.faces.new(cv if k else list(reversed(cv)))
         f.material_index = 1
     bm.normal_update()
@@ -83,7 +89,7 @@ def _ring_at(rings, x):
     return rings[-1][1], rings[-1][2]
 
 
-def _label_patch(name, rings, L, ay, az, coll, mat, nx=8, nt=16):
+def _label_patch(name, rings, L, ay, az, coll, mat, nx=8, nt=16, asym=(1.0, 1.0)):
     """Label as a curved patch on the yoke ellipse. UV: u along +Y (y0 -> y1), v = 1 at x0 (-X, top of print)."""
     bm = bmesh.new()
     uv_layer = bm.loops.layers.uv.new("UVMap")
@@ -92,9 +98,8 @@ def _label_patch(name, rings, L, ay, az, coll, mat, nx=8, nt=16):
         x = L["x0"] + (L["x1"] - L["x0"]) * i / nx
         ry, rz = _ring_at(rings, x)
         ry, rz = ry + L["offset"], rz + L["offset"]
-        t0 = math.acos(max(-1, min(1, (L["y0"] - ay) / ry)))
-        t1 = math.acos(max(-1, min(1, (L["y1"] - ay) / ry)))
-        grid.append([bm.verts.new(lib.mm(x, ay + ry * math.cos(t), az + rz * math.sin(t)))
+        t0, t1 = (math.acos(max(-1, min(1, (yy - ay) / (ry * (asym[0] if yy < ay else 1.0))))) for yy in (L["y0"], L["y1"]))
+        grid.append([bm.verts.new(lib.mm(x, ay + _ell(ry, rz, t, asym)[0], az + _ell(ry, rz, t, asym)[1]))
                      for t in (t0 + (t1 - t0) * k / nt for k in range(nt + 1))])
     for i in range(nx):
         for k in range(nt):
@@ -163,11 +168,12 @@ def build(P: dict, coll) -> None:
     ks = [Y.get(f"s{i}", 1.0) for i in range(len(Y["rings"]))]  # per-ring scale knobs (fit)
     rings = [(x, ry * sy * k, rz * sz * k) for (x, ry, rz), k in zip(Y["rings"], ks)]
     yay, yaz = ay + Y.get("dy", 0.0), az + Y.get("dz", 0.0)
-    _uv_loft("crt.yoke", rings, yay, yaz, coll, yellow, tape_cap)
+    asym = (Y.get("sy_neg", 1.0), Y.get("sz_bot", 1.0))
+    _uv_loft("crt.yoke", rings, yay, yaz, coll, yellow, tape_cap, asym=asym)
     c = P["copper"]
     _uv_loft("crt.yoke_copper", [(c["x0"], c["ry"] * sy, c["rz"] * sz), (c["x1"], c["ry"] * sy, c["rz"] * sz)],
-             yay, yaz, coll, copper, copper_plain)
-    _label_patch("crt.label_yoke", rings, L, yay, yaz, coll, label)
+             yay, yaz, coll, copper, copper_plain, asym=asym)
+    _label_patch("crt.label_yoke", rings, L, yay, yaz, coll, label, asym=asym)
 
     for key, name, mat in (("holder", "crt.yoke_holder", white), ("clamp", "crt.neck_clamp", metal),
                            ("white_ring", "crt.neck_white_ring", white), ("cream_ring", "crt.neck_ring", cream),

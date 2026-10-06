@@ -136,6 +136,27 @@
   case group changed concurrently (case 62.9 -> 75.1 percent). Raw PSNR inside pcb ID pixels 12.65 -> 13.09 dB.
 - Worst remaining pcb parts (dB): trim_6 10.1, capB_i 10.2, capK_n 10.4, conn_b 11.3, reg_tab 13.2, choke_a 13.7.
 
+## Phase 3 (2026-10-05): photo textures on every component
+- scripts/model/pcb/uvparts.py: analytic patches (box faces, cylinder side + polar top) + shelf-packed atlas per
+  part at 6 texels/mm; parts_from_params(P) covers blocks, slab, trimmers, caps/chokes, axial parts, flyback,
+  flyback_base, heat-sink plate (one box, chamfer dropped), board. build.py makes UV meshes from the same patches
+  and replaces the procedural object (and its old label quads) when assets/textures/pcb_parts/<part>.png exists.
+- scripts/model/pcb/bake_parts.py: per texel, best K = 5 of all TRAIN views (data/split.json) by cos x px/mm,
+  texel must face the view (cos > 0.15) and the ID pixel (1 px interior) must belong to the part or its labels;
+  median of the K samples from the 1/2-scale photos; unseen texels = material color. Sheet:
+  outputs/textures/pcb_parts_sheet.jpg. Needs a train ID run of the current model:
+  `scripts/bslot.sh -b --factory-startup --python scripts/blender/render_views.py -- --out outputs/runs/pcb_idtrain --build scripts/model/build_all.py --views train --passes id && uv run python scripts/model/pcb/bake_parts.py --id-run outputs/runs/pcb_idtrain`
+- Tested: min-cos 0.35 (no gain, reverted), K 3 -> 5 (pcb PSNR 13.64 -> 13.75 dB, kept).
+- Geometry fits (probe, step 0.5): conn_b, capB_i, trim_6, film_a, choke_c all moved < 1.2 mm with loss gains
+  < 1.5 percent: positions already at the edge-loss optimum; not applied.
+- error_budget probe pcb_019 -> pcb_025: pcb share 15.6 -> 11.2 percent; raw PSNR in pcb pixels 13.12 -> 13.75 dB.
+  Per part dB: conn_b 11.0 -> 17.5, trim_6 9.9 -> 19.5, capK_n 10.3 -> 17.1, capB_i 9.9 -> 19.5, reg_tab 13.1 ->
+  17.2, choke_a 14.2 -> 16.1, choke_b 14.8 -> 19.6, film_a 15.7 -> 19.3. Plate (as one textured box) 2.5 percent
+  at 16.6 dB vs 2.4 percent before as quads (neutral). Board (generic bake) 3.0 percent at 17.5 dB (neutral).
+- Holdout check (pcb_hold, 14 holdout views, eval only): pcb share 9.3 percent, PSNR in pcb pixels 13.49 dB
+  (probe 13.75): the textures generalize.
+- Sheet: outputs/runs/pcb_025/pcb_components_sheet.jpg. Board re-bake pending the wires agent's final paths.
+
 ## Phase 1B plan (as of 1A)
 - Texture the flyback WARNING label (coordinator spec outputs/scratch/coord/warn_spec.json, best views IMG_1613,
   IMG_1622, IMG_1632) and the flyback -X face ("SY-F100C NO."); board top texture (orthophoto at z 6 from
@@ -153,3 +174,4 @@
 ## Requests to coordinator
 - (done) ID decode tolerance.
 - 2026-10-05: board top re-baked with wires.red_e and re-traced red_d (train views, hole_frac 0.604); pcb_018 probe: label_board_top color residual 33.3 -> 30.3, SSIM 0.305 -> 0.324; raw PSNR in pcb pixels 13.09 -> 13.12 dB.
+- 2026-10-05: final re-bake after the wires agent's Phase 3 (29 wires objects in a fresh 123-view train ID run): all 47 part atlases incl. board. pcb_026 probe: raw PSNR in pcb pixels 13.75 -> 13.76 dB; per-part dB unchanged within 0.2 (board 17.6 -> 17.5); pcb share 11.2 -> 11.5 percent while missing-geometry share fell 6.4 -> 5.4 (shares redistribute). Sheet outputs/runs/pcb_026/pcb_components_sheet.jpg.

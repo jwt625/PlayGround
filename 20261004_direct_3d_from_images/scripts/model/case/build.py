@@ -153,7 +153,17 @@ def build(P: dict, coll) -> None:
     G = P["material"]
     glass = lib.mat_pbr("case_glass", tuple(G["glass_rgb"]), roughness=G["glass_rough"], alpha=G["glass_alpha"])
     glass.node_tree.nodes["Principled BSDF"].inputs["Specular IOR Level"].default_value = G["glass_spec"]
-    if hasattr(glass, "surface_render_method"):
+    if G.get("glass_mode", "alpha") == "transmission":
+        # ray-traced refraction (render_views enables EEVEE screen-space ray tracing)
+        bs = glass.node_tree.nodes["Principled BSDF"]
+        bs.inputs["Transmission Weight"].default_value = 1.0
+        bs.inputs["Alpha"].default_value = 1.0
+        bs.inputs["IOR"].default_value = 1.49
+        bs.inputs["Base Color"].default_value = (*G["glass_tx_rgb"], 1.0)
+        glass.surface_render_method = "DITHERED"
+        glass.use_raytrace_refraction = True
+        glass.use_backface_culling = False
+    elif hasattr(glass, "surface_render_method"):
         glass.surface_render_method = "BLENDED"
     white = lib.mat_pbr("case_card_white", (0.80, 0.80, 0.78), roughness=0.7)
     bar_black = lib.mat_pbr("case_bracket_black", (0.015, 0.015, 0.015), roughness=0.3)

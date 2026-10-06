@@ -64,8 +64,8 @@ half_w = 46.5
 z_top = 35.8
 flange = 2.5      # flange width at the top
 inset = 5.0       # bottom inset relative to the top outline
-z_bot_mx = 25.9   # bottom z at the -X end: parallel to the card plane, 1.5 mm below it (case_027: the old
-z_bot_px = 9.5    # 24.5 / 13.0 bottom cut through the card's +X half once the window became opaque)
+z_bot_mx = 26.3   # bottom z at the -X end: parallel to the card plane, 1.5 mm below it (case_027: the old
+z_bot_px = 7.0    # 24.5 / 13.0 bottom cut through the card's +X half once the window became opaque)
 thick = 1.5
 nseg = 6          # long walls split along X (the bottom is tilted, so a single wall quad is twisted)
 
@@ -93,14 +93,15 @@ half_len = 44.0
 r = 0.8
 
 [card]            # white card on the window bottom, tilted about Y (higher at -X)
-# tilt: tri IMG_1527 far corners (-32.4, 39.8, 14.3) and (-91.0, 40.5, 25.75) world; extents: rays of corner
-# picks in IMG_1518 / IMG_1638 onto that plane (+X edge spans world y -38..41, -X edge at world x -90..-96)
-x0 = -91.4        # local x of the -X edge (world -93.0); -95.0 tried in case_020: card edge 6.76 -> 6.98 px, pts 0.77 -> 0.90, reverted
-x1 = -30.65       # local x of the +X edge (world -32.25)
-y0 = -37.0
-y1 = 41.5
-z_mx = 26.2
-z_px = 14.3
+# 2026-10-05 Phase 3 re-measure, pick.py tri on train views (corner picks in IMG_1524 / IMG_1571, 4-9 inliers):
+# world (-91.3, 40.5, 25.0), (-33.0, 40.3, 12.5), (-33.0, -39.1, 12.6), (-90.7, -36.7, 26.8) -> local below.
+# (Phase 1 values from fewer views: x -91.4..-30.65, y -37..41.5, z 26.2 / 14.3.)
+x0 = -89.6        # local x of the -X edge
+x1 = -31.5        # local x of the +X edge
+y0 = -38.7
+y1 = 39.7
+z_mx = 25.9
+z_px = 12.55
 thick = 0.8
 
 [material]
@@ -108,6 +109,8 @@ black_spec = 0.02  # Specular IOR Level of the black plastic (white eval world).
                    # wall median 46-114 render vs 1-58 photo (outputs/scratch/case/bright.py); 0.06: 27-96
 black_rgb = [0.005, 0.007, 0.010]  # slight blue: photo walls are B > G > R (mat reflections)
 black_rough = 0.3
+glass_mode = "alpha"  # "alpha" (blend) or "transmission" (ray-traced; case_032: window 12.6 dB vs 14.3 textured shell)
+glass_tx_rgb = [0.85, 0.87, 0.86]
 glass_rgb = [0.02, 0.022, 0.022]
 glass_alpha = 0.15   # 0.35 with rgb 0.3 (case_026): window 12.2 dB, worse
 glass_rough = 0.05

@@ -5,7 +5,7 @@
 | group | wires (agent: wires modeling agent) |
 | owns | `scripts/model/wires/` (build.py, fit_wire.py, ray_depth.py, traces.json), `config/model/wires.toml` |
 | phase | 1A done 2026-10-05; 1B pass 1 done 2026-10-05 |
-| last run | `outputs/runs/wires_202` (probe, all parts, full) |
+| last run | `outputs/runs/wires_309` (probe, all parts, full) |
 | objects | 30: wires.bundle_{red,yellow,orange,green,brown}, wires.ext_board, wires.label_ext_board, wires.ext_pot_{1,2}, wires.label_ext_pot_2, wires.ext_strip, wires.ext_conn4, wires.ext_conn4_pins, wires.white_single_{a,b}, wires.white_pair, wires.loop_{yellow,blue,red,brown}, wires.loop_tie, wires.hv_cable, wires.grey_cable, wires.grey_inner, wires.red_{a,b,c,d,e} |
 
 ## TODO
@@ -124,6 +124,34 @@
   Tails now drop between the wall and the plate at y 48.6 to z 16 (hidden).
 - pot_1 top texture: best train view IMG_1622 shows the green bundle wire across the top and the pot only
   partly; no clean view exists, so no texture (the 1B bake was removed).
+
+## Phase 3 (2026-10-05): refinement, iterations wires_301-309 (train views only)
+- Colors: per-part photo vs render medians (probe, eroded ID pixels) -> base colors scaled by the linear ratio for
+  red/yellow/orange/green/brown/cream/white/conn; new `cream_in` for grey_inner (photo 223,214,180). After:
+  orange 187,120,55 vs photo 190,125,60; hv_cable 173,147,102 vs 173,146,99; conn 144,148,148 exact.
+- Board label: lib.label_quad winding faces away from a viewer above (normal (TR-TL)x(BL-TL)); the label sat
+  0.05 mm inside the board. New `_label_up` in build.py (same UVs, face up, +0.08 mm). Board texture re-baked from
+  8 bright top train views (1560, 1580, 1629, 1622, 1614, 1631, 1616, 1588), n_best 3: label 16.6 -> 17.1 dB.
+  The label still renders darker than the photo (median 58,34,15 vs 130,99,58 sRGB); the board's near-wall half
+  is dark in the render (lighting/occlusion), not resolved.
+- Pots: sparse points within r 5 mm of each axis put the tops 7.6-8.9 mm above the board (1A-2 used 4.5).
+  h = 8, centers pot_1 (107.0, -7.9), pot_2 (117.4, -22.0). pot_2 top re-baked (IMG_1622 + 1614). pot_2 pts
+  1.19 -> 0.46 mm, label_ext_pot_2 2.74 -> 0.23 mm, pot_1 2.21 -> 1.52 mm.
+- ext_conn4: fit_params on 12 train views gave (120.56, 64.22, 8.31, 24.7 deg), within 0.1 mm / 1 deg of the
+  previous pose: the residual edge (3.8 px) is the box shape (no flange), not the pose. Pose kept.
+- White singles: earlier corridor fits had stacked points (duplicates 1 mm apart, zigzags). Re-solved with
+  ray_depth --sparse plus white masks (sparse points showed the single_a arc at z 23-26 near x 76-85 where the
+  model had 19-21), then a fit on 14 train views (max-move 2). fit_wire.write_pts now thins points closer than
+  2.5 mm. single_a: fp 0.222 -> 0.057, edge 3.10 -> 2.39 px, pts 1.33 -> 0.34 mm, >4 mm 0.14 -> 0.04.
+  single_b: pts 0.84 -> 0.54, >4 mm 0.12 -> 0.08. white_pair: pts 0.48 -> 0.40 (>4 mm 0.11: mat points near the
+  free end, see the (69, 118, 10) note).
+- hv_cable: fit on 12 train views then hand-smoothed: pts 0.91 -> 0.54 mm, still 13.1 dB (shading of a thick
+  glossy cable; color matches).
+- Bundle: ray_depth --sparse + 14-view fit (max-move 2): small gains (brown fp 0.101 -> 0.094).
+- Error budget (absolute, sum of squared error / 1e6, probe): wires_202 (same wire model as wires_301): total
+  23354, wires ~2359 (10.1 percent), no model 1774. wires_309: total 19950, wires 2240 (11.2 percent), no model
+  1079. The share rises because wire pixels moved from "no model" to wires and other groups cut the total.
+- Paths are final for the pcb board re-bake (hv_cable, grey_cable, grey_inner, red_a..e, loop_*, loop_tie).
 
 ## Notes / issues
 - The external board's -X edge reaches x 96 (z 1.4-2.8), inside the case outer wall (+X end at ~98.9 from

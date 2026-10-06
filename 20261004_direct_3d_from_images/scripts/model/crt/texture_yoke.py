@@ -31,10 +31,14 @@ from common import OUTPUTS  # noqa: E402
 from tools.geom import load_views  # noqa: E402
 from tools.texture_from_photos import full_res_cams, sample_view  # noqa: E402
 
+ASYM = (1.0, 1.0)  # yoke/copper asymmetry (sy_neg, sz_bot), set by yoke_rings(); same as build._ell
 T0 = -math.pi / 2  # texture seam at the bottom of the loft (never seen)
 # Color gates per surface (OpenCV HSV: H 0-180): a view's texel is used only if its color is plausible for the
 # surface (rejects occluders the model does not have yet and misregistered edges); rejected texels are inpainted.
-GATES = {"label": None, "yoke": dict(h=(10, 32), s=120, v=60), "copper": dict(h=(0, 32), s=90, v=30)}  # copper or tape (tape covers the ring at the sides)
+GATES_1C = {"yoke": dict(h=(10, 32), s=120, v=60), "copper": dict(h=(0, 32), s=90, v=30)}
+# Phase 3 (2026-10-05): gates off by default. Self-texture test in IMG_1624: yoke 19.3 dB with the gate vs 29.9 dB
+# without (the gate drops highlights, shadows and folds); probe crt_025: yoke 18.4 -> 19.2 dB. --gate re-enables.
+GATES = {}
 
 
 def yoke_rings(P):
@@ -43,29 +47,31 @@ def yoke_rings(P):
     sy, sz = Y.get("scale_y", 1.0), Y.get("scale_z", 1.0)
     ks = [Y.get(f"s{i}", 1.0) for i in range(len(Y["rings"]))]
     rings = [(x, ry * sy * k, rz * sz * k) for (x, ry, rz), k in zip(Y["rings"], ks)]
+    global ASYM
+    ASYM = (Y.get("sy_neg", 1.0), Y.get("sz_bot", 1.0))
     return rings, P["axis"]["y"] + Y.get("dy", 0.0), P["axis"]["z"] + Y.get("dz", 0.0), sy, sz
 
 
 def surfaces(P):
     rings, yay, az, sy, sz = yoke_rings(P)
     c = P["copper"]
-    ay = P["axis"]["y"]
+    ay, az0 = P["axis"]["y"], P["axis"]["z"]
     cyl = {}
     for key, obj in (("holder", "crt.yoke_holder"), ("clamp", "crt.neck_clamp"), ("white_ring", "crt.neck_white_ring"),
                      ("cream_ring", "crt.neck_ring"), ("cap", "crt.socket_cap"), ("neck", "crt.neck")):
         q = P[key]
         cyl[key] = (obj, [(q["x0"], q["r"], q["r"]), (q["x1"], q["r"], q["r"])], ay + q.get("dy", 0.0),
-                    az + q.get("dz", 0.0))
+                    az0 + q.get("dz", 0.0))
     g = P["black_ring"]
-    cyl["dark_ring"] = ("crt.yoke_ring", [(g["x0"], g["r"], g["r"]), (g["x1"], g["r"], g["r"])], ay, az)
+    cyl["dark_ring"] = ("crt.yoke_ring", [(g["x0"], g["r"], g["r"]), (g["x1"], g["r"], g["r"])], ay, az0)
     b = P["board"]  # +X face of the socket board: plane, TL/TR/BR/BL seen from +X (right = +Y)
     cyl["board"] = ("crt.socket_board_face", {"plane": [[b["x1"], b["y0"], b["z1"]], [b["x1"], b["y1"], b["z1"]],
                                                    [b["x1"], b["y1"], b["z0"]], [b["x1"], b["y0"], b["z0"]]]}, 0, 0)
-    cyl["label"] = ("crt.label_yoke", {"label": P["label"], "rings": rings}, yay, az)
+    cyl["label"] = ("crt.label_yoke", {"label": P["label"], "rings": rings, "asym": ASYM}, yay, az)
     return cyl | {
-        "yoke": ("crt.yoke", rings, yay, az),
-        "copper": ("crt.yoke_copper", [(c["x0"], c["ry"] * sy, c["rz"] * sz), (c["x1"], c["ry"] * sy, c["rz"] * sz)],
-                   yay, az),
+        "yoke": ("crt.yoke", {"rings": rings, "asym": ASYM}, yay, az),
+        "copper": ("crt.yoke_copper", {"rings": [(c["x0"], c["ry"] * sy, c["rz"] * sz),
+                                                 (c["x1"], c["ry"] * sy, c["rz"] * sz)], "asym": ASYM}, yay, az),
     }
 
 
@@ -91,20 +97,24 @@ def grid(rings, ay, az, ppm):
     """Texel world points (h, w, 3) in meters and outward normals."""
     if isinstance(rings, dict) and "plane" in rings:
         return plane_grid(rings["plane"], ppm)
+    asym = (1.0, 1.0)
+    if isinstance(rings, dict) and "label" not in rings:
+        rings, asym = rings["rings"], rings["asym"]
     if isinstance(rings, dict):  # label patch on the yoke ellipse, same parametrization as build._label_patch
-        L, rr = rings["label"], rings["rings"]
+        L, rr, asym = rings["label"], rings["rings"], rings["asym"]
         w = int(round((L["y1"] - L["y0"]) * ppm * 1.15))
         h = int(round((L["x1"] - L["x0"]) * ppm))
         xs = L["x0"] + (L["x1"] - L["x0"]) * (np.arange(h) + 0.5) / h
         ry, rz = interp(rr, xs)
         ry, rz = ry + L["offset"], rz + L["offset"]
-        t0 = np.arccos(np.clip((L["y0"] - ay) / ry, -1, 1))
-        t1 = np.arccos(np.clip((L["y1"] - ay) / ry, -1, 1))
+        t0 = np.arccos(np.clip((L["y0"] - ay) / (ry * (asym[0] if L["y0"] < ay else 1.0)), -1, 1))
+        t1 = np.arccos(np.clip((L["y1"] - ay) / (ry * (asym[0] if L["y1"] < ay else 1.0)), -1, 1))
         f = (np.arange(w) + 0.5) / w
         T = t0[:, None] + (t1 - t0)[:, None] * f[None, :]
         Xg = np.repeat(xs[:, None], w, 1)
-        Pp = np.stack([Xg, ay + ry[:, None] * np.cos(T), az + rz[:, None] * np.sin(T)], -1)
-        Nn = np.stack([np.zeros_like(T), np.cos(T) / ry[:, None], np.sin(T) / rz[:, None]], -1)
+        kc = np.where(np.cos(T) < 0, asym[0], 1.0)
+        Pp = np.stack([Xg, ay + ry[:, None] * kc * np.cos(T), az + rz[:, None] * np.sin(T)], -1)
+        Nn = np.stack([np.zeros_like(T), np.cos(T) / (ry[:, None] * kc), np.sin(T) / rz[:, None]], -1)
         Nn /= np.linalg.norm(Nn, axis=-1, keepdims=True)
         return Pp / 1e3, Nn
     x0, x1 = rings[0][0], rings[-1][0]
@@ -117,7 +127,9 @@ def grid(rings, ay, az, ppm):
 
     def pt(xx, tt):
         ry, rz = interp(rings, xx)
-        return np.stack([xx, ay + ry * np.cos(tt), az + rz * np.sin(tt)], -1)
+        c, s_ = np.cos(tt), np.sin(tt)
+        return np.stack([xx, ay + ry * c * np.where(c < 0, asym[0], 1.0),
+                         az + rz * s_ * np.where(s_ < 0, asym[1], 1.0)], -1)
 
     P = pt(Xg, T)
     dt = pt(Xg, T + 1e-3) - pt(Xg, T - 1e-3)
@@ -136,6 +148,7 @@ def main():
     ap.add_argument("--k", type=int, default=1)
     ap.add_argument("--surfaces", default="yoke,copper,holder,clamp,white_ring,cream_ring,cap,neck,dark_ring,board")
     ap.add_argument("--no-gate", action="store_true")
+    ap.add_argument("--gate", action="store_true", help="1C HSV color gates on yoke/copper")
     ap.add_argument("--no-gain", action="store_true")
     ap.add_argument("--min-cos", type=float, default=0.25)
     ap.add_argument("--views", default="", help="comma list: restrict source views (diagnostics)")
@@ -183,7 +196,7 @@ def main():
                 continue
             t, inb = sample_view(v, intr[v.camera_id], img_dir, X)
             sc[~inb] = -1
-            g = GATES.get(sname)
+            g = GATES_1C.get(sname) if a.gate else GATES.get(sname)
             if g and not a.no_gate:
                 hsv = cv2.cvtColor(t, cv2.COLOR_BGR2HSV)
                 ok = (hsv[..., 0] >= g["h"][0]) & (hsv[..., 0] <= g["h"][1]) & (hsv[..., 1] >= g["s"]) & \

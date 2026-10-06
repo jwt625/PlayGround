@@ -105,6 +105,8 @@ def main():
     cams = json.loads((ROOT / "data" / "cameras_s4.json").read_text())["views"]
     split = json.loads((ROOT / "data" / "split.json").read_text())
     sel = split[a.views] if a.views in split else a.views.split(",")
+    if set(sel) & set(split["holdout"]):  # holdout views are for evaluation only (audit 2026-10-05)
+        raise SystemExit("fit_params: holdout views are not allowed for fitting; use probe/train views")
     f = 100 // a.res
     edt = {v: np.load(ROOT / "data" / "edt_s4" / f"{v}.npy")[::f, ::f].astype(np.float32) / 10.0 / f for v in sel}
     masks = {}

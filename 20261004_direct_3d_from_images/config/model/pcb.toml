@@ -145,6 +145,10 @@ ic_a_dy = 0.0
 hv_boot_dx = 0.0
 hv_boot_dy = 0.0
 hv_boot_dz = 0.0
+conn_b_dx = 0.0
+conn_b_dy = 0.0
+choke_c_dx = 0.0
+choke_c_dy = 0.0
 
 # Phase 1C small parts (IMG_1560 ortho z 8 at 14 px/mm + sparse-point boxes; DevLog-002-pcb)
 [[block]]
@@ -367,7 +371,8 @@ z = 12.0
 w = 0.8
 t = 0.5
 
-# Photo-textured quads on procedural parts (bake: scripts/tools/bake_id_owned.py, specs outputs/scratch/pcb/tex/*.json,
+# Superseded 2026-10-05 by per-part atlases (scripts/model/pcb/bake_parts.py): build.py removes these quads when
+# assets/textures/pcb_parts/<part>.png exists. Kept as fallback. Photo-textured quads on procedural parts (bake: scripts/tools/bake_id_owned.py, specs outputs/scratch/pcb/tex/*.json,
 # train views only, ID run outputs/runs/pcb_bake_id2). Corners TL TR BR BL as seen from outside the face.
 [[tex_quad]]
 name = "plate_top"

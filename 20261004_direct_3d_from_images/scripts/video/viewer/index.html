@@ -1,0 +1,115 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>CRT model vs 3DGS</title>
+<style>
+  html, body { margin: 0; padding: 0; background: #000; overflow: hidden; }
+  canvas { display: block; }
+</style>
+<!-- Same stack as ~/Documents/GitHub/3dgs-viewer: three 0.181 + Spark 0.1.10 (symlinked from its node_modules). -->
+<script type="importmap">
+{ "imports": {
+  "three": "./three/build/three.module.js",
+  "three/addons/": "./three/examples/jsm/",
+  "@sparkjsdev/spark": "./spark/dist/spark.module.js"
+} }
+</script>
+</head>
+<body>
+<script type="module">
+import * as THREE from "three";
+import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
+import { SplatMesh } from "@sparkjsdev/spark";
+
+const cfg = await (await fetch("cfg.json")).json();
+const S = cfg.w || cfg.size, H = cfg.h || cfg.size;
+const VFOV = 2 * Math.atan(Math.tan(cfg.fov_deg * Math.PI / 360) * H / S) * 180 / Math.PI;  // keep horizontal FOV
+const q = new URLSearchParams(location.search);
+const amb = parseFloat(q.get("amb") || "3.0");
+
+// top: explicit model (glb)
+const r1 = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true });
+r1.setPixelRatio(1); r1.setSize(S, H);
+r1.outputColorSpace = THREE.SRGBColorSpace;
+r1.toneMapping = THREE.NoToneMapping;
+document.body.appendChild(r1.domElement);
+const s1 = new THREE.Scene();
+s1.background = new THREE.Color(0xffffff);
+s1.add(new THREE.AmbientLight(0xffffff, amb));
+const c1 = new THREE.PerspectiveCamera(VFOV, S / H, 0.005, 20);
+s1.add((await new GLTFLoader().loadAsync("model.glb")).scene);
+
+// bottom: 3DGS ply via Spark (COLMAP frame placed into the glTF frame)
+const r2 = new THREE.WebGLRenderer({ antialias: false, preserveDrawingBuffer: true });
+r2.setPixelRatio(1); r2.setSize(S, H);
+r2.setClearColor(0x000000, 1);
+document.body.appendChild(r2.domElement);
+const s2 = new THREE.Scene();
+const c2 = new THREE.PerspectiveCamera(VFOV, S / H, 0.005, 50);
+const splat = new SplatMesh({ url: "scene.ply" });
+splat.position.set(...cfg.splat.position);
+splat.quaternion.set(...cfg.splat.rotation);
+splat.scale.set(...cfg.splat.scale);
+s2.add(splat);
+await splat.initialized;
+
+function place(cam, f) {
+  cam.position.set(...f.C);
+  cam.up.set(0, 1, 0);
+  cam.lookAt(new THREE.Vector3(...f.T));
+  cam.updateMatrixWorld(true);
+}
+const raf = () => new Promise((r) => requestAnimationFrame(r));
+// warm up (Spark builds its sort/draw state on the first frames)
+place(c2, cfg.cams[0]);
+for (let k = 0; k < 30; k++) { r2.render(s2, c2); await raf(); }
+
+window.setFrame = async (i) => {
+  const f = cfg.cams[i];
+  place(c1, f); place(c2, f);
+  r1.render(s1, c1);
+  for (let k = 0; k < 3; k++) { r2.render(s2, c2); await raf(); }
+};
+
+// Real-time recording: draw both canvases onto one 1:2 canvas each frame and record it with MediaRecorder.
+window.record = async (fps = 30) => {
+  const comp = document.createElement("canvas");
+  comp.width = S; comp.height = 2 * H;
+  const ctx = comp.getContext("2d");
+  const stream = comp.captureStream(0);
+  const track = stream.getVideoTracks()[0];
+  const rec = new MediaRecorder(stream, { mimeType: "video/webm;codecs=vp9", videoBitsPerSecond: 40e6 });
+  const chunks = [];
+  rec.ondataavailable = (e) => e.data.size && chunks.push(e.data);
+  rec.start();
+  const t0 = performance.now();
+  for (let i = 0; i < cfg.cams.length; i++) {
+    const f = cfg.cams[i];
+    place(c1, f); place(c2, f);
+    r1.render(s1, c1);
+    r2.render(s2, c2);
+    ctx.drawImage(r1.domElement, 0, 0); ctx.drawImage(r2.domElement, 0, H);
+    ctx.font = "600 30px Helvetica, Arial, sans-serif"; ctx.lineWidth = 5;
+    ctx.strokeStyle = "#000"; ctx.fillStyle = "#fff";
+    for (const [t, y] of [["Explicit model (glb)", 48], ["3DGS (Brush ply)", H + 48]]) {
+      ctx.strokeText(t, 24, y); ctx.fillText(t, 24, y);
+    }
+    track.requestFrame();
+    await raf();
+    const due = t0 + (i + 1) * 1000 / fps;
+    while (performance.now() < due) await new Promise((r) => setTimeout(r, 1));
+  }
+  rec.stop();
+  await new Promise((r) => (rec.onstop = r));
+  const blob = new Blob(chunks, { type: "video/webm" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob); a.download = "capture.webm";
+  document.body.appendChild(a); a.click();
+  return { seconds: (performance.now() - t0) / 1000, bytes: blob.size };
+};
+window.nFrames = cfg.cams.length;
+window.ready = true;
+</script>
+</body>
+</html>

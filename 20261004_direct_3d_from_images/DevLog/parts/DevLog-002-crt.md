@@ -6,8 +6,8 @@
 | Owner | crt modeling agent |
 | Files | `scripts/model/crt/build.py`, `config/model/crt.toml`, `scripts/model/crt/texture_yoke.py`, `scripts/model/crt/part_psnr.py`, `scripts/model/crt/part_psnr_by_part.py`, `scripts/model/crt/label_spec.json` (1B only), `assets/textures/crt_*.png` |
 | Started | 2026-10-04 |
-| Phase | 1A, 1B, 1C, 1D done (2026-10-05) |
-| Last run | `outputs/runs/crt_020` (probe, full); ID pass for all train views: `outputs/runs/crt_idtrain` (input of texture_yoke.py) |
+| Phase | 1A-1D, Phase 3 done (2026-10-05) |
+| Last run | `outputs/runs/crt_029` (probe, full); ID pass for all train views: `outputs/runs/crt_idtrain` (input of texture_yoke.py) |
 
 ## TODO
 
@@ -158,6 +158,29 @@ Per part (raw): yoke 15.9 (52 percent of pixels, 41 percent of the error), label
 | fit_local | 15.32 | 15.59 | 22.87 |
 
 Geometry (whole model, new evaluator): edge mean 3.05 px, pts median 0.39 mm. CRT parts: yoke pts median 0.22 mm and edge mean 3.23 px; label 0.11 mm and 1.65 px.
+
+## Phase 3 log (EEVEE screen-space ray tracing; metric = error_budget.py; absolute CRT numbers from `scripts/model/crt/crt_budget.py`)
+
+Shares from error_budget.py change as other groups improve, so absolute CRT SSE (squared error summed over CRT pixels, same blur and color fit as error_budget.py) is the comparison metric.
+
+- 2026-10-05 04:55 crt_021 baseline: CRT share 11.9 percent, CRT SSE 2.759e9, 17.53 dB; yoke 18.1, copper 15.5, holder 17.9, clamp 14.6, dark ring 16.5, cream ring 15.1.
+- 2026-10-05 05:05 Label shift test (best integer image shift per view): 0-1 px in most views; fit crt_label1 (radial offset) 0.3 -> 0.4, negligible, not applied.
+- 2026-10-05 05:15 Yoke asymmetry knobs sy_neg / sz_bot (build._ell, mirrored in texture_yoke.py); fit crt_yoke4 (17 train views): sy_neg 1.0, sz_bot 0.73 (loss 1.595 -> 1.582). Re-baked. crt_022: yoke 18.1 -> 18.4 dB, CRT SSE 2.730e9. The yoke bottom is never seen directly (it is hidden in the PCB cutout); sz_bot only trims the lower silhouette.
+- 2026-10-05 05:20 Per-view split: IMG_1624 (close-up) carries about 40 percent of the CRT SSE.
+- 2026-10-05 05:25 k = 7 (median of 7 best views) for copper, clamp, rings, cap, dark ring, holder: CRT SSE 2.691e9 (crt_023). k = 5 for the yoke changed nothing (crt_024; kept k = 3).
+- 2026-10-05 05:35 Self-texture test, IMG_1624, budget metric. With the 1C color gate: yoke 19.3 dB, holder 21.1, copper 19.4, clamp 24.9, label 25.7. The multi-view textures give 17.7 / 18.0 / 14.7 / 15.1. Gate off, grazing texels on: yoke 29.9 dB. So the geometry of the yoke, clamp and label is right in that view. The remaining error is texture: the gate removed highlights, shadows and folds, and the rest is cross-view appearance (metal and tape speculars).
+- 2026-10-05 05:40 Gate off for yoke and copper (crt_025): yoke 18.4 -> 19.2 dB, CRT SSE 2.490e9. min_cos 0.05 (crt_026), k = 7 yoke (crt_027) and no exposure gain (crt_028, 2.530e9) did not help. texture_yoke.py now has gates off by default (`--gate` restores the 1C gates).
+- 2026-10-05 05:50 crt_029 (final, same textures as crt_025): CRT share 12.2 percent (others improved meanwhile), CRT SSE 2.489e9 (-9.8 percent vs crt_021), 17.96 dB; yoke 19.2, copper 15.5, holder 17.7, clamp 14.6, dark ring 16.3, cream ring 15.3. Edge mean 2.99 px, pts median 0.40 mm.
+
+Re-bake after any geometry change (all train views, about 1.5 min):
+```
+scripts/bslot.sh -b --factory-startup --python scripts/blender/render_views.py -- --out outputs/runs/crt_idtrain --build scripts/model/build_all.py --views train --passes id
+uv run python scripts/model/crt/texture_yoke.py --idrun outputs/runs/crt_idtrain --k 3 --erode 1 --min-cos 0.15 --surfaces yoke,copper,neck,board
+uv run python scripts/model/crt/texture_yoke.py --idrun outputs/runs/crt_idtrain --k 7 --erode 1 --min-cos 0.15 --surfaces clamp,white_ring,cream_ring,cap,dark_ring,holder
+uv run python scripts/model/crt/texture_yoke.py --idrun outputs/runs/crt_idtrain --k 1 --surfaces label --ppm 20 --views IMG_1560 --no-gain --out-suffix _1560
+```
+
+Remaining CRT error is view-dependent appearance (speculars on tape and metal) that a single diffuse texture cannot reproduce. Next lever would be a specular term or view-dependent textures, not geometry.
 
 ## Requests to coordinator
 

@@ -1,10 +1,19 @@
 """pcb group: main board in the electronics tray (+X) and the parts on it (flyback, heat-sink plate, caps, chokes,
 trimmers, connectors, regulators). All dimensions from config/model/pcb.toml (mm, world frame)."""
 
+import importlib
+import sys
+from pathlib import Path
+
 import bmesh
 import bpy
 import lib
 from mathutils import Vector
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import uvparts  # noqa: E402
+
+importlib.reload(uvparts)
 
 
 def _mats(P):
@@ -175,4 +184,50 @@ def build(P: dict, coll) -> None:
         if (lib.ROOT / q["texture"]).exists():
             lib.label_quad(f"pcb.label_{q['name']}", q["corners"], coll,
                            lib.mat_image(f"pcb_tex_{q['name']}", q["texture"]), offset_mm=q.get("offset", 0.05))
+
+    # Photo-textured components (atlases from scripts/model/pcb/bake_parts.py) replace the procedural objects.
+    for spec in uvparts.parts_from_params(P):
+        tex = uvparts.texture_path(spec["name"])
+        if not (lib.ROOT / tex).exists():
+            continue
+        for nm in [f"pcb.{spec['name']}", f"pcb.label_{spec['name']}_top"] + spec.get("remove", []):
+            o = bpy.data.objects.get(nm)
+            if o is not None:
+                bpy.data.objects.remove(o, do_unlink=True)
+        ob = _textured(f"pcb.{spec['name']}", spec, coll, lib.mat_image(f"pcb_part_{spec['name']}", tex))
+        if spec.get("leads", 0) > 0:
+            ld = lib.cylinder("_al", 0.3, spec["leads"], tuple(spec["center"]), coll, axis=spec["axis"], mat=M["leg"],
+                              verts=8)
+            _join(f"pcb.{spec['name']}", [ob, ld], coll)
+
+
+def _textured(name, spec, coll, mat):
+    """Mesh from uvparts patches with atlas UVs (must match bake_parts.py)."""
+    import numpy as np
+    pl = uvparts.patches(spec["prims"])
+    W, H = uvparts.layout(pl)
+    bm = bmesh.new()
+    uvl = bm.loops.layers.uv.new("UVMap")
+    for p in pl:
+        nu, nv = p["seg"]
+        ss, tt = np.meshgrid(np.linspace(0, 1, nu + 1), np.linspace(0, 1, nv + 1))
+        X, N = p["fn"](ss, tt)
+        vs = [[bm.verts.new(Vector(lib.mm(*X[j, i]))) for i in range(nu + 1)] for j in range(nv + 1)]
+        for j in range(nv):
+            for i in range(nu):
+                quad = [(j, i), (j, i + 1), (j + 1, i + 1), (j + 1, i)]
+                a, b, c = (Vector(X[q]) for q in quad[:3])
+                nrm = (b - a).cross(c - b)
+                ctr = N[j, i]
+                if nrm.dot(Vector(ctr)) < 0:
+                    quad = quad[::-1]
+                try:
+                    f = bm.faces.new([vs[q[0]][q[1]] for q in quad])
+                except ValueError:
+                    continue
+                f.smooth = p["smooth"]
+                for loop, q in zip(f.loops, quad):
+                    s, t = ss[q], tt[q]
+                    loop[uvl].uv = ((p["x0"] + s * p["w"]) / W, 1 - (p["y0"] + t * p["h"]) / H)
+    return lib._obj_from_bm(name, bm, coll, mat)
 
