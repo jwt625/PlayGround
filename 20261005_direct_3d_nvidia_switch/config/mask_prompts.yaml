@@ -1,0 +1,65 @@
+# SAM 2.1 prompts (scripts/prep/masks_sam.py) and mask assembly (scripts/prep/cameras_masks.py). Boxes and
+# points in mm in the named frame. Objects with occluder: true are marked unknown in the evaluation masks.
+objects:
+  tray:
+    frame: world
+    box_mm: [-245, 245, -30, 830, -95, 25]       # body plus levers and rear fittings (metric tray frame)
+    points_mm: [[-170, 80, -20], [-170, 230, -20], [-170, 380, -20], [-170, 530, -20], [-170, 680, -20], [-60, 80, -20], [-60, 230, -20], [-60, 380, -20], [-60, 530, -20], [-60, 680, -20], [60, 80, -20], [60, 230, -20], [60, 380, -20], [60, 530, -20], [60, 680, -20], [170, 80, -20], [170, 230, -20], [170, 380, -20], [170, 530, -20], [170, 680, -20]]   # 4 x 5 grid inside the body
+  package:
+    frame: package
+    box_mm: [-58, 58, -58, 58, -6, 3]            # package only (substrate, stiffener, lid); stand excluded
+    points_mm: [[0, 0, 0], [35, 35, 0], [-35, -35, 0]]
+  stand:           # package display stand (modeled by the package group); black on a black table, SAM cannot separate
+    frame: world   # it reliably -> treated as unknown (occluder) so stand parts are neither penalized nor rewarded
+    occluder: true
+    box_mm: [75, 160, -252, -200, -46, 76]       # world box of package.stand_* except the fake back plate
+    points_mm: [[117.0, -211.3, 32.3], [117.2, -230.7, -6.2], [113.2, -206.2, 67.4]]   # rod, base, ledge
+    views_only: [IMG_5711, IMG_5712, IMG_5717, IMG_5735, IMG_5736, IMG_5737, IMG_5740, IMG_5747]
+  uqd_px:          # rear coolant fittings (+X side), from upper.toml Wave 2: SAM's tray mask drops them (IMG_5741)
+    frame: world
+    box_mm: [184, 216, 838, 878, -42, 26]
+    points_mm: [[200, 862, 14], [200, 862, -29]]
+    skip_views: [IMG_5727, IMG_5729, IMG_5748]   # 2026-10-06 review: wrong or partial segments
+  uqd_nx:          # -X side, mirrored, about 6 mm lower (0.85 deg roll)
+    frame: world
+    box_mm: [-216, -184, 838, 878, -48, 20]
+    points_mm: [[-200, 862, 8], [-200, 862, -35]]
+    skip_views: [IMG_5734, IMG_5743, IMG_5748]
+  sign:            # occluder (out of scope): acrylic "Spectrum-X CPO Switch Tray" sign in front of the front panel
+    frame: world
+    occluder: true
+    box_mm: [-120, 100, -60, -5, -65, 35]        # rough, from rays in IMG_5738 onto Y = -15 / -40
+    points_mm: [[-10, -25, -15]]
+# Background pixels inside these projected hulls become unknown (128): inside the outline only see-through gaps
+# and SAM misses (dark cable, black parts) are background there, so only the outer outline is scored.
+hull_unknown:
+  tray: {frame: world, box_mm: [-222, 222, 20, 806, -71, 26]}   # measured body (audit DevLog-003), +-3.3 mm roll pad
+  package: {frame: package, box_mm: [-55, 55, -55, 55, -5, 2]}
+# Object pixels outside the union of these projected hulls (dilated by outside_margin_px at 1/4 scale) become
+# unknown: SAM spills onto the plinth and hardware below the side walls (audit DevLog-003, IMG_5752-5757), and no
+# in-scope part lies outside these boxes.
+outside_unknown:
+  margin_px: 6
+  boxes:
+    body: {frame: world, box_mm: [-222, 222, 20, 806, -71, 26]}
+    front: {frame: world, box_mm: [-268, 268, -15, 60, -95, 45]}     # levers, grip bar, port plate
+    rear: {frame: world, box_mm: [-245, 245, 780, 905, -95, 65]}     # UQD fittings and brackets, rear lip
+    cables: {frame: world, box_mm: [-222, 222, 20, 806, -71, 60]}    # cables/fittings above the rim
+    package: {frame: package, box_mm: [-60, 60, -60, 60, -6, 4]}
+views:
+  # unknown_px: polygons (1/2-scale px) marked unknown in the evaluation masks (SAM leaks onto out-of-scope objects;
+  # chassis agent report 2026-10-05)
+  IMG_5751:
+    unknown_px: [[[2380, 0], [2856, 0], [2856, 1660], [2380, 1660]], [[1000, 1660], [2856, 1660], [2856, 2142], [1000, 2142]]]   # black plinth
+  IMG_5742:
+    unknown_px: [[[0, 1450], [1480, 1450], [1480, 2142], [0, 2142]]]   # hardware/second tray below the -X wall (widened 2026-10-06, chassis W5 regions)
+  IMG_5746:
+    unknown_px: [[[0, 1650], [1450, 1650], [1450, 2142], [0, 2142]]]   # hardware below the tray (widened 2026-10-06)
+  IMG_5749:
+    unknown_px: [[[2380, 1840], [2856, 1840], [2856, 2142], [2380, 2142]]]   # brochure below the tray (chassis W5 regions)
+  IMG_5738:
+    sign: {box_px: [320, 1000, 1180, 1290]}   # projected box bled into the front panel
+  IMG_5714:
+    sign: {skip: true}   # SAM segmented the lever/wing, not the sign (2026-10-06 review)
+  IMG_5731:
+    sign: {skip: true}   # score 0.24, wrong region

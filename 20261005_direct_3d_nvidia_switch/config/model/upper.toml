@@ -1,0 +1,827 @@
+# Upper group: middle bay (Y 370-595), rear bay (Y 605-776), rear UQD fittings, copper tubes down to Y = 350.
+# mm, tray frame (X width, Y front -> rear, Z out of the open top; Z = 0 crossbar top).
+# Provenance: DevLog/parts/DevLog-002-upper.md (sparse-point height modes per region, orthophotos of train
+# views IMG_5713/5748/5749/5753 on planes z = const, overlays). Phase 1A block-out: boxes, prisms, tubes.
+#
+# Entry types (one Blender object per entry, named "upper.<name>"):
+#   [[box]]   b = [x0, x1, y0, y1, z0, z1], mat, optional bevel
+#   [[prism]] pts = [[x, y], ...] (outline, any winding), z = [z0, z1], mat
+#   [[cyl]]   c = [x, y, z] center, r, h, axis ("x"|"y"|"z"), mat
+#   [[tube]]  pts = [[x, y, z], ...] polyline, r, fillet (corner radius), mat
+#   [[cyls]]  repeated vertical cylinders: xy = [[x, y], ...], r, z = [z0, z1], mat (one object)
+
+[mats]  # sRGB 0-255 (converted to linear in build.py), roughness, metallic. Photo medians, lit patches.
+nickel = [125, 120, 104, 0.45, 0.6]     # serpentine / board plates (IMG_5749 lit patch 121,115,95)
+steel = [175, 175, 168, 0.35, 0.7]      # ASIC cold plate, clamp
+copper = [185, 110, 75, 0.35, 0.8]      # tubes, blocks (lit tube pixels)
+pcb = [34, 37, 37, 0.5, 0.0]            # black boards
+baffle = [28, 30, 31, 0.6, 0.0]         # black plastic baffles (IMG_5749 23,26,25)
+hose = [30, 31, 30, 0.7, 0.0]           # black hoses, UQD bodies
+alu = [175, 172, 160, 0.4, 0.6]         # aluminum fitting blocks
+blue = [60, 100, 170, 0.5, 0.0]         # blue wire bundles
+ribbon = [62, 64, 63, 0.7, 0.0]         # flat ribbon cable (IMG_5749 70,72,71)
+cap = [35, 35, 36, 0.4, 0.0]            # electrolytic capacitor sleeves
+conn = [20, 22, 22, 0.5, 0.0]           # black connectors
+chrome = [200, 200, 196, 0.2, 1.0]       # (Wave 6 first try for collars: too bright; kept for reference)
+collar = [120, 118, 112, 0.3, 0.8]      # UQD collars and nut, darker metal (Wave 6 second try)
+oring = [170, 45, 45, 0.5, 0.0]         # red O-ring (IMG_5741 crop color, Wave 6)
+teal = [29, 33, 36, 0.8, 0.0]           # braided teal cable near the crossbar: median of its pixels in 6 probe views (29,33,34)
+
+# ---------------- rear bay ----------------
+[[box]]
+name = "rear_pcb"           # black board under serpentine plate and board2
+tex = "rear_pcb"
+b = [-125, 107, 597, 772, -5, -3]
+mat = "pcb"
+
+[[box]]
+name = "serp_plate"         # nickel cold plate; top z 11 (tube top 17 from copper points mode 14-17)
+tex = "serp_plate"
+b = [-115, 22, 600, 767, 10, 14]   # 4 mm plate (Wave 2): the 17 mm box side rendered as a bright band where the photo shows the thin edge and dark below (IMG_5729)
+mat = "nickel"
+
+[[box]]
+name = "board2_plate_a"     # upper nickel plate of board2 (ortho z12 IMG_5749)
+tex = "board2_a"
+b = [25, 101, 616, 652, 3, 9]
+mat = "nickel"
+
+[[box]]
+name = "board2_plate_b"     # lower nickel plate of board2
+tex = "board2_b"
+b = [23, 81, 680, 768, 3, 8]
+mat = "nickel"
+
+[[cyl]]
+name = "coin_cell"          # Wave 7: center moved (85, 662) -> (89, 672): orthophotos of train IMG_5749 and 5753 at z 0
+                            # agree (coin X 79-98, Y 665-680)
+c = [89, 672, -1]
+r = 10
+h = 4
+axis = "z"
+mat = "alu"
+
+[[boxes]]
+name = "coin_holder"        # Wave 7: metal holder tabs on both sides of the coin cell (same orthos: X 74-77 and 100-103,
+                            # Y 667-679)
+b = [[74, 77, 667, 679, -3, 0.5], [100, 103, 667, 679, -3, 0.5]]
+mat = "alu"
+
+[[box]]
+name = "board2_conn"        # black connector at the end of the braided cable (teal fan-out)
+tex = "board2_conn"
+tex_sides = true
+b = [30, 80, 597, 616, -3, 7]
+mat = "conn"
+
+[[box]]
+name = "rear_pcb_left"      # board with power connectors under the ribbon cable
+tex = "rear_pcb_left"
+b = [-212, -118, 598, 775, -14, -12]
+mat = "pcb"
+
+[[box]]
+name = "ribbon"             # flat ribbon cable along Y
+tex = "ribbon"
+b = [-167, -120, 600, 776, 2.5, 4]   # Wave 4: 1.5 mm thick (was 4): its light side faces showed as a strip
+                            # under the serpentine tube edge where the photo is dark (IMG_5744, 5742)
+mat = "ribbon"
+
+# Wave 6 detail: the power connector row is three separate 8-pin housings (orthophoto of train IMG_5749 at z -2:
+# housings at X -180..-168, Y 657-675 / 702-722 / 750-768; the cable bundle runs at X -200..-185), each with a
+# latch tab on its +X face (latch side not resolved in the photos; placed facing the ribbon).
+[[box]]
+name = "pwr_conns"          # (old continuous block, kept for reference) A/B against the split housings
+skip = true
+tex = "pwr_conns"
+tex_sides = true
+b = [-179, -165, 640, 775, -12, -2]
+mat = "conn"
+
+[[box]]
+name = "pwr_conn_1"
+tex = "pwr_conn_1"
+tex_sides = true
+b = [-180, -168, 657, 675, -12, -2]
+mat = "conn"
+
+[[box]]
+name = "pwr_conn_2"
+tex = "pwr_conn_2"
+tex_sides = true
+b = [-180, -168, 702, 722, -12, -2]
+mat = "conn"
+
+[[box]]
+name = "pwr_conn_3"
+tex = "pwr_conn_3"
+tex_sides = true
+b = [-180, -168, 750, 768, -12, -2]
+mat = "conn"
+
+[[box]]
+name = "pwr_latch_1"
+b = [-168, -166.5, 663, 669, -8, -2]
+mat = "conn"
+
+[[box]]
+name = "pwr_latch_2"
+b = [-168, -166.5, 709, 715, -8, -2]
+mat = "conn"
+
+[[box]]
+name = "pwr_latch_3"
+b = [-168, -166.5, 756, 762, -8, -2]
+mat = "conn"
+
+# serpentine copper tube: +X L-block -> along the divider (Y 582, Z 12: copper-score line fit in 6 train views,
+# overlay IMG_5734) -> inlet -> 9 rows -> left leg -> along divider -> -X block
+[[tube]]
+name = "serp_tube"
+r = 3.0
+fillet = 6.0
+fillet_n = 12               # Wave 6 detail: 12 segments per bend (was 6), 4 bevel steps (was 3)
+bevel_res = 4
+mat = "copper"
+pts = [[186, 582, 12], [6, 582, 12], [6, 600, 16], [6, 612, 16], [-24, 612, 16], [-24, 635, 16],
+       [-76, 635, 16], [-76, 644, 16], [-1, 644, 16], [-1, 656, 16], [-74, 656, 16], [-74, 667.5, 16],
+       [-1, 667.5, 16], [-1, 680, 16], [-76, 680, 16], [-76, 691, 16], [-10, 691, 16], [-10, 704, 16],
+       [-86, 704, 16], [-86, 716, 16], [10, 716, 16], [10, 730, 16], [-76, 730, 16], [-76, 742.5, 16],
+       [-98, 742.5, 16], [-98, 600, 14], [-98, 582, 12], [-158, 582, 12], [-168, 577, 12], [-186, 577, 12]]
+# Wave 5: S-jog before the -X L-block: Y 582 -> 577 between X -158 and -168 (orthophotos of train IMG_5749 and 5753
+# at z 12 agree)
+
+[[box]]
+name = "lblock_px"          # copper L-block on the +X side near the divider
+tex = "lblock_px"
+tex_sides = true
+b = [184, 216, 578, 600, 8, 28]
+mat = "copper"
+
+[[box]]
+name = "lblock_nx"          # copper L-block on the -X side near the divider
+tex = "lblock_nx"
+tex_sides = true
+b = [-212, -182, 578, 598, 4, 22]
+mat = "copper"
+
+[[box]]
+name = "lblock_px_tab"      # L-block leg toward the rear where the hose attaches (ortho z-6 IMG_5749)
+tex = "lblock_px_tab"
+tex_sides = true
+b = [200, 216, 600, 627, 12, 28]
+mat = "copper"
+
+[[box]]
+name = "lblock_nx_tab"
+tex = "lblock_nx_tab"
+tex_sides = true
+b = [-212, -196, 598, 612, 6, 22]
+mat = "copper"
+
+[[tube]]
+name = "cables_nx"          # black cable bundle from the power connectors along the -X side (ortho z2 IMG_5749)
+r = 5.0
+fillet = 20.0
+mat = "hose"
+pts = [[-180, 625, 8], [-192, 680, 12], [-190, 780, 12]]  # Wave 4: a lower/thinner route (r 4, Z 4-5) was worse on both
+                            # lists (edge 3.38 -> 4.80 probe, 3.26 -> 5.72 list2; pts 4.2 -> 11.8 mm): reverted
+
+[[tube]]
+name = "hose_px"            # black hose: +X L-block -> UQD
+r = 5.0
+fillet = 10.0
+mat = "hose"
+pts = [[206, 627, 20], [205, 660, 9], [204, 780, 8], [201, 823, 14]]  # Wave 4: runs at Z about 8 (overlays of
+                            # Z 20 / 6 / -6 lines on train IMG_5713 and 5753: the hose lies between the Z 6 and Z 20
+                            # lines, nearer Z 6; Z 20 ran along the gray rail above it); last point into the UQD block
+
+[[tube]]
+name = "hose_nx"
+r = 5.0
+fillet = 10.0
+mat = "hose"
+pts = [[-205, 612, 12], [-206, 660, 7], [-207, 795, 7], [-201, 823, 8]]  # Wave 4: Z 10 -> 7 (overlays IMG_5713/5741).
+                            # Wave 5: a dark-mask line fit (6 train views) gives X -200, Z 6; A/B (upper_057/058 vs
+                            # 055/056): edge 4.94 -> 3.92 probe but 4.05 -> 4.41 list2, hose + rear_pcb_left SSE worse
+                            # on both lists (1.01 -> 1.12, 0.65 -> 0.76), pts 1.78 -> 1.59 mm: not adopted
+
+# Rear UQD fittings (Wave 2, 2026-10-06): per side two UQD bodies along +Y stacked in Z (not side by side in X):
+# upper body A at Z +14 (+X), lower body B about 43 mm below (image offset A->B in IMG_5741 solved with the
+# per-axis image Jacobian: dX -0.5, dY +2, dZ -43 mm). Body A collar/O-ring at (200, 853, 14) from two rays
+# (IMG_5741 and IMG_5754 at X = 185/205 intersect within 2.4 mm in Z at X 200). Visible black body length about
+# 20-25 mm (IMG_5742 -X side, ends against the background; 30 mm overshot there). Silver block between the bracket and body A
+# (IMG_5741, about 26 mm along Y); black block holding body B. -X side mirrored, Z 6 mm lower (0.85 deg roll;
+# overlays IMG_5741/5742/5754 agree). Old bracket boxes over the rear lip kept (pts median 1.8 mm).
+[[box]]
+name = "uqd_bracket_px"     # Wave 4: thin black bulkhead plate instead of a solid 22 mm block: IMG_5713/5741/5755
+                            # show the open fitting (chrome barb, sheet metal) where the block rendered solid
+b = [170, 219, 795, 798, 4, 40]
+mat = "hose"
+
+[[cyl]]
+name = "uqd_px_fit"         # kept: without it (upper_048 vs 046) uqd_bracket_px edge 4.64 -> 4.89, block 2.89 -> 2.96;
+                            # chrome hose barb / nut between the rear lip and the silver block on body A's axis
+                            # (IMG_5741: chrome tube and nut toward lower Y from the block; IMG_5713)
+c = [201, 806, 14]
+r = 6
+h = 32
+axis = "y"
+mat = "alu"
+
+[[cyl]]
+name = "uqd_nx_fit"         # mirrored (-X body A axis, 6 mm lower: roll). Skipped (Wave 4): PSNR 12.4 probe /
+                            # 8.0 list2, edge 4.7 / 6.2 px (upper_045/046)
+skip = true
+c = [-201, 806, 8]
+r = 6
+h = 32
+axis = "y"
+mat = "alu"
+
+[[box]]
+name = "uqd_hold_px"
+tex = "uqd_hold_px"        # black block holding the lower body B (IMG_5741: black around B's collar)
+tex_sides = true
+b = [186, 216, 803, 851, -45, 1]
+mat = "hose"
+
+[[box]]
+name = "uqd_block_px"
+tex = "uqd_block_px"
+tex_sides = true
+b = [188, 214, 822, 851, 1, 27]
+mat = "alu"
+
+[[cyl]]
+name = "uqd_px_a"
+tex = "uqd_px_a"                # side texture upper_uqd_px_a_side.png (Wave 3)
+c = [200, 862, 14]
+r = 9.5
+h = 22
+axis = "y"
+mat = "hose"
+
+[[cyl]]
+name = "uqd_px_b"
+tex = "uqd_px_b"                # side texture upper_uqd_px_b_side.png (Wave 3)
+c = [200, 862, -29]
+r = 9.5
+h = 22
+axis = "y"
+mat = "hose"
+
+# Wave 6 detail: per UQD body a chrome collar (r 10.5, 6 mm) with a red O-ring step (r 9.8, 1.5 mm) at the block
+# face (IMG_5741 crops: chrome collar, red ring between collar and block); +X barb with a hex nut and two ridges.
+[[cyl]]
+name = "uqd_px_a_oring"
+c = [200, 851.75, 14]
+r = 9.8
+h = 1.5
+axis = "y"
+mat = "oring"
+
+[[cyl]]
+name = "uqd_px_a_collar"
+c = [200, 855.5, 14]
+r = 10.0
+h = 6
+axis = "y"
+mat = "collar"
+
+[[cyl]]
+name = "uqd_px_b_oring"
+c = [200, 851.75, -29]
+r = 9.8
+h = 1.5
+axis = "y"
+mat = "oring"
+
+[[cyl]]
+name = "uqd_px_b_collar"
+c = [200, 855.5, -29]
+r = 10.0
+h = 6
+axis = "y"
+mat = "collar"
+
+[[cyl]]
+name = "uqd_nx_a_oring"
+c = [-200, 851.75, 8]
+r = 9.8
+h = 1.5
+axis = "y"
+mat = "oring"
+
+[[cyl]]
+name = "uqd_nx_a_collar"
+c = [-200, 855.5, 8]
+r = 10.0
+h = 6
+axis = "y"
+mat = "collar"
+
+[[cyl]]
+name = "uqd_nx_b_oring"
+c = [-200, 851.75, -35]
+r = 9.8
+h = 1.5
+axis = "y"
+mat = "oring"
+
+[[cyl]]
+name = "uqd_nx_b_collar"
+c = [-200, 855.5, -35]
+r = 10.0
+h = 6
+axis = "y"
+mat = "collar"
+
+[[cyl]]
+name = "uqd_px_nut"         # hex nut on the barb next to the silver block. Skipped: list2 SSE +0.146 (PSNR 14.1), upper_064
+skip = true
+c = [201, 818, 14]
+r = 8
+h = 5
+axis = "y"
+verts = 6
+mat = "collar"
+
+[[cyl]]
+name = "uqd_px_ridge_a"
+c = [201, 800, 14]
+r = 6.8
+h = 1.5
+axis = "y"
+mat = "alu"
+
+[[cyl]]
+name = "uqd_px_ridge_b"
+c = [201, 806, 14]
+r = 6.8
+h = 1.5
+axis = "y"
+mat = "alu"
+
+[[box]]
+name = "uqd_bracket_nx"
+tex = "uqd_bracket_nx"
+tex_sides = true
+b = [-219, -150, 776, 798, -2, 34]
+mat = "hose"
+
+[[box]]
+name = "uqd_hold_nx"
+tex = "uqd_hold_nx"
+tex_sides = true
+b = [-216, -186, 803, 851, -51, -5]
+mat = "hose"
+
+[[box]]
+name = "uqd_block_nx"
+tex = "uqd_block_nx"
+tex_sides = true
+b = [-214, -188, 822, 851, -5, 21]
+mat = "alu"
+
+[[cyl]]
+name = "uqd_nx_a"
+tex = "uqd_nx_a"                # side texture upper_uqd_nx_a_side.png (Wave 3)
+c = [-200, 862, 8]
+r = 9.5
+h = 22
+axis = "y"
+mat = "hose"
+
+[[cyl]]
+name = "uqd_nx_b"
+tex = "uqd_nx_b"                # side texture upper_uqd_nx_b_side.png (Wave 3)
+c = [-200, 862, -35]
+r = 9.5
+h = 22
+axis = "y"
+mat = "hose"
+
+# ---------------- middle bay ----------------
+[[box]]
+name = "mid_pcb"            # main board (top z -48: sparse mode -47/-49 at X 60-115)
+tex = "mid_pcb"
+b = [-212, 212, 375, 592, -50, -48]
+mat = "pcb"
+
+[[box]]
+name = "asic_plate"         # steel cold plate over the switch ASIC (top -22: QR label mode -23)
+tex = "asic_plate"
+tex_sides = true
+b = [-41, 40, 474, 560, -34, -22]
+mat = "steel"
+
+[[box]]
+name = "cu_block"           # copper block with QR label on the cold plate
+tex = "cu_block"
+b = [-13.6, 11.6, 503, 530, -22, -19]
+mat = "copper"
+
+[[box]]
+name = "cu_block2"          # small copper fitting with QR label
+tex = "cu_block2"
+b = [13, 33.6, 540, 555, -22, -18]
+mat = "copper"
+
+[[tube]]
+name = "asic_tube_a"
+r = 2.0
+fillet = 4.0
+mat = "copper"
+pts = [[-5.6, 529, -24], [-5.6, 550, -24]]
+
+[[tube]]
+name = "asic_tube_b"
+r = 2.0
+fillet = 4.0
+mat = "copper"
+pts = [[4.5, 529, -24], [4.5, 550, -24]]
+
+[[box]]
+name = "asic_elbow"
+tex = "asic_elbow"
+b = [-10, 11, 548, 562, -32, -24]
+mat = "copper"
+
+[[box]]
+name = "clamp_bar"          # stainless retention bar across the front of the cold plate (top -29)
+tex = "clamp_bar"
+b = [-60, 60, 421, 440, -35, -30]
+mat = "steel"
+
+[[cyls]]
+name = "clamp_screws"       # Wave 6 detail: row of 8 screw holes on the clamp bar (orthophoto of train IMG_5749 at
+                            # z -31, 8 px/mm: X -28.1 .. 27.5, pitch 7.95, Y 434.8; IMG_5753 agrees); shallow dark relief
+xy = [[-28.1, 434.8], [-20.1, 434.8], [-12.2, 434.8], [-4.3, 434.8], [3.6, 434.8], [11.6, 434.8], [19.5, 434.8], [27.5, 434.8]]
+r = 1.1
+z = [-30, -29.7]
+mat = "conn"
+
+[[box]]
+name = "clamp_side_nx"      # raised stainless arm (sub-cell modes -25..-31 at |X| 38-72, Y 447-473)
+tex = "clamp_side_nx"
+b = [-100, -38, 440, 478, -31, -26]
+mat = "steel"
+
+[[box]]
+name = "clamp_side_px"
+tex = "clamp_side_px"
+b = [38, 100, 440, 478, -31, -26]
+mat = "steel"
+
+[[box]]
+name = "clamp_pad_nx"       # low stainless end pads with screws (modes -41..-43 at |X| 60-89)
+tex = "clamp_pad_nx"
+b = [-89, -60, 421, 473, -46, -41]
+mat = "steel"
+
+[[box]]
+name = "clamp_pad_px"
+tex = "clamp_pad_px"
+b = [60, 89, 421, 473, -46, -41]
+mat = "steel"
+
+[[box]]
+name = "clamp2_side_nx"     # rear stainless arms behind the spreaders (far points Z -22..-25 at Y 540-560)
+tex = "clamp2_side_nx"
+b = [-100, -40, 545, 565, -28, -24]
+mat = "steel"
+
+[[box]]
+name = "clamp2_side_px"
+tex = "clamp2_side_px"
+b = [40, 100, 545, 565, -26, -22]
+mat = "steel"
+
+[[box]]
+name = "asic_rear_bracket"  # steel bracket between cold plate and divider (points Y 580-600, Z -14..-19)
+tex = "asic_rear_bracket"
+tex_sides = true
+b = [-25, 40, 568, 592, -22, -15]
+mat = "steel"
+
+[[box]]
+name = "comp_nx"            # components on the main board near the crossbar, -X side (points Z -38)
+tex = "comp_nx"
+tex_sides = true
+b = [-80, -40, 385, 420, -48, -38]
+mat = "conn"
+
+[[box]]
+name = "fin_block"          # copper fins / heat pipes under the clamp
+tex = "fin_block"
+tex_sides = true
+b = [-40, 38, 440, 477, -48, -31]
+mat = "copper"
+
+[[box]]
+name = "hs_nx"              # left connector heat spreader (top -33)
+tex = "hs_nx"
+tex_sides = true
+b = [-97, -45, 473, 549, -48, -33]
+mat = "steel"
+
+[[box]]
+name = "hs_px"              # right connector heat spreader (top -29)
+tex = "hs_px"
+tex_sides = true
+b = [55, 95, 473, 549, -48, -29]
+mat = "steel"
+
+[[cyls]]
+name = "hs_px_screws"       # Wave 6 detail: screw row on the +X heat spreader (orthophoto of train IMG_5749 at z -29,
+                            # 6 px/mm: X 83, Y 486.7 .. 543.3, pitch about 8.1; IMG_5753 agrees where not covered)
+xy = [[83, 486.7], [83, 495.0], [83, 503.3], [83, 511.7], [83, 519.2], [83, 527.5], [83, 535.8], [83, 543.3]]
+r = 1.2
+z = [-29, -28.7]
+mat = "conn"
+
+[[boxes]]
+name = "hs_px_clips"        # Wave 6 detail: stamped latch clips of the cable connectors beside the screws (same ortho:
+                            # one clip per screw row at X 88-95)
+b = [[88.5, 95, 485.2, 488.2, -31, -27.5], [88.5, 95, 493.5, 496.5, -31, -27.5], [88.5, 95, 501.8, 504.8, -31, -27.5], [88.5, 95, 510.2, 513.2, -31, -27.5], [88.5, 95, 517.7, 520.7, -31, -27.5], [88.5, 95, 526.0, 529.0, -31, -27.5], [88.5, 95, 534.3, 537.3, -31, -27.5], [88.5, 95, 541.8, 544.8, -31, -27.5]]
+mat = "steel"
+
+[[cyls]]
+name = "hs_nx_screws"       # Wave 7: screw row on the -X heat spreader, measured (not mirrored): orthophotos of train
+                            # IMG_5749 and 5753 at z -33, 6 px/mm, agree: X -82.8, Y 486.7 .. 542.5, pitch 8.0; plus the
+                            # larger hole at (-66.7, 514.7)
+xy = [[-82.8, 486.7], [-82.8, 494.5], [-82.8, 502.5], [-82.8, 510.3], [-82.8, 518.7], [-82.8, 526.7], [-82.8, 534.7], [-82.8, 542.5], [-66.7, 514.7]]
+r = 1.2
+z = [-33, -32.7]
+mat = "conn"
+
+[[boxes]]
+name = "hs_nx_clips"        # Wave 7: connector latch clips beside the screw row (same orthos: X -96 .. -87, one per row)
+b = [[-96, -87, 485.2, 488.2, -35, -31.5], [-96, -87, 493.0, 496.0, -35, -31.5], [-96, -87, 501.0, 504.0, -35, -31.5], [-96, -87, 508.8, 511.8, -35, -31.5], [-96, -87, 517.2, 520.2, -35, -31.5], [-96, -87, 525.2, 528.2, -35, -31.5], [-96, -87, 533.2, 536.2, -35, -31.5], [-96, -87, 541.0, 544.0, -35, -31.5]]
+mat = "steel"
+
+[[box]]
+name = "wires_nx"           # blue wire bundle at the left spreader
+tex = "wires_nx"
+tex_sides = true
+b = [-107, -95, 478, 547, -45, -36]
+mat = "blue"
+
+[[box]]
+name = "wires_px"
+tex = "wires_px"
+tex_sides = true
+b = [93, 115, 478, 547, -45, -27]
+mat = "blue"
+
+[[box]]
+name = "conn_row_top"       # connector clip row with blue wires near the crossbar
+tex = "conn_row_top"
+tex_sides = true
+b = [-45, 45, 408, 421, -42, -30]
+mat = "steel"
+
+[[cyls]]
+name = "caps_px"            # electrolytic capacitors, 3 x 3 (K768 1000 uF), board -48 -> top -34
+tex = "cap"
+tex_sides = true            # instanced side texture upper_cap_side.png (Wave 3)
+xy = [[123, 418], [134, 416], [146, 418], [125, 432], [137, 431], [149, 432], [128, 446], [140, 446], [152, 447]]
+r = 4.0
+z = [-48, -34]
+top_round = 0.6            # Wave 6 detail: rounded top edge (frustum r -> r - 0.6)
+verts = 24
+mat = "cap"
+
+[[cyls]]
+name = "caps2_px"           # second capacitor group near the divider (red-top sparse points at (162,522), (147,545), Z -32)
+tex = "cap"
+# no tex_sides: the instanced side texture scored worse here (SSE 0.233 -> 0.289, upper_038 vs 039)
+tex_shared = true
+xy = [[162, 522], [147.5, 545], [158, 535], [170, 528], [150, 568]]
+r = 4.0
+z = [-48, -32]
+top_round = 0.6            # Wave 6 detail: rounded top edge (frustum r -> r - 0.6)
+verts = 24
+mat = "cap"
+
+[[prism]]
+name = "baffle_nx"          # large black baffle on the -X side (top -32)
+tex = "baffle_nx"
+pts = [[-212, 390], [-125, 390], [-125, 477], [-102, 477], [-102, 563], [-175, 563], [-205, 470], [-212, 465]]
+z = [-35, -32]
+mat = "baffle"
+
+[[tube]]
+name = "baffle_nx_rib"      # curved second duct edge inside baffle_nx (Wave 2): traced on orthophotos of IMG_5749 and
+                            # IMG_5753 at z -32 (agree within 2-3 mm, so the edge is near z -32); the oblique IMG_5742
+                            # ortho puts the visible edge within about 3 mm of -32: a low step, not a tall wall.
+                            # Modeled as a 3 mm rib along the trace. A/B (upper_025 vs 024): baffle_nx + rib SSE
+                            # 15.90 -> 15.87 (neutral), rib edge 5.7 px, baffle_nx edge 3.33 -> 3.82: skipped.
+skip = true
+r = 1.5
+fillet = 8.0
+mat = "baffle"
+pts = [[-187, 392, -30.5], [-186, 415, -30.5], [-180, 432, -30.5], [-172, 448, -30.5], [-169, 462, -30.5],
+       [-163, 480, -30.5], [-157, 500, -30.5], [-150, 520, -30.5], [-143, 538, -30.5], [-138, 552, -30.5]]
+
+[[prism]]
+name = "baffle_px"          # black slanted baffle on the +X side with the capacitor window
+tex = "baffle_px"
+pts = [[150, 392], [213, 392], [213, 457], [167, 552], [115, 552], [115, 480], [130, 463], [150, 455], [160, 445], [163, 420], [155, 400]]
+z = [-23, -20]              # unused when plane is set
+plane = [-32.82, 0.0176, 0.0225]  # top z = a + b x + c y (Wave 2, 2026-10-06): robust fit to 45 dark train points
+                            # in the outline excluding the capacitor window (MAD 1.3 mm): -21.4 at Y 392 -> -17.5 at
+                            # Y 552. A first fit with the capacitor tops (-34) included gave a false 3.9 deg slope.
+thick = 3.0
+mat = "baffle"
+
+[[tube]]
+name = "teal_cable"         # braided teal cable on the -X side near the crossbar: teal train points at X -103..-96,
+                            # Y 393-438, Z -38..-33 (Wave 2); runs along Y toward the crossbar (IMG_5729/5734/5749)
+r = 4.0
+fillet = 6.0
+mat = "teal"
+pts = [[-100, 378, -33], [-100, 446, -35]]
+
+[[box]]
+name = "wblock_px"          # aluminum manifold block at the +X wall (overlay IMG_5734)
+tex = "wblock_px"
+tex_sides = true
+b = [183, 213, 507, 550, -40, -23]
+mat = "alu"
+
+[[box]]
+name = "wblock_nx"          # aluminum block at the -X wall (mode -37)
+tex = "wblock_nx"
+tex_sides = true
+b = [-208, -188, 527, 553, -52, -36]
+mat = "alu"
+
+[[tube]]
+name = "wtube_px_a"         # copper tubes along the +X wall toward the front; visible Y 400-507 only (no tube
+                            # crosses Y 320-410 per lower agent; they end where hidden under the black duct)
+r = 3.0
+fillet = 5.0
+mat = "copper"
+pts = [[202, 507, -20], [202, 478, -20]]  # Wave 2: only Y 478-507 is visible; the rest runs under baffle_px (photos IMG_5749/5734)
+
+[[tube]]
+name = "wtube_px_b"
+r = 3.0
+fillet = 5.0
+mat = "copper"
+pts = [[211, 507, -20], [211, 460, -20]]
+
+[[box]]
+name = "rear_bracket"       # sheet-metal bracket at the +X rear corner (ortho z12 IMG_5749/5713)
+tex = "rear_bracket"
+b = [122, 215, 735, 766, -10, -4]
+mat = "alu"
+
+# Texture bake options (scripts/model/upper/bake_upper.py); session = S1|S2|S3|all, stat = median|p25.
+# Session per texture (Wave 2, 2026-10-06): full-mode probe A/B of three complete bakes (upper_015 all, upper_016 S1,
+# upper_017 S3; per-part SSE after color fit, blur 4, outputs/scratch/upper/eb_014_017.txt). Rule: one session
+# unless "all" scores better. stat p25 where it beat median in Phase 1B (upper_012 vs 011).
+# Wave 3 (2026-10-06): six complete variants (all/S1/S3 x median/p25, upper_029-034) vs the Wave 2 set (028),
+# per-part SSE with the color fit taken on non-upper pixels only (eb.py --fitx): baffle_px S1 p25, clamp_side_nx
+# all p25, asic_plate S3 p25 (probe evidence only), hs_px S3 median, clamp_side_px all p25, clamp_bar S1 p25,
+# hs_nx S1 p25; mid_pcb, baffle_nx, serp_plate, rear_pcb, ribbon, comp_nx, fin_block, cap kept (eb_var3x.txt).
+[texbake.rear_pcb]
+session = "all"
+stat = "p25"
+ppm = 6
+[texbake.serp_plate]
+session = "S1"
+ppm = 8
+[texbake.board2_a]
+session = "all"
+ppm = 8
+[texbake.board2_b]
+session = "all"
+ppm = 8
+[texbake.board2_conn]
+session = "all"
+ppm = 8
+[texbake.rear_pcb_left]
+session = "all"
+[texbake.ribbon]
+session = "all"
+stat = "p25"
+ppm = 5
+[texbake.pwr_conns]
+session = "all"
+[texbake.lblock_px]
+session = "all"
+[texbake.lblock_nx]
+session = "all"
+[texbake.lblock_px_tab]
+session = "all"
+[texbake.lblock_nx_tab]
+session = "all"
+[texbake.uqd_bracket_px]
+session = "S1"
+[texbake.uqd_block_px]
+session = "all"           # new geometry (Wave 2); seen mostly in S2/S3 views; not A/B tested
+[texbake.uqd_bracket_nx]
+session = "S3"
+[texbake.uqd_block_nx]
+session = "all"           # new geometry (Wave 2); seen mostly in S2/S3 views; not A/B tested
+[texbake.mid_pcb]
+session = "all"
+stat = "p25"
+ppm = 5
+[texbake.asic_plate]
+session = "S3"
+ppm = 10
+stat = "p25"
+[texbake.cu_block]
+session = "S1"
+ppm = 16
+[texbake.cu_block2]
+session = "S1"
+ppm = 16
+[texbake.asic_elbow]
+session = "S1"
+[texbake.clamp_bar]
+session = "S1"
+ppm = 8
+stat = "p25"
+[texbake.clamp_side_nx]
+session = "all"
+stat = "p25"
+[texbake.clamp_side_px]
+session = "all"
+stat = "p25"
+[texbake.clamp_pad_nx]
+session = "all"
+[texbake.clamp_pad_px]
+session = "all"
+[texbake.clamp2_side_nx]
+session = "all"
+[texbake.clamp2_side_px]
+session = "S1"
+[texbake.asic_rear_bracket]
+session = "S1"
+[texbake.comp_nx]
+session = "S1"
+[texbake.fin_block]
+session = "S1"
+ppm = 8
+[texbake.hs_nx]
+session = "S1"
+ppm = 8
+stat = "p25"
+[texbake.hs_px]
+session = "S3"
+stat = "median"
+ppm = 8
+[texbake.wires_nx]
+session = "S1"
+[texbake.wires_px]
+session = "all"
+[texbake.conn_row_top]
+session = "all"
+[texbake.wblock_px]
+session = "all"
+[texbake.wblock_nx]
+session = "S3"
+[texbake.rear_bracket]
+session = "all"
+[texbake.baffle_nx]
+session = "S3"
+ppm = 4
+[texbake.baffle_px]
+session = "S1"
+stat = "p25"
+ppm = 4
+[texbake.cap]
+session = "S1"
+stat = "p25"
+ppm = 24
+cap = 4
+[texbake.uqd_hold_px]
+session = "all"           # new part (Wave 2); not A/B tested
+[texbake.uqd_hold_nx]
+session = "all"           # new part (Wave 2); not A/B tested
+[texbake.uqd_px_a]
+session = "all"
+ppm = 8
+[texbake.uqd_px_b]
+session = "all"
+ppm = 8
+[texbake.uqd_nx_a]
+session = "all"
+ppm = 8
+[texbake.uqd_nx_b]
+session = "all"
+ppm = 8
+[texbake.pwr_conn_1]
+session = "all"
+ppm = 8
+[texbake.pwr_conn_2]
+session = "all"
+ppm = 8
+[texbake.pwr_conn_3]
+session = "all"
+ppm = 8

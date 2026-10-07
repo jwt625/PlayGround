@@ -1,0 +1,314 @@
+# Chassis group (tray shell). mm, tray frame (X width, Y front -> rear, Z out of the open top, Z = 0 crossbar top).
+# Phase 1A block-out by the chassis agent, 2026-10-05. Measurements: DevLog/parts/DevLog-002-chassis.md.
+
+[colors]  # 8-bit sRGB, medians of photo patches (devlog 3.6); converted to linear in build.py
+metal = [152, 154, 146]   # crossbar top 5749/5751 (164,170,161)/(154,156,148); walls sunlit 5744 (154,143,113)
+bezel = [140, 128, 108]   # front plate 5738 sunlit (170,155,126), 5740 shaded (103,98,88)
+black = [52, 54, 56]      # duct tops 5749 (67,70,72) incl. slots
+green = [32, 53, 32]      # MMC adapters 5740
+port = [22, 22, 22]
+unseen = [84, 82, 75]     # Wave 6: median of the wall_px_in (83,82,74) and floor_front (86,82,76) photo textures
+
+[unseen]              # faces no camera sees: all downward faces (normal -Z) of chassis parts, plus the +Y faces of
+                      # back_parts (back of the front panel, outer face of the rear wall). Untextured on purpose.
+enabled = true
+back_parts = ["chassis.front_grip", "chassis.rear_wall"]   # front_plate / front_lip +Y faces are seen from the top views (chassis_062: +55 / +22): excluded
+
+[body]
+roll_deg = 0.0       # parts built level; build.py applies the shared "tray" frame (frames.json, 0.85 deg). Was -0.73 (own crossbar fit) until 2026-10-06
+x_outer = 219.0       # outer side-wall faces at X = +-219 (frame definition)
+z_bot = -63.0         # underside of the floor pan (local; world -65.7 at -X)
+z_rim = 21.3          # top edge of the side walls (local; -X edges 20.6, +X points about 22; fit 22.1)
+y_rear = 803.0        # rear end (three-view agreement at Z 20: 800-803; fit 805)
+t = 1.2               # sheet thickness
+
+[wall]
+y0 = 23.0             # walls start behind the front panel plate
+flange_w = 8.0        # inward top fold width
+
+[rear]
+z_top = 21.3
+
+[front]
+y_face = 23.0         # recessed port plate (MMC / RJ45 plane)
+plate_t = 3.0
+z_top = 22.0
+z_bot = -63.0         # bottom of the front assembly (panel height = z_top - z_bot)
+lip_d = 22.0          # top silver lip runs BEHIND the plate (Y yf..yf+22; points Y 32-44 at Z 14-18); a forward lip hid the ports
+lip_h = 5.0
+bezel_y0 = -20.5      # grip bar front, upper part (fit on 5735/5736/5738/5740: -20.5)
+plate_tex_z0 = -49.0  # Wave 7: front_plate texture down to where the wing meets the panel (was bezel_z1 -34; the "65" cage
+                      # port at X about -118..-100 and the panel face between the MMC groups were flat bezel color)
+bezel_z1 = -34.0      # top of the grip bar (fit)
+grip_z0 = -52.0       # bottom of the grip bar (fit -51.75; -54 gave fp 0.28 on the lower lip)
+grip_lo_y0 = -20.5    # lower lip flush with the grip front (points at Y -33 gave fp 0.53, -22 gave 0.37: likely sign base)
+grip_lo_z1 = -46.0
+bezel_inset_x = 2.0   # wing runs to the levers (IMG_5738 region: missing geometry at 14)
+
+[front.grip]          # grip wing as a Y-Z profile extruded over |X| <= x_outer - bezel_inset_x (replaces the two slabs)
+# front lip up to the fitted silhouette top (-34 at Y -20.5), valley in front of the MMC rows (sparse points
+# Y -20..-12 at Z -50..-46), panel side at the MMC bottom (-48) so the adapter rows are not buried
+profile_yz = [[23.0, -52.0], [-20.5, -52.0], [-20.5, -34.0], [17.0, -49.0], [23.0, -49.0]]
+# Wave 3 tried (chassis_039-044): a nose to Y -30.5 at Z -49 (train points along X -162..+187 at Y -31 +- 2, Z -48 +- 3,
+# outside the sign's X -71..78), rounded and as a textured facet: IoU 0.961 -> 0.973 and edge 6.1 -> 5.4 px (rounded),
+# but SAM masks call it background (nose fp 0.54) and wing-family SSE front list 1833 -> 1886-1888, probe 2757 -> 2754-2757:
+# rejected. Facet profile for reference: [[23,-52],[-27,-52],[-30.5,-49],[-28,-39],[-20.5,-34],[17,-49],[23,-49]]
+slope = [[-20.5, -34.0], [17.0, -49.0]]   # upper face of the wing (textured quad); keep equal to profile points 3-4
+
+[front.mmc]           # 8 groups (4 per side) of 4 stacked adapter blocks
+x_centers = [-203.0, -180.6, -157.9, -135.9, 133.8, 156.2, 178.6, 201.0]   # Wave 7: green extents in a single-view S1
+w = 17.0              # strip bake over the MMC row (8 px/mm): -X -203.0/-180.6/-157.9/-135.9, width 17.0-17.2; +X 133.2/156.3/
+z0 = -51.5            # 177.8/201.0 (blurred side; pitch 22.4 from 201.0 used); green Z -51.9..-9.0. Was +-130.5..198, w 19,
+z1 = -9.0             # Z -48..-10 (edges at |X| 119-189 from 1A were group gaps)
+rows = 4
+gap = 1.5
+recess = false        # Wave 7 (rejected: chassis +40 / +23 dark back, +57 / +27 green back, chassis_067): one shallow opening per row and group (green body walls from the box cut, dark back)
+row_seps = [-15.5, -28.0, -40.5]   # bright row separators in the sharp -X textures g0-g3 (Z -14.5..-17.2 / -27.9..-28.1 / -40.0..-41.2)
+frame = 1.5
+recess_depth = 4.0
+recess_back = "green" # back face material of the openings (dark "port" back: chassis +40 / +23 vs no recess, chassis_067)
+depth = 6.0           # protrusion in front of the plate; 1.5 tried (chassis_032 vs 031): MMC SSE -30 percent but wing/plate worse, chassis +1 percent
+
+[front.ports]
+geometry = false      # RJ45/USB/LED come from the front_plate photo texture (flat boxes disabled 2026-10-05)
+recess = true         # Wave 6: RJ45 / USB openings cut through the plate with dark open cavities (port_<i>), textured
+depth = 12.0          # plate quad split around the holes
+
+[front.rj45]           # Wave 6: dark openings located in the front_plate photo texture (4 px/mm): centers X 8.0 / 32.2 /
+x_centers = [8.0, 32.2, 54.6, 76.9]   # 54.6 / 76.9, 12.2-12.8 x 7.8-10 mm, Z 4-14 (was 8 / 28 / 48 / 69, 14 x 11 at Z 10)
+w = 12.5
+h = 9.5
+zc = 9.4
+[front.usb]
+xc = -12.8            # texture opening X -19.5..-6.0, Z 3.2..9.0
+w = 13.0
+h = 5.5
+zc = 6.1
+[front.led]
+x0 = -72.0
+x1 = -38.0
+zc = 8.0
+
+[lever]
+r = 10.5             # fit chassis_lever2 (8 views)
+xc_inset = -8.5      # barrel axis outside the outer wall face (fit chassis_lever2)
+yc = 6.0              # fit (front views + 5711, 5751)
+z0 = -70.0            # fit
+z1 = 21.0             # fit
+head_r = 9.0          # hook head: disc with axis along X at the top of the barrel (fit chassis_lever2)
+head_len = 16.0
+head_dz = 6.0         # head center below z1
+
+[rails_front]         # DISABLED (chassis_016: color residual 82/75, points 7-8 mm off). silver sheet-metal rails inboard of the black ducts (orthos z = -3 IMG_5751/5749: |X| 110-122;
+x_in = 112.0          # -X sparse points X -125..-110, Y 81-339, local Z about -1.6; +X 9 points, mirrored)
+x_out = 121.0
+y0 = 45.0
+y1 = 328.0
+z_top = -2.0
+t = 1.5
+enabled = false
+
+[shelf_px]            # Wave 5b: silver shelf along the +X wall, middle bay, beside upper.baffle_px's slanted edge
+                      # (IMG_5734 strip photo 190 / render 67). Train points X 177-217, Y 426-557: Z -25.0 (MAD 1.2 mm);
+                      # plane sweep pairs (5729/5734/5749/5751) peak Z -23..-17 (upper's wall tubes at -20 included)
+enabled = false       # paired A/B chassis_057 / own11: chassis+upper SSE +0.07 / -0.06 percent (neutral); the 5734 strip
+                      # turned out to be the crossbar rear ledge (crossbar.y_ext), not this shelf
+x0 = 160.0            # under the baffle (hidden) inboard of its slanted edge (213,457)-(167,552)
+y0 = 392.0
+y1 = 577.0            # to the divider
+z_top = -25.0
+
+[rail_rear_px]        # Wave 5d: gray sheet-metal strip along the +X wall in the rear bay (upper agent: 19 train points
+                      # 7.5 mm from any surface). Train points X 189-201 (5-95 percent), Z 12-15 (median 14.2), Y 590-760;
+                      # plane sweeps (5741/5742/5748/5749/5754) ambiguous (Z 6-10, hose_px nearby); one-view overlay 5741
+enabled = false       # paired A/B chassis_060 / own14: chassis+upper SSE 27103 -> 27442 probe, 25101 -> 25292 own: rejected
+x0 = 187.0
+x1 = 201.0
+y0 = 595.0
+y1 = 765.0
+z_top = 13.5
+
+[clips]               # cover-latch clips standing on the side-wall rims (IMG_5755 ortho X = -219: Y 555-575, 700-720)
+y_centers = [565.0, 710.0]
+len_y = 20.0
+h = 7.0               # fp 0.07-0.16 at 9; sparse points 0.2-1.4 mm on 3 of 4 clips
+w = 6.0               # inward from the outer face
+
+[crossbar]
+y0 = 331.0             # fit (probe) 331 / 371; sparse points on the top 328-372
+y1 = 371.0
+x_half = 217.8
+flange_depth = 30.0
+y_ext_front = 320.5    # Wave 6: front ledge Y y_ext_front..y0 (lower agent: fibers vanish at Y about 315). Plane sweeps
+z_ext_front = 1.6      # Y 318-324: Z +2 (pair NCC 0.84 X -180..-60, 0.80 X 60..180); Y 312-318 no surface (fibers -26);
+                       # train points Y 324-331 Z -2..+2. Fit outputs/fits/chassis_xbar_extf1: 320.5 / 1.6 (edge 1.87 -> 1.48 px)
+y_ext = 381.5          # Wave 5c: rear ledge Y y1..y_ext behind the stamped step at y1 (IMG_5734 strip at Y 372-390 by
+z_ext = 3.5            # ray; plane sweeps Y 374-384: Z 0 / 2 / 4 / 4-6 at X -160 / -80 / 0 / 80-160; Y 384-402 no peak;
+                       # train points Z about 3 over Y 372-381, 0 at 384). Fit outputs/fits/chassis_xbar_ext1 (8 train
+                       # views): 381.4 / 3.5, edge 3.54 -> 1.52 px (start 385 / 3.0)
+edge_n = 8              # segments of the edge arc; 1 = 45 deg chamfer (planar: photo-textured crossbar_ch_*)
+edge_r = 0.0           # Wave 5 tried 7 (arc) and 7 chamfer, rejected (devlog Wave 5); fit outputs/fits/chassis_xbar_r1: 6.9 (edge 2.16 -> 1.72 px), y0/y1 330.6/370.75 (kept 331/371); 0 = sharp
+z_top = 1.0            # top face (tray frame); train points |Z| < 3-6 mm in the tray frame sit about +1 mm above Z 0 (Wave 2)
+
+[divider]
+y = 578.0
+z_top = -1.5          # wall top = horizontal top flange; orthos z = -5 of 5734/5754 agree, plane sweeps -6..+4; fit
+                      # outputs/fits/chassis_divflange1 (8 train views, edge 3.10 -> 1.36 px): -1.6. Was rim 21.3 (no flange)
+flange_y0 = 557.0     # silver flange seen from above (orthos 5734/5754: front edge Y 555-557; fit 557.25)
+flange_y1 = 593.0     # fit 593.0
+flange_x = 190.0      # half width; rounded ends at |X| about 185-190
+flange_r = 15.0       # corner radius
+
+[ducts_front]        # black slotted air ducts along both sides of the front bay
+x_in = 128.0          # dark sparse points X 126-212, top cluster at local Z -6..-2
+x_out = 217.0
+y0 = 30.0
+y1 = 325.0
+z_top = -3.0
+
+# Photo textures (scripts/model/chassis/bake.py; surfaces in chassis_surfaces.py). Session per surface: one session
+# where possible (hard sun, shadows moved between S1 12:31-12:37, S2 12:47, S3 13:36).
+[tex]
+enabled = true
+
+[tex.crossbar_top]
+k = 1
+sessions = ["S3"]     # S3 vs S1 (chassis_011 vs 009): color residual 40.6 -> 33.7, SSIM 0.582 -> 0.548
+px_per_mm = 4
+[tex.front_plate]
+k = 1                 # single best view per texel: residual 34.0 -> 29.7, SSIM 0.514 -> 0.602 (chassis_011)
+sessions = ["S1"]
+px_per_mm = 4
+[tex.grip_front]
+sessions = ["S1"]
+skip = true           # slab front face; the Wave 3 nose facet texture was rejected with the nose
+[tex.grip_top]
+sessions = ["S1"]
+skip = true          # sign and plinth bleed in (slab geometry does not match the curved wing)
+[tex.lip_top]
+views = ["IMG_5711", "IMG_5712", "IMG_5717", "IMG_5735", "IMG_5736", "IMG_5738", "IMG_5740"]
+sessions = ["S1"]
+[tex.wall_mx_out]
+sessions = ["S1", "S2", "S3"]   # all sessions beat one session here (chassis_012 vs 011: residual -1.1..-2.9)
+px_per_mm = 3
+[tex.wall_px_out]
+px_per_mm = 3
+[tex.wall_mx_in]
+sessions = ["S3"]
+px_per_mm = 3
+[tex.wall_px_in]
+sessions = ["S1", "S2", "S3"]
+px_per_mm = 3
+[tex.duct_front_mx_top]
+k = 8
+stat = "p25"
+sessions = ["S1", "S2", "S3"]   # all sessions beat one session here (chassis_012 vs 011: residual -1.1..-2.9)
+[tex.duct_front_px_top]
+k = 8
+stat = "p25"
+sessions = ["S1", "S2", "S3"]   # all sessions beat one session here (chassis_012 vs 011: residual -1.1..-2.9)
+[tex.mmc_g0]
+k = 1                 # single best view: SSIM +0.08..0.11 vs median of 5 (chassis_010)
+sessions = ["S1"]
+px_per_mm = 8
+[tex.mmc_g1]
+k = 1                 # single best view: SSIM +0.08..0.11 vs median of 5 (chassis_010)
+sessions = ["S1"]
+px_per_mm = 8
+[tex.mmc_g2]
+k = 1                 # single best view: SSIM +0.08..0.11 vs median of 5 (chassis_010)
+sessions = ["S1"]
+px_per_mm = 8
+[tex.mmc_g3]
+k = 1                 # single best view: SSIM +0.08..0.11 vs median of 5 (chassis_010)
+sessions = ["S1"]
+px_per_mm = 8
+[tex.mmc_g4]
+sessions = ["S1"]
+px_per_mm = 8
+[tex.mmc_g5]
+sessions = ["S1"]
+px_per_mm = 8
+[tex.mmc_g6]
+sessions = ["S1"]
+px_per_mm = 8
+[tex.mmc_g7]
+sessions = ["S1"]
+px_per_mm = 8
+[tex.divider_front]    # chassis_013: residual 56.6 -> 45.9 vs flat (contains the upper group tube pixels above the divider)
+px_per_mm = 3
+sessions = ["S1", "S2", "S3"]
+[tex.divider_rear]
+skip = true           # 75 percent never seen (one S2 view)
+px_per_mm = 3
+sessions = ["S1", "S2", "S3"]
+[tex.rear_in]
+px_per_mm = 3
+sessions = ["S1", "S2", "S3"]
+[tex.rim_mx]           # chassis_014: residual 70.8 -> 42.2 vs flat flange
+sessions = ["S1", "S2", "S3"]
+[tex.rim_px]           # chassis_014: residual 65.5 -> 38.8
+sessions = ["S1", "S2", "S3"]
+[tex.crossbar_fl_front]
+skip = true           # flat color scores better (chassis_014: 60.9 / 56.1 textured vs 57.9 / 55.5 flat; the real flanges are rounded)
+sessions = ["S1", "S2", "S3"]
+[tex.crossbar_fl_rear]
+skip = true           # flat color scores better (chassis_014: 60.9 / 56.1 textured vs 57.9 / 55.5 flat; the real flanges are rounded)
+sessions = ["S1", "S2", "S3"]
+[tex.wing]
+sessions = ["S1"]
+[tex.rear_out]
+skip = true           # never seen: no camera behind the rear (all centers at Y < 803)
+sessions = ["S1", "S2", "S3"]
+px_per_mm = 3
+[tex.floor_front]
+sessions = ["S1", "S2", "S3"]
+px_per_mm = 3
+[tex.floor_mid]
+sessions = ["S1", "S2", "S3"]
+px_per_mm = 3
+[tex.floor_rear]
+# dz: the visible rear-bay surface is a deck at local Z -13.8, not the floor pan (-61.8). Height sweep scored by
+# full-mode SSE on 7 rear-bay train views (chassis_fz*, median-of-5 bake per height): dz 0/10/25/38/42/45/48/51/55 ->
+# floor family 7667/6588/5190/4046/3765/3581/3531/3606/4042; train points at Z -15..-11 (X 120-180, Y 740-760).
+# K1 3433 vs median 3531 (in-sample, within noise: median kept); single sessions S1/S2/S3 5927/3707/5242.
+k = 5
+dz = 48
+sessions = ["S1", "S2", "S3"]
+px_per_mm = 3
+[tex.divider_top]
+sessions = ["S1", "S2", "S3"]
+px_per_mm = 3
+[tex.duct_front_mx_in]
+sessions = ["S1", "S2", "S3"]
+px_per_mm = 3
+[tex.duct_front_px_in]
+sessions = ["S1", "S2", "S3"]
+px_per_mm = 3
+[tex.crossbar_ch_front]
+skip = true
+sessions = ["S1", "S2", "S3"]
+px_per_mm = 4
+[tex.crossbar_ch_rear]
+skip = true
+sessions = ["S1", "S2", "S3"]
+px_per_mm = 4
+[tex.shelf_px_top]
+sessions = ["S1", "S2", "S3"]
+px_per_mm = 3
+[tex.crossbar_ext]
+sessions = ["S3"]
+k = 1
+px_per_mm = 4
+[tex.rail_rear_px_top]
+sessions = ["S1", "S2", "S3"]
+px_per_mm = 4
+[tex.crossbar_ext_front]
+sessions = ["S3"]
+k = 1
+px_per_mm = 4
+[tex.mmc_strip]
+skip = true           # diagnostic bake only (MMC group extents), never built
+k = 1
+sessions = ["S1"]
+px_per_mm = 8

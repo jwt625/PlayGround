@@ -1,0 +1,17 @@
+# Scene configuration (assumptions and paths; no logic here). Relative paths are relative to the project root.
+source_dir: source            # read-only copies of the 44 photos (source/images), copied 2026-10-05 from the download
+sparse_model: data/colmap/sparse/0   # own COLMAP run (scripts/prep/run_colmap.sh); selected sub-model
+model_name: nvsw_tray_model    # export file names
+work_scales: [4, 2]           # undistorted copies at 1/4 and 1/2 resolution (data/undistorted_s4, _s2)
+sessions:                     # EXIF capture time groups (2026-08-24); holdout and probe must span all three
+  S1: [IMG_5711, IMG_5740]    # 12:31:41-12:37:13
+  S2: [IMG_5741, IMG_5747]    # 12:47:22-12:47:30
+  S3: [IMG_5748, IMG_5758]    # 13:36:09-13:36:24
+split:                        # scripts/prep/split.py
+  package_views: [IMG_5711, IMG_5712, IMG_5717, IMG_5735, IMG_5736, IMG_5737, IMG_5738, IMG_5739, IMG_5740, IMG_5747]
+  exclude_views: [IMG_5739]   # COLMAP pose wrong (tray box overlay misses by > 100 px; 275 observations); 2026-10-05
+  min_obs: 300                # weakly registered views (IMG_5741: 98, IMG_5739: 275) are never holdout or probe
+  min_package_holdout: 1
+  holdout_quota: {S1: 3, S2: 1, S3: 1}
+  min_package_probe: 2
+  probe_quota: {S1: 4, S2: 2, S3: 2}

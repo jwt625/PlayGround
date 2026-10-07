@@ -1,0 +1,23 @@
+# Measurement inputs for scripts/prep/world_frame.py (coordinator, 2026-10-05). Hand-picked; keep in sync with
+# DevLog-001 section 3. Pixel coordinates: 1/4-scale undistorted images (polygons) or 1/2-scale (holes).
+tray_planes:
+  # Sparse points between these offsets along the dominant plane normal (COLMAP units) are the tray's parallel
+  # layers (floor, boards, crossbar tops); RANSAC planes there give the tray Z axis.
+  colmap_normal_hint: [-0.184, -0.414, -0.891]
+  offset_band: [3.30, 3.95]
+crossbar_polygons_s4:
+  # Sparse points seen in the view and inside the polygon lie on the NVIDIA crossbar top: their principal
+  # direction is the tray X axis (width). The two views agree within 0.6 deg.
+  IMG_5713: [[582, 100], [702, 100], [700, 930], [612, 930]]
+  IMG_5749: [[712, 5], [842, 5], [845, 900], [712, 900]]
+wall_holes_s2:
+  # Screw holes on the outer side-wall faces (X = const). tri: one pick, epipolar match; tri2: manual matches.
+  minus_x:
+    - {tri: [IMG_5756, 1627, 1630]}
+    - {tri: [IMG_5756, 1910, 1625]}
+  plus_x:
+    - {tri2: [IMG_5745, 1495, 262, IMG_5744, 2240, 522]}
+    - {tri2: [IMG_5745, 1590, 162, IMG_5744, 2283, 380]}
+front_panel_views: [IMG_5735, IMG_5740]   # Y origin: mode of Y over the sparse points these views see (panel face)
+scale_reference:
+  tray_body_width_mm: 438.0   # SN6810-LD, NVIDIA user manual v1.3 + PNY and Dell datasheets (references/md/dimensions_research.md)

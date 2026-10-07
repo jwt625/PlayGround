@@ -1,0 +1,6 @@
+# Evaluator settings (scripts/eval/evaluate.py). Sparse points count as "object" points if inside any region.
+# Boxes in mm, [x0, x1, y0, y1, z0, z1], in the named frame (world = tray frame, or a frame in frames.json).
+point_regions:
+  tray: {frame: world, box_mm: [-240, 240, 15, 840, -100, 40]}   # Y >= 15: excludes the acrylic sign's printed text (Y -10..+3)
+  package: {frame: package, box_mm: [-65, 65, -65, 65, -10, 8]}
+max_point_err_px: 2.0

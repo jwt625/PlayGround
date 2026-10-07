@@ -1,0 +1,415 @@
+# Lower group: front bay contents (Y 0-330), braided cables over their full length, front-bay copper tubes.
+# mm, tray frame (X width, Y front -> rear, Z out of the open top, Z = 0 crossbar top).
+# Measurements: DevLog/parts/DevLog-002-lower.md (orthophotos on planes z = const from train views, sparse-point
+# clusters by color, polyline triangulation of the cables).
+
+[tilt]            # Wave 2: rigid parts are built level and moved with lib.apply_frame(objs, "tray") (world z = tray z
+                  # + 0.0148 x). Residual pitch in the tray frame: board plane fit z = -0.0016 x + 0.0061 y - 0.05
+                  # (1382 train pts, MAD 0.17); a joint fit board/fingers/floor gives +0.0008..0.0037 (devlog 5d).
+dzdy = 0.006      # shear z += dzdy (y - y0) in the level frame, before the tray frame
+y0 = 200.0
+# X values of parts below Z -10 converted from world X (orthophotos) to tray-local X: x += 0.014835 z (Wave 2)
+skip = ["braid_a", "braid_b", "ribbon_a_front", "ribbon_a_rear", "cable_loop", "clip_bar"]
+
+[colors]  # linear base colors (photo-sampled); 1B color_fit.py refit kept only for base and braid_b (lower_105)
+board = [0.022, 0.023, 0.025]
+copper = [0.45, 0.19, 0.10]
+oe = [0.50, 0.47, 0.42]           # nickel/silver OE frames
+base = [0.05, 0.05, 0.052]
+org = [0.012, 0.012, 0.013]       # black organizer blocks
+strip = [0.70, 0.72, 0.71]        # white fiber strips
+fiber = [0.017, 0.08, 0.30]
+braid = [0.03, 0.048, 0.042]
+braid_b = [0.006, 0.008, 0.012]
+ribbon = [0.21, 0.28, 0.32]
+conn = [0.010, 0.010, 0.011]
+white = [0.75, 0.74, 0.70]        # nylon clips, plug
+metal = [0.30, 0.29, 0.27]        # manifold, fittings, left plate
+silver = [0.45, 0.45, 0.43]       # left rod
+cable_blk = [0.010, 0.010, 0.010]
+screw = [0.17, 0.17, 0.165]
+screw_cu = [0.20, 0.07, 0.035]   # dark copper screw heads on the finger blocks (darker than the block copper in the crop)     # board screw heads: train point colors lum 92-135 (sRGB) -> about 0.17 linear, matte
+
+[board]           # black control board with NVIDIA logo near the front panel (orthos IMG_5725/5751 at z = 0)
+x0 = -100.0
+x1 = 101.0
+y0 = 52.0
+y1 = 108.0
+z_top = 1.2       # local (tilted) frame: world top about 0.45 at X 0, Y 80
+t = 1.6
+
+# Wave 3 test (lower_303/304), disabled: screws pts 0.76 mm, but board area squared error 1101 -> 1109 (tex_board +
+# screws, probe) and tex_board edge 1.34 -> 1.41 px. Uncomment to enable (build.py reads [board_screws]).
+[board_screws]    # Wave 3: screw heads at the six board holes (1A ortho positions). Train points within 6 mm
+x = [-94.8, 0.3, 94.8]   # Wave 5: gold pad centers in the baked board texture (were 1A ortho -88/0/96, 63/101); train points
+y = [65.9, 103.1]        # near each hole: bright (lum 92-135 vs black board), p90 height 1.4-4.8 mm above the top
+r = 2.8           # Wave 5: head only (IMG_5726 s2 crop: silver head inside a flat gold pad, which the board texture carries); was 3.5
+h = 2.5           # median of the six p90 heights above the board top (about 2.6)
+
+[bracket]         # metal flange under the board's rear edge (sparse points Y 112-116 at Z -5..-8 across X)
+x0 = -100.0
+x1 = 101.0
+y0 = 60.0        # gray frame under the board; visible as a band Y 110-116 at Z about -6 (orthos z = -6 in
+y1 = 117.0       # IMG_5725, 5751, 5722 agree within 3 mm); local points cluster Y 112-116, Z -8..-4
+z0 = -8.0
+z1 = -1.6
+
+[connector]       # large black connector on the board (+X end), latch up
+b = [22.0, 66.0, 89.0, 107.0, 0.0, 15.0]   # Wave 4: train points (6 x 8 mm bins) top 14-15 over X 22-64, Y 92-100; X 70-86 is the
+                                            # white plug (top 8.4) and tape, not housing (was X 22-88). Y1 102 tested: edge 3.05 vs 1.92 px
+
+[plug]            # small white plug on the board
+b = [69.0, 85.0, 83.0, 95.0, 0.0, 8.4]     # Wave 4: bright train points X 70-86, Y 86-94, top 8.4 (was X 70-82, Y 82-97, top 6)
+
+[clip_board]      # white clip holding the black cable loop at the board's +X rear corner
+b = [78.0, 100.0, 110.0, 130.0, -8.0, 4.0]
+
+[clip_bar]        # white clip on the crossbar holding the braided cable
+x0 = 37.5         # 1A tri2 IMG_5751/5753 (36, 66, 343, 362, 0, 24); Wave 2 fit_params lower_clip_bar on 7 train
+x1 = 69.5         # views (5732-5734, 5743, 5751-5753): edge loss 1.98 -> 1.51
+y0 = 340.75
+y1 = 363.5
+z0 = 0.0
+z1 = 20.5
+
+[fingers]         # copper cold-plate fingers over the optical engines (8 at 24 mm pitch, ortho z = -30)
+n = 8
+x_first = -68.43
+pitch = 24.0
+w = 19.0
+y0 = 113.0
+y1 = 170.0
+blocks = [[116, 132], [134, 150], [152, 170]]   # 3 copper blocks per finger (ortho z = -6: copper from Y 116)
+straps = { y = [[132, 134], [150, 152]], overhang = 1.0, drop = 0.6, t = 3.0 }   # silver clips between blocks
+# Wave 5: screw in the center of the rear block (IMG_5726 s2 crop: dark copper head about 22 px = 3.4 mm wide at
+# about 6.5 px/mm, slightly recessed); modeled as a head 0.4 mm proud with a 0.8 mm sink
+screw = { y = 161.0, r = 1.7, h = 1.2, sink = 0.8 }
+z_top = -26.8     # local; per-finger world medians -28.5 (f1) .. -24.2 (f8) follow the tilt
+h = 5.0
+
+[oe]              # optical-engine frames under each finger
+w = 22.0
+y0 = 110.0
+y1 = 205.0
+z_top = -32.0
+h = 6.0
+
+[base]            # black floor of the OE area (fibers and strips lie on it)
+x0 = -85.6
+x1 = 111.4
+y0 = 110.0
+y1 = 330.0
+z_top = -39.0
+t = 3.0
+
+[tubes]           # copper loops: each finger has 2 legs at x_c +- leg_dx; U-bends join neighbors
+r = 2.75
+leg_dx = 4.5
+z = -32.0
+y_leg0 = 170.0
+y_leg1 = 200.0
+u_depth = 12.0    # U apex Y = y_leg1 + u_depth
+fillet = 6.0
+# U pairs (finger index of the right leg, next finger's left leg): group L 0-3, group R 4-7
+u_pairs = [[0, 1], [1, 2], [2, 3], [4, 5], [5, 6], [6, 7]]
+
+[[long_tube]]     # f1 left leg -> fitting 3 (passes under the left organizer)
+name = "tube_f1"
+pts = [[-72.97, 170.0, -32.0], [-72.97, 196.0, -32.0], [-80.47, 212.0, -32.0], [-80.49, 258.0, -33.0], [-68.52, 272.0, -35.0], [-20.52, 272.0, -35.0], [7.5, 272.0, -34.0], [20.01, 284.0, -33.0], [20.01, 290.0, -33.0]]
+
+[[long_tube]]     # f4 right leg -> fitting 1
+name = "tube_f4"
+pts = [[8.03, 170.0, -32.0], [8.03, 196.0, -32.0], [13.53, 210.0, -32.0], [13.53, 255.0, -32.0], [-2.97, 274.0, -32.0], [-2.99, 290.0, -33.0]]
+
+[[long_tube]]     # f5 left leg -> fitting 2
+name = "tube_f5"
+pts = [[23.03, 170.0, -32.0], [23.03, 196.0, -32.0], [20.53, 210.0, -32.0], [20.53, 255.0, -32.0], [7.03, 274.0, -32.0], [7.01, 290.0, -33.0]]
+
+[[long_tube]]     # f8 right leg -> fitting 4 (passes under the right organizer)
+name = "tube_f8"
+pts = [[104.03, 170.0, -32.0], [104.03, 196.0, -32.0], [107.53, 214.0, -32.0], [107.51, 258.0, -33.0], [95.48, 272.0, -35.0], [44.48, 272.0, -35.0], [34.01, 281.0, -33.0], [34.01, 290.0, -33.0]]
+
+[fittings]        # compression fittings into the center manifold block (axis Y)
+x = [-2.99, 7.01, 20.01, 34.01]
+y0 = 284.0
+y1 = 299.0
+z = -33.0
+r = 3.6
+
+[manifold]        # metal block the four tubes end in (visible end of the front-bay loop)
+b = [-9.52, 41.48, 298.0, 326.0, -42.0, -28.0]
+
+[org_l]           # black fiber organizer blocks (color-coded label on top)
+b = [-57.49, -17.49, 266.0, 300.0, -39.0, -27.0]
+
+[org_r]
+b = [49.53, 91.53, 268.0, 300.0, -39.0, -25.0]
+
+[strip_l]         # white fiber strips with color marks
+b = [-72.55, 2.45, 237.5, 242.5, -38.0, -36.5]
+
+[strip_r]
+b = [23.45, 87.45, 237.5, 242.5, -38.0, -36.5]
+
+[fibers]          # grouped blue fibers: 2 bundles per OE to its organizer; exits toward the crossbar
+r = 0.8           # Wave 5: individual fiber about 1.5 mm wide (IMG_5726 s2 crop: 10 px at 6.5 px/mm); was 1.1
+port_y = 205.0
+port_dx = 5.0
+z_port = -35.0
+z_floor = -37.5
+strip_y = 240.0
+org_y = 266.0
+z_org = -31.0
+# Wave 3: per-fiber x (port, strip crossing at strip_y, organizer entry), traced in orthophotos on z = -36.5 of
+# IMG_5725 at 9 px/mm (outputs/scratch/lower/ortho_fib_l/r.jpg), world x -> tray-local x (-0.5); the entries form two
+# clusters of 4 per organizer. Right group: ports 6 (80.6) partly hidden by braid A (model value).
+trace_l = [[-72.2, -64.2, -55.5], [-64.9, -62.2, -51.6], [-49.9, -49.0, -47.2], [-42.7, -47.5, -43.3], [-26.6, -30.5, -33.8], [-17.2, -21.6, -29.4], [-3.8, -14.4, -24.9], [4.5, -8.3, -19.9]]
+trace_r = [[24.5, 27.5, 52.8], [30.6, 30.0, 56.7], [47.3, 51.2, 60.6], [55.1, 52.8, 62.8], [73.4, 77.3, 75.1], [80.1, 79.0, 80.1], [92.8, 87.3, 85.1], [102.8, 105.5, 89.5]]
+exit_n = 6
+exit_r = 1.3
+exit_y0 = 300.0
+exit_y1 = 322.0   # fibers bend down right after the organizers (regions lower_001). Wave 2 test lower_214
+exit_z0 = -32.0   # (y1 345, z0 -29, z1 -60 from blue points at Z -28..-33 to Y 315): pts r 3.36 -> 2.27 but
+exit_z1 = -62.0   # edge +0.6..0.8 px and color res +3..10 on both sides: reverted
+boot_len = 4.5    # white ribbed strain-relief boot on each fiber at the OE port (IMG_5749 s2 crop: about 25 px
+boot_r = 1.8      # long, twice the fiber width, at about 370 mm = 4-5 mm)
+boot_ribs = 5     # Wave 5: ribbed strain relief (IMG_5726 s2 crop: about 5 ribs over the boot; rings r 1.8 on a core)
+boot_r_core = 1.3
+rib_frac = 0.55   # ring length / rib pitch
+
+[fibers.exit_ribbon]   # Wave 4: exits leave the organizers' rear faces as flat level ribbons and pass straight under
+                       # the crossbar (IMG_5733 s2 crop: about 8 parallel fibers per side). rayplane z = -30 on IMG_5733
+                       # bundle edges: L X -48.4..-31.7, R 57.2..72.7 (world; local -0.45); blue train points Y 295-310
+                       # Z -31.7..-27.4 (median about -29.5), X medians L -36..-35, R 67..74
+n = 8
+r = 0.8
+w = 14.0               # center-to-center span (bundle width 15.5-16.7 in IMG_5732/5733 minus one fiber)
+xc_l = -38.9           # IMG_5733 (near top-down) center -40.0..-37.7 for z -30..-20, points -36: world -38.5, local -0.45
+xc_r = 66.5            # IMG_5733 center 64.9, points 67-74: world 67
+z = -29.5
+y0 = 299.0
+y1 = 334.0             # under the crossbar front face (Y 331); hidden beyond (y1 320 tested: worse, floor shows through)
+
+[braid_a]         # braided harness: front connector -> over the fingers -> crossbar clip -> rear bay connector
+r = 5.0
+# Wave 4: middle-bay knot offsets (tubegeom.centerline, linear between knots Y 400/470/540, taper to 0 at 375/565)
+mx400 = 0.0
+mz400 = 0.0
+mx470 = 0.0
+mz470 = 0.0
+mx540 = 0.0
+mz540 = 0.0
+tex = "lower_braid_a_w5z.png"   # Wave 5: re-bake at 8 px/mm (was 4), all sessions, median of best 5, ID pass lower_idtrain8 (sharper weave; probe/B neutral)   # cylindrical bake (bake_lower.py --tubes), session all (S1+S3-fill: color res 47.0 -> 51.7, lower_213)
+pts = [[48, 131, 7.5], [45.1, 136.0, 6.0], [45.9, 156.0, 1.0], [52.5, 176.0, -6.6], [66.7, 196.0, -12.6], [82.9, 216.0, -17.9], [91.1, 236.0, -22.0], [92.9, 256.0, -23.3], [89.4, 276.0, -16.0], [86.5, 296.0, -6.5], [79.7, 316.0, 5.5], [69.0, 332.0, 14.7], [58, 346, 12], [50, 358, 13], [46, 372, 13], [46.5, 390, 11.5], [47, 405, 10.5], [48, 428, 9], [47.5, 455, 7.5], [46.4, 471, 9.6], [47.8, 488, 9.6], [50, 505, 9], [52.3, 523, 8.4], [55.6, 541, 6.9], [58.6, 561, 5], [60, 580, 6], [61, 592, 6]]
+
+[ribbon_a_front]  # light-blue wire fan: from a line on the connector face into the braid end
+r = 0.85          # Wave 5: about 16 wires of about 1.7 mm (IMG_5726 s2 crop: about 14 px each at about 8 px/mm); was 9 x r 1.3
+n = 16
+line = [[29, 107, 12.5], [55, 107, 12.5]]   # light-blue points X 29-52, Y 106-118, Z 11-14
+tip = [48, 131, 7.5]
+
+[ribbon_a_rear]   # fan from the braid end to the rear-bay connector (ortho 5749: X 50-75, Y 595-625)
+r = 1.3
+n = 9
+line = [[52, 616, 4], [76, 616, 4]]
+tip = [61, 592, 6]
+
+[braid_b]         # second braided cable along -X side of the OE area, dives under the crossbar
+                  # Wave 2: pts Y 112-312 from ray_depth_b.py (Viterbi over the braid mask in 14 train views)
+r = 5.0
+tex = "lower_braid_b_s1f3_w5z.png"   # Wave 5: re-bake at 8 px/mm, S1 + S3 fill, ID pass lower_idtrain8   # session S1, never-seen texels from S3 (ties "all": 49.5 / 49.5, lower_212/213)
+dx = 0.0         # offsets on the visible front part (fit_params lower_braid_b: edge 1.747 -> 1.692)
+dz = 0.0
+dz_slope = 0.0  # mm per 100 mm of Y
+kx125 = 0.0       # knot offsets at Y 125/200/275; fit lower_braid_b2 (edge 1.791 -> 1.720 on its views) did not help probe: zeroed
+kx200 = 0.0
+kx275 = 0.0
+kz125 = 0.0
+kz200 = 0.0
+kz275 = 0.0
+pts = [[-115.2, 112.0, -26.2], [-115.6, 132.0, -23.4], [-114.9, 152.0, -19.1], [-115.1, 172.0, -16.2], [-114.6, 192.0, -14.2], [-113.4, 212.0, -12.4], [-112.1, 232.0, -12.4], [-108.4, 252.0, -14.9], [-107.2, 272.0, -16.1], [-106.4, 292.0, -20.4], [-105.7, 312.0, -41.0], [-102, 345, -42], [-100, 430, -40], [-99, 490, -34]]
+
+[cable_loop]      # thin black cable looping from the connector through the board clip
+r = 2.3
+pts = [[40, 113, 4], [36, 128, 0], [40, 145, -3], [50, 154, -5], [66, 148, -4], [78, 132, -2], [88, 122, 1], [100, 115, 3], [114, 110, 4]]   # dark sparse points (29)
+
+[rod_l]           # silver rod along the -X side of the fingers
+r = 3.0
+pts = [[-103.45, 105.0, -30.0], [-103.46, 278.0, -31.0], [-93.47, 292.0, -32.0], [-78.47, 293.0, -32.0]]
+
+[plate_l]         # metal plate left of the left organizer
+b = [-100.51, -60.51, 255.0, 302.0, -36.0, -33.0]
+
+[smd_board_l]     # small board with SMD parts at the -X edge of the OE area
+b = [-100.66, -84.66, 115.0, 250.0, -45.5, -43.5]
+
+# Photo-textured top surfaces (quads at local z + lift; rect in local mm; file in assets/textures/).
+# Baked by scripts/model/lower/bake_lower.py (ID-owned texels, one session per surface, see devlog).
+# Wave 4: board top split into 3 X bands (-100/-33/34/101) for a per-region session choice (was lower_board_top.png, S3)
+[[tex]]
+name = "board_x0"
+kind = "single"
+rect = [-100.0, -33.0, 52.0, 108.0]
+z = 1.2
+stem = "lower_board_x0"
+file = "lower_board_x0_S3.png"
+flat = "board"
+
+[[tex]]
+name = "board_x1"
+kind = "single"
+rect = [-33.0, 34.0, 52.0, 108.0]
+z = 1.2
+stem = "lower_board_x1"
+file = "lower_board_x1_S3.png"
+flat = "board"
+
+[[tex]]
+name = "board_x2"
+kind = "single"
+rect = [34.0, 101.0, 52.0, 108.0]
+z = 1.2
+stem = "lower_board_x2"
+file = "lower_board_x2_S2.png"
+flat = "board"
+
+
+[[tex]]
+name = "fingers"
+kind = "fingers"
+rect = [-80.43, 111.57, 116.0, 170.0]
+z = -26.8
+stem = "lower_finger_tops"
+file = "lower_finger_tops.png"   # S3 (Wave 4: L/R split with S1/S2/S3 re-bakes tested, S3 best in both groups, no gain)
+flat = "copper"
+
+[[tex]]
+name = "oe"
+kind = "oe"
+rect = [-80.43, 111.57, 170.0, 205.0]
+z = -32.0
+stem = "lower_oe_tops"
+file = "lower_oe_tops.png"
+flat = "oe"
+
+# Wave 4: floor split into 3 x 2 regions (X bands -85.58/-20/45/111.42, Y bands 205/262/330) so the shadow session
+# can be chosen per region (was one quad, lower_floor_st.png, S3 see-through). Files lower_floor_<rij>_<session>.png;
+# baked see-through (fibers, boots, strips owned) on the train ID pass outputs/runs/lower_idtrain5.
+[[tex]]
+name = "floor_r00"
+kind = "single"
+rect = [-85.58, -20.0, 205.0, 262.0]
+z = -39.0
+stem = "lower_floor_r00"
+file = "lower_floor_r00_S1.png"
+flat = "base"
+
+[[tex]]
+name = "floor_r01"
+kind = "single"
+rect = [-20.0, 45.0, 205.0, 262.0]
+z = -39.0
+stem = "lower_floor_r01"
+file = "lower_floor_r01_S1.png"
+flat = "base"
+
+[[tex]]
+name = "floor_r02"
+kind = "single"
+rect = [45.0, 111.42, 205.0, 262.0]
+z = -39.0
+stem = "lower_floor_r02"
+file = "lower_floor_r02_S2.png"
+flat = "base"
+
+[[tex]]
+name = "floor_r10"
+kind = "single"
+rect = [-85.58, -20.0, 262.0, 330.0]
+z = -39.0
+stem = "lower_floor_r10"
+file = "lower_floor_r10_S3.png"
+flat = "base"
+
+[[tex]]
+name = "floor_r11"
+kind = "single"
+rect = [-20.0, 45.0, 262.0, 330.0]
+z = -39.0
+stem = "lower_floor_r11"
+file = "lower_floor_r11_S3.png"
+flat = "base"
+
+[[tex]]
+name = "floor_r12"
+kind = "single"
+rect = [45.0, 111.42, 262.0, 330.0]
+z = -39.0
+stem = "lower_floor_r12"
+file = "lower_floor_r12_S3.png"
+flat = "base"
+
+
+[[tex]]
+name = "org_l"
+kind = "single"
+rect = [-57.4, -17.4, 266.0, 300.0]
+z = -27.0
+stem = "lower_org_l"
+file = "lower_org_l.png"
+flat = "org"
+
+[[tex]]
+name = "org_r"
+kind = "single"
+rect = [49.63, 91.63, 268.0, 300.0]
+z = -25.0
+stem = "lower_org_r"
+file = "lower_org_r_S2.png"
+flat = "org"
+
+[[tex]]
+name = "strip_l"
+kind = "single"
+rect = [-72.54, 2.46, 237.5, 242.5]
+z = -36.5
+stem = "lower_strip_l"
+file = "lower_strip_l.png"
+flat = "strip"
+
+[[tex]]
+name = "strip_r"
+kind = "single"
+rect = [23.46, 87.46, 237.5, 242.5]
+z = -36.5
+stem = "lower_strip_r"
+file = "lower_strip_r.png"
+flat = "strip"
+
+[[tex]]
+name = "manifold"
+kind = "single"
+rect = [-9.42, 41.58, 298.0, 326.0]
+z = -28.0
+stem = "lower_manifold"
+file = "lower_manifold.png"
+flat = "metal"
+
+[[tex]]
+name = "plate_l"
+kind = "single"
+rect = [-100.49, -60.49, 255.0, 302.0]
+z = -33.0
+stem = "lower_plate_l"
+file = "lower_plate_l.png"
+flat = "metal"
+
+# Wave 4: SMD board top (gray PCB with pads, sunlit in IMG_5723/5730; was flat black, probe/B SSE 235/652)
+[[tex]]
+name = "smd"
+kind = "single"
+rect = [-100.66, -84.66, 115.0, 250.0]
+z = -43.5
+stem = "lower_smd_l"
+file = "lower_smd_l_S3.png"
+flat = "board"

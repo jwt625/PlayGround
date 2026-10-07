@@ -1,0 +1,82 @@
+{
+ "generated_by": "coordinator (DevLog-001 section on frames); package frame refined by the package agent",
+ "date": "2026-10-06",
+ "convention": "P_world_mm = R @ P_local_mm + t_mm (R columns = local axes in the tray/world frame)",
+ "frames": {
+  "scene": {
+   "R": [
+    [
+     0.9861255215995159,
+     0.15202447769836258,
+     -0.066670936926243
+    ],
+    [
+     -6.938893903907228e-18,
+     0.4016288296207646,
+     0.9158025350573422
+    ],
+    [
+     0.16600137243433563,
+     -0.9030962525655806,
+     0.39605643909918037
+    ]
+   ],
+   "t_mm": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "note": "gravity frame (scripts/prep/gravity.py, 43 views): Z up = smallest eigenvector of the cameras' display-right vectors (roll rms 7.3 deg); bootstrap angle median 2.2 deg, 95th percentile 5.5 deg; Y = horizontal direction of tray +Y; for the environment and exports"
+  },
+  "package": {
+   "R": [
+    [
+     -0.9977599091956822,
+     -0.02825950367975296,
+     -0.060634676989309313
+    ],
+    [
+     0.03508561959063123,
+     -0.99278694464691,
+     -0.11464328081747743
+    ],
+    [
+     -0.05695755349174822,
+     -0.1165138746691891,
+     0.9915545139374876
+    ]
+   ],
+   "t_mm": [
+    112.031,
+    -150.522,
+    77.845
+   ],
+   "note": "origin = center of the substrate top face (package agent Phase 1A, 2026-10-05: ring-edge center in 3 close-ups, substrate-top height by NCC; folded from its frame correction (-4.0, -3.1, -0.7) mm); Z = normal of 408 sparse points on the package top, toward the cameras; X/Y along the stiffener edges (in-plane rotation and tilt < 0.4 deg, not applied)"
+  },
+  "tray": {
+   "R": [
+    [
+     0.9998899589753325,
+     0.0,
+     -0.014834754474138404
+    ],
+    [
+     0.0,
+     1.0,
+     0.0
+    ],
+    [
+     0.014834754474138404,
+     0.0,
+     0.9998899589753325
+    ]
+   ],
+   "t_mm": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "note": "tray-level frame for tray-aligned rigid parts (audit DevLog-003, 2026-10-06): the world frame is rolled about Y; +X is raised: world z = local z + 0.0148 x (0.85 deg; mirrored wall holes 0.95 deg, crossbar top 0.73-1.0, wall bottom edges 0.75-0.82; about +-0.1 deg). Rotation about the world Y axis through the origin. Use lib.apply_frame(objs, \"tray\")."
+  }
+ }
+}
