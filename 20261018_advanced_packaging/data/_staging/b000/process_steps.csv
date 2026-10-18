@@ -1,0 +1,40 @@
+step_id,tv_id,flow_name,seq,category,step,performed,target,material,equipment,temp_c,time_s,pressure_mpa,thickness_um,conditions,result,basis,source,overrides,locator,qualifiers,notes
+ectc.2019.00095-a-s01,ectc.2019.00095-a,SoIC integration flow (Fig. 2),1,test,known good die (KGD) selection for stacking,,,,,,,,,,,stated,text,,p.2 Sec. II,,
+ectc.2019.00095-a-s02,ectc.2019.00095-a,SoIC integration flow (Fig. 2),2,other,bond formation on SoC,,,,,,,,,,,stated,schematic,,p.2 Fig. 2,,
+ectc.2019.00095-a-s03,ectc.2019.00095-a,SoIC integration flow (Fig. 2),3,bonding,"SoIC stacking (F2F, F2B or both)",,,,,,,,,,,stated,mixed,,p.2 Fig. 2; p.2 Sec. II,,
+ectc.2019.00095-a-s04,ectc.2019.00095-a,SoIC integration flow (Fig. 2),4,underfill,underfill,no,,,,,,,,,,stated,schematic,,p.2 Fig. 2,,Crossed out in SoIC flow.
+ectc.2019.00095-a-s05,ectc.2019.00095-a,SoIC integration flow (Fig. 2),5,other,RDL (optional),,,,,,,,,,,stated,schematic,,p.2 Fig. 2,,
+ectc.2019.00095-a-s06,ectc.2019.00095-a,SoIC integration flow (Fig. 2),6,assembly,integrate SoIC into FC or WLSI package (here InFO_PoP),,,,,,,,,,,stated,mixed,,p.2 Fig. 2; p.2 Sec. IV,,
+ectc.2019.00095-e-s01,ectc.2019.00095-e,typical 3DIC flow (Fig. 2),1,other,micro-bump formation on SOC-1,,,,,,,,,,,stated,schematic,,p.2 Fig. 2,,
+ectc.2019.00095-e-s02,ectc.2019.00095-e,typical 3DIC flow (Fig. 2),2,bonding,flip chip stacking SOC-1 on SOC-2,,,,,,,,,,,stated,schematic,,p.2 Fig. 2,,
+ectc.2019.00095-e-s03,ectc.2019.00095-e,typical 3DIC flow (Fig. 2),3,underfill,underfill,,,,,,,,,,,stated,schematic,,p.2 Fig. 2,,
+ectc.2019.00095-e-s04,ectc.2019.00095-e,typical 3DIC flow (Fig. 2),4,other,C4 FC bump formation,,,,,,,,,,,stated,schematic,,p.2 Fig. 2,,
+ectc.2019.00095-e-s05,ectc.2019.00095-e,typical 3DIC flow (Fig. 2),5,assembly,FC assembly on substrate,,,,,,,,,,,stated,schematic,,p.2 Fig. 2,,
+iedm19573.2019.8993637-a-b01,iedm19573.2019.8993637-a,microbump formation and F2F bonding,1,deposition_other,barrier and seed layers,,,,,,,,,,,stated,text,,p.1 Sec. II.A,,Implied by later removal; method and materials not given.
+iedm19573.2019.8993637-a-b02,iedm19573.2019.8993637-a,microbump formation and F2F bonding,2,lithography,resist pattern for Cu pillar,,,,,,,,,,,stated,text,,p.1 Sec. II.A,,
+iedm19573.2019.8993637-a-b03,iedm19573.2019.8993637-a,microbump formation and F2F bonding,3,electroplating,Cu pillar plating,,,Cu,,,,,,,,stated,text,,p.1 Sec. II.A; p.3 Fig. 4,,
+iedm19573.2019.8993637-a-b04,iedm19573.2019.8993637-a,microbump formation and F2F bonding,4,electroplating,solder plating over Cu pillar through same resist pattern,,,SnAg,,,,,,,,stated,text,,p.1 Sec. II.A; p.3 Fig. 4,,
+iedm19573.2019.8993637-a-b05,iedm19573.2019.8993637-a,microbump formation and F2F bonding,5,resist_strip,resist removal,,,,,,,,,,,stated,text,,p.1 Sec. II.A,,
+iedm19573.2019.8993637-a-b06,iedm19573.2019.8993637-a,microbump formation and F2F bonding,6,etch_other,barrier and seed removal by etch,,,,,,,,,,,stated,text,,p.1 Sec. II.A,,Process shares tools with Intel standard Cu bumping.
+iedm19573.2019.8993637-a-b07,iedm19573.2019.8993637-a,microbump formation and F2F bonding,7,bonding,face-to-face thermal compression bonding of top die to base wafer,,,,,,,,,solder bumps on both top die and base wafer,void-free joints with controlled IMC,stated,text,,p.1 Sec. II.A; p.3 Fig. 3,,Bump height variability tightly controlled on both dies.
+iedm19573.2019.8993637-a-t01,iedm19573.2019.8993637-a,TSV-mid in 22FFL,1,other,insert TSV module at upper-layer patterning of 22FFL stack,,,,,,,,,,,stated,text,,p.1 Sec. II.B,,
+iedm19573.2019.8993637-a-t02,iedm19573.2019.8993637-a,TSV-mid in 22FFL,2,etch_dry,dielectric etch,,,,,,,,,,,stated,text,,p.1 Sec. II.B,,
+iedm19573.2019.8993637-a-t03,iedm19573.2019.8993637-a,TSV-mid in 22FFL,3,tsv_tgv_formation,Si etch by Bosch process,,,,,,,,,,,stated,text,,p.1 Sec. II.B,,
+iedm19573.2019.8993637-a-t04,iedm19573.2019.8993637-a,TSV-mid in 22FFL,4,deposition_other,conformal oxide liner on exposed Si,,,oxide,,,,,,,,stated,text,,p.1 Sec. II.B,,"Electrical isolation, reduced low-frequency capacitance."
+iedm19573.2019.8993637-a-t05,iedm19573.2019.8993637-a,TSV-mid in 22FFL,5,deposition_other,Ta barrier then Cu seed (continuous),,,Ta; Cu,,,,,,,,stated,text,,p.2 Sec. II.B,,
+iedm19573.2019.8993637-a-t06,iedm19573.2019.8993637-a,TSV-mid in 22FFL,6,electroplating,"bulk Cu fill, bottom-up, minimal overburden",,,Cu,,,,,,,"void-free fill, intact barrier and liner",stated,text,,p.2 Sec. II.B; p.3 Fig. 6,,
+iedm19573.2019.8993637-a-t07,iedm19573.2019.8993637-a,TSV-mid in 22FFL,7,cmp,remove Cu/barrier and liner oxide,,,,,,,,,,planar TSV vs surrounding metal; uniform remaining etch stop film,stated,text,,p.2 Sec. II.B; p.3 Fig. 7,,
+iedm19573.2019.8993637-a-t08,iedm19573.2019.8993637-a,TSV-mid in 22FFL,8,other,resume standard interconnect flow; redundant vias land on TSV,,,,,,,,,,,stated,text,,p.2 Sec. II.B; p.4 Fig. 8,,Same vias connect to N-1 metal; no extra via patterning.
+iedm19573.2019.8993637-a-r01,iedm19573.2019.8993637-a,TSV reveal and backside bump,1,test,fully patterned wafer tested,,,,,,,,,,,stated,text,,p.2 Sec. II.C,,
+iedm19573.2019.8993637-a-r02,iedm19573.2019.8993637-a,TSV reveal and backside bump,2,temporary_bonding,flip and mount wafer to carrier wafer,,,,,,,,,,,stated,text,,p.2 Sec. II.C,,
+iedm19573.2019.8993637-a-r03,iedm19573.2019.8993637-a,TSV reveal and backside bump,3,grinding_thinning,backgrind to expose TSVs,,,,,,,,75,,,design_target,text,,p.2 Sec. II.C,thickness_um:approx,
+iedm19573.2019.8993637-a-r04,iedm19573.2019.8993637-a,TSV reveal and backside bump,4,etch_other,blanket Si etch,,,,,,,,,,,stated,text,,p.2 Sec. II.C,,
+iedm19573.2019.8993637-a-r05,iedm19573.2019.8993637-a,TSV reveal and backside bump,5,deposition_other,silicon nitride on Si and protruding TSVs,,,silicon nitride,,,,,,,,stated,text,,p.2 Sec. II.C,,
+iedm19573.2019.8993637-a-r06,iedm19573.2019.8993637-a,TSV reveal and backside bump,6,cmp,nitride polish to planarize and expose Cu TSVs,,,,,,,,,,,stated,text,,p.2 Sec. II.C,,
+iedm19573.2019.8993637-a-r07,iedm19573.2019.8993637-a,TSV reveal and backside bump,7,other,"Cu/solder bump by standard bump processing, aligned to exposed TSV",,,Cu/solder,,,,,,,,stated,text,,p.2 Sec. II.C; p.4 Fig. 9,,
+itherm45881.2020.9190542-a-s01,itherm45881.2020.9190542-a,"TIM1 and lid assembly, ThetaJC test",1,dispense,TIM dispense patterning (gel) or film pick and place (film),,,,,,,,,tuned for TIM coverage >90%,,stated,text,,p.2 Sec. Development,,Sequence follows text; assembly order not stated.
+itherm45881.2020.9190542-a-s02,itherm45881.2020.9190542-a,"TIM1 and lid assembly, ThetaJC test",2,cure,TIM curing profile,,,,,,,,,tuned for coverage; profile not given,,stated,text,,p.2 Sec. Development,,Sequence follows text; assembly order not stated.
+itherm45881.2020.9190542-a-s03,itherm45881.2020.9190542-a,"TIM1 and lid assembly, ThetaJC test",3,assembly,metal lid attach with adhesive,,,,,,,,,"BLT set by lid cavity depth, adhesive thickness, clamping force; BLT 30-120 um window from warpage",,stated,text,,p.2 Sec. Development,,Sequence follows text; assembly order not stated.
+itherm45881.2020.9190542-a-s04,itherm45881.2020.9190542-a,"TIM1 and lid assembly, ThetaJC test",4,inspection,"TIM coverage by scanning acoustic tomography (T-scan, T-SAM)",,,,,,,,,spec coverage >90%,,stated,text,,p.2 Sec. Development; p.2 Table 2,,Sequence follows text; assembly order not stated.
+itherm45881.2020.9190542-a-s05,itherm45881.2020.9190542-a,"TIM1 and lid assembly, ThetaJC test",5,assembly,mount TTV on thermal test PCB,,,,,,,,,,,stated,text,,p.2 Sec. Experiment; p.2 Fig. 3,,
+itherm45881.2020.9190542-a-s06,itherm45881.2020.9190542-a,"TIM1 and lid assembly, ThetaJC test",6,test,ThetaJC junction-to-case test per JEDEC [5] (JESD51-1),,,,,,,,,cold plate (constant-temperature fluid) pressure-fit on lid; Tc by embedded thermocouple at lid center; silica-based thermal grease; Tj at steady state,,stated,text,,p.2 Sec. Experiment; p.3 Fig. 4; p.3 Eq. (1),,

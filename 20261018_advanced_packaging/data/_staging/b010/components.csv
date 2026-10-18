@@ -1,0 +1,27 @@
+comp_id,tv_id,component_type,is_emulator,embedded,name,count,x_mm,y_mm,thickness_um,cavity_x_mm,cavity_y_mm,cavity_depth_um,gap_um,process_node,material,supplier,basis,source,overrides,locator,qualifiers,notes
+ectc51906.2022.00057-a-c1,ectc51906.2022.00057-a,unspecified,,,upper wafer (face-to-face),1,,,,,,,,,Si,,stated,text,,p.2 Sec. 2-1; p.3 Sec. 2-3,,Device content not stated; test module with daisy chain and comb-comb TEG.
+ectc51906.2022.00057-a-c2,ectc51906.2022.00057-a,unspecified,,,lower wafer (face-to-face),1,,,,,,,,,Si,,stated,text,,p.2 Sec. 2-1; p.3 Sec. 2-3,,
+ectc51906.2022.00057-b-c1,ectc51906.2022.00057-b,unspecified,,,top wafer (face down),1,,,,,,,,,Si,,stated,schematic,,p.4 Fig. 10; p.5 Fig. 14,,Removed ('washed out') before HAADF-STEM analysis.
+ectc51906.2022.00057-b-c2,ectc51906.2022.00057-b,unspecified,,,"middle wafer (thinned, TSVs, backside Cu pads)",1,,,,,,,,,Si,,stated,mixed,,p.4 Sec. 3-1; p.4 Fig. 10; p.4 Sec. 3-2,,Thinned middle-wafer Si thickness not given (plots in a.u.).
+ectc51906.2022.00057-b-c3,ectc51906.2022.00057-b,unspecified,,,bottom wafer (face up),1,,,,,,,,,Si,,stated,mixed,,p.4 Sec. 3-1; p.4 Fig. 10,,
+ectc51906.2022.00179-a-c1,ectc51906.2022.00179-a,dummy_die,yes,,"top die (full thickness, FS Ni/Sn bumps + Ni spacer bumps)",,,,,,,,,,Si,,stated,mixed,,p.2 Sec. III; p.2 Fig. 4,,"Daisy chain, Kelvin and EM test structures."
+ectc51906.2022.00179-a-c2,ectc51906.2022.00179-a,dummy_die,yes,,landing die (Ni/Cu pads),,,,,,,,,,Si,,stated,mixed,,p.2 Sec. III; p.2 Fig. 4,,
+ectc51906.2022.00179-a-c3,ectc51906.2022.00179-a,underfill,,,capillary underfill (CUF),,,,,,,,,,,,stated,text,,p.2 Sec. III; p.5 Sec. VI,,Product not named; incomplete fill between 5 um pitch bumps.
+ectc51906.2022.00179-b-c1,ectc51906.2022.00179-b,dummy_die,yes,,"top die (50 um thin, FS Ni/Sn bumps, BS M1B/VIA1B)",,,,50,,,,,,Si,,design_target,text,,p.1 Sec. III; p.2 Sec. III; p.2 Fig. 4,,
+ectc51906.2022.00179-b-c2,ectc51906.2022.00179-b,dummy_die,yes,,landing die (Ni/Cu pads),,,,,,,,,,Si,,stated,mixed,,p.2 Sec. III; p.2 Fig. 4,,
+ectc51906.2022.00179-b-c3,ectc51906.2022.00179-b,underfill,,,capillary underfill (CUF),,,,,,,,,,,,stated,text,,p.2 Sec. III,,
+ectc51906.2022.00179-b-c4,ectc51906.2022.00179-b,other,,,"glass carrier (temporary, laser debonded)",,,,,,,,,,glass,,stated,text,,p.1 Sec. II; p.1 Fig. 1,,
+ectc51906.2022.00179-c-c1,ectc51906.2022.00179-c,other,,,"device wafer (TSV-middle, thinned)",1,,,50,,,,,,Si,,design_target,text,,p.1 Sec. III; p.3 Sec. IV,,300 mm.
+ectc51906.2022.00179-c-c2,ectc51906.2022.00179-c,other,,,glass carrier wafer (temporary),1,,,,,,,,,glass,,stated,text,,p.1 Sec. II; p.3 Sec. IV,,
+ectc51906.2022.00179-c-c3,ectc51906.2022.00179-c,adhesive,,,temporary bonding material (TBM) with laser release layer,,,,,,,,,,TBM (product not named); laser release layer,,stated,text,,p.1 Sec. II; p.3 Sec. IV,,"TBM coated on carrier, release layer on device wafer. Thermal budget value not stated."
+ectc51906.2022.00179-d-c1,ectc51906.2022.00179-d,dummy_die,yes,,stacked B2F dies (tiers T0-T3 shown),5,,,,,,,,,Si,,stated,mixed,,p.4 Sec. V; p.5 Sec. V; p.5 Fig. 14,,Die thickness not stated for this maskset.
+ectc51906.2022.00179-e-c1,ectc51906.2022.00179-e,dummy_die,yes,,STCA top die (full thickness),,,,,,,,,,Si,,stated,schematic,,p.6 Fig. 19,,
+ectc51906.2022.00179-e-c2,ectc51906.2022.00179-e,dummy_die,yes,,STCB landing die (Ni/Cu pads),,,,,,,,,,Si,,stated,schematic,,p.6 Fig. 19,,
+ectc51906.2022.00179-e-c3,ectc51906.2022.00179-e,underfill,,,wafer-level photo-patternable polymer as underfill,,,,,,,,,,,,stated,mixed,,p.6 Sec. VII; p.6 Fig. 19; p.6 Fig. 20,,Product not named.
+ectc51906.2022.00309-a-c1,ectc51906.2022.00309-a,asic,,,main die,1,24,32,,,,,70,,Si,,design_target,table,gap_um:text;material:text,p.2 Table 1; p.1 Sec. II.A; p.3 Sec. II.D,gap_um:ge,gap_um = minimum die gap (main die to chiplet). Thickness not given; revealed by mold grinding.
+ectc51906.2022.00309-a-c2,ectc51906.2022.00309-a,asic,,,chiplet,8,16,5,,,,,,,Si,,design_target,table,material:text,p.2 Table 1; p.2 Fig. 1; p.3 Sec. II.D,,Paper: 9 ASICs in total (1 large ASIC + 8 small chiplets).
+ectc51906.2022.00309-a-c3,ectc51906.2022.00309-a,interposer,,,"fanout interposer (3 RDLs, chip last)",1,34,42,30,,,,,,Cu RDL + low-temperature-cured photo-dielectric,,design_target,table,thickness_um:text;material:text,p.2 Table 1; p.2 Sec. II.A; p.2 Sec. II.C,,
+ectc51906.2022.00309-a-c4,ectc51906.2022.00309-a,substrate,,,"organic substrate, 7-2-7",1,74,74,,,,,,,E705G core,,design_target,table,,p.2 Table 1; p.3 Sec. II.D,,16 layers stated in text.
+ectc51906.2022.00309-a-c5,ectc51906.2022.00309-a,mold,,no,"mold compound (thinned by mold grinding, top die revealed)",,,,,,,,,,,,stated,text,,p.3 Sec. II.D; p.3 Fig. 6,,Product and final thickness not given.
+ectc51906.2022.00309-a-c6,ectc51906.2022.00309-a,underfill,,,capillary underfill (CUF) at microbumps,,,,,,,,,,,,stated,text,,p.3 Sec. II.D,,
+ectc51906.2022.00309-a-c7,ectc51906.2022.00309-a,stiffener,,,ring type heat sink (stiffener ring),1,,,,,,,,,,,stated,mixed,,p.1 Abstract; p.2 Table 1; p.3 Sec. II.D; p.3 Fig. 7,,Abstract: CoS warpage controlled by stiffener ring; Table 1: heat sink ring type.

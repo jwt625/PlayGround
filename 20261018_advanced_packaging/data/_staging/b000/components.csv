@@ -1,0 +1,27 @@
+comp_id,tv_id,component_type,is_emulator,embedded,name,count,x_mm,y_mm,thickness_um,cavity_x_mm,cavity_y_mm,cavity_depth_um,gap_um,process_node,material,supplier,basis,source,overrides,locator,qualifiers,notes
+ectc.2019.00095-a-c1,ectc.2019.00095-a,logic_soc,,,SoIC logic-on-logic chiplet stack,,,,,,,,,,,,stated,text,,p.1 Abstract; p.2 Sec. IV,,"Number of tiers, die sizes, nodes not reported for this TV."
+ectc.2019.00095-b-c1,ectc.2019.00095-b,unspecified,,,small chiplets of different sizes,,,,,,,,,,,,stated,figure_image,,p.2 Fig. 3(a),,
+ectc.2019.00095-c-c1,ectc.2019.00095-c,unspecified,,,large chiplets (same size),,,,,,,,,,,,stated,figure_image,,p.2 Fig. 3(b),,
+ectc.2019.00095-d-c1,ectc.2019.00095-d,logic_soc,,,Logic1,1,,,,,,,,,,,stated,figure_image,,p.2 Fig. 3(c),,Label read from photo.
+ectc.2019.00095-d-c2,ectc.2019.00095-d,logic_soc,,,Logic2,1,,,,,,,,,,,stated,figure_image,,p.2 Fig. 3(c),,Label read from photo.
+ectc.2019.00095-d-c3,ectc.2019.00095-d,logic_soc,,,Logic3,1,,,,,,,,,,,stated,figure_image,,p.2 Fig. 3(c),,Label read from photo.
+ectc.2019.00095-e-c1,ectc.2019.00095-e,logic_soc,,,SOC-1 (top),1,,,,,,,,,,,stated,schematic,,p.2 Fig. 2,,
+ectc.2019.00095-e-c2,ectc.2019.00095-e,logic_soc,,,SOC-2 (bottom),1,,,,,,,,,,,stated,schematic,,p.2 Fig. 2,,
+ectc.2019.00095-e-c3,ectc.2019.00095-e,underfill,,,underfill,,,,,,,,,,,,stated,schematic,,p.2 Fig. 2,,
+ectc.2019.00095-f-c1,ectc.2019.00095-f,logic_soc,,,SoC1,1,,,,,,,,,,,stated,schematic,,p.3 Fig. 9,,
+ectc.2019.00095-f-c2,ectc.2019.00095-f,logic_soc,,,SoC2,1,,,,,,,,,,,stated,schematic,,p.3 Fig. 9,,
+ectc.2019.00095-f-c3,ectc.2019.00095-f,substrate,,,Substrate,,,,,,,,,,,,stated,schematic,,p.3 Fig. 9,,
+iedm19573.2019.8993637-a-c1,iedm19573.2019.8993637-a,logic_soc,,,Top Die (logic),1,,,,,,,,,,,stated,mixed,,p.1 Sec. I; p.3 Fig. 1; p.3 Fig. 2,,"High-performance logic chiplet, face down on base die; node and size not given."
+iedm19573.2019.8993637-a-c2,iedm19573.2019.8993637-a,base_die,,,base die (22FFL with TSV-mid),1,,,75,,,,,22FFL,Si,,design_target,text,,p.1 Sec. I; p.1 Sec. II.B; p.2 Sec. II.C,thickness_um:approx,Ground to approximately 75 um to reveal TSVs; thickness set by product needs and Cu fill aspect ratio.
+iedm19573.2019.8993637-a-c3,iedm19573.2019.8993637-a,substrate,,,package,,,,,,,,,,,,stated,mixed,,p.1 Sec. I; p.3 Fig. 1,,Package type not described.
+itherm45881.2020.9190542-a-c1,itherm45881.2020.9190542-a,logic_soc,yes,,"thermal die (Die-1, Die-2)",2,21.78,16.25,,,,,,,,MediaTek in-house,design_target,table,,p.2 Table 1; p.2 Sec. Development; p.2 Sec. Experiment,,Heater and thermal sensor designed in; Table 1 lists as SOC. Text gives 16.26 mm (conflict).
+itherm45881.2020.9190542-a-c2,itherm45881.2020.9190542-a,interposer,,,InFO die (fan-out),1,22.78,34.0,,,,,,,,,design_target,table,,p.2 Table 1; p.2 Fig. 1,,Fan-out by 3 fine-line RDL; molding around dies.
+itherm45881.2020.9190542-a-c3,itherm45881.2020.9190542-a,substrate,,,BGA substrate,1,62.5,62.5,,,,,,,,,design_target,table,,p.2 Table 1; p.2 Fig. 2,,Layer count and core not given.
+itherm45881.2020.9190542-a-c4,itherm45881.2020.9190542-a,lid,,,metal lid (heat sink lid or ring),1,,,,,,,,,metal,,stated,mixed,,p.1 Introduction; p.2 Sec. Development; p.2 Fig. 2,,For warpage control and heat spreading; lid cavity depth used to set BLT.
+itherm45881.2020.9190542-a-c5,itherm45881.2020.9190542-a,tim,,,TIM1 (die to lid),,,,60,,,,,,"gel (3.2, 6.0 W/mK) or film (25.0, 30.0 W/mK) per variant",,design_target,table,,p.2 Table 1; p.2 Table 2; p.4 Table 4,,Film types: graphite/CNT class (text). BLT 60 baseline; 140 um tested; 30-120 um considered.
+itherm45881.2020.9190542-a-c6,itherm45881.2020.9190542-a,adhesive,,,lid adhesive,,,,,,,,,,,,stated,mixed,,p.2 Sec. Development; p.2 Fig. 2,,Thickness used to control BLT; value not given.
+itherm45881.2020.9190542-a-c7,itherm45881.2020.9190542-a,mold,,,Molding,,,,,,,,,,,,stated,schematic,,p.2 Fig. 2; p.3 Fig. 5,,
+itherm45881.2020.9190542-a-c8,itherm45881.2020.9190542-a,other,,,Resistor (on substrate),,,,,,,,,,,,stated,schematic,,p.2 Fig. 1; p.2 Fig. 2,,
+itherm45881.2020.9190542-a-c9,itherm45881.2020.9190542-a,pcb,,,thermal test PCB,1,,,,,,,,,,,stated,mixed,,p.2 Sec. Experiment; p.2 Fig. 3,,Test board with connectors to power supply and DAQ.
+itherm45881.2020.9190542-b-c1,itherm45881.2020.9190542-b,logic_soc,yes,,"thermal die (Die-1, Die-2) model",2,,,,,,,,,,,simulated,text,,p.5 Sec. Discussion; p.5 Table 7,,Same validated TTV package model.
+itherm45881.2020.9190542-b-c2,itherm45881.2020.9190542-b,heat_spreader,,,vapor-chamber based heat sink,1,,,,,,,,,,,simulated,mixed,,p.5 Sec. Discussion; p.5 Fig. 13,,Dimensions and ThetaCA not given.

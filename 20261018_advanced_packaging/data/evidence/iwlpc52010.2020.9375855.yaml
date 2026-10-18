@@ -1,0 +1,37 @@
+paper_id: iwlpc52010.2020.9375855
+verified_on: 2026-10-18
+source_files:
+  - references/iwlpc52010.2020.9375855/text.md
+  - references/iwlpc52010.2020.9375855/source.json
+  - references/iwlpc52010.2020.9375855/figures/page_03.png
+  - references/iwlpc52010.2020.9375855/figures/page_04.png
+  - references/iwlpc52010.2020.9375855/figures/page_05.png
+figure_reading_method: >-
+  Page renders p.3-p.5 opened; Table 1 + Fig. 5 (p.4) and p.5 (Fig. 7) re-rendered from source.pdf at 2.5-5x zoom in the scratchpad.
+entries:
+  - {table: interconnects, row_id: iwlpc52010.2020.9375855-a-i2, field: diameter_um, value: 4, unit: um, basis: design_target, locator: "p.3 Sec. X-Cube Test Vehicles", note: "7nm TSV with diameter of 4um and pitch of 50um"}
+  - {table: interconnects, row_id: iwlpc52010.2020.9375855-a-i3, field: pitch_um, value: 125, unit: um, basis: design_target, locator: "p.3 Sec. X-Cube Test Vehicles; p.3 Fig. 3", note: "Cu pillar pitch 125 um, also labeled in Fig. 3"}
+  - {table: electrical_interfaces, row_id: iwlpc52010.2020.9375855-b-e1, field: energy_pj_per_bit, value: 0.07, unit: pJ/bit, basis: unspecified, locator: "p.4 Sec. SAINT-S Specification", note: "driver power efficiency"}
+  - {table: metrics, row_id: iwlpc52010.2020.9375855-a-m1, field: n_samples, value: 350, unit: units, basis: measured, locator: "p.4 Table 1", note: "350/3Lot"}
+derived:
+  - {table: interconnects, row_id: iwlpc52010.2020.9375855-a-i4, field: pitch_um, value: 400, formula: "0.4 mm x 1000", inputs: "p.3 Sec. X-Cube Test Vehicles; p.3 Fig. 3"}
+  - {table: interconnects, row_id: iwlpc52010.2020.9375855-b-i4, field: pitch_um, value: 400, formula: "0.4 mm x 1000", inputs: "p.3 Sec. X-Cube Test Vehicles"}
+  - {table: electrical_interfaces, row_id: iwlpc52010.2020.9375855-b-e1, field: aggregate_bw_tbps, value: 0.1944, formula: "24.3 GB/s x 8 / 1000", inputs: "p.4 Sec. SAINT-S Specification"}
+  - {table: electrical_interfaces, row_id: iwlpc52010.2020.9375855-b-e1, field: lane_rate_gbps, value: 1.52, formula: "2 x 760 Mbps (DDR) per TSV data line, from '128 x 2 x 760Mbps'", inputs: "p.4 Sec. SAINT-S Specification; p.4 Fig. 6"}
+  - {table: electrical_interfaces, row_id: iwlpc52010.2020.9375855-b-e1, field: lanes, value: 128, formula: "128 from '128 x 2 x 760Mbps' (Fig. 6 TSV label)", inputs: "p.4 Fig. 6"}
+conflicts:
+  - {table: test_vehicles, row_id: iwlpc52010.2020.9375855-a, field: n_dies, values: ["multiple stacked SRAM dies (text)", "one SRAM die drawn in Fig. 3 'Details of package and functional test vehicles'"], locators: ["p.3 Sec. X-Cube Test Vehicles", "p.3 Fig. 3"], chosen: "left empty", why: "count not given"}
+  - {table: electrical_interfaces, row_id: iwlpc52010.2020.9375855-b-e1, field: lane_rate_gbps, values: ["SRAM interface speed 760 MHz", "760 Mbps in '128 x 2 x 760Mbps'", "Fig. 6 label '128 * 2 * 760bps'"], locators: ["p.4 Sec. SAINT-S Specification", "p.4 Fig. 6"], chosen: "1.52 Gb/s per line (derived, DDR)", why: "aggregate 24.3 GB/s requires 128 lines x 2 x 760 Mb/s"}
+excluded:
+  - "HBM2/2E micro bump minimum 55 um pitch (general background)"
+  - "ISC silicon stack capacitor 300 nF/mm2, stack capacitor <2 um thick (refs [9][10])"
+  - "TSV-less RDL interposer L/S <2/2 um and Si interposer L/S <1 um under development (background)"
+  - "typical DRAM latency 45 ns and the 6.9x comparison (background)"
+  - "X-Cube capability up to 8 stacked dies, 720 um total thickness (generic, no TV built; in papers.notes)"
+  - "Figs. 8-9 3DIC design flows (Cadence tools, ref [12]); design tools noted only"
+not_reported:
+  - number of SRAM dies in package TV; die thicknesses; logic die TSV depth
+  - micro-bump pitch, diameter, height, alloy, bonding temperature/force/time, underfill/NCF
+  - Cu pillar diameter/height, solder cap; substrate layer count and materials; mold compound product
+  - warpage data (named as purpose only); thermal; yield numbers
+  - optical_interfaces

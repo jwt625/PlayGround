@@ -1,0 +1,42 @@
+paper_id: ectc.2016.201
+verified_on: 2026-10-18
+source_files:
+  - references/ectc.2016.201/text.md
+  - references/ectc.2016.201/source.json
+  - references/ectc.2016.201/source.pdf
+  - references/ectc.2016.201/figures/page_03.png
+  - references/ectc.2016.201/figures/page_05.png
+  - references/ectc.2016.201/figures/page_06.png
+  - references/ectc.2016.201/figures/page_07.png
+  - references/ectc.2016.201/figures/page_08.png
+  - references/ectc.2016.201/figures/page_09.png
+figure_reading_method: >-
+  Fig. 4(a) SEM inset bump-pitch labels read from the native embedded image (1170x526 px, xref 85 of source.pdf)
+  cropped and upscaled 4x in scratch (not kept); labels low resolution but read as "130um bump pitch" and "55um bump pitch".
+  Fig. 10 and Fig. 12 read by eye against gridlines from a 300 dpi re-render; values flagged approx.
+entries:
+  - {table: interconnects, row_id: ectc.2016.201-a-i1, field: pitch_um, value: 55, unit: um, basis: design_target, locator: "p.5 Fig. 4(a)", note: "SEM inset label, fine pitch bumps on bridge"}
+  - {table: interconnects, row_id: ectc.2016.201-a-i2, field: pitch_um, value: 130, unit: um, basis: design_target, locator: "p.5 Fig. 4(a)", note: "SEM inset label, coarse pitch bumps; first digit partly cropped by inset edge"}
+  - {table: electrical_interfaces, row_id: ectc.2016.201-c-e1, field: insertion_loss_db, value: 3.5, unit: dB, basis: measured, locator: "p.8 Fig. 10(a)", note: "blue band about -3.4 to -3.6 dB at 10 GHz"}
+  - {table: electrical_interfaces, row_id: ectc.2016.201-d-e2, field: lane_rate_gbps, value: 8, unit: Gb/s, basis: simulated, locator: "p.9 Fig. 12(a)", note: "0.5 UI contour crosses 5 mm near 7.5-8 Gb/s"}
+  - {table: electrical_interfaces, row_id: ectc.2016.201-d-e3, field: lane_rate_gbps, value: 6, unit: Gb/s, basis: simulated, locator: "p.9 Fig. 12(b)", note: "0.5 UI contour crosses 5 mm near 6 Gb/s"}
+  - {table: metrics, row_id: ectc.2016.201-c-m1, field: value, value: -17, unit: dB, basis: measured, locator: "p.8 Fig. 10(b)"}
+  - {table: metrics, row_id: ectc.2016.201-a-m1, field: value, value: 250, unit: IO/mm/layer, basis: derived, locator: "p.3 Fig. 2(b)", note: "data point at half-line pitch 2 um"}
+  - {table: metrics, row_id: ectc.2016.201-a-m2, field: value, value: 500, unit: IO/mm/layer, basis: derived, locator: "p.3 Fig. 2(b)", note: "data point at half-line pitch 1 um"}
+derived:
+  - {table: electrical_interfaces, row_id: ectc.2016.201-a-e1, field: aggregate_bw_tbps, value: 8, formula: "1 TB/s * 8 bit/byte", inputs: "p.8 Sec. IV"}
+  - {table: electrical_interfaces, row_id: ectc.2016.201-a-e1, field: bw_density_tbps_per_mm, value: 0.571, formula: "8 Tb/s / 14 mm die edge", inputs: "p.8 Sec. IV"}
+conflicts: []
+excluded:
+  - "0.7 pJ/b at 1.2 V swing with ACDBI attributed to ref [7]"
+  - "HBM 1024-bit at 2 Gb/s and GDDR5 128-bit at 7.2 Gb/s (Fig. 1, reproduced from ref [1])"
+  - "CoWoS/NTI/SLIM attributes in Table I and Fig. 2 (other vendors' technologies, qualitative)"
+  - "CPU-DRAM bandwidth doubling every 2.5 years (ref [2])"
+not_reported:
+  - die sizes, die count of a product, package and substrate dimensions, substrate layer count
+  - bridge thickness exact value, metal thickness, dielectric materials, bridge pad dimensions
+  - bump diameter, height, metallurgy; TCB conditions; underfill product
+  - bridge via diameter, depth; cavity depth
+  - signaling TV trace length and line/space
+  - reliability, warpage, thermal, yield numbers
+  - optical_interfaces

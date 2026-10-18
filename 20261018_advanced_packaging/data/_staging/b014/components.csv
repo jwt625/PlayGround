@@ -1,0 +1,21 @@
+comp_id,tv_id,component_type,is_emulator,embedded,name,count,x_mm,y_mm,thickness_um,cavity_x_mm,cavity_y_mm,cavity_depth_um,gap_um,process_node,material,supplier,basis,source,overrides,locator,qualifiers,notes
+iedm45625.2022.10019499-a-c1,iedm45625.2022.10019499-a,unspecified,,,top die (Fig. 10 'Top'),1,,,,,,,,,,,stated,figure_image,,p.3 Fig. 10(a),,"Function, size, thickness not given."
+iedm45625.2022.10019499-a-c2,iedm45625.2022.10019499-a,unspecified,,,base (Fig. 10 'Base'),,,,,,,,,,,,stated,figure_image,,p.3 Fig. 10(a); p.1 Sec. III,,Die-to-wafer bonding per Sec. III title; base die/wafer details not given.
+iedm45625.2022.10019499-b-c1,iedm45625.2022.10019499-b,other,,,support silicon (top permanently attached wafer),,,,,,,,,,Si,,stated,mixed,,p.2 Sec. IV.A; p.3 Fig. 2,,Bonded to topmost chiplet layer for structural stability.
+iedm45625.2022.10019499-b-c2,iedm45625.2022.10019499-b,unspecified,,,top chiplets (second chiplet layer),3,,,,,,,,,,,stated,schematic,,p.3 Fig. 2,,Count as drawn in example Fig. 2.
+iedm45625.2022.10019499-b-c3,iedm45625.2022.10019499-b,base_die,,,base chiplets (first chiplet layer),2,,,,,,,,,,,stated,schematic,,p.3 Fig. 2,,Count as drawn; may be active lateral interconnect chiplets (Fig. 4(b)).
+iedm45625.2022.10019499-b-c4,iedm45625.2022.10019499-b,other,,no,inorganic fill replacing organic mold,,,,,,,,,,silicon dioxide,,stated,text,,p.1 Sec. II; p.2 Sec. IV.B,,"'e.g., silicon dioxide'; PECVD."
+iedm45625.2022.10019499-b-c5,iedm45625.2022.10019499-b,substrate,,,package,,,,,,,,,,,,stated,schematic,,p.3 Fig. 2; p.4 Fig. 11,,Conventional package; build not given.
+iedm45625.2022.10019499-c-c1,iedm45625.2022.10019499-c,unspecified,,,"chiplets (Chiplet #1, #2; Chiplets 1-4)",,,,20,,,,,,,,measured,text,,p.2 Sec. IV.B; p.4 Fig. 14; p.4 Fig. 15,thickness_um:gt,'20+ um chiplets'; height includes active Si and metallization (Fig. 12). basis: oxide deposited over them.
+iedm45625.2022.10019499-c-c2,iedm45625.2022.10019499-c,other,,,carrier wafer (Fig. 14 'Carrier'; Fig. 17 'Base Wafer'),,,,,,,,,,,,stated,figure_image,,p.4 Fig. 14(a); p.4 Fig. 17,,Material and size not given.
+ectc51906.2022.00061-a-c1,ectc51906.2022.00061-a,dummy_die,yes,,identical Si dies with electroplated Cu/X-alloy/Ga,2,10,10,,,,,,,Si,,design_target,text,,p.2 Sec. II.A; p.2 Sec. II.B,,Chip-scale size; Si thickness not given. Emulates Cu pillar fine-pitch bonding.
+ectc51906.2022.00218-a-c1,ectc51906.2022.00218-a,asic,,,ASIC,,,,,,,,,,,,stated,mixed,,p.5 Sec. IV; p.6 Fig. 10,,"Size, thickness, node not given."
+ectc51906.2022.00218-a-c2,ectc51906.2022.00218-a,hbm,,,HBMs,,,,,,,,,,,,stated,mixed,,p.5 Sec. IV; p.6 Fig. 10,,Plural 'HBMs'; count and generation not given.
+ectc51906.2022.00218-a-c3,ectc51906.2022.00218-a,interposer,,,HDFO module with 4-layer ETR (organic RDL interposer),,,,,,,,,,,,stated,mixed,,p.5 Sec. IV; p.5 Fig. 8; p.6 Fig. 10,,Built on Si wafer later removed by grinding + dry etch.
+ectc51906.2022.00218-a-c4,ectc51906.2022.00218-a,mold,,no,"epoxy mold compound (EMC), ground to expose chips",,,,,,,,,,EMC,,stated,text,,p.5 Sec. IV,,
+ectc51906.2022.00218-a-c5,ectc51906.2022.00218-a,underfill,,,"capillary underfill, chips to ETR",,,,,,,,,,,,stated,text,,p.5 Sec. IV,,
+ectc51906.2022.00218-a-c6,ectc51906.2022.00218-a,underfill,,,"underfill, module to substrate",,,,,,,,,,,,stated,text,,p.5 Sec. IV,,
+ectc51906.2022.00218-a-c7,ectc51906.2022.00218-a,substrate,,,laminate substrate,,,,,,,,,,,,stated,text,,p.5 Sec. IV; p.5 Fig. 9(c),,Layer count and size not given.
+ectc51906.2022.00218-a-c8,ectc51906.2022.00218-a,lid,,,lid (front side),,,,,,,,,,,,stated,mixed,,p.5 Sec. IV; p.5 Fig. 9(d),,
+ectc51906.2022.00218-a-c9,ectc51906.2022.00218-a,tim,,,TIM between exposed chips and lid,,,,,,,,,,,,stated,text,,p.5 Sec. IV,,
+ectc51906.2022.00218-b-c1,ectc51906.2022.00218-b,other,,,Si wafer (ETR build carrier),,,,,,,,,,Si,,stated,mixed,,p.2 Fig. 1(c); p.4 Fig. 4,,300 mm inferred from Fig. 4 axis.

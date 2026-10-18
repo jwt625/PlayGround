@@ -1,0 +1,22 @@
+paper_id: ectc51909.2023.00108
+verified_on: 2026-10-18
+source_files:
+  - references/ectc51909.2023.00108/text.md
+  - references/ectc51909.2023.00108/source.json
+  - references/ectc51909.2023.00108/figures/page_02.png
+  - references/ectc51909.2023.00108/figures/page_04.png
+  - references/ectc51909.2023.00108/figures/page_05.png
+figure_reading_method: >-
+  Table I (p.2), Table II (p.4) and Table III (p.5) read from 150 dpi page renders; values legible, match text.md.
+  Fig. 1, 3-9 are block schematics without dimensions.
+entries:
+  - {table: optical_interfaces, row_id: ectc51909.2023.00108-b-o1, field: coupling_loss_db, value: 0.3, unit: dB, basis: unspecified, locator: "p.2 Sec. II.B; p.1 Abstract", note: "written as insertion loss of -0.3dB (Sec. II.B) and loss of 0.3 dB (abstract); entered positive"}
+  - {table: optical_interfaces, row_id: ectc51909.2023.00108-b-o1, field: mfd_chip_um, value: 10, unit: um, basis: unspecified, locator: "p.2 Table I", note: "spot size ~10 um for vertical BBC (and GC); EC ~1 um"}
+  - {table: electrical_interfaces, row_id: ectc51909.2023.00108-a-e1, field: reach_mm, value: 1, unit: mm, basis: unspecified, locator: "p.4 Table II", note: "Link Length (mm) row"}
+derived: []
+conflicts:
+  - {table: optical_interfaces, row_id: ectc51909.2023.00108-a-o1, field: scope, values: ["transition loss 0.015 dB (Sec. III.E)", "coupling loss 0.015 dB (Sec. IV)", "estimated coupling loss ~0.015 dB (Fig. 9 caption)"], locators: ["p.5 Sec. III.E", "p.5 Sec. IV", "p.5 Fig. 9"], chosen: "0.015 dB, author_estimate, approx", why: "caption states it is estimated; same number in all places"}
+excluded:
+  - "SoIC bond performance claims attributed to refs [3], [4]"
+  - "InFO_oS 2/2 um RDL and CoWoS_S 0.4/0.4 um BEOL described with refs [5], [6]; Table II values kept as this paper's comparison"
+not_reported: [process_steps, "die/interposer/package dimensions", "waveguide material, cross-section, number of layers", "absolute bandwidth, energy pJ/bit, lane rate", "wavelength/band", "bump pitches", "measurement vs simulation basis of all loss numbers", reliability, thermal, warpage]

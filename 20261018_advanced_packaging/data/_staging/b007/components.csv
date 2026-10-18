@@ -1,0 +1,26 @@
+comp_id,tv_id,component_type,is_emulator,embedded,name,count,x_mm,y_mm,thickness_um,cavity_x_mm,cavity_y_mm,cavity_depth_um,gap_um,process_node,material,supplier,basis,source,overrides,locator,qualifiers,notes
+ectc.2013.6575597-a-c1,ectc.2013.6575597-a,logic_soc,,,28nm logic chip 'C',1,24,14,,,,,,28nm,"Si, Cu/ELK BEOL",,design_target,text,,p.2 Fig. 3 text; p.1 Abstract,,Thinned before CoW; die thickness not reported.
+ectc.2013.6575597-a-c2,ectc.2013.6575597-a,dram,yes,,40nm chip 'D' mimicking HBM DRAM,2,12,7,,,,,,40nm,"Si, Cu/ELK BEOL",,design_target,text,,p.2 Fig. 3 text,,1024 I/O ubumps in center rows of each chip.
+ectc.2013.6575597-a-c3,ectc.2013.6575597-a,interposer,,,Si interposer with TSV,1,26,24,100,,,,,,Si; 3 Cu damascene + 1 Al RDL; optional MIM,,design_target,text,,p.1 Test Vehicle and Fabrication; p.2 col. 1,,Thickness = backside thinning target to reveal TSVs.
+ectc.2013.6575597-a-c4,ectc.2013.6575597-a,substrate,,,organic flip chip BGA substrate,1,40,40,,,,,,,organic,,design_target,text,,p.2 col. 1,,Layer count not reported.
+ectc.2013.6575597-a-c5,ectc.2013.6575597-a,underfill,,,ubump underfill,,,,,,,,,,underfill (not named),,stated,text,,p.2 Reliability of uBump; p.4 Component Level Reliability,,Selected by FE modeling; product not named.
+ectc.2013.6575597-b-c1,ectc.2013.6575597-b,other,,,CoWoS component (TV a),1,,,,,,,,,,,stated,text,,p.4 Board Level Reliability (a),,Same test vehicle as component-level tests.
+ectc.2013.6575597-b-c2,ectc.2013.6575597-b,pcb,,,"IPC9701 test board, eight-metal-layer PWB",1,120,100,2350,,,,,,,,design_target,text,,p.4 Board Level Reliability (a); p.5 Fig. 15,,2.35 mm thickness converted to um.
+ectc.2013.6575597-c-c1,ectc.2013.6575597-c,logic_soc,yes,,TTV top die simulating logic power,,,,,,,,,,,,stated,text,,p.4 Power Cycling Test,,"Metal heaters, thermal sensors, daisy chain."
+ectc.2013.6575597-c-c2,ectc.2013.6575597-c,dram,yes,,TTV top die simulating DRAM power,,,,,,,,,,,,stated,text,,p.4 Power Cycling Test,,"Metal heaters, thermal sensors, daisy chain."
+ectc.2013.6575597-c-c3,ectc.2013.6575597-c,underfill,,,C4 bump underfill UF-1 / UF-2,,,,,,,,,,UF-1; UF-2 (coded),,stated,text,,p.4 Power Cycling Test; p.5,,Split variable; UF-2 superior in power cycling.
+ectc.2013.6575597-c-c4,ectc.2013.6575597-c,pcb,,,PWB,,,,,,,,,,,,stated,text,,p.4 Power Cycling Test,,Board details not restated.
+ectc.2013.6575597-d-c1,ectc.2013.6575597-d,interposer,,,full-thickness interposer wafer,,,,,,,,,,,,stated,text,,p.1 Test Vehicle and Fabrication; p.2 Thermo-mechanical reliability,,
+ectc51906.2022.00303-a-c1,ectc51906.2022.00303-a,unspecified,,,dielet (model),,1,1,,,,,,,,,simulated,text,,p.2 Sec. II,,Die size swept 1x1 to 20x20 mm; x/y = lower bound. Inter-die spacing 10% of die edge.
+ectc51906.2022.00303-a-c2,ectc51906.2022.00303-a,interposer,,,Si-IF with 4-layer P/G and signal metal,,,,,,,,,,Si,,simulated,text,,p.2 Sec. II; p.3 Fig. 3(a),,Metal material of M1-M4 not stated.
+ectc51906.2022.00303-c-c1,ectc51906.2022.00303-c,unspecified,,,dielets (incl. dielet with TSV),,,,200,,,,,,,,design_target,schematic,,p.2 Fig. 1(a),thickness_um:approx,Thinner dielets compatible; mismatched thicknesses accommodated.
+ectc51906.2022.00303-c-c2,ectc51906.2022.00303-c,interposer,,,TSV-less Si-IF interposer (full thickness),,,,500,,,,,,Si,,design_target,schematic,,p.2 Fig. 1(a); p.1 Sec. I,thickness_um:gt,'Mechanical support: >500 um'; RDL <30 um.
+ectc51906.2022.00303-c-c3,ectc51906.2022.00303-c,other,,,"compliant power platform (CPP), segmented PCBs embedded in PDMS",,,,4000,,,,,,segmented PCB; PDMS,,design_target,schematic,material:text,p.2 Fig. 1(a); p.1 Sec. I; p.4 Fig. 5(f),thickness_um:lt,Soldered to TPVs; reduces CTE-mismatch stress.
+ectc51906.2022.00303-c-c4,ectc51906.2022.00303-c,connector,,,FlexCon,,,,,,,,,,,,stated,schematic,,p.2 Fig. 2; p.1 Sec. I,,Flexible connector for I/O; prior work.
+ectc51906.2022.00303-c-c5,ectc51906.2022.00303-c,pcb,,,vertically stacked power boards with DC-DC converters,,,,,,,,,,,,stated,mixed,,p.2 Fig. 2; p.2 col. 1,,Fed from high-voltage DC supply board; solder-connected to CPP.
+ectc51906.2022.00303-c-c6,ectc51906.2022.00303-c,dtc,,,DT capacitors,,,,,,,,,,,,stated,schematic,,p.2 Fig. 2(a),,Decaps may be on Si-IF and CPP (text).
+ectc51906.2022.00303-c-c7,ectc51906.2022.00303-c,cold_plate,,,thermal dissipation unit (two-phase flash cooling) / cold plates,,,,,,,,,,,,stated,mixed,,p.2 Fig. 2(a); p.4 Sec. III,,Heat removed from interposer backside; cooling developed in ref [8].
+ectc51906.2022.00303-d-c1,ectc51906.2022.00303-d,dummy_die,yes,,mimic thin dielet (Bosch-etched Si square),,2,2,100,,,,500,,Si with SiO2 hard mask,,design_target,text,,p.4 Sec. IV; p.5 Fig. 6(a),,Sizes 2x2 to 5x5 mm (lower bound entered); inter-dielet spacing 500-800 um (min entered). Rough edge design.
+ectc51906.2022.00303-d-c2,ectc51906.2022.00303-d,other,,,Si wafer (interposer surrogate),,,,525,,,,,,Si,,design_target,text,,p.4 Sec. IV; p.5 Fig. 7(e),,
+ectc51906.2022.00303-e-c1,ectc51906.2022.00303-e,dummy_die,yes,,thick Si dielet,,2,2,500,,,,,,Si,,design_target,text,,p.5 Sec. IV col. 2,,2x2 mm size stated for shear test die.
+ectc51906.2022.00303-e-c2,ectc51906.2022.00303-e,interposer,,,Si interposer with thin oxide,,,,,,,,,,Si; thin oxide,,stated,text,,p.5 Sec. IV col. 2,,Oxide thickness not reported.

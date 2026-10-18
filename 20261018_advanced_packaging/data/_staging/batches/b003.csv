@@ -1,0 +1,2 @@
+paper_id,doi,title,year,venue,primary_bucket,buckets,priority,triage_rationale
+ectc51906.2022.00244,10.1109/ectc51906.2022.00244,Buried Power Rails and Nano-Scale TSV: Technology Boosters for Backside Power Delivery Network and 3D Heterogeneous Integration,2022,ECTC,thermal_pdn,thermal_pdn,1,"BSPDN: nano-TSV landing on buried power rails, <500 nm final Si, <10 nm alignment; W/Co/Ru resistances."

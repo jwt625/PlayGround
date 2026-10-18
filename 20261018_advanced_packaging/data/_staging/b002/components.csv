@@ -1,0 +1,16 @@
+comp_id,tv_id,component_type,is_emulator,embedded,name,count,x_mm,y_mm,thickness_um,cavity_x_mm,cavity_y_mm,cavity_depth_um,gap_um,process_node,material,supplier,basis,source,overrides,locator,qualifiers,notes
+ectc51909.2023.00009-a-c1,ectc51909.2023.00009-a,interposer,,,SiPho interposer (SOI),1,,,110,,,,,,SOI: 310 nm Si film on 800 nm BOX,,measured,text,material:design_target,p.3 Sec. III.A; p.5 Sec. III.E.1,,"Thinned Si (110 +/- 1) um after grinding and wet stress release. Hosts MRR (PN modulators, PIN filters), Ge PDs, heaters, SPGC."
+ectc51909.2023.00009-b-c1,ectc51909.2023.00009-b,logic_soc,,,chiplet (16 computation cores each),4,,,,,,,,,,,design_target,text,,p.2 Sec. II; p.2 Fig. 1,,
+ectc51909.2023.00009-b-c2,ectc51909.2023.00009-b,eic,,,E/O interface driver die,6,,,,,,,,,,,design_target,text,,p.1 Sec. II; p.2 Sec. II; p.2 Fig. 1,,"Buffering, routing, arbitration, serialization, driving and thermal tuning of MRR modulators/filters."
+ectc51909.2023.00009-b-c3,ectc51909.2023.00009-b,interposer,,,SiPho interposer,1,,,,,,,,,,,design_target,text,,p.2 Sec. II,,Same interposer technology as TV a.
+ectc51909.2023.00009-b-c4,ectc51909.2023.00009-b,substrate,,,BGA,1,,,,,,,,,,,stated,text,,p.1 Sec. II; p.2 Sec. II,,'mounted on a BGA'; power from backside via TSV and backside RDL.
+ectc51909.2023.00298-a-c1,ectc51909.2023.00298-a,substrate,,,glass panel (core),1,152.4,152.4,300,,,,,,"glass, CTE 7.8 ppm",Corning,design_target,text,,p.1 Abstract; p.2 Sec. I; p.2 Fig. 1,,Glass type/product name not stated.
+ectc51909.2023.00150-a-c1,ectc51909.2023.00150-a,fpga,no,no,FPGA,1,29,12,,,,,,,Si,,design_target,table,,p.2 Table I; p.1 Abstract,,"Abstract: approximately 29 x 12 mm, more than 188,000 pads at 40 um pitch. Thickness not stated."
+ectc51909.2023.00150-a-c2,ectc51909.2023.00150-a,hbm,no,no,HBM2,1,11.9,7.8,,,,,,,,,design_target,table,,p.2 Table I,,Bump pitch 55 um.
+ectc51909.2023.00150-a-c3,ectc51909.2023.00150-a,asic,no,no,IBM AI chip,1,6,3,,,,,,,,,design_target,table,,p.2 Table I,,Bump pitch 150 um.
+ectc51909.2023.00150-a-c4,ectc51909.2023.00150-a,interposer,,,organic interposer with fine-pitch RDL,1,26,34,,,,,,,organic thin film (4 high density layers),,design_target,table,,p.2 Table I; p.2 Sec. II.A,,Top pads ENEPIG (Ni/Pd/Au). Dielectric and thickness not stated.
+ectc51909.2023.00150-a-c5,ectc51909.2023.00150-a,substrate,,,build-up substrate,1,55,55,,,,,,,,,design_target,table,,p.2 Table I; p.2 Sec. II.A,,"7-2-7: 7 top wiring layers, 2 around core, 7 bottom."
+ectc51909.2023.00150-a-c6,ectc51909.2023.00150-a,underfill,,,underfill (UF),,,,,,,,,,,,stated,text,,p.5 Sec. II.D,,Process optimized; dispensed before cooling. Material not stated.
+ectc51909.2023.00150-a-c7,ectc51909.2023.00150-a,lid,,,lid,1,,,,,,,,,,,stated,mixed,,p.5 Sec. II.D; p.6 Fig. 14(a),,Attached to substrate surface after chip bonding; material not stated.
+ectc51909.2023.00150-a-c8,ectc51909.2023.00150-a,pcb,,,evaluation board,1,,,,,,,,,,,stated,mixed,,p.5 Sec. II.D; p.6 Fig. 14(b),,Module mounted for power-on test.
+ectc51909.2023.00150-b-c1,ectc51909.2023.00150-b,dummy_die,yes,no,FPGA-size chip without device layers,1,29,12,,,,,,,,,design_target,text,x_mm:table;y_mm:table,p.2 Sec. II.A; p.2 Table I,,Same size and same bump array as FPGA (40 um pitch).

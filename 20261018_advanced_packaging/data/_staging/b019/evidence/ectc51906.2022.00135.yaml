@@ -1,0 +1,35 @@
+paper_id: ectc51906.2022.00135
+verified_on: 2026-10-18
+schema_version: 2
+source_files:
+  - references/ectc51906.2022.00135/text.md
+  - references/ectc51906.2022.00135/source.json
+  - references/ectc51906.2022.00135/source.pdf
+  - references/ectc51906.2022.00135/figures/page_01.png
+  - references/ectc51906.2022.00135/figures/page_02.png
+  - references/ectc51906.2022.00135/figures/page_03.png
+  - references/ectc51906.2022.00135/figures/page_04.png
+figure_reading_method: >-
+  Page renders 1-4 viewed. From source.pdf: Fig. 9 cross-section labels at 600 dpi, Fig. 7 at 600 dpi (colorbar
+  unreadable), Fig. 8 at 400 dpi (no axis values), Table 2 at 300 dpi (image-only table, absent from text.md).
+  Table 1 checked against the page image; Fig. 4/5 bar labels read from the page render.
+entries:
+  - {table: metrics, row_id: ectc51906.2022.00135-a-m14, field: value, value: 5.73, unit: um, basis: measured, locator: "p.4 Fig. 9", note: "topmost label; Fig. 9 labels top to bottom 5.73, 3.97, 4.63, 2.87, 5.07, 1.98, 4.63, 1.98, 4.41, 1.76, 8.16 um"}
+  - {table: metrics, row_id: ectc51906.2022.00135-a-m26, field: n_samples, value: 50, unit: ea, basis: measured, locator: "p.4 Table 2", note: "S/S per lots column"}
+derived: []
+conflicts:
+  - {table: test_vehicles, row_id: ectc51906.2022.00135-a, field: name, values: ["six-metal layer RDL-first TV (Sec. III)", "all 4 redistribution layers (Sec. III)", "four RDL layer structure with five dielectric layers (simulation)"], locators: ["p.3 Sec. III", "p.3 Sec. III", "p.3 Sec. III"], chosen: "6 metal = 2 UBM + M1-M4", why: "consistent with Table 1 and Fig. 6"}
+  - {table: stack_layers, row_id: ectc51906.2022.00135-a-L04, field: thickness_um, values: ["5 um nominal dielectric (text)", "1.76-3.97 um between metal levels (Fig. 9)"], locators: ["p.3 Sec. III", "p.4 Fig. 9"], chosen: "5 nominal in stack_layers; Fig. 9 values in metrics", why: "design vs measured kept separately; Fig. 9 layer assignment inferred"}
+excluded:
+  - "WLCSP, WLFO and SiP technology references [1]-[4] (no numbers)"
+  - "Abstract general PLFO challenges (die shift, TTV in back-grind) - no data in this paper"
+not_reported:
+  - electrical_interfaces, optical_interfaces
+  - die size, count, function and thickness; package size and thickness; bump pitch and solder alloy
+  - dielectric product and properties; cure temperature; glass panel thickness and CTE values
+  - temporary bond / release layer for RDL-first; laser debond conditions; mold product
+  - absolute warpage values (Fig. 7/8 unreadable or without axis); TCT_B temperatures; preconditioning; lot count
+  - cost model inputs
+source_quality:
+  - "Table 2 (reliability) is an image; text.md contains only its caption. Read from page image p.4 (300 dpi re-render)."
+  - "Fig. 2 flow-chart labels appear in text.md out of place at the end of p.2; content consistent with the image."

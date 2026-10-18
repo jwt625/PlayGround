@@ -1,0 +1,35 @@
+paper_id: ectc51906.2022.00218
+verified_on: 2026-10-18
+source_files:
+  - references/ectc51906.2022.00218/text.md
+  - references/ectc51906.2022.00218/source.json
+  - references/ectc51906.2022.00218/figures/page_02.png
+  - references/ectc51906.2022.00218/figures/page_03.png
+  - references/ectc51906.2022.00218/figures/page_04.png
+  - references/ectc51906.2022.00218/figures/page_05.png
+  - references/ectc51906.2022.00218/figures/page_06.png
+figure_reading_method: >-
+  Page renders p.2-p.6 opened. Fig. 2 (SEM dimension labels) and Fig. 7 (dishing bar charts) re-rendered from source.pdf at 4x
+  in the scratchpad. Fig. 4 y-axis is A.U.; only the text thickness differences are entered.
+entries:
+  - {table: stack_layers, row_id: ectc51906.2022.00218-b-L01, field: line_um, value: 2, unit: um, basis: measured, locator: "p.3 Fig. 2(a) labels '2 um' / '1 um'; p.3 Fig. 3 caption", note: "2/1 um L/S"}
+  - {table: interconnects, row_id: ectc51906.2022.00218-b-i2, field: diameter_um, value: 3.15, unit: um, basis: measured, locator: "p.3 Fig. 2(c)", note: "top 3.15, bottom 1.64, height 5.66 um labels"}
+  - {table: interconnects, row_id: ectc51906.2022.00218-b-i3, field: depth_um, value: 6.63, unit: um, basis: measured, locator: "p.3 Fig. 2(b)", note: "all three via patterns labeled 6.63 um deep"}
+  - {table: test_vehicles, row_id: ectc51906.2022.00218-a, field: carrier_format, value: wafer_300mm, unit: "", basis: stated, locator: "p.4 Fig. 4", note: "position axis -150 to 150 mm; wafer diameter not stated in text"}
+derived: []
+conflicts:
+  - {table: metrics, row_id: ectc51906.2022.00218-b-m12, field: value, values: ["dishing not over 90 nm (text)", "Fig. 7(a) over-CMP 50% Mid error bar top ~0.096 um"], locators: ["p.5 Sec. III", "p.4 Fig. 7(a)"], chosen: "90 nm le (text); bar heights 0.043-0.075 um entered separately", why: "bars (central values) all below 90 nm; error-bar extreme exceeds it"}
+  - {table: stack_layers, row_id: ectc51906.2022.00218-b-L01, field: line_um, values: ["2/1 um L/S (Fig. 2, Fig. 3)", "'less than 2-um resolution' (abstract)", "'less than 2/1 um' (conclusion)"], locators: ["p.3 Fig. 2(a); p.3 Fig. 3", "p.1 Abstract", "p.6 Sec. VI"], chosen: "2/1 (measured cross-section)", why: "only 2/1 um shown; sub-2 um is a capability claim"}
+excluded:
+  - "2-nm node nanosheet 45% speed vs 7-nm (industry context)"
+  - "Si interposer 4-6 GHz limitation (ref [1])"
+  - "500 nm dual damascene RDL with NA 0.48 litho (ref [5]); PBO dual damascene (ref [6]); ABF dual damascene (ref [4])"
+  - "generic SAP and conventional dual damascene flows (Fig. 1(a),(b)) - comparison only"
+  - "Fig. 4 dielectric thickness profiles (A.U. axis) for levels 1-3 and 5 - qualitative only"
+not_reported:
+  - electrical_interfaces (no data rate, loss or protocol; HBM interface properties not given)
+  - optical_interfaces
+  - package, ASIC, HBM, module and substrate dimensions; HBM count/generation; substrate layer count
+  - u-bump, Cu pillar and BGA pitch/size/alloy; reflow profile; underfill/EMC/TIM/lid materials
+  - ETR dielectric trade name, thickness, cure conditions; barrier metal; exposure dose; package-level L/S
+  - BHAST comb L/S and failure criterion; JEDEC standard numbers; pass criteria; warpage; yield values

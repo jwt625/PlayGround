@@ -1,0 +1,35 @@
+paper_id: tcpmt.2023.3312037
+verified_on: 2026-10-18
+schema_version: 2
+source_files:
+  - references/tcpmt.2023.3312037/text.md
+  - references/tcpmt.2023.3312037/source.json
+  - references/tcpmt.2023.3312037/source.pdf
+  - references/tcpmt.2023.3312037/figures/page_01.png
+  - references/tcpmt.2023.3312037/figures/page_02.png
+  - references/tcpmt.2023.3312037/figures/page_03.png
+  - references/tcpmt.2023.3312037/figures/page_04.png
+  - references/tcpmt.2023.3312037/figures/page_05.png
+figure_reading_method: >-
+  Page renders 1-5 viewed (p.6 is text and references only, read in text.md). From source.pdf: Fig. 6 at 600 dpi;
+  Fig. 7(c), 7(d), 8, 9(c) at 800 dpi. Table I is image-only and was read from the p.4 render.
+entries:
+  - {table: metrics, row_id: tcpmt.2023.3312037-b-m2, field: value, value: 150, unit: um, basis: design_target, locator: "p.3 Fig. 6(a)", note: "arrow spans trench opening; 50 um arrow spans mold ledge to die edge; depth label >20um"}
+  - {table: metrics, row_id: tcpmt.2023.3312037-c-m2, field: value, value: 11, unit: deg, basis: measured, locator: "p.3 Fig. 7(c)", note: "red annotation 11 deg; SEM tool label 10.78 deg"}
+  - {table: metrics, row_id: tcpmt.2023.3312037-e-m4, field: value, value: 105.71, unit: um, basis: measured, locator: "p.4 Fig. 9(c)", note: "horizontal label at thinner-die top; 107.69 um near bottom"}
+derived: []
+conflicts: []
+excluded:
+  - "Fig. 1 PVC package layout reprinted from ref [1] (die counts not entered)"
+  - "trench on substrate for underfill keep-out zone attributed to ref [8]"
+  - "capillary flow and contact-line theory attributed to refs [2]-[7]"
+  - "Fig. 7(c)/(d) SEM measurement labels (e.g. 41.3 deg, 48.19 deg, 27.89 deg, 111.88, 417.11, 638.21, 12.72 um) not defined in text; not entered"
+  - "Fig. 8 labels 103.07, 216.88, 286.37, 215.47 and ~17 um not defined in text; only the vertical [1] 308.29 um entered (inferred die height delta)"
+not_reported:
+  - electrical_interfaces, optical_interfaces
+  - package, die and EMIB dimensions; die thicknesses; bump pitch; TCB conditions
+  - underfill, mold, coating and barrier products; cure conditions; laser ablation recipe
+  - HVM UOD yield numbers; trench edge angle target in HVM; thermal performance data
+source_quality:
+  - "Table I (comparison of UOD solutions) is image-only; text.md has only the caption. Read from the p.4 render."
+  - "text.md clean otherwise (typos 'Fevores', 'Froveros' are in the original)."

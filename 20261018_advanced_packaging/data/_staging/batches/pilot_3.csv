@@ -1,0 +1,2 @@
+paper_id,doi,title,year,venue,primary_bucket,buckets,priority,triage_rationale
+ectc51906.2022.00180,10.1109/ectc51906.2022.00180,Demonstration of Glass-based 3D Package Architectures with Embedded Dies for High Performance Computing,2022,ECTC,glass,glass,1,"Glass panel embedding 3D TVs: 50x50 mm glass interposer, 4 embedded dies, 8 HBM + 2 SoC at 35 um bump pitch."

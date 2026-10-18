@@ -1,0 +1,40 @@
+paper_id: ectc51687.2025.00052
+verified_on: 2026-10-18
+source_files:
+  - references/ectc51687.2025.00052/text.md
+  - references/ectc51687.2025.00052/source.json
+  - references/ectc51687.2025.00052/figures/page_03.png
+  - references/ectc51687.2025.00052/figures/page_04.png
+  - references/ectc51687.2025.00052/figures/page_05.png
+  - references/ectc51687.2025.00052/figures/page_06.png
+  - references/ectc51687.2025.00052/figures/page_07.png
+figure_reading_method: >-
+  Page renders p.3-p.7 opened; Fig. 8, Fig. 9, Fig. 10 and Fig. 11 re-rendered from source.pdf at 5-7x in the scratchpad.
+  Bar heights and curve levels read against labeled axes; values approx.
+entries:
+  - {table: metrics, row_id: ectc51687.2025.00052-a-m1, field: value, value: 2.0, unit: dB, basis: measured, locator: "p.7 Fig. 10(a)", note: "Ch3_4 T0/250/500/1000 ~1.78/1.97/2.10/2.00 dB per facet"}
+  - {table: metrics, row_id: ectc51687.2025.00052-a-m2, field: value, value: 2.4, unit: dB, basis: measured, locator: "p.7 Fig. 10(a)", note: "Ch5_6 ~2.03/2.03/2.17/2.42"}
+  - {table: metrics, row_id: ectc51687.2025.00052-a-m3, field: value, value: 1.8, unit: dB, basis: measured, locator: "p.7 Fig. 10(a)", note: "Ch7_8 ~2.00/2.03/2.07/1.83"}
+  - {table: metrics, row_id: ectc51687.2025.00052-a-m4, field: value, value: 0.53, unit: dB, basis: measured, locator: "p.7 Fig. 10(b)", note: "HTS 24/250/500/750/1000 h: Ch1_2 -0.27/0.02/-0.03/0.05/0.08; Ch3_4 0.35/0.18/1.15/0.87/0.16; Ch5_6 -0.28/0.18/0.32/0.38/0.20; Ch7_8 0.03/0.23/0.27/0.67/0.44; Ch9_10 -0.07/0.08/0.35/0.62/0.53; Ch11_12 -0.30/0.33/-0.50/-0.52/-0.28"}
+  - {table: metrics, row_id: ectc51687.2025.00052-a-m5, field: value, value: 0.73, unit: dB, basis: measured, locator: "p.7 Fig. 10(c)", note: "T&H 250/500/750/1000 h: Ch1_2 -1.75/-1.55/-1.45/-1.35; Ch3_4 -0.15/0.20/-0.10/0.48; Ch5_6 -0.18/-0.10/0.08/0.40; Ch7_8 0.60/0.20/0.38/0.73; Ch9_10 -0.07/0.17/~0/0.52; Ch11_12 0.35/-0.30/0.10/0.18"}
+  - {table: metrics, row_id: ectc51687.2025.00052-a-m6, field: value, value: 0.18, unit: dB, basis: measured, locator: "p.7 Fig. 10(d)", note: "LTS 24/250/500 h: Ch1_2 0.18/-0.20/0.05; Ch3_4 -0.08/-0.07/0.01; Ch5_6 0.04/0.07/0.10; Ch7_8 0.07/-0.24/-0.16; Ch9_10 0.06/0.08/0.01; Ch11_12 -0.03/-0.33/-0.30"}
+  - {table: metrics, row_id: ectc51687.2025.00052-b-m1, field: value, value: 5.1, unit: dB, basis: measured, locator: "p.6 Fig. 8(b)", note: "bar label 5.1 dB post reflow over 3.2 dB T0"}
+  - {table: metrics, row_id: ectc51687.2025.00052-c-m1, field: value, value: 4.4, unit: dB, basis: measured, locator: "p.6 Fig. 8(c)", note: "bar label 4.4 dB post reflow over 3.2 dB T0"}
+derived: []
+conflicts:
+  - {table: metrics, row_id: ectc51687.2025.00052-e-m2, field: unit, values: ["200-500 mW power levels", "200 to 500 mA power", "200 mA to 500 mA laser power"], locators: ["p.3 Sec. V", "p.7 Sec. V.E", "p.8 Sec. VI"], chosen: "both kept in value_text", why: "unit inconsistent in source"}
+  - {table: optical_interfaces, row_id: ectc51687.2025.00052-e-o1, field: fiber_pitch_um, values: ["< 20 - 25 um (modeling and hardware)", "< 20 um pitch hardware validation"], locators: ["p.3 Sec. V; p.4 Sec. V.A", "p.7 Sec. V.E; p.8 Sec. VI"], chosen: "20 with lt", why: "hardware validation statement"}
+  - {table: metrics, row_id: ectc51687.2025.00052-a-m4, field: condition, values: ["HTS 110 C or 125 C up to 1000 h", "HTS at 110 C for 1000 hrs (Fig. 10 results)"], locators: ["p.6 Sec. V.E", "p.7 Sec. V.E"], chosen: "110 C", why: "Fig. 10 results text"}
+  - {table: metrics, row_id: ectc51687.2025.00052-a-m9, field: value_text, values: ["Fig. 8 early 3.2 / 5.1 / 4.4 dB and enhanced 2.0 dB", "conclusion: early 3.2 to > 5.1 dB, improved < 1.5 dB to 3.0 dB"], locators: ["p.6 Fig. 8", "p.8 Sec. VI"], chosen: "both entered on their rows", why: "conclusion range wider than Fig. 8 bars; > 5.1 bound not in Fig. 8"}
+  - {table: papers, row_id: ectc51687.2025.00052, field: notes, values: ["PWG pitch '50 mm' (p.3 Sec. IV, p.4 Sec. V.A)", "50 um elsewhere"], locators: ["p.3 Sec. IV; p.4 Sec. V.A", "p.1 Abstract; p.3 Sec. V"], chosen: "50 um", why: "typo in source"}
+excluded:
+  - "V-groove SMF CPO at 250 um and 125 um pitch, IBM Bromont (ref [3], Fig. 2)"
+  - "Prior PIC-PWG-ferrule link-only Telcordia GR-468 results: 0-0.75 dB (damp heat), 0-0.5 dB (TC) IL increase (refs [4,5])"
+  - "Fig. 1 BW scaling vs FLOPS (ref [1])"
+  - "Future TVs: 10X lower energy E-O-E links, WDM, co-designed EIC (plans only)"
+not_reported:
+  - PIC thickness/platform, substrate material/layers/thickness, lid material, package thickness
+  - flip chip bump diameter/height/alloy, BGA ball size, underfill/adhesive products, reflow profiles
+  - alignment method (passive vs active) for PIC-PWG; MFD; polarization; wavelength of IL figures beyond O-band sweep
+  - n_samples and pass criteria of JEDEC tests; thermo-mechanical stress values (Fig. 5 contour, no scale values)
+  - electrical_interfaces (no data rate or energy reported)

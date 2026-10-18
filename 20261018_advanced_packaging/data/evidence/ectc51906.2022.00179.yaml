@@ -1,0 +1,48 @@
+paper_id: ectc51906.2022.00179
+verified_on: 2026-10-18
+schema_version: 2
+source_files:
+  - references/ectc51906.2022.00179/text.md
+  - references/ectc51906.2022.00179/source.json
+  - references/ectc51906.2022.00179/source.pdf
+  - references/ectc51906.2022.00179/figures/page_01.png
+  - references/ectc51906.2022.00179/figures/page_02.png
+  - references/ectc51906.2022.00179/figures/page_03.png
+  - references/ectc51906.2022.00179/figures/page_04.png
+  - references/ectc51906.2022.00179/figures/page_05.png
+  - references/ectc51906.2022.00179/figures/page_06.png
+figure_reading_method: >-
+  All six page renders viewed. Fig. 2, 3, 5, 6, 10, 11, 13, 14, 15 re-rendered from source.pdf at 400-600 dpi, Fig. 4, 9,
+  16, 17 at 300 dpi. CDF plots read by pixel calibration: y from 0/100% tick rows, log x from panel frame edges
+  (Fig. 15: 108.5-108.8 px/decade). Plateau levels about +-2%; log reads about +-0.05 decade; Fig. 14 box means about +-3%.
+entries:
+  - {table: interconnects, row_id: ectc51906.2022.00179-a-i1, field: diameter_um, value: 13, unit: um, basis: design_target, locator: "p.2 Fig. 2", note: "panel label '20um pitch (13um diameter)'; 10/7, 7/5, 5/3 likewise"}
+  - {table: interconnects, row_id: ectc51906.2022.00179-a-i1, field: count, value: 300, unit: bumps, basis: design_target, locator: "p.5 Sec. VI; p.5 Fig. 15 legend", note: "600/840/1200 for 10/7/5 um"}
+  - {table: interconnects, row_id: ectc51906.2022.00179-a-i1, field: resistance_mohm, value: 27, unit: mohm, basis: measured, locator: "p.5 Fig. 15 Kelvin panel", note: "median x 444 px -> 10^-1.57 ohm; 10 um 10^-1.40; 7 um 10^-1.02; 5 um 10^-0.67"}
+  - {table: interconnects, row_id: ectc51906.2022.00179-b-i1, field: cap_height_um, value: 3.5, unit: um, basis: measured, locator: "p.2 Sec. III; p.2 Fig. 3", note: "Sn left for bonding after BS processing; Ni UBM 2 um remaining"}
+  - {table: metrics, row_id: ectc51906.2022.00179-a-m8, field: value, value: 46, unit: "%", basis: measured, locator: "p.5 Fig. 15", note: "5 um green daisy-chain CDF jumps at about 46%"}
+  - {table: metrics, row_id: ectc51906.2022.00179-c-m2, field: value, value: 292, unit: um, basis: measured, locator: "p.3 Fig. 9", note: "bar top; error bar about 252-332"}
+  - {table: metrics, row_id: ectc51906.2022.00179-c-m3, field: value, value: 149, unit: um, basis: measured, locator: "p.3 Fig. 9", note: "bar top; error bar about 120-179"}
+derived:
+  - {table: interconnects, row_id: ectc51906.2022.00179-a-i1, field: bonding_force_n, value: 9.81, formula: "1 kgf x 9.80665 N/kgf (unit conversion)", inputs: "p.2 Sec. III '1kgf'; same for a-i2..i4, b-i1..i4"}
+  - {table: interconnects, row_id: ectc51906.2022.00179-c-i1, field: aspect_ratio, value: 10, formula: "depth/diameter = 50/5", inputs: "p.3 Sec. IV '5 by 50 TSV'"}
+conflicts:
+  - {table: metrics, row_id: ectc51906.2022.00179-a-m8, field: value, values: ["50% (text)", "about 46% (Fig. 15 CDF)"], locators: ["p.5 Sec. VI", "p.5 Fig. 15"], chosen: 46, why: "result plot over text (rule k); text likely rounded"}
+  - {table: metrics, row_id: ectc51906.2022.00179-a-m25, field: condition, values: ["TCT 970 cycles (text, Fig. 17 header)", "TCT 1000 cycles (Fig. 16 legend)"], locators: ["p.5 Sec. VI; p.6 Fig. 17", "p.5 Fig. 16"], chosen: "970 cycles", why: "text and Fig. 17 agree; both values listed in condition"}
+  - {table: metrics, row_id: ectc51906.2022.00179-a-m21, field: condition, values: ["three reflows at 265 C for 10 min (text)", "Reflow 250 C for 5 min (Fig. 17 header)"], locators: ["p.5 Sec. VI", "p.6 Fig. 17"], chosen: "both listed", why: "cannot resolve; condition cell carries both"}
+  - {table: metrics, row_id: ectc51906.2022.00179-a-m30, field: value, values: ["5% drop after HTS at 10 um (Fig. 16)", "yield remains same for 20 and 10 um (text)"], locators: ["p.5 Fig. 16", "p.5 Sec. VI"], chosen: 5, why: "result plot over text"}
+  - {table: metrics, row_id: ectc51906.2022.00179-a-m1, field: value, values: ["Fig. 5 CDF plateaus 98/84/78/5%", "Fig. 15 yields 100/100/100/46-50%"], locators: ["p.2 Fig. 5", "p.5 Fig. 15"], chosen: "both entered as separate variants", why: "different F2F bonding lots (Sec. III vs reliability set); not merged"}
+  - {table: test_vehicles, row_id: ectc51906.2022.00179-d, field: n_dies, values: ["N=5 die (vertical collective text)", "tiers T01/T12/T23 in Fig. 14; T34 label in Fig. 18"], locators: ["p.5 Sec. V", "p.5 Fig. 14; p.6 Fig. 18"], chosen: 5, why: "text value; consistent with T34 label"}
+excluded:
+  - "Ni UBM low IMC and Cu-on-Ni fast IMC rationale attributed to refs [3-10]"
+  - "Spacer bump concept attributed to refs [3-4]"
+  - "Fig. 6 Kelvin resistances: two series from 4-point design limitation; not entered as values"
+  - "Fig. 5 and Fig. 6 Kelvin/EM CDF plateaus: entered only daisy-chain levels; Kelvin/EM resistances taken from Fig. 15"
+not_reported:
+  - electrical_interfaces, optical_interfaces
+  - die x/y sizes, landing die thickness, die thickness in the N>2 maskset
+  - bump heights for F2F dies and BS bumps, BS bump diameters, Ni/Cu pad dimensions
+  - TCB time and full profile, CUF product and cure, alignment accuracy value
+  - TBM product and thermal budget temperature, laser wavelength, dielectric type
+  - embedded-bump polymer product and thickness, embedded-bump yield
+  - warpage sign convention (wafer bow only)

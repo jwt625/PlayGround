@@ -1,0 +1,37 @@
+paper_id: ectc.2011.5898527
+verified_on: 2026-10-18
+source_files:
+  - references/ectc.2011.5898527/text.md
+  - references/ectc.2011.5898527/source.json
+  - references/ectc.2011.5898527/source.pdf
+  - references/ectc.2011.5898527/figures/page_01.png
+  - references/ectc.2011.5898527/figures/page_02.png
+  - references/ectc.2011.5898527/figures/page_03.png
+  - references/ectc.2011.5898527/figures/page_04.png
+  - references/ectc.2011.5898527/figures/page_05.png
+figure_reading_method: >-
+  Tables 1-5 read from page renders (text-layer table extraction garbled); Fig. 4 Shadow Moire panels re-rendered at
+  600 dpi in scratch (not kept): embedded images too low resolution, axis values illegible, only shape recorded.
+  SEM scale bars in Fig. 1 and Fig. 9 not used for dimensions.
+entries:
+  - {table: interconnects, row_id: ectc.2011.5898527-a-i2, field: aspect_ratio, value: 10, unit: "-", basis: design_target, locator: "p.5 Conclusions", note: "TSV processes established for aspect ratio up to 10"}
+  - {table: metrics, row_id: ectc.2011.5898527-b-m1, field: value, value: -2.39, unit: mil, basis: simulated, locator: "p.3 Table 3", note: "COC after ubump UF; smiley face per text"}
+derived: []
+conflicts:
+  - {table: metrics, row_id: ectc.2011.5898527-a-m2, field: value, values: [264, 248], locators: ["p.5 Reliability Assessment text 264 hours", "p.5 Fig. 8(b) caption After 248hr HAST"], chosen: 264, why: "text states 264 h twice; caption is a single label"}
+  - {table: components, row_id: ectc.2011.5898527-a-c4, field: thickness_um, values: [1000, "1200-1300"], locators: ["p.3 Sec. a optimum ~1 mm for 42.5 mm package", "p.3 Sec. a ~1.2-1.3 mm for 45x45 mm package"], chosen: 1000, why: "TV is the 42.5x42.5 mm package"}
+excluded:
+  - "TSV typical 10-20 um diameter, 50-100 um depth (generic industry statement in Introduction)"
+  - "L/S 0.8/0.8 um silicon module (ref [2] title)"
+not_reported:
+  - electrical_interfaces
+  - optical_interfaces
+  - die thickness, microbump count, bump diameter and height, UBM stack
+  - TSV depth explicitly, TSV pitch, interposer RDL layer count and line/space
+  - COC and C4 bonding method, temperature, force
+  - underfill products (UF-A/B/C coded), flux products
+  - sample counts for HAST and TC, electromigration results (mentioned in abstract only)
+  - Shadow Moire numeric values (illegible), substrate layer count, lid material grade
+notes: >-
+  Table 4 values given without units or cycle count ("after x cycles"). Abstract mentions electro-migration testing
+  but no EM data are reported. TC written as "TCB".

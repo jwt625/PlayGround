@@ -1,0 +1,32 @@
+paper_id: ectc51687.2025.00063
+verified_on: 2026-10-18
+schema_version: 2
+source_files:
+  - references/ectc51687.2025.00063/text.md
+  - references/ectc51687.2025.00063/source.json
+  - references/ectc51687.2025.00063/source.pdf
+  - references/ectc51687.2025.00063/figures/page_02.png
+  - references/ectc51687.2025.00063/figures/page_03.png
+  - references/ectc51687.2025.00063/figures/page_04.png
+figure_reading_method: >-
+  Page renders 2-4 viewed. Fig. 2 (SEM, 600 dpi), Fig. 7 (400 dpi) and Fig. 8 (400 dpi) re-rendered from source.pdf.
+  Fig. 3 table values read from the page image. Fig. 2 SEM scale bars 100 um, x100; no extra dimensions taken.
+entries:
+  - {table: metrics, row_id: ectc51687.2025.00063-a-m1, field: value, value: 285, unit: um, basis: measured, locator: "p.2 Fig. 3 table", note: "Composition A, Process 1"}
+  - {table: metrics, row_id: ectc51687.2025.00063-d-m4, field: value, value: 3.9, unit: um, basis: measured, locator: "p.4 Fig. 8 label '1: 3.9um'", note: "labels 1-4 = 3.9, 5.0, 4.3, 4.1 um"}
+  - {table: stack_layers, row_id: ectc51687.2025.00063-d-L01, field: thickness_um, value: 3, unit: um, basis: design_target, locator: "p.4 Fig. 8 caption", note: "'for 3um-thickness Cu electrodes inside cavity'"}
+derived:
+  - {table: stack_layers, row_id: ectc51687.2025.00063-d-L03, field: thickness_min_um, value: 0.15, formula: "150 nm / 1000", inputs: "p.2 Sec. III"}
+  - {table: stack_layers, row_id: ectc51687.2025.00063-d-L03, field: thickness_max_um, value: 1.0, formula: "1,000 nm / 1000", inputs: "p.2 Sec. III"}
+  - {table: stack_layers, row_id: ectc51687.2025.00063-d-L04, field: thickness_min_um, value: 0.1, formula: "100 nm / 1000", inputs: "p.2 Sec. III"}
+  - {table: stack_layers, row_id: ectc51687.2025.00063-d-L04, field: thickness_max_um, value: 0.4, formula: "400 nm / 1000", inputs: "p.2 Sec. III"}
+conflicts:
+  - {table: stack_layers, row_id: ectc51687.2025.00063-d-L01, field: line_um, values: ["10/10 um (Abstract)", "L/S < ~5 um Cu (Sec. III, Sec. IV)", "PR min L/S ~2 um (Fig. 7)"], locators: ["p.1 Abstract", "p.3 Sec. III; p.4 Sec. IV", "p.3 Fig. 7"], chosen: "10/10 and <5 kept as separate feature rows; ~2 um is resist only (metric d-m8)", why: "different statements, none tied to a measured Cu cross-section"}
+excluded:
+  - "Fig. 1 electro-optical packaging substrate concept (ASIC, PIC, glass waveguides, BGA) cited to [1]-[3]; no build in this paper"
+  - "Low glass dielectric constant vs PCB/polymer claim attributed to [1]"
+not_reported:
+  - electrical_interfaces, optical_interfaces (no electrical or optical measurement)
+  - glass thickness, glass composition names, cavity x/y size, TGV pitch, TGV depth, TGV metallization/fill
+  - HF concentration, etch time, mechanical processing details, LDI dose/focus values, plating chemistry and current
+  - measured Cu line/space values (abstract says measured vs design, no numbers), reliability, adhesion values

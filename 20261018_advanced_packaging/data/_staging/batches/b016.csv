@@ -1,0 +1,4 @@
+paper_id,doi,title,year,venue,primary_bucket,buckets,priority,triage_rationale
+eptc67330.2025.11392108,10.1109/eptc67330.2025.11392108,A Packaging Structure for an Antenna-in-Package Module,2025,EPTC,advanced_substrate,advanced_substrate,1,8x5.5x1.6 mm AiP of three panel-made substrates; panel-to-panel polymer hybrid bonding with conductive paste.
+ectc51687.2025.00052,10.1109/ectc51687.2025.00052,Co-Packaged Optics (CPO) Technology Full Module Test Vehicle Demonstrations,2025,ECTC,cpo,cpo,1,"CPO modules with PIC-to-polymer-waveguide first/last assembly, 12 ch at 50 um pitch; reflow and JEDEC stress."
+ectc51909.2023.00174,10.1109/ectc51909.2023.00174,CoWoS Architecture Evolution for Next Generation HPC on 2.5D System in Package,2023,ECTC,si_interposer,si_bridge;si_interposer;organic_rdl_fanout,1,"CoWoS-L reconstituted interposer: LSI chiplets with TSV, eDTC, global RDL, TIV; 3x reticle with 8 HBMs."

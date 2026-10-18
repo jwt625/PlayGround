@@ -1,0 +1,38 @@
+paper_id: ectc51529.2024.00227
+verified_on: 2026-10-18
+source_files:
+  - references/ectc51529.2024.00227/text.md
+  - references/ectc51529.2024.00227/source.json
+  - references/ectc51529.2024.00227/figures/page_01.png
+  - references/ectc51529.2024.00227/figures/page_02.png
+  - references/ectc51529.2024.00227/figures/page_03.png
+  - references/ectc51529.2024.00227/figures/page_04.png
+  - references/ectc51529.2024.00227/figures/page_05.png
+figure_reading_method: >-
+  Page renders at 150 dpi; Fig. 4, Fig. 5, Fig. 6(C), Fig. 7 and Fig. 8(C) re-rendered from source.pdf at 5-7x zoom in
+  the scratchpad to read histogram percentages and stack labels (Release Layer 200 nm, TBM 30um, Glass 700um, Si 100um).
+entries:
+  - {table: stack_layers, row_id: ectc51529.2024.00227-a-L08, field: thickness_um, value: 0.2, unit: um, basis: design_target, locator: "p.4 Fig. 7(A)", note: "label 'Release Layer 200 nm'"}
+  - {table: components, row_id: ectc51529.2024.00227-a-c3, field: thickness_um, value: 700, unit: um, basis: design_target, locator: "p.4 Fig. 7", note: "label 'Glass 700um'"}
+  - {table: metrics, row_id: ectc51529.2024.00227-a-m5, field: value, value: 6, unit: um, basis: measured, locator: "p.4 Sec. II", note: "mean +/- 3 sigma for X 'around 6 um'"}
+  - {table: interconnects, row_id: ectc51529.2024.00227-b-i1, field: alignment_um, value: 2.4, unit: um, basis: measured, locator: "p.5 Sec. III; p.4 Fig. 8(C)", note: "mean +/- 3 sigma = 2.4 um"}
+  - {table: optical_interfaces, row_id: ectc51529.2024.00227-b-o1, field: coupling_loss_db, value: 0.36, unit: dB, basis: measured, locator: "p.5 Sec. IV", note: "0.36 +/- 0.18 dB for 1.5 mm EVC (mean +/- 3 sigma)"}
+derived:
+  - {table: stack_layers, row_id: ectc51529.2024.00227-a-L08, field: thickness_um, value: 0.2, formula: "200 nm / 1000", inputs: "p.4 Fig. 7(A)"}
+conflicts:
+  - {table: metrics, row_id: ectc51529.2024.00227-b-m11, field: value, values: ["76% of dies <0.5 dB at 1310 nm (Abstract)", "nearly all dies <0.5 dB (Sec. IV)"], locators: ["p.1 Abstract", "p.5 Sec. IV"], chosen: 76, why: "only numeric statement; Sec. IV wording kept in notes"}
+  - {table: metrics, row_id: ectc51529.2024.00227-a-m21, field: value, values: ["nearly all dies better than 3 um (text)", "97% <3 um (Fig. 6C)"], locators: ["p.4 Sec. II", "p.3 Fig. 6(C)"], chosen: 97, why: "figure value; consistent with text"}
+excluded:
+  - "EVC insertion loss below 0.5 dB in O-band even for 0.5 mm EVC (Introduction) attributed to ref [9]"
+  - "Earlier imec CoD2W hybrid-bonding demonstrations with Si/glass carriers (refs [3]-[8]) and electrical-connectivity use of this flow (ref [10])"
+  - "Fig. 1(A) vision schematic of multi-XPU optical interconnect wafer (no numbers)"
+judgment_calls:
+  - "Two TVs: Fig. 7 shows two different temporary carrier stacks (RL on TBM vs RL on die) with different debond methods; final bonded stack is the same."
+  - "EVC loss results (Sec. IV) attached to TV b: Abstract and Conclusions tie 96% yield, 2.4 um and <0.5 dB to one wafer; the paper does not say explicitly."
+  - "Die-to-wafer interface entered as interconnect level optical / optical_coupling with bonding_method fusion (paper: dielectric bonding, N2 plasma activation, DI rinse)."
+  - "Position of the TV b release-layer coat relative to tape transfer and carrier debond is not stated; placed before tape transfer."
+not_reported:
+  - electrical_interfaces; die count per wafer; PIC function (modulators/PDs not stated as present on these dies)
+  - TBM, release layer, bonding dielectric and protective layer materials; plasma power/time; bond temperature, force, anneal
+  - laser debond wavelength/fluence; UV-laser debond equipment name; warpage measurement tool
+  - EVC MFD, polarization, channel count; bond strength; reliability

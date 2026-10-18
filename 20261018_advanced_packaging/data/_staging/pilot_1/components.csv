@@ -1,0 +1,5 @@
+comp_id,tv_id,component_type,is_emulator,embedded,name,count,x_mm,y_mm,thickness_um,cavity_x_mm,cavity_y_mm,cavity_depth_um,gap_um,process_node,material,supplier,basis,source,overrides,locator,qualifiers,notes
+ectc51906.2022.00142-b-c1,ectc51906.2022.00142-b,dummy_die,yes,no,silicon chip,1,20,20,725,,,,,,Si,,design_target,text,count:figure_image,p.2 Sec. II.D; p.2 Fig. 3(b),,Plain silicon chip in FC-BGA mock-up; 20 x 20 x t0.725 mm; count 1 per package from Fig. 3(b) photo.
+ectc51906.2022.00142-b-c2,ectc51906.2022.00142-b,underfill,,,underfill,,,,,,,,,,,,stated,text,,p.2 Sec. II.D,,Material and dispense method not stated.
+ectc51906.2022.00142-c-c1,ectc51906.2022.00142-c,dummy_die,yes,no,silicon chip,1,20,20,725,,,,,,Si,,design_target,text,count:figure_image,p.2 Sec. II.D; p.2 Fig. 3(b),,Plain silicon chip in FC-BGA mock-up; 20 x 20 x t0.725 mm; count 1 per package from Fig. 3(b) photo.
+ectc51906.2022.00142-c-c2,ectc51906.2022.00142-c,underfill,,,underfill,,,,,,,,,,,,stated,text,,p.2 Sec. II.D,,Material and dispense method not stated.

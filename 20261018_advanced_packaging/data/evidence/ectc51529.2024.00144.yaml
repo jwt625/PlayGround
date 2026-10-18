@@ -1,0 +1,25 @@
+paper_id: ectc51529.2024.00144
+verified_on: 2026-10-18
+source_files:
+  - references/ectc51529.2024.00144/text.md
+  - references/ectc51529.2024.00144/source.json
+  - references/ectc51529.2024.00144/figures/page_02.png
+  - references/ectc51529.2024.00144/figures/page_03.png
+  - references/ectc51529.2024.00144/figures/page_04.png
+figure_reading_method: >-
+  Tables I-III are images; read from 150 dpi page renders. Fig. 3 re-rendered at 400 dpi and Figs. 5, 7 at 300 dpi
+  from source.pdf in scratch (not kept). Fig. 7 bar heights and Fig. 5 -3 dB crossing read by eye against gridlines.
+entries:
+  - {table: metrics, row_id: ectc51529.2024.00144-a-m6, field: value, value: 40.7, unit: GHz, basis: simulated, locator: "p.3 Fig. 5", note: "dashed marker at SoIC -3 dB crossing, between 40 and 41 GHz"}
+  - {table: interconnects, row_id: ectc51529.2024.00144-a-i1, field: notes, value: "5 x 4", unit: "", basis: design_target, locator: "p.3 Table I; p.2 Fig. 3(B)", note: "Fig. 3(B) shows 5 columns x 4 rows per MRM unit incl. S+, S- and P/G"}
+derived: []
+conflicts:
+  - {table: metrics, row_id: ectc51529.2024.00144-a-m3, field: value, values: ["> 10.7x", "10.7 times"], locators: ["p.3 Table I", "p.2 Sec. III.A"], chosen: "10.7 with qualifier gt", why: "result table over text"}
+  - {table: metrics, row_id: ectc51529.2024.00144-b-m2, field: value, values: [32, 31], locators: ["p.3 Sec. III.B", "p.3 Fig. 5"], chosen: 32, why: "explicit text value; figure crossing read by eye"}
+excluded:
+  - "SoIC bond 85% lower capacitance than microbump, attributed to ref [13]"
+  - "compact PD data rate > 50 Gbps and PD intrinsic RC parameters, attributed to ref [18]"
+  - "Fig. 2 WDM wavelength count vs ring/disk radius trend (refs [22-31]); radius < 5 um for 32/64 wavelength"
+  - "OE on interposer better EE than substrate, attributed to ref [11]"
+  - "10^-18 BER requirement for disaggregated memory from ref [21] (kept only as a Table II condition)"
+not_reported: [optical_interfaces, process_steps, "absolute SoIC and microbump pitches", "pad sizes", "die sizes", "interposer line/space and thickness", "absolute energy per bit", "absolute laser power", "coupler type and coupling loss", "number of wavelengths", "measured hardware data"]

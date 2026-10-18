@@ -1,0 +1,56 @@
+paper_id: ectc.2019.00-29
+verified_on: 2026-10-18
+source_files:
+  - references/ectc.2019.00-29/text.md
+  - references/ectc.2019.00-29/source.json
+  - references/ectc.2019.00-29/source.pdf
+  - references/ectc.2019.00-29/figures/page_02.png
+  - references/ectc.2019.00-29/figures/page_03.png
+  - references/ectc.2019.00-29/figures/page_04.png
+  - references/ectc.2019.00-29/figures/page_05.png
+  - references/ectc.2019.00-29/figures/page_06.png
+  - references/ectc.2019.00-29/figures/page_07.png
+  - references/ectc.2019.00-29/figures/page_08.png
+figure_reading_method: >-
+  Page renders read at 150 dpi; Fig. 12, Fig. 17 and Fig. 22 re-rendered from source.pdf at 500-900 dpi (scratch crops,
+  not kept) to read SEM measurement labels. Fig. 22 label-to-layer assignment follows the thin vertical measurement
+  line next to each label and was checked against the image scale (about 0.078 um/px from the 29.5 um line).
+  Fig. 12 top/bottom CD labels illegible (low-resolution embedded image): not used; sidewall angles legible.
+entries:
+  - {table: stack_layers, row_id: ectc.2019.00-29-a-L04, field: thickness_um, value: 5.04, unit: um, basis: measured, locator: "p.7 Fig. 22", note: "D3 over RDL2"}
+  - {table: stack_layers, row_id: ectc.2019.00-29-a-L05, field: thickness_um, value: 7.97, unit: um, basis: measured, locator: "p.7 Fig. 22", note: "Cu RDL #2"}
+  - {table: stack_layers, row_id: ectc.2019.00-29-a-L08, field: thickness_um, value: 4.10, unit: um, basis: measured, locator: "p.7 Fig. 22", note: "D2 between RDL1 top and RDL2 bottom"}
+  - {table: stack_layers, row_id: ectc.2019.00-29-a-L09, field: thickness_um, value: 5.98, unit: um, basis: measured, locator: "p.7 Fig. 22", note: "Cu RDL #1"}
+  - {table: stack_layers, row_id: ectc.2019.00-29-a-L12, field: thickness_um, value: 6.91, unit: um, basis: measured, locator: "p.7 Fig. 22", note: "D1 under RDL1"}
+  - {table: metrics, row_id: ectc.2019.00-29-b-m4, field: value, value: 10.0, unit: um, basis: measured, locator: "p.5 Fig. 11", note: "160 mJ/cm2 point on the 10.0 um target line; text states 160 mJ/cm2 for 10 um CD"}
+  - {table: metrics, row_id: ectc.2019.00-29-c-m5, field: value, value: 87.5, unit: deg, basis: measured, locator: "p.6 Fig. 17(a)", note: "label 87.5 deg (cs)"}
+  - {table: metrics, row_id: ectc.2019.00-29-c-m6, field: value, value: 88.8, unit: deg, basis: measured, locator: "p.6 Fig. 17(a)", note: "label 88.8 deg (cs), other sidewall"}
+derived:
+  - {table: stack_layers, row_id: ectc.2019.00-29-a-L06, field: thickness_um, value: 0.1, formula: "1 kA = 1000 A * 1e-4 um/A", inputs: "p.6 Sec. IV.D"}
+  - {table: stack_layers, row_id: ectc.2019.00-29-a-L07, field: thickness_um, value: 0.1, formula: "1 kA = 1000 A * 1e-4 um/A", inputs: "p.6 Sec. IV.D"}
+  - {table: stack_layers, row_id: ectc.2019.00-29-a-L10, field: thickness_um, value: 0.1, formula: "1 kA = 1000 A * 1e-4 um/A", inputs: "p.6 Sec. IV.D"}
+  - {table: stack_layers, row_id: ectc.2019.00-29-a-L11, field: thickness_um, value: 0.1, formula: "1 kA = 1000 A * 1e-4 um/A", inputs: "p.6 Sec. IV.D"}
+conflicts:
+  - {table: stack_layers, row_id: ectc.2019.00-29-a-L05, field: thickness_um, values: [7.97, 5, 7], locators: ["p.7 Fig. 22", "p.2 Sec. II.A target Cu RDL thickness", "p.6 Sec. IV.D target Cu plating"], chosen: 7.97, why: "measured cross-section"}
+  - {table: stack_layers, row_id: ectc.2019.00-29-a-L09, field: thickness_um, values: [5.98, 5, 7], locators: ["p.7 Fig. 22", "p.2 Sec. II.A target", "p.6 Sec. IV.D target; 7.3-7.4 measured on UBM pad Fig. 19"], chosen: 5.98, why: "measured cross-section of TV"}
+  - {table: stack_layers, row_id: ectc.2019.00-29-a-L04, field: thickness_um, values: [5.04, 10], locators: ["p.7 Fig. 22", "p.2 Sec. II.A up to 10 um; p.4 target around 10 um"], chosen: 5.04, why: "measured cross-section"}
+  - {table: metrics, row_id: ectc.2019.00-29-a-m8, field: value, values: [10, 5], locators: ["p.4 Sec. III.B below 10%", "p.8 Sec. VI <5%"], chosen: 10, why: "body text; summary may conflate with seed variation (<5%)"}
+  - {table: interconnects, row_id: ectc.2019.00-29-a-i3, field: pad_x_um, values: [50, "300/200 arrows"], locators: ["p.2 Sec. II.A package UBM 50 um diameter", "p.7 Fig. 19(b) UBM pad cross-section"], chosen: 50, why: "text design value; Fig. 19 features unlabeled"}
+  - {table: test_vehicles, row_id: ectc.2019.00-29-a, field: notes, values: ["around 1000 I/Os", "up to 1000 I/Os"], locators: ["p.2 Sec. II.A", "p.2 Table 1"], chosen: "notes only", why: "I/O count not mapped to a specific interconnect level"}
+excluded:
+  - "Fan-out industry statements (300/330 mm wafer, panel standardization) are background, refs [1]-[7]"
+not_reported:
+  - electrical_interfaces
+  - optical_interfaces
+  - reliability tests
+  - Cu pillar pitch, height, solder alloy
+  - solder ball size, pitch, alloy
+  - die thickness, mold thickness, package thickness
+  - dielectric, PR, release layer, mold product names and properties
+  - meander parasitic results
+  - LDI tool and PVD/ECP equipment vendors
+  - dielectric cure conditions
+notes: >-
+  Fig. 3 caption is used twice (p.2 mask set and p.3 daisy chain schematics); text calls the p.3 figure Fig. 4.
+  p.3 Fig. 3 legend lists daisy chains (corner x4, outer row x3, inner row x3; 8/10/5 um RDL1-RDL2 chains x2/x1/x1)
+  and meanders (8 um x4, 10 um x2, 5 um x2); not tabulated.

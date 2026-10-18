@@ -1,0 +1,39 @@
+paper_id: ectc51909.2023.00174
+verified_on: 2026-10-18
+source_files:
+  - references/ectc51909.2023.00174/text.md
+  - references/ectc51909.2023.00174/source.json
+  - references/ectc51909.2023.00174/figures/page_01.png
+  - references/ectc51909.2023.00174/figures/page_02.png
+  - references/ectc51909.2023.00174/figures/page_03.png
+  - references/ectc51909.2023.00174/figures/page_04.png
+  - references/ectc51909.2023.00174/figures/page_05.png
+figure_reading_method: >-
+  Page renders p.1-p.5 opened; Fig. 8, Fig. 9, Fig. 11 and Fig. 12 re-rendered from source.pdf at 6-7x in the scratchpad.
+  Cumulative-distribution medians read at the 50% line; values approx.
+entries:
+  - {table: metrics, row_id: ectc51909.2023.00174-a-m1, field: value, value: 60, unit: ohm, basis: measured, locator: "p.4 Fig. 11(a)", note: "u-bump chain ~58-65 ohm; post-stress (Fig. 12(a)) ~56-68 ohm"}
+  - {table: metrics, row_id: ectc51909.2023.00174-a-m2, field: value, value: 24.4, unit: ohm, basis: measured, locator: "p.4 Fig. 11(b)", note: "TSV chain ~24.2-25.1 ohm; post-stress ~24-25"}
+  - {table: metrics, row_id: ectc51909.2023.00174-a-m3, field: value, value: 40, unit: ohm, basis: measured, locator: "p.4 Fig. 11(c)", note: "TIV chain ~39.5-40.5 ohm; post-stress ~39-41"}
+  - {table: metrics, row_id: ectc51909.2023.00174-a-m4, field: value, value: 34.8, unit: ohm, basis: measured, locator: "p.4 Fig. 11(d)", note: "C4 chain ~34-35.5 ohm; post-stress ~33-36 (uHAST lowest)"}
+  - {table: electrical_interfaces, row_id: ectc51909.2023.00174-d-e1, field: insertion_loss_db, value: 0.82, unit: dB, basis: measured, locator: "p.4 Fig. 9", note: "S21 ~-0.82 dB at 50 GHz, -0.25 dB at DC"}
+  - {table: electrical_interfaces, row_id: ectc51909.2023.00174-e-e1, field: insertion_loss_db, value: 1.2, unit: dB, basis: measured, locator: "p.4 Fig. 9", note: "S21 ~-1.2 dB at 50 GHz, -0.34 dB at DC"}
+  - {table: metrics, row_id: ectc51909.2023.00174-a-m10, field: value, value: 600, unit: uF, basis: author_estimate, locator: "p.3 Fig. 6", note: "label '600uF' at 3X reticle, '800uF' at 4X"}
+derived: []
+conflicts:
+  - {table: test_vehicles, row_id: ectc51909.2023.00174-a, field: package_y_mm, values: [76, 78], locators: ["p.2 Sec. II.A text '70mm x 76mm'", "p.2 Fig. 3(a),(b) photo labels 70mm / 78mm"], chosen: 78, why: "photo (both panels) > text per rule k"}
+  - {table: test_vehicles, row_id: ectc51909.2023.00174-a, field: interposer_area_mm2, values: ["~2500 (text)", "43 x 58 = 2494"], locators: ["p.1 Abstract; p.4 Sec. III.C", "p.2 Sec. II.A"], chosen: "2500 approx", why: "consistent within rounding"}
+  - {table: papers, row_id: ectc51909.2023.00174, field: primary_bucket, values: ["si_interposer (batch file)", "si_bridge (full text: LSI chiplets in molding-compound RI replace Si interposer)"], locators: ["batch b016", "p.2 Sec. II.A"], chosen: si_bridge, why: "full text describes LSI bridge-type reconstituted interposer"}
+  - {table: electrical_interfaces, row_id: ectc51909.2023.00174-d-e1, field: locator, values: ["text cites 'Fig. 10' for LSI insertion loss", "insertion loss is Fig. 9"], locators: ["p.4 Sec. III.B"], chosen: "Fig. 9", why: "figure numbering typo in text"}
+excluded:
+  - "1st generation eDTC: PDN impedance -93%, 1st droop -72%, HBM VDDQ SSN 38% at 3.2 GHz (ref [8])"
+  - "CoWoS-S 2500 mm2 four-mask stitching and 3 SoC + 8 HBM qualification (refs [1,5])"
+  - "typical CoWoS u-bump pitch around 30 to 60 um (generic CoWoS process description, not this TV)"
+  - "MiM capacitor comparison '>50 times' (ref [9])"
+  - "Fig. 1 roadmap transistor counts; 1x reticle ~830 mm2 (25.52 x 32.52 mm) definition kept only implicitly via reticle_multiple"
+not_reported:
+  - u-bump, TSV, TIV, C4 pitch/diameter/height/metallurgy and bonding conditions
+  - RDL line/space and dielectric of RI front/back RDL; RI and LSI thicknesses; LSI sizes
+  - substrate layers/material; ring and lid materials; TIM product; HBM generation
+  - n_samples for chains and reliability; warpage; thermal data; yield numbers
+  - optical_interfaces; protocol-level electrical interface data (data rate, energy)

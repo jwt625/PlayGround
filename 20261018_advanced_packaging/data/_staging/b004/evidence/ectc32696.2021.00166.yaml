@@ -1,0 +1,44 @@
+paper_id: ectc32696.2021.00166
+verified_on: 2026-10-18
+schema_version: 2
+source_files:
+  - references/ectc32696.2021.00166/text.md
+  - references/ectc32696.2021.00166/source.json
+  - references/ectc32696.2021.00166/source.pdf
+  - references/ectc32696.2021.00166/figures/page_01_220dpi.png
+  - references/ectc32696.2021.00166/figures/page_02_220dpi.png
+  - references/ectc32696.2021.00166/figures/page_03_220dpi.png
+  - references/ectc32696.2021.00166/figures/page_04_220dpi.png
+  - references/ectc32696.2021.00166/figures/page_05_220dpi.png
+  - references/ectc32696.2021.00166/figures/page_06_220dpi.png
+source_defect: >-
+  PDF text layer is font-encoded garbage; text.md was later replaced by tesseract OCR of the 220 dpi renders. Every
+  value here was read from page renders of source.pdf (200 dpi full pages, page 4 at 400 dpi for Fig. 6), equivalent
+  to the 220 dpi renders; the OCR text was used only as a cross-check.
+figure_reading_method: >-
+  Fig. 6(a) and 6(c) read by pixel calibration against gridlines of a 400 dpi page-4 render (about 90 px/mm and
+  1118 px per pJ/bit). Fig. 6(b) has no y tick values, so only the text thresholds (~20, ~30 um) are entered.
+  Fig. 4(b) stacked bars have no axis values.
+entries:
+  - {table: electrical_interfaces, row_id: ectc32696.2021.00166-e-e1, field: energy_pj_per_bit, value: 0.005, unit: pJ/bit, basis: simulated, locator: "p.4 Fig. 6(c)", note: "curve starts near 9 um at about 0.005"}
+  - {table: electrical_interfaces, row_id: ectc32696.2021.00166-e-e4, field: energy_pj_per_bit, value: 0.5, unit: pJ/bit, basis: simulated, locator: "p.4 Fig. 6(c)", note: "curve leaves the 0.5 pJ/bit axis top near 38.5 um, so >0.5 at 40 um"}
+  - {table: electrical_interfaces, row_id: ectc32696.2021.00166-e-e5, field: reach_mm, value: 5.05, unit: mm, basis: simulated, locator: "p.4 Fig. 6(a)", note: "channel length at 50 um pitch"}
+  - {table: interconnects, row_id: ectc32696.2021.00166-a-i1, field: pitch_um, value: 10, unit: um, basis: design_target, locator: "p.5 Sec. IV.A", note: "hexagonal pitch arrangement"}
+  - {table: interconnects, row_id: ectc32696.2021.00166-b-i1, field: count, value: 3000000, unit: count, basis: design_target, locator: "p.5 Sec. IV.B", note: "'over 3 million'"}
+derived: []
+conflicts:
+  - {table: test_vehicles, row_id: ectc32696.2021.00166-a, field: locator, values: ["text cites Fig. 3 for solder vs HB comparison, Fig. 2 for scaling trend, Fig. 4(b) for top view", "captions are Figure 2, Figure 1 and Figure 5(b)"], locators: ["p.1 Sec. I; p.2 Sec. II; p.3 Sec. III.B", "p.2 Fig. 1; p.2 Fig. 2; p.4 Fig. 5"], chosen: "caption labels", why: "rule (c): cite caption label when text and caption disagree"}
+excluded:
+  - "sub-1 um HB pitch scalability (ref [10])"
+  - "higher max current per interconnect (ref [9]); thermal coupling benefit (ref [12])"
+  - "Fig. 1 generic area-ratio vs pitch trend (9.0-50.9 um; area ratio 1/16 to 2) and technology brackets: generic geometric scaling, no build"
+  - "40+ um FLI for standard solder: generic comparison, no build"
+  - "particle-induced void sizes (ref [18])"
+not_reported:
+  - die x/y dimensions and thickness, die count of passive test chip
+  - HB pad diameter, recess depth, dielectric material, bonding temperature/time, anneal temperature/time, alignment
+  - daisy-chain resistance, yield, current-carrying results, reliability data
+  - solder-version comparison results
+  - active test chip results (in fabrication)
+  - protocol, lane rate in Gb/s, bandwidth density numbers
+  - optical_interfaces, warpage, thermal metrics

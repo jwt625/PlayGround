@@ -1,0 +1,37 @@
+paper_id: eptc53413.2021.9663896
+verified_on: 2026-10-18
+source_files:
+  - references/eptc53413.2021.9663896/text.md
+  - references/eptc53413.2021.9663896/source.json
+  - references/eptc53413.2021.9663896/figures/page_01.png
+  - references/eptc53413.2021.9663896/figures/page_02.png
+  - references/eptc53413.2021.9663896/figures/page_03.png
+  - references/eptc53413.2021.9663896/figures/page_04.png
+  - references/eptc53413.2021.9663896/figures/page_05.png
+  - references/eptc53413.2021.9663896/figures/page_06.png
+  - references/eptc53413.2021.9663896/figures/page_07.png
+figure_reading_method: >-
+  All page renders p.1-p.7 opened; Table 1 and Table 2 read from p.5 render; Figs. 12/13 (fit labels) and Fig. 17 re-rendered
+  from source.pdf at 4-5x zoom in the scratchpad.
+entries:
+  - {table: metrics, row_id: eptc53413.2021.9663896-a-m23, field: value, value: 0.812596, unit: "", basis: measured, locator: "p.4 Fig. 12", note: "fit label y = 0.000071x + 20.511331, R2 = 0.812596"}
+  - {table: metrics, row_id: eptc53413.2021.9663896-a-m24, field: value, value: 0.796225, unit: "", basis: measured, locator: "p.4 Fig. 13", note: "fit label y = 0.000079x - 26.394199, R2 = 0.796225"}
+  - {table: interconnects, row_id: eptc53413.2021.9663896-b-i1, field: diameter_um, value: 30, unit: um, basis: measured, locator: "p.6 Fig. 20", note: "X-section label '30um Cu Stud', 'Custom PMIC in M-Series'; text also 30 um"}
+  - {table: interconnects, row_id: eptc53413.2021.9663896-b-i2, field: diameter_um, value: 15, unit: um, basis: measured, locator: "p.6 Fig. 20", note: "X-section label '15um via contact'"}
+  - {table: interconnects, row_id: eptc53413.2021.9663896-c-i1, field: diameter_um, value: 12, unit: um, basis: design_target, locator: "p.7 Fig. 21", note: "Gen 2: 12 um Cu stud, 6 um via"}
+  - {table: metrics, row_id: eptc53413.2021.9663896-e-m19, field: value, value: 65, unit: um, basis: simulated, locator: "p.6 Fig. 17", note: "plot read at 45 mm; curves at 45 mm ~65.5 / ~38 / ~29.5 um; at 5 mm ~25 / ~13 / ~7 um"}
+  - {table: metrics, row_id: eptc53413.2021.9663896-e-m5, field: value_text, value: "600 mm ~77-92%; 300 mm ~93% to ~71%", unit: "%", basis: derived, locator: "p.3 Fig. 7", note: "plot read, body size 3-39 mm"}
+derived: []
+conflicts:
+  - {table: metrics, row_id: eptc53413.2021.9663896-a-m69, field: value, values: ["27.5 um (text, Y mean + 3 sigma before compensation)", "29.95 um from Table 1 averages |-9.16| + 3 x 6.93 (own arithmetic)"], locators: ["p.5 Sec. Die Shift with Compensation", "p.5 Table 1"], chosen: 27.5, why: "stated value entered; own arithmetic disagrees, flagged. X before (10.48 + 3 x 6.34 = 29.5) and after-values are consistent"}
+  - {table: test_vehicles, row_id: eptc53413.2021.9663896-b, field: carrier_format, values: ["300mm round format (abstract)", "SEMI standard 300 mm panel (p.1 process flow)"], locators: ["p.1 Abstract", "p.1 Sec. M-Series Process Flow"], chosen: "wafer_300mm", why: "round 300 mm reconstituted panel; both describe the same 300 mm round format"}
+  - {table: metrics, row_id: eptc53413.2021.9663896-a-m4, field: value_text, values: ["X range -8 to +28 um (text)", "Fig. 9 histogram bins span about -10 to +29.4 um"], locators: ["p.4 Sec. Die Shift with No Adaptive Patterning", "p.4 Fig. 9"], chosen: "text", why: "bins with near-zero counts at ends; text range entered"}
+excluded:
+  - "Fig. 18/19 TSMC InFO Apple A14: 20 um via contact, 50 um extra Cu capture pad, 25 um Cu stud (Prismark teardown, ref [5])"
+  - "Fig. 4/5 two-die Adaptive Alignment/Routing images credited to ref [4]; no numbers"
+  - "Fig. 1 M-Series cross-section credited to ref [1]; used only for layer order, no numbers"
+not_reported:
+  - die sizes and thicknesses, EMC product and thickness, Cu stud height and pitch (Gen 1), polymer dielectric product and thickness
+  - RDL line/space and thickness for Gen 1 production, layer count, UBM and solder ball dimensions
+  - LDI tool model for Gen 1 and Gen 2, molding conditions, die attach tool, cure conditions
+  - yield values (electrical), warpage, reliability, thermal; electrical_interfaces; optical_interfaces

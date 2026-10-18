@@ -1,0 +1,64 @@
+paper_id: ectc51906.2022.00072
+verified_on: 2026-10-18
+schema_version: 2
+source_files:
+  - references/ectc51906.2022.00072/text.md
+  - references/ectc51906.2022.00072/source.json
+  - references/ectc51906.2022.00072/figures/page_02.png
+  - references/ectc51906.2022.00072/figures/page_03.png
+  - references/ectc51906.2022.00072/figures/page_04.png
+  - references/ectc51906.2022.00072/figures/page_05.png
+  - references/ectc51906.2022.00072/figures/page_06.png
+  - references/ectc51906.2022.00072/figures/page_07.png
+  - references/ectc51906.2022.00072/figures/img_p03_1.png
+  - references/ectc51906.2022.00072/figures/img_p03_2.png
+  - references/ectc51906.2022.00072/figures/img_p03_3.png
+  - references/ectc51906.2022.00072/figures/img_p04_1.png
+  - references/ectc51906.2022.00072/figures/img_p04_2.png
+  - references/ectc51906.2022.00072/figures/img_p04_3.png
+  - references/ectc51906.2022.00072/figures/img_p04_4.png
+  - references/ectc51906.2022.00072/figures/img_p04_5.png
+  - references/ectc51906.2022.00072/figures/img_p04_6.png
+  - references/ectc51906.2022.00072/figures/img_p05_1.png
+  - references/ectc51906.2022.00072/figures/img_p06_1.png
+  - references/ectc51906.2022.00072/figures/img_p06_2.png
+  - references/ectc51906.2022.00072/figures/img_p07_1.png
+locator_notes:
+  - "Fig. 1(a) panel label sits at end of text.md p.2; page_02.png has no image; the image renders on p.3."
+  - "Fig. 3 image renders on p.4; its caption text is on p.5. Locators use p.4 Fig. 3."
+entries:
+  - {table: optical_interfaces, row_id: ectc51906.2022.00072-a-o1, field: fiber_pitch_um, value: 250, unit: um, basis: design_target, locator: "p.2 Sec. II.A", note: "90WG offers up to 12 SSC with Vgrooves at 250 um pitch"}
+  - {table: optical_interfaces, row_id: ectc51906.2022.00072-a-o1, field: channels, value: 12, unit: ch, basis: design_target, locator: "p.2 Sec. I; p.5 Sec. IV", note: "TV designed with 12 SMF Vgrooves; 12-Ch ribbon"}
+  - {table: optical_interfaces, row_id: ectc51906.2022.00072-a-o1, field: coupling_loss_db, value: 1.5, unit: dB, basis: measured, locator: "p.5 Sec. V.A", note: "TM mean, 153 modules x 4 loopbacks (paper: over 600 loopbacks)"}
+  - {table: optical_interfaces, row_id: ectc51906.2022.00072-a-o1, field: mfd_fiber_um, value: 9, unit: um, basis: design_target, locator: "p.2 Sec. II.A", note: "'typically ~9 um' for optical fiber; waveguide MFD ~350 nm"}
+  - {table: components, row_id: ectc51906.2022.00072-a-c2, field: notes, value: "125/250", unit: um, basis: design_target, locator: "p.2 Sec. II.A", note: "cladding 125 um, coating 250 um"}
+  - {table: stack_layers, row_id: ectc51906.2022.00072-a-L02, field: thickness_um, value: 0.15, unit: um, basis: design_target, locator: "p.2 Sec. II.A", note: "~150 nm top Si"}
+  - {table: metrics, row_id: ectc51906.2022.00072-a-m6, field: value, value: -0.71, unit: dB, basis: derived, locator: "p.6 Sec. V.B", note: "paper's own RSS: sqrt(0.5^2 + 0.5^2) = 0.707"}
+  - {table: metrics, row_id: ectc51906.2022.00072-a-m8, field: value, value: -0.65, unit: dB, basis: measured, locator: "p.6 Fig. 5 (img_p06_1.png)", note: "HTS panel, 0.0 to -0.5 dB = 70 px native; lowest TE/TM points ~-0.63/-0.66"}
+  - {table: metrics, row_id: ectc51906.2022.00072-a-m13, field: value, value: 1.15, unit: dB, basis: measured, locator: "p.7 Fig. 6 (img_p07_1.png)", note: "TE log axis interpolated between 1 and 2 dB gridlines; 99/1% lines ~1.8/0.74"}
+  - {table: metrics, row_id: ectc51906.2022.00072-a-m16, field: value, value: 1.65, unit: dB, basis: measured, locator: "p.7 Fig. 6 (img_p07_1.png)", note: "TM median ~1.64 to ~1.69 from 250 to 2000 h; 99% ~2.53-2.61; 1% ~1.05-1.09"}
+  - {table: metrics, row_id: ectc51906.2022.00072-a-m23, field: value, value: -1.3, unit: dB, basis: measured, locator: "p.4 Fig. 3(a) (img_p04_3.png)", note: "axis gridlines -2/-4/-6/-8; best TE ~-1.26, best TM ~-1.14"}
+  - {table: metrics, row_id: ectc51906.2022.00072-b-m1, field: value, value: 1.79, unit: "", basis: measured, locator: "p.4 Fig. 2(d) (img_p04_2.png)", note: "90WG points ~1.78-1.80; CMOS median ~1.0; BOR N median ~3.4, Y median ~1.0"}
+  - {table: process_steps, row_id: ectc51906.2022.00072-d-s01, field: conditions, value: 300, unit: um, basis: design_target, locator: "p.4 Fig. 2 caption", note: "loading ball contact diameter"}
+derived:
+  - {table: test_vehicles, row_id: ectc51906.2022.00072-d, field: package_thickness_mm, value: 0.78, formula: "780 um / 1000 (unit conversion, basis kept design_target)", inputs: "p.3 Sec. II.B (~780 um full wafer thickness)"}
+  - {table: optical_interfaces, row_id: ectc51906.2022.00072-a-o1, field: mfd_chip_um, value: 0.35, formula: "350 nm / 1000 (unit conversion, basis kept design_target)", inputs: "p.2 Sec. II.A (~350 nm)"}
+  - {table: optical_interfaces, row_id: ectc51906.2022.00072-a-o2, field: mfd_chip_um, value: 0.35, formula: "350 nm / 1000 (unit conversion, basis kept design_target)", inputs: "p.2 Sec. II.A (~350 nm)"}
+conflicts:
+  - {table: metrics, row_id: ectc51906.2022.00072-a-m3, field: value, values: [72, 500], locators: ["p.6 Table 1", "p.6 Fig. 5 panel title 'LTS 500hrs'"], chosen: 72, why: "result table over figure panel label"}
+  - {table: metrics, row_id: ectc51906.2022.00072-b-m1, field: locator, values: ["Fig. 2(c)", "Fig. 2(d)"], locators: ["p.3 Sec. II.B text", "p.4 Fig. 2 caption"], chosen: "Fig. 2(d)", why: "rule (c): cite caption label"}
+excluded:
+  - "Operating temperature -20 C to 150 C and lead-free solder reflow compatibility of IBM fiber attach: attributed to ref [6]."
+  - "Fiber-to-chip pick-and-place throughput and pigtail handling claims: attributed to refs [2, 3, 6, 7, 8]."
+not_reported:
+  - electrical_interfaces (no electrical I/O, data rate, or RF characterization)
+  - interconnects (no bumps, wires or vias characterized; optical I/O moved to optical_interfaces)
+  - Vgroove absolute width, depth, angle, length; SSC length and tip width
+  - PIC die size and thickness; Si-submount dimensions and PIC-to-submount attach
+  - adhesive product names, UV dose, oven cure temperature/time
+  - fiber lid material and dimensions
+  - number of metal levels and BEOL materials
+  - time-zero IL distribution width and scope (per facet vs per loopback)
+  - numeric assembly yield ("meet the required yields" only)
+  - reflow count; extended TC (-40/125 C) cycle count and sample size; DH extension sample size
+  - DCB/BOR sample counts and absolute Gc or strength values (normalized only)

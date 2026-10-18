@@ -1,0 +1,40 @@
+paper_id: ectc51906.2022.00057
+verified_on: 2026-10-18
+schema_version: 2
+source_files:
+  - references/ectc51906.2022.00057/text.md
+  - references/ectc51906.2022.00057/source.json
+  - references/ectc51906.2022.00057/source.pdf
+  - references/ectc51906.2022.00057/figures/page_01.png
+  - references/ectc51906.2022.00057/figures/page_02.png
+  - references/ectc51906.2022.00057/figures/page_03.png
+  - references/ectc51906.2022.00057/figures/page_04.png
+  - references/ectc51906.2022.00057/figures/page_05.png
+figure_reading_method: >-
+  Page renders 1-5 viewed; Fig. 5, 6, 7, 8, 9 re-rendered from source.pdf at 300 dpi and read by pixel calibration
+  against axis ticks/gridlines (Fig. 8: 12 decade gridlines 1E-1..1E+11, 37.4 px/decade; Fig. 9: 4 decades
+  1E-14..1E-10, 112.9 px/decade). Bar values about +-0.1 nm; log reads about +-0.1 decade.
+entries:
+  - {table: interconnects, row_id: ectc51906.2022.00057-a-i1, field: pad_x_um, value: 0.5, unit: um, basis: design_target, locator: "p.2 Sec. 2-1", note: "500 nm pad size corresponds to 1 um pitch"}
+  - {table: interconnects, row_id: ectc51906.2022.00057-a-i1, field: count, value: 200000, unit: connections, basis: design_target, locator: "p.3 Fig. 8 caption", note: "per daisy chain; comb-comb TEG also 200K"}
+  - {table: metrics, row_id: ectc51906.2022.00057-a-m12, field: value, value: 0.7, unit: ohm/unit, basis: measured, locator: "p.3 Fig. 8", note: "circles centred about 0.84 decade above 1E-1"}
+  - {table: metrics, row_id: ectc51906.2022.00057-a-m13, field: value, value: 8.0e7, unit: ohm/unit, basis: measured, locator: "p.3 Fig. 8", note: "50% squares about 10^7.9; 1% about 10^5.9; 99% about 10^9.1"}
+  - {table: metrics, row_id: ectc51906.2022.00057-a-m14, field: value, value: 9.0e-13, unit: A, basis: measured, locator: "p.3 Fig. 9", note: "50% about 10^-12.06; min about 10^-13.2; max about 10^-11.5"}
+derived:
+  - {table: interconnects, row_id: ectc51906.2022.00057-a-i1, field: resistance_mohm, value: 700, formula: "0.7 ohm x 1000 (unit conversion)", inputs: "p.3 Fig. 8 advanced integration median"}
+  - {table: metrics, row_id: ectc51906.2022.00057-b-m1, field: value, value: 0.33, formula: "1/3 (fraction to decimal)", inputs: "p.4 Sec. 3-2 'about 1/3'"}
+  - {table: metrics, row_id: ectc51906.2022.00057-b-m2, field: value, value: 0.2, formula: "1/5 (fraction to decimal)", inputs: "p.4 Sec. 3-2 'less than 1/5'"}
+conflicts:
+  - {table: interconnects, row_id: ectc51906.2022.00057-b-i2, field: pitch_um, values: [1.4, 1], locators: ["p.5 Sec. 3-3; p.5 Fig. 14; p.1 Abstract", "p.4 Sec. 3-1 ('introduction of 1um pitch Cu-Cu hybrid bonding to face-to-back')"], chosen: 1.4, why: "measured cross-section and abstract/conclusion state 1.4 um"}
+  - {table: metrics, row_id: ectc51906.2022.00057-c-m3, field: variant, values: ["Cu-Pad size (nm) axis label", "pad size in um per text"], locators: ["p.2 Fig. 4", "p.2 Sec. 2-1"], chosen: "um", why: "text: about 10 nm expansion for pads larger than 4 um; 500 nm pad corresponds to 1 um pitch"}
+  - {table: metrics, row_id: ectc51906.2022.00057-c-m2, field: value, values: ["less than 4 nm (text)", "about 4.0 nm (Fig. 4 point at 0.5)"], locators: ["p.2 Sec. 2-1", "p.2 Fig. 4"], chosen: "4 (lt)", why: "text states the bound; figure consistent within reading error"}
+excluded:
+  - "Fig. 1 CIS evolution and Fig. 2 typical three-layer structure: generic/cited [6], [10]; only via-last TSV note used"
+  - "Cu pumping grain-boundary diffusion mechanism attributed to ref [12]"
+  - "Fig. 11 and Fig. 12 absolute values: y axes in a.u."
+not_reported:
+  - electrical_interfaces, optical_interfaces
+  - wafer diameter of the two-wafer test module (200 mm stated only for thinning evaluations)
+  - bonding temperature/pressure, anneal temperature/time, alignment, dielectric of three-wafer module
+  - pad size/protrusion at 1.4 um F2B, TSV diameter/depth, thinned Si thickness, absolute TTV
+  - number of chains measured, leakage bias voltage, numeric yield, reliability tests

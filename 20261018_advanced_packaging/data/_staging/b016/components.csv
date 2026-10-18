@@ -1,0 +1,40 @@
+comp_id,tv_id,component_type,is_emulator,embedded,name,count,x_mm,y_mm,thickness_um,cavity_x_mm,cavity_y_mm,cavity_depth_um,gap_um,process_node,material,supplier,basis,source,overrides,locator,qualifiers,notes
+eptc67330.2025.11392108-a-c1,eptc67330.2025.11392108-a,other,,yes,"RF IC CSP, mmWave radar sensor (TI-IWRL6432 WCSP)",1,4.5,4.9,625,,,,,,,TI,design_target,text,,p.3 Sec. IV.A; p.4 Sec. V; p.1 Abstract,,"Commercial CSP, 57-60 GHz, SAC305 balls; sits in B substrate cavity. RF IC has no component_type enum."
+eptc67330.2025.11392108-a-c2,eptc67330.2025.11392108-a,substrate,,,A substrate (antenna substrate),1,8,5.5,450,,,,,,,,design_target,schematic,x_mm:text;y_mm:text,p.2 Fig. 3; p.3 Fig. 6(d); p.3 Sec. IV.A,,"Symmetric build-up with core, made in panel format; carries 2T3R patch antenna array, area 4.3x6.9 mm."
+eptc67330.2025.11392108-a-c3,eptc67330.2025.11392108-a,interposer,,,B substrate (interposer) with cavity and coaxial vias,1,,,800,,,,,,,,design_target,schematic,,p.2 Fig. 3; p.3 Fig. 6(d); p.2 Sec. II,,Organic core substrate; cavity made after A/B bonding to house CSP; cavity size not given.
+eptc67330.2025.11392108-a-c4,eptc67330.2025.11392108-a,substrate,,,C substrate (IC carrier) with fine-line fan-out,1,,,230,,,,,,,,design_target,schematic,,p.2 Fig. 3; p.3 Fig. 6(d); p.2 Sec. II,thickness_um:approx,Fig. 6(d) '~0.23' span assigned to C substrate; line/space not given.
+eptc67330.2025.11392108-a-c5,eptc67330.2025.11392108-a,underfill,,,underfill (CSP/C and A-B unit/C gaps),2,,,,,,,,,,,stated,text,,p.3 Sec. IV.A; p.3 Fig. 7,,Dispensed and cured in pressure oven; material not given.
+eptc67330.2025.11392108-b-c1,eptc67330.2025.11392108-b,substrate,,,A substrate (antenna substrate),,,,,,,,,,,,stated,text,,p.4 Sec. VI; p.5 Fig. 15,,
+eptc67330.2025.11392108-b-c2,eptc67330.2025.11392108-b,interposer,,,B substrate (interposer),,,,,,,,,,,,stated,text,,p.4 Sec. VI; p.5 Fig. 15,,
+ectc51687.2025.00052-b-c1,ectc51687.2025.00052-b,pic,,,photonic integrated circuit (PIC) chip with adiabatic PWG couplers and flip chip bumps,1,8,10,,,,,,,,,design_target,text,,p.4 Sec. V.A; p.3 Sec. V,,"Designed by IBM; built by IBM or trusted supplier. Thickness, node not given."
+ectc51687.2025.00052-b-c2,ectc51687.2025.00052-b,substrate,,,base substrate,1,17,17,,,,,,,,,design_target,text,,p.4 Sec. V.A; p.5 Fig. 6,,
+ectc51687.2025.00052-b-c3,ectc51687.2025.00052-b,other,,,"polymer optical waveguide (PWG), 12 channels, 50 um to 250 um pitch fan-out",1,,,,,,,,,,,stated,text,,p.3 Sec. V; p.6 Sec. V.E,,PWG material and dimensions not given; no waveguide enum.
+ectc51687.2025.00052-b-c4,ectc51687.2025.00052-b,connector,,,"pluggable ferrule (MT ferrule compatible), 12 SMF at 250 um pitch",1,,,,,,,,,,,stated,text,,p.3 Sec. V; p.8 Sec. VI,,
+ectc51687.2025.00052-b-c5,ectc51687.2025.00052-b,lid,,,module lid attached to substrate and ferrule,1,,,,,,,,,,,stated,text,,p.3 Sec. V; p.5 Sec. V.D; p.6 Sec. V.D,,"Protection, thermal heat sink and mechanical support of ferrule; material not given."
+ectc51687.2025.00052-b-c6,ectc51687.2025.00052-b,underfill,,,PIC flip chip underfill,,,,,,,,,,,,stated,table,,p.5 Table 2,,
+ectc51687.2025.00052-b-c7,ectc51687.2025.00052-b,adhesive,,,optical adhesive for PIC-PWG and ferrule bonds,,,,,,,,,,,,stated,table,,p.5 Table 2; p.5 Sec. V.B,,"RI, viscosity, modulus characterized (Table 1); values not given."
+ectc51687.2025.00052-b-c8,ectc51687.2025.00052-b,pcb,,,printed circuit board (test card),1,,,,,,,,,,,stated,text,,p.3 Sec. V,,
+ectc51687.2025.00052-c-c1,ectc51687.2025.00052-c,pic,,,photonic integrated circuit (PIC) chip with adiabatic PWG couplers and flip chip bumps,1,8,10,,,,,,,,,design_target,text,,p.4 Sec. V.A; p.3 Sec. V,,"Designed by IBM; built by IBM or trusted supplier. Thickness, node not given."
+ectc51687.2025.00052-c-c2,ectc51687.2025.00052-c,substrate,,,base substrate with cut-out under PWG,1,17,17,,,,,,,,,design_target,text,,p.4 Sec. V.A; p.5 Fig. 6; p.6 Fig. 7,,
+ectc51687.2025.00052-c-c3,ectc51687.2025.00052-c,other,,,"polymer optical waveguide (PWG), 12 channels, 50 um to 250 um pitch fan-out",1,,,,,,,,,,,stated,text,,p.3 Sec. V; p.6 Sec. V.E,,PWG material and dimensions not given; no waveguide enum.
+ectc51687.2025.00052-c-c4,ectc51687.2025.00052-c,connector,,,"pluggable ferrule (MT ferrule compatible), 12 SMF at 250 um pitch",1,,,,,,,,,,,stated,text,,p.3 Sec. V; p.8 Sec. VI,,
+ectc51687.2025.00052-c-c5,ectc51687.2025.00052-c,lid,,,module lid attached to substrate and ferrule,1,,,,,,,,,,,stated,text,,p.3 Sec. V; p.5 Sec. V.D; p.6 Sec. V.D,,"Protection, thermal heat sink and mechanical support of ferrule; material not given."
+ectc51687.2025.00052-c-c6,ectc51687.2025.00052-c,underfill,,,PIC flip chip underfill,,,,,,,,,,,,stated,table,,p.5 Table 2,,
+ectc51687.2025.00052-c-c7,ectc51687.2025.00052-c,adhesive,,,optical adhesive for PIC-PWG and ferrule bonds,,,,,,,,,,,,stated,table,,p.5 Table 2; p.5 Sec. V.B,,"RI, viscosity, modulus characterized (Table 1); values not given."
+ectc51687.2025.00052-c-c8,ectc51687.2025.00052-c,pcb,,,printed circuit board (test card),1,,,,,,,,,,,stated,text,,p.3 Sec. V,,
+ectc51687.2025.00052-d-c1,ectc51687.2025.00052-d,pic,,,PIC chips,3,,,,,,,,,,,stated,text,,p.6 Sec. V.E; p.7 Fig. 12,,
+ectc51687.2025.00052-d-c2,ectc51687.2025.00052-d,connector,,,pluggable ferrules,3,,,,,,,,,,,stated,figure_image,,p.7 Fig. 12,,Three ferrules visible in photo.
+ectc51687.2025.00052-e-c1,ectc51687.2025.00052-e,other,,,polymer optical waveguide (PWG) prototype at <20-25 um pitch,,,,,,,,,,,,stated,text,,p.3 Sec. V; p.7 Sec. V.E,,
+ectc51909.2023.00174-a-c1,ectc51909.2023.00174-a,logic_soc,,,SoC/chiplet top dies,3,,,,,,,,,,,design_target,text,,p.2 Sec. II.A; p.2 Fig. 2,,
+ectc51909.2023.00174-a-c2,ectc51909.2023.00174-a,hbm,,,HBM,8,,,,,,,,,,,design_target,text,,p.2 Sec. II.A; p.1 Abstract,,HBM generation not given.
+ectc51909.2023.00174-a-c3,ectc51909.2023.00174-a,interposer,,,"reconstituted interposer (RI): LSI dies + TIV in molding compound, front/back RDL",1,43,58,,,,,,,molding compound with embedded LSI chiplets,,design_target,text,,p.2 Sec. II.A; p.2 Sec. II.B,,
+ectc51909.2023.00174-a-c4,ectc51909.2023.00174-a,bridge,,yes,"local Si interconnect (LSI) chiplets with TSV, Cu interconnect, eDTC",10,,,,,,,,,Si,,design_target,text,,p.2 Sec. II.A; p.3 Sec. II.C,count:gt,'More than 10 LSI dies'. LSI-1 / LSI-2 mix in TV not stated; known-good dies placed on carrier.
+ectc51909.2023.00174-a-c5,ectc51909.2023.00174-a,dtc,,yes,new generation embedded deep trench capacitor (eDTC) in LSI,,,,,,,,,,,,stated,text,,p.3 Sec. II.D; p.3 Sec. III.A,,Max eDTC area per single Si chip ~300 mm2 due to yield (stated).
+ectc51909.2023.00174-a-c6,ectc51909.2023.00174-a,underfill,,,top die underfill,,,,,,,,,,,,stated,text,,p.2 Sec. II.B,,
+ectc51909.2023.00174-a-c7,ectc51909.2023.00174-a,mold,,,top die encapsulation molding compound,,,,,,,,,,,,stated,text,,p.2 Sec. II.B,,
+ectc51909.2023.00174-a-c8,ectc51909.2023.00174-a,substrate,,,package substrate,1,,,,,,,,,,,stated,text,,p.2 Sec. II.A; p.2 Fig. 2,,Substrate size/layers not given beyond package 70x76 (78) mm.
+ectc51909.2023.00174-b-c1,ectc51909.2023.00174-b,stiffener,,,ring,1,,,,,,,,,,,stated,figure_image,,p.2 Fig. 3(a); p.2 Sec. II.B,,
+ectc51909.2023.00174-c-c1,ectc51909.2023.00174-c,lid,,,lid,1,,,,,,,,,,,stated,figure_image,,p.2 Fig. 3(b); p.2 Sec. II.B,,
+ectc51909.2023.00174-c-c2,ectc51909.2023.00174-c,tim,,,film type thermal interface material between lid and CoW die,,,,,,,,,,,,stated,text,,p.2 Sec. II.B,,Replaces gel-type TIM; product not given.
+ectc51909.2023.00174-d-c1,ectc51909.2023.00174-d,bridge,,,LSI-1 die,,,,,,,,,,Si,,stated,text,,p.3 Sec. II.C,,
+ectc51909.2023.00174-e-c1,ectc51909.2023.00174-e,bridge,,,LSI-2 die,,,,,,,,,,Si,,stated,text,,p.3 Sec. II.C,,

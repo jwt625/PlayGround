@@ -1,0 +1,44 @@
+paper_id: ectc51909.2023.00150
+verified_on: 2026-10-18
+schema_version: 2
+source_files:
+  - references/ectc51909.2023.00150/text.md
+  - references/ectc51909.2023.00150/source.json
+  - references/ectc51909.2023.00150/figures/page_01.png
+  - references/ectc51909.2023.00150/figures/page_02.png
+  - references/ectc51909.2023.00150/figures/page_03.png
+  - references/ectc51909.2023.00150/figures/page_04.png
+  - references/ectc51909.2023.00150/figures/page_05.png
+  - references/ectc51909.2023.00150/figures/page_06.png
+  - references/ectc51909.2023.00150/figures/img_p03_27.png
+  - references/ectc51909.2023.00150/figures/img_p03_31.png
+  - references/ectc51909.2023.00150/figures/img_p03_33.png
+locator_notes:
+  - "Fig. 3-6 images render on p.3 (Fig. 3/4 called out in p.2 text). Fig. 5, Fig. 3, Fig. 4, Fig. 7 also re-rendered from source.pdf at 300-400 dpi in scratch."
+entries:
+  - {table: interconnects, row_id: ectc51909.2023.00150-a-i1, field: count, value: 188000, unit: pads, basis: design_target, locator: "p.1 Abstract; p.6 Sec. III", note: "'more than 188,000 pads at 40 um pitch'"}
+  - {table: test_vehicles, row_id: ectc51909.2023.00150-a, field: substrate_layer_count, value: "7-2-7", unit: "", basis: design_target, locator: "p.2 Table I; p.1 Abstract", note: "abstract: '4+1 7-2-7 layers'"}
+  - {table: metrics, row_id: ectc51909.2023.00150-a-m2, field: value, value: 2.7, unit: um, basis: measured, locator: "p.3 Fig. 4(a)", note: "red 200 C curve peak near X 2000 um; 120 C within about -1.2 to +0.5 um"}
+  - {table: metrics, row_id: ectc51909.2023.00150-a-m3, field: value, value: -3.1, unit: um, basis: measured, locator: "p.3 Fig. 4(a)", note: "blue 30 C curve minimum near X 1500 um"}
+  - {table: metrics, row_id: ectc51909.2023.00150-a-m4, field: value, value: 4.0, unit: um, basis: measured, locator: "p.3 Fig. 4(b)", note: "red 200 C peak near X 1000 um and 1800 um"}
+  - {table: metrics, row_id: ectc51909.2023.00150-a-m5, field: value, value: 3.6, unit: um, basis: measured, locator: "p.3 Fig. 4(b)", note: "blue 30 C peak near X 2000 um; 120 C peak about 3.2 um"}
+  - {table: metrics, row_id: ectc51909.2023.00150-a-m10, field: value, value: 37, unit: um, basis: measured, locator: "p.3 Fig. 5 (img_p03_27.png)", note: "West panel label; center and East panels 35 um (img_p03_31/33)"}
+  - {table: metrics, row_id: ectc51909.2023.00150-a-m13, field: value, value: 39, unit: um, basis: measured, locator: "p.4 Fig. 7", note: "height label on separation-failure cross-section"}
+derived:
+  - {table: test_vehicles, row_id: ectc51909.2023.00150-a, field: interposer_area_mm2, value: 884, formula: "x*y = 26*34", inputs: "p.2 Table I interposer size 26 mm x 34 mm"}
+conflicts:
+  - {table: process_steps, row_id: ectc51909.2023.00150-a-s12, field: notes, values: ["IMS", "solder transfer method"], locators: ["p.1 Abstract (IMS developed to form solder)", "p.6 Sec. III (solder transfer method developed)"], chosen: "both flows recorded; method used for the final FPGA build not stated", why: "Sec. II.D says only 'newly developed solder deposition technique'"}
+excluded:
+  - "Fig. 12 process temperatures (25 C / 250 C axis) and flux/UF-cure sequence: figure attributed to ref [12]."
+  - "IMS process details and volume-control method: refs [9-11]."
+  - "AI-based asymmetric warpage reduction: ref [8]."
+  - "Fig. 1(a) C4 2D packaging: comparison schematic, not a built TV."
+not_reported:
+  - electrical_interfaces (no data rate, bandwidth, energy, loss; 'high-bandwidth' only qualitative)
+  - optical_interfaces
+  - die thicknesses; interposer and substrate thickness; RDL metal/dielectric materials and thicknesses; via sizes
+  - Cu pillar diameter/height, solder alloy and volume, pad size
+  - TCB temperature, force, time; UF material and temperature
+  - interposer-to-substrate joint type/pitch; BGA pitch
+  - lid material; reliability testing; numeric yield
+  - warpage magnitude in Fig. 3 (3D plot not readable)

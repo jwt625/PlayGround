@@ -1,0 +1,41 @@
+paper_id: ectc32696.2021.00315
+verified_on: 2026-10-18
+source_files:
+  - references/ectc32696.2021.00315/text.md
+  - references/ectc32696.2021.00315/source.json
+  - references/ectc32696.2021.00315/figures/page_01.png
+  - references/ectc32696.2021.00315/figures/page_02.png
+  - references/ectc32696.2021.00315/figures/page_03.png
+  - references/ectc32696.2021.00315/figures/page_04.png
+  - references/ectc32696.2021.00315/figures/page_05.png
+figure_reading_method: >-
+  All page renders opened; Fig. 3 (6x), Fig. 5 (4x), Fig. 9 (4x) and Fig. 10 (6x) re-rendered from source.pdf in the
+  scratchpad. Table I read from the p.5 render (text layer lost the circled failure-mode markers).
+entries:
+  - {table: test_vehicles, row_id: ectc32696.2021.00315-a, field: package_thickness_mm, value: 3.082, unit: mm, basis: design_target, locator: "p.2 Fig. 3", note: "overall height incl. BGA balls (schematic)"}
+  - {table: stack_layers, row_id: ectc32696.2021.00315-a-L03, field: thickness_um, value: 35, unit: um, basis: design_target, locator: "p.2 Fig. 3", note: "0.035 mm ubump layer"}
+  - {table: stack_layers, row_id: ectc32696.2021.00315-a-L06, field: thickness_um, value: 70, unit: um, basis: design_target, locator: "p.2 Fig. 3", note: "0.07 mm interposer bump layer; MIP total 0.90 = 0.685+0.035+0.11+0.07"}
+  - {table: components, row_id: ectc32696.2021.00315-a-c8, field: thickness_um, value: 710, unit: um, basis: design_target, locator: "p.2 Fig. 3", note: "ring 0.71 mm above unlabeled 0.1 mm layer"}
+  - {table: interconnects, row_id: ectc32696.2021.00315-a-i2, field: height_um, value: 72.2, unit: um, basis: measured, locator: "p.3 Fig. 10", note: "joint gap center 72.2 um, edge 69.5 um"}
+  - {table: metrics, row_id: ectc32696.2021.00315-a-m2, field: value, value: -107, unit: um, basis: measured, locator: "p.2 Fig. 5", note: "plot read at first 25 C point"}
+  - {table: metrics, row_id: ectc32696.2021.00315-a-m3, field: value, value: 27, unit: um, basis: measured, locator: "p.2 Fig. 5", note: "plot read substrate at 25 C"}
+  - {table: metrics, row_id: ectc32696.2021.00315-a-m12, field: value_text, value: "underfill crack 14F/30", unit: count, basis: measured, locator: "p.5 Table I", note: "circled 1 = underfill crack, circled 2 = EMC crack per caption"}
+derived:
+  - {table: stack_layers, row_id: ectc32696.2021.00315-a-L01, field: thickness_um, value: 685, formula: "0.685 mm x 1000", inputs: "p.2 Fig. 3"}
+  - {table: stack_layers, row_id: ectc32696.2021.00315-a-L03, field: thickness_um, value: 35, formula: "0.035 mm x 1000", inputs: "p.2 Fig. 3"}
+  - {table: stack_layers, row_id: ectc32696.2021.00315-a-L06, field: thickness_um, value: 70, formula: "0.07 mm x 1000", inputs: "p.2 Fig. 3"}
+  - {table: components, row_id: ectc32696.2021.00315-a-c8, field: thickness_um, value: 710, formula: "0.71 mm x 1000", inputs: "p.2 Fig. 3"}
+  - {table: interconnects, row_id: ectc32696.2021.00315-a-i2, field: count, value: 60000, formula: "60K = 60 x 1000", inputs: "p.1 Abstract"}
+conflicts:
+  - {table: metrics, row_id: ectc32696.2021.00315-a-m1, field: value, values: ["165 um (text, MIP warpage without control)", "Fig. 5 MIP peak about +155 um at 240 C (plot read)"], locators: ["p.2 Sec. II.B; p.3 Sec. III", "p.2 Fig. 5"], chosen: 165, why: "explicit author value; plot read imprecise and the metric definition behind 165 is not stated"}
+  - {table: metrics, row_id: ectc32696.2021.00315-a-m5, field: value, values: ["50 um at high temperature (text, phase2)", "Fig. 9 blue curve about -40 um at 240 C"], locators: ["p.3 Sec. III", "p.3 Fig. 9"], chosen: 50, why: "explicit author value; Fig. 9 legend arrows are ambiguous"}
+  - {table: interconnects, row_id: ectc32696.2021.00315-a-i2, field: height_um, values: ["72.2 um center / 69.5 um edge (measured Fig. 10)", "0.07 mm (schematic Fig. 3)"], locators: ["p.3 Fig. 10", "p.2 Fig. 3"], chosen: 72.2, why: "measured cross-section over schematic"}
+excluded:
+  - "Fig. 1 interposer area vs length roadmap (854-3200 mm2, 31-54 mm, 50x50 to 85x85 packages) - generic layouts, not this TV"
+  - "Shadow moire as a widely used method (ref [3]); 2.5D TC/PC board-level reliability (ref [4])"
+not_reported:
+  - die x/y and process nodes; ubump pitch/diameter/metallurgy; ubump bonding conditions (Process A/B not quantified)
+  - Cu pillar pitch/diameter, solder alloy, reflow profile; underfill and EMC products, CTE/Tg/modulus values
+  - substrate layer count, core, thickness; ring frame material; interposer TSV details; backside RDL thickness/volume
+  - FEM material inputs and absolute stress (only normalized %); underfill thickness values
+  - electrical_interfaces; optical_interfaces

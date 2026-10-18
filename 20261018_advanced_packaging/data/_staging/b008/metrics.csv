@@ -1,0 +1,86 @@
+metric_id,tv_id,category,parameter,variant,value,value_text,unit,statistic,n_samples,condition,test_standard,pass_criterion,result,scope,reference_tv_id,basis,source,overrides,locator,qualifiers,notes
+ectc51909.2023.00333-a-m1,ectc51909.2023.00333-a,geometry,GX-92P bonding layer thickness,,5.4772,,um,single,,,,,,"cross-section SEM, ARC 80 um / GX-92P / ARC 120 um",,measured,figure_image,,p.3 Fig. 4,,Laminated film specified as 5 um.
+ectc51909.2023.00333-a-m2,ectc51909.2023.00333-a,geometry,cavity depth (bonded ARC thickness at measured point),,207.57,,um,single,,,,,,,,measured,text,,p.3 Sec. III.B; p.3 Fig. 5(a),,
+ectc51909.2023.00333-a-m3,ectc51909.2023.00333-a,geometry,cavity bottom size,,2.59,2.59 x 2.59 mm,mm,single,,,,,,,,measured,text,,p.3 Sec. III.B,,Designed as die 2.54 mm plus 50 um per edge.
+ectc51909.2023.00333-a-m4,ectc51909.2023.00333-a,geometry,cavity sidewall taper angle,,78.54,,deg,single,,,,,,,,measured,figure_image,,p.4 Fig. 6; p.3 Sec. III.B,,
+ectc51909.2023.00333-a-m5,ectc51909.2023.00333-a,other,GX-92P sidewall damage after fs-laser cavity drilling,drilling condition optimized for ARC only,,abrasion and damage/discoloration of GX-92P along sidewall (heat-affected zone),,,,,,,fail,,,measured,figure_image,,p.3 Fig. 5(b); p.3 Sec. III.B,,
+ectc51909.2023.00333-a-m6,ectc51909.2023.00333-a,other,GX-92P sidewall damage after fs-laser cavity drilling,power and pulse duration stepped down near GX-92P,,"optimized cavity, no abrasion reported",,,,,,,pass,,,measured,figure_image,,p.3 Fig. 5(a); p.3 Sec. III.B,,
+ectc51909.2023.00333-a-m7,ectc51909.2023.00333-a,other,die encapsulation (die-to-cavity gap fill),,,gap between cavity wall and chip filled with ABF during reflow,,,,,,,pass,cross-section after carrier removal,,measured,figure_image,,p.4 Fig. 8; p.4 Sec. III.C,,
+ectc51909.2023.00333-b-m1,ectc51909.2023.00333-b,electrical,dielectric constant,,10.12,,,mean,,3-170 GHz,,,,,,measured,text,,p.1 Abstract,,+/-0.061 as written
+ectc51909.2023.00333-b-m2,ectc51909.2023.00333-b,electrical,loss tangent,,,0.000066 to 0.0013,,range,,3-170 GHz,,,,,,measured,text,,p.1 Abstract,,
+ectc51909.2023.00333-b-m3,ectc51909.2023.00333-b,electrical,microstrip line insertion loss,,,0.019 to 0.293,,range,,3-170 GHz,,,,,,measured,text,,p.1 Abstract,,No unit printed for the microstrip range; the CPW range that follows is given in dB/mm.
+ectc51909.2023.00333-b-m4,ectc51909.2023.00333-b,electrical,CPW line insertion loss,,,0.026 to 0.24,dB/mm,range,,3-170 GHz,,,,,,measured,text,,p.1 Abstract,,
+ectc51529.2024.00227-a-m1,ectc51529.2024.00227-a,warpage,free-standing die warpage,side to side,10,,um,typical,,,,,,total profile of 7.2 mm die removed from tape frame; dome shape (Fig. 4B),,measured,text,,p.3 Sec. II; p.3 Fig. 4(B),,
+ectc51529.2024.00227-a-m2,ectc51529.2024.00227-a,warpage,free-standing die warpage,diagonal (45 deg),18,,um,typical,,,,,,"total profile, diagonal scan",,measured,text,,p.3 Sec. II; p.3 Fig. 4(B),,
+ectc51529.2024.00227-a-m3,ectc51529.2024.00227-a,warpage,die warpage on temporary carrier,majority of dies (full contact),1,,um,typical,,,,,,total profile on glass carrier,,measured,text,,p.3 Sec. II; p.3 Fig. 4(D),value:lt,
+ectc51529.2024.00227-a-m4,ectc51529.2024.00227-a,warpage,die warpage on temporary carrier,"several dies (edge contact only, voided)",8,,um,typical,,,,,,total profile; convex (Fig. 4D),,measured,text,,p.3 Sec. II; p.3 Fig. 4(D); p.4 Fig. 7(A),value:approx,
+ectc51529.2024.00227-a-m5,ectc51529.2024.00227-a,geometry,"die-to-carrier alignment mean + 3 sigma, X",before and after protective-layer strip,6,,um,other,,,,,,,,measured,text,,p.4 Sec. II; p.3 Fig. 5,value:approx,Before/after identical within measurement error.
+ectc51529.2024.00227-a-m6,ectc51529.2024.00227-a,geometry,"die-to-carrier alignment mean + 3 sigma, Y",before and after protective-layer strip,5.15,,um,other,,,,,,,,measured,text,,p.4 Sec. II; p.3 Fig. 5,,
+ectc51529.2024.00227-a-m7,ectc51529.2024.00227-a,geometry,dies with die-to-carrier misalignment < 1 um,before strip,25,,%,percentile,,,,,,,,measured,figure_image,,p.3 Fig. 5(A),,
+ectc51529.2024.00227-a-m8,ectc51529.2024.00227-a,geometry,dies with die-to-carrier misalignment < 2 um,before strip,55,,%,percentile,,,,,,,,measured,figure_image,,p.3 Fig. 5(A),,
+ectc51529.2024.00227-a-m9,ectc51529.2024.00227-a,geometry,dies with die-to-carrier misalignment < 3 um,before strip,83,,%,percentile,,,,,,,,measured,figure_image,,p.3 Fig. 5(A),,
+ectc51529.2024.00227-a-m10,ectc51529.2024.00227-a,geometry,dies with die-to-carrier misalignment < 4 um,before strip,96,,%,percentile,,,,,,,,measured,figure_image,,p.3 Fig. 5(A),,
+ectc51529.2024.00227-a-m11,ectc51529.2024.00227-a,geometry,dies with die-to-carrier misalignment < 1 um,after strip,27,,%,percentile,,,,,,,,measured,figure_image,,p.3 Fig. 5(B),,
+ectc51529.2024.00227-a-m12,ectc51529.2024.00227-a,geometry,dies with die-to-carrier misalignment < 2 um,after strip,57,,%,percentile,,,,,,,,measured,figure_image,,p.3 Fig. 5(B),,
+ectc51529.2024.00227-a-m13,ectc51529.2024.00227-a,geometry,dies with die-to-carrier misalignment < 3 um,after strip,86,,%,percentile,,,,,,,,measured,figure_image,,p.3 Fig. 5(B),,
+ectc51529.2024.00227-a-m14,ectc51529.2024.00227-a,geometry,dies with die-to-carrier misalignment < 4 um,after strip,96,,%,percentile,,,,,,,,measured,figure_image,,p.3 Fig. 5(B),,
+ectc51529.2024.00227-a-m15,ectc51529.2024.00227-a,yield,dies lost during protective-layer strip,carrier 1 of 2,12,,%,single,,,,,,,,measured,text,,p.4 Sec. II,,All missing dies were highly warped ones.
+ectc51529.2024.00227-a-m16,ectc51529.2024.00227-a,yield,dies lost during protective-layer strip,carrier 2 of 2,0,,%,single,,,,,,,,measured,text,,p.4 Sec. II,,
+ectc51529.2024.00227-a-m17,ectc51529.2024.00227-a,yield,die transfer yield (carrier to target wafer),"carrier 2, mechanical debond",74,,%,single,,,,,,,,measured,text,,p.4 Sec. II; p.3 Fig. 6(A),,
+ectc51529.2024.00227-a-m18,ectc51529.2024.00227-a,other,bond quality (SAM),,,nearly all dies void-free in inner parts; most show poorly non-bonded die edges,,,,,,,partial,,,measured,figure_image,,p.4 Sec. II; p.3 Fig. 6(B); p.3 Fig. 6(D),,
+ectc51529.2024.00227-a-m19,ectc51529.2024.00227-a,geometry,dies with die-to-target wafer misalignment < 1 um,,51,,%,percentile,,,,,,,,measured,figure_image,,p.3 Fig. 6(C); p.4 Sec. II,,
+ectc51529.2024.00227-a-m20,ectc51529.2024.00227-a,geometry,dies with die-to-target wafer misalignment < 2 um,,82,,%,percentile,,,,,,,,measured,figure_image,,p.3 Fig. 6(C); p.4 Sec. II,,
+ectc51529.2024.00227-a-m21,ectc51529.2024.00227-a,geometry,dies with die-to-target wafer misalignment < 3 um,,97,,%,percentile,,,,,,,,measured,figure_image,,p.3 Fig. 6(C); p.4 Sec. II,,
+ectc51529.2024.00227-b-m1,ectc51529.2024.00227-b,warpage,die warpage on temporary carrier,,1,,um,max,,,,,,"all dies, release layer on die (Fig. 7B profile)",,measured,text,,p.4 Sec. III; p.5 Sec. III; p.4 Fig. 7(B),value:lt,All dies void-free on carrier.
+ectc51529.2024.00227-b-m2,ectc51529.2024.00227-b,yield,die survival through protective-layer strip,,99.9,,%,single,,6 carrier wafers; 1 die lost,,,,,,measured,text,,p.5 Sec. III,,
+ectc51529.2024.00227-b-m3,ectc51529.2024.00227-b,yield,die transfer yield (carrier to target wafer),laser debond,96,,%,single,,,,,,,,measured,text,,p.5 Sec. III; p.4 Fig. 8(A); p.1 Abstract,,
+ectc51529.2024.00227-b-m4,ectc51529.2024.00227-b,geometry,die-to-target wafer alignment mean + 3 sigma,,2.4,,um,other,,,,,,,,measured,text,,p.5 Sec. III; p.4 Fig. 8(C),,
+ectc51529.2024.00227-b-m5,ectc51529.2024.00227-b,geometry,dies with die-to-target wafer misalignment < 1 um,,58,,%,percentile,,,,,,,,measured,figure_image,,p.4 Fig. 8(C),,
+ectc51529.2024.00227-b-m6,ectc51529.2024.00227-b,geometry,dies with die-to-target wafer misalignment < 2 um,,86,,%,percentile,,,,,,,,measured,figure_image,,p.4 Fig. 8(C),,
+ectc51529.2024.00227-b-m7,ectc51529.2024.00227-b,geometry,dies with die-to-target wafer misalignment < 3 um,,98,,%,percentile,,,,,,,,measured,figure_image,,p.4 Fig. 8(C),,
+ectc51529.2024.00227-b-m8,ectc51529.2024.00227-b,geometry,dies with die-to-target wafer misalignment < 4 um,,99,,%,percentile,,,,,,,,measured,figure_image,,p.4 Fig. 8(C),,
+ectc51529.2024.00227-b-m9,ectc51529.2024.00227-b,other,bond quality (SAM),,,all bonded dies void-free apart from die edge,,,,,,,partial,,,measured,figure_image,,p.5 Sec. III; p.4 Fig. 8(B); p.4 Fig. 8(D),,
+ectc51529.2024.00227-b-m10,ectc51529.2024.00227-b,warpage,transferred die edge profile,,,"die edge unbonded and bent upward, away from target wafer",,,,,,,,line scan normalized to die center; 3D surface scan,,measured,figure_image,,p.5 Sec. III; p.5 Fig. 9(B); p.5 Fig. 9(D),,Pre-bond inspection showed no significant contaminants on die edges (Fig. 9C).
+ectc51529.2024.00227-b-m11,ectc51529.2024.00227-b,optical,dies with die-to-wafer coupling loss < 0.5 dB,,76,,%,single,,1310 nm,,,,,,measured,text,,p.1 Abstract,,Abstract only; Sec. IV says 'nearly all dies' below 0.5 dB.
+ectc51529.2024.00227-b-m12,ectc51529.2024.00227-b,geometry,die rotation,,,order of a few mdeg,mdeg,typical,,,,,,,,stated,text,,p.5 Sec. IV,,Stated as typical; not a measured distribution.
+ectc51529.2024.00092-a-m1,ectc51529.2024.00092-a,geometry,via hole diameter vs etch time,15 min,12.02,,um,single,,,,,,,,measured,figure_image,,p.3 Fig. 5; p.2 Sec. II.B,,Microscope label; non-modified etch rate trended in the same ratio.
+ectc51529.2024.00092-a-m2,ectc51529.2024.00092-a,geometry,via hole diameter vs etch time,30 min,21.88,,um,single,,,,,,,,measured,figure_image,,p.3 Fig. 5; p.2 Sec. II.B,,
+ectc51529.2024.00092-a-m3,ectc51529.2024.00092-a,geometry,via hole diameter vs etch time,45 min,31.56,,um,single,,,,,,,,measured,figure_image,,p.3 Fig. 5; p.2 Sec. II.B,,
+ectc51529.2024.00092-a-m4,ectc51529.2024.00092-a,geometry,via hole diameter vs etch time,60 min,40.59,,um,single,,,,,,,,measured,figure_image,,p.3 Fig. 5; p.2 Sec. II.B,,
+ectc51529.2024.00092-a-m5,ectc51529.2024.00092-a,geometry,via hole diameter vs etch time,75 min,49.87,,um,single,,,,,,,,measured,figure_image,,p.3 Fig. 5; p.2 Sec. II.B,,
+ectc51529.2024.00092-a-m6,ectc51529.2024.00092-a,other,etch selectivity non-modified : laser-modified glass,,5,1:5,x,typical,,,,,,,,stated,text,,p.1 Sec. I; p.2 Fig. 1,,'typically'; laser modified area etches 5x faster.
+ectc51529.2024.00092-b-m1,ectc51529.2024.00092-b,geometry,TTV after etch,,5,,um,single,,50 um etch on 400 um blanket panel,,,,,,measured,text,,p.4 Sec. III.A,,
+ectc51529.2024.00092-b-m2,ectc51529.2024.00092-b,geometry,post-etch thickness uniformity within panel,,2,,%,other,,,,,,,,measured,text,,p.4 Sec. III.A; p.3 Sec. II.C; p.5 Sec. IV,value:lt,Uniformity definition not stated.
+ectc51529.2024.00092-b-m3,ectc51529.2024.00092-b,geometry,panel-to-panel thickness variation,,3,,%,other,,,,,,,,measured,text,,p.3 Sec. II.C,value:approx,
+ectc51529.2024.00092-b-m4,ectc51529.2024.00092-b,geometry,post-etch thickness uniformity (sigma/average of glass etched amount),,0.4,,%,other,,,,,,map over 510x515 mm panel,,measured,figure_image,,p.4 Fig. 8,,Fig. 8 surface spans legend bins 36-46 um etched amount.
+ectc51529.2024.00092-b-m5,ectc51529.2024.00092-b,other,etch bath temperature control,,1,,C,max,,"3 temperature processes, different durations; excluding sample introduction",,,,,,measured,text,,p.4 Sec. III.B; p.4 Fig. 9,value:le,+/-1 C; Fig. 9 axis labels illegible.
+ectc51529.2024.00092-b-m6,ectc51529.2024.00092-b,other,etch tank temperature variation (equipment),,0.5,,C,other,,,,,,,,stated,text,,p.1 Abstract,,Abstract; laminar flow from tank bottom.
+ectc51529.2024.00092-b-m7,ectc51529.2024.00092-b,other,"bath concentration (normalized to initial fill, titration)",no dosing,0.87,,fraction of initial,min,,,,within +/-5% of initial fill,fail,,,measured,figure_image,,p.4 Fig. 10; p.4 Sec. III.B,value:approx,Rapid deterioration past 5 days; x-axis unlabeled (daily titration per text).
+ectc51529.2024.00092-b-m8,ectc51529.2024.00092-b,other,"bath concentration (normalized to initial fill, titration)",time-based dosing only,0.99,,fraction of initial,min,,,,within +/-5% of initial fill,pass,,,measured,figure_image,,p.4 Fig. 10; p.4 Sec. III.B,value:approx,
+ectc51529.2024.00092-b-m9,ectc51529.2024.00092-b,throughput,panels per batch,,12,,panels,single,,,,,,,,design_target,text,,p.3 Sec. II.C; p.5 Sec. IV,,Two load ports; 510 x 515 mm panels.
+ectc51529.2024.00092-b-m10,ectc51529.2024.00092-b,reliability,Ti carrier coating chemical exposure,,,coating selected based on ICP-MS results,,,,24 h in chemical bath at 130 C,,,,,,measured,text,,p.4 Sec. III.C,,Metal contamination test; numeric ICP-MS results not given.
+ectc51529.2024.00092-c-m1,ectc51529.2024.00092-c,other,glass etch rate,glass type A,0.60,,um/min,single,,,,,,,,measured,table,,p.3 Table 1,,
+ectc51529.2024.00092-c-m2,ectc51529.2024.00092-c,other,glass etch rate,glass type B,0.62,,um/min,single,,,,,,,,measured,table,,p.3 Table 1,,
+ectc51529.2024.00092-c-m3,ectc51529.2024.00092-c,other,glass etch rate,glass type C,0.86,,um/min,single,,,,,,,,measured,table,,p.3 Table 1,,
+ectc51529.2024.00092-c-m4,ectc51529.2024.00092-c,other,glass etch rate,glass type D,0.97,,um/min,single,,,,,,,,measured,table,,p.3 Table 1,,
+ectc51529.2024.00092-c-m5,ectc51529.2024.00092-c,other,glass etch rate,glass type E,1.60,,um/min,single,,,,,,,,measured,table,,p.3 Table 1,,
+ectc51529.2024.00092-c-m6,ectc51529.2024.00092-c,other,glass etch rate,glass type F,0.75,,um/min,single,,,,,,,,measured,table,,p.3 Table 1,,
+ectc51529.2024.00092-c-m7,ectc51529.2024.00092-c,other,glass etch rate,glass type G,0.81,,um/min,single,,,,,,,,measured,table,,p.3 Table 1,,
+ectc51529.2024.00092-c-m8,ectc51529.2024.00092-c,other,glass etch rate,glass type H,0.65,,um/min,single,,,,,,,,measured,table,,p.3 Table 1,,
+ectc51529.2024.00092-c-m9,ectc51529.2024.00092-c,other,glass etch rate,glass type I,0.41,,um/min,single,,,,,,,,measured,table,,p.3 Table 1,,
+ectc51529.2024.00092-c-m10,ectc51529.2024.00092-c,other,glass etch rate,glass type J,0.45,,um/min,single,,,,,,,,measured,table,,p.3 Table 1,,
+ectc51529.2024.00092-c-m11,ectc51529.2024.00092-c,other,glass etch rate,glass type K,0.33,,um/min,single,,,,,,,,measured,table,,p.3 Table 1,,
+ectc51529.2024.00092-c-m12,ectc51529.2024.00092-c,other,glass etch rate vs temperature,110 C,20,,um/h,single,,bath 110 C; glass type not stated,,,,,,measured,text,,p.1 Abstract,,Abstract: etch rate linear with time and temperature.
+ectc51529.2024.00092-c-m13,ectc51529.2024.00092-c,other,glass etch rate vs temperature,130 C,85,,um/h,single,,bath 130 C; glass type not stated,,,,,,measured,text,,p.1 Abstract,,
+ectc51529.2024.00092-d-m1,ectc51529.2024.00092-d,geometry,TGV aspect ratio,glass thickness 0.2; 50 um via,4,,,single,,,,,,,,design_target,figure_image,,p.2 Fig. 3,,
+ectc51529.2024.00092-d-m2,ectc51529.2024.00092-d,geometry,TGV aspect ratio,glass thickness 0.4; 50 um via,8,,,single,,,,,,,,design_target,figure_image,,p.2 Fig. 3,,
+ectc51529.2024.00092-d-m3,ectc51529.2024.00092-d,geometry,TGV aspect ratio,glass thickness 0.5; 50 um via,10,,,single,,,,,,,,design_target,figure_image,,p.2 Fig. 3,,
+ectc51529.2024.00092-d-m4,ectc51529.2024.00092-d,geometry,TGV aspect ratio,glass thickness 0.7; 50 um via,14,,,single,,,,,,,,design_target,figure_image,,p.2 Fig. 3,,
+ectc51529.2024.00092-d-m5,ectc51529.2024.00092-d,geometry,TGV aspect ratio,glass thickness 0.2; 75 um via,2.7,,,single,,,,,,,,design_target,figure_image,,p.2 Fig. 3,value:approx,
+ectc51529.2024.00092-d-m6,ectc51529.2024.00092-d,geometry,TGV aspect ratio,glass thickness 0.4; 75 um via,5.3,,,single,,,,,,,,design_target,figure_image,,p.2 Fig. 3,value:approx,
+ectc51529.2024.00092-d-m7,ectc51529.2024.00092-d,geometry,TGV aspect ratio,glass thickness 0.5; 75 um via,6.7,,,single,,,,,,,,design_target,figure_image,,p.2 Fig. 3,value:approx,
+ectc51529.2024.00092-d-m8,ectc51529.2024.00092-d,geometry,TGV aspect ratio,glass thickness 0.7; 75 um via,9.3,,,single,,,,,,,,design_target,figure_image,,p.2 Fig. 3,value:approx,
+ectc51529.2024.00092-d-m9,ectc51529.2024.00092-d,geometry,TGV aspect ratio,glass thickness 0.2; 100 um via,2,,,single,,,,,,,,design_target,figure_image,,p.2 Fig. 3,,
+ectc51529.2024.00092-d-m10,ectc51529.2024.00092-d,geometry,TGV aspect ratio,glass thickness 0.4; 100 um via,4,,,single,,,,,,,,design_target,figure_image,,p.2 Fig. 3,,
+ectc51529.2024.00092-d-m11,ectc51529.2024.00092-d,geometry,TGV aspect ratio,glass thickness 0.5; 100 um via,5,,,single,,,,,,,,design_target,figure_image,,p.2 Fig. 3,,
+ectc51529.2024.00092-d-m12,ectc51529.2024.00092-d,geometry,TGV aspect ratio,glass thickness 0.7; 100 um via,7,,,single,,,,,,,,design_target,figure_image,,p.2 Fig. 3,,

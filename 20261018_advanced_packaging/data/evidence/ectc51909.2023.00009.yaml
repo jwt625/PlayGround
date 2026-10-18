@@ -1,0 +1,52 @@
+paper_id: ectc51909.2023.00009
+verified_on: 2026-10-18
+schema_version: 2
+source_files:
+  - references/ectc51909.2023.00009/text.md
+  - references/ectc51909.2023.00009/source.json
+  - references/ectc51909.2023.00009/figures/page_02.png
+  - references/ectc51909.2023.00009/figures/page_03.png
+  - references/ectc51909.2023.00009/figures/page_04.png
+  - references/ectc51909.2023.00009/figures/page_05.png
+  - references/ectc51909.2023.00009/figures/page_06.png
+  - references/ectc51909.2023.00009/figures/page_07.png
+  - references/ectc51909.2023.00009/figures/page_08.png
+locator_notes:
+  - "No page_01.png render exists (page 1 is text only: title, abstract, Sec. I-II start)."
+  - "Fig. 11, 20, 21, 26, 27 re-rendered from source.pdf at 250-300 dpi in scratch for label/axis reading."
+entries:
+  - {table: interconnects, row_id: ectc51909.2023.00009-a-i2, field: resistance_mohm, value: 21, unit: mOhm, basis: measured, locator: "p.8 Sec. IV.B", note: "(21 +/- 3) mOhm Kelvin, 12 um TSV"}
+  - {table: interconnects, row_id: ectc51909.2023.00009-a-i2, field: yield_pct, value: 95, unit: "%", basis: measured, locator: "p.1 Abstract; p.8 Sec. V", note: "'greater than 95 %'"}
+  - {table: interconnects, row_id: ectc51909.2023.00009-a-i3, field: resistance_mohm, value: 2100, unit: mOhm, basis: measured, locator: "p.7 Fig. 26", note: "VIA 1 CDF 50% at ~2.1 Ohm (range ~1.7-2.4)"}
+  - {table: interconnects, row_id: ectc51909.2023.00009-a-i4, field: resistance_mohm, value: 2250, unit: mOhm, basis: measured, locator: "p.7 Fig. 26", note: "VIA 2 CDF 50% at ~2.25 Ohm (range ~2.0-3.5)"}
+  - {table: interconnects, row_id: ectc51909.2023.00009-a-i5, field: resistance_mohm, value: 1400, unit: mOhm, basis: measured, locator: "p.7 Fig. 26", note: "VIA 3 CDF 50% at ~1.4 Ohm; 75% knee ~1.5 Ohm"}
+  - {table: metrics, row_id: ectc51909.2023.00009-a-m6, field: value, value: 3.0e-8, unit: A, basis: measured, locator: "p.6 Fig. 20", note: "dark current at -1 V between 1e-8 and 1e-7 gridlines"}
+  - {table: metrics, row_id: ectc51909.2023.00009-a-m18, field: value, value: 26.3, unit: mOhm, basis: measured, locator: "p.8 Fig. 27", note: "11 um CDF 50%; 13 um CDF 50% ~16.8 mOhm"}
+  - {table: metrics, row_id: ectc51909.2023.00009-a-m22, field: value, value: 93.4, unit: um, basis: measured, locator: "p.4 Fig. 11", note: "SEM labels 93.4 um depth; 11.9/11.0/9.9 um CD top/mid/bottom"}
+derived:
+  - {table: interconnects, row_id: ectc51909.2023.00009-a-i7, field: pitch_um, value: 80, formula: "bump diameter + space = 40 + 40", inputs: "p.5 Sec. III.E.3"}
+  - {table: stack_layers, row_id: ectc51909.2023.00009-a-L12, field: thickness_um, value: 0.11, formula: "Ti 10 nm + TiN 100 nm = 110 nm = 0.11 um", inputs: "p.3 Sec. III.A"}
+  - {table: stack_layers, row_id: ectc51909.2023.00009-a-L24, field: thickness_um, value: 0.3, formula: "Ti 100 nm + Cu 200 nm = 0.3 um", inputs: "p.5 Sec. III.E.2"}
+  - {table: stack_layers, row_id: ectc51909.2023.00009-a-L28, field: thickness_um, value: 0.6, formula: "Ti 200 nm + Cu 400 nm = 0.6 um", inputs: "p.5 Sec. III.E.3"}
+  - {table: interconnects, row_id: ectc51909.2023.00009-a-i3, field: resistance_mohm, value: 2100, formula: "2.1 Ohm x 1000 (unit conversion, basis kept)", inputs: "p.7 Fig. 26"}
+  - {table: interconnects, row_id: ectc51909.2023.00009-a-i4, field: resistance_mohm, value: 2250, formula: "2.25 Ohm x 1000 (unit conversion, basis kept)", inputs: "p.7 Fig. 26"}
+  - {table: interconnects, row_id: ectc51909.2023.00009-a-i5, field: resistance_mohm, value: 1400, formula: "1.4 Ohm x 1000 (unit conversion, basis kept)", inputs: "p.7 Fig. 26"}
+  - {table: process_steps, row_id: ectc51909.2023.00009-a-s62, field: time_s, value: 10800, formula: "3 h x 3600 (unit conversion)", inputs: "p.5 Sec. III.E.2"}
+  - {table: "nm->um conversions", formula: "x nm / 1000 for all stack_layers thickness/via cells (60, 300, 600, 540, 1500, 500, 20, 310, 300, 165, 65, 800 nm; 300/750 nm vias)", inputs: "p.3-p.5 Sec. III"}
+conflicts:
+  - {table: interconnects, row_id: ectc51909.2023.00009-a-i2, field: resistance_mohm, values: ["below 22", "21 +/- 3"], locators: ["p.1 Abstract", "p.8 Sec. IV.B"], chosen: 21, why: "result text over abstract summary"}
+  - {table: metrics, row_id: ectc51909.2023.00009-a-m22, field: value, values: [100, 93.4], locators: ["p.4 Sec. III.B (TSV 100 um thick)", "p.4 Fig. 11 SEM after DRIE"], chosen: "100 design in interconnects; 93.4 measured in metrics", why: "different quantities (design TSV height vs Si etch depth label)"}
+  - {table: metrics, row_id: ectc51909.2023.00009-a-m10, field: value, values: [18, 27, 20], locators: ["p.6 Sec. IV.A (1 V)", "p.6 Sec. IV.A (2 V)", "p.8 Sec. V (1.5 V)"], chosen: "all entered as bias variants", why: "different bias points"}
+  - {table: stack_layers, row_id: ectc51909.2023.00009-a-L16, field: thickness_um, values: [0.31, 0.3], locators: ["p.3 Sec. III.A SOI film 310 nm", "p.3 Sec. III.A waveguide 300 nm"], chosen: "both: film 310 nm, waveguide 300 nm as separate feature rows", why: "different features"}
+  - {table: interconnects, row_id: ectc51909.2023.00009-a-i3, field: diameter_um, values: ["300 nm width square", "300 nm diameter"], locators: ["p.4 Sec. III.C", "p.7 Sec. IV.B"], chosen: 0.3, why: "same value; shape wording differs"}
+excluded:
+  - "Ref [2] active-interposer metrics (0.6 ns/mm, 3 Tb/s/mm2, 156 mW/mm2) appear only in the reference list title."
+  - "POPSTAR architecture performance claims (bandwidth, latency, power) attributed to ref [3]; backside cavity tuning-power benefit to ref [10]."
+  - "SOI platform description attributed to ref [11]."
+not_reported:
+  - electrical_interfaces (no data rate, energy per bit or protocol; 10 Gbit/s is a stated capability, not measured)
+  - interposer die size, BEOL dielectric thicknesses for Via 1/2 other than 540 nm, metal patterning method
+  - u-pillar/bump bonding to dies (system not assembled), BGA details
+  - implant species/doses, anneal temperatures (except TSV 400 C and LTC 230 C), etch chemistries except SF6 nail reveal
+  - fiber attach and coupling to fiber (only 'Fiber Coupling' label in Fig. 1)
+  - warpage, reliability, thermal metrics

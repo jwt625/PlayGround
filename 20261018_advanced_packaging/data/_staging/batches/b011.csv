@@ -1,0 +1,4 @@
+paper_id,doi,title,year,venue,primary_bucket,buckets,priority,triage_rationale
+ectc51529.2024.00088,10.1109/ectc51529.2024.00088,Dry processes to form fine features on advanced substrates,2024,ECTC,advanced_substrate,advanced_substrate,1,"DFR lamination, digital litho, plasma dry etch of 5-10 um ABF; vias/trenches down to 5 um, AR up to 2."
+ectc51529.2024.00144,10.1109/ectc51529.2024.00144,High Bandwidth and Energy Efficient Electrical-Optical System Integration Using COUPE Technology,2024,ECTC,cpo,hybrid_bonding;cpo,1,COUPE optical engine with SoIC-bonded EIC/PIC; system-level bandwidth density and TIA sensitivity analysis.
+ectc32862.2020.00185,10.1109/ectc32862.2020.00185,Development of Mold-First Fan-Out Panel-Level Packaging (FO-PLP) on 600mm x 600mm Size Panel,2020,ECTC,panel,panel,1,curator-verified primary disclosure: FOPLP line: IME A*STAR 600x600 mm mold-first

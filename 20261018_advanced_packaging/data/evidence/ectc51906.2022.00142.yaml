@@ -1,0 +1,66 @@
+paper_id: ectc51906.2022.00142
+verified_on: 2026-10-18
+schema_version: 2
+source_files:
+  - references/ectc51906.2022.00142/text.md
+  - references/ectc51906.2022.00142/source.json
+  - references/ectc51906.2022.00142/source.pdf
+  - references/ectc51906.2022.00142/figures/page_02.png
+  - references/ectc51906.2022.00142/figures/page_03.png
+  - references/ectc51906.2022.00142/figures/page_04.png
+  - references/ectc51906.2022.00142/figures/page_05.png
+  - references/ectc51906.2022.00142/figures/img_p03_1.png
+  - references/ectc51906.2022.00142/figures/img_p03_2.png
+  - references/ectc51906.2022.00142/figures/img_p04_3.png
+  - references/ectc51906.2022.00142/figures/img_p04_5.png
+  - references/ectc51906.2022.00142/figures/img_p04_6.png
+  - references/ectc51906.2022.00142/figures/img_p04_7.png
+  - references/ectc51906.2022.00142/figures/img_p04_8.png
+  - references/ectc51906.2022.00142/figures/img_p04_9.png
+  - references/ectc51906.2022.00142/figures/img_p05_1.png
+figure_reading_method: >-
+  Fig. 5, Fig. 6 and Fig. 12 values read by pixel calibration of the embedded chart images (img_p03_1, img_p04_9,
+  img_p05_1) against their gridlines; Fig. 12 on a log axis (23 px per decade). Fig. 7 coplanarity labels illegible
+  even after 400 dpi re-render (raster-limited); SEM/FIB scale bars (Figs. 9, 10, 11, 13) not used for dimensions.
+entries:
+  - {table: components, row_id: ectc51906.2022.00142-b-c1, field: count, value: 1, unit: count, basis: measured, source: figure_image, locator: "p.2 Fig. 3(b)", note: "one chip visible in package photo"}
+  - {table: process_steps, row_id: ectc51906.2022.00142-a-s01, field: material, value: "ETS thin copper foil 5 um", unit: um, basis: design_target, source: schematic, locator: "p.2 Fig. 1(b)", note: "ETS foil = copper foil + peeling layer + 5 um thin copper foil"}
+  - {table: metrics, row_id: ectc51906.2022.00142-a-m5, field: value, value: 0.04, unit: kN/m, basis: measured, source: figure_image, locator: "p.3 Fig. 5", note: "shiny marker partly hidden under ETS marker at 0 and 315 mJ/cm2; center from visible lower edge"}
+  - {table: metrics, row_id: ectc51906.2022.00142-b-m1, field: value, value: -201, unit: um, basis: measured, source: figure_image, locator: "p.4 Fig. 6", note: "error bars present but definition not stated; not extracted"}
+  - {table: metrics, row_id: ectc51906.2022.00142-b-m7, field: value, value: 45, unit: "%", basis: measured, source: text, locator: "p.3 Sec. III.B", note: "Fig. 6 bar reading gives 35/79 = 0.44 and 36/79 = 0.46, consistent"}
+  - {table: metrics, row_id: ectc51906.2022.00142-d-m6, field: value, value: 4e9, unit: ohm, basis: measured, source: figure_image, locator: "p.5 Fig. 12", note: "shiny 60 s Pd curve hidden under other curves after about 30 h; its 200 h value not extracted"}
+derived:
+  - {table: stack_layers, row_id: ectc51906.2022.00142-a-L03, field: thickness_um, value: 800, formula: "0.8 mm * 1000", inputs: "p.2 Sec. II.A"}
+  - {table: stack_layers, row_id: ectc51906.2022.00142-b-L05, field: thickness_um, value: 800, formula: "0.8 mm * 1000", inputs: "p.2 Sec. II.A"}
+  - {table: stack_layers, row_id: ectc51906.2022.00142-c-L05, field: thickness_um, value: 800, formula: "0.8 mm * 1000", inputs: "p.2 Sec. II.A"}
+  - {table: stack_layers, row_id: ectc51906.2022.00142-d-L07, field: thickness_um, value: 800, formula: "0.8 mm * 1000", inputs: "p.2 Sec. II.A"}
+  - {table: stack_layers, row_id: ectc51906.2022.00142-e-L06, field: thickness_um, value: 800, formula: "0.8 mm * 1000", inputs: "p.2 Sec. II.A"}
+  - {table: stack_layers, row_id: ectc51906.2022.00142-b-L01, field: thickness_um, value: 725, formula: "0.725 mm * 1000", inputs: "p.2 Sec. II.D"}
+  - {table: stack_layers, row_id: ectc51906.2022.00142-c-L01, field: thickness_um, value: 725, formula: "0.725 mm * 1000", inputs: "p.2 Sec. II.D"}
+  - {table: components, row_id: ectc51906.2022.00142-b-c1, field: thickness_um, value: 725, formula: "0.725 mm * 1000", inputs: "p.2 Sec. II.D"}
+  - {table: components, row_id: ectc51906.2022.00142-c-c1, field: thickness_um, value: 725, formula: "0.725 mm * 1000", inputs: "p.2 Sec. II.D"}
+  - {table: process_steps, row_id: ectc51906.2022.00142-d-s19, field: time_s, value: 604800, formula: "168 h * 3600", inputs: "p.3 Sec. II.G"}
+  - {table: process_steps, row_id: ectc51906.2022.00142-e-s05, field: time_s, value: 604800, formula: "168 h * 3600", inputs: "p.3 Sec. II.G"}
+  - {table: process_steps, row_id: ectc51906.2022.00142-d-s21, field: time_s, value: 720000, formula: "200 h * 3600", inputs: "p.3 Table II"}
+  - {table: process_steps, row_id: ectc51906.2022.00142-e-s07, field: time_s, value: 720000, formula: "200 h * 3600", inputs: "p.3 Table II"}
+conflicts:
+  - {table: stack_layers, row_id: ectc51906.2022.00142-d-L01, field: material, values: ["Prepreg without Glass cross (Table III, spans all rows incl. insulation film reference)", "insulating resin constituting the prepreg or insulation film (Sec. II.G)"], locators: ["p.5 Table III", "p.3 Sec. II.G"], chosen: "Prepreg without Glass cross", why: "result table > text"}
+  - {table: stack_layers, row_id: ectc51906.2022.00142-e-L01, field: material, values: ["Prepreg without Glass cross (Table III)", "insulating resin constituting the prepreg or insulation film (Sec. II.G)"], locators: ["p.5 Table III", "p.3 Sec. II.G"], chosen: "Prepreg without Glass cross", why: "result table > text; for the film reference the text could mean film resin"}
+  - {table: metrics, row_id: ectc51906.2022.00142-b-m7, field: value, values: [45, "reduced by half"], locators: ["p.3 Sec. III.B", "p.5 Sec. IV"], chosen: 45, why: "numeric statement; conclusion is a rounded restatement"}
+excluded:
+  - "low transmission loss of micro-strip lines up to 40 GHz with UV-assisted SAP, refs [22, 23]"
+  - "HAST reliability on L/S 15/15 um with primer copper foil, ref [17]"
+  - "flip-chip joint pitch down to 20 um, ref [18]"
+not_reported:
+  - electrical_interfaces and optical_interfaces
+  - prepreg, core and insulation film product names, CTE, modulus, Tg, Dk/Df
+  - electroless seed and electroplated line thickness
+  - die-to-substrate joint type, pitch, count, bonding conditions; BGA balls
+  - underfill material
+  - UV dose for warpage samples; UV lamp/equipment model
+  - Pd removing reagent and seed etchant chemistry
+  - surface treatment type and cover-resin application method before HAST
+  - insulation film reference sample process details
+  - HAST test standard; warpage sample count
+  - Ra for matt VLP and matt ETS press variants
+  - vias (laser via step skipped)

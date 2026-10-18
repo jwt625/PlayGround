@@ -1,0 +1,4 @@
+paper_id,doi,title,year,venue,primary_bucket,buckets,priority,triage_rationale
+ectc.2019.00-29,10.1109/ectc.2019.00-29,RDL-1st Fan-Out Panel Level Packaging (FOPLP) for Heterogeneous and Economical Packaging,2019,ECTC,panel,panel,1,curator-verified primary disclosure: FOPLP line: IME A*STAR consortium Gen 3 panel 550x650 mm
+ectc.2016.201,10.1109/ectc.2016.201,"Embedded Multi-die Interconnect Bridge (EMIB) -- A High Density, High Bandwidth Packaging Interconnect",2016,"ECTC 2016 (66th), pp. 557-565",si_bridge,si_bridge,1,curator-verified primary disclosure: EMIB
+ectc.2011.5898527,10.1109/ectc.2011.5898527,Advanced reliability study of TSV interposers and interconnects for the 28nm technology FPGA,2011,"ECTC 2011 (61st), pp. 285-290",si_interposer,si_interposer,1,"curator-verified primary disclosure: CoWoS-S (original CoWoS; first public disclosure, name CoWoS absent) / AMD-Xilinx SSI interposer"

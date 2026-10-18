@@ -1,0 +1,50 @@
+layer_id,tv_id,structure,side,seq,layer_name,feature,material,material_class,layer_role,reinforcement,thickness_um,thickness_min_um,thickness_max_um,line_um,space_um,via_diameter_um,via_pitch_um,roughness_ra_um,repeat,properties,basis,source,overrides,locator,qualifiers,notes
+ectc32696.2021.00174-a-L01,ectc32696.2021.00174-a,other,single,1,backside lamination (option),,,,cap,,,,,,,,,,,,stated,schematic,,p.2 Fig. 7,,Optional; material not named.
+ectc32696.2021.00174-a-L02,ectc32696.2021.00174-a,die,single,2,die,,Si,silicon,device,,,,,,,,,,,,stated,text,,p.2 Sec. II; p.2 Fig. 7,,
+ectc32696.2021.00174-a-L03,ectc32696.2021.00174-a,mold,single,2,mold compound (encapsulates die on six sides),,mold compound,mold_compound,encapsulant,,,,,,,,,,,,stated,text,,p.2 Sec. II; p.3 Sec. III; p.2 Fig. 7,,Front mold top-ground to expose Cu studs.
+ectc32696.2021.00174-a-L04,ectc32696.2021.00174-a,die,single,3,Cu stud (with seed),on die passivation openings,Cu,metal,conductor,,,,,,,,,,,,stated,mixed,,p.2 Fig. 7; p.3 Sec. III,,Stud height not given.
+ectc32696.2021.00174-a-L05,ectc32696.2021.00174-a,fan_out_rdl,single,4,PM1 (Repassivation 1),,,,passivation,,7.5,,,,,,,,,,design_target,table,,p.4 Table 4; p.2 Fig. 7; p.5 Fig. 14,,"Table 4 target, result Pass. Material not named. Fig. 14 measurement labels unreadable."
+ectc32696.2021.00174-a-L06,ectc32696.2021.00174-a,fan_out_rdl,single,5,RDL (with seed),,,metal,conductor,,7,,,15,,,,,,,design_target,table,,p.4 Table 4; p.2 Fig. 7,,"Table 4: RDL Height 7 um, RDL Width 15 um; also lists 'RDL Thickness 15um' (see conflicts). Single RDL. Metal not named."
+ectc32696.2021.00174-a-L07,ectc32696.2021.00174-a,fan_out_rdl,single,6,PM2 (Repassivation 2),,,,passivation,,9,,,,,,,,,,design_target,table,,p.4 Table 4; p.2 Fig. 7,,"Table 4 target, result Pass. Material not named."
+ectc32696.2021.00174-a-L08,ectc32696.2021.00174-a,fan_out_rdl,single,7,UBM (with seed),,,metal,surface_finish,,9,,,,,,,,,,design_target,table,,p.4 Table 4; p.2 Fig. 7,,"Table 4 'UBM 9um' target, Pass. UBM metal not named."
+ectc32696.2021.00174-c-L01,ectc32696.2021.00174-c,fan_out_rdl,single,1,PM1,,,,passivation,,,,,,,,,,,,stated,figure_image,,p.2 Fig. 3,,
+ectc32696.2021.00174-c-L02,ectc32696.2021.00174-c,fan_out_rdl,single,2,RDL,,,metal,conductor,,,,,,,,,,,,stated,figure_image,,p.2 Fig. 3,,
+ectc32696.2021.00174-c-L03,ectc32696.2021.00174-c,fan_out_rdl,single,3,PM2,,,,passivation,,,,,,,,,,,,stated,figure_image,,p.2 Fig. 3,,
+ectc32696.2021.00174-c-L04,ectc32696.2021.00174-c,fan_out_rdl,single,4,UBM,,,metal,surface_finish,,,,,,,,,,,,stated,figure_image,,p.2 Fig. 3,,
+ectc32696.2021.00174-d-L01,ectc32696.2021.00174-d,fan_out_rdl,single,1,RDL,,,metal,conductor,,,,,,,,,,,,stated,figure_image,,p.2 Fig. 3,,
+ectc32696.2021.00174-d-L02,ectc32696.2021.00174-d,fan_out_rdl,single,2,PM2,,,,passivation,,,,,,,,,,,,stated,figure_image,,p.2 Fig. 3,,
+ectc32696.2021.00174-d-L03,ectc32696.2021.00174-d,fan_out_rdl,single,3,UBM,,,metal,surface_finish,,,,,,,,,,,,stated,figure_image,,p.2 Fig. 3,,
+ectc32696.2021.00174-e-L01,ectc32696.2021.00174-e,fan_out_rdl,single,1,PM1,,,,passivation,,,,,,,,,,,,stated,figure_image,,p.2 Fig. 3,,
+ectc32696.2021.00174-e-L02,ectc32696.2021.00174-e,fan_out_rdl,single,2,RDL,,,metal,conductor,,,,,,,,,,,,stated,figure_image,,p.2 Fig. 3,,
+ectc32696.2021.00174-e-L03,ectc32696.2021.00174-e,fan_out_rdl,single,3,PM2,,,,passivation,,,,,,,,,,,,stated,figure_image,,p.2 Fig. 3,,
+ectc51909.2023.00180-a-L01,ectc51909.2023.00180-a,tim_lid,single,1,lid,,,,cap,,,,,,,,,,,,stated,schematic,,p.2 Fig. 2,,
+ectc51909.2023.00180-a-L02,ectc51909.2023.00180-a,tim_lid,single,2,thermal interface material,,,tim,thermal,,,,,,,,,,,,stated,schematic,,p.2 Fig. 2,,
+ectc51909.2023.00180-a-L03,ectc51909.2023.00180-a,die,single,3,main chips A and B,,Si,silicon,device,,,,,,,,,,,,stated,mixed,,p.2 Sec. II; p.2 Fig. 2,,
+ectc51909.2023.00180-a-L04,ectc51909.2023.00180-a,tim_lid,single,3,lid adhesive (lid foot to laminate),,,adhesive,adhesive,,,,,,,,,,,,stated,schematic,,p.2 Fig. 2,,
+ectc51909.2023.00180-a-L05,ectc51909.2023.00180-a,bonding_interface,single,4,uC4 chip-to-bridge joints,30-75 um pitch,solder (solder-to-solder),solder,bonding,,,,,,,,,,,,design_target,text,material:stated,p.1 Abstract; p.2 Sec. II; p.2 Sec. II.A,,
+ectc51909.2023.00180-a-L06,ectc51909.2023.00180-a,bridge,single,5,Si bridge,,Si,silicon,device,,60,,,,,,,,,,design_target,text,,p.2 Sec. II; p.2 Fig. 2,,
+ectc51909.2023.00180-a-L07,ectc51909.2023.00180-a,bonding_interface,single,4,Cu pillar C4 chip-to-laminate joints (standoff clears bridge),,Cu pillar with SnAg solder cap,metal,bonding,,,,,,,,,,,,stated,text,,p.2 Sec. II; p.3 Fig. 8,,Laterally beside bridge; spans uC4 + bridge height. Height not given for the build.
+ectc51909.2023.00180-a-L09,ectc51909.2023.00180-a,substrate_buildup,front,6,"organic laminate (standard, no cavity)",,organic laminate,organic_laminate,conductor,,,,,9,12,,,,,,design_target,text,,p.2 Sec. II,,"Laminate layer count, core and dielectric not given."
+ectc51909.2023.00180-b-L01,ectc51909.2023.00180-b,tim_lid,single,1,lid,,,,cap,,,,,,,,,,,,stated,schematic,,p.2 Fig. 2,,
+ectc51909.2023.00180-b-L02,ectc51909.2023.00180-b,tim_lid,single,2,thermal interface material,,,tim,thermal,,,,,,,,,,,,stated,schematic,,p.2 Fig. 2,,
+ectc51909.2023.00180-b-L03,ectc51909.2023.00180-b,die,single,3,main chips A and B,,Si,silicon,device,,,,,,,,,,,,stated,mixed,,p.2 Sec. II; p.2 Fig. 2,,
+ectc51909.2023.00180-b-L04,ectc51909.2023.00180-b,tim_lid,single,3,lid adhesive (lid foot to laminate),,,adhesive,adhesive,,,,,,,,,,,,stated,schematic,,p.2 Fig. 2,,
+ectc51909.2023.00180-b-L05,ectc51909.2023.00180-b,bonding_interface,single,4,uC4 chip-to-bridge joints,30-75 um pitch,solder (solder-to-solder),solder,bonding,,,,,,,,,,,,design_target,text,material:stated,p.1 Abstract; p.2 Sec. II; p.2 Sec. II.A,,
+ectc51909.2023.00180-b-L06,ectc51909.2023.00180-b,bridge,single,5,Si bridge,,Si,silicon,device,,60,,,,,,,,,,design_target,text,,p.2 Sec. II; p.2 Fig. 2,,
+ectc51909.2023.00180-b-L07,ectc51909.2023.00180-b,bonding_interface,single,4,Cu pillar C4 chip-to-laminate joints (standoff clears bridge),,Cu pillar with SnAg solder cap,metal,bonding,,,,,,,,,,,,stated,text,,p.2 Sec. II; p.3 Fig. 8,,Laterally beside bridge; spans uC4 + bridge height. Height not given for the build.
+ectc51909.2023.00180-b-L09,ectc51909.2023.00180-b,substrate_buildup,front,6,"organic laminate (standard, no cavity)",,organic laminate,organic_laminate,conductor,,,,,9,12,,,,,,design_target,text,,p.2 Sec. II,,"Laminate layer count, core and dielectric not given."
+ectc51909.2023.00180-a-L08,ectc51909.2023.00180-a,underfill,single,4,capillary underfill (uC4 area and C4 area),,,underfill,encapsulant,,,,,,,,,,,,stated,text,,p.3 Sec. II.B; p.3 Fig. 11,,
+ectc51909.2023.00180-b-L08,ectc51909.2023.00180-b,underfill,single,4,NCP (uC4 area) and underfill (C4 area),,NCP,underfill,encapsulant,,,,,,,,,,,,stated,text,,p.2 Sec. II.A; p.2 Fig. 6,,
+ectc51906.2022.00108-a-L01,ectc51906.2022.00108-a,die,single,1,logic and HBM devices,,Si,silicon,device,,,,,,,,,,,,stated,schematic,,p.2 Fig. 2; p.1 Fig. 1,,
+ectc51906.2022.00108-a-L02,ectc51906.2022.00108-a,mold,single,1,mold and underfill encapsulating devices (molded interposer),,mold compound; underfill,mold_compound,encapsulant,,,,,,,,,,,,stated,text,,p.2 Sec. II.A,,
+ectc51906.2022.00108-a-L03,ectc51906.2022.00108-a,other,single,1,ring frame stiffener,ring frame around molded interposer,,,other,,,700,3000,,,,,,,,design_target,figure_image,,p.4 Fig. 5; p.2 Fig. 2; p.5 Sec. III.C,,"Splits: Stiff A 0.7/1/3 mm, B 0.78/1 mm, C 1/1.5 mm. Material not named."
+ectc51906.2022.00108-a-L04,ectc51906.2022.00108-a,interposer,single,2,Si interposer,,Si,silicon,core,,,,,,,,,,,molded interposer CTE 3~4 ppm,stated,text,,p.1 Abstract; p.2 Sec. II.A,,
+ectc51906.2022.00108-a-L05,ectc51906.2022.00108-a,other,single,2,stiffener adhesive,,,adhesive,adhesive,,100,,,,,,,,,,design_target,text,,p.4 Sec. III.B,thickness_um:lt,
+ectc51906.2022.00108-a-L06,ectc51906.2022.00108-a,bonding_interface,single,3,flip chip mount joints (molded interposer to substrate),,,solder,bonding,,,,,,,,,,,,stated,mixed,material_class:schematic,p.2 Sec. II.A; p.2 Fig. 2,,
+ectc51906.2022.00108-a-L07,ectc51906.2022.00108-a,substrate_buildup,front,4,solder resist and ABF build-up,,SR; ABF,organic_laminate,dielectric,,,,,,,,,,,substrate CTE 13~20 ppm,stated,mixed,,p.2 Sec. II.A; p.3 Table I,,
+ectc51906.2022.00108-a-L08,ectc51906.2022.00108-a,substrate_core,core,5,substrate core,,,organic_laminate,core,,,,,,,,,,,,stated,table,,p.3 Table I,,Core 1.2 mm in FEM POR; build value not stated separately.
+ectc51906.2022.00108-a-L09,ectc51906.2022.00108-a,substrate_buildup,back,6,ABF build-up and solder resist (bottom),,SR; ABF,organic_laminate,dielectric,,,,,,,,,,,,stated,schematic,,p.2 Fig. 2,,
+ectc51906.2022.00108-b-L01,ectc51906.2022.00108-b,substrate_buildup,front,1,solder resist (SR a POR; SR b in LEG3),,SR a,organic_laminate,passivation,,,,,,,,,,,,simulated,table,,p.3 Table I,,Table I 'All' leg prints 'B' for SR (case as printed).
+ectc51906.2022.00108-b-L02,ectc51906.2022.00108-b,substrate_buildup,front,2,ABF build-up (ABF X POR; Y in LEG4 and All),,ABF X,dielectric_polymer,dielectric,,,,,,,,,,,,simulated,table,,p.3 Table I,,
+ectc51906.2022.00108-b-L03,ectc51906.2022.00108-b,substrate_core,core,3,prepreg (PPG) thickness N (2N in LEG5 and All),,,organic_laminate,dielectric,,,,,,,,,,,,simulated,table,,p.3 Table I,,Relative thickness only; position within core not stated.
+ectc51906.2022.00108-b-L04,ectc51906.2022.00108-b,substrate_core,core,4,core (core A POR; B in LEG1 and All),,core A,organic_laminate,core,,1200,,,,,,,,,,simulated,table,thickness_um:design_target,p.3 Table I; p.3 Sec. III.A,,1.2T POR; 1.4 mm in LEG2 and All.

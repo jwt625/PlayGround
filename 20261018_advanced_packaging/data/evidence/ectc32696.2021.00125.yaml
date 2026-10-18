@@ -1,0 +1,34 @@
+paper_id: ectc32696.2021.00125
+verified_on: 2026-10-18
+schema_version: 2
+source_files:
+  - references/ectc32696.2021.00125/text.md
+  - references/ectc32696.2021.00125/source.json
+  - references/ectc32696.2021.00125/source.pdf
+  - references/ectc32696.2021.00125/figures/page_01.png
+  - references/ectc32696.2021.00125/figures/page_02.png
+  - references/ectc32696.2021.00125/figures/page_03.png
+  - references/ectc32696.2021.00125/figures/page_04.png
+  - references/ectc32696.2021.00125/figures/page_05.png
+figure_reading_method: >-
+  Pages 1-5 re-rendered at 300 dpi and split into column quadrants; Table 1-3 and Fig. 4-8 bar labels read directly
+  (percent labels printed on the plots).
+entries:
+  - {table: metrics, row_id: ectc32696.2021.00125-b-m7, field: value, value: 53, unit: "%", basis: simulated, locator: "p.4 Fig. 4", note: "printed '-53%'; organic bar about 0.47 normalized"}
+  - {table: metrics, row_id: ectc32696.2021.00125-b-m10, field: value, value: 35, unit: "%", basis: simulated, locator: "p.5 Fig. 8(b)", note: "w/ bar about 0.86 on axis whose w/o bar exceeds 1.2; normalization unclear, text 35% used"}
+derived:
+  - {table: test_vehicles, row_id: ectc32696.2021.00125-a, field: interposer_area_mm2, value: 1120, formula: "x*y = 32*35", inputs: "p.2 Sec. II.A"}
+  - {table: test_vehicles, row_id: ectc32696.2021.00125-b, field: interposer_area_mm2, value: 1802, formula: "x*y = 53*34", inputs: "p.3 Sec. II.B"}
+conflicts:
+  - {table: metrics, row_id: ectc32696.2021.00125-b-m9, field: value, values: ["more than 40% (text)", "-43% (Fig. 6 label)"], locators: ["p.4 Sec. III.A", "p.5 Fig. 6"], chosen: 43, why: "figure label is the specific result value; text is a bound consistent with it"}
+excluded:
+  - "CoWoS-S (Si interposer) column of Table 1 and Fig. 1: comparison only, no build"
+  - "HBM connection length > 4 mm statement: generic, no TV"
+  - "JEDEC criteria are standard values, entered only as pass_criterion"
+not_reported:
+  - die thickness, HBM2 dimensions, package thickness, lid/ring (Fig. 2(b)/3(b) yellow side blocks unlabeled)
+  - RDL thickness, via size, dielectric product name and properties
+  - microbump height/diameter/metallurgy, bonding conditions; C4 pitch/size; BGA pitch
+  - warpage, sample counts per reliability test, failure criteria beyond pass
+  - electrical_interfaces (no data rate, loss or energy), optical_interfaces
+  - absolute FE stress/SED values (normalized only)

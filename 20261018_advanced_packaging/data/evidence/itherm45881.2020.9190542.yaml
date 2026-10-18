@@ -1,0 +1,43 @@
+paper_id: itherm45881.2020.9190542
+verified_on: 2026-10-18
+source_files:
+  - references/itherm45881.2020.9190542/text.md
+  - references/itherm45881.2020.9190542/source.json
+  - references/itherm45881.2020.9190542/figures/page_02.png
+  - references/itherm45881.2020.9190542/figures/page_03.png
+  - references/itherm45881.2020.9190542/figures/page_04.png
+  - references/itherm45881.2020.9190542/figures/page_05.png
+  - references/itherm45881.2020.9190542/figures/page_06.png
+  - references/itherm45881.2020.9190542/source.pdf
+figure_reading_method: >-
+  Tables 1-8 read from the page renders and cross-checked against text.md. Fig. 12 re-rendered from source.pdf at
+  300 dpi; bar tops and the dT marker read by pixel calibration (about 222 px per normalized unit, 34.7 px per C).
+  Figs. 8-10 bar/line values match Tables 3 and 5 (not entered twice).
+entries:
+  - {table: components, row_id: itherm45881.2020.9190542-a-c1, field: x_mm, value: 21.78, unit: mm, basis: design_target, locator: "p.2 Table 1", note: "Si size 21.78x16.25 mm2 per die"}
+  - {table: interconnects, row_id: itherm45881.2020.9190542-a-i1, field: pitch_um, value: 130, unit: um, basis: design_target, locator: "p.2 Table 1; p.2 Sec. Development", note: "Table 1 'C4 pitch 130'; text 'minimum pitch 130 um copper/solder'"}
+  - {table: metrics, row_id: itherm45881.2020.9190542-a-m21, field: value, value: 2.05, unit: x, basis: simulated, locator: "p.5 Fig. 12", note: "simulation bar for condition B; experiment bar 2.10 (row m22)"}
+  - {table: metrics, row_id: itherm45881.2020.9190542-a-m23, field: value, value: 13.7, unit: C, basis: unspecified, locator: "p.5 Fig. 12", note: "right axis 'dT between die0 and die1'; not stated whether measured or simulated"}
+derived:
+  - {table: test_vehicles, row_id: itherm45881.2020.9190542-a, field: interposer_area_mm2, value: 774.5, formula: "x*y = 22.78*34.00 = 774.52", inputs: "p.2 Table 1 InFO size"}
+conflicts:
+  - {table: components, row_id: itherm45881.2020.9190542-a-c1, field: y_mm, values: [16.26, 16.25], locators: ["p.2 Sec. Development", "p.2 Table 1"], chosen: 16.25, why: "result/spec table over text (rule k)"}
+  - {table: metrics, row_id: itherm45881.2020.9190542-a-m4, field: value, values: ["0.031 C/W (Table 3, gel 6.0 W/mK, BLT 60, Test)", "0.034 C/W (Table 5, TIM B gel 6.0 W/mK, BLT 60, Test)"], locators: ["p.4 Table 3", "p.4 Table 5"], chosen: "both kept as separate rows with table named in variant", why: "nominally the same condition in two tables; paper does not reconcile (possibly different samples)"}
+  - {table: metrics, row_id: itherm45881.2020.9190542-a-m15, field: variant, values: ["Table 2 labels the 30.0 W/mK film TIM 'C'", "Tables 4-5 label 25.0 W/mK 'C' and 30.0 W/mK 'D'"], locators: ["p.2 Table 2", "p.4 Table 4; p.4 Table 5"], chosen: "variants keyed by thermal conductivity", why: "letters inconsistent between tables"}
+  - {table: stack_layers, row_id: itherm45881.2020.9190542-a-L02, field: thickness_um, values: ["BLT window 30-120 um (Development)", "BLT controllable 60-140 um (Different TIM BLT)", "60 um (Table 1)"], locators: ["p.2 Sec. Development", "p.3 Sec. Different TIM BLT", "p.2 Table 1"], chosen: "60 nominal; min/max 60/140 as tested", why: "tested values from Tables 3 and 5"}
+  - {table: metrics, row_id: itherm45881.2020.9190542-a-m19, field: value, values: ["around 42% (Sec. Different TIMs)", "41.6% (Conclusion)"], locators: ["p.4 Sec. Different TIMs", "p.7 Conclusion"], chosen: 41.6, why: "more precise statement; consistent with Table 5 test (0.036-0.021)/0.036"}
+excluded:
+  - "InFO_oS definition and cost argument (ref [1], TSMC web page)"
+  - "TIM assembly challenges of 75x75 mm FCBGA (refs [2], [3])"
+  - "multi-die thermal superposition modeling (ref [4])"
+  - "Fig. 11 temperature contours: qualitative (no scale), hot spot stronger in condition B"
+not_reported:
+  - die thickness, InFO RDL metal and dielectric materials and thicknesses, RDL order
+  - substrate layer count, core, thickness; BGA ball pitch and count
+  - lid metal, lid thickness, cavity depth, adhesive material and thickness, clamping force
+  - TIM product names and suppliers; film TIM composition beyond 'graphite/CNT film type' class
+  - power applied in the BLT and TIM ThetaJC tests; n_samples for all tests
+  - ThetaCA and vapor-chamber dimensions
+  - die-to-InFO interconnect (microbump or chip-first) type and pitch
+  - warpage values (warpage motivates the lid but is not reported)
+  - electrical_interfaces, optical_interfaces

@@ -1,0 +1,99 @@
+# Prefilter only: regex (case-insensitive) over title + abstract assigns candidate buckets.
+# Final buckets come from the LLM scoring pass; these just route papers and drop clearly off-topic ones.
+# conditional: true = bucket only valid when the packaging stack is detailed (enforced at scoring).
+buckets:
+  si_interposer:
+    label: "2.5D silicon interposer"
+    patterns:
+      - 'CoWoS-?S\b'
+      - '\bCoWoS\b'
+      - 'silicon interposer|Si interposer|si-interposer'
+      - '\bSoIS\b'
+      - 'TSV interposer|interposer[^.]{0,40}TSV|through[- ]silicon[- ]vias?[^.]{0,60}interposer'
+      - '\b2\.5-?D\b'
+      - '\binterposers?\b'
+  organic_rdl_fanout:
+    label: "Organic/RDL interposer and large-reticle fan-out"
+    patterns:
+      - 'CoWoS-?R\b'
+      - '\bInFO(_|-|\b)'
+      - 'FOWLP|fan-?out wafer[- ]level|\bfan-?out\b'
+      - '\bFOCoS\b|\bSWIFT\b'
+      - 'RDL interposer|organic interposer|redistribution[- ]layer interposer'
+      - '\bRDLs?\b|redistribution layer'
+      - 'high[- ]density fan-?out|\bHDFO\b|\bFOEB\b'
+  si_bridge:
+    label: "Local silicon bridge in organic substrate"
+    patterns:
+      - 'CoWoS-?L\b'
+      - '\bLSI\b[^.]{0,40}(bridge|interconnect)|local silicon interconnect'
+      - '\bEMIB(-T)?\b'
+      - 'silicon bridge|si bridge|embedded bridge|bridge die|bridge chip|\bS-?Connect\b'
+  panel:
+    label: "Panel-level packaging"
+    patterns:
+      - '\bFOPLP\b|\bPLP\b'
+      - 'panel[- ]level'
+      - '\d{3}\s?(mm)?\s?[x×]\s?\d{3}\s?mm[^.]{0,40}panel|large[- ]panel|panel size'
+  hybrid_bonding:
+    label: "Hybrid bonding"
+    patterns:
+      - 'hybrid bond'
+      - 'Cu-?Cu (direct )?bond|copper[- ]to[- ]copper bond|Cu/SiCN|Cu/SiO2|direct bond interconnect|\bDBI\b'
+      - '\bSoIC\b|Foveros Direct'
+      - 'die[- ]to[- ]wafer|wafer[- ]to[- ]wafer|chip[- ]to[- ]wafer|\bD2W\b|\bW2W\b|\bC2W\b'
+      - 'bumpless'
+      - 'SiCN|wafer bonding|plasma[- ]activated|fusion bond|direct bond|bonding interface'
+  microbump_3d:
+    label: "Micro-bump / 3D stacking with solder"
+    patterns:
+      - '\bFoveros\b'
+      - 'micro-?bumps?|μ-?bump|u-?bump|fine[- ]pitch bump'
+      - '\bHBM\d?E?\b|high bandwidth memory'
+      - 'thermo-?compression bond|\bTCB\b|\bTC-NCF\b|\bMR-?MUF\b|\bNCF\b'
+      - '3D stack|die stack|chip stack|stacked (dram|die|chip)'
+      - '\bX-Cube\b|\bTSVs?\b|through[- ]silicon[- ]vias?'
+      - 'non-?conductive film|fine[- ]pitch|\d+\s?(µm|μm|um)[- ]pitch'
+  glass:
+    label: "Glass core / glass substrate"
+    patterns:
+      - 'glass[- ]core|glass substrate|glass interposer|glass panel|glass carrier'
+      - '\bglass\b[^.]{0,30}(stack|via|wafer|core|package|packaging|substrate)'
+      - '\bTGV\b|through[- ]glass[- ]vias?'
+      - 'Absolics|\bSKC\b'
+  advanced_substrate:
+    label: "Advanced substrates"
+    patterns:
+      - '\bABF\b|Ajinomoto build-?up'
+      - 'build-?up (film|layer|substrate)'
+      - 'embedded (die|chip|bridge|capacitor|passive|component)|die embedding|chip embedding'
+      - 'coreless'
+      - 'FC-?BGA substrate|organic substrate|package substrate|substrate technology|advanced substrate'
+      - 'semi-?additive|\bSAP\b|\bmSAP\b|line/space|L/S'
+  cpo:
+    label: "Silicon photonics co-packaging"
+    conditional: true
+    patterns:
+      - 'co-?packaged optics|\bCPO\b'
+      - 'silicon photonic|photonic integrated circuit|\bPIC\b|optical engine|photonic engine|\bCOUPE\b'
+      - 'fiber attach|fiber array|optical interposer|optical i/o|fiber coupling|edge coupl|grating coupl'
+  thermal_pdn:
+    label: "Thermal/power-delivery structures integral to the stack"
+    conditional: true
+    patterns:
+      - 'embedded (micro-?fluidic )?cooling|micro-?fluidic|microchannel|liquid cooling|two-phase|jet impingement|cold plate'
+      - 'backside power|backside PDN|back-?side power delivery|\bBSPDN\b|\bBSPD\b'
+      - 'integrated voltage regulator|\bIVR\b|vertical power delivery|embedded (deep trench )?capacitor|deep trench capacitor|\bDTC\b'
+      - 'thermal interface material|\bTIM\b|heat spreader|\blid\b'
+
+# Generic packaging context terms used to keep filtered-venue papers (IEDM, VLSI, IRPS, ...) that match no bucket.
+packaging_context:
+  - 'packag|interposer|chiplet|heterogeneous integration|3D integration|3D-IC|3DIC|stack|bond|bump|TSV|RDL|substrate'
+
+# Full venues: keep papers that match no bucket but hit a generic packaging-core term (LLM pass decides).
+packaging_core:
+  - 'chiplet|heterogeneous(ly)? integrat|\b2\.5-?D\b|\b3-?D\b[^.]{0,25}(integrat|stack|packag|IC\b)|interposer|\bRDLs?\b|redistribution|\bTSVs?\b|through[- ](silicon|glass)|bump|underfill|wafer[- ]level|fan-?out|substrate|warpage|bonding|\bHBM|reticle|mold(ed|ing)? (compound|underfill)|\bWLCSP\b|flip[- ]chip'
+
+# Phrases that, alone, mark off-topic for full venues (applied only when no bucket matches).
+off_topic_hint:
+  - 'antenna|wireless power|electromagnetic interference shielding|printed circuit board assembly|LED|solar|battery|wearable|textile|flexible hybrid electronics'

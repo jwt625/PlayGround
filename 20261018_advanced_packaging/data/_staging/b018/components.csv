@@ -1,0 +1,22 @@
+comp_id,tv_id,component_type,is_emulator,embedded,name,count,x_mm,y_mm,thickness_um,cavity_x_mm,cavity_y_mm,cavity_depth_um,gap_um,process_node,material,supplier,basis,source,overrides,locator,qualifiers,notes
+vlsitechnologyandcir46769.2022.9830182-a-c1,vlsitechnologyandcir46769.2022.9830182-a,logic_soc,,,"logic chiplets (xPU: GPU, CPU, AI accelerator, ASIC)",,,,,,,,,,,,stated,mixed,,p.1 Sec. Technology and Architecture; p.2 Fig. 1(a),,
+vlsitechnologyandcir46769.2022.9830182-a-c2,vlsitechnologyandcir46769.2022.9830182-a,other,,,memory cubes (3D cache / HBM),,,,,,,,,,,,stated,mixed,,p.1 Sec. Technology and Architecture; p.2 Fig. 1(a),,SoIC bond also used inside the memory cube.
+vlsitechnologyandcir46769.2022.9830182-a-c3,vlsitechnologyandcir46769.2022.9830182-a,interposer,,,silicon interposer (five BEOL metal layers),,,,,,,,,,Si,,stated,text,,p.1 Sec. Technology and Architecture,,
+vlsitechnologyandcir46769.2022.9830182-b-c1,vlsitechnologyandcir46769.2022.9830182-b,interposer,,,silicon interposer with BEOL lines,,,,,,,,,,Si,,stated,mixed,,p.1 Sec. Electrical Characterization and Verification; p.2 Fig. 3,,
+vlsitechnologyandcir46769.2022.9830182-c-c1,vlsitechnologyandcir46769.2022.9830182-c,logic_soc,,,dies with N5 inverter-based lite I/O drivers (TX and RX),,,,,,,,,N5,,,stated,mixed,,p.1 Sec. STCO A; p.2 Fig. 5(a),,Lower ESD load (C_ESD) with SoIC bond.
+vlsitechnologyandcir46769.2022.9830182-c-c2,vlsitechnologyandcir46769.2022.9830182-c,interposer,,,SoIC interposer,,,,,,,,,,Si,,stated,mixed,,p.1 Sec. STCO A; p.2 Fig. 4,,
+vlsitechnologyandcir46769.2022.9830182-d-c1,vlsitechnologyandcir46769.2022.9830182-d,logic_soc,,,dies with N5 inverter-based lite I/O drivers (TX and RX),,,,,,,,,N5,,,stated,mixed,,p.1 Sec. STCO A; p.2 Fig. 5(a),,
+vlsitechnologyandcir46769.2022.9830182-d-c2,vlsitechnologyandcir46769.2022.9830182-d,interposer,,,microbump interposer,,,,,,,,,,Si,,stated,mixed,,p.1 Sec. STCO A; p.2 Fig. 4,,
+vlsitechnologyandcir46769.2022.9830182-e-c1,vlsitechnologyandcir46769.2022.9830182-e,logic_soc,,,processing core with N5 router,,,,,,,,,N5,,,stated,mixed,,p.1 Sec. STCO B; p.2 Fig. 6(a)-(b),,
+vlsitechnologyandcir46769.2022.9830182-f-c1,vlsitechnologyandcir46769.2022.9830182-f,logic_soc,,,processing core with N5 router,,,,,,,,,N5,,,stated,mixed,,p.1 Sec. STCO B; p.2 Fig. 6(a)-(b),,
+vlsitechnologyandcir46769.2022.9830182-g-c1,vlsitechnologyandcir46769.2022.9830182-g,sram,,,SRAM tiers of 4-Hi cube (64MB total),4,,,,,,,,N7,,,stated,mixed,,p.1 Sec. STCO C; p.2 Fig. 7(b),,
+vlsitechnologyandcir46769.2022.9830182-h-c1,vlsitechnologyandcir46769.2022.9830182-h,sram,,,2D SRAM (64MB),1,,,,,,,,N7,,,stated,mixed,,p.1 Sec. STCO C; p.2 Fig. 7(a),,
+vlsitechnologyandcir46769.2022.9830182-i-c1,vlsitechnologyandcir46769.2022.9830182-i,base_die,,,HBM base die,1,,,,,,,,,,,stated,mixed,,p.2 Fig. 8,,
+vlsitechnologyandcir46769.2022.9830182-i-c2,vlsitechnologyandcir46769.2022.9830182-i,hbm,,,HBM core dies (12-Hi cube),12,,,,,,,,,,,stated,mixed,,p.1 Sec. STCO D; p.2 Fig. 8,,
+vlsitechnologyandcir46769.2022.9830182-j-c1,vlsitechnologyandcir46769.2022.9830182-j,base_die,,,HBM base die,1,,,,,,,,,,,stated,mixed,,p.2 Fig. 8,,
+vlsitechnologyandcir46769.2022.9830182-j-c2,vlsitechnologyandcir46769.2022.9830182-j,hbm,,,HBM core dies (12-Hi cube),12,,,,,,,,,,,stated,mixed,,p.1 Sec. STCO D; p.2 Fig. 8,,
+ectc51906.2022.00038-a-c1,ectc51906.2022.00038-a,dummy_die,,,top chip with Cu pillar array,1,,,,,,,,,Si,,stated,schematic,,p.2 Fig. 1 insets,,Die size and thickness not stated.
+ectc51906.2022.00038-a-c2,ectc51906.2022.00038-a,dummy_die,,,bottom chip with Cu pillar array,1,,,,,,,,,Si,,stated,schematic,,p.2 Fig. 1 insets,,
+ectc51906.2022.00038-a-c3,ectc51906.2022.00038-a,underfill,,,underfill applied after MELI-Cu,,,,,,,,,,,,stated,mixed,,p.3 Sec. III.B; p.3 Fig. 4(c),,Product not stated.
+ectc51906.2022.00038-b-c1,ectc51906.2022.00038-b,unspecified,,,chips with 50 um diameter Cu pillars,,,,,,,,,,,,stated,text,,p.4 Sec. III.D,,
+ectc51906.2022.00038-c-c1,ectc51906.2022.00038-c,unspecified,,,sample with side-by-side Cu pillars,,,,,,,,,,,,stated,mixed,,p.4 Sec. III.E; p.4 Fig. 7,,Chip arrangement not described.

@@ -1,0 +1,28 @@
+comp_id,tv_id,component_type,is_emulator,embedded,name,count,x_mm,y_mm,thickness_um,cavity_x_mm,cavity_y_mm,cavity_depth_um,gap_um,process_node,material,supplier,basis,source,overrides,locator,qualifiers,notes
+ectc51909.2023.00235-a-c1,ectc51909.2023.00235-a,logic_soc,yes,,Chip 1 (Logic/SoC test chip),1,12.77,17.04,,,,,,,Si; Al pads,,design_target,table,,p.2 Table I; p.2 Sec. II.A,,"Mixed bump pitch: 75 um, with 1.2 x 6.0 mm physical interface region at 55 um pitch toward HBM2."
+ectc51909.2023.00235-a-c2,ectc51909.2023.00235-a,hbm,yes,,Chip 2 (HBM2 test die),1,7.98,11.98,,,,,,,,,design_target,table,,p.2 Table I; p.2 Sec. II.A,,"Replicates HBM2 bump layout, minimum bump pitch 55 um."
+ectc51909.2023.00235-a-c3,ectc51909.2023.00235-a,asic,yes,,Chip 3 (Accelerator core test die),1,4.23,4.23,,,,,,,,,design_target,table,,p.2 Table I; p.2 Sec. II.A,,Simulates accelerator core die at 150 um pitch.
+ectc51909.2023.00235-a-c4,ectc51909.2023.00235-a,substrate,,,high density (HD) organic substrate,1,35,35,,,,,,,organic laminate; 4 HD layers on 4-2-5 base build-up,,design_target,table,,p.2 Table I; p.2 Sec. II.A,,"Composite CTE (XY) 13.5 ppm; TSM NiPdAu (ENEPIG), BSM SAC on NiPdAu."
+ectc51909.2023.00235-a-c5,ectc51909.2023.00235-a,underfill,,,capillary underfill,,,,,,,,,,,,stated,text,,p.2 Sec. II.D,,Applied post chip join; product not named.
+ectc51909.2023.00235-a-c6,ectc51909.2023.00235-a,lid,,,lid,,,,,,,,,,,,stated,text,,p.3 Sec. III,,Lidded package inserted in BGA socket for continuity test; lid material and TIM not reported.
+ectc51909.2023.00235-b-c1,ectc51909.2023.00235-b,logic_soc,yes,,Chip 1 (Logic/SoC test chip),1,12.77,17.04,,,,,,,Si; Al pads,,design_target,table,,p.2 Table I; p.2 Sec. II.A,,"Mixed bump pitch: 75 um, with 1.2 x 6.0 mm physical interface region at 55 um pitch toward HBM2."
+ectc51909.2023.00235-b-c2,ectc51909.2023.00235-b,hbm,yes,,Chip 2 (HBM2 test die),1,7.98,11.98,,,,,,,,,design_target,table,,p.2 Table I; p.2 Sec. II.A,,"Replicates HBM2 bump layout, minimum bump pitch 55 um."
+ectc51909.2023.00235-b-c3,ectc51909.2023.00235-b,asic,yes,,Chip 3 (Accelerator core test die),1,4.23,4.23,,,,,,,,,design_target,table,,p.2 Table I; p.2 Sec. II.A,,Simulates accelerator core die at 150 um pitch.
+ectc51909.2023.00235-b-c4,ectc51909.2023.00235-b,substrate,,,high density (HD) organic substrate,1,35,35,,,,,,,organic laminate; 4 HD layers on 4-2-5 base build-up,,design_target,table,,p.2 Table I; p.2 Sec. II.A,,"Composite CTE (XY) 13.5 ppm; TSM NiPdAu (ENEPIG), BSM SAC on NiPdAu."
+ectc51909.2023.00235-b-c5,ectc51909.2023.00235-b,underfill,,,capillary underfill,,,,,,,,,,,,stated,text,,p.2 Sec. II.D,,Applied post chip join; product not named.
+ectc51909.2023.00235-b-c6,ectc51909.2023.00235-b,lid,,,lid,,,,,,,,,,,,stated,text,,p.3 Sec. III,,Lidded package inserted in BGA socket for continuity test; lid material and TIM not reported.
+ectc51909.2023.00108-a-c1,ectc51909.2023.00108-a,asic,,,"ASIC (host, e.g. switch or compute)",,,,,,,,,,,,stated,schematic,,p.5 Fig. 9(A)-(B),,
+ectc51909.2023.00108-a-c2,ectc51909.2023.00108-a,pic,,,COUPE2.0 optical engine (OE),,,,,,,,,,,,stated,text,,p.4 Sec. III.E; p.5 Fig. 9,,OE = EIC + PIC; detailed under TV b.
+ectc51909.2023.00108-a-c3,ectc51909.2023.00108-a,interposer,,,composite interposer (iOIS_CI),,,,,,,,,,CoWoS-based interposer with BEOL Cu RDL and multi-layer dielectric waveguides,,stated,text,,p.1 Abstract; p.3 Sec. III.B; p.4 Sec. III.E,,Dimensions not reported; waveguide dielectric not named.
+ectc51909.2023.00108-a-c4,ectc51909.2023.00108-a,substrate,,,package substrate,,,,,,,,,,,,stated,schematic,,p.5 Fig. 9,,
+ectc51909.2023.00108-a-c5,ectc51909.2023.00108-a,other,,,"optional optical blocks: laser, SOA, APD, LNOI, memory",,,,,,,,,,,,stated,schematic,,p.5 Fig. 9(C); p.5 Sec. III.E,,Proposed modular heterogeneous integration on CI; not demonstrated.
+ectc51909.2023.00108-b-c1,ectc51909.2023.00108-b,eic,,,EIC,1,,,,,,,,,,,stated,schematic,,p.1 Sec. II.A; p.2 Fig. 1(D),,
+ectc51909.2023.00108-b-c2,ectc51909.2023.00108-b,pic,,,PIC with vertical broad-band coupler (BBC) and PBSR,1,,,,,,,,,,,stated,text,,p.2 Sec. II.B; p.2 Fig. 1(D); p.2 Table I,,
+ectc51909.2023.00108-b-c3,ectc51909.2023.00108-b,lens,,yes,embedded microlens,,,,,,,,,,,,stated,text,,p.1 Abstract; p.5 Sec. IV,,
+ectc51909.2023.00108-b-c4,ectc51909.2023.00108-b,fiber_array,,,multiple-row vertical fiber array unit (FAU),,,,,,,,,,,,stated,text,,p.2 Sec. II.B; p.2 Table I,,
+ectc51529.2024.00093-a-c1,ectc51529.2024.00093-a,substrate,,,TGV glass core,,,,300,,,,,,alkali-free glass,,design_target,text,,p.4 Sec. II.C,,
+ectc51529.2024.00093-b-c1,ectc51529.2024.00093-b,substrate,,,TGV glass core,,,,400,,,,,,alkali-free glass,,design_target,text,,p.4 Sec. II.C,,
+ectc51529.2024.00093-c-c1,ectc51529.2024.00093-c,substrate,,,TGV glass core,,,,400,,,,,,alkali-free glass,,design_target,text,,p.4 Sec. II.C,,
+ectc51529.2024.00093-d-c1,ectc51529.2024.00093-d,substrate,,,TGV glass core,,,,400,,,,,,alkali-free glass,,design_target,text,,p.3 Sec. II.B,,
+ectc51529.2024.00093-e-c1,ectc51529.2024.00093-e,substrate,,,TGV glass core,,,,400,,,,,,alkali-free glass,,design_target,text,,p.3 Sec. II.B,,
+ectc51529.2024.00093-f-c1,ectc51529.2024.00093-f,substrate,,,TGV glass core,,,,400,,,,,,alkali-free glass,,design_target,text,,p.3 Sec. II.B,,

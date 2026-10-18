@@ -1,0 +1,3 @@
+metric_id,tv_id,category,parameter,variant,value,value_text,unit,statistic,n_samples,condition,test_standard,pass_criterion,result,scope,reference_tv_id,basis,source,overrides,locator,qualifiers,notes
+ectc51906.2022.00180-a-m1,ectc51906.2022.00180-a,geometry,vertical 3D interconnect length (HBM to embedded SoC),,45,,um,,,cross-section,,,,microbump + microvia path,,measured,text,,p.3 Sec. II-B; p.4 Fig. 7; p.5 Sec. IV,value:lt,Fig. 7 annotates 44 um (interconnects total_length_um); intro design goal <50 um.
+ectc51906.2022.00180-a-m2,ectc51906.2022.00180-a,geometry,embedded die-to-die distance,,92,,um,,,cross-section,,,,,,measured,text,,p.3 Sec. II-B; p.4 Fig. 7,value:approx,design placement 100 um (p.2); conclusion says about 100 um.

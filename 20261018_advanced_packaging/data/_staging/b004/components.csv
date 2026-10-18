@@ -1,0 +1,28 @@
+comp_id,tv_id,component_type,is_emulator,embedded,name,count,x_mm,y_mm,thickness_um,cavity_x_mm,cavity_y_mm,cavity_depth_um,gap_um,process_node,material,supplier,basis,source,overrides,locator,qualifiers,notes
+ectc32696.2021.00166-a-c1,ectc32696.2021.00166-a,dummy_die,yes,,"top die (passive, daisy-chain)",,,,,,,,,,,,stated,mixed,,p.5 Fig. 7; p.5 Fig. 8; p.5 Sec. IV.A,,Modular design; assembled die sizes 15 to 190 mm2.
+ectc32696.2021.00166-a-c2,ectc32696.2021.00166-a,base_die,yes,,"base die / bottom wafer (passive, daisy-chain test pads)",,,,,,,,,,,,stated,mixed,,p.5 Fig. 7; p.5 Fig. 8; p.6 Fig. 10,,
+ectc32696.2021.00166-b-c1,ectc32696.2021.00166-b,unspecified,,,top die (Top Die 1-4),4,,,,,,,,Intel 10nm FinFET,,,stated,mixed,,p.5 Sec. IV.B; p.5 Fig. 9,,Node stated for the test chip as a whole; die function not stated.
+ectc32696.2021.00166-b-c2,ectc32696.2021.00166-b,base_die,,,base die,1,,,,,,,,Intel 10nm FinFET,,,stated,mixed,,p.5 Sec. IV.B; p.5 Fig. 9,,Node stated for the test chip as a whole.
+ectc32696.2021.00166-b-c3,ectc32696.2021.00166-b,substrate,,,package,1,,,,,,,,,,,stated,schematic,,p.5 Fig. 9(a),,Illustrative view label only.
+ectc32696.2021.00166-e-c1,ectc32696.2021.00166-e,unspecified,,,"top dies (Circuit 1, Circuit 2)",2,,,,,,,,,,,stated,schematic,,p.4 Fig. 5(a),,
+ectc32696.2021.00166-e-c2,ectc32696.2021.00166-e,interposer,,,passive interposer,1,,,,,,,,,Si,,stated,mixed,material:schematic,p.3 Sec. III.B; p.4 Fig. 5(a),,
+iedm19573.2019.8993659-a-c1,iedm19573.2019.8993659-a,unspecified,yes,,top die (test chip),2,,,,,,,,,,,stated,mixed,,p.4 Fig. 6; p.4 Fig. 7,,Fine-pitch microbumps and coarse-pitch C4 on the same side.
+iedm19573.2019.8993659-a-c2,iedm19573.2019.8993659-a,base_die,yes,yes,"bottom die (ODI die, test chip)",1,,,,,,,,,,,stated,mixed,,p.4 Fig. 6; p.4 Fig. 7(b),,"C4 on bottom side facing package, microbumps on top side; placed in package cavity."
+iedm19573.2019.8993659-a-c3,iedm19573.2019.8993659-a,substrate,,,organic package with central cavity,1,,,,,,,,,,,stated,mixed,,p.4 Fig. 6; p.2 Sec. V,,'relatively simple base organic packaging technologies' (conclusion).
+iedm19573.2019.8993659-b-c1,iedm19573.2019.8993659-b,base_die,,yes,bottom dies,,,,,,,,,,,,stated,figure_image,,p.4 Fig. 8(a); p.4 Fig. 8(c),,Plural in labels; count not stated.
+iedm19573.2019.8993659-b-c2,iedm19573.2019.8993659-b,other,,,dielectric between pillars and dies,,,,,,,,,,,,stated,caption,,p.4 Fig. 8(c),,Material not named.
+iedm19573.2019.8993659-c-c1,iedm19573.2019.8993659-c,base_die,,,base die with TSVs (e.g. processor),,,,,,,,,,,,stated,schematic,,p.3 Fig. 2(a); p.3 Fig. 3(a),,
+iedm19573.2019.8993659-d-c1,iedm19573.2019.8993659-d,interposer,,,multi-reticle interposer,,35,35,,,,,,,,,author_estimate,text,,p.2 Sec. III,,
+ectc32696.2021.00125-a-c1,ectc32696.2021.00125-a,logic_soc,,,SOC,1,30,25,,,,,,,,,design_target,text,,p.2 Sec. II.A; p.2 Fig. 2,,'almost equivalent to one reticle size'
+ectc32696.2021.00125-a-c2,ectc32696.2021.00125-a,hbm,,,HBM2,2,,,,,,,,,,,stated,text,,p.2 Sec. II.A; p.2 Fig. 2,,
+ectc32696.2021.00125-a-c3,ectc32696.2021.00125-a,interposer,,,organic interposer (4 RDLs),1,32,35,,,,,,,Cu traces in low-k polymer,,design_target,text,material:table,p.2 Sec. II.A; p.2 Fig. 2; p.1 Table 1,,
+ectc32696.2021.00125-a-c4,ectc32696.2021.00125-a,substrate,,,"substrate, 5-2-5 low-CTE core",1,55,55,,,,,,,,,design_target,text,,p.2 Sec. II.A; p.2 Fig. 2,,
+ectc32696.2021.00125-a-c5,ectc32696.2021.00125-a,underfill,,,microbump underfill,,,,,,,,,,,,stated,text,,p.3 Sec. II.C; p.5 Sec. III.C,,
+ectc32696.2021.00125-a-c6,ectc32696.2021.00125-a,underfill,,,C4 underfill,,,,,,,,,,,,stated,text,,p.3 Sec. II.C; p.5 Sec. III.B,,
+ectc32696.2021.00125-a-c7,ectc32696.2021.00125-a,mold,,,molding,,,,,,,,,,,,stated,text,,p.3 Sec. II.C,,Named only as an interface checked in SEM sanity check.
+ectc32696.2021.00125-b-c1,ectc32696.2021.00125-b,logic_soc,,,"SOC (Chip1, Chip2)",2,30,25,,,,,,,,,design_target,text,,p.3 Sec. II.B; p.3 Fig. 3,,Dimensions given once for 'the SOC'; applied to each.
+ectc32696.2021.00125-b-c2,ectc32696.2021.00125-b,interposer,,,organic interposer (4 RDLs),1,53,34,,,,,,,Cu traces in low-k polymer,,design_target,text,material:table,p.3 Sec. II.B; p.3 Fig. 3; p.1 Table 1,,
+ectc32696.2021.00125-b-c3,ectc32696.2021.00125-b,substrate,,,"substrate, 5-2-5 low-CTE core",1,85,85,,,,,,,,,design_target,text,,p.3 Sec. II.B; p.3 Fig. 3,,
+ectc32696.2021.00125-b-c4,ectc32696.2021.00125-b,underfill,,,microbump underfill,,,,,,,,,,,,stated,text,,p.3 Sec. II.C; p.5 Sec. III.C,,
+ectc32696.2021.00125-b-c5,ectc32696.2021.00125-b,underfill,,,C4 underfill,,,,,,,,,,,,stated,text,,p.3 Sec. II.C; p.5 Sec. III.B,,
+ectc32696.2021.00125-c-c1,ectc32696.2021.00125-c,unspecified,,,large monolithic die,1,25,26,,,,,,,,,design_target,text,,p.4 Sec. III.A,,

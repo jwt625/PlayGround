@@ -1,0 +1,32 @@
+paper_id: iedm45625.2022.10019499
+verified_on: 2026-10-18
+source_files:
+  - references/iedm45625.2022.10019499/text.md
+  - references/iedm45625.2022.10019499/source.json
+  - references/iedm45625.2022.10019499/figures/page_03.png
+  - references/iedm45625.2022.10019499/figures/page_04.png
+figure_reading_method: >-
+  Page renders p.3-p.4 opened; Figs. 5, 6, 7-9, 13, 15-16 and 19 re-rendered from source.pdf at 3-9x in the scratchpad.
+  All plots except Fig. 8 (Contact Area %) and Fig. 5 (IO/mm2, IO/um) are normalized (A.U.).
+entries:
+  - {table: interconnects, row_id: iedm45625.2022.10019499-a-i1, field: pitch_um, value: 3, unit: um, basis: design_target, locator: "p.1 Sec. III; p.3 Fig. 7 label '3 um Pitch'; p.3 Fig. 10(a) label '3 um'", note: "scaled from 9 um"}
+  - {table: interconnects, row_id: iedm45625.2022.10019499-b-i1, field: density_per_mm2, value: 100000, unit: 1/mm2, basis: design_target, locator: "p.2 Sec. IV.A", note: "'below 3 um (or more than ~100K connections/mm2)'"}
+  - {table: metrics, row_id: iedm45625.2022.10019499-e-m7, field: value, value: 58, unit: A.U., basis: simulated, locator: "p.3 Fig. 6(b)", note: "log axis 0.1-100; bar between 10 and 100, read ~50-60"}
+  - {table: metrics, row_id: iedm45625.2022.10019499-c-m3, field: value_text, value: "slightly below max allowed", unit: "", basis: measured, locator: "p.4 Fig. 13", note: "Recipe 3 bar top just under the red dashed max-allowed line"}
+derived: []
+conflicts:
+  - {table: metrics, row_id: iedm45625.2022.10019499-e-m2, field: value, values: ["up to 10X power reduction (text)", "Fig. 6(a) HB 3 um optimistic scaling ~0.05 of solder (~20X)", "Fig. 6(a) HB 3 um no digital scaling ~0.22 (~4.5X)"], locators: ["p.1 Abstract; p.1 Sec. II", "p.3 Fig. 6(a)"], chosen: "10 (text, le)", why: "text claim entered; plot bars entered separately as e-m3..m6; ratio arithmetic not entered"}
+excluded:
+  - "Fig. 1 generic feature sizes (silicon 10-100s nm vs packaging 1-10s um) - generic comparison, not a build"
+  - "ODI architecture (ref [2]) and prior 9 um pitch hybrid bonding on Intel process (ref [3]) details"
+  - "metal ion drift failure criterion (ref [6])"
+  - "UCIe modular interface (ref [5]) - in development, no electrical data"
+not_reported:
+  - electrical_interfaces (no absolute data rate, pJ/bit or bandwidth; UCIe interface only planned)
+  - optical_interfaces
+  - die/chiplet x-y sizes and thicknesses (except chiplets 20+ um), carrier/wafer diameter, process node
+  - HB pad diameter, pad metal and dielectric materials, bonding layer thickness, recess values (only 1X/2X/4X)
+  - bonding temperature, force, time; anneal temperature/time; alignment accuracy
+  - TDV diameter/depth/aspect ratio/metal; solder bump dimensions
+  - oxide thickness value, PECVD conditions, warpage absolute values and sign convention
+  - reliability tests, electrical yield, resistance

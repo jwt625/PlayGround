@@ -1,0 +1,45 @@
+paper_id: iwlpc52010.2020.9375887
+verified_on: 2026-10-18
+source_files:
+  - references/iwlpc52010.2020.9375887/text.md
+  - references/iwlpc52010.2020.9375887/source.json
+  - references/iwlpc52010.2020.9375887/source.pdf
+  - references/iwlpc52010.2020.9375887/figures/page_01.png
+  - references/iwlpc52010.2020.9375887/figures/page_02.png
+  - references/iwlpc52010.2020.9375887/figures/page_03.png
+  - references/iwlpc52010.2020.9375887/figures/page_04.png
+  - references/iwlpc52010.2020.9375887/figures/page_05.png
+  - references/iwlpc52010.2020.9375887/figures/page_06.png
+  - references/iwlpc52010.2020.9375887/figures/img_p01_1.png
+  - references/iwlpc52010.2020.9375887/figures/img_p03_2.png
+figure_reading_method: >-
+  Fig. 10 (p.5), Table 3 (p.6) and Fig. 5 (p.3) re-rendered from source.pdf at 5x zoom in the scratchpad; Table 1
+  read from embedded image img_p01_1.png. Fig. 10 segment values (277/213/138/249 um warpage; 68/83/74/95 um TTV)
+  average to the text values 219.25 um and 80 um.
+entries:
+  - {table: metrics, row_id: iwlpc52010.2020.9375887-a-m1, field: value, value: 277, unit: um, basis: measured, locator: "p.5 Fig. 10", note: "Warpage row of Fig. 10 table, Segment No. 1"}
+  - {table: metrics, row_id: iwlpc52010.2020.9375887-a-m6, field: value, value: 68, unit: um, basis: measured, locator: "p.5 Fig. 10", note: "TTV row of Fig. 10 table, Segment No. 1"}
+  - {table: stack_layers, row_id: iwlpc52010.2020.9375887-a-L07, field: thickness_min_um, value: 280, unit: um, basis: design_target, locator: "p.5 Table 2", note: "Silicon BG Thickness 280um - 700um (evaluation plan)"}
+  - {table: stack_layers, row_id: iwlpc52010.2020.9375887-a-L05, field: thickness_max_um, value: 815, unit: um, basis: design_target, locator: "p.5 Table 2", note: "Mold Thickness 405um - 815um"}
+  - {table: metrics, row_id: iwlpc52010.2020.9375887-b-m13, field: value, value: 4.50, unit: "%", basis: derived, locator: "p.6 Table 3", note: "Option B useable area loss as compared to baseline, as printed"}
+derived: []
+conflicts:
+  - {table: metrics, row_id: iwlpc52010.2020.9375887-a-m1, field: variant, values: ["4 panels used in initial evaluation (text)", "columns labeled 'Segment No. 1-4' (Fig. 10)"], locators: ["p.5 Sec. Panel Warpage", "p.5 Fig. 10"], chosen: "variant uses figure label 'Segment No.'; averages labeled 'average of 4 panels'", why: "text says 4 panels and averages 'across panels'; figure labels columns as segments; not reconciled"}
+  - {table: metrics, row_id: iwlpc52010.2020.9375887-b-m13, field: value, values: ["4.50% (printed loss, Option B)", "4.05% (100 - 95.95% printed in the same row)"], locators: ["p.6 Table 3", "p.6 Table 3"], chosen: 4.50, why: "entered as printed; inconsistency inside Table 3 noted"}
+  - {table: metrics, row_id: iwlpc52010.2020.9375887-b-m21, field: value, values: ["8.05% (printed loss, Option C)", "8.02% (100 - 91.98% printed in the same row)"], locators: ["p.6 Table 3", "p.6 Table 3"], chosen: 8.05, why: "entered as printed; inconsistency inside Table 3 noted"}
+  - {table: metrics, row_id: iwlpc52010.2020.9375887-b-m10, field: scope, values: ["column header 'Total useable area (per segment)'", "values equal per-panel zone area minus per-panel panel-ID and fiducial area (333,737.29 - 620 - 500 = 332,617.29)"], locators: ["p.6 Table 3"], chosen: "values as printed; scope notes the per-panel arithmetic", why: "header and arithmetic disagree"}
+excluded:
+  - "Fig. 1 Weibull board-level TC: 6x6 mm WLCSP test chip in 6.25x6.25 mm M-Series package, 500 um bump pitch, no UBM, SAC405, 1 mm board, no TC failures to 1000 cycles, >200% improvement (ref [1], Source: DECA)"
+  - "Figs. 2-4 market drivers, production volume and revenue (Yole, ref [2]); FOPLP share 5% (2019) to 18% (2025), $3.05B by 2025 at 15% CAGR (refs [2,5])"
+  - "Table 1 eWLB and WLCSP columns (comparison, not builds of this paper)"
+  - "Fig. 9 CSAM mechanism schematic (generic leaded package with die attach adhesive)"
+  - "Fig. 12 keep-out-zone example on a 300 mm round panel (not the 600 mm build)"
+  - "Text: Option B usable loss '1X' vs Option C '2X' (relative restatement of Table 3)"
+not_reported:
+  - die size, function and count per panel; package body size for TV a
+  - Cu stud height, diameter and pitch; via diameters; RDL line/space, thickness, layer count
+  - dielectric, mold compound, epoxy and UBM materials or product names
+  - molding, cure, sputter and bonding conditions (temperature, pressure, time)
+  - warpage measurement method, temperature, sign convention, and process step of the segment values
+  - die shift magnitudes; void counts or areas; reliability data for this build
+  - electrical_interfaces, optical_interfaces

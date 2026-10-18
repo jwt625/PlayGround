@@ -1,0 +1,3 @@
+paper_id,doi,title,year,venue,primary_bucket,buckets,priority,triage_rationale
+vlsitechnologyandcir46769.2022.9830182,10.1109/vlsitechnologyandcir46769.2022.9830182,SoIC_H Technology for Heterogenous System Integration,2022,VLSI,hybrid_bonding,hybrid_bonding;si_interposer,1,"SoIC_H: SoIC bond replaces microbump in 2.5D integration; STCO-estimated power, latency, area benefits."
+ectc51906.2022.00038,10.1109/ectc51906.2022.00038,Fine-Pitch 30 μm Cu-Cu Bonding by Using Low Temperature Microfluidic Electroless Interconnection,2022,ECTC,microbump_3d,microbump_3d,1,"Microfluidic electroless Cu bonding of Cu pillars at 30-45 um pitch, 28 um standoff, 50 C; FIB/SEM, 80 MPa."

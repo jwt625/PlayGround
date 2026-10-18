@@ -1,0 +1,23 @@
+comp_id,tv_id,component_type,is_emulator,embedded,name,count,x_mm,y_mm,thickness_um,cavity_x_mm,cavity_y_mm,cavity_depth_um,gap_um,process_node,material,supplier,basis,source,overrides,locator,qualifiers,notes
+ectc51687.2025.00233-a-c1,ectc51687.2025.00233-a,substrate,,,glass substrate with TGVs,1,,,400,,,,,,glass,,design_target,text,,p.3 Sec. III.A,,Glass type/supplier not stated; 0.4 mm.
+ectc51687.2025.00233-b-c1,ectc51687.2025.00233-b,substrate,,,glass core,1,77,77,400,,,,,,glass,,design_target,mixed,,p.3 Sec. III.B; p.4 Sec. III.B; p.3 Fig. 2(c),,0.4 mm (text; Fig. 2(c) label 'Glass core 0.4mm'). Glass type not stated. TV fabricated by Unimicron NBD1 team (ack).
+eptc53413.2021.9663896-a-c1,eptc53413.2021.9663896-a,unspecified,,yes,die in 4.5x5.5 mm body package,1,,,,,,,,,Si,,stated,text,,p.3 Sec. Die Shift with No Adaptive Patterning,,"Die size, thickness and function not given; Cu studs used as scanner reference."
+eptc53413.2021.9663896-a-c2,eptc53413.2021.9663896-a,mold,,,EMC reconstituted panel,,,,,,,,,,EMC,,stated,text,,p.3 Sec. Die Shift; p.1 Sec. M-Series Process Flow,,
+eptc53413.2021.9663896-b-c1,eptc53413.2021.9663896-b,other,,yes,custom PMIC (silicon device),1,,,,,,,,,Si,,stated,figure_image,,p.6 Fig. 20; p.1 Fig. 1,,Active surface and sidewalls fully encapsulated in EMC; no polyimide stress buffer needed.
+eptc53413.2021.9663896-b-c2,eptc53413.2021.9663896-b,mold,,,EMC (encapsulant and stress buffer),,,,,,,,,,EMC,,stated,mixed,,p.1 Sec. Introduction; p.1 Fig. 1; p.6 Fig. 20,,
+ectc51909.2023.00175-a-c1,ectc51909.2023.00175-a,asic,yes,,dummy ASIC,1,23,24,,,,,,,Si,,design_target,table,,p.2 Table 1; p.4 Fig. 6(a),,50 um bump pitch. Thickness not stated (simulated 450-650 um).
+ectc51909.2023.00175-a-c2,ectc51909.2023.00175-a,hbm,yes,,dummy HBM2,2,8,12,,,,,,,Si,,design_target,table,,p.2 Table 1; p.4 Fig. 6(a),,55 um bump pitch.
+ectc51909.2023.00175-a-c3,ectc51909.2023.00175-a,bridge,,yes,connect die (Si bridge),2,7,6,70,,,,,,Si,,design_target,table,thickness_um:measured;thickness_um:figure_image,p.2 Table 1; p.4 Sec. IV.A; p.4 Fig. 6(a),thickness_um:approx,Square shape; embedded in 1st mold; Cu stud ~5 um. 'Height of connect die is about 70 um'.
+ectc51909.2023.00175-a-c4,ectc51909.2023.00175-a,ipd,yes,yes,mimic IPD with Cu stud,,,,,,,,,,,,stated,mixed,,p.2 Sec. II.B; p.4 Sec. IV.A; p.4 Fig. 6(c),,Embedded in mold under top die. Count and size not given.
+ectc51909.2023.00175-a-c5,ectc51909.2023.00175-a,mold,,no,"1st mold EMC (connect die, IPD, tall Cu pillars)",,,,,,,,,,EMC,,stated,text,,p.2 Sec. II.B; p.3 Sec. III.A,,Which of EMC A/B/C was used in the build not stated.
+ectc51909.2023.00175-a-c6,ectc51909.2023.00175-a,mold,,,2nd mold EMC (top dies),,,,,,,,,,EMC,,stated,text,,p.2 Sec. II.B; p.3 Sec. III.A,,Ground to expose top side of Si dies.
+ectc51909.2023.00175-a-c7,ectc51909.2023.00175-a,underfill,,,capillary underfill under top dies,,,,,,,,,,CUF,,stated,mixed,,p.2 Sec. II.B; p.4 Fig. 6(c),,'CUF' label in Fig. 6(c).
+ectc51909.2023.00175-a-c8,ectc51909.2023.00175-a,substrate,,,package substrate (HDBU),1,67,67,,,,,,,,,design_target,mixed,,p.2 Table 1; p.4 Fig. 6(a),,Layer count and core not given.
+ectc51909.2023.00175-b-c1,ectc51909.2023.00175-b,asic,yes,,dummy ASIC,2,24,26,,,,,,,Si,,design_target,table,,p.2 Table 1; p.4 Fig. 8(e),,50 um bump pitch.
+ectc51909.2023.00175-b-c2,ectc51909.2023.00175-b,hbm,yes,,dummy HBM,8,11,10,,,,,,,Si,,design_target,table,,p.2 Table 1; p.4 Fig. 8(c),,55 um bump pitch; HBM generation not stated.
+ectc51909.2023.00175-b-c3,ectc51909.2023.00175-b,bridge,,yes,"connect die (Si bridge), 6x6 mm",,6,6,,,,,,,Si,,design_target,table,,p.2 Table 1; p.4 Fig. 8(b),,10 connect dies total in two sizes (6x6 and 3x8 mm); split per size not stated.
+ectc51909.2023.00175-b-c4,ectc51909.2023.00175-b,bridge,,yes,"connect die (Si bridge), 3x8 mm",,3,8,,,,,,,Si,,design_target,table,,p.2 Table 1; p.4 Fig. 8(b),,See 6x6 mm row; total 10 connect dies.
+ectc51909.2023.00175-b-c5,ectc51909.2023.00175-b,mold,,,1st mold EMC,,,,,,,,,,EMC,,stated,text,,p.2 Sec. II.B,,
+ectc51909.2023.00175-b-c6,ectc51909.2023.00175-b,mold,,,2nd mold EMC,,,,,,,,,,EMC,,stated,text,,p.2 Sec. II.B,,
+ectc51909.2023.00175-b-c7,ectc51909.2023.00175-b,substrate,,,package substrate (HDBU),1,85,85,,,,,,,,,design_target,mixed,,p.2 Table 1; p.4 Fig. 8(c),,
+ectc51909.2023.00175-b-c8,ectc51909.2023.00175-b,lid,,,lid,1,,,,,,,,,,,stated,figure_image,,p.4 Fig. 8(a),,"Photo label 'LID'; material, size, TIM not given."

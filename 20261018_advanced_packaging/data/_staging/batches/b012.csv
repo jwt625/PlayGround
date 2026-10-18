@@ -1,0 +1,4 @@
+paper_id,doi,title,year,venue,primary_bucket,buckets,priority,triage_rationale
+ectc51687.2025.00233,10.1109/ectc51687.2025.00233,Dry Film Photo-Imageable Dielectric Enabling Glass Core Substrate TGV Filling and Build-Up,2025,ECTC,glass,glass;advanced_substrate,1,"Glass core TV, 6 RDL + 6 DF-PID layers, 100 um TGVs in 400 um glass filled by lamination, 9/12 um L/S."
+eptc53413.2021.9663896,10.1109/eptc53413.2021.9663896,Deca & ASE Scaling M-Series & Adaptive Patterning to 600mm,2021,EPTC,panel,panel,1,curator-verified primary disclosure: FOPLP line: ASE/Deca 600x600 mm
+ectc51909.2023.00175,10.1109/ectc51909.2023.00175,Reliability Performance of S-Connect Module (Bridge Technology) for Heterogeneous Integration Packaging,2023,ECTC,si_bridge,si_bridge;organic_rdl_fanout,1,"Chip-last S-Connect bridge modules 32.8x25.6 and 53.5x45.4 mm, up to 10 bridges; warpage <100 um, reliability."

@@ -1,0 +1,3 @@
+paper_id,doi,title,year,venue,primary_bucket,buckets,priority,triage_rationale
+ectc.2013.6575597,10.1109/ectc.2013.6575597,Reliability characterization of Chip-on-Wafer-on-Substrate (CoWoS) 3D IC integration technology,2013,"ECTC 2013 (63rd), pp. 366-371",si_interposer,si_interposer,1,curator-verified primary disclosure: CoWoS-S (first TSMC-authored paper naming CoWoS)
+ectc51906.2022.00303,10.1109/ectc51906.2022.00303,TSV-less Power Delivery for Wafer-scale Assemblies and Interposers,2022,ECTC,thermal_pdn,si_interposer;thermal_pdn,1,"TSV-less dielet-side PDN on Si-IF: 100 um dielet surrogate, 500 um wide Cu TPVs, polymer walls, Al2O3 encapsulation."

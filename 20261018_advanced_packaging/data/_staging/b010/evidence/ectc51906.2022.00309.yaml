@@ -1,0 +1,37 @@
+paper_id: ectc51906.2022.00309
+verified_on: 2026-10-18
+schema_version: 2
+source_files:
+  - references/ectc51906.2022.00309/text.md
+  - references/ectc51906.2022.00309/source.json
+  - references/ectc51906.2022.00309/source.pdf
+  - references/ectc51906.2022.00309/figures/page_02.png
+  - references/ectc51906.2022.00309/figures/page_03.png
+  - references/ectc51906.2022.00309/figures/page_04.png
+  - references/ectc51906.2022.00309/figures/page_05.png
+figure_reading_method: >-
+  Page renders 2-5 viewed; Table 1-3 checked against the page images. Fig. 12 colorbars re-rendered from source.pdf at
+  500 dpi; Fig. 9 and Fig. 11 at 300 dpi (no scale bars, no dimensions taken).
+entries:
+  - {table: interconnects, row_id: ectc51906.2022.00309-a-i4, field: pitch_um, value: 130, unit: um, basis: design_target, locator: "p.2 Table 1", note: "text p.3 'C4 bump with 130 um'"}
+  - {table: metrics, row_id: ectc51906.2022.00309-a-m2, field: value_text, value: "75.7 / -155.0", unit: um, basis: measured, locator: "p.4 Fig. 12 25 C colorbar", note: "colorbar end labels"}
+  - {table: metrics, row_id: ectc51906.2022.00309-a-m3, field: value_text, value: "29.9 / -24.2", unit: um, basis: measured, locator: "p.4 Fig. 12 260 C colorbar", note: "colorbar end labels"}
+derived:
+  - {table: test_vehicles, row_id: ectc51906.2022.00309-a, field: interposer_area_mm2, value: 1428, formula: "x*y = 34*42", inputs: "p.2 Table 1 fanout size"}
+  - {table: metrics, row_id: ectc51906.2022.00309-a-m2, field: value, value: 230.7, formula: "75.7 - (-155.0)", inputs: "p.4 Fig. 12 25 C colorbar"}
+  - {table: metrics, row_id: ectc51906.2022.00309-a-m3, field: value, value: 54.1, formula: "29.9 - (-24.2)", inputs: "p.4 Fig. 12 260 C colorbar"}
+conflicts:
+  - {table: process_steps, row_id: ectc51906.2022.00309-a-s06, field: seq, values: ["text: SAP (seed, PR, plating, strip, seed etch) then photo-dielectric", "Fig. 4: seed deposition, passivation coating/patterning, RDL plating"], locators: ["p.2 Sec. II.C", "p.2 Fig. 4"], chosen: "text order", why: "text gives the detailed sub-steps; schematic order ambiguous"}
+  - {table: test_vehicles, row_id: ectc51906.2022.00309-a, field: substrate_layer_count, values: ["7-2-7 (Table 1)", "16 layers substrate (text)"], locators: ["p.2 Table 1", "p.3 Sec. II.D"], chosen: "7-2-7 (16 layers)", why: "consistent (7+2+7=16); both kept"}
+  - {table: components, row_id: ectc51906.2022.00309-a-c7, field: name, values: ["ring type heat sink (Table 1, text)", "stiffener ring (Abstract)"], locators: ["p.2 Table 1; p.3 Sec. II.D", "p.1 Abstract"], chosen: "both in name", why: "same ring element described two ways"}
+excluded:
+  - "chip-first vs chip-last comparison and FO-WLP market claims attributed to refs [1-3]"
+  - "SAP process attributed to refs [4-5] (steps entered only as described in this paper)"
+  - "Abstract claims of high assembly yield: no number"
+not_reported:
+  - electrical_interfaces (no data rate, loss, energy for D2D link), optical_interfaces
+  - die thicknesses, mold and package thickness, carrier type and wafer size
+  - Cu RDL thickness, dielectric product and properties, cure temperature
+  - micro bump height/metallurgy, FCB and CoS bonding conditions, CoS underfill product
+  - C4 'diameter 70 x 90 um' meaning, BGA pitch, substrate core thickness
+  - RDL leakage, sheet resistance and via chain values, sample counts for reliability, warpage sign convention

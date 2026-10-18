@@ -1,0 +1,33 @@
+paper_id: ectc51909.2023.00235
+verified_on: 2026-10-18
+source_files:
+  - references/ectc51909.2023.00235/text.md
+  - references/ectc51909.2023.00235/source.json
+  - references/ectc51909.2023.00235/source.pdf
+  - references/ectc51909.2023.00235/figures/page_02.png
+  - references/ectc51909.2023.00235/figures/page_03.png
+  - references/ectc51909.2023.00235/figures/page_04.png
+  - references/ectc51909.2023.00235/figures/page_05.png
+  - references/ectc51909.2023.00235/figures/page_06.png
+  - references/ectc51909.2023.00235/figures/page_07.png
+figure_reading_method: >-
+  Table I, Table II, Table III, Fig. 8, Fig. 10(b), Fig. 11 re-rendered from source.pdf at 250-600 dpi in scratch (not kept).
+  Fig. 10(b) SEM labels are printed upside down; read after 180 deg rotation. Fig. 8 values read by eye against gridlines (approx).
+entries:
+  - {table: interconnects, row_id: ectc51909.2023.00235-a-i1, field: diameter_um, value: 30, unit: um, basis: design_target, locator: "p.2 Table I", note: "Chip 1 'C4 Diameter' cell reads '30 / 30 & 40 / 30' against pitch '75 / 55'; first pair entered"}
+  - {table: metrics, row_id: ectc51909.2023.00235-a-m6, field: value, value: 250, unit: cycles, basis: measured, locator: "p.3 Table II", note: "MR pillar: green at Time 0 and Precon, yellow from 250 cyc"}
+  - {table: metrics, row_id: ectc51909.2023.00235-a-m8, field: value, value: 500, unit: cycles, basis: measured, locator: "p.3 Table II", note: "TCB pillar: green through 250 cyc, yellow from 500"}
+  - {table: metrics, row_id: ectc51909.2023.00235-a-m9, field: value, value: 850, unit: cycles, basis: measured, locator: "p.3 Table II", note: "TCB pedestal: green through 500 cyc, yellow from 850"}
+  - {table: metrics, row_id: ectc51909.2023.00235-c-m1, field: value, value: 3.9, unit: normalized, basis: simulated, locator: "p.5 Fig. 8", note: "light-blue dotted curve labeled 40 um slow at 40 um pitch"}
+  - {table: metrics, row_id: ectc51909.2023.00235-c-m12, field: value, value: 1.37, unit: normalized, basis: simulated, locator: "p.6 Fig. 11(a)", note: "label G1: 1.37; F1: 1.00 is the normalization point"}
+derived:
+  - {table: interconnects, row_id: ectc51909.2023.00235-a-i5, field: pitch_um, value: 1000, formula: "1.0 mm * 1000", inputs: "p.2 Table I BGA Pitch 1.0 mm"}
+  - {table: interconnects, row_id: ectc51909.2023.00235-b-i5, field: pitch_um, value: 1000, formula: "1.0 mm * 1000", inputs: "p.2 Table I BGA Pitch 1.0 mm"}
+conflicts:
+  - {table: test_vehicles, row_id: ectc51909.2023.00235-a, field: substrate_layer_count, values: ["4+4-2-5", "4+1 5-2-5", "4-2-5 base"], locators: ["p.2 Table I", "p.1 Abstract", "p.2 Sec. II.A"], chosen: "4+4-2-5", why: "result table; text Sec. II.A also states 4 + 4-2-5 total x-section"}
+  - {table: metrics, row_id: ectc51909.2023.00235-c-m13, field: value_text, values: ["Al pad diameter decrease lowers stress (Table III)", "larger pad lowers stress (text p.5)"], locators: ["p.5 Table III", "p.5 Sec. III.B.2"], chosen: "Table III", why: "table over text; text 'pad' may mean the C4/substrate pad"}
+  - {table: metrics, row_id: ectc51909.2023.00235-b-m2, field: value, values: [2300, 1000], locators: ["p.7", "p.3 Sec. III"], chosen: 2300, why: "1000 cycles was the planned ATC duration; result reports 2300 cycles with no fails"}
+excluded:
+  - "Cu pillar electromigration/thermal conductivity claims attributed to ref [6]"
+  - "low temperature underfill and wafer thinning mitigations attributed to ref [4]"
+not_reported: [electrical_interfaces, optical_interfaces, "bump height and solder alloy of real hardware", "TCB temperature/force/time", "underfill, lid and TIM materials", "HD dielectric material and layer thicknesses", "via diameters (design)", "core material/thickness", "package thickness"]

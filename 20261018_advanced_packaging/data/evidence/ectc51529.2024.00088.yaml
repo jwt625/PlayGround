@@ -1,0 +1,28 @@
+paper_id: ectc51529.2024.00088
+verified_on: 2026-10-18
+source_files:
+  - references/ectc51529.2024.00088/text.md
+  - references/ectc51529.2024.00088/source.json
+  - references/ectc51529.2024.00088/figures/page_02.png
+  - references/ectc51529.2024.00088/figures/page_03.png
+  - references/ectc51529.2024.00088/figures/page_04.png
+figure_reading_method: >-
+  Page renders read at 150 dpi; Fig. 4 and Fig. 6 re-rendered from source.pdf at 400 dpi in scratch (not kept). In
+  Fig. 6 the horizontal arrows are top and bottom CD, the vertical arrow is depth (matches caption depths 6/10/10 um).
+entries:
+  - {table: metrics, row_id: ectc51529.2024.00088-a-m1, field: value, value: 15.6, unit: um, basis: measured, locator: "p.2 Fig. 2(c),(f)", note: "laser confocal step label 15.6um on both via and trench profiles"}
+  - {table: metrics, row_id: ectc51529.2024.00088-a-m8, field: value, value: 8.3, unit: um, basis: measured, locator: "p.3 Fig. 4(c)", note: "ABF portion below DFR/ABF interface arrow"}
+derived:
+  - {table: stack_layers, row_id: ectc51529.2024.00088-a-L05, field: space_um, value: 5, formula: "pitch - trench CD = 10 - 5", inputs: "p.4 Fig. 6(d)"}
+  - {table: stack_layers, row_id: ectc51529.2024.00088-a-L06, field: space_um, value: 10, formula: "15 - 5", inputs: "p.2 Fig. 2(d)"}
+  - {table: stack_layers, row_id: ectc51529.2024.00088-a-L07, field: space_um, value: 16, formula: "24 - 8", inputs: "p.2 Fig. 2(e)"}
+  - {table: stack_layers, row_id: ectc51529.2024.00088-a-L08, field: space_um, value: 20, formula: "30 - 10", inputs: "p.2 Fig. 2(f)"}
+conflicts:
+  - {table: metrics, row_id: ectc51529.2024.00088-a-m6, field: value, values: [14.3, 14.1, 14.2], locators: ["p.3 Fig. 4(a)", "p.3 Fig. 4(b)", "p.3 Sec. III.B"], chosen: "figure values per feature", why: "text ~14.2 um is an overall figure; per-feature measured labels entered"}
+  - {table: metrics, row_id: ectc51529.2024.00088-a-m8, field: value, values: [8.3, 8.1, 8.2], locators: ["p.3 Fig. 4(c)", "p.3 Fig. 4(d)", "p.3 Sec. III.B"], chosen: "figure values per feature", why: "measured image labels over text"}
+  - {table: metrics, row_id: ectc51529.2024.00088-a-m21, field: locator, values: ["Fig. 6 caption labels vias (a-b), trenches (d-e)", "image shows vias a-c, trenches d-f"], locators: ["p.4 Fig. 6 caption", "p.4 Fig. 6"], chosen: "image panel labels", why: "caption panel ranges inconsistent with three via panels; Fig. 4 caption also says (b) for panel (d)"}
+excluded:
+  - "Cu-mask DRIE of ABF, via CD 8-20 um, depth 5.4 um attributed to refs [7-8]"
+  - "sub-10 um vias and L/S, etched depth 7 um attributed to ref [9]"
+  - "laser drilling via CD > 15 um limit (general statement, background)"
+not_reported: [components, interconnects, electrical_interfaces, optical_interfaces, "ABF grade and thickness", "Cu thickness", "coupon size", "etch time, gas flows, ICP/CCP power", "exposure dose", "taper angle", "metallization"]

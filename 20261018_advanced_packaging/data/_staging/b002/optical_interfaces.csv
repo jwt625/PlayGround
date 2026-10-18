@@ -1,0 +1,2 @@
+oi_id,tv_id,coupler_type,alignment,wavelength_nm,band,polarization,channels,fiber_pitch_um,fiber_type,mfd_chip_um,mfd_fiber_um,coupling_loss_db,scope,attach_material,lane_rate_gbps,basis,source,overrides,locator,qualifiers,notes
+ectc51909.2023.00009-a-o1,ectc51909.2023.00009-a,grating,,1308,,single polarization (SPGC),,,,,,3.27,per SPGC; mean over several wafers (+/- 0.2 dB),,,measured,table,,p.6 Table I; p.6 Sec. IV.A; p.1 Abstract,,Central wavelength 1308 +/- 8 nm; nominal 1310 nm. Measured after TSV processing at metal 1 level.

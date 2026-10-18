@@ -1,0 +1,35 @@
+paper_id: ectc51909.2023.00298
+verified_on: 2026-10-18
+schema_version: 2
+source_files:
+  - references/ectc51909.2023.00298/text.md
+  - references/ectc51909.2023.00298/source.json
+  - references/ectc51909.2023.00298/figures/page_02.png
+  - references/ectc51909.2023.00298/figures/page_03.png
+  - references/ectc51909.2023.00298/figures/page_04.png
+locator_notes:
+  - "No page_01/page_05 renders (text-only pages). Fig. 1, 5, 8, 10 re-rendered from source.pdf at 200-400 dpi in scratch."
+  - "Text cites 'Figure 2' for the 15 um L/S image (caption Fig. 3) and 'Figure 8' for warpage-resolution map (caption Fig. 10); locators use caption labels."
+entries:
+  - {table: stack_layers, row_id: ectc51909.2023.00298-a-L03, field: thickness_um, value: 5, unit: um, basis: design_target, locator: "p.2 Fig. 1", note: "label 'ABF GX92P (5 um)'"}
+  - {table: stack_layers, row_id: ectc51909.2023.00298-a-L12, field: thickness_um, value: 15, unit: um, basis: design_target, locator: "p.2 Fig. 1", note: "label 'ABF GX92 (15 um)'; applied to every GX92 layer (not stated per layer)"}
+  - {table: interconnects, row_id: ectc51909.2023.00298-a-i1, field: diameter_um, value: 15, unit: um, basis: design_target, locator: "p.2 Fig. 1; p.2 Sec. II", note: "'15 um diameter vias' label; text 'around 15 microns'"}
+  - {table: metrics, row_id: ectc51909.2023.00298-a-m11, field: value, value: 8, unit: coupons, basis: measured, locator: "p.4 Fig. 10", note: "front face grid 4x5: green 8, yellow 10, red 2"}
+  - {table: metrics, row_id: ectc51909.2023.00298-a-m12, field: value, value: 8, unit: coupons, basis: measured, locator: "p.4 Fig. 10", note: "back face grid 4x5: green 8, yellow 8, red 4"}
+  - {table: metrics, row_id: ectc51909.2023.00298-a-m3, field: value_text, value: "4/6", unit: um, basis: measured, locator: "p.3 Fig. 5", note: "image labels 3.9 um (line) and 5.7 um (space)"}
+derived:
+  - {table: test_vehicles, row_id: ectc51909.2023.00298-a, field: carrier_size_mm, value: "152.4x152.4", formula: "6 in x 25.4 (unit conversion, basis kept)", inputs: "p.1 Abstract 6 in x 6 in"}
+  - {table: components, row_id: ectc51909.2023.00298-a-c1, field: x_mm, value: 152.4, formula: "6 in x 25.4 (unit conversion, basis kept)", inputs: "p.2 Sec. I"}
+conflicts:
+  - {table: stack_layers, row_id: ectc51909.2023.00298-a-L04, field: line_um, values: [5, 7], locators: ["p.3 Sec. III (target L/S 5/5)", "p.2 Fig. 1 label '7 um L/S'"], chosen: 5, why: "text over schematic; 7 um is also the M3 DFR thickness"}
+  - {table: interconnects, row_id: ectc51909.2023.00298-a-i1, field: diameter_um, values: [15, 17, "<20"], locators: ["p.2 Fig. 1 / Sec. II design", "p.3 Sec. III measured min", "p.1 Abstract"], chosen: "15 design in interconnects; 17 measured in metrics", why: "design vs measured"}
+excluded:
+  - "Ref [4]: 400 microvias of 5 um diameter, 12.5 Ohm chain resistance."
+  - "Ref [3]: glass interposer data rate / energy per bit simulation claims."
+  - "Ref [5]: sputtered Ti/Cu adhesion benefit."
+not_reported:
+  - electrical_interfaces, optical_interfaces
+  - Cu thickness per metal layer; seed thicknesses; via depth
+  - lamination, ABF cure, desmear and bake conditions; M4 plating step details
+  - glass product name; TGV (future work)
+  - numeric warpage; reliability (HAST is future work); via chain count/sample size

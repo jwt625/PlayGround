@@ -1,0 +1,46 @@
+comp_id,tv_id,component_type,is_emulator,embedded,name,count,x_mm,y_mm,thickness_um,cavity_x_mm,cavity_y_mm,cavity_depth_um,gap_um,process_node,material,supplier,basis,source,overrides,locator,qualifiers,notes
+ectc51906.2022.00232-a-c1,ectc51906.2022.00232-a,asic,,,SoC (7 nm ASIC),1,31.5,23.8,,,,,,7 nm,Si,,design_target,table,process_node:text;material:schematic,p.1 Abstract; p.2 Table I; p.2 Table II; p.2 Fig. 2,,Thickness not given.
+ectc51906.2022.00232-a-c2,ectc51906.2022.00232-a,io_die,,,I/O die (chiplet),8,15.5,4,,,,,60,,,,design_target,table,,p.1 Abstract; p.2 Table I; p.2 Table II; p.2 Fig. 3(b),,"gap_um = D2D gap (SoC to I/O die), Table II. 8 identical I/O dies."
+ectc51906.2022.00232-a-c3,ectc51906.2022.00232-a,mold,,no,epoxy mold compound (reconstituted wafer),,,,,,,,,,epoxy mold compound,,stated,text,,p.1 Sec. II; p.2 Fig. 2; p.5 Fig. 13,,Product and thickness not given.
+ectc51906.2022.00232-a-c4,ectc51906.2022.00232-a,substrate,,,low loss organic substrate,1,74,74,,,,,,,,,design_target,table,,p.1 Sec. II; p.2 Table I,,Core thickness 1.4 mm (Table I); total substrate thickness and layer count not given.
+ectc51906.2022.00232-a-c5,ectc51906.2022.00232-a,stiffener,,,copper stiffener ring,1,,,2500,,,,,,Cu,,design_target,table,material:text,p.1 Sec. II; p.2 Table I; p.2 Fig. 1; p.2 Fig. 3(a),,Ring foot width 13/10 mm (Table I; meaning of the two values not stated). Warpage control.
+ectc51906.2022.00232-a-c6,ectc51906.2022.00232-a,underfill,,,underfill at C4 (module to substrate),,,,,,,,,,,,stated,schematic,,p.2 Fig. 1; p.5 Fig. 13,,Shown in Fig. 1 and Fig. 13 only; product not given.
+ectc51906.2022.00232-b-c1,ectc51906.2022.00232-b,asic,,,SoC (7 nm ASIC),1,31.5,23.8,,,,,,7 nm,Si,,design_target,table,process_node:text;material:schematic,p.1 Abstract; p.2 Table I; p.2 Table II; p.2 Fig. 2,,Thickness not given.
+ectc51906.2022.00232-b-c2,ectc51906.2022.00232-b,io_die,,,I/O die (chiplet),8,15.5,4,,,,,60,,,,design_target,table,,p.1 Abstract; p.2 Table I; p.2 Table II; p.2 Fig. 3(b),,"gap_um = D2D gap (SoC to I/O die), Table II. 8 identical I/O dies."
+ectc51906.2022.00232-b-c3,ectc51906.2022.00232-b,mold,,no,epoxy mold compound (reconstituted wafer),,,,,,,,,,epoxy mold compound,,stated,text,,p.1 Sec. II; p.2 Fig. 2; p.5 Fig. 13,,Product and thickness not given.
+ectc51906.2022.00232-b-c4,ectc51906.2022.00232-b,substrate,,,low loss organic substrate,1,91,91,,,,,,,,,design_target,table,,p.1 Sec. II; p.2 Table I,,Core thickness 1.4 mm (Table I); total substrate thickness and layer count not given.
+ectc51906.2022.00232-b-c5,ectc51906.2022.00232-b,stiffener,,,copper stiffener ring,1,,,2500,,,,,,Cu,,design_target,table,material:text,p.1 Sec. II; p.2 Table I; p.2 Fig. 1; p.2 Fig. 3(a),,Ring foot width 17/19 mm (Table I; meaning of the two values not stated). Warpage control.
+ectc51906.2022.00232-b-c6,ectc51906.2022.00232-b,underfill,,,underfill at C4 (module to substrate),,,,,,,,,,,,stated,schematic,,p.2 Fig. 1; p.5 Fig. 13,,Shown in Fig. 1 and Fig. 13 only; product not given.
+ectc51906.2022.00232-c-c1,ectc51906.2022.00232-c,asic,,,SoC (7 nm ASIC),1,31.5,23.8,,,,,,7 nm,Si,,design_target,table,process_node:text;material:schematic,p.1 Abstract; p.2 Table I; p.2 Table II; p.2 Fig. 2,,Thickness not given.
+ectc51906.2022.00232-c-c2,ectc51906.2022.00232-c,io_die,,,I/O die (chiplet),8,15.5,4,,,,,60,,,,design_target,table,,p.1 Abstract; p.2 Table I; p.2 Table II; p.2 Fig. 3(b),,"gap_um = D2D gap (SoC to I/O die), Table II. 8 identical I/O dies."
+ectc51906.2022.00232-c-c3,ectc51906.2022.00232-c,mold,,no,epoxy mold compound (reconstituted wafer),,,,,,,,,,epoxy mold compound,,stated,text,,p.1 Sec. II; p.2 Fig. 2; p.5 Fig. 13,,Product and thickness not given.
+ectc51906.2022.00135-a-c1,ectc51906.2022.00135-a,unspecified,,,Si die (flip chip),,,,,,,,,,Si,,stated,schematic,name:text,p.3 Fig. 6; p.3 Sec. III,,"Function, size, count and thickness not given."
+ectc51906.2022.00135-a-c2,ectc51906.2022.00135-a,mold,,no,mold underfill (MUF): encapsulant and underfill,,,,,,,,,,,,stated,text,,p.3 Sec. III; p.3 Fig. 6,,Product not given.
+ectc51906.2022.00135-a-c3,ectc51906.2022.00135-a,other,,,"650x650 mm glass panel (temporary RDL support, laser debonded)",,650,650,,,,,,,glass,,design_target,text,material:stated,p.2 Sec. I; p.3 Sec. III; p.3 Fig. 6,,CTE matched large-format glass (Sec. I); sectioned before flip chip; not reusable in this flow. Thickness not given.
+ectc51906.2022.00135-c-c1,ectc51906.2022.00135-c,other,,,650x650 mm CTE-matched glass carrier panel,,650,650,,,,,,,glass,,design_target,text,material:stated,p.1 Fig. 1; p.2 Sec. I,,
+ectc51906.2022.00135-c-c2,ectc51906.2022.00135-c,adhesive,,,temporary bonding adhesive (wafer/sub-panel to glass panel),,,,,,,,,,,,stated,text,,p.2 Sec. I,,Product not given.
+tcpmt.2023.3312037-a-c1,tcpmt.2023.3312037-a,other,,,Foveros 3-D stack (thinned die; back side metallization with Au surface finish; ~250 um mold shelf at edge),2,,,,,,,,,Si with mold shelf; BSM + Au finish,,stated,text,,p.1 Sec. I; p.2 Sec. II; p.3 Sec. III,,Thinner die. Surface under BSM is mold or Si. Thickness not given. Trench laser-ablated in mold shelf (HVM).
+tcpmt.2023.3312037-a-c2,tcpmt.2023.3312037-a,hbm,,,"HBM (full thickness, mold sidewall)",,,,,,,,100,,mold sidewall,,stated,text,gap_um:design_target,p.1 Sec. I; p.2 Sec. II; p.2 Fig. 4,gap_um:ge,"gap_um = DtD spacing to Foveros stack, as small as 100 um. Two memory suppliers, different mold materials. Count from reprinted Fig. 1 not entered."
+tcpmt.2023.3312037-a-c3,tcpmt.2023.3312037-a,other,,,"transceiver die (full thickness, Si sidewall)",,,,,,,,100,,Si,,stated,text,gap_um:design_target,p.1 Sec. I; p.2 Sec. II,gap_um:ge,"gap_um = DtD spacing to Foveros stack, as small as 100 um."
+tcpmt.2023.3312037-a-c4,tcpmt.2023.3312037-a,bridge,,,EMIB bridge,,,,,,,,,,,,stated,text,,p.1 Abstract; p.1 Sec. I,,No bridge details given.
+tcpmt.2023.3312037-a-c5,tcpmt.2023.3312037-a,substrate,,,package substrate,,,,,,,,,,,,stated,schematic,,p.1 Fig. 2,,No details.
+tcpmt.2023.3312037-a-c6,tcpmt.2023.3312037-a,underfill,,,"package-level capillary underfill (epoxy resin, silica filler, additives)",,,,,,,,,,epoxy resin + silica filler,,stated,text,,p.1 Sec. I; p.2 Sec. II,,"Product not given; dispensed at edge, flows toward C4 and DtD space."
+tcpmt.2023.3312037-a-c7,tcpmt.2023.3312037-a,underfill,,,"wafer-level underfill (Foveros chiplets, under wafer-level mold)",,,,,,,,,,,,stated,text,,p.5 Sec. V,,Ablates slower than mold; at process corners can fill most of the mold shelf.
+tcpmt.2023.3312037-a-c8,tcpmt.2023.3312037-a,tim,,,solder TIM,,,,,,,,,,solder,,stated,text,,p.1 Sec. I; p.5 Sec. IV,,Applied after underfilling; UOD/trench surfaces risk TIM delamination.
+tcpmt.2023.3312037-a-c9,tcpmt.2023.3312037-a,heat_spreader,,,heat spreader,,,,,,,,,,,,stated,schematic,,p.1 Fig. 2,,Generic schematic only.
+tcpmt.2023.3312037-b-c1,tcpmt.2023.3312037-b,dummy_die,,,thicker die,,,,,,,,,,,,stated,text,,p.3 Sec. III.A; p.3 Fig. 6,,
+tcpmt.2023.3312037-b-c2,tcpmt.2023.3312037-b,dummy_die,,,thinner die with laser-ablated edge trench,,,,,,,,,,,,stated,text,,p.3 Sec. III.A; p.3 Fig. 6,,Fig. 6(a) schematic: Si with mold at edge; trench in the mold region.
+tcpmt.2023.3312037-b-c3,tcpmt.2023.3312037-b,other,,,glass slide (dies glued on),,,,,,,,,,glass,,stated,text,,p.3 Sec. III.A; p.3 Fig. 6,,
+tcpmt.2023.3312037-b-c4,tcpmt.2023.3312037-b,underfill,,,"underfill, manually dispensed, supplier-recommended cure",,,,,,,,,,,,stated,text,,p.3 Sec. III.A; p.3 Fig. 6,,
+tcpmt.2023.3312037-c-c1,tcpmt.2023.3312037-c,unspecified,,,thicker die,,,,,,,,,,,,stated,mixed,,p.3 Sec. III.B; p.3 Fig. 7,,
+tcpmt.2023.3312037-c-c2,tcpmt.2023.3312037-c,unspecified,,,thinner die,,,,,,,,,,,,stated,mixed,,p.3 Sec. III.B; p.3 Fig. 7,,
+tcpmt.2023.3312037-c-c3,tcpmt.2023.3312037-c,other,,,hydrophobic coating on thinner die top side (treated split),,,,,,,,,,,,stated,text,,p.3 Sec. III.B; p.3 Fig. 7,,Material not named.
+tcpmt.2023.3312037-c-c4,tcpmt.2023.3312037-c,underfill,,,underfill,,,,,,,,,,,,stated,mixed,,p.3 Sec. III.B; p.3 Fig. 7,,
+tcpmt.2023.3312037-d-c1,tcpmt.2023.3312037-d,unspecified,,,thicker die,,,,,,,,,,,,stated,mixed,,p.3 Sec. III.C; p.4 Fig. 8,,
+tcpmt.2023.3312037-d-c2,tcpmt.2023.3312037-d,unspecified,,,thinner die,,,,,,,,,,,,stated,mixed,,p.3 Sec. III.C; p.4 Fig. 8,,
+tcpmt.2023.3312037-d-c3,tcpmt.2023.3312037-d,other,,,hydrophobic barrier line on thinner die edge,,,,,,,,,,,,stated,text,,p.3 Sec. III.C; p.4 Fig. 8,,Material not named.
+tcpmt.2023.3312037-d-c4,tcpmt.2023.3312037-d,underfill,,,underfill,,,,,,,,,,,,stated,mixed,,p.3 Sec. III.C; p.4 Fig. 8,,
+tcpmt.2023.3312037-e-c1,tcpmt.2023.3312037-e,unspecified,,,thicker die,,,,,,,,,,,,stated,mixed,,p.4 Sec. III.D; p.4 Fig. 9,,
+tcpmt.2023.3312037-e-c2,tcpmt.2023.3312037-e,unspecified,,,thinner die,,,,,,,,,,,,stated,mixed,,p.4 Sec. III.D; p.4 Fig. 9,,
+tcpmt.2023.3312037-e-c3,tcpmt.2023.3312037-e,other,,,hydrophobic coating on thicker die sidewall (Q-tip),,,,,,,,,,,,stated,text,,p.4 Sec. III.D; p.4 Fig. 9,,Material not named.
+tcpmt.2023.3312037-e-c4,tcpmt.2023.3312037-e,underfill,,,underfill,,,,,,,,,,,,stated,mixed,,p.4 Sec. III.D; p.4 Fig. 9,,

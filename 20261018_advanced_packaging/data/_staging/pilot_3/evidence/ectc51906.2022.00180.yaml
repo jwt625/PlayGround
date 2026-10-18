@@ -1,0 +1,43 @@
+paper_id: ectc51906.2022.00180
+verified_on: 2026-10-18
+schema_version: 2
+source_files:
+  - references/ectc51906.2022.00180/text.md
+  - references/ectc51906.2022.00180/source.json
+  - references/ectc51906.2022.00180/figures/page_01.png
+  - references/ectc51906.2022.00180/figures/page_02.png
+  - references/ectc51906.2022.00180/figures/page_03.png
+  - references/ectc51906.2022.00180/figures/page_04.png
+  - references/ectc51906.2022.00180/figures/page_05.png
+  - references/ectc51906.2022.00180/figures/page_06.png
+  - references/ectc51906.2022.00180/source.pdf   # high-dpi clips (scratch only) of Figs. 2, 3, 5(a), 6, 7, 8, 9, 11(b), 12(c), 13 for label legibility
+entries:
+  - {table: interconnects, row_id: ectc51906.2022.00180-a-i3, field: notes, value: 96, unit: um, basis: measured, locator: "p.4 Fig. 7", note: "annotated span between adjacent 3D joints; endpoints not center-to-center, not entered as pitch"}
+  - {table: interconnects, row_id: ectc51906.2022.00180-a-i3, field: notes, value: 25, unit: um, basis: measured, locator: "p.4 Fig. 7", note: "joint width in cross-section; pillar design diameter 20 um kept in diameter_um"}
+  - {table: stack_layers, row_id: ectc51906.2022.00180-b-L06, field: thickness_um, value: 50, unit: um, basis: design_target, locator: "p.5 Fig. 9", note: "schematic label spans whole top build-up (DL1+DL2 with M1/M2); DL1 alone not given"}
+  - {table: metrics, row_id: ectc51906.2022.00180-a-m1, field: value, value: 50, unit: um, basis: design_target, locator: "p.1 Sec. I", note: "intro design goal <50 um interconnect length via RDL via stacks"}
+derived:
+  - {table: test_vehicles, row_id: ectc51906.2022.00180-b, field: interposer_area_mm2, value: 2500, formula: "x*y = 50*50", inputs: "p.5 Sec. IV; p.5 Fig. 9"}
+conflicts:
+  - {table: test_vehicles, row_id: ectc51906.2022.00180-a, field: package_x_mm, values: [15, 20], locators: ["p.2 Sec. II-A-2; p.4 Fig. 6(c); p.4 Fig. 7", "p.2 Fig. 3(a)"], chosen: 15, why: "x-ray/cross-section photo and text over schematic"}
+  - {table: components, row_id: ectc51906.2022.00180-a-c1, field: y_mm, values: [10, 10.1], locators: ["p.2 Sec. II-A-2", "p.2 Fig. 2"], chosen: 10, why: "text over layout schematic"}
+  - {table: components, row_id: ectc51906.2022.00180-a-c1, field: gap_um, values: [92, 100], locators: ["p.3 Sec. II-B; p.4 Fig. 7", "p.2 Sec. II-A-2; p.5 Sec. IV"], chosen: 92, why: "measured cross-section over design text"}
+  - {table: components, row_id: ectc51906.2022.00180-a-c2, field: thickness_um, values: [775, 750], locators: ["p.4 Fig. 7", "p.2 Fig. 3(a)"], chosen: 775, why: "measured cross-section over schematic"}
+  - {table: interconnects, row_id: ectc51906.2022.00180-a-i1, field: pitch_min_um, values: ["10;20;30", "20;40"], locators: ["p.2 Sec. II-A-2", "p.2 Fig. 2"], chosen: "10;20;30 (min 10, max 30, vias at 20 per p.5)", why: "text over layout schematic"}
+  - {table: stack_layers, row_id: ectc51906.2022.00180-b-L09, field: thickness_um, values: [260, 200], locators: ["p.6 Fig. 13; p.5 Fig. 9", "p.3 Sec. III-A-2"], chosen: 260, why: "measured cross-section over text"}
+  - {table: components, row_id: ectc51906.2022.00180-b-c4, field: thickness_um, values: [260, 200], locators: ["p.6 Fig. 13", "p.3 Sec. III-A-2"], chosen: 260, why: "measured cross-section over text"}
+  - {table: process_steps, row_id: ectc51906.2022.00180-b-s11, field: material, values: ["TOK", "Hitachi Chemicals"], locators: ["p.3 Sec. III-B", "p.5 Ack."], chosen: "TOK", why: "method text over acknowledgment"}
+excluded:
+  - "desmear roughness ~300-500 nm, attributed to ref [10] (p.3)"
+  - "package sizes up to ~100x100 mm possible for TV-2 architecture, attributed to ref [8] (p.2)"
+not_reported:
+  - "RDL line/space for any layer"
+  - "TCB temperature, force, time; underfill material and cure"
+  - "ABF grade and cure for TV-2; DL1 thickness; second ABF lamination for DL1/DL4"
+  - "microvia diameters in TV-2; via-in-via dimensions"
+  - "bump metallurgy for TV-2 SoC/HBM emulators"
+  - "BGA ball alloy; TV-1 BGA ball size/pitch"
+  - "package thickness; glass grade/CTE"
+  - electrical_interfaces
+  - optical_interfaces
+  - "daisy-chain resistance, warpage values, reliability tests, thermal data, yield"

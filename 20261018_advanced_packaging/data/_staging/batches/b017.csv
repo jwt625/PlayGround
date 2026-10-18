@@ -1,0 +1,4 @@
+paper_id,doi,title,year,venue,primary_bucket,buckets,priority,triage_rationale
+ectc51687.2025.00063,10.1109/ectc51687.2025.00063,Advanced Glass Substrate Fabrication and Metallization Process Technology for Co-Packaged Optics,2025,ECTC,glass,glass,1,Glass cavity plus TGV by mechanical and wet processing; 10 um L/S RDL in cavity via spray coat and LDI.
+ectc51909.2023.00307,10.1109/ectc51909.2023.00307,Formation and 3D Stacking Process of CMOS Chips with Backside Buried Metal Power Distribution Networks,2023,ECTC,thermal_pdn,thermal_pdn;microbump_3d,1,"Backside buried metal PDN and TSVs formed together; BCB insulator, SLID bonding, four-tier stack of ~45 um chips."
+tcpmt.2023.3266666,10.1109/tcpmt.2023.3266666,Fabrication and Performance of 300-mm Wafer-Scale Silicon Microchannel Cooler,2023,TCPMT,thermal_pdn,thermal_pdn,1,"300 mm wafer-scale Si microchannel cooler, Pb-Sn attached test wafer, frit-bonded glass manifolds; 14 kW, <18 C rise."

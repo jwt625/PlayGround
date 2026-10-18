@@ -1,0 +1,36 @@
+paper_id: ectc51687.2025.00233
+verified_on: 2026-10-18
+source_files:
+  - references/ectc51687.2025.00233/text.md
+  - references/ectc51687.2025.00233/source.json
+  - references/ectc51687.2025.00233/figures/page_02.png
+  - references/ectc51687.2025.00233/figures/page_03.png
+  - references/ectc51687.2025.00233/figures/page_04.png
+figure_reading_method: >-
+  Page renders p.2-p.4 opened; Fig. 2 and Fig. 3(a) re-rendered from source.pdf at 5x zoom in the scratchpad.
+entries:
+  - {table: test_vehicles, row_id: ectc51687.2025.00233-b, field: substrate_x_mm, value: 77, unit: mm, basis: design_target, locator: "p.3 Sec. III.B", note: "unit size 77 x 77 mm2"}
+  - {table: interconnects, row_id: ectc51687.2025.00233-b-i2, field: diameter_um, value: 30, unit: um, basis: design_target, locator: "p.4 Fig. 4; p.4 Sec. III.B", note: "Fig. 4 'Drill Size: 30 um, pitch: 150 um'; text 'via size of 30 um'"}
+  - {table: metrics, row_id: ectc51687.2025.00233-b-m6, field: value, value: 9, unit: um, basis: design_target, locator: "p.4 Fig. 4", note: "Line width/space 9/12 um, length 2000 um"}
+  - {table: metrics, row_id: ectc51687.2025.00233-b-m2, field: pass_criterion, value: "1e8", unit: ohm, basis: measured, locator: "p.4 Table III", note: "Insulation R > 10^8 ohm"}
+  - {table: stack_layers, row_id: ectc51687.2025.00233-b-L08, field: thickness_um, value: 400, unit: um, basis: design_target, locator: "p.4 Sec. III.B; p.3 Fig. 2(c)", note: "0.4 mm glass core; Fig. 2(c) label"}
+derived:
+  - {table: interconnects, row_id: ectc51687.2025.00233-a-i1, field: aspect_ratio, value: 4, formula: "depth/diameter = 400/100", inputs: "p.3 Sec. III.A"}
+  - {table: interconnects, row_id: ectc51687.2025.00233-b-i1, field: aspect_ratio, value: 4, formula: "depth/diameter = 400/100", inputs: "p.4 Sec. III.B"}
+  - {table: process_steps, row_id: ectc51687.2025.00233-b-s08, field: time_s, value: 3600, formula: "1 h x 3600", inputs: "p.2 Sec. II.B"}
+  - {table: process_steps, row_id: ectc51687.2025.00233-b-s09, field: time_s, value: 3600, formula: "1 h x 3600", inputs: "p.2 Sec. II.B"}
+  - {table: interconnects, row_id: ectc51687.2025.00233-a-i1, field: depth_um, value: 400, formula: "0.4 mm x 1000 (via depth = glass thickness)", inputs: "p.3 Sec. III.A"}
+conflicts:
+  - {table: test_vehicles, row_id: ectc51687.2025.00233-b, field: substrate_layer_count, values: ["two layer RDL structures on both sides (p.2 Sec. I)", "three layers of RDL per side (p.4 Sec. III.B); six RDL + six DF-PID (abstract); M1-M6 (Fig. 3(a))"], locators: ["p.2 Sec. I", "p.4 Sec. III.B; p.1 Abstract; p.3 Fig. 3(a)"], chosen: "3 RDL per side", why: "results text, abstract and schematic agree"}
+excluded:
+  - "Intel prediction: 50% less pattern distortion and 10x IO density for glass (ref [2])"
+  - "TSV higher loss than TGV at high frequency (ref [4]); fully filled TGV lower loss at 30 GHz (ref [3])"
+  - "Table I generic glass/Si/organic comparison (roughness <10 nm vs 400-600 nm) - not this TV"
+  - "Cu CTE 17 ppm/K and glass CTE ~3-9 ppm/K - generic background, glass type of TV not given"
+  - "DF6800 / DF6800M (Table II) - not used in this TV; DF6800 details in ref [9]"
+not_reported:
+  - glass type/supplier, TGV pitch/count, TGV formation method, liner metal thickness
+  - per-layer DF-PID and Cu thicknesses, per-layer L/S, via diameters per layer
+  - lamination temperature/pressure/time, exposure dose, plasma power/time, seed thickness
+  - n_samples for reliability, bHAST/HTS test structure assignment, measured resistance or R shift values
+  - warpage numbers; electrical_interfaces; optical_interfaces

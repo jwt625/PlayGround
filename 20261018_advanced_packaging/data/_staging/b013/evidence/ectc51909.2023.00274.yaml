@@ -1,0 +1,55 @@
+paper_id: ectc51909.2023.00274
+verified_on: 2026-10-18
+source_files:
+  - references/ectc51909.2023.00274/text.md
+  - references/ectc51909.2023.00274/source.json
+  - references/ectc51909.2023.00274/figures/page_01.png
+  - references/ectc51909.2023.00274/figures/page_03.png
+  - references/ectc51909.2023.00274/figures/page_04.png
+  - references/ectc51909.2023.00274/figures/page_05.png
+  - references/ectc51909.2023.00274/figures/page_06.png
+  - references/ectc51909.2023.00274/figures/page_07.png
+figure_reading_method: >-
+  text.md text layer is garbled (per-font character shift) although source.json says garbled_text_layer false and no
+  TEXT_LAYER_WARNING.md exists. All 8 pages re-rendered at 300 dpi and OCRed with tesseract in the scratchpad; every number
+  checked against page renders p.1, p.3-p.7 (OCR misread the abstract '<= 10 um' as '< 10 nm' and '>= 50 kW'). Figs. 6, 9, 10,
+  11 cropped at 4x.
+entries:
+  - {table: interconnects, row_id: ectc51909.2023.00274-a-i1, field: pitch_um, value: 10, unit: um, basis: design_target, locator: "p.4 Fig. 4(c); p.4 Fig. 4(d); p.4 Fig. 5(a)", note: "10 um bonding pitch labels; abstract <= 10 um"}
+  - {table: interconnects, row_id: ectc51909.2023.00274-a-i1, field: alignment_um, value: 1, unit: um, basis: measured, locator: "p.4 Sec. II.C; p.4 Fig. 5(a)", note: "+/-1 um in x and y"}
+  - {table: interconnects, row_id: ectc51909.2023.00274-b-i2, field: pad_x_um, value: 250, unit: um, basis: design_target, locator: "p.6 Fig. 9(c)", note: "label '250x480 um2 pad size'"}
+  - {table: components, row_id: ectc51909.2023.00274-b-c1, field: gap_um, value: 500, unit: um, basis: design_target, locator: "p.6 Fig. 9(b)", note: "label '500 um inter-dielet spacing'"}
+  - {table: metrics, row_id: ectc51909.2023.00274-b-m3, field: value, value: 1.6, unit: ohm, basis: measured, locator: "p.7 Fig. 11(c)", note: "full chain bar read at about 1.60 ohm"}
+  - {table: metrics, row_id: ectc51909.2023.00274-a-m1, field: notes, value: "148-184 N box", unit: N, basis: measured, locator: "p.5 Fig. 6(a)", note: "plot read of whiskers"}
+derived:
+  - {table: process_steps, row_id: ectc51909.2023.00274-a-s10, field: time_s, value: 3600, formula: "1 h x 3600", inputs: "p.3 Sec. II.B"}
+  - {table: interconnects, row_id: ectc51909.2023.00274-a-i1, field: anneal_time_min, value: 60, formula: "1 h x 60", inputs: "p.3 Sec. II.B"}
+  - {table: process_steps, row_id: ectc51909.2023.00274-a-s12, field: time_s, value: 345600, formula: "96 h x 3600", inputs: "p.4 Sec. II.B"}
+  - {table: stack_layers, row_id: ectc51909.2023.00274-a-L01, field: thickness_um, value: 0.015, formula: "15 nm / 1000", inputs: "p.3 Sec. II.B"}
+  - {table: stack_layers, row_id: ectc51909.2023.00274-a-L06, field: thickness_um, value: 0.4, formula: "400 nm / 1000", inputs: "p.3 Sec. II.B"}
+  - {table: stack_layers, row_id: ectc51909.2023.00274-a-L07, field: thickness_um, value: 0.2, formula: "200 nm / 1000", inputs: "p.3 Sec. II.B"}
+  - {table: stack_layers, row_id: ectc51909.2023.00274-b-L09, field: thickness_um, value: 0.22, formula: "Ti 20 nm + Cu 200 nm", inputs: "p.5 Sec. III.A"}
+  - {table: stack_layers, row_id: ectc51909.2023.00274-c-L09, field: thickness_um, value: 0.22, formula: "Ti 20 nm + Cu 200 nm", inputs: "p.5 Sec. III.A"}
+  - {table: process_steps, row_id: ectc51909.2023.00274-b-s01, field: thickness_um, value: 0.22, formula: "Ti 20 nm + Cu 200 nm", inputs: "p.5 Sec. III.A"}
+  - {table: stack_layers, row_id: ectc51909.2023.00274-b-L05, field: thickness_um, value: 100, formula: "SU8 thickness = dielet height (100 um)", inputs: "p.6 Sec. III.A; p.5 Sec. III.A"}
+  - {table: stack_layers, row_id: ectc51909.2023.00274-c-L05, field: thickness_um, value: 200, formula: "SU8 thickness = dielet height (200 um)", inputs: "p.6 Sec. III.A; p.5 Sec. III.A"}
+  - {table: components, row_id: ectc51909.2023.00274-b-c4, field: thickness_um, value: 100, formula: "SU8 thickness = dielet height (100 um)", inputs: "p.6 Sec. III.A"}
+  - {table: interconnects, row_id: ectc51909.2023.00274-b-i2, field: height_um, value: 100, formula: "TPV height = SU8 thickness = dielet height", inputs: "p.6 Sec. III.A; p.7 Fig. 11(b)"}
+  - {table: interconnects, row_id: ectc51909.2023.00274-c-i2, field: height_um, value: 200, formula: "TPV height = SU8 thickness = dielet height", inputs: "p.6 Sec. III.A"}
+conflicts:
+  - {table: interconnects, row_id: ectc51909.2023.00274-a-i1, field: count, values: ["180 bonding pillars per chain", "180 daisy chains per assembly"], locators: ["p.3 Sec. II.B", "p.3 Sec. II.B"], chosen: 180, why: "both stated; count column holds pillars per chain, chain count in TV notes"}
+  - {table: metrics, row_id: ectc51909.2023.00274-a-m3, field: n_samples, values: ["15 of 180 chains chosen for testing", "45 daisy chains on three dielets"], locators: ["p.3 Sec. II.B", "p.4 Sec. II.B; p.4 Sec. II.C"], chosen: 45, why: "15 per dielet x 3 dielets consistent with Fig. 6(b) inset (15 probing pads per side)"}
+  - {table: papers, row_id: ectc51909.2023.00274, field: first_author, values: ["Haoxiang Ren (page render author block)", "Krutikesh Sahoo (OCR reading order)"], locators: ["p.1"], chosen: "Haoxiang Ren", why: "page render shows Ren first"}
+excluded:
+  - "Si-IF latency < 20 ps and < 0.4 pJ/bit energy per bit (ref [5])"
+  - "wafer-scale GPU 18.9x speedup and 143x EDP vs MCM (ref [3])"
+  - "several tens of MW for wafer-scale HPC (ref [6]); state-of-the-art PDN efficiency < 70% (background)"
+  - "dielet-side PDN surrogate structure from previous work (ref [19])"
+  - "MIL-STD 50 N shear spec value is from ref [18]; used only as pass_criterion"
+not_reported:
+  - Si dielet thickness and count (TV a); GaN-IF wafer diameter and Si thickness; Cu pillar/pad diameter and height
+  - Cu damascene thickness, dielectric material; ALD/PECVD thicknesses in TV b/c; SU8 product grade
+  - TCB parameters for TV b/c (stated as optimized); reflow profiles; solder volume/stencil thickness
+  - TPV count per assembly beyond per-chain; resistance for 200 um dielet build
+  - electrical_interfaces (no D2D PHY property); optical_interfaces
+  - HEMT/IVR electrical efficiency (not built)

@@ -1,0 +1,37 @@
+paper_id: ectc51909.2023.00333
+verified_on: 2026-10-18
+source_files:
+  - references/ectc51909.2023.00333/text.md
+  - references/ectc51909.2023.00333/source.json
+  - references/ectc51909.2023.00333/figures/page_02.png
+  - references/ectc51909.2023.00333/figures/page_03.png
+  - references/ectc51909.2023.00333/figures/page_04.png
+figure_reading_method: >-
+  Page renders at 150 dpi; Fig. 4 SEM inset and Fig. 5(a) measurement overlay re-rendered from source.pdf at 6-8x
+  zoom in the scratchpad. Fig. 5(a) overlay labels (about 207 um / 11 um) are illegible even at 8x, so the cavity
+  depth 207.57 um and bottom size 2.59 mm come from the Sec. III.B text.
+entries:
+  - {table: stack_layers, row_id: ectc51909.2023.00333-a-L03, field: thickness_um, value: 5.4772, unit: um, basis: measured, locator: "p.3 Fig. 4", note: "SEM label 5.4772um between arrows across GX-92P"}
+  - {table: components, row_id: ectc51909.2023.00333-a-c1, field: cavity_depth_um, value: 207.57, unit: um, basis: measured, locator: "p.3 Sec. III.B", note: "depth at the measured point = bonded ARC substrate thickness"}
+  - {table: components, row_id: ectc51909.2023.00333-a-c1, field: gap_um, value: 50, unit: um, basis: design_target, locator: "p.3 Sec. III.B", note: "cavity designed with an extra 50 um on each edge"}
+  - {table: metrics, row_id: ectc51909.2023.00333-a-m4, field: value, value: 78.54, unit: deg, basis: measured, locator: "p.4 Fig. 6", note: "angle label on cross-section"}
+  - {table: process_steps, row_id: ectc51909.2023.00333-a-s07, field: temp_c, value: 70, unit: C, basis: design_target, locator: "p.4 Sec. III.C", note: "hot roller process at 70 C"}
+  - {table: metrics, row_id: ectc51909.2023.00333-b-m1, field: value, value: 10.12, unit: "", basis: measured, locator: "p.1 Abstract", note: "dielectric constant 10.12+/-0.061 over 3-170 GHz; abstract only"}
+derived: []
+conflicts:
+  - {table: stack_layers, row_id: ectc51909.2023.00333-a-L03, field: thickness_um, values: [5, 5.4772], locators: ["p.3 Sec. III.A text (GX-92P (5um))", "p.3 Fig. 4 SEM"], chosen: 5.4772, why: "measured cross-section over text (rule k)"}
+  - {table: components, row_id: ectc51909.2023.00333-a-c1, field: cavity_x_mm, values: ["2.64 implied by die 2.54 mm + 50 um per edge (design)", "2.59 measured cavity bottom"], locators: ["p.3 Sec. III.B", "p.3 Sec. III.B"], chosen: 2.59, why: "measured value; tapered sidewall (78.54 deg) means top and bottom differ; not reconciled in paper"}
+  - {table: stack_layers, row_id: ectc51909.2023.00333-a-L03, field: material, values: ["ABF (GX-92P)", "photo-imageable polyimide-based dry film dielectric"], locators: ["p.2 Sec. II.A", "p.3 Sec. II.A"], chosen: "GX-92P (ABF dry film)", why: "trade name kept as written; description noted"}
+  - {table: stack_layers, row_id: ectc51909.2023.00333-a-L01, field: material, values: ["ABF GL102", "GL-102 ABF"], locators: ["p.3 Sec. II.D", "p.4 Sec. III.C"], chosen: "ABF GL102 (GL-102)", why: "same film, two spellings"}
+excluded:
+  - "ARC er = 10, tan d = 0.0001 (10-60 GHz), kth 36-38 W/m K: attributed to ref [5] (Corning)"
+  - "LTCC processing 800-1000 C (ref [6]); glass 1.1, LCP 0.2-0.3, PTFE 0.25, LTCC 1-4 W/m K thermal conductivities (refs [9]-[12])"
+  - "GX-92P property claims attributed to ref [13]"
+  - "Fig. 1 ARC roll/wafer/panel photo credited to ref [5]"
+  - "Fig. 2 generic die/cavity height mismatch schematic (no numbers)"
+not_reported:
+  - electrical_interfaces, optical_interfaces, interconnects (die 'connecting bumps' face up; no dimensions or connection formed)
+  - substrate/panel size, cavity count, die-to-cavity measured gap
+  - GX-92P cure temperature and time; lamination pressure/temperature/time; ABF cure/reflow conditions
+  - fs-laser wavelength, power, pulse duration, repetition rate; LTHC release laser parameters
+  - warpage, reliability, thermal, yield; RF test structure details behind the abstract numbers

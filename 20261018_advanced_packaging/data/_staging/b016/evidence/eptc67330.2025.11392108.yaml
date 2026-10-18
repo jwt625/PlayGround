@@ -1,0 +1,43 @@
+paper_id: eptc67330.2025.11392108
+verified_on: 2026-10-18
+source_files:
+  - references/eptc67330.2025.11392108/text.md
+  - references/eptc67330.2025.11392108/source.json
+  - references/eptc67330.2025.11392108/figures/page_02.png
+  - references/eptc67330.2025.11392108/figures/page_03.png
+  - references/eptc67330.2025.11392108/figures/page_04.png
+  - references/eptc67330.2025.11392108/figures/page_05.png
+figure_reading_method: >-
+  Page renders p.2-p.5 opened; Fig. 6, Fig. 6(d), Fig. 8, Fig. 15, Fig. 16 and Table II re-rendered from source.pdf at 5-10x in the scratchpad.
+entries:
+  - {table: interconnects, row_id: eptc67330.2025.11392108-a-i3, field: height_um, value: 120, unit: um, basis: measured, locator: "p.3 Fig. 8(c)", note: "label 'Final Solder Thk.=120'"}
+  - {table: interconnects, row_id: eptc67330.2025.11392108-a-i3, field: diameter_um, value: 230, unit: um, basis: measured, locator: "p.3 Fig. 8(c)", note: "label 'Solder Dia.=230'; as-placed SnCu ball drawn 0.2 mm in Fig. 6(d)"}
+  - {table: interconnects, row_id: eptc67330.2025.11392108-a-i2, field: count, value: 6, unit: vias, basis: stated, locator: "p.5 Fig. 16", note: "3D X-ray label 'Coaxial Via x 6'"}
+  - {table: components, row_id: eptc67330.2025.11392108-a-c2, field: thickness_um, value: 450, unit: um, basis: design_target, locator: "p.3 Fig. 6(d)", note: "'A Substrateoard t=0.45' (mm)"}
+  - {table: components, row_id: eptc67330.2025.11392108-a-c3, field: thickness_um, value: 800, unit: um, basis: design_target, locator: "p.3 Fig. 6(d)", note: "'B Sub t=0.8' (mm); A+B ~1.25 mm"}
+  - {table: metrics, row_id: eptc67330.2025.11392108-a-m2, field: value, value: -13.6, unit: um, basis: measured, locator: "p.3 Fig. 9", note: "table in figure: 25/-11/N/A, 170/-13.6/24, 260/-18.6/69, 170/-16.2/47, 25/-14/27 (temp/warpage/variation vs RT %)"}
+derived:
+  - {table: components, row_id: eptc67330.2025.11392108-a-c2, field: thickness_um, value: 450, formula: "0.45 mm x 1000", inputs: "p.3 Fig. 6(d)"}
+  - {table: components, row_id: eptc67330.2025.11392108-a-c3, field: thickness_um, value: 800, formula: "0.8 mm x 1000", inputs: "p.3 Fig. 6(d)"}
+  - {table: components, row_id: eptc67330.2025.11392108-a-c4, field: thickness_um, value: 230, formula: "~0.23 mm x 1000", inputs: "p.3 Fig. 6(d)"}
+  - {table: components, row_id: eptc67330.2025.11392108-a-c1, field: thickness_um, value: 625, formula: "0.625 mm x 1000", inputs: "p.3 Sec. IV.A"}
+  - {table: interconnects, row_id: eptc67330.2025.11392108-a-i5, field: diameter_um, value: 300, formula: "0.3 mm x 1000", inputs: "p.3 Fig. 6(b),(d)"}
+  - {table: interconnects, row_id: eptc67330.2025.11392108-a-i5, field: height_um, value: 210, formula: "0.21 mm x 1000", inputs: "p.4 Fig. 10"}
+conflicts:
+  - {table: test_vehicles, row_id: eptc67330.2025.11392108-a, field: package_thickness_mm, values: [1.6, 1.78, "1.4 excl. BGA + 0.21 ball"], locators: ["p.1 Abstract", "p.3 Sec. IV.A; p.3 Fig. 6(c) H=1.78+/-0.1; p.3 Fig. 9 header", "p.4 Fig. 10"], chosen: 1.78, why: "text and Fig. 6 photo/Fig. 9 header agree; abstract 1.6 and Fig. 10 1.4 may exclude BGA (Fig. 6(d) spans 1.25+0.12+0.23 = 1.60)"}
+  - {table: interconnects, row_id: eptc67330.2025.11392108-a-i5, field: height_um, values: [210, 230], locators: ["p.4 Fig. 10 'Ball Ht. 0.21 mm'", "p.3 Fig. 6(d) '~0.23'"], chosen: 210, why: "explicit label vs approximate dimension"}
+  - {table: metrics, row_id: eptc67330.2025.11392108-a-m12, field: unit, values: ["1,000 hours (Table II, text)", "'THTST x 1,000 Cycles' (Fig. 16(c) label)"], locators: ["p.5 Table II", "p.5 Fig. 16(c)"], chosen: "h", why: "table > figure label"}
+  - {table: process_steps, row_id: eptc67330.2025.11392108-a-s04, field: conditions, values: ["UV on BS for via opening (Fig. 4)", "through hole made by laser drilling (text)"], locators: ["p.2 Fig. 4", "p.2 Sec. III"], chosen: "laser_drill, both noted", why: "consistent if UV laser; not stated"}
+excluded:
+  - "Fig. 1 typical AiP and Fig. 2 asymmetric substrate structures (refs [2],[3])"
+  - "Antenna design methodology and simulation details (ref [5], NTU)"
+  - "Fig. 15 L= measurements (21.9, 23.0, 19.2, 15.3, 118.4, 43.7, 18.7 um): features not identified"
+  - "Table I qualitative comparison: asymmetric substrate >10 layers (generic, no build)"
+  - "AoM module size 6.7 x 10.9 mm (commercial reference product; only in metric value_text)"
+not_reported:
+  - substrate layer counts, materials (prepreg/CCL), line/space of A/B/C substrates; panel size
+  - BS product name, TLPS via diameter/pitch, lamination/cure temperature, pressure, time
+  - cavity dimensions and method; coaxial via dimensions
+  - reflow profiles; underfill material; BGA pitch and count
+  - S-parameter data; thermal performance
+  - electrical_interfaces, optical_interfaces

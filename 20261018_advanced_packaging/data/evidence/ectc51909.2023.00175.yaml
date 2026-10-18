@@ -1,0 +1,33 @@
+paper_id: ectc51909.2023.00175
+verified_on: 2026-10-18
+source_files:
+  - references/ectc51909.2023.00175/text.md
+  - references/ectc51909.2023.00175/source.json
+  - references/ectc51909.2023.00175/figures/page_02.png
+  - references/ectc51909.2023.00175/figures/page_03.png
+  - references/ectc51909.2023.00175/figures/page_04.png
+  - references/ectc51909.2023.00175/figures/page_05.png
+figure_reading_method: >-
+  Page renders p.2-p.5 opened; Figs. 3, 4, 5, 6 and 9 re-rendered from source.pdf at 4-5x zoom in the scratchpad.
+entries:
+  - {table: interconnects, row_id: ectc51909.2023.00175-a-i4, field: height_um, value: 135, unit: um, basis: measured, locator: "p.4 Sec. IV.A; p.4 Fig. 6(b)", note: "tall Cu pillar height 135 um, 260 um pitch"}
+  - {table: components, row_id: ectc51909.2023.00175-a-c3, field: thickness_um, value: 70, unit: um, basis: measured, locator: "p.4 Sec. IV.A", note: "'height of connect die is about 70 um'"}
+  - {table: metrics, row_id: ectc51909.2023.00175-a-m2, field: value, value: 1.2, unit: x, basis: measured, locator: "p.5 Fig. 9", note: "shadow moire @25 C; mTV2 3.2x; @250 C 0.9x / 2.7x; colour-bar units illegible"}
+  - {table: metrics, row_id: ectc51909.2023.00175-c-m5, field: value, value: 1.0, unit: a.u., basis: simulated, locator: "p.3 Fig. 3", note: "plot read: RT legs 1-6 ~1.0, legs 7-9 ~1.28; HT legs 1-3 ~-1.0, 4-6 ~-1.17, 7-9 ~-1.65"}
+  - {table: metrics, row_id: ectc51909.2023.00175-c-m11, field: value, value: 1.0, unit: a.u., basis: simulated, locator: "p.3 Fig. 4", note: "plot read: 450 um 1.0/-1.0; 550 um 0.7/-0.66; 650 um 0.5/-0.47 (RT/HT)"}
+derived:
+  - {table: test_vehicles, row_id: ectc51909.2023.00175-a, field: interposer_area_mm2, value: 840, formula: "printed in Fig. 9 (840 mm2); check 32.8 x 25.6 = 839.7", inputs: "p.5 Fig. 9; p.1 Abstract"}
+conflicts:
+  - {table: test_vehicles, row_id: ectc51909.2023.00175-a, field: interposer_x_mm, values: ["32.8 x 25.6 mm2 (abstract)", "33 x 26 mm2 (Table 1; text 'about 33 x 26')", "840 mm2 (Fig. 9)", "850 mm2 (Sec. I)"], locators: ["p.1 Abstract", "p.2 Table 1; p.2 Sec. II.C", "p.5 Fig. 9", "p.2 Sec. I"], chosen: "32.8 x 25.6; area 840", why: "table and text values are rounded ('about'); abstract gives precise dimensions consistent with Fig. 9 area"}
+  - {table: test_vehicles, row_id: ectc51909.2023.00175-b, field: interposer_x_mm, values: ["53.5 x 45.4 mm2 (abstract) = 2428.9 mm2", "54 x 46 mm2 (Table 1)", "2400 mm2 (2.9X) (Fig. 9)", "2500 mm2 (Sec. I)"], locators: ["p.1 Abstract", "p.2 Table 1", "p.5 Fig. 9", "p.2 Sec. I"], chosen: "53.5 x 45.4; area 2400 (printed)", why: "precise dimensions from abstract; printed area from Fig. 9 kept, disagreement with own product noted"}
+  - {table: test_vehicles, row_id: ectc51909.2023.00175-b, field: reticle_multiple, values: ["3x (abstract, Table 1)", "2.9X (Fig. 9)"], locators: ["p.1 Abstract; p.2 Table 1", "p.5 Fig. 9"], chosen: 3, why: "nominal reticle class in table and text"}
+  - {table: metrics, row_id: ectc51909.2023.00175-b-m4, field: value, values: ["simulated mTV2/mTV1 3.4x RT, 3.7x HT (text)", "shadow moire 3.2/1.2 = 2.7x at 25 C, 2.7/0.9 = 3.0x at 250 C (Fig. 9, own arithmetic)"], locators: ["p.5 Sec. IV.B", "p.5 Fig. 9"], chosen: "both entered separately (simulated vs measured)", why: "different basis"}
+excluded:
+  - "Prototype chip-first S-Connect with double-side soldering (2021, ref [1])"
+  - "HPC market growth and SoC cost/yield background (refs [2]-[5]); CoWoS interposer routing (refs [6],[7])"
+not_reported:
+  - top die thicknesses in the builds, EMC selected for the builds, underfill product, carrier wafer size
+  - RDL layer count, line/space, dielectric, thickness; ubump diameter, alloy, bonding conditions; IPD size/count
+  - tall Cu pillar diameter; C4 pitch/size/alloy; substrate layer count; lid material; BGA
+  - absolute warpage values with sign convention (only a.u./normalized and abstract <100 um)
+  - reliability n_samples, pass criteria; electrical test data; electrical_interfaces; optical_interfaces

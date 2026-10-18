@@ -1,0 +1,39 @@
+paper_id: ectc51906.2022.00232
+verified_on: 2026-10-18
+schema_version: 2
+source_files:
+  - references/ectc51906.2022.00232/text.md
+  - references/ectc51906.2022.00232/source.json
+  - references/ectc51906.2022.00232/figures/page_01.png
+  - references/ectc51906.2022.00232/figures/page_02.png
+  - references/ectc51906.2022.00232/figures/page_03.png
+  - references/ectc51906.2022.00232/figures/page_04.png
+  - references/ectc51906.2022.00232/figures/page_05.png
+figure_reading_method: >-
+  Page renders 1-5 viewed at 150 dpi; Tables I-V and the Fig. 4 / Fig. 6 value cells checked against the images.
+  Fig. 9, 10, 13, 14 cross-sections and Fig. 7 FEA have no scale bars or values; used qualitatively only.
+entries:
+  - {table: metrics, row_id: ectc51906.2022.00232-c-m1, field: value, value: 69, unit: um, basis: measured, locator: "p.2 Fig. 4", note: "Exp. 25 C cell; text agrees (69 um convex)"}
+  - {table: metrics, row_id: ectc51906.2022.00232-b-m1, field: value, value: 1.3, unit: ratio, basis: measured, locator: "p.3 Fig. 6", note: "TV1 = 1x; text 30% higher"}
+  - {table: metrics, row_id: ectc51906.2022.00232-b-m2, field: value, value: 1.6, unit: ratio, basis: measured, locator: "p.3 Fig. 6", note: "TV1 = 1x; text 60% higher"}
+derived:
+  - {table: test_vehicles, row_id: ectc51906.2022.00232-a, field: interposer_area_mm2, value: 1387.68, formula: "x*y = 41.3*33.6", inputs: "p.2 Table I fan-out module size"}
+  - {table: test_vehicles, row_id: ectc51906.2022.00232-b, field: interposer_area_mm2, value: 1387.68, formula: "x*y = 41.3*33.6", inputs: "p.2 Table I fan-out module size"}
+  - {table: test_vehicles, row_id: ectc51906.2022.00232-c, field: interposer_area_mm2, value: 1387.68, formula: "x*y = 41.3*33.6", inputs: "p.2 Table II fan-out module size"}
+  - {table: components, row_id: ectc51906.2022.00232-a-c5, field: thickness_um, value: 2500, formula: "2.5 mm * 1000", inputs: "p.2 Table I ring thickness"}
+  - {table: stack_layers, row_id: ectc51906.2022.00232-a-L10, field: thickness_um, value: 1400, formula: "1.4 mm * 1000", inputs: "p.2 Table I core thickness"}
+conflicts:
+  - {table: test_vehicles, row_id: ectc51906.2022.00232-c, field: package_x_mm, values: ["41 x 33 mm (text)", "41.3 x 33.6 mm (Tables I, II)"], locators: ["p.1 Sec. II", "p.2 Table I; p.2 Table II"], chosen: "41.3 x 33.6", why: "table over text (rule k)"}
+excluded:
+  - "silicon interposer / TSV cost and chiplet yield claims attributed to refs [1-6]"
+  - "RDL stress constrained by die gap mechanism attributed in part to ref [7] (qualitative, not entered)"
+  - "Abstract: main challenges for packages >= 65x65 mm2 (general statement, no build)"
+not_reported:
+  - electrical_interfaces (no D2D data rate, loss or energy), optical_interfaces
+  - die, mold and module thickness; reconstituted wafer size; carrier type; debond step
+  - RDL dielectric material and thickness; Cu RDL thickness before redesign; via sizes
+  - C4 Cu pillar diameter/height, solder cap, bonding conditions; underfill product; BGA pitch
+  - substrate layer count, build-up materials, total thickness; absolute package warpage values
+  - reliability sample counts; number of reflows in the pre-optimization failure test; FEA model details
+source_quality:
+  - "text.md p.1 Abstract renders the '>=' sign (U+2A7E) as a dotless i ('ı65x65mm2'); page image read instead. No other garbling."

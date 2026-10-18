@@ -1,0 +1,71 @@
+# Hand-written notes for triage_report.md (facts from DevLog-000; keep dated). Numbers are computed by
+# scripts/report.py from cache/selection_stats.json; do not hard-code counts here.
+generated: "2026-10-18"
+venue_source:
+  IMAPS: "Crossref (prefix 10.4071, IMAPSource Proceedings, issue Symposium)"
+  IWLPC: "Crossref (SMTA prefix 10.37665, 'Wafer-Level Packaging Symposium' vols 19-22)"
+venue_notes:
+  ECTC: "Sessions/committees from ectc.net final programs 2022-2026"
+  TCPMT: "Journal; year = Xplore publicationYear (early-access records included)"
+  EPTC: "2026 not yet posted on Xplore (2026-10-18)"
+  3DIC: "Only 2023 and 2024 found on Xplore; 2022/2025/2026 not found (not held or not yet indexed)"
+  IEDM: "Filtered venue: full TOC fetched, packaging/3D topic filter (session data not in Xplore)"
+  VLSI: "Filtered venue: Technology and Circuits combined proceedings; topic filter"
+  EDAPS: "Filtered venue: cross-section disclosure required (scoring penalizes pure modeling)"
+  EPEPS: "Filtered venue: as EDAPS"
+  IRPS: "Filtered venue: test-vehicle stack required"
+  ITherm: "Filtered venue; 2026 not yet on Xplore (2026-10-18)"
+  ICEP: "2025 = ICEP-IAAC"
+  ESTC: "Biennial (even years); 2023 not held"
+  EMPC: "Biennial (odd years); 2022/2024 not held"
+  IWLPC: "Not on Xplore; Crossref holds only part of each proceedings; edition-to-year mapping inferred (IWLPC 2017 = 14th, proceedings.com)"
+  IMAPS: "meridian.allenpress.com behind Cloudflare (403); Crossref Symposium records only (likely partial)"
+enumeration_notes:
+  - "IEEE Xplore: venue-year search by publication title, 100 rows/page, then completeness check against each proceedings/issue TOC totalRecords (all matched; +2 T-CPMT records backfilled). Records whose Xplore publicationYear falls outside a venue's scope were dropped (4 T-CPMT strays)."
+  - "Xplore abstracts in search/TOC responses are truncated (~400 chars); full abstracts from OpenAlex (by DOI), else Xplore /rest/document/<id>/abstract. 237 of 8613 OpenAlex abstracts compared (2.8%) were placeholders or swapped and were replaced."
+  - "Fraunhofer/imec/ITRI technical reports: not enumerated as a separate source; their conference papers are covered through the venues above."
+  - "Venues outside the screened list appear only as curator-verified primary disclosures (outside_screen = 'unscreened venue', e.g. ICEPT, ISSCC) or in the reference table."
+  - "IWLPC and IMAPS records have no session data; access is member/subscription via publisher."
+  - "ECTC session match: 1840 of 1949 records (94.4%) mapped to a program session (title prefix match against ectc.net final-program PDFs); unmatched rows have an empty session."
+reviews:
+  - doi: 10.1109/tcpmt.2022.3144461
+    why: "Broad technical survey of 2.5D/3D, fan-out, bridge and hybrid-bonding platforms (Unimicron, T-CPMT 2022); nominated by 2 curators"
+  - doi: 10.1109/iedm45625.2022.10019534
+    why: "First-party OSAT platform overview (ASE, IEDM 2022) covering fan-out, bridge and 2.5D/3D stacks used across buckets"
+  - doi: 10.1109/iedm45741.2023.10413890
+    why: "First-party memory-maker overview of HBM stacking, MR-MUF and hybrid bonding (SK hynix, IEDM 2023); nominated by 2 curators"
+reviews_note: "Chosen by the orchestrator from 26 curator nominations: technical first-party or survey papers preferred over market overviews (e.g. the Yole ESTC 2024 fan-out overview, 2 nominations, was passed over)."
+spec_items:
+  - {name: "CoWoS-S (original CoWoS)", re: 'CoWoS-S|original CoWoS', gap: ""}
+  - {name: "CoWoS-R", re: 'CoWoS-R', gap: ""}
+  - {name: "CoWoS-L", re: 'CoWoS-L', gap: ""}
+  - {name: "InFO-oS", re: 'InFO[-_ ]?oS', gap: "No TSMC-authored in-window InFO_oS paper in the screened set; MediaTek 2022 fan-out-on-substrate paper attributed by inference."}
+  - {name: "InFO-LSI", re: 'InFO[-_ ]?LSI', gap: "No peer-reviewed disclosure found; only TSMC Hot Chips 33 (2021) tutorial and press."}
+  - {name: "SoIC", re: 'SoIC', gap: ""}
+  - {name: "EMIB", re: '\bEMIB\b(?!-T)', gap: ""}
+  - {name: "EMIB-T", re: 'EMIB-T', gap: ""}
+  - {name: "Foveros", re: 'Foveros(?! Direct)(?! Omni)', gap: ""}
+  - {name: "Foveros Direct", re: 'Foveros Direct', gap: "No peer-reviewed paper uses the brand; Intel hybrid-bonding papers mapped by inference."}
+  - {name: "Foveros Omni (ODI)", re: 'Foveros Omni|\bODI\b', gap: "Omni = ODI rebrand per trade press only."}
+  - {name: "Intel glass core", re: 'Intel glass core', gap: "Only two Intel glass-core papers found (ICEP-IAAC 2025 short paper, ECTC 2026)."}
+  - {name: "Samsung I-Cube", re: 'I-Cube', gap: "I-Cube S attribution to the 2021 MIoS paper is low confidence (brand not named)."}
+  - {name: "Samsung X-Cube", re: 'X-Cube', gap: "In-window papers do not use the X-Cube name; attribution inferred."}
+  - {name: "Samsung H-Cube", re: 'H-Cube', gap: "No peer-reviewed disclosure found; 2021-11-11 press release only."}
+  - {name: "SK hynix HBM3E stack", re: 'HBM3E', gap: "No peer-reviewed 12-high HBM3E (Advanced MR-MUF) stack paper; earliest MR-MUF paper (ECTC 2023, 8-high) cached instead."}
+  - {name: "SK hynix HBM4 stack", re: 'HBM4', gap: "VLSI 2026 12-layer test vehicle; bonding method not stated in abstract."}
+  - {name: "Absolics/SKC glass substrate", re: 'Absolics|SKC', gap: "Only one Absolics paper (ECTC 2024, TGV etch); no peer-reviewed stack-up or panel size."}
+  - {name: "FOPLP lines >= 500 x 500 mm", re: 'FOPLP line|\b[5-7][0-9]{2} ?(mm)? ?x ?[5-7][0-9]{2}', gap: "No peer-reviewed paper for Powertech, Innolux, JCET or any Samsung >= 500 mm line (press only)."}
+method:
+  - "Prefilter: bucket regexes (config/buckets.yaml) plus a packaging-core keep rule for full venues and a packaging-context requirement for filtered venues; dropped records are listed in candidates.csv with score_method=rule, an empty score and their rule-based provisional score in rule_score."
+  - "Scoring: each kept abstract scored 0-10 by an LLM subagent against the spec rubric (config/scoring_prompt.md), 100 per batch, with component points recorded; rescore batches replaced scores where the abstract changed. Same-abstract duplicates scored 7 and 9 in one case, so scores carry roughly +/-2 noise."
+  - "Re-bucketing: 74 LLM >= 7 papers with no bucket were re-checked by a subagent (1 gained a bucket, 73 out of scope: process steps, sensors, power modules, device-level, board-level); 8 papers whose only bucket was removed by a curator reject were re-checked for a different bucket."
+  - "Curation: 4 disclosure-research subagents (TSMC, Intel, Samsung+SK hynix, glass+FOPLP) verified primary-disclosure DOIs via Crossref; 10 per-bucket curator subagents proposed mandatory items, lineages, ranked picks, bucket-scoped rejects, gaps and reviews."
+  - "Selection (scripts/select_cache.py): protected = spec-list technologies (curator entries matching the spec's named list) + orchestrator overrides + series anchored by a protected paper (completed). Candidates: curator picks with LLM score >= 5, LLM score >= 7, and near-complete series (>= half cached, <= 2 missing; members added but not protected). Per-bucket floor 10 papers / 3 orgs / 3 years with threshold lowering to 5. Cap 300: drop from the most over-represented bucket first (by cached count), lowest effective score = LLM score + 1 (curator pick) + 1 (curator priority 1), ties by raw score, then bucket-exclusive papers first, then curator rank; never breaking another bucket's floor."
+  - "Curator 'mandatory' items not on the spec's named list (e.g. FOCoS, Deca M-Series, SPIL FO-EB, S-Connect, iPaS) are rank-0 priority-1 picks that compete under the cap; curator out-of-window items not on the spec list are in the reference table, not cached."
+  - "Pre-2022 spec-list primary disclosures are cached with outside_screen = 'pre-2022' and count toward the cap (Wentao, 2026-10-18). Their score is empty (not LLM-scored)."
+  - "Where 'first disclosure' is ambiguous both candidates are cached: CoWoS (Xilinx ECTC 2011, name absent; TSMC ECTC 2013, first CoWoS-titled) and InFO-oS (MediaTek ITherm 2020, first naming; TSMC ECTC 2021, first process paper)."
+  - "Orchestrator overrides (config/selection.yaml, protected): five CPO papers excluded by the cpo input filter (stack_detailed=false) but flagged by the cpo curator as strong first-party disclosures (TSMC iOIS, TSMC COUPE+SoIC, Celestial AI OMIB, IBM/GF fiber attach, Intel EMIB fiber CPO), and Microsoft direct-to-silicon microfluidic cooling (thermal_pdn curator gap note)."
+  - "Duplicate Xplore index entries (same normalized title within venue-year) are collapsed to the canonical (shorter) DOI, which inherits the best score and buckets."
+  - "lineage_id lists every series (';'-separated) of which the paper is a member and that is complete in cache_list.csv; identical or subset series proposed by different curators are collapsed, overlapping different series stay separate."
+  - "Organization per paper (first_author_org) = first author's affiliation matched against config/orgs.yaml, else the first organization-like segment of the first author's affiliation; spelling variants (case, punctuation, corporate suffixes) merged. Co-author affiliations are not used."
+  - "Scores are triage estimates from abstracts only; access status from Xplore accessType and OpenAlex OA/repository locations."

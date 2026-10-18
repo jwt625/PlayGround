@@ -1,0 +1,4 @@
+paper_id,doi,title,year,venue,primary_bucket,buckets,priority,triage_rationale
+ectc51906.2022.00176,10.1109/ectc51906.2022.00176,High Performance and Energy Efficient Computing with Advanced SoIC™ Scaling,2022,ECTC,hybrid_bonding,hybrid_bonding,1,"First 3 um bond pitch F2F CoW SoIC, 6x6 mm full-array TV, daisy chain/Kelvin, low thermal budget; WAT yield."
+iwlpc52010.2020.9375855,10.23919/iwlpc52010.2020.9375855,"Accelerating Innovations in the New Era of HPC, 5G and Networking with Advanced 3D Packaging Technologies",2020,IWLPC 2020,microbump_3d,microbump_3d,1,curator-verified primary disclosure: Samsung X-Cube (micro-bump)
+ectc32696.2021.00033,10.1109/ectc32696.2021.00033,InFO_oS (Integrated Fan-Out on Substrate) Technology for Advanced Chiplet Integration,2021,ECTC 2021,organic_rdl_fanout,organic_rdl_fanout,1,"curator-verified primary disclosure: InFO-oS: first TSMC InFO_oS process paper (2.5X reticle, 5 RDL 2/2 um)"

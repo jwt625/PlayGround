@@ -1,0 +1,42 @@
+paper_id: ectc.2013.6575597
+verified_on: 2026-10-18
+source_files:
+  - references/ectc.2013.6575597/text.md
+  - references/ectc.2013.6575597/source.json
+  - references/ectc.2013.6575597/figures/page_02.png
+  - references/ectc.2013.6575597/figures/page_03.png
+  - references/ectc.2013.6575597/figures/page_04.png
+  - references/ectc.2013.6575597/figures/page_05.png
+  - references/ectc.2013.6575597/figures/page_06.png
+figure_reading_method: >-
+  Table 1 and Table 2 read from page renders. Fig. 13 re-rendered at 300 dpi from source.pdf in scratch (not kept) to
+  rank curves and count plotted failure points; Figs. 4, 6, 8, 13 have no numeric failure-time/resistance axes.
+  Fig. 16 bar lengths read for 900G BGA (about 1 shock).
+entries:
+  - {table: metrics, row_id: ectc.2013.6575597-b-m8, field: value, value: 1, unit: shocks, basis: measured, locator: "p.6 Fig. 16", note: "900G/0.7ms BGA bar at about 1; text gives only uBump 2 and TSV+C4 11"}
+  - {table: stack_layers, row_id: ectc.2013.6575597-a-L04, field: notes, value: 2.0, unit: fF/um2, basis: design_target, locator: "p.1 Test Vehicle and Fabrication", note: "optional MIM decap capacitance density between Cu layers 1 and 2"}
+derived:
+  - {table: test_vehicles, row_id: ectc.2013.6575597-a, field: interposer_area_mm2, value: 624, formula: "x*y = 26*24", inputs: "p.2 col. 1, p.2 Fig. 3 text"}
+  - {table: interconnects, row_id: ectc.2013.6575597-a-i2, field: aspect_ratio, value: 10, formula: "depth/diameter = 100/10", inputs: "p.1 Test Vehicle and Fabrication"}
+  - {table: components, row_id: ectc.2013.6575597-b-c2, field: thickness_um, value: 2350, formula: "2.35 mm * 1000", inputs: "p.4 Board Level Reliability (a)"}
+  - {table: metrics, row_id: ectc.2013.6575597-a-m7, field: value, value: 10, formula: "one order of magnitude = 10x", inputs: "p.3 Reliability of TSV"}
+  - {table: metrics, row_id: ectc.2013.6575597-c-m1, field: value, value: "rank 1-6", formula: "ordering of lowest plotted failure point per curve, Fig. 13", inputs: "p.5 Fig. 13"}
+conflicts:
+  - {table: test_vehicles, row_id: ectc.2013.6575597-a, field: interposer_area_mm2, values: [624, 600], locators: ["p.2 26mm x 24mm interposer", "p.1 Abstract 600mm2"], chosen: 624, why: "explicit dimensions; abstract value rounded"}
+  - {table: metrics, row_id: ectc.2013.6575597-b-m2, field: test_standard, values: ["service condition F, A, D (text)", "T/C-C 200X/500X/1000X (Table 2 row labels)"], locators: ["p.5 Mechanical Shock Test", "p.5 Table 2"], chosen: "text; only 200G/1.5ms = service D entered (text states it)", why: "Table 2 row labels duplicate Table 1 labels (copy error in source)"}
+excluded:
+  - "TSV Cu protrusion mitigation by ECP chemistry and annealing (refs [2], [3])"
+  - "power cycling methodology validity (refs [4], [5])"
+not_reported:
+  - electrical_interfaces
+  - optical_interfaces
+  - die thicknesses, ubump diameter/height/solder, UBM stack, bonding temperature/force/time
+  - interposer wafer diameter, substrate layer count, package thickness, lid
+  - Cu damascene line/space split and thicknesses, Al RDL thickness
+  - EM numeric MTTF, current density, failure-time axis values (Figs. 4, 6, 8, 13)
+  - sample sizes for component-level, board TC, power cycling and shock tests
+  - warpage, thermal resistance
+  - wafer-level TC temperature range
+notes: >-
+  Table 2 service-condition column repeats Table 1 labels (T/C-C 200X...), a source error; text gives conditions F, A, D.
+  Primary bucket si_interposer kept.

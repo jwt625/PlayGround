@@ -1,0 +1,35 @@
+paper_id: tcpmt.2023.3266666
+verified_on: 2026-10-18
+schema_version: 2
+source_files:
+  - references/tcpmt.2023.3266666/text.md
+  - references/tcpmt.2023.3266666/source.json
+  - references/tcpmt.2023.3266666/source.pdf
+  - references/tcpmt.2023.3266666/figures/page_01.png
+  - references/tcpmt.2023.3266666/figures/page_02.png
+  - references/tcpmt.2023.3266666/figures/page_03.png
+  - references/tcpmt.2023.3266666/figures/page_04.png
+  - references/tcpmt.2023.3266666/figures/page_05.png
+  - references/tcpmt.2023.3266666/figures/page_06.png
+  - references/tcpmt.2023.3266666/figures/page_07.png
+figure_reading_method: >-
+  Page renders 1-7 viewed. Fig. 4(a) re-rendered at 400 dpi and read by pixel calibration against the 20/40 C gridlines
+  (about +-0.2 C). Fig. 10 and Fig. 11 re-rendered at 300 dpi; Fig. 9(b),(c) and Fig. 10 temperature labels are printed
+  values. Fig. 8 ranges read from the page render (about +-0.3 kPa). Pages 8-9 are references and biographies.
+entries:
+  - {table: metrics, row_id: tcpmt.2023.3266666-a-m1, field: value, value: 18, unit: C, basis: measured, locator: "p.8 Sec. IV", note: "'less than 18 C' at 13.8 kW"}
+  - {table: metrics, row_id: tcpmt.2023.3266666-b-m1, field: value, value: 24.6, unit: C, basis: simulated, locator: "p.3 Fig. 4(a)", note: "pixel read; text deltas 3.6 and 11.5 C consistent with 28.2 and 36.0"}
+  - {table: stack_layers, row_id: tcpmt.2023.3266666-a-L08, field: line_um, value: 75, unit: um, basis: design_target, locator: "p.1 Sec. II.A", note: "fin width; channel width 150 um entered as space_um; fin length 836 um"}
+derived: []
+conflicts:
+  - {table: metrics, row_id: tcpmt.2023.3266666-a-m1, field: condition, values: ["about 14 kW (Abstract)", "13.8 kW (Sec. III, Sec. IV)"], locators: ["p.1 Abstract", "p.5 Sec. III; p.8 Sec. IV"], chosen: "13.8 kW", why: "result text more specific; abstract rounds"}
+  - {table: metrics, row_id: tcpmt.2023.3266666-a-m33, field: variant, values: ["happ about 104 000 as 'the average' (Abstract)", "96 000 (Fig. 9b) and 98 000 / 104 000 (Fig. 10) (Sec. III)"], locators: ["p.1 Abstract", "p.7 Sec. III"], chosen: "all three entered as variants", why: "abstract quotes the best Fig. 10 case"}
+excluded:
+  - "Tuckerman and Pease 800 W/cm2 microchannel history [1]; manifold and CTE-matched glass prior work [2]-[8]; WSI history and Cerebras [9]-[11]"
+  - "staggered fin rationale from prior work [12] (geometry of this cooler is entered)"
+  - "half-flow-length 300 mm cooler 'designed and built': no data"
+not_reported:
+  - electrical_interfaces, optical_interfaces
+  - microchannel etch tool/chemistry, glass layer thicknesses, frit product and firing profile, solder reflow profile and exact Pb-Sn composition
+  - Ti/Cu/Ni/Au thicknesses, laminate size/layer count, C4 count and diameter
+  - warpage, thermal-cycling reliability, n_samples per cooler for Fig. 8/11 (only 'a number of' and 'six')

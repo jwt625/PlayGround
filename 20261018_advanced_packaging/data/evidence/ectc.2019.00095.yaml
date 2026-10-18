@@ -1,0 +1,45 @@
+paper_id: ectc.2019.00095
+verified_on: 2026-10-18
+source_files:
+  - references/ectc.2019.00095/text.md
+  - references/ectc.2019.00095/source.json
+  - references/ectc.2019.00095/figures/page_01.png
+  - references/ectc.2019.00095/figures/page_02.png
+  - references/ectc.2019.00095/figures/page_03.png
+  - references/ectc.2019.00095/figures/page_04.png
+  - references/ectc.2019.00095/figures/page_05.png
+figure_reading_method: >-
+  Fig. 5, Fig. 6 and Fig. 9 cropped from the 150 dpi page renders and upscaled 3x; values read by pixel calibration
+  against axis ticks (Fig. 5 and Fig. 6 log axes, about 106 and 159 px per decade in the upscaled crops). Bar-chart
+  ratios (Figs. 7, 10, 11) taken from the printed labels, not bar heights.
+entries:
+  - {table: interconnects, row_id: ectc.2019.00095-a-i1, field: pitch_um, value: 10, unit: um, basis: design_target, locator: "p.1 Abstract; p.1 Sec. II", note: "'bond pitch starts from sub-10 um rule'; platform rule, the InFO_PoP TV pitch itself is not stated"}
+  - {table: interconnects, row_id: ectc.2019.00095-a-i1, field: density_per_mm2, value: 12000, unit: 1/mm2, basis: design_target, locator: "p.2 Fig. 5", note: "SoIC point read at about 8.7 um pitch and 1.2E4 counts/mm2; consistent with 1/(8.7 um)^2"}
+  - {table: interconnects, row_id: ectc.2019.00095-a-i1, field: ic_type, value: cu_cu_hybrid, basis: stated, locator: "p.3 Fig. 8 legend", note: "legend labels the SoIC bond 'HB'; Cu not stated, inferred from hybrid bond"}
+  - {table: interconnects, row_id: ectc.2019.00095-a-i1, field: yield_pct, value: 100, unit: "%", basis: measured, locator: "p.3 Fig. 6", note: "all five chain sizes at 100%"}
+  - {table: interconnects, row_id: ectc.2019.00095-e-i1, field: density_per_mm2, value: 600, unit: 1/mm2, basis: design_target, locator: "p.2 Fig. 5", note: "two 2.5D/3DIC points at about 36 um / 7.6E2 and 40 um / 5.7E2"}
+  - {table: metrics, row_id: ectc.2019.00095-a-m10, field: variant, value: "bond counts per chain ~41, ~5.1E3, ~2.0E5, ~2.1E6, ~4.9E6", basis: measured, locator: "p.3 Fig. 6", note: "x positions read on log axis 1E+01..1E+07; rows m10-m14"}
+  - {table: electrical_interfaces, row_id: ectc.2019.00095-f-e1, field: insertion_loss_db, value: 1.05, unit: dB, basis: unspecified, locator: "p.3 Fig. 9", note: "plotted as -1.05 dB at 30 GHz (sign convention: loss shown negative); kink near 27 GHz"}
+  - {table: electrical_interfaces, row_id: ectc.2019.00095-a-e1, field: insertion_loss_db, value: 0, unit: dB, basis: unspecified, locator: "p.3 Fig. 9", note: "flat line at 0 dB over 0-30 GHz"}
+derived:
+  - {table: metrics, row_id: ectc.2019.00095-a-m1, field: value, value: 0.23, formula: "consistency check only: 0.23 x 40 um = 9.2 um, matches Fig. 5 SoIC point (~8.7 um) and sub-10 um rule; not entered as a pitch", inputs: "p.3 Fig. 7; p.2 Fig. 5"}
+conflicts:
+  - {table: metrics, row_id: ectc.2019.00095-a-m1, field: value, values: ["0.23X (Fig. 7 label)", "at least 4X smaller (text)"], locators: ["p.3 Fig. 7", "p.3 Sec. V.A"], chosen: 0.23, why: "figure label is the specific number; text is a bound (1/0.23 = 4.3, consistent)"}
+  - {table: metrics, row_id: ectc.2019.00095-a-m26, field: unit, values: ["HTS/1000x (text)", "T1000 (Fig. 15(b) legend)"], locators: ["p.4 Sec. VI", "p.5 Fig. 15"], chosen: "1000, unit x as written", why: "text writes 'x' (cycles) for HTS, which is normally hours; left as written"}
+excluded:
+  - "more than 20 Tbps memory bandwidth (attributed to ref [13])"
+  - "SoIC+ roadmap point (~1 um pitch, ~1E6 counts/mm2, Fig. 5): future generation, not a built TV"
+  - "Fig. 5 flip chip point (~130 um pitch, ~58 counts/mm2): generic industry reference, no TV"
+  - "Fig. 3(d) multi-tier microbump stacks (4 and 10 tiers): comparison photo of typical 3DIC, no data"
+  - "Fig. 1 partition concepts and Fig. 4 CoWoS/InFO_PoP concept schematics (DRAM, HBM, interposer): concept drawings, not described as built"
+  - "prior TSV logic-on-logic and wide I/O memory-on-logic work [3-5]"
+not_reported:
+  - die sizes, thicknesses, process nodes, number of tiers in the InFO_PoP TV
+  - SoIC bond metallurgy, dielectric, pad size, bonding method, temperature, anneal, alignment
+  - TSV and TDV diameter, depth, pitch, keep-out zone
+  - InFO_PoP RDL, mold, package size and thickness
+  - stack_layers (no layer stack disclosed)
+  - absolute R, L, C, energy pJ/bit, thermal resistance (only normalized ratios)
+  - EM, SM, Vbd stress conditions and n_samples; Table 1 n_samples
+  - protocol, lane rate, bandwidth of any D2D link
+  - optical_interfaces

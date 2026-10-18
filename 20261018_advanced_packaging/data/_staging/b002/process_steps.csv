@@ -1,0 +1,113 @@
+step_id,tv_id,flow_name,seq,category,step,performed,target,material,equipment,temp_c,time_s,pressure_mpa,thickness_um,conditions,result,basis,source,overrides,locator,qualifiers,notes
+ectc51909.2023.00009-a-s01,ectc51909.2023.00009-a,front-end photonic,1,other,Implantation steps for MRR PN/PIN junctions and access paths,,,,,,,,,,,stated,text,,p.3 Sec. III.A,,Doses and species not stated.
+ectc51909.2023.00009-a-s02,ectc51909.2023.00009-a,front-end photonic,2,lithography,3 levels DUV photolithography with Si3N4 hard mask,,,Si3N4 hard mask,,,,,,193 nm and 248 nm DUV,,stated,text,,p.3 Sec. III.A,,
+ectc51909.2023.00009-a-s03,ectc51909.2023.00009-a,front-end photonic,3,etch_other,"Si patterned to 3 thicknesses (waveguide 300 nm, Rib slab 165 nm, Deep-Rib slab 65 nm)",,,,,,,,,,,stated,text,,p.3 Sec. III.A; p.3 Fig. 5,,Etch method not stated.
+ectc51909.2023.00009-a-s04,ectc51909.2023.00009-a,front-end photonic,4,other,Additional implantation on MRR slab,,,,,,,,,,,stated,text,,p.3 Sec. III.A,,
+ectc51909.2023.00009-a-s05,ectc51909.2023.00009-a,front-end photonic,5,deposition_cvd,HDP-CVD SiO2 encapsulation and planarization,,,SiO2,,,,,,,,stated,text,,p.3 Sec. III.A,,
+ectc51909.2023.00009-a-s06,ectc51909.2023.00009-a,front-end photonic,6,etch_other,"PD cavity patterned and partially etched in Si (SiO2/Si3N4 hard mask), surface preparation",,,,,,,,,,,stated,text,,p.3 Sec. III.A,,
+ectc51909.2023.00009-a-s07,ectc51909.2023.00009-a,front-end photonic,7,deposition_cvd,"Ge selective epitaxy on Si, two-step RPCVD",,,Ge,,,,,,,,stated,text,,p.3 Sec. III.A,,
+ectc51909.2023.00009-a-s08,ectc51909.2023.00009-a,front-end photonic,8,cmp,Excess Ge removed by CMP stopping on SiO2,,,,,,,,,,,stated,text,,p.3 Sec. III.A,,
+ectc51909.2023.00009-a-s09,ectc51909.2023.00009-a,front-end photonic,9,deposition_other,SiO2 cap on Ge PD,,,SiO2,,,,,,,,stated,text,,p.3 Sec. III.A; p.3 Fig. 6(b),,
+ectc51909.2023.00009-a-s10,ectc51909.2023.00009-a,front-end photonic,10,etch_other,Dielectric stack etched down to doped Si for silicidation,,,,,,,,,,,stated,text,,p.3 Sec. III.A,,
+ectc51909.2023.00009-a-s11,ectc51909.2023.00009-a,front-end photonic,11,deposition_other,Thin Ti/TiN deposited on Si,,,Ti/TiN,,,,,,,,stated,text,,p.3 Sec. III.A,,
+ectc51909.2023.00009-a-s12,ectc51909.2023.00009-a,front-end photonic,12,anneal,First thermal anneal forms TiSi2,,,,,,,,,,,stated,text,,p.3 Sec. III.A,,Temperature not stated.
+ectc51909.2023.00009-a-s13,ectc51909.2023.00009-a,front-end photonic,13,etch_wet,Wet removal of unreacted Ti/TiN,,,,,,,,,,,stated,text,,p.3 Sec. III.A,,
+ectc51909.2023.00009-a-s14,ectc51909.2023.00009-a,front-end photonic,14,anneal,Second thermal anneal stabilizes 20 nm TiSi2,,,,,,,,0.02,,,design_target,text,,p.3 Sec. III.A,,
+ectc51909.2023.00009-a-s15,ectc51909.2023.00009-a,front-end photonic,15,deposition_other,Thick SiO2 deposited and planarized to 600 nm over Si structures,,,SiO2,,,,,0.6,,,design_target,text,,p.3 Sec. III.A,,
+ectc51909.2023.00009-a-s16,ectc51909.2023.00009-a,front-end photonic,16,deposition_other,Heater stack Ti 10 nm / TiN 100 nm deposited,,,Ti/TiN,,,,,,,,design_target,text,,p.3 Sec. III.A,,10 nm Ti / 100 nm TiN.
+ectc51909.2023.00009-a-s17,ectc51909.2023.00009-a,front-end photonic,17,etch_dry,Heater patterned by dry etching,,,,,,,,,,,stated,text,,p.3 Sec. III.A; p.3 Fig. 8,,
+ectc51909.2023.00009-a-s18,ectc51909.2023.00009-a,front-end photonic,18,deposition_other,Heaters encapsulated by 300 nm planarized SiO2,,,SiO2,,,,,0.3,,,design_target,text,,p.3 Sec. III.A,,
+ectc51909.2023.00009-a-s19,ectc51909.2023.00009-a,front-end photonic,19,etch_dry,Heater contacts dry etched in 300 nm SiO2,,,,,,,,,,,stated,text,,p.3 Sec. III.A,,
+ectc51909.2023.00009-a-s20,ectc51909.2023.00009-a,front-end photonic,20,etch_other,MRR and PD contacts etched down to TiSi2,,,,,,,,,,,stated,text,,p.3 Sec. III.A,,
+ectc51909.2023.00009-a-s21,ectc51909.2023.00009-a,front-end photonic,21,deposition_other,"One-step W deposition fills heater, PD and MRR contacts",,ectc51909.2023.00009-a-i6,W,,,,,,,,stated,text,,p.3 Sec. III.A; p.3 Fig. 9,,
+ectc51909.2023.00009-a-s22,ectc51909.2023.00009-a,front-end photonic,22,cmp,Excess W removed by CMP,,,,,,,,,,,stated,text,,p.3 Sec. III.A,,
+ectc51909.2023.00009-a-s23,ectc51909.2023.00009-a,front-end photonic,23,deposition_cvd,60 nm PECVD SiN passivation before TSV,,,SiN,,,,,0.06,,,design_target,text,,p.3 Sec. III.A; p.4 Fig. 10,,
+ectc51909.2023.00009-a-s24,ectc51909.2023.00009-a,TSV middle,24,lithography,TSV photoresist patterning,,,,,,,,,,,stated,text,,p.4 Sec. III.B; p.4 Fig. 11,,
+ectc51909.2023.00009-a-s25,ectc51909.2023.00009-a,TSV middle,25,etch_dry,RIE of dielectric photonic stack (SiN/SiO2),,ectc51909.2023.00009-a-i2,,,,,,,,,stated,text,,p.4 Sec. III.B,,
+ectc51909.2023.00009-a-s26,ectc51909.2023.00009-a,TSV middle,26,tsv_tgv_formation,"Si DRIE, Bosch process, 12 um diameter x 100 um",,ectc51909.2023.00009-a-i2,,,,,,,,,design_target,text,,p.4 Sec. III.B; p.4 Fig. 11,,
+ectc51909.2023.00009-a-s27,ectc51909.2023.00009-a,TSV middle,27,deposition_cvd,TSV isolation: 300 nm SACVD + 100 nm PECVD SiO2,,,SiO2,,,,,,,,design_target,text,,p.4 Sec. III.B,,
+ectc51909.2023.00009-a-s28,ectc51909.2023.00009-a,TSV middle,28,deposition_pvd,"Ti PVD adhesion, TiN CVD barrier, Cu PVD seed",,,Ti/TiN/Cu,,,,,,,,stated,text,,p.4 Sec. III.B,,Thicknesses not stated.
+ectc51909.2023.00009-a-s29,ectc51909.2023.00009-a,TSV middle,29,deposition_other,Electro-grafted Cu layer for seed continuity,,,Cu,,,,,,,,stated,text,,p.4 Sec. III.B; p.4 Fig. 12(a),,
+ectc51909.2023.00009-a-s30,ectc51909.2023.00009-a,TSV middle,30,electroplating,Cu ECD with optimized bottom-up filling recipe,,,Cu,,,,,,,remaining Cu surface thickness < 3 um,stated,text,,p.4 Sec. III.B; p.4 Fig. 12(b),,
+ectc51909.2023.00009-a-s31,ectc51909.2023.00009-a,TSV middle,31,anneal,TSV anneal with specific thermal profile to minimize Cu stress,,,,,400,,,,,,design_target,text,,p.4 Sec. III.B; p.4 Fig. 13,,Profile and time not stated.
+ectc51909.2023.00009-a-s32,ectc51909.2023.00009-a,TSV middle,32,cmp,"CMP step 1: Cu and barrier, stop on TSV isolation oxide",,,,,,,,,,,stated,text,,p.4 Sec. III.B,,
+ectc51909.2023.00009-a-s33,ectc51909.2023.00009-a,TSV middle,33,cmp,"CMP step 2: SiO2/SiN, stop on 300 nm W contacts",,,,,,,,,,challenging due to TSV Cu opening,stated,text,,p.4 Sec. III.B; p.4 Fig. 14,,
+ectc51909.2023.00009-a-s34,ectc51909.2023.00009-a,BEOL,34,deposition_pvd,Metals 1-3: 540 nm Ti-TiN/AlCu/Ti-TiN PVD,,,Ti-TiN/AlCu/Ti-TiN,,,,,0.54,,,design_target,text,,p.4 Sec. III.C; p.5 Fig. 15,,Metal patterning method not stated.
+ectc51909.2023.00009-a-s35,ectc51909.2023.00009-a,BEOL,35,deposition_cvd,"PECVD SiO2 interlayer, each planarized by CMP",,,SiO2,,,,,,,,stated,text,,p.4 Sec. III.C,,
+ectc51909.2023.00009-a-s36,ectc51909.2023.00009-a,BEOL,36,etch_dry,300 nm square contacts patterned by RIE in SiO2,,,,,,,,,,,stated,text,,p.4 Sec. III.C,,
+ectc51909.2023.00009-a-s37,ectc51909.2023.00009-a,BEOL,37,deposition_other,Contacts filled with W and planarized,,,W,,,,,,,,stated,text,,p.4 Sec. III.C,,
+ectc51909.2023.00009-a-s38,ectc51909.2023.00009-a,BEOL,38,deposition_pvd,"Metal 4 with Via 3 interlayer increased to 1.5 um, 750 nm contacts",,,,,,,,1.5,,,design_target,text,,p.4 Sec. III.C,,For RF functionality.
+ectc51909.2023.00009-a-s39,ectc51909.2023.00009-a,BEOL,39,deposition_cvd,Final passivation: planarized 500 nm SiO2 PECVD + 600 nm SiN PECVD,,,SiO2/SiN,,,,,,,,design_target,text,,p.5 Sec. III.C,,
+ectc51909.2023.00009-a-s40,ectc51909.2023.00009-a,BEOL,40,lithography,Pad opening with positive resist,,,,,,,,,,,stated,text,,p.5 Sec. III.C,,
+ectc51909.2023.00009-a-s41,ectc51909.2023.00009-a,BEOL,41,etch_dry,Dielectric stack etched by RIE at pads,,,,,,,,,,,stated,text,,p.5 Sec. III.C,,
+ectc51909.2023.00009-a-s42,ectc51909.2023.00009-a,u-pillars,42,deposition_pvd,Ti/Cu seed 100 nm / 400 nm PVD,,,Ti/Cu,,,,,,,,design_target,text,,p.5 Sec. III.D,,
+ectc51909.2023.00009-a-s43,ectc51909.2023.00009-a,u-pillars,43,lithography,"12 um positive resist, CD 20 um, pitch 20 um",,,,,,,,12,,,design_target,text,,p.5 Sec. III.D,,
+ectc51909.2023.00009-a-s44,ectc51909.2023.00009-a,u-pillars,44,electroplating,"Electroplating 5 um Cu, 2 um Ni, 0.3 um Au",,ectc51909.2023.00009-a-i1,Cu/Ni/Au,,,,,,,,design_target,text,,p.5 Sec. III.D,,
+ectc51909.2023.00009-a-s45,ectc51909.2023.00009-a,u-pillars,45,resist_strip,Resist stripped,,,,,,,,,,,stated,text,,p.5 Sec. III.D,,
+ectc51909.2023.00009-a-s46,ectc51909.2023.00009-a,u-pillars,46,etch_wet,Seed layer removed by wet etching,,,,,,,,,,,stated,text,,p.5 Sec. III.D,,
+ectc51909.2023.00009-a-s47,ectc51909.2023.00009-a,backside,47,temporary_bonding,Temporary bonding on 725 um bulk Si carrier with 20 um adhesive polymer,,,adhesive polymer,,,,,20,,,design_target,text,,p.5 Sec. III.E.1,,
+ectc51909.2023.00009-a-s48,ectc51909.2023.00009-a,backside,48,grinding_thinning,Coarse and fine grinding of interposer wafer,,,,,,,,,,,stated,text,,p.5 Sec. III.E.1,,
+ectc51909.2023.00009-a-s49,ectc51909.2023.00009-a,backside,49,etch_wet,Wet Si stress release to (110 +/- 1) um,,,,,,,,110,,,measured,text,,p.5 Sec. III.E.1,,
+ectc51909.2023.00009-a-s50,ectc51909.2023.00009-a,backside,50,inspection,Residual Si above TSV monitored by IR interferometry,,,,,,,,,,,stated,text,,p.5 Sec. III.E.1,,
+ectc51909.2023.00009-a-s51,ectc51909.2023.00009-a,backside,51,via_reveal,Cu nails revealed by SF6 RIE,,ectc51909.2023.00009-a-i2,,,,,,,SF6 RIE,nail height 3 to 6 um,stated,text,,p.5 Sec. III.E.1; p.5 Fig. 17,,
+ectc51909.2023.00009-a-s52,ectc51909.2023.00009-a,backside,52,deposition_cvd,"Low temperature PECVD SiO2, 2 um",,,SiO2,,,,,2,,,design_target,text,,p.5 Sec. III.E.1,,
+ectc51909.2023.00009-a-s53,ectc51909.2023.00009-a,backside,53,cmp,CMP removes dielectric and opens TSV Cu,,,,,,,,,,,stated,text,,p.5 Sec. III.E.1; p.5 Fig. 17,,
+ectc51909.2023.00009-a-s54,ectc51909.2023.00009-a,backside,54,deposition_pvd,RDL seed Ti 100 nm / Cu 200 nm PVD,,,Ti/Cu,,,,,,,,design_target,text,,p.5 Sec. III.E.2,,
+ectc51909.2023.00009-a-s55,ectc51909.2023.00009-a,backside,55,lithography,"Positive resist RDL lithography, L/S 10/10 um",,,,,,,,,,,design_target,text,,p.5 Sec. III.E.2,,
+ectc51909.2023.00009-a-s56,ectc51909.2023.00009-a,backside,56,surface_treatment,O2 plasma treatment,,,,,,,,,O2 plasma,,stated,text,,p.5 Sec. III.E.2,,
+ectc51909.2023.00009-a-s57,ectc51909.2023.00009-a,backside,57,electroplating,3 um Cu plated by ECD,,ectc51909.2023.00009-a-L25,Cu,,,,,3,,,design_target,text,,p.5 Sec. III.E.2,,
+ectc51909.2023.00009-a-s58,ectc51909.2023.00009-a,backside,58,etch_wet,Seed layer wet etched,,,,,,,,,,,stated,text,,p.5 Sec. III.E.2,,Resist strip not explicitly stated.
+ectc51909.2023.00009-a-s59,ectc51909.2023.00009-a,backside,59,deposition_cvd,"Low temperature SiN 100 nm PECVD (Cu diffusion barrier, plasma protection)",,,SiN,,,,,0.1,,,design_target,text,,p.5 Sec. III.E.2,,
+ectc51909.2023.00009-a-s60,ectc51909.2023.00009-a,backside,60,etch_other,40 um diameter cavities etched above ring resonators from bulk Si to BOX,,ectc51909.2023.00009-a-L22,,,,,,,,,design_target,text,,p.5 Sec. III.E.2; p.5 Fig. 18(a),,Etch method not stated.
+ectc51909.2023.00009-a-s61,ectc51909.2023.00009-a,backside,61,lithography,"LTC passivation polymer 8 um, dedicated spin coat over cavities, mask aligner lithography",,,LTC passivation polymer,mask aligner,,,,8,,,design_target,text,,p.5 Sec. III.E.2; p.5 Fig. 18(b),,
+ectc51909.2023.00009-a-s62,ectc51909.2023.00009-a,backside,62,cure,LTC polymer anneal,,,,,230,10800,,,N2 atmosphere,,design_target,text,,p.5 Sec. III.E.2,,
+ectc51909.2023.00009-a-s63,ectc51909.2023.00009-a,backside,63,deposition_other,Bump seed Ti 200 nm / Cu 400 nm on LTC passivation,,,Ti/Cu,,,,,,,,design_target,text,,p.5 Sec. III.E.3,,Deposition method not stated.
+ectc51909.2023.00009-a-s64,ectc51909.2023.00009-a,backside,64,lithography,"40 um positive resist; mask aligner; 40 um bump diameter, 40 um space",,,,mask aligner,,,,40,,,design_target,text,,p.5 Sec. III.E.3,,
+ectc51909.2023.00009-a-s65,ectc51909.2023.00009-a,backside,65,electroplating,"ECD of 5 um Cu, 2 um Ni, 17 um SnAg",,ectc51909.2023.00009-a-i7,Cu/Ni/SnAg,,,,,,,,design_target,text,,p.5 Sec. III.E.3,,
+ectc51909.2023.00009-a-s66,ectc51909.2023.00009-a,backside,66,resist_strip,Resist stripped and seed etched,,,,,,,,,,,stated,text,,p.5 Sec. III.E.3,,
+ectc51909.2023.00009-a-s67,ectc51909.2023.00009-a,backside,67,debonding,Wafers debonded on dicing tape,,,,,,,,,,,stated,text,,p.5 Sec. III.E.3,,
+ectc51909.2023.00009-a-s68,ectc51909.2023.00009-a,backside,68,cleaning,Cleaned to remove adhesive residues,,,,,,,,,,,stated,text,,p.5 Sec. III.E.3,,
+ectc51909.2023.00298-a-s01,ectc51909.2023.00298-a,SAP M1-M3 (double-side),1,surface_treatment,Surface treatment to promote dielectric adhesion to glass,,,,,,,,,,,stated,text,,p.2 Sec. II; p.2 Fig. 2,,Chemistry not stated.
+ectc51909.2023.00298-a-s02,ectc51909.2023.00298-a,SAP M1-M3 (double-side),2,lamination,Build-up dielectric ABF GX92 vacuum laminated on both faces,,,ABF GX92,vacuum laminator (Meiki),,,,,,,stated,text,,p.2 Sec. II,,Lamination conditions not stated.
+ectc51909.2023.00298-a-s03,ectc51909.2023.00298-a,SAP M1-M3 (double-side),3,cure,ABF cure,,,,,,,,,,,stated,schematic,,p.2 Fig. 2,,'ABF Apply and Cure' in flow chart; conditions not stated.
+ectc51909.2023.00298-a-s04,ectc51909.2023.00298-a,SAP M1-M3 (double-side),4,laser_drill,Microvias drilled with femtosecond laser (M2-M4),,,,femtosecond laser micromachining system (OPTEC),,,,,laser spot 20 um; via size limited to ~15 um,,design_target,text,,p.2 Sec. II; p.1 Abstract,,
+ectc51909.2023.00298-a-s05,ectc51909.2023.00298-a,SAP M1-M3 (double-side),5,desmear,Desmear,,,,,,,,,,,stated,schematic,,p.2 Fig. 2,,Flow chart only; conditions not stated.
+ectc51909.2023.00298-a-s06,ectc51909.2023.00298-a,SAP M1-M3 (double-side),6,electroless,Electroless Cu seed (solution deposited),,,electroless Cu (Atotech chemistry),,,,,,,,stated,text,,p.2 Sec. II; p.2 Fig. 2,,
+ectc51909.2023.00298-a-s07,ectc51909.2023.00298-a,SAP M1-M3 (double-side),7,lamination,"Negative-tone DFR applied: 15 um (M1, M2), 7 um (M3)",,,"negative tone DFR (Hitachi Chemical, now Showa Denko)",,,,,,no pre- or post-exposure bake,,design_target,text,,p.2 Sec. II,,Thickness split by layer in conditions.
+ectc51909.2023.00298-a-s08,ectc51909.2023.00298-a,SAP M1-M3 (double-side),8,lithography,Exposure: 15 um DFR on Tamarack mask aligner; 7 um DFR on Heidelberg maskless aligner,,,,Tamarack mask aligner; Heidelberg Instruments maskless aligner,,,,,,,stated,text,,p.2 Sec. II,,
+ectc51909.2023.00298-a-s09,ectc51909.2023.00298-a,SAP M1-M3 (double-side),9,lithography,Development in spray conveyor,,,,spray conveyor,30,,,,25 s for 7 um DFR; 42 s for 15 um DFR,,design_target,text,,p.2 Sec. II,,
+ectc51909.2023.00298-a-s10,ectc51909.2023.00298-a,SAP M1-M3 (double-side),10,electroplating,Cu electroplating in sacrificial anode tank,,,Cu (Atotech chemistry),,,,,,,,stated,text,,p.2 Sec. II,,
+ectc51909.2023.00298-a-s11,ectc51909.2023.00298-a,SAP M1-M3 (double-side),11,resist_strip,Beaker-scale resist strip in EKC-162,,,EKC-162 (EKC),,40,300,,,,,design_target,text,,p.2 Sec. II,,
+ectc51909.2023.00298-a-s12,ectc51909.2023.00298-a,SAP M1-M3 (double-side),12,etch_wet,Seed layer etch in spray conveyor,,,,spray conveyor,30,25,,,,,design_target,text,,p.2 Sec. II,,
+ectc51909.2023.00298-a-s13,ectc51909.2023.00298-a,aSAP M4 (double-side),13,lamination,"ABF GX92P dielectric (thinner, smaller fillers)",,,ABF GX92P,,,,,,,,stated,text,,p.2 Sec. II; p.2 Fig. 1,,
+ectc51909.2023.00298-a-s14,ectc51909.2023.00298-a,aSAP M4 (double-side),14,laser_drill,Femtosecond laser microvias; size still ~15 um (spot-limited),,,,,,,,,,,stated,text,,p.2 Sec. II; p.3 Sec. III,,
+ectc51909.2023.00298-a-s15,ectc51909.2023.00298-a,aSAP M4 (double-side),15,deposition_pvd,Ti/Cu seed sputtered without breaking vacuum,,,Ti/Cu,"DC sputter chamber, multiple sources (Denton Vacuum)",,,,,0.2 A current,,design_target,text,,p.2 Sec. II,,
+ectc51909.2023.00298-a-s16,ectc51909.2023.00298-a,aSAP M4 (double-side),16,lamination,5 um positive-tone DFR applied,,,TOK PC-0471W-F5,,,,,5,,,design_target,text,,p.2 Sec. II,,
+ectc51909.2023.00298-a-s17,ectc51909.2023.00298-a,aSAP M4 (double-side),17,other,Pre-exposure bake in convection oven,,,,convection oven,,,,,temperature and time increased slightly vs hot plate; oven-specific,,stated,text,,p.2 Sec. II,,Values not stated; changing ovens degraded lithography.
+ectc51909.2023.00298-a-s18,ectc51909.2023.00298-a,aSAP M4 (double-side),18,lithography,Maskless exposure,,,,Heidelberg MLA 150,,,,,depth of focus 25 um (tool),,stated,text,,p.2 Sec. II; p.4 Sec. IV,,
+ectc51909.2023.00298-a-s19,ectc51909.2023.00298-a,aSAP M4 (double-side),19,other,Post-exposure bake in convection oven,,,,convection oven,,,,,,,stated,text,,p.2 Sec. II,,
+ectc51909.2023.00298-a-s20,ectc51909.2023.00298-a,aSAP M4 (double-side),20,lithography,Beaker development in 2.38 % TMAH,,,2.38 % TMAH,,30,90,,,,,design_target,text,,p.2 Sec. II,,
+ectc51909.2023.00298-a-s21,ectc51909.2023.00298-a,aSAP M4 (double-side),21,resist_strip,Beaker strip in EKC photoresist stripper,,,EKC-162 (EKC),,40,240,,,,,design_target,text,,p.2 Sec. II,,Cu plating step for M4 not separately described.
+ectc51909.2023.00298-a-s22,ectc51909.2023.00298-a,aSAP M4 (double-side),22,etch_other,Seed layer etch,,,,,,,,,,,stated,text,,p.3 Sec. III; p.4 Fig. 9,,Conditions for Ti/Cu etch not stated.
+ectc51909.2023.00298-a-s23,ectc51909.2023.00298-a,singulation,23,other,Photoresist applied before dicing to protect 2 um lines from dicing tape,,,,,,,,,,,stated,text,,p.4 Sec. IV,,
+ectc51909.2023.00298-a-s24,ectc51909.2023.00298-a,singulation,24,dicing,Coupon singulation on dicing tape,,,,,,,,,,,stated,text,,p.4 Sec. IV,,
+ectc51909.2023.00298-a-s25,ectc51909.2023.00298-a,inspection,25,inspection,Laser confocal microscope / 3D step profiler imaging at multiple stages; SEM; cross-sections,,,,Keyence VX3600 laser confocal scanning microscope,,,,,,,stated,text,,p.1 Abstract; p.3 Sec. III; p.4 Fig. 8,,
+ectc51909.2023.00150-a-s01,ectc51909.2023.00150-a,assembly,1,surface_finish,Interposer top bonding pads covered with gold by ENEPIG,,ectc51909.2023.00150-a-L03,ENEPIG (Ni/Pd/Au),,,,,,,,stated,text,,p.2 Sec. II.A; p.2 Table I,,
+ectc51909.2023.00150-a-s02,ectc51909.2023.00150-a,assembly,2,assembly,Organic interposer bonded on top of build-up substrate,,,,,,,,,,,stated,text,,p.2 Sec. II.A,,Method and conditions not stated.
+ectc51909.2023.00150-a-s03,ectc51909.2023.00150-a,solder transfer (Process A),3,other,Dummy Si solder transfer chip prepared with solder at target-chip bump locations,,,,,,,,,,,stated,mixed,,p.4 Sec. II.C; p.5 Fig. 10(a),,
+ectc51909.2023.00150-a-s04,ectc51909.2023.00150-a,solder transfer (Process A),4,bonding,"Transfer chip aligned to substrate, contacted, heated and pressurized",,,,,,,,,,,stated,mixed,,p.4 Sec. II.C; p.5 Fig. 10(a),,Temperature and pressure not stated.
+ectc51909.2023.00150-a-s05,ectc51909.2023.00150-a,solder transfer (Process A),5,debonding,Chips pulled apart while still heated; solder left on interposer pads,,,,,,,,,,,stated,mixed,,p.4 Sec. II.C; p.5 Fig. 10(a); p.5 Fig. 11,,
+ectc51909.2023.00150-a-s06,ectc51909.2023.00150-a,solder transfer (Process A),6,reflow,Post reflow,,,,,,,,,,,stated,schematic,,p.5 Fig. 10(a),,
+ectc51909.2023.00150-a-s07,ectc51909.2023.00150-a,IMS (Process B),7,deposition_other,Solder resist deposited on organic interposer substrate,,,solder resist,,,,,,,,stated,mixed,,p.5 Sec. II.C; p.5 Fig. 10(b),,
+ectc51909.2023.00150-a-s08,ectc51909.2023.00150-a,IMS (Process B),8,lithography,Vias formed in resist at solder locations,,,,,,,,,,,stated,text,,p.5 Sec. II.C,,
+ectc51909.2023.00150-a-s09,ectc51909.2023.00150-a,IMS (Process B),9,deposition_other,IMS head injects pure molten solder alloy into resist vias,,,Pb-free solder,IMS tool,,,,,"solder volume varied across die site: less where bridging-prone, more where non-wet-prone",,stated,mixed,,p.1 Abstract; p.5 Sec. II.C; p.5 Fig. 10(b),,Alloy not stated; volume-control details in ref [11].
+ectc51909.2023.00150-a-s10,ectc51909.2023.00150-a,IMS (Process B),10,resist_strip,Resist removed,,,,,,,,,,,stated,text,,p.5 Sec. II.C; p.5 Fig. 10(b),,
+ectc51909.2023.00150-a-s11,ectc51909.2023.00150-a,IMS (Process B),11,reflow,Deposited solder reflowed if necessary,,,,,,,,,,,stated,text,,p.5 Sec. II.C; p.5 Fig. 10(b),,
+ectc51909.2023.00150-a-s12,ectc51909.2023.00150-a,assembly,12,bonding,FPGA die bonded by TCB onto 40 um pitch pads with deposited solder,,ectc51909.2023.00150-a-i1,,,,,,,,,stated,text,,p.5 Sec. II.D,,TCB chosen to reduce substrate warpage and expansion mismatch; conditions not stated.
+ectc51909.2023.00150-a-s13,ectc51909.2023.00150-a,assembly,13,underfill,UF dispensed while package kept at high temperature (before cooling),,ectc51909.2023.00150-a-c6,,,,,,,,,stated,mixed,,p.5 Sec. II.D; p.5 Fig. 12; p.6 Sec. III,,Fig. 12 temperatures from ref [12] not entered. Order vs HBM/AI chip bonding not stated.
+ectc51909.2023.00150-a-s14,ectc51909.2023.00150-a,assembly,14,bonding,HBM and IBM AI chip bonded,,,,,,,,,,,stated,text,,p.5 Sec. II.D,,Method not stated.
+ectc51909.2023.00150-a-s15,ectc51909.2023.00150-a,assembly,15,inspection,"Cross-section, non-destructive 3D X-ray and electrical test of 40 um joints",,,,,,,,,,,stated,text,,p.5 Sec. II.D; p.5 Fig. 13,,
+ectc51909.2023.00150-a-s16,ectc51909.2023.00150-a,assembly,16,assembly,Lid attached to substrate surface,,ectc51909.2023.00150-a-c7,,,,,,,,,stated,text,,p.5 Sec. II.D; p.6 Fig. 14(a),,
+ectc51909.2023.00150-a-s17,ectc51909.2023.00150-a,assembly,17,ball_attach,BGA joined to backside of build-up substrate,,ectc51909.2023.00150-a-i5,,,,,,,,,stated,text,,p.5 Sec. II.D,,
+ectc51909.2023.00150-a-s18,ectc51909.2023.00150-a,assembly,18,test,Module mounted on evaluation board; initial power-on test with bench power supply,,,,,,,,,,passed,stated,text,,p.5 Sec. II.D; p.6 Fig. 14(b),,
+ectc51909.2023.00150-b-s01,ectc51909.2023.00150-b,bonding optimization,1,bonding,Bonding experiments with FPGA-size dummy chip,,,,,,,,,,,stated,text,,p.2 Sec. II.A,,Conditions not stated.

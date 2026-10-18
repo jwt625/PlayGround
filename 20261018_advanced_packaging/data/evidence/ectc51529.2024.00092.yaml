@@ -1,0 +1,35 @@
+paper_id: ectc51529.2024.00092
+verified_on: 2026-10-18
+source_files:
+  - references/ectc51529.2024.00092/text.md
+  - references/ectc51529.2024.00092/source.json
+  - references/ectc51529.2024.00092/figures/page_02.png
+  - references/ectc51529.2024.00092/figures/page_03.png
+  - references/ectc51529.2024.00092/figures/page_04.png
+figure_reading_method: >-
+  Page renders at 150 dpi; Fig. 3, Fig. 4, Fig. 6, Fig. 8, Fig. 9 and Fig. 10 re-rendered from source.pdf at 6-8x zoom
+  in the scratchpad. Fig. 9 axis labels stay illegible at 8x, so only the text value (+/-1 C) is used. Table 1 read
+  from the page_03 render.
+entries:
+  - {table: interconnects, row_id: ectc51529.2024.00092-a-i1, field: diameter_um, value: 49.49, unit: um, basis: measured, locator: "p.2 Fig. 4", note: "microscope label [1]49.49um on zoomed via"}
+  - {table: interconnects, row_id: ectc51529.2024.00092-a-i1, field: pitch_um, value: 75, unit: um, basis: measured, locator: "p.2 Fig. 4", note: "label [1]75um between two adjacent via centers"}
+  - {table: metrics, row_id: ectc51529.2024.00092-b-m4, field: value, value: 0.4, unit: "%", basis: measured, locator: "p.4 Fig. 8", note: "chart title 'sigma/average 0.4%'"}
+  - {table: metrics, row_id: ectc51529.2024.00092-b-m7, field: value, value: 0.87, unit: fraction, basis: measured, locator: "p.4 Fig. 10", note: "lowest No Dosing squares about 0.872-0.875"}
+  - {table: metrics, row_id: ectc51529.2024.00092-b-m8, field: value, value: 0.99, unit: fraction, basis: measured, locator: "p.4 Fig. 10", note: "lowest time-based dosing triangle about 0.987"}
+  - {table: process_steps, row_id: ectc51529.2024.00092-b-s02, field: temp_c, value: 130, unit: C, basis: design_target, locator: "p.3 Fig. 6", note: "box '03/05 Panel Etch 130C'; same 130 C is the highest bath temperature in Sec. III.C"}
+derived:
+  - {table: process_steps, row_id: ectc51529.2024.00092-a-s03, field: time_s, value: 4500, formula: "75 min * 60", inputs: "p.3 Fig. 5 (last interval label 75min)"}
+conflicts:
+  - {table: test_vehicles, row_id: ectc51529.2024.00092-d, field: notes, values: ["AR ranges from 4 to 20 (Sec. II.A)", "Fig. 3 points span about 2 to 14"], locators: ["p.2 Sec. II.A", "p.2 Fig. 3"], chosen: "Fig. 3 points entered", why: "figure points read directly; text range not reconciled"}
+  - {table: metrics, row_id: ectc51529.2024.00092-b-m4, field: scope, values: ["50 um etch on 400 um blanket panel (text)", "Fig. 8 etched amount about 38-46 um (legend bins 36-46)"], locators: ["p.4 Sec. III.A", "p.4 Fig. 8"], chosen: "both kept; Fig. 8 noted", why: "Fig. 8 may be a different etch amount; paper does not say"}
+  - {table: metrics, row_id: ectc51529.2024.00092-b-m5, field: value, values: ["0.5 C temperature variation (Abstract)", "within +/-1 C (Sec. III.B)"], locators: ["p.1 Abstract", "p.4 Sec. III.B"], chosen: "both entered as separate rows", why: "abstract equipment statement vs measured bath profile"}
+  - {table: test_vehicles, row_id: ectc51529.2024.00092-c, field: notes, values: ["up to 12 types of glasses tested (text)", "Table 1 lists 11 types A-K"], locators: ["p.3 Sec. II.C", "p.3 Table 1"], chosen: "Table 1 rows entered", why: "table is the data"}
+excluded:
+  - "Yole 2020 projection of 2.5-3x glass substrate growth 2019-2025 (Abstract, market report)"
+  - "Fig. 2 hourglass TGV parameter definitions (DT, DM, DB, theta_T, theta_B, H) without values"
+  - "Comparisons to photo-mask isotropic etching and laser ablation (qualitative)"
+not_reported:
+  - electrical_interfaces, optical_interfaces, metallization, reliability of TGVs
+  - etch chemistry names and concentrations; Table 1 etch temperature and chemistry; glass compositions/suppliers per type
+  - laser modification parameters; via shape (hourglass/V) and sidewall angles for the measured vias; SEM cross-section values
+  - coupon size; number of panels in uniformity study; TTV method; ICP-MS numbers; equipment model names

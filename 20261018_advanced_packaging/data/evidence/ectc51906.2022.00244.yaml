@@ -1,0 +1,99 @@
+paper_id: ectc51906.2022.00244
+verified_on: 2026-10-18
+schema_version: 2
+source_files:
+  - references/ectc51906.2022.00244/text.md
+  - references/ectc51906.2022.00244/source.json
+  - references/ectc51906.2022.00244/source.pdf
+  - references/ectc51906.2022.00244/figures/page_01.png
+  - references/ectc51906.2022.00244/figures/page_02.png
+  - references/ectc51906.2022.00244/figures/page_03.png
+  - references/ectc51906.2022.00244/figures/page_04.png
+  - references/ectc51906.2022.00244/figures/page_05.png
+  - references/ectc51906.2022.00244/figures/page_06.png
+  - references/ectc51906.2022.00244/figures/page_07.png
+  - references/ectc51906.2022.00244/figures/page_08.png
+  - references/ectc51906.2022.00244/figures/img_p03_1.png
+  - references/ectc51906.2022.00244/figures/img_p04_1.png
+  - references/ectc51906.2022.00244/figures/img_p04_3.png
+locator_notes:
+  - "text.md text layer is font-encoded (letters shifted +29, digits and spaces dropped); every number was read from page renders of source.pdf (150 dpi files plus 220-500 dpi re-renders in scratch)."
+  - "Fig. 13 option numbering 1-8 = table columns left to right; TV a = options 1-4, b = 5-7, c = 8."
+entries:
+  - {table: interconnects, row_id: ectc51906.2022.00244-a-i1, field: alignment_um, value: 0.022, unit: um, basis: measured, locator: "p.3 Fig. 5 (img_p03_1.png)", note: "after correction: X box ~11-14 nm, Y box ~18-26 nm; axis 0-350 nm, ~1.19 nm/px native"}
+  - {table: stack_layers, row_id: ectc51906.2022.00244-a-L03, field: via_diameter_um, value: 0.09, unit: um, basis: design_target, locator: "p.3 Sec. II", note: "n-TSV diameter scaled to 90 nm; top CD 90x120 nm"}
+  - {table: metrics, row_id: ectc51906.2022.00244-a-m7, field: value, value: 139, unit: nm, basis: measured, locator: "p.3 Fig. 5", note: "X median line at native row ~195, 0 nm at row 311, 350 nm at row 18"}
+  - {table: metrics, row_id: ectc51906.2022.00244-a-m11, field: value, value: 429, unit: nm, basis: measured, locator: "p.4 Fig. 6 (img_p04_3.png)", note: "label partly hidden by measurement line; first three digits 429"}
+derived:
+  - {table: stack_layers, row_id: ectc51906.2022.00244-a-L04, field: space_um, value: 0.073, formula: "pitch - width = 105 nm - 32 nm = 73 nm; /1000", inputs: "p.3 Sec. II"}
+  - {table: components, row_id: ectc51906.2022.00244-a-c1, field: thickness_um, value: 0.35, formula: "350 nm / 1000 (unit conversion, basis kept)", inputs: "see row locator"}
+  - {table: stack_layers, row_id: ectc51906.2022.00244-a-L02, field: thickness_um, value: 0.1, formula: "100 nm / 1000 (unit conversion, basis kept)", inputs: "see row locator"}
+  - {table: stack_layers, row_id: ectc51906.2022.00244-a-L03, field: thickness_um, value: 0.35, formula: "350 nm / 1000 (unit conversion, basis kept)", inputs: "see row locator"}
+  - {table: stack_layers, row_id: ectc51906.2022.00244-a-L03, field: via_diameter_um, value: 0.09, formula: "90 nm / 1000 (unit conversion, basis kept)", inputs: "see row locator"}
+  - {table: stack_layers, row_id: ectc51906.2022.00244-a-L04, field: line_um, value: 0.032, formula: "32 nm / 1000 (unit conversion, basis kept)", inputs: "see row locator"}
+  - {table: stack_layers, row_id: ectc51906.2022.00244-a-L05, field: thickness_um, value: 0.05, formula: "50 nm / 1000 (unit conversion, basis kept)", inputs: "see row locator"}
+  - {table: interconnects, row_id: ectc51906.2022.00244-a-i1, field: diameter_um, value: 0.09, formula: "90 nm / 1000 (unit conversion, basis kept)", inputs: "see row locator"}
+  - {table: interconnects, row_id: ectc51906.2022.00244-a-i1, field: depth_um, value: 0.35, formula: "350 nm / 1000 (unit conversion, basis kept)", inputs: "see row locator"}
+  - {table: interconnects, row_id: ectc51906.2022.00244-a-i1, field: alignment_um, value: 0.022, formula: "~22 nm / 1000 (unit conversion, basis kept)", inputs: "see row locator"}
+  - {table: stack_layers, row_id: ectc51906.2022.00244-b-L04, field: space_um, value: 0.073, formula: "pitch - width = 105 nm - 32 nm = 73 nm; /1000", inputs: "p.3 Sec. II"}
+  - {table: components, row_id: ectc51906.2022.00244-b-c1, field: thickness_um, value: 0.35, formula: "350 nm / 1000 (unit conversion, basis kept)", inputs: "see row locator"}
+  - {table: stack_layers, row_id: ectc51906.2022.00244-b-L02, field: thickness_um, value: 0.1, formula: "100 nm / 1000 (unit conversion, basis kept)", inputs: "see row locator"}
+  - {table: stack_layers, row_id: ectc51906.2022.00244-b-L03, field: thickness_um, value: 0.35, formula: "350 nm / 1000 (unit conversion, basis kept)", inputs: "see row locator"}
+  - {table: stack_layers, row_id: ectc51906.2022.00244-b-L03, field: via_diameter_um, value: 0.09, formula: "90 nm / 1000 (unit conversion, basis kept)", inputs: "see row locator"}
+  - {table: stack_layers, row_id: ectc51906.2022.00244-b-L04, field: line_um, value: 0.032, formula: "32 nm / 1000 (unit conversion, basis kept)", inputs: "see row locator"}
+  - {table: stack_layers, row_id: ectc51906.2022.00244-b-L05, field: thickness_um, value: 0.05, formula: "50 nm / 1000 (unit conversion, basis kept)", inputs: "see row locator"}
+  - {table: interconnects, row_id: ectc51906.2022.00244-b-i1, field: diameter_um, value: 0.09, formula: "90 nm / 1000 (unit conversion, basis kept)", inputs: "see row locator"}
+  - {table: interconnects, row_id: ectc51906.2022.00244-b-i1, field: depth_um, value: 0.35, formula: "350 nm / 1000 (unit conversion, basis kept)", inputs: "see row locator"}
+  - {table: interconnects, row_id: ectc51906.2022.00244-b-i1, field: alignment_um, value: 0.022, formula: "~22 nm / 1000 (unit conversion, basis kept)", inputs: "see row locator"}
+  - {table: stack_layers, row_id: ectc51906.2022.00244-c-L04, field: space_um, value: 0.073, formula: "pitch - width = 105 nm - 32 nm = 73 nm; /1000", inputs: "p.3 Sec. II"}
+  - {table: components, row_id: ectc51906.2022.00244-c-c1, field: thickness_um, value: 0.35, formula: "350 nm / 1000 (unit conversion, basis kept)", inputs: "see row locator"}
+  - {table: stack_layers, row_id: ectc51906.2022.00244-c-L02, field: thickness_um, value: 0.1, formula: "100 nm / 1000 (unit conversion, basis kept)", inputs: "see row locator"}
+  - {table: stack_layers, row_id: ectc51906.2022.00244-c-L03, field: thickness_um, value: 0.35, formula: "350 nm / 1000 (unit conversion, basis kept)", inputs: "see row locator"}
+  - {table: stack_layers, row_id: ectc51906.2022.00244-c-L03, field: via_diameter_um, value: 0.09, formula: "90 nm / 1000 (unit conversion, basis kept)", inputs: "see row locator"}
+  - {table: stack_layers, row_id: ectc51906.2022.00244-c-L04, field: line_um, value: 0.032, formula: "32 nm / 1000 (unit conversion, basis kept)", inputs: "see row locator"}
+  - {table: stack_layers, row_id: ectc51906.2022.00244-c-L05, field: thickness_um, value: 0.05, formula: "50 nm / 1000 (unit conversion, basis kept)", inputs: "see row locator"}
+  - {table: interconnects, row_id: ectc51906.2022.00244-c-i1, field: diameter_um, value: 0.09, formula: "90 nm / 1000 (unit conversion, basis kept)", inputs: "see row locator"}
+  - {table: interconnects, row_id: ectc51906.2022.00244-c-i1, field: depth_um, value: 0.35, formula: "350 nm / 1000 (unit conversion, basis kept)", inputs: "see row locator"}
+  - {table: interconnects, row_id: ectc51906.2022.00244-c-i1, field: alignment_um, value: 0.022, formula: "~22 nm / 1000 (unit conversion, basis kept)", inputs: "see row locator"}
+  - {table: process_steps, row_id: ectc51906.2022.00244-a-s01, field: thickness_um, value: 0.05, formula: "50 nm / 1000 (unit conversion, basis kept)", inputs: "p.2 Sec. II; p.2 Fig. 3"}
+  - {table: process_steps, row_id: ectc51906.2022.00244-a-s02, field: thickness_um, value: 0.35, formula: "350 nm / 1000 (unit conversion, basis kept)", inputs: "p.2 Sec. II; p.2 Fig. 3"}
+  - {table: process_steps, row_id: ectc51906.2022.00244-a-s03, field: thickness_um, value: 0.05, formula: "50 nm / 1000 (unit conversion, basis kept)", inputs: "p.2 Sec. II; p.3 Sec. II"}
+  - {table: process_steps, row_id: ectc51906.2022.00244-a-s13, field: thickness_um, value: 0.1, formula: "100 nm / 1000 (unit conversion, basis kept)", inputs: "p.3 Sec. II"}
+  - {table: process_steps, row_id: ectc51906.2022.00244-a-s16, field: thickness_um, value: 0.01, formula: "10 nm / 1000 (unit conversion, basis kept)", inputs: "p.3 Sec. II; p.3 Fig. 4"}
+  - {table: process_steps, row_id: ectc51906.2022.00244-a-s19, field: thickness_um, value: 0.005, formula: "5 nm / 1000 (unit conversion, basis kept)", inputs: "p.3 Sec. II; p.7 Fig. 13"}
+  - {table: process_steps, row_id: ectc51906.2022.00244-b-s01, field: thickness_um, value: 0.05, formula: "50 nm / 1000 (unit conversion, basis kept)", inputs: "p.2 Sec. II; p.2 Fig. 3"}
+  - {table: process_steps, row_id: ectc51906.2022.00244-b-s02, field: thickness_um, value: 0.35, formula: "350 nm / 1000 (unit conversion, basis kept)", inputs: "p.2 Sec. II; p.2 Fig. 3"}
+  - {table: process_steps, row_id: ectc51906.2022.00244-b-s03, field: thickness_um, value: 0.05, formula: "50 nm / 1000 (unit conversion, basis kept)", inputs: "p.2 Sec. II; p.3 Sec. II"}
+  - {table: process_steps, row_id: ectc51906.2022.00244-b-s13, field: thickness_um, value: 0.1, formula: "100 nm / 1000 (unit conversion, basis kept)", inputs: "p.3 Sec. II"}
+  - {table: process_steps, row_id: ectc51906.2022.00244-b-s16, field: thickness_um, value: 0.01, formula: "10 nm / 1000 (unit conversion, basis kept)", inputs: "p.3 Sec. II; p.3 Fig. 4"}
+  - {table: process_steps, row_id: ectc51906.2022.00244-b-s19, field: thickness_um, value: 0.005, formula: "5 nm / 1000 (unit conversion, basis kept)", inputs: "p.3 Sec. II; p.7 Fig. 13"}
+  - {table: process_steps, row_id: ectc51906.2022.00244-c-s01, field: thickness_um, value: 0.05, formula: "50 nm / 1000 (unit conversion, basis kept)", inputs: "p.2 Sec. II; p.2 Fig. 3"}
+  - {table: process_steps, row_id: ectc51906.2022.00244-c-s02, field: thickness_um, value: 0.35, formula: "350 nm / 1000 (unit conversion, basis kept)", inputs: "p.2 Sec. II; p.2 Fig. 3"}
+  - {table: process_steps, row_id: ectc51906.2022.00244-c-s03, field: thickness_um, value: 0.05, formula: "50 nm / 1000 (unit conversion, basis kept)", inputs: "p.2 Sec. II; p.3 Sec. II"}
+  - {table: process_steps, row_id: ectc51906.2022.00244-c-s13, field: thickness_um, value: 0.1, formula: "100 nm / 1000 (unit conversion, basis kept)", inputs: "p.3 Sec. II"}
+  - {table: process_steps, row_id: ectc51906.2022.00244-c-s16, field: thickness_um, value: 0.01, formula: "10 nm / 1000 (unit conversion, basis kept)", inputs: "p.3 Sec. II; p.3 Fig. 4"}
+  - {table: process_steps, row_id: ectc51906.2022.00244-c-s19, field: thickness_um, value: 0.005, formula: "5 nm / 1000 (unit conversion, basis kept)", inputs: "p.3 Sec. II; p.7 Fig. 13"}
+  - {table: process_steps, row_id: ectc51906.2022.00244-c-s20, field: thickness_um, value: 0.012, formula: "12 nm / 1000 (unit conversion, basis kept)", inputs: "p.7 Fig. 13"}
+conflicts:
+  - {table: stack_layers, row_id: ectc51906.2022.00244-a-L03, field: thickness_um, values: [0.35, 0.5], locators: ["p.2 Sec. II; p.3 Sec. II; p.3 Fig. 4; p.7 Sec. IV; p.4 Fig. 6 (429 - 82.6 nm)", "p.7 Fig. 13 table (Si Thickness 500nm, all options)"], chosen: 0.35, why: "measured cross-section and text agree on ~350 nm; abstract says <500 nm"}
+  - {table: interconnects, row_id: ectc51906.2022.00244-a-i1, field: alignment_um, values: [0.01, 0.012, 0.022], locators: ["p.3 Sec. II text <10 nm", "p.3 Fig. 5 X after correction", "p.3 Fig. 5 Y after correction"], chosen: 0.022, why: "measured plot over text; worst axis entered; text claim kept as metric"}
+  - {table: stack_layers, row_id: ectc51906.2022.00244-b-L03, field: thickness_um, values: [0.35, 0.5], locators: ["p.2 Sec. II; p.3 Sec. II; p.3 Fig. 4; p.7 Sec. IV; p.4 Fig. 6 (429 - 82.6 nm)", "p.7 Fig. 13 table (Si Thickness 500nm, all options)"], chosen: 0.35, why: "measured cross-section and text agree on ~350 nm; abstract says <500 nm"}
+  - {table: interconnects, row_id: ectc51906.2022.00244-b-i1, field: alignment_um, values: [0.01, 0.012, 0.022], locators: ["p.3 Sec. II text <10 nm", "p.3 Fig. 5 X after correction", "p.3 Fig. 5 Y after correction"], chosen: 0.022, why: "measured plot over text; worst axis entered; text claim kept as metric"}
+  - {table: stack_layers, row_id: ectc51906.2022.00244-c-L03, field: thickness_um, values: [0.35, 0.5], locators: ["p.2 Sec. II; p.3 Sec. II; p.3 Fig. 4; p.7 Sec. IV; p.4 Fig. 6 (429 - 82.6 nm)", "p.7 Fig. 13 table (Si Thickness 500nm, all options)"], chosen: 0.35, why: "measured cross-section and text agree on ~350 nm; abstract says <500 nm"}
+  - {table: interconnects, row_id: ectc51906.2022.00244-c-i1, field: alignment_um, values: [0.01, 0.012, 0.022], locators: ["p.3 Sec. II text <10 nm", "p.3 Fig. 5 X after correction", "p.3 Fig. 5 Y after correction"], chosen: 0.022, why: "measured plot over text; worst axis entered; text claim kept as metric"}
+  - {table: metrics, row_id: ectc51906.2022.00244-b-m14, field: value, values: [60, 118], locators: ["p.7 Fig. 13 middle, arrow label", "p.7 Fig. 13 middle, dashed line position"], chosen: 60, why: "author label; plotted line position read approx"}
+  - {table: metrics, row_id: ectc51906.2022.00244-a-m35, field: value, values: [1902, 3800], locators: ["p.7 Fig. 13 caption", "p.5 Fig. 10 table blocks 1+2+3+4+5"], chosen: 1902, why: "caption states value used for link normalization; both entered as rows"}
+excluded:
+  - "Fig. 1 dynamic IR-drop maps and color scale: ARM study, ref [2]."
+  - "CVD-Ru lowers BPR resistance by 40% vs W lines of same CD: ref [7]."
+  - "More than 20% of BEOL routing resources dedicated to PDN: background statement, not this TV."
+  - "BSPDN target flow previously described in ref [10]; only values stated for this work entered."
+not_reported:
+  - electrical_interfaces (DC PDN resistance only; no protocol, data rate or energy)
+  - optical_interfaces
+  - n-TSV pitch and count per Kelvin structure; BPR height; BSM1 thickness and width
+  - SiCN thickness and bonding equipment; carrier wafer material and thickness
+  - etch chemistries, PEALD/ALD/CVD temperatures, SSE time in seconds, W type A vs B definition
+  - BPR and chain data for option 8 (Co n-TSV): Fig. 13 middle/bottom panels empty
+  - n-TSV-to-BPR contact resistance separated from n-TSV resistance; reliability; thermal; yield
+  - overlay sample count (Fig. 5)

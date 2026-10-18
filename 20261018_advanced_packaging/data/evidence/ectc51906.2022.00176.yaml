@@ -1,0 +1,32 @@
+paper_id: ectc51906.2022.00176
+verified_on: 2026-10-18
+source_files:
+  - references/ectc51906.2022.00176/text.md
+  - references/ectc51906.2022.00176/source.json
+  - references/ectc51906.2022.00176/figures/page_02.png
+  - references/ectc51906.2022.00176/figures/page_03.png
+  - references/ectc51906.2022.00176/figures/page_04.png
+figure_reading_method: >-
+  Page renders p.2-p.4 opened; Fig. 3(b) and Fig. 5 re-rendered from source.pdf at 5-6x zoom in the scratchpad.
+entries:
+  - {table: interconnects, row_id: ectc51906.2022.00176-a-i1, field: density_per_mm2, value: 100000, unit: 1/mm2, basis: design_target, locator: "p.3 Sec. III.A", note: "full array bond pattern achieved bond density 100K/mm2"}
+  - {table: metrics, row_id: ectc51906.2022.00176-a-m6, field: value, value: 0.67, unit: ratio, basis: measured, locator: "p.4 Fig. 5 caption; p.4 Sec. IV.C", note: "SoIC4 Rc normalized to SoIC1 at 25 C"}
+  - {table: metrics, row_id: ectc51906.2022.00176-a-m7, field: value, value: 0.55, unit: ratio, basis: measured, locator: "p.4 Fig. 5", note: "plot read; other SoIC4 points ~0.58 (-25 C), 0.63 (0 C), 0.71 (50 C), 0.74 (75 C), 0.79 (100 C)"}
+  - {table: metrics, row_id: ectc51906.2022.00176-b-m2, field: value, value: 1.24, unit: ratio, basis: measured, locator: "p.4 Fig. 5", note: "plot read; SoIC1 50 C ~1.09"}
+derived: []
+conflicts:
+  - {table: metrics, row_id: ectc51906.2022.00176-a-m2, field: value, values: ["~12.5 ohm long chain (text)", "Fig. 3(b) long-chain slope about 1.5 V / 0.009 A = ~165 ohm"], locators: ["p.3 Sec. IV.A", "p.4 Fig. 3(b)"], chosen: "12.5 ohm (text)", why: "plot slope is own arithmetic on an unlabeled-unit axis; text value entered, discrepancy flagged (possible unit/label swap with short chain ~165 kOhm)"}
+  - {table: metrics, row_id: ectc51906.2022.00176-a-m1, field: value, values: ["~165 kOhm short chain (text)", "Fig. 3(b) inset short-chain slope roughly 1e4 ohm order"], locators: ["p.3 Sec. IV.A", "p.4 Fig. 3(b) inset"], chosen: "165000 ohm (text)", why: "inset too coarse to read; text entered"}
+  - {table: papers, row_id: ectc51906.2022.00176, field: notes, values: ["Table II caption repeats Table I caption (bandwidth density/EEP)", "Table II content is FEM roughness/thermal budget legs"], locators: ["p.3 Table II"], chosen: "content", why: "caption copy error in source"}
+excluded:
+  - "IDC data volume growth (Fig. 1, CAGR 15%/30%, 16 ZB, 163 ZB) - market data, not packaging"
+  - "BSI CMOS image sensor wafer-on-wafer stack, N65/N45 logic (ref [3])"
+  - "sub-3 um pitch gives 1e5 counts/mm2 and beyond (general SoIC statement, refs [4-5])"
+  - "bulk Cu TCR 3.9e-3/C (ref [11])"
+not_reported:
+  - electrical_interfaces (no protocol, data rate, energy per bit; EEP only relative)
+  - optical_interfaces
+  - die thicknesses, wafer diameter, process node, BEOL layer count, bond pad diameter, barrier/seed materials and thickness, total bond height
+  - dielectric bonding layer material, surface activation, bonding force/dwell/over-travel values, thermal budget temperatures T1/T2, anneal
+  - bonding accuracy spec, count of bonds per chain, resistance specification, absolute Rc values
+  - EM, SM, VBD results; preconditioning; warpage; thermal

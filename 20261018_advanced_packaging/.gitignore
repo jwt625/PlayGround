@@ -1,0 +1,14 @@
+.env
+cache/
+logs/
+node_modules/
+# re-include deliverables, the extraction database and configs hidden by PlayGround root patterns (*.csv, *cache*, *.txt)
+!outputs/
+!outputs/*.csv
+!scripts/select_cache.py
+!data/**/*.csv
+!config/force_ocr.txt
+references/*/source.pdf
+references/*/text.md
+references/*/figures/
+references/_inbox/

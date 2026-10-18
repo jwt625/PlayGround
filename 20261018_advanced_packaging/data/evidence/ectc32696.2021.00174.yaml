@@ -1,0 +1,45 @@
+paper_id: ectc32696.2021.00174
+verified_on: 2026-10-18
+schema_version: 2
+source_files:
+  - references/ectc32696.2021.00174/text.md
+  - references/ectc32696.2021.00174/source.json
+  - references/ectc32696.2021.00174/source.pdf
+  - references/ectc32696.2021.00174/figures/page_01.png
+  - references/ectc32696.2021.00174/figures/page_02.png
+  - references/ectc32696.2021.00174/figures/page_03.png
+  - references/ectc32696.2021.00174/figures/page_04.png
+  - references/ectc32696.2021.00174/figures/page_05.png
+  - references/ectc32696.2021.00174/figures/page_06.png
+figure_reading_method: >-
+  Page renders 1-6 viewed (page 7 text only). Fig. 3, 7, 9, 14 and Table 2 re-rendered from source.pdf at 400-600 dpi.
+  Fig. 3 bars read by pixel calibration (0 at y=660 px, 1400 at y=152 px; 0.363 px/cycle), about +-20 cycles.
+  Fig. 14 is a 405x302 px embedded image; its red measurement labels are not legible at native resolution.
+entries:
+  - {table: metrics, row_id: ectc32696.2021.00174-c-m1, field: value, value: 1130, unit: cycles, basis: simulated, locator: "p.2 Fig. 3", note: "bar top y=250 px -> 1129"}
+  - {table: metrics, row_id: ectc32696.2021.00174-d-m1, field: value, value: 900, unit: cycles, basis: simulated, locator: "p.2 Fig. 3", note: "bar top y=333 px -> 901"}
+  - {table: metrics, row_id: ectc32696.2021.00174-e-m1, field: value, value: 750, unit: cycles, basis: simulated, locator: "p.2 Fig. 3", note: "bar top y=389 px -> 747"}
+  - {table: metrics, row_id: ectc32696.2021.00174-f-m1, field: value, value: 680, unit: cycles, basis: simulated, locator: "p.2 Fig. 3", note: "bar top y=414 px -> 678; 500-cycle requirement line at about 490"}
+  - {table: interconnects, row_id: ectc32696.2021.00174-a-i2, field: pitch_um, value: 350, unit: um, basis: design_target, locator: "p.3 Fig. 9", note: "Fig. 9 table 'Pitch 0.35mm'"}
+derived:
+  - {table: interconnects, row_id: ectc32696.2021.00174-a-i2, field: pitch_um, value: 350, formula: "0.35 mm x 1000 (unit conversion)", inputs: "p.3 Fig. 9"}
+  - {table: interconnects, row_id: ectc32696.2021.00174-c-i1, field: pitch_um, value: 350, formula: "0.35 mm x 1000 (unit conversion)", inputs: "p.2 Sec. I"}
+  - {table: metrics, row_id: ectc32696.2021.00174-a-m18, field: n_samples, value: 20, formula: "4 rows (P01-P04) x 5 points", inputs: "p.4 Fig. 12"}
+conflicts:
+  - {table: stack_layers, row_id: ectc32696.2021.00174-a-L06, field: thickness_um, values: [7, 15], locators: ["p.4 Table 4 'RDL Height 7um'", "p.4 Table 4 'RDL Thickness 15um'"], chosen: 7, why: "both targets in the same table; height taken as Cu thickness, 15 um equals RDL width; both kept as metrics"}
+  - {table: metrics, row_id: ectc32696.2021.00174-a-m8, field: parameter, values: ["TTV Post Top Grind 0.715mm (Table 4)", "TTV spec < 50um (Table 3)"], locators: ["p.4 Table 4", "p.4 Table 3"], chosen: "entered as printed", why: "0.715 mm cannot be a TTV under a 50 um spec; likely a panel thickness target"}
+  - {table: test_vehicles, row_id: ectc32696.2021.00174-c, field: basis, values: ["BLR Simulation (caption)", "Board Level Temp Cycle Results (chart title); test vehicle and JEDEC board described"], locators: ["p.2 Fig. 3 caption", "p.2 Fig. 3; p.2 Sec. I"], chosen: simulated, why: "caption states simulation"}
+  - {table: test_vehicles, row_id: ectc32696.2021.00174-e, field: name, values: ["2 Mask Layer (caption)", "2P1M = PM1, RDL, PM2 (Fig. 3 inset)"], locators: ["p.2 Fig. 3 caption", "p.2 Fig. 3 inset"], chosen: "2P1M layer list from inset", why: "inset table lists layers"}
+excluded:
+  - "Fig. 1 chip first vs chip last (Source: Techsearch, Fraunhofer IZM)"
+  - "Table 1 fan-out advantages (Source: Yole)"
+  - "Fig. 18 cost/package vs panel size, 25% and 66% cost reduction (Source: Yole)"
+  - "Fig. 20 die count 1x/1.64x/4.54x/6.5x (Source: JCET)"
+  - "Fig. 19 price ranking and Table 6 body size vs RDL layers vs cost (qualitative, no numbers)"
+  - "market figures: USD 1.2 billion, 15.5% unit growth [4], 62.5% CAGR [2]"
+  - "Fig. 14 cross-section measurement labels (illegible)"
+not_reported:
+  - electrical_interfaces, optical_interfaces
+  - die size, die thickness, die function, mold compound and PM dielectric names, RDL/UBM metal, Cu stud height/diameter
+  - ball count, RDL via size, warpage magnitude and sign, absolute TTV values (Fig. 10 maps have no scale)
+  - molding/cure temperatures and times, LDI tool, BLR measured data (pending)

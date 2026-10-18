@@ -1,0 +1,4 @@
+paper_id,doi,title,year,venue,primary_bucket,buckets,priority,triage_rationale
+ectc32696.2021.00174,10.1109/ectc32696.2021.00174,600mm Fan-Out Panel Level Packaging (FOPLP) As A Scale Up Alternative to 300mm Fan-Out Wafer Level Packaging (FOWLP) with 6-Sided Die Protection,2021,ECTC,panel,panel,1,curator-verified primary disclosure: FOPLP line: nepes 600x600 mm (first ECTC version)
+ectc51909.2023.00180,10.1109/ectc51909.2023.00180,Direct Bonded Heterogeneous Integration (DBHi): Surface Bridge Approach for Die Tiling,2023,ECTC,si_bridge,si_bridge,1,"DBHi surface bridge thinned 200 to 60 um, 30-75 um pitch uC4 Cu pillars; TCB plus reflow assembly, FEM."
+ectc51906.2022.00108,10.1109/ectc51906.2022.00108,Investigation on Package Warpage and Reliability of the large size 2.5D Molded Interposer on Substrate (MIoS) Package,2022,ECTC,si_interposer,si_interposer,1,"MIoS: 2 logic + 8 HBM on 2800 mm2 Si interposer, 85x85 mm body; stiffener warpage experiments."

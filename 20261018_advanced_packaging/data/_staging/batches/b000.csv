@@ -1,0 +1,4 @@
+paper_id,doi,title,year,venue,primary_bucket,buckets,priority,triage_rationale
+ectc.2019.00095,10.1109/ectc.2019.00095,System on Integrated Chips (SoIC(TM) for 3D Heterogeneous Integration,2019,"ECTC 2019 (69th), pp. 594-599",hybrid_bonding,hybrid_bonding,1,curator-verified primary disclosure: TSMC SoIC
+iedm19573.2019.8993637,10.1109/iedm19573.2019.8993637,Foveros: 3D Integration and the use of Face-to-Face Chip Stacking for Logic Devices,2019,IEDM 2019,microbump_3d,microbump_3d,1,curator-verified primary disclosure: Foveros
+itherm45881.2020.9190542,10.1109/itherm45881.2020.9190542,Thermal Characteristics of Integrated Fan-Out on Substrate (InFO_oS) Packaging Technology,2020,ITherm 2020,organic_rdl_fanout,organic_rdl_fanout,1,curator-verified primary disclosure: InFO-oS: first paper naming InFO_oS

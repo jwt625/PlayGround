@@ -1,0 +1,2 @@
+# paper_ids whose text layer drops numbers (symbol-font shift) although letters read fine; verified manually
+ectc51909.2023.00307

@@ -1,0 +1,46 @@
+comp_id,tv_id,component_type,is_emulator,embedded,name,count,x_mm,y_mm,thickness_um,cavity_x_mm,cavity_y_mm,cavity_depth_um,gap_um,process_node,material,supplier,basis,source,overrides,locator,qualifiers,notes
+ectc32696.2021.00174-a-c1,ectc32696.2021.00174-a,unspecified,,,"single die (Cu studs on passivation openings, face up)",1,,,,,,,,,Si,,stated,text,,p.2 Sec. II; p.3 Sec. III; p.2 Fig. 7,,"Die function, size and thickness not given; target apps PMIC, RF, single die."
+ectc32696.2021.00174-a-c2,ectc32696.2021.00174-a,mold,,,compression mold compound (6-sided die protection),1,,,,,,,,,mold compound,,stated,text,,p.2 Sec. II; p.3 Sec. III; p.4 Sec. III,,Mold compound not named.
+ectc32696.2021.00174-c-c1,ectc32696.2021.00174-c,pcb,,,1 mm JEDEC test board,1,,,,,,,,,,,design_target,text,,p.2 Sec. I,,Board thickness 1 mm stated; shared by all BLR models.
+ectc51909.2023.00180-a-c1,ectc51909.2023.00180-a,unspecified,,,main chips A and B (Cu pillar C4),2,19,19,,,,,,,Si,,design_target,text,,p.2 Sec. II; p.2 Fig. 2; p.6 Table IV,,Function not stated; daisy-chain nets tested.
+ectc51909.2023.00180-a-c2,ectc51909.2023.00180-a,bridge,,,Si bridge chip,1,3.5,2.5,60,,,,,,Si,,design_target,text,,p.1 Abstract; p.1 Sec. I; p.2 Sec. II; p.2 Fig. 2,,Thinned from 200 um (previous DBHi) to 60 um; no handler used. Gap between chips not given.
+ectc51909.2023.00180-a-c3,ectc51909.2023.00180-a,substrate,,,"organic laminate (standard, cavity-free)",1,68.5,68.5,,,,,,,organic laminate,,design_target,text,,p.2 Sec. II; p.2 Fig. 2,,Signal routing allowed under bridge; LW/LS 9/12 um.
+ectc51909.2023.00180-a-c4,ectc51909.2023.00180-a,lid,,,lid,1,,,,,,,,,,,stated,schematic,,p.2 Fig. 2; p.3 Fig. 9,,FEM uses a copper lid.
+ectc51909.2023.00180-a-c5,ectc51909.2023.00180-a,tim,,,thermal interface material,1,,,,,,,,,,,stated,schematic,,p.2 Fig. 2,,
+ectc51909.2023.00180-a-c6,ectc51909.2023.00180-a,adhesive,,,lid adhesive,1,,,,,,,,,,,stated,schematic,,p.2 Fig. 2,,
+ectc51909.2023.00180-b-c1,ectc51909.2023.00180-b,unspecified,,,main chips A and B (Cu pillar C4),2,19,19,,,,,,,Si,,design_target,text,,p.2 Sec. II; p.2 Fig. 2; p.6 Table IV,,Function not stated; daisy-chain nets tested.
+ectc51909.2023.00180-b-c2,ectc51909.2023.00180-b,bridge,,,Si bridge chip,1,3.5,2.5,60,,,,,,Si,,design_target,text,,p.1 Abstract; p.1 Sec. I; p.2 Sec. II; p.2 Fig. 2,,Thinned from 200 um (previous DBHi) to 60 um; no handler used. Gap between chips not given.
+ectc51909.2023.00180-b-c3,ectc51909.2023.00180-b,substrate,,,"organic laminate (standard, cavity-free)",1,68.5,68.5,,,,,,,organic laminate,,design_target,text,,p.2 Sec. II; p.2 Fig. 2,,Signal routing allowed under bridge; LW/LS 9/12 um.
+ectc51909.2023.00180-b-c4,ectc51909.2023.00180-b,lid,,,lid,1,,,,,,,,,,,stated,schematic,,p.2 Fig. 2; p.3 Fig. 9,,FEM uses a copper lid.
+ectc51909.2023.00180-b-c5,ectc51909.2023.00180-b,tim,,,thermal interface material,1,,,,,,,,,,,stated,schematic,,p.2 Fig. 2,,
+ectc51909.2023.00180-b-c6,ectc51909.2023.00180-b,adhesive,,,lid adhesive,1,,,,,,,,,,,stated,schematic,,p.2 Fig. 2,,
+ectc51909.2023.00180-a-c7,ectc51909.2023.00180-a,underfill,,,"capillary underfill, two dispenses (uC4 through chip A-B gap; C4 to laminate)",2,,,,,,,,,,,stated,text,,p.3 Sec. II.B; p.3 Fig. 10; p.3 Fig. 11,,Material not named.
+ectc51909.2023.00180-b-c7,ectc51909.2023.00180-b,underfill,,,non conductive paste (NCP) in uC4 area,1,,,,,,,,,NCP,,stated,text,,p.2 Sec. II.A; p.2 Fig. 4,,Plus underfill dispensed after laminate assembly.
+ectc51909.2023.00180-c-c1,ectc51909.2023.00180-c,bridge,,,Si bridge,1,,,200,,,,,,Si,,simulated,table,,p.4 Table II,,linear elastic
+ectc51909.2023.00180-c-c2,ectc51909.2023.00180-c,substrate,,,organic laminate with cavity under bridge,1,,,,,,,,,,,simulated,table,,p.4 Table II; p.4 Sec. II.C,,core and build-up temperature-dependent linear
+ectc51909.2023.00180-c-c3,ectc51909.2023.00180-c,lid,,,copper lid,1,,,,,,,,,Cu,,simulated,text,,p.4 Sec. II.C; p.5 Fig. 12(b),,plastic properties
+ectc51909.2023.00180-c-c4,ectc51909.2023.00180-c,underfill,,,underfill,1,,,,,,,,,,,simulated,text,,p.4 Sec. II.C,,viscoelastic
+ectc51909.2023.00180-d-c1,ectc51909.2023.00180-d,bridge,,,Si bridge,1,,,30,,,,,,Si,,simulated,table,,p.4 Table II,,linear elastic
+ectc51909.2023.00180-d-c2,ectc51909.2023.00180-d,substrate,,,organic laminate with cavity under bridge,1,,,,,,,,,,,simulated,table,,p.4 Table II; p.4 Sec. II.C,,core and build-up temperature-dependent linear
+ectc51909.2023.00180-d-c3,ectc51909.2023.00180-d,lid,,,copper lid,1,,,,,,,,,Cu,,simulated,text,,p.4 Sec. II.C; p.5 Fig. 12(b),,plastic properties
+ectc51909.2023.00180-d-c4,ectc51909.2023.00180-d,underfill,,,underfill,1,,,,,,,,,,,simulated,text,,p.4 Sec. II.C,,viscoelastic
+ectc51909.2023.00180-e-c1,ectc51909.2023.00180-e,bridge,,,Si bridge,1,,,30,,,,,,Si,,simulated,table,,p.4 Table II,,linear elastic
+ectc51909.2023.00180-e-c2,ectc51909.2023.00180-e,substrate,,,organic laminate (no cavity),1,,,,,,,,,,,simulated,table,,p.4 Table II; p.4 Sec. II.C,,core and build-up temperature-dependent linear
+ectc51909.2023.00180-e-c3,ectc51909.2023.00180-e,lid,,,copper lid,1,,,,,,,,,Cu,,simulated,text,,p.4 Sec. II.C; p.5 Fig. 12(b),,plastic properties
+ectc51909.2023.00180-e-c4,ectc51909.2023.00180-e,underfill,,,underfill,1,,,,,,,,,,,simulated,text,,p.4 Sec. II.C,,viscoelastic
+ectc51909.2023.00180-f-c1,ectc51909.2023.00180-f,bridge,,,Si bridge,1,,,30,,,,,,Si,,simulated,table,,p.4 Table II,,linear elastic
+ectc51909.2023.00180-f-c2,ectc51909.2023.00180-f,substrate,,,organic laminate (no cavity),1,,,,,,,,,,,simulated,table,,p.4 Table II; p.4 Sec. II.C,,core and build-up temperature-dependent linear
+ectc51909.2023.00180-f-c3,ectc51909.2023.00180-f,lid,,,copper lid,1,,,,,,,,,Cu,,simulated,text,,p.4 Sec. II.C; p.5 Fig. 12(b),,plastic properties
+ectc51909.2023.00180-f-c4,ectc51909.2023.00180-f,underfill,,,underfill,1,,,,,,,,,,,simulated,text,,p.4 Sec. II.C,,viscoelastic
+ectc51909.2023.00180-g-c1,ectc51909.2023.00180-g,bridge,,,Si bridge,1,,,60,,,,,,Si,,simulated,table,,p.4 Table II,,linear elastic
+ectc51909.2023.00180-g-c2,ectc51909.2023.00180-g,substrate,,,organic laminate (no cavity),1,,,,,,,,,,,simulated,table,,p.4 Table II; p.4 Sec. II.C,,core and build-up temperature-dependent linear
+ectc51909.2023.00180-g-c3,ectc51909.2023.00180-g,lid,,,copper lid,1,,,,,,,,,Cu,,simulated,text,,p.4 Sec. II.C; p.5 Fig. 12(b),,plastic properties
+ectc51909.2023.00180-g-c4,ectc51909.2023.00180-g,underfill,,,underfill,1,,,,,,,,,,,simulated,text,,p.4 Sec. II.C,,viscoelastic
+ectc51906.2022.00108-a-c1,ectc51906.2022.00108-a,logic_soc,,,logic die (labelled ASIC in Fig. 1),2,,,,,,,,,Si,,stated,mixed,,p.1 Abstract; p.1 Fig. 1,,
+ectc51906.2022.00108-a-c2,ectc51906.2022.00108-a,hbm,,,MPGA HBM,8,,,,,,,,,,,stated,mixed,,p.1 Abstract; p.1 Fig. 1; p.2 Sec. II.A,,
+ectc51906.2022.00108-a-c3,ectc51906.2022.00108-a,interposer,,,Si interposer (molded interposer),1,,,,,,,,,Si,,design_target,text,,p.1 Abstract; p.1 Sec. I,,2800 mm2; molded interposer CTE 3~4 ppm. x/y not given.
+ectc51906.2022.00108-a-c4,ectc51906.2022.00108-a,mold,,,mold encapsulating devices on interposer,1,,,,,,,,,mold compound,,stated,text,,p.2 Sec. II.A,,
+ectc51906.2022.00108-a-c5,ectc51906.2022.00108-a,underfill,,,underfill,,,,,,,,,,,,stated,text,,p.2 Sec. II.A,,
+ectc51906.2022.00108-a-c6,ectc51906.2022.00108-a,substrate,,,organic substrate,1,85,85,,,,,,,organic substrate with ABF build-up and SR,,design_target,mixed,material:stated,p.1 Abstract; p.2 Sec. II.A; p.3 Table I,,Substrate size taken as package body 85x85 mm. CTE 13~20 ppm.
+ectc51906.2022.00108-a-c7,ectc51906.2022.00108-a,stiffener,,,ring frame stiffener (Stiff A/B/C splits),1,,,,,,,,,,,stated,mixed,,p.2 Sec. II.A; p.3 Sec. III.B; p.3 Table II; p.4 Fig. 5,,"Table II relative: modulus A + , B ++, C ++; CTE A +++, B ++, C + (= substrate +). Thickness splits 0.7-3 mm in metrics.variant."
+ectc51906.2022.00108-a-c8,ectc51906.2022.00108-a,adhesive,,,stiffener adhesive (Adhesive A/B/C splits),1,,,100,,,,,,,,design_target,text,,p.4 Sec. III.B; p.4 Table III,thickness_um:lt,Relative moduli and adhesion strength in metrics.

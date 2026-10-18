@@ -1,0 +1,35 @@
+paper_id: ectc51906.2022.00038
+verified_on: 2026-10-18
+schema_version: 2
+source_files:
+  - references/ectc51906.2022.00038/text.md
+  - references/ectc51906.2022.00038/source.json
+  - references/ectc51906.2022.00038/source.pdf
+  - references/ectc51906.2022.00038/figures/page_02.png
+  - references/ectc51906.2022.00038/figures/page_03.png
+  - references/ectc51906.2022.00038/figures/page_04.png
+figure_reading_method: >-
+  page_02..04.png viewed in full; Fig. 1 insets re-rendered from source.pdf at 600 dpi to read micro-bump pair labels
+  (7 um, 15 um, 6 um). Table I, Fig. 6 void-fraction labels read from page renders; other figures qualitative.
+entries:
+  - {table: interconnects, row_id: ectc51906.2022.00038-a-i2, field: cap_height_um, value: 15, unit: um, basis: design_target, locator: "p.2 Fig. 1 inset", note: "schematic SnAg label 15 um; top Cu/Ni 7 um; bottom Ni/Au/Cu 6 um; sum 28 um = stated standoff"}
+  - {table: metrics, row_id: ectc51906.2022.00038-b-m1, field: value, value: 1.2, unit: "%", basis: measured, locator: "p.4 Fig. 6(a)", note: "image label 'Void fraction: 1.2%', matches text"}
+  - {table: metrics, row_id: ectc51906.2022.00038-b-m2, field: value, value: 0.2, unit: "%", basis: measured, locator: "p.4 Fig. 6(b)", note: "image label 'Void fraction: 0.2%'; text 'about 0.2%'"}
+derived:
+  - {table: process_steps, row_id: ectc51906.2022.00038-a-s05, field: pressure_mpa, value: 0.0207, formula: "3 psi x 0.00689476 MPa/psi (unit conversion)", inputs: "p.3 Sec. III.B 'greater than 3 psi'"}
+  - {table: process_steps, row_id: ectc51906.2022.00038-b-s02, field: time_s, value: 5400, formula: "1.5 h x 3600 s/h (unit conversion)", inputs: "p.4 Sec. III.D"}
+  - {table: interconnects, row_id: ectc51906.2022.00038-b-i1, field: anneal_time_min, value: 90, formula: "1.5 h x 60 min/h (unit conversion)", inputs: "p.4 Sec. III.D"}
+conflicts:
+  - {table: metrics, row_id: ectc51906.2022.00038-a-m6, field: qualifiers, values: ["above 80 MPa (Sec. III.C)", "can approach 80 MPa (abstract, conclusion)"], locators: ["p.3 Sec. III.C", "p.1 Abstract; p.4 Sec. IV"], chosen: "80 gt", why: "results section describes the measurement; abstract wording looser"}
+excluded:
+  - "150 um pitch / 50 um standoff uniform MELI-Cu bonding attributed to previous study ref [1]"
+  - "20 MPa Cu-to-Cu bonding strength of ref [14]; 200 MPa tensile strength of crack-free electroless Cu of ref [15]"
+  - "flow-pattern recipe (oscillatory cycles) from ref [1]; loading factor definition from ref [13]"
+  - "disc-shaped voids and seams of vertical joints described from literature ref [1]"
+not_reported:
+  - electrical_interfaces, optical_interfaces
+  - die sizes and thicknesses, Cu pillar height, per-region pillar count, TV b pitch and gap
+  - electroless bath chemistry, pretreatment chemistry, plating time, flow rate, deposition rate
+  - underfill product, corner micro-bump bonding conditions, alignment
+  - electrical resistance, yield percentage, reliability testing, warpage, thermal
+  - tensile sample count

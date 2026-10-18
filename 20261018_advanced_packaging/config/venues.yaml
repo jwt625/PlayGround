@@ -1,0 +1,76 @@
+# Venue definitions. mode: full = every record screened; filtered = full TOC fetched, topic filter applied.
+# match: regex (case-insensitive) on Xplore publicationTitle used to identify the venue's proceedings.
+# query: Xplore search text used to discover publication numbers.
+venues:
+  ECTC:
+    years: [2022, 2023, 2024, 2025, 2026]
+    mode: full
+    query: "Electronic Components and Technology Conference"
+    match: "Electronic Components and Technology Conference"
+  TCPMT:
+    years: [2022, 2023, 2024, 2025, 2026]
+    mode: full
+    kind: journal
+    query: "Transactions on Components, Packaging and Manufacturing Technology"
+    match: "Transactions on Components, Packaging and Manufacturing Technology"
+  EPTC:
+    years: [2022, 2023, 2024, 2025, 2026]
+    mode: full
+    query: "Electronics Packaging Technology Conference"
+    match: "Electronics Packaging Technology Conference"
+  3DIC:
+    years: [2022, 2023, 2024, 2025, 2026]
+    mode: full
+    query: "Systems Integration Conference"
+    match: "3D Systems Integration|\\(3DIC\\)"
+  IEDM:
+    years: [2022, 2023, 2024, 2025]
+    mode: filtered
+    query: "International Electron Devices Meeting"
+    match: "Electron Devices Meeting"
+  VLSI:
+    years: [2022, 2023, 2024, 2025, 2026]
+    mode: filtered
+    query: "Symposium on VLSI Technology and Circuits"
+    match: "VLSI Technology"
+  EDAPS:
+    years: [2022, 2023, 2024, 2025]
+    mode: filtered
+    query: "Electrical Design of Advanced Packaging and Systems"
+    match: "Electrical Design of Advanced Packag"
+  EPEPS:
+    years: [2022, 2023, 2024, 2025]
+    mode: filtered
+    query: "Electrical Performance of Electronic Packaging and Systems"
+    match: "Electrical Performance of Electronic Packaging"
+  IRPS:
+    years: [2022, 2023, 2024, 2025, 2026]
+    mode: filtered
+    query: "International Reliability Physics Symposium"
+    match: "Reliability Physics Symposium"
+  ITherm:
+    years: [2022, 2023, 2024, 2025, 2026]
+    mode: filtered
+    query: "Thermal and Thermomechanical Phenomena in Electronic Systems"
+    match: "Thermal and Thermomechanical Phenomena"
+  ICEP:
+    years: [2022, 2023, 2024, 2025]
+    mode: full
+    query: "International Conference on Electronics Packaging"
+    match: "International Conference on Electronics Packaging"
+    exclude: "Electronic Packaging Technology"
+  ESTC:
+    years: [2022, 2023, 2024]
+    mode: full
+    query: "Electronics System-Integration Technology Conference"
+    match: "Electronics System-Integration Technology"
+  EMPC:
+    years: [2022, 2023, 2024]
+    mode: full
+    query: "European Microelectronics and Packaging Conference"
+    match: "European Microelectronics"
+  IWLPC:
+    years: [2022, 2023, 2024, 2025]
+    mode: full
+    query: "International Wafer Level Packaging Conference"
+    match: "Wafer Level Packaging Conference"

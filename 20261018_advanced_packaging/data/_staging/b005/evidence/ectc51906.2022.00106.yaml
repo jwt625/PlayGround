@@ -1,0 +1,37 @@
+paper_id: ectc51906.2022.00106
+verified_on: 2026-10-18
+source_files:
+  - references/ectc51906.2022.00106/text.md
+  - references/ectc51906.2022.00106/source.json
+  - references/ectc51906.2022.00106/source.pdf
+  - references/ectc51906.2022.00106/figures/page_01_220dpi.png
+  - references/ectc51906.2022.00106/figures/page_02_220dpi.png
+  - references/ectc51906.2022.00106/figures/page_03_220dpi.png
+  - references/ectc51906.2022.00106/figures/page_04_220dpi.png
+figure_reading_method: >-
+  Original text layer was font-encoded garbage (common-word ratio 0.008); text.md was later replaced by tesseract OCR.
+  All text, tables and figure labels were read from source.pdf renders at 216 dpi (page quadrants) plus 7x crops of
+  Fig. 1(b) and Fig. 6 in the scratchpad; equivalent to the page_NN_220dpi.png renders. OCR text cross-checked
+  afterwards; no value taken from text.md alone.
+entries:
+  - {table: interconnects, row_id: ectc51906.2022.00106-a-i1, field: pitch_um, value: 75, unit: um, basis: design_target, locator: "p.1 Abstract; p.1 Sec. II", note: "bridge C4 pitch used for this study was 75 um"}
+  - {table: interconnects, row_id: ectc51906.2022.00106-a-i2, field: pitch_um, value: 150, unit: um, basis: design_target, locator: "p.1 Abstract", note: "standard pitch bumps (150 um) processor chips to laminate"}
+  - {table: components, row_id: ectc51906.2022.00106-a-c1, field: thickness_um, value: 725, unit: um, basis: design_target, locator: "p.4 Fig. 7", note: "vertical arrow spans the chip in a 'Proportional drawing'"}
+  - {table: metrics, row_id: ectc51906.2022.00106-a-m1, field: value_text, value: "0/29", unit: broken nets, basis: measured, locator: "p.4 Table III", note: "two rows, '# of parts' 1 each, 0/29 at every readout to 1000"}
+  - {table: metrics, row_id: ectc51906.2022.00106-c-m3, field: value, value: 7, unit: shots, basis: measured, locator: "p.3 Sec. IV; p.4 Fig. 6", note: "seven blue dots; Fig. 6 counted 7 blue among red fail shots"}
+derived: []
+conflicts:
+  - {table: components, row_id: ectc51906.2022.00106-a-c2, field: y_mm, values: [3.2, 3.5], locators: ["p.1 Sec. II text", "p.2 Fig. 1(b) label"], chosen: 3.2, why: "text over schematic/layout label (rule k); same for -b-c2"}
+  - {table: metrics, row_id: ectc51906.2022.00106-a-m8, field: value, values: ["800 um gap depth (Abstract)", "725 um labeled in Fig. 7 proportional drawing"], locators: ["p.1 Abstract", "p.4 Fig. 7"], chosen: "800 as gap depth; 725 entered as processor chip thickness", why: "Fig. 7 arrow spans chip only; 800 may include standoff, not reconciled"}
+  - {table: metrics, row_id: ectc51906.2022.00106-c-m6, field: value, values: ["about 100 um with elongated tail (Abstract)", "maximum 120 um (Sec. IV)", "rod around 50 um (Sec. IV)"], locators: ["p.1 Abstract", "p.3 Sec. IV", "p.3 Sec. IV"], chosen: "all kept as separate rows with statistic", why: "different definitions (typical, max, rod width)"}
+excluded:
+  - "Table I NCP-A/B/C and CUF-A material properties (filler, viscosity, Tg, CTE, modulus), attributed to ref [3]"
+  - "Table II energy release rate Gc of CUF-A and NCP-A on PSPI/SiO2/Si3N4, attributed to ref [3]"
+  - "FEM result: shear stress dominant in uC4 during low-temperature cycles, model with TIM and Cu lid (ref [3])"
+  - "DBHi advantages list (bandwidth, power per bit, UBM, laminate yield) attributed to refs [1][2]"
+not_reported:
+  - laminate size, layer count, thickness; lid and TIM materials and thicknesses
+  - bridge thickness; uC4 and C4 diameter, height, count, solder alloy, UBM
+  - reflow, TCB, cure temperatures and times; dispense pressure, dot count, dot volume
+  - thermal cycling standard, pass criterion, dwell; assembly yield number
+  - warpage, electrical performance; electrical_interfaces, optical_interfaces

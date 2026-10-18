@@ -1,0 +1,4 @@
+paper_id,doi,title,year,venue,primary_bucket,buckets,priority,triage_rationale
+iedm45625.2022.10019499,10.1109/iedm45625.2022.10019499,Enabling Next Generation 3D Heterogeneous Integration Architectures on Intel Process,2022,IEDM,hybrid_bonding,hybrid_bonding,1,Quasi-monolithic chip 3D architecture with BEOL-compatible hybrid bonding and ultra-thick oxide fill modules.
+ectc51906.2022.00061,10.1109/ectc51906.2022.00061,Novel Ga Assisted Low-temperature Bonding Technology for Fine-pitch Interconnects,2022,ECTC,microbump_3d,microbump_3d,1,"Ga/X-alloy assisted TCB at 150 C for <20 um pitch Cu interconnects; ~2 um CuGa2 IMC by SEM/FIB, >5 MPa."
+ectc51906.2022.00218,10.1109/ectc51906.2022.00218,Substrate Silicon Wafer Integrated Fan-out Technology (S-SWIFT®) Packaging with Fine Pitch Embedded Trace RDL,2022,ECTC,organic_rdl_fanout,organic_rdl_fanout,1,"S-SWIFT embedded trace RDL: <2 um resolution, up to 6 layers; 4-layer stacked-via package built, JEDEC passed."

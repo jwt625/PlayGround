@@ -1,0 +1,20 @@
+comp_id,tv_id,component_type,is_emulator,embedded,name,count,x_mm,y_mm,thickness_um,cavity_x_mm,cavity_y_mm,cavity_depth_um,gap_um,process_node,material,supplier,basis,source,overrides,locator,qualifiers,notes
+ectc.2019.00-29-a-c1,ectc.2019.00-29-a,dummy_die,yes,yes,IC test chip (Al daisy chain chip),1,10,10,,,,,,,Si; Al pads; oxide passivation,,design_target,text,,p.2 Table 1; p.3 Sec. II.B; p.3 Fig. 4,,Daisy chains at center and edge regions; thickness not reported. Embedded in moldable underfill.
+ectc.2019.00-29-a-c2,ectc.2019.00-29-a,mold,,,moldable underfill (panel compression mold),,,,,,,,,,moldable underfill,,stated,text,,p.3 Sec. III.A,,Molded underfill replaces separate underfill; product and thickness not reported.
+ectc.2019.00-29-a-c3,ectc.2019.00-29-a,other,,,glass carrier panel (Gen 3),1,550,650,,,,,,,glass,,design_target,text,,p.3 Sec. III.A,,Temporary carrier removed by laser debond; thickness not reported.
+ectc.2016.201-a-c1,ectc.2016.201-a,bridge,,yes,Si bridge die,,2,2,75,,,,,,"Si with multi-layer thick BEOL metals, no TSV",,design_target,table,thickness_um:text,p.5 Table II; p.6 Sec. III(b); p.4 Sec. II,thickness_um:lt,Size range 2x2 to 8x8 mm (current; larger possible); x/y = lower bound. Bridges per package >5 possible.
+ectc.2016.201-a-c2,ectc.2016.201-a,substrate,,,organic FCBGA package substrate,,,,,,,,,,organic build-up substrate,,stated,text,,p.4 Sec. II; p.5 Fig. 4(a); p.6 Sec. III,,
+ectc.2016.201-a-c3,ectc.2016.201-a,adhesive,,,bridge cavity adhesive,,,,,,,,,,adhesive,,stated,text,,p.6 Sec. III,,Holds bridge in cavity; material not named.
+ectc.2016.201-a-c4,ectc.2016.201-a,underfill,,,capillary epoxy underfill,,,,,,,,,,epoxy underfill,,stated,text,,p.6 Sec. III,,Void-free filling between fine and coarse pitch regions.
+ectc.2016.201-a-c5,ectc.2016.201-a,unspecified,,,Si dies (DIE 1-3 in schematic),3,,,,,,,,,,,stated,schematic,,p.5 Fig. 4(a),,
+ectc.2016.201-b-c1,ectc.2016.201-b,unspecified,,,"dies (1 large, 4 small per photo)",5,,,,,,,,,,,stated,caption,name:figure_image,p.7 Fig. 7; p.5 Fig. 4(b),,
+ectc.2016.201-b-c2,ectc.2016.201-b,bridge,,yes,EMIB Si bridges,4,,,,,,,,,,,stated,caption,,p.7 Fig. 7,,
+ectc.2016.201-b-c3,ectc.2016.201-b,underfill,,,epoxy underfill,,,,,,,,,,epoxy underfill,,stated,text,,p.6 Sec. III; p.7 Fig. 7,,
+ectc.2016.201-c-c1,ectc.2016.201-c,bridge,,yes,EMIB Si bridge (signal pair),,,,,,,,,,,,stated,text,,p.7 Sec. IV,,
+ectc.2011.5898527-a-c1,ectc.2011.5898527-a,fpga,,,FPGA slice (IC1-IC4),4,7,12,,,,,,28nm,"Si, Cu/low-k BEOL",,design_target,table,,p.2 Table 1; p.2 Package Description; p.2 Fig. 2,,Thickness not reported.
+ectc.2011.5898527-a-c2,ectc.2011.5898527-a,interposer,,,Cu TSV silicon interposer,1,25,31,100,,,,,,Si with Cu TSV (via-first/via-middle),,design_target,text,,p.1 Abstract; p.2 Package Description,,"Passive interposer, no active devices implied by intro."
+ectc.2011.5898527-a-c3,ectc.2011.5898527-a,substrate,,,organic package substrate,1,42.5,42.5,,,,,,,"organic, low-CTE core chosen",,design_target,table,,p.2 Table 1; p.2 Package Warpage,,Core 800 um; layer count not reported.
+ectc.2011.5898527-a-c4,ectc.2011.5898527-a,lid,,,forged Cu heat spreader (lid),,,,1000,,,,,,copper,,simulated,text,,p.2 Package Warpage; p.3 Sec. a,thickness_um:approx,Forged lid chosen; optimum ~1 mm on top of die from simulation; built lid thickness not stated separately.
+ectc.2011.5898527-a-c5,ectc.2011.5898527-a,tim,,,TIM1,,,,,,,,,,TIM1 (not named),,stated,table,,p.2 Table 2,,
+ectc.2011.5898527-a-c6,ectc.2011.5898527-a,underfill,,,microbump underfill (UF-A baseline in phase 2),,,,,,,,,,"UF-A (phase 1 screened UF-A, UF-B, UF-C)",,stated,text,,p.5 Reliability Assessment,,
+ectc.2011.5898527-a-c7,ectc.2011.5898527-a,underfill,,,C4 underfill (standard),,,,,,,,,,standard C4 underfill,,stated,text,,p.5 Reliability Assessment,,

@@ -1,0 +1,32 @@
+paper_id: iedm19573.2019.8993637
+verified_on: 2026-10-18
+source_files:
+  - references/iedm19573.2019.8993637/text.md
+  - references/iedm19573.2019.8993637/source.json
+  - references/iedm19573.2019.8993637/figures/page_03.png
+  - references/iedm19573.2019.8993637/figures/page_04.png
+  - references/iedm19573.2019.8993637/source.pdf
+figure_reading_method: >-
+  Pages 3-4 re-rendered from source.pdf at 300 dpi into the scratchpad. Fig. 11 and Fig. 13 box plots read by pixel
+  calibration against y ticks (about 8.4 px/mOhm and 3.0 px/fF); box center line taken as median. Figs. 2, 3 and 10
+  are truncated in the source PDF itself (only fragments drawn), so no values were taken from them.
+entries:
+  - {table: interconnects, row_id: iedm19573.2019.8993637-a-i1, field: pitch_um, value: 50, unit: um, basis: design_target, locator: "p.1 Sec. II.A", note: "current generation; >2X pitch and 4X diameter reduction vs conventional Intel bump (ref [2])"}
+  - {table: interconnects, row_id: iedm19573.2019.8993637-a-i2, field: diameter_um, value: 9, unit: um, basis: design_target, locator: "p.2 Sec. III", note: "target for first products; 'over 8um of Cu diameter' (p.2 Sec. II.B); range 7-13 um demonstrated"}
+  - {table: interconnects, row_id: iedm19573.2019.8993637-a-i2, field: pitch_min_um, value: 15.0, unit: um, basis: design_target, locator: "p.2 Sec. III", note: "TSV arrays with 15.0-16.0 um pitch"}
+  - {table: metrics, row_id: iedm19573.2019.8993637-b-m2, field: value, value: 59, unit: mOhm, basis: measured, locator: "p.4 Fig. 11", note: "Fig. 12 x positions (~38, ~64, ~95, ~133 um2) match pi*D^2/4 for D 7, 9, 11, 13 um"}
+conflicts:
+  - {table: metrics, row_id: iedm19573.2019.8993637-b-m3, field: value, values: ["30 mOhm mean (text)", "~28.6 mOhm box center (Fig. 11)"], locators: ["p.2 Sec. III", "p.4 Fig. 11"], chosen: "both kept as separate rows (mean vs median)", why: "different statistics; text value likely rounded; whisker range 25-31.5 mOhm includes 30"}
+excluded:
+  - "conventional Intel bump pitch/diameter (ref [2]); only the 2X/4X ratios are stated"
+  - "22FFL process details (ref [3])"
+  - "Co-EMIB and POP memory pairing: mentioned as options, no build described"
+not_reported:
+  - top die and base die sizes, top die node, die thickness of top die
+  - microbump height, solder cap height, count, bonding temperature/force/time, alignment, joint resistance, yield number
+  - TSV depth (only base die ground to ~75 um), aspect ratio, liner/barrier thickness
+  - package substrate type, size, layer count, package-side bump pitch and size
+  - electrical_interfaces (no protocol, data rate or energy)
+  - reliability test conditions and standards
+  - TSV leakage and breakdown values
+  - optical_interfaces

@@ -1,0 +1,37 @@
+paper_id: ectc51909.2023.00180
+verified_on: 2026-10-18
+schema_version: 2
+source_files:
+  - references/ectc51909.2023.00180/text.md
+  - references/ectc51909.2023.00180/source.json
+  - references/ectc51909.2023.00180/source.pdf
+  - references/ectc51909.2023.00180/figures/page_01.png
+  - references/ectc51909.2023.00180/figures/page_02.png
+  - references/ectc51909.2023.00180/figures/page_03.png
+  - references/ectc51909.2023.00180/figures/page_04.png
+  - references/ectc51909.2023.00180/figures/page_05.png
+  - references/ectc51909.2023.00180/figures/page_06.png
+figure_reading_method: >-
+  Page renders 1-6 viewed. Fig. 9, 14(d), 15(f), 16(c), 17, 18, 19 re-rendered from source.pdf at 400 dpi; bar tops read
+  against gridlines (Fig. 17: 0 at y=415 px, 1.0 at y=50 px; Fig. 18: 0 at 408, 1.0 at 100; Fig. 19: 0 at 405, 3.0 at 88).
+  Reading error about +-0.02 (Fig. 17/18) and +-0.05 (Fig. 19).
+entries:
+  - {table: interconnects, row_id: ectc51909.2023.00180-a-i1, field: pitch_min_um, value: 30, unit: um, basis: design_target, locator: "p.1 Abstract; p.2 Sec. II", note: "'very fine pitch interconnects (30-75 um)'; conclusion lists finer 30 um pitch in cavity-free laminates as next step"}
+  - {table: metrics, row_id: ectc51909.2023.00180-g-m1, field: value, value: 0.64, unit: ratio, basis: simulated, locator: "p.6 Fig. 17; p.5 Fig. 14(d)", note: "both plots agree"}
+  - {table: metrics, row_id: ectc51909.2023.00180-g-m2, field: value, value: 0.88, unit: ratio, basis: simulated, locator: "p.6 Fig. 18; p.5 Fig. 15(f)"}
+  - {table: metrics, row_id: ectc51909.2023.00180-g-m3, field: value, value: 3.23, unit: ratio, basis: simulated, locator: "p.6 Fig. 19; p.5 Fig. 16(c)"}
+derived: []
+conflicts:
+  - {table: metrics, row_id: ectc51909.2023.00180-e-m1, field: value, values: [0.95, 0.99], locators: ["p.6 Fig. 17 cavity group (case 3 N)", "p.6 Fig. 17 C4 height group (case 3, 65 um)"], chosen: 0.95, why: "same case plotted twice with different bar heights; cavity-group bar adjacent to case 2 comparison chosen; both listed"}
+  - {table: metrics, row_id: ectc51909.2023.00180-e-m2, field: value, values: ["0.70 vs 0.62 for case 2 (about 13% higher)", "text: difference less than 10%"], locators: ["p.6 Fig. 18", "p.4 Sec. II.C"], chosen: 0.70, why: "figure read; text difference may be in absolute units of the case-1 reference (0.08)"}
+  - {table: interconnects, row_id: ectc51909.2023.00180-a-i1, field: pitch_min_um, values: ["30-75 um (abstract, Sec. I, Sec. II)", "finer pitch (30 um) as next step (Sec. III)"], locators: ["p.1 Abstract; p.2 Sec. II", "p.6 Sec. III"], chosen: "30-75 range", why: "configuration statement; build pitch not separately stated"}
+excluded:
+  - "AI compute growth 2.5x/year, 1000x/decade (general, uncited)"
+  - "standard DBHi with 200 um bridge in laminate cavity: prior work [4-6], only used as FEM case 1"
+  - "NCP process parameters from ref [6]; super fine jet underfill technique details from ref [7]"
+  - "Intel embedded bridge approach (description only)"
+not_reported:
+  - electrical_interfaces (no data rate, energy or bandwidth numbers), optical_interfaces
+  - uC4 bump diameter, height, count; Cu pillar pitch, diameter, height for the build; chip thickness; chip gap
+  - TCB temperature, force, time; reflow profile; underfill and NCP materials; laminate layer count/core
+  - thermal cycling conditions and post-cycling results; warpage; absolute FEM stress/strain values

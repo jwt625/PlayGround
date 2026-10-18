@@ -1,0 +1,319 @@
+# Schema for the packaging extraction tables in data/. Single source of truth for scripts/validate_db.py.
+# Modeled on eo-modulator-atlas (data/schema/devices.schema.yaml). v1 2026-10-18; v2 2026-10-18 after pilots 1-3
+# (data/_staging/pilot_*/SCHEMA_FEEDBACK.md).
+#
+# Rules (binding)
+#   (a) Empty cell = not reported in the source. Never estimate, never take numbers from memory, press, other papers,
+#       reviews or the triage abstracts. A number comes from the cached full text or a figure/table of it.
+#       Numbers this paper attributes to cited prior work are not entered (mention in evidence `excluded`).
+#   (b) Every row has `basis` (what kind of value) and `source` (where it was read) and `locator`.
+#       basis: measured (SEM/FIB/X-section/profilometer/AFM/CSAM/electrical test, or the authors' result table/plot)
+#              | design_target (dimensions/conditions stated as the build or design) | simulated | derived (the paper's
+#              own calculation) | author_estimate | stated (a non-numeric fact: material, step, name) | unspecified.
+#       source: text | table | figure_image (photo/SEM/plot read off an image) | schematic (drawing labels) | caption | mixed.
+#       Cells that differ from the row's basis/source go in `overrides` as "field:basis" or "field:source"
+#       (e.g. "pitch_um:schematic;yield_pct:measured"). Pure unit conversions keep the original basis and are logged
+#       in the evidence `derived` list with the formula. Your own arithmetic beyond unit conversion (area = x*y,
+#       ratios) -> override "field:derived" + evidence `derived` entry.
+#   (c) locator: "p.N" = the page index of references/<paper_id>/text.md ("<!-- page N -->") where the figure IMAGE or
+#       text appears, plus figure/table/section: "p.3 Fig. 2(b)", "p.4 Table I", "p.2 Sec. II". Several ';'-separated.
+#       If text and caption disagree on a panel label, cite the caption label and note it.
+#   (d) Bounds/approximations (over, >, <, about, ~, up to, sub-): number in the cell + `qualifiers` entry
+#       "<field>:gt|lt|ge|le|approx". Ranges: *_min / *_max columns where they exist; otherwise one row per value.
+#   (e) Units are in the column name. Convert only exact unit changes (mil -> um 25.4, h -> s 3600) and log them.
+#   (f) Row granularity: one test_vehicle per distinct physical build (a different layer stack, die set, carrier or
+#       structure). Split variables that leave the stack unchanged (UV dose, anneal time, offset, foil side, cure
+#       condition, sample split) are NOT new TVs: record them in metrics.variant / process_steps.conditions.
+#       Coupons and sub-assemblies are TVs with tv_kind test_coupon / sub_assembly. Simulation-only structures:
+#       tv_kind simulation_model.
+#   (g) stack_layers: seq = 1 at the TOP (die / heat-sink side), increasing downward, within (structure, side).
+#       side: front (above a core), back (below a core), core, single (no core). Laterally co-planar elements
+#       (embedded die in a cavity) use separate structures (die vs glass_core/substrate_core). Different test
+#       features in one layer (10/10 and 8/8 combs) = separate rows with the same seq and different `feature`.
+#   (h) Pitch = center-to-center. Line/space separate columns. Via diameter = top diameter unless stated.
+#       Several discrete pitches: pitch_min_um / pitch_max_um, the list in notes; or one row per pitch if other
+#       attributes differ.
+#   (i) Interfaces: electrical_interfaces only when the paper reports an electrical/protocol property (data rate,
+#       energy, bandwidth, loss, BER, protocol name); a bare pad array is an interconnect only. Protocol as named
+#       (UCIe-S/A, BoW, AIB, HBM3/3E/4, custom). Energy pJ/bit and loss with `scope`. Optical I/O -> optical_interfaces.
+#       channel_type for RDL on a glass core = organic_rdl (dielectric decides); TGV paths = glass.
+#   (j) Organizations: the paper's affiliation names as printed; first author first. Suppliers may come from the
+#       acknowledgments (note "ack").
+#   (k) Conflicts inside a paper: precedence measured cross-section/photo > result table > text > schematic. Enter the
+#       winner; list every alternative in the evidence `conflicts` list (field, values, locators, chosen, why).
+#   (l) A technology/brand name goes in `technology_name` only if the paper itself uses it; inferred mappings -> notes.
+#   (m) No emoji; ISO dates; no absolute local paths or private names in any file; notes <= 30 words, no long quotes.
+version: 2
+
+enums:
+  basis: [measured, design_target, simulated, derived, author_estimate, stated, unspecified]
+  source: [text, table, figure_image, schematic, caption, mixed]
+  bucket: [si_interposer, organic_rdl_fanout, si_bridge, panel, hybrid_bonding, microbump_3d, glass,
+           advanced_substrate, cpo, thermal_pdn, other]
+  source_status: [full_text, partial_text, abstract_only, needs_download]
+  tv_kind: [package, test_coupon, sub_assembly, wafer_level, panel_level, die_stack, simulation_model, other]
+  package_class: [si_interposer_2p5d, organic_rdl_interposer, fan_out_wafer, fan_out_panel, si_bridge_organic,
+                  si_bridge_fanout, hybrid_bonded_3d, microbump_3d, glass_core_substrate, glass_interposer,
+                  glass_embedded_die, organic_substrate, embedded_die_substrate, cpo_module, photonic_interposer,
+                  fiber_subassembly, wafer_scale, other, unspecified]
+  carrier_format: [wafer_200mm, wafer_300mm, panel, strip, unit, other, unspecified]
+  component_type: [logic_soc, asic, gpu, cpu, fpga, hbm, dram, sram, io_die, base_die, bridge, interposer, ipd,
+                   capacitor, dtc, ivr, inductor, pic, eic, laser, fiber_array, fiber_lid, lens, connector, submount,
+                   dummy_die, stiffener, lid, heat_spreader, tim, cold_plate, micro_cooler, substrate, pcb, mold,
+                   underfill, adhesive, die_attach_film, other, unspecified]
+  structure: [die, die_stack, bonding_interface, interposer, interposer_rdl, bridge, fan_out_rdl, substrate_core,
+              substrate_buildup, glass_core, cavity, solder_mask, underfill, mold, tim_lid, photonic, coupon, other]
+  side: [front, back, core, single]
+  material_class: [metal, dielectric_polymer, dielectric_inorganic, silicon, glass, ceramic, mold_compound,
+                   underfill, solder, adhesive, tim, organic_laminate, other, unspecified]
+  layer_role: [conductor, dielectric, passivation, seed, barrier, adhesion, bonding, core, carrier, adhesive,
+               encapsulant, device, cap, thermal, optical, surface_finish, other]
+  interconnect_level: [die_to_die_hybrid, die_to_wafer_hybrid, wafer_to_wafer_hybrid, die_to_interposer,
+                       die_to_substrate, die_to_bridge, interposer_to_substrate, substrate_to_board, die_stack_internal,
+                       through_via, rdl_via, wire, optical, other, unspecified]
+  interconnect_type: [cu_cu_hybrid, cu_cu_direct, microbump, cu_pillar, c4, bga, tsv, tgv, tdv, tmv, rdl_via,
+                      microvia, stacked_via, via_in_via, pth, wire_bond, solder_ball, anisotropic, optical_coupling,
+                      other, unspecified]
+  bonding_method: [hybrid_bond_d2w, hybrid_bond_w2w, hybrid_bond_c2c, fusion, tcb, tcb_ncf, mass_reflow, lab,
+                   mr_muf, sintering, thermocompression_cu, adhesive, none, other, unspecified]
+  step_category: [lithography, resist_strip, deposition_pvd, deposition_cvd, deposition_other, electroplating,
+                  electroless, etch_dry, etch_wet, etch_other, cmp, grinding_thinning, tsv_tgv_formation, via_reveal,
+                  laser_drill, desmear, lamination, sap_msap, surface_treatment, surface_activation, surface_finish,
+                  cure, dispense, bonding, debonding, temporary_bonding, die_attach, ball_attach, anneal, molding,
+                  underfill, dicing, singulation, reflow, assembly, fiber_prep, laser_marking, preconditioning,
+                  inspection, test, cleaning, other]
+  protocol: [ucie_s, ucie_a, ucie_3d, bow, aib, aib2, openhbi, lipincon, hbm2e, hbm3, hbm3e, hbm4, xsr, usr, mr, lr,
+             pcie, cxl, ethernet_serdes, nvlink, custom, other, unspecified]
+  channel_type: [si_interposer_rdl, organic_rdl, si_bridge, substrate, hybrid_bond_3d, microbump_3d, glass,
+                 optical_fiber, optical_waveguide, pcb, other, unspecified]
+  coupler_type: [edge, grating, evanescent, adiabatic, lens, mirror, free_space, other, unspecified]
+  alignment: [passive, active, self_aligned, other, unspecified]
+  metric_category: [warpage, reliability, thermal, power_delivery, electrical, optical, yield, mechanical, geometry,
+                    adhesion, cost, throughput, other]
+  statistic: [single, mean, median, max, min, typical, range, percentile, other]
+  result: [pass, fail, partial, na]
+  yes_no: ["yes", "no"]
+
+common: &common
+  basis: {type: enum, enum: basis, required: true}
+  source: {type: enum, enum: source, required: true}
+  overrides: {type: list}
+  locator: {type: str, required: true}
+  qualifiers: {type: list}
+  notes: {type: str}
+
+tables:
+  papers:
+    key: paper_id
+    columns:
+      paper_id: {type: str, required: true}          # DOI suffix, e.g. ectc51909.2023.00174
+      doi: {type: str, required: true}
+      title: {type: str, required: true}
+      year: {type: int, required: true}
+      venue: {type: str, required: true}
+      first_author: {type: str}
+      orgs: {type: list}
+      primary_bucket: {type: enum, enum: bucket, required: true}
+      buckets: {type: list, enum: bucket}
+      technology_name: {type: str}
+      source_status: {type: enum, enum: source_status, required: true}
+      pages_read: {type: str}
+      n_test_vehicles: {type: int}
+      verified_on: {type: date, required: true}
+      notes: {type: str}
+  test_vehicles:
+    key: tv_id
+    parent: {table: papers, column: paper_id}
+    columns:
+      tv_id: {type: str, required: true}             # <paper_id>-a, -b, ...
+      paper_id: {type: str, required: true}
+      name: {type: str}
+      tv_kind: {type: enum, enum: tv_kind, required: true}
+      package_class: {type: enum, enum: package_class, required: true}
+      technology_name: {type: str}
+      purpose: {type: str}
+      carrier_format: {type: enum, enum: carrier_format}
+      carrier_size_mm: {type: str}                   # "300" wafer dia, "600x600" panel
+      package_x_mm: {type: float}
+      package_y_mm: {type: float}
+      package_thickness_mm: {type: float}
+      interposer_x_mm: {type: float}
+      interposer_y_mm: {type: float}
+      interposer_area_mm2: {type: float}
+      reticle_multiple: {type: float}
+      substrate_x_mm: {type: float}
+      substrate_y_mm: {type: float}
+      substrate_layer_count: {type: str}             # as written, e.g. "5-2-5", "14L"
+      n_dies: {type: int}
+      n_hbm: {type: int}
+      <<: *common
+  components:
+    key: comp_id
+    parent: {table: test_vehicles, column: tv_id}
+    columns:
+      comp_id: {type: str, required: true}           # <tv_id>-c1
+      tv_id: {type: str, required: true}
+      component_type: {type: enum, enum: component_type, required: true}
+      is_emulator: {type: enum, enum: yes_no}        # emulates the function in component_type (daisy-chain/dummy)
+      embedded: {type: enum, enum: yes_no}           # embedded in a cavity / mold / substrate
+      name: {type: str}
+      count: {type: int}
+      x_mm: {type: float}
+      y_mm: {type: float}
+      thickness_um: {type: float}
+      cavity_x_mm: {type: float}
+      cavity_y_mm: {type: float}
+      cavity_depth_um: {type: float}
+      gap_um: {type: float}                          # die-to-die or die-to-cavity gap, which in notes
+      process_node: {type: str}
+      material: {type: str}
+      supplier: {type: str}
+      <<: *common
+  stack_layers:
+    key: layer_id
+    parent: {table: test_vehicles, column: tv_id}
+    columns:
+      layer_id: {type: str, required: true}          # <tv_id>-L01
+      tv_id: {type: str, required: true}
+      structure: {type: enum, enum: structure, required: true}
+      side: {type: enum, enum: side}
+      seq: {type: int, required: true}
+      layer_name: {type: str}
+      feature: {type: str}                           # comb, serpentine, daisy chain, plane, pad array ...
+      material: {type: str}
+      material_class: {type: enum, enum: material_class}
+      layer_role: {type: enum, enum: layer_role}
+      reinforcement: {type: str}                     # glass cloth / filler as written
+      thickness_um: {type: float}
+      thickness_min_um: {type: float}
+      thickness_max_um: {type: float}
+      line_um: {type: float}
+      space_um: {type: float}
+      via_diameter_um: {type: float}
+      via_pitch_um: {type: float}
+      roughness_ra_um: {type: float}
+      repeat: {type: int}
+      properties: {type: str}                        # Dk/Df/CTE/modulus/Tg as written
+      <<: *common
+  interconnects:
+    key: ic_id
+    parent: {table: test_vehicles, column: tv_id}
+    columns:
+      ic_id: {type: str, required: true}             # <tv_id>-i1
+      tv_id: {type: str, required: true}
+      level: {type: enum, enum: interconnect_level, required: true}
+      ic_type: {type: enum, enum: interconnect_type, required: true}
+      pitch_um: {type: float}
+      pitch_min_um: {type: float}
+      pitch_max_um: {type: float}
+      pad_x_um: {type: float}
+      pad_y_um: {type: float}
+      diameter_um: {type: float}
+      height_um: {type: float}                       # pillar/bump/joint height (Cu part if a cap is given)
+      cap_height_um: {type: float}                   # solder cap
+      depth_um: {type: float}                        # via depth
+      total_length_um: {type: float}                 # composite vertical path if the paper states it
+      aspect_ratio: {type: float}
+      count: {type: int}
+      density_per_mm2: {type: float}
+      metallurgy: {type: str}
+      dielectric: {type: str}
+      bonding_method: {type: enum, enum: bonding_method}
+      bonding_temp_c: {type: float}
+      bonding_pressure_mpa: {type: float}
+      bonding_force_n: {type: float}
+      bonding_time_s: {type: float}
+      anneal_temp_c: {type: float}
+      anneal_time_min: {type: float}
+      alignment_um: {type: float}
+      resistance_mohm: {type: float}
+      yield_pct: {type: float}
+      <<: *common
+  process_steps:
+    key: step_id
+    parent: {table: test_vehicles, column: tv_id}
+    columns:
+      step_id: {type: str, required: true}           # <tv_id>-s01
+      tv_id: {type: str, required: true}
+      flow_name: {type: str}
+      seq: {type: int, required: true}
+      category: {type: enum, enum: step_category, required: true}
+      step: {type: str, required: true}
+      performed: {type: enum, enum: yes_no}          # "no" for steps shown in a generic flow but skipped here
+      target: {type: str}
+      material: {type: str}
+      equipment: {type: str}
+      temp_c: {type: float}
+      time_s: {type: float}
+      pressure_mpa: {type: float}
+      thickness_um: {type: float}
+      conditions: {type: str}                        # atmosphere, gas, power, dose (mJ/cm2), wavelength, split values
+      result: {type: str}
+      <<: *common
+  electrical_interfaces:
+    key: ei_id
+    parent: {table: test_vehicles, column: tv_id}
+    columns:
+      ei_id: {type: str, required: true}             # <tv_id>-e1
+      tv_id: {type: str, required: true}
+      protocol: {type: enum, enum: protocol, required: true}
+      protocol_as_written: {type: str}
+      channel_type: {type: enum, enum: channel_type}
+      lane_rate_gbps: {type: float}
+      lanes: {type: int}
+      aggregate_bw_tbps: {type: float}
+      bw_density_tbps_per_mm: {type: float}
+      bw_density_tbps_per_mm2: {type: float}
+      energy_pj_per_bit: {type: float}
+      scope: {type: str}                             # what energy/loss covers (PHY only, link incl. channel, per lane)
+      reach_mm: {type: float}
+      bump_pitch_um: {type: float}
+      line_um: {type: float}
+      space_um: {type: float}
+      insertion_loss_db: {type: float}
+      il_freq_ghz: {type: float}
+      ber: {type: str}
+      latency_ns: {type: float}
+      <<: *common
+  optical_interfaces:
+    key: oi_id
+    parent: {table: test_vehicles, column: tv_id}
+    columns:
+      oi_id: {type: str, required: true}             # <tv_id>-o1
+      tv_id: {type: str, required: true}
+      coupler_type: {type: enum, enum: coupler_type, required: true}
+      alignment: {type: enum, enum: alignment}
+      wavelength_nm: {type: float}
+      band: {type: str}
+      polarization: {type: str}
+      channels: {type: int}
+      fiber_pitch_um: {type: float}
+      fiber_type: {type: str}
+      mfd_chip_um: {type: float}
+      mfd_fiber_um: {type: float}
+      coupling_loss_db: {type: float}                # positive dB
+      scope: {type: str}                             # per facet, per loopback, per link
+      attach_material: {type: str}
+      lane_rate_gbps: {type: float}
+      <<: *common
+  metrics:
+    key: metric_id
+    parent: {table: test_vehicles, column: tv_id}
+    columns:
+      metric_id: {type: str, required: true}         # <tv_id>-m1
+      tv_id: {type: str, required: true}
+      category: {type: enum, enum: metric_category, required: true}
+      parameter: {type: str, required: true}
+      variant: {type: str}                           # split value (rule f), e.g. "UV 1260 mJ/cm2; shiny side"
+      value: {type: float}
+      value_text: {type: str}
+      unit: {type: str}
+      statistic: {type: enum, enum: statistic}
+      n_samples: {type: int}
+      condition: {type: str}                         # temperature, humidity, bias, duration, preconditioning
+      test_standard: {type: str}                     # JEDEC JESD22-A104 etc. as written
+      pass_criterion: {type: str}
+      result: {type: enum, enum: result}
+      scope: {type: str}                             # what the value covers (per joint, per chain, sign convention)
+      reference_tv_id: {type: str}                   # for ratios vs another TV
+      <<: *common

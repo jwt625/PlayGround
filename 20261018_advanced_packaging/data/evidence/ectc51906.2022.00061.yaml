@@ -1,0 +1,31 @@
+paper_id: ectc51906.2022.00061
+verified_on: 2026-10-18
+source_files:
+  - references/ectc51906.2022.00061/text.md
+  - references/ectc51906.2022.00061/source.json
+  - references/ectc51906.2022.00061/figures/page_02.png
+  - references/ectc51906.2022.00061/figures/page_03.png
+  - references/ectc51906.2022.00061/figures/page_04.png
+figure_reading_method: >-
+  Page renders p.2-p.4 opened (Fig. 1-2 schematics, Fig. 3 SEM with Table I, Figs. 5-6 FIB/EDS). All numbers come from text and Table I;
+  no plot values read.
+entries:
+  - {table: interconnects, row_id: ectc51906.2022.00061-a-i1, field: bonding_temp_c, value: 150, unit: C, basis: design_target, locator: "p.2 Sec. II.B", note: "oven 150 C; 1 MPa via fixed fixture"}
+  - {table: stack_layers, row_id: ectc51906.2022.00061-a-L05, field: properties, value: "CuGa2 melting point 259 C", unit: C, basis: stated, locator: "p.2 Sec. I", note: "stated for the formed IMC, no citation"}
+derived: []
+conflicts:
+  - {table: metrics, row_id: ectc51906.2022.00061-a-m2, field: value, values: ["around 2 um (abstract)", "approximately 1.8 um (Sec. III.A)"], locators: ["p.1 Abstract", "p.3 Sec. III.A"], chosen: 1.8, why: "results section value from the SEM cross-section"}
+  - {table: metrics, row_id: ectc51906.2022.00061-a-m1, field: value, values: ["greater than 5 MPa (abstract)", "5.5 MPa (Sec. III.B, Sec. IV)"], locators: ["p.1 Abstract", "p.4 Sec. III.B; p.5 Sec. IV"], chosen: 5.5, why: "results section value"}
+  - {table: stack_layers, row_id: ectc51906.2022.00061-a-L04, field: thickness_um, values: ["7 um electroplated (Sec. II.A)", "~6.5 um after TCB (Sec. III.A)"], locators: ["p.2 Sec. II.A", "p.3 Sec. III.A"], chosen: 6.5, why: "measured post-bond cross-section; 7 um is the as-plated design value (Cu consumed by IMC)"}
+excluded:
+  - "Ga melting point 29.76 C (ref [18])"
+  - "CuGa2 molar volume shrinkage 0.46% vs 6.83% Cu6Sn5 and 8.69% Cu3Sn (Lin et al. ref [20])"
+  - "250 C typical micro-bump reflow temperature (ref [19])"
+  - "CuGa2 forms within a few hours below 150 C; Cu9Ga4 at higher T (refs [21,22])"
+not_reported:
+  - electrical_interfaces, optical_interfaces
+  - interconnect pitch/size (blanket coupon; '<20 um pitch' is the target application only)
+  - X-alloy identity and as-plated thickness; Ga thickness; X-alloy/Ga ratio
+  - Ti/Cu seed thickness unit ('1k/2k' as written); Si die thickness
+  - bonding time, heating/cooling rates, atmosphere
+  - number of samples for tensile test; reliability tests; electrical resistance; warpage

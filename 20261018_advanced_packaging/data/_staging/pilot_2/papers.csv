@@ -1,0 +1,2 @@
+paper_id,doi,title,year,venue,first_author,orgs,primary_bucket,buckets,technology_name,source_status,pages_read,n_test_vehicles,verified_on,notes
+ectc51906.2022.00072,10.1109/ectc51906.2022.00072,Optical performance and reliability assessment from self-aligned single mode fiber attach for O-band silicon photonics platform,2022,ECTC,Jae Kyu Cho,Globalfoundries Inc.;IBM,cpo,cpo,CMS90WG (90WG),full_text,1-7,4,2026-10-18,"GF 90WG PIC, 12-Ch Vgroove + metamaterial SSC, IBM Bromont passive fiber attach, GR-468 stress. CPO only as motivation; no electrical I/O."

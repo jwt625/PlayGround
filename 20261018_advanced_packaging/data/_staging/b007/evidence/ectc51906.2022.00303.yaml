@@ -1,0 +1,43 @@
+paper_id: ectc51906.2022.00303
+verified_on: 2026-10-18
+source_files:
+  - references/ectc51906.2022.00303/text.md
+  - references/ectc51906.2022.00303/source.json
+  - references/ectc51906.2022.00303/figures/page_02.png
+  - references/ectc51906.2022.00303/figures/page_03.png
+  - references/ectc51906.2022.00303/figures/page_04.png
+  - references/ectc51906.2022.00303/figures/page_05.png
+  - references/ectc51906.2022.00303/figures/page_06.png
+figure_reading_method: >-
+  Fig. 1(a), Fig. 4, Fig. 7 and Fig. 8 re-rendered at 300-450 dpi from source.pdf in scratch (not kept) to read
+  dimension labels and plot end points. Fig. 3(b) read from page render.
+entries:
+  - {table: metrics, row_id: ectc51906.2022.00303-a-m2, field: value, value: 26, unit: ratio, basis: simulated, locator: "p.3 Fig. 3(b)", note: "dielet-side curve end point at 20 mm, between 25 and 30 gridlines"}
+  - {table: metrics, row_id: ectc51906.2022.00303-b-m4, field: value, value: 1.13, unit: mm, basis: derived, locator: "p.3 Fig. 4(b)", note: "line end at 10 mm slightly above 1.1 gridline"}
+  - {table: process_steps, row_id: ectc51906.2022.00303-e-s02, field: conditions, value: "200 C; 0.06 s/10 s; 0.7 A/cycle; 50 cycles", basis: design_target, locator: "p.6 Fig. 8(a), Fig. 8(c) title"}
+derived:
+  - {table: stack_layers, row_id: ectc51906.2022.00303-e-L04, field: thickness_um, value: 0.003, formula: "3 nm / 1000", inputs: "p.5 Sec. IV col. 2; p.6 Sec. V"}
+  - {table: process_steps, row_id: ectc51906.2022.00303-e-s02, field: thickness_um, value: 0.003, formula: "3 nm / 1000", inputs: "p.5 Sec. IV col. 2"}
+  - {table: components, row_id: ectc51906.2022.00303-c-c3, field: thickness_um, value: 4000, formula: "<4 mm * 1000", inputs: "p.2 Fig. 1(a)"}
+conflicts:
+  - {table: interconnects, row_id: ectc51906.2022.00303-d-i1, field: notes (TPV width), values: ["500 um width (abstract)", "703 um (Fig. 7e)", "1175 um (Fig. 7a)", "500-800 um inter-dielet spacing design"], locators: ["p.1 Abstract", "p.5 Fig. 7(e)", "p.5 Fig. 7(a)", "p.4 Sec. IV"], chosen: "Fig. 7 labels recorded as metrics; no width column filled", why: "measured cross-section labels; abstract value is a design summary"}
+  - {table: stack_layers, row_id: ectc51906.2022.00303-d-L03, field: thickness_um, values: [277, 280, 100], locators: ["p.5 Fig. 7(b)", "p.5 Sec. IV around 280 um", "p.6 Sec. V (100 um thick) Cu"], chosen: 277, why: "measured cross-section; conclusion value not reconciled in paper"}
+  - {table: stack_layers, row_id: ectc51906.2022.00303-d-L02, field: thickness_um, values: [123, 100], locators: ["p.5 Fig. 7(e)-(f)", "p.4 Sec. IV 100 um-thickness squares"], chosen: 123, why: "measured cross-section"}
+  - {table: stack_layers, row_id: ectc51906.2022.00303-d-L04, field: thickness_um, values: [203, 200], locators: ["p.5 Fig. 7(a)-(b)", "p.5 Sec. IV"], chosen: 203, why: "measured cross-section"}
+  - {table: stack_layers, row_id: ectc51906.2022.00303-e-L05, field: thickness_um, values: [510, 500], locators: ["p.6 Fig. 9(b)", "p.6 Fig. 9 caption; p.6 Sec. V"], chosen: 510, why: "measured cross-section"}
+  - {table: stack_layers, row_id: ectc51906.2022.00303-e-L04, field: thickness_um, values: [0.003, 0.0035, 0.0033], locators: ["p.5 text 3 nm", "p.6 Fig. 8(a) 0.7 A/cycle x 50 cycles", "p.6 Fig. 8(c) AFM step"], chosen: 0.003, why: "text design value; AFM step kept as metric e-m2"}
+  - {table: metrics, row_id: ectc51906.2022.00303-a-m1, field: value, values: ["die < 5x5 mm (Sec. II)", "die < 25 mm2 (abstract, conclusion)"], locators: ["p.2 Sec. II", "p.1 Abstract; p.6 Sec. V"], chosen: 5, why: "consistent (5x5 = 25 mm2)"}
+excluded:
+  - "Si-IF sub-10 um fine-pitch Cu-Cu bonding (ref [3])"
+  - "CPP and FlexCon design (ref [6]); two-phase flash cooling (ref [8]); SuperCHIPS protocol (ref [7])"
+  - "cutting-edge chips 0.5-1 W/mm2 (general statement)"
+not_reported:
+  - electrical_interfaces
+  - optical_interfaces
+  - Si-IF metal material and dielectric; TSV dimensions for substrate-side model
+  - fusion anneal temperature/time; oxide thickness; bond alignment accuracy
+  - Ti/Cu seed thickness; Cu plating chemistry, current density, time; SU-8 grade and cure
+  - wafer diameter for surrogate; thermal cycle count for SU-8 test
+  - AC/PDN impedance, IR drop values, decap values
+notes: >-
+  Primary bucket thermal_pdn kept; si_interposer added (Si-IF). TPV has no interconnect_type enum, entered as other.

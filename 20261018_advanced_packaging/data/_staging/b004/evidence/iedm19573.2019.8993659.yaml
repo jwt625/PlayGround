@@ -1,0 +1,35 @@
+paper_id: iedm19573.2019.8993659
+verified_on: 2026-10-18
+schema_version: 2
+source_files:
+  - references/iedm19573.2019.8993659/text.md
+  - references/iedm19573.2019.8993659/source.json
+  - references/iedm19573.2019.8993659/source.pdf
+  - references/iedm19573.2019.8993659/figures/page_03.png
+  - references/iedm19573.2019.8993659/figures/page_04.png
+  - references/iedm19573.2019.8993659/figures/img_p04_6.png
+figure_reading_method: >-
+  Pages 3-4 re-rendered from source.pdf at 300 dpi (page 4 also 800 dpi). Fig. 3(a) log axis about 720 px/decade
+  at the crop scale; Fig. 3(b) 30.7 px/%; Fig. 4(c) 16.6 px/um; Fig. 5(c) 15.45 px/um. Fig. 8(b) SEM labels are
+  raster-limited (embedded image 564x279 px); digits not reliably legible.
+entries:
+  - {table: metrics, row_id: iedm19573.2019.8993659-c-m1, field: value, value: 1.15, unit: mOhm, basis: derived, locator: "p.3 Fig. 3(a)", note: "green marker x position log10 = 0.0625"}
+  - {table: metrics, row_id: iedm19573.2019.8993659-a-m4, field: value_text, value: "-7 to 37", unit: um, basis: derived, locator: "p.3 Fig. 4(c)", note: "C4 band edges at x = -7.0 and 36.7 um"}
+  - {table: metrics, row_id: iedm19573.2019.8993659-a-m5, field: value_text, value: "10 to 25", unit: um, basis: derived, locator: "p.3 Fig. 4(c)", note: "microbump band edges at 9.9 and 24.8 um"}
+  - {table: metrics, row_id: iedm19573.2019.8993659-a-m7, field: value_text, value: "-8 to +8", unit: um, basis: derived, locator: "p.4 Fig. 5(c)", note: "band edges at -7.8 and +7.8 um"}
+  - {table: metrics, row_id: iedm19573.2019.8993659-b-m1, field: value_text, value: "137.4; 135.9", unit: um, basis: measured, locator: "p.4 Fig. 8(b)", note: "tentative reading; leading digits uncertain"}
+derived: []
+conflicts:
+  - {table: metrics, row_id: iedm19573.2019.8993659-a-m8, field: value, values: ["80+% overlap (caption)", "dashed threshold at about 75-76% (plot)"], locators: ["p.4 Fig. 5(c) caption", "p.4 Fig. 5(c) plot"], chosen: 80, why: "caption states the definition; plot line kept as alternative"}
+  - {table: test_vehicles, row_id: iedm19573.2019.8993659-a, field: name, values: ["Type 1 = bottom die between two top dies (Sec. II, Fig. 1(d))", "Fig. 7(b) label 'ODI Type 2 - 1st Gen' on a 2-top-die / 1-bottom-die section"], locators: ["p.1 Sec. II", "p.4 Fig. 7(b)"], chosen: "no type assigned", why: "inconsistent within paper"}
+excluded:
+  - "TSV area increase up to 70% (ref [2])"
+  - "TSV resistance mitigation by TSV count (ref [5]); thermal resistance claim (ref [4])"
+  - "Fig. 1, Fig. 2, Fig. 9 architecture concept drawings (no dimensions)"
+  - "Fig. 6 inset small text near 'Coarse/Fine Pitch' illegible; not used"
+not_reported:
+  - microbump, C4 and Cu pillar pitch, diameter, height (pillar height only illegible SEM labels), counts
+  - die sizes, thicknesses, package size, cavity dimensions, layer count
+  - TCB temperature, force, time; alignment accuracy numbers
+  - electrical measurements (resistance, yield numbers), reliability tests
+  - electrical_interfaces (no protocol, data rate or energy), optical_interfaces

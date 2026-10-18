@@ -1,0 +1,78 @@
+# Canonical organization names and affiliation-string regexes (case-insensitive).
+# priority: true = in the spec's weighted list (first-party industrial / institute / vendor).
+# kind: foundry_osat | idm | memory | institute | university_center | vendor | other
+orgs:
+  TSMC: {re: 'TSMC|Taiwan Semiconductor Manufacturing', kind: foundry_osat, priority: true}
+  Intel: {re: '\bIntel\b', kind: idm, priority: true}
+  Samsung: {re: 'Samsung', kind: idm, priority: true}
+  SK hynix: {re: 'SK ?hynix', kind: memory, priority: true}
+  Micron: {re: '(?<!Uni)(?<!HANA )(?<!Hana )\bMicron\b', kind: memory, priority: true}
+  ASE/SPIL: {re: '\bASE\b|Advanced Semiconductor Engineering|\bSPIL\b|Siliconware', kind: foundry_osat, priority: true}
+  Amkor: {re: 'Amkor', kind: foundry_osat, priority: true}
+  JCET: {re: 'JCET|Jiangsu Changjiang|STATS ChipPAC', kind: foundry_osat, priority: true}
+  Powertech: {re: 'Powertech|\bPTI\b', kind: foundry_osat, priority: true}
+  imec: {re: '\bimec\b|IMEC', kind: institute, priority: true}
+  Fraunhofer IZM: {re: 'Fraunhofer', kind: institute, priority: true}
+  ITRI: {re: '\bITRI\b|Industrial Technology Research Institute', kind: institute, priority: true}
+  A*STAR IME: {re: 'A\*STAR|Institute of Microelectronics.{0,60}Singapore|Singapore.{0,60}Institute of Microelectronics|\bIME\b(?!.{0,40}Chinese)', kind: institute, priority: true}
+  CAS IME: {re: 'Institute of Microelectronics.{0,40}Chinese Academy|Chinese Academy of Sciences.{0,40}Institute of Microelectronics', kind: institute, priority: false}
+  CEA-Leti: {re: 'CEA|Leti', kind: institute, priority: true}
+  Georgia Tech PRC: {re: 'Georgia Institute of Technology|Georgia Tech', kind: university_center, priority: true}
+  Applied Materials: {re: 'Applied Materials', kind: vendor, priority: true}
+  Lam Research: {re: 'Lam Research', kind: vendor, priority: true}
+  BESI: {re: '\bBESI\b|BE Semiconductor', kind: vendor, priority: true}
+  EVG: {re: '\bEVG\b|EV Group', kind: vendor, priority: true}
+  SUSS: {re: 'SUSS|SÜSS', kind: vendor, priority: true}
+  Ajinomoto: {re: 'Ajinomoto', kind: vendor, priority: true}
+  Resonac: {re: 'Resonac|Showa Denko|Hitachi Chemical', kind: vendor, priority: true}
+  Corning: {re: 'Corning', kind: vendor, priority: true}
+  Schott: {re: 'SCHOTT', kind: vendor, priority: true}
+  Absolics: {re: 'Absolics|\bSKC\b', kind: vendor, priority: true}
+  Samtec: {re: 'Samtec', kind: vendor, priority: true}
+  Onto Innovation: {re: 'Onto Innovation', kind: vendor, priority: true}
+  KLA: {re: '\bKLA\b', kind: vendor, priority: true}
+  # Other first-party industrial (counts as industrial, not in the weighted list)
+  AMD: {re: '\bAMD\b|Advanced Micro Devices|Xilinx', kind: idm, priority: false}
+  NVIDIA: {re: 'NVIDIA', kind: idm, priority: false}
+  IBM: {re: '\bIBM\b', kind: idm, priority: false}
+  Broadcom: {re: 'Broadcom', kind: idm, priority: false}
+  Google: {re: 'Google', kind: idm, priority: false}
+  Meta: {re: '\bMeta\b(?! ?material)', kind: idm, priority: false}
+  Microsoft: {re: 'Microsoft', kind: idm, priority: false}
+  Apple: {re: '\bApple\b', kind: idm, priority: false}
+  Qualcomm: {re: 'Qualcomm', kind: idm, priority: false}
+  Cisco: {re: '\bCisco\b', kind: idm, priority: false}
+  Marvell: {re: 'Marvell', kind: idm, priority: false}
+  GlobalFoundries: {re: 'GlobalFoundries|GLOBALFOUNDRIES', kind: foundry_osat, priority: false}
+  UMC: {re: '\bUMC\b|United Microelectronics', kind: foundry_osat, priority: false}
+  Unimicron: {re: 'Unimicron', kind: vendor, priority: false}
+  Ibiden: {re: 'Ibiden|IBIDEN', kind: vendor, priority: false}
+  Shinko: {re: 'Shinko', kind: vendor, priority: false}
+  AT&S: {re: 'AT ?& ?S|Austria Technologie', kind: vendor, priority: false}
+  Kyocera: {re: 'Kyocera|KYOCERA', kind: vendor, priority: false}
+  Toppan: {re: 'Toppan|TOPPAN', kind: vendor, priority: false}
+  DNP: {re: 'Dai Nippon Printing|\bDNP\b', kind: vendor, priority: false}
+  AGC: {re: '\bAGC\b|Asahi Glass', kind: vendor, priority: false}
+  LPKF: {re: 'LPKF', kind: vendor, priority: false}
+  Tokyo Electron: {re: 'Tokyo Electron|\bTEL\b', kind: vendor, priority: false}
+  Disco: {re: '\bDISCO\b|Disco Corporation', kind: vendor, priority: false}
+  ASMPT: {re: 'ASMPT|ASM Pacific', kind: vendor, priority: false}
+  Kulicke & Soffa: {re: 'Kulicke|\bK&S\b', kind: vendor, priority: false}
+  Canon: {re: 'Canon', kind: vendor, priority: false}
+  Nikon: {re: 'Nikon', kind: vendor, priority: false}
+  Brewer Science: {re: 'Brewer Science', kind: vendor, priority: false}
+  Deca: {re: 'Deca Technologies', kind: foundry_osat, priority: false}
+  Nepes: {re: '\bnepes\b|NEPES', kind: foundry_osat, priority: false}
+  Huawei/HiSilicon: {re: 'Huawei|HiSilicon', kind: idm, priority: false}
+  Sony: {re: '\bSony\b', kind: idm, priority: false}
+  Texas Instruments: {re: 'Texas Instruments', kind: idm, priority: false}
+  Infineon: {re: 'Infineon', kind: idm, priority: false}
+  STMicroelectronics: {re: 'STMicroelectronics', kind: idm, priority: false}
+  Ayar Labs: {re: 'Ayar Labs', kind: other_industrial, priority: false}
+  Ciena: {re: 'Ciena', kind: other_industrial, priority: false}
+  Tongfu/TFME: {re: 'Tongfu|TFME', kind: foundry_osat, priority: false}
+  Hua Tian: {re: 'Huatian|Hua Tian', kind: foundry_osat, priority: false}
+  Nanya/Winbond/YMTC/CXMT: {re: 'Nanya|Winbond|YMTC|Yangtze Memory|CXMT|ChangXin', kind: memory, priority: false}
+  SEMATECH/NY CREATES: {re: 'NY CREATES|SEMATECH', kind: institute, priority: false}
+  Tohoku/AIST/Japan inst: {re: '\bAIST\b|National Institute of Advanced Industrial Science', kind: institute, priority: false}
+  NCAP/Natcast/NIST: {re: 'Natcast|\bNIST\b', kind: institute, priority: false}

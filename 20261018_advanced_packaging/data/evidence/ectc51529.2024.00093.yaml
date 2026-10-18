@@ -1,0 +1,27 @@
+paper_id: ectc51529.2024.00093
+verified_on: 2026-10-18
+source_files:
+  - references/ectc51529.2024.00093/text.md
+  - references/ectc51529.2024.00093/source.json
+  - references/ectc51529.2024.00093/source.pdf
+  - references/ectc51529.2024.00093/figures/page_02.png
+  - references/ectc51529.2024.00093/figures/page_03.png
+  - references/ectc51529.2024.00093/figures/page_04.png
+figure_reading_method: >-
+  Figs. 3, 4, 6, 8, 9, 10, 11 re-rendered from source.pdf at 500-1200 dpi in scratch (not kept). Embedded images are
+  low resolution: Fig. 6 stress labels other than filled, Fig. 8 via-diameter labels, and Fig. 3 GIP text are illegible.
+entries:
+  - {table: interconnects, row_id: ectc51529.2024.00093-a-i1, field: pitch_um, value: 90, unit: um, basis: design_target, locator: "p.2 Fig. 4", note: "'90 um Pitch' label on filled-via SEM; first digit partly obscured, read at 1200 dpi"}
+  - {table: interconnects, row_id: ectc51529.2024.00093-b-i1, field: pitch_um, value: 150, unit: um, basis: design_target, locator: "p.2 Fig. 4", note: "'150 um Pitch' conformal SEM label"}
+  - {table: interconnects, row_id: ectc51529.2024.00093-c-i1, field: pitch_um, value: 100, unit: um, basis: design_target, locator: "p.2 Fig. 4", note: "'100 um Pitch' partially filled SEM label"}
+  - {table: interconnects, row_id: ectc51529.2024.00093-c-i1, field: resistance_mohm, value: 34, unit: mOhm, basis: measured, locator: "p.4 Fig. 11", note: "cumulative plot crosses sigma 0 near 34 mOhm/via; data span about 31-38"}
+  - {table: interconnects, row_id: ectc51529.2024.00093-i-i1, field: pitch_um, value: 110, unit: um, basis: stated, locator: "p.2 Fig. 3", note: "photo label '40um, 110um pitch' on 510x515 mm panel"}
+  - {table: metrics, row_id: ectc51529.2024.00093-g-m2, field: value, value: 0.97, unit: A, basis: simulated, locator: "p.3 Fig. 6", note: "Current [A] at delta t = 10 C column"}
+derived: []
+conflicts:
+  - {table: electrical_interfaces, row_id: ectc51529.2024.00093-f-e1, field: insertion_loss_db, values: [0.48, 0.45], locators: ["p.3 Sec. II.B; p.5 Sec. III", "p.1 Abstract"], chosen: 0.48, why: "result text and conclusion; Fig. 8 label reads 0.46 or 0.48 (illegible)"}
+  - {table: metrics, row_id: ectc51529.2024.00093-c-m1, field: condition, values: ["-55 to 120 C", "-55 to 122 C"], locators: ["p.2 Sec. I; p.4 Sec. II.C", "p.4 Fig. 11 caption"], chosen: "-55 to 120 C", why: "text states 120 C twice"}
+  - {table: stack_layers, row_id: ectc51529.2024.00093-a-L02, field: properties, values: ["Dk 5.8, Df 0.006 of insulating layer (text)", "listed under Glass property (Figs. 9-11 box)"], locators: ["p.4 Sec. II.C", "p.4 Fig. 9"], chosen: "insulating layer", why: "text over figure label"}
+excluded:
+  - "glass interposer/substrate commercialization timeline and RF/optical applications attributed to refs [1-6]"
+not_reported: [optical_interfaces, "TGV drilling (laser) and Cu fill process conditions", "wiring/insulating layer materials and thicknesses", "CPW gap, via diameter on S21 coupons", "chain length / via count per chain", "warpage", "Fig. 6 stress values for conformal and X-shape (illegible)"]

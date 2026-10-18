@@ -1,0 +1,33 @@
+paper_id: vlsitechnologyandcir46769.2022.9830182
+verified_on: 2026-10-18
+schema_version: 2
+source_files:
+  - references/vlsitechnologyandcir46769.2022.9830182/text.md
+  - references/vlsitechnologyandcir46769.2022.9830182/source.json
+  - references/vlsitechnologyandcir46769.2022.9830182/source.pdf
+  - references/vlsitechnologyandcir46769.2022.9830182/figures/page_02.png
+figure_reading_method: >-
+  page_02.png viewed in full; Fig. 1 and Fig. 8 re-rendered from source.pdf at 400 dpi, Fig. 3 at 300 dpi. All numbers are
+  printed table/label values (Fig. 4, 6(c), 7(c), 8 tables/labels, Fig. 5(b) '~66% reduction'); Fig. 3 and Fig. 5(b) axes carry no values.
+entries:
+  - {table: interconnects, row_id: vlsitechnologyandcir46769.2022.9830182-c-i1, field: count, value: 512, unit: bonds, basis: design_target, locator: "p.2 Fig. 4; p.1 Sec. STCO A", note: "256 bit I/O with 512 bonds; 2 x 256 signal array"}
+  - {table: metrics, row_id: vlsitechnologyandcir46769.2022.9830182-c-m3, field: value, value: 66, unit: "%", basis: simulated, locator: "p.2 Fig. 5(b)", note: "figure label '~66% reduction'; text and abstract 'over 60%'"}
+  - {table: metrics, row_id: vlsitechnologyandcir46769.2022.9830182-g-m1, field: value, value: 61, unit: "%", basis: simulated, locator: "p.2 Fig. 7(c)", note: "bar labels -61% / -49% / -73%, matching text"}
+  - {table: interconnects, row_id: vlsitechnologyandcir46769.2022.9830182-i-i1, field: pitch_um, value: 36, unit: um, basis: design_target, locator: "p.2 Fig. 8", note: "Fig. 8 table: Pitch 36 um for both microbump and SoIC columns"}
+derived:
+  - {table: test_vehicles, row_id: vlsitechnologyandcir46769.2022.9830182-i, field: n_dies, value: 13, formula: "base die + 12-Hi cube = 1 + 12", inputs: "p.2 Fig. 8 'Base + 12 Hi Cube'; same for -j"}
+conflicts:
+  - {table: metrics, row_id: vlsitechnologyandcir46769.2022.9830182-c-m1, field: value, values: ["bump area 0.1X (Fig. 4 table)", "bond area 60% lower (text)"], locators: ["p.2 Fig. 4", "p.1 Sec. STCO A"], chosen: 0.1, why: "table over text; text appears to swap the length and area percentages"}
+  - {table: metrics, row_id: vlsitechnologyandcir46769.2022.9830182-c-m2, field: value, values: ["interconnect length 0.4X (Fig. 4 table)", "interconnect length 90% lower (text)"], locators: ["p.2 Fig. 4", "p.1 Sec. STCO A"], chosen: 0.4, why: "table over text"}
+  - {table: metrics, row_id: vlsitechnologyandcir46769.2022.9830182-i-m2, field: value, values: ["1.28X bandwidth (Fig. 8; text 28% higher bandwidth)", "30% bandwidth improvement (abstract)"], locators: ["p.2 Fig. 8; p.1 Sec. STCO D", "p.1 Abstract"], chosen: 1.28, why: "table and body text agree; abstract swaps BW and energy efficiency"}
+  - {table: metrics, row_id: vlsitechnologyandcir46769.2022.9830182-i-m3, field: value, values: ["1.30X energy efficiency (Fig. 8; text 30%)", "28% energy efficiency improvement (abstract)"], locators: ["p.2 Fig. 8; p.1 Sec. STCO D", "p.1 Abstract"], chosen: 1.30, why: "table and body text agree"}
+excluded:
+  - "12-Hi SoIC_HBM vs microbump_HBM benchmark with the same CMOS driver attributed to refs [8][9]"
+  - "microbump contact resistivity baseline from ref [5] (only the <10% ratio entered)"
+  - "N5 router area estimate from ref [6]; 3D memory tool from ref [7]"
+not_reported:
+  - die sizes, interposer size, layer thicknesses, line/space, materials of BEOL and bond
+  - bonding/anneal conditions, alignment, yield, reliability, warpage, thermal
+  - absolute energy pJ/bit, bandwidth, insertion loss values (Fig. 3 and Fig. 5 axes unlabelled)
+  - TSV and C4/bottom bump dimensions (shown only in Fig. 1(a) schematic)
+  - optical_interfaces

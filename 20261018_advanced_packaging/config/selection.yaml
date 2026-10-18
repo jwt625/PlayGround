@@ -1,0 +1,26 @@
+# Selection rules (from init-prompt.md; cap from 2026-10-18 answer)
+threshold: 7
+floor_n: 10
+floor_orgs: 3
+floor_years: 3
+floor_min_score: 5
+cap: 300
+# Spec "cache regardless of score" list (init-prompt.md). Curator mandatory/out_of_window entries whose tech text
+# matches spec_mandatory_re (and not spec_mandatory_exclude_re) are protected; other curator "mandatory" items become
+# rank-0 priority-1 picks (compete under the cap); other out_of_window items are reported as references, not cached.
+spec_mandatory_re: 'CoWoS|InFO[-_ ]?oS|InFO[-_ ]?LSI|SoIC|\bEMIB\b|Foveros|\bODI\b|I-Cube|X-Cube|H-Cube|SK hynix HBM3E|SK hynix HBM4|HBM3E stack|HBM4 stack|Absolics|SKC|Intel glass core|FOPLP line|\b(5[0-9]{2}|6[0-9]{2}|7[0-9]{2}) ?(mm)? ?x ?(5[0-9]{2}|6[0-9]{2}|7[0-9]{2}) ?mm'
+spec_mandatory_exclude_re: 'COUPE|CPO|cooling|context|MI300'
+# Cap drop order uses effective score = LLM score + pick_bonus (curator pick) + priority1_bonus (curator priority 1).
+pick_bonus: 1
+priority1_bonus: 1
+lineage_max: 10
+# Orchestrator overrides (DevLog-000, 2026-10-18): curator-flagged first-party papers excluded by the input filter.
+orchestrator_overrides:
+  - {uid: 10.1109/ectc51909.2023.00108, bucket: cpo, why: "TSMC iOIS COUPE2.0 on CoWoS interposer; cpo curator gap note"}
+  - {uid: 10.1109/ectc51529.2024.00144, bucket: cpo, why: "TSMC COUPE with SoIC bonding; cpo curator gap note"}
+  - {uid: 10.1109/ectc51687.2025.00062, bucket: cpo, why: "Celestial AI OMIB process flow; cpo curator gap note"}
+  - {uid: 10.1109/ectc51906.2022.00072, bucket: cpo, why: "IBM/GF self-aligned SM fiber attach; cpo curator gap note"}
+  - {uid: 10.1109/ectc51687.2025.00012, bucket: cpo, why: "Intel EMIB fiber CPO; cpo curator gap note"}
+  - {uid: 10.1109/ectc51846.2026.00156, bucket: thermal_pdn, why: "Microsoft direct-to-silicon microfluidic cooling; thermal_pdn curator gap note"}
+pick_min_score: 5  # curator picks below this are not candidates (spec's lowest coverage threshold)
+lineage_complete_missing_max: 2

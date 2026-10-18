@@ -1,0 +1,44 @@
+paper_id: ectc51909.2023.00091
+verified_on: 2026-10-18
+source_files:
+  - references/ectc51909.2023.00091/text.md
+  - references/ectc51909.2023.00091/source.json
+  - references/ectc51909.2023.00091/figures/page_02.png
+  - references/ectc51909.2023.00091/figures/page_03.png
+  - references/ectc51909.2023.00091/figures/page_04.png
+figure_reading_method: >-
+  Page renders p.2-p.4 opened; Fig. 6 (p.3) and Fig. 7 (p.4) re-rendered from source.pdf at 4x zoom in the scratchpad
+  to read the warpage labels and lid/ring labels.
+entries:
+  - {table: metrics, row_id: ectc51909.2023.00091-a-m1, field: value, value: 64, unit: um, basis: measured, locator: "p.3 Fig. 6(c)", note: "label '64um' at RT (25C)"}
+  - {table: metrics, row_id: ectc51909.2023.00091-a-m2, field: value, value: -148, unit: um, basis: measured, locator: "p.3 Fig. 6(c)", note: "label '-148um' at HT (240C)"}
+  - {table: metrics, row_id: ectc51909.2023.00091-b-m1, field: value, value: 186, unit: um, basis: measured, locator: "p.4 Fig. 7(c)", note: "label '186um' at RT (25C)"}
+  - {table: metrics, row_id: ectc51909.2023.00091-b-m2, field: value, value: -107, unit: um, basis: measured, locator: "p.4 Fig. 7(c)", note: "label '-107um' at HT (240C)"}
+  - {table: components, row_id: ectc51909.2023.00091-a-c8, field: thickness_um, value: 2000, unit: um, basis: design_target, locator: "p.3 Fig. 6(c)", note: "header 'Lid: 91mmx91mmx2mm'"}
+  - {table: interconnects, row_id: ectc51909.2023.00091-a-i3, field: pitch_um, value: 500, unit: um, basis: design_target, locator: "p.3 Table 1", note: "uBGA / BGA pitch 0.5mm / 1mm"}
+derived:
+  - {table: test_vehicles, row_id: ectc51909.2023.00091-a, field: n_dies, value: 14, formula: "2 SoC + 4 HBM2E + 8 dummy", inputs: "p.3 Table 1"}
+  - {table: test_vehicles, row_id: ectc51909.2023.00091-b, field: n_dies, value: 18, formula: "6 SoC + 12 HBM2E + 0 dummy", inputs: "p.3 Table 1"}
+  - {table: interconnects, row_id: ectc51909.2023.00091-a-i3, field: pitch_um, value: 500, formula: "0.5 mm x 1000", inputs: "p.3 Table 1"}
+  - {table: interconnects, row_id: ectc51909.2023.00091-a-i4, field: pitch_um, value: 1000, formula: "1 mm x 1000", inputs: "p.3 Table 1"}
+  - {table: stack_layers, row_id: ectc51909.2023.00091-a-L11, field: thickness_um, value: 1400, formula: "1.4 mm x 1000", inputs: "p.3 Table 1"}
+  - {table: components, row_id: ectc51909.2023.00091-a-c8, field: thickness_um, value: 2000, formula: "2 mm x 1000", inputs: "p.3 Fig. 6(c)"}
+conflicts:
+  - {table: metrics, row_id: ectc51909.2023.00091-a-m1, field: value, values: ["64 um (Fig. 6(c) label)", "65 um (text)"], locators: ["p.3 Fig. 6(c)", "p.3 Sec. II.A"], chosen: 64, why: "measured plot label over text"}
+  - {table: metrics, row_id: ectc51909.2023.00091-a-m2, field: value, values: ["-148 um (Fig. 6(c) label)", "~150 um (text)"], locators: ["p.3 Fig. 6(c)", "p.3 Sec. II.A"], chosen: -148, why: "measured plot label over text"}
+  - {table: metrics, row_id: ectc51909.2023.00091-b-m1, field: value, values: ["186 um (Fig. 7(c) label)", "within 200 um (text)"], locators: ["p.4 Fig. 7(c)", "p.4 Sec. II.B"], chosen: 186, why: "measured plot label over text bound"}
+  - {table: metrics, row_id: ectc51909.2023.00091-b-m2, field: value, values: ["-107 um (Fig. 7(c) label)", "within 120 um (text)"], locators: ["p.4 Fig. 7(c)", "p.4 Sec. II.B"], chosen: -107, why: "measured plot label over text bound"}
+  - {table: interconnects, row_id: ectc51909.2023.00091-a-i3, field: pitch_um, values: ["500 (Table 1, 0.5 mm)", "400-500 um range (text)"], locators: ["p.3 Table 1", "p.3 Sec. II; p.4 Sec. III"], chosen: 500, why: "table gives the TV value; text gives the scheme range"}
+excluded:
+  - "Fig. 5 measured differential insertion loss SC-RDL vs organic substrate (~25% lower at 28 GHz, ~30% at 50 GHz; 0.8x/0.75x/0.7x at 56/112/200 Gb/s, 90 ohm) - attributed to ref [6] (SoIS)"
+  - "wafer-process Cu trace roughness <100 nm (stated in Fig. 5 / ref [6] context; kept as layer note only)"
+  - "5th gen CoWoS-S 3x reticle ~2600 mm2 interposer, 58.9x44.1 mm, eDTC 320 nF/mm2, 2 SoC + 1 chiplet + 8 HBM (ref [5])"
+  - "CoWoS roadmap Fig. 2 (interposer area doubled 2016-2022, 16/12 nm to 5 nm, 4 to 8 HBM, 32 to 128 GB)"
+  - "RI/Si interposer up to 4x (~3300 mm2), 65 mm longer dimension; 5-6x estimate 75-85 mm (ref [7] / estimate)"
+  - "C4 pitch 100-130 um flux cleaning concern (general)"
+not_reported:
+  - process flow (only 'process feasibility check with good wafer warpage control'); process_steps empty
+  - ubump pitch/size/metallurgy for the TVs; F/S RDL L/S; RDL dielectric product and thicknesses; Cu thickness
+  - die sizes and thicknesses, LSI size, IPD x/y, mold and TIM materials, package thickness
+  - warpage measurement method and sign convention; reliability test temperatures/humidity, preconditioning
+  - electrical_interfaces (Fig. 5 attributed to ref [6]); optical_interfaces (CPO mentioned as potential only)

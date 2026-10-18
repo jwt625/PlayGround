@@ -1,0 +1,2 @@
+paper_id,doi,title,year,venue,primary_bucket,buckets,priority,triage_rationale
+ectc51906.2022.00072,10.1109/ectc51906.2022.00072,Optical performance and reliability assessment from self-aligned single mode fiber attach for O-band silicon photonics platform,2022,ECTC,cpo,cpo,1,"Passive SMF attach in PIC V-grooves on 300 mm platform with metamaterial SSC; <2 dB O-band IL, stress tests."
