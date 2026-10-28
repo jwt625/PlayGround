@@ -1,0 +1,912 @@
+{
+ "pn": "4128880",
+ "figures": [
+  {
+   "id": "1",
+   "label": "FIG. 1",
+   "sheet": 1,
+   "page": 1,
+   "crop": [
+    369,
+    625,
+    1972,
+    2595
+   ],
+   "rotate": 0,
+   "front_page": false
+  },
+  {
+   "id": "2",
+   "label": "FIG. 2",
+   "sheet": 2,
+   "page": 2,
+   "crop": [
+    302,
+    423,
+    2090,
+    2818
+   ],
+   "rotate": 0,
+   "front_page": true
+  },
+  {
+   "id": "3A",
+   "label": "FIG. 3A",
+   "sheet": 3,
+   "page": 3,
+   "crop": [
+    509,
+    626,
+    1236,
+    1762
+   ],
+   "rotate": 0,
+   "front_page": false
+  },
+  {
+   "id": "3B",
+   "label": "FIG. 3B",
+   "sheet": 3,
+   "page": 3,
+   "crop": [
+    1240,
+    727,
+    1951,
+    1764
+   ],
+   "rotate": 0,
+   "front_page": false
+  },
+  {
+   "id": "3C",
+   "label": "FIG. 3C",
+   "sheet": 3,
+   "page": 3,
+   "crop": [
+    508,
+    1824,
+    1226,
+    2773
+   ],
+   "rotate": 0,
+   "front_page": false
+  },
+  {
+   "id": "3D",
+   "label": "FIG. 3D",
+   "sheet": 3,
+   "page": 3,
+   "crop": [
+    1228,
+    1819,
+    1944,
+    2775
+   ],
+   "rotate": 0,
+   "front_page": false
+  },
+  {
+   "id": "4",
+   "label": "FIG. 4",
+   "sheet": 4,
+   "page": 4,
+   "crop": [
+    1215,
+    1462,
+    1946,
+    2963
+   ],
+   "rotate": 270,
+   "front_page": false
+  },
+  {
+   "id": "5",
+   "label": "FIG. 5",
+   "sheet": 5,
+   "page": 5,
+   "crop": [
+    629,
+    530,
+    1686,
+    2746
+   ],
+   "rotate": 0,
+   "front_page": false
+  },
+  {
+   "id": "6",
+   "label": "FIG. 6",
+   "sheet": 4,
+   "page": 4,
+   "crop": [
+    377,
+    972,
+    1214,
+    2987
+   ],
+   "rotate": 270,
+   "front_page": false
+  },
+  {
+   "id": "7",
+   "label": "FIG. 7",
+   "sheet": 6,
+   "page": 6,
+   "crop": [
+    269,
+    411,
+    2066,
+    3208
+   ],
+   "rotate": 270,
+   "front_page": false
+  },
+  {
+   "id": "8",
+   "label": "FIG. 8",
+   "sheet": 7,
+   "page": 7,
+   "crop": [
+    314,
+    443,
+    1936,
+    3158
+   ],
+   "rotate": 270,
+   "front_page": false
+  },
+  {
+   "id": "9",
+   "label": "FIG. 9",
+   "sheet": 8,
+   "page": 8,
+   "crop": [
+    337,
+    865,
+    1771,
+    2908
+   ],
+   "rotate": 0,
+   "front_page": false
+  }
+ ],
+ "parts": [
+  {
+   "ref": "10",
+   "name": "central processor unit",
+   "figs": [
+    "1"
+   ]
+  },
+  {
+   "ref": "11",
+   "name": "computation section",
+   "figs": [
+    "1"
+   ]
+  },
+  {
+   "ref": "12",
+   "name": "memory section",
+   "figs": [
+    "1",
+    "2",
+    "5",
+    "7"
+   ],
+   "alt": [
+    "memory"
+   ]
+  },
+  {
+   "ref": "13",
+   "name": "I/O section",
+   "figs": [
+    "1"
+   ]
+  },
+  {
+   "ref": "14",
+   "name": "I/O stations and peripheral equipment",
+   "figs": [
+    "1"
+   ]
+  },
+  {
+   "ref": "15",
+   "name": "mass storage subsystems",
+   "figs": [
+    "1"
+   ]
+  },
+  {
+   "ref": "16",
+   "name": "maintenance control unit",
+   "figs": [
+    "1"
+   ]
+  },
+  {
+   "ref": "20",
+   "name": "vector registers",
+   "figs": [
+    "2"
+   ]
+  },
+  {
+   "ref": "21",
+   "name": "data path or trunk",
+   "figs": [
+    "2"
+   ]
+  },
+  {
+   "ref": "22",
+   "name": "signal path select, or fan-out",
+   "figs": [
+    "2"
+   ]
+  },
+  {
+   "ref": "23",
+   "name": "fan-out",
+   "figs": [
+    "2"
+   ],
+   "alt": [
+    "vector register fanout"
+   ]
+  },
+  {
+   "ref": "30",
+   "name": "scalar registers",
+   "figs": [
+    "2"
+   ]
+  },
+  {
+   "ref": "31",
+   "name": "fan-outs",
+   "figs": [
+    "2"
+   ]
+  },
+  {
+   "ref": "32",
+   "name": "fan-outs",
+   "figs": [
+    "2"
+   ],
+   "alt": [
+    "scalar register fan-out"
+   ]
+  },
+  {
+   "ref": "33",
+   "name": "data trunk",
+   "figs": [],
+   "alt": [
+    "data path"
+   ]
+  },
+  {
+   "ref": "34",
+   "name": "data path",
+   "figs": [
+    "2"
+   ]
+  },
+  {
+   "ref": "40",
+   "name": "T registers",
+   "figs": [
+    "2"
+   ]
+  },
+  {
+   "ref": "41",
+   "name": "data path",
+   "figs": [
+    "2"
+   ]
+  },
+  {
+   "ref": "50",
+   "name": "address registers",
+   "figs": [
+    "2"
+   ]
+  },
+  {
+   "ref": "51",
+   "name": "fan-outs",
+   "figs": [
+    "2"
+   ]
+  },
+  {
+   "ref": "52",
+   "name": "fan-outs",
+   "figs": [
+    "2"
+   ],
+   "alt": [
+    "fan-out"
+   ]
+  },
+  {
+   "ref": "53",
+   "name": "data path",
+   "figs": []
+  },
+  {
+   "ref": "54",
+   "name": "data path",
+   "figs": [
+    "2"
+   ]
+  },
+  {
+   "ref": "60",
+   "name": "B registers",
+   "figs": [
+    "2"
+   ]
+  },
+  {
+   "ref": "61",
+   "name": "data path",
+   "figs": [
+    "2"
+   ]
+  },
+  {
+   "ref": "62",
+   "name": "lines",
+   "figs": []
+  },
+  {
+   "ref": "63",
+   "name": "lines",
+   "figs": [
+    "2"
+   ]
+  },
+  {
+   "ref": "70",
+   "name": "instruction buffers",
+   "figs": [
+    "2"
+   ]
+  },
+  {
+   "ref": "71",
+   "name": "data paths",
+   "figs": [
+    "2"
+   ]
+  },
+  {
+   "ref": "72",
+   "name": "instruction line",
+   "figs": [
+    "2"
+   ],
+   "alt": [
+    "instruction path"
+   ]
+  },
+  {
+   "ref": "80",
+   "name": "data line",
+   "figs": [
+    "2"
+   ]
+  },
+  {
+   "ref": "81",
+   "name": "data line",
+   "figs": [
+    "2"
+   ]
+  },
+  {
+   "ref": "82",
+   "name": "data path",
+   "figs": [
+    "2"
+   ]
+  },
+  {
+   "ref": "90",
+   "name": "curved figure",
+   "figs": [
+    "3A",
+    "3B"
+   ]
+  },
+  {
+   "ref": "91",
+   "name": "arrows",
+   "figs": [
+    "3A"
+   ]
+  },
+  {
+   "ref": "92",
+   "name": "arrows",
+   "figs": [
+    "3A",
+    "3B"
+   ]
+  },
+  {
+   "ref": "93",
+   "name": "results",
+   "figs": [
+    "3A",
+    "3B",
+    "3C"
+   ]
+  },
+  {
+   "ref": "94",
+   "name": "copy of the contents of the designated S_{j} register",
+   "figs": [
+    "3B"
+   ]
+  },
+  {
+   "ref": "95",
+   "name": "curved FIG.",
+   "figs": [
+    "3C",
+    "3D"
+   ]
+  },
+  {
+   "ref": "96",
+   "name": "arrow",
+   "figs": [
+    "3C"
+   ]
+  },
+  {
+   "ref": "97",
+   "name": "",
+   "figs": [
+    "3D"
+   ]
+  },
+  {
+   "ref": "98",
+   "name": "",
+   "figs": [
+    "3D"
+   ]
+  },
+  {
+   "ref": "100",
+   "name": "curved figure",
+   "figs": [
+    "5",
+    "6"
+   ]
+  },
+  {
+   "ref": "101",
+   "name": "curved figure",
+   "figs": [
+    "5",
+    "6"
+   ]
+  },
+  {
+   "ref": "102",
+   "name": "curved figure",
+   "figs": [
+    "5",
+    "6"
+   ]
+  },
+  {
+   "ref": "103",
+   "name": "curved figure",
+   "figs": [
+    "5",
+    "6"
+   ]
+  },
+  {
+   "ref": "120",
+   "name": "representative one of the eight registers",
+   "figs": [
+    "7"
+   ],
+   "alt": [
+    "vector register"
+   ]
+  },
+  {
+   "ref": "121",
+   "name": "data path",
+   "figs": [
+    "7"
+   ]
+  },
+  {
+   "ref": "122",
+   "name": "path select network",
+   "figs": [
+    "7"
+   ],
+   "alt": [
+    "path select"
+   ]
+  },
+  {
+   "ref": "123",
+   "name": "",
+   "figs": [
+    "7"
+   ]
+  },
+  {
+   "ref": "124",
+   "name": "functional unit",
+   "figs": [
+    "7"
+   ]
+  },
+  {
+   "ref": "125",
+   "name": "data path",
+   "figs": [
+    "7"
+   ]
+  },
+  {
+   "ref": "126",
+   "name": "data path",
+   "figs": [
+    "7"
+   ]
+  },
+  {
+   "ref": "127",
+   "name": "date path",
+   "figs": []
+  },
+  {
+   "ref": "130",
+   "name": "path select",
+   "figs": [
+    "7"
+   ]
+  },
+  {
+   "ref": "131",
+   "name": "data paths",
+   "figs": [
+    "7"
+   ],
+   "alt": [
+    "signal path"
+   ]
+  },
+  {
+   "ref": "132",
+   "name": "data paths",
+   "figs": [
+    "7"
+   ],
+   "alt": [
+    "path"
+   ]
+  },
+  {
+   "ref": "133",
+   "name": "data path",
+   "figs": [
+    "7"
+   ]
+  },
+  {
+   "ref": "134",
+   "name": "element address counter",
+   "figs": [
+    "7"
+   ],
+   "alt": [
+    "address counter",
+    "Address register"
+   ]
+  },
+  {
+   "ref": "135",
+   "name": "vector length counter",
+   "figs": [
+    "7"
+   ]
+  },
+  {
+   "ref": "136",
+   "name": "write control counter",
+   "figs": [
+    "7"
+   ]
+  },
+  {
+   "ref": "137",
+   "name": "lead",
+   "figs": [
+    "7"
+   ]
+  },
+  {
+   "ref": "140",
+   "name": "control lead",
+   "figs": [
+    "7"
+   ]
+  },
+  {
+   "ref": "141",
+   "name": "AND gate",
+   "figs": [
+    "7"
+   ]
+  },
+  {
+   "ref": "142",
+   "name": "OR gate",
+   "figs": [
+    "7"
+   ]
+  },
+  {
+   "ref": "143",
+   "name": "lead",
+   "figs": [
+    "7"
+   ]
+  },
+  {
+   "ref": "144",
+   "name": "lead",
+   "figs": [
+    "7"
+   ]
+  },
+  {
+   "ref": "145",
+   "name": "gate",
+   "figs": [
+    "7"
+   ]
+  },
+  {
+   "ref": "146",
+   "name": "lead",
+   "figs": [
+    "7"
+   ]
+  },
+  {
+   "ref": "147",
+   "name": "line",
+   "figs": [
+    "7"
+   ]
+  },
+  {
+   "ref": "150",
+   "name": "gate",
+   "figs": [
+    "7"
+   ]
+  },
+  {
+   "ref": "151",
+   "name": "count select unit",
+   "figs": [
+    "7"
+   ],
+   "alt": [
+    "count selector"
+   ]
+  },
+  {
+   "ref": "152",
+   "name": "lead",
+   "figs": [
+    "7"
+   ]
+  },
+  {
+   "ref": "153",
+   "name": "lead",
+   "figs": [
+    "7"
+   ]
+  },
+  {
+   "ref": "154",
+   "name": "AND gate",
+   "figs": [
+    "7"
+   ]
+  },
+  {
+   "ref": "155",
+   "name": "AND gate",
+   "figs": [
+    "7"
+   ]
+  },
+  {
+   "ref": "160",
+   "name": "decoder",
+   "figs": [
+    "8"
+   ]
+  },
+  {
+   "ref": "161",
+   "name": "",
+   "figs": [
+    "8"
+   ]
+  },
+  {
+   "ref": "162",
+   "name": "",
+   "figs": [
+    "8"
+   ]
+  },
+  {
+   "ref": "163",
+   "name": "lead",
+   "figs": [
+    "8"
+   ]
+  },
+  {
+   "ref": "164",
+   "name": "lead",
+   "figs": [
+    "8"
+   ],
+   "alt": [
+    "control line"
+   ]
+  },
+  {
+   "ref": "165",
+   "name": "comparison circuit",
+   "figs": [
+    "8"
+   ],
+   "alt": [
+    "compare circuit"
+   ]
+  },
+  {
+   "ref": "170",
+   "name": "reservation register",
+   "figs": [
+    "8"
+   ]
+  },
+  {
+   "ref": "171",
+   "name": "gate",
+   "figs": [
+    "8"
+   ]
+  },
+  {
+   "ref": "172",
+   "name": "leads",
+   "figs": [
+    "8"
+   ]
+  },
+  {
+   "ref": "173",
+   "name": "chain slot control",
+   "figs": [
+    "8"
+   ]
+  },
+  {
+   "ref": "174",
+   "name": "leads",
+   "figs": [
+    "8"
+   ]
+  },
+  {
+   "ref": "175",
+   "name": "lead",
+   "figs": [
+    "8"
+   ]
+  },
+  {
+   "ref": "176",
+   "name": "AND gate",
+   "figs": [
+    "8"
+   ]
+  },
+  {
+   "ref": "180",
+   "name": "test circuit",
+   "figs": [
+    "8"
+   ],
+   "alt": [
+    "Test unit"
+   ]
+  },
+  {
+   "ref": "181",
+   "name": "set circuit",
+   "figs": [
+    "8"
+   ]
+  },
+  {
+   "ref": "182",
+   "name": "lead",
+   "figs": [
+    "8"
+   ]
+  },
+  {
+   "ref": "183",
+   "name": "lead",
+   "figs": [
+    "8"
+   ]
+  },
+  {
+   "ref": "184",
+   "name": "gate",
+   "figs": [
+    "8"
+   ]
+  },
+  {
+   "ref": "185",
+   "name": "",
+   "figs": [
+    "8"
+   ]
+  },
+  {
+   "ref": "186",
+   "name": "lead",
+   "figs": []
+  },
+  {
+   "ref": "190",
+   "name": "lead",
+   "figs": [
+    "8"
+   ]
+  },
+  {
+   "ref": "191",
+   "name": "variable delay",
+   "figs": [
+    "8"
+   ],
+   "alt": [
+    "Delay"
+   ]
+  }
+ ]
+}

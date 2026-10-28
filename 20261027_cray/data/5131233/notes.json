@@ -1,0 +1,84 @@
+{
+  "patent": "Filed in March 1991 by Cray Computer Corporation of Colorado Springs, the company Seymour Cray founded in 1989 to develop the Cray-3. The patent itself names no machine. Cray supercomputers already cooled circuitry by immersion in fluorocarbon liquid; the Cray-2 was immersed in Fluorinert. This patent keeps immersion for the bulky, low heat-density power supplies, and cools the densely packed logic modules with a spray of the same liquid driven through them by pressurized helium. The added latent heat of vaporization and the forced turbulence are meant to remove more heat than plain immersion can.",
+  "figs": {
+    "1": "Three dashed boxes group the subsystems: 34 (upper right) is the gas loop, 30 (lower right) the liquid loop, and 110 (bottom left) the fill and drain equipment. In the gas loop, gas and vapor leave separation chamber 40 at port 42, pass filter 92 and blower 90, then aftercooler 44 and vortex separator 98, and re-enter logic module chamber 24 at port 36. Liquid condensed in 98 returns along conduit 46 (top and left edge) to pump 102, which also draws from pool 38 and sends cooled liquid to nozzles 32 and back to the pool. Arrows mark flow direction; the small humps are pipe crossings with no connection.",
+    "2": "Edge-on section through part of a logic module. Coolant moves from top (high pressure 144, logic module chamber) to bottom (low pressure 146, separation chamber) down channels 66. Heavy hatching is the ICs 50 and PCBs 58, which are joined by bonded leads 52. The narrow gaps 62 between each IC and its PCB alternate with wide pockets such as 148 and 150. That repeated narrow-to-wide change is what the description credits with speeding the gas up and creating turbulence.",
+    "3": "Shown turned upright from the sideways drawing sheet. This is one logic module seen face-on: a 4 x 4 grid of PCBs 58, with the ICs 50 dotted in on only three of them. Power connectors 70 on the left edge 68 plug into receptacles 72 of bus 74, and wire mats 76 line the other three edges. At the bottom, gaskets 86 at the lower corners rest on edges 87 of partition 82, so coolant can only leave through the module into opening 84.",
+    "4": "Shown turned upright from the sideways drawing sheet. Vertical section through housing 23. Liquid enters manifold 88 at port 89 (top) and sprays from nozzles 32 onto the logic modules 28, which hang edge-on from bus 74 above opening 84 in partition 82. Gas enters chamber 24 at port 36. Gas, vapor and droplets pass down through the modules into separation chamber 40, where gas is withdrawn at port 42 and the liquid falls to the pool surface at the bottom. Signal cables 78 pass through the walls at seals 80.",
+    "5": "Shown turned upright from the sideways drawing sheet. Qualitative diagram, not hardware. Bands with short dashes carry liquid, stippled bands carry gas and vapor, and the plain lower-right loop is the gas path through the blower (heat of compression in) and the aftercooler (heat out). Small solid arrows show mass flow; hollow arrows show heat flow. The short vertical bar where the loops meet stands for the logic modules, where heat 132 enters and the liquid splits into vapor 134 and unvaporized liquid 136."
+  },
+  "parts": {
+    "24": "The description once calls it \"logic module chamber 26\" and twice \"logic module chamber 28\"; these are evident misprints.",
+    "32": "The description once writes \"cooling gas circulation loop 32\"; the loop is 34.",
+    "40": "Called \"condensation chamber 40\" once in the description.",
+    "44": "Introduced as \"the heat exchanger or aftercooler 44\" in the gas loop. It is a separate unit from liquid-loop heat exchanger 48.",
+    "50": "The description once writes \"adjacent PCB 50\", evidently meaning PCB 58.",
+    "54": "\"inserting the leads 54\" in the description evidently means leads 52.",
+    "90": "The patent names a rotary lobe positive displacement (Roots) blower as preferred.",
+    "124": "Numerals 124 to 142 label flows of gas, liquid, vapor and heat in the Fig. 5 diagram, not hardware.",
+    "131": "Both 131 and 134 denote vaporized cooling liquid in the description of Fig. 5.",
+    "144": "These are regions of the channel rather than parts: 144 is on the logic module chamber side and 146 on the separation chamber side."
+  },
+  "glossary": [
+    {
+      "term": "sensible heat",
+      "def": "Heat that raises a substance's temperature without changing its phase. The patent defines it the same way."
+    },
+    {
+      "term": "latent heat",
+      "def": "Heat absorbed or released during a phase change, such as liquid to vapor, at constant temperature. Per unit mass it is usually far larger than the sensible heat of a few degrees' warming."
+    },
+    {
+      "term": "two-phase flow",
+      "def": "Flow of liquid and gas (or vapor) together in one channel. Here it is spray droplets, helium and coolant vapor moving through the module channels."
+    },
+    {
+      "term": "forced convection",
+      "def": "Heat transfer to a fluid that is driven past the surface by a pump or blower, as opposed to natural convection or conduction through a stagnant layer."
+    },
+    {
+      "term": "boundary layer",
+      "def": "The thin, slow-moving layer of fluid next to a surface. When it is stagnant it adds thermal resistance, and turbulence thins or disrupts it."
+    },
+    {
+      "term": "thermal hysteresis (boiling)",
+      "def": "In pool boiling, highly wetting liquids such as fluorocarbons often need the surface to overshoot well above the boiling point before boiling starts. Afterwards the boiling curve differs between rising and falling heat flux."
+    },
+    {
+      "term": "dielectric coolant",
+      "def": "An electrically insulating liquid that can touch live circuitry directly without causing shorts."
+    },
+    {
+      "term": "Fluorinert",
+      "def": "3M trade name for a family of inert perfluorinated dielectric liquids with low boiling points, used for electronics immersion cooling. The patent names it as the preferred coolant."
+    },
+    {
+      "term": "immersion cooling",
+      "def": "Cooling components by submerging them in a dielectric liquid. In this patent that is the power supply components 29 in pool 38."
+    },
+    {
+      "term": "saturation",
+      "def": "The condition in which a gas holds the maximum amount of vapor it can at a given temperature and pressure. Cooling a saturated mixture forces some vapor to condense."
+    },
+    {
+      "term": "aftercooler",
+      "def": "A heat exchanger placed after a compressor or blower. It removes the heat of compression and, here, condenses coolant vapor out of the helium."
+    },
+    {
+      "term": "vortex separator",
+      "def": "A device that spins a gas stream so that the denser liquid droplets are thrown outward by centrifugal force and collected."
+    },
+    {
+      "term": "Roots blower",
+      "def": "A rotary lobe positive displacement blower: two meshing lobed rotors trap and move fixed volumes of gas."
+    },
+    {
+      "term": "psig",
+      "def": "Pounds per square inch, gauge: pressure above local atmospheric pressure."
+    },
+    {
+      "term": "Venturi effect",
+      "def": "A fluid speeds up and its static pressure drops as it passes through a constriction. The description of Fig. 2 relies on this effect at passageways 62."
+    }
+  ]
+}

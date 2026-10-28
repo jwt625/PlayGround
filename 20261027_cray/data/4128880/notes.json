@@ -1,0 +1,133 @@
+{
+ "patent": "Filed June 30, 1976 and issued December 5, 1978 to Seymour Cray of Cray Research; it describes the vector architecture of the Cray-1, first installed at Los Alamos in 1976, although the patent names no machine. Eight vector registers of 64 64-bit words sit between memory and fully segmented (pipelined) functional units, so vector operations run register-to-register instead of memory-to-memory. The patent presents this as a remedy for the long start-up delay of memory-to-memory streaming vector machines (it cites the Texas Instruments and Control Data STAR designs), which made short vectors of roughly 5 to 10 elements cheaper to compute in scalar mode. It also claims chaining: results arriving in a vector register are forwarded at once as operands to another functional unit, so more than one result can be produced per clock period.",
+ "figs": {
+  "1": "Dashed box 10 encloses the three sections of the processor, stacked top to bottom. Dashed lines leaving I/O section 13 stand for individual I/O channels to peripheral stations 14 and mass storage 15; the single solid line goes to maintenance control unit 16.",
+  "2": "Memory 12 is the tall column at left; register sets are in the middle and functional unit groups at right. Slanted parallelograms are fan-outs that select one register of a set: 22 and 23 for the eight V registers, 31 and 32 for S0-S7, 51 and 52 for A0-A7. T registers 40 buffer the S registers and B registers 60 buffer the A registers. Subscripts j and k mark operand paths and i marks result paths; the instruction buffers 70, P register and NIP/LIP/CIP registers along the bottom form the instruction issue path.",
+  "3A": "The stacked bars are vector registers, each horizontal line an element. The curved tube 90 is the functional unit drawn as a pipe divided into n segments, one clock period each: operand pairs from V_{j} and V_{k} enter at segment 1 (arrows 91, 92) and results leave at segment n into V_{i} (93).",
+  "3B": "Same as FIG. 3A except that the second operand is a single scalar register S_{j} (top), whose value enters the pipe with every element read from V_{k}.",
+  "3C": "Vector load: the memory path 95 is drawn as a six-segment pipe, matching the six clock periods from memory to the first element of V_{i}.",
+  "3D": "Vector store, the reverse of FIG. 3C: elements of V_{i} enter the six-segment path 95 at 97 and leave to memory at 98.",
+  "4": "Time runs left to right in clock periods t_{0}, t_{1}, ...; each row is one element pair of a floating point add V0 = V1 + V2. Dashed segments are transit to and from the add unit and the solid bar is the six clock periods inside it. Each row starts one clock period after the one above, so up to six additions are in the unit at once.",
+  "5": "Four chained vector instructions drawn as pipes between the register stack in the middle: memory read 100 (memory to V0), integer add 101 (V0 + V1 to V2), shift 102 (V2 to V3) and logical product 103 (V3 and V4 to V5). Segment counts give each unit's time: 6, 3, 4 and 2 clock periods.",
+  "6": "Timing for the chain of FIG. 5 in clock periods t_{0} to t_{31}. Each row is the production of one element of V5, the solid bars being the four functional unit times bracketed below by 100 to 103 and the dashed segments register transits. Asterisks on the first row mark the chain slot time at which each following instruction issues; rows are offset one clock period, so a new V5 element is completed every clock period.",
+  "7": "One of the eight vector registers (120) with its control. The upper row is the data path: path select 130 picks input from a functional unit or memory, and data select 122 sends elements to a functional unit or memory, joined by the dashed operand paths from another V register (126) and a scalar register. The lower row is control logic: element address counter 134 steps through the elements on lead 140, vector length counter 135 counts the VL elements down and signals register free at zero, and write control counter 136 delays writing results until they arrive and issues the chain slot signal.",
+  "8": "Instruction issue logic, read left to right from the CIP register and instruction decoder 160. The upper path checks the requested vector registers against reservation register 170 through chain slot control 173 in comparison circuit 165; the dashed box below checks functional unit busy counters C0 to C5. AND gate 176 combines both checks into go issue, and gate 184 then sends go parameter, go sequence (through variable delay 191) and go functional unit to the register control of FIG. 7.",
+  "9": "Contents of V2 after a floating point add with V2 as both an operand and the result register, V1 the other operand and VL = 64. Because the add unit time plus two transfer periods is eight clock periods, V2 collects eight interleaved partial sums, shown fully expanded for elements 56 to 63 at the bottom."
+ },
+ "parts": {
+  "12": "Same numeral is used for the memory section in FIG. 1 and for memory in FIGS. 2, 5 and 7.",
+  "33": "Named in the text but not printed in FIG. 2; it is the unlabeled line from memory to fan-out 31.",
+  "53": "Named in the text but not printed in FIG. 2; it is the unlabeled line from memory to the A registers.",
+  "62": "Named in the text but not printed in FIG. 2; it is the unlabeled line from the B registers to the P register.",
+  "93": "The text says only that results are delivered at 93; the numeral marks the arrow from the last pipe segment into the result register.",
+  "95": "Printed as \"curved FIG. 95\", a slip for curved figure.",
+  "97": "Printed in FIG. 3D but not referenced in the text; it marks the arrow from register V_{j} into the memory path.",
+  "98": "Printed in FIG. 3D but not referenced in the text; it marks the arrow from the memory path into memory.",
+  "123": "Printed in FIG. 7 but not referenced in the text; it is the data path from path select 122 to functional unit 124 that the text mentions without a numeral.",
+  "127": "Named in the text (printed \"date path\") as the dashed path delivering a scalar register copy to functional unit 124; the numeral 127 is not printed on that path in FIG. 7.",
+  "161": "The text says the i request is transmitted to 161 without naming the block; in FIG. 8 it is an unlabeled box between the decoder and comparison circuit 165.",
+  "162": "The text says the j and k requests are transmitted to 162 without naming the block; in FIG. 8 it is an unlabeled box between the decoder and comparison circuit 165.",
+  "185": "The text says the i request information is combined with the j and k request information at 185; in FIG. 8 it is an unlabeled box feeding gate 184.",
+  "186": "Named in the text but not printed in FIG. 8; it is the line from 185 to gate 184.",
+  "182": "Printed twice in FIG. 8, at both ends of the lead from test circuit 180 to AND gate 176.",
+  "164": "Printed twice in FIG. 8: on the j and k request lead into comparison circuit 165 and on its branch to gate 184."
+ },
+ "glossary": [
+  {
+   "term": "vector",
+   "def": "An ordered set of data elements, such as a row or column of a matrix, processed element by element with the same operation."
+  },
+  {
+   "term": "scalar machine",
+   "def": "A computer that brings each operand from memory to the arithmetic unit and returns each result to memory, one operation at a time."
+  },
+  {
+   "term": "memory-to-memory (streaming) vector machine",
+   "def": "A vector machine that streams operands from memory through pipes to the arithmetic unit and results back to memory; the patent cites a start-up delay of 10 to 100 clock periods before the first operands arrive."
+  },
+  {
+   "term": "vector register",
+   "def": "One of eight registers V0 to V7, each holding 64 elements of 64 bits; vector instructions read operands from and write results to these registers instead of memory."
+  },
+  {
+   "term": "element",
+   "def": "One word of a vector register, written as a subscript on the register name: V1_{0} is element 0 of V1, V1_{63} the last."
+  },
+  {
+   "term": "i, j, k designators",
+   "def": "Instruction fields that select registers: j and k name the operand registers, i names the result register (V_{i}, V_{j}, V_{k}; likewise S and A)."
+  },
+  {
+   "term": "clock period",
+   "def": "The basic machine cycle; in this design a segmented functional unit accepts a new operand pair and a vector register delivers or accepts one element every clock period. The Cray-1 clock period was 12.5 ns."
+  },
+  {
+   "term": "functional unit",
+   "def": "A dedicated arithmetic or logical unit (for example vector add, floating point multiply, scalar shift); the preferred embodiment has twelve, grouped as vector, floating point, scalar and address units."
+  },
+  {
+   "term": "functional unit segmentation",
+   "def": "Division of a functional unit into stages that each take one clock period, so a new operation can enter every clock period while earlier ones are still in progress; now called pipelining."
+  },
+  {
+   "term": "functional unit time",
+   "def": "The number of clock periods from an operand pair entering a segmented functional unit to its result leaving, which is also the number of operations the unit can have in progress at once (six for floating point add, three for integer add in the examples)."
+  },
+  {
+   "term": "vector length register (VL)",
+   "def": "Register, set from an A register, giving the number of elements (up to 64) processed by each vector instruction; longer vectors are handled in groups of 64 and a remainder under program control."
+  },
+  {
+   "term": "vector mask register (VM)",
+   "def": "64-bit register with one bit per vector element, used by vector merge and test instructions to choose between operands element by element; set from an S register or by a vector test in the logical unit."
+  },
+  {
+   "term": "chaining",
+   "def": "Issuing a vector instruction whose operand register is the result register of an instruction still in progress, so each result is passed on to the second functional unit in the same clock period it arrives; two or more results can then be produced per clock period."
+  },
+  {
+   "term": "chain slot time",
+   "def": "The single clock period, when the first result of a vector instruction reaches its result register, at which a dependent instruction may issue and chain; otherwise it waits until the result register reservation is released."
+  },
+  {
+   "term": "reservation",
+   "def": "Marking of a vector register or functional unit as busy for the clock periods set by the vector length (and, for a result register, the functional unit time); a later instruction needing it cannot issue until it is released."
+  },
+  {
+   "term": "go issue, go parameter, go sequence, go functional unit",
+   "def": "Control signals of FIG. 8 and FIG. 7: go issue releases an instruction once no conflicts remain, and the other three set up the register paths, start operand sequencing and start the functional unit."
+  },
+  {
+   "term": "parcel",
+   "def": "A 16-bit unit of instruction; each of the four instruction buffers holds 64 parcels. NIP, LIP and CIP are the next, lower and current instruction parcel registers."
+  },
+  {
+   "term": "fan-out",
+   "def": "A signal path select network connecting a single data path to any one register of a set."
+  },
+  {
+   "term": "T and B registers",
+   "def": "Sets of 64 intermediate registers that buffer the S (scalar) and A (address) registers respectively against memory."
+  },
+  {
+   "term": "exchange package (XA)",
+   "def": "A block of memory holding the information needed to switch execution from one program to another; the XA register gives its first word address."
+  },
+  {
+   "term": "phased banks",
+   "def": "Memory divided into banks accessed in rotation, successive words in successive banks, so block transfers run faster than a single bank's access time allows; now called interleaving."
+  },
+  {
+   "term": "population/leading zero",
+   "def": "Scalar functional unit that counts the one bits in a word (population count) or the zero bits before the first one bit (leading zero count)."
+  },
+  {
+   "term": "reciprocal approximation",
+   "def": "Floating point functional unit that produces an approximate reciprocal of an operand; division is done by multiplying by the reciprocal."
+  },
+  {
+   "term": "recursive operation",
+   "def": "A vector instruction whose result register is also one of its operand registers (i equal to j or k); results are fed back as operands, which reduces a 64-element vector to a few partial sums (FIG. 9)."
+  }
+ ]
+}
