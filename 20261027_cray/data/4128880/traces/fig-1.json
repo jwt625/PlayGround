@@ -1,0 +1,725 @@
+{
+ "fig": "1",
+ "w": 1603,
+ "h": 1970,
+ "stroke": 3,
+ "elements": [
+  {
+   "id": "cpu",
+   "kind": "outline",
+   "shapes": [
+    {
+     "t": "r",
+     "d": [
+      140,
+      43,
+      1532,
+      1250
+     ],
+     "dash": [
+      70,
+      14
+     ]
+    }
+   ],
+   "ref": "10"
+  },
+  {
+   "id": "cpu-label",
+   "kind": "label",
+   "shapes": [
+    {
+     "t": "t",
+     "s": "10",
+     "x": 40,
+     "y": 430,
+     "size": 61,
+     "len": 47,
+     "italic": true
+    }
+   ],
+   "ref": "10"
+  },
+  {
+   "id": "cpu-leader",
+   "kind": "leader",
+   "shapes": [
+    {
+     "t": "l",
+     "d": [
+      [
+       101,
+       411
+      ],
+      [
+       136,
+       411
+      ]
+     ]
+    }
+   ],
+   "ref": "10"
+  },
+  {
+   "id": "computation",
+   "kind": "block",
+   "shapes": [
+    {
+     "t": "r",
+     "d": [
+      524,
+      125,
+      1233,
+      466
+     ],
+     "w": 5
+    }
+   ],
+   "ref": "11"
+  },
+  {
+   "id": "computation-name",
+   "kind": "text",
+   "shapes": [
+    {
+     "t": "t",
+     "s": "COMPUTATION",
+     "x": 729,
+     "y": 288,
+     "size": 53,
+     "len": 322,
+     "bold": true
+    },
+    {
+     "t": "t",
+     "s": "SECTION",
+     "x": 774,
+     "y": 342,
+     "size": 51,
+     "len": 201,
+     "bold": true
+    }
+   ]
+  },
+  {
+   "id": "computation-label",
+   "kind": "label",
+   "shapes": [
+    {
+     "t": "t",
+     "s": "11",
+     "x": 462,
+     "y": 355,
+     "size": 56,
+     "len": 33,
+     "italic": true
+    }
+   ],
+   "ref": "11"
+  },
+  {
+   "id": "computation-leader",
+   "kind": "leader",
+   "shapes": [
+    {
+     "t": "path",
+     "d": "M 470 365 Q 476 384 494 384 L 522 381"
+    }
+   ],
+   "ref": "11"
+  },
+  {
+   "id": "memory",
+   "kind": "block",
+   "shapes": [
+    {
+     "t": "r",
+     "d": [
+      523,
+      564,
+      1232,
+      883
+     ],
+     "w": 5
+    }
+   ],
+   "ref": "12"
+  },
+  {
+   "id": "memory-name",
+   "kind": "text",
+   "shapes": [
+    {
+     "t": "t",
+     "s": "MEMORY",
+     "x": 763,
+     "y": 705,
+     "size": 53,
+     "len": 191,
+     "bold": true
+    },
+    {
+     "t": "t",
+     "s": "SECTION",
+     "x": 759,
+     "y": 754,
+     "size": 53,
+     "len": 197,
+     "bold": true
+    }
+   ]
+  },
+  {
+   "id": "memory-label",
+   "kind": "label",
+   "shapes": [
+    {
+     "t": "t",
+     "s": "12",
+     "x": 424,
+     "y": 744,
+     "size": 56,
+     "len": 41,
+     "italic": true
+    }
+   ],
+   "ref": "12"
+  },
+  {
+   "id": "memory-leader",
+   "kind": "leader",
+   "shapes": [
+    {
+     "t": "path",
+     "d": "M 471 752 Q 480 762 494 762 L 521 758"
+    }
+   ],
+   "ref": "12"
+  },
+  {
+   "id": "io",
+   "kind": "block",
+   "shapes": [
+    {
+     "t": "r",
+     "d": [
+      523,
+      979,
+      1231,
+      1179
+     ],
+     "w": 5
+    }
+   ],
+   "ref": "13"
+  },
+  {
+   "id": "io-name",
+   "kind": "text",
+   "shapes": [
+    {
+     "t": "t",
+     "s": "I/O",
+     "x": 709,
+     "y": 1088,
+     "size": 50,
+     "len": 72,
+     "bold": true
+    },
+    {
+     "t": "t",
+     "s": "SECTION",
+     "x": 880,
+     "y": 1089,
+     "size": 50,
+     "len": 187,
+     "bold": true
+    }
+   ]
+  },
+  {
+   "id": "io-label",
+   "kind": "label",
+   "shapes": [
+    {
+     "t": "t",
+     "s": "13",
+     "x": 411,
+     "y": 1066,
+     "size": 56,
+     "len": 49,
+     "italic": true
+    }
+   ],
+   "ref": "13"
+  },
+  {
+   "id": "io-leader",
+   "kind": "leader",
+   "shapes": [
+    {
+     "t": "path",
+     "d": "M 465 1074 Q 472 1083 484 1082 L 521 1078"
+    }
+   ],
+   "ref": "13"
+  },
+  {
+   "id": "link-comp-mem",
+   "kind": "wire",
+   "shapes": [
+    {
+     "t": "l",
+     "d": [
+      [
+       871,
+       468
+      ],
+      [
+       871,
+       562
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "id": "link-mem-io",
+   "kind": "wire",
+   "shapes": [
+    {
+     "t": "l",
+     "d": [
+      [
+       871,
+       885
+      ],
+      [
+       871,
+       977
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "id": "mcu",
+   "kind": "block",
+   "shapes": [
+    {
+     "t": "r",
+     "d": [
+      175,
+      1508,
+      290,
+      1712
+     ],
+     "w": 5
+    }
+   ],
+   "ref": "16"
+  },
+  {
+   "id": "mcu-label",
+   "kind": "label",
+   "shapes": [
+    {
+     "t": "t",
+     "s": "16",
+     "x": 321,
+     "y": 1767,
+     "size": 56,
+     "len": 45,
+     "italic": true
+    }
+   ],
+   "ref": "16"
+  },
+  {
+   "id": "mcu-leader",
+   "kind": "leader",
+   "shapes": [
+    {
+     "t": "path",
+     "d": "M 292 1696 Q 316 1700 326 1732"
+    }
+   ],
+   "ref": "16"
+  },
+  {
+   "id": "mass-storage",
+   "kind": "block",
+   "shapes": [
+    {
+     "t": "r",
+     "d": [
+      415,
+      1507,
+      767,
+      1712
+     ],
+     "w": 5
+    }
+   ],
+   "ref": "15"
+  },
+  {
+   "id": "mass-storage-label",
+   "kind": "label",
+   "shapes": [
+    {
+     "t": "t",
+     "s": "15",
+     "x": 797,
+     "y": 1750,
+     "size": 58,
+     "len": 55,
+     "italic": true
+    }
+   ],
+   "ref": "15"
+  },
+  {
+   "id": "mass-storage-leader",
+   "kind": "leader",
+   "shapes": [
+    {
+     "t": "path",
+     "d": "M 769 1694 Q 790 1700 796 1715"
+    }
+   ],
+   "ref": "15"
+  },
+  {
+   "id": "io-stations",
+   "kind": "block",
+   "shapes": [
+    {
+     "t": "r",
+     "d": [
+      943,
+      1506,
+      1481,
+      1709
+     ],
+     "w": 5
+    }
+   ],
+   "ref": "14"
+  },
+  {
+   "id": "io-stations-label",
+   "kind": "label",
+   "shapes": [
+    {
+     "t": "t",
+     "s": "14",
+     "x": 1512,
+     "y": 1748,
+     "size": 64,
+     "len": 51,
+     "italic": true
+    }
+   ],
+   "ref": "14"
+  },
+  {
+   "id": "io-stations-leader",
+   "kind": "leader",
+   "shapes": [
+    {
+     "t": "path",
+     "d": "M 1483 1692 Q 1500 1696 1512 1710"
+    }
+   ],
+   "ref": "14"
+  },
+  {
+   "id": "mcu-channel",
+   "kind": "wire",
+   "shapes": [
+    {
+     "t": "l",
+     "d": [
+      [
+       631,
+       1181
+      ],
+      [
+       240,
+       1507
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "id": "mass-storage-channel-1",
+   "kind": "wire",
+   "shapes": [
+    {
+     "t": "l",
+     "d": [
+      [
+       677,
+       1181
+      ],
+      [
+       470,
+       1506
+      ]
+     ],
+     "dash": [
+      40,
+      16
+     ]
+    }
+   ]
+  },
+  {
+   "id": "mass-storage-channel-2",
+   "kind": "wire",
+   "shapes": [
+    {
+     "t": "l",
+     "d": [
+      [
+       694,
+       1181
+      ],
+      [
+       556,
+       1506
+      ]
+     ],
+     "dash": [
+      40,
+      16
+     ]
+    }
+   ]
+  },
+  {
+   "id": "mass-storage-channel-3",
+   "kind": "wire",
+   "shapes": [
+    {
+     "t": "l",
+     "d": [
+      [
+       720,
+       1181
+      ],
+      [
+       650,
+       1506
+      ]
+     ],
+     "dash": [
+      40,
+      16
+     ]
+    }
+   ]
+  },
+  {
+   "id": "mass-storage-channel-4",
+   "kind": "wire",
+   "shapes": [
+    {
+     "t": "l",
+     "d": [
+      [
+       757,
+       1181
+      ],
+      [
+       736,
+       1506
+      ]
+     ],
+     "dash": [
+      40,
+      16
+     ]
+    }
+   ]
+  },
+  {
+   "id": "io-station-channel-1",
+   "kind": "wire",
+   "shapes": [
+    {
+     "t": "l",
+     "d": [
+      [
+       952,
+       1181
+      ],
+      [
+       960,
+       1505
+      ]
+     ],
+     "dash": [
+      40,
+      16
+     ]
+    }
+   ]
+  },
+  {
+   "id": "io-station-channel-2",
+   "kind": "wire",
+   "shapes": [
+    {
+     "t": "l",
+     "d": [
+      [
+       981,
+       1181
+      ],
+      [
+       1020,
+       1505
+      ]
+     ],
+     "dash": [
+      40,
+      16
+     ]
+    }
+   ]
+  },
+  {
+   "id": "io-station-channel-3",
+   "kind": "wire",
+   "shapes": [
+    {
+     "t": "l",
+     "d": [
+      [
+       1025,
+       1181
+      ],
+      [
+       1078,
+       1505
+      ]
+     ],
+     "dash": [
+      40,
+      16
+     ]
+    }
+   ]
+  },
+  {
+   "id": "io-station-channel-4",
+   "kind": "wire",
+   "shapes": [
+    {
+     "t": "l",
+     "d": [
+      [
+       1072,
+       1181
+      ],
+      [
+       1161,
+       1505
+      ]
+     ],
+     "dash": [
+      40,
+      16
+     ]
+    }
+   ]
+  },
+  {
+   "id": "io-station-channel-5",
+   "kind": "wire",
+   "shapes": [
+    {
+     "t": "l",
+     "d": [
+      [
+       1115,
+       1181
+      ],
+      [
+       1220,
+       1505
+      ]
+     ],
+     "dash": [
+      40,
+      16
+     ]
+    }
+   ]
+  },
+  {
+   "id": "io-station-channel-6",
+   "kind": "wire",
+   "shapes": [
+    {
+     "t": "l",
+     "d": [
+      [
+       1142,
+       1181
+      ],
+      [
+       1296,
+       1505
+      ]
+     ],
+     "dash": [
+      40,
+      16
+     ]
+    }
+   ]
+  },
+  {
+   "id": "io-station-channel-7",
+   "kind": "wire",
+   "shapes": [
+    {
+     "t": "l",
+     "d": [
+      [
+       1180,
+       1181
+      ],
+      [
+       1394,
+       1505
+      ]
+     ],
+     "dash": [
+      40,
+      16
+     ]
+    }
+   ]
+  },
+  {
+   "id": "fig-label",
+   "kind": "text",
+   "shapes": [
+    {
+     "t": "t",
+     "s": "FIG.1",
+     "x": 627,
+     "y": 1929,
+     "size": 61,
+     "len": 140,
+     "bold": true
+    }
+   ]
+  }
+ ]
+}
