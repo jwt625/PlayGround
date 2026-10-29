@@ -99,7 +99,7 @@ Projects that have spun off:
 
 <img src="assets/power-mass-plot.png" alt="Power versus Mass" width="50%">
 
-- Oct 2026: [Interactive Patents](https://github.com/jwt625/ipatent): interactive gallery of 13 classic patents (Cray vector registers, FM synthesis, Diffie-Hellman, Stanford fiber amplifier, PageRank, Kilby IC, Corning fiber, Intel MCS-4 memory bus, TI DMD, transistor, DRAM cell, mouse) rebuilt from the USPTO scans. Verbatim description and claims with column:line citations; every figure retraced as vector elements keyed to its reference numerals, linked both ways to the text.
+- Oct 2026: [Interactive Patents](https://github.com/jwt625/ipatent): interactive gallery of 13 classic patents (Cray vector registers and immersion cooling, FM synthesis, Diffie-Hellman, Stanford fiber amplifier, PageRank, Kilby IC, Corning fiber, Intel MCS-4 memory system, TI DMD, transistor, DRAM cell, mouse) rebuilt from the USPTO scans. Verbatim description and claims with column:line citations; every figure retraced as vector elements keyed to its reference numerals, linked both ways to the text.
   - Try it: [outside5sigma.com/ipatent](https://outside5sigma.com/ipatent/).
 
 <img src="assets/ipatent.png" alt="Interactive Patents" width="50%">
