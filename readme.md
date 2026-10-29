@@ -98,3 +98,8 @@ Projects that have spun off:
 - Sep 2026: [Power versus Mass](https://github.com/jwt625/PlayGround/tree/main/20260926_power_mass_plot): log-log comparison of whole-body or system power against mass for 40 animals, compute systems, spacecraft and transportation, with idle and peak endpoints, battery / SOFC / propellant specific-power guides and off-scale arrows. Data, provenance and estimate flags live in one JSON file that drives the plot.
 
 <img src="assets/power-mass-plot.png" alt="Power versus Mass" width="50%">
+
+- Oct 2026: [Interactive Patents](https://github.com/jwt625/ipatent): interactive gallery of 13 classic patents (Cray vector registers, FM synthesis, Diffie-Hellman, Stanford fiber amplifier, PageRank, Kilby IC, Corning fiber, Intel MCS-4 memory bus, TI DMD, transistor, DRAM cell, mouse) rebuilt from the USPTO scans. Verbatim description and claims with column:line citations; every figure retraced as vector elements keyed to its reference numerals, linked both ways to the text.
+  - Try it: [outside5sigma.com/ipatent](https://outside5sigma.com/ipatent/).
+
+<img src="assets/ipatent.png" alt="Interactive Patents" width="50%">
