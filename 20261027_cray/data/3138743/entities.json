@@ -1,0 +1,27 @@
+{
+  "pn": "3138743",
+  "inventors": [
+    {
+      "name": "Jack S. Kilby",
+      "printed": "Jack S. Kilby, Dallas, Tex.",
+      "city": "Dallas",
+      "region": "TX",
+      "country": "US"
+    }
+  ],
+  "assignees": [
+    {
+      "name": "Texas Instruments Incorporated",
+      "printed": "Texas Instruments Incorporated, Dallas, Tex., a corporation of Delaware",
+      "org": "Texas Instruments",
+      "kind": "company",
+      "city": "Dallas",
+      "region": "TX",
+      "country": "US"
+    }
+  ],
+  "source": {
+    "page": 4,
+    "where": "column 1 header (inventor, assignor to)"
+  }
+}

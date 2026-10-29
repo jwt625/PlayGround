@@ -1,0 +1,34 @@
+{
+  "pn": "2524035",
+  "inventors": [
+    {
+      "name": "John Bardeen",
+      "printed": "John Bardeen, Summit",
+      "city": "Summit",
+      "region": "NJ",
+      "country": "US"
+    },
+    {
+      "name": "Walter H. Brattain",
+      "printed": "Walter H. Brattain, Morristown, N. J.",
+      "city": "Morristown",
+      "region": "NJ",
+      "country": "US"
+    }
+  ],
+  "assignees": [
+    {
+      "name": "Bell Telephone Laboratories, Incorporated",
+      "printed": "Bell Telephone Laboratories, Incorporated, New York, N. Y., a corporation of New York",
+      "org": "Bell Labs",
+      "kind": "company",
+      "city": "New York",
+      "region": "NY",
+      "country": "US"
+    }
+  ],
+  "source": {
+    "page": 3,
+    "where": "column 1 header (inventors, assignor to)"
+  }
+}

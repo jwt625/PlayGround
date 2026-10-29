@@ -1,0 +1,4254 @@
+{
+ "pn": "4018121",
+ "number": "4,018,121",
+ "title": "METHOD OF SYNTHESIZING A MUSICAL SOUND",
+ "inventors": [
+  "John M. Chowning"
+ ],
+ "assignee": "The Board of Trustees of Leland Stanford Junior University, Stanford, Calif.",
+ "filed": "1975-05-02",
+ "issued": "1977-04-19",
+ "appl_no": "573,933",
+ "int_cl": "G10H 1/00; G10H 5/00",
+ "us_cl": "84/1.01; 84/101",
+ "refs_patents": [
+  {
+   "no": "3,794,748",
+   "date": "2/1974",
+   "name": "Deutsch",
+   "cl": "84/1.24"
+  }
+ ],
+ "refs_other": [
+  "Alan Douglas, \"Electrical Synthesis of Musical Tones\", Electronic Engineering, July 1953, p. 278.",
+  "Alley & Atwood, Electronic Engineering, Second Edition, John Wiley & Sons, Inc., copyright 1966, pp. 564-572."
+ ],
+ "examiners": "Primary Examiner--Stanley J. Witkowski; Attorney, Agent, or Firm--Flehr, Hohbach, Test, Albritton & Herbert",
+ "claims_count": 14,
+ "drawing_figures": 18,
+ "abstract": "Musical sounds are synthesized by means of frequency modulation with the carrier and modulating frequencies being in the audio range and the modulating index being related to a function to control the bandwidth and evolution in time of the partial frequencies of synthesized sound.",
+ "sections": [
+  {
+   "heading": "CROSS REFERENCE TO RELATED APPLICATION",
+   "paras": [
+    {
+     "col": 1,
+     "line": 5,
+     "text": "This application is a continuation-in-part of application Ser. No. 454,790, filed Mar. 26, 1974, and now abandoned."
+    }
+   ]
+  },
+  {
+   "heading": "BACKGROUND OF THE INVENTION",
+   "paras": [
+    {
+     "col": 1,
+     "line": 10,
+     "text": "The present invention is directed to a method of synthesizing a musical sound and more specifically to a technique utilizing frequency modulation to provide for the temporal evolution of the spectral components of a musical sound."
+    },
+    {
+     "col": 1,
+     "line": 15,
+     "text": "Several types of musical synthesizers are well known in the art but thus far the synthesis of natural sounds has been elusive. In a typical type of analog synthesizer, a voltage controlled oscillator is driven by a waveform of the desired shape and frequency and then filtered and passed through an attenuator to provide the proper envelope to simulate a desired musical or natural sound. With the foregoing analog synthesizer which is of the subtractive type, there is, of course, no evolution in time of the various spectral components or partial frequencies of the final sound."
+    },
+    {
+     "col": 1,
+     "line": 26,
+     "text": "Synthesizers utilizing digital techniques have realized that to create a natural sound individual partial frequencies must be generated and combined. One type of organ is based on this principle where the several partial frequencies are added together and then given a common envelope function. The combinations of such frequencies are based, of course, on the principles established in Fourier analysis."
+    },
+    {
+     "col": 1,
+     "line": 34,
+     "text": "Yet another digital synthesis technique has been suggested by Jean-Claude Risset and Max V. Mathews, \"Analysis of Musical Instrument Tones,\" Physics Today, vol. 22, no. 2, pp. 23-30 (1969). Risset established that the character of the temporal evolution or the evolution in time of the spectral components of a sound is of critical importance in the determination of timbre. In other words, Risset would suggest that to simulate a natural sound the amplitude of each harmonic should be individually controlled as a function of time. In addition, Risset suggested, at least for the production of the trumpet tones, that the attack envelope, that is, the initial envelope characteristic for the trumpet tone, has a distinctive characteristic in that during the attack and also decay portion of the sound, the energy of the various frequency components evolve in complicated ways."
+    },
+    {
+     "col": 1,
+     "line": 51,
+     "text": "To implement the Risset theory with known techniques requires a complex digital computer which individually simulates each frequency component. Thus, at the present time a real time music synthesizer of the digital type is not commercially feasible."
+    },
+    {
+     "col": 1,
+     "line": 56,
+     "text": "The variation of bandwidth with modulation index has been illustrated in an article by Murlan S. Corrington, \"Variation of Bandwidth With Modulation Index in Frequency Modulation,\" Selected Papers on Frequency Modulation, edited by Klapper (Dover Publications, 1970). However, this is merely a theoretical study of frequency modulation."
+    }
+   ]
+  },
+  {
+   "heading": "OBJECTS AND SUMMARY OF THE INVENTION",
+   "paras": [
+    {
+     "col": 1,
+     "line": 65,
+     "text": "It is, therefore, an object of the present invention to provide an improved method of synthesizing a musical sound composed of a plurality of partial frequencies in which the amplitude of each frequency individually varies as a function of time in accordance the timbral qualities of the musical sound to be synthesized."
+    },
+    {
+     "col": 2,
+     "line": 3,
+     "text": "In accordance with the above object, the method comprises the steps of selecting carrier, ω_{c}, and modulation, ω_{m}, frequencies in the audio range. The ω_{c} and ω_{m} frequencies are modulated in accordance with"
+    },
+    {
+     "col": 2,
+     "line": 8,
+     "text": "e = A_{sin} [ω_{c}t + I(t) sin ω_{m}t]"
+    },
+    {
+     "col": 2,
+     "line": 10,
+     "text": "where e is the instantaneous amplitude of the frequency modulated wave, A is the peak amplitude and I(t) is the modulation index. I(t) is selected as a predetermined function to control the bandwidth of the wave and its evolution in time."
+    }
+   ]
+  },
+  {
+   "heading": "BRIEF DESCRIPTION OF THE DRAWINGS",
+   "paras": [
+    {
+     "col": 2,
+     "line": 17,
+     "text": "FIG. 1 is a dynamic FM spectrum useful in understanding the invention;"
+    },
+    {
+     "col": 2,
+     "line": 19,
+     "text": "FIG. 2 is a circuit useful for practicing the present invention as represented in MUSIC V notation;"
+    },
+    {
+     "col": 2,
+     "line": 21,
+     "text": "FIGS. 3 and 4 are dynamic FM spectra useful in understanding the invention; and"
+    },
+    {
+     "col": 2,
+     "line": 23,
+     "text": "FIGS. 5 through 18 are block diagrams for a digital FM synthesizer embodied in the present invention."
+    }
+   ]
+  },
+  {
+   "heading": "DETAILED DESCRIPTION OF THE PREFERRED EMBODIMENTS",
+   "paras": [
+    {
+     "col": 2,
+     "line": 28,
+     "text": "In general the present invention provides a frequency modulation technique for producing a complex spectra; that is, one which has a spectral evolution which evolves in time with relative simplicity. In other words, the frequency modulation technique of the present invention provides for specific control of the individual or partial frequencies making up a total or natural musical sound."
+    },
+    {
+     "col": 2,
+     "line": 36,
+     "text": "Specifically, this is accomplished by selecting carrier and modulation frequencies in the audio range and frequency modulating the carrier ω_{c} with the modulation frequency, ω_{m}, in accordance with"
+    },
+    {
+     "col": 2,
+     "line": 41,
+     "text": "e = A_{sin} [ω_{c}t + I(t) sin ω_{m}t] (1)"
+    },
+    {
+     "col": 2,
+     "line": 43,
+     "text": "where e is the instantaneous amplitude of the frequency modulated wave, A is the peak amplitude and I(t) the modulation index. Moreover, the modulation index is selected as a predetermined function to control the bandwidth of the wave and its evolution in time."
+    },
+    {
+     "col": 2,
+     "line": 48,
+     "text": "FIG. 1 illustrates the foregoing for the production of a brass-like sound. The dynamic spectra of a typical brass tone is shown as functions of frequency, time and amplitude in the Attack mode to steady state mode and into a Decay mode. The curve 10 labeled amplitude function is a characteristic envelope function of the overall tone or musical sound and varies the factor A in equation (1). Curve 11 labeled index function shows the variation of I(t) from an initial zero point ID_{1} to the final steady state point ID_{2}. The spectral evolution curves of FIG. 1 are based on carrier and modulation frequencies equal to one another. That is, they have relative values of 1.0 as indicated in the drawing of FIG. 1 with ID_{1} equal to zero and ID_{2} equal to five. The overall envelope of amplitude function 10 in essence varies the peak amplitude A of equation (1). Thus, the intensity of sound increases from a zero level as shown by curve 10 to a maximum at steady state and then decays in a somewhat linear manner."
+    },
+    {
+     "col": 2,
+     "line": 67,
+     "text": "Risset demonstrated in his analysis of trumpet tones a fundamental characteristic of this class of timbres; the amount of energy in the spectrum is distributed over an increasing band in approximate proportion to the increase in intensity. This is illustrated in FIG. 1 where initially only the carrier and lower harmonics such as the second and third have any appreciable amplitude and thereafter during the state state [designated SS] the higher harmonics are increased in intensity. Other characteristics of a brass tone are that frequencies in the spectrum are in harmonic series, both odd and even numbered harmonics are sometimes present, and as stated by Risset but not specifically illustrated in FIG. 1, the rise time of the amplitude or envelope function is rapid for a typical attack and may \"overshoot\" the steady state. Moreover, a comparison of the curves 10 and 11, illustrates that the modulation index varies in direct proportion to the amplitude of a modulated carrier wave."
+    },
+    {
+     "col": 3,
+     "line": 18,
+     "text": "The musical brass-like sound illustrated in FIG. 1 is preferably achieved by use of a special purpose computer or digital FM synthesizer as will be described below. However, for demonstration purposes as to the effectiveness of the concept of the present invention a typical minicomputer can be programmed with a FORTRAN IV program written in MUSIC V. MUSIC V is a well-known program as set out in a look by Max V. Mathews, The Technology of Computer Music (The MIT Press, Boston, 1969). The difficulty with using the MUSIC V program is that it is not a real-time on-line system."
+    },
+    {
+     "col": 3,
+     "line": 30,
+     "text": "In general, the MUSIC V sound synthesis program is a program which generates samples of a sound wave which are then stored in a memory device as computed. Digital to analog conversion and filtering then allows an audio system to regenerate the sound. The program is designed so that computation of samples is done by program blocks called unit generators abbreviated U.G. A typical unit generator is an oscillator which has two inputs, an output, and a stored wave shape function. The first input specifies the amplitude of the output, the second input the frequency of the output, and the function determines the shape of the output. The value of an input can either be specified by the user or can be the output of another unit generator, thereby allowing multi-level operations on waveforms. A collection of interconnected unit generators is called an instrument which is supplied data through a set of parameters P_{1} through P_{8}."
+    },
+    {
+     "col": 3,
+     "line": 48,
+     "text": "Referring to FIG. 2, this is a suitable instrument for producing a FM circuit which generates a dynamic spectra in accordance with the present invention. A unit generator 4 produces an amplitude envelope similar to envelope 10 of FIG. 1 and a unit generator 5 a modulation index envelope similar to envelope 11 of FIG. 1. The parameters for the instruments have the following functions."
+    },
+    {
+     "col": 3,
+     "line": 56,
+     "text": "P_{1} = Begin time of instrument"
+    },
+    {
+     "col": 3,
+     "line": 57,
+     "text": "P_{2} = Instrument number"
+    },
+    {
+     "col": 3,
+     "line": 58,
+     "text": "P_{3} = Duration of the \"note\""
+    },
+    {
+     "col": 3,
+     "line": 59,
+     "text": "P_{4} = Amplitude of the output wave"
+    },
+    {
+     "col": 3,
+     "line": 60,
+     "text": "P_{5} = Carrier frequency"
+    },
+    {
+     "col": 3,
+     "line": 61,
+     "text": "P_{6} = Modulating frequency"
+    },
+    {
+     "col": 3,
+     "line": 62,
+     "text": "P_{7} = Initial modulation index ID_{1}"
+    },
+    {
+     "col": 3,
+     "line": 63,
+     "text": "P_{8} = Final modulation index ID_{2}"
+    },
+    {
+     "col": 3,
+     "line": 64,
+     "text": "The parameter values for brass-like tones such as illustrated in FIG. 1 would be the following:"
+    },
+    {
+     "col": 3,
+     "line": 67,
+     "text": "P_{3} = 0.6"
+    },
+    {
+     "col": 3,
+     "line": 67,
+     "text": "P_{4} = 1000 (amplitude scaling)"
+    },
+    {
+     "col": 3,
+     "line": 68,
+     "text": "P_{5} = 440 Hz"
+    },
+    {
+     "col": 4,
+     "line": 1,
+     "text": "P_{6} = 440 Hz (ratio of c/m = 1/1)"
+    },
+    {
+     "col": 4,
+     "line": 2,
+     "text": "P_{7} = 0"
+    },
+    {
+     "col": 4,
+     "line": 3,
+     "text": "P_{8} = 5."
+    },
+    {
+     "col": 4,
+     "line": 4,
+     "text": "A standard MUSIC V program is suitable in many instances but depending on the musical sound being generated the instantaneous frequency of the modulated carrier at times become negative; in other words, the final waveform would have a phase angle which decreases with time. This condition occurs when either the ratio of the carrier to the modulating frequency is very small or the modulation index is very large. Thus, the unit generator U.G. 3 of FIG. 2 must be able to produce a wave which results from taking the sine of an angle which decreases as well as increases with time. The change in code to the oscillator in MUSIC V to allow for decreasing angle is:"
+    },
+    {
+     "col": 4,
+     "line": 17,
+     "table": [
+      [
+       "for"
+      ],
+      [
+       "290 IF(SUM -XNFUN) 288, 287, 287"
+      ],
+      [
+       "287 SUM=SUM-XNFUN"
+      ],
+      [
+       "substitute"
+      ],
+      [
+       "290 IF(SUM.GW.XNFUN) GO TO 287"
+      ],
+      [
+       "IF(SUM.LT.0.0) GO TO 289"
+      ],
+      [
+       "and for"
+      ],
+      [
+       "GO TO293"
+      ],
+      [
+       "292 J6=L1+J3-1."
+      ],
+      [
+       "substitute"
+      ],
+      [
+       "GO TO 293"
+      ],
+      [
+       "287 SUM=SUM-XNFUN"
+      ],
+      [
+       "GO TO 288"
+      ],
+      [
+       "289 SUM=SUM+XNFUN"
+      ],
+      [
+       "GO TO 288"
+      ],
+      [
+       "292 J6=L1+J3-1"
+      ]
+     ]
+    },
+    {
+     "col": 4,
+     "line": 33,
+     "text": "FIGS. 3 and 4 illustrate respectively bell-like and clarinet-like tones. Referring to FIG. 3, the bell-like timbre of the family of percussive sounds is developed around the following two premises:"
+    },
+    {
+     "col": 4,
+     "line": 37,
+     "text": "1. The spectral components are not usually in the harmonic series, and"
+    },
+    {
+     "col": 4,
+     "line": 39,
+     "text": "2. The evolution of the spectrum is from the complex to the simple. The amplitude or envelope function of the bell-like sound illustrated has an exponential decay which, for example, may terminate at a time of 15 seconds. The index function is directly proportional to the amplitude envelope. From a MUSIC V standpoint, the parameters to produce a bell-like sound can be the following:"
+    },
+    {
+     "col": 4,
+     "line": 47,
+     "text": "P_{3} = 15 seconds"
+    },
+    {
+     "col": 4,
+     "line": 49,
+     "text": "P_{4} = 1000"
+    },
+    {
+     "col": 4,
+     "line": 49,
+     "text": "P_{5} = 200 Hz"
+    },
+    {
+     "col": 4,
+     "line": 50,
+     "text": "P_{6} = 280 Hz"
+    },
+    {
+     "col": 4,
+     "line": 51,
+     "text": "P_{7} = 0"
+    },
+    {
+     "col": 4,
+     "line": 52,
+     "text": "P_{8} = 10."
+    },
+    {
+     "col": 4,
+     "line": 53,
+     "text": "More importantly, however, the carrier and moduation frequencies are related to one another by an irrational number or a number ratio which is not an integer. As illustrated in FIG. 3, this causes inharmonic spectra where the components are not in a relation of simple ratios. However, such irrational numbers should be small enough to maintain the density of partial tones to produce, for example, the bell-like sound of FIG. 3."
+    },
+    {
+     "col": 4,
+     "line": 61,
+     "text": "The irrational ratio of ω_{c}/ω_{m} = 1/ √2, for example, which produces a nonperiodic waveform, and where the bandwidth is controlled by the index function in time, can produce bell tones and other percussive tones as shown in FIG. 3."
+    },
+    {
+     "col": 4,
+     "line": 66,
+     "text": "The same technique can also be used to produce secondary features of quasi-periodic tones, such as the \"scratchiness\" during the attack of a violin tone. This will be termed a \"grit function\" hereinafter. In this case, this index or grit function would only be non-zero during the attack interval of, for example, 0.025 seconds after which the spectrum would be composed solely of the rationally related ω_{c}/ω_{m} ratios. This would demand two modulating oscillators and one carrier oscillator, where the first modulating frequency is related to the carrier, ω_{c}/ω_{m} = 1/1, and the second by 1/ √2 = ω_{c}/ω_{m}. In such as case, the FM modulation of the present invention would occur in accordance with the following equation:"
+    },
+    {
+     "col": 5,
+     "line": 13,
+     "text": "e = A_{sin} [ω_{c}t + I_{1}(t) sin ω_{m1}t + I_{2}(t) sin ω_{m2}t] (2)"
+    },
+    {
+     "col": 5,
+     "line": 15,
+     "text": "where I_{1}(t) and ω_{m1} are equivalent to I(t) and ω_{m}t of equation (1) and ω_{m2} is an additional modulating frequency where ω_{c}/ω_{m2} is equal to an irrational number. Thus, the first index I_{1}(t) would have an envelope shape similar to the amplitude envelope of the brass-like sound of FIG. 2 but in addition the grit function would be added and would be the predetermined function of the second index I_{2}(t) and having a duration of less than 200 milliseconds. Thus, for a violin sound along with the grit function the carrier and first modulation frequency would be related by a function 1/1 = ω_{c}/ω_{m1}. The first index function would be inversely proporational to the rising amplitude envelope."
+    },
+    {
+     "col": 5,
+     "line": 28,
+     "text": "From the foregoing it is apparent that the ratio of the carrier and modulating frequencies determines the position of the components in the spectrum. The modulation index itself determines the number of components which will have a significant amplitude. With regard to simple frequency ratios, N_{1}/N_{2}, the following generalizations can be made:"
+    },
+    {
+     "col": 5,
+     "line": 35,
+     "text": "1. The carrier is always the N_{1}th harmonic in the series."
+    },
+    {
+     "col": 5,
+     "line": 37,
+     "text": "2. If N_{2} = 1, the spectrum contains all harmonics and the fundamental is at the modulating frequency, e.g., 1/1,2/1."
+    },
+    {
+     "col": 5,
+     "line": 40,
+     "text": "3. When N_{2} is an even number, the spectrum contains only odd numbered harmonics, e.g., ½, ¼, 3/2, ¾, 5/2."
+    },
+    {
+     "col": 5,
+     "line": 42,
+     "text": "4. If N_{2} = 3, every third harmonic is missing from the series, e.g., ⅓, ⅔, 4/3, 5/3."
+    },
+    {
+     "col": 5,
+     "line": 44,
+     "text": "FIG. 4 illustrates a clarinet-like timbral sound where the index function curve is inversely proportional to the leading edge of amplitude function. In addition ω_{c}/ω_{m} = ½. This, as stated above in rule (3) produces only odd harmonics which is a well known characteristic of the clarinet sound."
+    },
+    {
+     "col": 5,
+     "line": 50,
+     "text": "With respect to the grit function I_{2}(t) this is of a very short duration compared to the period of the carrier frequency, ω_{c}."
+    },
+    {
+     "col": 5,
+     "line": 53,
+     "text": "The special richness which may be produced by the technique of the present invention lies in the fact that there are ratios of the carrier and modulating frequencies and values of the index which will produce sideband components that fall in the negative frequency domain of the spectrum. These negative components reflect around 0 Hz and \"mix\" with the components in the positive domain. The variety of frequency relations which result from this mix is vast and includes both harmonic and inharmonic spectra."
+    },
+    {
+     "col": 5,
+     "line": 63,
+     "text": "A simple but very useful example of reflected side frequencies occurs if the ratio of the carrier to modulating frequencies is unity. For the values"
+    },
+    {
+     "col": 5,
+     "line": 66,
+     "text": "ω_{c} = 100 Hz"
+    },
+    {
+     "col": 5,
+     "line": 67,
+     "text": "ω_{m} = 100 Hz"
+    },
+    {
+     "col": 5,
+     "line": 68,
+     "text": "I = 4"
+    },
+    {
+     "col": 6,
+     "line": 1,
+     "text": "The component at 0 Hz represents a constant in the wave. The remaining lower-side frequencies are reflected into the positive frequency domain with a change of sign (inversion of phase) and add algebraically to the components which are already there. For example the second lower-side frequency will add to the carrier with like signs, therefore increasing the energy at 100 Hz, while the third lower-side frequency will add to the first upper-side frequency with unlike signs, decreasing the energy at 200 Hz. The foregoing as well as other facets of the present invention is discussed in an article by the present inventor in the Journal of the Audio Engineering Society, September, 1973, entitled \"The Synthesis of Complex Audio Spectra by Means of Frequency Modulation.\""
+    },
+    {
+     "col": 6,
+     "line": 16,
+     "text": "A formant peak may be accomplished by the FM modulation technique of the present invention in accordance with"
+    },
+    {
+     "col": 6,
+     "line": 20,
+     "text": "e = A_{sin} (ω_{c1}t + ω_{c2}t + I(t) sin ω_{m}t) (3)"
+    },
+    {
+     "col": 6,
+     "line": 22,
+     "text": "where ω_{c1} + ω_{c2} are two carrier frequencies having ratios with ω_{m}. Such ratios typically being ω_{c2}/ω_{m} = 7/1 and ω_{c1} 1ω_{m} = 1/1 and the 7/1 ratio placing the formant peak at the seventh harmonic."
+    },
+    {
+     "col": 6,
+     "line": 26,
+     "text": "From the foregoing it is apparent that the present invention provides a simple technique for providing for the timbral evolution for the various frequencies or partials of a complex musical sound. Moreover, the present invention realizes such timbal evolution especially in the attack portion of the sound often provides the \"signature\" of the sound. In other words, this is what the listener judges as the lively quality of the sound. In contrast, it is the fixed proportion spectrum of most synthesized sounds that readily imparts to the listener the electronic cue and lifeless quality. The FM synthesis technique of the present invention is far simpler than additive or subtractive synthesis techniques which can produce similar spectra. It is believed that the FM technique of the present invention duplicates natural sounds more cost effectively than if a very complex computer were utilized to control the amplitudes of individual partial frequencies in a very precise manner. In other words, although the control of the present invention is seemingly limited in that precise amplitude control of each partial frequency cannot be varied fully as desired, this proves to be no limitation as far as the subjective musical impression is concerned."
+    },
+    {
+     "col": 6,
+     "line": 49,
+     "text": "Finally, the present invention may be capable of generating \"musical sounds\" which have not heretofore been heard by a human being. Thus, the use of the term \"musical sound\" is not meant to be limited to the standard musical sounds now known."
+    },
+    {
+     "col": 6,
+     "line": 54,
+     "text": "From the foregoing, it is apparent that the frequency modulation technique of the present invention is quite different from the addition of a typical vibrato or periodic variation of a frequency around some average which is added to a musical sound. In vibrato, the modulating frequency is merely a few cycles per second and thus the ear has little difficulty tracking the instantaneous frequency of the carrier. However, where the carriers and modulating frequencies are either equal or of approximately the same order of magnitude, the ear can no longer track the instantaneous change in frequency as a sweep frequency but rather perceives a complex spectrum."
+    },
+    {
+     "col": 6,
+     "line": 67,
+     "text": "Although the MUSIC V program will produce musical sounds in accordance with the FM techniques of this invention, if real-time operation is desired, a digital FM synthesizer should be used."
+    },
+    {
+     "col": 7,
+     "line": 3,
+     "text": "FIG. 5 illustrates a micro-programmed device which has a digital output on line 21 which is converted to analog output by digital to analog converter 22 to produce the desired musical sound at loudspeaker 23. The device has as its inputs a 3 bit binary number representing the instrument or rather a selection of different timbres or tone quality, a seven bit binary number representing the desired frequency of the musical note and a key bit which initiates the generation of the musical sound. The synthesizer will then generate successive 16 bit binary numbers on its output 21 which represents the waveform at 50 microsecond intervals. If the device is to be used as the sound generating part of, for example, an organ all that is required is to feed the number of the key that is being depressed as the frequency information and, of course, the actual pressing of the key. All of the blocks of FIG. 5 are shown in detail in subsequent drawings and can be made up with standard off-the-shelf components. Each block in FIGS. 6-18 is labeled with a standard type number which may be found in the TTL Data Book, Number CC-411, Texas Instruments, Incorporated and INTEL Data Catalog, October; 1973, and ordered from Texas Instruments Components, Group, Market Communications Depart., P.O. Box 5012, M.S. 84, Dallas, Texas 75222 and Intel Corporation, 3065 Bowers Avenue, Santa Clara, California 95051."
+    },
+    {
+     "col": 7,
+     "line": 30,
+     "text": "Referring now specifically to FIG. 5, there are illustrated both sources of information and sinks. All data is communicated over the data bus 24. The sources of information are a scratch pad memory 26, envelope memory 27, initialization memory 28 and a binary constant 29. The sinks are a multiplier 31, adder 32 and the output latch for register 33. Two other sinks are not directly connected to the data bus are the sine memory 34 which is a read only memory and in addition, scratch pad memory 26 which can also accept data. Information in the search pad memory 26 is inputed by a four way selector 36 and a frequency memory 37. Envelope counter memory 38 which is driven by an eight bit binary counter 39 provides a segmented envelope as will be discussed below."
+    },
+    {
+     "col": 7,
+     "line": 45,
+     "text": "Lastly, the actual program for the digital synthesizer is provided by an instruction memory 41 and its associated latch 42. Such memory is shown in greater detail in FIG. 6 and consists of four 74186 read only memories that can hold 64 eight bit words each. Thus, a combination of two of the memories produces a standard 16 bit instruction word labeled I0 through I15. The memory pair 41a is for the 64 word running program and the pair 41b for the start up program. The start up program is initiated by a true signal on the active input. After this 64 word program is run through once, the running program then cycles. Each cycle is 50 microseconds in which time the running program cycles through all 64 words and then starts at the beginning again. This 50 microseconds is also the sample time; that is a new sample is delivered to the D/A converter 22 (FIG. 5) for every sample time. Memories 41a, b are addressed by the program counter which consists of blocks 43 and 44 which has as outputs PC0 through PC5. These signals address the instruction memories at the inputs indicated advancing the instruction and then wrapping around at 63 back to zero. The latches 42 store on each cycle the output of the read only memories 41; that is, the 16 bits of the instruction word I0-I15 are stored into the latches. The outputs of the latches perform the following functions. The MA0, 1,2,3, outputs serve as a memory address for the scratchpad memory 26 (FIG. 5). WS0, 1 controls the selector 36 which controls what is written into the scratchpad memory 26. In general the scratchpad memory 26 can be written into from four sources. Namely, the multiplier 31, adder 32, sine memory 34 and frequency memory 37. This occurs at initialize time discussed in conjunction with FIG. 11."
+    },
+    {
+     "col": 8,
+     "line": 11,
+     "text": "Referring now again to FIG. 6, the outputs LS0, 1, and 2 form a three bit binary number which decodes to one of either latch selects which are for the purpose of directing information to the system. Specifically, one of its functions is to specify which data sink will latch the data that is on the bus. RE0, 1, 2 form a three bit binary number which selects a data source to be gated onto the bus. LOB is for the purpose of gating the low order eight bits of the scratchpad memory onto the bus. The purpose of LOB is for sine wave interpolation where the 16 bit angle of which the sine is being taken is divided into a high order eight bits and low order eight bits. Since the sine memory 34 itself only accepts the high order eight bits, the interpolation is done on the low order eight bits and the LOB signal essentially turns off the high order bits and sets them to zero when it goes onto the bus. ISEL and SSEL select which envelope function is of interest. They are finally directed to the envelope memory 27 of FIG. 5. They can select either an amplitude function or a modulation index function or the second modulation index function. The WE signal in this instruction word from the latches 42 is write enable and enables writing into the scratchpad memory 26. Lastly, WS0, 1, provide the scratchpad memory write data and selects one of four inputs to the scratchpad memory which are multiplier, adder, sine table and frequency memory."
+    },
+    {
+     "col": 8,
+     "line": 39,
+     "text": "The remaining gating shown in FIG. 6 is AND gate 40, OR gating 46, and D flip-flop 47 which serve the purpose of shutting off initializing after start up. During start up the system is in INIT state. This state is completed by an Init Done signal (which is an input to OR gate 46) which means that the program counter has overflowed and the initialization program is completed. In general in operation if, for example, an update on the amplitude of the output sinusoid is desired, this is accomplished by storing the current value of the amplitude of the sinusoid and scratchpad memory 26 and then reading out of the envelope memory 27 the increment to that value. Thus, on one instruction cycle the scratchpad memory will be gated onto the data bus by the adder latches of adder 32 and the adder will latch onto the current amplitude position. On the next instruction cycle the envelope memory 27 is gated onto the data bus and the other adder latch activated. A few microseconds later, the sum appears at the adder output, AO0-15."
+    },
+    {
+     "col": 8,
+     "line": 59,
+     "text": "FIG. 7 provides control logic for the latch instruction outputs of FIG. 6. Specifically the latch select bits LS0, 1, 2 are coupled to a decoder 48 which produces when enabled a signal on one of eight different lines. These include the multiplier latch signals MPL1, 2 and adder latch signals AL1, 2. Also, sine table latch, ST and a signal EL which is used as a control signal to cycle the envelope memory onto the next segment; this occurs once every 63 instructions. This is done because of a lack of sufficient bits in the instruction word. The last output \"load output buffer\" causes the output latch 33 (FIG. 1) to store words from the data bus."
+    },
+    {
+     "col": 9,
+     "line": 3,
+     "text": "Control bits RE0, 1, 2 to decoder 49 determine which of four data sources are gated onto the data bus. Output SP gates the scratchpad memory onto the bus; IM gates the initialization memory 28 onto the bus. Such memory contains data as for example, the factor by which the fundamental frequency is multiplied to produce either the modulating frequency or carrier frequency. As is apparent from the foregoing examples, this is generally an small integer factor of 1, 2, 3. This is, of course, done at the initialization time. The constant C1 is ¾ which is the difference between a sine and cosine angle so that a cosine angle may be processed as a sine angle during sine table table interpolation. C2 is unused. ENV gates the envelope memory 27 onto the bus which, of course, contains the increment that is to be added to the current value of either the modulation index or amplitude envelope for the next step."
+    },
+    {
+     "col": 9,
+     "line": 20,
+     "text": "Memory 48 is enabled by a bus enable input which is produced by the gate 51 having as inputs I load, CLR 2 and latch. Decoder 49 is enabled by single I Load. Both I load and latch are generated by the four coupled flip-flops 52 which are fired in order; that is, only one of them is true at any one time. Flip-flops 52 count the master clock (MRCLK) and each time the master clock goes true the stored bit advances to the next flip-flop. The first flip-flop increments the program counter with the output PCINC and in turn the program counter causes data to be produced from the read only instruction memories 41. At the next clock pulse I Load will be produced which latches the instruction word and gates the data source onto the data. The next clock cycle is wait and on the last clock cycle LATCH will come true and will cause whatever data is present on the data but to be latched into one of the data sinks. This completes an instruction cycle at which time the initial flip-flop causes the program counter to increment another step. Thus, in operation in general at I load the instruction word is produced and control signals propagate around the system, the data getting gated onto the bus and then latched off the bus to perform whatever function is desired as, for example, adding or multiplying."
+    },
+    {
+     "col": 9,
+     "line": 45,
+     "text": "The last two functions illustrated in FIG. 7 include the production of the master clock which is produced by the crystal clock 53. The clock runs at a rate such that an instruction word is executed in about 800 nanoseconds which thus allows 64 instruction words in 50 microseconds. Finally, OR and AND gates provide a clear pulse so that when power is supplied to the device all registers are reset."
+    },
+    {
+     "col": 9,
+     "line": 53,
+     "text": "The major states of the device from a system standpoint are Idle, Init, Run, and Decay. In the Idle state there is no note playing and no key is depressed. When a key is depressed the device goes into Inite state and it runs the 64 word initialize program in the instruction memory. When that program is finished, it automatically goes into Run state and it stays in Run state until the key is lifted. When the key is lifted it goes into Decay state. How long it stays in Decay state is determined by the Decay envelope in the envelope memory. When it completes the Decay envelope, then the device goes back into the Idle state. There are also some sub-states associated with envelope control. For instance, the Run state is divided into two sub-states called Attack and Steady State and Decay major state is called a run-down state in the envelope control. This renaming is to prevent a timing problem. The timing problem is if the key stroke is very very short such that the device is still in the Attack sub-state but the key is lifted the envelope control keeps it in Attack state until the attack is finished and then goes into Decay state; so it will never abort the attack because of a very short key stroke."
+    },
+    {
+     "col": 10,
+     "line": 8,
+     "text": "The foregoing is illustrated in the state diagram of FIG. 8. Changing states is done on the AND of the previous state and the state changing condition and the clock. For instance, to get out of Idle state, there must be present the AND (gate 56) of Idle, the key has become depressed, and master clock (MRCLK); gate 57 goes into the Init state. To get out of Init state, Init Done must come up to activate gate 58. Init Done (FIG. 6) comes true when the program counter 44 reaches 63; that is, the initialize program is finished. Run state is gotten out of by being in Run state and the key being raised; that is, \"Not\" Key comes true and the master clock closes gate 59 to go into Decay. Finally Idle state is returned to by being in a Run Down sub-state as Envelope Done comes up, Decay is true and master clock. Thus, if the device is in Decay mode and the envelope has cycled all the way through into Run Down mode and is done, signified by Envelope Done, the Idle is returned to."
+    },
+    {
+     "col": 10,
+     "line": 27,
+     "text": "FIG. 9 contains the blocks envelope memory 27 and envelope counter memory 38 of FIG. 5. These are all INTEL (trademark) model 1302 (see INTEL Data Catalog) read only memories. The envelope memory consists of two 1302s which provide 256 different 16 bit words. These 16 bit words as they come out of the memory are labeled Env 0, 1, through 15. They are the increments to the current position, e.g., the attach amplitude or the modulation index or the second modulation index. The envelope words are the amount that is added to those amplitudes at each sample cycle; that is, at one loop of the instruction memory; (50 microseconds). The envelope counter memory 38 specifies the number of sample cycles where the above increment is true; the process is a piece wise linear approximation and the counter memory specifies the number of samples for each piece of the piece wise linear segment. The number ENV 0 through ENV 15 is actually related to the slope of that piece wise linear segment. The counter memory generates an eight bit count CNT 0 through 7."
+    },
+    {
+     "col": 10,
+     "line": 48,
+     "text": "All of the above is addressed by various inputs. There is instrument number which is a three bit number INS 0, 1 and 2 where different Attack and Decay envelopes are selected for different instruments. With the segment number SEG 0, 1, an Attack can be synthesized on any instrument with up to four segments and the Decay with up to four segments. Also gated is the signal \"attack\" which selects a different set of piece-wise linear segments for the attack compared to the decay. The signal Init is ORed with Attack to ensure that the data will be ready as soon as the Init state is completed and Attack is begun. The other two bits in the eight bit address are SSEL and ISEL from the instruction word; they select the desired envelope which may be the Attack envelope, the first modulation index envelope or the second modulation index envelope."
+    },
+    {
+     "col": 10,
+     "line": 64,
+     "text": "All the other gates on FIG. 9 gate the envelopes onto the bus. They are tristate buffers which have three states; true, false and not enabled. Data is gated onto the bus with the OR of two signals; ENV which is from the read enable bits of the instruction word, that is decoder 49 (FIG. 7) and CNTEN or count enable. Count enable is true if the device is in Attack and not in Decay; that is, count enable specifies that the amplitudes are changing. Otherwise the device is in steady state and the amplitudes are not changing and therefore zeros are gated onto the bus. Gating zeros onto the bus is illustrated in FIG. 7; gating the envelope increment itself onto the bus as shown in FIG. 9."
+    },
+    {
+     "col": 11,
+     "line": 9,
+     "text": "FIG. 10 illustrates envelope control and contains two sets of counters. The first set of counters 61 consists of three counters which take in the count from the envelope counter memory which is an eight bit count 0-7 and counts the number of EL signals. The EL signal is a decoded latch select and there is one in every sample cycle; that is, one instruction of the 63 instructions turns the EL bit on. Thus, counters 61 essentially count samples. The number that comes out of the envelope counter memory is the negative or the two's complement of the number of samples to count until the segment is completed. Counters 61 are enabled by CNTEN, count enable, and they only count if in an attack mode or run-down mode which is physically the Attack or the Decay of the signal. When counters 61 overflow, CNTOV goes true, counter overflow, and allows the other counter 62 in FIG. 10 to count. Counter 62 counts which of the four segments of the piece-wise linear approximation is being processed. That is, at initialize time counter 62 is cleared and its output is Seg 0 and Seg 1 and this goes directly into the address of the envelope memory and the envelope counter memory. In operation, some number of samples is counted and then CNTOV goes true and counts to the next segment. A new count is reloaded and the number of samples in that segment is counted. When four segments have been counted through, envelope done comes true. That will cause, if in an Attack mode, a move to Steady State; in Run Down it will cause a return to Idle."
+    },
+    {
+     "col": 11,
+     "line": 40,
+     "text": "There are a few other input signals. For instance, load enable, LDENB, enables the loading of the sample counter 61 by the envelope counter memory 27 and is generated by the OR (gate 63) of load and CNTOV when the counter overflows; CNTOV has gone true and a new count is ready to be accepted. However, upon going into Attack mode the count has not overflowed and some way of getting it started is needed. Thus, when attack first goes true, Load is set."
+    },
+    {
+     "col": 11,
+     "line": 49,
+     "text": "Count enable, CNTEN is generated by the OR of Attack and RUN Down (gate 64). This is essentially true during the Attack Decay portions of the waveform but it is not identical to the Decay major state. Specifically, four flip-flop 66 form a four-flop. Attack is generated by going into the Run major state, then Attack goes true and it also brings Load true. But Load only stays true for one sample cycle whereas, Attack will stay true until Envelope Done comes up; that is, until all four segments have been counted through. Thereafter, Steady State mode will be stayed in until essentially going into Decay major state; that is until the key is lifted; then the device goes into Run Down mode. R load is generated like Load; that is, it stays on momentarily whereas Run Down stays on until Envelope Done comes true. If the key is tapped very very shortly, the major state will change to Decay but the device will stay in Attack mode until Envelope Done comes true; then it will go into Steady State for just an instant and then flip into Run Down mode."
+    },
+    {
+     "col": 12,
+     "line": 1,
+     "text": "FIG. 11 is a more detailed diagram of blocks frequency memory 37 and initialization memory 28 of FIG. 5. The frequency memory is coupled directly to the selector 36 for the scratchpad memory 26 and the initialization memory 28 can be gated onto the bus. Since the initialization memory is only 8 eights, only the higher order 8 bits is gated onto the bus and the low order 8 bits are gated as zeros as illustrated in FIG. 12."
+    },
+    {
+     "col": 12,
+     "line": 9,
+     "text": "Referring in detail to FIG. 11, inputed to the frequency memory is a 7 bit number, FREQ 0 through 6. In actuality, this is the number of a key starting at A natural 27.5 Hertz and every number specifies a half step from that low A; that is, 128 frequency numbers can specify a seven octave range above low low A. This is transformed via the frequency memory into an actual frequency number. Thus the frequency number is the amount that is added to the current position of the sine table to get the next position in the sine table. That is, this is the incremental angle of which the sine is taken. Memory outputs FT0 through FT15 are coupled into the selector 36 (FIG. 5) which can be selected by WS0 and 1 in the instruction word which is the write select into the scratchpad memory."
+    },
+    {
+     "col": 12,
+     "line": 24,
+     "text": "The initialization memory is addressed by the three bits of the instruction and also by a four bit counter; that is, up to 16 initialization constants can be supplied and every time the program asks for a new initialization constant with the IM signals (decoded from RE0 through 2) the read enable, which gates data onto the bus, will count counter 67 and thus go to a new initialization constant. The program essentially has to know what these constants are and what order they are stored in."
+    },
+    {
+     "col": 12,
+     "line": 34,
+     "text": "The kind of constants that are stored in the initialization memory are the following: for most versatility, the frequency of the carrier sinusoid and the modulating sinusoid are not necessarily the same frequency as the fundamental frequency. The difference is that they will in general be small integral multiples of the fundamental frequency. Those integral multiples 0, 1, 2 or 3 or so are stored in the initialized memory to be later read out. The other information that is stored in the initialized memory are the beginning amplitudes. For example, some amplitude envelopes start at a non-zero number like the bell which starts at a loud point and decay down. However, for most instruments, those numbers are 0. These are stored in a specific order; i.e., the multiplier for the second modulating frequency, the multiplier for the first modulating frequency, and the multiplier for the carrier frequency. Gated out of the initialization memory onto the data bus (IM0-7) are the beginning positions for the angle of which the sine is taken, which in most cases is 0. The next three numbers gated out of the initialization memory are the first modulating index, I_{1}, the second modulating index, I_{2}, and the signal amplitude A. I_{1}, I_{2} and A are actually locations in the scratchpad memory. The following is a list of the scratchpad memory locations and then the symbolic names."
+    },
+    {
+     "col": 12,
+     "line": 62,
+     "table": [
+      [
+       "SP locations:",
+       "",
+       ""
+      ],
+      [
+       "0",
+       "pos1",
+       ""
+      ],
+      [
+       "1",
+       "fr1",
+       "; Fm2"
+      ],
+      [
+       "2",
+       "fr108",
+       "; Fm2*8"
+      ],
+      [
+       "3",
+       "pos2",
+       ""
+      ],
+      [
+       "4",
+       "fr2",
+       "; Fm1"
+      ],
+      [
+       "5",
+       "fr208",
+       "; Fm1*8"
+      ],
+      [
+       "6",
+       "pos3",
+       ""
+      ],
+      [
+       "7",
+       "fr3",
+       "; Fc"
+      ]
+     ]
+    },
+    {
+     "col": 13,
+     "line": 1,
+     "table": [
+      [
+       "10",
+       "I_{2}",
+       "; Index 2 / 8"
+      ],
+      [
+       "11",
+       "I_{1}",
+       "; Index 1 / 8"
+      ],
+      [
+       "12",
+       "A",
+       "; Amplitude envelope"
+      ],
+      [
+       "13",
+       "ti2",
+       "; Temps"
+      ],
+      [
+       "14",
+       "t1",
+       ""
+      ],
+      [
+       "15",
+       "t2",
+       ""
+      ]
+     ],
+     "caption": "-continued"
+    },
+    {
+     "col": 13,
+     "line": 9,
+     "text": "Specifically, fr1 specifies the frequency of the second modulating index, pos1 is the angle of the second modulating sinusoid; fr2 and pos2 are the frequency of the first modulating waveform and the current angle of the first modulating waveform and fr3 and pos3 are the carrier frequency and its position; A, I_{1} and I_{2} are the amplitude envelope, index 1 and index 2, respectively. There are three temporary registers in the scratchpad memory designated t1, t2 and ti2. Two other numbers fr108, fr208 are the modulating frequencies times 8. This is a constant offset and is used because in actuality and indexes are divided by 8 to provide scaling because of a fixed point system."
+    },
+    {
+     "col": 13,
+     "line": 22,
+     "text": "Lastly, FIG. 11 shows the tristate buffers that gate the initialization memory onto the data bus."
+    },
+    {
+     "col": 13,
+     "line": 24,
+     "text": "FIG. 12 illustrates the scratchpad memory 26 (FIG. 5). This contains the scratchpad memory itself which are four read/write memories. These are four sixteen bit memories. Data into the scratchpad memory comes out of selector 36. The selector is selected by WS0 and 1 which comes out of the instruction word as shown in FIG. 6. This can gate in either the output of the multiplier which is MP0 through 15, the adder AO0 through 15, the sine table STO through 15 and the frequency memory FTO through 15 and the selector produces an intermediate signal OI0 through 15 which goes directly into the scratchpad memory data inputs. The scratchpad memory is always reading but it is also write enabled by WE which is a bit in the instruction word; that is, write enable, WE, and its clock ILOAD."
+    },
+    {
+     "col": 13,
+     "line": 40,
+     "text": "The write enable on the scratchpad memory is true if WE, the write enable bit of the instruction word is true. It is clocked on not I load, that is, the falling edge of the instruction load. This will set the write enable true and as soon as the latch timing signal comes up, the write enable will be turned off; that is, presumably the data will have been written by then."
+    },
+    {
+     "col": 13,
+     "line": 47,
+     "text": "The circuit of FIG. 13 accomplishes three different things related to the data bus. It can gate scratchpad memory output which is Mem 0 through 15 onto the data bus and it can gate zeros onto the data bus. This is, of course, important for the envelope control during steady state where the amplitudes and modulation indices are not changing. Also zeros can be gated onto the high order bits of the bus if the LOB, low order bit signal is true in the instruction word. This is for doing sine table interpolation. Finally, the third thing which is gated is a constant of ¾; that is, the higher bits on ¾ of a rotation onto the bus. This is controlled by signal C1 which is one of the read enables; that is, REO through 2 go into a demultiplexer which will produce one of the signals C1. This is a constant which is added to the angle of the sine to get a cosine. It is essentially 3/2 pi."
+    },
+    {
+     "col": 13,
+     "line": 63,
+     "text": "On the left hand side of the bus are gates 68 that control operations. For instance, it is desired in a steady state condition to gate 0 on the low order bits 8-15 of the bus on the condition that the initialization memory, the IM signal, is being read from and the constant C1 from the envelope is present. It is the OR of those conditions which produces a signal ENBGND 8-15, enabled ground, on 8 through 15 and this in turn controls the tristate latches which will gate ground on the low order bits of the bus. The high order bits will gate bits 0 through 5 and bits 6 through 7 slightly differently. That is, all the bits are ground on the condition for that of steady state for the envelope. The only reason bits 0 through 5 are gated differently from bits 6 through 7 is that the constant C1 only occupies the first 6 bits and the rest of them of zeros. If C1 is true, then zeros are gated onto bits 6 through 15 of the bus and ground is enabled; that is, zeros are enabled on 6 through 7 separately; and the condition under which zeros are gated on 6 through 7 are if LOB is true; that is, low order bits are being gated. Zeros are gated onto the high order bits of the data bus from the instruction word if ENV and not count enable, CNTEN, are true; that is, if there is an envelope request and are in steady state or there is an instruction memory or an initialization memory request, or if the constant is being gated onto the bus. Zeros will also be gated onto the bus bits 0 through 5 if LOB is true; that is, low order bits only and if envelope control and steady state are true."
+    },
+    {
+     "col": 14,
+     "line": 24,
+     "text": "FIG. 14 illustrates the adder 32. It has three parts; a 16 bit adder 70 and two input latches 71, 72. The input latches are strobed or made to latch data from the bus, 16 bits, on the AL1 and AL2 signals; AL1 latches 71 and AL2 latches 72. The output of these latches goes directly into the 16 bit adder 70. The output of the adder is called AO 0 through 15. It is a 16 bit number. The output of the adder goes to two different places; sine table input latch and the scratchpad memory write select. When the angle of a sinusoid is being updated the angular increment is added to it and at the same time this data can go to the sine table. Thus, not only can the updated angle be stored back in the scratchpad memory but the sine table loop up can be started at the same time."
+    },
+    {
+     "col": 14,
+     "line": 39,
+     "text": "FIGS. 15 and 16 control the 16 bit multiplier 31 (FIG. 5). The 16 bit multiplier has two latches, a third latch for the partial product, a 16 bit adder, a 16 bit gate which gates the multiplicand into the 16 bit adder to add it to the partial product when shifted and it has some control logic. The control logic is essentially the multiplier latch which is actually a shift register 73 and a counter 74 that will count 15 times and then stop. It operates as follows: on signal MPL2 the multiplicand is latched into one of the multiplier latches. On signal MPL1 the multiplier is latched into a 16 bit shift register, and MPL1 also resets the multiplier control circuit. That is, the fall of MPL1 will gate MP load true which causes on the next fall of MP step, the counter to load. The counter is loaded with +1 to take 15 steps not 16. MP step is produced by MP GO and master clock flip-flop 76. However, for synchronizing purposes the output is gated round into the input. The sequence of operation is as follows: MPL1 (the signal which controls the gating of the multiplier input latch) and that gates MP load true which causes the load enable of the counter to go true and then on the next master clock, the counter will get loaded with a +1 and MPGO will be brought ture which will cause MP load to become false; then once MP GO is true, then each MP step is cycling the multiplier. With the multiplier itself the serial output of the 16 bit input latch 77 and shift register 73 is called MC enable (multiplicand enable) and is coupled into a set of gates 78 (FIG. 16) which will gate the multiplier into the adders 79 and which adds the partial product to the multiplier. At each step the MC enable or multiplicand enable will either gate the multiplicand into the adders or not. So all 15 bits of the multiplier are stepped through. The partial product is latched by latch 81 into a 16 bit register on the output. This is not shown on the block diagram but is internal to the 16 bit multiplier block. An output controlled by MP step. The output of latch 84, the signals MP 0 through MP 15, is the partial product which becomes the product after the last multiplier step. The shifting right of the partial product is accomplished in FIG. 16 simply by the ordering of the bits as they go back into the adder; that is, the bits are shifted right by one. In the first adder 79 there is the sign bit twice MP0 as the first two bits. That is, an arithmetic two complement shift right where copy the sign bit is copied into the vacated places; that is, the low order bit is discarded on every cycle because a multiply will eventually end up with a 31 bit resultant and all that is necessary is 16 bits. The multiplier is stopped by the counter 74 overflowing and this produces MP clear which turns off MP 60 and the multiplier halts. The product is available at the multiplier output (latch 81) as signals MP0 through 15. These multiplier output signals will remain true, of course, until the next time multiplication is begun. The total multiplication takes 15 clock steps. A clock step is about 200 nanoseconds so the whole multiply takes 3 microseconds or roughly five instruction cycles. Thus on the fifth instruction cycle after the multiplication is initialized, the output can be used."
+    },
+    {
+     "col": 16,
+     "line": 1,
+     "text": "The device is also busy doing other things during that time. It is slightly pipelined; that is, the multiplier may be loaded up and while computing other things like update amplitude or modulating index may be accomplished."
+    },
+    {
+     "col": 16,
+     "line": 6,
+     "text": "FIG. 17 is the output register and it is gated on the signal \"load out buf\" which is produced by the latch select bits LS0 through 1 from the instruction word; this grabs 16 bits off of the bus and latches them. The program goes through computing what the output waveform should be and then at the very last step it gates the waveform onto the data bus and strobes \"load out buf\" which causes the output word to be sent to the D to A converter 22 (FIG. 5)."
+    },
+    {
+     "col": 16,
+     "line": 15,
+     "text": "FIG. 18 is a sine table. It consists of a 256 — 16 bit word read only memory. The output of the read only memory is called ST0 through 15 and goes back into the input selector for the scratchpad memory. The address for the sine table comes out of the adder output AO0 through 7; that is, only the high order 8 bits are looked at and latched on the signal ST which is again generated from the latch select bits from the instruction word LS0 through 2. When ST occurs, the adder output is latched and produces internal signals which are SA0 through 7; that is, the sine address or sine angle. With these memories, it can take as long as a microsecond to get the data out so one microsecond later or roughly two instruction cycles, the sine is available for use."
+    },
+    {
+     "col": 16,
+     "line": 30,
+     "text": "The running program for the foregoing is shown below."
+    },
+    {
+     "col": 16,
+     "line": 33,
+     "table": [
+      [
+       "INSTRUCTION MEMORY locations",
+       "",
+       "ISel,MA,WS,LS,RE,LOB,SSEL,NE",
+       ""
+      ],
+      [
+       "RUNNING program",
+       "",
+       "",
+       "10123456789012345"
+      ],
+      [
+       "0",
+       "pos1→AL1",
+       "0,0,0,3,1,0,0,0",
+       "0000000011001000"
+      ],
+      [
+       "1",
+       "fr1→AL2",
+       "0,1,0,4,1,0,0,0",
+       "0000100100001000"
+      ],
+      [
+       "2",
+       "AC→pos1, AO→ST",
+       "0,0,1,5,0,0,0,1",
+       "0000001101000001"
+      ],
+      [
+       "3",
+       "I2→AL1",
+       "0,10,0,3,1,0,0,0",
+       "0100000011001000"
+      ],
+      [
+       "4",
+       "MO→t1→outbuf",
+       "0,14,0,7,1,0,0,1",
+       "0110000111001001"
+      ],
+      [
+       "5",
+       "ST→t1→ML2",
+       "0,14,2,2,1,0,0,1",
+       "0110010010001001"
+      ],
+      [
+       "6",
+       "I2→ML1",
+       "0,10,0,1,1,0,0,0",
+       "0100000001001000"
+      ],
+      [
+       "7",
+       "env(00)→AL2",
+       "0,0,0,4,5,0,0,0",
+       "0000000100101000"
+      ],
+      [
+       "10",
+       "AO→I2",
+       "1,10,1,0,0,0,0,1",
+       "1100001000000001"
+      ],
+      [
+       "11",
+       "pos2→AL1",
+       "1,3,2,3,1,0,0,0",
+       "1001100011001000"
+      ],
+      [
+       "12",
+       "fr2→AL2",
+       "1,4,0,4,1,0,0,0",
+       "1010000100001000"
+      ],
+      [
+       "13",
+       "AO→pos2, AO→ST",
+       "1,3,1,5,0,0,0,1",
+       "1001101101000001"
+      ],
+      [
+       "14",
+       "MO→t1→ML2",
+       "1,14,0,2,1,0,0,1",
+       "1110000010001001"
+      ],
+      [
+       "15",
+       "fr108→ML1",
+       "1,2,0,1,1,0,0,0",
+       "1001000001001000"
+      ],
+      [
+       "16",
+       "pos2→AL1",
+       "1,3,0,3,1,0,0,0",
+       "1001100011001000"
+      ],
+      [
+       "17",
+       "C1→AL2",
+       "1,0,0,4,3,0,0,0",
+       "1000000100011000"
+      ],
+      [
+       "20",
+       "ST→t1, AO→ST",
+       "1,14,2,5,0,0,0,1",
+       "1110010101000001"
+      ],
+      [
+       "21",
+       "I1→AL1",
+       "1,11,0,3,1,0,0,0",
+       "1100100011001000"
+      ],
+      [
+       "22",
+       "env(10)→AL2",
+       "1,0,0,4,5,0,0,0",
+       "1000000100101000"
+      ],
+      [
+       "23",
+       "MO→ti2",
+       "1,13,0,0,0,0,1,1",
+       "1101100000000011"
+      ],
+      [
+       "24",
+       "ST→t2→ML2",
+       "1,15,2,2,1,0,1,1",
+       "1110110010001011"
+      ]
+     ]
+    },
+    {
+     "col": 17,
+     "line": 1,
+     "table": [
+      [
+       "INSTRUCTION MEMORY locations",
+       "",
+       "ISel,MA,WS,LS,RE,LOB,SSEL,NE",
+       ""
+      ],
+      [
+       "RUNNING program",
+       "",
+       "",
+       "10123456789012345"
+      ],
+      [
+       "25",
+       "pos2(lob)→ML1",
+       "1,3,0,1,1,1,1,0",
+       "1001100001001110"
+      ],
+      [
+       "26",
+       "AO→I1",
+       "1,11,1,0,0,0,1,1",
+       "1100101000000011"
+      ],
+      [
+       "27",
+       "A→AL1",
+       "1,12,0,3,1,0,1,0",
+       "1101000011001010"
+      ],
+      [
+       "30",
+       "env(11)→AL2",
+       "1,0,0,4,5,0,1,0",
+       "1000000100101010"
+      ],
+      [
+       "31",
+       "AO→A",
+       "0,12,1,0,0,0,0,0",
+       "0101001000000000"
+      ],
+      [
+       "32",
+       "t1→AL2",
+       "0,14,0,4,1,0,0,0",
+       "0110000100001000"
+      ],
+      [
+       "33",
+       "nop",
+       "0",
+       "0"
+      ],
+      [
+       "34",
+       "MO→t1→AL1",
+       "0,14,0,3,1,0,0,1",
+       "0110000011001001"
+      ],
+      [
+       "35",
+       "AO→t1→ML2",
+       "0,14,1,2,1,0,0,1",
+       "0110001010001001"
+      ],
+      [
+       "36",
+       "I1→ML1",
+       "0,11,0,1,1,0,0,0",
+       "0100100001001000"
+      ],
+      [
+       "37",
+       "nop",
+       "0",
+       "0"
+      ],
+      [
+       "40",
+       "nop",
+       "0",
+       "0"
+      ],
+      [
+       "41",
+       "nop",
+       "0",
+       "0"
+      ],
+      [
+       "42",
+       "nop",
+       "0",
+       "0"
+      ],
+      [
+       "43",
+       "nop",
+       "0",
+       "0"
+      ],
+      [
+       "44",
+       "MO→t1→ML2",
+       "0,14,0,2,1,0,0,0",
+       "0110000010001000"
+      ],
+      [
+       "45",
+       "fr2o8→ML1",
+       "0,5,0,1,1,0,0,0",
+       "0010100001001000"
+      ],
+      [
+       "46",
+       "nop",
+       "0",
+       "0"
+      ],
+      [
+       "47",
+       "nop",
+       "0",
+       "0"
+      ],
+      [
+       "50",
+       "nop",
+       "0",
+       "0"
+      ],
+      [
+       "51",
+       "nop",
+       "0",
+       "0"
+      ],
+      [
+       "52",
+       "ti2→AL1",
+       "0,13,0,3,1,0,0,0",
+       "0101100011001000"
+      ],
+      [
+       "53",
+       "MO→t1→AL2",
+       "0,14,0,4,1,0,0,1",
+       "0110000100001001"
+      ],
+      [
+       "54",
+       "AO→ti2→AL2",
+       "0,13,1,4,1,0,0,1",
+       "0101101100001001"
+      ],
+      [
+       "55",
+       "pos3→AL1",
+       "0,6,0,3,1,0,0,0",
+       "0011000011001000"
+      ],
+      [
+       "56",
+       "AO→ti2, AO→ST",
+       "0,13,1,5,0,0,0,1",
+       "0101101101000001"
+      ],
+      [
+       "57",
+       "ti2→AL1",
+       "0,13,0,3,1,0,0,0",
+       "0101100011001000"
+      ],
+      [
+       "60",
+       "C1→AL2",
+       "0,0,0,4,3,0,0,0",
+       "0000000100011000"
+      ],
+      [
+       "61",
+       "ST→t1, AO→ST",
+       "0,14,2,5,0,0,0,0",
+       "0110010101000000"
+      ],
+      [
+       "62",
+       "nop",
+       "0",
+       "0"
+      ],
+      [
+       "63",
+       "ti2(lob)→ML2",
+       "0,13,0,2,1,1,0,0",
+       "0101100010001100"
+      ],
+      [
+       "64",
+       "ST→t2→ML1",
+       "0,15,2,1,1,0,0,1",
+       "0110110001001001"
+      ],
+      [
+       "65",
+       "pos3→AL2",
+       "0,6,0,4,1,0,0,0",
+       "0011000100001000"
+      ],
+      [
+       "66",
+       "fr3→AL1",
+       "0,4,0,3,1,0,0,0",
+       "0010000011001000"
+      ],
+      [
+       "67",
+       "AO→pos3",
+       "0,6,1,0,0,0,0,1",
+       "0011001000000001"
+      ],
+      [
+       "70",
+       "nop",
+       "0",
+       "0"
+      ],
+      [
+       "71",
+       "nop",
+       "0",
+       "0"
+      ],
+      [
+       "72",
+       "MO→t2→AL1",
+       "0,15,0,3,1,0,0,1",
+       "0110100011001001"
+      ],
+      [
+       "73",
+       "t→AL2",
+       "0,15,0,4,1,0,0,0",
+       "0110100100001000"
+      ],
+      [
+       "74",
+       "AO→t1→ML2",
+       "0,14,1,2,1,0,0,1",
+       "0110001010001001"
+      ],
+      [
+       "75",
+       "A→ML1",
+       "0,12,0,1,1,0,0,0",
+       "0101000001001000"
+      ],
+      [
+       "76",
+       "→EL",
+       "0,0,0,6,0,0,0,0",
+       "0000000110000000"
+      ],
+      [
+       "77",
+       "nop",
+       "0",
+       "0"
+      ]
+     ],
+     "caption": "-continued"
+    },
+    {
+     "col": 17,
+     "line": 61,
+     "text": "In the above running program the left hand column has the actual program counter number in octal form. The second column is a shorthand notation for describing where data is flowing. In general, the adder latches are AL1 and AL3, multiplier latches are ML1 and ML2, the sine table latches ST, the envelope memory is ENV. For the state of bits Isel and Ssel they are ENV (00, 01, 10, 11) to reflect the four possible states. For the writing back into the scratchpad memory there is either AO for adder output, MO for multiplier output, ST for sine table and FT for frequency table. This is, only in initialization, of course."
+    },
+    {
+     "col": 18,
+     "line": 65,
+     "text": "The program of TABLE I is repeatedly processed by the apparatus of FIG. 5. In so doing, the apparatus of FIG. 5 iteratively performs calculations which are an approximation of Equation (2). The instructions of TABLE I are stored in the instruction memory 41 of FIG. 5. The instructions are accessed in order, from Instruction 0 to Instruction 77, to complete one pass through TABLE I. After each pass through TABLE I, Instructions 0 through 77 are again accessed to complete a new pass through TABLE I."
+    },
+    {
+     "col": 19,
+     "line": 7,
+     "text": "The final calculation for each pass through TABLE I is set up by latching quantities into the input latches of multiplier 31. Those quantities are latched during Instructions 74 and 75. The product of those quantities, latched in the multiplier during Instructions 74 and 75, becomes available on the multiplier 31 output (MO) approximately five instruction cycles later. Five instruction cycles later, for any given pass through the TABLE I instructions, actually occurs in the next pass through TABLE I. In the next pass through TABLE I, Instruction 4 transfers the output from multiplier 31 to latches 33."
+    },
+    {
+     "col": 19,
+     "line": 19,
+     "text": "For each pass through TABLE I, a new value is gated into the output latches 33 in FIG. 5. The digital-to-analog converter 22 converts the data stored in latches 33 to an analog signal which in turn is converted to a musical sound in speaker 23."
+    },
+    {
+     "col": 19,
+     "line": 24,
+     "text": "The TABLE I instructions evaluate Equation (2) utilizing an interpolation technique for evaluating the sine terms in Equation (2). Also the instructions of TABLE I employ scaling factors for the modulation indexes. The interpolation technique, the scaling factors and the equations actually iterated by the TABLE I instructions will now be described."
+    },
+    {
+     "col": 19,
+     "line": 31,
+     "text": "Equation (2) includes three sine terms. In order to accurately evaluate the sine terms with a comparatively small sine table (256-word sine memory 34 of FIG. 5), two of the three sine values in Equation (2) are evaluated using an interpolation technique. Evaluation of the third sine term (sinω_{m2}t), however, does not employ the interpolation technique when this term represents the grit function for producing inharmonic partials which do not require the greater accuracy achieved by interpolation."
+    },
+    {
+     "col": 19,
+     "line": 42,
+     "text": "The interpolation involves separately utilizing the high-order bits and the low-order bits of angles."
+    },
+    {
+     "col": 19,
+     "line": 44,
+     "text": "As previously indicated, the sine memory 34 in FIG. 5 is addressed by only the eight high-order bits of angles from the adder 32. The angles in the apparatus of FIG. 5, and particularly those output from adder 32, are defined by 16-bit binary numbers. While the sine memory 34 only receives the high-order eight bits, the interpolation technique employs the low-order eight bits to form a more accurate evaluation of the sine term."
+    },
+    {
+     "col": 19,
+     "line": 53,
+     "text": "In order to do the interpolation, an angle such as the ω_{m1}t modulating frequency is defined by two parts. The angle ω_{m1}t is equal to the high-order bits of ω_{m1}t (hereinafter hob: ω_{m1}t) plus the low-order bits of ω_{m1}t (hereinafter lob: ω_{m1}t). The term sin(ω_{m1}t) is given therefore by the following Equation (3)."
+    },
+    {
+     "col": 19,
+     "line": 60,
+     "text": "sin(ω_{m1}t) = sin(hob: ω_{m1}t + lob: ω_{m1}t) (3)"
+    },
+    {
+     "col": 19,
+     "line": 61,
+     "text": "Using the sum of angles formula, Equation (3) is expanded to the following Equation (4)."
+    },
+    {
+     "col": 19,
+     "line": 64,
+     "text": "sin(hob: ω_{m1}t + lob: ω_{m1}t) = sin(hob: ω_{m1}t)cos(lob: ω_{m1}t) + sin(lob: ω_{m1}t)cos(hob: ω_{m1}t) (4)"
+    },
+    {
+     "col": 19,
+     "line": 67,
+     "text": "In Equation (4), (hob: ω_{m1}t) is much, much greater (256 times greater) than (lob: ω_{m1}t). Under these conditions, the term cos(lob: ω_{m1}t) is approximately equal to unity and the term sin(lob: ω_{m1}t) is approximately equal to (lob:ω_{m1}t) itself. Using those approximations, the value of the sin(ω_{m1}t) is given by the following Equation (5)."
+    },
+    {
+     "col": 20,
+     "line": 7,
+     "text": "sin(ω_{m1}t) = sin(hob: ω_{m1}t) + (lob: ω_{m1}t)cos(hob: ω_{m1}t) (5)"
+    },
+    {
+     "col": 20,
+     "line": 10,
+     "text": "By using Equation (5), the accuracy with which the sine terms are calculated is as if sine memory 34 in FIG. 5 had 4,000 locations rather than just 256 locations. Of course, the interpolation in accordance with Equation (5) can be avoided, merely by employing a larger sine memory 34 or by accepting less accurate results with an attendant deterioration in quality of the sound produced."
+    },
+    {
+     "col": 20,
+     "line": 18,
+     "text": "In the TABLE I evaluation of Equation (2), the modulation indexes I1(t) and I2(t) are divided by a constant 8 to form modulation indexes I1 and I2, respectively. In order to restore the modulation indexes to their full values, the modulation indexes I1 and I2 in TABLE I are each multiplied by a scaling factor which cancels the factor of 8 division. The scaling factors for the modulation indexes are selected as 8 times (Δω_{m1}t) for I1 and as 8 times (Δω_{m2}t) for I2."
+    },
+    {
+     "col": 20,
+     "line": 27,
+     "text": "In the evaluation of Equation (2), the indexes I1(t) and I2(t) are given by Equations (6) and (7)."
+    },
+    {
+     "col": 20,
+     "line": 30,
+     "text": "I1(t) = (I1) (8Δω_{m1}t) (6)"
+    },
+    {
+     "col": 20,
+     "line": 31,
+     "text": "I2(t) = (I2) (8Δω_{m2}t) (7)"
+    },
+    {
+     "col": 20,
+     "line": 33,
+     "text": "The program of TABLE I treats the amplitude A of Equation (2) as a function of time so that A becomes A(t)."
+    },
+    {
+     "col": 20,
+     "line": 36,
+     "text": "Using A(t) and the modulation indexes of Equations (6) and (7), Equation (2) becomes Equation (8) as follows."
+    },
+    {
+     "col": 20,
+     "line": 40,
+     "text": "e = A(t)sin[ω_{c}t + (I1) (8Δω_{m1}t)sin(ω_{m1}t) + (I2) (8Δω_{m1}t)sin ω_{m2}t] (8)"
+    },
+    {
+     "col": 20,
+     "line": 43,
+     "text": "Note that the form of Equation (8) is like that of a differential equation in that it includes the Δω_{m1}t and Δω_{m2}t terms. The incremental evaluation by TABLE I is like an integration which transforms differential equations like Equation (8) to equations like Equation (2)."
+    },
+    {
+     "col": 20,
+     "line": 49,
+     "text": "In Equation (8), the overall angle for the first sine term is designated as X and therefore Equation (8) becomes the following Equation (9)."
+    },
+    {
+     "col": 20,
+     "line": 53,
+     "text": "e + A(t)sin[X] (9)"
+    },
+    {
+     "col": 20,
+     "line": 55,
+     "text": "In Equation (9), the approximation like that employed in Equation (5) is also employed to form the Equation (10) as follows:"
+    },
+    {
+     "col": 20,
+     "line": 59,
+     "text": "e = A(t) [sin(hob:X) + (lob:X)cos(hob:X)] (10)"
+    },
+    {
+     "col": 20,
+     "line": 61,
+     "text": "In Equation (8) the approximation of Equation (5) is also employed in connection with evaluating the sin(ω_{m1}t) term. Utilizing Equation (5) and Equation (8), the value for X in Equation (10) is given by the following Equation (11)."
+    },
+    {
+     "col": 20,
+     "line": 66,
+     "text": "X = [ω_{c}t + (8Δω_{m1}t) (I1) [sin(hob:ω_{m1}t) + (lob:ω_{m1}t)cos(hob:ω_{m1}t)] + (8Δω_{m2}t)(I2)sin(hob:ω_{m2}t)] (11)"
+    },
+    {
+     "col": 21,
+     "line": 1,
+     "text": "The program of Table I evaluates Equations (10) and (11) at many different incremental values of angles and amplitudes. For each pass through TABLE I, new incremental values are added to the angles and amplitudes and Equations (10) and (11) are evaluated with the new values to form an approximation of Equation (2). For each pass through TABLE I constant incremental values Δω_{c}t, Δω_{m1}t, and Δω_{m2}t are added to each of the angles, ω_{c}t, ω_{m1}t, and ω_{m2}t, respectively. In a similar manner, each of the amplitudes A(t), I1, and I2 are added to time-varying incremental values ΔA, ΔI1 and ΔI2, respectively, for each pass through TABLE I. After the incremental values are added to the angles and the amplitudes in Equations (10) and (11), the addition, multiplication and sine functions of Equations (10) and (11) are performed as now described in connection with the TABLE I program."
+    },
+    {
+     "col": 21,
+     "line": 18,
+     "text": "In TABLE I, the instructions are numbered in accordance with their octal address in the memory 41 of FIG. 5. The instructions are sequentially fetched from the memory 41 and executed by the FIG. 5 apparatus."
+    },
+    {
+     "col": 21,
+     "line": 22,
+     "text": "In Instruction 0, the contents from the pos1 of the scratch pad memory 26 are gated to the AL1 latch of the adder 32. The location pos1 in the scratch pad memory stores the accumulated value for the angle ω_{m2}t. The old ω_{m2}t value from pos1 has added to it an incremental angle Δω_{m2}t to form a new ω_{m2}t value which is stored back into pos1 as hereafter explained."
+    },
+    {
+     "col": 21,
+     "line": 29,
+     "text": "In Instruction 1, the contents of the fr1 location of the scratch pad memory 26 are gated to the AL2 latch of the adder 32. The fr1 location of the scratch pad memory stores the incremental angle Δω_{m2}t which is added to the accumulated value of the modulation frequency ω_{m2}t by adder 32."
+    },
+    {
+     "col": 21,
+     "line": 35,
+     "text": "In Instruction 2, the new value of ω_{m2}t resulting from the addition set up in Instruction 0 and 1 at the output (AO) from adder 32 is stored into pos1 location of the scratch pad memory 26. Also, the eight high-order bits of the results of the addition from adder 32 are input to the sine memory 34 (ST) of FIG. 5. Memory 34 is therefore addressed to provide a value equal to sin(hob:ω_{m2}t) which is the last factor in the last term of Equation (11)."
+    },
+    {
+     "col": 21,
+     "line": 44,
+     "text": "In Instruction 3, the accumulated value of I2 of the second modulation index is gated from the I2 location of scratch pad memory 26 to the AL1 latch of adder 32."
+    },
+    {
+     "col": 21,
+     "line": 48,
+     "text": "In Instruction 4, the output (MO) from the multiplier 31 in FIG. 5 is gated to the output buffer latches 33 through the t1 location of the scratch pad memory 26. The output (MO) from multiplier 31 is the product formed by multiplying the quantities stored in the multiplier latches ML1 and ML2 in Instructions 74 and 75 of a prior pass through TABLE I. After completion of Instruction 77 for any particular pass through TABLE I, Instruction 0 is again accessed and a new pass through the TABLE I instructions is carried out. For each pass through the instructions of TABLE I, the multiplier output (MO) is stored in latches 33 by Instruction 4. The output stored by Instruction 4 is an elevation of Equation (10) which was determined by the previous pass through TABLE I."
+    },
+    {
+     "col": 21,
+     "line": 63,
+     "text": "In Instruction 5, the output (ST) from the sine memory 34, is stored first in the t1 location of the scratch pad memory 26 and then in the ML2 input latch (MPL2) of multiplier 31. The value stored in the ML2 latch is sin(hob:ω_{m2}t) which is the last factor of the last term of Equation (11)."
+    },
+    {
+     "col": 22,
+     "line": 1,
+     "text": "In Instruction 6, the accumulated value of the second modulation index I2 is gated from the I2 location of scratch pad memory 26 to the ML1 input latch (MPL1) of multiplier 31."
+    },
+    {
+     "col": 22,
+     "line": 5,
+     "text": "In Instruction 7, the ΔI2 value to be added to the accumulated value of the second modulating index is accessed from the (00) locations of the envelope memory 27 and stored in the AL2 latch location of adder 32. Depending upon what has been stored in memory 27, the value of ΔI2 can change for each pass through TABLE I. In any case I2 is time varying in accordance with the present invention."
+    },
+    {
+     "col": 22,
+     "line": 13,
+     "text": "In Instruction 10, the ΔI2 value from Instruction 7 and the accumulated value of I2 from Instruction 3 have been added and the sum is stored as a new I2 value into the I2 location of scratch pad memory 26. The contents of the I2 location are now ready for use during the next pass through the TABLE I program."
+    },
+    {
+     "col": 22,
+     "line": 19,
+     "text": "In Instruction 11, the accumulated value of the ω_{m1}t angle is read out from pos2 of the scratch pad memory to the AL1 latch of the adder 32."
+    },
+    {
+     "col": 22,
+     "line": 22,
+     "text": "In Instruction 12, the Δω_{m1}t incremental angle is read out from the fr2 location of the scratch pad memory to the AL2 adder latch."
+    },
+    {
+     "col": 22,
+     "line": 25,
+     "text": "In Instruction 13, the sum from the addition of the latched values in Instructions 11 and 12 is the new accumulated value of the angle ω_{m1}t. That new value is stored back into location pos2 of the scratch pad memory. Also the higher order bits of the sum output from the adder are utilized to address the sine memory."
+    },
+    {
+     "col": 22,
+     "line": 31,
+     "text": "In Instruction 14, the product result of the multiplication initiated by the values latched in the multiplier in Instructions 5 and 6 is available and stored in the t1 location of the scratch pad memory and then into the ML2 latch of the multiplier 31. The product formed and stored in the ML2 latch is the righthand two factors of the last term in Equation (11), that is, (12)sin(hob:ω_{m2}t)."
+    },
+    {
+     "col": 22,
+     "line": 39,
+     "text": "In Instruction 18, the 8Δω_{m2}t scaling factor is read out from the fr108 location of the scratch pad memory and stored in the multiplier latch ML1. The multiplier 31 commences multiplication of the values latched in Instructions 14 and 15 and the product result appears later at the time of Instruction 23."
+    },
+    {
+     "col": 22,
+     "line": 45,
+     "text": "In Instruction 16, the accumulated value of the ω_{m1}t angle is transferred to the AL1 adder latch."
+    },
+    {
+     "col": 22,
+     "line": 47,
+     "text": "In Instruction 17, a constant is read out from the store 29 of FIG. 5 and stored into the AL2 latch of adder 32. The constant is a binary representation of an odd number multiple of π/2 (e.g., 3π/2) which when added to a sine angle shifts a sine function to a cosine function."
+    },
+    {
+     "col": 22,
+     "line": 53,
+     "text": "In Instruction 20, the sum result of the addition of the values latched in Instructions 16 and 17 is available and input to the sine memory 34 of FIG. 5. At the same time, the previous output from the sine table addressing in Instruction 13 is stored in the t1 location of the scratch pad memory. The values stored in t1 is sin(hob:ω_{m1}t) which is a factor in the second term of the Equation (11)."
+    },
+    {
+     "col": 22,
+     "line": 61,
+     "text": "In Instruction 21, the accumulated value of the modulation index I1 is read out from the I1 location of the scratch pad memory and stored in the adder latch AL1."
+    },
+    {
+     "col": 22,
+     "line": 64,
+     "text": "In Instruction 22, the incremental value ΔI1 of the first modulation index is read out from the (10) locations of the envelope memory 27 and stored in the AL2 latch of the adder 32. Depending upon what has been stored in memory 27, the value of ΔI1 can change for each pass through TABLE I. In any case, I1 is time varying."
+    },
+    {
+     "col": 23,
+     "line": 3,
+     "text": "In Instruction 23, the product result of the multiplication initiated in Instructions 14 and 15 is available and is stored in the ti2 location of the scratch pad memory 26. The product stored in the ti2 location is the last term of Equation (11)."
+    },
+    {
+     "col": 23,
+     "line": 8,
+     "text": "In Instruction 24, the output from the sine memory 34, as addressed in the Instruction 20, is transferred through the t2 location of the scratch pad memory to the multiplier latch ML2. The value stored in latch ML2 is cos(hob:ω_{m1}t) which is a factor in the second term of Equation (11)."
+    },
+    {
+     "col": 23,
+     "line": 14,
+     "text": "In Instruction 25, the lower order eight bits of the accumulated value of the angle ω_{m1}t are read out from pos2 of the scratch pad memory and stored in the multiplier latch ML1. Multiplier 31 commences multiplication of the values latched in Instructions 24 and 25 and the product becomes available during Instruction 34."
+    },
+    {
+     "col": 23,
+     "line": 20,
+     "text": "In Instruction 26, the addition of the quantities latched in Instructions 21 and 22 forms a sum which is the new accumulated value for the modulation index I1 and which is stored in the I1 location of the scratch pad memory."
+    },
+    {
+     "col": 23,
+     "line": 25,
+     "text": "In Instruction 27, the accumulated value of the amplitude envelope A is transferred from the A location of the scratch pad memory 26 to the adder latch AL."
+    },
+    {
+     "col": 23,
+     "line": 28,
+     "text": "In Instruction 30, the incremental value ΔA is read out from locations (11) of the envelope memory 27 and latched in the adder latch AL2."
+    },
+    {
+     "col": 23,
+     "line": 31,
+     "text": "In Instruction 31, the new accumulated value A of the amplitude resulting from addition of the values latched in Instructions 27 and 30 is stored into the A location of the scratch pad memory."
+    },
+    {
+     "col": 23,
+     "line": 36,
+     "text": "In Instruction 32, the contents of the t1 location of the scratch pad memory are latched into the adder latch AL2. The quantity in latch AL2 is the one stored previously into the t1 location in Instruction 20, that is, sin(hob:ω_{m1}t)."
+    },
+    {
+     "col": 23,
+     "line": 41,
+     "text": "In Instruction 33, no new operation is initiated."
+    },
+    {
+     "col": 23,
+     "line": 42,
+     "text": "In Instruction 34, the results of the multiplication of quantities latched in Instructions 24 and 25 is available and the product is stored through the t1 location of the scratch pad memory into the adder latch AL1. The product stored in AL1 is term (lob:ω_{m1}t)cos(hob:ω_{m1}t) of Equation (11)."
+    },
+    {
+     "col": 23,
+     "line": 48,
+     "text": "In Instruction 35, the sum result of the addition of the values latched into the adder in Instructions 32 and 34 is stored by way of the scratch pad location t1 into the multiplier latch ML2. The contents of latch ML2 are sin(hob:ω_{m1}t) + (lob:ω_{m1}t)cos(hob:ω_{m1}t)."
+    },
+    {
+     "col": 23,
+     "line": 53,
+     "text": "In Instruction 36, the accumulated value I1 of the first modulation index is read out from the I1 location of the scratch pad memory and stored into the multiplier ML1 latch. The multiplication commences after Instruction 36 and the product is available during Instruction 44."
+    },
+    {
+     "col": 23,
+     "line": 59,
+     "text": "In Instructions 37 through 43, no new operations are initiated."
+    },
+    {
+     "col": 23,
+     "line": 61,
+     "text": "In Instruction 44, the product of I1 times the quantity latched in Instruction 35 is stored into the multiplier latch ML2. This product is (I1)[sin(hob:ω_{m1}t) + (lob:ω_{m1}t)cos(hob:ω_{m1}t)] which is a part of Equation (11)."
+    },
+    {
+     "col": 23,
+     "line": 66,
+     "text": "In Instruction 45, the scaling factor (8Δω_{m1}t) is read out from the scratch pad location fr208 and stored in the multiplier latch ML1. With Instruction 45, the multiplication commences and the product is available in Instruction 53."
+    },
+    {
+     "col": 24,
+     "line": 3,
+     "text": "In Instructions 46 through 51, no new operations are initiated."
+    },
+    {
+     "col": 24,
+     "line": 5,
+     "text": "In Instruction 52, the contents from the scratch pad memory location ti2 are stored into the adder latch AL. Adder latch AL1 contains the quantity which was stored in the tlocation in Instruction 23, and which is the last term of Equation (11)."
+    },
+    {
+     "col": 24,
+     "line": 10,
+     "text": "In Instruction 53, the product resulting from multiplication of the quantities latched in the multiplier in Instructions 44 and 45 is available and is transferred through the t1 scratch pad location to the adder latch AL2. The quantities now in the adder latch AL2 is the second term of Equation (11), namely, (8Δω_{m1}t)(I1)[(sin(hob:ω_{m1}t) + (lob:ω_{m1}t)cos(hob:ω_{m1}t)]."
+    },
+    {
+     "col": 24,
+     "line": 17,
+     "text": "In Instruction 54, the quantities latched in Instructions 52 and 53 are added and the sum result is stored in location ti2 of the scratch pad memory and then transferred to the AL2 latch of the adder. The quantity in latch AL2 is the sum of the last two terms of Equation (11)."
+    },
+    {
+     "col": 24,
+     "line": 23,
+     "text": "In Instruction 55, the accumulated value ω_{c}t for the carrier frequency angle is read out from pos3 of the scratch pad memory and stored in the adder latch AL1."
+    },
+    {
+     "col": 24,
+     "line": 26,
+     "text": "In Instruction 56, the values latched in Instructions 54 and 55 are added and the sum result is stored in the ti2 location of the scratch pad memory. The quantity in the location ti2 is now the value X as defined by Equation (11). The high-order bits of X from the adder output in Instruction 56 are input to address the sine memory."
+    },
+    {
+     "col": 24,
+     "line": 33,
+     "text": "In Instruction 57, the value of X from the ti2 scratch pad memory location is latched into the adder latch AL1."
+    },
+    {
+     "col": 24,
+     "line": 36,
+     "text": "In Instruction 60, a constant C1 is accessed from the binary constant store 29 and stored in adder latch AL2."
+    },
+    {
+     "col": 24,
+     "line": 38,
+     "text": "In Instruction 61, the output from the sine memory sin(hob:X), which is a factor in Equation (10), is stored in the scratch pad memory location t1. At the same time, the output from the adder, which is the sum of the values latched in Instructions 57 and 60, is input to the sine memory. The addition of the quantities latched in Instructions 57 and 60 converts the sine function to a cosine function, namely, to cos(hob:X)."
+    },
+    {
+     "col": 24,
+     "line": 46,
+     "text": "In Instruction 62, no new operation is initiated."
+    },
+    {
+     "col": 24,
+     "line": 47,
+     "text": "In Instruction 63, the eight low-order bits of the ti2 location of the scratch pad memory are input to the multiplier latch ML2 so that ML2 stores (lob:X)."
+    },
+    {
+     "col": 24,
+     "line": 50,
+     "text": "In Instruction 64, the output from the sine table addressed in Instruction 61, is transferred to the t2 location of the scratch pad memory and then to the multiplier latch ML1 so that ML1 stores cos(hob:X)."
+    },
+    {
+     "col": 24,
+     "line": 54,
+     "text": "Multiplication commences and the product of the values latched in Instructions 63 and 64 is available in Instruction 72."
+    },
+    {
+     "col": 24,
+     "line": 57,
+     "text": "In Instruction 65, the accumulated value ω_{c}t of the carrier angle is transferred from the scratch pad memory location pos3 to the adder latch AL2."
+    },
+    {
+     "col": 24,
+     "line": 60,
+     "text": "In Instruction 66, the incremental angle Δω_{c}t is read out from the scratch pad memory location fr3 and stored in the adder latch AL1."
+    },
+    {
+     "col": 24,
+     "line": 63,
+     "text": "In Instruction 67, the values latched in Instructions 65 and 66 are added to form the new accumulated sum ω_{c}t which is stored into the scratch pad memory location pos3."
+    },
+    {
+     "col": 24,
+     "line": 67,
+     "text": "In Instructions 70 and 71, no new operations are initiated."
+    },
+    {
+     "col": 25,
+     "line": 1,
+     "text": "In Instruction 72, the product of the quantities latched in Instructions 63 and 64 is stored in the t2 location of the scratch pad memory and then into the adder latch AL1. The quantity in latch AL1 is the righthand term of Equation (10), namely, (lob:X)cos(hob:X)."
+    },
+    {
+     "col": 25,
+     "line": 7,
+     "text": "In Instruction 73, the contents of the t1 scratch pad memory location are stored in the adder latch AL2. Latch AL2 at this time stores the quantity sin(hob:X) which is the lefthand term in Equation (10) and which was stored in t1 in Instruction 61."
+    },
+    {
+     "col": 25,
+     "line": 12,
+     "text": "In Instruction 74, the sum of the quantities latched in Instructions 72 and 73 is available on the output from the adder and is stored into scratch pad memory location t1 and from there into the multiplier latch ML2. The quantity in latch ML2 is [sin(hob:X) + (lob:X)cos(hob:X)]."
+    },
+    {
+     "col": 25,
+     "line": 18,
+     "text": "In Instruction 75, the amplitude value A from the A location of the scratch pad memory is latched into the multiplier latch ML1 and starts the multiplication of the quantities latched in Instructions 74 and 75. The multiplication started by Instruction 75 is not complete until at least five instruction cycles later. When complete, the final product A(t)[sin(hob:X) + (lob:X)cos(hob:X)] is formed which equals the value e of Equation (10). The final product for one pass through TABLE I becomes available in Instruction 4 of the next pass through TABLE I."
+    }
+   ]
+  }
+ ],
+ "brief_drawings": [
+  {
+   "fig": "1",
+   "col": 2,
+   "line": 17,
+   "text": "FIG. 1 is a dynamic FM spectrum useful in understanding the invention;"
+  },
+  {
+   "fig": "2",
+   "col": 2,
+   "line": 19,
+   "text": "FIG. 2 is a circuit useful for practicing the present invention as represented in MUSIC V notation;"
+  },
+  {
+   "fig": "3",
+   "col": 2,
+   "line": 21,
+   "text": "FIGS. 3 and 4 are dynamic FM spectra useful in understanding the invention; and"
+  },
+  {
+   "fig": "4",
+   "col": 2,
+   "line": 21,
+   "text": "FIGS. 3 and 4 are dynamic FM spectra useful in understanding the invention; and"
+  },
+  {
+   "fig": "5",
+   "col": 2,
+   "line": 23,
+   "text": "FIGS. 5 through 18 are block diagrams for a digital FM synthesizer embodied in the present invention."
+  },
+  {
+   "fig": "6",
+   "col": 2,
+   "line": 23,
+   "text": "FIGS. 5 through 18 are block diagrams for a digital FM synthesizer embodied in the present invention."
+  },
+  {
+   "fig": "7",
+   "col": 2,
+   "line": 23,
+   "text": "FIGS. 5 through 18 are block diagrams for a digital FM synthesizer embodied in the present invention."
+  },
+  {
+   "fig": "8",
+   "col": 2,
+   "line": 23,
+   "text": "FIGS. 5 through 18 are block diagrams for a digital FM synthesizer embodied in the present invention."
+  },
+  {
+   "fig": "9",
+   "col": 2,
+   "line": 23,
+   "text": "FIGS. 5 through 18 are block diagrams for a digital FM synthesizer embodied in the present invention."
+  },
+  {
+   "fig": "10",
+   "col": 2,
+   "line": 23,
+   "text": "FIGS. 5 through 18 are block diagrams for a digital FM synthesizer embodied in the present invention."
+  },
+  {
+   "fig": "11",
+   "col": 2,
+   "line": 23,
+   "text": "FIGS. 5 through 18 are block diagrams for a digital FM synthesizer embodied in the present invention."
+  },
+  {
+   "fig": "12",
+   "col": 2,
+   "line": 23,
+   "text": "FIGS. 5 through 18 are block diagrams for a digital FM synthesizer embodied in the present invention."
+  },
+  {
+   "fig": "13",
+   "col": 2,
+   "line": 23,
+   "text": "FIGS. 5 through 18 are block diagrams for a digital FM synthesizer embodied in the present invention."
+  },
+  {
+   "fig": "14",
+   "col": 2,
+   "line": 23,
+   "text": "FIGS. 5 through 18 are block diagrams for a digital FM synthesizer embodied in the present invention."
+  },
+  {
+   "fig": "15",
+   "col": 2,
+   "line": 23,
+   "text": "FIGS. 5 through 18 are block diagrams for a digital FM synthesizer embodied in the present invention."
+  },
+  {
+   "fig": "16",
+   "col": 2,
+   "line": 23,
+   "text": "FIGS. 5 through 18 are block diagrams for a digital FM synthesizer embodied in the present invention."
+  },
+  {
+   "fig": "17",
+   "col": 2,
+   "line": 23,
+   "text": "FIGS. 5 through 18 are block diagrams for a digital FM synthesizer embodied in the present invention."
+  },
+  {
+   "fig": "18",
+   "col": 2,
+   "line": 23,
+   "text": "FIGS. 5 through 18 are block diagrams for a digital FM synthesizer embodied in the present invention."
+  }
+ ],
+ "claims": [
+  {
+   "n": 1,
+   "col": 25,
+   "line": 30,
+   "depends": null,
+   "text": "1. A method of synthesizing a musical sound composed of a plurality of component frequencies and characterized by a time-varying amplitude envelope having a time-varying attack portion, a substantialy steadystate portion and a time-varying decay portion, the steps comprising,\ngenerating a signal ω_{c} to define a carrier frequency in the audio range,\ngenerating a signal ω_{m} to define a modulation frequency in the audio range,\ngenerating a signal I(t) to define a time-varying modulation index,\nfrequency modulating ω_{c} with ω_{m} to form a frequency modulated wave defined by e = Asin [ω_{c}t + I(t) sin ω_{m}t] where e defines the instantaneous amplitude of said wave, A defines the peak amplitude of said wave, and [ω_{c}t + I(t) sin ω_{m}t] defines the frequency spectrum of said wave wherein the frequency spectrum of said wave changes as a function of the modulation index I(t) to form a representation of said sound."
+  },
+  {
+   "n": 2,
+   "col": 25,
+   "line": 51,
+   "depends": 1,
+   "text": "2. A method as in claim 1 including the step of varying I(t) as a function of the attack portion of said amplitude envelope."
+  },
+  {
+   "n": 3,
+   "col": 25,
+   "line": 54,
+   "depends": null,
+   "text": "3. In a digital apparatus having storage means for storing signals including an audio-range carrier frequency signal ω_{c}, including an audio-range modulation frequency signal ω_{m}, including a time-varying modulation index signal I(t), and including an output amplitude signal A; having waveform means for providing waveform signals as a function of input angles; and having arithmetic means for arithmetically combining signals; a method of synthesizing a musical sound comprising the steps of,\naccessing from said storage means, periodically with time t, the signals ω_{m}, ω_{c}, I(t) and A,\ntransferring said signal ω_{m} as an input angle to said waveform means to provide periodically a modulation waveform signal,\nmultiplying, in said arithmetic means, said modulation waveform signal and a value of said signal I(t) to form periodically a modulation component signal,\nadding, in said arithmetic means, said modulation component signal and the signal ω_{c} to obtain periodically an output angle signal,\ntransferring said output angle signal to said waveform means to obtain periodically an output waveform signal,\nmultiplying, in said arithmetic means, said output waveform signal by said signal A to provide an output signal to produce said musical sound."
+  },
+  {
+   "n": 4,
+   "col": 26,
+   "line": 14,
+   "depends": null,
+   "text": "4. An apparatus for electrically synthesizing musical sound comprising,\nstore means for storing signals proportional to amplitudes A of an output signal e, for storing signals proportional to audio-range carrier frequencies ω_{c}, for storing signals proportional to modulation frequencies ω_{m}, for storing signals proportional to amplitude modulation indexes I(t) where I(t) varies as a function of time t,\naccessing means for accessing said signals, periodically with time t, from said store means,\nprocessing means for processing said signals accessed from said store means to form said output signal equal to A sin [ω_{c}t + I(t) sin ω_{m}t],\naudio transducer means responsive to said output signal for providing an audio signal output representing said musical sound."
+  },
+  {
+   "n": 5,
+   "col": 26,
+   "line": 31,
+   "depends": null,
+   "text": "5. An apparatus for synthesizing musical sound composed of a plurality of frequency components and characterized by a time-varying amplitude envelope including a time-varying attack portion, a substantially steady-state portion and a time-varying decay portion, said apparatus comprising,\nsine wave means for producing signals proportional to the sine of input angles,\nan adder,\na multiplier,\na temporary store,\nfrequency store means for storing values of audio-range frequency signals including carrier frequency signals ω_{c}t and modulation frequency signals ω_{m}t,\namplitude store means for storing amplitude signals including time-varying amplitude modulation signals I(t) and output amplitude signals A,\nmeans for connecting periodically a modulation frequency signal ω_{m}t as an input angle to said sine wave means to produce signal sin ω_{m}t in said temporary store,\nmeans for connecting periodically said signal sin ω_{m}t to said multiplier and means for connecting periodically time-varying values of said signal I(t) to said multiplier to form periodically a product signal I(t) sin ω_{m}t in said temporary store,\nmeans for connecting periodically said signal I(t) sin ω_{m}t to said adder means and means for connecting periodically a carrier frequency signal ω_{c}t to said adder to form periodically a sum signal [ω_{c}t + I(t) sin ω_{m}t] in said temporary store,\nmeans for connecting periodically said signal [ω_{c}t + I(t) sin ω_{m}t] as an input angle to said sine wave means whereby said sine wave means periodically provides a signal sin [ω_{c}t + I(t) sin ω_{m}t] in said temporary store,\nmeans for connecting periodically said signal sin [ω_{c}t + I(t) sin ω_{m}t ] to said multiplier and means for connecting periodically an amplitude value A to said multiplier to provide periodically an output signal A sin [ω_{c}t + I(t) sin ω_{m}t] in said temporary store,\naudio transducer means responsive to said output signal for providing an audio signal representing said musical sound."
+  },
+  {
+   "n": 6,
+   "col": 27,
+   "line": 9,
+   "depends": 5,
+   "text": "6. The apparatus of claim 5, wherein said frequency store means includes means for storing said signals ω_{m}t and ω_{c}t such that ω_{c} is an integral multiple of ω_{m} whereby said output signal has a frequency spectrum including only odd harmonics."
+  },
+  {
+   "n": 7,
+   "col": 27,
+   "line": 15,
+   "depends": 6,
+   "text": "7. The apparatus of claim 6 wherein said frequency store means includes means for storing said signals ω_{m}t and ω_{c}t such that the ratio ω_{c}/ω_{m} is equal to 2/1."
+  },
+  {
+   "n": 8,
+   "col": 27,
+   "line": 19,
+   "depends": 5,
+   "text": "8. The apparatus of claim 5 wherein said amplitude store means includes means for storing said modulation index signal I(t) directly proportional to said attack portion of said amplitude envelope and said frequency store means includes means for storing the signals ω_{c}t and ω_{m}t such that the ratio ω_{c}/ω_{m} is equal to ω_{c}/1 whereby the frequency spectrum of said output signal includes both odd and even harmonics for producing musical sound with the timbrel quality of brass instruments."
+  },
+  {
+   "n": 9,
+   "col": 28,
+   "line": 1,
+   "depends": 8,
+   "text": "9. The apparatus of claim 8 where said means for storing the signals ω_{c}t and ω_{m}t stores values such that ω_{c}/ω_{m} is equal to 1/1."
+  },
+  {
+   "n": 10,
+   "col": 28,
+   "line": 4,
+   "depends": 5,
+   "text": "10. The apparatus of claim 5 in which said frequency store means includes means for storing ω_{c}t and ω_{m}t such that the ratio of ω_{c}/ω_{m} is equal to an irrational number whereby the frequency spectrum of said output signal includes inharmonic frequencies."
+  },
+  {
+   "n": 11,
+   "col": 28,
+   "line": 9,
+   "depends": 5,
+   "text": "11. The apparatus of claim 5 wherein said frequency store means includes means for storing the frequency signals ω_{c}t equals to ω_{c1}t + ω_{c2}t where ω_{c1} and ω_{c2} are unequal frequencies."
+  },
+  {
+   "n": 12,
+   "col": 28,
+   "line": 13,
+   "depends": 11,
+   "text": "12. The apparatus of claim 11 where said frequency store means store ω_{c1}t, ω_{c2}t and ω_{m} such that the ratio ω_{c2}/ω_{m} is equal to 7/1 and such that the ratio ω_{c1}/ω_{m} is equal to 1/1."
+  },
+  {
+   "n": 13,
+   "col": 28,
+   "line": 17,
+   "depends": 5,
+   "text": "13. The apparatus of claim 5 wherein said frequency store means includes means for storing said frequency signals ω_{m}t as first frequency signals ω_{m1}t and second frequency signals ω_{m2}t, wherein said amplitude store means includes means for storing said modulation signals I(t) as first amplitude modulation signals I_{1}(t) and as second amplitude modulation signals I_{2}(t), whereby said output signal is Asin [ω_{c}t + I_{1}(t) sin ω_{m1}t + I_{2}(t) sin ω_{m2}t]."
+  },
+  {
+   "n": 14,
+   "col": 28,
+   "line": 26,
+   "depends": 5,
+   "text": "14. The apparatus of claim 5 wherein said amplitude store means includes means for storing said output amplitude signals A as a function of said time-varying amplitude envelope."
+  }
+ ],
+ "ocr_fixes": [
+  {
+   "col": 1,
+   "line": 19,
+   "ocr": "frequericy",
+   "fixed": "frequency",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 1,
+   "line": 33,
+   "ocr": "Fourier.",
+   "fixed": "Fourier",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 2,
+   "line": 4,
+   "ocr": "w,,",
+   "fixed": "ω_{c},",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 2,
+   "line": 5,
+   "ocr": "wm, … w,",
+   "fixed": "ω_{m}, … ω_{c}",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 2,
+   "line": 6,
+   "ocr": "@m",
+   "fixed": "ω_{m}",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 2,
+   "line": 8,
+   "ocr": " … € … = Aginl Wet … SIN … Op_t]",
+   "fixed": "e … = … A_{sin} [ω_{c}t … sin … ω_{m}t]",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 2,
+   "line": 10,
+   "ocr": "¢",
+   "fixed": "e",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 2,
+   "line": 11,
+   "ocr": "/(1)",
+   "fixed": "I(t)",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 2,
+   "line": 13,
+   "ocr": "contro!",
+   "fixed": "control",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 2,
+   "line": 34,
+   "ocr": "frequencies.",
+   "fixed": "frequencies",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 2,
+   "line": 38,
+   "ocr": "w,",
+   "fixed": "ω_{c}",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 2,
+   "line": 39,
+   "ocr": "w,,,",
+   "fixed": "ω_{m},",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 2,
+   "line": 41,
+   "ocr": "€ …  … = … Agig [Wet + M(t) … Wnt] a)",
+   "fixed": "= … A_{sin} [ω_{c}t … + … I(t) … ω_{m}t] (1)",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 2,
+   "line": 44,
+   "ocr": "/(t)",
+   "fixed": "I(t)",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 2,
+   "line": 56,
+   "ocr": "ID,",
+   "fixed": "ID_{1}",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 2,
+   "line": 57,
+   "ocr": "ID,.",
+   "fixed": "ID_{2}.",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 2,
+   "line": 61,
+   "ocr": "ID, … ID,",
+   "fixed": "ID_{1} … ID_{2}",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 3,
+   "line": 3,
+   "ocr": "1.",
+   "fixed": "1",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 3,
+   "line": 11,
+   "ocr": "Risset.but",
+   "fixed": "Risset but",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 3,
+   "line": 33,
+   "ocr": "filtering.",
+   "fixed": "filtering",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 3,
+   "line": 47,
+   "ocr": "P, … P,.",
+   "fixed": "P_{1} … P_{8}.",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 3,
+   "line": 51,
+   "ocr": "similar.",
+   "fixed": "similar",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 3,
+   "line": 53,
+   "ocr": "11.",
+   "fixed": "11",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 3,
+   "line": 56,
+   "ocr": "P,",
+   "fixed": "P_{1}",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 3,
+   "line": 57,
+   "ocr": "P,",
+   "fixed": "P_{2}",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 3,
+   "line": 58,
+   "ocr": "P,",
+   "fixed": "P_{3}",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 3,
+   "line": 59,
+   "ocr": "P,",
+   "fixed": "P_{4}",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 3,
+   "line": 60,
+   "ocr": "P,",
+   "fixed": "P_{5}",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 3,
+   "line": 61,
+   "ocr": "P,",
+   "fixed": "P_{6}",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 3,
+   "line": 62,
+   "ocr": "P, … ID, P,",
+   "fixed": "P_{7} … ID_{1} P_{8}",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 3,
+   "line": 63,
+   "ocr": "ID,",
+   "fixed": "ID_{2}",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 3,
+   "line": 64,
+   "ocr": "‘tones.",
+   "fixed": "tones",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 3,
+   "line": 67,
+   "ocr": "",
+   "fixed": "P_{3} = 0.6 P_{4}",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 3,
+   "line": 68,
+   "ocr": "P;",
+   "fixed": "P_{5}",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 4,
+   "line": 1,
+   "ocr": " … cfm =",
+   "fixed": "P_{6} … c/m",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 4,
+   "line": 2,
+   "ocr": "Pno Ps",
+   "fixed": "P_{7} = 0 P_{8}",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 4,
+   "line": 6,
+   "ocr": "instantaneous.",
+   "fixed": "instantaneous",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 4,
+   "line": 10,
+   "ocr": "‘is",
+   "fixed": "is",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 4,
+   "line": 47,
+   "ocr": "P,;",
+   "fixed": "P_{3}",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 4,
+   "line": 49,
+   "ocr": "P;",
+   "fixed": "P_{4} = 1000 P_{5}",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 4,
+   "line": 50,
+   "ocr": "P,",
+   "fixed": "P_{6}",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 4,
+   "line": 51,
+   "ocr": "P,=0 P,",
+   "fixed": "P_{7} = 0 P_{8}",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 4,
+   "line": 53,
+   "ocr": "‘More",
+   "fixed": "More",
+   "basis": "scan"
+  },
+  {
+   "col": 4,
+   "line": 56,
+   "ocr": "FIG..3,",
+   "fixed": "FIG. 3,",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 4,
+   "line": 58,
+   "ocr": "ratios.’",
+   "fixed": "ratios.",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 4,
+   "line": 61,
+   "ocr": "w,/_ … V2,",
+   "fixed": "ω_{c}/ω_{m} … √2,",
+   "basis": "scan"
+  },
+  {
+   "col": 4,
+   "line": 63,
+   "ocr": "controlled.",
+   "fixed": "controlled",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 4,
+   "line": 65,
+   "ocr": "3.:",
+   "fixed": "3.",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 4,
+   "line": 66,
+   "ocr": "used:",
+   "fixed": "used",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 4,
+   "line": 70,
+   "ocr": "t",
+   "fixed": "",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 5,
+   "line": 5,
+   "ocr": "w,/w,,",
+   "fixed": "ω_{c}/ω_{m}",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 5,
+   "line": 8,
+   "ocr": "_to … w,/w,,",
+   "fixed": "to … ω_{c}/ω_{m}",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 5,
+   "line": 9,
+   "ocr": "y2= @-/@m:",
+   "fixed": "√2 = ω_{c}/ω_{m}.",
+   "basis": "scan"
+  },
+  {
+   "col": 5,
+   "line": 13,
+   "ocr": "€ … Asin … [et … A(2) … sin. … Om, C+ 2 (1) … @yal]",
+   "fixed": "e … A_{sin} … [ω_{c}t … I_{1}(t) … sin … ω_{m1}t + I_{2}(t) … ω_{m2}t]",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 5,
+   "line": 15,
+   "ocr": "J,(t) … w,,, … @mt",
+   "fixed": "I_{1}(t) … ω_{m1} … ω_{m}t",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 5,
+   "line": 16,
+   "ocr": "wm:",
+   "fixed": "ω_{m2}",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 5,
+   "line": 17,
+   "ocr": "@,/@ 2",
+   "fixed": "ω_{c}/ω_{m2}",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 5,
+   "line": 18,
+   "ocr": "J,(¢)",
+   "fixed": "I_{1}(t)",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 5,
+   "line": 19,
+   "ocr": "brasslike",
+   "fixed": "brass-like",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 5,
+   "line": 21,
+   "ocr": "function-of",
+   "fixed": "function of",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 5,
+   "line": 22,
+   "ocr": "J,(t)",
+   "fixed": "I_{2}(t)",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 5,
+   "line": 26,
+   "ocr": "@/@q;.",
+   "fixed": "ω_{c}/ω_{m1}.",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 5,
+   "line": 33,
+   "ocr": "N,/Ng,",
+   "fixed": "N_{1}/N_{2},",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 5,
+   "line": 35,
+   "ocr": "N,th",
+   "fixed": "N_{1}th",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 5,
+   "line": 37,
+   "ocr": "Ne=",
+   "fixed": "N_{2} =",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 5,
+   "line": 40,
+   "ocr": "N, … 49",
+   "fixed": "N_{2} … ",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 5,
+   "line": 41,
+   "ocr": "1%, … %,",
+   "fixed": "½, … ¼,",
+   "basis": "scan"
+  },
+  {
+   "col": 5,
+   "line": 42,
+   "ocr": "N.",
+   "fixed": "N_{2}",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 5,
+   "line": 43,
+   "ocr": "%,",
+   "fixed": "⅔,",
+   "basis": "scan"
+  },
+  {
+   "col": 5,
+   "line": 46,
+   "ocr": "@,/w,,",
+   "fixed": "ω_{c}/ω_{m}",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 5,
+   "line": 47,
+   "ocr": "%.",
+   "fixed": "½.",
+   "basis": "scan"
+  },
+  {
+   "col": 5,
+   "line": 48,
+   "ocr": "whichis",
+   "fixed": "which is",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 5,
+   "line": 50,
+   "ocr": "I,(t)",
+   "fixed": "I_{2}(t)",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 5,
+   "line": 52,
+   "ocr": "we.",
+   "fixed": "ω_{c}.",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 5,
+   "line": 58,
+   "ocr": "negative.",
+   "fixed": "negative",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 5,
+   "line": 66,
+   "ocr": "@,",
+   "fixed": "ω_{c}",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 5,
+   "line": 67,
+   "ocr": "mn",
+   "fixed": "ω_{m}",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 5,
+   "line": 68,
+   "ocr": "l=4",
+   "fixed": "I = 4",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 6,
+   "line": 20,
+   "ocr": "2 … € …  … = … Agin (Weyl + Weat … wf)",
+   "fixed": "e … = … A_{sin} (ω_{c1}t … + … ω_{c2}t … ω_{m}t)",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 6,
+   "line": 22,
+   "ocr": " … @,; … + 2",
+   "fixed": "ω_{c1} … + … ω_{c2}",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 6,
+   "line": 23,
+   "ocr": "w,,. … @./@_",
+   "fixed": "ω_{m}. … ω_{c2}/ω_{m}",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 6,
+   "line": 24,
+   "ocr": "w,,1w,",
+   "fixed": "ω_{c1} 1ω_{m}",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 6,
+   "line": 30,
+   "ocr": "39",
+   "fixed": "",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 7,
+   "line": 51,
+   "ocr": "10",
+   "fixed": "I0",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 7,
+   "line": 62,
+   "ocr": "4la,",
+   "fixed": "41a,",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 7,
+   "line": 63,
+   "ocr": "PCO",
+   "fixed": "PC0",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 7,
+   "line": 64,
+   "ocr": "PCS.",
+   "fixed": "PC5.",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 8,
+   "line": 1,
+   "ocr": "I0-115",
+   "fixed": "I0-I15",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 8,
+   "line": 2,
+   "ocr": "MAO,",
+   "fixed": "MA0,",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 8,
+   "line": 4,
+   "ocr": "WS9,",
+   "fixed": "WS0,",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 8,
+   "line": 11,
+   "ocr": "LSO,",
+   "fixed": "LS0,",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 8,
+   "line": 16,
+   "ocr": "REO,",
+   "fixed": "RE0,",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 8,
+   "line": 31,
+   "ocr": "function",
+   "fixed": "function.",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 8,
+   "line": 35,
+   "ocr": "WSO,",
+   "fixed": "WS0,",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 8,
+   "line": 58,
+   "ocr": "AOO-15.",
+   "fixed": "AO0-15.",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 8,
+   "line": 60,
+   "ocr": "LSO,",
+   "fixed": "LS0,",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 8,
+   "line": 64,
+   "ocr": "ALI,",
+   "fixed": "AL1,",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 9,
+   "line": 3,
+   "ocr": "REO,",
+   "fixed": "RE0,",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 9,
+   "line": 13,
+   "ocr": "%",
+   "fixed": "¾",
+   "basis": "scan"
+  },
+  {
+   "col": 9,
+   "line": 50,
+   "ocr": "microseconds,",
+   "fixed": "microseconds.",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 9,
+   "line": 64,
+   "ocr": "substates",
+   "fixed": "sub-states",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 10,
+   "line": 21,
+   "ocr": "substate",
+   "fixed": "sub-state",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 10,
+   "line": 67,
+   "ocr": "signals,",
+   "fixed": "signals;",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 11,
+   "line": 44,
+   "ocr": "overflows,",
+   "fixed": "overflows;",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 11,
+   "line": 55,
+   "ocr": "also.",
+   "fixed": "also",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 11,
+   "line": 56,
+   "ocr": "Attack.",
+   "fixed": "Attack",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 12,
+   "line": 6,
+   "ocr": "initialization.",
+   "fixed": "initialization",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 12,
+   "line": 20,
+   "ocr": "FTO",
+   "fixed": "FT0",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 12,
+   "line": 21,
+   "ocr": "WSO",
+   "fixed": "WS0",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 12,
+   "line": 25,
+   "ocr": "‘and",
+   "fixed": "and",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 12,
+   "line": 28,
+   "ocr": "REO",
+   "fixed": "RE0",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 12,
+   "line": 56,
+   "ocr": "I,, … I,",
+   "fixed": "I_{1}, … I_{2},",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 12,
+   "line": 57,
+   "ocr": "signal. … I,, I,",
+   "fixed": "signal … I_{1}, I_{2}",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 13,
+   "line": 9,
+   "ocr": "fr",
+   "fixed": "fr1",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 13,
+   "line": 10,
+   "ocr": "pos!",
+   "fixed": "pos1",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 13,
+   "line": 14,
+   "ocr": "1, … I,",
+   "fixed": "I_{1} … I_{2}",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 13,
+   "line": 17,
+   "ocr": "11, 12",
+   "fixed": "t1, t2",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 13,
+   "line": 28,
+   "ocr": "WSO",
+   "fixed": "WS0",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 13,
+   "line": 31,
+   "ocr": "MPO … AOO",
+   "fixed": "MP0 … AO0",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 13,
+   "line": 57,
+   "ocr": "%; … %",
+   "fixed": "¾; … ¾",
+   "basis": "scan"
+  },
+  {
+   "col": 14,
+   "line": 3,
+   "ocr": "controls.",
+   "fixed": "controls",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 14,
+   "line": 4,
+   "ocr": "of.",
+   "fixed": "of",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 14,
+   "line": 8,
+   "ocr": "bits‘O",
+   "fixed": "bits 0",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 14,
+   "line": 12,
+   "ocr": "is;",
+   "fixed": "is,",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 14,
+   "line": 14,
+   "ocr": "7.are",
+   "fixed": "7 are",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 14,
+   "line": 27,
+   "ocr": "ALI",
+   "fixed": "AL1",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 14,
+   "line": 30,
+   "ocr": "number,",
+   "fixed": "number.",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 14,
+   "line": 54,
+   "ocr": "flipflop",
+   "fixed": "flip-flop",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 14,
+   "line": 57,
+   "ocr": "MPLI1",
+   "fixed": "MPL1",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 14,
+   "line": 61,
+   "ocr": "a+1",
+   "fixed": "a +1",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 15,
+   "line": 5,
+   "ocr": "‘Jatch",
+   "fixed": "latch",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 15,
+   "line": 14,
+   "ocr": "MPO",
+   "fixed": "MP0",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 15,
+   "line": 23,
+   "ocr": "MPO",
+   "fixed": "MP0",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 15,
+   "line": 24,
+   "ocr": "-true,",
+   "fixed": "true,",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 16,
+   "line": 7,
+   "ocr": "“‘load",
+   "fixed": "\"load",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 16,
+   "line": 8,
+   "ocr": "LSO",
+   "fixed": "LS0",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 16,
+   "line": 17,
+   "ocr": "STO",
+   "fixed": "ST0",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 16,
+   "line": 23,
+   "ocr": "LSO",
+   "fixed": "LS0",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 16,
+   "line": 25,
+   "ocr": "SAO",
+   "fixed": "SA0",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 17,
+   "line": 62,
+   "ocr": "_has … in.octal",
+   "fixed": "has … in octal",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 17,
+   "line": 63,
+   "ocr": "is.a",
+   "fixed": "is a",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 18,
+   "line": 65,
+   "ocr": "|",
+   "fixed": "I",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 19,
+   "line": 1,
+   "ocr": "|",
+   "fixed": "I",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 19,
+   "line": 7,
+   "ocr": "I’",
+   "fixed": "I",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 19,
+   "line": 11,
+   "ocr": "and.75, .",
+   "fixed": "and 75,",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 19,
+   "line": 13,
+   "ocr": "‘instruction",
+   "fixed": "instruction",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 19,
+   "line": 20,
+   "ocr": "digital-toanalog",
+   "fixed": "digital-to-analog",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 19,
+   "line": 23,
+   "ocr": "ts",
+   "fixed": "",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 19,
+   "line": 24,
+   "ocr": "Equation.",
+   "fixed": "Equation",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 19,
+   "line": 33,
+   "ocr": "(256- word",
+   "fixed": "(256-word",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 19,
+   "line": 35,
+   "ocr": "evalu- , ated",
+   "fixed": "evaluated",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 19,
+   "line": 36,
+   "ocr": "3",
+   "fixed": "",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 19,
+   "line": 37,
+   "ocr": "(sin@ ot),",
+   "fixed": "(sinω_{m2}t),",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 19,
+   "line": 39,
+   "ocr": "the.",
+   "fixed": "the",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 19,
+   "line": 45,
+   "ocr": "an-. gles",
+   "fixed": "angles",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 19,
+   "line": 54,
+   "ocr": "@mt",
+   "fixed": "ω_{m1}t",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 19,
+   "line": 55,
+   "ocr": "wmf … w,,,¢ (here- 35 inafter",
+   "fixed": "ω_{m1}t … ω_{m1}t (hereinafter",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 19,
+   "line": 56,
+   "ocr": "w»,f) … @,.,¢",
+   "fixed": "ω_{m1}t) … ω_{m1}t",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 19,
+   "line": 57,
+   "ocr": "@ yt). … sin(@ uf)",
+   "fixed": "ω_{m1}t). … sin(ω_{m1}t)",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 19,
+   "line": 60,
+   "ocr": "sin(@, ¢) … wat … a_it)",
+   "fixed": "sin(ω_{m1}t) … ω_{m1}t … ω_{m1}t)",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 19,
+   "line": 61,
+   "ocr": "“Using … the. … i … ‘is",
+   "fixed": "Using … the …  … is",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 19,
+   "line": 63,
+   "ocr": "Equation.",
+   "fixed": "Equation",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 19,
+   "line": 64,
+   "ocr": "a _\\f … @.»if) … toyg;t)cos(lob:  -@aat)",
+   "fixed": "ω_{m1}t … ω_{m1}t) … ω_{m1}t)cos(lob: ω_{m1}t)",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 19,
+   "line": 65,
+   "ocr": "@»,f)cos(hob: wit) … 6",
+   "fixed": "ω_{m1}t)cos(hob: ω_{m1}t) … ",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 19,
+   "line": 67,
+   "ocr": "@ ait) … is: … much.",
+   "fixed": "ω_{m1}t) … is … much",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 19,
+   "line": 68,
+   "ocr": "#,,,¢).",
+   "fixed": "ω_{m1}t).",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 20,
+   "line": 1,
+   "ocr": "@,,2)",
+   "fixed": "ω_{m1}t)",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 20,
+   "line": 2,
+   "ocr": "unity.and … @_f) … is:",
+   "fixed": "unity and … ω_{m1}t) … is",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 20,
+   "line": 3,
+   "ocr": "(lob:enif)",
+   "fixed": "(lob:ω_{m1}t)",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 20,
+   "line": 4,
+   "ocr": "sin(@mut) … is- … i … bythe",
+   "fixed": "sin(ω_{m1}t) … is …  … by the",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 20,
+   "line": 5,
+   "ocr": ". Sin(@m_if)",
+   "fixed": "sin(ω_{m1}t)",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 20,
+   "line": 7,
+   "ocr": "w,_,f) … @,)f}cos(hob: Gait)",
+   "fixed": "ω_{m1}t) … ω_{m1}t)cos(hob: ω_{m1}t)",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 20,
+   "line": 15,
+   "ocr": "AS … accurate.",
+   "fixed": " … accurate",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 20,
+   "line": 18,
+   "ocr": "Equation. … 2),",
+   "fixed": "Equation … (2),",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 20,
+   "line": 19,
+   "ocr": "[1(#) … 12(t)",
+   "fixed": "I1(t) … I2(t)",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 20,
+   "line": 22,
+   "ocr": "11 … [2",
+   "fixed": "I1 … I2",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 20,
+   "line": 25,
+   "ocr": "‘5 … (Aenit)",
+   "fixed": " … (Δω_{m1}t)",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 20,
+   "line": 26,
+   "ocr": "H … (A@, et) … 12.",
+   "fixed": "I1 … (Δω_{m2}t) … I2.",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 20,
+   "line": 28,
+   "ocr": "[2(t)",
+   "fixed": "I2(t)",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 20,
+   "line": 29,
+   "ocr": "_",
+   "fixed": "=",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 20,
+   "line": 30,
+   "ocr": "(sy) … ay (8A) (6) “1 = (2) (Bde) | mu)",
+   "fixed": "(I1) (8Δω_{m1}t) (6) I2(t) … (I2) (8Δω_{m2}t) (7)",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 20,
+   "line": 33,
+   "ocr": ".e",
+   "fixed": "",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 20,
+   "line": 40,
+   "ocr": " … € …  … = … A(t)sinfagt … (11) (8A@mit)sin(e—;t) + (12) (8Ae@,;¢)sin mat]",
+   "fixed": "follows. e … = … A(t)sin[ω_{c}t … + … (I1) (8Δω_{m1}t)sin(ω_{m1}t) … (I2) (8Δω_{m1}t)sin ω_{m2}t]",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 20,
+   "line": 44,
+   "ocr": "Aw,,,t",
+   "fixed": "Δω_{m1}t",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 20,
+   "line": 45,
+   "ocr": "A@mat",
+   "fixed": "Δω_{m2}t",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 20,
+   "line": 49,
+   "ocr": "8), … ‘the",
+   "fixed": "(8), … the",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 20,
+   "line": 53,
+   "ocr": "e+ … ACt)sin[X]",
+   "fixed": "e … + A(t)sin[X]",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 20,
+   "line": 55,
+   "ocr": "“In",
+   "fixed": "In",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 20,
+   "line": 59,
+   "ocr": "(lob:X )cos(hob:X )]",
+   "fixed": "(lob:X)cos(hob:X)]",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 20,
+   "line": 62,
+   "ocr": "evaluating.",
+   "fixed": "evaluating",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 20,
+   "line": 63,
+   "ocr": "sin(@ if)",
+   "fixed": "sin(ω_{m1}t)",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 20,
+   "line": 64,
+   "ocr": "the. … Hanation",
+   "fixed": "the … Equation",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 20,
+   "line": 65,
+   "ocr": "following. … (14). … .",
+   "fixed": "following … (11). X … =",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 20,
+   "line": 66,
+   "ocr": "X= [wut … (8Aemyt) … [sin(hob mit) + (lobe Jeosthob: omit) (BAttgat)(12)sin(hob: nat )} ( ! 1)",
+   "fixed": "[ω_{c}t … (8Δω_{m1}t) (I1) [sin(hob:ω_{m1}t) + (lob:ω_{m1}t)cos(hob:ω_{m1}t)] + (8Δω_{m2}t)(I2)sin(hob:ω_{m2}t)] … ",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 21,
+   "line": 8,
+   "ocr": "Aw,t, A@mt, … A@nof",
+   "fixed": "Δω_{c}t, Δω_{m1}t, … Δω_{m2}t",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 21,
+   "line": 9,
+   "ocr": "wet, Wait, … Wmot,",
+   "fixed": "ω_{c}t, ω_{m1}t, … ω_{m2}t,",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 21,
+   "line": 10,
+   "ocr": "1, … [2",
+   "fixed": "I1, … I2",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 21,
+   "line": 11,
+   "ocr": "AA, AI",
+   "fixed": "ΔA, ΔI1",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 21,
+   "line": 12,
+   "ocr": "AI2,",
+   "fixed": "ΔI2,",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 21,
+   "line": 18,
+   "ocr": "IJ,",
+   "fixed": "I,",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 21,
+   "line": 22,
+   "ocr": "pos!",
+   "fixed": "pos1",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 21,
+   "line": 23,
+   "ocr": "ALI",
+   "fixed": "AL1",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 21,
+   "line": 24,
+   "ocr": "posl",
+   "fixed": "pos1",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 21,
+   "line": 26,
+   "ocr": "Oot. … @»ot … posi",
+   "fixed": "ω_{m2}t. … ω_{m2}t … pos1",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 21,
+   "line": 27,
+   "ocr": "A@mot … NeW … ®t",
+   "fixed": "Δω_{m2}t … new … ω_{m2}t",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 21,
+   "line": 28,
+   "ocr": "pos]",
+   "fixed": "pos1",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 21,
+   "line": 29,
+   "ocr": "frl",
+   "fixed": "fr1",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 21,
+   "line": 31,
+   "ocr": "fri",
+   "fixed": "fr1",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 21,
+   "line": 32,
+   "ocr": "Aw;.t",
+   "fixed": "Δω_{m2}t",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 21,
+   "line": 34,
+   "ocr": "@,of",
+   "fixed": "ω_{m2}t",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 21,
+   "line": 35,
+   "ocr": "@ of",
+   "fixed": "ω_{m2}t",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 21,
+   "line": 37,
+   "ocr": "pos]",
+   "fixed": "pos1",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 21,
+   "line": 41,
+   "ocr": "sin(hob:w2t)",
+   "fixed": "sin(hob:ω_{m2}t)",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 21,
+   "line": 44,
+   "ocr": "12",
+   "fixed": "I2",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 21,
+   "line": 45,
+   "ocr": "[2",
+   "fixed": "I2",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 21,
+   "line": 50,
+   "ocr": "¢1",
+   "fixed": "t1",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 21,
+   "line": 51,
+   "ocr": "from:",
+   "fixed": "from",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 21,
+   "line": 54,
+   "ocr": "_-of",
+   "fixed": "of",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 21,
+   "line": 64,
+   "ocr": "¢1",
+   "fixed": "t1",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 21,
+   "line": 67,
+   "ocr": "sin(hob:@m2¢)",
+   "fixed": "sin(hob:ω_{m2}t)",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 22,
+   "line": 2,
+   "ocr": "[2 … 12",
+   "fixed": "I2 … I2",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 22,
+   "line": 3,
+   "ocr": "MLI",
+   "fixed": "ML1",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 22,
+   "line": 5,
+   "ocr": "AI2",
+   "fixed": "ΔI2",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 22,
+   "line": 10,
+   "ocr": "AI2",
+   "fixed": "ΔI2",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 22,
+   "line": 11,
+   "ocr": "L … [2",
+   "fixed": "I. … I2",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 22,
+   "line": 13,
+   "ocr": "AI2",
+   "fixed": "ΔI2",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 22,
+   "line": 15,
+   "ocr": "12",
+   "fixed": "I2",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 22,
+   "line": 16,
+   "ocr": "12",
+   "fixed": "I2",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 22,
+   "line": 17,
+   "ocr": "12",
+   "fixed": "I2",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 22,
+   "line": 19,
+   "ocr": "@nif",
+   "fixed": "ω_{m1}t",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 22,
+   "line": 21,
+   "ocr": "ALI",
+   "fixed": "AL1",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 22,
+   "line": 22,
+   "ocr": "Aw,,,¢",
+   "fixed": "Δω_{m1}t",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 22,
+   "line": 27,
+   "ocr": "@,,,t.",
+   "fixed": "ω_{m1}t.",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 22,
+   "line": 28,
+   "ocr": "pos2.of",
+   "fixed": "pos2 of",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 22,
+   "line": 33,
+   "ocr": "#1",
+   "fixed": "t1",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 22,
+   "line": 37,
+   "ocr": "(12)sin(hob:@p2t).",
+   "fixed": "(12)sin(hob:ω_{m2}t).",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 22,
+   "line": 39,
+   "ocr": "8Aq@,,.f",
+   "fixed": "8Δω_{m2}t",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 22,
+   "line": 45,
+   "ocr": "w,,t",
+   "fixed": "ω_{m1}t",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 22,
+   "line": 50,
+   "ocr": "7/2 … 37/2)",
+   "fixed": "π/2 … 3π/2)",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 22,
+   "line": 57,
+   "ocr": "¢1",
+   "fixed": "t1",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 22,
+   "line": 58,
+   "ocr": "#1 … sin(hob:@,,t)",
+   "fixed": "t1 … sin(hob:ω_{m1}t)",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 22,
+   "line": 62,
+   "ocr": "[1",
+   "fixed": "I1",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 22,
+   "line": 64,
+   "ocr": "AI1",
+   "fixed": "ΔI1",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 22,
+   "line": 68,
+   "ocr": "AI",
+   "fixed": "ΔI1",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 23,
+   "line": 1,
+   "ocr": "[1",
+   "fixed": "I1",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 23,
+   "line": 10,
+   "ocr": "¢2",
+   "fixed": "t2",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 23,
+   "line": 12,
+   "ocr": "cos(hob:w,,;¢)",
+   "fixed": "cos(hob:ω_{m1}t)",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 23,
+   "line": 15,
+   "ocr": "w,,,¢",
+   "fixed": "ω_{m1}t",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 23,
+   "line": 19,
+   "ocr": "34,",
+   "fixed": "34.",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 23,
+   "line": 22,
+   "ocr": "[1",
+   "fixed": "I1",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 23,
+   "line": 23,
+   "ocr": "1",
+   "fixed": "I1",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 23,
+   "line": 28,
+   "ocr": "AA",
+   "fixed": "ΔA",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 23,
+   "line": 36,
+   "ocr": "#1",
+   "fixed": "t1",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 23,
+   "line": 39,
+   "ocr": "¢1",
+   "fixed": "t1",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 23,
+   "line": 40,
+   "ocr": "sin(hob:@n1t).",
+   "fixed": "sin(hob:ω_{m1}t).",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 23,
+   "line": 44,
+   "ocr": "#1",
+   "fixed": "t1",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 23,
+   "line": 46,
+   "ocr": "(lob:@,_;t)cos(hob:@,12)",
+   "fixed": "(lob:ω_{m1}t)cos(hob:ω_{m1}t)",
+   "basis": "scan"
+  },
+  {
+   "col": 23,
+   "line": 50,
+   "ocr": "¢1",
+   "fixed": "t1",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 23,
+   "line": 52,
+   "ocr": "sin(hob:@yit) … (lob:@,1t)cos(hob:@ yf).",
+   "fixed": "sin(hob:ω_{m1}t) … (lob:ω_{m1}t)cos(hob:ω_{m1}t).",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 23,
+   "line": 53,
+   "ocr": "[1",
+   "fixed": "I1",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 23,
+   "line": 63,
+   "ocr": "(11)[sin(hob:w,,t)",
+   "fixed": "(I1)[sin(hob:ω_{m1}t)",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 23,
+   "line": 64,
+   "ocr": "(lob:@m1t)cos(hob:wnit)]",
+   "fixed": "(lob:ω_{m1}t)cos(hob:ω_{m1}t)]",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 23,
+   "line": 66,
+   "ocr": "(8 Aw,;t)",
+   "fixed": "(8Δω_{m1}t)",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 24,
+   "line": 6,
+   "ocr": "#i2",
+   "fixed": "ti2",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 24,
+   "line": 8,
+   "ocr": "flocation",
+   "fixed": "tlocation",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 24,
+   "line": 13,
+   "ocr": "#1",
+   "fixed": "t1",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 24,
+   "line": 15,
+   "ocr": "(8A@,,;¢)(11)[(sin(hob:@_1¢)",
+   "fixed": "(8Δω_{m1}t)(I1)[(sin(hob:ω_{m1}t)",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 24,
+   "line": 16,
+   "ocr": "(lob:@,_,¢)cos(hob:@,,f)].",
+   "fixed": "(lob:ω_{m1}t)cos(hob:ω_{m1}t)].",
+   "basis": "scan"
+  },
+  {
+   "col": 24,
+   "line": 18,
+   "ocr": "§2",
+   "fixed": "52",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 24,
+   "line": 19,
+   "ocr": "1i2",
+   "fixed": "ti2",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 24,
+   "line": 23,
+   "ocr": "w,t",
+   "fixed": "ω_{c}t",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 24,
+   "line": 33,
+   "ocr": "1/2",
+   "fixed": "ti2",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 24,
+   "line": 35,
+   "ocr": "5 ALI.",
+   "fixed": "AL1.",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 24,
+   "line": 40,
+   "ocr": "¢1.",
+   "fixed": "t1.",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 24,
+   "line": 47,
+   "ocr": "1i2",
+   "fixed": "ti2",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 24,
+   "line": 49,
+   "ocr": "(lob:X),",
+   "fixed": "(lob:X).",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 24,
+   "line": 51,
+   "ocr": "12",
+   "fixed": "t2",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 24,
+   "line": 57,
+   "ocr": "w,t",
+   "fixed": "ω_{c}t",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 24,
+   "line": 60,
+   "ocr": "Aw,¢",
+   "fixed": "Δω_{c}t",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 24,
+   "line": 61,
+   "ocr": "/r3",
+   "fixed": "fr3",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 24,
+   "line": 64,
+   "ocr": "",
+   "fixed": "65",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 24,
+   "line": 65,
+   "ocr": "tet",
+   "fixed": "ω_{c}t",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 25,
+   "line": 2,
+   "ocr": "12",
+   "fixed": "t2",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 25,
+   "line": 4,
+   "ocr": "ALI. … AL}",
+   "fixed": "AL1. … AL1",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 25,
+   "line": 5,
+   "ocr": "-(lob:X)cos(hob:X).",
+   "fixed": "(lob:X)cos(hob:X).",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 25,
+   "line": 7,
+   "ocr": "#1 … scratch:",
+   "fixed": "t1 … scratch",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 25,
+   "line": 11,
+   "ocr": "#1",
+   "fixed": "t1",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 25,
+   "line": 15,
+   "ocr": "#1",
+   "fixed": "t1",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 25,
+   "line": 16,
+   "ocr": "(lob:X)cos(hob:X",
+   "fixed": "(lob:X)cos(hob:X)].",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 25,
+   "line": 20,
+   "ocr": "of.",
+   "fixed": "of",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 25,
+   "line": 36,
+   "ocr": "w,",
+   "fixed": "ω_{c}",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 25,
+   "line": 38,
+   "ocr": "w,,",
+   "fixed": "ω_{m}",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 25,
+   "line": 42,
+   "ocr": "w, … w»",
+   "fixed": "ω_{c} … ω_{m}",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 25,
+   "line": 43,
+   "ocr": "[w,¢",
+   "fixed": "[ω_{c}t",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 25,
+   "line": 44,
+   "ocr": "®t]",
+   "fixed": "ω_{m}t]",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 25,
+   "line": 46,
+   "ocr": "[af … +I(t) … wt]",
+   "fixed": "[ω_{c}t + … I(t) … ω_{m}t]",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 25,
+   "line": 56,
+   "ocr": "w,,",
+   "fixed": "ω_{c},",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 25,
+   "line": 57,
+   "ocr": "w»,",
+   "fixed": "ω_{m},",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 25,
+   "line": 65,
+   "ocr": "f, … w,,, @,,",
+   "fixed": "t, … ω_{m}, ω_{c},",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 25,
+   "line": 66,
+   "ocr": "w,",
+   "fixed": "ω_{m}",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 26,
+   "line": 1,
+   "ocr": "modula' . tion",
+   "fixed": "modulation",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 26,
+   "line": 6,
+   "ocr": "@, … peri' odically",
+   "fixed": "ω_{c} … periodically",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 26,
+   "line": 13,
+   "ocr": "musica!",
+   "fixed": "musical",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 26,
+   "line": 18,
+   "ocr": "w,,",
+   "fixed": "ω_{c},",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 26,
+   "line": 20,
+   "ocr": "w»,",
+   "fixed": "ω_{m},",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 26,
+   "line": 21,
+   "ocr": "var: jes",
+   "fixed": "varies",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 26,
+   "line": 22,
+   "ocr": "1,",
+   "fixed": "t,",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 26,
+   "line": 24,
+   "ocr": "¢,",
+   "fixed": "t,",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 26,
+   "line": 27,
+   "ocr": "to'A … [wet … wt],",
+   "fixed": "to A … [ω_{c}t … ω_{m}t],",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 26,
+   "line": 31,
+   "ocr": "__ §.",
+   "fixed": "5.",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 26,
+   "line": 42,
+   "ocr": "audiorange",
+   "fixed": "audio-range",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 26,
+   "line": 44,
+   "ocr": "w,t … wat,",
+   "fixed": "ω_{c}t … ω_{m}t,",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 26,
+   "line": 49,
+   "ocr": "wat",
+   "fixed": "ω_{m}t",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 26,
+   "line": 50,
+   "ocr": "wt",
+   "fixed": "ω_{m}t",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 26,
+   "line": 52,
+   "ocr": "wt",
+   "fixed": "ω_{m}t",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 26,
+   "line": 56,
+   "ocr": "w,,¢",
+   "fixed": "ω_{m}t",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 26,
+   "line": 58,
+   "ocr": "mt",
+   "fixed": "ω_{m}t",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 26,
+   "line": 59,
+   "ocr": "w,t",
+   "fixed": "ω_{c}t",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 26,
+   "line": 60,
+   "ocr": "[wet",
+   "fixed": "[ω_{c}t",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 26,
+   "line": 61,
+   "ocr": "Sin … @,¢]",
+   "fixed": "sin … ω_{m}t]",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 26,
+   "line": 62,
+   "ocr": "[w,¢",
+   "fixed": "[ω_{c}t",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 26,
+   "line": 63,
+   "ocr": "wf]",
+   "fixed": "ω_{m}t]",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 26,
+   "line": 65,
+   "ocr": "[w,t … pt]",
+   "fixed": "[ω_{c}t … ω_{m}t]",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 26,
+   "line": 67,
+   "ocr": "[wt",
+   "fixed": "[ω_{c}t",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 26,
+   "line": 68,
+   "ocr": "@,t",
+   "fixed": "ω_{m}t",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 27,
+   "line": 3,
+   "ocr": "[wt … @, ¢]",
+   "fixed": "[ω_{c}t … ω_{m}t]",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 27,
+   "line": 11,
+   "ocr": "wt",
+   "fixed": "ω_{m}t",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 27,
+   "line": 12,
+   "ocr": "wt …  … @,:is … w,",
+   "fixed": "ω_{c}t … ω_{c} … is … ω_{m}",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 27,
+   "line": 17,
+   "ocr": "wf",
+   "fixed": "ω_{m}t",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 27,
+   "line": 18,
+   "ocr": "w,t … Gc/Gim",
+   "fixed": "ω_{c}t … ω_{c}/ω_{m}",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 27,
+   "line": 22,
+   "ocr": "to:",
+   "fixed": "to",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 27,
+   "line": 24,
+   "ocr": "w,t",
+   "fixed": "ω_{c}t",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 27,
+   "line": 25,
+   "ocr": "@,f … @,/w, … «,/1",
+   "fixed": "ω_{m}t … ω_{c}/ω_{m} … ω_{c}/1",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 27,
+   "line": 27,
+   "ocr": "harmonics.",
+   "fixed": "harmonics",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 27,
+   "line": 55,
+   "ocr": "$5",
+   "fixed": "",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 28,
+   "line": 2,
+   "ocr": "@,t … wf",
+   "fixed": "ω_{c}t … ω_{m}t",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 28,
+   "line": 3,
+   "ocr": "@-/@m,",
+   "fixed": "ω_{c}/ω_{m}",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 28,
+   "line": 5,
+   "ocr": "w,f … @pt",
+   "fixed": "ω_{c}t … ω_{m}t",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 28,
+   "line": 6,
+   "ocr": "w,/w,,",
+   "fixed": "ω_{c}/ω_{m}",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 28,
+   "line": 10,
+   "ocr": "inchides",
+   "fixed": "includes",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 28,
+   "line": 11,
+   "ocr": "w,t … we;t … Wat … @e, … @,.",
+   "fixed": "ω_{c}t … ω_{c1}t … ω_{c2}t … ω_{c1} … ω_{c2}",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 28,
+   "line": 14,
+   "ocr": "@,;f, @.f … w,,",
+   "fixed": "ω_{c1}t, ω_{c2}t … ω_{m}",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 28,
+   "line": 15,
+   "ocr": "@3/Gm … 7 … ey! On, 18",
+   "fixed": "ω_{c2}/ω_{m} … 7/1 … ω_{c1}/ω_{m} is",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 28,
+   "line": 19,
+   "ocr": "wf … wf",
+   "fixed": "ω_{m}t … ω_{m1}t",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 28,
+   "line": 20,
+   "ocr": "w »2f,",
+   "fixed": "ω_{m2}t,",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 28,
+   "line": 22,
+   "ocr": ",()",
+   "fixed": "I_{1}(t)",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 28,
+   "line": 23,
+   "ocr": "second: … I(t),",
+   "fixed": "second … I_{2}(t),",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 28,
+   "line": 24,
+   "ocr": "[eet … 1,(t) … SIN … Wp yt … 1,(t)",
+   "fixed": "[ω_{c}t … I_{1}(t) … sin … ω_{m1}t … I_{2}(t)",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 28,
+   "line": 25,
+   "ocr": "Omat }.",
+   "fixed": "ω_{m2}t].",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 28,
+   "line": 26,
+   "ocr": "‘14. … aniplitude",
+   "fixed": "14. … amplitude",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 28,
+   "line": 27,
+   "ocr": "‘output",
+   "fixed": "output",
+   "basis": "scan + Google Patents"
+  }
+ ]
+}

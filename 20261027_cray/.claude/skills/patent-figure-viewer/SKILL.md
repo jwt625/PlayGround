@@ -18,11 +18,13 @@ user's `~/.claude/VIZ-STYLE-GUIDE.md` (dark default, sharp corners, no explainer
 | 2 | verbatim text | agent per patent | `data/<pn>/text.json` |
 | 3 | figure table, parts, notes | agent per patent | `data/<pn>/figures.json`, `data/<pn>/notes.json`, then `python3 -I pipeline/crop.py <pn>` |
 | 4 | traces | agents, split by complexity | `data/<pn>/traces/fig-<id>.json`, checked with `overlay.py` + `coverage.py` |
-| 5 | build | script | `python3 -I pipeline/build.py` -> `index.html` |
+| 5 | build | script | `python3 -I pipeline/build.py [--only <pn>...]` -> `index.html` gallery + `p/<pn>.html` per patent |
 | 6 | verify | script + eyes | `pipeline/selftest.sh`, `pipeline/shoot.sh '#/<pn>/figures/<fig>/<ref>' out.png` |
 
 Setup for a new patent: put the PDF at `sources/<pn>.pdf` (USPTO image PDF), write
-`data/<pn>/meta.json` = `{"col1_page": <0-based page index of text column 1>, "google": "https://patents.google.com/patent/US<pn>A/en"}`.
+`data/<pn>/meta.json` = `{"col1_page": <0-based page index of text column 1>, "google": "https://patents.google.com/patent/US<pn>A/en", "group": "<gallery section>"}`
+(groups and their order: `GROUPS` in `build.py`). PDF links: Google Patents page HTML has the `patentimages.storage.googleapis.com/...pdf` URL;
+B1 grants (no pre-grant publication) use `US<pn>B1`.
 Find `col1_page` from the OCR: the first page whose text starts with the patent number then `1`.
 
 `work/` is regenerable and untracked: on a fresh checkout run stage 1 and `crop.py` for each patent
@@ -90,3 +92,20 @@ open the scanned page. About tab: note, bibliography, glossary, parts index, ref
 - Chrome throttles hundreds of rapid `location.hash` changes; the self-test routes internally.
 - `?selftest`, `?step=N`, `?theme=light|dark` are headless review hooks.
 - Parent repo `.gitignore` ignores `*.json/*.pdf/*.html`; the project `.gitignore` re-includes them.
+- Size: full-page 1-bit scans are ~0.1 MB each base64; 13 patents of pages alone were ~34 MB, so the build
+  is split (light gallery `index.html`, one self-contained `p/<pn>.html` per patent, each under ~20 MB).
+- Check drawings exist before proposing a patent: Cohen-Boyer US 4,237,224 is "No Drawings".
+- Batch runs: a Workflow pipeline per patent (text + figure agents in parallel, tracers grouped by the
+  figure agent's complexity score: >=7 solo, else packed to a load of 10, max 6 figures) ran 11 patents /
+  208 figures in ~2 h with 97 agents at ~12 concurrent. Tracer median 12~18 min, dense logic sheets ~25.
+- Numeral linking also covers uppercase suffixes (12D), primes (3', 320′ -> ASCII in parts), comma lists
+  without spaces (42,48) and range ends (51-54). Letter labels (A, B, C) stay drawing-only.
+- Drawing-only designators (R1, C1, Q1) used as refs get a part with an empty name, never an invented one.
+- Term status: 17 years from grant; 20 from filing after 1995-06-08; the later of the two if in force on
+  1995-06-08; 20 years counts from the earliest U.S. non-provisional parent (front page [63]); a printed
+  terminal disclaimer ("[*] Notice") caps it. Google's "anticipated expiration" missed a disclaimer (4,859,016).
+- Tracer wishlist (not built): hatch phase/offset, centred hatch line, text skew/weight/outline for hand
+  lettering, arrowhead length/width, dash offset, hit-only fill, multi-ref elements, ignore-mask in
+  coverage.py for neighbouring-figure ink. Hand lettering vs Helvetica is the main residual off-scan ink.
+- Certificates (correction, reexamination) are appended pages, sometimes a different page size
+  (2560x3300): text paras carry `page`; the scan modal reads per-page sizes (`page_wh`).

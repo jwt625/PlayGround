@@ -1,0 +1,713 @@
+{
+  "pn": "4018121",
+  "figures": [
+    {
+      "id": "1",
+      "label": "FIG. 1",
+      "sheet": 1,
+      "page": 1,
+      "crop": [
+        320,
+        427,
+        1925,
+        2430
+      ],
+      "rotate": 0,
+      "front_page": false
+    },
+    {
+      "id": "2",
+      "label": "FIG. 2",
+      "sheet": 1,
+      "page": 1,
+      "crop": [
+        247,
+        2130,
+        2018,
+        2924
+      ],
+      "rotate": 0,
+      "front_page": true
+    },
+    {
+      "id": "3",
+      "label": "FIG. 3",
+      "sheet": 2,
+      "page": 2,
+      "crop": [
+        344,
+        632,
+        1981,
+        2712
+      ],
+      "rotate": 0,
+      "front_page": false
+    },
+    {
+      "id": "4",
+      "label": "FIG. 4",
+      "sheet": 3,
+      "page": 3,
+      "crop": [
+        340,
+        771,
+        1947,
+        2658
+      ],
+      "rotate": 0,
+      "front_page": false
+    },
+    {
+      "id": "5",
+      "label": "FIG. 5",
+      "sheet": 4,
+      "page": 4,
+      "crop": [
+        322,
+        362,
+        2015,
+        3001
+      ],
+      "rotate": 270,
+      "front_page": false
+    },
+    {
+      "id": "6",
+      "label": "FIG. 6",
+      "sheet": 5,
+      "page": 5,
+      "crop": [
+        271,
+        432,
+        2045,
+        2890
+      ],
+      "rotate": 270,
+      "front_page": false
+    },
+    {
+      "id": "7",
+      "label": "FIG. 7",
+      "sheet": 6,
+      "page": 6,
+      "crop": [
+        440,
+        386,
+        1927,
+        3021
+      ],
+      "rotate": 270,
+      "front_page": false
+    },
+    {
+      "id": "8",
+      "label": "FIG. 8",
+      "sheet": 7,
+      "page": 7,
+      "crop": [
+        473,
+        395,
+        1797,
+        2946
+      ],
+      "rotate": 270,
+      "front_page": false
+    },
+    {
+      "id": "9",
+      "label": "FIG. 9",
+      "sheet": 8,
+      "page": 8,
+      "crop": [
+        407,
+        377,
+        1934,
+        3017
+      ],
+      "rotate": 270,
+      "front_page": false
+    },
+    {
+      "id": "10",
+      "label": "FIG. 10",
+      "sheet": 9,
+      "page": 9,
+      "crop": [
+        326,
+        322,
+        1977,
+        3054
+      ],
+      "rotate": 270,
+      "front_page": false
+    },
+    {
+      "id": "11",
+      "label": "FIG. 11",
+      "sheet": 10,
+      "page": 10,
+      "crop": [
+        352,
+        520,
+        2012,
+        2856
+      ],
+      "rotate": 270,
+      "front_page": false
+    },
+    {
+      "id": "12",
+      "label": "FIG. 12",
+      "sheet": 11,
+      "page": 11,
+      "crop": [
+        230,
+        614,
+        2064,
+        2776
+      ],
+      "rotate": 0,
+      "front_page": false
+    },
+    {
+      "id": "13",
+      "label": "FIG. 13",
+      "sheet": 12,
+      "page": 12,
+      "crop": [
+        272,
+        397,
+        2070,
+        3059
+      ],
+      "rotate": 270,
+      "front_page": false
+    },
+    {
+      "id": "14",
+      "label": "FIG. 14",
+      "sheet": 13,
+      "page": 13,
+      "crop": [
+        248,
+        393,
+        2037,
+        2998
+      ],
+      "rotate": 270,
+      "front_page": false
+    },
+    {
+      "id": "15",
+      "label": "FIG. 15",
+      "sheet": 14,
+      "page": 14,
+      "crop": [
+        379,
+        338,
+        1942,
+        3031
+      ],
+      "rotate": 270,
+      "front_page": false
+    },
+    {
+      "id": "16",
+      "label": "FIG. 16",
+      "sheet": 15,
+      "page": 15,
+      "crop": [
+        227,
+        340,
+        2019,
+        3029
+      ],
+      "rotate": 270,
+      "front_page": false
+    },
+    {
+      "id": "17",
+      "label": "FIG. 17",
+      "sheet": 16,
+      "page": 16,
+      "crop": [
+        771,
+        363,
+        1551,
+        3031
+      ],
+      "rotate": 270,
+      "front_page": false
+    },
+    {
+      "id": "18",
+      "label": "FIG. 18",
+      "sheet": 17,
+      "page": 17,
+      "crop": [
+        382,
+        770,
+        1821,
+        2606
+      ],
+      "rotate": 270,
+      "front_page": false
+    }
+  ],
+  "parts": [
+    {
+      "ref": "4",
+      "name": "unit generator",
+      "figs": [
+        "2"
+      ]
+    },
+    {
+      "ref": "5",
+      "name": "unit generator",
+      "figs": [
+        "2"
+      ]
+    },
+    {
+      "ref": "10",
+      "name": "curve",
+      "figs": [
+        "1"
+      ],
+      "alt": [
+        "amplitude function",
+        "envelope",
+        "overall envelope of amplitude function"
+      ]
+    },
+    {
+      "ref": "11",
+      "name": "Curve",
+      "figs": [
+        "1"
+      ],
+      "alt": [
+        "index function",
+        "envelope"
+      ]
+    },
+    {
+      "ref": "21",
+      "name": "line",
+      "figs": [
+        "5"
+      ],
+      "alt": [
+        "output"
+      ]
+    },
+    {
+      "ref": "22",
+      "name": "digital to analog converter",
+      "figs": [
+        "5"
+      ],
+      "alt": [
+        "D/A converter",
+        "D to A converter",
+        "analog converter"
+      ]
+    },
+    {
+      "ref": "23",
+      "name": "loudspeaker",
+      "figs": [
+        "5"
+      ],
+      "alt": [
+        "speaker"
+      ]
+    },
+    {
+      "ref": "24",
+      "name": "data bus",
+      "figs": [
+        "5"
+      ]
+    },
+    {
+      "ref": "26",
+      "name": "scratch pad memory",
+      "figs": [
+        "5",
+        "12"
+      ],
+      "alt": [
+        "scratchpad memory",
+        "search pad memory"
+      ]
+    },
+    {
+      "ref": "27",
+      "name": "envelope memory",
+      "figs": [
+        "5",
+        "9"
+      ]
+    },
+    {
+      "ref": "28",
+      "name": "initialization memory",
+      "figs": [
+        "5"
+      ]
+    },
+    {
+      "ref": "29",
+      "name": "binary constant",
+      "figs": [
+        "5"
+      ]
+    },
+    {
+      "ref": "31",
+      "name": "multiplier",
+      "figs": [
+        "5"
+      ],
+      "alt": [
+        "16 bit multiplier"
+      ]
+    },
+    {
+      "ref": "32",
+      "name": "adder",
+      "figs": [
+        "5"
+      ]
+    },
+    {
+      "ref": "33",
+      "name": "output latch for register",
+      "figs": [
+        "5"
+      ],
+      "alt": [
+        "output latch",
+        "output latches",
+        "output buffer latches"
+      ]
+    },
+    {
+      "ref": "34",
+      "name": "sine memory",
+      "figs": [
+        "5"
+      ]
+    },
+    {
+      "ref": "36",
+      "name": "four way selector",
+      "figs": [
+        "5",
+        "12"
+      ],
+      "alt": [
+        "selector"
+      ]
+    },
+    {
+      "ref": "37",
+      "name": "frequency memory",
+      "figs": [
+        "5"
+      ]
+    },
+    {
+      "ref": "38",
+      "name": "envelope counter memory",
+      "figs": [
+        "5",
+        "9"
+      ]
+    },
+    {
+      "ref": "39",
+      "name": "eight bit binary counter",
+      "figs": [
+        "5"
+      ]
+    },
+    {
+      "ref": "40",
+      "name": "AND gate",
+      "figs": []
+    },
+    {
+      "ref": "41",
+      "name": "instruction memory",
+      "figs": [
+        "5"
+      ],
+      "alt": [
+        "read only memories",
+        "memory"
+      ]
+    },
+    {
+      "ref": "41a",
+      "name": "memory pair",
+      "figs": [
+        "6"
+      ]
+    },
+    {
+      "ref": "41b",
+      "name": "pair",
+      "figs": [
+        "6"
+      ]
+    },
+    {
+      "ref": "42",
+      "name": "associated latch",
+      "figs": [
+        "5",
+        "6"
+      ],
+      "alt": [
+        "latches"
+      ]
+    },
+    {
+      "ref": "43",
+      "name": "blocks",
+      "figs": [
+        "6"
+      ]
+    },
+    {
+      "ref": "44",
+      "name": "blocks",
+      "figs": [
+        "6"
+      ],
+      "alt": [
+        "program counter"
+      ]
+    },
+    {
+      "ref": "46",
+      "name": "OR gating",
+      "figs": [
+        "6"
+      ],
+      "alt": [
+        "OR gate"
+      ]
+    },
+    {
+      "ref": "47",
+      "name": "D flip-flop",
+      "figs": [
+        "6"
+      ]
+    },
+    {
+      "ref": "48",
+      "name": "decoder",
+      "figs": [
+        "7"
+      ],
+      "alt": [
+        "Memory"
+      ]
+    },
+    {
+      "ref": "49",
+      "name": "decoder",
+      "figs": [
+        "7"
+      ]
+    },
+    {
+      "ref": "51",
+      "name": "gate",
+      "figs": [
+        "7"
+      ]
+    },
+    {
+      "ref": "52",
+      "name": "four coupled flip-flops",
+      "figs": [
+        "7"
+      ],
+      "alt": [
+        "Flip-flops"
+      ]
+    },
+    {
+      "ref": "53",
+      "name": "crystal clock",
+      "figs": [
+        "7"
+      ]
+    },
+    {
+      "ref": "56",
+      "name": "gate",
+      "figs": [
+        "8"
+      ]
+    },
+    {
+      "ref": "57",
+      "name": "gate",
+      "figs": [
+        "8"
+      ]
+    },
+    {
+      "ref": "58",
+      "name": "gate",
+      "figs": [
+        "8"
+      ]
+    },
+    {
+      "ref": "59",
+      "name": "gate",
+      "figs": [
+        "8"
+      ]
+    },
+    {
+      "ref": "61",
+      "name": "first set of counters",
+      "figs": [
+        "10"
+      ],
+      "alt": [
+        "counters",
+        "sample counter"
+      ]
+    },
+    {
+      "ref": "62",
+      "name": "other counter",
+      "figs": [
+        "10"
+      ],
+      "alt": [
+        "Counter"
+      ]
+    },
+    {
+      "ref": "63",
+      "name": "gate",
+      "figs": [
+        "10"
+      ]
+    },
+    {
+      "ref": "64",
+      "name": "gate",
+      "figs": [
+        "10"
+      ]
+    },
+    {
+      "ref": "66",
+      "name": "four flip-flop",
+      "figs": [
+        "10"
+      ]
+    },
+    {
+      "ref": "67",
+      "name": "counter",
+      "figs": [
+        "11"
+      ]
+    },
+    {
+      "ref": "68",
+      "name": "gates",
+      "figs": [
+        "13"
+      ]
+    },
+    {
+      "ref": "70",
+      "name": "16 bit adder",
+      "figs": [
+        "14"
+      ]
+    },
+    {
+      "ref": "71",
+      "name": "input latches",
+      "figs": [
+        "14"
+      ]
+    },
+    {
+      "ref": "72",
+      "name": "input latches",
+      "figs": [
+        "14"
+      ]
+    },
+    {
+      "ref": "73",
+      "name": "shift register",
+      "figs": [
+        "15"
+      ]
+    },
+    {
+      "ref": "74",
+      "name": "counter",
+      "figs": [
+        "15"
+      ]
+    },
+    {
+      "ref": "76",
+      "name": "flip-flop",
+      "figs": [
+        "15"
+      ]
+    },
+    {
+      "ref": "77",
+      "name": "16 bit input latch",
+      "figs": [
+        "15"
+      ]
+    },
+    {
+      "ref": "78",
+      "name": "set of gates",
+      "figs": [
+        "16"
+      ]
+    },
+    {
+      "ref": "79",
+      "name": "adders",
+      "figs": [
+        "16"
+      ]
+    },
+    {
+      "ref": "81",
+      "name": "latch",
+      "figs": [
+        "16"
+      ]
+    },
+    {
+      "ref": "84",
+      "name": "latch",
+      "figs": []
+    }
+  ]
+}

@@ -1,0 +1,91 @@
+{
+ "patent": "The Bell Telephone Laboratories patent on the point-contact transistor. Bardeen and Brattain first demonstrated the device in December 1947, and this application was filed in June 1948. The patent never uses the word \"transistor\", a name Bell Labs adopted in 1948. Two closely spaced metal points rest on a block of N-type germanium. One point (the emitter) injects holes into a thin P-type surface layer, and the other (the collector) gathers most of them, so a small emitter signal controls a larger collector current. Bardeen, Brattain and William Shockley shared the 1956 Nobel Prize in Physics for semiconductor research and the discovery of the transistor effect. Point-contact transistors were manufactured in the early 1950s and were then replaced by junction transistors, which were easier to reproduce.",
+ "figs": {
+  "1": "The block is shown in perspective: dashed lines are hidden edges, and the hatched faces are the sides of the block. Points 5 and 6 nearly touch at the middle of top face 3. The left loop (input transformer 10, battery 7 at +0.5 V, emitter 5) and the right loop (collector 6, battery 8 at -40 V, output transformer 9) share a return wire to base electrode 2 on the underside, which makes this the grounded-base connection.",
+  "1A": "Not to scale. Break gaps at both ends and the wavy break across the middle mean that length and depth have been left out. The dotted line just below the top surface is barrier 4, which separates thin P-type layer 3 from the N-type body. The two contacts are drawn as bent metal strips that touch the surface close together. The dashed curve 13 at the left is a hole stream line that runs along the layer and then crosses the barrier. The dashed region 14 near the contact point, marked with plus signs, is the high-field region, where fixed positive charges are shown.",
+  "2": "The vacuum-tube triode wired in the same way as FIG. 1. The grid is tied to the common return, as base electrode 2 is in FIG. 1. Bias E_{C} feeds the cathode and E_{B} feeds the plate. The description maps emitter to cathode, base electrode to grid and collector to anode.",
+  "3": "Plan view of the top face, with the rectangle as the block outline. Without a collector field, the hole stream lines 13 run straight out from emitter 5 in all directions. The curved strokes from numeral 13 are leaders to several of those lines. Dashed circle 14 marks the edge of the collector field around point 6.",
+  "3A": "The same view as FIG. 3 with the collector field present. Stream lines leaving emitter 5 now bend round and end on collector 6 instead of spreading evenly. The closed loops show how much of the surrounding area drains into the collector inside dashed boundary 14.",
+  "4": "Collectors 6 and 6a sit symmetrically on either side of emitter 5, each inside its own dashed field boundary 14. The stream lines form two lobes, one ending on each collector. The vertical line through 5 is the stream line midway between them.",
+  "5": "Three collectors 6, 6a and 6b are spaced at roughly 120 degrees around emitter 5. The dashed three-lobed outline 14 is the combined boundary of their fields, which encloses nearly all of the stream lines.",
+  "6": "Ring collector 6d is the band between the two solid circles, with emitter 5 at its centre and stream lines running out to the ring. The text describes the collector field as a semitorus. Dashed circles 14a (inside the ring) and 14b (outside) are where that field meets the block surface.",
+  "7": "The two semicircular spots 6e and 6f face each other with their straight edges toward emitter 5, which sits in the narrow gap between them. The text calls this layout the substantial equivalent of the circle of FIG. 6. Dashed outlines 14 mark each spot's field.",
+  "8": "Wedge 16 of insulation is plated on two sides: film 51 on the left is the emitter and film 61 on the right is the collector. The films meet the block surface 3 at the wedge's narrow lower edge. The dash lines at the top are the leads, and the dashed lines inside the wedge are hidden edges. Layer 3 and barrier 4 are too thin to draw, so 4 points to the top edge of the block.",
+  "9": "Cone 17 is plated over its conical surface to form collector 62. Central wire 52 (dashed where hidden inside the cone) runs down the axis to the tip and serves as the emitter. Only the tip touches surface 3.",
+  "10": "Block 1 is shaped as a truncated pyramid and seen from the side. Base electrode 2 is on the wide face, and layer 3'' and barrier 4'' are at the small face, where both points touch. Emitter 5 goes to the common bottom wire. The input (source 11 with bias 7, E_{C}) is applied between base and emitter, and the output (bias 8, E_{B}, and load R_{L}) is taken between collector and emitter. In tube terms this is the conventional grounded-cathode stage.",
+  "11": "The surface treatment is limited to a bowl-shaped patch on the right face, which gives layer 3' and barrier 4'. Collector 6 returns directly through battery 8 (E_{B}) to the common wire. The load R_{L} is in the emitter lead and is shared by input and output, which makes this the cathode-follower (grounded-plate) connection. The unlabeled zigzag below battery 7 is a resistor in series with source 11.",
+  "12": "Grounded-base connection as in FIG. 1, with a parallel tuned circuit (coil and unlabeled capacitor) in both the emitter lead and the collector lead. The two coils are drawn side by side and labeled 12 as one transformer. Their coupling feeds collector output back to the emitter and sustains oscillation. R_{L} is the load in the collector return.",
+  "13": "Energy band picture: negative potential (-V) is plotted upward and depth x into the semiconductor runs to the right from the metal at the vertical axis. The curve falls from height E_{e} at the metal to zero where the space-charge region ends. The plus signs along the axis are the fixed, ionized donor charges in that region.",
+  "14": "The P-type counterpart of FIG. 13, drawn upside down. The hole potential curve drops from the axis by E_{h} at the metal and flattens with depth.",
+  "15": "Vertical dashed line BARRIER divides the thin P-type layer (left, next to the metal at the axis) from the N-type body (right). The upper group a, a_{1}, a_{2} is the conduction-band (electron) energy, and the lower group b, b_{1}, b_{2} is the hole energy, offset by the constant E_{g}. Solid curves (a, b) are equilibrium, dash-dot curves (a_{1}, b_{1}) have a small bias applied, and dashed curves (a_{2}, b_{2}) have a signal added. Short dashes on the axis in the P region are negative fixed charges, and plus signs in the N region are positive fixed charges. E_{F} is the Fermi level.",
+  "16": "Drawn in pseudo-3D. x is depth into the surface, y runs along the surface from the emitter (near the origin) to the collector (far end), and V is negative potential on a roughly logarithmic scale. Each solid profile is curve b of FIG. 15 at a different y. The dashed plane marks the barrier depth. Small circles are holes gathered at each profile's peak, like bubbles. Toward the collector the peak flattens, and at E_{collector} the holes leave through the collector (arrows at top)."
+ },
+ "parts": {
+  "1'": "Named in the text for the truncated-pyramid block of FIG. 10; the drawing prints it as 1 without a prime.",
+  "3''": "Printed in FIG. 10 but not mentioned in the text; by analogy with 3' in FIG. 11 it marks the P-type layer at the small face.",
+  "4''": "Printed in FIG. 10 with a mark that resembles a degree sign.",
+  "2": "The plated film on the underside is the base electrode; the text uses both terms.",
+  "14": "The same numeral marks the high-field region in FIG. 1A and the dashed collector field boundaries in FIGS. 3 to 5 and 7.",
+  "51": "Introduced as \"metal films ..., one 51 to serve as emitter and the other 61 as collector\".",
+  "8": "Battery 8 and transformer 9 are together called \"external load circuit 8, 9\".",
+  "15": "The text uses \"stream lines 15\" for the hole current near the contacts; in FIG. 1A, 15 points to the contact region."
+ },
+ "glossary": [
+  {
+   "term": "point contact",
+   "def": "A sharpened springy metal wire pressed onto a semiconductor surface, making a contact only a few thousandths of an inch across."
+  },
+  {
+   "term": "emitter, collector, base",
+   "def": "The three terminals named in this patent and still used for bipolar transistors: the emitter injects carriers, the collector gathers them, and the base is the common reference (here the plated underside)."
+  },
+  {
+   "term": "N-type / P-type",
+   "def": "Semiconductor whose mobile charges are mainly electrons (N) or mainly holes (P), set by impurities or, as the patent explains, by surface space charge."
+  },
+  {
+   "term": "hole",
+   "def": "A missing electron in the filled band that moves through the crystal like a positive charge."
+  },
+  {
+   "term": "rectifying contact",
+   "def": "A junction that conducts easily in one direction and poorly in the other; the 1940s crystal detector is one."
+  },
+  {
+   "term": "barrier / inversion layer",
+   "def": "A thin depleted region separating zones of opposite conductivity type; Schottky called the opposite-type zone next to a surface an inversion region."
+  },
+  {
+   "term": "high back voltage germanium",
+   "def": "Germanium processed to withstand 100 to 200 V in the reverse direction as a point-contact rectifier; developed during wartime radar detector work."
+  },
+  {
+   "term": "forming",
+   "def": "Passing a brief overload through a point contact to change the material under it and improve the contact's characteristics."
+  },
+  {
+   "term": "triode",
+   "def": "A three-electrode vacuum tube (cathode, grid, plate): the amplifier this device was meant to replace."
+  },
+  {
+   "term": "grounded grid / grounded base",
+   "def": "A connection in which the control electrode is common to input and output; FIG. 1 is the transistor form and FIG. 2 the tube form."
+  },
+  {
+   "term": "cathode follower",
+   "def": "Tube stage with the load in the cathode lead and the plate at signal ground; its output follows the input. FIG. 11 is the transistor counterpart."
+  },
+  {
+   "term": "Fermi level",
+   "def": "The reference energy E_{F} that sets how electrons and holes fill the energy bands; in the band diagrams the curves are measured from it."
+  },
+  {
+   "term": "energy gap",
+   "def": "The energy E_{g} between the filled (valence) band and the conduction band; about 0.7 eV in germanium."
+  },
+  {
+   "term": "mil",
+   "def": "One thousandth of an inch (25.4 micrometres); the patent spaces the points 1 to 10 mils apart."
+  }
+ ]
+}

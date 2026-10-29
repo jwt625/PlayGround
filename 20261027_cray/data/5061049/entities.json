@@ -1,0 +1,27 @@
+{
+  "pn": "5061049",
+  "inventors": [
+    {
+      "name": "Larry J. Hornbeck",
+      "printed": "Larry J. Hornbeck, Van Alstyne, Tex.",
+      "city": "Van Alstyne",
+      "region": "TX",
+      "country": "US"
+    }
+  ],
+  "assignees": [
+    {
+      "name": "Texas Instruments Incorporated",
+      "printed": "Texas Instruments Incorporated, Dallas, Tex.",
+      "org": "Texas Instruments",
+      "kind": "company",
+      "city": "Dallas",
+      "region": "TX",
+      "country": "US"
+    }
+  ],
+  "source": {
+    "page": 0,
+    "where": "front page [75], [73]"
+  }
+}

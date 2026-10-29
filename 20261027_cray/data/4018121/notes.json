@@ -1,0 +1,91 @@
+{
+ "patent": "John Chowning developed FM synthesis at Stanford University's computer music group, which became CCRMA (Center for Computer Research in Music and Acoustics), in the late 1960s and early 1970s. He published it in the Journal of the Audio Engineering Society in 1973. Stanford licensed the patent to Yamaha, which used it in digital synthesizers starting with the GS1 (1980) and the DX7 (1983), one of the best-selling synthesizers ever made. FM chips derived from this work later produced the sound in many PC sound cards and game consoles. The license became one of the largest royalty earners in Stanford's history up to the patent's expiry in the mid-1990s. The claims cover the method: audio-rate carrier and modulating frequencies, with a modulation index that changes over time to control how the spectrum evolves. FIGS. 5-18 describe one real-time hardware embodiment built from standard TTL and Intel ROM/RAM parts.",
+ "figs": {
+  "1": "The two small insets at the top are the input functions: the amplitude envelope, curve 10, and the index function, curve 11, which rises from 0 to 5. The main plot is a 3-D waterfall. Time runs to the right, frequency runs down the slanted axis from 0 Hz, and each horizontal trace is the amplitude of one spectral component over the note, with vertical hatching filling the area under it. Because WC = WM = 1.0, the components fall on a harmonic series. The rows nearest the axis origin carry energy early in the attack, and components further down the axis build up later as the index rises.",
+  "2": "Drawn in MUSIC V flowchart notation, not as circuit hardware. The rounded boxes are oscillator unit generators. U.G.4 and U.G.5 hold an envelope shape and run once per note, at rate 1/P3. U.G.1 is the modulating oscillator at frequency P6, and U.G.3 is the output oscillator, marked with a sine. The triangles with + are adders. Reading left to right: the index envelope is scaled and offset into a deviation (U.G.5, U.G.6), which sets the amplitude of modulator U.G.1. U.G.2 adds the modulator output to the carrier frequency P5, and the sum drives the frequency of U.G.3. U.G.4 sets the output amplitude.",
+  "3": "Same waterfall layout as FIG. 1, for a bell-like tone. Both the amplitude function and the index function decay exponentially, the index from 8.0 to 0.0, over the 15 s note. The ratio WM/WC = 1.4 makes the components inharmonic and closely spaced, so there are many more rows than in FIG. 1. Almost all of them die out quickly, which shows the spectrum going from complex to simple. Dashed continuations mark the remaining time after a component has faded.",
+  "4": "Waterfall for a clarinet-like tone. The amplitude function is a 0.5 s note with a 0.1 s rise, and the index curve falls from ID1 to ID2. The parameter block reads WC = 1.0, WM = 2.0, IDX1 = 2.0, IDX2 = 1.0. Only a few components carry visible energy, and the first row is by far the strongest. The vertical strokes are sparse hatching under each trace.",
+  "5": "The vertical line labeled DATA BUS (24) is the single shared bus. Sources sit to its left (initialization memory 28, scratch pad 26, envelope memory 27, binary constant 29) and sinks to its right (multiplier 31 and adder 32, each with two input latches, and output latch 33). Signal-group names such as MP 0-15, AO 0-15, ST 0-15 and FT 0-15 are the 16-bit outputs of the multiplier, adder, sine memory and frequency memory. They meet again at selector 36, which feeds the scratch pad. The external inputs, an instrument number (3 bits), a key number (7 bits) and a key-down bit, enter at the bottom left across the dashed interface line.",
+  "6": "Detail of instruction memory 41 and its latch 42. Each pair of 74186 PROMs (41a running program, 41b start-up program) supplies one 16-bit word: the upper chip gives I0-I7 and the lower chip I8-I15. The open-collector outputs of the two pairs are wired together, and ACTIVE or INIT picks which pair is enabled. The PROMs are addressed by PC0-PC5 from the two cascaded 74161 counters 43, 44. Two 74174 hex D flip-flops and one 74175 latch I0-I15 and rename the bits as instruction fields (ISEL, MA0-3, WS0-1, LS0-2, RE0-2, LOB, SSEL, WE). Small diamonds mark active-low (inverted) pins, and the prefix ~ marks the complement of a signal.",
+  "7": "Timing and decode logic. Two 74S138 1-of-8 decoders expand the LS field (48) into latch strobes ~MPL1, ~MPL2, ~AL1, ~AL2, ~ST, ~EL and ~LOAD OUT BUF, and the RE field (49) into source enables ~SP, ~IM, ~C1, ~C2 and ~ENV. Crystal clock 53, buffered by 7437s, gives MRCLK. The 1K resistor and 1 MF capacitor at the top right form a power-on reset that produces CLEAR. The chain of 7474 flip-flops 52 steps a single 1 through PCINC, I LOAD and LATCH to sequence each instruction.",
+  "8": "Major-state logic. Each row, from top to bottom IDLE, INIT, RUN and DECAY, has a 7425 gate whose output goes out as true and complemented signals (7404 and 7437). Each state is held by feedback through the shared vertical lines. The 7410 gates 56, 58 and 59 detect the transitions: Idle with a key down, Init Done, and Run with the key released. The 7421 at the top left returns the device to Idle when Run Down, Env Done, Decay and MRCLK coincide. ACTIVE (right) is the OR of RUN and DECAY, formed by a 7437 with inverted inputs.",
+  "9": "Envelope memory 27 is the upper two 1302 ROMs (ENV 0-15), and envelope counter memory 38 is the bottom ROM (CNT 0-7). All three share address lines A-H: SEG0-1, INS0-2, SSEL, ISEL, and the OR of INIT and ATTACK. On the right, columns of 8095/8097 tri-state buffers drive ENV onto BUS 0-15 when ~ENV and ~CNTEN enable them. In the first column the inputs are printed ENV 0, 1, 2, 4, 5, 6 against BUS 0-5. The sequence skips ENV 3 and repeats ENV 6, which looks like a drafting slip.",
+  "10": "Envelope control. The three cascaded 74161s at the bottom are sample counters 61: they load the CNT 0-7 count and count EL pulses until CNTOV. Counter 62 (middle left) counts the four envelope segments, gives SEG 0 and SEG 1, and raises ENV DONE. The four 7474 flip-flops that the arrows of 66 point to hold the sub-states ATTACK, STEADY STATE and RUN DOWN, plus the LOAD/R LOAD pulses. Gate 64 forms CNTEN and gate 63 forms ~LDENB.",
+  "11": "Left: frequency memory 37, two 1302 ROMs that turn the 7-bit key number FREQ 0-6 into a 16-bit phase increment FT 0-15. The circled AZI tags (compare AZI KEY in FIG. 8) mark the external key inputs. Middle: initialization memory 28, one 1302 addressed by INS 0-2 and by IADR 0-3 from counter 67, which counts each ~IM read. Right: the IM 0-7 outputs pass through tri-state buffers onto BUS 0-7, the high-order bits. (In this design bit 0 is the most significant bit; see FIG. 14.)",
+  "12": "Left: selector 36, built as eight 74153 dual 4-to-1 multiplexers. For each bit n, WS0/WS1 choose MP n, AO n, ST n or FT n and output DI n. Right: scratch pad memory 26, four 7489 16-word x 4-bit RAMs stacked to make 16 bits. They are addressed by MA 0-3, and their inverted outputs are labeled MEM 0-15. The 7474 and 7402 at the bottom form the write-enable pulse, which is set from WE on ~I LOAD and cleared by LATCH or IDLE.",
+  "13": "Bus-source gating, one column of buffers per 6- or 2-bit group. 8095/8097 are non-inverting tri-state buffers and 8096/8098 inverting ones. The inverting columns put scratch-pad data (~MEM) onto the bus. The other columns drive constant GND (zeros), or CTL+ (ones) on bus bits 0 and 1, which gives the constant C1. With bit 0 most significant, that constant is 3/4 of a rotation. Gates 68 (7454 and 7451 AND-OR-INVERT, upper left) decode IM, C1, LOB, SP, ENV and ~CNTEN into the ~ENBGND enables.",
+  "14": "Adder 32. Top: 16 bit adder 70, four 74283 4-bit adders chained through CO-CI. The carry-in at the far right is grounded, so AO 12-15 is the least significant nibble and AO 0 the most significant bit. Below: input latches 71 (A0-A15) and 72 (B0-B15), each two 74174s plus a 74175. They load from BUS 0-15 when the inverted strobes ~AL1 and ~AL2 fire.",
+  "15": "Multiplier control and input latches. Counter 74 (74161) counts the multiply steps. The 7474 flip-flops, including 76, and the 7402 gates generate MPGO, ~MPLOAD and ~MPCLR. The two 8-bit parallel-load shift registers 73 take the multiplier from BUS 0-15 on MPL1 and shift it out serially as MCENB. Latch 77 (bottom) holds the multiplicand MC 0-15, loaded on ~MPL2. Rows of dots mark repeated bits that are not drawn.",
+  "16": "Shift-and-add datapath of multiplier 31. Each 7408 AND gate in set 78 passes one multiplicand bit MC n when MCENB is true. Adders 79 (four 74283) add that to the partial product. The partial-product register 81 (74174s and 74175), at the top, is clocked by ~MP STEP and outputs MP 0-MP 15. The sum outputs feed the latch inputs, and MP n feeds back to the adders' B inputs shifted one place right. That is why MP 0, the sign bit, enters the first adder twice.",
+  "17": "Output latch 33 is two 74174s plus a 74175, clocked through a 7404 by ~LOAD OUT BUF. They capture BUS 0-15 and hold OUT 0-15 for the D/A converter until the next sample.",
+  "18": "Sine memory 34. Two 74175s latch adder outputs AO 0-7, the high-order 8 bits of the phase angle, as SA 0-7 on ~ST. These address two 1302 ROMs that together output a 16-bit sine value ST 0-15. Bits 0-7 come from the upper ROM and bits 8-15 from the lower."
+ },
+ "parts": {
+  "4": "The description says \"unit generator 4\" and \"unit generator 5\"; the drawing labels these blocks U.G.4 and U.G.5.",
+  "5": "See 4: printed in the drawing as U.G.5.",
+  "40": "The description names \"AND gate 40\" in FIG. 6, but no numeral 40 is printed in any drawing.",
+  "76": "The description reads \"MP step is produced by MP GO and master clock flip-flop 76\"; on the drawing 76 is the 7474 whose inputs include MPGO and MPCLK.",
+  "81": "The description also says \"latch 84\" for what is evidently latch 81; no 84 appears in the drawings.",
+  "84": "Evidently a misprint for latch 81 (FIG. 16), which outputs MP 0 through MP 15.",
+  "41": "Built from four 74186 64 x 8 PROMs, shown as pairs 41a and 41b in FIG. 6.",
+  "66": "Printed \"four flip-flop 66 form a four-flop\"; the four arrows from 66 point to four 7474 flip-flops."
+ },
+ "glossary": [
+  {
+   "term": "frequency modulation (FM) synthesis",
+   "def": "Generating a tone by varying the instantaneous frequency of a carrier sinusoid with another sinusoid, both in the audio range. One modulator and one carrier produce many sidebands at the carrier frequency plus or minus integer multiples of the modulating frequency."
+  },
+  {
+   "term": "modulation index",
+   "def": "Peak frequency deviation divided by modulating frequency, I(t) in the patent. Larger index puts energy into more sidebands; sideband amplitudes follow Bessel functions J_n(I)."
+  },
+  {
+   "term": "carrier / modulating frequency ratio",
+   "def": "Determines where the components fall: simple integer ratios give harmonic spectra, non-integer ratios (e.g. 1.4) give inharmonic, bell-like spectra."
+  },
+  {
+   "term": "reflected sidebands",
+   "def": "Lower sidebands that would fall below 0 Hz reappear at positive frequencies with inverted phase and add to the components already there."
+  },
+  {
+   "term": "MUSIC V",
+   "def": "Max Mathews' 1960s Bell Labs sound-synthesis program, written in FORTRAN. It computed samples offline from unit generators connected into instruments."
+  },
+  {
+   "term": "unit generator (U.G.)",
+   "def": "A MUSIC V building block such as an oscillator or adder. Its inputs (amplitude, frequency) can be constants, note parameters P1-Pn, or other unit generators' outputs."
+  },
+  {
+   "term": "envelope",
+   "def": "A time-varying control curve applied over a note; here piecewise-linear segments for attack, steady state and decay, stored as increments and segment lengths in ROM."
+  },
+  {
+   "term": "phase accumulator / sine table",
+   "def": "The digital oscillator method used here: a frequency number is added to a stored angle each sample, and the top 8 bits of the angle look up a 256-entry sine ROM."
+  },
+  {
+   "term": "TTL 74xx",
+   "def": "Transistor-transistor logic family of the era; part numbers identify functions, e.g. 7400 NAND, 7402 NOR, 7404 inverter, 7474 D flip-flop, 74161 4-bit counter, 74174/74175 hex/quad D latches, 74153 dual 4-to-1 multiplexer, 74283 4-bit adder, 74S138 1-of-8 decoder."
+  },
+  {
+   "term": "8095 / 8096 / 8097 / 8098",
+   "def": "Tri-state bus buffers: 8095 and 8097 non-inverting, 8096 and 8098 inverting. A disabled tri-state output floats, so several sources can share one bus."
+  },
+  {
+   "term": "1302 ROM / 74186 PROM / 7489 RAM",
+   "def": "Memory chips of the time: Intel 1302 is a 256 x 8 mask-programmed ROM, 74186 a 64 x 8 open-collector (O.C.) PROM, 7489 a 16 x 4 read/write RAM."
+  },
+  {
+   "term": "~ (tilde) and diamond pins",
+   "def": "A leading ~ names the complement (active-low form) of a signal; a small diamond on a pin marks an inverting input or output."
+  },
+  {
+   "term": "two's complement",
+   "def": "The signed binary format used by the adder and multiplier; an arithmetic right shift copies the sign bit, as FIG. 16 does by feeding MP 0 twice."
+  },
+  {
+   "term": "D/A converter",
+   "def": "Converts each 16-bit output sample to a voltage; one sample every 50 microseconds (20 kHz) in this design."
+  }
+ ]
+}

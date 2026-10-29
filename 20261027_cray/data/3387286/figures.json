@@ -1,0 +1,492 @@
+{
+ "pn": "3387286",
+ "figures": [
+  {
+   "id": "1",
+   "label": "FIG. 1",
+   "sheet": 1,
+   "page": 0,
+   "crop": [
+    296,
+    560,
+    1804,
+    1828
+   ],
+   "rotate": 0,
+   "front_page": true
+  },
+  {
+   "id": "2",
+   "label": "FIG. 2",
+   "sheet": 1,
+   "page": 0,
+   "crop": [
+    243,
+    1945,
+    1880,
+    2960
+   ],
+   "rotate": 0,
+   "front_page": false
+  },
+  {
+   "id": "2A",
+   "label": "FIG. 2A",
+   "sheet": 2,
+   "page": 1,
+   "crop": [
+    284,
+    588,
+    1890,
+    1098
+   ],
+   "rotate": 0,
+   "front_page": false
+  },
+  {
+   "id": "3",
+   "label": "FIG. 3",
+   "sheet": 2,
+   "page": 1,
+   "crop": [
+    293,
+    1222,
+    1741,
+    1639
+   ],
+   "rotate": 0,
+   "front_page": false
+  },
+  {
+   "id": "4A",
+   "label": "FIG. 4A",
+   "sheet": 2,
+   "page": 1,
+   "crop": [
+    288,
+    1764,
+    1767,
+    2299
+   ],
+   "rotate": 0,
+   "front_page": false
+  },
+  {
+   "id": "4B",
+   "label": "FIG. 4B",
+   "sheet": 2,
+   "page": 1,
+   "crop": [
+    288,
+    2407,
+    1887,
+    2936
+   ],
+   "rotate": 0,
+   "front_page": false
+  },
+  {
+   "id": "5",
+   "label": "FIG. 5",
+   "sheet": 3,
+   "page": 2,
+   "crop": [
+    297,
+    602,
+    1668,
+    1429
+   ],
+   "rotate": 0,
+   "front_page": false
+  },
+  {
+   "id": "6",
+   "label": "FIG. 6",
+   "sheet": 3,
+   "page": 2,
+   "crop": [
+    363,
+    2285,
+    1672,
+    2926
+   ],
+   "rotate": 0,
+   "front_page": false
+  },
+  {
+   "id": "7",
+   "label": "FIG. 7",
+   "sheet": 3,
+   "page": 2,
+   "crop": [
+    355,
+    1526,
+    1642,
+    2167
+   ],
+   "rotate": 0,
+   "front_page": false
+  }
+ ],
+ "parts": [
+  {
+   "ref": "10",
+   "name": "memory cells",
+   "figs": [
+    "1"
+   ]
+  },
+  {
+   "ref": "12",
+   "name": "field-effect transistor",
+   "figs": [
+    "1",
+    "2",
+    "2A",
+    "3",
+    "5",
+    "6",
+    "7"
+   ],
+   "alt": [
+    "input transistor"
+   ]
+  },
+  {
+   "ref": "12D",
+   "name": "drain terminal",
+   "figs": [
+    "1",
+    "2",
+    "2A",
+    "3",
+    "5",
+    "6",
+    "7"
+   ],
+   "alt": [
+    "drain diffusion"
+   ]
+  },
+  {
+   "ref": "12G",
+   "name": "gate electrode",
+   "figs": [
+    "1",
+    "2",
+    "2A",
+    "3",
+    "5",
+    "6",
+    "7"
+   ]
+  },
+  {
+   "ref": "12S",
+   "name": "source terminal",
+   "figs": [
+    "1",
+    "2",
+    "2A",
+    "3",
+    "5",
+    "6",
+    "7"
+   ],
+   "alt": [
+    "source diffusion"
+   ]
+  },
+  {
+   "ref": "12W",
+   "name": "connection",
+   "figs": [
+    "1",
+    "5",
+    "6",
+    "7"
+   ],
+   "alt": [
+    "substrate terminal"
+   ]
+  },
+  {
+   "ref": "14",
+   "name": "capacitor",
+   "figs": [
+    "1",
+    "2",
+    "2A",
+    "3"
+   ]
+  },
+  {
+   "ref": "14A",
+   "name": "deposited aluminum electrode",
+   "figs": [
+    "2",
+    "2A",
+    "3"
+   ]
+  },
+  {
+   "ref": "14B",
+   "name": "thin layer of oxide",
+   "figs": [
+    "2",
+    "2A",
+    "3"
+   ]
+  },
+  {
+   "ref": "14C",
+   "name": "another retangular section",
+   "figs": [
+    "2",
+    "2A",
+    "3"
+   ],
+   "alt": [
+    "N+ diffused layer"
+   ]
+  },
+  {
+   "ref": "14D",
+   "name": "metallized conductor",
+   "figs": [
+    "2"
+   ]
+  },
+  {
+   "ref": "20",
+   "name": "word line drivers",
+   "figs": [
+    "1"
+   ]
+  },
+  {
+   "ref": "22",
+   "name": "bit line drivers and sense amplifiers",
+   "figs": [
+    "1"
+   ]
+  },
+  {
+   "ref": "24",
+   "name": "word lines",
+   "figs": [
+    "1",
+    "2",
+    "4A",
+    "4B",
+    "5",
+    "6"
+   ]
+  },
+  {
+   "ref": "24R",
+   "name": "word lines",
+   "figs": [
+    "7"
+   ],
+   "alt": [
+    "read line",
+    "read word line"
+   ]
+  },
+  {
+   "ref": "24W",
+   "name": "word lines",
+   "figs": [
+    "7"
+   ],
+   "alt": [
+    "write word line"
+   ]
+  },
+  {
+   "ref": "26",
+   "name": "bit lines",
+   "figs": [
+    "1",
+    "2",
+    "4A",
+    "4B",
+    "5",
+    "6"
+   ]
+  },
+  {
+   "ref": "26R",
+   "name": "bit lines",
+   "figs": [
+    "7"
+   ],
+   "alt": [
+    "bit sense line"
+   ]
+  },
+  {
+   "ref": "26W",
+   "name": "bit lines",
+   "figs": [
+    "7"
+   ],
+   "alt": [
+    "bit write line"
+   ]
+  },
+  {
+   "ref": "30",
+   "name": "storage node",
+   "figs": [
+    "1",
+    "5",
+    "6",
+    "7"
+   ]
+  },
+  {
+   "ref": "32",
+   "name": "substrate",
+   "figs": [
+    "2",
+    "2A",
+    "3"
+   ]
+  },
+  {
+   "ref": "34",
+   "name": "thick layer of silicon dioxide",
+   "figs": [
+    "2",
+    "2A",
+    "3"
+   ]
+  },
+  {
+   "ref": "36",
+   "name": "relatively thin layer of oxide",
+   "figs": [
+    "2",
+    "2A"
+   ]
+  },
+  {
+   "ref": "38",
+   "name": "larger diffusion",
+   "figs": [
+    "2",
+    "2A"
+   ]
+  },
+  {
+   "ref": "40",
+   "name": "reference or biasing potential source",
+   "figs": [
+    "1",
+    "2A",
+    "5",
+    "6",
+    "7"
+   ]
+  },
+  {
+   "ref": "42",
+   "name": "metallized connection",
+   "figs": [
+    "3"
+   ]
+  },
+  {
+   "ref": "44",
+   "name": "metallized conductor",
+   "figs": [
+    "3"
+   ]
+  },
+  {
+   "ref": "50",
+   "name": "output transistor",
+   "figs": [
+    "5",
+    "6",
+    "7"
+   ]
+  },
+  {
+   "ref": "50D",
+   "name": "drain",
+   "figs": [
+    "5",
+    "6",
+    "7"
+   ]
+  },
+  {
+   "ref": "50G",
+   "name": "gate",
+   "figs": [
+    "5",
+    "6",
+    "7"
+   ]
+  },
+  {
+   "ref": "50S",
+   "name": "source",
+   "figs": [
+    "5",
+    "6",
+    "7"
+   ],
+   "alt": [
+    "source terminal"
+   ]
+  },
+  {
+   "ref": "50W",
+   "name": "terminals",
+   "figs": [
+    "5",
+    "6",
+    "7"
+   ]
+  },
+  {
+   "ref": "52",
+   "name": "third field-effect transistor",
+   "figs": [
+    "6"
+   ]
+  },
+  {
+   "ref": "52D",
+   "name": "drain",
+   "figs": [
+    "6"
+   ]
+  },
+  {
+   "ref": "52G",
+   "name": "gate",
+   "figs": [
+    "6"
+   ]
+  },
+  {
+   "ref": "52S",
+   "name": "source",
+   "figs": [
+    "6"
+   ]
+  },
+  {
+   "ref": "52W",
+   "name": "",
+   "figs": [
+    "6"
+   ]
+  }
+ ]
+}

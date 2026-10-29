@@ -1,0 +1,41 @@
+{
+  "pn": "4200770",
+  "inventors": [
+    {
+      "name": "Martin E. Hellman",
+      "printed": "Martin E. Hellman, Stanford",
+      "city": "Stanford",
+      "region": "CA",
+      "country": "US"
+    },
+    {
+      "name": "Bailey W. Diffie",
+      "printed": "Bailey W. Diffie, Berkeley",
+      "city": "Berkeley",
+      "region": "CA",
+      "country": "US"
+    },
+    {
+      "name": "Ralph C. Merkle",
+      "printed": "Ralph C. Merkle, Palo Alto, all of Calif.",
+      "city": "Palo Alto",
+      "region": "CA",
+      "country": "US"
+    }
+  ],
+  "assignees": [
+    {
+      "name": "Stanford University",
+      "printed": "Stanford University, Palo Alto, Calif.",
+      "org": "Stanford University",
+      "kind": "university",
+      "city": "Palo Alto",
+      "region": "CA",
+      "country": "US"
+    }
+  ],
+  "source": {
+    "page": 0,
+    "where": "front page [75], [73]"
+  }
+}

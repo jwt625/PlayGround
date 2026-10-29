@@ -1,0 +1,27 @@
+{
+  "pn": "3387286",
+  "inventors": [
+    {
+      "name": "Robert H. Dennard",
+      "printed": "Robert H. Dennard, Croton-on-Hudson, N.Y.",
+      "city": "Croton-on-Hudson",
+      "region": "NY",
+      "country": "US"
+    }
+  ],
+  "assignees": [
+    {
+      "name": "International Business Machines Corporation",
+      "printed": "International Business Machines Corporation, Armonk, N.Y., a corporation of New York",
+      "org": "IBM",
+      "kind": "company",
+      "city": "Armonk",
+      "region": "NY",
+      "country": "US"
+    }
+  ],
+  "source": {
+    "page": 3,
+    "where": "column 1 header (inventor, assignor to)"
+  }
+}

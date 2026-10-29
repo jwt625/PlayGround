@@ -1,0 +1,16 @@
+{
+ "pn": "6285999",
+ "figures": [
+  {"id": "1", "label": "FIG. 1", "sheet": 1, "page": 2, "crop": [387, 589, 2066, 2850], "rotate": 0, "front_page": false},
+  {"id": "2", "label": "FIG. 2", "sheet": 2, "page": 3, "crop": [302, 579, 2083, 2868], "rotate": 0, "front_page": true},
+  {"id": "3", "label": "FIG. 3", "sheet": 3, "page": 4, "crop": [393, 335, 2050, 3129], "rotate": 0, "front_page": false}
+ ],
+ "parts": [
+  {"ref": "A", "name": "document A", "figs": ["1", "2"]},
+  {"ref": "B", "name": "document B", "figs": ["1", "2"]},
+  {"ref": "C", "name": "document C", "figs": ["1", "2"]},
+  {"ref": "101", "name": "step 101", "figs": ["3"]},
+  {"ref": "103", "name": "step 103", "figs": ["3"]},
+  {"ref": "105", "name": "step 105", "figs": ["3"]}
+ ]
+}

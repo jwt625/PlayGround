@@ -1,0 +1,505 @@
+{
+ "pn": "3138743",
+ "figures": [
+  {
+   "id": "1",
+   "label": "FIG. 1",
+   "sheet": 1,
+   "page": 0,
+   "crop": [
+    366,
+    592,
+    921,
+    1095
+   ],
+   "rotate": 0,
+   "front_page": false
+  },
+  {
+   "id": "1A",
+   "label": "FIG. 1a",
+   "sheet": 1,
+   "page": 0,
+   "crop": [
+    1099,
+    575,
+    1885,
+    1078
+   ],
+   "rotate": 0,
+   "front_page": false
+  },
+  {
+   "id": "2",
+   "label": "FIG. 2",
+   "sheet": 1,
+   "page": 0,
+   "crop": [
+    289,
+    1189,
+    998,
+    1755
+   ],
+   "rotate": 0,
+   "front_page": false
+  },
+  {
+   "id": "2A",
+   "label": "FIG. 2a",
+   "sheet": 1,
+   "page": 0,
+   "crop": [
+    1090,
+    1075,
+    1770,
+    1561
+   ],
+   "rotate": 0,
+   "front_page": false
+  },
+  {
+   "id": "3",
+   "label": "FIG. 3",
+   "sheet": 1,
+   "page": 0,
+   "crop": [
+    268,
+    1780,
+    1037,
+    2359
+   ],
+   "rotate": 0,
+   "front_page": false
+  },
+  {
+   "id": "4",
+   "label": "FIG. 4",
+   "sheet": 1,
+   "page": 0,
+   "crop": [
+    366,
+    2343,
+    1041,
+    2914
+   ],
+   "rotate": 0,
+   "front_page": false
+  },
+  {
+   "id": "5",
+   "label": "FIG. 5",
+   "sheet": 1,
+   "page": 0,
+   "crop": [
+    1099,
+    1542,
+    1770,
+    2072
+   ],
+   "rotate": 0,
+   "front_page": false
+  },
+  {
+   "id": "5A",
+   "label": "FIG. 5a",
+   "sheet": 1,
+   "page": 0,
+   "crop": [
+    1124,
+    2049,
+    1873,
+    2539
+   ],
+   "rotate": 0,
+   "front_page": false
+  },
+  {
+   "id": "6A",
+   "label": "FIG. 6a",
+   "sheet": 2,
+   "page": 1,
+   "crop": [
+    272,
+    717,
+    990,
+    2584
+   ],
+   "rotate": 270,
+   "front_page": false
+  },
+  {
+   "id": "6B",
+   "label": "FIG. 6b",
+   "sheet": 2,
+   "page": 1,
+   "crop": [
+    1042,
+    717,
+    1850,
+    2607
+   ],
+   "rotate": 270,
+   "front_page": false
+  },
+  {
+   "id": "7",
+   "label": "FIG. 7",
+   "sheet": 3,
+   "page": 2,
+   "crop": [
+    221,
+    686,
+    1816,
+    2399
+   ],
+   "rotate": 0,
+   "front_page": false
+  },
+  {
+   "id": "8A",
+   "label": "FIG. 8a",
+   "sheet": 4,
+   "page": 3,
+   "crop": [
+    592,
+    558,
+    1310,
+    2055
+   ],
+   "rotate": 270,
+   "front_page": false
+  },
+  {
+   "id": "8B",
+   "label": "FIG. 8b",
+   "sheet": 4,
+   "page": 3,
+   "crop": [
+    524,
+    1456,
+    1232,
+    2624
+   ],
+   "rotate": 270,
+   "front_page": false
+  },
+  {
+   "id": "8C",
+   "label": "FIG. 8c",
+   "sheet": 4,
+   "page": 3,
+   "crop": [
+    1264,
+    1041,
+    1879,
+    2277
+   ],
+   "rotate": 270,
+   "front_page": false
+  }
+ ],
+ "parts": [
+  {
+   "ref": "10",
+   "name": "body of semiconductor material",
+   "figs": [
+    "1"
+   ]
+  },
+  {
+   "ref": "11",
+   "name": "contacts",
+   "figs": [
+    "1"
+   ]
+  },
+  {
+   "ref": "12",
+   "name": "contacts",
+   "figs": [
+    "1"
+   ]
+  },
+  {
+   "ref": "10a",
+   "name": "body of p-type semiconductor material",
+   "figs": [
+    "1A"
+   ]
+  },
+  {
+   "ref": "10b",
+   "name": "n-type region",
+   "figs": [
+    "1A"
+   ]
+  },
+  {
+   "ref": "13",
+   "name": "p-n junction",
+   "figs": [
+    "1A"
+   ]
+  },
+  {
+   "ref": "11a",
+   "name": "contacts",
+   "figs": [
+    "1A"
+   ]
+  },
+  {
+   "ref": "12a",
+   "name": "contacts",
+   "figs": [
+    "1A"
+   ]
+  },
+  {
+   "ref": "15",
+   "name": "semiconductor wafer of p-type conductivity",
+   "figs": [
+    "2"
+   ]
+  },
+  {
+   "ref": "16",
+   "name": "n-type diffused layer",
+   "figs": [
+    "2"
+   ]
+  },
+  {
+   "ref": "17",
+   "name": "ohmic contacts",
+   "figs": [
+    "2"
+   ]
+  },
+  {
+   "ref": "15a",
+   "name": "body of semiconductor material",
+   "figs": [
+    "2A"
+   ]
+  },
+  {
+   "ref": "18",
+   "name": "layer",
+   "figs": [
+    "2A"
+   ],
+   "alt": [
+    "dielectric layer"
+   ]
+  },
+  {
+   "ref": "19",
+   "name": "plate",
+   "figs": [
+    "2A"
+   ]
+  },
+  {
+   "ref": "17a",
+   "name": "ohmic contact",
+   "figs": [
+    "2A"
+   ]
+  },
+  {
+   "ref": "20",
+   "name": "wafer of p-type conductivity",
+   "figs": [
+    "3"
+   ]
+  },
+  {
+   "ref": "21",
+   "name": "n-type conductivity diffused layer",
+   "figs": [
+    "3"
+   ]
+  },
+  {
+   "ref": "22",
+   "name": "broad area contact",
+   "figs": [
+    "3"
+   ]
+  },
+  {
+   "ref": "23",
+   "name": "spaced contacts",
+   "figs": [
+    "3"
+   ]
+  },
+  {
+   "ref": "25",
+   "name": "collector region",
+   "figs": [
+    "4"
+   ]
+  },
+  {
+   "ref": "26",
+   "name": "diffused p-n junction",
+   "figs": [
+    "4"
+   ]
+  },
+  {
+   "ref": "27",
+   "name": "base layer",
+   "figs": [
+    "4"
+   ]
+  },
+  {
+   "ref": "28",
+   "name": "emitter contact",
+   "figs": [
+    "4"
+   ]
+  },
+  {
+   "ref": "29",
+   "name": "base and collector contacts",
+   "figs": [
+    "4"
+   ]
+  },
+  {
+   "ref": "30",
+   "name": "base and collector contacts",
+   "figs": [
+    "4"
+   ]
+  },
+  {
+   "ref": "35",
+   "name": "region of one type conductivity",
+   "figs": [
+    "5"
+   ]
+  },
+  {
+   "ref": "36",
+   "name": "mesa region of opposite conductivity type",
+   "figs": [
+    "5"
+   ]
+  },
+  {
+   "ref": "37",
+   "name": "contacts",
+   "figs": [
+    "5"
+   ]
+  },
+  {
+   "ref": "38",
+   "name": "contacts",
+   "figs": [
+    "5"
+   ]
+  },
+  {
+   "ref": "50",
+   "name": "gold plated Kovar leads",
+   "figs": [
+    "6A"
+   ]
+  },
+  {
+   "ref": "51",
+   "name": "areas",
+   "figs": [
+    "6A"
+   ]
+  },
+  {
+   "ref": "52",
+   "name": "areas",
+   "figs": [
+    "6A"
+   ]
+  },
+  {
+   "ref": "53",
+   "name": "areas",
+   "figs": [
+    "6A"
+   ]
+  },
+  {
+   "ref": "54",
+   "name": "areas",
+   "figs": [
+    "6A"
+   ]
+  },
+  {
+   "ref": "56",
+   "name": "transistor emitter areas",
+   "figs": [
+    "6A"
+   ]
+  },
+  {
+   "ref": "60",
+   "name": "mesa areas",
+   "figs": [
+    "6A"
+   ]
+  },
+  {
+   "ref": "70",
+   "name": "gold wires",
+   "figs": [
+    "6A"
+   ]
+  },
+  {
+   "ref": "R1",
+   "name": "",
+   "figs": [
+    "8A",
+    "8B"
+   ]
+  },
+  {
+   "ref": "R2",
+   "name": "",
+   "figs": [
+    "8A",
+    "8B"
+   ]
+  },
+  {
+   "ref": "R3",
+   "name": "",
+   "figs": [
+    "8A",
+    "8B"
+   ]
+  },
+  {
+   "ref": "C1",
+   "name": "",
+   "figs": [
+    "8A",
+    "8B"
+   ]
+  },
+  {
+   "ref": "Q1",
+   "name": "",
+   "figs": [
+    "8A",
+    "8B"
+   ]
+  }
+ ]
+}

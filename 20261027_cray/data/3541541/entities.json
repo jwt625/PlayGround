@@ -1,0 +1,27 @@
+{
+  "pn": "3541541",
+  "inventors": [
+    {
+      "name": "Douglas C. Engelbart",
+      "printed": "Douglas C. Engelbart, Palo Alto, Calif.",
+      "city": "Palo Alto",
+      "region": "CA",
+      "country": "US"
+    }
+  ],
+  "assignees": [
+    {
+      "name": "Stanford Research Institute",
+      "printed": "Stanford Research Institute, Menlo Park, Calif., a corporation of California",
+      "org": "SRI",
+      "kind": "research institute",
+      "city": "Menlo Park",
+      "region": "CA",
+      "country": "US"
+    }
+  ],
+  "source": {
+    "page": 3,
+    "where": "column 1 header (inventor, assignor to)"
+  }
+}

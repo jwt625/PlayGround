@@ -1,0 +1,34 @@
+{
+  "pn": "5131233",
+  "inventors": [
+    {
+      "name": "Seymour R. Cray",
+      "printed": "Seymour R. Cray",
+      "city": "Colorado Springs",
+      "region": "CO",
+      "country": "US"
+    },
+    {
+      "name": "Gregory J. Sherwood",
+      "printed": "Gregory J. Sherwood, both of Colorado Springs, Colo.",
+      "city": "Colorado Springs",
+      "region": "CO",
+      "country": "US"
+    }
+  ],
+  "assignees": [
+    {
+      "name": "Cray Computer Corporation",
+      "printed": "Cray Computer Corporation, Colorado Springs, Colo.",
+      "org": "Cray Computer",
+      "kind": "company",
+      "city": "Colorado Springs",
+      "region": "CO",
+      "country": "US"
+    }
+  ],
+  "source": {
+    "page": 0,
+    "where": "front page [75], [73]"
+  }
+}

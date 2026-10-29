@@ -1,0 +1,2240 @@
+{
+ "pn": "4859016",
+ "number": "4,859,016",
+ "title": "FIBER OPTIC AMPLIFIER",
+ "inventors": [
+  "Herbert J. Shaw",
+  "Michel J. F. Digonnet"
+ ],
+ "assignee": "The Board of Trustees of the Leland Stanford Junior University, Stanford, Calif.",
+ "filed": "1987-12-22",
+ "issued": "1989-08-22",
+ "appl_no": "137,870",
+ "int_cl": "G02B 6/26; H01S 3/07",
+ "us_cl": "350/96.15; 330/4.3; 372/6; 372/69",
+ "field_of_search": "350/96.15, 96.16; 372/6, 69, 94; 330/4, 4.3, 5, 84, 85",
+ "notice": "The portion of the term of this patent subsequent to Nov. 19, 2002 has been disclaimed.",
+ "related": "Division of Ser. No. 930,136, Nov. 12, 1986, Pat. No. 4,723,824, which is a division of Ser. No. 554,888, Nov. 25, 1983, Pat. No. 4,674,830.",
+ "refs_patents": [
+  {
+   "no": "3,230,474",
+   "date": "1/1966",
+   "name": "Keck et al.",
+   "cl": "331/94.5"
+  },
+  {
+   "no": "3,456,211",
+   "date": "7/1969",
+   "name": "Koester",
+   "cl": "372/6"
+  },
+  {
+   "no": "3,731,225",
+   "date": "5/1973",
+   "name": "Wild et al.",
+   "cl": "372/6"
+  },
+  {
+   "no": "3,753,145",
+   "date": "8/1973",
+   "name": "Chesler",
+   "cl": "372/75"
+  },
+  {
+   "no": "3,902,130",
+   "date": "8/1975",
+   "name": "Pike",
+   "cl": "330/4.3"
+  },
+  {
+   "no": "3,914,709",
+   "date": "10/1975",
+   "name": "Pike et al.",
+   "cl": "372/30"
+  },
+  {
+   "no": "3,957,341",
+   "date": "5/1976",
+   "name": "Taylor",
+   "cl": "350/96.15"
+  },
+  {
+   "no": "3,975,692",
+   "date": "8/1976",
+   "name": "Mego, Jr. et al.",
+   "cl": "372/26"
+  },
+  {
+   "no": "4,136,929",
+   "date": "1/1979",
+   "name": "Suzaki",
+   "cl": "350/96.15"
+  },
+  {
+   "no": "4,243,297",
+   "date": "1/1981",
+   "name": "Elion",
+   "cl": "350/96.15"
+  },
+  {
+   "no": "4,258,336",
+   "date": "3/1981",
+   "name": "Fletcher et al.",
+   "cl": "372/6"
+  },
+  {
+   "no": "4,300,811",
+   "date": "11/1981",
+   "name": "Ettenberg et al.",
+   "cl": "350/1.1"
+  },
+  {
+   "no": "4,301,543",
+   "date": "11/1981",
+   "name": "Palmer",
+   "cl": "455/612"
+  },
+  {
+   "no": "4,307,933",
+   "date": "12/1981",
+   "name": "Palmer et al.",
+   "cl": "350/96.16"
+  },
+  {
+   "no": "4,315,666",
+   "date": "2/1982",
+   "name": "Hicks, Jr.",
+   "cl": "350/96.15"
+  },
+  {
+   "no": "4,335,933",
+   "date": "6/1982",
+   "name": "Palmer",
+   "cl": "350/96.19"
+  },
+  {
+   "no": "4,342,499",
+   "date": "8/1982",
+   "name": "Hicks, Jr.",
+   "cl": "350/96.15"
+  },
+  {
+   "no": "4,343,532",
+   "date": "8/1982",
+   "name": "Palmer",
+   "cl": "350/96.19"
+  },
+  {
+   "no": "4,362,359",
+   "date": "12/1982",
+   "name": "Dammann et al.",
+   "cl": "350/96.19"
+  },
+  {
+   "no": "4,383,318",
+   "date": "5/1983",
+   "name": "Barry et al.",
+   "cl": "372/6"
+  },
+  {
+   "no": "4,515,431",
+   "date": "5/1985",
+   "name": "Shaw et al.",
+   "cl": "350/96.15"
+  },
+  {
+   "no": "4,546,476",
+   "date": "10/1985",
+   "name": "Shaw et al.",
+   "cl": "372/6"
+  },
+  {
+   "no": "4,553,238",
+   "date": "11/1985",
+   "name": "Shaw et al.",
+   "cl": "372/6"
+  },
+  {
+   "no": "4,554,510",
+   "date": "11/1985",
+   "name": "Shaw et al.",
+   "cl": "330/4.3"
+  },
+  {
+   "no": "4,603,940",
+   "date": "8/1986",
+   "name": "Shaw et al.",
+   "cl": "350/96.15"
+  },
+  {
+   "no": "4,674,830",
+   "date": "6/1987",
+   "name": "Shaw et al.",
+   "cl": "350/96.15"
+  },
+  {
+   "no": "4,723,824",
+   "date": "2/1988",
+   "name": "Shaw et al.",
+   "cl": "350/96.15"
+  }
+ ],
+ "refs_foreign": [
+  {
+   "no": "0038023",
+   "date": "10/1981",
+   "country": "European Pat. Off.",
+   "cl": ""
+  },
+  {
+   "no": "0112090",
+   "date": "6/1984",
+   "country": "European Pat. Off.",
+   "cl": ""
+  },
+  {
+   "no": "1439469",
+   "date": "11/1968",
+   "country": "Fed. Rep. of Germany",
+   "cl": ""
+  },
+  {
+   "no": "53-91752",
+   "date": "11/1978",
+   "country": "Japan",
+   "cl": "350/96.15"
+  },
+  {
+   "no": "55-76308",
+   "date": "6/1980",
+   "country": "Japan",
+   "cl": ""
+  },
+  {
+   "no": "57-85004",
+   "date": "5/1982",
+   "country": "Japan",
+   "cl": ""
+  },
+  {
+   "no": "1094639",
+   "date": "12/1967",
+   "country": "United Kingdom",
+   "cl": ""
+  }
+ ],
+ "refs_other": [
+  "Kapany et al., “Coherent Interactions Between Optical Waveguides . . . ”, J.O.S.A., vol. 58, No. 9, Sep. 1968.",
+  "Burrus et al., “Single–Crystal Fiber Optical Devices: A Nd:YAG Fiber Laser”, Appl. Phys. Lett., vol. 26, No. 6, Mar. 15, 1975, pp. 318–320.",
+  "Bergh et al., “Single Mode Fiber Optic Directional Coupler”, Electronics Letters, vol. 16, No. 7, Mar. 27, 1980, pp. 260–261.",
+  "Periasamy et al., “Laser Amplification in an Optical Fiber by Evanescent Field Coupling”, Appl. Physics, vol. 24, No. 3, Mar. 1981, pp. 201–203.",
+  "Digonnet et al., “Analysis of a Tunable Single Mode Optical Fiber Coupler”, IEEE J.Q.E., vol. QE–18, No. 4, Apr. 1982.",
+  "Injeyan et al., “Light Amplification by Evanescent Wave Coupling in a Multimode Fiber”, Appl. Optics, vol. 21, No. 11, Jun. 1982, pp. 1928–1932.",
+  "Alferov et al., “Multichannel Duplex Fiber–Optic Communication Line . . . ”, Soviet J. Quant. Electr., vol. 12, No. 8, Aug. 1982, pp. 1088–1090."
+ ],
+ "examiners": "Primary Examiner--John D. Lee; Attorney, Agent, or Firm--Knobbe, Martens, Olson & Bear",
+ "claims_count": 15,
+ "drawing_figures": 14,
+ "drawing_sheets": 5,
+ "abstract": "An amplifier for use with fiber optic systems comprises a neodymium YAG crystal placed in series with a signal-carrying optical fiber. The ND:YAG crystal is supplied by the optical fiber with both the signal to be amplified, and pumping illumination. The pumping illumination is coupled onto the optical fiber by a multiplexing coupler which is used to combine the signal to be amplified and illumination from a pumping illumination source onto a single optical fiber. The pumping illumination inverts the neodymium ions within the ND:YAG crystal. The signal to be amplified propagates through this crystal to stimulate emission of coherent light from the neodymium ions, resulting in amplification of the signal. Because this arrangement permits the ND:YAG crystal to be end-pumped with pumping illumination, and because the length of the ND:YAG crystal may be substantially greater that the absorption length for the crystal at the wavelength of the pumping illumination, virtually all of the pumping illumination may be absorbed within the ND:YAG crystal and used for amplification of the signal carried by the optical fiber.",
+ "sections": [
+  {
+   "heading": "",
+   "paras": [
+    {
+     "col": 1,
+     "line": 4,
+     "text": "This application is a division of application Ser. No. 930,136, filed Nov. 12, 1986 U.S. Pat. No. 4,723,824, which is a division of application Ser. No. 554,888 filed Nov. 25, 1983, now issued as U.S. Pat. No. 4,674,830."
+    }
+   ]
+  },
+  {
+   "heading": "BACKGROUND OF THE INVENTION",
+   "paras": [
+    {
+     "col": 1,
+     "line": 10,
+     "text": "The concept of optical amplifiers, based upon the capability of certain materials, particularly on a macroscopic level, is well known. Thus, for example, it is known to place a pumping light source and a single crystal neodymium-yttrium aluminum garnet (ND:YAG) rod, several millimeters in diameter and several centimeters in length, in a tubular reflective cavity. For example, the light source and ND:YAG rod may be located, respectively, to extend along the two foci of a cavity having an elliptical cross section. In such an arrangement, light emitted by the light source and reflected from the cavity walls will impinge upon the ND:YAG rod. The light source is preferably selected to emit wavelengths corresponding to the absorption spectra of the ND:YAG crystal so that the neodymium ions of the crystal are inverted to an energy level above the upper lasing level. After inversion, an initial relaxation of the neodymium ions through phonon radiation yields an ion population at the upper lasing level. From this level, the ions will relax to a lower lasing level, emitting light of a wavelength which is characteristic of the ND:YAG material. Advantageously, the lower lasing level is above the ground level for the ions so that a rapid, phonon-emitting relaxation will occur between the lower lasing level and the ground level, enabling a high inversion ratio to exist between the upper and lower lasing levels within the pumped ions."
+    },
+    {
+     "col": 1,
+     "line": 39,
+     "text": "With the population so inverted, as is well known from laser technology, the ND:YAG will provide a very slow fluorescence, that is, random emission of incoherent light. This spontaneous radiation, however, has a minimal effect on the amplifying rod, since the average lifetime of ions in the inverted state is 230 microseconds, in ND:YAG."
+    },
+    {
+     "col": 1,
+     "line": 46,
+     "text": "If, after some of the neodymium ions of the ND:YAG rod have been inverted, a light signal at the lasing frequency is transmitted through the rod, the light signal will trigger the relaxation of the neodymium ions, causing coherent emission of stimulated radiation, which will effectively add to the transmitted signal, thus amplifying this signal."
+    },
+    {
+     "col": 1,
+     "line": 53,
+     "text": "The absorption length of the pumping illumination within the ND:YAG crystal (i.e., the length of material through which the illumination must traverse before about 65% of the illumination is absorbed) is typically in the range between 2 and 3 millimeters, and thus the ND:YAG crystals used in transverse pumping structures such as described previously have had diameters at least this large so that the crystal could absorb a substantial portion of the pumping radiation during the initial reflection from the cavity walls and passage through he crystal. If, during this initial traverse through the crystal, the pumping illumination is not absorbed, it is likely to be reflected by the cavity walls back to the light source, where it will be reabsorbed, generating heat in the light source and reducing the overall efficiency of the amplifier."
+    },
+    {
+     "col": 2,
+     "line": 1,
+     "text": "When such amplifiers are used in fiber optic systems, it has been thought necessary, because of the large difference in diameter between the optical fiber and the ND:YAG crystal, to use optical components, such as lenses, to focus light from the optical fiber into the ND:YAG rod, and the amplified light signal from the ND:YAG rod back into another fiber. Such optical systems require careful alignment and are susceptible to environmental changes, such as vibration, and thermal effects. Additionally, the optical components and the size of the ND:YAG rod make the amplifying system relatively large, and thus impractical for certain applications. Furthermore, the relatively large size of the ND:YAG rod introduces beam wander within the rod due to thermal effects. Thus, the signal from the input fiber optic element will traverse different paths through the rod, a characteristic which is temperature related and varies with time, so that the output light may be lost due to the fact that the fiber will accept only light within a small acceptance angle. Thus, as the beam within the ND:YAG rod wanders, the output signal may vary in an uncontrollable manner. Furthermore, the large size of the ND:YAG rod requires a large amount of input energy in order to maintain a high energy density within the rod. Such large pump power requires high output light sources, generating substantial heat which must be dissipated, typically by liquid cooling of the cavity."
+    },
+    {
+     "col": 2,
+     "line": 29,
+     "text": "While amplifiers of this type are useful in many applications, such as some communications applications, a use which puts severe limitations upon the amplification system is a recirculating fiber optic gyroscope. With such gyroscopes, an optical fiber, typically a kilometer or more in length, is wound into a loop, and a light signal is recirculated within the loop in both directions. Motion of the loop causes a phase difference between the counter-propagating light signals which may be used to measure gyroscope rotation. It is advantageous, because the phase shift induced in one rotation is relatively small and because periodic outputs relating to rotation are required, to recirculate input light within the loop as many times as possible."
+    },
+    {
+     "col": 2,
+     "line": 43,
+     "text": "In traversing a kilometer of optical fiber, an optical signal will typically lose 30 to 50 percent of its intensity. An amplifier, if capable of amplifying the bidirectional counter-propagating light signals, would permit a light signal to propagate many more times within the loop, if the amplifier were placed in a series with the loop, and provided a gain equal to the propagation loss."
+    },
+    {
+     "col": 2,
+     "line": 50,
+     "text": "Unfortunately, the relatively large size, high power requirements caused by relatively inefficient performance, beam wander effects, and cooling requirements of prior art ND:YAG rod amplifiers makes such amplifiers relatively impractical for high accuracy gyroscopes. These factors, of course, also limit the utility of such amplifiers in other applications, such as communication networks."
+    }
+   ]
+  },
+  {
+   "heading": "SUMMARY OF THE INVENTION",
+   "paras": [
+    {
+     "col": 2,
+     "line": 60,
+     "text": "The disadvantages associated with crystal rod amplifiers are alleviated in the present invention. This invention permits end pumping of the ND:YAG material, and thus, completely avoids the requirement for a large diameter for this crystal which is inherent in side pumping arrangements. The ND:YAG fiber may thus be made extremely small in diameter in comparison with prior art rod amplifiers, since the pumping illumination is absorbed along the length of the fiber, rather than across its width. This results in a higher concentration of pumping illumination within the small diameter of the ND:YAG crystal and thus a higher potential gain for the amplifying structure."
+    },
+    {
+     "col": 3,
+     "line": 5,
+     "text": "In order to accomplish this end pumping, the ND:YAG material is formed as a small diameter fiber and is placed in series with the optical fiber which is transmitting the signal to be amplified."
+    },
+    {
+     "col": 3,
+     "line": 9,
+     "text": "Adjacent to the ND:YAG fiber, the optical fiber passes through a multiplexing optical coupler. Within this multiplexing coupler, a pair of optical fibers are arranged with a carefully selected interaction length to provide a high fiber-to-fiber coupling efficiency at the wavelength of the pumping source, but a low coupling efficiency at the wavelength of the signal to be amplified. This results in a coupling of the pumping illumination into the optical fiber which is carrying the signal, and thus into the ND:YAG fiber, while substantially eliminating loss to the optical signal which is to be amplified, since this signal is not coupled from the optical fiber of the multiplexing coupler."
+    },
+    {
+     "col": 3,
+     "line": 22,
+     "text": "Because the present invention permits the pumping illumination to be coupled into the optical signal fiber for guiding to the end of the ND:YAG fiber, the diameter of the ND:YAG fiber need not exceed the absorption length at the pumping wavelength, since the pumping illumination is effectively absorbed in a direction along the axis of the ND:YAG fiber rather than perpendicular to that axis."
+    },
+    {
+     "col": 3,
+     "line": 31,
+     "text": "Using this arrangement, pumping illumination can be continuously supplied to the amplifying ND:YAG fiber without interfering with its signal carrying characteristics. Thus, since a four-port coupler is used for multiplexing the pumping illumination to the amplifying fiber, the ends of the amplifying fiber are always available for direct signal coupling to the optical fibers within the optical system so that careful time sequencing between the application of pumping illumination and the signal to be amplified is not necessary."
+    },
+    {
+     "col": 3,
+     "line": 41,
+     "text": "In order to achieve uniform bidirectional amplification within the ND:YAG crystal, pumping illumination may be supplied by multiplexing couplers arranged at both ends of the ND:YAG fiber, providing a symmetrical inversion population along the length of this fiber."
+    }
+   ]
+  },
+  {
+   "heading": "BRIEF DESCRIPTION OF THE DRAWINGS",
+   "paras": [
+    {
+     "col": 3,
+     "line": 48,
+     "text": "These and other advantages of the present invention are best understood through reference to the drawings, in which:"
+    },
+    {
+     "col": 3,
+     "line": 51,
+     "text": "FIG. 1 is a cross sectional view of the fiber optic coupler used as a multiplexer in the present invention showing a pair of fiber optic strands mounted in respective arcuate grooves with a given radius of curvature of respective bases;"
+    },
+    {
+     "col": 3,
+     "line": 56,
+     "text": "FIGS. 2 and 3 are cross sectional views of the coupler of FIG. 1 taken along lines 2—2 and 3—3, respectively;"
+    },
+    {
+     "col": 3,
+     "line": 58,
+     "text": "FIG. 4 is a perspective view of the lower base of the coupler of FIG. 1 separated from the other base to show its associated fiber mounting and the oval-shaped facing surface of the fiber;"
+    },
+    {
+     "col": 3,
+     "line": 62,
+     "text": "FIG. 5 is a schematic diagram showing the evanescent fields of the pair of fibers overlapping at the interaction region;"
+    },
+    {
+     "col": 3,
+     "line": 65,
+     "text": "FIG. 6 is a chart showing relative coupled power versus signal wavelength for a fiber coupler having a minimum fiber spacing of 4 microns, an offset of 0 micron, and a fiber radius of curvature of 25 centimeters;"
+    },
+    {
+     "col": 4,
+     "line": 1,
+     "text": "FIG. 7 is a chart of relative coupled power versus signal wavelengths similar to FIG. 6 but with a fiber radius of curvature of 200 centimeters;"
+    },
+    {
+     "col": 4,
+     "line": 4,
+     "text": "FIG. 8 is a chart of relative coupled power versus signal wavelength for a fiber coupler having a minimum fiber spacing of 4 microns, a fiber radius of 200 centimeters, and a selectable fiber offset;"
+    },
+    {
+     "col": 4,
+     "line": 8,
+     "text": "FIG. 9 is a schematic diagram showing the directional amplifier of the present invention;"
+    },
+    {
+     "col": 4,
+     "line": 10,
+     "text": "FIG. 10 is a diagram showing the absorption spectrum of ND:YAG at 300° K.;"
+    },
+    {
+     "col": 4,
+     "line": 12,
+     "text": "FIG. 11a and 11b are simplified energy level diagrams of a four-level laser using a doped material, such as ND:YAG;"
+    },
+    {
+     "col": 4,
+     "line": 15,
+     "text": "FIG. 12 is a schematic diagram of a symmetrical bidirectional amplifier in accordance with the present invention;"
+    },
+    {
+     "col": 4,
+     "line": 18,
+     "text": "FIG. 13 is a schematic diagram of an amplifier system, including a multiplexing coupler for signal insertion and signal sensing in a closed fiber loop."
+    }
+   ]
+  },
+  {
+   "heading": "DETAILED DESCRIPTION OF THE PREFERRED EMBODIMENT",
+   "paras": [
+    {
+     "col": 4,
+     "line": 24,
+     "text": "In order to gain a detailed understanding of the operation of the fiber optic amplifier of this invention, it is necessary to understand that manner in which a fiber optic coupler can be constructed to selectively couple a first optical frequency while not coupling a second optical frequency. The apparatus, as well as methods for constructing the apparatus, required for such selective coupling, are disclosed in copending patent application entitled “Passive Fiber Optic Multiplexer”, filed in the U.S. Pat. Office Nov. 9, 1981, bearing Ser. No. 319,301, and listing Herbert J. Shaw and Michel J. F. Digonnet as inventors (now U.S. Pat. No. 4,556,279). The application is assigned to the assignee of the present invention. That application is hereby incorporated herein by reference. Nonetheless, the principal characteristics of that device and its method of manufacture are described below."
+    },
+    {
+     "col": 4,
+     "line": 41,
+     "text": "This invention utilizes a passive multiplexer which utilizes a fiber optic coupler. This coupler 10 is illustrated in FIGS. 1-4, and includes two strands 12A and 12B of a single mode fiber optic material. The fiber strands 12A and 12B, in the embodiment shown, have a core radius of 2 microns, a core refractive index of 1.46 and a cladding index of 1.456. The strands 12A and 12B are mounted in longitudinal arcuate grooves 13A and 13B, respectively, formed in optically flat confronting surfaces 14A and 14B, respectively, of rectangular bases or blocks 16A and 16B, respectively. The block 16A with the strand 12A mounted in the groove 13A will be referred to as the coupler half 10A and the block 16B with the strand 12B mounted in the groove 13B will be referred to as the coupler half 10B."
+    },
+    {
+     "col": 4,
+     "line": 56,
+     "text": "Each of the strands 12A and 12B comprise an optical fiber which is doped to have a central core and an outer cladding. The strands 12A and 12B may comprise a commercially available fiber of quartz glass which is doped to have a central core and an outer cladding. The index of refraction of the fibers 12A and 12B should be as nearly as possible identical, and both of the strands 12A and 12B should include a central core which is sufficiently small to provide single mode transmission at the optical frequencies to be used. Thus, these strands 12A and 12B typically have a core diameter on the order of 10 microns or less and a cladding diameter on the order of 125 microns. In the embodiment disclosed, the diameter of the strands 12 and their respective cores are exaggerated. As will be understood in more detail from the description which follows, the fiber 12B is used to transmit the signal to be amplified while the fiber 12A is used to couple pumping illumination to the fiber 12B. For this reason, the fiber 12B will be referred to as the signal fiber while the fiber 12A will be referred to as the pumping fiber."
+    },
+    {
+     "col": 5,
+     "line": 9,
+     "text": "The arcuate grooves 13A and 13B have a radius of curvature which is very large compared to the diameter of the fibers 12, and have a width slightly larger than the fiber diameter to permit the fibers 12, when mounted therein, to conform to a path defined by the bottom walls of the grooves 13. The depth of the grooves 13A and 13B varies from a minimum at the center of the blocks 16A and 16B, respectively, to a maximum at the edges of the blocks 16A and 16B, respectively. This advantageously permits the fiber optic strands 12A and 12B, when mounted in the grooves 13A and 13B, respectively, to gradually converge toward the center and diverge toward the edges of the blocks 16A, 16B, thereby eliminating any sharp bends or abrupt changes in direction of the fibers 12 which may cause power loss through mode perturbation. In the embodiment shown, the grooves 13 are illustrated as being rectangular in cross section, however, it will be understood that other suitable cross sectional contours which will accommodate the fiber 12 may be used alternatively, such as a U-shaped cross section or a V-shaped cross section."
+    },
+    {
+     "col": 5,
+     "line": 31,
+     "text": "At the centers of the blocks 16, in the embodiment shown, the depth of the grooves 13, which mount the strands 12, is less than the diameter of the strands 12, while at the edges of the blocks 16, the depth of the grooves 13 is preferably at least as great as the diameter of the strands 12. Fiber optic material was removed from each of the strands 12A and 12B e.g. by polishing, to form the respective oval-shaped planar surfaces 18A, 18B, which are coplanar with the confronting surfaces 14A, 14B, respectively. These surfaces 18A, 18B, will be referred to herein as the fiber “facing surfaces”. Thus, the amount of fiber optic material removed increases gradually from zero towards the edges of the block 16 to a maximum towards the center of the block 16. This tapered removal of the fiber optic material enables the fiber cores to converge and diverge gradually, which is advantageous for avoiding backward reflection and excess loss of light energy."
+    },
+    {
+     "col": 5,
+     "line": 49,
+     "text": "In the embodiment shown, the coupler halves 10A and 10B are identical, and are assembled by placing the confronting surfaces 14A and 14B of the blocks 16A and 16B together, so that the facing surfaces 18A and 18B of the strands 12A and 12B are in facing relationship."
+    },
+    {
+     "col": 5,
+     "line": 55,
+     "text": "An index matching substance (not shown), such as index matching oil, is provided between the confronting surfaces 14. This substance has a refractive index approximately equal to the refractive index of the cladding, and also functions to prevent the optically flat surfaces 14 from becoming permanently locked together. The oil is introduced between the blocks 16 by capillary action."
+    },
+    {
+     "col": 5,
+     "line": 63,
+     "text": "An interaction region 32 is formed at the junction of the strands 12, in which light is transferred between the strands by evanescent field coupling. It has been found that, to insure proper evanescent field coupling, the amount of material removed from the fibers 12 must be carefully controlled so that the spacing between the core portions of the strands 12 is within a predetermined “critical zone”. The evanescent fields extend into the cladding and decrease rapidly with distance outside their respective cores. Thus, sufficient material should be removed to permit each core to be positioned substantially within the evanescent field of the other. If too little material is removed, the cores will not be sufficiently close to permit the evanescent fields to cause the desired interaction of the guided modes, and thus, insufficient coupling will result. Conversely, if too much material is removed, the propagation characteristics of the fibers will be altered, resulting in loss of light energy due to mode perturbation. However, when the spacing between the cores of the strands 12 is within the critical zone, each strand receives a significant portion of the evanescent field energy from the other strand, and good coupling is achieved without significant energy loss. The critical zone is illustrated schematically in FIG. 5 are including that area, designated by the reference numeral 33, in which the evanescent fields, designated by reference numerals 34A and 34B, of the fibers 12A and 12B, respectively, overlap with sufficient strength to provide coupling, i.e., each core is within the evanescent field of the other."
+    },
+    {
+     "col": 6,
+     "line": 25,
+     "text": "The blocks or bases 12 may be fabricated of any suitable rigid material. In one presently preferred embodiment, the bases 12 comprise generally rectangular blocks of fused quartz glass approximately one inch long, one inch wide, and 0.4 inch thick. In this embodiment, the fiber optic strands 12 are secured in the slots 13 by suitable cement 38, such as epoxy glue. One advantage of the fused quartz blocks 16 is that they have coefficient of thermal expansion similar to that of glass fibers, and this advantage is particularly important if the blocks 16 and fibers 12 are subjected to any heat treatment during the manufacturing process. Another advantage of the fused quartz blocks is that, as they are made of the same material as the optical fiber, they polish at the same rate as the optical fiber, and thus, provide a continuous support to the fiber during polishing. Other suitable materials for the block 16 include silicon, which also has excellent thermal properties for this application."
+    }
+   ]
+  },
+  {
+   "heading": "OPERATION OF THE COUPLER 10",
+   "paras": [
+    {
+     "col": 6,
+     "line": 46,
+     "text": "The coupler 12 includes four ports, labeled A, B, C, and D in FIG. 1. When viewed from the perspective of FIG. 1, ports A and C, which correspond to strands 12A and 12B, respectively, are on the left-hand side of the coupler 10, while the ports B and D, which correspond to the strands 12A and 12B, respectively, are on the right-hand side of the coupler 10. For the purposes of discussion, it will be assumed that input light is applied to port A. This light passes through the coupler and is output at port B and/or port D, depending upon the amount of power that is coupled between the strands 12. In this regard, the term “normalized coupled power” is defined as the ratio of the coupled power to the total output power. In the above example, the normalized coupled power would be equal to the ratio of the power at port D to the sum of the power output at ports B and D. This ratio is also referred to as the “coupling efficiency”, and when so used is typically expressed as a percent. Thus, when the term “normalized coupled power” is used herein, it should be understood that the corresponding coupling efficiency is equal to the normalized coupled power times 100. In this regard, tests have shown that the coupler 10 has a coupling efficiency of up to 100%. However, it will also be seen that the coupler 10 may be “tuned” to adjust the coupling efficiency to any desired value between zero and the maximum. Such tuning may be accomplished e.g. by relatively laterally sliding the fibers in a direction perpendicular to their length. The relative positions of the fibers may be defined in terms of their offset, i.e. the distance between the central axes of the fiber cores, measured in the direction perpendicular to their length, along the surfaces 14. Thus, when the oval surfaces 18 are superimposed, the offset is zero, and the offset increases as the fibers 12 are laterally separated by relatively sliding the blocks 16."
+    },
+    {
+     "col": 7,
+     "line": 14,
+     "text": "The coupler 10 is highly directional, with substantially all of the power applied at one side of the coupler being delivered to the other side of the coupler. The coupler directivity is defined as the ratio of the power at port D to the power at port C, with the input applied to port A. Tests have shown that the directionally coupled power (at power D) is greater than 60 db above the contra-directionally coupled power (at port C). Further, the coupler directivity is symmetrical. That is, the coupler operates with the same characteristics regardless of which side of the coupler is the input side and which side is the output side. Moreover, the coupler 10 achieves these results with very low throughput losses. The throughput loss is defined as the ratio of the total output power (ports B and D) to the input power (port A) subtracted from one (i.e., 1−(P_{B}+P_{D})/P_{A}). Experimental results show that throughput losses of 0.2 db have been obtained, although losses of 0.5 db are more common. Moreover, these tests indicate that the coupler 10 operates substantially independently of the polarization of the input light applied."
+    },
+    {
+     "col": 7,
+     "line": 35,
+     "text": "The coupler 10 operates on evanescent field coupling principles in which guided modes of the strands 12 interact, through their evanescent fields, to cause light to be transferred between the strands 12. As previously indicated, this transfer of light occurs at the interaction region 32. The amount of light transferred is dependent upon the proximity and orientation of the cores, as well as the effective length of the interaction region 32. As will be described in detail below, the amount of light transferred is also dependent of the wavelength of the light. The length of the interaction region 32 is, in turn, dependent upon the radius of curvature of the fibers 12, and, to a limited extent, the core spacing, although it has been found that the effective length of the interaction region 32 is substantially independent of core spacing. However, the “coupling length”, i.e., the length within the interaction region 32 which is required for a single, complete transfer of a light signal from one fiber 12 to the other, is a function of core spacing, as well as wavelength. In one exemplary embodiment, employing an edge-to-edge core spacing of about 1.4 microns, and a radius of curvature on the order of 25 centimeters, the effective interaction region is approximately one millimeter long at a light signal wavelength of 633 nm. Because the coupling length at 633 nm is also one millimeter in such a coupler, the light makes only one transfer between the strands 12 as it travels through the interaction region 32. However, if the length of the interaction region 32 is increased, or core spacing decreased, a phenomenon referred to herein as “overcoupling” will occur, since the coupling length is shorter than the effective interaction length. Under these circumstances, the light will transfer back to the strand from which is originated. As the interaction length is further increased, and/or the core spacing further decreased, the effective interaction length increases relative to the coupling length, and at least some of the light transfers back to the other strand. Thus, the light may make multiple transfers back and forth between the two strands 12 as it travels through the region 32, the number of such transfers being dependent on the length of the interaction region 32, the light wavelength (as described below), and the core spacing."
+    },
+    {
+     "col": 8,
+     "line": 10,
+     "text": "Since the coupling length in a single mode fiber coupler, as described above, shows a strong dependence on signal wavelength, as described in detail in the copending application incorporated above, it is possible with properly chosen geometrical parameters for the coupler 10, to totally couple one signal wavelength while a second signal wavelength remains essentially uncoupled. This phenomenon permits the combination of two signals fed into the ports on one side of the coupler 10. Thus, as shown in FIG. 1, if a pumping signal having a wavelength λ_{1} is fed into port A of coupler 10, and a signal to be amplified, having a wavelength λ_{2} is coupled to port C, and the geometry is properly selected, both signals can be combined at port D, with virtually no light output at port B."
+    },
+    {
+     "col": 8,
+     "line": 25,
+     "text": "To illustrate this wavelength dependence, FIG. 6 provides a plot of coupled power versus signal wavelength in the visible and near infrared spectrum for a particular coupler geometry. Because for this coupler configuration the effective interaction length of the coupler is an odd multiple of the coupling length for the wavelength 720 nm, but an even multiple of the coupling length for the wavelength 550 nm, the wavelength 720 nm will be 100% coupled, while the wavelength 550 nm will be effectively uncoupled. With different efficiencies, different wavelengths may be combined or separated. For instance, 590 nm and 650 nm may be separated or combined at an 80% efficiency."
+    },
+    {
+     "col": 8,
+     "line": 38,
+     "text": "Virtually any pair of wavelengths (λ_{1}, λ_{2}) may be efficiently combined or separated so long as the effective interaction length is an even multiple of the coupling length for one wavelength and an odd multiple for coupling length for the other wavelength. As the number of coupling lengths within the effective interaction length increases, the resolution of the multiplexer is enhanced. As is described in detail in the incorporated reference, the multiplexer resolution may be enhanced by increasing the radius of curvature of the fibers 12A,12B. Provided that the interaction length of the coupler is large enough, virtually any two signals may be exactly mixed or separated, regardless of how closely spaced their wavelengths are."
+    },
+    {
+     "col": 8,
+     "line": 52,
+     "text": "The interaction length is a function of wavelength, and the resolution is approximately proportional to (R)^{½}. As R increases, the effective interaction length increases, and becomes a higher multiple of the coupling length, improving resolution. This result is illustrated in FIG. 7, which is comparable to the graph of FIG. 6, except that the radius of curvature has been increased to 200 centimeters. As anticipated, this increase in radius improves the coupler resolution near g=600 nm from approximately 170 nm in the 25 centimeter radius example of FIG. 6 to approximately 60 nm in the 200 centimeter case."
+    },
+    {
+     "col": 8,
+     "line": 64,
+     "text": "The resolution of a multiplexing coupler depends on two independent parameters, H (fiber spacing) and R (radius of curvature of the fibers). For a given pair of signal wavelengths, efficient mixing may be achieved by first properly selecting a fiber spacing H for the coupler which yields a large wavelength dependence for the wavelengths of interest (choice of H), and then by selecting a radius of curvature which yields a resolution equal to the difference between the wavelengths (choice of R)."
+    },
+    {
+     "col": 9,
+     "line": 6,
+     "text": "After the resolution of the coupler has been set in accordance with the wavelengths to be separated, the coupler may be tuned to precisely adjust the coupling lengths for the wavelengths of interest so that the effective interaction length is an even multiple of the coupling length of one wavelength and an odd multiple of the coupling length of the other wavelength. This is accomplished by offsetting the fibers by sliding the blocks 16A,16B (FIG. 1) relative one another in a direction normal to the axis of the fibers 12A,12B. Such an offset has the effect of increasing the minimum fiber spacing H and increasing the effective radius of curvature of the fibers. If the required offset is small enough, it will not upset the multiplexer resolution. This stems from the fact that the separation H of a large radius coupler changes rapidly with fiber offset in comparison to changes in the effective radius of curvature with fiber offset."
+    },
+    {
+     "col": 9,
+     "line": 24,
+     "text": "To illustrate this tunability of multiplexing couplers, FIG. 8 provides a plot of relative coupled power versus wavelength for three increasing values of fiber offset (0 microns, 0.5 microns, and 1.0 microns). The curve is seen to shift toward increasing wavelengths as the offset increases, while the period of oscillation (or resolution) remains virtually unchanged. In this particular example (R=200 cm, H=4 microns), a 1-micron offset shifts the curve by approximately 45 nm."
+    }
+   ]
+  },
+  {
+   "heading": "OVERALL OPERATION OF THE AMPLIFIER",
+   "paras": [
+    {
+     "col": 9,
+     "line": 35,
+     "text": "Referring now to FIG. 9, the manner in which the amplifier of the present invention utilizes the wavelength multiplexing properties of the coupler 10 to provide pumping illumination to energize ND:YAG fiber will be described."
+    },
+    {
+     "col": 9,
+     "line": 40,
+     "text": "A source of pumping illumination 42 is coupled to the fiber 12A of the coupler 10 to provide pumping illumination at port A of the multiplexing coupler 10, and a signal to be amplified is coupled to one end of the fiber 12B at port C of the coupler 10. The pumping illumination from the source 42 and the signal to be amplified are combined at port D at the coupler 10 through the multiplexing action of the coupler, as explained above. Thus, the coupler 10 is adjusted to have a 100% coupling efficiency at the wavelength of the source 42, and a 0% coupling efficiency, at the wavelength of the signal input at port C. This pair of signal wavelengths is supplied to an ND:YAG crystal 44 which is coupled to the fiber 12B in the manner described below. The signal input at the port C will be amplified in the ND:YAG crystal 44 and the amplified signal will be coupled from this crystal 44 to an optical fiber 46 for transmission within the optical fiber system. The diameter of the ND:YAG crystal 44 may be extremely small in comparison with the diameter of ND:YAG rods used in prior art amplifiers. For example, an amplifier has been constructed in which the crystal 44 has a diameter of 100 microns. Even smaller diameters are feasible, approaching the diameter of the single mode fiber 12B. Coupling between the fiber 12B and the crystal 44 is enhanced as the diameter of the crystal 44 is reduced and signal gain is increased since the density of pumping illumination from the source 42 within the crystal 44 increases as the crystal 44 diameter is reduced."
+    }
+   ]
+  },
+  {
+   "heading": "ND:YAG AMPLIFICATION",
+   "paras": [
+    {
+     "col": 10,
+     "line": 3,
+     "text": "Referring now to FIG. 10, which is a diagram of the absorption spectrum of the ND:YAG crystal 44 at 300° K., it can be seen that ND:YAG material has a relatively high optical density, and thus a short absorption length, at selected wavelengths. For this reason, it is advisable to select the wavelength of the pumping illumination source 42 in order to permit the absorption length to be as short as possible. This will permit substantially complete absorption of the pumping illumination within a very short length of the ND:YAG crystal 44. As can be seen from FIG. 10, the wavelength 0.58 microns is best suited for pumping illumination, although the wavelengths 0.75 and 0.81 microns are relatively well suited."
+    },
+    {
+     "col": 10,
+     "line": 17,
+     "text": "Referring now to FIG. 11A, which is an energy level diagram for the ND:YAG crystal 44, it will be understood that, when pump light at the absorption wavelength, described above, is absorbed by the ND:YAG crystal 44, the neodymium ions are excited from the ground state to the pump band. From the pump band, the ions quickly relax, through phonon interactions, to the upper lasing level. From this upper lasing level, the neodymium ions will undergo a relatively slow fluorescence to the lower lasing level. From this latter level, a final, rapid phonon relaxation occurs to the ground state. This latter rapid relaxation in a four-level laser system of the type shown in FIG. 11A is advantageous, since the rapid phonon relaxation between the lower lasing level and the ground state provides a practically empty lower lasing level. This feature is shown in FIG. 11B, in which the population densities at the pump band upper lasing level, lower lasing level, and ground state are shown for the ND:YAG crystal 44 during continuous pumping. Because the rage of fluorescence between the upper lasing level and lower lasing level is relatively slow in comparison with the phonon relaxation between the pump band and the upper lasing level, as well as between the lower lasing level and the ground state, the population density at the upper lasing level is substantially higher than that at the lower lasing level, yielding a high inversion ratio. The average lifetime of neodymium ions at the upper lasing level, prior to spontaneous fluorescence, is about 230 microseconds at 300° k. in ND:YAG."
+    },
+    {
+     "col": 10,
+     "line": 47,
+     "text": "The signal to be amplified is selected to have a wavelength at the laser transition wavelength (1.064 microns), i.e., the wavelength of light emitted by the ND:YAG ions during relaxation between the upper and lower lasing levels. When this signal is supplied to the crystal 44 by the coupler 10 (FIG. 9), it will trigger the emission of stimulated photons at the same frequency, coherent with the signal, and the signal is thereby amplified. Thus, the passage of light at this frequency will cause a photon emitting relaxation between the upper lasing level and lower lasing level of FIG. 11A, in phase with the light signal to be amplified, yielding an effective gain for the input light signal."
+    },
+    {
+     "col": 10,
+     "line": 60,
+     "text": "The gain which can be achieved in the amplifier of this invention is dependent upon the density of the inverted neodymium ion population within the ND:YAG crystal 44. Initially, the ultimate inversion population is limited by the lattice structure of the YAG material 44 itself since the ND:YAG material, some yttrium atoms are replaced with neodymium atoms in the crystal lattice. Only approximately 1 yttrium atom in each 100 yttrium atoms may be replaced by a neodymium ion without distorting the lattice structure on the ND:YAG material."
+    },
+    {
+     "col": 11,
+     "line": 3,
+     "text": "Theoretical calculations of the small gain signal (g_{0} of the amplifier of this invention can be made, using the relation g_{0}σΔN, where σ is the stimulated emission cross section, for ND:YAG, 8.8×10^{−19}cm^{2}, and ΔN is the population inversion density given by:"
+    },
+    {
+     "col": 11,
+     "line": 10,
+     "text": "ΔN = (P_{p}/V)(η_{1}η_{2}t_{sp}/hν) (1)"
+    },
+    {
+     "col": 11,
+     "line": 12,
+     "text": "where P_{p} is the absorbed pump power, V is the crystal volume and thus, P_{p}/V is the absorbed pump power per unit of fiber volume, t_{sp} is the spontaneous radiative lifetime, that is, the 230-microsecond fluorescence relaxation time of the neodymium ions, η_{1} is the effective spectral overlap of pump output with an ND:YAG absorption line, as shown in FIG. 10, η_{2} is equal to the quantum efficiency of 1.06-micron fluorescence, namely 0.63, and hγ is equal to the energy of one pump photon."
+    },
+    {
+     "col": 11,
+     "line": 21,
+     "text": "Combining the above relationship provides:"
+    },
+    {
+     "col": 11,
+     "line": 24,
+     "text": "g_{0} = σ(P_{p}/V)(η_{1}η_{2}t_{sp}/hν) (2)"
+    },
+    {
+     "col": 11,
+     "line": 26,
+     "text": "for the dependence of gain on pump power. It should be recognized that the value P_{p} is the absorbed pump power and that an increase in the length of the crystal 44 does not necessarily increase the gain. Thus, if the pumping radiation from the source 42 is coupled completely to the ND:YAG crystal 44, and travels in the crystal 44 a distance which is sufficient to permit this crystal 44 to nearly completely absorb the pumping radiation, then the value P_{p} in this equation may be replaced by the input power level. To obtain the net gain, however, one must subtract from 90 the propagation losses within the ND:YAG crystal 44 at 1.06 microns. A loss of 100 db per kilometer would reduce the gain by only 0.001 dB per centimeter. Thus, if the overall length of the crystal 44 can be maintained relatively short, while still absorbing substantially all of the input pump power, the propagation losses within the amplifier can be maintained at a low level."
+    }
+   ]
+  },
+  {
+   "heading": "DETAILED OPERATION OF THE AMPLIFIER",
+   "paras": [
+    {
+     "col": 11,
+     "line": 46,
+     "text": "Referring again to FIG. 30, the pumping source 42 coupled to the fiber 12A at the port A of the coupler 10, through the multiplexing action of the coupler 10, provides pumping illumination for the ND:YAG crystal 44. The pumping source 42 may be, for example, a long-life LED, such as those currently available which operate at a current density of approximately 1,000 amps per cm^{2} and have a radiance of approximately 5 watts per sr.cm^{2}. In fact, some LEDs have been reported with a radiance of approximately 50 watts/sr./cm^{2}. Because of the size differential between the single mode fiber 12A and these LEDs, a lens may be useful in focusing the output of the LED source into the fiber 12A."
+    },
+    {
+     "col": 11,
+     "line": 59,
+     "text": "Alternatively, the pump source 42 may be laser diode which permits even higher concentrations of pump power in the fiber 12A and thus in the ND:YAG crystal 44."
+    },
+    {
+     "col": 11,
+     "line": 63,
+     "text": "Regardless of the type of pumping source 42 utilized, the efficiency of the system will be enhanced if the wavelength of the radiation from this source 42 corresponds to a peak in the absorption spectrum of the ND:YAG crystal 44, shown in FIG. 10. Electroluminescent diodes are commercially available with appropriate dopings to emit spectra in the 0.8 micron range which match quite well the absorption spectrum of room temperature ND:YAG material. For example, commercially available GaAlAs LEDs provide radiation spectra which are strong at the 0.8 micron region. Similarly, laser diode structures are commercially available which emit energy over the 0.8 to 0.85 micron range. In addition, the pump wavelength should be as close to the signal wavelength as allowed by the spectroscopy of the ND:YAG, to maximize the overall pumping efficiency."
+    },
+    {
+     "col": 12,
+     "line": 12,
+     "text": "It will be recalled that the lasing frequency of the ND:YAG material of the crystal 44 is 1.06 micron. The multiplexing coupler 10 is thus fabricated for use in this invention to provide virtually complete coupling at the wavelength of the pumping source 42, 0.8 microns in the above example, while providing substantially no coupling at the lasing frequency of the ND:YAG crystal 44, 1.06 microns in this same example."
+    },
+    {
+     "col": 12,
+     "line": 21,
+     "text": "This selective coupling is accomplished, in accordance with the techniques described above, by properly selecting the fiber spacing H to yield a large wavelength dependence for wavelengths between 0.8 microns and 1.06 microns, and then by selecting a radius of curvature for the fibers 12A,12B which yields a resolution equal to the difference between 1.06 and 0.8 microns, or 0.26 microns. After the resolution of the coupler has been set in this manner, the coupler may be tuned, as previously described, to adjust the coupling length for the wavelengths 0.8 microns and 1.06 microns so that the effective interaction length is an even multiple of the coupling length for one of this pair of wavelengths and an odd multiple of the coupling length for the remaining wavelength. In the example shown in FIG. 9, since it is desired to couple the output of the pump source 42 into the fiber 12B, the effective interaction length for the coupler should be adjusted to be an odd multiple of the coupling length at the wavelength of the pump source 42, i.e., 0.8 microns, and to be an even multiple of the signal frequency 1.06 microns. This will result in a complete coupling of the illumination from the pump source 42, from the fiber 12A into the fiber 12B, with essentially no coupling of the signal to be amplified from the fiber 12B to the fiber 12A. It will be understood, of course, that no coupling in this instance means an even number of complete couplings so that, for example, if the effective interaction length at the region 32 is twice the coupling length at 1.06 microns, the signal to be amplified will be coupled two complete times, once from the fiber 12B to the fiber 12A, and then from the fiber 12A to the fiber 12B. If this signal enters the coupler at port C, as shown on the left of FIG. 9, it will exit uncoupled at port D. However, at port D, the signal to be amplified will coexist with light from the pumping source 42, which will be completely coupled from the fiber 12A to the fiber 12B."
+    },
+    {
+     "col": 12,
+     "line": 59,
+     "text": "Since light from the pumping source 42 will be transmitted along the fiber 12B, after coupling, this pumping illumination will invert the neodymium ions in the ND:YAG crystal 44. Thus, a signal, which is injected at port C and exits, uncoupled, from port D, will be amplified in the manner previously described as it passes through the crystal 44, since this signal will excite spontaneous lasing relaxation of the ND:YAG material of the crystal 44, which lasing relaxation will provide light coherent with the signal to be amplified."
+    },
+    {
+     "col": 13,
+     "line": 1,
+     "text": "The amplifier of the present invention therefore provides a convenient means to transfer pumping illumination from the pump source 42 by wavelength dependent coupling to the ND:YAG crystal 44, while prohibiting coupling of the signal to be amplified from the fiber 12B to the fiber 12A. It should be recognized that the results achieved in the present invention may also be realized using a coupler in which the coupling efficiency at the pumping illumination wavelength is 0%, while the coupling efficiency at the light signal wavelength is 100%. In this case, the pumping source would be coupled to port C of the coupler 10, while the input light signal to be amplified would be coupled to port A."
+    }
+   ]
+  },
+  {
+   "heading": "BIDIRECTIONAL SYMMETRY",
+   "paras": [
+    {
+     "col": 13,
+     "line": 16,
+     "text": "In order to make the amplifier symmetrically bidirectional, a pair of pump sources 42,48 should be utilized, as shown in FIG. 12, along with a pair of multiplexing couplers 50,52. It will be understood that, if such bidirectional symmetry is not necessary, either of the pump sources 42,48 will invert ions at one end of the ND:YAG crystal 44 and will thus yield gain for signals transmitted in either direction in the crystal 44."
+    },
+    {
+     "col": 13,
+     "line": 24,
+     "text": "If only one of the pump sources 42,48 is utilized, it should be recognized that the ND:YAG crystal 44 will not be uniformly illuminated. Thus, the inverted population of neodymium ions will not be uniformly distributed along the length of the crystal 44. Because this non-uniform or non-symmetrical state within the amplifier may yield different gain for signals input at the fiber 54, than for signals input at the fiber 56 (particularly when these signals occur simultaneously), it is advantageous to utilize the pair of sources 42,48."
+    },
+    {
+     "col": 13,
+     "line": 34,
+     "text": "The phenomenon of dissimilar gain for signals traversing the fiber crystal 44 in different directions with a non-symmetrical inversion population of neodymium ions occurs as follows. It will recognized that, as a signal to be amplified propagates from left to right in the crystal 44 of FIG. 12, it will trigger the emission of stimulated photons within the ND:YAG crystal 44. Such triggering emission, of course, lowers the inversion population within the crystal 44. If, for example, in a gyroscope, a pair of waves propagate simultaneously through the crystal 44 in opposite directions, the signal input at the left end will deplete the inversion population adjacent this end before the signal input at the right end arrives at the left end of the crystal 44, as viewed in FIG. 12. If the inversion population is higher at the left end of the crystal 44, than at the right end, as would be the case if only the pump source 42 were utilized, the signal input at the left will undergo a greater amplification, since it will deplete the inversion population before the signal which is input at the right end arrives at the high density left end."
+    },
+    {
+     "col": 13,
+     "line": 55,
+     "text": "It should be recognized that the pumping illumination supplied by the pump sources 42,48 should be sufficient, on a continuing basis, to replace the depleted population within the crystal 44 which occurs when the signals are amplified. Thus, for example, in a gyroscope where a pulse signal circulates through a kilometer of fiber, a counter-propagating signal will traverse the amplifier, shown in FIG. 12, approximately once each 5 microseconds. If continuous pump sources 42,48 are used, they should provide sufficient output so that, during each 5-microsecond period, they are capable of reinverting the neodymium ion population which is relaxed during each successive traverse of the signals to reinvert a population equal to that which has relaxed, such that the amplification factor or gain of the amplifier will remain relatively constant."
+    },
+    {
+     "col": 14,
+     "line": 3,
+     "text": "As will be recognized from the above-description, a proper selection of fiber spacing and radius of curvature will yield a coupler which permits pumping sources 42,48 to illuminate the crystal 44 to invert the neodymium population therein. With a proper selection of the coupler parameters, the signal to be amplified is not coupled from the fibers 54,56, and thus traverses the crystal 44 to be amplified by stimulating relaxation of neodymium ions in the crystal 44 which produces light coherent with the signal to be amplified."
+    }
+   ]
+  },
+  {
+   "heading": "SIGNAL INSERTION",
+   "paras": [
+    {
+     "col": 14,
+     "line": 15,
+     "text": "Referring now to FIG. 13, a system arrangement is shown in which the multiplexing properties of a pair of couplers 58,60 is used to permit a pumping source 42 to illuminate the ND:YAG crystal 44 while also permitting an injection of signals into a recirculating fiber optic system. In this instance, for example, it may be assumed that the fiber ends 62,64 are a part of a recirculating fiber loop and that the system, in addition to supplying pumping illumination for the crystal 44, to amplify signals circulating in this loop, must supply signals for injection into the loop."
+    },
+    {
+     "col": 14,
+     "line": 26,
+     "text": "In the system shown in FIG. 13, the coupler 58 is arranged to couple light wavelengths from the illumination source 42 with a coupling efficiency of 100%, while leaving the input signal at an input fiber 66 effectively uncoupled. This will yield a combination signal on the fiber segment 68 which includes both the pumping illumination from the source 42 and the input signal from the fiber 66. If the characteristics of the coupler 60 are properly selected in the manner described above, and this coupler 60 is properly tuned, the coupler 60 may be arranged to couple 100% of light wavelengths from the pumping signal 42 but only 1% of wavelengths at the signal input from the fiber segment 68. Thus, 1% of the input signal from the fiber segment 66 will be injected into the fiber recirculating loop and will initially be transmitted through the crystal 44 to the fiber segment 64 for recirculation. At the same time, 100% of the pumping illumination from the source 42 will be injected into the end of the crystal 44 to provide amplification for the recirculating signal."
+    },
+    {
+     "col": 14,
+     "line": 46,
+     "text": "When this recirculating signal appears at the fiber segment 62, only 1% of the signal will be lost at the coupler 60 and this 1% may supply an output for a sensor 70 to monitor the recirculating light. The remaining 99% of the recirculating light signal will be injected into the crystal 44 from the coupler 60, for reamplification and recirculation within the fiber loop. This system, therefore, with the use of two couplers 58,60, provides continuous sensing of the light circulating in the fiber loop, signal injection into the loop, and continuous pumping for the amplifying crystal 44. The coupling efficiencies provided above are exemplary only, but it should be recognized that the coupling efficiency of the coupler 60 should be maintained relatively low at the wavelength of the signal propagating in the loop so that only a small portion, smaller than the amplification added to the signal at the crystal 44, is subtracted from the recirculating signal by the coupler 60."
+    }
+   ]
+  },
+  {
+   "heading": "SUMMARY",
+   "paras": [
+    {
+     "col": 14,
+     "line": 67,
+     "text": "The combination of the multiplexing coupler with an ND:YAG amplifying crystal permits end pumping of the amplifying crystal with simultaneous signal injection at the end of this fiber so that the pumping illumination need not be carefully timed with respect to the signal to be amplified. Symmetrical bidirectional amplification is possible and signal injection using the same multiplexing coupler may be achieved."
+    }
+   ]
+  },
+  {
+   "heading": "REEXAMINATION CERTIFICATE (4193rd) B1 4,859,016",
+   "paras": [
+    {
+     "col": null,
+     "line": null,
+     "page": 15,
+     "text": "United States Patent [19]"
+    },
+    {
+     "col": null,
+     "line": null,
+     "page": 15,
+     "text": "Shaw et al."
+    },
+    {
+     "col": null,
+     "line": null,
+     "page": 15,
+     "text": "[11] B1 4,859,016"
+    },
+    {
+     "col": null,
+     "line": null,
+     "page": 15,
+     "text": "[45] Certificate Issued *Nov. 7, 2000"
+    },
+    {
+     "col": null,
+     "line": null,
+     "page": 15,
+     "text": "[54] FIBER OPTIC AMPLIFIER"
+    },
+    {
+     "col": null,
+     "line": null,
+     "page": 15,
+     "text": "[75] Inventors: Herbert J. Shaw, Stanford; Michel J. F. Digonnet, Palo Alto, both of Calif."
+    },
+    {
+     "col": null,
+     "line": null,
+     "page": 15,
+     "text": "[73] Assignee: The Board of Trustees of The Leland Stanford Junior University"
+    },
+    {
+     "col": null,
+     "line": null,
+     "page": 15,
+     "text": "Reexamination Request: No. 90/005,445, Aug. 9, 1999"
+    },
+    {
+     "col": null,
+     "line": null,
+     "page": 15,
+     "text": "Reexamination Certificate for: Patent No.: 4,859,016 Issued: Aug. 22, 1989 Appl. No.: 07/137,870 Filed: Dec. 22, 1987"
+    },
+    {
+     "col": null,
+     "line": null,
+     "page": 15,
+     "text": "[*] Notice: This patent is subject to a terminal disclaimer."
+    },
+    {
+     "col": null,
+     "line": null,
+     "page": 15,
+     "text": "Related U.S. Application Data"
+    },
+    {
+     "col": null,
+     "line": null,
+     "page": 15,
+     "text": "[62] Division of application No. 06/930,136, Nov. 12, 1986, Pat. No. 4,723,824, which is a division of application No. 06/554,888, Nov. 25, 1983, Pat. No. 4,674,830."
+    },
+    {
+     "col": null,
+     "line": null,
+     "page": 15,
+     "text": "[51] Int. Cl.^{7} G02B 6/26; H01S 3/067"
+    },
+    {
+     "col": null,
+     "line": null,
+     "page": 15,
+     "text": "[52] U.S. Cl. 385/5; 359/341; 359/342; 372/6; 372/69"
+    },
+    {
+     "col": null,
+     "line": null,
+     "page": 15,
+     "text": "[58] Field of Search 385/4, 5, 15, 27, 385/28, 30, 31, 38, 39, 122, 126, 127; 372/3, 6, 69, 70, 71, 94; 359/333, 341, 342, 343, 345"
+    },
+    {
+     "col": null,
+     "line": null,
+     "page": 15,
+     "text": "Primary Examiner—John D. Lee"
+    },
+    {
+     "col": null,
+     "line": null,
+     "page": 15,
+     "text": "[57] ABSTRACT"
+    },
+    {
+     "col": null,
+     "line": null,
+     "page": 15,
+     "text": "An amplifier for use with fiber optic systems comprises a neodymium YAG crystal placed in series with a signal-carrying optical fiber. The ND:YAG crystal is supplied by the optical fiber with both the signal to be amplified, and pumping illumination. The pumping illumination is coupled onto the optical fiber by a multiplexing coupler which is used to combine the signal to be amplified and illumination from a pumping illumination source onto a single optical fiber. The pumping illumination inverts the neodymium ions within the ND:YAG crystal. The signal to be amplified propagates through this crystal to stimulate emission of coherent light from the neodymium ions, resulting in amplification of the signal. Because this arrangement permits the ND:YAG crystal to be end-pumped with pumping illuminations, and because the length of the ND:YAG crystal may be substantially greater that the absorption length for the crystal at the wavelength of the pumping illumination, virtually all of the pumping illumination may be absorbed within the ND:YAG crystal and used for amplification of the signal carried by the optical fiber."
+    },
+    {
+     "col": 1,
+     "line": 1,
+     "page": 17,
+     "text": "REEXAMINATION CERTIFICATE ISSUED UNDER 35 U.S.C. 307"
+    },
+    {
+     "col": 1,
+     "line": 4,
+     "page": 17,
+     "text": "THE PATENT IS HEREBY AMENDED AS INDICATED BELOW."
+    },
+    {
+     "col": 1,
+     "line": 7,
+     "page": 17,
+     "text": "Matter enclosed in heavy brackets [ ] appeared in the patent, but has been deleted and is no longer a part of the patent; matter printed in italics indicates additions made to the patent."
+    },
+    {
+     "col": 1,
+     "line": 12,
+     "page": 17,
+     "text": "AS A RESULT OF REEXAMINATION, IT HAS BEEN DETERMINED THAT:"
+    },
+    {
+     "col": 1,
+     "line": 15,
+     "page": 17,
+     "text": "The patentability of claims 7–15 is confirmed."
+    },
+    {
+     "col": 1,
+     "line": 17,
+     "page": 17,
+     "text": "Claims 1, 2, 5 and 6 are cancelled."
+    },
+    {
+     "col": 1,
+     "line": 19,
+     "page": 17,
+     "text": "Claims 3 and 4 are determined to be patentable as amended."
+    },
+    {
+     "col": 1,
+     "line": 22,
+     "page": 17,
+     "text": "New claims 16–22 are added and determined to be patentable."
+    },
+    {
+     "col": 1,
+     "line": 25,
+     "page": 17,
+     "text": "3. A fiber optic amplifier [as defined in claim 2, wherein] comprising:\nan optical fiber comprised of a material which will emit light in response to pumping;\na source of signals to be amplified comprising light at a frequency of said emitted light;\na source of light for pumping said material; and\nmeans for coupling both said signals and said light for pumping into an end of said optical fiber, said means for coupling comprising an optical coupler, said optical coupler [comprises] being highly wavelength discriminating and comprising a single-mode optical coupler having a plurality of input/output ports comprised of respective single mode fiber portions, one of said ports being coupled to said optical fiber so as to transmit both pump light and signals to be amplified between said optical coupler and said material which will emit light in response to pumping, a second of said ports being coupled to transmit said pump light from the pump source to said optical fiber, and a third of said ports transmitting said signals to be amplified.",
+     "italic": [
+      [
+       60,
+       452
+      ],
+      [
+       486,
+       539
+      ],
+      [
+       570,
+       1049
+      ]
+     ]
+    },
+    {
+     "col": 1,
+     "line": 47,
+     "page": 17,
+     "text": "4. A fiber optic amplifier [as defined in claim 2 in which said], comprising:\nan optical fiber comprised of a material which will emit light in response to pumping;\na source of signals comprising light at a frequency of said emitted light;\na source of light for pumping said material; and\nmeans for coupling both said signals and said light for pumping into an end of said optical fiber, said coupling means comprising an optical coupler which utilizes evanescent field coupling.",
+     "italic": [
+      [
+       64,
+       421
+      ],
+      [
+       438,
+       443
+      ]
+     ]
+    },
+    {
+     "col": 2,
+     "line": 6,
+     "page": 17,
+     "text": "16. The fiber optic apparatus of claim 11, wherein said source of light for pumping is coupled to said optical fiber such that said pump light propagates through said laser material in a propagation direction to pump said laser material, whereby a population inversion is created in the laser material, and wherein said optical fiber receives signals to be amplified for propagation in the same propagation direction as said light for pumping, whereby relaxation of the population inversion in said laser material amplifies said signals as said signals propagate in said propagation direction.",
+     "italic": [
+      [
+       0,
+       593
+      ]
+     ]
+    },
+    {
+     "col": 2,
+     "line": 17,
+     "page": 17,
+     "text": "17. The fiber optic apparatus of claim 11, wherein said optical fiber has a first propagation direction and a second propagation direction opposite said first propagation direction, and wherein said source of pump light is coupled to said optical fiber such that said pump light propagates through said laser material in at least said first propagation direction to pump said laser material, whereby a population inversion is created in said laser material, and wherein said optical fiber receives signals to be amplified for propagation in at least said second direction, whereby relaxation of the population inversion in said laser material amplifies said signals as said signals propagate in said second propagation direction.",
+     "italic": [
+      [
+       0,
+       729
+      ]
+     ]
+    },
+    {
+     "col": 2,
+     "line": 30,
+     "page": 17,
+     "text": "18. The fiber optic apparatus of claim 17, wherein said apparatus comprises a second source of pump light coupled to said optical fiber such that pump light from the second source propagates through said laser material in said second direction.",
+     "italic": [
+      [
+       0,
+       244
+      ]
+     ]
+    },
+    {
+     "col": 2,
+     "line": 35,
+     "page": 17,
+     "text": "19. The fiber optic apparatus of claim 11, wherein said optical fiber has a diameter that at least approaches single mode to increase pump light density and thereby increase population inversions in said laser material as said pump light propagates within said diameter through said laser material.",
+     "italic": [
+      [
+       0,
+       298
+      ]
+     ]
+    },
+    {
+     "col": 2,
+     "line": 41,
+     "page": 17,
+     "text": "20. The fiber optic apparatus of claim 11, wherein the optical fiber is formed substantially entirely of said laser material.",
+     "italic": [
+      [
+       0,
+       125
+      ]
+     ]
+    },
+    {
+     "col": 2,
+     "line": 44,
+     "page": 17,
+     "text": "21. The fiber optic apparatus of claim 11, wherein said ports comprise respective portions of single mode optical fiber.",
+     "italic": [
+      [
+       0,
+       120
+      ]
+     ]
+    },
+    {
+     "col": 2,
+     "line": 47,
+     "page": 17,
+     "text": "22. The fiber optic apparatus of claim 21, wherein said optical coupler utilizes evanescent field coupling.",
+     "italic": [
+      [
+       0,
+       107
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "heading": "EX PARTE REEXAMINATION CERTIFICATE (6821st) US 4,859,016 C2",
+   "paras": [
+    {
+     "col": null,
+     "line": null,
+     "page": 18,
+     "text": "United States Patent"
+    },
+    {
+     "col": null,
+     "line": null,
+     "page": 18,
+     "text": "Shaw et al."
+    },
+    {
+     "col": null,
+     "line": null,
+     "page": 18,
+     "text": "(10) Number: US 4,859,016 C2"
+    },
+    {
+     "col": null,
+     "line": null,
+     "page": 18,
+     "text": "(45) Certificate Issued: May 12, 2009"
+    },
+    {
+     "col": null,
+     "line": null,
+     "page": 18,
+     "text": "(54) FIBER OPTIC AMPLIFIER"
+    },
+    {
+     "col": null,
+     "line": null,
+     "page": 18,
+     "text": "(75) Inventors: Herbert J. Shaw, Stanford, CA (US); Michel J. F. Digonnet, Palo Alto, CA (US)"
+    },
+    {
+     "col": null,
+     "line": null,
+     "page": 18,
+     "text": "(73) Assignee: The Board of Trustees of the Leland Stanford Junior University"
+    },
+    {
+     "col": null,
+     "line": null,
+     "page": 18,
+     "text": "Reexamination Request: No. 90/006,726, Jul. 24, 2003 No. 90/007,147, Jul. 30, 2004"
+    },
+    {
+     "col": null,
+     "line": null,
+     "page": 18,
+     "text": "Reexamination Certificate for: Patent No.: 4,859,016 Issued: Aug. 22, 1989 Appl. No.: 07/137,860 Filed: Dec. 22, 1987"
+    },
+    {
+     "col": null,
+     "line": null,
+     "page": 18,
+     "text": "Reexamination Certificate B1 4,859,016 issued Nov. 7, 2000"
+    },
+    {
+     "col": null,
+     "line": null,
+     "page": 18,
+     "text": "Related U.S. Application Data"
+    },
+    {
+     "col": null,
+     "line": null,
+     "page": 18,
+     "text": "(62) Division of application No. 06/930,136, filed on Nov. 12, 1986, now Pat. No. 4,723,824, which is a division of application No. 06/554,888, filed on Nov. 25, 1983, now Pat. No. 4,674,830."
+    },
+    {
+     "col": null,
+     "line": null,
+     "page": 18,
+     "text": "(51) Int. Cl. G02B 6/26 (2006.01) H01S 3/067 (2006.01)"
+    },
+    {
+     "col": null,
+     "line": null,
+     "page": 18,
+     "text": "(52) U.S. Cl. 385/5; 359/341.3; 359/342; 359/349; 372/6; 372/69"
+    },
+    {
+     "col": null,
+     "line": null,
+     "page": 18,
+     "text": "(58) Field of Classification Search 385/4, 385/5, 15, 27, 28, 30, 31, 38, 39, 122, 126, 385/127, 42; 372/3, 6, 69, 70, 71, 94; 359/333, 359/341, 342, 343, 345"
+    },
+    {
+     "col": null,
+     "line": null,
+     "page": 18,
+     "text": "See application file for complete search history."
+    },
+    {
+     "col": null,
+     "line": null,
+     "page": 18,
+     "text": "Primary Examiner—Margaret Rubin"
+    },
+    {
+     "col": null,
+     "line": null,
+     "page": 18,
+     "text": "(57) ABSTRACT"
+    },
+    {
+     "col": null,
+     "line": null,
+     "page": 18,
+     "text": "An amplifier for use with fiber optic systems comprises a neodymium YAG crystal placed in series with a signal-carrying optical fiber. The ND:YAG crystal is supplied by the optical fiber with both the signal to be amplified, and pumping illumination. The pumping illumination is coupled onto the optical fiber by a multiplexing coupler which is used to combine the signal to be amplified and illumination from a pumping illumination source onto a single optical fiber. The pumping illumination inverts the neodymium ions within the ND:YAG crystal. The signal to be amplified propagates through this crystal to stimulate emission of coherent light from the neodymium ions, resulting in amplification of the signal. Because this arrangement permits the ND:YAG crystal to be end-pumped with pumping illuminations, and because the length of the ND:YAG crystal may be substantially greater than the absorption length for the crystal at the wavelength of the pumping illumination, virtually all of the pumping illumination may be absorbed within the ND:YAG crystal and used for amplification of the signal carried by the optical fiber."
+    },
+    {
+     "col": null,
+     "line": null,
+     "page": 18,
+     "text": "At the time of issuance and publication of this certificate, the patent remains subject to pending reexamination control numbers 90/008,744 and 90/008,941 filed Sep. 20, 2007 and Nov. 28, 2007 respectively. The claim content of the patent may be subsequently revised in the reexamination proceedings."
+    },
+    {
+     "col": 1,
+     "line": 1,
+     "page": 20,
+     "text": "EX PARTE REEXAMINATION CERTIFICATE ISSUED UNDER 35 U.S.C. 307"
+    },
+    {
+     "col": 1,
+     "line": 6,
+     "page": 20,
+     "text": "NO AMENDMENTS HAVE BEEN MADE TO THE PATENT"
+    },
+    {
+     "col": 2,
+     "line": 1,
+     "page": 20,
+     "text": "AS A RESULT OF REEXAMINATION, IT HAS BEEN DETERMINED THAT:"
+    },
+    {
+     "col": 2,
+     "line": 4,
+     "page": 20,
+     "text": "The patentability of claims 3, 4 and 7–22 is confirmed."
+    },
+    {
+     "col": 2,
+     "line": 5,
+     "page": 20,
+     "text": "Claims 1, 2, 5 and 6 were previously cancelled."
+    }
+   ]
+  },
+  {
+   "heading": "EX PARTE REEXAMINATION CERTIFICATE (7230th) US 4,859,016 C3",
+   "paras": [
+    {
+     "col": null,
+     "line": null,
+     "page": 21,
+     "text": "United States Patent"
+    },
+    {
+     "col": null,
+     "line": null,
+     "page": 21,
+     "text": "Shaw et al."
+    },
+    {
+     "col": null,
+     "line": null,
+     "page": 21,
+     "text": "(10) Number: US 4,859,016 C3"
+    },
+    {
+     "col": null,
+     "line": null,
+     "page": 21,
+     "text": "(45) Certificate Issued: Dec. 8, 2009"
+    },
+    {
+     "col": null,
+     "line": null,
+     "page": 21,
+     "text": "(54) FIBER OPTIC AMPLIFIER"
+    },
+    {
+     "col": null,
+     "line": null,
+     "page": 21,
+     "text": "(75) Inventors: Herbert J. Shaw, Stanford, CA (US); Michel J. F. Digonnet, Palo Alto, CA (US)"
+    },
+    {
+     "col": null,
+     "line": null,
+     "page": 21,
+     "text": "(73) Assignee: The Board of Trustees of the Leland Stanford Junior University"
+    },
+    {
+     "col": null,
+     "line": null,
+     "page": 21,
+     "text": "Reexamination Request: No. 90/008,744, Sep. 20, 2007 No. 90/008,941, Nov. 28, 2007"
+    },
+    {
+     "col": null,
+     "line": null,
+     "page": 21,
+     "text": "Reexamination Certificate for: Patent No.: 4,859,016 Issued: Aug. 22, 1989 Appl. No.: 07/137,870 Filed: Dec. 22, 1987"
+    },
+    {
+     "col": null,
+     "line": null,
+     "page": 21,
+     "text": "Reexamination Certificate B1 4,859,016 issued Nov. 7, 2000"
+    },
+    {
+     "col": null,
+     "line": null,
+     "page": 21,
+     "text": "Reexamination Certificate C2 4,859,016 issued May 12, 2009"
+    },
+    {
+     "col": null,
+     "line": null,
+     "page": 21,
+     "text": "Related U.S. Application Data"
+    },
+    {
+     "col": null,
+     "line": null,
+     "page": 21,
+     "text": "(62) Division of application No. 06/930,136, filed on Nov. 12, 1986, now Pat. No. 4,723,824, which is a division of application No. 06/554,888, filed on Nov. 25, 1983, now Pat. No. 4,674,830."
+    },
+    {
+     "col": null,
+     "line": null,
+     "page": 21,
+     "text": "(51) Int. Cl. H01S 3/0915 (2006.01) H01S 3/0933 (2006.01) H01S 3/094 (2006.01) H01S 3/067 (2006.01) H01S 3/06 (2006.01) H04B 10/17 (2006.01) H04J 14/02 (2006.01)"
+    },
+    {
+     "col": null,
+     "line": null,
+     "page": 21,
+     "text": "(52) U.S. Cl. 385/5; 359/341.3; 359/342; 359/349; 372/6; 372/69"
+    },
+    {
+     "col": null,
+     "line": null,
+     "page": 21,
+     "text": "(58) Field of Classification Search None"
+    },
+    {
+     "col": null,
+     "line": null,
+     "page": 21,
+     "text": "See application file for complete search history."
+    },
+    {
+     "col": null,
+     "line": null,
+     "page": 21,
+     "text": "Primary Examiner—James Menefee"
+    },
+    {
+     "col": null,
+     "line": null,
+     "page": 21,
+     "text": "(57) ABSTRACT"
+    },
+    {
+     "col": null,
+     "line": null,
+     "page": 21,
+     "text": "An amplifier for use with fiber optic systems comprises a neodymium YAG crystal placed in series with a signal-carrying optical fiber. The ND:YAG crystal is supplied by the optical fiber with both the signal to be amplified, and pumping illumination. The pumping illumination is coupled onto the optical fiber by a mutliplexing coupler which is used to combine the signal to be amplified and illumination from a pumping illumination source onto a single optical fiber. The pumping illumination inverts the neodymium ions within the ND:YAG crystal. The signal to be amplified propagates through this crystal to stimulate emission of coherent light from the neodymium ions, resulting in amplification of the signal. Because this arrangement permits the ND:YAG crystal to be end-pumped with pumping illuminations, and because the length of the ND:YAG crystal may be substantially greater than the absorption length for the crystal at the wavelength of the pumping illumination, virtually all of the pumping illumination may be absorbed within the ND:YAG crystal and used for amplification of the signal carried by the optical fiber."
+    },
+    {
+     "col": 1,
+     "line": 1,
+     "page": 27,
+     "text": "EX PARTE REEXAMINATION CERTIFICATE ISSUED UNDER 35 U.S.C. 307"
+    },
+    {
+     "col": 1,
+     "line": 6,
+     "page": 27,
+     "text": "THE PATENT IS HEREBY AMENDED AS INDICATED BELOW."
+    },
+    {
+     "col": 2,
+     "line": 1,
+     "page": 27,
+     "text": "AS A RESULT OF REEXAMINATION, IT HAS BEEN DETERMINED THAT:"
+    },
+    {
+     "col": 2,
+     "line": 4,
+     "page": 27,
+     "text": "The patentability of claims 3–4 and 11–15 is confirmed."
+    },
+    {
+     "col": 2,
+     "line": 5,
+     "page": 27,
+     "text": "Claims 1–2 and 5–6 were previously cancelled."
+    },
+    {
+     "col": 2,
+     "line": 6,
+     "page": 27,
+     "text": "Claims 7–10 and 16–22 were not reexamined."
+    }
+   ]
+  }
+ ],
+ "brief_drawings": [
+  {
+   "fig": "1",
+   "col": 3,
+   "line": 51,
+   "text": "FIG. 1 is a cross sectional view of the fiber optic coupler used as a multiplexer in the present invention showing a pair of fiber optic strands mounted in respective arcuate grooves with a given radius of curvature of respective bases;"
+  },
+  {
+   "fig": "2",
+   "col": 3,
+   "line": 56,
+   "text": "FIGS. 2 and 3 are cross sectional views of the coupler of FIG. 1 taken along lines 2—2 and 3—3, respectively;"
+  },
+  {
+   "fig": "3",
+   "col": 3,
+   "line": 56,
+   "text": "FIGS. 2 and 3 are cross sectional views of the coupler of FIG. 1 taken along lines 2—2 and 3—3, respectively;"
+  },
+  {
+   "fig": "4",
+   "col": 3,
+   "line": 58,
+   "text": "FIG. 4 is a perspective view of the lower base of the coupler of FIG. 1 separated from the other base to show its associated fiber mounting and the oval-shaped facing surface of the fiber;"
+  },
+  {
+   "fig": "5",
+   "col": 3,
+   "line": 62,
+   "text": "FIG. 5 is a schematic diagram showing the evanescent fields of the pair of fibers overlapping at the interaction region;"
+  },
+  {
+   "fig": "6",
+   "col": 3,
+   "line": 65,
+   "text": "FIG. 6 is a chart showing relative coupled power versus signal wavelength for a fiber coupler having a minimum fiber spacing of 4 microns, an offset of 0 micron, and a fiber radius of curvature of 25 centimeters;"
+  },
+  {
+   "fig": "7",
+   "col": 4,
+   "line": 1,
+   "text": "FIG. 7 is a chart of relative coupled power versus signal wavelengths similar to FIG. 6 but with a fiber radius of curvature of 200 centimeters;"
+  },
+  {
+   "fig": "8",
+   "col": 4,
+   "line": 4,
+   "text": "FIG. 8 is a chart of relative coupled power versus signal wavelength for a fiber coupler having a minimum fiber spacing of 4 microns, a fiber radius of 200 centimeters, and a selectable fiber offset;"
+  },
+  {
+   "fig": "9",
+   "col": 4,
+   "line": 8,
+   "text": "FIG. 9 is a schematic diagram showing the directional amplifier of the present invention;"
+  },
+  {
+   "fig": "10",
+   "col": 4,
+   "line": 10,
+   "text": "FIG. 10 is a diagram showing the absorption spectrum of ND:YAG at 300° K.;"
+  },
+  {
+   "fig": "11a",
+   "col": 4,
+   "line": 12,
+   "text": "FIG. 11a and 11b are simplified energy level diagrams of a four-level laser using a doped material, such as ND:YAG;"
+  },
+  {
+   "fig": "11b",
+   "col": 4,
+   "line": 12,
+   "text": "FIG. 11a and 11b are simplified energy level diagrams of a four-level laser using a doped material, such as ND:YAG;"
+  },
+  {
+   "fig": "12",
+   "col": 4,
+   "line": 15,
+   "text": "FIG. 12 is a schematic diagram of a symmetrical bidirectional amplifier in accordance with the present invention;"
+  },
+  {
+   "fig": "13",
+   "col": 4,
+   "line": 18,
+   "text": "FIG. 13 is a schematic diagram of an amplifier system, including a multiplexing coupler for signal insertion and signal sensing in a closed fiber loop."
+  }
+ ],
+ "claims": [
+  {
+   "n": 1,
+   "col": 15,
+   "line": 8,
+   "depends": null,
+   "text": "1. A fiber optic amplifier, comprising:\nan optical fiber comprised of a material which will emit light in response to pumping;\na source of signals comprising light at a frequency of said emitted light;\na source of light for pumping said material; and\nmeans for coupling both said signals and said light for pumping into an end of said optical fiber."
+  },
+  {
+   "n": 2,
+   "col": 15,
+   "line": 16,
+   "depends": 1,
+   "text": "2. A fiber optic amplifier as defined in claim 1 in which said means for coupling comprises an optical coupler."
+  },
+  {
+   "n": 3,
+   "col": 15,
+   "line": 19,
+   "depends": 2,
+   "text": "3. A fiber optic amplifier as defined in claim 2, wherein said optical coupler comprises a single-mode optical coupler."
+  },
+  {
+   "n": 4,
+   "col": 15,
+   "line": 22,
+   "depends": 2,
+   "text": "4. A fiber optic amplifier as defined in claim 2 in which said optical coupler utilizes evanescent field coupling."
+  },
+  {
+   "n": 5,
+   "col": 15,
+   "line": 25,
+   "depends": 3,
+   "text": "5. A fiber optic amplifier as defined in claim 3 in which said optical coupler provides different coupling coefficients for said signals and said light for pumping."
+  },
+  {
+   "n": 6,
+   "col": 15,
+   "line": 28,
+   "depends": 5,
+   "text": "6. A fiber optic amplifier as defined in claim 5 in which said optical coupler has a coupling efficiency which is wavelength dependent and in which said signals and said light for pumping are at different wavelengths, yielding different coupling efficiencies for said signals and said light for pumping."
+  },
+  {
+   "n": 7,
+   "col": 15,
+   "line": 34,
+   "depends": null,
+   "text": "7. A fiber optic amplifier, comprising:\na fiber optic coupler including a pair of optical fibers juxtaposed to provide coupling of light at a first frequency between said fibers and to prohibit coupling of light at a second frequency between said fibers;\na source of pumping illumination coupled to a first end of one of said pair of fibers, said pumping illumination comprising light having said first frequency;\na source of a signal to be amplified, coupled to a first end of the other of said pair of fibers, said signal to be amplified comprising light having said second frequency; and\na laser fiber formed of material which will possess a laser transition at said second frequency of said signal to be amplified if said material is pumped with said pumping illumination, said laser fiber coupled at one end to a second end of said other of said pair of fibers."
+  },
+  {
+   "n": 8,
+   "col": 15,
+   "line": 54,
+   "depends": 7,
+   "text": "8. A fiber optic amplifier as defined in claim 7 in which said fiber optical coupler has an effective interaction length at the juxtaposition of said optical fibers which is an even multiple of the coupling length of said fibers at said juxtaposition at a first wavelength corresponding to one of said first and second frequencies and an odd multiple of the coupling length of said fibers at said juxtaposition at a second wavelength corresponding to the other of said first and second frequencies."
+  },
+  {
+   "n": 9,
+   "col": 16,
+   "line": 5,
+   "depends": 8,
+   "text": "9. A fiber optical amplifier as defined in claim 8, wherein said pair of optical fibers are laterally offset from one another to tune said coupler to provide said odd and even multiples."
+  },
+  {
+   "n": 10,
+   "col": 16,
+   "line": 9,
+   "depends": 9,
+   "text": "10. A fiber optic amplifier as defined in claim 9, wherein said pair of optical fibers are arcuate and wherein the radius of said arcuate optical fibers is selected in accordance with the difference between said first and second wavelengths."
+  },
+  {
+   "n": 11,
+   "col": 16,
+   "line": 14,
+   "depends": null,
+   "text": "11. A fiber optic apparatus, comprising:\na source of pump light comprising light having a first wavelength;\nan optical fiber comprising a laser material, said optical fiber emitting light at a second wavelength in response to pumping at said first wavelength; and\nan optical coupler having an input port and an output port, said input port coupled to said pump source to receive light from said pump source, said output port coupled to said optical fiber for pumping said laser material, said coupler being highly wavelength discriminating so as to selectively couple one of said first and second wavelengths without substantial coupling of the other of said first and second wavelengths."
+  },
+  {
+   "n": 12,
+   "col": 16,
+   "line": 29,
+   "depends": null,
+   "text": "12. A method for amplifying a light signal carried by an optical fiber, comprising the steps of:\ncombining said light signal and pumping illumination on a single optical fiber; and\ncoupling said combined light signal and pumping illumination from said single optical fiber to one end of a fiber comprised of a material which will emit stimulated radiation at a wavelength of said light signal if pumped with said pumping illumination."
+  },
+  {
+   "n": 13,
+   "col": 16,
+   "line": 39,
+   "depends": 12,
+   "text": "13. A method of amplifying a light signal as defined in claim 12, wherein said combining step comprises multiplexing said wavelength of said light signal and a wavelength of said pumping illumination in an optical coupler which is optically connected to said single optical fiber and which has a coupling efficiency which is wavelength dependent."
+  },
+  {
+   "n": 14,
+   "col": 16,
+   "line": 46,
+   "depends": 13,
+   "text": "14. A method of amplifying a light signal as defined in claim 13, wherein said multiplexing step comprises:\njuxtaposing a pair of optical fibers to provide an interaction length; and\napplying said light signal to one of said fibers and said pumping illumination to the other of said fibers."
+  },
+  {
+   "n": 15,
+   "col": 16,
+   "line": 52,
+   "depends": 12,
+   "text": "15. A method of amplifying a light signal as defined in claim 12, wherein the step of coupling comprises coupling said combined light signal and pumping illumination to a laser fiber having a diameter which is less than the absorption length of said laser fiber at said wavelength of said pumping illumination."
+  }
+ ],
+ "ocr_fixes": [
+  {
+   "col": 1,
+   "line": 49,
+   "ocr": "_ will",
+   "fixed": "will",
+   "basis": "scan (speck)"
+  },
+  {
+   "col": 1,
+   "line": 54,
+   "ocr": "(ie.,",
+   "fixed": "(i.e.,",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 2,
+   "line": 21,
+   "ocr": "within.",
+   "fixed": "within",
+   "basis": "scan (speck) + Google Patents"
+  },
+  {
+   "col": 3,
+   "line": 23,
+   "ocr": "to.",
+   "fixed": "to",
+   "basis": "scan (speck) + Google Patents"
+  },
+  {
+   "col": 3,
+   "line": 50,
+   "ocr": "|",
+   "fixed": "",
+   "basis": "scan (speck)"
+  },
+  {
+   "col": 4,
+   "line": 5,
+   "ocr": "for.a",
+   "fixed": "for a",
+   "basis": "scan (speck) + Google Patents"
+  },
+  {
+   "col": 4,
+   "line": 12,
+   "ocr": "and 118",
+   "fixed": "and 11b",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 4,
+   "line": 19,
+   "ocr": ".a",
+   "fixed": "a",
+   "basis": "scan (speck) + Google Patents"
+  },
+  {
+   "col": 4,
+   "line": 27,
+   "ocr": "be-constructed",
+   "fixed": "be constructed",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 4,
+   "line": 55,
+   "ocr": "haif",
+   "fixed": "half",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 4,
+   "line": 58,
+   "ocr": "‘strands",
+   "fixed": "strands",
+   "basis": "scan (speck) + Google Patents"
+  },
+  {
+   "col": 5,
+   "line": 6,
+   "ocr": "wiil",
+   "fixed": "will",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 5,
+   "line": 42,
+   "ocr": "Thus,.",
+   "fixed": "Thus,",
+   "basis": "scan (speck) + Google Patents"
+  },
+  {
+   "col": 5,
+   "line": 42,
+   "ocr": "removed.",
+   "fixed": "removed",
+   "basis": "scan (speck) + Google Patents"
+  },
+  {
+   "col": 5,
+   "line": 59,
+   "ocr": "also-functions",
+   "fixed": "also functions",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 6,
+   "line": 10,
+   "ocr": "too.",
+   "fixed": "too",
+   "basis": "scan (speck) + Google Patents"
+  },
+  {
+   "col": 6,
+   "line": 11,
+   "ocr": "thé",
+   "fixed": "the",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 6,
+   "line": 25,
+   "ocr": "fabricated-of",
+   "fixed": "fabricated of",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 6,
+   "line": 27,
+   "ocr": "the.",
+   "fixed": "the",
+   "basis": "scan (speck) + Google Patents"
+  },
+  {
+   "col": 6,
+   "line": 64,
+   "ocr": "as.a",
+   "fixed": "as a",
+   "basis": "scan (speck) + Google Patents"
+  },
+  {
+   "col": 7,
+   "line": 7,
+   "ocr": "ie.",
+   "fixed": "i.e.",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 7,
+   "line": 8,
+   "ocr": "between.",
+   "fixed": "between",
+   "basis": "scan (speck) + Google Patents"
+  },
+  {
+   "col": 7,
+   "line": 27,
+   "ocr": "toss",
+   "fixed": "loss",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 7,
+   "line": 29,
+   "ocr": "from.one (ie., 1—(Pg+Pp)/P.).",
+   "fixed": "from one (i.e., 1−(P_{B}+P_{D})/P_{A}).",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 7,
+   "line": 35,
+   "ocr": "_ The",
+   "fixed": "The",
+   "basis": "scan (speck)"
+  },
+  {
+   "col": 7,
+   "line": 45,
+   "ocr": "in.",
+   "fixed": "in",
+   "basis": "scan (speck) + Google Patents"
+  },
+  {
+   "col": 7,
+   "line": 50,
+   "ocr": "i-e.,",
+   "fixed": "i.e.,",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 7,
+   "line": 59,
+   "ocr": "the.coupling",
+   "fixed": "the coupling",
+   "basis": "scan (speck) + Google Patents"
+  },
+  {
+   "col": 8,
+   "line": 20,
+   "ocr": "A;",
+   "fixed": "λ_{1}",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 8,
+   "line": 21,
+   "ocr": "A2",
+   "fixed": "λ_{2}",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 8,
+   "line": 24,
+   "ocr": "B. .",
+   "fixed": "B.",
+   "basis": "scan (speck) + Google Patents"
+  },
+  {
+   "col": 8,
+   "line": 31,
+   "ocr": "but.an",
+   "fixed": "but an",
+   "basis": "scan (speck) + Google Patents"
+  },
+  {
+   "col": 8,
+   "line": 38,
+   "ocr": "(A, A2)",
+   "fixed": "(λ_{1}, λ_{2})",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 8,
+   "line": 49,
+   "ocr": "signals.",
+   "fixed": "signals",
+   "basis": "scan (speck) + Google Patents"
+  },
+  {
+   "col": 8,
+   "line": 54,
+   "ocr": "(R)?.",
+   "fixed": "(R)^{½}.",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 9,
+   "line": 10,
+   "ocr": "isan",
+   "fixed": "is an",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 9,
+   "line": 30,
+   "ocr": "_remains",
+   "fixed": "remains",
+   "basis": "scan (speck) + Google Patents"
+  },
+  {
+   "col": 9,
+   "line": 54,
+   "ocr": "port.C",
+   "fixed": "port C",
+   "basis": "scan (speck) + Google Patents"
+  },
+  {
+   "col": 9,
+   "line": 58,
+   "ocr": "smail",
+   "fixed": "small",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 10,
+   "line": 1,
+   "ocr": "AMPLIFICATION.",
+   "fixed": "AMPLIFICATION",
+   "basis": "scan (speck) + Google Patents"
+  },
+  {
+   "col": 10,
+   "line": 5,
+   "ocr": "has.a",
+   "fixed": "has a",
+   "basis": "scan (speck) + Google Patents"
+  },
+  {
+   "col": 10,
+   "line": 15,
+   "ocr": "and.0.81",
+   "fixed": "and 0.81",
+   "basis": "scan (speck) + Google Patents"
+  },
+  {
+   "col": 10,
+   "line": 26,
+   "ocr": "level,.a",
+   "fixed": "level, a",
+   "basis": "scan (speck) + Google Patents"
+  },
+  {
+   "col": 10,
+   "line": 49,
+   "ocr": "ie.,",
+   "fixed": "i.e.,",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 10,
+   "line": 51,
+   "ocr": "©",
+   "fixed": "",
+   "basis": "scan (speck)"
+  },
+  {
+   "col": 10,
+   "line": 61,
+   "ocr": "the.",
+   "fixed": "the",
+   "basis": "scan (speck) + Google Patents"
+  },
+  {
+   "col": 11,
+   "line": 3,
+   "ocr": "(go of",
+   "fixed": "(g_{0} of",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 11,
+   "line": 5,
+   "ocr": "gooAN, where o is",
+   "fixed": "g_{0}σΔN, where σ is",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 11,
+   "line": 6,
+   "ocr": "8.8 10~—!9cm2, and AN is",
+   "fixed": "8.8×10^{−19}cm^{2}, and ΔN is",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 11,
+   "line": 12,
+   "ocr": "where P, is",
+   "fixed": "where P_{p} is",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 11,
+   "line": 13,
+   "ocr": "P,/V",
+   "fixed": "P_{p}/V",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 11,
+   "line": 14,
+   "ocr": "t, is",
+   "fixed": "t_{sp} is",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 11,
+   "line": 16,
+   "ocr": "ions, 7 is",
+   "fixed": "ions, η_{1} is",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 11,
+   "line": 18,
+   "ocr": "72 is.equal",
+   "fixed": "η_{2} is equal",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 11,
+   "line": 20,
+   "ocr": "and hy is",
+   "fixed": "and hγ is",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 11,
+   "line": 26,
+   "ocr": "of.gain",
+   "fixed": "of gain",
+   "basis": "scan (speck) + Google Patents"
+  },
+  {
+   "col": 11,
+   "line": 27,
+   "ocr": "value P, is",
+   "fixed": "value P_{p} is",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 11,
+   "line": 31,
+   "ocr": "the.",
+   "fixed": "the",
+   "basis": "scan (speck) + Google Patents"
+  },
+  {
+   "col": 11,
+   "line": 34,
+   "ocr": "P,",
+   "fixed": "P_{p}",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 11,
+   "line": 53,
+   "ocr": "cm?",
+   "fixed": "cm^{2}",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 11,
+   "line": 55,
+   "ocr": "watts/sr./cm2.",
+   "fixed": "watts/sr./cm^{2}.",
+   "basis": "scan"
+  },
+  {
+   "col": 11,
+   "line": 54,
+   "ocr": "sr.cm2,",
+   "fixed": "sr.cm^{2}.",
+   "basis": "scan"
+  },
+  {
+   "col": 11,
+   "line": 66,
+   "ocr": ". sponds",
+   "fixed": "sponds",
+   "basis": "scan (speck)"
+  },
+  {
+   "col": 12,
+   "line": 14,
+   "ocr": "for.use",
+   "fixed": "for use",
+   "basis": "scan (speck) + Google Patents"
+  },
+  {
+   "col": 12,
+   "line": 19,
+   "ocr": "crys- .",
+   "fixed": "crys-",
+   "basis": "scan (speck)"
+  },
+  {
+   "col": 13,
+   "line": 42,
+   "ocr": "crystal:44.",
+   "fixed": "crystal 44.",
+   "basis": "scan (speck) + Google Patents"
+  },
+  {
+   "col": 13,
+   "line": 43,
+   "ocr": "2 pair",
+   "fixed": "a pair",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 14,
+   "line": 21,
+   "ocr": "' assumed",
+   "fixed": "assumed",
+   "basis": "scan (speck)"
+  },
+  {
+   "col": 14,
+   "line": 43,
+   "ocr": "-will",
+   "fixed": "will",
+   "basis": "scan (speck) + Google Patents"
+  },
+  {
+   "col": 14,
+   "line": 64,
+   "ocr": "60. ,",
+   "fixed": "60.",
+   "basis": "scan (speck)"
+  },
+  {
+   "col": 14,
+   "line": 67,
+   "ocr": "|",
+   "fixed": "",
+   "basis": "scan (speck)"
+  },
+  {
+   "col": 15,
+   "line": 35,
+   "ocr": "fiber-optic",
+   "fixed": "fiber optic",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 15,
+   "line": 42,
+   "ocr": "comprising.",
+   "fixed": "comprising",
+   "basis": "scan (speck) + Google Patents"
+  },
+  {
+   "col": 16,
+   "line": 24,
+   "ocr": "wave--",
+   "fixed": "wave-",
+   "basis": "scan"
+  },
+  {
+   "col": 16,
+   "line": 29,
+   "ocr": "12:",
+   "fixed": "12.",
+   "basis": "scan (speck) + Google Patents"
+  },
+  {
+   "col": 16,
+   "line": 39,
+   "ocr": "as-defined",
+   "fixed": "as defined",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 13,
+   "line": 19,
+   "ocr": "bidi20. rectional",
+   "fixed": "bidirectional",
+   "basis": "scan (gutter numeral 20 read into text)"
+  },
+  {
+   "col": null,
+   "line": null,
+   "page": 0,
+   "ocr": "Anamplifier",
+   "fixed": "An amplifier",
+   "basis": "scan"
+  },
+  {
+   "col": null,
+   "line": null,
+   "page": 0,
+   "ocr": "fiber. with",
+   "fixed": "fiber with",
+   "basis": "scan"
+  },
+  {
+   "col": null,
+   "line": null,
+   "page": 0,
+   "ocr": "amplifica-_ 'tion",
+   "fixed": "amplification",
+   "basis": "scan"
+  },
+  {
+   "col": null,
+   "line": null,
+   "page": 0,
+   "ocr": "* may",
+   "fixed": "may",
+   "basis": "scan"
+  },
+  {
+   "col": null,
+   "line": null,
+   "page": 0,
+   "ocr": "'fiber.",
+   "fixed": "fiber.",
+   "basis": "scan"
+  },
+  {
+   "col": null,
+   "line": null,
+   "page": 0,
+   "ocr": "Fletcher et ab.",
+   "fixed": "Fletcher et al.",
+   "basis": "scan"
+  },
+  {
+   "col": null,
+   "line": null,
+   "page": 0,
+   "ocr": "Shaw etal.",
+   "fixed": "Shaw et al.",
+   "basis": "scan"
+  },
+  {
+   "col": null,
+   "line": null,
+   "page": 0,
+   "ocr": "[SU] Unt. C14",
+   "fixed": "[51] Int. Cl.^{4}",
+   "basis": "scan"
+  },
+  {
+   "col": null,
+   "line": null,
+   "page": 0,
+   "ocr": "HO1S 3/07",
+   "fixed": "H01S 3/07",
+   "basis": "scan"
+  },
+  {
+   "col": null,
+   "line": null,
+   "page": 0,
+   "ocr": "0.5.4,",
+   "fixed": "J.O.S.A.,",
+   "basis": "scan"
+  },
+  {
+   "col": null,
+   "line": null,
+   "page": 0,
+   "ocr": "Waveguides... ”",
+   "fixed": "Waveguides . . . ”",
+   "basis": "scan"
+  },
+  {
+   "col": null,
+   "line": null,
+   "page": 1,
+   "ocr": "Appi. Optics",
+   "fixed": "Appl. Optics",
+   "basis": "scan"
+  },
+  {
+   "col": null,
+   "line": null,
+   "page": 1,
+   "ocr": "Alferov et al. “",
+   "fixed": "Alferov et al., “",
+   "basis": "scan"
+  },
+  {
+   "col": null,
+   "line": null,
+   "page": 1,
+   "ocr": "Fiber-Optic",
+   "fixed": "Fiber–Optic",
+   "basis": "scan"
+  },
+  {
+   "col": null,
+   "line": null,
+   "page": 15,
+   "ocr": "ND: YAG crystal",
+   "fixed": "ND:YAG crystal",
+   "basis": "scan"
+  },
+  {
+   "col": null,
+   "line": null,
+   "page": 15,
+   "ocr": "[S51] Int. C17",
+   "fixed": "[51] Int. Cl.^{7}",
+   "basis": "scan"
+  },
+  {
+   "col": null,
+   "line": null,
+   "page": 15,
+   "ocr": "HO1S 3/067",
+   "fixed": "H01S 3/067",
+   "basis": "scan"
+  },
+  {
+   "col": null,
+   "line": null,
+   "page": 15,
+   "ocr": "U.S. Che",
+   "fixed": "U.S. Cl.",
+   "basis": "scan"
+  },
+  {
+   "col": null,
+   "line": null,
+   "page": 18,
+   "ocr": "do) Number:",
+   "fixed": "(10) Number:",
+   "basis": "scan"
+  },
+  {
+   "col": null,
+   "line": null,
+   "page": 18,
+   "ocr": "a2) EX PARTE",
+   "fixed": "(12) EX PARTE",
+   "basis": "scan"
+  },
+  {
+   "col": null,
+   "line": null,
+   "page": 18,
+   "ocr": "HOS 3/067",
+   "fixed": "H01S 3/067",
+   "basis": "scan"
+  },
+  {
+   "col": null,
+   "line": null,
+   "page": 18,
+   "ocr": "U.S.C oes",
+   "fixed": "U.S. Cl.",
+   "basis": "scan"
+  },
+  {
+   "col": null,
+   "line": null,
+   "page": 18,
+   "ocr": "within the ND: YAG crystal",
+   "fixed": "within the ND:YAG crystal",
+   "basis": "scan"
+  },
+  {
+   "col": null,
+   "line": null,
+   "page": 21,
+   "ocr": "HOIS",
+   "fixed": "H01S",
+   "basis": "scan"
+  },
+  {
+   "col": null,
+   "line": null,
+   "page": 21,
+   "ocr": "HOS 3/067",
+   "fixed": "H01S 3/067",
+   "basis": "scan"
+  },
+  {
+   "col": null,
+   "line": null,
+   "page": 21,
+   "ocr": "HO4B",
+   "fixed": "H04B",
+   "basis": "scan"
+  },
+  {
+   "col": null,
+   "line": null,
+   "page": 21,
+   "ocr": "HO4J",
+   "fixed": "H04J",
+   "basis": "scan"
+  },
+  {
+   "col": null,
+   "line": null,
+   "page": 21,
+   "ocr": "within the ND: YAG crystal",
+   "fixed": "within the ND:YAG crystal",
+   "basis": "scan"
+  },
+  {
+   "col": null,
+   "line": null,
+   "page": 27,
+   "ocr": "claims 34 and 11-15",
+   "fixed": "claims 3–4 and 11–15",
+   "basis": "scan"
+  }
+ ]
+}

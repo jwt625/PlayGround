@@ -63,6 +63,11 @@ gas/vapor regions, `dashes` = short-dash fill for liquid regions). `"fill": "pap
 background colour (white knockouts such as slashes inside a solid block). Hatch spacing:
 `"pitch": px, "angle": deg, "hw": px` on a `hatch` shape (default 14 px, 45 deg, 2 px line) to match printed hatching. Use a pattern fill instead of tracing
 hundreds of individual hatch strokes or dots; trace individual strokes only where they carry meaning.
+Known renderer behaviour, kept on purpose: the hatch line sits on the pattern tile edge, so it renders
+`hw/2` wide, offset `hw/4`; the pattern phase is fixed to the figure origin. All existing traces were
+fitted against the overlay with this behaviour (most pass `hw` = 2x the printed width), so changing it
+needs a re-fit of every hatched figure. Phase-match hatching by tuning `pitch` per region, or trace
+measured strokes.
 
 ## Sequences (timing diagrams, step-by-step figures)
 

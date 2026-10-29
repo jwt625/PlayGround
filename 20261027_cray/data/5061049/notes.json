@@ -1,0 +1,177 @@
+{
+ "patent": "Texas Instruments patent filed in 1990, the last continuation of a family going back to 1984. Inventor Larry Hornbeck is credited with inventing TI's Digital Micromirror Device (DMD) in 1987. Each pixel is a small aluminum mirror on thin torsion hinges over addressing electrodes. The patent adds landing electrodes held at the mirror's potential, so the mirror tip can touch down without welding. A bias voltage then makes the mirror bistable: it rests tilted one way or the other, set by a small address voltage. That two-state digital mirror became the basis of TI's DLP projection, which reached the market in the mid-1990s. Production DMDs later moved the hinges under the mirror and put a CMOS SRAM cell under each pixel.",
+ "figs": {
+  "1A": "Cutaway of one pixel. Beam 30 is a square cut out of beam layer 28 by gap 38. Only the thin hinge-layer strips 34 and 36 at two opposite corners hold it, so it can twist about the line joining them. The four electrode strips run under the well, on oxide 44 over substrate 22. The printed words METAL, SPACER, SiO2 and SILICON name the layers. B-B marks the section of FIG. 1B.",
+  "1B": "Section B-B. Beam 30 (holes 32 dashed) hangs over an empty well. Spacer 24 (hatched) remains only at the sides, with curved etched-back walls. The electrodes, left to right, are 40, 42, 46 and 41, on oxide 44. Landing electrodes 40 and 41 lie under the beam tips; address electrodes 42 and 46 lie nearer the hinge axis. The front page repeats this figure.",
+  "1C": "Plan view. Beam 30 is drawn as a diamond with hinges 34 and 36 at the left and right corners, so the tilt axis runs horizontally. The dashed horizontal bands are the buried electrodes: landing electrodes 41 and 40 under the top and bottom tips, address electrodes 46 and 42 between them. The braces at the right give each electrode's extent. The rounded dashed outline matches the 'EDGE OF 324' well outline of FIGS. 36A-C.",
+  "2": "Beam 30 twists down toward electrode 42. The + signs on 42 and the - signs on the underside of the beam show the induced charge, which collects where the gap is smallest. The wavy arrows over the beam and the fixed metal at the right stand for light falling on the pixel.",
+  "3A": "Measured deflection angle (circles; the axis label printed '0 (DEG)' is theta) against voltage for the simplified pixel 120. Deflection grows slowly, then turns almost vertical near 65 V, the collapse voltage. The dashed line is the near-linear analog region.",
+  "3B": "Shown turned upright from the sideways drawing sheet. Two neighbouring pixels 120. The left pixel shows beam 130 with its corner hinges 134 and 136. The right pixel has its beam and hinges removed, exposing the two triangular address electrodes 146 and 142 that meet along the hinge diagonal. Layers 122-128 show at the cut edges; C- and C+ are printed at the top and bottom edges.",
+  "4": "Defines the analysis variables. Top view: a square beam of side L hinged at corners 135 and 137, with the integration strip dx at distance x from the axis. Cross section: beam 130 and electrode 146 grounded, voltage phi_a on 142; tip 131 drops by z_T across gap z_0 as the beam rotates by theta. The right-hand brace groups the two views.",
+  "5": "Torque against normalized tip deflection alpha (alpha = 1: tip touches the electrode). The solid curves are electrostatic torque at three address voltages; the dashed straight line is the hinge restoring torque. For V1 the curves cross at P (stable) and Q (unstable). For V2 they touch at R, the last stable point. The V3 curve is above the line everywhere, so the beam collapses.",
+  "6": "Shown turned upright from the sideways drawing sheet. Summary of FIG. 5. The stable deflection alpha rises with address voltage phi_a until it reaches alpha_c = 0.54 at V_c. The dashed vertical arrow at V_c is the jump to alpha = 1.00 (collapse).",
+  "7": "Electrical schematic of pixel 20. The beam and both landing electrodes are tied to the differential bias V_B. The address signal phi_a drives electrode 46 (+) directly and electrode 42 (-) through the inverter triangle. The dashed lines show the beam tilted to -alpha and +alpha.",
+  "8": "Attractive torque for pixel 20 with the same voltage on both address electrodes. Torque toward 46 (tau_+, upper solid curve) and torque toward 42 (tau_-, lower solid curve) add up to the dashed net curve. The net curve passes through zero at alpha = 0. It stays finite at alpha = +/-1, because there the tip rests on a landing electrode.",
+  "9": "Variables for pixel 20: L' is how far address electrodes 42 and 46 extend under the beam, measured from the axis, against the half-diagonal L/sqrt(2). The landing electrodes and the beam sit at V_B; the address electrodes are driven to phi_- and phi_+.",
+  "10": "In FIGS. 10-13 the solid line is the restoring torque -tau_r and the dashed curve is the attractive torque at a given bias, both against deflection alpha. Here the bias is small: the dashed curve is smaller in magnitude than the line on both sides, so every deflection is pulled back to alpha = 0.",
+  "11": "At a higher bias the dashed curve crosses the line at P and -P near the ends. Past those points the beam snaps onto a landing electrode, so alpha = 0, +1 and -1 are all stable.",
+  "12": "At V_0 the dashed curve is tangent to the restoring line at the origin. alpha = 0 is no longer stable, and the beam falls to one landing electrode or the other.",
+  "13": "Above V_0 the dashed curve is steeper than the line through the origin. Any small tilt grows until the beam lands, so only alpha = +/-1 remain stable.",
+  "14": "Potential energy U against deflection for increasing bias V_B. At V_B = 0 there is a single valley at alpha = 0. At the intermediate biases, valleys at the landing points (dashed verticals at +/-1) form beside it, separated by humps. At V_B = V_0 the centre has become a hump and only the two landing valleys remain.",
+  "15": "Same layout as FIG. 7, biased for addressing: the beam and landing electrodes are at -|V_B|, electrode 42 is grounded, and electrode 46 is at phi_+ = +gamma|V_B|. This small address voltage chooses which way the beam falls when the bias is applied.",
+  "16": "Attractive torque with the small address voltage applied. The dashed curve is shifted so that it crosses zero at -|alpha_m| instead of the origin. An undeflected beam therefore feels a net torque toward +1 (landing electrode 41).",
+  "17": "Bistable switching. phi_+ and phi_- are complementary address levels (0 V or +gamma|V_B|). The bias phi_B sits at -|V_B| and returns briefly to 0 V; each time the bias comes back, the beam takes the side its address selects. The bottom trace alpha alternates between its two levels. Its lowest level is printed '+1'; the description calls it -1.",
+  "18": "Normalized torques (units tau_0, beta = 1/2). The upper curve is the single-electrode torque tau_+, the lower curve the differential torque tau_a = tau_0 Delta g. The dashed line marked SLOPE is the tangent of the lower curve at alpha = 0, from which the minimum bias V_0 is found. The steeper dashed line from the origin touches the upper curve at alpha_c (about 0.9) and height g_c.",
+  "19": "Net torque with no address voltage (gamma = 0, through the origin, no preferred direction) and with gamma = 0.1 (shifted up). The shifted curve meets the dashed restoring line at P, at -|alpha_p|. A beam starting to the right of that point goes to +1.",
+  "20": "Soft landing in the simplified pixel 120 with a narrowed electrode. The restoring line runs to tau_rL at alpha_L = 1. The attractive curve touches it at alpha_c, tau_c (collapse) and ends at tau_aL. The gap Delta tau_L between them at alpha = 1 is the torque left over when the tip lands.",
+  "21": "The same construction for pixel 20 biased at V_0. Curve (1), gamma = 0, and curve (2), gamma = 0.1, are labelled with their printed formulas. The landing torque Delta tau_L is read at alpha = alpha_L = 1.",
+  "22": "Holding torque. The upper curve (bias V_0) lands with excess torque tau_L. At the lower bias V_H the attractive curve meets the restoring line exactly at alpha = 1, so the landing torque is zero (tau_H = tau_rL). Below V_H the beam lifts off and returns to the analog point P.",
+  "23": "Deflection against bias, traced in the order (0)-(1)-(2)-(3)-(4) shown by the arrows. The beam rises along the analog curve to alpha_c at V_0, jumps to 1.0, and stays there as the bias is lowered. At V_H it drops back to the analog curve.",
+  "24": "Flatness margin. The solid curve is the attractive torque. The three dashed lines are the restoring torque for a flat beam (1), one with built-in tilt -|alpha_m| (2), and one tilted further (3). Line (2) crosses the axis where the curve does, so the beam has no preferred direction; with (3) it falls the wrong way. Delta alpha is the shift between (1) and (2).",
+  "25": "Plan view of address electrodes shifted by epsilon along the beam diagonal. The square is beam 30. The two diagonal-edged outlines are address electrodes 42 and 46. Each is drawn twice, solid and dashed, offset along the diagonal by the shift epsilon. The heavily hatched slivers +/-Delta A_1 and +/-Delta A_2 are the overlap gained and lost.",
+  "26": "Attractive torque for misalignment epsilon = 0 (1), epsilon_m (2) and larger (3), against the dashed restoring line. The short vertical arrow near alpha = 0.15 shows how far the torque drops as misalignment grows.",
+  "27": "FIG. 7 with balance electrodes added. 243 and 245 sit between the address and landing electrodes, and each is fed from a potentiometer between -|V_B| and ground; the potentiometers are the resistor symbols with arrows. Address signal phi drives 246 directly and 242 through the inverter.",
+  "28": "Torque lines for addressing the + electrode (left pair, tau_a+) and the - electrode (right pair, tau_a-). Solid lines are aligned (epsilon = 0); dashed lines have half the misalignment margin. The downward arrows show the shift. The axis intercepts give the angular margins: 1/2 alpha_m and alpha_m.",
+  "29": "First reset method. Each short spike phi_R (+V_R) on electrode 42 comes while the bias phi_B is at 0. phi_A is the address sequence: deflect, not deflect (dashed pulse), deflect. In the alpha trace the small dips below 0 are the brief kicks from the reset spikes; the dashed fall shows a beam that did not stick returning on its own.",
+  "30A": "Second reset method. A short spike to +V_R (or -V_R) on the bias line phi_B precedes each change of state. phi_A(+) and phi_A(-) select the side. alpha goes to +1, then to -1, then back to +1; the small steps are the reset bending and release.",
+  "30B": "Section along the hinge axis during the reset pulse. Beam 30 is pulled straight down toward substrate 22, bending hinges 34 and 36 instead of twisting them. The hinges spring it back up when the pulse ends.",
+  "31": "Part of linear array 310. Each diamond is a beam with corner hinges. For the two left-hand pixels the electrodes underneath are drawn dashed: landing 340/341 and address 342/346, with leads 342, 346, 342' and 346' running out at the top and bottom edges. The remaining pixels show only beams 330 and their holes.",
+  "32A": "Printer optics. Source and optics 352 send a flat sheet of light 358 onto the long array 310. Light from between the beams (sheet 360) and from beams tilted away (361) misses lens 354. Light from beams tilted toward it (362) passes the lens and is focused as line 364 on drum 356.",
+  "32B": "Side view of FIG. 32A. The sheets leave the array at multiples of 2 theta, and sheet 362 leaves normal to the array, so lens 354 can face it squarely.",
+  "32C": "Top view. Rays from three tilted beams pass lens 354, where each forms an image 355 of the source, and converge onto line 364 on drum 356.",
+  "33": "Section along address electrode 446. At the left is the access transistor: enable gate 450 on gate oxide 454 between n+ regions 456 (input) and 466 (to electrode 446) in p-type substrate 422. Electrode 446 lies under beam 430 in the well; layers 426-428 carry the beam bias. Spacer 424 is hatched.",
+  "34": "Plan view of pixels 420 and 420'. The vertical strip at the left is enable gate 450. The dashed boxes beside it are n+ regions 452/456 and 462/466, linked by dashed leads to address electrodes 442 and 446 under each diamond beam. The landing electrodes are 440 and 441, with 441' and 440 shared between the two pixels.",
+  "35A": "Start of the first fabrication method: address electrode 346 on thermal oxide 344 over substrate 322.",
+  "35B": "Spacer 324 (hatched) covers the electrodes. Thin hinge layer 326 goes on top, and oxide etch stops 348 (small hatched pads) mark where the hinges will be.",
+  "35C": "Beam layer 328 is added and patterned with photoresist 50 (heavily hatched). The two narrow openings 332 are etched holes. Under etch stops 348 only the thin layer 326 is left; those thin portions become the hinges.",
+  "35D": "Protective PMMA 52 covers the wafer before dicing. The blobs on top are the dicing debris it keeps off the beams.",
+  "35E": "After the PMMA is dissolved and the spacer is plasma-etched through the holes and gaps, a well lies under beam 330. Thin hinges 334 and 336 connect the beam to the surrounding layers; 349 are the etch-stop remnants.",
+  "36A": "Plan views FIGS. 36A-C follow the spacer etch under the beam. Early stage: dashed circles around each access hole 332 show local undercut, and the 'EDGE OF 324' outline lies just inside the beam.",
+  "36B": "Middle stage: the circles around the holes are larger and the well edge has spread outward.",
+  "36C": "Final stage: the circles are gone and the well edge lies outside the beam, so the beam is free except at hinges 334 and 336.",
+  "37A": "Section of the FIG. 36A stage: small cavities in spacer 324 directly under the openings.",
+  "37B": "Section of the FIG. 36B stage: the cavities are wider and deeper.",
+  "37C": "Section of the FIG. 36C stage: the cavities have merged into one well, and spacer remains only at the sides.",
+  "38": "Shown turned upright from the sideways drawing sheet. Linear array of octagonal beams. Neighbouring pixels share a gap (538/538') and a landing electrode (541, 540'). The dashed vertical strips are the address and landing electrodes. The wavy dashed lines are the edges of one continuous well in spacer 524.",
+  "39A": "Cantilever variant: the square beam 570 hangs from a single corner hinge 572 and swings down onto landing electrode 579. The dashed square is address electrode 578.",
+  "39B": "Torsion beam 580 hinged at two points (581, 582) on one side, so it tilts only one way, onto landing electrode 589. The dashed outline is address electrode 588.",
+  "39C": "Linear array of cantilever beams in groups of four ('cloverleaves'), with hinges 592 at the shared corners. The dashed line at the top is the spacer edge.",
+  "39D": "Area array: four cantilever beams (560 ...) share each post 561 (small circle) through hinges 562. The dashed outlines are the electrodes beneath.",
+  "40A": "Second fabrication method (buried hinge by liftoff). On spacer 182 over the substrate lies thin hinge metal 180, with a stack of PMMA 184, ARC 186 and photoresist 188 on top. The PMMA is undercut about 1 micrometre (scale bar) below the photoresist cap.",
+  "40B": "Beam metal 190 is sputtered on. It breaks at the overhang, leaving one piece on the resist stack and one on the hinge metal.",
+  "40C": "After liftoff: a thin region of hinge metal 180 is surrounded by thick metal 190, whose edges 192 are tapered.",
+  "40D": "Photoresist patterned with openings 194 that define beam and hinge together, so the two are self-aligned.",
+  "40E": "After the single etch: the 'BURIED HINGE' is a strip of thin metal between thick sections of 190.",
+  "41A": "Plan of the FIG. 40C stage: the dashed rectangle is thin region 180 inside thick metal 190.",
+  "41B": "Plan of the photoresist openings 194 (dashed). A square outline frees the beam, and U-shaped slots at left and right cut the hinges from the thin region.",
+  "41C": "Finished beam: square with a thin hinge on each side leading to the supports. A-A is the section line of FIGS. 40A-E.",
+  "42A": "Area array 610 of square beams 630 set at 45 degrees. Each hangs from torsion hinges 634 and 636 attached to posts 624 (circles). A-A, B-B and C-C are the section lines of FIGS. 44A-C.",
+  "42B": "Addressing for array 610. Serial DATA IN is loaded into the S/P converter and register, then driven down the columns by the drain buffer amplifiers. The gate decoder selects one row at a time. The circled inset enlarges pixel n,m: two transistors from gate line G_n and drain lines D_m and D'_m, each charging a variable capacitor symbol (the address electrodes).",
+  "43A": "Shown turned upright from the sideways drawing sheet. Diffusion level. The long vertical strips are n+ bitlines 660 and 661 and p+ channel stops 670 and 672. The notched shapes between them are floating sources 662 and 666.",
+  "43B": "Shown turned upright from the sideways drawing sheet. Gate level: polysilicon wordlines 680 and 680' cross the array, and gates 682 and 686 branch off them over the dashed diffusions. Dashed circles mark vias 663 and 667.",
+  "43C": "Electrode level: diagonal address electrodes 642 and 646 and landing electrodes 640 and 641. Circles are post sites; dashed shapes are the gates and vias beneath.",
+  "43D": "Spacer level. The continuous spacer is gone; only posts 624 (double circles) remain at the hinge junctions.",
+  "44A": "Section A-A through two posts. Each post 624 is the hinge and beam metal 626/628 dipping down to the electrode level. Below are the electrodes on oxide 644, gate oxide 643, and the n+ and p+ regions in substrate 622.",
+  "44B": "Section B-B. Beam 630 and its hinge 634 float above the electrodes. Electrode 640 rises over gate 682, and 642 reaches down through the oxide to floating source 662.",
+  "44C": "Section C-C: beam 630 above the electrode layer. Gate 682 runs under the electrodes, and the diffused regions lie below it."
+ },
+ "parts": {
+  "124": "Not mentioned by number. The description says the elements of pixel 120 are 'numbered 100 higher' than those of pixel 20, so the name is taken from spacer 24.",
+  "126": "Labelled together with 128 as '126/128' in FIG. 3B. Named by the 'numbered 100 higher' rule from hinge layer 26.",
+  "128": "Named by the 'numbered 100 higher' rule from beam layer 28.",
+  "134": "Not mentioned by number; named by the 'numbered 100 higher' rule from hinge 34.",
+  "136": "Not mentioned by number; named by the 'numbered 100 higher' rule from hinge 36.",
+  "230": "Drawing only: the beam of pixel 220 in FIG. 27.",
+  "424": "Drawing only: the hatched spacer in FIG. 33.",
+  "432": "Drawing only: an access hole in beam 430 (FIG. 34).",
+  "434": "Drawing only: a hinge of beam 430 (FIGS. 33, 34).",
+  "436": "Drawing only: a hinge of beam 430 (FIGS. 33, 34).",
+  "438": "Drawing only: the gap around beam 430 (FIG. 34).",
+  "41": "In the first reset method the description once writes 'reset electrode 41' where the reset electrode is 42.",
+  "42": "Used as the reset electrode in the first reset method (FIG. 29); the description also writes 'reset electrodes 40' there.",
+  "642": "The description once writes 'landing electrodes 642, 646'; elsewhere 642 and 646 are address electrodes and 640 and 641 are the landing electrodes.",
+  "646": "See 642."
+ },
+ "glossary": [
+  {
+   "term": "spatial light modulator (SLM)",
+   "def": "A device that changes light pixel by pixel, for example a projector imager. Here each pixel steers reflected light by tilting a mirror."
+  },
+  {
+   "term": "deformable mirror device (DMD)",
+   "def": "TI's name for an array of electrostatically deflected micromirrors. In later products the D stands for 'digital'."
+  },
+  {
+   "term": "torsion hinge",
+   "def": "A thin, narrow metal strip that twists to let the mirror rotate and springs it back. Its stiffness sets the restoring torque."
+  },
+  {
+   "term": "cantilever beam",
+   "def": "A beam fixed at one end that bends down instead of twisting. It deflects in one direction only."
+  },
+  {
+   "term": "collapse voltage",
+   "def": "The voltage at which electrostatic attraction overpowers the hinge and the beam snaps all the way down. Usually called pull-in or snap-down today."
+  },
+  {
+   "term": "normalized deflection (alpha)",
+   "def": "Tip deflection divided by the tip-to-electrode gap: 0 means flat, +/-1 means the tip is touching down."
+  },
+  {
+   "term": "differential bias",
+   "def": "A voltage applied to the mirror and landing electrodes together. It multiplies the effect of the much smaller address voltage, which the patent calls torque gain."
+  },
+  {
+   "term": "monostable / tristable / bistable",
+   "def": "One, three or two stable mirror positions. The bistable mode, with the mirror resting on one landing electrode or the other, is the digital mode that DLP uses."
+  },
+  {
+   "term": "soft landing",
+   "def": "Arranging the electrodes so that little torque is left when the mirror tip lands, which reduces impact damage and sticking."
+  },
+  {
+   "term": "stiction",
+   "def": "Surfaces in contact sticking together; the reason the patent describes the reset pulses of FIGS. 29-30."
+  },
+  {
+   "term": "plasma etch access holes",
+   "def": "Openings in the mirror metal through which the plasma removes the organic spacer underneath, freeing the mirror."
+  },
+  {
+   "term": "spacer",
+   "def": "A sacrificial layer, here photoresist or PMMA, that sets the gap under the mirror and is etched away at the end."
+  },
+  {
+   "term": "PMMA",
+   "def": "Poly(methyl methacrylate), a polymer used as a resist and protective coating."
+  },
+  {
+   "term": "liftoff",
+   "def": "Patterning metal by depositing it over a resist pattern and then dissolving the resist, which carries away the metal on top of it."
+  },
+  {
+   "term": "sputter deposition",
+   "def": "Depositing a thin metal film by knocking atoms off a target with ions."
+  },
+  {
+   "term": "PEVCD",
+   "def": "As printed; evidently PECVD, plasma-enhanced chemical vapour deposition of oxide."
+  },
+  {
+   "term": "Ti:Si:Al",
+   "def": "Aluminum alloyed with small amounts of titanium and silicon, used for both hinge and mirror layers."
+  },
+  {
+   "term": "MOSFET",
+   "def": "Metal-oxide-semiconductor field-effect transistor. Here each acts as a switch that connects a column (bitline) to a pixel's address electrode."
+  },
+  {
+   "term": "wordline / bitline",
+   "def": "Row and column wires of a memory-style array. Selecting a wordline turns on a row of transistors; the bitlines carry the data into them."
+  },
+  {
+   "term": "electrophotographic printing",
+   "def": "Laser-printer style printing: light discharges a charged photoconductive drum in the image pattern, and toner sticks to that pattern."
+  }
+ ]
+}

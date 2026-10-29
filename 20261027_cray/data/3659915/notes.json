@@ -1,0 +1,23 @@
+{
+ "patent": "Filed May 11, 1970 and issued May 2, 1972 to Robert Maurer and Peter Schultz of Corning Glass Works. It claims an optical fiber with a fused silica cladding and a fused silica core doped (up to 15 percent by weight) to raise its refractive index; the worked example is a titanium-oxide-doped core about 3 microns across in a 100 micron fiber. In 1970 Corning researchers Kapron, Keck and Maurer reported a fiber of this type with attenuation below 20 dB/km, the figure then regarded as the threshold for practical optical communication; earlier glass fibers lost on the order of 1000 dB/km. A doped-silica core in a silica cladding remains the basic construction of telecommunications fiber, although germanium oxide later replaced titanium oxide as the usual core dopant. Corning asserted this patent in Corning Glass Works v. Sumitomo Electric (Fed. Cir. 1989), where fiber with a pure silica core and a fluorine-doped (index-lowering) cladding was held to infringe under the doctrine of equivalents.",
+ "figs": {
+  "1": "A short length of the waveguide drawn as a solid cylinder in oblique view, with the near end face showing core 30 inside cladding 20. The groups of short parallel strokes are a drafting convention for a transparent glass surface, not features of the fiber. The two marks labelled 2 with arrows fix the cutting plane and viewing direction of FIG. 2. Proportions are schematic: the example in the text has a 3 micron core in a 100 micron fiber, far smaller than the core drawn here.",
+  "2": "The cut face at plane 2-2: a small circular core 30 centred in cladding 20. Both regions carry diagonal section lining of alternating solid and dashed lines, the drafting symbol for glass; the leader for 30 runs across the cladding to end inside the core."
+ },
+ "parts": {
+  "10": "The whole fiber; in the example, drawn to about 100 microns outside diameter.",
+  "20": "Pure fused silica, or fused silica doped more lightly than the core.",
+  "30": "Doped fused silica with a refractive index above that of the cladding; about 1.466 against 1.4584 for the cladding in the example."
+ },
+ "glossary": [
+  {"term": "fused silica", "def": "Non-crystalline silicon dioxide (SiO2) glass made by melting or depositing very pure silica; hard, with a high softening point (drawing in the example is at about 1,900 C)."},
+  {"term": "optical waveguide", "def": "A structure that confines and guides light along its length; here a glass fiber in which light is held in the core by its higher refractive index."},
+  {"term": "core / cladding", "def": "The central light-carrying region of a fiber and the surrounding layer of slightly lower refractive index."},
+  {"term": "index of refraction", "def": "Ratio of the speed of light in vacuum to its speed in the material; a small core-cladding difference (here about 0.5 percent) keeps light in the core."},
+  {"term": "mode", "def": "One of the distinct field patterns in which light can propagate along a waveguide; different modes travel at different speeds, which smears out a signal (modal dispersion). Limiting propagation to preselected modes, or one mode, avoids this."},
+  {"term": "dopant", "def": "A small amount of another substance added to change a property, here an oxide added to silica to raise its refractive index."},
+  {"term": "multivalent metal oxide", "def": "Oxide of a metal with valence above one, such as TiO2, Ta2O5, SnO2, Nb2O5, ZrO2, Al2O3 listed in the patent; these diffuse little in silica, so the core boundary stays sharp."},
+  {"term": "devitrification", "def": "Crystallisation of a glass, which causes scattering and weakness; a risk when core and cladding glasses differ in composition."},
+  {"term": "dB/km", "def": "Attenuation unit for fiber: 10 dB/km means 10 percent of the light remains after 1 km, 20 dB/km means 1 percent."}
+ ]
+}

@@ -1,0 +1,571 @@
+{
+  "pn": "4859016",
+  "figures": [
+    {
+      "id": "1",
+      "label": "FIG. 1",
+      "sheet": 1,
+      "page": 2,
+      "crop": [
+        380,
+        275,
+        2095,
+        1150
+      ],
+      "rotate": 0,
+      "front_page": false
+    },
+    {
+      "id": "2",
+      "label": "FIG. 2",
+      "sheet": 1,
+      "page": 2,
+      "crop": [
+        295,
+        1150,
+        1160,
+        2420
+      ],
+      "rotate": 0,
+      "front_page": false
+    },
+    {
+      "id": "3",
+      "label": "FIG. 3",
+      "sheet": 1,
+      "page": 2,
+      "crop": [
+        1270,
+        1280,
+        2095,
+        2240
+      ],
+      "rotate": 0,
+      "front_page": false
+    },
+    {
+      "id": "4",
+      "label": "FIG. 4",
+      "sheet": 1,
+      "page": 2,
+      "crop": [
+        480,
+        2300,
+        1825,
+        2960
+      ],
+      "rotate": 0,
+      "front_page": false
+    },
+    {
+      "id": "5",
+      "label": "FIG. 5",
+      "sheet": 2,
+      "page": 3,
+      "crop": [
+        367,
+        255,
+        1380,
+        925
+      ],
+      "rotate": 0,
+      "front_page": false
+    },
+    {
+      "id": "6",
+      "label": "FIG. 6",
+      "sheet": 2,
+      "page": 3,
+      "crop": [
+        430,
+        915,
+        2080,
+        1915
+      ],
+      "rotate": 0,
+      "front_page": false
+    },
+    {
+      "id": "7",
+      "label": "FIG. 7",
+      "sheet": 2,
+      "page": 3,
+      "crop": [
+        430,
+        1905,
+        2010,
+        2920
+      ],
+      "rotate": 0,
+      "front_page": false
+    },
+    {
+      "id": "8",
+      "label": "FIG. 8",
+      "sheet": 3,
+      "page": 4,
+      "crop": [
+        615,
+        320,
+        1910,
+        1570
+      ],
+      "rotate": 0,
+      "front_page": false
+    },
+    {
+      "id": "9",
+      "label": "FIG. 9",
+      "sheet": 4,
+      "page": 5,
+      "crop": [
+        446,
+        287,
+        912,
+        2360
+      ],
+      "rotate": 270,
+      "front_page": true
+    },
+    {
+      "id": "10",
+      "label": "FIG. 10",
+      "sheet": 5,
+      "page": 6,
+      "crop": [
+        552,
+        315,
+        1905,
+        1177
+      ],
+      "rotate": 0,
+      "front_page": false
+    },
+    {
+      "id": "11A",
+      "label": "FIG. 11a",
+      "sheet": 5,
+      "page": 6,
+      "crop": [
+        364,
+        1600,
+        1306,
+        2326
+      ],
+      "rotate": 0,
+      "front_page": false
+    },
+    {
+      "id": "11B",
+      "label": "FIG. 11b",
+      "sheet": 5,
+      "page": 6,
+      "crop": [
+        1480,
+        1614,
+        2119,
+        2321
+      ],
+      "rotate": 0,
+      "front_page": false
+    },
+    {
+      "id": "12",
+      "label": "FIG. 12",
+      "sheet": 4,
+      "page": 5,
+      "crop": [
+        1040,
+        287,
+        1475,
+        2093
+      ],
+      "rotate": 270,
+      "front_page": true
+    },
+    {
+      "id": "13",
+      "label": "FIG. 13",
+      "sheet": 4,
+      "page": 5,
+      "crop": [
+        1475,
+        700,
+        2092,
+        2520
+      ],
+      "rotate": 270,
+      "front_page": false
+    }
+  ],
+  "parts": [
+    {
+      "ref": "10",
+      "name": "coupler",
+      "figs": [
+        "1"
+      ],
+      "alt": [
+        "multiplexing coupler"
+      ]
+    },
+    {
+      "ref": "10A",
+      "name": "coupler half",
+      "figs": [
+        "1",
+        "9"
+      ]
+    },
+    {
+      "ref": "10B",
+      "name": "coupler half",
+      "figs": [
+        "1",
+        "9"
+      ]
+    },
+    {
+      "ref": "12",
+      "name": "strands",
+      "figs": [],
+      "alt": [
+        "fibers"
+      ]
+    },
+    {
+      "ref": "12A",
+      "name": "strands",
+      "figs": [
+        "1",
+        "2",
+        "3",
+        "5",
+        "9"
+      ],
+      "alt": [
+        "pumping fiber"
+      ]
+    },
+    {
+      "ref": "12B",
+      "name": "strands",
+      "figs": [
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "9"
+      ],
+      "alt": [
+        "signal fiber"
+      ]
+    },
+    {
+      "ref": "13",
+      "name": "grooves",
+      "figs": [],
+      "alt": [
+        "slots"
+      ]
+    },
+    {
+      "ref": "13A",
+      "name": "longitudinal arcuate grooves",
+      "figs": [
+        "1",
+        "2",
+        "3"
+      ]
+    },
+    {
+      "ref": "13B",
+      "name": "longitudinal arcuate grooves",
+      "figs": [
+        "1",
+        "2",
+        "3",
+        "4"
+      ]
+    },
+    {
+      "ref": "14",
+      "name": "confronting surfaces",
+      "figs": []
+    },
+    {
+      "ref": "14A",
+      "name": "optically flat confronting surfaces",
+      "figs": [
+        "1",
+        "2",
+        "3"
+      ]
+    },
+    {
+      "ref": "14B",
+      "name": "optically flat confronting surfaces",
+      "figs": [
+        "1",
+        "2",
+        "4"
+      ]
+    },
+    {
+      "ref": "16",
+      "name": "blocks",
+      "figs": []
+    },
+    {
+      "ref": "16A",
+      "name": "rectangular bases or blocks",
+      "figs": [
+        "1",
+        "2",
+        "3"
+      ]
+    },
+    {
+      "ref": "16B",
+      "name": "rectangular bases or blocks",
+      "figs": [
+        "1",
+        "2",
+        "3",
+        "4"
+      ]
+    },
+    {
+      "ref": "18",
+      "name": "oval surfaces",
+      "figs": []
+    },
+    {
+      "ref": "18A",
+      "name": "oval-shaped planar surfaces",
+      "figs": [
+        "1"
+      ],
+      "alt": [
+        "facing surfaces"
+      ]
+    },
+    {
+      "ref": "18B",
+      "name": "oval-shaped planar surfaces",
+      "figs": [
+        "1",
+        "4"
+      ],
+      "alt": [
+        "facing surfaces"
+      ]
+    },
+    {
+      "ref": "32",
+      "name": "interaction region",
+      "figs": [
+        "1"
+      ]
+    },
+    {
+      "ref": "33",
+      "name": "area",
+      "figs": [
+        "5"
+      ],
+      "alt": [
+        "critical zone"
+      ]
+    },
+    {
+      "ref": "34A",
+      "name": "evanescent fields",
+      "figs": [
+        "5"
+      ]
+    },
+    {
+      "ref": "34B",
+      "name": "evanescent fields",
+      "figs": [
+        "5"
+      ]
+    },
+    {
+      "ref": "38",
+      "name": "suitable cement",
+      "figs": [
+        "2",
+        "3"
+      ]
+    },
+    {
+      "ref": "42",
+      "name": "source of pumping illumination",
+      "figs": [
+        "9",
+        "12",
+        "13"
+      ],
+      "alt": [
+        "pumping source",
+        "pump source"
+      ]
+    },
+    {
+      "ref": "44",
+      "name": "ND:YAG crystal",
+      "figs": [
+        "9",
+        "12",
+        "13"
+      ]
+    },
+    {
+      "ref": "46",
+      "name": "optical fiber",
+      "figs": [
+        "9"
+      ]
+    },
+    {
+      "ref": "48",
+      "name": "pump sources",
+      "figs": [
+        "12"
+      ]
+    },
+    {
+      "ref": "50",
+      "name": "multiplexing couplers",
+      "figs": [
+        "12"
+      ]
+    },
+    {
+      "ref": "52",
+      "name": "multiplexing couplers",
+      "figs": [
+        "12"
+      ]
+    },
+    {
+      "ref": "54",
+      "name": "fiber",
+      "figs": [
+        "12"
+      ]
+    },
+    {
+      "ref": "56",
+      "name": "fiber",
+      "figs": [
+        "12"
+      ]
+    },
+    {
+      "ref": "58",
+      "name": "couplers",
+      "figs": [
+        "13"
+      ]
+    },
+    {
+      "ref": "60",
+      "name": "couplers",
+      "figs": [
+        "13"
+      ]
+    },
+    {
+      "ref": "62",
+      "name": "fiber ends",
+      "figs": [
+        "13"
+      ],
+      "alt": [
+        "fiber segment"
+      ]
+    },
+    {
+      "ref": "64",
+      "name": "fiber ends",
+      "figs": [
+        "13"
+      ],
+      "alt": [
+        "fiber segment"
+      ]
+    },
+    {
+      "ref": "66",
+      "name": "input fiber",
+      "figs": [
+        "13"
+      ],
+      "alt": [
+        "fiber segment"
+      ]
+    },
+    {
+      "ref": "68",
+      "name": "fiber segment",
+      "figs": [
+        "13"
+      ]
+    },
+    {
+      "ref": "70",
+      "name": "sensor",
+      "figs": [
+        "13"
+      ]
+    },
+    {
+      "ref": "A",
+      "name": "ports",
+      "figs": [
+        "1",
+        "9"
+      ],
+      "alt": [
+        "port A"
+      ]
+    },
+    {
+      "ref": "B",
+      "name": "ports",
+      "figs": [
+        "1",
+        "9"
+      ],
+      "alt": [
+        "port B"
+      ]
+    },
+    {
+      "ref": "C",
+      "name": "ports",
+      "figs": [
+        "1",
+        "9"
+      ],
+      "alt": [
+        "port C"
+      ]
+    },
+    {
+      "ref": "D",
+      "name": "ports",
+      "figs": [
+        "1",
+        "9"
+      ],
+      "alt": [
+        "port D"
+      ]
+    }
+  ]
+}

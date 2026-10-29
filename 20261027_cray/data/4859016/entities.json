@@ -1,0 +1,34 @@
+{
+  "pn": "4859016",
+  "inventors": [
+    {
+      "name": "Herbert J. Shaw",
+      "printed": "Herbert J. Shaw, Stanford",
+      "city": "Stanford",
+      "region": "CA",
+      "country": "US"
+    },
+    {
+      "name": "Michel J. F. Digonnet",
+      "printed": "Michel J. F. Digonnet, Palo Alto, both of Calif.",
+      "city": "Palo Alto",
+      "region": "CA",
+      "country": "US"
+    }
+  ],
+  "assignees": [
+    {
+      "name": "The Board of Trustees of the Leland Stanford Junior University",
+      "printed": "The Board of Trustees of the Leland Stanford Junior University, Stanford, Calif.",
+      "org": "Stanford University",
+      "kind": "university",
+      "city": "Stanford",
+      "region": "CA",
+      "country": "US"
+    }
+  ],
+  "source": {
+    "page": 0,
+    "where": "front page [75], [73]"
+  }
+}

@@ -1,7 +1,8 @@
 // Patent figure gallery + viewer. Data: window.PATENTS (pipeline/build.py). Traces: window.TraceRender.
+// window.SITE: {links: {pn: file}} on the gallery page (light records), {home: file} on a per-patent page.
 // Routes: #/  |  #/<pn>/figures/<fig>[/<ref>]  |  #/<pn>/text[/<pid>]  |  #/<pn>/claims  |  #/<pn>/about
 (function () {
-  const PATS = window.PATENTS, byPn = Object.fromEntries(PATS.map(p => [p.pn, p]));
+  const PATS = window.PATENTS, SITE = window.SITE || {}, byPn = Object.fromEntries(PATS.map(p => [p.pn, p]));
   const NS = 'http://www.w3.org/2000/svg';
   const $ = (s, r = document) => r.querySelector(s);
   const h = (tag, cls, html) => { const n = document.createElement(tag); if (cls) n.className = cls; if (html != null) n.innerHTML = html; return n; };
@@ -219,21 +220,21 @@
 
   // ---------- scan page modal ----------
   let modalView = null;
-  function openScan(pat, col, label) {
-    const page = col ? pat.col1_page + Math.floor((col - 1) / 2) : 0;
+  function openScan(pat, col, label, pg) {
+    const page = pg != null && pg !== '' && !isNaN(pg) ? +pg : col ? pat.col1_page + Math.floor((col - 1) / 2) : 0;
     const src = pat.pages[page]; if (!src) return;
     $('#modal').hidden = false;
     $('#modalTitle').innerHTML = `<span class="num">${esc(pat.number)}</span> &nbsp;page ${page + 1} of ${pat.pages.length}${col ? `, column ${col}` : ''}${label ? ` &nbsp;<span class="cite">${esc(label)}</span>` : ''}`;
     const body = $('#modalBody'); body.innerHTML = '';
     const fv = h('div', 'fv'); body.appendChild(fv);
     const svg = mk('svg', { class: 'stage', preserveAspectRatio: 'xMidYMid meet' }); fv.appendChild(svg);
-    const W = 2320, H = 3408;
+    const [W, H] = (pat.page_wh && pat.page_wh[page]) || [2320, 3408], k = W / 2320;
     svg.appendChild(mk('image', { class: 'scan', href: src, x: 0, y: 0, width: W, height: H }));
-    if (col) { const left = col % 2 === 1; svg.appendChild(mk('rect', { class: 'colmark', x: left ? 120 : 1180, y: 330, width: 1020, height: 2960, opacity: .35 })); }
+    if (col) { const left = col % 2 === 1; svg.appendChild(mk('rect', { class: 'colmark', x: (left ? 120 : 1180) * k, y: 330 * k, width: 1020 * k, height: 2960 * k, opacity: .35 })); }
     modalView = new PanZoom(fv, svg);
     requestAnimationFrame(() => {
       modalView.setFull([0, 0, W, H]);
-      if (col) { const left = col % 2 === 1; modalView.set([left ? 60 : 1120, 200, 1140, 1600]); }
+      if (col) { const left = col % 2 === 1; modalView.set([(left ? 60 : 1120) * k, 200 * k, 1140 * k, 1600 * k]); }
     });
   }
   $('#modalClose').onclick = () => { $('#modal').hidden = true; $('#modalBody').innerHTML = ''; };
@@ -253,8 +254,10 @@
   function route(hash) {
     const r = parse(typeof hash === 'string' ? hash : location.hash);
     hideTip();
-    if (!r.pn) { view = null; renderGallery(); return; }
+    if (!r.pn && SITE.home) { go(PATS[0], 'figures', undefined, undefined, true); return route(); }
+    if (!r.pn) { const hs = typeof hash === 'string' ? hash : location.hash; if (view && view.gallery) view.update(hs); else { view = null; renderGallery(hs); } return; }
     const pat = byPn[r.pn];
+    if (view && view.cleanup) view.cleanup();
     if (!view || view.pat !== pat || view.tab !== r.tab) {
       main.innerHTML = '';
       view = ({ figures: FiguresTab, text: TextTab, claims: ClaimsTab, about: AboutTab }[r.tab] || FiguresTab)(pat);
@@ -269,34 +272,201 @@
     $('#crumb').innerHTML = pat ? `<span class="num">${esc(pat.number)}</span><span class="tt">${esc(pat.title)}</span>` : '';
     $('#tabs').innerHTML = pat ? [['figures', 'Figures'], ['text', 'Description'], ['claims', 'Claims'], ['about', 'About']]
       .map(([k, n]) => `<a href="#/${pat.pn}/${k}" class="${k === tab ? 'on' : ''}">${n}</a>`).join('') : '';
-    document.title = pat ? `US ${pat.number}` : 'Cray Patent Figures';
+    document.title = pat ? `US ${pat.number}` : 'Patent Figures';
   }
 
-  // ---------- gallery ----------
-  function renderGallery() {
+  // ---------- gallery: search, facets, sort, cards / table ----------
+  // State lives in the hash: #/?q=..&v=cards|table&s=<sort>&d=asc|desc&group=a|b&decade=..&kind=..&country=..
+  const GROUP_ORDER = [...new Set(PATS.map(p => p.group || ''))];
+  const firstOrg = p => { const a = (p.assignees || [])[0]; return a ? (a.org || a.name) : ''; };
+  const where = p => { const a = (p.assignees || []).find(a => a.place) || (p.inventors || []).find(i => i.place); return a ? a.place : ''; };
+  const country = p => { const a = (p.assignees || []).find(a => a.country) || (p.inventors || []).find(i => i.country); return a ? a.country : ''; };
+  const surname = n => (n || '').replace(/,?\s+(Jr|Sr|II|III|IV)\.?$/i, '').trim().split(/\s+/).pop() || '';
+  const year = d => (d || '').slice(0, 4);
+  const pct = (a, b) => b ? Math.round(100 * a / b) : null;
+  const FACETS = [
+    ['group', 'Group', p => [p.group || '']],
+    ['decade', 'Issued', p => year(p.issued) ? [year(p.issued).slice(0, 3) + '0s'] : []],
+    ['kind', 'Assignee', p => [...new Set((p.assignees || []).map(a => a.kind).filter(Boolean))]],
+    ['country', 'Country', p => country(p) ? [country(p)] : []],
+    ['status', 'Status', p => p.status ? [p.status.state] : []],
+  ];
+  const SORTS = {
+    group: ['Group', p => [GROUP_ORDER.indexOf(p.group || ''), p.issued || '']],
+    issued: ['Issued', p => p.issued || ''], filed: ['Filed', p => p.filed || ''],
+    number: ['Patent number', p => +p.pn], title: ['Title', p => (p.title || '').toLowerCase()],
+    inventor: ['First inventor', p => surname(((p.inventors || [])[0] || {}).name).toLowerCase()],
+    assignee: ['Assignee', p => firstOrg(p).toLowerCase()], place: ['Location', p => where(p).toLowerCase()],
+    figures: ['Figures', p => p.counts.figures], traced: ['Traced', p => pct(p.counts.traced, p.counts.figures)],
+    claims: ['Claims', p => p.counts.claims], parts: ['Numbered parts', p => p.counts.parts],
+    term: ['Term end', p => (p.status || {}).term_end || ''],
+  };
+  const statusTip = s => s ? `${esc(s.state)} ${esc(s.term_end)}: ${esc(s.basis)}${s.google_expiration && s.google_expiration !== s.term_end ? `; Google Patents lists ${esc(s.google_expiration)}` : ''}; checked ${esc(s.checked)}` : 'unknown';
+  PATS.forEach(p => {
+    if (!p.counts) return;
+    p.hay = [p.pn, p.number, p.title, p.group, p.issued, p.filed, p.abstract,
+      ...(p.inventors || []).flatMap(i => [i.name, i.place]), ...(p.assignees || []).flatMap(a => [a.name, a.org, a.kind, a.place]),
+      ...(p.partnames || [])].filter(Boolean).join(' \u0001 ').toLowerCase();
+    p.facet = Object.fromEntries(FACETS.map(([k, , fn]) => [k, fn(p)]));
+  });
+  function galleryState(hash = location.hash) {
+    const qs = new URLSearchParams((hash.split('?')[1]) || '');
+    const st = { q: qs.get('q') || '', v: qs.get('v') === 'table' ? 'table' : 'cards', s: SORTS[qs.get('s')] ? qs.get('s') : 'group', d: qs.get('d') === 'desc' ? -1 : 1, f: {} };
+    FACETS.forEach(([k]) => st.f[k] = new Set((qs.get(k) || '').split('|').filter(Boolean)));
+    return st;
+  }
+  function galleryHash(st) {
+    const qs = new URLSearchParams();
+    if (st.q) qs.set('q', st.q);
+    if (st.v !== 'cards') qs.set('v', st.v);
+    if (st.s !== 'group') qs.set('s', st.s);
+    if (st.d < 0) qs.set('d', 'desc');
+    FACETS.forEach(([k]) => { if (st.f[k].size) qs.set(k, [...st.f[k]].join('|')); });
+    const s = qs.toString();
+    return '#/' + (s ? '?' + s : '');
+  }
+  const cmp = (a, b) => Array.isArray(a) ? (cmp(a[0], b[0]) || cmp(a[1], b[1])) : (a == null || a === '') - (b == null || b === '') || (a < b ? -1 : a > b ? 1 : 0);
+
+  function renderGallery(hash) {
     renderBar(null);
     main.innerHTML = '';
-    const g = h('div', 'gallery'), cards = h('div', 'cards'); g.appendChild(cards); main.appendChild(g);
-    PATS.forEach(p => {
-      const fig = p.figures.find(f => f.front) || p.figures[0];
-      const c = h('a', 'card'); c.href = `#/${p.pn}/figures/${fig.id}`;
-      const th = h('div', 'thumb');
-      if (fig.trace) {
-        const s = mk('svg', { class: 'fv' }); th.appendChild(s);
-        th.classList.add('fv', 'm-trace');
+    const st = galleryState(hash);
+    const g = h('div', 'gallery'); main.appendChild(g);
+    const bar = h('div', 'gbar'), facets = h('div', 'gfacets'), out = h('div', 'gout');
+    g.append(bar, facets, out);
+    const q = h('input'); q.type = 'search'; q.placeholder = 'Search patents, people, places, parts'; q.value = st.q;
+    const views = h('span', 'grp');
+    const vb = { cards: h('button', '', 'Cards'), table: h('button', '', 'Table') };
+    views.append(vb.cards, vb.table);
+    const sortSel = h('select'); Object.entries(SORTS).forEach(([k, [n]]) => sortSel.appendChild(new Option(n, k)));
+    const dirBtn = h('button'); dirBtn.title = 'Sort direction';
+    const count = h('span', 'lbl num');
+    bar.append(q, h('span', 'lbl', 'Sort'), sortSel, dirBtn, views, h('span', 'spacer'), count);
+
+    const commit = () => { history.replaceState(null, '', galleryHash(st)); draw(); };
+    q.oninput = () => { st.q = q.value.trim(); commit(); };
+    sortSel.onchange = () => { st.s = sortSel.value; st.d = 1; commit(); };
+    dirBtn.onclick = () => { st.d = -st.d; commit(); };
+    Object.entries(vb).forEach(([k, b]) => b.onclick = () => { st.v = k; commit(); });
+    const onKey = ev => { if (ev.key === '/' && document.activeElement !== q && view && view.gallery) { ev.preventDefault(); q.focus(); } };
+    addEventListener('keydown', onKey);
+
+    function matches(p, skip) {
+      const toks = st.q.toLowerCase().split(/\s+/).filter(Boolean);
+      if (toks.some(t => !p.hay.includes(t.replace(/,/g, '')) && !p.hay.includes(t))) return false;
+      return FACETS.every(([k]) => k === skip || !st.f[k].size || p.facet[k].some(v => st.f[k].has(v)));
+    }
+    function drawFacets() {
+      facets.innerHTML = '';
+      FACETS.forEach(([k, name]) => {
+        const vals = new Map();
+        PATS.forEach(p => p.facet[k].forEach(v => vals.set(v, 0)));
+        PATS.filter(p => matches(p, k)).forEach(p => p.facet[k].forEach(v => vals.set(v, vals.get(v) + 1)));
+        if (vals.size < 2 && !st.f[k].size) return;
+        const order = k === 'group' ? GROUP_ORDER : [...vals.keys()].sort();
+        const row = h('div', 'frow'); row.appendChild(h('span', 'lbl', name));
+        order.filter(v => vals.has(v)).forEach(v => {
+          const b = h('button', 'fchip' + (st.f[k].has(v) ? ' on' : ''), `${esc(v || 'Other')} <span class="num">${vals.get(v)}</span>`);
+          b.onclick = () => { st.f[k].has(v) ? st.f[k].delete(v) : st.f[k].add(v); commit(); };
+          row.appendChild(b);
+        });
+        facets.appendChild(row);
+      });
+      if (FACETS.some(([k]) => st.f[k].size) || st.q) {
+        const clr = h('button', 'fchip', 'Clear'); clr.onclick = () => { st.q = q.value = ''; FACETS.forEach(([k]) => st.f[k].clear()); commit(); };
+        (facets.lastChild || facets).appendChild(clr);
+      }
+    }
+    function draw() {
+      sortSel.value = st.s; dirBtn.textContent = st.d > 0 ? 'Asc' : 'Desc';
+      Object.entries(vb).forEach(([k, b]) => b.classList.toggle('on', st.v === k));
+      drawFacets();
+      const key = SORTS[st.s][1];
+      const rows = PATS.filter(p => matches(p)).sort((a, b) => st.d * cmp(key(a), key(b)) || cmp(+a.pn, +b.pn));
+      count.textContent = `${rows.length} of ${PATS.length}`;
+      out.innerHTML = '';
+      if (!rows.length) { out.appendChild(h('div', 'gnone lbl', 'No match')); return; }
+      (st.v === 'table' ? drawTable : drawCards)(rows);
+    }
+    const link = (p, fig) => `${(SITE.links || {})[p.pn] || ''}#/${p.pn}/figures/${encodeURIComponent(fig.id)}`;
+    const frontFig = p => p.figures.find(f => f.front) || p.figures[0];
+
+    function drawCards(rows) {
+      const io = new IntersectionObserver(es => es.forEach(e => {
+        if (!e.isIntersecting) return;
+        io.unobserve(e.target); const p = byPn[e.target.dataset.pn], fig = frontFig(p);
+        const s = mk('svg', { class: 'fv' }); e.target.appendChild(s);
+        e.target.classList.add('fv', 'm-trace');
         TraceRender.renderTrace(s, fig.trace, { uid: 'g' + p.pn });
         s.setAttribute('preserveAspectRatio', 'xMidYMid meet');
-      } else { const im = h('img'); im.src = fig.img; im.style.filter = 'var(--scan-filter)'; im.style.objectFit = 'contain'; th.appendChild(im); }
-      c.appendChild(th);
-      const parts = Object.keys(p.parts).length;
-      c.appendChild(h('div', 'meta', `
-        <div class="row"><span class="num">US ${esc(p.number)}</span><span>${esc(fmtDate(p.issued))}</span></div>
-        <div class="t">${esc(p.title)}</div>
-        <div class="row"><span>${esc((p.inventors || []).join(', '))}</span></div>
-        <div class="row"><span>${esc(p.assignee || '')}</span></div>
-        <div class="counts num">${p.figures.length} figures &middot; ${p.claims.length} claims &middot; ${parts} numbered parts &middot; filed ${esc(fmtDate(p.filed))}</div>`));
-      cards.appendChild(c);
-    });
+      }), { rootMargin: '400px' });
+      const grouped = st.s === 'group';
+      let cards = null, cur = null;
+      rows.forEach(p => {
+        if (!cards || (grouped && (p.group || '') !== cur)) {
+          cur = p.group || ''; cards = out.appendChild(h('div', 'cards'));
+          if (grouped && cur) cards.appendChild(h('div', 'ghead', esc(cur)));
+        }
+        const fig = frontFig(p);
+        const c = h('a', 'card'); c.href = link(p, fig);
+        const th = h('div', 'thumb');
+        if (fig.trace) { th.dataset.pn = p.pn; io.observe(th); }
+        else { const im = h('img'); im.src = fig.img; im.style.filter = 'var(--scan-filter)'; im.style.objectFit = 'contain'; th.appendChild(im); }
+        c.appendChild(th);
+        const orgs = (p.assignees || []).map(a => `${esc(a.org || a.name)}${a.place ? ` <span class="pl">${esc(a.place)}</span>` : ''}`).join('; ');
+        c.appendChild(h('div', 'meta', `
+          <div class="row"><span class="num">US ${esc(p.number)}</span><span class="num">${esc(fmtDate(p.issued))}</span></div>
+          <div class="t">${esc(p.title)}</div>
+          <div class="row"><span>${(p.inventors || []).map(i => esc(i.name)).join(', ')}</span></div>
+          <div class="row"><span>${orgs || '<span class="unk">No assignee</span>'}</span></div>
+          <div class="counts num">${p.counts.figures} figures &middot; ${p.counts.claims} claims &middot; ${p.counts.parts} numbered parts &middot; filed ${esc(fmtDate(p.filed))}</div>`));
+        cards.appendChild(c);
+      });
+    }
+
+    function drawTable(rows) {
+      const wrap = h('div', 'gtable'), t = h('table');
+      const cols = [
+        ['number', 'Patent', p => `<span class="num">${esc(p.number)}</span>`, 'num'],
+        ['issued', 'Issued', p => esc(p.issued || ''), 'num'],
+        ['filed', 'Filed', p => esc(p.filed || ''), 'num'],
+        ['title', 'Title', p => esc(p.title), 'tt'],
+        ['inventor', 'Inventors', p => (p.inventors || []).map(i => esc(i.name)).join(', ')],
+        ['assignee', 'Assignee', p => esc(firstOrg(p)) || '<span class="unk">none</span>'],
+        ['place', 'Location', p => esc(where(p)) || '<span class="unk">unknown</span>'],
+        ['group', 'Group', p => esc(p.group || '')],
+        ['term', 'Status', p => p.status ? `<span class="st" title="${statusTip(p.status)}">${esc(p.status.state)} <span class="num">${esc(p.status.term_end)}</span></span>` : '<span class="unk">unknown</span>'],
+        ['figures', 'Figs', p => p.counts.figures, 'r'],
+        ['traced', 'Traced', p => `${pct(p.counts.traced, p.counts.figures)} %`, 'r'],
+        ['claims', 'Claims', p => p.counts.claims, 'r'],
+        ['parts', 'Parts', p => p.counts.parts, 'r'],
+      ];
+      t.innerHTML = `<thead><tr>${cols.map(([k, n, , c]) => `<th data-k="${k}" class="${c === 'r' ? 'r' : ''}${st.s === k ? ' on' : ''}">${n}${st.s === k ? (st.d > 0 ? ' &#9650;' : ' &#9660;') : ''}</th>`).join('')}</tr></thead>`;
+      const tb = h('tbody'); t.appendChild(tb);
+      rows.forEach(p => {
+        const tr = h('tr'); tr.dataset.pn = p.pn;
+        tr.innerHTML = cols.map(([k, , fn, c]) => `<td class="${c || ''}">${fn(p)}</td>`).join('');
+        tb.appendChild(tr);
+      });
+      t.querySelector('thead').onclick = ev => {
+        const th = ev.target.closest('th'); if (!th) return;
+        if (st.s === th.dataset.k) st.d = -st.d; else { st.s = th.dataset.k; st.d = 1; }
+        commit();
+      };
+      tb.onclick = ev => { const tr = ev.target.closest('tr'); if (tr) { const p = byPn[tr.dataset.pn]; location.href = link(p, frontFig(p)); } };
+      tb.onmouseover = ev => {
+        const tr = ev.target.closest('tr'); if (!tr) return;
+        const p = byPn[tr.dataset.pn], fig = frontFig(p);
+        const ppl = (p.inventors || []).map(i => `<div>${esc(i.name)}${i.place ? ` <span class="pl">${esc(i.place)}</span>` : ''}</div>`).join('');
+        showTip(ev, `<img class="tthumb" src="${fig.img}" alt=""><div class="tmeta"><span class="num">US ${esc(p.number)}</span> ${esc(fig.label || '')}</div>${ppl}`);
+      };
+      tb.onmousemove = ev => { if (tip.style.display === 'block') moveTip(ev); };
+      tb.onmouseleave = hideTip;
+      wrap.appendChild(t); out.appendChild(wrap);
+    }
+
+    draw();
+    view = { gallery: true, update(hash) { const s2 = galleryState(hash); Object.assign(st, s2); if (document.activeElement !== q) q.value = st.q; draw(); }, cleanup() { removeEventListener('keydown', onKey); } };
   }
 
   // ---------- figures tab ----------
@@ -490,7 +660,7 @@
       const a = ev.target.closest('a.rf, a.fg, .cite'); if (!a) return;
       if (a.classList.contains('rf')) { const f = pat.figures.find(f => (pat.parts[a.dataset.ref] || {}).figs && pat.parts[a.dataset.ref].figs.includes(f.id)); if (f) go(pat, 'figures', f.id, a.dataset.ref); }
       else if (a.classList.contains('fg')) go(pat, 'figures', a.dataset.fig);
-      else if (a.dataset.col) openScan(pat, +a.dataset.col, a.textContent);
+      else if (a.dataset.col || a.dataset.page) openScan(pat, +a.dataset.col, a.textContent, a.dataset.page);
     });
   }
 
@@ -511,7 +681,7 @@
       const hd = h('div', 'tsec', esc(s.heading)); hd.dataset.sec = si; if (!s.heading) hd.style.margin = '12px 0 0'; body.appendChild(hd);
       pat.paras.filter(p => p.sec === si).forEach(p => {
         const n = h('div', 'para'); n.dataset.pid = p.id;
-        const c = `<span class="cite" data-col="${p.col || ''}" title="Show on the scanned page">${cite(p.col, p.line)}</span>`;
+        const c = `<span class="cite" data-col="${p.col || ''}" data-page="${p.page != null ? p.page : ''}" title="Show on the scanned page">${p.page != null && !p.col ? `p.${p.page + 1}` : cite(p.col, p.line)}</span>`;
         n.innerHTML = c + (p.table ? `<div><table>${p.table.map(r => `<tr>${r.map(x => `<td>${subsup(x)}</td>`).join('')}</tr>`).join('')}</table></div>` : `<p>${rich(p.text, p.spans)}</p>`);
         body.appendChild(n); nodes.push([p, n]);
       });
@@ -562,7 +732,7 @@
     const body = h('div', 'tbody'); col.appendChild(body);
     const nodes = pat.claims.map(c => {
       const n = h('div', 'claim' + (c.depends ? ' dep' : ''));
-      n.innerHTML = `<div class="lbl"><span class="num">${c.n}</span>${c.depends ? ` &middot; depends on ${c.depends}` : ' &middot; independent'} <span class="cite" data-col="${c.col || ''}">${cite(c.col, c.line)}</span></div><p>${rich(c.text, c.spans)}</p>`;
+      n.innerHTML = `<div class="lbl"><span class="num">${c.n}</span>${c.depends ? ` &middot; depends on ${c.depends}` : ' &middot; independent'} <span class="cite" data-col="${c.col || ''}" data-page="${c.page != null ? c.page : ''}">${cite(c.col, c.line)}</span></div><p>${rich(c.text, c.spans)}</p>`;
       body.appendChild(n); return [c, n];
     });
     bindRich(body, pat, pane);
@@ -584,6 +754,8 @@
   }
 
   function AboutTab(pat) {
+    const ent = pat.entities || {};
+    const personHtml = e => `${esc(e.name)}${[e.city, e.region, e.country !== 'US' ? e.country : null].filter(Boolean).length ? ` <span class="pl">${esc([e.city, e.region, e.country !== 'US' ? e.country : null].filter(Boolean).join(', '))}</span>` : ''}${e.kind ? ` <span class="lbl">${esc(e.kind)}</span>` : ''}`;
     const root = h('div', 'about'); main.appendChild(root);
     const n = pat.notes || {};
     const row = (k, v) => v ? `<tr><th>${k}</th><td>${v}</td></tr>` : '';
@@ -593,8 +765,9 @@
       <table>
         ${row('Patent', `<span class="num">US ${esc(pat.number)}</span>`)}
         ${row('Title', esc(pat.title))}
-        ${row('Inventors', esc((pat.inventors || []).join('; ')))}
-        ${row('Assignee', esc(pat.assignee))}
+        ${row('Inventors', ent.inventors ? ent.inventors.map(personHtml).join('<br>') : esc((pat.inventors || []).join('; ')))}
+        ${row('Term', pat.status ? `${esc(pat.status.state)} <span class="num">${esc(pat.status.term_end)}</span> <span class="pl">${esc(pat.status.basis)}${pat.status.google_expiration && pat.status.google_expiration !== pat.status.term_end ? `; Google Patents lists ${esc(pat.status.google_expiration)}` : ''}; checked ${esc(pat.status.checked)}</span>` : '<span class="unk">unknown</span>')}
+        ${row('Assignee', ent.assignees ? (ent.assignees.map(personHtml).join('<br>') || '<span class="unk">none printed</span>') : esc(pat.assignee))}
         ${row('Application no.', `<span class="num">${esc(pat.appl_no)}</span>`)}
         ${row('Filed', `<span class="num">${esc(pat.filed)}</span>`)}
         ${row('Issued', `<span class="num">${esc(pat.issued)}</span>`)}
@@ -615,6 +788,7 @@
     return { update() { } };
   }
 
+  if (SITE.home) $('#home').href = SITE.home;
   route();
 
   // ?selftest: drive every route, figure, part and hover; report into the #selftest block (read with --dump-dom)
@@ -624,7 +798,28 @@
     addEventListener('unhandledrejection', e => errs.push(`rejection: ${e.reason && e.reason.stack || e.reason}`));
     const wait = ms => new Promise(r => setTimeout(r, ms));
     (async () => {
-      for (const p of PATS) {
+      if (SITE.links) {  // gallery page: cards only
+        route('#/'); await wait(100);
+        const cards = document.querySelectorAll('.card'), bad = [...cards].filter(c => !/^p\/\d+\.html#\//.test(c.getAttribute('href')));
+        if (bad.length || cards.length !== PATS.length) errs.push(`gallery: ${cards.length} cards for ${PATS.length} patents, ${bad.length} bad links`);
+        log.push(`gallery: ${cards.length} cards, ${document.querySelectorAll('.card svg .tr-el, .card svg [data-ref]').length} trace elements`);
+        const n = () => document.querySelectorAll('.card, .gtable tbody tr').length;
+        for (const v of ['cards', 'table']) for (const k of Object.keys(SORTS)) for (const d of ['', '&d=desc']) {
+          route(`#/?v=${v}&s=${k}${d}`); await wait(5);
+          if (n() !== PATS.length) errs.push(`${v} sort ${k}${d}: ${n()} rows`);
+        }
+        const probe = PATS[0], term = ((probe.inventors || [])[0] || {}).name || probe.title;
+        route(`#/?v=table&q=${encodeURIComponent(term)}`); await wait(5);
+        if (!document.querySelector(`.gtable tr[data-pn="${probe.pn}"]`)) errs.push(`search "${term}" misses ${probe.pn}`);
+        route(`#/?q=zzzz-no-match`); await wait(5);
+        if (!document.querySelector('.gnone')) errs.push('no-match state missing');
+        for (const [k] of FACETS) for (const v of new Set(PATS.flatMap(p => p.facet[k]))) {
+          route(`#/?v=table&${k}=${encodeURIComponent(v)}`); await wait(5);
+          const want = PATS.filter(p => p.facet[k].includes(v)).length;
+          if (n() !== want) errs.push(`facet ${k}=${v}: ${n()} rows, want ${want}`);
+        }
+        log.push(`gallery: ${Object.keys(SORTS).length} sorts x 2 views x 2 dirs, search, facets checked`);
+      } else for (const p of PATS) {
         for (const f of p.figures) {
           route(`#/${p.pn}/figures/${f.id}`); await wait(30);
           const refs = f.refs.slice(0, 40);

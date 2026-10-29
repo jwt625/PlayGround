@@ -9,7 +9,7 @@ Every patent goes through the same stages and produces the same files under `dat
 | 3 figures | figure table, then `pipeline/crop.py <pn>` | `data/<pn>/figures.json`, `work/<pn>/figs/fig-<id>.png` |
 | 4 traces | traced against crops, checked with `pipeline/overlay.py` | `data/<pn>/traces/fig-<id>.json` (see TRACE_SCHEMA.md) |
 | 5 notes | labeled context notes | `data/<pn>/notes.json` |
-| 6 build | `pipeline/build.py` | `index.html` (gallery + viewers, self-contained) |
+| 6 build | `pipeline/build.py` | `index.html` (gallery) + `p/<pn>.html` (one self-contained viewer per patent) |
 
 ## Faithfulness rules (text and names)
 
@@ -52,6 +52,9 @@ Every patent goes through the same stages and produces the same files under `dat
 - `brief_drawings`: one entry per figure from the BRIEF DESCRIPTION OF THE DRAWINGS (also kept
   in `sections`). Tables, if any, go in a section para with `"table": [[cells], ...]` instead of `text`.
 - `ocr_fixes`: every place where OCR was wrong and corrected (audit trail).
+- Pages outside the column numbering (certificates of correction, reexamination certificates): their
+  paras/claims carry `"page": <0-based page index>`; citations then open that page. `col`/`line` as
+  printed on the certificate, or null.
 
 ## figures.json
 
@@ -77,6 +80,37 @@ Every patent goes through the same stages and produces the same files under `dat
   phrase the description uses when it introduces the numeral, verbatim ("vector register V0",
   "cooling liquid"), lower case kept as printed. A numeral used for two things gets the first
   introduced name and an `"alt": ["..."]` list.
+
+## entities.json
+
+People and organizations from the front page (bibliographic fields [75] Inventors, [73] Assignee) or,
+for pre-1971 patents, the header of column 1 ("..., assignor to ..."). Feeds gallery search, facets
+and a future map view; `lat`/`lon` are reserved for a later geocoding stage and left out until then.
+
+```json
+{
+  "pn": "4128880",
+  "inventors": [
+    {"name": "Seymour R. Cray, Jr.", "printed": "Seymour R. Cray, Jr., Lilydale, Minn.",
+     "city": "Lilydale", "region": "MN", "country": "US"}
+  ],
+  "assignees": [
+    {"name": "Cray Research, Inc.", "printed": "Cray Research, Inc., Chippewa Falls, Wis.",
+     "org": "Cray Research", "kind": "company", "city": "Chippewa Falls", "region": "WI", "country": "US"}
+  ],
+  "source": {"page": 0, "where": "front page [75], [73]"}
+}
+```
+
+- `printed`: the entry verbatim as printed, one inventor or assignee per entry; a shared place ("both of
+  Colorado Springs, Colo.") stays on the entry it is printed with, `city`/`region` filled on all. `name`: as printed.
+- `city` as printed but unabbreviated ("Mt. View" stays "Mt. View"); `region`: USPS state code for
+  the US, otherwise the printed subdivision or null; `country`: ISO 3166-1 alpha-2. US patents omit
+  the country for US residents; a printed foreign country ("Tokyo, Japan") maps to its code.
+- `org`: short canonical name for grouping across patents ("Stanford University" for "The Board of
+  Trustees of the Leland Stanford Junior University", "IBM" for "International Business Machines
+  Corporation"). `kind`: company | university | research institute | government | individual.
+- No assignee printed: `assignees: []`. Unknown parts are null, never guessed.
 
 ## notes.json
 

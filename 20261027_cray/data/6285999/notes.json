@@ -1,0 +1,54 @@
+{
+ "patent": "Filed January 9, 1998 (provisional January 10, 1997) by Lawrence Page while a graduate student at Stanford and assigned to Stanford University; issued September 4, 2001. It describes PageRank, the link-analysis ranking used by the Google search engine that Page and Sergey Brin built at Stanford and incorporated in 1998; the same method was published by Brin and Page at the WWW7 conference in 1998. A page's rank is computed from the ranks of the pages linking to it, each divided by that page's number of forward links, plus a constant term for a random jump; the ranks are the stationary distribution of a random walk on the link graph (the principal eigenvector of the normalized link matrix), approximated by repeated matrix multiplication. Stanford licensed the patent exclusively to Google in exchange for shares among other terms. A 2013 certificate of correction added a National Science Foundation government-support statement to column 1.",
+ "figs": {
+  "1": "Each folded-corner rectangle is a hypertext document; the thick bars inside stand for lines of its content. An arrow leaving a bar is a hyperlink in that line: the first bar of B and the first bar of C each link to A, so B and C are backlinks of A. Bars without arrows are content or links to documents not drawn.",
+  "2": "The number under each letter is that document's rank; the number on each arrow is the rank carried along that link. A (0.4) has two forward links, so each carries 0.2; B (0.2) has one link, carrying 0.2 to C; C (0.4) has one link, carrying 0.4 back to A. Each document's rank equals the sum of its incoming arrows (C: 0.2 + 0.2), the steady state for the case without random jumps worked in the text.",
+  "3": "Three-step method from START to DONE: choose a starting probability vector, multiply it n times by the transition matrix A to approach the steady state p_{∞}, then read node k's rank from the k-th entry of the result. The wavy lines are leaders from the step numerals to the boxes."
+ },
+ "parts": {
+  "A": "Letters, not numerals. The link structure differs between figures: in FIG. 1 B and C link to A; in FIG. 2 A links to B and C, B links to C and C links to A.",
+  "101": "The text introduces each step as \"a step 101\" (and 103, 105) without a separate name; the box wording is the step's content."
+ },
+ "glossary": [
+  {
+   "term": "linked database",
+   "def": "A collection of documents that cite or link to one another, such as the web, academic articles or court cases; treated as a directed graph of N nodes."
+  },
+  {
+   "term": "forward link",
+   "def": "A link from a document to another document (to a child node)."
+  },
+  {
+   "term": "backlink",
+   "def": "A link pointing into a document from another (from a parent node); B is a backlink of A when B links to A."
+  },
+  {
+   "term": "citation counting",
+   "def": "Ranking a document by the plain number of documents citing it; the patent contrasts this with weighting each citation by the citing document's own rank."
+  },
+  {
+   "term": "random surfer",
+   "def": "A model reader who follows a random forward link from each page and, with probability α, jumps to a random page instead; a page's rank is the long-run probability of the surfer being on it."
+  },
+  {
+   "term": "α (random jump probability)",
+   "def": "The constant in the rank formula giving the chance of a random jump rather than following a link; the patent gives about 0.1 as typical. The 1998 Brin-Page paper instead writes the complement, a damping factor d (typically 0.85), as the chance of following a link."
+  },
+  {
+   "term": "transition probability matrix",
+   "def": "An N x N matrix A whose element A[i][j] is the probability of moving from node i to node j in one step of the random walk."
+  },
+  {
+   "term": "steady-state probability",
+   "def": "The distribution p_{∞} over nodes that one more step of the random walk leaves unchanged; equivalently the principal eigenvector of the transition matrix."
+  },
+  {
+   "term": "power iteration",
+   "def": "Approximating the principal eigenvector by repeatedly multiplying a starting vector by the matrix, p_{n} = A^{n}p_{0}; the patent says convergence typically takes on the order of 100 iterations, and that approximate ranks can be used after two or more."
+  },
+  {
+   "term": "hypermedia",
+   "def": "Documents (text, images and other media) connected by hyperlinks, of which the world wide web is the largest example."
+  }
+ ]
+}

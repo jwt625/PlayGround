@@ -1,0 +1,76 @@
+{
+ "patent": "Filed July 14, 1967 and issued June 4, 1968 to Robert H. Dennard of IBM; it is the original patent on the one-transistor dynamic random-access memory (DRAM) cell. Each bit is a charge on a capacitor reached through a single MOS transistor whose gate is driven by a word line and whose source sits on a bit line. Contemporary semiconductor read-write memories used multi-transistor latch cells, which the patent cites as its motivation: fewer devices per cell means smaller cells and denser chips, at the cost of destructive readout and periodic regeneration (now called refresh). The one-transistor, one-capacitor cell of FIG. 1 became the standard DRAM cell from the mid-1970s and still is. FIGS. 5-7 show two- and three-transistor variants that store charge on a transistor gate and read nondestructively.",
+ "figs": {
+  "1": "Word lines 24 run vertically from driver 20, one per column (word); bit lines 26 run horizontally from block 22, one per row (bit). Each transistor is drawn as a rectangle (the channel) with the gate plate to its left: gate to the word line, source (bottom) to the bit line, drain (top) to storage node 30 and one plate of capacitor 14. The far capacitor plates are bused to the plain ground symbol below the array; the substrate connections 12W are bused separately to ground through bias source 40. Dashed box 10 marks one cell.",
+  "2": "Plan view of one cell, a fragment of a larger chip (wavy edges are break lines). Solid outlines are aluminum: word line 24 along the bottom with its upward tab forming gate 12G, and capacitor ground line 14D along the top joined to the large plate 14A. Dashed outlines lie under the metal: the vertical bit-line diffusion 26 containing source 12S, the thin-oxide gate window 36, and diffusion 38 running from drain 12D to the lower capacitor electrode 14C. The upper-left corner is cut away to show substrate 32 below oxide 34; the short ruled strokes are surface shading. Arrows 2A-2A give the cut of FIG. 2A.",
+  "2A": "Section along 2A-2A in FIG. 2. Bold hatch is thick oxide 34; dashed hatch is the P substrate 32. The N+ regions are shallow surface diffusions: source 12S at left, and one continuous diffusion 38 that is drain 12D under the gate and electrode 14C under the capacitor. The thin strips on top are the aluminum gate 12G over thin oxide 36 and plate 14A over thin oxide 14B. The substrate is tied to ground through bias source 40 at right.",
+  "3": "Same cut as FIG. 2A for the alternative cell. Here the drain 12D and capacitor electrode 14C are separate N+ diffusions: metal contact 42 on the drain rises over the oxide to become plate 14A, and metal 44 at right contacts 14C to ground it. The capacitor is thus wired with the diffused electrode grounded instead of the aluminum plate.",
+  "4A": "Time runs left to right; the two traces share one time axis. The word line pulse covers a read then a write. Just after it rises, the bit line shows the sense signal: a bump if a 1 was stored (solid), nothing for a 0 (dashed). The bit driver then raises the line to +8 V to write 1 or holds it at 0 to write 0 (dashed); the bit pulse ends after the word pulse so the capacitor is left at the written level.",
+  "4B": "Same layout as FIG. 4A with the bit line resting at +8 V. Reading a stored 0 pulls the line down sharply (solid dip); a stored 1 gives only a small disturbance (dashed). Writing 1 leaves the line at +8 V (dashed); writing 0 drives it to 0 V for the rest of the word pulse.",
+  "5": "Two-transistor cell: input transistor 12 charges the gate of output transistor 50, whose gate capacitance holds the bit at node 30. The inset waveforms attached to the lines give the drive: the word line goes to +14 V to write and to -5 V to read; the bit line is pulsed to +6 V to write 1. During read only transistor 50 can conduct, passing the negative word pulse to the bit line if node 30 is high, so the stored charge is not removed.",
+  "6": "FIG. 5 plus transistor 52, whose gate 52G and drain 52D are both tied to node 30 and whose source goes to the bit line. Wired this way it conducts only when node 30 rises too far, clamping the stored voltage.",
+  "7": "FIG. 5 with separate write and read lines: write word line 24W drives only gate 12G and bit write line 26W feeds only source 12S; read word line 24R drives source 50S and drain 50D outputs to bit sense line 26R. Each line now carries signals of one polarity only."
+ },
+ "parts": {
+  "12W": "Introduced as \"A further connection is made to the substrate or wafer ... shown at 12W\"; later called the substrate terminal.",
+  "14C": "The description prints \"retangular\". It is the N+ diffused region under the capacitor plate, part of diffusion 38 in FIGS. 2 and 2A.",
+  "14D": "Labeled CAPACITOR GROUND LINE in FIG. 2.",
+  "24": "In FIG. 1 the word lines are vertical; in FIG. 2 the text notes the word line runs horizontally.",
+  "52W": "Drawn but not named in the description; it is the substrate terminal of transistor 52, wired like 12W and 50W.",
+  "50W": "Named only in the sentence \"terminals 12W and 50W, which are connected to the substrate\"."
+ },
+ "glossary": [
+  {
+   "term": "DRAM",
+   "def": "Dynamic random-access memory: bits held as charge that leaks away and must be refreshed periodically."
+  },
+  {
+   "term": "word line / bit line",
+   "def": "Row-select and data lines of a memory array. A word line turns on every cell in one word; each bit line carries one bit in and out of the selected cell."
+  },
+  {
+   "term": "sense amplifier",
+   "def": "Circuit on each bit line that detects the small signal a cell puts on the line during a read."
+  },
+  {
+   "term": "destructive readout",
+   "def": "Reading removes the stored information (here, the capacitor discharges onto the bit line), so the data must be written back."
+  },
+  {
+   "term": "regeneration",
+   "def": "The patent's term for refresh: periodically reading and rewriting every word before stored charge leaks away."
+  },
+  {
+   "term": "insulated-gate field-effect transistor (MOS)",
+   "def": "Transistor in which a voltage on a metal gate, insulated by a thin oxide, opens a conducting channel between source and drain in the silicon below."
+  },
+  {
+   "term": "enhancement type",
+   "def": "Transistor that is off with zero gate voltage and turns on when the gate exceeds the threshold voltage."
+  },
+  {
+   "term": "threshold voltage",
+   "def": "Gate-to-source voltage at which the transistor channel begins to conduct."
+  },
+  {
+   "term": "NPN (for an MOS transistor)",
+   "def": "Period usage for an N-channel device: N-type source and drain in a P-type substrate."
+  },
+  {
+   "term": "N+",
+   "def": "Heavily doped N-type silicon, used for source, drain and the lower capacitor electrode."
+  },
+  {
+   "term": "substrate bias",
+   "def": "Fixed negative voltage on the P substrate (source 40) that keeps the source and drain junctions reverse biased."
+  },
+  {
+   "term": "latch cell",
+   "def": "Memory cell built from cross-coupled transistors that holds its state while powered; the multi-transistor design the patent contrasts with (static RAM)."
+  },
+  {
+   "term": "gate-to-substrate capacitance",
+   "def": "Capacitance between a MOS transistor's gate and the silicon beneath it, used in FIGS. 5-7 as the storage element."
+  }
+ ]
+}

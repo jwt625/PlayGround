@@ -1,0 +1,751 @@
+{
+ "pn": "3541541",
+ "figures": [
+  {
+   "id": "1",
+   "label": "FIG. 1",
+   "sheet": 1,
+   "page": 0,
+   "crop": [
+    395,
+    443,
+    1893,
+    1450
+   ],
+   "rotate": 0,
+   "front_page": true
+  },
+  {
+   "id": "2",
+   "label": "FIG. 2",
+   "sheet": 1,
+   "page": 0,
+   "crop": [
+    315,
+    1430,
+    1870,
+    2138
+   ],
+   "rotate": 0,
+   "front_page": false
+  },
+  {
+   "id": "3",
+   "label": "FIG. 3",
+   "sheet": 1,
+   "page": 0,
+   "crop": [
+    380,
+    2140,
+    1890,
+    2972
+   ],
+   "rotate": 0,
+   "front_page": false
+  },
+  {
+   "id": "4",
+   "label": "FIG. 4",
+   "sheet": 2,
+   "page": 1,
+   "crop": [
+    267,
+    450,
+    1794,
+    1150
+   ],
+   "rotate": 0,
+   "front_page": false
+  },
+  {
+   "id": "5",
+   "label": "FIG. 5",
+   "sheet": 2,
+   "page": 1,
+   "crop": [
+    288,
+    1178,
+    1648,
+    1946
+   ],
+   "rotate": 0,
+   "front_page": false
+  },
+  {
+   "id": "6",
+   "label": "FIG. 6",
+   "sheet": 2,
+   "page": 1,
+   "crop": [
+    302,
+    2022,
+    2029,
+    2918
+   ],
+   "rotate": 0,
+   "front_page": false
+  },
+  {
+   "id": "7",
+   "label": "FIG. 7",
+   "sheet": 3,
+   "page": 2,
+   "crop": [
+    227,
+    728,
+    1922,
+    2850
+   ],
+   "rotate": 0,
+   "front_page": false
+  }
+ ],
+ "parts": [
+  {
+   "ref": "10",
+   "name": "cathode ray tube display",
+   "figs": [
+    "1"
+   ]
+  },
+  {
+   "ref": "12",
+   "name": "face",
+   "figs": [
+    "1"
+   ]
+  },
+  {
+   "ref": "14",
+   "name": "computer system",
+   "figs": [
+    "1"
+   ],
+   "alt": [
+    "computer"
+   ]
+  },
+  {
+   "ref": "15",
+   "name": "typewriter input apparatus",
+   "figs": [
+    "1"
+   ],
+   "alt": [
+    "typewriter apparatus",
+    "typewriter"
+   ]
+  },
+  {
+   "ref": "16",
+   "name": "X-Y position indicator control",
+   "figs": [
+    "1",
+    "2"
+   ],
+   "alt": [
+    "position indicator control",
+    "indicator control"
+   ]
+  },
+  {
+   "ref": "17",
+   "name": "cabinet",
+   "figs": [
+    "1",
+    "2"
+   ]
+  },
+  {
+   "ref": "18",
+   "name": "wire",
+   "figs": [
+    "1"
+   ]
+  },
+  {
+   "ref": "20",
+   "name": "line or other cursor",
+   "figs": [
+    "1"
+   ],
+   "alt": [
+    "cursor",
+    "line cursor"
+   ]
+  },
+  {
+   "ref": "22",
+   "name": "buttons",
+   "figs": [
+    "1",
+    "2"
+   ],
+   "alt": [
+    "pushbuttons"
+   ]
+  },
+  {
+   "ref": "26",
+   "name": "housing",
+   "figs": [
+    "2",
+    "3"
+   ]
+  },
+  {
+   "ref": "28",
+   "name": "bottom wall",
+   "figs": [
+    "2",
+    "3"
+   ]
+  },
+  {
+   "ref": "30",
+   "name": "right angle bracket",
+   "figs": [
+    "2",
+    "3"
+   ],
+   "alt": [
+    "bracket"
+   ]
+  },
+  {
+   "ref": "32",
+   "name": "arm",
+   "figs": [
+    "2",
+    "3"
+   ]
+  },
+  {
+   "ref": "34",
+   "name": "pushbutton switches",
+   "figs": [
+    "2"
+   ],
+   "alt": [
+    "switches"
+   ]
+  },
+  {
+   "ref": "36",
+   "name": "arm",
+   "figs": [
+    "3"
+   ]
+  },
+  {
+   "ref": "38",
+   "name": "X position potentiometer",
+   "figs": [
+    "3"
+   ],
+   "alt": [
+    "potentiometer"
+   ]
+  },
+  {
+   "ref": "38A",
+   "name": "rheostats or potentiometers",
+   "figs": [
+    "4"
+   ]
+  },
+  {
+   "ref": "40",
+   "name": "Y position potentiometer",
+   "figs": [
+    "3"
+   ]
+  },
+  {
+   "ref": "40A",
+   "name": "rheostats or potentiometers",
+   "figs": [
+    "4"
+   ]
+  },
+  {
+   "ref": "42",
+   "name": "X position wheel",
+   "figs": [
+    "2",
+    "3"
+   ]
+  },
+  {
+   "ref": "44",
+   "name": "shaft",
+   "figs": [
+    "3"
+   ]
+  },
+  {
+   "ref": "46",
+   "name": "Y position wheel",
+   "figs": [
+    "3"
+   ]
+  },
+  {
+   "ref": "48",
+   "name": "shaft",
+   "figs": [
+    "3"
+   ]
+  },
+  {
+   "ref": "50",
+   "name": "slots",
+   "figs": [
+    "3"
+   ]
+  },
+  {
+   "ref": "52",
+   "name": "slots",
+   "figs": [
+    "3"
+   ]
+  },
+  {
+   "ref": "54",
+   "name": "ball bearing support",
+   "figs": [
+    "2",
+    "3"
+   ]
+  },
+  {
+   "ref": "62",
+   "name": "Electrical conductors",
+   "figs": [
+    "4"
+   ]
+  },
+  {
+   "ref": "64",
+   "name": "Electrical conductors",
+   "figs": [
+    "4"
+   ],
+   "alt": [
+    "lead"
+   ]
+  },
+  {
+   "ref": "66",
+   "name": "Electrical conductors",
+   "figs": [
+    "4"
+   ],
+   "alt": [
+    "leads"
+   ]
+  },
+  {
+   "ref": "68",
+   "name": "Electrical conductors",
+   "figs": [
+    "4"
+   ],
+   "alt": [
+    "leads"
+   ]
+  },
+  {
+   "ref": "70",
+   "name": "terminal",
+   "figs": [
+    "4"
+   ]
+  },
+  {
+   "ref": "72",
+   "name": "wipers",
+   "figs": [
+    "4"
+   ]
+  },
+  {
+   "ref": "74",
+   "name": "wipers",
+   "figs": [
+    "4"
+   ]
+  },
+  {
+   "ref": "80",
+   "name": "encoding disc",
+   "figs": [
+    "5"
+   ],
+   "alt": [
+    "disc"
+   ]
+  },
+  {
+   "ref": "82",
+   "name": "rings",
+   "figs": [
+    "5"
+   ]
+  },
+  {
+   "ref": "84",
+   "name": "rings",
+   "figs": [
+    "5"
+   ]
+  },
+  {
+   "ref": "86",
+   "name": "rings",
+   "figs": [
+    "5"
+   ]
+  },
+  {
+   "ref": "88",
+   "name": "rings",
+   "figs": [
+    "5"
+   ]
+  },
+  {
+   "ref": "92",
+   "name": "wires",
+   "figs": [
+    "5"
+   ],
+   "alt": [
+    "output wires"
+   ]
+  },
+  {
+   "ref": "94",
+   "name": "wires",
+   "figs": [
+    "5"
+   ],
+   "alt": [
+    "output wires"
+   ]
+  },
+  {
+   "ref": "96",
+   "name": "wires",
+   "figs": [
+    "5"
+   ],
+   "alt": [
+    "output wires"
+   ]
+  },
+  {
+   "ref": "98",
+   "name": "wires",
+   "figs": [
+    "5"
+   ],
+   "alt": [
+    "output wires"
+   ]
+  },
+  {
+   "ref": "99",
+   "name": "X position wheel shaft",
+   "figs": [
+    "5"
+   ]
+  },
+  {
+   "ref": "100",
+   "name": "disc",
+   "figs": [
+    "6"
+   ]
+  },
+  {
+   "ref": "102",
+   "name": "rows of electrical contacts",
+   "figs": [
+    "6"
+   ],
+   "alt": [
+    "up row",
+    "contact"
+   ]
+  },
+  {
+   "ref": "104",
+   "name": "rows of electrical contacts",
+   "figs": [
+    "6"
+   ],
+   "alt": [
+    "row"
+   ]
+  },
+  {
+   "ref": "106",
+   "name": "rows of electrical contacts",
+   "figs": [
+    "6"
+   ],
+   "alt": [
+    "row"
+   ]
+  },
+  {
+   "ref": "108",
+   "name": "sensors",
+   "figs": [
+    "6"
+   ],
+   "alt": [
+    "sensor"
+   ]
+  },
+  {
+   "ref": "110",
+   "name": "sensors",
+   "figs": [
+    "6"
+   ],
+   "alt": [
+    "readying sensor"
+   ]
+  },
+  {
+   "ref": "112",
+   "name": "sensors",
+   "figs": [
+    "6"
+   ],
+   "alt": [
+    "down sensor"
+   ]
+  },
+  {
+   "ref": "114",
+   "name": "lines",
+   "figs": [
+    "6"
+   ],
+   "alt": [
+    "up line"
+   ]
+  },
+  {
+   "ref": "116",
+   "name": "lines",
+   "figs": [
+    "6"
+   ],
+   "alt": [
+    "line"
+   ]
+  },
+  {
+   "ref": "118",
+   "name": "lines",
+   "figs": [
+    "6"
+   ],
+   "alt": [
+    "down line"
+   ]
+  },
+  {
+   "ref": "120",
+   "name": "flip-flop",
+   "figs": [
+    "6"
+   ],
+   "alt": [
+    "RS flip-flop"
+   ]
+  },
+  {
+   "ref": "122",
+   "name": "OR gate",
+   "figs": [
+    "6"
+   ]
+  },
+  {
+   "ref": "124",
+   "name": "AND gates",
+   "figs": [
+    "6"
+   ],
+   "alt": [
+    "gate",
+    "delay line"
+   ]
+  },
+  {
+   "ref": "126",
+   "name": "AND gates",
+   "figs": [
+    "6"
+   ],
+   "alt": [
+    "AND gate"
+   ]
+  },
+  {
+   "ref": "128",
+   "name": "counter",
+   "figs": [
+    "6"
+   ]
+  },
+  {
+   "ref": "130",
+   "name": "input",
+   "figs": [
+    "6"
+   ]
+  },
+  {
+   "ref": "132",
+   "name": "input",
+   "figs": [
+    "6"
+   ]
+  },
+  {
+   "ref": "134",
+   "name": "input",
+   "figs": [
+    "6"
+   ]
+  },
+  {
+   "ref": "140",
+   "name": "disc",
+   "figs": [
+    "7"
+   ]
+  },
+  {
+   "ref": "142",
+   "name": "track",
+   "figs": [
+    "7"
+   ]
+  },
+  {
+   "ref": "146",
+   "name": "control contact",
+   "figs": [
+    "7"
+   ],
+   "alt": [
+    "contact"
+   ]
+  },
+  {
+   "ref": "148",
+   "name": "stepping contact",
+   "figs": [
+    "7"
+   ]
+  },
+  {
+   "ref": "150",
+   "name": "Schmidt trigger circuit",
+   "figs": [
+    "7"
+   ]
+  },
+  {
+   "ref": "152",
+   "name": "AND gates",
+   "figs": [
+    "7"
+   ]
+  },
+  {
+   "ref": "154",
+   "name": "AND gates",
+   "figs": [
+    "7"
+   ]
+  },
+  {
+   "ref": "156",
+   "name": "AND gates",
+   "figs": [
+    "7"
+   ]
+  },
+  {
+   "ref": "158",
+   "name": "AND gates",
+   "figs": [
+    "7"
+   ]
+  },
+  {
+   "ref": "160",
+   "name": "resolver",
+   "figs": [
+    "7"
+   ]
+  },
+  {
+   "ref": "162",
+   "name": "differentiator",
+   "figs": [
+    "7"
+   ]
+  },
+  {
+   "ref": "164",
+   "name": "inverter chopper",
+   "figs": [
+    "7"
+   ]
+  },
+  {
+   "ref": "166",
+   "name": "normal chopper",
+   "figs": [
+    "7"
+   ],
+   "alt": [
+    "chopper"
+   ]
+  },
+  {
+   "ref": "168",
+   "name": "up input port",
+   "figs": [
+    "7"
+   ]
+  },
+  {
+   "ref": "170",
+   "name": "up/down counter",
+   "figs": [
+    "7"
+   ],
+   "alt": [
+    "counter"
+   ]
+  },
+  {
+   "ref": "172",
+   "name": "down input port",
+   "figs": [
+    "7"
+   ]
+  }
+ ]
+}

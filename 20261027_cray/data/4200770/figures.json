@@ -1,0 +1,396 @@
+{
+ "pn": "4200770",
+ "figures": [
+  {
+   "id": "1",
+   "label": "FIG. 1",
+   "sheet": 1,
+   "page": 1,
+   "crop": [
+    275,
+    384,
+    1961,
+    3140
+   ],
+   "rotate": 270,
+   "front_page": true
+  },
+  {
+   "id": "2",
+   "label": "FIG. 2",
+   "sheet": 2,
+   "page": 2,
+   "crop": [
+    549,
+    418,
+    1753,
+    1317
+   ],
+   "rotate": 0,
+   "front_page": false
+  },
+  {
+   "id": "3",
+   "label": "FIG. 3",
+   "sheet": 2,
+   "page": 2,
+   "crop": [
+    537,
+    1417,
+    1747,
+    2874
+   ],
+   "rotate": 0,
+   "front_page": false
+  },
+  {
+   "id": "4",
+   "label": "FIG. 4",
+   "sheet": 3,
+   "page": 3,
+   "crop": [
+    450,
+    413,
+    2026,
+    1291
+   ],
+   "rotate": 0,
+   "front_page": false
+  },
+  {
+   "id": "5",
+   "label": "FIG. 5",
+   "sheet": 3,
+   "page": 3,
+   "crop": [
+    498,
+    1391,
+    1732,
+    1902
+   ],
+   "rotate": 0,
+   "front_page": false
+  },
+  {
+   "id": "6",
+   "label": "FIG. 6",
+   "sheet": 3,
+   "page": 3,
+   "crop": [
+    493,
+    2106,
+    1879,
+    3090
+   ],
+   "rotate": 0,
+   "front_page": false
+  }
+ ],
+ "parts": [
+  {
+   "ref": "11",
+   "name": "converser",
+   "figs": [
+    "1"
+   ]
+  },
+  {
+   "ref": "12",
+   "name": "converser",
+   "figs": [
+    "1"
+   ]
+  },
+  {
+   "ref": "13",
+   "name": "unauthorized party or eavesdropper",
+   "figs": [
+    "1"
+   ],
+   "alt": [
+    "eavesdropper"
+   ]
+  },
+  {
+   "ref": "15",
+   "name": "cryptographic devices",
+   "figs": [
+    "1"
+   ]
+  },
+  {
+   "ref": "16",
+   "name": "cryptographic devices",
+   "figs": [
+    "1"
+   ],
+   "alt": [
+    "cryptographic device"
+   ]
+  },
+  {
+   "ref": "17",
+   "name": "cryptographic device",
+   "figs": [
+    "1"
+   ]
+  },
+  {
+   "ref": "19",
+   "name": "insecure communication channel",
+   "figs": [
+    "1"
+   ],
+   "alt": [
+    "insecure channel"
+   ]
+  },
+  {
+   "ref": "21",
+   "name": "secure key generator",
+   "figs": [
+    "1"
+   ],
+   "alt": [
+    "secure key generators"
+   ]
+  },
+  {
+   "ref": "22",
+   "name": "secure key generator",
+   "figs": [
+    "1"
+   ],
+   "alt": [
+    "secure key generators"
+   ]
+  },
+  {
+   "ref": "23",
+   "name": "secure key generator",
+   "figs": [
+    "1"
+   ]
+  },
+  {
+   "ref": "25",
+   "name": "independent key sources",
+   "figs": [
+    "1"
+   ],
+   "alt": [
+    "key source"
+   ]
+  },
+  {
+   "ref": "26",
+   "name": "independent key sources",
+   "figs": [
+    "1"
+   ]
+  },
+  {
+   "ref": "31",
+   "name": "transmitter/receivers",
+   "figs": [
+    "1"
+   ]
+  },
+  {
+   "ref": "32",
+   "name": "transmitter/receivers",
+   "figs": [
+    "1"
+   ]
+  },
+  {
+   "ref": "41",
+   "name": "X register",
+   "figs": [
+    "2"
+   ]
+  },
+  {
+   "ref": "42",
+   "name": "R register",
+   "figs": [
+    "2"
+   ]
+  },
+  {
+   "ref": "43",
+   "name": "A register",
+   "figs": [
+    "2"
+   ]
+  },
+  {
+   "ref": "44",
+   "name": "multiplier",
+   "figs": [
+    "2"
+   ]
+  },
+  {
+   "ref": "51",
+   "name": "Y and Z registers",
+   "figs": [
+    "3"
+   ],
+   "alt": [
+    "Y register"
+   ]
+  },
+  {
+   "ref": "52",
+   "name": "Y and Z registers",
+   "figs": [
+    "3"
+   ],
+   "alt": [
+    "Z register"
+   ]
+  },
+  {
+   "ref": "53",
+   "name": "Q register",
+   "figs": [
+    "3"
+   ],
+   "alt": [
+    "Z register"
+   ]
+  },
+  {
+   "ref": "54",
+   "name": "P register",
+   "figs": [
+    "3"
+   ]
+  },
+  {
+   "ref": "55",
+   "name": "adder",
+   "figs": []
+  },
+  {
+   "ref": "56",
+   "name": "comparator",
+   "figs": [
+    "3"
+   ]
+  },
+  {
+   "ref": "57",
+   "name": "subtractor",
+   "figs": [
+    "3"
+   ]
+  },
+  {
+   "ref": "58",
+   "name": "SUBTRACTOR",
+   "figs": [
+    "3"
+   ]
+  },
+  {
+   "ref": "61",
+   "name": "AND gate",
+   "figs": [
+    "4"
+   ]
+  },
+  {
+   "ref": "62",
+   "name": "AND gate",
+   "figs": [
+    "4"
+   ]
+  },
+  {
+   "ref": "63",
+   "name": "OR gate",
+   "figs": [
+    "4"
+   ]
+  },
+  {
+   "ref": "64",
+   "name": "exclusive-or (XOR) gates",
+   "figs": [
+    "4"
+   ]
+  },
+  {
+   "ref": "65",
+   "name": "exclusive-or (XOR) gates",
+   "figs": [
+    "4"
+   ]
+  },
+  {
+   "ref": "66",
+   "name": "delay",
+   "figs": [
+    "4"
+   ]
+  },
+  {
+   "ref": "71",
+   "name": "AND gates",
+   "figs": [
+    "5"
+   ]
+  },
+  {
+   "ref": "72",
+   "name": "AND gates",
+   "figs": [
+    "5"
+   ]
+  },
+  {
+   "ref": "81",
+   "name": "AND gates",
+   "figs": [
+    "6"
+   ]
+  },
+  {
+   "ref": "82",
+   "name": "XOR gate",
+   "figs": [
+    "6"
+   ]
+  },
+  {
+   "ref": "83",
+   "name": "AND gates",
+   "figs": [
+    "6"
+   ]
+  },
+  {
+   "ref": "84",
+   "name": "OR gate",
+   "figs": [
+    "6"
+   ]
+  },
+  {
+   "ref": "85",
+   "name": "delay",
+   "figs": [
+    "6"
+   ]
+  },
+  {
+   "ref": "86",
+   "name": "XOR gate",
+   "figs": [
+    "6"
+   ]
+  }
+ ]
+}

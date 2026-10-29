@@ -1,0 +1,71 @@
+{
+ "patent": "Filed February 6, 1959 and issued June 23, 1964 to Jack S. Kilby, assigned to Texas Instruments. It is Kilby's basic integrated-circuit patent: resistors, capacitors, diodes and transistors are all formed in one wafer of single-crystal semiconductor and isolated or defined by shaping the wafer. Kilby demonstrated a working germanium phase-shift oscillator built this way at Texas Instruments on September 12, 1958, and received the 2000 Nobel Prize in Physics in part for the invention of the integrated circuit. In the embodiments the components are joined by bonded gold wires; Robert Noyce's planar integrated-circuit patent for Fairchild (US 2,981,877, filed July 1959) used metal deposited over oxide instead, and the interference between the two applications over interconnection claims was decided for Noyce in 1969. Kilby's patent mentions deposited gold on evaporated silicon oxide only as an alternative.",
+ "figs": {
+  "1": "Cross-section of a bulk resistor. Diagonal hatching is the semiconductor body; the beaded band under contacts 11 and 12 marks where each contact meets the surface. The resistance is set by the spacing of the two contacts.",
+  "1A": "Cross-section. Hatching in opposite directions separates the thin N layer 10b from the P body 10a; the boundary between them is junction 13. Both contacts sit on the N layer, so current stays in that layer. The vertical pins on the contacts are leads.",
+  "2": "Cross-section of a junction capacitor: an N layer over a P wafer, with a contact and lead on each face. The capacitance is that of the N-P junction, so the device is also a diode.",
+  "2A": "Cross-section of an oxide capacitor: body 15a is one plate, dielectric layer 18 sits on it and metal plate 19 on top. No lead is drawn to plate 19 (the text says its contact is not shown).",
+  "3": "Same layer stack as FIG. 2, but the bottom contact is split into two spaced contacts 23. Current between them flows along the P wafer under the junction, giving a resistor with capacitance spread along its length to top contact 22.",
+  "4": "Cross-section of a mesa transistor. The raised mesa carries base layer 27 above collector region 25; on top, emitter contact 28 sits between two contact pads, the left one labeled 29. Collector contact 30 covers the bottom face.",
+  "5": "Cross-section of a mesa diode: mesa region 36 rises from region 35, with contact 38 on the mesa and contact 37 on the bottom face.",
+  "5A": "Plan view of a spiral strip of semiconductor used as an inductor. The hatched squares at the two ends show the strip's cross-section. No reference numerals are printed.",
+  "6A": "Perspective view of the multivibrator wafer, sideways on the sheet. Regions are labeled with circuit symbols; arrowheads along a strip mark where one resistor ends and the next begins. T1 and T2 are the transistor mesas, each drawn as concentric rings (emitter area 56 inside mesa area 60). Leads 50 lie along both long edges of the wafer, each named for its terminal. Wires 70 arc from leads and contacts across the wafer. The long open slot through the wafer separates R1 and R2 from the rest of the circuit. Contact areas 51 and 52 lie at C2 and C1, and 53 and 54 at T2 and T1.",
+  "6B": "The FIG. 7 circuit redrawn in the perspective of FIG. 6A, each component in the place it occupies on the wafer. C1 and C2 are drawn as a plate line beside the zigzag of R8 and R3, showing that each capacitor is distributed along its resistor.",
+  "7": "Conventional schematic with component values. T1 and T2 are PNP transistors (emitter arrows point toward the base). Each collector feeds the other's base through a 400-ohm resistor and a 1.8K resistor bypassed by 50 pF (R4, R3 with C2; R7, R8 with C1). The coupling is resistive, so this is the bistable (flip-flop) form of multivibrator. The bases are pulled toward +V by R1 and R2, the collector loads R5 and R6 go to -V, and both emitters go to ground.",
+  "8A": "Perspective view of the phase-shift oscillator wafer, sideways on the sheet. The wafer is stepped: a thick bar carries R1, R2 and R3 along one strip, with arrowheads marking their ends. A thinner shelf carries capacitor area C1 next to transistor Q1. The tabs underneath are the -V, OUTPUT and +V leads. FIG. 8B is printed overlapping this drawing at the upper left of the crop.",
+  "8B": "The FIG. 8C circuit drawn in the layout of FIG. 8A. R2 and the C1 plate line run side by side, forming a distributed R-C network. The slab at lower right belongs to FIG. 8A.",
+  "8C": "Conventional schematic. Q1 is a single PNP transistor. The distributed network R2/C1 couples its collector back to its base, providing the phase shift needed for oscillation. R1 is the collector load to -V, R3 ties the base to +V, and the emitter connects to +V."
+ },
+ "parts": {
+  "29": "The text gives \"base and collector contacts 29 and 30, respectively\": 29 is the base contact.",
+  "30": "The text gives \"base and collector contacts 29 and 30, respectively\": 30 is the collector contact.",
+  "51": "The text introduces 51-54 together as gold areas making ohmic contact to the n region \"such as the transistor base connections and the capacitor contacts\"; in FIG. 6A, 51 and 52 sit at C2 and C1, and 53 and 54 at T2 and T1.",
+  "50": "Kovar is an iron-nickel-cobalt alloy whose thermal expansion is close to that of glass and semiconductors."
+ },
+ "glossary": [
+  {
+   "term": "n-type / p-type",
+   "def": "Semiconductor doped so that current is carried mainly by electrons (n) or by holes (p)."
+  },
+  {
+   "term": "p-n junction",
+   "def": "The boundary between p-type and n-type regions. It conducts in one direction only and, under reverse bias, acts as a voltage-dependent capacitor."
+  },
+  {
+   "term": "diffusion",
+   "def": "Introducing dopant atoms into a heated semiconductor from its surface to form a thin layer of the opposite type."
+  },
+  {
+   "term": "ohmic contact",
+   "def": "A metal-to-semiconductor contact with linear, symmetric resistance, as opposed to a rectifying contact, which behaves like a diode."
+  },
+  {
+   "term": "mesa",
+   "def": "A raised plateau left when the surrounding semiconductor is etched away. It confines a junction to a small area; mesa transistors were common in the late 1950s."
+  },
+  {
+   "term": "distributed R-C network",
+   "def": "A resistive strip with capacitance spread along its whole length, rather than separate resistors and capacitors."
+  },
+  {
+   "term": "multivibrator",
+   "def": "A two-transistor circuit in which each transistor drives the other. The bistable form is a flip-flop that stores one bit."
+  },
+  {
+   "term": "phase-shift oscillator",
+   "def": "An amplifier whose output is fed back to its input through an R-C network that shifts the phase by 180 degrees, so the circuit oscillates."
+  },
+  {
+   "term": "μμf",
+   "def": "Micromicrofarad, 10^{-12} farad, now written pF."
+  },
+  {
+   "term": "photo resist",
+   "def": "A light-sensitive coating that is exposed through a pattern and developed so that it protects only selected areas during etching."
+  },
+  {
+   "term": "lapping",
+   "def": "Grinding a wafer flat and to a set thickness with an abrasive slurry."
+  }
+ ]
+}

@@ -1,0 +1,975 @@
+{
+ "pn": "3138743",
+ "number": "3,138,743",
+ "title": "MINIATURIZED ELECTRONIC CIRCUITS",
+ "inventors": [
+  "Jack S. Kilby"
+ ],
+ "assignee": "Texas Instruments Incorporated, Dallas, Tex.",
+ "filed": "1959-02-06",
+ "issued": "1964-06-23",
+ "appl_no": "791,602",
+ "int_cl": "",
+ "us_cl": "317—101",
+ "refs_patents": [
+  {
+   "no": "2,493,199",
+   "date": "Jan. 3, 1950",
+   "name": "Khouri",
+   "cl": ""
+  },
+  {
+   "no": "2,748,041",
+   "date": "May 29, 1956",
+   "name": "Leverenz",
+   "cl": ""
+  },
+  {
+   "no": "2,816,228",
+   "date": "Dec. 10, 1957",
+   "name": "Johnson",
+   "cl": ""
+  },
+  {
+   "no": "2,817,048",
+   "date": "Dec. 17, 1957",
+   "name": "Thuermel",
+   "cl": ""
+  },
+  {
+   "no": "2,824,977",
+   "date": "Feb. 25, 1958",
+   "name": "Pankove",
+   "cl": ""
+  },
+  {
+   "no": "2,836,776",
+   "date": "May 27, 1958",
+   "name": "Ishikawa",
+   "cl": ""
+  },
+  {
+   "no": "2,878,147",
+   "date": "Mar. 17, 1959",
+   "name": "Beale",
+   "cl": ""
+  },
+  {
+   "no": "2,915,647",
+   "date": "Dec. 1, 1959",
+   "name": "Ebers",
+   "cl": ""
+  },
+  {
+   "no": "2,916,408",
+   "date": "Dec. 8, 1959",
+   "name": "Freedman",
+   "cl": ""
+  },
+  {
+   "no": "2,922,937",
+   "date": "Jan. 26, 1960",
+   "name": "Hutzler",
+   "cl": ""
+  },
+  {
+   "no": "2,935,668",
+   "date": "May 3, 1960",
+   "name": "Robinson et al.",
+   "cl": ""
+  },
+  {
+   "no": "2,995,686",
+   "date": "Aug. 8, 1961",
+   "name": "Selvin",
+   "cl": ""
+  },
+  {
+   "no": "2,998,550",
+   "date": "Aug. 29, 1961",
+   "name": "Collins et al.",
+   "cl": ""
+  }
+ ],
+ "refs_other": [],
+ "examiners": "",
+ "claims_count": 25,
+ "drawing_figures": 14,
+ "abstract": "",
+ "sections": [
+  {
+   "heading": "",
+   "paras": [
+    {
+     "col": 1,
+     "line": 9,
+     "text": "This invention relates to miniature electronic circuits, and more particularly to unique integrated electronic circuits fabricated from semiconductor material."
+    },
+    {
+     "col": 1,
+     "line": 12,
+     "text": "Many methods and techniques for miniaturizing electronic circuits have been proposed in the past. At first, most of the effort was spent upon reducing the size of the components and packing them more closely together. Work directed toward reducing component size is still going on but has nearly reached a limit. Other efforts have been made to reduce the size of electronic circuits such as by eliminating the protective coverings from components, by using more or less conventional techniques to form components on a single substrate, and by providing the components with a uniform size and shape to permit closer spacings in the circuit packaging therefor."
+    },
+    {
+     "col": 1,
+     "line": 24,
+     "text": "All of these methods and techniques require a very large number and variety of operations in fabricating a complete circuit. For example, of all circuit components, resistors are usually considered the most simple to form, but when adapted for miniaturization by conventional techniques, fabrication requires at least the following steps:"
+    },
+    {
+     "col": 1,
+     "line": 31,
+     "text": "(a) Formation of the substrate."
+    },
+    {
+     "col": 1,
+     "line": 32,
+     "text": "(b) Preparation of the substrate."
+    },
+    {
+     "col": 1,
+     "line": 33,
+     "text": "(c) Application of terminations."
+    },
+    {
+     "col": 1,
+     "line": 34,
+     "text": "(d) Preparation of resistor material."
+    },
+    {
+     "col": 1,
+     "line": 35,
+     "text": "(e) Application of the resistor material."
+    },
+    {
+     "col": 1,
+     "line": 36,
+     "text": "(f) Heat treatment of the resistor material."
+    },
+    {
+     "col": 1,
+     "line": 37,
+     "text": "(g) Protection or stabilization of the resistor."
+    },
+    {
+     "col": 1,
+     "line": 38,
+     "text": "Capacitors, transistors, and diodes when adapted for miniaturization each require at least as many steps in the fabrication thereof. Unfortunately, many of the steps required are not compatible. A treatment that is desirable for the protection of a resistor may damage another element, such as a capacitor or transistor, and as the size of the complete circuit is reduced, such conflicting treatments, or interactions, become of increasing importance. Interactions may be minimized by forming the components separately and then assembling them into a complete package, but the very act of assembly may cause damage to the more sensitive components."
+    },
+    {
+     "col": 1,
+     "line": 50,
+     "text": "Because of the large number of operations required, control over miniaturized circuit fabrication becomes very difficult. To illustrate, many raw materials must be evaluated and controlled even though they may not be well understood. Further, many testing operations are required and, even though a high yield may be obtained for each operation, so many operations are required that the over-all yield is often quite low. In service, the reliability of a circuit produced by methods of such complexity may also be quite low due to the tremendous number of controls required. Additionally, the separate formation of individual components requires individual terminations for each component. These terminations may eventually become as small as a dot of conductive paint. However, they still account for a large fraction of the usable area or volume of the circuit and may become an additional cause of circuit failure or rejection due to misalignment."
+    },
+    {
+     "col": 1,
+     "line": 68,
+     "text": "In contrast to the approaches to miniaturization that have been made in the past, the present invention has resulted from a new and totally different concept for miniaturization. Radically departing from the teachings of the art, it is proposed by the invention that miniaturization can best be attained by use of as few materials and operations as possible. In accordance with the principles of the invention, the ultimate in circuit miniaturization is attained using only one material for all circuit elements and a limited number of compatible process steps for the production thereof."
+    },
+    {
+     "col": 2,
+     "line": 7,
+     "text": "The above is accomplished by the present invention by utilizing a body of semiconductor material exhibiting one type of conductivity, either n-type or p-type, and having formed therein a diffused region or regions of appropriate conductivity type to form a p-n junction between such region or regions and the semiconductor body or, as the case may be, between diffused regions. According to the principles of this invention, all components of an entire electronic circuit are fabricated within the body so characterized by adapting the novel techniques to be described in detail hereinafter. It is to be noted that all components of the circuit are integrated into the body of semiconductor material and constitute portions thereof."
+    },
+    {
+     "col": 2,
+     "line": 20,
+     "text": "In a more specific conception of the invention, all components of an electronic circuit are formed in or near one surface of a relatively thin semiconductor wafer characterized by a diffused p-n junction or junctions. Of importance to this invention is the concept of shaping. This shaping concept makes it possible in a circuit to obtain the necessary isolation between components and to define the components or, stated differently, to limit the area which is utilized for a given component. Shaping may be accomplished in a given circuit in one or more of several different ways. These various ways include actual removal of portions of the semiconductor material, specialized configurations of the semiconductor material such as long and narrow, L-shaped, U-shaped, etc., selective conversion of intrinsic semiconductor material by diffusion of impurities thereinto to provide low resistivity paths for current flow, and selectve conversion of semiconductor material of one conductivity type to conductivity of the opposite type wherein the p-n junction thereby formed acts as a barrier to current flow. In any event, the effect of shaping is to direct and/or confine paths for current flow thus permitting the fabrication of circuits which could not otherwise be obtained in a single wafer of semiconductor material. As a result, the final circuit is arranged in essentially planar form. It is possible to shape the wafer during processing and to produce by diffusion the various circuit elements in a desired and proper relationship. Certain of the resistor and capacitor components described herein have utility and novelty in and of themselves although they are completely adaptable to and perhaps find their greatest utility as integral parts of the semiconductor electronic circuit hereof."
+    },
+    {
+     "col": 2,
+     "line": 51,
+     "text": "It is, therefore, a principal object of this invention to provide a novel miniaturized electronic circuit fabricated from a body of semiconductor material containing a diffused p-n junction wherein all components of the electronic circuit are completely integrated into the body of semiconductor material."
+    },
+    {
+     "col": 2,
+     "line": 57,
+     "text": "It is another principal object of this invention to produce desired circuits by appropriately shaping a wafer of semiconductor material to obtain the necessary isolation between components thereof and to define the areas utilized by such components."
+    },
+    {
+     "col": 2,
+     "line": 62,
+     "text": "It is a further object of this invention to provide a unique miniaturized electronic circuit fabricated as described whereby the resulting electronic circuit will be substantially smaller, more compact, and simpler than circuit packages heretofore developed using known techniques."
+    },
+    {
+     "col": 2,
+     "line": 68,
+     "text": "It is a still further object of this invention to provide novel miniaturized electronic circuits fabricated as described above which involve less processing than techniques heretofore used for this purpose."
+    },
+    {
+     "col": 3,
+     "line": 1,
+     "text": "It is a primary object of the invention to provide a miniaturized electronic circuit wherein the active and passive circuit components are integrated within a body of semiconductor material, the junctions of such components being near and/or extending to one face of the body, with components being spaced or electrically separated from one another as necessary in the circuit. These features permit a versatility in design of integrated circuits not heretofore available."
+    },
+    {
+     "col": 3,
+     "line": 10,
+     "text": "The foregoing and other objects and features of the invention will become more readily apparent from the following detailed description of preferred embodiments of the present invention when taken in conjunction with the appended drawings, in which:"
+    },
+    {
+     "col": 3,
+     "line": 15,
+     "text": "FIGURES 1-5a illustrate schematically various circuit components fabricated in accordance with the principles of the present invention in order that they may be integrated into, or as they constitute parts of, a single body of semiconductor material;"
+    },
+    {
+     "col": 3,
+     "line": 20,
+     "text": "FIGURE 6a illustrates schematically a multivibrator circuit fabricated in accordance with the present invention;"
+    },
+    {
+     "col": 3,
+     "line": 23,
+     "text": "FIGURE 6b shows the wiring diagram for the multivibrator circuit of FIGURE 6a laid out in the same relationship;"
+    },
+    {
+     "col": 3,
+     "line": 26,
+     "text": "FIGURE 7 illustrates the wiring diagram of the multivibrator circuit of FIGURE 6a in a more conventional presentation;"
+    },
+    {
+     "col": 3,
+     "line": 29,
+     "text": "FIGURE 8a illustrates schematically a phase shift oscillator fabricated in accordance with the principles of the present invention;"
+    },
+    {
+     "col": 3,
+     "line": 32,
+     "text": "FIGURE 8b shows the wiring diagram for FIGURE 8a with the components laid out in the same relationship; and"
+    },
+    {
+     "col": 3,
+     "line": 35,
+     "text": "FIGURE 8c portrays the wiring diagram of the phase shift oscillator."
+    },
+    {
+     "col": 3,
+     "line": 37,
+     "text": "As will be apparent to one skilled in the art, circuit components can be classified according to their circuit functions. Thus, circuit elements may be thought of as being active or passive in nature. According to “The Encyclopedic Dictionary of Electronics and Nuclear Engineering,” edited by Sarbacher, and published by Prentice-Hall, active elements are those which in an impedance network act as current generators; whereas passive elements do not so act. Examples of active elements are photocells and transistors; examples of passive elements are resistors, capacitors and inductors. Diodes, while most often employed as passive elements, may if suitably biased and energized, function in an active capacity. Varactor diodes and tunnel diodes are examples of diodes operating in an active capacity. The term “circuit” (or “network”) means two or more discrete circuit elements electrically connected together; and by “discrete circuit element” is meant a resistor, capacitor, inductor, diode, transistor or the like that is formed separately or purposely as distinguished from existence as a function incidentally, accidentally or inherently as a part of some other circuit element, as, for example, every transistor may be said to exhibit some resistance and capacitance along with its transistor action."
+    },
+    {
+     "col": 3,
+     "line": 61,
+     "text": "Referring now to the drawings in detail, preferred embodiments of the present invention will now be described in detail in order that a better understanding of the principles of the invention and the various forms and embodiments of the invention will be better understood."
+    },
+    {
+     "col": 3,
+     "line": 66,
+     "text": "As noted previously, the invention is primarily concerned with miniaturization of electronic circuits. Also, as noted, the invention contemplates the use of a body of semiconductor material appropriately shaped, electrically and physically and having formed therein a p-n junction or junctions and the use of component designs for the various circuit elements or components which can be integrated into or which constitute parts of the aforesaid body of semiconductor material."
+    },
+    {
+     "col": 3,
+     "line": 75,
+     "text": "FIGURES 1-5 inclusive illustrate in detail circuit elements formed in accordance with the principles of this invention which can be integrated into a body of semiconductor material. It is noted at this point that the body of semiconductor material is of single crystal structure, and can be composed of any suitable semiconductor material. There may be mentioned as examples of suitable materials germanium, silicon, intermetallic alloys such as gallium arsenide, aluminum antimonide, indium antimonide, as well as others."
+    },
+    {
+     "col": 4,
+     "line": 9,
+     "text": "Referring particularly to FIGURE 1, there is shown a typical design for a resistor which may be embodied or integrated into a body of single crystal semiconductor material. As noted in FIGURE 1, the design contemplates utilizing the bulk resistance of a body 10 of semiconductor material of any conductivity type. Contacts 11 and 12 are made ohmically to one surface of the body 10, spaced apart a sufficient distance to achieve a desired resistance. As will be apparent to one skilled in the art, ohmic connections are those which exhibit symmetry and linearity in resistance to flow of current therethrough in any available direction. If two resistors are to be connected together, it is not necessary to provide separate terminations for the common point. The resistance may be calculated from"
+    },
+    {
+     "col": 4,
+     "line": 24,
+     "text": "R=ρL/A"
+    },
+    {
+     "col": 4,
+     "line": 25,
+     "text": "where L is the active length in centimeters, A is the cross sectional area, and ρ is the resistivity in ohm-cm. of the semiconductor material."
+    },
+    {
+     "col": 4,
+     "line": 28,
+     "text": "In addition to the resistor shown in FIGURE 1, a resistor may be provided as shown in FIGURE 1a for integration into and as forming a part of a body of semiconductor material. In FIGURE 1a, there is shown a body 10a of p-type semiconductor material with an n-type region 10b formed therein. Of course, between the body 10a and region 10b there is a p-n junction which is designated by the numeral 13. Contacts 11a and 12a are made to one surface of the region 10b, spaced apart from each other in order to achieve a desired resistance. As in FIGURE 1, the contacts 11a and 12a are ohmic contacts to the region 10b. A resistor formed in the manner of FIGURE 1a has several important advantages. First, the p-n junction 13 provides a barrier to current flow from the n-type region 10b into the p-type body 10a and, thus, the current flow is confined to a path in the n-type region 10b between the contacts thereto. The second advantage is that the total resistance value thereof can be controlled to a large degree. The total resistance value may be controlled by etching very lightly over the entire surface to remove the uppermost portion of the n-type region 10b, being very careful to not etch through the p-n junction, and as well by selectively etching to or through the p-n junction 13 thereby effectively to increase the length of the path traveled by the current between the contacts. The third, and perhaps major, advantage in forming a resistor according to FIGURE 1a is in that, by controlling the doping level or impurity concentration in the n-type region 10b, lower and more nearly constant temperature coefficients may be provided for the resistor. The above description has been in terms of a p-type body 10a and an n-type region 10b but it is obvious that the body 10a could be equally as well of n-type conductivity and the region 10b of p-type conductivity. Resistors according to FIGURE 1a may be formed as separate circuit elements or components."
+    },
+    {
+     "col": 4,
+     "line": 64,
+     "text": "Capacitor designs may be obtained by utilizing the capacitance of a p-n junction, as shown in FIGURE 2, wherein a semiconductor wafer 15 of p-type conductivity is shown containing an n-type diffused layer 16. Ohmic contacts 17 are made to opposite faces of the wafer 15. The capacitance of a diffused junction is given by"
+    },
+    {
+     "col": 4,
+     "line": 71,
+     "text": "C=Aε(qa/12εV)^{1/3}"
+    },
+    {
+     "col": 4,
+     "line": 73,
+     "text": "where A is the area of the junction in square cm., ε is the dielectric constant, q is electronic charge, where a is the impurity density gradient, and V is the applied voltage."
+    },
+    {
+     "col": 5,
+     "line": 1,
+     "text": "Instead of the capacitor of FIGURE 2, capacitance in a body of single crystal of semiconductor material may be provided as shown and described in connection with FIGURE 2a. FIGURE 2a shows a body 15a of semiconductor material, of either n- or p-type conductivity, which constitutes one plate of the capacitor. Evaporated onto the body 15a is a layer 18 providing a dielectric layer for the capacitor. It is necessary that the layer 18 have a suitable dielectric constant and be inert when in contact with the semiconductor body 15a. Silicon oxide has been found to be a suitable material for dielectric layer 18 and may be applied by evaporation or thermal oxidation techniques onto body 15a. Plate 19 forms the other plate of the capacitor and is provided by evaporating a conductive material onto layer 18. Gold and aluminum have been found to be satisfactory materials for the plate 19. Ohmic contact 17a is made to the body of semiconductor material 15a and contact to plate 19 may be made by any suitable electrical contact (not shown). Capacitors formed in the manner described in connection with FIGURE 2a have been found to exhibit much more stable characteristics than pure junction capacitors, that is, p-n junction capacitors, and, of course, may be fabricated as separate elements or components."
+    },
+    {
+     "col": 5,
+     "line": 25,
+     "text": "Capacitors produced in the manner of FIGURE 2 are also diodes, and must therefore be properly polarized in the circuit. Non-polar capacitors may be made by connecting two such areas back-to-back. Although junction capacitors have a marked voltage dependence, such dependence is present to a lesser degree for low voltages in the non-polar configuration."
+    },
+    {
+     "col": 5,
+     "line": 32,
+     "text": "Resistor and capacitor designs may be combined to form a distributed R-C network. Such is shown in FIGURE 3, wherein a wafer 20 of p-type conductivity having an n-type conductivity diffused layer 21 formed therein is provided with a broad area contact 22 on the face and spaced contacts 23 on the opposite face. These networks are useful for low pass-filters, phase shift networks, coupling elements, etc. Their parameters may be calculated from the equations above. Other configurations of this general type are also possible."
+    },
+    {
+     "col": 5,
+     "line": 42,
+     "text": "Transistors and diodes may be formed on a wafer, as described by Lee in “Bell System Technical Journal,” vol. 35, p. 23 (1956). This reference describes a transistor, as shown in FIGURE 4, which has a collector region 25, a diffused p-n junction 26, a base layer 27, an emitter contact 28 for a rectifying connection with base layer 27 and base and collector contacts 29 and 30, respectively. The base layer 27 is formed as a mesa of small cross section. A diode of similar design is shown in FIGURE 5, and consists of a region 35 of one type conductivity, a mesa region 36 of opposite conductivity type with a p-n diffused junction formed therebetween and contacts 37 and 38 to each region."
+    },
+    {
+     "col": 5,
+     "line": 55,
+     "text": "Small inductances, suitable for high frequency use, may also be made by shaping the semiconductor as evidenced by FIGURE 5a which shows a spiral of semiconductor material. It is also possible to prepare photosensitive, photoresistive, solar cells and other like components utilizing the considerations outlined above."
+    },
+    {
+     "col": 5,
+     "line": 61,
+     "text": "Although all of the circuit elements have been described in terms of a single diffused layer, it is quite possible to use a double diffused structure. Thus, double diffusion may be employed to form both n-p-n and p-n-p structures. Moreover, any suitable substances can be used for the semiconductor materials, conductivity producing impurities, and contact materials; and suitable and known processing can be exploited in producing the above circuit designs."
+    },
+    {
+     "col": 5,
+     "line": 70,
+     "text": "Because all of the circuit designs described above can be formed from a single material, a semiconductor, it is possible by physical and electrical shaping to integrate all of them into a single crystal semiconductor wafer containing a diffused p-n junction, or junctions, and to process the wafer to provide the proper circuit and the correct component values. Junction areas for the transistors, diodes, and capacitors are formed by properly shaped “mesas” on the wafer."
+    },
+    {
+     "col": 6,
+     "line": 4,
+     "text": "A specific illustration of an electronic circuit embodying the principles of the invention is shown in FIGURE 6a. As shown, a thin wafer of single crystal semiconductor material containing a diffused p-n junction has been processed and shaped to include a complete and integrated multivibrator electronic circuit formed essentially in one surface of the wafer. The regions of the wafer have been marked with symbols representative of the circuit element functions that are performed in the various regions. FIGURE 6b shows a wiring diagram of the various circuit functions in the relationship which they occupy in the wafer of FIGURE 6a. A more conventionally drawn circuit diagram is shown in FIGURE 7 with the circuit values actually used. The multivibrator circuit shown in FIGURES 6a, 6b and 7 will be described as illustrative of the processing techniques employed. First, a semiconducting wafer, preferably silicon or germanium, of the proper resistivity is lapped and polished on one side. For this design, 3 ohm-cm. p-type germanium was used. The wafer was then subjected to an antimony diffusion process which produced an n-type layer on the surface about 0.7 mil deep. The wafer was then cut to the proper size, 0.200 inch x 0.080 inch and the unpolished surface was lapped to give a wafer thickness of 0.0025 inch."
+    },
+    {
+     "col": 6,
+     "line": 29,
+     "text": "Gold plated Kovar leads 50 were attached by alloying to the wafer in the proper positions (as shown). Kovar is a trade name for an iron-nickel-cobalt alloy. Gold was then evaporated through a mask to provide the areas 51-54 which provide ohmic contact with the n region, such as the transistor base connections and the capacitor contacts. Aluminum was evaporated through a properly shaped mask to provide the transistor emitter areas 56, which form rectifying contacts with the n layer."
+    },
+    {
+     "col": 6,
+     "line": 38,
+     "text": "The wafer was then coated with a photosensitive resist or lacquer, such as Eastman Photo Resist, supplied by Eastman Kodak Company, and exposed through a negative to a light. The lacquer image remaining after development was used as a resist for etching the wafer to the proper shape. In particular, this etching forms a slot through the wafer to provide isolation between R_{1} and R_{2} and the rest of the circuit and also shapes all of the resistor areas to the previously calculated configuration. Either chemical etching or electrolytic etching may be used, although electrolytic etching appears to be preferable."
+    },
+    {
+     "col": 6,
+     "line": 50,
+     "text": "After this step, the photoresist was removed with a solvent and the mesa areas 60 masked by the same photographic process. The water was again immersed in etchant and the n layer completely removed in the exposed areas. A chemical etch is considered preferable. The photoresist was then removed."
+    },
+    {
+     "col": 6,
+     "line": 56,
+     "text": "Gold wires 70 were then thermally bonded to the appropriate areas to complete the connections and a final clean-up etch given. Instead of using the gold wires 70 in making electrical connections, connections may be provided in other ways. For example, an insulating and inert material such as silicon oxide may be evaporated onto the semiconductor circuit wafer through a mask either to cover the wafer completely except at the points where electrical contact is to be made thereto, or to cover only selected portions joining the points to be electrically connected. Electrically conducting material such as gold may then be laid down on the insulating material to make the necessary electrical circuit connections."
+    },
+    {
+     "col": 6,
+     "line": 69,
+     "text": "After testing, the circuit may be hermetically sealed, if required, for protection against contamination. The finished device was smaller by several orders of magnitude than any others which have previously been proposed. Because the fabrication steps required are quite similar to those now used in manufacturing transistors and because of the relatively small number of steps required, these devices are inherently inexpensive and reliable, as well as compact."
+    },
+    {
+     "col": 7,
+     "line": 3,
+     "text": "A further illustration of the process hereof is shown in FIGURES 8a-8c. Each area of the single crystal semiconductor wafer has been marked with a symbol for the circuit element which it represents. This unit illustrates the use of resistors, transistors, and a distributed R-C network to form a complete phase shift oscillator."
+    },
+    {
+     "col": 7,
+     "line": 10,
+     "text": "It must be emphasized that the two embodiments described above are merely two of innumerable circuits which can be fabricated by the techniques of the present invention. There is no limit upon the complexity or configuration of circuits which can be made in this manner. While there is a limit upon the types and values of components which can be made in a limited space, the invention hereof nevertheless represents a remarkable improvement over the prior art. As evidence of the advance in the art accomplished by the present invention, it is possible using the techniques described above to achieve component densities of greater than thirty million per cubic foot as compared with five hundred thousand per cubic foot which is the highest component density attained prior to this invention."
+    },
+    {
+     "col": 7,
+     "line": 25,
+     "text": "Although the invention has been shown and described in terms of specific embodiments, it will be evident that changes and modifications are possible which do not in fact depart from the inventive concepts taught herein. Hence, such changes and modifications are deemed to fall within the purview of the invention."
+    }
+   ]
+  }
+ ],
+ "brief_drawings": [
+  {
+   "fig": "1",
+   "col": 3,
+   "line": 15,
+   "text": "FIGURES 1-5a illustrate schematically various circuit components fabricated in accordance with the principles of the present invention in order that they may be integrated into, or as they constitute parts of, a single body of semiconductor material;"
+  },
+  {
+   "fig": "1a",
+   "col": 3,
+   "line": 15,
+   "text": "FIGURES 1-5a illustrate schematically various circuit components fabricated in accordance with the principles of the present invention in order that they may be integrated into, or as they constitute parts of, a single body of semiconductor material;"
+  },
+  {
+   "fig": "2",
+   "col": 3,
+   "line": 15,
+   "text": "FIGURES 1-5a illustrate schematically various circuit components fabricated in accordance with the principles of the present invention in order that they may be integrated into, or as they constitute parts of, a single body of semiconductor material;"
+  },
+  {
+   "fig": "2a",
+   "col": 3,
+   "line": 15,
+   "text": "FIGURES 1-5a illustrate schematically various circuit components fabricated in accordance with the principles of the present invention in order that they may be integrated into, or as they constitute parts of, a single body of semiconductor material;"
+  },
+  {
+   "fig": "3",
+   "col": 3,
+   "line": 15,
+   "text": "FIGURES 1-5a illustrate schematically various circuit components fabricated in accordance with the principles of the present invention in order that they may be integrated into, or as they constitute parts of, a single body of semiconductor material;"
+  },
+  {
+   "fig": "4",
+   "col": 3,
+   "line": 15,
+   "text": "FIGURES 1-5a illustrate schematically various circuit components fabricated in accordance with the principles of the present invention in order that they may be integrated into, or as they constitute parts of, a single body of semiconductor material;"
+  },
+  {
+   "fig": "5",
+   "col": 3,
+   "line": 15,
+   "text": "FIGURES 1-5a illustrate schematically various circuit components fabricated in accordance with the principles of the present invention in order that they may be integrated into, or as they constitute parts of, a single body of semiconductor material;"
+  },
+  {
+   "fig": "5a",
+   "col": 3,
+   "line": 15,
+   "text": "FIGURES 1-5a illustrate schematically various circuit components fabricated in accordance with the principles of the present invention in order that they may be integrated into, or as they constitute parts of, a single body of semiconductor material;"
+  },
+  {
+   "fig": "6a",
+   "col": 3,
+   "line": 20,
+   "text": "FIGURE 6a illustrates schematically a multivibrator circuit fabricated in accordance with the present invention;"
+  },
+  {
+   "fig": "6b",
+   "col": 3,
+   "line": 23,
+   "text": "FIGURE 6b shows the wiring diagram for the multivibrator circuit of FIGURE 6a laid out in the same relationship;"
+  },
+  {
+   "fig": "7",
+   "col": 3,
+   "line": 26,
+   "text": "FIGURE 7 illustrates the wiring diagram of the multivibrator circuit of FIGURE 6a in a more conventional presentation;"
+  },
+  {
+   "fig": "8a",
+   "col": 3,
+   "line": 29,
+   "text": "FIGURE 8a illustrates schematically a phase shift oscillator fabricated in accordance with the principles of the present invention;"
+  },
+  {
+   "fig": "8b",
+   "col": 3,
+   "line": 32,
+   "text": "FIGURE 8b shows the wiring diagram for FIGURE 8a with the components laid out in the same relationship; and"
+  },
+  {
+   "fig": "8c",
+   "col": 3,
+   "line": 35,
+   "text": "FIGURE 8c portrays the wiring diagram of the phase shift oscillator."
+  }
+ ],
+ "claims": [
+  {
+   "n": 1,
+   "col": 7,
+   "line": 32,
+   "depends": null,
+   "text": "1. In an integrated circuit having a plurality of electrical circuit components in a wafer of single-crystal semiconductor material, a plurality of junction transistors defined in the wafer, each transistor including thin layers of semiconductor material of opposite conductivity-types adjacent one major face of the wafer providing a base and an emitter region which overlie a collector region, the base-emitter and base-collector junctions of each of said transistors extending wholly to said one major face, a plurality of thin elongated regions of the wafer exhibiting substantial resistance to provide semiconductor resistors, the elongated regions being spaced on said one major face from the transistors, and conductive means connecting selected ones of the elongated regions to regions of selected ones of the transistors."
+  },
+  {
+   "n": 2,
+   "col": 7,
+   "line": 47,
+   "depends": null,
+   "text": "2. In a semiconductor device which includes a single-crystal semiconductor wafer: a junction transistor provided adjacent one major face of the wafer by thin layers of semiconductor material of opposite conductivity types overlying one another and extending to said one major face with the emitter-base and base-collector junctions of the transistor extending wholly to said one major face; and a resistor provided in the wafer by a discrete elongated region of the semiconductor material which is spaced from the transistor on said one major face."
+  },
+  {
+   "n": 3,
+   "col": 7,
+   "line": 57,
+   "depends": null,
+   "text": "3. An integrated circuit comprising a wafer of semiconductor material containing a plurality of electrical circuit components including at least one active circuit component and at least one passive circuit component, the active circuit component including at least two thin layers of semiconductor material of opposite conductivity-types extending to one major face of the wafer with p-n junctions of the active circuit component extending wholly to said one major face, the passive circuit component including at least one discrete region of the semiconductor material of the wafer which is spaced on said one major face away from the thin layers of the active component, substantial electrical impedance being exhibited between the semiconductor material contiguous to the at least one discrete region of the passive component and semiconductor material immediately underlying said thin layers of the active component."
+  },
+  {
+   "n": 4,
+   "col": 7,
+   "line": 74,
+   "depends": 3,
+   "text": "4. An integrated circuit according to claim 3 wherein said active circuit component is a junction transistor, said passive circuit component is an elongated resistor region, and said semiconductor material immediately underlying said thin layers of the active component defines the collector region of the junction transistor."
+  },
+  {
+   "n": 5,
+   "col": 8,
+   "line": 5,
+   "depends": 3,
+   "text": "5. An integrated circuit according to claim 3 which further comprises: at least one other active circuit component provided in the wafer and including at least two thin layers of semiconductor material of opposite conductivity-types extending to said one major face with p-n junctions of such other active circuit component extending wholly to said one major face; and at least one other passive circuit component provided in the wafer and including at least one discrete region of the semiconductor material which is spaced on said one major face away from the thin layers of the at least one other active component."
+  },
+  {
+   "n": 6,
+   "col": 8,
+   "line": 17,
+   "depends": 5,
+   "text": "6. An integrated circuit according to claim 5 wherein said discrete regions of said passive circuit components include thin surface-adjacent regions at said one major face of the wafer."
+  },
+  {
+   "n": 7,
+   "col": 8,
+   "line": 21,
+   "depends": 3,
+   "text": "7. An integrated circuit according to claim 3 wherein the at least one discrete region of the passive circuit component includes a thin surface-adjacent layer of semiconductor material."
+  },
+  {
+   "n": 8,
+   "col": 8,
+   "line": 25,
+   "depends": 7,
+   "text": "8. An integrated circuit according to claim 7 wherein the passive circuit component is a resistor."
+  },
+  {
+   "n": 9,
+   "col": 8,
+   "line": 27,
+   "depends": 3,
+   "text": "9. An integrated circuit according to claim 3 wherein at least one of said circuit components includes a thin layer of dielectric material overlying said one major face of the wafer with a thin layer of conductive material overlying the dielectric material."
+  },
+  {
+   "n": 10,
+   "col": 8,
+   "line": 32,
+   "depends": null,
+   "text": "10. A semiconductor device comprising: a body of single-crystal semiconductor material; an active circuit component provided adjacent one major face of the body and including thin regions of the semiconductor material which extend to said one major face, each of such regions being of different conductivity than adjoining semiconductor material with the interface between each such region and other of the semiconductor material of the body extending wholly to said one major face; a passive circuit component provided in the body by a discrete portion of the semiconductor material which is spaced from the active circuit component on said one major face, substantial electrical impedance existing through the body between said thin regions of the active circuit component and the discrete portion of the passive circuit component."
+  },
+  {
+   "n": 11,
+   "col": 8,
+   "line": 47,
+   "depends": 10,
+   "text": "11. A semiconductor device according to claim 10 wherein at least part of said substantial electrical impedance is exhibited by at least one p-n junction within the wafer."
+  },
+  {
+   "n": 12,
+   "col": 8,
+   "line": 51,
+   "depends": null,
+   "text": "12. An integrated circuit comprising a wafer of single-crystal semiconductor material having a plurality of electrical circuit components therein, the components including an active circuit component which comprises thin regions of semiconductor material of opposite conductivity-types closely adjacent one major face of the wafer with p-n junctions between such thin regions extending wholly to said one major face, the components further including a semiconductor resistor provided by a discrete elongated region of the wafer which is spaced on said one major face from the active circuit component, and a conductive lead connecting an end of the elongated region to one of the thin regions of the active circuit component."
+  },
+  {
+   "n": 13,
+   "col": 8,
+   "line": 64,
+   "depends": null,
+   "text": "13. In an integrated circuit having a plurality of circuit components in a wafer of single-crystal semiconductor material, a pair of junction transistors defined in the wafer with each transistor including thin layers of alternate conductivity type adjacent one major face of the wafer providing a base and an emitter region which overlie a collector region, the base-emitter and collector-base junctions of each of said transistors extending wholly to said one major face, elongated semiconductor means defined in the wafer and exhibiting substantial resistance to provide load resistor means for the pair of transistors, first conductive means connected to the collector region of one of the transistors and to an end of the elongated semiconductor means, second conductive means connected to the collector region of the other one of the transistors and to an end of the elongated semiconductor means, means including contacts to the emitter regions of the transistors and to the elongated semiconductor means for applying operating bias to the transistors and means including separate contacts on said base regions for applying inputs to said pair of transistors."
+  },
+  {
+   "n": 14,
+   "col": 9,
+   "line": 10,
+   "depends": 13,
+   "text": "14. In an integrated circuit according to claim 13 first and second elongated semiconductor regions defined in the wafer and exhibiting substantial resistance to provide base resistors for the pair of transistors, and conductive means separately connecting an end of the first elongated region to the base region of one of the transistors and an end of the second elongated region to the base region of the other of the transistors."
+  },
+  {
+   "n": 15,
+   "col": 9,
+   "line": 18,
+   "depends": null,
+   "text": "15. An integrated circuit ahving a plurality of electrical circuit components in a wafer of single-crystal semiconductor material, at least one of the components being an active circuit component which includes thin layers of semiconductor material of alternate conductivity types defined in the wafer adjacent one major face thereof with p-n junctions of such active circuit component extending wholly to said one major face, at least one of the components being a passive circuit component which includes at least one discrete region defined in the wafer, the passive circuit component being spaced on said one major face from the active circuit component, substantial electrical impedance being exhibited through the wafer between the active circuit component and the passive circuit component, a plurality of interconnections between selected ones of the electrical circuit components, the circuit components and interconnections being so arranged and constructed as to allow, upon the application of electrical power, the performance within the structure of an electrical function equivalent to the function performed by a plural element electrical network."
+  },
+  {
+   "n": 16,
+   "col": 9,
+   "line": 39,
+   "depends": null,
+   "text": "16. An integrated circuit comprising a wafer of single-crystal semiconductor material containing a plurality of electrical circuit components defined in the wafer, the circuit components including an active circuit component which comprises at least two thin regions of the wafer of opposite conductivity-types each extending to one major face with the junction between each such thin region and other semiconductor material of the wafer extending to said one major face, the circuit components further including a passive circuit component which comprises at least one discrete region of the semiconductor material, the discrete region being spaced on said one major face from the thin regions of the active circuit component, non-common regions of the active and passive circuit components being interconnected to form at least part of an electrical circuit."
+  },
+  {
+   "n": 17,
+   "col": 9,
+   "line": 55,
+   "depends": 2,
+   "text": "17. In a semiconductor device according to claim 2, said thin layers of said junction transistor being portions of a raised mesa-shaped part of said one major face."
+  },
+  {
+   "n": 18,
+   "col": 9,
+   "line": 58,
+   "depends": 3,
+   "text": "18. An integrated circuit according to claim 3 wherein said active circuit component is a junction transistor with said two thin layers being the base and emitter regions of said junction transistor, the emitter region being substantially smaller than the base region on said one major face, a base contact being positioned on said base region spaced from the emitter region."
+  },
+  {
+   "n": 19,
+   "col": 10,
+   "line": 3,
+   "depends": 18,
+   "text": "19. An integrated circuit according to claim 18 wherein said discrete region of the passive circuit component includes a thin surface-adjacent layer of semiconductor material of conductivity-type opposite that of subjacent semiconductor material, an ohmic contact is provided on said surface-adjacent layer, and a conductive lead connects such ohmic contact to said base contact."
+  },
+  {
+   "n": 20,
+   "col": 10,
+   "line": 10,
+   "depends": 10,
+   "text": "20. A semiconductor device according to claim 10 wherein said passive circuit component provided in the body by said discrete portion of the semiconductor material includes a thin surface-adjacent portion of the semiconductor material at said one major face of the body, such thin portion being of conductivity differing from subjacent semiconductor material."
+  },
+  {
+   "n": 21,
+   "col": 10,
+   "line": 17,
+   "depends": 20,
+   "text": "21. A semiconductor device according to claim 20 wherein separate electrical contacts are provided on at least two of said thin regions of the active circuit component on said one major face, wherein a contact is provided on said thin surface-adjacent portion on said one major face, and wherein conductive means interconnects said contact on said surface-adjacent portion with one of said contacts on said thin regions of the active circuit component."
+  },
+  {
+   "n": 22,
+   "col": 10,
+   "line": 26,
+   "depends": 13,
+   "text": "22. In an integrated circuit according to claim 13 said elongated semiconductor means being a single elongated region of the semiconductor material with said first and second conductive means being separately connected to opposite ends of such elongated region and with said means for applying operating bias being connected to a centrally located portion of such elongated region."
+  },
+  {
+   "n": 23,
+   "col": 10,
+   "line": 33,
+   "depends": 13,
+   "text": "23. In an integrated circuit according to claim 13 said means for applying inputs to said pair of transistors includes separate coupling means connecting the first conductive means to the contact on the base region of said one of the transistors and connecting the second conductive means to the contact on the base region of said other one of the transistors."
+  },
+  {
+   "n": 24,
+   "col": 10,
+   "line": 40,
+   "depends": 16,
+   "text": "24. An integrated circuit according to claim 16 wherein said discrete region of the passive circuit component includes a thin surface-adjacent region of conductivity type opposite to that of subjacent semiconductor material."
+  },
+  {
+   "n": 25,
+   "col": 10,
+   "line": 44,
+   "depends": 24,
+   "text": "25. An integrated circuit according to claim 24 wherein said passive circuit component is a P–N junction capacitor."
+  }
+ ],
+ "ocr_fixes": [
+  {
+   "col": 1,
+   "line": 32,
+   "ocr": "(6)",
+   "fixed": "(b)",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 3,
+   "line": 15,
+   "ocr": "1-Sa",
+   "fixed": "1-5a",
+   "basis": "scan (Google: l-Sa)"
+  },
+  {
+   "col": 3,
+   "line": 23,
+   "ocr": "FIGURE 65",
+   "fixed": "FIGURE 6b",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 3,
+   "line": 32,
+   "ocr": "FIGURE 85",
+   "fixed": "FIGURE 8b",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 3,
+   "line": 75,
+   "ocr": "“FIGURES",
+   "fixed": "FIGURES",
+   "basis": "scan (speck before word) + Google Patents"
+  },
+  {
+   "col": 4,
+   "line": 24,
+   "ocr": "R=pL/A",
+   "fixed": "R=ρL/A",
+   "basis": "scan (Greek rho)"
+  },
+  {
+   "col": 4,
+   "line": 26,
+   "ocr": "and p is",
+   "fixed": "and ρ is",
+   "basis": "scan (Greek rho)"
+  },
+  {
+   "col": 4,
+   "line": 31,
+   "ocr": "FIGURE la,",
+   "fixed": "FIGURE 1a,",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 4,
+   "line": 34,
+   "ocr": "region 105 there",
+   "fixed": "region 10b there",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 4,
+   "line": 35,
+   "ocr": "Contacts Ila",
+   "fixed": "Contacts 11a",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 4,
+   "line": 36,
+   "ocr": "region 10, spaced",
+   "fixed": "region 10b, spaced",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 4,
+   "line": 42,
+   "ocr": "region 105 into",
+   "fixed": "region 10b into",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 4,
+   "line": 42,
+   "ocr": "10a.and,",
+   "fixed": "10a and,",
+   "basis": "scan (speck) + Google Patents"
+  },
+  {
+   "col": 4,
+   "line": 43,
+   "ocr": "region 105 between",
+   "fixed": "region 10b between",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 4,
+   "line": 48,
+   "ocr": "region 105,",
+   "fixed": "region 10b,",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 4,
+   "line": 56,
+   "ocr": "temperature - coefficients",
+   "fixed": "temperature coefficients",
+   "basis": "scan (speck at line end) + Google Patents"
+  },
+  {
+   "col": 4,
+   "line": 56,
+   "ocr": "region 105, lower",
+   "fixed": "region 10b, lower",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 4,
+   "line": 61,
+   "ocr": "105 of p-type",
+   "fixed": "10b of p-type",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 4,
+   "line": 67,
+   "ocr": "Obmic",
+   "fixed": "Ohmic",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 4,
+   "line": 69,
+   "ocr": "diffused eee is",
+   "fixed": "diffused junction is",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 4,
+   "line": 71,
+   "ocr": "1/3 C=Ae ineV",
+   "fixed": "C=Aε(qa/12εV)^{1/3}",
+   "basis": "scan (display formula; OCR garbled, Google garbled)"
+  },
+  {
+   "col": 4,
+   "line": 73,
+   "ocr": "cm., ¢ is",
+   "fixed": "cm., ε is",
+   "basis": "scan (Greek epsilon)"
+  },
+  {
+   "col": 4,
+   "line": 74,
+   "ocr": "constant, g is",
+   "fixed": "constant, q is",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 5,
+   "line": 29,
+   "ocr": "dependence. is",
+   "fixed": "dependence is",
+   "basis": "scan (speck) + Google Patents"
+  },
+  {
+   "col": 5,
+   "line": 31,
+   "ocr": "configuration. :",
+   "fixed": "configuration.",
+   "basis": "scan (speck) + Google Patents"
+  },
+  {
+   "col": 5,
+   "line": 33,
+   "ocr": "network. .Such",
+   "fixed": "network. Such",
+   "basis": "scan (speck) + Google Patents"
+  },
+  {
+   "col": 5,
+   "line": 33,
+   "ocr": "FIG(URE",
+   "fixed": "FIGURE",
+   "basis": "scan (speck) + Google Patents"
+  },
+  {
+   "col": 5,
+   "line": 71,
+   "ocr": "from 4a single",
+   "fixed": "from a single",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 6,
+   "line": 3,
+   "ocr": "“mesas”.on",
+   "fixed": "“mesas” on",
+   "basis": "scan (speck) + Google Patents"
+  },
+  {
+   "col": 6,
+   "line": 18,
+   "ocr": "6a, 65 and",
+   "fixed": "6a, 6b and",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 6,
+   "line": 30,
+   "ocr": "to. the",
+   "fixed": "to the",
+   "basis": "scan (speck) + Google Patents"
+  },
+  {
+   "col": 6,
+   "line": 44,
+   "ocr": "between R, and R, and",
+   "fixed": "between R_{1} and R_{2} and",
+   "basis": "scan (subscripts) + Google Patents"
+  },
+  {
+   "col": 6,
+   "line": 47,
+   "ocr": "Hither",
+   "fixed": "Either",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 6,
+   "line": 48,
+   "ocr": "erable. :",
+   "fixed": "erable.",
+   "basis": "scan (speck) + Google Patents"
+  },
+  {
+   "col": 6,
+   "line": 72,
+   "ocr": "posed..",
+   "fixed": "posed.",
+   "basis": "scan (speck) + Google Patents"
+  },
+  {
+   "col": 7,
+   "line": 2,
+   "ocr": "compact. :",
+   "fixed": "compact.",
+   "basis": "scan (speck) + Google Patents"
+  },
+  {
+   "col": 7,
+   "line": 11,
+   "ocr": "aré",
+   "fixed": "are",
+   "basis": "scan (speck) + Google Patents"
+  },
+  {
+   "col": 7,
+   "line": 74,
+   "ocr": "4, An",
+   "fixed": "4. An",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 8,
+   "line": 12,
+   "ocr": "component. provided",
+   "fixed": "component provided",
+   "basis": "scan (speck) + Google Patents"
+  },
+  {
+   "col": 8,
+   "line": 22,
+   "ocr": "component: includes",
+   "fixed": "component includes",
+   "basis": "scan (speck) + Google Patents"
+  },
+  {
+   "col": 8,
+   "line": 36,
+   "ocr": "face; each",
+   "fixed": "face, each",
+   "basis": "scan + Google Patents"
+  },
+  {
+   "col": 9,
+   "line": 19,
+   "ocr": "single-crystal: semiconductor",
+   "fixed": "single-crystal semiconductor",
+   "basis": "scan (speck) + Google Patents"
+  },
+  {
+   "col": 9,
+   "line": 21,
+   "ocr": "layers. of",
+   "fixed": "layers of",
+   "basis": "scan (speck) + Google Patents"
+  },
+  {
+   "col": 9,
+   "line": 35,
+   "ocr": "upon. the",
+   "fixed": "upon the",
+   "basis": "scan (speck) + Google Patents"
+  },
+  {
+   "col": 9,
+   "line": 58,
+   "ocr": "' 18.",
+   "fixed": "18.",
+   "basis": "scan (speck) + Google Patents"
+  },
+  {
+   "col": 10,
+   "line": 25,
+   "ocr": "component. .",
+   "fixed": "component.",
+   "basis": "scan (speck) + Google Patents"
+  },
+  {
+   "col": 10,
+   "line": 45,
+   "ocr": "P—N",
+   "fixed": "P–N",
+   "basis": "scan (en dash)"
+  }
+ ]
+}

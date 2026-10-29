@@ -1,0 +1,27 @@
+{
+  "pn": "6285999",
+  "inventors": [
+    {
+      "name": "Lawrence Page",
+      "printed": "Lawrence Page, Stanford, CA (US)",
+      "city": "Stanford",
+      "region": "CA",
+      "country": "US"
+    }
+  ],
+  "assignees": [
+    {
+      "name": "The Board of Trustees of the Leland Stanford Junior University",
+      "printed": "The Board of Trustees of the Leland Stanford Junior University, Stanford, CA (US)",
+      "org": "Stanford University",
+      "kind": "university",
+      "city": "Stanford",
+      "region": "CA",
+      "country": "US"
+    }
+  ],
+  "source": {
+    "page": 0,
+    "where": "front page (75), (73)"
+  }
+}

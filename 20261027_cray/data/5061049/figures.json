@@ -1,0 +1,2909 @@
+{
+ "pn": "5061049",
+ "figures": [
+  {
+   "id": "1A",
+   "label": "FIG. 1A",
+   "sheet": 1,
+   "page": 1,
+   "crop": [
+    215,
+    513,
+    2051,
+    2067
+   ],
+   "rotate": 0,
+   "front_page": false
+  },
+  {
+   "id": "1B",
+   "label": "FIG. 1B",
+   "sheet": 1,
+   "page": 1,
+   "crop": [
+    375,
+    2067,
+    2068,
+    3015
+   ],
+   "rotate": 0,
+   "front_page": true
+  },
+  {
+   "id": "1C",
+   "label": "FIG. 1C",
+   "sheet": 2,
+   "page": 2,
+   "crop": [
+    324,
+    324,
+    1951,
+    2066
+   ],
+   "rotate": 0,
+   "front_page": false
+  },
+  {
+   "id": "2",
+   "label": "FIG. 2",
+   "sheet": 2,
+   "page": 2,
+   "crop": [
+    252,
+    2379,
+    2046,
+    3206
+   ],
+   "rotate": 0,
+   "front_page": false
+  },
+  {
+   "id": "3A",
+   "label": "FIG. 3A",
+   "sheet": 3,
+   "page": 3,
+   "crop": [
+    520,
+    327,
+    1681,
+    1892
+   ],
+   "rotate": 0,
+   "front_page": false
+  },
+  {
+   "id": "4",
+   "label": "FIG. 4",
+   "sheet": 3,
+   "page": 3,
+   "crop": [
+    258,
+    1958,
+    2032,
+    3200
+   ],
+   "rotate": 0,
+   "front_page": false
+  },
+  {
+   "id": "3B",
+   "label": "FIG. 3B",
+   "sheet": 4,
+   "page": 4,
+   "crop": [
+    421,
+    601,
+    1891,
+    2945
+   ],
+   "rotate": 270,
+   "front_page": false
+  },
+  {
+   "id": "6",
+   "label": "FIG. 6",
+   "sheet": 5,
+   "page": 5,
+   "crop": [
+    345,
+    610,
+    1992,
+    2929
+   ],
+   "rotate": 270,
+   "front_page": false
+  },
+  {
+   "id": "5",
+   "label": "FIG. 5",
+   "sheet": 6,
+   "page": 6,
+   "crop": [
+    385,
+    355,
+    1932,
+    1803
+   ],
+   "rotate": 0,
+   "front_page": false
+  },
+  {
+   "id": "7",
+   "label": "FIG. 7",
+   "sheet": 6,
+   "page": 6,
+   "crop": [
+    327,
+    1983,
+    1812,
+    3207
+   ],
+   "rotate": 0,
+   "front_page": false
+  },
+  {
+   "id": "8",
+   "label": "FIG. 8",
+   "sheet": 7,
+   "page": 7,
+   "crop": [
+    466,
+    319,
+    1814,
+    2010
+   ],
+   "rotate": 0,
+   "front_page": false
+  },
+  {
+   "id": "9",
+   "label": "FIG. 9",
+   "sheet": 7,
+   "page": 7,
+   "crop": [
+    345,
+    2216,
+    1936,
+    3222
+   ],
+   "rotate": 0,
+   "front_page": false
+  },
+  {
+   "id": "10",
+   "label": "FIG. 10",
+   "sheet": 8,
+   "page": 8,
+   "crop": [
+    502,
+    329,
+    1807,
+    1608
+   ],
+   "rotate": 0,
+   "front_page": false
+  },
+  {
+   "id": "11",
+   "label": "FIG. 11",
+   "sheet": 8,
+   "page": 8,
+   "crop": [
+    541,
+    1885,
+    1801,
+    3177
+   ],
+   "rotate": 0,
+   "front_page": false
+  },
+  {
+   "id": "12",
+   "label": "FIG. 12",
+   "sheet": 9,
+   "page": 9,
+   "crop": [
+    467,
+    338,
+    1876,
+    1702
+   ],
+   "rotate": 0,
+   "front_page": false
+  },
+  {
+   "id": "13",
+   "label": "FIG. 13",
+   "sheet": 9,
+   "page": 9,
+   "crop": [
+    491,
+    1791,
+    1887,
+    3210
+   ],
+   "rotate": 0,
+   "front_page": false
+  },
+  {
+   "id": "14",
+   "label": "FIG. 14",
+   "sheet": 10,
+   "page": 10,
+   "crop": [
+    342,
+    362,
+    1949,
+    1832
+   ],
+   "rotate": 0,
+   "front_page": false
+  },
+  {
+   "id": "15",
+   "label": "FIG. 15",
+   "sheet": 10,
+   "page": 10,
+   "crop": [
+    650,
+    2371,
+    1702,
+    3200
+   ],
+   "rotate": 0,
+   "front_page": false
+  },
+  {
+   "id": "16",
+   "label": "FIG. 16",
+   "sheet": 11,
+   "page": 11,
+   "crop": [
+    500,
+    346,
+    1830,
+    1676
+   ],
+   "rotate": 0,
+   "front_page": false
+  },
+  {
+   "id": "17",
+   "label": "FIG. 17",
+   "sheet": 11,
+   "page": 11,
+   "crop": [
+    337,
+    2134,
+    1967,
+    3214
+   ],
+   "rotate": 0,
+   "front_page": false
+  },
+  {
+   "id": "18",
+   "label": "FIG. 18",
+   "sheet": 12,
+   "page": 12,
+   "crop": [
+    528,
+    352,
+    1807,
+    1747
+   ],
+   "rotate": 0,
+   "front_page": false
+  },
+  {
+   "id": "19",
+   "label": "FIG. 19",
+   "sheet": 12,
+   "page": 12,
+   "crop": [
+    506,
+    1764,
+    1805,
+    3201
+   ],
+   "rotate": 0,
+   "front_page": false
+  },
+  {
+   "id": "20",
+   "label": "FIG. 20",
+   "sheet": 13,
+   "page": 13,
+   "crop": [
+    488,
+    342,
+    1798,
+    1700
+   ],
+   "rotate": 0,
+   "front_page": false
+  },
+  {
+   "id": "21",
+   "label": "FIG. 21",
+   "sheet": 13,
+   "page": 13,
+   "crop": [
+    367,
+    1822,
+    1942,
+    3205
+   ],
+   "rotate": 0,
+   "front_page": false
+  },
+  {
+   "id": "22",
+   "label": "FIG. 22",
+   "sheet": 14,
+   "page": 14,
+   "crop": [
+    481,
+    352,
+    1865,
+    1725
+   ],
+   "rotate": 0,
+   "front_page": false
+  },
+  {
+   "id": "23",
+   "label": "FIG. 23",
+   "sheet": 14,
+   "page": 14,
+   "crop": [
+    565,
+    1789,
+    1816,
+    3212
+   ],
+   "rotate": 0,
+   "front_page": false
+  },
+  {
+   "id": "24",
+   "label": "FIG. 24",
+   "sheet": 15,
+   "page": 15,
+   "crop": [
+    429,
+    322,
+    1927,
+    1543
+   ],
+   "rotate": 0,
+   "front_page": false
+  },
+  {
+   "id": "25",
+   "label": "FIG. 25",
+   "sheet": 15,
+   "page": 15,
+   "crop": [
+    438,
+    1747,
+    1954,
+    3195
+   ],
+   "rotate": 0,
+   "front_page": false
+  },
+  {
+   "id": "26",
+   "label": "FIG. 26",
+   "sheet": 16,
+   "page": 16,
+   "crop": [
+    573,
+    355,
+    1869,
+    1561
+   ],
+   "rotate": 0,
+   "front_page": false
+  },
+  {
+   "id": "27",
+   "label": "FIG. 27",
+   "sheet": 16,
+   "page": 16,
+   "crop": [
+    463,
+    2145,
+    1927,
+    3191
+   ],
+   "rotate": 0,
+   "front_page": false
+  },
+  {
+   "id": "28",
+   "label": "FIG. 28",
+   "sheet": 17,
+   "page": 17,
+   "crop": [
+    406,
+    421,
+    2010,
+    1711
+   ],
+   "rotate": 0,
+   "front_page": false
+  },
+  {
+   "id": "29",
+   "label": "FIG. 29",
+   "sheet": 17,
+   "page": 17,
+   "crop": [
+    279,
+    1895,
+    2085,
+    3094
+   ],
+   "rotate": 0,
+   "front_page": false
+  },
+  {
+   "id": "30A",
+   "label": "FIG. 30A",
+   "sheet": 18,
+   "page": 18,
+   "crop": [
+    269,
+    512,
+    2078,
+    1716
+   ],
+   "rotate": 0,
+   "front_page": false
+  },
+  {
+   "id": "30B",
+   "label": "FIG. 30B",
+   "sheet": 18,
+   "page": 18,
+   "crop": [
+    364,
+    2208,
+    1911,
+    3053
+   ],
+   "rotate": 0,
+   "front_page": false
+  },
+  {
+   "id": "31",
+   "label": "FIG. 31",
+   "sheet": 19,
+   "page": 19,
+   "crop": [
+    271,
+    429,
+    2117,
+    1677
+   ],
+   "rotate": 0,
+   "front_page": false
+  },
+  {
+   "id": "32A",
+   "label": "FIG. 32A",
+   "sheet": 19,
+   "page": 19,
+   "crop": [
+    557,
+    2029,
+    1833,
+    3106
+   ],
+   "rotate": 0,
+   "front_page": false
+  },
+  {
+   "id": "32B",
+   "label": "FIG. 32B",
+   "sheet": 20,
+   "page": 20,
+   "crop": [
+    282,
+    367,
+    2088,
+    1542
+   ],
+   "rotate": 0,
+   "front_page": false
+  },
+  {
+   "id": "32C",
+   "label": "FIG. 32C",
+   "sheet": 20,
+   "page": 20,
+   "crop": [
+    447,
+    1768,
+    2089,
+    3183
+   ],
+   "rotate": 0,
+   "front_page": false
+  },
+  {
+   "id": "33",
+   "label": "FIG. 33",
+   "sheet": 21,
+   "page": 21,
+   "crop": [
+    306,
+    350,
+    2043,
+    1264
+   ],
+   "rotate": 0,
+   "front_page": false
+  },
+  {
+   "id": "34",
+   "label": "FIG. 34",
+   "sheet": 21,
+   "page": 21,
+   "crop": [
+    345,
+    1680,
+    1974,
+    3203
+   ],
+   "rotate": 0,
+   "front_page": false
+  },
+  {
+   "id": "35A",
+   "label": "FIG. 35A",
+   "sheet": 22,
+   "page": 22,
+   "crop": [
+    706,
+    342,
+    1791,
+    839
+   ],
+   "rotate": 0,
+   "front_page": false
+  },
+  {
+   "id": "35B",
+   "label": "FIG. 35B",
+   "sheet": 22,
+   "page": 22,
+   "crop": [
+    629,
+    1204,
+    1830,
+    1927
+   ],
+   "rotate": 0,
+   "front_page": false
+  },
+  {
+   "id": "35C",
+   "label": "FIG. 35C",
+   "sheet": 22,
+   "page": 22,
+   "crop": [
+    480,
+    2269,
+    1926,
+    3198
+   ],
+   "rotate": 0,
+   "front_page": false
+  },
+  {
+   "id": "35D",
+   "label": "FIG. 35D",
+   "sheet": 23,
+   "page": 23,
+   "crop": [
+    409,
+    365,
+    2071,
+    1450
+   ],
+   "rotate": 0,
+   "front_page": false
+  },
+  {
+   "id": "35E",
+   "label": "FIG. 35E",
+   "sheet": 23,
+   "page": 23,
+   "crop": [
+    292,
+    2265,
+    2095,
+    3162
+   ],
+   "rotate": 0,
+   "front_page": false
+  },
+  {
+   "id": "36A",
+   "label": "FIG. 36A",
+   "sheet": 24,
+   "page": 24,
+   "crop": [
+    672,
+    324,
+    1818,
+    1268
+   ],
+   "rotate": 0,
+   "front_page": false
+  },
+  {
+   "id": "36B",
+   "label": "FIG. 36B",
+   "sheet": 24,
+   "page": 24,
+   "crop": [
+    636,
+    1299,
+    1857,
+    2243
+   ],
+   "rotate": 0,
+   "front_page": false
+  },
+  {
+   "id": "36C",
+   "label": "FIG. 36C",
+   "sheet": 24,
+   "page": 24,
+   "crop": [
+    484,
+    2243,
+    1864,
+    3205
+   ],
+   "rotate": 0,
+   "front_page": false
+  },
+  {
+   "id": "37A",
+   "label": "FIG. 37A",
+   "sheet": 25,
+   "page": 25,
+   "crop": [
+    364,
+    313,
+    2018,
+    1129
+   ],
+   "rotate": 0,
+   "front_page": false
+  },
+  {
+   "id": "37B",
+   "label": "FIG. 37B",
+   "sheet": 25,
+   "page": 25,
+   "crop": [
+    431,
+    1418,
+    1987,
+    2159
+   ],
+   "rotate": 0,
+   "front_page": false
+  },
+  {
+   "id": "37C",
+   "label": "FIG. 37C",
+   "sheet": 25,
+   "page": 25,
+   "crop": [
+    353,
+    2456,
+    2014,
+    3215
+   ],
+   "rotate": 0,
+   "front_page": false
+  },
+  {
+   "id": "38",
+   "label": "FIG. 38",
+   "sheet": 26,
+   "page": 26,
+   "crop": [
+    474,
+    691,
+    1951,
+    2835
+   ],
+   "rotate": 270,
+   "front_page": false
+  },
+  {
+   "id": "39A",
+   "label": "FIG. 39A",
+   "sheet": 27,
+   "page": 27,
+   "crop": [
+    447,
+    325,
+    1256,
+    1070
+   ],
+   "rotate": 0,
+   "front_page": false
+  },
+  {
+   "id": "39B",
+   "label": "FIG. 39B",
+   "sheet": 27,
+   "page": 27,
+   "crop": [
+    1256,
+    325,
+    2043,
+    1084
+   ],
+   "rotate": 0,
+   "front_page": false
+  },
+  {
+   "id": "39C",
+   "label": "FIG. 39C",
+   "sheet": 27,
+   "page": 27,
+   "crop": [
+    362,
+    1084,
+    2038,
+    2057
+   ],
+   "rotate": 0,
+   "front_page": false
+  },
+  {
+   "id": "39D",
+   "label": "FIG. 39D",
+   "sheet": 27,
+   "page": 27,
+   "crop": [
+    456,
+    2057,
+    1859,
+    3223
+   ],
+   "rotate": 0,
+   "front_page": false
+  },
+  {
+   "id": "40A",
+   "label": "FIG. 40A",
+   "sheet": 28,
+   "page": 28,
+   "crop": [
+    448,
+    421,
+    2035,
+    1303
+   ],
+   "rotate": 0,
+   "front_page": false
+  },
+  {
+   "id": "40B",
+   "label": "FIG. 40B",
+   "sheet": 28,
+   "page": 28,
+   "crop": [
+    445,
+    1303,
+    2081,
+    2246
+   ],
+   "rotate": 0,
+   "front_page": false
+  },
+  {
+   "id": "40C",
+   "label": "FIG. 40C",
+   "sheet": 28,
+   "page": 28,
+   "crop": [
+    287,
+    2387,
+    2100,
+    3089
+   ],
+   "rotate": 0,
+   "front_page": false
+  },
+  {
+   "id": "40D",
+   "label": "FIG. 40D",
+   "sheet": 29,
+   "page": 29,
+   "crop": [
+    276,
+    502,
+    2121,
+    1305
+   ],
+   "rotate": 0,
+   "front_page": false
+  },
+  {
+   "id": "40E",
+   "label": "FIG. 40E",
+   "sheet": 29,
+   "page": 29,
+   "crop": [
+    379,
+    1425,
+    2049,
+    2134
+   ],
+   "rotate": 0,
+   "front_page": false
+  },
+  {
+   "id": "41A",
+   "label": "FIG. 41A",
+   "sheet": 29,
+   "page": 29,
+   "crop": [
+    699,
+    2385,
+    1615,
+    3021
+   ],
+   "rotate": 0,
+   "front_page": false
+  },
+  {
+   "id": "41B",
+   "label": "FIG. 41B",
+   "sheet": 30,
+   "page": 30,
+   "crop": [
+    311,
+    488,
+    2067,
+    1728
+   ],
+   "rotate": 0,
+   "front_page": false
+  },
+  {
+   "id": "41C",
+   "label": "FIG. 41C",
+   "sheet": 30,
+   "page": 30,
+   "crop": [
+    294,
+    1793,
+    2056,
+    3006
+   ],
+   "rotate": 0,
+   "front_page": false
+  },
+  {
+   "id": "42A",
+   "label": "FIG. 42A",
+   "sheet": 31,
+   "page": 31,
+   "crop": [
+    643,
+    297,
+    1757,
+    1894
+   ],
+   "rotate": 0,
+   "front_page": false
+  },
+  {
+   "id": "42B",
+   "label": "FIG. 42B",
+   "sheet": 31,
+   "page": 31,
+   "crop": [
+    312,
+    2145,
+    2071,
+    3186
+   ],
+   "rotate": 0,
+   "front_page": false
+  },
+  {
+   "id": "43B",
+   "label": "FIG. 43B",
+   "sheet": 32,
+   "page": 32,
+   "crop": [
+    452,
+    324,
+    2006,
+    1728
+   ],
+   "rotate": 270,
+   "front_page": false
+  },
+  {
+   "id": "43A",
+   "label": "FIG. 43A",
+   "sheet": 32,
+   "page": 32,
+   "crop": [
+    390,
+    1730,
+    1992,
+    3190
+   ],
+   "rotate": 270,
+   "front_page": false
+  },
+  {
+   "id": "43C",
+   "label": "FIG. 43C",
+   "sheet": 33,
+   "page": 33,
+   "crop": [
+    491,
+    311,
+    1907,
+    1852
+   ],
+   "rotate": 0,
+   "front_page": false
+  },
+  {
+   "id": "43D",
+   "label": "FIG. 43D",
+   "sheet": 33,
+   "page": 33,
+   "crop": [
+    602,
+    2060,
+    1720,
+    3191
+   ],
+   "rotate": 0,
+   "front_page": false
+  },
+  {
+   "id": "44A",
+   "label": "FIG. 44A",
+   "sheet": 34,
+   "page": 34,
+   "crop": [
+    372,
+    318,
+    2051,
+    1139
+   ],
+   "rotate": 0,
+   "front_page": false
+  },
+  {
+   "id": "44B",
+   "label": "FIG. 44B",
+   "sheet": 34,
+   "page": 34,
+   "crop": [
+    375,
+    1309,
+    2040,
+    2157
+   ],
+   "rotate": 0,
+   "front_page": false
+  },
+  {
+   "id": "44C",
+   "label": "FIG. 44C",
+   "sheet": 34,
+   "page": 34,
+   "crop": [
+    324,
+    2304,
+    2047,
+    3184
+   ],
+   "rotate": 0,
+   "front_page": false
+  }
+ ],
+ "parts": [
+  {
+   "ref": "20",
+   "name": "pixel",
+   "figs": [
+    "1A",
+    "1B",
+    "1C",
+    "2",
+    "7",
+    "30B"
+   ]
+  },
+  {
+   "ref": "22",
+   "name": "silicon substrate",
+   "figs": [
+    "1A",
+    "1B",
+    "2",
+    "30B"
+   ]
+  },
+  {
+   "ref": "24",
+   "name": "insulating spacer",
+   "figs": [
+    "1A",
+    "1B",
+    "2",
+    "30B"
+   ]
+  },
+  {
+   "ref": "26",
+   "name": "metal hinge layer",
+   "figs": [
+    "1A",
+    "1B",
+    "2",
+    "30B"
+   ]
+  },
+  {
+   "ref": "28",
+   "name": "metal beam layer",
+   "figs": [
+    "1A",
+    "1B",
+    "2",
+    "30B"
+   ]
+  },
+  {
+   "ref": "30",
+   "name": "beam",
+   "alt": [
+    "torsion beam"
+   ],
+   "figs": [
+    "1A",
+    "1B",
+    "1C",
+    "2",
+    "7",
+    "9",
+    "15",
+    "25",
+    "30B"
+   ]
+  },
+  {
+   "ref": "31",
+   "name": "tip",
+   "figs": [
+    "7",
+    "9",
+    "15"
+   ]
+  },
+  {
+   "ref": "32",
+   "name": "plasma etch access holes",
+   "figs": [
+    "1A",
+    "1B",
+    "1C",
+    "2",
+    "30B"
+   ]
+  },
+  {
+   "ref": "34",
+   "name": "torsion hinges",
+   "alt": [
+    "portions"
+   ],
+   "figs": [
+    "1A",
+    "1C",
+    "30B"
+   ]
+  },
+  {
+   "ref": "36",
+   "name": "torsion hinges",
+   "alt": [
+    "portions"
+   ],
+   "figs": [
+    "1A",
+    "1C",
+    "30B"
+   ]
+  },
+  {
+   "ref": "38",
+   "name": "plasma etch access gap",
+   "figs": [
+    "1A",
+    "1B",
+    "1C"
+   ]
+  },
+  {
+   "ref": "40",
+   "name": "Electrodes",
+   "alt": [
+    "landing electrodes"
+   ],
+   "figs": [
+    "1A",
+    "1B",
+    "1C",
+    "2",
+    "7",
+    "9",
+    "15"
+   ]
+  },
+  {
+   "ref": "41",
+   "name": "Electrodes",
+   "alt": [
+    "landing electrodes"
+   ],
+   "figs": [
+    "1B",
+    "1C",
+    "2",
+    "7",
+    "9",
+    "15"
+   ]
+  },
+  {
+   "ref": "42",
+   "name": "Electrodes",
+   "alt": [
+    "address electrode"
+   ],
+   "figs": [
+    "1A",
+    "1B",
+    "1C",
+    "2",
+    "7",
+    "9",
+    "15",
+    "25"
+   ]
+  },
+  {
+   "ref": "44",
+   "name": "silicon dioxide layer",
+   "figs": [
+    "1A",
+    "1B",
+    "2",
+    "30B"
+   ]
+  },
+  {
+   "ref": "46",
+   "name": "Electrodes",
+   "alt": [
+    "address electrode"
+   ],
+   "figs": [
+    "1A",
+    "1B",
+    "1C",
+    "2",
+    "7",
+    "9",
+    "15",
+    "25"
+   ]
+  },
+  {
+   "ref": "50",
+   "name": "photoresist",
+   "figs": [
+    "35C",
+    "35D"
+   ]
+  },
+  {
+   "ref": "52",
+   "name": "PMMA (polymethyl methacrylate)",
+   "figs": [
+    "35D"
+   ]
+  },
+  {
+   "ref": "120",
+   "name": "pixel",
+   "figs": [
+    "3B"
+   ]
+  },
+  {
+   "ref": "122",
+   "name": "substrate",
+   "figs": [
+    "3B"
+   ]
+  },
+  {
+   "ref": "124",
+   "name": "insulating spacer",
+   "figs": [
+    "3B"
+   ]
+  },
+  {
+   "ref": "126",
+   "name": "metal hinge layer",
+   "figs": [
+    "3B"
+   ]
+  },
+  {
+   "ref": "128",
+   "name": "metal beam layer",
+   "figs": [
+    "3B"
+   ]
+  },
+  {
+   "ref": "130",
+   "name": "torsion beam",
+   "figs": [
+    "3B",
+    "4"
+   ]
+  },
+  {
+   "ref": "131",
+   "name": "tip",
+   "figs": [
+    "4"
+   ]
+  },
+  {
+   "ref": "134",
+   "name": "torsion hinges",
+   "figs": [
+    "3B"
+   ]
+  },
+  {
+   "ref": "135",
+   "name": "opposite corners",
+   "figs": [
+    "4"
+   ]
+  },
+  {
+   "ref": "136",
+   "name": "torsion hinges",
+   "figs": [
+    "3B"
+   ]
+  },
+  {
+   "ref": "137",
+   "name": "opposite corners",
+   "figs": [
+    "4"
+   ]
+  },
+  {
+   "ref": "142",
+   "name": "address electrode",
+   "figs": [
+    "3B",
+    "4"
+   ]
+  },
+  {
+   "ref": "146",
+   "name": "address electrode",
+   "figs": [
+    "3B",
+    "4"
+   ]
+  },
+  {
+   "ref": "180",
+   "name": "thin aluminum hinge layer",
+   "alt": [
+    "thin metal region",
+    "hinge metal"
+   ],
+   "figs": [
+    "40A",
+    "40B",
+    "40C",
+    "40D",
+    "40E",
+    "41A",
+    "41C"
+   ]
+  },
+  {
+   "ref": "182",
+   "name": "spacer",
+   "figs": [
+    "40A",
+    "40B",
+    "40C",
+    "40D",
+    "40E"
+   ]
+  },
+  {
+   "ref": "184",
+   "name": "spacer layer",
+   "alt": [
+    "PMMA"
+   ],
+   "figs": [
+    "40A",
+    "40B"
+   ]
+  },
+  {
+   "ref": "186",
+   "name": "antireflection coating (ARC)",
+   "figs": [
+    "40A",
+    "40B"
+   ]
+  },
+  {
+   "ref": "188",
+   "name": "photoresist",
+   "figs": [
+    "40A",
+    "40B"
+   ]
+  },
+  {
+   "ref": "190",
+   "name": "beam metal",
+   "alt": [
+    "thick metal region"
+   ],
+   "figs": [
+    "40B",
+    "40C",
+    "40D",
+    "40E",
+    "41A",
+    "41C"
+   ]
+  },
+  {
+   "ref": "192",
+   "name": "patterned edge",
+   "figs": [
+    "40C",
+    "40E",
+    "41A",
+    "41C"
+   ]
+  },
+  {
+   "ref": "194",
+   "name": "opening in the photoresist",
+   "figs": [
+    "40D",
+    "41B"
+   ]
+  },
+  {
+   "ref": "220",
+   "name": "preferred embodiment pixel",
+   "figs": [
+    "27"
+   ]
+  },
+  {
+   "ref": "230",
+   "name": "",
+   "figs": [
+    "27"
+   ]
+  },
+  {
+   "ref": "240",
+   "name": "landing electrodes",
+   "figs": [
+    "27"
+   ]
+  },
+  {
+   "ref": "241",
+   "name": "landing electrodes",
+   "figs": [
+    "27"
+   ]
+  },
+  {
+   "ref": "242",
+   "name": "address electrodes",
+   "figs": [
+    "27"
+   ]
+  },
+  {
+   "ref": "243",
+   "name": "balance electrodes",
+   "figs": [
+    "27"
+   ]
+  },
+  {
+   "ref": "245",
+   "name": "balance electrodes",
+   "figs": [
+    "27"
+   ]
+  },
+  {
+   "ref": "246",
+   "name": "address electrodes",
+   "figs": [
+    "27"
+   ]
+  },
+  {
+   "ref": "310",
+   "name": "linear array",
+   "figs": [
+    "31",
+    "32A",
+    "32B",
+    "32C"
+   ]
+  },
+  {
+   "ref": "320",
+   "name": "second preferred embodiment pixels",
+   "figs": [
+    "31"
+   ]
+  },
+  {
+   "ref": "320'",
+   "name": "second preferred embodiment pixels",
+   "figs": [
+    "31"
+   ]
+  },
+  {
+   "ref": "320''",
+   "name": "second preferred embodiment pixels",
+   "figs": [
+    "31"
+   ]
+  },
+  {
+   "ref": "320'''",
+   "name": "second preferred embodiment pixels",
+   "figs": [
+    "31"
+   ]
+  },
+  {
+   "ref": "322",
+   "name": "substrate",
+   "figs": [
+    "35A",
+    "35B",
+    "35C",
+    "35D",
+    "35E",
+    "37A",
+    "37B",
+    "37C"
+   ]
+  },
+  {
+   "ref": "324",
+   "name": "spacer",
+   "figs": [
+    "35B",
+    "35C",
+    "35D",
+    "35E",
+    "36A",
+    "36B",
+    "36C",
+    "37A",
+    "37B",
+    "37C"
+   ]
+  },
+  {
+   "ref": "326",
+   "name": "hinge layer",
+   "figs": [
+    "35B",
+    "35C",
+    "35D",
+    "35E",
+    "37A",
+    "37B",
+    "37C"
+   ]
+  },
+  {
+   "ref": "328",
+   "name": "beam layer",
+   "figs": [
+    "35C",
+    "35D",
+    "35E",
+    "36A",
+    "36B",
+    "36C",
+    "37A",
+    "37B",
+    "37C"
+   ]
+  },
+  {
+   "ref": "330",
+   "name": "beam",
+   "figs": [
+    "31",
+    "35E"
+   ]
+  },
+  {
+   "ref": "330'",
+   "name": "beam",
+   "figs": [
+    "31"
+   ]
+  },
+  {
+   "ref": "330''",
+   "name": "beam",
+   "figs": [
+    "31"
+   ]
+  },
+  {
+   "ref": "332",
+   "name": "plasma etch access holes",
+   "figs": [
+    "35C",
+    "35E",
+    "36A",
+    "36B",
+    "36C",
+    "37A",
+    "37B",
+    "37C"
+   ]
+  },
+  {
+   "ref": "332''",
+   "name": "plasma etch access holes",
+   "figs": [
+    "31"
+   ]
+  },
+  {
+   "ref": "334",
+   "name": "torsion hinges",
+   "figs": [
+    "31",
+    "35E",
+    "36C"
+   ]
+  },
+  {
+   "ref": "336",
+   "name": "torsion hinges",
+   "figs": [
+    "31",
+    "35E",
+    "36C"
+   ]
+  },
+  {
+   "ref": "338",
+   "name": "plasma etch access gap",
+   "figs": [
+    "36A",
+    "36B",
+    "36C"
+   ]
+  },
+  {
+   "ref": "338''",
+   "name": "plasma etch access gap",
+   "figs": [
+    "31"
+   ]
+  },
+  {
+   "ref": "340",
+   "name": "landing electrodes",
+   "figs": [
+    "31"
+   ]
+  },
+  {
+   "ref": "340'",
+   "name": "landing electrodes",
+   "figs": [
+    "31"
+   ]
+  },
+  {
+   "ref": "341",
+   "name": "landing electrodes",
+   "figs": [
+    "31"
+   ]
+  },
+  {
+   "ref": "341'",
+   "name": "landing electrodes",
+   "figs": [
+    "31"
+   ]
+  },
+  {
+   "ref": "342",
+   "name": "address electrodes",
+   "figs": [
+    "31"
+   ]
+  },
+  {
+   "ref": "342'",
+   "name": "address electrodes",
+   "figs": [
+    "31"
+   ]
+  },
+  {
+   "ref": "343",
+   "name": "central metal line",
+   "figs": [
+    "31"
+   ]
+  },
+  {
+   "ref": "344",
+   "name": "thermal oxide",
+   "figs": [
+    "35A",
+    "35B",
+    "35C",
+    "35D",
+    "35E",
+    "37A",
+    "37B",
+    "37C"
+   ]
+  },
+  {
+   "ref": "346",
+   "name": "address electrodes",
+   "alt": [
+    "addressing electrode"
+   ],
+   "figs": [
+    "31",
+    "35A",
+    "35B",
+    "35C",
+    "35D",
+    "35E",
+    "37A",
+    "37B",
+    "37C"
+   ]
+  },
+  {
+   "ref": "346'",
+   "name": "address electrodes",
+   "alt": [
+    "addressing electrode"
+   ],
+   "figs": [
+    "31"
+   ]
+  },
+  {
+   "ref": "348",
+   "name": "torsion hinge etch stops",
+   "figs": [
+    "35B",
+    "35C",
+    "35D",
+    "36A",
+    "36B",
+    "37A",
+    "37B"
+   ]
+  },
+  {
+   "ref": "349",
+   "name": "remnants",
+   "figs": [
+    "35E",
+    "36A",
+    "36B",
+    "36C",
+    "37C"
+   ]
+  },
+  {
+   "ref": "350",
+   "name": "system",
+   "figs": [
+    "32A",
+    "32B",
+    "32C"
+   ]
+  },
+  {
+   "ref": "352",
+   "name": "light source and optics",
+   "figs": [
+    "32A",
+    "32B"
+   ]
+  },
+  {
+   "ref": "354",
+   "name": "imaging lens",
+   "figs": [
+    "32A",
+    "32B",
+    "32C"
+   ]
+  },
+  {
+   "ref": "355",
+   "name": "image",
+   "figs": [
+    "32C"
+   ]
+  },
+  {
+   "ref": "356",
+   "name": "photoconductive drum",
+   "figs": [
+    "32A",
+    "32B",
+    "32C"
+   ]
+  },
+  {
+   "ref": "358",
+   "name": "sheet",
+   "figs": [
+    "32A",
+    "32B"
+   ]
+  },
+  {
+   "ref": "360",
+   "name": "sheet",
+   "figs": [
+    "32A",
+    "32B"
+   ]
+  },
+  {
+   "ref": "361",
+   "name": "sheet",
+   "figs": [
+    "32A",
+    "32B"
+   ]
+  },
+  {
+   "ref": "362",
+   "name": "sheet",
+   "figs": [
+    "32A",
+    "32B"
+   ]
+  },
+  {
+   "ref": "364",
+   "name": "line",
+   "figs": [
+    "32A",
+    "32B",
+    "32C"
+   ]
+  },
+  {
+   "ref": "420",
+   "name": "pixel",
+   "figs": [
+    "33",
+    "34"
+   ]
+  },
+  {
+   "ref": "420'",
+   "name": "pixel",
+   "figs": [
+    "34"
+   ]
+  },
+  {
+   "ref": "422",
+   "name": "p type silicon substrate",
+   "figs": [
+    "33"
+   ]
+  },
+  {
+   "ref": "424",
+   "name": "",
+   "figs": [
+    "33"
+   ]
+  },
+  {
+   "ref": "426",
+   "name": "metal layers",
+   "figs": [
+    "33"
+   ]
+  },
+  {
+   "ref": "428",
+   "name": "metal layers",
+   "figs": [
+    "33"
+   ]
+  },
+  {
+   "ref": "430",
+   "name": "beam",
+   "figs": [
+    "33",
+    "34"
+   ]
+  },
+  {
+   "ref": "430'",
+   "name": "beam",
+   "figs": [
+    "34"
+   ]
+  },
+  {
+   "ref": "432",
+   "name": "",
+   "figs": [
+    "34"
+   ]
+  },
+  {
+   "ref": "434",
+   "name": "",
+   "figs": [
+    "33",
+    "34"
+   ]
+  },
+  {
+   "ref": "434'",
+   "name": "",
+   "figs": [
+    "34"
+   ]
+  },
+  {
+   "ref": "436",
+   "name": "",
+   "figs": [
+    "33",
+    "34"
+   ]
+  },
+  {
+   "ref": "436'",
+   "name": "",
+   "figs": [
+    "34"
+   ]
+  },
+  {
+   "ref": "438",
+   "name": "",
+   "figs": [
+    "34"
+   ]
+  },
+  {
+   "ref": "440",
+   "name": "landing electrodes",
+   "figs": [
+    "34"
+   ]
+  },
+  {
+   "ref": "440'",
+   "name": "landing electrodes",
+   "figs": [
+    "34"
+   ]
+  },
+  {
+   "ref": "441",
+   "name": "landing electrodes",
+   "figs": [
+    "34"
+   ]
+  },
+  {
+   "ref": "441'",
+   "name": "landing electrodes",
+   "figs": [
+    "34"
+   ]
+  },
+  {
+   "ref": "442",
+   "name": "address electrodes",
+   "figs": [
+    "34"
+   ]
+  },
+  {
+   "ref": "442'",
+   "name": "address electrodes",
+   "figs": [
+    "34"
+   ]
+  },
+  {
+   "ref": "444",
+   "name": "silicon dioxide",
+   "figs": [
+    "33"
+   ]
+  },
+  {
+   "ref": "446",
+   "name": "address electrode",
+   "figs": [
+    "33",
+    "34"
+   ]
+  },
+  {
+   "ref": "446'",
+   "name": "address electrode",
+   "figs": [
+    "34"
+   ]
+  },
+  {
+   "ref": "450",
+   "name": "enable gate",
+   "figs": [
+    "33",
+    "34"
+   ]
+  },
+  {
+   "ref": "452",
+   "name": "n+ doped regions",
+   "alt": [
+    "MOSFET drains"
+   ],
+   "figs": [
+    "34"
+   ]
+  },
+  {
+   "ref": "454",
+   "name": "gate oxide",
+   "figs": [
+    "33"
+   ]
+  },
+  {
+   "ref": "456",
+   "name": "n+ doped regions",
+   "alt": [
+    "MOSFET drains"
+   ],
+   "figs": [
+    "33",
+    "34"
+   ]
+  },
+  {
+   "ref": "456'",
+   "name": "n+ doped regions",
+   "alt": [
+    "MOSFET drains"
+   ],
+   "figs": [
+    "34"
+   ]
+  },
+  {
+   "ref": "462",
+   "name": "n+ doped regions",
+   "figs": [
+    "34"
+   ]
+  },
+  {
+   "ref": "462'",
+   "name": "n+ doped regions",
+   "figs": [
+    "34"
+   ]
+  },
+  {
+   "ref": "466",
+   "name": "n+ doped regions",
+   "figs": [
+    "33",
+    "34"
+   ]
+  },
+  {
+   "ref": "466'",
+   "name": "n+ doped regions",
+   "figs": [
+    "34"
+   ]
+  },
+  {
+   "ref": "510",
+   "name": "linear array",
+   "figs": [
+    "38"
+   ]
+  },
+  {
+   "ref": "520",
+   "name": "third preferred embodiment pixels",
+   "figs": [
+    "38"
+   ]
+  },
+  {
+   "ref": "520'",
+   "name": "third preferred embodiment pixels",
+   "figs": [
+    "38"
+   ]
+  },
+  {
+   "ref": "520''",
+   "name": "third preferred embodiment pixels",
+   "figs": [
+    "38"
+   ]
+  },
+  {
+   "ref": "524",
+   "name": "spacer",
+   "figs": [
+    "38"
+   ]
+  },
+  {
+   "ref": "530",
+   "name": "Beams",
+   "figs": [
+    "38"
+   ]
+  },
+  {
+   "ref": "530'",
+   "name": "Beams",
+   "figs": [
+    "38"
+   ]
+  },
+  {
+   "ref": "530''",
+   "name": "Beams",
+   "figs": [
+    "38"
+   ]
+  },
+  {
+   "ref": "532",
+   "name": "plasma etch access holes",
+   "figs": [
+    "38"
+   ]
+  },
+  {
+   "ref": "532''",
+   "name": "plasma etch access holes",
+   "figs": [
+    "38"
+   ]
+  },
+  {
+   "ref": "534",
+   "name": "torsion hinges",
+   "figs": [
+    "38"
+   ]
+  },
+  {
+   "ref": "536",
+   "name": "torsion hinges",
+   "figs": [
+    "38"
+   ]
+  },
+  {
+   "ref": "538",
+   "name": "plasma etch access gaps",
+   "figs": [
+    "38"
+   ]
+  },
+  {
+   "ref": "538'",
+   "name": "plasma etch access gaps",
+   "figs": [
+    "38"
+   ]
+  },
+  {
+   "ref": "538''",
+   "name": "plasma etch access gaps",
+   "figs": [
+    "38"
+   ]
+  },
+  {
+   "ref": "540",
+   "name": "landing electrodes",
+   "figs": [
+    "38"
+   ]
+  },
+  {
+   "ref": "540'",
+   "name": "landing electrodes",
+   "figs": [
+    "38"
+   ]
+  },
+  {
+   "ref": "541",
+   "name": "landing electrodes",
+   "figs": [
+    "38"
+   ]
+  },
+  {
+   "ref": "542",
+   "name": "address electrodes",
+   "figs": [
+    "38"
+   ]
+  },
+  {
+   "ref": "542'",
+   "name": "address electrodes",
+   "figs": [
+    "38"
+   ]
+  },
+  {
+   "ref": "546",
+   "name": "address electrodes",
+   "figs": [
+    "38"
+   ]
+  },
+  {
+   "ref": "560",
+   "name": "cantilever beams",
+   "figs": [
+    "39D"
+   ]
+  },
+  {
+   "ref": "560''",
+   "name": "cantilever beams",
+   "figs": [
+    "39D"
+   ]
+  },
+  {
+   "ref": "561",
+   "name": "posts",
+   "alt": [
+    "conductive posts"
+   ],
+   "figs": [
+    "39D"
+   ]
+  },
+  {
+   "ref": "561'",
+   "name": "posts",
+   "alt": [
+    "conductive posts"
+   ],
+   "figs": [
+    "39D"
+   ]
+  },
+  {
+   "ref": "561''",
+   "name": "posts",
+   "alt": [
+    "conductive posts"
+   ],
+   "figs": [
+    "39D"
+   ]
+  },
+  {
+   "ref": "562",
+   "name": "cantilever hinges",
+   "figs": [
+    "39D"
+   ]
+  },
+  {
+   "ref": "562'",
+   "name": "cantilever hinges",
+   "figs": [
+    "39D"
+   ]
+  },
+  {
+   "ref": "562''",
+   "name": "cantilever hinges",
+   "figs": [
+    "39D"
+   ]
+  },
+  {
+   "ref": "563",
+   "name": "electrode",
+   "figs": [
+    "39D"
+   ]
+  },
+  {
+   "ref": "564",
+   "name": "row electrodes",
+   "figs": [
+    "39D"
+   ]
+  },
+  {
+   "ref": "565",
+   "name": "address electrodes",
+   "figs": [
+    "39D"
+   ]
+  },
+  {
+   "ref": "565'",
+   "name": "address electrodes",
+   "figs": [
+    "39D"
+   ]
+  },
+  {
+   "ref": "565''",
+   "name": "address electrodes",
+   "figs": [
+    "39D"
+   ]
+  },
+  {
+   "ref": "570",
+   "name": "cantilever beam",
+   "figs": [
+    "39A"
+   ]
+  },
+  {
+   "ref": "572",
+   "name": "cantilever hinge",
+   "figs": [
+    "39A"
+   ]
+  },
+  {
+   "ref": "574",
+   "name": "plasma etch access hole",
+   "figs": [
+    "39A"
+   ]
+  },
+  {
+   "ref": "576",
+   "name": "plasma etch access gap",
+   "figs": [
+    "39A"
+   ]
+  },
+  {
+   "ref": "578",
+   "name": "address electrode",
+   "figs": [
+    "39A"
+   ]
+  },
+  {
+   "ref": "579",
+   "name": "landing electrode",
+   "figs": [
+    "39A"
+   ]
+  },
+  {
+   "ref": "580",
+   "name": "torsion beam",
+   "figs": [
+    "39B"
+   ]
+  },
+  {
+   "ref": "581",
+   "name": "torsion hinges",
+   "figs": [
+    "39B"
+   ]
+  },
+  {
+   "ref": "582",
+   "name": "torsion hinges",
+   "figs": [
+    "39B"
+   ]
+  },
+  {
+   "ref": "584",
+   "name": "plasma etch access holes",
+   "figs": [
+    "39B"
+   ]
+  },
+  {
+   "ref": "586",
+   "name": "plasma etch access gap",
+   "figs": [
+    "39B"
+   ]
+  },
+  {
+   "ref": "588",
+   "name": "address electrode",
+   "figs": [
+    "39B"
+   ]
+  },
+  {
+   "ref": "589",
+   "name": "landing electrode",
+   "figs": [
+    "39B"
+   ]
+  },
+  {
+   "ref": "590",
+   "name": "cantilever beams",
+   "figs": [
+    "39C"
+   ]
+  },
+  {
+   "ref": "590'",
+   "name": "cantilever beams",
+   "figs": [
+    "39C"
+   ]
+  },
+  {
+   "ref": "590''",
+   "name": "cantilever beams",
+   "figs": [
+    "39C"
+   ]
+  },
+  {
+   "ref": "592",
+   "name": "Cantilever hinges",
+   "figs": [
+    "39C"
+   ]
+  },
+  {
+   "ref": "592'",
+   "name": "Cantilever hinges",
+   "figs": [
+    "39C"
+   ]
+  },
+  {
+   "ref": "592''",
+   "name": "Cantilever hinges",
+   "figs": [
+    "39C"
+   ]
+  },
+  {
+   "ref": "610",
+   "name": "array",
+   "figs": [
+    "42A"
+   ]
+  },
+  {
+   "ref": "620",
+   "name": "fourth preferred embodiment pixels",
+   "figs": []
+  },
+  {
+   "ref": "622",
+   "name": "p- silicon substrate",
+   "figs": [
+    "43A",
+    "44A",
+    "44B",
+    "44C"
+   ]
+  },
+  {
+   "ref": "624",
+   "name": "posts",
+   "alt": [
+    "Metal posts"
+   ],
+   "figs": [
+    "42A",
+    "43D",
+    "44A"
+   ]
+  },
+  {
+   "ref": "624'",
+   "name": "posts",
+   "alt": [
+    "Metal posts"
+   ],
+   "figs": [
+    "42A",
+    "43D"
+   ]
+  },
+  {
+   "ref": "624''",
+   "name": "posts",
+   "alt": [
+    "Metal posts"
+   ],
+   "figs": [
+    "42A",
+    "43D",
+    "44A"
+   ]
+  },
+  {
+   "ref": "626",
+   "name": "reflecting layers",
+   "alt": [
+    "hinge metal"
+   ],
+   "figs": [
+    "44A",
+    "44C"
+   ]
+  },
+  {
+   "ref": "628",
+   "name": "reflecting layers",
+   "alt": [
+    "beam metal"
+   ],
+   "figs": [
+    "44A",
+    "44C"
+   ]
+  },
+  {
+   "ref": "630",
+   "name": "torsion beam",
+   "alt": [
+    "beams"
+   ],
+   "figs": [
+    "42A",
+    "44B",
+    "44C"
+   ]
+  },
+  {
+   "ref": "630'",
+   "name": "torsion beam",
+   "alt": [
+    "beams"
+   ],
+   "figs": [
+    "42A"
+   ]
+  },
+  {
+   "ref": "630''",
+   "name": "torsion beam",
+   "alt": [
+    "beams"
+   ],
+   "figs": [
+    "42A",
+    "44B",
+    "44C"
+   ]
+  },
+  {
+   "ref": "634",
+   "name": "torsion hinges",
+   "figs": [
+    "42A",
+    "44B"
+   ]
+  },
+  {
+   "ref": "634'",
+   "name": "torsion hinges",
+   "figs": [
+    "42A"
+   ]
+  },
+  {
+   "ref": "636",
+   "name": "torsion hinges",
+   "figs": [
+    "42A"
+   ]
+  },
+  {
+   "ref": "636'",
+   "name": "torsion hinges",
+   "figs": [
+    "42A"
+   ]
+  },
+  {
+   "ref": "640",
+   "name": "landing electrodes",
+   "figs": [
+    "43C",
+    "44A",
+    "44B"
+   ]
+  },
+  {
+   "ref": "640'",
+   "name": "landing electrodes",
+   "figs": [
+    "43C"
+   ]
+  },
+  {
+   "ref": "640''",
+   "name": "landing electrodes",
+   "figs": [
+    "43C",
+    "44B"
+   ]
+  },
+  {
+   "ref": "641",
+   "name": "landing electrodes",
+   "figs": [
+    "43C"
+   ]
+  },
+  {
+   "ref": "641'",
+   "name": "landing electrodes",
+   "figs": [
+    "43C",
+    "44A"
+   ]
+  },
+  {
+   "ref": "642",
+   "name": "Address electrodes",
+   "alt": [
+    "landing electrodes"
+   ],
+   "figs": [
+    "43C",
+    "44B",
+    "44C"
+   ]
+  },
+  {
+   "ref": "642'",
+   "name": "Address electrodes",
+   "alt": [
+    "landing electrodes"
+   ],
+   "figs": [
+    "44B"
+   ]
+  },
+  {
+   "ref": "642''",
+   "name": "Address electrodes",
+   "alt": [
+    "landing electrodes"
+   ],
+   "figs": [
+    "44C"
+   ]
+  },
+  {
+   "ref": "643",
+   "name": "Gate oxide",
+   "figs": [
+    "44A"
+   ]
+  },
+  {
+   "ref": "644",
+   "name": "Insulating silicon dioxide (oxide)",
+   "figs": [
+    "44A"
+   ]
+  },
+  {
+   "ref": "646",
+   "name": "Address electrodes",
+   "alt": [
+    "landing electrodes"
+   ],
+   "figs": [
+    "43C",
+    "44B",
+    "44C"
+   ]
+  },
+  {
+   "ref": "646'",
+   "name": "Address electrodes",
+   "alt": [
+    "landing electrodes"
+   ],
+   "figs": [
+    "43C",
+    "44B",
+    "44C"
+   ]
+  },
+  {
+   "ref": "660",
+   "name": "n+ diffused regions",
+   "alt": [
+    "Diffused lines",
+    "bitlines"
+   ],
+   "figs": [
+    "43A",
+    "43B",
+    "44A",
+    "44B",
+    "44C"
+   ]
+  },
+  {
+   "ref": "660''",
+   "name": "n+ diffused regions",
+   "alt": [
+    "Diffused lines",
+    "bitlines"
+   ],
+   "figs": [
+    "43A",
+    "44A",
+    "44B",
+    "44C"
+   ]
+  },
+  {
+   "ref": "661",
+   "name": "n+ diffused regions",
+   "alt": [
+    "Diffused lines",
+    "bitlines"
+   ],
+   "figs": [
+    "43A",
+    "43B",
+    "44A",
+    "44B",
+    "44C"
+   ]
+  },
+  {
+   "ref": "661'",
+   "name": "n+ diffused regions",
+   "alt": [
+    "Diffused lines",
+    "bitlines"
+   ],
+   "figs": [
+    "43A",
+    "44A",
+    "44B",
+    "44C"
+   ]
+  },
+  {
+   "ref": "662",
+   "name": "n+ diffused regions",
+   "alt": [
+    "floating sources"
+   ],
+   "figs": [
+    "43A",
+    "43B",
+    "43C",
+    "44B"
+   ]
+  },
+  {
+   "ref": "662'",
+   "name": "n+ diffused regions",
+   "alt": [
+    "floating sources"
+   ],
+   "figs": [
+    "43A"
+   ]
+  },
+  {
+   "ref": "663",
+   "name": "vias",
+   "figs": [
+    "43B",
+    "43C"
+   ]
+  },
+  {
+   "ref": "666",
+   "name": "n+ diffused regions",
+   "alt": [
+    "floating sources"
+   ],
+   "figs": [
+    "43A",
+    "43B"
+   ]
+  },
+  {
+   "ref": "666'",
+   "name": "n+ diffused regions",
+   "alt": [
+    "floating sources"
+   ],
+   "figs": [
+    "43A"
+   ]
+  },
+  {
+   "ref": "667",
+   "name": "vias",
+   "figs": [
+    "43B",
+    "43C"
+   ]
+  },
+  {
+   "ref": "670",
+   "name": "p+ channel stops",
+   "figs": [
+    "43A",
+    "44A",
+    "44B",
+    "44C"
+   ]
+  },
+  {
+   "ref": "670'",
+   "name": "p+ channel stops",
+   "figs": [
+    "43A",
+    "44A",
+    "44B",
+    "44C"
+   ]
+  },
+  {
+   "ref": "672",
+   "name": "p+ channel stops",
+   "figs": [
+    "43A",
+    "44A",
+    "44B",
+    "44C"
+   ]
+  },
+  {
+   "ref": "680",
+   "name": "polysilicon wordlines",
+   "figs": [
+    "43B"
+   ]
+  },
+  {
+   "ref": "680'",
+   "name": "polysilicon wordlines",
+   "figs": [
+    "43B"
+   ]
+  },
+  {
+   "ref": "682",
+   "name": "gates",
+   "figs": [
+    "43B",
+    "43C",
+    "44B",
+    "44C"
+   ]
+  },
+  {
+   "ref": "686",
+   "name": "gates",
+   "figs": [
+    "43B"
+   ]
+  },
+  {
+   "ref": "686'",
+   "name": "gates",
+   "figs": [
+    "43B"
+   ]
+  }
+ ]
+}

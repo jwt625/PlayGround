@@ -1,0 +1,581 @@
+{
+ "pn": "2524035",
+ "figures": [
+  {
+   "id": "1",
+   "label": "FIG. 1",
+   "sheet": 1,
+   "page": 0,
+   "crop": [
+    587,
+    532,
+    1847,
+    981
+   ],
+   "rotate": 0,
+   "front_page": true
+  },
+  {
+   "id": "1A",
+   "label": "FIG. 1A",
+   "sheet": 1,
+   "page": 0,
+   "crop": [
+    402,
+    1001,
+    1964,
+    1560
+   ],
+   "rotate": 0,
+   "front_page": false
+  },
+  {
+   "id": "2",
+   "label": "FIG. 2",
+   "sheet": 1,
+   "page": 0,
+   "crop": [
+    456,
+    1593,
+    1058,
+    2005
+   ],
+   "rotate": 0,
+   "front_page": false
+  },
+  {
+   "id": "3",
+   "label": "FIG. 3",
+   "sheet": 2,
+   "page": 1,
+   "crop": [
+    617,
+    517,
+    1169,
+    1056
+   ],
+   "rotate": 0,
+   "front_page": false
+  },
+  {
+   "id": "3A",
+   "label": "FIG. 3A",
+   "sheet": 2,
+   "page": 1,
+   "crop": [
+    1273,
+    518,
+    1818,
+    1058
+   ],
+   "rotate": 0,
+   "front_page": false
+  },
+  {
+   "id": "4",
+   "label": "FIG. 4",
+   "sheet": 2,
+   "page": 1,
+   "crop": [
+    635,
+    1030,
+    1174,
+    1541
+   ],
+   "rotate": 0,
+   "front_page": false
+  },
+  {
+   "id": "5",
+   "label": "FIG. 5",
+   "sheet": 2,
+   "page": 1,
+   "crop": [
+    1283,
+    1041,
+    1824,
+    1538
+   ],
+   "rotate": 0,
+   "front_page": false
+  },
+  {
+   "id": "6",
+   "label": "FIG. 6",
+   "sheet": 2,
+   "page": 1,
+   "crop": [
+    639,
+    1519,
+    1180,
+    2023
+   ],
+   "rotate": 0,
+   "front_page": false
+  },
+  {
+   "id": "7",
+   "label": "FIG. 7",
+   "sheet": 2,
+   "page": 1,
+   "crop": [
+    1279,
+    1515,
+    1828,
+    1992
+   ],
+   "rotate": 0,
+   "front_page": false
+  },
+  {
+   "id": "8",
+   "label": "FIG. 8",
+   "sheet": 2,
+   "page": 1,
+   "crop": [
+    557,
+    2018,
+    1242,
+    2522
+   ],
+   "rotate": 0,
+   "front_page": false
+  },
+  {
+   "id": "9",
+   "label": "FIG. 9",
+   "sheet": 2,
+   "page": 1,
+   "crop": [
+    1246,
+    1984,
+    1976,
+    2523
+   ],
+   "rotate": 0,
+   "front_page": false
+  },
+  {
+   "id": "10",
+   "label": "FIG. 10",
+   "sheet": 1,
+   "page": 0,
+   "crop": [
+    1266,
+    1598,
+    1848,
+    2074
+   ],
+   "rotate": 0,
+   "front_page": false
+  },
+  {
+   "id": "11",
+   "label": "FIG. 11",
+   "sheet": 1,
+   "page": 0,
+   "crop": [
+    439,
+    2113,
+    1047,
+    2670
+   ],
+   "rotate": 0,
+   "front_page": false
+  },
+  {
+   "id": "12",
+   "label": "FIG. 12",
+   "sheet": 1,
+   "page": 0,
+   "crop": [
+    1270,
+    2115,
+    1809,
+    2620
+   ],
+   "rotate": 0,
+   "front_page": false
+  },
+  {
+   "id": "13",
+   "label": "FIG. 13",
+   "sheet": 3,
+   "page": 2,
+   "crop": [
+    649,
+    504,
+    1552,
+    1013
+   ],
+   "rotate": 0,
+   "front_page": false
+  },
+  {
+   "id": "14",
+   "label": "FIG. 14",
+   "sheet": 3,
+   "page": 2,
+   "crop": [
+    667,
+    1006,
+    1543,
+    1428
+   ],
+   "rotate": 0,
+   "front_page": false
+  },
+  {
+   "id": "15",
+   "label": "FIG. 15",
+   "sheet": 3,
+   "page": 2,
+   "crop": [
+    520,
+    1396,
+    1659,
+    2244
+   ],
+   "rotate": 0,
+   "front_page": false
+  },
+  {
+   "id": "16",
+   "label": "FIG. 16",
+   "sheet": 3,
+   "page": 2,
+   "crop": [
+    431,
+    2070,
+    2008,
+    2792
+   ],
+   "rotate": 0,
+   "front_page": false
+  }
+ ],
+ "parts": [
+  {
+   "ref": "1",
+   "name": "block",
+   "figs": [
+    "1",
+    "8",
+    "9",
+    "10",
+    "11",
+    "12",
+    "1A"
+   ]
+  },
+  {
+   "ref": "1'",
+   "name": "block",
+   "figs": []
+  },
+  {
+   "ref": "2",
+   "name": "metal film",
+   "alt": [
+    "base electrode",
+    "plated electrode"
+   ],
+   "figs": [
+    "1",
+    "1A",
+    "8",
+    "9",
+    "10",
+    "11",
+    "12"
+   ]
+  },
+  {
+   "ref": "3",
+   "name": "thin layer",
+   "alt": [
+    "upper surface",
+    "upper face",
+    "P-type layer",
+    "layer or film"
+   ],
+   "figs": [
+    "1",
+    "1A",
+    "8",
+    "9",
+    "12"
+   ]
+  },
+  {
+   "ref": "3'",
+   "name": "bowl-shaped P-layer",
+   "figs": [
+    "11"
+   ]
+  },
+  {
+   "ref": "3''",
+   "name": "",
+   "figs": [
+    "10"
+   ]
+  },
+  {
+   "ref": "4",
+   "name": "boundary",
+   "alt": [
+    "high resistance barrier"
+   ],
+   "figs": [
+    "1",
+    "1A",
+    "8",
+    "9",
+    "12"
+   ]
+  },
+  {
+   "ref": "4'",
+   "name": "bowl-shaped barrier",
+   "figs": [
+    "11"
+   ]
+  },
+  {
+   "ref": "4''",
+   "name": "barrier",
+   "figs": [
+    "10"
+   ]
+  },
+  {
+   "ref": "5",
+   "name": "first electrode",
+   "alt": [
+    "emitter"
+   ],
+   "figs": [
+    "1",
+    "1A",
+    "3",
+    "3A",
+    "4",
+    "5",
+    "6",
+    "7",
+    "10",
+    "11"
+   ]
+  },
+  {
+   "ref": "6",
+   "name": "second electrode",
+   "alt": [
+    "collector"
+   ],
+   "figs": [
+    "1",
+    "1A",
+    "3",
+    "3A",
+    "4",
+    "5",
+    "10",
+    "11"
+   ]
+  },
+  {
+   "ref": "6a",
+   "name": "collectors",
+   "figs": [
+    "4",
+    "5"
+   ]
+  },
+  {
+   "ref": "6b",
+   "name": "collectors",
+   "figs": [
+    "5"
+   ]
+  },
+  {
+   "ref": "6d",
+   "name": "ring collector",
+   "figs": [
+    "6"
+   ]
+  },
+  {
+   "ref": "6e",
+   "name": "semicircular spots",
+   "figs": [
+    "7"
+   ]
+  },
+  {
+   "ref": "6f",
+   "name": "semicircular spots",
+   "figs": [
+    "7"
+   ]
+  },
+  {
+   "ref": "7",
+   "name": "batteries",
+   "figs": [
+    "1",
+    "10",
+    "11",
+    "12"
+   ]
+  },
+  {
+   "ref": "8",
+   "name": "batteries",
+   "alt": [
+    "load circuit"
+   ],
+   "figs": [
+    "1",
+    "10",
+    "11",
+    "12"
+   ]
+  },
+  {
+   "ref": "9",
+   "name": "output transformer",
+   "alt": [
+    "load circuit"
+   ],
+   "figs": [
+    "1",
+    "2"
+   ]
+  },
+  {
+   "ref": "10",
+   "name": "input transformer",
+   "figs": [
+    "1",
+    "2"
+   ]
+  },
+  {
+   "ref": "11",
+   "name": "source",
+   "figs": [
+    "10",
+    "11"
+   ]
+  },
+  {
+   "ref": "12",
+   "name": "transformer",
+   "figs": [
+    "12"
+   ]
+  },
+  {
+   "ref": "13",
+   "name": "stream lines",
+   "alt": [
+    "current stream lines"
+   ],
+   "figs": [
+    "1A",
+    "3",
+    "3A"
+   ]
+  },
+  {
+   "ref": "14",
+   "name": "broken line",
+   "alt": [
+    "collector field",
+    "broken lines",
+    "field",
+    "strong field"
+   ],
+   "figs": [
+    "1A",
+    "3",
+    "3A",
+    "4",
+    "5",
+    "7"
+   ]
+  },
+  {
+   "ref": "14a",
+   "name": "broken lines",
+   "figs": [
+    "6"
+   ]
+  },
+  {
+   "ref": "14b",
+   "name": "broken lines",
+   "figs": [
+    "6"
+   ]
+  },
+  {
+   "ref": "15",
+   "name": "stream lines",
+   "figs": [
+    "1A"
+   ]
+  },
+  {
+   "ref": "16",
+   "name": "wedge-shaped piece of insulating material",
+   "figs": [
+    "8"
+   ]
+  },
+  {
+   "ref": "17",
+   "name": "cone-shaped piece",
+   "figs": [
+    "9"
+   ]
+  },
+  {
+   "ref": "51",
+   "name": "metal films",
+   "alt": [
+    "emitter"
+   ],
+   "figs": [
+    "8"
+   ]
+  },
+  {
+   "ref": "52",
+   "name": "central wire",
+   "figs": [
+    "9"
+   ]
+  },
+  {
+   "ref": "61",
+   "name": "metal films",
+   "alt": [
+    "collector"
+   ],
+   "figs": [
+    "8"
+   ]
+  },
+  {
+   "ref": "62",
+   "name": "surrounding plate film",
+   "figs": [
+    "9"
+   ]
+  }
+ ]
+}

@@ -1,0 +1,70 @@
+{
+ "patent": "Filed September 6, 1977 by Martin Hellman, Whitfield Diffie (named here as Bailey W. Diffie) and Ralph Merkle and assigned to Stanford University, it claims the public key exchange that Diffie and Hellman published in \"New Directions in Cryptography\" (IEEE Transactions on Information Theory, November 1976), now called Diffie-Hellman key exchange. Each party keeps a random secret X, sends Y = a^X mod q over an open channel, and raises the other party's Y to its own X; both arrive at the same key a^(X1 X2) mod q, while an eavesdropper who sees q, a, Y1 and Y2 would have to solve a discrete logarithm. The agreed key then drives a conventional cipher such as DES. FIGS. 2-6 give a bit-serial hardware implementation of modular exponentiation built from registers, a modular multiplier and adder, comparator and subtractor circuits. The patent expired in 1997.",
+ "figs": {
+  "1": "Dashed boxes 11 and 12 are the two conversers, each with a key source, secure key generator and cryptographic device; dashed box 13 is the eavesdropper, tapping insecure channel 19 with the same two kinds of device. Key source 25 supplies q, a and X_{1}, key source 26 only X_{2}: q and a reach converser 12 over the channel together with Y_{1}. Ciphertext C from device 15 joins the q, a, Y_{1} line into transmitter/receiver 31; Y_{2} comes back the other way. Only K, never X_{1} or X_{2}, leaves a secure key generator toward a cryptographic device.",
+  "2": "Each register is drawn as a row of bit cells, high-order bit at left, low-order bit (x_{0}, a_{0}) at right. The rows show the starting state i = 0: X register 41 holds the exponent, R register 42 holds 1, A register 43 holds a. The line from the low-order end of each register to multiplier 44 marks the register/multiplier connection, not individual data paths. Square-and-multiply: each step the low bit of X decides whether R is multiplied by A, A is squared, and X shifts right.",
+  "3": "Same register notation as FIG. 2. Y, Z and Q registers 51-53 hold y, z and q; P register 54 accumulates y z mod q and is shown at its initial all-zero state. The three function blocks below share the bus at right. Their drawing numerals (56 ADDER, 57 COMPARATOR, 58 SUBTRACTOR) are one higher than the numerals the description uses (adder 55, comparator 56, subtractor 57).",
+  "4": "Bit-serial full adder: bits enter at left, low-order bit first (the rightmost symbol in each printed sequence enters first). AND 61 detects p_{i} = z_{i} = 1; AND 62 combines the XOR 64 output with the stored carry from delay 66; OR 63 forms the next carry. XOR 64 then XOR 65 form the sum bit s_{i}. The output sequence has k + 1 bits, s_{k} being the final carry.",
+  "5": "Bit-serial comparator; here the sequences are printed with p_{k-1} and q_{k-1} at the right, i.e. entering first, high-order bit first. The circles on the gate inputs are inversions: AND 71 fires when p_{i} = 0 and q_{i} = 1 (p < q), AND 72 when p_{i} = 1 and q_{i} = 0 (p > q). The first bit position where they differ decides the result.",
+  "6": "Bit-serial subtractor, low-order bit first. AND 81 (inverted p input) detects p_{i} = 0, q_{i} = 1; AND 83 (inverted input from XOR 82) passes the stored borrow when p_{i} = q_{i}; OR 84 forms the new borrow, held in delay 85. XOR 82 and XOR 86 give the difference bit d_{i}."
+ },
+ "parts": {
+  "13": "The patent's model is a passive eavesdropper who can read everything on channel 19 but not alter it.",
+  "16": "Introduced together with 15 as \"cryptographic devices 15 and 16\".",
+  "21": "Implemented as the exponentiation circuit of FIG. 2.",
+  "25": "Key source 25 also generates q and a; the patent notes these may instead be public knowledge.",
+  "53": "The description once writes \"the contents of the Z register 53\"; 53 is the Q register and the Z register is 52.",
+  "55": "No 55 appears on the drawings; the description's adder 55 is the box labelled ADDER and numbered 56 in FIG. 3, implemented in FIG. 4.",
+  "56": "In the description 56 is the comparator (FIG. 5); in FIG. 3 the numeral 56 is printed on the box labelled ADDER.",
+  "57": "In the description 57 is the subtractor (FIG. 6); in FIG. 3 the numeral 57 is printed on the box labelled COMPARATOR.",
+  "58": "Drawing-only numeral, printed on the box labelled SUBTRACTOR in FIG. 3; the description calls the subtractor 57.",
+  "66": "Holds the carry bit between successive bit positions.",
+  "85": "Holds the borrow bit between successive bit positions."
+ },
+ "glossary": [
+  {
+   "term": "modulo q (mod q)",
+   "def": "Arithmetic where only the remainder after division by q is kept, so every value lies between 0 and q - 1."
+  },
+  {
+   "term": "one-way function",
+   "def": "A function easy to compute but infeasible to invert. Here Y = a^X mod q is easy; recovering X from Y is the discrete logarithm problem."
+  },
+  {
+   "term": "discrete logarithm",
+   "def": "Finding X given a, q and a^X mod q. No efficient general method is known for large well-chosen q, which is the basis of the scheme's security."
+  },
+  {
+   "term": "square-and-multiply",
+   "def": "Computing a^X by scanning the bits of X: square a running power each step and multiply it into the result when the bit is 1. It takes about log2 X steps instead of X - 1 multiplications."
+  },
+  {
+   "term": "public key distribution",
+   "def": "Agreeing on a shared secret key over a channel everyone can read, with no key exchanged in advance."
+  },
+  {
+   "term": "Data Encryption Standard (DES)",
+   "def": "The 56-bit-key block cipher adopted as a U.S. federal standard in 1977; the \"National Data Encryption Standard\" the patent mentions."
+  },
+  {
+   "term": "bit-serial",
+   "def": "Processing one bit per clock step over a single wire, with a delay element carrying the carry or borrow to the next bit."
+  },
+  {
+   "term": "XOR (exclusive-or)",
+   "def": "Logic gate whose output is 1 when exactly one input is 1; addition modulo 2."
+  },
+  {
+   "term": "delay",
+   "def": "A one-bit storage element that outputs its input one clock period later; a D flip-flop such as the SN7474 the patent lists."
+  },
+  {
+   "term": "SN7400, SN7404, SN7474",
+   "def": "TTL logic chips: quad 2-input NAND, hex inverter and dual D flip-flop."
+  },
+  {
+   "term": "modem",
+   "def": "Device that converts digital data to signals for a telephone line and back; here the transmitter/receivers 31 and 32."
+  }
+ ]
+}

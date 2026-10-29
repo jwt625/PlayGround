@@ -1,0 +1,34 @@
+{
+  "pn": "3659915",
+  "inventors": [
+    {
+      "name": "Robert D. Maurer",
+      "printed": "Robert D. Maurer",
+      "city": "Painted Post",
+      "region": "NY",
+      "country": "US"
+    },
+    {
+      "name": "Peter C. Schultz",
+      "printed": "Peter C. Schultz, both of Painted Post, N.Y.",
+      "city": "Painted Post",
+      "region": "NY",
+      "country": "US"
+    }
+  ],
+  "assignees": [
+    {
+      "name": "Corning Glass Works",
+      "printed": "Corning Glass Works, Corning, N.Y.",
+      "org": "Corning",
+      "kind": "company",
+      "city": "Corning",
+      "region": "NY",
+      "country": "US"
+    }
+  ],
+  "source": {
+    "page": 0,
+    "where": "front page [72], [73]"
+  }
+}

@@ -1,4 +1,4 @@
-# parent repo ignores *.json, *.pdf, *.html; this project tracks its data, sources and built page
+# parent repo ignores *.json, *.pdf, *.html; this project tracks its data, sources and built pages
 !*.json
 !sources/*.pdf
 !index.html
@@ -6,3 +6,4 @@
 # regenerable: pipeline/extract.sh + pipeline/crop.py rebuild everything under work/
 work/
 __pycache__/
+!p/*.html

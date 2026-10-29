@@ -1,0 +1,12 @@
+{
+ "pn": "3659915",
+ "figures": [
+  {"id": "1", "label": "FIG. 1", "sheet": 1, "page": 1, "crop": [410, 485, 2040, 1675], "rotate": 0, "front_page": true},
+  {"id": "2", "label": "FIG. 2", "sheet": 1, "page": 1, "crop": [853, 1778, 1482, 2494], "rotate": 0, "front_page": false}
+ ],
+ "parts": [
+  {"ref": "10", "name": "optical waveguide", "figs": ["1"]},
+  {"ref": "20", "name": "cladding layer", "figs": ["1", "2"]},
+  {"ref": "30", "name": "core", "figs": ["1", "2"]}
+ ]
+}

@@ -1,0 +1,27 @@
+{
+  "pn": "4128880",
+  "inventors": [
+    {
+      "name": "Seymour R. Cray, Jr.",
+      "printed": "Seymour R. Cray, Jr., Lilydale, Minn.",
+      "city": "Lilydale",
+      "region": "MN",
+      "country": "US"
+    }
+  ],
+  "assignees": [
+    {
+      "name": "Cray Research, Inc.",
+      "printed": "Cray Research, Inc., Chippewa Falls, Wis.",
+      "org": "Cray Research",
+      "kind": "company",
+      "city": "Chippewa Falls",
+      "region": "WI",
+      "country": "US"
+    }
+  ],
+  "source": {
+    "page": 0,
+    "where": "front page [75], [73]"
+  }
+}

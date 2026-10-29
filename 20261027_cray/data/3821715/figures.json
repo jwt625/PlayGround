@@ -1,0 +1,762 @@
+{
+  "pn": "3821715",
+  "figures": [
+    {
+      "id": "1",
+      "label": "FIG. 1",
+      "sheet": 1,
+      "page": 1,
+      "crop": [
+        184,
+        508,
+        1975,
+        3192
+      ],
+      "rotate": 270,
+      "front_page": true
+    },
+    {
+      "id": "2",
+      "label": "FIG. 2",
+      "sheet": 2,
+      "page": 2,
+      "crop": [
+        326,
+        613,
+        2035,
+        3003
+      ],
+      "rotate": 270,
+      "front_page": false
+    },
+    {
+      "id": "3",
+      "label": "FIG. 3",
+      "sheet": 3,
+      "page": 3,
+      "crop": [
+        201,
+        497,
+        1970,
+        3144
+      ],
+      "rotate": 270,
+      "front_page": false
+    },
+    {
+      "id": "4",
+      "label": "FIG. 4",
+      "sheet": 4,
+      "page": 4,
+      "crop": [
+        183,
+        517,
+        2014,
+        3124
+      ],
+      "rotate": 270,
+      "front_page": false
+    },
+    {
+      "id": "5",
+      "label": "FIG. 5",
+      "sheet": 5,
+      "page": 5,
+      "crop": [
+        322,
+        584,
+        2041,
+        3165
+      ],
+      "rotate": 270,
+      "front_page": false
+    }
+  ],
+  "parts": [
+    {
+      "ref": "10",
+      "name": "central processing unit or central processor",
+      "figs": [
+        "1",
+        "3"
+      ],
+      "alt": [
+        "processor"
+      ]
+    },
+    {
+      "ref": "12",
+      "name": "control unit",
+      "figs": [
+        "1",
+        "3"
+      ],
+      "alt": [
+        "control means"
+      ]
+    },
+    {
+      "ref": "13",
+      "name": "four-bit arithmetic unit",
+      "figs": [
+        "1",
+        "3"
+      ]
+    },
+    {
+      "ref": "14",
+      "name": "index register",
+      "figs": [
+        "1",
+        "3"
+      ]
+    },
+    {
+      "ref": "15",
+      "name": "address register",
+      "figs": [
+        "1",
+        "3"
+      ]
+    },
+    {
+      "ref": "20",
+      "name": "bi-directional data bus lines",
+      "figs": [
+        "1",
+        "3",
+        "4",
+        "5"
+      ],
+      "alt": [
+        "common data bus lines"
+      ]
+    },
+    {
+      "ref": "21",
+      "name": "bi-directional data bus lines",
+      "figs": [
+        "1",
+        "3",
+        "4",
+        "5"
+      ],
+      "alt": [
+        "common data bus lines"
+      ]
+    },
+    {
+      "ref": "22",
+      "name": "bi-directional data bus lines",
+      "figs": [
+        "1",
+        "3",
+        "4",
+        "5"
+      ],
+      "alt": [
+        "common data bus lines"
+      ]
+    },
+    {
+      "ref": "23",
+      "name": "bi-directional data bus lines",
+      "figs": [
+        "1",
+        "3",
+        "4",
+        "5"
+      ],
+      "alt": [
+        "common data bus lines"
+      ]
+    },
+    {
+      "ref": "30",
+      "name": "read-only-memory (ROM)",
+      "figs": [
+        "1",
+        "3"
+      ],
+      "alt": [
+        "ROM"
+      ]
+    },
+    {
+      "ref": "31",
+      "name": "ROMs",
+      "figs": [
+        "3"
+      ]
+    },
+    {
+      "ref": "32",
+      "name": "ROMs",
+      "figs": [
+        "3"
+      ]
+    },
+    {
+      "ref": "33",
+      "name": "lead",
+      "figs": [
+        "1",
+        "3",
+        "4"
+      ],
+      "alt": [
+        "ROM control lead"
+      ]
+    },
+    {
+      "ref": "35",
+      "name": "random-access-memory (RAM)",
+      "figs": [
+        "1",
+        "3"
+      ],
+      "alt": [
+        "RAM"
+      ]
+    },
+    {
+      "ref": "36",
+      "name": "RAMs",
+      "figs": [
+        "3"
+      ]
+    },
+    {
+      "ref": "37",
+      "name": "RAMs",
+      "figs": [
+        "3"
+      ]
+    },
+    {
+      "ref": "38",
+      "name": "RAMs",
+      "figs": [
+        "3"
+      ]
+    },
+    {
+      "ref": "43",
+      "name": "X-address register",
+      "figs": [
+        "5"
+      ]
+    },
+    {
+      "ref": "44",
+      "name": "refresh counter",
+      "figs": [
+        "5"
+      ]
+    },
+    {
+      "ref": "45",
+      "name": "address multiplexer",
+      "figs": [
+        "5"
+      ]
+    },
+    {
+      "ref": "46",
+      "name": "status character decoder",
+      "figs": [
+        "5"
+      ]
+    },
+    {
+      "ref": "47",
+      "name": "main memory decoder",
+      "figs": [
+        "5"
+      ]
+    },
+    {
+      "ref": "48",
+      "name": "main memory",
+      "figs": [
+        "5"
+      ]
+    },
+    {
+      "ref": "49",
+      "name": "refresh amplifiers",
+      "figs": [
+        "5"
+      ]
+    },
+    {
+      "ref": "50",
+      "name": "input/output multiplexer",
+      "figs": [
+        "5"
+      ]
+    },
+    {
+      "ref": "51",
+      "name": "lead",
+      "figs": [
+        "1",
+        "3",
+        "5"
+      ]
+    },
+    {
+      "ref": "52",
+      "name": "lead",
+      "figs": [
+        "5"
+      ],
+      "alt": [
+        "terminal P_{o}"
+      ]
+    },
+    {
+      "ref": "53",
+      "name": "main timing means",
+      "figs": [
+        "5"
+      ]
+    },
+    {
+      "ref": "54",
+      "name": "main memory timing means",
+      "figs": [
+        "5"
+      ]
+    },
+    {
+      "ref": "56a",
+      "name": "lines",
+      "figs": [
+        "1"
+      ]
+    },
+    {
+      "ref": "56b",
+      "name": "lines",
+      "figs": [
+        "1"
+      ]
+    },
+    {
+      "ref": "56c",
+      "name": "lines",
+      "figs": [
+        "1"
+      ]
+    },
+    {
+      "ref": "56d",
+      "name": "lines",
+      "figs": [
+        "1"
+      ]
+    },
+    {
+      "ref": "57a",
+      "name": "input/output lines",
+      "figs": [
+        "1",
+        "3",
+        "4"
+      ]
+    },
+    {
+      "ref": "57b",
+      "name": "input/output lines",
+      "figs": [
+        "1",
+        "3",
+        "4"
+      ]
+    },
+    {
+      "ref": "57c",
+      "name": "input/output lines",
+      "figs": [
+        "1",
+        "3",
+        "4"
+      ]
+    },
+    {
+      "ref": "57d",
+      "name": "input/output lines",
+      "figs": [
+        "1",
+        "3",
+        "4"
+      ]
+    },
+    {
+      "ref": "58",
+      "name": "RAM and output control means",
+      "figs": [
+        "5"
+      ],
+      "alt": [
+        "control"
+      ]
+    },
+    {
+      "ref": "60",
+      "name": "lead",
+      "figs": [
+        "3",
+        "4",
+        "5"
+      ]
+    },
+    {
+      "ref": "61",
+      "name": "ground line",
+      "figs": [
+        "3",
+        "4",
+        "5"
+      ],
+      "alt": [
+        "lead"
+      ]
+    },
+    {
+      "ref": "62",
+      "name": "leads",
+      "figs": [
+        "1",
+        "3",
+        "4",
+        "5"
+      ]
+    },
+    {
+      "ref": "63",
+      "name": "leads",
+      "figs": [
+        "1",
+        "3",
+        "4",
+        "5"
+      ]
+    },
+    {
+      "ref": "64",
+      "name": "lead",
+      "figs": [
+        "1",
+        "3",
+        "4",
+        "5"
+      ]
+    },
+    {
+      "ref": "65",
+      "name": "lead",
+      "figs": [
+        "1",
+        "3",
+        "4",
+        "5"
+      ]
+    },
+    {
+      "ref": "66",
+      "name": "signals",
+      "figs": [
+        "2"
+      ]
+    },
+    {
+      "ref": "67",
+      "name": "signals",
+      "figs": [
+        "2"
+      ]
+    },
+    {
+      "ref": "68",
+      "name": "signal",
+      "figs": [
+        "2"
+      ],
+      "alt": [
+        "synchronization pulse"
+      ]
+    },
+    {
+      "ref": "70",
+      "name": "input and output ports",
+      "figs": [
+        "1"
+      ]
+    },
+    {
+      "ref": "70a",
+      "name": "input port",
+      "figs": [
+        "4"
+      ]
+    },
+    {
+      "ref": "70b",
+      "name": "output port",
+      "figs": [
+        "4"
+      ]
+    },
+    {
+      "ref": "71",
+      "name": "control unit",
+      "figs": [
+        "1"
+      ],
+      "alt": [
+        "control"
+      ]
+    },
+    {
+      "ref": "72",
+      "name": "memory array",
+      "figs": [
+        "1"
+      ],
+      "alt": [
+        "ROM array"
+      ]
+    },
+    {
+      "ref": "73",
+      "name": "input buffers",
+      "figs": [
+        "4"
+      ],
+      "alt": [
+        "input buffer"
+      ]
+    },
+    {
+      "ref": "74",
+      "name": "partial decoder",
+      "figs": [
+        "4"
+      ],
+      "alt": [
+        "decoder"
+      ]
+    },
+    {
+      "ref": "75",
+      "name": "means",
+      "figs": [
+        "4"
+      ]
+    },
+    {
+      "ref": "76",
+      "name": "decoder",
+      "figs": [
+        "4"
+      ]
+    },
+    {
+      "ref": "77",
+      "name": "precharge and read means",
+      "figs": [
+        "4"
+      ]
+    },
+    {
+      "ref": "78",
+      "name": "16 by 64 ROM arrays",
+      "figs": [
+        "4"
+      ]
+    },
+    {
+      "ref": "79",
+      "name": "Y decoders",
+      "figs": [
+        "4"
+      ]
+    },
+    {
+      "ref": "80",
+      "name": "multiplexer",
+      "figs": [
+        "4"
+      ]
+    },
+    {
+      "ref": "81",
+      "name": "Y decoders",
+      "figs": [
+        "4"
+      ]
+    },
+    {
+      "ref": "82",
+      "name": "16 by 64 ROM arrays",
+      "figs": [
+        "4"
+      ]
+    },
+    {
+      "ref": "83",
+      "name": "precharge and read means",
+      "figs": [
+        "4"
+      ]
+    },
+    {
+      "ref": "84",
+      "name": "X decoders",
+      "figs": [
+        "4"
+      ]
+    },
+    {
+      "ref": "85",
+      "name": "X decoders",
+      "figs": [
+        "4"
+      ]
+    },
+    {
+      "ref": "86",
+      "name": "address register",
+      "figs": [
+        "4"
+      ]
+    },
+    {
+      "ref": "87",
+      "name": "RAM array",
+      "figs": [
+        "1"
+      ]
+    },
+    {
+      "ref": "88",
+      "name": "RAM control unit",
+      "figs": [
+        "1"
+      ]
+    },
+    {
+      "ref": "89",
+      "name": "output port",
+      "figs": [
+        "1"
+      ]
+    },
+    {
+      "ref": "90",
+      "name": "multiplexer",
+      "figs": [
+        "4"
+      ]
+    },
+    {
+      "ref": "91",
+      "name": "multiplexer",
+      "figs": [
+        "4"
+      ]
+    },
+    {
+      "ref": "92",
+      "name": "data flip-flop",
+      "figs": [
+        "4"
+      ]
+    },
+    {
+      "ref": "93",
+      "name": "input/output flip-flop",
+      "figs": [
+        "4"
+      ]
+    },
+    {
+      "ref": "94",
+      "name": "output buffers",
+      "figs": [
+        "4"
+      ],
+      "alt": [
+        "output buffer"
+      ]
+    },
+    {
+      "ref": "95",
+      "name": "input/output control logic means",
+      "figs": [
+        "4"
+      ]
+    },
+    {
+      "ref": "96",
+      "name": "inhibit logic means",
+      "figs": [
+        "4"
+      ]
+    },
+    {
+      "ref": "97",
+      "name": "Y register",
+      "figs": [
+        "5"
+      ]
+    },
+    {
+      "ref": "98",
+      "name": "data bus input/output buffers",
+      "figs": [
+        "5"
+      ],
+      "alt": [
+        "buffers"
+      ]
+    },
+    {
+      "ref": "99",
+      "name": "output flip-flops",
+      "figs": [
+        "5"
+      ]
+    },
+    {
+      "ref": "99a",
+      "name": "output leads",
+      "figs": [
+        "5"
+      ]
+    },
+    {
+      "ref": "99b",
+      "name": "output leads",
+      "figs": [
+        "5"
+      ]
+    },
+    {
+      "ref": "99c",
+      "name": "output leads",
+      "figs": [
+        "5"
+      ]
+    },
+    {
+      "ref": "99d",
+      "name": "output leads",
+      "figs": [
+        "5"
+      ]
+    }
+  ]
+}

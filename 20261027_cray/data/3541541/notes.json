@@ -1,0 +1,71 @@
+{
+ "patent": "Filed June 21, 1967 and issued November 17, 1970 to Douglas Engelbart, assigned to Stanford Research Institute; this is the patent on the computer mouse, built at SRI's Augmentation Research Center in the mid-1960s (with engineer Bill English) and shown publicly in Engelbart's December 1968 demonstration of the NLS system. The patent never uses the word \"mouse\". The device rolls on two perpendicular edge-on wheels plus a ball bearing, each wheel turning a potentiometer or encoder, and trails a cable to the computer; it is contrasted with the light pen, which must be held against the CRT face. Later commercial mice replaced the two wheels with a single rolling ball driving two encoder shafts.",
+ "figs": {
+  "1": "The mouse 16 sits on the cabinet top 17 beside the typewriter 15, with its cable 18 trailing to the right and three buttons 22 on its front end. On the screen face 12 the cursor 20 is the short bar under the last character of the sample text.",
+  "2": "Side section, front of the mouse at left. Diagonal hatching is the cut plastic shell 26 and bottom wall 28. X wheel 42 stands edge-on at the left and pokes through the bottom wall to touch the surface line 17; ball bearing 54 at right is the third support point. Buttons 22 press down on switches 34 held by bracket arm 32.",
+  "3": "Top section through the same mouse, front at left. The L-shaped bracket 30 carries potentiometer 38 on arm 32 and potentiometer 40 on arm 36; wheel 42 (left, vertical in this view) and wheel 46 (bottom, horizontal) lie at right angles, each in its own slot 50 or 52. The dashed circle 54 is the ball bearing on the underside.",
+  "4": "The two potentiometers are wired as voltage dividers between +V (lead 62) and ground (lead 64); the wiper voltages appear on leads 66 and 68 at terminals X and Y. The small semicircle where the vertical +V drop crosses lead 64 is a crossover without connection.",
+  "5": "Absolute encoder disc for one axis: four concentric rings by sixteen numbered sectors. Hatched cells are coated differently from blank ones (conductive or insulating); the four small squares in sector 15, beside the 0/15 boundary, are the fixed contacts, inner ring to wire 92, outer ring to wire 98. Each sector position therefore reads as a 4-bit code.",
+  "6": "Incremental encoder for one axis. The three dashed circles are the contact rows 102, 104, 106; sensors 108-112 sit side by side at the right of the disc. The ready line 116 sets flip-flop 120; the next contact on the up or down row then passes one AND gate (half-moon symbols with a dot) to the counter, and the same pulse through OR gate 122 (the + symbol) and the delay resets the flip-flop. Numeral 124 is printed on both the upper AND gate and the DELAY box.",
+  "7": "Two-contact incremental encoder: one segmented track 142, read by control contact 146 and stepping contact 148. The small waveforms drawn beside the lines show the signal at each stage: rough square wave from the contact, clean square wave after resolver 160, positive and negative spikes after differentiator 162, then the trains labeled OFF PULSE and ON PULSE from the two choppers. The four AND gates combine these with the ON/OFF state of Schmitt trigger 150 to steer each step to the UP or DOWN input of counter 170; dots are junctions and small arcs are crossovers."
+ },
+ "parts": {
+  "16": "The device now called a mouse.",
+  "38A": "Circuit symbol for the resistance of potentiometer 38 (Y position pot in the drawing).",
+  "40A": "Circuit symbol for the resistance of potentiometer 40 (X position pot in the drawing).",
+  "100": "The text introduces disc 100 as part of 'the readout circuit of FIG. 5'; it appears only in FIG. 6.",
+  "124": "Printed for two different elements: AND gate 124 and delay line 124 (DELAY box) in FIG. 6.",
+  "150": "Spelled 'Schmidt' in the text and 'SCHMITT' in the drawing.",
+  "160": "Here a signal-squaring circuit, not an angle resolver: the text describes it as 'of the Schmitt trigger, on-off type'."
+ },
+ "glossary": [
+  {
+   "term": "CRT",
+   "def": "Cathode ray tube: the vacuum-tube display screen of computer terminals of the period."
+  },
+  {
+   "term": "cursor",
+   "def": "A mark on the screen showing the position at which the next edit or command applies."
+  },
+  {
+   "term": "light pencil",
+   "def": "Light pen: a photodetector held against the CRT face; the computer finds its position from the moment the scanning beam passes under it."
+  },
+  {
+   "term": "potentiometer / rheostat",
+   "def": "Variable resistor turned by a shaft; the wiper is the sliding contact whose voltage tracks shaft angle."
+  },
+  {
+   "term": "multiturn potentiometer",
+   "def": "A potentiometer whose full range takes several shaft turns, giving finer resolution over a longer travel."
+  },
+  {
+   "term": "shaft position encoder",
+   "def": "Absolute encoder: a coded disc read by several contacts, giving the shaft angle directly as a binary word on parallel wires."
+  },
+  {
+   "term": "incremental encoder",
+   "def": "Encoder that emits one pulse per step of rotation, with direction indicated separately; position is kept by counting."
+  },
+  {
+   "term": "up-down counter",
+   "def": "Digital counter that adds one for each pulse on its up input and subtracts one for each pulse on its down input."
+  },
+  {
+   "term": "RS flip-flop",
+   "def": "One-bit memory with set (S) and reset (R) inputs."
+  },
+  {
+   "term": "Schmitt trigger",
+   "def": "Comparator circuit with hysteresis that turns a slow or noisy input into a clean two-level signal."
+  },
+  {
+   "term": "differentiator",
+   "def": "Circuit whose output is proportional to the rate of change of its input; a square wave becomes a spike at each edge."
+  },
+  {
+   "term": "chopper",
+   "def": "Here a circuit that passes only pulses of one polarity (the inverter chopper inverts first, so it passes the other edge)."
+  }
+ ]
+}

@@ -1,0 +1,27 @@
+{
+  "pn": "4018121",
+  "inventors": [
+    {
+      "name": "John M. Chowning",
+      "printed": "John M. Chowning, Palo Alto, Calif.",
+      "city": "Palo Alto",
+      "region": "CA",
+      "country": "US"
+    }
+  ],
+  "assignees": [
+    {
+      "name": "The Board of Trustees of Leland Stanford Junior University",
+      "printed": "The Board of Trustees of Leland Stanford Junior University, Stanford, Calif.",
+      "org": "Stanford University",
+      "kind": "university",
+      "city": "Stanford",
+      "region": "CA",
+      "country": "US"
+    }
+  ],
+  "source": {
+    "page": 0,
+    "where": "front page [75], [73]"
+  }
+}

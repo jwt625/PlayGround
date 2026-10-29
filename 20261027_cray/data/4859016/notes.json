@@ -1,0 +1,92 @@
+{
+  "patent": "From Stanford University (inventors Herbert J. Shaw and Michel J. F. Digonnet). It is a division of an application first filed in November 1983, issued in 1989. The amplifier is a thin single-crystal Nd:YAG fiber spliced into the signal fiber and end-pumped: a wavelength-selective evanescent-field coupler moves the pump light onto the signal fiber, so pump and signal enter the amplifying fiber together through one end. Prior Nd:YAG amplifiers were side-pumped rods that needed lenses to get light in and out of the fiber. The intended use was the recirculating fiber-optic gyroscope. Claim 1 is not limited to Nd:YAG. It recites any optical fiber of a material that emits light when pumped, with signal and pump coupled into one end. That is the basic arrangement of the erbium-doped fiber amplifier (EDFA), first demonstrated in 1987 at Southampton and AT&T Bell Labs, which became the standard amplifier of long-haul optical networks in the 1990s. The patent went through three reexaminations; the first certificate issued in 2000.",
+  "figs": {
+    "1": "The two coupler halves, assembled and seen from the side. Strand 12A runs from port A to port B in the upper block 16A, and strand 12B runs from C to D in the lower block 16B. Each strand follows its curved groove, so the two strands converge and touch only at interaction region 32 in the middle. The vertically shaded wedges on each side of the center are the walls of the grooves, which become shallower toward the center. The arrows 2-2 and 3-3 mark the section planes of Figs. 2 and 3.",
+    "2": "Section 2-2, taken toward the end of the coupler. Here the grooves are deep, the strands are still round, and their cores (small dashed circles) are far apart. Diagonal hatching is the block material and dashed hatching is the fiber glass. The stippled corners are cement 38. The horizontal line across the middle is the joint between the confronting surfaces 14A and 14B.",
+    "3": "Section 3-3, at the center of the coupler. Each strand has been polished flat level with its block face, so the two flattened fiber cross-sections meet along the joint line. The cores (small circles) sit just above and below the joint. Compare with Fig. 2, where the cores are well separated.",
+    "4": "The lower half 10B on its own, in perspective. Strand 12B lies in groove 13B across the top face 14B. At the center, where polishing has cut into the fiber, the oval facing surface 18B is exposed flush with the face. The vertical line shading on the block's sides only indicates surface shading.",
+    "5": "Enlarged schematic of the cross-section at the interaction region. The outer outlines are the claddings of 12A (above) and 12B (below), flattened where they meet. The small circles are the cores. Each dashed circle (34A, 34B) marks how far one fiber's evanescent field reaches. The hatched lens where the two dashed circles overlap is area 33, the region where coupling takes place.",
+    "6": "Coupled power plotted against wavelength for one coupler geometry: h_{0} is the minimum fiber spacing (the H of the text), and R is the fiber radius of curvature. Near 0.72 µm the curve reaches 100 % and near 0.55 µm it falls to about 0 %, so one coupler can combine or separate those two wavelengths. The dash-dot verticals and the bracket mark that null-to-peak spacing, which is labeled as the resolution.",
+    "7": "The same plot as Fig. 6 but with R = 200 cm. The longer interaction length makes the coupling oscillate faster with wavelength, so the null-to-peak spacing (bracket) shrinks to 60 nm.",
+    "8": "Three curves for one coupler (h_{0} = 4 µm, R = 200 cm) at three fiber offsets, labeled 0 µm, .5 µm and OFFSET = 1.0 µm. All three have the same period, and each one is displaced along the wavelength axis from the others. This shows that sliding the blocks sideways tunes where the peaks and nulls fall without changing the resolution.",
+    "9": "The basic amplifier as a fiber schematic. The coupler is drawn as a box enclosing two curved fiber lines, with halves 10A and 10B. Pump source 42 feeds port A. The signal enters at port C, and both leave together at port D into the Nd:YAG crystal 44, which is drawn as the long thin rectangle. The amplified signal continues on fiber 46. Port B is left unconnected.",
+    "10": "Absorption spectrum of Nd:YAG from 0.3 to 0.95 µm. The vertical axis is optical density, printed 00 to 10 (evidently 0.0 to 1.0). The tallest line is near 0.59 µm, and there are strong groups near 0.75 and 0.81 µm. These are the candidate pump wavelengths the description discusses.",
+    "11A": "Energy-level diagram with levels numbered 0 to 3. The solid upward arrow W03 is pumping from the ground state 0 to the pump band 3. The diagonal arrow r32 is the fast decay to the upper lasing level 2. The broad hollow arrow from 2 to 1 is the laser transition, and the arrow r10 is the decay from lower level 1 to ground. Dashed arrows (r30, r31, r20, r21) are the other decay paths. The leader lines on the left tie each level's name to its line.",
+    "11B": "Population at each level under steady pumping, drawn as the length of a hatched bar: E3 (pump band), E2, E1, and the unlabeled ground state along the axis. The bar at E2 is longer than the bar at E1, which is the population inversion. The zigzag arrows are the decays, marked FAST or SLOW. Only the slow 2-to-1 step lets population build up.",
+    "12": "Bidirectional version. Each end of crystal 44 has its own coupler (50, 52) and pump source (42, 48), so the crystal is pumped from both ends. Signals travel either way between fibers 54 and 56. The short unlabeled fiber end on each coupler is its unused port.",
+    "13": "Loop version. Coupler 58 merges pump 42 with the signal arriving on input fiber 66 onto segment 68. Coupler 60 then sends all of the pump, plus a small fraction of that signal, into the loop through crystal 44. Ends 62 and 64 belong to the recirculating loop, which the drawing leaves open. Light coming back around the loop at 62 mostly passes on into 44, and coupler 60 taps a small fraction off to sensor 70."
+  },
+  "parts": {
+    "10": "The description once writes \"The coupler 12 includes four ports\", evidently meaning coupler 10.",
+    "12": "Collective numeral for strands 12A and 12B; not printed alone in the drawings. The drawings letter all suffixes in lower case (12a, 13b, ...); the description uses capitals.",
+    "13": "Collective numeral for grooves 13A and 13B; also called \"slots 13\" once.",
+    "14": "Collective numeral for surfaces 14A and 14B.",
+    "16": "Collective numeral for blocks 16A and 16B. The description twice writes \"bases 12\" (\"The blocks or bases 12 may be fabricated...\"), evidently meaning the blocks 16.",
+    "18": "Collective numeral for facing surfaces 18A and 18B.",
+    "33": "Introduced as \"that area, designated by the reference numeral 33\", the region where the evanescent fields overlap; the description calls this the critical zone.",
+    "44": "A single-crystal Nd:YAG fiber; the description and summary also call it the \"ND:YAG fiber\". The built example had a diameter of 100 microns.",
+    "62": "62 and 64 are the two ends of a recirculating fiber loop; the loop itself is not drawn.",
+    "A": "Port letters, not numerals. A and B are the ends of strand 12A; C and D are the ends of strand 12B.",
+    "B": "Port letters, not numerals. A and B are the ends of strand 12A.",
+    "C": "Port letters, not numerals. C and D are the ends of strand 12B; the signal enters at C in Fig. 9.",
+    "D": "Port letters, not numerals. Pump and signal leave together at D in Fig. 9."
+  },
+  "glossary": [
+    {
+      "term": "Nd:YAG",
+      "def": "Yttrium aluminum garnet crystal in which about 1 % of the yttrium ions are replaced by neodymium. A common solid-state laser material that emits at 1.064 µm. The patent writes it ND:YAG."
+    },
+    {
+      "term": "single-mode fiber",
+      "def": "Optical fiber with a core small enough (a few microns) that light travels in only one guided mode. Here the claddings are 125 µm across and the cores are 10 µm or less."
+    },
+    {
+      "term": "evanescent field",
+      "def": "The part of a guided mode's light that extends a short way outside the fiber core into the cladding and decays rapidly with distance. Two cores brought close enough to share it exchange light."
+    },
+    {
+      "term": "coupling length",
+      "def": "The distance over which light transfers completely from one fiber to the other in an evanescent coupler. It depends on wavelength, so an interaction region that is an odd multiple of it at one wavelength and an even multiple at another separates the two wavelengths."
+    },
+    {
+      "term": "wavelength multiplexing coupler",
+      "def": "A coupler that combines or separates light by wavelength. Today it is usually called a WDM coupler, and fused-fiber versions of it combine pump and signal in fiber amplifiers."
+    },
+    {
+      "term": "end pumping",
+      "def": "Sending pump light along the axis of the gain medium, so it is absorbed over the medium's length, instead of from the side across its width (side or transverse pumping)."
+    },
+    {
+      "term": "four-level laser",
+      "def": "A gain medium in which pumping lifts ions to a band above the upper lasing level, and the lower lasing level lies above the ground state and empties quickly. Inversion between the lasing levels is therefore easy to keep."
+    },
+    {
+      "term": "population inversion",
+      "def": "More ions in the upper lasing level than in the lower one. It is required for stimulated emission to amplify light rather than be absorbed."
+    },
+    {
+      "term": "stimulated emission",
+      "def": "Emission of a photon by an excited ion, triggered by an incoming photon at the transition wavelength. The new photon has the same frequency and phase, which is what adds gain to the signal."
+    },
+    {
+      "term": "phonon relaxation",
+      "def": "Nonradiative decay in which an ion gives up energy as lattice vibrations (heat) instead of light. It is fast in Nd:YAG between the pump band and the upper level, and between the lower level and ground."
+    },
+    {
+      "term": "optical density",
+      "def": "Absorbance on a log scale: an optical density of 1 transmits 10 % of the light."
+    },
+    {
+      "term": "recirculating fiber-optic gyroscope",
+      "def": "A rotation sensor that sends light both ways around a long fiber coil and measures the phase shift that rotation produces (the Sagnac effect). Recirculating the light many times increases sensitivity, but only if the loss per pass is made up."
+    },
+    {
+      "term": "index matching oil",
+      "def": "A liquid with nearly the same refractive index as the cladding. It is placed between the polished faces so the gap does not reflect or scatter light."
+    },
+    {
+      "term": "erbium-doped fiber amplifier (EDFA)",
+      "def": "A glass fiber doped with erbium and pumped through a WDM coupler, amplifying signals near 1.55 µm. Developed in 1987, after this patent's original filing. It uses the same pump-and-signal-into-the-fiber-end arrangement with a different gain material."
+    }
+  ]
+}

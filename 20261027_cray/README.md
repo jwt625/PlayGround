@@ -1,17 +1,32 @@
-# Cray patent figure viewer
+# Patent figure viewer
 
-Interactive gallery for two Seymour Cray patents, built from the USPTO scans with one pipeline:
+Interactive gallery of classic patents, built from the USPTO scans with one pipeline:
 
-| Patent | Title | Figures |
-|---|---|---|
-| US 4,128,880 (1978) | Computer Vector Register Processing | 12 (FIG. 1, 2, 3A-3D, 4-9) |
-| US 5,131,233 (1992) | Gas-Liquid Forced Turbulence Cooling | 5 |
+| Group | Patent | Title | Figures |
+|---|---|---|---|
+| Cray | US 4,128,880 (1978) | Computer Vector Register Processing | 12 |
+| Cray | US 5,131,233 (1992) | Gas-Liquid Forced Turbulence Cooling | 5 |
+| Impact and royalties | US 4,018,121 (1977) | Method of Synthesizing a Musical Sound (Chowning, FM synthesis) | 18 |
+| Impact and royalties | US 4,200,770 (1980) | Cryptographic Apparatus and Method (Hellman, Diffie, Merkle) | 6 |
+| Impact and royalties | US 4,859,016 (1989) | Fiber Optic Amplifier (Shaw, Digonnet; 3 reexamination certificates) | 14 |
+| Impact and royalties | US 6,285,999 B1 (2001) | Method for Node Ranking in a Linked Database (Page, PageRank) | 3 |
+| Classic products | US 3,138,743 (1964) | Miniaturized Electronic Circuits (Kilby, integrated circuit) | 14 |
+| Classic products | US 3,659,915 (1972) | Fused Silica Optical Waveguide (Maurer, Schultz, Corning) | 2 |
+| Classic products | US 3,821,715 (1974) | Memory System for a Multi-Chip Digital Computer (Hoff, Mazor, Faggin, Intel) | 5 |
+| Classic products | US 5,061,049 (1991) | Spatial Light Modulator and Method (Hornbeck, TI DMD) | 73 |
+| Industry legends | US 2,524,035 (1950) | Three-Electrode Circuit Element (Bardeen, Brattain, transistor) | 18 |
+| Industry legends | US 3,387,286 (1968) | Field-Effect Transistor Memory (Dennard, DRAM cell) | 9 |
+| Industry legends | US 3,541,541 (1970) | X-Y Position Indicator (Engelbart, mouse) | 7 |
 
-Open `index.html` (self-contained, works from `file://`, no network).
+Open `index.html` (gallery, under 1 MB); each patent is a self-contained `p/<pn>.html` (1~10 MB) that
+works from `file://` with no network. Term status (`meta.json` `status`) is computed from the statutory
+rules and printed disclaimers, cross-checked against Google Patents legal status; it is not legal advice.
 
 ## Views
 
-- **Gallery**: one card per patent.
+- **Gallery** (`index.html`): search (number, title, people, places, part names), Cards / Table views,
+  12 sort keys (table headers sort too), facet chips (group, decade, assignee kind, country). State is in the
+  hash (`#/?v=table&s=issued&d=desc&q=stanford`). Each patent opens its own page `p/<pn>.html`.
 - **Figures**: figure list, pan/zoom stage, part panel. Every reference numeral is a traced
   vector element: hover or click its body, label or leader. View modes: Redraw (vector trace),
   Scan (original sheet), Overlay (trace over scan). Parts tour steps through parts in order of first

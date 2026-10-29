@@ -1,0 +1,86 @@
+{
+  "patent": "Filed January 22, 1973 and issued June 28, 1974 to Intel Corporation, naming Marcian E. (Ted) Hoff, Stanley Mazor and Federico Faggin. The system it describes matches Intel's MCS-4 chip set of 1971: the 4004 4-bit CPU, 4001 mask-programmed ROMs and 4002 RAMs, each in a 16-pin package, although the patent names no product. The 4004 is widely cited as the first commercially available single-chip microprocessor. The claims do not cover the processor itself but the memory scheme that let so few pins suffice: every chip shares one 4-bit bidirectional bus, the CPU sends addresses and a chip select code over that bus in time slots, and each memory chip carries its own decoder that recognizes its code, so no separate address or chip-select wiring is needed.",
+  "figs": {
+    "1": "Shown turned upright from the sideways drawing sheet. Three chips, each a dashed outline: CPU 10 at top, one ROM 30 at lower left, one RAM 35 at lower right. The four data bus lines 20-23 leave control 12 and reach both memories; the double arrowheads mark them bidirectional. Apart from the bus, each memory receives only clocks φ_{1} and φ_{2}, SYNC, RESET and one control line: 33 to the ROM, 51 to the RAM. The ROM's I/O port 70 serves bidirectional lines 57a-57d; the RAM's output port 89 drives output-only lines 56a-56d. The \"16\" printed inside ROM array 72 is not referred to in the text.",
+    "2": "Shown turned upright from the sideways drawing sheet. Time runs left to right through one instruction cycle of eight subcycles, A_{1} to X_{3}; the leftmost column is X_{3} of the previous cycle. The top three traces are clock φ_{1} (66) and clock φ_{2} (67), each drawn as one low pulse per subcycle, and SYNC (68), which is low during X_{3}, once per cycle. Below the waveforms is a table giving, for each subcycle, which chip drives the bus and what the four bus lines carry. A_{3} carries the chip select code after the two address nibbles; only then does the selected ROM put its two instruction nibbles on the bus in M_{1} and M_{2}.",
+    "3": "Shown turned upright from the sideways drawing sheet. The whole computer: CPU 10, ROMs 30, 31 and 32, and RAMs 35-38, all on bus lines 20-23. The dashed line between ROMs 31 and 32 stands for further ROMs (the text allows up to 16). All ROMs share control lead 33 and all RAMs share lead 51. The RAMs are of two mask types, and each has its P_{o} pin tied to ground (35, 37) or to V_{DD} (36, 38); type and P_{o} together give each of the four RAMs a distinct select code. Each ROM has four I/O lines (numbered 57a-57d only on ROM 30) and each RAM four OUT lines.",
+    "4": "Shown turned upright from the sideways drawing sheet. One ROM chip. The address path runs along the top row: input buffers 73, partial decoder 74, multiplexer 90 (which joins the two 4-bit address transfers into one 8-bit address), address register 86, then X decoders 84 and 85 into the tall column 77-83. That column holds two 16 x 64 arrays (78, 82) around the central multiplexer 80. The chip select path is along the bottom: decoder 76 compares the bus code with the code fixed in this chip's mask and, together with lead 33, sets data flip-flop 92 or I/O flip-flop 93. Unless the chip is selected, inhibit logic 96 keeps output buffers 94 off the bus. I/O control logic 95 connects ports 70a and 70b, and through them lines 57a-57d, to the bus via multiplexer 91.",
+    "5": "Shown turned upright from the sideways drawing sheet. One RAM chip. The large block at right is the storage: a strip of status character memory (4 x 4 x 4 cells) above main memory 48 (4 x 16 x 4 cells), which gives four registers, each holding 16 main and 4 status characters of 4 bits. Precharge is on top, and refresh amplifiers 49 and I/O multiplexer 50 are below. The heavy line along the bottom and left is the chip's internal 4-bit bus from data bus buffers 98 to X address register 43, Y register 97, multiplexer 50 and output flip-flops 99. Refresh counter 44 drives the same decoders as register 43 through address multiplexer 45. Control 58 holds the chip select logic and receives RAM control lead 51 and the P_{o} lead 52."
+  },
+  "parts": {
+    "20": "FIG. 4 labels the four bus lines together as 20-23.",
+    "36": "When introducing FIG. 5 the text lists \"RAMs 38, 36, 37 and 38\", a misprint for 35, 36, 37 and 38.",
+    "52": "The text calls it terminal P_{o}. FIG. 3 shows the P_{o} pins without the numeral.",
+    "56a": "FIG. 1 numbers the RAM output lines 56a-56d; FIG. 5 numbers the RAM's output leads 99a-99d.",
+    "57a": "FIG. 4 labels the four lines together as (57a-57d).",
+    "60": "Carries the negative supply potential V_{DD}.",
+    "62": "Clock φ_{1}, drawn as signal 66 in FIG. 2.",
+    "63": "Clock φ_{2}, drawn as signal 67 in FIG. 2.",
+    "64": "Carries the synchronization signal SYNC (signal 68 in FIG. 2) from the processor.",
+    "65": "Carries the reset signal.",
+    "70": "Drawn in FIG. 4 as separate input port 70a and output port 70b.",
+    "75": "The text names it only as \"means 75\"; the box is labeled ROM TIMING."
+  },
+  "glossary": [
+    {
+      "term": "MOS",
+      "def": "Metal-oxide-semiconductor: the field-effect transistor technology used for all chips in this system."
+    },
+    {
+      "term": "P-channel silicon gate",
+      "def": "An early MOS process with p-type transistors and polysilicon gates, used by Intel in the early 1970s."
+    },
+    {
+      "term": "ROM",
+      "def": "Read-only memory. Here mask-programmed: the program, and each chip's select decoder, are fixed by a mask during manufacture."
+    },
+    {
+      "term": "RAM",
+      "def": "Random-access memory, readable and writable."
+    },
+    {
+      "term": "dynamic memory",
+      "def": "Memory that stores bits as charge on capacitances, which leaks away, so each cell must be read and rewritten (refreshed) periodically."
+    },
+    {
+      "term": "precharge",
+      "def": "Charging the array's column lines to a known level before a read, so that the selected cells can pull them down."
+    },
+    {
+      "term": "dual in-line package",
+      "def": "A rectangular chip package with two parallel rows of pins; here 16 pins, which limits how many separate signals each chip can have."
+    },
+    {
+      "term": "bidirectional data bus",
+      "def": "Shared wires that carry data in either direction, driven by one chip at a time."
+    },
+    {
+      "term": "chip select code",
+      "def": "A code sent by the CPU that only the addressed memory chip recognizes; the other chips stay off the bus."
+    },
+    {
+      "term": "φ_{1}, φ_{2}",
+      "def": "Two non-overlapping clock phases supplied externally to every chip."
+    },
+    {
+      "term": "SYNC",
+      "def": "A pulse from the CPU, once every eight clock periods, that marks the start of each instruction cycle for the memories."
+    },
+    {
+      "term": "multiplexer (MUX)",
+      "def": "A circuit that selects which of several inputs drives an output, or splits or combines words over time."
+    },
+    {
+      "term": "flip-flop",
+      "def": "A one-bit storage circuit that holds its state until set or reset."
+    },
+    {
+      "term": "V_{DD}",
+      "def": "The supply voltage terminal; negative in this P-channel design."
+    },
+    {
+      "term": "nibble",
+      "def": "A 4-bit group; addresses and instructions cross the 4-bit bus one nibble per subcycle."
+    }
+  ]
+}

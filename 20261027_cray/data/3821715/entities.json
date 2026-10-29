@@ -1,0 +1,41 @@
+{
+  "pn": "3821715",
+  "inventors": [
+    {
+      "name": "Marcian Edward Hoff, Jr.",
+      "printed": "Marcian Edward Hoff, Jr., Santa Clara",
+      "city": "Santa Clara",
+      "region": "CA",
+      "country": "US"
+    },
+    {
+      "name": "Stanley Mazor",
+      "printed": "Stanley Mazor, Sunnyvale",
+      "city": "Sunnyvale",
+      "region": "CA",
+      "country": "US"
+    },
+    {
+      "name": "Federico Faggin",
+      "printed": "Federico Faggin, Cupertino, all of Calif.",
+      "city": "Cupertino",
+      "region": "CA",
+      "country": "US"
+    }
+  ],
+  "assignees": [
+    {
+      "name": "Intel Corporation",
+      "printed": "Intel Corporation, Santa Clara, Calif.",
+      "org": "Intel",
+      "kind": "company",
+      "city": "Santa Clara",
+      "region": "CA",
+      "country": "US"
+    }
+  ],
+  "source": {
+    "page": 0,
+    "where": "front page [75], [73]"
+  }
+}
