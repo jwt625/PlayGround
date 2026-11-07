@@ -1,0 +1,72 @@
+# Assumptions for the GRIN profile study. No logic here; values only.
+# Sources of numbers: see DevLog-000 and references/md/avicena-deep-dive-notes.md.
+
+sources:
+  uled:
+    lam0_um: 0.430        # Avicena slides (article p.70, p.77)
+    fwhm_nm: 20.0         # assumption; article p.76: 10 nm FWHM "is wrong", real penalty ~2.5x higher
+    n_nodes_opt: 3        # Gauss-Hermite nodes during optimization
+    n_nodes_eval: 5       # nodes for final reported metrics
+  uvcsel:
+    lam0_um: 0.850        # article p.85: AMS OSRAM 850 nm uVCSEL (1060 nm mentioned as alternative)
+    fwhm_nm: 1.0          # assumption
+    n_nodes_opt: 1
+    n_nodes_eval: 3
+
+constraints:              # toggle with `enabled`
+  A_om3:                  # OM3 class: 50 um core, NA 0.2 (Photonics 13, 408, Table 1; article p.85)
+    enabled: true
+    mode: fixed
+    core_diameter_um: 50.0
+    na: 0.20              # NA defined at the source center wavelength
+  B_large:                # coupling-first: OM1-class NA 0.28 (same table), larger core (assumption)
+    enabled: true
+    mode: fixed
+    core_diameter_um: 80.0
+    na: 0.28
+  C_pareto:               # core radius and NA free within bounds; alpha-optimized per point
+    enabled: true
+    mode: pareto
+    core_diameter_um: [30.0, 40.0, 50.0, 62.5, 80.0, 100.0]
+    na: [0.12, 0.16, 0.20, 0.24, 0.28]
+
+parameterizations:
+  alpha:
+    bounds: [1.80, 2.60]    # strict stage 1 ran with [1.80, 2.30] (2026-11-06); widened for the robust stage
+  bernstein:
+    degree: 8
+    maxfev: 3000          # total evaluation budget (CMA -> Powell -> Nelder-Mead)
+    edge_logit_init: 3.0  # edge-step variant: initial c_N = sigmoid(3) = 0.95
+  staircase:
+    n_layers: [2, 3, 4, 6, 8, 12, 16]
+    free_radii: true
+    maxfev_per_param: 120 # CMA-ES budget = this x number of params
+
+coupling_floor:           # free-form/staircase runs: etendue (LED coupling proxy) >= that of the stage-1 alpha optimum
+  enabled: true
+  tolerance: 0.01         # allowed fractional etendue shortfall before penalty
+  penalty_ps_per_m: 100.0 # added per unit fractional etendue deficit; deficit > 5% rejected outright
+
+robust:                   # robust objective: sqrt(mean sigma^2) over all (delta_scale x lam_shift) members
+  delta_scale: [0.98, 1.00, 1.02]   # peak GeO2 fraction x0 scaled (~ +-2% Delta), fabrication proxy (assumption)
+  lam_shift_nm:                     # source center wavelength shifts (assumption)
+    uled: [0.0]                     # uLED: 20 nm FWHM spectrum already averaged
+    uvcsel: [-10.0, 0.0, 10.0]      # 850 nm +-10 nm VCSEL wavelength spread
+
+optimizer:                # chain: CMA-ES, then Powell, then Nelder-Mead from the best point so far
+  n_starts: 3             # independent restarts per design (seed 1 starts at the alpha optimum)
+  restart_perturb: 0.3    # std of Gaussian perturbation of the start point for seeds > 1
+  cma_sigma0: 0.5
+  cma_frac: 0.4
+  powell_frac: 0.3
+
+numerics:
+  dr_um: 0.05
+  clad_margin_um: 15.0
+  oversample: 8
+
+link:
+  length_m: 10.0          # Avicena 1.6T AOC reach target (article p.131)
+
+run:
+  workers: 8              # parallel processes (machine has 12 cores)

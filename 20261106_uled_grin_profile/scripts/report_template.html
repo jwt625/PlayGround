@@ -1,0 +1,596 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GRIN Profile Study</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/plotly.js/3.0.1/plotly.min.js"></script>
+<script>
+window.MathJax = {tex: {inlineMath: [["\\(", "\\)"]], displayMath: [["\\[", "\\]"]]}, svg: {fontCache: "global"}};
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js" async></script>
+<style>
+:root {
+  color-scheme: light;
+  --page: #f9f9f7; --surface: #fcfcfb; --surface-2: #f0efec;
+  --text-1: #0b0b0b; --text-2: #52514e; --muted: #898781;
+  --grid: #e1e0d9; --axis: #c3c2b7; --border: rgba(11,11,11,0.10);
+  --c1: #2a78d6; --c2: #eb6834; --c3: #1baf7a; --c4: #eda100; --c5: #e87ba4;
+  --s250: #86b6ef; --s300: #6da7ec; --s350: #5598e7; --s400: #3987e5; --s450: #2a78d6; --s500: #256abf; --s550: #1c5cab;
+  --accent: #2a78d6;
+}
+@media (prefers-color-scheme: dark) {
+  :root:where(:not([data-theme="light"])) {
+    color-scheme: dark;
+    --page: #0d0d0d; --surface: #1a1a19; --surface-2: #232321;
+    --text-1: #f0efec; --text-2: #c3c2b7; --muted: #898781;
+    --grid: #2c2c2a; --axis: #383835; --border: rgba(255,255,255,0.10);
+    --c1: #3987e5; --c2: #d95926; --c3: #199e70; --c4: #c98500; --c5: #d55181;
+    --accent: #3987e5;
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --page: #0d0d0d; --surface: #1a1a19; --surface-2: #232321;
+  --text-1: #f0efec; --text-2: #c3c2b7; --muted: #898781;
+  --grid: #2c2c2a; --axis: #383835; --border: rgba(255,255,255,0.10);
+  --c1: #3987e5; --c2: #d95926; --c3: #199e70; --c4: #c98500; --c5: #d55181;
+  --accent: #3987e5;
+}
+* { box-sizing: border-box; border-radius: 0; }
+html, body { margin: 0; background: var(--page); color: var(--text-1);
+  font: 12px/1.4 system-ui, -apple-system, "Segoe UI", sans-serif; }
+header { position: sticky; top: 0; z-index: 10; display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
+  padding: 6px 12px; background: var(--surface); border-bottom: 1px solid var(--border); }
+header h1 { font-size: 13px; margin: 0; font-weight: 600; }
+header nav a { color: var(--text-2); text-decoration: none; margin-right: 10px; }
+header nav a:hover { color: var(--text-1); }
+.status { color: var(--muted); font-variant-numeric: tabular-nums; }
+.badge { border: 1px solid var(--c4); color: var(--text-1); padding: 0 5px; margin-left: 6px; }
+.spacer { flex: 1; }
+button, .seg button { font: inherit; color: var(--text-2); background: var(--surface-2); border: 1px solid var(--border);
+  padding: 3px 8px; cursor: pointer; }
+button:hover { color: var(--text-1); }
+button[aria-pressed="true"] { color: var(--text-1); border-color: var(--accent); }
+.seg { display: inline-flex; }
+.seg button + button { border-left: none; }
+#theme { padding: 3px 6px; line-height: 0; }
+#theme svg { width: 14px; height: 14px; stroke: var(--text-2); fill: none; stroke-width: 2; }
+main { padding: 8px 12px 40px; max-width: 1500px; margin: 0 auto; }
+section { margin-top: 14px; }
+section > h2 { font-size: 12px; font-weight: 600; color: var(--text-2); margin: 0 0 6px; text-transform: uppercase;
+  letter-spacing: 0.04em; }
+details > summary { cursor: pointer; font-size: 12px; font-weight: 600; color: var(--text-2); text-transform: uppercase;
+  letter-spacing: 0.04em; margin-bottom: 6px; }
+.grid { display: grid; gap: 8px; }
+.g2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.card { background: var(--surface); border: 1px solid var(--border); padding: 6px 6px 2px; min-width: 0; }
+.card .cap { color: var(--text-2); font-size: 11px; padding: 0 4px 2px; display: flex; justify-content: space-between; }
+.card .cap span:last-child { color: var(--muted); }
+.plot { width: 100%; height: 330px; }
+.plot.tall { height: 380px; }
+.controls { display: flex; gap: 14px; align-items: center; flex-wrap: wrap; padding: 6px 0; color: var(--text-2); }
+table { border-collapse: collapse; width: 100%; font-variant-numeric: tabular-nums; background: var(--surface); }
+th, td { padding: 3px 6px; border-bottom: 1px solid var(--grid); text-align: right; white-space: nowrap; }
+th { color: var(--text-2); font-weight: 600; cursor: pointer; user-select: none; position: sticky; top: 0;
+  background: var(--surface); }
+#tbl th:nth-child(-n+4), #tbl td:nth-child(-n+4) { text-align: left; }
+td.na { color: var(--muted); }
+.tablewrap { max-height: 520px; overflow: auto; border: 1px solid var(--border); }
+.method { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); gap: 14px; }
+.method .txt { background: var(--surface); border: 1px solid var(--border); padding: 8px 12px; color: var(--text-1); }
+.method .txt h3 { font-size: 12px; margin: 10px 0 4px; color: var(--text-2); }
+.method .txt p { margin: 4px 0; }
+.method table td:first-child, .method table th:first-child { text-align: left; }
+#symtbl td, #symtbl th { white-space: normal; text-align: left; }
+#valtxt table td, #valtxt table th { text-align: right; }
+.note { color: var(--muted); font-size: 11px; }
+@media (max-width: 900px) { .g2, .method { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<header>
+  <h1>GRIN profile study: blue uLED and uVCSEL multimode fiber</h1>
+  <nav>
+    <a href="#overview">Overview</a><a href="#detail">Designs</a><a href="#table">Table</a><a href="#method">Method</a>
+  </nav>
+  <span class="status" id="status"></span>
+  <span class="spacer"></span>
+  <span>y</span>
+  <div class="seg" id="yscale"><button data-v="log">log</button><button data-v="linear">lin</button></div>
+  <button id="theme" title="Toggle light/dark" aria-label="Toggle light/dark"></button>
+</header>
+<main>
+<section id="overview">
+  <h2>Optimum OFL RMS modal delay vs layer count</h2>
+  <div class="grid g2" id="layers"></div>
+</section>
+<section>
+  <h2>Alpha-profile scans</h2>
+  <div class="grid g2" id="scans"></div>
+</section>
+<section>
+  <h2>Core diameter / NA trade (alpha optimum per point)</h2>
+  <div class="grid g2" id="pareto"></div>
+</section>
+<section>
+  <h2>Modal delay vs wavelength, 50 um / NA 0.20 designs</h2>
+  <div class="controls"><span>spectral average (Gaussian FWHM)</span><div class="seg" id="svlavg"></div>
+    <span class="note">sqrt of the Gaussian-weighted mean of sigma^2 over wavelength; 0 = single wavelength; 1 nm sampling</span></div>
+  <div class="grid"><div class="card"><div class="cap"><span>OFL RMS intermodal delay</span><span>dashed: robust objective</span></div><div class="plot tall" id="svl"></div></div></div>
+</section>
+<section id="detail">
+  <h2>Design detail</h2>
+  <div class="controls">
+    <span>source</span><div class="seg" id="dsrc"></div>
+    <span>core / NA</span><div class="seg" id="dcons"></div>
+    <span class="note">legend click toggles a design; click a point to pin its readout, click blank to clear</span>
+  </div>
+  <div class="grid g2" id="profiles"></div>
+  <div class="grid g2" id="delays" style="margin-top:8px"></div>
+</section>
+<section id="table">
+  <h2>Results table</h2>
+  <div class="controls"><span class="note" id="tablenote"></span></div>
+  <div class="tablewrap"><table id="tbl"><thead></thead><tbody></tbody></table></div>
+</section>
+<section id="method">
+  <details open><summary>Method, assumptions, validation</summary>
+  <div class="method">
+    <div class="txt" id="methodtxt">
+      <h3>Objective</h3>
+      <p>Minimize the overfilled-launch (OFL) RMS intermodal group-delay spread, equal power in every guided scalar LP mode (degeneracy 1 for \(l=0\), 2 for \(l&gt;0\)), averaged over the source spectrum \(S(\lambda)\) (Gauss-Hermite nodes):</p>
+      \[ \sigma_\text{modal}^2 = \sum_j S_j\, \frac{\sum_m w_m (\tau_m(\lambda_j) - \bar\tau(\lambda_j))^2}{\sum_m w_m}. \]
+      <p>Robust objective: \(\sigma_\text{rob} = \sqrt{\langle \sigma_\text{modal}^2 \rangle}\) over the ensemble \(x_0 \times \{0.98, 1, 1.02\}\) (all sources) and \(\lambda_0 + \{-10, 0, 10\}\) nm (uVCSEL).</p>
+      <h3>Mode solver</h3>
+      <p>Scalar weakly guiding equation per azimuthal order \(l\), cell-centered radial finite differences, Dirichlet at \(r = a + 15\) um, symmetric tridiagonal eigenproblem (LAPACK stemr), guided modes \(\beta &gt; k n_\text{clad}\):</p>
+      \[ \psi'' + \tfrac{1}{r}\psi' - \tfrac{l^2}{r^2}\psi + k^2 n^2(r,\lambda)\,\psi = \beta^2 \psi. \]
+      <p>Group delay per mode (Hellmann-Feynman, exact for the discrete problem), with the local material group index \(N = n - \lambda\, dn/d\lambda\):</p>
+      \[ \frac{\tau_m}{L} = \frac{1}{c}\frac{d\beta}{dk} = \frac{k}{c\,\beta}\,\frac{\langle\psi| n N |\psi\rangle}{\langle\psi|\psi\rangle}. \]
+      <h3>Material</h3>
+      <p>Three-term Sellmeier, SiO2 (Malitson 1965) and GeO2 (Fleming 1984); binary glass coefficients \(B_i, \lambda_i\) linear in GeO2 mole fraction \(x\). Cladding pure SiO2. Peak \(x_0\) set by the NA at the source center wavelength.</p>
+      <h3>Profiles (monotonic, axially symmetric)</h3>
+      <p>\(x(r) = x_0\,[1 - F(r/a)]\), \(x = 0\) for \(r \ge a\). Alpha: \(F = \rho^\alpha\). Bernstein: \(F = \sum_k c_k B_{k,8}(\rho)\), \(0 = c_0 \le \dots \le c_8\), \(c_8 = 1\) (continuous) or \(c_8 &lt; 1\) (edge step). Staircase: \(N\) layers with free radii and levels, first level \(x_0\).</p>
+      <h3>Coupling floor</h3>
+      <p>Fixed core and peak NA do not fix coupling (a pilot collapsed to about one guided mode). Free-form and staircase designs keep fiber etendue \(G = \int \pi (n^2 - n_\text{clad}^2)\, 2\pi r\, dr\) (proportional to guided mode count) at least \(0.99\times\) that of the alpha optimum of the same case; penalty 100 ps/m per unit shortfall.</p>
+      <h3>Optimizer</h3>
+      <p>Per design 3 starts (seed 1 at the alpha optimum, others perturbed); each runs CMA-ES, then Powell, then Nelder-Mead. Shaded bands in the layer plot span the seeds.</p>
+      <h3>Bandwidth</h3>
+      <p>First \(|H(f)| = 0.5\) of the pooled impulse response (modal only at \(\lambda_0\), or modal + chromatic over the spectrum), scaled to \(L\).</p>
+      <h3>Validation</h3>
+      <div id="valtxt"></div>
+    </div>
+    <div><table id="symtbl"><thead><tr><th>symbol / item</th><th>value</th><th>source</th></tr></thead><tbody></tbody></table></div>
+  </div>
+  </details>
+</section>
+</main>
+<script>
+const D = /*__DATA__*/null;
+const S = { ylog: true, src: "uled", cons: "A_om3", avg: "0" };
+const SRC = { uled: "uLED 430 nm", uvcsel: "uVCSEL 850 nm" };
+const CONS = { A_om3: "50 um / NA 0.20", B_large: "80 um / NA 0.28" };
+const OBJS = ["strict", "robust"];
+const NS = D.config.parameterizations.staircase.n_layers;
+const css = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+const f3 = v => (v === null || v === undefined || !isFinite(v)) ? "-" : Number(v).toPrecision(3);
+const plots = [];
+
+function hexA(hex, a) {
+  const h = hex.replace("#", "");
+  const n = parseInt(h, 16);
+  return `rgba(${(n >> 16) & 255},${(n >> 8) & 255},${n & 255},${a})`;
+}
+function stairColor(n) {
+  const steps = ["--s250", "--s300", "--s350", "--s400", "--s450", "--s500", "--s550"];
+  const i = Math.max(0, NS.indexOf(n));
+  return css(steps[Math.min(i, steps.length - 1)]);
+}
+function kindColor(d) {
+  if (d.kind === "stair") return stairColor(d.n);
+  return { step: css("--muted"), alpha: css("--c2"), bernstein: css("--c3"), bernsteinstep: css("--c4") }[d.kind];
+}
+function axis(extra) {
+  return Object.assign({ gridcolor: css("--grid"), linecolor: css("--axis"), zeroline: false, ticks: "outside",
+    tickcolor: css("--axis"), ticklen: 3, color: css("--text-2"), title: { font: { size: 11 } },
+    exponentformat: "power" }, extra || {});
+}
+function baseLayout(x, y, extra) {
+  return Object.assign({
+    paper_bgcolor: css("--surface"), plot_bgcolor: css("--surface"),
+    font: { family: "system-ui, -apple-system, Segoe UI, sans-serif", size: 11, color: css("--text-2") },
+    margin: { l: 58, r: 8, t: 44, b: 38 }, xaxis: axis(x), yaxis: axis(y), hovermode: "closest",
+    hoverlabel: { bgcolor: css("--surface-2"), bordercolor: css("--axis"), font: { color: css("--text-1"), size: 11 },
+      align: "left" },
+    legend: { font: { size: 10, color: css("--text-2") }, bgcolor: "rgba(0,0,0,0)", orientation: "h", x: 0, xanchor: "left",
+      y: 1.01, yanchor: "bottom", itemwidth: 30 },
+    showlegend: true,
+    annotations: [], shapes: [],
+  }, extra || {});
+}
+const CFG = { displaylogo: false, responsive: true,
+  modeBarButtonsToRemove: ["select2d", "lasso2d", "autoScale2d", "toggleSpikelines", "hoverClosestCartesian",
+    "hoverCompareCartesian"] };
+
+function yType() { return S.ylog ? "log" : "linear"; }
+
+function card(parent, id, cap, right, cls) {
+  const c = document.createElement("div");
+  c.className = "card";
+  const h = document.createElement("div");
+  h.className = "cap";
+  const a = document.createElement("span"); a.textContent = cap;
+  const b = document.createElement("span"); b.textContent = right || "";
+  h.append(a, b);
+  const p = document.createElement("div");
+  p.className = "plot" + (cls ? " " + cls : "");
+  p.id = id;
+  c.append(h, p);
+  parent.append(c);
+  return p;
+}
+
+// pinned readouts: click a point to pin (multiple), click a pin to remove it, click blank to clear all
+function attachPins(div) {
+  if (div._pins) return;
+  div._pins = true;
+  let hit = false;
+  div.on("plotly_click", ev => {
+    hit = true;
+    const pt = ev.points[0];
+    if (!pt || !pt.text) return;
+    const xa = div._fullLayout.xaxis, ya = div._fullLayout.yaxis;
+    const X = xa.type === "log" ? Math.log10(pt.x) : pt.x;
+    const Y = ya.type === "log" ? Math.log10(pt.y) : pt.y;
+    const ann = (div.layout.annotations || []).filter(a => a.name !== "pin" || a.x !== X || a.y !== Y);
+    ann.push({ name: "pin", x: X, y: Y, text: pt.text, showarrow: true, arrowcolor: css("--muted"), arrowwidth: 1,
+      ax: 26, ay: -26, bgcolor: css("--surface-2"), bordercolor: css("--axis"), borderwidth: 1,
+      font: { size: 10, color: css("--text-1") }, align: "left", captureevents: true });
+    Plotly.relayout(div, { annotations: ann });
+  });
+  div.on("plotly_clickannotation", ev => {
+    hit = true;
+    const ann = div.layout.annotations.filter((a, i) => i !== ev.index);
+    Plotly.relayout(div, { annotations: ann });
+  });
+  div.addEventListener("click", () => {
+    setTimeout(() => {
+      if (!hit && (div.layout.annotations || []).some(a => a.name === "pin")) {
+        Plotly.relayout(div, { annotations: div.layout.annotations.filter(a => a.name !== "pin") });
+      }
+      hit = false;
+    }, 0);
+  });
+}
+function draw(div, traces, layout) {
+  const keep = (div.layout && div.layout.annotations || []).filter(a => a.name === "pin");
+  layout.annotations = (layout.annotations || []).concat(keep);
+  Plotly.react(div, traces, layout, CFG).then(() => attachPins(div));
+}
+function pending(layout, msg) {
+  layout.annotations = [{ text: msg, showarrow: false, xref: "paper", yref: "paper", x: 0.5, y: 0.5,
+    font: { color: css("--muted"), size: 11 } }];
+  layout.xaxis.visible = false; layout.yaxis.visible = false;
+  return layout;
+}
+const line = (color, dash) => ({ color, width: 2, dash: dash || "solid", shape: "linear" });
+const mark = color => ({ size: 8, color, line: { color: css("--surface"), width: 2 } });
+
+// ---------------------------------------------------------------- overview: sigma vs N layers
+function drawLayers() {
+  const root = document.getElementById("layers");
+  for (const obj of OBJS) for (const src of ["uled", "uvcsel"]) {
+    const id = `lay-${obj}-${src}`;
+    const div = document.getElementById(id) || card(root, id, `${SRC[src]}, ${obj} objective`, "band: seed min-max");
+    const tr = [];
+    ["A_om3", "B_large"].forEach((cons, ci) => {
+      const col = css(ci === 0 ? "--c1" : "--c2");
+      const rows = NS.map(n => D.layers.find(l => l.src === src && l.cons === cons && l.obj === obj && l.kind === "stair" && l.n === n))
+        .filter(Boolean);
+      if (rows.length) {
+        const x = rows.map(r => r.n), lo = rows.map(r => Math.min(...r.seeds)), hi = rows.map(r => Math.max(...r.seeds));
+        tr.push({ x, y: hi, mode: "lines", line: { width: 0 }, hoverinfo: "skip", showlegend: false });
+        tr.push({ x, y: lo, mode: "lines", line: { width: 0 }, fill: "tonexty", fillcolor: hexA(col, 0.12),
+          hoverinfo: "skip", showlegend: false });
+        tr.push({ x, y: lo, mode: "lines+markers", line: line(col), marker: mark(col), name: `${CONS[cons]} staircase`,
+          text: rows.map(r => `<b>${f3(Math.min(...r.seeds))} ps/m</b><br>${CONS[cons]}, staircase N=${r.n}<br>seeds: ${r.seeds.map(f3).join(", ")}`),
+          hovertemplate: "%{text}<extra></extra>" });
+      }
+      [["alpha", "dot"], ["bernstein", "dash"], ["bernsteinstep", "dashdot"]].forEach(([k, dash]) => {
+        const r = D.layers.find(l => l.src === src && l.cons === cons && l.obj === obj && l.kind === k);
+        if (!r) return;
+        const v = Math.min(...r.seeds);
+        const lab = { alpha: "alpha", bernstein: "Bernstein cont.", bernsteinstep: "Bernstein edge step" }[k];
+        tr.push({ x: [NS[0], NS[NS.length - 1]], y: [v, v], mode: "lines", line: line(col, dash), name: `${CONS[cons]} ${lab}`,
+          text: [0, 1].map(() => `<b>${f3(v)} ps/m</b><br>${CONS[cons]}, ${lab}<br>seeds: ${r.seeds.map(f3).join(", ")}`),
+          hovertemplate: "%{text}<extra></extra>" });
+      });
+    });
+    let lay = baseLayout({ type: "log", tickvals: NS, ticktext: NS.map(String), title: { text: "layers N" } },
+      { type: yType(), title: { text: "objective (ps/m)" } });
+    if (!tr.length) lay = pending(lay, "pending: stage " + (obj === "strict" ? "2" : "2r"));
+    draw(div, tr, lay);
+  }
+}
+
+// ---------------------------------------------------------------- alpha scans
+function drawScans() {
+  const root = document.getElementById("scans");
+  for (const src of ["uled", "uvcsel"]) {
+    const id = `scan-${src}`;
+    const div = document.getElementById(id) || card(root, id, `${SRC[src]}, alpha profile`, "dashed: robust");
+    const tr = [];
+    ["A_om3", "B_large"].forEach((cons, ci) => {
+      const col = css(ci === 0 ? "--c1" : "--c2");
+      for (const obj of OBJS) {
+        const s = D.scans.find(q => q.src === src && q.cons === cons && q.obj === obj);
+        if (!s) continue;
+        const dash = obj === "strict" ? "solid" : "dash";
+        tr.push({ x: s.alpha, y: s.sigma, mode: "lines", line: line(col, dash), name: `${CONS[cons]}, ${obj}`,
+          text: s.alpha.map((a, i) => `<b>${f3(s.sigma[i])} ps/m</b><br>alpha ${a.toFixed(2)}<br>${CONS[cons]}, ${obj}`),
+          hovertemplate: "%{text}<extra></extra>" });
+        tr.push({ x: [s.best_alpha], y: [s.best_sigma], mode: "markers", marker: mark(col), showlegend: false,
+          text: [`<b>${f3(s.best_sigma)} ps/m</b><br>optimum alpha ${s.best_alpha}<br>${CONS[cons]}, ${obj}`],
+          hovertemplate: "%{text}<extra></extra>" });
+      }
+    });
+    let lay = baseLayout({ title: { text: "alpha" } }, { type: yType(), title: { text: "OFL RMS modal delay (ps/m)" } });
+    if (!tr.length) lay = pending(lay, "pending: stage 1");
+    draw(div, tr, lay);
+  }
+}
+
+// ---------------------------------------------------------------- pareto
+function drawPareto() {
+  const root = document.getElementById("pareto");
+  const nas = D.config.constraints.C_pareto.na;
+  const cols = ["--c1", "--c2", "--c3", "--c4", "--c5"];
+  for (const obj of OBJS) for (const src of ["uled", "uvcsel"]) {
+    const id = `par-${obj}-${src}`;
+    const div = document.getElementById(id) || card(root, id, `${SRC[src]}, ${obj} objective`, "points: core diameter 30-100 um");
+    const tr = nas.map((na, j) => {
+      const pts = D.pareto.filter(p => p.src === src && p.obj === obj && p.na === na).sort((a, b) => a.d - b.d);
+      return { x: pts.map(p => p.etendue), y: pts.map(p => p.sigma), mode: "lines+markers", name: `NA ${na.toFixed(2)}`,
+        line: line(css(cols[j])), marker: mark(css(cols[j])),
+        text: pts.map(p => `<b>${f3(p.sigma)} ps/m</b><br>core ${p.d} um, NA ${p.na.toFixed(2)}<br>alpha ${p.alpha}<br>etendue ${f3(p.etendue)} um^2 sr`),
+        hovertemplate: "%{text}<extra></extra>" };
+    }).filter(t => t.x.length);
+    let lay = baseLayout({ type: "log", dtick: "D2", title: { text: "fiber etendue (um^2 sr)" } },
+      { type: yType(), title: { text: "alpha optimum (ps/m)" } });
+    if (!tr.length) lay = pending(lay, "pending: stage " + (obj === "strict" ? "1" : "1r"));
+    draw(div, tr, lay);
+  }
+}
+
+// ---------------------------------------------------------------- sigma vs wavelength
+function smooth(lam, y, fwhm) {
+  if (!fwhm) return y;
+  const sg = fwhm / 2.3548, out = [];
+  for (let i = 0; i < lam.length; i++) {
+    let num = 0, den = 0;
+    for (let j = 0; j < lam.length; j++) {
+      const d = (lam[j] - lam[i]) / sg;
+      if (Math.abs(d) > 4 || y[j] === null) continue;
+      const w = Math.exp(-0.5 * d * d);
+      num += w * y[j] * y[j]; den += w;
+    }
+    out.push(Math.abs(lam[i] - lam[0]) < 2 * sg || Math.abs(lam[lam.length - 1] - lam[i]) < 2 * sg ? null : Math.sqrt(num / den));
+  }
+  return out;
+}
+function drawSvl() {
+  const div = document.getElementById("svl");
+  const fw = Number(S.avg);
+  const colOf = s => s.kind === "step" ? css("--muted") :
+    css({ "uled-alpha": "--c1", "uled-bernsteinstep": "--c3", "uvcsel-alpha": "--c2", "uvcsel-bernsteinstep": "--c4" }[`${s.src}-${s.kind}`]);
+  const tr = D.svl.series.map(s => smooth(D.svl.lam_nm, s.sigma, fw)).map((y, k) => [D.svl.series[k], y]).map(([s, y]) => ({
+    x: D.svl.lam_nm, y, mode: "lines", line: line(colOf(s), s.obj === "robust" ? "dash" : "solid"),
+    name: s.kind === "step" ? "step index" : `${s.label}, for ${SRC[s.src]}, ${s.obj}`,
+    text: y.map((v, i) => `<b>${f3(v)} ps/m</b><br>${D.svl.lam_nm[i]} nm${fw ? `, ${fw} nm FWHM average` : ""}<br>${s.label}, optimized for ${SRC[s.src]} (${s.obj})`),
+    hovertemplate: "%{text}<extra></extra>" }));
+  const lay = baseLayout({ title: { text: "wavelength (nm)" } }, { type: yType(), title: { text: "OFL RMS modal delay (ps/m)" } });
+  for (const [x, t] of [[430, "430 nm"], [850, "850 nm"]]) {
+    lay.shapes.push({ type: "line", x0: x, x1: x, yref: "paper", y0: 0, y1: 1, line: { color: css("--axis"), width: 1 } });
+    lay.annotations.push({ x, yref: "paper", y: 0, text: t, showarrow: false, yanchor: "bottom", xanchor: "left", xshift: 3,
+      font: { size: 10, color: css("--muted") } });
+  }
+  draw(div, tr, tr.length ? lay : pending(lay, "pending"));
+}
+
+// ---------------------------------------------------------------- detail
+function detailDesigns(obj) {
+  return D.designs.filter(d => d.src === S.src && d.cons === S.cons && (d.obj === obj || d.kind === "step"))
+    .sort((a, b) => order(a) - order(b));
+}
+function order(d) { return { step: 0, alpha: 1, bernstein: 2, bernsteinstep: 3 }[d.kind] ?? 10 + d.n; }
+function drawDetail() {
+  const pr = document.getElementById("profiles"), dl = document.getElementById("delays");
+  const lam = D.config.sources[S.src].lam0_um * 1e3;
+  for (const obj of OBJS) {
+    const ds = detailDesigns(obj);
+    const pid = `prof-${obj}`, did = `del-${obj}`;
+    const p = document.getElementById(pid) || card(pr, pid, `index profile, ${obj} objective`, "");
+    const q = document.getElementById(did) || card(dl, did, `mode group delays, ${obj} objective`, "", "tall");
+    p.parentElement.querySelector(".cap span:last-child").textContent = `${SRC[S.src]}, ${CONS[S.cons]}`;
+    q.parentElement.querySelector(".cap span:last-child").textContent = `${SRC[S.src]}, ${CONS[S.cons]}, at ${lam} nm`;
+    const vis = d => (d.kind === "stair" && ![4, 8, 16].includes(d.n)) || d.kind === "bernstein" ? "legendonly" : true;
+    const tp = ds.map(d => ({ x: d.r, y: d.dn, mode: "lines", line: line(kindColor(d)), name: d.label, visible: vis(d),
+      text: d.r.map((r, i) => `<b>${f3(d.dn[i])} e-3</b><br>r ${r.toFixed(2)} um<br>${d.label}`),
+      hovertemplate: "%{text}<extra></extra>" }));
+    let lp = baseLayout({ title: { text: "r (um)" } }, { title: { text: `n - n(SiO2) at ${lam} nm (1e-3)` } });
+    if (!tp.length) lp = pending(lp, "pending");
+    draw(p, tp, lp);
+    const vis2 = d => ["alpha", "bernsteinstep"].includes(d.kind) || (d.kind === "stair" && d.n === 16) ? true : "legendonly";
+    const td = ds.map(d => ({ x: d.p, y: d.dtau, mode: "markers", name: `${d.label} (${f3(d.sigma_center)} ps/m)`, visible: vis2(d),
+      marker: { size: 8, color: hexA(kindColor(d), 0.85), line: { color: css("--surface"), width: 1 } },
+      text: d.p.map((pp, i) => `<b>${f3(d.dtau[i])} ps/m</b><br>principal ${pp}, l=${d.l[i]}<br>${d.label}`),
+      hovertemplate: "%{text}<extra></extra>" }));
+    let ld = baseLayout({ title: { text: "principal mode number 2m + l - 1" } }, { title: { text: "group delay - LP01 (ps/m)" } });
+    if (!td.length) ld = pending(ld, "pending");
+    draw(q, td, ld);
+  }
+}
+
+// ---------------------------------------------------------------- table
+const COLS = [
+  ["source", d => SRC[d.src]], ["core / NA", d => CONS[d.cons]], ["objective", d => d.kind === "step" ? "-" : d.obj],
+  ["design", d => d.label],
+  ["objective value (ps/m)", d => d.objective_value],
+  ["seeds", d => d.n_seeds || null],
+  ["seed spread (ps/m)", d => { const l = D.layers.find(x => x.gid === d.gid); return l && l.seeds.length > 1 ? Math.max(...l.seeds) - Math.min(...l.seeds) : null; }],
+  ["sigma at lambda0 (ps/m)", d => d.sigma_center],
+  ["modes", d => d.modes],
+  ["G / G_alpha", d => { const a = D.designs.find(x => x.src === d.src && x.cons === d.cons && x.kind === "alpha" && x.obj === (d.kind === "step" ? "strict" : d.obj)); return a ? d.etendue / a.etendue : null; }],
+  ["sigma spectral (ps/m)", d => d.final && d.final[d.src].sigma_modal_ps_per_m],
+  ["sigma robust (ps/m)", d => d.final && d.final[d.src].sigma_robust_ps_per_m],
+  ["sigma dr/2 (ps/m)", d => d.final && d.final[d.src].sigma_modal_ps_per_m_dr_half],
+  ["sigma inner 80% (ps/m)", d => d.final && d.final[d.src].sigma_inner80_center_ps_per_m],
+  ["BW modal @L (GHz)", d => d.final && d.final[d.src].bw_modal_ghz_at_L],
+  ["BW total @L (GHz)", d => d.final && d.final[d.src].bw_total_ghz_at_L],
+  ["sigma, other source (ps/m)", d => { const o = d.src === "uled" ? "uvcsel" : "uled"; return d.final && d.final[o].sigma_modal_ps_per_m; }],
+];
+let sortCol = null, sortDir = 0;
+function drawTable() {
+  const thead = document.querySelector("#tbl thead"), tbody = document.querySelector("#tbl tbody");
+  thead.textContent = "";
+  const tr = document.createElement("tr");
+  COLS.forEach(([name], i) => {
+    const th = document.createElement("th");
+    th.textContent = name + (sortCol === i ? (sortDir > 0 ? " ↑" : " ↓") : "");
+    th.addEventListener("click", () => {
+      if (sortCol !== i) { sortCol = i; sortDir = 1; } else if (sortDir === 1) sortDir = -1; else { sortCol = null; sortDir = 0; }
+      drawTable();
+    });
+    tr.append(th);
+  });
+  thead.append(tr);
+  let rows = D.designs.filter(d => d.src === S.src && d.cons === S.cons).slice().sort((a, b) =>
+    (a.obj === b.obj ? 0 : a.obj === "strict" ? -1 : 1) || order(a) - order(b));
+  if (sortCol !== null) {
+    const g = COLS[sortCol][1];
+    rows.sort((a, b) => {
+      const x = g(a), y = g(b);
+      if (x === null || x === undefined) return 1;
+      if (y === null || y === undefined) return -1;
+      return (typeof x === "number" ? x - y : String(x).localeCompare(String(y))) * sortDir;
+    });
+  }
+  tbody.textContent = "";
+  for (const d of rows) {
+    const r = document.createElement("tr");
+    COLS.forEach(([, g], i) => {
+      const td = document.createElement("td");
+      const v = g(d);
+      if (v === null || v === undefined || v === false) { td.textContent = "-"; td.className = "na"; }
+      else td.textContent = typeof v === "number" && i > 3 ? (i === 5 || i === 8 ? String(Math.round(v)) : f3(v)) : String(v);
+      r.append(td);
+    });
+    tbody.append(r);
+  }
+  document.getElementById("tablenote").textContent = `${SRC[S.src]}, ${CONS[S.cons]} (set by the design-detail controls). ` +
+    `Columns from "sigma spectral" on fill in after the final stage; L = ${D.config.link.length_m} m.`;
+}
+
+// ---------------------------------------------------------------- method side table, status, controls
+function drawStatic() {
+  const st = D.status.map(s => `${s.stage} ${s.done}${s.total !== null ? "/" + s.total : ""}`).join(" · ");
+  const partial = D.status.some(s => s.total !== null && s.done < s.total) || D.status.find(s => s.stage === "3 final").done === 0;
+  const el = document.getElementById("status");
+  el.textContent = `data ${D.generated.replace("T", " ")} · jobs ${st}`;
+  if (partial) { const b = document.createElement("span"); b.className = "badge"; b.textContent = "partial"; el.append(b); }
+  const c = D.config, s = c.sources;
+  const rows = [
+    ["\\(\\lambda_0\\), uLED", `${s.uled.lam0_um * 1e3} nm, FWHM ${s.uled.fwhm_nm} nm`, "article p.70, p.77; FWHM assumption"],
+    ["\\(\\lambda_0\\), uVCSEL", `${s.uvcsel.lam0_um * 1e3} nm, FWHM ${s.uvcsel.fwhm_nm} nm`, "article p.85; FWHM assumption"],
+    ["spectral nodes (opt / eval)", `${s.uled.n_nodes_opt} / ${s.uled.n_nodes_eval} uLED, ${s.uvcsel.n_nodes_opt} / ${s.uvcsel.n_nodes_eval} uVCSEL`, "Gauss-Hermite"],
+    ["core / NA, case A", `${c.constraints.A_om3.core_diameter_um} um / ${c.constraints.A_om3.na}`, "OM3 class, Photonics 13, 408 Table 1"],
+    ["core / NA, case B", `${c.constraints.B_large.core_diameter_um} um / ${c.constraints.B_large.na}`, "OM1-class NA; core assumption"],
+    ["Pareto grid", `core ${c.constraints.C_pareto.core_diameter_um.join(", ")} um; NA ${c.constraints.C_pareto.na.join(", ")}`, "assumption"],
+    ["\\(L\\)", `${c.link.length_m} m`, "Avicena AOC target, article p.131"],
+    ["robust ensemble", `x0 x ${c.robust.delta_scale.join(" / ")}; uVCSEL shift ${c.robust.lam_shift_nm.uvcsel.join(" / ")} nm`, "assumption"],
+    ["coupling floor", `G >= ${1 - c.coupling_floor.tolerance} G_alpha, penalty ${c.coupling_floor.penalty_ps_per_m} ps/m`, "agent decision"],
+    ["Bernstein degree", `${c.parameterizations.bernstein.degree}, budget ${c.parameterizations.bernstein.maxfev} evals`, ""],
+    ["staircase N", `${NS.join(", ")}; budget ${c.parameterizations.staircase.maxfev_per_param} x params`, ""],
+    ["restarts", `${c.optimizer.n_starts} (perturb ${c.optimizer.restart_perturb})`, ""],
+    ["grid", `dr ${c.numerics.dr_um} um, cladding margin ${c.numerics.clad_margin_um} um, ${c.numerics.oversample}x cell averaging`, "convergence: dr/2 column"],
+    ["SiO2", "Malitson, JOSA 55, 1205 (1965)", "refractiveindex.info"],
+    ["GeO2", "Fleming, Appl. Opt. 23, 4486 (1984)", "refractiveindex.info"],
+    ["mixing", "linear in GeO2 mole fraction", "ofiber doped_glass"],
+  ];
+  const tb = document.querySelector("#symtbl tbody");
+  tb.textContent = "";
+  for (const r of rows) {
+    const tr = document.createElement("tr");
+    r.forEach(v => { const td = document.createElement("td"); td.textContent = v; tr.append(td); });
+    tb.append(tr);
+  }
+  const vt = document.getElementById("valtxt");
+  vt.textContent = "";
+  const p = document.createElement("p");
+  p.textContent = `Unit tests: ${D.tests} (silica n_D, analytic dn/dlambda, step-index LP modes vs Bessel roots, parabolic oscillator eigenvalues, Hellmann-Feynman vs finite-difference group index).`;
+  vt.append(p);
+  if (D.validation.length) {
+    const p2 = document.createElement("p");
+    p2.textContent = "No material dispersion, numerical alpha optimum vs Olshansky-Keck 2 - 12 Delta/5 (inner 80% mode groups / all guided modes):";
+    vt.append(p2);
+    const t = document.createElement("table");
+    const hr = document.createElement("tr");
+    ["lambda (um)", "a (um)", "Delta", "V", "alpha OK", "alpha inner 80%", "alpha all modes"].forEach(h => { const th = document.createElement("th"); th.textContent = h; hr.append(th); });
+    t.append(hr);
+    for (const v of D.validation) {
+      const tr = document.createElement("tr");
+      [v.lam_um, v.a_um, v.delta, v.V.toFixed(1), v.alpha_ok.toFixed(4), v["alpha_num_frac0.8"].toFixed(4), v["alpha_num_frac1.0"].toFixed(4)]
+        .forEach(x => { const td = document.createElement("td"); td.textContent = String(x); tr.append(td); });
+      t.append(tr);
+    }
+    vt.append(t);
+  }
+}
+
+function seg(id, opts, key, onchange) {
+  const el = document.getElementById(id);
+  el.textContent = "";
+  for (const [v, t] of opts) {
+    const b = document.createElement("button");
+    b.textContent = t; b.dataset.v = v;
+    b.setAttribute("aria-pressed", String(S[key] === v));
+    b.addEventListener("click", () => { S[key] = v; seg(id, opts, key, onchange); onchange(); });
+    el.append(b);
+  }
+}
+const SUN = '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>';
+const MOON = '<svg viewBox="0 0 24 24"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>';
+function setThemeIcon() {
+  const dark = document.documentElement.dataset.theme === "dark";
+  document.getElementById("theme").innerHTML = dark ? SUN : MOON;
+}
+function drawAll() { drawLayers(); drawScans(); drawPareto(); drawSvl(); drawDetail(); drawTable(); }
+
+document.getElementById("theme").addEventListener("click", () => {
+  const r = document.documentElement;
+  r.dataset.theme = r.dataset.theme === "dark" ? "light" : "dark";
+  try { localStorage.setItem("grin-theme", r.dataset.theme); } catch (e) { /* storage unavailable */ }
+  setThemeIcon();
+  document.querySelectorAll(".plot").forEach(p => { if (p.layout) p.layout.annotations = []; });
+  drawAll();
+});
+document.querySelectorAll("#yscale button").forEach(b => {
+  b.addEventListener("click", () => {
+    S.ylog = b.dataset.v === "log";
+    document.querySelectorAll("#yscale button").forEach(x => x.setAttribute("aria-pressed", String(x === b)));
+    document.querySelectorAll(".plot").forEach(p => { if (p.layout) p.layout.annotations = []; });
+    drawLayers(); drawScans(); drawPareto(); drawSvl();
+  });
+});
+try { const t = localStorage.getItem("grin-theme"); if (t) document.documentElement.dataset.theme = t; } catch (e) { /* ignore */ }
+setThemeIcon();
+document.querySelector('#yscale button[data-v="log"]').setAttribute("aria-pressed", "true");
+document.querySelector('#yscale button[data-v="linear"]').setAttribute("aria-pressed", "false");
+seg("svlavg", [["0", "0"], ["1", "1 nm"], ["20", "20 nm"]], "avg", drawSvl);
+seg("dsrc", [["uled", SRC.uled], ["uvcsel", SRC.uvcsel]], "src", () => { drawDetail(); drawTable(); });
+seg("dcons", [["A_om3", CONS.A_om3], ["B_large", CONS.B_large]], "cons", () => { drawDetail(); drawTable(); });
+drawStatic();
+drawAll();
+</script>
+</body>
+</html>

@@ -1,0 +1,15 @@
+# local environment and tool caches
+.venv/
+__pycache__/
+.pytest_cache/
+.ruff_cache/
+# local run logs and tmux chain scripts (machine-specific paths)
+logs/
+# regenerable caches; static figures regenerated after the study completes
+outputs/report/cache_*.json
+outputs/figures/
+# re-include canonical outputs ignored by the PlayGround-level *.json / *.html rules
+!outputs/runs/*.json
+!outputs/validation/*.json
+!outputs/report/grin_report.html
+!scripts/report_template.html
