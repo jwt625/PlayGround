@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>My Learning</title>
+<link rel="stylesheet" href="engine/lms.css">
+<script src="engine/config.js"></script>
+<script src="courses/ferroelectric.js"></script>
+<script src="courses/feedback.js"></script>
+</head>
+<body>
+<div class="topbar">
+  <div class="logo">Intracavity Photonics<small>Learning Center</small></div>
+  <div class="course-name">My Learning</div>
+  <button id="theme">Theme</button>
+</div>
+<div class="dash">
+  <h1>Welcome back. You have required training due.</h1>
+  <div class="sub">The following courses have been assigned to you by the Office of Photonic Conduct based on your role, your lab, and a recent incident review.</div>
+  <div class="kpis">
+    <div class="kpi bad"><div class="v" id="k-assigned">0</div><div class="k">Required courses assigned</div></div>
+    <div class="kpi"><div class="v" id="k-done">0</div><div class="k">Completed</div></div>
+    <div class="kpi bad"><div class="v" id="k-compliance">0%</div><div class="k">Personal compliance score</div></div>
+    <div class="kpi"><div class="v">2026-12-31</div><div class="k">Earliest due date</div></div>
+  </div>
+  <div class="tiles" id="tiles"></div>
+  <p style="color:var(--ink-3);font-size:12px;margin-top:22px">Completion is tracked. Training records are retained for seven years or one laser lifetime, whichever is longer.</p>
+  <p id="dev-note" style="display:none;color:var(--ink-3);font-size:12px">Development host: append <code>?dev=1</code> to a course link (or use the Dev links above) for dev mode: navigation unlocked, dev panel, image path overlay. Ignored on any other host.</p>
+</div>
+<script>
+(function () {
+  try { var t = localStorage.getItem('lms_parody_theme'); if (t) document.documentElement.dataset.theme = t; } catch (e) {}
+  document.getElementById('theme').onclick = function () {
+    var cur = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
+    document.documentElement.dataset.theme = cur; try { localStorage.setItem('lms_parody_theme', cur); } catch (e) {}
+  };
+  var C = window.LMS_COURSES || {};
+  var live = ['ferroelectric', 'feedback'].filter(function (k) { return C[k]; });
+  var soon = [
+    ['PKG-1444', 'The Adhesive Is an Optical Component', 'Refractive index discipline at the fiber-attach interface, cure shrinkage, and fillets that wander onto facets.'],
+    ['PKG-0260', 'Warpage Is an Alignment Error', 'Convex at room temperature, concave at reflow, convex again at peak. Your alignment, all three times.'],
+    ['RF-0443', 'Your DC Is Not Your RF', 'Slow charge, fast fields, and the V pi you measured with a power supply.'],
+    ['MET-0003', 'Metric Reporting Integrity', 'Normalization frequencies, factor-of-two conventions, and loaded versus intrinsic Q.'],
+    ['SIM-0001', 'Simulation Integrity and Boundary Conduct', 'Symmetry planes, perfectly matched layers, and modes that live only in the box.'],
+    ['CAV-0124', 'Ultrastable Cavity Conduct', 'Zero crossings, mounts, and coatings that are noisier than you are.']
+  ];
+  var devHost = typeof window.LMS_isDevHost === 'function' && window.LMS_isDevHost();
+  if (devHost) document.getElementById('dev-note').style.display = '';
+  var tiles = document.getElementById('tiles');
+  var done = 0;
+  function pct(k) {
+    try { var s = JSON.parse(localStorage.getItem('lms_parody_' + k) || '{}'); return s.completed ? s.completed.length : 0; } catch (e) { return 0; }
+  }
+  live.forEach(function (k) {
+    var c = C[k];
+    var total = c.chapters.reduce(function (a, ch) { return a + ch.steps.length; }, 0) + 1;
+    var n = Math.min(total, pct(k));
+    var p = Math.round(100 * n / total);
+    if (p >= 100) done++;
+    var el = document.createElement('div');
+    el.className = 'tile-c';
+    el.innerHTML = '<div class="tb"><div class="code">' + c.code + '  |  ' + c.duration + '</div><h2>' + c.title + '</h2><p>' + (c.subtitle || '') + '</p>' +
+      '<div class="progress-bar" style="margin-top:12px"><div style="width:' + p + '%"></div></div></div>' +
+      '<div class="tf"><span class="tag req">REQUIRED</span>' + (p < 100 ? '<span class="tag over">DUE 2026-12-31</span>' : '<span class="tag soon">COMPLETE</span>') +
+      '<span style="flex:1"></span><a class="btn primary" style="text-decoration:none" href="player.html?c=' + k + '">' + (n ? 'Resume' : 'Start') + '</a>' +
+      (devHost ? '<a class="btn small" style="text-decoration:none" href="player.html?c=' + k + '&dev=1" title="Dev mode: navigation unlocked, dev panel">Dev</a>' : '') + '</div>';
+    tiles.appendChild(el);
+  });
+  soon.forEach(function (s) {
+    var el = document.createElement('div');
+    el.className = 'tile-c locked';
+    el.innerHTML = '<div class="tb"><div class="code">' + s[0] + '</div><h2>' + s[1] + '</h2><p>' + s[2] + '</p></div>' +
+      '<div class="tf"><span class="tag soon">COMING SOON</span><span class="tag req">WILL BE REQUIRED</span></div>';
+    tiles.appendChild(el);
+  });
+  document.getElementById('k-assigned').textContent = live.length + soon.length;
+  document.getElementById('k-done').textContent = done;
+  document.getElementById('k-compliance').textContent = Math.round(100 * done / (live.length + soon.length)) + '%';
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,199 @@
+{
+ "af_heart_1.00": {
+  "voice": "af_heart",
+  "speed": 1.0,
+  "speech_s": 33.58,
+  "words": 89,
+  "wpm": 159.0,
+  "rtf": 0.524,
+  "thats_right_s": 0.68,
+  "f0_median_hz": 201.8,
+  "f0_std_st": 2.84,
+  "f0_p5_p95_st": 9.2,
+  "voiced_frac": 0.551,
+  "wer": 0.0217,
+  "asr_misses": [
+   {
+    "ref": "lithium niobate is a wonderful colleague it is electro optic piezoelectric pyroelectric photorefractive and anisotropic it brings its whole self to work",
+    "hyp": "lithium niobate is a wonderful colleague it is electro optic piezoelectric pyroelectric photo refractive and anisotropic it brings its whole self to work"
+   }
+  ],
+  "mp3_lufs": -18.5,
+  "mp3_peak_dbfs": -1.7
+ },
+ "af_bella_1.00": {
+  "voice": "af_bella",
+  "speed": 1.0,
+  "speech_s": 34.57,
+  "words": 89,
+  "wpm": 154.4,
+  "rtf": 0.188,
+  "thats_right_s": 0.66,
+  "f0_median_hz": 203.0,
+  "f0_std_st": 2.36,
+  "f0_p5_p95_st": 7.6,
+  "voiced_frac": 0.629,
+  "wer": 0.0217,
+  "asr_misses": [
+   {
+    "ref": "lithium niobate is a wonderful colleague it is electro optic piezoelectric pyroelectric photorefractive and anisotropic it brings its whole self to work",
+    "hyp": "lithium niobate is a wonderful colleague it is electro optic piezoelectric pyroelectric photo refractive and anisotropic it brings its whole self to work"
+   }
+  ],
+  "mp3_lufs": -18.4,
+  "mp3_peak_dbfs": -1.6
+ },
+ "af_nicole_1.00": {
+  "voice": "af_nicole",
+  "speed": 1.0,
+  "speech_s": 51.25,
+  "words": 89,
+  "wpm": 104.2,
+  "rtf": 0.174,
+  "thats_right_s": 0.83,
+  "f0_median_hz": 157.4,
+  "f0_std_st": 2.9,
+  "f0_p5_p95_st": 6.21,
+  "voiced_frac": 0.238,
+  "wer": 0.0217,
+  "asr_misses": [
+   {
+    "ref": "lithium niobate is a wonderful colleague it is electro optic piezoelectric pyroelectric photorefractive and anisotropic it brings its whole self to work",
+    "hyp": "lithium niobate is a wonderful colleague it is electro optic piezoelectric pyroelectric photo refractive and anisotropic it brings its whole self to work"
+   }
+  ],
+  "mp3_lufs": -18.6,
+  "mp3_peak_dbfs": -1.0
+ },
+ "am_michael_1.00": {
+  "voice": "am_michael",
+  "speed": 1.0,
+  "speech_s": 37.32,
+  "words": 89,
+  "wpm": 143.1,
+  "rtf": 0.183,
+  "thats_right_s": 0.75,
+  "f0_median_hz": 116.6,
+  "f0_std_st": 3.09,
+  "f0_p5_p95_st": 9.9,
+  "voiced_frac": 0.54,
+  "wer": 0.0326,
+  "asr_misses": [
+   {
+    "ref": "lithium niobate is a wonderful colleague it is electro optic piezoelectric pyroelectric photorefractive and anisotropic it brings its whole self to work",
+    "hyp": "lithium niobate is a wonderful colleague it is electro optic piezoelectric pyroelectric photo refractive and anisotropic it brings its whole self to work"
+   },
+   {
+    "ref": "so the passing tests did not test the thing that is most likely to be wrong",
+    "hyp": "so the passing test did not test the thing that is most likely to be wrong"
+   }
+  ],
+  "mp3_lufs": -19.0,
+  "mp3_peak_dbfs": -1.3
+ },
+ "am_fenrir_1.00": {
+  "voice": "am_fenrir",
+  "speed": 1.0,
+  "speech_s": 33.85,
+  "words": 89,
+  "wpm": 157.7,
+  "rtf": 0.182,
+  "thats_right_s": 0.68,
+  "f0_median_hz": 133.1,
+  "f0_std_st": 4.66,
+  "f0_p5_p95_st": 15.28,
+  "voiced_frac": 0.634,
+  "wer": 0.0,
+  "asr_misses": [],
+  "mp3_lufs": -18.7,
+  "mp3_peak_dbfs": -1.5
+ },
+ "bf_emma_1.00": {
+  "voice": "bf_emma",
+  "speed": 1.0,
+  "speech_s": 31.65,
+  "words": 89,
+  "wpm": 168.7,
+  "rtf": 0.193,
+  "thats_right_s": 0.72,
+  "f0_median_hz": 181.9,
+  "f0_std_st": 2.01,
+  "f0_p5_p95_st": 6.9,
+  "voiced_frac": 0.6,
+  "wer": 0.0217,
+  "asr_misses": [
+   {
+    "ref": "lithium niobate is a wonderful colleague it is electro optic piezoelectric pyroelectric photorefractive and anisotropic it brings its whole self to work",
+    "hyp": "lithium niobate is a wonderful colleague it is electro optic piezoelectric pyroelectric photo refractive and anisotropic it brings its whole self to work"
+   }
+  ],
+  "mp3_lufs": -18.6,
+  "mp3_peak_dbfs": -1.0
+ },
+ "bm_george_1.00": {
+  "voice": "bm_george",
+  "speed": 1.0,
+  "speech_s": 37.98,
+  "words": 89,
+  "wpm": 140.6,
+  "rtf": 0.179,
+  "thats_right_s": 0.95,
+  "f0_median_hz": 141.9,
+  "f0_std_st": 3.79,
+  "f0_p5_p95_st": 13.6,
+  "voiced_frac": 0.699,
+  "wer": 0.0217,
+  "asr_misses": [
+   {
+    "ref": "lithium niobate is a wonderful colleague it is electro optic piezoelectric pyroelectric photorefractive and anisotropic it brings its whole self to work",
+    "hyp": "lithium niobate is a wonderful colleague it is electro optic piezoelectric pyroelectric photo refractive and anisotropic it brings its whole self to work"
+   }
+  ],
+  "mp3_lufs": -18.6,
+  "mp3_peak_dbfs": -1.8
+ },
+ "af_heart_0.95": {
+  "voice": "af_heart",
+  "speed": 0.95,
+  "speech_s": 34.76,
+  "words": 89,
+  "wpm": 153.6,
+  "rtf": 0.21,
+  "thats_right_s": 0.7,
+  "f0_median_hz": 201.8,
+  "f0_std_st": 2.86,
+  "f0_p5_p95_st": 9.2,
+  "voiced_frac": 0.551,
+  "wer": 0.0217,
+  "asr_misses": [
+   {
+    "ref": "lithium niobate is a wonderful colleague it is electro optic piezoelectric pyroelectric photorefractive and anisotropic it brings its whole self to work",
+    "hyp": "lithium niobate is a wonderful colleague it is electro optic piezoelectric pyroelectric photo refractive and anisotropic it brings its whole self to work"
+   }
+  ],
+  "mp3_lufs": -18.5,
+  "mp3_peak_dbfs": -1.3
+ },
+ "af_heart_1.05": {
+  "voice": "af_heart",
+  "speed": 1.05,
+  "speech_s": 32.51,
+  "words": 89,
+  "wpm": 164.3,
+  "rtf": 0.188,
+  "thats_right_s": 0.64,
+  "f0_median_hz": 200.7,
+  "f0_std_st": 2.79,
+  "f0_p5_p95_st": 9.0,
+  "voiced_frac": 0.56,
+  "wer": 0.0217,
+  "asr_misses": [
+   {
+    "ref": "lithium niobate is a wonderful colleague it is electro optic piezoelectric pyroelectric photorefractive and anisotropic it brings its whole self to work",
+    "hyp": "lithium niobate is a wonderful colleague it is electro optic piezoelectric pyroelectric photo refractive and anisotropic it brings its whole self to work"
+   }
+  ],
+  "mp3_lufs": -18.5,
+  "mp3_peak_dbfs": -1.8
+ }
+}
