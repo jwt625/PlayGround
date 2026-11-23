@@ -1,0 +1,42 @@
+  h   40 nm  theta 29.50  n1 1.990385  n2 1.987168
+  h   40 nm  theta 30.00  n1 1.990483  n2 1.987542
+  h   40 nm  theta 30.50  n1 1.990633  n2 1.987869
+  h   40 nm  theta 31.00  n1 1.990846  n2 1.988137
+  h   40 nm  theta 31.50  n1 1.991126  n2 1.988342
+  h   30 nm  theta 29.50  n1 1.989783  n2 1.987028
+  h   30 nm  theta 30.00  n1 1.990001  n2 1.987282
+  h   30 nm  theta 30.50  n1 1.990285  n2 1.987475
+  h   30 nm  theta 31.00  n1 1.990631  n2 1.987611
+  h   30 nm  theta 31.50  n1 1.991028  n2 1.987699
+  h   20 nm  theta 29.50  n1 1.990252  n2 1.987409
+  h   20 nm  theta 30.00  n1 1.990426  n2 1.987708
+  h   20 nm  theta 30.50  n1 1.990664  n2 1.987947
+  h   20 nm  theta 31.00  n1 1.990968  n2 1.988124
+  h   20 nm  theta 31.50  n1 1.991332  n2 1.988245
+  h   15 nm  theta 29.50  n1 1.990399  n2 1.987563
+  h   15 nm  theta 30.00  n1 1.990578  n2 1.987857
+  h   15 nm  theta 30.50  n1 1.990822  n2 1.988090
+  h   15 nm  theta 31.00  n1 1.991131  n2 1.988262
+  h   15 nm  theta 31.50  n1 1.991499  n2 1.988379
+h   40 nm: closest approach at 30.96 deg, minimum splitting 0.00271, n1 at 30.5 deg 1.99063
+h   30 nm: closest approach at 29.89 deg, minimum splitting 0.00272, n1 at 30.5 deg 1.99029
+h   20 nm: closest approach at 30.25 deg, minimum splitting 0.00270, n1 at 30.5 deg 1.99066
+h   15 nm: closest approach at 30.21 deg, minimum splitting 0.00271, n1 at 30.5 deg 1.99082
+       98.40 real        80.14 user        17.52 sys
+          2357264384  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+              629600  page reclaims
+                 353  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   1  messages sent
+                   1  messages received
+                   1  signals received
+                 507  voluntary context switches
+              118979  involuntary context switches
+            82434674  instructions retired
+            44783794  cycles elapsed
+            21020960  peak memory footprint

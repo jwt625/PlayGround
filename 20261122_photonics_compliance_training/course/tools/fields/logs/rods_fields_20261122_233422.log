@@ -1,0 +1,15 @@
+23:34:22 es check: cached
+23:34:22 es rf: cached
+23:34:22 es lf: cached
+23:34:22 es vac: cached
+23:34:22 modes h=0.025: cached
+23:34:23 check: C 146.805 pF/m, n_rf 1.9920, Z0 45.26 ohm; TE Gamma 0.5052 dn/V -1.7138e-05 VpiL 2.2611 V cm; TM Gamma 0.4331 dn/V -6.7196e-06 VpiL 5.7667 V cm; ratio full 2.550, scalar 3.393, equal-overlap 2.908
+23:34:23    TE parts {"xx": 0.9581, "yy": 0.0031, "zz": 0.0162, "xy": 0.0226, "yz": 0.0, "xz": -0.0}
+23:34:23    TM parts {"xx": 0.0932, "yy": 0.678, "zz": 0.1473, "xy": 0.0814, "yz": -0.0, "xz": -0.0}
+23:34:23 rf: C 146.710 pF/m, n_rf 1.9914, Z0 45.28 ohm; TE Gamma 0.5054 dn/V -1.6998e-05 VpiL 2.2797 V cm; TM Gamma 0.4332 dn/V -6.0604e-06 VpiL 6.3940 V cm; ratio full 2.805, scalar 3.775, equal-overlap 3.236
+23:34:23    TE parts {"xx": 0.9632, "yy": 0.0028, "zz": 0.0146, "xy": 0.0194, "yz": 0.0, "xz": -0.0}
+23:34:23    TM parts {"xx": 0.1031, "yy": 0.6736, "zz": 0.1464, "xy": 0.0769, "yz": -0.0, "xz": -0.0}
+23:34:23 lf: C 148.785 pF/m, n_rf 2.0054, Z0 44.96 ohm; TE Gamma 0.5139 dn/V -1.7976e-05 VpiL 2.1556 V cm; TM Gamma 0.4402 dn/V -6.8591e-06 VpiL 5.6494 V cm; ratio full 2.621, scalar 3.396, equal-overlap 2.909
+23:34:23    TE parts {"xx": 0.9681, "yy": 0.0032, "zz": 0.0165, "xy": 0.0122, "yz": 0.0, "xz": -0.0}
+23:34:23    TM parts {"xx": 0.0961, "yy": 0.7033, "zz": 0.1553, "xy": 0.0453, "yz": -0.0, "xz": -0.0}
+23:34:27 export: fe_rods_fields_data.js 117.0 KB, 40 lines, 1254 points

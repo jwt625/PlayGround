@@ -69,6 +69,7 @@
     volume: 1,
     reflect: saved.reflect && typeof saved.reflect === 'object' ? saved.reflect : {},
   };
+  let stepGen = 0; /* increments on every step change; async waits compare it to know the step is still current */
   const persist = () => store.set({ completed: [...state.completed], name: state.name, seat: Math.floor(state.seat), pos: state.pos, reflect: state.reflect });
 
   /* ---------- sound: intro / outro music bed and subtle effects (engine/sound.js; files from media/sound/manifest.js) ---------- */
@@ -108,6 +109,7 @@
     const spoken = new Set(); /* every text passed to the speech layer this session (dev and test checks) */
     let voice = null;
     let curAudio = null, curFinish = null;
+    let line = null; /* the sentence now playing: { text, t0, audio, acc } (progress ring clock) */
     function pickVoice() {
       if (!synth) return;
       const vs = synth.getVoices().filter((v) => /^en/i.test(v.lang));
@@ -135,6 +137,7 @@
           resolve(why);
         };
         curAudio = a; curFinish = finish;
+        if (line) line.audio = a;
         a.onended = () => finish('end');
         a.onerror = () => finish('err');
         const wd = setInterval(() => {
@@ -151,6 +154,7 @@
         const words = text.split(/\s+/).length;
         const est = Math.max(1.2, words / 2.6) * 1000;
         const clip = DEV_MUTE ? null : clipFor(text);
+        line = { text, t0: Date.now(), audio: null, acc: null };
         if (!clip && !DEV_MUTE) { missing.set(text, (missing.get(text) || 0) + 1); devPanelMissing(); }
         if (clip) {
           playClip(clip, est).then((r) => {
@@ -169,6 +173,7 @@
         const iv = setInterval(() => {
           const now = Date.now();
           if (!paused()) acc += now - last; last = now;
+          if (line && line.text === text) line.acc = acc;
           if (interrupted) { clearInterval(iv); resolve('int'); }
           else if (acc >= est * (DEV_FAST ? 0.25 : 1)) { clearInterval(iv); resolve('end'); }
         }, 100);
@@ -197,6 +202,7 @@
         interrupted = false;
         Sound.speaking(true);
         const r = await once(text);
+        line = null;
         Sound.speaking(false);
         if (sess !== state.sess) return;
         if (r === 'int' && paused()) { continue; } /* blur or idle pause: repeat the sentence from its start */
@@ -205,15 +211,24 @@
     }
     /* One sentence at a time: calls made while a sentence plays wait their turn (browser speech queued the same way). */
     let chain = Promise.resolve();
+    let pending = 0; /* sentences queued or playing; busy() lets the ask popup wait for silence */
     function speak(text, sess) {
       if (!text) return Promise.resolve();
-      const p = chain.then(() => speakNow(String(text), sess));
+      pending++;
+      const p = chain.then(() => speakNow(String(text), sess)).finally(() => { pending--; });
       chain = p.catch(() => {});
       return p;
     }
+    /* seconds into the sentence `text` if it is the one playing now, else null */
+    function elapsed(text) {
+      if (!line || line.text !== text) return null;
+      if (line.audio) return line.audio.currentTime || 0;
+      if (line.acc != null) return line.acc / 1000;
+      return (Date.now() - line.t0) / 1000;
+    }
     function interrupt() { interrupted = true; if (curFinish) curFinish('int'); if (synth) synth.cancel(); }
     function setVolume(v) { if (curAudio) curAudio.volume = v; }
-    return { speak, interrupt, setVolume, missing, spoken, available: !!synth, recorded: () => !!(AUDIO.files && Object.keys(AUDIO.files).length && typeof window.LMS_hash === 'function') };
+    return { speak, interrupt, setVolume, missing, spoken, busy: () => pending > 0, elapsed, available: !!synth, recorded: () => !!(AUDIO.files && Object.keys(AUDIO.files).length && typeof window.LMS_hash === 'function') };
   })();
   let DEV_MUTE = false, DEV_FAST = false;
 
@@ -222,16 +237,84 @@
   function setCaption(t) { const c = $('.cc-text'); if (c) { c.textContent = capText(t); c.dataset.raw = t || ''; } }
   /* Natural 300 ms gap between sentences (pause-aware). */
   /* pause-aware silence between sentences: 300 ms normally, 1.2 s after a question the narrator then answers */
-  async function gap(sess, base) { let acc = 0; const ms = (base || 300) * (DEV_FAST ? 0.25 : 1); while (acc < ms) { await sleep(50); if (sess !== state.sess) return; if (state.pauseReasons.size === 0) acc += 50; } }
+  async function gap(sess, base, run) { let acc = 0; const ms = (base || 300) * (DEV_FAST ? 0.25 : 1); while (acc < ms) { await sleep(50); if (sess !== state.sess) return; if (state.pauseReasons.size === 0) acc += 50; if (run) run.gapAcc = acc; } }
+  const gapAfter = (t) => (/\?["'\u201d)]*\s*$/.test(String(t)) ? 1200 : 300);
   async function sayLines(lines, sess) {
     const ls = (lines || []).filter(Boolean);
-    for (let i = 0; i < ls.length; i++) {
-      if (sess !== state.sess) return false;
-      await Speech.speak(ls[i], sess);
-      if (i < ls.length - 1) await gap(sess, /\?["'\u201d)]*\s*$/.test(String(ls[i])) ? 1200 : 300);
-    }
-    return sess === state.sess;
+    const run = Ring.begin(ls, sess);
+    try {
+      for (let i = 0; i < ls.length; i++) {
+        if (sess !== state.sess) return false;
+        if (run) { run.i = i; run.phase = 'line'; run.gapAcc = 0; }
+        await Speech.speak(ls[i], sess);
+        if (i < ls.length - 1) { if (run) run.phase = 'gap'; await gap(sess, gapAfter(ls[i]), run); }
+      }
+      return sess === state.sess;
+    } finally { Ring.end(run); }
   }
+
+  /* Progress ring at the right end of the captions box: full at the start of a narration run (one sayLines call: its sentences
+     plus the pauses between them), its start point moves clockwise from 12 o'clock so the arc left equals the time left,
+     gone at the end. Planned length = recorded clip seconds (audio/manifest.js) or the text estimate, plus the engine gaps,
+     divided by the playback speed (fixed at 1.0). Position follows the playing clip's own clock. */
+  const SPEED = 1.0;
+  const Ring = (function () {
+    const R0 = 8, CIRC = 2 * Math.PI * R0;
+    let run = null, raf = 0, el = null, arc = null;
+    function lineDur(text) {
+      const words = String(text).split(/\s+/).length;
+      const est = Math.max(1.2, words / 2.6);
+      const clip = DEV_MUTE ? null : clipFor(text);
+      if (clip && clip.sec) return clip.sec / SPEED;
+      return (DEV_MUTE || !Speech.available) && DEV_FAST ? est * 0.25 : est / SPEED;
+    }
+    function ensure() {
+      if (el) return true;
+      el = $('.cc-ring'); arc = el && el.querySelector('.arc');
+      if (arc) arc.setAttribute('stroke-dasharray', CIRC.toFixed(3) + ' ' + CIRC.toFixed(3));
+      return !!arc;
+    }
+    function draw(frac) {
+      frac = Math.max(0, Math.min(1, frac));
+      /* visible dash = remaining fraction, starting (1 - frac) of the way round, ending at 12 o'clock */
+      arc.setAttribute('stroke-dasharray', (frac * CIRC).toFixed(3) + ' ' + (CIRC + 1).toFixed(3));
+      arc.setAttribute('stroke-dashoffset', (-(1 - frac) * CIRC).toFixed(3));
+      el.dataset.frac = frac.toFixed(3);
+    }
+    function frame() {
+      raf = 0;
+      if (!run || !ensure()) return;
+      const r = run;
+      const i = Math.min(r.i, r.ls.length - 1);
+      let pos;
+      if (r.phase === 'gap') pos = r.starts[i] + r.durs[i] + Math.min(r.gaps[i], (r.gapAcc || 0) / 1000);
+      else {
+        const e = Speech.elapsed(r.ls[i]);
+        pos = e == null ? Math.max(r.starts[i], Math.min(r.last, r.starts[i] + r.durs[i])) : r.starts[i] + Math.min(r.durs[i], e / SPEED);
+      }
+      r.last = pos;
+      draw(r.total > 0 ? 1 - pos / r.total : 0);
+      raf = requestAnimationFrame(frame);
+    }
+    function begin(ls, sess) {
+      if (!ls.length || !ensure()) return null;
+      const durs = ls.map(lineDur);
+      const gaps = ls.map((t, k) => (k < ls.length - 1 ? gapAfter(t) * (DEV_FAST ? 0.25 : 1) / 1000 : 0));
+      const starts = []; let acc = 0;
+      for (let k = 0; k < ls.length; k++) { starts.push(acc); acc += durs[k] + gaps[k]; }
+      run = { ls, durs, gaps, starts, total: acc, sess, i: 0, phase: 'line', gapAcc: 0, last: 0 };
+      draw(1); el.classList.add('on');
+      if (!raf) raf = requestAnimationFrame(frame);
+      return run;
+    }
+    function end(r) {
+      if (!r || run !== r) return;
+      run = null;
+      if (raf) { cancelAnimationFrame(raf); raf = 0; }
+      if (ensure()) { draw(0); el.classList.remove('on'); }
+    }
+    return { begin, end, active: () => !!run };
+  })();
 
   /* ---------- pause / enforcement ---------- */
   function addPause(reason) {
@@ -300,7 +383,8 @@
 
   /* ---------- layout ---------- */
   const mantraBeats = course.mantraShort || [course.mantra];
-  document.title = course.title;
+  const plainMath = typeof window.LMS_mathPlain === 'function' ? window.LMS_mathPlain : (t) => String(t || '');
+  document.title = plainMath(course.title);
   document.body.append(
     h('div', { class: 'topbar' },
       h('div', { class: 'logo' }, 'Five Sigma Photonics', h('small', null, 'Learning Center')),
@@ -325,7 +409,7 @@
       h('main', { class: 'main' },
         h('div', { class: 'stage-wrap' },
           h('section', { class: 'stage' }, h('div', { class: 'stage-head' }, h('span', { class: 'chap' }), h('h2', { class: 'stitle' })), h('div', { class: 'stage-body' })),
-          h('div', { class: 'captions' }, h('span', { class: 'cc-tag' }, 'CC'), h('span', { class: 'cc-text' }))
+          h('div', { class: 'captions' }, h('span', { class: 'cc-tag' }, 'CC'), h('span', { class: 'cc-text' }), ringEl())
         ),
         h('div', { class: 'controls' },
           h('button', { class: 'btn back', onclick: () => go(state.pos - 1) }, 'Back'),
@@ -345,6 +429,12 @@
     h('div', { class: 'ticker' }, h('span', { class: 'lbl' }, 'REMEMBER'), h('div', { class: 'run' }, ...Array.from({ length: 4 }, () => [h('span', null, course.mantra), ...(course.ticker || []).map((t) => h('span', null, t))]).flat()))
   );
 
+  function ringEl() {
+    const w = document.createElement('span');
+    w.className = 'cc-ring'; w.setAttribute('aria-hidden', 'true'); w.title = 'Time left in this narration';
+    w.innerHTML = '<svg viewBox="0 0 20 20" width="20" height="20"><circle class="arc" cx="10" cy="10" r="8" transform="rotate(-90 10 10)"/></svg>';
+    return w;
+  }
   function speedMenu(e) {
     const host = e.target.parentElement;
     const old = $('.speed-menu', host); if (old) { old.remove(); return; }
@@ -440,7 +530,7 @@
     if (!DEV && !chapterUnlocked(target.ci)) { toast('This module is locked. Complete the previous module first.'); return; }
     cleanups.forEach((fn) => { try { fn(); } catch (e) {} }); cleanups = [];
     Speech.interrupt();
-    state.sess++;
+    state.sess++; stepGen++;
     state.pos = i; persist();
     setCaption('');
     const body = $('.stage-body'); body.innerHTML = '';
@@ -456,6 +546,7 @@
     fn(body, st, target, state.sess);
     setupAsk(st);
     setupStages(body, st);
+    if (window.LMS_math) window.LMS_math($('.stage')); /* math markup; the observer in engine/math.js also covers later insertions */
     updateNext();
     $('.stage-wrap').scrollTop = 0;
     preloadStep(steps[i + 1]);
@@ -471,20 +562,46 @@
     window.LMS_collectImages({ chapters: [{ steps: [f.st] }] }).forEach((src) => { if (preloaded.has(src)) return; preloaded.add(src); const im = new Image(); im.decoding = 'async'; im.src = src; });
   }
 
-  /* ---------- ask: popup question over the content after the base narration (or after a chat's last message) ---------- */
+  /* ---------- ask: popup question over the content ----------
+     Order: the step's intro narration first (chat steps: alongside the messages), then the step's own requirement (video watched,
+     every message shown, every tab opened), then about 800 ms of silence, then the popup. The popup never opens while any
+     narration is still playing: the wait restarts whenever speech is busy or the course is paused. */
   let askCtl = null;
+  const ASK_QUIET_MS = 800;
+  async function quietFor(ms, gen) {
+    let acc = 0; const need = ms * (DEV_FAST ? 0.25 : 1);
+    while (acc < need) {
+      await sleep(50);
+      if (gen !== stepGen) return false;
+      if (state.pauseReasons.size > 0 || Speech.busy()) acc = 0; else acc += 50;
+    }
+    return gen === stepGen;
+  }
   function setupAsk(st) {
     const a = st.ask;
     if (!a || !a.question || !(a.options || []).length) return;
     gate.ask = false;
-    const isChatMsgs = st.type === 'chat' && a.after === 'messages';
-    const ctl = { shown: false, answered: false };
+    const isChat = st.type === 'chat'; /* chat steps schedule the popup themselves, after the last message */
+    const ctl = { shown: false, answered: false, pending: false };
     let resolveDone = null;
     const donePromise = new Promise((r) => { resolveDone = r; });
-    ctl.check = () => { if (!ctl.shown && !isChatMsgs && gate.narr && gate.req) ctl.show(); };
+    ctl.check = () => { if (!ctl.shown && !ctl.pending && !isChat && gate.narr && gate.req) ctl.schedule(); };
+    /* wait for silence, then open; resolves true when answered, false if the step was left first */
+    ctl.schedule = async () => {
+      if (ctl.shown) return donePromise;
+      if (ctl.pending) return donePromise;
+      ctl.pending = true;
+      const gen = stepGen;
+      const ok = await quietFor(ASK_QUIET_MS, gen);
+      if (!ok) return false;
+      ctl.pending = false;
+      if (!isChat && !(gate.narr && gate.req)) return donePromise; /* requirement regressed meanwhile; the next done() re-checks */
+      return ctl.show();
+    };
     ctl.show = () => {
       if (ctl.shown) return donePromise;
       ctl.shown = true;
+      ctl.openedAt = Date.now();
       const anyCorrect = a.options.some((o) => o.correct === true);
       const fbk = h('div', { class: 'ask-fb hidden' });
       const btns = a.options.map((o, i) => h('button', { class: 'ask-opt', onclick: () => pick(i) }, h('span', { html: o.text })));
@@ -604,6 +721,73 @@
       '<rect x="120" y="128" width="26" height="16" fill="none" stroke="#222" stroke-width="2"/><rect x="154" y="128" width="26" height="16" fill="none" stroke="#222" stroke-width="2"/><line x1="146" y1="136" x2="154" y2="136" stroke="#222" stroke-width="2"/>' +
       '<path d="M135 166 Q150 174 165 166" fill="none" stroke="#7a4a3a" stroke-width="3"/></svg>';
   }
+  /* Presenter cam: short muted clips over the still, cam = { idle: src | [src], talk: [src | { src, weight }] }.
+     Every clip starts and ends on the still's pose, so clips are chained only at clip ends (never cut mid-clip):
+     a talk clip while narration plays (weighted random; the last clip is not repeated while an alternative of equal
+     or higher weight exists, so a weight 0.5 gesture plays about 1 in 3), an idle clip when silent. One preloaded
+     <video> per clip, stacked; the next one is shown once it has a frame, so a swap never flashes black. Paused with
+     the course, removed on step change, still only under prefers-reduced-motion or if any clip fails to load. */
+  function hostCam(frame, cam, poster) {
+    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const norm = (v) => [].concat(v || []).map((x) => (typeof x === 'string' && x ? { src: x, weight: 1 } : x && x.src ? { src: x.src, weight: +x.weight > 0 ? +x.weight : 1 } : null)).filter(Boolean);
+    const idle = norm(cam.idle), talk = norm(cam.talk);
+    if (!idle.length && !talk.length) return;
+    const wrap = h('div', { class: 'host-cam', 'aria-hidden': 'true' });
+    const els = new Map(); /* src -> <video> */
+    let cur = null, last = null, lastBusy = 0, z = 1, dead = false, waiting = false;
+    const isPaused = () => state.pauseReasons.size > 0;
+    function stop() {
+      dead = true; clearInterval(iv);
+      els.forEach((v) => { try { v.pause(); v.removeAttribute('src'); v.load(); } catch (e) { /* ignore */ } });
+      wrap.remove();
+    }
+    function onEnded(e) { if (dead || e.target !== cur) return; if (isPaused()) waiting = true; else playNext(); }
+    idle.concat(talk).forEach((c) => {
+      if (els.has(c.src)) return;
+      const v = document.createElement('video');
+      v.muted = true; v.defaultMuted = true; v.playsInline = true; v.controls = false; v.preload = 'auto';
+      v.setAttribute('muted', ''); v.setAttribute('playsinline', ''); v.setAttribute('disablepictureinpicture', ''); v.tabIndex = -1;
+      if (poster) v.poster = poster;
+      v.addEventListener('ended', onEnded);
+      v.addEventListener('error', () => { if (!dead) stop(); }); /* still stays underneath */
+      v.src = c.src;
+      wrap.append(v); els.set(c.src, v);
+    });
+    function pick() {
+      const talking = talk.length && Date.now() - lastBusy < 700; /* bridges the short gaps between sentences */
+      const pool = talking ? talk : idle.length ? idle : talk;
+      const lw = (pool.find((c) => c.src === last) || {}).weight || 0;
+      const cands = pool.filter((c) => !(c.src === last && pool.some((o) => o.src !== last && o.weight >= lw)));
+      let r = Math.random() * cands.reduce((s, c) => s + c.weight, 0);
+      for (const c of cands) { r -= c.weight; if (r <= 0) return c; }
+      return cands[cands.length - 1];
+    }
+    function playNext() {
+      if (dead) return;
+      waiting = false;
+      const c = pick(); last = c.src;
+      const v = els.get(c.src), prev = cur;
+      cur = v;
+      try { v.currentTime = 0; } catch (e) { /* ignore */ }
+      const show = () => { if (dead || cur !== v) return; v.style.zIndex = String(++z); v.classList.add('on'); if (prev && prev !== v) setTimeout(() => { if (cur !== prev) prev.classList.remove('on'); }, 60); };
+      if (typeof v.requestVideoFrameCallback === 'function') v.requestVideoFrameCallback(show);
+      else v.addEventListener('playing', show, { once: true });
+      const p = v.play();
+      if (p && p.catch) p.catch((e) => { if (!dead && e && e.name === 'NotAllowedError') stop(); });
+    }
+    const iv = setInterval(() => {
+      if (dead) return;
+      if (Speech.busy()) lastBusy = Date.now();
+      if (!cur) return;
+      if (isPaused()) { if (!cur.paused) cur.pause(); }
+      else if (waiting) playNext();
+      else if (cur.paused && !cur.ended) { const p = cur.play(); if (p && p.catch) p.catch(() => {}); }
+    }, 120);
+    frame.append(wrap);
+    cleanups.push(stop);
+    /* start on the first narration tick: the step's narration begins right after render */
+    setTimeout(() => { if (!dead) { if (Speech.busy()) lastBusy = Date.now(); playNext(); } }, 150);
+  }
   function bulletsList(items, sess, lines) {
     const ul = h('ul', { class: 'bullets' }, ...(items || []).map((b, i) => h('li', null, h('span', { class: 'b' }, String(i + 1)), h('span', { html: b }))));
     const lis = [...ul.children];
@@ -686,7 +870,21 @@
     } else if (layout === 'title') {
       put(body, h('div', { class: 'slide-title' }, h('div', { class: 'code' }, (course.code || '') + '  |  Version ' + (course.version || '1.0') + '  |  Effective ' + (course.effective || '')), h('h1', { html: st.heading || course.title }), h('p', { html: st.subtitle || course.subtitle || '' }), st.bullets ? bulletsList(st.bullets, sess, st.narration) : null, callout));
     } else if (layout === 'host') {
-      const frame = h('div', { class: 'host-frame', html: hostSvg() }, DEV ? h('span', { class: 'placeholder-tag' }, 'PRESENTER FOOTAGE PENDING') : null, h('div', { class: 'lower-third' }, h('b', null, (course.host && course.host.name) || 'Host'), (course.host && course.host.role) || ''));
+      /* presenter still: step.hostImg overrides course.host.img (string path or { src }); the drawn placeholder is the fallback */
+      const hv = st.hostImg || (course.host && course.host.img);
+      const hsrc = typeof hv === 'string' ? hv : hv && hv.src;
+      const frame = h('div', { class: 'host-frame' + (hsrc ? ' has-img' : ''), html: hsrc ? '' : hostSvg() });
+      if (hsrc) {
+        const im = h('img', { class: 'host-img', src: hsrc, alt: plainMath(stripHtml((mediaInfo(hsrc) || {}).alt || (course.host && course.host.name) || 'Presenter')), decoding: 'async', draggable: 'false' });
+        im.addEventListener('error', () => { im.remove(); frame.classList.remove('has-img'); frame.insertAdjacentHTML('afterbegin', hostSvg()); });
+        frame.append(im);
+        if (DEV) frame.append(h('span', { class: 'devpath' }, hsrc + '  |  ' + ((mediaInfo(hsrc) || {}).credit || 'NO REGISTRY ENTRY')));
+      }
+      /* presenter cam: step.hostCam overrides course.host.cam; a step with its own hostImg but no hostCam shows its still only
+         (the course clips are in a different pose); hostCam: false turns the clips off for that step */
+      const cam = st.hostCam !== undefined ? st.hostCam : st.hostImg ? null : course.host && course.host.cam;
+      if (cam) hostCam(frame, cam, hsrc);
+      put(frame, DEV && !hsrc ? h('span', { class: 'placeholder-tag' }, 'PRESENTER FOOTAGE PENDING') : null, h('div', { class: 'lower-third' }, h('b', null, (course.host && course.host.name) || 'Host'), (course.host && course.host.role) || ''));
       put(body, h('div', { class: 'host-layout' }, frame, h('div', null, st.bullets ? bulletsList(st.bullets, sess, st.narration) : null, callout)));
     } else if (layout === 'policy') {
       put(body, h('div', { class: 'policy-doc' }, h('div', { class: 'ph' }, (course.policy || 'POLICY') + '  |  CONTROLLED DOCUMENT  |  DO NOT PARAPHRASE'), st.bullets ? bulletsList(st.bullets, sess, st.narration) : null), callout);
@@ -805,6 +1003,36 @@
     });
   }
 
+  /* reveal-tab media: tab.media = { src, alt, caption, href } or an array of up to 3. Caption (short citation) stays visible; license links and notes sit on the final credits page. */
+  const tabMedia = (tb) => (Array.isArray(tb.media) ? tb.media : tb.media ? [tb.media] : []).filter((m) => m && m.src).slice(0, 3);
+  /* registry licenseUrl (http(s)) as a link after a caption or credit, e.g. the CC BY 4.0 deed */
+  const licLink = (m, label, cls) => (/^https?:\/\//.test((m && m.licenseUrl) || '') ? ' <a' + (cls ? ' class="' + cls + '"' : '') + ' target="_blank" rel="noopener license" href="' + esc(m.licenseUrl) + '">' + label + '</a>' : '');
+  function mediaFigure(md) {
+    const m = mediaInfo(md.src) || {};
+    const alt = md.alt || m.alt || '';
+    const img = h('img', { src: md.src, alt: plainMath(stripHtml(alt)), decoding: 'async', draggable: 'false' });
+    const zoom = h('button', { class: 'rv-zoom', title: 'Select to enlarge', 'aria-label': 'Enlarge figure', onclick: () => lightbox(md) }, img);
+    const capHtml = (md.caption || '') + (md.href && /^https?:\/\//.test(md.href) ? ' <a class="rv-src" target="_blank" rel="noopener" href="' + esc(md.href) + '">Source</a>' : '');
+    const fig = h('figure', { class: 'rv-fig' }, zoom, capHtml ? h('figcaption', { class: 'rv-cap', html: capHtml }) : null);
+    if (DEV) fig.append(h('span', { class: 'devpath' }, md.src + '  |  ' + (m.credit || 'NO REGISTRY ENTRY')));
+    img.addEventListener('error', () => { fig.classList.add('broken'); zoom.append(h('span', { class: 'broken-msg' }, 'Image unavailable')); });
+    return fig;
+  }
+  function lightbox(md) {
+    const old = $('.lightbox'); if (old) old.remove();
+    const m = mediaInfo(md.src) || {};
+    const close = () => { lb.remove(); document.removeEventListener('keydown', onKey); };
+    const onKey = (e) => { if (e.key === 'Escape') close(); };
+    const lb = h('div', { class: 'lightbox', role: 'dialog', 'aria-modal': 'true', onclick: (e) => { if (e.target === lb) close(); } },
+      h('div', { class: 'lb-box' },
+        h('img', { src: md.src, alt: plainMath(stripHtml(md.alt || m.alt || '')) }),
+        md.caption ? h('div', { class: 'lb-cap', html: md.caption + (md.href && /^https?:\/\//.test(md.href) ? ' <a target="_blank" rel="noopener" href="' + esc(md.href) + '">Source</a>' : '') }) : null,
+        h('button', { class: 'btn small lb-x', onclick: close }, 'Close')));
+    document.body.append(lb);
+    document.addEventListener('keydown', onKey);
+    cleanups.push(close);
+  }
+
   R.reveal = (body, st, f, sess) => {
     const tabs = st.tabs || [];
     const viewed = new Set();
@@ -819,7 +1047,10 @@
       if (busy && !DEV) { toast('Please wait for the current narration to finish.'); return; }
       busy = true; pulse();
       btns.forEach((b, k) => b.classList.toggle('open', k === i));
-      panel.innerHTML = tabs[i].body || '';
+      const media = tabMedia(tabs[i]);
+      panel.innerHTML = '';
+      if (media.length) put(panel, h('div', { class: 'rv-split' + (media.length > 1 ? ' multi n' + media.length : '') }, h('div', { class: 'rv-media' }, ...media.map(mediaFigure)), h('div', { class: 'rv-body', html: tabs[i].body || '' })));
+      else panel.innerHTML = tabs[i].body || '';
       const ok = await sayLines(tabs[i].narration || [], sess);
       if (!ok) return;
       viewed.add(i); btns[i].classList.add('done'); busy = false;
@@ -855,7 +1086,11 @@
       tap.addEventListener('click', go2); area.addEventListener('click', go2);
       cleanups.push(() => resolve(false));
     });
+    /* askCtl is set up by go() right after this renderer returns; it is read only after the first await below */
+    const hasAsk = !!(st.ask && st.ask.question && (st.ask.options || []).length);
     (async () => {
+      /* judged scenario: the narrator's intro plays while the messages unfold; the popup waits for both (then a short silence) */
+      const narrP = hasAsk ? sayLines(st.narration, sess).then((ok0) => { if (ok0) done('narr'); return ok0; }) : null;
       for (let i = 0; i < msgs.length; i++) {
         const m = msgs[i];
         if (sess !== state.sess) return;
@@ -869,16 +1104,14 @@
       }
       if (sess !== state.sess) return;
       if (!st.ask && !(st.stages && st.stages.length)) isok.classList.remove('hidden'); /* old prompt box only when there is no popup question and no stages */
-      if (st.ask && st.ask.after === 'messages' && askCtl) {
+      if (hasAsk && askCtl) {
         done('req');
-        const answered = await askCtl.show();
-        if (!answered) return;
-        const ok2 = await sayLines(st.narration, state.sess);
-        if (ok2) done('narr');
+        if (!(await narrP) || sess !== state.sess) return;
+        await askCtl.schedule();
         return;
       }
       done('req');
-      const ok = await sayLines(st.narration, sess);
+      const ok = narrP ? await narrP : await sayLines(st.narration, sess);
       if (ok) done('narr');
     })();
   };
@@ -939,7 +1172,7 @@
     let busy = true;
     const { fig } = figure(st.image || {}, { cls: 'hs-fig hs-' + style, exact: true, maxVh: style === 'numbered' ? 64 : 60 });
     const marks = spots.map((sp, i) => {
-      const lbl = stripHtml(sp.label || '');
+      const lbl = plainMath(stripHtml(sp.label || ''));
       let inner;
       if (style === 'pins') inner = [h('span', { class: 'pin-head' }, h('span', { class: 'pin-plus' }))];
       else if (style === 'numbered') inner = [h('span', { class: 'num-badge' }, String(i + 1))];
@@ -1269,16 +1502,17 @@
     put(body, h('div', { class: 'disclaimer' },
       h('p', null, 'Dramatization. Five Sigma Photonics, Inc., the Office of Photonic Conduct, Gary, his manager, his coworkers, and every incident, chat, email, policy number, and certificate in this course are fictional. Any resemblance to real persons, companies, or incidents is unintended, although the physics is real.'),
       h('p', null, 'Images include photographs used under the licenses listed below, and computer renderings and drawings made for this course. Renderings and drawings, including the micrograph-style images, depict no real device, measurement, or incident. People shown in photographs are not cast members and are not depicted doing anything wrong.'),
+      h('p', null, 'Literature figures carry a short citation in the course. Figures marked Redrawn are reproduced from the cited work or plotted from its stated values; Computed figures are plotted from the stated model; Illustrative figures are schematic sketches, not data. Each figure\'s treatment, license, and source version are listed with its credit below. Interactive activities list their model, parameters, and sources under Model details.'),
       h('p', null, 'All scenarios, chats, calls, meetings, and emails in this course are hypothetical dramatizations. Messaging, meeting, and mail screens are generic mock-ups and do not depict any real product.'),
       h('p', null, 'Narration is synthesized speech. Technical statements are sourced in the reference list of each module.'),
       h('p', null, 'Gary is a fictional composite. Any resemblance to engineers, living or lasing, is coincidental. Any resemblance to your lab is intentional.')));
-    const imgs = window.LMS_collectImages ? window.LMS_collectImages(course) : [];
+    const imgs = (window.LMS_collectImages ? window.LMS_collectImages(course) : []).concat(window.LMS_collectHostCams ? window.LMS_collectHostCams(course) : []);
     if (imgs.length) {
       put(body, h('h3', { class: 'refs-h' }, 'Media credits'),
         h('ol', { class: 'refs credits' }, ...imgs.map((src) => {
           const m = mediaInfo(src) || {};
           const lic = m.license && String(m.credit || '').toLowerCase().indexOf(String(m.license).toLowerCase()) < 0 ? '. ' + esc(m.license) : '';
-          return h('li', { html: (m.alt ? '<span class="cr-alt">' + esc(m.alt) + '.</span> ' : '') + esc(m.credit || 'Credit pending') + lic + (/^https?:\/\//.test(m.source || '') ? ' <a target="_blank" rel="noopener" href="' + esc(m.source) + '">source</a>' : '') });
+          return h('li', { html: (m.alt ? '<span class="cr-alt">' + esc(m.alt) + '.</span> ' : '') + esc(m.credit || 'Credit pending') + lic + (m.note ? '. <span class="cr-note">' + esc(m.note) + '</span>' : '') + (/^https?:\/\//.test(m.source || '') ? ' <a target="_blank" rel="noopener" href="' + esc(m.source) + '">source</a>' : '') + licLink(m, 'license') });
         })));
     }
     const snds = window.LMS_collectSounds ? window.LMS_collectSounds(course) : [];
@@ -1287,7 +1521,7 @@
         h('ol', { class: 'refs credits' }, ...snds.map((src) => {
           const m = mediaInfo(src) || {};
           const lic = m.license && String(m.credit || '').toLowerCase().indexOf(String(m.license).toLowerCase()) < 0 ? '. ' + esc(m.license) : '';
-          return h('li', { html: (m.alt ? '<span class="cr-alt">' + esc(m.alt) + '.</span> ' : '') + esc(m.credit || 'Credit pending') + lic + (/^https?:\/\//.test(m.source || '') ? ' <a target="_blank" rel="noopener" href="' + esc(m.source) + '">source</a>' : '') });
+          return h('li', { html: (m.alt ? '<span class="cr-alt">' + esc(m.alt) + '.</span> ' : '') + esc(m.credit || 'Credit pending') + lic + (/^https?:\/\//.test(m.source || '') ? ' <a target="_blank" rel="noopener" href="' + esc(m.source) + '">source</a>' : '') + licLink(m, 'license') });
         })));
     }
     setGate({ narr: true, req: true });
@@ -1299,11 +1533,11 @@
     put(body, st.instructions ? h('div', { class: 'widget-instr', html: st.instructions }) : null, root, flag);
     setGate({ narr: false, req: false });
     sayLines(st.narration, sess).then((ok) => { if (ok) done('narr'); });
-    const fn = course.widgets && course.widgets[st.widget];
+    const fn = (window.LMS_WIDGETS && window.LMS_WIDGETS[st.widget]) || (course.widgets && course.widgets[st.widget]); /* widgets/*.js override in-course widgets */
     const api = {
       complete: () => { if (sess === state.sess) { flag.classList.remove('hidden'); done('req'); } },
       /* widgets speak static strings only; list each one in course.speech so it can be pre-recorded */
-      say: (t) => Speech.speak(t, sess),
+      say: (t) => (Ring.active() ? Speech.speak(t, sess) : sayLines([t], sess)),
       onCleanup: (fn2) => cleanups.push(fn2),
       css,
       review: DEV,
@@ -1358,7 +1592,8 @@
     $('.chap').textContent = course.code || ''; $('.stitle').textContent = 'Welcome';
     $('.count').textContent = '';
     const resumeAt = saved.pos || 0;
-    put(body, h('div', { class: 'start' },
+    const covers = startCovers();
+    put(body, h('div', { class: 'start' + (covers.el ? ' has-covers' : '') }, covers.el,
       h('div', { style: 'font:600 12px var(--mono);letter-spacing:1px;color:var(--ink-3)' }, 'REQUIRED TRAINING  |  ASSIGNED BY: OFFICE OF PHOTONIC CONDUCT'),
       h('h1', null, course.title),
       h('p', { style: 'margin:0;color:var(--ink-2);font-size:16px' }, course.subtitle || ''),
@@ -1378,6 +1613,31 @@
     ));
     $('.next').disabled = true; $('.back').disabled = true;
     renderToc();
+  }
+  /* Start screen backdrop: each module's cover image in order, cross-fading with a slow push-in, module name in the corner.
+     Covers are the first step image of each chapter (opening slides). Reduced motion: the first cover, still. */
+  function startCovers() {
+    const list = [];
+    (course.chapters || []).forEach((ch, ci) => {
+      const st = (ch.steps || []).find((x) => x.image && x.image.src);
+      if (st) list.push({ src: st.image.src, label: (ci === 0 ? '' : 'Module ' + ci + '  |  ') + (ch.title || '') });
+    });
+    if (!list.length) return { el: null };
+    const still = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const slides = list.map((c, i) => h('div', { class: 'sc-slide' + (i === 0 ? ' on' : ''), style: 'background-image:url("' + c.src + '")' }));
+    const lbl = h('div', { class: 'sc-label' }, list[0].label);
+    const el = h('div', { class: 'start-covers' + (still ? ' still' : ''), 'aria-hidden': 'true' }, ...slides, h('div', { class: 'sc-veil' }), lbl);
+    if (!still && list.length > 1) {
+      let k = 0;
+      const tm = setInterval(() => {
+        if (!el.isConnected) { clearInterval(tm); return; }
+        slides[k].classList.remove('on'); k = (k + 1) % slides.length;
+        slides[k].classList.remove('on'); void slides[k].offsetWidth; slides[k].classList.add('on'); /* restart the push-in */
+        lbl.textContent = list[k].label;
+      }, 5200);
+      cleanups.push(() => clearInterval(tm));
+    }
+    return { el };
   }
   function begin(i) {
     started = true;

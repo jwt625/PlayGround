@@ -1,0 +1,41 @@
+indices at 1.55 um: n_o 2.21111, n_e 2.13756 (Zelmon 1997), SiO2 1.44402 (Malitson 1965)
+
+V1 isotropic slab, film n_o, t 0.8 um, SiO2 below, air above
+  analytic TE0 2.091493  TM0 2.036571
+  h  40.0 nm  TE0 2.090991 (-5.0e-04)  TM0 2.037213 (+6.4e-04)
+  h  20.0 nm  TE0 2.091366 (-1.3e-04)  TM0 2.036732 (+1.6e-04)
+  h  10.0 nm  TE0 2.091461 (-3.2e-05)  TM0 2.036612 (+4.0e-05)
+  h   5.0 nm  TE0 2.091485 (-7.9e-06)  TM0 2.036581 (+1.0e-05)
+
+V2 anisotropic x-cut slab, t 0.8 um, full rotated tensor, vs 4x4 transfer matrix
+  theta    0  transfer matrix 2.036571, 2.017247  |  FD 2.036581 (TE 0.000, d +1.0e-05)  2.017239 (TE 1.000, d -7.4e-06)
+  theta   30  transfer matrix 2.035676, 2.034195  |  FD 2.035674 (TE 0.739, d -2.6e-06)  2.034200 (TE 0.303, d +5.3e-06)
+  theta   60  transfer matrix 2.072377, 2.029907  |  FD 2.072370 (TE 0.999, d -7.7e-06)  2.029917 (TE 0.002, d +1.1e-05)
+  theta   90  transfer matrix 2.091493, 2.027086  |  FD 2.091485 (TE 1.000, d -7.9e-06)  2.027097 (TE 0.000, d +1.1e-05)
+
+V3 rib t 0.8, slab 0.4, top width 1.2, sidewall 65.0 deg, air top: quadratic solver vs transverse formulation
+  theta   0  quadratic 1.9911452, 1.9710664, 1.8597581  transverse 1.9911452, 1.9710664, 1.8595926  max diff 1.7e-04
+  theta  90  quadratic 2.0405778, 1.9830467, 1.9218467  transverse 2.0405778, 1.9830465, 1.9214144  max diff 4.3e-04
+
+V4 rib grid convergence (first two modes)
+  theta   0  h   40 nm  1.991514 (TE 0.010)  1.970594 (TE 0.991)
+  theta   0  h   30 nm  1.990517 (TE 0.010)  1.970849 (TE 0.991)
+  theta   0  h   20 nm  1.991145 (TE 0.010)  1.971067 (TE 0.991)
+  theta   0  h   15 nm  1.991268 (TE 0.010)  1.971246 (TE 0.991)
+  theta   0  h   10 nm  1.991087 (TE 0.010)  1.971204 (TE 0.991)
+  theta  45  h   40 nm  2.006004 (TE 0.986)  1.987519 (TE 0.027)
+  theta  45  h   30 nm  2.006273 (TE 0.986)  1.986512 (TE 0.027)
+  theta  45  h   20 nm  2.006481 (TE 0.986)  1.987159 (TE 0.027)
+  theta  45  h   15 nm  2.006657 (TE 0.986)  1.987284 (TE 0.027)
+  theta  45  h   10 nm  2.006617 (TE 0.986)  1.987104 (TE 0.027)
+
+V4b computational window (theta 45, h 20 nm)
+  half width 2.5 um, oxide 1.2 um, air 0.9 um: 2.006481  1.987159
+  half width 3.0 um, oxide 1.4 um, air 1.0 um: 2.006480  1.987159
+  half width 4.0 um, oxide 2.0 um, air 1.4 um: 2.006480  1.987159
+
+V5 mirror symmetry: theta and 180 - theta give the same indices (h 20 nm)
+  theta  30.0  1.9904253  1.9877075
+  theta 150.0  1.9904253  1.9877075
+
+done in 163 s

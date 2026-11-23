@@ -60,7 +60,7 @@ Quiz behavior (engine): correct -> voice "That's right!" + `correctSay`. Wrong -
 ## Content rules
 
 - No emoji. No internal shorthands in anything shown (no cluster ids, no DevLog refs, no file paths). Real citations as "Author et al., Journal, Year" + DOI.
-- Physics must be correct. Models in widgets either use real formulas with sourced constants, or are labeled on screen "Illustrative model" with normalized axes. Never invent numbers; a number shown must come from a cited source or a stated formula.
+- Physics must be correct. Models in widgets either use real formulas with sourced constants, or are labeled "Illustrative model" (in the widget's Model details) with normalized axes. Widgets show one short model line; full method, parameters, sources and caveats go in a closed `<details>` "Model details" in the same widget. Never invent numbers; a number shown must come from a cited source or a stated formula.
 - Parody at maximum: overstated duration, repeated objectives, mantra in every chapter (at least 4 times per chapter), 2-3 more hypothetical scenarios than needed, earnest host voice, corporate euphemisms, fake policy numbers, "Speak up" and "zero tolerance" framing applied to physics.
 - Narration in plain spoken English; spell acronyms the way they should be pronounced (TTS reads it), e.g. "V pi", "x-cut".
 - Cast: Gary (engineer who does everything wrong), his manager, a bystander coworker, the host. Generic chat apps only, no real product branding.
@@ -92,7 +92,7 @@ Quiz behavior (engine): correct -> voice "That's right!" + `correctSay`. Wrong -
 
 - Images live in `media/fe/`, `media/fb/`, `media/shared/`, `media/render/`. JPEG, long side at most 2400 px, under about 700 KB.
 - Each lane writes its own `media/credits_<lane>.js`:
-  `window.LMS_MEDIA = Object.assign(window.LMS_MEDIA || {}, { 'media/fe/x.jpg': { alt, credit: 'Author, via Wikimedia Commons, CC BY-SA 4.0', license, source: 'https://...', kind: 'photo' | 'render', w, h } })`.
+  `window.LMS_MEDIA = Object.assign(window.LMS_MEDIA || {}, { 'media/fe/x.jpg': { alt, credit: 'Author, via Wikimedia Commons, CC BY-SA 4.0', license, licenseUrl: 'https://creativecommons.org/licenses/by-sa/4.0/' (CC entries), source: 'https://...', kind: 'photo' | 'render', w, h } })`.
 - The engine prints the credit in small type in the image corner from this registry; the references step lists all image credits used by the course.
 - People: no identifiable real person may be shown as Gary, his manager, or anyone doing something wrong. Cast members appear only as anonymous figures (bunny suit and mask, from behind, gloved hands, out of focus). Generic identifiable people only in neutral background roles, preferably none.
 - No image-generation models. Real photos (public domain or CC licensed, with attribution) and Blender renders only.
@@ -159,3 +159,53 @@ Style rule: the three interactive families (hotspots, cards, spot) must look cle
 - Engine effects (subtle, at most one effect per 400 ms): `correct` (check, cards, ask, spot hit), `wrong` (check, cards, ask, spot miss, sort), `reveal` (stage reveal), `message` (chat message from someone other than the learner), `popup` (ask popup), `sortPlace` (sort item placed), `moduleDone` (module interstitial), `certificate` (certificate step), `perfectScore` (exam passed at 100 percent).
 - Opt-in effect on any step: `sfx: '<key>'`, any key present in `LMS_SOUND.sfx` (e.g. 'memeBoom', 'sadTrombone'), played once when the step opens. Use sparingly. New meme sounds need only a file and a manifest entry.
 - Controls bar: "Sound effects: on / off" toggle (on by default, remembered per viewer) switches music and effects together. Dev mode with voice off keeps music and effects off.
+
+## Math, literature media, presenter still, popup pacing, narration ring (engine, 2026-11-22)
+
+### Math markup
+
+- `$...$` inline, `$$...$$` display (KaTeX 0.16.11, vendored in `engine/vendor/katex/` with its LICENSE; fonts are the woff2 set and load from file:// and http). Write TeX inside the delimiters, e.g. `'$\\Delta n = n_e - n_o$'` in a JS string (backslashes doubled in JS source).
+- Rendered everywhere text is displayed: step titles, bullets, body HTML, captions, cards, reveal tabs, hotspot and spot labels, check questions / options / feedback, ask questions and options, chat messages and mail bodies, refs, disclaimer, exam, widget instructions and any HTML a widget inserts. `engine/math.js` runs an idempotent pass after each step render and a MutationObserver on `<body>` for anything inserted later. `window.LMS_math(el)` renders on demand; `window.LMS_mathPlain(s)` gives a plain-text version (Greek letters, common operators) for attributes such as `title`.
+- Not rendered inside `<svg>`, `<canvas>`, `<textarea>`, `<code>`, `<pre>`, form controls, or `class="nomath"`. Widgets that draw labels in SVG use plain Unicode (Δn, λ, a `<tspan>` subscript), or put math in an HTML element over the drawing, never `$` inside SVG text.
+- A literal dollar sign in displayed text: `<span class="nomath">$</span>`.
+- Spoken strings never contain math: narration, tab / spot / card / stage narration, check `why` and `correctSay`, a check `question` without narration (it is spoken), `missWhy`, spot `why`, sort `why`, ask `question` and option `say`, `course.speech`, widget speech. Put math only in display-only fields, and say it in words in the narration. The validator errors on any spoken string with `$`, on unbalanced `$`, and on math that KaTeX cannot parse.
+
+### Reveal-tab media
+
+- `reveal` tabs may carry `media: { src, alt, caption, href }` or an array of up to 3. One item sits beside the tab body (stacked above it at phone width); two or three sit in a row above it. Select a figure to enlarge it (lightbox; Escape or a click outside closes).
+- `caption` is required and stays visible under the figure: a short citation plus at most a short treatment tag, nothing else (2026-11-22): crops "Author et al., Journal Year, Fig. 2b."; faithful redraws or plots of stated values "Author et al., Journal Year. Redrawn."; sketches "... Redrawn, illustrative."; model plots "... Computed." / "... Computed, illustrative."; not a figure from the paper "... Illustrative.". No license text, "for this course", "not data", or preprint notes in the caption: those go in the registry (`credit`, `license`, `licenseUrl`, `note`) and appear on the final Disclaimer and Media Credits step. It may contain HTML and math. `href` (optional, http(s)) adds a "Source" link after the caption.
+- Figures sit on a white panel (paper figures and transparent SVGs read correctly in dark mode). `.svg` files work through `<img>`.
+- Each `src` must exist under `course/` and have a media registry entry with `credit` and `license` (literature entries go in `media/credits_lit_fe.js` / `media/credits_lit_fb.js`); tab media are listed on the final Disclaimer and Media Credits step.
+- Creative Commons entries also carry `licenseUrl`, the license deed (e.g. `https://creativecommons.org/licenses/by/4.0/`, `.../by-sa/4.0/`, `https://creativecommons.org/publicdomain/zero/1.0/`), as CC BY asks for a link to the license. The player shows a "license" link in the final credits list only (not under the tab caption or in the lightbox). Optional registry `note` (plain text: treatment, "sketch, not data", preprint vs journal, crop detail) is printed after the credit in the final credits list. Present in `credits_lit_fe.js`, `credits_lit_fb.js`, `credits_fe.js`, `credits_fb.js`, `credits_sound.js`. The validator warns on a CC BY tab-media entry without it and errors on a non-http(s) value.
+
+### Presenter still (host slides)
+
+- `course.host.img` (path string or `{ src }`) replaces the drawn placeholder in `layout: 'host'` slides: the image fills the 3:4 frame (`object-fit: cover`, focus near the top), the lower third (name, role) stays on top. A step's `hostImg` overrides `course.host.img`. The drawn placeholder is the fallback when neither is set or the image fails to load. Register the still in the media registry (it is listed in the credits).
+
+### Presenter cam (host slides)
+
+- `course.host.cam = { idle: src | [src], talk: [src | { src, weight }] }`: short muted MP4 clips of the presenter played over the still in `layout: 'host'` slides. A step's `hostCam` (same shape) overrides it; `hostCam: false` turns the clips off. A step with its own `hostImg` and no `hostCam` shows its still only (the course clips are in a different pose).
+- Clips: rendered from the same scene as the still (`tools/blender/anim_host_pat.py`, encoded by `tools/blender/encode_host_cam.sh`), 600x800, 24 fps, H.264 yuv420p, faststart, no audio, 3 to 5 s. Every clip starts and ends on the still's pose and expression with the motion at rest, so any clip can follow any other.
+- Scheduling: clips change only at a clip's end, never mid-clip. While narration is playing (or paused between sentences for less than 0.7 s) the next clip is a talk clip, else an idle clip. Talk clips are picked at random by `weight` (default 1); the clip just played is not repeated while another clip of equal or higher weight exists, so with `['talk.mp4', { src: 'gesture.mp4', weight: 0.5 }]` the gesture plays about one time in three and never twice in a row.
+- Display: one preloaded `<video>` per clip (muted, `playsinline`, no controls, the still as `poster`), stacked over the still and under the lower third; the next clip is shown once its first frame is decoded, so a change never flashes black. The clip pauses while the course is paused and is stopped and removed on step change. `prefers-reduced-motion: reduce` shows the still only; if a clip fails to load or autoplay is refused, the clips are removed and the still stays. Works from `file://` and http.
+- Register every clip in the media registry with `kind: 'video'` (listed in the credits). The validator errors on a clip that is missing on disk, not an `.mp4`, not registered, or registered without a credit or `kind: 'video'`, and on a cam object without clips.
+
+### Widget files
+
+- `widgets/<name>.js` (loaded by `player.html` after the course files) may define `window.LMS_WIDGETS[name] = function (root, params, api) { ... }`; it overrides `course.widgets[name]`. Spoken lines go in `window.LMS_WIDGET_SPEECH[courseId] = [ ... ]` (static strings), collected by `LMS_collectSpeech` and the voice generator. `api.say('...')` must be called with a registered literal (the validator warns otherwise).
+
+### Popup pacing (ask)
+
+- Every step with `ask` needs at least one narration line that introduces the scenario (validator error otherwise), e.g. "Watch this meeting, then decide whether Gary's response is appropriate."
+- Chat steps with `ask` (either `after` value): the step narration (the intro) starts together with the messages (typing indicators, or tap through with `tapToAdvance`); the popup waits until both the narration and the messages are done, then about 800 ms of silence. The messages never wait for the narrator. Chat steps without `ask` keep the old order (messages, then narration).
+- Other steps with `ask`: base narration and the step's own requirement (video watched, every tab / spot / card opened), then about 800 ms of silence, then the popup.
+- The popup never opens while any narration is playing: the silence timer restarts whenever speech is busy or the course is paused. After the answer, stages (if any) reveal as before.
+
+### Narration progress ring
+
+- A 20 px ring at the right end of the captions box (space always reserved). At the start of each narration run (one sequence of sentences: step narration, a tab, a stage, a popup question or answer, feedback, a widget line) it is a full circle; its start point moves clockwise from 12 o'clock so the arc left equals the time left; it disappears at the end of the run and when captions are off.
+- Planned length = recorded clip seconds from `audio/manifest.js` (or the text estimate without a clip) plus the engine pauses (300 ms between sentences, 1.2 s after a question), divided by the playback speed (fixed at 1.0x). The position follows the playing clip's own clock, so a blur pause holds it and a replayed sentence starts it over from that sentence.
+
+### Start screen backdrop
+
+The start screen shows each chapter's cover (the first step in the chapter with `image.src`) cross-fading in chapter order with a slow push-in and a small module label; text sits on a veil in the theme background color. `prefers-reduced-motion`: first cover only, no motion.

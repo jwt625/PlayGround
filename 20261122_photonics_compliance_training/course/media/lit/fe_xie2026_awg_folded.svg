@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 360" width="560" height="360" font-family="'Helvetica Neue', Helvetica, Arial, sans-serif">
+<rect width="560" height="360" fill="#ffffff"/>
+<path d="M17,210 h52 l-16,26 h-20 z" fill="#cfe1f6" stroke="#2a78d6" stroke-width="1.2"/>
+<line x1="43" y1="236" x2="43" y2="262" stroke="#2a78d6" stroke-width="1.6"/>
+<path d="M201,210 h52 l-16,26 h-20 z" fill="#cfe1f6" stroke="#2a78d6" stroke-width="1.2"/>
+<line x1="227" y1="236" x2="227" y2="262" stroke="#2a78d6" stroke-width="1.6"/>
+<path d="M61,210 C61,90 209,90 209,210" fill="none" stroke="#2a78d6" stroke-width="1.6"/>
+<path d="M55,210 C55,77 215,77 215,210" fill="none" stroke="#2a78d6" stroke-width="1.6"/>
+<path d="M49,210 C49,64 221,64 221,210" fill="none" stroke="#2a78d6" stroke-width="1.6"/>
+<path d="M43,210 C43,51 227,51 227,210" fill="none" stroke="#2a78d6" stroke-width="1.6"/>
+<path d="M37,210 C37,38 233,38 233,210" fill="none" stroke="#2a78d6" stroke-width="1.6"/>
+<path d="M31,210 C31,25 239,25 239,210" fill="none" stroke="#2a78d6" stroke-width="1.6"/>
+<path d="M25,210 C25,12 245,12 245,210" fill="none" stroke="#2a78d6" stroke-width="1.6"/>
+<text x="135" y="22" text-anchor="middle" font-size="16" font-weight="600" fill="#1d2733">conventional</text>
+<text x="135" y="286" text-anchor="middle" font-size="15" fill="#4d5b6b">arms turn through</text>
+<text x="135" y="304" text-anchor="middle" font-size="15" fill="#4d5b6b">many angles; each angle,</text>
+<text x="135" y="322" text-anchor="middle" font-size="15" fill="#4d5b6b">a different TE index</text>
+<path d="M300,80 l34,-38 v100 l-34,-38 z" fill="#cfe1f6" stroke="#2a78d6" stroke-width="1.2"/>
+<line x1="274" y1="86" x2="300" y2="86" stroke="#2a78d6" stroke-width="1.6"/>
+<line x1="274" y1="98" x2="300" y2="98" stroke="#2a78d6" stroke-width="1.6"/>
+<line x1="334" y1="50" x2="400" y2="50" fill="none" stroke="#2a78d6" stroke-width="1.6"/>
+<circle cx="406" cy="50" r="6" fill="none" stroke="#2a78d6" stroke-width="1.6"/>
+<line x1="334" y1="64" x2="418" y2="64" fill="none" stroke="#2a78d6" stroke-width="1.6"/>
+<circle cx="424" cy="64" r="6" fill="none" stroke="#2a78d6" stroke-width="1.6"/>
+<line x1="334" y1="78" x2="436" y2="78" fill="none" stroke="#2a78d6" stroke-width="1.6"/>
+<circle cx="442" cy="78" r="6" fill="none" stroke="#2a78d6" stroke-width="1.6"/>
+<line x1="334" y1="92" x2="454" y2="92" fill="none" stroke="#2a78d6" stroke-width="1.6"/>
+<circle cx="460" cy="92" r="6" fill="none" stroke="#2a78d6" stroke-width="1.6"/>
+<line x1="334" y1="106" x2="472" y2="106" fill="none" stroke="#2a78d6" stroke-width="1.6"/>
+<circle cx="478" cy="106" r="6" fill="none" stroke="#2a78d6" stroke-width="1.6"/>
+<line x1="334" y1="120" x2="490" y2="120" fill="none" stroke="#2a78d6" stroke-width="1.6"/>
+<circle cx="496" cy="120" r="6" fill="none" stroke="#2a78d6" stroke-width="1.6"/>
+<line x1="334" y1="134" x2="508" y2="134" fill="none" stroke="#2a78d6" stroke-width="1.6"/>
+<circle cx="514" cy="134" r="6" fill="none" stroke="#2a78d6" stroke-width="1.6"/>
+<text x="430" y="22" text-anchor="middle" font-size="16" font-weight="600" fill="#1d2733">folded</text>
+<text x="430" y="176" text-anchor="middle" font-size="15" fill="#4d5b6b">length steps in</text>
+<text x="430" y="194" text-anchor="middle" font-size="15" fill="#4d5b6b">straight sections</text>
+<text x="430" y="212" text-anchor="middle" font-size="15" fill="#4d5b6b">along one direction;</text>
+<text x="430" y="230" text-anchor="middle" font-size="15" fill="#4d5b6b">loop reflectors</text>
+<text x="430" y="248" text-anchor="middle" font-size="15" fill="#4d5b6b">send light back</text>
+<line x1="300" y1="340" x2="326" y2="340" stroke="#1d2733" stroke-width="1.4"/>
+<line x1="300" y1="340" x2="300" y2="314" stroke="#1d2733" stroke-width="1.4"/>
+<text x="331" y="345" font-size="15" fill="#1d2733">z</text>
+<text x="296" y="309" font-size="15" fill="#1d2733">y</text>
+<text x="350" y="345" font-size="14" fill="#4d5b6b">x-cut film, in-plane axes</text>
+</svg>

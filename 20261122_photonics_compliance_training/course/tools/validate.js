@@ -16,9 +16,32 @@ tryLoad(path.join(courseDir, 'audio', 'manifest.js'));
 tryLoad(path.join(mediaDir, 'cast.js'));
 tryLoad(path.join(mediaDir, 'sound', 'manifest.js'));
 tryLoad(path.join(engineDir, 'sound.js'));
+/* widgets/*.js override in-course widgets (window.LMS_WIDGETS[name]) and register their spoken lines (window.LMS_WIDGET_SPEECH[courseId]) */
+const vm = require('vm');
+const widgetDir = path.join(courseDir, 'widgets');
+const widgetFiles = fs.existsSync(widgetDir) ? fs.readdirSync(widgetDir).filter((f) => f.endsWith('.js')).sort() : [];
+{
+  const noop = () => null;
+  const fakeEl = () => ({ style: {}, classList: { add: noop, remove: noop, toggle: noop }, setAttribute: noop, appendChild: noop, append: noop, addEventListener: noop, getContext: () => null });
+  const sb = { console, window: global.window, document: { createElement: fakeEl, createElementNS: fakeEl, getElementById: noop, querySelector: noop, querySelectorAll: () => [], head: fakeEl(), body: fakeEl(), documentElement: fakeEl(), addEventListener: noop },
+    getComputedStyle: () => ({ getPropertyValue: () => '' }), navigator: { userAgent: 'node' }, location: { search: '', hostname: 'localhost', protocol: 'file:' },
+    setTimeout: noop, clearTimeout: noop, setInterval: noop, clearInterval: noop, requestAnimationFrame: noop, cancelAnimationFrame: noop, addEventListener: noop, removeEventListener: noop, Math, JSON };
+  vm.createContext(sb);
+  /* widget globals land on window: run each file with window as the global object's window property and copy top-level assignments through it */
+  widgetFiles.forEach((f) => {
+    try { vm.runInContext(fs.readFileSync(path.join(widgetDir, f), 'utf8'), sb, { filename: 'widgets/' + f }); }
+    catch (e) { console.log('WARN  widgets/' + f + ' failed to load in node: ' + e.message); }
+  });
+}
+/* KaTeX for math markup checks ($...$ inline, $$...$$ display) */
+let katex = null;
+try { katex = require(path.join(engineDir, 'vendor', 'katex', 'katex.min.js')); } catch (e) { katex = null; }
 const MEDIA = window.LMS_MEDIA || {};
 const hashFn = window.LMS_hash || globalThis.LMS_hash;
 
+/* anims/*.js define code-drawn video keyframes (window.LMS_DRAW) used by the course files */
+const animDir = path.join(courseDir, 'anims');
+if (fs.existsSync(animDir)) fs.readdirSync(animDir).filter((f) => f.endsWith('.js')).sort().forEach((f) => require(path.join(animDir, f)));
 require(file);
 const ids = Object.keys(window.LMS_COURSES || {});
 let errs = 0, warns = 0;
@@ -42,6 +65,23 @@ for (const id of ids) {
     if (typeof im.src !== 'string' || !im.src) { err(where + ' image.src must be a non-empty string'); return; }
     if (!imgs.has(im.src)) imgs.set(im.src, where);
   };
+  /* presenter cam clips (course.host.cam, step hostCam): { idle: src | [src], talk: [src | { src, weight }] } or false */
+  const cams = new Map(); /* src -> first location */
+  const camAdd = (cam, where) => {
+    if (cam === undefined || cam === null || cam === false) return;
+    if (typeof cam !== 'object' || Array.isArray(cam)) { err(where + ' must be { idle, talk } or false'); return; }
+    Object.keys(cam).forEach((k) => { if (k !== 'idle' && k !== 'talk') err(where + ' unknown key ' + k + ' (idle, talk)'); });
+    let count = 0;
+    ['idle', 'talk'].forEach((k) => [].concat(cam[k] || []).forEach((x, j) => {
+      const s = typeof x === 'string' ? x : x && x.src;
+      if (typeof s !== 'string' || !s) { err(where + ' ' + k + '[' + j + '] needs a src'); return; }
+      if (x && typeof x === 'object' && x.weight !== undefined && !(typeof x.weight === 'number' && x.weight > 0)) err(where + ' ' + k + '[' + j + '] weight must be a number > 0');
+      count++;
+      if (!cams.has(s)) cams.set(s, where + ' ' + k);
+    }));
+    if (!count) err(where + ' has no idle or talk clips');
+  };
+  camAdd(c.host && c.host.cam, id + ' host.cam');
   const check = (st, where) => {
     if (!TYPES.includes(st.type)) err(where + ' bad type ' + st.type);
     if (st.type === 'check') {
@@ -97,6 +137,8 @@ for (const id of ids) {
       else a.options.forEach((o, k) => { if (!o.text) err(where + ' ask option ' + k + ' needs text'); if (o.correct !== undefined && typeof o.correct !== 'boolean') err(where + ' ask option ' + k + ' correct must be true or false'); if (o.say !== undefined && typeof o.say !== 'string') err(where + ' ask option ' + k + ' say must be a string'); });
       if (a && a.after !== undefined && !['narration', 'messages'].includes(a.after)) err(where + " ask.after must be 'narration' or 'messages'");
       if (a && a.after === 'messages' && st.type !== 'chat') err(where + " ask.after 'messages' only applies to chat steps");
+      /* the narrator introduces every judged scenario before the popup (chat steps: before the messages play) */
+      if (!(Array.isArray(st.narration) && st.narration.some((l) => typeof l === 'string' && l.trim()))) err(where + ' ask needs at least one narration line that introduces the scenario before the question');
     }
     if (st.type === 'chat' && st.app === 'email') {
       (st.messages || []).forEach((m, k) => {
@@ -119,12 +161,31 @@ for (const id of ids) {
       if (!(st.items && st.items.length)) err(where + ' sort needs items');
       (st.items || []).forEach((it, k) => { if (!it.text) err(where + ' sort item ' + k + ' needs text'); if (ids.indexOf(it.bucket) < 0) err(where + ' sort item ' + k + ' bucket not found: ' + it.bucket); if (!it.why) err(where + ' sort item ' + k + ' needs why (read aloud on a wrong drop)'); });
     }
-    if (st.type === 'widget' && !(c.widgets && typeof c.widgets[st.widget] === 'function')) err(where + ' widget not found: ' + st.widget);
+    if (st.type === 'widget' && !(c.widgets && typeof c.widgets[st.widget] === 'function') && !(window.LMS_WIDGETS && typeof window.LMS_WIDGETS[st.widget] === 'function')) err(where + ' widget not found: ' + st.widget);
     if (st.type === 'video') {
       if (!(st.keyframes && st.keyframes.length && st.duration)) err(where + ' video needs keyframes + duration');
       (st.keyframes || []).forEach((k, j) => { if (k.image) image(k.image, where + ' keyframe ' + j, false); });
     }
     if (st.type === 'reveal' && !(st.tabs && st.tabs.length)) err(where + ' reveal needs tabs');
+    (st.tabs || []).forEach((tb, k) => {
+      if (tb.media === undefined) return;
+      const list = Array.isArray(tb.media) ? tb.media : [tb.media];
+      if (!list.length || list.length > 3) err(where + ' tab ' + k + ' media must be one object or an array of one to three');
+      list.forEach((md, j) => {
+        const w = where + ' tab ' + k + ' media ' + j;
+        if (!md || typeof md.src !== 'string' || !md.src) { err(w + ' needs src'); return; }
+        image(md, w, true);
+        if (!md.caption || typeof md.caption !== 'string') err(w + ' needs a caption with the short citation (shown on screen): ' + md.src);
+        if (md.href !== undefined && !/^https?:\/\//.test(md.href)) err(w + ' href must be an http(s) link');
+        const m = MEDIA[md.src];
+        if (m && !m.license) err(w + ' registry entry has no license: ' + md.src);
+        if (m && m.licenseUrl !== undefined && !/^https?:\/\//.test(m.licenseUrl)) err(w + ' registry licenseUrl must be an http(s) link: ' + md.src);
+        if (m && /^CC BY/.test(m.license || '') && !m.licenseUrl) warn(w + ' CC licensed but the registry entry has no licenseUrl: ' + md.src);
+        if (!md.alt && !(m && m.alt)) warn(w + ' has no alt text (media field or registry)');
+      });
+    });
+    if (st.hostImg !== undefined) { const v = typeof st.hostImg === 'string' ? { src: st.hostImg } : st.hostImg; image(v, where + ' hostImg', true); }
+    if (st.hostCam !== undefined) { if (st.layout !== 'host') warn(where + ' hostCam only plays on layout host slides'); camAdd(st.hostCam, where + ' hostCam'); }
     if (st.type === 'chat') {
       if (!(st.messages && st.messages.length)) err(where + ' chat needs messages');
       const SK = { phone: ['imessage', 'signal', 'whatsapp'], thread: ['slack', 'teams'], call: ['facetime', 'meeting'], email: ['mail'] };
@@ -153,6 +214,16 @@ for (const id of ids) {
     else if (!m.credit) err(where + ' image registry entry has no credit: ' + s);
   }
 
+  /* presenter cam clips: relative .mp4 under course/, on disk, registry entry with credit and kind 'video' */
+  for (const [s, where] of cams) {
+    if (/^(https?:)?\/\//.test(s) || path.isAbsolute(s)) { err(where + ' clip must be a relative path under course/: ' + s); continue; }
+    if (!/\.mp4$/i.test(s)) err(where + ' clip must be an .mp4 file: ' + s);
+    if (!fs.existsSync(path.join(courseDir, s))) err(where + ' clip file missing: ' + s);
+    const m = MEDIA[s];
+    if (!m) err(where + ' clip has no registry entry (media/credits_*.js): ' + s);
+    else { if (!m.credit) err(where + ' clip registry entry has no credit: ' + s); if (m.kind !== 'video') err(where + " clip registry entry needs kind: 'video': " + s); }
+  }
+
   /* sound files the course can play: on disk and credited (warnings: the sound lane may still be delivering) */
   (window.LMS_collectSounds ? window.LMS_collectSounds(c) : []).forEach((f) => {
     if (!fs.existsSync(path.join(courseDir, f))) warn(id + ' sound file missing: ' + f);
@@ -179,6 +250,29 @@ for (const id of ids) {
   }
 
   const lines = SL.LMS_collectSpeech(c);
+  /* nothing with math markup may reach the speech layer */
+  lines.forEach((l) => { if (String(l).indexOf('$') >= 0) err(id + ' spoken line contains "$" (math markup is for displayed text only; write narration in words): "' + String(l).slice(0, 100) + '"'); });
+  /* math markup in displayed text must parse */
+  const seenMath = new Set();
+  const walk = (v, where) => {
+    if (typeof v === 'string') {
+      if (v.indexOf('$') < 0 || seenMath.has(v)) return;
+      seenMath.add(v);
+      const t = v.replace(/<span class="nomath">[^<]*<\/span>/g, '');
+      const left = t.replace(/\$\$([\s\S]+?)\$\$|\$([^$]+?)\$/g, (m, d, i) => {
+        const tex = d != null ? d : i;
+        if (katex) { try { katex.renderToString(tex, { throwOnError: true, displayMode: d != null, strict: 'ignore' }); } catch (e) { err(where + ' math does not parse: $' + tex.slice(0, 60) + '$ (' + String(e.message).slice(0, 90) + ')'); } }
+        return '';
+      });
+      if (left.indexOf('$') >= 0) err(where + ' unbalanced "$" in displayed text (use <span class="nomath">$</span> for a literal dollar sign): "' + v.slice(0, 90) + '"');
+      return;
+    }
+    if (Array.isArray(v)) { v.forEach((x, k) => walk(x, where)); return; }
+    if (v && typeof v === 'object') for (const k of Object.keys(v)) { if (typeof v[k] !== 'function') walk(v[k], where); }
+  };
+  Object.keys(c).forEach((k) => { if (k !== 'chapters' && k !== 'exam' && typeof c[k] !== 'function') walk(c[k], id + '.' + k); });
+  c.chapters.forEach((ch, ci) => { Object.keys(ch).forEach((k) => { if (k !== 'steps') walk(ch[k], id + ' ch' + ci + ' ' + k); }); (ch.steps || []).forEach((st, si) => walk(st, id + ' ch' + ci + ' step' + si)); });
+  (c.exam.pool || []).forEach((q, i) => walk(q, id + ' exam' + i));
   let rec = 'N/A (no hash function)';
   if (typeof hashFn === 'function') {
     const files = (window.LMS_AUDIO && window.LMS_AUDIO.files) || {};
@@ -186,6 +280,22 @@ for (const id of ids) {
   }
   console.log(id, 'chapters', c.chapters.length, 'steps', n, 'exam pool', (c.exam.pool || []).length, 'narration words', words, '(~' + Math.round(words / 150) + ' min spoken)',
     'speech lines', lines.length, '(' + rec + ')', 'images', imgs.size, 'widgets', Object.keys(c.widgets || {}).join(','));
+}
+/* widget files: say literals must be registered in window.LMS_WIDGET_SPEECH (or a course.speech list) so they can be pre-recorded */
+{
+  const reg = new Set();
+  Object.values(window.LMS_WIDGET_SPEECH || {}).forEach((a) => (Array.isArray(a) ? a : []).forEach((l) => reg.add(String(l).replace(/\s+/g, ' ').trim())));
+  Object.values(window.LMS_COURSES || {}).forEach((c) => (Array.isArray(c.speech) ? c.speech : []).forEach((l) => reg.add(String(l).replace(/\s+/g, ' ').trim())));
+  reg.forEach((l) => { if (l.indexOf('$') >= 0) err('widget speech line contains "$": "' + l.slice(0, 100) + '"'); });
+  widgetFiles.forEach((f) => {
+    const wsrc = fs.readFileSync(path.join(widgetDir, f), 'utf8');
+    const re2 = /\bapi\.say\s*\(\s*(['"])((?:\\.|(?!\1).)*)\1\s*\)/g;
+    let mm;
+    while ((mm = re2.exec(wsrc))) {
+      const text = mm[2].replace(/\\(['"\\])/g, '$1').replace(/\s+/g, ' ').trim();
+      if (!reg.has(text)) warn('widgets/' + f + ': spoken line not registered in LMS_WIDGET_SPEECH: "' + text.slice(0, 80) + '"');
+    }
+  });
 }
 console.log(errs ? errs + ' errors' : 'OK', warns ? '(' + warns + ' warnings)' : '');
 process.exit(errs ? 1 : 0);

@@ -34,7 +34,9 @@ load('engine/speech_hash.js');
 const hasLines = fs.existsSync(path.join(ROOT, 'engine/speech_lines.js'));
 if (hasLines) load('engine/speech_lines.js');
 const courseFiles = fs.readdirSync(path.join(ROOT, 'courses')).filter((f) => f.endsWith('.js')).sort();
+if (fs.existsSync(path.join(ROOT, 'anims'))) fs.readdirSync(path.join(ROOT, 'anims')).filter((f) => f.endsWith('.js')).sort().forEach((f) => load('anims/' + f));
 courseFiles.forEach((f) => load('courses/' + f));
+if (fs.existsSync(path.join(ROOT, 'widgets'))) fs.readdirSync(path.join(ROOT, 'widgets')).filter((f) => f.endsWith('.js')).sort().forEach((f) => load('widgets/' + f));
 const COURSES = sandbox.LMS_COURSES || {};
 const useEngine = typeof sandbox.LMS_collectSpeech === 'function';
 

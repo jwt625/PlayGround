@@ -5,6 +5,7 @@ window.LMS_MEDIA = Object.assign(window.LMS_MEDIA || {}, {
     "alt": "Music: intro bed, \"Life of Riley\" by Kevin MacLeod",
     "credit": "\"Life of Riley\" Kevin MacLeod (incompetech.com), licensed under Creative Commons: By Attribution 4.0 (http://creativecommons.org/licenses/by/4.0/); excerpt looped and level adjusted",
     "license": "CC BY 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
     "source": "https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1400054",
     "kind": "audio",
     "duration": 75.294
@@ -13,6 +14,7 @@ window.LMS_MEDIA = Object.assign(window.LMS_MEDIA || {}, {
     "alt": "Music: outro with ending, \"Cheery Monday\" by Kevin MacLeod",
     "credit": "\"Cheery Monday\" Kevin MacLeod (incompetech.com), licensed under Creative Commons: By Attribution 4.0 (http://creativecommons.org/licenses/by/4.0/); final section excerpted and level adjusted",
     "license": "CC BY 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
     "source": "https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1700065",
     "kind": "audio",
     "duration": 23.059

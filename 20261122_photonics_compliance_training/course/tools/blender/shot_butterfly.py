@@ -18,7 +18,7 @@ from mathutils import Matrix, Vector  # noqa: E402
 import common as C  # noqa: E402
 
 A = C.args(out="/tmp/bfly.jpg", samples=128, res=1920, noise=0.015, view="main", iso_reverse=0,
-           look="AgX - Medium High Contrast")
+           look="AgX - Medium High Contrast", check_only=0)
 rnd = random.Random(2)
 
 
@@ -184,16 +184,18 @@ def butterfly(m, origin, rot_z):
     # fiber snout (on axis) and strain-relief boot
     parts.append(C.cylinder("snout", 1.75, 6.0, (-10.4 - 3.0, 0, 5.0), m["kovar_au"], verts=48,
                             rot=(0, math.radians(90), 0), bevel=0.1))
-    parts.append(C.cylinder("boot", 1.6, 18.0, (-16.4 - 9.0, 0, 5.0), m["rubber"], verts=48,
-                            rot=(0, math.radians(90), 0), r2=1.0))
+    # boot: 1.6 mm radius at the snout, tapering to 1.0 mm at the free end where the 900 um tube exits
+    parts.append(C.cylinder("boot", 1.0, 18.0, (-16.4 - 9.0, 0, 5.0), m["rubber"], verts=48,
+                            rot=(0, math.radians(90), 0), r2=1.6))
     parts.append(C.text_mesh("lid_t1", "DFB  1550 nm", 1.5, (0, 1.6, 8.9), h=0.01, mat=m["white_mark"]))
     parts.append(C.text_mesh("lid_t2", "SN 24-0817", 1.1, (0, -1.4, 8.9), h=0.01, mat=m["white_mark"]))
     C.parent(parts, root)
     return root
 
 
-def dsub(m, name, face_x, y, z, sgn, cable_pts):
-    """D-sub 9 receptacle on an end face (normal +-x) with a mated plug, backshell and cable."""
+def dsub(m, name, face_x, y, z, sgn, cable_nodes):
+    """D-sub 9 receptacle on an end face (normal +-x) with a mated plug, backshell and cable; the cable
+    leaves the backshell on axis and follows cable_nodes [(point, tangent or None)]."""
     parts = []
     parts.append(C.box(name + "_shell", (1.0, 18.0, 10.0), (face_x + sgn * 0.5, y, z), m["nickel"], bevel=0.4))
     parts.append(C.box(name + "_plug", (8.0, 16.5, 8.5), (face_x + sgn * 5.0, y, z), m["nickel"], bevel=0.6))
@@ -202,8 +204,9 @@ def dsub(m, name, face_x, y, z, sgn, cable_pts):
     for sy in (-1, 1):
         parts.append(C.cylinder(name + f"_jk{sy}", 1.6, 6.0, (face_x + sgn * 11.0, y + sy * 12.5, z), m["nickel"],
                                 verts=24, rot=(0, math.radians(90), 0), bevel=0.2))
-    parts.append(lay_cable(name + "_cable", [Vector((face_x + sgn * 25.0, y, z))] + [Vector(p) for p in cable_pts],
-                           2.6, m["grey_plastic"]))
+    s0 = Vector((face_x + sgn * 25.0, y, z))
+    parts.append(route(name + "_cable", [(s0, (sgn, 0, 0))] + cable_nodes, 2.6, m["grey_plastic"],
+                       touch=(name + "_back",), start=(s0, (sgn, 0, 0))))
     return parts
 
 
@@ -249,14 +252,30 @@ def mount(m, origin):
                              rot=(math.radians(90), 0, math.radians(90))))
     parts.append(C.text_mesh("lbl_tec", "TEC", 2.2, (ox - 22.05, oy + 10.0, 21.5), h=0.01, mat=m["white_mark"],
                              rot=(math.radians(90), 0, math.radians(-90))))
-    parts += dsub(m, "db_ld", ox + 22.0, oy, 15.0, 1, [(ox + 60, oy + 10, 12), (ox + 75, oy + 60, 2.6),
-                                                     (ox + 80, oy + 200, 2.6)])
-    parts += dsub(m, "db_tec", ox - 22.0, oy, 15.0, -1, [(ox - 52, oy + 15, 8), (ox - 50, oy + 60, 2.6),
-                                                       (ox - 40, oy + 200, 2.6)])
+    # cables (5.2 mm OD) clear the base plate (they used to cut through it) and lie on the table
+    c = 2.6
+    parts += dsub(m, "db_ld", ox + 22.0, oy, 15.0, 1, [
+        ((ox + 63, oy + 6, 12.5), None), ((ox + 73, oy + 25, 6.0), None), ((ox + 77, oy + 50, c), None),
+        ((ox + 79, oy + 105, c), None), ((ox + 80, oy + 199, c), None)])
+    # TEC cable: turns toward the back (R ~ 28 mm) while dropping past the plate's left edge, away from the
+    # fiber pigtail that comes down on the front side of the same end
+    parts += dsub(m, "db_tec", ox - 22.0, oy, 15.0, -1, [
+        ((ox - 61, oy + 3.75, 12.2), None), ((ox - 71.25, oy + 14, 5.4), None), ((ox - 75, oy + 28, c), (0, 1, 0)),
+        ((ox - 73, oy + 65, c), None), ((ox - 65, oy + 125, c), None), ((ox - 40, oy + 199, c), None)])
     return parts
 
 
 FC_LEN = 52.0  # tip to boot end (mm): 24 mm plug + 28 mm boot
+
+
+def fc_rest(tip_xy, yaw_xy):
+    """Pose of an FC connector lying on the table: it rests on the rear edge of the knurled nut
+    (r = 5.0 mm, 24 mm behind the tip) and on the boot end (r = 1.35 mm, 52 mm behind the tip), so
+    the axis rises toward the tip at atan(3.65 / 28) = 7.4 deg. Returns (tip, direction)."""
+    a = math.atan2(5.0 - 1.35, 52.0 - 24.0)
+    h = Vector((yaw_xy[0], yaw_xy[1], 0.0)).normalized()
+    d = h * math.cos(a) + Vector((0, 0, math.sin(a)))
+    return Vector((tip_xy[0], tip_xy[1], 5.0 * math.cos(a) + 24.0 * math.sin(a))), d
 
 
 def _knurl_sleeve(name, r_out, r_root, z0, z1, mat, teeth=48):
@@ -420,6 +439,272 @@ def lay_cable(name, pts, radius, mat):
     return C.curve_tube(name, [Vector(p) for p in pts], radius, mat, resolution=32, bevel_res=4)
 
 
+TABLE_XY = ((-300.0, 300.0), (-225.0, 225.0))  # breadboard footprint, top face at z = 0
+ROUTES = []  # fibers and cables registered for check_routes()
+
+
+def route(name, nodes, radius, mat, touch=(), start=None, end=None, min_bend=20.0, hf=0.36):
+    """Fiber or cable as a cubic Bezier through nodes [(point, tangent or None)] with explicit handles
+    (tangent given, else the bisector of the neighbour chords; 0.36 x chord per side), so the shape is
+    not left to AUTO handles: nodes on the table (z = radius) get a horizontal tangent and two such
+    nodes in a row give a span that stays exactly on the table. touch: objects this line enters or
+    starts from (boots, splice sleeves), skipped in the solid check; start/end: (point, axis) the line
+    must leave from / arrive at, tangent to the component axis."""
+    P = [Vector(p) for p, _ in nodes]
+    T = []
+    for i, (_, t) in enumerate(nodes):
+        if t is not None:
+            v = Vector(t)
+        elif i == 0:
+            v = P[1] - P[0]
+        elif i == len(P) - 1:
+            v = P[-1] - P[-2]
+        else:
+            v = (P[i] - P[i - 1]).normalized() + (P[i + 1] - P[i]).normalized()
+        if t is None and abs(P[i].z - radius) < 1e-6:
+            v.z = 0.0
+        T.append(v.normalized())
+    cu = bpy.data.curves.new(name, "CURVE")
+    cu.dimensions = "3D"
+    cu.bevel_depth = radius
+    cu.bevel_resolution = 4
+    cu.resolution_u = 32
+    cu.use_fill_caps = True
+    sp = cu.splines.new("BEZIER")
+    sp.bezier_points.add(len(P) - 1)
+    for i, bp in enumerate(sp.bezier_points):
+        bp.handle_left_type = bp.handle_right_type = "FREE"
+        bp.co = P[i]
+        hl = hf * (P[i] - P[i - 1]).length if i > 0 else 1.0
+        hr = hf * (P[i + 1] - P[i]).length if i < len(P) - 1 else 1.0
+        bp.handle_left = P[i] - T[i] * hl
+        bp.handle_right = P[i] + T[i] * hr
+    ob = C.link(bpy.data.objects.new(name, cu))
+    cu.materials.append(mat)
+    ROUTES.append(dict(name=name, r=radius, touch=tuple(touch), start=start, end=end, min_bend=min_bend))
+    return ob
+
+
+def _left(u):
+    return Vector((-u.y, u.x))
+
+
+def _hd(deg):
+    return Vector((math.cos(math.radians(deg)), math.sin(math.radians(deg))))
+
+
+def csc(p1, h1, rho1, p2, h2, rho2):
+    """Plan-view path from pose (p1, heading h1 deg) to pose (p2, h2): arc of signed radius rho1
+    (+ left / counterclockwise, - right), common tangent line, arc rho2 (Dubins CSC with unequal radii).
+    Returns primitives ("arc", centre, rho, start heading, sweep deg) / ("line", start, dir, length)."""
+    p1, p2 = Vector(p1).to_2d(), Vector(p2).to_2d()
+    u1, u2 = _hd(h1), _hd(h2)
+    c1, c2 = p1 + rho1 * _left(u1), p2 + rho2 * _left(u2)
+    D, dl = c2 - c1, rho2 - rho1
+    L = math.sqrt(D.length_squared - dl * dl)
+    u = Vector((L * D.x + dl * D.y, -dl * D.x + L * D.y)) / (L * L + dl * dl)
+    hu = math.degrees(math.atan2(u.y, u.x))
+
+    def sweep(a, b, rho):
+        return (b - a) % 360.0 if rho > 0 else -((a - b) % 360.0)
+    t1 = c1 - rho1 * _left(u)
+    return [("arc", c1, rho1, h1, sweep(h1, hu, rho1)), ("line", t1, u, L), ("arc", c2, rho2, hu, sweep(hu, h2, rho2))]
+
+
+def line(p, h, length):
+    return [("line", Vector(p).to_2d(), _hd(h), length)]
+
+
+def _prim_len(pr):
+    return pr[3] if pr[0] == "line" else abs(pr[2]) * abs(math.radians(pr[4]))
+
+
+def plan_eval(prims, s):
+    """Plan position and unit heading at horizontal arc length s."""
+    for pr in prims:
+        n = _prim_len(pr)
+        if s <= n + 1e-9 or pr is prims[-1]:
+            if pr[0] == "line":
+                return pr[1] + pr[2] * s, pr[2].copy()
+            _, c, rho, h0, sw = pr
+            u = _hd(h0 + math.copysign(math.degrees(s / abs(rho)), sw))
+            return c - rho * _left(u), u
+        s -= n
+    raise ValueError
+
+
+def zprofile(keys):
+    """Height and slope dz/ds from segments (s0, s1, z0, z1, kind) held flat in between. kind "S": two
+    parabolas, zero slope at both ends (curvature 4 dz / L^2); "P0": one parabola, zero slope at s0;
+    "P1": one parabola, zero slope at s1 (end slope 2 dz / L, used to meet a tilted boot)."""
+    def f(s):
+        z = keys[0][2]
+        for s0, s1, z0, z1, kind in keys:
+            if s < s0:
+                return z, 0.0
+            if s > s1:
+                z = z1
+                continue
+            L, h, u = s1 - s0, z1 - z0, (s - s0) / (s1 - s0)
+            if kind == "S":
+                return (z0 + 2 * h * u * u, 4 * h * u / L) if u < 0.5 else (z1 - 2 * h * (1 - u) ** 2, 4 * h * (1 - u) / L)
+            if kind == "P0":
+                return z0 + h * u * u, 2 * h * u / L
+            return z1 - h * (1 - u) ** 2, 2 * h * (1 - u) / L
+        return z, 0.0
+    return f
+
+
+def path_nodes(prims, zf, step=3.0):
+    """Dense Bezier nodes (point, exact tangent) along plan primitives with the height profile zf."""
+    total = sum(_prim_len(p) for p in prims)
+    n = max(2, int(math.ceil(total / step)))
+    out = []
+    for i in range(n + 1):
+        s = total * i / n
+        p, u = plan_eval(prims, s)
+        z, dz = zf(s)
+        out.append((Vector((p.x, p.y, z)), Vector((u.x, u.y, dz))))
+    return out, total
+
+
+def _centerline(ob, res=256):
+    """Tessellated centerline of a curve object (what Cycles renders, at a finer resolution)."""
+    cu = ob.data
+    bd, ru = cu.bevel_depth, cu.resolution_u
+    cu.bevel_depth, cu.resolution_u = 0.0, res
+    dg = bpy.context.evaluated_depsgraph_get()
+    dg.update()
+    ev = ob.evaluated_get(dg)
+    me = ev.to_mesh()
+    pts = [ob.matrix_world @ v.co for v in me.vertices]
+    ev.to_mesh_clear()
+    cu.bevel_depth, cu.resolution_u = bd, ru
+    return pts
+
+
+def _resample(pts, step):
+    """Polyline resampled at uniform arc-length spacing (last point kept)."""
+    out, acc, nxt = [pts[0].copy()], 0.0, step
+    for a, b in zip(pts[:-1], pts[1:]):
+        L = (b - a).length
+        while L > 0 and acc + L >= nxt:
+            out.append(a.lerp(b, (nxt - acc) / L))
+            nxt += step
+        acc += L
+    if (out[-1] - pts[-1]).length > 1e-6:
+        out.append(pts[-1].copy())
+    return out
+
+
+def check_routes(routes, exclude=("ceiling", "dust"), tol=0.02, table_xy=TABLE_XY, floor="breadboard"):
+    """Sample every registered fiber / cable densely and print violations of: (a) table top: centre at
+    least one radius above z = 0 over the breadboard; (b) solids: signed distance from the centre to
+    every other rendered solid (mesh, cable, other fiber) at least one radius; (c) continuity: one open
+    spline, no sample gaps, ends on their attachment points and tangent to the component axis; bend
+    radius >= the route minimum. Also lists solids that sink into the table top. Returns the count."""
+    from mathutils.bvhtree import BVHTree
+    bpy.context.view_layer.update()
+    lines = {r["name"]: _centerline(bpy.data.objects[r["name"]]) for r in routes}
+    dg = bpy.context.evaluated_depsgraph_get()
+    dg.update()
+    solids = {}
+    bad = 0
+    for ob in bpy.data.objects:
+        if ob.type not in ("MESH", "CURVE") or ob.hide_render or ob.name.split(".")[0] in exclude:
+            continue
+        ev = ob.evaluated_get(dg)
+        me = ev.to_mesh()
+        if me is None or not me.polygons:
+            ev.to_mesh_clear()
+            continue
+        vs = [ob.matrix_world @ v.co for v in me.vertices]
+        polys = [tuple(p.vertices) for p in me.polygons]
+        ev.to_mesh_clear()
+        lo = Vector((min(v.x for v in vs), min(v.y for v in vs), min(v.z for v in vs)))
+        hi = Vector((max(v.x for v in vs), max(v.y for v in vs), max(v.z for v in vs)))
+        solids[ob.name] = (BVHTree.FromPolygons(vs, polys), lo, hi)
+        if ob.type == "MESH" and lo.z < -tol and ob.name != floor:
+            print(f"CHECK solid  {ob.name:22s} sinks {-lo.z:.2f} mm into the table top")
+            bad += 1
+    for r in routes:
+        nm, rad = r["name"], r["r"]
+        raw = lines[nm]
+        sp = bpy.data.objects[nm].data.splines
+        if len(sp) != 1 or sp[0].use_cyclic_u:
+            print(f"CHECK {nm}: {len(sp)} splines (expected one open spline)")
+            bad += 1
+        gap = max((b - a).length for a, b in zip(raw[:-1], raw[1:]))
+        pts = _resample(raw, 0.25)
+        length = sum((b - a).length for a, b in zip(raw[:-1], raw[1:]))
+        # (a) table top
+        tmin, tat = 1e9, None
+        for p in pts:
+            if table_xy[0][0] <= p.x <= table_xy[0][1] and table_xy[1][0] <= p.y <= table_xy[1][1]:
+                if p.z - rad < tmin:
+                    tmin, tat = p.z - rad, p
+        if tmin < -tol:
+            print(f"CHECK {nm}: below table top by {-tmin:.2f} mm at ({tat.x:.1f}, {tat.y:.1f})")
+            bad += 1
+        # (b) solids
+        worst = {}
+        for p in pts:
+            for sn, (bvh, lo, hi) in solids.items():
+                if sn == nm or sn.split(".")[0] in r["touch"]:
+                    continue
+                m = rad + 0.1
+                if not (lo.x - m <= p.x <= hi.x + m and lo.y - m <= p.y <= hi.y + m and lo.z - m <= p.z <= hi.z + m):
+                    continue
+                inside = lo.x <= p.x <= hi.x and lo.y <= p.y <= hi.y and lo.z <= p.z <= hi.z
+                hit = bvh.find_nearest(p) if inside else bvh.find_nearest(p, m)
+                if hit[0] is None:
+                    continue
+                loc, nrm = hit[0], hit[1]
+                d = (p - loc).length
+                sd = d if (p - loc).dot(nrm) >= 0 else -d
+                c = sd - rad
+                if c < worst.get(sn, (1e9, None))[0]:
+                    worst[sn] = (c, p)
+        for sn, (c, p) in sorted(worst.items(), key=lambda kv: kv[1][0]):
+            if c < -tol:
+                print(f"CHECK {nm}: inside {sn} by {-c:.2f} mm at ({p.x:.1f}, {p.y:.1f}, {p.z:.1f})")
+                bad += 1
+        # (c) continuity, attachment, bend radius
+        if gap > 2.0:
+            print(f"CHECK {nm}: gap of {gap:.2f} mm between centerline samples")
+            bad += 1
+        for key, p0, p1 in (("start", raw[0], pts[min(8, len(pts) - 1)]),
+                            ("end", raw[-1], pts[max(0, len(pts) - 9)])):
+            if r[key] is None:
+                continue
+            att, ax = Vector(r[key][0]), Vector(r[key][1]).normalized()
+            tang = (p1 - p0).normalized() if key == "start" else (p0 - p1).normalized()
+            off = (p0 - att).length
+            ang = math.degrees(tang.angle(ax))
+            if off > 0.05 or ang > 3.0:
+                print(f"CHECK {nm}: {key} {off:.2f} mm from its attachment, {ang:.1f} deg off the axis")
+                bad += 1
+        q = _resample(raw, 0.5)
+        k = 4
+        rmin, rat = 1e9, None
+        for i in range(k, len(q) - k):
+            a, b, c3 = q[i - k], q[i], q[i + k]
+            ar = (b - a).cross(c3 - a).length / 2
+            if ar < 1e-9:
+                continue
+            R = (b - a).length * (c3 - b).length * (c3 - a).length / (4 * ar)
+            if R < rmin:
+                rmin, rat = R, b
+        if rmin < r["min_bend"]:
+            print(f"CHECK {nm}: bend radius {rmin:.1f} mm < {r['min_bend']:.0f} mm at ({rat.x:.1f}, {rat.y:.1f}, {rat.z:.1f})")
+            bad += 1
+        cl = min([c for c, _ in worst.values()] + [99.0])
+        print(f"CHECK {nm:8s} r={rad:.2f} len={length:6.1f} mm  table clr={tmin:+.2f}  solid clr={cl:+.2f}  "
+              f"min bend R={rmin:6.1f} mm  max step={gap:.2f} mm")
+    print(f"CHECK violations: {bad}")
+    return bad
+
+
 def isolator(m, center, direction, reverse):
     d = Vector(direction).normalized()
     rot = d.to_track_quat("Z", "Y").to_matrix().to_4x4()
@@ -428,7 +713,7 @@ def isolator(m, center, direction, reverse):
     parts = [C.cylinder("iso_body", 2.75, 35.0, (0, 0, 0), m["ss"], verts=64, bevel=0.3)]
     for s in (1, -1):
         parts.append(C.cylinder(f"iso_boot{s}", 1.2, 8.0, (0, 0, s * 21.5), m["rubber"], verts=32,
-                                r2=0.7 if s > 0 else 1.2, rot=(0 if s > 0 else math.pi, 0, 0)))
+                                r2=0.7, rot=(0 if s > 0 else math.pi, 0, 0)))  # same tapered boot on both ends
     # printed label band (white) with a long direction arrow (about 60 % of the body length) and text;
     # the reversed variant uses the same decal turned end for end
     parts.append(C.cylinder("iso_label", 2.78, 26.0, (0, 0, 0), m["label_white"], verts=64))
@@ -463,41 +748,76 @@ def scene_main():
     # mount on the 25 mm grid (screws into the holes at x = -25 / 75, y = 0 / 50), package on its seat
     mount(m, (25.0, 25.0, 0.0))
     butterfly(m, (25.0, 25.0, 25.5), 0.0)
-    # pigtail (900 um tube): leaves the boot on axis, droops to the board with > 25 mm bend radii; the
-    # inline isolator is fusion-spliced in, each splice protected by a 40 mm heat-shrink sleeve
+    # pigtail (900 um tube): leaves the boot on axis, arcs down past the left edge of the base plate
+    # (clear of the TEC D-sub and its cable), lands on the board and runs around the plate's front
+    # corner; bend radii >= 20 mm. The inline isolator is fusion-spliced in, each splice protected by a
+    # 40 mm heat-shrink sleeve lying on the board, the fiber running through it beside its steel rod.
     r = 0.45
     b0 = Vector((25.0 - 34.4, 25.0, 30.5))
-    iso_c = Vector((-60, -45, 2.75))
+    iso_c = Vector((-60, -45, 2.78))             # resting on its label band (r 2.78)
     iso_d = Vector((-1, 0.25, 0)).normalized()   # forward = away from the laser (toward the left)
     iso_in, iso_out = iso_c - iso_d * 25.5, iso_c + iso_d * 25.5
-    pig1 = [b0, b0 + Vector((-12, 0, -0.5)), Vector((-34, 4, 10)), Vector((0, -26, r)), Vector((50, -38, r)),
-            Vector((66, -60, r)), iso_in - iso_d * 74, iso_in - iso_d * 50, iso_in - iso_d * 12, iso_in]
-    lay_cable("pig1", pig1, r, m["yellow"])
+    zs = 1.9                                     # fiber height inside a sleeve (axis 1.5, rod below)
+
+    def at(p, z):
+        return Vector((p.x, p.y, z))
+
     isolator(m, iso_c, iso_d, A["iso_reverse"] == 1)
+    rot_d = iso_d.to_track_quat("Z", "Y").to_matrix().to_4x4()
     for k, c in enumerate((iso_in - iso_d * 31, iso_out + iso_d * 31)):
         sl = C.cylinder(f"splice{k}", 1.5, 40.0, (0, 0, 0), m["sleeve"], verts=32, bevel=0.4)
-        sl.matrix_world = Matrix.Translation(c + Vector((0, 0, 1.5 - r))) @ iso_d.to_track_quat("Z", "Y").to_matrix().to_4x4()
+        sl.matrix_world = Matrix.Translation(at(c, 1.5)) @ rot_d
         rod = C.cylinder(f"splice_rod{k}", 0.5, 38.0, (0, 0, 0), m["ss"], verts=16)
-        rod.matrix_world = Matrix.Translation(c + Vector((0, 0, 1.5 - r)) + Vector((0, 0, -0.6))) @ iso_d.to_track_quat("Z", "Y").to_matrix().to_4x4()
+        rod.matrix_world = Matrix.Translation(at(c, 1.5 - 0.6)) @ rot_d
+    # pig1, plan view: left arc R 28 from the boot around the plate's front-left corner, tangent line,
+    # right hairpin R 22 onto the isolator axis, straight through the splice sleeve into the isolator
+    e0 = iso_in - iso_d * 80
+    h_iso = math.degrees(math.atan2(iso_d.y, iso_d.x))
+    pr = csc(b0, 180.0, 28.0, e0, h_iso, -22.0) + line(e0, h_iso, 80.0)
+    tot = sum(_prim_len(p) for p in pr)
+    zf = zprofile([(0.0, 85.0, b0.z, r, "S"), (tot - 80.0, tot - 63.0, r, zs, "S"),
+                   (tot - 11.0, tot, zs, iso_in.z, "S")])
+    nodes, _ = path_nodes(pr, zf)
+    route("pig1", nodes, r, m["yellow"], touch=("boot", "splice0", "iso_boot-1"), start=(b0, (-1, 0, 0)),
+          end=(iso_in, iso_d), hf=1 / 3)
     # FC/APC at the end of the pigtail, resting on its nut and boot, dust cap on
     cap_g = C.principled("cap_green", color=(0.05, 0.40, 0.10), rough=0.45)
     cap_b = C.principled("cap_blue", color=(0.03, 0.13, 0.55), rough=0.45)
-    apc_dir = Vector((1, 0.12, 0.07)).normalized()
-    apc_tip = Vector((70.0, -96.0, 5.1))
+    apc_tip, apc_dir = fc_rest((70.0, -96.0), (1, 0.12))
     apc_back = apc_tip - apc_dir * FC_LEN
-    pig2 = [iso_out, iso_out + iso_d * 12, iso_out + iso_d * 50, iso_out + iso_d * 62 + Vector((0, 0, -0.5)),
-            Vector((-152, -60, r)), Vector((-120, -104, r)), Vector((-50, -112, r)),
-            apc_back - apc_dir * 14 + Vector((0, 0, -0.6)), apc_back]
-    lay_cable("pig2", pig2, r, m["yellow"])
+    apc_h = Vector((apc_dir.x, apc_dir.y, 0)).normalized()
+    # pig2: straight out of the isolator through the second sleeve, then a left loop R 22 (dropping to
+    # the board over its first 34 mm) and a gentle left arc (R 150) onto the connector axis; the last
+    # 13.8 mm rise to the tilted boot
+    lz = 2 * (apc_back.z - r) / math.tan(math.asin(apc_dir.z))
+    p3 = iso_out + iso_d * 51
+    land = apc_back - apc_h * lz
+    h_apc = math.degrees(math.atan2(apc_h.y, apc_h.x))
+    pr = line(iso_out, h_iso, 51.0) + csc(p3, h_iso, 22.0, land, h_apc, 150.0) + line(land, h_apc, lz)
+    tot = sum(_prim_len(p) for p in pr)
+    zf = zprofile([(0.0, 11.0, iso_out.z, zs, "S"), (51.0, 85.0, zs, r, "S"), (tot - lz, tot, r, apc_back.z, "P0")])
+    nodes, _ = path_nodes(pr, zf)
+    route("pig2", nodes, r, m["yellow"], touch=("iso_boot1", "splice1", "fc_apc_boot"), start=(iso_out, iso_d),
+          end=(apc_back, apc_dir), hf=1 / 3)
     fc_connector(m, "fc_apc", apc_tip, apc_dir, m["green"], apc=True, cap=cap_g)
-    # FC/PC patch cord (2 mm jacket) beside it, also capped; cord runs off the board edge
-    pc_dir = Vector((1, -0.05, 0.07)).normalized()
-    pc_tip = Vector((76.0, -122.0, 5.1))
+    # FC/PC patch cord (2 mm jacket) beside it, also capped; the cord runs to the board edge and hangs
+    # over it (out of frame)
+    pc_tip, pc_dir = fc_rest((76.0, -122.0), (1, -0.05))
     fc_connector(m, "fc_pc", pc_tip, pc_dir, m["blue"], apc=False, cap=cap_b)
     pcb = pc_tip - pc_dir * FC_LEN
-    lay_cable("pc_cord", [pcb, pcb - pc_dir * 14 + Vector((0, 0, -0.6)), Vector((-40, -136, 1.0)),
-                          Vector((-110, -150, 1.0)), Vector((-200, -140, 1.0)), Vector((-320, -130, 1.0))], 1.0,
-              m["yellow"])
+    pc_h = Vector((pc_dir.x, pc_dir.y, 0)).normalized()
+    lz = 2 * (pcb.z - 1.0) / math.tan(math.asin(pc_dir.z))
+    h_pc = math.degrees(math.atan2(-pc_h.y, -pc_h.x))
+    p1 = pcb - pc_h * lz
+    pr = line(pcb, h_pc, lz) + csc(p1, h_pc, 300.0, (-300.0, -130.0), 180.0, -300.0)
+    tot = sum(_prim_len(p) for p in pr)
+    nodes, _ = path_nodes(pr, zprofile([(0.0, lz, pcb.z, 1.0, "P1")]))
+    # over the board edge (top corner at x = -300): R 24 arc around (-300, z -23), then hanging
+    for k in range(1, 7):
+        a = math.radians(15 * k)
+        nodes.append((Vector((-300 - 24 * math.sin(a), -130, -23 + 24 * math.cos(a))), Vector((-math.cos(a), 0, -math.sin(a)))))
+    nodes.append((Vector((-324, -130, -80)), Vector((0, 0, -1))))
+    route("pc_cord", nodes, 1.0, m["yellow"], touch=("fc_pc_boot",), start=(pcb, -pc_dir), hf=1 / 3)
     dust = C.principled("dust", color=(0.5, 0.48, 0.45), rough=0.9)
     C.scatter_dust("dust", ((-150, 150), (-180, 120)), 0.0, 260, 0.03, 0.2, dust, seed=5, fibers=5,
                    fiber_len=(2.0, 6.0))
@@ -518,6 +838,7 @@ def scene_main():
     C.area_light("rim", (100, 400, 120), (0, 0, 0), 200, 1.0e5, color=(1.0, 0.98, 0.95))
     C.ceiling(900.0, color=(0.05, 0.05, 0.05))
     C.compositor(vignette=0.22, dispersion=0.003)
+    check_routes(ROUTES)
 
 
 def scene_ferrules():
@@ -527,14 +848,17 @@ def scene_ferrules():
     # 8 degree face is seen in profile); APC behind, PC in front, camera low from the front
     C.box("table", (400, 400, 10), (0, 100, -5.0), C.principled("mat", color=(0.035, 0.038, 0.04), rough=0.75,
                                                               bump=0.2, bump_scale=2.0, bump_dist=0.01))
-    d = Vector((1, 0, 0.056)).normalized()  # resting on the knurled nut and the boot end
-    d = Vector((1, 0, (5.0 - 1.35) / FC_LEN)).normalized()  # resting on the knurled nut and the boot end
+    # each connector rests on the rear edge of its knurled nut and on its boot end (fc_rest); the 2 mm
+    # jacket drops from the boot onto the mat, then curves gently toward the back (R 400 mm arcs)
     for nm, y, mat, apc in (("fc_apc", 15.0, m["green"], True), ("fc_pc", 0.0, m["blue"], False)):
-        tip = Vector((0.0, y, 5.0))
+        tip, d = fc_rest((0.0, y), (1, 0))
         fc_connector(m, nm, tip, d, mat, apc=apc)
         b = tip - d * FC_LEN
-        lay_cable(nm + "_jacket", [b + d * 1.0, b - d * 8.0, b - d * 25.0 + Vector((0, 2, -0.3)),
-                                    Vector((b.x - 70, y + 6, 1.0)), Vector((b.x - 140, y + 14, 1.0))], 1.0, m["yellow"])
+        lz = 2 * (b.z - 1.0) / math.tan(math.asin(d.z))
+        p1 = b - Vector((lz, 0, 0))
+        pr = line(b, 180.0, lz) + csc(p1, 180.0, -400.0, (b.x - 140, y + 14), 173.5, 400.0)
+        nodes, _ = path_nodes(pr, zprofile([(0.0, lz, b.z, 1.0, "P1")]))
+        route(nm + "_jacket", nodes, 1.0, m["yellow"], touch=(nm + "_boot",), start=(b, -d), hf=1 / 3)
     tgt = Vector((-24.0, 7.5, 4.0))
     el = math.radians(28.0)
     loc = tgt + 220.0 * Vector((0, -math.cos(el), math.sin(el)))
@@ -544,10 +868,12 @@ def scene_ferrules():
     C.area_light("back", (40, 80, 30), (0, 0, 4), 60, 1.2e4, color=(0.95, 0.97, 1.0))
     C.area_light("fill", (80, -80, 10), (0, 0, 4), 60, 6.0e3)
     C.compositor(vignette=0.2, dispersion=0.004)
+    check_routes(ROUTES, table_xy=((-200.0, 200.0), (-100.0, 300.0)), floor="table")
 
 
 if __name__ == "__main__":
     C.reset()
     C.setup_render(samples=A["samples"], res=(A["res"], A["res"] * 9 // 16), noise=A["noise"], look=A["look"])
     scene_ferrules() if A["view"] == "ferrules" else scene_main()
-    C.render(A["out"])
+    if not A["check_only"]:
+        C.render(A["out"])

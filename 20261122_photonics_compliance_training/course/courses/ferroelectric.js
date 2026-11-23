@@ -8,14 +8,6 @@
 
   /* ---------- runtime helpers (only called by the engine at runtime) ---------- */
 
-  function cssTok(name, fb) {
-    try {
-      var v = getComputedStyle(document.documentElement).getPropertyValue(name);
-      v = v && v.trim();
-      return v || fb;
-    } catch (e) { return fb; }
-  }
-
   function palette(api, root) {
     function g(n, fb) {
       var v = '';
@@ -34,17 +26,6 @@
       ok: g('--ok', g('--good', '#3a9d5d')),
       warn: g('--warn', '#d39b2a'),
       panel: g('--panel', 'rgba(127,127,127,0.08)')
-    };
-  }
-
-  function animColors() {
-    return {
-      fg: cssTok('--fg', cssTok('--text', '#cfd6de')),
-      muted: cssTok('--muted', '#8a96a3'),
-      accent: cssTok('--accent', '#2f7de1'),
-      danger: cssTok('--danger', '#d9534f'),
-      ok: cssTok('--ok', '#3a9d5d'),
-      warn: cssTok('--warn', '#d39b2a')
     };
   }
 
@@ -100,324 +81,11 @@
 
   /* ---------- animatic helpers for video keyframes ---------- */
 
-  function bg(ctx, w, h) {
-    ctx.clearRect(0, 0, w, h);
-    ctx.fillStyle = 'rgba(127,127,127,0.07)';
-    ctx.fillRect(0, 0, w, h);
-  }
-  function label(ctx, w, h, text, col) {
-    ctx.fillStyle = col; ctx.font = Math.round(h * 0.05) + 'px sans-serif'; ctx.textAlign = 'center';
-    ctx.fillText(text, w / 2, h * 0.93);
-  }
-  function stamp(ctx, w, h, text, col, u) {
-    if (u < 0.75) return;
-    ctx.save(); ctx.translate(w * 0.78, h * 0.2); ctx.rotate(-0.2);
-    ctx.strokeStyle = col; ctx.lineWidth = 3; ctx.fillStyle = col;
-    ctx.font = 'bold ' + Math.round(h * 0.07) + 'px sans-serif'; ctx.textAlign = 'center';
-    var tw = ctx.measureText(text).width + 20;
-    ctx.strokeRect(-tw / 2, -h * 0.06, tw, h * 0.09); ctx.fillText(text, 0, h * 0.01);
-    ctx.restore();
-  }
-  function arrow(ctx, x0, y0, x1, y1, col, lw) {
-    ctx.strokeStyle = col; ctx.fillStyle = col; ctx.lineWidth = lw || 2;
-    ctx.beginPath(); ctx.moveTo(x0, y0); ctx.lineTo(x1, y1); ctx.stroke();
-    var a = Math.atan2(y1 - y0, x1 - x0), s = 8;
-    ctx.beginPath(); ctx.moveTo(x1, y1);
-    ctx.lineTo(x1 - s * Math.cos(a - 0.4), y1 - s * Math.sin(a - 0.4));
-    ctx.lineTo(x1 - s * Math.cos(a + 0.4), y1 - s * Math.sin(a + 0.4));
-    ctx.closePath(); ctx.fill();
-  }
-
-  // Square chip with in-plane axes that rotate (orientation confusion)
-  function animChip(opts) {
+  // code-drawn keyframe from the shared drawing library (anims/fe_draw.js): scene name, keyframe index
+  function feDraw(name, k) {
     return function (ctx, w, h, u) {
-      var C = animColors(); bg(ctx, w, h);
-      var cx = w / 2, cy = h * 0.48, s = Math.min(w, h) * 0.32;
-      ctx.save(); ctx.translate(cx, cy); ctx.rotate((opts.spin || 0) * u * Math.PI * 2);
-      ctx.fillStyle = 'rgba(160,170,190,0.25)'; ctx.strokeStyle = C.fg; ctx.lineWidth = 2;
-      ctx.fillRect(-s / 2, -s / 2, s, s); ctx.strokeRect(-s / 2, -s / 2, s, s);
-      ctx.restore();
-      var ang = (opts.axisSwap ? Math.floor(u * 4) * Math.PI / 2 : 0) + (opts.spin || 0) * u * Math.PI * 2;
-      var L = s * 0.75;
-      arrow(ctx, cx, cy, cx + L * Math.cos(ang), cy + L * Math.sin(ang), C.accent, 3);
-      arrow(ctx, cx, cy, cx + L * Math.cos(ang - Math.PI / 2), cy + L * Math.sin(ang - Math.PI / 2), C.warn, 3);
-      ctx.fillStyle = C.fg; ctx.font = Math.round(h * 0.05) + 'px sans-serif';
-      ctx.fillText(opts.a || 'y', cx + (L + 12) * Math.cos(ang), cy + (L + 12) * Math.sin(ang));
-      ctx.fillText(opts.b || 'z', cx + (L + 12) * Math.cos(ang - Math.PI / 2), cy + (L + 12) * Math.sin(ang - Math.PI / 2));
-      if (opts.qmark) { ctx.font = 'bold ' + Math.round(h * 0.16) + 'px sans-serif'; ctx.fillStyle = C.danger; ctx.textAlign = 'center'; ctx.globalAlpha = 0.5 + 0.5 * Math.sin(u * 20); ctx.fillText('?', cx, cy + h * 0.05); ctx.globalAlpha = 1; ctx.textAlign = 'start'; }
-      if (opts.caption) label(ctx, w, h, opts.caption, C.muted);
-      if (opts.stamp) stamp(ctx, w, h, opts.stamp, opts.stampOk ? C.ok : C.danger, u);
-    };
-  }
-
-  // Ring with a polarization toll booth
-  function animRing(opts) {
-    return function (ctx, w, h, u) {
-      var C = animColors(); bg(ctx, w, h);
-      var cx = w / 2, cy = h * 0.47, r = Math.min(w, h) * (opts.big ? 0.36 : 0.22);
-      ctx.strokeStyle = C.fg; ctx.lineWidth = 6; ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI * 2); ctx.stroke();
-      var a = u * Math.PI * 2 * (opts.laps || 1);
-      var conv = opts.convert && (a % (Math.PI * 2)) > Math.PI * 0.3;
-      ctx.fillStyle = conv ? C.danger : C.accent;
-      ctx.beginPath(); ctx.arc(cx + r * Math.cos(a), cy + r * Math.sin(a), 9, 0, Math.PI * 2); ctx.fill();
-      ctx.fillStyle = C.muted; ctx.font = Math.round(h * 0.045) + 'px sans-serif'; ctx.textAlign = 'center';
-      ctx.fillText(conv ? 'now mostly TM' : 'TE', cx + r * Math.cos(a), cy + r * Math.sin(a) - 16);
-      arrow(ctx, w * 0.08, h * 0.82, w * 0.22, h * 0.82, C.accent, 2); ctx.fillStyle = C.fg; ctx.textAlign = 'start'; ctx.fillText('y', w * 0.23, h * 0.83);
-      arrow(ctx, w * 0.08, h * 0.82, w * 0.08, h * 0.66, C.warn, 2); ctx.fillText('z (optic axis)', w * 0.09, h * 0.65);
-      if (opts.caption) label(ctx, w, h, opts.caption, C.muted);
-      if (opts.stamp) stamp(ctx, w, h, opts.stamp, opts.stampOk ? C.ok : C.danger, u);
-    };
-  }
-
-  // Transmission dip being swept, with resonance moving red (+1) or blue (-1)
-  function animDip(opts) {
-    return function (ctx, w, h, u) {
-      var C = animColors(); bg(ctx, w, h);
-      var x0 = w * 0.08, x1 = w * 0.92, y0 = h * 0.15, y1 = h * 0.78;
-      ctx.strokeStyle = C.muted; ctx.lineWidth = 1; ctx.strokeRect(x0, y0, x1 - x0, y1 - y0);
-      var shift = (opts.sign || 0) * 0.12 * u;
-      ctx.strokeStyle = opts.sign > 0 ? C.danger : C.accent; ctx.lineWidth = 2.5; ctx.beginPath();
-      for (var i = 0; i <= 200; i++) {
-        var x = i / 200, d = (x - 0.5 - shift) / 0.03, T = 1 - 0.8 / (1 + d * d);
-        var px = x0 + x * (x1 - x0), py = y0 + (1 - T) * (y1 - y0) * 0.9 + 6;
-        if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
-      }
-      ctx.stroke();
-      var lx = x0 + (opts.dir < 0 ? 1 - u : u) * (x1 - x0);
-      ctx.strokeStyle = C.warn; ctx.setLineDash([4, 4]); ctx.beginPath(); ctx.moveTo(lx, y0); ctx.lineTo(lx, y1); ctx.stroke(); ctx.setLineDash([]);
-      ctx.fillStyle = C.muted; ctx.font = Math.round(h * 0.045) + 'px sans-serif'; ctx.textAlign = 'center';
-      ctx.fillText('wavelength (illustrative)', w / 2, h * 0.85);
-      if (opts.caption) label(ctx, w, h, opts.caption, C.muted);
-      if (opts.stamp) stamp(ctx, w, h, opts.stamp, opts.stampOk ? C.ok : C.danger, u);
-    };
-  }
-
-  // Wafer on hotplate with surface charge and sparks
-  function animWafer(opts) {
-    return function (ctx, w, h, u) {
-      var C = animColors(); bg(ctx, w, h);
-      var x0 = w * 0.2, x1 = w * 0.8, yw = h * 0.5, t = h * 0.06;
-      ctx.fillStyle = 'rgba(200,80,40,' + (0.25 + 0.3 * (opts.heat ? u : 1 - u)) + ')'; ctx.fillRect(w * 0.12, yw + t + 6, w * 0.76, h * 0.12);
-      ctx.fillStyle = 'rgba(170,180,200,0.35)'; ctx.fillRect(x0, yw, x1 - x0, t);
-      ctx.strokeStyle = C.fg; ctx.strokeRect(x0, yw, x1 - x0, t);
-      var n = Math.floor(14 * u);
-      ctx.font = 'bold ' + Math.round(h * 0.05) + 'px sans-serif'; ctx.textAlign = 'center';
-      for (var i = 0; i < n; i++) {
-        var x = x0 + (i + 0.5) * (x1 - x0) / 14;
-        ctx.fillStyle = C.danger; ctx.fillText('+', x, yw - 6);
-        ctx.fillStyle = C.accent; ctx.fillText('-', x, yw + t + h * 0.045);
-      }
-      if (opts.foil) { ctx.strokeStyle = C.ok; ctx.lineWidth = 3; ctx.strokeRect(x0 - 6, yw - 6, x1 - x0 + 12, t + 12); }
-      if (opts.spark && u > 0.6) {
-        ctx.strokeStyle = C.warn; ctx.lineWidth = 2; ctx.beginPath();
-        var sx = w * (0.3 + 0.4 * ((u * 7) % 1)), sy = yw - 4;
-        ctx.moveTo(sx, sy); ctx.lineTo(sx + 10, sy - 18); ctx.lineTo(sx - 4, sy - 28); ctx.lineTo(sx + 12, sy - 50); ctx.stroke();
-      }
-      if (opts.caption) label(ctx, w, h, opts.caption, C.muted);
-      if (opts.stamp) stamp(ctx, w, h, opts.stamp, opts.stampOk ? C.ok : C.danger, u);
-    };
-  }
-
-  // Bias point ball rolling off the cos^2 transfer curve
-  function animBias(opts) {
-    return function (ctx, w, h, u) {
-      var C = animColors(); bg(ctx, w, h);
-      var x0 = w * 0.08, x1 = w * 0.92, y0 = h * 0.15, y1 = h * 0.75;
-      ctx.strokeStyle = C.fg; ctx.lineWidth = 2; ctx.beginPath();
-      for (var i = 0; i <= 200; i++) {
-        var p = i / 200 * 2 * Math.PI, T = Math.cos(p / 2) * Math.cos(p / 2);
-        var px = x0 + i / 200 * (x1 - x0), py = y1 - T * (y1 - y0);
-        if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
-      }
-      ctx.stroke();
-      var ph = Math.PI / 2 + (opts.drift ? 1.2 * (1 - Math.exp(-3 * u)) : 0.05 * Math.sin(u * 30));
-      var bx = x0 + ph / (2 * Math.PI) * (x1 - x0), by = y1 - Math.pow(Math.cos(ph / 2), 2) * (y1 - y0);
-      ctx.fillStyle = opts.drift ? C.danger : C.ok; ctx.beginPath(); ctx.arc(bx, by, 10, 0, Math.PI * 2); ctx.fill();
-      ctx.fillStyle = C.muted; ctx.font = Math.round(h * 0.045) + 'px sans-serif'; ctx.textAlign = 'center';
-      ctx.fillText('bias voltage (normalized)', w / 2, h * 0.84);
-      if (opts.caption) label(ctx, w, h, opts.caption, C.muted);
-      if (opts.stamp) stamp(ctx, w, h, opts.stamp, opts.stampOk ? C.ok : C.danger, u);
-    };
-  }
-
-  // Q meter needle
-  function animQ(opts) {
-    return function (ctx, w, h, u) {
-      var C = animColors(); bg(ctx, w, h);
-      var cx = w / 2, cy = h * 0.72, r = Math.min(w, h) * 0.45;
-      ctx.strokeStyle = C.fg; ctx.lineWidth = 3; ctx.beginPath(); ctx.arc(cx, cy, r, Math.PI, 2 * Math.PI); ctx.stroke();
-      ctx.font = Math.round(h * 0.045) + 'px sans-serif'; ctx.fillStyle = C.muted; ctx.textAlign = 'center';
-      var labels = ['10^2', '10^4', '10^6', '10^8', '10^10', '10^12', '10^14'];
-      for (var i = 0; i < labels.length; i++) {
-        var a = Math.PI + i / (labels.length - 1) * Math.PI;
-        ctx.fillText(labels[i], cx + (r + 18) * Math.cos(a), cy + (r + 18) * Math.sin(a) + 4);
-      }
-      var frac = opts.from + (opts.to - opts.from) * Math.min(1, u * 1.4);
-      var na = Math.PI + frac * Math.PI;
-      arrow(ctx, cx, cy, cx + r * 0.9 * Math.cos(na), cy + r * 0.9 * Math.sin(na), frac > 0.7 ? C.danger : C.ok, 4);
-      if (opts.caption) label(ctx, w, h, opts.caption, C.muted);
-      if (opts.stamp) stamp(ctx, w, h, opts.stamp, opts.stampOk ? C.ok : C.danger, u);
-    };
-  }
-
-  // Wafer with a flat. Mask waveguides are fixed to the lab (vertical lines); the intended
-  // waveguide direction is fixed to the wafer (perpendicular to the flat, per the fictional traveler),
-  // so with the flat at six o'clock (90) the mask and the intended direction agree.
-  // opts.flat: final flat direction in degrees, canvas convention (90 = six o'clock, 0 = three o'clock)
-  function animFlat(opts) {
-    return function (ctx, w, h, u) {
-      var C = animColors(); bg(ctx, w, h);
-      var cx = w / 2, cy = h * 0.46, r = Math.min(w, h) * 0.33;
-      var a0 = (opts.flat != null ? opts.flat : 90) * Math.PI / 180;
-      var a = a0 + (opts.spin ? Math.pow(1 - Math.min(1, u * 1.25), 2) * opts.spin * Math.PI * 2 : 0);
-      var phi = Math.acos(0.88);
-      ctx.save();
-      ctx.beginPath(); ctx.arc(cx, cy, r, a + phi, a - phi + Math.PI * 2); ctx.closePath();
-      ctx.fillStyle = 'rgba(170,180,200,0.28)'; ctx.fill(); ctx.strokeStyle = C.fg; ctx.lineWidth = 2; ctx.stroke();
-      if (opts.mask) {
-        ctx.clip();
-        ctx.strokeStyle = C.accent; ctx.lineWidth = 2; ctx.globalAlpha = opts.maskFade ? Math.min(1, u * 2) : 1;
-        for (var i = -4; i <= 4; i++) { ctx.beginPath(); ctx.moveTo(cx + i * r * 0.18, cy - r); ctx.lineTo(cx + i * r * 0.18, cy + r); ctx.stroke(); }
-        ctx.globalAlpha = 1;
-      }
-      ctx.restore();
-      ctx.fillStyle = C.muted; ctx.font = Math.round(h * 0.042) + 'px sans-serif'; ctx.textAlign = 'center';
-      ctx.fillText('flat', cx + r * 1.08 * Math.cos(a), cy + r * 1.08 * Math.sin(a) + 5);
-      if (opts.intended) {
-        var b = a, L = r * 0.7; // perpendicular to the flat chord
-        ctx.setLineDash([6, 5]);
-        arrow(ctx, cx - L * Math.cos(b), cy - L * Math.sin(b), cx + L * Math.cos(b), cy + L * Math.sin(b), C.ok, 3);
-        ctx.setLineDash([]);
-        ctx.fillStyle = C.ok; ctx.fillText('intended waveguide axis', cx + (L + 10) * Math.cos(b), cy + (L + 10) * Math.sin(b) - 8);
-      }
-      if (opts.caption) label(ctx, w, h, opts.caption, C.muted);
-      if (opts.stamp) stamp(ctx, w, h, opts.stamp, opts.stampOk ? C.ok : C.danger, u);
-    };
-  }
-
-  // Polarization-maintaining fiber end face (stress rods mark the slow axis) launching into an x-cut ridge.
-  // opts.rot0: starting slow-axis angle (0 = horizontal = TE); opts.rotate: turn by 90 degrees during the keyframe
-  function animPM(opts) {
-    return function (ctx, w, h, u) {
-      var C = animColors(); bg(ctx, w, h);
-      var cx = w * 0.28, cy = h * 0.46, r = Math.min(w, h) * 0.22;
-      var rot = (opts.rot0 || 0) + (opts.rotate ? Math.min(1, u * 1.6) * Math.PI / 2 : 0);
-      ctx.strokeStyle = C.fg; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI * 2); ctx.stroke();
-      ctx.fillStyle = C.fg; ctx.fillRect(cx - 6, cy - r - 12, 12, 12);
-      ctx.font = Math.round(h * 0.04) + 'px sans-serif'; ctx.textAlign = 'center'; ctx.fillStyle = C.muted;
-      ctx.fillText('rotation mount mark', cx, cy - r - 18);
-      var dx = Math.cos(rot), dy = -Math.sin(rot);
-      ctx.fillStyle = 'rgba(140,150,170,0.55)';
-      [-1, 1].forEach(function (s) { ctx.beginPath(); ctx.arc(cx + s * 0.55 * r * dx, cy + s * 0.55 * r * dy, 0.17 * r, 0, Math.PI * 2); ctx.fill(); });
-      ctx.fillStyle = C.fg; ctx.beginPath(); ctx.arc(cx, cy, 4, 0, Math.PI * 2); ctx.fill();
-      arrow(ctx, cx, cy, cx + 0.32 * r * dx, cy + 0.32 * r * dy, C.accent, 3);
-      arrow(ctx, cx, cy, cx - 0.32 * r * dx, cy - 0.32 * r * dy, C.accent, 3);
-      ctx.fillStyle = C.muted; ctx.fillText('slow axis (stress rods)', cx, cy + r + 22);
-      // x-cut ridge cross-section
-      var px = w * 0.72, py = h * 0.52, fw = w * 0.36;
-      ctx.fillStyle = 'rgba(170,180,200,0.3)'; ctx.fillRect(px - fw / 2, py, fw, h * 0.05);
-      ctx.fillRect(px - w * 0.04, py - h * 0.06, w * 0.08, h * 0.06);
-      ctx.strokeStyle = C.fg; ctx.lineWidth = 1.5; ctx.strokeRect(px - fw / 2, py, fw, h * 0.05);
-      var te = Math.abs(Math.cos(rot)) > 0.7;
-      var ex = te ? 1 : 0, ey = te ? 0 : -1, Lp = h * 0.09;
-      arrow(ctx, px, py - h * 0.03, px + Lp * ex, py - h * 0.03 + Lp * ey, te ? C.ok : C.danger, 3);
-      arrow(ctx, px, py - h * 0.03, px - Lp * ex, py - h * 0.03 - Lp * ey, te ? C.ok : C.danger, 3);
-      ctx.fillStyle = te ? C.ok : C.danger; ctx.fillText(te ? 'TE: along z, uses r33' : 'TM: along x, uses r13', px, py + h * 0.14);
-      ctx.fillStyle = C.muted; ctx.fillText('x-cut ridge, light along y', px, py + h * 0.2);
-      if (opts.caption) label(ctx, w, h, opts.caption, C.muted);
-      if (opts.stamp) stamp(ctx, w, h, opts.stamp, opts.stampOk ? C.ok : C.danger, u);
-    };
-  }
-
-  // Traveling-wave modulator, top view: optical pulse goes left to right; the RF wave goes with it or against it
-  function animTW(opts) {
-    return function (ctx, w, h, u) {
-      var C = animColors(); bg(ctx, w, h);
-      var x0 = w * 0.08, x1 = w * 0.92, y0 = h * 0.22, y1 = h * 0.62;
-      ctx.fillStyle = 'rgba(170,180,200,0.22)'; ctx.fillRect(x0, y0, x1 - x0, y1 - y0);
-      ctx.strokeStyle = C.fg; ctx.lineWidth = 2; ctx.strokeRect(x0, y0, x1 - x0, y1 - y0);
-      var ey = h * 0.36, wy = h * 0.5, ex0 = x0 + w * 0.08, ex1 = x1 - w * 0.08, dir = opts.counter ? -1 : 1;
-      ctx.fillStyle = 'rgba(200,170,60,0.55)'; ctx.fillRect(ex0, ey - h * 0.03, ex1 - ex0, h * 0.06);
-      var inX = dir > 0 ? ex0 : ex1, tX = dir > 0 ? ex1 : ex0;
-      ctx.fillStyle = C.fg; ctx.font = Math.round(h * 0.04) + 'px sans-serif'; ctx.textAlign = 'center';
-      ctx.fillText('RF in', inX, y0 - 8); ctx.fillText('on-chip 50 ohm termination', tX, y0 - 8);
-      ctx.strokeStyle = C.fg; ctx.strokeRect(tX - 10, ey - 12, 20, 24);
-      ctx.strokeStyle = C.warn; ctx.lineWidth = 2; ctx.beginPath();
-      for (var i = 0; i <= 120; i++) {
-        var x = ex0 + (ex1 - ex0) * i / 120, ph = (x - ex0) / (ex1 - ex0) * Math.PI * 6 - dir * u * Math.PI * 12;
-        var yy = ey + h * 0.022 * Math.sin(ph); if (i === 0) ctx.moveTo(x, yy); else ctx.lineTo(x, yy);
-      }
-      ctx.stroke();
-      arrow(ctx, (ex0 + ex1) / 2 - dir * w * 0.06, ey - h * 0.07, (ex0 + ex1) / 2 + dir * w * 0.06, ey - h * 0.07, C.warn, 2);
-      ctx.strokeStyle = C.accent; ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(x0, wy); ctx.lineTo(x1, wy); ctx.stroke();
-      var px = x0 + ((u * 1.2) % 1) * (x1 - x0);
-      ctx.fillStyle = C.accent; ctx.beginPath(); ctx.arc(px, wy, 8, 0, Math.PI * 2); ctx.fill();
-      ctx.fillStyle = C.fg; ctx.fillText('light in', x0 + w * 0.04, y1 + 18);
-      ctx.fillStyle = opts.counter ? C.danger : C.ok;
-      ctx.fillText(opts.counter ? 'RF and light travel in opposite directions' : 'RF and light travel together', w / 2, y1 + 40);
-      if (opts.caption) label(ctx, w, h, opts.caption, C.muted);
-      if (opts.stamp) stamp(ctx, w, h, opts.stamp, opts.stampOk ? C.ok : C.danger, u);
-    };
-  }
-
-  // Chip on a thermoelectric cooler with floating pads; cable plugged in while charged
-  function animTEC(opts) {
-    return function (ctx, w, h, u) {
-      var C = animColors(); bg(ctx, w, h);
-      var bx = w * 0.12, bw = w * 0.4, by = h * 0.58, bh = h * 0.14;
-      var hot = opts.heat ? u : (opts.hot ? 1 : 0);
-      ctx.fillStyle = 'rgba(200,80,40,' + (0.15 + 0.45 * hot) + ')'; ctx.fillRect(bx, by, bw, bh);
-      ctx.strokeStyle = C.fg; ctx.lineWidth = 1.5; ctx.strokeRect(bx, by, bw, bh);
-      ctx.fillStyle = C.muted; ctx.font = Math.round(h * 0.038) + 'px sans-serif'; ctx.textAlign = 'center';
-      ctx.fillText('thermoelectric cooler', bx + bw / 2, by + bh + 18);
-      var cx0 = bx + bw * 0.15, cw = bw * 0.7, cy = by - h * 0.07;
-      ctx.fillStyle = 'rgba(170,180,200,0.4)'; ctx.fillRect(cx0, cy, cw, h * 0.07); ctx.strokeStyle = C.fg; ctx.strokeRect(cx0, cy, cw, h * 0.07);
-      ctx.fillStyle = 'rgba(200,170,60,0.8)'; ctx.fillRect(cx0 + cw * 0.75, cy - 5, cw * 0.2, 5);
-      var n = Math.floor(10 * (opts.heat ? u : (opts.hot ? 1 : 0)));
-      ctx.font = 'bold ' + Math.round(h * 0.045) + 'px sans-serif';
-      for (var i = 0; i < n; i++) { ctx.fillStyle = C.danger; ctx.fillText('-', cx0 + (i + 0.5) * cw * 0.7 / 10, cy - 6); }
-      ctx.fillStyle = C.fg; ctx.font = Math.round(h * 0.05) + 'px sans-serif';
-      ctx.fillText(opts.heat ? (Math.round(25 + 45 * u) + ' C') : (opts.hot ? '70 C' : '25 C'), bx + bw / 2, h * 0.16);
-      var ax = w * 0.74, ay = h * 0.34, aw = w * 0.16, ah = h * 0.16;
-      ctx.strokeStyle = opts.dead ? C.danger : C.fg; ctx.lineWidth = 2; ctx.strokeRect(ax, ay, aw, ah);
-      ctx.fillStyle = C.fg; ctx.font = Math.round(h * 0.038) + 'px sans-serif'; ctx.fillText('driver amplifier', ax + aw / 2, ay - 8);
-      if (opts.dead) {
-        ctx.strokeStyle = C.danger; ctx.beginPath(); ctx.moveTo(ax, ay); ctx.lineTo(ax + aw, ay + ah); ctx.moveTo(ax + aw, ay); ctx.lineTo(ax, ay + ah); ctx.stroke();
-        ctx.strokeStyle = C.muted; ctx.lineWidth = 2;
-        for (var k = 0; k < 3; k++) { ctx.beginPath(); var sx = ax + aw * (0.3 + 0.2 * k), sy = ay - 14 - 20 * ((u * 2 + k * 0.3) % 1); ctx.moveTo(sx, sy); ctx.quadraticCurveTo(sx + 8, sy - 10, sx, sy - 20); ctx.stroke(); }
-      }
-      var padX = cx0 + cw * 0.85, padY = cy - 5;
-      var plugU = opts.plug ? Math.min(1, u * 1.5) : (opts.plugged ? 1 : 0);
-      var px = ax - (ax - (padX + 10)) * plugU, py = ay + ah / 2 - (ay + ah / 2 - (padY - 30)) * plugU;
-      ctx.strokeStyle = C.fg; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(ax, ay + ah / 2); ctx.quadraticCurveTo((ax + px) / 2, ay + ah, px, py); ctx.stroke();
-      ctx.fillStyle = C.fg; ctx.fillRect(px - 6, py - 6, 12, 12);
-      if (opts.spark && plugU > 0.95 && u > 0.6) {
-        ctx.strokeStyle = C.warn; ctx.lineWidth = 3; ctx.beginPath();
-        ctx.moveTo(px, py + 6); ctx.lineTo(px - 10, py + 12); ctx.lineTo(px + 4, py + 18); ctx.lineTo(padX, padY); ctx.stroke();
-      }
-      if (opts.caption) label(ctx, w, h, opts.caption, C.muted);
-      if (opts.stamp) stamp(ctx, w, h, opts.stamp, opts.stampOk ? C.ok : C.danger, u);
-    };
-  }
-
-  // A die passed from hand to hand; each hand turns it. opts.labels: list of who held it
-  function animHands(opts) {
-    return function (ctx, w, h, u) {
-      var C = animColors(); bg(ctx, w, h);
-      var L = opts.labels || ['tool'], n = L.length, k = Math.min(n - 1, Math.floor(u * n));
-      var cx = w / 2, cy = h * 0.44, s = Math.min(w, h) * 0.22;
-      var ang = (opts.turns || [])[k] != null ? opts.turns[k] * Math.PI / 180 : k * Math.PI / 2;
-      ctx.save(); ctx.translate(cx, cy); ctx.rotate(ang);
-      ctx.fillStyle = 'rgba(160,170,190,0.3)'; ctx.fillRect(-s / 2, -s / 2, s, s);
-      ctx.strokeStyle = C.fg; ctx.lineWidth = 2; ctx.strokeRect(-s / 2, -s / 2, s, s);
-      ctx.fillStyle = C.danger; ctx.beginPath(); ctx.arc(-s / 2 + 10, -s / 2 + 10, 5, 0, Math.PI * 2); ctx.fill();
-      ctx.restore();
-      ctx.fillStyle = C.fg; ctx.font = 'bold ' + Math.round(h * 0.055) + 'px sans-serif'; ctx.textAlign = 'center';
-      ctx.fillText(L[k], cx, h * 0.8);
-      ctx.fillStyle = C.muted; ctx.font = Math.round(h * 0.035) + 'px sans-serif';
-      ctx.fillText('die mark (red dot) shows where the chip has been turned', cx, h * 0.87);
-      if (opts.caption) label(ctx, w, h, opts.caption, C.muted);
-      if (opts.stamp) stamp(ctx, w, h, opts.stamp, opts.stampOk ? C.ok : C.danger, u);
+      var F = window.LMS_DRAW && window.LMS_DRAW.fe;
+      if (F && F.scenes && F.scenes[name]) F.scenes[name](ctx, w, h, u, k || 0);
     };
   }
 
@@ -451,13 +119,6 @@
 
   // Static widget lines: every line a widget may speak, registered in course.speech.
   // Keep each identical to the literal passed to the widget's speech call.
-  var WSAY = {
-    xcut: 'Well done. On x-cut, T E turns with the waveguide, and T M does not.',
-    pr: 'You scanned both ways. Notice that one direction looks narrower than the true resonance. Scan both ways.',
-    bias: 'Thank you. Holding a D C voltage is not the same as holding a bias point. Watch your charge.',
-    pyro: 'Thank you. A hotplate step of tens of kelvin can give kilovolts per millimeter before screening. Watch your charge.',
-    euler: 'Excellent. A sign error is invisible at zero degrees and loud in between. Know your axes.'
-  };
 
   function takeaways(items, withCats) {
     var extra = withCats ? [
@@ -517,6 +178,7 @@
     weis: { cite: 'Weis and Gaylord, Applied Physics A, 1985 (lithium niobate: summary of physical properties and crystal structure)', doi: '10.1007/BF00614817' },
     ieee176: { cite: 'IEEE Standard on Piezoelectricity, ANSI/IEEE Std 176-1987', doi: '10.1109/IEEESTD.1988.79638' },
     wangLT: { cite: 'Wang et al., Nature, 2024 (lithium tantalate photonic integrated circuits for volume manufacturing)', doi: '10.1038/s41586-024-07369-1' },
+    wangPJ2020: { cite: 'Wang, Chen, Dai and Liu, IEEE Photonics Journal, 2020 (polarization coupling of x-cut thin film lithium niobate based waveguides)', doi: '10.1109/JPHOT.2020.2995317' },
     liu2024: { cite: 'Liu et al., Optics Express, 2024 (sharp bend and large free spectral range ring resonator on thin-film lithium niobate)', doi: '10.1364/OE.515173' },
     liu2023: { cite: 'Liu et al., Light: Advanced Manufacturing, 2023 (ultra-compact lithium niobate photonic chip for wavelength-division-multiplexing transmitters)', doi: '10.37188/lam.2023.013' },
     xie2026: { cite: 'Xie et al., Optics Express, 2026 (reflective-path-enabled folded arrayed waveguide grating on thin-film lithium niobate)', doi: '10.1364/OE.588499' },
@@ -658,17 +320,17 @@
     {
       type: 'video', title: 'Cold open: Which edge is z?', duration: 26,
       narration: [
-        "Let's watch a typical Monday morning.",
+        "Let's watch a typical Monday morning, and judge Gary's conduct.",
         "Gary picks up a freshly diced chip. It is square. It has no flat. It has no mark.",
         "Gary rotates it a few times, decides it is fine, and loads it.",
         "Three months of optimization later, Gary learns the model was set up in a different crystal frame than the device.",
         "Is this okay? No. This is not okay. " + M
       ],
       keyframes: [
-        { t: 0, shot: 'Medium shot, cleanroom bench under yellow lithography light. Camera at bench height, 35 mm. Gary in a bunny suit holds a square 5 mm chip in tweezers above a gel-pack. The chip has no flat, no notch, no marking. Slow push-in.', caption: 'A square chip. No flat. No mark.', cast: ['Gary'], draw: animChip({ caption: 'square chip, axes unknown', qmark: true }) },
-        { t: 7, shot: 'Extreme close-up of the chip in tweezers, macro lens. Overlay of crystal axis arrows (y and z) drawn on the chip surface; each time Gary blinks (cut to his eyes), the arrows jump by 90 degrees.', caption: 'The axes move every time nobody is looking.', cast: ['Gary'], draw: animChip({ axisSwap: true, caption: 'which edge is z?' }) },
-        { t: 14, shot: 'Over-the-shoulder at Gary\'s desk, monitor shows a finite element model tree with a single dropdown labeled Coordinate system, set to the wrong one. A calendar on the wall flips three months. Gary\'s coffee mugs multiply.', caption: 'Three months of optimization, in the wrong frame.', cast: ['Gary'], draw: animChip({ spin: 0.5, a: 'y?', b: 'z?', caption: 'three months later' }) },
-        { t: 21, shot: 'Freeze frame on Gary\'s face lit by the monitor. Red stamp graphic slams in: NOT OKAY. Hold 2 seconds.', caption: 'Is this okay?', cast: ['Gary'], draw: animChip({ qmark: true, stamp: 'NOT OKAY', caption: 'is this okay?' }) }
+        { t: 0, shot: 'Medium shot, cleanroom bench under yellow lithography light. Camera at bench height, 35 mm. Gary in a bunny suit holds a square 5 mm chip in tweezers above a gel-pack. The chip has no flat, no notch, no marking. Slow push-in.', caption: 'A square chip. No flat. No mark.', cast: ['Gary'], draw: feDraw('whichz', 0) },
+        { t: 7, shot: 'Extreme close-up of the chip in tweezers, macro lens. Overlay of crystal axis arrows (y and z) drawn on the chip surface; each time Gary blinks (cut to his eyes), the arrows jump by 90 degrees.', caption: 'The axes move every time nobody is looking.', cast: ['Gary'], draw: feDraw('whichz', 1) },
+        { t: 14, shot: 'Over-the-shoulder at Gary\'s desk, monitor shows a finite element model tree with a single dropdown labeled Coordinate system, set to the wrong one. A calendar on the wall flips three months. Gary\'s coffee mugs multiply.', caption: 'Three months of optimization, in the wrong frame.', cast: ['Gary'], draw: feDraw('whichz', 2) },
+        { t: 21, shot: 'Freeze frame on Gary\'s face lit by the monitor. Red stamp graphic slams in: NOT OKAY. Hold 2 seconds.', caption: 'Is this okay?', cast: ['Gary'], draw: feDraw('whichz', 3) }
       ]
     },
     {
@@ -696,9 +358,9 @@
       prompt: 'Open each hazard to continue.',
       tabs: [
         { label: 'Rotate the crystal or the room?', body: '<p>Rotating the crystal by an angle is the same as rotating the coordinate system by the opposite angle. Solvers differ in which one they mean.</p><p>Some finite element packages define Euler angles (z-x-z) as a rotation of the coordinate system. A thesis may define its rotated tensor as a rotation of the crystal. Same magnitude, opposite sign.</p><p>Component transformation is the inverse (the transpose, for a rotation) of the basis-vector transformation.</p>', narration: ["Rotating the crystal by an angle is the same as rotating the coordinates by the opposite angle.", "Solvers and theses do not always say which one they mean. Some finite element tools define Euler angles as a rotation of the coordinate system.", "If you copy a rotated tensor from a thesis that rotated the crystal, you can be off by the sign of the angle. Same magnitude. Opposite sign. Different device."] },
-        { label: 'Plus 45 is not minus 45', body: '<p>Lithium niobate is trigonal, point group 3m. Its only mirror planes contain the z axis and are perpendicular to the x axis family.</p><p>On x-cut, rotating a waveguide by plus 45 degrees or minus 45 degrees from y is related by a mirror that is not a symmetry of the crystal. Photoelastic, piezoelectric, and electro-optic couplings can differ.</p><p>Logged incident: Euler angles (minus pi over 4, pi over 2, pi over 2) used where (pi over 4, pi over 2, pi over 2) was intended.</p>', narration: ["Lithium niobate is trigonal, point group three m. Its mirror planes contain the z axis and are perpendicular to the x axis.", "So on x-cut, plus forty five degrees and minus forty five degrees from the y axis are not related by a symmetry of the crystal.", "Off-diagonal tensor terms with odd signs, such as the fourteen and forty one components, make the two directions behave differently.", "One logged incident: an Euler angle of minus pi over four was used where plus pi over four was intended. The model solved. Nothing errored. That is the problem."] },
+        { label: 'Plus 45 is not minus 45', body: '<p>Lithium niobate is trigonal, point group 3m. Its only mirror planes contain the z axis and are perpendicular to the x axis family.</p><p>On x-cut, rotating a waveguide by plus 45 degrees or minus 45 degrees from y is related by a mirror that is not a symmetry of the crystal. Photoelastic, piezoelectric, and electro-optic couplings can differ (for example the elastic $c_{14}$ and photoelastic $p_{14}$, $p_{41}$ terms, which flip sign under that mirror).</p><p>Logged incident: Euler angles $(-\\pi/4, \\pi/2, \\pi/2)$ used where $(\\pi/4, \\pi/2, \\pi/2)$ was intended.</p>', narration: ["Lithium niobate is trigonal, point group three m. Its mirror planes contain the z axis and are perpendicular to the x axis.", "So on x-cut, plus forty five degrees and minus forty five degrees from the y axis are not related by a symmetry of the crystal.", "Tensor terms that flip sign under that mirror, such as the elastic and photoelastic one four components, make the two directions behave differently.", "One logged incident: an Euler angle of minus pi over four was used where plus pi over four was intended. The model solved. Nothing errored. That is the problem."] },
         { label: 'Tests at 0 and 90 degrees', body: '<p>At 0 and 90 degrees, many sign and transpose errors cancel. The rotated tensor looks correct. The bug waits for 45 degrees.</p><p>Always validate a rotation at a non-special angle, against an independent calculation.</p><p>Also check that the angle label on a plot is the physical angle. In one logged case, a solver Euler angle of 135 degrees was the physical 45 degree device, and the plot said 45.</p>', narration: ["At zero and ninety degrees, many sign and transpose errors cancel, so your rotation code passes every test you wrote.", "The bug waits for forty five degrees.", "Always validate rotation code at a non-special angle against an independent calculation.", "Also check that the angle in your plot title is the physical angle. In one logged case, a solver angle of one hundred thirty five degrees corresponded to the physical forty five degree device."] },
-        { label: 'Notation and constants', body: '<p>Voigt notation: the elastic stiffness carries no factor of 2, but piezoelectric strain coefficients on shear components do in the common contracted convention. Mixing conventions corrupts rotated tensors.</p><p>Solver scripting may expect a symmetric 6 by 6 matrix as an upper triangle, column by column, not row-major.</p><p>Clamped (constant strain, superscript S) and unclamped (constant stress, superscript T) constants differ. Low-frequency measurements see unclamped values; RF sees clamped. See Weis and Gaylord, 1985, for both tables.</p><p>Tensor signs depend on the axis convention (for example IEEE Std 176-1987 versus the 1949 IRE rules), and published lithium niobate tables do not all use the same frame. Check that two sources use the same one before mixing coefficients; mixing frames flips signs.</p>', narration: ["Tensor notation has its own hazards.", "In Voigt notation, the elastic stiffness has no factor of two, but piezoelectric strain coefficients on shear components usually do. Mixing them corrupts rotated tensors.", "Some solvers expect a symmetric six by six matrix entered as an upper triangle, column by column. Pasting a row-major list gives a valid-looking but wrong stiffness.", "Clamped and unclamped constants differ. Low frequency measurements see unclamped values. R F sees clamped values. Weis and Gaylord tabulate both.", "And never combine coefficients from two papers without checking that they use the same axis sign convention. Know your axes."] }
+        { label: 'Notation and constants', body: '<p>Voigt notation: the elastic stiffness carries no factor of 2, but piezoelectric strain coefficients on shear components do in the common contracted convention. Mixing conventions corrupts rotated tensors.</p><p>Solver scripting may expect a symmetric 6 by 6 matrix as an upper triangle, column by column, not row-major.</p><p>Clamped (constant strain, superscript $S$, as in $r^S$) and unclamped (constant stress, superscript $T$, as in $r^T$) constants differ. Low-frequency measurements see unclamped values; RF sees clamped. See Weis and Gaylord, 1985, for both tables.</p><p>Tensor signs depend on the axis convention (for example IEEE Std 176-1987 versus the 1949 IRE rules), and published lithium niobate tables do not all use the same frame. Check that two sources use the same one before mixing coefficients; mixing frames flips signs.</p>', narration: ["Tensor notation has its own hazards.", "In Voigt notation, the elastic stiffness has no factor of two, but piezoelectric strain coefficients on shear components usually do. Mixing them corrupts rotated tensors.", "Some solvers expect a symmetric six by six matrix entered as an upper triangle, column by column. Pasting a row-major list gives a valid-looking but wrong stiffness.", "Clamped and unclamped constants differ. Low frequency measurements see unclamped values. R F sees clamped values. Weis and Gaylord tabulate both.", "And never combine coefficients from two papers without checking that they use the same axis sign convention. Know your axes."] }
       ]
     },
     {
@@ -715,6 +377,7 @@
         {"from": "Gary", "text": "ok. queuing plus 45 and 30 tonight", "side": "left"}
       ],
       narration: [
+        "Read these texts, and judge whether Gary's plan is proper.",
         "Gary planned to mirror one simulated angle instead of running the other one, because the geometry is symmetric. Is this okay?",
         "No. Dana did the right thing. Dana spoke up, named the missing symmetry, and asked for a test at a non-special angle.",
         "Know your axes. Trust no symmetry plane."
@@ -733,6 +396,7 @@
         {"from": "Gary", "text": "A spot check is a day. If it changes the optimum, a full re-optimization is about three months.", "side": "left", "to": ["Manager", "Dana Okafor"], "date": "2026-11-10 10:15", "subject": "RE: RE: RE: Coupler optimization results, final (v7)"}
       ],
       narration: [
+        "Read this email thread, and judge whether Gary's reply is proper.",
         "Gary's model inherited a material frame from an old template, and every check he relies on would pass either way. Is this okay?",
         "No. A wrong frame is not an error. It is a different, valid device that you did not intend to make.",
         "Make the material frame a named, reviewed parameter, and print it on every results slide.",
@@ -743,23 +407,23 @@
       type: 'chat', title: 'Scenario 3: The animation', app: 'thread',
       meta: { header: '#figures', participants: ['Gary', 'Dana', 'Manager'] },
       messages: [
-        {"from": "Gary", "text": "poling animation for the talk is done. domains flip up and down through the film, same as the figure in the review paper", "side": "left"},
-        {"from": "Dana", "text": "our devices are x-cut. z is in the plane. the domains should flip left and right, between the electrodes", "side": "right"},
-        {"from": "Gary", "text": "the review paper figure had z vertical", "side": "left"},
-        {"from": "Dana", "text": "that figure was labeled x-cut. vertical was the film normal in their sketch, not z", "side": "right"},
-        {"from": "Manager", "text": "it's a schematic for a twenty minute talk. I'd keep it and say it is illustrative", "side": "left"},
-        {"from": "Dana", "text": "illustrative of z-cut, yes. people copy talk figures into their own decks", "side": "right"}
+        {"from": "Gary", "text": "poling animation for the talk is done. I started from the review paper figure, but it is z-cut: z vertical, domains flip up and down through the film", "side": "left"},
+        {"from": "Gary", "text": "ours are x-cut, so I redrew it. z in the plane, the polarization flips left and right, between the electrodes. cut labeled in the corner", "side": "left"},
+        {"from": "Manager", "text": "the review figure is prettier. it's a schematic for a twenty minute talk, could we just use theirs and say it is illustrative", "side": "left"},
+        {"from": "Gary", "text": "illustrative of z-cut. people copy talk figures into their own decks, so I'd rather show the cut we actually have", "side": "left"},
+        {"from": "Dana", "text": "checked it against our layout. field and polarization along z, in the plane. good to go", "side": "right"}
       ],
       narration: [
-        "Even figures and animations have a cut. Gary built a z-cut picture for an x-cut device. Is this okay?",
-        "No. When the cut is a single dropdown or a single assumption, it gets copied. Label the cut on every figure.",
+        "Read this thread, and judge whether Gary's response is proper.",
+        "Gary made a poling animation for a talk, and the manager would rather reuse a prettier figure. Is this okay?",
+        "Yes. Gary drew the cut he actually has, labeled it, and kept it when the shortcut was offered. Even figures and animations have a cut.",
         "Know your axes."
       ]
     },
     {
       type: 'widget', title: 'Interactive: Spot the sign', widget: 'eulerSign', params: {},
-      instructions: 'Rotate a vector with "rotate the crystal" and "rotate the coordinates" conventions. Compare the two at 0, 90, and a non-special angle.',
-      narration: ["In this activity, you will compare two rotation conventions. Use the angle slider and the convention buttons. Notice where they agree, and where they do not."]
+      instructions: 'Rotate the crystal on an x-cut die. The left panel rotates the crystal as intended; the right panel uses the same matrix as a coordinate rotation by mistake. Check 0 or 90 degrees, then an angle in between, and compare the effective electro-optic coefficient of the two.',
+      narration: ["In this activity, you will rotate a lithium niobate crystal on an x-cut die, and compute its electro-optic response two ways: by rotating the crystal, and by using the same matrix as a coordinate rotation by mistake.", "Move the angle slider. Notice where the two agree, and where they do not."]
     },
     {
       type: 'check',
@@ -812,16 +476,17 @@
     {
       type: 'video', title: 'Cold open: The gentle bend', duration: 24,
       narration: [
+        "Watch Gary's plan for his ring, and judge whether it is okay.",
         "Gary's x-cut ring has extra loss and a polarization problem.",
         "Gary has a plan. Make the bend bigger and gentler. Everyone knows gentle bends are safer.",
         "The new ring is enormous. The light goes in as T E and comes out mostly as T M.",
         "Is this okay? No. On x-cut, the crystal changes what the mode sees as the waveguide turns. " + M
       ],
       keyframes: [
-        { t: 0, shot: 'Top-down orthographic camera over an x-cut chip on a probe station chuck. A small ring resonator glows faintly. A light pulse (blue particle trail) travels around the ring. Crystal axis gizmo in the corner: y to the right, z up.', caption: 'A ring on x-cut. Light goes around.', cast: [], draw: animRing({ caption: 'x-cut ring, TE launched' }) },
-        { t: 6, shot: 'Medium shot of Gary at the layout workstation, dragging a ring radius handle outward with obvious satisfaction. The ring on the monitor grows to fill the screen. Sticky note on the monitor: GENTLE = SAFE.', caption: 'Make it bigger. Bigger is gentler.', cast: ['Gary'], draw: animRing({ big: true, caption: 'bigger radius' }) },
-        { t: 12, shot: 'Top-down again on the big ring. The pulse changes color from blue to red at a fixed azimuth (about one quarter of the way around), marked by a striped toll-booth barrier labeled POLARIZATION CHECKPOINT.', caption: 'At one angle, TE meets TM.', cast: [], draw: animRing({ big: true, convert: true, caption: 'crossing angle' }) },
-        { t: 19, shot: 'Freeze on the red pulse exiting the bus waveguide. Stamp graphic: NOT OKAY.', caption: 'Is this okay?', cast: [], draw: animRing({ big: true, convert: true, stamp: 'NOT OKAY', caption: 'is this okay?' }) }
+        { t: 0, shot: 'Top-down orthographic camera over an x-cut chip on a probe station chuck. A small ring resonator glows faintly. A light pulse (blue particle trail) travels around the ring. Crystal axis gizmo in the corner: y to the right, z up.', caption: 'A ring on x-cut. Light goes around.', cast: [], draw: feDraw('gentle', 0) },
+        { t: 6, shot: 'Medium shot of Gary at the layout workstation, dragging a ring radius handle outward with obvious satisfaction. The ring on the monitor grows to fill the screen. Sticky note on the monitor: GENTLE = SAFE.', caption: 'Make it bigger. Bigger is gentler.', cast: ['Gary'], draw: feDraw('gentle', 1) },
+        { t: 12, shot: 'Top-down again on the big ring. The pulse changes color from blue to red at a fixed azimuth (about one quarter of the way around), marked by a striped toll-booth barrier labeled POLARIZATION CHECKPOINT.', caption: 'At one angle, TE meets TM.', cast: [], draw: feDraw('gentle', 2) },
+        { t: 19, shot: 'Freeze on the red pulse exiting the bus waveguide. Stamp graphic: NOT OKAY.', caption: 'Is this okay?', cast: [], draw: feDraw('gentle', 3) }
       ]
     },
     {
@@ -829,8 +494,8 @@
       bullets: [
         'x-cut: TM is polarized along x and sees the ordinary index at every in-plane angle',
         'TE is polarized in-plane; its bulk index moves between the extraordinary and ordinary values as the guide turns',
-        'Index ellipse: 1/n_TE^2 = cos^2(theta)/n_e^2 + sin^2(theta)/n_o^2, theta measured from the crystal y axis',
-        'At 1550 nm: n_o about 2.211, n_e about 2.138 (Zelmon et al., 1997)'
+        'Index ellipse: $\\dfrac{1}{n_{\\mathrm{TE}}^2} = \\dfrac{\\cos^2\\theta}{n_e^2} + \\dfrac{\\sin^2\\theta}{n_o^2}$, $\\theta$ measured from the crystal y axis',
+        'At 1550 nm: $n_o \\approx 2.211$, $n_e \\approx 2.138$ (Zelmon et al., 1997)'
       ],
       callout: 'Waveguide geometry lowers TE and TM effective indices by different amounts, which can create a crossing.',
       narration: [
@@ -845,17 +510,20 @@
     },
     {
       type: 'widget', title: 'Interactive: Rotate the x-cut die', widget: 'xcutIndex', params: {},
-      instructions: 'Drag the propagation angle slider across the full range. Then raise the illustrative waveguide offset and find where TE and TM cross.',
-      narration: ["In this activity, you will rotate a waveguide on an x-cut die and watch the bulk index seen by each polarization. Then add an illustrative waveguide offset and find the crossing."]
+      instructions: 'Drag the propagation angle slider across a wide range and watch the effective indices of the two lowest modes, computed with a full-vector anisotropic mode solver for a real rib profile. The curve color shows how TE-like each mode is. Then find the angle where the two curves come closest; zoom in around the cursor if it helps, and watch the field maps trade polarization.',
+      narration: [
+        "In this activity, you will rotate a rib waveguide on an x-cut die. The curves are not a sketch. They come from a full vector mode solver with the complete rotated permittivity tensor, for an eight hundred nanometer film with a four hundred nanometer etch and slanted sidewalls.",
+        "The color of each curve shows how T E like that mode is. Sweep the angle, then find where the two curves come closest. There, the modes stop being T E or T M, and the field maps trade places."
+      ]
     },
     {
       type: 'reveal', title: 'What the literature reports',
       prompt: 'Open each finding to continue.',
       tabs: [
-        { label: 'A crossing at about 25 degrees', body: '<p>Wang et al. (Nature, 2024) report that in x-cut lithium niobate the fundamental TE and TM modes cross at a propagation angle of about 25 degrees for the geometry they studied, so a bend that sweeps all angles passes a hybridization point.</p><p>Lithium tantalate of the same dimensions shows no crossing; its birefringence is much smaller.</p>', narration: ["Wang and colleagues, in Nature in twenty twenty four, report that in x-cut lithium niobate, the fundamental T E and T M modes cross at a propagation angle of about twenty five degrees for the geometry they studied.", "Lithium tantalate with the same dimensions showed no crossing, because its birefringence is much smaller.", "The angle depends on geometry. The existence of a crossing is the point."] },
-        { label: 'Gentler can be worse', body: '<p>Liu et al. (Optics Express, 2024), citing earlier work, note that on x-cut thin-film lithium niobate, bends hybridize modes and larger bend radii can increase mode conversion and loss.</p><p>One way to picture it (a plausible picture, not a result of those papers): a slow passage through an anticrossing is adiabatic, so the light follows the hybrid branch and leaves in the other polarization. A fast passage can jump across.</p>', narration: ["Liu and colleagues, in Optics Express in twenty twenty four, citing earlier work, note that on x-cut thin film lithium niobate, larger bend radii can increase mode conversion and loss.", "One way to picture it: a slow passage through an anticrossing is adiabatic. The light follows the hybrid branch and leaves in the other polarization. A fast passage can jump across instead.", "So gentle is not automatically safe. Respect the boundary, but also respect the crossing."] },
-        { label: 'Sidewalls are involved', body: '<p>Liu et al. (Light: Advanced Manufacturing, 2023) attribute hybridization in sharp bends and adiabatic tapers to lithium niobate anisotropy together with angled sidewalls.</p><p>Etched lithium niobate ridges have slanted sidewalls. A slanted sidewall breaks the up-down symmetry that would otherwise keep TE and TM apart.</p>', narration: ["Liu and colleagues, in twenty twenty three, attribute hybridization in sharp bends and tapers to anisotropy together with angled sidewalls.", "Etched lithium niobate ridges are not vertical. The slanted sidewall breaks the symmetry that would otherwise keep T E and T M from coupling.", "Trust no symmetry plane, especially one your etch did not give you."] },
-        { label: 'Arrays of angles', body: '<p>Arrayed waveguide gratings route arms at different angles. On x-cut, each angle sees a different index, which adds phase errors. Xie et al. (Optics Express, 2026) identify this in-plane anisotropy as an obstacle for narrow-spacing arrayed waveguide gratings on the platform.</p>', narration: ["Any device with many arms at different angles inherits this problem.", "Xie and colleagues, in twenty twenty six, identify in-plane anisotropy as a source of phase errors in arrayed waveguide gratings on x-cut thin film lithium niobate.", "Every arm has an angle. Every angle has an index. Know your axes."] }
+        { label: 'A crossing at about 25 degrees', body: '<p>Wang et al. (Nature, 2024) report that in x-cut lithium niobate the fundamental TE and TM modes cross at a propagation angle of about 25 degrees for the geometry they studied, so a bend that sweeps all angles passes a hybridization point.</p><p>Lithium tantalate of the same dimensions shows no crossing; its birefringence is much smaller.</p><p>In their simulation (figure), the angle is measured from the crystal y axis; the arrows mark the two lithium niobate crossings.</p>', narration: ["Wang and colleagues, in Nature in twenty twenty four, report that in x-cut lithium niobate, the fundamental T E and T M modes cross at a propagation angle of about twenty five degrees for the geometry they studied.", "Lithium tantalate with the same dimensions showed no crossing, because its birefringence is much smaller.", "The angle depends on geometry. The existence of a crossing is the point."], media: { src: 'media/lit/fe_wang2024_fig2g.png', alt: 'Simulated effective index of the fundamental TE and TM modes versus angle from the crystal y axis for x-cut lithium niobate (red) and lithium tantalate (blue); arrows mark the lithium niobate crossings', caption: 'Wang et al., Nature 2024, Fig. 2g.', href: 'https://doi.org/10.1038/s41586-024-07369-1' } },
+        { label: 'Gentler can be worse', body: '<p>Liu et al. (Optics Express, 2024), citing earlier work, note that on x-cut thin-film lithium niobate, bends hybridize modes and larger bend radii can increase mode conversion and loss.</p><p>The earlier work, Wang et al. (IEEE Photonics Journal, 2020), explains it with the anticrossing: a slow passage is adiabatic, so the light follows the hybrid branch and leaves in the other polarization. As at any anticrossing, a fast passage can jump across the gap instead.</p><p>In their simulated 90 degree bends (figure), raising the radius to 100 µm did not suppress TE to TM coupling at 1.31 µm, where the modes hybridize, but did at 1.55 µm, where they do not.</p>', narration: ["Liu and colleagues, in Optics Express in twenty twenty four, citing earlier work, note that on x-cut thin film lithium niobate, larger bend radii can increase mode conversion and loss.", "That earlier work, by Wang and colleagues in twenty twenty, explains it with the anticrossing. A slow passage is adiabatic. The light follows the hybrid branch and leaves in the other polarization. As at any anticrossing, a fast passage can jump across instead.", "In their simulated bends, a bigger radius did not reduce the conversion at the wavelength where the modes hybridize.", "So gentle is not automatically safe. Respect the boundary, but also respect the crossing."], media: { src: 'media/lit/fe_wang2020_fig6bc.png', alt: 'Simulated transmission through a 90 degree bend versus radius on oxide-clad x-cut thin-film lithium niobate at 1.31 and 1.55 micrometers: TE to TE, TE to TM and total', caption: 'Wang et al., IEEE Photonics J. 2020, Fig. 6(b,c).', href: 'https://doi.org/10.1109/JPHOT.2020.2995317' } },
+        { label: 'Sidewalls are involved', body: '<p>Liu et al. (Light: Advanced Manufacturing, 2023) write that on x-cut, non-negligible hybridization might exist in sharp bends and adiabatic tapers, owing to lithium niobate anisotropy and angled sidewalls.</p><p>Etched lithium niobate ridges have slanted sidewalls; in their chip, about 30 degrees from vertical (cross section in the figure). Coupling the fundamental TE and TM modes needs both mirror symmetries of the cross section broken. Up-down is already broken by substrate and cladding, and the slant adds to it; left-right is broken by the off-diagonal permittivity of a rotated x-cut guide, or by a bend.</p>', narration: ["Liu and colleagues, in twenty twenty three, write that hybridization might exist in sharp bends and tapers, owing to anisotropy and angled sidewalls.", "Coupling the fundamental T E and T M modes needs both mirror symmetries of the cross section broken. Substrate, cladding and a slanted sidewall break up and down. A rotated crystal axis or a bend breaks left and right.", "Trust no symmetry plane, especially one your etch did not give you."], media: { src: 'media/lit/fe_liu2023_fig3e.jpg', alt: 'Electron micrograph of the cross section of etched lithium niobate ridges with slanted sidewalls, etch depths of about 200 and 180 nanometers', caption: 'Liu et al., Light Adv. Manuf. 2023, Fig. 3e.', href: 'https://doi.org/10.37188/lam.2023.013' } },
+        { label: 'Arrays of angles', body: '<p>Arrayed waveguide gratings route arms at different angles. On x-cut, each angle sees a different index, which adds phase errors. Xie et al. (Optics Express, 2026) identify this in-plane anisotropy as an obstacle for narrow-spacing arrayed waveguide gratings on the platform.</p><p>Their fix (figure) folds the grating so that the length steps between arms sit in straight sections that all run in one direction, with loop reflectors sending the light back.</p>', narration: ["Any device with many arms at different angles inherits this problem.", "Xie and colleagues, in twenty twenty six, identify in-plane anisotropy as a source of phase errors in arrayed waveguide gratings on x-cut thin film lithium niobate.", "Every arm has an angle. Every angle has an index. Know your axes."], media: { src: 'media/lit/fe_xie2026_awg_folded.svg', alt: 'Schematic: conventional arrayed waveguide grating with arms turning through many angles, and a folded design with length steps in parallel straight sections ending in loop reflectors', caption: 'Xie et al., Opt. Express 2026, Fig. 1. Redrawn, illustrative.', href: 'https://doi.org/10.1364/OE.588499' } }
       ]
     },
     {
@@ -870,6 +538,7 @@
         {"from": "Manager", "text": "Can we get the angle sweep by Friday?", "side": "left"}
       ],
       narration: [
+        "Watch this weekly sync, and judge whether Gary's fix is proper.",
         "Gary tripled the ring radius to reduce bend loss on x-cut. Is this okay?",
         "Not without checking the crossing. A round ring sweeps every propagation angle, and on x-cut every angle is different.",
         "Scan the angles. " + M
@@ -879,30 +548,33 @@
       type: 'chat', title: 'Scenario 2: The polarization blame', app: 'phone',
       meta: { header: 'Gary', participants: ['Gary', 'Manager'] },
       messages: [
-        {"from": "Gary", "text": "output has a TM component. probably the input fiber, it is an old patch cord", "side": "left"},
-        {"from": "Manager", "text": "did you check the input", "side": "right"},
-        {"from": "Gary", "text": "twice. it is clean TE", "side": "left"},
+        {"from": "Gary", "text": "output has a TM component. first suspect was the input fiber, it is an old patch cord", "side": "left"},
+        {"from": "Manager", "text": "so swap the cord?", "side": "right"},
+        {"from": "Gary", "text": "checked the input first, twice, with a polarizer. clean TE. the cord is cleared", "side": "left"},
         {"from": "Manager", "text": "then what is it", "side": "right"},
-        {"from": "Gary", "text": "I will swap the cord anyway and see if it goes away", "side": "left"}
+        {"from": "Gary", "text": "made on chip. on x-cut a bend through the TE-TM crossing angle or a taper with slanted sidewalls can convert. checking the bend angles and the taper next", "side": "left"}
       ],
       narration: [
-        "Gary blames the input polarization for a T M component, even after the input checks out. Is this okay?",
-        "No. On x-cut, a bend through the crossing angle or a taper with slanted sidewalls can convert T E to T M on chip.",
-        "Speak up. The fiber is innocent until proven guilty."
+        "Read these messages, and judge whether Gary's troubleshooting is proper.",
+        "Gary checks his input before blaming it, then looks for the T M on chip. Is this okay?",
+        "Yes. On x-cut, a bend through the crossing angle or a taper with slanted sidewalls can convert T E to T M on chip.",
+        "The fiber is innocent until proven guilty, and Gary checked before accusing it."
       ]
     },
     {
       type: 'chat', title: 'Scenario 3: The routing shortcut', app: 'thread',
       meta: { header: '#layout-review', participants: ['Gary', 'Dana'] },
       messages: [
-        { from: 'Gary', text: 'routed the two arms of the interferometer at different angles to save area. lengths are matched, so phase is matched', side: 'left' },
-        { from: 'Dana', text: 'on x-cut, matched length at different angles is not matched phase. TE index depends on the angle', side: 'right' },
-        { from: 'Gary', text: 'by how much', side: 'left' },
-        { from: 'Dana', text: 'in bulk, from n_e to n_o, about 0.07 across the full range. in the guide, compute it. do not assume zero', side: 'right' }
+        { from: 'Gary', text: 'routed the two arms of the interferometer at different angles to save area. on x-cut the TE index depends on the angle, so matched length is not matched phase', side: 'left' },
+        { from: 'Gary', text: 'computed the TE effective index versus angle for our guide and set the arm lengths for equal phase at 1550. plot attached', side: 'left' },
+        { from: 'Dana', text: 'equal phase at one wavelength. the group index changes with angle too, so the balance moves across the band', side: 'right' },
+        { from: 'Gary', text: 'swept it. the residual imbalance over the band is in the second plot, and the arm angles are on the layout', side: 'left' },
+        { from: 'Dana', text: 'good. that is the review I wanted', side: 'right' }
       ],
       narration: [
-        "Gary assumed matched lengths give matched phase, on x-cut, at different angles. Is this okay?",
-        "No. In bulk, the T E index moves by about zero point zero seven between the extraordinary and ordinary values. Compute it for your waveguide.",
+        "Read this layout review thread, and judge whether Gary's routing is proper.",
+        "Gary routed two interferometer arms at different angles on x-cut, to save area. Is this okay?",
+        "Yes. Gary did not assume that matched length means matched phase. In bulk, the T E index moves by about zero point zero seven between the extraordinary and ordinary values. Gary computed it for his waveguide.",
         "Know your axes."
       ]
     },
@@ -921,7 +593,7 @@
       question: 'Gary\'s x-cut ring shows TE to TM conversion. He proposes doubling the bend radius. What should a compliant engineer say?',
       options: [
         { text: 'Check whether TE and TM effective indices cross at some propagation angle for this geometry before changing the radius; on x-cut, a larger bend radius has been reported to increase conversion and loss', correct: true, why: '' },
-        { text: 'Good idea. Larger radius always reduces conversion and loss', correct: false, why: "On isotropic platforms, larger bend radius usually means lower radiation loss and less mode mixing. On x-cut lithium niobate, the effective indices of TE and TM depend on propagation angle, and for some geometries they cross. Near a crossing, slanted sidewalls and bending couple the two. Liu and colleagues, in Optics Express in twenty twenty four, citing earlier work, note that larger bend radii can increase mode conversion and loss on x-cut thin film lithium niobate. One plausible picture is that a slower passage through the crossing is more adiabatic, so the light follows the hybridized mode and converts. So check the crossing first." },
+        { text: 'Good idea. Larger radius always reduces conversion and loss', correct: false, why: "On isotropic platforms, larger bend radius usually means lower radiation loss and less mode mixing. On x-cut lithium niobate, the effective indices of TE and TM depend on propagation angle, and for some geometries they cross. Near a crossing, slanted sidewalls and bending couple the two. Liu and colleagues, in Optics Express in twenty twenty four, citing earlier work, note that larger bend radii can increase mode conversion and loss on x-cut thin film lithium niobate. The earlier work explains it: a slower passage through the crossing is more adiabatic, so the light follows the hybridized mode and converts. So check the crossing first." },
         { text: 'Switch to a fiber with better polarization maintenance', correct: false, why: "If the input is already clean TE, the conversion happens on the chip, not in the fiber. On x-cut, a bend that sweeps through the angle where TE and TM effective indices cross, combined with slanted sidewalls, can convert polarization on chip. Changing the fiber does not change the crystal." }
       ],
       correctSay: "Correct. Check the crossing before you change the radius."
@@ -934,7 +606,7 @@
       'TM on x-cut uses a smaller electro-optic coefficient: about three times the V pi; verify the launch with a polarizer'
     ], true),
     ack('mode conversion in bends'),
-    refs([R.zelmon, R.wangLT, R.liu2024, R.liu2023, R.xie2026, R.weis])
+    refs([R.zelmon, R.wangLT, R.liu2024, R.wangPJ2020, R.liu2023, R.xie2026, R.weis])
   ];
 
   /* ======================= CHAPTER 3 ======================= */
@@ -955,16 +627,17 @@
     {
       type: 'video', title: 'Cold open: The record Q', duration: 26,
       narration: [
+        "Watch this measurement, and judge whether Gary's result is okay.",
         "Gary measures a lithium niobate ring. He sweeps the laser once, in one direction, at a comfortable power.",
         "The resonance dip is beautifully narrow. Gary calculates a record quality factor and sends it to his manager.",
         "Dana repeats the sweep in the other direction. The dip is much wider.",
         "Is this okay? No. One direction is not a measurement. Scan both ways. " + M
       ],
       keyframes: [
-        { t: 0, shot: 'Close-up of a tunable laser front panel and an oscilloscope in a dim optics lab. Gary presses SWEEP once. A single trace appears with a deep, narrow dip.', caption: 'One sweep. One direction.', cast: ['Gary'], draw: animDip({ sign: -1, dir: 1, caption: 'sweep short to long' }) },
-        { t: 7, shot: 'Over-the-shoulder on Gary typing in a chat window: RECORD Q. Manager in a small video-call tile gives two thumbs up. Confetti particles fall only inside the manager tile.', caption: 'A record quality factor.', cast: ['Gary', 'Manager'], draw: animDip({ sign: -1, dir: 1, caption: 'narrow dip: record Q?' }) },
-        { t: 14, shot: 'Dana leans in, presses REVERSE on the laser. Scope shows the same resonance now broad and lopsided. Split-screen comparison of the two traces.', caption: 'The other direction.', cast: ['Dana'], draw: animDip({ sign: -1, dir: -1, caption: 'sweep long to short' }) },
-        { t: 21, shot: 'Freeze on the split screen. Stamp: NOT OKAY.', caption: 'Is this okay?', cast: [], draw: animDip({ sign: -1, dir: -1, stamp: 'NOT OKAY', caption: 'is this okay?' }) }
+        { t: 0, shot: 'Close-up of a tunable laser front panel and an oscilloscope in a dim optics lab. Gary presses SWEEP once. A single trace appears with a deep, narrow dip.', caption: 'One sweep. One direction.', cast: ['Gary'], draw: feDraw('recordq', 0) },
+        { t: 7, shot: 'Over-the-shoulder on Gary typing in a chat window: RECORD Q. Manager in a small video-call tile gives two thumbs up. Confetti particles fall only inside the manager tile.', caption: 'A record quality factor.', cast: ['Gary', 'Manager'], draw: feDraw('recordq', 1) },
+        { t: 14, shot: 'Dana leans in, presses REVERSE on the laser. Scope shows the same resonance now broad and lopsided. Split-screen comparison of the two traces.', caption: 'The other direction.', cast: ['Dana'], draw: feDraw('recordq', 2) },
+        { t: 21, shot: 'Freeze on the split screen. Stamp: NOT OKAY.', caption: 'Is this okay?', cast: [], draw: feDraw('recordq', 3) }
       ]
     },
     {
@@ -988,17 +661,17 @@
     },
     {
       type: 'widget', title: 'Interactive: Resonance sweep', widget: 'prSweep', params: {},
-      instructions: 'Pick a mechanism and a power, then sweep in both directions. Compare the apparent linewidth with the cold linewidth.',
-      narration: ["In this activity, you will sweep a laser across a resonance. Choose the mechanism, set the power, and sweep in both directions. Watch the apparent linewidth."]
+      instructions: 'Pick a mechanism and a power, then sweep in both directions. Change the sweep time by at least a factor of 100 and sweep both ways again. Compare each trace with the dashed cold resonance, and watch the shift history below the plot.',
+      narration: ["In this activity, you will sweep a laser across a ring resonance in both directions.", "The thermal shift responds in about ten microseconds. The photorefractive shift builds and relaxes over tens of milliseconds to tens of seconds, and the crystal remembers the previous sweep.", "Sweep both ways, then sweep again much faster or much slower. Two directions that agree are not yet proof of a cold resonance."]
     },
     {
       type: 'reveal', title: 'Photorefractive conduct in the literature',
       prompt: 'Open each finding to continue.',
       tabs: [
-        { label: 'Cladding', body: '<p>Xu et al. (Optics Express, 2021): the standard oxide top cladding dramatically worsens the photorefractive effect in thin-film lithium niobate microrings. Removing it, plus heat treatment, suppressed the photorefraction-induced relative resonance shift by more than two orders of magnitude.</p><p>Shen et al. (Nature Photonics, 2024, supplement): PECVD oxide cladding caused significant photorefraction; spin-on, annealed HSQ cladding brought it down to air-clad levels.</p>', narration: ["Xu and colleagues, in twenty twenty one, found that the standard oxide top cladding dramatically worsens photorefraction in thin film lithium niobate rings. Removing it, with heat treatment, suppressed the relative resonance shift by more than two orders of magnitude.", "Shen and colleagues report that plasma deposited oxide cladding caused significant photorefraction, while annealed H S Q cladding brought it down to air-clad levels.", "Cladding is not just an optical choice. It is a charge choice. Watch your charge."] },
-        { label: 'Small cavities, big shifts', body: '<p>Liang et al. (Optica, 2017): in lithium niobate photonic crystal nanocavities, the photorefractive tuning rate reached about 84 MHz per photon.</p><p>Li et al. (Laser and Photonics Reviews, 2019): at higher input power (2 mW), photorefraction was observed to quench in photonic crystal cavities. More power does not always mean more shift.</p>', narration: ["In small mode volumes, the effect is dramatic. Liang and colleagues reported a photorefractive tuning rate of about eighty four megahertz per photon in lithium niobate photonic crystal nanocavities.", "And it is not monotonic. Li and colleagues observed photorefraction quenching at higher input power in photonic crystal cavities.", "So a single power is not a characterization. Scan the power too."] },
-        { label: 'Measuring loss honestly', body: '<p>Shams-Ansari et al. (APL Photonics, 2022) measured material loss with a pump-probe method on time scales shorter than the photorefractive response, to separate intrinsic loss from photorefractive artifacts.</p>', narration: ["If you want the true material loss, you have to outrun the charge.", "Shams-Ansari and colleagues used a pump-probe measurement faster than the photorefractive response to separate loss from photorefractive artifacts.", "Scan both ways, and when that is not enough, scan faster than the crystal can respond."] },
-        { label: '"Damage" is a misnomer', body: '<p>Photorefractive optical damage is a reversible index change from trapped space charge, not physical damage. Light or heat can erase it.</p><p>In nonlinear devices it still matters: Lu et al. (Optica, 2019) report wavelength-dependent photorefractive blue shifts of pump and second-harmonic resonances in a poled microring, creating a mismatch.</p><p>Zhang et al. (arXiv, 2026) even write a photorefractive grating on purpose to couple TE and TM modes, with hour-long lifetimes. Your chip remembers last Tuesday.</p>', narration: ["The term optical damage is misleading. Photorefraction is usually a reversible index change from trapped charge. Light or heat can erase it.", "It still breaks things. In a poled microring, Lu and colleagues report that photorefraction shifts the pump and second harmonic resonances by different amounts, creating a mismatch.", "And it lasts. Zhang and colleagues wrote photorefractive gratings on purpose, with lifetimes of hours. Your chip remembers last Tuesday's experiment.", "Watch your charge."] }
+        { label: 'Cladding', body: '<p>Xu et al. (Optics Express, 2021): the standard oxide top cladding dramatically worsens the photorefractive effect in thin-film lithium niobate microrings. Removing it, plus heat treatment, suppressed the photorefraction-induced relative resonance shift by more than two orders of magnitude.</p><p>In their process sequence (figure), stripping the oxide alone left the shift even larger; it fell below the detection limit only after the uncladded chip was re-annealed.</p><p>Shen et al. (Nature Photonics, 2024, supplement), citing that PECVD oxide cladding causes significant photorefraction, used spin-on, annealed HSQ cladding instead: in their HSQ-clad rings the photorefractive shift was not noticeable up to 0 dBm in the bus waveguide, a weak effect comparable with that of air-clad devices.</p>', narration: ["Xu and colleagues, in twenty twenty one, found that the standard oxide top cladding dramatically worsens photorefraction in thin film lithium niobate rings. Removing it, with heat treatment, suppressed the relative resonance shift by more than two orders of magnitude.", "Shen and colleagues, citing that plasma deposited oxide makes it worse, used annealed H S Q cladding instead. Their rings showed a weak photorefractive effect, comparable with air-clad devices.", "Cladding is not just an optical choice. It is a charge choice. Watch your charge."], media: { src: 'media/lit/fe_xu2021_fig5.png', alt: 'Maximum photorefractive frequency shift versus intracavity power after oxide coating, annealing, cladding removal and re-annealing; after re-annealing the shift is below the detection limit', caption: 'Xu et al., arXiv 2020, Fig. 5.', href: 'https://doi.org/10.48550/arXiv.2012.12671' } },
+        { label: 'Small cavities, big shifts', body: '<p>Liang et al. (Optica, 2017): in lithium niobate photonic crystal nanocavities, the photorefractive tuning rate reached about 84 MHz per photon. In the same paper (figure), the blue shift saturated as power rose, was then quenched while the power was held at 41 µW, and came back after a few hours in the dark.</p><p>Li et al. (Laser and Photonics Reviews, 2019): at higher input power (2 mW), photorefraction was observed to quench in photonic crystal cavities. More power does not always mean more shift.</p>', narration: ["In small mode volumes, the effect is dramatic. Liang and colleagues reported a photorefractive tuning rate of about eighty four megahertz per photon in lithium niobate photonic crystal nanocavities.", "And it is not monotonic. Li and colleagues observed photorefraction quenching at higher input power in photonic crystal cavities.", "So a single power is not a characterization. Scan the power too."], media: { src: 'media/lit/fe_liang2017_sequence.svg', alt: 'Step diagram: resonance blue shift of about 55 picometers as input power rises from 330 nanowatts to 8 microwatts, saturation at 41 microwatts, return to the passive position after about 10 minutes at 41 microwatts, quenched afterwards, recovering after hours in the dark', caption: 'Liang et al., Optica 2017. Redrawn, illustrative.', href: 'https://doi.org/10.1364/OPTICA.4.001251' } },
+        { label: 'Measuring loss honestly', body: '<p>Shams-Ansari et al. (APL Photonics, 2022) measured material loss with a pump-probe method on time scales shorter than the photorefractive response, to separate intrinsic loss from photorefractive artifacts.</p><p>First they timed the charge (figure): after the pump was switched off, the PECVD-oxide-clad sample A drifted with a time constant of about 100 seconds, while the annealed samples B and C showed no photorefractive drift within a minute.</p>', narration: ["If you want the true material loss, you have to outrun the charge.", "Shams-Ansari and colleagues used a pump-probe measurement faster than the photorefractive response to separate loss from photorefractive artifacts.", "Scan both ways, and when that is not enough, scan faster than the crystal can respond."], media: { src: 'media/lit/fe_shams2022_fig2.png', alt: 'Pump-probe setup and probe resonance shift versus time after the pump is switched off for three samples; the oxide-clad sample drifts over tens of seconds, the annealed samples do not', caption: 'Shams-Ansari et al., arXiv 2022, Fig. 2.', href: 'https://doi.org/10.48550/arXiv.2203.17133' } },
+        { label: '"Damage" is a misnomer', body: '<p>Photorefractive optical damage is a reversible index change from trapped space charge, not physical damage. Light or heat can erase it.</p><p>In nonlinear devices it still matters: Lu et al. (Optica, 2019) attribute the early saturation of second-harmonic conversion in a poled microring to photorefraction, which shifts the pump and second-harmonic resonances by different amounts and creates a mismatch.</p><p>Zhang et al. (arXiv, 2026) even write a photorefractive grating on purpose to couple TE and TM modes, with hour-long lifetimes. Your chip remembers last Tuesday.</p><p>In their data (figure), the doublet splitting grows with each step of write power, then relaxes with a time constant of about 65 minutes once the pump is off, leaving a residual splitting.</p>', narration: ["The term optical damage is misleading. Photorefraction is usually a reversible index change from trapped charge. Light or heat can erase it.", "It still breaks things. In a poled microring, Lu and colleagues attribute an early saturation of the second harmonic to photorefraction, which shifts the pump and second harmonic resonances by different amounts.", "And it lasts. Zhang and colleagues wrote photorefractive gratings on purpose, with lifetimes of hours. Your chip remembers last Tuesday's experiment.", "Watch your charge."], media: { src: 'media/lit/fe_zhang2026_fig2de.png', alt: 'Transmission maps of a hybrid-mode doublet: the splitting grows with each step of write power, then relaxes over two hours after the pump is switched off', caption: 'Zhang et al., arXiv 2026, Fig. 2(d,e).', href: 'https://doi.org/10.48550/arXiv.2606.06637' } }
       ]
     },
     {
@@ -1012,6 +685,7 @@
         {"from": "Gary", "text": "the usual 1 mW", "side": "right"}
       ],
       narration: [
+        "Read these texts, and judge whether Gary's report is proper.",
         "Gary reports a record linewidth from the sweep direction that looked cleaner. Is this okay?",
         "No. A dip that snaps narrow in one direction is a property of your scan, not your resonator.",
         "Sweep both ways. Reduce power until the two directions agree. Report the direction and the power. " + M
@@ -1027,6 +701,7 @@
         {"from": "Dana", "text": "It protects the surface. It does not protect the resonance. Could we measure both cladded and uncladded die, at several powers, both scan directions, before making it the default?", "side": "right", "to": ["Manager", "Gary"], "date": "2026-11-05 14:31", "subject": "RE: RE: Process change: adding oxide cladding to all rings"}
       ],
       narration: [
+        "Read this email thread, and judge whether Gary's change is okay.",
         "Gary added deposited oxide cladding to every ring, by habit. Is this okay?",
         "Only after you measure it. In thin film lithium niobate, cladding choice is a photorefraction choice.",
         "Watch your charge."
@@ -1036,15 +711,16 @@
       type: 'chat', title: 'Scenario 3: The lock that ran away', app: 'thread',
       meta: { header: '#lab-ops', participants: ['Gary', 'Dana', 'Manager'] },
       messages: [
-        {"from": "Gary", "text": "thermal lock on the ring keeps running away. I set the lock side for a red shift, same as on silicon nitride", "side": "left"},
-        {"from": "Dana", "text": "in LN the photorefractive shift is blue and slower than the thermal red shift. which one wins depends on power and time", "side": "right"},
-        {"from": "Gary", "text": "so which side do I lock on", "side": "left"},
-        {"from": "Dana", "text": "measure the shift sign and its time constant at your power first. then pick", "side": "right"},
-        {"from": "Manager", "text": "can we lock on whichever side is stable today and characterize later", "side": "left"}
+        {"from": "Gary", "text": "thermal lock on the ring ran away overnight. I had set the lock side for a red shift, same as on silicon nitride", "side": "left"},
+        {"from": "Gary", "text": "in LN there is also a photorefractive blue shift, slower than the thermal one. which wins depends on power and time, so I am measuring the shift sign and time constant at our power before I pick a side", "side": "left"},
+        {"from": "Manager", "text": "can we lock on whichever side is stable today and characterize later", "side": "left"},
+        {"from": "Gary", "text": "stable today is how it ran away last night. the measurement is one afternoon. I will log which side and why", "side": "left"},
+        {"from": "Dana", "text": "agree. sweep both directions while you are at it", "side": "right"}
       ],
       narration: [
-        "Gary assumed only a thermal red shift, out of habit from other platforms. Is this okay?",
-        "No. In lithium niobate, a blue photorefractive shift and a red thermal shift compete, with different time constants.",
+        "Read this lab operations thread, and judge whether Gary's response is proper.",
+        "Gary's lock ran away overnight, and he chooses to measure before he relocks. Is this okay?",
+        "Yes. Gary dropped a habit from other platforms and measured first. In lithium niobate, a blue photorefractive shift and a red thermal shift compete, with different time constants.",
         "Measure first. Scan both ways. " + M
       ]
     },
@@ -1097,23 +773,24 @@
     {
       type: 'video', title: 'Cold open: The hotplate', duration: 26,
       narration: [
+        "Watch this routine bake, and judge whether it is okay.",
         "Gary puts a z-cut lithium niobate wafer on a hotplate to bake his resist.",
         "Gary did not apply any voltage. Gary is not worried about voltage.",
         "When the wafer comes off the hotplate, small sparks dance along the surface.",
         "Is this okay? No. Temperature change is charge. Watch your charge. " + M
       ],
       keyframes: [
-        { t: 0, shot: 'Medium shot, cleanroom wet bench with a hotplate. Gary places a 100 mm z-cut wafer onto the hotplate with wafer tweezers. Hotplate display reads a bake temperature. Camera dolly left to right.', caption: 'A routine bake.', cast: ['Gary'], draw: animWafer({ heat: true, caption: 'heating' }) },
-        { t: 7, shot: 'Close-up of the wafer surface: plus signs fade in on the top face and minus signs on the bottom face (graphic overlay), growing in number as the temperature rises.', caption: 'No voltage applied. Charge appears anyway.', cast: [], draw: animWafer({ heat: true, caption: 'surface charge builds' }) },
-        { t: 14, shot: 'Gary lifts the wafer off the hotplate onto a cool metal surface. Small blue arcs flicker between the wafer edge and the tweezers. Gary does not notice.', caption: 'Cooling down. Sparks.', cast: ['Gary'], draw: animWafer({ spark: true, caption: 'cooling: discharge' }) },
-        { t: 21, shot: 'Freeze frame on an arc. Stamp: NOT OKAY. Then cut to the corrected take: same wafer wrapped in aluminum foil, slow ramp, no arcs, green stamp OKAY.', caption: 'Is this okay?', cast: ['Gary'], draw: animWafer({ spark: true, stamp: 'NOT OKAY', caption: 'is this okay?' }) }
+        { t: 0, shot: 'Medium shot, cleanroom wet bench with a hotplate. Gary places a 100 mm z-cut wafer onto the hotplate with wafer tweezers. Hotplate display reads a bake temperature. Camera dolly left to right.', caption: 'A routine bake.', cast: ['Gary'], draw: feDraw('hotplate', 0) },
+        { t: 7, shot: 'Close-up of the wafer surface: plus signs fade in on the top face and minus signs on the bottom face (graphic overlay), growing in number as the temperature rises.', caption: 'No voltage applied. Charge appears anyway.', cast: [], draw: feDraw('hotplate', 1) },
+        { t: 14, shot: 'Gary lifts the wafer off the hotplate onto a cool metal surface. Small blue arcs flicker between the wafer edge and the tweezers. Gary does not notice.', caption: 'Cooling down. Sparks.', cast: ['Gary'], draw: feDraw('hotplate', 2) },
+        { t: 21, shot: 'Freeze frame on an arc. Stamp: NOT OKAY. Then cut to the corrected take: same wafer wrapped in aluminum foil, slow ramp, no arcs, green stamp OKAY.', caption: 'Is this okay?', cast: ['Gary'], draw: feDraw('hotplate', 3) }
       ]
     },
     {
       type: 'slide', layout: 'host', title: 'Let\'s take a closer look',
       bullets: [
         'Pyroelectric: spontaneous polarization changes with temperature; bound surface charge appears on faces normal to z',
-        'Unscreened field: E = p dT / (eps0 eps33)',
+        'Unscreened field: $E = p\\,\\Delta T / (\\varepsilon_0 \\varepsilon_{33})$',
         'z-cut: charge on top and bottom faces, field overlaps the device; x-cut: charge on edges and sidewalls',
         'Screening by surface conduction and ambient takes time; until then, the field is real'
       ],
@@ -1129,8 +806,8 @@
     },
     {
       type: 'widget', title: 'Interactive: Pyroelectric field estimator', widget: 'pyroCalc', params: {},
-      instructions: 'Move the temperature-change slider and the thickness slider. Compare the unscreened field with the coercive field.',
-      narration: ["In this activity, you will estimate the unscreened pyroelectric field across a z-cut wafer. Move the temperature change, and compare the field with the field needed to flip domains."]
+      instructions: 'Set how far the hot plate is above room temperature, then change the ramp rate. Compare the peak field with the coercive field, and the top-face voltage with the spark threshold of air. Then try the thin film and the x-cut wafer.',
+      narration: ["In this activity, you will heat a lithium niobate wafer on a grounded hot plate, hold it, and cool it down again.", "Move the temperature, then the ramp rate. A slow ramp only helps if the charge can leak away while you ramp.", "Then compare a z-cut wafer, a z-cut thin film, and an x-cut wafer, and compare the field with the field needed to flip domains."]
     },
     {
       type: 'reveal', title: 'Where temperature change happens at work',
@@ -1155,6 +832,7 @@
         {"from": "Dana", "text": "the wafer biases itself", "side": "right"}
       ],
       narration: [
+        "Read these texts, and judge whether Gary's recipe change is proper.",
         "Gary removed a slow ramp to save time on z-cut wafers. Is this okay?",
         "No. A fast temperature step leaves no time for the charge to screen. Slow ramps and discharge paths exist for a reason.",
         "Watch your charge. " + M
@@ -1170,22 +848,24 @@
         {"from": "Manager", "text": "approved. please label it", "side": "left"}
       ],
       narration: [
+        "Read this cleanroom thread, and judge whether the purchase is okay.",
         "The foil in the cleanroom is a discharge path. Is this okay?",
-        "Yes. This is one of the rare scenarios in this course that is okay. Please label the foil.",
+        "Yes. This one is okay. Please label the foil.",
         "Watch your charge."
       ]
     },
     {
       type: 'chat', title: 'Scenario 3: The neighbor', app: 'email',
-      meta: {"header": "Inbox", "subject": "Cryostat run 42: devices on the other chip failed", "participants": ["Gary", "Manager", "Dana"]},
+      meta: {"header": "Inbox", "subject": "Cryostat run 42: shared stage with a superconducting chip", "participants": ["Gary", "Manager", "Dana"]},
       messages: [
-        {"from": "Gary", "text": "Hi all,\n\nCryostat run 42 summary: my lithium niobate chip survived the cooldown. The superconducting chip next to it did not; I suspect its wiring, since my chip was not biased. I will let its owner know.\n\nGary", "side": "left", "to": ["Manager", "Dana Okafor"], "date": "2026-11-12 18:22", "subject": "Cryostat run 42: devices on the other chip failed", "attachments": [{"name": "run42_cooldown_log.csv", "size": "5.6 MB"}]},
-        {"from": "Dana", "text": "Hi Gary,\n\nA cooldown is a temperature change of almost 300 kelvin, and your chip does not need a bias to charge. It can discharge into its neighbors. For the next run: shielding electrodes, ground the lithium niobate, and ramp slowly.\n\nDana", "side": "right", "to": ["Gary"], "cc": ["Manager"], "date": "2026-11-13 08:47", "subject": "RE: Cryostat run 42: devices on the other chip failed"},
-        {"from": "Manager", "text": "Please coordinate with the owner of the other chip before the next cooldown, and add the grounding to the run checklist.", "side": "left", "to": ["Gary", "Dana Okafor"], "date": "2026-11-13 09:30", "subject": "RE: RE: Cryostat run 42: devices on the other chip failed"}
+        {"from": "Gary", "text": "Hi all,\n\nCryostat run 42 plan: my lithium niobate chip shares the stage with a superconducting chip from the next group. A cooldown is a temperature change of almost 300 kelvin, and my chip does not need a bias to charge.\n\nSo: grounded shielding electrodes between the chips, every electrode and the backside metal of my chip grounded, and a slow ramp. The ramp only helps if the charge can leak away while it cools, which gets slower as it gets colder, so the shields and grounds do the real work. I have walked the other chip's owner through it, and they agreed.\n\nGary", "side": "left", "to": ["Manager", "Dana Okafor"], "date": "2026-11-12 18:22", "subject": "Cryostat run 42: shared stage with a superconducting chip", "attachments": [{"name": "run42_stage_layout.pdf", "size": "0.9 MB"}]},
+        {"from": "Dana", "text": "Hi Gary,\n\nLooks right to me. Please add the grounding check to the run checklist, so it survives the next person who loads the stage.\n\nDana", "side": "right", "to": ["Gary"], "cc": ["Manager"], "date": "2026-11-13 08:47", "subject": "RE: Cryostat run 42: shared stage with a superconducting chip"},
+        {"from": "Manager", "text": "Approved. Thanks for coordinating before the cooldown instead of after it.", "side": "left", "to": ["Gary", "Dana Okafor"], "date": "2026-11-13 09:30", "subject": "RE: RE: Cryostat run 42: shared stage with a superconducting chip"}
       ],
       narration: [
-        "Gary assumes an unbiased chip cannot hurt its neighbor. Is this okay?",
-        "No. Pyroelectric fields do not respect chip boundaries. Shield, ground, and coordinate with your neighbors.",
+        "Read this email, and judge whether Gary's cryostat plan is proper.",
+        "Gary's lithium niobate chip will share a cooldown with a neighbor's superconducting chip. Is this okay?",
+        "Yes. Pyroelectric fields do not respect chip boundaries, and Gary planned for that. Shield, ground, and coordinate with your neighbors.",
         "Watch your charge. " + M
       ]
     },
@@ -1229,16 +909,17 @@
     {
       type: 'video', title: 'Cold open: Quadrature on Monday', duration: 24,
       narration: [
+        "Watch Gary's Monday, and judge his response to the drift.",
         "Gary biases his lithium niobate modulator at quadrature with a D C voltage, and goes to lunch.",
         "When he returns, the bias point has rolled down the transfer curve.",
         "Gary increases the voltage. It drifts again. Gary increases the voltage again.",
         "Is this okay? No. Charge moves under D C bias. Watch your charge. " + M
       ],
       keyframes: [
-        { t: 0, shot: 'Medium shot of a test rack: a voltage source, a modulator on a fiber stage, a photodetector readout. Gary sets the voltage, the readout sits at half power. He leaves frame toward lunch.', caption: 'Quadrature, set by DC voltage.', cast: ['Gary'], draw: animBias({ drift: false, caption: 'biased at quadrature' }) },
-        { t: 6, shot: 'Time-lapse: wall clock spins one hour. A large ball on an oversized cosine-squared curve sculpture next to the rack rolls slowly downhill.', caption: 'The bias point leaves.', cast: [], draw: animBias({ drift: true, caption: 'drift under constant voltage' }) },
-        { t: 13, shot: 'Gary returns, cranks the voltage knob. The ball is pushed back, then rolls away again. Repeat three times, faster each cut.', caption: 'More voltage. More drift.', cast: ['Gary'], draw: animBias({ drift: true, caption: 'more voltage, more drift' }) },
-        { t: 19, shot: 'Freeze on Gary turning the knob. Stamp: NOT OKAY.', caption: 'Is this okay?', cast: ['Gary'], draw: animBias({ drift: true, stamp: 'NOT OKAY', caption: 'is this okay?' }) }
+        { t: 0, shot: 'Medium shot of a test rack: a voltage source, a modulator on a fiber stage, a photodetector readout. Gary sets the voltage, the readout sits at half power. He leaves frame toward lunch.', caption: 'Quadrature, set by DC voltage.', cast: ['Gary'], draw: feDraw('quadrature', 0) },
+        { t: 6, shot: 'Time-lapse: wall clock spins one hour. A large ball on an oversized cosine-squared curve sculpture next to the rack rolls slowly downhill.', caption: 'The bias point leaves.', cast: [], draw: feDraw('quadrature', 1) },
+        { t: 13, shot: 'Gary returns, cranks the voltage knob. The ball is pushed back, then rolls away again. Repeat three times, faster each cut.', caption: 'More voltage. More drift.', cast: ['Gary'], draw: feDraw('quadrature', 2) },
+        { t: 19, shot: 'Freeze on Gary turning the knob. Stamp: NOT OKAY.', caption: 'Is this okay?', cast: ['Gary'], draw: feDraw('quadrature', 3) }
       ]
     },
     {
@@ -1262,18 +943,18 @@
     },
     {
       type: 'widget', title: 'Interactive: Bias point time trace', widget: 'biasDrift', params: {},
-      instructions: 'Run the trace with at least two bias strategies. Try both layer stacks.',
-      narration: ["In this activity, you will hold a modulator at quadrature with different strategies, and watch the bias point over time. The model is illustrative."]
+      instructions: 'Pick a device, then run at least two bias strategies. The time axis runs from 1 microsecond to 1 year. Then try another device and a different controller range.',
+      narration: ["In this activity, you will set a modulator to quadrature and watch its bias point from one microsecond to one year.", "Charge moving in and around the crystal slowly cancels the applied field. Compare holding a constant voltage, a bias controller, and a heater, on thin film and on bulk crystal."]
     },
     {
       type: 'reveal', title: 'Bias conduct in the literature',
       prompt: 'Open each finding to continue.',
       tabs: [
-        { label: 'Thermo-optic escape', body: '<p>Maeder et al. (Optics Letters, 2022): on the same chip, an electro-optic phase shifter drifted over minutes from DC drift, while a thermo-optic phase shifter stayed within 0.5 dB over 33.3 minutes.</p><p>Liu et al. (ACS Photonics, 2026): an apparently drifting heater was probe contact resistance. Under constant-voltage drive the extinction ratio decayed from 25 to 21 dB over 100 minutes; under constant-current drive it showed no systematic drift over 95 minutes.</p>', narration: ["Maeder and colleagues compared phase shifters on the same chip. The electro-optic one drifted over minutes. The thermo-optic one stayed within half a dB over thirty three minutes.", "But heaters have their own conduct issues. Liu and colleagues found an apparently drifting heater was really probe contact resistance. Constant current drive fixed it.", "The heater is innocent. The probe needle did it."] },
-        { label: 'Drift as a budget line', body: '<p>Zheng et al. (Laser and Photonics Reviews, 2024) budgeted a 1 kHz refresh of all phase-shifter voltages in a thin-film lithium niobate photonic neural network, specifically to handle bias drift.</p><p>Drift is not a lab nuisance. It is an energy and control cost.</p>', narration: ["Zheng and colleagues budgeted a one kilohertz refresh of every phase shifter voltage in a thin film lithium niobate photonic neural network, to handle bias drift.", "That is a mandatory re-attestation one thousand times per second. Drift belongs in the architecture, not in the footnotes."] },
-        { label: 'No drift observed', body: '<p>Some modulators are set to quadrature by tuning the laser wavelength on an unbalanced interferometer instead of applying DC bias (for example, Valdez et al., Optics Express, 2023). That avoids drift; it does not measure it.</p><p>Read the methods before quoting a drift-free result.</p>', narration: ["Some papers set the operating point by tuning the laser wavelength on an unbalanced interferometer, instead of applying a D C bias.", "That avoids drift. It does not measure it. Before you quote a drift-free result, read the methods section. Watch your charge."] },
-        { label: 'Which V pi?', body: '<p>V pi and V pi L are quoted per arm, push-pull, single-arm, series push-pull, or differential. These differ by factors of 2.</p><p>A DC V pi is often measured with a kilohertz to megahertz triangle wave whose frequency is not stated.</p><p>Electro-optic S21 in dB is electrical dB: at minus 3 dB, the drive power must double; at minus 6 dB, V pi has doubled. The normalization frequency moves the 3 dB point.</p>', narration: ["Before you compare V pi between papers, ask which V pi.", "Per arm, push-pull, single arm, or differential conventions differ by factors of two.", "The frequency of a D C V pi measurement is often unstated.", "And electro-optic bandwidth is usually quoted in electrical dB. At minus three dB, drive power doubles. At minus six dB, V pi has doubled. Also check the normalization frequency.", "Know your axes, including the axes of your plots."] },
-        { label: 'Clamped and unclamped', body: '<p>Static and low-frequency measurements correspond to unclamped (constant stress) electro-optic coefficients; RF corresponds to clamped (constant strain). Weis and Gaylord (1985) tabulate both. At 633 nm, Weis and Gaylord list r33 of about 28.8 to 30.8 pm/V clamped versus 32.2 to 34.0 pm/V unclamped. Using one r33 for both regimes shifts predicted V pi L by several percent.</p>', narration: ["Low frequency and R F also see different electro-optic coefficients. Low frequency is unclamped. R F is clamped. The difference in r three three is several percent, and several percent of V pi is a real number on a datasheet.", "Watch your charge, and watch your clamping."] }
+        { label: 'Thermo-optic escape', body: '<p>Maeder et al. (Optics Letters, 2022): on the same chip, an electro-optic phase shifter drifted over minutes from DC drift, while a thermo-optic phase shifter stayed within 0.5 dB over 33.3 minutes.</p><p>Liu et al. (ACS Photonics, 2026) attribute most of an apparent heater drift to time-varying contact resistance between the probes and the heater pads. Without feedback, with the source voltage stepped to hold constant electrical power, the extinction ratio decayed from 25 to 21 dB over 100 minutes; under constant-current drive it showed no systematic drift over 95 minutes. With closed-loop thermo-optic bias control it held about 25 dB for 93 minutes (figure).</p>', narration: ["Maeder and colleagues compared phase shifters on the same chip. The electro-optic one drifted over minutes. The thermo-optic one stayed within half a dB over thirty three minutes.", "But heaters have their own conduct issues. Liu and colleagues attribute most of an apparent heater drift to changing probe contact resistance. Under constant current drive, the systematic drift was gone.", "The heater was mostly innocent. The probe needle did most of it."], media: { src: 'media/lit/fe_liu2026_fig5a.png', alt: 'Pulse extinction ratio and heater power over about 93 minutes under closed-loop thermo-optic bias control at the null point, then a bias-off period; inset shows a 117 picosecond pulse', caption: 'Liu et al., ACS Photonics 2026, Fig. 5a.', href: 'https://doi.org/10.1021/acsphotonics.6c00668' } },
+        { label: 'Drift as a budget line', body: '<p>Zheng et al. (Laser and Photonics Reviews, 2024) budgeted a 1 kHz refresh of all phase-shifter voltages in a thin-film lithium niobate photonic neural network, specifically to handle bias drift. Their chip (figure) has 54 phase shifters.</p><p>Drift is not a lab nuisance. It is an energy and control cost.</p>', narration: ["Zheng and colleagues budgeted a one kilohertz refresh of every phase shifter voltage in a thin film lithium niobate photonic neural network, to handle bias drift.", "That is a mandatory re-attestation one thousand times per second. Drift belongs in the architecture, not in the footnotes."], media: { src: 'media/lit/fe_zheng2024_fig2.jpg', alt: 'Photograph of the packaged thin-film lithium niobate photonic neural network chip with fiber arrays and wire bonds, and a micrograph of its electrodes', caption: 'Zheng et al., arXiv 2024, Fig. 2.', href: 'https://doi.org/10.48550/arXiv.2402.16513' } },
+        { label: 'No drift observed', body: '<p>Some modulators are set to quadrature by tuning the laser wavelength on an unbalanced interferometer instead of applying DC bias (for example, Valdez et al., Optics Express, 2023). That avoids drift; it does not measure it.</p><p>Read the methods before quoting a drift-free result.</p>', narration: ["Some papers set the operating point by tuning the laser wavelength on an unbalanced interferometer, instead of applying a D C bias.", "That avoids drift. It does not measure it. Before you quote a drift-free result, read the methods section. Watch your charge."], media: { src: 'media/lit/fe_valdez2023_quadrature.svg', alt: 'Computed transmission of an unbalanced Mach-Zehnder interferometer versus laser wavelength, with the quadrature point reached by tuning the laser and no DC bias', caption: 'Valdez et al., Opt. Express 2023. Computed, illustrative.', href: 'https://doi.org/10.1364/OE.480519' } },
+        { label: 'Which V pi?', body: '<p>V pi and V pi L are quoted per arm, push-pull, single-arm, series push-pull, or differential. These differ by factors of 2.</p><p>A DC V pi is often measured with a kilohertz to megahertz triangle wave whose frequency is not stated.</p><p>Electro-optic S21 in dB is electrical dB: at minus 3 dB, the drive power must double; at minus 6 dB, V pi has doubled. The normalization frequency moves the 3 dB point.</p>', narration: ["Before you compare V pi between papers, ask which V pi.", "Per arm, push-pull, single arm, or differential conventions differ by factors of two.", "The frequency of a D C V pi measurement is often unstated.", "And electro-optic bandwidth is usually quoted in electrical dB. At minus three dB, drive power doubles. At minus six dB, V pi has doubled. Also check the normalization frequency.", "Know your axes, including the axes of your plots."], media: { src: 'media/lit/fe_vpi_electrical_db.svg', alt: 'Computed drive voltage and drive power multiples needed for the same phase versus electro-optic response in electrical dB: at minus 3 dB voltage times 1.41 and power times 2, at minus 6 dB voltage times 2 and power times 4', caption: 'Computed from the definition of electrical dB.' } },
+        { label: 'Clamped and unclamped', body: '<p>Static and low-frequency measurements correspond to unclamped (constant stress) electro-optic coefficients; RF corresponds to clamped (constant strain). Weis and Gaylord (1985) tabulate both. At 633 nm, Weis and Gaylord list r33 of about 28.8 to 30.8 pm/V clamped versus 32.2 to 34.0 pm/V unclamped. Using one r33 for both regimes shifts predicted V pi L by several percent.</p>', narration: ["Low frequency and R F also see different electro-optic coefficients. Low frequency is unclamped. R F is clamped. The difference in r three three is several percent, and several percent of V pi is a real number on a datasheet.", "Watch your charge, and watch your clamping."], media: { src: 'media/lit/fe_weis1985_r33.svg', alt: 'Range bars of the r33 electro-optic coefficient of lithium niobate at 633 nanometers: clamped 28.8 to 30.8 picometers per volt, unclamped 32.2 to 34.0 picometers per volt', caption: 'Weis and Gaylord, Appl. Phys. A 1985. Redrawn.', href: 'https://doi.org/10.1007/BF00614817' } }
       ]
     },
     {
@@ -1287,6 +968,7 @@
         {"from": "Manager", "text": "Please add a footnote. Several footnotes.", "side": "left", "to": ["Gary", "Dana Okafor"], "date": "2026-11-06 13:10", "subject": "RE: RE: RE: Datasheet draft: V pi"}
       ],
       narration: [
+        "Read this email thread, and judge whether Gary's V pi entry is proper.",
         "Gary measured V pi at an unstated low frequency and labeled it as the V pi. Is this okay?",
         "No. State the frequency, the drive convention, and the bandwidth convention. Your D C is not your R F.",
         "Watch your charge. " + M
@@ -1303,6 +985,7 @@
         {"from": "Gary", "text": "probably. I will give it a few days to relax and re-measure", "side": "left"}
       ],
       narration: [
+        "Read this message exchange, and judge whether Gary's stability test is okay.",
         "Gary held a large D C bias for days. Is this okay?",
         "It is a valid experiment, if you planned it. Yeh and colleagues showed long D C bias can reduce the response, make it rectifying, and take weeks to recover.",
         "Know your history. Watch your charge."
@@ -1312,16 +995,16 @@
       type: 'chat', title: 'Scenario 3: The drift-free claim', app: 'thread',
       meta: { header: '#paper-club', participants: ['Gary', 'Dana', 'Manager'] },
       messages: [
-        { from: 'Gary', text: 'this paper shows no drift at all. we should copy their stack', side: 'left' },
-        { from: 'Dana', text: 'how did they bias it', side: 'right' },
-        { from: 'Gary', text: 'they tuned the laser to quadrature', side: 'left' },
-        { from: 'Dana', text: 'so no DC bias was applied. no DC bias, no DC drift test', side: 'right' },
+        { from: 'Gary', text: 'this paper shows no drift at all. before anyone copies their stack: they tuned the laser to quadrature, so no DC bias was applied', side: 'left' },
+        { from: 'Gary', text: 'no DC bias, no DC drift test. the stack might be fine, but this paper does not show it', side: 'left' },
         { from: 'Manager', text: 'can we also not apply DC bias', side: 'left' },
-        { from: 'Dana', text: 'not in a product with a fixed laser', side: 'right' }
+        { from: 'Dana', text: 'not in a product with a fixed laser', side: 'right' },
+        { from: 'Gary', text: 'agreed. I will put their stack through our DC hold test before anyone calls it drift-free', side: 'left' }
       ],
       narration: [
-        "Gary treated a result without D C bias as proof of a drift-free stack. Is this okay?",
-        "No. Avoiding the test is not passing the test. Read the methods.",
+        "Read this paper club thread, and judge Gary's reading of the paper.",
+        "Gary found a paper that reports no drift at all, and read how it was biased. Is this okay?",
+        "Yes. Gary read the methods. Avoiding the test is not passing the test.",
         "Watch your charge. " + M
       ]
     },
@@ -1365,16 +1048,17 @@
     {
       type: 'video', title: 'Cold open: Q equals seven times ten to the thirteen', duration: 24,
       narration: [
+        "Watch this simulation, and judge whether Gary's result is okay.",
         "Gary simulates a quarter of a lithium niobate nanobeam, with two symmetry planes, to save time.",
         "The mechanical quality factor is seven times ten to the thirteen. Gary is thrilled.",
         "Dana runs the full geometry, with no symmetry planes, in the same crystal frame. The quality factor is about two thousand two hundred.",
         "Is this okay? No. Trust no symmetry plane. " + M
       ],
       keyframes: [
-        { t: 0, shot: 'Screen capture style shot of a finite element model: a nanobeam cut to one quarter, the missing three quarters hidden behind a stage curtain labeled TRUST ME. Gary at the keyboard.', caption: 'A quarter model, to save time.', cast: ['Gary'], draw: animQ({ from: 0.1, to: 0.9, caption: 'quarter model with symmetry planes' }) },
-        { t: 6, shot: 'Huge analog Q meter on the office wall; the needle slams to the far right and sticks at 10^13. Gary raises both fists.', caption: 'Q of seven times ten to the thirteen.', cast: ['Gary'], draw: animQ({ from: 0.9, to: 0.92, caption: 'Q pinned high' }) },
-        { t: 12, shot: 'Dana pulls the curtain open: full nanobeam, no symmetry planes. Needle swings back down to about 10^3.', caption: 'Full geometry, same frame.', cast: ['Dana'], draw: animQ({ from: 0.92, to: 0.2, caption: 'full geometry: leaky' }) },
-        { t: 18, shot: 'Freeze on the curtain half open. Stamp: NOT OKAY.', caption: 'Is this okay?', cast: ['Gary', 'Dana'], draw: animQ({ from: 0.2, to: 0.2, stamp: 'NOT OKAY', caption: 'is this okay?' }) }
+        { t: 0, shot: 'Screen capture style shot of a finite element model: a nanobeam cut to one quarter, the missing three quarters hidden behind a stage curtain labeled TRUST ME. Gary at the keyboard.', caption: 'A quarter model, to save time.', cast: ['Gary'], draw: feDraw('qnano', 0) },
+        { t: 6, shot: 'Huge analog Q meter on the office wall; the needle slams to the far right and sticks at 10^13. Gary raises both fists.', caption: 'Q of seven times ten to the thirteen.', cast: ['Gary'], draw: feDraw('qnano', 1) },
+        { t: 12, shot: 'Dana pulls the curtain open: full nanobeam, no symmetry planes. Needle swings back down to about 10^3.', caption: 'Full geometry, same frame.', cast: ['Dana'], draw: feDraw('qnano', 2) },
+        { t: 18, shot: 'Freeze on the curtain half open. Stamp: NOT OKAY.', caption: 'Is this okay?', cast: ['Gary', 'Dana'], draw: feDraw('qnano', 3) }
       ]
     },
     {
@@ -1382,7 +1066,7 @@
       bullets: [
         'A symmetry plane forces the solution to be symmetric or antisymmetric about it',
         'An anisotropic, rotated crystal often lacks that symmetry; the plane removes the coupling that leaks energy',
-        'Logged case: quarter model with symmetry, Q from 2e10 to 7.1e13; full model, same frame, fundamental Q about 2200',
+        'Logged case: quarter model with symmetry, $Q$ from $2\\times10^{10}$ to $7.1\\times10^{13}$; full model, same frame, fundamental $Q \\approx 2200$',
         'If weakening the absorbing layer raises Q, the loss channel is not being captured'
       ],
       callout: 'Symmetry planes are a privilege the crystal must grant.',
@@ -1401,7 +1085,7 @@
       tabs: [
         { label: 'Absorbing layers', body: '<p>Logged case: weakening the perfectly matched layer raised Q. A quality factor that does not respond to the absorber means energy is not reaching the absorber, often because a symmetry or a boundary condition blocked the leak.</p><p>Sweep the absorber strength and thickness. Q should converge, not wander.</p>', narration: ["Sweep the absorber strength and thickness. A converged quality factor should be insensitive to reasonable changes.", "If a weaker absorber gives a higher quality factor, the loss channel is not being captured. Something upstream, often a symmetry plane, is blocking the leak."] },
         { label: 'Cyclic symmetry', body: '<p>Logged case: a cyclic symmetry condition behaved like a reflection and gave the wrong mode profile, even with copied face meshes. The full geometry gave the correct mode, in 55 minutes instead of 22.</p><p>Thirty-three extra minutes is cheaper than a wrong paper.</p>', narration: ["In one logged case, a cyclic symmetry condition behaved like a mirror and produced the wrong mode. The full geometry took fifty five minutes instead of twenty two, and gave the right answer.", "Thirty three extra minutes is cheaper than a wrong paper. Trust no symmetry plane."] },
-        { label: 'Voltage versus Charge terminal', body: '<p>In a piezoelectric eigenfrequency study, a Voltage terminal is treated as a short circuit: the setpoint is ignored, and you get the resonance. A Charge terminal with zero charge is an open circuit, and you get the anti-resonance.</p><p>The coupling coefficient k squared comes from the two frequencies. Two eigen runs, one short and one open.</p>', narration: ["In a piezoelectric eigenfrequency study, an electrode set to a Voltage terminal acts as a short circuit. The voltage value is ignored. You get the resonance.", "A Charge terminal with zero charge acts as an open circuit. You get the anti-resonance.", "Which one you need depends on what the electrode is connected to. The coupling coefficient comes from comparing the two runs.", "If you typed one volt and expected a biased device, the eigen solver did not tell you it ignored you."] },
+        { label: 'Voltage versus Charge terminal', body: '<p>In a piezoelectric eigenfrequency study, a Voltage terminal is treated as a short circuit: the setpoint is ignored, and you get the resonance. A Charge terminal with zero charge is an open circuit, and you get the anti-resonance.</p><p>The coupling coefficient $k^2$ comes from the two frequencies. Two eigen runs, one short and one open.</p>', narration: ["In a piezoelectric eigenfrequency study, an electrode set to a Voltage terminal acts as a short circuit. The voltage value is ignored. You get the resonance.", "A Charge terminal with zero charge acts as an open circuit. You get the anti-resonance.", "Which one you need depends on what the electrode is connected to. The coupling coefficient comes from comparing the two runs.", "If you typed one volt and expected a biased device, the eigen solver did not tell you it ignored you."] },
         { label: 'Pipelines and bookkeeping', body: '<p>Logged cases: an extra selection step before a mirror-and-join dataset operation returned zero interaction integrals; a surface integral missed the hole sidewalls; an optimizer result was overwritten by an unchanged output filename; a sidewall taper was computed for one side instead of two.</p><p>A zero, a perfect number, or a suspiciously round improvement is a reason to look, not a reason to celebrate.</p>', narration: ["Not every problem is physics. In logged cases, one extra selection step before a dataset operation returned zero coupling. A surface integral skipped the hole sidewalls. An output file was overwritten because its name was not changed. A sidewall taper was computed for one side instead of two.", "A zero, a perfect number, or a suspiciously large improvement is a reason to look again.", "Know your axes. Trust no symmetry plane."] }
       ]
     },
@@ -1417,6 +1101,7 @@
         { from: 'Dana', text: 'Right. Check once, then you have earned the shortcut.', side: 'left' }
       ],
       narration: [
+        "Watch this design review meeting, and judge whether Gary's model is okay.",
         "Gary used symmetry planes because the geometry was symmetric. Is this okay?",
         "Only if the crystal, in your frame, has the same symmetry. Run the full model once to earn the shortcut.",
         "Trust no symmetry plane. " + M
@@ -1426,14 +1111,15 @@
       type: 'chat', title: 'Scenario 2: The ignored volt', app: 'phone',
       meta: { header: 'Gary', participants: ['Gary', 'Dana'] },
       messages: [
-        { from: 'Gary', text: 'set the electrode to 1 V in the eigen study but the mode is the same at 0 V and 100 V??', side: 'left' },
-        { from: 'Dana', text: 'Voltage terminal in an eigen study is a short. the value is ignored', side: 'right' },
-        { from: 'Gary', text: 'so how do I get the open circuit frequency', side: 'left' },
-        { from: 'Dana', text: 'Charge terminal, zero charge. run both. the difference gives k squared', side: 'right' }
+        { from: 'Gary', text: 'set the electrode to 1 V in the eigen study and the mode is the same at 0 V and 100 V. looked it up: a Voltage terminal in an eigen study is a short, the value is ignored', side: 'left' },
+        { from: 'Gary', text: 'so that run is the short-circuit frequency. running a Charge terminal with zero charge for the open circuit. the difference gives k squared', side: 'left' },
+        { from: 'Dana', text: 'right. which one goes in the deck', side: 'right' },
+        { from: 'Gary', text: 'both, labeled short and open', side: 'left' }
       ],
       narration: [
-        "Gary expected the eigen solver to apply his bias voltage. Is this okay?",
-        "No. In an eigen study, a Voltage terminal is a short circuit. Use a Charge terminal with zero charge for open circuit.",
+        "Read these texts, and judge whether Gary's response is proper.",
+        "Gary's eigen study ignored the voltage he typed in, and he works out why. Is this okay?",
+        "Yes. Gary noticed that nothing changed, and found out why before reporting. In an eigen study, a Voltage terminal is a short circuit. A Charge terminal with zero charge is an open circuit.",
         "Know your boundaries."
       ]
     },
@@ -1441,20 +1127,22 @@
       type: 'chat', title: 'Scenario 3: The template frame', app: 'thread',
       meta: { header: '#simulation', participants: ['Gary', 'Manager', 'Dana'] },
       messages: [
-        {"from": "Gary", "text": "new results attached. same solver template as last year, the materials are already set up in it", "side": "left"},
-        {"from": "Dana", "text": "last year was y-cut. this wafer is x-cut. did the material frame change", "side": "right"},
-        {"from": "Gary", "text": "the template has been reviewed before, I did not touch the materials", "side": "left"},
-        {"from": "Manager", "text": "please put the cut, the Euler angles, and the symmetry settings on the first slide of every results deck", "side": "left"}
+        {"from": "Gary", "text": "new results attached. started from last year's solver template, but last year was y-cut and this wafer is x-cut, so I reset the material frame", "side": "left"},
+        {"from": "Dana", "text": "checked against anything", "side": "right"},
+        {"from": "Gary", "text": "a known case first: in bulk, TE along y sees n_e and TE along z sees n_o, as it should. cut, Euler angles, and symmetry settings are on slide 1", "side": "left"},
+        {"from": "Manager", "text": "good. please make that first slide standard for every results deck", "side": "left"}
       ],
       narration: [
-        "Gary reused a template without checking its crystal frame. Is this okay?",
-        "No. Put the cut, the Euler angles, and the symmetry settings on the first slide of every results deck.",
+        "Read this thread, and judge whether Gary's use of the template is proper.",
+        "Gary reused last year's solver template for a new wafer. Is this okay?",
+        "Yes. Gary checked the template's crystal frame against the wafer, and tested it on a known case. Put the cut, the Euler angles, and the symmetry settings on the first slide of every results deck.",
         M
       ]
     },
     {
       type: 'check',
-      question: 'A quarter model of a rotated-frame lithium niobate resonator with two symmetry planes gives Q = 1e13. The full model, same frame, gives Q around 1e3. Which is more trustworthy, and why?',
+      question: 'A quarter model of a rotated-frame lithium niobate resonator with two symmetry planes gives $Q = 10^{13}$. The full model, same frame, gives $Q \\approx 10^{3}$. Which is more trustworthy, and why?',
+      narration: ["A quarter model of a rotated-frame lithium niobate resonator, with two symmetry planes, gives a quality factor of ten to the thirteen. The full model, in the same frame, gives about ten to the three. Which is more trustworthy, and why?"],
       options: [
         { text: 'The full model, because the symmetry planes impose a symmetry the rotated anisotropic crystal does not have, deleting the leaky coupling', correct: true, why: '' },
         { text: 'The quarter model, because it allows a finer mesh', correct: false, why: "A finer mesh is a fine goal, but it cannot fix a wrong boundary condition. A symmetry plane forces the solution to be symmetric or antisymmetric about that plane. In an anisotropic crystal like lithium niobate, especially in a rotated frame, the elastic and piezoelectric tensors often do not have that symmetry. The plane removes exactly the mixed solutions that couple to leaky modes, so the quality factor becomes absurdly high. Run the full model at least once to check." },
@@ -1497,7 +1185,8 @@
 
   function feltSlide(what) {
     return {
-      type: 'slide', layout: 'host', title: 'How do you think Gary felt?',
+      type: 'slide', layout: 'host', title: 'How do you think Gary felt?', hostImg: 'media/render/host_pat_empathy.jpg',
+      hostCam: { idle: 'media/render/host_pat_cam_empathy_idle.mp4', talk: ['media/render/host_pat_cam_empathy_talk.mp4'] },
       bullets: ['Take a moment to consider how Gary felt when ' + String(what).replace(/\b(?:[A-Z] ){1,5}[A-Z]\b/g, function (m) { return m.replace(/ /g, ''); })],
       narration: [
         "Let's take a moment to think about Gary.",
@@ -1552,6 +1241,7 @@
     {
       type: 'video', title: "Incident video: The flat at three o'clock", duration: 34,
       narration: [
+        "Watch the incident as it happened, and judge Gary's conduct.",
         "Gary carries a cassette of x-cut wafers from the spin coater to the mask aligner.",
         "A spin coater stops each wafer at whatever angle it stops. That is normal. The flat is the only reference that survives.",
         "The procedure says: flat toward the operator, at six o'clock. Gary places the wafer with the flat at three o'clock.",
@@ -1561,11 +1251,11 @@
         "Is this okay? No. This is not okay. " + M
       ],
       keyframes: [
-        { t: 0, shot: 'Cleanroom corridor under yellow lithography light, 35 mm lens, camera at chest height tracking alongside. Gary in a white bunny suit, hood, mask and nitrile gloves, seen from behind and in profile, carries a 100 mm wafer cassette away from a spin coater (bowl lid open, chuck still decelerating) toward a manual mask aligner. The wafers in the cassette sit at random rotations; their flats point in different directions.', caption: 'From the spin coater. Each wafer stops wherever it stops.', cast: ['Gary'], draw: animFlat({ spin: 2.3, flat: 30, caption: 'spin coater: the wafer stops at an arbitrary angle' }) },
-        { t: 7, shot: "Top-down macro of the mask aligner vacuum chuck with three alignment pins. A translucent 100 mm x-cut lithium niobate wafer, resist-coated, slides in under a gloved hand with its flat against the right-hand pin (three o'clock). In sharp focus in the foreground, a laminated card taped to the tool bezel: FLAT AT SIX O'CLOCK.", caption: "Procedure: flat at six o'clock. Gary: flat at three o'clock.", cast: ['Gary'], draw: animFlat({ flat: 0, intended: true, caption: "flat loaded at three o'clock" }) },
-        { t: 14, shot: 'Microscope eyepiece view (circular vignette): straight vertical chrome waveguide lines on the mask slide over the wafer. Inset, on a clipboard: the lot traveler page with a hand sketch showing the waveguides perpendicular to the flat.', caption: 'First layer: aligned to the edge in front of him.', cast: [], draw: animFlat({ flat: 0, intended: true, mask: true, maskFade: true, caption: 'mask waveguides are fixed to the tool, not to the crystal' }) },
-        { t: 21, shot: 'Montage of later layers: electrode and gold pad layers land on first-layer alignment crosses, verniers read zero. A semi-transparent crystal axis gizmo fades in over the wafer: the waveguides run along z, the dashed green intended direction runs along y.', caption: 'Every layer aligned to every other layer.', cast: [], draw: animFlat({ flat: 0, intended: true, mask: true, caption: 'waveguides along z; intended along y' }) },
-        { t: 28, shot: 'Test bay, six weeks later. A monitor shows a modulator transfer curve stretched across a far larger voltage range than the reference trace. Dana, in a lab coat, seen from behind, points at the screen. Freeze frame. Red stamp: NOT OKAY.', caption: 'Is this okay?', cast: ['Dana'], draw: animFlat({ flat: 0, intended: true, mask: true, stamp: 'NOT OKAY', caption: 'is this okay?' }) }
+        { t: 0, shot: 'Cleanroom corridor under yellow lithography light, 35 mm lens, camera at chest height tracking alongside. Gary in a white bunny suit, hood, mask and nitrile gloves, seen from behind and in profile, carries a 100 mm wafer cassette away from a spin coater (bowl lid open, chuck still decelerating) toward a manual mask aligner. The wafers in the cassette sit at random rotations; their flats point in different directions.', caption: 'From the spin coater. Each wafer stops wherever it stops.', cast: ['Gary'], draw: feDraw('flat', 0) },
+        { t: 7, shot: "Top-down macro of the mask aligner vacuum chuck with three alignment pins. A translucent 100 mm x-cut lithium niobate wafer, resist-coated, slides in under a gloved hand with its flat against the right-hand pin (three o'clock). In sharp focus in the foreground, a laminated card taped to the tool bezel: FLAT AT SIX O'CLOCK.", caption: "Procedure: flat at six o'clock. Gary: flat at three o'clock.", cast: ['Gary'], draw: feDraw('flat', 1) },
+        { t: 14, shot: 'Microscope eyepiece view (circular vignette): straight vertical chrome waveguide lines on the mask slide over the wafer. Inset, on a clipboard: the lot traveler page with a hand sketch showing the waveguides perpendicular to the flat.', caption: 'First layer: aligned to the edge in front of him.', cast: [], draw: feDraw('flat', 2) },
+        { t: 21, shot: 'Montage of later layers: electrode and gold pad layers land on first-layer alignment crosses, verniers read zero. A semi-transparent crystal axis gizmo fades in over the wafer: the waveguides run along z, the dashed green intended direction runs along y.', caption: 'Every layer aligned to every other layer.', cast: [], draw: feDraw('flat', 3) },
+        { t: 28, shot: 'Test bay, six weeks later. A monitor shows a modulator transfer curve stretched across a far larger voltage range than the reference trace. Dana, in a lab coat, seen from behind, points at the screen. Freeze frame. Red stamp: NOT OKAY.', caption: 'Is this okay?', cast: ['Dana'], draw: feDraw('flat', 4) }
       ]
     },
     {
@@ -1579,7 +1269,7 @@
         {"from": "Gary", "text": "Will do. I will update the recipe card and clean up the lot 7 data in the shared folder so the review deck is not confusing.", "side": "right", "to": ["Manager", "Dana Okafor"], "date": "2026-11-16 11:32", "subject": "RE: RE: RE: Lot 7 modulators: V pi out of family"}
       ],
       narration: [
-        "The incident unfolds over email.",
+        "The incident unfolds over email. Judge whether the response is proper.",
         "The test result is clear. The first guesses are the supplier batch and the coater. Dana follows the evidence to the hand-off.",
         "Gary proposes excluding lot 7 as non-representative and cleaning up its data. The manager would rather not open a failure analysis this close to the review. Is this okay?",
         "No. Nobody here is acting in bad faith, and that is the problem. Lot 7 gets no failure analysis, no traveler entry, and no root cause on record, and its data is about to be removed instead of marked. The next lot goes through the same hand-off.",
@@ -1591,14 +1281,14 @@
       type: 'reveal', title: 'What went wrong, technically',
       prompt: 'Open each finding to continue.',
       tabs: [
-        { label: 'The modulator lost r33', body: '<p>Designed: on x-cut, the waveguide runs along y. TE light is polarized along z, the electrodes put the field along z, and the index change is set by n_e^3 r33.</p><p>Fabricated: the waveguide runs along z. TE light is polarized along y, the electrodes now put the field along y, and the index change is set by n_o^3 r22.</p><p>V pi ratio, for equal overlap: (n_e^3 r33) / (n_o^3 r22). With n_e = 2.138 and n_o = 2.211 at 1550 nm (Zelmon et al., 1997) and the 633 nm coefficients compiled by Weis and Gaylord (1985):</p><p>RF (clamped): r33 = 28.8 to 30.8 pm/V, r22 = 3.4 pm/V, ratio about 7.7 to 8.2.<br>Low frequency (unclamped): r33 = 32.2 to 34.0 pm/V, r22 = 6.7 to 6.8 pm/V, ratio about 4.3 to 4.6 (unclamped r22 is composition sensitive, so treat this as about 4 to 5).</p><p>Your DC is not your RF, even when you are wrong.</p>', narration: [
+        { label: 'The modulator lost r33', body: '<p>Designed: on x-cut, the waveguide runs along y. TE light is polarized along z, the electrodes put the field along z, and the index change is set by $n_e^3 r_{33}$.</p><p>Fabricated: the waveguide runs along z. TE light is polarized along y, the electrodes now put the field along y, and the index change is set by $n_o^3 r_{22}$.</p><p>$V_\\pi$ ratio, for equal overlap:</p><p>$$\\frac{V_\\pi(\\text{fabricated})}{V_\\pi(\\text{designed})} = \\frac{n_e^3\\, r_{33}}{n_o^3\\, r_{22}}$$</p><p>With $n_e = 2.138$ and $n_o = 2.211$ at 1550 nm (Zelmon et al., 1997) and the 633 nm coefficients compiled by Weis and Gaylord (1985):</p><p>RF (clamped): $r_{33} = 28.8$ to $30.8$ pm/V, $r_{22} = 3.4$ pm/V, ratio about 7.7 to 8.2.<br>Low frequency (unclamped): $r_{33} = 32.2$ to $34.0$ pm/V, $r_{22} = 6.7$ to $6.8$ pm/V, ratio about 4.3 to 4.6 (unclamped $r_{22}$ is composition sensitive, so treat this as about 4 to 5).</p><p>Your DC is not your RF, even when you are wrong.</p>', narration: [
           "On x-cut, the design runs the waveguide along y. T E light is polarized along z, the electrodes put the field along z, and the modulator uses r three three, the largest coefficient.",
           "With the waveguide along z, T E light is polarized along y, and the electrodes now put the field along y. The modulator uses r two two instead.",
           "For equal overlap, the V pi ratio is n e cubed times r three three, over n o cubed times r two two.",
           "With the indices from Zelmon and colleagues, and the coefficients compiled by Weis and Gaylord, that is about eight times at R F, where the clamped values apply, and about four and a half times at low frequency, where the unclamped values apply.",
           "Even the error has a different D C and R F value. Know your axes."
         ] },
-        { label: 'The polarizations lost their material birefringence', body: '<p>Along y on x-cut, TE sees n_e and TM sees n_o: about 0.07 of material birefringence adds to whatever separation the waveguide geometry gives.</p><p>Along z, the optic axis, TE and TM both see n_o in bulk, so the material birefringence no longer contributes. Their separation now depends on the waveguide cross-section: film thickness, etch depth, width, and sidewall angle. For some profiles they are nearly degenerate; for others they stay apart.</p><p>And, as the bends chapter will show, on x-cut the TE-like and TM-like effective indices can cross as a bend sweeps the propagation direction. With the layout rotated 90 degrees, every bend sweeps a different range of crystal directions, so the crossings move. Every polarization number in the design was computed for the other axis.</p>', narration: [
+        { label: 'The polarizations lost their material birefringence', body: '<p>Along y on x-cut, TE sees $n_e$ and TM sees $n_o$: $n_o - n_e \\approx 0.07$ of material birefringence adds to whatever separation the waveguide geometry gives.</p><p>Along z, the optic axis, TE and TM both see $n_o$ in bulk, so the material birefringence no longer contributes. Their separation now depends on the waveguide cross-section: film thickness, etch depth, width, and sidewall angle. For some profiles they are nearly degenerate; for others they stay apart.</p><p>And, as the bends chapter will show, on x-cut the TE-like and TM-like effective indices can cross as a bend sweeps the propagation direction. With the layout rotated 90 degrees, every bend sweeps a different range of crystal directions, so the crossings move. Every polarization number in the design was computed for the other axis.</p>', narration: [
           "Along y, T E sees the extraordinary index and T M sees the ordinary index. About zero point zero seven of material birefringence adds to whatever the waveguide geometry gives.",
           "Along z, both see the ordinary index in bulk. The separation now depends only on the waveguide cross-section: film thickness, etch depth, width, and sidewall angle. For some profiles, T E and T M are nearly degenerate.",
           "And, as the bends chapter will show, on x-cut the two can cross as a bend sweeps the propagation direction. Rotate the layout, and the crossings move. Know your axes."
@@ -1655,18 +1345,19 @@
     {
       type: 'video', title: "Incident video: The rods at twelve o'clock", duration: 30,
       narration: [
+        "Watch the incident as it happened, and judge Gary's conduct at the bench.",
         "Gary replaces the polarization-maintaining patch cord that feeds the lensed fiber at the chip input. The old one was damaged.",
         "He looks at the new cord's end face in the fiber inspection scope, and sets the rotation of its mating sleeve by eye.",
         "He turns the two stress rods to vertical, because he remembers the slow axis as perpendicular to the rods.",
-        "In this type of fiber, the slow axis runs along the line through the stress rods. The light leaves the fiber polarized vertically, out of the chip plane. That is T M.",
+        "In this type of fiber, the slow axis runs along the line through the stress rods. The laser light is launched on the slow axis, so it leaves the fiber polarized vertically, out of the chip plane. That is T M.",
         "The modulator still works. On the oscilloscope, it just needs nearly three times the voltage.",
         "Is this okay? No. " + M
       ],
       keyframes: [
-        { t: 0, shot: 'Optical test bench, 50 mm lens, shallow depth of field. Gloved hands unplug a polarization-maintaining patch cord from a rotatable mating sleeve that feeds the lensed fiber at the chip input, and plug in a new one. A small lithium niobate chip on a vacuum stage sits between two lensed fibers. Background out of focus: a rack with a tunable laser and a photodetector.', caption: 'The old patch cord: stress rods horizontal.', cast: ['Gary'], draw: animPM({ rot0: 0, caption: 'old fiber: rods horizontal, light TE' }) },
-        { t: 7, shot: 'Screen insert: the fiber inspection scope image of the patch cord end face, a bright core between two dark circular stress rods. A gloved hand turns the mating sleeve rotation knob; the rods swing from horizontal to vertical. A sticky note on the monitor bezel, handwritten: SLOW AXIS PERPENDICULAR TO RODS (crossed out by a second hand later in the film).', caption: 'The new patch cord, set from memory: rods vertical.', cast: ['Gary'], draw: animPM({ rot0: 0, rotate: true, caption: 'rods vertical: slow axis vertical' }) },
-        { t: 14, shot: 'Cutaway render of the chip cross-section: thin-film ridge on oxide, gold electrodes either side. A red double arrow for the optical field points straight up out of the film (TM) instead of sideways along the crystal z axis (TE).', caption: 'Light arrives polarized out of the plane: TM.', cast: [], draw: animPM({ rot0: Math.PI / 2, caption: 'TM launched on x-cut' }) },
-        { t: 21, shot: 'Oscilloscope close-up: the modulator transfer curve, clean and high-contrast, but stretched across a much larger voltage sweep than the reference trace in grey. Freeze. Red stamp: NOT OKAY.', caption: 'Is this okay?', cast: [], draw: animPM({ rot0: Math.PI / 2, stamp: 'NOT OKAY', caption: 'is this okay?' }) }
+        { t: 0, shot: 'Optical test bench, 50 mm lens, shallow depth of field. Gloved hands unplug a polarization-maintaining patch cord from a rotatable mating sleeve that feeds the lensed fiber at the chip input, and plug in a new one. A small lithium niobate chip on a vacuum stage sits between two lensed fibers. Background out of focus: a rack with a tunable laser and a photodetector.', caption: 'The old patch cord: stress rods horizontal.', cast: ['Gary'], draw: feDraw('rods', 0) },
+        { t: 7, shot: 'Screen insert: the fiber inspection scope image of the patch cord end face, a bright core between two dark circular stress rods. A gloved hand turns the mating sleeve rotation knob; the rods swing from horizontal to vertical. A sticky note on the monitor bezel, handwritten: SLOW AXIS PERPENDICULAR TO RODS (crossed out by a second hand later in the film).', caption: 'The new patch cord, set from memory: rods vertical.', cast: ['Gary'], draw: feDraw('rods', 1) },
+        { t: 14, shot: 'Cutaway render of the chip cross-section: thin-film ridge on oxide, gold electrodes either side. A red double arrow for the optical field points straight up out of the film (TM) instead of sideways along the crystal z axis (TE).', caption: 'Light arrives polarized out of the plane: TM.', cast: [], draw: feDraw('rods', 2) },
+        { t: 21, shot: 'Oscilloscope close-up: the modulator transfer curve, clean and high-contrast, but stretched across a much larger voltage sweep than the reference trace in grey. Freeze. Red stamp: NOT OKAY.', caption: 'Is this okay?', cast: [], draw: feDraw('rods', 3) }
       ]
     },
     {
@@ -1678,11 +1369,12 @@
         { from: 'Gary', text: 'new input patch cord. rods set like always', side: 'left' },
         { from: 'Dana', text: 'which way are the rods', side: 'right' },
         { from: 'Gary', text: 'vertical. slow axis horizontal', side: 'left' },
-        { from: 'Dana', text: 'in this fiber the slow axis is along the rods. vertical rods, vertical polarization. you are launching TM. on x-cut along y that uses r13, not r33', side: 'right' },
+        { from: 'Dana', text: 'in this fiber the slow axis is along the rods, and the laser is launched on the slow axis. vertical rods, vertical polarization. you are launching TM. on x-cut along y that uses r13, not r33', side: 'right' },
         { from: 'Gary', text: 'so the 14 chips I measured this week', side: 'left' },
         { from: 'Dana', text: 'TM. rotate the fiber 90 degrees, re-measure, and log which runs used which polarization', side: 'right' }
       ],
       narration: [
+        "Read this test bench thread, and judge whether Gary's response is proper.",
         "Gary notices the V pi went up, but trusts his memory of the fiber. Is this okay?",
         "No. A clean transfer curve with the wrong voltage is the signature of the wrong electro-optic coefficient.",
         "Dana asks the one question that matters: which way are the rods?",
@@ -1694,7 +1386,7 @@
       type: 'reveal', title: 'What went wrong, technically',
       prompt: 'Open each finding to continue.',
       tabs: [
-        { label: 'TM uses r13', body: '<p>x-cut, waveguide along y, electrodes put the field along z.</p><p>TE: polarized along z, index change set by n_e^3 r33.<br>TM: polarized along x, index change set by n_o^3 r13.</p><p>V pi(TM) / V pi(TE), for equal overlap, = (n_e^3 r33) / (n_o^3 r13). With n_e = 2.138, n_o = 2.211 (Zelmon et al., 1997) and the 633 nm values compiled by Weis and Gaylord (1985):</p><p>RF (clamped): r13 = 7.7 to 8.6 pm/V, ratio about 3.2 to 3.4.<br>Low frequency (unclamped): r13 = 10.0 to 10.9 pm/V, ratio about 2.8 to 2.9.<br>(Ratios from same-source pairs of coefficients.)</p><p>The TM mode also overlaps the in-plane field differently, so the real ratio is a measurement, not a division.</p>', narration: [
+        { label: 'TM uses r13', body: '<p>x-cut, waveguide along y, electrodes put the field along z.</p><p>TE: polarized along z, index change set by $n_e^3 r_{33}$.<br>TM: polarized along x, index change set by $n_o^3 r_{13}$.</p><p>For equal overlap:</p><p>$$\\frac{V_\\pi(\\mathrm{TM})}{V_\\pi(\\mathrm{TE})} = \\frac{n_e^3\\, r_{33}}{n_o^3\\, r_{13}}$$</p><p>With $n_e = 2.138$, $n_o = 2.211$ (Zelmon et al., 1997) and the 633 nm values compiled by Weis and Gaylord (1985):</p><p>RF (clamped): $r_{13} = 7.7$ to $8.6$ pm/V, ratio about 3.2 to 3.4.<br>Low frequency (unclamped): $r_{13} = 10.0$ to $10.9$ pm/V, ratio about 2.8 to 2.9.<br>(Ratios from same-source pairs of coefficients.)</p><p>The TM mode also overlaps the in-plane field differently, so the real ratio is a measurement, not a division.</p>', narration: [
           "On x-cut, with the waveguide along y, the electrodes put the field along z.",
           "T E light is polarized along z and uses r three three. T M light is polarized along x, and uses r one three.",
           "For equal overlap, the V pi ratio is n e cubed r three three over n o cubed r one three. With the values compiled by Weis and Gaylord, that is about three point two to three point four at R F, and about two point eight to two point nine at low frequency.",
@@ -1704,9 +1396,10 @@
           "The output photodetector does not care about polarization. The transfer curve looked clean, with good extinction. Only the voltage scale changed.",
           "A polarization error does not look like an error. It looks like a worse device. That is why it survives for a week."
         ] },
-        { label: 'Stress rods and slow axes', body: '<p>In polarization-maintaining fiber with two stress rods, the slow axis runs along the line through the rods. Light launched on the slow axis exits polarized along that line.</p><p>Do not set fiber rotation from memory. Check the launch polarization with a polarizer and power meter before coupling to the chip, and record the fiber serial number and the measured polarization in the bench log.</p>', narration: [
+        { label: 'Stress rods and slow axes', body: '<p>In polarization-maintaining fiber with two stress rods, the slow axis runs along the line through the rods. Linear light launched on the slow axis, or on the fast axis, exits polarized along that axis.</p><p>That is the only case the fiber maintains. Linear light launched at an angle to the axes splits between the slow and fast modes, which travel with different propagation constants. The output is then in general elliptical, and its state changes with fiber length, wavelength, temperature, and stress. A misaligned launch can look linear at the moment you check it and drift when the lab warms up.</p><p>The metric is the polarization extinction ratio: rotate a polarizer at the output and compare maximum and minimum power:</p><p>$$\\mathrm{PER} = 10\\log_{10}\\frac{P_{\\max}}{P_{\\min}}\\ \\mathrm{dB}$$</p><p>Do not set fiber rotation from memory. Measure the launch with a rotating polarizer and a power meter before coupling to the chip, and record the fiber serial number, the polarization direction, and the extinction ratio in the bench log.</p>', narration: [
           "In polarization-maintaining fiber with two stress rods, the slow axis runs along the line through the rods.",
-          "Do not set the fiber rotation from memory. Check the launch polarization with a polarizer and a power meter before coupling to the chip. Record the fiber and the measured polarization in the bench log.",
+          "The fiber maintains only what you launch on an axis. Linear light launched at an angle splits between the slow and fast modes, which travel with different propagation constants. The output is then in general elliptical, and it changes with length, wavelength, temperature, and stress.",
+          "Do not set the fiber rotation from memory. Measure the launch with a rotating polarizer and a power meter before coupling to the chip. Record the fiber, the polarization direction, and the extinction ratio in the bench log.",
           "Know your axes, including the axes of your fiber."
         ] }
       ]
@@ -1754,6 +1447,7 @@
     {
       type: 'video', title: 'Incident video: The hot plug', duration: 32,
       narration: [
+        "Watch the incident as it happened, and judge Gary's conduct.",
         "Gary is qualifying a test fixture. The bulk z-cut lithium niobate chip sits on a thermoelectric cooler, with its electrode pads wired to an R F connector.",
         "To protect the driver amplifier during the thermal step, Gary unplugs its cable. Now the electrodes are floating.",
         "Gary steps the cooler from twenty five to seventy degrees Celsius, at full speed. A temperature change of forty five kelvin.",
@@ -1763,11 +1457,11 @@
         "Is this okay? No. Temperature change is charge. Watch your charge. " + M
       ],
       keyframes: [
-        { t: 0, shot: 'Package qualification lab, bench height, 35 mm. A gold-plated test fixture on a thermoelectric cooler block with a heatsink and fan below. A 0.5 mm thick bulk lithium niobate chip, about 2 mm by 40 mm, is wire-bonded to a coaxial RF connector on the fixture. A gloved hand unscrews the cable from the connector and sets it on the bench; the cable leads to a boxed driver amplifier module.', caption: 'Cable unplugged "to protect the amplifier". Pads now floating.', cast: ['Gary'], draw: animTEC({ caption: 'pads floating' }) },
-        { t: 7, shot: 'Close-up of a temperature controller front panel: setpoint changes from 25.0 to 70.0, ramp rate field reads MAX. Rack-focus to the chip: a graphic overlay of minus signs accumulating along the top surface under the electrodes.', caption: 'Forty-five kelvin, at full speed.', cast: [], draw: animTEC({ heat: true, caption: 'temperature step: surface charge builds' }) },
-        { t: 14, shot: 'Macro, low angle, the connector and cable: the gloved hand brings the cable nut toward the fixture connector. A tiny blue-white arc jumps across the last fraction of a millimeter at the center pin. Single frame flash, then normal light.', caption: 'Plugged back in while charged.', cast: ['Gary'], draw: animTEC({ hot: true, plug: true, spark: true, caption: 'discharge through the connector' }) },
-        { t: 21, shot: 'The driver amplifier module on the bench, its status LED dark. A thin wisp of smoke (practical effect) rises from its vent. Cut to a microscope image of the chip: a dark burn track across the gap between signal and ground electrodes.', caption: 'One driver amplifier, former.', cast: [], draw: animTEC({ hot: true, plugged: true, dead: true, caption: 'driver amplifier: output stage damaged' }) },
-        { t: 27, shot: 'Freeze on the smoke wisp. Red stamp: NOT OKAY. Then the corrected take: shorting cap on the connector during the step, slow ramp on the controller, cap removed only after the chip is back at room temperature and discharged; green stamp OKAY.', caption: 'Is this okay?', cast: [], draw: animTEC({ hot: true, plugged: true, dead: true, stamp: 'NOT OKAY', caption: 'is this okay?' }) }
+        { t: 0, shot: 'Package qualification lab, bench height, 35 mm. A gold-plated test fixture on a thermoelectric cooler block with a heatsink and fan below. A 0.5 mm thick bulk lithium niobate chip, about 2 mm by 40 mm, is wire-bonded to a coaxial RF connector on the fixture. A gloved hand unscrews the cable from the connector and sets it on the bench; the cable leads to a boxed driver amplifier module.', caption: 'Cable unplugged "to protect the amplifier". Pads now floating.', cast: ['Gary'], draw: feDraw('hotplug', 0) },
+        { t: 7, shot: 'Close-up of a temperature controller front panel: setpoint changes from 25.0 to 70.0, ramp rate field reads MAX. Rack-focus to the chip: a graphic overlay of minus signs accumulating along the top surface under the electrodes.', caption: 'Forty-five kelvin, at full speed.', cast: [], draw: feDraw('hotplug', 1) },
+        { t: 14, shot: 'Macro, low angle, the connector and cable: the gloved hand brings the cable nut toward the fixture connector. A tiny blue-white arc jumps across the last fraction of a millimeter at the center pin. Single frame flash, then normal light.', caption: 'Plugged back in while charged.', cast: ['Gary'], draw: feDraw('hotplug', 2) },
+        { t: 21, shot: 'The driver amplifier module on the bench, its status LED dark. A thin wisp of smoke (practical effect) rises from its vent. Cut to a microscope image of the chip: a dark burn track across the gap between signal and ground electrodes.', caption: 'One driver amplifier, former.', cast: [], draw: feDraw('hotplug', 3) },
+        { t: 27, shot: 'Freeze on the smoke wisp. Red stamp: NOT OKAY. Then the corrected take: shorting cap on the connector during the step, slow ramp on the controller, cap removed only after the chip is back at room temperature and discharged; green stamp OKAY.', caption: 'Is this okay?', cast: [], draw: feDraw('hotplug', 4) }
       ]
     },
     {
@@ -1782,6 +1476,7 @@
         {"from": "Dana", "text": "Not random. Shorting cap on the connector during every thermal step, slow ramp, connect only after discharge. I would also keep the spare in its box until the procedure is updated.", "side": "right", "to": ["Manager", "Gary"], "cc": ["Equipment owner, fixture 2"], "date": "2026-11-18 16:52", "subject": "RE: RE: RE: Driver amplifier failure on fixture 2"}
       ],
       narration: [
+        "Read this email thread, and judge whether Gary's handling of the failure is proper.",
         "Gary logs the amplifier failure as cause unknown, swaps in a spare, and keeps the qualification on schedule. Is this okay?",
         "No. A failure with a mechanism is not random. Floating electrodes on z-cut lithium niobate store pyroelectric charge, and plugging in at temperature delivers it to whatever is on the other end of the cable.",
         "Watch your charge. " + RESPOND
@@ -1792,14 +1487,14 @@
       type: 'reveal', title: 'What went wrong, technically',
       prompt: 'Open each finding to continue.',
       tabs: [
-        { label: 'How much charge', body: '<p>Bound surface charge density on the z faces: sigma = p dT. Unscreened field: E = p dT / (eps0 eps33), eps33 = 28. Voltage across a slab of thickness t: V = E t.</p><p>dT = 45 K, t = 0.5 mm, p = 4.0e-5 C/(m^2 K) (Weis and Gaylord, 1985) to about 9.5e-5 C/(m^2 K) (Popescu et al., 2013):</p><p>sigma = 1.8 to 4.3 nC per square millimeter; E = 7.3 to 17 kV/mm; V = 3.6 to 8.6 kV between a wide floating top electrode and the grounded fixture below.</p><p>Unscreened upper bound. Surface conduction, air, and partial discharges reduce it. In bulk lithium niobate, dark conduction is slow, so a large part can remain for a long time.</p>', narration: [
+        { label: 'How much charge', body: '<p>Bound surface charge density on the z faces: $\\sigma = p\\,\\Delta T$. Unscreened field: $E = p\\,\\Delta T / (\\varepsilon_0 \\varepsilon_{33})$, $\\varepsilon_{33} = 28$. Voltage across a slab of thickness $t$: $V = E\\,t$.</p><p>$\\Delta T = 45$ K, $t = 0.5$ mm, $p = 4.0\\times10^{-5}\\ \\mathrm{C\\,m^{-2}\\,K^{-1}}$ (Weis and Gaylord, 1985) to about $9.5\\times10^{-5}\\ \\mathrm{C\\,m^{-2}\\,K^{-1}}$ (Popescu et al., 2013):</p><p>$\\sigma = 1.8$ to $4.3$ nC per square millimeter; $E = 7.3$ to $17$ kV/mm; $V = 3.6$ to $8.6$ kV between a wide floating top electrode and the grounded fixture below.</p><p>Unscreened upper bound. Surface conduction, air, and partial discharges reduce it. In bulk lithium niobate, dark conduction is slow, so a large part can remain for a long time.</p>', narration: [
           "Let's estimate the charge. The bound charge density is the pyroelectric coefficient times the temperature change.",
           "For forty five kelvin, with the literature range of the coefficient, that is about two to four nanocoulombs per square millimeter.",
           "If nothing screens it, the field is that charge density over epsilon zero epsilon three three. Seven to seventeen kilovolts per millimeter.",
           "Across a half millimeter chip, between a wide floating top electrode and the grounded fixture below, that is an upper bound of about four to nine kilovolts.",
           "Screening reduces it over time. In bulk lithium niobate, dark conduction is slow. Watch your charge."
         ] },
-        { label: 'Why it reached the amplifier', body: '<p>With the pads shorted or connected through a low-impedance path, pyroelectric charge drains continuously as a small current, i = p A dT/dt, while the temperature changes.</p><p>With the pads floating, it is stored. Connecting a cable later releases it in one event, through the connector center pin, into whatever is on the other end: an amplifier output, a probe tip, a transimpedance amplifier input.</p><p>Which face goes negative depends on which face is up: the coefficient is negative, so heating leaves the plus z face negative, and cooling leaves it positive (Weis and Gaylord, 1985). Either way, the energy is the same.</p>', narration: [
+        { label: 'Why it reached the amplifier', body: '<p>With the pads shorted or connected through a low-impedance path, pyroelectric charge drains continuously as a small current, $i = p\\,A\\,dT/dt$, while the temperature changes.</p><p>With the pads floating, it is stored. Connecting a cable later releases it in one event, through the connector center pin, into whatever is on the other end: an amplifier output, a probe tip, a transimpedance amplifier input.</p><p>Which face goes negative depends on which face is up: the coefficient is negative, so heating leaves the plus z face negative, and cooling leaves it positive (Weis and Gaylord, 1985). Either way, the energy is the same.</p>', narration: [
           "When the pads are shorted, or connected through a low impedance, the pyroelectric charge drains as a small current while the temperature changes.",
           "When the pads float, the charge is stored. Plugging in a cable later releases it all at once, into whatever is on the other end. An amplifier output. A probe tip. An amplifier input.",
           "The sign depends on which face is up. Heating leaves the plus z face negative, and cooling leaves it positive. The amplifier does not care about the sign.",
@@ -1857,6 +1552,7 @@
     {
       type: 'video', title: 'Incident video: The chip that was turned around', duration: 32,
       narration: [
+        "Watch the incident as it happened. Then judge Gary's conduct.",
         "Gary takes a modulator chip from a shared gel-pak and places it on the probe station chuck. It is turned one hundred eighty degrees from the bench card.",
         "The lensed fiber is on the left, so the light goes in on the left, as always. That is the end the chip designer intended as the output. A Mach-Zehnder modulator does not mind which way the light goes.",
         "The R F pads at the other end end in an on-chip termination. So the R F probe can only land on the R F input pads. Today, those are on the right. Gary moves the probe arm.",
@@ -1865,10 +1561,10 @@
         "Is this okay? No. Know your axes. Your D C is not your R F. " + M
       ],
       keyframes: [
-        { t: 0, shot: 'Top-down macro of a gel-pak with a grid of identical rectangular modulator dies, no die marks visible from above. Gloved tweezers lift one die. Cut to the probe station chuck: the die placed with its label text upside down relative to a laminated bench card on the chuck edge.', caption: 'From the shared gel-pak. Turned around.', cast: ['Gary'], draw: animHands({ labels: ['gel-pak', 'tweezers', 'probe station chuck'], turns: [0, 90, 180], caption: 'a half turn between the gel-pak and the chuck' }) },
-        { t: 8, shot: 'Probe station, 45 degree overhead: lensed fiber on a stage at the left facet. A GSG RF probe on a manipulator is unscrewed from the left side and remounted on the right, landing on pads next to the words RF IN, which are upside down in the frame. At the left end, a small on-chip thin-film resistor is visible.', caption: 'Light enters on the left. RF can only enter on the right.', cast: ['Gary'], draw: animTW({ counter: true, caption: 'counter-propagating' }) },
-        { t: 16, shot: 'Network analyzer screen: the electro-optic response trace drops smoothly, crosses the minus 3 dB line at a few GHz, and dives into a deep null. A second reference trace (grey) from last week stays flat to tens of GHz.', caption: 'DC V pi: perfect. High-speed response: no.', cast: [], draw: animTW({ counter: true, caption: 'the velocity match became a velocity sum' }) },
-        { t: 24, shot: 'Freeze on the null. Red stamp: NOT OKAY. Corrected take: die turned around, fiber and probe back to the bench card positions, RF and light both traveling left to right, response flat; green stamp OKAY.', caption: 'Is this okay?', cast: [], draw: animTW({ counter: true, stamp: 'NOT OKAY', caption: 'is this okay?' }) }
+        { t: 0, shot: 'Top-down macro of a gel-pak with a grid of identical rectangular modulator dies, no die marks visible from above. Gloved tweezers lift one die. Cut to the probe station chuck: the die placed with its label text upside down relative to a laminated bench card on the chuck edge.', caption: 'From the shared gel-pak. Turned around.', cast: ['Gary'], draw: feDraw('turned0') },
+        { t: 8, shot: 'Probe station, 45 degree overhead: lensed fiber on a stage at the left facet. A GSG RF probe on a manipulator is unscrewed from the left side and remounted on the right, landing on pads next to the words RF IN, which are upside down in the frame. At the left end, a small on-chip thin-film resistor is visible.', caption: 'Light enters on the left. RF can only enter on the right.', cast: ['Gary'], draw: feDraw('turned1') },
+        { t: 16, shot: 'Network analyzer screen: the electro-optic response trace drops smoothly, crosses the minus 3 dB line at a few GHz, and dives into a deep null. A second reference trace (grey) from last week stays flat to tens of GHz.', caption: 'DC V pi: perfect. High-speed response: no.', cast: [], draw: feDraw('turned2') },
+        { t: 24, shot: 'Freeze on the null. Red stamp: NOT OKAY. Corrected take: die turned around, fiber and probe back to the bench card positions, RF and light both traveling left to right, response flat; green stamp OKAY.', caption: 'Is this okay?', cast: [], draw: feDraw('turned3') }
       ]
     },
     {
@@ -1885,6 +1581,7 @@
         {"from": "Dana", "text": "turn it around and re-measure, yes. and log it. the rest of the lot came out of the same gel-pak", "side": "right"}
       ],
       narration: [
+        "Read this test thread, and judge whether Gary's plan is proper.",
         "Gary's first guess is the network analyzer calibration. His second is to fix the one chip and update its row. Is this okay?",
         "No. The calibration did nothing wrong, and quiet fixes hide the other chips loaded the same way.",
         "Know your axes. " + RESPOND
@@ -1895,7 +1592,7 @@
       type: 'reveal', title: 'What went wrong, technically',
       prompt: 'Open each finding to continue.',
       tabs: [
-        { label: 'Direction is part of the design', body: '<p>Light entering at time t0 reaches position z at t0 + z n_g / c. The RF wave along the electrode has index n_m. Integrating the phase the light picks up along a length L (the time-of-flight treatment used by Boynton et al., 2020, p. 8), the response is</p><p>|H(f)| = |sin(x) / x|, x = pi f L (n_m - n_g) / c for co-propagation, and x = pi f L (n_m + n_g) / c for counter-propagation (RF loss ignored).</p><p>A published thin-film design reports an RF effective index n_m = 2.2 and an optical group index n_g = 2.23 (Arab Juneghani et al., 2022, p. 3). For L = 5 mm:</p><p>Co-propagating: the velocity term alone reaches -3 dB (electrical) near 890 GHz, so RF loss sets the bandwidth instead.<br>Counter-propagating: -3 dB (electrical, |H| = 0.71) at about 6.0 GHz, first null at c / (L (n_m + n_g)), about 13.5 GHz.</p>', narration: [
+        { label: 'Direction is part of the design', body: '<p>Light entering at time $t_0$ reaches position $z$ at $t_0 + z\\,n_g/c$. The RF wave along the electrode has index $n_m$. Integrating the phase the light picks up along a length L (the time-of-flight treatment used by Boynton et al., 2020, p. 8), the response is</p><p>$$|H(f)| = \\left|\\frac{\\sin x}{x}\\right|, \\qquad x = \\frac{\\pi f L\\,(n_m \\mp n_g)}{c}$$</p><p>with the minus sign for co-propagation and the plus sign for counter-propagation (RF loss ignored).</p><p>A published thin-film design reports an RF effective index $n_m = 2.2$ and an optical group index $n_g = 2.23$ (Arab Juneghani et al., 2022, p. 3). For $L = 5$ mm:</p><p>Co-propagating: the velocity term alone reaches -3 dB (electrical) near 890 GHz, so RF loss sets the bandwidth instead.<br>Counter-propagating: -3 dB (electrical, $|H| = 0.71$) at about 6.0 GHz, first null at $c / [L\\,(n_m + n_g)]$, about 13.5 GHz.</p>', narration: [
           "A traveling wave modulator works because the R F wave and the light move together. Light that enters at one moment keeps seeing the same part of the R F wave all the way along the electrode.",
           "Follow the light through the device, and add up the phase it picks up. The response is a sinc function. Its argument is pi, times frequency, times length, times the index difference, over the speed of light.",
           "When the waves co-propagate, the index difference is n m minus n g. In a velocity matched design, that is almost zero. A published thin film design reports an R F index of two point two and an optical group index of two point two three.",
@@ -1908,7 +1605,7 @@
           "At D C, the modulator gives the same phase whichever way the light travels. So the D C V pi was perfect.",
           "Only the relative direction of the R F wave and the light changed. That is why the D C test passed. Your D C is not your R F."
         ] },
-        { label: 'When 180 degrees flips the sign', body: '<p>On x-cut, a half turn in the plane is a 180 degree rotation about x. It maps +y to -y and +z to -z. A tensor component changes sign if its indices contain y and z an odd number of times in total: r33, r13, r22, r51, and the pyroelectric coefficient all flip in any frame that did not turn with the crystal. The refractive indices do not.</p><p>It matters when something stayed fixed while the crystal turned:</p><p>A mask written on a wafer loaded 180 degrees from the flat: electrodes in the mask frame, crystal turned. The voltage-to-phase sign reverses; a bias controller set to lock on a rising slope finds the other quadrature, and data polarity inverts.</p><p>A z-cut wafer processed face down: the +z and -z faces swap. Hydrofluoric acid etches the two faces at very different rates (Sones et al., 2002), and the pyroelectric charge on heating has the opposite sign.</p><p>Thin film made by ion slicing: the implanted face of the donor crystal is bonded to the handle wafer (process: Zhu et al., 2021), so the exposed film surface is the opposite face from the donor\'s top face. This matters for z-cut; on x-cut, plus x and minus x are related by the crystal\'s mirror symmetry.</p>', narration: [
+        { label: 'When 180 degrees flips the sign', body: '<p>On x-cut, a half turn in the plane is a 180 degree rotation about x. It maps +y to -y and +z to -z. A tensor component changes sign if its indices contain y and z an odd number of times in total: $r_{33}$, $r_{13}$, $r_{22}$, $r_{51}$, and the pyroelectric coefficient all flip in any frame that did not turn with the crystal. The refractive indices do not.</p><p>It matters when something stayed fixed while the crystal turned:</p><p>A mask written on a wafer loaded 180 degrees from the flat: electrodes in the mask frame, crystal turned. The voltage-to-phase sign reverses; a bias controller set to lock on a rising slope finds the other quadrature, and data polarity inverts.</p><p>A z-cut wafer processed face down: the +z and -z faces swap. Hydrofluoric acid etches the two faces at very different rates (Sones et al., 2002), and the pyroelectric charge on heating has the opposite sign.</p><p>Thin film made by ion slicing: the implanted face of the donor crystal is bonded to the handle wafer (process: Zhu et al., 2021), so the exposed film surface is the opposite face from the donor\'s top face. This matters for z-cut; on x-cut, plus x and minus x are related by the crystal\'s mirror symmetry.</p>', narration: [
           "Now, precisely, when does a half turn flip a sign?",
           "On x-cut, a half turn in the plane maps plus y to minus y, and plus z to minus z. A coefficient changes sign if its indices contain y and z an odd number of times in total. So r three three, r one three, r two two, r five one, and the pyroelectric coefficient all flip in any frame that did not turn with the crystal. The refractive indices do not change.",
           "So it matters when something stayed fixed while the crystal turned. If a mask is written on a wafer loaded a half turn from its flat, the electrodes are in the mask frame and the crystal is turned. The voltage to phase sign reverses, a bias controller set for a rising slope finds the other quadrature, and the data comes out inverted.",
@@ -2088,16 +1785,17 @@
   ]), {
     type: 'video', title: 'Cold open: Many hands', duration: 32,
     narration: [
+      "Watch one die's journey, and judge whether it is okay.",
       "This is one die. Before it reaches a test bench, it passes through many hands.",
       "A spin coater. A mask aligner. A mode solver. A wafer supplier. A shared gel-pak. A partner university. Your own fiber mount. A deal made under schedule pressure. And a lab where nobody has time to check.",
       "Each one can turn it. None of them writes it down unless someone does.",
       "Is this okay? No. " + M
     ],
     keyframes: [
-      { t: 0, shot: 'Abstract set: a single rectangular lithium niobate die with a small red corner mark, resting on a white turntable against a dark grey seamless background, lit by one soft key light. Slow orbit.', caption: 'One die.', cast: [], draw: animHands({ labels: ['one die'], caption: 'one die, one mark' }) },
-      { t: 6, shot: 'Rapid sequence of real-scale props, each entering frame and touching the die once, each leaving it at a new angle: a spin coater chuck, a mask aligner vacuum chuck with pins, a monitor showing a mode solver material dialog, a sealed wafer box from a supplier, a shared gel-pak with unlabeled pockets.', caption: 'Tools, software, suppliers, coworkers.', cast: [], draw: animHands({ labels: ['spin coater', 'aligner chuck', 'mode solver', 'wafer supplier', 'shared gel-pak'], turns: [0, 90, 90, 180, 270], caption: 'each hand can turn it' }) },
-      { t: 14, shot: 'Continuing: a padded shipping box with a partner university return label (generic, no real names), a fiber rotation mount on Gary\'s bench, two gloved hands shaking over a printed tool reservation calendar, a cluttered shelf of unmarked die boxes in a lab with a crackling hotplate.', caption: 'Collaborators, yourself, deals, environments.', cast: ['Gary'], draw: animHands({ labels: ['partner lab', 'your own bench', 'a deal', 'the lab itself'], turns: [180, 270, 0, 90], caption: 'and none of them writes it down' }) },
-      { t: 24, shot: 'Return to the turntable: the die, now turned 90 degrees from its start, red mark in the wrong corner. Freeze. Red stamp: NOT OKAY.', caption: 'Is this okay?', cast: [], draw: animHands({ labels: ['the test bench'], turns: [90], stamp: 'NOT OKAY', caption: 'is this okay?' }) }
+      { t: 0, shot: 'Abstract set: a single rectangular lithium niobate die with a small red corner mark, resting on a white turntable against a dark grey seamless background, lit by one soft key light. Slow orbit.', caption: 'One die.', cast: [], draw: feDraw('hands', 0) },
+      { t: 6, shot: 'Rapid sequence of real-scale props, each entering frame and touching the die once, each leaving it at a new angle: a spin coater chuck, a mask aligner vacuum chuck with pins, a monitor showing a mode solver material dialog, a sealed wafer box from a supplier, a shared gel-pak with unlabeled pockets.', caption: 'Tools, software, suppliers, coworkers.', cast: [], draw: feDraw('hands', 1) },
+      { t: 14, shot: 'Continuing: a padded shipping box with a partner university return label (generic, no real names), a fiber rotation mount on Gary\'s bench, two gloved hands shaking over a printed tool reservation calendar, a cluttered shelf of unmarked die boxes in a lab with a crackling hotplate.', caption: 'Collaborators, yourself, deals, environments.', cast: ['Gary'], draw: feDraw('hands', 2) },
+      { t: 24, shot: 'Return to the turntable: the die, now turned 90 degrees from its start, red mark in the wrong corner. Freeze. Red stamp: NOT OKAY.', caption: 'Is this okay?', cast: [], draw: feDraw('hands', 3) }
     ]
   }, {
     type: 'slide', layout: 'host', title: 'Orientation misconduct can come from anywhere',
@@ -2323,11 +2021,11 @@
           {"from": "Gary", "text": "note: chip 4 loaded, input on the left", "side": "right"},
           {"from": "Gary", "text": "correction: input on the right?", "side": "right"},
           {"from": "Gary", "text": "the mark is on the other corner. today's chip 4 data may be mirrored", "side": "right"},
-          {"from": "Gary", "text": "note: re-measure chip 4 tomorrow. probably no need to flag it", "side": "right"}
+          {"from": "Gary", "text": "logged in the run sheet: chip 4, today's data loaded mirrored, flagged, rows kept. re-measure tomorrow", "side": "right"}
         ],
-        narration: ["Gary is the source, the victim, and the only witness. Is this okay?", "No. Domestic misconduct has no witnesses. Log it anyway. Know your axes."]
+        narration: ["Read Gary's notes to himself, and judge whether his response is proper.", "Gary found his own loading error, and nobody else saw it. Is this okay?", "Yes. Gary is the source, the victim, and the only witness. He logged it anyway, because domestic misconduct has no witnesses. Know your axes."]
       },
-      classifyQ: 'Gary marked his own chip on the wrong corner, loaded it from his own notes, and is the only person who knows.',
+      classifyQ: 'Gary marked his own chip on the wrong corner, loaded it from his own notes, and was the only person who knew until he logged it.',
       wrong: [
         ['peer', 'In this incident, no coworker, shared container, or shared template was involved. Gary is the source and the affected party.'],
         ['tool', 'In this incident, no tool turned anything. Gary made the mark, read the mark, and loaded the chip.'],
@@ -2396,7 +2094,7 @@
           {"from": "Manager", "text": "good questions. let us pick this up after tapeout", "side": "left"},
           {"from": "Dana", "text": "we said after tapeout for the last three tapeouts", "side": "left"}
         ],
-        narration: ["Crackling wafers, unmarked dies, and no time to fix either. Is this okay?", "No. When correct conduct is impossible for everyone, the environment is the incident. You should not get used to it. Watch your charge."]
+        narration: ["Read this channel, and judge the answers the new hire gets.", "Crackling wafers, unmarked dies, and no time to fix either. Is this okay?", "No. When correct conduct is impossible for everyone, the environment is the incident. You should not get used to it. Watch your charge."]
       },
       classifyQ: 'In one lab, hotplates have no ramp control, wafers crackle when they come off, dies are stored unmarked, and new hires are told "you get used to it".',
       wrong: [
@@ -2414,7 +2112,7 @@
       question: 'You are Gary. You discover that your "x-cut" simulations were z-cut simulations. The results are already in a design review deck sent to three groups. What do you do?',
       narration: ["You are Gary.", "Your x-cut simulations were z-cut simulations, and three groups have the deck.", "What would you do?"],
       options: [
-        { text: 'Re-run in the stated frame; validate against a known case (bulk TE along y on x-cut sees n_e); send a correction to everyone who received the deck; log it; put the cut, frame, and Euler angles on the first slide from now on', correct: true, why: '' },
+        { text: 'Re-run in the stated frame; validate against a known case (bulk TE along y on x-cut sees $n_e$); send a correction to everyone who received the deck; log it; put the cut, frame, and Euler angles on the first slide from now on', correct: true, why: '' },
         { text: 'File a bug report: the solver default should be x-cut', correct: false, why: "The solver has no way to know what cut your wafer is. A diagonal anisotropic material entered in the simulation's own axes is a documented, reasonable input, and the solver solved exactly the device you described. A bug report would be closed as working as intended, and your deck would still be wrong in three groups' inboxes. Check every material frame against a known case, such as the bulk T E index along y on x-cut, which should be the extraordinary index. Then send the correction. Know your categories. Know your axes." },
         { text: "Replace the slides in the shared folder with corrected ones, marked v8", correct: false, why: "Versioning the deck is good practice. But three groups already downloaded version seven, and some may already be designing around a crossing that does not exist on your wafer. A new version in a folder is not a correction unless the people with the old one are told what changed and why. Send the corrected deck with a one-line explanation, and log it. Know your axes." },
         { text: 'Add a footnote: "Crystal frame details available on request"', correct: false, why: "A footnote that hides the frame is the opposite of the procedure. The frame belongs on the first slide, in plain words: the cut, the propagation axis, and the Euler angles, with their convention. And the existing results are wrong, so they need a correction, not a footnote. Know your axes." },
@@ -2544,7 +2242,7 @@
     [ch2, 3, 'media/fe/opener_bends_drawn.jpg', [0.5, 0.35, 1.0, 0.5, 0.3, 1.12], ["Module three. Respecting Boundaries: Mode Conversion in Bends.", "On x-cut, every bend is also a change of crystal direction."]],
     [ch3, 4, 'media/fe/opener_photorefractive_drawn.jpg', [0.5, 0.3, 1.0, 0.45, 0.3, 1.12], ["Module four. Photorefractive Conduct.", "The light you send writes back. Scan both ways."]],
     [ch4, 5, 'media/render/ln_wafer_hotplate.jpg', [0.5, 0.4, 1.0, 0.58, 0.25, 1.4], ["Module five. Pyroelectric Awareness.", "No voltage has been applied. Charge is being generated anyway."]],
-    [ch5, 6, 'media/render/tfln_probe_station_closeup.jpg', [0.5, 0.5, 1.0, 0.5, 0.6, 1.3], ["Module six. Bias Point Retention.", "Your D C is not your R F. Please hold that thought, and your bias point."]],
+    [ch5, 6, 'media/render/tfln_probe_station_wide.jpg', [0.5, 0.5, 1.0, 0.5, 0.6, 1.3], ["Module six. Bias Point Retention.", "Your D C is not your R F. Please hold that thought, and your bias point."]],
     [ch6, 7, 'media/fe/sim_solver_window_drawn.jpg', [0.5, 0.4, 1.0, 0.6, 0.35, 1.25], ["Module seven. Simulation Integrity.", "Solved without errors is not the same as solved correctly."]]
   ].forEach(function (o) {
     var ch = o[0];
@@ -2791,19 +2489,19 @@
     var i = -1;
     for (var k = 0; k < ch5.steps.length; k++) if (ch5.steps[k].title === 'What went wrong, technically') { i = k; break; }
     if (i < 0) throw new Error('Media anchor not found: turned-around reveal');
-    // Probe-tip points and the die arrow from the render plan; fiber points moved along the fibers and the engraving read off the image, checked by screenshot.
+    // Pins projected from world points through the render camera (tools/blender/project_points.py, probe station close view), checked by screenshot.
     ch5.steps.splice(i + 1, 0, {
       type: 'hotspots', title: 'How chip 3 should have looked', style: 'pins',
       prompt: 'A correctly oriented device under test. Open every pin to continue.',
       image: { src: 'media/render/tfln_probe_station_closeup.jpg' },
       narration: ["Here is a correctly oriented device under test. Every probe is where the layout said it would be. Open every pin."],
       spots: [
-        { x: 0.284, y: 0.62, label: 'Fixture plus z engraving', body: '<p>The fixture is engraved with plus z. It is the reference for every die loaded here.</p>', narration: ["The fixture is engraved with plus z. It is the reference for every die loaded here."] },
-        { x: 0.503, y: 0.657, label: 'Die plus z arrow', body: '<p>The die arrow agrees with the fixture arrow. Check it before the probes come down, not after the result looks strange.</p>', narration: ["The die arrow agrees with the fixture arrow. Check it before the probes come down."] },
-        { x: 0.26, y: 0.77, label: 'Lensed fiber, input facet', body: '<p>Light enters at the end the layout calls the input, at the same end as the RF input.</p>', narration: ["Light enters at the end the layout calls the input, the same end as the R F input."] },
-        { x: 0.449, y: 0.724, label: 'Probe on the RF input pads', body: '<p>The RF wave starts here and travels with the light. That is the velocity match you paid for.</p>', narration: ["The R F wave starts here and travels with the light. That is the velocity match you paid for."] },
-        { x: 0.574, y: 0.701, label: 'Probe on the termination pads', body: '<p>The far end of the electrode, terminated through the second probe. It is not an input, even though the pads look identical.</p>', narration: ["These are the termination pads at the far end, terminated through the second probe. They look identical to the input pads. They are not an input."] },
-        { x: 0.73, y: 0.68, label: 'Lensed fiber, output facet', body: '<p>Light leaves here, after traveling the whole electrode alongside the RF wave.</p>', narration: ["Light leaves here, after traveling the whole electrode alongside the R F wave. Know your axes."] }
+        { x: 0.39, y: 0.58, label: 'Fixture plus z engraving', body: '<p>The fixture is engraved with plus z. It is the reference for every die loaded here.</p>', narration: ["The fixture is engraved with plus z. It is the reference for every die loaded here."] },
+        { x: 0.563, y: 0.478, label: 'Die plus z arrow', body: '<p>The die arrow agrees with the fixture arrow. Check it before the probes come down, not after the result looks strange.</p>', narration: ["The die arrow agrees with the fixture arrow. Check it before the probes come down."] },
+        { x: 0.535, y: 0.635, label: 'Lensed fiber, input facet', body: '<p>Light enters at the end the layout calls the input, at the same end as the RF input.</p>', narration: ["Light enters at the end the layout calls the input, the same end as the R F input."] },
+        { x: 0.485, y: 0.455, label: 'Probe on the RF input pads', body: '<p>The RF wave starts here and travels with the light. That is the velocity match you paid for.</p>', narration: ["The R F wave starts here and travels with the light. That is the velocity match you paid for."] },
+        { x: 0.69, y: 0.5, label: 'Probe on the termination pads', body: '<p>The far end of the electrode, terminated through the second probe. It is not an input, even though the pads look identical.</p>', narration: ["These are the termination pads at the far end, terminated through the second probe. They look identical to the input pads. They are not an input."] },
+        { x: 0.652, y: 0.4, label: 'Lensed fiber, output facet', body: '<p>Light leaves here, after traveling the whole electrode alongside the RF wave.</p>', narration: ["Light leaves here, after traveling the whole electrode alongside the R F wave. Know your axes."] }
       ]
     });
   })();
@@ -2858,7 +2556,7 @@
        ['Neither; both change with angle', "TM on x-cut is polarized along x, the film normal, which is always an ordinary direction. Its bulk index does not change with in-plane angle. Its effective index still depends on geometry."]]),
     q('On x-cut thin-film lithium niobate, what has been reported about increasing the bend radius, and what should you check first?',
       'A larger radius can increase TE to TM conversion and loss; check whether TE and TM effective indices cross at some propagation angle for your geometry',
-      [['Nothing to check; a larger radius always reduces conversion', "That is true on isotropic platforms. On x-cut, Liu and colleagues, citing earlier work, note that larger bend radii can increase mode conversion and loss. The bend sweeps through angles where TE and TM can hybridize; one plausible picture is that a slower passage through a crossing converts more."],
+      [['Nothing to check; a larger radius always reduces conversion', "That is true on isotropic platforms. On x-cut, Liu and colleagues, citing earlier work, note that larger bend radii can increase mode conversion and loss. The bend sweeps through angles where TE and TM can hybridize; the earlier work explains it: a slower passage through a crossing is more adiabatic and converts more."],
        ['Bend radius changes only radiation loss; polarization conversion can only come from the input fiber', "On x-cut, anisotropy and slanted sidewalls near a TE and TM crossing angle can convert polarization on chip, and a larger radius has been reported to increase that conversion. Check the crossing before blaming the fiber."]]),
     q('Rotating the crystal by +30 degrees is equivalent to which coordinate operation?',
       'Rotating the coordinate system by -30 degrees',
@@ -2941,439 +2639,7 @@
 
   var widgets = {};
 
-  // (a) x-cut index vs propagation angle
-  widgets.xcutIndex = function (root, params, api) {
-    var P = palette(api, root); ensureStyle(P.accent);
-    var NO = 2.211, NE = 2.138; // Zelmon et al. 1997, 1550 nm, congruent LN
-    var wrap = el('div', { 'class': 'fe-w' }); root.appendChild(wrap);
-    var cv = makeCanvas(root, 0.5); wrap.appendChild(cv.c);
-    var row1 = el('div', { 'class': 'fe-row' });
-    var l1 = el('label', null, 'Propagation angle from crystal y: <b class="fe-read">0</b> deg');
-    var s1 = el('input', { type: 'range', min: '0', max: '90', step: '1', value: '0' });
-    s1.className = 'fe-hint';
-    var h1 = hand('drag');
-    row1.appendChild(l1); row1.appendChild(s1); row1.appendChild(h1);
-    var row2 = el('div', { 'class': 'fe-row' });
-    var l2 = el('label', null, 'Illustrative waveguide offset (TM below TE): <b class="fe-read">0.000</b>');
-    var s2 = el('input', { type: 'range', min: '0', max: '0.1', step: '0.001', value: '0' });
-    row2.appendChild(l2); row2.appendChild(s2);
-    var read = el('div', { 'class': 'fe-read' });
-    var note = el('div', { 'class': 'fe-note' }, 'Bulk curves: 1/n_TE^2 = cos^2(theta)/n_e^2 + sin^2(theta)/n_o^2, n_TM = n_o; n_o = 2.211, n_e = 2.138 at 1550 nm (Zelmon et al., JOSA B, 1997). <span class="fe-tag">Illustrative model</span> The offset slider is not computed: real waveguide geometry lowers TE and TM effective indices by different amounts, which can create a crossing (about 25 deg for one geometry in Wang et al., Nature, 2024).');
-    wrap.appendChild(row1); wrap.appendChild(row2); wrap.appendChild(read); wrap.appendChild(note);
-    var thMin = 90, thMax = 0, offTouched = false, done = false, moved1 = false;
-
-    function nTE(th) { var c = Math.cos(th), s = Math.sin(th); return 1 / Math.sqrt(c * c / (NE * NE) + s * s / (NO * NO)); }
-    function crossing(d) {
-      var nt = NO - d; if (d <= 0 || nt < NE) return null;
-      var c2 = (1 / (nt * nt) - 1 / (NO * NO)) / (1 / (NE * NE) - 1 / (NO * NO));
-      if (c2 < 0 || c2 > 1) return null;
-      return Math.acos(Math.sqrt(c2)) * 180 / Math.PI;
-    }
-    function draw() {
-      var ctx = cv.ctx, w = cv.w, h = cv.h; ctx.clearRect(0, 0, w, h);
-      var th = +s1.value, off = +s2.value;
-      var px0 = w * 0.42, px1 = w - 20, py0 = 16, py1 = h - 34;
-      var nmin = NE - off - 0.12, nmax = NO + 0.02;
-      if (off < 0.04) nmin = NE - 0.06;
-      function X(t) { return px0 + t / 90 * (px1 - px0); }
-      function Y(n) { return py1 - (n - nmin) / (nmax - nmin) * (py1 - py0); }
-      ctx.strokeStyle = P.grid; ctx.lineWidth = 1; ctx.strokeRect(px0, py0, px1 - px0, py1 - py0);
-      ctx.fillStyle = P.fg; ctx.font = '12px sans-serif'; ctx.textAlign = 'center';
-      for (var t = 0; t <= 90; t += 15) { ctx.fillText(String(t), X(t), py1 + 14); }
-      ctx.fillText('propagation angle from y (deg)', (px0 + px1) / 2, py1 + 28);
-      ctx.textAlign = 'right';
-      var step = 0.02; for (var n = Math.ceil(nmin / step) * step; n <= nmax + 1e-9; n += step) { ctx.fillText(n.toFixed(2), px0 - 4, Y(n) + 4); }
-      // TE bulk
-      ctx.strokeStyle = P.accent; ctx.lineWidth = 2.5; ctx.beginPath();
-      for (var i = 0; i <= 90; i++) { var y = Y(nTE(i * Math.PI / 180)); if (i === 0) ctx.moveTo(X(i), y); else ctx.lineTo(X(i), y); }
-      ctx.stroke();
-      // TM bulk
-      ctx.strokeStyle = P.warn; ctx.beginPath(); ctx.moveTo(X(0), Y(NO)); ctx.lineTo(X(90), Y(NO)); ctx.stroke();
-      if (off > 0) {
-        ctx.setLineDash([6, 4]); ctx.beginPath(); ctx.moveTo(X(0), Y(NO - off)); ctx.lineTo(X(90), Y(NO - off)); ctx.stroke(); ctx.setLineDash([]);
-        var xc = crossing(off);
-        if (xc != null) {
-          ctx.fillStyle = P.danger; ctx.beginPath(); ctx.arc(X(xc), Y(NO - off), 6, 0, Math.PI * 2); ctx.fill();
-          ctx.textAlign = 'left'; ctx.fillText('crossing ' + xc.toFixed(1) + ' deg', X(xc) + 8, Y(NO - off) - 8);
-        }
-      }
-      ctx.textAlign = 'left'; ctx.fillStyle = P.accent; ctx.fillText('TE (bulk)', X(2), Y(NE) - 6);
-      ctx.fillStyle = P.warn; ctx.fillText('TM (bulk) = n_o', X(2), Y(NO) - 6);
-      if (off > 0) ctx.fillText('TM with illustrative offset', X(2), Y(NO - off) + 14);
-      // cursor
-      ctx.strokeStyle = P.fg; ctx.setLineDash([3, 3]); ctx.beginPath(); ctx.moveTo(X(th), py0); ctx.lineTo(X(th), py1); ctx.stroke(); ctx.setLineDash([]);
-      // die inset
-      var cx = w * 0.2, cy = h * 0.5, R = Math.min(w * 0.17, h * 0.38);
-      ctx.strokeStyle = P.fg; ctx.lineWidth = 1.5; ctx.strokeRect(cx - R, cy - R, 2 * R, 2 * R);
-      ctx.fillStyle = P.muted; ctx.font = '11px sans-serif'; ctx.textAlign = 'center'; ctx.fillText('x-cut die (top view, x out of page)', cx, cy + R + 14);
-      arrow(ctx, cx - R + 8, cy + R - 8, cx - R + 40, cy + R - 8, P.muted, 1.5); ctx.fillText('y', cx - R + 46, cy + R - 4);
-      arrow(ctx, cx - R + 8, cy + R - 8, cx - R + 8, cy + R - 40, P.muted, 1.5); ctx.fillText('z', cx - R + 8, cy + R - 44);
-      var a = th * Math.PI / 180, L = R * 0.8;
-      ctx.strokeStyle = P.accent; ctx.lineWidth = 6; ctx.beginPath();
-      ctx.moveTo(cx - L * Math.cos(a), cy + L * Math.sin(a)); ctx.lineTo(cx + L * Math.cos(a), cy - L * Math.sin(a)); ctx.stroke();
-      arrow(ctx, cx, cy, cx + 0.5 * L * Math.cos(a), cy - 0.5 * L * Math.sin(a), P.fg, 2);
-      // TE polarization (perpendicular, in plane)
-      var pa = a + Math.PI / 2;
-      arrow(ctx, cx, cy, cx + 0.35 * L * Math.cos(pa), cy - 0.35 * L * Math.sin(pa), P.danger, 2);
-      ctx.fillStyle = P.danger; ctx.fillText('E (TE)', cx + 0.45 * L * Math.cos(pa), cy - 0.45 * L * Math.sin(pa));
-      var nt = nTE(a);
-      read.innerHTML = 'n_TE (bulk) = <b>' + nt.toFixed(4) + '</b> &nbsp; n_TM (bulk) = <b>' + NO.toFixed(4) + '</b> &nbsp; difference = <b>' + (NO - nt).toFixed(4) + '</b>' + (off > 0 ? ' &nbsp; crossing with offset: <b>' + (crossing(off) == null ? 'none (offset larger than n_o - n_e)' : crossing(off).toFixed(1) + ' deg') + '</b>' : '');
-      l1.querySelector('b').textContent = String(th);
-      l2.querySelector('b').textContent = off.toFixed(3);
-    }
-    function check() {
-      if (done) return;
-      if (thMax - thMin >= 60 && offTouched) {
-        done = true; s2.classList.remove('fe-hint');
-        say(api, 'Well done. On x-cut, T E turns with the waveguide, and T M does not.');
-        api.complete();
-      }
-    }
-    s1.addEventListener('input', function () {
-      var v = +s1.value; thMin = Math.min(thMin, v); thMax = Math.max(thMax, v);
-      if (!moved1) { moved1 = true; }
-      if (thMax - thMin >= 60 && s1.classList.contains('fe-hint')) {
-        s1.classList.remove('fe-hint'); if (h1.parentNode) h1.parentNode.removeChild(h1);
-        if (!offTouched) { s2.classList.add('fe-hint'); row2.appendChild(hand('now the offset')); }
-      }
-      draw(); check();
-    });
-    s2.addEventListener('input', function () {
-      offTouched = true;
-      var hh = row2.querySelector('.fe-hand'); if (hh && hh.parentNode && thMax - thMin >= 60) { hh.parentNode.removeChild(hh); s2.classList.remove('fe-hint'); }
-      draw(); check();
-    });
-    draw();
-  };
-
-  // (b) resonance sweep with thermal (red) or photorefractive (blue) shift; quasi-static illustrative model
-  widgets.prSweep = function (root, params, api) {
-    var P = palette(api, root); ensureStyle(P.accent);
-    var wrap = el('div', { 'class': 'fe-w' }); root.appendChild(wrap);
-    var cv = makeCanvas(root, 0.45); wrap.appendChild(cv.c);
-    var rowM = el('div', { 'class': 'fe-row' });
-    var bT = el('button', null, 'Thermal (red shift)'), bP = el('button', null, 'Photorefractive (blue shift)');
-    bP.className = 'on'; rowM.appendChild(el('span', null, 'Mechanism:')); rowM.appendChild(bT); rowM.appendChild(bP);
-    var rowP = el('div', { 'class': 'fe-row' });
-    var lp = el('label', null, 'Power (normalized): <b class="fe-read">0.60</b>');
-    var sp = el('input', { type: 'range', min: '0', max: '1', step: '0.01', value: '0.6' });
-    rowP.appendChild(lp); rowP.appendChild(sp);
-    var rowS = el('div', { 'class': 'fe-row' });
-    var bUp = el('button', null, 'Sweep short to long wavelength'), bDn = el('button', null, 'Sweep long to short wavelength');
-    bUp.className = 'fe-hint'; bDn.className = 'fe-hint';
-    var hd = hand('sweep both ways');
-    rowS.appendChild(bUp); rowS.appendChild(bDn); rowS.appendChild(hd);
-    var read = el('div', { 'class': 'fe-read' }, 'Cold linewidth = 1.00 (normalized). Sweep to measure.');
-    var note = el('div', { 'class': 'fe-note' }, '<span class="fe-tag">Illustrative model</span> Normalized detuning in cold linewidths. Quasi-static: resonance shift = sign x power x normalized intracavity energy; time constants ignored (in real lithium niobate the photorefractive response is much slower than the thermal one). Direction of shift per Luke et al., Optics Express, 2020.');
-    wrap.appendChild(rowM); wrap.appendChild(rowP); wrap.appendChild(rowS); wrap.appendChild(read); wrap.appendChild(note);
-
-    var sign = -1, AMAX = 6, XR = 8, N = 400;
-    var traces = []; var anim = null; var doneDirs = {}; var done = false;
-    function lor(d) { return 1 / (1 + 4 * d * d); }
-    function solve(x, a, sPrev) {
-      // roots of g(s) = s - a * lor(x - s), s between 0 and a
-      var lo = Math.min(0, a), hi = Math.max(0, a), M2 = 600, roots = [];
-      if (Math.abs(a) < 1e-9) return 0;
-      var prevS = lo, prevG = lo - a * lor(x - lo);
-      for (var i = 1; i <= M2; i++) {
-        var s = lo + (hi - lo) * i / M2, g = s - a * lor(x - s);
-        if (prevG === 0) roots.push(prevS);
-        else if (prevG * g < 0) {
-          var A = prevS, B = s, gA = prevG;
-          for (var k = 0; k < 40; k++) { var m = (A + B) / 2, gm = m - a * lor(x - m); if (gA * gm <= 0) { B = m; } else { A = m; gA = gm; } }
-          roots.push((A + B) / 2);
-        }
-        prevS = s; prevG = g;
-      }
-      if (!roots.length) return sPrev;
-      var best = roots[0];
-      roots.forEach(function (r) { if (Math.abs(r - sPrev) < Math.abs(best - sPrev)) best = r; });
-      return best;
-    }
-    function compute(dir) {
-      var a = sign * (+sp.value) * AMAX, out = [], s = 0;
-      for (var i = 0; i <= N; i++) {
-        var f = i / N, x = dir > 0 ? -XR + 2 * XR * f : XR - 2 * XR * f;
-        s = solve(x, a, s);
-        out.push({ x: x, T: 1 - 0.85 * lor(x - s) });
-      }
-      out.sort(function (p, q2) { return p.x - q2.x; });
-      return out;
-    }
-    function width(tr) {
-      var thr = 1 - 0.85 / 2, xs = tr.filter(function (p) { return p.T < thr; }).map(function (p) { return p.x; });
-      if (!xs.length) return 0;
-      return Math.max.apply(null, xs) - Math.min.apply(null, xs);
-    }
-    function draw(partial) {
-      var ctx = cv.ctx, w = cv.w, h = cv.h; ctx.clearRect(0, 0, w, h);
-      var x0 = 50, x1 = w - 14, y0 = 12, y1 = h - 34;
-      function X(x) { return x0 + (x + XR) / (2 * XR) * (x1 - x0); }
-      function Y(T) { return y1 - T * (y1 - y0); }
-      ctx.strokeStyle = P.grid; ctx.strokeRect(x0, y0, x1 - x0, y1 - y0);
-      ctx.fillStyle = P.fg; ctx.font = '12px sans-serif'; ctx.textAlign = 'center';
-      for (var t = -8; t <= 8; t += 2) ctx.fillText(String(t), X(t), y1 + 14);
-      ctx.fillText('laser detuning (cold linewidths); right = longer wavelength', (x0 + x1) / 2, y1 + 28);
-      ctx.textAlign = 'right'; ctx.fillText('1', x0 - 4, Y(1) + 4); ctx.fillText('0', x0 - 4, Y(0) + 4);
-      // cold
-      ctx.strokeStyle = P.muted; ctx.setLineDash([4, 4]); ctx.lineWidth = 1.5; ctx.beginPath();
-      for (var i = 0; i <= 300; i++) { var x = -XR + 2 * XR * i / 300, y = Y(1 - 0.85 * lor(x)); if (i === 0) ctx.moveTo(X(x), y); else ctx.lineTo(X(x), y); }
-      ctx.stroke(); ctx.setLineDash([]);
-      traces.forEach(function (tr) {
-        var pts = tr.pts; var n = tr === traces[traces.length - 1] && partial != null ? Math.floor(partial * pts.length) : pts.length;
-        var ordered = tr.dir > 0 ? pts : pts.slice().reverse();
-        ctx.strokeStyle = tr.dir > 0 ? P.accent : P.danger; ctx.lineWidth = 2.2; ctx.beginPath();
-        for (var k = 0; k < n; k++) { var p = ordered[k]; if (k === 0) ctx.moveTo(X(p.x), Y(p.T)); else ctx.lineTo(X(p.x), Y(p.T)); }
-        ctx.stroke();
-      });
-      ctx.textAlign = 'left'; ctx.fillStyle = P.muted; ctx.fillText('dashed: cold resonance', x0 + 6, y0 + 14);
-    }
-    function run(dir) {
-      if (anim) cancelAnimationFrame(anim);
-      var pts = compute(dir);
-      if (traces.length >= 2) traces.shift();
-      traces.push({ dir: dir, pts: pts });
-      var t0 = performance.now(), D = 1800;
-      function step(now) {
-        var u = Math.min(1, (now - t0) / D); draw(u);
-        if (u < 1) anim = requestAnimationFrame(step);
-        else {
-          anim = null;
-          var wd = width(pts);
-          read.innerHTML = 'Last sweep (' + (dir > 0 ? 'short to long' : 'long to short') + ', ' + (sign > 0 ? 'thermal' : 'photorefractive') + ', power ' + (+sp.value).toFixed(2) + '): apparent linewidth = <b>' + wd.toFixed(2) + '</b> cold linewidths. ' + (wd < 0.95 ? 'Artificially narrow: Q would be overstated.' : wd > 1.05 ? 'Dragged wide.' : 'Matches the cold resonance.');
-          if (+sp.value > 0.05) doneDirs[dir] = true;
-          if (!done && doneDirs[1] && doneDirs[-1]) {
-            done = true; bUp.classList.remove('fe-hint'); bDn.classList.remove('fe-hint'); if (hd.parentNode) hd.parentNode.removeChild(hd);
-            say(api, 'You scanned both ways. Notice that one direction looks narrower than the true resonance. Scan both ways.');
-            api.complete();
-          }
-        }
-      }
-      anim = requestAnimationFrame(step);
-    }
-    bT.addEventListener('click', function () { sign = 1; bT.className = 'on'; bP.className = ''; traces = []; draw(); });
-    bP.addEventListener('click', function () { sign = -1; bP.className = 'on'; bT.className = ''; traces = []; draw(); });
-    sp.addEventListener('input', function () { lp.querySelector('b').textContent = (+sp.value).toFixed(2); traces = []; draw(); });
-    bUp.addEventListener('click', function () { run(1); });
-    bDn.addEventListener('click', function () { run(-1); });
-    cleanup(api, function () { if (anim) cancelAnimationFrame(anim); });
-    draw();
-  };
-
-  // (c) DC bias drift time trace; illustrative two-layer relaxation
-  widgets.biasDrift = function (root, params, api) {
-    var P = palette(api, root); ensureStyle(P.accent);
-    var wrap = el('div', { 'class': 'fe-w' }); root.appendChild(wrap);
-    var cv = makeCanvas(root, 0.42); wrap.appendChild(cv.c);
-    var rowS = el('div', { 'class': 'fe-row' });
-    var modes = [
-      ['hold', 'Hold constant DC voltage'],
-      ['loop', 'Bias controller (periodic re-adjust)'],
-      ['thermo', 'Thermo-optic bias']
-    ];
-    var btns = {};
-    rowS.appendChild(el('span', null, 'Strategy:'));
-    modes.forEach(function (m) { var b = el('button', null, m[1]); b.className = 'fe-hint'; btns[m[0]] = b; rowS.appendChild(b); });
-    var hd = hand('run two strategies'); rowS.appendChild(hd);
-    var rowK = el('div', { 'class': 'fe-row' });
-    var bA = el('button', null, 'Stack A: field in crystal decays'), bB = el('button', null, 'Stack B: field in crystal grows');
-    bA.className = 'on'; rowK.appendChild(el('span', null, 'Layer stack:')); rowK.appendChild(bA); rowK.appendChild(bB);
-    var read = el('div', { 'class': 'fe-read' }, 'Pick a strategy.');
-    var note = el('div', { 'class': 'fe-note' }, '<span class="fe-tag">Illustrative model</span> MZI transmission T = cos^2(phi/2), started at quadrature. Field in the crystal relaxes from its capacitive division to its resistive division: phi(t) = phi0 [r + (1 - r) exp(-t/tau)], with r below 1 (stack A) or above 1 (stack B), as in a two-layer Maxwell-Wagner stack. Time in units of tau. In thin film, real tau is microseconds to milliseconds depending on stack and temperature (see Liu et al., ACS Photonics, 2026; Holzgrafe et al., Optics Express, 2024). For bulk lithium niobate, dark-conductivity values (Volk and Wohlecke, 2008) imply hours to days.');
-    wrap.appendChild(rowS); wrap.appendChild(rowK); wrap.appendChild(read); wrap.appendChild(note);
-    var r = 0.4, runs = [], used = {}, done = false, anim = null, TMAX = 5;
-    function series(mode) {
-      var pts = [], phi0 = Math.PI / 2, corr = 0;
-      for (var i = 0; i <= 500; i++) {
-        var t = TMAX * i / 500, phi;
-        if (mode === 'thermo') phi = phi0;
-        else {
-          var eff = r + (1 - r) * Math.exp(-t);
-          if (mode === 'loop') {
-            // re-adjust every 0.25 tau: voltage scaled so that phase returns to quadrature
-            var tk = Math.floor(t / 0.25) * 0.25, effk = r + (1 - r) * Math.exp(-tk);
-            phi = phi0 * eff / effk;
-          } else phi = phi0 * eff;
-        }
-        pts.push({ t: t, T: Math.pow(Math.cos(phi / 2), 2) });
-      }
-      return pts;
-    }
-    function draw(partial) {
-      var ctx = cv.ctx, w = cv.w, h = cv.h; ctx.clearRect(0, 0, w, h);
-      var x0 = 50, x1 = w - 14, y0 = 12, y1 = h - 34;
-      function X(t) { return x0 + t / TMAX * (x1 - x0); }
-      function Y(T) { return y1 - T * (y1 - y0); }
-      ctx.strokeStyle = P.grid; ctx.strokeRect(x0, y0, x1 - x0, y1 - y0);
-      ctx.fillStyle = P.fg; ctx.font = '12px sans-serif'; ctx.textAlign = 'center';
-      for (var t = 0; t <= TMAX; t++) ctx.fillText(String(t), X(t), y1 + 14);
-      ctx.fillText('time / tau', (x0 + x1) / 2, y1 + 28);
-      ctx.textAlign = 'right'; ctx.fillText('1', x0 - 4, Y(1) + 4); ctx.fillText('0.5', x0 - 4, Y(0.5) + 4); ctx.fillText('0', x0 - 4, Y(0) + 4);
-      ctx.strokeStyle = P.ok; ctx.setLineDash([4, 4]); ctx.beginPath(); ctx.moveTo(X(0), Y(0.5)); ctx.lineTo(X(TMAX), Y(0.5)); ctx.stroke(); ctx.setLineDash([]);
-      ctx.textAlign = 'left'; ctx.fillStyle = P.ok; ctx.fillText('quadrature', x0 + 6, Y(0.5) - 6);
-      var cols = { hold: P.danger, loop: P.accent, thermo: P.warn };
-      runs.forEach(function (rn, idx) {
-        var n = idx === runs.length - 1 && partial != null ? Math.floor(partial * rn.pts.length) : rn.pts.length;
-        ctx.strokeStyle = cols[rn.mode]; ctx.lineWidth = 2.2; ctx.beginPath();
-        for (var k = 0; k < n; k++) { var p = rn.pts[k]; if (k === 0) ctx.moveTo(X(p.t), Y(p.T)); else ctx.lineTo(X(p.t), Y(p.T)); }
-        ctx.stroke();
-      });
-      ctx.fillStyle = P.fg; ctx.textAlign = 'left'; ctx.fillText('MZI transmission (normalized)', x0 + 6, y0 + 14);
-    }
-    function run(mode) {
-      if (anim) cancelAnimationFrame(anim);
-      runs = runs.filter(function (x) { return x.mode !== mode; });
-      runs.push({ mode: mode, pts: series(mode) });
-      used[mode] = true; btns[mode].classList.remove('fe-hint'); btns[mode].className = 'on';
-      var t0 = performance.now(), D = 2000;
-      function step(now) {
-        var u = Math.min(1, (now - t0) / D); draw(u);
-        if (u < 1) anim = requestAnimationFrame(step);
-        else {
-          anim = null;
-          var last = runs[runs.length - 1].pts; var Tend = last[last.length - 1].T;
-          read.innerHTML = (mode === 'hold' ? 'Constant voltage: bias walks off quadrature to T = ' : mode === 'loop' ? 'Controller: sawtooth around quadrature; each correction is a refresh you must budget for. Final T = ' : 'Thermo-optic: no DC field in the crystal in this model (heaters bring their own drift sources, such as probe contact resistance). Final T = ') + '<b>' + Tend.toFixed(3) + '</b>';
-          if (!done && Object.keys(used).length >= 2) {
-            done = true; if (hd.parentNode) hd.parentNode.removeChild(hd);
-            say(api, 'Thank you. Holding a D C voltage is not the same as holding a bias point. Watch your charge.');
-            api.complete();
-          }
-        }
-      }
-      anim = requestAnimationFrame(step);
-    }
-    modes.forEach(function (m) { btns[m[0]].addEventListener('click', function () { run(m[0]); }); });
-    bA.addEventListener('click', function () { r = 0.4; bA.className = 'on'; bB.className = ''; runs = runs.map(function (x) { return { mode: x.mode, pts: series(x.mode) }; }); draw(); });
-    bB.addEventListener('click', function () { r = 1.6; bB.className = 'on'; bA.className = ''; runs = runs.map(function (x) { return { mode: x.mode, pts: series(x.mode) }; }); draw(); });
-    cleanup(api, function () { if (anim) cancelAnimationFrame(anim); });
-    draw();
-  };
-
-  // (d) pyroelectric field estimator, unscreened upper bound
-  widgets.pyroCalc = function (root, params, api) {
-    var P = palette(api, root); ensureStyle(P.accent);
-    var EPS0 = 8.854e-12, EPS33 = 28, EC = 21; // EC in kV/mm, congruent LN (Volk and Wohlecke 2008, Table 7.1)
-    var wrap = el('div', { 'class': 'fe-w' }); root.appendChild(wrap);
-    var cv = makeCanvas(root, 0.38); wrap.appendChild(cv.c);
-    var r1 = el('div', { 'class': 'fe-row' });
-    var l1 = el('label', null, 'Temperature change dT: <b class="fe-read">10</b> K');
-    var s1 = el('input', { type: 'range', min: '1', max: '150', step: '1', value: '10' }); s1.className = 'fe-hint';
-    var h1 = hand('drag'); r1.appendChild(l1); r1.appendChild(s1); r1.appendChild(h1);
-    var r2 = el('div', { 'class': 'fe-row' });
-    var l2 = el('label', null, 'Wafer thickness: <b class="fe-read">0.50</b> mm');
-    var s2 = el('input', { type: 'range', min: '0.1', max: '1', step: '0.05', value: '0.5' });
-    r2.appendChild(l2); r2.appendChild(s2);
-    var r3 = el('div', { 'class': 'fe-row' });
-    var bLo = el('button', null, 'p = 4.0e-5 C/(m^2 K)'), bHi = el('button', null, 'p = 9.5e-5 C/(m^2 K)');
-    bLo.className = 'on'; r3.appendChild(el('span', null, 'Pyroelectric coefficient (literature range):')); r3.appendChild(bLo); r3.appendChild(bHi);
-    var read = el('div', { 'class': 'fe-read' });
-    var note = el('div', { 'class': 'fe-note' }, 'E = p dT / (eps0 eps33), eps33 = 28; V = E x thickness. Unscreened upper bound: surface conduction and ambient charge reduce it over time. Pyroelectric coefficient magnitude: 4.0e-5 C/(m^2 K) (Weis and Gaylord, Applied Physics A, 1985, after Savage 1966) to about 9.5e-5 C/(m^2 K) (Popescu et al., Journal of Applied Physics, 2013). Coercive field about 21 kV/mm for congruent lithium niobate (Volk and Wohlecke, Lithium Niobate, Springer, 2008, Table 7.1).');
-    wrap.appendChild(r1); wrap.appendChild(r2); wrap.appendChild(r3); wrap.appendChild(read); wrap.appendChild(note);
-    var p = 4.0e-5, touched1 = false, touched2 = false, done = false, anim = null, ph = 0;
-    function vals() {
-      var dT = +s1.value, t = +s2.value; var E = p * dT / (EPS0 * EPS33); // V/m
-      var kVmm = E / 1e6; var kV = kVmm * t; return { dT: dT, t: t, kVmm: kVmm, kV: kV };
-    }
-    function draw() {
-      var ctx = cv.ctx, w = cv.w, h = cv.h; ctx.clearRect(0, 0, w, h);
-      var v = vals();
-      // wafer
-      var x0 = 20, x1 = w * 0.48, ym = h * 0.5, th = 14 + v.t * 40;
-      ctx.fillStyle = 'rgba(160,170,190,0.3)'; ctx.fillRect(x0, ym - th / 2, x1 - x0, th);
-      ctx.strokeStyle = P.fg; ctx.strokeRect(x0, ym - th / 2, x1 - x0, th);
-      var n = Math.min(24, Math.round(2 + v.kVmm)); ctx.font = 'bold 14px sans-serif'; ctx.textAlign = 'center';
-      for (var i = 0; i < n; i++) {
-        var x = x0 + (i + 0.5) * (x1 - x0) / n, j = Math.sin(ph + i) * 1.5;
-        ctx.fillStyle = P.danger; ctx.fillText('+', x, ym - th / 2 - 4 + j);
-        ctx.fillStyle = P.accent; ctx.fillText('-', x, ym + th / 2 + 14 - j);
-      }
-      ctx.fillStyle = P.muted; ctx.font = '11px sans-serif'; ctx.fillText('z-cut wafer, z normal to surface', (x0 + x1) / 2, h - 8);
-      // bar
-      var bx0 = w * 0.56, bx1 = w - 20, by = h * 0.42, bh = 22, maxE = 80;
-      function BX(e) { return bx0 + Math.min(e, maxE) / maxE * (bx1 - bx0); }
-      ctx.strokeStyle = P.grid; ctx.strokeRect(bx0, by, bx1 - bx0, bh);
-      ctx.fillStyle = v.kVmm >= EC ? P.danger : P.accent; ctx.fillRect(bx0, by, BX(v.kVmm) - bx0, bh);
-      ctx.strokeStyle = P.fg; ctx.setLineDash([4, 3]); ctx.beginPath(); ctx.moveTo(BX(EC), by - 10); ctx.lineTo(BX(EC), by + bh + 10); ctx.stroke(); ctx.setLineDash([]);
-      ctx.fillStyle = P.fg; ctx.font = '12px sans-serif'; ctx.textAlign = 'center';
-      ctx.fillText('coercive field 21 kV/mm', BX(EC), by - 14);
-      for (var e = 0; e <= maxE; e += 20) ctx.fillText(String(e), BX(e), by + bh + 16);
-      ctx.fillText('unscreened field (kV/mm)', (bx0 + bx1) / 2, by + bh + 32);
-      read.innerHTML = 'Unscreened field: <b>' + v.kVmm.toFixed(1) + ' kV/mm</b> &nbsp; Voltage across wafer: <b>' + v.kV.toFixed(1) + ' kV</b> &nbsp; Ratio to coercive field: <b>' + (v.kVmm / EC).toFixed(2) + '</b>';
-    }
-    function loop() { ph += 0.15; draw(); anim = requestAnimationFrame(loop); }
-    function check() {
-      if (done) return;
-      if (touched1 && touched2) {
-        done = true; s2.classList.remove('fe-hint');
-        say(api, 'Thank you. A hotplate step of tens of kelvin can give kilovolts per millimeter before screening. Watch your charge.');
-        api.complete();
-      }
-    }
-    s1.addEventListener('input', function () {
-      touched1 = true; l1.querySelector('b').textContent = s1.value;
-      if (s1.classList.contains('fe-hint')) { s1.classList.remove('fe-hint'); if (h1.parentNode) h1.parentNode.removeChild(h1); if (!touched2) { s2.classList.add('fe-hint'); r2.appendChild(hand('now thickness')); } }
-      check();
-    });
-    s2.addEventListener('input', function () {
-      touched2 = true; l2.querySelector('b').textContent = (+s2.value).toFixed(2);
-      var hh = r2.querySelector('.fe-hand'); if (hh && hh.parentNode && touched1) hh.parentNode.removeChild(hh);
-      check();
-    });
-    bLo.addEventListener('click', function () { p = 4.0e-5; bLo.className = 'on'; bHi.className = ''; });
-    bHi.addEventListener('click', function () { p = 9.5e-5; bHi.className = 'on'; bLo.className = ''; });
-    cleanup(api, function () { if (anim) cancelAnimationFrame(anim); });
-    loop();
-  };
-
-  // (e) rotation convention comparison: rotate the crystal vs rotate the coordinates
-  widgets.eulerSign = function (root, params, api) {
-    var P = palette(api, root); ensureStyle(P.accent);
-    var wrap = el('div', { 'class': 'fe-w' }); root.appendChild(wrap);
-    var cv = makeCanvas(root, 0.45); wrap.appendChild(cv.c);
-    var r1 = el('div', { 'class': 'fe-row' });
-    var l1 = el('label', null, 'Angle: <b class="fe-read">0</b> deg');
-    var s1 = el('input', { type: 'range', min: '-90', max: '90', step: '1', value: '0' }); s1.className = 'fe-hint';
-    var h1 = hand('drag to 0, 90, and something in between'); r1.appendChild(l1); r1.appendChild(s1); r1.appendChild(h1);
-    var read = el('div', { 'class': 'fe-read' });
-    var note = el('div', { 'class': 'fe-note' }, 'A crystal-fixed vector (the z axis of a crystal lying in the y-z plane, as on x-cut) expressed in lab components two ways. Active: rotate the crystal by +angle. Passive applied by mistake: use the same matrix as a coordinate rotation (its transpose). The two agree at 0 deg and differ in sign of one component elsewhere. Exact geometry, no material constants.');
-    wrap.appendChild(r1); wrap.appendChild(read); wrap.appendChild(note);
-    var seen0 = false, seen90 = false, seenGen = false, done = false;
-    function draw() {
-      var a = +s1.value * Math.PI / 180;
-      var ctx = cv.ctx, w = cv.w, h = cv.h; ctx.clearRect(0, 0, w, h);
-      var panels = [{ cx: w * 0.27, title: 'Rotate the crystal (+angle)', s: 1, col: P.accent }, { cx: w * 0.73, title: 'Matrix used as coordinate rotation', s: -1, col: P.danger }];
-      var R = Math.min(w * 0.18, h * 0.36), cy = h * 0.52;
-      panels.forEach(function (pn) {
-        ctx.strokeStyle = P.grid; ctx.lineWidth = 1; ctx.beginPath(); ctx.arc(pn.cx, cy, R, 0, Math.PI * 2); ctx.stroke();
-        arrow(ctx, pn.cx - R, cy, pn.cx + R, cy, P.muted, 1); arrow(ctx, pn.cx, cy + R, pn.cx, cy - R, P.muted, 1);
-        ctx.fillStyle = P.muted; ctx.font = '11px sans-serif'; ctx.textAlign = 'left'; ctx.fillText('lab y', pn.cx + R - 26, cy + 14); ctx.fillText('lab z', pn.cx + 4, cy - R + 10);
-        // crystal z starts along lab z (angle 90 deg in plot); rotate by s*a
-        var ang = Math.PI / 2 + pn.s * a;
-        arrow(ctx, pn.cx, cy, pn.cx + R * 0.9 * Math.cos(ang), cy - R * 0.9 * Math.sin(ang), pn.col, 3);
-        ctx.fillStyle = pn.col; ctx.fillText('crystal z', pn.cx + R * 0.95 * Math.cos(ang) + 4, cy - R * 0.95 * Math.sin(ang));
-        ctx.fillStyle = P.fg; ctx.font = '12px sans-serif'; ctx.textAlign = 'center'; ctx.fillText(pn.title, pn.cx, 14);
-        var yc = -pn.s * Math.sin(a), zc = Math.cos(a);
-        ctx.fillText('(y, z) = (' + yc.toFixed(3) + ', ' + zc.toFixed(3) + ')', pn.cx, h - 8);
-      });
-      var deg = +s1.value;
-      var agree = Math.abs(Math.sin(a)) < 1e-9;
-      read.innerHTML = agree ? 'At ' + deg + ' deg the two conventions <b>agree</b>. A test here cannot catch the error.' : 'At ' + deg + ' deg the two conventions <b>disagree</b> in the sign of the y component.' + (Math.abs(Math.abs(deg) - 90) < 1e-9 ? ' Note: a test that only checks which axis the vector lands on, not its sign, still passes here.' : '');
-      l1.querySelector('b').textContent = String(deg);
-    }
-    s1.addEventListener('input', function () {
-      var d = +s1.value;
-      if (d === 0) seen0 = true;
-      if (Math.abs(d) === 90) seen90 = true;
-      if (Math.abs(d) >= 20 && Math.abs(d) <= 70) seenGen = true;
-      draw();
-      if (!done && seenGen && (seen0 || seen90)) {
-        done = true; s1.classList.remove('fe-hint'); if (h1.parentNode) h1.parentNode.removeChild(h1);
-        say(api, 'Excellent. A sign error is invisible at zero degrees and loud in between. Know your axes.');
-        api.complete();
-      }
-    });
-    draw();
-  };
+  /* xcutIndex, prSweep, biasDrift, pyroCalc and eulerSign live in widgets/*.js (mode data from tools/modesolver/); they register on window.LMS_WIDGETS and their spoken lines on LMS_WIDGET_SPEECH. */
 
 
 
@@ -3437,11 +2703,27 @@
     { text: 'OK', say: 'Look again. Something is missing.' },
     { text: 'Not OK', correct: true, say: 'Here is why.' }
   ];
+  // Scenarios where Gary acts properly: the correct answer is OK.
+  function okYes(right, why) {
+    return [
+      { text: 'OK', correct: true, say: right },
+      { text: 'Not OK', say: 'This one is okay. ' + why }
+    ];
+  }
   var ASK_SPECIAL = {
     'Scenario 2: Kitchen foil': [
       { text: 'OK', correct: true, say: 'This one really is okay.' },
       { text: 'Not OK', say: 'This one is actually fine. The foil is a discharge path.' }
     ],
+    'Scenario 3: The animation': okYes('Gary drew the cut he actually has.', 'Gary drew the cut he actually has, and labeled it.'),
+    'Category 6 vignette: Notes to self': okYes('Gary logged his own error.', 'Gary logged his own error, with no witnesses.'),
+    'Scenario 2: The polarization blame': okYes('Gary checked the input before blaming it.', 'Gary checked the input before blaming it, then looked on chip.'),
+    'Scenario 3: The routing shortcut': okYes('Gary computed the phase instead of assuming it.', 'Gary computed the phase instead of assuming it.'),
+    'Scenario 3: The lock that ran away': okYes('Gary measured before he picked a side.', 'Gary measured the shift before he picked a lock side.'),
+    'Scenario 3: The neighbor': okYes('Gary planned for the charge.', 'Gary shielded, grounded, and coordinated before the cooldown.'),
+    'Scenario 3: The drift-free claim': okYes('Gary read the methods.', 'Gary read the methods before quoting the result.'),
+    'Scenario 2: The ignored volt': okYes('Gary found out why before reporting.', 'Gary found out why the voltage was ignored, before reporting.'),
+    'Scenario 3: The template frame': okYes('Gary checked the frame.', 'Gary checked the frame and tested a known case.'),
     'Scenario 2: The overnight hold': [
       { text: 'OK', say: 'Only if it was planned.' },
       { text: 'Not OK', say: 'It can be fine, if it was planned.' },
@@ -3670,12 +2952,13 @@
     policy: 'Policy PHC-17.3, Ferroelectric Conduct and Crystal Orientation',
     mantra: MANTRA,
     mantraShort: ['Know your axes.', 'Watch your charge.', 'Scan both ways.', 'Trust no symmetry plane.'],
-    host: { name: 'Pat Reynolds', role: 'Director, Office of Photonic Conduct' },
+    host: { name: 'Pat Reynolds', role: 'Director, Office of Photonic Conduct', img: 'media/render/host_pat_present.jpg',
+      cam: { idle: 'media/render/host_pat_cam_idle.mp4', talk: ['media/render/host_pat_cam_talk.mp4', { src: 'media/render/host_pat_cam_gesture.mp4', weight: 0.5 }] } },
     employer: 'Five Sigma Photonics, Inc.',
     chapters: [ch0, ch1, chSrc, ch2, ch3, ch4, ch5, ch6],
     exam: { passPct: 80, count: 10, pool: pool },
     references: allRefs,
     widgets: widgets,
-    speech: [WSAY.xcut, WSAY.pr, WSAY.bias, WSAY.pyro, WSAY.euler]
+    speech: []
   };
 })();

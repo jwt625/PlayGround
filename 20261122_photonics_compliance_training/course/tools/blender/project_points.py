@@ -47,14 +47,18 @@ for v, arrow, mz in ((0, (0, 1.15, ZT), (0, YC, ZT)), (90, (-1.15, 0, ZT), (-YC,
         "fiber slot IN (mouth at pocket)": (-3.6, YC, 0), "fiber slot OUT (mouth at pocket)": (3.6, YC, 0),
         "IN label": (-9.0, YC - 2.2, 0), "OUT label": (9.0, YC - 2.2, 0)})
 run("tfln_die_fixture_0deg extra", "shot_die_fixture", ["variant=0"], "scene", {
-    "RF input pads": (-1.9, YC, ZT), "termination pads": (1.9, YC, ZT),
+    "RF input pads": (-2.05, 1.975, ZT), "termination pads": (2.05, -1.975, ZT),
     "input MMI splitter": (-2.66, YC, ZT), "output MMI combiner": (2.66, YC, ZT),
-    "arm around RF pads (north)": (-1.9, YC + 0.40, ZT)})
-run("tfln_probe_station_closeup", "shot_probe_station", [], "scene", {
-    "GSG probe on RF input pads": (-1.9, YC, ZT), "GSG probe on termination pads": (1.9, YC, ZT),
-    "west probe connector": (-17.0, YC, ZT + 12.5), "east probe connector": (17.0, YC, ZT + 12.5),
-    "lensed fiber at input facet": (-3.01, YC, ZT), "lensed fiber at output facet": (3.01, YC, ZT),
-    "die +Z arrow": (0, 1.15, ZT), "objective": (0, 0, 20)})
+    "fixture RF engraving": (-3.7, 5.0, 0)})
+run("tfln_probe_station_closeup", "shot_probe_station", ["view=close"], "scene", {
+    "GSG probe on RF input pads": (-2.05, 1.975, ZT), "GSG probe on termination pads": (2.05, -1.975, ZT),
+    "input probe coax (1 mm up)": (-2.05, 3.0, ZT + 0.9), "termination probe coax (1 mm up)": (2.05, -3.0, ZT + 0.9),
+    "lensed fiber at input facet": (-3.01, YC, ZT), "input fiber 1 mm back": (-4.0, YC, ZT),
+    "lensed fiber at output facet": (3.01, YC, ZT), "output fiber 1 mm back": (4.0, YC, ZT),
+    "die +Z arrow": (0, 1.15, ZT), "fixture +Z engraving": (-6.2, 4.5, 0), "fixture RF engraving": (-3.7, 5.0, 0)})
+run("tfln_probe_station_wide", "shot_probe_station", ["view=wide"], "scene", {
+    "die centre": (0, YC, ZT), "input probe plug": (-2.05, 22.0, 18.0), "termination probe plug": (2.05, -22.0, 18.0),
+    "objective": (0, 0, 40)})
 pf = math.sqrt(50 ** 2 - 16.25 ** 2)
 ps = math.sqrt(50 ** 2 - 9.0 ** 2)
 run("ln_wafer_carrier", "shot_wafer", ["scene=carrier"], "scene", {

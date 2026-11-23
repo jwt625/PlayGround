@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 410" width="600" height="410" font-family="'Helvetica Neue', Helvetica, Arial, sans-serif">
+<rect width="600" height="410" fill="#ffffff"/>
+<rect x="20" y="23" width="560" height="34" fill="#e4eef9" stroke="#4d5b6b" stroke-width="1"/>
+<ellipse cx="33.5" cy="40" rx="5.8" ry="10.5" fill="#ffffff" stroke="#4d5b6b" stroke-width="0.8"/>
+<ellipse cx="54.0" cy="40" rx="5.8" ry="10.5" fill="#ffffff" stroke="#4d5b6b" stroke-width="0.8"/>
+<ellipse cx="74.5" cy="40" rx="5.8" ry="10.5" fill="#ffffff" stroke="#4d5b6b" stroke-width="0.8"/>
+<ellipse cx="95.0" cy="40" rx="5.8" ry="10.5" fill="#ffffff" stroke="#4d5b6b" stroke-width="0.8"/>
+<ellipse cx="115.5" cy="40" rx="5.7" ry="10.4" fill="#ffffff" stroke="#4d5b6b" stroke-width="0.8"/>
+<ellipse cx="136.0" cy="40" rx="5.7" ry="10.3" fill="#ffffff" stroke="#4d5b6b" stroke-width="0.8"/>
+<ellipse cx="156.5" cy="40" rx="5.6" ry="10.1" fill="#ffffff" stroke="#4d5b6b" stroke-width="0.8"/>
+<ellipse cx="177.0" cy="40" rx="5.4" ry="9.8" fill="#ffffff" stroke="#4d5b6b" stroke-width="0.8"/>
+<ellipse cx="197.5" cy="40" rx="5.1" ry="9.3" fill="#ffffff" stroke="#4d5b6b" stroke-width="0.8"/>
+<ellipse cx="218.0" cy="40" rx="4.8" ry="8.7" fill="#ffffff" stroke="#4d5b6b" stroke-width="0.8"/>
+<ellipse cx="238.5" cy="40" rx="4.4" ry="7.9" fill="#ffffff" stroke="#4d5b6b" stroke-width="0.8"/>
+<ellipse cx="259.0" cy="40" rx="4.0" ry="7.2" fill="#ffffff" stroke="#4d5b6b" stroke-width="0.8"/>
+<ellipse cx="279.5" cy="40" rx="3.7" ry="6.7" fill="#ffffff" stroke="#4d5b6b" stroke-width="0.8"/>
+<ellipse cx="320.5" cy="40" rx="3.7" ry="6.7" fill="#ffffff" stroke="#4d5b6b" stroke-width="0.8"/>
+<ellipse cx="341.0" cy="40" rx="4.0" ry="7.2" fill="#ffffff" stroke="#4d5b6b" stroke-width="0.8"/>
+<ellipse cx="361.5" cy="40" rx="4.4" ry="7.9" fill="#ffffff" stroke="#4d5b6b" stroke-width="0.8"/>
+<ellipse cx="382.0" cy="40" rx="4.8" ry="8.7" fill="#ffffff" stroke="#4d5b6b" stroke-width="0.8"/>
+<ellipse cx="402.5" cy="40" rx="5.1" ry="9.3" fill="#ffffff" stroke="#4d5b6b" stroke-width="0.8"/>
+<ellipse cx="423.0" cy="40" rx="5.4" ry="9.8" fill="#ffffff" stroke="#4d5b6b" stroke-width="0.8"/>
+<ellipse cx="443.5" cy="40" rx="5.6" ry="10.1" fill="#ffffff" stroke="#4d5b6b" stroke-width="0.8"/>
+<ellipse cx="464.0" cy="40" rx="5.7" ry="10.3" fill="#ffffff" stroke="#4d5b6b" stroke-width="0.8"/>
+<ellipse cx="484.5" cy="40" rx="5.7" ry="10.4" fill="#ffffff" stroke="#4d5b6b" stroke-width="0.8"/>
+<ellipse cx="505.0" cy="40" rx="5.8" ry="10.5" fill="#ffffff" stroke="#4d5b6b" stroke-width="0.8"/>
+<ellipse cx="525.5" cy="40" rx="5.8" ry="10.5" fill="#ffffff" stroke="#4d5b6b" stroke-width="0.8"/>
+<ellipse cx="546.0" cy="40" rx="5.8" ry="10.5" fill="#ffffff" stroke="#4d5b6b" stroke-width="0.8"/>
+<ellipse cx="566.5" cy="40" rx="5.8" ry="10.5" fill="#ffffff" stroke="#4d5b6b" stroke-width="0.8"/>
+<polyline points="150.0,55.0 152.0,55.0 154.0,55.0 156.0,55.0 158.0,55.0 160.0,55.0 162.0,54.9 164.0,54.9 166.0,54.9 168.0,54.9 170.0,54.9 172.0,54.9 174.0,54.8 176.0,54.8 178.0,54.8 180.0,54.7 182.0,54.7 184.0,54.6 186.0,54.6 188.0,54.5 190.0,54.5 192.0,54.4 194.0,54.3 196.0,54.2 198.0,54.0 200.0,53.9 202.0,53.7 204.0,53.6 206.0,53.4 208.0,53.2 210.0,52.9 212.0,52.7 214.0,52.4 216.0,52.1 218.0,51.8 220.0,51.4 222.0,51.0 224.0,50.6 226.0,50.1 228.0,49.6 230.0,49.1 232.0,48.5 234.0,47.9 236.0,47.3 238.0,46.6 240.0,45.9 242.0,45.1 244.0,44.4 246.0,43.6 248.0,42.7 250.0,41.9 252.0,41.0 254.0,40.1 256.0,39.2 258.0,38.3 260.0,37.3 262.0,36.4 264.0,35.5 266.0,34.5 268.0,33.6 270.0,32.7 272.0,31.8 274.0,31.0 276.0,30.2 278.0,29.4 280.0,28.7 282.0,28.0 284.0,27.4 286.0,26.9 288.0,26.4 290.0,26.0 292.0,25.6 294.0,25.4 296.0,25.2 298.0,25.0 300.0,25.0 302.0,25.0 304.0,25.2 306.0,25.4 308.0,25.6 310.0,26.0 312.0,26.4 314.0,26.9 316.0,27.4 318.0,28.0 320.0,28.7 322.0,29.4 324.0,30.2 326.0,31.0 328.0,31.8 330.0,32.7 332.0,33.6 334.0,34.5 336.0,35.5 338.0,36.4 340.0,37.3 342.0,38.3 344.0,39.2 346.0,40.1 348.0,41.0 350.0,41.9 352.0,42.7 354.0,43.6 356.0,44.4 358.0,45.1 360.0,45.9 362.0,46.6 364.0,47.3 366.0,47.9 368.0,48.5 370.0,49.1 372.0,49.6 374.0,50.1 376.0,50.6 378.0,51.0 380.0,51.4 382.0,51.8 384.0,52.1 386.0,52.4 388.0,52.7 390.0,52.9 392.0,53.2 394.0,53.4 396.0,53.6 398.0,53.7 400.0,53.9 402.0,54.0 404.0,54.2 406.0,54.3 408.0,54.4 410.0,54.5 412.0,54.5 414.0,54.6 416.0,54.6 418.0,54.7 420.0,54.7 422.0,54.8 424.0,54.8 426.0,54.8 428.0,54.9 430.0,54.9 432.0,54.9 434.0,54.9 436.0,54.9 438.0,54.9 440.0,55.0 442.0,55.0 444.0,55.0 446.0,55.0 448.0,55.0 450.0,55.0" fill="none" stroke="#eb6834" stroke-width="2"/>
+<text x="300" y="80" text-anchor="middle" font-size="14" fill="#4d5b6b">nanobeam cavity; orange: mode envelope</text>
+<line x1="104" y1="150" x2="104" y2="322" stroke="#4d5b6b" stroke-width="1"/>
+<line x1="104" y1="172" x2="590" y2="172" stroke="#d3dbe4" stroke-width="1"/>
+<text x="96" y="177" text-anchor="end" font-size="15" fill="#1d2733">0</text>
+<line x1="104" y1="288" x2="590" y2="288" stroke="#d3dbe4" stroke-width="1"/>
+<text x="96" y="293" text-anchor="end" font-size="15" fill="#1d2733">about -55</text>
+<text transform="translate(18 236.0) rotate(-90)" text-anchor="middle" font-size="15" fill="#1d2733">shift (pm)</text>
+<text x="144.0" y="344" text-anchor="middle" font-size="15" fill="#1d2733">330 nW</text>
+<circle cx="144.0" cy="172" r="7" fill="#2a78d6" stroke="#ffffff" stroke-width="2"/>
+<text x="144.0" y="158" text-anchor="middle" font-size="15" fill="#4d5b6b">start</text>
+<text x="227.2" y="344" text-anchor="middle" font-size="15" fill="#1d2733">8 µW</text>
+<line x1="153.0" y1="172" x2="218.2" y2="288" stroke="#7b8796" stroke-width="1.3" stroke-dasharray="4 4"/>
+<circle cx="227.2" cy="288" r="7" fill="#2a78d6" stroke="#ffffff" stroke-width="2"/>
+<text x="227.2" y="313" text-anchor="middle" font-size="15" fill="#4d5b6b">blue shift</text>
+<text x="310.4" y="344" text-anchor="middle" font-size="15" fill="#1d2733">41 µW</text>
+<line x1="236.2" y1="288" x2="301.4" y2="288" stroke="#7b8796" stroke-width="1.3" stroke-dasharray="4 4"/>
+<circle cx="310.4" cy="288" r="7" fill="#2a78d6" stroke="#ffffff" stroke-width="2"/>
+<text x="310.4" y="313" text-anchor="middle" font-size="15" fill="#4d5b6b">saturates</text>
+<text x="393.6" y="344" text-anchor="middle" font-size="15" fill="#1d2733">41 µW</text>
+<text x="393.6" y="362" text-anchor="middle" font-size="15" fill="#1d2733">10 min</text>
+<line x1="319.4" y1="288" x2="384.6" y2="172" stroke="#7b8796" stroke-width="1.3" stroke-dasharray="4 4"/>
+<circle cx="393.6" cy="172" r="7" fill="#2a78d6" stroke="#ffffff" stroke-width="2"/>
+<text x="393.6" y="158" text-anchor="middle" font-size="15" fill="#4d5b6b">returns</text>
+<text x="476.8" y="344" text-anchor="middle" font-size="15" fill="#1d2733">any</text>
+<text x="476.8" y="362" text-anchor="middle" font-size="15" fill="#1d2733">power</text>
+<line x1="402.6" y1="172" x2="467.8" y2="172" stroke="#7b8796" stroke-width="1.3" stroke-dasharray="4 4"/>
+<circle cx="476.8" cy="172" r="7" fill="#2a78d6" stroke="#ffffff" stroke-width="2"/>
+<text x="476.8" y="158" text-anchor="middle" font-size="15" fill="#4d5b6b">quenched</text>
+<text x="560.0" y="344" text-anchor="middle" font-size="15" fill="#1d2733">hours</text>
+<text x="560.0" y="362" text-anchor="middle" font-size="15" fill="#1d2733">dark</text>
+<text x="560.0" y="218.0" text-anchor="middle" font-size="15" fill="#4d5b6b">recovers,</text>
+<text x="560.0" y="236.0" text-anchor="middle" font-size="15" fill="#4d5b6b">shift</text>
+<text x="560.0" y="254.0" text-anchor="middle" font-size="15" fill="#4d5b6b">returns</text>
+<text x="347.0" y="402" text-anchor="middle" font-size="14" fill="#4d5b6b">input power; held about 10 min at 41 µW</text>
+<text x="110" y="136" font-size="15" fill="#1d2733">initial shift only: about 87 cavity photons, about 84 MHz per photon</text>
+</svg>

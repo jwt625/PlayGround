@@ -129,6 +129,8 @@
       out = out.concat(S.examResult(c, true), S.examResult(c, false), S.certificate(c));
     }
     arr(c.speech).forEach(function (l) { out.push(l); });
+    /* Widget files under widgets/ register spoken strings per course id: window.LMS_WIDGET_SPEECH[courseId] = [...] */
+    arr((G.LMS_WIDGET_SPEECH || {})[c.id]).forEach(function (l) { out.push(l); });
     var seen = {}, res = [];
     out.forEach(function (l) { var k = String(l).replace(/\s+/g, ' ').trim(); if (k && !seen[k]) { seen[k] = 1; res.push(l); } });
     return res;
@@ -158,7 +160,11 @@
     if (st.meta && st.meta.header) out.push(st.meta.header);
     return out;
   }
-  /* Every image src a course uses (slide, photo, hotspots, cards, spot, check incl. exam pool, video keyframes, stages, cast avatars shown in chats). */
+  /* reveal tab media: one { src, alt, caption, href } or an array of up to three */
+  function tabMedia(tb) { var m = tb && tb.media; return (Array.isArray(m) ? m : m ? [m] : []).filter(function (x) { return x && x.src; }).slice(0, 3); }
+  /* presenter still for host slides: path string or { src } */
+  function hostImage(v) { return typeof v === 'string' && v ? { src: v } : v && v.src ? v : null; }
+  /* Every image src a course uses (also reveal tab media and presenter stills), (slide, photo, hotspots, cards, spot, check incl. exam pool, video keyframes, stages, cast avatars shown in chats). */
   function collectImages(c) {
     var out = [];
     var add = function (im) { if (im && im.src && out.indexOf(im.src) < 0) out.push(im.src); };
@@ -168,9 +174,26 @@
       add(st.image);
       (st.cards || []).forEach(function (cd) { add(cd.image); });
       (st.keyframes || []).forEach(function (k) { add(k.image); });
+      (st.tabs || []).forEach(function (tb) { tabMedia(tb).forEach(add); });
+      if (st.type === 'slide' && st.layout === 'host') add(hostImage(st.hostImg || (c.host && c.host.img)));
     };
     (c.chapters || []).forEach(function (ch) { (ch.steps || []).forEach(step); });
     if (c.exam) (c.exam.pool || []).forEach(step);
+    return out;
+  }
+
+  /* Presenter cam clip srcs a course plays (course.host.cam on host slides without their own hostImg, step hostCam). */
+  function collectHostCams(c) {
+    var out = [];
+    var add = function (cam) {
+      if (!cam || typeof cam !== 'object') return;
+      ['idle', 'talk'].forEach(function (k) { [].concat(cam[k] || []).forEach(function (x) { var s = typeof x === 'string' ? x : x && x.src; if (s && out.indexOf(s) < 0) out.push(s); }); });
+    };
+    var step = function (st) {
+      if (st.type !== 'slide' || st.layout !== 'host') return;
+      add(st.hostCam !== undefined ? st.hostCam : st.hostImg ? null : c.host && c.host.cam);
+    };
+    (c.chapters || []).forEach(function (ch) { (ch.steps || []).forEach(step); });
     return out;
   }
 
@@ -180,8 +203,10 @@
   G.LMS_splitSentences = splitSentences;
   G.LMS_collectSpeech = collectSpeech;
   G.LMS_collectImages = collectImages;
+  G.LMS_collectHostCams = collectHostCams;
   G.LMS_castFor = castFor;
+  G.LMS_tabMedia = tabMedia;
   if (typeof module !== 'undefined' && module.exports) {
-    module.exports = { LMS_LINES: LINES, LMS_SPEECH: S, LMS_stripHtml: stripHtml, LMS_splitSentences: splitSentences, LMS_collectSpeech: collectSpeech, LMS_collectImages: collectImages, LMS_castFor: castFor };
+    module.exports = { LMS_LINES: LINES, LMS_SPEECH: S, LMS_stripHtml: stripHtml, LMS_splitSentences: splitSentences, LMS_collectSpeech: collectSpeech, LMS_collectImages: collectImages, LMS_collectHostCams: collectHostCams, LMS_castFor: castFor, LMS_tabMedia: tabMedia };
   }
 })(typeof window !== 'undefined' ? window : globalThis);

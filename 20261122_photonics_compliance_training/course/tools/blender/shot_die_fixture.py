@@ -3,7 +3,8 @@
 variant=0 / 90 / 180: die rotation (counterclockwise, degrees) relative to the fixture. The fixture
 has fiber slots on the west and east sides and a laser-engraved "+Z" reference arrow; the die has a
 gold "+Z" arrow. Correct loading (variant 0): die arrow parallel to the fixture arrow, facets at the
-fiber slots, RF pads to the north.
+fiber slots, RF input pads to the north at the IN end (under the fixture's "RF" mark), termination pads
+to the south at the OUT end.
 Camera, lights and everything else are identical across variants (choice-card set).
 """
 import math
@@ -81,7 +82,8 @@ def build_fixture(m):
     """Machined die fixture, 40 x 28 x 6 mm, black anodized: 6.12 mm square pocket (0.2 mm deep) with
     a vacuum port under the die, two 1.2 mm wide fiber slots on the waveguide line ending at the
     pocket (west = IN, east = OUT), four M3 socket head cap screws (5.5 mm heads) in counterbores
-    holding it to the chuck, laser-marked 2 mm text, and a vacuum hose barb on the south face."""
+    holding it to the chuck, laser-marked 2 mm text (+Z arrow, IN, OUT, RF, part note), and a vacuum hose barb
+    on the south face."""
     W, H, D = 40.0, 28.0, 6.0
     blk = C.box("fixture", (W, H, D), (0, 0, -D / 2), m["anod"])
     cutters = [C.box("c_pocket", (6.12, 6.12, 1.0), (0, 0, -POCKET_D + 0.5))]
@@ -124,6 +126,8 @@ def build_fixture(m):
     C.text_mesh("engr_z", "+Z", 2.0, (-9.4, 5.6, 0), h=z, mat=m["engr"])
     C.text_mesh("engr_in", "IN", 2.0, (-9.0, SLOT_Y - 2.2, 0), h=z, mat=m["engr"])
     C.text_mesh("engr_out", "OUT", 2.0, (9.0, SLOT_Y - 2.2, 0), h=z, mat=m["engr"])
+    # "RF" on the side where the input probe lands (die RF input pads, north edge, input end)
+    C.text_mesh("engr_rf", "RF", 2.0, (-3.7, 5.0, 0), h=z, mat=m["engr"])
     C.text_mesh("engr_id", "LN-MZM 6 MM  X-CUT", 1.5, (0.0, -8.5, 0), h=z, mat=m["engr"])
     return blk
 

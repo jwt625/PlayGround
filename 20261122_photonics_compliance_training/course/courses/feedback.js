@@ -15,7 +15,7 @@
     marinins: { cite: 'Marinins et al., "Wafer-scale hybrid integration of InP DFB lasers on Si photonics by flip-chip bonding with sub-300nm alignment precision", IEEE J. Sel. Top. Quantum Electron., 2022', doi: '10.1109/jstqe.2022.3223641' },
     kurczveil: { cite: 'Kurczveil et al., "Characterization of insertion loss and back reflection in passive hybrid silicon tapers", IEEE Photonics Journal, 2013', doi: '10.1109/jphot.2013.2246559' },
     moscoso: { cite: 'Moscoso-Martir et al., "Hybrid silicon photonics flip-chip laser integration with vertical self-alignment", CLEO Pacific Rim, 2017', doi: '10.1109/cleopr.2017.8118971' },
-    dekoninck: { cite: 'De Koninck et al., "GaAs nano-ridge laser diodes fully fabricated in a 300-mm CMOS pilot line", Nature, 2025', doi: '10.1038/s41586-024-08364-2' },
+    dekoninck: { cite: 'De Koninck et al., "GaAs nano-ridge laser diodes fully fabricated in a 300-mm CMOS pilot line", Nature, 2025 (statements quoted from the preprint, arXiv:2309.04473, 2023)', doi: '10.1038/s41586-024-08364-2' },
     bao: { cite: 'Bao et al., "An erbium-doped waveguide amplifier on thin film lithium niobate with an output power exceeding 100 mW", Laser Photonics Rev., 2024', doi: '10.1002/lpor.202400765' },
     celo: { cite: 'Celo et al., Group IV Photonics Conference (GFP), 2017', doi: '10.1109/group4.2017.8082188' },
     tian: { cite: 'Tian et al., Optical and Quantum Electronics, 2025', doi: '10.1007/s11082-024-07958-4' },
@@ -27,13 +27,13 @@
     franken: { cite: 'Franken et al., "High-power and narrow-linewidth laser on thin-film lithium niobate enabled by photonic wire bonding", APL Photonics, 2025', doi: '10.1063/5.0231827' },
     jalas: { cite: 'Jalas et al., "What is - and what is not - an optical isolator", Nature Photonics, 2013', doi: '10.1038/nphoton.2013.185' },
     shi2015: { cite: 'Shi, Yu and Fan, "Limitations of nonlinear optical isolators due to dynamic reciprocity", Nature Photonics 9, 388 (2015)', doi: '10.1038/nphoton.2015.79' },
-    lapointe: { cite: 'Lapointe et al., "Passive broadband Faraday isolator for hybrid integration to photonic circuits without lens and external magnet", Nature Photonics, 2025', doi: '10.1038/s41566-024-01601-0' },
+    lapointe: { cite: 'Lapointe et al., "Passive broadband Faraday isolator for hybrid integration to photonic circuits without lens and external magnet", Nature Photonics, 2025 (numbers quoted from the preprint, Research Square rs-3157765, 2023)', doi: '10.1038/s41566-024-01601-0' },
     kashyap: { cite: 'Kashyap and Blow, "Observation of catastrophic self-propelled self-focusing in optical fibres", Electronics Letters, 1988', doi: '10.1049/el:19880032' },
     ji2017: { cite: 'Ji et al., "Ultra-low-loss on-chip resonators with sub-milliwatt parametric oscillation threshold", Optica, 2017', doi: '10.1364/optica.4.000619' },
     hausmann: { cite: 'Hausmann et al., "Diamond nonlinear photonics", Nature Photonics, 2014', doi: '10.1038/nphoton.2014.72' },
     raja: { cite: 'Raja et al., "Electrically pumped photonic integrated soliton microcomb", Nature Communications, 2019', doi: '10.1038/s41467-019-08498-2' },
     white: { cite: 'White et al., "Unified laser stabilization and isolation on a silicon chip", Nature Photonics, 2024', doi: '10.1038/s41566-024-01539-3' },
-    kramnik: { cite: 'Kramnik et al., "Scalable feedback stabilization of quantum light sources on a CMOS chip", arXiv:2411.05921, 2024', url: 'https://arxiv.org/abs/2411.05921' },
+    kramnik: { cite: 'Kramnik et al., "Scalable feedback stabilization of quantum light sources on a CMOS chip", Nature Electronics 8, 620, 2025 (preprint arXiv:2411.05921, 2024)', doi: '10.1038/s41928-025-01410-5' },
     chen2026: { cite: 'Chen et al., "Ultrahigh-Q integrated flame-hydrolysis-deposited germano-silicate resonators on silicon", Light: Science and Applications, 2026', doi: '10.1038/s41377-026-02353-y' },
     chowdhury: { cite: 'Chowdhury et al., Optics Express, 2024', doi: '10.1364/oe.510036' },
     lenstra: { cite: 'Lenstra, Verbeek and den Boef, "Coherence collapse in single-mode semiconductor lasers due to optical feedback", IEEE J. Quantum Electron. 21, 674 (1985)', doi: '10.1109/JQE.1985.1072725' },
@@ -67,7 +67,8 @@
   function ack(text) {
     return { type: 'ack', text: text + ' I acknowledge the policy mantra: ' + MANTRA + ' I understand that this attestation is retained in accordance with Policy PHC-1550.4 and may be reviewed during my annual Return Loss Conversation.', narration: ['Please read the attestation carefully, and tick the box to confirm.', 'Your attestation is recorded.'] };
   }
-  function isThisOk(line) { return [line, 'Pause and ask yourself. Is this okay?', 'Remember. ' + MANTRA]; }
+  /* judged chats: intro (read or watch, then judge) is spoken before the OK / Not OK popup; the verdict line after it */
+  function isThisOk(line, intro) { return [].concat(intro, ['Pause and ask yourself. Is this okay?', line, 'Remember. ' + MANTRA]); }
 
   /* =================================================================== */
   /* INCIDENT REVIEWS                                                       */
@@ -92,7 +93,8 @@
       narration: [first ? 'You are Dana Okafor, Gary\'s labmate.' : 'You are Dana.', 'Dana saw it happen. Now Dana has a choice.', 'Remember the approved phrase. ' + APPROVED] };
   }
   function felt(situation, bullets, narr) {
-    return { type: 'slide', layout: 'host', title: 'How Do You Think Gary Felt?',
+    return { type: 'slide', layout: 'host', title: 'How Do You Think Gary Felt?', hostImg: 'media/render/host_pat_empathy.jpg',
+      hostCam: { idle: 'media/render/host_pat_cam_empathy_idle.mp4', talk: ['media/render/host_pat_cam_empathy_talk.mp4'] },
       bullets: [situation, 'Gary felt ashamed', 'Shame is a normal response to a reflection, including your own', 'This is a judgment-free zone', 'The incident has still been logged'].concat(bullets || []),
       callout: 'Judgment-free. Still logged.',
       narration: ['Let us pause for a moment.', situation + '.', 'How do you think Gary felt?', 'Gary felt ashamed.', 'That is normal. Shame is a normal response to a reflection, including your own.', 'This is a judgment-free zone. Nobody in this course is judging Gary.', 'The incident has still been logged.'].concat(narr || []).concat(['Remember. ' + MANTRA]) };
@@ -100,148 +102,6 @@
   function feltTabs(situation, tabs) {
     return { type: 'reveal', title: 'How Do You Think Gary Felt?', prompt: situation + '. How do you think Gary felt? Open each feeling. All feelings are valid. All feelings are logged.', tabs: tabs,
       narration: ['Let us pause for a moment.', situation + '.', 'How do you think Gary felt? Please open each feeling.', 'All feelings are valid. All feelings are logged.'] };
-  }
-  function telegraph(x) { return (Math.sin(x * 37) + Math.sin(x * 91) > 0.3 ? 0.75 : 0.42); }
-
-
-  /* ---------- animatic drawing helpers (runtime only) ---------- */
-  function C(name, fb) {
-    try { var v = getComputedStyle(document.documentElement).getPropertyValue(name).trim(); return v || fb; } catch (e) { return fb; }
-  }
-  function cols() {
-    return { bg: C('--panel-2', '#14171b'), panel: C('--panel', '#1d2228'), fg: C('--ink', '#e3e6ea'), muted: C('--ink-2', '#8b939c'),
-      accent: C('--accent', '#4ea1ff'), bad: C('--bad', '#e5534b'), ok: C('--ok', '#3fb950'), warn: C('--warn', '#d29922'), border: C('--line', '#3a414a') };
-  }
-  function clear(ctx, w, h) { var c = cols(); ctx.fillStyle = c.panel; ctx.fillRect(0, 0, w, h); return c; }
-  function text(ctx, s, x, y, size, color, align) {
-    var sz = size || 14, cw = (ctx.canvas && (ctx.canvas.clientWidth || ctx.canvas.width)) || 800;
-    ctx.font = sz + 'px system-ui, sans-serif';
-    while (sz > 8 && ctx.measureText(s).width > cw - 12) { sz -= 1; ctx.font = sz + 'px system-ui, sans-serif'; }
-    ctx.fillStyle = color; ctx.textAlign = align || 'left'; ctx.textBaseline = 'middle'; ctx.fillText(s, x, y);
-  }
-  function stamp(ctx, w, h, u, s, color) {
-    if (u < 0.55) return;
-    var k = Math.min(1, (u - 0.55) / 0.1);
-    ctx.save(); ctx.translate(w * 0.78, h * 0.72); ctx.rotate(-0.18); ctx.scale(Math.min(1, w / 640), Math.min(1, w / 640)); ctx.globalAlpha = k;
-    ctx.strokeStyle = color; ctx.lineWidth = 3; ctx.strokeRect(-90, -22, 180, 44);
-    text(ctx, s, 0, 0, 20, color, 'center'); ctx.restore();
-  }
-  function stick(ctx, x, y, s, name, color) {
-    ctx.strokeStyle = color; ctx.lineWidth = 2;
-    ctx.beginPath(); ctx.arc(x, y - s * 1.6, s * 0.35, 0, 7); ctx.stroke();
-    ctx.beginPath(); ctx.moveTo(x, y - s * 1.25); ctx.lineTo(x, y - s * 0.4); ctx.moveTo(x - s * 0.5, y - s); ctx.lineTo(x + s * 0.5, y - s);
-    ctx.moveTo(x, y - s * 0.4); ctx.lineTo(x - s * 0.35, y); ctx.moveTo(x, y - s * 0.4); ctx.lineTo(x + s * 0.35, y); ctx.stroke();
-    text(ctx, name, x, y + 12, 11, color, 'center');
-  }
-  /* chip with laser, bus waveguide, reflectors; forward pulse and returning echoes */
-  function dChip(ctx, w, h, u, o) {
-    var c = clear(ctx, w, h); o = o || {};
-    var y = h * 0.55, x0 = w * 0.12, x1 = w * 0.88, xl = w * 0.24;
-    ctx.fillStyle = c.bg; ctx.fillRect(x0, y - h * 0.12, x1 - x0, h * 0.24);
-    ctx.strokeStyle = c.border; ctx.strokeRect(x0, y - h * 0.12, x1 - x0, h * 0.24);
-    ctx.fillStyle = c.warn; ctx.fillRect(x0 + 4, y - 10, xl - x0 - 8, 20); text(ctx, 'laser', (x0 + xl) / 2, y - 22, 11, c.muted, 'center');
-    ctx.strokeStyle = c.accent; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(xl, y); ctx.lineTo(x1 - 6, y); ctx.stroke();
-    var refl = o.refl || [0.95];
-    refl.forEach(function (f, i) {
-      var xr = xl + f * (x1 - 6 - xl);
-      ctx.fillStyle = i === refl.length - 1 && o.hotFar ? c.bad : c.muted; ctx.fillRect(xr - 2, y - 9, 4, 18);
-      var back = xr - ((u * 1.6) % 1) * (xr - xl);
-      ctx.globalAlpha = 0.35 + 0.4 * (i === refl.length - 1 && o.hotFar ? 1 : 0.3);
-      ctx.fillStyle = c.bad; ctx.beginPath(); ctx.arc(back, y + 5, 4, 0, 7); ctx.fill(); ctx.globalAlpha = 1;
-    });
-    var fw = xl + ((u * 1.6) % 1) * (x1 - 6 - xl); ctx.fillStyle = c.accent; ctx.beginPath(); ctx.arc(fw, y - 5, 5, 0, 7); ctx.fill();
-    if (o.ruler) {
-      var k = Math.min(1, u * 1.4); ctx.strokeStyle = c.ok; ctx.setLineDash([5, 4]); ctx.beginPath(); ctx.moveTo(xl, y + h * 0.2); ctx.lineTo(xl + k * (x1 - 6 - xl), y + h * 0.2); ctx.stroke(); ctx.setLineDash([]);
-      text(ctx, 'parasitic cavity length', (xl + x1) / 2, y + h * 0.26, 12, c.ok, 'center');
-    }
-    if (o.gary) stick(ctx, w * 0.06, h * 0.9, 18, 'Gary', c.fg);
-    if (o.label) text(ctx, o.label, w / 2, h * 0.12, 15, c.fg, 'center');
-    if (o.stamp) stamp(ctx, w, h, u, o.stamp, o.stampColor === 'ok' ? c.ok : c.bad);
-  }
-  /* plotted trace that draws itself progressively */
-  function dTrace(ctx, w, h, u, o) {
-    var c = clear(ctx, w, h), L = w * 0.1, Rr = w * 0.92, T = h * 0.2, B = h * 0.82;
-    ctx.strokeStyle = c.border; ctx.lineWidth = 1; ctx.strokeRect(L, T, Rr - L, B - T);
-    text(ctx, o.x || '', (L + Rr) / 2, B + 16, 11, c.muted, 'center');
-    ctx.save(); ctx.translate(L - 14, (T + B) / 2); ctx.rotate(-Math.PI / 2); text(ctx, o.y || '', 0, 0, 11, c.muted, 'center'); ctx.restore();
-    var n = 300, end = Math.max(2, Math.floor(n * Math.min(1, u * 1.25)));
-    (o.fs || [o.f]).forEach(function (f, j) {
-      ctx.strokeStyle = j === 0 ? c.accent : c.warn; ctx.lineWidth = 2; ctx.beginPath();
-      for (var i = 0; i < end; i++) { var xx = i / (n - 1), yy = f(xx, u); var px = L + xx * (Rr - L), py = B - yy * (B - T); if (i) ctx.lineTo(px, py); else ctx.moveTo(px, py); }
-      ctx.stroke();
-    });
-    if (o.label) text(ctx, o.label, w / 2, h * 0.09, 15, c.fg, 'center');
-    if (o.stamp) stamp(ctx, w, h, u, o.stamp, o.stampColor === 'ok' ? c.ok : c.bad);
-  }
-  /* comb of cavity modes under a moving filter */
-  function dComb(ctx, w, h, u, o) {
-    var c = clear(ctx, w, h); o = o || {};
-    var B = h * 0.8, sp = w / 11, off = (u * sp * 1.2) % sp, fc = w * (0.25 + 0.5 * u), fw = w * 0.12;
-    ctx.strokeStyle = c.warn; ctx.lineWidth = 2; ctx.beginPath();
-    for (var x = 0; x <= w; x += 3) { var g = 1 / (1 + Math.pow((x - fc) / fw, 2)); var py = B - g * h * 0.55; if (x) ctx.lineTo(x, py); else ctx.moveTo(x, py); }
-    ctx.stroke();
-    var best = null, bd = 1e9;
-    for (var k = -1; k < 13; k++) { var xm = k * sp + off; var d = Math.abs(xm - fc); if (d < bd) { bd = d; best = xm; } }
-    for (var k2 = -1; k2 < 13; k2++) {
-      var xm2 = k2 * sp + off, g2 = 1 / (1 + Math.pow((xm2 - fc) / fw, 2));
-      ctx.strokeStyle = xm2 === best ? c.accent : c.muted; ctx.lineWidth = xm2 === best ? 4 : 1.5;
-      ctx.beginPath(); ctx.moveTo(xm2, B); ctx.lineTo(xm2, B - (xm2 === best ? 0.7 : 0.2 + 0.25 * g2) * h * 0.6); ctx.stroke();
-    }
-    ctx.strokeStyle = c.border; ctx.beginPath(); ctx.moveTo(0, B); ctx.lineTo(w, B); ctx.stroke();
-    text(ctx, o.label || 'cavity modes (gray), filter (amber), lasing mode (blue)', w / 2, h * 0.1, 14, c.fg, 'center');
-    if (o.stamp) stamp(ctx, w, h, u, o.stamp, o.stampColor === 'ok' ? c.ok : c.bad);
-  }
-  /* ring resonator with CW and CCW light, optional scatterer and standing wave */
-  function dRing(ctx, w, h, u, o) {
-    var c = clear(ctx, w, h); o = o || {};
-    var cx = w / 2, cy = h * 0.5, r = Math.min(w, h) * 0.28;
-    ctx.strokeStyle = c.accent; ctx.lineWidth = 3; ctx.beginPath(); ctx.arc(cx, cy, r, 0, 7); ctx.stroke();
-    ctx.beginPath(); ctx.moveTo(w * 0.08, cy + r + 12); ctx.lineTo(w * 0.92, cy + r + 12); ctx.stroke();
-    var a = u * Math.PI * 4;
-    ctx.fillStyle = c.accent; ctx.beginPath(); ctx.arc(cx + r * Math.cos(a), cy + r * Math.sin(a), 6, 0, 7); ctx.fill();
-    if (o.ccw) { ctx.fillStyle = c.bad; ctx.beginPath(); ctx.arc(cx + r * Math.cos(-a + 1), cy + r * Math.sin(-a + 1), 6, 0, 7); ctx.fill(); }
-    if (o.speck) { ctx.fillStyle = c.warn; ctx.beginPath(); ctx.arc(cx + r * Math.cos(-0.6), cy + r * Math.sin(-0.6), 4, 0, 7); ctx.fill(); }
-    if (o.seams) { ctx.strokeStyle = c.panel; ctx.lineWidth = 5; for (var s = 0; s < 8; s++) { var t = s * Math.PI / 4; ctx.beginPath(); ctx.moveTo(cx + (r - 6) * Math.cos(t), cy + (r - 6) * Math.sin(t)); ctx.lineTo(cx + (r + 6) * Math.cos(t), cy + (r + 6) * Math.sin(t)); ctx.stroke(); } }
-    if (o.standing && u > 0.4) {
-      ctx.fillStyle = c.fg; for (var n = 0; n < 24; n++) { var t2 = n * Math.PI / 12; ctx.globalAlpha = 0.3 + 0.7 * Math.abs(Math.cos(t2 * 3 + u * 2)); ctx.beginPath(); ctx.arc(cx + (r - 14) * Math.cos(t2), cy + (r - 14) * Math.sin(t2), 2.5, 0, 7); ctx.fill(); }
-      ctx.globalAlpha = 1;
-    }
-    if (o.gary) stick(ctx, w * 0.1, h * 0.75, 18, 'Gary', c.fg);
-    if (o.label) text(ctx, o.label, w / 2, h * 0.08, 15, c.fg, 'center');
-    if (o.stamp) stamp(ctx, w, h, u, o.stamp, o.stampColor === 'ok' ? c.ok : c.bad);
-  }
-  function dCard(ctx, w, h, u, o) {
-    var c = clear(ctx, w, h);
-    text(ctx, o.title, w / 2, h * 0.42, 22, c.fg, 'center');
-    if (o.sub) text(ctx, o.sub, w / 2, h * 0.56, 14, c.muted, 'center');
-    if (o.people) o.people.forEach(function (p, i) { stick(ctx, w * (0.2 + 0.6 * i / Math.max(1, o.people.length - 1)), h * 0.92, 16, p, c.muted); });
-    if (o.stamp) stamp(ctx, w, h, u, o.stamp, o.stampColor === 'ok' ? c.ok : c.bad);
-  }
-  function lor(x, x0, wd) { return 1 / (1 + Math.pow((x - x0) / wd, 2)); }
-  /* isolator scene: laser, isolator (normal, reversed, removed or rotated 90 degrees), downstream reflector or source */
-  function dIso(ctx, w, h, u, o) {
-    var c = clear(ctx, w, h); o = o || {};
-    var y = h * 0.52, xl = w * 0.16, xi = w * 0.5, xr = w * 0.86, bw = Math.min(80, w * 0.12);
-    var k = (u * 1.4) % 1, back = !o.rot && (o.none || o.rev);
-    ctx.strokeStyle = c.accent; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(xl, y); ctx.lineTo(xr, y); ctx.stroke();
-    ctx.fillStyle = back && u > 0.5 ? c.bad : c.warn; ctx.fillRect(xl - 44, y - 13, 44, 26); text(ctx, 'laser', xl - 22, y - 26, 11, c.muted, 'center');
-    ctx.fillStyle = c.muted; ctx.fillRect(xr - 2, y - 14, 5, 28); text(ctx, o.right || 'reflector', xr, y - 26, 11, c.muted, 'center');
-    if (o.none) { ctx.setLineDash([4, 4]); ctx.strokeStyle = c.muted; ctx.strokeRect(xi - bw / 2, y - 18, bw, 36); ctx.setLineDash([]); text(ctx, 'isolator removed', xi, y - 30, 11, c.muted, 'center'); }
-    else {
-      ctx.fillStyle = c.bg; ctx.fillRect(xi - bw / 2, y - 18, bw, 36); ctx.strokeStyle = c.border; ctx.strokeRect(xi - bw / 2, y - 18, bw, 36);
-      var d = o.rev ? -1 : 1; ctx.strokeStyle = c.fg; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(xi - d * bw * 0.3, y); ctx.lineTo(xi + d * bw * 0.3, y);
-      ctx.moveTo(xi + d * bw * 0.3, y); ctx.lineTo(xi + d * bw * 0.15, y - 7); ctx.moveTo(xi + d * bw * 0.3, y); ctx.lineTo(xi + d * bw * 0.15, y + 7); ctx.stroke();
-      text(ctx, o.rot ? 'isolator, rotated 90 degrees' : 'isolator', xi, y - 30, 11, c.muted, 'center');
-      if (o.rot) { ctx.strokeStyle = c.bad; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(xi - bw / 2 - 10, y - 12); ctx.lineTo(xi - bw / 2 - 10, y + 12); ctx.stroke(); text(ctx, 'input polarizer crossed with the laser polarization', xi, y + 34, 11, c.bad, 'center'); }
-    }
-    var blockF = !o.none && (o.rev || o.rot), fx = xl + k * (xr - xl);
-    if (blockF && fx > xi - bw / 2) { ctx.globalAlpha = Math.max(0, 1 - (fx - xi + bw / 2) / 40); fx = xi - bw / 2; }
-    ctx.fillStyle = c.accent; ctx.beginPath(); ctx.arc(fx, y - 5, 5, 0, 7); ctx.fill(); ctx.globalAlpha = 1;
-    var bx = xr - k * (xr - xl);
-    if (!o.rot && (back || bx > xi + bw / 2)) { ctx.fillStyle = c.bad; ctx.globalAlpha = 0.8; ctx.beginPath(); ctx.arc(bx, y + 6, 4, 0, 7); ctx.fill(); ctx.globalAlpha = 1; }
-    if (o.gary) stick(ctx, w * 0.06, h * 0.92, 18, 'Gary', c.fg);
-    if (o.label) text(ctx, o.label, w / 2, h * 0.12, 15, c.fg, 'center');
-    if (o.stamp) stamp(ctx, w, h, u, o.stamp, o.stampColor === 'ok' ? c.ok : c.bad);
   }
 
   /* =================================================================== */
@@ -266,7 +126,7 @@
         tabs: [
           { label: 'Feedback', body: '<p><b>Optical feedback</b>: any light that re-enters a laser cavity after leaving it. It adds a delayed field to the field inside the cavity. Its effect depends on how much returns, with what phase, and from how far away.</p>', narration: ['Optical feedback is any light that re-enters a laser cavity after leaving it.', 'It adds a delayed copy of the field to the field inside the cavity.', 'What happens next depends on how much light returns, with what phase, and from how far away.'] },
           { label: 'Retaliation', body: '<p><b>Retaliation</b> (policy term): a back-reflection. Every refractive index step, facet, coupler end, crossing, splice and connector can retaliate. Retaliation does not require intent.</p>', narration: ['In this course, retaliation is our policy term for a back-reflection.', 'Every refractive index step can retaliate. Facets, coupler ends, crossings, splices and connectors.', 'Retaliation does not require intent.'] },
-          { label: 'Parasitic cavity', body: '<p><b>Parasitic cavity</b>: any two reflections on the same optical path. Together they form a Fabry-Perot etalon that nobody drew on the layout. Its free spectral range is c / (2 n L), with n the group index and L the spacing.</p>', narration: ['A parasitic cavity is any two reflections on the same optical path.', 'Together they form a Fabry-Perot etalon that nobody drew on the layout.', 'Its free spectral range is the speed of light divided by two times the group index times the spacing.'] },
+          { label: 'Parasitic cavity', body: '<p><b>Parasitic cavity</b>: any two reflections on the same optical path. Together they form a Fabry-Perot etalon that nobody drew on the layout. Its free spectral range is $c/(2nL)$, with $n$ the group index and $L$ the spacing.</p>', narration: ['A parasitic cavity is any two reflections on the same optical path.', 'Together they form a Fabry-Perot etalon that nobody drew on the layout.', 'Its free spectral range is the speed of light divided by two times the group index times the spacing.'] },
           { label: 'Mode hop', body: '<p><b>Mode hop</b>: a sudden jump of a laser from one longitudinal cavity mode to another, usually by one free spectral range, when the mode with the most net gain changes. Mode hops often show hysteresis.</p>', narration: ['A mode hop is a sudden jump of a laser from one cavity mode to another.', 'It happens when a different mode starts to win the competition for gain.', 'Mode hops often show hysteresis, so the direction you sweep in matters.'] }
         ], narration: ['Before we begin, let us agree on some terms.'] },
       { type: 'slide', layout: 'policy', title: 'Speak-Up Procedure for Optical Incidents',
@@ -299,10 +159,10 @@
       ]),
       { type: 'video', title: 'Cold Open: The Ripple', duration: 26,
         keyframes: [
-          { t: 0, cast: ['Gary'], caption: 'Gary flip-chip bonds an InP laser onto a silicon photonics chip.', shot: 'Lab bench, medium shot from 35 degrees above bench height, 50 mm lens. Flip-chip bonder with a small InP laser die held by the collet, lowering onto a silicon photonics chip with silicon nitride waveguides and grating couplers, on the chuck. Gary leans in, safety glasses on forehead. Too-clean training-video lighting, soft key from left.', draw: function (ctx, w, h, u) { dChip(ctx, w, h, u, { gary: true, label: 'Flip-chip InP laser on a silicon photonics chip' }); } },
-          { t: 7, cast: ['Gary'], caption: 'The light versus current curve has periodic ripples.', shot: 'Over-the-shoulder on Gary to a bench monitor. Light versus current curve plotting live, with a periodic ripple. Slow push-in on the monitor. Gary points at the gap between laser and chip on a second monitor showing a microscope view.', draw: function (ctx, w, h, u) { dTrace(ctx, w, h, u, { label: 'Light versus current (illustrative)', x: 'current', y: 'power', f: function (x) { var p = Math.max(0, x - 0.15); return 0.05 + 0.9 * p + 0.04 * Math.sin(x * 60) * (p > 0 ? 1 : 0); } }); } },
-          { t: 13, cast: ['Gary'], caption: 'Gary blames the sub-micron bond gap and reworks the bond. Three times.', shot: 'Montage, locked-off wide. Gary lifts the die, re-bonds, re-measures. Wall clock advances between cuts. The ripple on the monitor does not change. Freeze frame, red X stamp.', draw: function (ctx, w, h, u) { dChip(ctx, w, h, u, { refl: [0.03], gary: true, label: 'Suspect: the gap next to the laser', stamp: 'VIOLATION' }); } },
-          { t: 19, cast: ['Pat Reynolds'], caption: 'Replay: measure the whole path. The far-end grating coupler is the second mirror.', shot: 'Top-down macro of the chip. An animated ruler extends from the laser facet across the entire chip to the grating coupler at the far end. The coupler glows red. Green check stamp.', draw: function (ctx, w, h, u) { dChip(ctx, w, h, u, { refl: [0.03, 0.97], hotFar: true, ruler: true, label: 'The whole chip is the cavity', stamp: 'COMPLIANT', stampColor: 'ok' }); } }
+          { t: 0, cast: ['Gary'], caption: 'Gary flip-chip bonds an InP laser onto a silicon photonics chip.', shot: 'Lab bench, medium shot from 35 degrees above bench height, 50 mm lens. Flip-chip bonder with a small InP laser die held by the collet, lowering onto a silicon photonics chip with silicon nitride waveguides and grating couplers, on the chuck. Gary leans in, safety glasses on forehead. Too-clean training-video lighting, soft key from left.', draw: function (ctx, w, h, u) { LMS_DRAW.fb.flipChip(ctx, w, h, u, { mode: 'bond' }); } },
+          { t: 7, cast: ['Gary'], caption: 'The light versus current curve has periodic ripples.', shot: 'Over-the-shoulder on Gary to a bench monitor. Light versus current curve plotting live, with a periodic ripple. Slow push-in on the monitor. Gary points at the gap between laser and chip on a second monitor showing a microscope view.', draw: function (ctx, w, h, u) { LMS_DRAW.fb.liCurve(ctx, w, h, u); } },
+          { t: 13, cast: ['Gary'], caption: 'Gary blames the sub-micron bond gap and reworks the bond. Three times.', shot: 'Montage, locked-off wide. Gary lifts the die, re-bonds, re-measures. Wall clock advances between cuts. The ripple on the monitor does not change. Freeze frame, red X stamp.', draw: function (ctx, w, h, u) { LMS_DRAW.fb.flipChip(ctx, w, h, u, { mode: 'gap', stamp: 'VIOLATION' }); } },
+          { t: 19, cast: ['Pat Reynolds'], caption: 'Replay: measure the whole path. The far-end grating coupler is the second mirror.', shot: 'Top-down macro of the chip. An animated ruler extends from the laser facet across the entire chip to the grating coupler at the far end. The coupler glows red. Green check stamp.', draw: function (ctx, w, h, u) { LMS_DRAW.fb.flipChip(ctx, w, h, u, { mode: 'whole', stamp: 'COMPLIANT', ok: true }); } }
         ],
         narration: ['Meet Gary.', 'Gary has bonded a laser onto a silicon photonics chip.', 'The light versus current curve has ripples. Regular, periodic ripples.', 'Gary blames the tiny gap between the laser and the chip, because it is the closest interface.', 'He reworks the bond. Then he reworks it again.', 'Let us replay that. This time, Gary measures the whole optical path.', 'The second mirror was at the far end of the chip all along.'] },
       { type: 'slide', layout: 'host', title: 'What Is Unsolicited Feedback?',
@@ -311,13 +171,13 @@
         narration: ['Let us take a closer look.', 'When light returns into a laser, it adds a delayed copy of the field to the field already inside the cavity.', 'Whether that helps or hurts depends on three things. How much light returns. Its phase. And how long it took to come back.', 'Current and temperature both change the phase, so the symptoms repeat periodically as you tune.', 'That is why a ripple with a regular period is a confession, not a coincidence.', 'Remember. ' + MANTRA] },
       { type: 'reveal', title: 'The Five Regimes of Feedback', prompt: 'Tkach and Chraplyvy (1986) classified feedback effects on 1.5 micron distributed feedback lasers into five regimes, ordered by increasing feedback. Open each regime.',
         tabs: [
-          { label: 'Regime I', body: '<p>Very weak feedback. The linewidth narrows or broadens depending on the phase of the returning light.</p><p class="muted">The thresholds between regimes depend on the laser and on the distance to the reflector. This course does not quote numbers for them.</p>', narration: ['Regime one. Very weak feedback.', 'The linewidth narrows or broadens, depending on the phase of the returning light.', 'Even a whisper of retaliation changes the laser.'] },
-          { label: 'Regime II', body: '<p>Stronger feedback. The laser can split into or hop between external-cavity modes. This is where mode hopping from feedback lives.</p>', narration: ['Regime two. Stronger feedback.', 'The laser can hop between modes of the new, larger cavity that now includes the reflector.', 'Every reflection is a cavity. Every cavity hops.'] },
-          { label: 'Regime III', body: '<p>A narrow range where the laser settles on a single external-cavity mode with a narrow linewidth, insensitive to the feedback phase.</p>', narration: ['Regime three. A narrow window where the laser settles on one external cavity mode, with a narrow line.', 'This regime is narrow. Do not plan your career around it.'] },
-          { label: 'Regime IV', body: '<p><b>Coherence collapse.</b> The linewidth broadens dramatically and the laser becomes noisy. In this regime the behavior is largely insensitive to the distance and phase of the reflector.</p>', narration: ['Regime four. Coherence collapse.', 'The linewidth broadens dramatically and the laser becomes noisy.', 'Here, changing the distance to the reflector does not save you.'] },
-          { label: 'Regime V', body: '<p>Strong feedback into a laser with an anti-reflection coated facet: stable operation as an external-cavity laser. This is feedback that was designed, with consent.</p>', narration: ['Regime five. Strong feedback into a laser whose facet is anti-reflection coated.', 'The laser now runs stably as an external cavity laser.', 'This is feedback with consent. It was designed, documented, and approved.'] }
+          { label: 'Regime I', media: { src: 'media/lit/fb_tkach1986_regime1.svg', caption: 'Tkach and Chraplyvy, J. Lightwave Technol. 1986. Redrawn, illustrative.', href: 'https://doi.org/10.1109/JLT.1986.1074666' }, body: '<p>Very weak feedback. The linewidth narrows or broadens depending on the phase of the returning light.</p><p class="muted">The thresholds between regimes depend on the laser and on the distance to the reflector. The Mode Hop Map activity later in this course shows the levels reported for the 1986 experiment.</p>', narration: ['Regime one. Very weak feedback.', 'The linewidth narrows or broadens, depending on the phase of the returning light.', 'Even a whisper of retaliation changes the laser.'] },
+          { label: 'Regime II', media: { src: 'media/lit/fb_tkach1986_regime2.svg', caption: 'Tkach and Chraplyvy, J. Lightwave Technol. 1986. Redrawn, illustrative.', href: 'https://doi.org/10.1109/JLT.1986.1074666' }, body: '<p>Stronger feedback. The laser can split into or hop between external-cavity modes. This is where mode hopping from feedback lives.</p>', narration: ['Regime two. Stronger feedback.', 'The laser can hop between modes of the new, larger cavity that now includes the reflector.', 'Every reflection is a cavity. Every cavity hops.'] },
+          { label: 'Regime III', media: { src: 'media/lit/fb_tkach1986_regime3.svg', caption: 'Tkach and Chraplyvy, J. Lightwave Technol. 1986. Redrawn, illustrative.', href: 'https://doi.org/10.1109/JLT.1986.1074666' }, body: '<p>A narrow range where the laser settles on a single external-cavity mode with a narrow linewidth, insensitive to the feedback phase.</p>', narration: ['Regime three. A narrow window where the laser settles on one external cavity mode, with a narrow line.', 'This regime is narrow. Do not plan your career around it.'] },
+          { label: 'Regime IV', media: { src: 'media/lit/fb_tkach1986_regime4.svg', caption: 'Tkach and Chraplyvy, J. Lightwave Technol. 1986. Redrawn, illustrative.', href: 'https://doi.org/10.1109/JLT.1986.1074666' }, body: '<p><b>Coherence collapse.</b> The linewidth broadens dramatically and the laser becomes noisy. In this regime the behavior is largely insensitive to the distance and phase of the reflector.</p>', narration: ['Regime four. Coherence collapse.', 'The linewidth broadens dramatically and the laser becomes noisy.', 'Here, changing the distance to the reflector does not save you.'] },
+          { label: 'Regime V', media: { src: 'media/lit/fb_tkach1986_regime5.svg', caption: 'Tkach and Chraplyvy, J. Lightwave Technol. 1986. Redrawn, illustrative.', href: 'https://doi.org/10.1109/JLT.1986.1074666' }, body: '<p>Strong feedback into a laser with an anti-reflection coated facet: stable operation as an external-cavity laser. This is feedback that was designed, with consent.</p>', narration: ['Regime five. Strong feedback into a laser whose facet is anti-reflection coated.', 'The laser now runs stably as an external cavity laser.', 'This is feedback with consent. It was designed, documented, and approved.'] }
         ], narration: ['Feedback is not one thing. It is five things.'] },
-      { type: 'slide', layout: 'bullets', title: 'Retaliation From an Unexpected Direction',
+      { type: 'slide', layout: 'bullets', title: 'Retaliation From an Unexpected Direction', image: { src: 'media/lit/fb_marinins2022_far_end.svg', kb: [0.5, 0.5, 1, 0.5, 0.5, 1] },
         bullets: ['Flip-chip InP distributed feedback lasers on silicon photonics showed light versus current ripples with a 25 to 30 mA period (Marinins et al., 2022)', 'The cause: about 4 percent (-14 dB) feedback from a silicon nitride grating coupler at the far end of the waveguide', 'Not the sub-micron gap between the laser and the chip', 'Everyone suspects the closest interface. Measure the whole path'],
         callout: 'The far end of your chip is part of your laser until proven otherwise.',
         narration: ['This is not hypothetical.', 'Marinins and coworkers flip-chip bonded indium phosphide distributed feedback lasers onto silicon photonics.', 'The light versus current curves showed ripples with a period of twenty-five to thirty milliamps.', 'The cause was about four percent feedback, minus fourteen decibels, from a silicon nitride grating coupler at the far end of the waveguide.', 'Not the gap of less than one micron right next to the laser.', 'Everyone suspects the closest interface. Please measure the whole path.', 'Every interface reflects. Every reflection is a cavity.'] },
@@ -331,22 +191,25 @@
           { from: MGR, text: 'OK. That is the third rework?', side: 'left' },
           { from: GARY, text: 'Fourth. The gap is under a micron now, so this should be the last one', side: 'right' },
           { from: MGR, text: 'Go ahead. If it is still there, call it a packaging artifact in the report and we move on', side: 'left' }
-        ], narration: isThisOk('Gary has reworked the bond four times without asking why the ripple period never changed, and the fallback is to call it a packaging artifact.') },
+        ], narration: isThisOk('Gary has reworked the bond four times without asking why the ripple period never changed, and the fallback is to call it a packaging artifact.',
+          ['Read this text exchange between Gary and his manager, Morgan, about a ripple on a bonded laser.', 'Then judge whether Gary\'s plan is proper.']) },
       { type: 'chat', title: 'Scenario 2: The Flat Cleave', app: 'email', skin: 'mail', meta: { header: 'Inbox', subject: 'Laser output unstable near facet, RMA request', participants: [GARY, BY, MGR] },
         messages: [
           { from: GARY, text: 'Hi Morgan,\n\nThe DFB on bench 2 jumps in output power whenever the fiber comes within a few tens of microns of the facet. The datasheet says it should be stable. I would like to open an RMA with the vendor while we are in warranty. Trace attached.\n\nThanks,\nGary', side: 'right', to: [MGR], cc: [BY], date: '2026-11-12 09:14', subject: 'Laser output unstable near facet, RMA request', attachments: [{ name: 'power_vs_gap_2026-11-12.csv', size: '48 KB' }] },
           { from: BY, text: 'Gary, quick question before the RMA: is the fiber flat cleaved? A bare glass end reflects a few percent (Fresnel), so the tip and the facet form a cavity, and moving the fiber sweeps its phase. Could we try an angle-cleaved fiber or a drop of gel first?\n\nDana', side: 'left', to: [GARY], cc: [MGR], date: '2026-11-12 09:41' },
           { from: GARY, text: 'It is a clean flat cleave, checked under the scope. I would rather not change the setup in the middle of the characterization. The vendor can test the laser on their side.', side: 'right', to: [BY], cc: [MGR], date: '2026-11-12 10:03' },
           { from: MGR, text: 'Agree, let us send it back while it is in warranty. We can revisit the fiber if they find nothing.\n\nMorgan', side: 'left', to: [GARY, BY], date: '2026-11-12 10:20' }
-        ], narration: isThisOk('Gary wants to return the laser before testing the fiber tip he has just described, and Morgan agrees.') },
+        ], narration: isThisOk('Gary wants to return the laser before testing the fiber tip he has just described, and Morgan agrees.',
+          ['Read this email thread between Gary, Dana and Morgan, about an unstable laser on bench two.', 'Then judge whether Gary\'s request is proper.']) },
       { type: 'chat', title: 'Scenario 3: Isolator Placement', app: 'thread', skin: 'slack', meta: { header: '#laser-integration', participants: [GARY, BY, MGR] },
         messages: [
           { from: GARY, text: 'Isolator arrived, installed this morning', side: 'right' },
-          { from: GARY, text: 'I put it at the end of the fiber spool, before the receiver. That is where the connectorized ports were', side: 'right' },
-          { from: BY, text: 'The taper, the crossings and the grating coupler are all between the laser and that spot though', side: 'left' },
-          { from: GARY, text: 'True, but those are on-chip and fixed. The isolator covers everything downstream, where the connectors are', side: 'right' },
-          { from: MGR, text: 'Isolator is in the link and ticked on the checklist. Closing the ticket', side: 'left' }
-        ], narration: isThisOk('Gary installed the isolator where the ports were convenient, after every on-chip reflector, and the ticket was closed without a return-loss check.') },
+          { from: GARY, text: 'I put it at the chip output, on the first fiber after the chip. The spool, its connectors and the receiver are all behind it now', side: 'right' },
+          { from: BY, text: 'The taper, the crossings and the grating coupler are still between the laser and the isolator though', side: 'left' },
+          { from: GARY, text: 'Yes. Those are close to the laser and in the return-loss budget. I also took the L-I curve and the linewidth with the spool connected and disconnected: no ripple and no linewidth change either way. A flat L-I curve alone only rules out strong feedback. Both measurements are in the ticket', side: 'right' },
+          { from: MGR, text: 'Thanks. Closing the ticket with the measurement attached', side: 'left' }
+        ], narration: isThisOk('Gary placed the isolator at the chip output, in front of the distant reflectors, budgeted the near ones, and closed the ticket with a measurement attached.',
+          ['Read this team chat about where Gary installed the new isolator.', 'Then judge whether his placement is proper.']) },
       { type: 'check', question: 'A flip-chip InP laser on a silicon photonics chip, with silicon nitride waveguides and grating couplers, shows light versus current ripples with a regular 25 to 30 mA period. Reworking the sub-micron laser-to-chip gap does not change the period. What should Gary investigate first?',
         options: [
           { text: 'Reflectors further along the path, such as the grating coupler at the far end of the waveguide', correct: true, why: '' },
@@ -382,25 +245,25 @@
       ]),
       { type: 'video', title: 'Cold Open: The Wiggles', duration: 24,
         keyframes: [
-          { t: 0, cast: ['Gary'], caption: 'Gary measures a modulator transfer curve. It has wiggles.', shot: 'Office cubicle, medium close-up on Gary at a dual monitor. Left monitor: Mach-Zehnder modulator transfer curve with a fine periodic ripple riding on the cosine. Gary squints, then smiles.', draw: function (ctx, w, h, u) { dTrace(ctx, w, h, u, { label: 'Transmission versus wavelength (illustrative)', x: 'wavelength', y: 'transmission', f: function (x) { return 0.5 + 0.38 * Math.cos(x * 12) + 0.05 * Math.cos(x * 140); } }); } },
-          { t: 7, cast: ['Gary'], caption: 'Gary adds a sinusoid to his fit model. The fit is excellent.', shot: 'Screen insert: fit dialog with a new sinusoid term being typed in. Fit residuals collapse to zero. Gary does a small fist pump. Red X stamp freezes the frame.', draw: function (ctx, w, h, u) { dTrace(ctx, w, h, u, { label: 'Fit: cosine plus one extra sinusoid', x: 'wavelength', y: 'transmission', fs: [function (x) { return 0.5 + 0.38 * Math.cos(x * 12) + 0.05 * Math.cos(x * 140); }, function (x) { return 0.5 + 0.38 * Math.cos(x * 12) + 0.05 * Math.cos(x * 140) + 0.005; }], stamp: 'VIOLATION' }); } },
-          { t: 13, cast: ['Pat Reynolds'], caption: 'Replay: the ripple period is a ruler. It points to two reflectors.', shot: 'Camera cranes up out of the monitor into a stylized top view of the chip, which becomes a hall of mirrors: each facet, crossing and coupler end flashes as a reflector, and pairs of them are joined by glowing arcs labelled with their implied spacing.', draw: function (ctx, w, h, u) { dChip(ctx, w, h, u, { refl: [0.2, 0.55, 0.97], hotFar: true, ruler: true, label: 'Ripple period to reflector spacing: L = c / (2 n df)', stamp: 'COMPLIANT', stampColor: 'ok' }); } }
+          { t: 0, cast: ['Gary'], caption: 'Gary measures a modulator transfer curve. It has wiggles.', shot: 'Office cubicle, medium close-up on Gary at a dual monitor. Left monitor: Mach-Zehnder modulator transfer curve with a fine periodic ripple riding on the cosine. Gary squints, then smiles.', draw: function (ctx, w, h, u) { LMS_DRAW.fb.mzmTrace(ctx, w, h, u); } },
+          { t: 7, cast: ['Gary'], caption: 'Gary adds a sinusoid to his fit model. The fit is excellent.', shot: 'Screen insert: fit dialog with a new sinusoid term being typed in. Fit residuals collapse to zero. Gary does a small fist pump. Red X stamp freezes the frame.', draw: function (ctx, w, h, u) { LMS_DRAW.fb.mzmTrace(ctx, w, h, u, { fit: true, stamp: 'VIOLATION' }); } },
+          { t: 13, cast: ['Pat Reynolds'], caption: 'Replay: the ripple period is a ruler. It points to two reflectors.', shot: 'Camera cranes up out of the monitor into a stylized top view of the chip, which becomes a hall of mirrors: each facet, crossing and coupler end flashes as a reflector, and pairs of them are joined by glowing arcs labelled with their implied spacing.', draw: function (ctx, w, h, u) { LMS_DRAW.fb.mzmChip(ctx, w, h, u, { stamp: 'COMPLIANT', ok: true }); } }
         ],
         narration: ['Gary measures the transfer curve of his modulator.', 'It has wiggles. Small, regular, periodic wiggles.', 'Gary adds a sinusoid to his fit model. The fit is excellent.', 'Let us replay that.', 'The period of the wiggle is a ruler. It tells you the spacing between two reflectors.', 'Every interface reflects. Every reflection is a cavity.'] },
       { type: 'slide', layout: 'bullets', title: 'The Parasitic Etalon, in Two Formulas',
-        bullets: ['Two reflectors with power reflectances R1 and R2, spacing L, group index n', 'Ripple period: FSR = c / (2 n L); in wavelength, d-lambda = lambda^2 / (2 n L)', 'Lossless Airy transmission: T = (1 - R1)(1 - R2) / (1 + R1 R2 - 2 sqrt(R1 R2) cos(phase))', 'Peak-to-valley ripple: 20 log10[(1 + r) / (1 - r)] dB, with r = sqrt(R1 R2)', 'Weak mirrors still make a cavity. The ripple is small, but the period is exact'],
+        bullets: ['Two reflectors with power reflectances $R_1$ and $R_2$, spacing $L$, group index $n$', 'Ripple period: $\\mathrm{FSR} = c/(2nL)$; in wavelength, $\\Delta\\lambda = \\lambda^2/(2nL)$', 'Lossless Airy transmission, with round-trip phase $\\phi$: $$T = \\frac{(1-R_1)(1-R_2)}{1 + R_1R_2 - 2\\sqrt{R_1R_2}\\,\\cos\\phi}$$', 'Peak-to-valley ripple: $20\\log_{10}\\left[(1+r)/(1-r)\\right]$ dB, with $r = \\sqrt{R_1R_2}$','Weak mirrors still make a cavity. The ripple is small, but the period is exact'],
         callout: 'Measure the period. Compute the length. Find the two reflectors.',
         narration: ['Every parasitic cavity is described by two formulas.', 'The ripple period, or free spectral range, is the speed of light divided by two times the group index times the spacing.', 'The ripple depth depends on the geometric mean of the two reflectances.', 'Weak mirrors still make a cavity. The ripple may be small, but its period is exact.', 'So measure the period, compute the length, and go find the two reflectors.', MANTRA] },
       { type: 'widget', title: 'Interactive: Parasitic Fabry-Perot Ripple', widget: 'fabryPerot', params: {},
-        instructions: 'Adjust the two reflectances, the spacing and the group index. Watch the ripple period and depth. Then use the ripple-to-length calculator.',
-        narration: ['In this activity, you will build a cavity you did not design.', 'Move the sliders for the two reflectances, the spacing, and the group index.', 'Notice that the depth depends on the reflectances, and the period depends only on the spacing and the group index.'] },
+        instructions: 'Run a laser sweep. Then change the two interfaces, the gap length $L$ or the group index $n_g$, and sweep again. Watch the ripple period $\\lambda^2 / (2 n_g L)$ and its depth, and try a long gap with a coarse step. Then use the ripple-to-length calculator.',
+        narration: ['In this activity, you will build a cavity you did not design.', 'Press Run laser sweep. Then choose the two reflecting interfaces, change the gap, and sweep again.', 'Notice that the depth depends on the reflectances, and the period depends only on the spacing and the group index.', 'Now try a long gap with a coarse step. If the laser steps farther than half a ripple period, the sweep shows a slower, false ripple, or none at all. The cavity is still there.'] },
       { type: 'reveal', title: 'Cavities You Did Not Design', prompt: 'Open each tab to meet a reflector that was not on the schematic.',
         tabs: [
-          { label: 'Amplifier facets', body: '<p>In a high-gain erbium-doped thin film lithium niobate amplifier, facet back-reflections reinforced amplified spontaneous emission, and parasitic lasing set in at the 1531.5 nm fluorescence peak (Bao et al., 2024).</p><p>An amplifier has no mirrors only until it has gain.</p>', narration: ['An erbium-doped amplifier on thin film lithium niobate.', 'Facet back-reflections reinforced the amplified spontaneous emission, and parasitic lasing set in at fifteen thirty-one point five nanometers, at the fluorescence peak.', 'An amplifier has no mirrors only until it has enough gain.', 'Every interface reflects.'] },
-          { label: 'Crossings and splitters', body: '<p>A poorly designed waveguide crossing contributes crosstalk, parasitic cavities from back-reflection, and multipath (Celo et al., 2017). Splitter trees accumulate back-reflection with depth (Tian et al., 2025).</p>', narration: ['Waveguide crossings.', 'A poorly designed crossing contributes crosstalk, parasitic cavities, and multipath interference.', 'And splitter trees accumulate back-reflection with every level of depth.', 'Crossings and splitters are usually budgeted for loss only. Budget their reflections too.'] },
-          { label: 'Multimode interferometer walls', body: '<p>Back-reflection ripples from the end walls of multimode interferometers only appear in simulation when enough modes are included; one double-interferometer study needed more than 30 (Cherchi et al., 2014).</p><p>If your simulation has no ripple, check that it is allowed to have one.</p>', narration: ['Multimode interferometers have end walls, and end walls reflect.', 'In one study, the reflection ripples only appeared in simulation once more than thirty modes were included.', 'If your simulation shows no ripple, first check that it was allowed to show one.'] },
-          { label: 'Vertical grating couplers', body: '<p>A perfectly vertical grating coupler gives a large back-reflection into the waveguide, which is why grating couplers are usually tilted (Van Vaerenbergh et al., 2021).</p>', narration: ['Perfectly vertical grating couplers.', 'They give a large back-reflection into the waveguide, which is one reason grating couplers are usually tilted.', 'Angle is a policy, not a style choice.'] },
-          { label: 'Offset splices', body: '<p>A single-mode fiber spliced with a deliberate lateral core offset excites cladding modes and becomes an in-fiber Mach-Zehnder interferometer, used as a strain sensor (Contreras-Teran et al., 2023).</p><p class="muted">Course inference, not from the paper: an accidentally offset splice would behave the same way, as an unintended interferometer in your link.</p>', narration: ['An offset splice.', 'A single mode fiber spliced with a deliberate lateral offset excites cladding modes, and becomes an interferometer inside the fiber. It has been used as a strain sensor.', 'This next sentence is our inference, not the paper. An accidental offset would do the same thing, uninvited.'] },
+          { label: 'Amplifier facets', media: { src: 'media/lit/fb_bao2024_fig4ab.png', caption: 'Bao et al., arXiv 2024, Fig. 4(a,b).', href: 'https://arxiv.org/abs/2405.16583' }, body: '<p>In a high-gain erbium-doped thin film lithium niobate amplifier, facet back-reflections reinforced amplified spontaneous emission, and parasitic lasing set in at the 1531.5 nm fluorescence peak (Bao et al., 2024).</p><p>An amplifier has no mirrors only until it has gain.</p>', narration: ['An erbium-doped amplifier on thin film lithium niobate.', 'Facet back-reflections reinforced the amplified spontaneous emission, and parasitic lasing set in at fifteen thirty-one point five nanometers, at the fluorescence peak.', 'In the figure from the paper, the shaded band is the parasitic lasing regime, above twenty-eight decibels of gain.', 'An amplifier has no mirrors only until it has enough gain.', 'Every interface reflects.'] },
+          { label: 'Crossings and splitters', media: { src: 'media/lit/fb_crossings_splitters.svg', caption: 'Celo et al., IEEE Group IV Photonics 2017; Tian et al., Opt. Quantum Electron. 2025. Illustrative.', href: 'https://doi.org/10.1109/group4.2017.8082188' }, body: '<p>A poorly designed waveguide crossing contributes crosstalk, parasitic cavities from back-reflection, and multipath (Celo et al., 2017). Splitter trees accumulate back-reflection with depth (Tian et al., 2025).</p>', narration: ['Waveguide crossings.', 'A poorly designed crossing contributes crosstalk, parasitic cavities, and multipath interference.', 'And splitter trees accumulate back-reflection with every level of depth.', 'Crossings and splitters are usually budgeted for loss only. Budget their reflections too.'] },
+          { label: 'Multimode interferometer walls', media: { src: 'media/lit/fb_cherchi2014_mmi_walls.svg', caption: 'Cherchi et al., Opt. Express 2014. Redrawn, illustrative.', href: 'https://doi.org/10.1364/oe.22.009245' }, body: '<p>Back-reflection ripples from the end walls of multimode interferometers only appear in simulation when enough modes are included; one double-interferometer study needed more than 30 (Cherchi et al., 2014).</p><p>If your simulation has no ripple, check that it is allowed to have one.</p>', narration: ['Multimode interferometers have end walls, and end walls reflect.', 'In one study, the reflection ripples only appeared in simulation once more than thirty modes were included.', 'If your simulation shows no ripple, first check that it was allowed to show one.'] },
+          { label: 'Vertical grating couplers', media: { src: 'media/lit/fb_vaerenbergh2021_vertical_gc.svg', caption: 'Van Vaerenbergh et al., Opt. Express 2021. Redrawn, illustrative.', href: 'https://doi.org/10.1364/oe.433744' }, body: '<p>A perfectly vertical grating coupler gives a large back-reflection into the waveguide, which is why grating couplers are usually tilted (Van Vaerenbergh et al., 2021).</p>', narration: ['Perfectly vertical grating couplers.', 'They give a large back-reflection into the waveguide, which is one reason grating couplers are usually tilted.', 'Angle is a policy, not a style choice.'] },
+          { label: 'Offset splices', media: { src: 'media/lit/fb_contreras2023_offset_splice.svg', caption: 'Contreras-Teran et al., Meas. Sci. Technol. 2023. Redrawn, illustrative.', href: 'https://doi.org/10.1088/1361-6501/acb3ea' }, body: '<p>A single-mode fiber spliced with a deliberate lateral core offset excites cladding modes and becomes an in-fiber Mach-Zehnder interferometer, used as a strain sensor (Contreras-Teran et al., 2023).</p><p>An accidental offset can do the same: an unintended interferometer in your link.</p>', narration: ['An offset splice.', 'A single mode fiber spliced with a deliberate lateral offset excites cladding modes, and becomes an interferometer inside the fiber. It has been used as a strain sensor.', 'An accidental offset can do the same thing, uninvited.'] },
           { label: 'The dark port', body: '<p>In an on-chip interferometer that recombines through a 1x2 junction, there is no second guided output. Light that does not interfere constructively is not routed to another port: it is radiated or scattered, and part of it can reflect back toward the source.</p>', narration: ['The dark port of a one by two combiner.', 'There is no second guided output for the light to go to.', 'So the light that does not interfere constructively is radiated, or scattered, and part of it can come back.', 'Energy is conserved. Your budget is not.'] }
         ], narration: ['Parasitic cavities are everywhere. Let us meet some of them.'] },
       { type: 'chat', title: 'Scenario 1: The Excellent Fit', app: 'thread', skin: 'teams', meta: { header: '#modulator-team', participants: [GARY, BY, MGR] },
@@ -410,21 +273,24 @@
           { from: GARY, text: 'I treated it as a nuisance parameter. It is small and it does not change V pi', side: 'right' },
           { from: BY, text: 'It might not change V pi, but it is a cavity somewhere', side: 'left' },
           { from: MGR, text: 'Fits look clean. Let us use them in the review deck', side: 'left' }
-        ], narration: isThisOk('Gary absorbed the ripple into a fit term without converting its period into a length.') },
+        ], narration: isThisOk('Gary absorbed the ripple into a fit term without converting its period into a length.',
+          ['Read this team chat about Gary\'s modulator transfer curve fits.', 'Then judge whether Gary\'s handling of the wiggle is proper.']) },
       { type: 'chat', title: 'Scenario 2: The Accidental Laser', app: 'phone', skin: 'whatsapp', meta: { header: 'Messages', participants: [GARY, MGR] },
         messages: [
           { from: GARY, text: 'Amplifier test: a narrow line shows up right at the fluorescence peak at high pump', side: 'right' },
           { from: GARY, text: 'Could be a new low-threshold regime. Worth a quick invention disclosure?', side: 'right' },
           { from: MGR, text: 'Is that expected for an amplifier?', side: 'left' },
           { from: GARY, text: 'Not that I know of. That is why it might be novel', side: 'right' }
-        ], narration: isThisOk('Gary is considering an invention disclosure for a narrow line at the gain peak, without checking for facet feedback.') },
+        ], narration: isThisOk('Gary is considering an invention disclosure for a narrow line at the gain peak, without checking for facet feedback.',
+          ['Read this message exchange. Gary is testing a high-gain erbium-doped waveguide amplifier.', 'Then judge whether his next step is proper.']) },
       { type: 'chat', title: 'Scenario 3: Certified Single-Mode', app: 'call', skin: 'meeting', meta: { header: 'Video call', participants: [GARY, BY, MGR] },
         messages: [
-          { from: GARY, text: 'The fringes on the pigtail spectrum cannot be modal. It is single-mode fiber, and the splicer reported a good splice', side: 'right' },
-          { from: BY, text: 'The splicer loss figure is an estimate. A small core offset launches cladding modes, and core plus cladding is an interferometer', side: 'left' },
-          { from: GARY, text: 'The estimate was tiny though', side: 'right' },
-          { from: MGR, text: 'If the splicer passed it, I am comfortable calling it single mode', side: 'left' }
-        ], narration: isThisOk('Gary trusts the splicer estimate and the fiber label over the fringes on his spectrum.') },
+          { from: GARY, text: 'There are fringes on the pigtail spectrum. It is single-mode fiber and the splicer reported a good splice, but the splicer loss figure is only an estimate', side: 'right' },
+          { from: GARY, text: 'A small core offset would launch cladding modes, and core plus cladding is an interferometer. I will re-splice one unit, put a tight bend right after the splice on another to strip the cladding modes, and see if the fringes go', side: 'right' },
+          { from: BY, text: 'Sounds right. Log the fringe period before you change anything', side: 'left' },
+          { from: MGR, text: 'Fine by me. Post the before and after', side: 'left' }
+        ], narration: isThisOk('Gary treated the splicer figure as an estimate, and planned a test that shows whether the fringes come from cladding modes.',
+          ['Watch this video call about fringes on a fiber pigtail spectrum.', 'Then judge whether Gary\'s response is proper.']) },
       { type: 'check', question: 'A measured spectrum shows a ripple with a period of 0.1 nm near 1550 nm. Assume a group index of 4. What spacing between two reflectors does this imply?',
         options: [
           { text: 'About 3 mm', correct: true, why: '' },
@@ -438,7 +304,7 @@
           { text: 'The amplifier is saturated by the input signal', correct: false, why: 'Gain saturation by the signal reduces the gain, it does not create a new narrow line at the fluorescence peak. A narrow line at the gain peak means something is providing feedback. In the thin film lithium niobate amplifier reported by Bao and coworkers, facet back-reflections reinforced the amplified spontaneous emission, and parasitic lasing set in at fifteen thirty-one point five nanometers. Two facets and enough gain make a laser.' },
           { text: 'Amplifiers cannot lase because they have no mirrors', correct: false, why: 'An amplifier has no designed mirrors. But every facet reflects a little, and when the round-trip gain overcomes the facet losses, the amplifier becomes a laser. That is exactly what parasitic lasing is. Every interface reflects. Every reflection is a cavity.' }
         ], correctSay: 'Two facets plus gain equals an unauthorized laser.', narration: ['One more knowledge check.'] },
-      takeaways([['A regular ripple is a cavity: its period gives the spacing, L = c / (2 n FSR)', 'A regular ripple is a cavity. Its period gives the spacing between the two reflectors.'], ['Ripple depth grows with sqrt(R1 R2); weak mirrors still set an exact period', 'Ripple depth grows with the square root of R one times R two. Weak mirrors still set an exact period.'], 'Facets, coupler ends, crossings, splitters and interferometer walls all reflect', 'Gain plus two facets is a laser, whether or not you ordered one', 'If the ripple period moves when the fiber moves, the ripple belongs to the gap, not the device']),
+      takeaways([['A regular ripple is a cavity: its period gives the spacing, $L = c/(2n\\,\\mathrm{FSR})$','A regular ripple is a cavity. Its period gives the spacing between the two reflectors.'], ['Ripple depth grows with $\\sqrt{R_1R_2}$; weak mirrors still set an exact period','Ripple depth grows with the square root of R one times R two. Weak mirrors still set an exact period.'], 'Facets, coupler ends, crossings, splitters and interferometer walls all reflect', 'Gain plus two facets is a laser, whether or not you ordered one', 'If the ripple period moves when the fiber moves, the ripple belongs to the gap, not the device']),
       ack('I have completed Chapter 2, Every Interface Is a Cavity.'),
       refs('bao', 'celo', 'tian', 'cherchi', 'vaerenbergh', 'contreras', 'malitson', 'li1980')
     ]
@@ -459,10 +325,10 @@
       ]),
       { type: 'video', title: 'Cold Open: The Thermometer Ticket', duration: 26,
         keyframes: [
-          { t: 0, cast: ['Gary'], caption: 'Gary sweeps the laser temperature up and logs the wavelength.', shot: 'Lab bench, wide. A butterfly-packaged laser on a temperature controller, fiber to a wavemeter. Gary turns the controller knob up in steps, writing values on a clipboard. The wavemeter readout climbs smoothly, then jumps.', draw: function (ctx, w, h, u) { dComb(ctx, w, h, u, { label: 'Sweep up: comb (gray) and filter (amber) move at different rates' }); } },
-          { t: 9, cast: ['Gary', 'Dana'], caption: 'Dana repeats the sweep downward. The jump happens at a different temperature.', shot: 'Same set, Dana now at the controller turning the knob down. Split screen: Gary clipboard and Dana clipboard, the jump temperatures circled in red, not matching.', draw: function (ctx, w, h, u) { dComb(ctx, w, h, 1 - u, { label: 'Sweep down: the hop happens somewhere else' }); } },
-          { t: 16, cast: ['Gary'], caption: 'Gary opens a calibration ticket for the temperature sensor.', shot: 'Close-up on a laptop screen: a ticket titled "Thermometer inconsistent" being submitted. Red X stamp.', draw: function (ctx, w, h, u) { dCard(ctx, w, h, u, { title: 'Ticket: thermometer is inconsistent', sub: 'Filed by Gary', people: ['Gary'], stamp: 'VIOLATION' }); } },
-          { t: 21, cast: ['Pat Reynolds'], caption: 'Replay: the hop points differ because the laser remembers. That is hysteresis.', shot: 'Host stands beside a large wall chart showing two staircases, up and down, offset from each other. Green check stamp.', draw: function (ctx, w, h, u) { dTrace(ctx, w, h, u, { label: 'Lasing frequency versus temperature: up (blue) and down (amber)', x: 'temperature', y: 'frequency', fs: [function (x) { return (x * 3 % 1) * 0.3 + Math.floor(x * 3) * 0.22 + 0.1; }, function (x) { return ((x * 3 + 0.3) % 1) * 0.3 + Math.floor(x * 3 + 0.3) * 0.22 + 0.01; }], stamp: 'COMPLIANT', stampColor: 'ok' }); } }
+          { t: 0, cast: ['Gary'], caption: 'Gary sweeps the laser temperature up and logs the wavelength.', shot: 'Lab bench, wide. A butterfly-packaged laser on a temperature controller, fiber to a wavemeter. Gary turns the controller knob up in steps, writing values on a clipboard. The wavemeter readout climbs smoothly, then jumps.', draw: function (ctx, w, h, u) { LMS_DRAW.fb.hopSweep(ctx, w, h, u, { dir: 'up' }); } },
+          { t: 9, cast: ['Gary', 'Dana'], caption: 'Dana repeats the sweep downward. The jump happens at a different temperature.', shot: 'Same set, Dana now at the controller turning the knob down. Split screen: Gary clipboard and Dana clipboard, the jump temperatures circled in red, not matching.', draw: function (ctx, w, h, u) { LMS_DRAW.fb.hopSweep(ctx, w, h, u, { dir: 'down', prior: true }); } },
+          { t: 16, cast: ['Gary'], caption: 'Gary opens a calibration ticket for the temperature sensor.', shot: 'Close-up on a laptop screen: a ticket titled "Thermometer inconsistent" being submitted. Red X stamp.', draw: function (ctx, w, h, u) { LMS_DRAW.fb.doc(ctx, w, h, u, { app: 'Facilities ticketing', title: 'Ticket: thermometer is inconsistent', rows: [['Filed by', 'Gary'], ['Asset', 'Laser temperature sensor, bench 3'], ['Sweep up: jump at', '28.19 \u00b0C', 'bad'], ['Sweep down: jump at', '27.43 \u00b0C', 'bad'], ['Request', 'Recalibrate the temperature sensor', 'type']], button: 'Submit', stamp: 'VIOLATION' }); } },
+          { t: 21, cast: ['Pat Reynolds'], caption: 'Replay: the hop points differ because the laser remembers. That is hysteresis.', shot: 'Host stands beside a large wall chart showing two staircases, up and down, offset from each other. Green check stamp.', draw: function (ctx, w, h, u) { LMS_DRAW.fb.hopLoop(ctx, w, h, u, { stamp: 'COMPLIANT', ok: true }); } }
         ],
         narration: ['Gary sweeps the laser temperature up, and logs the wavelength.', 'It climbs smoothly. Then it jumps.', 'Dana repeats the sweep, going down. The jump happens at a different temperature.', 'Gary opens a calibration ticket for the temperature sensor.', 'Let us replay that. The thermometer is fine. The laser remembers which mode it was in.', 'Every cavity hops.'] },
       { type: 'slide', layout: 'host', title: 'Why Lasers Hop',
@@ -470,35 +336,38 @@
         callout: MANTRA,
         narration: ['Let us take a closer look.', 'A laser cavity supports a comb of modes, one free spectral range apart.', 'A filter selects which mode wins. That filter might be a grating, a ring, the gain peak, or a parasitic etalon from Chapter Two.', 'Temperature and current move the comb and the filter, but at different rates.', 'When a different mode starts to win, the laser jumps.', 'And once it has jumped, it tends to stay there. That is hysteresis. Sweep direction matters.', MANTRA] },
       { type: 'widget', title: 'Interactive: Mode Hop Map', widget: 'modeHop', params: {},
-        instructions: 'Run a sweep up, then a sweep down. Compare where the hops happen. Then change the hysteresis margin and the filter tuning rate.',
-        narration: ['In this activity, you will sweep a laser in both directions.', 'Press Sweep up, then press Sweep down.', 'Compare where the hops happen. This is an illustrative model with normalized units.'] },
+        instructions: 'Run a sweep up, then a sweep down, and compare where the hops happen. Then change the feedback level and the distance to the reflector, and watch the feedback parameter $C$: below $C = 1$ the laser is pulled but cannot hop.',
+        narration: ['In this activity, you will sweep a laser that can see its own reflection.', 'Press Sweep up, then press Sweep down.', 'Compare where the hops happen. Going up and going down, the laser hops at different points. That is hysteresis.', 'Then lower the feedback level, or move the reflector closer, until the feedback parameter C drops below one. The laser is still pulled. It can no longer hop.'] },
       { type: 'reveal', title: 'Mode Hop Fine Print', prompt: 'Open each tab to review the fine print.',
         tabs: [
-          { label: 'Tuning range is not mode-hop-free range', body: '<p>Mode-hop-free tuning is bounded by the laser cavity free spectral range unless the cavity phase follows the filter. A ring-enhanced extended-cavity laser reached 0.22 nm (28 GHz) of mode-hop-free tuning, six times its cavity free spectral range (van Rees et al., 2020).</p><p>Read the abstract for the tuning range. Read the figures for the continuous range.</p>', narration: ['The total tuning range and the mode-hop-free range are different numbers.', 'Without help, continuous tuning is bounded by the cavity free spectral range.', 'One ring-enhanced extended cavity laser reached zero point two two nanometers, or twenty-eight gigahertz, of mode-hop-free tuning. That was six times its cavity free spectral range.', 'Read the abstract for the tuning range. Read the figures for the continuous range.'] },
-          { label: 'Cavity phase', body: '<p>A kink-free, mode-hop-free power versus current curve in a photonic-wire-bond external-cavity laser required a proper initial cavity-phase setting, and reports of hops in the literature differ because they depend on design (Xu et al., 2021).</p>', narration: ['Cavity phase.', 'A kink-free power versus current curve in a photonic wire bond external cavity laser required setting the cavity phase properly first.', 'Single mode at one current does not mean single mode at every current.'] },
-          { label: 'A regime, not a property', body: '<p>Residual wiggles on a thin film lithium niobate photonic-wire-bond laser power curve were longitudinal mode hops, even though the same laser later ran 58 hours mode-hop-free with 4.4 MHz per hour drift (Franken et al., 2025).</p><p>Mode-hop-free: conditions apply.</p>', narration: ['Mode-hop-free is a regime, not a property.', 'In one thin film lithium niobate laser, wiggles on the power curve were longitudinal mode hops.', 'The same laser later ran fifty-eight hours mode-hop-free, with four point four megahertz per hour of drift.', 'Both statements are true. Conditions apply.'] },
-          { label: 'Feedback hops too', body: '<p>External feedback adds a second cavity. In the feedback regime classification of Tkach and Chraplyvy (1986), one regime is hopping between external-cavity modes. A parasitic etalon is a filter you did not choose.</p>', narration: ['Feedback hops too.', 'External feedback adds a second cavity, and with it a second comb.', 'A parasitic etalon is a filter you did not choose. Every reflection is a cavity. Every cavity hops.'] }
+          { label: 'Tuning range is not mode-hop-free range', media: { src: 'media/lit/fb_vanrees2020_mhf_tuning.svg', caption: 'van Rees et al., Opt. Express 2020. Redrawn.', href: 'https://doi.org/10.1364/oe.386356' }, body: '<p>Mode-hop-free tuning is bounded by the laser cavity free spectral range unless the cavity phase follows the filter. A ring-enhanced extended-cavity laser reached 0.22 nm (28 GHz) of mode-hop-free tuning, six times its cavity free spectral range (van Rees et al., 2020).</p><p>Read the abstract for the tuning range. Read the figures for the continuous range.</p>', narration: ['The total tuning range and the mode-hop-free range are different numbers.', 'Without help, continuous tuning is bounded by the cavity free spectral range.', 'One ring-enhanced extended cavity laser reached zero point two two nanometers, or twenty-eight gigahertz, of mode-hop-free tuning. That was six times its cavity free spectral range.', 'Read the abstract for the tuning range. Read the figures for the continuous range.'] },
+          { label: 'Cavity phase', media: { src: 'media/lit/fb_xu2021_fig5a.png', caption: 'Xu et al., Sci. Rep. 2021, Fig. 5(a).', href: 'https://doi.org/10.1038/s41598-021-95981-w' }, body: '<p>A kink-free power versus current curve (kinks are the typical sign of mode hops) in a photonic-wire-bond external-cavity laser required a proper initial cavity-phase setting. Some integrated external-cavity lasers in the literature hop and others do not; the authors believe this depends strongly on the design of the reflective semiconductor optical amplifier (RSOA), in particular its length, and on the pump current (Xu et al., 2021).</p>', narration: ['Cavity phase.', 'A kink-free power versus current curve in a photonic wire bond external cavity laser required setting the cavity phase properly first.', 'The figure shows that measured curve. No kinks.', 'Single mode at one current does not mean single mode at every current.'] },
+          { label: 'A regime, not a property', media: [{ src: 'media/lit/fb_franken2024_fig3a.png', caption: 'Franken et al., arXiv 2024, Fig. 3(a).', href: 'https://arxiv.org/abs/2407.00269' }, { src: 'media/lit/fb_franken2024_fig4d.png', caption: 'Franken et al., arXiv 2024, Fig. 4(d).', href: 'https://arxiv.org/abs/2407.00269' }], body: '<p>Residual wiggles on a thin film lithium niobate photonic-wire-bond laser power curve were longitudinal mode hops, even though the same laser also ran 58 hours mode-hop-free with 4.4 MHz per hour drift, with both amplifiers at 125 mA, just above threshold (Franken et al., 2025).</p><p>Mode-hop-free: conditions apply.</p>', narration: ['Mode-hop-free is a regime, not a property.', 'In one thin film lithium niobate laser, wiggles on the power curve were longitudinal mode hops.', 'In the first figure, the points wander around the straight line. Those are the hops.', 'The same laser also ran fifty-eight hours mode-hop-free, just above threshold, with four point four megahertz per hour of drift.', 'Both statements are true. Conditions apply.'] },
+          { label: 'Feedback hops too', media: { src: 'media/lit/fb_tkach1986_regime2.svg', caption: 'Tkach and Chraplyvy, J. Lightwave Technol. 1986. Redrawn, illustrative.', href: 'https://doi.org/10.1109/JLT.1986.1074666' }, body: '<p>External feedback adds a second cavity. In the feedback regime classification of Tkach and Chraplyvy (1986), one regime is hopping between external-cavity modes. A parasitic etalon is a filter you did not choose.</p>', narration: ['Feedback hops too.', 'External feedback adds a second cavity, and with it a second comb.', 'A parasitic etalon is a filter you did not choose. Every reflection is a cavity. Every cavity hops.'] }
         ], narration: ['Mode hops come with fine print. Let us read it together.'] },
       { type: 'chat', title: 'Scenario 1: The Datasheet', app: 'phone', skin: 'imessage', meta: { header: 'Messages', participants: [GARY, BY] },
         messages: [
-          { from: GARY, text: 'The datasheet lists a wide tuning range, so I will do one continuous sweep for the spectroscopy run', side: 'right' },
-          { from: BY, text: 'Tuning range, or mode-hop-free range? Those are usually different numbers', side: 'left' },
-          { from: GARY, text: 'Only one range is on the front page', side: 'right' },
-          { from: BY, text: 'Then check the footnotes before the run', side: 'left' }
-        ], narration: isThisOk('Gary is planning a continuous sweep from the headline tuning range.') },
+          { from: GARY, text: 'The datasheet front page lists a wide tuning range. Before planning one continuous sweep for the spectroscopy run, I read the footnotes', side: 'right' },
+          { from: GARY, text: 'The mode-hop-free range is a much smaller number. I will sweep in segments inside it, and log the wavemeter reading at every step', side: 'right' },
+          { from: BY, text: 'Nice. Record the sweep direction too, the hop points have hysteresis', side: 'left' },
+          { from: GARY, text: 'Added a column for it', side: 'right' }
+        ], narration: isThisOk('Gary read past the headline tuning range, found the mode-hop-free range, and planned the sweep inside it.',
+          ['Read this text exchange. Gary is planning a spectroscopy run with a tunable laser.', 'Then judge whether his preparation is proper.']) },
       { type: 'chat', title: 'Scenario 2: Up and Down', app: 'email', skin: 'mail', meta: { header: 'Inbox', subject: 'Wavelength calibration table (final_v3)', participants: [GARY, MGR, BY] },
         messages: [
           { from: GARY, text: 'Hi Morgan,\n\nAttached is the wavelength versus temperature table, measured going up. Dana measured going down and found different hop points. To keep a single table for the customer, I have averaged the two.\n\nGary', side: 'right', to: [MGR], cc: [BY], date: '2026-11-19 10:15', subject: 'Wavelength calibration table (final_v3)', attachments: [{ name: 'wavelength_vs_T_final_v3.xlsx', size: '64 KB' }] },
           { from: BY, text: 'Both sweeps are right. It is hysteresis. An averaged table puts the hop points where the laser never hops in either direction. Could we add a sweep-direction column instead?\n\nDana', side: 'left', to: [GARY, MGR], date: '2026-11-19 10:47' },
           { from: MGR, text: 'One table is easier for the customer. Averaging sounds like a fair compromise.\n\nMorgan', side: 'left', to: [GARY, BY], date: '2026-11-19 11:05' }
-        ], narration: isThisOk('Gary averaged two hop maps that differ because of hysteresis, to keep one table.') },
+        ], narration: isThisOk('Gary averaged two hop maps that differ because of hysteresis, to keep one table.',
+          ['Read this email thread about a wavelength calibration table for a customer.', 'Then judge whether Gary\'s table is proper.']) },
       { type: 'chat', title: 'Scenario 3: Qualified at One Current', app: 'thread', skin: 'teams', meta: { header: '#product-qual', participants: [GARY, MGR, BY] },
         messages: [
           { from: GARY, text: 'Laser qualified mode-hop-free: overnight run, zero hops', side: 'right' },
           { from: BY, text: 'At which current and temperature? The product spec runs hotter and at higher current', side: 'left' },
           { from: GARY, text: 'At the nominal point. The overnight run is our standard qualification', side: 'right' },
           { from: MGR, text: 'Standard qual passed. Mark it qualified', side: 'left' }
-        ], narration: isThisOk('Gary qualified the laser at one operating point, and the result is being applied to the whole operating range.') },
+        ], narration: isThisOk('Gary qualified the laser at one operating point, and the result is being applied to the whole operating range.',
+          ['Read this product qualification chat.', 'Then judge whether the qualification is proper.']) },
       { type: 'check', question: 'Gary sweeps the temperature up and records hop points. Dana sweeps down and records different hop points. What is the most likely explanation?',
         options: [
           { text: 'Hysteresis: once the laser is in a mode, it stays there past the midpoint, so hop points depend on sweep direction', correct: true, why: '' },
@@ -533,9 +402,9 @@
       ]),
       { type: 'video', title: 'Cold Open: The Diode', duration: 24,
         keyframes: [
-          { t: 0, cast: ['Gary'], caption: 'Gary adds an asymmetric mode converter between his laser and his chip, and labels it isolator in the layout.', shot: 'Lab bench, macro on a chip under a probe station. On the layout screen, Gary types the cell name "ISOLATOR" onto a section of waveguide that tapers asymmetrically. Proud nod.', draw: function (ctx, w, h, u) { dChip(ctx, w, h, u, { refl: [0.4, 0.97], gary: true, label: 'Asymmetric mode converter, labelled ISOLATOR' }); } },
-          { t: 7, cast: ['Gary'], caption: 'Forward and backward transmission differ on a single-mode detector. Gary declares victory.', shot: 'Monitor insert: two bars, forward tall, backward short, measured through a single-mode fiber detector. Gary prints the plot.', draw: function (ctx, w, h, u) { dCard(ctx, w, h, u, { title: 'Forward: high. Backward (fundamental mode only): low', sub: 'Measured with a single-mode detector', people: ['Gary'], stamp: 'VIOLATION' }); } },
-          { t: 13, cast: ['Pat Reynolds'], caption: 'Replay: the reflection travels back in the mode it left in, and arrives home as the fundamental mode.', shot: 'Animated cutaway of the waveguide. Forward: fundamental mode enters, exits as a higher-order mode. A downstream reflection sends the higher-order mode back; it reconverts to the fundamental mode and enters the laser. Red glow on the laser facet. Then a Faraday rotator and polarizer slide into place. Green check.', draw: function (ctx, w, h, u) { dChip(ctx, w, h, u, { refl: [0.97], hotFar: true, label: 'The reflection retraces the path, in reverse', stamp: 'COMPLIANT', stampColor: 'ok' }); } }
+          { t: 0, cast: ['Gary'], caption: 'Gary adds an asymmetric mode converter between his laser and his chip, and labels it isolator in the layout.', shot: 'Lab bench, macro on a chip under a probe station. On the layout screen, Gary types the cell name "ISOLATOR" onto a section of waveguide that tapers asymmetrically. Proud nod.', draw: function (ctx, w, h, u) { LMS_DRAW.fb.modeConv(ctx, w, h, u, { variant: 'layout' }); } },
+          { t: 7, cast: ['Gary'], caption: 'Forward and backward transmission differ on a single-mode detector. Gary declares victory.', shot: 'Monitor insert: two bars, forward tall, backward short, measured through a single-mode fiber detector. Gary prints the plot.', draw: function (ctx, w, h, u) { LMS_DRAW.fb.modeConv(ctx, w, h, u, { variant: 'measure', stamp: 'VIOLATION' }); } },
+          { t: 13, cast: ['Pat Reynolds'], caption: 'Replay: the reflection travels back in the mode it left in, and arrives home as the fundamental mode.', shot: 'Animated cutaway of the waveguide. Forward: fundamental mode enters, exits as a higher-order mode. A downstream reflection sends the higher-order mode back; it reconverts to the fundamental mode and enters the laser. Red glow on the laser facet. Then a Faraday rotator and polarizer slide into place. Green check.', draw: function (ctx, w, h, u) { LMS_DRAW.fb.modeConv(ctx, w, h, u, { variant: 'replay', stamp: 'COMPLIANT', ok: true }); } }
         ],
         narration: ['Gary has built an isolator. It says so in the layout.', 'It is a mode converter that treats the two directions differently.', 'On a single-mode detector, forward transmission is high, and backward transmission is low.', 'Let us replay that.', 'Light reflected downstream travels back in the same mode it left in. The converter undoes its own work, and the reflection arrives home in the fundamental mode.', 'Reciprocity is not optional. Isolate, angle, and verify.'] },
       { type: 'slide', layout: 'policy', title: 'Policy 4.1: Definition of an Isolator',
@@ -544,34 +413,36 @@
         narration: ['Policy section four point one. Definition of an isolator.', 'An optical isolator must break Lorentz reciprocity. Jalas and coworkers wrote this down in two thousand thirteen, in a paper titled, What is, and what is not, an optical isolator.', 'A structure that is linear, time-invariant, and non-magnetic is reciprocal. Its scattering matrix is symmetric.', 'To break reciprocity you need a magneto-optic material with a bias field, or time modulation.', 'Nonlinearity counts only partly. A nonlinear isolator works only within a window of power, and it is limited by dynamic reciprocity, as Shi and coworkers showed in two thousand fifteen.', 'A device that converts modes differently in each direction can look like an isolator if you only measure one mode. It is not one.', 'The proper test is to launch light backward into the mode, or modes, that the forward light exits in. Count every port and every mode, and compare the transmission with the forward direction. If they match, the device is reciprocal.', 'Isolate, angle, and verify.'] },
       { type: 'reveal', title: 'Isolation Facts and Myths', prompt: 'Open each tab.',
         tabs: [
-          { label: 'Why the reflection comes home', body: '<p>A reflector downstream returns light in the mode that arrived there. In a reciprocal device, light launched backward in the forward output mode reaches the forward input mode with the same transmission as the forward path (S<sub>ij</sub> = S<sub>ji</sub>): straight into the laser. Asymmetric mode conversion only changes what happens to <i>other</i> backward inputs.</p>', narration: ['Why the reflection comes home.', 'A downstream reflector sends light back in the mode that arrived there.', 'In a reciprocal device, that light reaches the mode that went in, with the same transmission as the forward path. Straight into the laser.', 'Mode conversion only changes what happens to other backward inputs. Not to your own reflection.'] },
+          { label: 'Why the reflection comes home', body: '<p>A reflector downstream returns light in the mode that arrived there. In a reciprocal device, light launched backward in the forward output mode reaches the forward input mode with the same transmission as the forward path ($S_{ij} = S_{ji}$): straight into the laser. Asymmetric mode conversion only changes what happens to <i>other</i> backward inputs.</p>', narration: ['Why the reflection comes home.', 'A downstream reflector sends light back in the mode that arrived there.', 'In a reciprocal device, that light reaches the mode that went in, with the same transmission as the forward path. Straight into the laser.', 'Mode conversion only changes what happens to other backward inputs. Not to your own reflection.'] },
           { label: 'Simulated isolation', body: '<p>A large isolation number from a simulation is not a working isolator. Check the boundary conditions, the materials (is anything actually nonreciprocal?), and which ports and modes were counted.</p>', narration: ['Simulated isolation.', 'A large number in a simulation is not a working isolator.', 'Check whether anything in the model is actually nonreciprocal, and which ports and modes were counted.'] },
-          { label: 'Real isolators', body: '<p>The usual fix for feedback-sensitive semiconductor lasers is a polarizer plus a Faraday rotator in a magnetic field, the classic bulk isolator. A lens-free, magnet-free version for hybrid integration reached more than 25 dB isolation and less than 1.5 dB insertion loss across the C-band (Lapointe et al., 2025).</p>', narration: ['Real isolators.', 'The classic fix is a polarizer plus a Faraday rotator in a magnetic field.', 'A compact version for hybrid integration, with no lens and no external magnet, reached more than twenty-five decibels of isolation, with less than one and a half decibels of insertion loss, across the C band.'] },
-          { label: 'Angle, with refraction', body: '<p>Output waveguides are tilted at the facet so that the reflection does not couple back into the guided mode. By Snell\'s law, n_wg sin(theta_wg) = n_out sin(theta_out), the beam leaves at a larger angle than the waveguide tilt. Rotate the chip or the waveguide so the <i>exiting</i> beam points where your fiber is.</p>', narration: ['Angle, with refraction.', 'Output waveguides are tilted at the facet so that the reflection does not couple back into the guided mode.', 'But by Snell\'s law, the beam leaves at a larger angle than the waveguide tilt.', 'So rotate things so the exiting beam points at your fiber. Not the waveguide.'] },
-          { label: 'Retaliation at scale', body: '<p>At high power, a fiber can carry a self-propelled damage front, the fiber fuse, that travels back along the fiber toward the source (Kashyap and Blow, 1988).</p>', narration: ['Retaliation at scale.', 'At high enough power, a fiber can carry a self-propelled damage front, called a fiber fuse.', 'It travels back along the fiber, toward the source.', 'Retaliation always knows where you live.'] }
+          { label: 'Real isolators', media: [{ src: 'media/lit/fb_lapointe2023_fig3g.png', caption: 'Lapointe et al., Research Square 2023, Fig. 3(g).', href: 'https://doi.org/10.21203/rs.3.rs-3157765/v1' }, { src: 'media/lit/fb_lapointe2023_fig3k.png', caption: 'Lapointe et al., Research Square 2023, Fig. 3(k).', href: 'https://doi.org/10.21203/rs.3.rs-3157765/v1' }], body: '<p>The usual fix for feedback-sensitive semiconductor lasers is a polarizer plus a Faraday rotator in a magnetic field, the classic bulk isolator. A lens-free, magnet-free version for hybrid integration reached more than 25 dB isolation across the C-band, with a projected insertion loss below 1.5 dB: 0.8 dB measured, plus about 0.5 dB for the two polarizers (Lapointe et al., 2023).</p>', narration: ['Real isolators.', 'The classic fix is a polarizer plus a Faraday rotator in a magnetic field.', 'A compact version for hybrid integration, with no lens and no external magnet, reached more than twenty-five decibels of isolation across the C band, with an insertion loss projected below one and a half decibels.'] },
+          { label: 'Angle, with refraction', body: '<p>Output waveguides are tilted at the facet so that the reflection does not couple back into the guided mode. By Snell\'s law, $n_\\text{wg}\\sin\\theta_\\text{wg} = n_\\text{out}\\sin\\theta_\\text{out}$, the beam leaves at a larger angle than the waveguide tilt. Rotate the chip or the waveguide so the <i>exiting</i> beam points where your fiber is.</p>', narration: ['Angle, with refraction.', 'Output waveguides are tilted at the facet so that the reflection does not couple back into the guided mode.', 'But by Snell\'s law, the beam leaves at a larger angle than the waveguide tilt.', 'So rotate things so the exiting beam points at your fiber. Not the waveguide.'] },
+          { label: 'Retaliation at scale', media: { src: 'media/lit/fb_kashyap1988_fiber_fuse.svg', caption: 'Kashyap and Blow, Electron. Lett. 1988. Illustrative.', href: 'https://doi.org/10.1049/el:19880032' }, body: '<p>At high power, a fiber can carry a self-propelled damage front, the fiber fuse, that travels back along the fiber toward the source (Kashyap and Blow, 1988).</p>', narration: ['Retaliation at scale.', 'At high enough power, a fiber can carry a self-propelled damage front, called a fiber fuse.', 'It travels back along the fiber, toward the source.', 'Retaliation always knows where you live.'] }
         ], narration: ['Let us separate isolation facts from isolation myths.'] },
       { type: 'chat', title: 'Scenario 1: The Contrast Ratio', app: 'thread', skin: 'slack', meta: { header: '#integration-wins', participants: [GARY, BY, MGR] },
         messages: [
-          { from: GARY, text: 'On-chip isolator result: strong forward to backward contrast, no magnets, no modulation, plain silicon', side: 'right' },
-          { from: BY, text: 'Measured with which detector? Single-mode fiber?', side: 'left' },
-          { from: GARY, text: 'Yes, the standard setup, both directions', side: 'right' },
-          { from: BY, text: 'Linear, static and non-magnetic means reciprocal. A single-mode detector sees mode conversion, not isolation', side: 'left' },
-          { from: MGR, text: 'Can we call it an isolator in the press release and explain the details in the paper?', side: 'left' }
-        ], narration: isThisOk('Gary measured a contrast in one mode and is calling a linear, static, non-magnetic device an isolator.') },
+          { from: GARY, text: 'Asymmetric silicon device: strong forward to backward contrast on the single-mode detector. No magnets, no modulation, plain silicon', side: 'right' },
+          { from: GARY, text: 'Before calling it anything, I launched backward into the mode the forward light exits in, and counted every output mode. Backward matches forward. It is reciprocal: a mode converter, not an isolator', side: 'right' },
+          { from: BY, text: 'Agreed. Linear, static and non-magnetic means reciprocal', side: 'left' },
+          { from: MGR, text: 'Thanks for checking before the press release. Mode converter it is', side: 'left' }
+        ], narration: isThisOk('Gary ran the full reciprocity test before making a claim, and reported a mode converter as a mode converter.',
+          ['Read this team chat about Gary\'s new silicon device.', 'Then judge whether Gary\'s handling of the result is proper.']) },
       { type: 'chat', title: 'Scenario 2: The Directional Modulator', app: 'call', skin: 'facetime', meta: { header: 'Video call', participants: [GARY, MGR, BY] },
         messages: [
           { from: GARY, text: 'Cost-down idea: our traveling-wave modulator is strongly directional, so it should suppress back-reflections. We could drop the isolator', side: 'right' },
           { from: BY, text: 'It modulates forward light efficiently. A continuous-wave reflection off the facet still passes back through it', side: 'left' },
           { from: MGR, text: 'Directional sounds close to one-way, no?', side: 'left' },
           { from: BY, text: 'Not for unmodulated light', side: 'left' }
-        ], narration: isThisOk('Gary proposes removing the isolator because the modulator is directional.') },
+        ], narration: isThisOk('Gary proposes removing the isolator because the modulator is directional.',
+          ['Watch this video call about a cost-down idea.', 'Then judge whether Gary\'s proposal is proper.']) },
       { type: 'chat', title: 'Scenario 3: The Straight Arrow', app: 'email', skin: 'mail', meta: { header: 'Inbox', subject: 'Fiber attach drawing for review, rev B', participants: [GARY, BY] },
         messages: [
           { from: GARY, text: 'Hi Dana,\n\nAttached is rev B of the fiber attach drawing. The output waveguide is tilted at the facet to reduce back-reflection, and the fiber is aligned along the waveguide axis. Could you review by Friday?\n\nThanks,\nGary', side: 'right', to: [BY], date: '2026-11-20 09:30', subject: 'Fiber attach drawing for review, rev B', attachments: [{ name: 'fiber_attach_revB.pdf', size: '860 KB' }] },
           { from: BY, text: 'Thanks Gary. One issue: the beam refracts at the facet and leaves at a larger angle than the waveguide tilt. The fiber should follow the refracted beam, not the waveguide.', side: 'left', to: [GARY], date: '2026-11-20 13:12' },
           { from: GARY, text: 'The assembly house aligns actively for maximum power anyway, so that should take care of it.', side: 'right', to: [BY], date: '2026-11-20 13:40' },
           { from: BY, text: 'Active alignment optimizes position. If the angle in the holder is wrong, it optimizes a lower coupling.\n\nDana', side: 'left', to: [GARY], date: '2026-11-20 14:02' }
-        ], narration: isThisOk('Gary drew the fiber along the waveguide tilt, and is relying on active alignment to fix the refraction angle.') },
+        ], narration: isThisOk('Gary drew the fiber along the waveguide tilt, and is relying on active alignment to fix the refraction angle.',
+          ['Read this email exchange about Gary\'s fiber attach drawing.', 'Then judge whether Gary\'s answer to Dana is proper.']) },
       { type: 'check', question: 'A passive, linear, time-invariant silicon device without magneto-optic material shows high forward and low backward transmission when measured with a single-mode detector. Is it an isolator?',
         options: [
           { text: 'No. It is reciprocal; it converts modes asymmetrically, and a reflection of its forward output still returns to the source', correct: true, why: '' },
@@ -606,10 +477,10 @@
       ]),
       { type: 'video', title: 'Cold Open: The Split Personality', duration: 26,
         keyframes: [
-          { t: 0, cast: ['Gary'], caption: 'Gary measures a ring resonator with a very high Q. The dip has two bottoms.', shot: 'Dark lab, laser sweep across a ring on a chip under a microscope. Monitor shows a transmission dip with two closely spaced minima. Gary leans in, frowning.', draw: function (ctx, w, h, u) { dRing(ctx, w, h, u, { gary: true, speck: true, ccw: true, label: 'A scatterer couples clockwise and counter-clockwise light' }); } },
-          { t: 8, cast: ['Gary'], caption: 'Gary fits one Lorentzian through both. The reported Q drops.', shot: 'Screen insert: a single wide Lorentzian fit drawn over a doublet. The Q value field shows a smaller number. Gary emails "wafer is bad". Red X stamp.', draw: function (ctx, w, h, u) { dTrace(ctx, w, h, u, { label: 'Doublet with a single-Lorentzian fit (illustrative)', x: 'detuning', y: 'transmission', fs: [function (x) { return 1 - 0.85 * lor(x, 0.45, 0.04) - 0.85 * lor(x, 0.55, 0.04); }, function (x) { return 1 - 0.75 * lor(x, 0.5, 0.09); }], stamp: 'VIOLATION' }); } },
-          { t: 15, cast: ['Gary', 'Morgan'], caption: 'Months later: the laser team needs backscatter for self-injection locking.', shot: 'Conference room, wide. Morgan unveils a slide: "Backscatter is now mandatory." Gary looks at his wafer-scrap request on his laptop.', draw: function (ctx, w, h, u) { dCard(ctx, w, h, u, { title: 'Policy update: backscatter is now mandatory', sub: 'Self-injection locking needs light to come back', people: ['Gary', 'Morgan'] }); } },
-          { t: 21, cast: ['Pat Reynolds'], caption: 'Replay: fit the doublet with a coupled-mode model. Know when backscatter helps and when it hurts.', shot: 'Host beside a ring model with standing-wave nodes glowing around the circumference. Green check stamp.', draw: function (ctx, w, h, u) { dRing(ctx, w, h, u, { standing: true, ccw: true, speck: true, label: 'Two standing waves, two resonances', stamp: 'COMPLIANT', stampColor: 'ok' }); } }
+          { t: 0, cast: ['Gary'], caption: 'Gary measures a ring resonator with a very high Q. The dip has two bottoms.', shot: 'Dark lab, laser sweep across a ring on a chip under a microscope. Monitor shows a transmission dip with two closely spaced minima. Gary leans in, frowning.', draw: function (ctx, w, h, u) { LMS_DRAW.fb.ringScatter(ctx, w, h, u); } },
+          { t: 8, cast: ['Gary'], caption: 'Gary fits one Lorentzian through both. The reported Q drops.', shot: 'Screen insert: a single wide Lorentzian fit drawn over a doublet. The Q value field shows a smaller number. Gary emails "wafer is bad". Red X stamp.', draw: function (ctx, w, h, u) { LMS_DRAW.fb.doubletPlot(ctx, w, h, u, { stamp: 'VIOLATION' }); } },
+          { t: 15, cast: ['Gary', 'Morgan'], caption: 'Months later: the laser team needs backscatter for self-injection locking.', shot: 'Conference room, wide. Morgan unveils a slide: "Backscatter is now mandatory." Gary looks at his wafer-scrap request on his laptop.', draw: function (ctx, w, h, u) { LMS_DRAW.fb.silSlide(ctx, w, h, u); } },
+          { t: 21, cast: ['Pat Reynolds'], caption: 'Replay: fit the doublet with a coupled-mode model. Know when backscatter helps and when it hurts.', shot: 'Host beside a ring model with standing-wave nodes glowing around the circumference. Green check stamp.', draw: function (ctx, w, h, u) { LMS_DRAW.fb.ringScatter(ctx, w, h, u, { variant: 'standing', stamp: 'COMPLIANT', ok: true }); } }
         ],
         narration: ['Gary measures a ring resonator with a very high quality factor.', 'The dip has two bottoms.', 'Gary fits a single Lorentzian through both. The reported Q drops, and Gary asks to scrap the wafer.', 'Months later, the laser team announces that backscatter is now mandatory.', 'Let us replay that. A tiny scatterer couples clockwise and counter-clockwise light. The two form standing waves, and the resonance splits.', 'Every interface reflects. Even a speck of dust is an interface.'] },
       { type: 'slide', layout: 'host', title: 'Why Resonances Split',
@@ -617,16 +488,16 @@
         callout: MANTRA,
         narration: ['Let us take a closer look.', 'A ring supports two traveling waves with the same frequency, clockwise and counter-clockwise.', 'Any backscatter couples them. At high Q, even a tiny coupling can be larger than the linewidth.', 'The new eigenmodes are standing waves, and their frequencies split by twice the coupling rate.', 'And the backscattered light also leaves the ring backward. Toward your laser.', MANTRA] },
       { type: 'widget', title: 'Interactive: Backscatter Doublet', widget: 'doublet', params: {},
-        instructions: 'Increase the backscatter coupling until the resonance splits. Watch the apparent linewidth a single-Lorentzian fit would report, and the light reflected back toward the laser.',
-        narration: ['In this activity, you will add backscatter to a ring.', 'Move the backscatter slider to the right, until the dip splits.', 'Watch the reflected light. That is the light going back toward your laser.'] },
+        instructions: 'Increase the backscatter rate $\\beta$ until the resonance splits into a doublet. Compare the single-Lorentzian fit Q with the true Q, switch the plot to dB to see the light reflected back toward the laser, then try the silicon ring.',
+        narration: ['In this activity, you will add backscatter to a high Q ring.', 'Move the backscatter slider to the right, until the dip splits.', 'Compare the Q from a single Lorentzian fit with the true Q.', 'Then switch the plot to decibels, and watch the reflected light. That is the light going back toward your laser.'] },
       { type: 'reveal', title: 'Backscatter: Defect and Requirement', prompt: 'Open each tab.',
         tabs: [
-          { label: 'The doublet misreports Q', body: '<p>At high Q with tight confinement, very small defects or roughness split the clockwise and counter-clockwise degeneracy into a visible doublet; a single-Lorentzian fit then misreports Q (Ji et al., 2017).</p>', narration: ['At high Q, very small defects split the resonance into a doublet.', 'A single Lorentzian fit then misreports the Q.', 'Fit a doublet model. Report the intrinsic linewidth and the coupling separately.'] },
-          { label: 'Your lithography is a scatterer', body: '<p>Electron-beam writing discontinuities, jumps and pattern segmentation along the ring circumference, produced split resonances in diamond rings; continuous writing removed them (Hausmann et al., 2014).</p>', narration: ['Your lithography is a scatterer.', 'In diamond rings, discontinuities in electron beam writing around the circumference produced split resonances.', 'Continuous writing removed them. Each stitch was an interface, and every interface reflects.'] },
-          { label: 'Now mandatory', body: '<p>Self-injection locking relies on backscatter: the resonances that self-injection locked all showed backscatter splitting (Raja et al., 2019). The defect is the feature.</p>', narration: ['Policy reversal.', 'Self-injection locking relies on backscatter to send light back into the laser.', 'In one integrated soliton microcomb, the resonances that locked all showed backscatter splitting.', 'This is feedback with consent.'] },
-          { label: 'Until you turn it up', body: '<p>Backscatter-based self-injection locking works at low power, but as power increases the ring\'s nonlinear response detunes it, and the backscattered power no longer reaches the laser (White et al., 2024).</p>', narration: ['Until you turn it up.', 'Backscatter-based locking works at low power.', 'At higher power, the nonlinear response of the ring detunes it, and the backscattered light no longer reaches the laser.', 'Characterize at the power you will operate at.'] },
-          { label: 'The thermal cliff', body: '<p>Thermally locked microrings sit near the edge of instability: past a point, self-heating flips from negative to positive feedback and the resonance snaps to shorter wavelength. The balance point cannot be predicted, so a hot-to-cold calibration sweep is required (Kramnik et al., 2024).</p>', narration: ['The thermal cliff.', 'A thermally locked ring sits near the edge of instability.', 'Past a certain point, self-heating flips from negative to positive feedback, and the resonance snaps away to shorter wavelength.', 'The balance point cannot be predicted from the design, so a hot to cold calibration sweep is required.'] },
-          { label: 'Not every split is backscatter', body: '<p>Fano lineshapes from multimode interference can coexist with backscatter doublets in the same resonator, doublets at one wavelength and Fano shapes at others (Chen et al., 2026). Not every distorted dip is backscatter.</p>', narration: ['Not every split is backscatter.', 'In one resonator, backscatter doublets appeared at one wavelength, and Fano lineshapes from multimode interference at others.', 'Label your diagnosis as an inference until you have checked it.'] }
+          { label: 'The doublet misreports Q', media: { src: 'media/lit/fb_doublet_single_fit.svg', caption: 'Ji et al., Optica 2017. Computed, illustrative.', href: 'https://doi.org/10.1364/optica.4.000619' }, body: '<p>At high Q with tight confinement, very small defects or roughness split the clockwise and counter-clockwise degeneracy into a visible doublet (Ji et al., 2017).</p><p>The coupled-mode model (Kippenberg et al., 2002) shows the consequence: a single-Lorentzian fit to a doublet misreports Q.</p>', narration: ['At high Q, very small defects split the resonance into a doublet.', 'The coupled mode model shows the consequence. A single Lorentzian fit then misreports the Q.', 'Fit a doublet model. Report the intrinsic linewidth and the coupling separately.'] },
+          { label: 'Your lithography is a scatterer', media: { src: 'media/lit/fb_hausmann2014_stitching.svg', caption: 'Hausmann et al., Nat. Photonics 2014. Illustrative.', href: 'https://doi.org/10.1038/nphoton.2014.72' }, body: '<p>Hausmann et al. (2014) report that their earlier electron-beam writing left periodic scattering centres around diamond rings, which split the clockwise and counter-clockwise resonances. Writing the pattern continuously, without beam jumps or small segments, potentially explains why their new rings showed no split resonances.</p>', narration: ['Your lithography is a scatterer.', 'In diamond rings, earlier electron beam writing left periodic scatterers around the circumference, and the resonances split.', 'The authors suggest that writing the pattern continuously is why the split went away. Each stitch was an interface, and every interface reflects.'] },
+          { label: 'Now mandatory', media: { src: 'media/lit/fb_raja2019_fig2d_inset.png', caption: 'Raja et al., Nat. Commun. 2019, Fig. 2(d), inset.', href: 'https://doi.org/10.1038/s41467-019-08498-2' }, body: '<p>Self-injection locking relies on backscatter: the resonances that self-injection locked all showed backscatter splitting (Raja et al., 2019). The defect is the feature.</p>', narration: ['Policy reversal.', 'Self-injection locking relies on backscatter to send light back into the laser.', 'In one integrated soliton microcomb, the resonances that locked all showed backscatter splitting.', 'The figure shows one of them. Two dips, where one was expected.', 'This is feedback with consent.'] },
+          { label: 'Until you turn it up', media: { src: 'media/lit/fb_white2024_backreflection.svg', caption: 'White et al., Nat. Photonics 2024. Computed, illustrative.', href: 'https://doi.org/10.1038/s41566-024-01539-3' }, body: '<p>Backscatter-based self-injection locking works at low power, but as power increases the ring\'s nonlinear response detunes it, and the backscattered power no longer reaches the laser (White et al., 2024).</p>', narration: ['Until you turn it up.', 'Backscatter-based locking works at low power.', 'At higher power, the nonlinear response of the ring detunes it, and the backscattered light no longer reaches the laser.', 'Characterize at the power you will operate at.'] },
+          { label: 'The thermal cliff', media: { src: 'media/lit/fb_kramnik2024_fig2c.png', caption: 'Kramnik et al., arXiv 2024, Fig. 2(c).', href: 'https://arxiv.org/abs/2411.05921' }, body: '<p>Thermally locked microrings sit near the edge of instability: past a point, self-heating flips from negative to positive feedback and the resonance snaps to shorter wavelength. The balance point cannot be predicted, so a hot-to-cold calibration sweep is required (Kramnik et al., 2024).</p>', narration: ['The thermal cliff.', 'A thermally locked ring sits near the edge of instability.', 'Past a certain point, self-heating flips from negative to positive feedback, and the resonance snaps away to shorter wavelength.', 'In the figure, the forward and reverse sweeps snap at different wavelengths.', 'The balance point cannot be predicted from the design, so a hot to cold calibration sweep is required.'] },
+          { label: 'Not every split is backscatter', media: { src: 'media/lit/fb_chen2026_fig2d.png', caption: 'Chen et al., Light Sci. Appl. 2026, Fig. 2(d).', href: 'https://doi.org/10.1038/s41377-026-02353-y' }, body: '<p>Fano lineshapes from multimode interference can coexist with backscatter doublets in the same resonator, doublets at one wavelength and Fano shapes at others (Chen et al., 2026). Not every distorted dip is backscatter.</p>', narration: ['Not every split is backscatter.', 'In one resonator, backscatter doublets appeared at one wavelength, and Fano lineshapes from multimode interference at others.', 'The figure shows both in one device. A doublet at ten sixty-four nanometers, and a Fano shape at seven eighty.', 'Label your diagnosis as an inference until you have checked it.'] }
         ], narration: ['Backscatter is a defect. Backscatter is a requirement. Both are policy.'] },
       { type: 'chat', title: 'Scenario 1: Scrap the Wafer', app: 'email', skin: 'mail', meta: { header: 'Inbox', subject: 'Ring Q below target, lot 7', participants: [GARY, BY, MGR] },
         messages: [
@@ -634,7 +505,8 @@
           { from: BY, text: 'Before scrapping: are the dips split? If there are two minima, a single Lorentzian is measuring the splitting, not the loss.\n\nDana', side: 'left', to: [GARY, MGR], date: '2026-11-18 09:22' },
           { from: GARY, text: 'Most show two shallow minima. I treated the second one as sweep noise.', side: 'right', to: [BY, MGR], date: '2026-11-18 09:35' },
           { from: MGR, text: 'Let us scrap pending one more opinion. Dana, can you look at a few today?\n\nMorgan', side: 'left', to: [GARY, BY], date: '2026-11-18 10:02' }
-        ], narration: isThisOk('Gary fit doublets with a single Lorentzian and treated the second minimum as noise, and a scrap decision is pending.') },
+        ], narration: isThisOk('Gary fit doublets with a single Lorentzian and treated the second minimum as noise, and a scrap decision is pending.',
+          ['Read this email thread about ring resonators in lot seven.', 'Then judge whether Gary\'s recommendation is proper.']) },
       { type: 'chat', title: 'Scenario 2: Conflicting Policies', app: 'thread', skin: 'teams', meta: { header: '#all-hands', participants: [MGR, GARY, BY] },
         messages: [
           { from: MGR, text: 'Reminder: the resonator team target this quarter is minimum backscatter', side: 'left' },
@@ -642,13 +514,16 @@
           { from: GARY, text: 'Same ring?', side: 'right' },
           { from: MGR, text: 'Same ring. Both targets are in the plan', side: 'left' },
           { from: BY, text: 'Could we specify the coupling rate relative to the linewidth, and the operating power? Then both teams can sign', side: 'left' }
-        ], narration: isThisOk('The same ring has two opposite backscatter targets, and no operating power is specified.') },
+        ], narration: isThisOk('The same ring has two opposite backscatter targets, and no operating power is specified.',
+          ['Read this all-hands chat about this quarter\'s backscatter targets.', 'Then judge whether the plan is proper.']) },
       { type: 'chat', title: 'Scenario 3: The Snap', app: 'phone', skin: 'whatsapp', meta: { header: 'Messages', participants: [GARY, BY] },
         messages: [
-          { from: GARY, text: 'Thermal lock was stable for an hour, then the resonance jumped to the blue', side: 'right' },
-          { from: GARY, text: 'The lock point came from the design thermal model, so it should have had margin', side: 'right' },
-          { from: BY, text: 'The balance point is hard to predict from the design. A hot-to-cold calibration sweep would tell us where it really is', side: 'left' }
-        ], narration: isThisOk('Gary set his thermal lock point from the design model instead of calibrating it.') },
+          { from: GARY, text: 'Ran a hot-to-cold calibration sweep on the ring before setting the thermal lock', side: 'right' },
+          { from: GARY, text: 'Partway down, the resonance snapped to the blue. Not where the design thermal model put the balance point', side: 'right' },
+          { from: GARY, text: 'I set the lock point on the stable side, with margin from the snap, and logged the sweep', side: 'right' },
+          { from: BY, text: 'Good. Re-run the sweep if the operating power changes', side: 'left' }
+        ], narration: isThisOk('Gary measured the balance point with a hot to cold sweep instead of trusting the design model, and set the lock with margin.',
+          ['Read this message exchange about Gary\'s thermally locked ring.', 'Then judge whether Gary\'s handling is proper.']) },
       { type: 'check', question: 'A high-Q ring shows a resonance with two closely spaced minima. Gary fits one Lorentzian through both and reports a low Q. What should he do?',
         options: [
           { text: 'Fit a coupled-mode doublet model, and report the linewidth and the backscatter coupling separately', correct: true, why: '' },
@@ -683,9 +558,9 @@
       ]),
       { type: 'video', title: 'Cold Open: The Steady Number', duration: 24,
         keyframes: [
-          { t: 0, cast: ['Gary'], caption: 'The wavemeter shows a steady number. Gary concludes the laser is not hopping.', shot: 'Lab bench, close on a wavemeter display with a calm, steady reading. Behind it, out of focus, an oscilloscope trace of the laser intensity flickers between two levels. Gary gives a thumbs up to the camera.', draw: function (ctx, w, h, u) { dTrace(ctx, w, h, u, { label: 'Fast intensity (blue) versus slow instrument average (amber)', x: 'time', y: 'signal', fs: [function (x) { return (Math.sin(x * 90) > 0.2 ? 0.75 : 0.45); }, function () { return 0.62; }] }); } },
-          { t: 8, cast: ['Gary'], caption: 'Gary measures the ring with an on-chip laser. The free spectral range looks larger than designed.', shot: 'Probe station, chip with an attached laser and a ring. A thermal camera inset shows the region around the laser and the ring warming as the laser sweeps. Gary writes "new physics?" on a sticky note. Red X stamp.', draw: function (ctx, w, h, u) { dRing(ctx, w, h, u, { gary: true, label: 'The source heats the device it is measuring', stamp: 'VIOLATION' }); } },
-          { t: 15, cast: ['Pat Reynolds'], caption: 'Replay: compare against a separate benchtop laser, add an isolator, and look at fast signals.', shot: 'Same bench, now with a benchtop tunable laser through an isolator, a fast photodiode on the oscilloscope, and the thermal camera showing a cool chip. Green check stamp.', draw: function (ctx, w, h, u) { dCard(ctx, w, h, u, { title: 'Separate source. Isolator. Fast detector.', sub: 'Then compare', people: ['Pat Reynolds'], stamp: 'COMPLIANT', stampColor: 'ok' }); } }
+          { t: 0, cast: ['Gary'], caption: 'The wavemeter shows a steady number. Gary concludes the laser is not hopping.', shot: 'Lab bench, close on a wavemeter display with a calm, steady reading. Behind it, out of focus, an oscilloscope trace of the laser intensity flickers between two levels. Gary gives a thumbs up to the camera.', draw: function (ctx, w, h, u) { LMS_DRAW.fb.steadyNumber(ctx, w, h, u); } },
+          { t: 8, cast: ['Gary'], caption: 'Gary measures the ring with an on-chip laser. The free spectral range looks larger than designed.', shot: 'Probe station, chip with an attached laser and a ring. A thermal camera inset shows the region around the laser and the ring warming as the laser sweeps. Gary writes "new physics?" on a sticky note. Red X stamp.', draw: function (ctx, w, h, u) { LMS_DRAW.fb.onChipHeat(ctx, w, h, u, { stamp: 'VIOLATION' }); } },
+          { t: 15, cast: ['Pat Reynolds'], caption: 'Replay: compare against a separate benchtop laser, add an isolator, and look at fast signals.', shot: 'Same bench, now with a benchtop tunable laser through an isolator, a fast photodiode on the oscilloscope, and the thermal camera showing a cool chip. Green check stamp.', draw: function (ctx, w, h, u) { LMS_DRAW.fb.separateBench(ctx, w, h, u, { stamp: 'COMPLIANT', ok: true }); } }
         ],
         narration: ['The wavemeter shows a steady number. Gary concludes the laser is not hopping.', 'Meanwhile, the intensity flickers between two levels, faster than the wavemeter updates.', 'Next, Gary measures a ring with a laser on the same chip, and the free spectral range looks larger than designed.', 'Let us replay that. Use a separate source, add an isolator, and look at fast signals.', 'Isolate, angle, and verify. Verify is the part with the instruments.'] },
       { type: 'slide', layout: 'host', title: 'Every Instrument Integrates',
@@ -694,32 +569,35 @@
         narration: ['Let us take a closer look.', 'Every instrument integrates over something.', 'A wavemeter reports one number per update. A hop faster than the update can be averaged or missed.', 'An optical spectrum analyzer reports power within its resolution bandwidth. A ripple finer than that disappears.', 'A power meter averages over its response time.', 'And the setup has interfaces of its own. Fiber tips, connectors, the detector face. They reflect too.', MANTRA] },
       { type: 'reveal', title: 'When the Measurement Is the Problem', prompt: 'Open each tab.',
         tabs: [
-          { label: 'The setup feeds back', body: '<p>Without an isolator, parasitic reflections lead to an overestimate of laser linewidth, as stated for 300-mm GaAs nano-ridge lasers (De Koninck et al., 2025).</p>', narration: ['The setup feeds back.', 'Without an isolator in the measurement path, parasitic reflections lead to an overestimate of the laser linewidth.', 'Your measurement fiber is an interface. It reflects.'] },
-          { label: 'The source heats the sample', body: '<p>Sweeping an on-chip, photonic-wire-bonded distributed feedback laser heated the chip and red-shifted the rings under test: the free spectral range read 160 pm, against 120 pm with a benchtop laser and 110 pm simulated (Chowdhury et al., 2024).</p>', narration: ['The source heats the sample.', 'Sweeping a laser on the same chip heated the chip and red-shifted the rings under test.', 'The free spectral range read one hundred sixty picometers. With a separate benchtop laser, it read one hundred twenty. The simulation said one hundred ten.', 'The instrument was cooking the sample.'] },
+          { label: 'The setup feeds back', media: { src: 'media/lit/fb_dekoninck2023_figS5a.png', caption: 'De Koninck et al., arXiv 2023, Fig. S5(a).', href: 'https://arxiv.org/abs/2309.04473' }, body: '<p>Without an isolator, parasitic reflections lead to an overestimate of laser linewidth, as stated for 300-mm GaAs nano-ridge lasers (De Koninck et al., 2023).</p>', narration: ['The setup feeds back.', 'Without an isolator in the measurement path, parasitic reflections lead to an overestimate of the laser linewidth.', 'The figure shows that setup. The lensed fiber goes straight into the interferometer, with no isolator.', 'Your measurement fiber is an interface. It reflects.'] },
+          { label: 'The source heats the sample', media: { src: 'media/lit/fb_chowdhury2024_fsr.svg', caption: 'Chowdhury et al., Opt. Express 2024. Redrawn.', href: 'https://doi.org/10.1364/oe.510036' }, body: '<p>Sweeping an on-chip, photonic-wire-bonded distributed feedback laser heated the chip and red-shifted the rings under test: the free spectral range read 160 pm, against 120 pm with a benchtop laser and 110 pm simulated (Chowdhury et al., 2024).</p>', narration: ['The source heats the sample.', 'Sweeping a laser on the same chip heated the chip and red-shifted the rings under test.', 'The free spectral range read one hundred sixty picometers. With a separate benchtop laser, it read one hundred twenty. The simulation said one hundred ten.', 'The instrument was cooking the sample.'] },
           { label: 'Resolution hides ripple', body: '<p>Use the parasitic Fabry-Perot calculator from Chapter 2: a long fiber pigtail gives a ripple period far finer than a typical spectrum analyzer resolution. The ripple is still there; the instrument averages it.</p>', narration: ['Resolution hides ripple.', 'A long fiber pigtail makes a ripple period much finer than a typical analyzer resolution.', 'The ripple is still there. The instrument is averaging it for you, without asking.'] },
           { label: 'Simulations average too', body: '<p>An eigenmode solver can return a mode bound to the edge of the simulation domain. Before reporting a higher-order mode, check where its field lives and whether it moves when you move the boundary.</p>', narration: ['Simulations average too, in their own way.', 'An eigenmode solver can return a mode that lives at the edge of the simulation box.', 'Before reporting it, check whether it moves when you move the boundary.'] },
           { label: 'Label your inferences', body: '<p>When you attribute a ripple to a specific pair of reflectors, or a split to backscatter, write down whether you measured it or inferred it. This course labels its own inferences. So should you.</p>', narration: ['Label your inferences.', 'When you blame a ripple on two specific reflectors, write down whether you measured it, or inferred it.', 'This course labels its own inferences. So should you.'] }
         ], narration: ['Sometimes the measurement is the problem.'] },
       { type: 'chat', title: 'Scenario 1: The Calm Wavemeter', app: 'call', skin: 'meeting', meta: { header: 'Video call', participants: [GARY, MGR, BY] },
         messages: [
-          { from: GARY, text: 'No mode hops this morning. The wavemeter has been steady to the last digit', side: 'right' },
-          { from: BY, text: 'What is its update rate? The fast photodiode on the other bench shows the intensity switching between two levels', side: 'left' },
-          { from: GARY, text: 'I do not have a fast detector on this setup. The wavemeter is our standard check', side: 'right' },
-          { from: MGR, text: 'Steady all morning sounds stable to me', side: 'left' }
-        ], narration: isThisOk('Gary concludes there are no hops because a slow instrument reads steady.') },
+          { from: GARY, text: 'The wavemeter has been steady to the last digit all morning, but I am not calling it hop-free yet', side: 'right' },
+          { from: GARY, text: 'It updates slowly, and the fast photodiode on the other bench shows the intensity switching between two levels. I will borrow the photodiode and check before I report', side: 'right' },
+          { from: BY, text: 'It is free after lunch', side: 'left' },
+          { from: MGR, text: 'OK. Report after the fast check', side: 'left' }
+        ], narration: isThisOk('Gary did not take a steady reading from a slow instrument as proof, and checked with a fast detector before reporting.',
+          ['Watch this video call about this morning\'s laser test.', 'Then judge whether Gary\'s conclusion is proper.']) },
       { type: 'chat', title: 'Scenario 2: New Physics', app: 'thread', skin: 'slack', meta: { header: '#ring-characterization', participants: [GARY, BY, MGR] },
         messages: [
           { from: GARY, text: 'Measured free spectral range with the on-chip laser is noticeably larger than the design. Could be a dispersion effect we have not modeled', side: 'right' },
           { from: BY, text: 'Did you compare with the benchtop laser? The on-chip laser heats the chip while it sweeps, and the rings shift with it', side: 'left' },
           { from: GARY, text: 'The on-chip laser is the configuration the product uses, so I think it is the more relevant number', side: 'right' },
           { from: MGR, text: 'Let us mention it as an unexplained dispersion effect in the abstract and check later', side: 'left' }
-        ], narration: isThisOk('Gary is reporting a heating artifact from his own source as an unmodeled effect.') },
+        ], narration: isThisOk('Gary is reporting a heating artifact from his own source as an unmodeled effect.',
+          ['Read this team chat about a ring measured with a laser on the same chip.', 'Then judge whether Gary\'s interpretation is proper.']) },
       { type: 'chat', title: 'Scenario 3: The Record Linewidth', app: 'email', skin: 'mail', meta: { header: 'Inbox', subject: 'Linewidth result, DFB batch 12', participants: [GARY, BY] },
         messages: [
           { from: GARY, text: 'Hi Dana,\n\nLinewidth result attached. I took the isolator out of the interferometer path to get more signal, since the beat note was close to the noise floor.\n\nGary', side: 'right', to: [BY], date: '2026-11-18 17:20', subject: 'Linewidth result, DFB batch 12', attachments: [{ name: 'beatnote_2026-11-18.csv', size: '1.2 MB' }] },
           { from: BY, text: 'Without an isolator, reflections from the setup feed back into the laser, so the number is the laser plus the setup.', side: 'left', to: [GARY], date: '2026-11-18 17:45' },
           { from: GARY, text: 'The setup reflections should be small compared with the chip. I will mention "no isolator" in the methods.', side: 'right', to: [BY], date: '2026-11-18 18:02' }
-        ], narration: isThisOk('Gary removed the isolator from the linewidth setup to gain signal, and plans to footnote it.') },
+        ], narration: isThisOk('Gary removed the isolator from the linewidth setup to gain signal, and plans to footnote it.',
+          ['Read this email exchange about a laser linewidth result.', 'Then judge whether Gary\'s setup choice is proper.']) },
       { type: 'check', question: 'A ring measured with a laser on the same chip shows a free spectral range of 160 pm; a benchtop laser gives 120 pm; simulation gives 110 pm. What is the most likely cause?',
         options: [
           { text: 'The on-chip laser heats the chip while sweeping and red-shifts the rings during the measurement', correct: true, why: '' },
@@ -742,10 +620,10 @@
   var INC1 = [
     { type: 'video', title: 'Incident Review 1: The Missing Isolator', duration: 30,
       keyframes: [
-        { t: 0, cast: ['Gary', 'Morgan'], caption: 'Friday afternoon. The customer demo is on Monday, and the link is short on power.', shot: 'Lab bench, wide, 35 mm lens, eye level. A fiber-pigtailed laser in a butterfly package on a temperature-controlled mount, a small cylindrical inline fiber isolator with a printed arrow, a fiber spool, a benchtop power meter. Gary seen from behind in a lab coat, gloved hands on the bench. Morgan in the doorway, out of focus, holding a laptop. Wall calendar with Monday circled in red.', draw: function (ctx, w, h, u) { dCard(ctx, w, h, u, { title: 'Link budget: short on power', sub: 'Customer demo on Monday', people: ['Gary', 'Morgan'] }); } },
-        { t: 7, cast: ['Gary'], caption: 'Gary unplugs the isolator to win back its insertion loss. The power meter goes up.', shot: 'Macro, 100 mm lens. Gloved hands disconnect two fiber connectors, lift out the inline isolator and drop it into a small parts bag. The laser pigtail is mated directly to the link patch cord. Rack focus to the power meter as its reading rises. Slow push-in.', draw: function (ctx, w, h, u) { dIso(ctx, w, h, u, { none: true, gary: true, label: 'Isolator removed: every reflection now reaches the laser' }); } },
-        { t: 14, cast: ['Gary'], caption: 'Monday, at the customer. An unused splitter port on the evaluation board ends in an open, flat-polished connector. The laser hears it.', shot: 'Customer lab, medium shot. Evaluation board on an anti-static mat; one connector with its dust cap off, flat ferrule end catching a highlight. Oscilloscope beside it: laser intensity jumping between two levels. Electrical spectrum analyzer: a broad self-heterodyne beat note. Customer engineers only as out-of-focus silhouettes. Red stamp.', draw: function (ctx, w, h, u) { dTrace(ctx, w, h, u, { label: 'Laser intensity versus time (illustrative)', x: 'time', y: 'intensity', f: telegraph, stamp: 'VIOLATION' }); } },
-        { t: 22, cast: ['Pat Reynolds'], caption: 'Replay: the isolator stays in. A link budget is fixed by fixing the link, not by removing the protection.', shot: 'Still (Blender render): butterfly laser bench with the inline isolator back in line, arrow pointing away from the laser. Planned live shot: the customer board with a dust cap and an angled connector on the open port; power meter lower but steady; beat note narrow.', image: { src: 'media/render/butterfly_isolator_fc_bench.jpg' }, draw: function (ctx, w, h, u) { dIso(ctx, w, h, u, { label: 'Isolator in line, arrow away from the laser', stamp: 'COMPLIANT', stampColor: 'ok' }); } }
+        { t: 0, cast: ['Gary', 'Morgan'], caption: 'Friday afternoon. The customer demo is on Monday, and the link is short on power.', shot: 'Lab bench, wide, 35 mm lens, eye level. A fiber-pigtailed laser in a butterfly package on a temperature-controlled mount, a small cylindrical inline fiber isolator with a printed arrow, a fiber spool, a benchtop power meter. Gary seen from behind in a lab coat, gloved hands on the bench. Morgan in the doorway, out of focus, holding a laptop. Wall calendar with Monday circled in red.', draw: function (ctx, w, h, u) { LMS_DRAW.fb.linkBench(ctx, w, h, u, { variant: 'budget' }); } },
+        { t: 7, cast: ['Gary'], caption: 'Gary unplugs the isolator to win back its insertion loss. The power meter goes up.', shot: 'Macro, 100 mm lens. Gloved hands disconnect two fiber connectors, lift out the inline isolator and drop it into a small parts bag. The laser pigtail is mated directly to the link patch cord. Rack focus to the power meter as its reading rises. Slow push-in.', draw: function (ctx, w, h, u) { LMS_DRAW.fb.linkBench(ctx, w, h, u, { variant: 'remove' }); } },
+        { t: 14, cast: ['Gary'], caption: 'Monday, at the customer. An unused splitter port on the evaluation board ends in an open, flat-polished connector. The laser hears it.', shot: 'Customer lab, medium shot. Evaluation board on an anti-static mat; one connector with its dust cap off, flat ferrule end catching a highlight. Oscilloscope beside it: laser intensity jumping between two levels. Electrical spectrum analyzer: a broad self-heterodyne beat note. Customer engineers only as out-of-focus silhouettes. Red stamp.', draw: function (ctx, w, h, u) { LMS_DRAW.fb.linkBench(ctx, w, h, u, { variant: 'customer', stamp: 'VIOLATION' }); } },
+        { t: 22, cast: ['Pat Reynolds'], caption: 'Replay: the isolator stays in. A link budget is fixed by fixing the link, not by removing the protection.', shot: 'Still (Blender render): butterfly laser bench with the inline isolator back in line, arrow pointing away from the laser. Planned live shot: the customer board with a dust cap and an angled connector on the open port; power meter lower but steady; beat note narrow.', image: { src: 'media/render/butterfly_isolator_fc_bench.jpg' }, draw: function (ctx, w, h, u) { LMS_DRAW.fb.linkBench(ctx, w, h, u, { variant: 'inline', stamp: 'COMPLIANT', ok: true }); } }
       ],
       narration: ['Friday afternoon. The customer demo is on Monday, and the link is short on power.', 'Gary looks at the link budget. The isolator costs its insertion loss.', 'Gary unplugs the isolator. The power meter goes up. Gary feels good about this.', 'Monday, at the customer. An unused splitter port on the evaluation board ends in an open, flat-polished connector.', 'A flat end of fused silica reflects about three point three percent of the light that reaches it.', 'Assume an even one by two splitter. The light passes it twice, so about zero point eight percent of the laser output comes home. That is about minus twenty-one decibels.', 'With no isolator, nothing stops it. The intensity flickers, and the line broadens.', 'Let us replay that. The isolator stays in. A link budget is fixed by fixing the link.', MANTRA] },
     { type: 'chat', title: 'Incident 1: How It Unfolded', app: 'thread', skin: 'slack', meta: { header: '#demo-prep', participants: [GARY, MGR, BY] },
@@ -758,7 +636,8 @@
           { from: BY, text: 'The meter averages. Can we look at the spectrum and the linewidth before Monday?', side: 'left' },
           { from: MGR, text: 'Let us do that after the demo. Dana, let us keep this thread to solutions for now, I will loop you back in next week', side: 'left' }
         ],
-      narration: isThisOk('Gary removed the isolator to close the link budget for one demo, the spectrum check was postponed, and Morgan moved Dana off the thread.').concat(['Please note. Moving a coworker off a thread because they raised a concern is retaliation, even when it is polite.', 'Zero tolerance applies to people as well as to photons.']) },
+      narration: isThisOk('Gary removed the isolator to close the link budget for one demo, the spectrum check was postponed, and Morgan moved Dana off the thread.',
+        ['Read this team chat from the Friday before the demo, one message at a time.', 'Then judge whether the decisions Gary and Morgan make are proper.']).concat(['Please note. Moving a coworker off a thread because they raised a concern is retaliation, even when it is polite.', 'Zero tolerance applies to people as well as to photons.']) },
     felt('At the customer, the laser line was broad, the intensity flickered, and the customer asked whether this was the product',
       ['The isolator was in Gary\'s bag the whole time'],
       ['The isolator was in Gary\'s bag the whole time. It was isolating the bag.', 'Gary will not be punished for reporting this incident. He will be enrolled in this course again.', 'In Chapter Three, you will learn the official name for what happened on Friday. Isolation, traded for insertion loss. It is called Quid Pro Quo Feedback.']),
@@ -784,22 +663,23 @@
   var INC2 = [
     { type: 'video', title: 'Incident Review 2: The Ripple in the Report', duration: 30,
       keyframes: [
-        { t: 0, cast: ['Gary'], caption: 'Gary edge-couples a flat-cleaved fiber to a cleaved silicon chip facet and sweeps a tunable laser across the band.', shot: 'Edge-coupling stage, top-down through a stereo microscope, then cut to the monitor feed: a bare flat-cleaved fiber tip approaching a chip facet, the air gap visible as a dark band. Gloved hand on the piezo stage controller. Tunable laser and photodetector in the rack behind, out of focus.', draw: function (ctx, w, h, u) { dTrace(ctx, w, h, u, { label: 'Measured transmission versus wavelength (illustrative)', x: 'wavelength', y: 'transmission', f: function (x) { return 0.55 + 0.12 * Math.cos(x * 26) - 0.1 * x; } }); } },
-        { t: 8, cast: ['Gary'], caption: 'The transmission has a ripple with a 24 nm period. Gary reports it as an intrinsic device ripple, and fits it out.', shot: 'Over-the-shoulder to a monitor showing a report document; a plot captioned "intrinsic device ripple" is highlighted in yellow. The send button is clicked. Red stamp.', draw: function (ctx, w, h, u) { dTrace(ctx, w, h, u, { label: 'Reported as: intrinsic device ripple', x: 'wavelength', y: 'transmission', f: function (x) { return 0.55 + 0.12 * Math.cos(x * 26) - 0.1 * x; }, stamp: 'VIOLATION' }); } },
-        { t: 16, cast: ['Dana'], caption: 'Dana backs the fiber off by 5 micrometers. The period changes. The chip did not move.', shot: 'Split screen. Left: Dana\'s gloved hand turning the stage micrometer a fraction of a turn. Right: the live trace, ripple period visibly shrinking. A ruler graphic marks the period before and after.', draw: function (ctx, w, h, u) { dTrace(ctx, w, h, u, { label: 'Gap 50 um (blue) and 55 um (amber)', x: 'wavelength', y: 'transmission', fs: [function (x) { return 0.55 + 0.12 * Math.cos(x * 26); }, function (x) { return 0.55 + 0.12 * Math.cos(x * 26 * 55 / 50); }] }); } },
-        { t: 23, cast: ['Pat Reynolds'], caption: 'Replay: period to length. 24 nm at 1550 nm in air means a 50 micrometer gap: the fiber tip and the facet.', shot: 'Host beside a large graphic of the formula lambda squared over two L, with the fiber tip and the chip facet highlighted as the two mirrors of the cavity. A drop of index-matching gel fills the gap. Green check stamp.', draw: function (ctx, w, h, u) { dChip(ctx, w, h, u, { refl: [0.04, 0.96], hotFar: true, ruler: true, label: 'Period 24 nm in air: L = lambda^2 / (2 x 24 nm) = 50 um', stamp: 'COMPLIANT', stampColor: 'ok' }); } }
+        { t: 0, cast: ['Gary'], caption: 'Gary edge-couples a flat-cleaved fiber to a cleaved silicon chip facet and sweeps a tunable laser across the band.', shot: 'Edge-coupling stage, top-down through a stereo microscope, then cut to the monitor feed: a bare flat-cleaved fiber tip approaching a chip facet, the air gap visible as a dark band. Gloved hand on the piezo stage controller. Tunable laser and photodetector in the rack behind, out of focus.', draw: function (ctx, w, h, u) { LMS_DRAW.fb.edgeCouple(ctx, w, h, u, { mode: 'approach' }); } },
+        { t: 8, cast: ['Gary'], caption: 'The transmission has a ripple with a 24 nm period. Gary reports it as an intrinsic device ripple, and fits it out.', shot: 'Over-the-shoulder to a monitor showing a report document; a plot captioned "intrinsic device ripple" is highlighted in yellow. The send button is clicked. Red stamp.', draw: function (ctx, w, h, u) { LMS_DRAW.fb.gapTrace(ctx, w, h, u, { report: true, stamp: 'VIOLATION' }); } },
+        { t: 16, cast: ['Dana'], caption: 'Dana backs the fiber off by 5 micrometers. The period changes. The chip did not move.', shot: 'Split screen. Left: Dana\'s gloved hand turning the stage micrometer a fraction of a turn. Right: the live trace, ripple period visibly shrinking. A ruler graphic marks the period before and after.', draw: function (ctx, w, h, u) { LMS_DRAW.fb.edgeCouple(ctx, w, h, u, { mode: 'backoff', trace: true }); } },
+        { t: 23, cast: ['Pat Reynolds'], caption: 'Replay: period to length. 24 nm at 1550 nm in air means a 50 micrometer gap: the fiber tip and the facet.', shot: 'Host beside a large graphic of the formula lambda squared over two L, with the fiber tip and the chip facet highlighted as the two mirrors of the cavity. A drop of index-matching gel fills the gap. Green check stamp.', draw: function (ctx, w, h, u) { LMS_DRAW.fb.edgeCouple(ctx, w, h, u, { mode: 'gel', stamp: 'COMPLIANT', ok: true }); } }
       ],
       narration: ['Gary edge-couples a flat-cleaved fiber to a silicon chip, and sweeps a tunable laser across the band.', 'The transmission has a ripple. Its period is twenty-four nanometers.', 'Gary reports it as an intrinsic device ripple. He fits it, and subtracts it.', 'Dana backs the fiber off by five micrometers. The period changes. The chip did not move.', 'Let us replay that. In air, the ripple period is lambda squared over two times the gap.', 'At fifteen fifty nanometers, a period of twenty-four nanometers means a gap of fifty micrometers. That is the gap between the fiber tip and the facet.', 'Back off to fifty-five micrometers, and the period becomes about twenty-two nanometers. The ripple belongs to the gap.', 'Every interface reflects. Every reflection is a cavity.'] },
     { type: 'chat', title: 'Incident 2: How It Unfolded', app: 'email', skin: 'mail', meta: { header: 'Inbox', subject: 'Final report: waveguide transmission, lot 3', participants: [GARY, BY, MGR] },
       messages: [
           { from: GARY, text: 'Hi Morgan,\n\nAttached is the final transmission report for the customer. Every die shows a ripple with a 24 nm period and about the same depth, so I have characterized it as an intrinsic waveguide property and removed it with a sinusoid fit for the loss numbers. Raw data attached.\n\nBest,\nGary', side: 'right', to: [MGR], cc: [BY], date: '2026-11-17 16:05', subject: 'Final report: waveguide transmission, lot 3', attachments: [{ name: 'transmission_report_lot3_v4.pdf', size: '2.1 MB' }, { name: 'sweeps_lot3_raw.zip', size: '38 MB' }] },
-          { from: BY, text: 'Gary, 24 nm at 1550 nm in air corresponds to lambda squared over 2L with L of about 50 um. What gap did you use for the edge coupling? If it was about 50 um on every die, the ripple would look the same on every die.\n\nDana', side: 'left', to: [GARY], cc: [MGR], date: '2026-11-17 16:38' },
+          { from: BY, text: 'Gary, 24 nm at 1550 nm in air corresponds to $\\lambda^2/(2L)$ with $L \\approx 50\\ \\mu\\text{m}$. What gap did you use for the edge coupling? If it was about 50 um on every die, the ripple would look the same on every die.\n\nDana', side: 'left', to: [GARY], cc: [MGR], date: '2026-11-17 16:38' },
           { from: GARY, text: 'About 50 um on all of them, that is the standard alignment recipe. But the waveguide simulation shows no ripple, and the depth is consistent die to die, so I am fairly confident it is the device.', side: 'right', to: [BY], cc: [MGR], date: '2026-11-17 16:52' },
           { from: BY, text: 'The simulation has absorbing boundaries at the facets, so it cannot show a facet cavity. A flat cleave is about 3.3 percent and a silicon facet about 31 percent. Could we re-measure one die with gel before it goes out?', side: 'left', to: [GARY], cc: [MGR], date: '2026-11-17 17:10' },
           { from: MGR, text: 'The customer asked for data this week. Let us send it as is, describe the ripple as intrinsic, and follow up if they ask.\n\nMorgan', side: 'left', to: [GARY, BY], date: '2026-11-17 17:31' }
-        ], narration: isThisOk('Gary reported a ripple that matches his fiber gap as an intrinsic device property, and the report went out without a re-measurement.') },
+        ], narration: isThisOk('Gary reported a ripple that matches his fiber gap as an intrinsic device property, and the report went out without a re-measurement.',
+          ['Read this email thread about the final transmission report for the customer.', 'Then judge whether Gary\'s conclusion, and the decision to send it, are proper.']) },
     { type: 'slide', layout: 'bullets', title: 'Incident 2: The Numbers',
-      bullets: ['Air-gap etalon period: d-lambda = lambda^2 / (2 L). At 1550 nm, L = 50 um gives 24 nm; L = 55 um gives 21.8 nm', 'Flat silica end, n = 1.444 (Malitson, 1965): R = ((n - 1) / (n + 1))^2 = 3.3 percent, -14.8 dB', 'Cleaved silicon facet, n = 3.48 (Li, 1980): R = 31 percent (plane-wave Fresnel estimate)', 'Plane-wave peak-to-valley bound: 20 log10[(1 + r) / (1 - r)] with r = sqrt(R1 R2) = 0.10, about 1.8 dB. Diffraction in the gap returns less light, so the real ripple is smaller', 'Diagnostic: change the gap. If the period follows the gap, the ripple belongs to the gap'],
+      bullets: ['Air-gap etalon period: $\\Delta\\lambda = \\lambda^2/(2L)$. At 1550 nm, $L = 50\\ \\mu\\text{m}$ gives 24 nm; $L = 55\\ \\mu\\text{m}$ gives 21.8 nm', 'Flat silica end, $n = 1.444$ (Malitson, 1965): $R = \\left(\\frac{n-1}{n+1}\\right)^2$ = 3.3 percent, $-14.8$ dB', 'Cleaved silicon facet, $n = 3.48$ (Li, 1980): $R$ = 31 percent (plane-wave Fresnel estimate)', 'Plane-wave peak-to-valley bound: $20\\log_{10}\\left[(1+r)/(1-r)\\right]$ with $r = \\sqrt{R_1R_2} = 0.10$, about 1.8 dB. Diffraction in the gap returns less light, so the real ripple is smaller', 'Diagnostic: change the gap. If the period follows the gap, the ripple belongs to the gap'],
       callout: 'If the period moves when the fiber moves, the ripple is not the device.',
       narration: ['Let us check the numbers together.', 'In air, the ripple period is lambda squared over two times the gap. Fifty micrometers gives twenty-four nanometers. Fifty-five micrometers gives about twenty-two.', 'A flat end of fused silica, with an index of about one point four four four, reflects about three point three percent, or minus fifteen decibels.', 'A cleaved silicon facet, with an index of about three point four eight, reflects about thirty-one percent, as a plane-wave estimate.', 'Together they can make a ripple of up to about one point eight decibels peak to valley. Diffraction in the gap makes the real ripple smaller.', 'The diagnostic is simple. Change the gap. If the period follows the gap, the ripple belongs to the gap.', 'Every interface reflects. Every reflection is a cavity.'] },
     feltTabs('The customer received a report describing the gap between Gary\'s fiber and the chip as a property of the chip', [
@@ -830,11 +710,11 @@
   var INC3 = [
     { type: 'video', title: 'Incident Review 3: The Demo Restart', duration: 34,
       keyframes: [
-        { t: 0, cast: ['Gary'], caption: 'The live customer demo. The laser is tuned to the customer\'s channel. The isolator is still in Gary\'s bag from Friday.', shot: 'Customer conference room, wide. Demo rack with the laser, a wavemeter and a spectrum display on a large monitor. Gary from behind, presenting with a clicker. Customer engineers as out-of-focus silhouettes. A parts bag with a small cylindrical isolator visible in an open laptop bag on the floor.', draw: function (ctx, w, h, u) { dComb(ctx, w, h, u * 0.4, { label: 'Lasing mode (blue) under the filter (amber)' }); } },
-        { t: 8, cast: ['Gary'], caption: 'Midway through, the wavemeter jumps. The customer\'s receiver loses lock.', shot: 'Close on the wavemeter display: the reading jumps to a new value. Cut to the customer receiver status panel turning from green to red. Gary freezes mid-sentence.', draw: function (ctx, w, h, u) { dTrace(ctx, w, h, u, { label: 'Lasing frequency versus time: a hop', x: 'time', y: 'frequency', f: function (x) { return x < 0.55 ? 0.45 + 0.05 * x : 0.75 + 0.05 * x; } }); } },
-        { t: 15, cast: ['Gary'], caption: 'Gary power-cycles the laser. It comes back on the right channel. He tells the room it re-locked, and carries on.', shot: 'Close on a gloved hand flipping the laser driver output off and on. The wavemeter returns to the original value. Gary turns back to the room and continues the presentation. Red stamp.', draw: function (ctx, w, h, u) { dCard(ctx, w, h, u, { title: '"It re-locked."', sub: 'Laser power-cycled. Nothing logged.', people: ['Gary'], stamp: 'VIOLATION' }); } },
-        { t: 22, cast: ['Gary', 'Morgan'], caption: 'Afterwards, Morgan: "Good save. Let us not log a one-off. And let us keep Dana off the follow-up call."', shot: 'Corridor outside the conference room, medium two-shot from behind both figures. Morgan pats Gary on the shoulder. Through the glass, Dana is packing up alone.', draw: function (ctx, w, h, u) { dCard(ctx, w, h, u, { title: '"Let us keep Dana off the follow-up."', sub: 'Retaliation does not need to be loud', people: ['Gary', 'Morgan'], stamp: 'VIOLATION' }); } },
-        { t: 28, cast: ['Pat Reynolds'], caption: 'Replay: log the hop, the temperature, the current and the sweep direction. Put the isolator back. Retaliation is prohibited, by lasers and by managers.', shot: 'Host in the empty conference room beside the demo rack, isolator back in line, a lab log open on the table with a new entry. Green check stamp.', draw: function (ctx, w, h, u) { dCard(ctx, w, h, u, { title: 'Hop logged. Isolator restored. Nobody threatened.', sub: 'Temperature, current, sweep direction, setup', people: ['Pat Reynolds'], stamp: 'COMPLIANT', stampColor: 'ok' }); } }
+        { t: 0, cast: ['Gary'], caption: 'The live customer demo. The laser is tuned to the customer\'s channel. The isolator is still in Gary\'s bag from Friday.', shot: 'Customer conference room, wide. Demo rack with the laser, a wavemeter and a spectrum display on a large monitor. Gary from behind, presenting with a clicker. Customer engineers as out-of-focus silhouettes. A parts bag with a small cylindrical isolator visible in an open laptop bag on the floor.', draw: function (ctx, w, h, u) { LMS_DRAW.fb.wmTimeline(ctx, w, h, u, { phase: 'steady' }); } },
+        { t: 8, cast: ['Gary'], caption: 'Midway through, the wavemeter jumps. The customer\'s receiver loses lock.', shot: 'Close on the wavemeter display: the reading jumps to a new value. Cut to the customer receiver status panel turning from green to red. Gary freezes mid-sentence.', draw: function (ctx, w, h, u) { LMS_DRAW.fb.wmTimeline(ctx, w, h, u, { phase: 'hop' }); } },
+        { t: 15, cast: ['Gary'], caption: 'Gary power-cycles the laser. It comes back on the right channel. He tells the room it re-locked, and carries on.', shot: 'Close on a gloved hand flipping the laser driver output off and on. The wavemeter returns to the original value. Gary turns back to the room and continues the presentation. Red stamp.', draw: function (ctx, w, h, u) { LMS_DRAW.fb.wmTimeline(ctx, w, h, u, { phase: 'restart', stamp: 'VIOLATION' }); } },
+        { t: 22, cast: ['Gary', 'Morgan'], caption: 'Afterwards, Morgan: "Good save. Let us not log a one-off. And let us keep Dana off the follow-up call."', shot: 'Corridor outside the conference room, medium two-shot from behind both figures. Morgan pats Gary on the shoulder. Through the glass, Dana is packing up alone.', draw: function (ctx, w, h, u) { LMS_DRAW.fb.doc(ctx, w, h, u, { app: 'Calendar', title: 'Follow-up call: customer demo', rows: [['Organizer', 'Morgan'], ['Attendees', 'Gary, Morgan'], ['Dana Okafor', 'removed from the invitation', 'bad'], ['Message', 'Good save. Let us not log a one-off.', 'type']], stamp: 'VIOLATION' }); } },
+        { t: 28, cast: ['Pat Reynolds'], caption: 'Replay: log the hop, the temperature, the current and the sweep direction. Put the isolator back. Retaliation is prohibited, by lasers and by managers.', shot: 'Host in the empty conference room beside the demo rack, isolator back in line, a lab log open on the table with a new entry. Green check stamp.', draw: function (ctx, w, h, u) { LMS_DRAW.fb.doc(ctx, w, h, u, { app: 'Lab log', title: 'Entry: mode hop during the customer demo', rows: [['Laser temperature', '29.60 \u00b0C'], ['Laser current', '120.0 mA'], ['Sweep direction', 'up, warming'], ['Hop', '1550.392 nm to 1550.542 nm, one cavity mode', 'bad'], ['Isolator', 'back in line, arrow away from the laser', 'ok'], ['Follow-up call', 'Dana invited', 'ok']], stamp: 'COMPLIANT', ok: true }); } }
       ],
       narration: ['The live customer demo. The laser is tuned to the customer\'s channel.', 'The isolator is still in Gary\'s bag from Friday.', 'Midway through, the wavemeter jumps. The laser has hopped. The customer\'s receiver loses lock.', 'Gary power-cycles the laser. It comes back on the right channel.', 'Gary tells the room it re-locked, and carries on.', 'Afterwards, Morgan says, good save. Let us not log a one-off. And let us keep Dana off the follow-up call.', 'Let us replay that.', 'Restarting a laser picks a mode again from a fresh start. It does not remove the reflector, and it does not remove the hop point. The next temperature drift brings the laser back to it.', 'Log the hop, the temperature, the current, and the sweep direction. Put the isolator back.', 'And retaliation is prohibited. By lasers, and by managers.', 'Every cavity hops.'] },
     { type: 'chat', title: 'Incident 3: How It Unfolded', app: 'phone', skin: 'signal', meta: { header: 'Messages', participants: [MGR, GARY] },
@@ -845,7 +725,8 @@
           { from: GARY, text: 'Makes sense. I will log it if it happens again. The isolator is still out from Friday, by the way', side: 'right' },
           { from: MGR, text: 'Leave it for now. And let us keep Dana off the follow-up call, we need a confident tone', side: 'left' },
           { from: GARY, text: 'ok', side: 'right' }
-        ], narration: isThisOk('The mode hop is not in the log, the isolator is still out, and Morgan has taken Dana off the follow-up call.').concat(['Removing a coworker from a call because they raised concerns is retaliation, even when it is phrased as tone.', 'Retaliation against people is prohibited. So is keeping a hop out of the log.']) },
+        ], narration: isThisOk('The mode hop is not in the log, the isolator is still out, and Morgan has taken Dana off the follow-up call.',
+          ['Read these messages between Morgan and Gary, sent after the customer demo.', 'Then judge whether what they agree on is proper.']).concat(['Removing a coworker from a call because they raised concerns is retaliation, even when it is phrased as tone.', 'Retaliation against people is prohibited. So is keeping a hop out of the log.']) },
     felt('The laser hopped in front of the customer, Gary restarted it without logging it, and Dana was taken off the follow-up call',
       ['Gary also felt afraid to report. That is normal too', 'Retaliation against Gary for reporting is prohibited'],
       ['Gary also felt afraid to report. That is normal too.', 'Fear of retaliation is the most common reason people do not speak up. That is why retaliation is prohibited.', 'The laser is allowed to hop. It is a laser. Morgan is not allowed to retaliate. Morgan is a manager.', 'For the record, this incident is classified as Quid Pro Quo Feedback, followed by Retaliation by the laser. Taking Dana off the call is handled under a separate policy, with the same zero tolerance.']),
@@ -871,11 +752,11 @@
   var INC4 = [
     { type: 'video', title: 'Incident Review 4: Installed Backwards', duration: 34,
       keyframes: [
-        { t: 0, cast: ['Gary'], caption: 'Gary installs a new inline fiber isolator. The arrow on the housing points at the laser.', shot: 'Still (Blender render): butterfly laser on a finned mount, yellow pigtail through an inline isolator spliced in backwards (splice sleeves on both sides), its printed arrow pointing toward the laser; capped FC/APC and FC/PC connectors in the foreground. Planned live shot: gloved hands mating the isolator, slow push-in on the arrow.', image: { src: 'media/render/butterfly_isolator_reversed_bench.jpg' }, draw: function (ctx, w, h, u) { dIso(ctx, w, h, u, { rev: true, gary: true, label: 'Isolator installed with the arrow pointing at the laser' }); } },
-        { t: 8, cast: ['Gary'], caption: 'The output power drops by about the isolation ratio. Gary files a return request against the laser.', shot: 'Over-the-shoulder to a laptop: a vendor return form, reason field "laser output dead". Beside it, the power meter reading near the noise floor. Red stamp.', draw: function (ctx, w, h, u) { dCard(ctx, w, h, u, { title: 'Return request: "laser output dead"', sub: 'Filed against the laser vendor', people: ['Gary'], stamp: 'VIOLATION' }); } },
-        { t: 15, cast: ['Gary'], caption: 'Downstream, an optical amplifier emits spontaneous emission backward. The reversed isolator passes it straight into the laser.', shot: 'Animated cutaway of the link: laser, reversed isolator, fiber, an amplifier module. A faint red glow leaves the amplifier input traveling backward, passes the isolator in its low-loss direction and lands on the laser facet.', draw: function (ctx, w, h, u) { dIso(ctx, w, h, u, { rev: true, right: 'amplifier', label: 'Backward light from downstream passes the reversed isolator' }); } },
-        { t: 22, cast: ['Gary'], caption: 'On the free-space bench, Gary rotates a polarization-dependent isolator by 90 degrees to fit the mount. Nothing comes out.', shot: 'Optical table, medium close. A free-space isolator in a rotation mount, engraved input polarizer axis now horizontal while the laser polarization is vertical. Gary\'s gloved hand tightens the setscrew. The detector card behind it is dark.', draw: function (ctx, w, h, u) { dIso(ctx, w, h, u, { rot: true, label: 'Input polarizer crossed with the laser polarization' }); } },
-        { t: 28, cast: ['Pat Reynolds'], caption: 'Replay: the arrow points away from the laser, and the input polarizer is aligned to the laser polarization. Then measure forward power before you close the setup.', shot: 'Still (Blender render): the same bench with the isolator arrow pointing away from the laser. Planned live shot: host beside both setups, a printed checklist with two ticked lines, direction and rotation.', image: { src: 'media/render/butterfly_isolator_fc_bench.jpg' }, draw: function (ctx, w, h, u) { dIso(ctx, w, h, u, { label: 'Arrow away from the laser. Polarizer aligned.', stamp: 'COMPLIANT', stampColor: 'ok' }); } }
+        { t: 0, cast: ['Gary'], caption: 'Gary installs a new inline fiber isolator. The arrow on the housing points at the laser.', shot: 'Still (Blender render): butterfly laser on a finned mount, yellow pigtail through an inline isolator spliced in backwards (splice sleeves on both sides), its printed arrow pointing toward the laser; capped FC/APC and FC/PC connectors in the foreground. Planned live shot: gloved hands mating the isolator, slow push-in on the arrow.', image: { src: 'media/render/butterfly_isolator_reversed_bench.jpg' }, draw: function (ctx, w, h, u) { LMS_DRAW.fb.linkBench(ctx, w, h, u, { variant: 'reversed' }); } },
+        { t: 8, cast: ['Gary'], caption: 'The output power drops by about the isolation ratio. Gary files a return request against the laser.', shot: 'Over-the-shoulder to a laptop: a vendor return form, reason field "laser output dead". Beside it, the power meter reading near the noise floor. Red stamp.', draw: function (ctx, w, h, u) { LMS_DRAW.fb.doc(ctx, w, h, u, { app: 'Vendor returns', title: 'Return request', rows: [['Product', 'DFB laser, butterfly package'], ['Reason', 'Laser output dead', 'type'], ['Measured output', '-34.6 dBm', 'bad'], ['Datasheet output', '+2.1 dBm']], readouts: [{ label: 'POWER METER', value: '-34.6', unit: 'dBm', col: '#ff9d96' }], button: 'Submit', stamp: 'VIOLATION' }); } },
+        { t: 15, cast: ['Gary'], caption: 'Downstream, an optical amplifier emits spontaneous emission backward. The reversed isolator passes it straight into the laser.', shot: 'Animated cutaway of the link: laser, reversed isolator, fiber, an amplifier module. A faint red glow leaves the amplifier input traveling backward, passes the isolator in its low-loss direction and lands on the laser facet.', draw: function (ctx, w, h, u) { LMS_DRAW.fb.linkBench(ctx, w, h, u, { variant: 'reversed' }); } },
+        { t: 22, cast: ['Gary'], caption: 'On the free-space bench, Gary rotates a polarization-dependent isolator by 90 degrees to fit the mount. Nothing comes out.', shot: 'Optical table, medium close. A free-space isolator in a rotation mount, engraved input polarizer axis now horizontal while the laser polarization is vertical. Gary\'s gloved hand tightens the setscrew. The detector card behind it is dark.', draw: function (ctx, w, h, u) { LMS_DRAW.fb.fsIso(ctx, w, h, u); } },
+        { t: 28, cast: ['Pat Reynolds'], caption: 'Replay: the arrow points away from the laser, and the input polarizer is aligned to the laser polarization. Then measure forward power before you close the setup.', shot: 'Still (Blender render): the same bench with the isolator arrow pointing away from the laser. Planned live shot: host beside both setups, a printed checklist with two ticked lines, direction and rotation.', image: { src: 'media/render/butterfly_isolator_fc_bench.jpg' }, draw: function (ctx, w, h, u) { LMS_DRAW.fb.fsIso(ctx, w, h, u, { fixed: 0, stamp: 'COMPLIANT', ok: true }); } }
       ],
       narration: ['Gary installs a new fiber isolator. The arrow on the housing points at the laser.', 'The output power drops by about the isolation ratio. Gary files a return request against the laser.', 'Here is the subtle part. For the laser\'s own light reflected downstream, a reversed isolator attenuates the round trip just as much as a correct one. Forward loss times backward loss is the same product either way.', 'What the reversed isolator does is block almost all of the laser\'s output, and pass any light that starts downstream, such as amplified spontaneous emission traveling backward out of an amplifier, straight into the laser.', 'Meanwhile, on the free-space bench, Gary rotates a polarization-dependent isolator by ninety degrees to fit the mount.', 'Its input polarizer is now crossed with the laser polarization. By the law of Malus, the transmission goes as cosine squared of the angle. At ninety degrees, nothing comes out.', 'Let us replay that. The arrow points away from the laser. The input polarizer is aligned with the laser polarization.', 'Reciprocity is not optional. Isolate, angle, and verify.'] },
     { type: 'chat', title: 'Incident 4: How It Unfolded', app: 'thread', skin: 'slack', meta: { header: '#lab-help', participants: [GARY, BY, MGR] },
@@ -887,9 +768,10 @@
           { from: GARY, text: 'My link model shows no difference between orientations though. I modeled it as a two-port with the datasheet loss', side: 'right' },
           { from: BY, text: 'A symmetric two-port is reciprocal by construction. The model cannot show it', side: 'left' },
           { from: MGR, text: 'Can we hold off on a vendor ticket? Renewal negotiations are next week', side: 'left' }
-        ], narration: isThisOk('Gary installed the isolator backwards, trusted a symmetric model, and opened a vendor return, and Morgan is worried about the renewal.') },
+        ], narration: isThisOk('Gary installed the isolator backwards, trusted a symmetric model, and opened a vendor return, and Morgan is worried about the renewal.',
+          ['Read this lab help chat about a laser that went dark after an isolator swap.', 'Then judge whether Gary\'s diagnosis, and the response to it, are proper.']) },
     { type: 'slide', layout: 'policy', title: 'Policy 4.3: Isolator Orientation',
-      bullets: ['A Faraday isolator is non-reciprocal: forward and backward transmission differ by design (Jalas et al., 2013)', 'Polarization-dependent isolator: input polarizer, 45 degree Faraday rotator, output polarizer at 45 degrees. Backward light is rotated a further 45 degrees in the same sense, reaches 90 degrees, and is blocked (Saleh and Teich, 1991)', 'Reversed (180 degrees): the laser output is attenuated by about the isolation ratio; light that starts downstream passes into the laser with only the insertion loss', 'For the laser\'s own reflection, the round trip is forward transmission times backward transmission: the same product in either orientation', 'Rotated about its axis: a polarization-dependent isolator transmits as cos^2 of the angle between laser polarization and input polarizer (Malus): 0 at 90 degrees, 0.5 at 45 degrees. A polarization-independent fiber isolator does not care about rotation. It cares about direction'],
+      bullets: ['A Faraday isolator is non-reciprocal: forward and backward transmission differ by design (Jalas et al., 2013)', 'Polarization-dependent isolator: input polarizer, 45 degree Faraday rotator, output polarizer at 45 degrees. Backward light is rotated a further 45 degrees in the same sense, reaches 90 degrees, and is blocked (Saleh and Teich, 1991)', 'Reversed (180 degrees): the laser output is attenuated by about the isolation ratio; light that starts downstream passes into the laser with only the insertion loss', 'For the laser\'s own reflection, the round trip is forward transmission times backward transmission: the same product in either orientation', 'Rotated about its axis: a polarization-dependent isolator transmits as $\\cos^2\\theta$, with $\\theta$ the angle between laser polarization and input polarizer (Malus): 0 at 90 degrees, 0.5 at 45 degrees. A polarization-independent fiber isolator does not care about rotation. It cares about direction'],
       callout: 'Direction is not angle. Check both.',
       narration: ['Policy section four point three. Isolator orientation.', 'A Faraday isolator is non-reciprocal by design.', 'In a polarization-dependent isolator, light passes an input polarizer, is rotated by forty-five degrees in a Faraday rotator, and leaves through an output polarizer set at forty-five degrees.', 'Light coming backward is rotated another forty-five degrees in the same sense. It arrives at ninety degrees to the input polarizer, and is blocked. That is non-reciprocity.', 'If you install the isolator backwards, the laser output is attenuated by about the isolation ratio, and light that starts downstream gets into the laser with only the insertion loss.', 'For the laser\'s own reflection, the round trip is the forward transmission times the backward transmission. That product is the same in either orientation. So a reversed isolator does not protect you more, or less, from your own echo. It just takes your power, and lets strangers in.', 'If you rotate a polarization-dependent isolator about its axis, the transmission follows the law of Malus. Cosine squared. Zero at ninety degrees, one half at forty-five.', 'A polarization-independent fiber isolator does not care about rotation. It cares about direction.', 'Direction is not angle. Check both.'] },
     felt('The laser vendor returned the laser marked "no fault found", with a photo of the isolator arrow',
@@ -917,10 +799,10 @@
   var INC5 = [
     { type: 'video', title: 'Incident Review 5: Two Modes and a Record', duration: 30,
       keyframes: [
-        { t: 0, cast: ['Gary'], caption: 'Gary sweeps a high-Q ring. Every resonance has two dips.', shot: 'Dark lab, probe station, top-down through the microscope onto a ring resonator chip with lensed fibers on both sides. Monitor in the foreground: a transmission sweep with a doublet at each resonance. Gary from behind, leaning in.', draw: function (ctx, w, h, u) { dRing(ctx, w, h, u, { gary: true, speck: true, ccw: true, label: 'A scatterer couples clockwise and counter-clockwise light' }); } },
-        { t: 7, cast: ['Gary'], caption: 'Gary reports the pair as two transverse mode families: "a dual-mode ring".', shot: 'Slide on a monitor titled "Dual-mode ring", two arrows labelling the two dips "mode 1" and "mode 2". Red stamp.', draw: function (ctx, w, h, u) { dTrace(ctx, w, h, u, { label: 'Reported as: two mode families', x: 'detuning', y: 'transmission', f: function (x) { return 1 - 0.75 * lor(x, 0.42, 0.04) - 0.75 * lor(x, 0.58, 0.04); }, stamp: 'VIOLATION' }); } },
-        { t: 14, cast: ['Gary'], caption: 'For the intrinsic Q, Gary fits one shallow dip with the over-coupled branch, the fitting tool default for this gap. It is a record.', shot: 'Screen insert: a fitting tool dialog with a toggle "under-coupled / over-coupled". The cursor clicks over-coupled; the intrinsic Q field triples. Gary types "record" into the slide title. Red stamp.', draw: function (ctx, w, h, u) { dCard(ctx, w, h, u, { title: 'Intrinsic Q: record (over-coupled branch)', sub: 'Branch chosen because it gives the larger number', people: ['Gary'], stamp: 'VIOLATION' }); } },
-        { t: 21, cast: ['Dana', 'Pat Reynolds'], caption: 'Replay: light comes back out of the input port exactly at the doublet. Two independent mode families would not do that, and would walk apart across the spectrum.', shot: 'Same bench; Dana adds a circulator at the input and a second detector on the reflection port. The monitor shows a reflection peak aligned with each doublet. Then a wide sweep: the splitting stays pinned to every resonance. Green check stamp.', draw: function (ctx, w, h, u) { dRing(ctx, w, h, u, { standing: true, ccw: true, speck: true, label: 'Backscatter: one mode pair, split, and reflecting', stamp: 'COMPLIANT', stampColor: 'ok' }); } }
+        { t: 0, cast: ['Gary'], caption: 'Gary sweeps a high-Q ring. Every resonance has two dips.', shot: 'Dark lab, probe station, top-down through the microscope onto a ring resonator chip with lensed fibers on both sides. Monitor in the foreground: a transmission sweep with a doublet at each resonance. Gary from behind, leaning in.', draw: function (ctx, w, h, u) { LMS_DRAW.fb.ringScatter(ctx, w, h, u, { b: 90 }); } },
+        { t: 7, cast: ['Gary'], caption: 'Gary reports the pair as two transverse mode families: "a dual-mode ring".', shot: 'Slide on a monitor titled "Dual-mode ring", two arrows labelling the two dips "mode 1" and "mode 2". Red stamp.', draw: function (ctx, w, h, u) { LMS_DRAW.fb.doubletPlot(ctx, w, h, u, { variant: 'twomodes', stamp: 'VIOLATION' }); } },
+        { t: 14, cast: ['Gary'], caption: 'For the intrinsic Q, Gary fits one shallow dip with the over-coupled branch, the fitting tool default for this gap. It is a record.', shot: 'Screen insert: a fitting tool dialog with a toggle "under-coupled / over-coupled". The cursor clicks over-coupled; the intrinsic Q field triples. Gary types "record" into the slide title. Red stamp.', draw: function (ctx, w, h, u) { LMS_DRAW.fb.fitTool(ctx, w, h, u, { stamp: 'VIOLATION' }); } },
+        { t: 21, cast: ['Dana', 'Pat Reynolds'], caption: 'Replay: light comes back out of the input port exactly at the doublet. Two independent mode families would not do that, and would walk apart across the spectrum.', shot: 'Same bench; Dana adds a circulator at the input and a second detector on the reflection port. The monitor shows a reflection peak aligned with each doublet. Then a wide sweep: the splitting stays pinned to every resonance. Green check stamp.', draw: function (ctx, w, h, u) { LMS_DRAW.fb.ringReflect(ctx, w, h, u, { stamp: 'COMPLIANT', ok: true }); } }
       ],
       narration: ['Gary sweeps a high Q ring. Every resonance has two dips.', 'Gary reports the pair as two mode families, and calls it a dual-mode ring.', 'For the intrinsic Q, Gary fits one of the shallow dips with the over-coupled formula. It is the fitting tool default for his design gap, and the result is a record.', 'Let us replay that.', 'Dana looks at the light coming back out of the input port. There is a reflection peak, exactly at each doublet.', 'Two independent mode families would not send light back. And because they have different group indices, they would have different free spectral ranges, and walk apart across the spectrum.', 'A backscatter doublet stays pinned to every resonance, and it reflects. Every interface reflects. Even a speck is an interface.'] },
     { type: 'chat', title: 'Incident 5: How It Unfolded', app: 'email', skin: 'mail', meta: { header: 'Inbox', subject: 'Abstract draft: record intrinsic Q, lot 7', participants: [GARY, BY, MGR] },
@@ -929,9 +811,10 @@
           { from: BY, text: 'Is the over-coupled branch confirmed independently? Transmission alone cannot tell the branches apart. Also, I see light coming back out of the input port at every doublet, which looks like backscatter splitting rather than two families.\n\nDana', side: 'left', to: [GARY, MGR], date: '2026-11-21 16:25' },
           { from: GARY, text: 'The branch matches our design gap and the trend from the last lot, so I think it is reasonable.', side: 'right', to: [BY, MGR], date: '2026-11-21 16:48' },
           { from: MGR, text: 'Deadline is tonight. Let us submit with the record and refine in the full paper.\n\nMorgan', side: 'left', to: [GARY, BY], date: '2026-11-21 17:10' }
-        ], narration: isThisOk('Gary chose the coupling branch that matches expectation, called a backscatter doublet two mode families, and the abstract is going out tonight.') },
+        ], narration: isThisOk('Gary chose the coupling branch that matches expectation, called a backscatter doublet two mode families, and the abstract is going out tonight.',
+          ['Read this email thread about an abstract due tonight.', 'Then judge whether Gary\'s analysis, and the decision to submit, are proper.']) },
     { type: 'slide', layout: 'bullets', title: 'Incident 5: The Numbers',
-      bullets: ['Backscatter splitting of high-Q modes: Weiss et al., 1995; modal coupling model: Kippenberg, Spillane and Vahala, 2002', 'Single-mode extraction: Qi = 2 QL / (1 + sqrt(T0)) if under-coupled, 2 QL / (1 - sqrt(T0)) if over-coupled. The all-pass transmission is symmetric in loss and coupling (Yariv, 2000), so |T| alone cannot choose the branch', 'Coupled-mode model of this chapter, critically coupled before splitting, doublet well resolved: each dip bottoms at T0 = 0.25, and about 25 percent of the light comes back out of the input port at each dip', 'With T0 = 0.25 and each dip about one loaded linewidth wide: under-coupled branch gives Qi = 1.33 QL, over-coupled branch gives Qi = 4 QL. The true value in this model is 2 QL', 'Two transverse mode families have different group indices, hence different FSR = c / (2 pi R ng): their spacing changes from resonance to resonance'],
+      bullets: ['Backscatter splitting of high-Q modes: Weiss et al., 1995; modal coupling model: Kippenberg, Spillane and Vahala, 2002', 'Single-mode extraction: $Q_i = 2Q_L/(1+\\sqrt{T_0})$ if under-coupled, $Q_i = 2Q_L/(1-\\sqrt{T_0})$ if over-coupled. The all-pass transmission is symmetric in loss and coupling (Yariv, 2000), so $|T|$ alone cannot choose the branch', 'Coupled-mode model of this chapter, critically coupled before splitting, doublet well resolved: each dip bottoms at $T_0 = 0.25$, and about 25 percent of the light comes back out of the input port at each dip', 'With $T_0 = 0.25$ and each dip about one loaded linewidth wide: under-coupled branch gives $Q_i = 1.33\\,Q_L$, over-coupled branch gives $Q_i = 4\\,Q_L$. The true value in this model is $2\\,Q_L$', 'Two transverse mode families have different group indices, hence different $\\mathrm{FSR} = c/(2\\pi R\\,n_g)$: their spacing changes from resonance to resonance'],
       callout: 'A default is not a coupling regime.',
       narration: ['Let us check the numbers together.', 'Backscatter splitting of high Q modes was reported by Weiss and coworkers in nineteen ninety-five, and modeled as coupling between counter-propagating waves by Kippenberg, Spillane, and Vahala in two thousand two.', 'For a single resonance, you can get the intrinsic Q from the loaded Q and the dip depth. But there are two formulas, one for under-coupling and one for over-coupling.', 'The transmission of a ring on a bus is symmetric in the loss and the coupling, as Yariv wrote down in two thousand. So the transmission magnitude alone cannot tell you which formula applies.', 'In the coupled mode model of this chapter, take a ring that was critically coupled before splitting. Once the doublet is well resolved, each dip bottoms out at one quarter transmission, and about one quarter of the light comes back out of the input port.', 'Plug that into the two formulas. The under-coupled branch gives one point three three times the loaded Q. The over-coupled branch gives four times. The true value in this model is two times.', 'Gary chose four. It was the default.', 'And two real mode families have different group indices, so their free spectral ranges differ, and their spacing changes from resonance to resonance. A doublet does not walk. It reflects.'] },
     feltTabs('Gary\'s record Q and his dual-mode ring were in the draft abstract, and both were one ring with a speck on it', [
@@ -961,11 +844,11 @@
   var INC6 = [
     { type: 'video', title: 'Incident Review 6: Passed by Averaging', duration: 34,
       keyframes: [
-        { t: 0, cast: ['Gary'], caption: 'Outgoing inspection. Gary screens lasers with a swept optical spectrum analyzer and a power meter with a long averaging time.', shot: 'Inspection station, wide, cool fluorescent light. A rack with a spectrum analyzer, a power meter and a wavemeter; a tray of butterfly lasers in anti-static foam; inspection sheets on a clipboard. Gary from behind in a lab coat, gloved hand on the analyzer start-sweep key.', draw: function (ctx, w, h, u) { dCard(ctx, w, h, u, { title: 'Outgoing inspection', sub: 'One sweep at a time. Long averaging time.', people: ['Gary'] }); } },
-        { t: 8, cast: ['Gary'], caption: 'One laser hops between two adjacent modes. Most sweeps show only one of them. The power meter shows a steady average.', shot: 'Split screen. Left: fast photodiode trace on an oscilloscope switching between two levels. Right: the analyzer trace showing a single peak and the power meter showing a calm number. The oscilloscope is not connected in the inspection procedure; it is shown only to the viewer.', draw: function (ctx, w, h, u) { dTrace(ctx, w, h, u, { label: 'Fast intensity (blue) versus slow power meter (amber)', x: 'time', y: 'signal', fs: [telegraph, function () { return 0.58; }] }); } },
-        { t: 15, cast: ['Gary'], caption: 'Some runs show a second peak. Gary treats them as analyzer artifacts, attaches the representative run, and the laser passes.', shot: 'Close on the inspection sheet: "Run 9 of 9: PASS" written in, runs 1 to 8 not recorded. Runs 1 to 8 go into a folder labeled analyzer artifacts. Red stamp.', draw: function (ctx, w, h, u) { dCard(ctx, w, h, u, { title: 'Run 9 of 9: PASS', sub: 'Runs 1 to 8: not attached', people: ['Gary'], stamp: 'VIOLATION' }); } },
-        { t: 22, cast: ['Gary', 'Morgan'], caption: 'Two weeks later, the customer\'s coherent receiver finds the hops in the first hour.', shot: 'Conference room, a customer complaint email on the wall screen with a fast intensity trace attached. Morgan and Gary seen from behind.', draw: function (ctx, w, h, u) { dTrace(ctx, w, h, u, { label: 'Customer measurement: lasing frequency versus time', x: 'time', y: 'frequency', f: function (x) { return Math.sin(x * 23) > 0.4 ? 0.7 : 0.4; }, stamp: 'VIOLATION' }); } },
-        { t: 28, cast: ['Pat Reynolds'], caption: 'Replay: a fast photodiode, a resolution bandwidth narrower than the mode spacing, sweeps in both directions, and every run kept.', shot: 'Same station, now with a fast photodiode and oscilloscope wired into the procedure, the analyzer set to a narrow resolution, and nine printouts stapled to the sheet. Green check stamp.', draw: function (ctx, w, h, u) { dCard(ctx, w, h, u, { title: 'Fast detector. Enough resolution. Every run kept.', sub: 'Then decide', people: ['Pat Reynolds'], stamp: 'COMPLIANT', stampColor: 'ok' }); } }
+        { t: 0, cast: ['Gary'], caption: 'Outgoing inspection. Gary screens lasers with a swept optical spectrum analyzer and a power meter with a long averaging time.', shot: 'Inspection station, wide, cool fluorescent light. A rack with a spectrum analyzer, a power meter and a wavemeter; a tray of butterfly lasers in anti-static foam; inspection sheets on a clipboard. Gary from behind in a lab coat, gloved hand on the analyzer start-sweep key.', draw: function (ctx, w, h, u) { LMS_DRAW.fb.inspect(ctx, w, h, u, { variant: 'station' }); } },
+        { t: 8, cast: ['Gary'], caption: 'One laser hops between two adjacent modes. Most sweeps show only one of them. The power meter shows a steady average.', shot: 'Split screen. Left: fast photodiode trace on an oscilloscope switching between two levels. Right: the analyzer trace showing a single peak and the power meter showing a calm number. The oscilloscope is not connected in the inspection procedure; it is shown only to the viewer.', draw: function (ctx, w, h, u) { LMS_DRAW.fb.inspect(ctx, w, h, u, { variant: 'split' }); } },
+        { t: 15, cast: ['Gary'], caption: 'Some runs show a second peak. Gary treats them as analyzer artifacts, attaches the representative run, and the laser passes.', shot: 'Close on the inspection sheet: "Run 9 of 9: PASS" written in, runs 1 to 8 not recorded. Runs 1 to 8 go into a folder labeled analyzer artifacts. Red stamp.', draw: function (ctx, w, h, u) { LMS_DRAW.fb.inspect(ctx, w, h, u, { variant: 'runs', stamp: 'VIOLATION' }); } },
+        { t: 22, cast: ['Gary', 'Morgan'], caption: 'Two weeks later, the customer\'s coherent receiver finds the hops in the first hour.', shot: 'Conference room, a customer complaint email on the wall screen with a fast intensity trace attached. Morgan and Gary seen from behind.', draw: function (ctx, w, h, u) { LMS_DRAW.fb.inspect(ctx, w, h, u, { variant: 'customer', stamp: 'VIOLATION' }); } },
+        { t: 28, cast: ['Pat Reynolds'], caption: 'Replay: a fast photodiode, a resolution bandwidth narrower than the mode spacing, sweeps in both directions, and every run kept.', shot: 'Same station, now with a fast photodiode and oscilloscope wired into the procedure, the analyzer set to a narrow resolution, and nine printouts stapled to the sheet. Green check stamp.', draw: function (ctx, w, h, u) { LMS_DRAW.fb.inspect(ctx, w, h, u, { variant: 'replay', stamp: 'COMPLIANT', ok: true }); } }
       ],
       narration: ['Outgoing inspection. Gary screens lasers with a swept optical spectrum analyzer, and a power meter with a long averaging time.', 'One laser hops back and forth between two adjacent modes.', 'The analyzer can resolve the two modes. But it sweeps. It looks at each wavelength at a different moment, so a mode only appears if the laser is in it when the sweep passes that wavelength.', 'The power meter averages the two intensity levels into one calm number.', 'So most sweeps show one peak, some show two, and some show one peak that is lower than it should be.', 'Gary treats the second peaks as analyzer artifacts, and attaches the representative run. The laser passes.', 'Two weeks later, the customer finds the hops in the first hour.', 'Let us replay that. A fast photodiode. A resolution bandwidth narrower than the mode spacing. Sweeps in both directions. Every run kept.', 'Isolate, angle, and verify. Verify is the part with the instruments.'] },
     { type: 'chat', title: 'Incident 6: How It Unfolded', app: 'thread', skin: 'teams', meta: { header: '#outgoing-inspection', participants: [GARY, BY, MGR] },
@@ -975,7 +858,8 @@
           { from: GARY, text: 'A few had a second peak. They looked like analyzer artifacts, so I attached the representative run', side: 'right' },
           { from: BY, text: 'Runs 1 to 8 are data too. If the laser hops, some sweeps catch it and some do not', side: 'left' },
           { from: MGR, text: 'Let us keep the summary to representative runs so the review is not confusing. Yield is tight this quarter', side: 'left' }
-        ], narration: isThisOk('Gary attached only the run that looked representative, and the laser passed.') },
+        ], narration: isThisOk('Gary attached only the run that looked representative, and the laser passed.',
+          ['Read this outgoing inspection chat.', 'Then judge whether the way the laser passed is proper.']) },
     felt('The customer found the hops in the first hour, and attached a fast photodiode trace to the complaint',
       ['The customer\'s trace was very clear'],
       ['The customer\'s trace was very clear. Clarity is a gift, even when it arrives as a complaint.', 'Gary\'s inspection procedure will now include a fast photodiode. Gary will now include all runs.', 'For the record, measurement time traded for averaging is Quid Pro Quo Feedback. And the hops the customer found are Retaliation, delivered late.']),
@@ -1053,10 +937,10 @@
       ]),
       { type: 'video', title: 'Cold Open: Gary\'s Bench, Classified', duration: 30,
         keyframes: [
-          { t: 0, cast: ['Gary'], caption: 'Gary\'s bench. Every reflector on it belongs to a category. Gary does not know any of them.', shot: 'Optical bench, slow lateral dolly from left to right at bench height, 35 mm lens. Laser in a butterfly package, a chip on a stage, patch cords from an open drawer, a spectrum analyzer, a box with another institution\'s shipping label. Gary from behind, hands on hips.', draw: function (ctx, w, h, u) { dChip(ctx, w, h, u, { refl: [0.15, 0.35, 0.55, 0.75, 0.97], gary: true, label: 'Five reflectors, five owners' }); } },
-          { t: 8, cast: [], caption: 'Category labels appear one by one: Intracavity. External. Instrument-Originated. Third-Party. Intra-Group. Cross-Institutional.', shot: 'Same dolly, repeated. As the camera passes each item, a printed policy tag on a lanyard drops into frame beside it: on the chip, on the patch cord, on the analyzer input, on an isolator box, on the drawer, on the shipping box. Tags sway gently.', draw: function (ctx, w, h, u) { dCard(ctx, w, h, u, { title: 'Intracavity. External. Instrument. Third-Party.', sub: 'Intra-Group. Cross-Institutional.' }); } },
-          { t: 16, cast: ['Gary', 'Morgan'], caption: 'Morgan offers a trade: take out the isolator, get the insertion loss back. Quid Pro Quo.', shot: 'Two-shot from behind. Morgan holds out a small cylindrical isolator in one hand and a printed link budget in the other, as if weighing them. A tag reading Quid Pro Quo drops between them.', draw: function (ctx, w, h, u) { dCard(ctx, w, h, u, { title: 'Quid Pro Quo', sub: 'Isolation, in exchange for insertion loss', people: ['Gary', 'Morgan'], stamp: 'VIOLATION' }); } },
-          { t: 23, cast: ['Pat Reynolds'], caption: 'When nothing is angled and everything reflects: a Hostile Optical Environment. What the laser does next: Retaliation.', shot: 'Crane up to a top-down view of the whole bench. Every flat surface flashes in turn; arcs connect every pair. The laser at the left edge glows red and its spectrum on the monitor broadens. Host steps into frame. Green check stamp once the arcs fade.', draw: function (ctx, w, h, u) { dChip(ctx, w, h, u, { refl: [0.12, 0.3, 0.5, 0.7, 0.88, 0.97], hotFar: true, ruler: true, label: 'Six reflectors: fifteen cavities', stamp: 'COMPLIANT', stampColor: 'ok' }); } }
+          { t: 0, cast: ['Gary'], caption: 'Gary\'s bench. Every reflector on it belongs to a category. Gary does not know any of them.', shot: 'Optical bench, slow lateral dolly from left to right at bench height, 35 mm lens. Laser in a butterfly package, a chip on a stage, patch cords from an open drawer, a spectrum analyzer, a box with another institution\'s shipping label. Gary from behind, hands on hips.', draw: function (ctx, w, h, u) { LMS_DRAW.fb.benchTop(ctx, w, h, u, { stage: 'pan' }); } },
+          { t: 8, cast: [], caption: 'Category labels appear one by one: Intracavity. External. Instrument-Originated. Third-Party. Intra-Group. Cross-Institutional.', shot: 'Same dolly, repeated. As the camera passes each item, a printed policy tag on a lanyard drops into frame beside it: on the chip, on the patch cord, on the analyzer input, on an isolator box, on the drawer, on the shipping box. Tags sway gently.', draw: function (ctx, w, h, u) { LMS_DRAW.fb.benchTop(ctx, w, h, u, { stage: 'tags' }); } },
+          { t: 16, cast: ['Gary', 'Morgan'], caption: 'Morgan offers a trade: take out the isolator, get the insertion loss back. Quid Pro Quo.', shot: 'Two-shot from behind. Morgan holds out a small cylindrical isolator in one hand and a printed link budget in the other, as if weighing them. A tag reading Quid Pro Quo drops between them.', draw: function (ctx, w, h, u) { LMS_DRAW.fb.benchTop(ctx, w, h, u, { stage: 'trade', stamp: 'VIOLATION' }); } },
+          { t: 23, cast: ['Pat Reynolds'], caption: 'When nothing is angled and everything reflects: a Hostile Optical Environment. What the laser does next: Retaliation.', shot: 'Crane up to a top-down view of the whole bench. Every flat surface flashes in turn; arcs connect every pair. The laser at the left edge glows red and its spectrum on the monitor broadens. Host steps into frame. Green check stamp once the arcs fade.', draw: function (ctx, w, h, u) { LMS_DRAW.fb.benchTop(ctx, w, h, u, { stage: 'arcs', stamp: 'COMPLIANT', ok: true }); } }
         ],
         narration: ['This is Gary\'s bench.', 'Every reflector on it belongs to a category. Gary does not know any of them.', 'Intracavity. External. Instrument-Originated. Third-Party. Intra-Group. Cross-Institutional.', 'Morgan offers a trade. Take out the isolator, and get the insertion loss back. That is Quid Pro Quo.', 'When nothing is angled and everything reflects, that is a Hostile Optical Environment.', 'And what the laser does next is called Retaliation.', 'By the end of this chapter, you will be able to name all nine. You will hear them more than once. That is intentional.'] },
       { type: 'slide', layout: 'host', title: 'Why We Classify',
@@ -1067,7 +951,7 @@
       /* 1 Intracavity */
       catSlide(1, 'domestic',
         ['A far-end silicon nitride grating coupler on the same chip returned about 4 percent (-14 dB) into flip-chip lasers (Marinins et al., 2022); facet reflections made an amplifier lase (Bao et al., 2024)', 'A far-end grating coupler on the same chip returned about four percent of the light into flip-chip bonded lasers, as Marinins and coworkers found. And facet reflections made an erbium-doped amplifier lase, as Bao and coworkers reported.'],
-        [['The symptom survives every change outside the package', 'The symptom survives every change you make outside the package.'], ['The ripple period implies a length that fits on your chip, L = c / (2 n FSR)', 'The ripple period implies a length that fits on your own chip.'], ['Every unit of the same design shows it', 'Every unit of the same design shows it. It is not personal. It is in the layout.']],
+        [['The symptom survives every change outside the package', 'The symptom survives every change you make outside the package.'], ['The ripple period implies a length that fits on your chip, $L = c/(2n\\,\\mathrm{FSR})$','The ripple period implies a length that fits on your own chip.'], ['Every unit of the same design shows it', 'Every unit of the same design shows it. It is not personal. It is in the layout.']],
         'the chip or package designer'),
       { type: 'chat', title: 'Category 1 in the Workplace', app: 'phone', skin: 'signal', meta: { header: 'Messages', participants: [GARY, BY] },
         messages: [
@@ -1075,7 +959,8 @@
           { from: BY, text: 'Did the period change at all?', side: 'left' },
           { from: GARY, text: 'No, identical on all six units. I will try the cords from the other bench tomorrow', side: 'right' },
           { from: BY, text: 'If it survives every swap and shows on every unit, it is probably on the chip. Measure the distances on the layout', side: 'left' }
-        ], narration: isThisOk('Gary is about to swap a second set of patch cords to fix a ripple that has the same period on every unit.') },
+        ], narration: isThisOk('Gary is about to swap a second set of patch cords to fix a ripple that has the same period on every unit.',
+          ['Read this message exchange between Gary and Dana.', 'Then judge whether Gary\'s next step is proper.']) },
       classify('A laser flip-chip bonded on a silicon photonics chip shows a light versus current ripple. It does not change when any fiber or instrument is swapped, and it appears on every unit of the design. The ripple period matches the distance from the laser to an on-chip grating coupler.', 'domestic', [
         ['external', 'Swapping every fiber and instrument did not change the ripple, so the reflector is not on the path you connected.'],
         ['intragroup', 'Nothing shared by the group was involved. Every unit of the design shows it, including units nobody in the group has touched.'],
@@ -1084,7 +969,7 @@
 
       /* 2 External */
       catSlide(2, 'external',
-        ['A flat end of fused silica, n = 1.444 (Malitson, 1965), reflects about 3.3 percent (-14.8 dB) back along the fiber', 'A flat end of fused silica, with an index of about one point four four four, reflects about three point three percent of the light back along the fiber. A lensed fiber, a lens, a detector, and the device under test all have surfaces.'],
+        ['A flat end of fused silica, $n = 1.444$ (Malitson, 1965), reflects about 3.3 percent (-14.8 dB) back along the fiber', 'A flat end of fused silica, with an index of about one point four four four, reflects about three point three percent of the light back along the fiber. A lensed fiber, a lens, a detector, and the device under test all have surfaces.'],
         [['The symptom changes when you move, bend or disconnect a fiber', 'The symptom changes when you move, bend, or disconnect a fiber.'], ['The implied length matches a fiber or free-space distance on your bench', 'The implied cavity length matches a fiber or free-space distance on your bench.'], ['It improves with index-matching gel, an angled connector, or an isolator', 'It improves with index-matching gel, an angled connector, or an isolator in the right direction.']],
         'the owner of the setup'),
       { type: 'chat', title: 'Category 2 in the Workplace', app: 'thread', skin: 'slack', meta: { header: '#test-bench-2', participants: [GARY, BY] },
@@ -1093,7 +978,8 @@
           { from: BY, text: 'Could be the device facet. It is a mirror too, so you are tuning a cavity with the stage', side: 'left' },
           { from: GARY, text: 'Possible, but it settles once aligned, so I will just measure at the best spot', side: 'right' },
           { from: BY, text: 'The best spot is a point on the cavity fringe', side: 'left' }
-        ], narration: isThisOk('Gary plans to measure at the alignment position where the cavity happens to look best.') },
+        ], narration: isThisOk('Gary plans to measure at the alignment position where the cavity happens to look best.',
+          ['Read this team chat from test bench two.', 'Then judge whether Gary\'s plan is proper.']) },
       classify('The output of a fiber-coupled laser jumps whenever Gary moves a lensed fiber in front of the facet of the device under test. The laser has no isolator.', 'external', [
         ['domestic', 'The reflector here is the facet of the device under test and the lensed fiber, both outside the laser package. Intracavity Feedback lives inside your own chip or package.'],
         ['instrument', 'The lensed fiber and the device under test are not measurement instruments. They are the optical path you connected.'],
@@ -1114,11 +1000,11 @@
         'the owner of the measurement setup, and the instrument custodian'),
       { type: 'chat', title: 'Category 3 in the Workplace', app: 'email', skin: 'mail', meta: { header: 'Inbox', subject: 'Linewidth differs between setup A and setup B', participants: [GARY, BY] },
         messages: [
-          { from: GARY, text: 'Hi Dana,\n\nSame laser, two linewidth setups, two answers. Setup B reads noticeably broader. I will use A for the report and flag B for maintenance.\n\nGary', side: 'right', to: [BY], date: '2026-11-14 11:02', subject: 'Linewidth differs between setup A and setup B', attachments: [{ name: 'linewidth_A_vs_B_2026-11-14.xlsx', size: '96 KB' }] },
-          { from: BY, text: 'Before flagging B: does A have an input isolator and B not? If so, B is measuring the laser plus its own reflections, and that tells us something about B.', side: 'left', to: [GARY], date: '2026-11-14 11:20' },
-          { from: GARY, text: 'Yes, B has no isolator. So B is the faulty one?', side: 'right', to: [BY], date: '2026-11-14 11:26' },
-          { from: BY, text: 'B is the honest one. Add an isolator to B and compare again.\n\nDana', side: 'left', to: [GARY], date: '2026-11-14 11:31' }
-        ], narration: isThisOk('Gary is about to flag the setup without an isolator as faulty, instead of asking why the two setups disagree.') },
+          { from: GARY, text: 'Hi Dana,\n\nSame laser, two linewidth setups, two answers. Setup B reads noticeably broader. A has an input isolator and B does not, so B may be measuring the laser plus its own reflections.\n\nBefore I report either number, I would like to add an isolator to B and compare again. Could I borrow yours?\n\nGary', side: 'right', to: [BY], date: '2026-11-14 11:02', subject: 'Linewidth differs between setup A and setup B', attachments: [{ name: 'linewidth_A_vs_B_2026-11-14.xlsx', size: '96 KB' }] },
+          { from: BY, text: 'Of course, it is in the second drawer, labelled. If the two agree once B is isolated, the difference was B feeding back into the laser.\n\nDana', side: 'left', to: [GARY], date: '2026-11-14 11:20' },
+          { from: GARY, text: 'Thanks. I will log the comparison either way.', side: 'right', to: [BY], date: '2026-11-14 11:26' }
+        ], narration: isThisOk('Gary treated the disagreement between the two setups as a finding, and planned the isolator comparison before reporting any number.',
+          ['Read this email exchange about two linewidth setups that disagree.', 'Then judge whether Gary\'s plan is proper.']) },
       classify('The same laser reads a broader linewidth on the setup without an input isolator than on the setup with one. Nothing else differs.', 'instrument', [
         ['thirdparty', 'No supplier part failed to meet an assumption. The difference is an isolator that the measurement setup does not have.'],
         ['external', 'The reflections do come from outside the laser, but the defining feature is that they come from the measurement equipment itself, and they appear only while measuring.'],
@@ -1138,7 +1024,8 @@
           { from: GARY, text: 'The label says 1310. We run at 1550, but I assumed it would still be mostly fine', side: 'right' },
           { from: BY, text: 'Faraday rotation depends on wavelength. At 1550 it will not be 45 degrees, so the isolation drops', side: 'left' },
           { from: MGR, text: 'The 1550 version has a long lead time. Can we live with these for now?', side: 'left' }
-        ], narration: isThisOk('An isolator specified for another band was installed to avoid a long lead time, without measuring its isolation at the operating wavelength.') },
+        ], narration: isThisOk('An isolator specified for another band was installed to avoid a long lead time, without measuring its isolation at the operating wavelength.',
+          ['Read this purchasing chat about the new isolators.', 'Then judge whether the way they are being used is proper.']) },
       classify('An isolator labelled for the 1310 nm band is installed in a 1550 nm link. Backward light now reaches the laser.', 'thirdparty', [
         ['qpq', 'Nobody traded isolation for anything on purpose. The part was assumed to work at a wavelength it was not built for.'],
         ['instrument', 'The isolator is not measurement equipment. It is a purchased component on the optical path.'],
@@ -1154,16 +1041,17 @@
 
       /* 5 Intra-Group */
       catSlide(5, 'intragroup',
-        ['An open, flat-polished port on a shared splitter reflects about 3.3 percent of what reaches it (Fresnel, n = 1.444) back through the splitter toward every laser on that bench', 'An open, flat-polished port on a shared splitter reflects about three point three percent of the light that reaches it, back through the splitter, toward every laser connected to it.'],
+        ['An open, flat-polished port on a shared splitter reflects about 3.3 percent of what reaches it (Fresnel, $n = 1.444$) back through the splitter toward every laser on that bench', 'An open, flat-polished port on a shared splitter reflects about three point three percent of the light that reaches it, back through the splitter, toward every laser connected to it.'],
         [['Nobody knows who connected it', 'Nobody knows who connected it.'], ['The setup "has always been like that"', 'The setup has always been like that.'], ['Patch cords in the shared drawer have no labels, or labels in a previous student\'s handwriting', 'The patch cords in the shared drawer have no labels, or labels in the handwriting of a student who graduated.']],
         'the group lab manager, and every member of the group'),
       { type: 'chat', title: 'Category 5 in the Workplace', app: 'thread', skin: 'slack', meta: { header: '#group-lab', participants: [GARY, BY, MGR] },
         messages: [
-          { from: GARY, text: 'Who owns the 1x4 splitter on bench 3? Two ports are open', side: 'right' },
+          { from: GARY, text: 'Who owns the 1x4 splitter on bench 3? Two ports are open, with flat connectors', side: 'right' },
           { from: BY, text: 'It was set up before I joined. I think it has always been like that', side: 'left' },
-          { from: GARY, text: 'Lasers on bench 3 have always been a bit noisy too', side: 'right' },
-          { from: MGR, text: 'Bench 3 works for most measurements. Let us not reconfigure a shared bench mid-quarter', side: 'left' }
-        ], narration: isThisOk('Two open ports on a shared splitter have been reflecting into every laser on the bench, and nobody wants to touch a shared setup.') },
+          { from: GARY, text: 'Every laser on bench 3 sees those two reflections. I would like to put angled terminators on both ports at 3 pm today and note it in the bench log. Any objections?', side: 'right' },
+          { from: MGR, text: 'No objection. Please also add the splitter to the bench checklist, with an owner', side: 'left' }
+        ], narration: isThisOk('Gary found two open ports on a shared splitter, and announced the fix and the log entry before touching the shared bench.',
+          ['Read this group lab chat about a shared splitter on bench three.', 'Then judge whether Gary\'s response is proper.']) },
       classify('A shared splitter on the group\'s test bench has two ports left open with flat connectors. It was set up by a student who has since graduated. Every laser on that bench is a little noisier than elsewhere.', 'intragroup', [
         ['external', 'The reflectors are outside each laser package, yes. But the defining feature is that the resource is shared inside the group and nobody owns it. Primary category, please.'],
         ['hostile', 'Two identifiable open ports explain it. A Hostile Optical Environment has reflectors everywhere, with no single one to blame.'],
@@ -1172,16 +1060,16 @@
 
       /* 6 Cross-Institutional */
       catSlide(6, 'crossinst',
-        ['A partner\'s chip arrives with flat, uncoated facets although the email said they were angled. A cleaved silicon facet, n = 3.48 (Li, 1980), reflects about 31 percent as a plane-wave estimate', 'A partner\'s chip arrives with flat, uncoated facets, although the email said they would be angled. A cleaved silicon facet reflects about thirty-one percent, as a plane-wave estimate.'],
+        ['A partner\'s chip arrives with flat, uncoated facets although the email said they were angled. A cleaved silicon facet, $n = 3.48$ (Li, 1980), reflects about 31 percent as a plane-wave estimate', 'A partner\'s chip arrives with flat, uncoated facets, although the email said they would be angled. A cleaved silicon facet reflects about thirty-one percent, as a plane-wave estimate.'],
         [['The specification is an email that says "should be fine"', 'The specification is an email that says, should be fine.'], ['Nobody wrote down the return loss', 'Nobody wrote down the return loss.'], ['"The other group already measured it"', 'The other group already measured it. With their setup. Which you have not seen.']],
         'both principal investigators, in writing'),
       { type: 'chat', title: 'Category 6 in the Workplace', app: 'email', skin: 'mail', meta: { header: 'Inbox', subject: 'RE: Chips shipped (angled facets as discussed)', participants: [GARY, BY] },
         messages: [
-          { from: GARY, text: 'Hi Dana,\n\nThe chips from the partner group arrived. Under the scope the facets look flat to me, and I do not see a coating. Their email said angled. I will start measuring and note "facets as received" in the log.\n\nGary', side: 'right', to: [BY], date: '2026-11-15 14:12', subject: 'RE: Chips shipped (angled facets as discussed)', attachments: [{ name: 'facet_inspection_2026-11-15.jpg', size: '1.4 MB' }] },
-          { from: BY, text: 'Is the angle in the agreement, or only in the email?', side: 'left', to: [GARY], date: '2026-11-15 14:30' },
-          { from: GARY, text: 'The agreement just says "standard facets". I do not want to hold things up over a definition.', side: 'right', to: [BY], date: '2026-11-15 14:41' },
-          { from: BY, text: 'Then let us measure the return loss, write it down, and send it to both sides before we build on it.\n\nDana', side: 'left', to: [GARY], date: '2026-11-15 14:55' }
-        ], narration: isThisOk('A collaboration specified "standard facets", nobody defined the return loss, and Gary plans to note the facets as received and proceed.') },
+          { from: GARY, text: 'Hi Dana,\n\nThe chips from the partner group arrived. Under the scope the facets look flat to me, and I do not see a coating. Their email said angled, and the agreement only says "standard facets".\n\nBefore any device measurements, I will measure the return loss at our wavelength, log it, and send it to both principal investigators, with a proposal to put return loss into the specification.\n\nGary', side: 'right', to: [BY], date: '2026-11-15 14:12', subject: 'RE: Chips shipped (angled facets as discussed)', attachments: [{ name: 'facet_inspection_2026-11-15.jpg', size: '1.4 MB' }] },
+          { from: BY, text: 'Good. Until then, keep an isolator between the laser and the chip.\n\nDana', side: 'left', to: [GARY], date: '2026-11-15 14:30' },
+          { from: GARY, text: 'It is already in. I will copy you on the email to both sides.', side: 'right', to: [BY], date: '2026-11-15 14:41' }
+        ], narration: isThisOk('Gary found a gap in the collaboration specification, and will measure the reflection and tell both sides in writing before building on it.',
+          ['Read this email exchange about chips that arrived from a partner group.', 'Then judge whether Gary\'s plan is proper.']) },
       classify('Chips from a partner university arrive with flat, uncoated facets, although an email promised angled facets. The collaboration agreement never mentions return loss.', 'crossinst', [
         ['thirdparty', 'A partner university is not a supplier with a datasheet. The defining feature is a collaboration in which the reflections were never specified.'],
         ['domestic', 'The facets are on a chip from another institution. It will become part of your package, but the specification gap is between institutions.'],
@@ -1198,7 +1086,7 @@
 
       /* 7 Quid Pro Quo */
       catSlide(7, 'qpq',
-        ['Figures reported for one integrated isolator: more than 25 dB isolation, less than 1.5 dB insertion loss (Lapointe et al., 2025). Removing such an isolator wins back at most 1.5 dB and gives up at least 25 dB of protection', 'Here are example figures for one integrated isolator: more than twenty-five decibels of isolation, and less than one and a half decibels of insertion loss, as reported by Lapointe and coworkers. Removing such an isolator wins back at most one and a half decibels, and gives up at least twenty-five.'],
+        ['Figures reported for one integrated isolator: more than 25 dB isolation, less than 1.5 dB insertion loss projected (Lapointe et al., 2023). Removing such an isolator wins back at most 1.5 dB and gives up at least 25 dB of protection', 'Here are example figures for one integrated isolator: more than twenty-five decibels of isolation, and less than one and a half decibels of insertion loss, as projected by Lapointe and coworkers. Removing such an isolator wins back at most one and a half decibels, and gives up at least twenty-five.'],
         [['Any sentence that begins "If you just remove the isolator"', 'Any sentence that begins, if you just remove the isolator.'], ['"We will put it back after the demo"', 'We will put it back after the demo.'], ['Averaging time increased to make a measurement faster to pass', 'Averaging time increased to make a measurement easier to pass. Averaging is time traded for truth.']],
         'the person who proposed the trade, and their manager',
         ['Please note. A Quid Pro Quo offer does not need to be explicit. A link budget that only closes without the isolator is an offer.']),
@@ -1207,7 +1095,8 @@
           { from: MGR, text: 'The isolator costs us the margin we need. Take it out for the demo, we can add it back for production', side: 'left' },
           { from: GARY, text: 'And the reflections from their board?', side: 'right' },
           { from: MGR, text: 'It is one afternoon. Also, can you increase the averaging on the noise test? It passes marginally and the review is tomorrow', side: 'left' }
-        ], narration: isThisOk('Morgan suggested trading the isolator for insertion loss, and more averaging for a passing noise test.') },
+        ], narration: isThisOk('Morgan suggested trading the isolator for insertion loss, and more averaging for a passing noise test.',
+          ['Read this message exchange between Morgan and Gary, the day before a demo.', 'This time, judge whether Morgan\'s suggestions are proper.']) },
       classify('Morgan tells Gary that if he removes the isolator, the link budget closes, and that the isolator can go back in after the demo.', 'qpq', [
         ['retaliation', 'Retaliation is the laser\'s response, and it may well follow. But the defining feature here is the offer: isolation in exchange for insertion loss.'],
         ['intragroup', 'Morgan is in Gary\'s group, yes. But the defining feature is not a shared resource. It is a trade.'],
@@ -1216,17 +1105,19 @@
 
       /* 8 Hostile Optical Environment */
       catSlide(8, 'hostile',
-        ['Every pair of reflectors on a path is a cavity: N reflectors make N (N - 1) / 2 of them. Six flat surfaces make fifteen cavities, each with its own period c / (2 n L)', 'Every pair of reflectors on a path is a cavity. N reflectors make N times N minus one over two of them. Six flat surfaces make fifteen cavities, each with its own ripple period.'],
+        ['Every pair of reflectors on a path is a cavity: $N$ reflectors make $N(N-1)/2$ of them. Six flat surfaces make fifteen cavities, each with its own period $c/(2nL)$','Every pair of reflectors on a path is a cavity. N reflectors make N times N minus one over two of them. Six flat surfaces make fifteen cavities, each with its own ripple period.'],
         [['Ripples at several periods at once', 'Ripples at several periods at once.'], ['The symptom moves when anything on the bench is touched', 'The symptom moves when anything on the bench is touched. Including the bench.'], ['Nothing on the bench is angled, coated, gelled or isolated', 'Nothing on the bench is angled, coated, gelled, or isolated.']],
         'everyone who uses the bench, coordinated by the lab manager',
         ['A Hostile Optical Environment is not one bad reflector. It is a culture.']),
       { type: 'chat', title: 'Category 8 in the Workplace', app: 'call', skin: 'meeting', meta: { header: 'Video call', participants: [GARY, BY, MGR] },
         messages: [
-          { from: GARY, text: 'I see ripples at several periods. I will use the one closest to the expected device length', side: 'right' },
-          { from: BY, text: 'Flat cleaves, flat connectors, an uncoated lens, a flat detector window, an open splitter port. Any pair can be a cavity', side: 'left' },
-          { from: MGR, text: 'Every bench in the building looks like that. Pick the most likely one and move on', side: 'left' },
-          { from: BY, text: 'That is why we cannot tell which one is the device', side: 'left' }
-        ], narration: isThisOk('Gary is choosing the ripple that matches his expectation, on a bench where every surface is flat, and his manager says every bench is like that.') },
+          { from: GARY, text: 'I see ripples at several periods. Before I pick one: flat cleaves, flat connectors, an uncoated lens, a flat detector window, an open splitter port', side: 'right' },
+          { from: GARY, text: 'Any pair of those is a cavity, so the ripple closest to the expected device length is not evidence. I will gel or angle them one at a time and see which ripple goes away', side: 'right' },
+          { from: MGR, text: 'Every bench in the building looks like that', side: 'left' },
+          { from: GARY, text: 'Then I will send the list to the lab manager as well', side: 'right' },
+          { from: BY, text: 'I can help with the connectors', side: 'left' }
+        ], narration: isThisOk('Gary listed every reflector on the bench, did not pick the ripple that matched his expectation, and raised the bench with the lab manager.',
+          ['Watch this video call about the ripples on Gary\'s spectrum.', 'Then judge whether Gary\'s approach is proper.']) },
       classify('On Gary\'s bench: flat-cleaved fibers, flat connectors, an uncoated lens, a flat detector window and an open splitter port. The spectrum shows ripples at several periods at once, and they all move when someone leans on the table.', 'hostile', [
         ['external', 'Each reflector is External, yes. But with reflectors everywhere and ripples at several periods, there is no single reflector to blame. That is the defining feature of another category.'],
         ['intragroup', 'Some of these may be shared resources. But the defining feature is that everything reflects, and no single reflector explains it.'],
@@ -1252,7 +1143,8 @@
           { from: BY, text: 'It is responding to feedback. A new laser on the same path will behave the same way', side: 'left' },
           { from: GARY, text: 'Should I log it as a laser failure?', side: 'right' },
           { from: BY, text: 'Log the reflector as the cause, and the laser response as the symptom', side: 'left' }
-        ], narration: isThisOk('Morgan wants to replace a laser that is responding to feedback, instead of removing the feedback.') },
+        ], narration: isThisOk('Morgan wants to replace a laser that is responding to feedback, instead of removing the feedback.',
+          ['Read this all-hands chat about an unstable laser on bench two.', 'Then judge whether Morgan\'s proposal is proper.']) },
       classify('After a flat connector is added close to the laser, the line broadens dramatically and the laser becomes noisy. Moving the connector a little does not help.', 'retaliation', [
         ['external', 'The connector is indeed External Feedback, and it is reported as the source. But this question asks about the laser\'s response, not the source: a dramatic broadening that does not improve when the reflector moves. Responses have their own category.'],
         ['hostile', 'One connector was added. A Hostile Optical Environment has reflectors everywhere. And in any case, this question asks about the laser\'s response, not the source.'],
@@ -1315,7 +1207,7 @@
     q('A high-Q ring shows a doublet. What does a single-Lorentzian fit do?', 'It misreports Q, because the apparent width includes the splitting',
       [['It reports Q accurately and conservatively', 'The single Lorentzian width includes the splitting from backscatter coupling, so it is not a measure of loss. Fit a coupled-mode doublet model.']]),
     q('What is one published source of resonance splitting in rings written by electron-beam lithography?', 'Writing discontinuities (jumps and pattern segmentation) along the circumference',
-      [['The color of the resist', 'Hausmann and coworkers found that discontinuities in electron beam writing along the ring circumference produced split resonances, and continuous writing removed them.']]),
+      [['The color of the resist', 'Hausmann and coworkers report that earlier electron beam writing left periodic scatterers along the ring circumference that split the resonances, and suggest that continuous writing removed them.']]),
     q('Why can a thermally locked ring suddenly snap away from its lock?', 'Past a point, self-heating flips from negative to positive feedback; the balance point must be calibrated with a hot-to-cold sweep',
       [['Thermal locks are unconditionally stable', 'Kramnik and coworkers describe thermally locked rings sitting on the edge of instability. Past a point, self-heating switches from stabilizing to destabilizing, and the resonance snaps to shorter wavelength.']]),
     q('A wavemeter shows a steady wavelength. Can you conclude the laser is not hopping?', 'No. A hop faster than the update rate can be averaged or missed; check with a fast detector',
@@ -1416,204 +1308,7 @@
 
   var widgets = {};
 
-  /* ---- (a) Parasitic Fabry-Perot: lossless Airy transmission, FSR = c/(2 n L) ---- */
-  widgets.fabryPerot = function (root, params, api) {
-    var CL = 299792458, LAM = 1550e-9;
-    var s = { r1: -14, r2: -30, logL: Math.log10(3), ng: 4.0, span: 200 }; // L in mm (log10), span in GHz
-    var touched = {}, done = false;
-    var wrap = shell(root);
-    el('div', 'fbw-tag', 'Lossless two-mirror etalon. T = (1 - R1)(1 - R2) / (1 + R1 R2 - 2 sqrt(R1 R2) cos(2 pi f / FSR)). Frequency offset is relative to an arbitrary transmission peak.', wrap);
-    var fit = canvas(wrap, 240);
-    var rd = el('div', 'fbw-read', null, wrap);
-    var g = el('div', 'fbw-grid', null, wrap);
-    var unh = [];
-    function mark(k) { touched[k] = 1; unh.forEach(function (f) { f(); }); unh = []; if (!done && Object.keys(touched).length >= 2) { done = true; api.complete(); } }
-    var sR1 = slider(g, 'Reflector 1, R1', -60, -3, 1, s.r1, function (v) { return v + ' dB'; }, function (v) { s.r1 = v; mark('r1'); draw(); });
-    slider(g, 'Reflector 2, R2', -60, -3, 1, s.r2, function (v) { return v + ' dB'; }, function (v) { s.r2 = v; mark('r2'); draw(); });
-    var sL = slider(g, 'Spacing L', -2, 3, 0.01, s.logL, function (v) { var mm = Math.pow(10, v); return mm < 1 ? (mm * 1000).toPrecision(3) + ' um' : mm.toPrecision(3) + ' mm'; }, function (v) { s.logL = v; mark('L'); draw(); });
-    slider(g, 'Group index n', 1, 4.5, 0.01, s.ng, function (v) { return v.toFixed(2); }, function (v) { s.ng = v; mark('ng'); draw(); });
-    var row = el('div', 'fbw-row', '<span class="fbw-tag">Plot span</span>', wrap);
-    [20, 200, 2000, 20000].forEach(function (sp) {
-      var b = el('button', 'fbw-btn' + (sp === s.span ? ' on' : ''), sp >= 1000 ? (sp / 1000) + ' THz' : sp + ' GHz', row); b.type = 'button';
-      b.addEventListener('click', function () { s.span = sp; Array.prototype.forEach.call(row.querySelectorAll('button'), function (x) { x.classList.remove('on'); }); b.classList.add('on'); mark('span'); draw(); });
-    });
-    var inv = el('div', 'fbw-row', '<span class="fbw-tag">Ripple-to-length calculator</span> observed period <input type="number" min="0" step="any" value="100"> pm at 1550 nm, with the group index above, implies spacing <b class="fbw-invout"></b>', wrap);
-    var invIn = inv.querySelector('input'), invOut = inv.querySelector('.fbw-invout');
-    invOut.style.color = 'var(--accent,#4ea1ff)';
-    invIn.addEventListener('input', function () { mark('inv'); draw(); });
-    unh.push(hint(sR1.box, 'drag'));
-    unh.push(hint(sL.box, 'then drag'));
-
-    function draw() {
-      var o = fit(), ctx = o.ctx, w = o.w, h = o.h, c = apiCols(api);
-      ctx.fillStyle = c.panel; ctx.fillRect(0, 0, w, h);
-      var R1 = Math.pow(10, s.r1 / 10), R2 = Math.pow(10, s.r2 / 10), r = Math.sqrt(R1 * R2);
-      var L = Math.pow(10, s.logL) * 1e-3, fsr = CL / (2 * s.ng * L), fsrG = fsr / 1e9;
-      var Tmax = (1 - R1) * (1 - R2) / Math.pow(1 - r, 2), Tmin = (1 - R1) * (1 - R2) / Math.pow(1 + r, 2);
-      var dbMax = 10 * Math.log10(Tmax), dbMin = 10 * Math.log10(Tmin), mid = (dbMax + dbMin) / 2, half = Math.max((dbMax - dbMin) / 2 * 1.25, 0.005);
-      var A = axes(ctx, w, h, [-s.span / 2, s.span / 2], [mid - half, mid + half], 'frequency offset (GHz)', 'T (dB)', c);
-      var N = 1400, under = fsrG < s.span / 250;
-      if (under) {
-        ctx.fillStyle = c.accent; ctx.globalAlpha = 0.35; ctx.fillRect(A.L, A.Y(dbMax), A.R - A.L, A.Y(dbMin) - A.Y(dbMax)); ctx.globalAlpha = 1;
-        ctx.fillStyle = c.fg; ctx.font = '12px system-ui, sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-        ctx.fillText('Ripple period finer than this plot can sample: shown as its envelope. An instrument this coarse averages it.', (A.L + A.R) / 2, A.T + 14);
-      } else {
-        ctx.strokeStyle = c.accent; ctx.lineWidth = 1.6; ctx.beginPath();
-        for (var i = 0; i < N; i++) {
-          var f = -s.span / 2 + s.span * i / (N - 1), ph = 2 * Math.PI * f / fsrG;
-          var T = (1 - R1) * (1 - R2) / (1 + R1 * R2 - 2 * r * Math.cos(ph)), y = A.Y(10 * Math.log10(T));
-          if (i) ctx.lineTo(A.X(f), y); else ctx.moveTo(A.X(f), y);
-        }
-        ctx.stroke();
-      }
-      var r1 = Math.sqrt(R1), r2 = Math.sqrt(R2), Rmax = Math.pow(r1 + r2, 2) / Math.pow(1 + r1 * r2, 2);
-      var dlam = LAM * LAM * fsr / CL;
-      var pp = 20 * Math.log10((1 + r) / (1 - r));
-      rd.innerHTML = '<div><span>FSR </span><b>' + fmtN(fsrG) + ' GHz</b></div><div><span>Period at 1550 nm </span><b>' + fmtN(dlam * 1e12) + ' pm</b></div>' +
-        '<div><span>Ripple peak-to-valley </span><b>' + fmtN(pp) + ' dB</b></div><div><span>sqrt(R1 R2) </span><b>' + fmtN(r) + '</b></div>' +
-        '<div><span>Worst-case reflection back </span><b>' + (10 * Math.log10(Rmax)).toFixed(1) + ' dB</b></div>';
-      var pv = parseFloat(invIn.value);
-      invOut.textContent = pv > 0 ? (function () { var Lm = LAM * LAM / (2 * s.ng * pv * 1e-12); return Lm < 1e-3 ? (Lm * 1e6).toPrecision(3) + ' um' : Lm < 1 ? (Lm * 1e3).toPrecision(3) + ' mm' : Lm.toPrecision(3) + ' m'; })() : 'N/A';
-    }
-    var onR = function () { draw(); }; window.addEventListener('resize', onR);
-    api.onCleanup(function () { window.removeEventListener('resize', onR); });
-    draw();
-  };
-
-  /* ---- (b) Mode hop with hysteresis: illustrative, normalized ---- */
-  widgets.modeHop = function (root, params, api) {
-    var TMAX = 10, AC = 0.25;
-    var s = { af: 0.8, h: 0.2, T: 0, m: 0, up: [], down: [], hopsUp: [], hopsDown: [], didUp: false, didDown: false, busy: false };
-    var done = false, raf = 0;
-    var wrap = shell(root);
-    el('div', 'fbw-tag', 'Illustrative model. Normalized units: frequency in cavity free spectral ranges, temperature in arbitrary units. The laser stays in its mode until the filter peak is more than (0.5 + margin) away, then jumps to the mode nearest the filter.', wrap);
-    var fit1 = canvas(wrap, 150), fit2 = canvas(wrap, 220);
-    var rd = el('div', 'fbw-read', null, wrap);
-    var row = el('div', 'fbw-row', null, wrap);
-    var bUp = el('button', 'fbw-btn', 'Sweep up', row); bUp.type = 'button';
-    var bDn = el('button', 'fbw-btn', 'Sweep down', row); bDn.type = 'button';
-    var bClr = el('button', 'fbw-btn', 'Clear traces', row); bClr.type = 'button';
-    var g = el('div', 'fbw-grid', null, wrap);
-    var sT = slider(g, 'Temperature (manual)', 0, TMAX, 0.01, 0, function (v) { return v.toFixed(2); }, function (v) { moveTo(v, null); draw(); });
-    slider(g, 'Filter tuning rate / comb tuning rate', 1.4, 8, 0.1, s.af / AC, function (v) { return v.toFixed(1) + 'x'; }, function (v) { s.af = v * AC; reset(); draw(); });
-    slider(g, 'Hysteresis margin', 0, 0.45, 0.01, s.h, function (v) { return v.toFixed(2) + ' FSR'; }, function (v) { s.h = v; reset(); draw(); });
-    var unUp = hint(bUp, 'start here'), unDn = null;
-
-    function nuF(T) { return s.af * T; }
-    function nearest(T) { return Math.round(nuF(T) - AC * T); }
-    function stepT(T, rec, hops) {
-      var d = s.m + AC * T - nuF(T);
-      if (Math.abs(d) > 0.5 + s.h) { s.m = nearest(T); if (hops) hops.push(T); }
-      s.T = T; if (rec) rec.push([T, s.m + AC * T]);
-    }
-    function moveTo(T, rec, hops) { var n = Math.max(1, Math.ceil(Math.abs(T - s.T) / 0.005)), T0 = s.T; for (var i = 1; i <= n; i++) stepT(T0 + (T - T0) * i / n, rec, hops); }
-    function reset() { s.up = []; s.down = []; s.hopsUp = []; s.hopsDown = []; s.T = 0; s.m = nearest(0); sT.set(0); }
-    function sweep(dir) {
-      if (s.busy) return; s.busy = true;
-      var rec, hops;
-      if (dir > 0) { s.up = []; s.hopsUp = []; rec = s.up; hops = s.hopsUp; s.T = 0; s.m = nearest(0); }
-      else { s.down = []; s.hopsDown = []; rec = s.down; hops = s.hopsDown; if (Math.abs(s.T - TMAX) > 1e-9) { s.T = TMAX; s.m = nearest(TMAX); } }
-      rec.push([s.T, s.m + AC * s.T]);
-      var t0 = null, from = s.T, to = dir > 0 ? TMAX : 0, dur = 3500;
-      function frame(ts) {
-        if (t0 === null) t0 = ts; var k = Math.min(1, (ts - t0) / dur);
-        moveTo(from + (to - from) * k, rec, hops); sT.set(s.T); draw();
-        if (k < 1) raf = requestAnimationFrame(frame);
-        else {
-          s.busy = false;
-          if (dir > 0) { s.didUp = true; if (unUp) { unUp(); unUp = null; } if (!s.didDown && !unDn) unDn = hint(bDn, 'now sweep down'); }
-          else { s.didDown = true; if (unDn) { unDn(); unDn = null; } }
-          if (s.didUp && s.didDown && !done) { done = true; api.complete(); }
-        }
-      }
-      raf = requestAnimationFrame(frame);
-    }
-    bUp.addEventListener('click', function () { sweep(1); });
-    bDn.addEventListener('click', function () { sweep(-1); });
-    bClr.addEventListener('click', function () { if (!s.busy) { reset(); draw(); } });
-
-    function draw() {
-      var c = apiCols(api);
-      var ymax = Math.max(s.af, AC) * TMAX + 1.2, ymin = -1.2;
-      /* spectrum panel */
-      var o = fit1(), ctx = o.ctx; ctx.fillStyle = c.panel; ctx.fillRect(0, 0, o.w, o.h);
-      var A = axes(ctx, o.w, o.h, [ymin, ymax], [0, 1.1], 'optical frequency (cavity FSR units)', 'gain', c);
-      var fc = nuF(s.T), wd = 0.9;
-      ctx.strokeStyle = c.warn; ctx.lineWidth = 1.6; ctx.beginPath();
-      for (var i = 0; i <= 400; i++) { var x = ymin + (ymax - ymin) * i / 400, yv = lor(x, fc, wd); if (i) ctx.lineTo(A.X(x), A.Y(yv)); else ctx.moveTo(A.X(x), A.Y(yv)); }
-      ctx.stroke();
-      for (var m = Math.floor(ymin - AC * s.T) - 1; m <= Math.ceil(ymax - AC * s.T) + 1; m++) {
-        var nu = m + AC * s.T; if (nu < ymin || nu > ymax) continue;
-        var las = m === s.m; ctx.strokeStyle = las ? c.accent : c.muted; ctx.lineWidth = las ? 3.5 : 1.2;
-        ctx.beginPath(); ctx.moveTo(A.X(nu), A.Y(0)); ctx.lineTo(A.X(nu), A.Y(las ? 1.05 : 0.12 + 0.3 * lor(nu, fc, wd))); ctx.stroke();
-      }
-      /* trajectory panel */
-      var o2 = fit2(), c2 = o2.ctx; c2.fillStyle = c.panel; c2.fillRect(0, 0, o2.w, o2.h);
-      var B2 = axes(c2, o2.w, o2.h, [0, TMAX], [ymin, ymax], 'temperature (arbitrary units)', 'lasing frequency (FSR units)', c);
-      c2.strokeStyle = c.warn; c2.setLineDash([4, 4]); c2.lineWidth = 1; c2.beginPath(); c2.moveTo(B2.X(0), B2.Y(0)); c2.lineTo(B2.X(TMAX), B2.Y(nuF(TMAX))); c2.stroke(); c2.setLineDash([]);
-      function trace(arr, col) {
-        if (!arr.length) return; c2.strokeStyle = col; c2.lineWidth = 2; c2.beginPath();
-        for (var j = 0; j < arr.length; j++) { var p = arr[j], px = B2.X(p[0]), py = B2.Y(p[1]); if (j && Math.abs(p[1] - arr[j - 1][1]) > 0.5) { c2.stroke(); c2.beginPath(); c2.moveTo(px, py); } else if (j) c2.lineTo(px, py); else c2.moveTo(px, py); }
-        c2.stroke();
-      }
-      trace(s.up, c.accent); trace(s.down, c.bad);
-      c2.fillStyle = c.fg; c2.beginPath(); c2.arc(B2.X(s.T), B2.Y(s.m + AC * s.T), 4, 0, 7); c2.fill();
-      c2.font = '11px system-ui, sans-serif'; c2.textAlign = 'left'; c2.textBaseline = 'top';
-      c2.fillStyle = c.accent; c2.fillText('sweep up', B2.L + 6, B2.T + 4); c2.fillStyle = c.bad; c2.fillText('sweep down', B2.L + 70, B2.T + 4); c2.fillStyle = c.warn; c2.fillText('filter peak', B2.L + 150, B2.T + 4);
-      var f2 = function (a) { return a.length ? a.slice(0, 5).map(function (t) { return t.toFixed(2); }).join(', ') + (a.length > 5 ? ' ...' : '') : 'none yet'; };
-      rd.innerHTML = '<div><span>Temperature </span><b>' + s.T.toFixed(2) + '</b></div><div><span>Lasing mode index </span><b>' + s.m + '</b></div>' +
-        '<div><span>Hops going up at T = </span><b>' + f2(s.hopsUp) + '</b></div><div><span>Hops going down at T = </span><b>' + f2(s.hopsDown.slice().reverse()) + '</b></div>';
-    }
-    var onR = function () { draw(); }; window.addEventListener('resize', onR);
-    api.onCleanup(function () { cancelAnimationFrame(raf); window.removeEventListener('resize', onR); });
-    reset(); draw();
-  };
-
-  /* ---- (c) Backscatter doublet: coupled-mode theory, normalized to total linewidth kappa ----
-     a_cw, a_ccw with decay kappa/2, backscatter coupling beta, bus coupling kappa_e = eta * kappa.
-     D = kappa/2 - i Delta;  t = 1 - kappa_e D / (D^2 + beta^2);  r = i beta kappa_e / (D^2 + beta^2). */
-  widgets.doublet = function (root, params, api) {
-    var s = { b: 0, eta: 0.5 }, done = false;
-    var wrap = shell(root);
-    el('div', 'fbw-tag', 'Coupled-mode model. Detuning and backscatter rate are normalized to the total (loaded) linewidth kappa; eta = bus coupling rate / kappa (0.5 = critical coupling without backscatter).', wrap);
-    var fit = canvas(wrap, 250);
-    var rd = el('div', 'fbw-read', null, wrap);
-    var g = el('div', 'fbw-grid', null, wrap);
-    var un = null;
-    var sB = slider(g, 'Backscatter coupling beta / kappa', 0, 2, 0.01, s.b, function (v) { return v.toFixed(2); }, function (v) { s.b = v; if (un) { un(); un = null; } if (!done && v >= 0.6) { done = true; api.complete(); } draw(); });
-    slider(g, 'Bus coupling eta = kappa_e / kappa', 0.05, 0.95, 0.01, s.eta, function (v) { return v.toFixed(2); }, function (v) { s.eta = v; draw(); });
-    un = hint(sB.box, 'drag right');
-    function resp(x) {
-      // D = 0.5 - i x ; D^2 = 0.25 - x^2 - i x ; den = D^2 + b^2
-      var dr = 0.25 - x * x + s.b * s.b, di = -x, den = dr * dr + di * di;
-      // kappa_e * D / den
-      var nr = s.eta * 0.5, ni = -s.eta * x;
-      var qr = (nr * dr + ni * di) / den, qi = (ni * dr - nr * di) / den;
-      var tr = 1 - qr, ti = -qi;
-      var rr2 = (s.b * s.eta) * (s.b * s.eta) / den;
-      return [tr * tr + ti * ti, rr2];
-    }
-    function draw() {
-      var o = fit(), ctx = o.ctx, c = apiCols(api); ctx.fillStyle = c.panel; ctx.fillRect(0, 0, o.w, o.h);
-      var A = axes(ctx, o.w, o.h, [-4, 4], [0, 1.05], 'detuning / kappa', 'power fraction', c);
-      var N = 1601, xs = [], ts = [], rs = [], tmin = 2, rmax = 0;
-      for (var i = 0; i < N; i++) { var x = -4 + 8 * i / (N - 1), v = resp(x); xs.push(x); ts.push(v[0]); rs.push(v[1]); if (v[0] < tmin) tmin = v[0]; if (v[1] > rmax) rmax = v[1]; }
-      [[ts, c.accent], [rs, c.bad]].forEach(function (p) { ctx.strokeStyle = p[1]; ctx.lineWidth = 2; ctx.beginPath(); for (var j = 0; j < N; j++) { if (j) ctx.lineTo(A.X(xs[j]), A.Y(p[0][j])); else ctx.moveTo(A.X(xs[j]), A.Y(p[0][j])); } ctx.stroke(); });
-      var lvl = (1 + tmin) / 2, lo = null, hi = null;
-      for (var k = 0; k < N; k++) { if (ts[k] <= lvl) { if (lo === null) lo = xs[k]; hi = xs[k]; } }
-      var width = lo === null ? NaN : hi - lo;
-      if (lo !== null) { ctx.strokeStyle = c.warn; ctx.setLineDash([4, 3]); ctx.beginPath(); ctx.moveTo(A.X(lo), A.Y(lvl)); ctx.lineTo(A.X(hi), A.Y(lvl)); ctx.stroke(); ctx.setLineDash([]); }
-      ctx.font = '11px system-ui, sans-serif'; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
-      ctx.fillStyle = c.accent; ctx.fillText('transmission |t|^2', A.L + 6, A.T + 4); ctx.fillStyle = c.bad; ctx.fillText('reflected toward laser |r|^2', A.L + 6, A.T + 18); ctx.fillStyle = c.warn; ctx.fillText('full width at half depth', A.L + 6, A.T + 32);
-      rd.innerHTML = '<div><span>Supermode splitting </span><b>' + (2 * s.b).toFixed(2) + ' kappa</b></div>' +
-        '<div><span>Width at half depth </span><b>' + (isFinite(width) ? width.toFixed(2) + ' kappa' : 'N/A') + '</b></div>' +
-        '<div><span>Half-depth-width Q estimate / true loaded Q </span><b>' + (isFinite(width) && width > 0 ? (1 / width).toFixed(2) : 'N/A') + '</b></div>' +
-        '<div><span>Peak reflection toward laser </span><b>' + (rmax > 0 ? (10 * Math.log10(rmax)).toFixed(1) + ' dB' : 'none') + '</b></div>';
-    }
-    var onR = function () { draw(); }; window.addEventListener('resize', onR);
-    api.onCleanup(function () { window.removeEventListener('resize', onR); });
-    draw();
-  };
+  /* fabryPerot, modeHop and doublet live in widgets/*.js (sources in tools/widgets_src/fb/); they register on window.LMS_WIDGETS. */
 
   /* =================================================================== */
   /* MEDIA (Phase B): real photos from media/fb and media/shared.           */
@@ -1678,7 +1373,7 @@
       spots: [
         { x: 0.51, y: 0.43, label: 'Large round optic', body: '<p>Whatever this optic is meant to transmit, each of its surfaces also reflects. For glass with an index near 1.5, Fresnel gives about 4 percent at normal incidence. An anti-reflection coating reduces that. It does not remove it.</p>', narration: ['Each surface of this optic reflects. A coating reduces that. It does not remove it.'] },
         { x: 0.79, y: 0.73, label: 'Large glass cube', body: '<p>A cube has parallel faces. Two parallel faces are an etalon, and at normal incidence the cube also sends a reflection straight back toward the source. A small tilt sends that reflection somewhere harmless.</p>', narration: ['Two parallel faces are an etalon. A small tilt sends the reflection somewhere harmless.'] },
-        { x: 0.445, y: 0.695, label: 'Rotation mount', body: '<p>Rotation mounts usually carry a wave plate or polarizer: a thin plate with two parallel faces. A plate of thickness L and group index n is a low-finesse Fabry-Perot with free spectral range c / (2 n L).</p>', narration: ['A thin plate with two parallel faces is a Fabry-Perot, whether or not it was ordered as one.'] },
+        { x: 0.445, y: 0.695, label: 'Rotation mount', body: '<p>Rotation mounts usually carry a wave plate or polarizer: a thin plate with two parallel faces. A plate of thickness $L$ and group index $n$ is a low-finesse Fabry-Perot with free spectral range $c/(2nL)$.</p>', narration: ['A thin plate with two parallel faces is a Fabry-Perot, whether or not it was ordered as one.'] },
         { x: 0.14, y: 0.715, label: 'Small glass cube', body: '<p>Smaller does not mean exempt. Every pair of parallel faces is a cavity, and a table holds dozens of them.</p>', narration: ['Smaller does not mean exempt.'] },
         { x: 0.82, y: 0.65, label: 'Kinematic mount', body: '<p>The two adjustment knobs set the angle of the optic. Angle is your main control over where a reflection goes: into a beam block, not back into the laser.</p>', narration: ['Angle is your main control over where a reflection goes. Isolate, angle, and verify.'] },
         { x: 0.69, y: 0.72, label: 'Ring-mounted lens', body: '<p>Curved surfaces reflect too. A lens surface near a focus can return light almost exactly along the incoming axis.</p>', narration: ['Curved surfaces reflect too. Every interface reflects.'] }
@@ -1802,48 +1497,52 @@
   var MISS = {
     'Scenario 1: The Rework': 'Nobody asked why the ripple period stayed the same through four reworks.',
     'Scenario 2: The Flat Cleave': 'The fiber tip was never tested, and the laser is going back.',
-    'Scenario 3: Isolator Placement': 'The isolator sits after every reflector that matters, and nobody checked the return loss.',
     'Incident 1: How It Unfolded': 'The isolator came out with no spectrum or linewidth check, and the person who asked for one was moved off the thread.',
     'Scenario 1: The Excellent Fit': 'The ripple period was never converted into a length, so nobody knows which two surfaces made it.',
     'Scenario 2: The Accidental Laser': 'Nobody checked the facets before calling it novel.',
-    'Scenario 3: Certified Single-Mode': 'The fringes were explained away by a label and an estimate, not by a measurement.',
     'Incident 2: How It Unfolded': 'The ripple matches the fiber gap, and nobody changed the gap before calling it intrinsic.',
     'Category 1 in the Workplace': 'A ripple that survives every swap and appears on every unit points at the chip, not the cords.',
     'Category 2 in the Workplace': 'The best-looking alignment is just one point on a cavity fringe.',
-    'Category 3 in the Workplace': 'The disagreement between the setups is the finding, and it is about to be filed as maintenance.',
     'Category 4 in the Workplace': 'Nobody measured the isolation at the wavelength actually used.',
-    'Category 5 in the Workplace': 'Two open ports reflect into every laser on the bench, and nobody owns them.',
-    'Category 6 in the Workplace': 'The return loss was never specified or measured, and work is about to build on it.',
     'Category 7 in the Workplace': 'Protection and measurement quality are being traded for a schedule.',
-    'Category 8 in the Workplace': 'With reflectors everywhere, the ripple that matches expectation is not evidence.',
     'Category 9 in the Workplace': 'The laser is responding to a reflector that nobody has found.',
-    'Scenario 1: The Datasheet': 'The mode-hop-free range was never checked.',
     'Scenario 2: Up and Down': 'The two maps differ for a physical reason, and averaging hides it.',
     'Scenario 3: Qualified at One Current': 'One operating point was tested, and the whole range is being signed off.',
     'Incident 3: How It Unfolded': 'The hop is unlogged, the cause is still in place, and the person who raised concerns was removed from the call.',
-    'Scenario 1: The Contrast Ratio': 'Only one mode was measured, and the device cannot break reciprocity.',
     'Scenario 2: The Directional Modulator': 'Directional modulation is not isolation.',
     'Scenario 3: The Straight Arrow': 'The drawing ignores refraction, and active alignment cannot fix an angle.',
     'Incident 4: How It Unfolded': 'The orientation was never checked, and the vendor is being blamed for it.',
     'Scenario 1: Scrap the Wafer': 'The second minimum was dismissed as noise, and the fit model was never questioned.',
     'Scenario 2: Conflicting Policies': 'Two teams have opposite targets for the same ring, and neither target is a number.',
-    'Scenario 3: The Snap': 'The lock point was never calibrated.',
     'Incident 5: How It Unfolded': 'The coupling branch was assumed, not measured, and the reflection port was ignored.',
-    'Scenario 1: The Calm Wavemeter': 'A slow instrument cannot see a fast hop.',
     'Scenario 2: New Physics': 'The source was never cross-checked against a separate laser.',
     'Scenario 3: The Record Linewidth': 'A footnote does not remove the feedback from the measurement.',
     'Incident 6: How It Unfolded': 'The runs that showed the hop were left out.'
+  };
+  /* judged chats where the judged person acts properly: the correct answer is OK */
+  var PROPER = {
+    'Scenario 3: Isolator Placement': 'The isolator sits in front of the distant reflectors, and the near ones are budgeted and measured.',
+    'Scenario 3: Certified Single-Mode': 'The fringes are being tested, not explained away by a label and an estimate.',
+    'Category 3 in the Workplace': 'The disagreement between the setups is treated as the finding, and no number is reported until it is explained.',
+    'Category 5 in the Workplace': 'The shared reflectors were found, the fix was announced before anyone touched the shared bench, and the splitter gets an owner and a log entry.',
+    'Category 6 in the Workplace': 'The return loss will be measured, logged, and sent to both sides before any work builds on it.',
+    'Category 8 in the Workplace': 'The reflectors are listed and will be removed one at a time, and the bench is reported, not adapted to.',
+    'Scenario 1: The Datasheet': 'The mode-hop-free range was checked before the run, and the sweep was planned inside it.',
+    'Scenario 1: The Contrast Ratio': 'Every mode was counted before any claim, and the device is described as what it is.',
+    'Scenario 3: The Snap': 'The balance point was measured, not predicted, and the lock has margin.',
+    'Scenario 1: The Calm Wavemeter': 'A slow instrument was cross-checked with a fast one before anything was reported.'
   };
   /* 1. every "Is this okay?" chat: an OK / Not OK popup, then the answer as a stage */
   allSteps().forEach(function (st) {
     if (st.type !== 'chat' || !st.narration) return;
     var k = st.narration.indexOf('Pause and ask yourself. Is this okay?');
     if (k < 0) return;
-    var rest = st.narration.slice(k + 1), miss = MISS[st.title];
-    if (!miss) throw new Error('no MISS for chat ' + st.title);
-    st.narration = st.narration.slice(0, k).concat(['Pause and ask yourself.']);
-    st.ask = { question: 'Is this OK?', options: [{ text: 'OK', say: 'Not quite. ' + miss }, { text: 'Not OK', correct: true, say: miss }] };
-    st.stages = [{ prompt: 'Show why', title: 'It is not OK.', body: '<p>' + miss + '</p>', narration: rest }];
+    var rest = st.narration.slice(k + 1), good = PROPER[st.title], why = good || MISS[st.title];
+    if (!why) throw new Error('no MISS or PROPER for chat ' + st.title);
+    if (k < 1 || st.narration.slice(0, k).some(function (l) { return typeof l !== 'string' || !l; })) throw new Error('no judge intro for chat ' + st.title);
+    st.narration = st.narration.slice(0, k);
+    st.ask = { question: 'Is this OK?', options: [{ text: 'OK', correct: !!good, say: good ? why : 'Not quite. ' + why }, { text: 'Not OK', correct: !good, say: good ? 'Not quite. ' + why : why }] };
+    st.stages = [{ prompt: 'Show why', title: good ? 'It is OK.' : 'It is not OK.', body: '<p>' + why + '</p>', narration: rest }];
   });
   /* incident chats unfold one message at a time */
   allSteps().forEach(function (st) { if (st.type === 'chat' && /^Incident \d: How It Unfolded$/.test(st.title)) st.tapToAdvance = true; });
@@ -2020,7 +1719,8 @@
     version: '2026.4', effective: '2026-12-01',
     policy: 'Policy PHC-1550.4: Speak-Up, Non-Retaliation and Return Loss Standard',
     mantra: MANTRA, mantraShort: MSHORT,
-    host: { name: 'Pat Reynolds', role: 'Director, Office of Photonic Conduct' },
+    host: { name: 'Pat Reynolds', role: 'Director, Office of Photonic Conduct', img: 'media/render/host_pat_present.jpg',
+      cam: { idle: 'media/render/host_pat_cam_idle.mp4', talk: ['media/render/host_pat_cam_talk.mp4', { src: 'media/render/host_pat_cam_gesture.mp4', weight: 0.5 }] } },
     employer: 'Five Sigma Photonics, Inc.',
     chapters: [ch0, ch1, ch2, chCat, ch3, ch4, ch5, ch6],
     exam: { passPct: 80, count: 10, pool: pool },

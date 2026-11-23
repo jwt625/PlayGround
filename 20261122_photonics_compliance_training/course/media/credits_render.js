@@ -1,7 +1,7 @@
 /* Blender renders for both courses (Blender 4.2 LTS, Cycles). Scenes are built from the scripts in course/tools/blender/; 'source' names the script and its arguments. 2026-11-22. */
 window.LMS_MEDIA = Object.assign(window.LMS_MEDIA || {}, {
   "media/render/tfln_die_fixture_0deg.jpg": {
-    "alt": "Rendered view of a thin-film lithium niobate Mach-Zehnder modulator die (6 mm square): input waveguide and splitter on the left, two arms that pass around the RF pads into a straight gold ground-signal-ground electrode, combiner and output on the right, with probe pad sets at both ends of the electrode, seated correctly in a black anodized die fixture: the die's gold +Z arrow points the same way as the fixture's engraved +Z arrow, and the waveguide ends line up with the fiber slots marked IN and OUT",
+    "alt": "Rendered view of a thin-film lithium niobate Mach-Zehnder modulator die (6 mm square): input waveguide and splitter on the left, two arms running in the narrow gaps of a straight gold ground-signal-ground electrode (wide ground planes either side of the signal line), combiner and output on the right; past the arms the gaps widen, and the line bends up to the RF input pads near the top edge at the input end and down to the termination pads near the bottom edge at the output end. The die is seated correctly in a black anodized die fixture: its gold +Z arrow points the same way as the fixture's engraved +Z arrow, the RF input pads are on the side of the fixture's RF mark, and the waveguide ends line up with the fiber slots marked IN and OUT",
     "credit": "Rendered in Blender for this course",
     "license": "CC BY 4.0, project asset",
     "source": "course/tools/blender/shot_die_fixture.py variant=0",
@@ -10,7 +10,7 @@ window.LMS_MEDIA = Object.assign(window.LMS_MEDIA || {}, {
     "h": 1080
   },
   "media/render/tfln_die_fixture_90deg.jpg": {
-    "alt": "The same modulator die in the same fixture, rotated 90 degrees: the square die still fits the pocket, but its +Z arrow points sideways, its polished input and output facets now face the closed north and south walls of the pocket, and the IN and OUT fiber slots line up with no waveguide",
+    "alt": "The same modulator die in the same fixture, rotated 90 degrees: the square die still fits the pocket, but its +Z arrow points sideways, its polished input and output facets now face the closed north and south walls of the pocket, the IN and OUT fiber slots line up with no waveguide, and the RF input pads have moved from the side of the fixture's RF mark to the IN side",
     "credit": "Rendered in Blender for this course",
     "license": "CC BY 4.0, project asset",
     "source": "course/tools/blender/shot_die_fixture.py variant=90",
@@ -19,7 +19,7 @@ window.LMS_MEDIA = Object.assign(window.LMS_MEDIA || {}, {
     "h": 1080
   },
   "media/render/tfln_die_fixture_180deg.jpg": {
-    "alt": "The same modulator die in the same fixture, rotated 180 degrees: the die's +Z arrow points opposite to the fixture's +Z arrow, the label is upside down, and the waveguide is 0.8 mm off the fiber slot line",
+    "alt": "The same modulator die in the same fixture, rotated 180 degrees: the die's +Z arrow points opposite to the fixture's +Z arrow, the label is upside down, the waveguide is 0.8 mm off the fiber slot line, and the RF input pads are now at the OUT end, on the side away from the fixture's RF mark",
     "credit": "Rendered in Blender for this course",
     "license": "CC BY 4.0, project asset",
     "source": "course/tools/blender/shot_die_fixture.py variant=180",
@@ -28,10 +28,19 @@ window.LMS_MEDIA = Object.assign(window.LMS_MEDIA || {}, {
     "h": 1080
   },
   "media/render/tfln_probe_station_closeup.jpg": {
-    "alt": "Rendered probe-station view: two ground-signal-ground microwave probes, each on a positioner arm with a coaxial connector and cable, come in at a shallow angle from left and right and land on the pad sets at the two ends of a lithium niobate modulator's electrode; lensed fibers held from above reach the input and output facets through the fixture's slots, and a microscope objective hangs above",
+    "alt": "Rendered close-up of a lithium niobate modulator die in its fixture on a probe station. The gold coplanar electrode (two wide ground planes and a narrow signal line with thin gaps between them, where the modulator arms run) bends from its straight section to two ground-signal-ground pad sets near opposite edges of the die. One ground-signal-ground microwave probe lands on the RF input pads at the input end, the other on the termination pads at the output end; each probe is a black body with a thin coaxial line ending in a gold-plated tip with three contacts, coming in at a shallow angle. Lensed fibers in V-groove clamps on black holder arms meet the input and output facets along the waveguide axis, at right angles to the probes. The fixture is engraved with a +Z arrow, RF, IN and OUT",
     "credit": "Rendered in Blender for this course",
     "license": "CC BY 4.0, project asset",
-    "source": "course/tools/blender/shot_probe_station.py",
+    "source": "course/tools/blender/shot_probe_station.py view=close",
+    "kind": "render",
+    "w": 1920,
+    "h": 1080
+  },
+  "media/render/tfln_probe_station_wide.jpg": {
+    "alt": "Rendered overview of the same probe station: the die fixture on a vacuum chuck under a microscope objective, inside the opening of a nickel-plated platen. Two manual XYZ positioners with knob and micrometer adjusters hold the microwave probes on L-shaped arms from opposite sides; each probe has a mated cable plug with a knurled grip and a blue test cable. Two more positioners hold the lensed-fiber arms from the other two sides; each coated fiber is taped along its holder arm, then crosses to the platen beside the positioner, where its yellow jacket starts",
+    "credit": "Rendered in Blender for this course",
+    "license": "CC BY 4.0, project asset",
+    "source": "course/tools/blender/shot_probe_station.py view=wide",
     "kind": "render",
     "w": 1920,
     "h": 1080
@@ -134,5 +143,68 @@ window.LMS_MEDIA = Object.assign(window.LMS_MEDIA || {}, {
     "kind": "render",
     "w": 1920,
     "h": 1080
+  },
+  "media/render/host_pat_present.jpg": {
+    "alt": "Clay-style character portrait of Pat Reynolds, Director of the Office of Photonic Conduct: a woman with a silver chin-length bob, rectangular brown glasses, a gentle closed-mouth smile, a pearl necklace, a cream blouse and a navy blazer with a small round company lapel pin, facing the camera in a studio office with a walnut slat wall, a plant and a Five Sigma Photonics logo sign behind her",
+    "credit": "Rendered in Blender for this course",
+    "license": "CC BY 4.0, project asset",
+    "source": "course/tools/blender/shot_host_pat.py pose=present",
+    "kind": "render",
+    "w": 1200,
+    "h": 1600
+  },
+  "media/render/host_pat_empathy.jpg": {
+    "alt": "The same clay-style portrait of Pat Reynolds with her head tilted, brows drawn together in concern, and her right hand resting flat on her chest over her heart",
+    "credit": "Rendered in Blender for this course",
+    "license": "CC BY 4.0, project asset",
+    "source": "course/tools/blender/shot_host_pat.py pose=empathy",
+    "kind": "render",
+    "w": 1200,
+    "h": 1600
+  },
+  "media/render/host_pat_cam_idle.mp4": {
+    "alt": "Presenter cam loop, 4 seconds: Pat Reynolds in the studio office, breathing, blinking and moving her head slightly while she listens",
+    "credit": "Rendered in Blender for this course",
+    "license": "CC BY 4.0, project asset",
+    "source": "course/tools/blender/anim_host_pat.py clip=idle",
+    "kind": "video",
+    "w": 600,
+    "h": 800
+  },
+  "media/render/host_pat_cam_talk.mp4": {
+    "alt": "Presenter cam loop, 3 seconds: Pat Reynolds talking, with small nods and a brief lift of the eyebrows",
+    "credit": "Rendered in Blender for this course",
+    "license": "CC BY 4.0, project asset",
+    "source": "course/tools/blender/anim_host_pat.py clip=talk",
+    "kind": "video",
+    "w": 600,
+    "h": 800
+  },
+  "media/render/host_pat_cam_gesture.mp4": {
+    "alt": "Presenter cam loop, 5 seconds: Pat Reynolds talking and raising her right hand, palm open toward the viewer, then lowering it",
+    "credit": "Rendered in Blender for this course",
+    "license": "CC BY 4.0, project asset",
+    "source": "course/tools/blender/anim_host_pat.py clip=gesture",
+    "kind": "video",
+    "w": 600,
+    "h": 800
+  },
+  "media/render/host_pat_cam_empathy_idle.mp4": {
+    "alt": "Presenter cam loop, 4 seconds: Pat Reynolds with her right hand on her heart and a concerned expression, breathing and blinking",
+    "credit": "Rendered in Blender for this course",
+    "license": "CC BY 4.0, project asset",
+    "source": "course/tools/blender/anim_host_pat.py clip=empathy_idle",
+    "kind": "video",
+    "w": 600,
+    "h": 800
+  },
+  "media/render/host_pat_cam_empathy_talk.mp4": {
+    "alt": "Presenter cam loop, 3 seconds: Pat Reynolds with her right hand on her heart, talking with a concerned expression",
+    "credit": "Rendered in Blender for this course",
+    "license": "CC BY 4.0, project asset",
+    "source": "course/tools/blender/anim_host_pat.py clip=empathy_talk",
+    "kind": "video",
+    "w": 600,
+    "h": 800
   }
 });

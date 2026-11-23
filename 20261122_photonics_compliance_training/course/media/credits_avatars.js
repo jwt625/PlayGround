@@ -46,11 +46,11 @@ window.LMS_MEDIA = Object.assign(window.LMS_MEDIA || {}, {
     "h": 256
   },
   "media/avatars/pat_reynolds.jpg": {
-    "alt": "Illustrated profile picture: a woman with a silver bob, glasses, pearl earrings and a dark blue blazer, on a lavender background",
-    "credit": "Drawn for this course",
-    "license": "Drawn for this course",
-    "source": "Drawn in code for this course",
-    "kind": "drawing",
+    "alt": "Profile picture: clay-style render of a woman with a silver bob, rectangular brown glasses, a pearl necklace, a cream blouse and a navy blazer, in a studio office (cropped from the host portrait)",
+    "credit": "Rendered in Blender for this course",
+    "license": "CC BY 4.0, project asset",
+    "source": "course/tools/blender/shot_host_pat.py pose=present avatar=media/avatars/pat_reynolds.jpg",
+    "kind": "render",
     "w": 256,
     "h": 256
   },
