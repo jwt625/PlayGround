@@ -19,7 +19,13 @@
     examFailScore: 'Your score is shown on screen.',
     examRetake: 'Good news. You may retake the assessment as many times as needed.',
     certValid: 'Your certificate is valid for twelve months.',
-    certReenroll: 'You will be automatically re-enrolled in eleven months.'
+    certReenroll: 'You will be automatically re-enrolled in eleven months.',
+    recorded: 'Your response has been recorded.',
+    sortRight: 'Correct. That item is in the right place.',
+    sortWrong: 'Not quite. That item belongs in a different category.',
+    sortAll: 'Every item is now in the right place.',
+    askRight: "That's right.",
+    askWrong: "Let's look at this more closely."
   };
 
   var ENT = { amp: '&', lt: '<', gt: '>', quot: '"', apos: "'", nbsp: ' ', ndash: '–', mdash: '—', hellip: '…', rsquo: '’', lsquo: '‘', rdquo: '”', ldquo: '“', times: '×', deg: '°', micro: 'µ', mu: 'μ', pi: 'π', lambda: 'λ', Delta: 'Δ', minus: '−', plusmn: '±' };
@@ -64,12 +70,32 @@
     cardWrong: function (card) { return arr(card.narration).concat(S.checkWrong(card)); },
     spotHit: function (t) { return [LINES.spotFound].concat(splitSentences(stripHtml((t && t.why) || ''))); },
     spotMiss: function (st) { var w = splitSentences(stripHtml(st.missWhy || '')); return w.length ? w : [LINES.spotMiss]; },
-    spotAll: function () { return [LINES.spotAll]; }
+    spotAll: function () { return [LINES.spotAll]; },
+    stage: function (sg) { return arr(sg && sg.narration); },
+    reflectSubmit: function (st) { return [LINES.recorded].concat(arr(st.revealNarration)); },
+    sortRight: function () { return [LINES.sortRight]; },
+    sortWrong: function (item) { return [LINES.sortWrong].concat(splitSentences(stripHtml((item && item.why) || ''))); },
+    sortAll: function () { return [LINES.sortAll]; },
+    askQuestion: function (a) { return a && a.question ? [stripHtml(a.question)] : []; },
+    askAnswer: function (a, o) {
+      var anyCorrect = (a.options || []).some(function (x) { return x.correct === true; });
+      var say = splitSentences(stripHtml((o && o.say) || ''));
+      if (o && (o.correct === true || !anyCorrect)) return [LINES.askRight].concat(say);
+      return say.length ? say : [LINES.askWrong];
+    }
   };
 
   function stepLines(c, st, out) {
     var push = function (a) { for (var i = 0; i < a.length; i++) out.push(a[i]); };
+    (st.stages || []).forEach(function (sg) { push(S.stage(sg)); });
+    if (st.ask && st.ask.question) { push(S.askQuestion(st.ask)); (st.ask.options || []).forEach(function (o) { push(S.askAnswer(st.ask, o)); }); }
     switch (st.type) {
+      case 'reflect': push(S.narration(st)); push(S.reflectSubmit(st)); return;
+      case 'sort':
+        push(S.narration(st));
+        (st.items || []).forEach(function (it) { push(S.sortWrong(it)); });
+        push(S.sortRight()); push(S.sortAll());
+        return;
       case 'check':
         push(S.checkIntro(st));
         (st.options || []).forEach(function (o) { push(o.correct ? S.checkCorrect(st, o) : S.checkWrong(o)); });
@@ -108,11 +134,37 @@
     return res;
   }
 
-  /* Every image src a course uses (slide, photo, hotspots, cards, spot, check incl. exam pool, video keyframes). */
+  /* Cast profile picture for a chat name: exact key in LMS_CAST, then case-insensitive key or alias. */
+  function castFor(name) {
+    var C = G.LMS_CAST || {};
+    if (name == null) return null;
+    var n = String(name).trim();
+    if (Object.prototype.hasOwnProperty.call(C, n)) return C[n];
+    var l = n.toLowerCase();
+    for (var k in C) {
+      if (!Object.prototype.hasOwnProperty.call(C, k)) continue;
+      if (k.toLowerCase() === l) return C[k];
+      var al = C[k] && C[k].aliases || [];
+      for (var j = 0; j < al.length; j++) if (String(al[j]).toLowerCase() === l) return C[k];
+    }
+    return null;
+  }
+  /* Every name a chat step can show (senders, participants, header). */
+  function chatNames(st) {
+    var out = [];
+    if (st.type !== 'chat') return out;
+    (st.messages || []).forEach(function (m) { if (m.from) out.push(m.from); });
+    ((st.meta || {}).participants || []).forEach(function (p) { out.push(p); });
+    if (st.meta && st.meta.header) out.push(st.meta.header);
+    return out;
+  }
+  /* Every image src a course uses (slide, photo, hotspots, cards, spot, check incl. exam pool, video keyframes, stages, cast avatars shown in chats). */
   function collectImages(c) {
     var out = [];
     var add = function (im) { if (im && im.src && out.indexOf(im.src) < 0) out.push(im.src); };
     var step = function (st) {
+      chatNames(st).forEach(function (n) { var cc = castFor(n); if (cc && cc.avatar) add({ src: cc.avatar }); });
+      (st.stages || []).forEach(function (sg) { add(sg.image); });
       add(st.image);
       (st.cards || []).forEach(function (cd) { add(cd.image); });
       (st.keyframes || []).forEach(function (k) { add(k.image); });
@@ -128,7 +180,8 @@
   G.LMS_splitSentences = splitSentences;
   G.LMS_collectSpeech = collectSpeech;
   G.LMS_collectImages = collectImages;
+  G.LMS_castFor = castFor;
   if (typeof module !== 'undefined' && module.exports) {
-    module.exports = { LMS_LINES: LINES, LMS_SPEECH: S, LMS_stripHtml: stripHtml, LMS_splitSentences: splitSentences, LMS_collectSpeech: collectSpeech, LMS_collectImages: collectImages };
+    module.exports = { LMS_LINES: LINES, LMS_SPEECH: S, LMS_stripHtml: stripHtml, LMS_splitSentences: splitSentences, LMS_collectSpeech: collectSpeech, LMS_collectImages: collectImages, LMS_castFor: castFor };
   }
 })(typeof window !== 'undefined' ? window : globalThis);

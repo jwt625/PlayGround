@@ -490,7 +490,7 @@
       narration: ["Let's pause and reflect.", "How do you think Gary felt when " + context + "?"],
       options: [
         { text: 'Ashamed', correct: true, why: '' },
-        { text: 'Fine. Gary does not have feelings about crystal axes', correct: false, why: "Everyone at Intracavity Photonics has feelings about crystal axes, including Gary, and including you. Gary felt ashamed. Shame is a normal response to an orientation incident. It is not a disciplinary outcome, and it is not a performance review. The Office of Photonic Conduct is a judgment-free zone. The incident has still been logged, because a feeling is not a corrective action. Know your axes." },
+        { text: 'Fine. Gary does not have feelings about crystal axes', correct: false, why: "Everyone at Five Sigma Photonics has feelings about crystal axes, including Gary, and including you. Gary felt ashamed. Shame is a normal response to an orientation incident. It is not a disciplinary outcome, and it is not a performance review. The Office of Photonic Conduct is a judgment-free zone. The incident has still been logged, because a feeling is not a corrective action. Know your axes." },
         { text: 'Relieved, because now he can blame the equipment', correct: false, why: "Relief is understandable, but it is not what Gary felt, and it would not help. The equipment did exactly what it was told. Every tool in this building turns a wafer or a die to exactly the angle in its recipe, or to wherever it happens to stop, and none of them read the traveler. The orientation reference is lost at a hand-off between people, not inside a tool. Gary felt ashamed. Shame is normal. The Office of Photonic Conduct is a judgment-free zone. The incident has been logged." },
         { text: 'It is not appropriate to speculate about how Gary felt', correct: false, why: "In most workplace contexts, that would be a thoughtful answer. In this training, it is not the answer we are looking for. Gary felt ashamed, and he told us so, in a voluntary self-assessment. Shame is a normal response to an orientation incident. The Office of Photonic Conduct is a judgment-free zone. And the incident has still been logged." }
       ],
@@ -559,7 +559,7 @@
     steps: [
       {
         type: 'slide', layout: 'title', title: 'Ferroelectric Workplace Conduct and Crystal Orientation Awareness',
-        bullets: ['Course FE-0042', 'Annual mandatory refresher', 'Intracavity Photonics, Inc.'],
+        bullets: ['Course FE-0042', 'Annual mandatory refresher', 'Five Sigma Photonics, Inc.'],
         callout: M,
         narration: [
           "Welcome to Ferroelectric Workplace Conduct and Crystal Orientation Awareness.",
@@ -570,13 +570,13 @@
       },
       {
         type: 'slide', layout: 'host', title: 'A message from the Office of Photonic Conduct',
-        bullets: ['Pat Reynolds', 'Director, Office of Photonic Conduct', 'Intracavity Photonics, Inc.'],
+        bullets: ['Pat Reynolds', 'Director, Office of Photonic Conduct', 'Five Sigma Photonics, Inc.'],
         narration: [
-          "Hi. I'm Pat Reynolds, Director of the Office of Photonic Conduct here at Intracavity Photonics.",
-          "At Intracavity Photonics, we believe every crystal deserves a workplace where its axes are known, its charge is respected, and its symmetry is never assumed.",
+          "Hi. I'm Pat Reynolds, Director of the Office of Photonic Conduct here at Five Sigma Photonics.",
+          "At Five Sigma Photonics, we believe every crystal deserves a workplace where its axes are known, its charge is respected, and its symmetry is never assumed.",
           "Lithium niobate is a wonderful colleague. It is electro-optic, piezoelectric, pyroelectric, photorefractive, and anisotropic. It brings its whole self to work.",
           "That also means it brings its whole self to your measurement, your simulation, and your hotplate.",
-          "In this course, we will walk through seven areas of conduct. Each one comes from real incidents and real papers. The incidents are fictional. The papers are not.",
+          "In this course, we will walk through seven areas of conduct. Each one comes from real incidents and real papers.",
           "Together, we can build a culture of " + M.toLowerCase()
         ]
       },
@@ -621,7 +621,7 @@
         tabs: [
           { label: 'Gary', body: '<p>Gary is a dedicated device engineer. Gary moves fast. Gary has never once checked which edge of the chip is the z axis.</p><p>In this course, Gary will make every mistake so that you do not have to.</p>', narration: ["This is Gary. Gary is a dedicated engineer who moves fast. Gary will make every mistake in this course, so that you do not have to."] },
           { label: 'Gary\'s manager', body: '<p>Gary\'s manager wants results by Friday. The manager approves things that look like results.</p>', narration: ["This is Gary's manager. Gary's manager wants results by Friday, and approves things that look like results."] },
-          { label: 'The bystander', body: '<p>The bystander is a coworker who has seen this before. The bystander speaks up.</p><p>Be like the bystander.</p>', narration: ["This is a coworker who has seen this before. When something looks wrong, they speak up. Be like the bystander."] },
+          { label: 'Dana Okafor', body: '<p>Dana Okafor is Gary\'s labmate. Dana has seen this before. When something looks wrong, Dana speaks up.</p><p>Be like Dana.</p>', narration: ["This is Dana Okafor, Gary's labmate. Dana has seen this before. When something looks wrong, Dana speaks up. Be like Dana."] },
           { label: 'The crystal', body: '<p>Congruent lithium niobate. Point group 3m. Optic axis: z. Negative uniaxial: the extraordinary index is lower than the ordinary index.</p><p>The crystal does not attend meetings.</p>', narration: ["And this is the crystal. Congruent lithium niobate, point group three m. It is negative uniaxial, which means the extraordinary index is lower than the ordinary index. The crystal does not attend meetings, but it remembers everything."] }
         ]
       },
@@ -688,7 +688,7 @@
         "So on x-cut, the direction your waveguide runs in the plane changes the physics. On z-cut, it changes much less for the in-plane field.",
         "This is why every waveguide angle must be stated relative to a crystal axis, not relative to the chip edge, and not relative to your intuition.",
         "A practical tip from the lab: do not use square chips of an anisotropic material unless they are marked. Four identical edges means four chances to be wrong.",
-        "Know your axes. " + M
+        M
       ]
     },
     {
@@ -703,36 +703,37 @@
     },
     {
       type: 'chat', title: 'Scenario 1: The symmetric crystal', app: 'phone',
-      meta: { header: 'Gary', participants: ['Gary', 'Bystander'] },
+      meta: { header: 'Gary', participants: ['Gary', 'Dana'] },
       messages: [
-        { from: 'Gary', text: 'quick q. I simulated the minus 45 deg waveguide. plus 45 is the same right? crystal is symmetric', side: 'left' },
-        { from: 'Bystander', text: 'which cut', side: 'right' },
-        { from: 'Gary', text: 'x-cut. so y and z in plane. 45 is 45', side: 'left' },
-        { from: 'Bystander', text: 'no. 3m has no mirror that maps +45 to -45 on x-cut. the 14 and 41 terms flip sign', side: 'right' },
-        { from: 'Bystander', text: 'run both. and run one at 30 deg to check your rotation code', side: 'right' },
-        { from: 'Gary', text: 'ok but my rotation code passes all the tests', side: 'left' },
-        { from: 'Bystander', text: 'your tests are at 0 and 90', side: 'right' },
-        { from: 'Gary', text: '...', side: 'left' }
+        {"from": "Gary", "text": "quick q. I only simulated the minus 45 deg arm. plus 45 is the mirror image, so I was going to flip that result for the layout", "side": "left"},
+        {"from": "Dana", "text": "which cut", "side": "right"},
+        {"from": "Gary", "text": "x-cut. the geometry is mirror symmetric", "side": "left"},
+        {"from": "Dana", "text": "the geometry is. the crystal is not. 3m has no mirror that maps +45 to -45 on x-cut, the 14 and 41 terms change sign", "side": "right"},
+        {"from": "Dana", "text": "run both. and run one at 30 deg to check your rotation code", "side": "right"},
+        {"from": "Gary", "text": "the rotation code passes the regression tests though", "side": "left"},
+        {"from": "Dana", "text": "the regression tests are at 0 and 90", "side": "right"},
+        {"from": "Gary", "text": "ok. queuing plus 45 and 30 tonight", "side": "left"}
       ],
       narration: [
-        "Gary assumes plus forty five and minus forty five are equivalent on x-cut. Is this okay?",
-        "No. The bystander did the right thing. They spoke up, named the missing symmetry, and asked for a test at a non-special angle.",
+        "Gary planned to mirror one simulated angle instead of running the other one, because the geometry is symmetric. Is this okay?",
+        "No. Dana did the right thing. Dana spoke up, named the missing symmetry, and asked for a test at a non-special angle.",
         "Know your axes. Trust no symmetry plane."
       ]
     },
     {
       type: 'chat', title: 'Scenario 2: The inherited template', app: 'email',
-      meta: { header: 'Inbox', subject: 'RE: RE: RE: Optimization results, final (v7)', participants: ['Gary', 'Manager', 'Bystander'] },
+      meta: {"header": "Inbox", "subject": "Coupler optimization results, final (v7)", "participants": ["Gary", "Manager", "Dana"]},
       messages: [
-        { from: 'Manager', text: 'Great progress Gary. The optimized couplings look excellent. Let us put these in the tapeout.', side: 'left' },
-        { from: 'Bystander', text: 'Before tapeout: which coordinate system is the material in? The template you copied was set up for a different cut.', side: 'right' },
-        { from: 'Gary', text: 'It solved without errors and the numbers look physical.', side: 'left' },
-        { from: 'Bystander', text: 'Both of those are true for the wrong cut too. Nothing in the solver checks that the material frame matches the wafer you will buy.', side: 'right' },
-        { from: 'Manager', text: 'How long to rerun?', side: 'left' },
-        { from: 'Gary', text: 'About three months.', side: 'left' }
+        {"from": "Gary", "text": "Hi all,\n\nAttached are the optimized coupler results for the tapeout. The model converges, the mode profiles look clean, and the couplings are in the range we expected.\n\nBest,\nGary", "side": "left", "to": ["Manager", "Dana Okafor"], "date": "2026-11-09 16:12", "subject": "Coupler optimization results, final (v7)", "attachments": [{"name": "coupler_optimization_v7.pdf", "size": "3.1 MB"}]},
+        {"from": "Manager", "text": "Hi Gary,\n\nThese look excellent. Unless anyone objects, let's freeze them for the tapeout on the 20th.\n\nThanks", "side": "left", "to": ["Gary"], "cc": ["Dana Okafor"], "date": "2026-11-09 17:40", "subject": "RE: Coupler optimization results, final (v7)"},
+        {"from": "Dana", "text": "Hi both,\n\nBefore we freeze: which material frame is the model in? The template it was built from was set up for y-cut, and the wafers for this tapeout are x-cut.\n\nThanks,\nDana", "side": "right", "to": ["Gary", "Manager"], "date": "2026-11-10 08:55", "subject": "RE: RE: Coupler optimization results, final (v7)"},
+        {"from": "Gary", "text": "Hi Dana,\n\nThe model converges, the mode profiles look right, and the numbers match what we expect from last year. I would rather not reopen it this close to tapeout unless we see an actual problem.\n\nGary", "side": "left", "to": ["Dana Okafor"], "cc": ["Manager"], "date": "2026-11-10 09:20", "subject": "RE: RE: RE: Coupler optimization results, final (v7)"},
+        {"from": "Dana", "text": "Hi Gary,\n\nAll of those checks pass for the wrong cut too. Nothing in the solver compares the material frame with the wafer. One run with the frame set explicitly would settle it.\n\nDana", "side": "right", "to": ["Gary"], "cc": ["Manager"], "date": "2026-11-10 09:41", "subject": "RE: RE: RE: Coupler optimization results, final (v7)"},
+        {"from": "Manager", "text": "How long would that take?", "side": "left", "to": ["Gary", "Dana Okafor"], "date": "2026-11-10 10:02", "subject": "RE: RE: RE: Coupler optimization results, final (v7)"},
+        {"from": "Gary", "text": "A spot check is a day. If it changes the optimum, a full re-optimization is about three months.", "side": "left", "to": ["Manager", "Dana Okafor"], "date": "2026-11-10 10:15", "subject": "RE: RE: RE: Coupler optimization results, final (v7)"}
       ],
       narration: [
-        "Gary's model inherited a material frame from an old template. Is this okay?",
+        "Gary's model inherited a material frame from an old template, and every check he relies on would pass either way. Is this okay?",
         "No. A wrong frame is not an error. It is a different, valid device that you did not intend to make.",
         "Make the material frame a named, reviewed parameter, and print it on every results slide.",
         "Know your axes."
@@ -740,14 +741,14 @@
     },
     {
       type: 'chat', title: 'Scenario 3: The animation', app: 'thread',
-      meta: { header: '#figures', participants: ['Gary', 'Bystander', 'Manager'] },
+      meta: { header: '#figures', participants: ['Gary', 'Dana', 'Manager'] },
       messages: [
-        { from: 'Gary', text: 'poling animation for the talk is done. domains flipping up and down through the film, looks great', side: 'left' },
-        { from: 'Bystander', text: 'our devices are x-cut. z is in the plane. the domains should flip left and right, between the electrodes', side: 'right' },
-        { from: 'Gary', text: 'the reference figure had z vertical', side: 'left' },
-        { from: 'Bystander', text: 'the reference figure was labeled x-cut. vertical was the film normal in their sketch, not z', side: 'right' },
-        { from: 'Manager', text: 'can we just say it is illustrative', side: 'left' },
-        { from: 'Bystander', text: 'illustrative of z-cut, yes', side: 'right' }
+        {"from": "Gary", "text": "poling animation for the talk is done. domains flip up and down through the film, same as the figure in the review paper", "side": "left"},
+        {"from": "Dana", "text": "our devices are x-cut. z is in the plane. the domains should flip left and right, between the electrodes", "side": "right"},
+        {"from": "Gary", "text": "the review paper figure had z vertical", "side": "left"},
+        {"from": "Dana", "text": "that figure was labeled x-cut. vertical was the film normal in their sketch, not z", "side": "right"},
+        {"from": "Manager", "text": "it's a schematic for a twenty minute talk. I'd keep it and say it is illustrative", "side": "left"},
+        {"from": "Dana", "text": "illustrative of z-cut, yes. people copy talk figures into their own decks", "side": "right"}
       ],
       narration: [
         "Even figures and animations have a cut. Gary built a z-cut picture for an x-cut device. Is this okay?",
@@ -859,30 +860,30 @@
     },
     {
       type: 'chat', title: 'Scenario 1: The bigger ring', app: 'call',
-      meta: { header: 'Weekly sync (video call)', participants: ['Gary', 'Manager', 'Bystander'] },
+      meta: { header: 'Weekly sync (video call)', participants: ['Gary', 'Manager', 'Dana'] },
       messages: [
-        { from: 'Manager', text: 'Gary, update on the ring loss?', side: 'left' },
-        { from: 'Gary', text: 'Fixed it. I tripled the radius. Bends are gentler now, so the loss has to go down.', side: 'right' },
-        { from: 'Bystander', text: 'Did you check the TE and TM effective indices versus angle for our film and etch? If they cross, a bigger radius can convert more, not less.', side: 'left' },
-        { from: 'Gary', text: 'It is a ring. It is round. Every angle is the same.', side: 'right' },
-        { from: 'Bystander', text: 'On x-cut, every angle is different. That is the whole problem.', side: 'left' },
-        { from: 'Manager', text: 'Can we get the angle sweep by Friday?', side: 'left' }
+        {"from": "Manager", "text": "Gary, update on the ring loss?", "side": "left"},
+        {"from": "Gary", "text": "Tripled the radius. The bends are gentler now, so the bend loss should come down.", "side": "right"},
+        {"from": "Dana", "text": "Did you check the TE and TM effective indices versus angle for our film and etch? If they cross, a bigger radius can convert more, not less.", "side": "left"},
+        {"from": "Gary", "text": "The ring is rotationally symmetric, so I assumed the loss is the same at every angle.", "side": "right"},
+        {"from": "Dana", "text": "On x-cut, every angle is different. That is the whole problem.", "side": "left"},
+        {"from": "Manager", "text": "Can we get the angle sweep by Friday?", "side": "left"}
       ],
       narration: [
         "Gary tripled the ring radius to reduce bend loss on x-cut. Is this okay?",
         "Not without checking the crossing. A round ring sweeps every propagation angle, and on x-cut every angle is different.",
-        "Scan the angles. Know your axes. " + M
+        "Scan the angles. " + M
       ]
     },
     {
       type: 'chat', title: 'Scenario 2: The polarization blame', app: 'phone',
       meta: { header: 'Gary', participants: ['Gary', 'Manager'] },
       messages: [
-        { from: 'Gary', text: 'output has a TM component. must be the input fiber polarization', side: 'left' },
-        { from: 'Manager', text: 'did you check the input', side: 'right' },
-        { from: 'Gary', text: 'twice. it is clean TE', side: 'left' },
-        { from: 'Manager', text: 'then what is it', side: 'right' },
-        { from: 'Gary', text: 'the fiber. probably', side: 'left' }
+        {"from": "Gary", "text": "output has a TM component. probably the input fiber, it is an old patch cord", "side": "left"},
+        {"from": "Manager", "text": "did you check the input", "side": "right"},
+        {"from": "Gary", "text": "twice. it is clean TE", "side": "left"},
+        {"from": "Manager", "text": "then what is it", "side": "right"},
+        {"from": "Gary", "text": "I will swap the cord anyway and see if it goes away", "side": "left"}
       ],
       narration: [
         "Gary blames the input polarization for a T M component, even after the input checks out. Is this okay?",
@@ -892,12 +893,12 @@
     },
     {
       type: 'chat', title: 'Scenario 3: The routing shortcut', app: 'thread',
-      meta: { header: '#layout-review', participants: ['Gary', 'Bystander'] },
+      meta: { header: '#layout-review', participants: ['Gary', 'Dana'] },
       messages: [
         { from: 'Gary', text: 'routed the two arms of the interferometer at different angles to save area. lengths are matched, so phase is matched', side: 'left' },
-        { from: 'Bystander', text: 'on x-cut, matched length at different angles is not matched phase. TE index depends on the angle', side: 'right' },
+        { from: 'Dana', text: 'on x-cut, matched length at different angles is not matched phase. TE index depends on the angle', side: 'right' },
         { from: 'Gary', text: 'by how much', side: 'left' },
-        { from: 'Bystander', text: 'in bulk, from n_e to n_o, about 0.07 across the full range. in the guide, compute it. do not assume zero', side: 'right' }
+        { from: 'Dana', text: 'in bulk, from n_e to n_o, about 0.07 across the full range. in the guide, compute it. do not assume zero', side: 'right' }
       ],
       narration: [
         "Gary assumed matched lengths give matched phase, on x-cut, at different angles. Is this okay?",
@@ -956,13 +957,13 @@
       narration: [
         "Gary measures a lithium niobate ring. He sweeps the laser once, in one direction, at a comfortable power.",
         "The resonance dip is beautifully narrow. Gary calculates a record quality factor and sends it to his manager.",
-        "The bystander repeats the sweep in the other direction. The dip is much wider.",
+        "Dana repeats the sweep in the other direction. The dip is much wider.",
         "Is this okay? No. One direction is not a measurement. Scan both ways. " + M
       ],
       keyframes: [
         { t: 0, shot: 'Close-up of a tunable laser front panel and an oscilloscope in a dim optics lab. Gary presses SWEEP once. A single trace appears with a deep, narrow dip.', caption: 'One sweep. One direction.', cast: ['Gary'], draw: animDip({ sign: -1, dir: 1, caption: 'sweep short to long' }) },
         { t: 7, shot: 'Over-the-shoulder on Gary typing in a chat window: RECORD Q. Manager in a small video-call tile gives two thumbs up. Confetti particles fall only inside the manager tile.', caption: 'A record quality factor.', cast: ['Gary', 'Manager'], draw: animDip({ sign: -1, dir: 1, caption: 'narrow dip: record Q?' }) },
-        { t: 14, shot: 'Bystander leans in, presses REVERSE on the laser. Scope shows the same resonance now broad and lopsided. Split-screen comparison of the two traces.', caption: 'The other direction.', cast: ['Bystander'], draw: animDip({ sign: -1, dir: -1, caption: 'sweep long to short' }) },
+        { t: 14, shot: 'Dana leans in, presses REVERSE on the laser. Scope shows the same resonance now broad and lopsided. Split-screen comparison of the two traces.', caption: 'The other direction.', cast: ['Dana'], draw: animDip({ sign: -1, dir: -1, caption: 'sweep long to short' }) },
         { t: 21, shot: 'Freeze on the split screen. Stamp: NOT OKAY.', caption: 'Is this okay?', cast: [], draw: animDip({ sign: -1, dir: -1, stamp: 'NOT OKAY', caption: 'is this okay?' }) }
       ]
     },
@@ -1004,28 +1005,26 @@
       type: 'chat', title: 'Scenario 1: The record', app: 'phone',
       meta: { header: 'Manager', participants: ['Gary', 'Manager'] },
       messages: [
-        { from: 'Gary', text: 'record Q on the new ring!! linewidth is tiny', side: 'right' },
-        { from: 'Manager', text: 'amazing. which direction did you sweep', side: 'left' },
-        { from: 'Gary', text: 'the normal direction', side: 'right' },
-        { from: 'Manager', text: 'and the other one', side: 'left' },
-        { from: 'Gary', text: 'there is another one?', side: 'right' },
-        { from: 'Manager', text: 'and what power', side: 'left' },
-        { from: 'Gary', text: 'enough to see it', side: 'right' }
+        {"from": "Gary", "text": "Q on the new ring looks like a record. linewidth is tiny", "side": "right"},
+        {"from": "Manager", "text": "great. which direction did you sweep", "side": "left"},
+        {"from": "Gary", "text": "short to long. the other direction looks distorted, so I used the clean one", "side": "right"},
+        {"from": "Manager", "text": "and what power", "side": "left"},
+        {"from": "Gary", "text": "the usual 1 mW", "side": "right"}
       ],
       narration: [
-        "Gary reports a record linewidth from a single sweep direction at an unspecified power. Is this okay?",
+        "Gary reports a record linewidth from the sweep direction that looked cleaner. Is this okay?",
         "No. A dip that snaps narrow in one direction is a property of your scan, not your resonator.",
         "Sweep both ways. Reduce power until the two directions agree. Report the direction and the power. " + M
       ]
     },
     {
       type: 'chat', title: 'Scenario 2: Protective cladding', app: 'email',
-      meta: { header: 'Inbox', subject: 'Process change: adding oxide cladding to all rings', participants: ['Gary', 'Manager', 'Bystander'] },
+      meta: {"header": "Inbox", "subject": "Process change: adding oxide cladding to all rings", "participants": ["Gary", "Manager", "Dana"]},
       messages: [
-        { from: 'Gary', text: 'To protect the devices, I added a deposited oxide top cladding to the whole wafer. It is standard practice.', side: 'left' },
-        { from: 'Bystander', text: 'For lithium niobate, deposited oxide cladding has been reported to make photorefraction much worse. Xu et al. 2021 got more than two orders of magnitude less shift after removing it and heat treating.', side: 'right' },
-        { from: 'Manager', text: 'So is the cladding protective or not?', side: 'left' },
-        { from: 'Bystander', text: 'It protects the surface. It does not protect the resonance. Measure both cladded and uncladded die, at several powers, both scan directions.', side: 'right' }
+        {"from": "Gary", "text": "Hi all,\n\nTo protect the devices, I added a deposited oxide top cladding to the whole wafer in the last run. It is standard practice on our other platforms.\n\nGary", "side": "left", "to": ["Manager", "Dana Okafor"], "date": "2026-11-05 13:10", "subject": "Process change: adding oxide cladding to all rings"},
+        {"from": "Dana", "text": "Hi Gary,\n\nFor lithium niobate, deposited oxide cladding has been reported to make photorefraction much worse. Xu et al. 2021 saw more than two orders of magnitude less shift after removing it and heat treating. Paper attached.\n\nDana", "side": "right", "to": ["Gary"], "cc": ["Manager"], "date": "2026-11-05 14:02", "subject": "RE: Process change: adding oxide cladding to all rings", "attachments": [{"name": "xu2021_photorefraction_cladding.pdf", "size": "2.3 MB"}]},
+        {"from": "Manager", "text": "So is the cladding protective or not?", "side": "left", "to": ["Dana Okafor", "Gary"], "date": "2026-11-05 14:20", "subject": "RE: RE: Process change: adding oxide cladding to all rings"},
+        {"from": "Dana", "text": "It protects the surface. It does not protect the resonance. Could we measure both cladded and uncladded die, at several powers, both scan directions, before making it the default?", "side": "right", "to": ["Manager", "Gary"], "date": "2026-11-05 14:31", "subject": "RE: RE: Process change: adding oxide cladding to all rings"}
       ],
       narration: [
         "Gary added deposited oxide cladding to every ring, by habit. Is this okay?",
@@ -1035,13 +1034,13 @@
     },
     {
       type: 'chat', title: 'Scenario 3: The lock that ran away', app: 'thread',
-      meta: { header: '#lab-ops', participants: ['Gary', 'Bystander', 'Manager'] },
+      meta: { header: '#lab-ops', participants: ['Gary', 'Dana', 'Manager'] },
       messages: [
-        { from: 'Gary', text: 'thermal lock on the ring keeps running away. I set the lock side for a red shift like we do for silicon nitride', side: 'left' },
-        { from: 'Bystander', text: 'in LN the photorefractive shift is blue and slower than the thermal red shift. which one wins depends on power and time', side: 'right' },
-        { from: 'Gary', text: 'so which side do I lock on', side: 'left' },
-        { from: 'Bystander', text: 'measure the shift sign and its time constant at your power first. then pick', side: 'right' },
-        { from: 'Manager', text: 'can we just lock on both sides', side: 'left' }
+        {"from": "Gary", "text": "thermal lock on the ring keeps running away. I set the lock side for a red shift, same as on silicon nitride", "side": "left"},
+        {"from": "Dana", "text": "in LN the photorefractive shift is blue and slower than the thermal red shift. which one wins depends on power and time", "side": "right"},
+        {"from": "Gary", "text": "so which side do I lock on", "side": "left"},
+        {"from": "Dana", "text": "measure the shift sign and its time constant at your power first. then pick", "side": "right"},
+        {"from": "Manager", "text": "can we lock on whichever side is stable today and characterize later", "side": "left"}
       ],
       narration: [
         "Gary assumed only a thermal red shift, out of habit from other platforms. Is this okay?",
@@ -1146,14 +1145,14 @@
     },
     {
       type: 'chat', title: 'Scenario 1: The faster bake', app: 'phone',
-      meta: { header: 'Gary', participants: ['Gary', 'Bystander'] },
+      meta: { header: 'Gary', participants: ['Gary', 'Dana'] },
       messages: [
-        { from: 'Gary', text: 'cut the bake recipe from slow ramp to drop on and pull off. saves 20 min per wafer', side: 'left' },
-        { from: 'Bystander', text: 'which cut', side: 'right' },
-        { from: 'Gary', text: 'z', side: 'left' },
-        { from: 'Bystander', text: 'that slow ramp is there for the pyroelectric charge. a fast temperature step leaves no time to screen', side: 'right' },
-        { from: 'Gary', text: 'but I did not apply any voltage', side: 'left' },
-        { from: 'Bystander', text: 'the wafer applied it for you', side: 'right' }
+        {"from": "Gary", "text": "changed the bake recipe from slow ramp to place and remove. same final temperature, saves 20 min per wafer", "side": "left"},
+        {"from": "Dana", "text": "which cut", "side": "right"},
+        {"from": "Gary", "text": "z", "side": "left"},
+        {"from": "Dana", "text": "that slow ramp is there for the pyroelectric charge. a fast temperature step leaves no time to screen", "side": "right"},
+        {"from": "Gary", "text": "the resist does not care about the ramp, and nothing is biased during the bake", "side": "left"},
+        {"from": "Dana", "text": "the wafer biases itself", "side": "right"}
       ],
       narration: [
         "Gary removed a slow ramp to save time on z-cut wafers. Is this okay?",
@@ -1163,12 +1162,12 @@
     },
     {
       type: 'chat', title: 'Scenario 2: Kitchen foil', app: 'thread',
-      meta: { header: '#cleanroom', participants: ['Gary', 'Manager', 'Bystander'] },
+      meta: { header: '#cleanroom', participants: ['Gary', 'Manager', 'Dana'] },
       messages: [
-        { from: 'Manager', text: 'why is there aluminum foil in the procurement request', side: 'left' },
-        { from: 'Bystander', text: 'discharge path for lithium niobate during bakes. it is in the procedure', side: 'right' },
-        { from: 'Gary', text: 'I thought it was for lunch', side: 'left' },
-        { from: 'Manager', text: 'approved. please label it', side: 'left' }
+        {"from": "Manager", "text": "why is there aluminum foil in the procurement request", "side": "left"},
+        {"from": "Dana", "text": "discharge path for lithium niobate during bakes. it is in the procedure", "side": "right"},
+        {"from": "Gary", "text": "I assumed it was for wrapping parts", "side": "left"},
+        {"from": "Manager", "text": "approved. please label it", "side": "left"}
       ],
       narration: [
         "The foil in the cleanroom is a discharge path. Is this okay?",
@@ -1178,14 +1177,14 @@
     },
     {
       type: 'chat', title: 'Scenario 3: The neighbor', app: 'email',
-      meta: { header: 'Inbox', subject: 'Cryostat run 42: devices on the other chip failed', participants: ['Gary', 'Manager', 'Bystander'] },
+      meta: {"header": "Inbox", "subject": "Cryostat run 42: devices on the other chip failed", "participants": ["Gary", "Manager", "Dana"]},
       messages: [
-        { from: 'Gary', text: 'My lithium niobate chip survived the cooldown. The superconducting chip next to it did not. Not my problem.', side: 'left' },
-        { from: 'Bystander', text: 'A cooldown is a temperature change of almost 300 kelvin. Your chip can discharge into its neighbors. Next run: shielding electrodes, ground the lithium niobate, and ramp slowly.', side: 'right' },
-        { from: 'Manager', text: 'Please coordinate with the owner of the other chip before the next cooldown.', side: 'left' }
+        {"from": "Gary", "text": "Hi all,\n\nCryostat run 42 summary: my lithium niobate chip survived the cooldown. The superconducting chip next to it did not; I suspect its wiring, since my chip was not biased. I will let its owner know.\n\nGary", "side": "left", "to": ["Manager", "Dana Okafor"], "date": "2026-11-12 18:22", "subject": "Cryostat run 42: devices on the other chip failed", "attachments": [{"name": "run42_cooldown_log.csv", "size": "5.6 MB"}]},
+        {"from": "Dana", "text": "Hi Gary,\n\nA cooldown is a temperature change of almost 300 kelvin, and your chip does not need a bias to charge. It can discharge into its neighbors. For the next run: shielding electrodes, ground the lithium niobate, and ramp slowly.\n\nDana", "side": "right", "to": ["Gary"], "cc": ["Manager"], "date": "2026-11-13 08:47", "subject": "RE: Cryostat run 42: devices on the other chip failed"},
+        {"from": "Manager", "text": "Please coordinate with the owner of the other chip before the next cooldown, and add the grounding to the run checklist.", "side": "left", "to": ["Gary", "Dana Okafor"], "date": "2026-11-13 09:30", "subject": "RE: RE: Cryostat run 42: devices on the other chip failed"}
       ],
       narration: [
-        "Gary assumes charge on his chip stays on his chip. Is this okay?",
+        "Gary assumes an unbiased chip cannot hurt its neighbor. Is this okay?",
         "No. Pyroelectric fields do not respect chip boundaries. Shield, ground, and coordinate with your neighbors.",
         "Watch your charge. " + M
       ]
@@ -1279,13 +1278,13 @@
     },
     {
       type: 'chat', title: 'Scenario 1: The low V pi', app: 'email',
-      meta: { header: 'Inbox', subject: 'Datasheet draft: V pi', participants: ['Gary', 'Manager', 'Bystander'] },
+      meta: {"header": "Inbox", "subject": "Datasheet draft: V pi", "participants": ["Gary", "Manager", "Dana"]},
       messages: [
-        { from: 'Gary', text: 'Measured V pi with the usual triangle sweep. Putting it on the datasheet as the V pi.', side: 'left' },
-        { from: 'Bystander', text: 'What frequency was the triangle? Low-frequency V pi in thin film can differ a lot from RF V pi because of relaxation.', side: 'right' },
-        { from: 'Gary', text: 'The usual frequency.', side: 'left' },
-        { from: 'Bystander', text: 'Also: per arm or push-pull? And is the 3 dB bandwidth in electrical dB, normalized at what frequency?', side: 'right' },
-        { from: 'Manager', text: 'Please add a footnote. Several footnotes.', side: 'left' }
+        {"from": "Gary", "text": "Hi all,\n\nV pi for the datasheet, measured with our standard triangle sweep on the scope. I have put it in the draft as the V pi.\n\nGary", "side": "left", "to": ["Manager", "Dana Okafor"], "date": "2026-11-06 11:20", "subject": "Datasheet draft: V pi", "attachments": [{"name": "datasheet_draft_v3.docx", "size": "1.8 MB"}]},
+        {"from": "Dana", "text": "Hi Gary,\n\nWhat frequency was the triangle? Low-frequency V pi in thin film can differ a lot from RF V pi because of relaxation.\n\nDana", "side": "right", "to": ["Gary"], "cc": ["Manager"], "date": "2026-11-06 12:05", "subject": "RE: Datasheet draft: V pi"},
+        {"from": "Gary", "text": "The standard 1 kHz, same as every lot.", "side": "left", "to": ["Dana Okafor"], "cc": ["Manager"], "date": "2026-11-06 12:30", "subject": "RE: RE: Datasheet draft: V pi"},
+        {"from": "Dana", "text": "Then it is a 1 kHz V pi, not an RF V pi. Also: per arm or push-pull? And is the 3 dB bandwidth in electrical dB, normalized at what frequency?", "side": "right", "to": ["Gary"], "cc": ["Manager"], "date": "2026-11-06 12:44", "subject": "RE: RE: Datasheet draft: V pi"},
+        {"from": "Manager", "text": "Please add a footnote. Several footnotes.", "side": "left", "to": ["Gary", "Dana Okafor"], "date": "2026-11-06 13:10", "subject": "RE: RE: RE: Datasheet draft: V pi"}
       ],
       narration: [
         "Gary measured V pi at an unstated low frequency and labeled it as the V pi. Is this okay?",
@@ -1297,11 +1296,11 @@
       type: 'chat', title: 'Scenario 2: The overnight hold', app: 'phone',
       meta: { header: 'Gary', participants: ['Gary', 'Manager'] },
       messages: [
-        { from: 'Gary', text: 'left the modulator at 30 V over the weekend to test stability', side: 'left' },
-        { from: 'Manager', text: 'and?', side: 'right' },
-        { from: 'Gary', text: 'now the EO response is way smaller and looks like a diode', side: 'left' },
-        { from: 'Manager', text: 'will it come back', side: 'right' },
-        { from: 'Gary', text: 'google says maybe in 3 weeks', side: 'left' }
+        {"from": "Gary", "text": "left the modulator at 30 V over the weekend as a stability test", "side": "left"},
+        {"from": "Manager", "text": "and?", "side": "right"},
+        {"from": "Gary", "text": "the EO response is a lot smaller now and the curve looks rectified", "side": "left"},
+        {"from": "Manager", "text": "will it come back", "side": "right"},
+        {"from": "Gary", "text": "probably. I will give it a few days to relax and re-measure", "side": "left"}
       ],
       narration: [
         "Gary held a large D C bias for days. Is this okay?",
@@ -1311,14 +1310,14 @@
     },
     {
       type: 'chat', title: 'Scenario 3: The drift-free claim', app: 'thread',
-      meta: { header: '#paper-club', participants: ['Gary', 'Bystander', 'Manager'] },
+      meta: { header: '#paper-club', participants: ['Gary', 'Dana', 'Manager'] },
       messages: [
         { from: 'Gary', text: 'this paper shows no drift at all. we should copy their stack', side: 'left' },
-        { from: 'Bystander', text: 'how did they bias it', side: 'right' },
+        { from: 'Dana', text: 'how did they bias it', side: 'right' },
         { from: 'Gary', text: 'they tuned the laser to quadrature', side: 'left' },
-        { from: 'Bystander', text: 'so no DC bias was applied. no DC bias, no DC drift test', side: 'right' },
+        { from: 'Dana', text: 'so no DC bias was applied. no DC bias, no DC drift test', side: 'right' },
         { from: 'Manager', text: 'can we also not apply DC bias', side: 'left' },
-        { from: 'Bystander', text: 'not in a product with a fixed laser', side: 'right' }
+        { from: 'Dana', text: 'not in a product with a fixed laser', side: 'right' }
       ],
       narration: [
         "Gary treated a result without D C bias as proof of a drift-free stack. Is this okay?",
@@ -1368,14 +1367,14 @@
       narration: [
         "Gary simulates a quarter of a lithium niobate nanobeam, with two symmetry planes, to save time.",
         "The mechanical quality factor is seven times ten to the thirteen. Gary is thrilled.",
-        "The bystander runs the full geometry, with no symmetry planes, in the same crystal frame. The quality factor is about two thousand two hundred.",
+        "Dana runs the full geometry, with no symmetry planes, in the same crystal frame. The quality factor is about two thousand two hundred.",
         "Is this okay? No. Trust no symmetry plane. " + M
       ],
       keyframes: [
         { t: 0, shot: 'Screen capture style shot of a finite element model: a nanobeam cut to one quarter, the missing three quarters hidden behind a stage curtain labeled TRUST ME. Gary at the keyboard.', caption: 'A quarter model, to save time.', cast: ['Gary'], draw: animQ({ from: 0.1, to: 0.9, caption: 'quarter model with symmetry planes' }) },
         { t: 6, shot: 'Huge analog Q meter on the office wall; the needle slams to the far right and sticks at 10^13. Gary raises both fists.', caption: 'Q of seven times ten to the thirteen.', cast: ['Gary'], draw: animQ({ from: 0.9, to: 0.92, caption: 'Q pinned high' }) },
-        { t: 12, shot: 'Bystander pulls the curtain open: full nanobeam, no symmetry planes. Needle swings back down to about 10^3.', caption: 'Full geometry, same frame.', cast: ['Bystander'], draw: animQ({ from: 0.92, to: 0.2, caption: 'full geometry: leaky' }) },
-        { t: 18, shot: 'Freeze on the curtain half open. Stamp: NOT OKAY.', caption: 'Is this okay?', cast: ['Gary', 'Bystander'], draw: animQ({ from: 0.2, to: 0.2, stamp: 'NOT OKAY', caption: 'is this okay?' }) }
+        { t: 12, shot: 'Dana pulls the curtain open: full nanobeam, no symmetry planes. Needle swings back down to about 10^3.', caption: 'Full geometry, same frame.', cast: ['Dana'], draw: animQ({ from: 0.92, to: 0.2, caption: 'full geometry: leaky' }) },
+        { t: 18, shot: 'Freeze on the curtain half open. Stamp: NOT OKAY.', caption: 'Is this okay?', cast: ['Gary', 'Dana'], draw: animQ({ from: 0.2, to: 0.2, stamp: 'NOT OKAY', caption: 'is this okay?' }) }
       ]
     },
     {
@@ -1408,14 +1407,14 @@
     },
     {
       type: 'chat', title: 'Scenario 1: The quarter model', app: 'call',
-      meta: { header: 'Design review (video call)', participants: ['Gary', 'Manager', 'Bystander'] },
+      meta: { header: 'Design review (video call)', participants: ['Gary', 'Manager', 'Dana'] },
       messages: [
         { from: 'Gary', text: 'Mechanical Q is seven times ten to the thirteen. Quarter model, two symmetry planes, very efficient.', side: 'right' },
-        { from: 'Bystander', text: 'Is the crystal symmetric about both planes in this frame?', side: 'left' },
+        { from: 'Dana', text: 'Is the crystal symmetric about both planes in this frame?', side: 'left' },
         { from: 'Gary', text: 'The geometry is.', side: 'right' },
-        { from: 'Bystander', text: 'The geometry is not the crystal. Run the full model once in the same frame and compare.', side: 'left' },
+        { from: 'Dana', text: 'The geometry is not the crystal. Run the full model once in the same frame and compare.', side: 'left' },
         { from: 'Manager', text: 'If the full model agrees we can keep using the quarter model, right?', side: 'left' },
-        { from: 'Bystander', text: 'Right. Check once, then you have earned the shortcut.', side: 'left' }
+        { from: 'Dana', text: 'Right. Check once, then you have earned the shortcut.', side: 'left' }
       ],
       narration: [
         "Gary used symmetry planes because the geometry was symmetric. Is this okay?",
@@ -1425,12 +1424,12 @@
     },
     {
       type: 'chat', title: 'Scenario 2: The ignored volt', app: 'phone',
-      meta: { header: 'Gary', participants: ['Gary', 'Bystander'] },
+      meta: { header: 'Gary', participants: ['Gary', 'Dana'] },
       messages: [
         { from: 'Gary', text: 'set the electrode to 1 V in the eigen study but the mode is the same at 0 V and 100 V??', side: 'left' },
-        { from: 'Bystander', text: 'Voltage terminal in an eigen study is a short. the value is ignored', side: 'right' },
+        { from: 'Dana', text: 'Voltage terminal in an eigen study is a short. the value is ignored', side: 'right' },
         { from: 'Gary', text: 'so how do I get the open circuit frequency', side: 'left' },
-        { from: 'Bystander', text: 'Charge terminal, zero charge. run both. the difference gives k squared', side: 'right' }
+        { from: 'Dana', text: 'Charge terminal, zero charge. run both. the difference gives k squared', side: 'right' }
       ],
       narration: [
         "Gary expected the eigen solver to apply his bias voltage. Is this okay?",
@@ -1440,17 +1439,17 @@
     },
     {
       type: 'chat', title: 'Scenario 3: The template frame', app: 'thread',
-      meta: { header: '#simulation', participants: ['Gary', 'Manager', 'Bystander'] },
+      meta: { header: '#simulation', participants: ['Gary', 'Manager', 'Dana'] },
       messages: [
-        { from: 'Gary', text: 'new results attached. same template as last year', side: 'left' },
-        { from: 'Bystander', text: 'last year was y-cut. this wafer is x-cut. did the material frame change', side: 'right' },
-        { from: 'Gary', text: 'the template has a frame?', side: 'left' },
-        { from: 'Manager', text: 'please put the cut, the Euler angles, and the symmetry settings on the first slide of every results deck', side: 'left' }
+        {"from": "Gary", "text": "new results attached. same solver template as last year, the materials are already set up in it", "side": "left"},
+        {"from": "Dana", "text": "last year was y-cut. this wafer is x-cut. did the material frame change", "side": "right"},
+        {"from": "Gary", "text": "the template has been reviewed before, I did not touch the materials", "side": "left"},
+        {"from": "Manager", "text": "please put the cut, the Euler angles, and the symmetry settings on the first slide of every results deck", "side": "left"}
       ],
       narration: [
         "Gary reused a template without checking its crystal frame. Is this okay?",
         "No. Put the cut, the Euler angles, and the symmetry settings on the first slide of every results deck.",
-        "Know your axes. " + M
+        M
       ]
     },
     {
@@ -1484,13 +1483,12 @@
   ];
 
   /* ======================= INCIDENT SCENARIOS ======================= */
-  // All incidents are fictional and take place at Intracavity Photonics, Inc. Physics and cited numbers are real.
+  // All incidents are fictional and take place at Five Sigma Photonics, Inc. Physics and cited numbers are real.
 
   function incidentSlide(title, bullets, narration) {
     return {
       type: 'slide', layout: 'policy', title: 'Incident report: ' + title, bullets: bullets,
-      callout: 'This incident is fictional. The crystal axes are real.',
-      narration: ["We will now review an incident.", "This incident is fictional. It took place at Intracavity Photonics, Incorporated, which is also fictional. The crystal axes are real."].concat(narration).concat([
+      narration: ["We will now review an incident at Five Sigma Photonics."].concat(narration).concat([
         "As you watch, ask yourself two questions. Where was the orientation reference lost? And who could have spoken up?",
         M
       ])
@@ -1500,17 +1498,22 @@
   function feltSlide(what) {
     return {
       type: 'slide', layout: 'host', title: 'How do you think Gary felt?',
-      bullets: ['Gary felt ashamed', 'Shame is a normal response to an orientation incident', 'The Office of Photonic Conduct is a judgment-free zone', 'The incident has still been logged'],
-      callout: 'Feelings are valid. Logs are mandatory.',
+      bullets: ['Take a moment to consider how Gary felt when ' + String(what).replace(/\b(?:[A-Z] ){1,5}[A-Z]\b/g, function (m) { return m.replace(/ /g, ''); })],
       narration: [
         "Let's take a moment to think about Gary.",
-        "How do you think Gary felt when " + what + "?",
-        "Gary felt ashamed.",
-        "That is okay. Shame is a normal response to an orientation incident. It is not a disciplinary outcome.",
-        "The Office of Photonic Conduct is a judgment-free zone.",
-        "The incident has still been logged.",
-        "Feelings are valid. Logs are mandatory. " + M
-      ]
+        "How do you think Gary felt when " + what + "?"
+      ],
+      stages: [{
+        prompt: 'See how Gary felt',
+        bullets: ['Gary felt ashamed', 'Shame is a normal response to an orientation incident', 'The Office of Photonic Conduct is a judgment-free zone', 'The incident has still been logged', 'Feelings are valid. Logs are mandatory.'],
+        narration: [
+          "Gary felt ashamed.",
+          "That is okay. Shame is a normal response to an orientation incident. It is not a disciplinary outcome.",
+          "The Office of Photonic Conduct is a judgment-free zone.",
+          "The incident has still been logged.",
+          "Feelings are valid. Logs are mandatory. " + M
+        ]
+      }]
     };
   }
 
@@ -1525,7 +1528,7 @@
     ],
     callout: 'Zero tolerance for silent flats.',
     narration: [
-      "Intracavity Photonics has two approved speak-up phrases.",
+      "Five Sigma Photonics has two approved speak-up phrases.",
       "For orientation concerns, say: " + PHRASE_O,
       "For charge concerns, say: " + PHRASE_C,
       "Say them before the irreversible step. Before you expose, etch, bond, dice, plug in, or power on.",
@@ -1543,7 +1546,7 @@
       'Category: crystal orientation, 90 degrees',
       'Location: cleanroom, lithography bay',
       'Product: x-cut thin-film lithium niobate modulators, lot 7',
-      "Persons involved: Gary, a coworker, Gary's manager",
+      "Persons involved: Gary, Dana Okafor (labmate), Gary's manager",
       'Status: logged'
     ], ["It concerns a ninety degree orientation error during lithography on x-cut lithium niobate."]),
     {
@@ -1555,33 +1558,31 @@
         "For the first layer, there are no alignment marks yet. The mask is lined up with the flat. Gary lines it up with the edge in front of him.",
         "Every later layer aligns to the marks of the first layer. Every layer is aligned perfectly to every other layer. Together, they are aligned perfectly to the wrong crystal axis.",
         "Six weeks later, test reports that the modulators need about eight times the R F drive voltage.",
-        "Is this okay? No. This is not okay. Know your axes. " + M
+        "Is this okay? No. This is not okay. " + M
       ],
       keyframes: [
         { t: 0, shot: 'Cleanroom corridor under yellow lithography light, 35 mm lens, camera at chest height tracking alongside. Gary in a white bunny suit, hood, mask and nitrile gloves, seen from behind and in profile, carries a 100 mm wafer cassette away from a spin coater (bowl lid open, chuck still decelerating) toward a manual mask aligner. The wafers in the cassette sit at random rotations; their flats point in different directions.', caption: 'From the spin coater. Each wafer stops wherever it stops.', cast: ['Gary'], draw: animFlat({ spin: 2.3, flat: 30, caption: 'spin coater: the wafer stops at an arbitrary angle' }) },
         { t: 7, shot: "Top-down macro of the mask aligner vacuum chuck with three alignment pins. A translucent 100 mm x-cut lithium niobate wafer, resist-coated, slides in under a gloved hand with its flat against the right-hand pin (three o'clock). In sharp focus in the foreground, a laminated card taped to the tool bezel: FLAT AT SIX O'CLOCK.", caption: "Procedure: flat at six o'clock. Gary: flat at three o'clock.", cast: ['Gary'], draw: animFlat({ flat: 0, intended: true, caption: "flat loaded at three o'clock" }) },
         { t: 14, shot: 'Microscope eyepiece view (circular vignette): straight vertical chrome waveguide lines on the mask slide over the wafer. Inset, on a clipboard: the lot traveler page with a hand sketch showing the waveguides perpendicular to the flat.', caption: 'First layer: aligned to the edge in front of him.', cast: [], draw: animFlat({ flat: 0, intended: true, mask: true, maskFade: true, caption: 'mask waveguides are fixed to the tool, not to the crystal' }) },
         { t: 21, shot: 'Montage of later layers: electrode and gold pad layers land on first-layer alignment crosses, verniers read zero. A semi-transparent crystal axis gizmo fades in over the wafer: the waveguides run along z, the dashed green intended direction runs along y.', caption: 'Every layer aligned to every other layer.', cast: [], draw: animFlat({ flat: 0, intended: true, mask: true, caption: 'waveguides along z; intended along y' }) },
-        { t: 28, shot: 'Test bay, six weeks later. A monitor shows a modulator transfer curve stretched across a far larger voltage range than the reference trace. The bystander in a lab coat, seen from behind, points at the screen. Freeze frame. Red stamp: NOT OKAY.', caption: 'Is this okay?', cast: ['Bystander'], draw: animFlat({ flat: 0, intended: true, mask: true, stamp: 'NOT OKAY', caption: 'is this okay?' }) }
+        { t: 28, shot: 'Test bay, six weeks later. A monitor shows a modulator transfer curve stretched across a far larger voltage range than the reference trace. Dana, in a lab coat, seen from behind, points at the screen. Freeze frame. Red stamp: NOT OKAY.', caption: 'Is this okay?', cast: ['Dana'], draw: animFlat({ flat: 0, intended: true, mask: true, stamp: 'NOT OKAY', caption: 'is this okay?' }) }
       ]
     },
     {
       type: 'chat', title: 'The thread: Lot 7 out of family', app: 'email',
-      meta: { header: 'Inbox', subject: 'Lot 7 modulators: V pi out of family (please read)', participants: ['Bystander', 'Gary', 'Manager'] },
+      meta: {"header": "Inbox", "subject": "Lot 7 modulators: V pi out of family", "participants": ["Dana", "Gary", "Manager"]},
       messages: [
-        { from: 'Bystander', text: 'Lot 7 test summary. Low-frequency V pi is about 4.5 times the lot 6 value. RF V pi is about 8 times. Same layout, same electrodes, same wafer supplier.', side: 'left' },
-        { from: 'Gary', text: 'Probably the wafer vendor. Or the spin coater. It rotates the wafers.', side: 'right' },
-        { from: 'Bystander', text: 'Incoming inspection confirmed x-cut, and the flats match the supplier datasheet. Under the microscope, the waveguides run parallel to the primary flat. The traveler sketch shows them perpendicular.', side: 'left' },
-        { from: 'Manager', text: 'So the waveguides are along the wrong axis?', side: 'left' },
-        { from: 'Bystander', text: "Along z instead of y. The spin coater stopped where it stopped, as it always does. The flat was the reference. It was loaded at three o'clock.", side: 'left' },
-        { from: 'Gary', text: 'I can load the next lot correctly and we never talk about lot 7.', side: 'right' },
-        { from: 'Manager', text: 'We will talk about lot 7.', side: 'left' }
+        {"from": "Dana", "text": "Hi all,\n\nLot 7 test summary attached. Low-frequency V pi is about 4.5 times the lot 6 value, and RF V pi is about 8 times. Same layout, same electrodes, same wafer supplier. Wafer map photo attached as well.\n\nDana", "side": "left", "to": ["Gary", "Manager"], "cc": ["Lithography process owner"], "date": "2026-11-16 09:12", "subject": "Lot 7 modulators: V pi out of family", "attachments": [{"name": "lot7_vpi_summary.xlsx", "size": "1.2 MB"}, {"name": "lot7_wafer_map.jpg", "size": "840 KB"}]},
+        {"from": "Gary", "text": "Thanks Dana.\n\nLots 5 and 6 are both in family, so lot 7 looks like a one-off. The new supplier batch or the coater would be my first guesses; the coater was acting up that week.\n\nProposal: we exclude lot 7 from the review summary as non-representative and rerun the wafer next week.\n\nGary", "side": "right", "to": ["Dana Okafor", "Manager"], "cc": ["Lithography process owner"], "date": "2026-11-16 10:03", "subject": "RE: Lot 7 modulators: V pi out of family"},
+        {"from": "Dana", "text": "Hi Gary,\n\nIncoming inspection confirmed x-cut, and the flats match the supplier datasheet. Under the microscope the waveguides run parallel to the primary flat; the traveler sketch has them perpendicular. It looks like the first layer went down 90 degrees from the flat, not a material problem.\n\nDana", "side": "left", "to": ["Gary", "Manager"], "cc": ["Lithography process owner"], "date": "2026-11-16 10:41", "subject": "RE: RE: Lot 7 modulators: V pi out of family"},
+        {"from": "Manager", "text": "Thanks both.\n\nCan we keep Thursday's review focused on the representative lots? I would rather not open a failure analysis for one lot this close to the review. Gary, please fix the loading step and we will move on.", "side": "left", "to": ["Gary", "Dana Okafor"], "date": "2026-11-16 11:15", "subject": "RE: RE: Lot 7 modulators: V pi out of family"},
+        {"from": "Gary", "text": "Will do. I will update the recipe card and clean up the lot 7 data in the shared folder so the review deck is not confusing.", "side": "right", "to": ["Manager", "Dana Okafor"], "date": "2026-11-16 11:32", "subject": "RE: RE: RE: Lot 7 modulators: V pi out of family"}
       ],
       narration: [
         "The incident unfolds over email.",
-        "The test result is clear. The first instinct is to blame the wafer vendor and the spin coater. The bystander follows the evidence to the hand-off.",
-        "Gary offers to load the next lot correctly and never talk about this one. Is this okay?",
-        "No. Fixing the next lot without logging this one is how it happens again.",
+        "The test result is clear. The first guesses are the supplier batch and the coater. Dana follows the evidence to the hand-off.",
+        "Gary proposes excluding lot 7 as non-representative and cleaning up its data. The manager would rather not open a failure analysis this close to the review. Is this okay?",
+        "No. Nobody here is acting in bad faith, and that is the problem. Lot 7 gets no failure analysis, no traveler entry, and no root cause on record, and its data is about to be removed instead of marked. The next lot goes through the same hand-off.",
         "Know your axes. " + RESPOND
       ]
     },
@@ -1615,26 +1616,26 @@
       narration: ["You are Gary.", "The test summary is in your inbox. You remember loading the flat at three o'clock.", "What would you do?"],
       options: [
         { text: "Reply to all: confirm the flat was loaded at three o'clock; log it in the lot traveler and the shared run sheet with the wafer IDs and the measured V pi at both frequencies; tell the process owner today; propose a flat check sign-off at the aligner", correct: true, why: '' },
-        { text: 'Load the next lot correctly and say nothing about lot 7', correct: false, why: "Loading the next lot correctly is good. Saying nothing about lot 7 is not. Lot 7 now exists as a set of modulators with their waveguides along the crystal z axis, and a V pi about eight times higher at R F. If it is not logged, those chips can reach a test bench, a customer, or a paper, labeled as the intended design. Silence also leaves the procedure unchanged, so the same hand-off from the spin coater to the aligner can fail again next week, for you or for a coworker. Under Policy P H C seventeen point three, an orientation incident is logged in the traveler and the shared run sheet, and the process owner is told the same day. Shame is normal. Logging is mandatory. Know your axes." },
-        { text: 'Report the root cause as the spin coater, which rotates every wafer', correct: false, why: "The spin coater did exactly what it was told. It held the wafer by vacuum, spun it, and stopped at whatever angle the motor stopped at. Spin coaters are not expected to return a wafer at a defined rotation, and nothing in the procedure assumes that they do. That is why the flat exists, and why the procedure puts the flat at six o'clock on the aligner chuck. The orientation reference was not lost inside the spin coater. It was lost at the hand-off, when the wafer went onto the aligner without the flat being checked against the card on the tool. Reporting the spin coater would classify this as tool-initiated misconduct and send the corrective action to the wrong place. The fix belongs at the hand-off: a flat check, an entry in the traveler, and a second pair of eyes. Know your axes." },
-        { text: 'Open a maintenance ticket on the aligner vacuum chuck and prealigner', correct: false, why: "A vacuum chuck holds the wafer exactly where it was placed. It has no opinion about crystal axes. On tools that have a prealigner, the prealigner finds the flat and turns the wafer to the angle in the recipe, and it does that very reliably, including when the recipe angle is wrong. On a manual aligner, the operator seats the flat against the pins. In this incident, the wafer was seated with the flat at three o'clock, and the chuck held it there faithfully. A maintenance ticket would close as no fault found, the tool owner would lose an afternoon, and the procedure would stay the same. Check the flat against the traveler at the aligner, and record it. Know your axes." },
-        { text: 'Blame the wafer vendor: the flat must be on the wrong edge', correct: false, why: "The supplier's datasheet defines which crystal direction the flat marks, and incoming inspection confirmed that these wafers are x-cut and match that datasheet. The flat was in the right place on the wafer. The wafer was in the wrong place on the chuck. Blaming the supplier would classify this as third-party misconduct, and it would be unfair to a supplier who did nothing wrong. Supplier problems do happen in general, which is why incoming inspection exists and why the datasheet belongs in the traveler. Here, the evidence points to the hand-off. Know your axes." },
-        { text: 'Ask the simulation team to re-run the mode solver until it agrees with the measurement', correct: false, why: "The mode solver computed the device in the design: a waveguide along y, with T E polarized along z, using r three three. It was right about that device. The fabricated device is a different device, with its waveguide along z. Re-running the solver until it matches the measurement, by changing parameters you have no physical reason to change, turns a correct simulation into a wrong one and hides the real cause. If you want the simulation to explain the measurement, set it up with the waveguide along z, state that frame on the first slide, and confirm that it predicts the r two two response. Then log the incident. Know your axes." },
-        { text: 'Delete lot 7 from the results database as an outlier', correct: false, why: "Lot 7 is not an outlier. It is an accurate measurement of a device with its waveguides along the wrong crystal axis. Deleting it removes the only evidence that the hand-off failed, and deleting data is never an approved response to an orientation incident at Intracavity Photonics. Keep the data. Label it with the actual orientation. Log the incident in the traveler and the shared run sheet, and tell the process owner. Know your axes." }
+        { text: "Fix the loading step for lot 8, and exclude lot 7 from the review summary as non-representative", correct: false, why: "Fixing the loading step is right, and excluding a lot from a summary sounds tidy. But lot 7 is not non-representative. It is an accurate measurement of a device with its waveguides along the crystal z axis, and it is the only evidence that the hand-off failed. Excluded without a failure analysis, it leaves no traveler entry and no root cause, and nobody can tell later whether lot 8 was fixed or just lucky. The record has to say what happened: the flat was loaded at three o'clock, here are the measurements, here is the corrective action. Exclude it from the device statistics if you like, but mark it, explain it, and keep it. Know your axes." },
+        { text: "Write the root cause as \"spin coater or new supplier batch, under investigation\" and move on", correct: false, why: "Under investigation sounds careful. Here it is not, because the evidence is already in hand: incoming inspection confirmed the material, and the microscope shows the waveguides parallel to the flat. The spin coater did exactly what it always does: it held the wafer by vacuum, spun it, and stopped at whatever angle it stopped at. That is why the flat exists. A root cause of 'under investigation' that nobody investigates becomes the root cause of record, and it points the corrective action at the wrong place. The orientation was lost at the hand-off to the aligner. Write that down. Know your axes." },
+        { text: "Open a maintenance ticket on the aligner chuck and prealigner, to rule out the tool first", correct: false, why: "Ruling out the tool first sounds methodical. But a vacuum chuck holds the wafer exactly where it was placed, and a prealigner turns it to the angle in its recipe, very reliably, including when the recipe angle is wrong. On a manual aligner, the operator seats the flat against the pins. Here the wafer was seated with the flat at three o'clock, and you remember doing it. The ticket would close as no fault found, the tool owner would lose an afternoon, and lot 7 would still have no record. Check the flat against the traveler at the aligner, and log what happened. Know your axes." },
+        { text: "Ask the supplier to confirm their flat convention before anyone writes anything down", correct: false, why: "Confirming a convention with a supplier is often a good idea, and if this were a new supplier with an unread datasheet, it would be the first step. But incoming inspection already confirmed that these wafers match the datasheet. The flat was in the right place on the wafer. The wafer was in the wrong place on the chuck. Waiting for the supplier delays the record by days and implies a cause the evidence does not support. Log what you know now, and update it if anything changes. Know your axes." },
+        { text: "Ask the simulation team to re-check the model, in case it overpredicted the electro-optic response", correct: false, why: "Re-checking a model is never wasted. But the model was right about the device in the design: a waveguide along y, with T E polarized along z, using r three three. The fabricated device is a different device, with its waveguide along z. Looking for a modeling error first sends the investigation away from the hand-off, and it delays the record. If you want the model to explain the measurement, set it up with the waveguide along z and confirm the r two two response. Then log the incident. Know your axes." },
+        { text: "Clean up the lot 7 data in the shared folder so the review deck is not confusing", correct: false, why: "A clean review deck is a reasonable goal. Cleaning up the data is not the way to get it. Moved, renamed, or deleted files are how a failure disappears from the record, and the next person to see a lot with eight times the V pi will have nothing to compare it with. Keep the data where it is, label it with the actual orientation, and put a one-line explanation in the deck if it would confuse people. Marked data is not confusing. Missing data is. Know your axes." }
       ],
       correctSay: "You logged it, you told the process owner, and you proposed a fix to the procedure. " + RESPOND + " Know your axes."
     },
     {
-      type: 'check', kicker: 'You are the bystander',
+      type: 'check', kicker: 'You are Dana, Gary\'s labmate',
       question: "You are next in line for the mask aligner. Gary's wafer is on the chuck with the flat at three o'clock. The card on the tool says six o'clock. Gary's hand is on the exposure button. What do you do?",
-      narration: ["You are the bystander.", "You are next in line for the mask aligner. The flat is at three o'clock. The card says six o'clock. Gary is about to expose.", "What would you do?"],
+      narration: ["You are Dana.", "You are next in line for the mask aligner. The flat is at three o'clock. The card says six o'clock. Gary is about to expose.", "What would you do?"],
       options: [
         { text: 'Speak up now with the approved phrase, "' + PHRASE_O + '" Point to the flat and the card, and let Gary re-seat the wafer and note it in the traveler', correct: true, why: '' },
-        { text: 'Say nothing. It is not your wafer', correct: false, why: "At Intracavity Photonics, a lot with waveguides along the wrong axis consumes shared tool time, shared test time, and a shared schedule, so in that sense every wafer is everyone's wafer. Right now, before exposure, the fix takes ten seconds: re-seat the wafer with the flat at six o'clock. After exposure, the resist can usually be stripped and the wafer re-coated, which takes an hour. After etch, the error is permanent, and you will read about it in a lot 7 email. Bystander silence is not neutrality. It is a decision to let the crystal be wrong. Use the approved phrase. " + PHRASE_O },
-        { text: 'Mention it to Gary at lunch', correct: false, why: "Lunch is a wonderful time to discuss crystal orientation, and we encourage it. But by lunch, this wafer will have been exposed, developed, and possibly etched. Feedback delivered after the etch is a post-mortem, not a correction. The cheapest moment to speak up is before the exposure button is pressed. Use the approved phrase now. " + PHRASE_O + " Then, at lunch, you may discuss flat conventions as much as you like." },
-        { text: 'Wait until Gary leaves for coffee, then rotate the wafer yourself', correct: false, why: "Your intention is good, but an undocumented correction is its own orientation incident. Gary may come back, find the wafer somewhere unexpected, and rotate it again. The traveler will not record what happened. And handling another person's wafer on a vacuum chuck without telling them is how wafers get chipped and resist gets fingerprinted. Corrections are made by the person running the lot, out loud, and written in the traveler. Use the approved phrase. " + PHRASE_O },
-        { text: 'Take a photo and post it in the group chat with a laughing reaction', correct: false, why: "A photo of the flat can be useful evidence for the traveler. A laughing reaction in the group chat is not part of any procedure at Intracavity Photonics. Public mockery teaches people to hide orientation incidents instead of logging them, and hidden incidents are the ones that reach customers. Gary will feel ashamed either way. Shame is normal. Ridicule is not. Speak up directly, at the tool, with the approved phrase. " + PHRASE_O },
-        { text: "Email Gary's manager anonymously after the lot is etched", correct: false, why: "Escalation channels exist, and the Photonic Conduct Speak-Up Line accepts anonymous reports. But waiting until after etch turns a ten-second fix into a lost lot. When you can prevent an incident safely and directly, prevention comes first. Use the approved phrase at the tool. " + PHRASE_O + " If Gary disagrees, then escalate." }
+        { text: "Say nothing yet. Gary may be using a different card for this mask set", correct: false, why: "Giving a coworker the benefit of the doubt is kind, and sometimes a mask set does use a different loading convention. The way to find out is to ask, in one sentence, before the exposure. If Gary has a reason, he can explain it in ten seconds and you both learn something. If he does not, you saved a lot. After exposure, the resist can usually be stripped and redone, which takes an hour. After etch, the error is permanent. Use the approved phrase. Pause, please. Orientation check." },
+        { text: "Mention it after the exposure, so you do not interrupt a timed step", correct: false, why: "Not interrupting a timed step is a good instinct in a lithography bay. But the exposure has not started, and the flat check takes seconds. After the exposure, the resist has to be stripped and the wafer re-coated, and after etch the error is permanent. The cheapest moment to speak up is before the button is pressed. Use the approved phrase now. Pause, please. Orientation check." },
+        { text: "Re-seat the wafer for Gary while he checks the mask, to save time", correct: false, why: "Helping is good. Handling another person's wafer on their run, without telling them, is not. Gary may come back, find the wafer somewhere unexpected, and rotate it again, and the traveler will not record what happened. Corrections are made by the person running the lot, out loud, and written in the traveler. Use the approved phrase, and let Gary re-seat it. Pause, please. Orientation check." },
+        { text: "Take a photo of the flat for the traveler and send it to Gary after the run", correct: false, why: "A photo for the traveler is genuinely useful evidence. Sending it after the run turns it into evidence of a lost lot instead of a saved one. The photo can wait; the exposure cannot. Speak up first, at the tool, with the approved phrase, and then take the photo for the traveler together. Pause, please. Orientation check." },
+        { text: "Raise it with the process owner at the end of the week, so the loading procedure gets fixed properly", correct: false, why: "Fixing the procedure is the right long-term goal, and the process owner is the right person for it. But this wafer is on the chuck now. A procedure fix at the end of the week does not save this lot. Prevention first: speak up at the tool. Then, yes, raise the procedure with the process owner. Pause, please. Orientation check." }
       ],
       correctSay: PHRASE_O + " Five words before exposure cost nothing. After etch, they cost a lot. Speak up."
     },
@@ -1648,7 +1649,7 @@
       'Category: launch polarization, 90 degrees',
       'Location: modulator test bench 3',
       'Product: x-cut thin-film lithium niobate modulators, waveguides along y',
-      'Persons involved: Gary, a coworker, Gary\'s manager',
+      'Persons involved: Gary, Dana Okafor (labmate), Gary\'s manager',
       'Status: logged'
     ], ["It concerns a ninety degree error in the launch polarization at the chip input."]),
     {
@@ -1659,7 +1660,7 @@
         "He turns the two stress rods to vertical, because he remembers the slow axis as perpendicular to the rods.",
         "In this type of fiber, the slow axis runs along the line through the stress rods. The light leaves the fiber polarized vertically, out of the chip plane. That is T M.",
         "The modulator still works. On the oscilloscope, it just needs nearly three times the voltage.",
-        "Is this okay? No. Know your axes. " + M
+        "Is this okay? No. " + M
       ],
       keyframes: [
         { t: 0, shot: 'Optical test bench, 50 mm lens, shallow depth of field. Gloved hands unplug a polarization-maintaining patch cord from a rotatable mating sleeve that feeds the lensed fiber at the chip input, and plug in a new one. A small lithium niobate chip on a vacuum stage sits between two lensed fibers. Background out of focus: a rack with a tunable laser and a photodetector.', caption: 'The old patch cord: stress rods horizontal.', cast: ['Gary'], draw: animPM({ rot0: 0, caption: 'old fiber: rods horizontal, light TE' }) },
@@ -1670,21 +1671,21 @@
     },
     {
       type: 'chat', title: 'The thread: The voltage went up overnight', app: 'thread',
-      meta: { header: '#test-bench', participants: ['Gary', 'Bystander', 'Manager'] },
+      meta: { header: '#test-bench', participants: ['Gary', 'Dana', 'Manager'] },
       messages: [
         { from: 'Gary', text: 'V pi on the reference chip is 2.9 times what it was last week, same triangle sweep on the scope. same chip, same probes, same electrodes', side: 'left' },
         { from: 'Manager', text: 'did anything change', side: 'left' },
         { from: 'Gary', text: 'new input patch cord. rods set like always', side: 'left' },
-        { from: 'Bystander', text: 'which way are the rods', side: 'right' },
+        { from: 'Dana', text: 'which way are the rods', side: 'right' },
         { from: 'Gary', text: 'vertical. slow axis horizontal', side: 'left' },
-        { from: 'Bystander', text: 'in this fiber the slow axis is along the rods. vertical rods, vertical polarization. you are launching TM. on x-cut along y that uses r13, not r33', side: 'right' },
+        { from: 'Dana', text: 'in this fiber the slow axis is along the rods. vertical rods, vertical polarization. you are launching TM. on x-cut along y that uses r13, not r33', side: 'right' },
         { from: 'Gary', text: 'so the 14 chips I measured this week', side: 'left' },
-        { from: 'Bystander', text: 'TM. rotate the fiber 90 degrees, re-measure, and log which runs used which polarization', side: 'right' }
+        { from: 'Dana', text: 'TM. rotate the fiber 90 degrees, re-measure, and log which runs used which polarization', side: 'right' }
       ],
       narration: [
         "Gary notices the V pi went up, but trusts his memory of the fiber. Is this okay?",
         "No. A clean transfer curve with the wrong voltage is the signature of the wrong electro-optic coefficient.",
-        "The bystander asks the one question that matters: which way are the rods?",
+        "Dana asks the one question that matters: which way are the rods?",
         "Know your axes. " + RESPOND
       ]
     },
@@ -1716,9 +1717,9 @@
       narration: ["You are Gary.", "Fourteen chips were measured in T M this week. Two results already went to a customer.", "What would you do?"],
       options: [
         { text: 'Set the launch to TE and verify it with a polarizer; re-measure all 14 chips; mark the TM runs as TM in the bench log and the shared run sheet; tell the process owner and the account owner so the customer data can be corrected', correct: true, why: '' },
-        { text: 'Quietly rotate the fiber back, re-measure, and overwrite this week\'s results without telling anyone', correct: false, why: "Rotating the fiber back and re-measuring is exactly the right technical step. Doing it quietly and overwriting the old results is not. Two results already left the building labeled as T E. If the run sheet is overwritten, nobody can tell the customer which numbers to replace, and nobody can find out how long the launch was wrong. Overwritten data is not corrected data. It is deleted data with a new timestamp. Keep the T M runs, label them as T M, re-measure in T E, and tell the people who received the old numbers. Know your axes." },
+        { text: "Rotate the fiber, re-measure, and replace this week's numbers in the run sheet with the corrected ones", correct: false, why: "Re-measuring is exactly the right technical step. Replacing the numbers is not. Two results already left the building labeled as T E, and overwritten rows cannot tell anyone which values to correct, or how long the launch was wrong. Corrected data and overwritten data look the same in a run sheet, unless the old rows are kept and marked. Keep the T M runs, label them T M, add the T E re-measurements beside them, and tell the people who received the old numbers. Know your axes." },
         { text: 'Divide the TM V pi values by 2.9 and report them as TE', correct: false, why: "The factor of about two point nine is an estimate for equal mode overlap, using unclamped coefficients measured at six hundred thirty three nanometers, which apply to your low-frequency triangle sweep. The T M mode overlaps the in-plane electrode field differently from the T E mode, so the real ratio differs from chip to chip and design to design. At R F, where the clamped coefficients apply, the same estimate is about three point two to three point four, so even the constant depends on frequency. Dividing by a constant turns a measurement into a guess and labels the guess as a measurement. Re-measure in T E. Know your axes." },
-        { text: 'Blame the fiber vendor for unclear slow-axis labeling', correct: false, why: "The fiber did what this type of fiber does. Its slow axis runs along the line through the stress rods, as fiber of this design always has, and the datasheet describes the fiber type. The rotation was set from memory, at the bench. Blaming the supplier would classify this as third-party misconduct, when the reference was lost in your own setup, which is domestic misconduct. The fix is a polarization check with a polarizer before coupling, recorded in the bench log. Know your axes." },
+        { text: "Ask the fiber vendor to confirm the slow-axis marking before changing anything", correct: false, why: "Confirming a marking with a vendor sounds careful. But the fiber did what this type of fiber does: its slow axis runs along the line through the stress rods. The rotation was set from memory, at the bench. Waiting for a vendor reply delays the correction of data that is already with a customer. Check the launch polarization with a polarizer now, and log it. Know your axes." },
         { text: 'Report the fiber rotation mount as faulty', correct: false, why: "The rotation mount held the angle it was set to, which is its only job. It cannot read stress rods, and it does not know which axis is slow. The rods were turned to vertical by hand, on purpose, from memory. A maintenance ticket would close as no fault found. Check the launch polarization with a polarizer before coupling, and record it. Know your axes." },
         { text: 'Blame the inspection scope: the end-face image must be mirrored', correct: false, why: "Some cameras and microscopes do mirror the image, and that is worth knowing. But a mirror flips left and right. It maps a vertical line of stress rods to a vertical line, and a horizontal line to a horizontal line. A mirror cannot turn a ninety degree error into a correct alignment, or the other way around. The rods really were vertical. The slow axis really was vertical. Know your axes." },
         { text: 'Blame the electrode gold: it must have degraded', correct: false, why: "Degraded electrodes would raise loss and change the R F response. They would not multiply the low-frequency V pi by about three on the same chip overnight while the transfer curve stays clean. A factor near three, appearing the day a fiber was changed, points at the launch polarization, and the electro-optic coefficient changing from r three three to r one three. Know your axes." }
@@ -1726,9 +1727,9 @@
       correctSay: "Verify, re-measure, label, and tell the people who received the old numbers. " + RESPOND
     },
     {
-      type: 'check', kicker: 'You are the bystander',
+      type: 'check', kicker: 'You are Dana',
       question: 'You walk past test bench 3. The end-face image on the monitor shows the stress rods vertical. The bench card says horizontal. Gary is about to start a 14-chip overnight run and leave. What do you do?',
-      narration: ["You are the bystander.", "The stress rods are vertical. The bench card says horizontal. Gary is about to start an overnight run.", "What would you do?"],
+      narration: ["You are Dana.", "The stress rods are vertical. The bench card says horizontal. Gary is about to start an overnight run.", "What would you do?"],
       options: [
         { text: 'Speak up now: "' + PHRASE_O + '" Point to the rods and the bench card, and suggest a polarizer check before the run starts', correct: true, why: '' },
         { text: 'Say nothing. Maybe Gary knows something you do not', correct: false, why: "Gary may indeed know something you do not. The way to find out is to ask, before an overnight run that will produce fourteen chips of data in the wrong polarization. If Gary has a reason, he can explain it in ten seconds and you will both learn something. If he does not, you saved a night of bench time and a week of confusion. Use the approved phrase. " + PHRASE_O },
@@ -1747,7 +1748,7 @@
       'Location: package qualification lab',
       'Product: bulk z-cut lithium niobate phase modulator, 0.5 mm thick, in a test fixture on a thermoelectric cooler',
       'Equipment involved: one driver amplifier (former)',
-      "Persons involved: Gary, a coworker, Gary's manager",
+      "Persons involved: Gary, Dana Okafor (labmate), Gary's manager",
       'Status: logged'
     ], ["It concerns a pyroelectric discharge from a bulk z-cut lithium niobate chip into a connected driver amplifier."]),
     {
@@ -1771,17 +1772,17 @@
     },
     {
       type: 'chat', title: 'The thread: Amplifier failure on fixture 2', app: 'email',
-      meta: { header: 'Inbox', subject: 'Driver amplifier failure on fixture 2 (random?)', participants: ['Gary', 'Bystander', 'Manager'] },
+      meta: {"header": "Inbox", "subject": "Driver amplifier failure on fixture 2", "participants": ["Gary", "Dana", "Manager"]},
       messages: [
-        { from: 'Gary', text: 'The driver amplifier on fixture 2 failed during the thermal qualification. Random failure, I think. I have a spare. Logging it as random.', side: 'left' },
-        { from: 'Bystander', text: 'Was the chip lithium niobate, and were the pads connected during the temperature step?', side: 'right' },
-        { from: 'Gary', text: 'Bulk z-cut. I unplugged the amplifier during the step to protect it, and plugged it back in at 70 C.', side: 'left' },
-        { from: 'Bystander', text: 'Then the amplifier was protected during the step and exposed right after it. Floating pads on z-cut store the pyroelectric charge. Plugging in at temperature discharged it through the amplifier output.', side: 'right' },
-        { from: 'Manager', text: 'So not random?', side: 'left' },
-        { from: 'Bystander', text: 'Not random. Shorting cap on the connector during every thermal step, slow ramp, plug in only after it is discharged. And the spare amplifier stays in the box until the procedure is updated.', side: 'right' }
+        {"from": "Gary", "text": "Hi all,\n\nThe driver amplifier on fixture 2 failed during thermal qualification. These amplifiers have failed before. I have swapped in a spare and logged it as an amplifier failure, cause unknown, so we keep the qualification on schedule.\n\nGary", "side": "left", "to": ["Manager", "Dana Okafor"], "date": "2026-11-18 15:05", "subject": "Driver amplifier failure on fixture 2", "attachments": [{"name": "fixture2_thermal_qual_log.csv", "size": "880 KB"}]},
+        {"from": "Dana", "text": "Hi Gary,\n\nWas the chip lithium niobate, and were the pads connected during the temperature step?\n\nDana", "side": "right", "to": ["Gary"], "cc": ["Manager"], "date": "2026-11-18 15:40", "subject": "RE: Driver amplifier failure on fixture 2"},
+        {"from": "Gary", "text": "Bulk z-cut. I unplugged the amplifier during the step to protect it, and plugged it back in at 70 C to start the RF test.", "side": "left", "to": ["Dana Okafor"], "cc": ["Manager"], "date": "2026-11-18 16:02", "subject": "RE: RE: Driver amplifier failure on fixture 2"},
+        {"from": "Dana", "text": "Then the amplifier was protected during the step and exposed right after it. Floating pads on z-cut store the pyroelectric charge; plugging in at temperature discharged it through the amplifier output.", "side": "right", "to": ["Gary"], "cc": ["Manager"], "date": "2026-11-18 16:25", "subject": "RE: RE: RE: Driver amplifier failure on fixture 2"},
+        {"from": "Manager", "text": "So not a random failure?", "side": "left", "to": ["Dana Okafor", "Gary"], "date": "2026-11-18 16:40", "subject": "RE: RE: RE: Driver amplifier failure on fixture 2"},
+        {"from": "Dana", "text": "Not random. Shorting cap on the connector during every thermal step, slow ramp, connect only after discharge. I would also keep the spare in its box until the procedure is updated.", "side": "right", "to": ["Manager", "Gary"], "cc": ["Equipment owner, fixture 2"], "date": "2026-11-18 16:52", "subject": "RE: RE: RE: Driver amplifier failure on fixture 2"}
       ],
       narration: [
-        "Gary logs the amplifier failure as random. Is this okay?",
+        "Gary logs the amplifier failure as cause unknown, swaps in a spare, and keeps the qualification on schedule. Is this okay?",
         "No. A failure with a mechanism is not random. Floating electrodes on z-cut lithium niobate store pyroelectric charge, and plugging in at temperature delivers it to whatever is on the other end of the cable.",
         "Watch your charge. " + RESPOND
       ]
@@ -1819,22 +1820,22 @@
       narration: ["You are Gary.", "You understand the failure now. Fixture three is waiting for the same thermal step.", "What would you do?"],
       options: [
         { text: 'Tag the failed amplifier, log the incident with the mechanism in the shared run sheet, tell the equipment owner and the process owner, and hold fixture 3 until the procedure has a shorting cap during thermal steps, a ramp limit, and a discharge check before reconnecting', correct: true, why: '' },
-        { text: 'Swap in the spare amplifier, log the failure as random, and run fixture 3 the same way', correct: false, why: "Logging a failure with a known mechanism as random is inaccurate, and running fixture three the same way will very likely deliver the same discharge to the spare amplifier. The mechanism is simple: floating electrodes on a bulk z-cut chip store the pyroelectric charge from a forty five kelvin step, and reconnecting at temperature delivers it through the connector. An unscreened upper bound is several kilovolts. Under Policy P H C seventeen point three, equipment damage with a known cause is logged with that cause, and the procedure is fixed before the next run. Watch your charge." },
+        { text: "Swap in the spare, log the failure as 'amplifier failure, cause unknown', and keep fixture 3 on schedule", correct: false, why: "Cause unknown sounds honest, and keeping a qualification on schedule matters. But the cause is not unknown anymore. You know the mechanism: floating electrodes on a bulk z-cut chip stored the pyroelectric charge from a forty five kelvin step, and reconnecting at temperature delivered it through the connector. Logged as unknown, the record sends the next engineer to the amplifier vendor, and running fixture three the same way will very likely deliver the same discharge to the spare. Log the mechanism, and fix the procedure before the next run. Watch your charge." },
         { text: 'Blame the amplifier vendor for an inadequate ESD rating', correct: false, why: "Every amplifier has a limit to the electrostatic discharge it survives, and the datasheet states the rating it was tested to. A charged lithium niobate chip with floating electrodes is not a person touching a pin. It is a large stored charge, released through a connector center pin straight into the output stage. No reasonable rating is designed for that. The amplifier was not inadequate. It was connected to a charged crystal. Blaming the supplier would classify this as third-party misconduct, when the cause is in the procedure. Watch your charge." },
         { text: 'Report the temperature controller for ramping too fast', correct: false, why: "The temperature controller ramped at maximum speed because the ramp rate was set to maximum. It did exactly what it was told. A slower ramp does help, because it gives surface conduction more time to screen the charge, but the controller is not the cause, and with floating pads even a slow ramp can leave charge on bulk lithium niobate, where dark conduction is slow. The cause is floating electrodes during a temperature change, followed by a hot reconnection. Set a ramp limit in the procedure, short the pads, and discharge before reconnecting. Watch your charge." },
         { text: 'Point out that you were wearing a grounded wrist strap the whole time', correct: false, why: "Wearing a wrist strap was correct, and thank you. But a wrist strap grounds you. It does not ground the crystal. Lithium niobate is an insulator, and charge on an insulating surface does not flow to ground just because a grounded person is nearby. The charge here was on the crystal faces under floating electrodes, and it left through the cable you connected. Insulators are handled with shorting paths, ionizers, and slow ramps. Watch your charge." },
-        { text: 'Rework the burned electrode with a probe needle and re-test without logging it', correct: false, why: "Scraping or bridging a burned electrode gap does not restore the device, and it hides the evidence of what happened. The burn track across the gap is a record of the discharge path. Rework without logging also means the chip may return to a bench as if nothing happened. Photograph the damage, log it with the mechanism, and keep the chip as evidence for the procedure change. Watch your charge." },
+        { text: "Rework the burned electrode so the chip can finish its test, and add a note later", correct: false, why: "Finishing the test is tempting, because the chip is otherwise fine. But bridging a burned electrode gap does not restore the device, and the burn track is the record of the discharge path. A note added later is a note that often never gets added. Photograph the damage, log it with the mechanism now, and keep the chip as evidence for the procedure change. Watch your charge." },
         { text: 'Blame the humidity in the lab', correct: false, why: "Humidity does affect how fast surface charge leaks away, and very dry air makes static problems worse. But humidity did not create the charge. A forty five kelvin step on a pyroelectric crystal did, and floating pads stored it. Changing the weather is not a corrective action. Short the pads, limit the ramp, and discharge before reconnecting. Watch your charge." }
       ],
       correctSay: "Tag it, log it with the mechanism, tell the owners, and fix the procedure before the next run. Watch your charge. " + RESPOND
     },
     {
-      type: 'check', kicker: 'You are the bystander',
+      type: 'check', kicker: 'You are Dana',
       question: 'Fixture 3 has just finished a fast thermal step to 70 C. Its connector has no shorting cap. Gary is reaching for the driver amplifier cable. What do you do?',
-      narration: ["You are the bystander.", "The fixture just finished a thermal step. The connector has no shorting cap. Gary is reaching for the amplifier cable.", "What would you do?"],
+      narration: ["You are Dana.", "The fixture just finished a thermal step. The connector has no shorting cap. Gary is reaching for the amplifier cable.", "What would you do?"],
       options: [
         { text: 'Speak up now: "' + PHRASE_C + '" Ask Gary to wait, let the chip return to room temperature, discharge the pads through a resistor to ground, and then connect', correct: true, why: '' },
-        { text: 'Say nothing. It is not your amplifier', correct: false, why: "It is not your amplifier, but it is the company's amplifier, and next week it may be yours. More importantly, a discharge through a connector is a hazard to equipment and a disruption to everyone who shares the bench. Right now, waiting a few minutes and discharging the pads costs nothing. After the snap, it costs an amplifier and a day. Use the approved phrase. " + PHRASE_C },
+        { text: "Say nothing. Gary has run this fixture many times and knows it", correct: false, why: "Experience is real, and Gary has run this fixture many times. But this step was faster than usual, the connector has no shorting cap, and the charge does not care about experience. Waiting a few minutes and discharging the pads costs nothing. After the snap, it costs an amplifier and a day. Use the approved phrase. Pause, please. Charge check." },
         { text: 'Switch off the amplifier power supply so it is safe', correct: false, why: "Switching off the supply feels safe, but an unpowered amplifier is not protected from an electrostatic discharge into its output. Discharge damage does not need the device to be powered. The stored charge on the crystal goes through the connector either way. The fix is to remove the charge before connecting, not to remove the power. Use the approved phrase. " + PHRASE_C },
         { text: 'Hand Gary a wrist strap', correct: false, why: "A wrist strap grounds Gary. It does not ground the crystal, which is an insulator with charge sitting on its faces under floating electrodes. When the cable connects, that charge goes through the connector, not through Gary. Wrist straps are part of the procedure, but they do not address this hazard. Use the approved phrase, and discharge the pads before connecting. " + PHRASE_C },
         { text: 'Mention it at the next safety meeting', correct: false, why: "The next safety meeting is a good place to discuss the procedure change. It is not a good time to stop this particular connection, which is happening in the next five seconds. Speak first, then bring it to the meeting. Use the approved phrase. " + PHRASE_C }
@@ -1850,7 +1851,7 @@
       'Category: crystal orientation, 180 degrees',
       'Location: RF probe station 1',
       'Product: x-cut thin-film lithium niobate traveling-wave modulators, 5 mm, on-chip termination',
-      "Persons involved: Gary, a coworker, Gary's manager",
+      "Persons involved: Gary, Dana Okafor (labmate), Gary's manager",
       'Status: logged, and escalated'
     ], ["It concerns a one hundred eighty degree orientation error at an R F probe station, and what happened when the schedule became involved."]),
     {
@@ -1872,19 +1873,19 @@
     },
     {
       type: 'chat', title: 'The thread: Chip 3 bandwidth', app: 'thread',
-      meta: { header: '#rf-test', participants: ['Gary', 'Bystander', 'Manager'] },
+      meta: { header: '#rf-test', participants: ['Gary', 'Dana', 'Manager'] },
       messages: [
-        { from: 'Gary', text: 'chip 3: EO response is -3 dB at about 6 GHz with a null near 13.5 GHz. DC V pi is perfect. probably the network analyzer calibration', side: 'left' },
-        { from: 'Bystander', text: 'which end does the light go in', side: 'right' },
-        { from: 'Gary', text: 'left. same as always', side: 'left' },
-        { from: 'Bystander', text: 'and the RF probe', side: 'right' },
-        { from: 'Gary', text: 'right side today. that is where the RF in pads were', side: 'left' },
-        { from: 'Bystander', text: 'then the chip is turned around. light and RF counter-propagate. 6 GHz and a null at 13.5 is exactly what a 5 mm chip does backwards', side: 'right' },
-        { from: 'Gary', text: 'I could just turn it around and re-measure. nobody needs to know', side: 'left' },
-        { from: 'Bystander', text: 'turn it around and re-measure, yes. and log it. the rest of the lot came out of the same gel-pak', side: 'right' }
+        {"from": "Gary", "text": "chip 3: EO response is -3 dB at about 6 GHz with a null near 13.5 GHz. DC V pi is fine. probably the network analyzer calibration, it was done yesterday", "side": "left"},
+        {"from": "Dana", "text": "which end does the light go in", "side": "right"},
+        {"from": "Gary", "text": "left. same as always", "side": "left"},
+        {"from": "Dana", "text": "and the RF probe", "side": "right"},
+        {"from": "Gary", "text": "right side today. that is where the RF in pads were", "side": "left"},
+        {"from": "Dana", "text": "then the chip is turned around. light and RF counter-propagate. 6 GHz and a null at 13.5 is exactly what a 5 mm chip does backwards", "side": "right"},
+        {"from": "Gary", "text": "ok. I will turn it around, re-measure, and update its row. no need to make a thing of it, it is one chip", "side": "left"},
+        {"from": "Dana", "text": "turn it around and re-measure, yes. and log it. the rest of the lot came out of the same gel-pak", "side": "right"}
       ],
       narration: [
-        "Gary's first guess is the network analyzer calibration. His second is to fix it quietly. Is this okay?",
+        "Gary's first guess is the network analyzer calibration. His second is to fix the one chip and update its row. Is this okay?",
         "No. The calibration did nothing wrong, and quiet fixes hide the other chips loaded the same way.",
         "Know your axes. " + RESPOND
       ]
@@ -1923,55 +1924,55 @@
       narration: ["You are Gary.", "Chip three was loaded turned around. The other eleven chips came out of the same unmarked gel-pak.", "What would you do?"],
       options: [
         { text: 'Turn chip 3 to match the bench card and re-measure; record the orientation of every chip already measured in the shared run sheet; re-test any chip whose orientation is unknown; mark the dies and the gel-pak; tell the process owner', correct: true, why: '' },
-        { text: 'Quietly turn chip 3 around, re-measure, and replace the result', correct: false, why: "Turning the chip around and re-measuring gives the right number for chip three. Doing it quietly loses the information that chips were being loaded turned around. The other eleven chips came out of the same gel-pak, and some of their results may already be in the run sheet, measured backwards, with nothing to flag them. A quiet fix corrects one chip and leaves eleven unknown. Re-measure, record the orientation of every chip, mark the dies, and tell the process owner. Know your axes." },
+        { text: "Turn chip 3 around, re-measure, and update its row in the run sheet", correct: false, why: "Turning the chip around and re-measuring gives the right number for chip three. Updating one row does not tell anyone that chips were being loaded turned around. The other eleven chips came out of the same unmarked gel-pak, and some of their results may already be in the run sheet, measured backwards, with nothing to flag them. Re-measure chip three, mark the old row instead of replacing it, record the orientation of every chip, and tell the process owner. Know your axes." },
         { text: 'Re-calibrate the network analyzer and re-measure', correct: false, why: "A calibration corrects the instrument and cables up to the probe tips. It does not know which way the light goes on the chip. Re-calibrating will give you the same six gigahertz roll-off and the same null near thirteen and a half gigahertz, because those come from the light and the R F wave traveling in opposite directions through a five millimeter electrode. A calibration problem would also not produce a clean sinc null at exactly the frequency the counter-propagation formula predicts. The instrument did exactly what it was told. Know your axes." },
         { text: 'Replace the RF probe: it must be worn', correct: false, why: "A worn probe raises contact resistance and adds loss and ripple. It does not create a deep null at the speed of light divided by the device length times the sum of the R F and optical indices. That null is the signature of counter-propagation. A new probe would land on the same pads and measure the same physics. Know your axes." },
         { text: 'Report the probe station chuck theta stage for rotating the die', correct: false, why: "A theta stage rotates the chuck by the amount you command, and then holds it. It cannot turn a die end for end by itself, and a half turn is not a small alignment correction. The die was placed turned around when it came out of the gel-pak, and the chuck held it there faithfully. The reference was lost at the hand-off from the gel-pak to the chuck. Know your axes." },
         { text: 'Blame the gel-pak supplier: the dies must have rotated in transit', correct: false, why: "A gel-pak holds each die by surface tack, in the orientation it was placed. Dies do not turn end for end in a gel-pak. These dies were placed by a coworker, without die marks, in no recorded orientation. The orientation was never recorded, so it could not be lost in transit. That is a hand-off within the same group, which is peer-to-peer misconduct, not third-party. Mark the dies and record the orientation. Know your axes." },
-        { text: 'Report the DC V pi only, since it is correct', correct: false, why: "The D C V pi is indeed correct, because turning a finished chip around does not change its D C response. But this is a high-speed modulator, and its purpose is its R F response. Reporting only the D C value, when you know the R F test was done backwards, hides the result the customer cares about. Your D C is not your R F. Re-measure in the right orientation and report both. Know your axes." }
+        { text: "Report the DC V pi now, and add the RF numbers when the re-test is done", correct: false, why: "The D C V pi is correct, because turning a finished chip around does not change its D C response, and reporting what you trust is a reasonable instinct. But this is a high-speed modulator, and its R F response is what the customer is buying. Reporting only D C now, while you know the R F test was done backwards on some chips, lets the record say the lot is characterized when it is not. Report both, with the R F marked as pending re-test. Your D C is not your R F." }
       ],
       correctSay: "One chip fixed, eleven chips accounted for, and the dies marked. Know your axes. " + RESPOND
     },
     {
       type: 'chat', title: 'The thread: The Friday shipment', app: 'phone',
-      meta: { header: 'Manager', participants: ['Manager', 'Bystander'] },
+      meta: { header: 'Manager', participants: ['Manager', 'Dana'] },
       messages: [
-        { from: 'Manager', text: 'customer demo is Friday. DC V pi is in spec for the whole lot. ship it as measured', side: 'left' },
-        { from: 'Bystander', text: 'we do not know which chips were measured backwards. re-testing the RF on 12 chips takes about a day', side: 'right' },
-        { from: 'Manager', text: 'we do not have a day. keep the RF data off the run sheet until after Friday', side: 'left' },
-        { from: 'Manager', text: 'and I will remember who helped us make Friday', side: 'left' }
+        {"from": "Manager", "text": "customer demo is Friday. DC V pi is in spec across the lot. RF can follow with the next lot", "side": "left"},
+        {"from": "Dana", "text": "we do not know which chips were measured backwards. re-testing RF on 12 chips is about a day", "side": "right"},
+        {"from": "Manager", "text": "can we hold the RF numbers off the run sheet until they are re-measured? I do not want half-validated data in front of the customer", "side": "left"},
+        {"from": "Manager", "text": "appreciate you being a team player on this one", "side": "left"}
       ],
       narration: [
         "Now the schedule enters the room.",
-        "The manager asks to ship on D C data, and to keep the R F data off the run sheet until after Friday. Then the manager adds: I will remember who helped us make Friday.",
-        "Pause here. Notice the offer and the implied threat. Both are covered by Policy P H C seventeen point three."
+        "The manager suggests shipping on the D C data, and holding the R F numbers off the run sheet until they are re-measured. Then: appreciate you being a team player on this one.",
+        "Pause here. Nothing in it is a threat. Notice what would be missing from the record, and what is being asked of you."
       ]
     },
     {
       type: 'check', kicker: 'What would you do?',
-      question: 'You are the coworker who found the orientation error. Your manager asks you to ship on DC data and keep the RF results off the run sheet until after Friday. What do you do?',
-      narration: ["You are the coworker who found the error.", "Your manager wants the R F results kept off the run sheet until after Friday.", "What would you do?"],
+      question: 'You are Dana. Your manager suggests shipping on DC data and holding the RF numbers off the run sheet until they are re-measured. What do you do?',
+      narration: ["You are Dana.", "Your manager suggests holding the R F numbers off the run sheet until they are re-measured.", "What would you do?"],
       options: [
         { text: 'Put the RF results and the orientation finding on the run sheet, reply in writing with the facts and a re-test plan with its time estimate, and if the pressure continues, use the Photonic Conduct Speak-Up Line', correct: true, why: '' },
-        { text: 'Comply. The manager owns the schedule', correct: false, why: "The manager does own the schedule. The manager does not own the physics, and does not own the run sheet's accuracy. Keeping known results off the run sheet means the chips ship with a record that says their high-speed performance is fine, when you know some of them were measured backwards and the true response is unknown. Your job is to record what you measured and what you know, and to state the re-test plan and its cost. The decision to ship can then be made with the facts in view. Know your axes." },
+        { text: "Agree to hold the RF numbers until the re-test, so half-validated data does not confuse the customer", correct: false, why: "Not confusing the customer is a fair concern. But holding known results off the run sheet means the record says the high-speed performance is fine, when you know some chips were measured backwards and their true response is unknown. Half-validated data is handled by marking it, not by hiding it. Put the R F numbers on the run sheet, marked as measured with an unknown orientation, add the re-test plan and its time estimate, and let the shipping decision be made with that in view. Speak up." },
         { text: 'Ship, but add a vague footnote: "RF performance under characterization"', correct: false, why: "A vague footnote is a way of saying something without saying it. The customer will read it as routine. You know something specific: some chips were measured with the light and the R F wave counter-propagating, which collapses the bandwidth to a few gigahertz, and which chips is unknown. Write that down plainly, with the re-test plan. Know your axes." },
         { text: 'Re-test only chip 3 in the right orientation and ship the lot with that one result', correct: false, why: "Chip three is the only chip whose orientation you are sure of. One correct result does not certify eleven chips whose orientation was never recorded. Shipping the lot under chip three's number would turn one measurement into twelve claims. Re-test every chip whose orientation is unknown, or state clearly which chips were not re-tested. Know your axes." },
-        { text: 'Post the whole exchange in the company-wide channel with the caption "this is how we do quality here"', correct: false, why: "Your concern is valid, and speaking up is protected. But a public post in a company-wide channel is not the approved channel, and it turns a technical problem into a public conflict. The facts get lost, and people take sides. Put the facts on the run sheet, reply to your manager in writing, and if the pressure continues, use the Photonic Conduct Speak-Up Line, which exists exactly for this." },
-        { text: 'Delete the RF data so there is nothing to disagree about', correct: false, why: "Deleting data is never an approved response at Intracavity Photonics, under any schedule. The R F data is evidence of a real orientation error, and deleting it does not change the physics of the shipped chips. It only removes your ability to explain them. Keep the data. Put it on the run sheet. Know your axes." }
+        { text: "Raise it in the team channel, so everyone sees the issue before Friday", correct: false, why: "Visibility helps, and a team channel is less dramatic than going over anyone's head. But it moves a disagreement about one decision into a public thread, where the facts get lost and people take sides. The right sequence is: facts on the run sheet, a written reply to your manager with the re-test plan, and, if the pressure continues, the Photonic Conduct Speak-Up Line, which exists for exactly this. Speak up, in the right place." },
+        { text: "Move the RF data to a separate 'to be validated' folder that is not linked from the run sheet", correct: false, why: "A separate folder for unvalidated data sounds organized. In practice it is a way for data to leave the record without anyone deciding that it should. The run sheet is where the next person looks. Keep the R F data on it, marked as measured with an unknown orientation, with the re-test plan beside it. Know your axes." }
       ],
       correctSay: "Facts on the run sheet, the plan in writing, and the Speak-Up Line if the pressure continues. Speak up."
     },
     {
       type: 'chat', title: 'The thread: The following Monday', app: 'phone',
-      meta: { header: 'Manager', participants: ['Manager', 'Bystander'] },
+      meta: { header: 'Manager', participants: ['Manager', 'Dana'] },
       messages: [
-        { from: 'Manager', text: 'saw you put the RF data on the run sheet', side: 'left' },
-        { from: 'Manager', text: 'I have moved your aligner slots to the night shift and taken you off the customer review. just to keep the team focused', side: 'left' },
-        { from: 'Bystander', text: 'is this because of the run sheet', side: 'right' },
-        { from: 'Manager', text: 'it is because of focus', side: 'left' }
+        {"from": "Manager", "text": "quick one before our 1:1. I have trimmed the customer review attendee list to keep it small, so you are off this one", "side": "left"},
+        {"from": "Manager", "text": "also want to talk about tone. the run sheet note on Friday came across as escalating", "side": "left"},
+        {"from": "Dana", "text": "ok. is this about the RF data on the run sheet", "side": "right"},
+        {"from": "Manager", "text": "it is about how we communicate as a team", "side": "left"}
       ],
       narration: [
-        "The coworker logged the results. The following Monday, the coworker's tool time moved to nights, and the coworker was removed from the customer review.",
+        "Dana put the R F results on the run sheet, marked as measured with an unknown orientation. The following Monday, Dana was left off the customer review, and a one-on-one was booked about tone.",
         "Consider what you have seen."
       ]
     },
@@ -1980,30 +1981,30 @@
       question: "Which statement best describes the manager's Monday message?",
       narration: ["Which statement best describes the manager's Monday message?"],
       options: [
-        { text: 'Retaliation: an adverse change to tool time and meeting access, right after a good-faith orientation report', correct: true, why: '' },
-        { text: 'Normal schedule optimization', correct: false, why: "Schedules do change for legitimate reasons. But this change came immediately after a good-faith report, it took away tool time and access to a meeting, and it was announced in the same message that mentioned the report. The stated reason, focus, does not explain why this person, and why now. An adverse action that follows a report, and that would discourage a reasonable person from reporting again, is retaliation under Policy P H C seventeen point three. Intracavity Photonics has zero tolerance for retaliation." },
-        { text: 'Constructive feedback about team focus', correct: false, why: "Constructive feedback describes behavior and how to improve it. This message describes no behavior to improve, except putting accurate results on the run sheet, which is required by procedure. Moving someone's tool time to nights and removing them from a review right after they logged a finding is not feedback. It is retaliation. Intracavity Photonics has zero tolerance for retaliation." },
-        { text: 'Retaliation only if the coworker turns out to be right about the orientation', correct: false, why: "Protection does not depend on being right. A good-faith report is protected even if the investigation later finds a different cause. If people could only speak up when they were certain, nobody would speak up before the etch. In this case the coworker was right, but that is not why the report is protected. Intracavity Photonics has zero tolerance for retaliation." }
+        { text: 'Retaliation: being left off a review and called in about tone, right after a good-faith report', correct: true, why: '' },
+        { text: "Normal attendee management for a customer meeting", correct: false, why: "Attendee lists do get trimmed for legitimate reasons. But this change came right after Dana put the R F results on the run sheet, it removed Dana from the one meeting where those results matter, and it arrived together with a conversation about tone that refers to the run-sheet note. An adverse change that follows a report, and that would discourage a reasonable person from reporting again, is retaliation under Policy P H C seventeen point three, even when it is described as routine. Five Sigma Photonics has zero tolerance for retaliation." },
+        { text: "Constructive feedback about communication style", correct: false, why: "Feedback on communication can be legitimate. But the only communication named here is an accurate entry on the run sheet, which the procedure requires. Calling a required report escalating, in the same breath as taking someone off a review, teaches people to stop writing things down. That is retaliation, however politely it is delivered. Five Sigma Photonics has zero tolerance for retaliation." },
+        { text: 'Retaliation only if the coworker turns out to be right about the orientation', correct: false, why: "Protection does not depend on being right. A good-faith report is protected even if the investigation later finds a different cause. If people could only speak up when they were certain, nobody would speak up before the etch. In this case the coworker was right, but that is not why the report is protected. Five Sigma Photonics has zero tolerance for retaliation." }
       ],
-      correctSay: "This is retaliation. Good-faith orientation and charge reports are protected, whether or not they turn out to be right. Intracavity Photonics has zero tolerance for retaliation."
+      correctSay: "This is retaliation. Good-faith orientation and charge reports are protected, whether or not they turn out to be right. Five Sigma Photonics has zero tolerance for retaliation."
     },
     {
       type: 'slide', layout: 'policy', title: 'Zero tolerance for retaliation',
       bullets: [
         'Good-faith orientation and charge reports are protected activity under Policy PHC-17.3',
-        'Retaliation includes reassigning tool time, removing access to reviews or authorship, and schedule changes that follow a report',
+        'Retaliation includes removing access to reviews or authorship, reassigning tool time, and negative comments about tone that follow a report',
         'Protection does not depend on being right',
         'Report retaliation through the Photonic Conduct Speak-Up Line',
-        'Offering tool time or schedule relief for a skipped check is a separate violation: quid pro quo orientation'
+        'Linking goodwill, tool time, or credit to a skipped check is a separate violation: quid pro quo orientation'
       ],
       callout: 'The crystal does not retaliate. Neither do we.',
       narration: [
-        "Intracavity Photonics has zero tolerance for retaliation.",
+        "Five Sigma Photonics has zero tolerance for retaliation.",
         "Good-faith orientation and charge reports are protected activity under Policy P H C seventeen point three.",
-        "Retaliation includes reassigning tool time, removing access to reviews or authorship, and schedule changes that follow a report.",
+        "Retaliation includes removing access to reviews or authorship, reassigning tool time, and negative comments about tone that follow a report. It is often polite.",
         "Protection does not depend on being right.",
         "If you experience or witness retaliation, report it through the Photonic Conduct Speak-Up Line.",
-        "And remember Friday's message: I will remember who helped us make Friday. Offering a benefit in exchange for a skipped check is its own category. Quid pro quo orientation.",
+        "And remember Friday's message about being a team player. Linking goodwill, tool time, or credit to a skipped check is its own category. Quid pro quo orientation.",
         "The crystal does not retaliate. Neither do we. " + M
       ]
     }
@@ -2090,7 +2091,7 @@
       "This is one die. Before it reaches a test bench, it passes through many hands.",
       "A spin coater. A mask aligner. A mode solver. A wafer supplier. A shared gel-pak. A partner university. Your own fiber mount. A deal made under schedule pressure. And a lab where nobody has time to check.",
       "Each one can turn it. None of them writes it down unless someone does.",
-      "Is this okay? No. Know your axes. " + M
+      "Is this okay? No. " + M
     ],
     keyframes: [
       { t: 0, shot: 'Abstract set: a single rectangular lithium niobate die with a small red corner mark, resting on a white turntable against a dark grey seamless background, lit by one soft key light. Slow orbit.', caption: 'One die.', cast: [], draw: animHands({ labels: ['one die'], caption: 'one die, one mark' }) },
@@ -2108,7 +2109,7 @@
     ],
     callout: 'Eight categories. One response.',
     narration: [
-      "At Intracavity Photonics, orientation misconduct means any act or omission that makes a device's crystal axes differ from what its records say.",
+      "At Five Sigma Photonics, orientation misconduct means any act or omission that makes a device's crystal axes differ from what its records say.",
       "It may originate with a person, a tool, a program, a supplier, a partner institution, or an entire environment.",
       "We classify it by source, so that the corrective action goes to the right place.",
       "But the response does not depend on the source. " + RESPOND,
@@ -2138,14 +2139,14 @@
       callout: 'Tools are not disciplined. Recipes and hand-offs are.',
       chat: {
         type: 'chat', title: 'Category 1 vignette: The prealigner', app: 'thread',
-        meta: { header: '#equipment', participants: ['Gary', 'Bystander'] },
+        meta: { header: '#equipment', participants: ['Gary', 'Dana'] },
         messages: [
-          { from: 'Gary', text: 'the aligner prealigner rotated my wafer 90 degrees. opening a ticket', side: 'left' },
-          { from: 'Bystander', text: 'it found the flat and turned the wafer to the recipe angle. which recipe did you run', side: 'right' },
-          { from: 'Gary', text: 'the default', side: 'left' },
-          { from: 'Bystander', text: 'the default recipe was written for a different product and a different mask. the tool did exactly what the recipe said', side: 'right' },
-          { from: 'Gary', text: 'so the tool is innocent', side: 'left' },
-          { from: 'Bystander', text: 'the tool is a tool. check the flat on the chuck before every first-layer exposure, and put the recipe name in the traveler', side: 'right' }
+          {"from": "Gary", "text": "the prealigner turned my wafer 90 degrees on the last run. opening a ticket so equipment can look at it", "side": "left"},
+          {"from": "Dana", "text": "it found the flat and turned the wafer to the recipe angle. which recipe did you run", "side": "right"},
+          {"from": "Gary", "text": "the default one. it is what everyone uses", "side": "left"},
+          {"from": "Dana", "text": "the default recipe was written for a different product and a different mask. the tool did exactly what the recipe said", "side": "right"},
+          {"from": "Gary", "text": "ok, so I will just switch recipes next time", "side": "left"},
+          {"from": "Dana", "text": "switch recipes, and check the flat on the chuck before every first-layer exposure. put the recipe name in the traveler", "side": "right"}
         ],
         narration: ["A tool turned the wafer, exactly as its recipe said, and nobody checked the flat before exposure.", "Tools are not disciplined. Recipes and hand-offs are. Know your axes."]
       },
@@ -2174,14 +2175,14 @@
       callout: 'The solver does not know your wafer. It knows your input.',
       chat: {
         type: 'chat', title: 'Category 2 vignette: z is z', app: 'phone',
-        meta: { header: 'Gary', participants: ['Gary', 'Bystander'] },
+        meta: { header: 'Gary', participants: ['Gary', 'Dana'] },
         messages: [
-          { from: 'Gary', text: 'my time-domain simulation says TE and TM never cross on our x-cut. bends are safe', side: 'left' },
-          { from: 'Bystander', text: 'how did you enter the crystal', side: 'right' },
-          { from: 'Gary', text: 'diagonal anisotropic material. n_e on z', side: 'left' },
-          { from: 'Bystander', text: 'simulation z or crystal z? in your setup, simulation z is the film normal', side: 'right' },
-          { from: 'Gary', text: 'z is z', side: 'left' },
-          { from: 'Bystander', text: 'then your x-cut model is a z-cut model. the software solved it correctly. check it against a known case: bulk TE along y on x-cut should see n_e', side: 'right' }
+          {"from": "Gary", "text": "my time-domain simulation says TE and TM never cross on our x-cut. bends are safe", "side": "left"},
+          {"from": "Dana", "text": "how did you enter the crystal", "side": "right"},
+          {"from": "Gary", "text": "diagonal anisotropic material. n_e on z", "side": "left"},
+          {"from": "Dana", "text": "simulation z or crystal z? in your setup, simulation z is the film normal", "side": "right"},
+          {"from": "Gary", "text": "the crystal axes line up with the simulation axes, that is the default", "side": "left"},
+          {"from": "Dana", "text": "then your x-cut model is a z-cut model. the software solved it correctly. check it against a known case: bulk TE along y on x-cut should see n_e", "side": "right"}
         ],
         narration: ["Gary put the crystal z axis on the simulation z axis, which in his setup is the film normal. The software solved a z-cut device, correctly.", "The solver does not know your wafer. It knows your input. Know your axes."]
       },
@@ -2210,13 +2211,13 @@
       callout: 'X-cut names the axis normal to the wafer. It does not name the flat.',
       chat: {
         type: 'chat', title: 'Category 3 vignette: Same cut, new supplier', app: 'email',
-        meta: { header: 'Inbox', subject: 'Cost reduction: new x-cut wafer supplier', participants: ['Gary', 'Bystander', 'Manager'] },
+        meta: {"header": "Inbox", "subject": "Cost reduction: new x-cut wafer supplier", "participants": ["Gary", "Dana", "Manager"]},
         messages: [
-          { from: 'Gary', text: 'Switched to the new supplier\'s x-cut wafers. Same cut, same mask, lower price.', side: 'left' },
-          { from: 'Bystander', text: 'Did anyone compare the new datasheet\'s flat definition with the old one?', side: 'right' },
-          { from: 'Gary', text: 'Both say x-cut.', side: 'left' },
-          { from: 'Bystander', text: 'X-cut says which axis is normal to the wafer. It does not say which in-plane direction the flat marks. That is in the flat specification, and the new one is different.', side: 'right' },
-          { from: 'Manager', text: 'Please attach both datasheets to the traveler and add an incoming flat check.', side: 'left' }
+          {"from": "Gary", "text": "Hi all,\n\nFor the cost reduction: we have switched to the new supplier's x-cut wafers starting with lot 11. Same cut, same mask, about 20 percent cheaper.\n\nGary", "side": "left", "to": ["Manager", "Dana Okafor"], "date": "2026-11-03 14:20", "subject": "Cost reduction: new x-cut wafer supplier", "attachments": [{"name": "supplier_quote_xcut_100mm.pdf", "size": "410 KB"}]},
+          {"from": "Dana", "text": "Hi Gary,\n\nDid anyone compare the new datasheet's flat definition with the old one?\n\nDana", "side": "right", "to": ["Gary"], "cc": ["Manager"], "date": "2026-11-03 15:02", "subject": "RE: Cost reduction: new x-cut wafer supplier"},
+          {"from": "Gary", "text": "Both datasheets say x-cut, 100 mm, same thickness. The flats are standard.", "side": "left", "to": ["Dana Okafor"], "cc": ["Manager"], "date": "2026-11-03 15:30", "subject": "RE: RE: Cost reduction: new x-cut wafer supplier"},
+          {"from": "Dana", "text": "X-cut says which axis is normal to the wafer. It does not say which in-plane direction the flat marks. That is in the flat specification, and the new one is different from the old one.\n\nDana", "side": "right", "to": ["Gary"], "cc": ["Manager"], "date": "2026-11-03 16:05", "subject": "RE: RE: Cost reduction: new x-cut wafer supplier", "attachments": [{"name": "flat_spec_comparison.pdf", "size": "220 KB"}]},
+          {"from": "Manager", "text": "Thanks Dana. Please attach both datasheets to the traveler and add an incoming flat check for lot 11 onward.", "side": "left", "to": ["Gary", "Dana Okafor"], "date": "2026-11-03 16:40", "subject": "RE: RE: Cost reduction: new x-cut wafer supplier"}
         ],
         narration: ["The new supplier's datasheet defines the flat at a different crystal direction. Nobody compared it with the old one, and the old mask was used.", "X-cut names the axis normal to the wafer. It does not name the flat. Know your axes."]
       },
@@ -2247,12 +2248,12 @@
         type: 'chat', title: 'Category 4 vignette: The way I always put it', app: 'thread',
         meta: { header: '#lab-ops', participants: ['Gary', 'Previous shift'] },
         messages: [
-          { from: 'Gary', text: 'who put the lot 9 dies in the shared gel-pak', side: 'left' },
-          { from: 'Previous shift', text: 'me. they are fine', side: 'right' },
-          { from: 'Gary', text: 'which end is the input facet', side: 'left' },
-          { from: 'Previous shift', text: 'the same end as always', side: 'right' },
-          { from: 'Gary', text: 'which end is always', side: 'left' },
-          { from: 'Previous shift', text: 'the end I always put it', side: 'right' }
+          {"from": "Gary", "text": "who put the lot 9 dies in the shared gel-pak", "side": "left"},
+          {"from": "Previous shift", "text": "me, last night. they are all good dies", "side": "right"},
+          {"from": "Gary", "text": "which end is the input facet", "side": "left"},
+          {"from": "Previous shift", "text": "same as last week, label toward the front", "side": "right"},
+          {"from": "Gary", "text": "the label is on both ends on this mask", "side": "left"},
+          {"from": "Previous shift", "text": "then input toward the front, I think", "side": "right"}
         ],
         narration: ["Orientation was kept in one person's head and placed in a shared gel-pak without marks or a note.", "If the orientation does not travel with the die, the die travels alone. Know your axes."]
       },
@@ -2281,14 +2282,14 @@
       callout: 'There is no standard orientation. There is only a written one.',
       chat: {
         type: 'chat', title: 'Category 5 vignette: Standard orientation', app: 'email',
-        meta: { header: 'Inbox', subject: 'RE: RE: RE: dies shipped', participants: ['Partner lab', 'Gary', 'Bystander'] },
+        meta: {"header": "Inbox", "subject": "Dies shipped", "participants": ["Partner lab", "Gary", "Dana"]},
         messages: [
-          { from: 'Partner lab', text: 'Dies shipped. Standard orientation, as discussed.', side: 'left' },
-          { from: 'Gary', text: 'Thanks! Strange: our plus 45 degree devices behave like our minus 45 degree simulations.', side: 'right' },
-          { from: 'Bystander', text: 'Partner lab: how do you measure angle? We measure from crystal y toward z, viewed from the top.', side: 'right' },
-          { from: 'Partner lab', text: 'From the chip edge, counterclockwise, viewed from the back. We image through the substrate.', side: 'left' },
-          { from: 'Bystander', text: 'Counterclockwise from the back is clockwise from the top. Your plus 45 is our minus 45. On x-cut, those are different devices.', side: 'right' },
-          { from: 'Gary', text: 'As discussed.', side: 'right' }
+          {"from": "Partner lab", "text": "Hi Gary,\n\nThe dies shipped this morning, in standard orientation as discussed. Tracking number below.\n\nBest regards,\nPartner lab", "side": "left", "to": ["Gary"], "cc": ["Dana Okafor"], "date": "2026-10-28 08:30", "subject": "Dies shipped", "attachments": [{"name": "packing_list_batch3.pdf", "size": "96 KB"}]},
+          {"from": "Gary", "text": "Thanks! One oddity: our plus 45 degree devices behave like our minus 45 degree simulations. Probably our model.\n\nGary", "side": "left", "to": ["Partner lab"], "cc": ["Dana Okafor"], "date": "2026-11-02 17:10", "subject": "RE: Dies shipped"},
+          {"from": "Dana", "text": "Hi both,\n\nHow do you measure the angle on your side? We measure from crystal y toward z, viewed from the top.\n\nDana", "side": "right", "to": ["Partner lab"], "cc": ["Gary"], "date": "2026-11-03 09:05", "subject": "RE: RE: Dies shipped"},
+          {"from": "Partner lab", "text": "From the chip edge, counterclockwise, viewed from the back. We image through the substrate.", "side": "left", "to": ["Dana Okafor"], "cc": ["Gary"], "date": "2026-11-03 13:40", "subject": "RE: RE: RE: Dies shipped"},
+          {"from": "Dana", "text": "Counterclockwise from the back is clockwise from the top, so your plus 45 is our minus 45. On x-cut, those are different devices. Could we put a frame sketch in the shipping note from now on?", "side": "right", "to": ["Partner lab"], "cc": ["Gary"], "date": "2026-11-03 14:02", "subject": "RE: RE: RE: Dies shipped"},
+          {"from": "Gary", "text": "Thanks, that explains it. I will relabel our data.", "side": "left", "to": ["Partner lab", "Dana Okafor"], "date": "2026-11-03 14:20", "subject": "RE: RE: RE: Dies shipped"}
         ],
         narration: ["Two institutions, two definitions of zero degrees, and one mirror. On x-cut, plus forty five and minus forty five degrees are different devices.", "There is no standard orientation. There is only a written one. Know your axes."]
       },
@@ -2319,11 +2320,10 @@
         type: 'chat', title: 'Category 6 vignette: Notes to self', app: 'phone',
         meta: { header: 'Notes to self', participants: ['Gary'] },
         messages: [
-          { from: 'Gary', text: 'note: chip 4 loaded, input on the left', side: 'right' },
-          { from: 'Gary', text: 'correction: input on the right?', side: 'right' },
-          { from: 'Gary', text: 'correction: the mark is on the other corner', side: 'right' },
-          { from: 'Gary', text: 'note: do not tell anyone about chip 4', side: 'right' },
-          { from: 'Gary', text: 'note: the previous note is a policy violation', side: 'right' }
+          {"from": "Gary", "text": "note: chip 4 loaded, input on the left", "side": "right"},
+          {"from": "Gary", "text": "correction: input on the right?", "side": "right"},
+          {"from": "Gary", "text": "the mark is on the other corner. today's chip 4 data may be mirrored", "side": "right"},
+          {"from": "Gary", "text": "note: re-measure chip 4 tomorrow. probably no need to flag it", "side": "right"}
         ],
         narration: ["Gary is the source, the victim, and the only witness. Is this okay?", "No. Domestic misconduct has no witnesses. Log it anyway. Know your axes."]
       },
@@ -2352,16 +2352,15 @@
       callout: 'A check cannot be traded. It can only be done.',
       chat: {
         type: 'chat', title: 'Category 7 vignette: The stepper slot', app: 'phone',
-        meta: { header: 'Gary', participants: ['Gary', 'Bystander'] },
+        meta: { header: 'Gary', participants: ['Gary', 'Dana'] },
         messages: [
-          { from: 'Gary', text: 'can you sign off the lot 12 flat check? I will give you my stepper slot tomorrow', side: 'left' },
-          { from: 'Bystander', text: 'did you check the flats', side: 'right' },
-          { from: 'Gary', text: 'they look like flats', side: 'left' },
-          { from: 'Bystander', text: 'no trade. I will do the check with you now. it takes ten minutes', side: 'right' },
-          { from: 'Gary', text: 'slot offer withdrawn', side: 'left' },
-          { from: 'Bystander', text: 'that is fine', side: 'right' }
+          {"from": "Gary", "text": "can you co-sign the lot 12 flat check? I looked at the wafers this morning, they are fine. happy to swap you my stepper slot tomorrow, I know you need it", "side": "left"},
+          {"from": "Dana", "text": "did you check the flats against the traveler", "side": "right"},
+          {"from": "Gary", "text": "visually, yes. they look right", "side": "left"},
+          {"from": "Dana", "text": "thanks for the slot offer, but I cannot co-sign a check I did not see. I can do it with you now, it takes ten minutes", "side": "right"},
+          {"from": "Gary", "text": "fair. 10 minutes it is", "side": "left"}
         ],
-        narration: ["Gary offered tool time in exchange for a sign-off without a check. The bystander declined the trade and offered to do the check.", "A check cannot be traded. It can only be done. Know your axes."]
+        narration: ["Gary offered tool time in the same message as a request to co-sign a check Dana did not see. Dana declined the trade and offered to do the check.", "A check cannot be traded. It can only be done. Know your axes."]
       },
       classifyQ: 'Gary offered his stepper slot to a coworker in exchange for signing off a flat check that was not performed.',
       wrong: [
@@ -2388,14 +2387,14 @@
       callout: 'You should not get used to it.',
       chat: {
         type: 'chat', title: 'Category 8 vignette: You get used to it', app: 'thread',
-        meta: { header: '#cleanroom', participants: ['New hire', 'Gary', 'Manager', 'Bystander'] },
+        meta: { header: '#cleanroom', participants: ['New hire', 'Gary', 'Manager', 'Dana'] },
         messages: [
-          { from: 'New hire', text: 'is it normal that the z-cut wafers crackle when they come off the hotplate', side: 'right' },
-          { from: 'Gary', text: 'yes that is just lithium niobate', side: 'left' },
-          { from: 'New hire', text: 'and the dies in the white box, which way is up', side: 'right' },
-          { from: 'Gary', text: 'nobody knows. you get used to it', side: 'left' },
-          { from: 'Manager', text: 'we will look at it after tapeout', side: 'left' },
-          { from: 'Bystander', text: 'it has been after tapeout for three tapeouts', side: 'left' }
+          {"from": "New hire", "text": "is it normal that the z-cut wafers crackle when they come off the hotplate", "side": "right"},
+          {"from": "Gary", "text": "yes, that is lithium niobate. everyone sees it", "side": "left"},
+          {"from": "New hire", "text": "and the dies in the white box, which way is up", "side": "right"},
+          {"from": "Gary", "text": "they are all the same die, it does not really matter for screening", "side": "left"},
+          {"from": "Manager", "text": "good questions. let us pick this up after tapeout", "side": "left"},
+          {"from": "Dana", "text": "we said after tapeout for the last three tapeouts", "side": "left"}
         ],
         narration: ["Crackling wafers, unmarked dies, and no time to fix either. Is this okay?", "No. When correct conduct is impossible for everyone, the environment is the incident. You should not get used to it. Watch your charge."]
       },
@@ -2417,22 +2416,22 @@
       options: [
         { text: 'Re-run in the stated frame; validate against a known case (bulk TE along y on x-cut sees n_e); send a correction to everyone who received the deck; log it; put the cut, frame, and Euler angles on the first slide from now on', correct: true, why: '' },
         { text: 'File a bug report: the solver default should be x-cut', correct: false, why: "The solver has no way to know what cut your wafer is. A diagonal anisotropic material entered in the simulation's own axes is a documented, reasonable input, and the solver solved exactly the device you described. A bug report would be closed as working as intended, and your deck would still be wrong in three groups' inboxes. Check every material frame against a known case, such as the bulk T E index along y on x-cut, which should be the extraordinary index. Then send the correction. Know your categories. Know your axes." },
-        { text: 'Quietly replace the slides in the shared folder and say nothing', correct: false, why: "Replacing the slides fixes the folder. It does not fix the three groups who already downloaded the deck, who may already be designing around a crossing that does not exist on your wafer. A correction that nobody is told about is not a correction. Send the corrected deck with a one-line explanation of what changed and why, and log it. Know your axes." },
+        { text: "Replace the slides in the shared folder with corrected ones, marked v8", correct: false, why: "Versioning the deck is good practice. But three groups already downloaded version seven, and some may already be designing around a crossing that does not exist on your wafer. A new version in a folder is not a correction unless the people with the old one are told what changed and why. Send the corrected deck with a one-line explanation, and log it. Know your axes." },
         { text: 'Add a footnote: "Crystal frame details available on request"', correct: false, why: "A footnote that hides the frame is the opposite of the procedure. The frame belongs on the first slide, in plain words: the cut, the propagation axis, and the Euler angles, with their convention. And the existing results are wrong, so they need a correction, not a footnote. Know your axes." },
         { text: "Blame last year's template, which someone else made", correct: false, why: "An inherited template can contribute, and if it did, that is worth logging as peer-to-peer misconduct too. But you ran the simulation and you sent the results, and the check against a known case is the user's step. The fix is the same either way: re-run, validate, correct, log. Know your categories." },
-        { text: 'Switch to a different solver that gives the answer you expected', correct: false, why: "A different solver given the same input will solve the same z-cut device. A different solver given a different input may give the answer you expected for reasons unrelated to physics. Shopping for a solver until the answer looks right is not validation. Fix the frame, check it against a known case, and send the correction. Know your axes." }
+        { text: "Cross-check with a second solver before telling anyone", correct: false, why: "A second solver is a good cross-check of numerics. It is not a check of your input. Given the same diagonal tensor with crystal z on the film normal, a second solver will solve the same z-cut device and agree with the first one, which will feel like confirmation. Check the frame against a known case, such as the bulk T E index along y on x-cut, and tell the three groups now, not after the cross-check. Know your axes." }
       ],
       correctSay: "Fix the frame, validate against a known case, and tell everyone who has the old deck. " + RESPOND
     },
     afterPeer: {
-      type: 'check', kicker: 'You are the bystander',
+      type: 'check', kicker: 'You are Dana',
       question: 'You see a coworker taking dies from the shared, unmarked gel-pak and loading them into the probe station without looking for a die mark. What do you do?',
-      narration: ["You are the bystander.", "A coworker is loading dies from the shared unmarked gel-pak, without checking orientation.", "What would you do?"],
+      narration: ["You are Dana.", "A coworker is loading dies from the shared unmarked gel-pak, without checking orientation.", "What would you do?"],
       options: [
         { text: 'Speak up now: "' + PHRASE_O + '" Help check the orientation of the loaded die, and propose marked dies and an orientation column in the run sheet', correct: true, why: '' },
-        { text: 'Say nothing. They are not your dies', correct: false, why: "Shared containers create shared risk. Every die in that gel-pak may be measured by someone in the group, and an unknown orientation on one die becomes an unknown on every result taken from it. Right now, checking costs a minute. Use the approved phrase. " + PHRASE_O },
+        { text: "Say nothing. The coworker loads these dies every day and knows them", correct: false, why: "Daily experience is real. But these dies are unmarked and come from a shared gel-pak, so nobody can know their orientation from experience alone, including the person who loads them every day. Checking costs a minute now. Use the approved phrase. Pause, please. Orientation check." },
         { text: 'Come back at night and mark every die yourself', correct: false, why: "Your initiative is admirable. But marking dies whose orientation is already unknown records a guess as a fact. And doing it alone, at night, leaves no record of who decided what. Orientation is recovered by checking each die against a feature you can verify, together, and recording it. Speak up now. " + PHRASE_O },
-        { text: 'Post "a reminder to some people about gel-pak hygiene" in the group channel', correct: false, why: "Indirect public reminders tell everyone that something is wrong, without telling anyone what to do. The person loading the die right now may not even read it today. Speak directly, kindly, and now. " + PHRASE_O },
+        { text: "Post a general reminder about die marking in the lab channel", correct: false, why: "A general reminder is polite and avoids singling anyone out. But the die being loaded right now is still unmarked, and a reminder read tomorrow does not check it. Speak directly, kindly, and now, and then propose the marking fix for everyone. Pause, please. Orientation check." },
         { text: "Wait to see if their results look bad before saying anything", correct: false, why: "A modulator chip loaded turned around can give a perfect D C result and a quietly wrong R F result. Waiting for results to look bad means waiting for the wrong kind of result. Speak up before the measurement. " + PHRASE_O }
       ],
       correctSay: PHRASE_O + " And then fix the container, not just the die."
@@ -2445,7 +2444,7 @@
         { text: 'Tell the co-authors now, with the affected figures and the corrected labels; log it; add a viewing-direction sketch to every notebook page that records an angle', correct: true, why: '' },
         { text: 'Fix the labels in the next draft without mentioning why', correct: false, why: "Silent edits to angle labels in a paper draft look, to co-authors, like random changes, and some may reverse them. Others may have already used the old labels in their own analysis or simulations. Say what changed and why: the notebook recorded the mirrored view from the back side, so plus and minus angles were swapped. On x-cut, those are different devices. Know your axes." },
         { text: 'Blame the partner lab, since they image through the substrate too', correct: false, why: "The partner lab's convention may be a cross-institutional issue in general, but in this case the notebook is yours, and you recorded the mirrored view yourself. That is domestic misconduct. Assigning it to another institution would be inaccurate and would send the correction to people who did nothing wrong. Know your categories." },
-        { text: 'Remove the affected pages from the notebook', correct: false, why: "Notebooks are records. Removing pages destroys the evidence of what was measured and how it was labeled, which is exactly what you need to correct the paper. Mark the pages with a dated correction note, and keep them. Know your axes." },
+        { text: "Rewrite the affected notebook pages neatly with the corrected angles", correct: false, why: "Neat records are good, and rewriting looks like a correction. But the original pages are the evidence of what was measured and how it was labeled, and that is exactly what your co-authors need to correct the paper. Leave the originals, add a dated correction note on each page, and tell the co-authors. Know your axes." },
         { text: 'Do nothing, since the effect might be small', correct: false, why: "On x-cut lithium niobate, plus forty five and minus forty five degrees are not related by a symmetry of the crystal, so swapped labels can attach the wrong device to the wrong measurement. Whether the effect is small is something you find out after you tell your co-authors, not before. Know your axes." }
       ],
       correctSay: "Domestic misconduct has no witnesses, so you become the reporter. " + RESPOND
@@ -2456,10 +2455,10 @@
       narration: ["You are the new hire.", "Crackling wafers, unmarked dies, floating electrodes, and a team that says you get used to it.", "What would you do?"],
       options: [
         { text: 'Log each observation, raise them with the process owner and your manager in writing with specific requests (ramp control, shorting caps, die marking, time for checks), and use the Photonic Conduct Speak-Up Line if nothing changes', correct: true, why: '' },
-        { text: 'Get used to it, as advised', correct: false, why: "Getting used to it is how a hostile crystal environment sustains itself. Crackling wafers are pyroelectric discharges. Unmarked dies are orientation incidents waiting to happen. Floating electrodes during thermal cycling are how driver amplifiers fail. You are new, which means you can still see it. That is valuable. Log it, and raise it in writing. Watch your charge." },
+        { text: "Follow the existing habits for now. You are new, and the team knows the tools", correct: false, why: "Learning before you judge is a reasonable instinct for a new hire. But crackling wafers are pyroelectric discharges, unmarked dies are orientation incidents waiting to happen, and floating electrodes during thermal cycling are how driver amplifiers fail. You are new, which means you can still see it. Write down what you see, and raise it now. Watch your charge." },
         { text: 'Quietly bring your own ramp-controlled hotplate and shorting caps, and say nothing', correct: false, why: "Protecting your own work is understandable, and your devices will be safer. But everyone else's will not, and an unofficial tool in a shared lab is its own problem. A hostile crystal environment is fixed at the level of the environment: procedures, equipment, and time. Raise it in writing with specific requests." },
-        { text: 'Complain about it at lunch every day', correct: false, why: "Lunch complaints feel productive, but they create no record and assign no owner. The same conditions will be there next week, and you will have become part of the people who joke about it but never log it, which is a warning sign of this category. Write it down and send it to the people who can change it." },
-        { text: 'Resign in the group chat with a long message', correct: false, why: "You may eventually decide this workplace is not for you, and that is your right. But a resignation in a group chat does not fix the hotplate, mark the dies, or protect the next new hire. Use the channels that create records and owners first: logs, written requests, and the Speak-Up Line." }
+        { text: "Raise it informally with a senior colleague first, and see if it comes up again", correct: false, why: "Asking a senior colleague is a good first step for context. But in this lab the senior colleagues already say you get used to it, and seeing if it comes up again means waiting for the next spark. Informal conversations create no record and assign no owner. Write it down, with specific requests, and send it to the process owner and your manager. Watch your charge." },
+        { text: "Wait until your ninety-day review to raise it, when you have more standing", correct: false, why: "Waiting until you have standing feels sensible. But every week until then is more bakes without ramp control and more fixtures without shorting caps. Good-faith reports are protected from your first day, whatever your tenure. Raise it now, in writing. Watch your charge." }
       ],
       correctSay: "Specific, written, and escalated if nothing changes. You should not get used to it. Watch your charge."
     }
@@ -2538,9 +2537,26 @@
     return st;
   }
 
+  /* ---- Module openers: a hero title card at the start of every module ---- */
+  [
+    [ch1, 1, 'media/render/ln_wafer_carrier.jpg', [0.44, 0.62, 1.15, 0.40, 0.70, 1.3], ["Module one. Crystal Orientation Awareness.", "Every wafer arrives with a flat. Every flat arrives with an opinion about your crystal axes."]],
+    [chSrc, 2, 'media/fe/orient_hotspot_mask_aligners.jpg', [0.5, 0.4, 1.0, 0.45, 0.35, 1.2], ["Module two. Sources of Orientation Misconduct.", "Tools, software, suppliers, coworkers, partners, and you. Eight categories. One response."]],
+    [ch2, 3, 'media/fe/opener_bends_drawn.jpg', [0.5, 0.35, 1.0, 0.5, 0.3, 1.12], ["Module three. Respecting Boundaries: Mode Conversion in Bends.", "On x-cut, every bend is also a change of crystal direction."]],
+    [ch3, 4, 'media/fe/opener_photorefractive_drawn.jpg', [0.5, 0.3, 1.0, 0.45, 0.3, 1.12], ["Module four. Photorefractive Conduct.", "The light you send writes back. Scan both ways."]],
+    [ch4, 5, 'media/render/ln_wafer_hotplate.jpg', [0.5, 0.4, 1.0, 0.58, 0.25, 1.4], ["Module five. Pyroelectric Awareness.", "No voltage has been applied. Charge is being generated anyway."]],
+    [ch5, 6, 'media/render/tfln_probe_station_closeup.jpg', [0.5, 0.5, 1.0, 0.5, 0.6, 1.3], ["Module six. Bias Point Retention.", "Your D C is not your R F. Please hold that thought, and your bias point."]],
+    [ch6, 7, 'media/fe/sim_solver_window_drawn.jpg', [0.5, 0.4, 1.0, 0.6, 0.35, 1.25], ["Module seven. Simulation Integrity.", "Solved without errors is not the same as solved correctly."]]
+  ].forEach(function (o) {
+    var ch = o[0];
+    ch.steps.unshift({
+      type: 'slide', layout: 'hero', title: ch.title, heading: ch.title, kicker: 'Module ' + o[1],
+      subtitle: ch.subtitle, image: { src: o[2], kb: o[3] }, narration: o[4]
+    });
+  });
+
   /* ---- Module 0: Welcome ---- */
   ch0.steps[0].image = { src: 'media/fe/welcome_litho_bay.jpg' };
-  ch0.steps[0].subtitle = 'Annual mandatory refresher. Intracavity Photonics, Inc.';
+  ch0.steps[0].subtitle = 'Annual mandatory refresher. Five Sigma Photonics, Inc.';
   addAfter(ch0.steps, 'Course enforcement rules', [
     photoStep('Everyone is responsible', 'media/fe/welcome_fiber_test_floor.jpg',
       'Photonics is a team activity. Orientation is everyone\'s responsibility.',
@@ -2586,7 +2602,7 @@
       ]
     });
   })();
-  incFlat.forEach(function (st) { if (st.kicker === 'You are the bystander') st.image = { src: 'media/fe/orient_microscope_operator.jpg' }; });
+  incFlat.forEach(function (st) { if (/^You are Dana/.test(st.kicker || '')) st.image = { src: 'media/fe/orient_microscope_operator.jpg' }; });
   // Renders (media/credits_render.js). The die cards use crops of the fixture renders (media/fe/card_die_fixture_*.jpg,
   // made from media/render/tfln_die_fixture_*.jpg, box x 440-1400, y 160-880); re-crop if the renders change.
   addAfter(ch1.steps, 'The flat is the only reference', [{
@@ -2720,14 +2736,14 @@
       'Representative image of a failed component, with a different failure mode. Not the fixture 2 amplifier, which declined to be photographed.',
       ["This is a representative image of a failed component.", "It is not the fixture two amplifier, which declined to be photographed. Watch your charge."])
   ]);
-  incHotPlug.forEach(function (st) { if (st.kicker === 'You are the bystander') st.image = { src: 'media/fe/pyro_esd_label.jpg' }; });
+  incHotPlug.forEach(function (st) { if (/^You are Dana/.test(st.kicker || '')) st.image = { src: 'media/fe/pyro_esd_label.jpg' }; });
   (function () {
     var i = -1;
     for (var k = 0; k < ch4.steps.length; k++) if (ch4.steps[k].title === 'What went wrong, technically') { i = k; break; }
     if (i < 0) throw new Error('Media anchor not found: hot plug reveal');
     var ph = photoStep('What a discharge can look like', 'media/render/pyro_discharge_comb_micrograph.jpg',
-      'Illustration: discharge damage on interdigitated electrodes. Rendered for this course, modeled on generic discharge damage of thin gold films; not a recorded lithium niobate micrograph.',
-      ["This is an illustration of discharge damage on interdigitated electrodes, rendered for this course.", "Most of the fingers completed the cooldown. A few in the middle did not. Watch your charge."],
+      'Discharge damage on interdigitated electrodes.',
+      ["This is what discharge damage on interdigitated electrodes can look like.", "Most of the fingers completed the cooldown. A few in the middle did not. Watch your charge."],
       [0.5, 0.5, 1.0, 0.49, 0.45, 1.6]);
     ph.image.alt = 'Rendered illustration of interdigitated gold electrodes with discharge damage: missing gold segments, a fused bridge between fingers, resolidified gold spheres, and a small cracked crater';
     ch4.steps.splice(i + 1, 0, ph);
@@ -2804,9 +2820,9 @@
       ["This is a fabricated device. It has no symmetry planes you did not build. " + M]),
     {
       type: 'hotspots', title: 'Review the model before the result', style: 'pins',
-      prompt: 'Open every pin on the solver window to continue. Interface drawn for this course; the quality factor is the logged case from this chapter.',
+      prompt: 'Open every pin on the solver window to continue. The quality factor is the logged case from this chapter.',
       image: { src: 'media/fe/sim_solver_window_drawn.jpg' },
-      narration: ["Here is a solver window, drawn for this course. Open every pin before you look at the result."],
+      narration: ["Here is a solver window. Open every pin before you look at the result."],
       spots: [
         { x: 0.12, y: 0.247, label: 'Material frame', body: '<p>"Rotated frame" is not a frame. Which cut, which Euler angles, and does the solver rotate the crystal or the coordinates? Print it on the first slide.</p>', narration: ["Rotated frame is not a frame. State the cut, the Euler angles, and the rotation convention. Know your axes."] },
         { x: 0.651, y: 0.481, label: 'Symmetry planes', body: '<p>This is the mistake in this model. Each plane forces the solution to be symmetric or antisymmetric about it. The geometry is symmetric. Is the crystal, in this frame?</p>', narration: ["Each symmetry plane deletes every solution that is neither symmetric nor antisymmetric. The geometry is symmetric. The crystal may not be. Trust no symmetry plane."] },
@@ -3360,6 +3376,239 @@
   };
 
 
+
+  /* ---- chat platform skins (engine field `skin`; generic app looks, no product names in shown text) ---- */
+  var CHAT_SKINS = {
+    'Scenario 1: The symmetric crystal': 'imessage',
+    'Scenario 2: The inherited template': 'mail',
+    'Scenario 3: The animation': 'slack',
+    'The thread: Lot 7 out of family': 'mail',
+    'Category 1 vignette: The prealigner': 'teams',
+    'Category 2 vignette: z is z': 'signal',
+    'Category 3 vignette: Same cut, new supplier': 'mail',
+    'Category 4 vignette: The way I always put it': 'slack',
+    'Category 5 vignette: Standard orientation': 'mail',
+    'Category 6 vignette: Notes to self': 'imessage',
+    'Category 7 vignette: The stepper slot': 'whatsapp',
+    'Category 8 vignette: You get used to it': 'teams',
+    'Scenario 1: The bigger ring': 'meeting',
+    'Scenario 2: The polarization blame': 'whatsapp',
+    'Scenario 3: The routing shortcut': 'slack',
+    'The thread: The voltage went up overnight': 'slack',
+    'Scenario 1: The record': 'imessage',
+    'Scenario 2: Protective cladding': 'mail',
+    'Scenario 3: The lock that ran away': 'slack',
+    'Scenario 1: The faster bake': 'signal',
+    'Scenario 2: Kitchen foil': 'teams',
+    'Scenario 3: The neighbor': 'mail',
+    'The thread: Amplifier failure on fixture 2': 'mail',
+    'Scenario 1: The low V pi': 'mail',
+    'Scenario 2: The overnight hold': 'whatsapp',
+    'Scenario 3: The drift-free claim': 'teams',
+    'The thread: Chip 3 bandwidth': 'slack',
+    'The thread: The Friday shipment': 'imessage',
+    'The thread: The following Monday': 'imessage',
+    'Scenario 1: The quarter model': 'meeting',
+    'Scenario 2: The ignored volt': 'signal',
+    'Scenario 3: The template frame': 'teams'
+  };
+  // Prompt under each chat (engine default: "Pause and reflect: Is this OK?"), where a different question fits better.
+  var CHAT_ISOK = {
+    'The thread: The Friday shipment': 'Pause and reflect: What would you do?',
+    'The thread: The following Monday': 'Pause and reflect: Is this retaliation?'
+  };
+  CAT_ORDER.forEach(function (k, i) { CHAT_ISOK[CAT_CONTENT[k].chat.title] = 'Pause and reflect: Which category of orientation misconduct is this?'; });
+  [ch0, ch1, chSrc, ch2, ch3, ch4, ch5, ch6].forEach(function (ch) {
+    ch.steps.forEach(function (st) {
+      if (st.type !== 'chat') return;
+      var k = CHAT_SKINS[st.title];
+      if (!k) throw new Error('Chat step without a skin: ' + st.title);
+      st.skin = k;
+      if (CHAT_ISOK[st.title]) st.isok = CHAT_ISOK[st.title];
+    });
+  });
+
+
+  /* ======================= INTERACTION PASS: stages, tap-to-advance, reflect, sort ======================= */
+
+  // "Is this okay?" moments: the narration sets the scene, a popup asks the question, and the answer opens as a stage.
+  function joinCaps(t) { return String(t).replace(/\b(?:[A-Z] ){1,5}[A-Z]\b/g, function (m) { return m.replace(/ /g, ''); }); }
+  var OK_DEFAULT = [
+    { text: 'OK', say: 'Look again. Something is missing.' },
+    { text: 'Not OK', correct: true, say: 'Here is why.' }
+  ];
+  var ASK_SPECIAL = {
+    'Scenario 2: Kitchen foil': [
+      { text: 'OK', correct: true, say: 'This one really is okay.' },
+      { text: 'Not OK', say: 'This one is actually fine. The foil is a discharge path.' }
+    ],
+    'Scenario 2: The overnight hold': [
+      { text: 'OK', say: 'Only if it was planned.' },
+      { text: 'Not OK', say: 'It can be fine, if it was planned.' },
+      { text: 'Only if it was a planned experiment', correct: true, say: 'Exactly. Planned, it is an experiment.' }
+    ],
+    'Scenario 1: The quarter model': [
+      { text: 'OK', say: 'Not until the shortcut has been checked once.' },
+      { text: 'Not OK', say: 'It can be fine, once it has been checked.' },
+      { text: 'Only after one full-model check', correct: true, say: 'Exactly. Check once, then use the shortcut.' }
+    ],
+    'Scenario 2: Protective cladding': [
+      { text: 'OK', say: 'Not before it has been measured.' },
+      { text: 'Not OK', say: 'It can be fine, once it has been measured.' },
+      { text: 'Only after measuring with and without it', correct: true, say: 'Exactly. Measure first.' }
+    ]
+  };
+  var VIDEO_WHY = {
+    'Cold open: Which edge is z?': 'A wrong frame does not raise an error. It builds a different device.',
+    "Incident video: The flat at three o'clock": 'The flat was the only reference, and it was loaded at three o\'clock.',
+    'Cold open: Many hands': 'Every hand turned it, and none of them wrote it down.',
+    "Incident video: The rods at twelve o'clock": 'The rotation was set from memory, and nobody checked the launch polarization.'
+  };
+  function stripLead(t) { return String(t).replace(/^(?:No|Yes)\.\s+/, ''); }
+  var answerPrompts = ['See the answer', 'Check the verdict', 'Reveal the outcome', 'See what the policy says'];
+  var nAns = 0;
+  [ch1, chSrc, ch2, ch3, ch4, ch5, ch6].forEach(function (ch) {
+    ch.steps.forEach(function (st) {
+      if (!st.narration || st.stages) return;
+      if (st.type === 'chat') {
+        var k = -1;
+        for (var i = 0; i < st.narration.length; i++) if (/Is this okay\?$/.test(st.narration[i])) { k = i; break; }
+        if (k < 0 || k === st.narration.length - 1) return;
+        var rest = st.narration.slice(k + 1);
+        rest[0] = stripLead(rest[0]);
+        st.narration = st.narration.slice(0, k + 1);
+        st.narration[k] = st.narration[k].replace(/\s*Is this okay\?$/, '');
+        if (!st.narration[k]) st.narration.splice(k, 1);
+        st.ask = { question: 'Is this OK?', after: 'messages', options: ASK_SPECIAL[st.title] || OK_DEFAULT };
+        st.stages = [{ prompt: answerPrompts[nAns++ % answerPrompts.length], body: '<p>' + rest.map(joinCaps).join(' ') + '</p>', narration: rest }];
+      } else if (st.type === 'video') {
+        var last = st.narration[st.narration.length - 1];
+        var m = /^Is this okay\? No\.\s*(?:This is not okay\.\s*)?([\s\S]*)$/.exec(last);
+        if (!m) return;
+        st.narration = st.narration.slice(0, -1);
+        var why = (VIDEO_WHY[st.title] ? VIDEO_WHY[st.title] + ' ' : '') + m[1];
+        st.ask = { question: 'Is this OK?', options: OK_DEFAULT };
+        st.stages = [{ prompt: 'See why', body: '<p>' + joinCaps(why) + '</p>', narration: [why] }];
+      }
+    });
+  });
+  // The cold open of the Sources module follows the same pattern.
+  (function () {
+    var v = chSrc.steps[findStep(chSrc.steps, 'Cold open: Many hands')];
+    var last = v.narration[v.narration.length - 1];
+    var m = /^Is this okay\? No\.\s*([\s\S]*)$/.exec(last);
+    if (m) {
+      v.narration = v.narration.slice(0, -1);
+      v.ask = { question: 'Is this OK?', options: OK_DEFAULT };
+      v.stages = [{ prompt: 'See why', body: '<p>' + m[1] + '</p>', narration: [m[1]] }];
+    }
+  })();
+  // "How do you think Gary felt?" slides: the popup asks, the stage answers.
+  [ch2, ch5].forEach(function (ch) {
+    ch.steps.forEach(function (st) {
+      if (st.title !== 'How do you think Gary felt?' || !st.stages) return;
+      st.narration = st.narration.slice(0, 1);
+      st.ask = { question: 'How do you think Gary felt?', options: [
+        { text: 'Ashamed', correct: true, say: 'Yes. Gary felt ashamed.' },
+        { text: 'Fine', say: 'Gary did not feel fine.' },
+        { text: 'Relieved', say: 'Gary did not feel relieved.' }
+      ] };
+    });
+  });
+
+  // Incident threads unfold one message at a time.
+  ['The thread: Lot 7 out of family', 'The thread: The voltage went up overnight', 'The thread: Amplifier failure on fixture 2',
+   'The thread: Chip 3 bandwidth', 'The thread: The Friday shipment', 'The thread: The following Monday', 'Category 6 vignette: Notes to self'
+  ].forEach(function (t) {
+    var hit = false;
+    [ch1, chSrc, ch2, ch4, ch5].forEach(function (ch) { ch.steps.forEach(function (st) { if (st.type === 'chat' && st.title === t) { st.tapToAdvance = true; hit = true; } }); });
+    if (!hit) throw new Error('tapToAdvance anchor not found: ' + t);
+  });
+
+  // Reflection moments (ungraded).
+  ch0.steps.splice(ch0.steps.length - 1, 0, {
+    type: 'reflect', title: 'Self-assessment', mode: 'scale',
+    prompt: 'How confident are you in your orientation conduct?',
+    scale: ['Not confident', 'Slightly confident', 'Moderately confident', 'Very confident', 'I have never made an orientation error'],
+    narration: ["Before we begin, a short self-assessment. How confident are you in your orientation conduct?"],
+    reveal: '<p>Thank you. Your confidence has been recorded and will be compared with your final assessment. Confidence is not a control. Know your axes.</p>',
+    revealNarration: ["Confidence is not a control. Know your axes."]
+  });
+  addAfter(ch4.steps, 'After', [{
+    type: 'reflect', title: 'A moment for the amplifier', mode: 'choice',
+    prompt: 'Take a moment to consider how this made the driver amplifier feel.',
+    choices: ['Betrayed', 'Overwhelmed', 'Grounded, too late', 'It is an amplifier'],
+    narration: ["Take a moment to consider how this made the driver amplifier feel."],
+    reveal: '<p>The amplifier did not feel anything. It is an amplifier. Gary, however, felt ashamed. Shame is normal. The incident has been logged. Watch your charge.</p>',
+    revealNarration: ["The amplifier did not feel anything. It is an amplifier.", "Gary, however, felt ashamed. Shame is normal. The incident has been logged. Watch your charge."]
+  }]);
+  addAfter(ch5.steps, 'Zero tolerance for retaliation', [{
+    type: 'reflect', title: 'Your experience', mode: 'text',
+    prompt: 'Describe a time you felt pressure to skip, shorten, or not report a check. You do not have to name anyone.',
+    narration: ["Take a moment to describe a time you felt pressure to skip, shorten, or not report a check. You do not have to name anyone."],
+    reveal: '<p>Thank you for sharing. Your response stays in this browser. If the pressure was real, the Photonic Conduct Speak-Up Line is available, and good-faith reports are protected.</p>',
+    revealNarration: ["Thank you for sharing. If the pressure was real, the Photonic Conduct Speak-Up Line is available. Speak up."]
+  }]);
+  chSrc.steps.splice(findStep(chSrc.steps, 'Know your categories'), 0, {
+    type: 'reflect', title: 'Personal inventory', mode: 'choice',
+    prompt: 'Which category of orientation misconduct have you most recently committed?',
+    choices: CATS.concat(['None, to my knowledge']),
+    narration: ["Which category of orientation misconduct have you most recently committed? Answer honestly. This reflection is ungraded."],
+    reveal: '<p>There are no wrong answers here. If you chose "None, to my knowledge", please note that domestic orientation misconduct has no witnesses, including you. Stop. Mark. Log. Speak up.</p>',
+    revealNarration: ["There are no wrong answers here.", "If you chose none, to my knowledge, please note that domestic orientation misconduct has no witnesses, including you."]
+  });
+
+  // Sort exercises in the taxonomy module.
+  var whyCat = function (k, extra) { return "This one is " + CAT[k].say + ". " + extra; };
+  addAfter(chSrc.steps, srcAct.afterSoft.question, [{
+    type: 'sort', title: 'Who knows your crystal axes?',
+    prompt: 'Sort each item. Which ones know the crystal axes of your wafer, and which ones do exactly what they are told?',
+    narration: ["Sort each item. Which ones know the crystal axes of your wafer, and which ones do exactly what they are told?"],
+    buckets: [{ id: 'told', label: 'Does exactly what it is told' }, { id: 'knows', label: 'Knows your crystal axes' }],
+    items: [
+      { text: 'The spin coater', bucket: 'told', why: "The spin coater stops the wafer wherever it stops. It does not know where the flat is." },
+      { text: 'The aligner prealigner', bucket: 'told', why: "The prealigner turns the wafer to the angle in its recipe, right or wrong." },
+      { text: 'The probe station theta stage', bucket: 'told', why: "The theta stage holds whatever angle it was set to." },
+      { text: 'The pick-and-place recipe', bucket: 'told', why: "The pick-and-place tool sets each die down at the angle in its recipe." },
+      { text: 'The mode solver', bucket: 'told', why: "The mode solver solves the frame you entered, not the wafer you bought." },
+      { text: 'The shared gel-pak', bucket: 'told', why: "A gel-pak holds each die exactly as it was placed. It records nothing." },
+      { text: 'A traveler entry you wrote at the tool', bucket: 'knows', why: "A traveler entry written at the tool, against the flat, is a record of the crystal axes. That is what it is for." },
+      { text: 'You', bucket: 'knows', why: "You know the crystal axes, because you read the specification and checked the flat. Know your axes." }
+    ]
+  }]);
+  addAfter(chSrc.steps, srcAct.afterPeer.question, [{
+    type: 'sort', title: 'Classify by source, part one',
+    prompt: 'Drag each incident into its category of orientation misconduct.',
+    narration: ["Drag each incident into its category of orientation misconduct."],
+    buckets: [{ id: 'tool', label: CATS[0] }, { id: 'soft', label: CATS[1] }, { id: 'third', label: CATS[2] }, { id: 'peer', label: CATS[3] }],
+    items: [
+      { text: 'A prealigner turns a wafer to a recipe angle written for another product', bucket: 'tool', why: whyCat('tool', "A tool applied the rotation, and nobody re-checked the flat.") },
+      { text: 'A probe station chuck is left at the angle from the last user', bucket: 'tool', why: whyCat('tool', "The chuck held the angle it was last set to.") },
+      { text: 'A simulated x-cut device has its crystal z on the film normal', bucket: 'soft', why: whyCat('soft', "The error lives in a software frame convention.") },
+      { text: 'Rotation code passes its tests at 0 and 90 degrees only', bucket: 'soft', why: whyCat('soft', "The program was never checked against a known case at a general angle.") },
+      { text: 'A new supplier defines the primary flat at a different crystal direction', bucket: 'third', why: whyCat('third', "A supplied convention entered without incoming verification.") },
+      { text: 'Datasheet tensor signs follow a different axis convention', bucket: 'third', why: whyCat('third', "The convention came from outside, in a supplied document.") },
+      { text: 'Unmarked dies are left in a shared gel-pak with no note', bucket: 'peer', why: whyCat('peer', "Orientation did not travel with the die inside the group.") },
+      { text: 'A run-sheet template has no orientation column', bucket: 'peer', why: whyCat('peer', "A shared template inside the group lost the orientation.") }
+    ]
+  }]);
+  chSrc.steps.splice(findStep(chSrc.steps, 'Personal inventory'), 0, {
+    type: 'sort', title: 'Classify by source, part two',
+    prompt: 'Drag each incident into its category of orientation misconduct.',
+    narration: ["Part two. Drag each incident into its category of orientation misconduct."],
+    buckets: [{ id: 'cross', label: CATS[4] }, { id: 'dom', label: CATS[5] }, { id: 'qpq', label: CATS[6] }, { id: 'hostile', label: CATS[7] }],
+    items: [
+      { text: 'A partner lab measures angles from the back side and calls it standard', bucket: 'cross', why: whyCat('cross', "Two institutions, no written frame.") },
+      { text: 'A collaborator sends tensor constants in their own sign convention', bucket: 'cross', why: whyCat('cross', "The data crossed an organizational boundary without an agreed frame.") },
+      { text: 'You mark your own die on the wrong corner', bucket: 'dom', why: whyCat('dom', "Your own bench, your own mark, no witnesses.") },
+      { text: 'Your notebook records angles in a mirrored view', bucket: 'dom', why: whyCat('dom', "Your own records.") },
+      { text: '"Take my stepper slot if you sign off the flat check"', bucket: 'qpq', why: whyCat('qpq', "A benefit offered for a skipped check.") },
+      { text: '"Put me on the paper and I will not mention the frame"', bucket: 'qpq', why: whyCat('qpq', "Co-authorship traded for silence.") },
+      { text: 'Every hotplate in the lab lacks ramp control, and sparks are called normal', bucket: 'hostile', why: whyCat('hostile', "The conditions are pervasive.") },
+      { text: 'New hires are told "you get used to it"', bucket: 'hostile', why: whyCat('hostile', "Correct conduct is made impossible by the environment.") }
+    ]
+  });
+
   /* ======================= COURSE-WIDE PASSES ======================= */
 
   // Spoken strings spell acronyms and units the way the voice must read them (captions join spelled acronyms).
@@ -3379,6 +3628,9 @@
     (st.cards || []).forEach(function (c) { c.narration = sayAll(c.narration); if (c.why) c.why = speakify(c.why); });
     (st.targets || []).forEach(function (t) { if (t.why) t.why = speakify(t.why); });
     if (st.missWhy) st.missWhy = speakify(st.missWhy);
+    (st.stages || []).forEach(function (sg) { sg.narration = sayAll(sg.narration); });
+    if (st.revealNarration) st.revealNarration = sayAll(st.revealNarration);
+    (st.items || []).forEach(function (it) { if (it.why) it.why = speakify(it.why); });
     if (st.correctSay) st.correctSay = speakify(st.correctSay);
     if (st.type === 'check') {
       if (!st.narration || !st.narration.length) st.narration = [speakify(plain(st.question))];
@@ -3419,7 +3671,7 @@
     mantra: MANTRA,
     mantraShort: ['Know your axes.', 'Watch your charge.', 'Scan both ways.', 'Trust no symmetry plane.'],
     host: { name: 'Pat Reynolds', role: 'Director, Office of Photonic Conduct' },
-    employer: 'Intracavity Photonics, Inc.',
+    employer: 'Five Sigma Photonics, Inc.',
     chapters: [ch0, ch1, chSrc, ch2, ch3, ch4, ch5, ch6],
     exam: { passPct: 80, count: 10, pool: pool },
     references: allRefs,

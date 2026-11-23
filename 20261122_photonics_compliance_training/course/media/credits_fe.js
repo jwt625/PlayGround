@@ -359,5 +359,23 @@ window.LMS_MEDIA = Object.assign(window.LMS_MEDIA || {}, {
     "kind": "render",
     "w": 960,
     "h": 720
+  },
+  "media/fe/opener_bends_drawn.jpg": {
+    "alt": "Drawn title card: a waveguide on x-cut lithium niobate bends from the crystal y direction toward z, its light changing color from TE to TM near a marked crossing angle",
+    "credit": "Drawn for this course",
+    "license": "Drawn for this course",
+    "source": "",
+    "kind": "drawing",
+    "w": 1920,
+    "h": 1080
+  },
+  "media/fe/opener_photorefractive_drawn.jpg": {
+    "alt": "Drawn title card: a resonance dip shown at successively higher powers, moving toward shorter wavelength",
+    "credit": "Drawn for this course",
+    "license": "Drawn for this course",
+    "source": "",
+    "kind": "drawing",
+    "w": 1920,
+    "h": 1080
   }
 });

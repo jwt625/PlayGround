@@ -67,8 +67,16 @@
     lastInput: Date.now(),
     cc: true,
     volume: 1,
+    reflect: saved.reflect && typeof saved.reflect === 'object' ? saved.reflect : {},
   };
-  const persist = () => store.set({ completed: [...state.completed], name: state.name, seat: Math.floor(state.seat), pos: state.pos });
+  const persist = () => store.set({ completed: [...state.completed], name: state.name, seat: Math.floor(state.seat), pos: state.pos, reflect: state.reflect });
+
+  /* ---------- sound: intro / outro music bed and subtle effects (engine/sound.js; files from media/sound/manifest.js) ---------- */
+  state.sound = true;
+  try { state.sound = localStorage.getItem('lms_parody_sound') !== 'off'; } catch (e) { /* ignore */ }
+  const Sound = typeof window.LMS_SoundLayer === 'function'
+    ? window.LMS_SoundLayer({ volume: () => state.volume, enabled: () => state.sound && !DEV_MUTE, paused: () => state.pauseReasons.size > 0 })
+    : { music() {}, sfx() {}, speaking() {}, refresh() {}, log: [], current: () => null };
 
   /* ---------- flatten steps ---------- */
   const flat = [];
@@ -76,6 +84,8 @@
   const examChapter = { id: '__exam', title: 'Final Assessment', subtitle: 'Demonstrate your understanding', objectives: ['Answer at least ' + (course.exam ? course.exam.passPct : 80) + ' percent of questions correctly on the first attempt.', 'Receive your certificate of completion.', 'Remember: ' + course.mantra] };
   const chapters = course.chapters.concat(course.exam ? [examChapter] : []);
   const examIdx = course.chapters.length;
+  /* intro music range: Module 0's opening slides, up to the first step that is not a slide */
+  const introEnd = (() => { const k = flat.findIndex((f) => f.ci !== 0 || f.st.type !== 'slide'); return k < 0 ? flat.length : k; })();
   let examSteps = [];
   function buildExam() {
     const pool = (course.exam.pool || []).slice();
@@ -84,6 +94,7 @@
     examSteps = pool.slice(0, n).map((q, i) => ({ ci: examIdx, si: i, ch: examChapter, st: Object.assign({ type: 'check', exam: true, examNo: i + 1, examOf: n }, q), id: '__exam:' + i }));
     examSteps.push({ ci: examIdx, si: n, ch: examChapter, st: { type: 'examResult', title: 'Assessment Results' }, id: '__exam:result' });
     examSteps.push({ ci: examIdx, si: n + 1, ch: examChapter, st: { type: 'certificate', title: 'Certificate of Completion' }, id: '__exam:cert' });
+    examSteps.push({ ci: examIdx, si: n + 2, ch: examChapter, st: { type: 'disclaimer', title: 'Disclaimer and Media Credits' }, id: '__exam:disclaimer' });
     exam.answers = {};
   }
   const exam = { answers: {} };
@@ -184,7 +195,9 @@
         spoken.add(text);
         setCaption(text);
         interrupted = false;
+        Sound.speaking(true);
         const r = await once(text);
+        Sound.speaking(false);
         if (sess !== state.sess) return;
         if (r === 'int' && paused()) { continue; } /* blur or idle pause: repeat the sentence from its start */
         return;
@@ -208,13 +221,14 @@
   const capText = (t) => String(t || '').replace(/\b(?:[A-Z] ){1,5}[A-Z]\b/g, (m) => m.replace(/ /g, ''));
   function setCaption(t) { const c = $('.cc-text'); if (c) { c.textContent = capText(t); c.dataset.raw = t || ''; } }
   /* Natural 300 ms gap between sentences (pause-aware). */
-  async function gap(sess) { let acc = 0; const ms = DEV_FAST ? 75 : 300; while (acc < ms) { await sleep(50); if (sess !== state.sess) return; if (state.pauseReasons.size === 0) acc += 50; } }
+  /* pause-aware silence between sentences: 300 ms normally, 1.2 s after a question the narrator then answers */
+  async function gap(sess, base) { let acc = 0; const ms = (base || 300) * (DEV_FAST ? 0.25 : 1); while (acc < ms) { await sleep(50); if (sess !== state.sess) return; if (state.pauseReasons.size === 0) acc += 50; } }
   async function sayLines(lines, sess) {
     const ls = (lines || []).filter(Boolean);
     for (let i = 0; i < ls.length; i++) {
       if (sess !== state.sess) return false;
       await Speech.speak(ls[i], sess);
-      if (i < ls.length - 1) await gap(sess);
+      if (i < ls.length - 1) await gap(sess, /\?["'\u201d)]*\s*$/.test(String(ls[i])) ? 1200 : 300);
     }
     return sess === state.sess;
   }
@@ -289,7 +303,7 @@
   document.title = course.title;
   document.body.append(
     h('div', { class: 'topbar' },
-      h('div', { class: 'logo' }, 'Intracavity Photonics', h('small', null, 'Learning Center')),
+      h('div', { class: 'logo' }, 'Five Sigma Photonics', h('small', null, 'Learning Center')),
       h('div', { class: 'course-name' }, (course.code ? course.code + '  |  ' : '') + course.title),
       DEV ? h('span', { class: 'review-badge', title: 'Dev mode: gating disabled. Remove ?dev=1 for the learner experience.' }, 'DEV MODE') : null,
       DEV ? h('button', { onclick: () => devPanelToggle(), title: 'Show or hide the developer panel' }, 'Dev panel') : null,
@@ -320,6 +334,7 @@
           h('button', { class: 'btn small', onclick: () => { state.cc = !state.cc; $('.captions').classList.toggle('off', !state.cc); } }, 'CC'),
           h('span', { class: 'speed' }, h('button', { class: 'btn small', onclick: speedMenu }, 'Speed 1.0x')),
           h('label', { class: 'lock-hint', title: 'Minimum volume is enforced. Audio is required for this course.' }, 'Vol ', h('input', { class: 'vol', type: 'range', min: '0.35', max: '1', step: '0.05', value: '1', oninput: (e) => { state.volume = +e.target.value; Speech.setVolume(state.volume); if (+e.target.value <= 0.35) toast('Audio is required for this course. Minimum volume is enforced by your administrator.'); } })),
+          h('button', { class: 'btn small sfx-toggle', 'aria-pressed': String(state.sound), title: 'Music and sound effects', onclick: (e) => { state.sound = !state.sound; try { localStorage.setItem('lms_parody_sound', state.sound ? 'on' : 'off'); } catch (er) { /* ignore */ } e.currentTarget.setAttribute('aria-pressed', String(state.sound)); e.currentTarget.textContent = state.sound ? 'Sound effects: on' : 'Sound effects: off'; Sound.refresh(); } }, state.sound ? 'Sound effects: on' : 'Sound effects: off'),
           DEV ? h('button', { class: 'btn small', onclick: () => { DEV_MUTE = !DEV_MUTE; DEV_FAST = DEV_MUTE; Speech.interrupt(); toast(DEV_MUTE ? 'Dev: voice off, captions at 4x' : 'Dev: voice on'); } }, 'Voice on/off') : null,
           h('span', { class: 'spacer' }),
           h('span', { class: 'lock-hint gate-hint' }),
@@ -374,17 +389,17 @@
   let gate = { narr: true, req: true };
   let cleanups = [];
   function setGate(g) { gate = Object.assign({ narr: false, req: true }, g); updateNext(); }
-  function done(which) { gate[which] = true; updateNext(); }
+  function done(which) { gate[which] = true; updateNext(); if (askCtl) askCtl.check(); if (stageCtl) stageCtl.check(); }
   function updateNext() {
     const f = allSteps()[state.pos];
-    const ok = gate.narr && gate.req;
+    const ok = gate.narr && gate.req && gate.stage !== false && gate.ask !== false;
     if (ok && f) { state.completed.add(f.id); persist(); renderToc(); }
     const already = f && state.completed.has(f.id);
     const btn = $('.next');
     const isLast = state.pos >= allSteps().length - 1;
     btn.disabled = isLast || !(ok || already || DEV);
     btn.classList.toggle('ready', ok && !isLast);
-    $('.gate-hint').textContent = ok || already ? '' : !gate.req ? 'Complete the activity to continue' : 'Please listen to the narration in full';
+    $('.gate-hint').textContent = ok || already ? '' : !gate.req ? 'Complete the activity to continue' : gate.narr && gate.stage === false ? 'Continue the scenario to proceed' : 'Please listen to the narration in full';
     $('.back').disabled = state.pos === 0;
     btn.textContent = f && allSteps()[state.pos + 1] && allSteps()[state.pos + 1].ci !== f.ci ? 'Next module' : 'Next';
   }
@@ -408,13 +423,14 @@
       buttons: [{ label: 'Continue', primary: true, onclick: () => { if (left > 0) { toast('Please review this reminder in full. ' + left + ' seconds remaining.'); return; } closeModal(); cont(); } }],
     });
     const sess = state.sess;
+    Sound.sfx('moduleDone');
     sayLines(SP.interstitial(course), sess);
     const btn = $('.mf .btn', box);
     const tick = () => { btn.textContent = left > 0 ? 'Continue (' + left + ')' : 'Continue'; btn.disabled = left > 0; };
     tick();
     const iv = setInterval(() => { left -= 1; tick(); if (left <= 0) clearInterval(iv); }, 1000);
   }
-  function replay() { go(state.pos, true); }
+  function replay() { if (stageCtl && stageCtl.cur >= 0) stageCtl.replay(); else go(state.pos, true); }
 
   /* ---------- navigation ---------- */
   function go(i, force) {
@@ -436,10 +452,16 @@
     $('.stage').classList.toggle('is-hero', st.type === 'slide' && st.layout === 'hero');
     renderToc();
     const fn = R[st.type] || R.unknown;
+    stageCtl = null; askCtl = null;
     fn(body, st, target, state.sess);
+    setupAsk(st);
+    setupStages(body, st);
     updateNext();
     $('.stage-wrap').scrollTop = 0;
     preloadStep(steps[i + 1]);
+    /* music: intro over Module 0's opening slides, outro from the certificate through the disclaimer */
+    Sound.music(i < introEnd ? 'intro' : (st.type === 'certificate' || st.type === 'disclaimer') ? 'outro' : null);
+    if (typeof st.sfx === 'string' && st.sfx) Sound.sfx(st.sfx); /* opt-in meme effect, once when the step opens */
     devPanelUpdate();
   }
   /* Warm the browser cache with the next step's images so full-bleed photos appear without a pop-in. */
@@ -447,6 +469,125 @@
   function preloadStep(f) {
     if (!f || !window.LMS_collectImages) return;
     window.LMS_collectImages({ chapters: [{ steps: [f.st] }] }).forEach((src) => { if (preloaded.has(src)) return; preloaded.add(src); const im = new Image(); im.decoding = 'async'; im.src = src; });
+  }
+
+  /* ---------- ask: popup question over the content after the base narration (or after a chat's last message) ---------- */
+  let askCtl = null;
+  function setupAsk(st) {
+    const a = st.ask;
+    if (!a || !a.question || !(a.options || []).length) return;
+    gate.ask = false;
+    const isChatMsgs = st.type === 'chat' && a.after === 'messages';
+    const ctl = { shown: false, answered: false };
+    let resolveDone = null;
+    const donePromise = new Promise((r) => { resolveDone = r; });
+    ctl.check = () => { if (!ctl.shown && !isChatMsgs && gate.narr && gate.req) ctl.show(); };
+    ctl.show = () => {
+      if (ctl.shown) return donePromise;
+      ctl.shown = true;
+      const anyCorrect = a.options.some((o) => o.correct === true);
+      const fbk = h('div', { class: 'ask-fb hidden' });
+      const btns = a.options.map((o, i) => h('button', { class: 'ask-opt', onclick: () => pick(i) }, h('span', { html: o.text })));
+      const card = h('div', { class: 'ask-card', role: 'dialog', 'aria-modal': 'true' },
+        h('div', { class: 'ask-head' }, ltag('Quick check', 'strong')),
+        h('div', { class: 'ask-q', html: a.question }),
+        h('div', { class: 'ask-opts n' + Math.min(4, btns.length) }, ...btns), fbk);
+      const back = h('div', { class: 'ask-back' }, card);
+      $('.stage').append(back);
+      Sound.sfx('popup');
+      cleanups.push(() => back.remove());
+      const my0 = (Speech.interrupt(), ++state.sess);
+      sayLines(SP.askQuestion(a), my0);
+      requestAnimationFrame(() => { btns.forEach((b) => b.classList.add('hint')); try { card.scrollIntoView({ block: 'center', behavior: 'smooth' }); } catch (e) { /* ignore */ } });
+      let locked = false;
+      async function pick(i) {
+        if (locked) return;
+        locked = true;
+        const o = a.options[i];
+        const right = o.correct === true || !anyCorrect;
+        Sound.sfx(right ? 'correct' : 'wrong');
+        btns.forEach((b, k) => { b.disabled = true; b.classList.remove('hint'); if (k === i) b.classList.add(right ? 'right' : 'wrong'); if (anyCorrect && a.options[k].correct === true) b.classList.add('right'); });
+        const lines = SP.askAnswer(a, o);
+        fbk.className = 'ask-fb ' + (right ? 'good' : 'bad');
+        fbk.innerHTML = capText(esc(lines.join(' ')));
+        Speech.interrupt(); state.sess++; const my = state.sess;
+        const ok = await sayLines(lines, my);
+        if (!ok) return;
+        await gap(my, 700);
+        if (my !== state.sess) return;
+        back.classList.add('out');
+        setTimeout(() => back.remove(), 250);
+        ctl.answered = true;
+        gate.ask = true; updateNext();
+        resolveDone(true);
+        if (stageCtl && stageCtl.next === 0) stageCtl.open(0);
+        else if (stageCtl) stageCtl.check();
+      }
+      return donePromise;
+    };
+    askCtl = ctl;
+  }
+
+  /* ---------- stages: a step that unfolds in parts (read the scenario, then click to see what happened) ---------- */
+  let stageCtl = null;
+  function setupStages(body, st) {
+    const stages = (st.stages || []).filter(Boolean);
+    if (!stages.length) return;
+    gate.stage = false;
+    const wrap = h('div', { class: 'stg' });
+    const btn = h('button', { class: 'btn primary stg-btn hidden' });
+    const actions = h('div', { class: 'stg-actions' }, btn);
+    put(body, wrap, actions);
+    const baseImg = body.querySelector('.photo-fig img, .hero-fig img, .split-fig img, .kc-fig img');
+    const ctl = { next: 0, cur: -1, busy: false };
+    btn.addEventListener('click', () => ctl.open(ctl.next));
+    ctl.check = () => {
+      if (ctl.busy || ctl.next >= stages.length) { btn.classList.add('hidden'); return; }
+      if (gate.ask === false) { btn.classList.add('hidden'); return; } /* stages wait for the popup question */
+      if (!(DEV || (gate.narr && gate.req))) return;
+      btn.textContent = stages[ctl.next].prompt || 'Continue';
+      btn.classList.remove('hidden'); btn.classList.add('hint');
+    };
+    ctl.open = async (k) => {
+      if (k >= stages.length) return;
+      const sg = stages[k];
+      Speech.interrupt(); state.sess++; const my = state.sess;
+      ctl.busy = true; ctl.cur = k; btn.classList.add('hidden'); btn.classList.remove('hint');
+      const sec = h('section', { class: 'stg-sec' }, sg.title ? h('h3', { class: 'stg-h', html: sg.title }) : null);
+      if (sg.image && sg.image.src) {
+        if (baseImg) {
+          baseImg.style.opacity = '0';
+          setTimeout(() => { baseImg.src = sg.image.src; baseImg.onload = () => { baseImg.style.opacity = '1'; }; }, 250);
+          const cap = baseImg.closest('figure') && baseImg.closest('figure').querySelector('.devpath');
+          if (cap) cap.textContent = sg.image.src + '  |  ' + ((mediaInfo(sg.image.src) || {}).credit || 'NO REGISTRY ENTRY');
+        } else {
+          const { fig, img } = figure(sg.image, { cls: 'stg-fig' });
+          sec.append(fig); kenBurns(img, sg.image.kb, sg.narration);
+        }
+      }
+      if (sg.body) sec.append(h('div', { class: 'stg-body', html: sg.body }));
+      if (sg.bullets) sec.append(bulletsList(sg.bullets, my, sg.narration));
+      wrap.append(sec);
+      Sound.sfx('reveal');
+      requestAnimationFrame(() => { try { sec.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); } catch (e) { /* ignore */ } });
+      if (k === 0) await gap(my, 600); /* a breath between the base narration and the first stage */
+      const ok = await sayLines(SP.stage(sg), my);
+      if (!ok) return;
+      sec.querySelectorAll('.bullets li').forEach((li) => li.classList.add('in'));
+      ctl.busy = false; ctl.next = Math.max(ctl.next, k + 1);
+      if (ctl.next >= stages.length) { gate.stage = true; updateNext(); }
+      ctl.check();
+    };
+    ctl.replay = async () => {
+      const sg = stages[ctl.cur];
+      Speech.interrupt(); state.sess++; const my = state.sess;
+      ctl.busy = true; btn.classList.add('hidden');
+      const ok = await sayLines(SP.stage(sg), my);
+      if (!ok) return;
+      ctl.busy = false; ctl.check();
+    };
+    stageCtl = ctl;
+    ctl.check();
   }
 
   /* ---------- renderers ---------- */
@@ -504,7 +645,6 @@
       setAR(m.w, m.h);
       if (!m.w || !m.h) im.addEventListener('load', () => setAR(im.naturalWidth, im.naturalHeight));
     }
-    if (m.credit) fig.append(h('span', { class: 'credit' + (opts.creditTop ? ' top' : ''), title: [m.credit, m.license].filter(Boolean).join('  |  ') }, m.credit));
     if (DEV) fig.append(h('span', { class: 'devpath' }, src + '  |  ' + (m.credit || 'NO REGISTRY ENTRY')));
     im.addEventListener('error', () => { fig.classList.add('broken'); fig.append(h('span', { class: 'broken-msg' }, 'Image unavailable')); });
     return { fig, img: im };
@@ -546,7 +686,7 @@
     } else if (layout === 'title') {
       put(body, h('div', { class: 'slide-title' }, h('div', { class: 'code' }, (course.code || '') + '  |  Version ' + (course.version || '1.0') + '  |  Effective ' + (course.effective || '')), h('h1', { html: st.heading || course.title }), h('p', { html: st.subtitle || course.subtitle || '' }), st.bullets ? bulletsList(st.bullets, sess, st.narration) : null, callout));
     } else if (layout === 'host') {
-      const frame = h('div', { class: 'host-frame', html: hostSvg() }, h('span', { class: 'placeholder-tag' }, 'PRESENTER FOOTAGE PENDING'), h('div', { class: 'lower-third' }, h('b', null, (course.host && course.host.name) || 'Host'), (course.host && course.host.role) || ''));
+      const frame = h('div', { class: 'host-frame', html: hostSvg() }, DEV ? h('span', { class: 'placeholder-tag' }, 'PRESENTER FOOTAGE PENDING') : null, h('div', { class: 'lower-third' }, h('b', null, (course.host && course.host.name) || 'Host'), (course.host && course.host.role) || ''));
       put(body, h('div', { class: 'host-layout' }, frame, h('div', null, st.bullets ? bulletsList(st.bullets, sess, st.narration) : null, callout)));
     } else if (layout === 'policy') {
       put(body, h('div', { class: 'policy-doc' }, h('div', { class: 'ph' }, (course.policy || 'POLICY') + '  |  CONTROLLED DOCUMENT  |  DO NOT PARAPHRASE'), st.bullets ? bulletsList(st.bullets, sess, st.narration) : null), callout);
@@ -604,7 +744,6 @@
         const m = mediaInfo(kf.image.src) || {};
         const sx = W / 900;
         const lines = [];
-        if (m.credit) lines.push(m.credit);
         if (DEV && document.body.classList.contains('dev-overlay')) lines.push(kf.image.src + '  |  ' + (m.credit || 'NO REGISTRY ENTRY'));
         ctx.font = (10 * sx) + 'px ' + css('--font');
         lines.forEach((ln, j) => {
@@ -617,10 +756,12 @@
         if (typeof kf.draw === 'function') { try { ctx.save(); kf.draw(ctx, W, H, u); ctx.restore(); } catch (e) { ctx.restore(); } }
         else defaultCard(ctx, W, H, kf, u);
         ctx.setTransform(1, 0, 0, 1, 0, 0);
-        const lbl = 'ANIMATIC  |  BLENDER RENDER PENDING  |  KEYFRAME ' + (i + 1) + '/' + kfs.length;
-        ctx.font = (11 * W / 900) + 'px ui-monospace, Menlo, monospace';
-        ctx.fillStyle = 'rgba(0,0,0,0.7)'; ctx.fillRect(8 * (W / 900), 8 * (W / 900), ctx.measureText(lbl).width + 12 * (W / 900), 22 * (W / 900));
-        ctx.fillStyle = '#e3b04b'; ctx.fillText(lbl, 14 * (W / 900), 23 * (W / 900));
+        if (DEV) { /* production label: dev mode only */
+          const lbl = 'ANIMATIC  |  BLENDER RENDER PENDING  |  KEYFRAME ' + (i + 1) + '/' + kfs.length;
+          ctx.font = (11 * W / 900) + 'px ui-monospace, Menlo, monospace';
+          ctx.fillStyle = 'rgba(0,0,0,0.7)'; ctx.fillRect(8 * (W / 900), 8 * (W / 900), ctx.measureText(lbl).width + 12 * (W / 900), 22 * (W / 900));
+          ctx.fillStyle = '#e3b04b'; ctx.fillText(lbl, 14 * (W / 900), 23 * (W / 900));
+        }
       }
       shot.innerHTML = '<b>SHOT ' + (i + 1) + (kf.cast && kf.cast.length ? '  |  CAST: ' + esc(kf.cast.join(', ')) : '') + '</b>' + esc(kf.shot || '');
       vcap.textContent = kf.caption || '';
@@ -632,7 +773,7 @@
       if (playing && !paused) { t = Math.min(D, t + (now - last) / 1000 * (DEV_FAST ? 4 : 1)); }
       last = now;
       draw();
-      if (t >= D) { playing = false; pp.textContent = 'Replay'; done('req'); }
+      if (t >= D && playing) { playing = false; pp.textContent = 'Replay'; big.firstChild.textContent = 'REPLAY'; big.classList.remove('hidden'); done('req'); }
       raf = requestAnimationFrame(loop);
     }
     function play() {
@@ -690,49 +831,52 @@
     if (!st.narration || !st.narration.length) { busy = false; pulse(); }
   };
 
-  const AVC = ['#c0582f', '#2f6fc0', '#3f8f4f', '#8a4fb0', '#b08a2f', '#2f9aa0'];
-  const avColor = (name) => { let s = 0; for (const c of String(name)) s += c.charCodeAt(0); return name === 'Gary' ? '#c0582f' : AVC[s % AVC.length]; };
-  const initials = (n) => String(n).split(/\s+/).map((w) => w[0]).join('').slice(0, 2).toUpperCase();
 
+  /* chat: platform skins from engine/chat_skins.js; message-by-message reveal with typing indicators; optional tapToAdvance */
   R.chat = (body, st, f, sess) => {
-    const app = st.app || 'phone';
-    const meta = st.meta || {};
     const msgs = st.messages || [];
-    let list, add;
-    const tag = h('div', { class: 'scenario-tag' }, 'SCENARIO' + (st.scenarioNo ? ' ' + st.scenarioNo : '') + '  |  HYPOTHETICAL. ANY RESEMBLANCE TO YOUR LAB IS INTENTIONAL.');
-    if (app === 'call') {
-      const people = meta.participants || [...new Set(msgs.map((m) => m.from))];
-      const tiles = {};
-      const grid = h('div', { class: 'grid' }, ...people.map((p) => (tiles[p] = h('div', { class: 'tile' }, h('div', { class: 'av', style: 'background:' + avColor(p) }, initials(p)), h('span', { class: 'nm' }, p)))));
-      list = h('div', { class: 'chatlog' });
-      put(body, tag, h('div', { class: 'call' }, h('div', { class: 'call-top' }, h('span', null, meta.header || 'Weekly sync'), h('span', null, 'Recording  |  ' + people.length + ' participants')), grid, list));
-      add = (m) => { Object.values(tiles).forEach((t) => t.classList.remove('speaking')); if (tiles[m.from]) tiles[m.from].classList.add('speaking'); list.append(h('div', null, h('b', null, m.from + ': '), m.text)); list.scrollTop = 1e6; };
-    } else if (app === 'email') {
-      list = h('div', { class: 'eb' });
-      put(body, tag, h('div', { class: 'email' }, h('div', { class: 'eh', html: '<b>Subject:</b> ' + esc(meta.subject || meta.header || '(no subject)') + '<br><b>To:</b> ' + esc((meta.participants || []).join(', ') || 'team') }), list));
-      add = (m) => { list.append(h('div', { class: 'em' }, h('div', { class: 'who' }, m.from), h('div', { html: esc(m.text).replace(/\n/g, '<br>') }))); };
-    } else if (app === 'thread') {
-      list = h('div');
-      put(body, tag, h('div', { class: 'thread' }, h('div', { class: 'th-top' }, (/^#/.test(meta.header || '') ? meta.header : '# ' + (meta.header || 'lab-general')), h('small', null, (meta.participants || []).length ? (meta.participants.length + ' members') : '')), list));
-      add = (m) => { list.append(h('div', { class: 'tm' }, h('div', { class: 'av', style: 'background:' + avColor(m.from) }, initials(m.from)), h('div', null, h('div', { class: 'who' }, m.from, h('small', null, m.time || '')), h('div', null, m.text)))); };
-    } else {
-      list = h('div', { class: 'msgs' });
-      put(body, tag, h('div', { class: 'phone' }, h('div', { class: 'ph-top' }, meta.header || 'Messages', h('small', null, (meta.participants || []).join(', '))), list));
-      add = (m) => { list.append(h('div', { class: 'msg ' + (m.side || 'left') }, m.side === 'right' ? null : h('span', { class: 'who' }, m.from), m.text)); list.scrollTop = 1e6; };
-    }
+    const chat = window.LMS_CHAT.build(st, { toast });
+    const isok = h('div', { class: 'isok cs-isok hidden' }, st.isok || 'Pause and reflect: Is this OK?');
+    const tap = h('button', { class: 'cs-tap hidden' }, 'Tap to continue');
+    (chat.el.querySelector('.cs-screen') || chat.el).append(tap);
+    if (chat.kind === 'phone') {
+      const P = window.LMS_CHAT.people(st);
+      const side = h('div', { class: 'cs-side' },
+        h('div', { class: 'cs-who' }, h('div', { class: 'cs-who-h' }, 'In this conversation'), ...P.all.map((p) => h('div', { class: 'cs-who-p' }, window.LMS_CHAT.avatar(p), h('span', null, p)))),
+        isok);
+      put(body, h('div', { class: 'cs-stage phone' }, chat.el, side));
+    } else put(body, h('div', { class: 'cs-stage desk' }, chat.el, isok));
     setGate({ narr: false, req: false });
+    const waitMs = async (ms) => { let acc = 0; while (acc < ms) { await sleep(100); if (state.pauseReasons.size === 0) acc += 100; if (sess !== state.sess) return false; } return true; };
+    const waitTap = () => new Promise((resolve) => {
+      tap.classList.remove('hidden'); tap.classList.add('hint');
+      const area = chat.list;
+      const go2 = () => { tap.classList.add('hidden'); tap.classList.remove('hint'); tap.removeEventListener('click', go2); area.removeEventListener('click', go2); resolve(sess === state.sess); };
+      tap.addEventListener('click', go2); area.addEventListener('click', go2);
+      cleanups.push(() => resolve(false));
+    });
     (async () => {
-      for (const m of msgs) {
+      for (let i = 0; i < msgs.length; i++) {
+        const m = msgs[i];
         if (sess !== state.sess) return;
-        let typing = null;
-        if (app === 'phone' || app === 'thread') { typing = h('div', { class: 'typing' }, m.from + ' is typing...'); list.append(typing); list.scrollTop = 1e6; }
-        const wait = DEV ? 120 : Math.min(2600, 700 + m.text.length * 22);
-        let acc = 0; while (acc < wait) { await sleep(100); if (state.pauseReasons.size === 0) acc += 100; if (sess !== state.sess) return; }
-        if (typing) typing.remove();
-        add(m);
+        if (st.tapToAdvance && i > 0) { const ok = await waitTap(); if (!ok || sess !== state.sess) return; }
+        const t = chat.typing(m, i);
+        const ok = await waitMs(DEV ? 120 : Math.min(2600, 700 + String(m.text || '').length * 22));
+        if (t) t.stop();
+        if (!ok) return;
+        chat.add(m, i);
+        if (m.side !== 'right') Sound.sfx('message');
       }
       if (sess !== state.sess) return;
-      put(body, h('div', { class: 'isok' }, st.isok || 'Pause and reflect: Is this OK?'));
+      if (!st.ask && !(st.stages && st.stages.length)) isok.classList.remove('hidden'); /* old prompt box only when there is no popup question and no stages */
+      if (st.ask && st.ask.after === 'messages' && askCtl) {
+        done('req');
+        const answered = await askCtl.show();
+        if (!answered) return;
+        const ok2 = await sayLines(st.narration, state.sess);
+        if (ok2) done('narr');
+        return;
+      }
       done('req');
       const ok = await sayLines(st.narration, sess);
       if (ok) done('narr');
@@ -770,6 +914,7 @@
         locked = true;
         btns.forEach((b, k) => { b.disabled = true; if (k === i) b.classList.add('right'); });
         fb.className = 'kc-fb good'; fb.innerHTML = capText('<h4>' + esc(LINES.right) + '</h4>' + (o.why || st.correctSay || ''));
+        Sound.sfx('correct');
         att.textContent = attempts === 1 ? 'Correct on the first attempt. Excellent photonic conduct.' : 'Correct after ' + attempts + ' attempts. Every attempt is a learning opportunity.';
         await sayLines(SP.checkCorrect(st, o), my);
         if (my === state.sess) { done('narr'); done('req'); }
@@ -777,6 +922,7 @@
         locked = true;
         btns[i].classList.add('wrong'); btns[i].disabled = true;
         fb.className = 'kc-fb bad';
+        Sound.sfx('wrong');
         fb.innerHTML = capText('<h4>' + esc(LINES.notQuite) + '</h4>' + (o.why || 'This answer does not reflect the expected photonic conduct.') + '<p style="margin-bottom:0"><i>Please review the explanation, then select another answer.</i></p>');
         att.textContent = 'Attempt ' + attempts + '. You may try again as many times as needed. Remember: ' + course.mantra;
         await sayLines(SP.checkWrong(o), my);
@@ -899,6 +1045,7 @@
       Speech.interrupt(); state.sess++; const my = state.sess;
       busy = true; hint();
       if (mode === 'choose') {
+        Sound.sfx(cd.correct ? 'correct' : 'wrong');
         if (cd.correct) {
           finished = true;
           el.b.classList.add('right'); els.forEach((e, k) => { if (k !== i) e.b.disabled = true; });
@@ -964,6 +1111,7 @@
       Speech.interrupt(); state.sess++; const my = state.sess;
       busy = true; hint();
       let lines;
+      Sound.sfx(hit >= 0 ? 'correct' : 'wrong');
       if (hit >= 0) {
         const t = targets[hit];
         found.add(hit);
@@ -987,6 +1135,112 @@
     sayLines(SP.narration(st), sess).then((ok) => { if (ok) { done('narr'); busy = false; hint(); } });
   };
 
+  /* reflect: ungraded response (text / choice / scale), then the reveal. Responses stay in this browser only. */
+  R.reflect = (body, st, f, sess) => {
+    const mode = ['text', 'choice', 'scale'].indexOf(st.mode) >= 0 ? st.mode : 'text';
+    const prev = state.reflect[f.id];
+    let value = prev != null ? prev : null;
+    const submit = h('button', { class: 'btn primary rf-submit', disabled: true }, 'Submit');
+    const status = h('div', { class: 'rf-status' });
+    const reveal = h('div', { class: 'rf-reveal hidden' });
+    let input;
+    const words = (t) => String(t || '').trim().split(/\s+/).filter(Boolean).length;
+    const valid = () => (mode === 'text' ? words(value) >= 4 : value != null && value !== '');
+    const refresh = () => {
+      const ok = valid() && !submitted;
+      submit.disabled = !ok; submit.classList.toggle('hint', ok);
+      if (mode === 'text') status.textContent = submitted ? '' : words(value) >= 4 ? 'Ready to submit.' : 'Please write at least a few words (' + words(value) + ' so far).';
+    };
+    let submitted = false;
+    if (mode === 'text') {
+      input = h('textarea', { class: 'rf-text', rows: '5', placeholder: 'Type your response here. There are no wrong answers, only documented ones.' });
+      if (typeof value === 'string') input.value = value;
+      input.addEventListener('input', () => { value = input.value; refresh(); });
+    } else {
+      const opts = mode === 'scale' ? (st.scale && st.scale.length ? st.scale : ['Strongly disagree', 'Disagree', 'Neutral', 'Agree', 'Strongly agree']) : (st.choices || []);
+      const btns = opts.map((o, i) => h('button', { class: 'rf-opt', 'aria-pressed': 'false', onclick: () => { if (submitted) return; value = i; btns.forEach((b, k) => { b.classList.toggle('on', k === i); b.setAttribute('aria-pressed', k === i ? 'true' : 'false'); }); refresh(); } },
+        mode === 'scale' ? h('span', { class: 'rf-dot' }) : null, h('span', { html: o })));
+      if (typeof value === 'number' && btns[value]) btns[value].classList.add('on');
+      input = h('div', { class: mode === 'scale' ? 'rf-scale' : 'rf-choices' }, ...btns);
+    }
+    put(body, h('div', { class: 'rf' }, h('div', { class: 'kc-label' }, 'REFLECTION  |  UNGRADED. YOUR HONESTY IS APPRECIATED.'), st.prompt ? h('div', { class: 'kc-q', html: st.prompt }) : null, input, h('div', { class: 'rf-actions' }, submit, status), reveal));
+    setGate({ narr: false, req: false });
+    sayLines(SP.narration(st), sess).then((ok) => { if (ok && !submitted) done('narr'); });
+    submit.addEventListener('click', async () => {
+      if (!valid() || submitted) return;
+      submitted = true; refresh();
+      state.reflect[f.id] = value; persist();
+      if (input.tagName === 'TEXTAREA') input.readOnly = true; else input.querySelectorAll('button').forEach((b) => { b.disabled = true; });
+      reveal.innerHTML = '';
+      reveal.append(h('div', { class: 'rf-rec' }, LINES.recorded), st.reveal ? h('div', { class: 'rf-body' }, h('h4', null, 'What the Office of Photonic Conduct would like you to consider'), h('div', { html: st.reveal })) : null);
+      reveal.classList.remove('hidden');
+      Speech.interrupt(); state.sess++; const my = state.sess;
+      gate.narr = false; done('req');
+      const ok = await sayLines(SP.reflectSubmit(st), my);
+      if (ok) done('narr');
+    });
+    refresh();
+  };
+
+  /* sort: drag each item into its category (or select an item, then a category). Wrong drops bounce back and read the item's why. */
+  R.sort = (body, st, f, sess) => {
+    const items = st.items || [];
+    const buckets = st.buckets || [];
+    const placed = new Set();
+    let sel = -1, busy = true;
+    const fb = h('div', { class: 'kc-fb' });
+    const chips = items.map((it, i) => h('button', { class: 'sr-item', draggable: 'true', 'data-i': String(i), html: it.text,
+      onclick: (e) => { e.stopPropagation(); if (placed.has(i)) return; sel = sel === i ? -1 : i; hint(); },
+      ondragstart: (e) => { if (placed.has(i)) { e.preventDefault(); return; } sel = i; try { e.dataTransfer.setData('text/plain', String(i)); e.dataTransfer.effectAllowed = 'move'; } catch (er) { /* ignore */ } hint(); } }));
+    const tray = h('div', { class: 'sr-tray' }, ...chips);
+    const lists = {};
+    const cols = buckets.map((b) => {
+      lists[b.id] = h('div', { class: 'sr-list' });
+      const pick = () => { if (sel >= 0) place(sel, b.id); else toast('Select an item first, then choose its category.'); };
+      const col = h('div', { class: 'sr-bucket', role: 'button', tabindex: '0', 'data-b': b.id, onclick: pick, onkeydown: (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); pick(); } } }, h('div', { class: 'sr-bh', html: b.label }), lists[b.id]);
+      col.addEventListener('dragover', (e) => { e.preventDefault(); col.classList.add('over'); });
+      col.addEventListener('dragleave', () => col.classList.remove('over'));
+      col.addEventListener('drop', (e) => { e.preventDefault(); col.classList.remove('over'); let i = sel; try { const d = e.dataTransfer.getData('text/plain'); if (d !== '') i = +d; } catch (er) { /* ignore */ } if (i >= 0) place(i, b.id); });
+      return col;
+    });
+    const count = h('div', { class: 'must' }, 'Placed 0 of ' + items.length);
+    put(body, st.prompt ? h('p', { class: 'prompt', html: st.prompt }) : null, h('div', { class: 'kc-label' }, 'DRAG EACH ITEM INTO ITS CATEGORY, OR SELECT AN ITEM AND THEN A CATEGORY'), tray, h('div', { class: 'sr-buckets n' + Math.min(4, buckets.length) }, ...cols), fb, count);
+    setGate({ narr: false, req: items.length === 0 });
+    function hint() {
+      chips.forEach((c, i) => { c.classList.toggle('sel', i === sel); c.classList.toggle('hint', !busy && sel < 0 && i === items.findIndex((x, k) => !placed.has(k))); });
+      cols.forEach((c) => c.classList.toggle('hint', !busy && sel >= 0));
+    }
+    async function place(i, bid) {
+      if (busy && !DEV) { toast('Please wait for the current narration to finish.'); return; }
+      if (placed.has(i)) return;
+      const it = items[i], chip = chips[i];
+      Speech.interrupt(); state.sess++; const my = state.sess;
+      busy = true; sel = -1;
+      if (it.bucket === bid) {
+        Sound.sfx('sortPlace');
+        placed.add(i); chip.classList.add('placed'); chip.draggable = false; chip.disabled = true; lists[bid].append(chip);
+        count.textContent = 'Placed ' + placed.size + ' of ' + items.length;
+        fb.className = 'kc-fb good'; fb.innerHTML = capText('<h4>' + esc(LINES.sortRight) + '</h4>' + (it.why || ''));
+        hint();
+        let lines = SP.sortRight();
+        if (placed.size === items.length) lines = lines.concat(SP.sortAll());
+        const ok = await sayLines(lines, my);
+        if (!ok) return;
+        busy = false; hint(); done('narr');
+        if (placed.size === items.length) done('req');
+      } else {
+        Sound.sfx('wrong');
+        chip.classList.remove('bounce'); void chip.offsetWidth; chip.classList.add('bounce');
+        fb.className = 'kc-fb bad'; fb.innerHTML = capText('<h4>' + esc(LINES.sortWrong) + '</h4>' + (it.why || ''));
+        hint();
+        const ok = await sayLines(SP.sortWrong(it), my);
+        if (!ok) return;
+        busy = false; hint(); done('narr');
+      }
+    }
+    sayLines(SP.narration(st), sess).then((ok) => { if (ok) { busy = false; hint(); done('narr'); } });
+  };
+
   R.takeaways = (body, st, f, sess) => {
     put(body, h('div', { class: 'mantra-chips' }, ...mantraBeats.map((m) => h('span', null, m))), bulletsList(st.items || [], sess, st.narration), h('div', { class: 'callout', html: '<b>Remember:</b> ' + esc(course.mantra) }));
     narr(st, sess);
@@ -1006,17 +1260,37 @@
   R.refs = (body, st, f, sess) => {
     put(body, h('p', { style: 'margin-top:0;color:var(--ink-2)' }, 'The following sources informed this module. Reading them is strongly encouraged and, per policy, assumed.'),
       h('ol', { class: 'refs' }, ...(st.items || []).map((r) => h('li', { html: esc(r.cite) + (r.doi ? ' <a target="_blank" rel="noopener" href="https://doi.org/' + esc(r.doi) + '">doi:' + esc(r.doi) + '</a>' : r.url ? ' <a target="_blank" rel="noopener" href="' + esc(r.url) + '">link</a>' : '') }))));
+    setGate({ narr: true, req: true });
+    if (st.narration) narr(st, sess);
+  };
+
+  /* Final step: fine-print disclaimer and every media credit, kept out of the content screens for immersion. No narration. */
+  R.disclaimer = (body, st, f, sess) => {
+    put(body, h('div', { class: 'disclaimer' },
+      h('p', null, 'Dramatization. Five Sigma Photonics, Inc., the Office of Photonic Conduct, Gary, his manager, his coworkers, and every incident, chat, email, policy number, and certificate in this course are fictional. Any resemblance to real persons, companies, or incidents is unintended, although the physics is real.'),
+      h('p', null, 'Images include photographs used under the licenses listed below, and computer renderings and drawings made for this course. Renderings and drawings, including the micrograph-style images, depict no real device, measurement, or incident. People shown in photographs are not cast members and are not depicted doing anything wrong.'),
+      h('p', null, 'All scenarios, chats, calls, meetings, and emails in this course are hypothetical dramatizations. Messaging, meeting, and mail screens are generic mock-ups and do not depict any real product.'),
+      h('p', null, 'Narration is synthesized speech. Technical statements are sourced in the reference list of each module.'),
+      h('p', null, 'Gary is a fictional composite. Any resemblance to engineers, living or lasing, is coincidental. Any resemblance to your lab is intentional.')));
     const imgs = window.LMS_collectImages ? window.LMS_collectImages(course) : [];
     if (imgs.length) {
-      put(body, h('h3', { class: 'refs-h' }, 'Image credits'),
+      put(body, h('h3', { class: 'refs-h' }, 'Media credits'),
         h('ol', { class: 'refs credits' }, ...imgs.map((src) => {
           const m = mediaInfo(src) || {};
           const lic = m.license && String(m.credit || '').toLowerCase().indexOf(String(m.license).toLowerCase()) < 0 ? '. ' + esc(m.license) : '';
           return h('li', { html: (m.alt ? '<span class="cr-alt">' + esc(m.alt) + '.</span> ' : '') + esc(m.credit || 'Credit pending') + lic + (/^https?:\/\//.test(m.source || '') ? ' <a target="_blank" rel="noopener" href="' + esc(m.source) + '">source</a>' : '') });
         })));
     }
+    const snds = window.LMS_collectSounds ? window.LMS_collectSounds(course) : [];
+    if (snds.length) {
+      put(body, h('h3', { class: 'refs-h' }, 'Music and sound effects'),
+        h('ol', { class: 'refs credits' }, ...snds.map((src) => {
+          const m = mediaInfo(src) || {};
+          const lic = m.license && String(m.credit || '').toLowerCase().indexOf(String(m.license).toLowerCase()) < 0 ? '. ' + esc(m.license) : '';
+          return h('li', { html: (m.alt ? '<span class="cr-alt">' + esc(m.alt) + '.</span> ' : '') + esc(m.credit || 'Credit pending') + lic + (/^https?:\/\//.test(m.source || '') ? ' <a target="_blank" rel="noopener" href="' + esc(m.source) + '">source</a>' : '') });
+        })));
+    }
     setGate({ narr: true, req: true });
-    if (st.narration) narr(st, sess);
   };
 
   R.widget = (body, st, f, sess) => {
@@ -1040,10 +1314,11 @@
   };
 
   R.examResult = (body, st, f, sess) => {
-    const n = examSteps.length - 2;
+    const n = examSteps.filter((x) => x.st.exam).length; /* question steps only (result, certificate and disclaimer follow) */
     const right = Object.values(exam.answers).filter(Boolean).length;
     const pct = n ? Math.round((100 * right) / n) : 0;
     const pass = pct >= (course.exam.passPct || 80);
+    if (pass && pct === 100) Sound.sfx('perfectScore');
     setGate({ narr: false, req: pass });
     put(body, h('div', { class: 'start' },
       h('h1', null, pass ? 'Congratulations. You passed.' : 'You did not meet the passing score.'),
@@ -1056,10 +1331,11 @@
   };
 
   R.certificate = (body, st, f, sess) => {
+    Sound.sfx('certificate');
     const no = (course.code || 'CERT') + '-' + Math.random().toString(16).slice(2, 10).toUpperCase();
     const today = new Date().toISOString().slice(0, 10);
     put(body, h('div', { class: 'cert' },
-      h('div', { style: 'font:12px var(--mono);letter-spacing:2px;color:var(--ink-3)' }, 'INTRACAVITY PHOTONICS, INC.  |  OFFICE OF PHOTONIC CONDUCT'),
+      h('div', { style: 'font:12px var(--mono);letter-spacing:2px;color:var(--ink-3)' }, 'FIVE SIGMA PHOTONICS, INC.  |  OFFICE OF PHOTONIC CONDUCT'),
       h('h1', null, 'Certificate of Completion'),
       h('div', null, 'This certifies that'),
       h('div', { class: 'nm' }, state.name || 'Valued Team Member'),
@@ -1172,6 +1448,7 @@
   }
 
   startScreen();
+  Sound.music('intro');
   devPanelBuild();
-  window.__lms = { go, state, course, allSteps, dev: DEV, speech: Speech };
+  window.__lms = { go, state, course, allSteps, dev: DEV, speech: Speech, sound: Sound };
 })();

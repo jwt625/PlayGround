@@ -233,5 +233,41 @@ window.LMS_MEDIA = Object.assign(window.LMS_MEDIA || {}, {
     "kind": "photo",
     "w": 1920,
     "h": 1080
+  },
+  "media/fb/opener_airy.jpg": {
+    "alt": "Drawn title card: transmission combs of a lossless two-mirror etalon, T = 1 / (1 + F sin^2(phi / 2)), for mirror reflectances 0.3, 0.7 and 0.93, on a dark blue background",
+    "credit": "Drawn for this course",
+    "license": "Drawn for this course",
+    "source": "",
+    "kind": "drawing",
+    "w": 1920,
+    "h": 1080
+  },
+  "media/fb/opener_modehop.jpg": {
+    "alt": "Drawn title card: lasing frequency versus temperature as a staircase of mode hops, up-sweep and down-sweep offset by hysteresis, with the filter tuning line",
+    "credit": "Drawn for this course",
+    "license": "Drawn for this course",
+    "source": "",
+    "kind": "drawing",
+    "w": 1920,
+    "h": 1080
+  },
+  "media/fb/opener_faraday.jpg": {
+    "alt": "Drawn title card: a Faraday isolator; forward light rotates from 0 to 45 degrees and passes the output polarizer, backward light rotates from 45 to 90 degrees and is blocked at the input polarizer",
+    "credit": "Drawn for this course",
+    "license": "Drawn for this course",
+    "source": "",
+    "kind": "drawing",
+    "w": 1920,
+    "h": 1080
+  },
+  "media/fb/opener_doublet.jpg": {
+    "alt": "Drawn title card: a ring resonance splitting into a doublet as backscatter coupling grows, from the coupled-mode model, with the light reflected toward the laser and a ring outline",
+    "credit": "Drawn for this course",
+    "license": "Drawn for this course",
+    "source": "",
+    "kind": "drawing",
+    "w": 1920,
+    "h": 1080
   }
 });

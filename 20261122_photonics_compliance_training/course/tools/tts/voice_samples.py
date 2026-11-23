@@ -30,7 +30,7 @@ GRADE = {"af_heart": "A", "af_bella": "A-", "af_nicole": "B-", "am_michael": "C+
          "bm_george": "C"}   # Kokoro-82M VOICES.md overall grade, fetched 2026-11-22
 DEFAULT = ("af_heart", 1.0)   # chosen 2026-11-22; reasons in DevLog-003 voice section
 PASSAGE = [
-    "Hi. I'm Pat Reynolds, Director of the Office of Photonic Conduct here at Intracavity Photonics.",
+    "Hi. I'm Pat Reynolds, Director of the Office of Photonic Conduct here at Five Sigma Photonics.",
     "Lithium niobate is a wonderful colleague. It is electro-optic, piezoelectric, pyroelectric, photorefractive, and "
     "anisotropic. It brings its whole self to work.",
     "Not quite. Let's take a moment to understand why.",

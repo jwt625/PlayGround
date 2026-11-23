@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Course Sound Samples</title>
+<style>
+:root{--bg:#f6f7f9;--fg:#1d2330;--mut:#5b6474;--line:#d9dde4;--card:#fff}
+@media (prefers-color-scheme:dark){:root{--bg:#14171c;--fg:#e6e8ec;--mut:#9aa3b2;--line:#2b313b;--card:#1b1f26}}
+body{margin:0;padding:16px;background:var(--bg);color:var(--fg);font:14px/1.4 system-ui,sans-serif}
+h1{font-size:18px;margin:0 0 4px} h2{font-size:15px;margin:20px 0 6px} p{color:var(--mut);margin:4px 0 12px}
+.wrap{overflow-x:auto} table{border-collapse:collapse;background:var(--card);width:100%}
+td,th{border:1px solid var(--line);padding:6px 8px;text-align:left;vertical-align:middle}
+th{font-weight:600;color:var(--mut)} audio{height:32px;width:240px} code{font-size:12px} a{color:inherit}
+</style></head><body>
+<h1>Course sound samples</h1>
+<p>Files listed in <code>course/media/sound/manifest.js</code>. Suggested gains relative to narration 1.0: music 0.28, sfx 0.5. Narration clips measure about -18 LUFS. Meme effects (memeBoom, sadTrombone, perfectScore): not yet supplied.</p>
+<div class="wrap"><table><thead><tr><th>Key</th><th>Role</th><th>Play</th><th>Length</th><th>Format</th><th>Level</th><th>Credit</th></tr></thead>
+<tbody>
+<tr><td><code>music.intro</code></td><td>Intro bed (course title and welcome slides), seamless loop</td><td><audio controls preload="none" src="../../course/media/sound/music_intro_loop.mp3"></audio></td><td>75.29 s</td><td>2 ch, 44 kHz</td><td>-20.0 LUFS int., peak -5.7 dBFS</td><td>&quot;Life of Riley&quot; Kevin MacLeod (incompetech.com), licensed under Creative Commons: By Attribution 4.0 (http://creativecommons.org/licenses/by/4.0/); excerpt looped and level adjusted (<a href="https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1400054">source</a>)</td></tr>
+<tr><td><code>music.outro</code></td><td>Outro with ending (certificate and final pages)</td><td><audio controls preload="none" src="../../course/media/sound/music_outro.mp3"></audio></td><td>23.06 s</td><td>2 ch, 44 kHz</td><td>-20.0 LUFS int., peak -7.2 dBFS</td><td>&quot;Cheery Monday&quot; Kevin MacLeod (incompetech.com), licensed under Creative Commons: By Attribution 4.0 (http://creativecommons.org/licenses/by/4.0/); final section excerpted and level adjusted (<a href="https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1700065">source</a>)</td></tr>
+<tr><td><code>sfx.correct</code></td><td>Correct answer: two-note chime (A5 to E6, marimba and glockenspiel)</td><td><audio controls preload="none" src="../../course/media/sound/sfx_correct.mp3"></audio></td><td>0.85 s</td><td>1 ch, 48 kHz</td><td>-24.0 LUFS mom. max, peak -14.7 dBFS</td><td>Synthesized in code for this course (Made for this course)</td></tr>
+<tr><td><code>sfx.wrong</code></td><td>Wrong answer: soft low wooden bonk</td><td><audio controls preload="none" src="../../course/media/sound/sfx_wrong.mp3"></audio></td><td>0.42 s</td><td>1 ch, 48 kHz</td><td>-24.0 LUFS mom. max, peak -10.3 dBFS</td><td>Synthesized in code for this course (Made for this course)</td></tr>
+<tr><td><code>sfx.reveal</code></td><td>Stage reveal / click to reveal: light rising whoosh with a soft pop</td><td><audio controls preload="none" src="../../course/media/sound/sfx_reveal.mp3"></audio></td><td>0.40 s</td><td>1 ch, 48 kHz</td><td>-24.0 LUFS mom. max, peak -9.9 dBFS</td><td>Synthesized in code for this course (Made for this course)</td></tr>
+<tr><td><code>sfx.message</code></td><td>New chat message: two quick bubble pops</td><td><audio controls preload="none" src="../../course/media/sound/sfx_message.mp3"></audio></td><td>0.30 s</td><td>1 ch, 48 kHz</td><td>-24.0 LUFS mom. max, peak -8.1 dBFS</td><td>Synthesized in code for this course (Made for this course)</td></tr>
+<tr><td><code>sfx.popup</code></td><td>Ask popup appears: soft single ding</td><td><audio controls preload="none" src="../../course/media/sound/sfx_popup.mp3"></audio></td><td>1.00 s</td><td>1 ch, 48 kHz</td><td>-24.0 LUFS mom. max, peak -14.9 dBFS</td><td>Synthesized in code for this course (Made for this course)</td></tr>
+<tr><td><code>sfx.sortPlace</code></td><td>Sort item placed: soft wooden click</td><td><audio controls preload="none" src="../../course/media/sound/sfx_sort_place.mp3"></audio></td><td>0.10 s</td><td>1 ch, 48 kHz</td><td>-29.9 LUFS mom. max, peak -6.6 dBFS</td><td>Synthesized in code for this course (Made for this course)</td></tr>
+<tr><td><code>sfx.moduleDone</code></td><td>Module complete: marimba arpeggio into a glockenspiel chord</td><td><audio controls preload="none" src="../../course/media/sound/sfx_module_done.mp3"></audio></td><td>1.45 s</td><td>1 ch, 48 kHz</td><td>-24.0 LUFS mom. max, peak -13.4 dBFS</td><td>Synthesized in code for this course (Made for this course)</td></tr>
+<tr><td><code>sfx.certificate</code></td><td>Certificate awarded: short brass fanfare with timpani</td><td><audio controls preload="none" src="../../course/media/sound/sfx_certificate.mp3"></audio></td><td>2.60 s</td><td>1 ch, 48 kHz</td><td>-24.0 LUFS mom. max, peak -12.8 dBFS</td><td>Synthesized in code for this course (Made for this course)</td></tr>
+</tbody></table></div>
+<h2>Alternates (audition only, not used by the course)</h2>
+<div class="wrap"><table><thead><tr><th>File</th><th>Role</th><th>Play</th><th>Length</th><th>Format</th><th>Level</th><th>Credit</th></tr></thead>
+<tbody>
+<tr><td><code>alt_intro_loop_carefree.mp3</code></td><td>Alternate intro loop (not in the course)</td><td><audio controls preload="none" src="alt_intro_loop_carefree.mp3"></audio></td><td>60.00 s</td><td>2 ch, 44 kHz</td><td>-20.0 LUFS int., peak -5.8 dBFS</td><td>&quot;Carefree&quot; Kevin MacLeod (incompetech.com), CC BY 4.0; excerpt looped (<a href="https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1400037">source</a>)</td></tr>
+<tr><td><code>alt_outro_easy_lemon_30.mp3</code></td><td>Alternate outro (not in the course)</td><td><audio controls preload="none" src="alt_outro_easy_lemon_30.mp3"></audio></td><td>30.89 s</td><td>2 ch, 44 kHz</td><td>-20.0 LUFS int., peak -3.9 dBFS</td><td>&quot;Easy Lemon (30 second)&quot; Kevin MacLeod (incompetech.com), CC BY 4.0 (<a href="https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1200078">source</a>)</td></tr>
+</tbody></table></div>
+<p>Loop test: press play on the intro and let it wrap (the player loops it).</p>
+<script>document.querySelectorAll('audio').forEach(a=>{if(/loop/.test(a.src))a.loop=true});</script>
+</body></html>

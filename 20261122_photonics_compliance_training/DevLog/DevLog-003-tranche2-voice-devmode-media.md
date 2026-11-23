@@ -73,3 +73,74 @@ also come up with more complex scenario, e..g the sexual harassment training has
 - 2026-11-22: final sizes: courses 174 (FE, about 94 min narration) and 176 (FB, about 77 min) steps; media 23 MB; Kokoro clips in `course/audio/`.
 - 2026-11-22: final check (coordinator): learner mode via http://127.0.0.1:47293 plays recorded clips (HTTP 200), Next locked; dev mode badge and unlocked Next; dev gate false on outside5sigma.com and github.io, true on 127.0.0.1 and file://; validator OK both; no emoji, absolute paths or private terms in shipped files. 8 orphan clips (superseded text) removed.
 - Open: course length (FE about 94 min, FB about 77 min narration) vs his 25-30 min answer; listen check for "T E light" and "in-plane"; dicing-saw render not made; DSP wafer tint reads warm grey.
+
+## 6. Wave: immersion and chat UI (2026-11-22, after commit ed0dd80)
+
+His feedback (verbatim):
+
+```text
+remove "rendered in blender..." etc labels. They can be centralized to a final disclaimer, no need to break the immersion
+```
+
+```text
+the bystander should be given an actual name instead of calling it a bystander. The chat window display/UI should be better, e.g., using a proper iphone frame, and render a few kinds of msg platform style throughout the courses, such as imessage, signal, slack etc.
+```
+
+```text
+also remove banners like "SCENARIO | HYPOTHETICAL. ANY RESEMBLANCE TO YOUR LAB IS INTENTIONAL.", all these should be pretty obvious, and lump it into the central final disclaimer.
+```
+
+| # | Decision | Why |
+|---|---|---|
+| D18 | No credit text on content screens (photos included); all media credits plus the dramatization disclaimer live in one generated final step "Disclaimer and Media Credits" after the certificate; dev overlay still shows path + credit | Immersion; CC BY / BY-SA attribution satisfied by a credits list in the work |
+| D19 | Animatic "BLENDER RENDER PENDING" label and shot notes dev-only; "rendered" / "drawn for this course" wording removed from captions and narration | Same |
+| D20 | Bystander becomes a named recurring coworker in both courses | His request |
+| D21 | Chat `skin` field: phone imessage / signal / whatsapp in a realistic iPhone frame; thread slack / teams; call facetime / meeting; email mail. Real platform visual language, no real logos or app names; rounded corners allowed on device and bubbles only | His request; sharp-corner rule kept for LMS chrome |
+| D22 | In-content "scenario / hypothetical / fictional / dramatization" banners and lines removed; wording moved into the final disclaimer | His request |
+
+```text
+if a page has multiple evolutions for the narrator, e.g., trainee read the scenario, and click to see the results, then implement it that way. Maximize interactivity as possible (which is what this kind of training course do) to keep the trainee engaged. Add additional play button or interaction UI as needed.
+```
+
+| D23 | Engine: `stages` on any step (click-to-reveal stages, each with narration), chat `tapToAdvance`, new `reflect` (ungraded response then reveal) and `sort` (drag into buckets, click fallback, forgiving spoken whys), video Replay. Content lanes restructure multi-evolution pages into stages and add sort / reflect exercises, mostly reusing existing narration | His interactivity request |
+
+```text
+for various message apps UI, the various characters should also have proper corresponding profile pictures.
+```
+
+| D24 | `media/cast.js` (LMS_CAST: name -> avatar, aliases) used by every chat skin; avatars mix code-drawn illustrated portraits, non-face photo avatars (pets, landscapes, lab gear; PD/CC), code-drawn group emblems; Gary as an unidentifiable bunny-suit crop; credits in `credits_avatars.js` and the final credits list | His request; D12/D13 still hold (no image generation, no real identifiable person in the cast) |
+
+```text
+can you update the company name to Five Sigma Photonics. Should be rare enough and fits my brand of outside five sigma
+```
+
+| D25 | Fictional employer renamed "Intracavity Photonics, Inc." -> "Five Sigma Photonics, Inc." in courses (incl. narration), engine, dashboard, chat skins, cast, tools; company emblem redrawn as a five-sigma mark; supersedes D8's company name. The physics category "Intracavity (Domestic) Feedback" is unchanged | His request |
+- 2026-11-22 18:50: wave 6 done. FE 181 steps (about 95 min narration), FB 181 steps (about 79 min); every spoken line recorded (FE 1394/1394, FB 1381/1381; manifest 2753 clips, 116 MB; 154 catch-up clips; 34 superseded clips removed). Coordinator check: learner mode plays clips and gates Next, dev mode unlocks; no "Intracavity Photonics", emoji, absolute paths in shipped files; real-course chat skins with avatars inspected (iMessage, Slack). Uncommitted since ed0dd80.
+
+```text
+some of gary's actions are too extreme, make them less obviously wrong, like "Gary: I can load the next lot correctly and we never talk about lot 7." and the manager's "we will talk about lot 7". Should be more ambigious, such as gary saying delete lot 7 data instead of mark it as mistake with failure analysis. Also the layout should be more closer to an actual email with sender and title and date time etc.
+```
+
+| D26 | Tone pass in both courses: Gary's and the manager's lines and the wrong options become plausible rationalizations (exclude as non-representative, clean up data, follow up next lot, note verbally); wrongness = what is missing (failure analysis, log, root cause, marking); retaliation subtle | His request |
+| D27 | Mail skin becomes a real email client view: subject title, per-message From (name + address), To, Cc, ISO date-time, attachments, signature, stacked replies, message list; optional per-message `to`, `cc`, `date`, `subject`, `attachments`; addresses at the fictional domain "fivesigma.photonics" via `email` in cast.js | His request |
+
+```text
+sometimes the narrative repeats the same phrase immediately and sounds like a glitch, e.g. "know your axis". Also should pause a bit when narrator answer her own question. Or popup interaction box for user to choose ok vs not ok.
+```
+
+| D28 | Back-to-back identical sentences removed (scan: 6 FE "Know your axes." doubles, 1 FB "Every interface reflects." double, 3 FE correctSay "That's right" prefixes); engine pauses about 1.2 s after spoken questions; new `ask` popup on any step (question spoken, OK / Not OK style buttons, short spoken response, then auto-reveal of the first stage); chats' "Is this OK?" self-answers become ask popups | His request |
+
+```text
+each module should have an opening deck/media like module 0 has. Either stock image or svg/code generated/blender rendered and relevant materials.
+```
+
+| D29 | Every module opens with a hero title slide (kicker "Module N", title, subtitle, one or two narration lines, full-bleed relevant image with push-in) before its objectives; images from existing photos/renders or new code-drawn title-card art with correct physics (credited "Drawn for this course" in the final credits). FB Module 0 title slide gains an image | His request |
+- 2026-11-22 19:07: session restart interrupted the engine lane (mail layout, ask, question pause mostly landed) and the FE lane (tone/email/ask pass partial); both resumed.
+
+```text
+i think we should also add stock corporate music at the intro and outro slides to keep the user engaged. Maybe also add minor sound effects around the slide deck to bump awareness and focus of the tranee. Do not over-do the sound effect.
+Pick a few meme commonly used ones, and i might already have a few ready.
+```
+
+| D30 | Sound layer: corporate music bed on course start / Module 0 opening slides and an outro on certificate + disclaimer, ducked under narration; subtle SFX on correct / wrong / reveal / incoming message / popup / sort place / module complete / certificate / perfect score, rate-limited; meme SFX (boom, sad trombone) only via explicit per-step `sfx`, sparingly; learner toggle. Sources: public-domain / CC0 music or code-synthesized; functional SFX synthesized. Meme SFX: proposal only, he supplies the files (his correction, verbatim: "i did not ask you to search. Just propose."); manifest keys stay null until then | His request |
+- 2026-11-22 20:10: waves 7-9 done (tone pass, real email layout, ask popups and question pauses, module openers, sound layer). FE 188 steps (about 95 min), FB 188 steps (about 79 min); all spoken lines recorded (FE 1415, FB 1457; 2848 clips, 118 MB; 288 superseded clips removed). Music: Kevin MacLeod "Life of Riley" (intro loop) and "Cheery Monday" (outro), CC BY 4.0, credited on the disclaimer page; 8 synthesized functional SFX; meme SFX slots null pending his files. Coordinator check: clips and music load (HTTP 200), learner Next gated, dev unlocks, no old company name, emoji or local paths in shipped files. Uncommitted since ed0dd80.
