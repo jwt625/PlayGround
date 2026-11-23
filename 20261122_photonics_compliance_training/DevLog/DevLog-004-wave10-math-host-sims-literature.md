@@ -13,7 +13,7 @@ good. Cmt & push.
 Then:
 - render latex properly.
 - build the directory model with higher res, either svg or blender similar to gary model.
-- improve various interactive demo with more detailed model and more realistic simulations and results. e.g. Interactive: Rotate the x-cut die should do actual simulation with representative model profile. Check how 2d eigenn modes are solved in e.g. applied multiphysics repo or the luxretius repo, and implement proper anisotropy.
+- improve various interactive demo with more detailed model and more realistic simulations and results. e.g. Interactive: Rotate the x-cut die should do actual simulation with representative model profile. Check how 2d eigenn modes are solved in e.g. applied multiphysics repo or [another private repo], and implement proper anisotropy.
 - for "what the literature reports", add proper visualization for each case to help with engagement. Crop figures if open access (CCBY) with citation, or reproduce the illustration and photos or figures from fresh with the reference using svg or blender or any other format you see fit.
 - some time the ok/not ok popup is too fast, and comes up without any naarator explaining the scenario. e.g. "Module 3 | Respecting Boundaries: Mode Conversion in Bends
 Scenario 1: The bigger ring". For similar slides,narator should describe and open with smt similar to "read/observe this scenario/meeting/conversation, and judge if gary's reaction is proper". Some of the examples should have gary react properly so that trainee dont default to always "not ok"
