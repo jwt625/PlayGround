@@ -103,3 +103,8 @@ Projects that have spun off:
   - Try it: [outside5sigma.com/ipatent](https://outside5sigma.com/ipatent/).
 
 <img src="assets/ipatent.png" alt="Interactive Patents" width="50%">
+
+- Nov 2026: [Photonic Conduct](https://github.com/jwt625/photonic-conduct): parody corporate compliance training for photonics pitfalls, with two narrated interactive courses in a mock learning-management system (lithium niobate crystal orientation and charge conduct; zero tolerance for unsolicited optical feedback into lasers). Incident videos drawn in code, scenario chats and popups, and activities backed by real models: an anisotropic mode solver sweep for x-cut lithium niobate, photorefractive sweeps, Lang-Kobayashi mode hops and backscatter doublets.
+  - Try it: [outside5sigma.com/photonic-conduct](https://outside5sigma.com/photonic-conduct/).
+
+<img src="assets/photonic-conduct.png" alt="Photonic Conduct" width="50%">
